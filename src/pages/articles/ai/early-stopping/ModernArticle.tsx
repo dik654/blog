@@ -8,10 +8,31 @@ export default function EarlyStoppingArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Early stopping은 학습법이 아니라 trajectory에서 checkpoint를 고르는 상태 기계입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
-            validation event, best metric, minimum improvement, bad-event counter, patience부터 하나씩 정의합니다. 언제
-            멈추고 어떤 artifact를 반환할지는 그다음에 조합합니다.
-          </p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          다섯 번의 validation loss가 .42, .38, .39, .40, .41이라고 합시다.
+          Minimum improvement δ=0, patience P=2이고 counter가 P를 초과할 때
+          멈춥니다. Eval 2의 .38이 best이고 eval 5에서 bad counter가 3이 되어
+          멈춘 뒤, 반환할 것은 eval 5가 아니라 eval 2 snapshot입니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>Eval 3의 .39는 이전 best .38보다 좋아진 값일까요?</li>
+          <li>P=2이면 두 번째 bad event인 eval 4에서 바로 멈출까요?</li>
+          <li>학습을 eval 5에서 멈췄으므로 eval 5 checkpoint를 반환할까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. Loss는 낮을수록 좋고,
+          이 계약은 <code>c&gt;P</code>에서 멈춥니다. Stop event와 best artifact
+          선택은 서로 다른 상태 전이입니다.
+        </p>
+      </div>
+      <EarlyStoppingMechanismViz />
+      <ContentBoundary article="early-stopping" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+        Validation event, best metric, minimum improvement, bad-event counter,
+        patience를 따로 기록해야 언제 멈췄고 무엇을 반환했는지 재생할 수 있습니다.
+      </p></div>
       <TermBreakdown title="상태 기계의 다섯 값" items={[
         { term: "Validation event", description: "정해진 cadence에서 checkpoint 하나를 평가한 사건입니다.", example: "매 1000 update마다 val loss를 계산합니다." },
         { term: "Best metric b", description: "지금까지 선택 방향에서 가장 좋았던 값입니다.", example: "Loss를 최소화한다면 b=.38입니다." },
@@ -19,8 +40,6 @@ export default function EarlyStoppingArticle() {
         { term: "Bad-event counter c", description: "충분한 개선이 없었던 연속 evaluation 횟수입니다.", example: ".39,.40이면 c=2입니다." },
         { term: "Patience P", description: "Stop 전에 허용하는 bad event 수입니다.", example: "P=2이고 c=3이면 stop합니다.", boundary: "Update 수가 아니라 evaluation 횟수입니다." },
       ]} />
-      <EarlyStoppingMechanismViz />
-      <ContentBoundary article="early-stopping" />
     </section>
     <section id="state-machine" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Metric을 비교해 best 또는 bad counter 하나만 갱신합니다</h2>

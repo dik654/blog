@@ -137,14 +137,14 @@ function Scene({
 }
 
 export function AugmentationContractViz() {
-  const labels = ["배포에서 달라지는 것", "허용 transformation", "Target map", "Training objective"] as const;
+  const labels = ["640×480 사진·원래 box", "좌우 flip parameter", "같은 parameter로 box 이동", "유효한 pair의 평균 loss"] as const;
   const notes = [
-    "먼저 camera·조명·자세처럼 실제 deployment에서 달라질 원인을 관찰합니다.",
-    "변환 뒤에도 task 의미가 유지되는 범위만 augmentation distribution에 넣습니다.",
-    "Class는 유지할 수 있지만 box·mask·keypoint는 같은 parameter로 함께 옮겨야 합니다.",
-    "매 step에 transform을 sampling해 허용한 변화 전체의 평균 loss를 줄입니다.",
+    "640×480 상품 사진의 원래 box는 (80,120)–(240,360)입니다.",
+    "좌우 flip은 같은 상품을 유지하므로 허용하지만 x 좌표는 width 640을 기준으로 뒤집힙니다.",
+    "x₁′=640−240=400, x₂′=640−80=560이므로 새 box는 (400,120)–(560,360)입니다.",
+    "Image와 target이 같은 sampled parameter를 공유한 pair만 loss에 넣어 augmentation distribution의 평균 risk를 줄입니다.",
   ] as const;
-  return <Scene id="augmentation-contract-viz" eyebrow="Meaning before transform" title="현실의 변화가 training pair가 되는 순서" description="Deployment variation→transformation→target→objective를 한 단계씩 봅니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 210" role="img" aria-label={labels[active]} className="block h-auto w-full"><Box x={8} y={74} w={70} h={58} label="deployment" detail="light·pose" active={active === 0}/><Arrow x1={79} y1={103} x2={105} y2={103} id="aug-found-a" active={active >= 1}/><Box x={109} y={64} w={70} h={78} label="Tω" detail="allowed change" active={active === 1}/><Arrow x1={180} y1={103} x2={206} y2={103} id="aug-found-b" active={active >= 2}/><Box x={210} y={43} w={66} h={48} label="x′" detail="input" active={active === 2}/><Box x={210} y={116} w={66} h={48} label="τᵨ(y)" detail="target" active={active === 2}/><Arrow x1={277} y1={103} x2={302} y2={103} id="aug-found-c" active={active === 3}/><Box x={306} y={72} w={46} h={62} label="E loss" detail="train" active={active === 3}/></svg>}</Scene>;
+  return <Scene id="augmentation-contract-viz" eyebrow="640×480 DETECTION CASE" title="Flip한 image와 box (400,120)–(560,360)를 한 pair로 만듭니다" description="원래 box→좌우 flip→target map→training loss를 같은 sampled parameter로 연결합니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 210" role="img" aria-label={labels[active]} className="block h-auto w-full"><Box x={8} y={70} w={76} h={66} label="source" detail="box 80–240" active={active === 0}/><Arrow x1={85} y1={103} x2={108} y2={103} id="aug-found-a" active={active >= 1}/><Box x={112} y={64} w={70} h={78} label="flip" detail="x→640−x" active={active === 1}/><Arrow x1={183} y1={103} x2={206} y2={103} id="aug-found-b" active={active >= 2}/><Box x={210} y={43} w={72} h={48} label="image′" detail="flipped" active={active === 2}/><Box x={210} y={116} w={72} h={48} label="box′" detail="400–560" active={active === 2}/><Arrow x1={283} y1={103} x2={306} y2={103} id="aug-found-c" active={active === 3}/><Box x={310} y={72} w={42} h={62} label="E loss" detail="valid pair" active={active === 3}/></svg>}</Scene>;
 }
 
 export function ImageTransformViz() {

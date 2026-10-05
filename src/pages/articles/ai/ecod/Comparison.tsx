@@ -46,9 +46,11 @@ export default function Comparison() {
         <h3>Label이 있으면 ranking과 action policy를 따로 평가한다</h3>
         <p>
           연속 score는 ROC-AUC와 average precision(PR-AUC 계열)으로 비교한다. threshold를 정한 뒤에는
-          precision·recall·precision@k와 실제 조사 시간을 본다. anomaly prevalence가 낮은 데이터라면 ROC만으로 false alert 부담을 읽기
-          어려우므로 PR 결과와 base rate를 함께 기록한다. 비교 자체는 같은 split, feature, random seed와 compute budget에서
-          ECOD·Isolation Forest·LOF처럼 서로 다른 가설을 놓고 해야 한다.
+          precision, recall, precision@k와 실제 조사 시간을 본다.
+        </p>
+        <p>
+          Anomaly prevalence가 낮으면 ROC만으로 false alert 부담을 읽기 어렵다. PR 결과와 base rate를 함께 기록하고,
+          같은 split, feature, random seed, compute budget에서 ECOD, Isolation Forest, LOF처럼 서로 다른 가설을 비교한다.
         </p>
         <h3>Label이 없으면 성공을 증명하는 것이 아니라 실패 범위를 좁힌다</h3>
         <p>
@@ -60,9 +62,12 @@ export default function Comparison() {
         <p>
           ECDF는 reference population의 rank이므로 계절 변화·정책 변경·센서 교체가 생기면 정상 row도 tail로 이동한다. raw feature
           distribution, missing rate, tie rate, score quantile, alert rate와 reviewer precision을 함께
-          monitoring한다. 재학습할 때는 이전 model과 같은 golden rows의 순위 변화를 기록한다. candidate reference·package·batch
-          policy는 versioning한 뒤 같은 rows의 base/candidate 순위와 review budget을 paired 비교하고 canary로 올린다. reviewer
-          precision이나 alert-rate hard limit가 무너지면 이전 ECDF artifact와 threshold로 rollback한다.
+          monitoring한다.
+        </p>
+        <p>
+          재학습할 때는 이전 model과 같은 golden rows의 순위 변화를 기록한다. Candidate reference, package, batch policy를 versioning한 뒤
+          같은 rows의 base/candidate 순위와 review budget을 paired 비교하고 canary로 올린다. Reviewer precision이나 alert-rate hard
+          limit가 무너지면 이전 ECDF artifact와 threshold로 rollback한다.
         </p>
       </div>
 
@@ -71,9 +76,11 @@ export default function Comparison() {
         <p className="mt-2 text-sm font-semibold">On the Evaluation of Unsupervised Outlier Detection</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Campos 등은 unsupervised detector 순위가 benchmark 쪽 선택에 따라 크게 바뀔 수 있다는 문제를 분석했습니다. outlier definition,
-          class distribution, dataset 변형, metric 선택이 그 요인입니다. 이 연구가 내놓는 것은 특정 detector가 항상 우월하다는 결론이 아니라 평가의
-          경계입니다. ground truth와 생성 과정을 확인하고 여러 dataset·metric에서 비교하라는 뜻이지, label이 전혀 없는 production population의
-          성능을 자동으로 인증해 주는 방법으로 읽으면 안 됩니다.
+          class distribution, dataset 변형, metric 선택이 그 요인입니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 결과는 특정 detector가 항상 우월하다는 결론이 아니라 평가의 경계를 보여 줍니다. Ground truth와 생성 과정을 확인하고 여러 dataset과
+          metric에서 비교해야 합니다. Label이 전혀 없는 production population의 성능을 자동으로 인증하는 방법은 아닙니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1007/s10618-015-0444-8" target="_blank" rel="noreferrer">원 논문의 benchmark·metric sensitivity 보기</a>
       </div>

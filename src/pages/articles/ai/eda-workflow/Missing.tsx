@@ -25,14 +25,14 @@ M_i&=\mathbf{1}[x_i\ \text{is missing}],\\
 \hat{p}_{\mathrm{deviceA}}&=\frac{80}{200}=0.40.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-M_i&=\underbrace{\mathbf{1}[x_i\ \text{is missing}],}_{\text{missing indicator 계산}}\\
-\hat{p}_{\mathrm{all}}&=\underbrace{\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,}_{\text{기준량당 비율}}\\
-\hat{p}_{\mathrm{deviceA}}&=\underbrace{\frac{80}{200}=0.40.}_{\text{기준량당 비율}}
+M_i&=\underbrace{\mathbf{1}[x_i\ \text{is missing}],}_{\text{비었으면 1, 관측됐으면 0}}\\
+\hat{p}_{\mathrm{all}}&=\underbrace{\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,}_{\text{전체 주문의 결측률 10\%}}\\
+\hat{p}_{\mathrm{deviceA}}&=\underbrace{\frac{80}{200}=0.40.}_{\text{장비 A 주문의 결측률 40\%}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\mathbf{1}[x_i\ \text{is missing}],`, annotation: ["missing indicator이(가) 식의 결과에 기여하는","방식을 계산합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
-          { expression: String.raw`\frac{\sum_iM_i}{N}=\frac{100}{1000}=0.10,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
-          { expression: String.raw`\frac{80}{200}=0.40.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","결측 indicator를 만들고 전체뿐 아니라","시간·장비·label slice마다"] },
+          { expression: String.raw`\mathbf{1}[x_i\ \text{is missing}]`, annotation: ["각 주문의 값이 비어 있으면 1로 바꿔 셀 수 있게 합니다."] },
+          { expression: String.raw`\frac{100}{1000}=0.10`, annotation: ["전체 1,000건 중 결측 100건이므로 전체 결측률은 10%입니다."] },
+          { expression: String.raw`\frac{80}{200}=0.40`, annotation: ["장비 A의 200건만 분모로 두면 결측 80건, 즉 40%입니다."] },
         ]}
         terms={[
           { symbol: "M_i", name: "missing indicator", description: "관측 i가 비어 있으면 1, 아니면 0인 진단 변수입니다." },

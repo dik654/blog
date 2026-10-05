@@ -79,11 +79,11 @@ export function GeneralizationDiagnosisViz() {
 }
 
 export function DropoutMechanismViz() {
-  return <ConceptViz id="dropout-mechanism-viz" eyebrow="Stochastic activation path" title="Mask는 학습 때만 통로를 끄고 살아남은 값을 키웁니다" description="Bernoulli 선택, inverted scaling, evaluation mode를 서로 다른 장면으로 봅니다." scenes={[
-    { label: "Activation", title: "Dropout 전에는 모든 activation이 다음 층의 후보입니다", note: "h는 아직 random mask를 적용하지 않은 feature vector입니다.", nodes: [{ label: "h₁", sub: "2.0", shape: "circle" }, { label: "h₂", sub: "1.2", shape: "circle" }, { label: "h₃", sub: "0.7", shape: "circle" }] },
-    { label: "Mask", title: "각 통로에 0 또는 1인 Bernoulli mask를 붙입니다", note: "Element dropout과 channel dropout은 mask를 공유하는 축이 다릅니다.", nodes: [{ label: "keep", sub: "m=1", shape: "circle" }, { label: "drop", sub: "m=0", shape: "box" }, { label: "keep", sub: "m=1", shape: "circle" }] },
-    { label: "Scale", title: "살아남은 값만 1/q배 해 평균 크기를 맞춥니다", note: "평균은 보존되지만 한 번의 forward 결과와 downstream nonlinear output은 같지 않습니다.", nodes: [{ label: "m·h", sub: "selected", shape: "box" }, { label: "÷ q", sub: "inverted", shape: "circle" }, { label: "h̃", sub: "noisy", shape: "bar" }] },
-    { label: "Eval", title: "평가할 때는 mask 없이 전체 경로를 사용합니다", note: "MC dropout은 예외적인 추론 protocol이므로 sampling 횟수와 aggregation을 별도로 정의합니다.", nodes: [{ label: "train()", sub: "sample mask", shape: "box" }, { label: "mode switch", sub: "module state", shape: "circle" }, { label: "eval()", sub: "all paths", shape: "box" }] },
+  return <ConceptViz id="dropout-mechanism-viz" eyebrow="h=2 · p=.25 · q=.75" title="한 train output은 0 또는 8/3이고 평균은 2입니다" description="같은 activation의 Bernoulli 선택, inverted scaling, 추가 분산, eval mode를 추적합니다." scenes={[
+    { label: "h·p·q", title: "Activation 2에서 drop .25·keep .75를 고정합니다", note: "h=2, p=.25, q=1−p=.75가 이번 계산의 세 입력입니다.", nodes: [{ label: "h", sub: "2", shape: "circle" }, { label: "p", sub: ".25 drop", shape: "box" }, { label: "q", sub: ".75 keep", shape: "circle" }] },
+    { label: "두 결과", title: "Mask가 0이면 0, 1이면 scaling 전 값 2가 남습니다", note: "매 train forward에서 m~Bernoulli(.75)를 새로 뽑습니다.", nodes: [{ label: "m=0", sub: "p=.25", shape: "box" }, { label: "output", sub: "0", shape: "circle" }, { label: "m=1", sub: "q=.75", shape: "box" }, { label: "m·h", sub: "2", shape: "circle" }] },
+    { label: "8/3·평균2", title: "살아남은 2를 .75로 나누면 8/3입니다", note: "0×.25+(8/3)×.75=2지만 추가 분산은 4/3입니다. 한 forward가 2가 되는 것은 아닙니다.", nodes: [{ label: "m·h", sub: "2", shape: "box" }, { label: "÷ .75", sub: "1/q", shape: "circle" }, { label: "h̃", sub: "8/3", shape: "bar" }] },
+    { label: "Eval=2", title: "일반 eval에서는 mask 없이 h=2를 그대로 씁니다", note: "MC dropout만 명시적으로 train-style mask를 켜며 sample count와 aggregation을 별도로 정합니다.", nodes: [{ label: "train()", sub: "0 or 8/3", shape: "box" }, { label: "mode", sub: "switch", shape: "circle" }, { label: "eval()", sub: "2", shape: "box" }] },
   ]} />;
 }
 
@@ -97,11 +97,11 @@ export function WeightDecayMechanismViz() {
 }
 
 export function EarlyStoppingMechanismViz() {
-  return <ConceptViz id="early-stopping-mechanism-viz" eyebrow="Trajectory selection" title="멈추는 checkpoint와 반환하는 checkpoint는 다를 수 있습니다" description="Validation event가 best artifact와 bad-event counter를 어떻게 바꾸는지 순서대로 봅니다." scenes={[
-    { label: "Evaluate", title: "정해진 cadence마다 validation metric을 관측합니다", note: "Patience 단위는 update가 아니라 evaluation event입니다.", nodes: [{ label: "Train", sub: "updates", shape: "box" }, { label: "Eval", sub: "val loss", shape: "circle" }, { label: "Receipt", sub: "step + metric", shape: "box" }] },
-    { label: "Improve", title: "Threshold보다 좋아진 순간 best snapshot을 저장합니다", note: "Model뿐 아니라 optimizer, preprocessing, config digest도 durable artifact에 묶습니다.", nodes: [{ label: "Metric", sub: ".38", shape: "bar" }, { label: "Compare", sub: "best − δ", shape: "circle" }, { label: "Save", sub: "j*", shape: "box" }] },
-    { label: "Wait", title: "개선이 없을 때 bad-event counter를 하나 올립니다", note: "Evaluation cadence가 바뀌면 같은 patience라도 허용 update 수가 달라집니다.", nodes: [{ label: "Eval 3", sub: "bad 1", shape: "bar" }, { label: "Eval 4", sub: "bad 2", shape: "bar" }, { label: "Eval 5", sub: "bad 3", shape: "bar" }] },
-    { label: "Restore", title: "Stop event 뒤 last가 아니라 best artifact를 복원합니다", note: "새 process에서 best metric과 prediction을 재현해야 선택 계약이 닫힙니다.", nodes: [{ label: "Last", sub: "eval 5", shape: "box" }, { label: "Stop", sub: "P exceeded", shape: "circle" }, { label: "Best", sub: "eval 2", shape: "box" }] },
+  return <ConceptViz id="early-stopping-mechanism-viz" eyebrow="δ=0 · P=2 · stop when c>P" title=".42→.38→.39→.40→.41에서 eval 5에 멈추고 eval 2를 돌려줍니다" description="관측 metric, best 저장, bad counter, restore artifact를 한 trajectory로 봅니다." scenes={[
+    { label: "다섯 loss", title: "Validation loss는 .42, .38, .39, .40, .41입니다", note: "같은 cadence에서 loss를 minimize하며 δ=0으로 비교합니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar" }, { label: "e2", sub: ".38", shape: "bar" }, { label: "e3", sub: ".39", shape: "bar" }, { label: "e4·e5", sub: ".40·.41", shape: "bar" }] },
+    { label: "Best=e2", title: "Eval 2의 .38에서 best snapshot을 저장합니다", note: "이후 .39·.40·.41은 .38보다 낮지 않으므로 best가 아닙니다.", nodes: [{ label: "e1", sub: ".42", shape: "bar" }, { label: "e2", sub: ".38 best", shape: "bar" }, { label: "Save", sub: "j*=2", shape: "box" }] },
+    { label: "c=1·2·3", title: "Eval 3·4·5에서 bad counter가 1·2·3이 됩니다", note: "P=2이고 stop 조건이 c>P이므로 c=2인 eval 4가 아니라 c=3인 eval 5에서 멈춥니다.", nodes: [{ label: "Eval 3", sub: "bad 1", shape: "bar" }, { label: "Eval 4", sub: "bad 2", shape: "bar" }, { label: "Eval 5", sub: "bad 3", shape: "bar" }] },
+    { label: "Stop5→Best2", title: "Stop index 5와 return index 2를 분리합니다", note: "Eval 5에서 학습을 멈춘 뒤 immutable eval 2 artifact와 그 재현 state를 복원합니다.", nodes: [{ label: "Last", sub: "eval 5", shape: "box" }, { label: "Stop", sub: "c=3>P", shape: "circle" }, { label: "Return", sub: "eval 2", shape: "box" }] },
   ]} />;
 }
 

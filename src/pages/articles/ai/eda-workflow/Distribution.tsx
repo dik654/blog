@@ -31,15 +31,15 @@ Q_1=10,\ Q_3=30&\Rightarrow \operatorname{IQR}=20,\\
 &=[-20,60].
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\operatorname{IQR}&=\underbrace{Q_3-Q_1,}_{\text{interquartile range 계산}}\\
+\operatorname{IQR}&=\underbrace{Q_3-Q_1,}_{\text{가운데 50\%의 폭}}\\
 Q_1=10,\ Q_3=30&\Rightarrow \operatorname{IQR}=20,\\
-\text{review range}&=\underbrace{[10-1.5(20),\ 30+1.5(20)]}_{\text{오른쪽 항으로 결과 계산}}\\
-&=\underbrace{[-20,60].}_{\text{오른쪽 항으로 결과 계산}}
+\text{review range}&=\underbrace{[10-1.5(20),\ 30+1.5(20)]}_{\text{양쪽으로 IQR의 1.5배 확장}}\\
+&=\underbrace{[-20,60].}_{\text{검토 후보 경계}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`Q_3-Q_1,`, annotation: ["interquartile range이(가) 식의 결과에","기여하는 방식을 계산합니다.","가운데 50%를 덮는 Q3−Q1을 scale로 삼고, 양끝에서","그 1.5배보다"] },
-          { expression: String.raw`[10-1.5(20),\ 30+1.5(20)]`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","가운데 50%를 덮는 Q3−Q1을 scale로 삼고, 양끝에서","그 1.5배보다"] },
-          { expression: String.raw`[-20,60].`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","가운데 50%를 덮는 Q3−Q1을 scale로 삼고, 양끝에서","그 1.5배보다"] },
+          { expression: String.raw`Q_3-Q_1`, annotation: ["75백분위수에서 25백분위수를 빼 가운데 절반의 폭 20을 얻습니다."] },
+          { expression: String.raw`10-1.5(20)`, annotation: ["Q1에서 IQR의 1.5배를 빼 아래 검토 경계 −20을 만듭니다."] },
+          { expression: String.raw`30+1.5(20)`, annotation: ["Q3에 IQR의 1.5배를 더해 위 검토 경계 60을 만듭니다."] },
         ]}
         terms={[
           { symbol: "Q₁", name: "first quartile", description: "정렬한 sample의 아래 25% 경계입니다." },

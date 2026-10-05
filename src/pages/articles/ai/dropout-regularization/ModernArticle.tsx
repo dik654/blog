@@ -8,17 +8,36 @@ export default function DropoutRegularizationArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Dropout은 activation을 지우는 학습 시점의 확률 연산입니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
-            activation 하나, 0/1 mask, 살아남은 값을 보정하는 scaling을 차례로 봅니다. 이 세 물체를 이해한 뒤에야 여러 stochastic subnetwork라는
-            조합 해석으로 넘어갑니다.
-          </p></div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Activation h=2에 drop probability p=.25를 적용한다고 합시다.
+          Keep probability q=.75입니다. Mask m=0이면 output은 0이고,
+          m=1이면 inverted scaling으로 2/.75=8/3이 됩니다. 여러 forward의
+          평균은 2이고 추가 분산은 4/3입니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>살아남은 한 번의 train output도 원래 activation 2와 같을까요?</li>
+          <li>평균이 2로 보존되면 뒤의 nonlinear network output도 보존될까요?</li>
+          <li>일반적인 eval mode에서도 새 Bernoulli mask를 계속 뽑을까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. 살아남은 값은 8/3이고,
+          평균 보존은 한 forward나 nonlinear output의 보존이 아닙니다. 일반 eval은
+          mask 없이 모든 경로를 사용합니다.
+        </p>
+      </div>
+      <DropoutMechanismViz />
+      <ContentBoundary article="dropout-regularization" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+        Activation, 0/1 mask, 살아남은 값을 보정하는 scaling을 차례로 분리하면
+        여러 stochastic subnetwork라는 조합 해석도 같은 연산에서 따라옵니다.
+      </p></div>
       <TermBreakdown title="Dropout을 이루는 세 물체" items={[
         { term: "Activation h", description: "Dropout 직전 layer가 만든 feature 값입니다.", example: "한 coordinate h=2를 추적합니다." },
         { term: "Keep mask m", description: "통로를 남기면 1, 끄면 0인 Bernoulli random variable입니다.", example: "p=.25이면 keep probability q=.75입니다.", boundary: "Channel dropout은 여러 좌표가 같은 mask를 공유합니다." },
         { term: "Inverted scale 1/q", description: "남은 값의 평균 크기를 train과 eval 사이에서 맞추는 배율입니다.", example: "남으면 2/.75=8/3, 꺼지면 0입니다.", boundary: "한 번의 output을 원본과 같게 만드는 배율이 아닙니다." },
       ]} />
-      <DropoutMechanismViz />
-      <ContentBoundary article="dropout-regularization" />
     </section>
     <section id="mask" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Inverted scaling은 평균을 보존하고 분산을 추가합니다</h2>

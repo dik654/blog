@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DetectionContractViz from "./viz/DetectionContractViz";
 import MarginalRankViz from "./viz/MarginalRankViz";
@@ -9,9 +10,37 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">먼저 “이상치”가 무엇인지 운영 언어로 고정한다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          ECOD(Empirical Cumulative Distribution-based Outlier Detection)는 label이 없는 tabular data에서 각 feature의
-          분포 끝에 놓인 row를 찾아 연속 anomaly score로 순위화한다. 특정 parametric distribution을 맞추거나 반복 optimization을 하지 않으므로
-          빠른 global-outlier baseline으로 쓸 만하다. 다만 score가 높다고 fraud·고장·공격이 확정되지는 않는다.
+          네 거래의 금액이 ₩12K, ₩18K, ₩24K, ₩910K이고 접속 시간이 2초,
+          4초, 5초, 39초라고 합시다. 넷째 row는 두 feature 모두 오른쪽
+          tail 비율이 1/4이라 먼저 검토할 후보가 됩니다. 이 수치는 드문 정도이지
+          fraud label은 아닙니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>넷째 row가 두 feature의 끝에 있으므로 fraud가 확정될까요?</li>
+          <li>원화와 초의 scale이 달라 큰 단위의 feature가 자동으로 score를 지배할까요?</li>
+          <li>ECOD가 binary alert threshold와 실제 anomaly 비율도 스스로 정할까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. ECDF는 feature 안의 순위를
+          공통 좌표로 바꾸고, ECOD는 연속 score로 검토 순서를 만듭니다. Alert
+          threshold와 review budget은 별도 decision policy입니다.
+        </p>
+      </div>
+
+      <MarginalRankViz />
+      <ContentBoundary article="ecod" />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          ECOD(Empirical Cumulative Distribution-based Outlier Detection)는
+          label이 없는 tabular data에서 각 feature의 분포 끝에 놓인 row를
+          찾습니다. 결과는 연속 anomaly score와 그 순위입니다.
+        </p>
+        <p>
+          특정 parametric distribution을 맞추거나 반복 optimization을 하지
+          않으므로 빠른 global-outlier baseline으로 쓸 만합니다. Score가 높다는
+          사실만으로 fraud, 고장, 공격이 확정되지는 않습니다.
         </p>
         <p>
           따라서 첫 단계는 algorithm 선택이 아니라 detection contract다. 한 row가 거래인지
@@ -37,10 +66,10 @@ export default function Overview() {
         question="Feature j의 값 x가 reference data에서 어느 순위에 놓였는가?"
         idea={<>Indicator가 조건을 만족한 sample만 1로 세고 전체 개수로 나눕니다. 오른쪽 ECDF는 <code>1−F(x)</code>가 아니라 <code>X≥x</code>를 직접 세어 tie에서 양쪽 정의를 대칭으로 유지합니다.</>}
         formula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]\\\widehat F_{j,R}(x)&=\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]}_{\text{기준량당 비율}}\\\widehat F_{j,R}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\widehat F_{j,L}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]}_{\text{x 이하인 관측의 비율}}\\\widehat F_{j,R}(x)&=\underbrace{\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]}_{\text{x 이상인 관측의 비율}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Indicator가 조건을 만족한 sample만 1로 세고","전체 개수로 나눕니다."] },
-          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Indicator가 조건을 만족한 sample만 1로 세고","전체 개수로 나눕니다."] },
+          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\le x]`, annotation: ["Reference 값 중 x 이하인 행만 1로 셉니다.", "그 합을 n으로 나눈 값이 왼쪽 누적 순위입니다."] },
+          { expression: String.raw`\frac{1}{n}\sum_{r=1}^{n}\mathbf 1[X_{rj}\ge x]`, annotation: ["Reference 값 중 x 이상인 행만 1로 셉니다.", "Tie를 포함해 직접 센 값이 오른쪽 누적 순위입니다."] },
         ]}
         terms={[
           { symbol: "X_{rj}", name: "reference value", description: "Reference row r의 feature j 값입니다." },
@@ -54,8 +83,6 @@ export default function Overview() {
         ]}
         interpretation="Training row 자체를 평가하면 tail probability의 최솟값은 대략 1/n이므로 −log 계산에서 0이 되지 않습니다. 다만 reference population이 바뀌면 같은 raw value의 순위도 함께 바뀝니다."
       />
-
-      <MarginalRankViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Parameter-free라는 말은 score 함수에 한정된다</h3>

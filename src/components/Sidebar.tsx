@@ -42,7 +42,7 @@ export default function Sidebar() {
   return (
     <div
       ref={scrollRef}
-      className="h-[calc(100vh-3.5rem)] overflow-y-auto bg-gradient-to-b from-background to-muted/[0.08]"
+      className="h-[calc(100svh-3.5rem)] overflow-y-auto bg-gradient-to-b from-background to-muted/[0.08]"
     >
       <nav className="px-3 py-4">
         <Link
