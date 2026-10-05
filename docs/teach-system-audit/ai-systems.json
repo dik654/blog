@@ -274,11 +274,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "prose": "전역 799편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -481,11 +480,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "prose": "전역 799편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "retained-after-full-body-review",
       "bodyFiles": [
@@ -565,11 +563,10 @@
         "typescript": "actual npx tsc -b --pretty false exit0",
         "runtimeFixture": "Node 24 actual run accepted/denied/rejected PASS; 승인 누락 trace3·effect false; 행 불일치 effect true",
         "browserInteraction": "4 scenes·keyboard·play/pause·reduced-motion 양폭 통과: /tmp/teach-all/extension-browser-current/summary.json",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-extension-boundaries.json",
       "reviewDate": "2026-10-05",
       "reviewMode": "rewritten-after-full-body-review",
@@ -730,11 +727,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "prose": "전역 799편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "retained-after-full-body-review",
       "bodyFiles": [
@@ -876,11 +872,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "prose": "전역 799편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-and-toc-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1104,11 +1099,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "prose": "전역 799편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
+        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
       },
-      "remaining": [
-        "checkpoint 201 배포·production 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-05",
       "reviewMode": "retained-after-full-body-review",
       "bodyFiles": [
@@ -8112,7 +8106,7 @@
       "fixture": {
         "assumed": true,
         "bounds": [
-          1e-05,
+          0.00001,
           0.1
         ],
         "u": 0.5,
@@ -9663,7 +9657,7 @@
           "roundTrip": true,
           "chars": 6841,
           "edits": 0,
-          "changeRate": 7.309407207078955e-05,
+          "changeRate": 0.00007309407207078955,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -10214,7 +10208,7 @@
     "learningStrict": "/tmp/teach-all/launch23/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
     "formulaStrict": "/tmp/teach-all/launch23/formula-final.log — 전역1460식explicitPASS·본글1식양폭overflow0",
     "typescript": "/tmp/teach-all/launch23/tsc-final.log — actual app tsc세션37500실제exit0; root고정전체build별도",
-    "note": "현재 55편은 actual-body semantic review와 local 검증을 마쳤습니다. 미검토 131편은 완료에 포함하지 않습니다. checkpoint 201 root 고정 snapshot의 전역 strict 검사와 production build가 통과했고 배포를 진행 중입니다.",
+    "note": "현재 55편은 actual-body semantic review와 local·production 검증을 마쳤습니다. 미검토 131편은 완료에 포함하지 않습니다. checkpoint 201은 GitHub Pages run 37307865750으로 배포되어 운영 검증을 통과했습니다.",
     "reviewedRewriteRequired": 0,
     "verifiedRewrites": 55,
     "rewrittenLocalVerified": 55,
@@ -10222,6 +10216,7 @@
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
-    "mobileViewport": "/tmp/teach-all/mobile-viewport-stability-201.json"
+    "mobileViewport": "/tmp/teach-all/mobile-viewport-stability-201.json",
+    "checkpoint201Production": "docs/teach-system-audit/checkpoint-201-production.json"
   }
 }
