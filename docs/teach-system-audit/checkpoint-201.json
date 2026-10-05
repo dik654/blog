@@ -209,7 +209,7 @@
   "reviewed": 201,
   "remaining": 598,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "159 substantive rewrites and 42 retained teaching flows after actual body audit.",
   "validation": {
     "individual": "Actual body/source/math/exact 6+4/full panels/two widths and humanize PASS for 6 additions.",
@@ -227,5 +227,11 @@
     "viz": "Target 6 routes PASS in two-width browser sweep; global audit reports 4,027 advisory SVG text review items.",
     "whitespace": "PASS git diff --check; actual exit 0.",
     "mobileViewport": "Replaced 331 uses of dynamic viewport height across 326 source files with stable small viewport height; representative 6-route repeated-resize browser test kept 12 controlled figures at 754px and anchorDelta 0."
+  },
+  "commit": "ef3e24e8eac1b7e92d2b3a257440f66bc3e542d9",
+  "deployment": {
+    "runId": 37307865750,
+    "conclusion": "success",
+    "production": "6 new routes × 390/1440, 12 checks, 0 failed; mobile viewport representative 6 routes, 12 controlled figures, anchorDelta 0; actual final exit 0"
   }
 }

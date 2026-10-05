@@ -1,0 +1,576 @@
+{
+  "base": "https://dik654.github.io/blog",
+  "finished": "2026-10-05T12:20:57.241Z",
+  "commit": "ef3e24e8eac1b7e92d2b3a257440f66bc3e542d9",
+  "runId": 37307865750,
+  "conclusion": "success",
+  "browser": {
+    "base": "https://dik654.github.io/blog",
+    "routes": 6,
+    "checks": 12,
+    "failed": 0,
+    "results": [
+      {
+        "route": "ai/agent-extension-boundaries",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "predict",
+            "map",
+            "hook",
+            "skill",
+            "guardrail",
+            "verifier",
+            "trace",
+            "code",
+            "failure-matrix",
+            "sources",
+            "limits",
+            "prediction-review"
+          ],
+          "h2Count": 13,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 3
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-extension-boundaries",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "predict",
+            "map",
+            "hook",
+            "skill",
+            "guardrail",
+            "verifier",
+            "trace",
+            "code",
+            "failure-matrix",
+            "sources",
+            "limits",
+            "prediction-review"
+          ],
+          "h2Count": 13,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 3
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-code-mode",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "tool-discovery",
+            "data-reduction",
+            "decision"
+          ],
+          "h2Count": 4,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 3
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-code-mode",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "tool-discovery",
+            "data-reduction",
+            "decision"
+          ],
+          "h2Count": 4,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 3
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-memory-lifecycle",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "memory-types",
+            "lifetimes",
+            "lifecycle",
+            "compaction",
+            "salience-integrity",
+            "resume",
+            "memory-action-evaluation"
+          ],
+          "h2Count": 8,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 6
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-memory-lifecycle",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "memory-types",
+            "lifetimes",
+            "lifecycle",
+            "compaction",
+            "salience-integrity",
+            "resume",
+            "memory-action-evaluation"
+          ],
+          "h2Count": 8,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 6
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-devlog-patterns",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "question-owner",
+            "promotion",
+            "agent-review"
+          ],
+          "h2Count": 4,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 0
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-devlog-patterns",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "question-owner",
+            "promotion",
+            "agent-review"
+          ],
+          "h2Count": 4,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 0
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-frameworks",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "langchain",
+            "comparison"
+          ],
+          "h2Count": 3,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 5
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-frameworks",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "langchain",
+            "comparison"
+          ],
+          "h2Count": 3,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 5
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-sandbox-security",
+        "width": 390,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "namespace",
+            "cgroup",
+            "attack-path",
+            "container-root"
+          ],
+          "h2Count": 5,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 0
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      },
+      {
+        "route": "ai/agent-sandbox-security",
+        "width": 1440,
+        "issues": [],
+        "metrics": {
+          "ids": [
+            "overview",
+            "namespace",
+            "cgroup",
+            "attack-path",
+            "container-root"
+          ],
+          "h2Count": 5,
+          "overflow": false,
+          "katexErrors": 0,
+          "badSvg": 0,
+          "outside": 0,
+          "formulas": 0,
+          "formulaZero": 0,
+          "predictQuestions": 0
+        },
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ok": true
+      }
+    ]
+  },
+  "mobileViewport": {
+    "unit": "100svh",
+    "sourceScanDvh": 0,
+    "routes": 6,
+    "failed": 0,
+    "results": [
+      {
+        "route": "cs/ai/inference-optimization-layers",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 32884,
+          "targetTop": 466.125,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 32884,
+          "targetTop": 466.125,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      },
+      {
+        "route": "finance/banking/bank-balance-sheet-and-deposit-creation",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 31141,
+          "targetTop": 465.90625,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 31141,
+          "targetTop": 465.90625,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      },
+      {
+        "route": "cs/crypto/plonk",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 33297,
+          "targetTop": 465.84375,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 33297,
+          "targetTop": 465.84375,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      },
+      {
+        "route": "cs/gpu/cuda-compilation-and-isa-analysis",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 22744,
+          "targetTop": 465.703125,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 22744,
+          "targetTop": 465.703125,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      },
+      {
+        "route": "economics/labor/wage-floor-natural-experiment",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 30264,
+          "targetTop": 466.375,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 30264,
+          "targetTop": 466.375,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      },
+      {
+        "route": "cs/ai/agent-extension-boundaries",
+        "before": {
+          "supportsSvh": true,
+          "scrollY": 10898,
+          "targetTop": 465.875,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "after": {
+          "supportsSvh": true,
+          "scrollY": 10898,
+          "targetTop": 465.875,
+          "innerHeight": 844,
+          "controlled": [
+            {
+              "height": 754,
+              "overflow": "hidden"
+            },
+            {
+              "height": 754,
+              "overflow": "hidden"
+            }
+          ],
+          "documentOverflow": false
+        },
+        "heightStable": true,
+        "anchorDelta": 0,
+        "errors": [],
+        "ok": true
+      }
+    ],
+    "method": "Mobile Chromium 390×844에서 CSS 100svh 지원과 controlled figure 높이를 읽고 resize·visualViewport resize를 8회 발생시킨 뒤 scrollY·마지막 h2 top·figure 높이를 비교했다. 실제 브라우저 주소창 UI 자체는 headless 환경에서 열고 닫지 못하므로 standards-defined svh 적용과 viewport resize 불변성을 검증했다."
+  }
+}
