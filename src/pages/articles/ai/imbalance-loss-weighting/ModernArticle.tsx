@@ -13,16 +13,29 @@ export default function ImbalanceLossWeightingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <strong>Class-weighted risk</strong>는 target class에 따라 고정
-            coefficient를 곱합니다. <strong>Focal modulation</strong>은 현재
-            model이 그 example을 얼마나 쉽게 맞히는지에 따라 coefficient를
-            바꿉니다.
+            같은 batch에 positive loss 1과 여러 negative가 있습니다. Positive
+            class weight를 <strong>9</strong>로 두면 그 한 행의 contribution은
+            1×9=<strong>9</strong>가 됩니다. Row를 아홉 번 복제한 것은 아니며,
+            같은 loss의 배점만 바뀝니다.
           </p>
           <p>
-            둘은 minority 비율을 50:50으로 바꾸지 않습니다. 같은 training rows의
-            loss contribution을 재배분합니다.
+            Focal factor는 class 대신 현재 난이도를 봅니다. γ=2일 때 target
+            probability가 0.9인 easy example은 (1−0.9)²=<strong>0.01</strong>,
+            0.2인 hard example은 (1−0.2)²=<strong>0.64</strong>를 받습니다.
+          </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Positive weight 9를 주면 training row 수 자체가 아홉 배가 될까요?</li>
+            <li>Raw loss 1인 positive의 weighted contribution은 9가 될까요?</li>
+            <li>Focal factor 0.64는 그 hard example의 label이 깨끗하다는 뜻일까요?</li>
+          </ol>
+          <p>
+            답은 차례로 <strong>아니요, 예, 아니요</strong>입니다. Weight는
+            contribution을 바꾸고, focal은 hard label과 label noise를 구별하지 못합니다.
           </p>
         </div>
+        <LossSignalViz />
+        <ContentBoundary article="imbalance-loss-weighting" />
         <TermBreakdown
           title="Loss signal을 이루는 네 항"
           items={[
@@ -58,8 +71,6 @@ export default function ImbalanceLossWeightingArticle() {
             },
           ]}
         />
-        <LossSignalViz />
-        <ContentBoundary article="imbalance-loss-weighting" />
       </section>
       <section id="class-weight" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

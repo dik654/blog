@@ -4075,14 +4075,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 문서",
       label: "vLLM — Hybrid KV Cache Manager",
-      href: "https://github.com/vllm-project/vllm/blob/main/docs/design/hybrid_kv_cache_manager.md",
-      note: "kv hidden size·page size 정의와 full·sliding-window layer별 block 할당 설계",
+      href: "https://docs.vllm.ai/en/latest/design/hybrid_kv_cache_manager/",
+      note: "2026-10-06 확인. commit 458e74 기준의 early-stage 문서이며 kv hidden size·page size와 full·sliding-window layer별 block 할당을 설명함",
     },
     {
       kind: "공식 코드",
       label: "vLLM — KV cache interface",
-      href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/kv_cache_interface.py",
-      note: "hybrid allocator 비활성 시 sliding-window layer를 full-attention allocation으로 다루는 구현 경로",
+      href: "https://docs.vllm.ai/en/latest/api/vllm/v1/kv_cache_interface/",
+      note: "2026-10-06 확인. hybrid allocator 비활성 시 sliding-window layer를 FullAttentionSpec으로 다루는 현재 API source 경로",
     },
   ],
   "ai/llm-serving-capacity": [
@@ -8801,6 +8801,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/graphrag-community-and-multihop-search": [
     { kind: "핵심 논문", label: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., arXiv 2404.16130)", href: "https://arxiv.org/abs/2404.16130", note: "Leiden community detection·계층 summary, local/global search 구분, global search map-reduce 절차, community level 별 성능·token 비율의 근거. 수치는 저자 자기보고" },
+    { kind: "공식 문서", label: "Microsoft GraphRAG — DRIFT Search", href: "https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md", note: "2026-10-06 확인. 관련 community report로 primer를 만들고 후속 질문을 local search로 확장한 뒤 결과를 합치는 절차와 필수 데이터 경계" },
+    { kind: "공식 문서", label: "Microsoft GraphRAG — CLI query methods", href: "https://microsoft.github.io/graphrag/cli/", note: "2026-10-06 확인. 현재 query method가 local·global·drift·basic으로 구분되는 CLI 계약" },
   ],
   "ai/vision-language-model-architecture": [
     { kind: "핵심 논문", label: "Liu et al. · Visual Instruction Tuning / LLaVA (NeurIPS 2023)", href: "https://arxiv.org/abs/2304.08485", note: "Linear/MLP projector와 concat-projection 결합 방식의 근거" },

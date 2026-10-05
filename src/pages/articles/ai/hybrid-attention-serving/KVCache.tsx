@@ -55,10 +55,11 @@ export default function KVCache() {
           비교를 위한 첫 근사는 <code>Σ layer_cache_length</code>입니다. Muse는{" "}
           <code>39×min(T, 2048)+13×T</code>, Gemma는{" "}
           <code>50×min(T, 1024)+10×T</code>가 됩니다. 이 값은 byte가 아니라 “몇
-          layer가 몇 token을 보존하는가”만 나타내는 topology proxy입니다. 실제
-          byte는 각 layer의 보존 길이와 KV shape를 함께 곱해 합산해야 하며,
-          Gemma처럼 local·global shape가 다르면 하나의 평균값으로 뭉치면 안
-          됩니다.
+          layer가 몇 token을 보존하는가”만 나타내는 topology proxy입니다.
+        </p>
+        <p>
+          실제 byte는 각 layer의 보존 길이와 KV shape를 함께 곱해 합산합니다.
+          Gemma처럼 local·global shape가 다르면 하나의 평균값으로 뭉치면 안 됩니다.
         </p>
       </div>
       <TermBreakdown
@@ -140,24 +141,34 @@ r_l(T) &= T && [\mathrm{L_F}]
         <p>
           Model config에 <code>sliding_window</code>가 있다고 해서 모든 engine이
           자동으로 local KV를 회수하는 것은 아닙니다. vLLM의{" "}
-          <a href="https://github.com/vllm-project/vllm/blob/main/docs/design/hybrid_kv_cache_manager.md">
+          <a href="https://docs.vllm.ai/en/latest/design/hybrid_kv_cache_manager/">
             Hybrid KV Cache Manager 설계 문서
           </a>
           는 full layer에는 모든 token의 block을, sliding layer에는 최근
-          window에 필요한 block만 배정한다고 설명합니다. 다만 서로 다른 layer
-          type을 같은 physical page size로 묶기 위해 group과 padding을
-          사용하므로, config 식과 allocator byte가 정확히 같지는 않을 수
-          있습니다. Hybrid allocator가 비활성화되거나 해당 architecture가
-          full-attention cache spec으로 합쳐지는 경로에서는 model runner가 local
-          attention을 계산하더라도 allocator는 모든 token의 block을 잡습니다.
+          window에 필요한 block만 배정한다고 설명합니다.
+        </p>
+        <p>
+          2026년 10월 6일 확인한 이 문서는 commit 458e74를 기준으로 작성됐고,
+          기능이 아직 바뀔 수 있다고 명시합니다. 따라서 아래 계산은 고정된
+          runtime build의 cache spec과 함께 검증해야 합니다.
+        </p>
+        <p>
+          서로 다른 layer type을 같은 physical page size로 묶으려면 group과
+          padding이 필요합니다. 그래서 config 식과 allocator byte는 다를 수 있습니다.
+          Hybrid allocator가 비활성화되거나 full-attention cache spec으로 합쳐지면,
+          local attention을 계산해도 allocator는 모든 token의 block을 잡습니다.
+          현재 <a href="https://docs.vllm.ai/en/latest/api/vllm/v1/kv_cache_interface/">공식 API source</a>의
+          <code>FullAttentionSpec</code> 설명도 이 fallback 경계를 명시합니다.
         </p>
         <p>
           이번 Gemma 실측에서는 local window 1,024가 capacity를 눈에 띄게
           끌어올리지 못했습니다. 가장 보수적인 해석은 이 실행 경로에서 sliding
-          layer가 dense/full 방식으로 할당됐다는 것입니다. 이는 config만 보고
-          확정할 사실이 아니라 runtime log의 hybrid-manager 경고, 생성된 KV
-          cache spec, context 길이에 따른 allocated block 기울기로 확인해야
-          합니다. Paged KV cache의 block 관리 자체는{" "}
+          layer가 dense/full 방식으로 할당됐다는 것입니다.
+        </p>
+        <p>
+          이 상태는 config만 보고 확정할 수 없습니다. Runtime log의
+          hybrid-manager 경고, 생성된 KV cache spec, context 길이에 따른 allocated
+          block 기울기로 확인해야 합니다. Paged KV cache의 block 관리 자체는{" "}
           <a href="/cs/ai/vllm-paged-attention">PagedAttention·KV cache 글</a>에서
           이어서 설명합니다.
         </p>
@@ -174,18 +185,19 @@ r_l(T) &= T && [\mathrm{L_F}]
           <p><strong>일반화 금지:</strong> 임의 hybrid model의 local block 회수가 자동 지원된다는 뜻은 아닙니다.</p>
         </CitationBlock>
         <h3 id="paper-pagedattention" className="scroll-mt-20">
-          PagedAttention의 핵심 아이디어: 연속 공간 예약을 logical block table로
-          바꾼다
+          PagedAttention은 연속 예약을 block table로 바꿉니다
         </h3>
         <p>
           <a href="https://arxiv.org/abs/2309.06180">PagedAttention 논문</a>은
           요청마다 최대 길이만큼 연속 KV memory를 미리 잡는 대신, token이 늘 때
           fixed-size physical block을 배정하고 logical block table로
-          연결했습니다. 이 방식은 내부·외부 fragmentation을 줄이고 한 prefix의
-          physical block을 여러 sequence가 공유할 수 있게 합니다. 다만
-          PagedAttention이 local layer의 보존 정책을 자동으로 알아내는 것은
-          아닙니다. 어떤 layer가 어느 token의 block을 계속 소유해야 하는지는
-          위의 hybrid cache spec과 allocator가 별도로 결정합니다.
+          연결했습니다.
+        </p>
+        <p>
+          이 방식은 fragmentation을 줄이고 한 prefix의 physical block을 여러
+          sequence가 공유하게 합니다. PagedAttention 자체가 local layer의 보존
+          정책을 알아내지는 않습니다. 어떤 layer가 어느 block을 계속 소유할지는
+          hybrid cache spec과 allocator가 별도로 정합니다.
         </p>
       </div>
     </section>

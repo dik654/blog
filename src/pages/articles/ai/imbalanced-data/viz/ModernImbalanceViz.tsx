@@ -278,7 +278,7 @@ export function ResamplingGeometryViz() {
   const notes = [
     "Validation·test의 row와 prevalence를 먼저 봉인해 neighbor search에서 제외합니다.",
     "Oversampling은 train minority의 노출을 늘리고 undersampling은 train majority 일부를 버립니다.",
-    "SMOTE는 같은 class train point의 방향 벡터에 λ를 곱해 선분 안의 synthetic point를 만듭니다.",
+    "xᵢ=(2,4), xⱼ=(6,8)에서 λ=.25를 쓰면 (2,4)+.25×(4,4)=(3,5)가 됩니다.",
     "Category·sparse·time feature에서는 선분 중간이 실제 가능한 record인지 constraint로 확인해야 합니다.",
   ] as const;
   return (
@@ -367,20 +367,20 @@ export function ResamplingGeometryViz() {
               strokeDasharray="4 4"
             />
             <circle
-              cx="82"
-              cy="104"
+              cx="72"
+              cy="91"
               r="7"
               fill="var(--background)"
               stroke={accent}
               strokeWidth="1.25"
             />
             <text
-              x="82"
-              y="126"
+              x="72"
+              y="116"
               textAnchor="middle"
               className="fill-primary text-[8px] font-bold"
             >
-              λ=.5
+              λ=.25 · (3,5)
             </text>
           </motion.g>
           <motion.g animate={{ opacity: active === 3 ? 1 : 0.05 }}>
@@ -409,10 +409,10 @@ export function LossSignalViz() {
     "Hard noise를 별도 audit",
   ] as const;
   const notes = [
-    "평균 loss에서는 많은 majority example의 gradient 합이 training direction을 지배할 수 있습니다.",
-    "Class weight는 target class만 보고 같은 coefficient를 곱해 minority의 평균 기여를 키웁니다.",
-    "Focal loss는 target probability가 높은 easy example의 weight를 줄이고 hard example을 남깁니다.",
-    "틀린 label도 hard example로 보이므로 focal 후보는 audited error slice와 calibration을 함께 봅니다.",
+    "네 example의 raw contribution을 먼저 1로 놓고 어떤 규칙이 배점을 바꾸는지 비교합니다.",
+    "Positive와 noisy-positive는 target class만 보고 weight 9를 받습니다. Row 수는 그대로입니다.",
+    "γ=2이면 pₜ=.9는 .01, pₜ=.2는 .64를 받아 easy example의 contribution이 더 크게 줄어듭니다.",
+    "pₜ=.08인 틀린 label도 hard example로 보이므로 audited error slice와 calibration을 함께 봅니다.",
   ] as const;
   return (
     <Scene
@@ -440,7 +440,7 @@ export function LossSignalViz() {
                 ? 1
                 : active === 1
                   ? i >= 2
-                    ? 5
+                    ? 9
                     : 1
                   : active >= 2
                     ? Math.pow(1 - Number(p), 2)

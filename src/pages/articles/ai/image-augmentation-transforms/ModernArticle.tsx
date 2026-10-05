@@ -6,12 +6,42 @@ import { ImageTransformViz } from "../data-augmentation/viz/ModernAugmentationVi
 
 export default function ImageAugmentationTransformsArticle() {
   return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Image augmentation에는 위치를 바꾸는 변환과 값을 바꾸는 변환이 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">Rotation, crop, translation은 <strong>어디에 있는가</strong>를 바꿉니다. 이때 image와 annotation이 같은 좌표 변환을 공유해야 합니다.</p><p>Brightness, contrast, hue, noise는 같은 pixel 위치의 <strong>값이 어떻게 보이는가</strong>를 바꿉니다. 두 family는 target 갱신 방식과 실패 조건이 다릅니다.</p></div><TermBreakdown title="Image transform의 네 계약" items={[
+    <section id="overview" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">오른쪽으로 20px 옮긴 box는 절반만 남습니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          100×80 image에 box <strong>(60,20)–(100,60)</strong>이 있습니다. Image를
+          오른쪽으로 20px 옮기면 box도 <strong>(80,20)–(120,60)</strong>으로
+          옮겨야 합니다. Canvas와 겹치는 폭은 20px이므로 visible ratio는
+          20×40÷(40×40)=<strong>0.5</strong>입니다.
+        </p>
+        <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Image만 옮기고 box 좌표를 그대로 두어도 될까요?</li>
+          <li>회전까지 포함한 변환에서 원래 box의 대각선 두 점만 옮기면 충분할까요?</li>
+          <li>Keep threshold가 0.6이면 visible ratio 0.5인 box를 유지할까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. Image와 annotation은 같은
+          좌표 변환을 공유하고, 네 corner를 옮긴 뒤 clip한 면적으로 판정합니다.
+        </p>
+      </div>
+      <ImageTransformViz/>
+      <ContentBoundary article="image-augmentation-transforms"/>
+      <TermBreakdown title="Image transform의 네 계약" items={[
       {term:"Affine annotation transform",description:"Image point에 적용한 matrix와 translation을 box corner·mask·keypoint에도 똑같이 적용합니다.",example:"오른쪽 12px 이동이면 모든 x coordinate에도 +12."},
       {term:"Visibility rule",description:"Transform·crop·clip 뒤 남은 annotation 면적으로 keep·drop·ignore를 판정합니다.",boundary:"원래 object가 있었다는 이유만으로 거의 보이지 않는 box를 유지하지 않습니다."},
       {term:"Photometric augmentation",description:"Camera·조명 변화로 생길 pixel-value 변동 범위를 sampling합니다.",boundary:"색 자체가 label signal이면 hue change를 invariance로 둘 수 없습니다."},
       {term:"Normalization",description:"Random sample 생성이 아니라 model이 기대하는 고정 channel 좌표로 바꾸는 preprocessing입니다."},
-    ]}/><ImageTransformViz/><ContentBoundary article="image-augmentation-transforms"/></section>
+      ]}/>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>
+          Rotation·crop·translation은 <strong>어디에 있는가</strong>를 바꾸므로
+          annotation도 함께 옮깁니다. Brightness·contrast·hue·noise는 같은 pixel
+          위치의 값을 바꾸므로 label signal을 지우지 않는 범위를 따로 정합니다.
+        </p>
+      </div>
+    </section>
 
     <section id="visibility" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Box는 두 점이 아니라 네 corner를 옮기고 visibility를 다시 계산합니다</h2><ExplainedFormula question="Affine transform과 crop 뒤 annotation을 유지할지 어떻게 계산하나요?" idea={<p>네 corner에 같은 map을 적용해 새 box를 만들고 canvas와 교차시킨 뒤, 변환된 box 중 보이는 면적 비율을 계산합니다.</p>} formula={String.raw`p_j'=Ap_j+t,\quad B'=\operatorname{bbox}(\{p_j'\}_{j=1}^4),\quad r_{\rm vis}=\operatorname{area}(B'\cap C)/\operatorname{area}(B')`} annotatedFormula={String.raw`\begin{aligned}q_j&=\underbrace{Ap_j}_{\text{회전·scale·shear}}\\p_j'&=\underbrace{q_j+t}_{\text{crop·translation 추가}}\\B'&=\underbrace{\operatorname{bbox}(\{p_j'\}_{j=1}^{4})}_{\text{네 corner의 min·max}}\\B_{\rm clip}&=\underbrace{B'\cap C}_{\text{canvas 안으로 clip}}\\a_{\rm visible}&=\underbrace{\operatorname{area}(B_{\rm clip})}_{\text{보이는 면적}}\\a_{\rm object}&=\underbrace{\operatorname{area}(B')}_{\text{변환 뒤 전체 면적}}\\r_{\rm vis}&=\underbrace{a_{\rm visible}/a_{\rm object}}_{\text{visible ratio}}\end{aligned}`} operations={[
       {expression:String.raw`Ap_j+t`,annotation:["corner를 같은 coordinate map으로 옮겨","image와 annotation을 동기화"]},
