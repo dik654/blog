@@ -120,7 +120,7 @@ export default function LlmApplicationCachingViz() {
         role="group"
         aria-label="요청이 cache key를 만들고 exact-match, semantic, retrieval 계층을 순서대로 조회하다가 hit한 계층에서 멈추고 나머지는 건너뛰는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

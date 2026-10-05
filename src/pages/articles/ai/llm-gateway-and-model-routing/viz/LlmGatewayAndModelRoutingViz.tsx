@@ -113,7 +113,7 @@ export default function LlmGatewayAndModelRoutingViz() {
         role="group"
         aria-label="요청이 저비용 model부터 시도해 확신도가 낮으면 상위 model로 escalate하고, 상위 model이 실행에 실패하면 provider fallback으로 전환해 최종 응답을 받는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

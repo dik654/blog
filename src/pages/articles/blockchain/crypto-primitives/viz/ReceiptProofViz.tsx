@@ -13,7 +13,7 @@ export default function ReceiptProofViz() {
   const scene = scenes[controls.active];
   return <figure data-viz="receipt-proof" className="my-8 border-y border-border py-4">
     <figcaption className="mb-3 text-sm leading-6">네 기록 A40·B70·C20·D90 가운데 C만 받았을 때의 검증입니다. 그림의 해시는 앞부분만 표시합니다.</figcaption>
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="영수증 검증의 네 장면" onKeyDown={controls.onKeyDown} className="flex h-[min(530px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="영수증 검증의 네 장면" onKeyDown={controls.onKeyDown} className="flex h-[min(530px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
         <h3 className="text-lg font-semibold">{scene.title}</h3>
         <div className="my-5 space-y-4">

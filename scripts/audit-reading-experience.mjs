@@ -41,6 +41,18 @@ const cloudArticle = fs.readFileSync(
   "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
   "utf8",
 );
+const viewportSensitiveFiles = [];
+const collectViewportSensitiveFiles = (directory) => {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const path = `${directory}/${entry.name}`;
+    if (entry.isDirectory()) collectViewportSensitiveFiles(path);
+    else if (/\.(?:css|ts|tsx)$/.test(entry.name)) {
+      const source = fs.readFileSync(path, "utf8");
+      if (source.includes("100dvh")) viewportSensitiveFiles.push(path);
+    }
+  }
+};
+collectViewportSensitiveFiles("src");
 
 const primerIndex = articlePage.indexOf("<ArticleLessonPrimer");
 const onboardingIndex = articlePage.indexOf("<ArticleOnboarding");
@@ -119,9 +131,10 @@ const contract = {
   viewportCappedVizFrame:
     globalStyles.includes('figure[data-viz="modern"]:has([data-viz-controls])') &&
     globalStyles.includes('figure[data-viz="lesson-flow-v4"]') &&
-    globalStyles.includes("calc(100dvh - 5rem)") &&
+    globalStyles.includes("calc(100svh - 5rem)") &&
     globalStyles.includes("scroll-margin-top: 4rem") &&
     globalStyles.includes("overscroll-behavior: contain"),
+  stableMobileViewportUnits: viewportSensitiveFiles.length === 0,
   keyboardCutNavigation:
     lessonViz.includes("data-viz-keyboard") &&
     lessonViz.includes('event.key === "ArrowRight"') &&

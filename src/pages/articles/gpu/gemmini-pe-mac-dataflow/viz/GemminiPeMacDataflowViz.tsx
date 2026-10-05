@@ -525,7 +525,7 @@ export default function GemminiPeMacDataflowViz() {
         role="group"
         aria-label="PE 한 칸: MacUnit 을 이중 레지스터로 감싸 데이터플로우를 전환합니다"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(36rem,calc(100dvh-15rem))] min-h-[28rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(36rem,calc(100svh-15rem))] min-h-[28rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

@@ -95,7 +95,7 @@ function PatternViz({ id, eyebrow, title, description, nodes, edgeLabels, sceneN
           })}
         </div>
 
-        <div className="mt-5 grid gap-2 border-l border-primary/60 pl-4 sm:grid-cols-[7rem_minmax(0,1fr)] sm:items-start">
+        <div className="mt-5 grid min-h-[10rem] gap-2 border-l border-primary/60 pl-4 sm:min-h-[8rem] sm:grid-cols-[7rem_minmax(0,1fr)] sm:items-start">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-primary">CUT 0{controls.active + 1}</p>
           <div>
             <p className="text-sm font-bold">{activeNode.label}</p>

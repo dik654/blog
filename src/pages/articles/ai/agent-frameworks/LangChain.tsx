@@ -11,7 +11,7 @@ export default function LangChain() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          2026년 8월 공식 문서의 현재 계층에서 LangChain은 model·tool integration과 일반적인
+          2026년 10월 공식 문서의 현재 계층에서 LangChain은 model·tool integration과 일반적인
           agent loop를 제공하는 상위 framework입니다. 현재 <code>create_agent</code>는
           LangGraph runtime 위에서 동작합니다.
         </p>

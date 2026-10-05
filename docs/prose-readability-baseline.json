@@ -1138,7 +1138,7 @@
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "ai/hyper-connections-residual-streams": {
-      "fingerprint": "0d2705f91d6012d8",
+      "fingerprint": "1a4924d540c89a84",
       "score": 6
     },
     "ai/image-augmentation-transforms": {
@@ -1162,11 +1162,11 @@
       "score": 6
     },
     "ai/tensor-and-pipeline-parallel-inference": {
-      "fingerprint": "fae96cff1fbd0d82",
+      "fingerprint": "d7584ef4e2699f7c",
       "score": 6
     },
     "ai/visual-representation-tokenizers": {
-      "fingerprint": "548f0694e9cdd43d",
+      "fingerprint": "43e61367c344f5ba",
       "score": 6
     },
     "blockchain/evm-advanced": {
@@ -1250,7 +1250,7 @@
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/warp-stall-reasons-and-issue-utilization": {
-      "fingerprint": "d6960be8cece4572",
+      "fingerprint": "007358e7b7d60e24",
       "score": 6,
       "reviewedAt": "2026-10-04",
       "reviewNote": "모바일 조작부가 그림을 가리지 않도록 버튼만 W0 선택 등 짧은 단계명으로 줄였습니다. 긴 장면 제목과 본문·수치 설명은 그대로 유지되어 기존 문장 검수 결정을 유지합니다."

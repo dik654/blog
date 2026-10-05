@@ -12,7 +12,7 @@ export default function LiquidityBranchViz() {
   const s=states[scene.active];
   return <figure data-viz="liquidity-branches" className="my-8 border-y border-border py-4">
     <figcaption className="mb-3 text-sm leading-6">같은 은행, 같은 지급 요구 20억 원. 뒤의 두 장면은 서로 다른 선택이며 연속 거래가 아닙니다.</figcaption>
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="급매와 담보 차입의 장부 비교" onKeyDown={scene.onKeyDown} className="flex h-[min(530px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="급매와 담보 차입의 장부 비교" onKeyDown={scene.onKeyDown} className="flex h-[min(530px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
         <dl className="space-y-3">{s.values.map((value,i)=><div key={names[i]} className="grid grid-cols-[7rem_1fr_2rem] items-center gap-2 text-xs"><dt>{names[i]}</dt><dd className="h-5 border border-border" aria-hidden="true"><div className="h-full bg-primary/30" style={{width:`${value}%`}}/></dd><dd className="text-right font-mono">{value}</dd></div>)}</dl>
         <p className="mt-5 font-mono text-sm">{s.values[0]} + {s.values[1]} = {s.values[2]} + {s.values[3]} + {s.values[4]}</p>

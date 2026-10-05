@@ -14,7 +14,7 @@ export default function DepositJourneyViz() {
   const s = states[scene.active];
   return <figure data-viz="deposit-journey" className="my-8 border-y border-border py-4">
     <figcaption className="mb-3 text-sm leading-6">단위는 모두 억 원입니다. B은행은 기존 장부를 생략하고 이 거래로 달라진 두 칸만 보입니다.</figcaption>
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="빌리고 보내고 갚는 네 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(600px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="빌리고 보내고 갚는 네 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(600px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
         <h3 className="mb-3 font-semibold">A은행 · 같은 네 칸</h3>
         <dl className="grid grid-cols-2 gap-x-3 gap-y-4">{s.a.map((value,i)=><div key={names[i]} className="border-b border-border pb-2"><dt className="text-xs leading-5">{names[i]}</dt><dd className="mt-1 text-2xl font-semibold tabular-nums">{value}</dd></div>)}</dl>

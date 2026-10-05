@@ -7,7 +7,7 @@ export default function VisualRepresentationMap() {
       title="같은 image를 줄여도 reconstruction latent와 semantic feature는 다른 정보를 보존합니다"
       description="어떤 loss로 압축했는지가 무엇을 남길지를 정합니다. 생성 decoder는 pixel 복원을 요구하고, semantic encoder는 의미가 같은 view를 가까이 두는 데 초점을 맞춥니다."
       note="Semantic feature가 항상 3D geometry나 action에 충분한 것은 아닙니다. 반대로 reconstruction latent가 pixel을 잘 복원해도 object identity나 affordance가 선형적으로 잘 분리된다는 보장은 없습니다."
-      canvasClassName="max-h-[min(26rem,calc(100dvh-22rem))] overflow-y-auto"
+      canvasClassName="max-h-[min(26rem,calc(100svh-22rem))] overflow-y-auto"
     >
       <div data-viz-canvas className="grid min-w-0 gap-5 lg:grid-cols-[0.72fr_1fr_1fr] lg:items-stretch">
         <div className="flex min-h-36 items-center justify-center rounded-lg border border-border bg-background p-5 text-center">

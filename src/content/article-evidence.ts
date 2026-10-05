@@ -3220,21 +3220,21 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "핵심 논문",
       label: "MemGPT: Towards LLMs as Operating Systems",
       href: "https://arxiv.org/abs/2310.08560",
-      note: "제한된 context와 외부 storage 사이의 virtual context management",
+      note: "2026-10-05 원문 확인. 제한된 context와 외부 storage 사이의 virtual context management",
     },
     {
       kind: "공식 문서",
       label: "Anthropic — Managing context on the Claude Developer Platform",
       href: "https://claude.com/blog/context-management",
-      note: "Context editing과 file-based memory tool의 제품 경계·내부 평가 조건",
+      note: "2026-10-05 원문 확인. Context editing과 client-side file memory tool의 제품 경계·내부 평가 조건",
     },
-    { kind: "핵심 논문", label: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", note: "Memory stream·recency·importance·relevance 가중합 salience scoring과 reflection" },
-    { kind: "핵심 논문", label: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", note: "Working·episodic·semantic·procedural memory 구분을 language agent에 대응" },
+    { kind: "핵심 논문", label: "Generative Agents: Interactive Simulacra of Human Behavior", href: "https://arxiv.org/abs/2304.03442", note: "2026-10-05 원문 확인. Memory stream·recency·importance·relevance 가중합 salience scoring과 reflection" },
+    { kind: "핵심 논문", label: "Cognitive Architectures for Language Agents", href: "https://arxiv.org/abs/2309.02427", note: "2026-10-05 원문 확인. Working·episodic·semantic·procedural memory 구분을 language agent에 대응" },
     {
       "kind": "평가 논문",
       "label": "MemoryArena · arXiv 2602.16313",
       "href": "https://arxiv.org/abs/2602.16313",
-      "note": "memory-action-evaluation 절에서 기억 회상 90/100과 후속 과제 성공 8/20을 구분합니다. 숫자는 가정이며 논문 benchmark 결과가 아닙니다."
+      "note": "2026-10-05 원문 확인. memory-action-evaluation 절에서 기억 회상 90/100과 후속 과제 성공 8/20을 구분합니다. 숫자는 가정이며 논문 benchmark 결과가 아닙니다."
     },
 ],
   "ai/context-window-optimization": [
@@ -3353,10 +3353,22 @@ export const ARTICLE_EVIDENCE: Readonly<
 ],
   "ai/agent-extension-boundaries": [
     {
+      kind: "공식 문서",
+      label: "Anthropic — Agent Skills",
+      href: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+      note: "2026-10-05 확인. Metadata·instructions·resources의 progressive disclosure와 신뢰하지 않은 Skill의 보안 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "OpenAI Agents SDK — Guardrails",
+      href: "https://openai.github.io/openai-agents-python/guardrails/",
+      note: "2026-10-05 확인. Input·output·tool guardrail의 실제 workflow 위치와 parallel·blocking 실행 차이",
+    },
+    {
       kind: "공식 가이드",
       label: "Anthropic — Demystifying evals for AI agents",
       href: "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
-      note: "Agent trajectory와 code/model/human grader를 결합하는 평가 경계",
+      note: "2026-10-05 확인. Agent transcript와 environment outcome, code/model/human grader를 결합하는 평가 경계",
     },
   ],
   "ai/agent-frameworks": [
@@ -3370,37 +3382,37 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "LangGraph overview",
       href: "https://docs.langchain.com/oss/python/langgraph/overview",
-      note: "durable execution·human-in-the-loop·persistence를 제공하는 현재 runtime",
+      note: "2026-10-05 원문 확인. durable execution·human-in-the-loop·persistence를 제공하는 현재 runtime",
     },
     {
       kind: "공식 문서",
       label: "LangGraph — Persistence",
       href: "https://docs.langchain.com/oss/python/langgraph/persistence",
-      note: "thread별 graph-state checkpoint와 cross-thread application store의 현재 구분",
+      note: "2026-10-05 원문 확인. thread별 graph-state checkpoint와 cross-thread application store의 현재 구분",
     },
     {
       kind: "공식 문서",
       label: "LlamaIndex — Agents",
       href: "https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/",
-      note: "data·tool·memory를 연결하는 현재 agent workflow",
+      note: "2026-10-05 원문 확인. data·tool·memory를 연결하는 현재 agent workflow",
     },
     {
       kind: "공식 문서",
       label: "AutoGen — AgentChat",
       href: "https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/index.html",
-      note: "AgentChat·teams·termination·state의 현재 API 출발점",
+      note: "2026-10-05 원문 확인. AgentChat·teams와 event-driven Core runtime의 현재 계층",
     },
     {
       kind: "공식 문서",
       label: "CrewAI — Crews",
       href: "https://docs.crewai.com/en/concepts/crews",
-      note: "role-based Crew와 task orchestration의 현재 개념",
+      note: "2026-10-05 v1.15.23 원문 확인. role-based Crew와 task orchestration의 현재 개념",
     },
     {
       kind: "공식 문서",
       label: "CrewAI — Flows",
       href: "https://docs.crewai.com/en/concepts/flows",
-      note: "event-driven state·routing·@persist 기반 resume/fork를 제공하는 현재 Flow runtime",
+      note: "2026-10-05 v1.15.23 원문 확인. event-driven state·routing·@persist 기반 resume/fork를 제공하는 현재 Flow runtime",
     },
   ],
   "ai/multi-agent-implementation": [
@@ -3795,7 +3807,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 규격",
       label: "W3C PROV Overview",
       href: "https://www.w3.org/TR/prov-overview/",
-      note: "Entity·activity·agent와 생성·사용·귀속 관계로 evidence provenance를 표현하는 표준 모델",
+      note: "2026-10-05 원문 확인. Entity·activity·agent와 생성·사용·귀속 관계로 evidence provenance를 표현하는 표준 모델",
     },
     {
       kind: "프로젝트 실측",
@@ -4603,15 +4615,15 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Anthropic — Code execution with MCP",
       href: "https://www.anthropic.com/engineering/code-execution-with-mcp",
-      note: "중간 tool 결과를 sandbox 안에서 처리하는 패턴",
+      note: "2026-10-05 원문 확인. 선택적 tool loading과 중간 결과의 sandbox-local 처리를 설명하는 패턴",
     },
     {
       kind: "공식 문서",
       label: "Cloudflare — Code Mode for MCP",
       href: "https://blog.cloudflare.com/code-mode-mcp/",
-      note: "MCP binding과 sandbox program 실행",
+      note: "2026-10-05 원문 확인. MCP binding과 sandbox program 실행",
     },
-    { kind: "핵심 논문", label: "CodeAct: Executable Code Actions Elicit Better LLM Agents", href: "https://arxiv.org/abs/2402.01030", note: "여러 tool 호출을 하나의 실행 가능한 program으로 합성하는 code-as-action 제안" },
+    { kind: "핵심 논문", label: "CodeAct: Executable Code Actions Elicit Better LLM Agents", href: "https://arxiv.org/abs/2402.01030", note: "2026-10-05 원문 확인. 여러 tool 호출을 하나의 실행 가능한 program으로 합성하는 code-as-action 제안" },
 ],
   "ai/code-mode-runtime-contracts": [
     {

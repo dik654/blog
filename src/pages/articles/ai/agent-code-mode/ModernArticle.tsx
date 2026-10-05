@@ -11,12 +11,29 @@ export default function AgentCodeModeArticle() {
       <section className="space-y-6">
         <LessonHeader
           number="00"
-          eyebrow="먼저 왕복 한 번"
-          title="Code Mode는 코딩 에이전트의 별명이 아니라 tool workflow를 program으로 표현하는 실행 패턴이다"
+          eyebrow="같은 집계, 다른 경로"
+          title="10만 건의 issue를 팀별로 세는 두 실행 경로부터 비교한다"
         >
-          Tool result마다 model로 돌아오는 경로와, model이 program을 한 번 만든
-          뒤 runtime이 반복하는 경로를 먼저 나눕니다.
+          이름을 외우기 전에 같은 결과를 만드는 두 경로에서 무엇이 model
+          경계를 건너는지 추적합니다.
         </LessonHeader>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            지원팀장이 미처리 issue 10만 건을 받아 담당 팀별 개수 20개만 보고 싶다고 합시다. 첫 번째 경로에서는 model이 목록을 받고,
+            filter tool을 고르고, 결과를 다시 받은 뒤 group tool을 고릅니다. 두 번째 경로에서는 model이 filter와 group을 담은 짧은
+            TypeScript program을 한 번 만들고 runtime이 원본 rows를 안에서 처리합니다.
+          </p>
+          <p>뒤의 설명을 읽기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>원본 10만 행은 두 경로에서 각각 어디까지 이동할까요?</li>
+            <li>사용할 tool이 100개 중 3개라면 schema 100개를 모두 model에 보여 줘야 할까요?</li>
+            <li>두 번째 경로가 token을 줄인다면 실행 권한과 program 정확성도 자동으로 해결될까요?</li>
+          </ol>
+          <p>
+            첫째 경로에서는 원본이 model context를 오가지만 둘째 경로에서는 runtime 안에 머뭅니다. 필요한 signature만 나중에 펼칠 수
+            있으며, 비용 절감과 안전성은 따로 판정해야 합니다. 이제 이 차이에 이름을 붙이고 수치로 확인합니다.
+          </p>
+        </div>
         <TermLesson
           name="Agent tool-call round trip"
           oneLine="Model이 다음 tool과 인자를 만들고, 실행 결과를 context로 받아 다음 판단을 하는 inference→execution→observation 한 바퀴입니다."

@@ -1,6 +1,6 @@
 {
   "scope": 186,
-  "date": "2026-10-04",
+  "date": "2026-10-05",
   "screeningIsNotReview": true,
   "articles": [
     {
@@ -50,17 +50,17 @@
         "defaultStartupTrials": 10
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-history",
         "2": "why-state",
         "3": "search-terms",
-        "4-history": "proposal-loop",
         "4": "tpe",
         "5": "paper-tpe",
         "6": "paper-optuna",
         "7": "parallel-boundary",
+        "S": "overview",
+        "B": "black-box",
+        "4-history": "proposal-loop",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -158,16 +158,16 @@
         "exampleDate": "2026-04-16"
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-entry",
         "2": "why-entry",
         "3": "entry-terms",
         "4": "publication",
+        "7": "entry-limits",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "entry-source",
         "5-6-history": "links",
-        "7": "entry-limits",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -224,25 +224,72 @@
       "route": "ai/agent-code-mode",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-code-mode.tsx",
       "publicPath": "cs/ai/agent-code-mode",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Agent tool-call round trip과 Program IR 이름이 구체적인 한 요청보다 먼저 나옴",
+        "독자가 중간 data 이동·schema loading·안전성 경계를 먼저 예측하는 질문이 없음"
+      ],
+      "fixture": {
+        "inputRows": 100000,
+        "outputGroups": 20,
+        "availableTools": 100,
+        "loadedTools": 3,
+        "loopTokens": 2010,
+        "codeModeTokens": 400
+      },
+      "stageAnchors": {
+        "1": "tool round trip·program IR",
+        "2": "tool-discovery",
+        "3": "data-reduction",
+        "4": "decision",
+        "S": "overview의 10만 issue 집계",
+        "B": "overview의 세 예측"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+          "application": "on-demand tool loading과 sandbox-local intermediate data"
+        },
+        {
+          "href": "https://blog.cloudflare.com/code-mode-mcp/",
+          "application": "typed MCP binding과 sandbox program 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2402.01030",
+          "application": "code-as-action의 연구 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "10만 issue→20개 team count 한 사례를 두 실행 경로로 먼저 비교하고 원본 이동·100개 중 3개 schema 공개·권한/정확성 분리를 예측한 뒤 기존 IR·비용식·선택 경계에 연결했습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 201 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "targeted-entry-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx",
+      "contentHash": "b755929d05b3fa24561afe35bd0f0fbb2ea730d305312bb8793a07a6574a0649",
+      "preserved": [
+        "기존 7개 핵심 개념과 1개 설명 수식",
+        "2,010 대 400 token 가정 계산",
+        "세 공식 출처와 직접/loop/code/workflow 선택 경계"
       ]
     },
     {
@@ -399,7 +446,7 @@
       "route": "ai/agent-devlog-patterns",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-devlog-patterns.tsx",
       "publicPath": "cs/ai/agent-devlog-patterns",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -407,24 +454,56 @@
         "sectionCount": 5
       },
       "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "run": "run-1842",
+        "event": "empty compaction overwrote profile",
+        "decisionRecord": "ADR-005"
+      },
+      "stageAnchors": {
+        "1": "raw evidence와 claim",
+        "2": "question-owner",
+        "3": "promotion",
+        "4": "agent-review",
+        "S": "overview의 support agent overwrite 사건"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.w3.org/TR/prov-overview/",
+          "application": "entity·activity·agent와 생성·사용·귀속 관계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "실제 본문 전체를 읽고 run-1842의 empty output 사건이 raw evidence→질문별 정본→조건부 승격→공개 검토로 이어지는지 확인했습니다. 구체 사건이 용어보다 먼저 나오며 관찰과 인과 주장의 한계가 분명해 본문을 유지했습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 201 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "retained-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-devlog-patterns/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-devlog-patterns/ModernArticle.tsx",
+      "contentHash": "5a96d29e6d0845bdd5697828a8c17882f925f1f60f1725a6d05af9e0fe105feb",
+      "preserved": [
+        "run-1842 단일 사건",
+        "Artifact·Changelog·ADR·Lessons의 질문 소유권",
+        "W3C PROV의 적용 범위와 공개 승인 경계"
       ]
     },
     {
       "route": "ai/agent-extension-boundaries",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-extension-boundaries.tsx",
       "publicPath": "cs/ai/agent-extension-boundaries",
-      "status": "reviewed-rewrite-required",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -433,23 +512,79 @@
       },
       "beforeDefects": [
         "첫 문장이 Hook·Skill·Guardrail·Verifier 이름 나열이며 정의 먼저 익힌 뒤라는 역순 설명",
-        "migration과권한과검증 예가 서로 달라 같은 요청의 허용·실행·결과 추적 부재",
+        "migration과 권한과 검증 예가 서로 달라 같은 요청의 허용·실행·결과 추적 부재",
         "실제 공식 계약/코드 원문 적용과 예측 질문 부재"
       ],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "request": "prod/customers status migration",
+        "approval": "APR-42",
+        "expectedRows": 1200,
+        "acceptedObservedRows": 1200,
+        "rejectedObservedRows": 1199,
+        "effectReceipt": "fx-9001",
+        "outcomes": [
+          "accepted",
+          "denied",
+          "rejected"
+        ]
+      },
+      "stageAnchors": {
+        "0": "map",
+        "1": "hook",
+        "2": "skill",
+        "3": "guardrail",
+        "4": "verifier·trace",
+        "5": "code·failure-matrix",
+        "6": "sources",
+        "7": "limits·prediction-review",
+        "S": "overview",
+        "B": "predict"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+          "application": "metadata→instructions→resources 점진 공개와 untrusted skill 경계"
+        },
+        {
+          "href": "https://openai.github.io/openai-agents-python/guardrails/",
+          "application": "input/output/tool 및 parallel/blocking 검사 시점"
+        },
+        {
+          "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "application": "transcript와 outcome, code/model/human grader 구분"
+        }
+      ],
       "validation": {
-        "semanticReview": "실제 baseline plainText 전체를 읽고 사례·순서·추적·근거 적용·한계 위치를 판정; 자동 신호만으로 통과시키지 않음",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "운영 DB 변경 한 요청을 Hook→Skill→Guardrail→executor→Verifier로 추적하고 승인 누락은 effect 전 denied, 1,199행은 effect 후 rejected가 되는 실제 TypeScript fixture와 세 예측 답을 대조했습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "runtimeFixture": "Node 24 actual run accepted/denied/rejected PASS; 승인 누락 trace3·effect false; 행 불일치 effect true",
+        "browserInteraction": "4 scenes·keyboard·play/pause·reduced-motion 양폭 통과: /tmp/teach-all/extension-browser-current/summary.json",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "보존할 기존 설명·수식을 작은 사례와 실제 원문 적용에 연결하여 본문 재작성",
-        "학습 metadata·humanize·화면·문제 수량 검증"
+        "checkpoint 201 배포·production 검증"
       ],
-      "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-extension-boundaries.json"
+      "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-extension-boundaries.json",
+      "reviewDate": "2026-10-05",
+      "reviewMode": "rewritten-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agentic-patterns/ExtensionBoundariesArticle.tsx",
+        "src/pages/articles/ai/agentic-patterns/extensionBoundaryModel.ts",
+        "src/pages/articles/ai/agentic-patterns/viz/ModernAgentPatternViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agentic-patterns/ExtensionBoundariesArticle.tsx",
+      "contentHash": "0ef04cecde1b8fc77a7b71518731527027e138647d563d0fe722c607209bbf65",
+      "preserved": [
+        "Hook·Skill·Guardrail·Verifier의 기존 네 책임 구분",
+        "기존 시각화의 네 장면과 canonical route",
+        "권한과 결과 검증을 구분하는 경계"
+      ]
     },
     {
       "route": "ai/agent-failure-modes-and-recovery",
@@ -483,18 +618,18 @@
         }
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-recovery",
         "2": "why-recovery",
         "3": "failure-taxonomy",
         "4": "retry-idempotent",
-        "5-6": "recovery-checkpointing",
         "7": [
           "side-effect-control",
           "human-in-the-loop-escalation"
         ],
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "recovery-checkpointing",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -546,7 +681,7 @@
       "route": "ai/agent-frameworks",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-frameworks.tsx",
       "publicPath": "cs/ai/agent-frameworks",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -554,17 +689,65 @@
         "sectionCount": 3
       },
       "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "order": "A-104",
+        "operation": "refund",
+        "effectRule": "single idempotent refund",
+        "recovery": "approval interrupt and checkpoint resume"
+      },
+      "stageAnchors": {
+        "1": "직접 loop와 ReAct 전이",
+        "2": "langchain의 state·node·edge·checkpoint",
+        "3": "replay와 idempotency",
+        "4": "comparison의 동일 환불 fixture",
+        "5": "failure injection·upgrade·rollback",
+        "S": "overview의 A-104 환불 요청"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.langchain.com/oss/python/langgraph/overview",
+          "application": "2026-10-05 현재 LangChain framework와 LangGraph runtime 계층"
+        },
+        {
+          "href": "https://docs.langchain.com/oss/python/langgraph/persistence",
+          "application": "thread checkpointer와 cross-thread store 구분"
+        },
+        {
+          "href": "https://microsoft.github.io/autogen/stable/index.html",
+          "application": "AgentChat와 event-driven Core 구분"
+        },
+        {
+          "href": "https://docs.crewai.com/v1.15.23/en/concepts/flows",
+          "application": "Flow state·persistence·resume/fork 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "A-104 환불 요청 하나를 조회·정책·승인·idempotent effect·receipt로 끝까지 따라가며 직접 loop, LangGraph checkpoint/replay, LlamaIndex·AutoGen·CrewAI 선택과 failure injection·upgrade를 같은 조건에서 비교합니다. 최신 공식 문서와 일치해 날짜만 2026년 10월로 갱신했습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 201 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "retained-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-frameworks/Overview.tsx",
+        "src/pages/articles/ai/agent-frameworks/LangChain.tsx",
+        "src/pages/articles/ai/agent-frameworks/Comparison.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-frameworks/Overview.tsx",
+      "contentHash": "c54ff7a253789257e86de3a45fe3be1e3776e3670aeb44936c878dd1f882f2d4",
+      "preserved": [
+        "A-104 환불 단일 사례와 직접 구현 코드",
+        "ReAct·checkpoint·interrupt·idempotency의 실행 경계",
+        "다섯 runtime 후보와 failure/upgrade 비교"
       ]
     },
     {
@@ -641,25 +824,75 @@
       "route": "ai/agent-memory-lifecycle",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-memory-lifecycle.tsx",
       "publicPath": "cs/ai/agent-memory-lifecycle",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 8
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Application state 분류가 독자가 결과를 예측할 한 사건보다 먼저 나옴",
+        "본문 8개 h2 중 memory-types·lifecycle·salience-integrity 세 절이 catalog 목차에서 누락"
+      ],
+      "fixture": {
+        "failedTest": "payment-17",
+        "backup": "artifact://bk-42",
+        "requiredKeys": 6,
+        "restoredKeys": 4,
+        "recall": "90/100",
+        "taskSuccess": "8/20"
+      },
+      "stageAnchors": {
+        "1": "memory-types·lifetimes",
+        "2": "lifecycle",
+        "3": "compaction",
+        "4": "salience-integrity",
+        "5": "resume",
+        "6": "memory-action-evaluation",
+        "S": "overview의 중단된 payment migration",
+        "B": "overview의 세 예측"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2310.08560",
+          "application": "virtual context tier와 multi-session 범위"
+        },
+        {
+          "href": "https://claude.com/blog/context-management",
+          "application": "context editing과 client-side file memory 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2602.16313",
+          "application": "회상과 후속 행동 평가 분리"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "payment-17 실패와 backup receipt를 새 session이 복원하는 사례를 먼저 두고, 저장 수명·내용 종류·write/retrieval/consolidation·4/6 fidelity·salience·resume·90% 대 40% 행동 평가까지 같은 기록으로 연결했습니다. 본문 8절과 목차도 일치시켰습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 201 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "targeted-entry-and-toc-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-memory-lifecycle/ModernArticle.tsx",
+        "src/pages/articles/ai/agent-memory-lifecycle/MemoryTraceViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-memory-lifecycle/ModernArticle.tsx",
+      "contentHash": "ff2912240040fbffa76578478676e5644c1d2a0dacc679a1a7cf01f0da4edb47",
+      "preserved": [
+        "기존 7개 핵심 개념과 두 수식",
+        "MemGPT·Generative Agents·CoALA·MemoryArena 출처 범위",
+        "working state·long-term memory·artifact·procedure 구분"
       ]
     },
     {
@@ -825,7 +1058,7 @@
       "route": "ai/agent-sandbox-security",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-sandbox-security.tsx",
       "publicPath": "cs/ai/agent-sandbox-security",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -833,17 +1066,60 @@
         "sectionCount": 6
       },
       "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "fixture": {
+        "containerPid": 12,
+        "hostPid": 43120,
+        "workspace": "/workspace",
+        "memoryLimitGiB": 2,
+        "memoryUsageGiB": 1.5,
+        "pidLimit": 128
+      },
+      "stageAnchors": {
+        "1": "namespace",
+        "2": "cgroup과 0.5GiB headroom",
+        "3": "attack-path",
+        "4": "container-root",
+        "S": "overview의 PID12 agent process"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://man7.org/linux/man-pages/man7/namespaces.7.html",
+          "application": "process-visible resource view"
+        },
+        {
+          "href": "https://docs.kernel.org/admin-guide/cgroup-v2.html",
+          "application": "resource accounting과 limit"
+        },
+        {
+          "href": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+          "application": "UID0와 capability privilege 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "PID12·/workspace·2GiB·128 PID 제한의 한 process에서 시작해 namespace view, cgroup 0.5GiB headroom, attack path, container/host root 경계를 순서대로 쌓습니다. 공식 Linux 원문·수식 전제·한계가 일치해 본문을 유지했습니다.",
+        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "checkpoint 201 배포·production 검증"
+      ],
+      "reviewDate": "2026-10-05",
+      "reviewMode": "retained-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-sandbox-security/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-sandbox-security/ModernArticle.tsx",
+      "contentHash": "9f500db5ec365aa83efb2692b30cd6b4eba32c40d0fe123e09b87e1f30f49689",
+      "preserved": [
+        "process→namespace→cgroup→attack path→root 순서",
+        "2GiB−1.5GiB=0.5GiB 수치 사례와 Boolean reachability 식",
+        "Linux namespace·cgroup v2·capability의 서로 다른 책임"
       ]
     },
     {
@@ -947,16 +1223,16 @@
         "replacement": "ADR-006"
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-decision",
         "2": "why-record",
         "3": "decision-terms",
         "4": "drivers",
+        "7": "decision-limits",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "source-template",
         "5-6-history": "supersession",
-        "7": "decision-limits",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -2107,15 +2383,15 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-baseline",
         "2": "why-coverage",
         "3": "baseline-terms",
         "4": "coverage",
-        "5-6": "baseline-source",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "baseline-source",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -2209,8 +2485,6 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-submission",
         "2": "why-log",
@@ -2219,6 +2493,8 @@
         "5": "paper-submission-control",
         "6": "manifest",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -2296,17 +2572,17 @@
         "lateFeatureArrival": "2026-04-16T10:05:00Z"
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-contract",
         "2": "why-complete",
         "3": "evaluation-terms",
         "4": "target",
+        "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "source-availability",
         "7-metric": "metric",
         "7-roles": "roles",
-        "7": "boundary",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -2323,7 +2599,7 @@
           "roundTrip": true,
           "chars": 3343,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -2406,15 +2682,15 @@
         "sent": 0
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-boundary",
         "2": "why-boundary",
         "3": "three-layers",
         "4": "request-trace",
-        "5-6": "attack-path",
         "7": "release",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "attack-path",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -2808,16 +3084,16 @@
         "patientRisk": 0.5
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-evaluation",
         "2": "why-unit",
         "3": "validation-terms",
         "4": "risk",
+        "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "paper-cv-foundation",
         "7-family": "split-family",
-        "7": "boundary",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -3212,13 +3488,22 @@
         "assumptions": "Toy full-attention single-rank case; zero handshake/queue/network overhead; no prefix hit or block padding; numeric byte accounting only, not a runnable GPU model."
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "handoff-map",
         "2": "why-hold",
         "3": "names",
         "4": "request-trace",
+        "7": [
+          "transfer-budget",
+          "provisioning",
+          "paper-distserve",
+          "paper-mooncake",
+          "heterogeneous",
+          "failures",
+          "boundary"
+        ],
+        "S": "overview",
+        "B": "black-box",
         "5-6": [
           "proxy-request",
           "proxy-output",
@@ -3229,15 +3514,6 @@
           "routing-estimate",
           "transfer-bytes",
           "layer-overlap"
-        ],
-        "7": [
-          "transfer-budget",
-          "provisioning",
-          "paper-distserve",
-          "paper-mooncake",
-          "heterogeneous",
-          "failures",
-          "boundary"
         ],
         "review": "prediction-questions"
       },
@@ -3549,16 +3825,16 @@
         "run": "run-1842"
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-rule",
         "2": "why-exceptions",
         "3": "lesson-terms",
         "4": "scope-test",
+        "7": "lesson-limits",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "postmortem",
         "5-6-history": "provisional",
-        "7": "lesson-limits",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -3726,17 +4002,17 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-provenance",
         "2": "why-identity",
         "3": "tracking-terms",
-        "4-identity": "spec-attempt",
         "4": "artifact-reference",
         "5": "paper-mlflow-lifecycle",
         "6": "provenance-receipt",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "4-identity": "spec-attempt",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -4028,8 +4304,6 @@
         "ddof": 0
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-state",
         "2": "why-fit",
@@ -4038,6 +4312,8 @@
         "5": "paper-fold-local",
         "6": "manifest",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -4059,7 +4335,7 @@
           "roundTrip": true,
           "chars": 3129,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 1,
           "numbersMarkersPointersPreserved": true,
           "independentFinalize": "/tmp/teach-all/humanize-ai-systems-08/fold-local-validation/independent-finalize.md — root 원문 동일·좌표 각주 오탐 승인"
@@ -4180,16 +4456,16 @@
         "validGroups": 2
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-groups",
         "2": "why-groups",
         "3": "group-terms",
-        "4-disjoint": "disjoint",
         "4": "evidence",
-        "5-6": "paper-group-split",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "4-disjoint": "disjoint",
+        "5-6": "paper-group-split",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -4206,7 +4482,7 @@
           "roundTrip": true,
           "chars": 2915,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -4268,15 +4544,15 @@
         "gate": 0
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-experiment",
         "2": "classify",
         "3": "ablation-terms",
         "4": "ablation",
-        "5-6": "paper-harness-ablation",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "paper-harness-ablation",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -4635,15 +4911,28 @@
       "beforeDefects": [],
       "fixture": {
         "kind": "가정 사례이며 GPU 실측값이 아님",
-        "serialMs": [15, 40, 35, 10],
-        "firstChangeMs": [15, 20, 35, 10],
-        "strongerChangeMs": [15, 4, 35, 10],
+        "serialMs": [
+          15,
+          40,
+          35,
+          10
+        ],
+        "firstChangeMs": [
+          15,
+          20,
+          35,
+          10
+        ],
+        "strongerChangeMs": [
+          15,
+          4,
+          35,
+          10
+        ],
         "sharedBatch": "20개 요청의 지연 합 400 request-ms와 한 GPU batch의 20 GPU-ms를 분리",
         "regression": "짝차이 2,3,2,3,2 ms; 평균2.4, 표본분산0.3, 양측95%구간1.72–3.08 ms"
       },
       "stageAnchors": {
-        "S": "overview: 사용자의 기다림·처리량·실제 청구를 세 숫자로 분리",
-        "B": "black-box: 입력·답 조건·측정 시작과 끝·사용 기록의 경계",
         "0": "case: 같은100 ms 요청의 40→20→4 ms와 추가 준비5 ms",
         "1": "picture: 한 요청의 네 칸을 같은 축에서 네 장면으로 비교",
         "2": "why: 담당 영역의 분류표와 실제 의존 시간표를 구별",
@@ -4652,6 +4941,8 @@
         "5": "source-amdahl/source-profile: 실제 논문 세 쪽과 Nsight 분모를 사례에 적용",
         "6": "source-config/source-metrics/source-cost/regression: 고정 vLLM 원문과 실행 관찰·통계 경계",
         "7": "limits/decision: 조건별 일반화 한계와 다음 변경의 측정 절차",
+        "S": "overview: 사용자의 기다림·처리량·실제 청구를 세 숫자로 분리",
+        "B": "black-box: 입력·답 조건·측정 시작과 끝·사용 기록의 경계",
         "review": "review: 세 예측 질문과 6+4 답안"
       },
       "sourceEvidence": [
@@ -5543,15 +5834,15 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-harness",
         "2": "why-harness",
         "3": "agent-scaffold",
         "4": "proposal-runtime",
-        "5-6": "artifact-repair",
         "7": "model-change",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "artifact-repair",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -5962,15 +6253,15 @@
         "expectedMaximum": 0.72
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-selection",
         "2": "why-fresh",
         "3": "selection-terms",
         "4": "maximum",
-        "5-6": "paper-model-selection-bias",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "paper-model-selection-bias",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -6154,7 +6445,7 @@
           "roundTrip": true,
           "chars": 3784,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -6422,8 +6713,6 @@
         }
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-oof",
         "2": "why-weight",
@@ -6432,6 +6721,8 @@
         "5": "paper-cv-estimand",
         "6": "estimand",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -6453,7 +6744,7 @@
           "roundTrip": true,
           "chars": 3201,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -6609,15 +6900,15 @@
         "latencyGrowthCap": 0.1
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-pair",
         "2": "why-one-change",
         "3": "experiment-terms",
         "4": "paired-delta",
-        "5-6": "paired-source",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
+        "5-6": "paired-source",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -8893,19 +9184,19 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-tool-call",
         "2": "why-tool-call",
         "3": "selection-and-routing",
         "4": "tool-use-loop",
+        "7": "sources",
+        "S": "overview",
+        "B": "black-box",
         "5-6": [
           "argument-generation-and-invocation",
           "context-cost",
           "error-handling-and-retry"
         ],
-        "7": "sources",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9059,8 +9350,6 @@
         ]
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-comparison",
         "2": "why-parity",
@@ -9069,6 +9358,8 @@
         "5": "paper-validation-feedback",
         "6": "adaptation",
         "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9085,7 +9376,7 @@
           "roundTrip": true,
           "chars": 3051,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -9186,13 +9477,14 @@
         "requestHit": 0.9
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-blocks",
         "2": "why-blocks",
         "3": "block-names",
         "4": "logical-physical-address",
+        "7": "memory-kernel-boundary",
+        "S": "overview",
+        "B": "black-box",
         "5-6-fragmentation": "fragmentation-kinds",
         "5-6-pool": "block-pool",
         "5-6-fork": "sequence-forking",
@@ -9202,7 +9494,6 @@
         "5-6-hit": "prefix-sharing",
         "5-6-locality": "cache-locality",
         "5-6-paper": "paper-pagedattention",
-        "7": "memory-kernel-boundary",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9332,20 +9623,20 @@
         }
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-scheduler",
         "2": "why-scheduler",
         "3": "queue-batching",
         "4": "schedule-method",
+        "7": "scheduler-limits",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "scheduler-source",
         "5-6-chunk": "prefill-decode",
         "5-6-priority": "priority-order",
         "5-6-fairness": "scheduler-fairness",
         "5-6-preemption": "preemption",
         "5-6-overhead": "scheduler-overhead",
-        "7": "scheduler-limits",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9461,17 +9752,17 @@
         "goodputTokenPerSecond": 4
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-engine",
         "2": "why-engine",
         "3": "engine-loop",
         "4": "request-trace",
+        "7": "serving-limits",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "scheduler-source",
         "5-6-latency": "latency-accounting",
         "5-6-placement": "serving-architecture",
-        "7": "serving-limits",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9750,16 +10041,16 @@
         "strictBefore": true
       },
       "stageAnchors": {
-        "S": "overview",
-        "B": "black-box",
         "0": "small-case",
         "1": "inside-time",
         "2": "why-arrival",
         "3": "time-terms",
         "4": "labels",
+        "7": "boundary",
+        "S": "overview",
+        "B": "black-box",
         "5-6": "paper-walk-forward",
         "7-gaps": "gap-purge",
-        "7": "boundary",
         "review": "prediction-questions"
       },
       "sourceEvidence": [
@@ -9776,7 +10067,7 @@
           "roundTrip": true,
           "chars": 3093,
           "edits": 0,
-          "changeRate": 0.0,
+          "changeRate": 0,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -9911,23 +10202,26 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 49,
-    "unreviewed": 136,
-    "reviewed-rewrite-required": 1
+    "rewritten-local-verified": 55,
+    "unreviewed": 131
   },
   "localValidationSummary": {
-    "rewritten": 48,
-    "remainingUnreviewed": 136,
+    "rewritten": 55,
+    "remainingUnreviewed": 131,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "/tmp/teach-all/launch23/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
     "formulaStrict": "/tmp/teach-all/launch23/formula-final.log — 전역1460식explicitPASS·본글1식양폭overflow0",
     "typescript": "/tmp/teach-all/launch23/tsc-final.log — actual app tsc세션37500실제exit0; root고정전체build별도",
-    "note": "현재 48편은 local-verified입니다. 미검토 136편과 재작성 필요 2편은 완료에 포함하지 않습니다. 고정 snapshot build는 root 별도 검증입니다.",
-    "reviewedRewriteRequired": 2,
-    "verifiedRewrites": 48,
-    "rewrittenLocalVerified": 48,
-    "unreviewed": 136
+    "note": "현재 55편은 actual-body semantic review와 local 검증을 마쳤습니다. 미검토 131편은 완료에 포함하지 않습니다. checkpoint 201 root 고정 snapshot의 전역 strict 검사와 production build가 통과했고 배포를 진행 중입니다.",
+    "reviewedRewriteRequired": 0,
+    "verifiedRewrites": 55,
+    "rewrittenLocalVerified": 55,
+    "unreviewed": 131,
+    "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
+    "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
+    "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
+    "mobileViewport": "/tmp/teach-all/mobile-viewport-stability-201.json"
   }
 }

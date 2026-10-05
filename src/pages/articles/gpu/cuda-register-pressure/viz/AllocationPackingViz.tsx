@@ -14,7 +14,7 @@ const labels=["37칸 · 128명","37칸 · 320명","96칸 · 256명"];
 const notes=["32명 단위의 자리를 48개 확보합니다. 4개씩 묶은 일을 12개 놓을 수 있습니다.","같은 공간이지만 10개씩 묶어야 합니다. 4묶음이 들어가고 남은 8자리에는 다음 10자리 묶음이 들어가지 못합니다.","한 사람이 96칸을 붙잡으면 32명 단위 자리는 20개까지입니다. 8개씩 묶어 놓으면 2묶음, 16자리를 사용합니다."];
 export default function AllocationPackingViz(){const scenes=useAnimatedScenes(3,2400);const [r,t]=inputs[scenes.active];const x=cc70RegisterBound(r,t);return <figure data-viz="register-allocation" className="my-8 border-y border-border py-4">
 <figcaption className="mb-3 text-sm leading-6">한 구역의 64자리 중 몇 자리를 함께 사용할 수 있을까요? 작은 사각형 하나는 32명 분량입니다.</figcaption>
-<div data-viz-canvas tabIndex={0} role="group" aria-label="저장량과 묶음 크기의 배치 계산" onKeyDown={scenes.onKeyDown} className="flex h-[min(650px,calc(100dvh-140px))] min-h-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+<div data-viz-canvas tabIndex={0} role="group" aria-label="저장량과 묶음 크기의 배치 계산" onKeyDown={scenes.onKeyDown} className="flex h-[min(650px,calc(100svh-140px))] min-h-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
 <div className="min-h-0 flex-1 overflow-y-auto py-2">
 <p className="text-sm font-semibold">{labels[scenes.active]}</p>
 <div className="my-4 grid grid-cols-4 gap-4" aria-label={`${x.warps}개 사용, ${x.warpCapacity-x.warps}개 묶음 때문에 남음`}>

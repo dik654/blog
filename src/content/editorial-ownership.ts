@@ -325,9 +325,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "agent-extension-boundaries": {
     title: "Agent extension authority 글이 소유하는 범위",
-    owns: ["Hook·Skill·Guardrail·Verifier의 실행 시점·지식·policy·acceptance decision owner"],
+    owns: ["Hook·Skill·Guardrail·Verifier의 실행 시점·지식·policy·acceptance decision owner", "같은 action의 denied·rejected·accepted 상태와 effect 전후 경계"],
     reuses: [{ label: "Skill authoring format", href: "/cs/ai/skills-anatomy" }, { label: "하네스 검증 stack", href: "/cs/ai/llm-harness" }],
-    evidence: [{ kind: "standard", rule: "Hook·Skill은 runtime capability를 넓히지 않고 policy pass와 artifact acceptance를 분리한다." }],
+    evidence: [{ kind: "standard", rule: "Hook·Skill은 runtime capability를 넓히지 않고 policy pass와 artifact acceptance를 분리한다." }, { kind: "project-measurement", rule: "APR-42·1200행, 승인 누락, 1199행 fixture의 trace와 effectStarted 상태를 실행 결과로 대조한다." }],
   },
   "agent-frameworks": {
     title: "Agent framework 글이 소유하는 범위",
