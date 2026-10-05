@@ -1075,10 +1075,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   },
   "ai/agent-memory-lifecycle": {
     "action": "keep",
-    "status": "reviewed",
-    "reviewedAt": "2026-10-04",
-    "rationale": "관측에서 기억 쓰기·읽기·망각·행동 평가까지 같은 기록의 수명주기를 따라갑니다. 추가 MemoryArena 해설은 회상 점수와 실제 후속 행동 성과를 구분하는 기존 질문의 검증 단계입니다.",
-    "sharedGate": "동일 관측 기록이 장기 기억으로 채택되는 조건과 다음 행동에 쓰이는 경로를 추적하고, 회상 성공만으로 전체 작업 성공을 주장하지 않습니다."
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "중단된 결제 migration을 새 session이 이어받는 사례에서 저장 종류·write/retrieval/consolidation·압축·망각·resume·행동 평가까지 같은 기록의 수명주기를 따라갑니다. MemoryArena 해설은 회상 점수와 실제 후속 행동 성과를 구분하는 기존 질문의 검증 단계입니다.",
+    "sharedGate": "payment-17·artifact://bk-42 사례에서 필수 state 누락이 다음 행동을 바꾸는지 추적하고, 회상 성공만으로 전체 작업 성공을 주장하지 않습니다."
   },
   "ai/deep-learning-overview": {
     "action": "keep",
@@ -1920,6 +1920,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 여섯 연산의 CPU 제출과 GPU 완료를 하나의 시간표로 추적해 실제 값 읽기·stream 의존성·범위 대기로 연결합니다. 주소·크기·graph 생성 계약은 기존 CUDA Graph 정본을 재사용하며 제출 병목의 진단과 완료 의미를 이 글이 소유합니다.",
     "sharedGate": "3→8→18→38, S2/L3/E2/G1의 완료10·18·26/10·20·30/7·11·15/7·14·21, 첫3.005 대3.06ms와장기간격2.5대2, A26/B50의범위, D1/D2의21/15μs를 본문·수식·4장면·원문12패널·6기초/4심화에서 대조한다."
   },
+  "ai/agent-extension-boundaries": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-05",
+    "rationale": "운영 DB의 같은 migration 요청을 Hook·Skill·Guardrail·Verifier의 네 판정 위치로 나눈 뒤 accepted·denied·rejected 실행과 실제 TypeScript에 다시 대입하는 13절의 단일 추적입니다.",
+    "sharedGate": "APR-42·예상1200행의 정상 accepted, 승인 누락의 effectStarted=false·denied, 관찰1199행의 effectStarted=true·rejected를 본문·표·실행 코드·6기초/4심화에서 대조하고 제품별 pipeline 차이를 한계로 남깁니다."
+  },
   "ai/subword-static-embeddings": {
     "action": "keep",
     "status": "implemented",
@@ -1962,6 +1969,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "6ce09e8e1f3ff2c4",
   "ai/inference-optimization-layers": "0f317d8baf76db75",
   "ai/text-unicode-encoding": "582c3439a0477107",
@@ -2229,7 +2237,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "inference-from-sources/the-gap-was-made": "6224616aee8d25d8",
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
 
-"ai/agent-memory-lifecycle":"e3bb408c931ea9af",
+"ai/agent-memory-lifecycle":"26623451d21d621d",
 "ai/expert-parallelism-moe-systems":"1025d7f9fa6ef1a6",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
 "ai/flash-attention-io-aware-kernel":"88f916e0409787de",

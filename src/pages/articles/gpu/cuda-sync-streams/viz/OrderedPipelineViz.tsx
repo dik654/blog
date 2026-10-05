@@ -16,7 +16,7 @@ export default function OrderedPipelineViz() {
   const jobs = schedules[s.active];
   return <figure data-viz="ordered-pipeline" className="my-8 border-y border-border py-4">
     <figcaption className="mb-3 text-sm leading-6">같은 2·5·2ms를 0–24ms 축에서 비교합니다. 이동 통로 두 개와 계산 자리 하나를 가정했습니다.</figcaption>
-    <div data-viz-canvas tabIndex={0} role="group" aria-label="작업 순서와 버퍼 재사용 시간표" onKeyDown={s.onKeyDown} className="flex h-[min(590px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+    <div data-viz-canvas tabIndex={0} role="group" aria-label="작업 순서와 버퍼 재사용 시간표" onKeyDown={s.onKeyDown} className="flex h-[min(590px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
         {["보내기", "계산", "가져오기"].map((kind,row) => <div key={kind} className="mb-4">
           <p className="mb-2 text-sm">{kind}</p><div className="relative h-9 border-y border-border">

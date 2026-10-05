@@ -8,7 +8,7 @@ const states=[
 export default function ExpectedPathViz(){
  const scene=useAnimatedScenes(states.length,4500);const s=states[scene.active];const avg=s.rates.reduce((a,b)=>a+b,0)/3;
  return <figure data-viz="expected-path" className="my-8 border-y border-border py-4"><figcaption className="mb-3 text-sm leading-6">가정한 3년 경로와 선형 근사입니다. 오늘의 1일 금리를 첫 1년 평균과 자동으로 같게 놓지는 않습니다.</figcaption>
- <div data-viz-canvas tabIndex={0} role="group" aria-label="기대 경로와 기간 프리미엄의 세 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(540px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div data-viz-canvas tabIndex={0} role="group" aria-label="기대 경로와 기간 프리미엄의 세 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(540px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3"><div className="grid grid-cols-3 gap-3">{s.rates.map((r,i)=><div key={i} className="border-b border-border pb-3"><p className="text-xs">{i+1}년째 평균</p><p className="mt-2 text-xl font-semibold tabular-nums">{r}%</p><div className="mt-3 flex h-20 items-end"><div aria-hidden className="w-full bg-primary/30" style={{height:`${r/5*100}%`}}/></div></div>)}</div>
  <p className="my-4 text-base tabular-nums">평균 {avg.toFixed(2)}% + {s.premium.toFixed(2)}%p<br/><strong className="text-2xl">3년 금리 ≈ {(avg+s.premium).toFixed(2)}%</strong></p><p className="text-sm leading-7">{s.note}</p></div>
  <AnimatedSceneControls {...scene} labels={states.map(x=>x.label)}/></div></figure>;

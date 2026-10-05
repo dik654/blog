@@ -12,7 +12,7 @@ export default function FundingChoiceViz(){
  const scene=useAnimatedScenes(states.length,4500);const s=states[scene.active];
  return <figure data-viz="funding-choice" className="my-8 border-y border-border py-4">
  <figcaption className="mb-3 text-sm leading-6">금액 단위는 억 원, 금리는 가정한 연이율입니다. 1년을 365일로 나눠 하루 이자를 계산합니다.</figcaption>
- <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 6억 원을 빌리는 네 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(540px,calc(100dvh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
+ <div data-viz-canvas tabIndex={0} role="group" aria-label="같은 6억 원을 빌리는 네 장면" onKeyDown={scene.onKeyDown} className="flex h-[min(540px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
  <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
  <div className="grid grid-cols-2 gap-3"><div className="border-b border-border pb-3"><h3 className="font-semibold">A은행 · 돈이 필요</h3><p className="mt-2 text-sm leading-6">{s.a}</p></div><div className="border-b border-border pb-3"><h3 className="font-semibold">B은행 · 돈이 남음</h3><p className="mt-2 text-sm leading-6">{s.b}</p></div></div>
  <p className="my-5 text-lg font-semibold tabular-nums">{s.offer}</p><p className="text-sm leading-7">{s.note}</p>

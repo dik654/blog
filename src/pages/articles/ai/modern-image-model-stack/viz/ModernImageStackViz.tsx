@@ -30,7 +30,7 @@ export default function ModernImageStackViz() {
       title="한 모델처럼 보여도 실제로는 네 component가 서로 다른 계약을 맡습니다"
       description="Prompt는 조건 표현으로, image는 압축 latent로 바뀝니다. Transformer는 그 latent의 이동 방향을 반복해서 예측하고 decoder가 마지막 latent를 pixel로 되돌립니다."
       note="이 그림은 대표적인 latent diffusion·flow stack입니다. Pixel-space 생성이나 autoregressive image model까지 모든 이미지 모델이 이 구성을 따른다는 뜻은 아닙니다."
-      canvasClassName="max-h-[min(28rem,calc(100dvh-20rem))] overflow-y-auto"
+      canvasClassName="max-h-[min(28rem,calc(100svh-20rem))] overflow-y-auto"
     >
       <div
         data-viz-canvas

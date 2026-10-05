@@ -105,7 +105,7 @@ export default function WarpSpecializationAndAsyncPipelinesViz() {
         role="group"
         aria-label="Shared memory stage ring 이 producer 에 의해 채워지고 consumer 에 의해 소비되는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100dvh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

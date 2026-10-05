@@ -39,7 +39,7 @@ export default function ReportVsBelieveViz() {
         role="group"
         aria-label="전할 의무와 믿을 의무를 가르면 믿지 않는 이야기도 남는다는 것을 보이는 그림"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

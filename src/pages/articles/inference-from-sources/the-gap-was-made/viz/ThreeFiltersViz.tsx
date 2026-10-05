@@ -36,7 +36,7 @@ export default function ThreeFiltersViz() {
         role="group"
         aria-label="고대의 지움과 사본의 회수와 근대 판본의 생략을 차례로 보이는 그림"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">

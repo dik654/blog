@@ -39,7 +39,7 @@ export default function WhereItCanSlipViz() {
         role="group"
         aria-label="눈금으로 센 수가 어디서 어긋나는지와 그래서 말할 수 있는 범위를 보이는 그림"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100dvh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
