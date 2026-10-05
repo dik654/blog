@@ -1,6 +1,6 @@
 {
   "scope": 186,
-  "date": "2026-10-05",
+  "date": "2026-10-06",
   "screeningIsNotReview": true,
   "articles": [
     {
@@ -2985,151 +2985,513 @@
       "route": "ai/claw-permissions",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-permissions.tsx",
       "publicPath": "cs/ai/claw-permissions",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "로그인 401 사례는 있었지만 권한·실행·상위 ceiling의 결과를 먼저 예측할 질문이 없었음",
+        "핵심 PolicyViz가 mode·rule 상세 절 뒤에 있어 proposal과 host decision을 첫 화면에서 연결하기 어려웠음",
+        "ContentBoundary가 사례와 핵심 그림 사이에 있었음"
+      ],
+      "fixture": {
+        "request": "로그인 401 원인 조사·최소 수정·deterministic test",
+        "proposal": "edit_file(src/auth.ts, patch)",
+        "canonicalAction": "actor+path+write effect+policy generation",
+        "order": [
+          "authority ceiling",
+          "mode",
+          "rules",
+          "decision"
+        ],
+        "outcomes": [
+          "deny",
+          "prompt",
+          "allow",
+          "unknown"
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview의 로그인 401 edit 제안",
+        "B": "세 예측과 PolicyViz",
+        "1": "policy",
+        "2": "enforcer",
+        "3": "context-override"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/permissions.rs",
+          "application": "Pinned mode·subject matcher·rule precedence·prompt-or-deny"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/permission_enforcer.rs",
+          "application": "Allowed/Denied와 Prompt deferral seam"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/tools/src/lib.rs",
+          "application": "Built-in argument 분류와 optional enforcer dispatch"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/approval_tokens.rs",
+          "application": "Approval scope·executor·expiry·use count와 standalone ledger 경계"
+        },
+        {
+          "href": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+          "application": "Least privilege·deny by default·every-request enforcement"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "로그인 edit proposal을 canonical action으로 바꾼 뒤 ceiling→mode→rule→decision→executor를 추적했습니다. Policy Allow와 실제 effect 성공, hook context와 approval token, pinned optional enforcer와 production hardening을 구분했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-permissions/Overview.tsx",
+        "src/pages/articles/ai/claw-permissions/Policy.tsx",
+        "src/pages/articles/ai/claw-permissions/Enforcer.tsx",
+        "src/pages/articles/ai/claw-permissions/ContextOverride.tsx",
+        "src/pages/articles/ai/claw-permissions/viz/PolicyViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-permissions/Overview.tsx",
+      "contentHash": "0ed02d7222e1cce126b409180fd0d3b2bbabd88845e915464640de72fcd275de",
+      "preserved": [
+        "Pinned permission precedence와 unknown-tool 보수적 requirement",
+        "Approval token·Prompt deferral·TOCTOU 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "4개 본문 파일 연결"
     },
     {
       "route": "ai/claw-plugin",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-plugin.tsx",
       "publicPath": "cs/ai/claw-plugin",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "auth-lint 사례는 있었지만 enabled·permission label·reload generation의 결과를 먼저 예측할 질문이 없었음",
+        "앞 PluginRegistryViz가 Builtin·Bundled·External 일반 표여서 auth-lint가 Ready가 되는 경로를 직접 보여 주지 못했음"
+      ],
+      "fixture": {
+        "package": "acme/auth-lint@1.2.0",
+        "kind": "External",
+        "tool": "auth_lint",
+        "permission": "workspace-write",
+        "lifecycle": [
+          "init",
+          "shutdown"
+        ],
+        "hook": "PreToolUse",
+        "stages": [
+          "discover",
+          "validate",
+          "enable",
+          "ready"
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview의 auth-lint package",
+        "B": "세 예측과 case-specific registry Viz",
+        "1": "manifest-registry",
+        "2": "tool-execution",
+        "3": "lifecycle",
+        "4": "release-gate"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/plugins/src/lib.rs",
+          "application": "PluginKind·manifest validation·enabled aggregation·process·lifecycle"
+        },
+        {
+          "href": "https://slsa.dev/spec/v1.2/levels",
+          "application": "외부 package provenance와 공급망 보증 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "auth-lint 한 package를 발견·형식 검증·enable·tool-name 충돌·init·generation까지 추적했습니다. Permission label과 실제 executor enforcement, partial init과 rollback, 같은 version 문자열과 schema/executor identity를 구분했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-plugin/ModernArticle.tsx",
+        "src/pages/articles/ai/claw-plugin/viz/ModernPluginViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-plugin/ModernArticle.tsx",
+      "contentHash": "b0c45e7ea1d95a3f4e51441c47cd7d0d8cf679baf3d7fe36d4b0f087b112d06e",
+      "preserved": [
+        "Builtin·Bundled·External과 duplicate tool semantics",
+        "Process environment·timeout·sandbox integration gap",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "1개 본문 파일 연결"
     },
     {
       "route": "ai/claw-policy-engine",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-policy-engine.tsx",
       "publicPath": "cs/ai/claw-policy-engine",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "lane-17 수치는 있었지만 Retry·Merge·Notify의 실제 반환을 먼저 예측할 질문이 없었음",
+        "앞 Viz가 일반 Snapshot→Emit 단계만 보여 주고 lane-17의 ordered result를 표시하지 않았음"
+      ],
+      "fixture": {
+        "lane": "lane-17",
+        "greenLevel": 2,
+        "scopedDiff": true,
+        "reviewApproved": true,
+        "baseFresh": true,
+        "retryCount": 0,
+        "rules": [
+          "P10 Retry",
+          "P20 MergeToDev",
+          "P20 Notify"
+        ],
+        "result": [
+          "Retry",
+          "MergeToDev",
+          "Notify"
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview의 lane-17",
+        "B": "세 예측과 ordered action Viz",
+        "1": "rules",
+        "2": "lane-context",
+        "3": "green-contract",
+        "4": "release-gate"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/policy_engine.rs",
+          "application": "Boolean condition·stable priority·all-match action·Chain expansion"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/green_contract.rs",
+          "application": "GreenLevel과 test·base·recovery·flake conjunction"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "lane-17의 세 rule을 실제 값에 대입해 [Retry, MergeToDev, Notify]를 계산했습니다. Priority를 충돌 중재로 오해하지 않고, boolean state와 provenance·generation 및 evaluator와 executor를 분리했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-policy-engine/ModernArticle.tsx",
+        "src/pages/articles/ai/claw-policy-engine/viz/ModernPolicyViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-policy-engine/ModernArticle.tsx",
+      "contentHash": "3774bd0a941654d81e1a14632ee7f1f7860a81edac9f040d479036989ec9fd05",
+      "preserved": [
+        "Boolean condition·stable priority·Chain expansion",
+        "Green contract conjunction과 evidence 한계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "1개 본문 파일 연결"
     },
     {
       "route": "ai/claw-recovery",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-recovery.tsx",
       "publicPath": "cs/ai/claw-recovery",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "실패 분류의 일반 설명만 있고 한 timeout을 effect reconciliation까지 추적하는 고정 사례가 없었음",
+        "RecipesViz가 상세 recipes 절에 있어 recovery의 핵심 네 단계를 첫 화면에서 볼 수 없었음",
+        "ContentBoundary가 사례와 핵심 그림보다 먼저 나왔음"
+      ],
+      "fixture": {
+        "lane": "lane-17",
+        "failure": "auth test runner-timeout",
+        "known": [
+          "auth diff",
+          "first process/job identity"
+        ],
+        "retryLimit": 2,
+        "attemptsUsed": 1,
+        "remaining": 1,
+        "terminalRule": "effect reconciliation+test receipt 또는 escalation"
+      },
+      "stageAnchors": {
+        "S": "overview의 lane-17 timeout",
+        "B": "세 예측과 bounded recovery Viz",
+        "1": "recipes",
+        "2": "stale-branch",
+        "3": "escalation"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/recovery_recipes.rs",
+          "application": "Scenario·step·attempt·escalation policy와 in-memory ledger"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/stale_branch.rs",
+          "application": "Fresh·Stale·Diverged와 ahead/behind action"
+        },
+        {
+          "href": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+          "application": "긴 작업의 artifact·progress·검증 가능한 handoff"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "auth test timeout을 결과 부재로 다루고 classify→checkpoint→bounded retry→effect/test verification을 추적했습니다. Transient retry와 code/conflict, stale signal과 destructive delete, delivery와 acknowledgement를 분리했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-recovery/Overview.tsx",
+        "src/pages/articles/ai/claw-recovery/Recipes.tsx",
+        "src/pages/articles/ai/claw-recovery/StaleBranch.tsx",
+        "src/pages/articles/ai/claw-recovery/Escalation.tsx",
+        "src/pages/articles/ai/claw-recovery/viz/RecipesViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-recovery/Overview.tsx",
+      "contentHash": "26831801d32cd392659e5bf58277dee0c176d56b8bc5edc26e8e05b7100ce43a",
+      "preserved": [
+        "Retry budget R=max(0,L-A)와 partial recovery",
+        "Stale branch archive·owner·safe force update 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "4개 본문 파일 연결"
     },
     {
       "route": "ai/claw-session",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-session.tsx",
       "publicPath": "cs/ai/claw-session",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "로그인 401 trace는 있었지만 partial stream·ambiguous effect·resume 결과를 먼저 예측할 질문이 없었음",
+        "SessionStructViz가 record 용어 설명 뒤에 있어 durable/transient 경계가 첫 사례와 바로 연결되지 않았음",
+        "ContentBoundary가 사례와 핵심 그림 사이에 있었음"
+      ],
+      "fixture": {
+        "request": "로그인 401 수정",
+        "durable": [
+          "user/assistant blocks",
+          "effect/test ledger",
+          "authority/recovery refs"
+        ],
+        "transient": [
+          "partial text",
+          "JSON delta",
+          "in-flight process"
+        ],
+        "ambiguousCut": "edit effect 뒤 ToolResult append 전"
+      },
+      "stageAnchors": {
+        "S": "overview의 로그인 401 session",
+        "B": "세 예측과 durable/transient Viz",
+        "1": "conversation-runtime",
+        "2": "fork-compaction",
+        "3": "session-control"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/session.rs",
+          "application": "Typed message·JSONL·fork·compaction·workspace identity"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/conversation.rs",
+          "application": "User→assistant→permission/effect→ToolResult append 순서"
+        },
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/session_control.rs",
+          "application": "Pinned session control API의 실제 범위"
+        },
+        {
+          "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+          "application": "Local record와 external effect의 dual-write gap"
+        },
+        {
+          "href": "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+          "application": "Append-only event·derived view·snapshot 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "로그인 turn을 session·turn·attempt·effect로 나누고 committed message/effect/boundary와 transient stream을 분리했습니다. Effect 뒤 result 전 crash, message-copy fork와 workspace isolation, pause/resume와 cancel/shutdown을 실제 pinned 범위와 hardening 목표로 구분했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-session/Overview.tsx",
+        "src/pages/articles/ai/claw-session/ConversationRuntime.tsx",
+        "src/pages/articles/ai/claw-session/ForkCompaction.tsx",
+        "src/pages/articles/ai/claw-session/SessionControl.tsx",
+        "src/pages/articles/ai/claw-session/viz/SessionStructViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-session/Overview.tsx",
+      "contentHash": "4f71c42dc0fc9d4bd8f77cd9f4fef9b6621b8d447484d5f2d943ae9d12bce2e8",
+      "preserved": [
+        "Pinned typed record·conversation append·fork semantics",
+        "Crash cut·reconciliation·workspace mismatch hardening",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "4개 본문 파일 연결"
     },
     {
       "route": "ai/claw-subagent-orchestration",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-subagent-orchestration.tsx",
       "publicPath": "cs/ai/claw-subagent-orchestration",
-      "status": "unreviewed",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "status": "rewritten-local-verified",
+      "beforeDefects": [
+        "일반 역할 설명만 있고 한 coding task의 goal·dependency·artifact ownership을 추적하는 사례가 없었음",
+        "TeamLeadFlowViz가 상세 절에 있고 generic label만 보여 첫 화면의 핵심 흐름이 약했음",
+        "ContentBoundary가 사례와 핵심 그림보다 먼저 나왔음"
+      ],
+      "fixture": {
+        "goal": "로그인 401 최소 수정+deterministic test",
+        "main": "사용자 완료 조건·최종 통합",
+        "coordinator": "read-only auth trace→single-owner patch/test",
+        "workerArtifacts": [
+          "file:line evidence",
+          "isolated diff",
+          "test receipt"
+        ]
+      },
+      "stageAnchors": {
+        "S": "overview의 로그인 401 분해",
+        "B": "세 예측과 ownership Viz",
+        "1": "team-lead-workers",
+        "2": "agent-selection",
+        "3": "guardrails"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/claw-analog/src/agents.rs",
+          "application": "Agent spec·permission default·split session·sequential runner의 pinned 범위"
+        },
+        {
+          "href": "https://www.anthropic.com/engineering/multi-agent-research-system",
+          "application": "Orchestrator-worker 병렬 research의 경험적 설계 근거"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 새 사례·예측·Viz 문장을 수동으로 읽고 용어를 사례 뒤에 배치했으며, 긴 문장은 구현 경계·충돌·복구의 의미가 손실되지 않는지 실제 신호별로 재검토했습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 새 Viz 390px 이미지를 직접 확인: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-225/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "semanticReview": "로그인 401 작업에서 main의 user goal, coordinator의 dependency/write ownership, worker의 evidence·diff·test receipt를 분리했습니다. Separate worktree와 의미 충돌, 완료 문장과 artifact, queue cancellation과 child process·credential 회수를 구분했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "운영 배포와 production 390/1440 재검증"
+      ],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/claw-subagent-orchestration/Overview.tsx",
+        "src/pages/articles/ai/claw-subagent-orchestration/TeamLeadWorkers.tsx",
+        "src/pages/articles/ai/claw-subagent-orchestration/AgentSelection.tsx",
+        "src/pages/articles/ai/claw-subagent-orchestration/Guardrails.tsx",
+        "src/pages/articles/ai/claw-subagent-orchestration/viz/TeamLeadFlowViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/claw-subagent-orchestration/Overview.tsx",
+      "contentHash": "60df7206f6f5e83c66a827a8f939d073c0787e83512fa4edfcfe8400e407b4ac",
+      "preserved": [
+        "Task contract·write ownership·artifact verification",
+        "Agent selection hard constraints·budget/capability/topology guardrails",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "4개 본문 파일 연결"
     },
     {
       "route": "ai/claw-task-team",
@@ -11158,24 +11520,24 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 55,
+    "rewritten-local-verified": 61,
     "rewritten-production-verified": 18,
-    "unreviewed": 113
+    "unreviewed": 107
   },
   "localValidationSummary": {
-    "rewritten": 73,
-    "remainingUnreviewed": 113,
+    "rewritten": 79,
+    "remainingUnreviewed": 107,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "/tmp/teach-all/checkpoint219-learning.log — 799편 정확6+4 strict actual exit0",
-    "formulaStrict": "/tmp/teach-all/checkpoint219-formula.log — 1,471식 explicit annotation strict actual exit0",
-    "typescript": "checkpoint219 actual npx tsc -b --pretty false exit0",
-    "note": "현재 73편은 actual-body semantic review를 마쳤고 그중 18편은 운영 검증까지 완료했습니다. 미검토 113편은 완료에 포함하지 않습니다.",
+    "learningStrict": "checkpoint225 — 799편 정확6+4 strict actual exit0",
+    "formulaStrict": "checkpoint225 — 1,471식 explicit annotation strict actual exit0",
+    "typescript": "checkpoint225 actual npx tsc -b --pretty false exit0",
+    "note": "현재 79편은 actual-body semantic review를 마쳤고 그중 18편은 운영 검증까지 완료했습니다. 미검토 107편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 73,
-    "rewrittenLocalVerified": 55,
-    "unreviewed": 113,
+    "verifiedRewrites": 79,
+    "rewrittenLocalVerified": 61,
+    "unreviewed": 107,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
@@ -11187,6 +11549,7 @@
     "checkpoint213Humanize": "/tmp/teach-all/humanize-ai-six-visible-213/summary.json",
     "checkpoint213Production": "docs/teach-system-audit/checkpoint-213-production.json",
     "checkpoint219Browser": "/tmp/teach-all/browser-ai-six-219/summary.json",
-    "checkpoint219Production": "docs/teach-system-audit/checkpoint-219-production.json"
+    "checkpoint219Production": "docs/teach-system-audit/checkpoint-219-production.json",
+    "checkpoint225Browser": "/tmp/teach-all/browser-ai-six-225/summary.json"
   }
 }

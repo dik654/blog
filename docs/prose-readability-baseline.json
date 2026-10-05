@@ -10,7 +10,7 @@
       "score": 80
     },
     "ai/claw-session": {
-      "fingerprint": "ab5ba31e340276da",
+      "fingerprint": "233e73cafa316b6b",
       "score": 72
     },
     "ai/claw-overview": {
@@ -30,7 +30,7 @@
       "score": 42
     },
     "ai/claw-permissions": {
-      "fingerprint": "7c31529dc7b1dc8d",
+      "fingerprint": "268483332787ce49",
       "score": 42
     },
     "blockchain/filecoin-storacha": {
@@ -322,7 +322,7 @@
       "score": 23
     },
     "ai/claw-plugin": {
-      "fingerprint": "b4f4334731fd1618",
+      "fingerprint": "4d640a04cf486a21",
       "score": 22
     },
     "blockchain/bft-comparison": {
@@ -702,7 +702,7 @@
       "score": 13
     },
     "ai/claw-policy-engine": {
-      "fingerprint": "7f042c17d85a3523",
+      "fingerprint": "69dc2b9767d0d95d",
       "score": 12
     },
     "ai/hybrid-kv-cache-allocation": {
@@ -798,8 +798,8 @@
       "score": 12
     },
     "ai/claw-recovery": {
-      "fingerprint": "a04251a688f40fcd",
-      "score": 11
+      "fingerprint": "4faa09991707b4c6",
+      "score": 12
     },
     "ai/bptt": {
       "fingerprint": "c5fd044b3256705a",
@@ -1108,7 +1108,7 @@
       "score": 6
     },
     "ai/claw-subagent-orchestration": {
-      "fingerprint": "83c0d77537c769c1",
+      "fingerprint": "0c33582a0faf4d35",
       "score": 6
     },
     "ai/cnn-receptive-fields": {

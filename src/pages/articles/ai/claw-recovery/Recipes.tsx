@@ -1,4 +1,3 @@
-import RecipesViz from "./viz/RecipesViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 
@@ -39,10 +38,6 @@ export default function Recipes() {
           실행 후 성공을 독립적으로 확인하며, 실패 시 어디까지 적용됐는지 알 수
           있는 contract입니다.
         </p>
-
-        <div className="not-prose my-8">
-          <RecipesViz />
-        </div>
 
         <div id="paper-claw-recovery-recipes-source" className="scroll-mt-24">
           <CitationBlock

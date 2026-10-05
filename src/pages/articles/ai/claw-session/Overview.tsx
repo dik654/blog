@@ -91,8 +91,6 @@ export default function Overview() {
         세션은 모델의 기억이 아니라 작업을 다시 찾는 durable record입니다
       </h2>
 
-      <ContentBoundary article="claw-session" />
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           사용자가 로그인 401 오류 수정을 요청했다고 해 보겠습니다. 모델이 원인을 설명하는 것만으로는 작업이 끝나지 않습니다. Runtime은 어떤 요청에서 시작했는지, 어느
@@ -108,7 +106,25 @@ export default function Overview() {
           이 글은 저장된 대화와 실행이 어디까지 같은 작업인지 식별하는 경계를
           다룹니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Streaming 중인 불완전한 tool JSON을 durable session message로 바로 commit해야 할까요?</li>
+          <li>Edit attempt가 timeout되고 ToolResult가 없으면 workspace effect도 없었다고 볼 수 있을까요?</li>
+          <li>Session을 resume하면 이전 effect가 자동 rollback되거나 안전하게 한 번만 재실행될까요?</li>
+        </ol>
+        <p>
+          아래 그림은 pinned 구조체를 그대로 옮긴 class diagram이 아니라, 실제
+          typed record와 운영에 필요한 effect·authority·attempt 경계를 함께 놓은
+          <strong> 목표 architecture</strong>입니다. Pinned source에서 확인된
+          범위는 이어지는 source block과 schema ledger에서 따로 표시합니다.
+        </p>
       </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <SessionStructViz />
+      </div>
+
+      <ContentBoundary article="claw-session" />
 
       <div className="not-prose my-7 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {SCENARIO_TRACE.map(([status, step, detail]) => (
@@ -152,19 +168,6 @@ export default function Overview() {
             </p>
           </div>
         ))}
-      </div>
-
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>
-          아래 그림은 pinned 구조체를 그대로 옮긴 class diagram이 아니라, 실제
-          typed record와 운영에 필요한 effect·authority·attempt 경계를 함께 놓은
-          <strong> 목표 architecture</strong>입니다. Pinned source에서 확인된
-          범위는 이어지는 source block과 schema ledger에서 따로 표시합니다.
-        </p>
-      </div>
-
-      <div className="not-prose my-8 min-w-0">
-        <SessionStructViz />
       </div>
 
       <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">

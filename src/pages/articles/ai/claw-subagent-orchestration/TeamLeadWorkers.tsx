@@ -1,4 +1,3 @@
-import TeamLeadFlowViz from "./viz/TeamLeadFlowViz";
 import { CitationBlock } from "@/components/ui/citation";
 
 const responsibilities = [
@@ -34,9 +33,6 @@ export default function TeamLeadWorkers() {
           실행 순서와 재시도·취소를 계속 조정해야 할 때 추가하는 orchestration layer입니다.
         </p>
 
-        <div className="not-prose my-8">
-          <TeamLeadFlowViz />
-        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-3 md:grid-cols-3">

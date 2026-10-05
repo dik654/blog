@@ -48,13 +48,15 @@ export function SessionFrame({
 export function SessionSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: SessionStep[];
   columns?: 3 | 4;
+  compactMobile?: boolean;
 }) {
   return (
     <ol
-      className={`grid gap-x-7 gap-y-7 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
+      className={`grid gap-x-7 gap-y-7 ${compactMobile ? "grid-cols-2" : ""} ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
     >
       {items.map((item) => (
         <li

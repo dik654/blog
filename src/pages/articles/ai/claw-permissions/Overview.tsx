@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
+import PolicyViz from "./viz/PolicyViz";
 
 const LOGIN_TRACE = [
   [
@@ -56,8 +57,6 @@ export default function Overview() {
         권한은 모델의 제안을 실제 effect로 바꾸기 전에 host가 내리는 결정입니다
       </h2>
 
-      <ContentBoundary article="claw-permissions" />
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           사용자가 “로그인 버튼이 401을 반환하니 원인을 찾아 최소 수정하고
@@ -86,7 +85,27 @@ export default function Overview() {
           계약입니다. 특히 outer authority ceiling과 durable receipt는 현재
           <code>PermissionPolicy</code>가 완성해 둔 기능이 아닙니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>
+            모델이 올바른 <code>edit_file</code> 호출을 만들면 그 호출 자체가
+            <code>src/auth.ts</code> 쓰기 권한도 만들까요?
+          </li>
+          <li>
+            Policy가 Allow를 반환하면 file write와 뒤의 test도 반드시 성공할까요?
+          </li>
+          <li>
+            사람이 edit를 승인하면 바깥 sandbox·workspace ceiling을 넘어서는
+            path도 쓸 수 있을까요?
+          </li>
+        </ol>
       </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <PolicyViz />
+      </div>
+
+      <ContentBoundary article="claw-permissions" />
 
       <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">
         {LOGIN_TRACE.map(([owner, step, detail]) => (

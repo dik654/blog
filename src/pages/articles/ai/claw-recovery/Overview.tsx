@@ -1,3 +1,6 @@
+import ContentBoundary from "@/components/articles/content-boundary";
+import RecipesViz from "./viz/RecipesViz";
+
 const recoveryFlow = [
   ["실패 분류", "빌드, 테스트, 충돌, timeout, 외부 의존성 문제를 구분합니다."],
   ["상태 확인", "현재 브랜치와 작업 결과, 이전 복구 시도 이력을 수집합니다."],
@@ -18,8 +21,14 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         Recovery는 같은 명령을 다시 실행하는 기능이 아니다
       </h2>
-      <ContentBoundary article="claw-recovery" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          로그인 401 patch를 만든 <code>lane-17</code>에서 deterministic auth test가
+          끝나기 전에 runner 연결이 끊겼다고 하겠습니다. Timeout만 보고 같은
+          command를 다시 시작하면 첫 process가 file·cache·외부 job을 이미 바꿨는지
+          놓칠 수 있습니다. 먼저 failure fingerprint와 현재 diff, process·job
+          identity를 확인한 뒤 남은 budget 안에서 한 단계만 복구해야 합니다.
+        </p>
         <p>
           빌드 실패와 merge conflict는 모두 “작업 실패”로 보입니다. 필요한 대응은 전혀 다릅니다. network timeout은 재시도로 풀릴 수 있지만 잘못된 코드나 오래된
           branch는 상태를 바꾸지 않고 재시도해 봐야 같은 실패만 반복합니다. Recovery engine은 실패를 분류하고 현재 상태에 맞는 복구 절차를 제한된 횟수로 실행합니다.
@@ -31,7 +40,19 @@ export default function Overview() {
           acknowledgement는 source에서 이미 완성된 기능이 아니라 안전한 운영을
           위해 추가로 검증할 <strong>HARDENING</strong> 계약입니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Test command가 timeout됐다면 첫 attempt가 아무 effect도 만들지 않았다고 결론내려도 될까요?</li>
+          <li>Retry budget이 한 번 남아 있으면 compile error나 merge conflict에도 같은 command를 바로 반복해야 할까요?</li>
+          <li>두 번째 test가 통과하면 첫 외부 job의 상태를 확인하지 않고 recovery를 완료해도 될까요?</li>
+        </ol>
       </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <RecipesViz />
+      </div>
+
+      <ContentBoundary article="claw-recovery" />
 
       <div className="not-prose my-6 grid gap-3 lg:grid-cols-5">
         {recoveryFlow.map(([title, description], index) => (
@@ -74,4 +95,3 @@ export default function Overview() {
     </section>
   );
 }
-import ContentBoundary from "@/components/articles/content-boundary";
