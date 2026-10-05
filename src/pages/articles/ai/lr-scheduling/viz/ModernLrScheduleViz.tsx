@@ -451,22 +451,22 @@ export function DecayPolicyViz() {
 
 export function CosineRestartViz() {
   const labels = [
-    "Progress를 0에서 1로 정규화",
-    "Cosine 반 주기로 LR를 보간",
-    "Cycle 경계에서 LR만 되돌림",
-    "Model·optimizer state는 이어감",
+    "t=450/T=900 → r=.5",
+    "η=.1→.001의 중간은 .0505",
+    "T₀=900 끝 → T₁=1800",
+    "θ·optimizer moments는 보존",
   ] as const;
   const notes = [
-    "현재 cycle의 local step을 cycle length로 나눠 무차원 progress를 만듭니다.",
-    "1+cos(πr)를 절반으로 줄이면 peak에서 minimum으로 부드럽게 내려가는 scale이 됩니다.",
-    "Warm restart는 다음 cycle 첫 LR를 다시 peak로 올리고 cycle cursor를 0으로 되돌립니다.",
-    "Parameter와 momentum·moment를 지우는 cold restart가 아닙니다. 무엇을 보존하는지 receipt에 적습니다.",
+    "첫 900-update cycle에서 t=450이면 local progress r=.5입니다.",
+    "ηmax=.1, ηmin=.001에서 cosine scale .5를 적용하면 LR는 .0505입니다.",
+    "Cycle multiplier m=2이므로 900-update cycle 뒤 다음 길이는 1,800입니다. Cursor와 LR phase만 되돌립니다.",
+    "Warm restart는 parameter θ와 momentum·Adam moments를 이어갑니다. 이를 지우면 다른 실험입니다.",
   ] as const;
   return (
     <Scene
       id="cosine-restart-viz"
-      title="한 cosine cycle과 warm restart"
-      description="곡선의 progress 계산과 restart되는 state의 범위를 분리합니다."
+      title="η=.1→.001인 900-update cycle과 m=2 warm restart"
+      description="중간 LR .0505를 계산하고 다음 1,800-update cycle로 넘기는 state를 구분합니다."
       labels={labels}
       notes={notes}
     >
@@ -494,60 +494,83 @@ export function CosineRestartViz() {
             strokeWidth="1.25"
           />
           <motion.path
-            d="M34 40 C100 40 132 148 200 148 C268 148 300 40 366 40"
+            d="M34 40 C34 40 68 42 112 94 C156 146 190 148 190 148"
             fill="none"
             stroke={primary}
             strokeWidth="1.25"
             initial={false}
             animate={{
               pathLength: active >= 1 ? 1 : 0.34,
-              opacity: active >= 1 ? 1 : 0.25,
+              opacity: active >= 1 ? 1 : 0.65,
             }}
           />
-          {[34, 200, 366].map((x, index) => (
-            <motion.circle
-              key={x}
-              cx={x}
-              cy={index === 1 ? 148 : 40}
-              r="5"
-              fill={active >= index ? primary : muted}
-              initial={false}
-              animate={{ scale: active >= index ? 1 : 0.65 }}
-            />
-          ))}
+          <motion.circle
+            cx="112"
+            cy="94"
+            r="5"
+            fill={active <= 1 ? primary : muted}
+            initial={false}
+            animate={{ scale: active <= 1 ? 1 : 0.65 }}
+          />
+          <motion.path
+            d="M210 40 C210 40 244 42 288 94 C332 146 366 148 366 148"
+            fill="none"
+            stroke={primary}
+            strokeWidth="1.25"
+            initial={false}
+            animate={{ opacity: active >= 2 ? 1 : 0.08 }}
+          />
           <text
             x="34"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[10px]"
           >
-            r=0
+            t=0 · η=.1
           </text>
           <text
-            x="200"
+            x="112"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[10px]"
           >
-            r=1
+            t=450 · η=.0505
           </text>
           <text
-            x="366"
+            x="190"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[10px]"
           >
-            next cycle
+            t=900 · η=.001
           </text>
-          <motion.path
-            d="M202 130 C230 92 256 58 354 42"
-            fill="none"
+          <motion.line
+            x1="200"
+            y1="148"
+            x2="200"
+            y2="40"
             stroke={primary}
             strokeWidth="1.25"
             strokeDasharray="5 5"
             initial={false}
             animate={{ opacity: active >= 2 ? 1 : 0 }}
           />
+          <motion.circle
+            cx="210"
+            cy="40"
+            r="5"
+            fill={primary}
+            initial={false}
+            animate={{ opacity: active >= 2 ? 1 : 0.08 }}
+          />
+          <text
+            x="288"
+            y="168"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[10px]"
+          >
+            다음 cycle · T₁=1800
+          </text>
           <motion.g
             initial={false}
             animate={{ opacity: active === 3 ? 1 : 0.18 }}

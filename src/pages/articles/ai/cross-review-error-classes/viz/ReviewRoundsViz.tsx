@@ -21,15 +21,13 @@ const ROUNDS = [
 const RATIO = Math.sqrt(ROUNDS[2].n / ROUNDS[0].n);
 /** 같은 비율로 계속 줄어든다고 두었을 때 남은 합 */
 const REMAINING = (ROUNDS[2].n * RATIO) / (1 - RATIO);
-const TOTAL = ROUNDS.reduce((a, r) => a + r.n, 0);
-
 const OK = "#10b981";
 const WARN = "#ef4444";
 const ACCENT = "#6366f1";
 const MUTED = "#94a3b8";
 
-const X0 = 96;
-const BAR_W = 240;
+const X0 = 80;
+const BAR_W = 180;
 const MAX = 25;
 
 export default function ReviewRoundsViz() {
@@ -66,14 +64,14 @@ export default function ReviewRoundsViz() {
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
 
-          <div className="mt-4 w-full min-w-0 overflow-x-auto">
+          <div className="mt-4 w-full min-w-0">
             <svg
-              viewBox="0 0 480 200"
+              viewBox="0 0 360 210"
               role="img"
               aria-label={SCENES[s]}
-              className="h-auto w-full min-w-[30rem] max-w-2xl"
+              className="h-auto w-full max-w-lg"
             >
-              <text x={14} y={22} fontSize={8} fontWeight={700} fill={MUTED}>
+              <text x={8} y={22} fontSize={9} fontWeight={700} fill={MUTED}>
                 라운드
               </text>
               <text x={X0} y={22} fontSize={8} fontWeight={700} fill={MUTED}>
@@ -86,10 +84,10 @@ export default function ReviewRoundsViz() {
                 const w = (r.n / MAX) * BAR_W;
                 return (
                   <g key={i} opacity={active ? 1 : 0.25}>
-                    <text x={14} y={y + 14} fontSize={9.5} fontWeight={700} fill={active ? ACCENT : MUTED}>
+                    <text x={8} y={y + 14} fontSize={9.5} fontWeight={700} fill={active ? ACCENT : MUTED}>
                       {i + 1}라운드
                     </text>
-                    <text x={14} y={y + 26} fontSize={7.5} fill={MUTED}>
+                    <text x={8} y={y + 26} fontSize={7.5} fill={MUTED}>
                       {r.what}
                     </text>
                     <rect
@@ -105,23 +103,18 @@ export default function ReviewRoundsViz() {
                     <text x={X0 + w + 8} y={y + 14} fontSize={11} fontWeight={700} fill={active ? ACCENT : MUTED}>
                       {r.n}건
                     </text>
-                    {active && (
-                      <text x={X0 + w + 44} y={y + 14} fontSize={7.5} fill={MUTED}>
-                        {r.note}
-                      </text>
-                    )}
                   </g>
                 );
               })}
 
-              <line x1={14} y1={150} x2={456} y2={150} stroke={MUTED} strokeWidth={0.75} strokeOpacity={0.4} />
+              <line x1={8} y1={150} x2={352} y2={150} stroke={MUTED} strokeWidth={0.75} strokeOpacity={0.4} />
 
               {done ? (
                 <>
-                  <text x={14} y={168} fontSize={9} fontWeight={700} fill={MUTED}>
+                  <text x={8} y={168} fontSize={9} fontWeight={700} fill={MUTED}>
                     남은 어림
                   </text>
-                  <text x={14} y={180} fontSize={7.5} fill={MUTED}>
+                  <text x={8} y={180} fontSize={7.5} fill={MUTED}>
                     감쇠비 {RATIO.toFixed(2)}
                   </text>
                   <rect
@@ -138,19 +131,19 @@ export default function ReviewRoundsViz() {
                   <text x={X0 + (REMAINING / MAX) * BAR_W + 8} y={170} fontSize={11} fontWeight={700} fill={WARN}>
                     약 {REMAINING.toFixed(0)}건 남음
                   </text>
-                  <text x={96} y={192} fontSize={9} fontWeight={700} fill={WARN}>
-                    세 번을 돌려 {TOTAL}건을 고쳤는데도 남은 것이 3라운드 한 번 분량보다 많습니다
+                  <text x={80} y={198} fontSize={8.5} fontWeight={700} fill={WARN}>
+                    셋째 모집단이 달라 이 수를 예측값으로 쓰면 안 됩니다
                   </text>
                 </>
               ) : (
                 <>
-                  <text x={14} y={168} fontSize={9.5} fontWeight={700} fill={MUTED}>
+                  <text x={8} y={168} fontSize={9.5} fontWeight={700} fill={MUTED}>
                     여기까지 고친 것
                   </text>
                   <text x={X0} y={168} fontSize={11} fontWeight={700} fill={OK}>
                     {ROUNDS.slice(0, shown).reduce((a, r) => a + r.n, 0)}건
                   </text>
-                  <text x={14} y={190} fontSize={9} fill={MUTED}>
+                  <text x={8} y={190} fontSize={9} fill={MUTED}>
                     {shown < ROUNDS.length
                       ? "다음 라운드에서 또 나옵니다"
                       : "이제 남은 것을 세어 볼 차례입니다"}

@@ -9,11 +9,35 @@ import LostInMiddleViz from "./viz/LostInMiddleViz";
 
 export default function ContextWindowOptimizationArticle() {
   return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">긴 context의 capacity·utilization·prefill reuse는 다른 문제입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
-            Window에 token이 들어간다고 model이 그 evidence를 안정적으로 사용하는 것은 아닙니다. 같은 prefix 계산을 cache했다고 내용이 최신이 되는 것도
-            아닙니다. 먼저 output reserve를 포함한 token 장부를 맞추고 position·distractor 평가로 utilization을 측정하고 마지막으로 stable
-            prefix 계산을 재사용합니다.
-          </p><p>이 세 판단은 모두 <strong>context engineering</strong>이라는 상위 설계 층 아래에 있습니다. Context engineering은 문장을 다듬는 <Link to="/cs/ai/prompt-engineering">prompt engineering</Link>과 달리, retrieval 결과·tool 결과·대화 기록·system instruction 가운데 무엇을 이번 요청의 예산 안에 넣을지 고르는 layer입니다.</p><p>그 선택 자체(select→inject→compact→isolate)는 <Link to="/cs/ai/context-engineering#curation">Context engineering의 curation lifecycle</Link>이 정본이고, 후보를 무엇으로 채울지는 <Link to="/cs/ai/rag-pipeline">RAG pipeline</Link>이 다룹니다. 이 글은 선택된 항목이 예산·활용률·계산 재사용을 실제로 통과하는지만 봅니다.</p></div><TermBreakdown title="세 문제를 따로 측정" items={[{term:"Capacity",description:"Request가 허용하는 input+output token 상한과 source별 사용량입니다."},{term:"Utilization",description:"Context에 있는 relevant evidence를 model이 실제 answer와 citation에 사용하는 정도입니다.",boundary:"명목 max context length와 동일하지 않습니다."},{term:"Stable prefix",description:"여러 request에서 byte/token identity가 같은 앞부분입니다.",example:"Versioned system instruction과 tool schema"},{term:"Prompt cache",description:"동일 prefix의 prefill 계산을 provider 조건에 따라 재사용합니다.",boundary:"Cache hit는 freshness·correctness·authorization 증명이 아닙니다."}]}/><ContextWindowViz/><ContentBoundary article="context-window-optimization"/></section>
+    <section id="overview" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">긴 context의 capacity·utilization·prefill reuse는 다른 문제입니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          128k request를 구성한다고 합시다. System 8k, task 4k, retrieval 40k, history 30k,
+          tool result 20k에 답변 reserve 16k를 더하면 118k이고 headroom은 10k입니다. 같은
+          policy prefix가 반복되어 cache hit가 나더라도, 가운데 놓인 핵심 evidence를 model이
+          실제로 쓰는지와 그 policy가 최신인지는 별도로 확인해야 합니다.
+        </p>
+        <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+        <ol>
+          <li>118k가 128k 안에 들어오면 핵심 evidence도 안정적으로 사용된다고 볼 수 있을까요?</li>
+          <li>Stable prefix cache hit가 나면 policy revision과 권한도 현재 요청에 맞는 걸까요?</li>
+          <li>압축 뒤 100k가 되면 필요한 evidence가 모두 남았다고 결론 내릴 수 있을까요?</li>
+        </ol>
+        <p>
+          세 답은 모두 <strong>아니요</strong>입니다. Capacity, utilization, freshness와 계산 재사용은
+          서로 다른 검사입니다. 압축 뒤에는 필수 evidence checklist도 다시 통과시켜야 합니다.
+        </p>
+      </div>
+      <ContextWindowViz />
+      <ContentBoundary article="context-window-optimization" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p>Window에 token이 들어간다고 model이 그 evidence를 안정적으로 사용하는 것은 아닙니다. 같은 prefix 계산을 cache했다고 내용이 최신이 되는 것도 아닙니다. 먼저 output reserve를 포함한 token 장부를 맞추고 position·distractor 평가로 utilization을 측정하고 마지막으로 stable prefix 계산을 재사용합니다.</p>
+        <p>이 세 판단은 모두 <strong>context engineering</strong>이라는 상위 설계 층 아래에 있습니다. Context engineering은 문장을 다듬는 <Link to="/cs/ai/prompt-engineering">prompt engineering</Link>과 달리, retrieval 결과·tool 결과·대화 기록·system instruction 가운데 무엇을 이번 요청의 예산 안에 넣을지 고르는 layer입니다.</p>
+        <p>그 선택 자체(select→inject→compact→isolate)는 <Link to="/cs/ai/context-engineering#curation">Context engineering의 curation lifecycle</Link>이 정본이고, 후보를 무엇으로 채울지는 <Link to="/cs/ai/rag-pipeline">RAG pipeline</Link>이 다룹니다. 이 글은 선택된 항목이 예산·활용률·계산 재사용을 실제로 통과하는지만 봅니다.</p>
+      </div>
+      <TermBreakdown title="세 문제를 따로 측정" items={[{term:"Capacity",description:"Request가 허용하는 input+output token 상한과 source별 사용량입니다."},{term:"Utilization",description:"Context에 있는 relevant evidence를 model이 실제 answer와 citation에 사용하는 정도입니다.",boundary:"명목 max context length와 동일하지 않습니다."},{term:"Stable prefix",description:"여러 request에서 byte/token identity가 같은 앞부분입니다.",example:"Versioned system instruction과 tool schema"},{term:"Prompt cache",description:"동일 prefix의 prefill 계산을 provider 조건에 따라 재사용합니다.",boundary:"Cache hit는 freshness·correctness·authorization 증명이 아닙니다."}]}/>
+    </section>
     <section id="budget" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Output reserve를 먼저 떼고 token을 실제 serialization으로 셉니다</h2><ExplainedFormula question="128k limit에서 context가 답변 공간을 잠식하지 않게 어떻게 계산하나요?" idea={<p>
             System·task·retrieval·history·tool result의 실제 serialized token을 더하고 생성할 answer와 후속 tool call
             reserve를 별도 항으로 포함합니다. 합이 한도를 넘으면 low-value source를 제외하거나 원문을 artifact로 이동합니다.

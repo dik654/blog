@@ -13,6 +13,28 @@ export default function CosineRestartSchedulingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            Peak LR가 .1, minimum LR가 .001이고 첫 cycle이 900 update라고
+            합시다. 중간인 t=450에서는 LR가 .0505입니다. Cycle이 끝나고
+            multiplier m=2로 warm restart하면 다음 cycle 길이는 1,800이 되며,
+            cursor와 LR phase만 되돌리고 model parameter와 optimizer moments는 이어갑니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>t=450, T=900이면 현재 LR는 .0505일까요?</li>
+            <li>Warm restart에서 model weight와 Adam moments도 초기화할까요?</li>
+            <li>Epoch 수만 같고 optimizer update 수가 다른 두 schedule을 그대로 비교해도 될까요?</li>
+          </ol>
+          <p>
+            첫 답은 <strong>예</strong>, 나머지 둘은 <strong>아니요</strong>입니다.
+            Cosine은 cycle 안의 update 진행률을 LR로 바꾸고, warm restart는
+            그 LR phase의 경계만 다시 엽니다. 비교할 때는 update budget과
+            보존되는 state까지 같아야 합니다.
+          </p>
+        </div>
+        <CosineRestartViz />
+        <ContentBoundary article="cosine-restart-scheduling" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
             <strong>Cosine annealing</strong>은 현재 cycle의 진행률을 peak와
             minimum 사이의 learning rate로 바꿉니다.{" "}
             <strong>Warm restart</strong>는 cycle 끝에서 LR phase만 다시
@@ -53,8 +75,6 @@ export default function CosineRestartSchedulingArticle() {
             },
           ]}
         />
-        <CosineRestartViz />
-        <ContentBoundary article="cosine-restart-scheduling" />
       </section>
 
       <section id="cosine-progress" className="scroll-mt-20">

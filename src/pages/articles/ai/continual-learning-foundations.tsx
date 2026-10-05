@@ -20,20 +20,41 @@ export default function ContinualLearningFoundationsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            Task A를 정확도 90%까지 학습한 모델이 Task B를 배운다고 합시다.
+            Task A 표본을 하나도 다시 보여 주지 않으면 정확도가 55%로
+            떨어집니다. A 표본의 1%를 replay buffer에 남기면 78%, 10%면
+            85%, 50%면 87%가 남습니다. 아래 수치는 forgetting과 저장 비용의
+            관계를 보기 위한 고정 예시이며 특정 논문의 실측치가 아닙니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>Continual learning이라면 들어오는 모든 sample로 즉시 parameter를 갱신해야 할까요?</li>
+            <li>Buffer를 10%에서 50%로 다섯 배 늘리면 Task A 정확도의 회복폭도 다섯 배가 될까요?</li>
+            <li>Label 없는 test-time adaptation으로 성능이 회복되면 새 class를 영구히 학습했다고 볼 수 있을까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. Continual learning은
+            반복 갱신을 뜻하는 상위 개념이고 online update는 그중 한 방식입니다.
+            이 예시에서는 buffer 10%에서 50%로 늘려도 2%p만 더 회복합니다.
+            Test-time adaptation의 일시적 적응과 새 지식의 영구 저장도 구분해야 합니다.
+          </p>
+        </div>
+        <ReplayBufferForgettingViz />
+        <ContentBoundary article="continual-learning-foundations" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
             <Link to="/cs/ai/fine-tuning-tradeoffs-forgetting-and-merging">
               이전 글
             </Link>
             은 fine-tuning 한 번의 목적과 forgetting을 다뤘습니다. 실제
             배포된 모델은 한 번으로 끝나지 않고 계속 갱신됩니다.{" "}
-            <strong>Continual learning</strong>은 특정 task 경계 없이
-            배포 기간 내내 새 데이터를 반영하는 이 반복 갱신 전체를
-            가리키는 이름입니다.
+            <strong>Continual learning</strong>은 특정 task 경계 없이 배포
+            기간 내내 새 데이터를 반영하는 반복 갱신 전체를 가리킵니다.
           </p>
           <p>
-            그 반복 안에서도 데이터를 다루는 방식이 갈립니다. 가진 데이터를
-            한 번에 모아 학습하는지, 들어오는 데이터를 그때그때 즉시
-            반영하는지, 이전 모델에 새 데이터 조각만 이어 붙이는지에 따라
-            뒤에 나올 forgetting 위험과 필요한 인프라가 달라집니다.
+            그 반복 안에서도 데이터를 한 번에 모아 학습하는지, 들어오는
+            대로 반영하는지, 새 데이터 조각을 주기적으로 이어 붙이는지에
+            따라 forgetting 위험과 필요한 인프라가 달라집니다.
           </p>
         </div>
         <TermBreakdown
@@ -81,7 +102,6 @@ export default function ContinualLearningFoundationsArticle() {
           benchmark에서 비교했습니다. 실험은 논문이 다룬 classification
           task와 벤치마크 범위로 제한됩니다.
         </CitationBlock>
-        <ContentBoundary article="continual-learning-foundations" />
       </section>
 
       <section id="stability-plasticity" className="scroll-mt-20">
@@ -125,7 +145,6 @@ export default function ContinualLearningFoundationsArticle() {
             저장 비용 대비 이득이 줄어드는 지점이 존재합니다.
           </p>
         </div>
-        <ReplayBufferForgettingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Regularization-based continual learning은 데이터를 저장하지 않고 이전 task에 중요했던 parameter일수록 그 값에서 멀어지는 것을

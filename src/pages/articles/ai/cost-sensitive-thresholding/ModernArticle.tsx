@@ -13,13 +13,32 @@ export default function CostSensitiveThresholdingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
+            Calibrated probability를 내는 1,000건의 fraud 후보가 있다고
+            합시다. False positive 비용은 1, false negative 비용은 9이므로
+            두 action의 기대비용은 p=.1에서 같습니다. 다만 analyst가 하루
+            200건까지만 처리하고 recall .90 이상을 지켜야 한다면, .1은
+            운영 가능한 최종 threshold가 아닐 수 있습니다.
+          </p>
+          <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
+          <ol>
+            <li>Probability model이므로 관습대로 .5를 threshold로 쓰면 될까요?</li>
+            <li>Threshold를 계속 낮추면 전체 expected cost도 언제나 줄어들까요?</li>
+            <li>Model이 같으면 prevalence나 calibration이 바뀐 뒤에도 승인한 threshold를 그대로 써도 될까요?</li>
+          </ol>
+          <p>
+            세 답은 모두 <strong>아니요</strong>입니다. .5는 기본값이 아니고,
+            .1 아래에서는 false positive 쪽 기대비용이 더 커집니다. Cost
+            교차점도 capacity·minimum recall을 통과해야 하며, 분포나 calibration이
+            바뀌면 validation sweep을 다시 해야 합니다.
+          </p>
+        </div>
+        <ThresholdPolicyViz />
+        <ContentBoundary article="cost-sensitive-thresholding" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
             <strong>Cost-sensitive threshold</strong>는 false positive와 false
             negative의 비용, 필요한 recall, 하루 처리 capacity를 보고 어느
-            probability부터 positive action을 할지 정하는 경계입니다.
-          </p>
-          <p>
-            0.5는 기본값이 아닙니다. Probability가 calibrated되고 두 오류 비용이
-            특정 비율일 때만 한 후보가 됩니다.
+            probability부터 positive action을 할지 정하는 versioned policy입니다.
           </p>
         </div>
         <TermBreakdown
@@ -51,14 +70,12 @@ export default function CostSensitiveThresholdingArticle() {
             {
               term: "Capacity",
               description: "시간당 처리 가능한 positive action의 상한입니다.",
-              example: "Analyst가 하루 2,000 alerts를 검토할 수 있습니다.",
+              example: "이 사례에서는 analyst가 하루 200 alerts를 검토할 수 있습니다.",
               boundary:
                 "비용 최적 threshold가 capacity를 넘으면 feasible policy가 아닙니다.",
             },
           ]}
         />
-        <ThresholdPolicyViz />
-        <ContentBoundary article="cost-sensitive-thresholding" />
       </section>
       <section id="expected-cost" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -131,8 +148,7 @@ export default function CostSensitiveThresholdingArticle() {
       </section>
       <section id="capacity-policy" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Capacity가 있으면 validation candidates 중 feasible threshold를
-          고릅니다
+          Capacity 안에서 비용이 가장 낮은 threshold를 고릅니다
         </h2>
         <ExplainedFormula
           question="하루 alert K개와 minimum recall rmin을 동시에 지키는 threshold는 어떻게 고르나요?"
@@ -204,11 +220,17 @@ export default function CostSensitiveThresholdingArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Receipt에는 model·calibrator digest, validation window·prevalence,
-            cost matrix, capacity, selected threshold, confusion counts·slice
-            intervals와 rollback threshold를 남깁니다. Production에서
-            prevalence·calibration·alert volume이 drift하면 같은 model이라도
-            policy를 재검증합니다.
+            Receipt에는 model과 calibrator digest를 남깁니다. 어느 validation
+            window와 prevalence에서 승인했는지도 함께 적습니다.
+          </p>
+          <p>
+            의사결정 기록에는 cost matrix, capacity, 선택한 threshold가
+            들어갑니다. 관측한 confusion counts와 slice intervals, 문제가
+            생겼을 때 돌아갈 threshold도 보존합니다.
+          </p>
+          <p>
+            Production의 prevalence, calibration, alert volume 가운데 하나라도
+            drift하면 같은 model이라도 policy를 다시 검증합니다.
           </p>
         </div>
         <div id="paper-cost-sensitive" className="scroll-mt-24">

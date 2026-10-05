@@ -508,22 +508,22 @@ export function LossSignalViz() {
 
 export function ThresholdPolicyViz() {
   const labels = [
-    "두 action의 오류 비용 정의",
-    "Probability별 expected cost 계산",
-    "두 비용의 교차점 선택",
-    "Capacity·drift로 policy 재검증",
+    "C_FP=1 · C_FN=9",
+    "R₊=(1−p) · R₋=9p",
+    "두 비용은 p=.1에서 교차",
+    "하루 200건·recall .90 gate",
   ] as const;
   const notes = [
-    "Positive action은 실제 negative일 때 FP 비용을, negative action은 실제 positive일 때 FN 비용을 냅니다.",
-    "Calibrated p에서 positive 비용은 (1−p)C_FP, negative 비용은 pC_FN입니다.",
-    "두 비용이 같은 확률 τ*를 경계로 더 싼 action을 선택합니다. FN 비용이 커지면 τ*는 낮아집니다.",
-    "하루 처리량이나 prevalence가 바뀌면 validation sweep과 rollback receipt로 threshold를 다시 승인합니다.",
+    "1,000건의 calibrated 후보에서 false positive 비용은 1, false negative 비용은 9로 둡니다.",
+    "Positive action의 기대비용은 1−p, negative action의 기대비용은 9p입니다.",
+    "1−p=9p인 p=.1이 Bayes threshold입니다. p가 .1보다 높으면 positive action이 더 쌉니다.",
+    "τ=.1도 alerts/day≤200과 recall≥.90을 함께 통과해야 배포할 수 있습니다. 분포가 바뀌면 다시 검증합니다.",
   ] as const;
   return (
     <Scene
       id="threshold-policy-viz"
-      title="Probability에서 action policy로"
-      description="0.5 관습 대신 오류 비용과 운영 제약을 직접 비교합니다."
+      title="C_FP=1·C_FN=9이면 비용은 p=.1에서 교차합니다"
+      description="1,000건의 calibrated 후보에서 Bayes threshold와 하루 200건·recall .90 gate를 차례로 봅니다."
       labels={labels}
       notes={notes}
     >
@@ -554,28 +554,28 @@ export function ThresholdPolicyViz() {
             x="228"
             y="208"
             textAnchor="middle"
-            className="fill-muted-foreground text-[8px]"
+            className="fill-muted-foreground text-[10px]"
           >
             calibrated probability p
           </text>
           <motion.path
-            d="M50 42L404 174"
+            d="M50 106L404 120"
             fill="none"
             stroke={accent}
             strokeWidth="1.25"
-            animate={{ opacity: active >= 1 ? 1 : 0.1 }}
+            animate={{ opacity: active >= 1 ? 1 : 0.55 }}
           />
           <motion.path
-            d="M50 174L404 42"
+            d="M50 178L404 48"
             fill="none"
             stroke={muted}
             strokeWidth="1.25"
-            animate={{ opacity: active >= 1 ? 1 : 0.1 }}
+            animate={{ opacity: active >= 1 ? 1 : 0.55 }}
           />
           <motion.line
-            x1="122"
+            x1="227"
             y1="30"
-            x2="122"
+            x2="227"
             y2="178"
             stroke={accent}
             strokeWidth="1.25"
@@ -583,8 +583,8 @@ export function ThresholdPolicyViz() {
             animate={{ opacity: active >= 2 ? 1 : 0.08 }}
           />
           <motion.circle
-            cx="122"
-            cy="69"
+            cx="227"
+            cy="113"
             r="7"
             fill="var(--background)"
             stroke={accent}
@@ -592,12 +592,12 @@ export function ThresholdPolicyViz() {
             animate={{ opacity: active >= 2 ? 1 : 0.08 }}
           />
           <text
-            x="122"
-            y="198"
+            x="227"
+            y="194"
             textAnchor="middle"
-            className="fill-primary text-[8px] font-bold"
+            className="fill-primary text-[10px] font-bold"
           >
-            τ*
+            τ*=.1
           </text>
           <motion.g animate={{ opacity: active === 3 ? 1 : 0.08 }}>
             <rect
@@ -614,7 +614,7 @@ export function ThresholdPolicyViz() {
               x="315"
               y="61"
               textAnchor="middle"
-              className="fill-foreground text-[8px] font-bold"
+              className="fill-foreground text-[10px] font-bold"
             >
               capacity gate
             </text>
@@ -622,11 +622,15 @@ export function ThresholdPolicyViz() {
               x="315"
               y="75"
               textAnchor="middle"
-              className="fill-muted-foreground text-[7px]"
+              className="fill-muted-foreground text-[9px]"
             >
-              alerts/day ≤ K
-            </text>
+              alerts/day≤200 · recall≥.90
+          </text>
           </motion.g>
+          <text x="50" y="194" textAnchor="middle" className="fill-muted-foreground text-[9px]">0</text>
+          <text x="404" y="194" textAnchor="middle" className="fill-muted-foreground text-[9px]">.2</text>
+          <text x="55" y="101" className="fill-primary text-[9px] font-bold">R₊=1−p</text>
+          <text x="55" y="171" className="fill-muted-foreground text-[9px] font-bold">R₋=9p</text>
         </svg>
       )}
     </Scene>
