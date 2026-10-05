@@ -6166,76 +6166,229 @@
       "route": "ai/ensemble-methods",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/ensemble-methods.tsx",
       "publicPath": "cs/ai/ensemble-methods",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "앙상블 정의가 두 모델의 오차 장부보다 먼저 나왔음",
+        "평균이 큰 오차를 언제 상쇄하고 언제 남기는지 같은 두 행에서 바로 비교하기 어려웠음",
+        "stacking·blending 수식 주석 일부가 실제 행 분리와 연산을 말하지 않았음"
+      ],
+      "fixture": {
+        "row42Errors": [
+          0.6,
+          -0.5
+        ],
+        "row42Average": 0.05,
+        "row17Errors": [
+          0.8,
+          0.7
+        ],
+        "row17Average": 0.75
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "overview의 row 42와 row 17",
+        "B": "세 예측 뒤 두 행 오차 장부 Viz",
+        "1": "averaging",
+        "2": "stacking",
+        "3": "blending",
+        "4": "practice"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1016/S0893-6080(05)80023-1",
+          "application": "stacked generalization의 out-of-fold 예측 계약"
+        },
+        {
+          "href": "https://biostats.bepress.com/ucbbiostat/paper222/",
+          "application": "Super Learner의 library·cross-validation 선택 근거"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "row 42의 +0.6·−0.5가 +0.05로 상쇄되지만 row 17의 +0.8·+0.7은 +0.75로 남는 대비를 고정했습니다. OOF prediction, disjoint blend window, test set weight 선택 금지를 실제 행과 연산으로 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/ensemble-methods/Averaging.tsx",
+        "src/pages/articles/ai/ensemble-methods/Blending.tsx",
+        "src/pages/articles/ai/ensemble-methods/Overview.tsx",
+        "src/pages/articles/ai/ensemble-methods/Practice.tsx",
+        "src/pages/articles/ai/ensemble-methods/Stacking.tsx",
+        "src/pages/articles/ai/ensemble-methods/viz/WhyEnsembleViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/ensemble-methods/Averaging.tsx",
+      "contentHash": "28781190ebf34fca07b7157fbc0d29c2ec75c7d154ff668deea62472b7799811",
+      "preserved": [
+        "평균·rank average·stacking·blending의 구분",
+        "OOF prediction과 test leakage 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "6개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/evaluation-datasets-and-pipelines",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
       "publicPath": "cs/ai/evaluation-datasets-and-pipelines",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Golden set·coverage 정의가 200개 고정 사례보다 먼저 나왔음",
+        "전체 90%와 다른 언어 72%의 충돌이 첫 화면에서 보이지 않았음",
+        "기존 핵심 Viz가 예측 질문에서 떨어져 있었음"
+      ],
+      "fixture": {
+        "goldenSet": 200,
+        "categories": {
+          "fact": 60,
+          "summary": 40,
+          "code": 50,
+          "safety": 30,
+          "multiturn": 20
+        },
+        "productionCodeShare": 0.35,
+        "goldenCodeShare": 0.25,
+        "overallPass": 0.9,
+        "otherLanguagePass": 0.72
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "problem의 200개 golden set",
+        "B": "세 예측 뒤 category·slice Viz",
+        "1": "golden-set",
+        "2": "edge-case",
+        "3": "slice-analysis",
+        "4": "pipeline",
+        "5": "deployment"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://crfm-helm.readthedocs.io/en/latest/tutorial/",
+          "application": "scenario·metric 기반 평가 구성"
+        },
+        {
+          "href": "https://github.com/openai/evals/blob/main/docs/build-eval.md",
+          "application": "evaluation example과 자동 harness 계약"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "200개 golden set의 범주 수, 운영 code 비중 35% 대 set 25%, 전체 90% 대 다른 언어 72%를 고정했습니다. Coverage·slice·offline·shadow·A/B가 서로 대신할 수 없는 검증 단계임을 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
+        "src/pages/articles/ai/evaluation-datasets-and-pipelines/viz/EvaluationDatasetsAndPipelinesViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
+      "contentHash": "8403e2ed231ca546b1e607d959c665ccede3043c13994b625eb152efbf23b9eb",
+      "preserved": [
+        "golden set·edge case·slice 분석",
+        "offline·shadow·A/B 배포 순서",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/evaluation-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/evaluation-metrics.tsx",
       "publicPath": "cs/ai/evaluation-metrics",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "metric 이름이 연체 심사 한 건보다 먼저 나왔음",
+        "score·threshold·업무 비용·평가 단위를 한 사례에서 구분하기 어려웠음",
+        "기존 MetricContractViz가 도입 예측 뒤에 바로 오지 않았음"
+      ],
+      "fixture": {
+        "delinquencyScore": 0.73,
+        "reviewThreshold": 0.7,
+        "falseNegativeCost": 20,
+        "falsePositiveCost": 1,
+        "unit": "customer decision"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "overview의 연체 score 0.73",
+        "B": "세 예측 뒤 metric contract Viz",
+        "1": "action-cost",
+        "2": "reducer",
+        "3": "map"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "application": "prediction quality metric과 scoring API의 공식 경계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "연체 score 0.73, 임계값 0.70, FN 비용 20과 FP 비용 1을 고정했습니다. Score 자체와 최종 metric, accuracy와 비용, record 수와 customer decision 수를 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/evaluation-metrics/ModernArticle.tsx",
+        "src/pages/articles/ai/evaluation-metrics/viz/ModernEvaluationViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/evaluation-metrics/ModernArticle.tsx",
+      "contentHash": "e03cc688047f31e0853ec3a7a625e8ea873203bfc7a69ed826b5911bf0d79a69",
+      "preserved": [
+        "action·cost·reducer·map 계약",
+        "평가 단위와 집계 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/experiment-tracking",
@@ -6345,76 +6498,267 @@
       "route": "ai/expert-parallelism-moe-systems",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/expert-parallelism-moe-systems.tsx",
       "publicPath": "cs/ai/expert-parallelism-moe-systems",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 3,
         "levelMarkers": 10,
         "sectionCount": 10
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "본문의 token 37 사례는 강했지만 첫 예측 질문이 없었음",
+        "첫 화면에 GPU 0→1·5 dispatch와 combine 32 KiB를 한눈에 보는 Viz가 없었음",
+        "본문 변경 뒤 topology keep 판정의 source fingerprint가 오래됐음"
+      ],
+      "fixture": {
+        "experts": 64,
+        "gpus": 8,
+        "token": 37,
+        "sourceGpu": 0,
+        "destinations": [
+          {
+            "expert": 13,
+            "gpu": 1,
+            "weight": 0.25
+          },
+          {
+            "expert": 42,
+            "gpu": 5,
+            "weight": 0.75
+          }
+        ],
+        "hidden": 4096,
+        "dtype": "FP16",
+        "dispatchKiB": 16,
+        "combineKiB": 16,
+        "roundTripKiB": 32
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "overview의 token 37",
+        "B": "세 예측 뒤 두 원격 expert 경로 Viz",
+        "1": "black-box",
+        "2": "case",
+        "3": "picture",
+        "4": "need",
+        "5": "names",
+        "6": "mechanism",
+        "7": "source",
+        "8": "comparison",
+        "9": "limits"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/deepseek-ai/DeepEP/blob/93eb6eb238127e96c6d7a4a625a6dad158348509/README.md",
+          "application": "V2.5 dispatch handle·통신 자원 계약"
+        },
+        {
+          "href": "https://arxiv.org/abs/2412.19437",
+          "application": "DeepSeek-V3의 node 제한 routing·통신 계산 경계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "GPU 0의 token 37이 expert 13/GPU 1과 expert 42/GPU 5로 각각 8 KiB를 보내고 돌아와 0.25/0.75로 합쳐지는 경로를 시각화했습니다. 두 번의 원격 이동, 32 KiB 왕복, hot expert straggler를 구분했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/expert-parallelism-moe-systems.tsx",
+        "src/pages/articles/ai/expert-parallelism-moe-systems/viz/ExpertRouteCaseViz.tsx",
+        "src/pages/articles/ai/expert-parallelism-moe-systems/viz/ExpertParallelismMoeSystemsViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/expert-parallelism-moe-systems.tsx",
+      "contentHash": "529a45527e8a5fe326e2323a392e4fb80d089b58e068b0e946a7143705309a13",
+      "preserved": [
+        "64 expert·8 GPU의 전체 계산 장부",
+        "DeepEP V2.5 고정 원문 적용",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "3개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/feature-engineering",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/feature-engineering.tsx",
       "publicPath": "cs/ai/feature-engineering",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "feature engineering 정의가 cutoff가 있는 고객 한 행보다 먼저 나왔음",
+        "event time과 available time의 누출 차이가 첫 화면에서 수치로 보이지 않았음",
+        "여러 수식 주석이 어떤 행을 제외하고 무엇을 나누는지 생략했음"
+      ],
+      "fixture": {
+        "customer": "C-1042",
+        "cutoff": "2026-08-01 09:00",
+        "creditGrade": "B",
+        "gradeReceived": "2026-07-24",
+        "priorTransactions": 12,
+        "lateDelinquencyProcessing": "2026-08-01 14:20",
+        "row": {
+          "tx_count_30d": 12,
+          "grade_B": 1
+        }
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "overview의 C-1042 cutoff 행",
+        "B": "세 예측 뒤 event·availability timeline Viz",
+        "1": "numeric",
+        "2": "categorical",
+        "3": "interaction",
+        "4": "aggregation",
+        "5": "selection"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1145/2382577.2382579",
+          "application": "data leakage의 학습·배포 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/1706.09516",
+          "application": "categorical target encoding의 ordered 통계 경계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "C-1042의 8월 1일 09:00 cutoff, 12건 거래, 7월 24일 도착한 B등급, 14:20에 처리된 연체 결과를 고정했습니다. Event가 과거여도 cutoff 뒤에 알게 된 값은 제외하며 반복 고객 random split도 누출을 막지 못함을 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/feature-engineering/Overview.tsx",
+        "src/pages/articles/ai/feature-engineering/Numeric.tsx",
+        "src/pages/articles/ai/feature-engineering/Categorical.tsx",
+        "src/pages/articles/ai/feature-engineering/Interaction.tsx",
+        "src/pages/articles/ai/feature-engineering/Aggregation.tsx",
+        "src/pages/articles/ai/feature-engineering/Selection.tsx",
+        "src/pages/articles/ai/feature-engineering/viz/OverviewViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/feature-engineering/Overview.tsx",
+      "contentHash": "661dec19f1fee931116ba3f138c93afb60598f2d102572fb980d7599cbab9fbf",
+      "preserved": [
+        "numeric·categorical·interaction·aggregation·selection 흐름",
+        "cutoff·fold-local·entity 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "7개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/fine-tuning-tradeoffs-forgetting-and-merging",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging.tsx",
       "publicPath": "cs/ai/fine-tuning-tradeoffs-forgetting-and-merging",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "fine-tuning taxonomy가 두 task vector의 작은 좌표보다 먼저 나왔음",
+        "domain gain과 general capability 보존을 혼동할 수 있었음",
+        "기존 task arithmetic Viz가 merging 절에 있어 첫 예측과 떨어져 있었음"
+      ],
+      "fixture": {
+        "base": [
+          0,
+          0
+        ],
+        "domainDelta": [
+          0.6,
+          -0.2
+        ],
+        "styleDelta": [
+          -0.1,
+          0.5
+        ],
+        "lambda": 1,
+        "combined": [
+          0.5,
+          0.3
+        ]
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "S": "goal-taxonomy의 2차원 checkpoint",
+        "B": "세 예측 뒤 task arithmetic Viz",
+        "1": "data-tradeoff",
+        "2": "forgetting",
+        "3": "mitigation",
+        "4": "merging",
+        "5": "checkpoint-ablation"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1016/S0079-7421(08)60536-8",
+          "application": "catastrophic interference의 원 개념"
+        },
+        {
+          "href": "https://arxiv.org/abs/2203.05482",
+          "application": "task vector 산술"
+        },
+        {
+          "href": "https://arxiv.org/abs/2212.04089",
+          "application": "TIES merging의 충돌 완화"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-249/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호261, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
+        "semanticReview": "base (0,0), domain delta (+0.6,−0.2), style delta (−0.1,+0.5), λ=1 결합 (+0.5,+0.3)을 고정했습니다. 좌표 합은 계산되지만 두 능력 보존을 보장하지 않으므로 held-out probe와 checkpoint ablation이 필요함을 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging.tsx",
+        "src/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging/viz/TaskArithmeticMergeViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/fine-tuning-tradeoffs-forgetting-and-merging.tsx",
+      "contentHash": "52358ca17abe3124d8f535fc36cb20f566b27d104647f204e3fb6e264f82f31e",
+      "preserved": [
+        "목표 taxonomy·데이터 품질·망각·완화·병합 흐름",
+        "task arithmetic와 held-out 검증 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/flash-attention-io-aware-kernel",
@@ -12476,23 +12820,23 @@
   ],
   "counts": {
     "rewritten-local-verified": 55,
-    "rewritten-production-verified": 36,
-    "unreviewed": 95
+    "rewritten-production-verified": 48,
+    "unreviewed": 83
   },
   "localValidationSummary": {
-    "rewritten": 91,
-    "remainingUnreviewed": 95,
+    "rewritten": 103,
+    "remainingUnreviewed": 83,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "checkpoint237 — 799편 정확6+4 strict actual exit0",
-    "formulaStrict": "checkpoint237 — 1,471식 explicit annotation strict actual exit0",
-    "typescript": "checkpoint237 actual npx tsc -b exit0",
-    "note": "현재 91편은 actual-body semantic review를 마쳤고 그중 36편은 운영 검증까지 완료했습니다. 미검토 95편은 완료에 포함하지 않습니다.",
+    "learningStrict": "checkpoint249 — 799편 정확6+4 strict local+CI actual exit0",
+    "formulaStrict": "checkpoint249 — 1,471식 explicit annotation strict local+CI actual exit0",
+    "typescript": "checkpoint249 actual npx tsc -b exit0",
+    "note": "현재 103편은 actual-body semantic review를 마쳤고 그중 48편은 운영 검증까지 완료했습니다. 미검토 83편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 91,
+    "verifiedRewrites": 103,
     "rewrittenLocalVerified": 55,
-    "unreviewed": 95,
+    "unreviewed": 83,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
@@ -12511,6 +12855,12 @@
     "checkpoint231Production": "docs/teach-system-audit/checkpoint-231-production.json",
     "checkpoint237Browser": "/tmp/teach-all/browser-ai-six-237/summary.json",
     "checkpoint237Dist": "/tmp/teach-all/browser-ai-six-237-dist/summary.json",
-    "checkpoint237Production": "docs/teach-system-audit/checkpoint-237-production.json"
+    "checkpoint237Production": "docs/teach-system-audit/checkpoint-237-production.json",
+    "checkpoint243Browser": "/tmp/teach-all/browser-ai-six-243/summary.json",
+    "checkpoint243Dist": "/tmp/teach-all/browser-ai-six-243-dist/summary.json",
+    "checkpoint243Production": "docs/teach-system-audit/checkpoint-243-production.json",
+    "checkpoint249Browser": "/tmp/teach-all/browser-ai-six-249/summary.json",
+    "checkpoint249Dist": "/tmp/teach-all/browser-ai-six-249-dist/summary.json",
+    "checkpoint249Production": "docs/teach-system-audit/checkpoint-249-production.json"
   }
 }
