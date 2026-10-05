@@ -1,5 +1,4 @@
 import { CitationBlock } from "@/components/ui/citation";
-import CompactPipelineViz from "./viz/CompactPipelineViz";
 import PhaseTransitionViz from "./viz/PhaseTransitionViz";
 
 const ACTUAL_STEPS = [
@@ -72,10 +71,6 @@ export default function CompactPipeline() {
           입력에는 같은 결과를 내기 쉽지만, 규칙에 이름이 없는 상태를 알아서
           보존해 주지는 않습니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <CompactPipelineViz />
       </div>
 
       <div className="not-prose my-8 divide-y divide-border rounded-lg border border-border">

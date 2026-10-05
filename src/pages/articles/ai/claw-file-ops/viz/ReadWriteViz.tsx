@@ -9,6 +9,7 @@ export default function ReadWriteViz() {
       note="atomic rename은 단일 file 교체의 원자성만 보장하며 여러 file 변경 전체를 transaction으로 만들지는 않습니다."
     >
       <FileSteps
+        compactMobile
         items={[
           {
             label: "01",

@@ -32,7 +32,7 @@ export function ConfigFrame({
   children: ReactNode;
 }) {
   return (
-    <figure data-viz="config-trust-flow" className="my-10 overflow-hidden rounded-xl border border-border/70 bg-card">
+    <figure data-viz="config-trust-flow" className="not-prose my-10 overflow-hidden rounded-xl border border-border/70 bg-card">
       <div className="p-5 sm:p-7">
         <figcaption className="max-w-3xl">
           <span className="inline-flex rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold tracking-wide text-background">
@@ -57,13 +57,15 @@ export function ConfigFrame({
 export function ConfigSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: ConfigStep[];
   columns?: 3 | 4;
+  compactMobile?: boolean;
 }) {
   return (
     <div
-      className={`grid gap-4 sm:gap-5 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
+      className={`grid gap-4 sm:gap-5 ${compactMobile ? "grid-cols-2" : ""} ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
     >
       {items.map((item) => (
         <section

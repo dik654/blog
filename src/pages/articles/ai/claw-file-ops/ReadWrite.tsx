@@ -1,4 +1,3 @@
-import ReadWriteViz from "./viz/ReadWriteViz";
 import ExplainedFormula from "@/components/ui/explained-formula";
 
 const currentOperations = [
@@ -29,10 +28,6 @@ export default function ReadWrite() {
           <code>replace_all=false</code>인 edit는 match가 여러 개여도 첫 occurrence를
           바꾸므로 unique-match 계약도 아닙니다.
         </p>
-
-        <div className="not-prose my-8">
-          <ReadWriteViz />
-        </div>
       </div>
 
       <div className="not-prose my-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

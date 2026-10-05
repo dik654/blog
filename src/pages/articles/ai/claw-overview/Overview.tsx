@@ -44,13 +44,19 @@ export default function Overview() {
           아니라고 밝힙니다. 또한 Anthropic이 유지·보증하거나 승인한 project도 아닙니다. 공개 README는 검증된 clean-room 절차까지 문서화하지 않으므로 이 글도
           독립 재구현이라는 project 성격을 그보다 강한 개발 공정 주장으로 확대하지 않습니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Provider stream에 올바른 <code>edit_file</code> 호출이 나오면 그 순간 <code>auth.ts</code>가 바뀔까요?</li>
+          <li>Permission layer가 Deny를 반환하면 file executor와 그 side effect가 생길까요?</li>
+          <li>최종 text가 “수정 완료”라고 말하면 deterministic login test receipt 없이도 turn을 성공으로 commit해도 될까요?</li>
+        </ol>
       </div>
-
-      <ContentBoundary article="claw-overview" />
 
       <div className="not-prose my-8 min-w-0">
         <ArchitectureViz />
       </div>
+
+      <ContentBoundary article="claw-overview" />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>고정 사례의 한 turn을 여섯 경계로 나눕니다</h3>

@@ -47,9 +47,11 @@ export function CompactFrame({
 export function CompactSteps({
   steps,
   columns = 4,
+  compactMobile = false,
 }: {
   steps: CompactStep[];
   columns?: 2 | 3 | 4;
+  compactMobile?: boolean;
 }) {
   const columnClass =
     columns === 2
@@ -58,7 +60,7 @@ export function CompactSteps({
         ? "sm:grid-cols-3"
         : "sm:grid-cols-2 lg:grid-cols-4";
   return (
-    <ol className={`grid gap-x-7 gap-y-7 ${columnClass}`}>
+    <ol className={`grid gap-x-7 gap-y-7 ${compactMobile ? "grid-cols-2" : ""} ${columnClass}`}>
       {steps.map((step) => (
         <li
           key={step.label}

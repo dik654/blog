@@ -13,6 +13,7 @@ export default function CompactPipelineViz() {
       note="Compaction은 context representation을 바꾸는 작업입니다. 이미 내려진 permission decision, 실행된 edit와 외부 effect를 취소하거나 rollback하지 않으며 durable ledger와 receipt를 참조합니다."
     >
       <CompactSteps
+        compactMobile
         steps={[
           {
             label: "01 · RAW HISTORY",
