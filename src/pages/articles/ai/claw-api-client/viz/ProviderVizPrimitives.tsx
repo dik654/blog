@@ -57,13 +57,15 @@ export function ProviderFrame({
 export function ProviderSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: ProviderStep[];
   columns?: 3 | 4;
+  compactMobile?: boolean;
 }) {
   return (
     <div
-      className={`grid gap-4 sm:gap-5 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
+      className={`grid gap-4 sm:gap-5 ${compactMobile ? "grid-cols-2" : ""} ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
     >
       {items.map((item) => (
         <section

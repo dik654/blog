@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import ProviderCompatMatrixViz from "./viz/ProviderCompatMatrixViz";
 
 const contract = [
   ["Request", "메시지, tool schema, 모델 옵션을 공통 요청으로 표현합니다."],
@@ -51,7 +52,23 @@ export default function Overview() {
           있지만, 이것을 Claude Code나 Codex의 비공개 내부 구조 또는 모든
           provider의 완전 호환성으로 확대하지 않습니다.
         </p>
+        <p>
+          같은 <code>weather-17</code> 요청이 서울 날씨를 묻고 <code>get_weather</code> tool을 호출한다고 합시다. Provider A는
+          <code>{`{"location":"Se`}</code>와 <code>{`oul"}`}</code>을 서로 다른 delta로 보낸 뒤 block stop을 보냅니다.
+        </p>
+        <p>
+          Provider B는 HTTP 200을 반환하지만 tool argument의 terminal event 없이 connection이 끊깁니다. Runtime이 원하는 결과는 provider 이름이 아니라
+          <code>tool-call-17</code>의 완성된 JSON, 종료 상태, usage가 들어간 같은 내부 event입니다.
+        </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Provider B가 HTTP 200을 보냈다는 사실만으로 tool-call 호환성 PASS일까요?</li>
+          <li>Provider A의 첫 JSON delta만 받은 시점에 tool을 실행해도 될까요?</li>
+          <li>Text 일부를 받은 뒤 terminal event 없이 EOF가 오면 success일까요, partial failure일까요?</li>
+        </ol>
       </div>
+
+      <ProviderCompatMatrixViz />
 
       <div id="paper-claw-api-source" className="scroll-mt-24">
         <CitationBlock

@@ -3475,7 +3475,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — Manage Claude's memory",
       href: "https://code.claude.com/docs/en/memory",
-      note: "CLAUDE.md scope·nested loading·auto memory·compaction의 현재 source 계약",
+      note: "2026-10-05 현재 · CLAUDE.md·CLAUDE.local.md·AGENTS.md 선택, path rule loading, auto memory 200줄·25KB 한도의 source 계약",
     },
   ],
   "ai/claude-code-subagents": [
@@ -3483,7 +3483,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — Create custom subagents",
       href: "https://code.claude.com/docs/en/sub-agents",
-      note: "별도 context·system prompt·tool scope·permission·main handoff의 현재 계약",
+      note: "2026-10-05 현재 · 일반 subagent의 fresh context와 CLAUDE.md hierarchy, fork의 전체 conversation 상속, tool·permission·main handoff 계약",
     },
   ],
   "ai/claude-code-permissions": [
@@ -3491,7 +3491,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Claude Code — Configure permissions",
       href: "https://code.claude.com/docs/en/permissions",
-      note: "Deny→ask→allow rule matching과 hook decision이 결합되는 현재 순서",
+      note: "2026-10-05 현재 · compound Bash 분해, deny→ask→allow precedence, PreToolUse·mod와 rule decision이 결합되는 순서",
     },
   ],
   "ai/claude-code-hooks": [
@@ -3552,7 +3552,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ),
   "ai/claw-cli": clawEvidence(
-    { kind: "공식 코드", label: "Claw Code pinned CLI entry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/main.rs", note: "REPL·one-shot dispatch와 runtime·renderer 연결의 pinned 범위이며 모든 terminal·crash recovery 보장은 아님" },
+    { kind: "공식 코드", label: "Claw Code pinned CLI entry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/main.rs", note: "2026-10-05 재검증 · REPL·one-shot dispatch와 runtime·renderer 연결의 pinned 범위이며 모든 terminal·crash recovery 보장은 아님" },
     { kind: "공식 코드", label: "Claw Code pinned command registry", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/commands/src/lib.rs", note: "SlashCommandSpec·alias·help와 handler parser surface이며 일반 shell quote grammar 보장은 아님" },
     { kind: "공식 코드", label: "Claw Code pinned terminal renderer", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/render.rs", note: "Markdown parser와 StreamRenderBuffer safe boundary·flush의 실제 source" },
     { kind: "공식 코드", label: "Claw Code pinned repository init", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/rusty-claude-cli/src/init.rs", note: "Create-if-missing·gitignore idempotency artifact이며 transaction·atomic rename·rollback 근거는 아님" },
@@ -3637,7 +3637,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 코드",
       label: "Claw Code pinned Bash tool dispatch source",
       href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/tools/src/lib.rs",
-      note: "Bash schema·first-token/path permission classifier·optional enforcer·runtime handoff의 pinned artifact이며 full shell semantics나 mandatory enforcement 보증은 아님",
+      note: "2026-10-05 재검증 · Bash schema·first-token/path permission classifier·optional enforcer·runtime handoff의 pinned artifact이며 full shell semantics나 mandatory enforcement 보증은 아님",
     },
     {
       kind: "공식 코드",
@@ -3683,10 +3683,10 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/claw-api-client": clawEvidence(
-    { kind: "공식 코드", label: "Claw Code pinned API client", href: "https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/rust/crates/api/src", note: "ProviderClient·MessageRequest·StreamEvent·adapter와 cache의 pinned source 범위" },
-    { kind: "공식 문서", label: "Anthropic Messages API — Streaming", href: "https://platform.claude.com/docs/en/build-with-claude/streaming", note: "Anthropic SSE event·content block lifecycle의 공식 wire semantics이며 Claw parser 보증은 아님" },
-    { kind: "공식 문서", label: "Anthropic — Prompt caching", href: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching", note: "Provider prefix cache와 usage·TTL의 공식 계약이며 local response cache의 안전성 근거는 아님" },
-    { kind: "공식 문서", label: "OpenAI — Prompt caching", href: "https://developers.openai.com/api/docs/guides/prompt-caching", note: "OpenAI provider-side prefix reuse와 usage 관찰의 공식 범위" },
+    { kind: "공식 코드", label: "Claw Code pinned API client", href: "https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/rust/crates/api/src", note: "2026-10-05 재검증 · ProviderClient·MessageRequest·StreamEvent·adapter와 cache의 pinned source 범위" },
+    { kind: "공식 문서", label: "Anthropic Messages API — Streaming", href: "https://platform.claude.com/docs/en/build-with-claude/streaming", note: "2026-10-05 현재 · message/block lifecycle, cumulative usage, partial JSON, ping·error·unknown event의 공식 wire semantics" },
+    { kind: "공식 문서", label: "Anthropic — Prompt caching", href: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching", note: "2026-10-05 현재 · automatic/explicit prefix cache, 5분·1시간 TTL과 creation/read usage의 공식 계약" },
+    { kind: "공식 문서", label: "OpenAI — Prompt caching", href: "https://developers.openai.com/api/docs/guides/prompt-caching", note: "2026-10-05 현재 · GPT-5.6+ explicit breakpoint·30분 TTL과 cached/cache-write token usage의 공식 범위" },
   ),
   "ai/claw-config": clawEvidence(
     { kind: "공식 코드", label: "Claw Code pinned config loader", href: "https://github.com/ultraworkers/claw-code/blob/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src/config.rs", note: "USER·PROJECT·LOCAL deep merge와 field provenance의 actual source" },

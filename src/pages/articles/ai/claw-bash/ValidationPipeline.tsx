@@ -2,7 +2,6 @@ import { CitationBlock } from "@/components/ui/citation";
 
 import BannedPatternsViz from "./viz/BannedPatternsViz";
 import PathEscapeCheckViz from "./viz/PathEscapeCheckViz";
-import ValidationStagesViz from "./viz/ValidationStagesViz";
 
 const validationLedger = [
   {
@@ -70,10 +69,6 @@ export default function ValidationPipeline() {
           내부 코드를 모두 이해하지 못합니다. 따라서 lexical allow를 semantic
           safety의 증명으로 사용하지 않습니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <ValidationStagesViz />
       </div>
 
       <div className="not-prose my-8 grid min-w-0 gap-4 sm:grid-cols-2 lg:gap-6">

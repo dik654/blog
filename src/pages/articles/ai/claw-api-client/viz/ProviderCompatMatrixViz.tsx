@@ -7,42 +7,43 @@ import {
 export default function ProviderCompatMatrixViz() {
   return (
     <ProviderFrame
-      label="CONTRACT TESTS"
-      title="기능 매트릭스는 문서의 체크표가 아니라 실행되는 test 결과다"
-      description="provider·model·API version별 request, stream, error와 usage fixture를 검증해 observed capability profile을 만듭니다."
-      note="지원 여부는 시간이 지나며 바뀌므로 hard-coded 회사별 표보다 확인 날짜와 test evidence를 노출합니다."
+      label="WEATHER-17 CONTRACT"
+      title="두 provider의 wire event를 같은 tool-call-17로 내릴 수 있는가"
+      description="서울 날씨 요청 하나로 partial JSON, terminal event, EOF와 usage를 차례로 확인합니다."
+      note="HTTP 200은 transport 성공일 뿐입니다. 완성된 JSON·terminal state·usage 의미가 fixture와 맞아야 provider compatibility를 기록합니다."
     >
       <ProviderSteps
+        compactMobile
         items={[
           {
-            label: "REQUEST",
-            title: "Schema fidelity",
-            body: "role·content·tool·structured output 변환을 검사합니다.",
+            label: "01 · REQUEST",
+            title: "weather-17",
+            body: "공통 get_weather schema를 provider payload로 바꿉니다.",
             tone: "blue",
           },
           {
-            label: "STREAM",
-            title: "Event sequence",
-            body: "text·tool delta·unknown·terminal event를 검사합니다.",
+            label: "02 · DELTAS",
+            title: "부분 JSON 조립",
+            body: "두 JSON 조각을 call ID별 buffer에 모읍니다.",
             tone: "violet",
           },
           {
-            label: "FAILURE",
-            title: "Error behavior",
-            body: "rate limit·timeout·partial stream의 mapping을 검사합니다.",
+            label: "03 · TERMINAL",
+            title: "Stop 또는 EOF",
+            body: "Stop은 parse로, terminal 없는 EOF는 partial failure로 갑니다.",
             tone: "amber",
           },
           {
-            label: "METERING",
-            title: "Usage semantics",
-            body: "input·output·reasoning·cache field 해석을 검사합니다.",
+            label: "04 · COMMIT",
+            title: "공통 event 확정",
+            body: "JSON·schema·terminal·usage가 맞을 때만 commit합니다.",
             tone: "emerald",
           },
         ]}
       />
       <ProviderRule>
-        endpoint가 200을 반환하는 것과 feature semantics가 호환되는 것은
-        다릅니다.
+        A는 terminal까지 오면 commit할 수 있습니다. B가 200 뒤 EOF로 끝나면
+        text가 일부 있어도 같은 성공 event로 바꾸지 않습니다.
       </ProviderRule>
     </ProviderFrame>
   );

@@ -146,6 +146,47 @@ function Arrow({
   );
 }
 
+function FlowPanel({
+  label,
+  detail,
+  active,
+  dashed = false,
+}: {
+  label: string;
+  detail: string;
+  active: boolean;
+  dashed?: boolean;
+}) {
+  return (
+    <motion.div
+      initial={false}
+      animate={{ opacity: active ? 1 : 0.3 }}
+      className={`min-w-0 rounded-lg border bg-background px-3 py-3 text-center ${dashed ? "border-dashed" : ""}`}
+      style={{ borderColor: active ? primary : border }}
+    >
+      <p className="break-words text-sm font-bold leading-5 text-foreground">
+        {label}
+      </p>
+      <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">
+        {detail}
+      </p>
+    </motion.div>
+  );
+}
+
+function DownArrow({ active, label }: { active: boolean; label: string }) {
+  return (
+    <motion.div
+      initial={false}
+      animate={{ opacity: active ? 1 : 0.25 }}
+      className="flex items-center justify-center gap-2 py-1 text-center text-xs font-semibold text-primary"
+    >
+      <span aria-hidden>↓</span>
+      <span>{label}</span>
+    </motion.div>
+  );
+}
+
 export function WorkspaceHarnessViz() {
   const labels = [
     "Prompt가 workspace task를 시작합니다",
@@ -238,83 +279,44 @@ export function WorkspaceHarnessViz() {
 
 export function InstructionMemoryViz() {
   const labels = [
-    "Managed·user·project instruction을 순서대로 읽습니다",
-    "Nested rule은 관련 file을 열 때 추가됩니다",
-    "Auto memory는 repository별 학습을 보탭니다",
-    "합쳐진 context는 instruction이지 permission이 아닙니다",
+    "시작 source",
+    "auth rule",
+    "auto memory",
+    "permission",
   ] as const;
   const notes = [
-    "각 source는 작성자·scope·load 시점이 다른 context 조각입니다.",
-    "아직 방문하지 않은 subtree의 rule을 전부 처음부터 싣지 않고 필요할 때 발견합니다.",
-    "Auto memory는 Claude가 쓴 note이며 사용자가 쓴 CLAUDE.md와 owner가 다릅니다.",
-    "어떤 문장을 읽었다는 사실만으로 file·shell·network 권한이 생기지 않습니다.",
-  ] as const;
-  const rows = [
-    ["managed", "organization"],
-    ["user", "personal"],
-    ["project", "repository"],
-    ["nested", "path lazy"],
-    ["memory", "repo notes"],
+    "조직의 production 승인, 사용자의 한국어, project의 pnpm test, local의 staging URL을 ordered context로 이룹니다.",
+    "src/auth/token.ts에 Read가 발생해야 .claude/rules/auth.md의 auth test 규칙이 적용됩니다.",
+    "‘표로 비교’는 Claude가 쓴 repository auto memory이며 첫 200줄 또는 25KB만 시작 때 load됩니다.",
+    "‘production 명령은 승인받기’는 행동 지침입니다. 실제 차단은 permission·hook·sandbox에서 시행합니다.",
   ] as const;
   return (
     <LessonScene
       id="claude-memory-viz"
-      title="Instruction source가 context가 되는 순서"
-      description="Scope와 load 시점을 분리해 한 stack으로 합칩니다."
+      title="token.ts를 열 때 instruction stack이 바뀌는 모습"
+      description="Session 시작 source와 path-triggered source, 별도 runtime gate를 한 사례에서 구분합니다."
       labels={labels}
       notes={notes}
     >
       {(active) => (
-        <svg
-          viewBox="0 0 440 300"
-          role="img"
-          aria-label={labels[active]}
-          className="block h-auto w-full"
-        >
-          {rows.map(([label, detail], index) => (
-            <Box
-              key={label}
-              x={28}
-              y={18 + index * 52}
-              width={132}
-              label={label}
-              detail={detail}
-              active={index <= active + 1}
-            />
-          ))}
-          <Arrow
-            x1={166}
-            y1={146}
-            x2={238}
-            y2={146}
-            active={active >= 1}
-            id="cm1"
+        <div role="img" aria-label={labels[active]} className="rounded-xl border border-border/70 bg-muted/15 p-3 sm:p-4">
+          <FlowPanel
+            label="Session 시작 source"
+            detail="managed · user · project · local"
+            active
           />
-          <Box
-            x={244}
-            y={86}
-            width={164}
-            label="current context"
-            detail="ordered evidence"
-            active={active >= 1}
+          <DownArrow active={active >= 1} label="Read src/auth/token.ts" />
+          <div className="grid grid-cols-2 gap-2">
+            <FlowPanel label="auth path rule" detail="Read 때 load" active={active >= 1} />
+            <FlowPanel label="auto memory" detail="prefer table" active={active >= 2} />
+          </div>
+          <FlowPanel
+            label="현재 context ≠ Bash permission"
+            detail="ordered instruction과 실행 gate는 서로 다른 층"
+            active={active >= 2}
+            dashed={active >= 3}
           />
-          <Box
-            x={244}
-            y={174}
-            width={164}
-            label="runtime gate"
-            detail="separate authority"
-            active={active >= 3}
-          />
-          <Arrow
-            x1={326}
-            y1={146}
-            x2={326}
-            y2={170}
-            active={active >= 3}
-            id="cm2"
-          />
-        </svg>
+        </div>
       )}
     </LessonScene>
   );
@@ -322,88 +324,49 @@ export function InstructionMemoryViz() {
 
 export function SubagentHandoffViz() {
   const labels = [
-    "Main이 objective와 input snapshot을 고정합니다",
-    "Subagent는 별도 context와 좁은 tool scope에서 조사합니다",
-    "Summary와 source receipt를 main에 반환합니다",
-    "Main이 원자료를 다시 검증한 뒤에만 반영합니다",
+    "main 상태",
+    "일반 agent",
+    "fork",
+    "main 검증",
   ] as const;
   const notes = [
-    "‘조사해 줘’ 대신 file 범위·질문·금지 action·출력 schema를 적습니다.",
-    "별도 context는 집중을 돕지만 부모 대화의 모든 사실을 자동 상속하지 않습니다.",
-    "자유로운 완료 문장보다 file/line·command·uncertainty가 있는 artifact를 반환합니다.",
-    "Subagent 수가 늘어도 사실성이나 safe merge가 자동 보장되지는 않습니다.",
+    "Main은 이미 login failure log와 src/auth/session.ts를 읽었지만 이 상태가 모든 agent에 자동 복사되지는 않습니다.",
+    "Task message와 custom prompt·tools, 기본 CLAUDE.md hierarchy는 받지만 main history와 auto memory는 받지 않습니다.",
+    "Fork는 system prompt·tools·model·message history를 상속해 설명 비용을 줄이는 대신 input isolation을 잃습니다.",
+    "일반 subagent든 fork든 결론만 믿지 않고 main이 INC-81의 source identity와 재현 command를 다시 확인합니다.",
   ] as const;
   return (
     <LessonScene
       id="claude-subagent-viz"
-      title="Main과 subagent 사이의 검증 가능한 handoff"
-      description="입력 snapshot과 반환 artifact의 owner를 도형으로 분리합니다."
+      title="같은 INC-81을 일반 subagent와 fork에 맡기면"
+      description="무엇이 자동으로 전달되는지와 검증 책임을 두 갈래로 비교합니다."
       labels={labels}
       notes={notes}
     >
       {(active) => (
-        <svg
-          viewBox="0 0 440 250"
-          role="img"
-          aria-label={labels[active]}
-          className="block h-auto w-full"
-        >
-          <Box
-            x={18}
-            y={86}
-            width={88}
-            label="main"
-            detail="owns write"
-            active
+        <div role="img" aria-label={labels[active]} className="rounded-xl border border-border/70 bg-muted/15 p-3 sm:p-4">
+          <FlowPanel label="Main" detail="INC-81 대화 + terminal log + session.ts" active />
+          <DownArrow active={active >= 1} label="같은 조사 목표를 두 context 방식으로 전달" />
+          <div className="grid grid-cols-2 gap-2">
+            <FlowPanel
+              label="일반 auth-reviewer"
+              detail="fresh + task + CLAUDE.md"
+              active={active >= 1}
+            />
+            <FlowPanel
+              label="Fork"
+              detail="main history 전체"
+              active={active >= 2}
+            />
+          </div>
+          <DownArrow active={active >= 2} label="둘 다 같은 receipt schema로 반환" />
+          <FlowPanel
+            label="원인 후보 + file:line + 재현 command"
+            detail="Main이 원자료를 다시 읽고 검증한 뒤 반영"
+            active={active >= 3}
+            dashed
           />
-          <Arrow
-            x1={108}
-            y1={104}
-            x2={174}
-            y2={64}
-            active={active >= 1}
-            id="cs1"
-          />
-          <Box
-            x={180}
-            y={24}
-            width={100}
-            label="subagent"
-            detail="read-only"
-            active={active >= 1}
-          />
-          <Arrow
-            x1={280}
-            y1={65}
-            x2={348}
-            y2={104}
-            active={active >= 2}
-            id="cs2"
-          />
-          <Box
-            x={352}
-            y={86}
-            width={72}
-            label="receipt"
-            detail="sources"
-            active={active >= 2}
-          />
-          <path
-            d="M388 146 C388 206 63 206 63 146"
-            fill="none"
-            stroke={active >= 3 ? primary : border}
-            strokeWidth="1.25"
-            strokeDasharray="5 5"
-          />
-          <text
-            x="222"
-            y="208"
-            textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
-          >
-            main re-reads · verifies · merges
-          </text>
-        </svg>
+        </div>
       )}
     </LessonScene>
   );
@@ -411,105 +374,41 @@ export function SubagentHandoffViz() {
 
 export function PermissionDecisionViz() {
   const labels = [
-    "Model이 concrete tool call을 제안합니다",
-    "Matching deny를 가장 먼저 확인합니다",
-    "Ask가 맞으면 사용자 decision을 기다립니다",
-    "Allow와 blocking hook을 모두 통과해야 실행합니다",
+    "명령 분해",
+    "deny match",
+    "allow 충돌",
+    "실행 차단",
   ] as const;
   const notes = [
-    "Registry와 schema는 제안 가능한 action shape이지 실행 허가가 아닙니다.",
-    "넓은 deny는 더 구체적인 allow가 자동으로 뒤집지 못하므로 overlap을 설계해야 합니다.",
-    "Approval은 현재 caller·target·operation에 binding된 fresh decision이어야 합니다.",
-    "Permission allow 뒤에도 PreToolUse hook가 block할 수 있고 silent hook은 approve가 아닙니다.",
+    "제안은 rm -rf build && npm test 한 건이지만 rule matching은 compound command의 각 subcommand를 확인합니다.",
+    "deny: Bash(rm *)가 첫 subcommand와 맞으므로 가장 높은 precedence의 결과가 정해집니다.",
+    "allow: Bash(npm test *)가 둘째 subcommand와 맞아도 한 call 안의 deny match를 carve out하지 못합니다.",
+    "결과는 blocked입니다. 별도의 git push call이라면 ask가 맞아 fresh user decision으로 갑니다.",
   ] as const;
   return (
     <LessonScene
       id="claude-permission-viz"
-      title="Tool proposal이 execution이 되는 판정 순서"
-      description="Deny·ask·allow와 hook을 한 decision path로 봅니다."
+      title="rm -rf build && npm test는 왜 전체가 막히는가"
+      description="Compound Bash call의 분해와 deny→ask→allow precedence를 실제 명령에 적용합니다."
       labels={labels}
       notes={notes}
     >
       {(active) => (
-        <svg
-          viewBox="0 0 440 270"
-          role="img"
-          aria-label={labels[active]}
-          className="block h-auto w-full"
-        >
-          <Box
-            x={154}
-            y={12}
-            width={132}
-            label="tool proposal"
-            detail="name + input"
-            active
-          />
-          <Arrow
-            x1={220}
-            y1={72}
-            x2={220}
-            y2={94}
-            active={active >= 1}
-            id="cp1"
-          />
-          <Box
-            x={154}
-            y={98}
-            width={132}
-            label="deny?"
-            detail="first match"
-            active={active >= 1}
-          />
-          <Arrow
-            x1={286}
-            y1={127}
-            x2={340}
-            y2={127}
-            active={active >= 1}
-            id="cp2"
-          />
-          <Box
-            x={344}
-            y={98}
-            width={72}
-            label="stop"
-            detail="blocked"
-            active={active >= 1}
-          />
-          <Arrow
-            x1={220}
-            y1={158}
-            x2={220}
-            y2={178}
-            active={active >= 2}
-            id="cp3"
-          />
-          <Box
-            x={62}
-            y={182}
-            width={104}
-            label="ask"
-            detail="fresh approval"
-            active={active >= 2}
-          />
-          <Box
-            x={274}
-            y={182}
-            width={104}
-            label="allow + hook"
-            detail="then execute"
+        <div role="img" aria-label={labels[active]} className="rounded-xl border border-border/70 bg-muted/15 p-3 sm:p-4">
+          <FlowPanel label="rm -rf build && npm test" detail="Model이 제안한 Bash call 한 건" active />
+          <DownArrow active={active >= 1} label="compound command를 subcommand별로 검사" />
+          <div className="grid grid-cols-2 gap-2">
+            <FlowPanel label="rm -rf build" detail="deny match" active={active >= 1} />
+            <FlowPanel label="npm test" detail="allow match" active={active >= 2} />
+          </div>
+          <DownArrow active={active >= 2} label="deny → ask → allow precedence 적용" />
+          <FlowPanel
+            label="전체 call: BLOCKED"
+            detail="allow가 겹쳐도 deny를 뒤집지 못하며 process는 시작되지 않음"
             active={active >= 3}
+            dashed
           />
-          <Arrow
-            x1={168}
-            y1={211}
-            x2={270}
-            y2={211}
-            active={active >= 3}
-            id="cp4"
-          />
-        </svg>
+        </div>
       )}
     </LessonScene>
   );

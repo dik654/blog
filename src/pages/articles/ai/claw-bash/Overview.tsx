@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
+import ValidationStagesViz from "./viz/ValidationStagesViz";
 
 const executionTrace = [
   {
@@ -103,7 +104,22 @@ export default function Overview() {
           <strong> PINNED</strong>는 그 snapshot에서 확인한 동작이고,
           <strong> HARDENING</strong>은 안전한 release를 위해 추가할 계약입니다.
         </p>
+        <p>
+          첫 후보는 <code>rg -n &quot;401|Unauthorized&quot; src tests</code>입니다. 여기에 <code>&gt; report.txt</code>가 붙으면
+          file write가 생깁니다. <code>| sh</code>가 붙으면 search 결과가 다음 process의 code가 됩니다.
+        </p>
+        <p>
+          세 문자열 모두 첫 executable은 <code>rg</code>지만 실제 effect는 같지 않습니다.
+        </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>첫 token이 <code>rg</code>로 같으면 세 command를 모두 read-only로 분류해도 될까요?</li>
+          <li>Permission이 deny를 반환하면 shell process와 stdout이 만들어질까요?</li>
+          <li>실행이 timeout으로 끝나면 workspace effect도 없었다고 결론내릴 수 있을까요?</li>
+        </ol>
       </div>
+
+      <ValidationStagesViz />
 
       <ContentBoundary article="claw-bash" />
 

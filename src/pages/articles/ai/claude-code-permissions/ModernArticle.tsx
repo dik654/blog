@@ -18,7 +18,19 @@ export default function ClaudeCodePermissionsArticle() {
             허용됐다는 뜻이 아닙니다. Current identity·resource·operation에 맞는
             deny·ask·allow rule과 hook decision을 runtime이 적용합니다.
           </p>
+          <p>
+            한 설정에 <code>deny: Bash(rm *)</code>, <code>ask: Bash(git push *)</code>, <code>allow: Bash(npm test *)</code>가 있다고 합시다.
+            Model이 <code>rm -rf build &amp;&amp; npm test</code>를 한 Bash call로 제안했습니다. Claude Code는 compound command를 subcommand로 나눈 뒤
+            각 rule을 대조합니다.
+          </p>
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li><code>npm test</code>가 allow와 맞아도 앞의 <code>rm -rf build</code> 때문에 전체 call이 막힐까요?</li>
+            <li><code>git push origin main</code>은 allow가 없어도 바로 deny될까요, 사용자에게 물을까요?</li>
+            <li>PreToolUse hook이 <code>allow</code>를 돌려주면 matching deny·ask를 건너뛸 수 있을까요?</li>
+          </ol>
         </div>
+        <PermissionDecisionViz />
         <TermBreakdown
           title="한 call을 판단하는 네 대상"
           items={[
@@ -50,7 +62,6 @@ export default function ClaudeCodePermissionsArticle() {
             },
           ]}
         />
-        <PermissionDecisionViz />
         <ContentBoundary article="claude-code-permissions" />
       </section>
       <section id="precedence" className="scroll-mt-20">
@@ -129,9 +140,13 @@ export default function ClaudeCodePermissionsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            File tool rule만으로 Bash subprocess의 모든 file 접근을 막았다고 볼 수 없습니다. Credential scope·filesystem
-            sandbox·network policy·external service authorization을 별도 층으로 둡니다. PreToolUse hook가 allow를 반환해도
-            matching deny·ask를 우회하지 못하며 blocking hook는 permission상 허용된 call도 막을 수 있습니다.
+            File tool rule만으로 Bash subprocess의 모든 file 접근을 막았다고 볼 수 없습니다. Credential scope·filesystem sandbox·network
+            policy·external service authorization을 별도 층으로 둡니다.
+          </p>
+          <p>
+            PreToolUse hook가 allow를 반환해도 matching deny·ask를 우회하지 못합니다. 반대로 exit 2 같은 blocking hook는 permission상 허용된
+            call도 먼저 멈출 수 있습니다. 제품 version과 조직 설정에 따라 mod가 뒤에서 일부 결정을 바꿀 수 있으므로, managed policy와 실제
+            runtime 구성을 함께 고정합니다.
           </p>
         </div>
       </section>

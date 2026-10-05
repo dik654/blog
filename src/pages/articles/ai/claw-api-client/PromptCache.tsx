@@ -99,9 +99,11 @@ export default function PromptCache() {
         <p className="leading-7">
           Anthropic의 현재 문서는 automatic caching과 explicit cache breakpoint,
           기본 5분·선택적 1시간 TTL 및 provider-specific usage field를
-          설명합니다. OpenAI 문서는 recent model의 automatic caching과 최신
-          model family의 explicit breakpoint·cache write usage 차이를
-          설명합니다. 세부 동작은
+          설명합니다.
+        </p>
+        <p className="leading-7">
+          OpenAI의 현재 문서는 eligible prefix의 automatic caching을 설명합니다. GPT-5.6 이상에서는 <code>prompt_cache_options</code>로
+          explicit breakpoint와 30분 TTL을 요청하며, response의 cached token과 cache-write token을 따로 확인합니다. 세부 동작은
           <a
             href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
             target="_blank"
@@ -111,7 +113,7 @@ export default function PromptCache() {
           </a>
           와
           <a
-            href="https://platform.openai.com/docs/guides/prompt-caching"
+            href="https://developers.openai.com/api/docs/guides/prompt-caching"
             target="_blank"
             rel="noreferrer"
           >

@@ -49,9 +49,11 @@ export function BashFrame({
 export function BashSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: BashStep[];
   columns?: 2 | 3 | 4 | 5;
+  compactMobile?: boolean;
 }) {
   const grid =
     columns === 2
@@ -63,7 +65,7 @@ export function BashSteps({
           : "sm:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <div className={`grid min-w-0 gap-4 lg:gap-6 ${grid}`}>
+    <div className={`grid min-w-0 gap-4 lg:gap-6 ${compactMobile ? "grid-cols-2" : ""} ${grid}`}>
       {items.map((item) => (
         <section
           key={`${item.label}-${item.title}`}

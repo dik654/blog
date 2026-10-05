@@ -3,43 +3,43 @@ import { CliFrame, CliRule, CliSteps } from "./CliVizPrimitives";
 export default function ReplLoopViz() {
   return (
     <CliFrame
-      label="INTERACTION LOOP"
-      title="한 번의 입력도 세 경로로 갈라진다"
-      description="CLI는 로컬 제어 명령, 모델에 보낼 프롬프트, 종료 신호를 입력 직후 구분하고 각 경로의 결과를 다시 하나의 화면 상태로 모읍니다."
-      note="이 루프에서 모델은 일반 프롬프트만 받습니다. /exit 같은 제어 명령까지 모델에 보내면 종료와 상태 변경이 확률적인 동작이 됩니다."
+      label="THREE INPUTS"
+      title="/status·일반 prompt·EOF는 서로 다른 owner에게 간다"
+      description="입력 직후 route를 고정하고 각 결과를 같은 session event 기록과 화면 state에 모읍니다."
+      note="모델은 일반 prompt만 받습니다. TTY와 JSONL은 표현은 달라도 같은 event identity와 terminal state를 보존해야 합니다."
     >
       <CliSteps
+        compactMobile
         items={[
           {
-            label: "01 · READ",
-            title: "입력 수집",
-            body: "한 줄·여러 줄·EOF를 구분하고 현재 TTY 상태를 함께 읽습니다.",
+            label: "01 · /status",
+            title: "Local command",
+            body: "Registry handler에서 끝나며 model request는 없습니다.",
             tone: "blue",
           },
           {
-            label: "02 · ROUTE",
-            title: "경로 결정",
-            body: "slash command, 일반 프롬프트, 종료 신호를 결정론적으로 나눕니다.",
+            label: "02 · 테스트를 고쳐줘",
+            title: "Model turn",
+            body: "Session context를 runtime에 보내 typed event를 받습니다.",
             tone: "violet",
           },
           {
-            label: "03 · RUN",
-            title: "실행과 이벤트",
-            body: "로컬 핸들러 또는 모델 런타임을 호출하고 구조화된 이벤트를 받습니다.",
+            label: "03 · PERMISSION",
+            title: "Focus handoff",
+            body: "Tool target과 effect를 보여 주는 승인 UI로 focus를 옮깁니다.",
             tone: "emerald",
           },
           {
-            label: "04 · PRESENT",
-            title: "상태 표시",
-            body: "텍스트·tool call·권한 요청·오류를 구분해 표시한 뒤 다음 입력을 기다립니다.",
+            label: "04 · EOF",
+            title: "Deterministic exit",
+            body: "EOF를 model text와 분리해 마지막 state·exit code를 확정합니다.",
             tone: "amber",
           },
         ]}
       />
       <CliRule>
-        대화형 REPL과 자동화용 출력은 같은 실행 코어를 공유하되, 표현 계층은
-        분리합니다. 사람에게는 진행 상태를 보여주고 파이프에는 안정적인 JSONL을
-        내보내야 합니다.
+        세 경로의 결과를 session·turn·event sequence로 묶으면 대화형 화면과
+        자동화 JSONL을 같은 receipt에서 만들 수 있습니다.
       </CliRule>
     </CliFrame>
   );
