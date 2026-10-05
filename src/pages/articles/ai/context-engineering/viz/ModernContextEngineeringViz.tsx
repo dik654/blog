@@ -192,17 +192,17 @@ export function InstructionBoundaryViz() {
 
 export function ProvenanceFreshnessViz() {
   const mobile = useMobileDiagram();
-  const labels = ["Fragment shape", "Identity·version", "Freshness·ACL", "Conflict resolution"];
+  const labels = ["v7 fragment", "URI·revision", "8월 15일·HR ACL", "v7 선택·v6 제외"];
   const notes = [
-    "Chunk text만 넘기지 않고 원본을 다시 찾을 수 있는 fragment receipt를 만듭니다.",
-    "같은 policy 이름이라도 URI·revision이 다르면 서로 다른 entity로 취급합니다.",
-    "UpdatedAt·retrievedAt·validUntil·ACL을 함께 검사해 오래되거나 권한 밖인 fragment를 거부합니다.",
-    "충돌하면 더 그럴듯한 문장이 아니라 지정된 canonical source와 version rule로 선택합니다.",
+    "휴가 문장과 policy://leave/section-4@v7 receipt를 한 record로 전달합니다.",
+    "같은 leave policy라도 v6와 v7의 revision·digest가 다르면 서로 다른 entity입니다.",
+    "2026-08-15가 validity 안에 있고 tenant A HR reader에게 허용된 fragment만 남깁니다.",
+    "Similarity .92인 stale v6보다 similarity .81인 canonical v7을 선택합니다.",
   ];
   return (
-    <SceneFrame id="provenance-freshness-viz" eyebrow="Fragment receipt" title="검색 결과를 출처 없는 문장에서 검증 가능한 fragment로 바꿉니다" description="Text→identity→freshness→conflict resolution을 봅니다." labels={labels} notes={notes}>
+    <SceneFrame id="provenance-freshness-viz" eyebrow="2026-08-15 · TENANT A" title="Similarity가 더 높은 v6를 제외하고 현재 정본 v7을 고릅니다" description="Text→identity→validity·ACL→canonical revision을 한 receipt로 추적합니다." labels={labels} notes={notes}>
       {(active) => (
-        <svg viewBox={mobile ? ["25 25 355 260", "25 25 355 260", "25 25 355 260", "385 45 315 220"][active] : "0 0 720 310"} role="img" aria-label={labels[active]} className="block h-auto w-full">
+        <svg viewBox={mobile ? ["25 25 355 260", "25 25 355 260", "25 25 355 260", "385 45 315 220"][active] : "0 0 720 310"} role="img" aria-label={labels[active]} className={mobile ? "block aspect-[355/260] h-auto w-full" : "block h-auto w-full"}>
           <g opacity={active <= 2 ? 1 : 0.55}>
             <path d="M40 34h276l42 42v190H40z" fill="var(--background)" stroke={active < 3 ? accent : border} strokeWidth="1.25" /><path d="M316 34v42h42" fill="none" stroke={border} />
             <text x="62" y="70" className="fill-foreground text-[14px] font-bold">retrieved fragment</text>
@@ -271,16 +271,16 @@ export function ContextWindowViz() {
   const mobile = useMobileDiagram();
   const labels = ["Output reserve", "Source budget", "Position test", "Stable prefix cache"];
   const notes = [
-    "먼저 생성할 답과 tool call 공간을 예약해야 입력이 한도를 잠식하지 않습니다.",
-    "Instruction·task·retrieval·history·tool output을 실제 tokenizer 기준으로 따로 셉니다.",
-    "같은 evidence를 앞·가운데·끝에 두고 distractor 수를 통제해 실제 활용률을 측정합니다.",
-    "동일 prefix 계산을 재사용해도 stale instruction·semantic crowding·output reserve는 그대로 검사합니다.",
+    "128k 중 답과 후속 tool call에 쓸 16k를 먼저 예약합니다.",
+    "sys 8k+task 4k+retrieval 40k+history 30k+tool 20k+output 16k=118k, headroom은 10k입니다.",
+    "118k 안에 들어와도 같은 evidence를 앞·가운데·끝에 놓아 실제 활용률을 따로 측정합니다.",
+    "Policy prefix cache hit는 계산 재사용일 뿐 revision·ACL·정답 품질의 증거가 아닙니다.",
   ];
   const blocks = [
     ["sys", 72], ["task", 54], ["retrieval", 176], ["history", 128], ["tool", 92], ["output", 110],
   ] as const;
   return (
-    <SceneFrame id="context-window-viz" eyebrow="Capacity is not quality" title="한도·배치·계산 재사용을 서로 다른 문제로 봅니다" description="Token 장부와 position test, prefix cache를 한 장에서 연결합니다." labels={labels} notes={notes}>
+    <SceneFrame id="context-window-viz" eyebrow="128K REQUEST LEDGER" title="118k 사용·10k 여유여도 utilization과 cache는 따로 검사합니다" description="정확한 token 장부, evidence 위치, stable prefix 계산 재사용을 한 요청에서 연결합니다." labels={labels} notes={notes}>
       {(active) => (
         mobile ? (
           <svg viewBox="0 0 340 190" role="img" aria-label={labels[active]} className="block h-auto w-full">

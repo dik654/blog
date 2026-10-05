@@ -33,8 +33,8 @@ export default function ReplayBufferForgettingViz() {
   return (
     <VizFrame
       eyebrow="Experience replay"
-      title="Replay buffer 크기가 클수록 forgetting이 줄지만 개선폭은 줄어듭니다"
-      description="Task A를 90% 정확도로 학습한 뒤 task B를 학습할 때, replay buffer 크기에 따라 task A 정확도가 얼마나 유지되는지 보여줍니다."
+      title="Task A 90%가 Task B 뒤 buffer 0·1·10·50%에서 55·78·85·87%로 남습니다"
+      description="같은 고정 사례에서 replay buffer 크기와 Task A 정확도의 회복폭을 함께 비교합니다."
       note="숫자는 buffer 크기와 forgetting의 관계를 보여주기 위한 예시 값이며 특정 논문의 실측치가 아닙니다."
     >
       <div
