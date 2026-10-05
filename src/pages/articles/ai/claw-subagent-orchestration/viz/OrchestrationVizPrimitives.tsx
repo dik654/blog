@@ -57,13 +57,15 @@ export function OrchestrationFrame({
 export function OrchestrationSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: OrchestrationStep[];
   columns?: 3 | 4;
+  compactMobile?: boolean;
 }) {
   return (
     <div
-      className={`grid gap-3 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}
+      className={`grid gap-3 ${compactMobile ? "grid-cols-2 [&>*:last-child]:col-span-2" : ""} ${columns === 3 ? "sm:grid-cols-3 sm:[&>*:last-child]:col-span-1" : "sm:grid-cols-2 lg:grid-cols-4"}`}
     >
       {items.map((item) => (
         <section

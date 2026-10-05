@@ -18,6 +18,14 @@ export default function ModernPluginArticle() {
         <p>
           고정 예시는 외부 plugin <code>acme/auth-lint@1.2.0</code>입니다. 이 plugin은 로그인 401 수정 뒤 <code>auth_lint</code> tool을 실행하며 <code>workspace-write</code> 권한을 선언하고, init·shutdown command와 PreToolUse hook 하나를 포함합니다. 설치부터 tool result까지 같은 identity가 유지되는지 따라가겠습니다.
         </p>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Manifest가 유효하고 settings에서 enabled이면 <code>auth-lint</code>의 init도 끝난 Ready 상태일까요?</li>
+            <li><code>requiredPermission=workspace-write</code>라는 선언만 있으면 unauthorized process 실행이 차단됐다고 볼 수 있을까요?</li>
+            <li>Reload 전후 version 문자열이 같으면 model이 본 tool schema와 실제 executor generation도 반드시 같을까요?</li>
+          </ol>
+        </div>
         <PluginRegistryViz />
         <ContentBoundary article="claw-plugin" />
       </section>

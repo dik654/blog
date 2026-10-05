@@ -1,5 +1,4 @@
 import { CitationBlock } from "@/components/ui/citation";
-import PolicyViz from "./viz/PolicyViz";
 
 const MODES = [
   [
@@ -92,10 +91,6 @@ export default function Policy() {
           Tool requirement가 등록되지 않은 이름은 안전 쪽으로
           <code>DangerFullAccess</code>를 요구합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8 min-w-0">
-        <PolicyViz />
       </div>
 
       <div className="not-prose my-7 divide-y divide-border/70 rounded-lg border border-border/70">

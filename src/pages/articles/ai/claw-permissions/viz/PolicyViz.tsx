@@ -42,11 +42,11 @@ export default function PolicyViz() {
       description="같은 흐름은 edit receipt 뒤 제안되는 deterministic login test에도 별도로 적용됩니다. 앞 action의 승인이 다음 action을 자동 허용하지 않습니다."
       note="이 도식은 권한 판정 contract를 보여 줍니다. 구체적인 mode 이름·기본값·rule merge 구현은 대상 snapshot에서 따로 확인해야 하며, project config나 hook이 상위 authority의 deny를 넓힐 수 있다고 가정하지 않습니다."
     >
-      <div className="grid min-w-0 gap-4 md:grid-cols-2 md:gap-6">
+      <div className="grid min-w-0 gap-3 md:grid-cols-2 md:gap-6">
         {ownership.map((item) => (
           <section
             key={item.owner}
-            className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
+            className="min-w-0 rounded-lg border border-border/70 bg-background p-3 sm:p-4"
           >
             <p className="break-words text-[11px] font-bold tracking-wide text-primary">
               {item.owner}
@@ -64,6 +64,7 @@ export default function PolicyViz() {
       <div className="my-6 border-t border-border/70" />
 
       <PermissionSteps
+        compactMobile
         items={[
           {
             label: "CEILING",
@@ -92,11 +93,11 @@ export default function PolicyViz() {
         ]}
       />
 
-      <div className="mt-7 divide-y divide-border/70 border-y border-border/70">
+      <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border/70 bg-border/70 sm:block sm:divide-y sm:divide-border/70 sm:overflow-visible sm:rounded-none sm:border-x-0 sm:bg-transparent">
         {outcomes.map(([result, condition, effect]) => (
           <div
             key={result}
-            className="grid min-w-0 gap-1 py-3 sm:grid-cols-[5rem_minmax(0,1fr)_minmax(0,1fr)] sm:gap-4"
+            className="min-w-0 bg-background p-3 sm:grid sm:grid-cols-[5rem_minmax(0,1fr)_minmax(0,1fr)] sm:gap-4 sm:bg-transparent sm:px-0"
           >
             <p className="break-words text-xs font-bold text-primary">
               {result}

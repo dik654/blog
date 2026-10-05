@@ -49,13 +49,15 @@ export function PermissionFrame({
 export function PermissionSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: PermissionStep[];
   columns?: 3 | 4;
+  compactMobile?: boolean;
 }) {
   return (
     <ol
-      className={`grid min-w-0 gap-6 ${
+      className={`grid min-w-0 gap-6 ${compactMobile ? "grid-cols-2" : ""} ${
         columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"
       }`}
     >

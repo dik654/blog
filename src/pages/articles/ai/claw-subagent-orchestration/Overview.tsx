@@ -1,3 +1,7 @@
+import ContentBoundary from "@/components/articles/content-boundary";
+import { CitationBlock } from "@/components/ui/citation";
+import TeamLeadFlowViz from "./viz/TeamLeadFlowViz";
+
 const orchestrationFlow = [
   ["분해", "독립적으로 조사하거나 구현할 수 있는 경계를 찾습니다."],
   ["계약", "각 sub-agent의 목표, 읽기 범위, 출력 형식과 완료 조건을 정합니다."],
@@ -15,8 +19,14 @@ export default function Overview() {
       <h2 className="text-2xl font-bold mb-6">
         Sub-agent는 역할 수가 아니라 경계가 분명할 때 유용하다
       </h2>
-      <ContentBoundary article="claw-subagent-orchestration" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p className="text-lg leading-8">
+          사용자가 로그인 401의 원인을 찾아 최소 수정하고 deterministic test로
+          검증해 달라고 요청했다고 하겠습니다. Main agent는 이 완료 조건을
+          유지하고, coordinator는 읽기 전용 원인 추적과 좁은 patch·test 작업의
+          dependency 및 <code>src/auth.ts</code> 소유권을 정합니다. Worker는 각
+          계약의 file·line evidence 또는 diff·test receipt를 돌려줍니다.
+        </p>
         <p>
           긴 작업을 여러 agent에 나누면 탐색 결과가 메인 문맥을 가득 채우는 일을 줄이고 독립적인 조사를 병렬로 진행할 수 있습니다. 그러나 같은 파일을 동시에 고치거나 목표가 겹치면
           통합 비용과 충돌이 더 커집니다. multi-agent가 늘 토큰을 아끼거나 품질을 높인다고 보기는 어렵습니다.
@@ -34,6 +44,21 @@ export default function Overview() {
           아래의 병렬 dependency scheduler·durable cancellation·artifact merge를
           모두 구현했다는 증거는 아닙니다. 후자는 별도 hardening 계약입니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>별도 context나 worktree를 쓰면 두 worker가 <code>src/auth.ts</code>를 동시에 고쳐도 의미 충돌 없이 안전할까요?</li>
+          <li>Worker가 “원인 수정 완료”라고 요약하면 diff와 deterministic test receipt 없이도 main이 완료로 통합해도 될까요?</li>
+          <li>사용자가 main 작업을 취소했을 때 queue만 비우고 실행 중인 child process와 임시 credential을 남겨도 될까요?</li>
+        </ol>
+      </div>
+
+      <div className="not-prose my-8 min-w-0">
+        <TeamLeadFlowViz />
+      </div>
+
+      <ContentBoundary article="claw-subagent-orchestration" />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
 
         <div id="paper-claw-analog-agents-source" className="scroll-mt-24">
           <CitationBlock
@@ -95,5 +120,3 @@ export default function Overview() {
     </section>
   );
 }
-import ContentBoundary from "@/components/articles/content-boundary";
-import { CitationBlock } from "@/components/ui/citation";

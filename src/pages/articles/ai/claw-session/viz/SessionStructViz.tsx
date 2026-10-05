@@ -13,6 +13,7 @@ export default function SessionStructViz() {
       note="세션 객체 하나에 모든 mutable state를 넣으라는 뜻은 아닙니다. append-only event, derived view와 transient runtime buffer를 서로 다른 수명으로 관리하되 session·turn·attempt identity로 연결합니다."
     >
       <SessionSteps
+        compactMobile
         items={[
           {
             label: "COMMITTED · MESSAGE",

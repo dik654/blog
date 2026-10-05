@@ -1,25 +1,21 @@
-const rows = [
-  ["Builtin", "binary와 함께 제공", "compile/package boundary"],
-  ["Bundled", "설치 layout에서 발견", "배포 파일 boundary"],
-  ["External", "local path·git 설치", "외부 공급망 boundary"],
+const registryStages = [
+  ["01 · DISCOVER", "외부 package 고정", "acme/auth-lint@1.2.0의 root·archive digest·publisher provenance를 같은 설치 후보에 묶습니다."],
+  ["02 · VALIDATE", "Manifest와 path 검사", "plugin.json의 version·workspace-write·hook·init/shutdown·auth_lint schema가 형식 조건을 통과합니다."],
+  ["03 · ENABLE", "Registry에 유일하게 합류", "settings가 켜져 있고 enabled 집합 안에서 auth_lint라는 tool name이 충돌하지 않아야 합니다."],
+  ["04 · READY", "Init 뒤 generation 고정", "Initialize가 성공하고 model schema·permission decision·executor가 같은 plugin generation을 가리켜야 합니다."],
 ] as const;
 
 export function PluginRegistryViz() {
   return (
-    <figure data-viz="claw-plugin-registry" className="not-prose my-8 min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card">
+    <figure data-viz="claw-plugin-registry" data-viz-canvas className="not-prose my-8 min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card">
       <figcaption className="border-b border-border/70 p-4 sm:p-6">
-        <p className="text-sm font-semibold text-foreground">세 종류의 plugin이 하나의 registry에서 충돌을 검사한다</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">종류가 달라도 enabled tool name이 같으면 aggregation이 실패합니다.</p>
+        <p className="text-sm font-semibold text-foreground">auth-lint는 발견됐다는 이유만으로 실행 가능한 plugin이 되지 않습니다</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">같은 package identity를 discover → validate → enable → ready까지 유지해야 로그인 수정 뒤의 auth_lint 호출을 해석할 수 있습니다.</p>
       </figcaption>
-      <div className="grid gap-3 p-4 sm:hidden">
-        {rows.map(([kind, source, boundary]) => <div key={kind} className="min-w-0 rounded-lg border border-border bg-background p-4"><p className="text-sm font-semibold text-foreground">{kind}</p><dl className="mt-3 grid gap-2 text-xs leading-5"><div><dt className="font-medium text-foreground">발견 위치</dt><dd className="break-words text-muted-foreground">{source}</dd></div><div><dt className="font-medium text-foreground">추가로 확인할 것</dt><dd className="break-words text-muted-foreground">{boundary}</dd></div></dl></div>)}
+      <div className="grid grid-cols-2 gap-3 p-4 sm:p-6 lg:grid-cols-4">
+        {registryStages.map(([label, title, body]) => <section key={label} className="min-w-0 rounded-lg border border-border bg-background p-3 sm:p-4"><p className="break-words text-[10px] font-bold tracking-wide text-primary">{label}</p><h3 className="mt-2 break-words text-sm font-semibold text-foreground">{title}</h3><p className="mt-2 break-words text-xs leading-5 text-muted-foreground">{body}</p></section>)}
       </div>
-      <div className="hidden p-4 sm:block sm:p-6">
-        <div className="overflow-hidden rounded-lg border border-border">
-          <div className="grid grid-cols-3 bg-muted/50 text-xs font-semibold"><div className="p-3">종류</div><div className="border-l border-border p-3">발견 위치</div><div className="border-l border-border p-3">추가로 확인할 것</div></div>
-          {rows.map(([kind, source, boundary]) => <div key={kind} className="grid grid-cols-3 border-t border-border text-xs leading-5"><div className="p-3 font-medium">{kind}</div><div className="border-l border-border p-3 text-muted-foreground">{source}</div><div className="border-l border-border p-3 text-muted-foreground">{boundary}</div></div>)}
-        </div>
-      </div>
+      <p className="border-t border-border/70 bg-muted/30 px-4 py-3 text-xs leading-5 text-muted-foreground sm:px-6">Manifest validation은 publisher 신뢰를 증명하지 않고, enabled는 init 성공을 뜻하지 않으며, permission label은 executor 앞 enforcement를 대신하지 않습니다.</p>
     </figure>
   );
 }

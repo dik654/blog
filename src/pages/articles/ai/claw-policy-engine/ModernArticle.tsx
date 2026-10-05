@@ -18,6 +18,14 @@ export default function ModernPolicyArticle() {
         <p>
           고정 예시는 로그인 401 수정 작업인 <code>lane-17</code>입니다. Green level은 2, scoped diff와 review approved, base branch fresh, retry count는 0이고 green contract도 충족했다고 하겠습니다. Priority 10의 retry rule, 20의 merge rule, 20의 notify rule을 넣었을 때 어떤 action이 어떤 순서로 나오는지 끝까지 추적합니다.
         </p>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Priority 10의 Retry가 match하면 뒤의 Priority 20 MergeToDev는 자동으로 사라질까요?</li>
+            <li>같은 Priority 20인 MergeToDev와 Notify의 순서는 실행할 때마다 달라질까요?</li>
+            <li><code>green_contract_satisfied=true</code>라는 값만 있으면 어느 commit에서 누가 test했는지도 검증됐다고 볼 수 있을까요?</li>
+          </ol>
+        </div>
         <PolicyEvaluationViz />
         <ContentBoundary article="claw-policy-engine" />
       </section>
