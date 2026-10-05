@@ -2017,7 +2017,7 @@
       "route": "ai/claude-code-instructions-memory",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-instructions-memory.tsx",
       "publicPath": "cs/ai/claude-code-instructions-memory",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2062,12 +2062,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "조직·사용자·project·local·path rule·auto memory가 한 auth file을 읽을 때 언제 들어오는지 추적했습니다. CLAUDE.md/AGENTS.md 기본 선택과 함께 읽는 설정, instruction이 permission enforcement가 아니라는 경계를 공식 문서로 재검증했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2086,7 +2084,7 @@
       "route": "ai/claude-code-permissions",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-permissions.tsx",
       "publicPath": "cs/ai/claude-code-permissions",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2129,12 +2127,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "rm deny와 npm test allow가 한 compound call에 함께 있는 사건으로 rule precedence를 추적했습니다. git push의 ask와 PreToolUse allow가 deny·ask를 우회하지 못하는 현재 경계를 공식 문서로 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2153,7 +2149,7 @@
       "route": "ai/claude-code-subagents",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claude-code-subagents.tsx",
       "publicPath": "cs/ai/claude-code-subagents",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2202,12 +2198,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "같은 INC-81 조사에서 일반 subagent가 받는 task·prompt·tools·CLAUDE hierarchy와 fork가 추가로 상속하는 전체 conversation을 분리했습니다. 반환 artifact는 main이 다시 검증한다는 경계를 유지했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2226,7 +2220,7 @@
       "route": "ai/claw-api-client",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-api-client.tsx",
       "publicPath": "cs/ai/claw-api-client",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2281,12 +2275,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "weather-17 한 요청으로 partial JSON을 block stop에서 commit하는 경로와 terminal event 없는 EOF를 partial failure로 분리했습니다. pinned Claw adapter와 현재 Anthropic streaming, 두 provider의 prompt caching 계약 및 local response cache를 구별했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2310,7 +2302,7 @@
       "route": "ai/claw-bash",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-bash.tsx",
       "publicPath": "cs/ai/claw-bash",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2364,12 +2356,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "같은 rg 첫 token에서 plain search, redirect write, pipe-to-shell effect가 달라지는 경로를 front Viz로 먼저 추적했습니다. pinned production classifier·optional permission enforcer·별도 validation module·sh -lc runtime과 제안 hardening을 전 문단에서 구분해 재검토했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -2393,7 +2383,7 @@
       "route": "ai/claw-cli",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/claw-cli.tsx",
       "publicPath": "cs/ai/claw-cli",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -2457,12 +2447,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.49s·정적 public route 1,679개+404 actual exit0",
-        "production": "배포 전",
+        "production": "GitHub Pages run 37331492328 success @ d19026faec29305179f6cc4edede2b00d867ca93; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-213-production/summary.json",
         "semanticReview": "/status, 일반 prompt, EOF를 각각 local handler, model turn, session end로 보내는 한 입력 흐름을 먼저 배치했습니다. permission focus 이동과 TTY/JSONL 표현 차이에서도 동일 terminal state·identity가 유지되는 경계를 pinned source와 전체 본문에서 재검토했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 운영 390/1440 검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -10809,8 +10797,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 61,
-    "rewritten-production-verified": 6,
+    "rewritten-local-verified": 55,
+    "rewritten-production-verified": 12,
     "unreviewed": 119
   },
   "localValidationSummary": {
@@ -10822,7 +10810,7 @@
     "learningStrict": "/tmp/teach-all/launch23/learning-final.log — 정확6+4 strict 실제exit0·공유mismatch0",
     "formulaStrict": "/tmp/teach-all/launch23/formula-final.log — 전역1460식explicitPASS·본글1식양폭overflow0",
     "typescript": "/tmp/teach-all/launch23/tsc-final.log — actual app tsc세션37500실제exit0; root고정전체build별도",
-    "note": "현재 67편은 actual-body semantic review와 local 검증을 마쳤습니다. 미검토 119편은 완료에 포함하지 않습니다. checkpoint 213 production build가 통과했고 배포를 진행합니다.",
+    "note": "현재 67편은 actual-body semantic review와 운영 검증을 마쳤습니다. 미검토 119편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
     "verifiedRewrites": 67,
     "rewrittenLocalVerified": 67,
@@ -10835,6 +10823,7 @@
     "checkpoint207Browser": "/tmp/teach-all/browser-ai-six-207/summary.json",
     "checkpoint207Humanize": "/tmp/teach-all/humanize-ai-six-visible-207/summary.json",
     "checkpoint213Browser": "/tmp/teach-all/browser-ai-six-213/summary.json",
-    "checkpoint213Humanize": "/tmp/teach-all/humanize-ai-six-visible-213/summary.json"
+    "checkpoint213Humanize": "/tmp/teach-all/humanize-ai-six-visible-213/summary.json",
+    "checkpoint213Production": "docs/teach-system-audit/checkpoint-213-production.json"
   }
 }

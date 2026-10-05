@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-06",
+  "base": "https://dik654.github.io/blog",
+  "commit": "d19026faec29305179f6cc4edede2b00d867ca93",
+  "runId": 37331492328,
+  "conclusion": "success",
+  "newRoutes": {
+    "routes": 6,
+    "viewports": [
+      390,
+      1440
+    ],
+    "checks": 12,
+    "failed": 0,
+    "artifact": "/tmp/teach-all/browser-ai-six-213-production/summary.json"
+  },
+  "assertions": [
+    "expected section IDs",
+    "three prediction questions on new routes",
+    "front Viz after predictions",
+    "button and keyboard interaction",
+    "no document or uncontrolled element overflow",
+    "no KaTeX, console, or request errors"
+  ]
+}
