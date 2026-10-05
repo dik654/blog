@@ -4405,76 +4405,229 @@
       "route": "ai/context-provenance-freshness",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-provenance-freshness.tsx",
       "publicPath": "cs/ai/context-provenance-freshness",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Provenance 필드 이름이 고정 검색 사례와 예측보다 먼저 나왔음",
+        "기존 핵심 Viz가 v6·v7의 similarity·validity·ACL 수치를 직접 보여 주지 않았음",
+        "모바일 장면별 viewBox가 달라 자동 전환 때 그림 높이가 바뀔 수 있었음"
+      ],
+      "fixture": {
+        "queryDate": "2026-08-15",
+        "caller": "tenant A HR reader",
+        "stale": "v6 similarity .92, validUntil 2026-07-31",
+        "canonical": "v7 similarity .81, validFrom 2026-08-01",
+        "selected": "policy://leave/section-4@v7"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "fragment-shape",
+        "2": "conflict",
+        "3": "release",
+        "S": "overview의 휴가 정책 v6/v7",
+        "B": "세 예측과 provenance receipt Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.w3.org/TR/prov-o/",
+          "application": "Entity·Activity·Agent와 derivation 관계를 fragment provenance의 근거로 사용"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "2026-08-15 질의에서 similarity .92인 stale v6를 제외하고 validity·ACL·canonical revision을 통과한 v7을 고르는 과정을 추적했습니다. Provenance 완전성과 내용의 진실성도 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/context-provenance-freshness/ModernArticle.tsx",
+        "src/pages/articles/ai/context-engineering/viz/ModernContextEngineeringViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/context-provenance-freshness/ModernArticle.tsx",
+      "contentHash": "1c39c090802b9dc011bd9e6a5bb8cc58a1c649421efd5e231054bff34064cf40",
+      "preserved": [
+        "Typed fragment와 source·revision·validity·ACL receipt",
+        "Canonical source·revision conflict rule",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/context-window-optimization",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-window-optimization.tsx",
       "publicPath": "cs/ai/context-window-optimization",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Capacity·utilization·cache 정의가 하나의 token 장부보다 먼저 나왔음",
+        "앞 Viz가 실제 128k 구성과 118k 사용·10k 여유를 표시하지 않았음",
+        "Cache hit와 freshness·ACL·answer quality의 분리가 첫 화면에서 보이지 않았음"
+      ],
+      "fixture": {
+        "limit": "128k",
+        "system": "8k",
+        "task": "4k",
+        "retrieval": "40k",
+        "history": "30k",
+        "tool": "20k",
+        "outputReserve": "16k",
+        "total": "118k",
+        "headroom": "10k"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "budget",
+        "2": "relevance",
+        "3": "position",
+        "4": "cache",
+        "5": "compression",
+        "S": "overview의 128k request",
+        "B": "세 예측과 request ledger Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2307.03172",
+          "application": "Evidence 위치에 따른 long-context utilization"
+        },
+        {
+          "href": "https://arxiv.org/abs/2310.05736",
+          "application": "LLMLingua의 token-level prompt compression"
+        },
+        {
+          "href": "https://arxiv.org/abs/2310.06839",
+          "application": "LongLLMLingua의 question-aware compression·재배치"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "128k 한도에서 sys8k+task4k+retrieval40k+history30k+tool20k+output16k=118k를 계산했습니다. 10k 여유와 evidence utilization, prefix cache hit, freshness·ACL을 서로 다른 검사로 유지했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/context-window-optimization/ModernArticle.tsx",
+        "src/pages/articles/ai/context-window-optimization/viz/LostInMiddleViz.tsx",
+        "src/pages/articles/ai/context-engineering/viz/ModernContextEngineeringViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/context-window-optimization/ModernArticle.tsx",
+      "contentHash": "ab089b8565f34632ec1cafe6d735ad0c4a71c5b877f66b5576b8a30a4df870a5",
+      "preserved": [
+        "Lost-in-the-middle 위치 실험과 근거 범위",
+        "Compression checklist와 stable prefix cache 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "3개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/continual-learning-foundations",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/continual-learning-foundations.tsx",
       "publicPath": "cs/ai/continual-learning-foundations",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Offline·online·incremental·continual 이름이 forgetting 사례보다 먼저 나왔음",
+        "Replay buffer Viz가 strategies 절에 있어 첫 intuition과 떨어져 있었음",
+        "예시 수치와 논문 실측치의 경계를 첫 화면에서 확인하기 어려웠음"
+      ],
+      "fixture": {
+        "taskABefore": "90%",
+        "afterTaskB": {
+          "buffer0": "55%",
+          "buffer1": "78%",
+          "buffer10": "85%",
+          "buffer50": "87%"
+        },
+        "scope": "illustrative fixed values, not paper measurements"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "stability-plasticity",
+        "2": "strategies",
+        "3": "adaptation",
+        "4": "cadence-freshness",
+        "S": "overview의 Task A→B replay 사례",
+        "B": "세 예측과 forgetting bars"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1909.08383",
+          "application": "Continual learning 분류와 stability–plasticity 분석"
+        },
+        {
+          "href": "https://arxiv.org/abs/1612.00796",
+          "application": "EWC와 Fisher-weighted parameter penalty"
+        },
+        {
+          "href": "https://arxiv.org/abs/1606.04671",
+          "application": "Progressive neural network의 parameter isolation"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "Task A 90%가 Task B 뒤 buffer 0·1·10·50%에서 55·78·85·87%로 남는 고정 예시를 앞에 두었습니다. Online update와 continual learning, replay 회복폭과 저장 비용, test-time adaptation과 영구 학습을 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/continual-learning-foundations.tsx",
+        "src/pages/articles/ai/continual-learning-foundations/viz/ReplayBufferForgettingViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/continual-learning-foundations.tsx",
+      "contentHash": "ce718ffa6880121ebd1bdbbc8753e6c1901be9e7368a8dd8c3f17640c247b8de",
+      "preserved": [
+        "Replay·regularization·parameter isolation 전략",
+        "EWC 수식과 TTA·cadence 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/continuous-batching-step-anatomy",
@@ -4639,76 +4792,209 @@
       "route": "ai/cosine-restart-scheduling",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cosine-restart-scheduling.tsx",
       "publicPath": "cs/ai/cosine-restart-scheduling",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Cosine·warm restart 용어가 정확한 update 사례보다 먼저 나왔음",
+        "기존 Viz가 restart 뒤 LR가 점진적으로 상승하는 모양으로 읽힐 수 있었음",
+        "t=450의 .0505와 m=2의 다음 1,800-update cycle이 그림에 없었음"
+      ],
+      "fixture": {
+        "etaMax": ".1",
+        "etaMin": ".001",
+        "cycle0": 900,
+        "midpoint": "t=450 → .0505",
+        "multiplier": 2,
+        "cycle1": 1800,
+        "preserved": [
+          "θ",
+          "optimizer moments"
+        ]
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "cosine-progress",
+        "2": "restart-state",
+        "3": "comparison-boundary",
+        "S": "overview의 900-update cycle",
+        "B": "세 예측과 두-cycle Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1608.03983",
+          "application": "SGDR cosine schedule과 warm restart의 근거"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "ηmax=.1·ηmin=.001·T0=900에서 t=450의 LR .0505를 계산하고, m=2 restart가 T1=1800으로 넘어가되 θ와 optimizer moments를 보존함을 추적했습니다. Epoch 수와 optimizer update 수 비교도 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/cosine-restart-scheduling/ModernArticle.tsx",
+        "src/pages/articles/ai/lr-scheduling/viz/ModernLrScheduleViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/cosine-restart-scheduling/ModernArticle.tsx",
+      "contentHash": "2cfb687124d02182e4257894e452fde436a6ad219552e5e3b32d211b0846c6b8",
+      "preserved": [
+        "Cosine progress·LR 보간 수식",
+        "Restart state 보존과 비교 receipt",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/cost-sensitive-thresholding",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cost-sensitive-thresholding.tsx",
       "publicPath": "cs/ai/cost-sensitive-thresholding",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Threshold policy 정의가 비용이 있는 단일 population 사례보다 먼저 나왔음",
+        "기존 Viz의 두 직선과 표시된 교차점이 CFP=1·CFN=9의 τ=.1과 수학적으로 맞지 않았음",
+        "긴 제목과 receipt 목록형 문단이 압축돼 있었음"
+      ],
+      "fixture": {
+        "cases": 1000,
+        "falsePositiveCost": 1,
+        "falseNegativeCost": 9,
+        "bayesThreshold": ".1",
+        "capacity": "200 alerts/day",
+        "minimumRecall": ".90"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "expected-cost",
+        "2": "capacity-policy",
+        "3": "release-receipt",
+        "S": "overview의 1,000건 fraud 후보",
+        "B": "세 예측과 expected-cost crossing Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://cseweb.ucsd.edu/~elkan/rescale.pdf",
+          "application": "Cost matrix와 posterior decision threshold 관계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "1,000건의 calibrated 후보에서 CFP=1·CFN=9이면 R+=(1−p), R−=9p가 p=.1에서 교차함을 축과 곡선까지 다시 계산했습니다. Bayes threshold와 하루 200건·recall .90 운영 gate, drift 뒤 재승인을 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/cost-sensitive-thresholding/ModernArticle.tsx",
+        "src/pages/articles/ai/imbalanced-data/viz/ModernImbalanceViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/cost-sensitive-thresholding/ModernArticle.tsx",
+      "contentHash": "e5e8fcf95474ef218a52552534209e088f37979c1f1acd1533abbddcbc516ea0",
+      "preserved": [
+        "Bayes cost threshold 수식",
+        "Capacity·minimum recall feasible argmin",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/cross-review-error-classes",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cross-review-error-classes.tsx",
       "publicPath": "cs/ai/cross-review-error-classes",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
+      "beforeDefects": [
+        "25→16→8의 사례와 Viz는 앞에 있었지만 독자가 일반화·감쇠 추정 오류를 먼저 예측할 질문이 없었음",
+        "모바일 막대가 480px 최소 폭이라 active 25건 숫자가 가로 스크롤 뒤에 숨었음",
+        "셋째 라운드의 모집단 차이를 첫 화면에서 판단하기 어려웠음"
+      ],
+      "fixture": {
+        "artifactCount": 1,
+        "rounds": [
+          25,
+          16,
+          8
+        ],
+        "thirdRoundPopulation": "개정 과정에서 새로 생긴 오류만",
+        "direction": "one-way external review"
+      },
+      "stageAnchors": {
+        "1": "unit-mismatch",
+        "2": "guarantee",
+        "3": "overgeneralization",
+        "4": "repeated-fix",
+        "5": "boundary",
+        "S": "overview의 단일 결과물 세 라운드",
+        "B": "세 예측과 responsive review bars"
+      },
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
+        "semanticReview": "단일 조사 결과물의 25→16→8 지적을 검토했습니다. 49건 수정과 능력 향상, 서로 다른 모집단의 감쇠 추정, 감소와 검증 종료를 분리했고 360px 안에 모든 핵심 숫자가 보이도록 Viz를 재배치했습니다."
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/cross-review-error-classes.tsx",
+        "src/pages/articles/ai/cross-review-error-classes/viz/ReviewRoundsViz.tsx",
+        "src/pages/articles/ai/cross-review-error-classes/viz/ClaimTraceViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/cross-review-error-classes.tsx",
+      "contentHash": "b7a9f6823a7724b688a417bd5a0ecbb479a15faa4fcfef655d81ce8240439dc5",
+      "preserved": [
+        "Unit mismatch·guarantee·overgeneralization 오류 분류",
+        "단일 표본·one-way review의 일반화 한계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "3개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/cross-validation",
@@ -11871,27 +12157,27 @@
   ],
   "counts": {
     "rewritten-local-verified": 55,
-    "rewritten-production-verified": 30,
-    "unreviewed": 101
+    "rewritten-production-verified": 36,
+    "unreviewed": 95
   },
   "localValidationSummary": {
-    "rewritten": 85,
-    "remainingUnreviewed": 101,
+    "rewritten": 91,
+    "remainingUnreviewed": 95,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "checkpoint231 — 799편 정확6+4 strict actual exit0",
-    "formulaStrict": "checkpoint231 — 1,471식 explicit annotation strict actual exit0",
-    "typescript": "checkpoint231 actual npx tsc -b exit0",
-    "note": "현재 85편은 actual-body semantic review를 마쳤고 그중 30편은 운영 검증까지 완료했습니다. 미검토 101편은 완료에 포함하지 않습니다.",
+    "learningStrict": "checkpoint237 — 799편 정확6+4 strict actual exit0",
+    "formulaStrict": "checkpoint237 — 1,471식 explicit annotation strict actual exit0",
+    "typescript": "checkpoint237 actual npx tsc -b exit0",
+    "note": "현재 91편은 actual-body semantic review를 마쳤고 그중 36편은 운영 검증까지 완료했습니다. 미검토 95편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 85,
+    "verifiedRewrites": 91,
     "rewrittenLocalVerified": 55,
-    "unreviewed": 101,
+    "unreviewed": 95,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
-    "mobileViewport": "/tmp/teach-all/browser-ai-six-231/summary.json",
+    "mobileViewport": "/tmp/teach-all/browser-ai-six-237/summary.json",
     "checkpoint201Production": "docs/teach-system-audit/checkpoint-201-production.json",
     "checkpoint207Browser": "/tmp/teach-all/browser-ai-six-207/summary.json",
     "checkpoint207Humanize": "/tmp/teach-all/humanize-ai-six-visible-207/summary.json",
@@ -11903,6 +12189,9 @@
     "checkpoint225Browser": "/tmp/teach-all/browser-ai-six-225/summary.json",
     "checkpoint225Production": "docs/teach-system-audit/checkpoint-225-production.json",
     "checkpoint231Browser": "/tmp/teach-all/browser-ai-six-231/summary.json",
-    "checkpoint231Production": "docs/teach-system-audit/checkpoint-231-production.json"
+    "checkpoint231Production": "docs/teach-system-audit/checkpoint-231-production.json",
+    "checkpoint237Browser": "/tmp/teach-all/browser-ai-six-237/summary.json",
+    "checkpoint237Dist": "/tmp/teach-all/browser-ai-six-237-dist/summary.json",
+    "checkpoint237Production": "docs/teach-system-audit/checkpoint-237-production.json"
   }
 }
