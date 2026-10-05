@@ -1,16 +1,16 @@
 const lifecycle = [
-  ["등록", "server config·name"], ["연결", "stdio child spawn"], ["초기화", "initialize"],
-  ["발견", "tools/list"], ["호출", "tools/call"], ["종료", "kill·wait"],
+  ["등록", "docs config·server name"], ["연결", "stdio child spawn"], ["초기화", "initialize · legacy era"],
+  ["발견", "tools/list → search"], ["호출", "id 3 · hook exit code"], ["종료", "result 뒤 kill·wait"],
 ] as const;
 
 export function McpLifecycleViz() {
   return (
     <figure data-viz="claw-mcp-lifecycle" className="not-prose my-8 min-w-0 rounded-xl border border-border/70 bg-card p-4 sm:p-6">
       <figcaption className="mb-5">
-        <p className="text-sm font-semibold text-foreground">MCP tool은 발견되기 전에 transport lifecycle을 통과한다</p>
-        <p className="mt-1 text-xs leading-5 text-muted-foreground">Tool schema와 subprocess의 생존 상태를 한 가지 “연결됨”으로 합치지 않습니다.</p>
+        <p className="text-sm font-semibold text-foreground">Pinned Claw에서 docs.search가 Ready가 되는 여섯 단계</p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">Process 생존, legacy initialize, 발견된 schema와 request ID를 각각 확인합니다.</p>
       </figcaption>
-      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {lifecycle.map(([title, detail], index) => (
           <div key={title} className="relative min-w-0 rounded-lg border border-border bg-background p-4">
             <span className="text-[11px] font-semibold text-primary">{String(index + 1).padStart(2, "0")}</span>
@@ -19,6 +19,9 @@ export function McpLifecycleViz() {
           </div>
         ))}
       </div>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">
+        <strong className="text-foreground">Revision 경계:</strong> 이 그림은 pinned legacy-era 구현입니다. 2026-07-28 modern 연결은 명시적 era negotiation과 <code>server/discover</code> 경로를 사용하며 modern stdio에는 <code>initialize</code>가 없습니다.
+      </p>
     </figure>
   );
 }

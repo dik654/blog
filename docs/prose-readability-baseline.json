@@ -14,7 +14,7 @@
       "score": 72
     },
     "ai/claw-overview": {
-      "fingerprint": "e77d925d9f6d3e5f",
+      "fingerprint": "d0f59ed5c120fc1c",
       "score": 69
     },
     "ai/openclaw-assistant": {
@@ -26,7 +26,7 @@
       "score": 40
     },
     "ai/claw-compaction": {
-      "fingerprint": "5f4a30f4aa4abf70",
+      "fingerprint": "c0ea493dc7a16ad4",
       "score": 42
     },
     "ai/claw-permissions": {
@@ -150,7 +150,7 @@
       "score": 29
     },
     "ai/claw-file-ops": {
-      "fingerprint": "0c809efe2ce534fc",
+      "fingerprint": "48eba42dadc31d86",
       "score": 28
     },
     "ai/llm-serving-ops": {
@@ -374,7 +374,7 @@
       "score": 21
     },
     "ai/claw-config": {
-      "fingerprint": "4623bf689dc7fdd9",
+      "fingerprint": "65fa24c162ac2606",
       "score": 20
     },
     "ai/supervised-fine-tuning": {
@@ -542,7 +542,7 @@
       "score": 18
     },
     "ai/claw-hooks": {
-      "fingerprint": "6ad8e0881cfa7ba4",
+      "fingerprint": "a5fc102fee03f61e",
       "score": 16
     },
     "ai/llm-serving-capacity": {
@@ -806,7 +806,7 @@
       "score": 10
     },
     "ai/claw-mcp": {
-      "fingerprint": "fcf3ddd1212d116e",
+      "fingerprint": "d2c6788af55f9543",
       "score": 10
     },
     "ai/claw-task-team": {

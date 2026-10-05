@@ -3258,8 +3258,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 연구",
       label: "MCP 2026-07-28 release notes",
-      href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
-      note: "handshake 제거·self-describing request·discovery 변경 요약",
+      href: "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/",
+      note: "stateless core·self-describing request·discovery 변경 요약",
     },
   ],
   "ai/mcp-primitives": [
@@ -3805,7 +3805,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "ai/claw-mcp": clawEvidence(
     { kind: "공식 코드", label: "Claw Code pinned MCP stdio and bridge", href: "https://github.com/ultraworkers/claw-code/tree/b71afddae100ced324457337925a694686b8fef2/rust/crates/runtime/src", note: "mcp*.rs의 initialize·Content-Length frame·JSON-RPC ID·discovery·bridge·shutdown actual source이며 최신 MCP revision 호환이나 lifecycle full integration 보장은 아님" },
-    { kind: "공식 문서", label: "MCP 2026-07-28 specification announcement", href: "https://blog.modelcontextprotocol.io/posts/2026-07-28/", note: "해당 revision의 protocol 변경을 확인하는 공식 기록이며 pinned Claw commit의 구현 근거는 아님" },
+    { kind: "공식 문서", label: "MCP 2026-07-28 release candidate", href: "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/", note: "stateless core·self-describing requests·discovery 변경을 설명하는 공식 기록이며 pinned Claw commit의 구현 근거는 아님" },
+    { kind: "공식 문서", label: "MCP TypeScript SDK 2026-07-28 migration", href: "https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28", note: "legacy initialize 기본값과 명시적 modern negotiation·server/discover·modern stdio 경계를 구분" },
     { kind: "공식 규격", label: "MCP 2026-07-28 transports", href: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports", note: "링크된 revision의 standard transport boundary이며 pinned Content-Length helper가 표준이라는 뜻은 아님" },
     { kind: "공식 규격", label: "MCP 2026-07-28 tools", href: "https://modelcontextprotocol.io/specification/2026-07-28/server/tools", note: "링크된 revision의 tool discovery·invocation contract이며 server implementation·permission safety를 보장하지 않음" },
   ),

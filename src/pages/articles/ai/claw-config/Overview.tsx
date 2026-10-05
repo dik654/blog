@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import ConfigMergeViz from "./viz/ConfigMergeViz";
 
 const sources = [
   ["USER", "사용자 홈에서 읽은 낮은 우선순위의 파일 설정"],
@@ -26,6 +27,19 @@ export default function Overview() {
           환경 변수와 CLI 인자는 더 바깥 실행 계층에서 적용할 수 있지만, 이 loader
           자체의 다섯 단계 cascade라고 주장하면 실제 코드보다 넓은 설명이 됩니다.
         </p>
+
+        <p>
+          같은 실행에서 USER는 <code>model=slow</code>와 <code>sandbox.network=false</code>를,
+          PROJECT는 <code>model=fast</code>와 <code>sandbox.fs=workspace</code>를,
+          LOCAL은 <code>sandbox.network=true</code>만 지정했다고 하겠습니다.
+        </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>최종 <code>model</code> 값과 그 출처는 USER와 PROJECT 중 어느 쪽일까요?</li>
+          <li>LOCAL이 <code>sandbox.network</code>만 바꾸면 PROJECT의 <code>sandbox.fs</code>는 사라질까요?</li>
+          <li>최종 값과 provenance를 모두 기록하면 project file에 API key를 저장해도 안전해질까요?</li>
+        </ol>
+        <ConfigMergeViz />
 
         <div id="paper-claw-config-source" className="scroll-mt-24">
           <CitationBlock

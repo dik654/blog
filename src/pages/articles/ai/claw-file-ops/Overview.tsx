@@ -1,4 +1,5 @@
 import { CitationBlock } from "@/components/ui/citation";
+import ReadWriteViz from "./viz/ReadWriteViz";
 
 const operations = [
   ["read_file", "읽기", "offset과 limit으로 필요한 구간만 가져옵니다."],
@@ -26,6 +27,17 @@ export default function Overview() {
           edit는 직접 file을 갱신하며 expected digest나 atomic rename을 요구하지
           않으므로, 현재 기능과 production hardening을 분리해서 읽어야 합니다.
         </p>
+        <p>
+          Agent가 <code>src/auth.ts</code>를 읽어 digest <code>h1</code>을 얻은 뒤 다른 process가 같은 file을 <code>h2</code>로 바꿨다고
+          하겠습니다. Agent는 여전히 h1에서 만든 <code>old_string</code> edit를 제출하며, 그 문자열은 현재 file 안에 두 번 있습니다.
+        </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Pinned <code>edit_file</code>은 적용 전에 현재 digest가 h1인지 확인할까요?</li>
+          <li><code>replace_all=false</code>이면 두 match를 모두 거부할까요, 아니면 첫 occurrence를 바꿀까요?</li>
+          <li>Expected digest만 추가하면 temporary file·atomic rename과 path race 문제까지 함께 해결될까요?</li>
+        </ol>
+        <ReadWriteViz />
 
         <div id="paper-claw-file-ops-source" className="scroll-mt-24">
           <CitationBlock

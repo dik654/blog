@@ -48,9 +48,11 @@ export function OverviewFrame({
 export function OverviewSteps({
   items,
   columns = 4,
+  compactMobile = false,
 }: {
   items: OverviewStep[];
   columns?: 2 | 3 | 4;
+  compactMobile?: boolean;
 }) {
   const grid =
     columns === 2
@@ -60,7 +62,7 @@ export function OverviewSteps({
         : "sm:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <ol className={`grid gap-x-7 gap-y-7 ${grid}`}>
+    <ol className={`grid gap-x-7 gap-y-7 ${compactMobile ? "grid-cols-2" : ""} ${grid}`}>
       {items.map((item) => (
         <li
           key={`${item.label}-${item.title}`}

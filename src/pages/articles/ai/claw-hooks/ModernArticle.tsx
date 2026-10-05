@@ -21,6 +21,14 @@ export default function ModernHooksArticle() {
         <p>
           이 글은 로그인 401을 고치는 작업을 끝까지 같은 예시로 사용합니다. Agent가 <code>Bash</code> tool로 <code>git push origin main</code>을 요청했고 기본 permission 결과는 Ask라고 하겠습니다. 첫 hook은 변경 티켓이 있는지 확인해 Ask와 이유를 반환하고, 두 번째 hook은 main branch 직접 push를 막아 Deny를 반환합니다. 이때 무엇이 subprocess로 전달되고, 어느 결과가 최종 판정이 되며, 취소 뒤 무엇을 더 검증해야 하는지를 순서대로 살펴봅니다.
         </p>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>첫 hook이 Ask를 반환하면 즉시 사용자에게 질문할까요, 아니면 두 번째 matching hook도 실행할까요?</li>
+            <li>두 번째 hook이 Deny를 반환하면 Bash executor와 뒤의 hook, PostToolUse event까지 실행될까요?</li>
+            <li>Hook이 <code>updatedInput</code>으로 command를 바꾸면 원래 command에 내린 permission 결정을 그대로 재사용해도 될까요?</li>
+          </ol>
+        </div>
         <HookLifecycleViz />
         <ContentBoundary article="claw-hooks" />
       </section>

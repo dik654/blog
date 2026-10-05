@@ -18,6 +18,14 @@ export default function ModernMcpArticle() {
         <p>
           이 글의 고정 예시는 <code>docs</code>라는 stdio server가 제공하는 <code>search</code> tool입니다. 사용자가 “hook의 종료 코드를 찾아줘”라고 요청하면 Claw는 server를 초기화하고 tool을 발견한 뒤 model에 <code>mcp__docs__search</code>라는 이름으로 노출합니다. Model의 입력 <code>{`{"query":"hook exit code"}`}</code>가 어떤 frame과 request ID를 거쳐 결과로 돌아오는지 따라가겠습니다.
         </p>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li><code>docs</code> subprocess가 살아 있으면 <code>search</code> tool도 즉시 호출 가능한 Ready 상태일까요?</li>
+            <li>기다리던 request ID가 3인데 정상 JSON frame 안의 response ID가 2라면 그 결과를 받아들여도 될까요?</li>
+            <li>Pinned Claw의 <code>initialize → tools/list</code> 경로를 MCP 2026-07-28의 모든 연결에도 그대로 일반화할 수 있을까요?</li>
+          </ol>
+        </div>
         <McpLifecycleViz />
         <ContentBoundary article="claw-mcp" />
       </section>
@@ -26,6 +34,14 @@ export default function ModernMcpArticle() {
         <header><p className="text-sm font-semibold text-primary">01 · Bootstrap과 lifecycle</p><h2 className="mt-2 text-2xl font-bold">Config를 읽었다고 server가 Ready인 것은 아니다</h2></header>
         <p>
           Pinned manager는 server name과 transport config에서 bootstrap을 만들고, stdio라면 child process의 stdin·stdout을 pipe로 연결합니다. 이어 <code>initialize</code>가 성공해야 tool·resource discovery를 진행할 수 있습니다. “등록됨”, “process가 살아 있음”, “initialize 완료”, “tool 목록이 현재 instance에서 발견됨”은 서로 다른 상태입니다.
+        </p>
+        <p>
+          이 여섯 단계는 pinned Claw가 구현한 legacy-era 연결 경로입니다. MCP 2026-07-28 revision은 stateless core와 새 negotiation 경계를 도입했으며,
+          TypeScript SDK의 modern 연결은 명시적인 version negotiation에서 <code>server/discover</code>를 사용합니다.
+        </p>
+        <p>
+          Modern stdio에는 <code>initialize</code>가 없습니다. 따라서 receipt에는 server generation뿐 아니라 선택한 protocol era와 revision을 함께
+          남겨야 하며, pinned 여섯 단계를 current MCP 전체의 공통 wire path로 사용하면 안 됩니다.
         </p>
         <p>
           별도의 hardened lifecycle module에는 ConfigLoad부터 Cleanup까지 11 phase와 degraded report가 정의되어 있습니다. 하지만 type과 validator가 존재한다는 사실만으로 active manager의 모든 경로가 그 state machine을 통과한다고 단정할 수는 없습니다. 실제 caller·test의 연결을 확인하지 못한 부분은 <strong>integration gap</strong>으로 남겨야 합니다.
@@ -54,6 +70,11 @@ export default function ModernMcpArticle() {
           <p><strong>기여:</strong> mcp.rs, mcp_client.rs, mcp_stdio.rs, mcp_tool_bridge.rs와 hardened lifecycle source가 pinned 구현 범위를 보여 줍니다.</p>
           <p><strong>전제와 근거 범위:</strong> commit b71afdd…의 source와 같은 commit test에 한정합니다. 최신 MCP 규격 준수, remote transport 보안, 장기 connection 효율을 인증하지 않습니다.</p>
         </CitationBlock></div>
+        <div id="paper-mcp-version-negotiation"><CitationBlock source="Model Context Protocol TypeScript SDK · 2026-07-28 migration" citeKey={2} href="https://ts.sdk.modelcontextprotocol.io/v2/migration/support-2026-07-28">
+          <p><strong>문제:</strong> Legacy initialization과 2026-07-28 stateless negotiation을 같은 lifecycle로 설명하면 실제 wire path를 잘못 예측하게 됩니다.</p>
+          <p><strong>기여:</strong> SDK가 legacy 기본 연결과 명시적 modern version negotiation, <code>server/discover</code>, modern stdio server 진입점을 어떻게 구분하는지 설명합니다.</p>
+          <p><strong>전제와 근거 범위:</strong> 공식 TypeScript SDK의 migration contract입니다. Pinned Rust Claw가 이 modern path를 구현했다는 뜻은 아닙니다.</p>
+        </CitationBlock></div>
       </section>
 
       <section id="stdio-jsonrpc" className="space-y-6">
@@ -65,7 +86,7 @@ export default function ModernMcpArticle() {
         <aside className="rounded-lg border border-amber-500/35 bg-amber-500/5 p-5 text-sm leading-6">
           <strong>Version 경계:</strong> Pinned Claw의 initialize·JSON-RPC·Content-Length framing은 그 commit의 구현 사실입니다. MCP 공식 문서는 revision에 따라 lifecycle과 standard transport 규칙이 달라졌으므로, “MCP라면 항상 이 framing을 쓴다”고 일반화하면 안 됩니다. Client와 server가 합의한 specification revision과 transport profile을 함께 고정해야 합니다.
         </aside>
-        <div id="paper-mcp-transports"><CitationBlock source="Model Context Protocol · official transports" citeKey={2} href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">
+        <div id="paper-mcp-transports"><CitationBlock source="Model Context Protocol · official transports" citeKey={3} href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">
           <p><strong>문제:</strong> Client와 server가 message를 주고받는 표준 transport와 보안 책임을 정해야 합니다.</p>
           <p><strong>기여:</strong> 해당 revision의 transport 요구 사항과 구현자가 지켜야 할 연결 경계를 규정합니다.</p>
           <p><strong>전제와 근거 범위:</strong> 링크된 2026-07-28 revision에만 적용합니다. Pinned Claw commit이 자동으로 이 revision과 호환되거나 Content-Length helper가 표준이라는 뜻은 아닙니다.</p>
@@ -83,7 +104,7 @@ export default function ModernMcpArticle() {
           실제 call instance가 같은 generation인지, 매 호출의 discovery·shutdown 비용이 어떤지는 측정해 봐야 알 수 있습니다.
         </p>
         <div className="overflow-x-auto rounded-lg border border-border"><table className="min-w-[740px] w-full text-sm"><thead className="bg-muted/50 text-left"><tr><th className="p-3">보존할 값</th><th className="p-3">docs.search 예시</th><th className="p-3">잃었을 때 생기는 문제</th></tr></thead><tbody className="divide-y divide-border text-muted-foreground"><tr><td className="p-3">Server·instance</td><td className="p-3">docs · process generation 7</td><td className="p-3">reload 뒤 다른 process 결과를 같은 call로 오인</td></tr><tr><td className="p-3">Tool·schema digest</td><td className="p-3">search · schema a91…</td><td className="p-3">model이 본 argument 계약과 executor가 달라짐</td></tr><tr><td className="p-3">Request ID·attempt</td><td className="p-3">id 3 · attempt 1</td><td className="p-3">timeout 뒤 late response와 retry 결과 혼동</td></tr><tr><td className="p-3">Terminal outcome</td><td className="p-3">result·RPC error·timeout·disconnect</td><td className="p-3">부분 실패를 성공 text로 표시</td></tr></tbody></table></div>
-        <div id="paper-mcp-tools"><CitationBlock source="Model Context Protocol · official tools" citeKey={3} href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">
+        <div id="paper-mcp-tools"><CitationBlock source="Model Context Protocol · official tools" citeKey={4} href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">
           <p><strong>문제:</strong> Server가 tool capability와 input contract를 공개하고 client가 호출 결과를 해석해야 합니다.</p>
           <p><strong>기여:</strong> 링크된 revision의 discovery·invocation contract와 tool metadata 의미를 제공합니다.</p>
           <p><strong>전제와 근거 범위:</strong> Protocol surface의 근거이며 server command의 안전성, Claw permission integration, schema가 실제 effect를 완전히 기술한다는 보장은 아닙니다.</p>

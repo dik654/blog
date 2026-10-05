@@ -1,5 +1,6 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
+import CompactPipelineViz from "./viz/CompactPipelineViz";
 
 const FLOW = [
   ["1 · RAW HISTORY", "요청과 실행 기록", "로그인 401 요청, 검색, 권한 판정, edit와 test 결과가 message history에 쌓입니다."],
@@ -33,8 +34,6 @@ export default function Overview() {
         Compaction은 기록 삭제가 아니라 다음 행동을 위한 context 재구성입니다
       </h2>
 
-      <ContentBoundary article="claw-compaction" />
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           사용자가 “로그인 버튼이 401을 반환하니 원인을 찾아 최소 수정하고 test로 확인해 달라”고 요청했다고 해 보겠습니다. agent가 파일을 읽고, 검색하고, 권한을 확인하고,
@@ -50,7 +49,19 @@ export default function Overview() {
           이 소유하고, 이 글은 pinned Claw Code 구현이 실제로 어떤 history를
           줄이는지와 그 구현에 어떤 검증을 더해야 하는지를 다룹니다.
         </p>
+        <p>그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>오래된 <code>ToolUse</code>는 버리고 대응하는 <code>ToolResult</code>만 최근 원문에 남겨도 provider가 작업 흐름을 복원할 수 있을까요?</li>
+          <li>Compaction 전 이미 실행된 <code>auth.ts</code> 수정은 예전 context를 다시 채택하면 함께 되돌아갈까요?</li>
+          <li>다음 agent가 거부된 권한과 실패한 test를 복원하지 못한다면 token 수가 충분히 줄었어도 새 state를 채택해도 될까요?</li>
+        </ol>
       </div>
+
+      <div className="not-prose my-8">
+        <CompactPipelineViz />
+      </div>
+
+      <ContentBoundary article="claw-compaction" />
 
       <div className="not-prose my-8 grid min-w-0 gap-x-7 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
         {FLOW.map(([label, title, detail]) => (
