@@ -6191,12 +6191,12 @@
         "row17Average": 0.75
       },
       "stageAnchors": {
-        "S": "overview의 row 42와 row 17",
-        "B": "세 예측 뒤 두 행 오차 장부 Viz",
         "1": "averaging",
         "2": "stacking",
         "3": "blending",
-        "4": "practice"
+        "4": "practice",
+        "S": "overview의 row 42와 row 17",
+        "B": "세 예측 뒤 두 행 오차 장부 Viz"
       },
       "sourceEvidence": [
         {
@@ -6274,13 +6274,13 @@
         "otherLanguagePass": 0.72
       },
       "stageAnchors": {
-        "S": "problem의 200개 golden set",
-        "B": "세 예측 뒤 category·slice Viz",
         "1": "golden-set",
         "2": "edge-case",
         "3": "slice-analysis",
         "4": "pipeline",
-        "5": "deployment"
+        "5": "deployment",
+        "S": "problem의 200개 golden set",
+        "B": "세 예측 뒤 category·slice Viz"
       },
       "sourceEvidence": [
         {
@@ -6347,11 +6347,11 @@
         "unit": "customer decision"
       },
       "stageAnchors": {
-        "S": "overview의 연체 score 0.73",
-        "B": "세 예측 뒤 metric contract Viz",
         "1": "action-cost",
         "2": "reducer",
-        "3": "map"
+        "3": "map",
+        "S": "overview의 연체 score 0.73",
+        "B": "세 예측 뒤 metric contract Viz"
       },
       "sourceEvidence": [
         {
@@ -6534,8 +6534,6 @@
         "roundTripKiB": 32
       },
       "stageAnchors": {
-        "S": "overview의 token 37",
-        "B": "세 예측 뒤 두 원격 expert 경로 Viz",
         "1": "black-box",
         "2": "case",
         "3": "picture",
@@ -6544,7 +6542,9 @@
         "6": "mechanism",
         "7": "source",
         "8": "comparison",
-        "9": "limits"
+        "9": "limits",
+        "S": "overview의 token 37",
+        "B": "세 예측 뒤 두 원격 expert 경로 Viz"
       },
       "sourceEvidence": [
         {
@@ -6617,13 +6617,13 @@
         }
       },
       "stageAnchors": {
-        "S": "overview의 C-1042 cutoff 행",
-        "B": "세 예측 뒤 event·availability timeline Viz",
         "1": "numeric",
         "2": "categorical",
         "3": "interaction",
         "4": "aggregation",
-        "5": "selection"
+        "5": "selection",
+        "S": "overview의 C-1042 cutoff 행",
+        "B": "세 예측 뒤 event·availability timeline Viz"
       },
       "sourceEvidence": [
         {
@@ -6707,13 +6707,13 @@
         ]
       },
       "stageAnchors": {
-        "S": "goal-taxonomy의 2차원 checkpoint",
-        "B": "세 예측 뒤 task arithmetic Viz",
         "1": "data-tradeoff",
         "2": "forgetting",
         "3": "mitigation",
         "4": "merging",
-        "5": "checkpoint-ablation"
+        "5": "checkpoint-ablation",
+        "S": "goal-taxonomy의 2차원 checkpoint",
+        "B": "세 예측 뒤 task arithmetic Viz"
       },
       "sourceEvidence": [
         {
@@ -6990,51 +6990,145 @@
       "route": "ai/gradient-boosting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/gradient-boosting.tsx",
       "publicPath": "cs/ai/gradient-boosting",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "함수 공간 최적화 정의가 한 집의 잔차 계산보다 먼저 나왔음",
+        "학습률이 leaf 값을 얼마나 줄여 더하는지 첫 화면에서 계산하기 어려웠음",
+        "기존 핵심 Viz가 예측 질문과 분리되어 있었음"
+      ],
+      "fixture": {
+        "areaSquareMeters": 55,
+        "target": 7,
+        "currentPrediction": 4,
+        "residual": 3,
+        "treeLeaf": 2.4,
+        "learningRate": 0.2,
+        "update": 0.48,
+        "nextPrediction": 4.48
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "functional-gradient",
+        "2": "shrinkage",
+        "3": "comparison",
+        "S": "overview의 55㎡ 집",
+        "B": "세 예측 뒤 residual·tree·shrinkage Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1214/aos/1013203451",
+          "application": "함수 공간의 gradient boosting과 shrinkage 해석"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "목표 7·현재 예측 4에서 residual 3을 얻고, 새 tree leaf 2.4에 η=0.2를 곱한 0.48만 더해 4.48이 되는 한 번의 update를 고정했습니다. 모든 leaf를 더하거나 2.4를 그대로 더하는 오해를 예측 문제로 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/gradient-boosting/ModernArticle.tsx",
+        "src/pages/articles/ai/gbm-viz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/gradient-boosting/ModernArticle.tsx",
+      "contentHash": "9e4b762203922f1aac1f51d9503954ab70d8bbdc97ffeb6bbbf58e61c725b8fb",
+      "preserved": [
+        "functional gradient·pseudo-residual 설명",
+        "shrinkage·depth·subsampling 비교",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/graphrag-community-and-multihop-search",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
       "publicPath": "cs/ai/graphrag-community-and-multihop-search",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "GraphRAG 정의가 7-node 경로 사례보다 먼저 나왔음",
+        "local 2-hop·global 두 summary의 읽기 범위가 첫 화면에서 비교되지 않았음",
+        "현재 공식 구현의 DRIFT 반복 검색 경계가 빠져 있었음"
+      ],
+      "fixture": {
+        "nodes": 7,
+        "edges": 6,
+        "localHops": 2,
+        "visitedNodes": 3,
+        "communities": 2,
+        "modularity": 0.208
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "community",
+        "2": "search",
+        "3": "hybrid",
+        "4": "multihop",
+        "5": "evidence",
+        "S": "problem의 마리 퀴리→노벨상→베크렐",
+        "B": "세 예측 뒤 7-node·6-edge Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2404.16130",
+          "application": "Leiden community summary와 local/global search"
+        },
+        {
+          "href": "https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md",
+          "application": "2026-10-06 현재 DRIFT primer→후속 local search→결합 절차"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "node 7개·edge 6개에서 마리 퀴리→노벨 물리학상→앙리 베크렐의 2-hop·3-node local 경로와 두 community summary를 읽는 global 질문을 분리했습니다. Q≈0.208 산수를 재검산하고 현재 DRIFT의 필수 report·text unit·embedding 경계를 공식 문서로 보완했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
+        "src/pages/articles/ai/graphrag-community-and-multihop-search/viz/GraphragCommunityAndMultihopSearchViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
+      "contentHash": "267f5ea7352ee6daf5f902c85b13ef68a5a33134be16dd3e5d34d7b61761a6a4",
+      "preserved": [
+        "Leiden·modularity 설명과 Q≈0.208 예",
+        "local·global·multi-hop 구분",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/grouped-validation",
@@ -7219,26 +7313,76 @@
       "route": "ai/hybrid-kv-cache-allocation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/hybrid-kv-cache-allocation.tsx",
       "publicPath": "cs/ai/hybrid-kv-cache-allocation",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 2
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "full·sliding cache 일반식이 8-layer 할당 사례보다 먼저 나왔음",
+        "가시 범위와 실제 allocation을 같은 것으로 오해하기 쉬웠음",
+        "hybrid allocator 비활성 경계의 최신 공식 근거가 오래된 경로를 가리켰음"
+      ],
+      "fixture": {
+        "tokens": 4096,
+        "slidingWindow": 1024,
+        "fullLayers": 2,
+        "localLayers": 6,
+        "reclaimedLayerTokens": 14336,
+        "unreclaimedLayerTokens": 32768
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "kv-cache",
+        "S": "overview의 8-layer·4,096-token 요청",
+        "B": "세 예측 뒤 full/local 메모리 막대 Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2309.06180",
+          "application": "PagedAttention block table의 메모리 관리"
+        },
+        {
+          "href": "https://docs.vllm.ai/en/latest/design/hybrid_kv_cache_manager/",
+          "application": "2026-10-06 현재 hybrid KV cache group·page·sliding allocation"
+        },
+        {
+          "href": "https://docs.vllm.ai/en/latest/api/vllm/v1/kv_cache_interface/",
+          "application": "hybrid allocator 비활성 시 FullAttentionSpec 경계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "2개 full layer와 6개 local layer에서 reclaim이 작동하면 14,336 layer-token, 작동하지 않으면 32,768 layer-token인 대비를 고정했습니다. sliding visibility 1,024가 자동으로 allocation 절감을 뜻하지 않는다는 경계를 최신 vLLM 문서와 API source에 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/hybrid-kv-cache-allocation.tsx",
+        "src/pages/articles/ai/hybrid-kv-cache-allocation/viz/HybridKvCaseViz.tsx",
+        "src/pages/articles/ai/hybrid-attention-serving/KVCache.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/hybrid-kv-cache-allocation.tsx",
+      "contentHash": "9a849b92d67895d9efdf4da8acbc49a1caa271219e13e26e10ec6bf6beb22f09",
+      "preserved": [
+        "KV byte 식과 attention pattern 구분",
+        "PagedAttention의 block table 설명",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "3개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/hyperparameter-tuning",
@@ -7343,76 +7487,230 @@
       "route": "ai/image-augmentation-transforms",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/image-augmentation-transforms.tsx",
       "publicPath": "cs/ai/image-augmentation-transforms",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "기하 변환 정의가 100×80 이미지의 box 사례보다 먼저 나왔음",
+        "translate 뒤 clipping·visible ratio·keep/drop 판단이 떨어져 있었음",
+        "기존 핵심 Viz가 예측 질문 뒤에 바로 오지 않았음"
+      ],
+      "fixture": {
+        "image": [
+          100,
+          80
+        ],
+        "originalBox": [
+          60,
+          20,
+          100,
+          60
+        ],
+        "translateX": 20,
+        "translatedBox": [
+          80,
+          20,
+          120,
+          60
+        ],
+        "visibleArea": 800,
+        "originalArea": 1600,
+        "visibleRatio": 0.5,
+        "keepThreshold": 0.6,
+        "result": "drop"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "visibility",
+        "2": "photometric",
+        "3": "normalization",
+        "S": "overview의 100×80 이미지와 box",
+        "B": "세 예측 뒤 translate·clip Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.3390/info11020125",
+          "application": "image augmentation 기법의 범주와 적용 경계"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "box (60,20)–(100,60)를 오른쪽 20만큼 옮겨 (80,20)–(120,60)으로 만든 뒤, 보이는 20×40/40×40=0.5가 keep threshold 0.6보다 작아 drop되는 전 과정을 고정했습니다. 이미지와 annotation을 함께 변환해야 하는 이유를 같은 좌표로 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/image-augmentation-transforms/ModernArticle.tsx",
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/image-augmentation-transforms/ModernArticle.tsx",
+      "contentHash": "1d5542ec3e7dad7af511e13ae0be1786a9e8cd0af360744914b9e4528ab816a6",
+      "preserved": [
+        "geometry·photometric·normalization 구분",
+        "visibility ratio와 annotation 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/imbalance-loss-weighting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-loss-weighting.tsx",
       "publicPath": "cs/ai/imbalance-loss-weighting",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "class weight·focal loss 정의가 한 positive row 계산보다 먼저 나왔음",
+        "row 수와 gradient 기여가 달라지는 점이 첫 화면에서 보이지 않았음",
+        "focal factor와 noisy hard example 경계가 떨어져 있었음"
+      ],
+      "fixture": {
+        "positiveLoss": 1,
+        "positiveWeight": 9,
+        "weightedContribution": 9,
+        "gamma": 2,
+        "easyPt": 0.9,
+        "easyFactor": 0.01,
+        "hardPt": 0.2,
+        "hardFactor": 0.64
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "class-weight",
+        "2": "focal-modulation",
+        "3": "noise-boundary",
+        "S": "overview의 positive loss 1",
+        "B": "세 예측 뒤 weight·focal signal Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://openaccess.thecvf.com/content_ICCV_2017/html/Lin_Focal_Loss_for_ICCV_2017_paper.html",
+          "application": "focal loss의 (1−p_t)^γ modulation과 dense imbalance 문제"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "positive raw loss 1에 class weight 9를 곱해 기여 9가 되지만 row 수는 바뀌지 않는 사례를 고정했습니다. γ=2에서 p_t=.9의 factor .01과 p_t=.2의 .64를 비교하고, hard example이 곧 clean label이라는 뜻은 아님을 분리했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/imbalance-loss-weighting/ModernArticle.tsx",
+        "src/pages/articles/ai/imbalanced-data/viz/ModernImbalanceViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/imbalance-loss-weighting/ModernArticle.tsx",
+      "contentHash": "059f068da79441695dfe7a6ac2ca6ec6ed732b355b890dc82c49229255666858",
+      "preserved": [
+        "class weighting·focal modulation 구분",
+        "label noise와 calibration 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/imbalance-resampling",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-resampling.tsx",
       "publicPath": "cs/ai/imbalance-resampling",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "oversampling·SMOTE 정의가 두 점의 보간 사례보다 먼저 나왔음",
+        "복제와 새 observation을 만드는 일을 혼동하기 쉬웠음",
+        "split 전 resampling의 leakage가 첫 흐름에서 분리되지 않았음"
+      ],
+      "fixture": {
+        "xi": [
+          2,
+          4
+        ],
+        "xj": [
+          6,
+          8
+        ],
+        "lambda": 0.25,
+        "synthetic": [
+          3,
+          5
+        ]
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "fold-local",
+        "2": "smote-geometry",
+        "3": "release-boundary",
+        "S": "overview의 두 minority point",
+        "B": "세 예측 뒤 λ=.25 SMOTE Viz"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.jair.org/index.php/jair/article/view/10302",
+          "application": "SMOTE가 minority neighbor 사이에서 합성 표본을 만드는 원리"
+        }
+      ],
+      "validation": {
+        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
+        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
+        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
+        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
+        "typescript": "actual npx tsc -b exit0",
+        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
+        "formula": "전역 1,471식 explicit annotation strict actual exit0",
+        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
+        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
+        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
+        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "semanticReview": "x_i=(2,4), x_j=(6,8), λ=.25에서 합성점 (3,5)가 되는 좌표를 고정했습니다. 복제는 새 관측을 만들지 않고, SMOTE도 split 뒤 train fold 안에서만 fit해야 한다는 leakage 경계를 예측 문제와 시각화에 연결했습니다."
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-06",
+      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/imbalance-resampling/ModernArticle.tsx",
+        "src/pages/articles/ai/imbalanced-data/viz/ModernImbalanceViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/imbalance-resampling/ModernArticle.tsx",
+      "contentHash": "fe675964cc760907d16da81eba9c0d20f1d164dd3d48695dfc97b6b08f4e9a5a",
+      "preserved": [
+        "oversampling·undersampling·SMOTE 구분",
+        "fold-local resampling과 release 경계",
+        "정확히 기초6+심화4 연습문제"
+      ],
+      "contentHashScope": "2개 본문·Viz 파일 연결"
     },
     {
       "route": "ai/imbalanced-classification-evaluation",
@@ -10729,7 +11027,7 @@
       "fixture": {
         "assumed": true,
         "bounds": [
-          1e-05,
+          0.00001,
           0.1
         ],
         "u": 0.5,
@@ -12280,7 +12578,7 @@
           "roundTrip": true,
           "chars": 6841,
           "edits": 0,
-          "changeRate": 7.309407207078955e-05,
+          "changeRate": 0.00007309407207078955,
           "gateExit": 0,
           "numbersMarkersPointersPreserved": true
         },
@@ -12820,23 +13118,23 @@
   ],
   "counts": {
     "rewritten-local-verified": 55,
-    "rewritten-production-verified": 48,
-    "unreviewed": 83
+    "rewritten-production-verified": 54,
+    "unreviewed": 77
   },
   "localValidationSummary": {
-    "rewritten": 103,
-    "remainingUnreviewed": 83,
+    "rewritten": 109,
+    "remainingUnreviewed": 77,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
-    "learningStrict": "checkpoint249 — 799편 정확6+4 strict local+CI actual exit0",
-    "formulaStrict": "checkpoint249 — 1,471식 explicit annotation strict local+CI actual exit0",
-    "typescript": "checkpoint249 actual npx tsc -b exit0",
-    "note": "현재 103편은 actual-body semantic review를 마쳤고 그중 48편은 운영 검증까지 완료했습니다. 미검토 83편은 완료에 포함하지 않습니다.",
+    "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
+    "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
+    "typescript": "checkpoint255 actual npx tsc -b exit0",
+    "note": "현재 109편은 actual-body semantic review를 마쳤고 그중 54편은 운영 검증까지 완료했습니다. 미검토 77편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 103,
+    "verifiedRewrites": 109,
     "rewrittenLocalVerified": 55,
-    "unreviewed": 83,
+    "unreviewed": 77,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
@@ -12861,6 +13159,9 @@
     "checkpoint243Production": "docs/teach-system-audit/checkpoint-243-production.json",
     "checkpoint249Browser": "/tmp/teach-all/browser-ai-six-249/summary.json",
     "checkpoint249Dist": "/tmp/teach-all/browser-ai-six-249-dist/summary.json",
-    "checkpoint249Production": "docs/teach-system-audit/checkpoint-249-production.json"
+    "checkpoint249Production": "docs/teach-system-audit/checkpoint-249-production.json",
+    "checkpoint255Browser": "/tmp/teach-all/browser-ai-six-255/summary.json",
+    "checkpoint255Dist": "/tmp/teach-all/browser-ai-six-255-dist/summary.json",
+    "checkpoint255Production": "docs/teach-system-audit/checkpoint-255-production.json"
   }
 }
