@@ -203,7 +203,7 @@
   "reviewed": 195,
   "remaining": 604,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "156 substantive rewrites and 39 retained teaching flows after actual body audit.",
   "validation": {
     "individual": "Actual body/source/math/exact 6+4/full panels/two widths and humanize PASS for 6 additions.",
@@ -221,6 +221,10 @@
     "viz": "PASS target strict after Unicode accent stroke 2px→1.25px; all SVG text review items checked in two-width browser sweep.",
     "whitespace": "git diff --cached --check reports trailing whitespace in pinned upstream vLLM and utf8proc source files; these bytes are intentionally preserved for provenance and are not claimed as a pass."
   },
-  "commit": null,
-  "deployment": null
+  "commit": "1167a11219b6c424faccad3472a71198ddc97aca",
+  "deployment": {
+    "runId": 37299527933,
+    "conclusion": "success",
+    "production": "6 routes × 390/1440, 12 checks, 0 failed; actual final exit 0"
+  }
 }

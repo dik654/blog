@@ -1,0 +1,646 @@
+{
+  "base": "https://dik654.github.io/blog",
+  "finished": "2026-10-05T11:00:34.066Z",
+  "durationSeconds": 11.856,
+  "routes": 6,
+  "viewports": [
+    1440,
+    390
+  ],
+  "checks": 12,
+  "failed": 0,
+  "results": [
+    {
+      "route": "crypto/groth16",
+      "publicPath": "cs/crypto/groth16",
+      "width": 390,
+      "issues": [],
+      "worker": 5,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 8,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 26,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 19,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "screenshot": "/tmp/world-browser-audit/crypto--groth16-390.png",
+      "ok": true
+    },
+    {
+      "route": "crypto/groth16",
+      "publicPath": "cs/crypto/groth16",
+      "width": 1440,
+      "issues": [],
+      "worker": 4,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 8,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 26,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 22,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "screenshot": "/tmp/world-browser-audit/crypto--groth16-1440.png",
+      "ok": true
+    },
+    {
+      "route": "crypto/plonk",
+      "publicPath": "cs/crypto/plonk",
+      "width": 1440,
+      "issues": [],
+      "worker": 5,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 26,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 5,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 30,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "crypto/plonk",
+      "publicPath": "cs/crypto/plonk",
+      "width": 390,
+      "issues": [],
+      "worker": 4,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 26,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 5,
+        "formulaProblems": [],
+        "canvasCount": 2,
+        "canvasProblems": [],
+        "svgCount": 26,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/inference-optimization-layers",
+      "publicPath": "cs/ai/inference-optimization-layers",
+      "width": 390,
+      "issues": [],
+      "worker": 3,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 22,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 3,
+        "canvasProblems": [],
+        "svgCount": 17,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 547.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/inference-optimization-layers",
+      "publicPath": "cs/ai/inference-optimization-layers",
+      "width": 1440,
+      "issues": [],
+      "worker": 2,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 22,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 3,
+        "canvasProblems": [],
+        "svgCount": 20,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/text-unicode-encoding",
+      "publicPath": "cs/ai/text-unicode-encoding",
+      "width": 390,
+      "issues": [],
+      "worker": 1,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 21,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 4,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 19,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 574.015625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 596.515625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "ai/text-unicode-encoding",
+      "publicPath": "cs/ai/text-unicode-encoding",
+      "width": 1440,
+      "issues": [],
+      "worker": 0,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 6,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 21,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 4,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 23,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 3,
+          "checked": [
+            0,
+            1,
+            2
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "firms/market-power-and-markup",
+      "publicPath": "economics/firms/market-power-and-markup",
+      "width": 390,
+      "issues": [],
+      "worker": 4,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 15,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 20,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 515.515625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 5,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 547.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "firms/market-power-and-markup",
+      "publicPath": "economics/firms/market-power-and-markup",
+      "width": 1440,
+      "issues": [],
+      "worker": 5,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 9,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 15,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 3,
+        "formulaProblems": [],
+        "canvasCount": 5,
+        "canvasProblems": [],
+        "svgCount": 24,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 5,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "labor/wage-floor-natural-experiment",
+      "publicPath": "economics/labor/wage-floor-natural-experiment",
+      "width": 390,
+      "issues": [],
+      "worker": 2,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 10,
+        "minCardWidth": 316,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "h2Count": 17,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 5,
+        "formulaProblems": [],
+        "canvasCount": 7,
+        "canvasProblems": [],
+        "svgCount": 22,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 547.015625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 1,
+          "scenes": 6,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 515.515625,
+          "viewportHeight": 844
+        },
+        {
+          "i": 2,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 547.015625,
+          "viewportHeight": 844
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    },
+    {
+      "route": "labor/wage-floor-natural-experiment",
+      "publicPath": "economics/labor/wage-floor-natural-experiment",
+      "width": 1440,
+      "issues": [],
+      "worker": 3,
+      "metrics": {
+        "domOrder": true,
+        "primerCount": 1,
+        "reviewCount": 1,
+        "termCards": 10,
+        "minCardWidth": 655,
+        "badCards": [],
+        "documentOverflow": false,
+        "scrollWidth": 1440,
+        "clientWidth": 1440,
+        "h2Count": 17,
+        "katexErrors": 0,
+        "outsideElements": [],
+        "formulaCount": 5,
+        "formulaProblems": [],
+        "canvasCount": 7,
+        "canvasProblems": [],
+        "svgCount": 26,
+        "svgProblems": [],
+        "chartZero": 0
+      },
+      "scenes": [
+        {
+          "i": 0,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 1,
+          "scenes": 6,
+          "checked": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        },
+        {
+          "i": 2,
+          "scenes": 4,
+          "checked": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameDelta": 0,
+          "buttonDelta": 0,
+          "frameHeight": 706.515625,
+          "viewportHeight": 1000
+        }
+      ],
+      "console": [],
+      "transientChartWarnings": 0,
+      "requestFailures": [],
+      "ok": true
+    }
+  ]
+}
