@@ -233,7 +233,7 @@
   "reviewed": 225,
   "remaining": 574,
   "goalComplete": false,
-  "deployed": false,
+  "deployed": true,
   "disposition": "183 substantive rewrites and 42 retained teaching flows after actual body audit.",
   "validation": {
     "individual": "Six additions: actual full body/source/formula/exact 6+4 review; concrete case→three predictions→case-specific front core Viz; 390px rendered image read and two-width interaction checks PASS.",
@@ -252,6 +252,12 @@
     "viz": "Target 56 source files strict PASS and 6 routes across 12 two-width checks PASS; global legacy inventory remains outside this batch.",
     "whitespace": "PASS git diff --check; actual exit 0.",
     "mobileViewport": "100svh invariant remains enforced; no 100dvh source use. Front Viz cards use compact two-column layouts where text remains readable; fixed header overlay in stitched element screenshots was excluded from DOM overflow judgment.",
-    "production": "pending deployment"
+    "production": "GitHub Pages run 37342266446 success for commit afd746aa521a136fded9609903867cd323dc1b29; six new routes at 390/1440 produced 12 checks with 0 failed."
+  },
+  "commit": "afd746aa521a136fded9609903867cd323dc1b29",
+  "deployment": {
+    "runId": 37342266446,
+    "conclusion": "success",
+    "production": "6 routes × 390/1440, 12 checks, 0 failed; actual final exit 0"
   }
 }

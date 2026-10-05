@@ -2991,7 +2991,7 @@
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "로그인 401 사례는 있었지만 권한·실행·상위 ceiling의 결과를 먼저 예측할 질문이 없었음",
         "핵심 PolicyViz가 mode·rule 상세 절 뒤에 있어 proposal과 host decision을 첫 화면에서 연결하기 어려웠음",
@@ -3054,11 +3054,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "로그인 edit proposal을 canonical action으로 바꾼 뒤 ceiling→mode→rule→decision→executor를 추적했습니다. Policy Allow와 실제 effect 성공, hook context와 approval token, pinned optional enforcer와 production hardening을 구분했습니다."
+        "semanticReview": "로그인 edit proposal을 canonical action으로 바꾼 뒤 ceiling→mode→rule→decision→executor를 추적했습니다. Policy Allow와 실제 effect 성공, hook context와 approval token, pinned optional enforcer와 production hardening을 구분했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -3087,7 +3086,7 @@
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "auth-lint 사례는 있었지만 enabled·permission label·reload generation의 결과를 먼저 예측할 질문이 없었음",
         "앞 PluginRegistryViz가 Builtin·Bundled·External 일반 표여서 auth-lint가 Ready가 되는 경로를 직접 보여 주지 못했음"
@@ -3138,11 +3137,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "auth-lint 한 package를 발견·형식 검증·enable·tool-name 충돌·init·generation까지 추적했습니다. Permission label과 실제 executor enforcement, partial init과 rollback, 같은 version 문자열과 schema/executor identity를 구분했습니다."
+        "semanticReview": "auth-lint 한 package를 발견·형식 검증·enable·tool-name 충돌·init·generation까지 추적했습니다. Permission label과 실제 executor enforcement, partial init과 rollback, 같은 version 문자열과 schema/executor identity를 구분했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -3168,7 +3166,7 @@
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "lane-17 수치는 있었지만 Retry·Merge·Notify의 실제 반환을 먼저 예측할 질문이 없었음",
         "앞 Viz가 일반 Snapshot→Emit 단계만 보여 주고 lane-17의 ordered result를 표시하지 않았음"
@@ -3220,11 +3218,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "lane-17의 세 rule을 실제 값에 대입해 [Retry, MergeToDev, Notify]를 계산했습니다. Priority를 충돌 중재로 오해하지 않고, boolean state와 provenance·generation 및 evaluator와 executor를 분리했습니다."
+        "semanticReview": "lane-17의 세 rule을 실제 값에 대입해 [Retry, MergeToDev, Notify]를 계산했습니다. Priority를 충돌 중재로 오해하지 않고, boolean state와 provenance·generation 및 evaluator와 executor를 분리했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -3250,7 +3247,7 @@
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "실패 분류의 일반 설명만 있고 한 timeout을 effect reconciliation까지 추적하는 고정 사례가 없었음",
         "RecipesViz가 상세 recipes 절에 있어 recovery의 핵심 네 단계를 첫 화면에서 볼 수 없었음",
@@ -3300,11 +3297,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "auth test timeout을 결과 부재로 다루고 classify→checkpoint→bounded retry→effect/test verification을 추적했습니다. Transient retry와 code/conflict, stale signal과 destructive delete, delivery와 acknowledgement를 분리했습니다."
+        "semanticReview": "auth test timeout을 결과 부재로 다루고 classify→checkpoint→bounded retry→effect/test verification을 추적했습니다. Transient retry와 code/conflict, stale signal과 destructive delete, delivery와 acknowledgement를 분리했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -3333,7 +3329,7 @@
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "로그인 401 trace는 있었지만 partial stream·ambiguous effect·resume 결과를 먼저 예측할 질문이 없었음",
         "SessionStructViz가 record 용어 설명 뒤에 있어 durable/transient 경계가 첫 사례와 바로 연결되지 않았음",
@@ -3393,11 +3389,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "로그인 turn을 session·turn·attempt·effect로 나누고 committed message/effect/boundary와 transient stream을 분리했습니다. Effect 뒤 result 전 crash, message-copy fork와 workspace isolation, pause/resume와 cancel/shutdown을 실제 pinned 범위와 hardening 목표로 구분했습니다."
+        "semanticReview": "로그인 turn을 session·turn·attempt·effect로 나누고 committed message/effect/boundary와 transient stream을 분리했습니다. Effect 뒤 result 전 crash, message-copy fork와 workspace isolation, pause/resume와 cancel/shutdown을 실제 pinned 범위와 hardening 목표로 구분했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -3426,7 +3421,7 @@
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "beforeDefects": [
         "일반 역할 설명만 있고 한 coding task의 goal·dependency·artifact ownership을 추적하는 사례가 없었음",
         "TeamLeadFlowViz가 상세 절에 있고 generic label만 보여 첫 화면의 핵심 흐름이 약했음",
@@ -3470,11 +3465,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.24s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "semanticReview": "로그인 401 작업에서 main의 user goal, coordinator의 dependency/write ownership, worker의 evidence·diff·test receipt를 분리했습니다. Separate worktree와 의미 충돌, 완료 문장과 artifact, queue cancellation과 child process·credential 회수를 구분했습니다."
+        "semanticReview": "로그인 401 작업에서 main의 user goal, coordinator의 dependency/write ownership, worker의 evidence·diff·test receipt를 분리했습니다. Separate worktree와 의미 충돌, 완료 문장과 artifact, queue cancellation과 child process·credential 회수를 구분했습니다.",
+        "production": "GitHub Pages run 37342266446 success @ afd746aa521a136fded9609903867cd323dc1b29; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-225-production/summary.json"
       },
-      "remaining": [
-        "운영 배포와 production 390/1440 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -11520,8 +11514,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 61,
-    "rewritten-production-verified": 18,
+    "rewritten-local-verified": 55,
+    "rewritten-production-verified": 24,
     "unreviewed": 107
   },
   "localValidationSummary": {
@@ -11533,10 +11527,10 @@
     "learningStrict": "checkpoint225 — 799편 정확6+4 strict actual exit0",
     "formulaStrict": "checkpoint225 — 1,471식 explicit annotation strict actual exit0",
     "typescript": "checkpoint225 actual npx tsc -b --pretty false exit0",
-    "note": "현재 79편은 actual-body semantic review를 마쳤고 그중 18편은 운영 검증까지 완료했습니다. 미검토 107편은 완료에 포함하지 않습니다.",
+    "note": "현재 79편은 actual-body semantic review를 마쳤고 그중 24편은 운영 검증까지 완료했습니다. 미검토 107편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
     "verifiedRewrites": 79,
-    "rewrittenLocalVerified": 61,
+    "rewrittenLocalVerified": 55,
     "unreviewed": 107,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
@@ -11550,6 +11544,7 @@
     "checkpoint213Production": "docs/teach-system-audit/checkpoint-213-production.json",
     "checkpoint219Browser": "/tmp/teach-all/browser-ai-six-219/summary.json",
     "checkpoint219Production": "docs/teach-system-audit/checkpoint-219-production.json",
-    "checkpoint225Browser": "/tmp/teach-all/browser-ai-six-225/summary.json"
+    "checkpoint225Browser": "/tmp/teach-all/browser-ai-six-225/summary.json",
+    "checkpoint225Production": "docs/teach-system-audit/checkpoint-225-production.json"
   }
 }
