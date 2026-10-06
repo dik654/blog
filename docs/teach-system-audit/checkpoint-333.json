@@ -29,7 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment and production browser verification.",
+    "production": "GitHub Pages deployment 37531039351 succeeded. Production report output/playwright/philosophy-history-production/2026-10-06T21-09-32-209Z/summary.json recorded 22 passed and zero failed: six articles and two philosophy listings at 390px/1440px plus six mobile height/sidebar checks.",
     "curriculumCoverage": "MIT 24.01 supplied a historical reading and argument sequence; Yale PHIL 181 supplied the good-life, morality, justice and legitimacy frame. Stanford Encyclopedia entries supplied the tradition-specific scholarly boundaries. Remaining explicit gaps include medieval Latin and Jewish philosophy, Song-Ming Neo-Confucianism, later Indian schools, nineteenth- and twentieth-century analytic and continental philosophy, feminist, Indigenous and Latin American philosophy, metaethics and applied ethics."
+  },
+  "commit": "ad0d8a5966396c8a835bc5516b5b142b237c4004",
+  "deployment": {
+    "runId": 37531039351,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
