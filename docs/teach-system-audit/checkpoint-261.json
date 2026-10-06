@@ -26,8 +26,13 @@
     "topology": "PASS 805 strict; the six compact single-question foundations have reviewed keep decisions and source fingerprints.",
     "reading": "PASS organizing-principle labels and stage-derived full sequence; actual exit 0.",
     "mobileViewport": "All tested documents and lesson figures stayed within 390px; no console errors or warnings.",
-    "desktopViewport": "Philosophy domain and economic-history article inspected at 1440px; sidebar and figures stayed within the document."
+    "desktopViewport": "Philosophy domain and economic-history article inspected at 1440px; sidebar and figures stayed within the document.",
+    "production": "Six public routes × 390/1440 = 12 checks; exact ten-section order, three figures per article, document/figure overflow, three-question review blocks, console errors and failed requests checked; 0 failed. Philosophy and history domain pages also passed at 390px."
   },
-  "commit": null,
-  "deployment": null
+  "commit": "a695940eb18230685031e927f7c8024e1591134d",
+  "deployment": {
+    "runId": 37474262602,
+    "conclusion": "success",
+    "production": "6 routes × 390/1440, 12 checks, 0 failed; philosophy/history domain ordering confirmed at 390px"
+  }
 }
