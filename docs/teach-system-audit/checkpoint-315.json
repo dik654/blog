@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-309.json",
+  "publicArticles": 859,
+  "addedRoutes": [
+    "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests",
+    "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance",
+    "markets/japan-australia-retail-leverage-and-product-governance",
+    "markets/us-derivatives-regulatory-map-and-customer-segregation",
+    "markets/otc-clearing-reporting-and-bilateral-risk-mitigation",
+    "markets/cross-border-netting-enforceability-and-regulatory-recognition"
+  ],
+  "reviewed": 315,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive cross-jurisdiction derivatives regulation and infrastructure articles added after checkpoint 309; 273 substantive rewrites/additions and 42 retained teaching flows in total. University finance, Korean derivatives solicitation advisor training, Korea Banking Institute FP, exchange, regulator and international legal standards were used as complementary coverage checks rather than copied outlines.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "numeric": "Korea 1 hour education, 3 hour simulation, KRW 10m stage one, 10 open-interest trading days and KRW 20m stage two; Singapore recent three years and six listed SIP trades; CFD cash 100 at 30x gives exposure 3,000 and one-percent loss 30; Japan 4% margin implies 25x, giving 25 loss on a one-percent move; illustrative US customer cash 100 retains customer-account treatment across margin 20 and unused 80; 60 of 100 illustrative OTC trades gives 60%; netting +12-7-2=3, collateral 4 leaves zero versus 8 without netting.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-jurisdiction/2026-10-06T19-22-02-815Z/summary.json.",
+    "learning": "PASS 859 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192; the default Node heap limit was exhausted by the large canonical metadata files before the increased-memory run passed.",
+    "build": "PASS Vite 9.13s, 7,200 transformed modules and 1,820 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,017 concepts, 6,323 relations, 859 registered articles and zero invariants; 14 new concepts were added and four canonical concepts were reused instead of duplicated; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 859-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 859 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 450 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows at most 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment and the same 22 production checks.",
+    "curriculumCoverage": "MIT finance courses, GARP 2026 FRM, KIFIN derivatives solicitation advisor training and maintenance curriculum, Korea Banking Institute FP curriculum, and official KRX, MoneySense, ESMA, FCA, JFSA, ASIC, SEC, CFTC, UNIDROIT and Basel materials were mapped to implemented coverage. Canada, Hong Kong, Switzerland and other jurisdictions remain explicit gaps rather than being claimed complete."
+  },
+  "commit": null,
+  "deployment": {
+    "runId": null,
+    "conclusion": "pending",
+    "production": "pending"
+  }
+}

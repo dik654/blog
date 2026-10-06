@@ -48,6 +48,12 @@
 | 지역·확률변동성·점프 | 현재 표면·미래 흔들림·불연속 사건의 분리와 보정 | 30%·20%·24% 대 고정20%→오차14%p, −10%≈7.9σ | `markets/local-stochastic-volatility-jumps-and-calibration#case` | MIT 변동성·바젤 표면·점프 기준 |
 | 단기금리·HJM·금리 모형위험 | 한 금리와 만기별 선도곡선의 미래 움직임 | 하루 평균복귀0.2bp·흔들림6.3bp, 2년 HJM 평균2bp | `markets/short-rate-hjm-and-interest-rate-model-risk#case` | MIT HJM·바젤 모형검증 |
 | 위험강도곡선·회수·부도상관 | 생존·손실률·동시부도의 가격 장부 | 보호료1.2%·회수40%→세기2%·1년1.98%, 동시부도1%/10% | `markets/hazard-rate-curve-recovery-and-credit-correlation#case` | MIT 신용강의·바젤 CVA 확률 구분 |
+| 한국·싱가포르 소매 파생상품 진입 | 교육·모의거래·예탁금 또는 지식·경험 심사를 거친 주문 자격 | 한국 1시간+3시간+1,000만 원, 10거래일+2,000만 원 / 싱가포르 최근3년6회 | `markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests#case` | KRX·MoneySense 공식 안내, 진입·지식·적합성 구분 |
+| EU·영국 소매 CFD 보호 | 적정성·상품 개입·강제 청산·음수 잔액 보호 | 현금100×30배=3,000, 1% 이동 손실30, 설명용 50% 청산선 손실50 | `markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance#case` | ESMA 2026·FCA 공식 규칙, 영구계약 지급 구조 포함 |
+| 일본·호주 소매 레버리지·상품 유통 | 고객 지위와 기초자산별 증거금, 목표시장과 유통 통제 | 현금100에서 25배·30배·2배의 1% 손실25·30·2 | `markets/japan-australia-retail-leverage-and-product-governance#case` | JFSA 4% 증거금·ASIC 상품 개입과 설계·유통 의무 |
+| 미국 파생상품 관할·고객자금 | 상품별 CFTC·SEC 관할과 FCM 분리 계정 | 고객 현금100 중 증거금20·잔액80도 모두 고객 계정으로 표시 | `markets/us-derivatives-regulatory-map-and-customer-segregation#case` | SEC 증권기반스왑·CFTC FCM 분리 보관 공식 자료 |
+| 장외파생 중앙청산·보고·비청산 완화 | CCP 청산, 거래정보 보고, 담보·평가·분쟁 절차 | 설명용100건 중 청산60건=60%, 미청산40건은 별도 완화 장부 | `markets/otc-clearing-reporting-and-bilateral-risk-mitigation#case` | ESMA EMIR·CFTC 청산 요건, 의무별 분모 구분 |
+| 국경 간 종료 일괄상계·규제 인정 | 준거법·도산법상 상계 집행과 감독 규칙의 상호인정 | +12−7−2=순액3, 담보4 뒤0 대 상계 불인정 때8 | `markets/cross-border-netting-enforceability-and-regulatory-recognition#case` | UNIDROIT 상계 원칙·바젤 국경 간 증거금 기준 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

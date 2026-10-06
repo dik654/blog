@@ -30158,6 +30158,160 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "여러 회사의 부도 사건이 같은 기간에 함께 나타나는 정도를 설명하는 입력입니다.",
     "canonicalHref": "/finance/markets/hazard-rate-curve-recovery-and-credit-correlation#names"
   },
+  "retail-derivatives-entry-gate": {
+    "id": "retail-derivatives-entry-gate",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 시장 진입 문",
+    "aliases": [
+      "retail derivatives entry gate"
+    ],
+    "definition": "교육·모의거래·예탁금·경험처럼 소매 고객이 주문 전에 충족해야 하는 시장별 조건입니다.",
+    "canonicalHref": "/finance/markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests#names"
+  },
+  "derivatives-knowledge-assessment": {
+    "id": "derivatives-knowledge-assessment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 지식·경험 심사",
+    "aliases": [
+      "derivatives knowledge and experience assessment"
+    ],
+    "definition": "복잡한 상품을 이해할 학습·자격·경력·거래 경험이 있는지 확인하는 절차입니다.",
+    "canonicalHref": "/finance/markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests#names"
+  },
+  "derivatives-appropriateness-assessment": {
+    "id": "derivatives-appropriateness-assessment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 적정성 심사",
+    "aliases": [
+      "derivatives appropriateness assessment"
+    ],
+    "definition": "비권유 거래에서 고객의 지식과 경험이 복잡한 파생상품을 이해하기에 충분한지 보는 절차입니다.",
+    "canonicalHref": "/finance/markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance#names"
+  },
+  "cfd-product-intervention": {
+    "id": "cfd-product-intervention",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CFD 상품 개입",
+    "aliases": [
+      "CFD product intervention"
+    ],
+    "definition": "소매 피해를 줄이기 위해 레버리지·강제청산·경고·판매 유인을 시장 전체에서 제한하는 조치입니다.",
+    "canonicalHref": "/finance/markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance#names"
+  },
+  "negative-balance-protection": {
+    "id": "negative-balance-protection",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "마이너스 잔액 보호",
+    "aliases": [
+      "negative balance protection"
+    ],
+    "definition": "적용 대상 소매 CFD 계좌의 손실이 계좌에 넣은 전체 자금을 넘어 빚으로 남는 결과를 제한하는 장치입니다.",
+    "canonicalHref": "/finance/markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance#names"
+  },
+  "retail-derivatives-leverage-cap": {
+    "id": "retail-derivatives-leverage-cap",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "소매 파생상품 레버리지 한도",
+    "aliases": [
+      "retail derivatives leverage cap"
+    ],
+    "definition": "소매 고객이 낸 증거금에 비해 잡을 수 있는 파생상품 명목 노출의 최대 비율입니다.",
+    "canonicalHref": "/finance/markets/japan-australia-retail-leverage-and-product-governance#names"
+  },
+  "target-market-determination": {
+    "id": "target-market-determination",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "목표시장 결정",
+    "aliases": [
+      "target market determination"
+    ],
+    "definition": "상품이 맞을 가능성이 있는 소비자 범위와 유통·검토 조건을 정해 공개하고 관리하는 절차입니다.",
+    "canonicalHref": "/finance/markets/japan-australia-retail-leverage-and-product-governance#names"
+  },
+  "us-derivatives-jurisdiction-split": {
+    "id": "us-derivatives-jurisdiction-split",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "미국 파생상품 관할 분할",
+    "aliases": [
+      "US derivatives jurisdiction split"
+    ],
+    "definition": "스왑은 CFTC, 증권기반스왑은 SEC가 맡고 혼합스왑은 함께 다루는 상품별 감독 구조입니다.",
+    "canonicalHref": "/finance/markets/us-derivatives-regulatory-map-and-customer-segregation#names"
+  },
+  "fcm-customer-fund-segregation": {
+    "id": "fcm-customer-fund-segregation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "FCM 고객자금 분리",
+    "aliases": [
+      "FCM customer fund segregation"
+    ],
+    "definition": "선물·옵션 고객이 맡긴 돈과 재산을 중개회사 자기 자산에서 떼어 고객을 위해 보유하는 장치입니다.",
+    "canonicalHref": "/finance/markets/us-derivatives-regulatory-map-and-customer-segregation#names"
+  },
+  "derivatives-trade-reporting": {
+    "id": "derivatives-trade-reporting",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 거래보고",
+    "aliases": [
+      "derivatives trade reporting"
+    ],
+    "definition": "파생계약의 체결·변경·종료 정보를 정해진 거래정보저장소에 제출하는 의무입니다.",
+    "canonicalHref": "/finance/markets/otc-clearing-reporting-and-bilateral-risk-mitigation#names"
+  },
+  "uncleared-derivatives-risk-mitigation": {
+    "id": "uncleared-derivatives-risk-mitigation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "비청산 파생상품 위험 완화",
+    "aliases": [
+      "uncleared derivatives risk mitigation"
+    ],
+    "definition": "중앙청산 밖 계약의 확인·평가·분쟁 처리와 증거금을 관리하는 절차입니다.",
+    "canonicalHref": "/finance/markets/otc-clearing-reporting-and-bilateral-risk-mitigation#names"
+  },
+  "netting-legal-enforceability": {
+    "id": "netting-legal-enforceability",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "상계 법적 집행가능성",
+    "aliases": [
+      "netting legal enforceability"
+    ],
+    "definition": "부도·파산 뒤에도 여러 거래를 종료하고 한 순채무로 만드는 권리가 관련 법에서 인정되는 성질입니다.",
+    "canonicalHref": "/finance/markets/cross-border-netting-enforceability-and-regulatory-recognition#names"
+  },
+  "jurisdictional-netting-opinion": {
+    "id": "jurisdictional-netting-opinion",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "관할별 상계 법률의견",
+    "aliases": [
+      "jurisdictional netting opinion"
+    ],
+    "definition": "특정 당사자·문서·준거법·도산 절차에서 종료 일괄상계의 효력과 예외를 분석한 의견입니다.",
+    "canonicalHref": "/finance/markets/cross-border-netting-enforceability-and-regulatory-recognition#names"
+  },
+  "cross-border-regulatory-recognition": {
+    "id": "cross-border-regulatory-recognition",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "국경 간 규제 상호인정",
+    "aliases": [
+      "cross-border regulatory recognition"
+    ],
+    "definition": "본국과 현지국이 충분히 비슷한 감독 결과를 인정해 중복 준수를 줄이는 장치입니다.",
+    "canonicalHref": "/finance/markets/cross-border-netting-enforceability-and-regulatory-recognition#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -54724,6 +54878,90 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "default-correlation",
     "relation": "extends",
     "reason": "default-intensity-curve에서 default-correlation로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-suitability",
+    "to": "retail-derivatives-entry-gate",
+    "relation": "prerequisite",
+    "reason": "derivatives-suitability에서 retail-derivatives-entry-gate로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "retail-derivatives-entry-gate",
+    "to": "derivatives-knowledge-assessment",
+    "relation": "extends",
+    "reason": "retail-derivatives-entry-gate에서 derivatives-knowledge-assessment로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-suitability",
+    "to": "derivatives-appropriateness-assessment",
+    "relation": "prerequisite",
+    "reason": "derivatives-suitability에서 derivatives-appropriateness-assessment로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-appropriateness-assessment",
+    "to": "cfd-product-intervention",
+    "relation": "extends",
+    "reason": "derivatives-appropriateness-assessment에서 cfd-product-intervention로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "cfd-product-intervention",
+    "to": "negative-balance-protection",
+    "relation": "extends",
+    "reason": "cfd-product-intervention에서 negative-balance-protection로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "initial-variation-margin",
+    "to": "retail-derivatives-leverage-cap",
+    "relation": "prerequisite",
+    "reason": "initial-variation-margin에서 retail-derivatives-leverage-cap로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "retail-derivatives-leverage-cap",
+    "to": "target-market-determination",
+    "relation": "extends",
+    "reason": "retail-derivatives-leverage-cap에서 target-market-determination로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-suitability",
+    "to": "us-derivatives-jurisdiction-split",
+    "relation": "prerequisite",
+    "reason": "derivatives-suitability에서 us-derivatives-jurisdiction-split로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "us-derivatives-jurisdiction-split",
+    "to": "fcm-customer-fund-segregation",
+    "relation": "extends",
+    "reason": "us-derivatives-jurisdiction-split에서 fcm-customer-fund-segregation로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "central-counterparty-clearing",
+    "to": "derivatives-trade-reporting",
+    "relation": "prerequisite",
+    "reason": "central-counterparty-clearing에서 derivatives-trade-reporting로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-trade-reporting",
+    "to": "uncleared-derivatives-risk-mitigation",
+    "relation": "extends",
+    "reason": "derivatives-trade-reporting에서 uncleared-derivatives-risk-mitigation로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "close-out-netting",
+    "to": "netting-legal-enforceability",
+    "relation": "prerequisite",
+    "reason": "close-out-netting에서 netting-legal-enforceability로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "netting-legal-enforceability",
+    "to": "jurisdictional-netting-opinion",
+    "relation": "extends",
+    "reason": "netting-legal-enforceability에서 jurisdictional-netting-opinion로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "jurisdictional-netting-opinion",
+    "to": "cross-border-regulatory-recognition",
+    "relation": "extends",
+    "reason": "jurisdictional-netting-opinion에서 cross-border-regulatory-recognition로 실제 국가·계약 판단을 확장합니다."
   },
 ];
 
