@@ -16529,6 +16529,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "korea-singapore-retail-derivatives-entry-and-knowledge-tests": {
+    "title": "한국·싱가포르 파생상품 진입과 지식 심사 글이 소유하는 범위",
+    "owns": [
+      "한국 신규 일반개인의 1·3·1,000과 10·2,000 단계 장부",
+      "싱가포르 상장·비상장 복잡상품의 CAR·CKA 구분",
+      "지식 심사·진입 조건·권유 적합성의 책임 경계"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 적합성·설명·판매 기록",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "eu-uk-cfd-appropriateness-leverage-and-negative-balance": {
+    "title": "EU·영국 CFD 적정성·레버리지·잔액 보호 글이 소유하는 범위",
+    "owns": [
+      "현금 100·노출 3,000·1% 손실 30의 레버리지 장부",
+      "거래 전 적정성·거래 중 청산·거래 뒤 잔액 보호의 시간 구분",
+      "영구선물 이름과 CFD 지급 구조의 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 적합성·핵심 위험 설명",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "japan-australia-retail-leverage-and-product-governance": {
+    "title": "일본·호주 소매 레버리지와 상품 유통 글이 소유하는 범위",
+    "owns": [
+      "현금 100의 일본 25배·호주 30배·2배 손실 속도 비교",
+      "기초자산별 증거금과 소매·전문 고객 지위의 구분",
+      "레버리지 상품 조건과 목표시장 유통 관리의 연결"
+    ],
+    "reuses": [
+      {
+        "label": "개시·변동증거금의 현금 시점",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "us-derivatives-regulatory-map-and-customer-segregation": {
+    "title": "미국 파생상품 관할과 고객자금 분리 글이 소유하는 범위",
+    "owns": [
+      "금리스왑과 단일 회사 신용스왑의 감독기관 분류",
+      "고객 현금 100·필요 증거금 20·잔액 80의 분리 장부",
+      "상품 감독·영업행위·고객 돈 보관의 책임 구분"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 적합성·설명·판매 기록",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "otc-clearing-reporting-and-bilateral-risk-mitigation": {
+    "title": "장외파생 청산·보고·양자 위험 완화 글이 소유하는 범위",
+    "owns": [
+      "계약 100건·청산 60건·비청산 40건·보고 100건의 서로 다른 분모",
+      "청산소와 거래정보저장소의 기능 구분",
+      "EU와 미국의 적용 범위를 계약별로 다시 대입하는 절차"
+    ],
+    "reuses": [
+      {
+        "label": "중앙청산·개시증거금·부도 손실 순서",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "cross-border-netting-enforceability-and-regulatory-recognition": {
+    "title": "국경 간 상계 집행가능성과 규제 상호인정 글이 소유하는 범위",
+    "owns": [
+      "+12·−7·−2의 순액 3과 총 양수 12 비교",
+      "담보 4 뒤 순액 노출 0·총액 노출 8의 법률효과",
+      "관할별 법률의견과 감독 상호인정의 책임 구분"
+    ],
+    "reuses": [
+      {
+        "label": "종료 일괄상계·CSA 담보·CVA",
+        "href": "/finance/markets/otc-master-agreement-collateral-netting-and-cva"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 고객, 상품, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 법률의견, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

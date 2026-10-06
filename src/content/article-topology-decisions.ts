@@ -2256,6 +2256,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "신용 가격은 만기별 생존과 부도 도착 세기, 회수 뒤 손실과 동시부도를 따로 계산하며 시장가격용 확률과 실제 부도 추정을 분리해 단일기업·포트폴리오 꼬리위험을 관리합니다.",
     "sharedGate": "1.2%/(1−40%)=2%, 1−e^(−0.02)≈1.98%, 두 회사 기대손실 12와 동시부도 1%·10%를 검산합니다."
   },
+  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 계좌의 시장 진입 조건, 지식·경험 심사와 투자 권유의 적합성은 서로 다른 질문이며 국가와 상품에 맞춰 각각 확인해야 합니다.",
+    "sharedGate": "한국 1·3·1,000·10·2,000과 싱가포르 3년·6회의 대상·단위를 구분하고 거래 가능과 적합성을 분리합니다."
+  },
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "소매 CFD 보호는 거래 전 적정성, 기초자산별 레버리지, 계좌 강제청산과 음수 잔액 보호가 서로 다른 시점에 작동하는 구조입니다.",
+    "sharedGate": "100×30=3,000과 3,000×1%=30을 검산하고 50% 청산선과 음수 잔액 보호를 원금 보장으로 읽지 않습니다."
+  },
+  "markets/japan-australia-retail-leverage-and-product-governance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "레버리지 한도는 고객 유형과 기초자산에 붙여 읽어야 하며, 상품 조건 통제와 목표시장·유통 관리는 함께 확인해야 합니다.",
+    "sharedGate": "4%의 역수 25와 현금 100의 1% 손실 25·30·2를 검산하고 배수를 국가 전체의 안전 순위로 쓰지 않습니다."
+  },
+  "markets/us-derivatives-regulatory-map-and-customer-segregation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "미국 파생상품에서는 상품 관할, 거래상대 영업행위와 고객 돈 보관을 각각 분류해야 실제 감독·파산·분쟁 경로를 찾을 수 있습니다.",
+    "sharedGate": "고객 현금 100에서 증거금 20과 잔액 80을 모두 분리 표시하고 등록·분리를 손실 보장으로 읽지 않습니다."
+  },
+  "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "장외파생의 중앙청산, 거래보고와 비청산 위험 완화는 적용 범위와 기능이 다른 세 의무이며 계약별 상태표에서 함께 추적해야 합니다.",
+    "sharedGate": "60÷100=60%를 검산하고 청산 건수·보고 건수·비청산 담보 건수의 분모를 분리합니다."
+  },
+  "markets/cross-border-netting-enforceability-and-regulatory-recognition": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "종료 일괄상계의 위험 감소는 관련 관할의 도산법에서 집행될 때 성립하며, 관할별 법률의견과 감독 규칙의 상호인정을 별도로 관리해야 합니다.",
+    "sharedGate": "+12−7−2=3과 담보 4 뒤 0 대 8을 검산하고 규제 상호인정을 사법상 집행가능성으로 읽지 않습니다."
+  },
 };
 
 /**
@@ -2263,6 +2305,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "markets/cross-border-netting-enforceability-and-regulatory-recognition": "f5ba03ee5ac2c7ee",
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "c135e415762d61e1",
+  "markets/japan-australia-retail-leverage-and-product-governance": "23f25e390b424854",
+  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": "148449cdaf8b1d80",
+  "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": "472ed9e5ac314650",
+  "markets/us-derivatives-regulatory-map-and-customer-segregation": "f678958375789feb",
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "6ce09e8e1f3ff2c4",
   "ai/inference-optimization-layers": "0f317d8baf76db75",

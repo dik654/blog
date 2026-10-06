@@ -12556,4 +12556,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다."
     }
   ],
+  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": [
+    {
+      "kind": "공식 문서",
+      "label": "한국거래소 · 신규 개인 파생상품 진입",
+      "href": "https://trn.krx.co.kr/pages/0101?cmd=base",
+      "note": "신규 일반개인의 교육·모의거래·예탁금과 단계별 허용 상품을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Singapore MoneySense · Specified Investment Products",
+      "href": "https://www.moneysense.gov.sg/investments/understanding-specified-investment-products/",
+      "note": "상장·비상장 복잡상품의 CAR·CKA와 지식·경험 기준을 확인합니다."
+    }
+  ],
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": [
+    {
+      "kind": "공식 문서",
+      "label": "ESMA · 2026 perpetual futures statement",
+      "href": "https://www.esma.europa.eu/press-news/esma-news/esma-reminds-firms-their-obligations-under-cfd-product-intervention-measures",
+      "note": "영구계약의 CFD 해당 가능성과 적정성·목표시장·상품 개입 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "UK FCA · Contracts for differences",
+      "href": "https://www.fca.org.uk/firms/contract-for-differences",
+      "note": "30대 1~2대 1 레버리지, 50% 강제청산, 음수 잔액과 위험 경고를 확인합니다."
+    }
+  ],
+  "markets/japan-australia-retail-leverage-and-product-governance": [
+    {
+      "kind": "공식 문서",
+      "label": "Japan FSA · 개인 장외 FX",
+      "href": "https://www.fsa.go.jp/ordinary/iwagai/index.html",
+      "note": "개인 장외 FX의 4% 증거금·25배·로스컷 관계를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASIC · CFD product intervention and distribution",
+      "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+      "note": "소매 CFD 레버리지 범위와 상품 개입 기한, 목표시장 유통 감독을 확인합니다."
+    }
+  ],
+  "markets/us-derivatives-regulatory-map-and-customer-segregation": [
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Security-Based Swap Markets",
+      "href": "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets",
+      "note": "SEC·CFTC의 상품 관할과 증권기반스왑 영업행위 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Futures Commission Merchants",
+      "href": "https://www.cftc.gov/IndustryOversight/Intermediaries/FCMs/fcmsegregationfunds.html",
+      "note": "FCM 고객자금 분리와 파산 때의 보호·한계를 확인합니다."
+    }
+  ],
+  "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": [
+    {
+      "kind": "공식 문서",
+      "label": "ESMA · EMIR post-trading",
+      "href": "https://www.esma.europa.eu/esmas-activities/markets-and-infrastructure/post-trading",
+      "note": "청산·비청산 위험 완화·모든 파생상품 거래보고의 서로 다른 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Swap clearing requirement",
+      "href": "https://www.cftc.gov/LawRegulation/DoddFrankAct/Rulemakings/ClearingRequirement/CDFClearingReq.html",
+      "note": "미국의 일정 금리·신용스왑 의무청산 범위를 EU와 별도로 확인합니다."
+    }
+  ],
+  "markets/cross-border-netting-enforceability-and-regulatory-recognition": [
+    {
+      "kind": "공식 문서",
+      "label": "UNIDROIT · Close-out Netting Principles",
+      "href": "https://www.unidroit.org/instruments/capital-markets/netting/",
+      "note": "여러 거래를 한 순채무로 만드는 기능과 도산 시 집행가능성의 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BCBS–IOSCO · 비청산 증거금",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+      "note": "본국·현지국 증거금 규칙의 일관성과 중복 방지 원칙을 확인합니다."
+    }
+  ],
 };

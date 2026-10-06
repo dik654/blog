@@ -140930,4 +140930,1356 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": {
+    "entryLevel": false,
+    "entryNote": "한국의 1시간·3시간·1,000만 원과 싱가포르의 최근 3년 6회 기준에서 시작합니다.",
+    "coreIdea": "파생상품 계좌의 시장 진입 조건, 지식·경험 심사와 투자 권유의 적합성은 서로 다른 질문이며 국가와 상품에 맞춰 각각 확인해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-suitability",
+        "role": "권유 단계의 파생상품 적합성을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "retail-derivatives-entry-gate",
+        "role": "파생상품 시장 진입 문을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-knowledge-assessment",
+        "role": "파생상품 지식·경험 심사을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "retail-derivatives-entry-gate",
+        "sectionId": "names",
+        "intuition": "파생상품 시장 진입 문이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "한국 신규 일반개인의 교육 1시간·모의거래 3시간·1단계 예탁금 1,000만 원을 확인합니다.",
+        "boundary": "최대 손실이나 상품 적합성을 보장하지 않습니다."
+      },
+      {
+        "id": "derivatives-knowledge-assessment",
+        "sectionId": "names",
+        "intuition": "파생상품 지식·경험 심사이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "싱가포르 CAR의 최근 3년 6회 거래를 여러 충족 방법 중 하나로 봅니다.",
+        "boundary": "재산과 목적을 보는 적합성 판단과 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-suitability"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 시장 진입 문",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "retail-derivatives-entry-gate"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 지식·경험 심사",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-knowledge-assessment"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 시장 진입 문의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 시장 진입 문",
+          "한국 신규 일반개인의 교육 1시간·모의거래 3시간·1단계 예탁금 1,000만 원을 확인합니다.",
+          "최대 손실이나 상품 적합성을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 지식·경험 심사의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 지식·경험 심사",
+          "싱가포르 CAR의 최근 3년 6회 거래를 여러 충족 방법 중 하나로 봅니다.",
+          "재산과 목적을 보는 적합성 판단과 다릅니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "한국거래소 · 신규 개인 파생상품 진입",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "Singapore MoneySense · Specified Investment Products",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 법률·투자 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약과 최신 규정",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate",
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate",
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate",
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-entry-gate",
+          "derivatives-knowledge-assessment"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "한국거래소 · 신규 개인 파생상품 진입",
+        "href": "https://trn.krx.co.kr/pages/0101?cmd=base",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "신규 일반개인의 교육·모의거래·예탁금과 단계별 허용 상품을 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Singapore MoneySense · Specified Investment Products",
+        "href": "https://www.moneysense.gov.sg/investments/understanding-specified-investment-products/",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "상장·비상장 복잡상품의 CAR·CKA와 지식·경험 기준을 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": {
+    "entryLevel": false,
+    "entryNote": "현금 100·레버리지 30배·1% 가격 이동의 손실 30에서 시작합니다.",
+    "coreIdea": "소매 CFD 보호는 거래 전 적정성, 기초자산별 레버리지, 계좌 강제청산과 음수 잔액 보호가 서로 다른 시점에 작동하는 구조입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-suitability",
+        "role": "파생상품 권유 적합성과 위험 설명을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-appropriateness-assessment",
+        "role": "파생상품 적정성 심사을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "cfd-product-intervention",
+        "role": "CFD 상품 개입을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "negative-balance-protection",
+        "role": "마이너스 잔액 보호을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-appropriateness-assessment",
+        "sectionId": "names",
+        "intuition": "파생상품 적정성 심사이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "CFD 계좌를 열기 전에 레버리지와 손실 구조의 이해를 확인합니다.",
+        "boundary": "목적·재산까지 보는 권유 적합성과 같지 않습니다."
+      },
+      {
+        "id": "cfd-product-intervention",
+        "sectionId": "names",
+        "intuition": "CFD 상품 개입이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "기초자산에 따라 레버리지를 30대 1에서 2대 1 범위로 제한합니다.",
+        "boundary": "가격 방향이나 수익을 보장하지 않습니다."
+      },
+      {
+        "id": "negative-balance-protection",
+        "sectionId": "names",
+        "intuition": "마이너스 잔액 보호이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "가격 틈 뒤 CFD 계좌가 음수가 되는 채무를 제한합니다.",
+        "boundary": "원금 손실과 다른 계약 채무까지 없애지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-suitability"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 적정성 심사",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-appropriateness-assessment"
+        ]
+      },
+      {
+        "label": "3단계 · CFD 상품 개입",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "cfd-product-intervention"
+        ]
+      },
+      {
+        "label": "4단계 · 마이너스 잔액 보호",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "negative-balance-protection"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 적정성 심사의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 적정성 심사",
+          "CFD 계좌를 열기 전에 레버리지와 손실 구조의 이해를 확인합니다.",
+          "목적·재산까지 보는 권유 적합성과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "CFD 상품 개입의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CFD 상품 개입",
+          "기초자산에 따라 레버리지를 30대 1에서 2대 1 범위로 제한합니다.",
+          "가격 방향이나 수익을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cfd-product-intervention"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "마이너스 잔액 보호의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "마이너스 잔액 보호",
+          "가격 틈 뒤 CFD 계좌가 음수가 되는 채무를 제한합니다.",
+          "원금 손실과 다른 계약 채무까지 없애지 않습니다."
+        ],
+        "requiredConcepts": [
+          "negative-balance-protection"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "ESMA · 2026 perpetual futures statement",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "UK FCA · Contracts for differences",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "negative-balance-protection"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment",
+          "cfd-product-intervention",
+          "negative-balance-protection"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment",
+          "cfd-product-intervention",
+          "negative-balance-protection"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment",
+          "cfd-product-intervention",
+          "negative-balance-protection"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-appropriateness-assessment",
+          "cfd-product-intervention",
+          "negative-balance-protection"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ESMA · 2026 perpetual futures statement",
+        "href": "https://www.esma.europa.eu/press-news/esma-news/esma-reminds-firms-their-obligations-under-cfd-product-intervention-measures",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "영구계약의 CFD 해당 가능성과 적정성·목표시장·상품 개입 범위를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "UK FCA · Contracts for differences",
+        "href": "https://www.fca.org.uk/firms/contract-for-differences",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "30대 1~2대 1 레버리지, 50% 강제청산, 음수 잔액과 위험 경고를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/japan-australia-retail-leverage-and-product-governance": {
+    "entryLevel": false,
+    "entryNote": "현금 100에서 일본 25배와 호주 30배·2배의 1% 손실 25·30·2로 시작합니다.",
+    "coreIdea": "레버리지 한도는 고객 유형과 기초자산에 붙여 읽어야 하며, 상품 조건 통제와 목표시장·유통 관리는 함께 확인해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "initial-variation-margin",
+        "role": "개시·변동증거금을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "retail-derivatives-leverage-cap",
+        "role": "소매 파생상품 레버리지 한도을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "target-market-determination",
+        "role": "목표시장 결정을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "retail-derivatives-leverage-cap",
+        "sectionId": "names",
+        "intuition": "소매 파생상품 레버리지 한도이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "일본 개인 장외 FX의 4% 증거금은 25배 이하와 같은 관계입니다.",
+        "boundary": "모든 상품과 고객에게 같은 숫자가 적용되지 않습니다."
+      },
+      {
+        "id": "target-market-determination",
+        "sectionId": "names",
+        "intuition": "목표시장 결정이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "CFD의 지식과 위험 감수 수준을 가입·유통 경로에 반영합니다.",
+        "boundary": "개별 고객에 대한 투자 조언과 같은 문서는 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "initial-variation-margin"
+        ]
+      },
+      {
+        "label": "2단계 · 소매 파생상품 레버리지 한도",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "retail-derivatives-leverage-cap"
+        ]
+      },
+      {
+        "label": "3단계 · 목표시장 결정",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "target-market-determination"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "소매 파생상품 레버리지 한도의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "소매 파생상품 레버리지 한도",
+          "일본 개인 장외 FX의 4% 증거금은 25배 이하와 같은 관계입니다.",
+          "모든 상품과 고객에게 같은 숫자가 적용되지 않습니다."
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "목표시장 결정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "목표시장 결정",
+          "CFD의 지식과 위험 감수 수준을 가입·유통 경로에 반영합니다.",
+          "개별 고객에 대한 투자 조언과 같은 문서는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "target-market-determination"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "Japan FSA · 개인 장외 FX",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "ASIC · CFD product intervention and distribution",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "target-market-determination"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 법률·투자 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약과 최신 규정",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "target-market-determination"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap",
+          "target-market-determination"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap",
+          "target-market-determination"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap",
+          "target-market-determination"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "retail-derivatives-leverage-cap",
+          "target-market-determination"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Japan FSA · 개인 장외 FX",
+        "href": "https://www.fsa.go.jp/ordinary/iwagai/index.html",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "개인 장외 FX의 4% 증거금·25배·로스컷 관계를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ASIC · CFD product intervention and distribution",
+        "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "소매 CFD 레버리지 범위와 상품 개입 기한, 목표시장 유통 감독을 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/us-derivatives-regulatory-map-and-customer-segregation": {
+    "entryLevel": false,
+    "entryNote": "금리스왑·단일 회사 신용스왑의 감독 문과 FCM 고객 현금 100의 분리 장부에서 시작합니다.",
+    "coreIdea": "미국 파생상품에서는 상품 관할, 거래상대 영업행위와 고객 돈 보관을 각각 분류해야 실제 감독·파산·분쟁 경로를 찾을 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-suitability",
+        "role": "파생상품 판매 적합성과 설명을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "us-derivatives-jurisdiction-split",
+        "role": "미국 파생상품 관할 분할을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "fcm-customer-fund-segregation",
+        "role": "FCM 고객자금 분리을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "us-derivatives-jurisdiction-split",
+        "sectionId": "names",
+        "intuition": "미국 파생상품 관할 분할이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "금리스왑과 단일 회사 신용스왑의 첫 확인 기관이 갈립니다.",
+        "boundary": "브랜드나 계약 이름만으로 최종 분류하지 않습니다."
+      },
+      {
+        "id": "fcm-customer-fund-segregation",
+        "sectionId": "names",
+        "intuition": "FCM 고객자금 분리이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "입금 100 중 필요 증거금 20과 남은 80 모두 고객 계정 표시를 유지합니다.",
+        "boundary": "시장 손실 보전이나 예금보험과 같지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-suitability"
+        ]
+      },
+      {
+        "label": "2단계 · 미국 파생상품 관할 분할",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "us-derivatives-jurisdiction-split"
+        ]
+      },
+      {
+        "label": "3단계 · FCM 고객자금 분리",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "fcm-customer-fund-segregation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "미국 파생상품 관할 분할의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "미국 파생상품 관할 분할",
+          "금리스왑과 단일 회사 신용스왑의 첫 확인 기관이 갈립니다.",
+          "브랜드나 계약 이름만으로 최종 분류하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "FCM 고객자금 분리의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "FCM 고객자금 분리",
+          "입금 100 중 필요 증거금 20과 남은 80 모두 고객 계정 표시를 유지합니다.",
+          "시장 손실 보전이나 예금보험과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "SEC · Security-Based Swap Markets",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "CFTC · Futures Commission Merchants",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 법률·투자 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약과 최신 규정",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split",
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split",
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split",
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "us-derivatives-jurisdiction-split",
+          "fcm-customer-fund-segregation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "SEC · Security-Based Swap Markets",
+        "href": "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "SEC·CFTC의 상품 관할과 증권기반스왑 영업행위 범위를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CFTC · Futures Commission Merchants",
+        "href": "https://www.cftc.gov/IndustryOversight/Intermediaries/FCMs/fcmsegregationfunds.html",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "FCM 고객자금 분리와 파산 때의 보호·한계를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/otc-clearing-reporting-and-bilateral-risk-mitigation": {
+    "entryLevel": false,
+    "entryNote": "장외계약 100건 가운데 의무청산 60건·비청산 40건·보고 출발점 100건에서 시작합니다.",
+    "coreIdea": "장외파생의 중앙청산, 거래보고와 비청산 위험 완화는 적용 범위와 기능이 다른 세 의무이며 계약별 상태표에서 함께 추적해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "central-counterparty-clearing",
+        "role": "중앙청산과 증거금을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-trade-reporting",
+        "role": "파생상품 거래보고을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "uncleared-derivatives-risk-mitigation",
+        "role": "비청산 파생상품 위험 완화을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-trade-reporting",
+        "sectionId": "names",
+        "intuition": "파생상품 거래보고이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "청산 60건과 비청산 40건의 생애주기 정보를 모두 추적합니다.",
+        "boundary": "저장소가 계약 상대가 되거나 지급을 보증하지 않습니다."
+      },
+      {
+        "id": "uncleared-derivatives-risk-mitigation",
+        "sectionId": "names",
+        "intuition": "비청산 파생상품 위험 완화이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "청산되지 않은 40건의 양자 담보와 평가 차이를 맞춥니다.",
+        "boundary": "비청산을 무담보·무규제와 같은 말로 쓰지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "central-counterparty-clearing"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 거래보고",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-trade-reporting"
+        ]
+      },
+      {
+        "label": "3단계 · 비청산 파생상품 위험 완화",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "uncleared-derivatives-risk-mitigation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 거래보고의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 거래보고",
+          "청산 60건과 비청산 40건의 생애주기 정보를 모두 추적합니다.",
+          "저장소가 계약 상대가 되거나 지급을 보증하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "비청산 파생상품 위험 완화의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "비청산 파생상품 위험 완화",
+          "청산되지 않은 40건의 양자 담보와 평가 차이를 맞춥니다.",
+          "비청산을 무담보·무규제와 같은 말로 쓰지 않습니다."
+        ],
+        "requiredConcepts": [
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "ESMA · EMIR post-trading",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "CFTC · Swap clearing requirement",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 법률·투자 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약과 최신 규정",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting",
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting",
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting",
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-reporting",
+          "uncleared-derivatives-risk-mitigation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ESMA · EMIR post-trading",
+        "href": "https://www.esma.europa.eu/esmas-activities/markets-and-infrastructure/post-trading",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "청산·비청산 위험 완화·모든 파생상품 거래보고의 서로 다른 범위를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CFTC · Swap clearing requirement",
+        "href": "https://www.cftc.gov/LawRegulation/DoddFrankAct/Rulemakings/ClearingRequirement/CDFClearingReq.html",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "미국의 일정 금리·신용스왑 의무청산 범위를 EU와 별도로 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/cross-border-netting-enforceability-and-regulatory-recognition": {
+    "entryLevel": false,
+    "entryNote": "+12·−7·−2의 순액 3, 담보 4 뒤 순액 노출 0과 총액 노출 8에서 시작합니다.",
+    "coreIdea": "종료 일괄상계의 위험 감소는 관련 관할의 도산법에서 집행될 때 성립하며, 관할별 법률의견과 감독 규칙의 상호인정을 별도로 관리해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "close-out-netting",
+        "role": "종료 일괄상계와 CSA 담보을 국가별 시장 규칙과 계약 판단으로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "netting-legal-enforceability",
+        "role": "상계 법적 집행가능성을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "jurisdictional-netting-opinion",
+        "role": "관할별 상계 법률의견을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      },
+      {
+        "id": "cross-border-regulatory-recognition",
+        "role": "국경 간 규제 상호인정을 핵심 수치 사례와 실제 계약·규제 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "netting-legal-enforceability",
+        "sectionId": "names",
+        "intuition": "상계 법적 집행가능성이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "+12·−7·−2를 순수취 3으로 만듭니다.",
+        "boundary": "계약서 문구만으로 모든 관할에서 자동 성립하지 않습니다."
+      },
+      {
+        "id": "jurisdictional-netting-opinion",
+        "sectionId": "names",
+        "intuition": "관할별 상계 법률의견이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "지점과 상품이 의견 범위 안인지 거래마다 확인합니다.",
+        "boundary": "새 법인·상품·법 개정에 영구히 재사용하지 않습니다."
+      },
+      {
+        "id": "cross-border-regulatory-recognition",
+        "sectionId": "names",
+        "intuition": "국경 간 규제 상호인정이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "현지 비청산 증거금 규칙 준수로 본국의 중복 요구를 조정합니다.",
+        "boundary": "사법상 상계 집행가능성을 보장하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·판매 구조를 국가별 규칙 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "close-out-netting"
+        ]
+      },
+      {
+        "label": "2단계 · 상계 법적 집행가능성",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "netting-legal-enforceability"
+        ]
+      },
+      {
+        "label": "3단계 · 관할별 상계 법률의견",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "jurisdictional-netting-opinion"
+        ]
+      },
+      {
+        "label": "4단계 · 국경 간 규제 상호인정",
+        "relation": "앞 단계의 사례를 다음 법률·시장 판단으로 확장합니다.",
+        "concepts": [
+          "cross-border-regulatory-recognition"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "상계 법적 집행가능성의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "상계 법적 집행가능성",
+          "+12·−7·−2를 순수취 3으로 만듭니다.",
+          "계약서 문구만으로 모든 관할에서 자동 성립하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "관할별 상계 법률의견의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "관할별 상계 법률의견",
+          "지점과 상품이 의견 범위 안인지 거래마다 확인합니다.",
+          "새 법인·상품·법 개정에 영구히 재사용하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "jurisdictional-netting-opinion"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "국경 간 규제 상호인정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "국경 간 규제 상호인정",
+          "현지 비청산 증거금 규칙 준수로 본국의 중복 요구를 조정합니다.",
+          "사법상 상계 집행가능성을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "UNIDROIT · Close-out Netting Principles",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·상품 차이를 설명하세요.",
+        "answerChecklist": [
+          "BCBS–IOSCO · 비청산 증거금",
+          "관할 차이",
+          "상품·고객 차이"
+        ],
+        "requiredConcepts": [
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability",
+          "jurisdictional-netting-opinion",
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·상품에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability",
+          "jurisdictional-netting-opinion",
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 국가의 숫자를 단순 순위로 만들면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "고객 분류",
+          "상품 범위",
+          "집행·시점"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability",
+          "jurisdictional-netting-opinion",
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "법률·운영 경계"
+        ],
+        "requiredConcepts": [
+          "netting-legal-enforceability",
+          "jurisdictional-netting-opinion",
+          "cross-border-regulatory-recognition"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "UNIDROIT · Close-out Netting Principles",
+        "href": "https://www.unidroit.org/instruments/capital-markets/netting/",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "여러 거래를 한 순채무로 만드는 기능과 도산 시 집행가능성의 범위를 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BCBS–IOSCO · 비청산 증거금",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+        "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "본국·현지국 증거금 규칙의 일관성과 중복 방지 원칙을 확인합니다.",
+        "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 나라·상품·법인과 개별 분쟁의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };
