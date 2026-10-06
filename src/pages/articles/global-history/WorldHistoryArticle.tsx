@@ -16,21 +16,15 @@ export interface WorldHistorySection {
   paragraphs: readonly [string, string, ...string[]];
 }
 
-interface WorldHistoryArticleSource {
-  source: string;
-  excerpt: string;
-  application: string;
-  citation: string;
-  href: string;
-  note: string;
-}
-
 export interface WorldHistoryArticleData {
   sections: readonly WorldHistorySection[];
   overviewFlow: { title: string; steps: readonly { actor: string; movement: string; receives: string }[] };
   numericCase: { title: string; steps: readonly { label: string; value: string; detail: string }[] };
   terms: { title: string; items: readonly { term: string; description: string; example: string; boundary: string }[] };
-  sources: readonly [WorldHistoryArticleSource, WorldHistoryArticleSource, ...WorldHistoryArticleSource[]];
+  sources: readonly [
+    { source: string; excerpt: string; application: string; citation: string; href: string; note: string },
+    { source: string; excerpt: string; application: string; citation: string; href: string; note: string },
+  ];
   review: readonly [string, string, string];
 }
 
@@ -53,12 +47,8 @@ export default function WorldHistoryArticle({ data }: { data: WorldHistoryArticl
           ) : null}
           {section.id === "comparison" ? (
             <>
-              {data.sources.slice(1).map((source, index) => (
-                <div key={source.href} className={index > 0 ? "mt-8" : undefined}>
-                  <SourceApplication source={source.source} excerpt={source.excerpt} application={source.application} />
-                  <CitationBlock source={source.citation} citeKey={index + 2} href={source.href}>{source.note}</CitationBlock>
-                </div>
-              ))}
+              <SourceApplication source={data.sources[1].source} excerpt={data.sources[1].excerpt} application={data.sources[1].application} />
+              <CitationBlock source={data.sources[1].citation} citeKey={2} href={data.sources[1].href}>{data.sources[1].note}</CitationBlock>
             </>
           ) : null}
           {section.id === "limits" ? <ReviewPrompts questions={[...data.review]} /> : null}

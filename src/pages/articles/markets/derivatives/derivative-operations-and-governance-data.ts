@@ -350,7 +350,7 @@ export const multiAssetRareEventData: DerivativeDeepArticleData = {
   ],
 };
 
-export const canadaHongKongSwitzerlandData: DerivativeDeepArticleData = {
+export const canadaHongKongSwitzerlandData = {
   sections: [
     { id: "overview", level: "S", title: "1. 같은 5배 파생상품도 세 나라에서 먼저 묻는 질문이 다릅니다", bridge: "손실 한도 10인 고객에게 노출 100을 제안하는 사례에서 시작합니다.", paragraphs: [
       "고객이 맡긴 돈은 20이고 감당할 수 있다고 밝힌 손실은 10인데, 5배 노출로 100의 시장위험을 지는 거래를 제안했다고 하겠습니다. 기초자산이 12% 떨어지면 단순 손실은 12라서 고객 한도 10을 넘습니다.",
@@ -419,4 +419,4 @@ export const canadaHongKongSwitzerlandData: DerivativeDeepArticleData = {
     "캐나다·홍콩·스위스의 출발 분류가 어떻게 다른지 설명해 보세요. (답: 4·6절)",
     "일반 고객 또는 전문 고객이라는 이름만으로 결론을 낼 수 없는 이유는 무엇인가요? (답: 5·10절)",
   ],
-};
+} as const;
