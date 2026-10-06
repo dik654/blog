@@ -8,7 +8,7 @@ export default function EarlyFusion() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           RGB와 depth가 동일한 장면을 보더라도 pixel (u, v)가 같은 물리 지점을 가리킨다는 보장은 없습니다. camera calibration과 reprojection으로
-          공통 좌표계에 옮긴 뒤에야 channel concat이 의미를 갖습니다. 이 조건이 맞으면 첫 layer부터 색·거리처럼 low-level 신호의 조합을 학습할 수 있습니다.
+          공통 좌표계에 옮긴 뒤에야 같은 위치의 channel로 묶을 수 있습니다. 이 조건이 맞으면 첫 layer부터 색·거리처럼 low-level 신호의 조합을 학습할 수 있습니다.
         </p>
         <p>
           Input channel이 바뀌면 pretrained first-layer weight도 그대로 사용할 수 없습니다. weight를 복제·평균하거나 새 layer를 학습하는 방법을

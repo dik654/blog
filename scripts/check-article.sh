@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 한 글의 route 단위 감사를 한 번에 돌린다.
-#   scripts/check-article.sh ai/my-article            # 빠른 검사 (learning·graph·viz·prose·terms·order)
+#   scripts/check-article.sh ai/my-article            # 빠른 검사 (learning·graph·viz·prose·Korean·terms·order)
 #   scripts/check-article.sh ai/my-article --full     # + formula(전역)·topology(전역)·tsc
 # registration module 이 있으면 먼저 병합한다.
 set -u
@@ -35,6 +35,7 @@ if [ ${#VIZ_PATHS[@]} -gt 0 ]; then
 fi
 
 run node scripts/audit-prose-readability.mjs --strict "--route=$ROUTE"
+run node scripts/audit-korean-naturalness.mjs --strict "--route=$ROUTE"
 run node scripts/audit-term-density.mjs --strict "$ROUTE"
 run node scripts/audit-article-reading-order.mjs --strict
 

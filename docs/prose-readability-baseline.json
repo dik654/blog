@@ -22,7 +22,7 @@
       "score": 43
     },
     "ai/claw-api-client": {
-      "fingerprint": "c1168c7818484466",
+      "fingerprint": "7da4f682d8b25236",
       "score": 40
     },
     "ai/claw-compaction": {
@@ -362,7 +362,7 @@
       "score": 21
     },
     "blockchain/proofs-porep": {
-      "fingerprint": "6076d55fb311f1ee",
+      "fingerprint": "bc63c414e4210f36",
       "score": 21
     },
     "blockchain/proofs-snark": {
@@ -626,8 +626,8 @@
       "score": 14
     },
     "blockchain/cosmos-sdk": {
-      "fingerprint": "c55d9c7cc5a91f85",
-      "score": 14
+      "fingerprint": "82ae2167793e1f97",
+      "score": 12
     },
     "blockchain/curve-stable": {
       "fingerprint": "f7dd4df7625517f4",
@@ -694,7 +694,7 @@
       "score": 14
     },
     "tee/tee-attestation": {
-      "fingerprint": "e7c0e2fab29e6e5f",
+      "fingerprint": "429d04406f30ce34",
       "score": 14
     },
     "ai/claw-worker-boot": {
@@ -822,7 +822,7 @@
       "score": 10
     },
     "ai/multiview-fusion": {
-      "fingerprint": "2af4f3e3af7894de",
+      "fingerprint": "4e164173f37d6b7c",
       "score": 10
     },
     "ai/qwen-korean-consistency": {
@@ -994,7 +994,7 @@
       "score": 8
     },
     "crypto/libiop": {
-      "fingerprint": "fe40834994fa2062",
+      "fingerprint": "1b4c24192255c35b",
       "score": 8
     },
     "crypto/mpc": {
@@ -1068,7 +1068,7 @@
       "score": 8
     },
     "tee/hw-security": {
-      "fingerprint": "f996db2c352ad634",
+      "fingerprint": "2b63d64671099e16",
       "score": 8
     },
     "tee/intel-sgx": {
@@ -1092,7 +1092,7 @@
       "score": 8
     },
     "tee/tee-memory": {
-      "fingerprint": "dd372d57626cce9a",
+      "fingerprint": "bb16f5a22dcdcdff",
       "score": 8
     },
     "blockchain/reth-pipeline": {

@@ -33,7 +33,7 @@ export default function DenoiseWindow() {
 
       <TermBreakdown
         title="두 종류의 모델과 그에 맞는 사용법"
-        description="같은 파라미터가 다른 의미를 갖습니다. 종류를 먼저 확인해야 설정이 의미를 가집니다."
+        description="같은 파라미터라도 모델 종류에 따라 뜻이 다릅니다. 종류를 먼저 확인해야 설정을 올바르게 읽을 수 있습니다."
         items={[
           {
             term: "지시 편집 모델",

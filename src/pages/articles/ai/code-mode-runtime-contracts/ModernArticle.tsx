@@ -81,7 +81,7 @@ export default function CodeModeRuntimeContractsArticle() {
           oneLine="Final result의 schema·row count·byte budget·redaction·error detail·source provenance를 제한하는 출력 계약입니다."
           shape="local dataset → allowed fields → redact → size gate → result receipt"
           example="team,count,topIssueUrl만 최대 50 rows·32 KiB로 내보내고 source call IDs와 truncation flag를 붙입니다."
-          boundary="Schema-valid result가 factual·complete·authorized하다는 뜻은 아니며 truncation은 omission 의미를 가져야 합니다."
+          boundary="Schema-valid result가 factual·complete·authorized하다는 뜻은 아니며 truncation은 빠진 데이터가 있음을 알려야 합니다."
         />
         <ExplainedFormula
           question="결과를 model 경계 밖으로 내보낼 때 무엇을 동시에 제한해야 할까요?"

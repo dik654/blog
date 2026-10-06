@@ -122,8 +122,8 @@ export default function Overview() {
           terminal state를 가진 의미 계약이어야 합니다. Provider가 reasoning,
           image, structured output 또는 cache marker를 지원하지 않으면 값을 조용히
           지우지 않고 capability error나 명시적 downgrade로 반환합니다. 그래야
-          같은 프롬프트가 adapter 선택만으로 다른 권한이나 tool 의미를 갖지
-          않습니다.
+          같은 프롬프트를 adapter만 바꿨는데 권한이나 tool의 뜻까지 달라지는 일을
+          막습니다.
         </p>
         <p>
           새 provider를 추가할 때는 happy-path text 한 건으로 호환을 선언하지 않습니다. Text·여러 tool call·partial JSON·unknown

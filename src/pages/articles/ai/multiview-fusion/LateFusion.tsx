@@ -48,7 +48,7 @@ h&=\underbrace{\sum_v\alpha_v h_v.}_{\text{오른쪽 항으로 결과 계산}}
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>View mask와 permutation contract를 명시합니다</h3>
         <p>
-          view 위치가 의미를 갖는 고정 camera라면 view ID embedding을 넣고 순서를 고정할 수 있습니다. 반대로 unordered set이라면 mean
+          view 위치 자체가 정보를 담는 고정 camera라면 view ID embedding을 넣고 순서를 고정할 수 있습니다. 반대로 unordered set이라면 mean
           pooling이나 permutation-invariant aggregator를 사용해 입력 순서를 바꿔도 prediction이 유지되는지 test합니다.
         </p>
         <p>

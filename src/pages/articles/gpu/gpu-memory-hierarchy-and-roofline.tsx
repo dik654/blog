@@ -83,7 +83,7 @@ export default function Article() {
       <span id="roofline-bound" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">7 · 1/12 FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">64개 덧셈의 유효 연산 강도는 64/768=1/12 FLOP/B입니다. 측정 경계의 실제 전송량도 768바이트라고 가정합니다. 이때 1TB/s×1/12=약 83.3GFLOP/s가 이동에 의한 상한입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
+        <p className="leading-8">64개 덧셈의 유효 연산 강도는 64/768=1/12 FLOP/B입니다. 측정 경계의 실제 전송량도 768바이트라고 가정합니다. 이때 1TB/s×1/12=약 83.3GFLOP/s가 데이터 이동 속도로 정해지는 상한입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
         <p className="leading-8">같은 계산을 시간으로 보면 64÷10¹² =0.064ns의 계산 물량과 768÷10¹² =0.768ns의 이동 물량을 비교합니다. 더 큰 0.768ns는 포화된 장치의 처리량 모델입니다. 64개만 제출한 실제 kernel이 그 시간에 완료된다는 예측은 아닙니다. 요청 시작과 메모리 응답을 기다리는 시간이 남습니다.</p>
         <p className="leading-8">
             계산 상한과 이동 상한이 만나는 점은 1TFLOP/s÷1TB/s =1FLOP/B입니다. 이를 ridge point라고 부릅니다. 같은 경계의 실제 byte가 늘면 연산 강도는

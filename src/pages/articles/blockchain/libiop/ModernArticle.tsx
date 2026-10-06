@@ -19,7 +19,7 @@ export default function ModernArticle(){return <article className="space-y-14">
     { expression: String.raw`(1-\delta)^q`, annotation: ["Query count이(가) 식의 결과에 기여하는 방식을","계산합니다.","오류가 oracle의 δ 비율을 차지하고 q개","positions를 독립·균일하게 샘플한다는 단순화 아래에서"] },
   ]} terms={[{symbol:"δ",name:"Relative corruption",description:"Claimed oracle와 nearest valid codeword가 다른 위치의 비율입니다."},{symbol:"q",name:"Query count",description:"Verifier가 확인하는 sampled positions의 수입니다."},{symbol:"(1-δ)^q",name:"Toy miss bound",description:"독립 균일 샘플링에서 오류를 모두 피할 확률입니다."}]} assumptions={["Queries가 commitment 후에 균일·예측 불가능하게 정해집니다.","실제 protocol의 code distance·round dependencies·soundness error는 별도 분석을 따릅니다."]} interpretation="δ=1/4,q=4인 toy 경우 miss bound는 (3/4)^4≈0.316입니다. 이 값이 크다는 사실은 query·code·repetition parameter를 security target에 맞춰야 함을 보여 줍니다." /></section>
   <section id="bcs" className="space-y-5"><h2 className="text-2xl font-bold">BCS는 commit-first 순서를 artifact로 만든다</h2><p>
-            Interactive IOP에서 verifier가 던지던 public coins을 non-interactive proof에서는 transcript hash로 도출합니다.
+            Interactive IOP에서 verifier가 던지던 public coins을 non-interactive proof에서는 transcript hash로 계산합니다.
             Prover는 oracle Merkle root R0를 먼저 absorb하고 challenge α를 받으며 다음 root R1을 넣은 후 query q를 정합니다. Query
             value와 authentication path가 root에 속함을 확인해도 oracle 전체가 올바르다거나 hiding된다는 사실까지 자동으로 따라오지는 않습니다.
           </p><p>

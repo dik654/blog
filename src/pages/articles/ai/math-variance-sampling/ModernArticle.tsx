@@ -157,7 +157,7 @@ assumptions={["원문의 유한 분산과 i.i.d. 조건을 유지합니다.","�
 </section>
 <section id="paper-robbins-monro" data-teach-level="5" className="space-y-6">
 <h2 className="text-2xl font-bold">15 · Robbins–Monro의 한 번 갱신과 수렴 정리를 분리한다</h2>
-<p>Robbins와 Monro의 1951년 논문은 기대 응답 M(x)가 목표 α와 같아지는 위치를 찾습니다. 종이 401쪽 식 (7)은 관측 응답 yₙ을 받은 뒤 xₙ₊₁−xₙ=aₙ(α−yₙ)로 위치를 바꿉니다. 현재 응답이 목표보다 크면 양수 aₙ에 의해 왼쪽으로 이동합니다.</p>
+<p>Robbins와 Monro의 1951년 논문은 기대 응답 M(x)가 목표 α와 같아지는 위치를 찾습니다. 종이 401쪽 식 (7)은 관측 응답 yₙ을 받은 뒤 xₙ₊₁−xₙ=aₙ(α−yₙ)로 위치를 바꿉니다. 현재 응답이 목표보다 크고 aₙ이 양수면 왼쪽으로 이동합니다.</p>
 <ExplainedFormula question="같은 네 자료 중 작은 기울기 하나를 원문 갱신식에 넣으면 어디로 가나요?" idea="우리 조절값을 원문의 xₙ에, 뽑은 기울기를 yₙ에 대응시키고 목표 응답 α를 0으로 둡니다. 원문 기호 θ는 목표 위치이므로 우리 조절값 θ와 구별합니다." formula={String.raw`x_{n+1}-x_n=a_n(\alpha-y_n)`}
 annotatedFormula={String.raw`\begin{gathered}\text{원문 (7): }x_{n+1}-x_n=a_n(\alpha-y_n)\\x_n=-1.5,\ a_n=0.1,\ \alpha=0,\ y_n=-0.5\\x_{n+1}=-1.5+0.1(0-(-0.5))=-1.45\end{gathered}`}
 operations={[{expression:String.raw`y_n=x_n+1=-0.5`,annotation:["같은 네 aᵢ 중 1을 뽑아 현재 위치 −1.5에서 기울기를 구했습니다."]}]}

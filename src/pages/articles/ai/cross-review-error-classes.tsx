@@ -247,7 +247,7 @@ export default function CrossReviewErrorClassesArticle() {
 
           <p className="leading-7">
             또 다른 자리에서는 자체 용량, 그다음 탄력 임대, 그다음 외부라는
-            순서가 있었습니다. 비용 항목을 분류한 것에서 그 순서가 도출되지는
+            순서가 있었습니다. 비용 항목을 분류했다고 그 순서가 따라오지는
             않습니다. 대개 그렇게 나온다는 관찰일 뿐입니다.
           </p>
 

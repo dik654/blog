@@ -5,7 +5,7 @@ export default function OverviewViz({ onOpenCode }: { onOpenCode?: (key: string)
     <DezeroConceptViz
       eyebrow="STATEFUL LAYERS"
       title="시간 상태와 실행 모드를 레이어 계약에 추가한다"
-      summary="순환 모델은 이전 시점의 상태를, dropout은 train/eval 모드를, normalization과 embedding은 별도의 파라미터 및 인덱스 규칙을 필요로 합니다."
+      summary="순환 모델에는 이전 시점의 상태가 필요합니다. dropout은 train/eval 모드를 구분하고, normalization과 embedding은 각각 파라미터와 인덱스 규칙을 둡니다."
       stages={[
         { tag: "TIME", title: "RNN 상태", description: "hidden state를 다음 시점 입력과 함께 사용합니다." },
         { tag: "MEMORY", title: "LSTM cell state", description: "gate로 장기 기억과 외부 출력을 따로 제어합니다." },

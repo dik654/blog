@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
@@ -28,29 +27,6 @@ const CHUNK_TERMS = [
     name: "조각마다 드는 고정 비용",
     description:
       "Scheduling·batch 준비·kernel launch처럼 chunk가 늘 때 반복되는 비용입니다.",
-  },
-] as const;
-
-const KNOBS = [
-  {
-    name: "max_num_batched_tokens",
-    controls: "한 iteration의 전체 token budget",
-    watch: "GPU utilization · step time · ITL p95",
-  },
-  {
-    name: "max_num_seqs",
-    controls: "한 번에 진행할 request 상한",
-    watch: "KV pressure · queue · CPU scheduling",
-  },
-  {
-    name: "long_prefill_token_threshold",
-    controls: "긴 prefill 요청의 한-step token 상한",
-    watch: "Prefill chunk 수 · TTFT · decode stall",
-  },
-  {
-    name: "scheduling_policy",
-    controls: "FCFS 또는 priority queue ordering",
-    watch: "Queue age · starvation · tenant SLO",
   },
 ] as const;
 
@@ -178,7 +154,7 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
             설명은 priority 정책에 맞지 않습니다.
           </p>
           <p>
-            빈 KV 블록이 200개인데 앞 요청이 500개를 필요로 하고 뒤 요청은
+            빈 KV 블록이 200개인데 앞 요청에는 500개가 필요하고 뒤 요청은
             20개면 앞의 할당 실패에서 순회가 멈추는 경로에서는 둘 다 기다립니다.
             다른 상태를 건너뛰는 분기도 있으므로 V1의 모든 대기 원인이 같은
             break라고 일반화하지 않습니다. (가정)

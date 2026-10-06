@@ -40,6 +40,7 @@ jobs:
       - run: npm run audit:reading -- --strict
       - run: npm run audit:order -- --strict
       - run: npm run audit:prose -- --strict
+      - run: npm run audit:korean -- --strict
 
       - run: npm run build
         env:
