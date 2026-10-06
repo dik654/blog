@@ -29397,6 +29397,204 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "마음이 끌리는 참여와 가치 있는 대상이 만날 때 의미가 생긴다고 보는 관점입니다.",
     "canonicalHref": "/philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment#names"
   },
+  "no-arbitrage-pricing": {
+    "id": "no-arbitrage-pricing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "무차익 가격",
+    "aliases": [
+      "no-arbitrage pricing"
+    ],
+    "definition": "같은 미래 지급을 만드는 거래 사이에 비용 없는 확정 이익이 남지 않도록 맞춰지는 상대 가격입니다.",
+    "canonicalHref": "/finance/markets/no-arbitrage-cost-of-carry-and-basis#names"
+  },
+  "cost-of-carry": {
+    "id": "cost-of-carry",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "보유비용",
+    "aliases": [
+      "cost of carry"
+    ],
+    "definition": "자산을 만기까지 들고 가는 자금·보관·보험 비용에서 배당과 편의수익을 뺀 값입니다.",
+    "canonicalHref": "/finance/markets/no-arbitrage-cost-of-carry-and-basis#names"
+  },
+  "futures-basis-convergence": {
+    "id": "futures-basis-convergence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선물 베이시스 수렴",
+    "aliases": [
+      "futures basis convergence"
+    ],
+    "definition": "선물과 현물의 조정된 가격 차이가 결제일에 같은 인도 대상을 향해 줄어드는 현상입니다.",
+    "canonicalHref": "/finance/markets/no-arbitrage-cost-of-carry-and-basis#names"
+  },
+  "central-counterparty-clearing": {
+    "id": "central-counterparty-clearing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "중앙청산",
+    "aliases": [
+      "central counterparty clearing"
+    ],
+    "definition": "청산소가 거래 양쪽 사이에 들어가 각 참여자의 계약 상대가 되고 이행을 관리하는 구조입니다.",
+    "canonicalHref": "/finance/markets/clearing-margin-and-default-waterfall#names"
+  },
+  "initial-variation-margin": {
+    "id": "initial-variation-margin",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "개시·변동증거금",
+    "aliases": [
+      "initial and variation margin"
+    ],
+    "definition": "개시증거금은 청산기간의 잠재 손실을 위한 담보이고 변동증거금은 이미 생긴 시가 손익의 지급입니다.",
+    "canonicalHref": "/finance/markets/clearing-margin-and-default-waterfall#names"
+  },
+  "default-waterfall": {
+    "id": "default-waterfall",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "손실 분담 순서",
+    "aliases": [
+      "CCP default waterfall"
+    ],
+    "definition": "회원 부도 때 부도 회원 재원부터 청산소와 공동 재원까지 사용하는 규정된 차례입니다.",
+    "canonicalHref": "/finance/markets/clearing-margin-and-default-waterfall#names"
+  },
+  "replicating-portfolio": {
+    "id": "replicating-portfolio",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "복제 포트폴리오",
+    "aliases": [
+      "replicating portfolio"
+    ],
+    "definition": "목표 계약과 관련 미래 상태마다 같은 지급을 내도록 만든 기초자산과 현금의 묶음입니다.",
+    "canonicalHref": "/finance/markets/option-replication-and-put-call-parity#names"
+  },
+  "risk-neutral-pricing": {
+    "id": "risk-neutral-pricing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "위험중립 가격",
+    "aliases": [
+      "risk-neutral pricing"
+    ],
+    "definition": "무차익 가격을 미래 지급의 할인된 계산 가중평균으로 표현하는 가격결정 방법입니다.",
+    "canonicalHref": "/finance/markets/option-replication-and-put-call-parity#names"
+  },
+  "put-call-parity": {
+    "id": "put-call-parity",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "풋콜 등식",
+    "aliases": [
+      "put-call parity"
+    ],
+    "definition": "같은 기초자산·행사가격·만기의 유럽형 콜과 풋을 현물과 안전자산에 연결하는 무차익 관계입니다.",
+    "canonicalHref": "/finance/markets/option-replication-and-put-call-parity#names"
+  },
+  "option-delta-gamma": {
+    "id": "option-delta-gamma",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 델타·감마",
+    "aliases": [
+      "option delta and gamma"
+    ],
+    "definition": "델타는 기초자산 가격에 대한 옵션 가격의 일차 민감도이고 감마는 델타의 변화율입니다.",
+    "canonicalHref": "/finance/markets/option-greeks-volatility-and-dynamic-hedging#names"
+  },
+  "implied-volatility": {
+    "id": "implied-volatility",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "내재변동성",
+    "aliases": [
+      "implied volatility"
+    ],
+    "definition": "현재 옵션 가격을 선택한 가격 모형에 거꾸로 넣어 얻는 변동성 입력값입니다.",
+    "canonicalHref": "/finance/markets/option-greeks-volatility-and-dynamic-hedging#names"
+  },
+  "dynamic-hedging-model-risk": {
+    "id": "dynamic-hedging-model-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "동적 헤지와 모형 위험",
+    "aliases": [
+      "dynamic hedging and model risk"
+    ],
+    "definition": "변하는 민감도에 맞춰 거래를 고치며 가격과 헤지 가정이 현실과 달라 생기는 손실을 관리하는 과정입니다.",
+    "canonicalHref": "/finance/markets/option-greeks-volatility-and-dynamic-hedging#names"
+  },
+  "forward-rate-agreement": {
+    "id": "forward-rate-agreement",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선도금리계약",
+    "aliases": [
+      "forward rate agreement"
+    ],
+    "definition": "미래 한 기간의 기준금리를 미리 정하고 실제 금리와의 차액을 정산하는 계약입니다.",
+    "canonicalHref": "/finance/markets/interest-rate-derivatives-from-fra-to-swaptions#names"
+  },
+  "interest-rate-cap-floor": {
+    "id": "interest-rate-cap-floor",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금리 캡·플로어",
+    "aliases": [
+      "interest rate cap and floor"
+    ],
+    "definition": "기간별 기준금리가 상한 위 또는 하한 아래일 때 지급하는 금리 옵션의 묶음입니다.",
+    "canonicalHref": "/finance/markets/interest-rate-derivatives-from-fra-to-swaptions#names"
+  },
+  "swaption-and-swap-curve": {
+    "id": "swaption-and-swap-curve",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스왑션과 스왑곡선",
+    "aliases": [
+      "swaption and swap curve"
+    ],
+    "definition": "스왑션은 미래 스왑을 시작할 권리이고 스왑곡선은 만기별 교환 금리와 할인 관계를 보여 줍니다.",
+    "canonicalHref": "/finance/markets/interest-rate-derivatives-from-fra-to-swaptions#names"
+  },
+  "derivatives-suitability": {
+    "id": "derivatives-suitability",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 적합성",
+    "aliases": [
+      "derivatives suitability"
+    ],
+    "definition": "권유할 때 고객의 목적·재산·경험과 상품 위험을 맞춰 부적합한 계약을 권하지 않는 원칙입니다.",
+    "canonicalHref": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
+  },
+  "key-risk-disclosure": {
+    "id": "key-risk-disclosure",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "핵심 위험 설명",
+    "aliases": [
+      "key risk disclosure"
+    ],
+    "definition": "손실 조건·규모·비용·대안 차이를 고객이 이해할 수 있는 시나리오로 전달하는 일입니다.",
+    "canonicalHref": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
+  },
+  "sales-practice-evidence": {
+    "id": "sales-practice-evidence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "판매 과정의 증거",
+    "aliases": [
+      "sales practice evidence"
+    ],
+    "definition": "고객 정보·제공 문서·설명·이해 확인·주문과 사후 검토를 재구성할 수 있게 남긴 기록입니다.",
+    "canonicalHref": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -53537,6 +53735,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "objective-worth-meaning",
     "relation": "prerequisite",
     "reason": "주관적 끌림을 구분해야 객관적 가치이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "no-arbitrage-pricing",
+    "to": "cost-of-carry",
+    "relation": "prerequisite",
+    "reason": "무차익 가격을 구분해야 보유비용이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "cost-of-carry",
+    "to": "futures-basis-convergence",
+    "relation": "extends",
+    "reason": "보유비용을 실제 판단과 위험 관리의 선물 베이시스 수렴으로 확장합니다."
+  },
+  {
+    "from": "futures-basis-convergence",
+    "to": "no-arbitrage-pricing",
+    "relation": "constrains",
+    "reason": "선물 베이시스 수렴은 무차익 가격을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "central-counterparty-clearing",
+    "to": "initial-variation-margin",
+    "relation": "prerequisite",
+    "reason": "중앙청산을 구분해야 개시·변동증거금이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "initial-variation-margin",
+    "to": "default-waterfall",
+    "relation": "extends",
+    "reason": "개시·변동증거금을 실제 판단과 위험 관리의 손실 분담 순서으로 확장합니다."
+  },
+  {
+    "from": "default-waterfall",
+    "to": "central-counterparty-clearing",
+    "relation": "constrains",
+    "reason": "손실 분담 순서은 중앙청산을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "replicating-portfolio",
+    "to": "risk-neutral-pricing",
+    "relation": "prerequisite",
+    "reason": "복제 포트폴리오을 구분해야 위험중립 가격이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "risk-neutral-pricing",
+    "to": "put-call-parity",
+    "relation": "extends",
+    "reason": "위험중립 가격을 실제 판단과 위험 관리의 풋콜 등식으로 확장합니다."
+  },
+  {
+    "from": "put-call-parity",
+    "to": "replicating-portfolio",
+    "relation": "constrains",
+    "reason": "풋콜 등식은 복제 포트폴리오을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "option-delta-gamma",
+    "to": "implied-volatility",
+    "relation": "prerequisite",
+    "reason": "옵션 델타·감마을 구분해야 내재변동성이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "implied-volatility",
+    "to": "dynamic-hedging-model-risk",
+    "relation": "extends",
+    "reason": "내재변동성을 실제 판단과 위험 관리의 동적 헤지와 모형 위험으로 확장합니다."
+  },
+  {
+    "from": "dynamic-hedging-model-risk",
+    "to": "option-delta-gamma",
+    "relation": "constrains",
+    "reason": "동적 헤지와 모형 위험은 옵션 델타·감마을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "forward-rate-agreement",
+    "to": "interest-rate-cap-floor",
+    "relation": "prerequisite",
+    "reason": "선도금리계약을 구분해야 금리 캡·플로어이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "interest-rate-cap-floor",
+    "to": "swaption-and-swap-curve",
+    "relation": "extends",
+    "reason": "금리 캡·플로어을 실제 판단과 위험 관리의 스왑션과 스왑곡선으로 확장합니다."
+  },
+  {
+    "from": "swaption-and-swap-curve",
+    "to": "forward-rate-agreement",
+    "relation": "constrains",
+    "reason": "스왑션과 스왑곡선은 선도금리계약을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "derivatives-suitability",
+    "to": "key-risk-disclosure",
+    "relation": "prerequisite",
+    "reason": "파생상품 적합성을 구분해야 핵심 위험 설명이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "key-risk-disclosure",
+    "to": "sales-practice-evidence",
+    "relation": "extends",
+    "reason": "핵심 위험 설명을 실제 판단과 위험 관리의 판매 과정의 증거으로 확장합니다."
+  },
+  {
+    "from": "sales-practice-evidence",
+    "to": "derivatives-suitability",
+    "relation": "constrains",
+    "reason": "판매 과정의 증거은 파생상품 적합성을 현실에 적용할 때의 범위와 한계를 정합니다."
   },
 ];
 

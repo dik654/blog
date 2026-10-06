@@ -2088,6 +2088,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "삶의 의미는 순간 행복이나 도덕 점수 하나보다 사람이 마음을 두는 활동과 독립적으로 가치 있는 대상이 지속적이고 수정 가능한 참여 속에서 만나는지 살펴야 합니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
     "sharedGate": "100시간의 비율은 권장안이 아니며 행복·도덕·의미와 개인의 선택·사회적 접근 조건을 구분합니다."
   },
+  "markets/no-arbitrage-cost-of-carry-and-basis": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "선물의 상대 가격은 미래 전망 하나가 아니라 현물을 만기까지 보유하는 자금·보관 비용과 수입을 복제해 무차익 경계를 만들며, 결제일에는 인도 가능한 현물과 선물의 베이시스가 수렴합니다.",
+    "sharedGate": "100+5−2=103의 복제비용과 108 선물 매도 뒤 5의 차이를 검산하고 차입·공매도·세금·인도 제약을 함께 밝힙니다."
+  },
+  "markets/clearing-margin-and-default-waterfall": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "중앙청산은 계약 상대와 위험 관리 경로를 바꾸고, 개시증거금은 잠재 미래 손실을, 변동증거금은 이미 생긴 시가 손익을 다루며, 회원 부도 뒤 손실은 규정된 재원 순서로 분담됩니다.",
+    "sharedGate": "잔액 12→4→추가 납부 8을 계산하고 계약가치·변동증거금·개시증거금·명목금액을 서로 다른 장부로 유지합니다."
+  },
+  "markets/option-replication-and-put-call-parity": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "옵션 가격은 모든 관련 상태에서 같은 지급을 만드는 기초자산과 현금 조합의 비용으로 묶이며, 위험중립 가중치는 이 무차익 가격의 계산 도구이고 풋콜 등식은 같은 조건의 네 계약을 연결합니다.",
+    "sharedGate": "0.5×120−40=20과 0.5×80−40=0, 오늘 0.5×100−40=10을 검산하고 위험중립 0.5를 실제 예측과 구분합니다."
+  },
+  "markets/option-greeks-volatility-and-dynamic-hedging": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "그릭스는 기초자산·곡률·시간·변동성 변화에 대한 옵션 가격의 국소 민감도이며, 델타가 계속 바뀌므로 헤지는 반복 조정해야 하고 거래비용·가격 도약·모형 가정의 어긋남이 실제 손익을 만듭니다.",
+    "sharedGate": "주가 +2의 델타 +1·감마 +0.08, 변동성 +5%p의 베가 +0.45, 하루 세타 −0.08을 단위와 국소 근사 조건 아래 검산합니다."
+  },
+  "markets/interest-rate-derivatives-from-fra-to-swaptions": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "금리파생은 명목금액·기준금리·일수·지급 방향으로 한 기간 차액을 만들고, 이를 여러 기간의 스왑이나 비대칭 보호인 캡·플로어·스왑션으로 조립하며 곡선·담보·베이시스에 따라 가치를 평가합니다.",
+    "sharedGate": "10억×0.02×0.25=500만 원의 기간 말 근사를 계산하고 FRA의 선지급 할인과 명목금액·현재가치의 차이를 밝힙니다."
+  },
+  "markets/derivatives-suitability-disclosure-and-sales-practice": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 권유는 고객의 목적·재산·경험과 실제 노출을 파악하고 상품의 유리·불리한 지급과 대안을 설명해 이해를 확인하며, 권유·승인·주문·사후 변경의 증거를 남기는 연속된 책임입니다.",
+    "sharedGate": "초과 1억 달러×환율 차이 200원=200억 원을 검산하고 자격·서명·수익 결과가 개별 판매 적합성을 자동 증명하지 않음을 밝힙니다."
+  },
 };
 
 /**
@@ -2431,4 +2473,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "philosophy-topics/identity-through-change":"57d9f81181b809b0",
 "philosophy-topics/meaning-in-life-attraction-worth-and-commitment":"d68c5cc8605b082d",
 "philosophy-topics/reference-context-and-speech-acts":"fb437e42f9544f2d",
+"markets/clearing-margin-and-default-waterfall":"ea3711f0755a3201",
+"markets/derivatives-suitability-disclosure-and-sales-practice":"5d95789c2007d659",
+"markets/interest-rate-derivatives-from-fra-to-swaptions":"ce2f42520c2d6f40",
+"markets/no-arbitrage-cost-of-carry-and-basis":"ecb9b9df99f2e09e",
+"markets/option-greeks-volatility-and-dynamic-hedging":"861495949a099543",
+"markets/option-replication-and-put-call-parity":"2037c02eea54b2fd",
 };

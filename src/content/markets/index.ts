@@ -28,7 +28,7 @@ const markets: Category = {
     {
       slug: "markets-derivatives",
       name: "파생상품",
-      description: "선도·선물·옵션·스왑의 지급과 위험 이전",
+      description: "선도·선물·옵션·스왑의 지급, 무차익 가격, 청산, 헤지와 판매 책임",
       icon: "🔀",
     },
   ],
