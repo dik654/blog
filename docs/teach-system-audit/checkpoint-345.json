@@ -31,13 +31,13 @@
     "visualization": "PASS strict visualization style audit with zero errors. The 4,031 review notices are static SVG-text prompts covered for this batch by the browser checks.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows at most 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending content commit, GitHub Pages deployment and production browser verification.",
+    "production": "GitHub Pages deployment 37539938064 succeeded. Production report output/playwright/derivative-curriculum-gaps-production/2026-10-06T22-28-21.222Z/summary.json recorded 22 passed and zero failed: six articles and two finance listings at 390px/1440px plus six mobile height/sidebar checks.",
     "curriculumCoverage": "The 13-topic KIFIN prerequisite course, KIFIN refresher course, KBI FP/PB and GARP FRM were mapped to exact routes in docs/derivatives-curriculum-coverage.md. Remaining explicit gaps include correlation surfaces and dispersion, credit base correlation and auctions, commodity quality and regional basis with physical delivery, jurisdiction-specific investigation/enforcement/complaint retention/tax cases, and a dedicated fractional-investment/non-monetary-trust beneficiary-certificate article."
   },
-  "commit": null,
+  "commit": "b110a4edd0f489e126de6e520bdf00973d905ec6",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37539938064,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
