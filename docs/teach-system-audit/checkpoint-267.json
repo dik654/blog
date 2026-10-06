@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-06",
+  "baselineCheckpoint": "checkpoint-261.json",
+  "publicArticles": 811,
+  "addedRoutes": [
+    "political-philosophy/consent-liberty-and-legitimate-power",
+    "philosophy-of-science/evidence-models-and-causal-explanation",
+    "mind-and-language/behavior-meaning-and-machine-understanding",
+    "economic-history/trade-credit-and-long-distance-networks",
+    "economic-history/colonial-plantations-slavery-and-extraction",
+    "economic-history/decolonization-oil-shocks-and-debt"
+  ],
+  "reviewed": 267,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive philosophy and economic-history foundations added after checkpoint 261; 225 substantive rewrites/additions and 42 retained teaching flows in total.",
+  "validation": {
+    "individual": "Six additions passed article checks after one prose correction; evidence labels were aligned with the typed source taxonomy before build.",
+    "browser": "Six routes × 390/1440 = 12 checks; exact S/B/0..7 order, three figures, three prediction prompts, figure containment, document overflow, console errors and failed requests checked; 0 failed.",
+    "navigation": "Philosophy, economic-history and history listings × 390/1440 = 6 checks; organizing-principle labels, exact stage order and document overflow checked; 0 failed.",
+    "learning": "PASS 811 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b after evidence taxonomy correction; actual exit 0.",
+    "build": "PASS Vite 9.97s and 1,718 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,880 concepts, 6,184 relations, 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 811 strict; actual exit 0.",
+    "topology": "PASS 811 strict; the six compact single-question foundations have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS reading experience and 91 listings with 437 prerequisite edges; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm and Korean naturalness audits for 811 public articles.",
+    "mobileViewport": "All tested documents, figures and listing pages stayed within 390px; no console errors or failed requests.",
+    "desktopViewport": "All six articles and three listing pages stayed within 1440px with exact section and stage order.",
+    "production": "Six public routes × 390/1440 plus three listing pages × 390/1440 = 18 checks; all content, order, containment, console and request checks passed with 0 failures."
+  },
+  "commit": "e2afb73994699ed3f40e54b9940bbc8378242205",
+  "deployment": {
+    "runId": 37480082974,
+    "conclusion": "success",
+    "production": "18 checks across articles and listings at 390/1440, 0 failed"
+  }
+}
