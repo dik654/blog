@@ -29,13 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment and production browser verification.",
+    "production": "GitHub Pages deployment 37527412796 succeeded. Production report output/playwright/derivative-operations-governance-production/2026-10-06T20-39-32-958Z/summary.json recorded 22 passed and zero failed: six articles and two finance listings at 390px/1440px plus six mobile height/sidebar checks.",
     "curriculumCoverage": "KIFIN derivatives solicitation and Korea Banking Institute FP curricula supplied product, customer, law, ethics, dispute and operating coverage checks; MIT 15.450 supplied simulation order. Basel-IOSCO margin standards, ISDA SIMM and collateral operations, CFTC confirmation and reconciliation, BIS settlement, FCA product governance, Stanford rare-event research, Canada NI 93-101, Hong Kong SFC and Swiss FINMA supplied primary evidence. Remaining explicit gaps include compression and collateral optimization numbers, default management, swaption and correlation surfaces, and additional jurisdictions' enforcement and tax differences."
   },
-  "commit": null,
+  "commit": "cb7e73e4a7b2ceeeffdcb0f659b0f6b4b8245cee",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37527412796,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
