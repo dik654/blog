@@ -12220,4 +12220,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "주관·객관·결합 관점을 포함한 삶의 의미 논쟁을 정리한 동료 검토 연구입니다."
     }
   ],
+  "markets/no-arbitrage-cost-of-carry-and-basis": [
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Equity Index Fair Value",
+      "href": "https://www.cmegroup.com/trading/equity-index/fairvalue.html",
+      "note": "주가지수 선물의 공정가치를 현금지수·자금조달비용·배당으로 연결합니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT Sloan · 15.401 Finance Theory I",
+      "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf",
+      "note": "선도·선물의 무차익 가격과 헤지를 옵션 가격보다 먼저 두는 대학 금융론 과정입니다."
+    }
+  ],
+  "markets/clearing-margin-and-default-waterfall": [
+    {
+      "kind": "공식 연구",
+      "label": "CFTC · Supervisory Stress Test of CCPs",
+      "href": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/cftcstresstest111516.pdf",
+      "note": "개시증거금과 변동증거금의 다른 역할과 스트레스 손실 흡수를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · DCO default resources rule",
+      "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html",
+      "note": "회원 채무불이행 때 사용할 손실 흡수 재원과 순서를 다룹니다."
+    }
+  ],
+  "markets/option-replication-and-put-call-parity": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT Sloan · 15.401 Finance Theory I",
+      "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf",
+      "note": "옵션 성질에서 이항모형과 블랙숄즈로 이어지는 학습 순서를 보여 줍니다."
+    },
+    {
+      "kind": "공식 가이드",
+      "label": "Options Industry Council · Put-Call Parity",
+      "href": "https://www.optionseducation.org/advancedconcepts/put-call-parity",
+      "note": "동일 조건 유럽형 콜·풋과 현물·현금의 무차익 관계를 설명합니다."
+    }
+  ],
+  "markets/option-greeks-volatility-and-dynamic-hedging": [
+    {
+      "kind": "공식 가이드",
+      "label": "Options Industry Council · Volatility & the Greeks",
+      "href": "https://www.optionseducation.org/advancedconcepts/volatility-the-greeks",
+      "note": "역사적·내재변동성과 주요 그릭스의 역할 및 예측 한계를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OCC · Characteristics and Risks of Standardized Options",
+      "href": "https://www.theocc.com/company-information/documents-and-archives/options-disclosure-document",
+      "note": "상장 옵션의 권리·의무와 실제 거래 위험을 다루는 공시문서입니다."
+    }
+  ],
+  "markets/interest-rate-derivatives-from-fra-to-swaptions": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT Sloan · 15.433 Investments",
+      "href": "https://ocw.mit.edu/courses/15-433-investments-spring-2003/pages/calendar/",
+      "note": "채권과 수익률곡선에서 스왑·캡·플로어·스왑션으로 이어지는 선수 순서를 보여 줍니다."
+    },
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Introduction to Interest Rate Products",
+      "href": "https://www.cmegroup.com/articles/2026/introduction-to-interest-rates-products.html",
+      "note": "SOFR 선물·옵션으로 OIS와 캡·플로어 노출을 구성하는 현재 사례를 설명합니다."
+    }
+  ],
+  "markets/derivatives-suitability-disclosure-and-sales-practice": [
+    {
+      "kind": "공식 문서",
+      "label": "국가법령정보센터 · 금융소비자보호법 제17·19조",
+      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033001899",
+      "note": "2026년 시행 법문에서 적합성 원칙과 일반금융소비자 설명의무를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정",
+      "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+      "note": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다."
+    }
+  ],
 };

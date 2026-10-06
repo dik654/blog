@@ -135407,4 +135407,1378 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/no-arbitrage-cost-of-carry-and-basis": {
+    "entryLevel": true,
+    "entryNote": "현물 100을 빌려 사고 배당 2를 받은 뒤 선물 108에 넘기는 거래에서 시작합니다.",
+    "coreIdea": "선물의 상대 가격은 미래 전망 하나가 아니라 현물을 만기까지 보유하는 자금·보관 비용과 수입을 복제해 무차익 경계를 만들며, 결제일에는 인도 가능한 현물과 선물의 베이시스가 수렴합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "no-arbitrage-pricing",
+        "role": "무차익 가격이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "cost-of-carry",
+        "role": "보유비용이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "futures-basis-convergence",
+        "role": "선물 베이시스 수렴이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "no-arbitrage-pricing",
+        "sectionId": "names",
+        "intuition": "무차익 가격을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "현물 100+이자 5−배당 2와 선물 103을 비교합니다.",
+        "boundary": "미래 현물 가격을 정확히 예측하는 값은 아닙니다."
+      },
+      {
+        "id": "cost-of-carry",
+        "sectionId": "names",
+        "intuition": "보유비용을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "주가지수의 자금비용 5에서 배당 2를 뺍니다.",
+        "boundary": "자산과 투자자마다 비용·수입 항목이 다릅니다."
+      },
+      {
+        "id": "futures-basis-convergence",
+        "sectionId": "names",
+        "intuition": "선물 베이시스 수렴을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "남은 기간이 짧아지며 이자·배당 조정도 작아집니다.",
+        "boundary": "인도 품질·장소·결제가 다르면 먼저 조정해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 무차익 가격",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "no-arbitrage-pricing"
+        ]
+      },
+      {
+        "label": "2단계 · 보유비용",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "cost-of-carry"
+        ]
+      },
+      {
+        "label": "3단계 · 선물 베이시스 수렴",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "futures-basis-convergence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "무차익 가격의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "무차익 가격",
+          "현물 100+이자 5−배당 2와 선물 103을 비교합니다.",
+          "미래 현물 가격을 정확히 예측하는 값은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "보유비용이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "보유비용",
+          "차이",
+          "주가지수의 자금비용 5에서 배당 2를 뺍니다."
+        ],
+        "requiredConcepts": [
+          "cost-of-carry"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "선물 베이시스 수렴이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "선물 베이시스 수렴",
+          "남은 기간이 짧아지며 이자·배당 조정도 작아집니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "futures-basis-convergence"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "CME Group · Equity Index Fair Value",
+          "MIT Sloan · 15.401 Finance Theory I",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "cost-of-carry"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "futures-basis-convergence"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "no-arbitrage-pricing",
+          "cost-of-carry",
+          "futures-basis-convergence"
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing",
+          "cost-of-carry",
+          "futures-basis-convergence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing",
+          "cost-of-carry",
+          "futures-basis-convergence"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing",
+          "cost-of-carry",
+          "futures-basis-convergence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "no-arbitrage-pricing",
+          "cost-of-carry",
+          "futures-basis-convergence"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · Equity Index Fair Value",
+        "href": "https://www.cmegroup.com/trading/equity-index/fairvalue.html",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "주가지수 선물의 공정가치를 현금지수·자금조달비용·배당으로 연결합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "MIT Sloan · 15.401 Finance Theory I",
+        "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "선도·선물의 무차익 가격과 헤지를 옵션 가격보다 먼저 두는 대학 금융론 과정입니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/clearing-margin-and-default-waterfall": {
+    "entryLevel": true,
+    "entryNote": "개시증거금 12에서 첫날 손실 8이 빠져 추가 납부가 필요한 장부에서 시작합니다.",
+    "coreIdea": "중앙청산은 계약 상대와 위험 관리 경로를 바꾸고, 개시증거금은 잠재 미래 손실을, 변동증거금은 이미 생긴 시가 손익을 다루며, 회원 부도 뒤 손실은 규정된 재원 순서로 분담됩니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "central-counterparty-clearing",
+        "role": "중앙청산이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "initial-variation-margin",
+        "role": "개시·변동증거금이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "default-waterfall",
+        "role": "손실 분담 순서이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "central-counterparty-clearing",
+        "sectionId": "names",
+        "intuition": "중앙청산을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "청산소가 매수자의 매도자이자 매도자의 매수자가 됩니다.",
+        "boundary": "시장위험이나 청산소 실패 가능성이 사라지지는 않습니다."
+      },
+      {
+        "id": "initial-variation-margin",
+        "sectionId": "names",
+        "intuition": "개시·변동증거금을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "처음 12를 맡기고 첫날 손실 8이 현금으로 빠집니다.",
+        "boundary": "증거금은 명목원금이나 최대손실이 아닙니다."
+      },
+      {
+        "id": "default-waterfall",
+        "sectionId": "names",
+        "intuition": "손실 분담 순서을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "부도 회원의 증거금과 공동기금 부담분을 먼저 씁니다.",
+        "boundary": "청산소와 상품마다 세부 순서와 한도가 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 중앙청산",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "central-counterparty-clearing"
+        ]
+      },
+      {
+        "label": "2단계 · 개시·변동증거금",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "initial-variation-margin"
+        ]
+      },
+      {
+        "label": "3단계 · 손실 분담 순서",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "default-waterfall"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "중앙청산이 거래 양쪽 사이에서 맡는 역할과 사례를 설명하세요.",
+        "answerChecklist": [
+          "중앙청산",
+          "청산소가 매수자의 매도자이자 매도자의 매수자가 됩니다.",
+          "시장위험이나 청산소 실패 가능성이 사라지지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "개시·변동증거금이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "개시·변동증거금",
+          "차이",
+          "처음 12를 맡기고 첫날 손실 8이 현금으로 빠집니다."
+        ],
+        "requiredConcepts": [
+          "initial-variation-margin"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "손실 분담 순서이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "손실 분담 순서",
+          "부도 회원의 증거금과 공동기금 부담분을 먼저 씁니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "default-waterfall"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "CFTC · Supervisory Stress Test of CCPs",
+          "CFTC · DCO default resources rule",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "initial-variation-margin"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "default-waterfall"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "central-counterparty-clearing",
+          "initial-variation-margin",
+          "default-waterfall"
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing",
+          "initial-variation-margin",
+          "default-waterfall"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing",
+          "initial-variation-margin",
+          "default-waterfall"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing",
+          "initial-variation-margin",
+          "default-waterfall"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "central-counterparty-clearing",
+          "initial-variation-margin",
+          "default-waterfall"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CFTC · Supervisory Stress Test of CCPs",
+        "href": "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/cftcstresstest111516.pdf",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "개시증거금과 변동증거금의 다른 역할과 스트레스 손실 흡수를 설명합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CFTC · DCO default resources rule",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "회원 채무불이행 때 사용할 손실 흡수 재원과 순서를 다룹니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/option-replication-and-put-call-parity": {
+    "entryLevel": true,
+    "entryNote": "주가가 120 또는 80이 될 때 20 또는 0을 주는 콜을 주식 반 주와 차입 40으로 복제합니다.",
+    "coreIdea": "옵션 가격은 모든 관련 상태에서 같은 지급을 만드는 기초자산과 현금 조합의 비용으로 묶이며, 위험중립 가중치는 이 무차익 가격의 계산 도구이고 풋콜 등식은 같은 조건의 네 계약을 연결합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "replicating-portfolio",
+        "role": "복제 포트폴리오이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "risk-neutral-pricing",
+        "role": "위험중립 가격이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "put-call-parity",
+        "role": "풋콜 등식이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "replicating-portfolio",
+        "sectionId": "names",
+        "intuition": "복제 포트폴리오을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "주식 0.5주와 차입 40이 콜의 20·0을 만듭니다.",
+        "boundary": "현실의 모든 상태와 비용을 완전히 복제할 수 있다는 뜻은 아닙니다."
+      },
+      {
+        "id": "risk-neutral-pricing",
+        "sectionId": "names",
+        "intuition": "위험중립 가격을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "20과 0을 각각 0.5로 가중해 10을 얻습니다.",
+        "boundary": "계산 가중치를 실제 상승 확률로 해석하지 않습니다."
+      },
+      {
+        "id": "put-call-parity",
+        "sectionId": "names",
+        "intuition": "풋콜 등식을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "금리 0에서 C+100=S+P를 맞춥니다.",
+        "boundary": "미국형 행사·배당·거래비용을 확인해야 합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 복제 포트폴리오",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "replicating-portfolio"
+        ]
+      },
+      {
+        "label": "2단계 · 위험중립 가격",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "risk-neutral-pricing"
+        ]
+      },
+      {
+        "label": "3단계 · 풋콜 등식",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "put-call-parity"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "복제 포트폴리오의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "복제 포트폴리오",
+          "주식 0.5주와 차입 40이 콜의 20·0을 만듭니다.",
+          "현실의 모든 상태와 비용을 완전히 복제할 수 있다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "위험중립 가격이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "위험중립 가격",
+          "차이",
+          "20과 0을 각각 0.5로 가중해 10을 얻습니다."
+        ],
+        "requiredConcepts": [
+          "risk-neutral-pricing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "풋콜 등식이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "풋콜 등식",
+          "금리 0에서 C+100=S+P를 맞춥니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "put-call-parity"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "MIT Sloan · 15.401 Finance Theory I",
+          "Options Industry Council · Put-Call Parity",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-pricing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "put-call-parity"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "replicating-portfolio",
+          "risk-neutral-pricing",
+          "put-call-parity"
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio",
+          "risk-neutral-pricing",
+          "put-call-parity"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio",
+          "risk-neutral-pricing",
+          "put-call-parity"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio",
+          "risk-neutral-pricing",
+          "put-call-parity"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "replicating-portfolio",
+          "risk-neutral-pricing",
+          "put-call-parity"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT Sloan · 15.401 Finance Theory I",
+        "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "옵션 성질에서 이항모형과 블랙숄즈로 이어지는 학습 순서를 보여 줍니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Options Industry Council · Put-Call Parity",
+        "href": "https://www.optionseducation.org/advancedconcepts/put-call-parity",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "동일 조건 유럽형 콜·풋과 현물·현금의 무차익 관계를 설명합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/option-greeks-volatility-and-dynamic-hedging": {
+    "entryLevel": true,
+    "entryNote": "옵션 가격 5와 델타 0.50·감마 0.04·베가 0.09·하루 세타 −0.08의 손익 근사에서 시작합니다.",
+    "coreIdea": "그릭스는 기초자산·곡률·시간·변동성 변화에 대한 옵션 가격의 국소 민감도이며, 델타가 계속 바뀌므로 헤지는 반복 조정해야 하고 거래비용·가격 도약·모형 가정의 어긋남이 실제 손익을 만듭니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "option-delta-gamma",
+        "role": "옵션 델타·감마이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "implied-volatility",
+        "role": "내재변동성이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "dynamic-hedging-model-risk",
+        "role": "동적 헤지와 모형 위험이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "option-delta-gamma",
+        "sectionId": "names",
+        "intuition": "옵션 델타·감마을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "주가 +2 뒤 델타가 0.50에서 약 0.58로 변합니다.",
+        "boundary": "큰 이동에도 처음 민감도가 고정된다는 뜻은 아닙니다."
+      },
+      {
+        "id": "implied-volatility",
+        "sectionId": "names",
+        "intuition": "내재변동성을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "베가 0.09로 5%포인트 변화의 효과를 약 0.45로 봅니다.",
+        "boundary": "미래 실현변동성의 확정 예측이나 모형과 무관한 값은 아닙니다."
+      },
+      {
+        "id": "dynamic-hedging-model-risk",
+        "sectionId": "names",
+        "intuition": "동적 헤지와 모형 위험을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "델타 0.58에 맞춰 주식 0.08주를 더 삽니다.",
+        "boundary": "자주 조정하면 모든 위험과 비용이 사라지지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 옵션 델타·감마",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "option-delta-gamma"
+        ]
+      },
+      {
+        "label": "2단계 · 내재변동성",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "implied-volatility"
+        ]
+      },
+      {
+        "label": "3단계 · 동적 헤지와 모형 위험",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "dynamic-hedging-model-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "옵션 델타·감마의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "옵션 델타·감마",
+          "주가 +2 뒤 델타가 0.50에서 약 0.58로 변합니다.",
+          "큰 이동에도 처음 민감도가 고정된다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "내재변동성이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "내재변동성",
+          "차이",
+          "베가 0.09로 5%포인트 변화의 효과를 약 0.45로 봅니다."
+        ],
+        "requiredConcepts": [
+          "implied-volatility"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "동적 헤지와 모형 위험이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "동적 헤지와 모형 위험",
+          "델타 0.58에 맞춰 주식 0.08주를 더 삽니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "Options Industry Council · Volatility & the Greeks",
+          "OCC · Characteristics and Risks of Standardized Options",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "implied-volatility"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "option-delta-gamma",
+          "implied-volatility",
+          "dynamic-hedging-model-risk"
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma",
+          "implied-volatility",
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma",
+          "implied-volatility",
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma",
+          "implied-volatility",
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "option-delta-gamma",
+          "implied-volatility",
+          "dynamic-hedging-model-risk"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Options Industry Council · Volatility & the Greeks",
+        "href": "https://www.optionseducation.org/advancedconcepts/volatility-the-greeks",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "역사적·내재변동성과 주요 그릭스의 역할 및 예측 한계를 설명합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "OCC · Characteristics and Risks of Standardized Options",
+        "href": "https://www.theocc.com/company-information/documents-and-archives/options-disclosure-document",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "상장 옵션의 권리·의무와 실제 거래 위험을 다루는 공시문서입니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/interest-rate-derivatives-from-fra-to-swaptions": {
+    "entryLevel": true,
+    "entryNote": "3개월 뒤 시작하는 10억 원 대출의 4%와 6% 차이를 3개월만큼 계산합니다.",
+    "coreIdea": "금리파생은 명목금액·기준금리·일수·지급 방향으로 한 기간 차액을 만들고, 이를 여러 기간의 스왑이나 비대칭 보호인 캡·플로어·스왑션으로 조립하며 곡선·담보·베이시스에 따라 가치를 평가합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "forward-rate-agreement",
+        "role": "선도금리계약이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "interest-rate-cap-floor",
+        "role": "금리 캡·플로어이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "swaption-and-swap-curve",
+        "role": "스왑션과 스왑곡선이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "forward-rate-agreement",
+        "sectionId": "names",
+        "intuition": "선도금리계약을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "10억에서 4%와 6%의 3개월 차이 약 500만 원을 계산합니다.",
+        "boundary": "명목원금 자체를 반드시 교환하는 것은 아닙니다."
+      },
+      {
+        "id": "interest-rate-cap-floor",
+        "sectionId": "names",
+        "intuition": "금리 캡·플로어을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "변동금리 대출자가 상승 위험을 막으려고 캡을 삽니다.",
+        "boundary": "기준금리·관측일·프리미엄이 다른 계약을 이름만으로 같게 보지 않습니다."
+      },
+      {
+        "id": "swaption-and-swap-curve",
+        "sectionId": "names",
+        "intuition": "스왑션과 스왑곡선을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "미래 차입 여부가 불확실하면 스왑 대신 스왑션을 살 수 있습니다.",
+        "boundary": "정책금리 하나가 모든 지급일의 가치를 정하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선도금리계약",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "forward-rate-agreement"
+        ]
+      },
+      {
+        "label": "2단계 · 금리 캡·플로어",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "interest-rate-cap-floor"
+        ]
+      },
+      {
+        "label": "3단계 · 스왑션과 스왑곡선",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "swaption-and-swap-curve"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "선도금리계약의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "선도금리계약",
+          "10억에서 4%와 6%의 3개월 차이 약 500만 원을 계산합니다.",
+          "명목원금 자체를 반드시 교환하는 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "금리 캡·플로어이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "금리 캡·플로어",
+          "차이",
+          "변동금리 대출자가 상승 위험을 막으려고 캡을 삽니다."
+        ],
+        "requiredConcepts": [
+          "interest-rate-cap-floor"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "스왑션과 스왑곡선이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "스왑션과 스왑곡선",
+          "미래 차입 여부가 불확실하면 스왑 대신 스왑션을 살 수 있습니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "MIT Sloan · 15.433 Investments",
+          "CME Group · Introduction to Interest Rate Products",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "interest-rate-cap-floor"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "forward-rate-agreement",
+          "interest-rate-cap-floor",
+          "swaption-and-swap-curve"
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement",
+          "interest-rate-cap-floor",
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement",
+          "interest-rate-cap-floor",
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement",
+          "interest-rate-cap-floor",
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "forward-rate-agreement",
+          "interest-rate-cap-floor",
+          "swaption-and-swap-curve"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT Sloan · 15.433 Investments",
+        "href": "https://ocw.mit.edu/courses/15-433-investments-spring-2003/pages/calendar/",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "채권과 수익률곡선에서 스왑·캡·플로어·스왑션으로 이어지는 선수 순서를 보여 줍니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CME Group · Introduction to Interest Rate Products",
+        "href": "https://www.cmegroup.com/articles/2026/introduction-to-interest-rates-products.html",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "SOFR 선물·옵션으로 OIS와 캡·플로어 노출을 구성하는 현재 사례를 설명합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-suitability-disclosure-and-sales-practice": {
+    "entryLevel": true,
+    "entryNote": "월 1억 달러 수출 노출에 환율 상승 시 2억 달러 매도 의무를 붙인 상담에서 시작합니다.",
+    "coreIdea": "파생상품 권유는 고객의 목적·재산·경험과 실제 노출을 파악하고 상품의 유리·불리한 지급과 대안을 설명해 이해를 확인하며, 권유·승인·주문·사후 변경의 증거를 남기는 연속된 책임입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "derivatives-suitability",
+        "role": "파생상품 적합성이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "key-risk-disclosure",
+        "role": "핵심 위험 설명이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "sales-practice-evidence",
+        "role": "판매 과정의 증거이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-suitability",
+        "sectionId": "names",
+        "intuition": "파생상품 적합성을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "월 1억 달러 노출에 2억 달러 의무가 맞는지 봅니다.",
+        "boundary": "위험 선호 설문이나 서명 하나로 충족되지는 않습니다."
+      },
+      {
+        "id": "key-risk-disclosure",
+        "sectionId": "names",
+        "intuition": "핵심 위험 설명을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "환율 200원 상승 때 초과 의무의 200억 원 차액을 보여 줍니다.",
+        "boundary": "유리한 경우만 강조하거나 수식만 건네는 일은 충분하지 않습니다."
+      },
+      {
+        "id": "sales-practice-evidence",
+        "sectionId": "names",
+        "intuition": "판매 과정의 증거을 생활 속 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "고객이 배수 의무를 되짚은 내용과 제공 자료를 보관합니다.",
+        "boundary": "형식적 서명이 실제 이해와 올바른 권유를 자동 증명하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 파생상품 적합성",
+        "relation": "사례의 첫 가격·지급 구분을 만듭니다.",
+        "concepts": [
+          "derivatives-suitability"
+        ]
+      },
+      {
+        "label": "2단계 · 핵심 위험 설명",
+        "relation": "첫 구분을 다음 현금흐름과 연결합니다.",
+        "concepts": [
+          "key-risk-disclosure"
+        ]
+      },
+      {
+        "label": "3단계 · 판매 과정의 증거",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "sales-practice-evidence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 적합성의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "파생상품 적합성",
+          "월 1억 달러 노출에 2억 달러 의무가 맞는지 봅니다.",
+          "위험 선호 설문이나 서명 하나로 충족되지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "핵심 위험 설명이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "핵심 위험 설명",
+          "차이",
+          "환율 200원 상승 때 초과 의무의 200억 원 차액을 보여 줍니다."
+        ],
+        "requiredConcepts": [
+          "key-risk-disclosure"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "판매 과정의 증거이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "판매 과정의 증거",
+          "고객이 배수 의무를 되짚은 내용과 제공 자료를 보관합니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "sales-practice-evidence"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 근거를 주는지 구분하세요.",
+        "answerChecklist": [
+          "국가법령정보센터 · 금융소비자보호법 제17·19조",
+          "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "key-risk-disclosure"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 계약 조건",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "sales-practice-evidence"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "derivatives-suitability",
+          "key-risk-disclosure",
+          "sales-practice-evidence"
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability",
+          "key-risk-disclosure",
+          "sales-practice-evidence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability",
+          "key-risk-disclosure",
+          "sales-practice-evidence"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability",
+          "key-risk-disclosure",
+          "sales-practice-evidence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 어디서 갈리는지 현금흐름으로 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-suitability",
+          "key-risk-disclosure",
+          "sales-practice-evidence"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "국가법령정보센터 · 금융소비자보호법 제17·19조",
+        "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033001899",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "2026년 시행 법문에서 적합성 원칙과 일반금융소비자 설명의무를 확인합니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정",
+        "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+        "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다.",
+        "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

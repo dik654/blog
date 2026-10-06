@@ -128,14 +128,14 @@ export const CATEGORY_READING_PATHS: Readonly<
   },
   markets: {
     title: "청구권에서 전략 상품의 실제 손익까지",
-    description: "채권·주식의 기초 위에 상품별 재원과 지급 조건을 놓고 ETF·파생상품·커버드콜을 비교합니다.",
+    description: "채권·주식의 기초 위에 상품별 지급 조건을 놓고 파생상품의 가격·청산·헤지·판매 책임까지 따라갑니다.",
     stages: [
       { eyebrow: "01 · 채무", title: "채권과 금리", description: "약정 지급과 현재 가격을 연결합니다.", subcategories: ["markets-bond"] },
       { eyebrow: "02 · 소유", title: "주식의 몫", description: "채무 지급 뒤 남는 청구권을 봅니다.", subcategories: ["markets-equity"] },
       { eyebrow: "03 · 상품", title: "포장과 실제 자산", description: "상품 지도·펀드·ETF·ETN·유동화를 비교합니다.", subcategories: ["markets-products"] },
-      { eyebrow: "04 · 계약", title: "손익의 이전", description: "선물·옵션·커버드콜·스왑에서 이익과 의무를 계산합니다.", subcategories: ["markets-derivatives"] },
+      { eyebrow: "04 · 계약", title: "손익에서 가격과 책임까지", description: "선물·옵션의 지급에서 무차익 가격·청산·헤지·판매 절차로 갑니다.", subcategories: ["markets-derivatives"] },
     ],
-    featuredArticles: ["bond-pricing-and-yield-curve", "equity-claims-and-valuation", "financial-products-and-claims", "funds-etfs-and-etns", "securitization-and-tranches", "forwards-and-futures", "options-and-asymmetric-payoffs", "covered-calls-and-income-funds", "swaps-and-credit-risk"],
+    featuredArticles: ["bond-pricing-and-yield-curve", "equity-claims-and-valuation", "financial-products-and-claims", "funds-etfs-and-etns", "securitization-and-tranches", "forwards-and-futures", "no-arbitrage-cost-of-carry-and-basis", "clearing-margin-and-default-waterfall", "options-and-asymmetric-payoffs", "option-replication-and-put-call-parity", "option-greeks-volatility-and-dynamic-hedging", "covered-calls-and-income-funds", "swaps-and-credit-risk", "interest-rate-derivatives-from-fra-to-swaptions", "derivatives-suitability-disclosure-and-sales-practice"],
   },
   circuits: {
     title: "한 회로를 계산하는 순서",

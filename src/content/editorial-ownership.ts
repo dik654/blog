@@ -15949,6 +15949,154 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "no-arbitrage-cost-of-carry-and-basis": {
+    "title": "무차익·보유비용·베이시스 글이 소유하는 범위",
+    "owns": [
+      "현물 100·자금비용 5·배당 2·선물 108의 복제 장부",
+      "무차익 가격과 미래 현물 전망의 구분",
+      "보유비용 항목과 만기 베이시스 수렴의 거래 경로"
+    ],
+    "reuses": [
+      {
+        "label": "선도·선물의 지급과 헤지",
+        "href": "/finance/markets/forwards-and-futures"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "clearing-margin-and-default-waterfall": {
+    "title": "청산·증거금·손실 분담 글이 소유하는 범위",
+    "owns": [
+      "개시증거금 12·유지 기준 9·첫날 손실 8의 현금 장부",
+      "고객·중개사·청산회원·중앙청산소의 역할 구분",
+      "부도 회원에서 공동 재원으로 이어지는 손실 분담 순서"
+    ],
+    "reuses": [
+      {
+        "label": "개인 계좌의 레버리지·담보 부족",
+        "href": "/finance/risk/margin-collateral-and-leverage"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "option-replication-and-put-call-parity": {
+    "title": "옵션 복제·위험중립 가격·풋콜 등식 글이 소유하는 범위",
+    "owns": [
+      "주가 120·80과 콜 지급 20·0의 한 기간 복제",
+      "실제 확률과 위험중립 계산 가중치의 구분",
+      "유럽형 옵션 풋콜 등식의 계약 조건과 적용 경계"
+    ],
+    "reuses": [
+      {
+        "label": "콜·풋의 권리와 만기 손익",
+        "href": "/finance/markets/options-and-asymmetric-payoffs"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "option-greeks-volatility-and-dynamic-hedging": {
+    "title": "옵션 그릭스·변동성·동적 헤지 글이 소유하는 범위",
+    "owns": [
+      "주가·감마·변동성·시간 효과를 나눈 옵션 한 단위 손익 근사",
+      "델타 0.50→0.58 뒤 주식 0.08주 재조정",
+      "국소 민감도와 실제 계약·증거금·모형 위험의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "옵션 복제와 무차익 가격",
+        "href": "/finance/markets/option-replication-and-put-call-parity"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "interest-rate-derivatives-from-fra-to-swaptions": {
+    "title": "FRA·스왑·캡·스왑션 글이 소유하는 범위",
+    "owns": [
+      "10억 원·금리차 2%포인트·0.25년의 500만 원 차액",
+      "FRA에서 스왑·캡·플로어·스왑션으로 이어지는 지급 구조",
+      "명목금액·곡선·듀레이션·담보 할인·기준금리 베이시스의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "금리스왑의 고정·변동 현금흐름",
+        "href": "/finance/markets/swaps-and-credit-risk"
+      },
+      {
+        "label": "채권 가격과 수익률곡선",
+        "href": "/finance/markets/bond-pricing-and-yield-curve"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-suitability-disclosure-and-sales-practice": {
+    "title": "파생상품 적합성·설명·판매 기록 글이 소유하는 범위",
+    "owns": [
+      "월 1억 달러 실제 노출과 2억 달러 매도 의무의 과다 헤지 사례",
+      "권유 시 적합성과 무권유 거래의 적정성 구분",
+      "고객 정보·시나리오·대안·이해 확인·기록의 판매 과정"
+    ],
+    "reuses": [
+      {
+        "label": "금융상품의 지급자·조건·출구",
+        "href": "/finance/markets/financial-products-and-claims"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·청산·계약·법적 절차의 정의와 구조는 거래소·감독기관·현행 법령의 적용 범위에만 귀속합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "교육과정의 학습 순서와 설명용 수치를 실제 시장 성과나 개별 법률 판단으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

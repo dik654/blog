@@ -1,6 +1,6 @@
 # 금융상품 학습 누락 검증
 
-확인일: 2026-10-04. 이 표는 특정 종목의 매수 목록이 아니라 지급 청구권·재원·상대방·손실 조건이 본문에서 설명되는지 검증한 기록이다. 시장에 존재하는 모든 개별 발행 상품을 열거했다는 뜻은 아니다. 분류가 같아도 실제 만기·준거법·상환식은 투자설명서로 확인한다.
+확인일: 2026-10-07. 이 표는 특정 종목의 매수 목록이 아니라 지급 청구권·재원·상대방·손실 조건이 본문에서 설명되는지 검증한 기록이다. 시장에 존재하는 모든 개별 발행 상품을 열거했다는 뜻은 아니다. 분류가 같아도 실제 만기·준거법·상환식은 투자설명서로 확인한다.
 
 ## 상품과 정본의 대응
 
@@ -18,12 +18,18 @@
 | 차입 투자·마진 거래 | 자산에서 빚을 뺀 자기 몫 | 자산90·빚80·허용80%에서 현금8/담보10/내부매각40 | `risk/margin-collateral-and-leverage#mechanism` | 가정 비율 명시·금액 검산 |
 | 외화·환헤지형 상품 | 외화 자산과 반대 통화 계약 | 달러 자산+10%, 달러당 원화−10%→원화−1% | ETF10절, 선물9절, `macro/global-capital-and-policy` | 금리차·통화·현금 날짜 연결 |
 | 선도·선물 | 계약 상대방·청산 정산 | 밀100톤30만→35만:500만 반대 손익, 중간 현금 별도 | `markets/forwards-and-futures#mechanism` | CME 원문 적용 |
+| 무차익 선물 가격·보유비용·베이시스 | 같은 만기 자산을 마련하는 현물·차입·선물 묶음 | 현물100+이자5−배당2=103, 선물108 매도 차이5 | `markets/no-arbitrage-cost-of-carry-and-basis#case` | CME·MIT 과정 대조 |
+| 중앙청산·개시/변동증거금 | 고객·회원·청산소 사이의 일일 현금과 부도 재원 | 잔액12−손실8=4, 유지9 아래서8 추가 납부 | `markets/clearing-margin-and-default-waterfall#case` | CFTC 스트레스·규칙 대조 |
 | 원자재 선물형 ETF·롤오버 | 만기별 선물 손익과 담보 이자 | 밀 새 만기31.5만→30만·100톤:−150만, 교체 즉시 손실로 오해하지 않음 | `markets/forwards-and-futures#mechanism` | 콘탱고·백워데이션·수렴 조건 |
 | 콜·풋·보호적 풋 | 선택권과 이행 의무 | 콜K100·비용8·S120→12, 주식+풋 최대손실8 | `markets/options-and-asymmetric-payoffs#mechanism` | 수식·손익곡선·OCC/KRX |
+| 옵션 복제·풋콜 등식 | 같은 미래 지급을 만드는 주식·현금 묶음 | 주식0.5주−차입40→상승20/하락0, 오늘값10 | `markets/option-replication-and-put-call-parity#case` | MIT 이항모형·OIC 대조 |
+| 그릭스·내재변동성·동적 헤지 | 가격·곡률·시간·변동성 민감도와 재조정 거래 | Δ0.50·Γ0.04·vega0.09·theta−0.08에서 하루 근사+1.45 | `markets/option-greeks-volatility-and-dynamic-hedging#case` | OIC·OCC 경계 적용 |
 | 커버드콜·인컴 펀드 | 보유 주식과 콜 매도대금 | 100주100·K105·비용수취3·S90/103/120→−700/600/800 | `markets/covered-calls-and-income-funds#mechanism` | 독립10층위·손익곡선 |
 | 부분 커버드콜·ATM/OTM·0DTE | 매도 수량·가격·만기 선택 | 200주에100주 콜이면 주당120에서14, 초과매도는 미담보 | 커버드콜9절 | 계약 단위와 경로 설명 |
 | 분배금·자본환급·총수익 | 자산에서 지급된 현금 | NAV100→88+분배12=총수익0%, ROC는 세무 추정과 구분 | 커버드콜7·9절 | QYLD 실제19a·최종 세무자료 아님 |
 | 금리·통화 스왑 | 서로 다른 조건의 지급 교환 | 10억 고정4%·변동6%→순수취2000만, 대출 합산4000만 | `markets/swaps-and-credit-risk#mechanism` | 순현금·명목금액 구분 |
+| FRA·캡·플로어·스왑션 | 한 기간 금리 차액과 여러 기간의 의무·선택권 | 10억×(6%−4%)×0.25=약500만 원, 선지급 할인 구분 | `markets/interest-rate-derivatives-from-fra-to-swaptions#case` | MIT·CME SOFR 사례 대조 |
+| 파생상품 권유·설명·기록 | 고객 목적·재산·경험과 상품 시나리오의 대응 | 수출1억달러·매도의무2억달러·환율차200원→초과분200억원 | `markets/derivatives-suitability-disclosure-and-sales-practice#case` | 금소법·금융투자교육원 과정 대조 |
 | CDS | 신용 사건 발생 시 보호 매도자의 지급 | 10억·회수40%→채권4억+보호6억, 상대방 이행 조건 | `markets/swaps-and-credit-risk#comparison` | 동시 부도 반례 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
