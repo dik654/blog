@@ -60,8 +60,13 @@ export default function DomainPage({ domain }: { domain: string }) {
   );
   // 순서대로 읽는 커리큘럼일 때만 전편을 번호와 함께 펼친다.
   const sequence = path?.showFullSequence
-    ? group.categories.flatMap((category) =>
-        category.articles.map((article) => ({ category, article })),
+    ? path.stages.flatMap((stage) =>
+        stage.categories.flatMap((categorySlug) => {
+          const category = group.categories.find((item) => item.slug === categorySlug);
+          return category
+            ? category.articles.map((article) => ({ category, article }))
+            : [];
+        }),
       )
     : [];
 
@@ -97,6 +102,9 @@ export default function DomainPage({ domain }: { domain: string }) {
             <p className="text-xs font-black tracking-[0.14em] text-primary">
               READING ORDER
             </p>
+            <span className="mt-3 inline-flex rounded-full border border-primary/20 bg-background px-2.5 py-1 text-xs font-bold text-primary">
+              배열 기준 · {path.organizingPrinciple ?? "선수 개념순"}
+            </span>
             <h2 className="mt-2 text-xl font-bold tracking-tight text-foreground">
               {path.title}
             </h2>

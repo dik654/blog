@@ -1,0 +1,58 @@
+import type { Article } from "../types";
+
+export const economicHistoryArticles: Article[] = [
+  {
+    slug: "agrarian-surplus-and-state",
+    title: "곡물을 모아 나누는 순간 측정·장부·권한이 함께 생깁니다",
+    subcategory: "economic-history-early-state",
+    sections: [
+      { id: "overview", title: "남은 곡물보다 누가 세고 나누는지가 중요합니다" },
+      { id: "black-box", title: "수확·저장·기록·배분이 하나의 고리를 이룹니다" },
+      { id: "case", title: "1200자루를 모아 다음 해까지 나눠 봅니다" },
+      { id: "picture", title: "창고 안의 양과 장부 위의 청구권을 나눕니다" },
+      { id: "need", title: "시간이 길어지고 사람이 많아지면 기억만으로 버티지 못합니다" },
+      { id: "names", title: "잉여·공납·회계·배분 권한에 이름을 붙입니다" },
+      { id: "mechanism", title: "같은 1200자루가 권리와 의무로 바뀌는 길을 추적합니다" },
+      { id: "source", title: "기원전 3100~2900년 무렵의 곡물 장부를 읽습니다" },
+      { id: "comparison", title: "장부는 국가의 존재를 혼자 증명하지 못합니다" },
+      { id: "limits", title: "잉여가 자동으로 국가를 만든다는 한 줄 인과를 피합니다" },
+    ],
+    component: () => import("@/pages/articles/economic-history/agrarian-surplus-and-state"),
+  },
+  {
+    slug: "industrial-revolution-wages-and-energy",
+    title: "비싼 노동과 싼 에너지가 기계를 유리하게 만들었습니다",
+    subcategory: "economic-history-industry",
+    sections: [
+      { id: "overview", title: "발명 목록보다 기계를 살 이유와 그 결과를 봅니다" },
+      { id: "black-box", title: "가격·투자·생산성·생활 수준을 한 고리로 잇습니다" },
+      { id: "case", title: "노동 10명과 석탄 기계 한 대의 비용을 비교합니다" },
+      { id: "picture", title: "기업의 선택과 노동자의 생활 장부를 분리합니다" },
+      { id: "need", title: "생산이 늘어도 생활이 같은 속도로 좋아지지는 않습니다" },
+      { id: "names", title: "요소 가격·노동 절약 기술·실질임금에 이름을 붙입니다" },
+      { id: "mechanism", title: "같은 기계가 두 지역에서 다른 선택이 되는 이유를 계산합니다" },
+      { id: "source", title: "고임금·저에너지 가격 설명을 원 논문에서 확인합니다" },
+      { id: "comparison", title: "1770~1840년 생산성과 임금의 다른 속도를 대조합니다" },
+      { id: "limits", title: "영국 한 사례를 산업화의 보편 법칙으로 만들지 않습니다" },
+    ],
+    component: () => import("@/pages/articles/economic-history/industrial-revolution-wages-and-energy"),
+  },
+  {
+    slug: "gold-standard-depression-bretton-woods",
+    title: "고정 환율의 약속은 위기 때 조정 비용을 누구에게 지울지 정합니다",
+    subcategory: "economic-history-money",
+    sections: [
+      { id: "overview", title: "금에서 달러로 기준이 바뀌어도 조정 문제는 남았습니다" },
+      { id: "black-box", title: "환율 약속·준비자산·국내 조정·국제 지원을 연결합니다" },
+      { id: "case", title: "금 100단위와 국외 지급 20단위의 압박을 계산합니다" },
+      { id: "picture", title: "바꿀 수 없는 값과 움직일 수 있는 값을 나눕니다" },
+      { id: "need", title: "고정은 불확실성을 줄이지만 위기의 출구도 좁힙니다" },
+      { id: "names", title: "금본위제·평가절하·자본통제·브레턴우즈에 이름을 붙입니다" },
+      { id: "mechanism", title: "같은 20단위 적자가 세 제도에서 어떻게 처리되는지 봅니다" },
+      { id: "source", title: "1870년대부터 1930년대 붕괴까지의 순서를 확인합니다" },
+      { id: "comparison", title: "1944년의 조정 가능한 고정환율이 무엇을 바꿨는지 봅니다" },
+      { id: "limits", title: "국가마다 들어오고 나간 시기와 비용은 달랐습니다" },
+    ],
+    component: () => import("@/pages/articles/economic-history/gold-standard-depression-bretton-woods"),
+  },
+];

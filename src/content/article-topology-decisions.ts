@@ -1962,6 +1962,36 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "100 ms 요청의 같은 시간표를 따라 분류·직렬 상한·상호작용을 이해한 뒤 요청 기다림과 실제 작업·비용의 차이를 확인합니다. vLLM의 설정과 측정 함수는 이 구별을 실제 코드로 검증하므로 한 글로 유지합니다. 개별 최적화의 내부 알고리즘은 각 정본을 재사용합니다.",
     "sharedGate": "100→80→64와 극한60 ms, 추가5/8 ms, 겹침80/20, 400 request-ms 대20 GPU-ms, 3→2/2→2 복사본, ROI−79.72%·1800일, 차이2.4와95%구간1.72–3.08을 22절·4장면·9원문패널·6기초/4심화에 동일 조건으로 대조한다."
   },
+  "reasoning/argument-and-counterexample": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "카드 결제 가게 100곳의 한 사례로 전제·결론 분리, 반례, 타당성, 건전성, 고전 원문과 현실의 확률 경계까지 같은 논증 검사 절차를 추적합니다. 다른 철학 글과 합치면 논증 검사가 지식·윤리 판단의 하위 요약으로 축소됩니다.",
+    sharedGate: "전자제품 40곳·다른 카드 결제 50곳·전체 100곳이라는 가정이 본문·시각화·연습문제에서 같고, 전제 참·결론 거짓인 반례 한 곳을 끝까지 유지하는지 확인합니다.",
+  },
+  "epistemology/knowledge-belief-and-luck": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "멈춘 시계 열 개의 한 사례로 믿음·참·정당화, 인식적 행운, 안전성, 게티어 원문과 경쟁 설명을 추적하는 지식론의 독립 입구입니다. 논증이나 윤리 글과 합치면 사실에 닿은 경로라는 질문이 사라집니다.",
+    sharedGate: "1~10시에 멈춘 시계 10개와 실제 4시·12시, 11시 59분·12시 1분의 변화가 본문·시각화·문제에서 같은 우연과 안전성 경계를 보여 주는지 확인합니다.",
+  },
+  "ethics/consequence-duty-and-character": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "알레르기 표시가 빠진 도시락 100개의 한 결정을 결과·의무·성품으로 세 번 읽고 고전 원문과 조직 절차까지 이어 가는 윤리 판단의 독립 입구입니다. 세 관점은 비교되어야 하지만 서로 다른 글로 떼면 같은 결정에서 충돌하는 이유를 잃습니다.",
+    sharedGate: "도시락 100개·위험 후보 10개·중증 반응 2%·피해 5000만원·회수 100만원의 가정과 분배 경계가 본문·시각화·문제에서 일치하는지 확인합니다.",
+  },
+  "economic-history/agrarian-surplus-and-state": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "1200자루의 한 장부로 실물 재고·기록·청구권·배분 권한을 나누고 기원전 3100~2900년 무렵 점토판의 해석 한계까지 추적하는 경제사 시간축의 첫 입구입니다. 뒤 산업화 글과 합치면 수천 년을 건너뛰며 회계와 초기 국가 형성의 질문이 얕아집니다.",
+    sharedGate: "100가구×12=1200, 종자100+비상50+지급1000=1150, 장부50·실물30·차이20이 본문·시각화·문제에서 일치하고 실제 유물 수치가 아니라 가정임을 밝히는지 확인합니다.",
+  },
+  "economic-history/industrial-revolution-wages-and-energy": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "같은 기계의 손익을 두 임금 수준에서 계산하고 상대 가격에서 생산성·실질임금·생활 분배까지 이어 가는 산업화의 독립 시기 단위입니다. 앞 장부 글이나 뒤 국제 통화 글과 합치면 기업의 채택 문턱과 가구 생활의 시차가 사라집니다.",
+    sharedGate: "사람 방식 10w, 기계 방식 50+4w, 주급10에서100대90, 주급6에서60대74, 문턱8.33과 1770=100·1840 생산143.9/소비임금127.1이 본문·문제에서 일치하는지 확인합니다.",
+  },
+  "economic-history/gold-standard-depression-bretton-woods": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
+    rationale: "준비자산 100과 순지급 20의 같은 압력을 금본위제·브레턴우즈·변동환율에서 처리해 1870년대부터 1970년대까지 이어 가는 하나의 국제 통화 질서 전환입니다. 세 제도를 떼면 앞 체제의 실패가 다음 설계의 선택지를 만든 경로가 끊깁니다.",
+    sharedGate: "금100·통화500·교환5:1·순지급20·잔액80·통화/금6.25의 가정과 1870~1880년대·1930년대·1944년·1971년·1970년대 초의 시기 구분이 본문·문제에서 일치하는지 확인합니다.",
+  },
 };
 
 /**
@@ -2275,4 +2305,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/covered-calls-and-income-funds":"b3bf1d0cf748a674",
 "markets/financial-products-and-claims":"a2c324243fb9fcee",
 "markets/securitization-and-tranches":"112869ad29851ed5",
+"reasoning/argument-and-counterexample":"05bdb4f60de04946",
+"epistemology/knowledge-belief-and-luck":"3ef05ccf985263ed",
+"ethics/consequence-duty-and-character":"653c67b9eade3a5f",
+"economic-history/agrarian-surplus-and-state":"05629080863fc1ee",
+"economic-history/industrial-revolution-wages-and-energy":"e57dccb3874557ce",
+"economic-history/gold-standard-depression-bretton-woods":"c1eaf8c1e6a13961",
 };

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-06",
+  "baselineCheckpoint": "checkpoint-255.json",
+  "publicArticles": 805,
+  "addedRoutes": [
+    "reasoning/argument-and-counterexample",
+    "epistemology/knowledge-belief-and-luck",
+    "ethics/consequence-duty-and-character",
+    "economic-history/agrarian-surplus-and-state",
+    "economic-history/industrial-revolution-wages-and-energy",
+    "economic-history/gold-standard-depression-bretton-woods"
+  ],
+  "reviewed": 261,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive foundation articles added after the 255-article fixed checkpoint; 219 substantive rewrites/additions and 42 retained teaching flows in total.",
+  "validation": {
+    "individual": "Six additions passed article checks after one Korean prose correction.",
+    "browser": "Six routes × 390/1440 = 12 checks; exact S/B/0..7 order, three prediction prompts, figure containment, document overflow and console checked; 0 failed.",
+    "learning": "PASS 805 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.33s and 1,700 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,862 concepts, 6,166 relations, 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 805 strict; actual exit 0.",
+    "topology": "PASS 805 strict; the six compact single-question foundations have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS organizing-principle labels and stage-derived full sequence; actual exit 0.",
+    "mobileViewport": "All tested documents and lesson figures stayed within 390px; no console errors or warnings.",
+    "desktopViewport": "Philosophy domain and economic-history article inspected at 1440px; sidebar and figures stayed within the document."
+  },
+  "commit": null,
+  "deployment": null
+}

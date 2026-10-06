@@ -36,6 +36,10 @@ import disputeResolution from "./dispute-resolution";
 import testimony from "./testimony";
 import recordNumbers from "./record-numbers";
 import inferenceFromSources from "./inference-from-sources";
+import economicHistory from "./economic-history";
+import reasoning from "./reasoning";
+import epistemology from "./epistemology";
+import ethics from "./ethics";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
 import devices from "./devices";
@@ -75,6 +79,10 @@ export const categories = [
   testimony,
   recordNumbers,
   inferenceFromSources,
+  economicHistory,
+  reasoning,
+  epistemology,
+  ethics,
   circuits,
   semiconductors,
   devices,

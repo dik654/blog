@@ -15649,6 +15649,42 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "argument-and-counterexample": {
+    title: "논증과 반례 글이 소유하는 범위",
+    owns: ["전제의 참과 추론 타당성을 분리하는 검사", "반례 하나로 필연적 추론을 깨는 방법", "타당성과 건전성의 경계"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "고전 원문은 번역의 표현과 역사적 범위를 밝히고 현대 형식 논리와 동일시하지 않습니다." }],
+  },
+  "knowledge-belief-and-luck": {
+    title: "지식·믿음·우연 글이 소유하는 범위",
+    owns: ["정당화·참·믿음 세 조건의 분리", "멈춘 시계로 보는 인식적 행운", "가까운 경우를 이용한 안전성 검사와 한계"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "게티어의 원 논문과 현대 해설을 구분하고 후속 이론 중 하나를 합의된 정답으로 쓰지 않습니다." }],
+  },
+  "consequence-duty-and-character": {
+    title: "결과·의무·성품 글이 소유하는 범위",
+    owns: ["한 행동을 결과·의무·성품의 세 질문으로 분리하는 입구", "기대값과 피해 분배의 구분", "개인 성품과 조직 절차의 연결"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "고전 원문 세 전통의 공통점과 차이를 보여 주되 현대 윤리학 전체를 세 이름으로 완결하지 않습니다." }],
+  },
+  "agrarian-surplus-and-state": {
+    title: "농업 잉여와 국가 장부 글이 소유하는 범위",
+    owns: ["실물 재고·장부 숫자·배분 청구권의 구분", "원시 설형문자 곡물 회계의 기능과 해석 한계", "잉여에서 국가로 가는 단선 인과의 반례"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "유물 설명과 학술 해독이 허용하는 주장만 쓰고 설명용 1200자루를 실제 고대 수치로 제시하지 않습니다." }],
+  },
+  "industrial-revolution-wages-and-energy": {
+    title: "산업혁명·임금·에너지 글이 소유하는 범위",
+    owns: ["상대 요소 가격과 기계 채택 문턱의 연결", "기업 손익과 노동자 생활 장부의 분리", "1770~1840년 생산성과 임금 시차의 범위"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "가정 비용표와 역사 실측 지수를 분리하고 영국의 가설을 산업화의 보편 법칙으로 확대하지 않습니다." }],
+  },
+  "gold-standard-depression-bretton-woods": {
+    title: "금본위제·대공황·브레턴우즈 글이 소유하는 범위",
+    owns: ["고정환율 아래 준비자산 유출과 국내 조정 경로", "1870년대·전간기·1944년·1970년대의 시간 구분", "브레턴우즈의 국제대출·조정 가능한 환율·자본통제 절충"],
+    reuses: [],
+    evidence: [{ kind: "primary-source", rule: "IMF의 제도 연표를 국가별 동일 경험으로 일반화하지 않고 가정한 금 100·지급 20을 역사 실측치와 분리합니다." }],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

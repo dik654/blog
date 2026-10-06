@@ -10,6 +10,7 @@ export interface DomainReadingStage {
 export interface DomainReadingPath {
   title: string;
   description: string;
+  organizingPrinciple?: "시간순" | "주제순" | "선수 개념순" | "혼합";
   stages: readonly DomainReadingStage[];
   /**
    * 대분류 전체가 선수 관계로 닫힌 하나의 커리큘럼일 때만 켭니다. 켜면 대분류
@@ -32,6 +33,7 @@ export const DOMAIN_READING_PATHS: Readonly<
   Partial<Record<DomainSlug, DomainReadingPath>>
 > = {
   electronics: {
+    organizingPrinciple: "선수 개념순",
     title: "전류에서 펌웨어까지 이어 읽기",
     description: "회로에서 읽은 전압과 전류가 소자의 상태, 칩의 동작, 임베디드 시스템의 시간 약속으로 이어지는 경로입니다.",
     stages: [
@@ -43,6 +45,7 @@ export const DOMAIN_READING_PATHS: Readonly<
     showFullSequence: true,
   },
   cs: {
+    organizingPrinciple: "주제순",
     title: "컴퓨터 기술을 네 덩어리로 나눠 읽기",
     description:
       "카테고리끼리 선수 관계가 아니라 다루는 층이 다릅니다. 필요한 덩어리부터 열어도 됩니다.",
@@ -80,6 +83,7 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   economics: {
+    organizingPrinciple: "선수 개념순",
     title: "가격에서 실제 사업과 국가의 장부까지",
     description:
       "가격과 기업의 원리를 배운 뒤 가게·임대·개발·공급망·보험·의료에 적용하고, 나라 사이의 자금과 인식이 시장으로 전달되는 경로를 읽습니다.",
@@ -143,6 +147,7 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   finance: {
+    organizingPrinciple: "선수 개념순",
     title: "금융의 청구권과 위험 이전을 읽는 순서",
     description:
       "돈과 은행에서 채권·주식으로 간 뒤 펀드·ETF·ETN과 파생상품의 현금흐름, 담보와 강제 매도까지 따라갑니다.",
@@ -180,6 +185,7 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   politics: {
+    organizingPrinciple: "선수 개념순",
     title: "정치를 아홉 편으로 쌓아 올리는 순서",
     description:
       "한 사회에 하나만 존재할 수 있는 결정을 누가 어떻게 내리는가 하나를 붙들고, 강제력이 어디에 모이는지에서 시작해 그 자리가 비어 있는 곳까지 갑니다.",
@@ -217,6 +223,7 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   law: {
+    organizingPrinciple: "선수 개념순",
     title: "법을 아홉 편으로 쌓아 올리는 순서",
     description:
       "일반적인 문장 하나가 내 앞에 놓인 판결문 한 줄이 되기까지 무엇이 필요한지를 따라갑니다. 정치 시리즈가 규범이 정해지는 자리에서 멈춘 지점부터 시작합니다.",
@@ -254,9 +261,10 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
 
   history: {
-    title: "역사를 사료에서부터 읽는 아홉 편",
+    organizingPrinciple: "혼합",
+    title: "사료를 읽는 법에서 경제사의 시간축으로",
     description:
-      "지난 일은 직접 볼 수 없고 남은 기록을 통해서만 닿습니다. 누가 왜 적었는지에서 시작해, 적힌 숫자가 무엇을 센 것인지를 따지고, 남은 것에서 어디까지 말할 수 있는지로 닫습니다.",
+      "먼저 남은 기록을 어디까지 믿을 수 있는지 배우고, 농업 잉여와 장부에서 산업화와 국제 통화 질서까지 실제 변화의 순서를 따라갑니다.",
     stages: [
       {
         eyebrow: "01 · 기록은 누가 만들었는가",
@@ -278,6 +286,40 @@ export const DOMAIN_READING_PATHS: Readonly<
         description:
           "남은 기록에서 주장으로 건너갈 때 무엇이 보태지는지, 그 보탬이 어디까지 허용되는지를 정합니다.",
         categories: ["inference-from-sources"],
+      },
+      {
+        eyebrow: "04 · 기원전 4천년기부터 1970년대까지",
+        title: "생산과 돈의 제도가 바뀐 순서",
+        description:
+          "남부 메소포타미아의 곡물 장부, 18~19세기 영국 산업화, 19세기 말부터 1970년대의 국제 통화 질서를 시간순으로 잇습니다.",
+        categories: ["economic-history"],
+      },
+    ],
+    showFullSequence: true,
+  },
+  philosophy: {
+    organizingPrinciple: "선수 개념순",
+    title: "생각을 검사하는 세 가지 질문",
+    description:
+      "말의 결론이 따라오는지 먼저 확인하고, 맞힌 것과 안 것을 가른 뒤, 여러 사람이 얽힌 행동을 어떤 기준으로 판단할지 살펴봅니다.",
+    stages: [
+      {
+        eyebrow: "01 · 결론이 따라오는가",
+        title: "논증과 반례",
+        description: "전제가 참인지와 결론이 전제에서 따라오는지를 나누고, 작은 반례로 추론의 빈틈을 찾습니다.",
+        categories: ["reasoning"],
+      },
+      {
+        eyebrow: "02 · 안다고 할 수 있는가",
+        title: "지식과 우연",
+        description: "믿음이 참이고 근거가 있어도 우연히 맞은 경우가 왜 남는지 같은 사례로 추적합니다.",
+        categories: ["epistemology"],
+      },
+      {
+        eyebrow: "03 · 무엇을 해야 하는가",
+        title: "결과·의무·성품",
+        description: "한 행동의 결과, 지켜야 할 원칙, 어떤 사람이 되는지를 같은 결정 위에 겹쳐 봅니다.",
+        categories: ["ethics"],
       },
     ],
     showFullSequence: true,
