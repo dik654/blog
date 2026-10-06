@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-267.json",
+  "publicArticles": 817,
+  "addedRoutes": [
+    "global-history/empires-roads-taxes-and-law",
+    "global-history/trade-religion-and-translation-networks",
+    "global-history/conquest-disease-silver-and-oceanic-exchange",
+    "global-history/revolutions-citizenship-and-industrial-empires",
+    "global-history/world-wars-depression-and-mass-states",
+    "global-history/cold-war-decolonization-and-globalization"
+  ],
+  "reviewed": 273,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive chronological world-history foundations added after checkpoint 267; 231 substantive rewrites/additions and 42 retained teaching flows in total.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "browser": "Six routes × 390/1440 plus global-history and history listings × 390/1440 = 16 checks; exact S/B/0..7 order, three figures, three review prompts, chronological listing order, containment, console errors and failed requests checked; 0 failed.",
+    "learning": "PASS 817 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.49s and 1,732 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,898 concepts, 6,202 relations, 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 817 strict; actual exit 0.",
+    "topology": "PASS 817 strict; the six compact single-case foundations have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS reading experience and 91 listings with 437 prerequisite edges; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm and Korean naturalness audits for 817 public articles.",
+    "mobileViewport": "All tested documents and figures stayed within 390px; arrows retained intrinsic size; no console errors or failed requests.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px with exact section and stage order.",
+    "production": "Six public routes and two listing routes at 390/1440 = 16 checks; all content, order, containment, console and request checks passed with 0 failures."
+  },
+  "commit": "4dbd10b06c5058844996b6c66ea68bd83fbc92b9",
+  "deployment": {
+    "runId": 37485267838,
+    "conclusion": "success",
+    "production": "16 checks across articles and listings at 390/1440, 0 failed"
+  }
+}
