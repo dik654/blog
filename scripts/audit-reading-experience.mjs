@@ -43,6 +43,7 @@ const contentBoundary = fs.readFileSync(
 );
 const globalStyles = fs.readFileSync("src/index.css", "utf8");
 const layoutShell = fs.readFileSync("src/components/Layout.tsx", "utf8");
+const sidebar = fs.readFileSync("src/components/Sidebar.tsx", "utf8");
 const cloudArticle = fs.readFileSync(
   "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
   "utf8",
@@ -204,6 +205,22 @@ const contract = {
     layoutShell.includes('className="sticky top-0 z-50') &&
     !layoutShell.includes('className="fixed top-0') &&
     !globalStyles.includes("@media (max-height:"),
+  mobileSidebarTrigger:
+    layoutShell.includes("data-mobile-sidebar-trigger") &&
+    layoutShell.includes('aria-controls="mobile-category-sidebar"') &&
+    layoutShell.includes("aria-expanded={mobileSidebarOpen}") &&
+    layoutShell.includes("lg:hidden"),
+  mobileSidebarDialog:
+    layoutShell.includes("data-mobile-sidebar-dialog") &&
+    layoutShell.includes('aria-modal="true"') &&
+    layoutShell.includes("data-mobile-sidebar-backdrop") &&
+    layoutShell.includes('document.body.style.overflow = "hidden"') &&
+    layoutShell.includes('event.key === "Escape"') &&
+    layoutShell.includes('event.key !== "Tab"') &&
+    layoutShell.includes('window.matchMedia("(min-width: 1024px)")') &&
+    layoutShell.includes("mobileSidebarCloseRef.current?.focus()") &&
+    sidebar.includes("onNavigate?: () => void") &&
+    sidebar.includes('event.target.closest("a[href]")'),
   keyboardCutNavigation:
     lessonViz.includes("data-viz-keyboard") &&
     lessonViz.includes('event.key === "ArrowRight"') &&

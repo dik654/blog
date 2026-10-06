@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { domains } from "@/content";
 import CategoryItem from "./sidebar/CategoryItem";
 
-export default function Sidebar() {
+export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { category: activeCategory, article: activeArticle } = useParams();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,16 @@ export default function Sidebar() {
   return (
     <div
       ref={scrollRef}
-      className="h-[calc(100svh-3.5rem)] overflow-y-auto bg-gradient-to-b from-background to-muted/[0.08]"
+      className="h-full overflow-y-auto bg-gradient-to-b from-background to-muted/[0.08]"
+      onClickCapture={(event) => {
+        if (
+          onNavigate &&
+          event.target instanceof Element &&
+          event.target.closest("a[href]")
+        ) {
+          onNavigate();
+        }
+      }}
     >
       <nav className="px-3 py-4">
         <Link
