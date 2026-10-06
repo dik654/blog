@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-291.json",
+  "publicArticles": 841,
+  "addedRoutes": [
+    "markets/currency-hedging-forward-points-and-cross-currency-basis",
+    "markets/commodity-carry-convenience-yield-and-roll",
+    "markets/option-strategies-and-structured-notes",
+    "markets/credit-derivatives-default-risk-and-tranches",
+    "markets/otc-master-agreement-collateral-netting-and-cva",
+    "markets/var-expected-shortfall-stress-and-model-risk"
+  ],
+  "reviewed": 297,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive derivatives use-and-risk articles added after checkpoint 291; 255 substantive rewrites/additions and 42 retained teaching flows in total. The sequence follows university finance and risk-management foundations plus the Korean derivatives investment solicitation advisor curriculum, with pricing, cash flow, contract operations, risk measurement and customer-facing loss boundaries kept distinct.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "numeric": "FX example independently recalculated as 1,350×1.0075÷1.0125=1,343.3333 KRW/USD and 800,000 USD=1,074,666,667 KRW; commodity 75+0.75+1-2=74.75; CDS 100m×2%=2m and 100m×(1-40%)=60m; OTC net 5+4-2-5=2, residual after 1.5 collateral=0.5 and illustrative CVA 10×2%×60%=0.12; empirical 80% VaR=4 and worst-20% ES=8 for the stated ten-loss sample.",
+    "browser": "Six routes × 390/1440 = 12 article checks; 10-section order, two explanatory figures, three term cards, three review prompts, containment, KaTeX, console errors and failed requests checked; 0 failed. Local report: output/playwright/derivative-risk/2026-10-06T17-34-47/summary.json.",
+    "learning": "PASS 841 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.67s, 7,179 transformed modules and 1,784 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,970 concepts, 6,274 relations, 841 registered articles and 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 841 strict; actual exit 0.",
+    "topology": "PASS 841 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 437 prerequisite edges; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm, Korean naturalness and term-density audits for 841 public articles.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; viewport height 844→700 preserved scrollY=1800 on all six routes; mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Six public routes and two listing routes at 390/1440 plus six mobile height/sidebar checks = 22 checks; all content, containment, console, request, scroll-position and sidebar checks passed with 0 failures.",
+    "curriculumCoverage": "KIFIN derivatives investment solicitation advisor scope, CME FX and commodity materials, OIC option strategies, SEC structured-note guidance, ISDA CDS and close-out materials, and Basel CVA, expected-shortfall and stress-testing standards were mapped to implemented coverage and explicit remaining quantitative and jurisdictional gaps."
+  },
+  "commit": "54a82ab0ba7836a38bfc9be86989edfe1307ac34",
+  "deployment": {
+    "runId": 37504823862,
+    "conclusion": "success",
+    "production": "22 checks across articles, listings, mobile height changes and sidebars, 0 failed"
+  }
+}
