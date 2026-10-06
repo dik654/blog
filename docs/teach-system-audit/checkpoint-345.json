@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-339.json",
+  "publicArticles": 889,
+  "addedRoutes": [
+    "finance/markets/krx-derivatives-contract-orders-and-daily-settlement",
+    "finance/markets/portfolio-compression-risk-tolerances-and-records",
+    "finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity",
+    "finance/markets/ccp-default-management-hedging-auction-and-porting",
+    "finance/markets/swaption-annuity-volatility-quotes-and-cube",
+    "finance/markets/derivatives-sales-records-access-retention-and-deletion"
+  ],
+  "reviewed": 345,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive derivatives articles added after checkpoint 339; 303 substantive rewrites/additions and 42 retained teaching flows in total. The batch fills practical gaps found by matching university pricing theory, Korean derivatives-adviser and bank curricula, GARP risk topics, and current exchange, regulator, infrastructure and consumer-protection sources.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "A KOSPI 200 futures move from 330 to 328 produces a KRW 500,000 loss at the stated multiplier; identical +100, -60 and -40 contracts compress gross notional from 200 to 0 only under matching conditions; collateral value 10 requires market values 10.53 and 11.77 under 5% and 15% haircuts; a +80 default position hedged by -60 leaves +20; a 3m x 10y swaption example maps a 10bp rate difference and KRW 100m notional through an 8.5 annuity to KRW 850,000 of underlying-rate difference value rather than option premium; and the sales-record example spans 22 minutes from customer-data capture to order. Every number is an explanatory case rather than a market quote or legal threshold.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-curriculum-gaps/2026-10-06T22-06-35-966Z/summary.json.",
+    "learning": "PASS 889 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS final Vite 9.54s, 7,238 transformed modules and 1,882 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,104 concepts, 6,411 relations, 889 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 889-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 889 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 468 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero uncovered findings on the six additions.",
+    "lint": "PASS full-repository ESLint after removing stale imports, replacing render-time mutation with derived positions, and correcting one pre-existing SVG stroke-width audit error.",
+    "visualization": "PASS strict visualization style audit with zero errors. The 4,031 review notices are static SVG-text prompts covered for this batch by the browser checks.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows at most 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending content commit, GitHub Pages deployment and production browser verification.",
+    "curriculumCoverage": "The 13-topic KIFIN prerequisite course, KIFIN refresher course, KBI FP/PB and GARP FRM were mapped to exact routes in docs/derivatives-curriculum-coverage.md. Remaining explicit gaps include correlation surfaces and dispersion, credit base correlation and auctions, commodity quality and regional basis with physical delivery, jurisdiction-specific investigation/enforcement/complaint retention/tax cases, and a dedicated fractional-investment/non-monetary-trust beneficiary-certificate article."
+  },
+  "commit": null,
+  "deployment": {
+    "runId": null,
+    "conclusion": "pending",
+    "production": "pending"
+  }
+}

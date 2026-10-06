@@ -135,7 +135,6 @@ export function LightGBMEfficiencyViz() {
             {Array.from({ length: 100 }, (_, i) => {
               const isLargeGradient = i < 20;
               const isSampledSmallGradient = i >= 20 && i < 30;
-              const isKept = isLargeGradient || isSampledSmallGradient;
               return (
                 <div
                   key={i}

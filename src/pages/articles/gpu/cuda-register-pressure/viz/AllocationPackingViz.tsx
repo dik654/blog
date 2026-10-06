@@ -2,7 +2,7 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 
-export function cc70RegisterBound(registers:number,threads:number){
+function cc70RegisterBound(registers:number,threads:number){
  const perWarp=Math.ceil(registers*32/256)*256;
  const warpCapacity=4*Math.floor(16384/perWarp);
  const warpsPerBlock=Math.ceil(threads/32);

@@ -1,6 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
@@ -36,20 +34,6 @@ const GAP_TERMS = [
     name: "Iteration token budget",
     description:
       "이번 model execution에 넣을 수 있는 scheduled token의 전체 상한입니다.",
-  },
-] as const;
-
-const PRIORITY_TERMS = [
-  {
-    symbol: "p_r",
-    name: "Request priority",
-    description: "vLLM priority policy에서는 값이 작을수록 먼저 고려됩니다.",
-  },
-  {
-    symbol: "a_r",
-    name: "Arrival time",
-    description:
-      "Priority가 같을 때 먼저 도착한 요청을 앞세우는 tie-break 값입니다.",
   },
 ] as const;
 

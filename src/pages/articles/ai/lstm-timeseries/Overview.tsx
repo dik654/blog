@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ForecastWindowViz from "./viz/ForecastWindowViz";

@@ -15,7 +15,7 @@ export default function RoundingGridViz(){const c=useAnimatedScenes(scenes.lengt
 {[0,1,2,3,4].map(n=><g key={n}><path d={`M${x(n)} 126v8`} stroke="currentColor" opacity=".3"/><text x={x(n)} y="171" textAnchor="middle" fontSize="11" fill="currentColor">{n===0?"0":`${n}δ`}</text></g>)}
 {[0,2,4].map((n,i)=><g key={n}><circle cx={x(n)} cy="130" r="5" fill="currentColor" opacity=".45"/><text x={x(n)} y="198" textAnchor="middle" fontSize="11" fill="currentColor">{i}번 자리</text></g>)}
 <path d={`M${x(s.input)} 67L${x(s.output)} 120`} stroke="var(--primary)" strokeWidth="1.25" fill="none"/>
-<circle cx={x(s.input)} cy="62" r="6" fill="var(--background)" stroke="var(--primary)" strokeWidth="1.5"/>
+<circle cx={x(s.input)} cy="62" r="6" fill="var(--background)" stroke="var(--primary)" strokeWidth="1.25"/>
 <circle cx={x(s.output)} cy="130" r="7" fill="var(--primary)"/>
 <text x="160" y="28" textAnchor="middle" fontSize="12" fill="currentColor">저장 전: 1{s.input>0?` + ${s.input}δ`:""}</text>
 <text x="160" y="154" textAnchor="middle" fontSize="11" fill="currentColor">1에서 더 간 양</text>
