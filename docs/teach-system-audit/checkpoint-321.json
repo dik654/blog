@@ -29,13 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "pending deployment",
+    "production": "GitHub Pages deployment 37522614528 succeeded. Production report output/playwright/derivative-professional-practice-production/2026-10-06T20-03-58-890Z/summary.json recorded 22 passed and zero failed: six articles and two finance listings at 390px/1440px plus six mobile height/sidebar checks.",
     "curriculumCoverage": "KIFIN derivatives solicitation advisor curriculum supplied the unfair-trading, tax, AML and dispute coverage check; Korea Banking Institute FP supplied the customer/product/planning boundary. Basel IRRBB, IFRS 9, Korea NTS, IRS Publication 550, CFTC position limits and surveillance, FATF securities RBA, KoFIU STR and UK FOS evidence guidance supplied primary rules. Multi-asset rare-event pricing, uncleared initial margin, trade lifecycle and additional jurisdictions remain explicit gaps."
   },
-  "commit": null,
+  "commit": "aa4462ab0181f2236a4cb564bf05f57a285f1587",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37522614528,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
