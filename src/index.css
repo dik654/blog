@@ -154,8 +154,14 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     overflow: visible !important;
   }
 
-  [data-viz] [data-viz-canvas] svg,
-  [data-viz="step-flow"] svg {
+  /*
+   * 큰 도표만 canvas 폭에 맞춘다. 모든 하위 svg를 잡으면 개념 사이의
+   * 작은 화살표와 도형도 100% 폭으로 늘어나므로, 원래부터 full-width인
+   * 도표와 canvas의 최상위 도표만 선택한다.
+   */
+  [data-viz] [data-viz-canvas] svg[class~="w-full"],
+  [data-viz] > [data-viz-canvas] > svg,
+  [data-viz="step-flow"] > [data-viz-canvas] > div > svg {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
