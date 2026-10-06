@@ -29,13 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows at most 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment and the same 22 production checks.",
+    "production": "PASS six public routes and two listing routes at 390/1440 plus six mobile height/sidebar checks = 22; all content, containment, console, request, scroll-position and sidebar checks passed. Report: output/playwright/derivative-jurisdiction-production/2026-10-06T19-31-47-937Z/summary.json.",
     "curriculumCoverage": "MIT finance courses, GARP 2026 FRM, KIFIN derivatives solicitation advisor training and maintenance curriculum, Korea Banking Institute FP curriculum, and official KRX, MoneySense, ESMA, FCA, JFSA, ASIC, SEC, CFTC, UNIDROIT and Basel materials were mapped to implemented coverage. Canada, Hong Kong, Switzerland and other jurisdictions remain explicit gaps rather than being claimed complete."
   },
-  "commit": null,
+  "commit": "930bd6bcd028ad5a47f38cd14a7eb6c5ac2e1018",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37518721023,
+    "conclusion": "success",
+    "production": "22 checks across articles, listings, mobile height changes and sidebars, zero failed"
   }
 }
