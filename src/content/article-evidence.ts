@@ -12052,4 +12052,88 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 사료", label: "UN Digital Library · Bandung Final Communiqué", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "경제 협력·자결·반식민·평화 원칙을 합의한 1955년 공동성명" },
     { kind: "공식 문서", label: "WTO · Marrakesh Declaration", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", note: "우루과이라운드 종료와 WTO 출범의 목표·범위를 밝힌 공식 선언" },
   ],
+  "philosophical-traditions/confucian-ritual-role-and-humane-rule": [
+    {
+      "kind": "핵심 사료",
+      "label": "Chinese Text Project · Analects, Wei Zheng",
+      "href": "https://ctext.org/analects/wei-zheng/ens",
+      "note": "덕과 예로 이끄는 정치의 규범적 비교를 담은 핵심 고전 사료입니다."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "Chinese Text Project · Xunzi, Treatise on Ritual Propriety",
+      "href": "https://ctext.org/xunzi/li-lun/ens",
+      "note": "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다."
+    }
+  ],
+  "philosophical-traditions/daoist-names-noncoercive-action-and-change": [
+    {
+      "kind": "핵심 사료",
+      "label": "Chinese Text Project · Dao De Jing",
+      "href": "https://ctext.org/dao-de-jing/ens",
+      "note": "이름의 한계와 무위의 작동을 확인하는 도가의 핵심 고전 사료입니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Stanford Encyclopedia of Philosophy · Laozi",
+      "href": "https://plato.stanford.edu/entries/laozi/",
+      "note": "노자 문헌과 주요 철학 쟁점의 범위를 정리한 동료 검토 보충 연구입니다."
+    }
+  ],
+  "philosophical-traditions/buddhist-aggregates-impermanence-and-not-self": [
+    {
+      "kind": "핵심 사료",
+      "label": "SuttaCentral · SN 22.59",
+      "href": "https://suttacentral.net/SN22.59/en/sujato?reference=main",
+      "note": "다섯 집합을 자아로 동일시할 수 있는지 묻는 초기 불교의 핵심 경전입니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
+      "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+      "note": "인도 불교 마음 철학의 주요 논쟁을 검토한 동료 검토 보충 연구입니다."
+    }
+  ],
+  "philosophical-traditions/gita-action-results-and-release": [
+    {
+      "kind": "핵심 사료",
+      "label": "Gita Supersite · Bhagavad Gita 2.47",
+      "href": "https://www.gitasupersite.in/dv/bhagavadgita/2.47",
+      "note": "『기타』 2.47의 산스크리트 원문과 전통별 주석을 비교할 수 있는 핵심 문헌 자료입니다."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "Gita Supersite · Bhagavad Gita 3.19",
+      "href": "https://www.gitasupersite.in/dv/bhagavadgita/3.19",
+      "note": "『기타』 3.19의 행위 요가 논증을 확인하는 비교용 핵심 문헌 자료입니다."
+    }
+  ],
+  "philosophical-traditions/islamic-causation-reason-and-revelation": [
+    {
+      "kind": "핵심 사료",
+      "label": "Library of Congress · The Incoherence of the Philosophers",
+      "href": "https://www.loc.gov/item/2021666178/",
+      "note": "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Causation in Arabic and Islamic Thought",
+      "href": "https://plato.stanford.edu/entries/arabic-islamic-causation/",
+      "note": "9~12세기 아랍어권 인과·행위자성 논쟁의 범위를 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophical-traditions/akan-personhood-community-and-agency": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Akan Philosophy of the Person",
+      "href": "https://plato.stanford.edu/entries/akan-person/",
+      "note": "아칸 인격론의 주요 해석과 쟁점을 정리한 동료 검토 학술 개관입니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Stanford Encyclopedia of Philosophy · African Ethics",
+      "href": "https://plato.stanford.edu/archives/spr2025/entries/african-ethics/",
+      "note": "아프리카 윤리의 넓은 비교 질문을 제공하는 동료 검토 보충 연구입니다."
+    }
+  ],
 };

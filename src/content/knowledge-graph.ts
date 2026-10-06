@@ -28979,6 +28979,218 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "bipolar-order": { id: "bipolar-order", kind: "concept", domain: "history", label: "양극 질서", aliases: ["bipolar order"], definition: "미국과 소련이 군사 동맹·핵 억지·원조의 두 큰 중심을 이룬 국제 구조입니다.", canonicalHref: "/history/global-history/cold-war-decolonization-and-globalization#names" },
   "nonalignment-bandung": { id: "nonalignment-bandung", kind: "concept", domain: "history", label: "반둥 비동맹", aliases: ["Bandung nonalignment"], definition: "아시아·아프리카 국가들이 식민주의 반대·주권·평화와 경제 협력을 공동 의제로 만든 정치 흐름입니다.", canonicalHref: "/history/global-history/cold-war-decolonization-and-globalization#names" },
   "postcolonial-development-order": { id: "postcolonial-development-order", kind: "concept", domain: "history", label: "탈식민 개발 질서", aliases: ["postcolonial development order"], definition: "독립국이 식민지기의 생산 구조와 국제 자금·무역 규칙 속에서 산업·복지와 자치를 넓히려 한 제도와 갈등입니다.", canonicalHref: "/history/global-history/cold-war-decolonization-and-globalization#names" },
+  "confucian-ren": {
+    "id": "confucian-ren",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "인(仁)",
+    "aliases": [
+      "ren",
+      "humaneness"
+    ],
+    "definition": "다른 사람을 사람답게 대하고 관계 속 책임을 실천하려는 유가의 도덕적 방향입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule#names"
+  },
+  "confucian-li": {
+    "id": "confucian-li",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "예(禮)",
+    "aliases": [
+      "li",
+      "ritual propriety"
+    ],
+    "definition": "도덕적 방향을 몸가짐·말·의례·회의와 정치의 반복 가능한 형식으로 옮기는 유가 개념입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule#names"
+  },
+  "virtuous-government": {
+    "id": "virtuous-government",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "덕치",
+    "aliases": [
+      "virtuous government"
+    ],
+    "definition": "지도자의 성품과 모범이 명령과 처벌보다 앞서 사람들이 따를 기준을 만든다는 정치 원리입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule#names"
+  },
+  "daoist-dao": {
+    "id": "daoist-dao",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "도(道)",
+    "aliases": [
+      "Dao",
+      "Way"
+    ],
+    "definition": "고정된 사물 하나보다 세계와 삶이 생겨나고 변하는 길과 질서를 가리키는 도가 개념입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/daoist-names-noncoercive-action-and-change#names"
+  },
+  "name-distinction-daoism": {
+    "id": "name-distinction-daoism",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "이름의 구분",
+    "aliases": [
+      "naming and distinction"
+    ],
+    "definition": "이름이 경험을 분류하고 행동을 가능하게 하면서도 그 구분을 세계 전체로 착각하게 만드는 문제입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/daoist-names-noncoercive-action-and-change#names"
+  },
+  "wuwei-noncoercive-action": {
+    "id": "wuwei-noncoercive-action",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "무위",
+    "aliases": [
+      "wuwei",
+      "noncoercive action"
+    ],
+    "definition": "사물의 흐름을 거스르는 억지 개입을 줄이면서 필요한 작용이 이루어지게 하는 행동 원리입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/daoist-names-noncoercive-action-and-change#names"
+  },
+  "five-aggregates": {
+    "id": "five-aggregates",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "다섯 집합",
+    "aliases": [
+      "five aggregates",
+      "skandhas"
+    ],
+    "definition": "몸·물질, 느낌, 지각, 의지적 형성, 의식으로 경험을 나눠 살피는 초기 불교의 분석 틀입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/buddhist-aggregates-impermanence-and-not-self#names"
+  },
+  "impermanence-anicca": {
+    "id": "impermanence-anicca",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "무상",
+    "aliases": [
+      "anicca",
+      "impermanence"
+    ],
+    "definition": "조건 지어진 현상이 생기고 계속 변하며 사라지는 성격을 가리킵니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/buddhist-aggregates-impermanence-and-not-self#names"
+  },
+  "not-self-anatta": {
+    "id": "not-self-anatta",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "무아",
+    "aliases": [
+      "anatta",
+      "not-self"
+    ],
+    "definition": "다섯 집합을 영원하고 독립적이며 완전히 통제되는 자기라고 동일시하기 어렵다는 가르침입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/buddhist-aggregates-impermanence-and-not-self#names"
+  },
+  "dharma-situated-duty": {
+    "id": "dharma-situated-duty",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "다르마와 처지의 의무",
+    "aliases": [
+      "dharma",
+      "situated duty"
+    ],
+    "definition": "질서·관계·삶의 처지에서 요구되는 올바른 행위와 의무를 가리키는 폭넓은 인도 사상 개념입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/gita-action-results-and-release#names"
+  },
+  "karma-yoga": {
+    "id": "karma-yoga",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "카르마 요가",
+    "aliases": [
+      "karma yoga",
+      "yoga of action"
+    ],
+    "definition": "행위의 열매를 자기 보상으로 붙잡지 않으면서 필요한 행위를 수행하는 『기타』의 길입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/gita-action-results-and-release#names"
+  },
+  "fruit-attachment": {
+    "id": "fruit-attachment",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "결과 집착",
+    "aliases": [
+      "attachment to fruits"
+    ],
+    "definition": "특정 결과를 반드시 내 뜻대로 만들고 내 공로와 보상으로 소유해야 한다는 매임입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/gita-action-results-and-release#names"
+  },
+  "falsafa-natural-causation": {
+    "id": "falsafa-natural-causation",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "팔사파의 자연 인과",
+    "aliases": [
+      "falsafa",
+      "natural causation"
+    ],
+    "definition": "그리스 철학을 아랍어권에서 번역·변형하며 논증과 자연 사물의 원인을 탐구한 철학 전통의 인과 설명입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/islamic-causation-reason-and-revelation#names"
+  },
+  "kalam-divine-agency": {
+    "id": "kalam-divine-agency",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "칼람의 신적 행위",
+    "aliases": [
+      "kalam",
+      "divine agency"
+    ],
+    "definition": "신·세계·인간 행위를 이성적으로 논증하며 자연 변화에서 신의 능력과 창조를 설명하는 사변 신학의 문제입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/islamic-causation-reason-and-revelation#names"
+  },
+  "necessary-connection-debate": {
+    "id": "necessary-connection-debate",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "필연적 연결 논쟁",
+    "aliases": [
+      "necessary connection",
+      "occasionalism debate"
+    ],
+    "definition": "원인과 결과의 결합이 사물 자체의 힘 때문에 달리 될 수 없는지 묻는 인과의 형이상학 논쟁입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/islamic-causation-reason-and-revelation#names"
+  },
+  "akan-biological-person": {
+    "id": "akan-biological-person",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "아칸 인격론의 인간 지위",
+    "aliases": [
+      "Akan human being",
+      "biological person"
+    ],
+    "definition": "태어남과 생명에 근거해 인간으로서 기본 대우를 받아야 하는 지위를 아칸 인격 논쟁에서 가리키는 구분입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/akan-personhood-community-and-agency#names"
+  },
+  "achieved-moral-personhood": {
+    "id": "achieved-moral-personhood",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "성취하는 도덕적 인격",
+    "aliases": [
+      "achieved personhood",
+      "moral personhood"
+    ],
+    "definition": "책임·너그러움·공동선을 위한 행동을 반복해 길러지고 인정되는 규범적 사람됨입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/akan-personhood-community-and-agency#names"
+  },
+  "relational-agency": {
+    "id": "relational-agency",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "관계적 행위자성",
+    "aliases": [
+      "relational agency"
+    ],
+    "definition": "타인과 제도에서 능력을 얻으면서 그 관계를 판단하고 바꿀 수 있는 힘입니다.",
+    "canonicalHref": "/philosophy/philosophical-traditions/akan-personhood-community-and-agency#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -52904,6 +53116,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "bipolar-order", to: "postcolonial-development-order", relation: "constrains", reason: "동맹·원조·제재 조건은 신생 국가의 국방·산업·복지 예산과 시장 선택을 제한했습니다." },
   { from: "nonalignment-bandung", to: "bipolar-order", relation: "contrasts", reason: "반둥 국가들은 두 진영 선택만이 아닌 반식민·평화·경제 협력의 공동 의제를 만들었습니다." },
   { from: "nonalignment-bandung", to: "postcolonial-development-order", relation: "extends", reason: "공동 협상과 지역 협력은 독립국이 자금·기술·무역의 대안을 늘리는 통로가 됐습니다." },
+  {
+    "from": "confucian-ren",
+    "to": "confucian-li",
+    "relation": "produces",
+    "reason": "순서·양보·책임을 반복해 판단 습관을 만듭니다."
+  },
+  {
+    "from": "confucian-li",
+    "to": "virtuous-government",
+    "relation": "extends",
+    "reason": "지도자의 실제 배분과 행실로 기준을 검증합니다."
+  },
+  {
+    "from": "virtuous-government",
+    "to": "confucian-ren",
+    "relation": "constrains",
+    "reason": "마지막 개념은 인(仁)을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "daoist-dao",
+    "to": "name-distinction-daoism",
+    "relation": "produces",
+    "reason": "이름이 욕망과 경쟁을 키우는 지점을 찾습니다."
+  },
+  {
+    "from": "name-distinction-daoism",
+    "to": "wuwei-noncoercive-action",
+    "relation": "extends",
+    "reason": "되먹임에 맞춰 강제를 줄이고 결과를 확인합니다."
+  },
+  {
+    "from": "wuwei-noncoercive-action",
+    "to": "daoist-dao",
+    "relation": "constrains",
+    "reason": "마지막 개념은 도(道)을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "five-aggregates",
+    "to": "impermanence-anicca",
+    "relation": "produces",
+    "reason": "각 과정의 강도와 내용이 달라지는지 관찰합니다."
+  },
+  {
+    "from": "impermanence-anicca",
+    "to": "not-self-anatta",
+    "relation": "extends",
+    "reason": "변하고 통제되지 않는 것을 영원한 나로 붙잡는지 묻습니다."
+  },
+  {
+    "from": "not-self-anatta",
+    "to": "five-aggregates",
+    "relation": "constrains",
+    "reason": "마지막 개념은 다섯 집합을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "dharma-situated-duty",
+    "to": "karma-yoga",
+    "relation": "produces",
+    "reason": "내 노력과 자연·타인·시장이 함께 결과를 만듭니다."
+  },
+  {
+    "from": "karma-yoga",
+    "to": "fruit-attachment",
+    "relation": "extends",
+    "reason": "행위는 계속하되 결과를 자아의 보상으로 독점하지 않습니다."
+  },
+  {
+    "from": "fruit-attachment",
+    "to": "dharma-situated-duty",
+    "relation": "constrains",
+    "reason": "마지막 개념은 다르마와 처지의 의무을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "falsafa-natural-causation",
+    "to": "kalam-divine-agency",
+    "relation": "produces",
+    "reason": "열·가연성·산소를 가까운 설명에 넣습니다."
+  },
+  {
+    "from": "kalam-divine-agency",
+    "to": "necessary-connection-debate",
+    "relation": "extends",
+    "reason": "자연의 힘과 신의 행위를 어떻게 나눌지 묻습니다."
+  },
+  {
+    "from": "necessary-connection-debate",
+    "to": "falsafa-natural-causation",
+    "relation": "constrains",
+    "reason": "마지막 개념은 팔사파의 자연 인과을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "akan-biological-person",
+    "to": "achieved-moral-personhood",
+    "relation": "produces",
+    "reason": "반복된 책임·돌봄·기여로 성품을 기릅니다."
+  },
+  {
+    "from": "achieved-moral-personhood",
+    "to": "relational-agency",
+    "relation": "extends",
+    "reason": "공동체에서 얻은 능력으로 부당한 규칙을 고칩니다."
+  },
+  {
+    "from": "relational-agency",
+    "to": "akan-biological-person",
+    "relation": "constrains",
+    "reason": "마지막 개념은 아칸 인격론의 인간 지위을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

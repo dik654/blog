@@ -2004,6 +2004,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "global-history/revolutions-citizenship-and-industrial-empires": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "주민 100명의 보편 선언·실제 시민 명부·제국 바깥의 차등 권리를 한 정치 장부로 추적합니다.", sharedGate: "30+40+30의 권리 장부와 1789년 선언·1885년 외교 문서의 작성자·누락된 당사자를 대조합니다." },
   "global-history/world-wars-depression-and-mass-states": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "100가구의 노동·식량·돌봄·상실이 두 전쟁과 불황, 식민 동원과 전후 약속을 거치는 한 동원 경로를 설명합니다.", sharedGate: "25+35+25+15의 설명용 장부와 현실의 중복을 구분하고 국제연맹 10·11·22조와 미국 한 지역 자료의 범위를 확인합니다." },
   "global-history/cold-war-decolonization-and-globalization": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "신생국 예산 100이 양극 원조·비동맹 공동 행동·개발 차관·다자 무역 규칙을 거치는 한 정책 공간 문제를 설명합니다.", sharedGate: "30+25+20+15+10의 예산과 지원 조건을 맞추고 반둥 공동성명과 마라케시 선언의 공식 목표·실제 결과 경계를 구분합니다." },
+  "philosophical-traditions/confucian-ritual-role-and-humane-rule": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "유가의 예는 욕망을 억누르는 겉형식이 아니라 관계와 역할을 반복해 인을 행동으로 옮기고, 지도자의 모범으로 공동 판단을 기르는 장치입니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "50+20+20+10의 곡물 장부와 관리의 태도를 함께 보고 『논어』·『순자』의 서로 다른 논증을 구분합니다."
+  },
+  "philosophical-traditions/daoist-names-noncoercive-action-and-change": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "도가의 무위는 손을 놓는 상태가 아니라 이름과 욕망이 만든 과도한 개입을 알아차리고 사물의 변화와 되먹임에 맞춰 강제를 줄이는 행동 원리입니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "100→60과 100→85의 수문 결과를 맞추고 『도덕경』 원문과 현대 학술 해석의 증거 수준을 구분합니다."
+  },
+  "philosophical-traditions/buddhist-aggregates-impermanence-and-not-self": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "초기 불교의 다섯 집합·무상·무아는 사람을 없애는 선언이 아니라 변하고 통제되지 않는 경험을 영원한 나로 붙잡는 과정을 검사해 다음 반응의 여지를 찾는 도구입니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "0~10초의 경험 구간은 설명용임을 밝히고 SN 22.59의 변화·통제 질문과 현대 해석 논쟁을 구분합니다."
+  },
+  "philosophical-traditions/gita-action-results-and-release": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "『바가바드 기타』의 카르마 요가는 통제 가능한 행위를 성실히 하되 결과 전체를 자기 보상으로 소유하려는 집착을 줄이는 길이며, 무관심이나 무행동과 다릅니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "35+25+20+20의 수확 조건은 설명용임을 밝히고 2.47의 네 지시와 3.19의 행위 지속을 함께 확인합니다."
+  },
+  "philosophical-traditions/islamic-causation-reason-and-revelation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "고전기 아랍어권의 인과 논쟁은 관찰된 규칙, 자연물의 인과력, 필연적 연결과 신의 행위를 구분하며 팔사파와 칼람 내부에서도 서로 다른 답을 만들었습니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "10회 성공·0회 실패의 관찰과 11번째 필연 주장을 구분하고 1차 저작과 2025년 개정 학술 개관의 역할을 나눕니다."
+  },
+  "philosophical-traditions/akan-personhood-community-and-agency": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "아칸 인격론의 현대적 논쟁은 인간으로서의 기본 지위와 공동체 속에서 기르는 도덕적 인격을 구분하면서, 관계가 행위자를 만들고 개인이 관계를 비판하는 두 방향을 함께 봅니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
+    "sharedGate": "70+20+10의 기여 장부와 10가구의 면제·비판 이유를 함께 보고 아칸 특정 논의와 아프리카 윤리 일반 비교를 구분합니다."
+  },
 };
 
 /**
@@ -2335,4 +2377,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "global-history/revolutions-citizenship-and-industrial-empires":"a9752357be625084",
 "global-history/world-wars-depression-and-mass-states":"20dd27b389da0ccd",
 "global-history/cold-war-decolonization-and-globalization":"4ce4addba9f0542a",
+"philosophical-traditions/confucian-ritual-role-and-humane-rule":"64e5a05381ce48c5",
+"philosophical-traditions/daoist-names-noncoercive-action-and-change":"91fcac8ea91ecfab",
+"philosophical-traditions/buddhist-aggregates-impermanence-and-not-self":"0532cf19dec6cabf",
+"philosophical-traditions/gita-action-results-and-release":"25d6ad4aab54471c",
+"philosophical-traditions/islamic-causation-reason-and-revelation":"787d04e46945df09",
+"philosophical-traditions/akan-personhood-community-and-agency":"abb41cc0b85907ee",
 };

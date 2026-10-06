@@ -305,10 +305,10 @@ export const DOMAIN_READING_PATHS: Readonly<
     showFullSequence: true,
   },
   philosophy: {
-    organizingPrinciple: "선수 개념순",
-    title: "생각을 검사하는 여섯 가지 질문",
+    organizingPrinciple: "혼합",
+    title: "생각을 검사하는 여섯 도구와 서로 다른 사상의 출발점",
     description:
-      "논증과 지식의 기준에서 시작해 행동·정치·과학·인공지능에 같은 검사 도구를 적용합니다.",
+      "논증과 지식의 기준에서 시작해 행동·정치·과학·인공지능을 검사한 뒤, 중국·인도·불교·이슬람·아칸 전통이 다른 생활 문제에서 만든 질문을 주제별로 읽습니다.",
     stages: [
       {
         eyebrow: "01 · 결론이 따라오는가",
@@ -345,6 +345,12 @@ export const DOMAIN_READING_PATHS: Readonly<
         title: "행동·의미·기계 이해",
         description: "정답을 내는 행동과 뜻을 이해하는 상태를 튜링의 검사와 중국어 방 반례로 비교합니다.",
         categories: ["mind-and-language"],
+      },
+      {
+        eyebrow: "07 · 질문은 어디서 달라졌는가",
+        title: "서로 다른 사상 전통의 출발점",
+        description: "유가의 역할, 도가의 개입, 불교의 경험, 『기타』의 행위, 이슬람 인과론과 아칸 인격론을 하나의 서양 연표에 억지로 넣지 않고 주제별로 비교합니다.",
+        categories: ["philosophical-traditions"],
       },
     ],
     showFullSequence: true,
