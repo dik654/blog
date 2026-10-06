@@ -31,6 +31,7 @@
 - 안정된 stage는 데스크톱에서도 viewport를 넘어 버튼이 화면 밖으로 밀리지 않게 `100svh`에서 page header·caption·control 여백을 뺀 상한을 둔다. 큰 장면은 frame을 키우는 대신 stage 내부의 responsive 재배치, 축척 또는 명시적 scroll 영역으로 처리한다.
 - 모바일 문서 shell에는 주소 표시줄과 함께 크기가 바뀌는 `vh`·`dvh`·`h-screen` 계열을 쓰지 않는다. 사이트 header는 문서 흐름을 차지하는 `sticky`로 두며, 주소 표시줄 높이에 따라 켜지고 꺼지는 `height` media query로 본문이나 Viz 높이를 바꾸지 않는다.
 - 640px 미만에서는 별도 모바일 Viz UI를 쓴다. 고정 stage 높이와 내부 세로 스크롤을 해제해 현재 장면 전체가 문서 흐름 안에 보이게 하고, SVG·diagram의 최소 폭은 article 폭에 맞춘다. 긴 상세 설명도 잘라 숨기지 않고 문서와 함께 세로로 읽게 한다. 조작부는 긴 장면 탭의 가로 스크롤 대신 `이전 / 현재 번호 / 다음` 3열과 한 줄 재생 버튼을 사용하며 모든 버튼이 390px 안에 들어와야 한다.
+- 모바일의 폭 맞춤 규칙은 canvas의 최상위 도표와 처음부터 `w-full`인 도표에만 적용한다. Viz 안의 모든 `svg`를 한꺼번에 `width: 100%`로 만들지 않는다. 연결 화살표·도형 glyph·아이콘처럼 고정 크기로 읽는 SVG는 선언한 폭과 높이를 유지하고, 회전한 뒤에도 전체 bounding box가 article 폭 안에 있어야 한다.
 - 같은 Viz의 모든 장면에서 control button의 bounding box 변화는 2px 이내, frame top/left/width 변화는 2px 이내를 목표로 한다. Reduced motion 여부와 관계없이 layout shift 자체는 없어야 한다.
 
 ## 3. 수식 규칙

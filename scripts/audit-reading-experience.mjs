@@ -152,8 +152,17 @@ const contract = {
     globalStyles.includes("@media (max-width: 39.999rem)") &&
     globalStyles.includes(":is([data-viz], figure):has([data-viz-controls])") &&
     globalStyles.includes("height: auto !important") &&
-    globalStyles.includes('[data-viz="step-flow"] svg') &&
     globalStyles.includes('[class*="min-w-["]'),
+  mobileVizIntrinsicSvgSizing:
+    globalStyles.includes(
+      '[data-viz] [data-viz-canvas] svg[class~="w-full"]',
+    ) &&
+    globalStyles.includes('[data-viz] > [data-viz-canvas] > svg') &&
+    globalStyles.includes(
+      '[data-viz="step-flow"] > [data-viz-canvas] > div > svg',
+    ) &&
+    !globalStyles.includes('[data-viz="step-flow"] svg') &&
+    !/^\s*\[data-viz\] \[data-viz-canvas\] svg,\s*$/m.test(globalStyles),
   mobileSceneControls:
     animatedControls.includes("data-viz-mobile-controls") &&
     animatedControls.includes("data-viz-desktop-controls") &&
