@@ -11975,4 +11975,31 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "§2와 식 (4.3)에 f=−x, g=.2, h=.25를 대입해 .75+.1ε를 구합니다."
     }
   ],
+  "reasoning/argument-and-counterexample": [
+    { kind: "핵심 사료", label: "Aristotle · Prior Analytics I.1·I.4", href: "https://classics.mit.edu/Aristotle/prior.1.i.html", note: "전제·추론·증명의 구분을 확인하는 고전 원문" },
+    { kind: "비교 사료", label: "Mozi · Canon I", href: "https://ctext.org/mozi/canon-i", note: "원인·조건·분류를 비교하는 중국 고전 원문과 주석" },
+  ],
+  "epistemology/knowledge-belief-and-luck": [
+    { kind: "핵심 논문", label: "Gettier, Is Justified True Belief Knowledge?, 1963", href: "https://academic.oup.com/analysis/article-abstract/23/6/121/109949", note: "정당화된 참인 믿음의 충분성을 흔드는 원 논문" },
+    { kind: "보충 읽기", label: "Stanford Encyclopedia of Philosophy · Analysis of Knowledge", href: "https://plato.stanford.edu/entries/knowledge-analysis/", note: "게티어·인식적 행운·신뢰성·안전성의 경쟁 설명 지도" },
+  ],
+  "ethics/consequence-duty-and-character": [
+    { kind: "핵심 사료", label: "Mill · Utilitarianism II", href: "https://www.gutenberg.org/files/11224/old/11224-h/11224-h.htm", note: "결과와 행복을 중심으로 행동을 판단하는 고전 원문" },
+    { kind: "비교 사료", label: "Kant · Groundwork II", href: "https://www.gutenberg.org/files/5682/5682-h/5682-h.htm", note: "준칙의 보편화와 사람에 대한 의무를 읽는 고전 원문" },
+    { kind: "비교 사료", label: "Aristotle · Nicomachean Ethics II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h", note: "덕·성품·습관을 읽는 고전 원문" },
+  ],
+  "economic-history/agrarian-surplus-and-state": [
+    { kind: "핵심 사료", label: "The Met · Proto-cuneiform barley and emmer account", href: "https://www.metmuseum.org/art/collection/search/327384", note: "기원전 3100~2900년 무렵 곡물 행정 장부와 동사 부재의 해석 한계" },
+    { kind: "핵심 연구", label: "CDLI · Unusual Accounting Practices in Archaic Mesopotamian Tablets", href: "https://cdli.earth/articles/cdlj/2005-1", note: "거래 항목·수 체계·합계와 출처 불명 자료의 범위를 분석" },
+  ],
+  "economic-history/industrial-revolution-wages-and-energy": [
+    { kind: "핵심 연구", label: "Allen · Why the Industrial Revolution was British", href: "https://doi.org/10.1111/j.1468-0289.2010.00532.x", note: "고임금·싼 에너지·교역과 노동 절약 발명의 관계를 제안하는 핵심 연구" },
+    { kind: "후속 논문", label: "Allen · Technical change, globalization, and the labour market", href: "https://academic.oup.com/ooec/article/3/Supplement_1/i178/7708096", note: "1770~1840년 생산성과 실질임금의 장기 지수 비교" },
+    { kind: "비판적 읽기", label: "Horrell & Humphries · Diets, Hunger and Living Standards", href: "https://academic.oup.com/past/article/239/1/71/4794719", note: "가구 예산과 자서전으로 지역·성별·나이의 생활 차이를 보완" },
+  ],
+  "economic-history/gold-standard-depression-bretton-woods": [
+    { kind: "핵심 연구", label: "IMF · Reserve Accumulation and International Monetary Stability", href: "https://www.elibrary.imf.org/view/journals/007/2010/034/article-A001-en.xml", note: "금본위제에서 브레턴우즈와 변동환율로 이어지는 제도 연표와 조정 구조" },
+    { kind: "후속 분석", label: "IMF · The Road to Bretton Woods", href: "https://www.elibrary.imf.org/view/journals/022/0001/002/article-A001-en.xml", note: "전간기 지급 제한·평가절하·대공황과 새 협력 체제의 배경" },
+    { kind: "공식 연구", label: "Ghosh · Measure to Measure", href: "https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm", note: "44개국 회의와 조정 가능한 고정환율·IMF의 설계 목적" },
+  ],
 };

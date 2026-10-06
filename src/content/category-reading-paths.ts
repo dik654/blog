@@ -8,6 +8,7 @@ export interface CategoryReadingStage {
 export interface CategoryReadingPath {
   title: string;
   description: string;
+  organizingPrinciple?: "시간순" | "주제순" | "선수 개념순" | "혼합";
   stages: readonly CategoryReadingStage[];
   featuredArticles: readonly string[];
 }
@@ -20,6 +21,17 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  "economic-history": {
+    organizingPrinciple: "시간순",
+    title: "장부에서 공장과 국제 통화 질서까지",
+    description: "각 글은 앞 시대의 제도가 다음 시대의 선택지를 어떻게 만들고 좁혔는지 시간순으로 따라갑니다.",
+    stages: [
+      { eyebrow: "01 · 기원전 3100~2900년 무렵", title: "곡물과 장부", description: "생산물을 모아 나눌 때 측정·기록·권한이 함께 생기는 조건을 봅니다.", subcategories: ["economic-history-early-state"] },
+      { eyebrow: "02 · 18세기 중엽~19세기 중엽", title: "산업화", description: "임금과 에너지 가격이 기계 선택을 바꾸고 생산과 생활이 다른 속도로 움직인 과정을 봅니다.", subcategories: ["economic-history-industry"] },
+      { eyebrow: "03 · 1870년대~1970년대", title: "국제 통화 질서", description: "금 교환 약속, 대공황기의 붕괴, 브레턴우즈의 조정 장치와 변동환율 전환을 잇습니다.", subcategories: ["economic-history-money"] },
+    ],
+    featuredArticles: ["agrarian-surplus-and-state", "industrial-revolution-wages-and-energy", "gold-standard-depression-bretton-woods"],
+  },
   business: {
     title: "한 가게의 시작과 사업 관계 읽기",
     description: "사업 모델의 현금 장부를 만들고, 자리·공사·영업·가맹과 국제 공급망의 권한을 봅니다.",

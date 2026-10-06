@@ -14,7 +14,8 @@ export type DomainSlug =
   | "politics"
   | "law"
   | "electronics"
-  | "history";
+  | "history"
+  | "philosophy";
 
 export interface DomainMeta {
   slug: DomainSlug;
@@ -65,6 +66,12 @@ export const DOMAIN_META: readonly DomainMeta[] = [
     description:
       "지난 일을 어떻게 아는지를 사료에서부터 따라갑니다. 누가 왜 적었는지, 적힌 숫자가 무엇을 센 것인지, 남은 기록에서 어디까지 말할 수 있는지를 원문을 열어 가며 봅니다.",
   },
+  {
+    slug: "philosophy",
+    name: "철학",
+    description:
+      "주장이 따라오는지, 안다고 할 수 있는지, 무엇을 해야 하는지를 작은 사례와 반례로 판단하는 도구부터 쌓습니다.",
+  },
 ];
 
 /**
@@ -109,6 +116,10 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   testimony: "history",
   "record-numbers": "history",
   "inference-from-sources": "history",
+  "economic-history": "history",
+  reasoning: "philosophy",
+  epistemology: "philosophy",
+  ethics: "philosophy",
 };
 
 /**

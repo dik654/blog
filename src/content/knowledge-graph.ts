@@ -23,7 +23,8 @@ export interface KnowledgeConcept {
     | "economics"
     | "political-science"
     | "law"
-    | "history";
+    | "history"
+    | "philosophy";
   label: string;
   /** 검색·원문 대조용 별칭입니다. 별칭 자체를 별도 concept node로 만들지 않습니다. */
   aliases?: readonly string[];
@@ -28909,6 +28910,39 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "차수 t의 두 비밀 분산식을 곱하면 차수는 최대 2t가 됩니다. 2t+1개의 정상 곱 조각을 새 차수 t 다항식으로 나누고 공개 보간 무게로 합치면 비밀 상수항을 보존한 차수 t 이하의 공유를 얻습니다. 독립 균등한 새 계수·정직한 재공유 조건과 능동 검증을 구분합니다.",
     "canonicalHref": "/cs/crypto/mpc#reshare-proof"
   },
+  "logical-validity": {
+    id: "logical-validity", kind: "concept", domain: "philosophy", label: "타당성 · validity",
+    aliases: ["논리적 타당성"],
+    definition: "전제를 모두 참이라고 놓았을 때 결론만 거짓인 경우가 없는 추론의 성질입니다. 전제의 실제 참과 결론의 실제 참은 별도로 검사합니다.",
+    canonicalHref: "/philosophy/reasoning/argument-and-counterexample#names",
+  },
+  "sound-argument": {
+    id: "sound-argument", kind: "concept", domain: "philosophy", label: "건전한 논증 · sound argument",
+    aliases: ["건전성"],
+    definition: "추론 형식이 타당하고 그 논증의 전제가 실제로 모두 참인 경우입니다. 결론이 우연히 맞은 경우와 구분합니다.",
+    canonicalHref: "/philosophy/reasoning/argument-and-counterexample#names",
+  },
+  "counterexample-method": {
+    id: "counterexample-method", kind: "method", domain: "philosophy", label: "반례 검사",
+    aliases: ["counterexample"],
+    definition: "전제는 유지하면서 결론만 거짓이 되는 가능한 경우 하나를 만들어, 결론이 반드시 따라온다는 주장을 깨는 검사입니다.",
+    canonicalHref: "/philosophy/reasoning/argument-and-counterexample#mechanism",
+  },
+  "justified-true-belief": { id: "justified-true-belief", kind: "concept", domain: "philosophy", label: "정당화된 참인 믿음", aliases: ["JTB", "justified true belief"], definition: "어떤 사람이 한 명제를 믿고, 그 명제가 참이며, 그 믿음을 가질 만한 근거가 있다는 세 조건의 결합입니다. 게티어 반례는 이 결합이 지식의 충분조건은 아님을 보입니다.", canonicalHref: "/philosophy/epistemology/knowledge-belief-and-luck#names" },
+  "epistemic-luck": { id: "epistemic-luck", kind: "concept", domain: "philosophy", label: "인식적 행운", aliases: ["epistemic luck"], definition: "믿음을 만든 근거와 실제 사실의 연결이 끊겼는데 별도의 우연으로 믿음이 참이 된 경우처럼, 참에 도달한 방식이 지식으로 인정되기 어려운 행운입니다.", canonicalHref: "/philosophy/epistemology/knowledge-belief-and-luck#names" },
+  "epistemic-safety": { id: "epistemic-safety", kind: "method", domain: "philosophy", label: "인식적 안전성", aliases: ["safety condition"], definition: "가까운 상황에서도 같은 방식으로 형성한 믿음이 쉽게 거짓이 되지 않아야 한다는 지식 후보 기준입니다. 어떤 상황을 가깝다고 볼지는 추가 설명이 필요합니다.", canonicalHref: "/philosophy/epistemology/knowledge-belief-and-luck#mechanism" },
+  "consequentialist-reasoning": { id: "consequentialist-reasoning", kind: "method", domain: "philosophy", label: "결과주의적 판단", aliases: ["consequentialism"], definition: "가능한 행동들이 모든 영향받는 사람에게 만드는 이익과 피해를 비교해 행동을 판단하는 방법입니다. 결과의 종류·분배·불확실성을 어떻게 셀지는 별도로 밝혀야 합니다.", canonicalHref: "/philosophy/ethics/consequence-duty-and-character#names" },
+  "deontological-reasoning": { id: "deontological-reasoning", kind: "method", domain: "philosophy", label: "의무론적 판단", aliases: ["deontology"], definition: "결과의 총합과 별개로 사람에게 지켜야 할 원칙·권리·약속과 행동 규칙의 보편화를 검사하는 방법입니다.", canonicalHref: "/philosophy/ethics/consequence-duty-and-character#names" },
+  "virtue-ethical-reasoning": { id: "virtue-ethical-reasoning", kind: "method", domain: "philosophy", label: "덕 윤리적 판단", aliases: ["virtue ethics"], definition: "고립된 행동 하나보다 좋은 선택을 반복해서 내리는 성품·습관·실천적 판단을 중심으로 행위를 평가하는 방법입니다.", canonicalHref: "/philosophy/ethics/consequence-duty-and-character#names" },
+  "agrarian-surplus": { id: "agrarian-surplus", kind: "concept", domain: "history", label: "농업 잉여", aliases: ["agrarian surplus"], definition: "현재 소비와 다음 생산에 필요한 몫을 뺀 뒤 다른 목적에 돌릴 수 있는 농업 생산물입니다. 필요량과 배분 규칙에 따라 크기가 달라집니다.", canonicalHref: "/history/economic-history/agrarian-surplus-and-state#names" },
+  "proto-cuneiform-accounting": { id: "proto-cuneiform-accounting", kind: "method", domain: "history", label: "원시 설형문자 회계", aliases: ["proto-cuneiform accounting"], definition: "기원전 4천년기 말 남부 메소포타미아에서 수 표시와 그림 문자를 점토판에 적어 곡물·제품·거래를 분류하고 합산한 행정 기록 방식입니다.", canonicalHref: "/history/economic-history/agrarian-surplus-and-state#source" },
+  "allocation-authority": { id: "allocation-authority", kind: "concept", domain: "history", label: "배분 권한", aliases: ["distribution authority"], definition: "저장한 자원에서 누가 무엇을 얼마나 받을지 정하고 그 결정을 집행하며 차이를 책임지게 하는 사회적 힘입니다.", canonicalHref: "/history/economic-history/agrarian-surplus-and-state#names" },
+  "factor-price-induced-innovation": { id: "factor-price-induced-innovation", kind: "concept", domain: "history", label: "요소 가격과 유발된 기술 선택", aliases: ["induced innovation", "factor prices"], definition: "노동·에너지·자본의 상대 가격이 어떤 기술을 발명하고 채택하면 비용이 줄어드는지를 바꾼다는 경제사 가설입니다.", canonicalHref: "/history/economic-history/industrial-revolution-wages-and-energy#source" },
+  "labor-saving-technology": { id: "labor-saving-technology", kind: "concept", domain: "economics", label: "노동 절약 기술", aliases: ["labour-saving technology"], definition: "같은 산출량을 만드는 데 직접 노동 시간을 덜 쓰도록 투입 조합을 바꾸는 기술입니다. 전체 고용의 증감은 상품 수요와 새 직무를 함께 봐야 합니다.", canonicalHref: "/history/economic-history/industrial-revolution-wages-and-energy#names" },
+  "productivity-wage-gap": { id: "productivity-wage-gap", kind: "concept", domain: "history", label: "생산성과 임금의 시차", aliases: ["Engels' pause", "productivity-wage gap"], definition: "노동자당 생산이 늘어나는 속도와 노동자가 실제 살 수 있는 임금이 늘어나는 속도가 일정 기간 벌어지는 현상입니다. 측정 계열과 분배 제도를 함께 봐야 합니다.", canonicalHref: "/history/economic-history/industrial-revolution-wages-and-energy#comparison" },
+  "gold-standard-adjustment": { id: "gold-standard-adjustment", kind: "concept", domain: "history", label: "금본위제의 조정", aliases: ["gold standard adjustment"], definition: "통화와 금의 고정 교환 비율을 지키는 동안 국외 지급 부족을 준비자산 유출, 금리·신용·임금·물가·수입의 변화로 맞추는 과정입니다.", canonicalHref: "/history/economic-history/gold-standard-depression-bretton-woods#names" },
+  "balance-of-payments-adjustment": { id: "balance-of-payments-adjustment", kind: "concept", domain: "economics", label: "국제수지 조정", aliases: ["balance of payments adjustment"], definition: "국외에서 받을 돈과 지급할 돈의 불균형을 환율·국제대출·준비자산·국내 수요·자본 이동 규칙 가운데 가능한 수단으로 줄이는 과정입니다.", canonicalHref: "/history/economic-history/gold-standard-depression-bretton-woods#mechanism" },
+  "bretton-woods-adjustable-peg": { id: "bretton-woods-adjustable-peg", kind: "concept", domain: "history", label: "브레턴우즈의 조정 가능한 고정환율", aliases: ["adjustable peg", "Bretton Woods system"], definition: "달러를 금에, 다른 통화를 달러에 연결하되 일시적 지급 부족에는 국제 지원을 제공하고 지속적 불균형에는 공식 환율 조정을 허용한 전후 국제 통화 제도입니다.", canonicalHref: "/history/economic-history/gold-standard-depression-bretton-woods#comparison" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -52780,6 +52814,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "relation": "prerequisite",
     "reason": "문자열에서 조각과 행으로 가는 계산을 알아야 함께 배포할 규칙을 정할 수 있습니다."
   },
+  { from: "counterexample-method", to: "logical-validity", relation: "evaluates", reason: "전제가 참이고 결론만 거짓인 경우를 찾는 검사가 타당성의 실패를 직접 판정합니다." },
+  { from: "logical-validity", to: "sound-argument", relation: "prerequisite", reason: "건전한 논증이 되려면 실제 전제의 참을 보기 전에 추론 형식이 먼저 타당해야 합니다." },
+  { from: "sound-argument", to: "counterexample-method", relation: "constrains", reason: "결론이 참인 것만으로 건전성을 인정하지 않고 반례와 전제 검사를 모두 통과하도록 제한합니다." },
+  { from: "epistemic-luck", to: "justified-true-belief", relation: "constrains", reason: "정당화·참·믿음을 모두 갖춰도 사실과 근거 사이에 행운이 끼면 지식의 충분조건이 되지 못합니다." },
+  { from: "epistemic-safety", to: "epistemic-luck", relation: "evaluates", reason: "가까운 경우에 쉽게 거짓이 되는지 확인해 멈춘 시계 같은 행운을 드러냅니다." },
+  { from: "justified-true-belief", to: "epistemic-safety", relation: "extends", reason: "세 조건만으로 남는 게티어 문제를 줄이기 위해 사실 추적의 안정성을 추가로 검사합니다." },
+  { from: "consequentialist-reasoning", to: "deontological-reasoning", relation: "contrasts", reason: "총 결과를 비교하는 질문과 결과와 별도로 지켜야 할 권리·원칙을 묻는 질문은 같은 행동의 다른 실패를 찾습니다." },
+  { from: "deontological-reasoning", to: "virtue-ethical-reasoning", relation: "contrasts", reason: "보편화할 행동 규칙의 검사와 행위자가 반복해 기르는 성품의 평가는 초점과 시간 범위가 다릅니다." },
+  { from: "virtue-ethical-reasoning", to: "consequentialist-reasoning", relation: "constrains", reason: "좋은 성품이라는 말은 실제 피해와 분배를 무시할 수 없고 결과 검사는 습관과 제도의 장기 효과까지 포함해야 합니다." },
+  { from: "agrarian-surplus", to: "proto-cuneiform-accounting", relation: "produces", reason: "여러 시점과 사람 사이에 남은 생산물을 모아 나누려면 양·종류·이동을 기억 밖에 기록할 필요가 생깁니다." },
+  { from: "proto-cuneiform-accounting", to: "allocation-authority", relation: "extends", reason: "기록은 받을 몫과 낼 의무를 오래 유지하고 차이를 드러내 배분 결정을 더 넓은 규모에서 집행하게 합니다." },
+  { from: "allocation-authority", to: "agrarian-surplus", relation: "constrains", reason: "무엇을 필요량과 남는 몫으로 분류하고 누구에게 먼저 줄지는 자연량이 아니라 배분 규칙과 권한이 정합니다." },
+  { from: "factor-price-induced-innovation", to: "labor-saving-technology", relation: "produces", reason: "상대적으로 비싼 노동과 싼 에너지·자본은 노동을 덜 쓰는 기술의 절감액과 채택 유인을 키웁니다." },
+  { from: "labor-saving-technology", to: "productivity-wage-gap", relation: "produces", reason: "기계화로 생산성이 먼저 늘어도 소유·노동시장·물가 조건 때문에 노동자의 실질임금 전달은 늦을 수 있습니다." },
+  { from: "productivity-wage-gap", to: "factor-price-induced-innovation", relation: "constrains", reason: "생산과 임금의 시차는 가격 가설만으로 생활 수준과 산업화의 전체 결과를 설명할 수 없음을 제한합니다." },
+  { from: "gold-standard-adjustment", to: "balance-of-payments-adjustment", relation: "extends", reason: "금 교환 약속 아래의 준비자산 유출과 국내 긴축은 국제수지 불균형을 다루는 여러 조정 경로 중 하나입니다." },
+  { from: "balance-of-payments-adjustment", to: "bretton-woods-adjustable-peg", relation: "produces", reason: "전간기의 긴축·평가절하·지급 제한 경험은 대출과 공식 환율 조정을 포함하는 새 체제 설계의 문제를 만들었습니다." },
+  { from: "bretton-woods-adjustable-peg", to: "gold-standard-adjustment", relation: "contrasts", reason: "둘 다 환율 기준을 고정하지만 브레턴우즈는 국제 지원·자본통제·공식 조정의 여지를 더 넓게 두었습니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

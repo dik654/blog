@@ -38,6 +38,9 @@ export default function CategoryReadingMap({
         <p className="text-xs font-black tracking-[0.14em] text-primary">
           TOP-DOWN MAP
         </p>
+        <span className="mt-3 inline-flex rounded-full border border-primary/20 bg-background px-2.5 py-1 text-xs font-bold text-primary">
+          배열 기준 · {path.organizingPrinciple ?? "선수 개념순"}
+        </span>
         <h2 className="mt-2 text-xl font-bold tracking-tight text-foreground">
           {path.title}
         </h2>
