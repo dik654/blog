@@ -12640,4 +12640,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "본국·현지국 증거금 규칙의 일관성과 중복 방지 원칙을 확인합니다."
     }
   ],
+  "markets/bank-irrbb-alm-and-derivatives-hedging": [
+    {
+      "kind": "공식 문서",
+      "label": "Basel Committee · IRRBB",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/srp/31/inforce/2026-01-01/published/2024-07-16",
+      "note": "EVE·NII와 갭·베이시스·옵션 위험을 함께 관리하는 공식 기준입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국금융연수원 · 자산관리사(FP)",
+      "href": "https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&mobile_yn=Y&p_iQlfn=04&pageName=qualInfo",
+      "note": "고객 재무설계의 파생상품 범위와 은행 자체 ALM 판단을 구분합니다."
+    }
+  ],
+  "markets/hedge-accounting-designation-effectiveness-and-rebalancing": [
+    {
+      "kind": "공식 문서",
+      "label": "IFRS Foundation · IFRS 9",
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/",
+      "note": "헤지관계의 공식 지정과 문서화, 효과 요건을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IFRS 9 · Rebalancing guidance",
+      "href": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on",
+      "note": "위험관리 목적이 유지될 때 헤지비율을 재조정하는 조건을 확인합니다."
+    }
+  ],
+  "markets/derivatives-tax-character-timing-and-jurisdiction": [
+    {
+      "kind": "공식 문서",
+      "label": "국세청 · 파생상품 양도소득세",
+      "href": "https://www.nts.go.kr/tax/sub/1.5.4.%ED%8C%8C%EC%83%9D%EC%83%81%ED%92%88%EC%97%90%20%EB%8C%80%ED%95%9C%20%EC%96%91%EB%8F%84%EC%86%8C%EB%93%9D%EC%84%B8%20%EC%8B%A0%EA%B3%A0%EB%82%A9%EB%B6%80%20%EC%95%88%EB%82%B4.html",
+      "note": "한국 거주 개인의 대상 상품·계산·신고 흐름을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "IRS · Publication 550",
+      "href": "https://www.irs.gov/pub/irs-prior/p550--2025.pdf",
+      "note": "미국 Section 1256의 연말 시가평가와 60·40 분류를 확인합니다."
+    }
+  ],
+  "markets/derivatives-market-abuse-position-limits-and-surveillance": [
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Speculative Position Limits",
+      "href": "https://www.cftc.gov/IndustryOversight/MarketSurveillance/SpeculativeLimits/index.htm",
+      "note": "핵심 실물인도 계약·연결 계약의 한도와 예외를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Market Surveillance Program",
+      "href": "https://www.cftc.gov/IndustryOversight/MarketSurveillance/CFTCMarketSurveillanceProgram/index.htm",
+      "note": "일별 포지션과 거래소 자료를 이용한 시장감시 업무를 확인합니다."
+    }
+  ],
+  "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring": [
+    {
+      "kind": "공식 문서",
+      "label": "FATF · Securities sector risk-based approach",
+      "href": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Rba-securities-sector.html",
+      "note": "옵션·선물·스왑을 포함한 증권 부문 위험기반 AML 원칙을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융정보분석원 · 의심거래보고",
+      "href": "https://www.kofiu.go.kr/kor/policy/amls03.do",
+      "note": "합당한 근거에 따른 STR 판단과 보고 절차를 확인합니다."
+    }
+  ],
+  "markets/derivatives-complaints-dispute-resolution-and-evidence": [
+    {
+      "kind": "공식 문서",
+      "label": "Financial Ombudsman Service · Business evidence",
+      "href": "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/information-from-financial-businesses",
+      "note": "가격·적정성·증거금 민원에서 회사가 제시할 증거 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융투자교육원 · 파생상품투자권유자문인력",
+      "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+      "note": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다."
+    }
+  ],
 };

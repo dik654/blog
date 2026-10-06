@@ -2298,6 +2298,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "종료 일괄상계의 위험 감소는 관련 관할의 도산법에서 집행될 때 성립하며, 관할별 법률의견과 감독 규칙의 상호인정을 별도로 관리해야 합니다.",
     "sharedGate": "+12−7−2=3과 담보 4 뒤 0 대 8을 검산하고 규제 상호인정을 사법상 집행가능성으로 읽지 않습니다."
   },
+  "markets/bank-irrbb-alm-and-derivatives-hedging": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "은행 장부의 금리 위험은 EVE와 NII를 함께 측정하고 갭·베이시스·옵션 위험을 찾아 ALCO가 조달과 파생상품 헤지를 함께 조정해야 합니다.",
+    "sharedGate": "대출 100·예금 80에서 NII 감소 0.8을 계산하고 EVE와 NII, 고객 FP와 은행 ALM을 구분합니다."
+  },
+  "markets/hedge-accounting-designation-effectiveness-and-rebalancing": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "헤지회계는 경제적 헤지를 자동 반영하는 장치가 아니라 시작 시 지정·문서화하고 효과를 계속 평가하며 위험관리 목적이 유지될 때 비율을 재조정하는 절차입니다.",
+    "sharedGate": "100억 차입·80억 스왑의 80% 지정과 차입 50억 뒤 160% 불일치를 계산하고 경제적 헤지와 회계 표시를 구분합니다."
+  },
+  "markets/derivatives-tax-character-timing-and-jurisdiction": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 세금은 세율보다 먼저 납세자와 계약의 소득 성격, 실현·연말평가 시점, 손익 통산 범위와 거주지 관할을 차례로 확인해야 합니다.",
+    "sharedGate": "12−5=7과 Section 1256의 10→6+4를 계산하고 계약 범위·연도·거주지 확인 전에는 실제 세액으로 쓰지 않습니다."
+  },
+  "markets/derivatives-market-abuse-position-limits-and-surveillance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 시장질서는 관련 계좌의 포지션을 합산하고 선의의 헤지 예외를 문서로 확인하며 주문·포지션·현물 자료를 조사해 경보와 위반 판정을 구분해야 합니다.",
+    "sharedGate": "400+200=600과 한도 500의 초과 100을 계산하고 헤지 예외, 감시 경보와 법적 위반을 각각 구분합니다."
+  },
+  "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 AML은 고객·실소유자와 예상 거래를 확인한 뒤 입출금·주문·손익을 한 사건으로 연결하고 경보·조사·STR 결정을 서로 다른 책임 단계로 남겨야 합니다.",
+    "sharedGate": "100·1,000·20·980의 자금 경로를 잇고 큰 금액 경보, 조사 사건, 합리적 의심과 STR 제출을 구분합니다."
+  },
+  "markets/derivatives-complaints-dispute-resolution-and-evidence": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 분쟁은 손실 결과나 서명 하나로 판단하지 않고 판매·체결·가격·증거금·통지 기록을 시간순으로 묶어 책임과 손해를 가린 뒤 계약 관할의 구제 경로로 이어야 합니다.",
+    "sharedGate": "100−30=70과 필요액 80의 부족 10을 계산하고 손실 결과, 고객 서명, 절차 준수와 인과관계를 따로 판단합니다."
+  },
 };
 
 /**
@@ -2671,4 +2713,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/local-stochastic-volatility-jumps-and-calibration":"f45b39cd5f617cc4",
 "markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"7ae43a6f4aae7689",
 "markets/short-rate-hjm-and-interest-rate-model-risk":"9917ed08a0dfd27b",
+"markets/bank-irrbb-alm-and-derivatives-hedging":"9ab579b9a231046c",
+"markets/hedge-accounting-designation-effectiveness-and-rebalancing":"4e0138563a64c02d",
+"markets/derivatives-tax-character-timing-and-jurisdiction":"87fc5b70d79bc408",
+"markets/derivatives-market-abuse-position-limits-and-surveillance":"e3255830ae68ce02",
+"markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"e4d16be5a57a6f1e",
+"markets/derivatives-complaints-dispute-resolution-and-evidence":"9193fe8e46d88fcf",
 };

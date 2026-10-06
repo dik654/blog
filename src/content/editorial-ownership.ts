@@ -16673,6 +16673,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "bank-irrbb-alm-and-derivatives-hedging": {
+    "title": "은행 IRRBB·ALM·파생상품 헤지 글이 소유하는 범위",
+    "owns": [
+      "EVE와 NII의 서로 다른 시간축",
+      "갭·베이시스·옵션 위험의 분해",
+      "대출 100·예금 80·스왑 80의 ALM 손계산"
+    ],
+    "reuses": [
+      {
+        "label": "스왑 현금흐름 교환",
+        "href": "/finance/markets/swaps-and-credit-risk"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "hedge-accounting-designation-effectiveness-and-rebalancing": {
+    "title": "헤지회계 지정·효과·재조정 글이 소유하는 범위",
+    "owns": [
+      "100억 차입과 80억 스왑의 80% 지정",
+      "IFRS 9 효과 요건과 회계상 손익 표시 경계",
+      "차입 50억 감소 뒤 160% 비율의 재조정"
+    ],
+    "reuses": [
+      {
+        "label": "은행 ALM 파생상품 헤지",
+        "href": "/finance/markets/bank-irrbb-alm-and-derivatives-hedging"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-tax-character-timing-and-jurisdiction": {
+    "title": "파생상품 세금의 성격·시점·관할 글이 소유하는 범위",
+    "owns": [
+      "이익 12·손실 5의 과세 전 순손익 7",
+      "한국 파생상품 양도소득 장부의 개념 구조",
+      "미국 Section 1256의 연말평가와 60·40 사례"
+    ],
+    "reuses": [
+      {
+        "label": "금융상품의 지급 청구권 지도",
+        "href": "/finance/markets/financial-products-and-claims"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-market-abuse-position-limits-and-surveillance": {
+    "title": "파생상품 한도·헤지 예외·시장감시 글이 소유하는 범위",
+    "owns": [
+      "관련 계좌 400+200=600의 포지션 합산",
+      "선의의 헤지 예외와 자동 차감의 구분",
+      "주문·포지션·현물 자료의 시장감시 흐름"
+    ],
+    "reuses": [
+      {
+        "label": "시장감시 사건 판단",
+        "href": "/cs/isms-aml/vasp-unfair-trading#manipulation-surveillance-case"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-aml-kyc-and-suspicious-transaction-monitoring": {
+    "title": "파생상품 KYC·거래감시·STR 글이 소유하는 범위",
+    "owns": [
+      "예상 100·입금 1,000·손실 20·출금 980의 사건",
+      "파생상품 자금세탁 위험경로",
+      "은행 입출금과 주문·손익의 사건 연결"
+    ],
+    "reuses": [
+      {
+        "label": "STR 경보·사건·결정 경계",
+        "href": "/cs/isms-aml/aml-str-reporting#alert-case-decision"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-complaints-dispute-resolution-and-evidence": {
+    "title": "파생상품 민원·분쟁조정·증거 글이 소유하는 범위",
+    "owns": [
+      "계좌자금 100·손실 30·필요 증거금 80의 부족액 10",
+      "판매·체결·증거금·민원 기록의 사건 시간줄",
+      "회사 민원에서 외부 조정으로 이어지는 구제 경로"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 판매 과정의 증거",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·회계·세금·절차 수치는 인용한 공식 자료의 계약, 고객, 관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 투자 결과, 세액, 규제 승인이나 분쟁 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
