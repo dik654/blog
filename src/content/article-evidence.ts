@@ -12002,4 +12002,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "후속 분석", label: "IMF · The Road to Bretton Woods", href: "https://www.elibrary.imf.org/view/journals/022/0001/002/article-A001-en.xml", note: "전간기 지급 제한·평가절하·대공황과 새 협력 체제의 배경" },
     { kind: "공식 연구", label: "Ghosh · Measure to Measure", href: "https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm", note: "44개국 회의와 조정 가능한 고정환율·IMF의 설계 목적" },
   ],
+  "political-philosophy/consent-liberty-and-legitimate-power": [
+    { kind: "핵심 사료", label: "Locke · Second Treatise", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h", note: "동의·다수·입법 권한과 공공선의 1차 원문" },
+    { kind: "비교 사료", label: "Mill · On Liberty", href: "https://www.gutenberg.org/files/34901/34901-h/34901-h.htm", note: "해악 원칙과 개인 자유의 1차 원문" },
+  ],
+  "philosophy-of-science/evidence-models-and-causal-explanation": [
+    { kind: "보충 읽기", label: "SEP · Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation/", note: "법칙·통계·인과·통합 설명과 반례의 전문 개관" },
+    { kind: "보충 읽기", label: "SEP · Causal Approaches", href: "https://plato.stanford.edu/entries/causal-explanation-science/", note: "기제와 개입주의 인과 설명의 범위" },
+  ],
+  "mind-and-language/behavior-meaning-and-machine-understanding": [
+    { kind: "핵심 논문", label: "Turing · Computing Machinery and Intelligence", href: "https://academic.oup.com/mind/article/LIX/236/433/986238", note: "모방 게임과 학습 기계의 원 논문" },
+    { kind: "비판적 읽기", label: "SEP · Chinese Room Argument", href: "https://plato.stanford.edu/entries/chinese-room/", note: "구문·의미 논증과 주요 반론의 전문 개관" },
+  ],
+  "economic-history/trade-credit-and-long-distance-networks": [
+    { kind: "핵심 사료", label: "The Met · Loan of silver tablet", href: "https://www.metmuseum.org/art/collection/search/325858", note: "은 6미나와 두 상환 시점을 기록한 점토판" },
+    { kind: "비교 사료", label: "UNESCO · Silk Roads with Documents", href: "https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents", note: "여러 지역의 사료로 본 육상·해상 교역망" },
+  ],
+  "economic-history/colonial-plantations-slavery-and-extraction": [
+    { kind: "공식 프로젝트 기록", label: "SlaveVoyages Database", href: "https://www.slavevoyages.org/blog/the-transatlantic-slave-trade-database/163", note: "항해 기록·추정 자료와 방법" },
+    { kind: "핵심 연구", label: "Nunn & Wantchekon · Origins of Mistrust", href: "https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221", note: "노예 무역 노출과 신뢰의 장기 관계" },
+    { kind: "선행·비교 논문", label: "Frankema et al. · African Scramble", href: "https://www.nber.org/papers/w21213", note: "상품 호황·식민 쟁탈·수출 특화의 계량사" },
+  ],
+  "economic-history/decolonization-oil-shocks-and-debt": [
+    { kind: "공식 문서", label: "United Nations · Decolonization", href: "https://www.un.org/en/global-issues/decolonization/", note: "1945년 이후 탈식민의 제도적 시간표" },
+    { kind: "공식 연구", label: "IMF · The 1980s Debt Crisis", href: "https://www.elibrary.imf.org/display/book/9781484371329/ch001.xml", note: "페트로달러 대출과 국제 부채 위기의 연결" },
+    { kind: "공식 연구", label: "IMF · Macroeconomic Crisis and Adjustment", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", note: "국가별 교역조건과 조정 경로 비교" },
+  ],
 };

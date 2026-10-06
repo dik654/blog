@@ -40,6 +40,9 @@ import economicHistory from "./economic-history";
 import reasoning from "./reasoning";
 import epistemology from "./epistemology";
 import ethics from "./ethics";
+import politicalPhilosophy from "./political-philosophy";
+import philosophyOfScience from "./philosophy-of-science";
+import mindAndLanguage from "./mind-and-language";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
 import devices from "./devices";
@@ -83,6 +86,9 @@ export const categories = [
   reasoning,
   epistemology,
   ethics,
+  politicalPhilosophy,
+  philosophyOfScience,
+  mindAndLanguage,
   circuits,
   semiconductors,
   devices,

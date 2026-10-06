@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const EVIDENCE_LABEL = {
   standard: "표준·명세",
   "primary-source": "공식 자료",
+  "secondary-source": "연구·해설",
   "project-measurement": "프로젝트 실측",
   "project-claim": "프로젝트 해석",
 } as const;
