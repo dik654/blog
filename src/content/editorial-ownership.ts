@@ -15701,6 +15701,120 @@ export const EDITORIAL_BOUNDARIES = {
   "revolutions-citizenship-and-industrial-empires": { title: "혁명·시민권·산업 제국 글이 소유하는 범위", owns: ["주민 100명의 차등 시민 명부", "보편 권리와 시행법의 거리", "국민 주권과 제국 지배의 충돌"], reuses: [], evidence: [{ kind: "primary-source", rule: "권리 선언의 원칙과 당시 여성·노예·식민지 주민의 실제 법적 지위를 분리합니다." }, { kind: "primary-source", rule: "제국 외교 문서의 인종주의 표현을 사실 서술이 아니라 작성자의 시선으로 분석합니다." }] },
   "world-wars-depression-and-mass-states": { title: "세계대전·불황·대중 국가 글이 소유하는 범위", owns: ["100가구의 전선·후방 동원", "전간기 불황과 국가 대응의 지역 차이", "국제연맹 평화 약속과 위임통치의 충돌"], reuses: [], evidence: [{ kind: "primary-source", rule: "국제연맹 규약의 집단 안보와 위임통치 조항을 함께 읽습니다." }, { kind: "primary-source", rule: "미국 자료의 범위를 미국 사례로 제한하고 세계 전체의 전형으로 쓰지 않습니다." }] },
   "cold-war-decolonization-and-globalization": { title: "냉전·탈식민·세계화 글이 소유하는 범위", owns: ["신생국 예산 100과 외부 지원 조건", "반둥 비동맹의 적극적 공동 의제", "WTO 규칙과 국가별 정책 공간"], reuses: [], evidence: [{ kind: "primary-source", rule: "반둥 공동성명의 합의와 참가국의 이후 외교 선택을 같은 것으로 만들지 않습니다." }, { kind: "primary-source", rule: "WTO 공식 목표와 국가별 실제 분배 결과를 구분합니다." }] },
+  "confucian-ritual-role-and-humane-rule": {
+    "title": "confucian-ritual-role-and-humane-rule 글이 소유하는 범위",
+    "owns": [
+      "곡물 100자루로 본 인과 예의 관계",
+      "반복된 절차가 성품을 만드는 경로",
+      "덕치와 법·견제의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고대 문장의 정치적 이상과 실제 국가 운영은 별도 사료로 확인합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "『순자』의 인간 본성론을 『논어』와 같은 하나의 유가 공식으로 합치지 않습니다."
+      }
+    ]
+  },
+  "daoist-names-noncoercive-action-and-change": {
+    "title": "daoist-names-noncoercive-action-and-change 글이 소유하는 범위",
+    "owns": [
+      "물 100으로 본 억지 개입과 손실",
+      "이름이 욕망을 만드는 경로",
+      "무위와 방치·무행동의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "짧고 다의적인 문장의 판본·번역 차이가 있으므로 한 번역어로 뜻을 고정하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "현대 학계의 해석 개관이며 고대 저자의 단일한 의도를 직접 증명하는 사료는 아닙니다."
+      }
+    ]
+  },
+  "buddhist-aggregates-impermanence-and-not-self": {
+    "title": "buddhist-aggregates-impermanence-and-not-self 글이 소유하는 범위",
+    "owns": [
+      "모욕을 들은 10초의 다섯 집합 분석",
+      "무상과 통제 불가능성의 구분",
+      "무아와 허무주의의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "번역의 not-self와 no-self 선택 및 경전층의 해석 문제를 별도로 고려합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "현대 학술 개관이므로 각 전통의 1차 경전과 주석을 대신하지 않습니다."
+      }
+    ]
+  },
+  "gita-action-results-and-release": {
+    "title": "gita-action-results-and-release 글이 소유하는 범위",
+    "owns": [
+      "수확 조건 100으로 본 행위와 결과",
+      "카르마 요가와 무행동의 구분",
+      "무집착과 책임 회피의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "번역과 주석 전통에 따라 권한·열매·동기의 설명이 달라짐을 전제로 합니다."
+      },
+      {
+        "kind": "primary-source",
+        "rule": "전쟁 서사와 계층적 의무의 역사적 맥락을 현대 직업윤리에 그대로 옮기지 않습니다."
+      }
+    ]
+  },
+  "islamic-causation-reason-and-revelation": {
+    "title": "islamic-causation-reason-and-revelation 글이 소유하는 범위",
+    "owns": [
+      "불과 솜 11회로 본 규칙과 필연",
+      "팔사파와 칼람의 인과 권한 배치",
+      "알가잘리와 반과학 쇠퇴 서사의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "현대 학술 개관이며 각 사상가 저작의 직접 독해를 대신하지 않습니다."
+      }
+    ]
+  },
+  "akan-personhood-community-and-agency": {
+    "title": "akan-personhood-community-and-agency 글이 소유하는 범위",
+    "owns": [
+      "다리 복구 100시간의 보이는·보이지 않는 기여",
+      "인간 지위와 도덕적 인격의 구분",
+      "공동체 형성과 개인 비판의 양방향 관계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "구전 표현과 현대 연구자의 논증을 문자로 고정된 단일 교리처럼 다루지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "아칸·요루바·남부 아프리카와 다른 지역 전통의 차이를 보존합니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

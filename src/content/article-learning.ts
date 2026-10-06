@@ -132725,4 +132725,1312 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "WTO · Marrakesh Declaration", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", problem: "1990년대 다자 무역 규칙의 확대가 시장 접근과 국내 의무를 함께 만든 방식을 봅니다.", contribution: "우루과이라운드 종료와 WTO 체제의 목표·범위를 밝힌 공식 선언을 제공합니다.", assumptions: "공식 목표와 국가별 실제 분배 결과는 무역·산업 자료로 따로 검증합니다.", evidenceScope: "우루과이라운드 종료와 WTO 출범 목표를 밝힌 1994년 1차 공식 문서입니다.", notClaim: "같은 규칙이 모든 회원국에 같은 이익과 조정 비용을 주었다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
+  "philosophical-traditions/confucian-ritual-role-and-humane-rule": {
+    "entryLevel": true,
+    "entryNote": "유가 문헌을 모른다고 가정하고 홍수 뒤 곡물 100자루를 나누는 회의에서 시작합니다.",
+    "coreIdea": "유가의 예는 욕망을 억누르는 겉형식이 아니라 관계와 역할을 반복해 인을 행동으로 옮기고, 지도자의 모범으로 공동 판단을 기르는 장치입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "confucian-ren",
+        "role": "인(仁)이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "confucian-li",
+        "role": "예(禮)이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "virtuous-government",
+        "role": "덕치이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "confucian-ren",
+        "sectionId": "names",
+        "intuition": "도덕적 방향 단계에서 다른 사람의 필요를 자기 판단 안에 넣습니다.",
+        "workedExample": "취약한 가구의 필요를 자기 몫과 같은 장부에 넣는 판단입니다.",
+        "boundary": "가까운 사람에 대한 정만으로 공정한 배분이 자동으로 정해지지는 않습니다."
+      },
+      {
+        "id": "confucian-li",
+        "sectionId": "names",
+        "intuition": "행동의 형식 단계에서 순서·양보·책임을 반복해 판단 습관을 만듭니다.",
+        "workedExample": "관리 몫부터 떼지 않고 필요와 역할을 듣는 회의 순서를 반복합니다.",
+        "boundary": "역사적 신분 규칙이나 겉예절 목록 전체를 그대로 옳다고 인정하는 말이 아닙니다."
+      },
+      {
+        "id": "virtuous-government",
+        "sectionId": "names",
+        "intuition": "정치적 모범 단계에서 지도자의 실제 배분과 행실로 기준을 검증합니다.",
+        "workedExample": "관리 자신이 운영 몫을 먼저 줄일 가능성을 열고 배분 이유를 공개합니다.",
+        "boundary": "좋은 지도자 한 명이 법·견제·행정 능력을 대신할 수 있다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "도덕적 방향",
+        "relation": "다른 사람의 필요를 자기 판단 안에 넣습니다.",
+        "concepts": [
+          "confucian-ren"
+        ]
+      },
+      {
+        "label": "행동의 형식",
+        "relation": "순서·양보·책임을 반복해 판단 습관을 만듭니다.",
+        "concepts": [
+          "confucian-li"
+        ]
+      },
+      {
+        "label": "정치적 모범",
+        "relation": "지도자의 실제 배분과 행실로 기준을 검증합니다.",
+        "concepts": [
+          "virtuous-government"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "곡물 100자루에서 공통 식량 50, 추가 돌봄 20, 씨앗 20을 빼면 운영 몫은 얼마인가요?",
+        "answerChecklist": [
+          "10자루",
+          "100−50−20−20"
+        ],
+        "requiredConcepts": [
+          "confucian-ren"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "인(仁)을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "취약한 가구의 필요를 자기 몫과 같은 장부에 넣는 판단입니다.",
+          "가까운 사람에 대한 정만으로 공정한 배분이 자동으로 정해지지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "confucian-ren"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "예(禮)이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "행동의 형식",
+          "순서·양보·책임을 반복해 판단 습관을 만듭니다."
+        ],
+        "requiredConcepts": [
+          "confucian-ren",
+          "confucian-li"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "덕치을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "관리 자신이 운영 몫을 먼저 줄일 가능성을 열고 배분 이유를 공개합니다.",
+          "좋은 지도자 한 명이 법·견제·행정 능력을 대신할 수 있다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "virtuous-government"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "Chinese Text Project · Analects, Wei Zheng이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "위정편 2.1·2.3의 한문 원문과 고전 번역을 함께 제공합니다.",
+          "고대 문장의 정치적 이상과 실제 국가 운영은 별도 사료로 확인합니다."
+        ],
+        "requiredConcepts": [
+          "confucian-ren",
+          "confucian-li"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "『순자』의 인간 본성론을 『논어』와 같은 하나의 유가 공식으로 합치지 않습니다.",
+          "이 원문이 모든 시대와 지역의 유가 의례를 같은 방식으로 정당화한다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "confucian-li",
+          "virtuous-government"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "인(仁)에서 덕치까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "다른 사람의 필요를 자기 판단 안에 넣습니다.",
+          "지도자의 실제 배분과 행실로 기준을 검증합니다."
+        ],
+        "requiredConcepts": [
+          "confucian-ren",
+          "confucian-li",
+          "virtuous-government"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "덕치의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "좋은 지도자 한 명이 법·견제·행정 능력을 대신할 수 있다는 뜻은 아닙니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "virtuous-government"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "덕과 예로 이끄는 정치의 규범적 비교를 담은 핵심 고전 사료입니다.",
+          "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다."
+        ],
+        "requiredConcepts": [
+          "confucian-ren",
+          "confucian-li"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "confucian-ren",
+          "confucian-li",
+          "virtuous-government"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Chinese Text Project · Analects, Wei Zheng",
+        "href": "https://ctext.org/analects/wei-zheng/ens",
+        "problem": "『논어』의 덕치와 형벌 비교를 실제 곡물 배분 절차에 대입해 읽어야 합니다.",
+        "contribution": "위정편 2.1·2.3의 한문 원문과 고전 번역을 함께 제공합니다.",
+        "assumptions": "고대 문장의 정치적 이상과 실제 국가 운영은 별도 사료로 확인합니다.",
+        "evidenceScope": "덕과 예로 이끄는 정치의 규범적 비교를 담은 핵심 고전 사료입니다.",
+        "notClaim": "형벌이 즉시 폐지되거나 역사상 모든 유가 국가가 이 원칙대로 운영됐다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Chinese Text Project · Xunzi, Treatise on Ritual Propriety",
+        "href": "https://ctext.org/xunzi/li-lun/ens",
+        "problem": "예를 조화로운 마음의 장식으로만 읽지 않고 욕망과 물자 부족의 충돌과 연결해야 합니다.",
+        "contribution": "『순자』 예론의 욕망·분배·다툼·예의 기원에 관한 원문을 제공합니다.",
+        "assumptions": "『순자』의 인간 본성론을 『논어』와 같은 하나의 유가 공식으로 합치지 않습니다.",
+        "evidenceScope": "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다.",
+        "notClaim": "이 원문이 모든 시대와 지역의 유가 의례를 같은 방식으로 정당화한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophical-traditions/daoist-names-noncoercive-action-and-change": {
+    "entryLevel": true,
+    "entryNote": "도가를 모른다고 가정하고 물 100단위를 논에 보내는 두 수문 운영 방식에서 시작합니다.",
+    "coreIdea": "도가의 무위는 손을 놓는 상태가 아니라 이름과 욕망이 만든 과도한 개입을 알아차리고 사물의 변화와 되먹임에 맞춰 강제를 줄이는 행동 원리입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "daoist-dao",
+        "role": "도(道)이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "name-distinction-daoism",
+        "role": "이름의 구분이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "wuwei-noncoercive-action",
+        "role": "무위이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "daoist-dao",
+        "sectionId": "names",
+        "intuition": "흐름 보기 단계에서 이름을 붙이기 전 변화와 관계를 살핍니다.",
+        "workedExample": "수로의 높낮이와 흙의 상태를 따라 물이 실제로 움직이는 길을 먼저 봅니다.",
+        "boundary": "자연의 현상을 그대로 두기만 하면 언제나 좋은 결과가 난다는 보증이 아닙니다."
+      },
+      {
+        "id": "name-distinction-daoism",
+        "sectionId": "names",
+        "intuition": "구분 검사 단계에서 이름이 욕망과 경쟁을 키우는 지점을 찾습니다.",
+        "workedExample": "좋은 밭이라는 이름이 물과 노동을 한곳에 몰아 경쟁을 키울 수 있습니다.",
+        "boundary": "언어를 쓰지 말라는 명령이 아니라 이름이 만든 경계와 욕망을 다시 보는 질문입니다."
+      },
+      {
+        "id": "wuwei-noncoercive-action",
+        "sectionId": "names",
+        "intuition": "작은 개입 단계에서 되먹임에 맞춰 강제를 줄이고 결과를 확인합니다.",
+        "workedExample": "물 100을 한 번에 밀지 않고 수위 피드백에 따라 나눠 보내 손실을 줄입니다.",
+        "boundary": "아무것도 하지 않거나 피해를 방치하고 책임을 피한다는 뜻이 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "흐름 보기",
+        "relation": "이름을 붙이기 전 변화와 관계를 살핍니다.",
+        "concepts": [
+          "daoist-dao"
+        ]
+      },
+      {
+        "label": "구분 검사",
+        "relation": "이름이 욕망과 경쟁을 키우는 지점을 찾습니다.",
+        "concepts": [
+          "name-distinction-daoism"
+        ]
+      },
+      {
+        "label": "작은 개입",
+        "relation": "되먹임에 맞춰 강제를 줄이고 결과를 확인합니다.",
+        "concepts": [
+          "wuwei-noncoercive-action"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "물 100을 억지로 보내 40을 잃으면 논에 닿는 양과, 적응적으로 보내 85가 닿을 때의 차이는 얼마인가요?",
+        "answerChecklist": [
+          "60과 85",
+          "적응 방식이 25 더 도달"
+        ],
+        "requiredConcepts": [
+          "daoist-dao"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "도(道)을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "수로의 높낮이와 흙의 상태를 따라 물이 실제로 움직이는 길을 먼저 봅니다.",
+          "자연의 현상을 그대로 두기만 하면 언제나 좋은 결과가 난다는 보증이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "daoist-dao"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "이름의 구분이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "구분 검사",
+          "이름이 욕망과 경쟁을 키우는 지점을 찾습니다."
+        ],
+        "requiredConcepts": [
+          "daoist-dao",
+          "name-distinction-daoism"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "무위을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "물 100을 한 번에 밀지 않고 수위 피드백에 따라 나눠 보내 손실을 줄입니다.",
+          "아무것도 하지 않거나 피해를 방치하고 책임을 피한다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "wuwei-noncoercive-action"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "Chinese Text Project · Dao De Jing이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "『도덕경』 1·2·37장 등을 한문 원문과 고전 번역으로 제공합니다.",
+          "짧고 다의적인 문장의 판본·번역 차이가 있으므로 한 번역어로 뜻을 고정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "daoist-dao",
+          "name-distinction-daoism"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "현대 학계의 해석 개관이며 고대 저자의 단일한 의도를 직접 증명하는 사료는 아닙니다.",
+          "무위의 모든 해석이 비강제적 행동이라는 한 번역으로 합의됐다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "name-distinction-daoism",
+          "wuwei-noncoercive-action"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "도(道)에서 무위까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "이름을 붙이기 전 변화와 관계를 살핍니다.",
+          "되먹임에 맞춰 강제를 줄이고 결과를 확인합니다."
+        ],
+        "requiredConcepts": [
+          "daoist-dao",
+          "name-distinction-daoism",
+          "wuwei-noncoercive-action"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "무위의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "아무것도 하지 않거나 피해를 방치하고 책임을 피한다는 뜻이 아닙니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "wuwei-noncoercive-action"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "이름의 한계와 무위의 작동을 확인하는 도가의 핵심 고전 사료입니다.",
+          "노자 문헌과 주요 철학 쟁점의 범위를 정리한 동료 검토 보충 연구입니다."
+        ],
+        "requiredConcepts": [
+          "daoist-dao",
+          "name-distinction-daoism"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "daoist-dao",
+          "name-distinction-daoism",
+          "wuwei-noncoercive-action"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Chinese Text Project · Dao De Jing",
+        "href": "https://ctext.org/dao-de-jing/ens",
+        "problem": "도·이름·무위를 따로 떼어 현대 자기계발 문구로 만들지 않고 장 전체의 관계로 읽어야 합니다.",
+        "contribution": "『도덕경』 1·2·37장 등을 한문 원문과 고전 번역으로 제공합니다.",
+        "assumptions": "짧고 다의적인 문장의 판본·번역 차이가 있으므로 한 번역어로 뜻을 고정하지 않습니다.",
+        "evidenceScope": "이름의 한계와 무위의 작동을 확인하는 도가의 핵심 고전 사료입니다.",
+        "notClaim": "『도덕경』 한 책이 장자와 모든 후대 도가·도교 전통을 대표한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Laozi",
+        "href": "https://plato.stanford.edu/entries/laozi/",
+        "problem": "무위를 단순 무행동이나 현대의 규제 완화 주장으로 오역하지 않아야 합니다.",
+        "contribution": "노자 문헌의 형성·주석과 도·덕·무위의 여러 현대 해석을 비교합니다.",
+        "assumptions": "현대 학계의 해석 개관이며 고대 저자의 단일한 의도를 직접 증명하는 사료는 아닙니다.",
+        "evidenceScope": "노자 문헌과 주요 철학 쟁점의 범위를 정리한 동료 검토 보충 연구입니다.",
+        "notClaim": "무위의 모든 해석이 비강제적 행동이라는 한 번역으로 합의됐다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophical-traditions/buddhist-aggregates-impermanence-and-not-self": {
+    "entryLevel": true,
+    "entryNote": "불교 용어를 모른다고 가정하고 모욕을 들은 뒤 화가 커지는 10초의 경험에서 시작합니다.",
+    "coreIdea": "초기 불교의 다섯 집합·무상·무아는 사람을 없애는 선언이 아니라 변하고 통제되지 않는 경험을 영원한 나로 붙잡는 과정을 검사해 다음 반응의 여지를 찾는 도구입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "five-aggregates",
+        "role": "다섯 집합이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "impermanence-anicca",
+        "role": "무상이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "not-self-anatta",
+        "role": "무아이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "five-aggregates",
+        "sectionId": "names",
+        "intuition": "경험 나누기 단계에서 한 사건을 몸·느낌·지각·형성·의식으로 봅니다.",
+        "workedExample": "모욕을 들은 10초를 몸의 열감부터 반격 충동과 의식까지 나눕니다.",
+        "boundary": "고정된 다섯 부품이나 현대 심리학의 기능 목록과 정확히 같은 분류가 아닙니다."
+      },
+      {
+        "id": "impermanence-anicca",
+        "sectionId": "names",
+        "intuition": "변화 보기 단계에서 각 과정의 강도와 내용이 달라지는지 관찰합니다.",
+        "workedExample": "얼굴의 열감과 반격 충동의 강도가 10초 안에서도 달라집니다.",
+        "boundary": "변한다는 이유만으로 경험이 존재하지 않거나 아무 가치가 없다는 뜻은 아닙니다."
+      },
+      {
+        "id": "not-self-anatta",
+        "sectionId": "names",
+        "intuition": "동일시 검사 단계에서 변하고 통제되지 않는 것을 영원한 나로 붙잡는지 묻습니다.",
+        "workedExample": "느낌에 사라지라고 명령해도 뜻대로 되지 않는 통제의 한계를 봅니다.",
+        "boundary": "행위의 책임·인과·관습적으로 부르는 사람까지 모두 없다는 허무주의와 같지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "경험 나누기",
+        "relation": "한 사건을 몸·느낌·지각·형성·의식으로 봅니다.",
+        "concepts": [
+          "five-aggregates"
+        ]
+      },
+      {
+        "label": "변화 보기",
+        "relation": "각 과정의 강도와 내용이 달라지는지 관찰합니다.",
+        "concepts": [
+          "impermanence-anicca"
+        ]
+      },
+      {
+        "label": "동일시 검사",
+        "relation": "변하고 통제되지 않는 것을 영원한 나로 붙잡는지 묻습니다.",
+        "concepts": [
+          "not-self-anatta"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "몸·느낌·지각·형성에 각각 2초가 지나면 의식과 선택이 두드러지는 구간은 몇 초부터인가요?",
+        "answerChecklist": [
+          "8초부터",
+          "0~8초 네 구간 뒤 8~10초"
+        ],
+        "requiredConcepts": [
+          "five-aggregates"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "다섯 집합을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "모욕을 들은 10초를 몸의 열감부터 반격 충동과 의식까지 나눕니다.",
+          "고정된 다섯 부품이나 현대 심리학의 기능 목록과 정확히 같은 분류가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "five-aggregates"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "무상이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "변화 보기",
+          "각 과정의 강도와 내용이 달라지는지 관찰합니다."
+        ],
+        "requiredConcepts": [
+          "five-aggregates",
+          "impermanence-anicca"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "무아을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "느낌에 사라지라고 명령해도 뜻대로 되지 않는 통제의 한계를 봅니다.",
+          "행위의 책임·인과·관습적으로 부르는 사람까지 모두 없다는 허무주의와 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "not-self-anatta"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "SuttaCentral · SN 22.59이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "팔리 경전과 번역을 문단별로 맞춰 다섯 집합의 반복 논증을 제공합니다.",
+          "번역의 not-self와 no-self 선택 및 경전층의 해석 문제를 별도로 고려합니다."
+        ],
+        "requiredConcepts": [
+          "five-aggregates",
+          "impermanence-anicca"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "현대 학술 개관이므로 각 전통의 1차 경전과 주석을 대신하지 않습니다.",
+          "모든 불교 전통이 자아의 존재를 동일한 논리와 말로 부정한다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "impermanence-anicca",
+          "not-self-anatta"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "다섯 집합에서 무아까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "한 사건을 몸·느낌·지각·형성·의식으로 봅니다.",
+          "변하고 통제되지 않는 것을 영원한 나로 붙잡는지 묻습니다."
+        ],
+        "requiredConcepts": [
+          "five-aggregates",
+          "impermanence-anicca",
+          "not-self-anatta"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "무아의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "행위의 책임·인과·관습적으로 부르는 사람까지 모두 없다는 허무주의와 같지 않습니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "not-self-anatta"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "다섯 집합을 자아로 동일시할 수 있는지 묻는 초기 불교의 핵심 경전입니다.",
+          "인도 불교 마음 철학의 주요 논쟁을 검토한 동료 검토 보충 연구입니다."
+        ],
+        "requiredConcepts": [
+          "five-aggregates",
+          "impermanence-anicca"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "five-aggregates",
+          "impermanence-anicca",
+          "not-self-anatta"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "SuttaCentral · SN 22.59",
+        "href": "https://suttacentral.net/SN22.59/en/sujato?reference=main",
+        "problem": "무아를 허무주의 문장으로 떼지 않고 다섯 집합에 대한 변화·고통·통제 질문의 순서로 읽어야 합니다.",
+        "contribution": "팔리 경전과 번역을 문단별로 맞춰 다섯 집합의 반복 논증을 제공합니다.",
+        "assumptions": "번역의 not-self와 no-self 선택 및 경전층의 해석 문제를 별도로 고려합니다.",
+        "evidenceScope": "다섯 집합을 자아로 동일시할 수 있는지 묻는 초기 불교의 핵심 경전입니다.",
+        "notClaim": "이 한 경전이 후대 불교 학파의 자아·공·마음 논쟁을 모두 끝낸다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
+        "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+        "problem": "무아의 수행 목적과 인격 연속성 논쟁을 현대의 자아 없음 문장 하나로 줄이지 않아야 합니다.",
+        "contribution": "다섯 집합·무아·의존 발생과 후대 인도 불교 학파의 쟁점을 비교합니다.",
+        "assumptions": "현대 학술 개관이므로 각 전통의 1차 경전과 주석을 대신하지 않습니다.",
+        "evidenceScope": "인도 불교 마음 철학의 주요 논쟁을 검토한 동료 검토 보충 연구입니다.",
+        "notClaim": "모든 불교 전통이 자아의 존재를 동일한 논리와 말로 부정한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophical-traditions/gita-action-results-and-release": {
+    "entryLevel": true,
+    "entryNote": "인도 철학을 모른다고 가정하고 수확 결과를 혼자 통제할 수 없는 농부의 선택에서 시작합니다.",
+    "coreIdea": "『바가바드 기타』의 카르마 요가는 통제 가능한 행위를 성실히 하되 결과 전체를 자기 보상으로 소유하려는 집착을 줄이는 길이며, 무관심이나 무행동과 다릅니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "dharma-situated-duty",
+        "role": "다르마와 처지의 의무이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "karma-yoga",
+        "role": "카르마 요가이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "fruit-attachment",
+        "role": "결과 집착이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "dharma-situated-duty",
+        "sectionId": "names",
+        "intuition": "해야 할 일 단계에서 관계와 처지에서 요구되는 행위를 판단합니다.",
+        "workedExample": "농부가 밭과 공동 수로를 돌보고 약속한 몫을 지킵니다.",
+        "boundary": "현재 조직의 직무나 태어난 신분에 무조건 복종하라는 말로 고정할 수 없습니다."
+      },
+      {
+        "id": "karma-yoga",
+        "sectionId": "names",
+        "intuition": "여러 결과 조건 단계에서 내 노력과 자연·타인·시장이 함께 결과를 만듭니다.",
+        "workedExample": "통제할 수 있는 준비와 현재 행동을 수행하고 외부 조건의 불확실성을 인정합니다.",
+        "boundary": "결과를 예측·평가하거나 잘못된 행동을 고치지 않아도 된다는 뜻이 아닙니다."
+      },
+      {
+        "id": "fruit-attachment",
+        "sectionId": "names",
+        "intuition": "열매를 놓기 단계에서 행위는 계속하되 결과를 자아의 보상으로 독점하지 않습니다.",
+        "workedExample": "흉작을 자기 존재의 완전한 실패로 여기거나 수확을 위해 이웃의 물을 빼앗습니다.",
+        "boundary": "목표를 세우고 성과를 확인하는 모든 활동을 집착이라고 부르지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "해야 할 일",
+        "relation": "관계와 처지에서 요구되는 행위를 판단합니다.",
+        "concepts": [
+          "dharma-situated-duty"
+        ]
+      },
+      {
+        "label": "여러 결과 조건",
+        "relation": "내 노력과 자연·타인·시장이 함께 결과를 만듭니다.",
+        "concepts": [
+          "karma-yoga"
+        ]
+      },
+      {
+        "label": "열매를 놓기",
+        "relation": "행위는 계속하되 결과를 자아의 보상으로 독점하지 않습니다.",
+        "concepts": [
+          "fruit-attachment"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "수확 조건 100에서 밭 준비 35와 현재 행위 25를 더하면 농부가 크게 바꿀 수 있는 몫은 얼마인가요?",
+        "answerChecklist": [
+          "60",
+          "35+25"
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "다르마와 처지의 의무을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "농부가 밭과 공동 수로를 돌보고 약속한 몫을 지킵니다.",
+          "현재 조직의 직무나 태어난 신분에 무조건 복종하라는 말로 고정할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "카르마 요가이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "여러 결과 조건",
+          "내 노력과 자연·타인·시장이 함께 결과를 만듭니다."
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty",
+          "karma-yoga"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "결과 집착을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "흉작을 자기 존재의 완전한 실패로 여기거나 수확을 위해 이웃의 물을 빼앗습니다.",
+          "목표를 세우고 성과를 확인하는 모든 활동을 집착이라고 부르지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "fruit-attachment"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "Gita Supersite · Bhagavad Gita 2.47이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "행위·열매·동기·무행동에 관한 네 부분과 여러 번역·주석을 제공합니다.",
+          "번역과 주석 전통에 따라 권한·열매·동기의 설명이 달라짐을 전제로 합니다."
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty",
+          "karma-yoga"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "전쟁 서사와 계층적 의무의 역사적 맥락을 현대 직업윤리에 그대로 옮기지 않습니다.",
+          "모든 힌두 전통이 지식·헌신·행위와 해탈의 관계를 똑같이 설명한다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "karma-yoga",
+          "fruit-attachment"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "다르마와 처지의 의무에서 결과 집착까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "관계와 처지에서 요구되는 행위를 판단합니다.",
+          "행위는 계속하되 결과를 자아의 보상으로 독점하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty",
+          "karma-yoga",
+          "fruit-attachment"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "결과 집착의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "목표를 세우고 성과를 확인하는 모든 활동을 집착이라고 부르지는 않습니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "fruit-attachment"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "『기타』 2.47의 산스크리트 원문과 전통별 주석을 비교할 수 있는 핵심 문헌 자료입니다.",
+          "『기타』 3.19의 행위 요가 논증을 확인하는 비교용 핵심 문헌 자료입니다."
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty",
+          "karma-yoga"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "dharma-situated-duty",
+          "karma-yoga",
+          "fruit-attachment"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Gita Supersite · Bhagavad Gita 2.47",
+        "href": "https://www.gitasupersite.in/dv/bhagavadgita/2.47",
+        "problem": "널리 인용되는 구절을 결과를 신경 쓰지 말라는 생산성 표어로 만들지 않아야 합니다.",
+        "contribution": "행위·열매·동기·무행동에 관한 네 부분과 여러 번역·주석을 제공합니다.",
+        "assumptions": "번역과 주석 전통에 따라 권한·열매·동기의 설명이 달라짐을 전제로 합니다.",
+        "evidenceScope": "『기타』 2.47의 산스크리트 원문과 전통별 주석을 비교할 수 있는 핵심 문헌 자료입니다.",
+        "notClaim": "결과를 검토하지 않거나 행위가 낳은 피해에 책임지지 않아도 된다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Gita Supersite · Bhagavad Gita 3.19",
+        "href": "https://www.gitasupersite.in/dv/bhagavadgita/3.19",
+        "problem": "집착을 줄이는 일이 무행동이 아니라 반복되는 행위의 수행이라는 점을 함께 확인해야 합니다.",
+        "contribution": "해야 할 행위를 집착 없이 수행하라는 3장의 원문과 여러 주석을 제공합니다.",
+        "assumptions": "전쟁 서사와 계층적 의무의 역사적 맥락을 현대 직업윤리에 그대로 옮기지 않습니다.",
+        "evidenceScope": "『기타』 3.19의 행위 요가 논증을 확인하는 비교용 핵심 문헌 자료입니다.",
+        "notClaim": "모든 힌두 전통이 지식·헌신·행위와 해탈의 관계를 똑같이 설명한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophical-traditions/islamic-causation-reason-and-revelation": {
+    "entryLevel": true,
+    "entryNote": "이슬람 철학을 모른다고 가정하고 불이 솜을 태운 열 번의 관찰과 열한 번째 예측에서 시작합니다.",
+    "coreIdea": "고전기 아랍어권의 인과 논쟁은 관찰된 규칙, 자연물의 인과력, 필연적 연결과 신의 행위를 구분하며 팔사파와 칼람 내부에서도 서로 다른 답을 만들었습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "falsafa-natural-causation",
+        "role": "팔사파의 자연 인과이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "kalam-divine-agency",
+        "role": "칼람의 신적 행위이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "necessary-connection-debate",
+        "role": "필연적 연결 논쟁이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "falsafa-natural-causation",
+        "sectionId": "names",
+        "intuition": "관찰된 규칙 단계에서 불과 솜의 결합과 연소를 반복해 기록합니다.",
+        "workedExample": "불의 열과 솜의 가연성을 연소의 가까운 원인으로 설명합니다.",
+        "boundary": "계시를 모두 부정한 세속 과학자 집단이나 하나의 고정 학파를 뜻하지 않습니다."
+      },
+      {
+        "id": "kalam-divine-agency",
+        "sectionId": "names",
+        "intuition": "자연 원인 단계에서 열·가연성·산소를 가까운 설명에 넣습니다.",
+        "workedExample": "불과 솜의 접촉과 함께 신이 연소 사건을 창조한다는 모형을 검토합니다.",
+        "boundary": "아슈아리·무타질라를 비롯한 여러 칼람 입장을 하나의 우인론으로 묶을 수 없습니다."
+      },
+      {
+        "id": "necessary-connection-debate",
+        "sectionId": "names",
+        "intuition": "필연성과 행위자 단계에서 자연의 힘과 신의 행위를 어떻게 나눌지 묻습니다.",
+        "workedExample": "열 번의 연소가 열한 번째의 논리적 필연까지 보여 주는지 구분합니다.",
+        "boundary": "관찰된 규칙이나 일상적 인과 표현을 모두 부정하는 질문과 같지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "관찰된 규칙",
+        "relation": "불과 솜의 결합과 연소를 반복해 기록합니다.",
+        "concepts": [
+          "falsafa-natural-causation"
+        ]
+      },
+      {
+        "label": "자연 원인",
+        "relation": "열·가연성·산소를 가까운 설명에 넣습니다.",
+        "concepts": [
+          "kalam-divine-agency"
+        ]
+      },
+      {
+        "label": "필연성과 행위자",
+        "relation": "자연의 힘과 신의 행위를 어떻게 나눌지 묻습니다.",
+        "concepts": [
+          "necessary-connection-debate"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "불과 솜의 실험 10회가 모두 연소했을 때 기록된 성공과 실패는 각각 몇 회인가요?",
+        "answerChecklist": [
+          "성공 10회",
+          "실패 0회"
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "팔사파의 자연 인과을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "불의 열과 솜의 가연성을 연소의 가까운 원인으로 설명합니다.",
+          "계시를 모두 부정한 세속 과학자 집단이나 하나의 고정 학파를 뜻하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "칼람의 신적 행위이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "자연 원인",
+          "열·가연성·산소를 가까운 설명에 넣습니다."
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation",
+          "kalam-divine-agency"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "필연적 연결 논쟁을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "열 번의 연소가 열한 번째의 논리적 필연까지 보여 주는지 구분합니다.",
+          "관찰된 규칙이나 일상적 인과 표현을 모두 부정하는 질문과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "necessary-connection-debate"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "Library of Congress · The Incoherence of the Philosophers이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
+          "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation",
+          "kalam-divine-agency"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "현대 학술 개관이며 각 사상가 저작의 직접 독해를 대신하지 않습니다.",
+          "알가잘리 이후 이슬람권 자연 연구가 한 번에 쇠퇴했다는 역사 명제를 지지하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "kalam-divine-agency",
+          "necessary-connection-debate"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "팔사파의 자연 인과에서 필연적 연결 논쟁까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "불과 솜의 결합과 연소를 반복해 기록합니다.",
+          "자연의 힘과 신의 행위를 어떻게 나눌지 묻습니다."
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation",
+          "kalam-divine-agency",
+          "necessary-connection-debate"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "필연적 연결 논쟁의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "관찰된 규칙이나 일상적 인과 표현을 모두 부정하는 질문과 같지 않습니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "necessary-connection-debate"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다.",
+          "9~12세기 아랍어권 인과·행위자성 논쟁의 범위를 정리한 동료 검토 연구입니다."
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation",
+          "kalam-divine-agency"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "falsafa-natural-causation",
+          "kalam-divine-agency",
+          "necessary-connection-debate"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Library of Congress · The Incoherence of the Philosophers",
+        "href": "https://www.loc.gov/item/2021666178/",
+        "problem": "알가잘리의 인과 논증을 후대의 반과학 이야기와 분리해 저작과 판본의 위치부터 확인해야 합니다.",
+        "contribution": "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
+        "assumptions": "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다.",
+        "evidenceScope": "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다.",
+        "notClaim": "이 필사본 하나로 당시 독자·교육·자연 탐구의 실제 반응을 모두 알 수 있다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Causation in Arabic and Islamic Thought",
+        "href": "https://plato.stanford.edu/entries/arabic-islamic-causation/",
+        "problem": "팔사파와 칼람의 여러 입장을 종교 대 과학의 두 진영으로 만들지 않아야 합니다.",
+        "contribution": "칼람 내부 논쟁과 이븐 시나·알가잘리·이븐 루시드의 인과론을 1차 문헌에 따라 비교합니다.",
+        "assumptions": "현대 학술 개관이며 각 사상가 저작의 직접 독해를 대신하지 않습니다.",
+        "evidenceScope": "9~12세기 아랍어권 인과·행위자성 논쟁의 범위를 정리한 동료 검토 연구입니다.",
+        "notClaim": "알가잘리 이후 이슬람권 자연 연구가 한 번에 쇠퇴했다는 역사 명제를 지지하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophical-traditions/akan-personhood-community-and-agency": {
+    "entryLevel": true,
+    "entryNote": "아칸 철학을 모른다고 가정하고 열 가구가 다리 복구 100시간을 나누는 사례에서 시작합니다.",
+    "coreIdea": "아칸 인격론의 현대적 논쟁은 인간으로서의 기본 지위와 공동체 속에서 기르는 도덕적 인격을 구분하면서, 관계가 행위자를 만들고 개인이 관계를 비판하는 두 방향을 함께 봅니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "akan-biological-person",
+        "role": "아칸 인격론의 인간 지위이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "achieved-moral-personhood",
+        "role": "성취하는 도덕적 인격이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "relational-agency",
+        "role": "관계적 행위자성이 사례의 판단과 행동을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "akan-biological-person",
+        "sectionId": "names",
+        "intuition": "기본 지위 단계에서 모든 인간에게 필요한 대우와 권리를 먼저 둡니다.",
+        "workedExample": "다리 수리에 참여하지 못해도 의료·식량과 말할 권리를 잃지 않습니다.",
+        "boundary": "도덕적 성품과 공동 기여가 이미 충분하다는 평가와 같지 않습니다."
+      },
+      {
+        "id": "achieved-moral-personhood",
+        "sectionId": "names",
+        "intuition": "도덕적 성장 단계에서 반복된 책임·돌봄·기여로 성품을 기릅니다.",
+        "workedExample": "자기 몫을 다하고 취약한 이웃의 사정을 꾸준히 돌보는 성품을 평가합니다.",
+        "boundary": "인격이 부족하다는 평가가 인간 지위나 법적 권리를 없애는 판정은 아닙니다."
+      },
+      {
+        "id": "relational-agency",
+        "sectionId": "names",
+        "intuition": "관계의 비판 단계에서 공동체에서 얻은 능력으로 부당한 규칙을 고칩니다.",
+        "workedExample": "공동체에서 안전 지식을 배운 주민이 부당한 다리 공사를 비판합니다.",
+        "boundary": "개인의 선택이 공동체에 완전히 흡수되거나 혼자서 만들어진다는 두 극단과 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "기본 지위",
+        "relation": "모든 인간에게 필요한 대우와 권리를 먼저 둡니다.",
+        "concepts": [
+          "akan-biological-person"
+        ]
+      },
+      {
+        "label": "도덕적 성장",
+        "relation": "반복된 책임·돌봄·기여로 성품을 기릅니다.",
+        "concepts": [
+          "achieved-moral-personhood"
+        ]
+      },
+      {
+        "label": "관계의 비판",
+        "relation": "공동체에서 얻은 능력으로 부당한 규칙을 고칩니다.",
+        "concepts": [
+          "relational-agency"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "다리 복구 100시간에서 직접 수리 70과 식사·돌봄 20을 빼면 기록·안전 확인은 몇 시간인가요?",
+        "answerChecklist": [
+          "10시간",
+          "100−70−20"
+        ],
+        "requiredConcepts": [
+          "akan-biological-person"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "아칸 인격론의 인간 지위을 글의 생활 사례와 연결해 한 문장 이상으로 설명하세요.",
+        "answerChecklist": [
+          "다리 수리에 참여하지 못해도 의료·식량과 말할 권리를 잃지 않습니다.",
+          "도덕적 성품과 공동 기여가 이미 충분하다는 평가와 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "akan-biological-person"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "성취하는 도덕적 인격이 첫 번째 개념을 실제 행동으로 옮기거나 분석하는 방식을 설명하세요.",
+        "answerChecklist": [
+          "도덕적 성장",
+          "반복된 책임·돌봄·기여로 성품을 기릅니다."
+        ],
+        "requiredConcepts": [
+          "akan-biological-person",
+          "achieved-moral-personhood"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "관계적 행위자성을 흔한 오해와 구분하고 사례에서 확인할 행동을 쓰세요.",
+        "answerChecklist": [
+          "공동체에서 안전 지식을 배운 주민이 부당한 다리 공사를 비판합니다.",
+          "개인의 선택이 공동체에 완전히 흡수되거나 혼자서 만들어진다는 두 극단과 다릅니다."
+        ],
+        "requiredConcepts": [
+          "relational-agency"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "basic",
+        "question": "Stanford Encyclopedia of Philosophy · Akan Philosophy of the Person이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
+        "answerChecklist": [
+          "언어·민족지·현대 아프리카 철학을 바탕으로 사람 개념의 형이상학과 규범 논쟁을 검토합니다.",
+          "구전 표현과 현대 연구자의 논증을 문자로 고정된 단일 교리처럼 다루지 않습니다."
+        ],
+        "requiredConcepts": [
+          "akan-biological-person",
+          "achieved-moral-personhood"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "이 글의 사례를 전통 전체의 단일한 답으로 일반화하면 안 되는 이유를 두 가지 쓰세요.",
+        "answerChecklist": [
+          "아칸·요루바·남부 아프리카와 다른 지역 전통의 차이를 보존합니다.",
+          "공동체적 윤리가 개인의 기본 권리와 내부 비판을 언제나 부정한다는 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "achieved-moral-personhood",
+          "relational-agency"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "아칸 인격론의 인간 지위에서 관계적 행위자성까지 판단이 바뀌는 경로를 원인과 결과로 그리세요.",
+        "answerChecklist": [
+          "모든 인간에게 필요한 대우와 권리를 먼저 둡니다.",
+          "공동체에서 얻은 능력으로 부당한 규칙을 고칩니다."
+        ],
+        "requiredConcepts": [
+          "akan-biological-person",
+          "achieved-moral-personhood",
+          "relational-agency"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "관계적 행위자성의 경계를 무시할 때 피해나 책임 회피가 생기는 반례를 하나 만드세요.",
+        "answerChecklist": [
+          "개인의 선택이 공동체에 완전히 흡수되거나 혼자서 만들어진다는 두 극단과 다릅니다.",
+          "피해를 받는 사람과 수정 방법"
+        ],
+        "requiredConcepts": [
+          "relational-agency"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "두 출처의 증거 종류와 범위가 어떻게 다르며 같은 주장을 서로 대신할 수 없는지 비교하세요.",
+        "answerChecklist": [
+          "아칸 인격론의 주요 해석과 쟁점을 정리한 동료 검토 학술 개관입니다.",
+          "아프리카 윤리의 넓은 비교 질문을 제공하는 동료 검토 보충 연구입니다."
+        ],
+        "requiredConcepts": [
+          "akan-biological-person",
+          "achieved-moral-personhood"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "글의 설명용 숫자를 실제 역사 통계로 쓰려면 어떤 자료·단위·비교 조건을 더 확인해야 하나요?",
+        "answerChecklist": [
+          "지역·시대·표본을 밝힌 자료",
+          "같은 단위와 빠진 행위자 확인"
+        ],
+        "requiredConcepts": [
+          "akan-biological-person",
+          "achieved-moral-personhood",
+          "relational-agency"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Akan Philosophy of the Person",
+        "href": "https://plato.stanford.edu/entries/akan-person/",
+        "problem": "아칸의 인간 구성과 도덕적 사람됨에 관한 현대 철학적 재구성을 서로 구분해야 합니다.",
+        "contribution": "언어·민족지·현대 아프리카 철학을 바탕으로 사람 개념의 형이상학과 규범 논쟁을 검토합니다.",
+        "assumptions": "구전 표현과 현대 연구자의 논증을 문자로 고정된 단일 교리처럼 다루지 않습니다.",
+        "evidenceScope": "아칸 인격론의 주요 해석과 쟁점을 정리한 동료 검토 학술 개관입니다.",
+        "notClaim": "가나의 모든 아칸 사람이나 시대가 이 설명을 똑같이 믿는다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · African Ethics",
+        "href": "https://plato.stanford.edu/archives/spr2025/entries/african-ethics/",
+        "problem": "공동체와 타인의 복지를 강조하는 비교를 아프리카 전체의 단일 본질로 일반화하지 않아야 합니다.",
+        "contribution": "여러 아프리카 윤리 전통의 인간주의·공동체·의무·권리 논쟁을 비교합니다.",
+        "assumptions": "아칸·요루바·남부 아프리카와 다른 지역 전통의 차이를 보존합니다.",
+        "evidenceScope": "아프리카 윤리의 넓은 비교 질문을 제공하는 동료 검토 보충 연구입니다.",
+        "notClaim": "공동체적 윤리가 개인의 기본 권리와 내부 비판을 언제나 부정한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

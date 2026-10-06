@@ -21,6 +21,20 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  "philosophical-traditions": {
+    organizingPrinciple: "주제순",
+    title: "역할·개입·경험·행위·인과·사람됨을 묻는 여섯 출발점",
+    description: "어느 전통이 먼저라는 서열이나 하나의 발전 연표 대신, 서로 다른 지역과 문헌이 생활 속 문제를 어떤 개념으로 나눴는지 주제순으로 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 역할과 욕망", title: "유가의 인·예·덕치", description: "부족한 곡물을 나누는 절차에서 관계와 역할을 훈련하는 예의 작동을 봅니다.", subcategories: ["traditions-confucian"] },
+      { eyebrow: "02 · 이름과 개입", title: "도가의 구분·도·무위", description: "물을 억지로 밀어 손실을 키우는 사례에서 이름이 만든 욕망과 비강제적 행동을 구분합니다.", subcategories: ["traditions-daoist"] },
+      { eyebrow: "03 · 경험과 붙잡음", title: "초기 불교의 다섯 집합·무상·무아", description: "모욕을 들은 10초를 나눠 고정된 나로 붙잡는 과정과 다음 반응의 여지를 봅니다.", subcategories: ["traditions-buddhist"] },
+      { eyebrow: "04 · 행위와 열매", title: "『바가바드 기타』의 다르마·카르마 요가", description: "수확을 만드는 통제 가능한 행위와 외부 조건을 나눠 무집착과 무관심을 구분합니다.", subcategories: ["traditions-gita"] },
+      { eyebrow: "05 · 원인과 필연", title: "이슬람 철학의 팔사파·칼람", description: "불과 솜의 열 번 관찰에서 규칙적 예측과 필연적 인과라는 주장을 나눕니다.", subcategories: ["traditions-islamic"] },
+      { eyebrow: "06 · 공동체와 사람됨", title: "아칸의 인격·기여·행위자성", description: "다리 복구 100시간에서 기본 인간 지위와 길러지는 도덕적 인격을 구분합니다.", subcategories: ["traditions-akan"] },
+    ],
+    featuredArticles: ["confucian-ritual-role-and-humane-rule", "daoist-names-noncoercive-action-and-change", "buddhist-aggregates-impermanence-and-not-self", "gita-action-results-and-release", "islamic-causation-reason-and-revelation", "akan-personhood-community-and-agency"],
+  },
   "global-history": {
     organizingPrinciple: "시간순",
     title: "제국의 도로에서 탈식민과 세계화까지",
