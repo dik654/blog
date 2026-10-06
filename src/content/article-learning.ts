@@ -139523,4 +139523,1411 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/brownian-motion-ito-and-risk-neutral-pricing": {
+    "entryLevel": false,
+    "entryNote": "주가 100·연 20%에서 하루 흔들림 약 1.26과 제곱 몫 1.59로 시작합니다.",
+    "coreIdea": "연속시간 가격모형은 짧은 구간의 평균과 제곱근 크기 흔들림을 나누고, 이토 보정으로 굽은 지급의 제곱항을 살린 뒤 복제와 위험중립 장부로 무차익 가격을 만듭니다.",
+    "assumedKnowledge": [
+      {
+        "id": "risk-neutral-pricing",
+        "role": "이항 복제에서 배운 위험중립 가격을 연속시간의 확률 장부로 넓히는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "brownian-price-process",
+        "role": "브라운 가격 과정을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "ito-quadratic-variation",
+        "role": "이토 보정과 이차변동을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "brownian-price-process",
+        "sectionId": "names",
+        "intuition": "브라운 가격 과정이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "하루 변화의 평균과 약 1.26의 무작위 흔들림을 나눕니다.",
+        "boundary": "점프와 두꺼운 꼬리를 자동으로 담지 않습니다."
+      },
+      {
+        "id": "ito-quadratic-variation",
+        "sectionId": "names",
+        "intuition": "이토 보정과 이차변동이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "100에서 ±1.26이 움직일 때 약 1.59의 제곱 몫이 남습니다.",
+        "boundary": "경로와 함수가 필요한 조건을 만족할 때 쓰는 계산 규칙입니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 가격 계산용 가중치",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "risk-neutral-pricing"
+        ]
+      },
+      {
+        "label": "2단계 · 짧은 무작위 경로",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "brownian-price-process"
+        ]
+      },
+      {
+        "label": "3단계 · 굽음의 보정",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "ito-quadratic-variation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "브라운 가격 과정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "브라운 가격 과정",
+          "하루 변화의 평균과 약 1.26의 무작위 흔들림을 나눕니다.",
+          "점프와 두꺼운 꼬리를 자동으로 담지 않습니다."
+        ],
+        "requiredConcepts": [
+          "brownian-price-process"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "이토 보정과 이차변동이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이토 보정과 이차변동",
+          "첫 개념과의 차이",
+          "100에서 ±1.26이 움직일 때 약 1.59의 제곱 몫이 남습니다."
+        ],
+        "requiredConcepts": [
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 이토 보정과 이차변동이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "이토 보정과 이차변동",
+          "100에서 ±1.26이 움직일 때 약 1.59의 제곱 몫이 남습니다.",
+          "경로와 함수가 필요한 조건을 만족할 때 쓰는 계산 규칙입니다."
+        ],
+        "requiredConcepts": [
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 18.642 · Stochastic Calculus",
+          "MIT 18.642 · Risk Neutral Valuation",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process",
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process",
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process",
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "brownian-price-process",
+          "ito-quadratic-variation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 18.642 · Stochastic Calculus",
+        "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec19_1.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "짧은 구간의 평균·분산과 이토 과정을 주가 100의 하루 사례에 적용합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "MIT 18.642 · Risk Neutral Valuation",
+        "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec21.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "복제와 위험중립 평가가 같은 가격으로 이어지는 범위를 확인합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/monte-carlo-path-dependent-pricing-and-variance-reduction": {
+    "entryLevel": false,
+    "entryNote": "평균가격 옵션의 지급 5·0·10·0을 네 경로에서 계산합니다.",
+    "coreIdea": "경로의존 파생상품은 무작위 경로별 지급을 할인 평균하고, 대칭표본과 통제변수로 계산 잡음을 줄이되 통계오차·시간격자·모형·계약 구현 오류를 따로 검증합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "barrier-path-dependence",
+        "role": "중간 경로가 만기 지급을 바꾼다는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "monte-carlo-derivative-pricing",
+        "role": "파생상품 몬테카를로 평가을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "antithetic-variates",
+        "role": "대칭표본을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "control-variate-pricing",
+        "role": "통제변수 가격 보정을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "monte-carlo-derivative-pricing",
+        "sectionId": "names",
+        "intuition": "파생상품 몬테카를로 평가이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "지급 5·0·10·0의 평균 3.75를 구합니다.",
+        "boundary": "많은 경로가 잘못된 모형과 계약 구현을 바로잡지는 않습니다."
+      },
+      {
+        "id": "antithetic-variates",
+        "sectionId": "names",
+        "intuition": "대칭표본이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "5와 0, 10과 0을 각각 짝지어 표준오차를 비교합니다.",
+        "boundary": "지급이 짝 사이에서 상쇄되지 않으면 개선 폭이 작을 수 있습니다."
+      },
+      {
+        "id": "control-variate-pricing",
+        "sectionId": "names",
+        "intuition": "통제변수 가격 보정이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "같은 경로의 만기 주가나 단순 옵션을 함께 계산합니다.",
+        "boundary": "상관과 알려진 기대값을 잘못 쓰면 편향이나 불안정성이 생깁니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 경로의존 지급",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "barrier-path-dependence"
+        ]
+      },
+      {
+        "label": "2단계 · 경로 평균",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "monte-carlo-derivative-pricing"
+        ]
+      },
+      {
+        "label": "3단계 · 계산 잡음 감소",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "antithetic-variates"
+        ]
+      },
+      {
+        "label": "4단계 · 알려진 평균 재사용",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "control-variate-pricing"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 몬테카를로 평가의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 몬테카를로 평가",
+          "지급 5·0·10·0의 평균 3.75를 구합니다.",
+          "많은 경로가 잘못된 모형과 계약 구현을 바로잡지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "대칭표본이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "대칭표본",
+          "첫 개념과의 차이",
+          "5와 0, 10과 0을 각각 짝지어 표준오차를 비교합니다."
+        ],
+        "requiredConcepts": [
+          "antithetic-variates"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 통제변수 가격 보정이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "통제변수 가격 보정",
+          "같은 경로의 만기 주가나 단순 옵션을 함께 계산합니다.",
+          "상관과 알려진 기대값을 잘못 쓰면 편향이나 불안정성이 생깁니다."
+        ],
+        "requiredConcepts": [
+          "control-variate-pricing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 15.450 · Derivatives and Monte Carlo",
+          "Basel Framework · Internal Models",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "control-variate-pricing"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing",
+          "antithetic-variates",
+          "control-variate-pricing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing",
+          "antithetic-variates",
+          "control-variate-pricing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing",
+          "antithetic-variates",
+          "control-variate-pricing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "monte-carlo-derivative-pricing",
+          "antithetic-variates",
+          "control-variate-pricing"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 15.450 · Derivatives and Monte Carlo",
+        "href": "https://ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/ab2510b021bee94c384057c138c343d4_MIT15_450F10_handout02.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "대칭표본과 통제변수의 조건을 네 지급의 작은 표본에 적용합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Internal Models",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "표본오차 밖의 가격 과정·자료·스트레스와 독립 검증을 연결합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/black-scholes-pde-finite-difference-and-numerical-error": {
+    "entryLevel": false,
+    "entryNote": "행사가 100 콜의 만기 지급 0·0·10을 한 시간 칸 전으로 옮깁니다.",
+    "coreIdea": "블랙숄즈 방정식은 시간·기울기·굽음·금리를 무차익 관계로 묶고, 유한차분은 이를 격자 차이로 바꾸며 수렴·안정성·경계와 독립 가격 비교로 수치오차를 통제합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "option-delta-gamma",
+        "role": "옵션의 기울기와 굽음이 가격 변화에 들어간다는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "black-scholes-pde",
+        "role": "블랙숄즈 편미분방정식을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "finite-difference-option-pricing",
+        "role": "옵션 유한차분 평가을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "numerical-scheme-stability",
+        "role": "수치 계산 안정성을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "black-scholes-pde",
+        "sectionId": "names",
+        "intuition": "블랙숄즈 편미분방정식이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "굽음 몫 20이 0.01년 동안 값 0.2를 만듭니다.",
+        "boundary": "고정한 시장과 경로 가정 밖의 현실을 자동으로 설명하지 않습니다."
+      },
+      {
+        "id": "finite-difference-option-pricing",
+        "sectionId": "names",
+        "intuition": "옵션 유한차분 평가이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "0·0·10에서 가운데 두 번째 차분 0.1을 구합니다.",
+        "boundary": "격자 범위·간격과 경계 조건에 따라 오차가 달라집니다."
+      },
+      {
+        "id": "numerical-scheme-stability",
+        "sectionId": "names",
+        "intuition": "수치 계산 안정성이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "시간 간격을 줄이며 음수와 톱니 모양이 사라지는지 봅니다.",
+        "boundary": "안정적이라고 정확하거나 시장에 잘 맞는 모형이라는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 가격의 기울기와 굽음",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "option-delta-gamma"
+        ]
+      },
+      {
+        "label": "2단계 · 연속 가격 관계",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "black-scholes-pde"
+        ]
+      },
+      {
+        "label": "3단계 · 격자 계산",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "finite-difference-option-pricing"
+        ]
+      },
+      {
+        "label": "4단계 · 오차 통제",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "numerical-scheme-stability"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "블랙숄즈 편미분방정식의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "블랙숄즈 편미분방정식",
+          "굽음 몫 20이 0.01년 동안 값 0.2를 만듭니다.",
+          "고정한 시장과 경로 가정 밖의 현실을 자동으로 설명하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "옵션 유한차분 평가이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "옵션 유한차분 평가",
+          "첫 개념과의 차이",
+          "0·0·10에서 가운데 두 번째 차분 0.1을 구합니다."
+        ],
+        "requiredConcepts": [
+          "finite-difference-option-pricing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 수치 계산 안정성이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "수치 계산 안정성",
+          "시간 간격을 줄이며 음수와 톱니 모양이 사라지는지 봅니다.",
+          "안정적이라고 정확하거나 시장에 잘 맞는 모형이라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 18.642 · Black-Scholes Equation",
+          "Basel Framework · Internal Models",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde",
+          "finite-difference-option-pricing",
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde",
+          "finite-difference-option-pricing",
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde",
+          "finite-difference-option-pricing",
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "black-scholes-pde",
+          "finite-difference-option-pricing",
+          "numerical-scheme-stability"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 18.642 · Black-Scholes Equation",
+        "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec21.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "방정식의 굽음 항에 90·100·110 격자를 넣어 한 칸 전 값 0.2를 구합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Internal Models",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "격자 수렴·경계·독립 가격 비교를 지속적인 모형 검증에 연결합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/local-stochastic-volatility-jumps-and-calibration": {
+    "entryLevel": false,
+    "entryNote": "90·100·110 옵션의 역산값 30%·20%·24%를 고정 20%와 비교합니다.",
+    "coreIdea": "옵션 모형은 현재 위치별 흔들림, 흔들림 자체의 미래 경로와 드문 큰 이동을 서로 다른 부품으로 설명하고, 가격 적합도·매개변수 안정성·헤지 손익·스트레스를 따로 검증합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "implied-volatility-surface",
+        "role": "행사가와 만기마다 다른 옵션의 역산 흔들림 지도를 읽는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "local-volatility-model",
+        "role": "지역변동성 모형을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "stochastic-volatility-model",
+        "role": "확률변동성 모형을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "jump-diffusion-model",
+        "role": "점프확산 모형을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "local-volatility-model",
+        "sectionId": "names",
+        "intuition": "지역변동성 모형이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "90·100·110 위치에 서로 다른 값을 둡니다.",
+        "boundary": "오늘 표면을 맞춰도 내일 표면 움직임과 헤지 손익을 보장하지 않습니다."
+      },
+      {
+        "id": "stochastic-volatility-model",
+        "sectionId": "names",
+        "intuition": "확률변동성 모형이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "주가 하락과 흔들림 상승이 함께 일어나는 경로를 만듭니다.",
+        "boundary": "매개변수가 늘어 유일한 보정과 안정적인 추정이 어려울 수 있습니다."
+      },
+      {
+        "id": "jump-diffusion-model",
+        "sectionId": "names",
+        "intuition": "점프확산 모형이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "하루 −10% 사건을 연속 흔들림과 별도로 넣습니다.",
+        "boundary": "과거에 드문 점프의 빈도와 크기를 정확히 추정하기 어렵습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 현재 옵션 지도",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "implied-volatility-surface"
+        ]
+      },
+      {
+        "label": "2단계 · 위치별 흔들림",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "local-volatility-model"
+        ]
+      },
+      {
+        "label": "3단계 · 움직이는 흔들림",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "stochastic-volatility-model"
+        ]
+      },
+      {
+        "label": "4단계 · 불연속 사건",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "jump-diffusion-model"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "지역변동성 모형의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "지역변동성 모형",
+          "90·100·110 위치에 서로 다른 값을 둡니다.",
+          "오늘 표면을 맞춰도 내일 표면 움직임과 헤지 손익을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "local-volatility-model"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "확률변동성 모형이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "확률변동성 모형",
+          "첫 개념과의 차이",
+          "주가 하락과 흔들림 상승이 함께 일어나는 경로를 만듭니다."
+        ],
+        "requiredConcepts": [
+          "stochastic-volatility-model"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 점프확산 모형이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "점프확산 모형",
+          "하루 −10% 사건을 연속 흔들림과 별도로 넣습니다.",
+          "과거에 드문 점프의 빈도와 크기를 정확히 추정하기 어렵습니다."
+        ],
+        "requiredConcepts": [
+          "jump-diffusion-model"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 18.642 · Volatility Modeling",
+          "Basel Framework · Market Risk",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "jump-diffusion-model"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model",
+          "stochastic-volatility-model",
+          "jump-diffusion-model"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model",
+          "stochastic-volatility-model",
+          "jump-diffusion-model"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model",
+          "stochastic-volatility-model",
+          "jump-diffusion-model"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "local-volatility-model",
+          "stochastic-volatility-model",
+          "jump-diffusion-model"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 18.642 · Volatility Modeling",
+        "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec17_1.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "고정 20%와 시간에 따라 달라지는 수익률 흔들림을 구분합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Market Risk",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/short-rate-hjm-and-interest-rate-model-risk": {
+    "entryLevel": false,
+    "entryNote": "현재 3%인 짧은 금리의 하루 평균복귀와 흔들림을 계산합니다.",
+    "coreIdea": "금리 파생상품은 한 개의 짧은 금리 또는 만기별 선도곡선의 미래 움직임을 모형화하고, 무차익 평균 제약·시장 보정·후보 모형 가격과 헤지 차이로 모형위험을 관리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "discount-factor-bootstrapping",
+        "role": "오늘의 만기별 할인계수와 선도금리를 만드는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "short-rate-model",
+        "role": "단기금리 모형을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "hjm-forward-rate-framework",
+        "role": "HJM 선도금리 틀을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "interest-rate-model-risk",
+        "role": "금리 모형위험을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "short-rate-model",
+        "sectionId": "names",
+        "intuition": "단기금리 모형이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "3%가 4% 중심으로 돌아가며 연 1% 흔들립니다.",
+        "boundary": "곡선의 여러 독립 움직임을 한 상태가 충분히 설명하지 못할 수 있습니다."
+      },
+      {
+        "id": "hjm-forward-rate-framework",
+        "sectionId": "names",
+        "intuition": "HJM 선도금리 틀이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "상수 1% 흔들림에서 2년 앞 평균 몫을 연 2bp로 둡니다.",
+        "boundary": "만기별 함수와 상관을 보정해야 하므로 자료와 계산이 늘어납니다."
+      },
+      {
+        "id": "interest-rate-model-risk",
+        "sectionId": "names",
+        "intuition": "금리 모형위험이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "같은 스왑션을 두 모형으로 계산해 차이를 준비금에 반영합니다.",
+        "boundary": "현재 가격 적합도 하나로 미래 헤지 성능을 판정할 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 오늘의 할인곡선",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "discount-factor-bootstrapping"
+        ]
+      },
+      {
+        "label": "2단계 · 한 점의 움직임",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "short-rate-model"
+        ]
+      },
+      {
+        "label": "3단계 · 곡선 전체의 움직임",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "hjm-forward-rate-framework"
+        ]
+      },
+      {
+        "label": "4단계 · 선택의 위험",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "interest-rate-model-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "short-rate-model"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "단기금리 모형의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "단기금리 모형",
+          "3%가 4% 중심으로 돌아가며 연 1% 흔들립니다.",
+          "곡선의 여러 독립 움직임을 한 상태가 충분히 설명하지 못할 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "short-rate-model"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "HJM 선도금리 틀이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "HJM 선도금리 틀",
+          "첫 개념과의 차이",
+          "상수 1% 흔들림에서 2년 앞 평균 몫을 연 2bp로 둡니다."
+        ],
+        "requiredConcepts": [
+          "hjm-forward-rate-framework"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 금리 모형위험이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "금리 모형위험",
+          "같은 스왑션을 두 모형으로 계산해 차이를 준비금에 반영합니다.",
+          "현재 가격 적합도 하나로 미래 헤지 성능을 판정할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 18.S096 · HJM Model",
+          "Basel Framework · Internal Models",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "short-rate-model"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "short-rate-model",
+          "hjm-forward-rate-framework",
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "short-rate-model",
+          "hjm-forward-rate-framework",
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "short-rate-model",
+          "hjm-forward-rate-framework",
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "short-rate-model",
+          "hjm-forward-rate-framework",
+          "interest-rate-model-risk"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 18.S096 · HJM Model",
+        "href": "https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/e4c52338bad489162192dd0cc44375ab_MIT18_S096F13_lecnote24.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "상수 흔들림 1%와 남은 만기 2년을 평균 제약에 넣어 연 2bp를 계산합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Internal Models",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "곡선·옵션 보정 뒤 장기 대용값, 극단 상황과 독립 가격을 검증합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/hazard-rate-curve-recovery-and-credit-correlation": {
+    "entryLevel": false,
+    "entryNote": "연 보호료 1.2%와 회수율 40%에서 가격 장부의 1년 부도확률을 풉니다.",
+    "coreIdea": "신용 가격은 만기별 생존과 부도 도착 세기, 회수 뒤 손실과 동시부도를 따로 계산하며 시장가격용 확률과 실제 부도 추정을 분리해 단일기업·포트폴리오 꼬리위험을 관리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "credit-recovery-rate",
+        "role": "신용사건 뒤 되찾는 몫과 손실률의 관계를 읽는 선수 개념입니다."
+      },
+      {
+        "id": "credit-loss-tranche",
+        "role": "동시부도가 손실 순서를 바꾸는 포트폴리오 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "default-intensity-curve",
+        "role": "부도 위험강도곡선을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      },
+      {
+        "id": "default-correlation",
+        "role": "부도상관을 핵심 수치 사례와 실제 가격·위험 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "default-intensity-curve",
+        "sectionId": "names",
+        "intuition": "부도 위험강도곡선이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "연 2%에서 1년 가격 장부 부도확률 약 1.98%를 구합니다.",
+        "boundary": "시장가격에서 푼 값은 실제 기업 부도 빈도와 다를 수 있습니다."
+      },
+      {
+        "id": "default-correlation",
+        "sectionId": "names",
+        "intuition": "부도상관이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "개별 10%에서 두 회사 동시부도가 1% 또는 10%가 됩니다.",
+        "boundary": "주가수익률 상관이나 일정한 역사적 숫자와 같다고 볼 수 없습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 회수 뒤 손실",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "credit-recovery-rate"
+        ]
+      },
+      {
+        "label": "2단계 · 시간별 부도 도착",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "default-intensity-curve"
+        ]
+      },
+      {
+        "label": "3단계 · 손실 순서",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "credit-loss-tranche"
+        ]
+      },
+      {
+        "label": "4단계 · 동시부도",
+        "relation": "앞 단계의 계산을 다음 가격·위험 판단으로 확장합니다.",
+        "concepts": [
+          "default-correlation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "부도 위험강도곡선의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "부도 위험강도곡선",
+          "연 2%에서 1년 가격 장부 부도확률 약 1.98%를 구합니다.",
+          "시장가격에서 푼 값은 실제 기업 부도 빈도와 다를 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "부도상관이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "부도상관",
+          "첫 개념과의 차이",
+          "개별 10%에서 두 회사 동시부도가 1% 또는 10%가 됩니다."
+        ],
+        "requiredConcepts": [
+          "default-correlation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "사례를 실제 장부에 적용할 때 부도상관이 바꾸는 판단을 설명하세요.",
+        "answerChecklist": [
+          "부도상관",
+          "개별 10%에서 두 회사 동시부도가 1% 또는 10%가 됩니다.",
+          "주가수익률 상관이나 일정한 역사적 숫자와 같다고 볼 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "default-correlation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT 15.433 · Modeling Default Risk",
+          "Basel Framework · CVA Risk",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 가격이나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "default-correlation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 위험관리 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve",
+          "default-correlation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve",
+          "default-correlation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve",
+          "default-correlation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "default-intensity-curve",
+          "default-correlation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 15.433 · Modeling Default Risk",
+        "href": "https://ocw.mit.edu/courses/15-433-investments-spring-2003/08ceba70b1a9e8969c47f667a7a3de11_1543317creditrisk1.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "λ=2%를 지수 생존식에 넣어 생존 98.02%와 부도 1.98%를 계산합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · CVA Risk",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2019-12-15/published/2019-12-15",
+        "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 대학 강의 또는 국제 감독 원문이 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-303.json",
+  "publicArticles": 853,
+  "addedRoutes": [
+    "markets/brownian-motion-ito-and-risk-neutral-pricing",
+    "markets/monte-carlo-path-dependent-pricing-and-variance-reduction",
+    "markets/black-scholes-pde-finite-difference-and-numerical-error",
+    "markets/local-stochastic-volatility-jumps-and-calibration",
+    "markets/short-rate-hjm-and-interest-rate-model-risk",
+    "markets/hazard-rate-curve-recovery-and-credit-correlation"
+  ],
+  "reviewed": 309,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive advanced derivatives pricing and model articles added after checkpoint 303; 267 substantive rewrites/additions and 42 retained teaching flows in total. University finance, Korean derivatives solicitation advisor training, GARP risk-management and Basel supervisory curricula were used as complementary coverage checks rather than copied outlines.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "numeric": "Daily stock move 20/sqrt(252)=1.2599 and square 1.5873; risk-neutral one-day mean 100*exp(0.05/252)=100.0198; Monte Carlo payoffs 5,0,10,0 have mean 3.75, individual standard error 2.3936 and paired standard error 1.25; finite-difference gamma contribution gives 0.2; a 10-point move against daily sigma 20/sqrt(252) is 7.937 standard deviations; daily short-rate mean reversion is 0.1984bp with 6.2994bp sigma and the illustrative HJM drift is 2bp/year; 1.2%/(1-40%) gives 2% intensity and 1-exp(-0.02)=1.9801% one-year default probability.",
+    "browser": "Six routes x 390/1440 plus two listing routes x 390/1440 and six mobile viewport/sidebar checks = 22 local checks; all passed. Local report: output/playwright/derivative-advanced/2026-10-06T18-41-58/summary.json.",
+    "learning": "PASS 853 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.57s, 7,193 transformed modules and 1,808 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,003 concepts, 6,309 relations, 853 registered articles and zero invariants; six existing canonical concepts were reused instead of duplicated; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 853 strict; actual exit 0.",
+    "topology": "PASS 853 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 444 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits for all six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; numeric-path arrow SVGs remained 24px; viewport height 844 to 700 produced zero scroll shift on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment.",
+    "curriculumCoverage": "MIT 18.642, 15.450, 18.S096 and 15.433, Basel MAR30 and MAR50, Korean derivatives solicitation advisor training and GARP risk-management coverage were mapped to implemented material and explicit remaining multi-asset, rare-event and jurisdictional gaps."
+  }
+}
