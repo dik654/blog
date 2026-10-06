@@ -42,6 +42,12 @@
 | 금리곡선 부트스트랩·다중곡선 | 시점별 할인계수와 기준금리 지급을 예상하는 곡선 | 100=5×0.96+105×DF₂→0.9067, 2년5.02%·선도5.88% | `markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging#case` | CME SOFR·BIS 기준금리 전환 대조 |
 | xVA·증거금 조달·동시 악화 위험 | 상대방·자기 신용, 무담보 자금과 개시증거금 비용 | 10−0.6+0.2−0.3−0.1=9.2, MVA0.1, 동시 악화 손실0.54 | `markets/xva-funding-margin-and-wrong-way-risk#case` | 바젤 CCR·ISDA 담보 운영과 중복 경계 |
 | 시장위험 백테스트·손익 귀속·모형 검증 | 위험값과 가상·실제·위험이론 손익의 비교 및 독립 검증 | 250일 예외7번→amber·승수1.83, 열흘 표본과 분리 | `markets/market-risk-backtesting-pnl-attribution-and-model-governance#case` | 바젤·2026 연준 모형 지침 대조 |
+| 브라운 운동·이토·위험중립 | 짧은 구간의 평균·분산과 굽은 지급의 제곱 보정 | 주가100·연20%→하루1.26, 제곱1.59, 가격 장부 평균100.0198 | `markets/brownian-motion-ito-and-risk-neutral-pricing#case` | MIT 2024 확률계산·위험중립 강의 대조 |
+| 몬테카를로·경로의존·분산감소 | 경로별 지급의 할인 평균과 계산 잡음 통제 | 지급5·0·10·0→가격3.75, 표준오차2.39→1.25 | `markets/monte-carlo-path-dependent-pricing-and-variance-reduction#case` | MIT·바젤 검증 범위 대조 |
+| 블랙숄즈 PDE·유한차분 | 연속 가격 관계를 시간·상태 격자로 역진 | 지급0·0·10→굽음0.1→한 칸 전0.2 | `markets/black-scholes-pde-finite-difference-and-numerical-error#case` | MIT 가격방정식·바젤 독립검증 |
+| 지역·확률변동성·점프 | 현재 표면·미래 흔들림·불연속 사건의 분리와 보정 | 30%·20%·24% 대 고정20%→오차14%p, −10%≈7.9σ | `markets/local-stochastic-volatility-jumps-and-calibration#case` | MIT 변동성·바젤 표면·점프 기준 |
+| 단기금리·HJM·금리 모형위험 | 한 금리와 만기별 선도곡선의 미래 움직임 | 하루 평균복귀0.2bp·흔들림6.3bp, 2년 HJM 평균2bp | `markets/short-rate-hjm-and-interest-rate-model-risk#case` | MIT HJM·바젤 모형검증 |
+| 위험강도곡선·회수·부도상관 | 생존·손실률·동시부도의 가격 장부 | 보호료1.2%·회수40%→세기2%·1년1.98%, 동시부도1%/10% | `markets/hazard-rate-curve-recovery-and-credit-correlation#case` | MIT 신용강의·바젤 CVA 확률 구분 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

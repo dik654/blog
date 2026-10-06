@@ -29980,6 +29980,184 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "객관적 전문가가 모형의 개념·자료·구현·사용을 비판하고 실제 변경을 이끄는 과정입니다.",
     "canonicalHref": "/finance/markets/market-risk-backtesting-pnl-attribution-and-model-governance#names"
   },
+  "brownian-price-process": {
+    "id": "brownian-price-process",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "브라운 가격 과정",
+    "aliases": [
+      "Brownian price process"
+    ],
+    "definition": "짧은 구간의 평균 변화와 시간에 비례하는 분산으로 연속 가격 경로를 나타내는 확률과정입니다.",
+    "canonicalHref": "/finance/markets/brownian-motion-ito-and-risk-neutral-pricing#names"
+  },
+  "ito-quadratic-variation": {
+    "id": "ito-quadratic-variation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "이토 보정과 이차변동",
+    "aliases": [
+      "Ito correction",
+      "quadratic variation"
+    ],
+    "definition": "브라운 경로의 변화 제곱이 시간 크기로 남아 굽은 함수의 두 번째 미분 항을 만드는 성질입니다.",
+    "canonicalHref": "/finance/markets/brownian-motion-ito-and-risk-neutral-pricing#names"
+  },
+  "monte-carlo-derivative-pricing": {
+    "id": "monte-carlo-derivative-pricing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 몬테카를로 평가",
+    "aliases": [
+      "Monte Carlo derivative pricing"
+    ],
+    "definition": "확률모형에서 여러 가격 경로를 만들고 계약 지급의 할인 평균으로 가격을 근사하는 방법입니다.",
+    "canonicalHref": "/finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction#names"
+  },
+  "antithetic-variates": {
+    "id": "antithetic-variates",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "대칭표본",
+    "aliases": [
+      "antithetic variates"
+    ],
+    "definition": "무작위 입력과 부호를 뒤집은 입력을 짝지어 방향 잡음을 줄이는 방법입니다.",
+    "canonicalHref": "/finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction#names"
+  },
+  "control-variate-pricing": {
+    "id": "control-variate-pricing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "통제변수 가격 보정",
+    "aliases": [
+      "control variate pricing"
+    ],
+    "definition": "기대값을 알고 목표 지급과 함께 움직이는 변수로 표본 평균의 오차를 줄이는 방법입니다.",
+    "canonicalHref": "/finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction#names"
+  },
+  "black-scholes-pde": {
+    "id": "black-scholes-pde",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "블랙숄즈 편미분방정식",
+    "aliases": [
+      "Black-Scholes PDE"
+    ],
+    "definition": "옵션의 시간 변화, 주가 기울기·굽음과 금리가 무차익 조건에서 만족해야 하는 연속 관계입니다.",
+    "canonicalHref": "/finance/markets/black-scholes-pde-finite-difference-and-numerical-error#names"
+  },
+  "finite-difference-option-pricing": {
+    "id": "finite-difference-option-pricing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 유한차분 평가",
+    "aliases": [
+      "finite difference option pricing"
+    ],
+    "definition": "가격 방정식의 미분을 가까운 시간·상태 격자 값의 차이로 바꾸어 역진하는 수치 방법입니다.",
+    "canonicalHref": "/finance/markets/black-scholes-pde-finite-difference-and-numerical-error#names"
+  },
+  "numerical-scheme-stability": {
+    "id": "numerical-scheme-stability",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "수치 계산 안정성",
+    "aliases": [
+      "numerical scheme stability"
+    ],
+    "definition": "작은 반올림과 입력 오차가 반복 계산에서 폭발하지 않고 통제되는 성질입니다.",
+    "canonicalHref": "/finance/markets/black-scholes-pde-finite-difference-and-numerical-error#names"
+  },
+  "local-volatility-model": {
+    "id": "local-volatility-model",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "지역변동성 모형",
+    "aliases": [
+      "local volatility model"
+    ],
+    "definition": "주가 위치와 시간마다 다른 흔들림을 정해 현재 옵션 표면을 설명하는 모형입니다.",
+    "canonicalHref": "/finance/markets/local-stochastic-volatility-jumps-and-calibration#names"
+  },
+  "stochastic-volatility-model": {
+    "id": "stochastic-volatility-model",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "확률변동성 모형",
+    "aliases": [
+      "stochastic volatility model"
+    ],
+    "definition": "흔들림 자체를 별도 무작위 상태로 두어 시간에 따라 오르내리게 하는 모형입니다.",
+    "canonicalHref": "/finance/markets/local-stochastic-volatility-jumps-and-calibration#names"
+  },
+  "jump-diffusion-model": {
+    "id": "jump-diffusion-model",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "점프확산 모형",
+    "aliases": [
+      "jump diffusion model"
+    ],
+    "definition": "작은 연속 움직임에 드문 큰 이동의 도착과 크기를 더한 모형입니다.",
+    "canonicalHref": "/finance/markets/local-stochastic-volatility-jumps-and-calibration#names"
+  },
+  "short-rate-model": {
+    "id": "short-rate-model",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "단기금리 모형",
+    "aliases": [
+      "short-rate model"
+    ],
+    "definition": "순간 금리 한 상태의 움직임을 정하고 그 값에서 모든 만기의 할인채 가격을 만드는 모형입니다.",
+    "canonicalHref": "/finance/markets/short-rate-hjm-and-interest-rate-model-risk#names"
+  },
+  "hjm-forward-rate-framework": {
+    "id": "hjm-forward-rate-framework",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "HJM 선도금리 틀",
+    "aliases": [
+      "HJM forward-rate framework"
+    ],
+    "definition": "만기별 순간 선도금리 곡선을 직접 움직이고 무차익 평균을 흔들림 구조에 묶는 틀입니다.",
+    "canonicalHref": "/finance/markets/short-rate-hjm-and-interest-rate-model-risk#names"
+  },
+  "interest-rate-model-risk": {
+    "id": "interest-rate-model-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금리 모형위험",
+    "aliases": [
+      "interest-rate model risk"
+    ],
+    "definition": "상태·분포·상관과 보정 상품 선택 때문에 금리 파생상품의 가격과 헤지가 달라지는 위험입니다.",
+    "canonicalHref": "/finance/markets/short-rate-hjm-and-interest-rate-model-risk#names"
+  },
+  "default-intensity-curve": {
+    "id": "default-intensity-curve",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "부도 위험강도곡선",
+    "aliases": [
+      "default intensity curve",
+      "hazard rate curve"
+    ],
+    "definition": "생존 조건에서 다음 짧은 구간에 부도가 도착하는 세기를 만기별로 이은 값입니다.",
+    "canonicalHref": "/finance/markets/hazard-rate-curve-recovery-and-credit-correlation#names"
+  },
+  "default-correlation": {
+    "id": "default-correlation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "부도상관",
+    "aliases": [
+      "default correlation"
+    ],
+    "definition": "여러 회사의 부도 사건이 같은 기간에 함께 나타나는 정도를 설명하는 입력입니다.",
+    "canonicalHref": "/finance/markets/hazard-rate-curve-recovery-and-credit-correlation#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -54444,6 +54622,108 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "market-risk-backtesting",
     "relation": "constrains",
     "reason": "유효한 독립 검증 개념은 시장위험 백테스트 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "risk-neutral-pricing",
+    "to": "brownian-price-process",
+    "relation": "prerequisite",
+    "reason": "risk-neutral-pricing에서 brownian-price-process로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "brownian-price-process",
+    "to": "ito-quadratic-variation",
+    "relation": "extends",
+    "reason": "brownian-price-process에서 ito-quadratic-variation로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "barrier-path-dependence",
+    "to": "monte-carlo-derivative-pricing",
+    "relation": "prerequisite",
+    "reason": "barrier-path-dependence에서 monte-carlo-derivative-pricing로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "monte-carlo-derivative-pricing",
+    "to": "antithetic-variates",
+    "relation": "optimizes",
+    "reason": "monte-carlo-derivative-pricing에서 antithetic-variates로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "monte-carlo-derivative-pricing",
+    "to": "control-variate-pricing",
+    "relation": "optimizes",
+    "reason": "monte-carlo-derivative-pricing에서 control-variate-pricing로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "option-delta-gamma",
+    "to": "black-scholes-pde",
+    "relation": "prerequisite",
+    "reason": "option-delta-gamma에서 black-scholes-pde로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "black-scholes-pde",
+    "to": "finite-difference-option-pricing",
+    "relation": "extends",
+    "reason": "black-scholes-pde에서 finite-difference-option-pricing로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "finite-difference-option-pricing",
+    "to": "numerical-scheme-stability",
+    "relation": "constrains",
+    "reason": "finite-difference-option-pricing에서 numerical-scheme-stability로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "implied-volatility-surface",
+    "to": "local-volatility-model",
+    "relation": "prerequisite",
+    "reason": "implied-volatility-surface에서 local-volatility-model로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "local-volatility-model",
+    "to": "stochastic-volatility-model",
+    "relation": "contrasts",
+    "reason": "local-volatility-model에서 stochastic-volatility-model로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "stochastic-volatility-model",
+    "to": "jump-diffusion-model",
+    "relation": "contrasts",
+    "reason": "stochastic-volatility-model에서 jump-diffusion-model로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "discount-factor-bootstrapping",
+    "to": "short-rate-model",
+    "relation": "prerequisite",
+    "reason": "discount-factor-bootstrapping에서 short-rate-model로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "short-rate-model",
+    "to": "hjm-forward-rate-framework",
+    "relation": "contrasts",
+    "reason": "short-rate-model에서 hjm-forward-rate-framework로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "hjm-forward-rate-framework",
+    "to": "interest-rate-model-risk",
+    "relation": "constrains",
+    "reason": "hjm-forward-rate-framework에서 interest-rate-model-risk로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "credit-recovery-rate",
+    "to": "default-intensity-curve",
+    "relation": "prerequisite",
+    "reason": "credit-recovery-rate에서 default-intensity-curve로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "credit-loss-tranche",
+    "to": "default-correlation",
+    "relation": "prerequisite",
+    "reason": "credit-loss-tranche에서 default-correlation로 계산과 위험 판단을 확장합니다."
+  },
+  {
+    "from": "default-intensity-curve",
+    "to": "default-correlation",
+    "relation": "extends",
+    "reason": "default-intensity-curve에서 default-correlation로 계산과 위험 판단을 확장합니다."
   },
 ];
 

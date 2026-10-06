@@ -12472,4 +12472,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "모형 생애주기, 유효한 반박, 독립 검증과 지속 감시의 현행 미국 은행 지침입니다."
     }
   ],
+  "markets/brownian-motion-ito-and-risk-neutral-pricing": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 18.642 · Stochastic Calculus",
+      "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec19_1.pdf",
+      "note": "짧은 구간의 평균·분산과 이토 과정을 주가 100의 하루 사례에 적용합니다."
+    },
+    {
+      "kind": "공개 강의",
+      "label": "MIT 18.642 · Risk Neutral Valuation",
+      "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec21.pdf",
+      "note": "복제와 위험중립 평가가 같은 가격으로 이어지는 범위를 확인합니다."
+    }
+  ],
+  "markets/monte-carlo-path-dependent-pricing-and-variance-reduction": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 15.450 · Derivatives and Monte Carlo",
+      "href": "https://ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/ab2510b021bee94c384057c138c343d4_MIT15_450F10_handout02.pdf",
+      "note": "대칭표본과 통제변수의 조건을 네 지급의 작은 표본에 적용합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Internal Models",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+      "note": "표본오차 밖의 가격 과정·자료·스트레스와 독립 검증을 연결합니다."
+    }
+  ],
+  "markets/black-scholes-pde-finite-difference-and-numerical-error": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 18.642 · Black-Scholes Equation",
+      "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec21.pdf",
+      "note": "방정식의 굽음 항에 90·100·110 격자를 넣어 한 칸 전 값 0.2를 구합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Internal Models",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+      "note": "격자 수렴·경계·독립 가격 비교를 지속적인 모형 검증에 연결합니다."
+    }
+  ],
+  "markets/local-stochastic-volatility-jumps-and-calibration": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 18.642 · Volatility Modeling",
+      "href": "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec17_1.pdf",
+      "note": "고정 20%와 시간에 따라 달라지는 수익률 흔들림을 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Market Risk",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+      "note": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다."
+    }
+  ],
+  "markets/short-rate-hjm-and-interest-rate-model-risk": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 18.S096 · HJM Model",
+      "href": "https://ocw.mit.edu/courses/18-s096-topics-in-mathematics-with-applications-in-finance-fall-2013/e4c52338bad489162192dd0cc44375ab_MIT18_S096F13_lecnote24.pdf",
+      "note": "상수 흔들림 1%와 남은 만기 2년을 평균 제약에 넣어 연 2bp를 계산합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Internal Models",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
+      "note": "곡선·옵션 보정 뒤 장기 대용값, 극단 상황과 독립 가격을 검증합니다."
+    }
+  ],
+  "markets/hazard-rate-curve-recovery-and-credit-correlation": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 15.433 · Modeling Default Risk",
+      "href": "https://ocw.mit.edu/courses/15-433-investments-spring-2003/08ceba70b1a9e8969c47f667a7a3de11_1543317creditrisk1.pdf",
+      "note": "λ=2%를 지수 생존식에 넣어 생존 98.02%와 부도 1.98%를 계산합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · CVA Risk",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2019-12-15/published/2019-12-15",
+      "note": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다."
+    }
+  ],
 };

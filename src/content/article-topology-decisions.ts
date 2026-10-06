@@ -2214,6 +2214,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "시장위험 모형은 가상·실제 손익의 백테스트, 위험이론 손익과 가상 손익의 P&L 귀속 검사, 독립 검증과 지속 감시를 연결해 예외 원인을 실제 모형·한도·사용 변경으로 바꿉니다.",
     "sharedGate": "열흘 설명용 예외 3개와 250일 규제 예외 7개·amber·1.83을 구분하고 가상·실제·모형 손익을 따로 검산합니다."
   },
+  "markets/brownian-motion-ito-and-risk-neutral-pricing": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "연속시간 가격모형은 짧은 구간의 평균과 제곱근 크기 흔들림을 나누고, 이토 보정으로 굽은 지급의 제곱항을 살린 뒤 복제와 위험중립 장부로 무차익 가격을 만듭니다.",
+    "sharedGate": "20%×100÷√252≈1.26, 1.26²≈1.59, 100e^(5%/252)≈100.0198을 검산하고 실제 확률과 가격 가중치를 구분합니다."
+  },
+  "markets/monte-carlo-path-dependent-pricing-and-variance-reduction": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "경로의존 파생상품은 무작위 경로별 지급을 할인 평균하고, 대칭표본과 통제변수로 계산 잡음을 줄이되 통계오차·시간격자·모형·계약 구현 오류를 따로 검증합니다.",
+    "sharedGate": "(5+0+10+0)/4=3.75와 표준오차 약 2.39·1.25를 검산하고 계산오차와 모형오차를 구분합니다."
+  },
+  "markets/black-scholes-pde-finite-difference-and-numerical-error": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "블랙숄즈 방정식은 시간·기울기·굽음·금리를 무차익 관계로 묶고, 유한차분은 이를 격자 차이로 바꾸며 수렴·안정성·경계와 독립 가격 비교로 수치오차를 통제합니다.",
+    "sharedGate": "(10−0+0)/100=0.1과 0.5×0.2²×100²×0.1×0.01=0.2를 검산하고 수치수렴과 모형정확성을 구분합니다."
+  },
+  "markets/local-stochastic-volatility-jumps-and-calibration": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "옵션 모형은 현재 위치별 흔들림, 흔들림 자체의 미래 경로와 드문 큰 이동을 서로 다른 부품으로 설명하고, 가격 적합도·매개변수 안정성·헤지 손익·스트레스를 따로 검증합니다.",
+    "sharedGate": "|30−20|+|20−20|+|24−20|=14%포인트와 10%/(20%/√252)≈7.9를 검산합니다."
+  },
+  "markets/short-rate-hjm-and-interest-rate-model-risk": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "금리 파생상품은 한 개의 짧은 금리 또는 만기별 선도곡선의 미래 움직임을 모형화하고, 무차익 평균 제약·시장 보정·후보 모형 가격과 헤지 차이로 모형위험을 관리합니다.",
+    "sharedGate": "0.5×(4%−3%)÷252≈0.2bp, 1%÷√252≈6.3bp, 1%×(1%×2)=2bp/년을 검산합니다."
+  },
+  "markets/hazard-rate-curve-recovery-and-credit-correlation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "신용 가격은 만기별 생존과 부도 도착 세기, 회수 뒤 손실과 동시부도를 따로 계산하며 시장가격용 확률과 실제 부도 추정을 분리해 단일기업·포트폴리오 꼬리위험을 관리합니다.",
+    "sharedGate": "1.2%/(1−40%)=2%, 1−e^(−0.02)≈1.98%, 두 회사 기대손실 12와 동시부도 1%·10%를 검산합니다."
+  },
 };
 
 /**
@@ -2575,4 +2617,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"102680220200d1c9",
 "markets/xva-funding-margin-and-wrong-way-risk":"fc63c546f5a16761",
 "markets/market-risk-backtesting-pnl-attribution-and-model-governance":"35c8227ebbc5f970",
+"markets/black-scholes-pde-finite-difference-and-numerical-error":"423da7bbb7b10e2f",
+"markets/brownian-motion-ito-and-risk-neutral-pricing":"b59abd14e937f1af",
+"markets/hazard-rate-curve-recovery-and-credit-correlation":"214e2d6ddce4a556",
+"markets/local-stochastic-volatility-jumps-and-calibration":"f45b39cd5f617cc4",
+"markets/monte-carlo-path-dependent-pricing-and-variance-reduction":"7ae43a6f4aae7689",
+"markets/short-rate-hjm-and-interest-rate-model-risk":"9917ed08a0dfd27b",
 };

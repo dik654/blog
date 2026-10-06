@@ -16385,6 +16385,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "brownian-motion-ito-and-risk-neutral-pricing": {
+    "title": "브라운 운동·이토 보정·위험중립 가격 글이 소유하는 범위",
+    "owns": [
+      "주가 100·연 20%·252일에서 하루 흔들림 1.26을 만드는 장부",
+      "±1.26에서 방향과 무관하게 약 1.59가 남는 이토 보정",
+      "실제 전망과 연 5% 위험중립 가격 장부의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "이항 복제와 위험중립 가격",
+        "href": "/finance/markets/option-replication-and-put-call-parity"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "monte-carlo-path-dependent-pricing-and-variance-reduction": {
+    "title": "몬테카를로 평가·대칭표본·통제변수 글이 소유하는 범위",
+    "owns": [
+      "평균가격 옵션의 지급 5·0·10·0과 평균 3.75",
+      "개별 표준오차 약 2.39와 대칭 쌍 표준오차 약 1.25의 비교",
+      "통계·시간격자·모형·계약 구현 오차의 분리"
+    ],
+    "reuses": [
+      {
+        "label": "장벽과 경로의존 지급",
+        "href": "/finance/markets/option-strategies-and-structured-notes"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "black-scholes-pde-finite-difference-and-numerical-error": {
+    "title": "블랙숄즈 PDE·유한차분·수치 안정성 글이 소유하는 범위",
+    "owns": [
+      "90·100·110의 지급 0·0·10에서 굽음 0.1을 구하는 격자",
+      "0.5×0.2²×100²×0.1×0.01=0.2의 한 칸 역진",
+      "명시·암시 방식과 수렴·안정성·시장 보정 오차의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "옵션 델타·감마와 동적 헤지",
+        "href": "/finance/markets/option-greeks-volatility-and-dynamic-hedging"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "local-stochastic-volatility-jumps-and-calibration": {
+    "title": "지역·확률변동성·점프확산과 보정 글이 소유하는 범위",
+    "owns": [
+      "30%·20%·24%를 고정 20%와 비교한 날개 오차 14%포인트",
+      "하루 −10%가 단순 표준 흔들림 약 1.26%의 7.9배인 꼬리 사례",
+      "가격 적합도·매개변수 안정성·헤지·스트레스 검사의 분리"
+    ],
+    "reuses": [
+      {
+        "label": "내재변동성 표면과 스큐",
+        "href": "/finance/markets/implied-volatility-surface-skew-and-smile"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "short-rate-hjm-and-interest-rate-model-risk": {
+    "title": "단기금리 모형·HJM·금리 모형위험 글이 소유하는 범위",
+    "owns": [
+      "3%·중심 4%·속도 0.5에서 하루 평균복귀 약 0.2bp인 장부",
+      "연 1% 흔들림의 하루 표준 이동 6.3bp와 HJM 2년 평균 몫 2bp",
+      "한 점 모형과 곡선 모형의 보정·헤지·모형위험 비교"
+    ],
+    "reuses": [
+      {
+        "label": "할인계수 부트스트랩과 다중곡선",
+        "href": "/finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "hazard-rate-curve-recovery-and-credit-correlation": {
+    "title": "위험강도곡선·회수율·부도상관 글이 소유하는 범위",
+    "owns": [
+      "보호료 1.2%·회수 40%에서 연 세기 2%와 1년 부도확률 1.98%를 푸는 장부",
+      "각 100·부도 10%·회수 40%인 두 회사의 기대손실 합계 12",
+      "같은 기대손실에서 동시 120 손실 확률이 1%와 10%로 갈리는 비교"
+    ],
+    "reuses": [
+      {
+        "label": "CDS 스프레드·회수율·손실 트랜치",
+        "href": "/finance/markets/credit-derivatives-default-risk-and-tranches"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 모형, 상품, 관할과 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
