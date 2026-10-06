@@ -12136,4 +12136,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "아프리카 윤리의 넓은 비교 질문을 제공하는 동료 검토 보충 연구입니다."
     }
   ],
+  "philosophy-topics/identity-through-change": [
+    {
+      "kind": "핵심 사료",
+      "label": "Plutarch · Life of Theseus 23.1",
+      "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A2008.01.0067%3Achapter%3D23%3Asection%3D1",
+      "note": "낡은 목재를 교체해 보존한 배의 고대 기록입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Identity Over Time",
+      "href": "https://plato.stanford.edu/entries/identity-time/",
+      "note": "시간을 거친 동일성과 지속 이론을 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophy-topics/free-will-control-and-responsibility": [
+    {
+      "kind": "핵심 사료",
+      "label": "Epictetus · Enchiridion",
+      "href": "https://classics.mit.edu/Epictetus/epicench.html",
+      "note": "우리에게 달린 것과 그렇지 않은 것을 나누는 고전 원문입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Free Will",
+      "href": "https://plato.stanford.edu/entries/freewill/",
+      "note": "대안·원천·책임과 결정론 논쟁을 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophy-topics/reference-context-and-speech-acts": [
+    {
+      "kind": "핵심 사료",
+      "label": "Bertrand Russell · On Denoting",
+      "href": "https://humanum.arts.cuhk.edu.hk/humftp/E-text/Russell/denoting.htm",
+      "note": "기술구와 지시 실패를 논리적으로 분석한 1905년 논문입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Speech Acts",
+      "href": "https://plato.stanford.edu/entries/speech-acts/",
+      "note": "발화 내용과 힘, 수행적 발화의 조건을 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophy-topics/consciousness-pain-and-other-minds": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Consciousness",
+      "href": "https://plato.stanford.edu/entries/consciousness/",
+      "note": "의식의 여러 개념과 1인칭·3인칭 접근을 정리한 동료 검토 연구입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Other Minds",
+      "href": "https://plato.stanford.edu/entries/other-minds/",
+      "note": "다른 사람의 경험을 아는 근거와 회의론의 답을 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophy-topics/aesthetic-taste-judgment-and-context": [
+    {
+      "kind": "핵심 사료",
+      "label": "David Hume · Of the Standard of Taste",
+      "href": "https://www.earlymoderntexts.com/assets/pdfs/hume1757essay2.pdf",
+      "note": "취향의 다양성과 좋은 판단자의 조건을 함께 논한 고전 에세이입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · The Concept of the Aesthetic",
+      "href": "https://plato.stanford.edu/entries/aesthetic-concept/",
+      "note": "미적 개념·경험·태도·판단의 논쟁을 정리한 동료 검토 연구입니다."
+    }
+  ],
+  "philosophy-topics/meaning-in-life-attraction-worth-and-commitment": [
+    {
+      "kind": "핵심 사료",
+      "label": "Aristotle · Nicomachean Ethics, Book I",
+      "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7",
+      "note": "잘 삶을 덕에 따른 활동과 완전한 삶에 연결하는 고전 원문입니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · The Meaning of Life",
+      "href": "https://plato.stanford.edu/entries/life-meaning/",
+      "note": "주관·객관·결합 관점을 포함한 삶의 의미 논쟁을 정리한 동료 검토 연구입니다."
+    }
+  ],
 };

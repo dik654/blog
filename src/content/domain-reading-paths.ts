@@ -347,7 +347,13 @@ export const DOMAIN_READING_PATHS: Readonly<
         categories: ["mind-and-language"],
       },
       {
-        eyebrow: "07 · 질문은 어디서 달라졌는가",
+        eyebrow: "07 · 무엇이 같은 것으로 남는가",
+        title: "철학의 핵심 질문",
+        description: "정체성·책임·언어·의식·미적 판단·삶의 의미를 생활 사례와 고전 논증으로 나눠 봅니다.",
+        categories: ["philosophy-topics"],
+      },
+      {
+        eyebrow: "08 · 질문은 어디서 달라졌는가",
         title: "서로 다른 사상 전통의 출발점",
         description: "유가의 역할, 도가의 개입, 불교의 경험, 『기타』의 행위, 이슬람 인과론과 아칸 인격론을 하나의 서양 연표에 억지로 넣지 않고 주제별로 비교합니다.",
         categories: ["philosophical-traditions"],

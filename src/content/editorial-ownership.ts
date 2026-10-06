@@ -15815,6 +15815,140 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "identity-through-change": {
+    "title": "identity-through-change 글이 소유하는 범위",
+    "owns": [
+      "부품 10개의 교체와 재조립 사례",
+      "수적 동일성과 질적 변화의 구분",
+      "사물 종류와 목적에 따른 지속 기준"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고대 기록은 사례의 역사적 출발점을 보여 주며 정체성 이론의 정답을 직접 증명하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "현대 이론의 분류가 자전거 A와 B 가운데 하나를 자동으로 판정하지 않습니다."
+      }
+    ]
+  },
+  "free-will-control-and-responsibility": {
+    "title": "free-will-control-and-responsibility 글이 소유하는 범위",
+    "owns": [
+      "창고 문 사례의 정보·대안·강제 조건",
+      "결정론과 생활 속 강제의 구분",
+      "대안 가능성과 행위 원천의 책임 논쟁"
+    ],
+    "reuses": [
+      {
+        "label": "윤리의 결과·의무·성품 판단",
+        "href": "/philosophy/ethics/consequence-duty-and-character"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "실천적 통제 구분을 결정론과 자유의지에 관한 형이상학적 증명으로 쓰지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "프랑크푸르트식 반례는 논쟁을 시작하는 사고실험이며 대안 논쟁을 끝낸 사실 보고가 아닙니다."
+      }
+    ]
+  },
+  "reference-context-and-speech-acts": {
+    "title": "reference-context-and-speech-acts 글이 소유하는 범위",
+    "owns": [
+      "은행의 두 지시 후보와 맥락 해소",
+      "10만원 약속의 내용과 발화 힘",
+      "기술 이론과 말행위의 서로 다른 질문"
+    ],
+    "reuses": [
+      {
+        "label": "기계의 행동과 이해 여부",
+        "href": "/philosophy/mind-and-language/behavior-meaning-and-machine-understanding"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "기술 이론의 존재·유일성 분석과 동음이의어를 맥락으로 푸는 문제를 같은 것으로 만들지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "분류만으로 암시·비꼼·권력 차이가 만드는 실제 효과를 모두 설명했다고 보지 않습니다."
+      }
+    ]
+  },
+  "consciousness-pain-and-other-minds": {
+    "title": "consciousness-pain-and-other-minds 글이 소유하는 범위",
+    "owns": [
+      "통증 보고와 관찰 자료의 단위 구분",
+      "현상적 성격과 보고 가능성의 구분",
+      "유추·설명·증언을 통한 다른 마음 판단"
+    ],
+    "reuses": [
+      {
+        "label": "믿음·진리·우연의 지식 조건",
+        "href": "/philosophy/epistemology/knowledge-belief-and-luck"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "신경 상관관계를 찾는 연구와 경험이 왜 생기는지를 완전히 설명하는 일을 구분합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "철학적 불확실성을 타인의 통증 증언을 무시할 허가로 쓰지 않습니다."
+      }
+    ]
+  },
+  "aesthetic-taste-judgment-and-context": {
+    "title": "aesthetic-taste-judgment-and-context 글이 소유하는 범위",
+    "owns": [
+      "공연 100명의 호감과 평가 이유 구분",
+      "반복 감상이 주의와 비판을 바꾸는 경로",
+      "다수결·전문가·역사적 배제의 경계"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "흄의 판단자 조건을 기존 전문가 집단의 무오류나 사회적 배제의 정당화로 쓰지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "한 매체의 기준을 음악·그림·건축·음식 전체에 그대로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "meaning-in-life-attraction-worth-and-commitment": {
+    "title": "meaning-in-life-attraction-worth-and-commitment 글이 소유하는 범위",
+    "owns": [
+      "한 주 100시간으로 본 활동과 의미의 차이",
+      "행복·도덕·의미의 구분",
+      "주관적 끌림과 객관적 가치의 결합"
+    ],
+    "reuses": [
+      {
+        "label": "행위의 옳고 그름과 윤리 판단",
+        "href": "/philosophy/ethics/consequence-duty-and-character"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "고대 폴리스의 시민관과 기능 논증을 현대 삶의 유일한 정답으로 일반화하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "현대 이론의 분류가 개인에게 열정을 찾으라고 요구하거나 구조적 제약을 지우지 않게 합니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -44,6 +44,7 @@ import ethics from "./ethics";
 import politicalPhilosophy from "./political-philosophy";
 import philosophyOfScience from "./philosophy-of-science";
 import mindAndLanguage from "./mind-and-language";
+import philosophyTopics from "./philosophy-topics";
 import philosophicalTraditions from "./philosophical-traditions";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
@@ -92,6 +93,7 @@ export const categories = [
   politicalPhilosophy,
   philosophyOfScience,
   mindAndLanguage,
+  philosophyTopics,
   philosophicalTraditions,
   circuits,
   semiconductors,

@@ -134033,4 +134033,1378 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "philosophy-topics/identity-through-change": {
+    "entryLevel": true,
+    "entryNote": "십 년 동안 부품 10개를 하나씩 바꾼 자전거와 옛 부품으로 다시 만든 자전거에서 시작합니다.",
+    "coreIdea": "시간에 따른 정체성은 닮음과 바로 그 하나임을 구분하고, 물질·시공간 경로·기능·인과적 역사 가운데 어떤 지속 기준을 쓰는지 공개해야 판단할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "numerical-identity",
+        "role": "수적 동일성이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "qualitative-change",
+        "role": "질적 변화이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "persistence-criterion",
+        "role": "지속 기준이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "numerical-identity",
+        "sectionId": "names",
+        "intuition": "수적 동일성을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "어제 잠근 자전거와 오늘 찾은 자전거를 바로 그 한 대로 봅니다.",
+        "boundary": "서로 완벽히 닮은 두 복제품이 한 물건이라는 뜻은 아닙니다."
+      },
+      {
+        "id": "qualitative-change",
+        "sectionId": "names",
+        "intuition": "질적 변화을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "같은 자전거의 낡은 체인이 새 체인으로 바뀝니다.",
+        "boundary": "성질 하나가 바뀔 때마다 새 대상이 생긴다고 미리 정하지 않습니다."
+      },
+      {
+        "id": "persistence-criterion",
+        "sectionId": "names",
+        "intuition": "지속 기준을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "보험은 소유 기록을, 전시는 원재료를 더 중시할 수 있습니다.",
+        "boundary": "모든 종류의 존재에 한 기준이 그대로 적용된다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 수적 동일성",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "numerical-identity"
+        ]
+      },
+      {
+        "label": "2단계 · 질적 변화",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "qualitative-change"
+        ]
+      },
+      {
+        "label": "3단계 · 지속 기준",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "persistence-criterion"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "numerical-identity"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "수적 동일성의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "수적 동일성",
+          "어제 잠근 자전거와 오늘 찾은 자전거를 바로 그 한 대로 봅니다.",
+          "서로 완벽히 닮은 두 복제품이 한 물건이라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "qualitative-change"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "질적 변화이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "질적 변화",
+          "차이",
+          "같은 자전거의 낡은 체인이 새 체인으로 바뀝니다."
+        ],
+        "requiredConcepts": [
+          "persistence-criterion"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "자전거 A와 B를 판정할 때 지속 기준이 답을 바꾸는 지점을 두 문장으로 설명하세요.",
+        "answerChecklist": [
+          "지속 기준",
+          "보험은 소유 기록을, 전시는 원재료를 더 중시할 수 있습니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "numerical-identity"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "Plutarch · Life of Theseus 23.1",
+          "Stanford Encyclopedia of Philosophy · Identity Over Time",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "qualitative-change"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "persistence-criterion"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "numerical-identity",
+          "qualitative-change",
+          "persistence-criterion"
+        ],
+        "requiredConcepts": [
+          "numerical-identity",
+          "qualitative-change",
+          "persistence-criterion"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "numerical-identity",
+          "qualitative-change",
+          "persistence-criterion"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "numerical-identity",
+          "qualitative-change",
+          "persistence-criterion"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "numerical-identity",
+          "qualitative-change",
+          "persistence-criterion"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Plutarch · Life of Theseus 23.1",
+        "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A2008.01.0067%3Achapter%3D23%3Asection%3D1",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "고대 기록은 사례의 역사적 출발점을 보여 주며 정체성 이론의 정답을 직접 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Identity Over Time",
+        "href": "https://plato.stanford.edu/entries/identity-time/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "현대 이론의 분류가 자전거 A와 B 가운데 하나를 자동으로 판정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-topics/free-will-control-and-responsibility": {
+    "entryLevel": true,
+    "entryNote": "돈을 받고, 위협을 받고, 수면 중에 같은 창고 문을 연 세 사람의 책임 차이에서 시작합니다.",
+    "coreIdea": "자유와 책임은 원인이 없다는 느낌보다 대안 가능성, 행동이 자기 이유에서 나온 원천성, 정보·이유·강제에 대한 실제 통제 조건을 나눠 판단해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "alternative-possibilities",
+        "role": "대안 가능성이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "sourcehood-control",
+        "role": "행위의 원천이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "responsibility-control",
+        "role": "책임 통제이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "alternative-possibilities",
+        "sectionId": "names",
+        "intuition": "대안 가능성을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "직원이 거부하거나 신고할 실행 가능한 길이 있었는지 봅니다.",
+        "boundary": "다른 장면을 상상할 수 있다는 말만으로 충분하지 않습니다."
+      },
+      {
+        "id": "sourcehood-control",
+        "sectionId": "names",
+        "intuition": "행위의 원천을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "개입하지 않은 감시 장치가 있어도 실제 선택이 자기 계획에서 나왔는지 봅니다.",
+        "boundary": "행동에 과거 원인이 전혀 없어야 한다는 주장과 같지 않습니다."
+      },
+      {
+        "id": "responsibility-control",
+        "sectionId": "names",
+        "intuition": "책임 통제을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "수면보행과 계획된 공모의 책임을 다르게 판단합니다.",
+        "boundary": "설명용 점수표가 실제 책임을 자동으로 산출하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 대안 가능성",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "alternative-possibilities"
+        ]
+      },
+      {
+        "label": "2단계 · 행위의 원천",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "sourcehood-control"
+        ]
+      },
+      {
+        "label": "3단계 · 책임 통제",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "responsibility-control"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "대안 가능성의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "대안 가능성",
+          "직원이 거부하거나 신고할 실행 가능한 길이 있었는지 봅니다.",
+          "다른 장면을 상상할 수 있다는 말만으로 충분하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "sourcehood-control"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "행위의 원천이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "행위의 원천",
+          "차이",
+          "개입하지 않은 감시 장치가 있어도 실제 선택이 자기 계획에서 나왔는지 봅니다."
+        ],
+        "requiredConcepts": [
+          "responsibility-control"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "창고 문을 연 세 사람에게 책임 통제를 적용해 책임이 달라지는 이유를 설명하세요.",
+        "answerChecklist": [
+          "책임 통제",
+          "수면보행과 계획된 공모의 책임을 다르게 판단합니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "Epictetus · Enchiridion",
+          "Stanford Encyclopedia of Philosophy · Free Will",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "sourcehood-control"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "responsibility-control"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "alternative-possibilities",
+          "sourcehood-control",
+          "responsibility-control"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities",
+          "sourcehood-control",
+          "responsibility-control"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities",
+          "sourcehood-control",
+          "responsibility-control"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities",
+          "sourcehood-control",
+          "responsibility-control"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "alternative-possibilities",
+          "sourcehood-control",
+          "responsibility-control"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Epictetus · Enchiridion",
+        "href": "https://classics.mit.edu/Epictetus/epicench.html",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "실천적 통제 구분을 결정론과 자유의지에 관한 형이상학적 증명으로 쓰지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Free Will",
+        "href": "https://plato.stanford.edu/entries/freewill/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "프랑크푸르트식 반례는 논쟁을 시작하는 사고실험이며 대안 논쟁을 끝낸 사실 보고가 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-topics/reference-context-and-speech-acts": {
+    "entryLevel": true,
+    "entryNote": "‘은행 앞’이라는 모호한 장소 표현과 ‘내일 10만원을 갚겠다’는 약속에서 시작합니다.",
+    "coreIdea": "말의 작동은 표현이 대상을 가리키는 지시, 상황이 해석을 좁히는 맥락, 같은 내용으로 주장·약속·명령을 수행하는 발화의 힘을 나눠야 이해할 수 있습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "reference-description",
+        "role": "지시와 기술이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "contextual-meaning",
+        "role": "맥락 의미이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "illocutionary-force",
+        "role": "발화수반력이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "reference-description",
+        "sectionId": "names",
+        "intuition": "지시와 기술을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "‘이 글을 쓴 사람’이라는 기술로 한 사람을 찾습니다.",
+        "boundary": "모든 표현이 머릿속 대상에 붙은 단순 이름이라는 뜻은 아닙니다."
+      },
+      {
+        "id": "contextual-meaning",
+        "sectionId": "names",
+        "intuition": "맥락 의미을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "통장 이야기가 은행을 금융기관으로 좁힙니다.",
+        "boundary": "맥락을 이유로 어떤 해석이든 허용된다는 뜻은 아닙니다."
+      },
+      {
+        "id": "illocutionary-force",
+        "sectionId": "names",
+        "intuition": "발화수반력을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "내일 갚겠다는 말이 조건이 맞을 때 약속을 만듭니다.",
+        "boundary": "말만 하면 권한과 관계에 무관하게 제도 효과가 생기는 것은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 지시와 기술",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "reference-description"
+        ]
+      },
+      {
+        "label": "2단계 · 맥락 의미",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "contextual-meaning"
+        ]
+      },
+      {
+        "label": "3단계 · 발화수반력",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "illocutionary-force"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "reference-description"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "지시와 기술의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "지시와 기술",
+          "‘이 글을 쓴 사람’이라는 기술로 한 사람을 찾습니다.",
+          "모든 표현이 머릿속 대상에 붙은 단순 이름이라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "contextual-meaning"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "맥락 의미이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "맥락 의미",
+          "차이",
+          "통장 이야기가 은행을 금융기관으로 좁힙니다."
+        ],
+        "requiredConcepts": [
+          "illocutionary-force"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "10만원 상환 문장이 약속으로 성립할 때 발화수반력이 하는 일을 설명하세요.",
+        "answerChecklist": [
+          "발화수반력",
+          "내일 갚겠다는 말이 조건이 맞을 때 약속을 만듭니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "reference-description"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "Bertrand Russell · On Denoting",
+          "Stanford Encyclopedia of Philosophy · Speech Acts",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "contextual-meaning"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "illocutionary-force"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "reference-description",
+          "contextual-meaning",
+          "illocutionary-force"
+        ],
+        "requiredConcepts": [
+          "reference-description",
+          "contextual-meaning",
+          "illocutionary-force"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "reference-description",
+          "contextual-meaning",
+          "illocutionary-force"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "reference-description",
+          "contextual-meaning",
+          "illocutionary-force"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "reference-description",
+          "contextual-meaning",
+          "illocutionary-force"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Bertrand Russell · On Denoting",
+        "href": "https://humanum.arts.cuhk.edu.hk/humftp/E-text/Russell/denoting.htm",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "기술 이론의 존재·유일성 분석과 동음이의어를 맥락으로 푸는 문제를 같은 것으로 만들지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Speech Acts",
+        "href": "https://plato.stanford.edu/entries/speech-acts/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "분류만으로 암시·비꼼·권력 차이가 만드는 실제 효과를 모두 설명했다고 보지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-topics/consciousness-pain-and-other-minds": {
+    "entryLevel": true,
+    "entryNote": "통증 8점이라는 환자의 말과 맥박·걷기·영상이라는 서로 다른 단위의 진료 자료에서 시작합니다.",
+    "coreIdea": "의식과 다른 마음은 경험의 현상적 성격, 당사자의 1인칭 증거, 관찰 가능한 3인칭 증거를 구분한 뒤 유추·최선의 설명·증언을 함께 써서 접근해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "phenomenal-character",
+        "role": "현상적 성격이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "first-third-person-evidence",
+        "role": "1인칭·3인칭 증거이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "other-minds-inference",
+        "role": "다른 마음 추론이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "phenomenal-character",
+        "sectionId": "names",
+        "intuition": "현상적 성격을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "욱신거림과 타는 듯함은 같은 8점 안에서도 다릅니다.",
+        "boundary": "말로 보고하거나 행동에 쓸 수 있는 능력과 언제나 같지는 않습니다."
+      },
+      {
+        "id": "first-third-person-evidence",
+        "sectionId": "names",
+        "intuition": "1인칭·3인칭 증거을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "환자의 8점 보고와 의료진의 맥박·영상을 함께 봅니다.",
+        "boundary": "어느 한쪽이 다른 쪽을 언제나 무효로 만든다는 구분이 아닙니다."
+      },
+      {
+        "id": "other-minds-inference",
+        "sectionId": "names",
+        "intuition": "다른 마음 추론을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "보고·걷기 변화·치료 반응을 통증 설명으로 묶습니다.",
+        "boundary": "타인의 마음을 직접 복사해 안거나 전혀 알 수 없다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 현상적 성격",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "phenomenal-character"
+        ]
+      },
+      {
+        "label": "2단계 · 1인칭·3인칭 증거",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "first-third-person-evidence"
+        ]
+      },
+      {
+        "label": "3단계 · 다른 마음 추론",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "other-minds-inference"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "현상적 성격의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "현상적 성격",
+          "욱신거림과 타는 듯함은 같은 8점 안에서도 다릅니다.",
+          "말로 보고하거나 행동에 쓸 수 있는 능력과 언제나 같지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "first-third-person-evidence"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "1인칭·3인칭 증거이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "1인칭·3인칭 증거",
+          "차이",
+          "환자의 8점 보고와 의료진의 맥박·영상을 함께 봅니다."
+        ],
+        "requiredConcepts": [
+          "other-minds-inference"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "통증 보고와 세 관찰 자료를 묶을 때 다른 마음 추론이 하는 일을 설명하세요.",
+        "answerChecklist": [
+          "다른 마음 추론",
+          "보고·걷기 변화·치료 반응을 통증 설명으로 묶습니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Consciousness",
+          "Stanford Encyclopedia of Philosophy · Other Minds",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "first-third-person-evidence"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "other-minds-inference"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "phenomenal-character",
+          "first-third-person-evidence",
+          "other-minds-inference"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character",
+          "first-third-person-evidence",
+          "other-minds-inference"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character",
+          "first-third-person-evidence",
+          "other-minds-inference"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character",
+          "first-third-person-evidence",
+          "other-minds-inference"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "phenomenal-character",
+          "first-third-person-evidence",
+          "other-minds-inference"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Consciousness",
+        "href": "https://plato.stanford.edu/entries/consciousness/",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "신경 상관관계를 찾는 연구와 경험이 왜 생기는지를 완전히 설명하는 일을 구분합니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Other Minds",
+        "href": "https://plato.stanford.edu/entries/other-minds/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "철학적 불확실성을 타인의 통증 증언을 무시할 허가로 쓰지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-topics/aesthetic-taste-judgment-and-context": {
+    "entryLevel": true,
+    "entryNote": "한 공연에 대한 100명의 60대 40 평가와 세 번 반복 감상 뒤 달라진 이유에서 시작합니다.",
+    "coreIdea": "미적 판단은 개인의 첫 반응을 출발점으로 삼되 작품의 확인 가능한 특징, 반복 비교로 기른 주의, 장르와 역사적 맥락을 이유로 제시하며 다수결과 전문가 권위를 함께 점검합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "aesthetic-judgment",
+        "role": "미적 판단이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "trained-taste",
+        "role": "훈련된 취향이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "aesthetic-context",
+        "role": "미적 맥락이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "aesthetic-judgment",
+        "sectionId": "names",
+        "intuition": "미적 판단을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "늦어진 박자가 앞 주제를 불안하게 바꾼다고 설명합니다.",
+        "boundary": "좋아한다는 개인 보고나 인기 순위와 그대로 같지 않습니다."
+      },
+      {
+        "id": "trained-taste",
+        "sectionId": "names",
+        "intuition": "훈련된 취향을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "세 연주를 비교해 속도 변화와 해석 차이를 듣습니다.",
+        "boundary": "전문가가 언제나 옳거나 모두 같은 취향을 가져야 한다는 뜻은 아닙니다."
+      },
+      {
+        "id": "aesthetic-context",
+        "sectionId": "names",
+        "intuition": "미적 맥락을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "늦춘 박자를 해당 연주 전통 안에서 해석합니다.",
+        "boundary": "맥락을 알면 작품을 반드시 좋아하거나 비판할 수 없다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 미적 판단",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "aesthetic-judgment"
+        ]
+      },
+      {
+        "label": "2단계 · 훈련된 취향",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "trained-taste"
+        ]
+      },
+      {
+        "label": "3단계 · 미적 맥락",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "aesthetic-context"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "미적 판단의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "미적 판단",
+          "늦어진 박자가 앞 주제를 불안하게 바꾼다고 설명합니다.",
+          "좋아한다는 개인 보고나 인기 순위와 그대로 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "trained-taste"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "훈련된 취향이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "훈련된 취향",
+          "차이",
+          "세 연주를 비교해 속도 변화와 해석 차이를 듣습니다."
+        ],
+        "requiredConcepts": [
+          "aesthetic-context"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "같은 박자 늦추기를 평가할 때 미적 맥락이 판단을 바꾸는 이유를 설명하세요.",
+        "answerChecklist": [
+          "미적 맥락",
+          "늦춘 박자를 해당 연주 전통 안에서 해석합니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "David Hume · Of the Standard of Taste",
+          "Stanford Encyclopedia of Philosophy · The Concept of the Aesthetic",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "trained-taste"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "aesthetic-context"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "aesthetic-judgment",
+          "trained-taste",
+          "aesthetic-context"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment",
+          "trained-taste",
+          "aesthetic-context"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment",
+          "trained-taste",
+          "aesthetic-context"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment",
+          "trained-taste",
+          "aesthetic-context"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "aesthetic-judgment",
+          "trained-taste",
+          "aesthetic-context"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "David Hume · Of the Standard of Taste",
+        "href": "https://www.earlymoderntexts.com/assets/pdfs/hume1757essay2.pdf",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "흄의 판단자 조건을 기존 전문가 집단의 무오류나 사회적 배제의 정당화로 쓰지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · The Concept of the Aesthetic",
+        "href": "https://plato.stanford.edu/entries/aesthetic-concept/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "한 매체의 기준을 음악·그림·건축·음식 전체에 그대로 일반화하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-topics/meaning-in-life-attraction-worth-and-commitment": {
+    "entryLevel": true,
+    "entryNote": "일주일의 깨어 있는 100시간을 생계·돌봄·관계·선택한 활동으로 나눈 시간표에서 시작합니다.",
+    "coreIdea": "삶의 의미는 순간 행복이나 도덕 점수 하나보다 사람이 마음을 두는 활동과 독립적으로 가치 있는 대상이 지속적이고 수정 가능한 참여 속에서 만나는지 살펴야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "subjective-attraction-meaning",
+        "role": "주관적 끌림이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "objective-worth-meaning",
+        "role": "객관적 가치이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "hybrid-meaning-in-life",
+        "role": "의미의 결합 관점이 생활 사례의 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "subjective-attraction-meaning",
+        "sectionId": "names",
+        "intuition": "주관적 끌림을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "과학을 설명하는 일이 좋아 매주 수업을 준비합니다.",
+        "boundary": "강한 욕구만 있으면 대상과 결과에 관계없이 의미 있다는 뜻은 아닙니다."
+      },
+      {
+        "id": "objective-worth-meaning",
+        "sectionId": "names",
+        "intuition": "객관적 가치을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "교육 기회를 넓히고 아이의 이해를 돕는 가치를 봅니다.",
+        "boundary": "권위가 지정한 일에 무관심하게 복종하면 충분하다는 뜻은 아닙니다."
+      },
+      {
+        "id": "hybrid-meaning-in-life",
+        "sectionId": "names",
+        "intuition": "의미의 결합 관점을 일상어로 먼저 구분한 뒤 사례의 어느 판단이 달라지는지 봅니다.",
+        "workedExample": "가르칠 관심이 실제 관계와 도움 속에서 능력과 약속으로 자랍니다.",
+        "boundary": "끌림과 가치를 숫자로 더하면 의미 점수가 나온다는 이론은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 주관적 끌림",
+        "relation": "사례에서 첫 구분을 만듭니다.",
+        "concepts": [
+          "subjective-attraction-meaning"
+        ]
+      },
+      {
+        "label": "2단계 · 객관적 가치",
+        "relation": "첫 구분을 다른 조건과 연결합니다.",
+        "concepts": [
+          "objective-worth-meaning"
+        ]
+      },
+      {
+        "label": "3단계 · 의미의 결합 관점",
+        "relation": "전체 판단의 적용 범위와 한계를 검사합니다.",
+        "concepts": [
+          "hybrid-meaning-in-life"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "생활 사례에서 처음 갈리는 두 판단을 설명하세요.",
+        "answerChecklist": [
+          "case",
+          "서로 다른 기준",
+          "판단 결과"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "주관적 끌림의 뜻과 사례를 설명하세요.",
+        "answerChecklist": [
+          "주관적 끌림",
+          "과학을 설명하는 일이 좋아 매주 수업을 준비합니다.",
+          "강한 욕구만 있으면 대상과 결과에 관계없이 의미 있다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "objective-worth-meaning"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "객관적 가치이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "객관적 가치",
+          "차이",
+          "교육 기회를 넓히고 아이의 이해를 돕는 가치를 봅니다."
+        ],
+        "requiredConcepts": [
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "지역 과학 수업 사례에 의미의 결합 관점을 적용해 끌림과 가치의 관계를 설명하세요.",
+        "answerChecklist": [
+          "의미의 결합 관점",
+          "가르칠 관심이 실제 관계와 도움 속에서 능력과 약속으로 자랍니다.",
+          "적용 범위"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 출처가 각각 어떤 질문에 쓰이는지 구분하세요.",
+        "answerChecklist": [
+          "Aristotle · Nicomachean Ethics, Book I",
+          "Stanford Encyclopedia of Philosophy · The Meaning of Life",
+          "증거 역할"
+        ],
+        "requiredConcepts": [
+          "objective-worth-meaning"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 통계나 판정식으로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "단위와 측정",
+          "경계"
+        ],
+        "requiredConcepts": [
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "subjective-attraction-meaning",
+          "objective-worth-meaning",
+          "hybrid-meaning-in-life"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning",
+          "objective-worth-meaning",
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 출처의 주장을 현대 사례에 적용할 때 남는 한계를 반례와 함께 쓰세요.",
+        "answerChecklist": [
+          "원문 맥락",
+          "현대 사례",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning",
+          "objective-worth-meaning",
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 분류가 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "이론 비교",
+          "추가 전제",
+          "판단 목적"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning",
+          "objective-worth-meaning",
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 질문이 인접한 기존 글의 질문과 어디서 갈리는지 설명하세요.",
+        "answerChecklist": [
+          "소유 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "subjective-attraction-meaning",
+          "objective-worth-meaning",
+          "hybrid-meaning-in-life"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Aristotle · Nicomachean Ethics, Book I",
+        "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7",
+        "problem": "생활 사례와 연결할 핵심 구분 또는 원전의 문제를 확인합니다.",
+        "contribution": "본문의 핵심 사례에 적용할 1차 논증 또는 중심 개념을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "원전 또는 핵심 텍스트의 논증 범위입니다.",
+        "notClaim": "고대 폴리스의 시민관과 기능 논증을 현대 삶의 유일한 정답으로 일반화하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · The Meaning of Life",
+        "href": "https://plato.stanford.edu/entries/life-meaning/",
+        "problem": "첫 자료가 남긴 쟁점을 현대 논쟁의 분류와 대조합니다.",
+        "contribution": "주요 입장과 반론의 범위를 비교할 학술 개관을 제공합니다.",
+        "assumptions": "번역·문헌 맥락·사례의 설명용 수치를 구분합니다.",
+        "evidenceScope": "동료 검토 학술 개관이 정리한 논쟁 범위입니다.",
+        "notClaim": "현대 이론의 분류가 개인에게 열정을 찾으라고 요구하거나 구조적 제약을 지우지 않게 합니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

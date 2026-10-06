@@ -2046,6 +2046,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "아칸 인격론의 현대적 논쟁은 인간으로서의 기본 지위와 공동체 속에서 기르는 도덕적 인격을 구분하면서, 관계가 행위자를 만들고 개인이 관계를 비판하는 두 방향을 함께 봅니다. 세 개념이 한 생활 사례의 판단 경로를 단계별로 엽니다.",
     "sharedGate": "70+20+10의 기여 장부와 10가구의 면제·비판 이유를 함께 보고 아칸 특정 논의와 아프리카 윤리 일반 비교를 구분합니다."
   },
+  "philosophy-topics/identity-through-change": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "시간에 따른 정체성은 닮음과 바로 그 하나임을 구분하고, 물질·시공간 경로·기능·인과적 역사 가운데 어떤 지속 기준을 쓰는지 공개해야 판단할 수 있습니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "A의 연속된 경로와 B의 옛 물질을 맞세우고 수적 동일성과 질적 닮음을 구분합니다."
+  },
+  "philosophy-topics/free-will-control-and-responsibility": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "자유와 책임은 원인이 없다는 느낌보다 대안 가능성, 행동이 자기 이유에서 나온 원천성, 정보·이유·강제에 대한 실제 통제 조건을 나눠 판단해야 합니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "정보·대안·이유 반응·강제 없음의 100점 표는 설명용이며 법적 책임 산식이 아님을 밝힙니다."
+  },
+  "philosophy-topics/reference-context-and-speech-acts": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "말의 작동은 표현이 대상을 가리키는 지시, 상황이 해석을 좁히는 맥락, 같은 내용으로 주장·약속·명령을 수행하는 발화의 힘을 나눠야 이해할 수 있습니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "100명의 해석 비율은 설명용이며 다수의 연상이 단어의 참뜻이나 작품 품질을 결정하지 않음을 밝힙니다."
+  },
+  "philosophy-topics/consciousness-pain-and-other-minds": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "의식과 다른 마음은 경험의 현상적 성격, 당사자의 1인칭 증거, 관찰 가능한 3인칭 증거를 구분한 뒤 유추·최선의 설명·증언을 함께 써서 접근해야 합니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "8점과 맥박 +20은 서로 환산할 절대 단위가 아니며 뇌 상관관계와 경험의 완전한 설명을 구분합니다."
+  },
+  "philosophy-topics/aesthetic-taste-judgment-and-context": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "미적 판단은 개인의 첫 반응을 출발점으로 삼되 작품의 확인 가능한 특징, 반복 비교로 기른 주의, 장르와 역사적 맥락을 이유로 제시하며 다수결과 전문가 권위를 함께 점검합니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "60대 40과 75명은 설명용이며 인기나 합의가 작품 가치를 자동으로 증명하지 않음을 밝힙니다."
+  },
+  "philosophy-topics/meaning-in-life-attraction-worth-and-commitment": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "삶의 의미는 순간 행복이나 도덕 점수 하나보다 사람이 마음을 두는 활동과 독립적으로 가치 있는 대상이 지속적이고 수정 가능한 참여 속에서 만나는지 살펴야 합니다. 세 개념이 하나의 생활 사례를 단계별로 엽니다.",
+    "sharedGate": "100시간의 비율은 권장안이 아니며 행복·도덕·의미와 개인의 선택·사회적 접근 조건을 구분합니다."
+  },
 };
 
 /**
@@ -2383,4 +2425,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "philosophical-traditions/gita-action-results-and-release":"25d6ad4aab54471c",
 "philosophical-traditions/islamic-causation-reason-and-revelation":"787d04e46945df09",
 "philosophical-traditions/akan-personhood-community-and-agency":"abb41cc0b85907ee",
+"philosophy-topics/aesthetic-taste-judgment-and-context":"81542fe35449ef01",
+"philosophy-topics/consciousness-pain-and-other-minds":"eba7af8542003009",
+"philosophy-topics/free-will-control-and-responsibility":"d5a80e861736f3e8",
+"philosophy-topics/identity-through-change":"57d9f81181b809b0",
+"philosophy-topics/meaning-in-life-attraction-worth-and-commitment":"d68c5cc8605b082d",
+"philosophy-topics/reference-context-and-speech-acts":"fb437e42f9544f2d",
 };
