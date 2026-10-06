@@ -54,6 +54,12 @@
 | 미국 파생상품 관할·고객자금 | 상품별 CFTC·SEC 관할과 FCM 분리 계정 | 고객 현금100 중 증거금20·잔액80도 모두 고객 계정으로 표시 | `markets/us-derivatives-regulatory-map-and-customer-segregation#case` | SEC 증권기반스왑·CFTC FCM 분리 보관 공식 자료 |
 | 장외파생 중앙청산·보고·비청산 완화 | CCP 청산, 거래정보 보고, 담보·평가·분쟁 절차 | 설명용100건 중 청산60건=60%, 미청산40건은 별도 완화 장부 | `markets/otc-clearing-reporting-and-bilateral-risk-mitigation#case` | ESMA EMIR·CFTC 청산 요건, 의무별 분모 구분 |
 | 국경 간 종료 일괄상계·규제 인정 | 준거법·도산법상 상계 집행과 감독 규칙의 상호인정 | +12−7−2=순액3, 담보4 뒤0 대 상계 불인정 때8 | `markets/cross-border-netting-enforceability-and-regulatory-recognition#case` | UNIDROIT 상계 원칙·바젤 국경 간 증거금 기준 |
+| 은행 IRRBB·ALM 헤지 | 대출·예금의 금리 변경 시점과 은행 전체 EVE·NII 한도 | 고정대출100×5%=5, 예금80×2→3%=1.6→2.4, NII−0.8·스왑+0.8 | `markets/bank-irrbb-alm-and-derivatives-hedging#case` | 바젤 2026 IRRBB·한국금융연수원 FP 범위 대조 |
+| 헤지회계 지정·효과·재조정 | 헤지대상 위험과 파생상품 손익의 회계상 연결 | 차입100억·스왑80억=80%, 차입50억 뒤160%를 재조정 | `markets/hedge-accounting-designation-effectiveness-and-rebalancing#case` | IFRS 9 지정·효과·B6.5.7~11 재조정 근거 |
+| 파생상품 세금의 성격·시점·관할 | 납세자·계약 분류·실현/연말평가·통산 범위 | 이익12−손실5=7, 미국 적격 Section 1256 순익10→장기6+단기4 | `markets/derivatives-tax-character-timing-and-jurisdiction#case` | 국세청·IRS 원문, 실제 세액과 계약 범위 경계 |
+| 포지션 한도·헤지 예외·시장감시 | 관련 계좌의 합산 수량과 주문·현물 자료의 시장질서 통제 | 공통 지배 계좌400+200=600, 가정 한도500보다100 초과 | `markets/derivatives-market-abuse-position-limits-and-surveillance#case` | CFTC 한도·일일 시장감시, 경보와 위반 구분 |
+| 파생상품 KYC·거래감시·STR | 고객·실소유자와 입출금·주문·손익·수취인의 사건 연결 | 예상100·입금1,000·거래손실20·해외출금980 | `markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring#case` | FATF 증권 RBA·KoFIU STR, 경보와 신고결정 구분 |
+| 파생상품 민원·분쟁조정·증거 | 판매·가격·체결·증거금·통지 기록과 관할별 구제 절차 | 계좌100−손실30=70, 필요 증거금80보다10 부족 | `markets/derivatives-complaints-dispute-resolution-and-evidence#case` | 영국 FOS 증거 범위·금융투자교육원 분쟁 과목 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

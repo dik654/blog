@@ -30312,6 +30312,182 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "본국과 현지국이 충분히 비슷한 감독 결과를 인정해 중복 준수를 줄이는 장치입니다.",
     "canonicalHref": "/finance/markets/cross-border-netting-enforceability-and-regulatory-recognition#names"
   },
+  "irrbb-economic-value-earnings": {
+    "id": "irrbb-economic-value-earnings",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "은행 장부의 EVE·NII",
+    "aliases": [
+      "IRRBB economic value and earnings measures"
+    ],
+    "definition": "금리 충격이 미래 현금흐름의 현재가치와 일정 기간 순이자이익에 미치는 영향을 따로 재는 두 관점입니다.",
+    "canonicalHref": "/finance/markets/bank-irrbb-alm-and-derivatives-hedging#names"
+  },
+  "irrbb-gap-basis-option-risk": {
+    "id": "irrbb-gap-basis-option-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "IRRBB 갭·베이시스·옵션 위험",
+    "aliases": [
+      "IRRBB gap basis and option risk"
+    ],
+    "definition": "자산과 부채의 금리 변경 시점, 기준금리 움직임과 고객 선택에서 생기는 은행 장부의 세 금리 위험입니다.",
+    "canonicalHref": "/finance/markets/bank-irrbb-alm-and-derivatives-hedging#names"
+  },
+  "bank-derivatives-alm-hedge": {
+    "id": "bank-derivatives-alm-hedge",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "은행 ALM 파생상품 헤지",
+    "aliases": [
+      "bank derivatives ALM hedge"
+    ],
+    "definition": "은행 전체 자산·부채의 EVE와 NII 한도에 맞춰 조달 조건과 파생상품 수량을 함께 조정하는 일입니다.",
+    "canonicalHref": "/finance/markets/bank-irrbb-alm-and-derivatives-hedging#names"
+  },
+  "hedge-accounting-designation": {
+    "id": "hedge-accounting-designation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "헤지회계 지정",
+    "aliases": [
+      "hedge accounting designation"
+    ],
+    "definition": "헤지대상·위험·수단·비율과 효과 평가 방법을 헤지관계 시작 시점에 공식 문서로 연결하는 일입니다.",
+    "canonicalHref": "/finance/markets/hedge-accounting-designation-effectiveness-and-rebalancing#names"
+  },
+  "hedge-accounting-effectiveness": {
+    "id": "hedge-accounting-effectiveness",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "헤지회계 효과 요건",
+    "aliases": [
+      "hedge accounting effectiveness requirements"
+    ],
+    "definition": "헤지대상과 수단의 경제적 관계, 신용위험의 지배 여부와 실제 수량에 따른 헤지비율을 평가하는 요건입니다.",
+    "canonicalHref": "/finance/markets/hedge-accounting-designation-effectiveness-and-rebalancing#names"
+  },
+  "hedge-accounting-rebalancing": {
+    "id": "hedge-accounting-rebalancing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "헤지회계 재조정",
+    "aliases": [
+      "hedge accounting rebalancing"
+    ],
+    "definition": "위험관리 목적이 유지되는 동안 헤지대상 또는 수단의 지정 수량을 바꿔 헤지비율을 다시 맞추는 절차입니다.",
+    "canonicalHref": "/finance/markets/hedge-accounting-designation-effectiveness-and-rebalancing#names"
+  },
+  "derivatives-tax-character": {
+    "id": "derivatives-tax-character",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 소득 성격",
+    "aliases": [
+      "derivatives tax character"
+    ],
+    "definition": "파생상품 손익을 자본이득·사업소득 등 어느 과세 범주에 넣을지 정하는 세법상 계약 분류입니다.",
+    "canonicalHref": "/finance/markets/derivatives-tax-character-timing-and-jurisdiction#names"
+  },
+  "derivatives-tax-timing": {
+    "id": "derivatives-tax-timing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 세금 인식 시점",
+    "aliases": [
+      "derivatives tax timing"
+    ],
+    "definition": "매도·만기 같은 실현 시점 또는 연말 시가평가 중 언제 계약 손익을 과세 장부에 넣을지 정하는 규칙입니다.",
+    "canonicalHref": "/finance/markets/derivatives-tax-character-timing-and-jurisdiction#names"
+  },
+  "derivatives-tax-residency-jurisdiction": {
+    "id": "derivatives-tax-residency-jurisdiction",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 세금의 거주지·관할",
+    "aliases": [
+      "derivatives tax residency and jurisdiction"
+    ],
+    "definition": "납세자 거주지와 거래 원천·조약을 바탕으로 어느 국가가 파생상품 소득에 과세할지 정하는 법적 연결입니다.",
+    "canonicalHref": "/finance/markets/derivatives-tax-character-timing-and-jurisdiction#names"
+  },
+  "derivatives-position-limit": {
+    "id": "derivatives-position-limit",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 포지션 한도",
+    "aliases": [
+      "derivatives position limit"
+    ],
+    "definition": "관련 계좌를 합쳐 특정 파생상품 계약에서 한 사람이 보유할 수 있는 최대 수량을 정하는 규칙입니다.",
+    "canonicalHref": "/finance/markets/derivatives-market-abuse-position-limits-and-surveillance#names"
+  },
+  "derivatives-bona-fide-hedge-exemption": {
+    "id": "derivatives-bona-fide-hedge-exemption",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 선의의 헤지 예외",
+    "aliases": [
+      "derivatives bona fide hedge exemption"
+    ],
+    "definition": "실제 또는 예상되는 상업 위험을 줄이는 포지션에 정의·수량·시점·절차 요건 아래 허용되는 한도 예외입니다.",
+    "canonicalHref": "/finance/markets/derivatives-market-abuse-position-limits-and-surveillance#names"
+  },
+  "derivatives-market-surveillance": {
+    "id": "derivatives-market-surveillance",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 시장감시",
+    "aliases": [
+      "derivatives market surveillance"
+    ],
+    "definition": "주문·정정·취소·체결·포지션과 현물 자료를 이어 조작과 한도 위반 징후를 찾는 운영입니다.",
+    "canonicalHref": "/finance/markets/derivatives-market-abuse-position-limits-and-surveillance#names"
+  },
+  "derivatives-aml-risk-path": {
+    "id": "derivatives-aml-risk-path",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 자금세탁 위험경로",
+    "aliases": [
+      "derivatives AML risk path"
+    ],
+    "definition": "자금이 증거금·프리미엄·정산 손익과 출금을 거치며 출처나 목적을 흐릴 수 있는 전체 이동 과정입니다.",
+    "canonicalHref": "/finance/markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring#names"
+  },
+  "derivatives-trade-funding-lineage": {
+    "id": "derivatives-trade-funding-lineage",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 거래·자금 연결",
+    "aliases": [
+      "derivatives trade funding lineage"
+    ],
+    "definition": "고객·실소유자, 은행 입출금, 주문·포지션·손익과 최종 수취인을 같은 사건 기록으로 잇는 방법입니다.",
+    "canonicalHref": "/finance/markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring#names"
+  },
+  "derivatives-complaint-evidence-pack": {
+    "id": "derivatives-complaint-evidence-pack",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 민원 증거 꾸러미",
+    "aliases": [
+      "derivatives complaint evidence pack"
+    ],
+    "definition": "고객 정보·설명·약관·주문·호가·체결·증거금·알림·가격 원천과 통신을 사건 시간순으로 묶은 자료입니다.",
+    "canonicalHref": "/finance/markets/derivatives-complaints-dispute-resolution-and-evidence#names"
+  },
+  "derivatives-dispute-redress-path": {
+    "id": "derivatives-dispute-redress-path",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 분쟁 구제 경로",
+    "aliases": [
+      "derivatives dispute redress path"
+    ],
+    "definition": "회사 민원 접수와 최종 답변에서 외부 조정·중재·법원으로 이어지는 관할별 해결 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-complaints-dispute-resolution-and-evidence#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -54962,6 +55138,108 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "cross-border-regulatory-recognition",
     "relation": "extends",
     "reason": "jurisdictional-netting-opinion에서 cross-border-regulatory-recognition로 실제 국가·계약 판단을 확장합니다."
+  },
+  {
+    "from": "swap-cashflow-exchange",
+    "to": "irrbb-economic-value-earnings",
+    "relation": "prerequisite",
+    "reason": "swap-cashflow-exchange에서 irrbb-economic-value-earnings로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "irrbb-economic-value-earnings",
+    "to": "irrbb-gap-basis-option-risk",
+    "relation": "extends",
+    "reason": "irrbb-economic-value-earnings에서 irrbb-gap-basis-option-risk로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "irrbb-gap-basis-option-risk",
+    "to": "bank-derivatives-alm-hedge",
+    "relation": "produces",
+    "reason": "irrbb-gap-basis-option-risk에서 bank-derivatives-alm-hedge로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "bank-derivatives-alm-hedge",
+    "to": "hedge-accounting-designation",
+    "relation": "prerequisite",
+    "reason": "bank-derivatives-alm-hedge에서 hedge-accounting-designation로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "hedge-accounting-designation",
+    "to": "hedge-accounting-effectiveness",
+    "relation": "evaluates",
+    "reason": "hedge-accounting-designation에서 hedge-accounting-effectiveness로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "hedge-accounting-effectiveness",
+    "to": "hedge-accounting-rebalancing",
+    "relation": "produces",
+    "reason": "hedge-accounting-effectiveness에서 hedge-accounting-rebalancing로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "financial-product-claim-map",
+    "to": "derivatives-tax-character",
+    "relation": "prerequisite",
+    "reason": "financial-product-claim-map에서 derivatives-tax-character로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-tax-character",
+    "to": "derivatives-tax-timing",
+    "relation": "constrains",
+    "reason": "derivatives-tax-character에서 derivatives-tax-timing로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-tax-timing",
+    "to": "derivatives-tax-residency-jurisdiction",
+    "relation": "constrains",
+    "reason": "derivatives-tax-timing에서 derivatives-tax-residency-jurisdiction로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "market-surveillance-case-decision",
+    "to": "derivatives-market-surveillance",
+    "relation": "extends",
+    "reason": "market-surveillance-case-decision에서 derivatives-market-surveillance로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-position-limit",
+    "to": "derivatives-bona-fide-hedge-exemption",
+    "relation": "constrains",
+    "reason": "derivatives-position-limit에서 derivatives-bona-fide-hedge-exemption로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-market-surveillance",
+    "to": "derivatives-position-limit",
+    "relation": "evaluates",
+    "reason": "derivatives-market-surveillance에서 derivatives-position-limit로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "cdd-purpose-source-risk-profile",
+    "to": "derivatives-aml-risk-path",
+    "relation": "prerequisite",
+    "reason": "cdd-purpose-source-risk-profile에서 derivatives-aml-risk-path로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-aml-risk-path",
+    "to": "derivatives-trade-funding-lineage",
+    "relation": "produces",
+    "reason": "derivatives-aml-risk-path에서 derivatives-trade-funding-lineage로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-trade-funding-lineage",
+    "to": "str-alert-case-decision-boundary",
+    "relation": "evaluates",
+    "reason": "derivatives-trade-funding-lineage에서 str-alert-case-decision-boundary로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "sales-practice-evidence",
+    "to": "derivatives-complaint-evidence-pack",
+    "relation": "prerequisite",
+    "reason": "sales-practice-evidence에서 derivatives-complaint-evidence-pack로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "derivatives-complaint-evidence-pack",
+    "to": "derivatives-dispute-redress-path",
+    "relation": "produces",
+    "reason": "derivatives-complaint-evidence-pack에서 derivatives-dispute-redress-path로 파생상품의 실제 업무 판단을 확장합니다."
   },
 ];
 

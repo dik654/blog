@@ -142282,4 +142282,1405 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/bank-irrbb-alm-and-derivatives-hedging": {
+    "entryLevel": false,
+    "entryNote": "고정 대출 100과 변동 예금 80에서 금리 1%포인트 상승 뒤 순이자 차이가 0.8 줄어드는 사례에서 시작합니다.",
+    "coreIdea": "은행 장부의 금리 위험은 EVE와 NII를 함께 측정하고 갭·베이시스·옵션 위험을 찾아 ALCO가 조달과 파생상품 헤지를 함께 조정해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "swap-cashflow-exchange",
+        "role": "변동금리 수취·고정금리 지급 스왑이 예금 비용 증가를 상쇄하는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "irrbb-economic-value-earnings",
+        "role": "은행 장부의 EVE·NII을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "irrbb-gap-basis-option-risk",
+        "role": "IRRBB 갭·베이시스·옵션 위험을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "bank-derivatives-alm-hedge",
+        "role": "은행 ALM 파생상품 헤지을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "irrbb-economic-value-earnings",
+        "sectionId": "names",
+        "intuition": "은행 장부의 EVE·NII이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "예금금리 상승 뒤 NII는 0.8 줄지만 EVE는 전체 만기 현금흐름으로 따로 계산합니다.",
+        "boundary": "두 측정값을 같은 숫자로 보거나 서로 대신 쓰지 않습니다."
+      },
+      {
+        "id": "irrbb-gap-basis-option-risk",
+        "sectionId": "names",
+        "intuition": "IRRBB 갭·베이시스·옵션 위험이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "5년 고정 대출과 3개월 변동 예금 사이의 시점·기준·행동 차이를 찾습니다.",
+        "boundary": "만기표 한 장으로 기준금리와 고객 행동 위험까지 알 수 없습니다."
+      },
+      {
+        "id": "bank-derivatives-alm-hedge",
+        "sectionId": "names",
+        "intuition": "은행 ALM 파생상품 헤지이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "명목 80의 변동금리 수취 스왑으로 예금 비용 증가 0.8을 줄입니다.",
+        "boundary": "개별 스왑 손익만 맞는다고 전체 장부가 안전해지지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "swap-cashflow-exchange"
+        ]
+      },
+      {
+        "label": "2단계 · 은행 장부의 EVE·NII",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "irrbb-economic-value-earnings"
+        ]
+      },
+      {
+        "label": "3단계 · IRRBB 갭·베이시스·옵션 위험",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "irrbb-gap-basis-option-risk"
+        ]
+      },
+      {
+        "label": "4단계 · 은행 ALM 파생상품 헤지",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "bank-derivatives-alm-hedge"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "은행 장부의 EVE·NII의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "은행 장부의 EVE·NII",
+          "예금금리 상승 뒤 NII는 0.8 줄지만 EVE는 전체 만기 현금흐름으로 따로 계산합니다.",
+          "두 측정값을 같은 숫자로 보거나 서로 대신 쓰지 않습니다."
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "IRRBB 갭·베이시스·옵션 위험의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "IRRBB 갭·베이시스·옵션 위험",
+          "5년 고정 대출과 3개월 변동 예금 사이의 시점·기준·행동 차이를 찾습니다.",
+          "만기표 한 장으로 기준금리와 고객 행동 위험까지 알 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "irrbb-gap-basis-option-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "은행 ALM 파생상품 헤지의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "은행 ALM 파생상품 헤지",
+          "명목 80의 변동금리 수취 스왑으로 예금 비용 증가 0.8을 줄입니다.",
+          "개별 스왑 손익만 맞는다고 전체 장부가 안전해지지 않습니다."
+        ],
+        "requiredConcepts": [
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "Basel Committee · IRRBB",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "한국금융연수원 · 자산관리사(FP)",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings",
+          "irrbb-gap-basis-option-risk",
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings",
+          "irrbb-gap-basis-option-risk",
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings",
+          "irrbb-gap-basis-option-risk",
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "irrbb-economic-value-earnings",
+          "irrbb-gap-basis-option-risk",
+          "bank-derivatives-alm-hedge"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Basel Committee · IRRBB",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/srp/31/inforce/2026-01-01/published/2024-07-16",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "EVE·NII와 갭·베이시스·옵션 위험을 함께 관리하는 공식 기준입니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "한국금융연수원 · 자산관리사(FP)",
+        "href": "https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&mobile_yn=Y&p_iQlfn=04&pageName=qualInfo",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "고객 재무설계의 파생상품 범위와 은행 자체 ALM 판단을 구분합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/hedge-accounting-designation-effectiveness-and-rebalancing": {
+    "entryLevel": false,
+    "entryNote": "변동금리 차입 100억 원과 지정 스왑 80억 원의 80% 헤지비율에서 시작합니다.",
+    "coreIdea": "헤지회계는 경제적 헤지를 자동 반영하는 장치가 아니라 시작 시 지정·문서화하고 효과를 계속 평가하며 위험관리 목적이 유지될 때 비율을 재조정하는 절차입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "bank-derivatives-alm-hedge",
+        "role": "경제적 금리 헤지를 회계상 지정과 표시로 이어 가는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "hedge-accounting-designation",
+        "role": "헤지회계 지정을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "hedge-accounting-effectiveness",
+        "role": "헤지회계 효과 요건을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "hedge-accounting-rebalancing",
+        "role": "헤지회계 재조정을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "hedge-accounting-designation",
+        "sectionId": "names",
+        "intuition": "헤지회계 지정이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "차입 100억 원의 기준금리 위험 중 80%를 스왑 80억 원과 연결합니다.",
+        "boundary": "거래 결과를 본 뒤 사후에 관계를 만들어 내지 않습니다."
+      },
+      {
+        "id": "hedge-accounting-effectiveness",
+        "sectionId": "names",
+        "intuition": "헤지회계 효과 요건이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "기준금리·날짜 차이로 1억 원 비용과 0.8억 원 상쇄가 얼마나 어긋나는지 봅니다.",
+        "boundary": "가치 변화가 매 기간 완벽히 같아야 한다는 뜻은 아닙니다."
+      },
+      {
+        "id": "hedge-accounting-rebalancing",
+        "sectionId": "names",
+        "intuition": "헤지회계 재조정이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "차입이 50억 원으로 줄면 80억 원 지정의 160% 비율을 다시 맞춥니다.",
+        "boundary": "위험관리 목적이 끝난 관계를 억지로 유지하는 절차가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "bank-derivatives-alm-hedge"
+        ]
+      },
+      {
+        "label": "2단계 · 헤지회계 지정",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "hedge-accounting-designation"
+        ]
+      },
+      {
+        "label": "3단계 · 헤지회계 효과 요건",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "hedge-accounting-effectiveness"
+        ]
+      },
+      {
+        "label": "4단계 · 헤지회계 재조정",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "hedge-accounting-rebalancing"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "헤지회계 지정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "헤지회계 지정",
+          "차입 100억 원의 기준금리 위험 중 80%를 스왑 80억 원과 연결합니다.",
+          "거래 결과를 본 뒤 사후에 관계를 만들어 내지 않습니다."
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "헤지회계 효과 요건의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "헤지회계 효과 요건",
+          "기준금리·날짜 차이로 1억 원 비용과 0.8억 원 상쇄가 얼마나 어긋나는지 봅니다.",
+          "가치 변화가 매 기간 완벽히 같아야 한다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-effectiveness"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "헤지회계 재조정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "헤지회계 재조정",
+          "차입이 50억 원으로 줄면 80억 원 지정의 160% 비율을 다시 맞춥니다.",
+          "위험관리 목적이 끝난 관계를 억지로 유지하는 절차가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "IFRS Foundation · IFRS 9",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "IFRS 9 · Rebalancing guidance",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation",
+          "hedge-accounting-effectiveness",
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation",
+          "hedge-accounting-effectiveness",
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation",
+          "hedge-accounting-effectiveness",
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "hedge-accounting-designation",
+          "hedge-accounting-effectiveness",
+          "hedge-accounting-rebalancing"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "IFRS Foundation · IFRS 9",
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "헤지관계의 공식 지정과 문서화, 효과 요건을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "IFRS 9 · Rebalancing guidance",
+        "href": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "위험관리 목적이 유지될 때 헤지비율을 재조정하는 조건을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-tax-character-timing-and-jurisdiction": {
+    "entryLevel": false,
+    "entryNote": "같은 과세기간의 이익 12와 손실 5를 합친 순손익 7에서 시작합니다.",
+    "coreIdea": "파생상품 세금은 세율보다 먼저 납세자와 계약의 소득 성격, 실현·연말평가 시점, 손익 통산 범위와 거주지 관할을 차례로 확인해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "financial-product-claim-map",
+        "role": "계약의 지급자·지급 조건을 먼저 읽은 뒤 세법상 분류로 이어 가는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-tax-character",
+        "role": "파생상품 소득 성격을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-tax-timing",
+        "role": "파생상품 세금 인식 시점을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-tax-residency-jurisdiction",
+        "role": "파생상품 세금의 거주지·관할을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-tax-character",
+        "sectionId": "names",
+        "intuition": "파생상품 소득 성격이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "미국 적격 Section 1256 순이익 10을 장기 6과 단기 4로 나눕니다.",
+        "boundary": "선물이나 옵션이라는 상품 이름만으로 확정하지 않습니다."
+      },
+      {
+        "id": "derivatives-tax-timing",
+        "sectionId": "names",
+        "intuition": "파생상품 세금 인식 시점이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "적격 Section 1256 미결제약정을 과세연도 말 공정가치로 평가합니다.",
+        "boundary": "계좌에서 현금이 오간 시점과 항상 같지 않습니다."
+      },
+      {
+        "id": "derivatives-tax-residency-jurisdiction",
+        "sectionId": "names",
+        "intuition": "파생상품 세금의 거주지·관할이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "한국 거주 개인의 국내외 과세대상 파생상품 범위를 계약별로 확인합니다.",
+        "boundary": "거래 앱이나 서버가 놓인 국가만으로 판단하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 소득 성격",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-tax-character"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 세금 인식 시점",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-tax-timing"
+        ]
+      },
+      {
+        "label": "4단계 · 파생상품 세금의 거주지·관할",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-tax-residency-jurisdiction"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 소득 성격의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 소득 성격",
+          "미국 적격 Section 1256 순이익 10을 장기 6과 단기 4로 나눕니다.",
+          "선물이나 옵션이라는 상품 이름만으로 확정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 세금 인식 시점의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 세금 인식 시점",
+          "적격 Section 1256 미결제약정을 과세연도 말 공정가치로 평가합니다.",
+          "계좌에서 현금이 오간 시점과 항상 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-timing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 세금의 거주지·관할의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 세금의 거주지·관할",
+          "한국 거주 개인의 국내외 과세대상 파생상품 범위를 계약별로 확인합니다.",
+          "거래 앱이나 서버가 놓인 국가만으로 판단하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "국세청 · 파생상품 양도소득세",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "IRS · Publication 550",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character",
+          "derivatives-tax-timing",
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character",
+          "derivatives-tax-timing",
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character",
+          "derivatives-tax-timing",
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-tax-character",
+          "derivatives-tax-timing",
+          "derivatives-tax-residency-jurisdiction"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "국세청 · 파생상품 양도소득세",
+        "href": "https://www.nts.go.kr/tax/sub/1.5.4.%ED%8C%8C%EC%83%9D%EC%83%81%ED%92%88%EC%97%90%20%EB%8C%80%ED%95%9C%20%EC%96%91%EB%8F%84%EC%86%8C%EB%93%9D%EC%84%B8%20%EC%8B%A0%EA%B3%A0%EB%82%A9%EB%B6%80%20%EC%95%88%EB%82%B4.html",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "한국 거주 개인의 대상 상품·계산·신고 흐름을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "IRS · Publication 550",
+        "href": "https://www.irs.gov/pub/irs-prior/p550--2025.pdf",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "미국 Section 1256의 연말 시가평가와 60·40 분류를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-market-abuse-position-limits-and-surveillance": {
+    "entryLevel": false,
+    "entryNote": "공통 지배 계좌의 400계약과 200계약을 합친 600이 가정 한도 500을 100 넘는 사례에서 시작합니다.",
+    "coreIdea": "파생상품 시장질서는 관련 계좌의 포지션을 합산하고 선의의 헤지 예외를 문서로 확인하며 주문·포지션·현물 자료를 조사해 경보와 위반 판정을 구분해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "market-surveillance-case-decision",
+        "role": "감시 경보를 조사 사건과 최종 판단으로 나누는 기존 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-position-limit",
+        "role": "파생상품 포지션 한도을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-bona-fide-hedge-exemption",
+        "role": "파생상품 선의의 헤지 예외을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-market-surveillance",
+        "role": "파생상품 시장감시을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-position-limit",
+        "sectionId": "names",
+        "intuition": "파생상품 포지션 한도이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "400계약과 200계약을 합친 600이 가정 한도 500을 100 넘습니다.",
+        "boundary": "실제 한도는 상품·월물·현물인도기간과 거래소에 따라 다릅니다."
+      },
+      {
+        "id": "derivatives-bona-fide-hedge-exemption",
+        "sectionId": "names",
+        "intuition": "파생상품 선의의 헤지 예외이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "원유 재고와 선물의 월물·수량을 문서로 연결해 예외 범위를 확인합니다.",
+        "boundary": "회사 내부에서 헤지라 부르는 것만으로 자동 인정되지 않습니다."
+      },
+      {
+        "id": "derivatives-market-surveillance",
+        "sectionId": "names",
+        "intuition": "파생상품 시장감시이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "큰 주문의 생성부터 취소까지와 관련 계좌의 이익을 한 사건으로 재구성합니다.",
+        "boundary": "경보나 큰 수익 자체가 위반 확정은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "market-surveillance-case-decision"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 포지션 한도",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-position-limit"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 선의의 헤지 예외",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-bona-fide-hedge-exemption"
+        ]
+      },
+      {
+        "label": "4단계 · 파생상품 시장감시",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-market-surveillance"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 포지션 한도의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 포지션 한도",
+          "400계약과 200계약을 합친 600이 가정 한도 500을 100 넘습니다.",
+          "실제 한도는 상품·월물·현물인도기간과 거래소에 따라 다릅니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 선의의 헤지 예외의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 선의의 헤지 예외",
+          "원유 재고와 선물의 월물·수량을 문서로 연결해 예외 범위를 확인합니다.",
+          "회사 내부에서 헤지라 부르는 것만으로 자동 인정되지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-bona-fide-hedge-exemption"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 시장감시의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 시장감시",
+          "큰 주문의 생성부터 취소까지와 관련 계좌의 이익을 한 사건으로 재구성합니다.",
+          "경보나 큰 수익 자체가 위반 확정은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "CFTC · Speculative Position Limits",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "CFTC · Market Surveillance Program",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit",
+          "derivatives-bona-fide-hedge-exemption",
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit",
+          "derivatives-bona-fide-hedge-exemption",
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit",
+          "derivatives-bona-fide-hedge-exemption",
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-position-limit",
+          "derivatives-bona-fide-hedge-exemption",
+          "derivatives-market-surveillance"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CFTC · Speculative Position Limits",
+        "href": "https://www.cftc.gov/IndustryOversight/MarketSurveillance/SpeculativeLimits/index.htm",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "핵심 실물인도 계약·연결 계약의 한도와 예외를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CFTC · Market Surveillance Program",
+        "href": "https://www.cftc.gov/IndustryOversight/MarketSurveillance/CFTCMarketSurveillanceProgram/index.htm",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "일별 포지션과 거래소 자료를 이용한 시장감시 업무를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring": {
+    "entryLevel": false,
+    "entryNote": "예상 월 거래 100인 계좌에 1,000이 들어와 거래 손실 20 뒤 980이 출금된 사례에서 시작합니다.",
+    "coreIdea": "파생상품 AML은 고객·실소유자와 예상 거래를 확인한 뒤 입출금·주문·손익을 한 사건으로 연결하고 경보·조사·STR 결정을 서로 다른 책임 단계로 남겨야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cdd-purpose-source-risk-profile",
+        "role": "고객 목적·자금 출처와 예상 행동을 거래감시의 기준선으로 쓰는 선수 개념입니다."
+      },
+      {
+        "id": "str-alert-case-decision-boundary",
+        "role": "자동 경보와 분석 사건, 권한자의 STR 결정을 구분하는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-aml-risk-path",
+        "role": "파생상품 자금세탁 위험경로을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-trade-funding-lineage",
+        "role": "파생상품 거래·자금 연결을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-aml-risk-path",
+        "sectionId": "names",
+        "intuition": "파생상품 자금세탁 위험경로이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "1,000 입금이 상쇄 거래의 비용 20을 거쳐 980 해외 출금으로 이어집니다.",
+        "boundary": "손실이나 큰 명목금액만으로 의심거래를 확정하지 않습니다."
+      },
+      {
+        "id": "derivatives-trade-funding-lineage",
+        "sectionId": "names",
+        "intuition": "파생상품 거래·자금 연결이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "세 시스템의 1,000·20·980 기록을 고객 식별자와 시각으로 연결합니다.",
+        "boundary": "필요한 조사자만 접근하며 경보와 신고 상태를 섞지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "cdd-purpose-source-risk-profile",
+          "str-alert-case-decision-boundary"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 자금세탁 위험경로",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-aml-risk-path"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 거래·자금 연결",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-trade-funding-lineage"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 자금세탁 위험경로의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 자금세탁 위험경로",
+          "1,000 입금이 상쇄 거래의 비용 20을 거쳐 980 해외 출금으로 이어집니다.",
+          "손실이나 큰 명목금액만으로 의심거래를 확정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 거래·자금 연결의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 거래·자금 연결",
+          "세 시스템의 1,000·20·980 기록을 고객 식별자와 시각으로 연결합니다.",
+          "필요한 조사자만 접근하며 경보와 신고 상태를 섞지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "FATF · Securities sector risk-based approach",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "FATF · Securities sector risk-based approach",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "금융정보분석원 · 의심거래보고",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path",
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path",
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path",
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-aml-risk-path",
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FATF · Securities sector risk-based approach",
+        "href": "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Rba-securities-sector.html",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "옵션·선물·스왑을 포함한 증권 부문 위험기반 AML 원칙을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융정보분석원 · 의심거래보고",
+        "href": "https://www.kofiu.go.kr/kor/policy/amls03.do",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "합당한 근거에 따른 STR 판단과 보고 절차를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-complaints-dispute-resolution-and-evidence": {
+    "entryLevel": false,
+    "entryNote": "계좌자금 100에서 손실 30이 나 증거금 80보다 10 부족해진 강제청산 분쟁에서 시작합니다.",
+    "coreIdea": "파생상품 분쟁은 손실 결과나 서명 하나로 판단하지 않고 판매·체결·가격·증거금·통지 기록을 시간순으로 묶어 책임과 손해를 가린 뒤 계약 관할의 구제 경로로 이어야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "sales-practice-evidence",
+        "role": "고객 정보와 위험 설명, 이해 확인 기록을 분쟁 사건의 출발 자료로 쓰는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-complaint-evidence-pack",
+        "role": "파생상품 민원 증거 꾸러미을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      },
+      {
+        "id": "derivatives-dispute-redress-path",
+        "role": "파생상품 분쟁 구제 경로을 핵심 수치 사례와 실제 계약·업무 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-complaint-evidence-pack",
+        "sectionId": "names",
+        "intuition": "파생상품 민원 증거 꾸러미이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "자금이 70이 된 시각의 가격과 증거금 알림, 강제청산 체결을 연결합니다.",
+        "boundary": "회사에 유리한 화면이나 결론 메모만 골라서는 충분하지 않습니다."
+      },
+      {
+        "id": "derivatives-dispute-redress-path",
+        "sectionId": "names",
+        "intuition": "파생상품 분쟁 구제 경로이 사례에서 맡는 일을 쉬운 숫자로 먼저 확인합니다.",
+        "workedExample": "최종 답변에 보상 근거, 외부 기관과 신청 기한을 함께 적습니다.",
+        "boundary": "국가·상품·계약 법인에 따라 기관과 기한이 다릅니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 상품·계약·통제 구조를 이번 업무 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "sales-practice-evidence"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 민원 증거 꾸러미",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-complaint-evidence-pack"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 분쟁 구제 경로",
+        "relation": "앞 단계의 수치와 기록을 다음 업무 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-dispute-redress-path"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 민원 증거 꾸러미의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 민원 증거 꾸러미",
+          "자금이 70이 된 시각의 가격과 증거금 알림, 강제청산 체결을 연결합니다.",
+          "회사에 유리한 화면이나 결론 메모만 골라서는 충분하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 분쟁 구제 경로의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 분쟁 구제 경로",
+          "최종 답변에 보상 근거, 외부 기관과 신청 기한을 함께 적습니다.",
+          "국가·상품·계약 법인에 따라 기관과 기한이 다릅니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "Financial Ombudsman Service · Business evidence",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
+        "answerChecklist": [
+          "Financial Ombudsman Service · Business evidence",
+          "적용 대상",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "금융투자교육원 · 파생상품투자권유자문인력",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack",
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack",
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack",
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-complaint-evidence-pack",
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Financial Ombudsman Service · Business evidence",
+        "href": "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/information-from-financial-businesses",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "가격·적정성·증거금 민원에서 회사가 제시할 증거 범위를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융투자교육원 · 파생상품투자권유자문인력",
+        "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+        "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
+        "contribution": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

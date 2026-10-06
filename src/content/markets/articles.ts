@@ -342,4 +342,47 @@ export const marketsArticles: Article[] = [
     sections: [{"id":"overview","title":"1. 세 계약의 +12·−7·−2를 한 금액 +3으로 줄입니다"},{"id":"black-box","title":"2. 계약 묶음·준거법·도산 법원의 세 칸을 엽니다"},{"id":"case","title":"3. 법률효과가 없으면 노출 3이 아니라 받을 돈 12를 따로 봅니다"},{"id":"picture","title":"4. 부도 순간에 종료·평가·합산·한 번 결제가 이어집니다"},{"id":"need","title":"5. 국경을 넘으면 같은 거래에 본국과 현지 규칙이 겹칩니다"},{"id":"names","title":"6. 상계 법적 집행가능성·관할별 법률의견·규제 상호인정에 이름을 붙입니다"},{"id":"mechanism","title":"7. +12·−7·−2에서 법률의견 갱신까지 따라갑니다"},{"id":"source","title":"8. UNIDROIT 원칙에서 상계가 지키려는 법률효과를 확인합니다"},{"id":"comparison","title":"9. 바젤·IOSCO는 국경 간 증거금 규칙의 중복을 줄이려 합니다"},{"id":"limits","title":"10. 법률의견 한 장을 모든 나라·상품의 영구 보증으로 쓰지 않습니다"}],
     component: () => import("@/pages/articles/markets/derivatives/cross-border-netting-enforceability-and-regulatory-recognition"),
   },
+  {
+    slug: "bank-irrbb-alm-and-derivatives-hedging",
+    title: "은행의 금리 위험은 EVE·NII와 ALM 헤지를 함께 봐야 한다",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 예금금리만 오르면 은행의 이자마진이 줄어듭니다"},{"id":"black-box","title":"2. 경제가치와 앞으로 벌 이자를 다른 장부로 엽니다"},{"id":"case","title":"3. 금리 1%포인트 상승으로 연 이자 차이가 0.8 줄어듭니다"},{"id":"picture","title":"4. 만기 틈·기준금리 차이·고객 선택을 함께 봅니다"},{"id":"need","title":"5. ALCO는 대출·예금·채권·헤지를 한 표에서 결정합니다"},{"id":"names","title":"6. EVE·NII와 갭·베이시스·옵션 위험에 이름을 붙입니다"},{"id":"mechanism","title":"7. 예금 비용 0.8 증가를 헤지 결정까지 따라갑니다"},{"id":"source","title":"8. 바젤 기준은 경제가치와 이익 측정을 함께 요구합니다"},{"id":"comparison","title":"9. 은행 FP의 고객 재무설계와 은행 ALM을 구분합니다"},{"id":"limits","title":"10. 스왑으로 이자 0.8을 맞춰도 다른 위험은 남습니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/bank-irrbb-alm-and-derivatives-hedging"),
+  },
+  {
+    slug: "hedge-accounting-designation-effectiveness-and-rebalancing",
+    title: "경제적 헤지를 재무제표에 잇는다: 지정·효과·재조정",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 경제적 헤지와 회계상 헤지는 같은 기록이 아닙니다"},{"id":"black-box","title":"2. 위험항목·헤지수단·비율·손익 표시를 따로 엽니다"},{"id":"case","title":"3. 차입 100억 중 80억을 지정하면 헤지비율은 80%입니다"},{"id":"picture","title":"4. 위험관리 목적과 회계 지정이 한 줄로 이어집니다"},{"id":"need","title":"5. 차입금이 줄면 스왑을 그대로 두지 않고 관계를 다시 맞춥니다"},{"id":"names","title":"6. 지정·효과·재조정에 이름을 붙입니다"},{"id":"mechanism","title":"7. 80% 지정에서 160% 불일치까지 따라갑니다"},{"id":"source","title":"8. IFRS 9는 시작 시점의 공식 지정과 문서를 요구합니다"},{"id":"comparison","title":"9. 재조정은 목적을 유지하며 지정 수량을 고치는 절차입니다"},{"id":"limits","title":"10. 회계상 통과가 현금 손실을 없애 주지는 않습니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/hedge-accounting-designation-effectiveness-and-rebalancing"),
+  },
+  {
+    slug: "derivatives-tax-character-timing-and-jurisdiction",
+    title: "파생상품 세금은 계약 성격·인식 시점·거주지에서 갈린다",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 같은 파생상품 이익도 나라와 계약에 따라 세금 시점이 다릅니다"},{"id":"black-box","title":"2. 사람·계약·시점·통산 범위의 네 칸을 엽니다"},{"id":"case","title":"3. 이익 12와 손실 5를 합치면 과세 전 순손익은 7입니다"},{"id":"picture","title":"4. 거래 화면의 손익에서 세금 신고 숫자까지 내려갑니다"},{"id":"need","title":"5. 헤지의 경제적 상쇄와 세금의 상쇄 시점이 어긋날 수 있습니다"},{"id":"names","title":"6. 소득 성격·인식 시점·거주지 관할에 이름을 붙입니다"},{"id":"mechanism","title":"7. 계약 한 건을 체결일부터 신고일까지 따라갑니다"},{"id":"source","title":"8. 한국은 과세대상 파생상품 손익을 별도 장부에서 계산합니다"},{"id":"comparison","title":"9. 미국 Section 1256은 연말 평가와 60·40 분류를 함께 둡니다"},{"id":"limits","title":"10. 세전 수익률과 세율 하나로 거래를 비교하지 않습니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/derivatives-tax-character-timing-and-jurisdiction"),
+  },
+  {
+    slug: "derivatives-market-abuse-position-limits-and-surveillance",
+    title: "관련 계좌 600계약을 함께 본다: 한도·헤지 예외·시장감시",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 계좌 둘로 나눠도 같은 사람이 잡은 포지션은 합쳐질 수 있습니다"},{"id":"black-box","title":"2. 포지션 크기·지배관계·주문 의도를 따로 엽니다"},{"id":"case","title":"3. 400과 200을 합친 600은 한도 500보다 100 큽니다"},{"id":"picture","title":"4. 거래소와 감독기관은 주문부터 실물인도까지 이어 봅니다"},{"id":"need","title":"5. 큰 헤지와 시장지배는 숫자만 보면 비슷할 수 있습니다"},{"id":"names","title":"6. 포지션 한도·선의의 헤지·시장감시에 이름을 붙입니다"},{"id":"mechanism","title":"7. 600계약을 사전 통제에서 조사 기록까지 따라갑니다"},{"id":"source","title":"8. CFTC 한도는 핵심 계약과 연결 계약을 함께 봅니다"},{"id":"comparison","title":"9. 일일 시장감시는 포지션과 주문의 이야기를 다시 만듭니다"},{"id":"limits","title":"10. 경보와 큰 수익을 조작의 증거로 단정하지 않습니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/derivatives-market-abuse-position-limits-and-surveillance"),
+  },
+  {
+    slug: "derivatives-aml-kyc-and-suspicious-transaction-monitoring",
+    title: "자금 1,000의 경로를 잇는다: 파생상품 KYC·거래감시·STR",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 1,000이 들어와 980이 나간 거래를 손실 20으로만 보지 않습니다"},{"id":"black-box","title":"2. 고객·실소유자·자금·거래 목적을 한 사건으로 묶습니다"},{"id":"case","title":"3. 예상 100보다 900 큰 자금이 들어온 경로를 확인합니다"},{"id":"picture","title":"4. 은행 송금과 파생상품 주문을 같은 시간줄에 놓습니다"},{"id":"need","title":"5. 빠른 국경 간 거래와 복잡한 법인 구조가 확인 비용을 키웁니다"},{"id":"names","title":"6. 파생상품 자금경로와 거래·자금 연결에 이름을 붙입니다"},{"id":"mechanism","title":"7. 1,000 입금부터 담당자의 신고 판단까지 따라갑니다"},{"id":"source","title":"8. FATF는 증권 부문 위험에 선물·옵션·스왑을 포함합니다"},{"id":"comparison","title":"9. 한국 과정은 고객확인과 STR·CTR을 파생상품 영업과 함께 둡니다"},{"id":"limits","title":"10. 경보를 범죄 판정이나 자동 계좌정지로 바꾸지 않습니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/derivatives-aml-kyc-and-suspicious-transaction-monitoring"),
+  },
+  {
+    slug: "derivatives-complaints-dispute-resolution-and-evidence",
+    title: "손실 30의 책임은 시간줄로 가린다: 파생상품 민원과 증거",
+    subcategory: "markets-derivatives",
+    sections: [{"id":"overview","title":"1. 증거금 부족 10이 생기면 가격·시간·설명을 함께 되짚습니다"},{"id":"black-box","title":"2. 판매·체결·증거금·민원 기록을 네 묶음으로 엽니다"},{"id":"case","title":"3. 자금 70에서 필요액 80을 빼면 10이 부족합니다"},{"id":"picture","title":"4. 주문 전 설명부터 최종 답변까지 한 시간줄을 만듭니다"},{"id":"need","title":"5. 판매가 맞았어도 체결이 잘못될 수 있고 그 반대도 가능합니다"},{"id":"names","title":"6. 증거 꾸러미와 분쟁 구제 경로에 이름을 붙입니다"},{"id":"mechanism","title":"7. 부족액 10 사건을 접수부터 재발 방지까지 따라갑니다"},{"id":"source","title":"8. 영국 옴부즈맨은 약관과 가격·헤지 자료까지 요구할 수 있습니다"},{"id":"comparison","title":"9. 국내 자격 과정은 분쟁 예방과 주요 사례를 별도 과목으로 둡니다"},{"id":"limits","title":"10. 손실이 컸다는 사실도 서명했다는 사실도 결론은 아닙니다"}],
+    component: () => import("@/pages/articles/markets/derivatives/derivatives-complaints-dispute-resolution-and-evidence"),
+  },
+
 ];

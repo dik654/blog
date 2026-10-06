@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-315.json",
+  "publicArticles": 865,
+  "addedRoutes": [
+    "markets/bank-irrbb-alm-and-derivatives-hedging",
+    "markets/hedge-accounting-designation-effectiveness-and-rebalancing",
+    "markets/derivatives-tax-character-timing-and-jurisdiction",
+    "markets/derivatives-market-abuse-position-limits-and-surveillance",
+    "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring",
+    "markets/derivatives-complaints-dispute-resolution-and-evidence"
+  ],
+  "reviewed": 321,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive professional-practice derivatives articles added after checkpoint 315; 279 substantive rewrites/additions and 42 retained teaching flows in total. Korean derivatives solicitation advisor and banking FP curricula were used as coverage checks, with Basel, IFRS, tax authority, market regulator, FATF/FIU and ombudsman originals used for actual rules and boundaries.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "Fixed loans 100 at 5 and variable deposits 80 repricing from 2% to 3% reduce illustrative NII from 3.4 to 2.6; debt 10bn and designated swap 8bn gives 80%, then 160% after debt falls to 5bn; gains 12 less losses 5 gives 7, and eligible US Section 1256 net 10 splits 6/4; related positions 400+200=600 exceed illustrative limit 500 by 100; expected 100, deposit 1,000, trading cost/loss 20 and withdrawal 980 form an AML case rather than an automatic STR; equity 100 less loss 30 gives 70, 10 short of margin 80.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-professional-practice/2026-10-06T19-52-48-364Z/summary.json.",
+    "learning": "PASS 865 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 9.71s, 7,207 transformed modules and 1,832 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,033 concepts, 6,340 relations, 865 registered articles and zero invariants; 16 new concepts were added and existing swap, product-claim, surveillance, CDD, STR and sales-evidence concepts were reused instead of duplicated; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 865-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 865 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 453 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "pending deployment",
+    "curriculumCoverage": "KIFIN derivatives solicitation advisor curriculum supplied the unfair-trading, tax, AML and dispute coverage check; Korea Banking Institute FP supplied the customer/product/planning boundary. Basel IRRBB, IFRS 9, Korea NTS, IRS Publication 550, CFTC position limits and surveillance, FATF securities RBA, KoFIU STR and UK FOS evidence guidance supplied primary rules. Multi-asset rare-event pricing, uncleared initial margin, trade lifecycle and additional jurisdictions remain explicit gaps."
+  },
+  "commit": null,
+  "deployment": {
+    "runId": null,
+    "conclusion": "pending",
+    "production": "pending"
+  }
+}
