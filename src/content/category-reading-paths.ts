@@ -21,6 +21,20 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  "philosophy-topics": {
+    organizingPrinciple: "주제순",
+    title: "같음·책임·말·경험·취향·의미를 나누는 여섯 질문",
+    description: "철학사를 한 줄 연표로 외우기보다, 서로 섞이기 쉬운 질문을 생활 사례와 원전으로 하나씩 분리해 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 변화와 같음", title: "정체성과 시간", description: "부품을 모두 바꾼 자전거가 같은 자전거인지 물으며 물질·연속성·기능·역사를 나눕니다.", subcategories: ["topics-identity"] },
+      { eyebrow: "02 · 선택과 책임", title: "자유의지와 통제", description: "다른 선택지, 자기 이유, 강제와 개입이 책임 판단을 어떻게 바꾸는지 봅니다.", subcategories: ["topics-freedom"] },
+      { eyebrow: "03 · 말과 행위", title: "지시·맥락·말로 하는 일", description: "같은 낱말이 가리키는 대상을 맥락이 어떻게 정하고, 약속이 관계를 어떻게 바꾸는지 봅니다.", subcategories: ["topics-language"] },
+      { eyebrow: "04 · 경험과 타인", title: "의식과 다른 마음", description: "통증 당사자의 경험과 관찰자의 증거가 어떻게 만나고 어디서 남는지 봅니다.", subcategories: ["topics-consciousness"] },
+      { eyebrow: "05 · 취향과 이유", title: "미적 판단", description: "좋아함·다수결·훈련된 판단이 각각 무엇을 말할 수 있는지 공연 사례로 구분합니다.", subcategories: ["topics-aesthetics"] },
+      { eyebrow: "06 · 잘 산다는 것", title: "삶의 의미", description: "마음이 끌리는 일, 가치 있는 일, 둘이 만나는 지속적 참여를 한 주의 시간표에 놓습니다.", subcategories: ["topics-meaning"] },
+    ],
+    featuredArticles: ["identity-through-change", "free-will-control-and-responsibility", "reference-context-and-speech-acts", "consciousness-pain-and-other-minds", "aesthetic-taste-judgment-and-context", "meaning-in-life-attraction-worth-and-commitment"],
+  },
   "philosophical-traditions": {
     organizingPrinciple: "주제순",
     title: "역할·개입·경험·행위·인과·사람됨을 묻는 여섯 출발점",

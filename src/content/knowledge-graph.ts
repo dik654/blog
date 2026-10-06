@@ -29191,6 +29191,212 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "타인과 제도에서 능력을 얻으면서 그 관계를 판단하고 바꿀 수 있는 힘입니다.",
     "canonicalHref": "/philosophy/philosophical-traditions/akan-personhood-community-and-agency#names"
   },
+  "numerical-identity": {
+    "id": "numerical-identity",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "수적 동일성",
+    "aliases": [
+      "numerical identity"
+    ],
+    "definition": "서로 다른 때의 설명이 바로 그 한 대상을 가리키는 관계입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/identity-through-change#names"
+  },
+  "qualitative-change": {
+    "id": "qualitative-change",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "질적 변화",
+    "aliases": [
+      "qualitative change"
+    ],
+    "definition": "한 대상이 시간에 따라 색·부품·모양 같은 성질을 얻거나 잃는 일입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/identity-through-change#names"
+  },
+  "persistence-criterion": {
+    "id": "persistence-criterion",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "지속 기준",
+    "aliases": [
+      "persistence criterion"
+    ],
+    "definition": "무엇이 보존될 때 한 대상이 시간을 건너 계속된다고 볼지 정하는 기준입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/identity-through-change#names"
+  },
+  "alternative-possibilities": {
+    "id": "alternative-possibilities",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "대안 가능성",
+    "aliases": [
+      "alternative possibilities"
+    ],
+    "definition": "행위자가 실제 상황에서 다른 행동을 할 수 있었는지를 묻는 조건입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/free-will-control-and-responsibility#names"
+  },
+  "sourcehood-control": {
+    "id": "sourcehood-control",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "행위의 원천",
+    "aliases": [
+      "sourcehood",
+      "source control"
+    ],
+    "definition": "행동이 외부 조종보다 행위자 자신의 가치·욕구·숙고에서 나왔는지를 묻습니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/free-will-control-and-responsibility#names"
+  },
+  "responsibility-control": {
+    "id": "responsibility-control",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "책임 통제",
+    "aliases": [
+      "responsibility-level control"
+    ],
+    "definition": "정보를 이해하고 이유에 반응하며 행동을 조절할 수 있는 능력입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/free-will-control-and-responsibility#names"
+  },
+  "reference-description": {
+    "id": "reference-description",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "지시와 기술",
+    "aliases": [
+      "reference",
+      "description"
+    ],
+    "definition": "표현이 대상을 가리키고 성질을 말해 대상을 좁히는 방식입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/reference-context-and-speech-acts#names"
+  },
+  "contextual-meaning": {
+    "id": "contextual-meaning",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "맥락 의미",
+    "aliases": [
+      "contextual meaning"
+    ],
+    "definition": "화자·시간·장소·앞뒤 대화가 실제 해석에 보태는 부분입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/reference-context-and-speech-acts#names"
+  },
+  "illocutionary-force": {
+    "id": "illocutionary-force",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "발화수반력",
+    "aliases": [
+      "illocutionary force",
+      "speech-act force"
+    ],
+    "definition": "내용을 말하면서 주장·질문·약속·명령 같은 일을 수행하는 힘입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/reference-context-and-speech-acts#names"
+  },
+  "phenomenal-character": {
+    "id": "phenomenal-character",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "현상적 성격",
+    "aliases": [
+      "phenomenal character",
+      "what-it-is-like"
+    ],
+    "definition": "경험이 당사자에게 어떤 느낌으로 나타나는지를 가리킵니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/consciousness-pain-and-other-minds#names"
+  },
+  "first-third-person-evidence": {
+    "id": "first-third-person-evidence",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "1인칭·3인칭 증거",
+    "aliases": [
+      "first-person evidence",
+      "third-person evidence"
+    ],
+    "definition": "자기 경험의 접근과 외부에서 관찰 가능한 행동·몸·뇌 자료의 차이입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/consciousness-pain-and-other-minds#names"
+  },
+  "other-minds-inference": {
+    "id": "other-minds-inference",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "다른 마음 추론",
+    "aliases": [
+      "other minds inference"
+    ],
+    "definition": "타인의 말·행동·몸을 가장 잘 설명하는 경험과 생각을 판단하는 과정입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/consciousness-pain-and-other-minds#names"
+  },
+  "aesthetic-judgment": {
+    "id": "aesthetic-judgment",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "미적 판단",
+    "aliases": [
+      "aesthetic judgment"
+    ],
+    "definition": "작품이나 장면의 형식·표현·아름다움 같은 성격을 이유와 함께 평가하는 판단입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/aesthetic-taste-judgment-and-context#names"
+  },
+  "trained-taste": {
+    "id": "trained-taste",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "훈련된 취향",
+    "aliases": [
+      "trained taste",
+      "practice and comparison"
+    ],
+    "definition": "반복 관찰과 다양한 비교로 미세한 차이를 보고 편견을 점검하는 능력입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/aesthetic-taste-judgment-and-context#names"
+  },
+  "aesthetic-context": {
+    "id": "aesthetic-context",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "미적 맥락",
+    "aliases": [
+      "aesthetic context"
+    ],
+    "definition": "장르·전통·제작 조건·전시 방식과 역사가 판단에 주는 정보입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/aesthetic-taste-judgment-and-context#names"
+  },
+  "subjective-attraction-meaning": {
+    "id": "subjective-attraction-meaning",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "주관적 끌림",
+    "aliases": [
+      "subjective attraction",
+      "subjectivism about meaning"
+    ],
+    "definition": "활동·관계·목표를 자기 것으로 여기고 관심과 만족을 느끼는 조건입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment#names"
+  },
+  "objective-worth-meaning": {
+    "id": "objective-worth-meaning",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "객관적 가치",
+    "aliases": [
+      "objective worth",
+      "objectivism about meaning"
+    ],
+    "definition": "현재 선호와 별개로 지식·우정·창작·돌봄처럼 추구할 이유가 있다고 평가되는 좋음입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment#names"
+  },
+  "hybrid-meaning-in-life": {
+    "id": "hybrid-meaning-in-life",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "의미의 결합 관점",
+    "aliases": [
+      "hybrid theory of meaning in life"
+    ],
+    "definition": "마음이 끌리는 참여와 가치 있는 대상이 만날 때 의미가 생긴다고 보는 관점입니다.",
+    "canonicalHref": "/philosophy/philosophy-topics/meaning-in-life-attraction-worth-and-commitment#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -53223,6 +53429,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "akan-biological-person",
     "relation": "constrains",
     "reason": "마지막 개념은 아칸 인격론의 인간 지위을 실제 행동과 권력의 조건에서 다시 검사하게 합니다."
+  },
+  {
+    "from": "qualitative-change",
+    "to": "persistence-criterion",
+    "relation": "extends",
+    "reason": "질적 변화의 구분을 실제 판단 기준인 지속 기준으로 확장합니다."
+  },
+  {
+    "from": "persistence-criterion",
+    "to": "numerical-identity",
+    "relation": "constrains",
+    "reason": "지속 기준은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "sourcehood-control",
+    "to": "responsibility-control",
+    "relation": "extends",
+    "reason": "행위의 원천의 구분을 실제 판단 기준인 책임 통제으로 확장합니다."
+  },
+  {
+    "from": "responsibility-control",
+    "to": "alternative-possibilities",
+    "relation": "constrains",
+    "reason": "책임 통제은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "contextual-meaning",
+    "to": "illocutionary-force",
+    "relation": "extends",
+    "reason": "맥락 의미의 구분을 실제 판단 기준인 발화수반력으로 확장합니다."
+  },
+  {
+    "from": "illocutionary-force",
+    "to": "reference-description",
+    "relation": "constrains",
+    "reason": "발화수반력은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "first-third-person-evidence",
+    "to": "other-minds-inference",
+    "relation": "extends",
+    "reason": "1인칭·3인칭 증거의 구분을 실제 판단 기준인 다른 마음 추론으로 확장합니다."
+  },
+  {
+    "from": "other-minds-inference",
+    "to": "phenomenal-character",
+    "relation": "constrains",
+    "reason": "다른 마음 추론은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "trained-taste",
+    "to": "aesthetic-context",
+    "relation": "extends",
+    "reason": "훈련된 취향의 구분을 실제 판단 기준인 미적 맥락으로 확장합니다."
+  },
+  {
+    "from": "aesthetic-context",
+    "to": "aesthetic-judgment",
+    "relation": "constrains",
+    "reason": "미적 맥락은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "objective-worth-meaning",
+    "to": "hybrid-meaning-in-life",
+    "relation": "extends",
+    "reason": "객관적 가치의 구분을 실제 판단 기준인 의미의 결합 관점으로 확장합니다."
+  },
+  {
+    "from": "hybrid-meaning-in-life",
+    "to": "subjective-attraction-meaning",
+    "relation": "constrains",
+    "reason": "의미의 결합 관점은 처음 개념을 생활 사례에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "numerical-identity",
+    "to": "qualitative-change",
+    "relation": "prerequisite",
+    "reason": "수적 동일성을 구분해야 질적 변화이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "alternative-possibilities",
+    "to": "sourcehood-control",
+    "relation": "prerequisite",
+    "reason": "대안 가능성을 구분해야 행위의 원천이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "reference-description",
+    "to": "contextual-meaning",
+    "relation": "prerequisite",
+    "reason": "지시와 기술을 구분해야 맥락 의미이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "phenomenal-character",
+    "to": "first-third-person-evidence",
+    "relation": "prerequisite",
+    "reason": "현상적 성격을 구분해야 1인칭·3인칭 증거이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "aesthetic-judgment",
+    "to": "trained-taste",
+    "relation": "prerequisite",
+    "reason": "미적 판단을 구분해야 훈련된 취향이 사례에서 맡는 역할을 볼 수 있습니다."
+  },
+  {
+    "from": "subjective-attraction-meaning",
+    "to": "objective-worth-meaning",
+    "relation": "prerequisite",
+    "reason": "주관적 끌림을 구분해야 객관적 가치이 사례에서 맡는 역할을 볼 수 있습니다."
   },
 ];
 
