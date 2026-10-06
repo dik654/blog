@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-297.json",
+  "publicArticles": 847,
+  "addedRoutes": [
+    "markets/minimum-variance-hedge-ratio-and-basis-risk",
+    "markets/binomial-black-scholes-and-early-exercise",
+    "markets/implied-volatility-surface-skew-and-smile",
+    "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging",
+    "markets/xva-funding-margin-and-wrong-way-risk",
+    "markets/market-risk-backtesting-pnl-attribution-and-model-governance"
+  ],
+  "reviewed": 303,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive quantitative derivatives and model-control articles added after checkpoint 297; 261 substantive rewrites/additions and 42 retained teaching flows in total. University finance, GARP FRM, Korean derivatives solicitation training, exchange, industry and supervisory curricula were used as coverage checks rather than copied outlines.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "numeric": "Hedge count 100m/2.5m=40 and 40*0.8=32; binomial q=0.625, down-node continuation 15.238, American put 7.993 and European put 6.293; risk reversal 24%-30%=-6 percentage points; DF2=(100-5*0.96)/105=0.9067, two-year zero rate about 5.02% and one-year-forward rate about 5.88%; illustrative adjusted value 10-0.6+0.2-0.3-0.1=9.2, MVA 5*2%=0.1, independent loss 0.12 and wrong-way loss 0.54; Basel 250-observation seven-exception result is amber with backtesting-dependent multiplier 1.83.",
+    "browser": "Six routes x 390/1440 = 12 article checks; ten sections, explanatory figure containment, controls, KaTeX, console errors and failed requests checked; zero failed. Local report: output/playwright/derivative-model/2026-10-06T18-06-14/summary.json.",
+    "learning": "PASS 847 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.39s, 7,186 transformed modules and 1,796 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 3,987 concepts, 6,292 relations, 847 registered articles and zero invariants; existing basis-risk-in-hedging canonical owner reused instead of duplicated; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 847 strict; actual exit 0.",
+    "topology": "PASS 847 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 438 prerequisite edges; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm, Korean naturalness and term-density audits for 847 public articles.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; viewport height 844 to 700 preserved scrollY=1800 on all six routes; mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Six public routes and two listing routes at 390/1440 plus six mobile height/sidebar checks = 22 checks; all content, containment, console, request, scroll-position and sidebar checks passed with zero failures.",
+    "curriculumCoverage": "MIT finance courses, GARP 2026 FRM, KIFIN derivatives solicitation advisor training, CME and OIC education, BIS Basel standards, ISDA collateral operations and the Federal Reserve 2026 model-risk guidance were mapped to implemented coverage and explicit remaining stochastic, numerical and jurisdictional gaps."
+  },
+  "commit": "dbd47591fd426eb9083447157abc76191e154fcb",
+  "deployment": {
+    "runId": 37509032444,
+    "conclusion": "success",
+    "production": "22 checks across articles, listings, mobile height changes and sidebars, zero failed"
+  }
+}
