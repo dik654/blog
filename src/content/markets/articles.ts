@@ -384,5 +384,293 @@ export const marketsArticles: Article[] = [
     sections: [{"id":"overview","title":"1. 증거금 부족 10이 생기면 가격·시간·설명을 함께 되짚습니다"},{"id":"black-box","title":"2. 판매·체결·증거금·민원 기록을 네 묶음으로 엽니다"},{"id":"case","title":"3. 자금 70에서 필요액 80을 빼면 10이 부족합니다"},{"id":"picture","title":"4. 주문 전 설명부터 최종 답변까지 한 시간줄을 만듭니다"},{"id":"need","title":"5. 판매가 맞았어도 체결이 잘못될 수 있고 그 반대도 가능합니다"},{"id":"names","title":"6. 증거 꾸러미와 분쟁 구제 경로에 이름을 붙입니다"},{"id":"mechanism","title":"7. 부족액 10 사건을 접수부터 재발 방지까지 따라갑니다"},{"id":"source","title":"8. 영국 옴부즈맨은 약관과 가격·헤지 자료까지 요구할 수 있습니다"},{"id":"comparison","title":"9. 국내 자격 과정은 분쟁 예방과 주요 사례를 별도 과목으로 둡니다"},{"id":"limits","title":"10. 손실이 컸다는 사실도 서명했다는 사실도 결론은 아닙니다"}],
     component: () => import("@/pages/articles/markets/derivatives/derivatives-complaints-dispute-resolution-and-evidence"),
   },
+  {
+      slug: "uncleared-initial-margin-simm-and-model-governance",
+      title: "비청산 개시증거금은 부도 뒤의 빈 시간을 막는다: SIMM과 모형 통제",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 개시증거금은 오늘 손실보다 부도 뒤의 빈 시간을 막습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 대상·계산·보관·모형 통제의 네 칸을 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 가중 민감도 6과 4는 단순 합 10보다 작은 8로 묶입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 현재 노출 2.5와 잠재 노출 8은 다른 통로로 움직입니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 공통 모형은 분쟁을 줄이지만 같은 결과를 보장하지 않습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 잠재 미래 노출·양방향 IM·SIMM 통제에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 거래 분류에서 담보 결제와 모형 검증까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. 국제 기준은 99% 한쪽 꼬리와 10일을 출발점으로 둡니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 최신 SIMM 버전과 회사별 승인 기록을 함께 봅니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 개시증거금 8은 가격 위험과 유동성 위험을 함께 만듭니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/uncleared-initial-margin-simm-and-model-governance"),
+    },
+  {
+      slug: "derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
+      title: "체결 뒤가 더 길다: 파생상품 확인·결제·대사와 예외 처리",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 체결된 거래도 확인·결제·대사를 지나야 살아 있는 장부가 됩니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 경제조건·법률조건·현금·장부 상태를 따로 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 3.00%와 3.05%의 차이는 해마다 0.05를 만듭니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 주문 한 건은 체결 뒤 여러 운영 사건으로 이어집니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 확인과 대사는 같은 오류를 다른 시점에 잡습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 거래 확인·결제 완결·포트폴리오 대사에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 5bp 오류를 발견하고 고친 뒤 현금까지 확인합니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CFTC 규칙은 확인·대사·압축·문서를 한 통제군으로 둡니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 오래된 운영 보고서도 자동화와 수동 예외의 경계를 보여 줍니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 거래가 맞아도 결제 실패와 보고 오류는 따로 남습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation"),
+    },
+  {
+      slug: "collateral-operations-margin-calls-disputes-and-substitution",
+      title: "호출액 5가 실제 담보가 되기까지: 대사·분쟁·교체·결제",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 노출 12가 생겨도 담보 호출액은 계약 조건을 거쳐 5가 됩니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 노출·계약 조건·자산 가치·결제 상태를 따로 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 시장가 6인 채권도 10%를 깎으면 담보가치는 5.4입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 계산·합의·배정·결제·대사가 하루 안에 이어집니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 담보 교체는 새 자산을 받은 뒤 옛 자산을 돌려줘야 안전합니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 담보 호출·할인 가치·교체 동시성에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 호출액 5의 합의와 5.4 채권의 결제를 끝까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. ISDA 운영 지침은 호출 데이터와 응답 시간을 구체적으로 잇습니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 개시증거금 대사와 변동증거금 대사는 계산 성질이 다릅니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 담보가 충분해도 결제·보관·집중 위험은 남습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/collateral-operations-margin-calls-disputes-and-substitution"),
+    },
+  {
+      slug: "derivatives-product-approval-target-market-and-post-sale-monitoring",
+      title: "수익 8보다 손실 40을 먼저 본다: 상품 승인·목표시장·사후 점검",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 상품 승인은 수익식보다 누구에게 어떤 손실이 생기는지 먼저 묻습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 설계자·목표 고객·판매 채널·사후 자료의 네 칸을 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 지수가 60이면 고객은 40을 잃지만 표시 수익은 8에 멈춥니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 아이디어가 고객 결과 자료를 거쳐 다시 승인표로 돌아옵니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 개별 고객 적합성만으로 상품 설계의 결함을 고칠 수 없습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 목표시장·반대시장·사후 검토에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 손실 40 시나리오에서 판매 중단 판단까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. FCA는 출시 전 승인과 중요한 사건 뒤의 재검토를 요구합니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 제조자와 판매자는 같은 고객을 다른 자료로 봅니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 민원 8건은 경보이지 상품 결함의 자동 판정은 아닙니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/derivatives-product-approval-target-market-and-post-sale-monitoring"),
+    },
+  {
+      slug: "multi-asset-options-correlation-and-rare-event-simulation",
+      title: "함께 떨어질 때 가격이 바뀐다: 다중자산 옵션과 희귀사건 시뮬레이션",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 자산을 둘로 늘리면 가격은 변동성보다 함께 움직이는 방식에 민감해집니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 개별 분포·의존 구조·지급식·표본 오차를 따로 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 상관 0과 1에서 바구니 변동성은 14.14%와 20%로 갈립니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 같은 난수에서 두 자산 경로와 지급액을 함께 만듭니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 10만 경로에서 10번만 나오면 0.01%도 매우 거친 추정입니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 상관 위험·꼬리 의존·중요도 표본추출에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 상관행렬을 보정하고 희귀 지급의 오차까지 보고합니다"
+    },
+    {
+      "id": "source",
+      "title": "8. MIT 강의는 난수 생성 뒤 분산감소와 준몬테카를로를 잇습니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 희귀사건 표본추출은 자주 보게 만든 뒤 확률 무게를 되돌립니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 평시 상관행렬 하나로 위기 동시하락을 확정하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/multi-asset-options-correlation-and-rare-event-simulation"),
+    },
+  {
+      slug: "canada-hong-kong-switzerland-retail-derivatives-and-market-rules",
+      title: "같은 5배 상품도 질문이 다르다: 캐나다·홍콩·스위스 파생상품 규칙",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 같은 5배 파생상품도 세 나라에서 먼저 묻는 질문이 다릅니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 고객 분류·서비스·상품 복잡성·시장 통제의 네 칸을 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 20으로 100을 움직이면 12% 하락 손실 12가 한도 10을 넘습니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 공통 사실관계를 세 갈래 법률 질문으로 나눕니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 고객 자산 규모만으로 지식과 손실 감당력을 대신하지 않습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 당사자 지위·복잡상품 판단·서비스별 검사에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 손실 12 사례를 분류에서 주문 기록까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. 캐나다 NI 93-101은 당사자 정보와 적합성을 연결합니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 홍콩의 복잡상품과 스위스의 서비스 검사는 출발점이 다릅니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 세 나라 비교표는 최신 법률의 적용 판단을 대신하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/canada-hong-kong-switzerland-retail-derivatives-and-market-rules"),
+    },
 
 ];

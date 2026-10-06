@@ -60,6 +60,12 @@
 | 포지션 한도·헤지 예외·시장감시 | 관련 계좌의 합산 수량과 주문·현물 자료의 시장질서 통제 | 공통 지배 계좌400+200=600, 가정 한도500보다100 초과 | `markets/derivatives-market-abuse-position-limits-and-surveillance#case` | CFTC 한도·일일 시장감시, 경보와 위반 구분 |
 | 파생상품 KYC·거래감시·STR | 고객·실소유자와 입출금·주문·손익·수취인의 사건 연결 | 예상100·입금1,000·거래손실20·해외출금980 | `markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring#case` | FATF 증권 RBA·KoFIU STR, 경보와 신고결정 구분 |
 | 파생상품 민원·분쟁조정·증거 | 판매·가격·체결·증거금·통지 기록과 관할별 구제 절차 | 계좌100−손실30=70, 필요 증거금80보다10 부족 | `markets/derivatives-complaints-dispute-resolution-and-evidence#case` | 영국 FOS 증거 범위·금융투자교육원 분쟁 과목 |
+| 비청산 개시증거금·SIMM 통제 | 부도 뒤 종료·대체 기간의 잠재 미래 노출과 분리 보관 담보 | 가중 민감도6·4, 상관0.25의 교육용 집계8, A·B가 각각8 제공 | `markets/uncleared-initial-margin-simm-and-model-governance#case` | BCBS·IOSCO 99%·10일 기준, ISDA SIMM 2.8+2512와 실제 공식 분리 |
+| 파생상품 거래 생애주기 | 체결 조건에서 확인·평가·대사·결제·보고까지 이어지는 거래 상태 | 명목100의 고정금리3.00% 대3.05%가 연 현금0.05 차이 | `markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#case` | CFTC 확인·대사 규칙과 BIS 결제 절차 |
+| 담보 호출·할인·교체 | 노출·문턱·기존 담보에서 나온 요구액과 실제 결제된 적격 자산 | 12−2−5=호출5, 채권6에 10% 할인→인정5.4 | `markets/collateral-operations-margin-calls-disputes-and-substitution#case` | ISDA 운영 지침·BCBS/IOSCO 분쟁 원칙 |
+| 파생상품 승인·목표시장·사후검토 | 제조자의 지급식·손실 구조와 판매자의 실제 고객·채널 통제 | 원금100에서 상승8 대 하락40, 예상 민원2 대 실제8 | `markets/derivatives-product-approval-target-market-and-post-sale-monitoring#case` | FCA PROD 3·금융투자교육원 과정 대조 |
+| 다중자산 옵션·상관·희귀사건 | 각 자산 분포와 함께 움직이는 구조, 경로별 지급과 표본 오차 | 변동성20% 두 자산의 상관0 바구니14.14%·상관1은20%, 희귀사건10/100,000 | `markets/multi-asset-options-correlation-and-rare-event-simulation#case` | MIT 시뮬레이션 강의·Stanford 희귀사건 연구 |
+| 캐나다·홍콩·스위스 소매 파생상품 | 당사자 지위·복잡상품·서비스 종류에 따른 고객 검사와 기록 | 예치금20×5=노출100, 12% 하락 손실12가 고객 한도10을2 초과 | `markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules#case` | Canada NI 93-101·Hong Kong SFC·FINMA 공식 안내 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

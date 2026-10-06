@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-321.json",
+  "publicArticles": 871,
+  "addedRoutes": [
+    "markets/uncleared-initial-margin-simm-and-model-governance",
+    "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation",
+    "markets/collateral-operations-margin-calls-disputes-and-substitution",
+    "markets/derivatives-product-approval-target-market-and-post-sale-monitoring",
+    "markets/multi-asset-options-correlation-and-rare-event-simulation",
+    "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules"
+  ],
+  "reviewed": 327,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive derivatives operations and governance articles added after checkpoint 321; 285 substantive rewrites/additions and 42 retained teaching flows in total. University pricing courses, derivatives solicitation and banking curricula supplied the coverage order, while Basel, IOSCO, ISDA, CFTC, BIS, FCA and Canadian, Hong Kong and Swiss regulator originals supplied current rules and boundaries.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "Illustrative SIMM-like aggregation sqrt(36+16+12)=8 is separated from actual SIMM; a 5bp fixed-rate mismatch on notional 100 produces 0.05 annual cash-flow difference; exposure 12 less threshold 2 and held collateral 5 gives call 5, while a bond 6 after 10% haircut recognizes 5.4; principal 100 has upside 8 and downside 40 with complaints 2 versus 8; two 20% volatility assets weighted equally give basket volatility 14.14% at zero correlation and 20% at unit correlation, while 10 rare hits in 100,000 imply 0.01% with about 31.6% relative standard error; deposit 20 at five times leverage gives exposure 100 and a 12% move loses 12, exceeding tolerance 10 by 2.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-operations-governance/2026-10-06T20-23-41-432Z/summary.json.",
+    "learning": "PASS 871 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 9.74s, 7,214 transformed modules and 1,844 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,050 concepts, 6,357 relations, 871 registered articles and zero invariants; 17 new concepts were added and existing non-cleared risk mitigation, settlement finality, margin liquidity, target market, sales evidence, Monte Carlo, volatility surface and appropriateness concepts were reused instead of duplicated; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 871-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 871 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 461 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment and production browser verification.",
+    "curriculumCoverage": "KIFIN derivatives solicitation and Korea Banking Institute FP curricula supplied product, customer, law, ethics, dispute and operating coverage checks; MIT 15.450 supplied simulation order. Basel-IOSCO margin standards, ISDA SIMM and collateral operations, CFTC confirmation and reconciliation, BIS settlement, FCA product governance, Stanford rare-event research, Canada NI 93-101, Hong Kong SFC and Swiss FINMA supplied primary evidence. Remaining explicit gaps include compression and collateral optimization numbers, default management, swaption and correlation surfaces, and additional jurisdictions' enforcement and tax differences."
+  },
+  "commit": null,
+  "deployment": {
+    "runId": null,
+    "conclusion": "pending",
+    "production": "pending"
+  }
+}
