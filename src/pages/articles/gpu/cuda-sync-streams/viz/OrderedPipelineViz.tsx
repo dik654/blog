@@ -1,7 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 const labels = ["두 묶음 · 순서대로", "두 묶음 · 겹쳐서", "네 묶음 · 반복"];
-export const schedules = [
+const schedules = [
   [[0,2,7,9],[9,11,16,18]],
   [[0,2,7,9],[2,4,12,14]],
   [[0,2,7,9],[2,4,12,14],[9,11,17,19],[14,16,22,24]],

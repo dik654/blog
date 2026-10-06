@@ -31086,6 +31086,204 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "보편을 말해 온 철학의 위치와 식민성·의존을 비판하고 배제된 사람의 요구에서 책임 있는 사유와 실천을 시작하는 흐름입니다.",
     "canonicalHref": "/philosophy/philosophy-history/indigenous-land-and-latin-american-liberation#names"
   },
+  "exchange-derivative-contract-spec": {
+    "id": "exchange-derivative-contract-spec",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "장내파생 계약명세",
+    "aliases": [
+      "exchange-derivative-contract-spec"
+    ],
+    "definition": "거래소 파생상품의 계약승수·호가단위·거래시간·최종거래일·결제방식을 한 종목의 규격으로 정한 자료입니다.",
+    "canonicalHref": "/finance/markets/krx-derivatives-contract-orders-and-daily-settlement#names"
+  },
+  "exchange-order-execution-condition": {
+    "id": "exchange-order-execution-condition",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "거래소 주문·체결 조건",
+    "aliases": [
+      "exchange-order-execution-condition"
+    ],
+    "definition": "주문의 가격 방식과 남은 수량 처리, 가격·시간 우선순위에 따른 체결 결과를 정하는 규칙입니다.",
+    "canonicalHref": "/finance/markets/krx-derivatives-contract-orders-and-daily-settlement#names"
+  },
+  "exchange-derivative-position-lifecycle": {
+    "id": "exchange-derivative-position-lifecycle",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "장내파생 포지션 생애주기",
+    "aliases": [
+      "exchange-derivative-position-lifecycle"
+    ],
+    "definition": "체결된 포지션이 일일정산·반대거래·최종거래일과 현금 또는 실물 결제를 거쳐 닫히는 상태 흐름입니다.",
+    "canonicalHref": "/finance/markets/krx-derivatives-contract-orders-and-daily-settlement#names"
+  },
+  "portfolio-compression-cycle": {
+    "id": "portfolio-compression-cycle",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "포트폴리오 압축 주기",
+    "aliases": [
+      "portfolio-compression-cycle"
+    ],
+    "definition": "거래 제출·대사·위험 계산·결과 승인·종료 또는 대체·사후 대사를 한 번에 잇는 절차입니다.",
+    "canonicalHref": "/finance/markets/portfolio-compression-risk-tolerances-and-records#names"
+  },
+  "compression-risk-tolerance": {
+    "id": "compression-risk-tolerance",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "압축 위험 허용오차",
+    "aliases": [
+      "compression-risk-tolerance"
+    ],
+    "definition": "압축 전후 현재가치·민감도·현금흐름이 달라도 된다고 각 참여자가 미리 정한 범위입니다.",
+    "canonicalHref": "/finance/markets/portfolio-compression-risk-tolerances-and-records#names"
+  },
+  "compression-gross-notional-boundary": {
+    "id": "compression-gross-notional-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "압축 명목원금 해석 경계",
+    "aliases": [
+      "compression-gross-notional-boundary"
+    ],
+    "definition": "총 명목 감소를 시장·신용·유동성 위험의 같은 비율 감소로 읽지 않고 별도 위험지표로 검증하는 원칙입니다.",
+    "canonicalHref": "/finance/markets/portfolio-compression-risk-tolerances-and-records#names"
+  },
+  "cheapest-to-deliver-collateral": {
+    "id": "cheapest-to-deliver-collateral",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "최소비용 담보 배정",
+    "aliases": [
+      "cheapest-to-deliver-collateral"
+    ],
+    "definition": "담보 인정가치 1을 제공하는 조달·기회·이동·교체 비용을 합쳐 계약을 만족하는 가장 낮은 비용의 자산 조합을 찾는 방법입니다.",
+    "canonicalHref": "/finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity#names"
+  },
+  "collateral-eligibility-constraint": {
+    "id": "collateral-eligibility-constraint",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "담보 적격성 제약",
+    "aliases": [
+      "collateral-eligibility-constraint"
+    ],
+    "definition": "계약·관할·통화·등급·만기·집중과 잘못된 방향의 위험에 따라 배정 후보를 제한하는 조건입니다.",
+    "canonicalHref": "/finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity#names"
+  },
+  "collateral-liquidity-buffer": {
+    "id": "collateral-liquidity-buffer",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "담보 유동성 완충",
+    "aliases": [
+      "collateral-liquidity-buffer"
+    ],
+    "definition": "예상 밖 증거금과 다른 지급을 견디기 위해 배정하지 않고 남겨 두는 현금과 쉽게 현금화할 자산입니다.",
+    "canonicalHref": "/finance/markets/collateral-optimization-eligibility-haircuts-and-liquidity#names"
+  },
+  "ccp-default-portfolio-hedging": {
+    "id": "ccp-default-portfolio-hedging",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CCP 부도 포트폴리오 임시 헤지",
+    "aliases": [
+      "ccp-default-portfolio-hedging"
+    ],
+    "definition": "회원 부도 뒤 경매가 끝나기 전 포트폴리오의 급한 시장 민감도를 줄이는 거래와 승인 절차입니다.",
+    "canonicalHref": "/finance/markets/ccp-default-management-hedging-auction-and-porting#names"
+  },
+  "ccp-default-auction": {
+    "id": "ccp-default-auction",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CCP 부도 경매",
+    "aliases": [
+      "ccp-default-auction"
+    ],
+    "definition": "부도 회원 포트폴리오를 비부도 회원에게 넘겨 중앙청산소의 균형 장부를 회복하는 입찰 절차입니다.",
+    "canonicalHref": "/finance/markets/ccp-default-management-hedging-auction-and-porting#names"
+  },
+  "ccp-client-porting": {
+    "id": "ccp-client-porting",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CCP 고객 포지션 이전",
+    "aliases": [
+      "ccp-client-porting"
+    ],
+    "definition": "부도 회원 고객의 포지션과 관련 담보를 받을 수 있는 다른 회원에게 옮기는 계정·동의·법률 절차입니다.",
+    "canonicalHref": "/finance/markets/ccp-default-management-hedging-auction-and-porting#names"
+  },
+  "swap-annuity-present-value": {
+    "id": "swap-annuity-present-value",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스왑 연금계수",
+    "aliases": [
+      "swap-annuity-present-value"
+    ],
+    "definition": "기초 금리스왑의 고정 지급 1단위가 여러 지급일에 만드는 할인 현재가치의 합입니다.",
+    "canonicalHref": "/finance/markets/swaption-annuity-volatility-quotes-and-cube#names"
+  },
+  "swaption-volatility-quote-type": {
+    "id": "swaption-volatility-quote-type",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스왑션 변동성 호가형",
+    "aliases": [
+      "swaption-volatility-quote-type"
+    ],
+    "definition": "스왑션 변동성 숫자가 normal bp·lognormal %·shifted lognormal 가운데 어느 모형·단위·이동값을 쓰는지 나타내는 규약입니다.",
+    "canonicalHref": "/finance/markets/swaption-annuity-volatility-quotes-and-cube#names"
+  },
+  "swaption-volatility-cube": {
+    "id": "swaption-volatility-cube",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스왑션 변동성 큐브",
+    "aliases": [
+      "swaption-volatility-cube"
+    ],
+    "definition": "옵션 만기·기초 스왑 만기·행사가 또는 moneyness별 내재변동성을 놓고 보간·보정 상태를 붙인 세 축 자료입니다.",
+    "canonicalHref": "/finance/markets/swaption-annuity-volatility-quotes-and-cube#names"
+  },
+  "derivatives-sales-record-lineage": {
+    "id": "derivatives-sales-record-lineage",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 판매기록 계보",
+    "aliases": [
+      "derivatives-sales-record-lineage"
+    ],
+    "definition": "고객 입력·적합성 판단·문서 버전·녹취·주문·체결·알림을 시각과 사건 식별자로 연결한 재구성 가능한 기록입니다.",
+    "canonicalHref": "/finance/markets/derivatives-sales-records-access-retention-and-deletion#names"
+  },
+  "financial-record-access-control": {
+    "id": "financial-record-access-control",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금융 판매기록 열람 통제",
+    "aliases": [
+      "financial-record-access-control"
+    ],
+    "definition": "고객 본인과 내부 담당자의 권한, 제3자 정보 마스킹, 사본·청취 제공과 접근 이력을 관리하는 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-sales-records-access-retention-and-deletion#names"
+  },
+  "financial-record-retention-deletion-boundary": {
+    "id": "financial-record-retention-deletion-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금융 기록 보존·파기 경계",
+    "aliases": [
+      "financial-record-retention-deletion-boundary"
+    ],
+    "definition": "자료 종류별 법적 근거·보존 시작일·기간·법적 보류와 원본·파생 사본의 삭제 완료를 정하는 기준입니다.",
+    "canonicalHref": "/finance/markets/derivatives-sales-records-access-retention-and-deletion#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -56156,6 +56354,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "latin-american-liberation-philosophy",
     "relation": "constrains",
     "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "futures-daily-settlement",
+    "to": "exchange-derivative-contract-spec",
+    "relation": "extends",
+    "reason": "futures-daily-settlement의 기존 구분을 장내파생 계약명세의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "exchange-derivative-contract-spec",
+    "to": "exchange-order-execution-condition",
+    "relation": "produces",
+    "reason": "장내파생 계약명세을 적용한 결과가 거래소 주문·체결 조건의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "exchange-order-execution-condition",
+    "to": "exchange-derivative-position-lifecycle",
+    "relation": "constrains",
+    "reason": "거래소 주문·체결 조건의 조건이 장내파생 포지션 생애주기을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "derivatives-portfolio-reconciliation",
+    "to": "portfolio-compression-cycle",
+    "relation": "extends",
+    "reason": "derivatives-portfolio-reconciliation의 기존 구분을 포트폴리오 압축 주기의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "portfolio-compression-cycle",
+    "to": "compression-risk-tolerance",
+    "relation": "produces",
+    "reason": "포트폴리오 압축 주기을 적용한 결과가 압축 위험 허용오차의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "compression-risk-tolerance",
+    "to": "compression-gross-notional-boundary",
+    "relation": "constrains",
+    "reason": "압축 위험 허용오차의 조건이 압축 명목원금 해석 경계을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "collateral-haircut-value",
+    "to": "cheapest-to-deliver-collateral",
+    "relation": "extends",
+    "reason": "collateral-haircut-value의 기존 구분을 최소비용 담보 배정의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "cheapest-to-deliver-collateral",
+    "to": "collateral-eligibility-constraint",
+    "relation": "produces",
+    "reason": "최소비용 담보 배정을 적용한 결과가 담보 적격성 제약의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "collateral-eligibility-constraint",
+    "to": "collateral-liquidity-buffer",
+    "relation": "constrains",
+    "reason": "담보 적격성 제약의 조건이 담보 유동성 완충을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "default-waterfall",
+    "to": "ccp-default-portfolio-hedging",
+    "relation": "extends",
+    "reason": "default-waterfall의 기존 구분을 CCP 부도 포트폴리오 임시 헤지의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "ccp-default-portfolio-hedging",
+    "to": "ccp-default-auction",
+    "relation": "produces",
+    "reason": "CCP 부도 포트폴리오 임시 헤지을 적용한 결과가 CCP 부도 경매의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "ccp-default-auction",
+    "to": "ccp-client-porting",
+    "relation": "constrains",
+    "reason": "CCP 부도 경매의 조건이 CCP 고객 포지션 이전을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "swaption-and-swap-curve",
+    "to": "swap-annuity-present-value",
+    "relation": "extends",
+    "reason": "swaption-and-swap-curve의 기존 구분을 스왑 연금계수의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "swap-annuity-present-value",
+    "to": "swaption-volatility-quote-type",
+    "relation": "produces",
+    "reason": "스왑 연금계수을 적용한 결과가 스왑션 변동성 호가형의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "swaption-volatility-quote-type",
+    "to": "swaption-volatility-cube",
+    "relation": "constrains",
+    "reason": "스왑션 변동성 호가형의 조건이 스왑션 변동성 큐브을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "sales-practice-evidence",
+    "to": "derivatives-sales-record-lineage",
+    "relation": "extends",
+    "reason": "sales-practice-evidence의 기존 구분을 파생상품 판매기록 계보의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "derivatives-sales-record-lineage",
+    "to": "financial-record-access-control",
+    "relation": "produces",
+    "reason": "파생상품 판매기록 계보을 적용한 결과가 금융 판매기록 열람 통제의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "financial-record-access-control",
+    "to": "financial-record-retention-deletion-boundary",
+    "relation": "constrains",
+    "reason": "금융 판매기록 열람 통제의 조건이 금융 기록 보존·파기 경계을 적용할 수 있는 범위와 한계를 정합니다."
   },
 ];
 

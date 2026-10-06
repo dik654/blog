@@ -147856,4 +147856,1459 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/krx-derivatives-contract-orders-and-daily-settlement": {
+    "entryLevel": false,
+    "entryNote": "330에 산 코스피200 선물 1계약이 정산가격 328이 되어 50만 원 손실로 계좌에 반영되는 사례에서 시작합니다.",
+    "coreIdea": "장내파생 거래는 계약명세의 승수·호가·만기에서 출발해 주문조건과 가격·시간 우선 체결을 거친 뒤 일일정산·반대거래·최종결제로 이어지며, 각 상태와 현금 영수증을 구분해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "futures-daily-settlement",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "exchange-derivative-contract-spec",
+        "role": "장내파생 계약명세을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "exchange-order-execution-condition",
+        "role": "거래소 주문·체결 조건을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "exchange-derivative-position-lifecycle",
+        "role": "장내파생 포지션 생애주기을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "exchange-derivative-contract-spec",
+        "sectionId": "names",
+        "intuition": "장내파생 계약명세이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "2포인트에 계약승수 25만 원을 곱해 50만 원으로 바꿉니다.",
+        "boundary": "계약명세의 승수는 증거금이나 최대손실과 같은 값이 아닙니다."
+      },
+      {
+        "id": "exchange-order-execution-condition",
+        "sectionId": "names",
+        "intuition": "거래소 주문·체결 조건이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "330 지정가 1계약의 일부·전량 체결과 남은 수량 처리를 확인합니다.",
+        "boundary": "시장가·IOC·FOK도 원하는 가격이나 체결을 보장하지 않습니다."
+      },
+      {
+        "id": "exchange-derivative-position-lifecycle",
+        "sectionId": "names",
+        "intuition": "장내파생 포지션 생애주기이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "300만 원 계좌에서 하루 손실 50만 원이 빠진 뒤 포지션 상태를 갱신합니다.",
+        "boundary": "주문 체결과 계약 종료를 같은 완료 상태로 보지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "futures-daily-settlement"
+        ]
+      },
+      {
+        "label": "2단계 · 장내파생 계약명세",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "exchange-derivative-contract-spec"
+        ]
+      },
+      {
+        "label": "3단계 · 거래소 주문·체결 조건",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "exchange-order-execution-condition"
+        ]
+      },
+      {
+        "label": "4단계 · 장내파생 포지션 생애주기",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "exchange-derivative-position-lifecycle"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "330−328의 2포인트에 계약승수 25만 원을 곱해 50만 원 손실을 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "장내파생 계약명세의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "장내파생 계약명세",
+          "2포인트에 계약승수 25만 원을 곱해 50만 원으로 바꿉니다.",
+          "계약명세의 승수는 증거금이나 최대손실과 같은 값이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "거래소 주문·체결 조건의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "거래소 주문·체결 조건",
+          "330 지정가 1계약의 일부·전량 체결과 남은 수량 처리를 확인합니다.",
+          "시장가·IOC·FOK도 원하는 가격이나 체결을 보장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "exchange-order-execution-condition"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "장내파생 포지션 생애주기의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "장내파생 포지션 생애주기",
+          "300만 원 계좌에서 하루 손실 50만 원이 빠진 뒤 포지션 상태를 갱신합니다.",
+          "주문 체결과 계약 종료를 같은 완료 상태로 보지 않습니다."
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "KRX 코스피200 선물 명세",
+          "계약승수·호가·만기·현금결제의 실제 종목 규격을 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "KRX 주문과 결제",
+          "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec",
+          "exchange-order-execution-condition",
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec",
+          "exchange-order-execution-condition",
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec",
+          "exchange-order-execution-condition",
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "exchange-derivative-contract-spec",
+          "exchange-order-execution-condition",
+          "exchange-derivative-position-lifecycle"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "KRX 코스피200 선물 명세",
+        "href": "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "계약승수·호가·만기·현금결제의 실제 종목 규격을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "KRX 주문과 결제",
+        "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/portfolio-compression-risk-tolerances-and-records": {
+    "entryLevel": false,
+    "entryNote": "같은 조건의 고정금리 수취 100과 지급 60·40이 순액 0이지만 총 명목 200을 남기는 사례에서 시작합니다.",
+    "coreIdea": "포트폴리오 압축은 거래를 대사하고 참여자의 위험 허용오차 안에서 상쇄 거래를 종료·대체해 계약 수와 총 명목을 줄인 뒤 법률·평가·담보·보고 장부를 다시 맞추며, 명목 감소와 위험 감소를 따로 측정합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-portfolio-reconciliation",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "portfolio-compression-cycle",
+        "role": "포트폴리오 압축 주기을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "compression-risk-tolerance",
+        "role": "압축 위험 허용오차을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "compression-gross-notional-boundary",
+        "role": "압축 명목원금 해석 경계을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "portfolio-compression-cycle",
+        "sectionId": "names",
+        "intuition": "포트폴리오 압축 주기이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "+100·−60·−40 세 거래를 승인한 효력 시점에 함께 종료합니다.",
+        "boundary": "알고리즘이 후보를 냈다고 법률상 계약이 자동으로 사라지지 않습니다."
+      },
+      {
+        "id": "compression-risk-tolerance",
+        "sectionId": "names",
+        "intuition": "압축 위험 허용오차이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "세 거래의 조건이 다르면 허용오차 안의 대체계약을 찾습니다.",
+        "boundary": "압축 서비스가 참여자 동의 없이 정하는 공통값이 아닙니다."
+      },
+      {
+        "id": "compression-gross-notional-boundary",
+        "sectionId": "names",
+        "intuition": "압축 명목원금 해석 경계이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "총 명목 200을 없앤 뒤 현재가치와 스트레스 현금을 다시 잽니다.",
+        "boundary": "명목원금은 최대손실이나 현재 노출 자체가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-portfolio-reconciliation"
+        ]
+      },
+      {
+        "label": "2단계 · 포트폴리오 압축 주기",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "portfolio-compression-cycle"
+        ]
+      },
+      {
+        "label": "3단계 · 압축 위험 허용오차",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "compression-risk-tolerance"
+        ]
+      },
+      {
+        "label": "4단계 · 압축 명목원금 해석 경계",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "compression-gross-notional-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "+100−60−40=0을 확인하고 완전 일치 사례의 총 명목 200을 0으로 줄입니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "포트폴리오 압축 주기의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "포트폴리오 압축 주기",
+          "+100·−60·−40 세 거래를 승인한 효력 시점에 함께 종료합니다.",
+          "알고리즘이 후보를 냈다고 법률상 계약이 자동으로 사라지지 않습니다."
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "압축 위험 허용오차의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "압축 위험 허용오차",
+          "세 거래의 조건이 다르면 허용오차 안의 대체계약을 찾습니다.",
+          "압축 서비스가 참여자 동의 없이 정하는 공통값이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "compression-risk-tolerance"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "압축 명목원금 해석 경계의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "압축 명목원금 해석 경계",
+          "총 명목 200을 없앤 뒤 현재가치와 스트레스 현금을 다시 잽니다.",
+          "명목원금은 최대손실이나 현재 노출 자체가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "CFTC 스왑 압축 규칙",
+          "종료·대체, 위험 허용 범위와 기록 의무의 미국 규칙을 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "BIS 거래 압축 설명",
+          "총 명목 감소를 위험 감소로 바로 읽지 않는 측정 경계를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle",
+          "compression-risk-tolerance",
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle",
+          "compression-risk-tolerance",
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle",
+          "compression-risk-tolerance",
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "portfolio-compression-cycle",
+          "compression-risk-tolerance",
+          "compression-gross-notional-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CFTC 스왑 압축 규칙",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "종료·대체, 위험 허용 범위와 기록 의무의 미국 규칙을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BIS 거래 압축 설명",
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "총 명목 감소를 위험 감소로 바로 읽지 않는 측정 경계를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/collateral-optimization-eligibility-haircuts-and-liquidity": {
+    "entryLevel": false,
+    "entryNote": "인정가치 10을 채우기 위해 5% 할인 채권 A 10.53과 15% 할인 채권 B 11.77을 비교하는 사례에서 시작합니다.",
+    "coreIdea": "담보 최적화는 적격성·집중·통화·결제 제약을 먼저 적용하고 할인 후 가치당 조달·기회·운영 비용을 비교해 자산을 배정하되, 다음 증거금 충격을 견딜 현금과 고유동성자산 완충을 남기는 문제입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "collateral-haircut-value",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "collateral-substitution-sequencing",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cheapest-to-deliver-collateral",
+        "role": "최소비용 담보 배정을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "collateral-eligibility-constraint",
+        "role": "담보 적격성 제약을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "collateral-liquidity-buffer",
+        "role": "담보 유동성 완충을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cheapest-to-deliver-collateral",
+        "sectionId": "names",
+        "intuition": "최소비용 담보 배정이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "B의 비용이 낮아도 인정가치 5까지만 쓰고 A로 나머지를 채웁니다.",
+        "boundary": "표면금리나 할인율 하나만 낮은 자산을 고르는 규칙이 아닙니다."
+      },
+      {
+        "id": "collateral-eligibility-constraint",
+        "sectionId": "names",
+        "intuition": "담보 적격성 제약이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "B의 남은 집중 한도가 인정가치 5라면 그 이상을 후보에서 뺍니다.",
+        "boundary": "시장가가 충분하거나 비용이 싸다는 사실만으로 통과하지 않습니다."
+      },
+      {
+        "id": "collateral-liquidity-buffer",
+        "sectionId": "names",
+        "intuition": "담보 유동성 완충이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "오늘 담보 10을 낸 뒤 내일 호출과 영업 지급을 견디는지 다시 계산합니다.",
+        "boundary": "평상시 비용 최소화와 같은 목표가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "collateral-haircut-value",
+          "collateral-substitution-sequencing"
+        ]
+      },
+      {
+        "label": "2단계 · 최소비용 담보 배정",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "cheapest-to-deliver-collateral"
+        ]
+      },
+      {
+        "label": "3단계 · 담보 적격성 제약",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "collateral-eligibility-constraint"
+        ]
+      },
+      {
+        "label": "4단계 · 담보 유동성 완충",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "collateral-liquidity-buffer"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "10÷95%=10.53과 10÷85%=11.77을 계산하고 B의 인정가치 한도 5 때문에 B 5와 A 5를 섞습니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "최소비용 담보 배정의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "최소비용 담보 배정",
+          "B의 비용이 낮아도 인정가치 5까지만 쓰고 A로 나머지를 채웁니다.",
+          "표면금리나 할인율 하나만 낮은 자산을 고르는 규칙이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "담보 적격성 제약의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "담보 적격성 제약",
+          "B의 남은 집중 한도가 인정가치 5라면 그 이상을 후보에서 뺍니다.",
+          "시장가가 충분하거나 비용이 싸다는 사실만으로 통과하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "collateral-eligibility-constraint"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "담보 유동성 완충의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "담보 유동성 완충",
+          "오늘 담보 10을 낸 뒤 내일 호출과 영업 지급을 견디는지 다시 계산합니다.",
+          "평상시 비용 최소화와 같은 목표가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "BCBS·IOSCO 비청산 증거금",
+          "적격성·할인율·집중과 잘못된 방향의 위험을 최적화 제약으로 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "ISDA 담보 운영 권고",
+          "배정·교체·수탁·결제와 자산 위치를 실제 운영 흐름으로 연결합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral",
+          "collateral-eligibility-constraint",
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral",
+          "collateral-eligibility-constraint",
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral",
+          "collateral-eligibility-constraint",
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "cheapest-to-deliver-collateral",
+          "collateral-eligibility-constraint",
+          "collateral-liquidity-buffer"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "BCBS·IOSCO 비청산 증거금",
+        "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "적격성·할인율·집중과 잘못된 방향의 위험을 최적화 제약으로 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ISDA 담보 운영 권고",
+        "href": "https://www.isda.org/collateral-management-sop/",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "배정·교체·수탁·결제와 자산 위치를 실제 운영 흐름으로 연결합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/ccp-default-management-hedging-auction-and-porting": {
+    "entryLevel": false,
+    "entryNote": "부도 회원 포트폴리오의 금리 민감도 +80에 −60을 임시 헤지해 경매 전 잔여 +20을 만드는 사례에서 시작합니다.",
+    "coreIdea": "CCP 부도관리는 고객계정 이전 가능성을 가른 뒤 부도 포트폴리오의 급한 위험을 헤지하고 이해 가능한 묶음으로 경매해 균형 장부를 회복하며, 남은 손실은 규정된 재원 순서와 보충 절차로 처리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "default-waterfall",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "central-counterparty-clearing",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "ccp-default-portfolio-hedging",
+        "role": "CCP 부도 포트폴리오 임시 헤지을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "ccp-default-auction",
+        "role": "CCP 부도 경매을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "ccp-client-porting",
+        "role": "CCP 고객 포지션 이전을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "ccp-default-portfolio-hedging",
+        "sectionId": "names",
+        "intuition": "CCP 부도 포트폴리오 임시 헤지이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "+80의 민감도에 −60을 더해 +20으로 줄입니다.",
+        "boundary": "모든 위험을 없애거나 경매를 대신하는 거래가 아닙니다."
+      },
+      {
+        "id": "ccp-default-auction",
+        "sectionId": "names",
+        "intuition": "CCP 부도 경매이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "잔여 +20의 정보와 묶음을 제시하고 비용 4·6·9의 입찰을 비교합니다.",
+        "boundary": "가장 싼 숫자만으로 법률·운영·집중 조건이 끝나지 않습니다."
+      },
+      {
+        "id": "ccp-client-porting",
+        "sectionId": "names",
+        "intuition": "CCP 고객 포지션 이전이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "경매 전 고객계정과 담보의 이전 가능성을 확인합니다.",
+        "boundary": "회원 고유 포트폴리오의 헤지·경매와 같은 절차가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "default-waterfall",
+          "central-counterparty-clearing"
+        ]
+      },
+      {
+        "label": "2단계 · CCP 부도 포트폴리오 임시 헤지",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "ccp-default-portfolio-hedging"
+        ]
+      },
+      {
+        "label": "3단계 · CCP 부도 경매",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "ccp-default-auction"
+        ]
+      },
+      {
+        "label": "4단계 · CCP 고객 포지션 이전",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "ccp-client-porting"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "+80에 −60을 더해 +20을 남기고 5bp 충격의 단순 잔여 손익 100을 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "CCP 부도 포트폴리오 임시 헤지의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CCP 부도 포트폴리오 임시 헤지",
+          "+80의 민감도에 −60을 더해 +20으로 줄입니다.",
+          "모든 위험을 없애거나 경매를 대신하는 거래가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "CCP 부도 경매의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CCP 부도 경매",
+          "잔여 +20의 정보와 묶음을 제시하고 비용 4·6·9의 입찰을 비교합니다.",
+          "가장 싼 숫자만으로 법률·운영·집중 조건이 끝나지 않습니다."
+        ],
+        "requiredConcepts": [
+          "ccp-default-auction"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "CCP 고객 포지션 이전의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CCP 고객 포지션 이전",
+          "경매 전 고객계정과 담보의 이전 가능성을 확인합니다.",
+          "회원 고유 포트폴리오의 헤지·경매와 같은 절차가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "ccp-client-porting"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "CPMI·IOSCO CCP 부도 경매",
+          "경매 범위·지배구조·헤지·분할·정보·입찰과 시험 쟁점을 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "CPMI·IOSCO 금융시장인프라 원칙",
+          "부도 규칙과 고객 포지션·담보의 구분·이전을 별도 원칙으로 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "ccp-client-porting"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging",
+          "ccp-default-auction",
+          "ccp-client-porting"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging",
+          "ccp-default-auction",
+          "ccp-client-porting"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging",
+          "ccp-default-auction",
+          "ccp-client-porting"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "ccp-default-portfolio-hedging",
+          "ccp-default-auction",
+          "ccp-client-porting"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CPMI·IOSCO CCP 부도 경매",
+        "href": "https://www.bis.org/publications/central-counterparty-default-management-auctions-issues-consideration",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "경매 범위·지배구조·헤지·분할·정보·입찰과 시험 쟁점을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CPMI·IOSCO 금융시장인프라 원칙",
+        "href": "https://www.bis.org/committees/cpmi/pfmi/overview",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "부도 규칙과 고객 포지션·담보의 구분·이전을 별도 원칙으로 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/swaption-annuity-volatility-quotes-and-cube": {
+    "entryLevel": false,
+    "entryNote": "3개월 뒤 시작하는 10년 스왑에서 선도금리 4.00%, 행사가 4.10%, 명목 1억, 연금계수 8.5를 쓰는 사례에서 시작합니다.",
+    "coreIdea": "스왑션 평가는 곡선에서 선도스왑금리와 연금계수를 만든 뒤 옵션 만기·기초 스왑 만기·행사가의 큐브 좌표에서 단위와 모형이 명시된 변동성을 찾아 보정·보간하고 가격과 민감도를 시장 호가에 검증하는 과정입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "swaption-and-swap-curve",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "implied-volatility-surface",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "swap-annuity-present-value",
+        "role": "스왑 연금계수을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "swaption-volatility-quote-type",
+        "role": "스왑션 변동성 호가형을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "swaption-volatility-cube",
+        "role": "스왑션 변동성 큐브을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "swap-annuity-present-value",
+        "sectionId": "names",
+        "intuition": "스왑 연금계수이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "10bp×1억×8.5=85만 원으로 금리 차이를 가치 단위로 바꿉니다.",
+        "boundary": "스왑션의 시간가치나 옵션 프리미엄 자체가 아닙니다."
+      },
+      {
+        "id": "swaption-volatility-quote-type",
+        "sectionId": "names",
+        "intuition": "스왑션 변동성 호가형이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "normal 70bp와 lognormal 20%를 서로 다른 입력으로 기록합니다.",
+        "boundary": "숫자만 떼어 다른 가격식에 넣을 수 없습니다."
+      },
+      {
+        "id": "swaption-volatility-cube",
+        "sectionId": "names",
+        "intuition": "스왑션 변동성 큐브이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "3개월×10년×+10bp 좌표의 변동성을 찾습니다.",
+        "boundary": "호가가 없는 좌표는 직접 관측값이 아니라 모형 결과일 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "swaption-and-swap-curve",
+          "implied-volatility-surface"
+        ]
+      },
+      {
+        "label": "2단계 · 스왑 연금계수",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "swap-annuity-present-value"
+        ]
+      },
+      {
+        "label": "3단계 · 스왑션 변동성 호가형",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "swaption-volatility-quote-type"
+        ]
+      },
+      {
+        "label": "4단계 · 스왑션 변동성 큐브",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "swaption-volatility-cube"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "10bp=0.001에 명목 1억과 연금계수 8.5를 곱해 기초 스왑 금리 차이 가치 85만 원을 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "스왑 연금계수의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스왑 연금계수",
+          "10bp×1억×8.5=85만 원으로 금리 차이를 가치 단위로 바꿉니다.",
+          "스왑션의 시간가치나 옵션 프리미엄 자체가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "스왑션 변동성 호가형의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스왑션 변동성 호가형",
+          "normal 70bp와 lognormal 20%를 서로 다른 입력으로 기록합니다.",
+          "숫자만 떼어 다른 가격식에 넣을 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "swaption-volatility-quote-type"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "스왑션 변동성 큐브의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스왑션 변동성 큐브",
+          "3개월×10년×+10bp 좌표의 변동성을 찾습니다.",
+          "호가가 없는 좌표는 직접 관측값이 아니라 모형 결과일 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "CME Group 스왑션 평가 방법",
+          "만기·tenor·moneyness 호가와 곡선·보정의 평가 순서를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "LSEG 스왑션 변동성 큐브",
+          "큐브의 세 축과 normal Bachelier·Black 호가형을 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value",
+          "swaption-volatility-quote-type",
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value",
+          "swaption-volatility-quote-type",
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value",
+          "swaption-volatility-quote-type",
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "swap-annuity-present-value",
+          "swaption-volatility-quote-type",
+          "swaption-volatility-cube"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group 스왑션 평가 방법",
+        "href": "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "만기·tenor·moneyness 호가와 곡선·보정의 평가 순서를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "LSEG 스왑션 변동성 큐브",
+        "href": "https://www.lseg.com/en/data-catalogue/fixed-income/derived/ird-swaps-swaption-volatility-cubes",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "큐브의 세 축과 normal Bachelier·Black 호가형을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-sales-records-access-retention-and-deletion": {
+    "entryLevel": false,
+    "entryNote": "14시10분 고객정보 확정, 14시12~30분 녹취, 14시32분 주문을 한 판매 사건으로 잇는 사례에서 시작합니다.",
+    "coreIdea": "파생상품 판매 기록은 고객자료·설명서 버전·녹취·이해 확인·주문·체결·알림을 같은 시각과 사건번호로 이어 변조를 막고 열람에 응할 수 있어야 하며, 자료별 법적 근거·기간·접근권한·법적 보류와 파기를 함께 관리해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "sales-practice-evidence",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-sales-record-lineage",
+        "role": "파생상품 판매기록 계보을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "financial-record-access-control",
+        "role": "금융 판매기록 열람 통제을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "financial-record-retention-deletion-boundary",
+        "role": "금융 기록 보존·파기 경계을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-sales-record-lineage",
+        "sectionId": "names",
+        "intuition": "파생상품 판매기록 계보이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "설명서 3판과 14시12~30분 녹취, 14시32분 주문을 묶습니다.",
+        "boundary": "녹취 파일 하나나 최종 서명 한 장과 같지 않습니다."
+      },
+      {
+        "id": "financial-record-access-control",
+        "sectionId": "names",
+        "intuition": "금융 판매기록 열람 통제이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "분쟁 목적 열람 요청에 관련 자료를 찾아 제공하고 이력을 남깁니다.",
+        "boundary": "판매 자료를 모든 직원이 자유롭게 보는 권한이 아닙니다."
+      },
+      {
+        "id": "financial-record-retention-deletion-boundary",
+        "sectionId": "names",
+        "intuition": "금융 기록 보존·파기 경계이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "보존 근거가 끝나면 원본·검색색인·내보낸 사본의 파기를 추적합니다.",
+        "boundary": "모든 자료에 같은 기간을 붙이거나 판매 기록을 다른 목적으로 계속 쓰지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "sales-practice-evidence"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 판매기록 계보",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "derivatives-sales-record-lineage"
+        ]
+      },
+      {
+        "label": "3단계 · 금융 판매기록 열람 통제",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "financial-record-access-control"
+        ]
+      },
+      {
+        "label": "4단계 · 금융 기록 보존·파기 경계",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "financial-record-retention-deletion-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "14시10분부터 14시32분까지 22분의 고객자료·18분 녹취·설명서 3판·주문을 한 사건으로 연결합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 판매기록 계보의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 판매기록 계보",
+          "설명서 3판과 14시12~30분 녹취, 14시32분 주문을 묶습니다.",
+          "녹취 파일 하나나 최종 서명 한 장과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "금융 판매기록 열람 통제의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "금융 판매기록 열람 통제",
+          "분쟁 목적 열람 요청에 관련 자료를 찾아 제공하고 이력을 남깁니다.",
+          "판매 자료를 모든 직원이 자유롭게 보는 권한이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "financial-record-access-control"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "금융 기록 보존·파기 경계의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "금융 기록 보존·파기 경계",
+          "보존 근거가 끝나면 원본·검색색인·내보낸 사본의 파기를 추적합니다.",
+          "모든 자료에 같은 기간을 붙이거나 판매 기록을 다른 목적으로 계속 쓰지 않습니다."
+        ],
+        "requiredConcepts": [
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "금융소비자보호법 제28조",
+          "기록·유지관리·변조 방지와 분쟁 목적 열람의 법률 구조를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "금융위원회 고난도 금융상품 보호장치",
+          "고난도 상품의 녹취·숙려와 청약 의사 재확인 흐름을 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage",
+          "financial-record-access-control",
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage",
+          "financial-record-access-control",
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage",
+          "financial-record-access-control",
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-sales-record-lineage",
+          "financial-record-access-control",
+          "financial-record-retention-deletion-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "금융소비자보호법 제28조",
+        "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "기록·유지관리·변조 방지와 분쟁 목적 열람의 법률 구조를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융위원회 고난도 금융상품 보호장치",
+        "href": "https://fsc.go.kr/no010101/75872",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "고난도 상품의 녹취·숙려와 청약 의사 재확인 흐름을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

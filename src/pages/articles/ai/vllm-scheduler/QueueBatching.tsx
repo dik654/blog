@@ -1,13 +1,9 @@
-import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
-import { CodeViewButton } from "@/components/code";
-import { codeRefs } from "./codeRefs";
 import SchedulerContractViz from "./viz/SchedulerContractViz";
 
 export default function QueueBatching({
-  onCodeRef,
+  onCodeRef: _onCodeRef,
 }: {
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {

@@ -1,10 +1,3 @@
-import ExplainedFormula from "@/components/ui/explained-formula";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation";
-import type { CodeRef } from "@/components/code/types";
-import { CodeViewButton } from "@/components/code";
-import { codeRefs } from "./codeRefs";
-
 export default function Overview() {
   return (
     <div className="space-y-16">

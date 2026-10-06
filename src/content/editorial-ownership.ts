@@ -17265,6 +17265,174 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "krx-derivatives-contract-orders-and-daily-settlement": {
+    "title": "지수 2포인트가 50만 원이 되는 길: KRX 계약·주문·일일정산 글이 소유하는 범위",
+    "owns": [
+      "코스피200 선물 330→328과 계약승수 25만 원의 하루 손익",
+      "지정가·시장가·IOC·FOK와 가격·시간 우선순위",
+      "체결·일일정산·반대거래·최종결제의 상태 구분"
+    ],
+    "reuses": [
+      {
+        "label": "선물의 일별 정산",
+        "href": "/finance/markets/forwards-and-futures#source"
+      },
+      {
+        "label": "중앙청산과 증거금",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "portfolio-compression-risk-tolerances-and-records": {
+    "title": "총 명목 200을 0으로 줄여도 위험은 따로 잰다: 거래 압축 글이 소유하는 범위",
+    "owns": [
+      "+100·−60·−40 세 거래의 순액 0과 총 명목 200 계산",
+      "위험 허용오차 안의 종료·대체와 참여자 승인",
+      "압축 뒤 법률·평가·담보·보고 장부의 사후 대사"
+    ],
+    "reuses": [
+      {
+        "label": "포트폴리오 대사",
+        "href": "/finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#names"
+      },
+      {
+        "label": "종료 일괄상계",
+        "href": "/finance/markets/otc-master-agreement-collateral-netting-and-cva#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "collateral-optimization-eligibility-haircuts-and-liquidity": {
+    "title": "담보 10을 가장 싸게 채우는 법: 적격성·할인율·유동성 글이 소유하는 범위",
+    "owns": [
+      "담보 인정가치 10에 대한 A 5%·B 15% 할인 역산",
+      "조달·기회·이동·교체 비용을 합친 자산 배정",
+      "집중한도와 다음 날 증거금 충격을 반영한 유동성 완충"
+    ],
+    "reuses": [
+      {
+        "label": "담보 할인 가치",
+        "href": "/finance/markets/collateral-operations-margin-calls-disputes-and-substitution#names"
+      },
+      {
+        "label": "담보 교체 순서",
+        "href": "/finance/markets/collateral-operations-margin-calls-disputes-and-substitution#need"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "ccp-default-management-hedging-auction-and-porting": {
+    "title": "회원 부도 뒤 +80을 누가 떠안는가: CCP 헤지·경매·포지션 이전 글이 소유하는 범위",
+    "owns": [
+      "부도 포트폴리오 +80을 −60 헤지해 잔여 +20으로 줄이는 계산",
+      "헤지·분할·입찰·낙찰로 CCP의 균형 장부를 회복하는 절차",
+      "고객 포지션 이전과 회원 고유 포트폴리오 경매의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "중앙청산",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall#names"
+      },
+      {
+        "label": "손실 분담 순서",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "swaption-annuity-volatility-quotes-and-cube": {
+    "title": "3개월×10년×+10bp를 찾는다: 스왑션 연금계수·호가형·큐브 글이 소유하는 범위",
+    "owns": [
+      "명목 1억·10bp·연금계수 8.5의 기초 스왑 가치 85만 원",
+      "normal·lognormal·shifted lognormal 변동성 호가형의 단위 구분",
+      "옵션 만기·스왑 만기·행사가의 큐브 보정·보간·검증"
+    ],
+    "reuses": [
+      {
+        "label": "스왑션과 스왑곡선",
+        "href": "/finance/markets/interest-rate-derivatives-from-fra-to-swaptions#names"
+      },
+      {
+        "label": "내재변동성 표면",
+        "href": "/finance/markets/implied-volatility-surface-skew-and-smile#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-sales-records-access-retention-and-deletion": {
+    "title": "18분 녹취만으로는 부족하다: 판매 기록·열람·보존·파기 글이 소유하는 범위",
+    "owns": [
+      "14시10분 고객정보부터 14시32분 주문까지의 판매기록 계보",
+      "설명서 버전·녹취·주문·체결을 같은 사건번호로 연결하는 통제",
+      "자료별 열람·접근·보존근거·법적 보류·파기의 생애주기"
+    ],
+    "reuses": [
+      {
+        "label": "판매 과정의 증거",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
+      },
+      {
+        "label": "민원 증거 꾸러미",
+        "href": "/finance/markets/derivatives-complaints-dispute-resolution-and-evidence#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

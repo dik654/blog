@@ -12982,4 +12982,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "라틴아메리카 해방 철학의 여러 흐름과 배제된 사람의 요구에서 철학·비판·실천을 잇는 목표를 확인합니다."
     }
   ],
+  "markets/krx-derivatives-contract-orders-and-daily-settlement": [
+    {
+      "kind": "공식 문서",
+      "label": "KRX 코스피200 선물 명세",
+      "href": "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp",
+      "note": "계약승수·호가·만기·현금결제의 실제 종목 규격을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX 주문과 결제",
+      "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+      "note": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다."
+    }
+  ],
+  "markets/portfolio-compression-risk-tolerances-and-records": [
+    {
+      "kind": "공식 문서",
+      "label": "CFTC 스왑 압축 규칙",
+      "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414",
+      "note": "종료·대체, 위험 허용 범위와 기록 의무의 미국 규칙을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS 거래 압축 설명",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf",
+      "note": "총 명목 감소를 위험 감소로 바로 읽지 않는 측정 경계를 확인합니다."
+    }
+  ],
+  "markets/collateral-optimization-eligibility-haircuts-and-liquidity": [
+    {
+      "kind": "공식 문서",
+      "label": "BCBS·IOSCO 비청산 증거금",
+      "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf",
+      "note": "적격성·할인율·집중과 잘못된 방향의 위험을 최적화 제약으로 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ISDA 담보 운영 권고",
+      "href": "https://www.isda.org/collateral-management-sop/",
+      "note": "배정·교체·수탁·결제와 자산 위치를 실제 운영 흐름으로 연결합니다."
+    }
+  ],
+  "markets/ccp-default-management-hedging-auction-and-porting": [
+    {
+      "kind": "공식 문서",
+      "label": "CPMI·IOSCO CCP 부도 경매",
+      "href": "https://www.bis.org/publications/central-counterparty-default-management-auctions-issues-consideration",
+      "note": "경매 범위·지배구조·헤지·분할·정보·입찰과 시험 쟁점을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CPMI·IOSCO 금융시장인프라 원칙",
+      "href": "https://www.bis.org/committees/cpmi/pfmi/overview",
+      "note": "부도 규칙과 고객 포지션·담보의 구분·이전을 별도 원칙으로 확인합니다."
+    }
+  ],
+  "markets/swaption-annuity-volatility-quotes-and-cube": [
+    {
+      "kind": "공식 문서",
+      "label": "CME Group 스왑션 평가 방법",
+      "href": "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf",
+      "note": "만기·tenor·moneyness 호가와 곡선·보정의 평가 순서를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "LSEG 스왑션 변동성 큐브",
+      "href": "https://www.lseg.com/en/data-catalogue/fixed-income/derived/ird-swaps-swaption-volatility-cubes",
+      "note": "큐브의 세 축과 normal Bachelier·Black 호가형을 확인합니다."
+    }
+  ],
+  "markets/derivatives-sales-records-access-retention-and-deletion": [
+    {
+      "kind": "공식 문서",
+      "label": "금융소비자보호법 제28조",
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+      "note": "기록·유지관리·변조 방지와 분쟁 목적 열람의 법률 구조를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 고난도 금융상품 보호장치",
+      "href": "https://fsc.go.kr/no010101/75872",
+      "note": "고난도 상품의 녹취·숙려와 청약 의사 재확인 흐름을 확인합니다."
+    }
+  ],
 };

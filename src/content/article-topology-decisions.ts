@@ -2466,6 +2466,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "국가 지도의 빈 땅 분류는 계절 이용·공동체 법·의례·회복 시간을 지울 수 있으며, 원주민의 땅에 근거한 규범과 라틴아메리카 해방 철학은 서로 다른 전통으로서 식민 권력과 보편을 말하는 위치를 다시 묻습니다.",
     "sharedGate": "국가가 미사용지라 부른 100헥타르를 공동체의 계절 이용 60, 물·의례 공간 20, 회복·재생 구역 20으로 다시 기록합니다."
   },
+  "markets/krx-derivatives-contract-orders-and-daily-settlement": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "장내파생 거래는 계약명세의 승수·호가·만기에서 출발해 주문조건과 가격·시간 우선 체결을 거친 뒤 일일정산·반대거래·최종결제로 이어지며, 각 상태와 현금 영수증을 구분해야 합니다.",
+    "sharedGate": "330−328의 2포인트에 계약승수 25만 원을 곱해 50만 원 손실을 계산합니다."
+  },
+  "markets/portfolio-compression-risk-tolerances-and-records": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "포트폴리오 압축은 거래를 대사하고 참여자의 위험 허용오차 안에서 상쇄 거래를 종료·대체해 계약 수와 총 명목을 줄인 뒤 법률·평가·담보·보고 장부를 다시 맞추며, 명목 감소와 위험 감소를 따로 측정합니다.",
+    "sharedGate": "+100−60−40=0을 확인하고 완전 일치 사례의 총 명목 200을 0으로 줄입니다."
+  },
+  "markets/collateral-optimization-eligibility-haircuts-and-liquidity": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "담보 최적화는 적격성·집중·통화·결제 제약을 먼저 적용하고 할인 후 가치당 조달·기회·운영 비용을 비교해 자산을 배정하되, 다음 증거금 충격을 견딜 현금과 고유동성자산 완충을 남기는 문제입니다.",
+    "sharedGate": "10÷95%=10.53과 10÷85%=11.77을 계산하고 B의 인정가치 한도 5 때문에 B 5와 A 5를 섞습니다."
+  },
+  "markets/ccp-default-management-hedging-auction-and-porting": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "CCP 부도관리는 고객계정 이전 가능성을 가른 뒤 부도 포트폴리오의 급한 위험을 헤지하고 이해 가능한 묶음으로 경매해 균형 장부를 회복하며, 남은 손실은 규정된 재원 순서와 보충 절차로 처리합니다.",
+    "sharedGate": "+80에 −60을 더해 +20을 남기고 5bp 충격의 단순 잔여 손익 100을 계산합니다."
+  },
+  "markets/swaption-annuity-volatility-quotes-and-cube": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "스왑션 평가는 곡선에서 선도스왑금리와 연금계수를 만든 뒤 옵션 만기·기초 스왑 만기·행사가의 큐브 좌표에서 단위와 모형이 명시된 변동성을 찾아 보정·보간하고 가격과 민감도를 시장 호가에 검증하는 과정입니다.",
+    "sharedGate": "10bp=0.001에 명목 1억과 연금계수 8.5를 곱해 기초 스왑 금리 차이 가치 85만 원을 계산합니다."
+  },
+  "markets/derivatives-sales-records-access-retention-and-deletion": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 판매 기록은 고객자료·설명서 버전·녹취·이해 확인·주문·체결·알림을 같은 시각과 사건번호로 이어 변조를 막고 열람에 응할 수 있어야 하며, 자료별 법적 근거·기간·접근권한·법적 보류와 파기를 함께 관리해야 합니다.",
+    "sharedGate": "14시10분부터 14시32분까지 22분의 고객자료·18분 녹취·설명서 3판·주문을 한 사건으로 연결합니다."
+  },
 };
 
 /**
@@ -2587,7 +2629,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/momentum-optimizer": "a4569d55fe8e3fb5",
   "ai/optimizers": "3c81cc8fed064324",
   "ai/rectifier-activations": "e34376d48f9d220e",
-  "ai/vllm-serving": "b96090c59bb5b806",
+  "ai/vllm-serving": "38c4d93ef3d9fbc3",
   "blockchain/rollup-fundamentals": "eb9ef0170efde5b7",
   "blockchain/stablecoin-overview": "c2364153df3233b8",
   "semiconductors/bands-and-doping": "f75aa1683e9970ef",
@@ -2602,7 +2644,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/agent-delegation-contracts": "872b22c7db72ecbb",
   "ai/agent-loop-foundations": "1e9173ac2df460c4",
   "ai/agent-plan-replanning": "066b27b1cff27452",
-  "ai/agent-run-contract": "c039f76838539f06",
+  "ai/agent-run-contract": "bd25a2a78166cb54",
   "ai/agent-verification": "b9bdcdbbf2efdd95",
   "ai/deep-learning-overview": "4e624eab044f92d0",
   "ai/softmax": "a7dde2b315e8ebe5",
@@ -2710,7 +2752,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vae": "147d459b37db9ccd",
   "ai/vllm-paged-attention": "ea303e6227016d05",
   "ai/vllm-spec-decode": "d4e161bdd3651539",
-  "ai/vllm-scheduler": "1061f2fdfdbb0797",
+  "ai/vllm-scheduler": "2b8865e6dc083b80",
   "ai/retrieval-ranking-funnel": "50578b053322609e",
   "ai/model-vram-budgeting": "b08d63b9f969e0e3",
   "ai/xml-prompting": "10c4804cd901a1a7",
@@ -2857,6 +2899,12 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"7817202230737953",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"979c71a00e7cebef",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"38e82d041553fdb7",
+"markets/krx-derivatives-contract-orders-and-daily-settlement":"1c9ed0f4cda5a094",
+"markets/portfolio-compression-risk-tolerances-and-records":"ef05d1b487b9533f",
+"markets/collateral-optimization-eligibility-haircuts-and-liquidity":"2070d4d2dfbc426d",
+"markets/ccp-default-management-hedging-auction-and-porting":"35205c38287785db",
+"markets/swaption-annuity-volatility-quotes-and-cube":"2aede1186920e4c0",
+"markets/derivatives-sales-records-access-retention-and-deletion":"5501a78d631b7ba2",
 "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control":"087a9f05150e5600",
 "philosophy-history/classical-india-pramana-self-and-liberation":"4bc84ed363f30015",
 "philosophy-history/colonial-modernity-race-and-decolonization":"c407c51fef396519",

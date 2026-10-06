@@ -672,5 +672,293 @@ export const marketsArticles: Article[] = [
   ],
       component: () => import("@/pages/articles/markets/derivatives/canada-hong-kong-switzerland-retail-derivatives-and-market-rules"),
     },
+  {
+      slug: "krx-derivatives-contract-orders-and-daily-settlement",
+      title: "지수 2포인트가 50만 원이 되는 길: KRX 계약·주문·일일정산",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 지수선물 1계약이 2포인트 내리면 장부에서 50만 원이 빠집니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 계약명세·주문·체결·청산의 네 장부를 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 330에서 328로 간 2포인트는 50만 원 손실입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 주문 1건이 우선순위와 일일정산을 거쳐 현금이 됩니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 주문이 체결됐다는 말과 계약이 끝났다는 말은 다릅니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 계약승수·주문조건·일일정산에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 지정가 매수에서 50만 원 출금까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. KRX 계약명세는 포인트를 현금으로 바꾸는 규칙을 정합니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. KRX는 시장가 외에도 남은 수량의 처리 조건을 구분합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 거래소 규격을 알아도 유동성과 급변 손실은 남습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/krx-derivatives-contract-orders-and-daily-settlement"),
+    },
+  {
+      slug: "portfolio-compression-risk-tolerances-and-records",
+      title: "총 명목 200을 0으로 줄여도 위험은 따로 잰다: 거래 압축",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 위험이 0인 스왑 세 건에도 명목원금 200이 남을 수 있습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 거래자료·허용오차·대체계약·법률효과를 따로 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 100−60−40=0이면 총 명목 200을 0으로 줄일 수 있습니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 장부 대사에서 종료 확인서까지 한 주기를 따라갑니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 총 명목을 줄여도 시장위험이 같은지는 따로 검사해야 합니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 압축 주기·위험 허용오차·총 명목 경계에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 세 거래를 종료하고 네 장부를 다시 맞춥니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CFTC 규칙은 압축을 종료와 대체를 통한 거래 감소로 설명합니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. BIS는 총 명목 감소만으로 위험 감소를 읽지 말라고 경계합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 압축은 부도 위험과 현금 부족을 없애지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/portfolio-compression-risk-tolerances-and-records"),
+    },
+  {
+      slug: "collateral-optimization-eligibility-haircuts-and-liquidity",
+      title: "담보 10을 가장 싸게 채우는 법: 적격성·할인율·유동성",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 같은 담보 10을 채워도 묶이는 자금 비용은 다릅니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 의무·자산·계약·유동성의 네 장부를 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 할인율 5%와 15%는 필요한 시장가를 10.53과 11.77로 바꿉니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 적격성 필터를 먼저 통과한 뒤 비용을 비교합니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 오늘 가장 싼 배정이 내일의 현금 부족을 만들 수 있습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 최소비용 담보·적격성 제약·유동성 완충에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. B를 5만 쓰고 나머지 5를 A로 채웁니다"
+    },
+    {
+      "id": "source",
+      "title": "8. BCBS·IOSCO는 적격성·할인율·집중·잘못된 방향을 함께 봅니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. ISDA 운영 지침은 계산 뒤 배정·교체·결제까지 잇습니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 최저비용 숫자는 법률·결제·시장 충격을 대신하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/collateral-optimization-eligibility-haircuts-and-liquidity"),
+    },
+  {
+      slug: "ccp-default-management-hedging-auction-and-porting",
+      title: "회원 부도 뒤 +80을 누가 떠안는가: CCP 헤지·경매·포지션 이전",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 회원이 부도나면 청산소는 +80의 민감도를 먼저 줄입니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 고객계정·부도 포트폴리오·시장·손실재원을 따로 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. +80에서 −60을 헤지하면 경매 전 잔여 민감도는 +20입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 부도 선언에서 장부를 다시 맞출 때까지 따라갑니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 많이 헤지할수록 안전하다는 규칙은 없습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 임시 헤지·부도 경매·고객 포지션 이전에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 잔여 +20을 경매하고 부족 손실을 규칙대로 배분합니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CPMI·IOSCO는 경매 설계와 사전 연습을 함께 다룹니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. PFMI는 부도 절차와 고객 포지션 이전을 별도 원칙으로 둡니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 경매 낙찰로 시스템 위험이 모두 사라지지는 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/ccp-default-management-hedging-auction-and-porting"),
+    },
+  {
+      slug: "swaption-annuity-volatility-quotes-and-cube",
+      title: "3개월×10년×+10bp를 찾는다: 스왑션 연금계수·호가형·큐브",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 3개월 뒤 10년 스왑을 고르는 권리는 세 좌표로 가격을 찾습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 곡선·연금계수·변동성 호가·보정의 네 칸을 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 10bp 차이는 명목 1억과 연금계수 8.5에서 85만 원입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 한 호가를 큐브 좌표에서 가격과 위험으로 바꿉니다"
+    },
+    {
+      "id": "need",
+      "title": "5. normal 70bp와 lognormal 20%는 같은 숫자표에 넣을 수 없습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 스왑 연금계수·변동성 호가형·스왑션 큐브에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 3개월×10년×+10bp 한 점을 평가 엔진에 넣습니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CME 자료는 만기·테너·moneyness 호가에서 전체 표면을 만듭니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. LSEG 큐브는 만기·스왑기간·행사가와 두 호가형을 함께 제공합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 매끈한 큐브가 거래 가능한 가격을 보장하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/swaption-annuity-volatility-quotes-and-cube"),
+    },
+  {
+      slug: "derivatives-sales-records-access-retention-and-deletion",
+      title: "18분 녹취만으로는 부족하다: 판매 기록·열람·보존·파기",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 18분 녹취가 있어도 누가 어떤 자료로 판단했는지는 비어 있을 수 있습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 판단 자료·통신·거래·보존 근거의 네 장부를 엽니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 14시10분 자료와 14시32분 주문 사이의 22분을 잇습니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 고객 입력에서 열람과 파기까지 한 줄로 추적합니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 오래 보관할수록 증거는 늘지만 개인정보 피해도 커집니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 판매기록 계보·열람 통제·보존과 파기 경계에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 18분 녹취를 주문과 묶고 열람 요청에 답합니다"
+    },
+    {
+      "id": "source",
+      "title": "8. 금융소비자보호법은 기록·변조 방지·열람을 한 조문에 둡니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 금융위원회 안내는 고난도 상품의 녹취와 숙려를 판매 흐름에 넣습니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 완전한 기록도 올바른 권유와 고객 이해를 자동 증명하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/derivatives-sales-records-access-retention-and-deletion"),
+    },
 
 ];

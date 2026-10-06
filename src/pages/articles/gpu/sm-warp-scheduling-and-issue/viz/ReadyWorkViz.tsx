@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 const names = ["A", "B", "C", "D"];
-export function makeWorkTimeline(firstRead: 4 | 8) {
+function makeWorkTimeline(firstRead: 4 | 8) {
   const readyAt = [1, 1, 1, 1];
   const issuedCount = [0, 0, 0, 0];
   return Array.from({ length: 6 }, (_, index) => {

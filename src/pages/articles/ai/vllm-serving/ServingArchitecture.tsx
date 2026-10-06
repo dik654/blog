@@ -1,6 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation";
 import EngineBoundaryViz from "./viz/EngineBoundaryViz";
 import ParallelLayoutViz from "./viz/ParallelLayoutViz";
 const LATENCY_TERMS = [
