@@ -126,6 +126,7 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   "mind-and-language": "philosophy",
   "philosophy-topics": "philosophy",
   "philosophical-traditions": "philosophy",
+  "philosophy-history": "philosophy",
 };
 
 /**

@@ -2382,6 +2382,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "캐나다·홍콩·스위스의 파생상품 고객 보호는 고객 지위, 복잡상품 여부와 제공 서비스라는 서로 다른 출발점에서 적용되므로 같은 손실 사례도 계약 법인·권유 여부·장내외 상품과 현재 관할 원문을 나눠 판단해야 합니다.",
     "sharedGate": "예치금 20×5배=노출 100에서 12% 하락 손실 12를 계산해 고객이 밝힌 손실 한도 10보다 2 큰지 확인합니다."
   },
+  "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "고대 지중해의 좋은 삶 논쟁은 믿음을 반례로 검사하고, 반복한 선택이 성품을 만든다고 보며, 책임질 행동과 통제할 수 없는 결과를 나누는 서로 다른 도구를 도시와 제국의 변화 속에서 발전시켰습니다.",
+    "sharedGate": "훈련 6시간·수면과 식사 계획 2시간·회복 2시간은 선수가 선택하지만 승리는 보장할 수 없습니다."
+  },
+  "philosophy-history/warring-states-china-care-ritual-and-standards": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "전국시대 중국의 사상 경쟁은 전쟁과 부족한 자원을 앞에 두고 누구의 이익을 셀지, 반복된 의례가 사람을 어떻게 기를지, 직책과 성과를 어떤 표준으로 묶을지를 둘러싼 통치 논쟁이었습니다.",
+    "sharedGate": "예산 100에서 군비 50→35와 큰 의례 20→10으로 남긴 25를 구제 20→40과 행정 10→15에 옮깁니다."
+  },
+  "philosophy-history/classical-india-pramana-self-and-liberation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "고전 인도 인식론은 지각·추론·비교·말이 언제 지식을 만드는지를 학파별로 다르게 분류하고, 오류 검사와 자아·고통·해탈에 관한 더 큰 논쟁에 연결했습니다.",
+    "sharedGate": "시장 개장 정보를 직접 본 안내문·지난 일정에서 한 추론·다른 시장과의 비교·관리자의 증언이라는 네 기록으로 검사합니다."
+  },
+  "philosophy-history/islamic-philosophy-translation-illumination-and-being": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "이슬람 철학사는 그리스어 문헌의 아랍어 번역에 머물지 않고 이븐 시나의 체계, 수흐라와르디의 조명 철학, 물라 사드라의 존재론처럼 논증·직관·경전 해석을 새로 결합한 장기 논쟁입니다.",
+    "sharedGate": "9세기 번역, 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다."
+  },
+  "philosophy-history/early-modern-europe-doubt-experience-and-causality": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "근대 유럽 철학은 새 과학과 종교·정치 변화 속에서 의심 가능한 믿음의 출발점, 반복 경험이 만드는 인과 기대, 객관적 사건 경험을 가능하게 하는 이해의 조건을 서로 다르게 설명했습니다.",
+    "sharedGate": "당구공 A가 B를 친 열 번 모두 B가 움직였지만 열한 번째의 논리적 필연까지 눈으로 본 것은 아닙니다."
+  },
+  "philosophy-history/colonial-modernity-race-and-decolonization": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "뒤부아와 파농은 인종·식민 질서가 자원과 권리만 배분하는 데 그치지 않고 타인의 시선을 통해 자기 이해와 행동 가능성을 만들며, 해방은 제도·문화·주체 형성을 함께 바꾸는 일이라고 분석했습니다.",
+    "sharedGate": "지원자 100명에게 같은 시험을 주지만 40명은 교육·언어·이동 조건에서 구조적 불이익을 겪었다고 놓고 형식적 동일성과 실제 조건을 나눕니다."
+  },
 };
 
 /**
@@ -2767,4 +2809,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"7817202230737953",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"979c71a00e7cebef",
 "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"38e82d041553fdb7",
+"philosophy-history/ancient-mediterranean-inquiry-virtue-and-control":"087a9f05150e5600",
+"philosophy-history/classical-india-pramana-self-and-liberation":"4bc84ed363f30015",
+"philosophy-history/colonial-modernity-race-and-decolonization":"c407c51fef396519",
+"philosophy-history/early-modern-europe-doubt-experience-and-causality":"7ad96448a6e9d797",
+"philosophy-history/islamic-philosophy-translation-illumination-and-being":"ac9d120c42d51df0",
+"philosophy-history/warring-states-china-care-ritual-and-standards":"b65407bf8fbc9e1d",
 };

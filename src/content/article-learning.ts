@@ -145132,4 +145132,1366 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control": {
+    "entryLevel": true,
+    "entryNote": "운동선수가 쓸 수 있는 10시간을 6·2·2로 나누고 승리라는 결과와 구분하는 사례에서 시작합니다.",
+    "coreIdea": "고대 지중해의 좋은 삶 논쟁은 믿음을 반례로 검사하고, 반복한 선택이 성품을 만든다고 보며, 책임질 행동과 통제할 수 없는 결과를 나누는 서로 다른 도구를 도시와 제국의 변화 속에서 발전시켰습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "socratic-elenchus",
+        "role": "소크라테스식 문답 검사을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "aristotelian-habituated-virtue",
+        "role": "아리스토텔레스의 습관화된 덕을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "stoic-control-distinction",
+        "role": "스토아의 통제 구분을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "socratic-elenchus",
+        "sectionId": "names",
+        "intuition": "상대가 내놓은 정의에서 질문과 반례로 모순 또는 앎의 한계를 드러내는 대화 방식입니다.",
+        "workedExample": "‘연습이 많을수록 좋다’는 말에 부상과 수면 부족을 반례로 냅니다.",
+        "boundary": "역사적 소크라테스의 정확한 발언을 모두 복원하는 방법은 아닙니다."
+      },
+      {
+        "id": "aristotelian-habituated-virtue",
+        "sectionId": "names",
+        "intuition": "좋은 선택을 반복하고 상황에 맞는 실천적 판단을 길러 좋은 삶을 이루는 성품 개념입니다.",
+        "workedExample": "용기만 밀어붙이지 않고 절제와 판단으로 6·2·2시간을 배분합니다.",
+        "boundary": "한 번의 승리나 사회적 평판을 덕과 같게 보지 않습니다."
+      },
+      {
+        "id": "stoic-control-distinction",
+        "sectionId": "names",
+        "intuition": "자신의 판단·의도·행동과 몸·평판·승리처럼 완전히 맡을 수 없는 결과를 나누는 훈련입니다.",
+        "workedExample": "훈련 계획은 고치되 상대의 경기와 날씨를 명령할 수는 없습니다.",
+        "boundary": "바꿀 수 있는 제도적 부당함까지 체념하라는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 소크라테스식 문답 검사",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "socratic-elenchus"
+        ]
+      },
+      {
+        "label": "2단계 · 아리스토텔레스의 습관화된 덕",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "aristotelian-habituated-virtue"
+        ]
+      },
+      {
+        "label": "3단계 · 스토아의 통제 구분",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "stoic-control-distinction"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "훈련 6시간·수면과 식사 계획 2시간·회복 2시간은 선수가 선택하지만 승리는 보장할 수 없습니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "소크라테스식 문답 검사의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "소크라테스식 문답 검사",
+          "‘연습이 많을수록 좋다’는 말에 부상과 수면 부족을 반례로 냅니다.",
+          "역사적 소크라테스의 정확한 발언을 모두 복원하는 방법은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "아리스토텔레스의 습관화된 덕의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "아리스토텔레스의 습관화된 덕",
+          "용기만 밀어붙이지 않고 절제와 판단으로 6·2·2시간을 배분합니다.",
+          "한 번의 승리나 사회적 평판을 덕과 같게 보지 않습니다."
+        ],
+        "requiredConcepts": [
+          "aristotelian-habituated-virtue"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "스토아의 통제 구분의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스토아의 통제 구분",
+          "훈련 계획은 고치되 상대의 경기와 날씨를 명령할 수는 없습니다.",
+          "바꿀 수 있는 제도적 부당함까지 체념하라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "stoic-control-distinction"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "MIT OpenCourseWare · Classics of Western Philosophy",
+          "플라톤·아리스토텔레스에서 근대 철학까지 질문·시대 변화·논증 훈련을 함께 두는 강의 범위를 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Ancient Ethical Theory",
+          "소크라테스부터 헬레니즘 학파까지 좋은 삶에 관한 이견과 역사 순서를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "stoic-control-distinction"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus",
+          "aristotelian-habituated-virtue",
+          "stoic-control-distinction"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus",
+          "aristotelian-habituated-virtue"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus",
+          "aristotelian-habituated-virtue",
+          "stoic-control-distinction"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "socratic-elenchus",
+          "aristotelian-habituated-virtue",
+          "stoic-control-distinction"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare · Classics of Western Philosophy",
+        "href": "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/pages/syllabus/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "플라톤·아리스토텔레스에서 근대 철학까지 질문·시대 변화·논증 훈련을 함께 두는 강의 범위를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Ancient Ethical Theory",
+        "href": "https://plato.stanford.edu/entries/ethics-ancient/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "소크라테스부터 헬레니즘 학파까지 좋은 삶에 관한 이견과 역사 순서를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/warring-states-china-care-ritual-and-standards": {
+    "entryLevel": true,
+    "entryNote": "전쟁 중인 나라의 군비·구제·의례·행정 예산 100을 다시 나누는 사례에서 시작합니다.",
+    "coreIdea": "전국시대 중국의 사상 경쟁은 전쟁과 부족한 자원을 앞에 두고 누구의 이익을 셀지, 반복된 의례가 사람을 어떻게 기를지, 직책과 성과를 어떤 표준으로 묶을지를 둘러싼 통치 논쟁이었습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "mohist-impartial-care",
+        "role": "묵가의 겸애을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "fa-administrative-standards",
+        "role": "행정 표준 fa을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "warring-states-philosophical-competition",
+        "role": "전국시대 사상 경쟁망을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "mohist-impartial-care",
+        "sectionId": "names",
+        "intuition": "자기 집단의 이익 때문에 다른 집과 나라를 해치지 않고 서로의 이익을 함께 고려하라는 묵가의 원리입니다.",
+        "workedExample": "공격 전쟁과 과도한 의례 비용을 줄여 구제에 20을 더합니다.",
+        "boundary": "가까운 사람에 대한 모든 감정을 똑같게 만들라는 명령은 아닙니다."
+      },
+      {
+        "id": "fa-administrative-standards",
+        "sectionId": "names",
+        "intuition": "관리의 말·성과·직책·상벌을 반복 가능한 기준에 맞춰 조직을 통제하는 전국시대의 행정 개념입니다.",
+        "workedExample": "구제 40이 실제 곡물과 의료로 전달됐는지 기준과 기록으로 확인합니다.",
+        "boundary": "군주 권력을 헌법으로 제한하는 현대 법치와 같은 뜻은 아닙니다."
+      },
+      {
+        "id": "warring-states-philosophical-competition",
+        "sectionId": "names",
+        "intuition": "유가·묵가·도가·법가로 후대에 분류된 저자와 문헌이 서로 비판하고 개념을 빌리며 통치 답안을 바꾼 논쟁망입니다.",
+        "workedExample": "같은 예산 100을 관계·공익·무위·표준이라는 다른 기준으로 평가합니다.",
+        "boundary": "당시 사상가가 네 개의 고정된 학교 중 하나에만 속했다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 묵가의 겸애",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "mohist-impartial-care"
+        ]
+      },
+      {
+        "label": "2단계 · 행정 표준 fa",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "fa-administrative-standards"
+        ]
+      },
+      {
+        "label": "3단계 · 전국시대 사상 경쟁망",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "warring-states-philosophical-competition"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "예산 100에서 군비 50→35와 큰 의례 20→10으로 남긴 25를 구제 20→40과 행정 10→15에 옮깁니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "묵가의 겸애의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "묵가의 겸애",
+          "공격 전쟁과 과도한 의례 비용을 줄여 구제에 20을 더합니다.",
+          "가까운 사람에 대한 모든 감정을 똑같게 만들라는 명령은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "행정 표준 fa의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "행정 표준 fa",
+          "구제 40이 실제 곡물과 의료로 전달됐는지 기준과 기록으로 확인합니다.",
+          "군주 권력을 헌법으로 제한하는 현대 법치와 같은 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "fa-administrative-standards"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "전국시대 사상 경쟁망의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "전국시대 사상 경쟁망",
+          "같은 예산 100을 관계·공익·무위·표준이라는 다른 기준으로 평가합니다.",
+          "당시 사상가가 네 개의 고정된 학교 중 하나에만 속했다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "warring-states-philosophical-competition"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Mohism",
+          "묵가의 겸애·비공·절용과 윤리·정치·논리의 연결을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Legalism in Chinese Philosophy",
+          "fa를 법률 하나로 번역하기 어려운 이유와 표준·기술·권세의 차이를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "warring-states-philosophical-competition"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care",
+          "fa-administrative-standards",
+          "warring-states-philosophical-competition"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care",
+          "fa-administrative-standards"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care",
+          "fa-administrative-standards",
+          "warring-states-philosophical-competition"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "mohist-impartial-care",
+          "fa-administrative-standards",
+          "warring-states-philosophical-competition"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Mohism",
+        "href": "https://plato.stanford.edu/entries/mohism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "묵가의 겸애·비공·절용과 윤리·정치·논리의 연결을 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Legalism in Chinese Philosophy",
+        "href": "https://plato.stanford.edu/entries/chinese-legalism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "fa를 법률 하나로 번역하기 어려운 이유와 표준·기술·권세의 차이를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/classical-india-pramana-self-and-liberation": {
+    "entryLevel": true,
+    "entryNote": "‘내일 시장이 열린다’는 한 문장을 뒷받침하는 네 기록이 독립된 지식 통로인지 묻는 사례에서 시작합니다.",
+    "coreIdea": "고전 인도 인식론은 지각·추론·비교·말이 언제 지식을 만드는지를 학파별로 다르게 분류하고, 오류 검사와 자아·고통·해탈에 관한 더 큰 논쟁에 연결했습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "pramana-epistemology",
+        "role": "프라마나 인식론을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "nyaya-four-pramanas",
+        "role": "나이야의 네 프라마나을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "buddhist-two-pramanas",
+        "role": "불교 인식론의 두 프라마나을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "pramana-epistemology",
+        "sectionId": "names",
+        "intuition": "믿음의 내용만이 아니라 그 믿음을 지식으로 만드는 신뢰할 만한 인식 통로와 오류 조건을 연구하는 인도 철학의 틀입니다.",
+        "workedExample": "시장 개장이라는 결론보다 안내문·추론·비교·증언이 각각 어떻게 작동했는지 봅니다.",
+        "boundary": "모든 학파가 같은 프라마나 목록이나 지식 정의를 받아들인 것은 아닙니다."
+      },
+      {
+        "id": "nyaya-four-pramanas",
+        "sectionId": "names",
+        "intuition": "나이야가 지각·추론·비교·신뢰할 만한 말의 네 통로를 서로 다른 지식 수단으로 인정하는 분류입니다.",
+        "workedExample": "네 시장 기록을 각각 지각·추론·비교·증언에 놓습니다.",
+        "boundary": "기록 네 개가 곧 네 개의 독립된 프라마나라는 뜻은 아니며 각 통로의 성립 조건을 따져야 합니다."
+      },
+      {
+        "id": "buddhist-two-pramanas",
+        "sectionId": "names",
+        "intuition": "디그나가와 다르마키르티 계열이 지각과 추론을 두 기본 지식 수단으로 두고 말과 비교를 추론 관계 안에서 설명하는 분류입니다.",
+        "workedExample": "관리자 증언도 말 자체의 별도 권위보다 말한 사람과 대상에 관한 추론으로 검사합니다.",
+        "boundary": "모든 불교 전통과 시대가 동일한 두 항목 이론을 썼다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 프라마나 인식론",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "pramana-epistemology"
+        ]
+      },
+      {
+        "label": "2단계 · 나이야의 네 프라마나",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "nyaya-four-pramanas"
+        ]
+      },
+      {
+        "label": "3단계 · 불교 인식론의 두 프라마나",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "buddhist-two-pramanas"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "시장 개장 정보를 직접 본 안내문·지난 일정에서 한 추론·다른 시장과의 비교·관리자의 증언이라는 네 기록으로 검사합니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "프라마나 인식론의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "프라마나 인식론",
+          "시장 개장이라는 결론보다 안내문·추론·비교·증언이 각각 어떻게 작동했는지 봅니다.",
+          "모든 학파가 같은 프라마나 목록이나 지식 정의를 받아들인 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "나이야의 네 프라마나의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "나이야의 네 프라마나",
+          "네 시장 기록을 각각 지각·추론·비교·증언에 놓습니다.",
+          "기록 네 개가 곧 네 개의 독립된 프라마나라는 뜻은 아니며 각 통로의 성립 조건을 따져야 합니다."
+        ],
+        "requiredConcepts": [
+          "nyaya-four-pramanas"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "불교 인식론의 두 프라마나의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "불교 인식론의 두 프라마나",
+          "관리자 증언도 말 자체의 별도 권위보다 말한 사람과 대상에 관한 추론으로 검사합니다.",
+          "모든 불교 전통과 시대가 동일한 두 항목 이론을 썼다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "buddhist-two-pramanas"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Epistemology in Classical Indian Philosophy",
+          "프라마나 논쟁의 긴 시간 범위와 학파별 지식 통로 분류를 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
+          "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "buddhist-two-pramanas"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology",
+          "nyaya-four-pramanas",
+          "buddhist-two-pramanas"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology",
+          "nyaya-four-pramanas"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology",
+          "nyaya-four-pramanas",
+          "buddhist-two-pramanas"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "pramana-epistemology",
+          "nyaya-four-pramanas",
+          "buddhist-two-pramanas"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Epistemology in Classical Indian Philosophy",
+        "href": "https://plato.stanford.edu/entries/epistemology-india/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "프라마나 논쟁의 긴 시간 범위와 학파별 지식 통로 분류를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
+        "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/islamic-philosophy-translation-illumination-and-being": {
+    "entryLevel": true,
+    "entryNote": "9·11·12·17세기의 네 정거장에서 번역된 개념이 반박과 종합을 거쳐 바뀌는 사례에서 시작합니다.",
+    "coreIdea": "이슬람 철학사는 그리스어 문헌의 아랍어 번역에 머물지 않고 이븐 시나의 체계, 수흐라와르디의 조명 철학, 물라 사드라의 존재론처럼 논증·직관·경전 해석을 새로 결합한 장기 논쟁입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "translation-commentary-chain",
+        "role": "번역·주석 사슬을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "illuminationist-knowledge",
+        "role": "조명 철학의 앎을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "primacy-of-existence",
+        "role": "존재의 우위을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "translation-commentary-chain",
+        "sectionId": "names",
+        "intuition": "문헌을 다른 언어로 옮긴 뒤 주석·요약·반박·재번역을 거치며 새 개념과 논쟁을 만드는 지식 이동 과정입니다.",
+        "workedExample": "그리스어 저작이 아랍어로 번역된 뒤 이븐 시나의 독자적 체계와 라틴어 독해의 재료가 됩니다.",
+        "boundary": "원문을 뜻 변화 없이 한 방향으로 복사한 단순 전달 과정은 아닙니다."
+      },
+      {
+        "id": "illuminationist-knowledge",
+        "sectionId": "names",
+        "intuition": "수흐라와르디 계열에서 논증과 함께 자기 현전과 빛의 위계로 앎과 실재를 설명하는 접근입니다.",
+        "workedExample": "어떤 것을 정의로 아는 일과 그것이 자신에게 직접 드러나는 일을 구분해 봅니다.",
+        "boundary": "논리를 버리고 개인 감정만 믿으라는 주장으로 줄일 수 없습니다."
+      },
+      {
+        "id": "primacy-of-existence",
+        "sectionId": "names",
+        "intuition": "물라 사드라의 철학에서 구체적으로 실재하는 것은 존재이고 본질은 마음이 구분한 방식이라고 보는 중심 주장입니다.",
+        "workedExample": "같은 ‘사람’ 본질로 묶인 개별 존재가 강도와 변화 속에서 실제로 존재하는 방식을 묻습니다.",
+        "boundary": "모든 이슬람 철학자가 공유한 교리나 서양 존재론의 단순 번역은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 번역·주석 사슬",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "translation-commentary-chain"
+        ]
+      },
+      {
+        "label": "2단계 · 조명 철학의 앎",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "illuminationist-knowledge"
+        ]
+      },
+      {
+        "label": "3단계 · 존재의 우위",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "primacy-of-existence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "9세기 번역, 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "번역·주석 사슬의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "번역·주석 사슬",
+          "그리스어 저작이 아랍어로 번역된 뒤 이븐 시나의 독자적 체계와 라틴어 독해의 재료가 됩니다.",
+          "원문을 뜻 변화 없이 한 방향으로 복사한 단순 전달 과정은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "조명 철학의 앎의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "조명 철학의 앎",
+          "어떤 것을 정의로 아는 일과 그것이 자신에게 직접 드러나는 일을 구분해 봅니다.",
+          "논리를 버리고 개인 감정만 믿으라는 주장으로 줄일 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "illuminationist-knowledge"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "존재의 우위의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "존재의 우위",
+          "같은 ‘사람’ 본질로 묶인 개별 존재가 강도와 변화 속에서 실제로 존재하는 방식을 묻습니다.",
+          "모든 이슬람 철학자가 공유한 교리나 서양 존재론의 단순 번역은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "primacy-of-existence"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Influence of Arabic and Islamic Philosophy on the Latin West",
+          "아랍어 철학이 라틴 서방의 논리·자연학·형이상학·심리학에 준 구체적 영향을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Mysticism in Arabic and Islamic Philosophy",
+          "논증과 직관의 결합, 수흐라와르디 이후 조명 철학의 전개를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "primacy-of-existence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain",
+          "illuminationist-knowledge",
+          "primacy-of-existence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain",
+          "illuminationist-knowledge"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain",
+          "illuminationist-knowledge",
+          "primacy-of-existence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "translation-commentary-chain",
+          "illuminationist-knowledge",
+          "primacy-of-existence"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Influence of Arabic and Islamic Philosophy on the Latin West",
+        "href": "https://plato.stanford.edu/entries/arabic-islamic-influence/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "아랍어 철학이 라틴 서방의 논리·자연학·형이상학·심리학에 준 구체적 영향을 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Mysticism in Arabic and Islamic Philosophy",
+        "href": "https://plato.stanford.edu/entries/arabic-islamic-mysticism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "논증과 직관의 결합, 수흐라와르디 이후 조명 철학의 전개를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/early-modern-europe-doubt-experience-and-causality": {
+    "entryLevel": true,
+    "entryNote": "당구공의 10회 관찰과 11번째 예측 사이에서 반복·필연·경험 조건을 나누는 사례에서 시작합니다.",
+    "coreIdea": "근대 유럽 철학은 새 과학과 종교·정치 변화 속에서 의심 가능한 믿음의 출발점, 반복 경험이 만드는 인과 기대, 객관적 사건 경험을 가능하게 하는 이해의 조건을 서로 다르게 설명했습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "methodic-doubt",
+        "role": "방법적 의심을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "causal-expectation-habit",
+        "role": "인과 기대의 습관을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "transcendental-causal-category",
+        "role": "선험적 인과 범주을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "methodic-doubt",
+        "sectionId": "names",
+        "intuition": "의심 가능한 믿음을 절차적으로 보류해 확실한 출발점과 그 정당화 범위를 찾는 방법입니다.",
+        "workedExample": "당구공 관찰이 꿈·기억·측정 오류일 가능성도 차례로 시험합니다.",
+        "boundary": "모든 믿음을 영원히 거부하는 생활 태도는 아닙니다."
+      },
+      {
+        "id": "causal-expectation-habit",
+        "sectionId": "names",
+        "intuition": "반복된 선후 관계가 다음에도 같은 사건이 이어질 것이라는 강한 기대를 마음에 만드는 흄의 설명입니다.",
+        "workedExample": "10/10으로 B가 움직인 뒤 11번째 움직임을 자연스럽게 예상합니다.",
+        "boundary": "과학적 모형과 실험적 개입이 쓸모없다는 결론은 아닙니다."
+      },
+      {
+        "id": "transcendental-causal-category",
+        "sectionId": "names",
+        "intuition": "사건을 주관적 인상 순서가 아니라 객관적 시간 순서로 경험하는 데 필요한 이해의 규칙이라는 칸트의 주장입니다.",
+        "workedExample": "충돌 뒤 움직임을 두 장면의 나열이 아니라 규칙에 따른 사건 관계로 판단합니다.",
+        "boundary": "구체적인 모든 자연 법칙을 경험 없이 미리 안다는 뜻은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 방법적 의심",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "methodic-doubt"
+        ]
+      },
+      {
+        "label": "2단계 · 인과 기대의 습관",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "causal-expectation-habit"
+        ]
+      },
+      {
+        "label": "3단계 · 선험적 인과 범주",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "transcendental-causal-category"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "당구공 A가 B를 친 열 번 모두 B가 움직였지만 열한 번째의 논리적 필연까지 눈으로 본 것은 아닙니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "방법적 의심의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "방법적 의심",
+          "당구공 관찰이 꿈·기억·측정 오류일 가능성도 차례로 시험합니다.",
+          "모든 믿음을 영원히 거부하는 생활 태도는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "methodic-doubt"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "인과 기대의 습관의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "인과 기대의 습관",
+          "10/10으로 B가 움직인 뒤 11번째 움직임을 자연스럽게 예상합니다.",
+          "과학적 모형과 실험적 개입이 쓸모없다는 결론은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "causal-expectation-habit"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "선험적 인과 범주의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "선험적 인과 범주",
+          "충돌 뒤 움직임을 두 장면의 나열이 아니라 규칙에 따른 사건 관계로 판단합니다.",
+          "구체적인 모든 자연 법칙을 경험 없이 미리 안다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "transcendental-causal-category"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "MIT OpenCourseWare · Classics of Western Philosophy",
+          "데카르트·캐번디시·흄·칸트를 읽으며 지식·마음·과학의 시대 변화를 다루는 과정 범위를 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Kant and Hume on Causality",
+          "흄의 인과 비판과 칸트의 답 사이에 남는 연대·문헌·해석 쟁점을 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "transcendental-causal-category"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt",
+          "causal-expectation-habit",
+          "transcendental-causal-category"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt",
+          "causal-expectation-habit"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt",
+          "causal-expectation-habit",
+          "transcendental-causal-category"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "methodic-doubt",
+          "causal-expectation-habit",
+          "transcendental-causal-category"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT OpenCourseWare · Classics of Western Philosophy",
+        "href": "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/pages/syllabus/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "데카르트·캐번디시·흄·칸트를 읽으며 지식·마음·과학의 시대 변화를 다루는 과정 범위를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Kant and Hume on Causality",
+        "href": "https://plato.stanford.edu/entries/kant-hume-causality/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "흄의 인과 비판과 칸트의 답 사이에 남는 연대·문헌·해석 쟁점을 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/colonial-modernity-race-and-decolonization": {
+    "entryLevel": true,
+    "entryNote": "같은 시험을 보는 지원자 100명 가운데 40명의 준비 조건이 달랐던 사례에서 시작합니다.",
+    "coreIdea": "뒤부아와 파농은 인종·식민 질서가 자원과 권리만 배분하는 데 그치지 않고 타인의 시선을 통해 자기 이해와 행동 가능성을 만들며, 해방은 제도·문화·주체 형성을 함께 바꾸는 일이라고 분석했습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "double-consciousness",
+        "role": "이중의식을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "colonial-subject-formation",
+        "role": "식민 주체 형성을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "decolonial-practice",
+        "role": "탈식민 실천을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "double-consciousness",
+        "sectionId": "names",
+        "intuition": "억압받는 집단의 사람이 자기 눈과 지배 사회가 자신을 보는 눈을 동시에 의식하며 생기는 갈등과 통찰을 가리키는 뒤부아의 개념입니다.",
+        "workedExample": "지원자가 자기 능력을 보면서도 평가자가 인종화한 고정관념으로 자신을 볼 가능성을 함께 계산합니다.",
+        "boundary": "두 문화에 속한 모든 사람의 보편적 심리나 의학적 진단은 아닙니다."
+      },
+      {
+        "id": "colonial-subject-formation",
+        "sectionId": "names",
+        "intuition": "식민 법·교육·언어·공간·폭력과 타인의 시선이 피지배자의 몸과 자기 이해, 행동 가능성을 길들이는 과정입니다.",
+        "workedExample": "같은 시험 규칙 이전에 교육 언어와 접근 기회가 40명의 준비 조건을 다르게 만듭니다.",
+        "boundary": "개인의 생각이 외부 권력에 의해 기계적으로 완전히 결정된다는 뜻은 아닙니다."
+      },
+      {
+        "id": "decolonial-practice",
+        "sectionId": "names",
+        "intuition": "독립 선언을 넘어 식민 통치가 남긴 제도·지식·문화·자기 이해의 관계를 바꾸는 집단적 작업입니다.",
+        "workedExample": "시험 문항만 고치는 데서 끝내지 않고 교육 접근·언어 선택·평가 권한과 이의 절차를 함께 바꿉니다.",
+        "boundary": "모든 식민 경험에 적용되는 하나의 고정된 처방은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 이중의식",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "double-consciousness"
+        ]
+      },
+      {
+        "label": "2단계 · 식민 주체 형성",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "colonial-subject-formation"
+        ]
+      },
+      {
+        "label": "3단계 · 탈식민 실천",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·제도·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "decolonial-practice"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "지원자 100명에게 같은 시험을 주지만 40명은 교육·언어·이동 조건에서 구조적 불이익을 겪었다고 놓고 형식적 동일성과 실제 조건을 나눕니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "행동 또는 판단의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "double-consciousness"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "이중의식의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "이중의식",
+          "지원자가 자기 능력을 보면서도 평가자가 인종화한 고정관념으로 자신을 볼 가능성을 함께 계산합니다.",
+          "두 문화에 속한 모든 사람의 보편적 심리나 의학적 진단은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "double-consciousness"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "식민 주체 형성의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "식민 주체 형성",
+          "같은 시험 규칙 이전에 교육 언어와 접근 기회가 40명의 준비 조건을 다르게 만듭니다.",
+          "개인의 생각이 외부 권력에 의해 기계적으로 완전히 결정된다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "colonial-subject-formation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "탈식민 실천의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "탈식민 실천",
+          "시험 문항만 고치는 데서 끝내지 않고 교육 접근·언어 선택·평가 권한과 이의 절차를 함께 바꿉니다.",
+          "모든 식민 경험에 적용되는 하나의 고정된 처방은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "decolonial-practice"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 그 자료에서 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Double Consciousness",
+          "뒤부아의 이중의식이 억압적 사회 환경과 자기 이해의 관계를 설명하는 개념임을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "double-consciousness"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Colonialism",
+          "식민 통치의 정당화·인종화·경제 구조와 탈식민 정치철학의 넓은 범위를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "decolonial-practice"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "double-consciousness",
+          "colonial-subject-formation",
+          "decolonial-practice"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 강의 또는 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "double-consciousness",
+          "colonial-subject-formation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "double-consciousness",
+          "colonial-subject-formation",
+          "decolonial-practice"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "double-consciousness",
+          "colonial-subject-formation",
+          "decolonial-practice"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Double Consciousness",
+        "href": "https://plato.stanford.edu/entries/double-consciousness/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "뒤부아의 이중의식이 억압적 사회 환경과 자기 이해의 관계를 설명하는 개념임을 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Colonialism",
+        "href": "https://plato.stanford.edu/entries/colonialism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌·강의 범위에서 확인할지 정합니다.",
+        "contribution": "식민 통치의 정당화·인종화·경제 구조와 탈식민 정치철학의 넓은 범위를 확인합니다.",
+        "assumptions": "대학 강의와 학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };
