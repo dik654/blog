@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-327.json",
+  "publicArticles": 877,
+  "addedRoutes": [
+    "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control",
+    "philosophy-history/warring-states-china-care-ritual-and-standards",
+    "philosophy-history/classical-india-pramana-self-and-liberation",
+    "philosophy-history/islamic-philosophy-translation-illumination-and-being",
+    "philosophy-history/early-modern-europe-doubt-experience-and-causality",
+    "philosophy-history/colonial-modernity-race-and-decolonization"
+  ],
+  "reviewed": 333,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive philosophy-history articles added after checkpoint 327; 291 substantive rewrites/additions and 42 retained teaching flows in total. The batch establishes a first cross-regional time axis without turning Mediterranean, Chinese, Indian, Islamic, European and colonial thought into one civilizational ladder.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "A 10-hour training plan is split 6+2+2 while victory remains uncontrolled; a budget of 100 moves 25 from military and ceremony into relief and administration; four market-opening records are classified under rival pramana schemes; four Islamic-philosophy stations connect the 9th, 11th, 12th and 17th centuries; ten observed billiard impacts do not logically entail the eleventh; 40 of 100 applicants face unequal preparation conditions. Every number is marked as an explanatory case rather than a historical measurement.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/philosophy-history/2026-10-06T21-00-20-876Z/summary.json.",
+    "learning": "PASS 877 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 9.67s, 7,224 transformed modules and 1,858 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,068 concepts, 6,375 relations, 877 registered articles and zero invariants; 18 new concepts were added and existing virtue ethics, Confucian ritual, early Buddhist experience, Islamic causation and postcolonial development routes were linked through editorial boundaries rather than redefined; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 877-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 877 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 461 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero findings on the six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment and production browser verification.",
+    "curriculumCoverage": "MIT 24.01 supplied a historical reading and argument sequence; Yale PHIL 181 supplied the good-life, morality, justice and legitimacy frame. Stanford Encyclopedia entries supplied the tradition-specific scholarly boundaries. Remaining explicit gaps include medieval Latin and Jewish philosophy, Song-Ming Neo-Confucianism, later Indian schools, nineteenth- and twentieth-century analytic and continental philosophy, feminist, Indigenous and Latin American philosophy, metaethics and applied ethics."
+  }
+}

@@ -30675,6 +30675,209 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "주문 실행·개별 자문·포트폴리오 관리 등 제공 서비스에 맞춰 고객의 지식·경험 또는 재무상황·투자목표를 확인하는 구조입니다.",
     "canonicalHref": "/finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules#names"
   },
+  "socratic-elenchus": {
+    "id": "socratic-elenchus",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "소크라테스식 문답 검사",
+    "aliases": [
+      "Socratic elenchus"
+    ],
+    "definition": "상대가 내놓은 정의에서 질문과 반례로 모순 또는 앎의 한계를 드러내는 대화 방식입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/ancient-mediterranean-inquiry-virtue-and-control#names"
+  },
+  "aristotelian-habituated-virtue": {
+    "id": "aristotelian-habituated-virtue",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "아리스토텔레스의 습관화된 덕",
+    "aliases": [
+      "habituated virtue"
+    ],
+    "definition": "좋은 선택을 반복하고 상황에 맞는 실천적 판단을 길러 좋은 삶을 이루는 성품 개념입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/ancient-mediterranean-inquiry-virtue-and-control#names"
+  },
+  "stoic-control-distinction": {
+    "id": "stoic-control-distinction",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "스토아의 통제 구분",
+    "aliases": [
+      "Stoic dichotomy of control"
+    ],
+    "definition": "자신의 판단·의도·행동과 몸·평판·승리처럼 완전히 맡을 수 없는 결과를 나누는 훈련입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/ancient-mediterranean-inquiry-virtue-and-control#names"
+  },
+  "mohist-impartial-care": {
+    "id": "mohist-impartial-care",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "묵가의 겸애",
+    "aliases": [
+      "jian ai",
+      "impartial care"
+    ],
+    "definition": "자기 집단의 이익 때문에 다른 집과 나라를 해치지 않고 서로의 이익을 함께 고려하라는 묵가의 원리입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/warring-states-china-care-ritual-and-standards#names"
+  },
+  "fa-administrative-standards": {
+    "id": "fa-administrative-standards",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "행정 표준 fa",
+    "aliases": [
+      "fa",
+      "administrative standards"
+    ],
+    "definition": "관리의 말·성과·직책·상벌을 반복 가능한 기준에 맞춰 조직을 통제하는 전국시대의 행정 개념입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/warring-states-china-care-ritual-and-standards#names"
+  },
+  "warring-states-philosophical-competition": {
+    "id": "warring-states-philosophical-competition",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "전국시대 사상 경쟁망",
+    "aliases": [
+      "Warring States philosophical competition"
+    ],
+    "definition": "유가·묵가·도가·법가로 후대에 분류된 저자와 문헌이 서로 비판하고 개념을 빌리며 통치 답안을 바꾼 논쟁망입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/warring-states-china-care-ritual-and-standards#names"
+  },
+  "pramana-epistemology": {
+    "id": "pramana-epistemology",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "프라마나 인식론",
+    "aliases": [
+      "pramāṇa"
+    ],
+    "definition": "믿음의 내용만이 아니라 그 믿음을 지식으로 만드는 신뢰할 만한 인식 통로와 오류 조건을 연구하는 인도 철학의 틀입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/classical-india-pramana-self-and-liberation#names"
+  },
+  "nyaya-four-pramanas": {
+    "id": "nyaya-four-pramanas",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "나이야의 네 프라마나",
+    "aliases": [
+      "Nyāya four pramāṇas"
+    ],
+    "definition": "나이야가 지각·추론·비교·신뢰할 만한 말의 네 통로를 서로 다른 지식 수단으로 인정하는 분류입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/classical-india-pramana-self-and-liberation#names"
+  },
+  "buddhist-two-pramanas": {
+    "id": "buddhist-two-pramanas",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "불교 인식론의 두 프라마나",
+    "aliases": [
+      "Buddhist two pramāṇas"
+    ],
+    "definition": "디그나가와 다르마키르티 계열이 지각과 추론을 두 기본 지식 수단으로 두고 말과 비교를 추론 관계 안에서 설명하는 분류입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/classical-india-pramana-self-and-liberation#names"
+  },
+  "translation-commentary-chain": {
+    "id": "translation-commentary-chain",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "번역·주석 사슬",
+    "aliases": [
+      "translation-commentary chain"
+    ],
+    "definition": "문헌을 다른 언어로 옮긴 뒤 주석·요약·반박·재번역을 거치며 새 개념과 논쟁을 만드는 지식 이동 과정입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being#names"
+  },
+  "illuminationist-knowledge": {
+    "id": "illuminationist-knowledge",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "조명 철학의 앎",
+    "aliases": [
+      "Illuminationism",
+      "ishrāq"
+    ],
+    "definition": "수흐라와르디 계열에서 논증과 함께 자기 현전과 빛의 위계로 앎과 실재를 설명하는 접근입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being#names"
+  },
+  "primacy-of-existence": {
+    "id": "primacy-of-existence",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "존재의 우위",
+    "aliases": [
+      "primacy of existence",
+      "aṣālat al-wujūd"
+    ],
+    "definition": "물라 사드라의 철학에서 구체적으로 실재하는 것은 존재이고 본질은 마음이 구분한 방식이라고 보는 중심 주장입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being#names"
+  },
+  "methodic-doubt": {
+    "id": "methodic-doubt",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "방법적 의심",
+    "aliases": [
+      "methodic doubt"
+    ],
+    "definition": "의심 가능한 믿음을 절차적으로 보류해 확실한 출발점과 그 정당화 범위를 찾는 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality#names"
+  },
+  "causal-expectation-habit": {
+    "id": "causal-expectation-habit",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "인과 기대의 습관",
+    "aliases": [
+      "causal habit",
+      "custom"
+    ],
+    "definition": "반복된 선후 관계가 다음에도 같은 사건이 이어질 것이라는 강한 기대를 마음에 만드는 흄의 설명입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality#names"
+  },
+  "transcendental-causal-category": {
+    "id": "transcendental-causal-category",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "선험적 인과 범주",
+    "aliases": [
+      "category of causality"
+    ],
+    "definition": "사건을 주관적 인상 순서가 아니라 객관적 시간 순서로 경험하는 데 필요한 이해의 규칙이라는 칸트의 주장입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality#names"
+  },
+  "double-consciousness": {
+    "id": "double-consciousness",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "이중의식",
+    "aliases": [
+      "double consciousness"
+    ],
+    "definition": "억압받는 집단의 사람이 자기 눈과 지배 사회가 자신을 보는 눈을 동시에 의식하며 생기는 갈등과 통찰을 가리키는 뒤부아의 개념입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
+  },
+  "colonial-subject-formation": {
+    "id": "colonial-subject-formation",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "식민 주체 형성",
+    "aliases": [
+      "colonial subject formation"
+    ],
+    "definition": "식민 법·교육·언어·공간·폭력과 타인의 시선이 피지배자의 몸과 자기 이해, 행동 가능성을 길들이는 과정입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
+  },
+  "decolonial-practice": {
+    "id": "decolonial-practice",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "탈식민 실천",
+    "aliases": [
+      "decolonial practice"
+    ],
+    "definition": "독립 선언을 넘어 식민 통치가 남긴 제도·지식·문화·자기 이해의 관계를 바꾸는 집단적 작업입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -55529,6 +55732,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "switzerland-service-level-client-test",
     "relation": "produces",
     "reason": "hong-kong-complex-derivative-classification의 판단을 switzerland-service-level-client-test의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "socratic-elenchus",
+    "to": "aristotelian-habituated-virtue",
+    "relation": "extends",
+    "reason": "좋은 삶을 누가 판단하는가: 고대 지중해의 문답·덕·통제에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "aristotelian-habituated-virtue",
+    "to": "stoic-control-distinction",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "socratic-elenchus",
+    "to": "stoic-control-distinction",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "mohist-impartial-care",
+    "to": "fa-administrative-standards",
+    "relation": "extends",
+    "reason": "전쟁을 줄일 기준은 무엇인가: 전국시대 중국의 겸애·예·법에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "fa-administrative-standards",
+    "to": "warring-states-philosophical-competition",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "mohist-impartial-care",
+    "to": "warring-states-philosophical-competition",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "pramana-epistemology",
+    "to": "nyaya-four-pramanas",
+    "relation": "extends",
+    "reason": "무엇이 지식이 되는가: 고전 인도의 프라마나·자아·해탈 논쟁에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "nyaya-four-pramanas",
+    "to": "buddhist-two-pramanas",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "pramana-epistemology",
+    "to": "buddhist-two-pramanas",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "translation-commentary-chain",
+    "to": "illuminationist-knowledge",
+    "relation": "extends",
+    "reason": "번역은 끝이 아니라 새 논쟁의 시작이었다: 이슬람 철학의 존재·빛·종합에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "illuminationist-knowledge",
+    "to": "primacy-of-existence",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "translation-commentary-chain",
+    "to": "primacy-of-existence",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "methodic-doubt",
+    "to": "causal-expectation-habit",
+    "relation": "extends",
+    "reason": "확실성에서 경험의 조건까지: 근대 유럽의 의심·인과·마음에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "causal-expectation-habit",
+    "to": "transcendental-causal-category",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "methodic-doubt",
+    "to": "transcendental-causal-category",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "double-consciousness",
+    "to": "colonial-subject-formation",
+    "relation": "extends",
+    "reason": "식민 질서는 사람의 자기 인식까지 바꾼다: 뒤부아·파농과 탈식민 철학에서 첫 구분을 개인의 판단과 반복되는 실천 또는 제도의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "colonial-subject-formation",
+    "to": "decolonial-practice",
+    "relation": "extends",
+    "reason": "같은 사례에서 두 번째 구분만으로 설명되지 않는 역사적 변화와 반론을 세 번째 개념으로 확장합니다."
+  },
+  {
+    "from": "double-consciousness",
+    "to": "decolonial-practice",
+    "relation": "contrasts",
+    "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
   },
 ];
 

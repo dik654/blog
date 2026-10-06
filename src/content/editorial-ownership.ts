@@ -16977,6 +16977,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "ancient-mediterranean-inquiry-virtue-and-control": {
+    "title": "좋은 삶을 누가 판단하는가: 고대 지중해의 문답·덕·통제 글이 소유하는 범위",
+    "owns": [
+      "고대 지중해의 문답·덕·통제를 10시간 사례에 적용하는 구분",
+      "아테네 시민 철학에서 헬레니즘 생활 훈련까지의 시간 이동",
+      "고대 윤리를 하나의 학설로 합치지 않는 비교 경계"
+    ],
+    "reuses": [
+      {
+        "label": "덕 윤리적 판단",
+        "href": "/philosophy/ethics/consequence-duty-and-character#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "warring-states-china-care-ritual-and-standards": {
+    "title": "전쟁을 줄일 기준은 무엇인가: 전국시대 중국의 겸애·예·법 글이 소유하는 범위",
+    "owns": [
+      "전국시대 예산 100의 경쟁 배분",
+      "겸애·유가의 예·행정 표준을 서로 다른 통치 기준으로 비교하는 일",
+      "법가와 현대 법치를 구분하는 번역 경계"
+    ],
+    "reuses": [
+      {
+        "label": "유가의 예",
+        "href": "/philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "classical-india-pramana-self-and-liberation": {
+    "title": "무엇이 지식이 되는가: 고전 인도의 프라마나·자아·해탈 논쟁 글이 소유하는 범위",
+    "owns": [
+      "시장 개장 정보 네 기록의 프라마나 분류",
+      "나이야의 네 통로와 불교 인식론의 두 통로 비교",
+      "인식론과 자아·고통·해탈 논쟁을 연결하되 같게 만들지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "초기 불교의 경험 분석",
+        "href": "/philosophy/philosophical-traditions/buddhist-aggregates-impermanence-and-not-self#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "islamic-philosophy-translation-illumination-and-being": {
+    "title": "번역은 끝이 아니라 새 논쟁의 시작이었다: 이슬람 철학의 존재·빛·종합 글이 소유하는 범위",
+    "owns": [
+      "9세기에서 17세기까지 네 정거장으로 본 이슬람 철학의 지속",
+      "번역·주석과 조명 철학·존재론의 관계",
+      "라틴 서방에 준 영향과 이슬람 철학 자체의 내적 전개를 구분하는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "이슬람 철학의 인과 논쟁",
+        "href": "/philosophy/philosophical-traditions/islamic-causation-reason-and-revelation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "early-modern-europe-doubt-experience-and-causality": {
+    "title": "확실성에서 경험의 조건까지: 근대 유럽의 의심·인과·마음 글이 소유하는 범위",
+    "owns": [
+      "당구공 10회 관찰과 11번째 기대의 구분",
+      "방법적 의심·인과 습관·선험적 인과 범주의 기능 비교",
+      "합리론 대 경험론 도식이 가리는 여성 철학자·제국·과학의 조건"
+    ],
+    "reuses": [
+      {
+        "label": "이슬람 철학의 인과 논쟁",
+        "href": "/philosophy/philosophical-traditions/islamic-causation-reason-and-revelation#case"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "colonial-modernity-race-and-decolonization": {
+    "title": "식민 질서는 사람의 자기 인식까지 바꾼다: 뒤부아·파농과 탈식민 철학 글이 소유하는 범위",
+    "owns": [
+      "지원자 100명과 불리한 조건 40명의 설명용 사례",
+      "이중의식에서 식민 주체 형성과 탈식민 실천으로 이어지는 되먹임",
+      "뒤부아와 파농의 분석을 모든 식민 경험의 단일 목소리로 일반화하지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "탈식민 개발 질서",
+        "href": "/history/global-history/cold-war-decolonization-and-globalization#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "대학 강의와 학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·예산·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

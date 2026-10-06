@@ -49,6 +49,20 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
     featuredArticles: ["confucian-ritual-role-and-humane-rule", "daoist-names-noncoercive-action-and-change", "buddhist-aggregates-impermanence-and-not-self", "gita-action-results-and-release", "islamic-causation-reason-and-revelation", "akan-personhood-community-and-agency"],
   },
+  "philosophy-history": {
+    organizingPrinciple: "혼합",
+    title: "여섯 지역과 시대에서 철학의 질문이 바뀐 경로",
+    description: "한 문명이 다음 문명으로 발전했다는 한 줄 연표 대신, 도시·전쟁·번역·과학·식민 통치가 서로 다른 지역의 질문과 논증을 어떻게 바꿨는지 시간순으로 교차해 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 기원전 5세기~서기 2세기", title: "고대 지중해의 문답·덕·통제", description: "운동선수의 10시간을 나누며 아테네의 시민 문답에서 헬레니즘 시대의 생활 훈련까지 이동합니다.", subcategories: ["philosophy-history-ancient-mediterranean"] },
+      { eyebrow: "02 · 기원전 5~3세기", title: "전국시대 중국의 경쟁하는 통치 기준", description: "전쟁 중인 나라의 예산 100을 겸애·예·행정 표준이 어떻게 다르게 배분하는지 봅니다.", subcategories: ["philosophy-history-warring-states"] },
+      { eyebrow: "03 · 기원전 말기~서기 12세기", title: "고전 인도의 지식 통로 논쟁", description: "시장 개장 정보 네 가지를 놓고 나이야와 불교 인식론이 지각·추론·말을 어떻게 분류했는지 추적합니다.", subcategories: ["philosophy-history-classical-india"] },
+      { eyebrow: "04 · 9~17세기", title: "이슬람 철학의 번역·빛·존재", description: "바그다드의 번역과 이븐 시나의 체계에서 수흐라와르디와 물라 사드라의 새 종합까지 네 정거장을 잇습니다.", subcategories: ["philosophy-history-islamic"] },
+      { eyebrow: "05 · 17~18세기", title: "근대 유럽의 의심·경험·인과", description: "당구공의 관찰 10회에서 데카르트·흄·칸트가 지식의 출발과 경험의 조건을 어떻게 달리 물었는지 봅니다.", subcategories: ["philosophy-history-early-modern"] },
+      { eyebrow: "06 · 19세기 말~20세기", title: "식민 근대의 시선과 탈식민", description: "같은 시험을 보는 100명의 서로 다른 조건에서 뒤부아와 파농이 인종 질서·자기 인식·해방을 연결한 방식을 봅니다.", subcategories: ["philosophy-history-colonial-modernity"] },
+    ],
+    featuredArticles: ["ancient-mediterranean-inquiry-virtue-and-control", "warring-states-china-care-ritual-and-standards", "classical-india-pramana-self-and-liberation", "islamic-philosophy-translation-illumination-and-being", "early-modern-europe-doubt-experience-and-causality", "colonial-modernity-race-and-decolonization"],
+  },
   "global-history": {
     organizingPrinciple: "시간순",
     title: "제국의 도로에서 탈식민과 세계화까지",

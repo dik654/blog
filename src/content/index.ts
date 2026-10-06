@@ -46,6 +46,7 @@ import philosophyOfScience from "./philosophy-of-science";
 import mindAndLanguage from "./mind-and-language";
 import philosophyTopics from "./philosophy-topics";
 import philosophicalTraditions from "./philosophical-traditions";
+import philosophyHistory from "./philosophy-history";
 import circuits from "./circuits";
 import semiconductors from "./semiconductors";
 import devices from "./devices";
@@ -95,6 +96,7 @@ export const categories = [
   mindAndLanguage,
   philosophyTopics,
   philosophicalTraditions,
+  philosophyHistory,
   circuits,
   semiconductors,
   devices,

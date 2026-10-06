@@ -12814,4 +12814,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "재무상황·목표·지식·경험과 추천 전 검사·기록을 확인합니다."
     }
   ],
+  "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OpenCourseWare · Classics of Western Philosophy",
+      "href": "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/pages/syllabus/",
+      "note": "플라톤·아리스토텔레스에서 근대 철학까지 질문·시대 변화·논증 훈련을 함께 두는 강의 범위를 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Ancient Ethical Theory",
+      "href": "https://plato.stanford.edu/entries/ethics-ancient/",
+      "note": "소크라테스부터 헬레니즘 학파까지 좋은 삶에 관한 이견과 역사 순서를 확인합니다."
+    }
+  ],
+  "philosophy-history/warring-states-china-care-ritual-and-standards": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Mohism",
+      "href": "https://plato.stanford.edu/entries/mohism/",
+      "note": "묵가의 겸애·비공·절용과 윤리·정치·논리의 연결을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Legalism in Chinese Philosophy",
+      "href": "https://plato.stanford.edu/entries/chinese-legalism/",
+      "note": "fa를 법률 하나로 번역하기 어려운 이유와 표준·기술·권세의 차이를 확인합니다."
+    }
+  ],
+  "philosophy-history/classical-india-pramana-self-and-liberation": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Epistemology in Classical Indian Philosophy",
+      "href": "https://plato.stanford.edu/entries/epistemology-india/",
+      "note": "프라마나 논쟁의 긴 시간 범위와 학파별 지식 통로 분류를 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
+      "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+      "note": "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다."
+    }
+  ],
+  "philosophy-history/islamic-philosophy-translation-illumination-and-being": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Influence of Arabic and Islamic Philosophy on the Latin West",
+      "href": "https://plato.stanford.edu/entries/arabic-islamic-influence/",
+      "note": "아랍어 철학이 라틴 서방의 논리·자연학·형이상학·심리학에 준 구체적 영향을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Mysticism in Arabic and Islamic Philosophy",
+      "href": "https://plato.stanford.edu/entries/arabic-islamic-mysticism/",
+      "note": "논증과 직관의 결합, 수흐라와르디 이후 조명 철학의 전개를 확인합니다."
+    }
+  ],
+  "philosophy-history/early-modern-europe-doubt-experience-and-causality": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT OpenCourseWare · Classics of Western Philosophy",
+      "href": "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/pages/syllabus/",
+      "note": "데카르트·캐번디시·흄·칸트를 읽으며 지식·마음·과학의 시대 변화를 다루는 과정 범위를 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Kant and Hume on Causality",
+      "href": "https://plato.stanford.edu/entries/kant-hume-causality/",
+      "note": "흄의 인과 비판과 칸트의 답 사이에 남는 연대·문헌·해석 쟁점을 확인합니다."
+    }
+  ],
+  "philosophy-history/colonial-modernity-race-and-decolonization": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Double Consciousness",
+      "href": "https://plato.stanford.edu/entries/double-consciousness/",
+      "note": "뒤부아의 이중의식이 억압적 사회 환경과 자기 이해의 관계를 설명하는 개념임을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Colonialism",
+      "href": "https://plato.stanford.edu/entries/colonialism/",
+      "note": "식민 통치의 정당화·인종화·경제 구조와 탈식민 정치철학의 넓은 범위를 확인합니다."
+    }
+  ],
 };
