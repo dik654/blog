@@ -960,5 +960,293 @@ export const marketsArticles: Article[] = [
   ],
       component: () => import("@/pages/articles/markets/derivatives/derivatives-sales-records-access-retention-and-deletion"),
     },
+  {
+      slug: "equity-dispersion-implied-correlation-and-variance",
+      title: "20% 두 개가 지수 17.32%가 되는 이유: 디스퍼전·내재상관·분산",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 두 종목이 함께 움직일수록 지수의 흔들림도 커집니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 종목의 흔들림·함께 움직임·지수 가중치·옵션 장부를 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 상관 0이면 14.14%, 0.5이면 17.32%입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 두 종목의 화살표가 지수 한 칸으로 모이는 모습을 그립니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 0.04와 0.03의 차이가 그대로 수익이 되지는 않습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 내재 평균상관·분산 디스퍼전·상관 표면에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 20% 두 개와 지수 17.32%를 실제 거래 장부로 옮깁니다"
+    },
+    {
+      "id": "source",
+      "title": "8. Cboe 식은 지수 분산에서 개별 분산을 빼 상관을 거꾸로 풉니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. Cboe는 디스퍼전을 구성 종목 분산과 포트폴리오 분산의 차이로 설명합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 하나의 평균상관은 위기 때의 꼬리 동조화를 숨길 수 있습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/equity-dispersion-implied-correlation-and-variance"),
+    },
+  {
+      slug: "credit-tranche-base-correlation-and-default-auction",
+      title: "손실 7이 어느 구간을 지우는가: 신용 트랜치·베이스 상관·부도 경매",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 포트폴리오 손실 7은 앞의 두 구간을 모두 지웁니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 회사별 부도·포트폴리오 손실·계약 구간·결제 가격을 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 손실 7이면 0~3은 3, 3~7은 4, 7~10은 0을 냅니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 손실 물이 낮은 구간부터 차오르고 경매 가격으로 현금이 됩니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 평균 부도확률만으로 위 구간의 위험을 계산할 수 없습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 손실 트랜치·베이스 상관·CDS 경매 최종가격에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 손실 7과 최종가격 35를 계약 장부 끝까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. BIS는 베이스 상관을 0부터 각 끝점까지의 가격 맞춤값으로 설명합니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. ISDA 절차는 신용사건 판단과 경매 결제를 표준 흐름으로 묶습니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 베이스 상관 곡선은 일관된 공동부도 확률표가 아닙니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/credit-tranche-base-correlation-and-default-auction"),
+    },
+  {
+      slug: "commodity-grades-location-basis-and-physical-delivery",
+      title: "옥수수 5,000부셸이 실제로 움직이는 법: 품질·지역 베이시스·실물인도",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 같은 옥수수도 품질과 장소가 다르면 인도 가격이 달라집니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 현물 장소·품질 검사·인도 증서·선물 장부를 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 5달러−4센트+6.25센트는 5.0225달러입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 밭의 곡물이 검사와 증서를 거쳐 계약 인도가 됩니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 지역 현금가격 4.70달러와 선물 5달러의 차이도 따로 봅니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 품질 차등·지역 베이시스·선적증서에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 5,000부셸의 검사에서 112.50달러 조정까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CBOT 옥수수 규칙은 등급·지역·인도 장소를 따로 적습니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. CME는 선적증서를 승인 시설의 인도 약속으로 설명합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 선물 인도가 지역 현물 위험과 물류 차질을 모두 없애지는 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/commodity-grades-location-basis-and-physical-delivery"),
+    },
+  {
+      slug: "derivatives-investigation-audit-trail-and-legal-hold",
+      title: "0.5초 주문을 다시 재생한다: 파생상품 조사·감사기록·법적 보류",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 0.5초 동안 바뀐 주문은 한 줄의 체결 기록만으로 설명할 수 없습니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 거래소 사건·사내 통신·신원 연결·보존 명령을 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. .100→.350→.600의 0.5초와 10초 전 대화를 한 사건으로 묶습니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 흩어진 기록을 시간순 사건표와 원본 꾸러미로 모읍니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 화면 캡처는 원본의 검색값과 수정 이력을 잃을 수 있습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 순서가 보장된 감사기록·원본 메타데이터 보존·법적 보류에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 0.5초 주문과 10초 전 대화를 재현 가능한 조사 꾸러미로 만듭니다"
+    },
+    {
+      "id": "source",
+      "title": "8. CFTC 집행 매뉴얼은 원본 형식과 통신·오디오 자료를 조사 입력으로 봅니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. EU MiFIR는 주문 특성과 그 결과 거래의 연결을 보존하도록 합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 완전한 시간표도 거래 의도를 자동으로 증명하지 않습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/derivatives-investigation-audit-trail-and-legal-hold"),
+    },
+  {
+      slug: "us-uk-derivatives-tax-mark-to-market-and-accounting-link",
+      title: "같은 이익 10을 두 장부로 읽기: 미국 연말평가와 영국 법인 회계 연결",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 같은 이익 10도 미국 개인과 영국 법인의 세금 장부에 다르게 들어갑니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 계약 분류·연말 평가·헤지 식별·회계 연결을 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 미국의 10은 6과 4로 갈리지만 영국의 10은 회계 장부에서 출발합니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 거래 한 건이 두 나라의 서로 다른 장부 칸으로 들어갑니다"
+    },
+    {
+      "id": "need",
+      "title": "5. 경제적으로 헤지됐다는 사실만으로 세금 시점이 맞춰지지 않습니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 연말 시가평가 장부·회계 손익 연결·세법상 헤지 식별에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 이익 10을 계약 식별자에서 신고 근거까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. IRS Form 6781은 연말 평가와 60·40 분류, 헤지 예외를 한 양식에 둡니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. HMRC는 영국 법인의 파생 손익을 회계 처리와 연결합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 국가별 표 한 장은 조약·법인 구조·연도 변경을 담지 못합니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/us-uk-derivatives-tax-mark-to-market-and-accounting-link"),
+    },
+  {
+      slug: "fractional-investment-trust-beneficiary-certificates",
+      title: "건물 10억보다 좌당 8만5천 원을 먼저 본다: 조각투자·신탁 수익증권",
+      subcategory: "markets-derivatives",
+      sections: [
+    {
+      "id": "overview",
+      "title": "1. 건물값 10억 원보다 투자자에게 돌아오는 8,500만 원의 길이 먼저입니다"
+    },
+    {
+      "id": "black-box",
+      "title": "2. 원자산·신탁 장부·발행회사·유통시장을 나눕니다"
+    },
+    {
+      "id": "case",
+      "title": "3. 1억 원에서 1,500만 원을 빼면 좌당 8만5천 원입니다"
+    },
+    {
+      "id": "picture",
+      "title": "4. 임차인의 월세가 신탁 계좌와 비용을 거쳐 투자자에게 옵니다"
+    },
+    {
+      "id": "need",
+      "title": "5. ‘부동산 한 조각’이라는 말은 투자자가 가진 법적 권리를 충분히 말하지 못합니다"
+    },
+    {
+      "id": "names",
+      "title": "6. 증권성 실질판단·비금전신탁 수익증권·발행과 유통 분리에 이름을 붙입니다"
+    },
+    {
+      "id": "mechanism",
+      "title": "7. 좌당 8만5천 원을 임대차계약에서 투자자 통장까지 따라갑니다"
+    },
+    {
+      "id": "source",
+      "title": "8. 금융위원회 지침은 조각투자의 이름보다 실제 권리와 운영 구조를 봅니다"
+    },
+    {
+      "id": "comparison",
+      "title": "9. 2026년 예비인가는 신탁 수익증권 유통시장과 투자계약증권을 구분합니다"
+    },
+    {
+      "id": "limits",
+      "title": "10. 신탁과 거래소가 있어도 공실·평가·매도 위험은 남습니다"
+    }
+  ],
+      component: () => import("@/pages/articles/markets/derivatives/fractional-investment-trust-beneficiary-certificates"),
+    },
 
 ];

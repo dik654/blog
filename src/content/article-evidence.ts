@@ -13066,4 +13066,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "고난도 상품의 녹취·숙려와 청약 의사 재확인 흐름을 확인합니다."
     }
   ],
+  "markets/equity-dispersion-implied-correlation-and-variance": [
+    {
+      "kind": "공식 문서",
+      "label": "Cboe · Implied Correlation Index 백서",
+      "href": "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf",
+      "note": "지수 분산 0.03과 개별 기여 0.02에서 평균상관 0.5를 역산하는 식을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Cboe · Implied Correlation Indices",
+      "href": "https://www.cboe.com/us/indices/implied/",
+      "note": "디스퍼전을 평균 구성 종목 분산과 포트폴리오 분산의 차이로 설명한 공식 범위를 확인합니다."
+    }
+  ],
+  "markets/credit-tranche-base-correlation-and-default-auction": [
+    {
+      "kind": "공식 문서",
+      "label": "BIS · CDS index tranches",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf",
+      "note": "0부터 각 끝점까지의 가격을 맞추는 베이스 상관 정의와 구간별 상관 차이를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ISDA · Big Bang Protocol",
+      "href": "https://www.isda.org/traditional-protocol/big-bang-protocol/",
+      "note": "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다."
+    }
+  ],
+  "markets/commodity-grades-location-basis-and-physical-delivery": [
+    {
+      "kind": "공식 문서",
+      "label": "CBOT · Corn Futures Chapter 10",
+      "href": "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf",
+      "note": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "CME Group · Warehouse Receipts vs. Shipping Certificates",
+      "href": "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions",
+      "note": "선적증서를 승인 시설의 인도 약속으로 설명한 공식 범위를 확인합니다."
+    }
+  ],
+  "markets/derivatives-investigation-audit-trail-and-legal-hold": [
+    {
+      "kind": "공식 문서",
+      "label": "CFTC · Enforcement Manual",
+      "href": "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf",
+      "note": "이메일·즉시 메시지·계좌·오디오와 원본 형식 자료를 조사 입력으로 다루는 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ESMA · MiFIR Article 25",
+      "href": "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records",
+      "note": "주문 특성과 그 결과 거래를 연결해 보관하는 EU 의무를 확인합니다."
+    }
+  ],
+  "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link": [
+    {
+      "kind": "공식 문서",
+      "label": "IRS · Form 6781 (2025)",
+      "href": "https://www.irs.gov/pub/irs-access/f6781_accessible.pdf",
+      "note": "Section 1256의 연말 시가평가·60대40 분류와 적시 식별 헤지 예외를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "HMRC · Corporate Finance Manual CFM50020",
+      "href": "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020",
+      "note": "영국 법인 파생계약 손익이 회계 처리와 연결되는 제도의 출발점을 확인합니다."
+    }
+  ],
+  "markets/fractional-investment-trust-beneficiary-certificates": [
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 조각투자 가이드라인",
+      "href": "https://www.fsc.go.kr/po010102/77728",
+      "note": "상품 이름보다 권리의 실질로 증권성을 판단하고 발행·유통 규율을 검토하는 원칙을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 비금전신탁 수익증권 장외거래소 예비인가",
+      "href": "https://www.fsc.go.kr/no010101/86295",
+      "note": "2026년 예비인가가 신탁 수익증권에 한정되고 투자계약증권을 포함하지 않는 범위를 확인합니다."
+    }
+  ],
 };

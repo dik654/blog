@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-345.json",
+  "publicArticles": 895,
+  "addedRoutes": [
+    "finance/markets/equity-dispersion-implied-correlation-and-variance",
+    "finance/markets/credit-tranche-base-correlation-and-default-auction",
+    "finance/markets/commodity-grades-location-basis-and-physical-delivery",
+    "finance/markets/derivatives-investigation-audit-trail-and-legal-hold",
+    "finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link",
+    "finance/markets/fractional-investment-trust-beneficiary-certificates"
+  ],
+  "reviewed": 351,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive derivatives and financial-market articles added after checkpoint 345; 309 substantive rewrites/additions and 42 retained teaching flows in total. The batch fills specialized product, delivery, investigation, jurisdictional-tax and fractional-investment gaps identified from university, Korean professional-certification, bank and risk-management curricula.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "Two equally weighted 20% volatility stocks produce 14.14% index volatility at correlation 0 and 17.32% at correlation 0.5; portfolio loss 7 allocates 3, 4 and 0 across the 0-3, 3-7 and 7-10 tranches while auction price 35 implies a simple USD 6.5m payment on USD 10m; corn USD 5 less 4 cents plus 6.25 cents is USD 5.0225 and USD 112.50 over 5,000 bushels; an order at .100 amended at .350 and cancelled at .600 spans 0.5 seconds; US qualified-contract gain 10 splits 6 and 4 while UK corporate gain 10 starts from accounting; and KRW 100m rent less KRW 15m costs divided over 1,000 units is KRW 85,000. Explanatory assumptions are separated from market quotes, tax liabilities and legal conclusions.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-specialized-gaps/2026-10-06T22-51-08-212Z/summary.json.",
+    "learning": "PASS 895 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 9.75s, 7,245 transformed modules and 1,894 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,122 concepts, 6,429 relations, 895 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 895-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 895 strict; all six additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 473 prerequisite edges; actual exit 0.",
+    "language": "PASS ko-natural direct lint at error zero, plus global prose rhythm, Korean naturalness and term-density audits with zero uncovered findings.",
+    "lint": "PASS full-repository ESLint.",
+    "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px modal sidebar opened, trapped focus and locked body scroll.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment after the content commit.",
+    "curriculumCoverage": "The audit now maps implied correlation and dispersion, credit tranche/base-correlation/auction settlement, commodity grade/location/certificate delivery, investigation evidence and legal hold, US-UK tax application, and fractional-investment trust beneficiary certificates. Remaining explicit gaps are recorded as transaction-level PnL attribution, actual auction time series, energy and metals delivery, more jurisdictional enforcement/tax cases, and post-launch fractional-investment operations."
+  },
+  "commit": null,
+  "deployment": null
+}
