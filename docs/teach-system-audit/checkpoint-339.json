@@ -29,13 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero uncovered findings on the six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment and production browser verification.",
+    "production": "GitHub Pages deployment 37535034827 succeeded. Production report output/playwright/philosophy-history-expansion-production/2026-10-06T21-42-43-530Z/summary.json recorded 22 passed and zero failed: six articles and two philosophy listings at 390px/1440px plus six mobile height/sidebar checks.",
     "curriculumCoverage": "MIT's historical reading sequence and Stanford Encyclopedia tradition-specific entries were used as complementary scope checks. The philosophy-history path now contains twelve overlapping time axes. Remaining explicit gaps include German idealism, existentialism, hermeneutics, critical theory, logical positivism, ordinary-language philosophy, East Asian regional transformations, additional African traditions, philosophy of religion, metaethics and applied ethics. The derivatives coverage standard separately fixes the division of labor: university finance for pricing theory, the derivatives investment solicitation adviser curriculum for exchange/OTC products, sales practice, law, ethics and disputes, bank FP curricula for customer goals and portfolio suitability, GARP for risk and operations, and current exchange/regulator sources for enforceable details."
   },
-  "commit": null,
+  "commit": "8070d2b643cc40c8f6eb608e262f54ca9aa8c005",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37535034827,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
