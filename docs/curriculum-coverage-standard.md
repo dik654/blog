@@ -54,6 +54,7 @@
 - [MIT 15.401 과목별 상세 목차](https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf): 무차익 선도·선물 가격, 헤지, 옵션 손익·이항모형·블랙숄즈를 명시한다.
 - [MIT Sloan 15.433 Investments](https://ocw.mit.edu/courses/15-433-investments-spring-2003/pages/calendar/): 주식 옵션과 변동성 뒤에 금리곡선, 선물·스왑·캡·플로어·스왑션, 신용위험과 신용파생상품을 둔다.
 - [MIT Sloan 15.450 Analytics of Finance](https://ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/pages/syllabus/): 무차익·위험중립 가격, 확률과정·블랙숄즈·금리모형, 몬테카를로와 변동성 모형을 심화 과정으로 둔다.
+- [GARP 2026 FRM 학습 자료](https://www.garp.org/frm/study-materials): 매년 고치는 공식 과정에서 정량 분석·금융시장과 상품·가치평가와 위험모형을 Part I에, 시장·신용·운영·유동성 위험과 투자 관리를 Part II에 둔다.
 - [금융투자교육원 파생상품투자권유자문인력 과정](https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853): 장내·장외 파생상품과 투자권유 실무에 더해 직무윤리·분쟁조정·자본시장법·협회 규정을 사전 의무과정에 포함한다.
 - [금융투자교육원 2026 보수 과정](https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=30640&courseMasterSeq=830): 법규 개정, 직무윤리·준법, 금리파생상품 현황과 운용·위험관리처럼 현업에서 바뀌는 내용을 보충한다.
 
@@ -61,22 +62,22 @@
 
 | 학습 순서 | 현재 정본 | 판정 | 보강해야 할 내용 |
 | --- | --- | --- | --- |
-| 현금흐름·현재가치·채권·주식 | `financial-products-and-claims`, 채권·주식 정본 | 입구 있음 | 최소분산 헤지와 다요인 포트폴리오 위험으로 연결 |
-| 선도·선물의 계약과 헤지 | `forwards-and-futures`, 무차익·통화·원자재 심화 글 | 자산별 연결 완료 | 회귀 기반 최소분산 헤지비율과 동적 수량 조정의 수치 심화 |
+| 현금흐름·현재가치·채권·주식 | `financial-products-and-claims`, 채권·주식 정본 | 입구 있음 | 다요인 포트폴리오 위험과 자산배분으로 연결 |
+| 선도·선물의 계약과 헤지 | 선물 입구·무차익·통화·원자재 글, `minimum-variance-hedge-ratio-and-basis-risk` | 회귀 기반 수량까지 연결 | 여러 헤지 수단, 관계 변화와 거래비용을 함께 푸는 수치 최적화 |
 | 거래소·청산·증거금 | `clearing-margin-and-default-waterfall`, 마진 정본 | 핵심 경로 완료 | 고객 재산 분리와 각 청산소 규정의 국가별 비교 |
-| 옵션 손익과 권리·의무 | 옵션 입구 글과 풋콜 등식 글 | 핵심 연결 완료 | 미국형 조기행사와 배당 효과의 수치 심화 |
-| 옵션 가격 결정 | `option-replication-and-put-call-parity` | 한 기간 입구 완료 | 다기간 이항·블랙숄즈 유도와 수치 구현 |
-| 변동성과 그릭스 | `option-greeks-volatility-and-dynamic-hedging` | 핵심 경로 완료 | 변동성 미소·곡면, 확률적 변동성·점프 모형 |
-| 옵션 전략·구조화 | 커버드콜과 `option-strategies-and-structured-notes` | 핵심 연결 완료 | 미국형 조기행사, 변동성 곡면과 다중자산 장벽의 수치 평가 |
-| 금리파생상품 | 기본 스왑 글, `interest-rate-derivatives-from-fra-to-swaptions` | 상품 흐름 완료 | 곡선 부트스트랩·듀레이션 헤지·다중곡선·담보 할인의 수치 심화 |
+| 옵션 손익과 권리·의무 | 옵션 입구·풋콜 등식·`binomial-black-scholes-and-early-exercise` | 조기행사 수치까지 연결 | 배당과 이자 변화가 행사 경계를 바꾸는 과정 |
+| 옵션 가격 결정 | 복제 글과 `binomial-black-scholes-and-early-exercise` | 두 기간 이항·연속시간 연결 완료 | 블랙숄즈 유도, 수치 오차와 몬테카를로·유한차분 비교 |
+| 변동성과 그릭스 | 그릭스 글, `implied-volatility-surface-skew-and-smile` | 표면 생성·검증까지 연결 | 지역·확률적 변동성, 점프 모형과 무차익 보정 |
+| 옵션 전략·구조화 | 커버드콜·구조화 글·조기행사·변동성 표면 글 | 핵심 연결 완료 | 다중자산 장벽과 경로의존 상품의 수치 평가 |
+| 금리파생상품 | 금리상품 글, `yield-curve-bootstrapping-multicurve-and-key-rate-hedging` | 부트스트랩·다중곡선·핵심만기 헤지 완료 | 스왑션 변동성 보정, 금리모형과 곡선 변경 통제 |
 | 통화·원자재 파생 | `currency-hedging-forward-points-and-cross-currency-basis`, `commodity-carry-convenience-yield-and-roll` | 핵심 연결 완료 | 통화스왑 현금흐름, 원자재별 품질·지역 베이시스와 국가별 인도 규정 비교 |
 | 신용파생상품 | `credit-derivatives-default-risk-and-tranches` | 핵심 연결 완료 | 기간별 위험률 곡선, 상관 모형·베이스 상관과 실제 경매 사례 심화 |
-| 장외계약·상대방 위험 | `otc-master-agreement-collateral-netting-and-cva` | 핵심 연결 완료 | 관할별 상계 집행, IM 모형·자금조달 조정과 거래 생애주기 운영 심화 |
-| 위험 측정과 포트폴리오 | `var-expected-shortfall-stress-and-model-risk` | 핵심 연결 완료 | 최소분산 헤지, 기대손실 백테스트, 위기 유동성과 모형 승인 절차 심화 |
+| 장외계약·상대방 위험 | 장외 기본계약 글, `xva-funding-margin-and-wrong-way-risk` | CVA·FVA·MVA·동시 악화 연결 | 관할별 상계 집행, IM 모형과 거래 생애주기 운영 심화 |
+| 위험 측정과 포트폴리오 | VaR·ES 글, 최소분산 헤지 글, `market-risk-backtesting-pnl-attribution-and-model-governance` | 측정→사후검사→독립 검증 연결 | 위기 유동성, 스트레스 ES와 국가별 모형 승인 절차 |
 | 투자권유·소비자 보호 | `derivatives-suitability-disclosure-and-sales-practice` | 한국 핵심 경로 완료 | 미국·EU·영국·일본의 고객 분류와 분쟁 절차 비교 |
 | 시장질서·법규·윤리 | 권유 글의 윤리·기록 입구 | 일부 | 장내·장외 규제, 불공정거래, 시세조종과 국가별 집행 차이 |
 
-첫 여섯 편은 `무차익 가격 → 청산과 증거금 → 옵션 복제 가격 → 그릭스와 변동성 → 금리파생상품 → 권유·분쟁·준법`의 기초 순서를 만든다. 두 번째 여섯 편은 `통화 헤지 → 원자재 곡선·인도 → 옵션 조합·구조화채권 → CDS·트랜치 → 장외 기본계약·담보·CVA → VaR·예상손실·스트레스`로 실제 운용과 위험관리 범위를 잇는다. 자격 과정은 상품 지식과 윤리·법규·분쟁을 빠뜨리지 않는 범위표로 썼고, 가격 이론과 시장 구조는 대학 금융론, 거래소·감독기관·국제기준 원문에 대조했다. 다음 보강은 표에 남은 수치 모형 심화와 국가별 시장·고객보호·상계 집행 비교다.
+첫 여섯 편은 `무차익 가격 → 청산과 증거금 → 옵션 복제 가격 → 그릭스와 변동성 → 금리파생상품 → 권유·분쟁·준법`의 기초 순서를 만든다. 두 번째 여섯 편은 `통화 헤지 → 원자재 곡선·인도 → 옵션 조합·구조화채권 → CDS·트랜치 → 장외 기본계약·담보·CVA → VaR·예상손실·스트레스`로 실제 운용과 위험관리 범위를 잇는다. 세 번째 여섯 편은 `회귀 기반 헤지 수량 → 이항 가격과 조기행사 → 변동성 표면 → 금리곡선 → xVA → 백테스트·손익 귀속·모형 검증`으로 계산과 통제를 더 깊게 잇는다. 자격 과정과 GARP 범위는 상품 지식·위험모형·윤리·법규·분쟁을 빠뜨리지 않는 범위표로 썼고, 가격 이론과 시장 구조는 대학 금융론, 거래소·감독기관·국제기준 원문에 대조했다. 다음 보강은 확률과정·수치해석 같은 고급 모형과 국가별 시장·고객보호·상계 집행 비교다.
 
 ## 분야별 확장 방법
 

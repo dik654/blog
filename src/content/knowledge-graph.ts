@@ -29793,6 +29793,193 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "지정한 극단 충격을 다시 평가하고 가격·분포·데이터·구현 가정이 틀릴 가능성까지 관리하는 과정입니다.",
     "canonicalHref": "/finance/markets/var-expected-shortfall-stress-and-model-risk#names"
   },
+  "minimum-variance-hedge-ratio": {
+    "id": "minimum-variance-hedge-ratio",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "최소분산 헤지비율",
+    "aliases": [
+      "minimum variance hedge ratio"
+    ],
+    "definition": "현물과 선물 변화의 공분산을 선물 변화의 분산으로 나눠 잔여 손익 변동을 가장 작게 하는 회귀 기울기입니다.",
+    "canonicalHref": "/finance/markets/minimum-variance-hedge-ratio-and-basis-risk#names"
+  },
+  "dynamic-hedge-rebalancing": {
+    "id": "dynamic-hedge-rebalancing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "동적 헤지 재조정",
+    "aliases": [
+      "dynamic hedge rebalancing"
+    ],
+    "definition": "노출가치와 가격 관계가 바뀔 때 계약 수를 다시 계산하고 체결하는 과정입니다.",
+    "canonicalHref": "/finance/markets/minimum-variance-hedge-ratio-and-basis-risk#names"
+  },
+  "risk-neutral-binomial-weight": {
+    "id": "risk-neutral-binomial-weight",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "이항 위험중립 가중치",
+    "aliases": [
+      "risk-neutral binomial weight"
+    ],
+    "definition": "주식과 현금으로 복제한 가격이 맞도록 상승·하락 지급에 붙이는 가격 계산용 가중치입니다.",
+    "canonicalHref": "/finance/markets/binomial-black-scholes-and-early-exercise#names"
+  },
+  "backward-induction-option-value": {
+    "id": "backward-induction-option-value",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 역진 계산",
+    "aliases": [
+      "option backward induction"
+    ],
+    "definition": "만기 지급에서 시작해 각 이전 노드의 가중·할인가치를 계산하며 오늘로 돌아오는 방법입니다.",
+    "canonicalHref": "/finance/markets/binomial-black-scholes-and-early-exercise#names"
+  },
+  "early-exercise-boundary": {
+    "id": "early-exercise-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "조기행사 경계",
+    "aliases": [
+      "early exercise boundary"
+    ],
+    "definition": "즉시 행사가치와 계속 보유가치가 같아져 미국형 옵션의 행동이 갈리는 주가·시간 경계입니다.",
+    "canonicalHref": "/finance/markets/binomial-black-scholes-and-early-exercise#names"
+  },
+  "implied-volatility-surface": {
+    "id": "implied-volatility-surface",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "내재변동성 표면",
+    "aliases": [
+      "implied volatility surface"
+    ],
+    "definition": "옵션 시장가격을 가격모형으로 역산해 행사가와 만기 좌표에 놓은 지도입니다.",
+    "canonicalHref": "/finance/markets/implied-volatility-surface-skew-and-smile#names"
+  },
+  "volatility-skew-risk-reversal": {
+    "id": "volatility-skew-risk-reversal",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "변동성 스큐와 위험반전",
+    "aliases": [
+      "volatility skew and risk reversal"
+    ],
+    "definition": "같은 만기와 비슷한 델타의 상승·하락 옵션 내재변동성 차이로 표면의 비대칭을 보는 방법입니다.",
+    "canonicalHref": "/finance/markets/implied-volatility-surface-skew-and-smile#names"
+  },
+  "volatility-smile": {
+    "id": "volatility-smile",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "변동성 미소",
+    "aliases": [
+      "volatility smile"
+    ],
+    "definition": "중앙 행사가보다 양쪽 날개의 내재변동성이 높은 U자 모양입니다.",
+    "canonicalHref": "/finance/markets/implied-volatility-surface-skew-and-smile#names"
+  },
+  "discount-factor-bootstrapping": {
+    "id": "discount-factor-bootstrapping",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "할인계수 부트스트랩",
+    "aliases": [
+      "discount factor bootstrapping"
+    ],
+    "definition": "앞 만기의 할인계수를 사용해 다음 만기의 할인계수를 차례로 푸는 곡선 생성 방법입니다.",
+    "canonicalHref": "/finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging#names"
+  },
+  "multicurve-projection-discounting": {
+    "id": "multicurve-projection-discounting",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "예상·할인 다중곡선",
+    "aliases": [
+      "multicurve projection and discounting"
+    ],
+    "definition": "담보 현금흐름을 할인하는 곡선과 기준금리 지급을 예상하는 곡선을 나누는 체계입니다.",
+    "canonicalHref": "/finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging#names"
+  },
+  "key-rate-duration": {
+    "id": "key-rate-duration",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "핵심만기 민감도",
+    "aliases": [
+      "key rate duration"
+    ],
+    "definition": "곡선의 특정 만기 지점이 움직일 때 거래 가치가 얼마나 바뀌는지 보는 민감도입니다.",
+    "canonicalHref": "/finance/markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging#names"
+  },
+  "funding-valuation-adjustment": {
+    "id": "funding-valuation-adjustment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "자금가치조정(FVA)",
+    "aliases": [
+      "funding valuation adjustment"
+    ],
+    "definition": "거래와 담보가 만드는 자금조달 비용·편익을 파생상품 가치에 반영하는 조정입니다.",
+    "canonicalHref": "/finance/markets/xva-funding-margin-and-wrong-way-risk#names"
+  },
+  "margin-valuation-adjustment": {
+    "id": "margin-valuation-adjustment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "증거금가치조정(MVA)",
+    "aliases": [
+      "margin valuation adjustment"
+    ],
+    "definition": "미래 개시증거금을 조달해 묶어 두는 비용을 반영하는 조정입니다.",
+    "canonicalHref": "/finance/markets/xva-funding-margin-and-wrong-way-risk#names"
+  },
+  "wrong-way-counterparty-risk": {
+    "id": "wrong-way-counterparty-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "잘못된 방향의 상대방 위험",
+    "aliases": [
+      "wrong-way counterparty risk"
+    ],
+    "definition": "상대방 신용이 나빠질수록 그 상대에게 받을 노출도 함께 커지는 관계입니다.",
+    "canonicalHref": "/finance/markets/xva-funding-margin-and-wrong-way-risk#names"
+  },
+  "market-risk-backtesting": {
+    "id": "market-risk-backtesting",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "시장위험 백테스트",
+    "aliases": [
+      "market risk backtesting"
+    ],
+    "definition": "과거 위험값과 이후 손익을 비교해 손실 문턱을 넘은 예외를 기록하는 검사입니다.",
+    "canonicalHref": "/finance/markets/market-risk-backtesting-pnl-attribution-and-model-governance#names"
+  },
+  "pnl-attribution-test": {
+    "id": "pnl-attribution-test",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "손익 귀속 검사",
+    "aliases": [
+      "profit and loss attribution test"
+    ],
+    "definition": "위험모형이 설명한 손익과 가격 장부의 가상 손익이 함께 움직이고 비슷한 분포인지 비교하는 검사입니다.",
+    "canonicalHref": "/finance/markets/market-risk-backtesting-pnl-attribution-and-model-governance#names"
+  },
+  "effective-model-challenge": {
+    "id": "effective-model-challenge",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "유효한 독립 검증",
+    "aliases": [
+      "effective model challenge"
+    ],
+    "definition": "객관적 전문가가 모형의 개념·자료·구현·사용을 비판하고 실제 변경을 이끄는 과정입니다.",
+    "canonicalHref": "/finance/markets/market-risk-backtesting-pnl-attribution-and-model-governance#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -54149,6 +54336,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "value-at-risk",
     "relation": "constrains",
     "reason": "스트레스 시험과 모형 위험은 위험가치(VaR)을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "minimum-variance-hedge-ratio",
+    "to": "basis-risk-in-hedging",
+    "relation": "prerequisite",
+    "reason": "최소분산 헤지비율 개념을 먼저 구분해야 헤지의 베이시스 위험 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "basis-risk-in-hedging",
+    "to": "dynamic-hedge-rebalancing",
+    "relation": "extends",
+    "reason": "헤지의 베이시스 위험 개념을 실제 적용과 남는 위험인 동적 헤지 재조정 개념으로 확장합니다."
+  },
+  {
+    "from": "dynamic-hedge-rebalancing",
+    "to": "minimum-variance-hedge-ratio",
+    "relation": "constrains",
+    "reason": "동적 헤지 재조정 개념은 최소분산 헤지비율 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "risk-neutral-binomial-weight",
+    "to": "backward-induction-option-value",
+    "relation": "prerequisite",
+    "reason": "이항 위험중립 가중치 개념을 먼저 구분해야 옵션 역진 계산 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "backward-induction-option-value",
+    "to": "early-exercise-boundary",
+    "relation": "extends",
+    "reason": "옵션 역진 계산 개념을 실제 적용과 남는 위험인 조기행사 경계 개념으로 확장합니다."
+  },
+  {
+    "from": "early-exercise-boundary",
+    "to": "risk-neutral-binomial-weight",
+    "relation": "constrains",
+    "reason": "조기행사 경계 개념은 이항 위험중립 가중치 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "implied-volatility-surface",
+    "to": "volatility-skew-risk-reversal",
+    "relation": "prerequisite",
+    "reason": "내재변동성 표면 개념을 먼저 구분해야 변동성 스큐와 위험반전 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "volatility-skew-risk-reversal",
+    "to": "volatility-smile",
+    "relation": "extends",
+    "reason": "변동성 스큐와 위험반전 개념을 실제 적용과 남는 위험인 변동성 미소 개념으로 확장합니다."
+  },
+  {
+    "from": "volatility-smile",
+    "to": "implied-volatility-surface",
+    "relation": "constrains",
+    "reason": "변동성 미소 개념은 내재변동성 표면 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "discount-factor-bootstrapping",
+    "to": "multicurve-projection-discounting",
+    "relation": "prerequisite",
+    "reason": "할인계수 부트스트랩 개념을 먼저 구분해야 예상·할인 다중곡선 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "multicurve-projection-discounting",
+    "to": "key-rate-duration",
+    "relation": "extends",
+    "reason": "예상·할인 다중곡선 개념을 실제 적용과 남는 위험인 핵심만기 민감도 개념으로 확장합니다."
+  },
+  {
+    "from": "key-rate-duration",
+    "to": "discount-factor-bootstrapping",
+    "relation": "constrains",
+    "reason": "핵심만기 민감도 개념은 할인계수 부트스트랩 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "funding-valuation-adjustment",
+    "to": "margin-valuation-adjustment",
+    "relation": "prerequisite",
+    "reason": "자금가치조정(FVA) 개념을 먼저 구분해야 증거금가치조정(MVA) 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "margin-valuation-adjustment",
+    "to": "wrong-way-counterparty-risk",
+    "relation": "extends",
+    "reason": "증거금가치조정(MVA) 개념을 실제 적용과 남는 위험인 잘못된 방향의 상대방 위험 개념으로 확장합니다."
+  },
+  {
+    "from": "wrong-way-counterparty-risk",
+    "to": "funding-valuation-adjustment",
+    "relation": "constrains",
+    "reason": "잘못된 방향의 상대방 위험 개념은 자금가치조정(FVA) 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
+  },
+  {
+    "from": "market-risk-backtesting",
+    "to": "pnl-attribution-test",
+    "relation": "prerequisite",
+    "reason": "시장위험 백테스트 개념을 먼저 구분해야 손익 귀속 검사 개념의 계산과 검증을 이해할 수 있습니다."
+  },
+  {
+    "from": "pnl-attribution-test",
+    "to": "effective-model-challenge",
+    "relation": "extends",
+    "reason": "손익 귀속 검사 개념을 실제 적용과 남는 위험인 유효한 독립 검증 개념으로 확장합니다."
+  },
+  {
+    "from": "effective-model-challenge",
+    "to": "market-risk-backtesting",
+    "relation": "constrains",
+    "reason": "유효한 독립 검증 개념은 시장위험 백테스트 개념을 현실에 적용할 때의 범위와 수정 조건을 정합니다."
   },
 ];
 

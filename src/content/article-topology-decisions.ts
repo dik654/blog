@@ -2172,6 +2172,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "VaR는 정한 기간과 신뢰수준의 손실 문턱을, 예상손실은 그 바깥 꼬리의 평균을 보여 주며, 자료에 없던 복합 충격과 모형·유동성 한계는 별도 스트레스 시험과 사후검증으로 관리합니다.",
     "sharedGate": "열 손실의 80% VaR 4·ES 8과 별도 스트레스 18을 검산하고 본문 80% 예를 규제 97.5% 기준과 구분합니다."
   },
+  "markets/minimum-variance-hedge-ratio-and-basis-risk": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "최소분산 헤지는 현물·선물 변화의 회귀 기울기를 노출가치와 계약가치에 적용해 수량을 정하고, 베이시스 변화·표본 오차·증거금과 재조정 비용을 함께 관리합니다.",
+    "sharedGate": "1억÷250만=40, 40×0.8=32계약을 검산하고 한 번의 손익과 전체 표본의 분산을 구분합니다."
+  },
+  "markets/binomial-black-scholes-and-early-exercise": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "이항모형은 실제 예측확률이 아닌 복제용 위험중립 가중치로 만기 지급을 역진하고, 미국형 옵션은 각 노드에서 계속 보유가치와 즉시 행사가치를 비교합니다.",
+    "sharedGate": "q=0.625, 하락 노드 보유 15.24·행사 20, 미국형 약 7.99·유럽형 약 6.29를 독립 검산합니다."
+  },
+  "markets/implied-volatility-surface-skew-and-smile": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "내재변동성 표면은 옵션 호가를 가격모형으로 역산해 행사가와 만기에 놓은 지도이며, 스큐·미소와 빈 구간 보간을 실제 포트폴리오 민감도와 모형 검증에 연결해야 합니다.",
+    "sharedGate": "30%·20%·24%와 위험반전 −6%포인트를 검산하고 역산값을 미래 변동성 예측과 구분합니다."
+  },
+  "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "금리곡선은 짧은 만기 할인계수부터 부트스트랩해 시장 지급을 재현하고, 담보 할인과 기준금리 예상 곡선을 분리한 뒤 핵심만기 민감도로 비평행 위험을 헤지합니다.",
+    "sharedGate": "DF₂=0.9067, 2년 무이표 약 5.02%, 1년 뒤 선도 약 5.88%를 검산하고 스왑금리 5%와 구분합니다."
+  },
+  "markets/xva-funding-margin-and-wrong-way-risk": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "xVA는 상대방·자기 신용, 무담보 자금과 개시증거금 비용을 구분해 거래 가치에 반영하고, 노출과 부도확률이 함께 나빠지는 잘못된 방향의 위험과 항 사이 중복을 관리합니다.",
+    "sharedGate": "조정가치 9.2, MVA 0.1, 독립 근사 0.12와 동시 악화 0.54를 검산하고 항 사이 중복을 확인합니다."
+  },
+  "markets/market-risk-backtesting-pnl-attribution-and-model-governance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "시장위험 모형은 가상·실제 손익의 백테스트, 위험이론 손익과 가상 손익의 P&L 귀속 검사, 독립 검증과 지속 감시를 연결해 예외 원인을 실제 모형·한도·사용 변경으로 바꿉니다.",
+    "sharedGate": "열흘 설명용 예외 3개와 250일 규제 예외 7개·amber·1.83을 구분하고 가상·실제·모형 손익을 따로 검산합니다."
+  },
 };
 
 /**
@@ -2527,4 +2569,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/option-strategies-and-structured-notes":"ce373730b7741a96",
 "markets/otc-master-agreement-collateral-netting-and-cva":"126b1136e7d677df",
 "markets/var-expected-shortfall-stress-and-model-risk":"d3dd437f75f5e00f",
+"markets/minimum-variance-hedge-ratio-and-basis-risk":"2abbfe2864ec4472",
+"markets/binomial-black-scholes-and-early-exercise":"228271896ce94bda",
+"markets/implied-volatility-surface-skew-and-smile":"d9d6d51970155bf5",
+"markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging":"102680220200d1c9",
+"markets/xva-funding-margin-and-wrong-way-risk":"fc63c546f5a16761",
+"markets/market-risk-backtesting-pnl-attribution-and-model-governance":"35c8227ebbc5f970",
 };
