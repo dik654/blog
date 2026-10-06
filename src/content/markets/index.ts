@@ -28,7 +28,7 @@ const markets: Category = {
     {
       slug: "markets-derivatives",
       name: "파생상품",
-      description: "선도·선물·옵션·스왑의 지급, 가격, 청산, 실물·통화 헤지, 장외계약과 위험관리",
+      description: "선도·선물·옵션·스왑의 지급에서 헤지비율·가격모형·변동성·금리곡선·장외 위험과 검증까지",
       icon: "🔀",
     },
   ],

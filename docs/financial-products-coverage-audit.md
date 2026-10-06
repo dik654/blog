@@ -36,6 +36,12 @@
 | CDS·지수 트랜치 | 신용 사건·회수율 지급과 포트폴리오 손실 순서 | 1억·스프레드2%·회수40%→프리미엄200만·보호6000만 | `markets/credit-derivatives-default-risk-and-tranches#case` | ISDA 결정 절차·BIS 트랜치 구조 |
 | 장외 기본계약·CSA·CVA | 거래상대별 상계집합, 담보와 미래 양의 노출 | +5+4−2−5=순액2, 담보1.5 뒤0.5, 노출10×PD2%×LGD60%=0.12 | `markets/otc-master-agreement-collateral-netting-and-cva#case` | ISDA·바젤 근거와 관할 경계 |
 | VaR·예상손실·스트레스 | 손실 문턱·꼬리 평균·지정 복합 충격 | 열 손실의 80% VaR4·ES8·별도 스트레스18 | `markets/var-expected-shortfall-stress-and-model-risk#case` | 바젤97.5% ES와 설명용80% 구분 |
+| 최소분산 헤지·베이시스 위험 | 현물 노출과 선물 가격 변화의 통계적 관계 | 1억÷250만=40, 회귀 기울기0.8→32계약 | `markets/minimum-variance-hedge-ratio-and-basis-risk#case` | CME 공식 헤지 예제·표본 변화 경계 |
+| 이항 옵션가격·미국형 조기행사 | 주식·현금 복제로 만든 각 갈림길의 보유가치와 행사가치 | q=0.625, 하락 노드 보유15.24·행사20, 미국형7.99·유럽형6.29 | `markets/binomial-black-scholes-and-early-exercise#case` | MIT·OIC 자료와 실제 확률 구분 |
+| 내재변동성 표면·스큐·미소 | 옵션 호가를 행사가·만기별로 역산한 상대가격 지도 | 90풋30%·중앙20%·110콜24%, 위험반전−6%p | `markets/implied-volatility-surface-skew-and-smile#case` | CME·바젤 근거와 예측값 오해 경계 |
+| 금리곡선 부트스트랩·다중곡선 | 시점별 할인계수와 기준금리 지급을 예상하는 곡선 | 100=5×0.96+105×DF₂→0.9067, 2년5.02%·선도5.88% | `markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging#case` | CME SOFR·BIS 기준금리 전환 대조 |
+| xVA·증거금 조달·동시 악화 위험 | 상대방·자기 신용, 무담보 자금과 개시증거금 비용 | 10−0.6+0.2−0.3−0.1=9.2, MVA0.1, 동시 악화 손실0.54 | `markets/xva-funding-margin-and-wrong-way-risk#case` | 바젤 CCR·ISDA 담보 운영과 중복 경계 |
+| 시장위험 백테스트·손익 귀속·모형 검증 | 위험값과 가상·실제·위험이론 손익의 비교 및 독립 검증 | 250일 예외7번→amber·승수1.83, 열흘 표본과 분리 | `markets/market-risk-backtesting-pnl-attribution-and-model-governance#case` | 바젤·2026 연준 모형 지침 대조 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

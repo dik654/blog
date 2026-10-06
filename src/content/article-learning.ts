@@ -138155,4 +138155,1372 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/minimum-variance-hedge-ratio-and-basis-risk": {
+    "entryLevel": false,
+    "entryNote": "1억 원 재고와 계약당 250만 원의 선물을 금액만 맞춘 40계약에서 시작합니다.",
+    "coreIdea": "최소분산 헤지는 현물·선물 변화의 회귀 기울기를 노출가치와 계약가치에 적용해 수량을 정하고, 베이시스 변화·표본 오차·증거금과 재조정 비용을 함께 관리합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "basis-risk-in-hedging",
+        "role": "선물과 실제 노출의 가격 차이가 바뀌어 완전한 상쇄가 어긋날 수 있다는 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "minimum-variance-hedge-ratio",
+        "role": "최소분산 헤지비율 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "dynamic-hedge-rebalancing",
+        "role": "동적 헤지 재조정 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "minimum-variance-hedge-ratio",
+        "sectionId": "names",
+        "intuition": "최소분산 헤지비율 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "금액 일치 40계약에 0.8을 곱해 선물 32계약을 팝니다.",
+        "boundary": "선택한 과거 표본 밖에서도 같은 기울기가 유지된다는 보장은 없습니다."
+      },
+      {
+        "id": "dynamic-hedge-rebalancing",
+        "sectionId": "names",
+        "intuition": "동적 헤지 재조정 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "자료 창이나 재고가 바뀌면 32계약을 다시 맞춥니다.",
+        "boundary": "잦은 조정은 거래비용과 증거금 부담을 키울 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 최소분산 헤지비율",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "minimum-variance-hedge-ratio"
+        ]
+      },
+      {
+        "label": "2단계 · 헤지의 베이시스 위험",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "basis-risk-in-hedging"
+        ]
+      },
+      {
+        "label": "3단계 · 동적 헤지 재조정",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "dynamic-hedge-rebalancing"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "최소분산 헤지비율 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "최소분산 헤지비율",
+          "금액 일치 40계약에 0.8을 곱해 선물 32계약을 팝니다.",
+          "선택한 과거 표본 밖에서도 같은 기울기가 유지된다는 보장은 없습니다."
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "헤지의 베이시스 위험 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "헤지의 베이시스 위험",
+          "첫 개념과의 차이",
+          "현물이 2% 떨어질 때 선물은 1.6%만 떨어집니다."
+        ],
+        "requiredConcepts": [
+          "basis-risk-in-hedging"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "동적 헤지 재조정 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "동적 헤지 재조정",
+          "자료 창이나 재고가 바뀌면 32계약을 다시 맞춥니다.",
+          "잦은 조정은 거래비용과 증거금 부담을 키울 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "CME Group · Hedging with E-mini S&P 500 Futures",
+          "KIFIN · 파생상품투자권유자문인력 과정",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "basis-risk-in-hedging"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "minimum-variance-hedge-ratio",
+          "basis-risk-in-hedging",
+          "dynamic-hedge-rebalancing"
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio",
+          "basis-risk-in-hedging",
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio",
+          "basis-risk-in-hedging",
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio",
+          "basis-risk-in-hedging",
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "minimum-variance-hedge-ratio",
+          "basis-risk-in-hedging",
+          "dynamic-hedge-rebalancing"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · Hedging with E-mini S&P 500 Futures",
+        "href": "https://www.cmegroup.com/education/whitepapers/hedging-with-e-mini-sp-500-future",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "상관·변동성과 포트폴리오 베타를 선물 헤지비율과 계약 수에 연결합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "KIFIN · 파생상품투자권유자문인력 과정",
+        "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "파생상품의 수익·위험·활용과 판매 실무·법규·윤리를 함께 다룹니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/binomial-black-scholes-and-early-exercise": {
+    "entryLevel": true,
+    "entryNote": "주가 100이 매 기간 1.2배 또는 0.8배가 되는 두 기간 풋에서 시작합니다.",
+    "coreIdea": "이항모형은 실제 예측확률이 아닌 복제용 위험중립 가중치로 만기 지급을 역진하고, 미국형 옵션은 각 노드에서 계속 보유가치와 즉시 행사가치를 비교합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "risk-neutral-binomial-weight",
+        "role": "이항 위험중립 가중치 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "backward-induction-option-value",
+        "role": "옵션 역진 계산 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "early-exercise-boundary",
+        "role": "조기행사 경계 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "risk-neutral-binomial-weight",
+        "sectionId": "names",
+        "intuition": "이항 위험중립 가중치 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "(1.05−0.8)÷(1.2−0.8)=0.625입니다.",
+        "boundary": "실제 주가 상승확률을 추정한 값이 아닙니다."
+      },
+      {
+        "id": "backward-induction-option-value",
+        "sectionId": "names",
+        "intuition": "옵션 역진 계산 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "하락 노드의 지급 4·36에서 계속 보유가치 15.24를 구합니다.",
+        "boundary": "입력과 복제 가능 조건이 틀리면 계산이 정확해도 시장가격은 어긋납니다."
+      },
+      {
+        "id": "early-exercise-boundary",
+        "sectionId": "names",
+        "intuition": "조기행사 경계 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "주가 80에서는 풋의 즉시 행사 20이 계속 보유 15.24보다 큽니다.",
+        "boundary": "미국형이라는 이유만으로 모든 노드에서 일찍 행사하지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 이항 위험중립 가중치",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "risk-neutral-binomial-weight"
+        ]
+      },
+      {
+        "label": "2단계 · 옵션 역진 계산",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "backward-induction-option-value"
+        ]
+      },
+      {
+        "label": "3단계 · 조기행사 경계",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "early-exercise-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "이항 위험중립 가중치 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "이항 위험중립 가중치",
+          "(1.05−0.8)÷(1.2−0.8)=0.625입니다.",
+          "실제 주가 상승확률을 추정한 값이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "옵션 역진 계산 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "옵션 역진 계산",
+          "첫 개념과의 차이",
+          "하락 노드의 지급 4·36에서 계속 보유가치 15.24를 구합니다."
+        ],
+        "requiredConcepts": [
+          "backward-induction-option-value"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "조기행사 경계 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "조기행사 경계",
+          "주가 80에서는 풋의 즉시 행사 20이 계속 보유 15.24보다 큽니다.",
+          "미국형이라는 이유만으로 모든 노드에서 일찍 행사하지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "early-exercise-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "MIT Sloan 15.401 · Options",
+          "Options Industry Council · Black-Scholes Formula",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "backward-induction-option-value"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "early-exercise-boundary"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "risk-neutral-binomial-weight",
+          "backward-induction-option-value",
+          "early-exercise-boundary"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight",
+          "backward-induction-option-value",
+          "early-exercise-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight",
+          "backward-induction-option-value",
+          "early-exercise-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight",
+          "backward-induction-option-value",
+          "early-exercise-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "risk-neutral-binomial-weight",
+          "backward-induction-option-value",
+          "early-exercise-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT Sloan 15.401 · Options",
+        "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/resources/options/",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "옵션 지급, 이항 나무와 복제를 연결하는 대학원 금융론 자료입니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Options Industry Council · Black-Scholes Formula",
+        "href": "https://www.optionseducation.org/advancedconcepts/black-scholes-formula",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "옵션 이론가격 입력과 미국형 주식 옵션의 조기행사·이항모형 사용을 설명합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/implied-volatility-surface-skew-and-smile": {
+    "entryLevel": true,
+    "entryNote": "한 달 만기 90 풋·100 중앙·110 콜의 역산 변동성 30%·20%·24%에서 시작합니다.",
+    "coreIdea": "내재변동성 표면은 옵션 호가를 가격모형으로 역산해 행사가와 만기에 놓은 지도이며, 스큐·미소와 빈 구간 보간을 실제 포트폴리오 민감도와 모형 검증에 연결해야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "implied-volatility-surface",
+        "role": "내재변동성 표면 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "volatility-skew-risk-reversal",
+        "role": "변동성 스큐와 위험반전 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "volatility-smile",
+        "role": "변동성 미소 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "implied-volatility-surface",
+        "sectionId": "names",
+        "intuition": "내재변동성 표면 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "90·100·110 행사가의 30%·20%·24%를 여러 만기에 쌓습니다.",
+        "boundary": "직접 관측한 미래 변동성이나 확정 예측은 아닙니다."
+      },
+      {
+        "id": "volatility-skew-risk-reversal",
+        "sectionId": "names",
+        "intuition": "변동성 스큐와 위험반전 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "110 콜 24%−90 풋 30%=−6%포인트입니다.",
+        "boundary": "델타·만기·호가 시각을 맞추지 않은 값은 비교할 수 없습니다."
+      },
+      {
+        "id": "volatility-smile",
+        "sectionId": "names",
+        "intuition": "변동성 미소 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "중앙 20%보다 90 풋 30%와 110 콜 24%가 높습니다.",
+        "boundary": "모든 상품과 시기에 같은 대칭 모양이 나타나지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 내재변동성 표면",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "implied-volatility-surface"
+        ]
+      },
+      {
+        "label": "2단계 · 변동성 스큐와 위험반전",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "volatility-skew-risk-reversal"
+        ]
+      },
+      {
+        "label": "3단계 · 변동성 미소",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "volatility-smile"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "내재변동성 표면 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "내재변동성 표면",
+          "90·100·110 행사가의 30%·20%·24%를 여러 만기에 쌓습니다.",
+          "직접 관측한 미래 변동성이나 확정 예측은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "변동성 스큐와 위험반전 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "변동성 스큐와 위험반전",
+          "첫 개념과의 차이",
+          "110 콜 24%−90 풋 30%=−6%포인트입니다."
+        ],
+        "requiredConcepts": [
+          "volatility-skew-risk-reversal"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "변동성 미소 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "변동성 미소",
+          "중앙 20%보다 90 풋 30%와 110 콜 24%가 높습니다.",
+          "모든 상품과 시기에 같은 대칭 모양이 나타나지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "volatility-smile"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "CME Group · Introduction to CVOL Skew",
+          "Basel Framework · Volatility Surface Risk",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "volatility-skew-risk-reversal"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "volatility-smile"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "implied-volatility-surface",
+          "volatility-skew-risk-reversal",
+          "volatility-smile"
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface",
+          "volatility-skew-risk-reversal",
+          "volatility-smile"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface",
+          "volatility-skew-risk-reversal",
+          "volatility-smile"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface",
+          "volatility-skew-risk-reversal",
+          "volatility-smile"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "implied-volatility-surface",
+          "volatility-skew-risk-reversal",
+          "volatility-smile"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · Introduction to CVOL Skew",
+        "href": "https://www.cmegroup.com/education/courses/introduction-to-cvol/introduction-to-cvol-skew",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "위험반전과 전체 풋·콜 가격을 사용하는 스큐 측정의 차이를 설명합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Volatility Surface Risk",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "행사가와 만기 전반의 변동성 위험요인, 관측 가격과 재보정 원칙을 정합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging": {
+    "entryLevel": true,
+    "entryNote": "1년 뒤 100의 가격 96과 2년 스왑 고정금리 5%에서 시작합니다.",
+    "coreIdea": "금리곡선은 짧은 만기 할인계수부터 부트스트랩해 시장 지급을 재현하고, 담보 할인과 기준금리 예상 곡선을 분리한 뒤 핵심만기 민감도로 비평행 위험을 헤지합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "discount-factor-bootstrapping",
+        "role": "할인계수 부트스트랩 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "multicurve-projection-discounting",
+        "role": "예상·할인 다중곡선 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "key-rate-duration",
+        "role": "핵심만기 민감도 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "discount-factor-bootstrapping",
+        "sectionId": "names",
+        "intuition": "할인계수 부트스트랩 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "DF₂=(100−5×0.96)÷105≈0.9067입니다.",
+        "boundary": "지급 관행과 입력 가격이 틀리면 정확한 계산도 잘못된 곡선을 만듭니다."
+      },
+      {
+        "id": "multicurve-projection-discounting",
+        "sectionId": "names",
+        "intuition": "예상·할인 다중곡선 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "SOFR OIS 할인과 별도 기간 지급 예상 곡선을 함께 사용합니다.",
+        "boundary": "모든 통화·담보·계약에 한 곡선을 공통 적용하지 않습니다."
+      },
+      {
+        "id": "key-rate-duration",
+        "sectionId": "names",
+        "intuition": "핵심만기 민감도 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "2년과 10년 위험을 서로 다른 선물·스왑으로 맞춥니다.",
+        "boundary": "총 듀레이션이 0이어도 곡선 기울기와 굽음 위험은 남을 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 할인계수 부트스트랩",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "discount-factor-bootstrapping"
+        ]
+      },
+      {
+        "label": "2단계 · 예상·할인 다중곡선",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "multicurve-projection-discounting"
+        ]
+      },
+      {
+        "label": "3단계 · 핵심만기 민감도",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "key-rate-duration"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "할인계수 부트스트랩 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "할인계수 부트스트랩",
+          "DF₂=(100−5×0.96)÷105≈0.9067입니다.",
+          "지급 관행과 입력 가격이 틀리면 정확한 계산도 잘못된 곡선을 만듭니다."
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "예상·할인 다중곡선 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "예상·할인 다중곡선",
+          "첫 개념과의 차이",
+          "SOFR OIS 할인과 별도 기간 지급 예상 곡선을 함께 사용합니다."
+        ],
+        "requiredConcepts": [
+          "multicurve-projection-discounting"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "핵심만기 민감도 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "핵심만기 민감도",
+          "2년과 10년 위험을 서로 다른 선물·스왑으로 맞춥니다.",
+          "총 듀레이션이 0이어도 곡선 기울기와 굽음 위험은 남을 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "key-rate-duration"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "CME Group · SOFR Third-Party Data FAQ",
+          "BIS · Beyond LIBOR",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "multicurve-projection-discounting"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "key-rate-duration"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "discount-factor-bootstrapping",
+          "multicurve-projection-discounting",
+          "key-rate-duration"
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping",
+          "multicurve-projection-discounting",
+          "key-rate-duration"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping",
+          "multicurve-projection-discounting",
+          "key-rate-duration"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping",
+          "multicurve-projection-discounting",
+          "key-rate-duration"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "discount-factor-bootstrapping",
+          "multicurve-projection-discounting",
+          "key-rate-duration"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · SOFR Third-Party Data FAQ",
+        "href": "https://www.cmegroup.com/market-data/faq-sofr-third-party-data.html",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "SOFR OIS 곡선의 할인계수·선도금리와 현금흐름 평가 용도를 설명합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BIS · Beyond LIBOR",
+        "href": "https://www.bis.org/publications/beyond-libor-primer-new-benchmark-rates",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "새 기준금리의 성격과 파생상품 할인·가치평가의 OIS 전환을 설명합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/xva-funding-margin-and-wrong-way-risk": {
+    "entryLevel": true,
+    "entryNote": "무부도 모형가치 10에서 CVA 0.6·DVA 0.2·FVA 0.3·MVA 0.1을 나누는 데서 시작합니다.",
+    "coreIdea": "xVA는 상대방·자기 신용, 무담보 자금과 개시증거금 비용을 구분해 거래 가치에 반영하고, 노출과 부도확률이 함께 나빠지는 잘못된 방향의 위험과 항 사이 중복을 관리합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "funding-valuation-adjustment",
+        "role": "자금가치조정(FVA) 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "margin-valuation-adjustment",
+        "role": "증거금가치조정(MVA) 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "wrong-way-counterparty-risk",
+        "role": "잘못된 방향의 상대방 위험 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "funding-valuation-adjustment",
+        "sectionId": "names",
+        "intuition": "자금가치조정(FVA) 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "기준가치 10에서 설명용 자금비용 0.3을 뺍니다.",
+        "boundary": "기관의 조달정책과 가격·회계 목적에 따라 정의와 부호가 달라질 수 있습니다."
+      },
+      {
+        "id": "margin-valuation-adjustment",
+        "sectionId": "names",
+        "intuition": "증거금가치조정(MVA) 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "개시증거금 5×조달스프레드 2%×1년=0.1입니다.",
+        "boundary": "현재 변동증거금이나 모든 담보 비용을 뜻하지 않습니다."
+      },
+      {
+        "id": "wrong-way-counterparty-risk",
+        "sectionId": "names",
+        "intuition": "잘못된 방향의 상대방 위험 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "노출 10·PD 2%가 충격 뒤 18·5%로 함께 오릅니다.",
+        "boundary": "노출과 부도확률을 독립으로 곱하는 단순 계산은 이 관계를 놓칩니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 자금가치조정(FVA)",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "funding-valuation-adjustment"
+        ]
+      },
+      {
+        "label": "2단계 · 증거금가치조정(MVA)",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "margin-valuation-adjustment"
+        ]
+      },
+      {
+        "label": "3단계 · 잘못된 방향의 상대방 위험",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "wrong-way-counterparty-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "자금가치조정(FVA) 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "자금가치조정(FVA)",
+          "기준가치 10에서 설명용 자금비용 0.3을 뺍니다.",
+          "기관의 조달정책과 가격·회계 목적에 따라 정의와 부호가 달라질 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "증거금가치조정(MVA) 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "증거금가치조정(MVA)",
+          "첫 개념과의 차이",
+          "개시증거금 5×조달스프레드 2%×1년=0.1입니다."
+        ],
+        "requiredConcepts": [
+          "margin-valuation-adjustment"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "잘못된 방향의 상대방 위험 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "잘못된 방향의 상대방 위험",
+          "노출 10·PD 2%가 충격 뒤 18·5%로 함께 오릅니다.",
+          "노출과 부도확률을 독립으로 곱하는 단순 계산은 이 관계를 놓칩니다."
+        ],
+        "requiredConcepts": [
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "Basel Framework · Counterparty Credit Risk",
+          "ISDA · Collateral Management Suggested Operational Practices",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "margin-valuation-adjustment"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "funding-valuation-adjustment",
+          "margin-valuation-adjustment",
+          "wrong-way-counterparty-risk"
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment",
+          "margin-valuation-adjustment",
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment",
+          "margin-valuation-adjustment",
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment",
+          "margin-valuation-adjustment",
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "funding-valuation-adjustment",
+          "margin-valuation-adjustment",
+          "wrong-way-counterparty-risk"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Basel Framework · Counterparty Credit Risk",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/53/inforce/2022-01-01/published/2019-12-15",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "미래 예상노출, 담보와 마진 위험기간을 정한 상대방 신용위험 기준입니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ISDA · Collateral Management Suggested Operational Practices",
+        "href": "https://www.isda.org/collateral-management-sop/",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "변동·개시증거금, 평가·마진콜·분쟁·결제·담보 교체의 운영 절차를 정리합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/market-risk-backtesting-pnl-attribution-and-model-governance": {
+    "entryLevel": true,
+    "entryNote": "하루 손실 한도 5와 다음 열흘의 손실 1·2·6·3·7·2·1·8·4·3을 비교하는 데서 시작합니다.",
+    "coreIdea": "시장위험 모형은 가상·실제 손익의 백테스트, 위험이론 손익과 가상 손익의 P&L 귀속 검사, 독립 검증과 지속 감시를 연결해 예외 원인을 실제 모형·한도·사용 변경으로 바꿉니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "market-risk-backtesting",
+        "role": "시장위험 백테스트 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "pnl-attribution-test",
+        "role": "손익 귀속 검사 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      },
+      {
+        "id": "effective-model-challenge",
+        "role": "유효한 독립 검증 개념을 핵심 사례의 계산과 판단에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "market-risk-backtesting",
+        "sectionId": "names",
+        "intuition": "시장위험 백테스트 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "250일에 예외 7번이면 현행 바젤 표의 amber 구간입니다.",
+        "boundary": "작은 표본의 예외 비율만으로 모형의 참·거짓을 확정하지 않습니다."
+      },
+      {
+        "id": "pnl-attribution-test",
+        "sectionId": "names",
+        "intuition": "손익 귀속 검사 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "최근 250일의 순위 상관과 경험분포 최대 차이를 비교합니다.",
+        "boundary": "VaR 문턱을 넘은 예외 수를 세는 백테스트와 같은 검사가 아닙니다."
+      },
+      {
+        "id": "effective-model-challenge",
+        "sectionId": "names",
+        "intuition": "유효한 독립 검증 개념을 사례의 숫자와 행동으로 먼저 구분합니다.",
+        "workedExample": "반복 예외의 원인을 위험요인 누락으로 찾아 모형과 한도를 고칩니다.",
+        "boundary": "개발자의 계산을 그대로 한 번 더 실행하는 일에 그치지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 시장위험 백테스트",
+        "relation": "사례의 첫 계산과 위험을 구분합니다.",
+        "concepts": [
+          "market-risk-backtesting"
+        ]
+      },
+      {
+        "label": "2단계 · 손익 귀속 검사",
+        "relation": "첫 계산을 가격·손익 검증으로 확장합니다.",
+        "concepts": [
+          "pnl-attribution-test"
+        ]
+      },
+      {
+        "label": "3단계 · 유효한 독립 검증",
+        "relation": "현실 적용의 한계와 수정 행동을 검사합니다.",
+        "concepts": [
+          "effective-model-challenge"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "입력 숫자",
+          "계산 순서",
+          "단위와 방향"
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "시장위험 백테스트 개념의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "시장위험 백테스트",
+          "250일에 예외 7번이면 현행 바젤 표의 amber 구간입니다.",
+          "작은 표본의 예외 비율만으로 모형의 참·거짓을 확정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "손익 귀속 검사 개념이 첫 개념과 다른 질문에 답하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "손익 귀속 검사",
+          "첫 개념과의 차이",
+          "최근 250일의 순위 상관과 경험분포 최대 차이를 비교합니다."
+        ],
+        "requiredConcepts": [
+          "pnl-attribution-test"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "유효한 독립 검증 개념이 실제 판단과 행동을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "유효한 독립 검증",
+          "반복 예외의 원인을 위험요인 누락으로 찾아 모형과 한도를 고칩니다.",
+          "개발자의 계산을 그대로 한 번 더 실행하는 일에 그치지 않습니다."
+        ],
+        "requiredConcepts": [
+          "effective-model-challenge"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 뒷받침하는 사실과 적용 범위를 구분하세요.",
+        "answerChecklist": [
+          "Basel Framework · MAR32 and MAR99",
+          "Federal Reserve · 2026 Revised Model Risk Management Guidance",
+          "근거 범위"
+        ],
+        "requiredConcepts": [
+          "pnl-attribution-test"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 손계산을 실제 거래나 규제 결과로 바로 쓰면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "실제 계약 또는 표본",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "effective-model-challenge"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 세 개념으로 결과와 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "market-risk-backtesting",
+          "pnl-attribution-test",
+          "effective-model-challenge"
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting",
+          "pnl-attribution-test",
+          "effective-model-challenge"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 공식 출처를 사례에 적용할 때 남는 반례와 한계를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting",
+          "pnl-attribution-test",
+          "effective-model-challenge"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "공식 기준",
+          "추가 전제",
+          "상품·기관·시장 차이"
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting",
+          "pnl-attribution-test",
+          "effective-model-challenge"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계산·현금흐름·통제로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본 범위",
+          "새 글의 범위",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "market-risk-backtesting",
+          "pnl-attribution-test",
+          "effective-model-challenge"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Basel Framework · MAR32 and MAR99",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/32.htm?inforce=20230101&published=20200327",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "시장위험 내부모형의 백테스트 구간, 가상·실제 손익과 P&L 귀속 검사 기준을 정합니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Federal Reserve · 2026 Revised Model Risk Management Guidance",
+        "href": "https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm",
+        "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "모형 생애주기, 유효한 반박, 독립 검증과 지속 감시의 현행 미국 은행 지침입니다.",
+        "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 교육·감독·시장 자료가 직접 정한 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장의 실제 가격·손실·회계·법률 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

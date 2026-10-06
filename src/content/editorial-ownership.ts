@@ -16241,6 +16241,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "minimum-variance-hedge-ratio-and-basis-risk": {
+    "title": "최소분산 헤지비율·헤지의 베이시스 위험·동적 헤지 재조정 글이 소유하는 범위",
+    "owns": [
+      "1억 원 노출·250만 원 계약·기울기 0.8에서 32계약을 구하는 장부",
+      "회귀 헤지비율과 금액 일치 40계약의 구분",
+      "베이시스·표본·담보·재조정 비용의 운영 경계"
+    ],
+    "reuses": [
+      {
+        "label": "통화별 순노출과 선도포인트",
+        "href": "/finance/markets/currency-hedging-forward-points-and-cross-currency-basis"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "binomial-black-scholes-and-early-exercise": {
+    "title": "이항 위험중립 가중치·옵션 역진 계산·조기행사 경계 글이 소유하는 범위",
+    "owns": [
+      "100·1.2·0.8·1.05의 두 기간 풋 가격 나무",
+      "미국형 7.99와 유럽형 6.29의 조기행사 차이",
+      "위험중립 가중치와 실제 예측확률의 경계"
+    ],
+    "reuses": [
+      {
+        "label": "한 기간 옵션 복제와 풋콜 등식",
+        "href": "/finance/markets/option-replication-and-put-call-parity"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "implied-volatility-surface-skew-and-smile": {
+    "title": "내재변동성 표면·변동성 스큐와 위험반전·변동성 미소 글이 소유하는 범위",
+    "owns": [
+      "30%·20%·24%의 한 달 만기 변동성 곡선",
+      "24−30=−6%포인트 위험반전의 해석",
+      "행사가×만기 표면의 보간·재가격·대용 위험"
+    ],
+    "reuses": [
+      {
+        "label": "그릭스·베가와 동적 헤지",
+        "href": "/finance/markets/option-greeks-volatility-and-dynamic-hedging"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "yield-curve-bootstrapping-multicurve-and-key-rate-hedging": {
+    "title": "할인계수 부트스트랩·예상·할인 다중곡선·핵심만기 민감도 글이 소유하는 범위",
+    "owns": [
+      "DF₁=0.96에서 DF₂=0.9067을 푸는 두 점 부트스트랩",
+      "2년 무이표 5.02%와 1년 뒤 선도 5.88%의 구분",
+      "다중곡선과 핵심만기 헤지의 연결"
+    ],
+    "reuses": [
+      {
+        "label": "FRA·스왑·캡·스왑션의 지급",
+        "href": "/finance/markets/interest-rate-derivatives-from-fra-to-swaptions"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "xva-funding-margin-and-wrong-way-risk": {
+    "title": "자금가치조정(FVA)·증거금가치조정(MVA)·잘못된 방향의 상대방 위험 글이 소유하는 범위",
+    "owns": [
+      "10−0.6+0.2−0.3−0.1=9.2의 설명용 xVA 장부",
+      "개시증거금 5·스프레드 2%의 MVA 근사 0.1",
+      "노출·PD 동시 악화에서 0.12가 0.54로 커지는 경로"
+    ],
+    "reuses": [
+      {
+        "label": "기본계약·상계·담보·CVA",
+        "href": "/finance/markets/otc-master-agreement-collateral-netting-and-cva"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "market-risk-backtesting-pnl-attribution-and-model-governance": {
+    "title": "시장위험 백테스트·손익 귀속 검사·유효한 독립 검증 글이 소유하는 범위",
+    "owns": [
+      "한도 5와 열흘 손실에서 세 예외를 찾는 입구 사례",
+      "250일 예외 7번·amber·승수 1.83의 규제 표",
+      "가상·실제·위험이론 손익과 독립 검증의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "VaR·예상손실·스트레스와 모형 위험",
+        "href": "/finance/markets/var-expected-shortfall-stress-and-model-risk"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "가격·위험·규제 수치는 인용한 공식 자료의 상품, 표본, 관할과 시행 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 호가, 규제 자본, 회계 가치나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

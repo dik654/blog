@@ -12388,4 +12388,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "스트레스 시험의 목표, 지배구조, 방법론, 자원과 사용 원칙을 정리합니다."
     }
   ],
+  "markets/minimum-variance-hedge-ratio-and-basis-risk": [
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Hedging with E-mini S&P 500 Futures",
+      "href": "https://www.cmegroup.com/education/whitepapers/hedging-with-e-mini-sp-500-future",
+      "note": "상관·변동성과 포트폴리오 베타를 선물 헤지비율과 계약 수에 연결합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KIFIN · 파생상품투자권유자문인력 과정",
+      "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+      "note": "파생상품의 수익·위험·활용과 판매 실무·법규·윤리를 함께 다룹니다."
+    }
+  ],
+  "markets/binomial-black-scholes-and-early-exercise": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT Sloan 15.401 · Options",
+      "href": "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/resources/options/",
+      "note": "옵션 지급, 이항 나무와 복제를 연결하는 대학원 금융론 자료입니다."
+    },
+    {
+      "kind": "공식 가이드",
+      "label": "Options Industry Council · Black-Scholes Formula",
+      "href": "https://www.optionseducation.org/advancedconcepts/black-scholes-formula",
+      "note": "옵션 이론가격 입력과 미국형 주식 옵션의 조기행사·이항모형 사용을 설명합니다."
+    }
+  ],
+  "markets/implied-volatility-surface-skew-and-smile": [
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Introduction to CVOL Skew",
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-cvol/introduction-to-cvol-skew",
+      "note": "위험반전과 전체 풋·콜 가격을 사용하는 스큐 측정의 차이를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Volatility Surface Risk",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+      "note": "행사가와 만기 전반의 변동성 위험요인, 관측 가격과 재보정 원칙을 정합니다."
+    }
+  ],
+  "markets/yield-curve-bootstrapping-multicurve-and-key-rate-hedging": [
+    {
+      "kind": "공식 문서",
+      "label": "CME Group · SOFR Third-Party Data FAQ",
+      "href": "https://www.cmegroup.com/market-data/faq-sofr-third-party-data.html",
+      "note": "SOFR OIS 곡선의 할인계수·선도금리와 현금흐름 평가 용도를 설명합니다."
+    },
+    {
+      "kind": "공식 연구",
+      "label": "BIS · Beyond LIBOR",
+      "href": "https://www.bis.org/publications/beyond-libor-primer-new-benchmark-rates",
+      "note": "새 기준금리의 성격과 파생상품 할인·가치평가의 OIS 전환을 설명합니다."
+    }
+  ],
+  "markets/xva-funding-margin-and-wrong-way-risk": [
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Counterparty Credit Risk",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/cre/53/inforce/2022-01-01/published/2019-12-15",
+      "note": "미래 예상노출, 담보와 마진 위험기간을 정한 상대방 신용위험 기준입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ISDA · Collateral Management Suggested Operational Practices",
+      "href": "https://www.isda.org/collateral-management-sop/",
+      "note": "변동·개시증거금, 평가·마진콜·분쟁·결제·담보 교체의 운영 절차를 정리합니다."
+    }
+  ],
+  "markets/market-risk-backtesting-pnl-attribution-and-model-governance": [
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · MAR32 and MAR99",
+      "href": "https://www.bis.org/basel_framework/chapter/MAR/32.htm?inforce=20230101&published=20200327",
+      "note": "시장위험 내부모형의 백테스트 구간, 가상·실제 손익과 P&L 귀속 검사 기준을 정합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve · 2026 Revised Model Risk Management Guidance",
+      "href": "https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm",
+      "note": "모형 생애주기, 유효한 반박, 독립 검증과 지속 감시의 현행 미국 은행 지침입니다."
+    }
+  ],
 };
