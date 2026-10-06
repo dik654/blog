@@ -2766,5 +2766,5 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/collateral-operations-margin-calls-disputes-and-substitution":"f8b869f1f74baf6c",
 "markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"7817202230737953",
 "markets/multi-asset-options-correlation-and-rare-event-simulation":"979c71a00e7cebef",
-"markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"fc318ed4cd05047b",
+"markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"38e82d041553fdb7",
 };

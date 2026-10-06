@@ -17,10 +17,10 @@
   "validation": {
     "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
     "numeric": "Illustrative SIMM-like aggregation sqrt(36+16+12)=8 is separated from actual SIMM; a 5bp fixed-rate mismatch on notional 100 produces 0.05 annual cash-flow difference; exposure 12 less threshold 2 and held collateral 5 gives call 5, while a bond 6 after 10% haircut recognizes 5.4; principal 100 has upside 8 and downside 40 with complaints 2 versus 8; two 20% volatility assets weighted equally give basket volatility 14.14% at zero correlation and 20% at unit correlation, while 10 rare hits in 100,000 imply 0.01% with about 31.6% relative standard error; deposit 20 at five times leverage gives exposure 100 and a 12% move loses 12, exceeding tolerance 10 by 2.",
-    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-operations-governance/2026-10-06T20-23-41-432Z/summary.json.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/derivative-operations-governance/2026-10-06T20-32-11-521Z/summary.json.",
     "learning": "PASS 871 exact 6+4 contracts; actual exit 0.",
     "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
-    "build": "PASS Vite 9.74s, 7,214 transformed modules and 1,844 static public routes plus 404; actual exit 0.",
+    "build": "PASS Vite 9.45s, 7,214 transformed modules and 1,844 static public routes plus 404; actual exit 0.",
     "graph": "PASS 4,050 concepts, 6,357 relations, 871 registered articles and zero invariants; 17 new concepts were added and existing non-cleared risk mitigation, settlement finality, margin liquidity, target market, sales evidence, Monte Carlo, volatility surface and appropriateness concepts were reused instead of duplicated; actual exit 0.",
     "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
     "articleStructure": "PASS targeted additions and 871-public-article strict baseline; actual exit 0.",
