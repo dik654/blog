@@ -70,7 +70,7 @@ export function TeeMemoryViz() {
   return (
     <FlatFlow
       id="tee-memory-boundary"
-      title="Private page와 shared page는 같은 보안 의미를 갖지 않는다"
+      title="Private page와 shared page의 보안 성질은 서로 다르다"
       description="Host와 I/O를 하려면 명시적인 shared buffer가 필요하며, 그 경계에서 다시 검증·암호화해야 합니다."
       steps={[
         ["PRIVATE", "TEE private memory", "CPU package 밖에서는 암호화되고 ownership·translation policy로 host 접근을 제한합니다."],

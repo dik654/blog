@@ -9,7 +9,7 @@ export default function Article() { return <article className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">1. 비밀을 보내지 않고 알고 있다는 사실을 보이려면</h2>
 <p className="leading-8">접속할 때마다 비밀 번호 자체를 보내면 받는 사람이 그 번호를 보관하거나 다시 쓸 수 있습니다. 비밀을 가진 사람만 제대로 답할 수 있는 질문을 보내되, 오간 답에서는 비밀이 더 드러나지 않도록 만들고 싶습니다.</p>
-<p className="leading-8">이 글에서는 손으로 계산할 수 있는 작은 숫자로 그 순서를 확인합니다. 작은 숫자는 안전한 암호가 아니라 설명용 가정입니다. 실제 보안은 훨씬 큰 수와 올바른 무작위 선택을 필요로 합니다.</p>
+<p className="leading-8">이 글에서는 손으로 계산할 수 있는 작은 숫자로 그 순서를 확인합니다. 작은 숫자는 안전한 암호가 아니라 설명용 가정입니다. 실제 보안에는 훨씬 큰 수와 올바른 무작위 선택이 필요합니다.</p>
 
 <p data-stage-bridge="overview" className="text-sm leading-7 text-muted-foreground">알고 있다는 사실과 비밀 공개를 나눴습니다. 먼저 세 번의 대화를 봅니다.</p>
 </section>

@@ -307,7 +307,7 @@ export default function LlmApplicationCachingArticle() {
           <p>
             Warming은 캐시를 채우는 시작점을, LRU는 캐시가 넘칠 때 비우는 순서를
             정하므로 서로 반대 방향의 절차입니다. Warming으로 채운 항목도 오래 조회되지
-            않으면 LRU에 의해 그대로 밀려날 수 있습니다.
+            않으면 LRU가 그대로 밀어낼 수 있습니다.
           </p>
         </div>
         <TermBreakdown

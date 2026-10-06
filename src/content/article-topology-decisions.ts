@@ -106,7 +106,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-10-06",
     "rationale": "한 번의 GPU 실행에 들어갈 후보를 같은 예산5 안에서 고르고 부족한 자원을 되돌리는 경로를 따라갑니다. 공정성과 CPU/GPU 중첩은 이 반복을 여러 번 운영할 때의 별도 측정 조건으로 붙어 있으므로 하나의 스케줄링 문제로 유지합니다.",
     "sharedGate": "실행중출력1·1 뒤남은3을입력12에배정하여상한4라도실제4조각이되는것을검산하고선점재계산·큐재삽입·VTC절대차이한계의 단위를 구분합니다."
   },
@@ -1666,7 +1666,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "같은 네 warp의6clock으로 배치·후보·발행과 기다림을 연결합니다. 경로별 활성 lane과 동기화 범위는 명령발행이 유효한 일로 이어지는 조건입니다.",
     "sharedGate": "B지연8이면clock6의준비시점A9/B10/C7/D8·active4 eligible0 issued0, B지연4이면eligible1 issued1입니다. Little의resident하한과eligible,500warp-load의모형/큐한도,40slots·26.5625%와실행시간을 구별합니다.",
     "status": "implemented",
-    "reviewedAt": "2026-10-04"
+    "reviewedAt": "2026-10-06"
   },
   "ai/math-high-dimensional-geometry": {
     "action": "keep",
@@ -1930,7 +1930,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/subword-static-embeddings": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-05",
+    "reviewedAt": "2026-10-06",
     "rationale": "조각 합성의 조회 결과는 사전·해시·문자 정규화와 행 파일의 조합으로 결정됩니다. run/runs의 같은 네 기여를 원문과 배포 반례까지 이어야 .vec만으로 OOV 기능이 유지된다는 오해를 막을 수 있어 한 글로 유지합니다. 앞선 단어 조회와 연쇄법칙은 정본을 재사용합니다.",
     "sharedGate": "run의 [0,5,5,7]→(4,.75), runs의 [5,5,6,3]→(1.75,1), Unicode의 (7,1)/(2,1)과 bucket 축소 후 (3,.75)를 본문·두 그림·실제 원문·6+4에서 같은 가정으로 대조합니다."
   },
@@ -1973,7 +1973,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/launch-overhead-and-cpu-gpu-synchronization": "6ce09e8e1f3ff2c4",
   "ai/inference-optimization-layers": "0f317d8baf76db75",
   "ai/text-unicode-encoding": "a10f387d00572a65",
-  "ai/subword-static-embeddings": "9318c48cfc1ef572",
+  "ai/subword-static-embeddings": "18c2834ee26d4253",
   "ai/word2vec-negative-sampling": "cbc9a8c89b7f9329",
   "ai/cuda-graph-capture": "d0ab85923d9ad4ae",
   "ai/word2vec-prediction-objectives": "16f9c34ef7e7fd8b",
@@ -2018,7 +2018,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/karatsuba": "88bf647bd63498c0",
   "gpu/cuda-compilation-and-isa-analysis": "cd0a7363eadf176d",
   "gpu/cuda-shared-memory": "ed8a9658baae593f",
-  "gpu/sm-warp-scheduling-and-issue": "6d0f750a184b07d0",
+  "gpu/sm-warp-scheduling-and-issue": "b62f92b0c106e1ad",
   "ai/continuous-batching-step-anatomy": "f6d631f09b82218c",
   "ai/math-vectors-inner-products": "16c1f5af435b15a1",
   "ai/serving-latency-metrics-and-slo": "78cb5743248b70d4",
@@ -2194,7 +2194,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vae": "147d459b37db9ccd",
   "ai/vllm-paged-attention": "ea303e6227016d05",
   "ai/vllm-spec-decode": "d4e161bdd3651539",
-  "ai/vllm-scheduler": "2bde960d9b11b3a0",
+  "ai/vllm-scheduler": "1061f2fdfdbb0797",
   "ai/retrieval-ranking-funnel": "50578b053322609e",
   "ai/model-vram-budgeting": "b08d63b9f969e0e3",
   "ai/xml-prompting": "10c4804cd901a1a7",
