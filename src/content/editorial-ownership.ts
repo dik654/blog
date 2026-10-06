@@ -16817,6 +16817,166 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "uncleared-initial-margin-simm-and-model-governance": {
+    "title": "비청산 개시증거금은 부도 뒤의 빈 시간을 막는다: SIMM과 모형 통제 글이 소유하는 범위",
+    "owns": [
+      "현재 노출 2.5와 잠재 미래 노출 8의 구분",
+      "양방향 개시증거금과 분리 보관",
+      "SIMM 2.8+2512의 입력·버전·검증·승인 통제"
+    ],
+    "reuses": [
+      {
+        "label": "비청산 위험 완화",
+        "href": "/finance/markets/otc-clearing-reporting-and-bilateral-risk-mitigation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": {
+    "title": "체결 뒤가 더 길다: 파생상품 확인·결제·대사와 예외 처리 글이 소유하는 범위",
+    "owns": [
+      "명목 100·3.00%와 3.05%의 연 현금 0.05 차이",
+      "거래 확인에서 포트폴리오 대사로 이어지는 상태",
+      "지급 지시·입금·재시도의 결제 예외 기록"
+    ],
+    "reuses": [
+      {
+        "label": "결제 최종성",
+        "href": "/finance/banking/payment-clearing-settlement#finality"
+      },
+      {
+        "label": "비청산 위험 완화",
+        "href": "/finance/markets/otc-clearing-reporting-and-bilateral-risk-mitigation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "collateral-operations-margin-calls-disputes-and-substitution": {
+    "title": "호출액 5가 실제 담보가 되기까지: 대사·분쟁·교체·결제 글이 소유하는 범위",
+    "owns": [
+      "노출 12·문턱 2·기존 담보 5에서 호출액 5 계산",
+      "시장가 6 채권의 10% 할인 가치 5.4",
+      "합의분 결제·분쟁 조사·담보 교체 순서"
+    ],
+    "reuses": [
+      {
+        "label": "증거금의 현금 시점",
+        "href": "/finance/risk/margin-collateral-and-leverage#comparison"
+      },
+      {
+        "label": "포트폴리오 대사",
+        "href": "/finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-product-approval-target-market-and-post-sale-monitoring": {
+    "title": "수익 8보다 손실 40을 먼저 본다: 상품 승인·목표시장·사후 점검 글이 소유하는 범위",
+    "owns": [
+      "원금 100의 이익 8·손실 40 상품 승인 시나리오",
+      "목표시장과 반대시장 및 유통 채널의 연결",
+      "민원 예상 2·실제 8에서 사후 검토와 수정 행동"
+    ],
+    "reuses": [
+      {
+        "label": "목표시장 결정",
+        "href": "/finance/markets/japan-australia-retail-leverage-and-product-governance#names"
+      },
+      {
+        "label": "판매 과정의 증거",
+        "href": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "multi-asset-options-correlation-and-rare-event-simulation": {
+    "title": "함께 떨어질 때 가격이 바뀐다: 다중자산 옵션과 희귀사건 시뮬레이션 글이 소유하는 범위",
+    "owns": [
+      "상관 0·1에서 바구니 변동성 14.14%·20% 계산",
+      "평균 상관과 극단 꼬리 의존의 구분",
+      "희귀사건 10/100,000의 표준오차와 중요도 표본추출"
+    ],
+    "reuses": [
+      {
+        "label": "몬테카를로 파생상품 평가",
+        "href": "/finance/markets/monte-carlo-path-dependent-pricing-and-variance-reduction#names"
+      },
+      {
+        "label": "내재변동성 표면",
+        "href": "/finance/markets/implied-volatility-surface-skew-and-smile#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "canada-hong-kong-switzerland-retail-derivatives-and-market-rules": {
+    "title": "같은 5배 상품도 질문이 다르다: 캐나다·홍콩·스위스 파생상품 규칙 글이 소유하는 범위",
+    "owns": [
+      "예치금 20·5배 노출 100·12% 하락 손실 12 사례",
+      "캐나다 당사자 지위·홍콩 복잡상품·스위스 서비스별 검사의 비교",
+      "거주지·계약 법인·권유·장내외 상품의 적용 순서"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 적정성 심사",
+        "href": "/finance/markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규제·모형·절차 수치는 인용한 공식 원문의 계약·고객·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 손계산을 실제 가격·증거금·판매 승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

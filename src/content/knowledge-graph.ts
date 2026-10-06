@@ -30488,6 +30488,193 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "회사 민원 접수와 최종 답변에서 외부 조정·중재·법원으로 이어지는 관할별 해결 절차입니다.",
     "canonicalHref": "/finance/markets/derivatives-complaints-dispute-resolution-and-evidence#names"
   },
+  "uncleared-initial-margin-pfe": {
+    "id": "uncleared-initial-margin-pfe",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "비청산 개시증거금의 잠재 미래 노출",
+    "aliases": [
+      "uncleared-initial-margin-pfe"
+    ],
+    "definition": "상대방 부도 뒤 계약을 닫고 새 거래로 바꾸는 기간에 시장이 더 움직여 생길 수 있는 손실을 담보로 미리 막는 측정입니다.",
+    "canonicalHref": "/finance/markets/uncleared-initial-margin-simm-and-model-governance#names"
+  },
+  "bilateral-initial-margin-segregation": {
+    "id": "bilateral-initial-margin-segregation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "양방향 개시증거금 분리 보관",
+    "aliases": [
+      "bilateral-initial-margin-segregation"
+    ],
+    "definition": "비청산 거래의 두 당사자가 개시증거금을 각각 제공하고 제공자와 수취자 부도에서 보호되도록 떼어 두는 구조입니다.",
+    "canonicalHref": "/finance/markets/uncleared-initial-margin-simm-and-model-governance#names"
+  },
+  "simm-model-governance": {
+    "id": "simm-model-governance",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "SIMM 모형 통제",
+    "aliases": [
+      "simm-model-governance"
+    ],
+    "definition": "SIMM의 현재 버전·거래 범위·민감도·보정·백테스트·독립 검증과 관할별 승인을 이어 관리하는 절차입니다.",
+    "canonicalHref": "/finance/markets/uncleared-initial-margin-simm-and-model-governance#names"
+  },
+  "derivatives-trade-confirmation": {
+    "id": "derivatives-trade-confirmation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 거래 확인",
+    "aliases": [
+      "derivatives-trade-confirmation"
+    ],
+    "definition": "거래 양쪽이 명목금액·금리·통화·날짜와 지배 계약 등 핵심 조건을 같은 내용으로 확정하는 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#names"
+  },
+  "derivatives-portfolio-reconciliation": {
+    "id": "derivatives-portfolio-reconciliation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 포트폴리오 대사",
+    "aliases": [
+      "derivatives-portfolio-reconciliation"
+    ],
+    "definition": "살아 있는 거래 전체의 존재·주요 조건·평가를 상대방 장부와 맞춰 차이와 원인을 찾는 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#names"
+  },
+  "derivatives-settlement-exception": {
+    "id": "derivatives-settlement-exception",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 결제 예외",
+    "aliases": [
+      "derivatives-settlement-exception"
+    ],
+    "definition": "예정 현금이나 자산이 계좌·금액·날짜·통화 문제로 도착하지 않아 조사와 재지시가 필요한 상태입니다.",
+    "canonicalHref": "/finance/markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation#names"
+  },
+  "collateral-margin-call": {
+    "id": "collateral-margin-call",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 담보 호출",
+    "aliases": [
+      "collateral-margin-call"
+    ],
+    "definition": "상계 노출에서 계약상 문턱과 기존·이동 중 담보를 반영해 추가 이전을 요구하는 운영 메시지와 절차입니다.",
+    "canonicalHref": "/finance/markets/collateral-operations-margin-calls-disputes-and-substitution#names"
+  },
+  "collateral-haircut-value": {
+    "id": "collateral-haircut-value",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "담보 할인 가치",
+    "aliases": [
+      "collateral-haircut-value"
+    ],
+    "definition": "가격 변동과 현금화 위험을 반영해 담보의 시장가보다 낮게 인정하는 계약상 가치입니다.",
+    "canonicalHref": "/finance/markets/collateral-operations-margin-calls-disputes-and-substitution#names"
+  },
+  "collateral-substitution-sequencing": {
+    "id": "collateral-substitution-sequencing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "담보 교체 순서 통제",
+    "aliases": [
+      "collateral-substitution-sequencing"
+    ],
+    "definition": "새 담보의 승인·수취와 기존 담보 반환 사이에 무담보 구간이 생기지 않도록 순서와 실패 처리를 정하는 통제입니다.",
+    "canonicalHref": "/finance/markets/collateral-operations-margin-calls-disputes-and-substitution#names"
+  },
+  "derivatives-negative-target-market": {
+    "id": "derivatives-negative-target-market",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 반대시장",
+    "aliases": [
+      "derivatives-negative-target-market"
+    ],
+    "definition": "상품의 위험·복잡성·기간과 고객의 필요·지식·손실 감당력이 맞지 않아 유통 대상에서 빼야 할 고객 집단입니다.",
+    "canonicalHref": "/finance/markets/derivatives-product-approval-target-market-and-post-sale-monitoring#names"
+  },
+  "derivatives-post-sale-product-review": {
+    "id": "derivatives-post-sale-product-review",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 사후 상품 검토",
+    "aliases": [
+      "derivatives-post-sale-product-review"
+    ],
+    "definition": "출시 뒤 실제 판매 대상·손실·중도해지·민원과 시장 사건을 승인 가정과 비교해 상품과 유통전략을 고치는 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-product-approval-target-market-and-post-sale-monitoring#names"
+  },
+  "multi-asset-correlation-risk": {
+    "id": "multi-asset-correlation-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "다중자산 상관 위험",
+    "aliases": [
+      "multi-asset-correlation-risk"
+    ],
+    "definition": "자산 사이 움직임의 상관 가정이 달라져 바스켓·best-of·worst-of 옵션의 가격과 헤지가 변하는 위험입니다.",
+    "canonicalHref": "/finance/markets/multi-asset-options-correlation-and-rare-event-simulation#names"
+  },
+  "financial-tail-dependence": {
+    "id": "financial-tail-dependence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금융자산의 꼬리 의존",
+    "aliases": [
+      "financial-tail-dependence"
+    ],
+    "definition": "큰 상승이나 하락 같은 극단 구간에서 여러 자산이 함께 움직이는 정도를 평균적인 선형 상관과 따로 보는 개념입니다.",
+    "canonicalHref": "/finance/markets/multi-asset-options-correlation-and-rare-event-simulation#names"
+  },
+  "rare-event-importance-sampling": {
+    "id": "rare-event-importance-sampling",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "희귀사건 중요도 표본추출",
+    "aliases": [
+      "rare-event-importance-sampling"
+    ],
+    "definition": "관심 있는 드문 경로를 더 자주 뽑고 가능도 비율로 가중해 원래 확률 아래의 기대값을 추정하는 방법입니다.",
+    "canonicalHref": "/finance/markets/multi-asset-options-correlation-and-rare-event-simulation#names"
+  },
+  "canada-derivatives-party-protection": {
+    "id": "canada-derivatives-party-protection",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "캐나다 파생상품 당사자 보호",
+    "aliases": [
+      "canada-derivatives-party-protection"
+    ],
+    "definition": "NI 93-101에서 파생상품 당사자의 지위와 포기 여부에 따라 고객 정보·적합성 등 추가 영업행위 의무를 적용하는 구조입니다.",
+    "canonicalHref": "/finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules#names"
+  },
+  "hong-kong-complex-derivative-classification": {
+    "id": "hong-kong-complex-derivative-classification",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "홍콩 복잡 파생상품 분류",
+    "aliases": [
+      "hong-kong-complex-derivative-classification"
+    ],
+    "definition": "상품 구조와 거래 장소를 보고 복잡상품·파생상품 지식·위험 설명과 적합성 적용 조건을 여는 분류입니다.",
+    "canonicalHref": "/finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules#names"
+  },
+  "switzerland-service-level-client-test": {
+    "id": "switzerland-service-level-client-test",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스위스 서비스별 고객 검사",
+    "aliases": [
+      "switzerland-service-level-client-test"
+    ],
+    "definition": "주문 실행·개별 자문·포트폴리오 관리 등 제공 서비스에 맞춰 고객의 지식·경험 또는 재무상황·투자목표를 확인하는 구조입니다.",
+    "canonicalHref": "/finance/markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -55240,6 +55427,108 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "derivatives-dispute-redress-path",
     "relation": "produces",
     "reason": "derivatives-complaint-evidence-pack에서 derivatives-dispute-redress-path로 파생상품의 실제 업무 판단을 확장합니다."
+  },
+  {
+    "from": "uncleared-derivatives-risk-mitigation",
+    "to": "uncleared-initial-margin-pfe",
+    "relation": "extends",
+    "reason": "uncleared-derivatives-risk-mitigation의 판단을 uncleared-initial-margin-pfe의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "uncleared-initial-margin-pfe",
+    "to": "bilateral-initial-margin-segregation",
+    "relation": "produces",
+    "reason": "uncleared-initial-margin-pfe의 판단을 bilateral-initial-margin-segregation의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "bilateral-initial-margin-segregation",
+    "to": "simm-model-governance",
+    "relation": "produces",
+    "reason": "bilateral-initial-margin-segregation의 판단을 simm-model-governance의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "uncleared-derivatives-risk-mitigation",
+    "to": "derivatives-trade-confirmation",
+    "relation": "extends",
+    "reason": "uncleared-derivatives-risk-mitigation의 판단을 derivatives-trade-confirmation의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "derivatives-trade-confirmation",
+    "to": "derivatives-portfolio-reconciliation",
+    "relation": "produces",
+    "reason": "derivatives-trade-confirmation의 판단을 derivatives-portfolio-reconciliation의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "derivatives-portfolio-reconciliation",
+    "to": "derivatives-settlement-exception",
+    "relation": "produces",
+    "reason": "derivatives-portfolio-reconciliation의 판단을 derivatives-settlement-exception의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "margin-liquidity-timing",
+    "to": "collateral-margin-call",
+    "relation": "extends",
+    "reason": "margin-liquidity-timing의 판단을 collateral-margin-call의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "collateral-margin-call",
+    "to": "collateral-haircut-value",
+    "relation": "produces",
+    "reason": "collateral-margin-call의 판단을 collateral-haircut-value의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "collateral-haircut-value",
+    "to": "collateral-substitution-sequencing",
+    "relation": "produces",
+    "reason": "collateral-haircut-value의 판단을 collateral-substitution-sequencing의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "target-market-determination",
+    "to": "derivatives-negative-target-market",
+    "relation": "extends",
+    "reason": "target-market-determination의 판단을 derivatives-negative-target-market의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "derivatives-negative-target-market",
+    "to": "derivatives-post-sale-product-review",
+    "relation": "produces",
+    "reason": "derivatives-negative-target-market의 판단을 derivatives-post-sale-product-review의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "monte-carlo-derivative-pricing",
+    "to": "multi-asset-correlation-risk",
+    "relation": "extends",
+    "reason": "monte-carlo-derivative-pricing의 판단을 multi-asset-correlation-risk의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "multi-asset-correlation-risk",
+    "to": "financial-tail-dependence",
+    "relation": "produces",
+    "reason": "multi-asset-correlation-risk의 판단을 financial-tail-dependence의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "financial-tail-dependence",
+    "to": "rare-event-importance-sampling",
+    "relation": "produces",
+    "reason": "financial-tail-dependence의 판단을 rare-event-importance-sampling의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "derivatives-appropriateness-assessment",
+    "to": "canada-derivatives-party-protection",
+    "relation": "extends",
+    "reason": "derivatives-appropriateness-assessment의 판단을 canada-derivatives-party-protection의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "canada-derivatives-party-protection",
+    "to": "hong-kong-complex-derivative-classification",
+    "relation": "produces",
+    "reason": "canada-derivatives-party-protection의 판단을 hong-kong-complex-derivative-classification의 수치·계약·운영 조건으로 확장합니다."
+  },
+  {
+    "from": "hong-kong-complex-derivative-classification",
+    "to": "switzerland-service-level-client-test",
+    "relation": "produces",
+    "reason": "hong-kong-complex-derivative-classification의 판단을 switzerland-service-level-client-test의 수치·계약·운영 조건으로 확장합니다."
   },
 ];
 

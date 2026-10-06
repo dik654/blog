@@ -2340,6 +2340,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "파생상품 분쟁은 손실 결과나 서명 하나로 판단하지 않고 판매·체결·가격·증거금·통지 기록을 시간순으로 묶어 책임과 손해를 가린 뒤 계약 관할의 구제 경로로 이어야 합니다.",
     "sharedGate": "100−30=70과 필요액 80의 부족 10을 계산하고 손실 결과, 고객 서명, 절차 준수와 인과관계를 따로 판단합니다."
   },
+  "markets/uncleared-initial-margin-simm-and-model-governance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "비청산 개시증거금은 현재 평가손실이 아니라 상대방 부도 뒤 계약을 닫고 바꾸는 동안의 잠재 미래 노출을 막으며, 공통 SIMM을 써도 범위·민감도·버전·보정·승인과 분리 보관을 계속 통제해야 합니다.",
+    "sharedGate": "가중 민감도 6과 4, 상관 0.25에서 √(6²+4²+2×0.25×6×4)=8을 구하고 현재 노출 2.5와 나눕니다."
+  },
+  "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 거래는 체결 뒤 경제·법률조건을 확인하고 평가·담보·지급을 처리하며 상대방 장부와 주기적으로 대사해 수정·결제·보고 예외를 만기까지 해결해야 완전한 운영 기록이 됩니다.",
+    "sharedGate": "명목 100에서 3.00%와 3.05%를 각각 계산해 연 지급액 3.00과 3.05, 차이 0.05를 찾습니다."
+  },
+  "markets/collateral-operations-margin-calls-disputes-and-substitution": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "담보 운영은 계약식으로 호출액을 구한 뒤 양쪽 자료를 맞추고 적격 자산의 할인 가치를 확인해 실제 결제하며, 분쟁 합의분과 교체 자산을 무담보 틈 없이 처리해야 신용보호가 됩니다.",
+    "sharedGate": "노출 12−문턱 2−기존 담보 5=호출액 5를 구하고, 시장가 6 채권의 10% 할인 가치 5.4를 계산합니다."
+  },
+  "markets/derivatives-product-approval-target-market-and-post-sale-monitoring": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 지배구조는 지급식과 나쁜 고객 결과를 출시 전에 시험해 목표·반대시장과 유통 채널을 정하고, 실제 판매·손실·민원 자료가 가정을 벗어나면 설명·채널·판매 여부를 다시 결정하는 생애주기 통제입니다.",
+    "sharedGate": "원금 100이 조건 충족 때 108로 늘어 이익 8, 지수 60의 나쁜 경로에서 손실 40이 되는 비대칭을 비교합니다."
+  },
+  "markets/multi-asset-options-correlation-and-rare-event-simulation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "다중자산 옵션은 개별 변동성 외에 자산들의 상관과 극단 구간의 꼬리 의존에 민감하며, 희귀 지급은 적중 횟수·표준오차와 중요도 표본추출의 가중치까지 검증해야 가격의 계산 오차와 모형 오차를 구분할 수 있습니다.",
+    "sharedGate": "절반 가중·각 20% 변동성에서 상관 0이면 14.14%, 상관 1이면 20%를 구하고 10/100,000 희귀사건의 상대표준오차 약 31.6%를 계산합니다."
+  },
+  "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "캐나다·홍콩·스위스의 파생상품 고객 보호는 고객 지위, 복잡상품 여부와 제공 서비스라는 서로 다른 출발점에서 적용되므로 같은 손실 사례도 계약 법인·권유 여부·장내외 상품과 현재 관할 원문을 나눠 판단해야 합니다.",
+    "sharedGate": "예치금 20×5배=노출 100에서 12% 하락 손실 12를 계산해 고객이 밝힌 손실 한도 10보다 2 큰지 확인합니다."
+  },
 };
 
 /**
@@ -2719,4 +2761,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/derivatives-market-abuse-position-limits-and-surveillance":"e3255830ae68ce02",
 "markets/derivatives-aml-kyc-and-suspicious-transaction-monitoring":"e4d16be5a57a6f1e",
 "markets/derivatives-complaints-dispute-resolution-and-evidence":"9193fe8e46d88fcf",
+"markets/uncleared-initial-margin-simm-and-model-governance":"0997bafd1b36aceb",
+"markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation":"007c5a75c4b1b38f",
+"markets/collateral-operations-margin-calls-disputes-and-substitution":"f8b869f1f74baf6c",
+"markets/derivatives-product-approval-target-market-and-post-sale-monitoring":"7817202230737953",
+"markets/multi-asset-options-correlation-and-rare-event-simulation":"979c71a00e7cebef",
+"markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules":"fc318ed4cd05047b",
 };

@@ -12724,4 +12724,94 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다."
     }
   ],
+  "markets/uncleared-initial-margin-simm-and-model-governance": [
+    {
+      "kind": "공식 문서",
+      "label": "BCBS·IOSCO 비청산 증거금",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+      "note": "99% 한쪽 꼬리·10일, 승인된 모형과 지속 검증의 국제 최소 기준입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ISDA SIMM 2.8+2512",
+      "href": "https://www.isda.org/?p=1243627",
+      "note": "2025년 말 자료 보정과 2026년 7월 적용일을 확인합니다."
+    }
+  ],
+  "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": [
+    {
+      "kind": "공식 문서",
+      "label": "CFTC 스왑 운영 규칙",
+      "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414",
+      "note": "확인·포트폴리오 대사·압축과 거래관계 문서 요건을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BIS OTC 결제 절차",
+      "href": "https://www.bis.org/publications/report-otc-derivatives-settlement-procedures-and-counterparty-risk-management",
+      "note": "데이터 입력부터 확인·결제, 복잡한 거래의 수동 예외를 확인합니다."
+    }
+  ],
+  "markets/collateral-operations-margin-calls-disputes-and-substitution": [
+    {
+      "kind": "공식 문서",
+      "label": "ISDA 담보 운영 권고",
+      "href": "https://www.isda.org/collateral-management-sop/",
+      "note": "호출 데이터·응답·교체·대사와 분쟁 원인을 하루 운영에 연결합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "BCBS·IOSCO 비청산 증거금",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+      "note": "거래 전 분쟁 절차와 적시 증거금 교환의 국제 원칙입니다."
+    }
+  ],
+  "markets/derivatives-product-approval-target-market-and-post-sale-monitoring": [
+    {
+      "kind": "공식 문서",
+      "label": "FCA PROD 3",
+      "href": "https://handbook.fca.org.uk/handbook/prod3",
+      "note": "출시 전 승인, 목표·반대시장과 중요한 사건 뒤 재검토를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융투자교육원 파생상품투자권유자문인력",
+      "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+      "note": "상품·영업·법규·윤리·분쟁 예방의 교육 범위를 확인합니다."
+    }
+  ],
+  "markets/multi-asset-options-correlation-and-rare-event-simulation": [
+    {
+      "kind": "공개 강의",
+      "label": "MIT 15.450 Simulation Methods",
+      "href": "https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/4fa033082ff5ee58722a67fe81f0dce7_MIT15_450F10_lec03.pdf",
+      "note": "난수 생성·분산감소·준몬테카를로와 실제 표준오차 확인을 연결합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Rare Event Simulation",
+      "href": "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf",
+      "note": "중요도 표본추출로 드문 사건을 자주 만들고 가능도 가중치를 적용하는 원리를 확인합니다."
+    }
+  ],
+  "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules": [
+    {
+      "kind": "공식 문서",
+      "label": "Canada NI 93-101",
+      "href": "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101",
+      "note": "파생상품 당사자 정보·적합성·확인서와 보호 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Hong Kong SFC Complex Products",
+      "href": "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+      "note": "장내 선물·주식 파생상품과 복잡상품 요건을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "FINMA Client Adviser Duties",
+      "href": "https://www.finma.ch/en/finma-public/fragen-und-probleme/zur-registrierung-von-kundenberaterinnen-oder-kundenberatern/",
+      "note": "재무상황·목표·지식·경험과 추천 전 검사·기록을 확인합니다."
+    }
+  ],
 };

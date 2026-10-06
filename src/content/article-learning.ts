@@ -143683,4 +143683,1453 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/uncleared-initial-margin-simm-and-model-governance": {
+    "entryLevel": false,
+    "entryNote": "현재 노출 2.5와 가중 민감도 6·4에서 계산한 교육용 개시증거금 8을 구분하는 사례에서 시작합니다.",
+    "coreIdea": "비청산 개시증거금은 현재 평가손실이 아니라 상대방 부도 뒤 계약을 닫고 바꾸는 동안의 잠재 미래 노출을 막으며, 공통 SIMM을 써도 범위·민감도·버전·보정·승인과 분리 보관을 계속 통제해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "uncleared-derivatives-risk-mitigation",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "uncleared-initial-margin-pfe",
+        "role": "비청산 개시증거금의 잠재 미래 노출을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "bilateral-initial-margin-segregation",
+        "role": "양방향 개시증거금 분리 보관을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "simm-model-governance",
+        "role": "SIMM 모형 통제을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "uncleared-initial-margin-pfe",
+        "sectionId": "names",
+        "intuition": "비청산 개시증거금의 잠재 미래 노출이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "현재 노출 2.5와 별도로 교육용 잠재 노출 8을 계산합니다.",
+        "boundary": "오늘의 변동증거금이나 예상 최대손실과 같은 숫자가 아닙니다."
+      },
+      {
+        "id": "bilateral-initial-margin-segregation",
+        "sectionId": "names",
+        "intuition": "양방향 개시증거금 분리 보관이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "A와 B가 각각 8을 제공해 보호된 계좌에 둡니다.",
+        "boundary": "양쪽 8을 하나의 순액으로 상계하지 않습니다."
+      },
+      {
+        "id": "simm-model-governance",
+        "sectionId": "names",
+        "intuition": "SIMM 모형 통제이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "2.8+2512 전환 전후 금액과 입력 차이를 대사합니다.",
+        "boundary": "공통 모형을 쓴다는 사실이 회사별 승인과 입력 책임을 없애지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "uncleared-derivatives-risk-mitigation"
+        ]
+      },
+      {
+        "label": "2단계 · 비청산 개시증거금의 잠재 미래 노출",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "uncleared-initial-margin-pfe"
+        ]
+      },
+      {
+        "label": "3단계 · 양방향 개시증거금 분리 보관",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "bilateral-initial-margin-segregation"
+        ]
+      },
+      {
+        "label": "4단계 · SIMM 모형 통제",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "simm-model-governance"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "가중 민감도 6과 4, 상관 0.25에서 √(6²+4²+2×0.25×6×4)=8을 구하고 현재 노출 2.5와 나눕니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "비청산 개시증거금의 잠재 미래 노출의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "비청산 개시증거금의 잠재 미래 노출",
+          "현재 노출 2.5와 별도로 교육용 잠재 노출 8을 계산합니다.",
+          "오늘의 변동증거금이나 예상 최대손실과 같은 숫자가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "양방향 개시증거금 분리 보관의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "양방향 개시증거금 분리 보관",
+          "A와 B가 각각 8을 제공해 보호된 계좌에 둡니다.",
+          "양쪽 8을 하나의 순액으로 상계하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "bilateral-initial-margin-segregation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "SIMM 모형 통제의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "SIMM 모형 통제",
+          "2.8+2512 전환 전후 금액과 입력 차이를 대사합니다.",
+          "공통 모형을 쓴다는 사실이 회사별 승인과 입력 책임을 없애지 않습니다."
+        ],
+        "requiredConcepts": [
+          "simm-model-governance"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "BCBS·IOSCO 비청산 증거금",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "ISDA SIMM 2.8+2512",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "simm-model-governance"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe",
+          "bilateral-initial-margin-segregation",
+          "simm-model-governance"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe",
+          "bilateral-initial-margin-segregation",
+          "simm-model-governance"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe",
+          "bilateral-initial-margin-segregation",
+          "simm-model-governance"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "uncleared-initial-margin-pfe",
+          "bilateral-initial-margin-segregation",
+          "simm-model-governance"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "BCBS·IOSCO 비청산 증거금",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "99% 한쪽 꼬리·10일, 승인된 모형과 지속 검증의 국제 최소 기준입니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ISDA SIMM 2.8+2512",
+        "href": "https://www.isda.org/?p=1243627",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "2025년 말 자료 보정과 2026년 7월 적용일을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-trade-lifecycle-confirmation-settlement-and-reconciliation": {
+    "entryLevel": false,
+    "entryNote": "명목 100 스왑의 고정금리가 두 장부에서 3.00%와 3.05%로 갈려 연 현금 0.05 차이가 난 사례에서 시작합니다.",
+    "coreIdea": "파생상품 거래는 체결 뒤 경제·법률조건을 확인하고 평가·담보·지급을 처리하며 상대방 장부와 주기적으로 대사해 수정·결제·보고 예외를 만기까지 해결해야 완전한 운영 기록이 됩니다.",
+    "assumedKnowledge": [
+      {
+        "id": "uncleared-derivatives-risk-mitigation",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "settlement-finality",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-trade-confirmation",
+        "role": "파생상품 거래 확인을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "derivatives-portfolio-reconciliation",
+        "role": "파생상품 포트폴리오 대사을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "derivatives-settlement-exception",
+        "role": "파생상품 결제 예외을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-trade-confirmation",
+        "sectionId": "names",
+        "intuition": "파생상품 거래 확인이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "3.00%와 3.05% 중 실제 합의값을 원 주문 기록으로 고칩니다.",
+        "boundary": "첫 확인이 나중 수정과 부분해지를 자동으로 맞추지는 않습니다."
+      },
+      {
+        "id": "derivatives-portfolio-reconciliation",
+        "sectionId": "names",
+        "intuition": "파생상품 포트폴리오 대사이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "100건 중 조건이 다른 두 건을 찾아 같은 버전으로 맞춥니다.",
+        "boundary": "차이 경보를 만든 것과 원인을 고쳐 닫은 것은 다릅니다."
+      },
+      {
+        "id": "derivatives-settlement-exception",
+        "sectionId": "names",
+        "intuition": "파생상품 결제 예외이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "합의한 지급액 3.00의 실제 입금 시각과 실패 사유를 남깁니다.",
+        "boundary": "결제 메시지를 보냈다는 기록만으로 완결을 주장하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "uncleared-derivatives-risk-mitigation",
+          "settlement-finality"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 거래 확인",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-trade-confirmation"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 포트폴리오 대사",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-portfolio-reconciliation"
+        ]
+      },
+      {
+        "label": "4단계 · 파생상품 결제 예외",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-settlement-exception"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "명목 100에서 3.00%와 3.05%를 각각 계산해 연 지급액 3.00과 3.05, 차이 0.05를 찾습니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 거래 확인의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 거래 확인",
+          "3.00%와 3.05% 중 실제 합의값을 원 주문 기록으로 고칩니다.",
+          "첫 확인이 나중 수정과 부분해지를 자동으로 맞추지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 포트폴리오 대사의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 포트폴리오 대사",
+          "100건 중 조건이 다른 두 건을 찾아 같은 버전으로 맞춥니다.",
+          "차이 경보를 만든 것과 원인을 고쳐 닫은 것은 다릅니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-portfolio-reconciliation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 결제 예외의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 결제 예외",
+          "합의한 지급액 3.00의 실제 입금 시각과 실패 사유를 남깁니다.",
+          "결제 메시지를 보냈다는 기록만으로 완결을 주장하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "CFTC 스왑 운영 규칙",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "BIS OTC 결제 절차",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation",
+          "derivatives-portfolio-reconciliation",
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation",
+          "derivatives-portfolio-reconciliation",
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation",
+          "derivatives-portfolio-reconciliation",
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-confirmation",
+          "derivatives-portfolio-reconciliation",
+          "derivatives-settlement-exception"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CFTC 스왑 운영 규칙",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "확인·포트폴리오 대사·압축과 거래관계 문서 요건을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BIS OTC 결제 절차",
+        "href": "https://www.bis.org/publications/report-otc-derivatives-settlement-procedures-and-counterparty-risk-management",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "데이터 입력부터 확인·결제, 복잡한 거래의 수동 예외를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/collateral-operations-margin-calls-disputes-and-substitution": {
+    "entryLevel": false,
+    "entryNote": "노출 12에서 문턱 2와 기존 담보 5를 빼 호출액 5를 만들고 채권 6에 10% 할인을 적용하는 사례에서 시작합니다.",
+    "coreIdea": "담보 운영은 계약식으로 호출액을 구한 뒤 양쪽 자료를 맞추고 적격 자산의 할인 가치를 확인해 실제 결제하며, 분쟁 합의분과 교체 자산을 무담보 틈 없이 처리해야 신용보호가 됩니다.",
+    "assumedKnowledge": [
+      {
+        "id": "margin-liquidity-timing",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "derivatives-portfolio-reconciliation",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "collateral-margin-call",
+        "role": "파생상품 담보 호출을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "collateral-haircut-value",
+        "role": "담보 할인 가치을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "collateral-substitution-sequencing",
+        "role": "담보 교체 순서 통제을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "collateral-margin-call",
+        "sectionId": "names",
+        "intuition": "파생상품 담보 호출이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "노출 12에서 문턱 2와 기존 담보 5를 빼 5를 호출합니다.",
+        "boundary": "호출 메시지를 보낸 것과 담보가 실제 도착한 것은 다릅니다."
+      },
+      {
+        "id": "collateral-haircut-value",
+        "sectionId": "names",
+        "intuition": "담보 할인 가치이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "시장가 6인 채권에 10%를 깎아 5.4로 인정합니다.",
+        "boundary": "금액이 충분해도 적격성·집중·잘못된 방향의 위험을 통과해야 합니다."
+      },
+      {
+        "id": "collateral-substitution-sequencing",
+        "sectionId": "names",
+        "intuition": "담보 교체 순서 통제이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "현금 5.4가 도착한 뒤 기존 채권을 반환합니다.",
+        "boundary": "기존 담보를 먼저 돌려주면 새 담보 결제 실패 때 노출이 생깁니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "margin-liquidity-timing",
+          "derivatives-portfolio-reconciliation"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 담보 호출",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "collateral-margin-call"
+        ]
+      },
+      {
+        "label": "3단계 · 담보 할인 가치",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "collateral-haircut-value"
+        ]
+      },
+      {
+        "label": "4단계 · 담보 교체 순서 통제",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "collateral-substitution-sequencing"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "노출 12−문턱 2−기존 담보 5=호출액 5를 구하고, 시장가 6 채권의 10% 할인 가치 5.4를 계산합니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 담보 호출의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 담보 호출",
+          "노출 12에서 문턱 2와 기존 담보 5를 빼 5를 호출합니다.",
+          "호출 메시지를 보낸 것과 담보가 실제 도착한 것은 다릅니다."
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "담보 할인 가치의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "담보 할인 가치",
+          "시장가 6인 채권에 10%를 깎아 5.4로 인정합니다.",
+          "금액이 충분해도 적격성·집중·잘못된 방향의 위험을 통과해야 합니다."
+        ],
+        "requiredConcepts": [
+          "collateral-haircut-value"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "담보 교체 순서 통제의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "담보 교체 순서 통제",
+          "현금 5.4가 도착한 뒤 기존 채권을 반환합니다.",
+          "기존 담보를 먼저 돌려주면 새 담보 결제 실패 때 노출이 생깁니다."
+        ],
+        "requiredConcepts": [
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "ISDA 담보 운영 권고",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "BCBS·IOSCO 비청산 증거금",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call",
+          "collateral-haircut-value",
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call",
+          "collateral-haircut-value",
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call",
+          "collateral-haircut-value",
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "collateral-margin-call",
+          "collateral-haircut-value",
+          "collateral-substitution-sequencing"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ISDA 담보 운영 권고",
+        "href": "https://www.isda.org/collateral-management-sop/",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "호출 데이터·응답·교체·대사와 분쟁 원인을 하루 운영에 연결합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BCBS·IOSCO 비청산 증거금",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "거래 전 분쟁 절차와 적시 증거금 교환의 국제 원칙입니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-product-approval-target-market-and-post-sale-monitoring": {
+    "entryLevel": false,
+    "entryNote": "원금 100이 좋은 경로에서 108, 나쁜 경로에서 60이 되는 구조화 상품 사례에서 시작합니다.",
+    "coreIdea": "파생상품 지배구조는 지급식과 나쁜 고객 결과를 출시 전에 시험해 목표·반대시장과 유통 채널을 정하고, 실제 판매·손실·민원 자료가 가정을 벗어나면 설명·채널·판매 여부를 다시 결정하는 생애주기 통제입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "target-market-determination",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "sales-practice-evidence",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-negative-target-market",
+        "role": "파생상품 반대시장을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "derivatives-post-sale-product-review",
+        "role": "파생상품 사후 상품 검토을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-negative-target-market",
+        "sectionId": "names",
+        "intuition": "파생상품 반대시장이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "원금 손실 40을 감당하지 못하는 고객을 반대시장에 둡니다.",
+        "boundary": "목표시장을 단순히 뒤집은 넓은 이름표로 끝내지 않습니다."
+      },
+      {
+        "id": "derivatives-post-sale-product-review",
+        "sectionId": "names",
+        "intuition": "파생상품 사후 상품 검토이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "민원 예상 2건이 실제 8건이면 원인 조사와 채널 제한을 검토합니다.",
+        "boundary": "민원 건수 하나만으로 설계 결함이나 보상 책임을 자동 판정하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "target-market-determination",
+          "sales-practice-evidence"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 반대시장",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-negative-target-market"
+        ]
+      },
+      {
+        "label": "3단계 · 파생상품 사후 상품 검토",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "derivatives-post-sale-product-review"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "원금 100이 조건 충족 때 108로 늘어 이익 8, 지수 60의 나쁜 경로에서 손실 40이 되는 비대칭을 비교합니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 반대시장의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 반대시장",
+          "원금 손실 40을 감당하지 못하는 고객을 반대시장에 둡니다.",
+          "목표시장을 단순히 뒤집은 넓은 이름표로 끝내지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 사후 상품 검토의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 사후 상품 검토",
+          "민원 예상 2건이 실제 8건이면 원인 조사와 채널 제한을 검토합니다.",
+          "민원 건수 하나만으로 설계 결함이나 보상 책임을 자동 판정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "FCA PROD 3",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "본문의 경계 조건을 숫자 사례에 적용해 설명하세요.",
+        "answerChecklist": [
+          "경계 조건",
+          "원금 100이 조건 충족 때 108로 늘어 이익 8, 지수 60의 나쁜 경로에서 손실 40이 되는 비대칭을 비교합니다.",
+          "잘못된 해석"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market",
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "금융투자교육원 파생상품투자권유자문인력",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market",
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market",
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market",
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-negative-target-market",
+          "derivatives-post-sale-product-review"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "FCA PROD 3",
+        "href": "https://handbook.fca.org.uk/handbook/prod3",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "출시 전 승인, 목표·반대시장과 중요한 사건 뒤 재검토를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융투자교육원 파생상품투자권유자문인력",
+        "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "상품·영업·법규·윤리·분쟁 예방의 교육 범위를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/multi-asset-options-correlation-and-rare-event-simulation": {
+    "entryLevel": false,
+    "entryNote": "변동성 20%인 두 자산을 절반씩 담고 상관 0과 1에서 바구니 변동성이 14.14%와 20%로 갈리는 사례에서 시작합니다.",
+    "coreIdea": "다중자산 옵션은 개별 변동성 외에 자산들의 상관과 극단 구간의 꼬리 의존에 민감하며, 희귀 지급은 적중 횟수·표준오차와 중요도 표본추출의 가중치까지 검증해야 가격의 계산 오차와 모형 오차를 구분할 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "monte-carlo-derivative-pricing",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      },
+      {
+        "id": "implied-volatility-surface",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "multi-asset-correlation-risk",
+        "role": "다중자산 상관 위험을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "financial-tail-dependence",
+        "role": "금융자산의 꼬리 의존을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "rare-event-importance-sampling",
+        "role": "희귀사건 중요도 표본추출을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "multi-asset-correlation-risk",
+        "sectionId": "names",
+        "intuition": "다중자산 상관 위험이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "상관 0과 1에서 절반씩 담은 바구니 변동성이 14.14%와 20%로 갈립니다.",
+        "boundary": "각 자산의 개별 변동성만으로 대신할 수 없습니다."
+      },
+      {
+        "id": "financial-tail-dependence",
+        "sectionId": "names",
+        "intuition": "금융자산의 꼬리 의존이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "평시 상관보다 위기 동시하락 시나리오를 더 크게 둡니다.",
+        "boundary": "상관행렬 하나가 모든 극단 공동분포를 정하지 않습니다."
+      },
+      {
+        "id": "rare-event-importance-sampling",
+        "sectionId": "names",
+        "intuition": "희귀사건 중요도 표본추출이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "10만 경로에서 10번 나온 0.01% 사건의 적중 수를 늘립니다.",
+        "boundary": "표본 분포를 바꾸고 가중치를 빠뜨리면 편향된 값이 됩니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "monte-carlo-derivative-pricing",
+          "implied-volatility-surface"
+        ]
+      },
+      {
+        "label": "2단계 · 다중자산 상관 위험",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "multi-asset-correlation-risk"
+        ]
+      },
+      {
+        "label": "3단계 · 금융자산의 꼬리 의존",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "financial-tail-dependence"
+        ]
+      },
+      {
+        "label": "4단계 · 희귀사건 중요도 표본추출",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "rare-event-importance-sampling"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "절반 가중·각 20% 변동성에서 상관 0이면 14.14%, 상관 1이면 20%를 구하고 10/100,000 희귀사건의 상대표준오차 약 31.6%를 계산합니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "다중자산 상관 위험의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "다중자산 상관 위험",
+          "상관 0과 1에서 절반씩 담은 바구니 변동성이 14.14%와 20%로 갈립니다.",
+          "각 자산의 개별 변동성만으로 대신할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "금융자산의 꼬리 의존의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "금융자산의 꼬리 의존",
+          "평시 상관보다 위기 동시하락 시나리오를 더 크게 둡니다.",
+          "상관행렬 하나가 모든 극단 공동분포를 정하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "financial-tail-dependence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "희귀사건 중요도 표본추출의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "희귀사건 중요도 표본추출",
+          "10만 경로에서 10번 나온 0.01% 사건의 적중 수를 늘립니다.",
+          "표본 분포를 바꾸고 가중치를 빠뜨리면 편향된 값이 됩니다."
+        ],
+        "requiredConcepts": [
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "MIT 15.450 Simulation Methods",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "Stanford Rare Event Simulation",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk",
+          "financial-tail-dependence",
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk",
+          "financial-tail-dependence",
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk",
+          "financial-tail-dependence",
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "multi-asset-correlation-risk",
+          "financial-tail-dependence",
+          "rare-event-importance-sampling"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "MIT 15.450 Simulation Methods",
+        "href": "https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/4fa033082ff5ee58722a67fe81f0dce7_MIT15_450F10_lec03.pdf",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "난수 생성·분산감소·준몬테카를로와 실제 표준오차 확인을 연결합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Rare Event Simulation",
+        "href": "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "중요도 표본추출로 드문 사건을 자주 만들고 가능도 가중치를 적용하는 원리를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/canada-hong-kong-switzerland-retail-derivatives-and-market-rules": {
+    "entryLevel": false,
+    "entryNote": "예치금 20으로 노출 100을 잡아 12% 하락 때 손실 12가 고객 한도 10을 넘는 사례에서 시작합니다.",
+    "coreIdea": "캐나다·홍콩·스위스의 파생상품 고객 보호는 고객 지위, 복잡상품 여부와 제공 서비스라는 서로 다른 출발점에서 적용되므로 같은 손실 사례도 계약 법인·권유 여부·장내외 상품과 현재 관할 원문을 나눠 판단해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-appropriateness-assessment",
+        "role": "이번 글의 계산·계약·고객보호 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "canada-derivatives-party-protection",
+        "role": "캐나다 파생상품 당사자 보호을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "hong-kong-complex-derivative-classification",
+        "role": "홍콩 복잡 파생상품 분류을 본문의 수치 사례와 공식 기준에 연결합니다."
+      },
+      {
+        "id": "switzerland-service-level-client-test",
+        "role": "스위스 서비스별 고객 검사을 본문의 수치 사례와 공식 기준에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "canada-derivatives-party-protection",
+        "sectionId": "names",
+        "intuition": "캐나다 파생상품 당사자 보호이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "필요·목표·재무상황·위험감내도와 손실 12를 비교합니다.",
+        "boundary": "모든 적격 당사자나 모든 캐나다 주에 같은 결론을 자동 적용하지 않습니다."
+      },
+      {
+        "id": "hong-kong-complex-derivative-classification",
+        "sectionId": "names",
+        "intuition": "홍콩 복잡 파생상품 분류이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "HKFE 선물과 상장 주식 파생상품을 복잡한 장내 파생상품 예로 봅니다.",
+        "boundary": "복잡성 분류와 손실 크기 또는 전면 판매금지는 같은 뜻이 아닙니다."
+      },
+      {
+        "id": "switzerland-service-level-client-test",
+        "sectionId": "names",
+        "intuition": "스위스 서비스별 고객 검사이 사례에서 맡는 일을 먼저 확인합니다.",
+        "workedExample": "추천 전 고객의 손실 한도 10과 노출 100의 위험을 맞춥니다.",
+        "boundary": "고객 이름만 보고 검사 범위를 정하지 않고 실제 서비스와 예외를 확인합니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 가격·계약·고객보호 개념을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-appropriateness-assessment"
+        ]
+      },
+      {
+        "label": "2단계 · 캐나다 파생상품 당사자 보호",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "canada-derivatives-party-protection"
+        ]
+      },
+      {
+        "label": "3단계 · 홍콩 복잡 파생상품 분류",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "hong-kong-complex-derivative-classification"
+        ]
+      },
+      {
+        "label": "4단계 · 스위스 서비스별 고객 검사",
+        "relation": "앞 단계의 수치와 기록을 다음 판단으로 확장합니다.",
+        "concepts": [
+          "switzerland-service-level-client-test"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 입력과 계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "예치금 20×5배=노출 100에서 12% 하락 손실 12를 계산해 고객이 밝힌 손실 한도 10보다 2 큰지 확인합니다.",
+          "계산 순서",
+          "단위와 적용 대상"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "캐나다 파생상품 당사자 보호의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "캐나다 파생상품 당사자 보호",
+          "필요·목표·재무상황·위험감내도와 손실 12를 비교합니다.",
+          "모든 적격 당사자나 모든 캐나다 주에 같은 결론을 자동 적용하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "홍콩 복잡 파생상품 분류의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "홍콩 복잡 파생상품 분류",
+          "HKFE 선물과 상장 주식 파생상품을 복잡한 장내 파생상품 예로 봅니다.",
+          "복잡성 분류와 손실 크기 또는 전면 판매금지는 같은 뜻이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "hong-kong-complex-derivative-classification"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "스위스 서비스별 고객 검사의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스위스 서비스별 고객 검사",
+          "추천 전 고객의 손실 한도 10과 노출 100의 위험을 맞춥니다.",
+          "고객 이름만 보고 검사 범위를 정하지 않고 실제 서비스와 예외를 확인합니다."
+        ],
+        "requiredConcepts": [
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정한 대상과 측정·확인 조건을 설명하세요.",
+        "answerChecklist": [
+          "Canada NI 93-101",
+          "적용 대상",
+          "측정 또는 확인 조건"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "뒤의 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
+        "answerChecklist": [
+          "Hong Kong SFC Complex Products·FINMA Client Adviser Duties",
+          "관할 차이",
+          "업무 목적 차이"
+        ],
+        "requiredConcepts": [
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "입력 변경",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection",
+          "hong-kong-complex-derivative-classification",
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection",
+          "hong-kong-complex-derivative-classification",
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 자료들을 단순한 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection",
+          "hong-kong-complex-derivative-classification",
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "연결한 기존 글과 이 글의 책임이 갈리는 지점을 계약·현금·법률효과로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "업무·법률 경계"
+        ],
+        "requiredConcepts": [
+          "canada-derivatives-party-protection",
+          "hong-kong-complex-derivative-classification",
+          "switzerland-service-level-client-test"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Canada NI 93-101",
+        "href": "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "파생상품 당사자 정보·적합성·확인서와 보호 범위를 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Hong Kong SFC Complex Products",
+        "href": "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "장내 선물·주식 파생상품과 복잡상품 요건을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      },
+      {
+        "title": "FINMA Client Adviser Duties",
+        "href": "https://www.finma.ch/en/finma-public/fragen-und-probleme/zur-registrierung-von-kundenberaterinnen-oder-kundenberatern/",
+        "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
+        "contribution": "재무상황·목표·지식·경험과 추천 전 검사·기록을 확인합니다.",
+        "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
+        "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };
