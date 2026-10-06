@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-285.json",
+  "publicArticles": 835,
+  "addedRoutes": [
+    "markets/no-arbitrage-cost-of-carry-and-basis",
+    "markets/clearing-margin-and-default-waterfall",
+    "markets/option-replication-and-put-call-parity",
+    "markets/option-greeks-volatility-and-dynamic-hedging",
+    "markets/interest-rate-derivatives-from-fra-to-swaptions",
+    "markets/derivatives-suitability-disclosure-and-sales-practice"
+  ],
+  "reviewed": 291,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive derivatives foundations added after checkpoint 285; 249 substantive rewrites/additions and 42 retained teaching flows in total. The sequence follows university finance foundations and the Korean derivatives investment solicitation advisor curriculum while preserving separate pricing, clearing, risk and sales-practice boundaries.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "browser": "Six routes × 390/1440 = 12 article checks; section order, two explanatory figures, three term cards, three review prompts, containment, console errors and failed requests checked; 0 failed.",
+    "learning": "PASS 835 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 8.96s and 1,772 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,952 concepts, 6,256 relations, 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 835 strict; actual exit 0.",
+    "topology": "PASS 835 strict; the six single-case foundations have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS reading experience and category listings; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm and Korean naturalness audits for 835 public articles.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; viewport height 844→700 preserved scrollY=1800 on all six routes; mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Six public routes and two listing routes at 390/1440 plus six mobile height/sidebar checks = 22 checks; all content, containment, console, request, scroll-position and sidebar checks passed with 0 failures.",
+    "curriculumCoverage": "MIT finance foundations, CME and OCC market materials, CFTC clearing rules, current Korean Financial Consumer Protection Act and KIFIN derivatives investment solicitation advisor curriculum were mapped to implemented coverage and explicit remaining gaps."
+  },
+  "commit": "b0b3ee105a9bcaea7d84245f5646754a25437406",
+  "deployment": {
+    "runId": 37500055844,
+    "conclusion": "success",
+    "production": "22 checks across articles, listings, mobile height changes and sidebars, 0 failed"
+  }
+}
