@@ -2424,6 +2424,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "뒤부아와 파농은 인종·식민 질서가 자원과 권리만 배분하는 데 그치지 않고 타인의 시선을 통해 자기 이해와 행동 가능성을 만들며, 해방은 제도·문화·주체 형성을 함께 바꾸는 일이라고 분석했습니다.",
     "sharedGate": "지원자 100명에게 같은 시험을 주지만 40명은 교육·언어·이동 조건에서 구조적 불이익을 겪었다고 놓고 형식적 동일성과 실제 조건을 나눕니다."
   },
+  "philosophy-history/medieval-translation-reason-and-revelation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "중세 철학은 라틴 기독교만의 정지된 시대가 아니라 그리스어·아랍어·히브리어·라틴어 문헌이 번역·주석·반박·재번역되며 권위와 논증, 인간 지식의 한계를 다시 정한 다언어 논쟁망입니다.",
+    "sharedGate": "세계의 시작을 묻는 한 문장이 그리스어 원문, 아랍어 번역·주석, 히브리어 번역, 라틴어 대학 문답이라는 네 기록으로 이동합니다."
+  },
+  "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "송명 유학은 불교·도가와의 논쟁 및 교육 제도 속에서 이치와 기, 사물 탐구와 마음의 수양, 도덕적 앎과 행동의 관계를 다시 세운 장기 전통입니다.",
+    "sharedGate": "곡물 100자루 중 10자루를 조사해 2자루의 습기를 발견한 뒤 추가 조사와 이미 확인된 위험의 조치를 구분합니다."
+  },
+  "philosophy-history/early-modern-india-new-nyaya-analysis-and-language": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "새 나이야는 대상·한정자·관계와 인식 사건을 정밀한 기술 언어로 분해해 철학뿐 아니라 문법·시학·법 이론의 논증을 검사한 약 네 세기의 분석 전통입니다.",
+    "sharedGate": "땅 네 구획 A~D와 연못·나무·길 표식 세 개를 놓고 ‘연못 옆 나무의 땅’이 어느 구획과 어떤 권리를 가리키는지 다시 씁니다."
+  },
+  "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "프래그머티즘·분석 철학·현상학은 결과를 시험하는 개입, 개념과 논증의 조건, 살아 있는 경험의 구조라는 서로 다른 질문을 발전시켰으며 분석 대 대륙이라는 두 상자보다 실제 방법의 겹침과 차이로 읽어야 합니다.",
+    "sharedGate": "가로등 민원 10건에서 전구 교체, 7일간 배선 관찰, 감지기 조정이라는 세 개입이 어떤 질문과 경험을 드러내는지 비교합니다."
+  },
+  "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "페미니즘 철학은 사회적 위치가 지식 생산에 미치는 영향, 돌봄 관계와 의존, 여러 권력 축이 함께 만드는 제도적 누락을 분석해 기존 인식론·윤리학·형이상학의 출발점과 보편 주장을 다시 검사합니다.",
+    "sharedGate": "승진 후보 100명 가운데 여성 40명 중 8명, 남성 60명 중 18명이 승진한 평균을 부서·인종화·돌봄 책임과 결정 권한별로 다시 엽니다."
+  },
+  "philosophy-history/indigenous-land-and-latin-american-liberation": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "국가 지도의 빈 땅 분류는 계절 이용·공동체 법·의례·회복 시간을 지울 수 있으며, 원주민의 땅에 근거한 규범과 라틴아메리카 해방 철학은 서로 다른 전통으로서 식민 권력과 보편을 말하는 위치를 다시 묻습니다.",
+    "sharedGate": "국가가 미사용지라 부른 100헥타르를 공동체의 계절 이용 60, 물·의례 공간 20, 회복·재생 구역 20으로 다시 기록합니다."
+  },
 };
 
 /**
@@ -2431,6 +2473,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "philosophy-history/early-modern-india-new-nyaya-analysis-and-language": "a1b3209071a4b1a3",
+  "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": "277f9a78d8806b21",
+  "philosophy-history/indigenous-land-and-latin-american-liberation": "f483240a48ec18da",
+  "philosophy-history/medieval-translation-reason-and-revelation": "a8642dd35b4deed2",
+  "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": "80edf0ce0db7744c",
+  "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": "287c7be8714df3ab",
   "markets/cross-border-netting-enforceability-and-regulatory-recognition": "f5ba03ee5ac2c7ee",
   "markets/eu-uk-cfd-appropriateness-leverage-and-negative-balance": "c135e415762d61e1",
   "markets/japan-australia-retail-leverage-and-product-governance": "23f25e390b424854",

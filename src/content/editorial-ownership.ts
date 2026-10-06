@@ -17121,6 +17121,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "medieval-translation-reason-and-revelation": {
+    "title": "중세의 책은 여러 방향으로 이동했다: 번역·문답·이성과 계시 글이 소유하는 범위",
+    "owns": [
+      "네 언어 기록으로 본 중세 문헌의 양방향 이동",
+      "권위·논증·경전 해석·인간 언어의 범위를 나누는 문답",
+      "중세 철학을 라틴 기독교 한 갈래로 축소하지 않는 지역·문헌 경계"
+    ],
+    "reuses": [
+      {
+        "label": "이슬람 철학의 번역·주석 사슬",
+        "href": "/philosophy/philosophy-history/islamic-philosophy-translation-illumination-and-being#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "song-ming-confucianism-pattern-heartmind-and-action": {
+    "title": "안다는 것은 언제 행동이 되는가: 송명 유학의 이치·마음·지행합일 글이 소유하는 범위",
+    "owns": [
+      "곡물 100자루에서 조사한 범위와 행동할 책임의 구분",
+      "이치·기, 격물궁리, 지행합일의 기능 비교",
+      "송명 유학의 내부 경쟁과 조선·일본·베트남의 변형을 한 고정 질서로 만들지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "유가의 인·예·덕치",
+        "href": "/philosophy/philosophical-traditions/confucian-ritual-role-and-humane-rule#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "early-modern-india-new-nyaya-analysis-and-language": {
+    "title": "모호한 문장을 관계 지도로 바꾸다: 초기 근대 인도의 새 나이야 글이 소유하는 범위",
+    "owns": [
+      "땅 네 구획과 표식 세 개를 이용한 관계 분석 사례",
+      "새 나이야의 기술 언어와 인식 사건 분석의 역할",
+      "새 나이야를 20세기 영미 분석 철학의 미완성 전사로 만들지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "고전 인도의 프라마나 인식론",
+        "href": "/philosophy/philosophy-history/classical-india-pramana-self-and-liberation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "modern-methods-pragmatism-analysis-and-phenomenology": {
+    "title": "고장 난 가로등을 세 번 묻다: 프래그머티즘·분석·현상학 글이 소유하는 범위",
+    "owns": [
+      "가로등 민원 10건과 세 개입으로 비교한 세 철학 방법",
+      "프래그머틱 격률·개념 분석·현상학적 기술의 질문 차이",
+      "분석 철학과 대륙 철학을 두 고정 진영으로 나누지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "근대 유럽의 방법적 의심",
+        "href": "/philosophy/philosophy-history/early-modern-europe-doubt-experience-and-causality#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "feminist-philosophy-standpoint-care-and-intersectionality": {
+    "title": "누구의 경험이 보편에서 빠졌는가: 입장·돌봄·교차성의 철학 글이 소유하는 범위",
+    "owns": [
+      "승진 후보 100명의 평균 아래 교차 집단과 돌봄 노동을 다시 여는 사례",
+      "입장 인식론·돌봄 윤리·교차성의 역할과 오용 경계",
+      "페미니즘 철학을 서구 여성 한 집단의 단일 역사로 만들지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "억압적 시선과 이중의식",
+        "href": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
+  "indigenous-land-and-latin-american-liberation": {
+    "title": "빈 땅이라는 지도는 무엇을 지우는가: 원주민의 땅과 라틴아메리카 해방 철학 글이 소유하는 범위",
+    "owns": [
+      "빈 땅 100헥타르를 60·20·20의 관계와 이용으로 다시 읽는 사례",
+      "땅에 근거한 규범·식민적 지움·라틴아메리카 해방 철학의 구분",
+      "원주민 사상과 라틴아메리카 해방 철학을 하나의 지역 목소리로 합치지 않는 경계"
+    ],
+    "reuses": [
+      {
+        "label": "식민 주체 형성과 탈식민 실천",
+        "href": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "secondary-source",
+        "rule": "학술 개관의 분류는 입구이며 각 전통의 모든 1차 문헌과 내부 이견을 대신하지 않습니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 숫자는 개념 관계를 손으로 확인하기 위한 설명용 사례이며 역사 인구·면적·빈도의 실측값이 아닙니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

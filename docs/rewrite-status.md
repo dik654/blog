@@ -1194,6 +1194,7 @@
 - [x] 주요 수식에 연산 의도를 underbrace로 직접 표시하고 자동 재생·키보드 조작이 가능한 새 flat Viz로 cache 성장과 state update를 시각화
 - [x] 기초 6개+심화 4개, official evidence·graph owner·article-only 역검사와 390px·1440px Playwright·build·전역 audit 완료
 - [x] 공식 BF16 55.56 GB·mixed-FP8 30.87 GB checkpoint payload에서 48 GiB의 32K·128K·262K known floor를 계산하고, FP8 weights≠FP8 KV·workspace 미지수를 새 VRAM Viz와 기동 log receipt로 설명
+
 # 2026-08-15 · CRUD 중 concept graph 유기적 확장 원칙
 
 - Article create·split·merge·rename·delete 도중 새 학습 단위나 선수·조합 경계가 드러나면 같은 변경에서 graph node·edge·canonical owner를 추가하고, 확장된 그래프로 route 경계를 다시 판단하도록 정본 계약을 보강했다.
@@ -1970,9 +1971,9 @@
 
 - 사용자가 "딥리서치도 해가면서 작성한 거 맞냐"고 물어 확인한 결과, **7편 시리즈에는 외부 문헌 검증을 하지 않았음**이 사실이었다. 세션 앞부분 SaaS·k8s 글은 Cloudflare Unimog·Maglev·BeyondCorp·AWS PrivateLink·Gateway API Inference Extension·LeaderWorkerSet을 직접 fetch했고 Wei·Heidemann 논문은 PDF를 `pdftotext`로 읽어 수치를 뽑았으나, 7편은 사용자 실측 산출물 검증만 하고 외부 인용은 로그를 그대로 옮겼다.
 - 사후 검증 결과 **세 인용 모두 사실이었다.**
-  - FLUXSynID: ICCVW 2025(FoundGen-Bio, pp.3757–3767) 확정. 원문 *"340k impostor verification attempts on identities from the CFD dataset, yielding values of 0.423 and 0.497 for ArcFace"*, ArcFace FMR 0.1%에서 6,641/14,889 = 44.6%, FLUX.1-dev·guidance 1.7~2.5·20 steps.
-  - arXiv:2207.12598 = Ho·Salimans, *Classifier-Free Diffusion Guidance*(2022). 초록에 *"trade off mode coverage and sample fidelity"*.
-  - arXiv:2604.04018 = *1.x-Distill*(2026). 증류의 mode collapse를 다룸.
+  - FLUXSynID: ICCVW 2025(FoundGen-Bio, pp.3757–3767) 확정. 원문 _"340k impostor verification attempts on identities from the CFD dataset, yielding values of 0.423 and 0.497 for ArcFace"_, ArcFace FMR 0.1%에서 6,641/14,889 = 44.6%, FLUX.1-dev·guidance 1.7~2.5·20 steps.
+  - arXiv:2207.12598 = Ho·Salimans, _Classifier-Free Diffusion Guidance_(2022). 초록에 _"trade off mode coverage and sample fidelity"_.
+  - arXiv:2604.04018 = _1.x-Distill_(2026). 증류의 mode collapse를 다룸.
 - 다만 검증하면서 규약 위반과 조건 누락 3건을 발견해 고쳤다.
   1. 6편 본문이 "두 문헌"을 문장으로만 언급하고 evidence 항목이 없었다 → 두 논문을 `핵심 논문`·`선행·비교 논문`으로 등록하고, 각각 "정체성 다양성을 직접 측정하지 않음"·"분포 정합 계열이라 측정 대상과 다른 증류 방식"이라는 인용 범위를 note와 본문 양쪽에 적었다.
   2. 0.423이 **ArcFace 전용** 값이라는 조건이 빠져 있었다(같은 표의 AdaFace는 0.253). 1편 본문에 문단을 추가해, 이 사실이 오히려 "임계값은 모델에서 측정해 정한다"는 그 글 자체의 논지를 한 번 더 확인해 준다는 점까지 적었다.
@@ -1982,7 +1983,7 @@
 ### 2026-09-12 · 남은 외부 인용 검증 (후속 2차)
 
 - 1차 검증에서 남겨 둔 세 주장을 마저 확인했다. **하나는 사실, 하나는 틀린 틀, 하나는 근거 없음**이었다.
-- **LaMa(3편) — 사실, 그리고 더 강해졌다.** Suvorov et al., *Resolution-robust Large Mask Inpainting with Fourier Convolutions*(WACV 2022, arXiv:2109.07161). 원문이 *"fast Fourier convolutions (FFCs), which have the image-wide receptive field"*라고 명시한다. 제가 쓴 "넓은 수용 영역"보다 논문 쪽이 더 강한 주장(이미지 전체)이라 본문을 그대로 고쳤고, **그 구조 설명이 애니에서만 마스크 밖 변화가 1.03으로 큰 실측의 설명이 된다**는 연결을 명시했다. 3편에 LaMa 논문 evidence가 아예 없었던 것도 채웠다(논문이 제거 용도를 주장한 것은 아니라는 경계 포함).
+- **LaMa(3편) — 사실, 그리고 더 강해졌다.** Suvorov et al., _Resolution-robust Large Mask Inpainting with Fourier Convolutions_(WACV 2022, arXiv:2109.07161). 원문이 *"fast Fourier convolutions (FFCs), which have the image-wide receptive field"*라고 명시한다. 제가 쓴 "넓은 수용 영역"보다 논문 쪽이 더 강한 주장(이미지 전체)이라 본문을 그대로 고쳤고, **그 구조 설명이 애니에서만 마스크 밖 변화가 1.03으로 큰 실측의 설명이 된다**는 연결을 명시했다. 3편에 LaMa 논문 evidence가 아예 없었던 것도 채웠다(논문이 제거 용도를 주장한 것은 아니라는 경계 포함).
 - **CCIP(1편) — 비교 틀이 틀렸다.** 제가 "공개된 임계값이 오탐 6~7% 수준이라 남남 45쌍에서 0을 요구하는 규율에 비하면 후퇴"라고 썼는데, 모델 카드는 **임계값을 F1 점수 최대 지점으로 정한다**고 명시한다(정밀도 0.938·재현율 0.944·F1 0.941). 제가 1−정밀도를 오탐률처럼 읽은 것이고, 정밀도의 분모는 같다고 판정한 쌍·FMR의 분모는 남남 쌍 전체라 두 숫자를 나란히 놓을 수 없다. 더 중요한 것은 F1 최대 선택이 1편이 주장하는 "허용 오탐률을 먼저 정한다"와 **다른 목표를 최적화**한다는 점이라, 그 쪽으로 문단을 다시 썼다. 원래 문장보다 비판이 정확해졌다.
 - **의상 민감도(1편) — 근거 없음, 삭제.** "옷과 색까지 보므로 의상을 바꾸면 벌점이 붙는다"는 모델 카드·공식 문서 어디에도 없다. 캐릭터 단위 지표라는 사실만 남기고 추론을 걷어냈다. 반환값이 차이값이라 낮을수록 같은 인물이라는 부분은 공식 문서로 확인됐다.
 - 검증: 전 audit 통과, 시리즈 7편 topology 전부 clean, tsc·eslint·build 통과(676 static route), 수정 문단 브라우저 렌더 확인.
@@ -1994,12 +1995,14 @@
 **정본 변경이 먼저였다.** 사용자가 teach-system(`~/.codex/skills/teach-system`)의 `blog` 프로필 적용을 요구해, AGENTS.md 절차대로 `blog-rewrite-contract.md`에 **1.3 설명 순서 사다리**를 먼저 병합하고 DoD에 5개 항목을 추가한 뒤 구현했다. 1.1(문단 호흡)이 "한 문단을 어떻게 쓰는가"라면 1.3은 "절의 순서를 어떻게 올리는가"이고, 둘은 겹쳐서 적용한다. 1.3.1에 분야별 치환을 명시했다 — 코드가 없는 글에서 층위 5·6의 "실물"은 원 논문의 식·표·문장이며, 층위 0의 사례 숫자를 그 식에 실제로 넣어 돌린 결과를 함께 싣는다.
 
 **원자료는 전부 직접 열어 읽었고, 인용은 쪽 이미지로 대조했다.**
+
 - Coase(1937) — Economica 4(16). JSTOR 스캔본 OCR. 쪽 번호가 OCR에 남지 않아 **문장별 쪽수를 주장하지 않았다.**
 - Young(1928) — Economic Journal 38(152). 텍스트 층이 표지뿐이어서 16면을 `pdftoppm`+`tesseract`로 전면 OCR한 뒤, 인용 4문장을 527·530·533·539쪽 이미지로 글자 단위 대조.
 - Cournot(1838, Bacon 1897 영역) — Internet Archive. 식 (1)(56쪽)·식 (2)(57쪽)·`necessarily p > d[φ(D)]/dD`(59쪽) 이미지 대조. **Lerner(1934)는 열람 가능한 전문을 끝내 찾지 못해 읽지 못했고**, 보충 읽기로만 두고 "어떤 주장도 여기 기대지 않는다"를 note에 적었다. 틈의 식은 Cournot 식 (2)에서 이 글이 직접 유도한 것으로 표시했다.
 - Card·Krueger(1994) — AER 84(4). 저자 공개본 PDF. 표 3(780쪽)·표 7(788쪽)과 772·792쪽 문장을 이미지로 대조. 표 3의 수치는 `pdftotext`가 전부 누락해 **페이지 이미지로만 복구**됐다.
 
 **원문이 계획을 두 번 고쳤다.**
+
 1. 1편 말미에 "싸지는 구조가 조직을 하나로 몰아간다"고 예고해 뒀는데, Young 527쪽이 바로 그 추론을 `common error`로 못 박는다. 2편에 부품 5를 따로 두어 왜 따라 나오지 않는지를 쓰고 **1편의 넘김 문단을 고쳤다.**
 2. 노동 1편은 Card·Krueger를 수요독점의 증거로 쓰려던 계획이었으나, 792쪽이 경쟁 모형으로도 수요독점으로도 설명하기 어렵다고 적는다(791쪽의 상여금 비교도 무효과). 글의 결론을 "둘 다 부족하다"로 바꿨고, 그래서 부품 1~4에서 두 셈을 모두 세워 두는 구조가 필요해졌다.
 
@@ -2019,7 +2022,8 @@
 
 **읽기 순서에서 선수 역전을 발견해 고쳤다.** 앞 회차에 `firms`·`labor`를 만들면서 `domain-reading-paths.ts`와 `src/content/index.ts`의 카테고리 순서를 함께 갱신하지 않았다. 그 결과 경제 대분류 페이지의 전체 순서가 1·2(scarcity) 다음에 바로 10·11·12에 와야 할 firms로 건너뛰었고, 두 카테고리는 `그 밖의 분야` 더미로 밀려 있었다. `audit:order --strict`는 카테고리 안의 순서만 보므로 이 교차 카테고리 역전을 잡지 못한다 — 렌더된 페이지의 번호 목록을 직접 읽어서 발견했다. 스테이지 05·06을 추가하고 카테고리 배열을 `scarcity → prices → market-failure → macro → firms → labor`로 고쳐 1~9(1단계)·10~13(2단계)가 됐다. 제목의 "아홉 편"도 낡아 있어 함께 고쳤다.
 
-**labor/measuring-the-spread** — 원자료는 Lorenz(1905), *Publications of the American Statistical Association* 9(70), 209–219쪽. JSTOR Early Journal Content 공개본(archive.org `jstor-2276207`)을 받아 전문을 읽었고, 210쪽 영국 소득세 표·214쪽 프로이센 표·217쪽 방법 문장·218쪽 열 사람 반례를 전부 쪽 이미지로 대조했다.
+**labor/measuring-the-spread** — 원자료는 Lorenz(1905), _Publications of the American Statistical Association_ 9(70), 209–219쪽. JSTOR Early Journal Content 공개본(archive.org `jstor-2276207`)을 받아 전문을 읽었고, 210쪽 영국 소득세 표·214쪽 프로이센 표·217쪽 방법 문장·218쪽 열 사람 반례를 전부 쪽 이미지로 대조했다.
+
 - 입구의 작은 수치 사례를 **원문 218쪽의 반례 그대로** 썼다(6 7 8 9 10 12 12 12 12 12 / 8 8 8 8 8 8 8 14 14 16). 이 두 분배는 곡선이 50%에서 엇갈리므로, 부품 4에서 한 숫자로 줄였을 때 순서가 뒤집히는 것을 입구 사례로 바로 보일 수 있다.
 - **넓이 비(0.120·0.144·0.357·0.394)는 Lorenz 글에 없다.** 그는 곡선과 읽는 규칙까지만 적었고 넓이를 한 숫자로 바꾸는 계산은 이 글이 그의 곡선에서 이어 적은 것이다. 본문·note·`notClaim` 세 곳에서 이 경계를 적었다.
 
@@ -2090,17 +2094,17 @@
 
 **범위**: `testimony` 3편, `record-numbers` 3편, `inference-from-sources` 3편. 한 세션에서 설계·집필·등록·검수·커밋까지 끝냈다. 전자 4분야는 `electronics-series` 브랜치(별도 worktree)가 맡으므로 손대지 않았다.
 
-| # | route | 1차 자료 | 묻는 것 |
-|---|---|---|---|
-| 1 | testimony/speeches-were-reconstructed | Thucydides 1.22 (Crawley) | 한 책 안의 두 칸과 증언이 갈리는 두 원인 |
-| 2 | testimony/told-but-not-believed | Herodotus 7.148–152 (Macaulay) | 꼬리표, 전할 의무와 믿을 의무, 규칙의 범위 |
-| 3 | testimony/the-writer-was-there | Josephus 『유대 전쟁사』 서문 1·4·8·12 (Whiston) | 당사자가 치우침을 공개하는 네 장치 |
-| 4 | record-numbers/how-the-army-was-counted | Herodotus 7.60 | 눈금으로 센 수의 해상도와 단위 오차 |
-| 5 | record-numbers/what-the-total-cannot-tell | Herodotus 7.184–187 | 합산된 총계의 끝자리와 저자의 검산 |
-| 6 | record-numbers/numbers-that-command | 함무라비 법전 196~204·209~225·268~277 (Johns 1903) | 명령하는 숫자의 네 꼴과 조항별 기준 |
-| 7 | inference-from-sources/ruins-mislead | Thucydides 1.10 | 남는 과정의 치우침과 방향 있는 보정 |
-| 8 | inference-from-sources/the-gap-was-made | Johns 판 머리말·65조 뒤 주·말미 세 조항 | 지워진 공백, 번호에 실린 추정, 돌아온 조각 |
-| 9 | inference-from-sources/naming-the-past | Johns 판 표제·본문 끝 문장·머리말 | 우리가 붙인 이름·구조·번역어가 들여오는 것 |
+| #   | route                                     | 1차 자료                                           | 묻는 것                                    |
+| --- | ----------------------------------------- | -------------------------------------------------- | ------------------------------------------ |
+| 1   | testimony/speeches-were-reconstructed     | Thucydides 1.22 (Crawley)                          | 한 책 안의 두 칸과 증언이 갈리는 두 원인   |
+| 2   | testimony/told-but-not-believed           | Herodotus 7.148–152 (Macaulay)                     | 꼬리표, 전할 의무와 믿을 의무, 규칙의 범위 |
+| 3   | testimony/the-writer-was-there            | Josephus 『유대 전쟁사』 서문 1·4·8·12 (Whiston)   | 당사자가 치우침을 공개하는 네 장치         |
+| 4   | record-numbers/how-the-army-was-counted   | Herodotus 7.60                                     | 눈금으로 센 수의 해상도와 단위 오차        |
+| 5   | record-numbers/what-the-total-cannot-tell | Herodotus 7.184–187                                | 합산된 총계의 끝자리와 저자의 검산         |
+| 6   | record-numbers/numbers-that-command       | 함무라비 법전 196~204·209~225·268~277 (Johns 1903) | 명령하는 숫자의 네 꼴과 조항별 기준        |
+| 7   | inference-from-sources/ruins-mislead      | Thucydides 1.10                                    | 남는 과정의 치우침과 방향 있는 보정        |
+| 8   | inference-from-sources/the-gap-was-made   | Johns 판 머리말·65조 뒤 주·말미 세 조항            | 지워진 공백, 번호에 실린 추정, 돌아온 조각 |
+| 9   | inference-from-sources/naming-the-past    | Johns 판 표제·본문 끝 문장·머리말                  | 우리가 붙인 이름·구조·번역어가 들여오는 것 |
 
 **사료 치환**: 조선왕조실록은 앞 회차에서 조사한 대로 기사 ID를 얻는 경로가 막혀 있어 쓰지 못했다. 사용자가 "접근 어려운 편은 확인 가능한 다른 원문 사료로 대체해도 된다"고 승인했으므로, Project Gutenberg로 전문을 확보한 네 사료(Thucydides·Herodotus·Josephus·함무라비 법전)로 아홉 편을 구성했다. **넷 다 전사본이고 facsimile이 아니다** — 그래서 아홉 편 모두 쪽수를 쓰지 않고 권·절 또는 조항 번호까지만 적었고, 그 사실을 인용 블록과 `evidenceScope`에 밝혔다. 그리스어·아카드어 원문을 읽지 않았다는 것도 함께 적었다.
 
@@ -2132,14 +2136,12 @@
 
 되돌려 넣기는 문단 220개. ⟦NNN⟧ 마커·숫자·라틴 문자 토큰·굵게/기울임 경계·"(답: 부품 N절)"·`<a href>`를 전수 대조했고, 적용한 문단은 모두 왕복 추출로 대조해 어긋남 0이다. **JSX 줄바꿈이 태그 경계에 붙으면 그 공백이 통째로 사라져 단어가 붙는다**(앞 회차의 "나누는 일앞에"). 그래서 줄이 `>`로 끝나거나 다음 줄이 `<`로 시작하면 두 줄을 합치도록 했고, 한글이 두 칸을 차지하는 것을 반영해 접는 폭도 기존 소스 스타일에 맞췄다. 브라우저에서 렌더된 본문을 직접 읽어 붙은 단어가 없는 것도 확인했다.
 
-
 ### Teach-system 전수 개선: 103편 중간 저장 (2026-10-04)
 
 - 전체 799편 중 실제 본문 검토와 개선·유지 검증을 마친 누적 103편입니다. 남은 696편 검토를 계속하며 goal은 진행 중입니다.
 - 이번 17편: 미분·야코비안·목적함수 3편, 교차검증·실험/제출·탐색 10편, DH·ElGamal 2편, 타이머·직렬통신 2편입니다.
 - 학습 계약 strict 103편 통과, 최종 화면 206회(390/1440) 통과. 실제 소스와 가정 수치를 구별하고 원문·수식·연습문제 답 경로를 대조했습니다.
 - 커밋 소스의 분리 검사 결과는 `teach-system-audit/checkpoint-103.json`에 기록합니다. 아직 배포하지 않았습니다.
-
 
 ### Teach-system 전수 개선: 115편 중간 저장 (2026-10-04)
 
@@ -2148,14 +2150,12 @@
 - 학습 계약 strict 115편, 최종 화면 누적 230회(390/1440)가 통과했습니다. 수렴 예제의 중복 React key를 교정하고 두 화면을 재검사했습니다.
 - 커밋 소스의 분리 검사는 `teach-system-audit/checkpoint-115.json`에 기록합니다. 아직 배포하지 않았습니다.
 
-
 ### Teach-system 전수 개선: 126편 중간 저장 (2026-10-04)
 
 - 전체 799편 중 누적 126편의 실제 본문 검토와 개선·유지 검증을 마쳤습니다. 남은 673편 검토를 계속하며 goal은 진행 중입니다.
 - 이번 11편: 벡터 1편, 지연시간·continuous batching 2편, Lagrange·유한체·Reed–Solomon 3편, CUDA·AMD·메모리 계층·HBM·스레드 계층 5편입니다.
 - 학습 계약 strict 126편과 최신 화면 누적 252회가 통과했습니다. 실제 원문의 버전·주소·분기·수학 반례를 같은 사례에 적용하고, 코드 패널·모바일 수식·키보드와 장면 전환을 검수했습니다.
 - 커밋 소스의 분리 검사 결과는 `teach-system-audit/checkpoint-126.json`에 기록합니다. 아직 배포하지 않았습니다.
-
 
 ### Teach-system 전수 개선: 137편 중간 저장 (2026-10-04)
 
@@ -2483,3 +2483,14 @@
 - 공개 사이트에서 새 여섯 글과 철학사·철학 목록을 390px·1440px로 16회 검사했다. 본문 열 절, 글마다 핵심 도식 3개, 문서·그림·버튼의 가로 넘침, 숫자 흐름 화살표 크기, 콘솔 오류와 실패 요청이 모두 기준을 통과했다.
 - 390px에서는 높이를 844px에서 700px로 바꿔도 여섯 글의 스크롤 이동값이 모두 0px였고, 상단 메뉴의 336px 모바일 사이드바 dialog도 모두 열렸다. 총 22개 운영 검사 결과는 `output/playwright/philosophy-history-production/2026-10-06T21-09-32-209Z/summary.json`에 기록했다.
 - 전체 goal은 진행 중이다. 남은 기존 글 544편의 깊이 재검수와 중세 라틴·유대 철학, 송명 성리학, 인도 후기 학파, 19~20세기 분석·대륙철학, 페미니즘·토착·라틴아메리카 철학 및 세계사·경제사의 다음 빈칸을 계속 다룬다.
+
+### Teach-system 전수 개선: 339편 중간 저장 (2026-10-07)
+
+- 철학사의 다음 빈칸을 `중세의 그리스어·아랍어·히브리어·라틴어 번역망 → 송명 유학의 이치·격물·지행합일 → 새 나이야의 관계·인식 분석 → 프래그머티즘·분석철학·현상학의 방법 → 페미니즘의 입장·돌봄·교차성 → 원주민의 땅과 라틴아메리카 해방 철학` 여섯 편으로 연결했다. 원주민 사상과 라틴아메리카 해방 철학, 새 나이야와 현대 영미 분석 철학처럼 가까워 보이는 흐름도 같은 전통으로 합치지 않았다.
+- Stanford 철학백과의 중세 철학·마이모니데스·송명 유학·왕양명·초기 근대 인도 분석 철학·철학적 분석·프래그머티즘·페미니즘 철학·권력·식민주의·해방 철학 항목을 시기와 전통별 근거로 사용했다. 12편의 읽기 순서는 겹치는 시대의 시작 시점을 기준으로 다시 배열하고 단선적인 문명 발전표가 아니라는 경계를 목록 첫 화면에 밝혔다.
+- 네 언어 기록, 곡물 100자루 중 조사한 10자루와 젖은 2자루, 땅 네 구획과 표식 세 개, 가로등 민원 10건과 세 개입, 여성 40명 중 8명과 남성 60명 중 18명의 승진, 빈 땅으로 분류된 100헥타르의 60·20·20 이용을 손으로 추적했다. 설명용 숫자를 역사 통계로 오해하지 않도록 각 글의 자료 범위와 한계를 따로 적었다.
+- 공개 catalog는 883편이며 실제 본문 검토는 누적 339편이다. 이 가운데 재작성·추가 297편, 기존 수업 흐름 유지 검증 42편이다. 개념 4,086개·관계 6,393개, 전체 글마다 기초 6문제·심화 4문제와 읽기 목록 91개·선수 관계 461개를 등록했다. 전체 goal은 진행 중이며 남은 기존 글은 544편이다.
+- 대학 금융론은 무차익·가격결정을, 금융투자교육원의 파생상품투자권유자문인력 과정은 장내·장외 상품·권유·법규·윤리·분쟁을, 은행권 FP 과정은 고객 목표·상품·포트폴리오 적합성을, GARP는 위험·운영 통제를 맡기는 파생상품 범위 기준을 다시 명시했다. 실제 효력과 수치는 거래소·감독기관·국제기준 원문에 대조한다.
+- 학습 계약·개념 그래프·수식·글 구조·토폴로지·시각화·읽기 경험·순서·문장 호흡·쉬운 한국어·용어 밀도·ESLint가 모두 통과했다. 8GB Node 한도에서 production build가 9.42초에 7,231개 모듈과 정적 공개 경로 1,870개 및 404 fallback을 생성했다.
+- 새 여섯 글과 철학사·철학 목록을 390px·1440px로 16회, 모바일 높이 변화·사이드바를 6회 더 확인해 총 22개 로컬 검사가 통과했다. 모바일 도식은 352~354px, 숫자 흐름 화살표는 27px였고 높이를 844px에서 700px로 바꿔도 스크롤 이동은 모두 0px였다. 336px 사이드바도 dialog로 열렸다. 결과는 `output/playwright/philosophy-history-expansion/2026-10-06T21-30-18-763Z/summary.json`에 기록했다.
+- 철학사의 다음 공백은 독일 관념론, 실존주의, 해석학, 비판이론, 논리실증주의, 일상언어철학, 한국·일본·베트남의 변형, 추가 아프리카 전통, 종교철학과 메타·응용 윤리다. 전체 goal은 진행 중이며 기존 글 544편의 깊이 재검수와 세계사·경제사의 다음 묶음을 계속 다룬다.

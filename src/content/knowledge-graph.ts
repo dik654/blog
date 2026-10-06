@@ -30878,6 +30878,214 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "독립 선언을 넘어 식민 통치가 남긴 제도·지식·문화·자기 이해의 관계를 바꾸는 집단적 작업입니다.",
     "canonicalHref": "/philosophy/philosophy-history/colonial-modernity-race-and-decolonization#names"
   },
+  "medieval-translation-commentary-network": {
+    "id": "medieval-translation-commentary-network",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "중세의 번역·주석망",
+    "aliases": [
+      "medieval translation-commentary network"
+    ],
+    "definition": "원문이 여러 언어의 번역·요약·주석·반박·재번역을 거치며 새 독자와 논쟁을 만드는 관계망입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/medieval-translation-reason-and-revelation#names"
+  },
+  "scholastic-question-method": {
+    "id": "scholastic-question-method",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "스콜라식 문답",
+    "aliases": [
+      "scholastic quaestio",
+      "quaestio method"
+    ],
+    "definition": "한 질문에 찬반 논거를 먼저 놓고 구분과 답을 제시한 뒤 각각의 반론에 답하는 수업·저술 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/medieval-translation-reason-and-revelation#names"
+  },
+  "negative-theology-language-limit": {
+    "id": "negative-theology-language-limit",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "부정 신학과 언어의 한계",
+    "aliases": [
+      "negative theology",
+      "apophatic theology"
+    ],
+    "definition": "신을 인간 사물처럼 긍정하는 말의 한계를 지키기 위해 무엇이 아닌지를 말하는 접근입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/medieval-translation-reason-and-revelation#names"
+  },
+  "li-qi-pattern-configuration": {
+    "id": "li-qi-pattern-configuration",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "이치와 기",
+    "aliases": [
+      "li and qi",
+      "理氣"
+    ],
+    "definition": "사물과 관계가 마땅히 작동하는 질서인 이치와 그 질서가 구체적으로 드러나는 재료·힘인 기를 함께 설명하는 틀입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/song-ming-confucianism-pattern-heartmind-and-action#names"
+  },
+  "investigation-of-things": {
+    "id": "investigation-of-things",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "격물궁리",
+    "aliases": [
+      "investigation of things",
+      "格物窮理"
+    ],
+    "definition": "사물·문헌·관계의 이치를 끝까지 살피며 앎과 자기 수양을 넓히는 주희 계열의 공부입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/song-ming-confucianism-pattern-heartmind-and-action#names"
+  },
+  "unity-of-knowledge-and-action": {
+    "id": "unity-of-knowledge-and-action",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "지행합일",
+    "aliases": [
+      "unity of knowledge and action",
+      "知行合一"
+    ],
+    "definition": "참으로 아는 일에는 그에 맞는 동기와 행동이 이미 포함된다는 왕양명의 주장입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/song-ming-confucianism-pattern-heartmind-and-action#names"
+  },
+  "navya-nyaya-analysis": {
+    "id": "navya-nyaya-analysis",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "새 나이야의 분석",
+    "aliases": [
+      "Navya-Nyāya",
+      "New Logic"
+    ],
+    "definition": "강게샤 이후 지식·언어·대상 관계의 모호함을 정밀한 기술 어휘로 분해하고 논증의 성립 조건을 검사한 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-india-new-nyaya-analysis-and-language#names"
+  },
+  "qualifier-relation-analysis": {
+    "id": "qualifier-relation-analysis",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "한정자·관계 분석",
+    "aliases": [
+      "qualifier relation analysis",
+      "avacchedaka analysis"
+    ],
+    "definition": "어떤 대상이 어떤 성질과 관계에 의해 가려지는지 드러내 모호한 지시와 범위를 좁히는 분석입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-india-new-nyaya-analysis-and-language#names"
+  },
+  "cognition-event-analysis": {
+    "id": "cognition-event-analysis",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "인식 사건 분석",
+    "aliases": [
+      "cognition event analysis",
+      "jñāna analysis"
+    ],
+    "definition": "누가 무엇을 어떤 인식 통로와 조건에서 알았는지 하나의 인식 사건으로 분해해 참과 오류의 원인을 찾는 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/early-modern-india-new-nyaya-analysis-and-language#names"
+  },
+  "pragmatic-maxim": {
+    "id": "pragmatic-maxim",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "프래그머틱 격률",
+    "aliases": [
+      "pragmatic maxim"
+    ],
+    "definition": "어떤 개념이 참일 때 예상되는 실제 효과와 가능한 개입의 차이를 밝혀 그 개념의 뜻을 분명히 하는 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology#names"
+  },
+  "conceptual-analysis-method": {
+    "id": "conceptual-analysis-method",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "개념 분석",
+    "aliases": [
+      "conceptual analysis"
+    ],
+    "definition": "주장의 핵심 개념, 사용 조건, 논리적 관계와 반례를 밝혀 무엇을 말하고 있는지 검사하는 여러 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology#names"
+  },
+  "phenomenological-description": {
+    "id": "phenomenological-description",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "현상학적 기술",
+    "aliases": [
+      "phenomenological description"
+    ],
+    "definition": "설명을 성급히 원인 이론으로 바꾸기 전에 몸·시간·공간·대상과 함께 나타나는 경험의 구조를 자세히 기술하는 방법입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology#names"
+  },
+  "standpoint-epistemology": {
+    "id": "standpoint-epistemology",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "입장 인식론",
+    "aliases": [
+      "standpoint epistemology"
+    ],
+    "definition": "지식이 사회적 위치와 노동 분업 속에서 만들어지며 주변화된 위치에서 지배 질서가 가린 관계를 발견할 가능성이 있다는 인식론입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality#names"
+  },
+  "care-ethics": {
+    "id": "care-ethics",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "돌봄 윤리",
+    "aliases": [
+      "ethics of care"
+    ],
+    "definition": "자율적 개인만을 기본 단위로 두지 않고 의존·관계·응답 책임과 돌봄 노동의 실제 조건을 도덕 판단에 넣는 접근입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality#names"
+  },
+  "intersectionality-analysis": {
+    "id": "intersectionality-analysis",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "교차성 분석",
+    "aliases": [
+      "intersectionality"
+    ],
+    "definition": "성별·인종화·계급·장애 같은 권력 축이 더해지는 수준을 넘어 특정 제도에서 함께 작동해 고유한 누락을 만드는 방식을 분석합니다.",
+    "canonicalHref": "/philosophy/philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality#names"
+  },
+  "land-based-normativity": {
+    "id": "land-based-normativity",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "땅에 근거한 규범",
+    "aliases": [
+      "land-based normativity"
+    ],
+    "definition": "땅을 교환 가능한 면적만으로 보지 않고 생계·친족·의례·책임·세대 간 관계가 규범을 만드는 자리로 이해하는 접근입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/indigenous-land-and-latin-american-liberation#names"
+  },
+  "colonial-erasure": {
+    "id": "colonial-erasure",
+    "kind": "concept",
+    "domain": "philosophy",
+    "label": "식민적 지움",
+    "aliases": [
+      "colonial erasure",
+      "terra nullius"
+    ],
+    "definition": "식민 법·지도·기록이 기존 공동체의 이용·법·지식과 정치적 주체성을 보이지 않는 것으로 만드는 과정입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/indigenous-land-and-latin-american-liberation#names"
+  },
+  "latin-american-liberation-philosophy": {
+    "id": "latin-american-liberation-philosophy",
+    "kind": "method",
+    "domain": "philosophy",
+    "label": "라틴아메리카 해방 철학",
+    "aliases": [
+      "Latin American philosophy of liberation",
+      "filosofía de la liberación"
+    ],
+    "definition": "보편을 말해 온 철학의 위치와 식민성·의존을 비판하고 배제된 사람의 요구에서 책임 있는 사유와 실천을 시작하는 흐름입니다.",
+    "canonicalHref": "/philosophy/philosophy-history/indigenous-land-and-latin-american-liberation#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -55840,6 +56048,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "decolonial-practice",
     "relation": "contrasts",
     "reason": "출발점과 도착점이 같은 문제를 서로 다른 지식·행동·권력의 층에서 다루므로 범위와 한계를 대조합니다."
+  },
+  {
+    "from": "medieval-translation-commentary-network",
+    "to": "scholastic-question-method",
+    "relation": "extends",
+    "reason": "중세의 책은 여러 방향으로 이동했다: 번역·문답·이성과 계시의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "scholastic-question-method",
+    "to": "negative-theology-language-limit",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "medieval-translation-commentary-network",
+    "to": "negative-theology-language-limit",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "li-qi-pattern-configuration",
+    "to": "investigation-of-things",
+    "relation": "extends",
+    "reason": "안다는 것은 언제 행동이 되는가: 송명 유학의 이치·마음·지행합일의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "investigation-of-things",
+    "to": "unity-of-knowledge-and-action",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "li-qi-pattern-configuration",
+    "to": "unity-of-knowledge-and-action",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "navya-nyaya-analysis",
+    "to": "qualifier-relation-analysis",
+    "relation": "extends",
+    "reason": "모호한 문장을 관계 지도로 바꾸다: 초기 근대 인도의 새 나이야의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "qualifier-relation-analysis",
+    "to": "cognition-event-analysis",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "navya-nyaya-analysis",
+    "to": "cognition-event-analysis",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "pragmatic-maxim",
+    "to": "conceptual-analysis-method",
+    "relation": "extends",
+    "reason": "고장 난 가로등을 세 번 묻다: 프래그머티즘·분석·현상학의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "conceptual-analysis-method",
+    "to": "phenomenological-description",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "pragmatic-maxim",
+    "to": "phenomenological-description",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "standpoint-epistemology",
+    "to": "care-ethics",
+    "relation": "extends",
+    "reason": "누구의 경험이 보편에서 빠졌는가: 입장·돌봄·교차성의 철학의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "care-ethics",
+    "to": "intersectionality-analysis",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "standpoint-epistemology",
+    "to": "intersectionality-analysis",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
+  },
+  {
+    "from": "land-based-normativity",
+    "to": "colonial-erasure",
+    "relation": "extends",
+    "reason": "빈 땅이라는 지도는 무엇을 지우는가: 원주민의 땅과 라틴아메리카 해방 철학의 생활 사례에서 첫 구분을 실제 조사·판단 방법으로 확장합니다."
+  },
+  {
+    "from": "colonial-erasure",
+    "to": "latin-american-liberation-philosophy",
+    "relation": "extends",
+    "reason": "두 번째 도구가 드러낸 조건을 행동·지식·권력의 다음 층으로 확장합니다."
+  },
+  {
+    "from": "land-based-normativity",
+    "to": "latin-american-liberation-philosophy",
+    "relation": "constrains",
+    "reason": "첫 개념의 범위와 역사적 전제가 세 번째 개념을 어디까지 적용할 수 있는지 제한합니다."
   },
 ];
 
