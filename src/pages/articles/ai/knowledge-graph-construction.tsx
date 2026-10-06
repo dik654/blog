@@ -17,28 +17,41 @@ export default function KnowledgeGraphConstructionArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Knowledge graph 는 문장을 넘나드는 사실을 node·edge 로 잇습니다
+          네 문장의 이름 7개가 대상 5개와 연결 4개가 됩니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            텍스트에 흩어진 사실을 한데 묶는 방법으로 knowledge graph 가 있습니다. Entity 하나를 node 로, entity 사이의 관계를 edge 로 삼아 전체를
-            하나의 그래프로 만든 자료구조입니다. Chunk 단위 검색이 문장 하나에서 멈추는 자리에서, 이 그래프는 여러 문장에 걸친 사실을 연결해 원문에 없던 질문에도 답할 길을
-            엽니다.
+            입력은 네 문장입니다. “마리 퀴리는 1867년 바르샤바에서 태어났다.” “그녀는
+            1903년 피에르 퀴리와 노벨 물리학상을 함께 받았다.” “피에르가 죽은 뒤 그녀는
+            파리 대학 교수직을 물려받았다.” “M. 퀴리는 1911년 두 번째 노벨상을 받았다.”
           </p>
           <p>
-            RAG 의 chunk 는 검색 단위와 근거 단위를 정할 뿐, 두 chunk 에 나뉘어 적힌
-            사실을 스스로 잇지 않습니다. "마리 퀴리는 바르샤바에서 태어났다"와 "그녀는
-            파리 대학 교수가 되었다"가 다른 chunk 에 있으면, 벡터 검색은 둘 중 질문과
-            더 가까운 chunk 하나만 찾고 둘을 이었을 때 나오는 사실은 놓칩니다.
+            추출기는 “마리 퀴리”, “그녀”, “피에르 퀴리”, “바르샤바”, “노벨
+            물리학상”, “파리 대학”, “M. 퀴리”라는 mention 7개를 먼저 찾습니다. 아직은
+            “마리 퀴리”와 “그녀”와 “M. 퀴리”가 같은 사람인지 모릅니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>찾은 mention 7개가 모두 서로 다른 최종 node로 남을까요?</li>
+            <li>성이 같다는 이유만으로 마리 퀴리와 피에르 퀴리를 하나로 합칠까요?</li>
+            <li>대명사와 약칭을 합치면 최종 결과는 node 5개와 edge 4개가 될까요?</li>
+          </ol>
           <p>
-            문장에서 entity 와 relation 을 뽑고(extraction), 그 결과를 담을 구조를 정하고(property graph), 같은 entity 를 가리키는 다른 표기를
-            하나로 합치는(dedup) 세 단계를 차례로 따라간 다음 전체를 하나의 pipeline 으로 잇습니다. 이 그래프 위에서 여러 entity 를 건너 답을 찾는 방법은 다음 글이
-            다룹니다.
+            답은 <strong>아니요, 아니요, 예</strong>입니다. 지칭하는 대상을 확인해 세
+            표기를 Marie Curie 하나로 합치고, Pierre Curie는 별도 인물로 남깁니다. 그러면
+            최종 그래프는 node 5개와 schema에 맞춘 edge 4개가 됩니다.
           </p>
         </div>
         <KnowledgeGraphConstructionViz />
         <ContentBoundary article="knowledge-graph-construction" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            이 과정을 knowledge graph construction이라고 부릅니다. 문장에서 entity와
+            relation을 뽑고, 같은 대상을 가리키는 표기를 합친 뒤, entity는 node로 관계는
+            edge로 저장합니다. 뒤 절에서 extraction·property graph·dedup이라는 이름을
+            방금 본 네 문장에 하나씩 붙입니다.
+          </p>
+        </div>
       </section>
 
       <section id="extraction" className="scroll-mt-20">

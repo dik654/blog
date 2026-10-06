@@ -3,7 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { MultiFidelityViz } from "../hyperparameter-tuning/viz/ModernHpoViz";
-export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 모든 후보를 끝까지 돌리기 전에 일부에 자원을 더 줍니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>설정이 많으면 모두 같은 시간 동안 학습시키기 어렵습니다. 짧게 실행한 결과로 계속 볼 후보를 고르면 자원을 아낄 수 있지만 늦게 좋아지는 후보를 놓칠 수도 있습니다.</p><p>이 글은 아홉 후보를 세 후보, 한 후보로 줄이는 과정을 추적합니다. 남긴 후보의 학습량과 실제 추가 비용을 따로 계산하고 멈춘 후보 중 어떤 가능성을 잃었는지 확인합니다.</p></div></section>
+export default function Article() { return <div className="space-y-16"><section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 모든 후보를 끝까지 돌리기 전에 일부에 자원을 더 줍니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>설정이 많으면 모두 같은 시간 동안 학습시키기 어렵습니다. 짧게 실행한 결과로 계속 볼 후보를 고르면 자원을 아낄 수 있지만 늦게 좋아지는 후보를 놓칠 수도 있습니다.</p><p>이 글은 아홉 후보를 세 후보, 한 후보로 줄이는 과정을 추적합니다. 남긴 후보의 학습량과 실제 추가 비용을 따로 계산하고 멈춘 후보 중 어떤 가능성을 잃었는지 확인합니다.</p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>상위 1/3만 남기면 후보 수는 9→3→1로 줄어들까요?</li><li>살아남은 후보의 누적 자원 목표는 1→3→9단위로 늘어날까요?</li><li>3단위에서 멈춘 B가 9단위에서도 나빴다고 확정할 수 있을까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. 적은 자원에서의 순위로 비용을 줄이는 대신 늦게 좋아지는 후보를 잘못 중단할 가능성을 함께 측정해야 합니다.</p><MultiFidelityViz /><ContentBoundary article="multi-fidelity-pruning" /></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 같은 진척에서 비교하고 일부만 더 학습합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>모든 후보를 정한 첫 지점까지 실행합니다. 같은 시험으로 점수를 비교해 일부를 남기고 남은 후보에게 다음 지점까지 자원을 줍니다. 중단 기록도 보존하며 일부는 끝까지 확인해 정책의 놓침을 조사합니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>공통 진척 좌표를 정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>같은 지점의 점수를 비교한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>일부 후보만 다음 지점으로 보낸다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>중단 후보의 놓친 가능성을 조사한다</span></li></ol></section>
 
@@ -26,7 +26,7 @@ export default function Article() { return <div className="space-y-16"><section 
 
 <section id="pruning-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 평가 깊이와 비교 지점과 중단 정책에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>후보를 얼마나 깊게 평가했는지가 fidelity입니다. 비교하는 사전 자원 지점은 rung이고 다음 자원을 주지 않고 멈추는 정책은 pruning입니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "Successive halving", "description": "같은 지점에서 일부 후보만 남기며 다음 자원을 늘리는 절차입니다.", "boundary": "halving이라는 이름이어도 여기서는3배 축소·확대를 사용합니다."}, {"term": "Survivor", "description": "현재 비교를 통과해 다음 자원을 받는 후보입니다.", "boundary": "최종 최적 후보라고 증명된 것은 아닙니다."}, {"term": "False prune", "description": "중단했을 후보가 정한 최종 예산에서는 채택 가능했을 사건입니다.", "boundary": "끝까지 확인하지 않은 후보의 결과는 알 수 없습니다."}]} /><p className="mt-6 text-base text-muted-foreground">
             아래 개념도는 같은 규칙을 27개에서 시작한 더 큰 가정 사례입니다. 본문의 9개 계산과 후보 수를 구별합니다.
-          </p><MultiFidelityViz /></section>
+          </p></section>
 
 <section id="successive-halving" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 후보 수는 3으로 나누고 목표 깊이는 3배 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             처음 수 9를 3으로 나누면 다음은 3, 다시 나누면 1입니다. 후보당 누적 목표는 1에서 3, 다시 9가 됩니다. 일반적으로 정한 감소 비율로 나눈 뒤 후보 수를 정수로
@@ -183,7 +183,7 @@ export default function Article() { return <div className="space-y-16"><section 
 <section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 늦게 좋아지는 후보와 재개 상태를 따로 검사합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             3단위 점수 0.63으로 멈춘 B를 따로 끝까지 실행했더니 0.85라고 합시다. 최종 채택 기준 0.80을 통과하므로 이 감사에서는 놓친 후보입니다. 초기 순위만으로 최종
             순위를 보장할 수 없으며 유예 기간과 중단 강도를 조절할 근거가 됩니다. (가정)
-          </p><p>이어 학습할 때 모델 가중치만 복구하고 갱신기·난수·스케줄 상태를 잃으면 처음부터 같은 절차를 이어 간 것이 아닐 수 있습니다. 갱신 수의 절약과 실제 시간·복구 비용도 따로 보고 최종 후보는 정한 전체 예산과 독립 평가에서 확인합니다.</p></div><ContentBoundary article="multi-fidelity-pruning" /></section>
+          </p><p>이어 학습할 때 모델 가중치만 복구하고 갱신기·난수·스케줄 상태를 잃으면 처음부터 같은 절차를 이어 간 것이 아닐 수 있습니다. 갱신 수의 절약과 실제 시간·복구 비용도 따로 보고 최종 후보는 정한 전체 예산과 독립 평가에서 확인합니다.</p></div></section>
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 줄인 후보와 절약한 자원과 놓친 후보를 구별했나요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             9@1→3@3→1@9를 이어 학습할 때 추가 자원은 왜 27이 아니라 21단위인가요? (답: 8절)

@@ -15,30 +15,30 @@ import LlmGuardrailsAndOutputValidationViz from "./llm-guardrails-and-output-val
 export default function LlmGuardrailsAndOutputValidationArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Guardrail은 input·output·tool 세 위치에서 서로 다른 실패를 막습니다
+          같은 위장 요청을 1ms 규칙은 놓치고 200ms model은 잡습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Guardrail은 LLM 파이프라인 어딘가에 놓여 위험한 입력이나 출력, 잘못된 행동을 걸러내는 검사입니다. 어디에 두느냐(input·output·tool)와 무엇으로
-            판정하느냐(rule 또는 model)가 서로 다른 축이고 이 두 선택이 막을 수 있는 실패와 놓치는 실패를 함께 정합니다.
+            위험한 의도를 글자 쪼개기로 감춘 요청 하나를 두 검사에 넣습니다. 약 1ms가
+            걸리는 rule-based guardrail은 금지 키워드와 정규식이 일치하지 않아 통과시킵니다.
+            약 200ms가 걸리는 model-based guardrail은 표현 뒤의 의도를 읽어 차단합니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>고정 문자열 패턴이 없으면 rule-based 검사가 위험한 의도까지 알아볼까요?</li>
+            <li>Rule-based 판정의 “통과”는 이 사례에서 false negative일까요?</li>
+            <li>Model-based 검사는 의미를 읽는 대신 약 200배의 지연을 쓸까요?</li>
+          </ol>
           <p>
-            이 글은 guardrail을 <Link to="#overview">두는 위치</Link>, <Link to="#rule-vs-model">판정 방식</Link>,
-            그 판정이 만드는 <Link to="#fp-fn-tradeoff">false positive·false negative 트레이드오프</Link>,
-            guardrail이 실제로 <Link to="#validation-methods">무엇을 검증하는지</Link>, 그리고 애매한
-            판정을 <Link to="#human-approval-gate">사람에게 넘기는 지점</Link> 순서로 다룹니다.
-          </p>
-          <p>
-            되돌리기 어려운 action 앞에 checkpoint를 두는 경계는{" "}
-            <Link to="/cs/ai/agent-control-boundaries#blast-radius">agent control boundary</Link> 글이,
-            결과·경로·비용을 독립적으로 채점하는 검증층은{" "}
-            <Link to="/cs/ai/agent-verification#layers">agent verification</Link> 글이 이미 다룹니다.
-            이 글은 그 검증층 중 실행 전에 입력·출력·tool 호출을 실시간으로 거르는 guardrail
-            자체를 채웁니다.
+            답은 <strong>아니요, 예, 예</strong>입니다. 빠른 규칙과 느린 의미 판정은
+            서로 다른 오류와 지연을 만듭니다. 실제 pipeline은 규칙으로 명백한 사례를 먼저
+            거르고, 애매한 요청만 model에 보내 두 비용을 조합합니다.
           </p>
         </div>
+        <LlmGuardrailsAndOutputValidationViz />
+        <ContentBoundary article="llm-guardrails-and-output-validation" />
         <TermBreakdown
           title="Guardrail을 두는 세 위치"
           description="같은 policy라도 어느 위치에 두느냐에 따라 막는 실패가 달라집니다."
@@ -63,8 +63,15 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
             },
           ]}
         />
-        <LlmGuardrailsAndOutputValidationViz />
-        <ContentBoundary article="llm-guardrails-and-output-validation" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Guardrail은 input·output·tool 세 위치에서 위험을 검사할 수 있습니다. 어디에
+            두는가와 rule·model 중 무엇으로 판정하는가는 별도 선택입니다. 되돌리기 어려운
+            action의 승인 경계는 <Link to="/cs/ai/agent-control-boundaries#blast-radius">agent
+            control boundary</Link>, 결과를 독립적으로 채점하는 층은{" "}
+            <Link to="/cs/ai/agent-verification#layers">agent verification</Link>에서 이어집니다.
+          </p>
+        </div>
       </section>
 
       <section id="rule-vs-model" className="scroll-mt-20">

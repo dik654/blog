@@ -16,6 +16,11 @@ const animatedControls = fs.readFileSync(
   "src/components/viz/AnimatedSceneControls.tsx",
   "utf8",
 );
+const stepViz = fs.readFileSync("src/components/ui/step-viz.tsx", "utf8");
+const responsiveVizTable = fs.readFileSync(
+  "src/components/viz/ResponsiveVizTable.tsx",
+  "utf8",
+);
 const termBreakdown = fs.readFileSync(
   "src/components/articles/term-breakdown.tsx",
   "utf8",
@@ -37,18 +42,33 @@ const contentBoundary = fs.readFileSync(
   "utf8",
 );
 const globalStyles = fs.readFileSync("src/index.css", "utf8");
+const layoutShell = fs.readFileSync("src/components/Layout.tsx", "utf8");
 const cloudArticle = fs.readFileSync(
   "src/pages/articles/blockchain/filecoin-onchain-cloud/ModernArticle.tsx",
   "utf8",
 );
 const viewportSensitiveFiles = [];
+const wideVizTableFiles = [];
 const collectViewportSensitiveFiles = (directory) => {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const path = `${directory}/${entry.name}`;
     if (entry.isDirectory()) collectViewportSensitiveFiles(path);
     else if (/\.(?:css|ts|tsx)$/.test(entry.name)) {
       const source = fs.readFileSync(path, "utf8");
-      if (source.includes("100dvh")) viewportSensitiveFiles.push(path);
+      if (
+        /100(?:d|l)?vh/.test(source) ||
+        /(?:^|[\s"'])(?:(?:min|max)-)?h-screen(?:[\s"':]|$)/m.test(source)
+      ) {
+        viewportSensitiveFiles.push(path);
+      }
+      if (
+        path.includes("/viz/") &&
+        source.includes("<table") &&
+        /min-w-\[(?:3\drem|[4-9]\drem|[4-9]\d{2}px|[1-9]\d{3}px)/.test(source) &&
+        !source.includes("ResponsiveVizTable")
+      ) {
+        wideVizTableFiles.push(path);
+      }
     }
   }
 };
@@ -128,6 +148,41 @@ const contract = {
     animatedControls.includes("min-h-[6.75rem]") &&
     animatedControls.includes("w-[7.75rem]") &&
     lessonViz.includes("w-[8.5rem]"),
+  mobileVizNaturalFlow:
+    globalStyles.includes("@media (max-width: 39.999rem)") &&
+    globalStyles.includes(":is([data-viz], figure):has([data-viz-controls])") &&
+    globalStyles.includes("height: auto !important") &&
+    globalStyles.includes('[data-viz="step-flow"] svg') &&
+    globalStyles.includes('[class*="min-w-["]'),
+  mobileSceneControls:
+    animatedControls.includes("data-viz-mobile-controls") &&
+    animatedControls.includes("data-viz-desktop-controls") &&
+    animatedControls.includes("grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]") &&
+    animatedControls.includes("← 이전") &&
+    animatedControls.includes("다음 →") &&
+    globalStyles.includes("[data-viz-controls] button") &&
+    globalStyles.includes("overflow-wrap: anywhere"),
+  mobileStepControls:
+    stepViz.includes("data-step-viz-mobile-controls") &&
+    stepViz.includes("grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]") &&
+    stepViz.includes("overflow-hidden bg-background") &&
+    stepViz.includes("sm:overflow-x-auto") &&
+    stepViz.includes("[&_svg]:w-full") &&
+    !stepViz.includes("↔ 좌우로 살펴보기"),
+  mobileVizTables:
+    responsiveVizTable.includes("data-viz-mobile-table") &&
+    responsiveVizTable.includes("data-viz-desktop-table") &&
+    responsiveVizTable.includes("sm:hidden") &&
+    responsiveVizTable.includes("hidden overflow-x-auto sm:block") &&
+    responsiveVizTable.includes("[overflow-wrap:anywhere]"),
+  allWideVizTablesHaveMobileCards: wideVizTableFiles.length === 0,
+  mobileLessonControls:
+    lessonViz.includes("data-lesson-mobile-controls") &&
+    lessonViz.includes("sm:sticky sm:bottom-0") &&
+    lessonViz.includes("grid-cols-1") &&
+    lessonViz.includes(
+      "grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)]",
+    ),
   viewportCappedVizFrame:
     globalStyles.includes('figure[data-viz="modern"]:has([data-viz-controls])') &&
     globalStyles.includes('figure[data-viz="lesson-flow-v4"]') &&
@@ -135,6 +190,11 @@ const contract = {
     globalStyles.includes("scroll-margin-top: 4rem") &&
     globalStyles.includes("overscroll-behavior: contain"),
   stableMobileViewportUnits: viewportSensitiveFiles.length === 0,
+  stableMobileDocumentShell:
+    layoutShell.includes('className="min-h-svh bg-background overscroll-none"') &&
+    layoutShell.includes('className="sticky top-0 z-50') &&
+    !layoutShell.includes('className="fixed top-0') &&
+    !globalStyles.includes("@media (max-height:"),
   keyboardCutNavigation:
     lessonViz.includes("data-viz-keyboard") &&
     lessonViz.includes('event.key === "ArrowRight"') &&
@@ -188,6 +248,12 @@ const contract = {
 const failures = Object.entries(contract)
   .filter(([key, value]) => key !== "publicArticles" && value !== true)
   .map(([key]) => `읽기 경험 계약 누락: ${key}`);
+
+if (wideVizTableFiles.length) {
+  failures.push(
+    ...wideVizTableFiles.map((path) => `모바일 카드가 없는 고정 폭 Viz 표: ${path}`),
+  );
+}
 
 console.log(`읽기 경험 요약: ${JSON.stringify(contract)}`);
 if (failures.length) {

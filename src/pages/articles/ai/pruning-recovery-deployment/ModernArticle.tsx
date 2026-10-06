@@ -16,6 +16,15 @@ export default function PruningRecoveryDeploymentArticle() {
             state에서 계속 0이어야 합니다. 그 다음 같은 generation에서 실제 artifact와 quality, target kernel을 함께 검증합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>제거한 weight가 0이어도 optimizer state가 남아 있으면 다음 update에서 되살아날 수 있을까요?</li>
+          <li>Fixed-mask recovery라면 weight와 optimizer state에 같은 mask를 다시 적용해야 할까요?</li>
+          <li>60% sparse라는 통계만으로 50% 2:4보다 실제 latency가 짧다고 보장할 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 제거 결정을 지키는 학습 불변식과 target runtime이 실제 sparse 경로를 선택했다는 실행 기록을 함께 확인합니다.</p>
+        <PruningRecoveryViz />
+        <ContentBoundary article="pruning-recovery-deployment" />
         <TermBreakdown
           title="복구와 배포를 잇는 네 ledger"
           items={[
@@ -50,8 +59,6 @@ export default function PruningRecoveryDeploymentArticle() {
             },
           ]}
         />
-        <PruningRecoveryViz />
-        <ContentBoundary article="pruning-recovery-deployment" />
       </section>
       <section id="mask-invariant" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

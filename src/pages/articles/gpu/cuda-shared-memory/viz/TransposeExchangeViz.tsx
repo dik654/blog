@@ -32,7 +32,8 @@ export default function TransposeExchangeViz() {
         </div>
       </div>
       <div data-viz-controls className="mt-4 shrink-0 border-t border-neutral-200 pt-3 dark:border-neutral-700">
-        <div role="group" aria-label="이동 단계 선택" className="grid grid-cols-3 gap-2">
+        <p data-viz-mobile-controls className="text-center text-sm font-semibold sm:hidden">{state.active + 1}. {scene.label}</p>
+        <div role="group" aria-label="이동 단계 선택" className="hidden grid-cols-3 gap-2 sm:grid">
           {scenes.map((s,i)=><button key={s.label} type="button" aria-pressed={state.active===i} onClick={()=>state.setActive(i)} className={`min-h-10 rounded-md border px-2 py-2 text-xs ${state.active===i?"border-sky-500 bg-sky-50 text-sky-900 dark:bg-sky-950 dark:text-sky-100":"border-neutral-300 dark:border-neutral-700"}`}>{i+1}. {s.label}</button>)}
         </div>
         <div className="mt-2 grid grid-cols-3 gap-2">

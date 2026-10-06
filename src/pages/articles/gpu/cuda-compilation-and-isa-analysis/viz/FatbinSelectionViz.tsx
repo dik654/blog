@@ -18,7 +18,8 @@ export default function FatbinSelectionViz(){
    <div aria-live="polite" className="mt-4 min-h-24 text-sm leading-7">{s.detail}</div>
   </div>
   <div data-viz-controls className="mt-3 shrink-0 border-t pt-3">
-   <div role="group" aria-label="장치와 내용물 선택" className="grid grid-cols-3 gap-2">{scenes.map((v,i)=><button key={v.label} type="button" aria-pressed={state.active===i} onClick={()=>state.setActive(i)} className={`min-h-11 rounded-md border px-1 py-2 text-xs ${state.active===i?"border-sky-500 bg-sky-50 text-sky-900 dark:bg-sky-950 dark:text-sky-100":"border-neutral-300 dark:border-neutral-700"}`}>{v.label}</button>)}</div>
+   <p data-viz-mobile-controls className="text-center text-sm font-semibold sm:hidden">{state.active + 1}. {s.label}</p>
+   <div role="group" aria-label="장치와 내용물 선택" className="hidden grid-cols-3 gap-2 sm:grid">{scenes.map((v,i)=><button key={v.label} type="button" aria-pressed={state.active===i} onClick={()=>state.setActive(i)} className={`min-h-11 rounded-md border px-1 py-2 text-xs ${state.active===i?"border-sky-500 bg-sky-50 text-sky-900 dark:bg-sky-950 dark:text-sky-100":"border-neutral-300 dark:border-neutral-700"}`}>{v.label}</button>)}</div>
    <div className="mt-2 grid grid-cols-3 gap-2"><button type="button" onClick={()=>state.setActive(state.active-1)} className="min-h-10 rounded-md border text-xs">이전</button><button type="button" disabled={state.reducedMotion} onClick={()=>state.setPlaying(!state.playing)} className="min-h-10 rounded-md border text-xs disabled:opacity-60">{state.reducedMotion?"재생 꺼짐":state.playing?"일시정지":"재생"}</button><button type="button" onClick={()=>state.setActive(state.active+1)} className="min-h-10 rounded-md border text-xs">다음</button></div>
    <div className="mt-2 text-xs leading-5 text-neutral-500">← → 선택 · Space 재생/정지 · 일반 대상·지원 driver 가정</div>
   </div>

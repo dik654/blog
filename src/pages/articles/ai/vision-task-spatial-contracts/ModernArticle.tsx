@@ -19,6 +19,11 @@ export default function VisionTaskArticle() {
             field·boundary detail을 선택합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Image classification은 공간축을 모으고 image마다 class score 하나를 남길까요?</li><li>Segmentation은 output grid의 각 위치에 class score를 유지해야 할까요?</li><li>Backbone이 작은 경계를 지웠어도 head 이름만 segmentation이면 원래 경계를 자동 복원할까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Task 이름보다 prediction 단위와 보존해야 할 좌표축을 먼저 고정합니다.</p>
+        <VisionTaskViz />
+        <ContentBoundary article="vision-task-spatial-contracts" />
         <TermBreakdown
           title="Task별 답의 단위"
           items={[
@@ -41,8 +46,6 @@ export default function VisionTaskArticle() {
             },
           ]}
         />
-        <VisionTaskViz />
-        <ContentBoundary article="vision-task-spatial-contracts" />
       </section>
       <section id="output-shapes" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

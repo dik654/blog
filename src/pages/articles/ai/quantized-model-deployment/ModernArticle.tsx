@@ -29,6 +29,15 @@ export default function QuantizedModelDeploymentArticle() {
             절차를 세웁니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>27B parameter를 모두 BF16으로 저장하면 raw weight만 약 54GB일까요?</li>
+          <li>같은 27B를 FP8로 저장하면 전체 실행 VRAM도 정확히 27GB일까요?</li>
+          <li>Checkpoint가 GPU에 들어가도 KV·workspace 때문에 실제 요청 실행은 실패할 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 예</strong>입니다. Parameter payload는 바닥값이며 mixed dtype·scale metadata·요청 상태·실행 중 peak를 차례로 더해야 합니다.</p>
+        <QuantizedDeploymentViz />
+        <ContentBoundary article="quantized-model-deployment" />
         <TermBreakdown
           title="VRAM을 서로 다른 성장축으로 분리"
           items={[
@@ -66,8 +75,6 @@ export default function QuantizedModelDeploymentArticle() {
             },
           ]}
         />
-        <QuantizedDeploymentViz />
-        <ContentBoundary article="quantized-model-deployment" />
       </section>
       <section id="weight-budget" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

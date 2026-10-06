@@ -21,7 +21,7 @@
  * Figure 전체를 작은 viewport 높이(svh)에 맞춰 안정된 크기로 예약하고, 큰 장면만
  * canvas 안에서 스크롤한다. 모바일 주소 표시줄이 나타나도 figure 높이가 다시
  * 계산되지 않으므로 읽던 본문 위치를 밀어내지 않는다. 좁은 화면의 조작부는
- * 가로로 스크롤되는 한 줄로 두어 본문을 덮지 않고, 넓은 화면에서는 하단에 고정한다.
+ * 이전·현재·다음의 별도 grid로 두고, 넓은 화면에서는 전체 탭을 하단에 고정한다.
  */
 figure[data-viz="modern"]:has([data-viz-controls]) {
   display: flex;
@@ -128,11 +128,60 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
   overflow: visible;
 }
 
-@media (max-height: 40rem) {
-  figure[data-viz="modern"]:has([data-viz-controls]),
-  figure[data-viz="lesson-flow-v4"] {
-    height: calc(100svh - 4.5rem);
-    max-height: calc(100svh - 4.5rem);
+/*
+ * 모바일 Viz는 데스크톱 stage를 잘라 보여 주지 않는다. Figure와 모든 scene
+ * canvas를 자연 높이로 풀고, 넓은 SVG와 임의 최소 폭은 article 폭에 맞춰
+ * 축소한다. 조작은 컴포넌트의 모바일 전용 이전/다음 UI가 맡는다.
+ */
+@media (max-width: 39.999rem) {
+  [data-viz] {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  :is([data-viz], figure):has([data-viz-controls]) {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :is([data-viz], figure):has([data-viz-controls]) [data-viz-canvas] {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  [data-viz] [data-viz-canvas] svg,
+  [data-viz="step-flow"] svg {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  [data-viz] [class*="min-w-["] {
+    min-width: 0 !important;
+  }
+
+  [data-viz] [data-viz-canvas],
+  [data-viz] [data-viz-canvas] > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  [data-viz-controls] {
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  [data-viz-controls] button {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 

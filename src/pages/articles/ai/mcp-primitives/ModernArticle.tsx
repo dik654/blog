@@ -13,6 +13,9 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/cs/ai/mcp-protocol">MCP core</Link>가 통신의 바깥 틀이라면 <strong>primitive</strong>는 그 안에서 교환하는 기능의 종류입니다. 모든 항목을 “model이 부르는 함수”로 뭉치면 승인·cache·side effect의 경계가 사라집니다.</p><p className="leading-8">
             먼저 Tool 하나를 정의하고 그다음 Resource와 Prompt를 대조합니다. 마지막에 schema·result·cache를 붙여 완전한 호출 contract로 조합합니다.
           </p></div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Tool은 model이 호출을 제안할 수 있는 동작일까요?</li><li>Resource와 Prompt도 항상 model이 스스로 실행하는 함수일까요?</li><li>입력 schema를 통과하면 현재 사용자의 실행 권한까지 증명될까요?</li></ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. 세 primitive는 시작 주체와 남기는 결과가 다르고, 구조 검증과 권한 판정도 서로 다른 경계입니다.</p>
         <McpLearningFlowViz mode="primitives" />
         <ContentBoundary article="mcp-primitives" />
       </section>

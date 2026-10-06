@@ -19,6 +19,11 @@ export default function WarmupSchedulingArticle() {
             local clock 0부터 다시 세어 경계값과 종료점을 맞춥니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>전체 1,000 updates 중 warmup이 100이면 main schedule 길이는 900일까요?</li><li>Global update 100에서 main local cursor는 0일까요?</li><li>Warmup 뒤 길이 1,000짜리 cosine을 새로 붙이면 전체가 1,100 updates로 밀릴까요?</li></ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. 전체 budget과 구간별 local clock, 두 schedule이 만나는 값을 함께 고정합니다.</p>
+        <WarmupCompositionViz />
+        <ContentBoundary article="warmup-scheduling" />
         <TermBreakdown
           title="Warmup 경계의 네 용어"
           items={[
@@ -52,8 +57,6 @@ export default function WarmupSchedulingArticle() {
             },
           ]}
         />
-        <WarmupCompositionViz />
-        <ContentBoundary article="warmup-scheduling" />
       </section>
 
       <section id="composition" className="scroll-mt-20">

@@ -9,16 +9,23 @@ export default function LrDecayPoliciesArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          LR를 낮추는 두 정책은 서로 다른 입력을 읽습니다
+          0.1을 100 update마다 절반으로 줄이면 update 250의 LR는 0.025입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <strong>Open-loop decay</strong>는 update clock만 읽습니다.{" "}
-            <strong>Metric-triggered decay</strong>는 validation event와 누적
-            state를 읽습니다. 결과가 LR 감소라는 이유로 같은 policy로 취급하면
-            resume와 재현이 깨집니다.
+            Base LR η₀=0.1, decay factor γ=0.5, interval K=100인 step policy를
+            봅니다. Update 250은 milestone 두 개를 지났으므로 0.1×0.5²=0.025입니다.
           </p>
+          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Update 250의 step-decay LR는 0.025일까요?</li>
+            <li>같은 γ=0.5를 매 update 곱하는 exponential policy도 0.025일까요?</li>
+            <li>Validation metric 없이 plateau policy의 decay 시점을 정할 수 있을까요?</li>
+          </ol>
+          <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Step·exponential은 clock을 읽고, plateau는 validation event와 누적 state를 읽습니다.</p>
         </div>
+        <DecayPolicyViz />
+        <ContentBoundary article="lr-decay-policies" />
         <TermBreakdown
           title="Decay를 결정하는 입력을 한 줄씩 구분"
           items={[
@@ -51,8 +58,6 @@ export default function LrDecayPoliciesArticle() {
             },
           ]}
         />
-        <DecayPolicyViz />
-        <ContentBoundary article="lr-decay-policies" />
       </section>
 
       <section id="open-loop" className="scroll-mt-20">

@@ -5,8 +5,8 @@ import DomainNav from "./DomainNav";
 
 export default function Layout() {
   return (
-    <div className="min-h-screen bg-background overscroll-none">
-      <header className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="min-h-svh bg-background overscroll-none">
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-14 items-center px-4 sm:px-6">
           <Link
             to="/"
@@ -23,7 +23,7 @@ export default function Layout() {
       <aside className="fixed bottom-0 left-0 top-14 z-40 hidden w-72 overflow-y-auto border-r bg-background lg:block">
         <Sidebar />
       </aside>
-      <div className="pt-14 lg:pl-72">
+      <div className="lg:pl-72">
         <main className="mx-auto max-w-[1400px] px-4 py-8 sm:px-8">
           <Outlet />
         </main>

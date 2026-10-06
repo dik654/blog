@@ -4,16 +4,12 @@ export default function ORPO() {
   return (
     <section id="orpo" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        ORPO는 chosen likelihood와 preference separation을 한 단계에서 학습한다
+        ORPO는 모방과 선호도 분리를 한 단계에서 학습한다
       </h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="leading-7">
-          SFT는 chosen response를 모방하는 동안 rejected response를 명시적으로 낮추지 않는다. Odds Ratio Preference
-          Optimization(ORPO)은 이 관찰에서 출발한다. Chosen의 negative log-likelihood에 chosen·rejected generation odds를
-          벌리는 term을 더해 별도의 reference model과 후속 preference stage 없이 domain adaptation과 preference separation을
-          함께 수행한다.
-        </p>
+        <p className="leading-7">SFT는 chosen response를 모방하는 동안 rejected response를 명시적으로 낮추지 않는다. Odds Ratio Preference Optimization(ORPO)은 이 관찰에서 출발한다.</p>
+        <p>Chosen의 negative log-likelihood에 두 응답의 generation odds를 벌리는 term을 더한다. 이 방식은 별도의 reference model과 후속 preference stage 없이 domain adaptation과 preference separation을 함께 수행한다.</p>
       </div>
 
       <ExplainedFormula
@@ -48,14 +44,9 @@ o_-(x)
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Reference forward를 제거하면 memory와 FLOP을 줄일 수 있지만 전체
-          memory가 정확히 절반으로 줄어드는 것은 아니다. Optimizer state와
-          activation은 trainable policy에 남고, packing·checkpointing·sharding에
-          따라 실제 절감률이 달라진다. <a href="https://arxiv.org/abs/2403.07691" target="_blank" rel="noreferrer">ORPO 논문</a>의
-          주된 실험 범위도 125M~7B와 특정 preference dataset이므로 더 큰 model에서
-          같은 우위를 가정하기보다 동일한 base·data·evaluation으로 검증한다.
-        </p>
+        <p>Reference forward를 제거하면 memory와 FLOP을 줄일 수 있지만 전체 memory가 정확히 절반으로 줄어드는 것은 아니다.</p>
+        <p>Optimizer state와 activation은 trainable policy에 남고, packing·checkpointing·sharding에 따라 실제 절감률이 달라진다.</p>
+        <p><a href="https://arxiv.org/abs/2403.07691" target="_blank" rel="noreferrer">ORPO 논문</a>의 주된 실험 범위는 125M~7B와 특정 preference dataset이다. 더 큰 model에서는 동일한 base·data·evaluation으로 다시 검증한다.</p>
       </div>
 
       <div
@@ -64,7 +55,7 @@ o_-(x)
       >
         <p className="text-xs font-bold text-primary">논문 해설 · ORPO</p>
         <h3 className="mt-2 text-base font-bold text-foreground">
-          핵심 기여는 chosen imitation과 rejected separation을 한 stage에 둔 것이다
+          핵심은 모방과 응답 분리를 한 stage에 둔 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           SFT term이 chosen response의 token likelihood를 유지하고 odds-ratio term이 rejected와의 상대 margin을 만듭니다. 여기서

@@ -14,6 +14,11 @@ export default function GradientDescentConvergenceArticle() {
       <h2 className="text-2xl font-bold">1 · 낮아지는 방향을 알아도 멀리 가면 점수가 커질 수 있다</h2>
       <p className="text-lg leading-8">현재 위치에서 점수가 어느 쪽으로 커지는지 알면 그 반대로 조금 움직여 볼 수 있습니다. 다만 방향을 맞췄다는 사실만으로 다음 점수의 감소까지 보장되지는 않습니다. 이동 거리가 너무 크면 가장 낮은 위치를 지나쳐 반대편의 더 높은 곳에 도착할 수 있습니다.</p>
       <p>이번 글은 현재 위치에서 다음 위치를 계산하는 규칙 하나를 반복합니다. 시작값과 점수 함수를 그대로 두고 이동에 곱하는 수만 바꾸어 보겠습니다. 그 차이가 경로를 어떻게 바꾸는지 본 뒤 어느 조건에서 반복의 결과를 보장할 수 있는지 확인합니다.</p>
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+      <ol className="list-decimal space-y-2 pl-6"><li>f(x)=x²/2, x₀=4, η=0.5이면 세 번 뒤 위치가 0.5일까요?</li><li>같은 시작점에서 η=2를 쓰면 위치가 0으로 수렴할까요?</li><li>기울기의 반대 방향을 골랐다는 사실만으로 임의의 η에서도 점수가 줄까요?</li></ol>
+      <p>답은 <strong>예, 아니요, 아니요</strong>입니다. 한 단계 방향과 실제 이동 거리를 함께 봐야 하며, 이 사례의 수렴 여부는 배율 |1−η|로 판정합니다.</p>
+      <DescentDynamicsViz />
+      <ContentBoundary article="math-gradient-descent-convergence" />
     </section>
     <section id="black-box" data-teach-level="B" className="space-y-6">
       <h2 className="text-2xl font-bold">2 · 현재 위치와 기울기로 다음 위치를 만든다</h2>
@@ -80,7 +85,6 @@ export default function GradientDescentConvergenceArticle() {
       <p>x₀=4처럼 0이 아닌 곳에서 시작하면 |1−η|&lt;1, 즉 0&lt;η&lt;2에서 0으로 수렴합니다. η=0은 위치를 그대로 두고 η=2는 같은 거리를 왕복합니다. η&gt;2는 부호를 바꾸며 거리를 키웁니다. 처음부터 x₀=0이라면 기울기도 0이라 이 모든 고정 η에서 그대로 0입니다.</p>
       <div className="overflow-x-auto"><table className="w-full min-w-[490px] text-sm"><thead><tr><th className="p-3 text-left">η</th><th className="p-3 text-left">배율 1−η</th><th className="p-3 text-left">위치 x₀→x₁→x₂→x₃</th></tr></thead><tbody>{[['0.5','0.5','4→2→1→0.5'],['1','0','4→0→0→0'],['1.5','−0.5','4→−2→1→−0.5'],['2','−1','4→−4→4→−4'],['3','−2','4→−8→16→−32']].map(row=><tr key={row[0]} className="border-t border-border">{row.map((cell,column)=><td key={column} className="p-3">{cell}</td>)}</tr>)}</tbody></table></div>
       <p>좌우를 번갈아 간다는 사실만으로 실패라고 판단하지 않습니다. η=1.5는 부호를 바꾸면서도 거리가 절반씩 줄어듭니다. 이 함수의 점수는 위치의 제곱에 비례하므로 거리 배율이 0.5이면 점수 배율은 0.25입니다. η=0.5의 점수 8→2→0.5→0.125도 같은 관계입니다.</p>
-      <DescentDynamicsViz />
       <p>앞 글의 하강 보조정리에 d=−η∇f를 넣으면 다음 값은 f(x)−η(1−Lη/2)‖∇f(x)‖² 이하입니다. 0&lt;η&lt;2/L이고 경로 전체에 같은 L을 적용할 수 있으면 기울기가 0이 아닌 곳에서 감소를 보장합니다. η=1/L은 그 감소량을 ‖∇f‖²/(2L)로 정리하기 쉬운 선택입니다.</p>
       <p>우리 f의 L=1에서는 1/L=1이라 한 번에 0으로 갑니다. 이 한 함수의 정확한 답을 모든 손실의 최적 보폭으로 일반화하지 않습니다. f=ax²/2, a&gt;0이면 반복 배율은 1−ηa이고 안정 범위도 0&lt;η&lt;2/a로 바뀝니다.</p>
     </section>
@@ -145,7 +149,6 @@ export default function GradientDescentConvergenceArticle() {
       <p>제약이 있으면 단순한 이동이 허용 범위 밖으로 나갈 수 있고 미분 불가능한 곳에서는 사용할 기울기 규칙을 정해야 합니다. 일부 데이터의 기울기만 사용하는 학습, 계산 오차, 누적 상태를 쓰는 다른 최적화 방법에도 여기의 정확한 반복식을 그대로 붙이지 않습니다.</p>
       <p>학습을 멈춘 뒤에는 보지 않은 데이터의 품질과 필요한 안전 조건을 별도로 평가합니다. 선택한 모델의 버전과 설정을 남기고 실제 장치의 시간·메모리 제약을 확인한 뒤 문제가 생기면 돌아갈 모델도 정합니다. 수학적 반복의 종료만으로 이런 사용 조건이 충족되지는 않습니다.</p>
       <ol className="list-decimal space-y-3 pl-6"><li>같은 x₀=4에서 η=1.5와 η=2는 모두 좌우를 오가는데 왜 하나는 0으로 가고 하나는 그렇지 않을까요? (답: 8절)</li><li>μ=2, L=8, η=1/L일 때 네 번 뒤 오차 비율의 상한은 얼마이며 실제 값과 항상 같을까요? (답: 9절)</li><li>기울기 크기 4에 η=0.000001을 썼다면 작은 이동만 보고 최적점 근처라고 말할 수 있을까요? (답: 11절)</li></ol>
-      <ContentBoundary article="math-gradient-descent-convergence" />
     </section>
   </article>;
 }

@@ -16,29 +16,28 @@ export default function LlmAsAJudgeArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          LLM-as-a-judge 는 사람 평가를 대신할 판정자를 model 로 세웁니다
+          답은 그대로인데 앞자리를 바꾸자 승자가 A에서 B로 바뀝니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Human evaluation 은 사람이 직접 읽고 점수를 매기거나 승패를 가르는, 가장 신뢰할
-            기준선이지만 느리고 비쌉니다. LLM-as-a-judge 는 그 판정을 또 다른 LLM(judge
-            model)에게 맡겨 비용을 크게 낮추는 대신, judge 자신의 편향을 새로운 위험으로
-            들여옵니다.
+            같은 질문에 대한 답변 A와 B를 judge model에 넣습니다. 첫 판정에서는 A를 먼저
+            제시했고 judge는 A를 승자로 골랐습니다. 두 답변의 내용은 그대로 둔 채 순서만
+            바꾼 두 번째 판정에서는 B가 앞자리에 오고, judge는 이번에는 B를 골랐습니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>답변 내용이 같으므로 두 판정의 승자가 반드시 같을까요?</li>
+            <li>첫 위치를 선호하는 judge라면 처음에는 A, 순서를 바꾸면 B를 고를까요?</li>
+            <li>두 판정이 엇갈렸는데도 한 답을 최종 승자로 확정해야 할까요?</li>
+          </ol>
           <p>
-            <Link to="/cs/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">
-              앞 글
-            </Link>{" "}
-            의 pairwise·pointwise 비교는 판정자가 누구인지 정하지 않았습니다. 이 글은 그 판정자
-            자리에 사람 대신 model 을 놓았을 때 rubric 을 어떻게 주고, 어떤 bias 가 생기며,
-            그것을 사람 기준과 어떻게 맞추는지를 봅니다.
-          </p>
-          <p>
-            Judge 의 신뢰도는 사람과의 agreement rate 로 잽니다. GPT-4 를 judge 로 쓴 MT-Bench
-            비교는 사람과 85% 로 일치했는데, 이는 사람 두 명끼리의 일치율 81% 와 비슷한
-            수준입니다. Chatbot Arena 비교에서는 87%, 단일 답변 채점에서는 95% 까지 올랐습니다.
+            답은 <strong>아니요, 예, 아니요</strong>입니다. 이 불일치는 답의 품질보다 배치
+            위치가 판정에 끼어든 position bias의 신호입니다. 두 순서에서 같은 답이 이길
+            때만 승자를 확정하고, 엇갈리면 tie 또는 재판정으로 보냅니다.
           </p>
         </div>
+        <PositionBiasViz />
+        <ContentBoundary article="llm-as-a-judge" />
         <TermBreakdown
           title="판정자의 두 자리"
           description="같은 pairwise·pointwise 질문에 누가 답하느냐가 다릅니다."
@@ -47,7 +46,14 @@ export default function LlmAsAJudgeArticle() {
             { term: "LLM-as-a-Judge · Judge Model", description: "판정을 또 다른 LLM 에게 맡기는 방법과 그 model 자신입니다.", example: "GPT-4 judge 가 사람과 85% 일치(MT-Bench)", boundary: "사람만큼 신뢰할 수 있는지는 judge 마다, task 마다 다시 재야 합니다." },
           ]}
         />
-        <ContentBoundary article="llm-as-a-judge" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            이처럼 사람 대신 model이 점수나 승패를 정하는 방법을 LLM-as-a-judge라고
+            부릅니다. <Link to="/cs/ai/llm-evaluation-criteria-and-methods#pointwise-pairwise-ranking">앞
+            글</Link>의 비교 방식에 judge model을 넣고, rubric과 순서 교환으로 판정 조건을
+            고정한 뒤 사람 평가와의 일치도를 확인합니다.
+          </p>
+        </div>
       </section>
 
       <section id="rubric" className="scroll-mt-20">
@@ -126,7 +132,6 @@ export default function LlmAsAJudgeArticle() {
             저자 스스로 통계적으로 확정하지 못한다고 밝혔습니다.
           </CitationBlock>
         </div>
-        <PositionBiasViz />
         <AlgorithmBlock
           title="Pairwise judge 호출: 순서를 두 번 바꿔 position bias 상쇄"
           input={["답변 쌍 (a, b)", "judge model 함수 judge(first, second) → 승자"]}

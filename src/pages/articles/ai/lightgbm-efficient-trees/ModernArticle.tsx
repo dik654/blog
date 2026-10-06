@@ -7,28 +7,47 @@ import { LightGBMEfficiencyViz } from "../gbm-viz";
 export default function LightGBMEfficientTreesArticle() {
   return (
     <article id="overview" className="space-y-16">
-      <section className="space-y-6">
-        <LessonHeader
-          number="00"
-          eyebrow="비용 축 세 개 분리"
-          title="LightGBM은 row·column·leaf budget을 서로 다른 기법으로 줄인다"
-        >
-          GOSS는 row, EFB는 sparse column, leaf-wise growth는 다음 split 위치를
-          다룹니다. 세 이름을 한 묶음으로 외우지 않습니다.
-        </LessonHeader>
+      <section id="problem" className="space-y-6 scroll-mt-20">
+        <h2 className="text-2xl font-bold">
+          10,000개 row를 3,000개만 보고 여섯 sparse column을 두 묶음으로 줄입니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            Split을 찾을 row가 10,000개라고 합시다. GOSS는 gradient가 큰 상위 20%인
+            2,000개를 모두 남깁니다. 이어서 전체 row 수의 10%인 1,000개를 나머지
+            8,000개에서 무작위로 뽑습니다. 따라서 이번 통계는 3,000개 row를 훑습니다.
+          </p>
+          <p>
+            여섯 sparse feature는 같은 row에서 동시에 켜지지 않아 EFB로 두 effective
+            column에 묶을 수 있습니다. 현재 terminal leaf 세 개의 예상 gain이
+            [3, 7, 5]라면 leaf-wise growth는 gain 7인 leaf 하나만 다음에 확장합니다.
+          </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>GOSS가 이번 split 통계를 위해 10,000개 row를 전부 쓸까요?</li>
+            <li>뽑힌 small-gradient row의 통계 weight는 (1−0.2)/0.1=8일까요?</li>
+            <li>Gain이 모두 양수이므로 세 terminal leaf를 한꺼번에 확장할까요?</li>
+          </ol>
+          <p>
+            답은 <strong>아니요, 예, 아니요</strong>입니다. 세 기법은 같은 절약을 세
+            이름으로 부르는 것이 아니라 각각 row 수, effective column 수, 다음 split
+            위치를 바꿉니다.
+          </p>
+        </div>
         <LightGBMEfficiencyViz />
+        <ContentBoundary article="lightgbm-efficient-trees" />
         <TermLesson
           name="Gradient-based One-Side Sampling · GOSS"
-          oneLine="큰-gradient rows는 유지하고 작은-gradient rows는 일부만 뽑아 보정 weight로 split statistics를 근사하는 row sampling입니다."
-          shape="top-a large gradients + b sample of remaining rows + weight (1−a)/b"
+          oneLine="큰-gradient rows는 유지하고 작은-gradient 집단에서는 전체 row 수의 b만큼 뽑아 보정 weight로 split statistics를 근사하는 row sampling입니다."
+          shape="top aN large gradients + bN sampled from the remainder + weight (1−a)/b"
           example="a=.2,b=.1이면 sampled small-gradient row의 통계 weight는 .8/.1=8입니다."
           boundary="Hard-example loss가 아니며 small-gradient subsample variance와 실제 boosting mode를 확인해야 합니다."
         />
         <ExplainedFormula
           question="왜 작은-gradient sample에 (1−a)/b를 곱할까요?"
-          idea="전체 small-gradient 집단 중 b 비율만 관측했으므로, 빠진 집단의 총 통계 규모를 복원하려고 표본 기여를 역확률에 가깝게 키웁니다."
+          idea="Small-gradient 집단은 전체의 1−a인데 그 안에서 전체 row 수의 b만큼만 관측합니다. 빠진 집단의 총 통계 규모를 복원하려고 표본 기여를 (1−a)/b배로 키웁니다."
           formula={String.raw`w_{\rm small}=\frac{1-a}{b}`}
-          annotatedFormula={String.raw`\begin{aligned}p_{\rm large}&=\underbrace{a}_{\text{큰 gradient row 유지 비율}}\\p_{\rm small}&=\underbrace{b}_{\text{나머지에서 sampling한 비율}}\\m_{\rm missing}&=\underbrace{1-a}_{\text{작은-gradient 집단의 전체 몫}}\\w_{\rm small}&=\underbrace{m_{\rm missing}/p_{\rm small}}_{\substack{\text{표본 기여를 키워}\text{집단 통계 규모를 보정}}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}p_{\rm large}&=\underbrace{a}_{\text{큰 gradient row 유지 비율}}\\p_{\rm small}&=\underbrace{b}_{\text{전체 row 수 기준 작은-gradient 표본 몫}}\\m_{\rm low}&=\underbrace{1-a}_{\text{작은-gradient 집단의 전체 몫}}\\w_{\rm small}&=\underbrace{m_{\rm low}/p_{\rm small}}_{\substack{\text{표본 기여를 키워}\text{집단 통계 규모를 보정}}}\end{aligned}`}
           operations={[
             {
               expression: String.raw`1-a`,
@@ -40,7 +59,7 @@ export default function LightGBMEfficientTreesArticle() {
             {
               expression: String.raw`(1-a)/b`,
               annotation: [
-                "모집단 몫을 관측 표본 비율로 나눠",
+                "작은-gradient 집단 몫을 전체 기준 표본 몫으로 나눠",
                 "sampled row의 통계 weight 계산",
               ],
             },
@@ -54,7 +73,7 @@ export default function LightGBMEfficientTreesArticle() {
             {
               symbol: String.raw`b`,
               name: "Small-gradient sample fraction",
-              description: "나머지 rows 중 sampling하는 비율입니다.",
+              description: "작은-gradient 집단에서 뽑는 수를 전체 row 수로 나눈 비율입니다.",
             },
           ]}
           assumptions={[
@@ -121,6 +140,11 @@ export default function LightGBMEfficientTreesArticle() {
               scope="NeurIPS 2017 algorithm과 공개 quality·speed 비교"
               notClaim="모든 modern version·dense dataset·device의 보편 우위"
             />
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              논문 Algorithm 2는 <code>topN=a×len(I)</code>, <code>randN=b×len(I)</code>로
+              둡니다. 따라서 이 글의 a=.2, b=.1, N=10,000 사례는 2,000+1,000 rows와
+              보정 계수 8을 사용합니다.
+            </p>
           </CitationBlock>
         </div>
         <ConceptLadderViz
@@ -139,7 +163,6 @@ export default function LightGBMEfficientTreesArticle() {
             },
           ]}
         />
-        <ContentBoundary article="lightgbm-efficient-trees" />
       </section>
     </article>
   );

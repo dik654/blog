@@ -26,6 +26,15 @@ export default function PruningArticle() {
             이어집니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Weight 10개 중 4개를 남기면 density는 0.4일까요?</li>
+          <li>Sparsity가 0.6이면 latency도 반드시 60% 줄어들까요?</li>
+          <li>Dense tensor에 0을 써 두기만 하면 kernel이 그 계산을 자동으로 건너뛸까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Mask의 통계와 실제 저장 형식·지원 kernel·실행 시간은 서로 다른 측정값입니다.</p>
+        <PruningMaskViz />
+        <ContentBoundary article="pruning" />
         <TermBreakdown
           title="Pruning의 첫 네 용어"
           items={[
@@ -57,8 +66,6 @@ export default function PruningArticle() {
             },
           ]}
         />
-        <PruningMaskViz />
-        <ContentBoundary article="pruning" />
       </section>
 
       <section id="mask-shape" className="scroll-mt-20">

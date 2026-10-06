@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { logarithmCodeRefs } from "./codeRefs";
@@ -12,6 +13,11 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <section id="overview" data-teach-level="S" className="space-y-6"><h2 className="text-2xl font-bold">1 · 절반으로 줄인 양과 줄인 횟수를 함께 기록한다</h2>
 <p className="text-lg leading-8">동전을 세 번 던져 모두 앞면이 나올 가능성을 생각해 봅시다. 매번 앞면일 가능성은 1/2이고 앞의 어떤 결과를 알아도 다음 앞면의 가능성이 바뀌지 않는다고 가정합니다. 처음에는 1, 한 번 확인하면 1/2, 두 번이면 1/4, 세 번이면 1/8이 됩니다. 확률은 곱해서 작아지고 절반으로 줄인 횟수는 하나씩 늘어납니다.</p>
 <p>같은 상황을 양으로 기록할 수도 있고 변화의 횟수로 기록할 수도 있습니다. 이 두 기록을 서로 바꾸는 계산을 익히면 긴 확률의 곱을 덧셈으로 다룰 수 있습니다. 먼저 세 번의 작은 사례를 끝까지 계산한 뒤 2000번으로 늘렸을 때 컴퓨터에 무엇이 남는지 확인하겠습니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>서로 독립인 공정한 동전을 세 번 던져 모두 앞면일 확률은 1/8일까요?</li><li>2를 기준으로 1/8을 만들 지수는 −3일까요?</li><li>한 번 던진 결과를 세 칸에 복사해도 세 칸 모두 앞면일 확률은 1/8일까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 거듭제곱과 로그의 계산보다 먼저 같은 배율을 새로 곱할 조건이 실제로 세 번 생기는지 확인해야 합니다.</p>
+<HalvingCountViz />
+<ContentBoundary article="math-exponents-logarithms" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6"><h2 className="text-2xl font-bold">2 · 한 번마다 같은 배율을 받고 남은 양을 돌려준다</h2>
 <p>시작값은 1, 매번 곱할 값은 1/2, 적용할 횟수는 3입니다. 여기서 1/2은 측정값이 아니라 설명을 위해 정한 공정한 동전의 확률입니다(가정). 실제 자료에서 앞면이 나오는 횟수가 반드시 전체의 절반이라는 뜻은 아닙니다. 한 번의 시행이 낼 수 있는 두 결과에 같은 가능성을 준 모형입니다.</p>
@@ -25,7 +31,6 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 </section>
 <section id="picture" data-teach-level="1" className="space-y-6"><h2 className="text-2xl font-bold">4 · 위 막대는 절반씩 줄고 아래 눈금은 한 칸씩 늘어난다</h2>
 <p>위쪽은 남은 양을 같은 길이의 기준으로 그린 막대입니다. 아래쪽은 절반으로 줄인 횟수입니다. 두 눈금은 같은 수를 뜻하지 않습니다. 막대가 1/8인 장면에서 아래 값은 3이며 한쪽 기록을 다른 쪽으로 바꾸어 읽습니다.</p>
-<HalvingCountViz />
 <p>아래 눈금이 한 칸 늘 때마다 위 막대는 같은 길이만큼 줄지 않습니다. 1에서 1/2로 줄어든 차이는 1/2이고 1/4에서 1/8로 줄어든 차이는 1/8입니다. 같게 유지되는 것은 남은 양의 비율과 아래쪽의 한 칸 간격입니다.</p>
 </section>
 <section id="need" data-teach-level="2" className="space-y-6"><h2 className="text-2xl font-bold">5 · 아주 작은 양도 변화의 횟수로 비교할 수 있다</h2>

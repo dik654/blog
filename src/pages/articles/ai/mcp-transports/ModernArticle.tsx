@@ -14,6 +14,9 @@ export default function ModernArticle() {
             먼저 local pipe 하나를 보고 다음에 remote endpoint를 봅니다. 마지막에 response stream·cancel·subscription을 수명 기준으로
             조합합니다.
           </p></div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>stdio server의 진단 로그를 stdout에 써도 protocol framing이 유지될까요?</li><li>Remote HTTP가 TLS로 암호화되면 caller의 업무 권한도 자동으로 증명될까요?</li><li>응답 stream을 닫으면 이미 만들어진 외부 effect까지 자동으로 취소될까요?</li></ol>
+        <p>답은 <strong>아니요, 아니요, 아니요</strong>입니다. Transport는 byte의 이동과 연결 수명을 다루며, 진단 채널·인증·업무 effect의 종료는 각각 따로 확인합니다.</p>
         <McpLearningFlowViz mode="transport" />
         <ContentBoundary article="mcp-transports" />
       </section>

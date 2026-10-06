@@ -21,6 +21,11 @@ export default function VideoConvolutionArchitecturesArticle() {
             초를 보는지 계산합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>30 fps에서 temporal kernel 3, dilation 1, input stride 2이면 원본 인덱스 0·2·4를 읽을까요?</li><li>첫 인덱스와 마지막 인덱스의 timestamp 차이는 4/30≈0.133초일까요?</li><li>2D filter를 시간축으로 복제해 초기화하면 장기 시간 관계까지 자동으로 학습된 것일까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Operator의 시간축 범위와 초기화가 제공하는 정보의 범위를 구분합니다.</p>
+        <VideoConvolutionViz />
+        <ContentBoundary article="video-convolution-architectures" />
         <TermBreakdown
           title="시간 convolution을 읽는 용어"
           items={[
@@ -46,8 +51,6 @@ export default function VideoConvolutionArchitecturesArticle() {
             },
           ]}
         />
-        <VideoConvolutionViz />
-        <ContentBoundary article="video-convolution-architectures" />
       </section>
 
       <section id="receptive-span" className="scroll-mt-20">

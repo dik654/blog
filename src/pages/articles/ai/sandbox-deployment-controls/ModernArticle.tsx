@@ -18,7 +18,15 @@ export default function SandboxDeploymentControlsArticle() {
           배포 통제를 identity, network, storage, lifecycle 네 층으로 나눕니다.
           각 용어를 따로 정의한 뒤 마지막에 workload control matrix로 합칩니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Pod의 ServiceAccount token 자동 주입을 꺼도 다른 Secret과 egress가 자동으로 사라질까요?</li>
+          <li>유효한 token이 있어도 RBAC verb·resource·namespace 중 하나가 맞지 않으면 요청을 거절해야 할까요?</li>
+          <li>Ephemeral workload의 종료 receipt에는 compute뿐 아니라 writable storage 파기도 포함해야 할까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. Identity·권한·network·storage·lifecycle은 독립 gate이므로 workload별 control matrix와 negative test로 함께 승인합니다.</p>
         <DeploymentControlsViz />
+        <ContentBoundary article="sandbox-deployment-controls" />
       </section>
 
       <section id="service-account-token" className="space-y-6">
@@ -258,7 +266,6 @@ export default function SandboxDeploymentControlsArticle() {
             { label: "Matrix", detail: "독립 gate receipt를 함께 승인" },
           ]}
         />
-        <ContentBoundary article="sandbox-deployment-controls" />
       </section>
     </article>
   );

@@ -12,6 +12,11 @@ export default function ProbabilityExperimentsArticle(){return <article classNam
 <h2 className="text-2xl font-bold">1 · 같은 두 번의 던짐에도 질문에 따라 남길 기록이 다르다</h2>
 <p className="text-lg leading-8">동전을 두 번 던지고 순서대로 적습니다. 앞면이 정확히 한 번 나왔는지 묻는다면 ‘앞·뒤’와 ‘뒤·앞’이 답에 들어갑니다. 첫 결과가 앞면이었다는 정보까지 받으면 둘 중 ‘앞·뒤’만 남습니다. 계산을 시작하기 전에 어떤 기록을 묻고 어떤 정보를 이미 아는지 나눠야 합니다.</p>
 <p>이 글은 네 가지 기록을 한 번 펼친 뒤 같은 목록에서 질문을 바꾸어 봅니다. 남은 기록을 어떻게 세고 어느 전체로 나누는지 확인한 다음 그 과정을 수식에 옮깁니다. 마지막에는 각각 앞뒤가 반반이라는 사실만으로 두 던짐의 관계까지 알 수 있는지 살펴봅니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>공정하고 독립인 두 번의 던짐에서 앞면이 정확히 한 번 나올 확률은 1/2일까요?</li><li>첫 결과가 앞면이라고 알게 된 뒤에도 그 조건부확률은 1/2일까요?</li><li>적어도 한 번 앞면이라고 알게 되면 같은 확률이 2/3로 바뀔까요?</li></ol>
+<p>답은 <strong>예, 예, 예</strong>입니다. 같은 네 기록에서도 어떤 정보를 조건으로 받았는지에 따라 남는 전체와 그 안의 비중이 달라집니다.</p>
+<ProbabilityTreeViz />
+<ContentBoundary article="math-probability-expectation-variance" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 절차를 정하고 경우를 나눈 뒤 질문에 맞게 모은다</h2>
@@ -38,7 +43,6 @@ export default function ProbabilityExperimentsArticle(){return <article classNam
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 지운 기록과 새 전체 안의 비중을 함께 본다</h2>
 <p>그림의 네 칸은 같은 순서 기록입니다. 굵게 표시한 칸은 정확히 한 번 앞면인 기록이고 흐려진 칸은 받은 정보와 맞지 않아 제외한 기록입니다. 기록 자체를 바꾸지 않고 어느 칸을 비교에 넣는지만 바꿉니다.</p>
-<ProbabilityTreeViz />
 <p>조건을 넣은 장면에서는 남은 칸의 비중을 다시 합해 1이 되게 표시합니다. 처음의 1/4을 그대로 읽으면 원래 전체에서의 몫과 새 전체 안에서의 몫을 섞게 됩니다. 두 칸을 남겼다면 각 1/2, 세 칸을 남겼다면 각 1/3입니다.</p>
 </section>
 <section id="why" data-teach-level="2" className="space-y-6">
@@ -127,7 +131,6 @@ assumptions={["배타적 사건이 독립일 수 없다는 결론에는 두 확�
 <p>공정함과 독립은 이번 계산의 가정입니다. 현실의 던짐이나 데이터가 같은 조건인지 확인하려면 수집 방법과 관측을 봐야 합니다. 작은 표의 합이 1이라는 검사는 내부적으로 일관된 확률법칙인지 확인할 뿐, 그 법칙이 현실을 잘 설명한다는 증명은 아닙니다.</p>
 <p>이 글의 네 경우는 유한하므로 사건의 확률을 각 기록의 점확률 합으로 계산했습니다. 일반적인 연속 모형에서는 개별 점의 확률이 모두 0이어도 구간의 확률은 양수일 수 있습니다. [0,1]에 고르게 배정한 모형에서 정확히 0.5인 사건의 확률은 0이고 [0.4,0.6]에 속할 확률은 0.2입니다. 확률 0을 언제나 빈 사건과 같은 뜻으로 읽지는 않습니다.</p>
 <p>순서 기록을 앞면 수처럼 숫자로 바꾸는 과정과 그 숫자의 평균은 <a className="text-primary underline" href="/cs/ai/math-random-variables-expectation">확률변수와 기댓값</a>에서 이어집니다. 일부 실행을 보고 전체 비율과 흔들림을 추정하는 문제는 <a className="text-primary underline" href="/cs/ai/math-variance-sampling">분산과 표본 추정</a>에서 다룹니다.</p>
-<ContentBoundary article="math-probability-expectation-variance" />
 </section>
 <section id="review" data-teach-level="8" className="space-y-6">
 <h2 className="text-2xl font-bold">14 · 정보를 바꾸기 전에 남을 기록을 고른다</h2>

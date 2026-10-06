@@ -19,6 +19,9 @@ export default function OneCycleSchedulingArticle() {
             budget의 상승·하강 phase에 배치합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Range test에서 손실이 급증한 학습률을 그대로 maximum으로 써야 할까요?</li><li>T=1,000, 상승 비율 p=0.3이면 300번째 갱신 부근에서 maximum LR에 도달할까요?</li><li>Micro-batch 횟수가 바뀌어도 optimizer 갱신 수가 같으면 같은 phase 위치일까요?</li></ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. 짧은 진단에서 불안정 경계보다 여유 있는 maximum을 고르고 실제 일정은 epoch보다 optimizer 갱신 시계에 맞춥니다.</p>
         <TermBreakdown
           title="진단과 실행을 이루는 네 용어"
           items={[

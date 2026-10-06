@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import SpikeLifecycleViz from "./viz/SpikeLifecycleViz";
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 
 const categoryRows = [
   ["Model representation", "ANN·Transformer·SNN", "State와 signal을 어떤 형태로 계산하는가"],
@@ -20,13 +21,17 @@ export default function SpikingNeuralNetworksArticle() {
         <LessonHeader number="00" eyebrow="먼저 category를 맞추기" title="SNN은 model 표현이고 backpropagation은 gradient 계산법이므로 서로의 대안이라고 바로 비교할 수 없다">
           Spiking Neural Network(SNN)는 시간이 흐르며 membrane state를 누적하고 threshold를 넘을 때 spike event를 내는 network입니다. 이 network도 surrogate derivative를 사용해 BPTT로 학습할 수 있습니다. 따라서 비교는 <strong>ANN 대 SNN</strong>, 또는 <strong>backprop 대 local learning rule</strong>처럼 같은 층에서 해야 합니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>β=.8, 이전 전압 .6, 현재 input .7이면 reset 전 전압은 1.18일까요?</li>
+          <li>Spike event가 sparse하다는 사실만으로 어떤 GPU에서도 energy가 반드시 줄어들까요?</li>
+          <li>Surrogate gradient는 hard threshold의 정확한 derivative일까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. 시간별 membrane state와 spike를 먼저 추적하고, 학습법과 실제 hardware 비용은 별도 층으로 검증합니다.</p>
+        <SpikeLifecycleViz />
+        <ContentBoundary article="spiking-neural-networks" />
         <TermLesson name="Spiking Neural Network" oneLine="연속 activation 하나 대신 시간별 membrane state와 sparse spike event를 사용해 정보를 계산·전달하는 dynamical neural network입니다." shape="input events → membrane integration → threshold spike → reset → next time step" example="[0,0,1,0,1]처럼 발화 시점이 output이고, 발화하지 않은 시간에도 neuron state는 남을 수 있습니다." boundary="Spike를 쓴다는 이유만으로 생물학적 뇌를 충실히 재현하거나 energy가 항상 줄어드는 것은 아닙니다." />
-        <div className="not-prose overflow-x-auto rounded-lg border border-border">
-          <table className="w-full min-w-[44rem] border-collapse text-left text-sm">
-            <thead className="bg-muted/20"><tr>{["층위", "예", "답하는 질문"].map((cell) => <th key={cell} className="border-b border-border px-4 py-3 font-black">{cell}</th>)}</tr></thead>
-            <tbody>{categoryRows.map(([layer, examples, question]) => <tr key={layer} className="border-b border-border last:border-b-0"><td className="px-4 py-3 font-black">{layer}</td><td className="px-4 py-3 text-muted-foreground">{examples}</td><td className="px-4 py-3 text-muted-foreground">{question}</td></tr>)}</tbody>
-          </table>
-        </div>
+        <div className="not-prose rounded-lg border border-border p-3"><ResponsiveVizTable columns={["층위", "예", "답하는 질문"]} rows={categoryRows} desktopMinWidthClassName="min-w-[44rem]" /></div>
       </section>
 
       <section id="lif-dynamics" className="space-y-6">
@@ -34,7 +39,6 @@ export default function SpikingNeuralNetworksArticle() {
           Leaky Integrate-and-Fire(LIF)의 핵심은 state가 있는 threshold unit입니다. Leak은 오래된 전압을 줄이고, input current가 다시 쌓이면 spike를 낸 뒤 reset합니다. Spike sequence의 의미는 rate·정확한 timing·latency code 등 encoding 선택에 따라 달라집니다.
         </LessonHeader>
         <TermLesson name="LIF membrane-state transition" oneLine="이전 membrane potential을 retention β로 남기고 현재 input을 더한 뒤, 이전 spike만큼 threshold를 빼 reset하는 discrete-time state update입니다." shape="uₜ₋₁ → leak β → + input Iₜ → threshold H → spike sₜ → reset" example="β=.8, uₜ₋₁=.6, Iₜ=.7, θ=1이면 reset 전 전압은 1.18이어서 spike=1입니다." boundary="LIF는 point-neuron abstraction이며 dendrite·neurotransmitter·cell type·structural plasticity를 모두 모델링하지 않습니다." />
-        <SpikeLifecycleViz />
         <ExplainedFormula
           question="한 time step에서 membrane state와 spike를 어떤 순서로 갱신할까요?"
           idea="이전 전압을 leak하고 input을 더하되, 직전 spike가 있었다면 threshold만큼 reset한 뒤 현재 threshold crossing을 이진 event로 만듭니다."
@@ -171,7 +175,6 @@ export default function SpikingNeuralNetworksArticle() {
             결론적으로 SNN의 가능성은 dense MAC을 sparse event로 바꾸는 것만이 아니라 workload 모양을 <strong>temporal state update와 event routing</strong>으로 바꾸는 데 있습니다. 기존 Transformer의 KV cache·GEMM·AllReduce 병목과는 다른 accelerator·compiler·measurement가 필요합니다.
           </p>
         </div>
-        <ContentBoundary article="spiking-neural-networks" />
       </section>
     </article>
   );

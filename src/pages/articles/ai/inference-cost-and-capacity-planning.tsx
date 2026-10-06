@@ -17,26 +17,40 @@ export default function InferenceCostAndCapacityPlanningArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          GPU 를 몇 장 살지는 peak 와 SLO 아래 GPU 당 처리량이 정합니다
+          Peak 6,000 tokens/s를 받으려면 GPU 9장이 필요합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 추론 비용은 GPU 를 빌린 시간에서 나옵니다. 그 시간 동안 낸 token 수로 나누면 cost/token 이 됩니다. 필요한 GPU 수는 가장 바쁜 시간의
-            요청량(peak) 을 SLO 를 지키는 GPU 당 처리량으로 나눈 값에 headroom 을 더한 것입니다. capacity planning 은 이 두 계산이 전부입니다.
+            Peak는 20 RPS이고 요청 하나는 평균 300 token입니다. GPU 한 장의 SLO
+            처리량은 1,000 tokens/s지만 목표 utilization을 .7로 제한하므로 계획에
+            쓸 수 있는 값은 700 tokens/s입니다. 6,000/700=8.57을 올림해 9장이 됩니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>GPU 6장이면 raw 처리량 6,000 tokens/s이므로 계획상 충분할까요?</li>
+            <li>목표 utilization .7을 적용하면 GPU 수는 9장일까요?</li>
+            <li>그래프의 planning margin 5%와 raw headroom 50%는 같은 분모일까요?</li>
+          </ol>
           <p>
-            이 글은 먼저 GPU-hour 단가에서 cost/token 과 cost/request 를 유도하고 그 값을 throughput per dollar·performance per
-            watt·TCO 로 비교하는 법을 봅니다. 다음으로 peak 와 headroom 에서 GPU 수를 정하고 reserved 와 on-demand 의 분배, scale-up 과
-            scale-out, autoscaling 정책, GPU fragmentation 까지 운영 판단을 닫습니다.
-          </p>
-          <p>
-            GPU 당 처리량은 앞 글의{" "}
-            <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link> 으로 SLO
-            아래에서 잰 값을 그대로 씁니다. 이 글의 GPU 시간당 가격은 모두 &quot;예: $2/GPU-h
-            가정&quot; 같은 가정값이며 실제 시세를 말하지 않습니다.
+            답은 <strong>아니요, 예, 아니요</strong>입니다. 9장의 목표 구간 용량은
+            6,300 tokens/s라 peak보다 5% 남습니다. Raw 상한 9,000을 분모로 보면
+            50%가 남지만, 그 50%에는 latency가 급등하기 전에 비워 둔 30%가 포함됩니다.
           </p>
         </div>
+        <InferenceCostAndCapacityPlanningViz />
         <ContentBoundary article="inference-cost-and-capacity-planning" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            LLM 추론 비용은 GPU를 빌린 시간을 그 시간에 낸 token 수로 나눈
+            cost/token에서 시작합니다. 필요한 GPU 수는 peak를 SLO 아래의 GPU당
+            처리량으로 나누고, 장애·예측 오차·배포를 흡수할 여유를 더해 정합니다.
+          </p>
+          <p>
+            GPU당 처리량은 앞 글의{" "}
+            <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link>에서
+            잰 값을 씁니다. 이 글의 $2/GPU-h 같은 가격은 계산용 가정이며 실제 시세가 아닙니다.
+          </p>
+        </div>
       </section>
 
       <section id="cost" className="scroll-mt-20">
@@ -170,9 +184,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             utilization 100 % 에 해당하므로 latency 가 발산하는 점입니다.
           </p>
           <p>
-            목표 utilization 을 무릎 앞인 0.7 정도로 두고 6,000 / (1,000 × 0.7) = 8.57, 올림해서 9 장으로 계획합니다. 남는 3 장 분량이
-            headroom 입니다. 용량 9,000 tokens/s 대 peak 6,000 이므로 headroom 은 50 % 입니다. Headroom 은 예측 오차, 장애 replica
-            대체, 배포 중 일시적 용량 감소를 흡수합니다.
+            목표 utilization 을 무릎 앞인 0.7 정도로 두고 6,000 / (1,000 × 0.7) = 8.57, 올림해서 9 장으로 계획합니다. Raw 용량은
+            9,000 tokens/s라 peak보다 50% 큽니다. 목표 utilization을 적용한 planning 용량은
+            6,300 tokens/s라 실제 계획 여유는 5%입니다.
           </p>
           <p>
             Headroom 을 peak 의 2 배로 잡으면 12 장입니다. $2/GPU-h 가정에서 추가 3 장은 한 달에 3 × 2 × 720 = $4,320 입니다. 평균 트래픽이 8
@@ -189,32 +203,33 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             하나를 고를 수밖에 없습니다. 그 간격은 다음 절의 reserved·on-demand 분배와 autoscaling 이 메웁니다.
           </p>
         </div>
-        <InferenceCostAndCapacityPlanningViz />
         <ExplainedFormula
           question="Peak 트래픽과 GPU 당 처리량에서 GPU 를 몇 장 두어야 하나요?"
-          idea="Peak 요청량을 token 으로 바꾸고, SLO 를 지키는 GPU 당 tokens/s 에 목표 utilization 을 곱한 값으로 나누면 무릎 앞에서 운영할 GPU 수가 나옵니다. 남는 비율이 headroom 입니다."
-          formula={String.raw`G=\left\lceil\frac{\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}}{r_{\text{gpu}}\cdot u}\right\rceil,\qquad h=\frac{G\cdot r_{\text{gpu}}}{\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}}-1`}
-          annotatedFormula={String.raw`G=\left\lceil\frac{\overbrace{\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}}^{\text{peak 에 필요한 tokens/s}}}{\underbrace{r_{\text{gpu}}\cdot u}_{\text{GPU 한 장이 목표 utilization 에서 내는 tokens/s}}}\right\rceil,\qquad h=\underbrace{\frac{G\cdot r_{\text{gpu}}}{\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}}-1}_{\text{peak 대비 남는 용량 비율 (headroom)}}`}
+          idea="Peak 요청량을 token 으로 바꾸고, GPU 당 SLO 처리량에 목표 utilization 을 곱한 값으로 나누면 무릎 앞에서 운영할 GPU 수가 나옵니다. Raw headroom과 목표 구간의 planning margin은 따로 셉니다."
+          formula={String.raw`G=\left\lceil\frac{d}{r_{\text{gpu}}u}\right\rceil,\qquad h_{\text{raw}}=\frac{Gr_{\text{gpu}}}{d}-1,\qquad m_{\text{plan}}=\frac{Gr_{\text{gpu}}u}{d}-1`}
+          annotatedFormula={String.raw`G=\left\lceil\frac{\overbrace{d}^{\mathrm{RPS}_{\text{peak}}n_{\text{req}}}}{\underbrace{r_{\text{gpu}}u}_{\text{목표 구간의 GPU당 처리량}}}\right\rceil,\qquad h_{\text{raw}}=\underbrace{\frac{Gr_{\text{gpu}}}{d}-1}_{\text{raw 상한의 여유}},\qquad m_{\text{plan}}=\underbrace{\frac{Gr_{\text{gpu}}u}{d}-1}_{\text{목표 utilization 안의 여유}}`}
           operations={[
             { expression: String.raw`\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}`, annotation: ["peak 요청률에 요청당 token 수를 곱해", "peak 에 필요한 tokens/s 산출"] },
             { expression: String.raw`r_{\text{gpu}}\cdot u`, annotation: ["GPU 당 SLO 처리량에 목표 utilization 을 곱해", "무릎 앞에서 장당 쓸 수 있는 처리량"] },
             { expression: String.raw`\left\lceil\cdot\right\rceil`, annotation: ["나눈 값을 올림해", "정수 GPU 수 결정"] },
-            { expression: String.raw`\frac{G\cdot r_{\text{gpu}}}{\mathrm{RPS}_{\text{peak}}\cdot n_{\text{req}}}-1`, annotation: ["총 용량을 peak 필요량으로 나누고 1 을 빼", "headroom 비율 산출"] },
+            { expression: String.raw`\frac{Gr_{\text{gpu}}}{d}-1`, annotation: ["raw 총 용량을 peak 필요량으로 나누고 1을 빼", "장애 흡수에 쓸 raw headroom 산출"] },
+            { expression: String.raw`\frac{Gr_{\text{gpu}}u}{d}-1`, annotation: ["목표 utilization을 적용한 용량으로 같은 계산을 해", "SLO 구간 안의 planning margin 산출"] },
           ]}
           terms={[
             { symbol: String.raw`\mathrm{RPS}_{\text{peak}}`, name: "Peak 요청률", description: "예측 트래픽 곡선의 최댓값(예: 20 req/s) 입니다." },
             { symbol: String.raw`n_{\text{req}}`, name: "요청당 token 수", description: "입력·출력을 benchmark 와 같은 분포로 센 요청당 token(예: 300) 입니다." },
             { symbol: String.raw`r_{\text{gpu}}`, name: "GPU 당 SLO 처리량", description: "앞 글의 λ sweep 에서 SLO 를 만족한 마지막 점의 tokens/s(예: 1,000) 입니다." },
             { symbol: "u", name: "목표 utilization", description: "Utilization–latency 곡선의 무릎 앞 값(예: 0.7) 입니다." },
+            { symbol: "d", name: "Peak token 수요", description: "Peak RPS × 요청당 token 수입니다. 이 예에서는 6,000 tokens/s입니다." },
           ]}
           assumptions={["r_gpu 가 planning 의 트래픽 분포에서 잰 값이라는 전제입니다. 분포가 다르면 다시 재야 합니다.", "u 는 M/M/1 직관의 무릎이며 실제 무릎은 실측 곡선에서 읽습니다. 요청 간 상관(burst) 이 크면 u 를 더 낮춥니다."]}
-          interpretation="G 는 peak 기준이라 평균 트래픽에서는 항상 과잉입니다. 그 과잉을 얼마나 오래 유지하는지가 cost/token 을 정하며, 다음 절의 reserved·on-demand 분배와 autoscaling 이 그 시간을 줄이는 도구입니다."
+          interpretation="이 예에서 h_raw=9,000/6,000−1=50%이고 m_plan=6,300/6,000−1=5%입니다. 앞 값에는 latency를 위해 비운 30%가 들어 있고, 뒤 값이 목표 구간 안에서 예측 오차를 버틸 실제 여유입니다."
         />
         <TermBreakdown
           title="Capacity 계획에서 구분하는 상태"
           items={[
             { term: "Peak capacity", description: "가장 바쁜 구간을 받아 내는 용량입니다.", example: "20 RPS × 300 token = 6,000 tokens/s.", boundary: "Peak 자체가 예측이라 오차가 headroom 에 들어가야 합니다." },
-            { term: "Headroom", description: "Peak 대비 남는 용량 비율입니다.", example: "9 장 9,000 대 6,000 → 50 %.", boundary: "장애 replica 대체와 배포 중 감소분까지 포함해야 실제 여유입니다." },
+            { term: "Raw headroom", description: "Peak 대비 장비의 raw 상한이 남는 비율입니다.", example: "9 장 9,000 대 6,000 → 50%.", boundary: "목표 utilization을 적용하면 SLO 구간의 planning margin은 5%뿐입니다." },
             { term: "Overprovisioning", description: "용량이 트래픽보다 많아 GPU-hour 가 비는 상태입니다.", example: "평균 8 RPS 에 9 장 → utilization 27 %.", boundary: "SLO 는 안전하지만 cost/token 이 배수로 오릅니다." },
             { term: "Underprovisioning", description: "용량이 peak 보다 적어 대기열이 쌓이는 상태입니다.", example: "peak 20 RPS 에 6 장 → ρ = 1.", boundary: "곡선의 발산 구간이라 위반이 아니라 timeout 으로 끝납니다." },
           ]}

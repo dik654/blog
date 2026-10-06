@@ -16,28 +16,39 @@ export default function LlmGatewayAndModelRoutingArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Gateway는 API를 하나로 묶고, router는 그 뒤에서 model을 고릅니다
+          확신도 0.42에서 상위 model로 넘어가고 timeout 뒤 fallback이 답합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            여러 LLM provider를 쓰는 애플리케이션이 provider마다 다른 API 형식과 인증 방식을 그대로 노출하면 코드가 provider 수만큼 갈라집니다. LLM
-            gateway는 이 형식을 하나의 interface로 통일하고 그 뒤에서 실제로 어떤 model을 쓸지는 router가 정책에 따라 고릅니다.
+            Gateway가 하나의 요청을 받았습니다. Router는 먼저 저비용 model을 호출합니다.
+            응답 확신도는 0.42이고 채택 threshold는 0.70이라, 이 답은 버리고 상위
+            model로 넘어갑니다. 상위 model은 답의 품질을 매기기도 전에 timeout으로
+            실패해 다른 provider가 같은 요청을 처리합니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>0.42가 threshold 0.70보다 낮아도 저비용 model의 답을 채택할까요?</li>
+            <li>상위 model로 넘어가는 첫 전환은 품질 신호인 낮은 확신도 때문일까요?</li>
+            <li>상위 model의 timeout 뒤 provider를 바꾸는 전환도 cascade라고 부를까요?</li>
+          </ol>
           <p>
-            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글은
-            이미 gateway를 다뤘지만 그 글의 초점은 호환성 계약을 먼저 걸러낸 뒤
-            deadline 안에서 retry·fallback을 안전하게 허용하는 운영 제어면입니다. 이
-            글은 그보다 앞선 질문, 즉 gateway가 API를 어떻게 통일하고 router가 어떤
-            기준으로 후보를 고르는지, 그리고 순서대로 model을 시도하는 cascade와
-            fallback이 무엇인지를 다룹니다.
-          </p>
-          <p>
-            이어지는 절은 gateway와 unified API → routing 정책의 종류 → model
-            cascade와 confidence 기반 escalation → fallback model과 provider
-            fallback 순서로 갑니다.
+            답은 <strong>아니요, 예, 아니요</strong>입니다. 확신도가 낮아 더 강한 model로
+            넘어가는 것은 cascade escalation이고, 실행 실패 때문에 대체 provider로
+            넘어가는 것은 fallback입니다. 겉으로는 둘 다 “다음 model 호출”이지만
+            시작 신호가 다릅니다.
           </p>
         </div>
+        <LlmGatewayAndModelRoutingViz />
         <ContentBoundary article="llm-gateway-and-model-routing" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            LLM gateway는 provider별 API 형식과 인증을 하나의 interface 뒤로 숨기고,
+            router는 능력·비용·지연·정책에 맞는 endpoint를 고릅니다.{" "}
+            <Link to="/cs/ai/llm-serving-ops#litellm-gateway">LLM 서빙 운영</Link> 글이
+            deadline과 retry budget을 소유하고, 이 글은 후보 선택과 cascade·fallback의
+            구분을 소유합니다.
+          </p>
+        </div>
       </section>
 
       <section id="gateway-unified-api" className="scroll-mt-20">
@@ -134,7 +145,6 @@ export default function LlmGatewayAndModelRoutingArticle() {
             비싼 model 호출을 건너뛰고 어려운 요청만 비싼 model로 넘어갑니다.
           </p>
         </div>
-        <LlmGatewayAndModelRoutingViz />
         <ExplainedFormula
           question="Cascade가 저렴한 model을 언제까지 믿고, 언제 다음 model로 넘어가나요?"
           idea="각 단계 model의 응답에 확신도를 매기고, 그 값이 threshold보다 낮으면 다음 단계로 넘어가며, 넘어갈 때마다 그 단계의 비용이 추가로 든다고 봅니다."

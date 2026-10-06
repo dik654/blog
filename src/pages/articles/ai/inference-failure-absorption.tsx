@@ -20,25 +20,24 @@ export default function InferenceFailureAbsorptionArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          장애는 예외가 아니라 빈도가 정해진 입력입니다
+          GPU 한 장이 죽을 때 세 요청의 운명이 갈립니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            가속기를 많이 쓰는 시스템에서 고장은 드문 일이 아닙니다. 공개된
-            대규모 실측에서 한 곳은 16,384장을 54일 돌리는 동안 계획에 없던
-            중단을 419번 겪었습니다. 평균 3.1시간에 한 번입니다.
+            같은 GPU에 신규 요청, 아직 첫 token을 내보내지 않은 요청, 이미
+            token을 보내는 stream이 하나씩 있습니다. GPU가 죽고 준비된 다른
+            replica가 남아 있어도 세 요청은 같은 방식으로 복구되지 않습니다.
           </p>
-
-          <p className="leading-7">
-            그런데도 그 시스템은 돌아갔습니다. 그러니 물어야 할 것은 고장을
-            어떻게 없애느냐가 아닙니다. 고장이 났을 때 그 영향이 어디서
-            멈추느냐입니다.
-          </p>
-
-          <p className="leading-7">
-            그리고 여기에 축이 하나 더 있습니다. 같은 고장이라도 그때 그 요청이
-            어디까지 갔느냐에 따라 결과가 다릅니다. 아래 그림이 두 축을 함께
-            놓은 것입니다.
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>신규 요청은 죽은 GPU를 후보에서 빼면 영향 없이 보낼 수 있을까요?</li>
+            <li>첫 token 전 요청은 응답이 커밋되지 않았다면 재시도할 수 있을까요?</li>
+            <li>이미 출력한 stream도 다른 replica가 중간 KV state를 자동 복원할까요?</li>
+          </ol>
+          <p>
+            답은 <strong>예, 예, 아니요</strong>입니다. 앞의 두 요청은 다른
+            replica에서 시작할 수 있습니다. 이미 보낸 글자와 생성 중 KV state는
+            새 replica에 없으므로 출력 중 stream은 끊깁니다.
           </p>
         </div>
 
@@ -47,6 +46,11 @@ export default function InferenceFailureAbsorptionArticle() {
         <ContentBoundary article="inference-failure-absorption" />
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p className="leading-7">
+            공개된 대규모 실측에서는 16,384장을 54일 돌리는 동안 계획에 없던
+            중단이 419번 발생했습니다. 평균 3.1시간에 한 번입니다. 장애가
+            반복된다는 사실보다 각 계층이 영향을 어디서 멈추는지가 운영 결과를 정합니다.
+          </p>
           <p className="leading-7">
             이 글이 푸는 질문은 하나입니다.{" "}
             <strong>

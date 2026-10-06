@@ -76,6 +76,16 @@ export default function ModernArticle() {
           </p>
         </div>
 
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Head width 256의 25%에 RoPE를 적용하면 rotary dimension은 64일까요?</li>
+          <li>Text와 image·video token은 같은 context budget을 나눠 쓸까요?</li>
+          <li>최대 위치 설정을 1,010,000으로 키우면 끝 위치의 retrieval 품질도 자동으로 보장될까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 위치 표현, 메모리 수용, 실제 정보 회수는 별도 조건이므로 길이·modality·runtime별 release profile을 각각 검증합니다.</p>
+        <ContextEnvelopeViz />
+        <ContentBoundary article="qwen36-long-context-deployment" />
+
         <TermBreakdown
           title="먼저 context support를 이루는 네 항목을 분리합니다"
           items={[
@@ -117,8 +127,6 @@ export default function ModernArticle() {
           ]}
         />
 
-        <ContextEnvelopeViz />
-        <ContentBoundary article="qwen36-long-context-deployment" />
       </section>
 
       <section id="position-modal" className="scroll-mt-20 space-y-7">

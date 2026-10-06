@@ -24,6 +24,11 @@ export default function WeightOnlyQuantizationArticle() {
             보존하는 이유를 봅니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Calibration input의 첫 channel norm이 10배 크면 같은 weight error도 output을 더 크게 바꿀 수 있을까요?</li><li>Float function을 유지하는 equivalent scaling도 channel별 quantization resolution은 바꿀까요?</li><li>GGUF 같은 container 이름만으로 quantization method와 실행 kernel까지 확정할 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Method·수치 format·실행 dtype·container를 서로 다른 계약으로 추적합니다.</p>
+        <WeightOnlyMethodViz />
+        <ContentBoundary article="weight-only-quantization" />
         <TermBreakdown
           title="이름 하나에 섞이면 안 되는 네 층"
           items={[
@@ -54,8 +59,6 @@ export default function WeightOnlyQuantizationArticle() {
             },
           ]}
         />
-        <WeightOnlyMethodViz />
-        <ContentBoundary article="weight-only-quantization" />
       </section>
       <section id="output-reconstruction" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

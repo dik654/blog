@@ -385,6 +385,8 @@ mechanism Viz가 더 적합하다.
 - [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.
 - [ ] Viz 장면 전환에서 frame과 control row가 흔들리지 않고, 가장 큰 장면에서도 control이 viewport 안에 남는다.
+- [ ] 모바일에서 브라우저 주소 표시줄이 나타나거나 사라져도 문서 shell·header·Viz가 재배치되어 읽던 문단을 밀지 않는다. 전역 높이는 `svh`, header는 문서 흐름을 차지하는 `sticky`를 쓰고 viewport `height` media query로 본문 높이를 바꾸지 않는다.
+- [ ] 390px의 Viz는 고정 높이에 잘리거나 내부 세로 스크롤에 갇히지 않고 현재 장면 전체가 문서 흐름에서 보인다. 넓은 그림은 article 폭으로 축소하며 모바일 전용 `이전 / 현재 번호 / 다음` 조작부의 모든 버튼이 화면 안에 있다.
 - [ ] 1.3의 층위 순서를 따르고, 글의 앞 1/5에 부품 이름이 없으며, 한 절의 새 용어가 세 개 이하다.
 - [ ] 층위 0의 작은 수치 사례가 근거로 추적되고, 층위 4의 추적이 같은 숫자를 다시 쓴다.
 - [ ] 층위 5·6 절마다 원문 실물(코드 발췌 또는 원 논문의 식·표·문장)이 있고, 사례 숫자를 그것에 넣어 돌린 결과가 붙어 있다.

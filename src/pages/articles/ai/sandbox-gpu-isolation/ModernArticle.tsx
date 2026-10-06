@@ -19,6 +19,15 @@ export default function SandboxGpuIsolationArticle() {
           순간부터 실제 GPU까지 누가 요청을 검사하고 memory access를 격리하는지
           그립니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>CPU syscall을 중개해도 GPU ioctl과 host driver 경로는 별도 공격면으로 남을까요?</li>
+          <li>Ioctl proxy가 허용 요청을 검사해도 host GPU driver가 신뢰 경계에서 완전히 사라질까요?</li>
+          <li>한 GPU·driver 조합의 검증 결과를 support matrix 밖 조합에 그대로 적용해도 될까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Process에서 device까지의 요청·DMA·memory 경로와 지원 조합을 구체적으로 적고 실제 negative test를 실행해야 합니다.</p>
+        <GpuIsolationViz />
+        <ContentBoundary article="sandbox-gpu-isolation" />
         <TermLesson
           name="GPU device isolation boundary"
           oneLine="GPU workload가 host driver·guest driver·VMM·IOMMU·device lifecycle 중 어느 component를 신뢰하는지 명시한 sandbox 계약입니다."
@@ -26,7 +35,6 @@ export default function SandboxGpuIsolationArticle() {
           example="CPU syscall이 gVisor에서 중개되어도 CUDA ioctl이 nvproxy를 거쳐 host NVIDIA driver로 들어가는 경로는 별도로 남습니다."
           boundary="CPU sandbox 결과를 GPU path에 그대로 외삽하거나 한 GPU 세대의 support를 다른 세대에 적용하면 안 됩니다."
         />
-        <GpuIsolationViz />
       </section>
 
       <section id="ioctl-proxy" className="space-y-6">
@@ -183,7 +191,6 @@ export default function SandboxGpuIsolationArticle() {
             { label: "Receipt", detail: "Driver·runtime·reset 조합 검증" },
           ]}
         />
-        <ContentBoundary article="sandbox-gpu-isolation" />
       </section>
     </article>
   );

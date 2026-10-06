@@ -28,8 +28,9 @@
 - 여러 컷을 넘기는 Viz는 pointer 버튼만 두지 않는다. Viz 자체를 keyboard focusable하게 만들고 `←`·`→`로 이전·다음 컷, `Space`로 재생·일시정지를 제공하며 화면에 단축키를 표시한다. 입력 필드와 contenteditable의 키는 가로채지 않는다.
 - 개념마다 여러 컷을 갖는 Viz에서 `다음`으로 개념 경계를 넘으면 새 개념의 첫 컷으로 이동한다. 반대로 첫 컷에서 `이전`으로 돌아가면 이전 개념의 마지막 컷을 보여 전체 탐색 순서가 단조 증가·감소하게 유지돼야 한다.
 - 장면을 바꿀 때 Viz 외곽 frame과 이전·재생·다음 control row의 위치가 움직이지 않아야 한다. 모든 장면의 필요한 크기를 기준으로 stage의 안정된 높이를 확보하고, control은 그 stage 아래의 고정된 row에 둔다. 현재 장면 내용 높이에 맞춰 wrapper 자체를 매번 줄였다 늘리지 않는다.
-- 안정된 stage는 데스크톱에서도 viewport를 넘어 버튼이 화면 밖으로 밀리지 않게 `100dvh`에서 page header·caption·control 여백을 뺀 상한을 둔다. 큰 장면은 frame을 키우는 대신 stage 내부의 responsive 재배치, 축척 또는 명시적 scroll 영역으로 처리한다.
-- 모바일은 장면별 긴 설명을 stage 안에 모두 쌓아 최소 높이를 무한히 늘리지 않는다. diagram과 현재 핵심 설명을 안정 영역에 두고, 상세 설명이 상한을 넘으면 stage 내부에서만 스크롤하되 control row는 바깥에 남긴다.
+- 안정된 stage는 데스크톱에서도 viewport를 넘어 버튼이 화면 밖으로 밀리지 않게 `100svh`에서 page header·caption·control 여백을 뺀 상한을 둔다. 큰 장면은 frame을 키우는 대신 stage 내부의 responsive 재배치, 축척 또는 명시적 scroll 영역으로 처리한다.
+- 모바일 문서 shell에는 주소 표시줄과 함께 크기가 바뀌는 `vh`·`dvh`·`h-screen` 계열을 쓰지 않는다. 사이트 header는 문서 흐름을 차지하는 `sticky`로 두며, 주소 표시줄 높이에 따라 켜지고 꺼지는 `height` media query로 본문이나 Viz 높이를 바꾸지 않는다.
+- 640px 미만에서는 별도 모바일 Viz UI를 쓴다. 고정 stage 높이와 내부 세로 스크롤을 해제해 현재 장면 전체가 문서 흐름 안에 보이게 하고, SVG·diagram의 최소 폭은 article 폭에 맞춘다. 긴 상세 설명도 잘라 숨기지 않고 문서와 함께 세로로 읽게 한다. 조작부는 긴 장면 탭의 가로 스크롤 대신 `이전 / 현재 번호 / 다음` 3열과 한 줄 재생 버튼을 사용하며 모든 버튼이 390px 안에 들어와야 한다.
 - 같은 Viz의 모든 장면에서 control button의 bounding box 변화는 2px 이내, frame top/left/width 변화는 2px 이내를 목표로 한다. Reduced motion 여부와 관계없이 layout shift 자체는 없어야 한다.
 
 ## 3. 수식 규칙

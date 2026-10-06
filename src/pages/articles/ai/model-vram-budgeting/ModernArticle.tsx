@@ -41,7 +41,9 @@ export default function ModernArticle() {
             위에서 runtime이 실제 예약한 peak를 확인해 GPU에 넣을지 결정합니다.
           </p>
         </div>
-
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>27B 가중치를 모두 BF16으로 저장하면 payload만 약 54GB일까요?</li><li>일부 tensor가 BF16이고 나머지가 FP8이면 dtype별 원소 수를 따로 세어야 할까요?</li><li>가중치가 들어가도 context와 동시 요청 수가 늘면 실제 VRAM이 부족해질 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. 가중치 바닥값에 요청별 상태와 실행 중 임시 공간을 더하고, 실제 peak와 여유 공간까지 확인해야 적재 여부를 판단할 수 있습니다.</p>
         <BudgetPipelineViz />
         <ContentBoundary article="model-vram-budgeting" />
       </section>

@@ -10,7 +10,7 @@ export default function ImbalancedDataArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          불균형은 먼저 population의 positive base rate가 작은 상태입니다
+          1,000명 가운데 50명만 positive입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -20,10 +20,21 @@ export default function ImbalancedDataArticle() {
             recall은 0입니다.
           </p>
           <p>
-            이 숫자를 본 뒤에야 model output을 세 층으로 나눕니다. Score의 순서,
-            probability의 의미, threshold 뒤 action은 같은 것이 아닙니다.
+            <strong>그림을 넘기기 전에 세 가지를 예측해 보세요.</strong>
+          </p>
+          <ol>
+            <li>모두 negative라고 답한 model의 accuracy는 95%일까요?</li>
+            <li>그 model의 positive recall도 95%일까요?</li>
+            <li>학습 batch를 50:50으로 만들면 운영 population의 prevalence도 50%로 바뀔까요?</li>
+          </ol>
+          <p>
+            답은 <strong>예, 아니요, 아니요</strong>입니다. Accuracy는 negative
+            950명을 맞혀 95%지만 positive 50명은 하나도 못 찾아 recall이 0입니다.
+            Sampling은 model이 보는 비율만 바꾸며 운영 population은 바꾸지 않습니다.
           </p>
         </div>
+        <ImbalanceDecisionViz />
+        <ContentBoundary article="imbalanced-data" />
         <TermBreakdown
           title="불균형 문제를 읽는 네 대상"
           items={[
@@ -62,8 +73,6 @@ export default function ImbalancedDataArticle() {
             },
           ]}
         />
-        <ImbalanceDecisionViz />
-        <ContentBoundary article="imbalanced-data" />
       </section>
       <section id="prevalence-baseline" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

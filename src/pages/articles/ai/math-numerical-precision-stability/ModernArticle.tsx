@@ -12,6 +12,11 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 <h2 className="text-2xl font-bold">1 · 분명히 두 번 더했는데 저장된 값은 그대로다</h2>
 <p className="text-lg leading-8">숫자 1에 아주 작은 양을 두 번 더합니다. 한 번 더한 결과를 저장하고 다시 더하니 마지막 값도 1입니다. 그런데 작은 양 두 개를 먼저 합쳐 한 번에 더하면 1보다 큰 값이 남습니다. 입력도 덧셈 횟수도 같은데 괄호를 놓는 위치가 답을 바꿨습니다.</p>
 <p>저장할 수 있는 숫자의 자리가 띄엄띄엄 놓여 있기 때문입니다. 계산한 값이 그 사이에 오면 어느 한 자리로 옮겨 적어야 합니다. 이 글은 같은 작은 덧셈이 언제 사라지는지부터 시작해, 실제 저장 코드의 선택 조건까지 따라갑니다. 이어 큰 지수 값과 작은 분산을 계산할 때도 같은 질문을 적용합니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>δ=1/2048일 때 1에 δ를 더해 매번 FP16에 저장하면 첫 결과가 다시 1일까요?</li><li>같은 δ를 두 번 연속 더해 저장하면 최종값도 1일까요?</li><li>δ+δ를 먼저 계산해 1에 더하면 1+1/1024가 남을까요?</li></ol>
+<p>답은 <strong>예, 예, 예</strong>입니다. 같은 입력과 덧셈 횟수여도 중간 저장 위치가 달라지면 반올림 경로와 최종값이 달라집니다.</p>
+<RoundingGridViz />
+<ContentBoundary article="math-numerical-precision-stability" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 계산할 값과 저장할 자리를 따로 본다</h2>
@@ -35,7 +40,6 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 계산한 위치에서 저장할 자리로 이동한다</h2>
 <p>아래 선은 1 근처를 확대했습니다. 채운 점은 저장할 수 있는 자리이고 빈 점은 저장 직전 계산한 위치입니다. 가로축은 1에서 얼마나 더 갔는지를 δ 단위로 표시합니다. 한 칸 δ가 모든 곳에서 저장 가능하다는 뜻은 아닙니다.</p>
-<RoundingGridViz />
 <p>한 번씩 더하는 두 장면에서는 빈 점이 같은 가운데에 놓이고 같은 왼쪽 자리로 돌아옵니다. 묶어서 더한 장면에서는 계산한 위치가 저장 가능한 점과 겹칩니다. 마지막 장면의 가운데는 오른쪽으로 이동합니다. 가운데면 항상 작은 값으로 내려간다고 외우면 이 장면을 설명할 수 없습니다.</p>
 </section>
 <section id="why" data-teach-level="2" className="space-y-6">
@@ -166,7 +170,6 @@ assumptions={["유한하고 비어 있지 않은 입력이라는 조건을 유�
 <p>작은 기울기가 0이 되는 것을 줄이려고 손실에 배율을 곱한 뒤 기울기를 되돌리는 방법을 손실 스케일링이라고 합니다. 이는 작은 값이 머무는 범위를 조정합니다. 이미 1+δ를 1로 저장하면서 버린 차이를 나중에 되찾는 방법은 아닙니다. 가중치나 누산값을 더 넓게 유지하는 선택과 목적을 구분합니다.</p>
 <p><a className="text-primary underline" href="https://docs.pytorch.org/docs/2.14/amp.html" target="_blank" rel="noreferrer">PyTorch 2.14 AMP의 연산별 안내</a>에서 실제 장치의 autocast 대상과 출력 형식을 확인할 수 있습니다. 이 글의 저장 변환 실험은 해당 정책이나 GPU 처리 시간을 측정한 실험이 아닙니다.</p>
 <p>이어 볼 내용은 <Link className="text-primary underline" to="/cs/ai/training-pipeline#loop">학습 루프의 혼합 정밀도</Link>, <Link className="text-primary underline" to="/cs/ai/quantization#error-shape">정수 격자의 반올림과 clipping</Link>, <Link className="text-primary underline" to="/cs/ai/math-matrices-svd#matrix-map">행렬이 요구하는 입력·출력 차원</Link>입니다. 같은 저장 문제를 재사용하되 각각의 연산 계약에서 다시 확인합니다.</p>
-<ContentBoundary article="math-numerical-precision-stability" />
 </section>
 <section id="limits" data-teach-level="7" className="space-y-6">
 <h2 className="text-2xl font-bold">17 · 값이 다른 이유를 재현 가능한 조건으로 적는다</h2>

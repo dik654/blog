@@ -17,6 +17,11 @@ export default function VideoUnderstandingArticle() {
             약 4초를 덮습니다. 먼저 source timestamp와 event duration을 seconds 단위로 고정한 뒤 frame count를 정합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>30 fps에서 16장을 stride 2로 읽으면 첫 장과 마지막 장의 간격은 1초일까요?</li><li>Stride를 8로 늘리면 약 4초를 덮는 대신 관측 간격도 네 배 성길까요?</li><li>Effective rate가 10 fps일 때 8 Hz 움직임을 고유하게 복원할 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Frame 개수와 관측 시간, 시간 해상도, 복원 가능한 주파수 경계를 따로 셉니다.</p>
+        <VideoObservationViz />
+        <ContentBoundary article="video-understanding" />
         <TermBreakdown
           title="시간 관측을 이루는 용어"
           items={[
@@ -42,8 +47,6 @@ export default function VideoUnderstandingArticle() {
             },
           ]}
         />
-        <VideoObservationViz />
-        <ContentBoundary article="video-understanding" />
       </section>
 
       <section id="duration" className="scroll-mt-20">

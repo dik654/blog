@@ -68,6 +68,13 @@ export default function ModernArticle() {
           </p>
         </div>
 
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>VLM이 image에서 컵을 찾으면 robot이 바로 실행할 joint action도 정해질까요?</li>
+          <li>RT-2의 특정 평가에서 62%가 나왔다는 사실이 모든 robot과 task의 성공률을 보장할까요?</li>
+          <li>Pixel grounding이 맞으면 depth·calibration·collision 오류와 무관하게 grasp도 성공할까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 아니요, 아니요</strong>입니다. 의미 인식 뒤에도 좌표·행동 표현·동역학·제어·재관측 계약을 차례로 통과해야 합니다.</p>
         <EmbodimentGapViz />
         <ContentBoundary article="vla-embodiment-gap" />
 
@@ -102,17 +109,23 @@ export default function ModernArticle() {
 
       <section id="action-interface" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>1단계 · Action head는 “더 정교한 것”보다 robot이 소비할 interface를 먼저 맞춥니다</h2>
+          <h2>1단계 · Robot이 소비할 action interface를 먼저 맞춥니다</h2>
           <p className="leading-8">
             VLA(Vision-Language-Action model)는 visual observation과 language instruction을 조건으로 robot
             action을 생성하는 model family입니다. 하지만 action은 자연어 token처럼 이미 표준화된 한
-            vocabulary가 아닙니다. 6-DoF end-effector pose, joint position·velocity, gripper state, mobile
-            waypoint는 차원·단위·주기부터 다릅니다.
+            vocabulary가 아닙니다.
+          </p>
+          <p className="leading-8">
+            6-DoF end-effector pose, joint position·velocity, gripper state, mobile waypoint는
+            차원·단위·주기부터 다릅니다.
           </p>
           <p className="leading-8">
             RT-2는 robot action을 text token으로 표현했고, ACT는 여러 미래 action을 chunk로 예측했으며,
             Diffusion Policy와 π0는 각각 diffusion과 flow matching으로 continuous trajectory distribution을
-            다룹니다. 이 순서는 세대 교체가 아닙니다. Multimodal action을 표현하는 능력, iterative sampling
+            다룹니다.
+          </p>
+          <p className="leading-8">
+            이 순서는 세대 교체가 아닙니다. Multimodal action을 표현하는 능력, iterative sampling
             cost, control frequency, demonstration 수가 함께 맞아야 합니다. Flow matching의 일반 objective는
             <Link to="/cs/ai/diffusion-continuous-time#flow-matching">별도 정본 글</Link>에서 재사용합니다.
           </p>
@@ -199,12 +212,15 @@ export default function ModernArticle() {
 
       <section id="embodiment-alignment" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>2단계 · Cross-embodiment pretraining은 adaptation을 없애지 않고 시작점을 바꿉니다</h2>
+          <h2>2단계 · 여러 robot의 사전학습은 adaptation의 시작점을 바꿉니다</h2>
           <p className="leading-8">
             Internet에는 image-text pair와 video가 많지만 정확한 robot state-action trajectory는 비싸고
             embodiment-specific합니다. Open X-Embodiment는 여러 기관의 data를 22개 robot, 527개 skill,
-            160,266개 task 규모로 표준화했고, Octo는 80만 trajectory, OpenVLA는 97만 real-world demonstration을
-            사용했습니다. 이 숫자는 embodied data scaling의 진전을 보여 주지만 web data와 동일한 coverage나
+            160,266개 task 규모로 표준화했습니다.
+          </p>
+          <p className="leading-8">
+            Octo는 80만 trajectory, OpenVLA는 97만 real-world demonstration을 사용했습니다. 이 숫자는
+            embodied data scaling의 진전을 보여 주지만 web data와 동일한 coverage나
             target robot의 calibration을 뜻하지 않습니다.
           </p>
           <p className="leading-8">
@@ -216,6 +232,8 @@ export default function ModernArticle() {
             <EvidenceTag>논문 자기보고</EvidenceTag>
             2026년 Qwen-VLA는 Qwen3.5-4B와 DiT action decoder로 manipulation·navigation·trajectory generation을
             하나의 framework에서 다룬다고 보고합니다. 이를 “통합했다”는 확정 사실로 확대하면 안 됩니다.
+          </p>
+          <p className="leading-8">
             논문 자체도 embodied data 규모, joint-training trade-off, short-horizon benchmark, tactile·force·long-term
             memory를 남은 과제로 적습니다. 별도 paper인 Qwen-RobotNav의 planner 구조와도 하나의 system처럼
             합치지 않습니다.
@@ -261,16 +279,22 @@ export default function ModernArticle() {
 
       <section id="system-boundary" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>3단계 · Foundation model이 직접 할 일과 기존 robotics stack에 맡길 일을 분리합니다</h2>
+          <h2>3단계 · Foundation model과 기존 robotics stack의 일을 나눕니다</h2>
           <p className="leading-8">
             Monolithic VLA는 perception부터 action까지 공동 학습하지만 hierarchical system은 느린 semantic decision과 빠른
-            geometry·planning·control을 나눕니다. 후자가 언제나 더 안전하거나 전자가 언제나 더 일반적인 것은 아닙니다. Modular path에서는
+            geometry·planning·control을 나눕니다.
+          </p>
+          <p className="leading-8">
+            후자가 언제나 더 안전하거나 전자가 언제나 더 일반적인 것은 아닙니다. Modular path에서는
             component를 개별 시험할 수 있는 대신 calibration, stale observation, planner/controller interface error가
             합성됩니다.
           </p>
           <p className="leading-8">
             OK-Robot처럼 VLM, navigation, grasp primitive를 조합한 system은 foundation model이 모든 low-level dynamics를
-            직접 예측하지 않아도 open-world task를 시도할 수 있음을 보여 줍니다. 동시에 component success를 곱하면 end-to-end success가 급격히
+            직접 예측하지 않아도 open-world task를 시도할 수 있음을 보여 줍니다.
+          </p>
+          <p className="leading-8">
+            동시에 component success를 곱하면 end-to-end success가 급격히
             낮아진다는 현실도 드러냅니다. 이것은 CFD에서 AI가 solver를 대체하기보다 적절한 solver와 조건을 선택하게 하는 경계와 닮았지만 물리 실행의 error
             feedback이 더 빠르다는 차이가 있습니다.
           </p>
@@ -300,10 +324,13 @@ export default function ModernArticle() {
 
       <section id="pixel-to-3d" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>4단계 · 2D pixel 선택은 3D action을 없애지 않고 geometry module로 넘깁니다</h2>
+          <h2>4단계 · 2D pixel 목표를 3D action으로 변환합니다</h2>
           <p className="leading-8">
             Navigation에서는 VLM이 이미 잘 다루는 image pixel이나 region을 목표로 고르고 depth·camera calibration·SLAM이 이를 3D
-            waypoint로 바꾸는 interface가 등장합니다. Goal2Pixel과 2026-08-18 공개된 TAMP-Nav가 이 방향을 보고했습니다. 그러나 최근
+            waypoint로 바꾸는 interface가 등장합니다. Goal2Pixel과 2026-08-18 공개된 TAMP-Nav가 이 방향을 보고했습니다.
+          </p>
+          <p className="leading-8">
+            그러나 최근
             preprint의 자기보고 결과일 뿐 이 글의 전체 결론은 아닙니다. 또한 manipulation의 grasp orientation·force·contact를 pixel 하나로
             환원하지 못합니다.
           </p>
@@ -388,15 +415,21 @@ p_w&=\underbrace{T_{wc}p_c}_{\text{world·map frame으로 변환}}
 
       <section id="closed-loop-release" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>5단계 · Release 단위는 한 frame의 action accuracy가 아니라 closed-loop trajectory입니다</h2>
+          <h2>5단계 · Release는 closed-loop trajectory로 판정합니다</h2>
           <p className="leading-8">
             Mobile navigation은 observe→infer→move를 계속 반복하므로 waypoint가 맞아도 inference·planning latency가 길면 이미 다른
-            위치의 observation을 사용하게 됩니다. Robot arm도 정적인 pick만 보면 느려도 되는 것처럼 보이지만 미끄러지는 물체를 다시 잡거나 peg insertion
+            위치의 observation을 사용하게 됩니다.
+          </p>
+          <p className="leading-8">
+            Robot arm도 정적인 pick만 보면 느려도 되는 것처럼 보이지만 미끄러지는 물체를 다시 잡거나 peg insertion
             중 force spike를 피하는 contact-rich task에는 높은 feedback frequency와 force/tactile sensing이 필요합니다.
           </p>
           <p className="leading-8">
             독립 benchmark도 이 경계를 지지합니다. RADAR는 dynamics와 observation noise 아래에서 여러 VLA의 fragility를 측정했고 SO-101
-            real-robot benchmark는 failure taxonomy와 recovery를 별도로 평가합니다. 이 결과들은 “VLM 성능이 VLA로 온전히 전이되지 않는다”는
+            real-robot benchmark는 failure taxonomy와 recovery를 별도로 평가합니다.
+          </p>
+          <p className="leading-8">
+            이 결과들은 “VLM 성능이 VLA로 온전히 전이되지 않는다”는
             경험담을 보편 법칙으로 바꿔 주지 않습니다. 오히려 semantic benchmark와 embodied release test를 분리해야 한다는 독립 반증입니다.
           </p>
         </div>
@@ -416,7 +449,10 @@ p_w&=\underbrace{T_{wc}p_c}_{\text{world·map frame으로 변환}}
           <p className="leading-8">
             <EvidenceTag>현장 경험</EvidenceTag>
             “환경이 조금만 달라져도 무너졌다”, “flow head보다 coordinate token이 나았다”, “navigation latency가
-            더 아팠다”는 관찰은 다음 실험을 설계하는 좋은 가설입니다. 다만 model·revision, robot·sensor,
+            더 아팠다”는 관찰은 다음 실험을 설계하는 좋은 가설입니다.
+          </p>
+          <p className="leading-8">
+            다만 model·revision, robot·sensor,
             dataset, action space, frequency, baseline과 반복 측정이 없으면 논문 결과나 보편 임계점이 아닙니다.
             이 블로그는 <strong>공식 artifact / 논문 자기보고 / 독립 평가 / project 실측 / 현장 경험 /
             추정</strong>을 같은 문장에 섞지 않습니다.

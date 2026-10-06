@@ -1,3 +1,5 @@
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
+
 const Step = ({ n, title, body }: { n: string; title: string; body: string }) => (
   <div className="min-w-0 rounded-lg border border-border bg-card p-4">
     <p className="text-xs font-semibold text-primary">{n}</p>
@@ -27,6 +29,6 @@ export function AvalancheStateViz() {
   ];
   return <figure data-viz="avalanche-state" className="not-prose min-w-0 overflow-hidden rounded-xl border border-border bg-card">
     <figcaption className="border-b border-border px-4 py-3 text-sm font-semibold">같은 poll 기록, 서로 다른 두 기억</figcaption>
-    <div className="overflow-x-auto"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-muted/40 text-muted-foreground"><tr>{["poll", "Snowflake streak", "Snowball strength", "decision"].map(x => <th key={x} className="px-4 py-3 font-medium">{x}</th>)}</tr></thead><tbody>{rows.map((r, i) => <tr key={i} className="border-t border-border/70">{r.map((x, j) => <td key={j} className="px-4 py-3 align-top">{x}</td>)}</tr>)}</tbody></table></div>
+    <div className="px-4 pb-4"><ResponsiveVizTable columns={["poll", "Snowflake streak", "Snowball strength", "decision"]} rows={rows} desktopMinWidthClassName="min-w-[620px]" /></div>
   </figure>;
 }

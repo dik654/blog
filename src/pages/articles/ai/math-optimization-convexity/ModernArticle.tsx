@@ -13,6 +13,11 @@ export default function OptimizationGeometryArticle() {
       <h2 className="text-2xl font-bold">1 · 지금의 기울기만 보고 얼마나 멀리 움직여도 될까</h2>
       <p className="text-lg leading-8">낮출 점수와 허용 범위를 정했어도 다음 위치를 고르는 문제는 남습니다. 현재 위치의 변화율을 알면 작은 이동의 결과를 예측할 수 있습니다. 하지만 이동하는 동안 그 비율이 급하게 바뀌면 처음의 예측만으로는 얼마나 좋아질지 알기 어렵습니다.</p>
       <p>이번에는 입력을 제곱한 점수 하나를 고정합니다. 두 점 사이를 직선으로 이었을 때 실제 점수가 어디에 있는지, 한 위치의 비율로 예측한 값이 얼마나 틀리는지를 직접 계산하겠습니다. 이 두 비교가 다음 글에서 이동 간격을 정하는 근거가 됩니다.</p>
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+      <ol className="list-decimal space-y-2 pl-6"><li>f(x)=x²에서 0과 2의 중간 점수 1은 두 끝 점수의 평균 2보다 낮을까요?</li><li>x=1에서 0.1만큼 움직인 실제 점수 1.21은 접선 예측 1.2와 정확히 같을까요?</li><li>기울기가 0이라는 사실만으로 임의의 함수에서 전역 최소점을 보장할까요?</li></ol>
+      <p>답은 <strong>예, 아니요, 아니요</strong>입니다. 볼록성은 곡선의 전역 위치를, 매끄러움은 한 점의 선형 예측에 남는 오차를 제한합니다.</p>
+      <CurvatureShapeViz />
+      <ContentBoundary article="math-optimization-convexity" />
     </section>
     <section id="black-box" data-teach-level="B" className="space-y-6">
       <h2 className="text-2xl font-bold">2 · 같은 점수 계산에서 위치와 변화율을 함께 읽는다</h2>
@@ -93,7 +98,6 @@ export default function OptimizationGeometryArticle() {
           interpretation="볼록성을 사용하지 않고 기울기 변화의 상한만 사용한 유도입니다. L이 적용되는 경로 밖으로 이동하면 이 보장을 쓸 수 없습니다." />
       </ProgressiveDetail>
       <p>이 상한에 d=−∇f/L을 대입하면 선형 항은 −‖∇f‖²/L, 오차 여유는 ‖∇f‖²/(2L)이므로 합은 −‖∇f‖²/(2L)입니다. L&gt;0이고 이동 경로가 조건을 만족하면 다음 값은 이만큼 이상 줄어듭니다. f=x²의 x=1에서는 d=−1이라 한 번에 0으로 가고 점수도 1에서 0이 됩니다.</p>
-      <CurvatureShapeViz />
       <p>매끄러움과 볼록성은 서로 대신할 수 없습니다. |x|는 볼록하지만 원점에서 기울기가 정의되지 않습니다. sin x는 기울기 cos x가 거리 한 단위에 최대 1만큼 변하므로 L=1이지만 전체 실수에서 볼록하지 않습니다. cos x의 변화율인 −sin x의 크기가 1 이하라는 사실로 이 상한을 확인할 수 있습니다.</p>
     </section>
     <section id="curvature-range" data-teach-level="4" className="space-y-6">
@@ -138,7 +142,6 @@ export default function OptimizationGeometryArticle() {
       <p>신경망 손실에는 같은 함수를 표현하는 서로 다른 가중치, 여러 골짜기, 안장점이 있을 수 있습니다. 예를 들어 두 가중치의 곱으로 출력하는 모형은 (a,b)와 (ca,b/c)가 같은 출력을 만듭니다(c≠0, 가정). 같은 최소값을 내는 가중치가 여럿이면 전체 공간의 강한 볼록성을 주장할 수 없습니다.</p>
       <p>앞의 보장은 함수의 조건을 먼저 확인한 뒤 쓰는 기준입니다. 현재 위치에서 오차가 작게 보였다는 이유로 손실 전체에 같은 L이나 μ를 적용하지 않습니다. 이어지는 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradient-descent-convergence">경사하강법과 수렴</a>에서 이 조건들이 보폭과 반복 횟수의 식에 어떻게 들어가는지 살펴봅니다.</p>
       <ol className="list-decimal space-y-3 pl-6"><li>f=x²에서 0과 2를 반씩 섞으면 곡선과 현의 높이는 각각 얼마이며, 일반적인 차이는 왜 음수가 될 수 없을까요? (답: 7절)</li><li>x=1에서 d=0.1만큼 움직일 때 L=2의 오차 여유는 얼마이며, d=−∇f/L을 택하면 어디로 갈까요? (답: 8절)</li><li>q=(x²+100y²)/2에서 κ=100은 무엇을 뜻하며 z=10y로 좌표를 바꾸면 왜 달라질까요? (답: 9절)</li></ol>
-      <ContentBoundary article="math-optimization-convexity" />
     </section>
   </article>;
 }

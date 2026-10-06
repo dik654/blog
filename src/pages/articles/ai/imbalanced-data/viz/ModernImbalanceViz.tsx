@@ -645,8 +645,8 @@ export function ImbalanceEvaluationViz() {
     "Probability bin의 frequency 확인",
   ] as const;
   const notes = [
-    "한 evaluation unit·window·dedup rule에서 TP·FP·FN·TN을 만듭니다.",
-    "Precision은 alert의 purity, recall은 실제 positive의 coverage를 묻습니다.",
+    "1,000건을 같은 unit·window로 세어 TP=40, FP=10, FN=10, TN=940을 만듭니다.",
+    "Precision=40/(40+10)=.8이고 recall=40/(40+10)=.8입니다. 값은 같아도 분모의 뜻은 다릅니다.",
     "TPR·FPR이 같아도 negative population이 커지면 FP count가 늘어 precision이 내려갑니다.",
     "Score bin별 평균 confidence와 positive frequency를 나란히 그려 calibration을 평가합니다.",
   ] as const;
@@ -667,10 +667,10 @@ export function ImbalanceEvaluationViz() {
         >
           <motion.g animate={{ opacity: active <= 1 ? 1 : 0.12 }}>
             {[
-              ["TP", 42, 34],
-              ["FP", 132, 34],
-              ["FN", 42, 100],
-              ["TN", 132, 100],
+              ["TP 40", 42, 34],
+              ["FP 10", 132, 34],
+              ["FN 10", 42, 100],
+              ["TN 940", 132, 100],
             ].map(([label, x, y], i) => (
               <g key={String(label)}>
                 <rect

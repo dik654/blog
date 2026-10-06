@@ -10,7 +10,7 @@ const prose="prose prose-neutral max-w-none dark:prose-invert";
 const rows=[["0","문장 끝","[0,0,0]","[0,0,0]"],["1","red","[1,0,0]","[1,0,1]"],["2","cat","[1,2,0]","[2,0,1]"],["3","saw","[0,1,1]","[0,1,2]"],["4","dog","[0,0,1]","[1,1,0]"]];
 export default function Word2VecNegativeSamplingArticle(){const sidebar=useCodeSidebar();const code=(key:string)=><CodeViewButton onClick={()=>sidebar.open(key,codeRefs[key])}/>;return <div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 한 번의 관찰에서 모든 단어를 비교해야 할까요</h2>
-<div className={prose}><p>문장에서 함께 나온 단어를 보고 수의 표를 고친다고 해 보겠습니다. 한 단어를 볼 때마다 사전에 있는 모든 단어와 비교하면 큰 사전일수록 일이 늘어납니다. 이번에 실제로 본 짝 하나와 따로 뽑은 두 짝만 비교해도 학습에 쓸 신호를 만들 수 있을까요? 먼저 비교 횟수를 세고 그 비교가 무엇을 뜻하는지 확인하겠습니다.</p><p>같은 세 비교에서 모두 점수 1이 나와도 처리 방향은 다릅니다. 관찰한 짝에는 더 높은 점수를 요구하고 추첨으로 만든 짝에는 더 낮은 점수를 요구합니다. 점수가 같은데 요구가 반대인 이유는 문장에서 얻은 관찰과 별도의 추첨이 서로 다른 역할을 하기 때문입니다.</p><p>이 글은 앞선 <a href="/cs/ai/word2vec">다섯 단어와 두 표</a>를 이어 사용합니다. 작은 계산에서 시작해 어느 줄이 얼마나 바뀌는지 따라갑니다. 끝에서는 실제 C 코드의 추첨과 갱신을 실행하고 같은 단어를 여러 번 뽑거나 관찰한 정답을 다시 뽑았을 때 무엇이 달라지는지 확인합니다.</p></div>
+<div className={prose}><p>문장에서 함께 나온 단어를 보고 수의 표를 고친다고 해 보겠습니다. 한 단어를 볼 때마다 사전에 있는 모든 단어와 비교하면 큰 사전일수록 일이 늘어납니다. 이번에 실제로 본 짝 하나와 따로 뽑은 두 짝만 비교해도 학습에 쓸 신호를 만들 수 있을까요? 먼저 비교 횟수를 세고 그 비교가 무엇을 뜻하는지 확인하겠습니다.</p><p>같은 세 비교에서 모두 점수 1이 나와도 처리 방향은 다릅니다. 관찰한 짝에는 더 높은 점수를 요구하고 추첨으로 만든 짝에는 더 낮은 점수를 요구합니다. 점수가 같은데 요구가 반대인 이유는 문장에서 얻은 관찰과 별도의 추첨이 서로 다른 역할을 하기 때문입니다.</p><p>이 글은 앞선 <a href="/cs/ai/word2vec">다섯 단어와 두 표</a>를 이어 사용합니다. 작은 계산에서 시작해 어느 줄이 얼마나 바뀌는지 따라갑니다. 끝에서는 실제 C 코드의 추첨과 갱신을 실행하고 같은 단어를 여러 번 뽑거나 관찰한 정답을 다시 뽑았을 때 무엇이 달라지는지 확인합니다.</p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>saw→cat 관찰과 saw→red·dog 추첨의 점수가 모두 1이어도 label은 1·0·0으로 다를까요?</li><li>세 비교는 입력 saw 행 하나와 대상 cat·red·dog 세 행을 읽을까요?</li><li>Negative label 0은 그 단어 쌍이 실제 언어에서 불가능하다는 판정일까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. 관찰 경로와 추첨 경로는 같은 점수를 서로 반대 방향으로 학습시킬 수 있습니다.</p><SamplingCaseViz/><ContentBoundary article="word2vec-negative-sampling"/>
 </section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장과 추첨표가 서로 다른 일을 맡습니다</h2>
 <div className={prose}><p>전체 흐름에는 두 입구가 있습니다. 한쪽은 문장을 읽고 가까이 나타난 단어의 짝을 만듭니다. 다른 쪽은 단어별 출현 횟수로 만든 추첨표에서 비교 대상을 고릅니다. 두 입구가 만든 기록을 합친 뒤 현재 수의 표가 어느 기록을 잘 구별하는지 점검합니다.</p><p>비교의 출발 단어는 그대로 두고 도착 단어만 바꿉니다. 출발 쪽 줄 하나와 각 도착 쪽 줄을 같은 자리끼리 곱해 더하면 점수가 나옵니다. 점수에 관찰에서 왔는지 추첨에서 왔는지 표시를 붙이고 그 표시와 어긋난 만큼 관련된 줄에 고칠 양을 보냅니다.</p><p>문장을 줄이는 작업은 이보다 앞에 있습니다. 너무 자주 나오는 단어의 일부 출현을 먼저 지우면 이후에 고르는 이웃 자체가 바뀝니다. 비교 대상을 추가하는 추첨과 문장에서 출현을 제거하는 작업을 별도 상자로 생각해 두세요. 하나는 만든 질문에 비교를 붙이고 다른 하나는 만들 질문의 재료를 바꿉니다.</p></div>
@@ -25,7 +25,6 @@ export default function Word2VecNegativeSamplingArticle(){const sidebar=useCodeS
 </section>
 <section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 관찰 한 건에 비교 두 건을 붙입니다</h2>
 <div className={prose}><p>첫 장면은 saw에서 cat으로 이어지는 관찰 하나입니다. 두 번째 장면에서 같은 출발점에 red와 dog의 비교가 붙습니다. 세 번째 장면은 세 점수가 모두 1이어도 요구하는 방향이 다른 것을 보여 줍니다. 여기까지는 새로운 단어의 뜻을 외우기보다 어떤 값이 어디서 왔는지 따라가면 됩니다.</p></div>
-<SamplingCaseViz/>
 <div className={prose}><p>한 비교에서 고칠 양을 구한 뒤에는 출발 쪽과 도착 쪽 모두에 돌려주어야 합니다. cat, red, dog는 서로 다른 대상 줄이므로 각각 자기 비교에서 온 양을 받습니다. saw의 입력 줄은 세 비교에서 온 양을 모두 받습니다. 한쪽만 바꾸는 계산으로 끝내면 원래 의도한 두 표의 학습과 달라집니다.</p><p>추첨 결과가 red, red였다고 바꾸어 보세요. 비교는 여전히 두 번 추가되지만 대상 줄은 같은 red를 두 번 가리킵니다. 서로 다른 대상 줄의 수는 줄어도 두 기록의 기여가 사라지지는 않습니다. 같은 줄을 한 번 읽고 두 배로 계산할지, 한 번 고친 줄을 다음 비교에서 다시 읽을지는 실행 규칙에 따라 달라집니다.</p></div>
 </section>
 <section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 계산을 줄이면 묻는 질문도 바뀝니다</h2>
@@ -109,7 +108,7 @@ export default function Word2VecNegativeSamplingArticle(){const sidebar=useCodeS
 </section>
 <section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">18. 같은 실행과 좋은 표현을 따로 확인합니다</h2>
 <div className={prose}><p>재현할 때는 자료와 단어 분리 방식부터 고정합니다. 단어 목록의 순서, 두 표의 초기값, 빈도표와 전체 횟수, 입력과 대상의 방향, 이웃 범위와 문장 경계를 함께 기록합니다. 여기에 추첨 지수와 k, 정답 제외와 중복 정책, 제거 기준과 실제 식, 난수 상태의 소비 순서와 스레드 수를 연결해야 같은 실행을 설명할 수 있습니다.</p><p>단어 제거를 바꾼 실험에서는 단어별 남김 비율과 거리별 관찰 쌍의 수를 먼저 비교합니다. 고친 표를 평가할 때는 같은 계산 예산이나 실제 시간, 포함된 갱신 수를 기록하고 선택한 후속 과제의 성능을 측정합니다. 바꾼 설정을 유지할 기준과 되돌릴 기준도 비교 전에 정해야 결과를 보고 유리한 조건만 고르지 않습니다.</p><p>이 글의 작은 실행은 원본 분기의 의미와 수치 차이를 확인합니다. 좋은 단어 표현을 학습했다거나 특정 하드웨어에서 더 빠르다는 실험은 아닙니다. q와 k를 바꾸면 학습 목적도 달라지고 원본의 유한 추첨표·라벨 제외·근사표는 이상식에 조건을 추가합니다. 공개된 원문이 있다는 이유만으로 그 실행과 논문 식을 같은 것으로 뭉뚱그리지 않겠습니다.</p></div>
-<ContentBoundary article="word2vec-negative-sampling"/>
+
 </section>
 <section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 다음 결과를 예측해 보세요</h2>
 <div className={prose}><p>정답 cat을 추첨에서도 한 번 포함하고 두 기록을 같은 무게로 세면 점수 1을 올리게 될까요, 내리게 될까요? 합친 미분과 그 이유를 예측해 보세요. (답: 11절)</p><p>원본에서 추첨 횟수를 6으로 설정했는데 여섯 번째 후보가 정답 cat과 같았습니다. 채택한 음수 수와 양수까지 포함한 내적 수는 각각 얼마일까요? (답: 16절)</p><p>같은 다섯 위치에 원본 제거 규칙을 적용해 red cat만 남았습니다. cat의 반경 1 이웃과 제거 전후 관찰 질문이 어떻게 바뀌는지 설명해 보세요. (답: 12·17절)</p></div>

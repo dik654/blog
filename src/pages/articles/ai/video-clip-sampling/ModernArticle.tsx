@@ -20,6 +20,11 @@ export default function VideoClipSamplingArticle() {
             표현합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>10초 영상에서 [0,2]·[1,3]·[8,10]의 길이를 단순히 더하면 6초일까요?</li><li>겹친 시간을 한 번만 센 interval union은 5초라서 coverage가 0.5일까요?</li><li>Frame 수가 같은 두 평가라면 clip 시작 시각이 달라도 같은 evidence를 보았다고 할 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 계산량은 frame 수로, 실제 관측 범위는 timestamp 합집합으로 따로 셉니다.</p>
+        <VideoClipSamplingViz />
+        <ContentBoundary article="video-clip-sampling" />
         <TermBreakdown
           title="Clip sampling의 기본 단위"
           items={[
@@ -45,8 +50,6 @@ export default function VideoClipSamplingArticle() {
             },
           ]}
         />
-        <VideoClipSamplingViz />
-        <ContentBoundary article="video-clip-sampling" />
       </section>
 
       <section id="coverage" className="scroll-mt-20">

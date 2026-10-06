@@ -24,6 +24,15 @@ export default function RegressionMetricsArticle() {
             달라집니다. 먼저 residual의 모양을 봅니다. 그다음 비용 곡선과 예측 target을 조합합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>실제값 42, 예측값 35의 residual을 y−ŷ로 정의하면 +7일까요?</li>
+          <li>Residual [1,1,1,9]의 MAE는 3일까요?</li>
+          <li>같은 residual의 RMSE는 √21≈4.58로 MAE보다 클까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. 절댓값 비용은 큰 오류를 선형으로, 제곱 비용은 더 강하게 반영하므로 같은 예측에도 다른 판단을 만듭니다.</p>
+        <RegressionMetricViz />
+        <ContentBoundary article="regression-metrics" />
         <TermBreakdown
           title="회귀 평가에서 먼저 구분할 형태"
           items={[
@@ -59,8 +68,6 @@ export default function RegressionMetricsArticle() {
             },
           ]}
         />
-        <RegressionMetricViz />
-        <ContentBoundary article="regression-metrics" />
       </section>
 
       <section id="residual-penalty" className="scroll-mt-20">

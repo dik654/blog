@@ -29,6 +29,15 @@ export default function QuantizationArticle() {
             이어집니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>x=0.7, scale=0.5, zero-point=0이면 code는 1이고 복원값은 0.5일까요?</li>
+          <li>“4-bit”라는 말만으로 scale 공유 범위와 실제 GPU kernel까지 알 수 있을까요?</li>
+          <li>Scale을 줄이면 rounding과 clipping을 합친 전체 오차가 언제나 작아질까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Code 간격을 좁히면 중앙은 정밀해지지만 표현 범위가 줄어 outlier가 더 많이 잘릴 수 있습니다.</p>
+        <QuantizerNumberLineViz />
+        <ContentBoundary article="quantization" />
         <TermBreakdown
           title="Quantizer를 이루는 물체를 한 줄씩"
           items={[
@@ -59,8 +68,6 @@ export default function QuantizationArticle() {
             },
           ]}
         />
-        <QuantizerNumberLineViz />
-        <ContentBoundary article="quantization" />
       </section>
 
       <section id="affine-map" className="scroll-mt-20">

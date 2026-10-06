@@ -20,7 +20,7 @@ export default function Word2VecObjectivesArticle(){const sidebar=useCodeSidebar
 <p>
             이 글에서는 다섯 단어짜리 문장과 작은 표를 끝까지 사용합니다. 먼저 두 종류의 질문이 어떻게 생기는지 보겠습니다. 그다음 각 후보에 확률을 주고 정답 확률을 높이려면 어느
             줄을 어느 정도 바꾸는지 계산합니다. 마지막에는 모든 후보를 한꺼번에 비교하는 대신 갈림길을 따라 하나의 단어를 찾는 방법을 실제 C 코드와 대조합니다.
-          </p></div></section>
+          </p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>두 saw의 입력 행을 평균하면 [0,1,1]이고 대상 cat과의 점수는 1일까요?</li><li>반대 방향에서는 입력 cat으로 왼쪽·오른쪽 saw를 각각 맞혀 점수 2인 질문 두 개가 생길까요?</li><li>다섯 후보 점수가 모두 같으면 정답 표시에 관계없이 예측 확률은 우선 각각 1/5일까요?</li></ol><p>답은 <strong>예, 예, 예</strong>입니다. 정답은 현재 점수를 평가하며 CBOW와 Skip-gram은 입력을 모으는 위치와 질문 수가 다릅니다.</p><ObjectiveCaseViz/><ContentBoundary article="word2vec-prediction-objectives"/></section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장을 고른 뒤 두 갈래로 바꿉니다</h2><div className={prose}>
 <p>전체 흐름의 입력은 문장과 현재 위치입니다. 가까운 이웃을 고른 뒤 각 단어의 번호로 수의 줄을 읽습니다. 여기서 첫 번째 선택을 합니다. 이웃 줄을 모아서 가운데를 맞힐지, 가운데 줄 하나로 이웃들을 따로 맞힐지 정합니다. 아직 어느 방식이 더 좋다고 가정하지 않겠습니다.</p>
 <p>다음 선택은 정답에 확률을 주는 방법입니다. 후보가 다섯 개라면 다섯 점수를 계산한 뒤 전체 합에 대한 비율을 만들 수 있습니다. 후보가 아주 많다면 정답까지 가는 짧은 갈림길에만 점수를 붙일 수도 있습니다. 앞의 선택은 예측 문제를 만들고 뒤의 선택은 그 문제의 답에 확률을 매깁니다. 두 선택을 따로 보아야 조합을 바꿀 수 있습니다.</p>
@@ -40,7 +40,7 @@ export default function Word2VecObjectivesArticle(){const sidebar=useCodeSidebar
 <p>점수 1과 2를 곧바로 확률처럼 읽으면 안 됩니다. 지금 표에는 수가 세 개 있지만 후보는 다섯 단어입니다. 어떤 후보를 얼마나 선호하는지 판단하려면 선택한 입력을 다른 후보들과도 비교해야 합니다. 따라서 점수가 더 큰 두 번째 방식이 더 좋은 학습 방식이라는 결론도 아직 낼 수 없습니다.</p>
 <p>후보들의 비교가 왜 필요한지 가장 단순한 경우로 확인할 수 있습니다. 다섯 후보의 점수가 모두 같다면 어느 단어를 더 선호할 근거도 없으므로 각각 1/5의 확률을 받습니다. cat을 정답으로 표시해도 예측 확률이 저절로 1이 되지는 않습니다. 정답은 표가 내놓은 답을 평가하고 나중에 수를 고치는 데 쓰입니다. 이번 입력에서 무엇을 알고 무엇을 맞혀야 하는지 섞지 않는 것이 중요합니다.</p></div></section>
 <section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 두 saw를 합치거나 따로 맞힙니다</h2><div className={prose}>
-<p>아래 첫 장면에서는 양쪽 saw의 줄이 평균을 만드는 한 곳으로 모입니다. 그 결과로 가운데 cat을 맞힙니다. 두 번째 장면에서는 가운데 cat의 줄이 두 질문에 공통으로 들어갑니다. 정답은 왼쪽 saw와 오른쪽 saw에 각각 붙습니다. 그림의 화살표는 문장을 읽은 순서가 아니라 예측에 쓰이는 방향입니다.</p></div><ObjectiveCaseViz/><div className={prose}>
+<p>아래 첫 장면에서는 양쪽 saw의 줄이 평균을 만드는 한 곳으로 모입니다. 그 결과로 가운데 cat을 맞힙니다. 두 번째 장면에서는 가운데 cat의 줄이 두 질문에 공통으로 들어갑니다. 정답은 왼쪽 saw와 오른쪽 saw에 각각 붙습니다. 그림의 화살표는 문장을 읽은 순서가 아니라 예측에 쓰이는 방향입니다.</p></div><div className={prose}>
 <p>
             세 번째 장면에서 보는 범위만 두 칸으로 넓혀 보세요. 가운데는 여전히 cat인데 첫 방식은 네 이웃을 한 번 모으고, 두 번째는 네 정답 위치를 따로 셉니다. 문장의 맨
             앞이나 끝에서는 없는 위치를 채워 넣지 않습니다. 남은 이웃이 몇 개인지가 평균의 나눗셈과 질문 수를 함께 바꿉니다.
@@ -151,7 +151,7 @@ export default function Word2VecObjectivesArticle(){const sidebar=useCodeSidebar
 <section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">20. 품질과 속도는 같은 조건에서 비교합니다</h2><div className={prose}><p>두 예측 방식과 두 출력 구조를 비교하려면 먼저 같은 자료 분할, 단어 번호표, 이웃 선택과 예측 방향을 고정합니다. 차원과 읽은 중심 위치 수뿐 아니라 실제 예측 건수와 사용한 시간 예산도 기록합니다. CBOW의 한 번과 Skip-gram의 여러 번은 같은 계산량이 아닐 수 있습니다.</p>
 <p>손실을 합했는지 중심별로 평균했는지, 평균 입력의 기울기를 교정했는지도 학습 규칙입니다. 계층형 출력에서는 실제 단어 빈도, 주소와 내부 노드 순서를 함께 저장해야 합니다. 나무나 ID만 바꾸고 학습된 내부 벡터를 그대로 읽으면 서로 다른 분기의 수를 정답 경로에 붙일 수 있습니다.</p>
 <p>검증 자료의 확률 손실과 사용하려는 과제의 품질을 별도로 비교합니다. 동시에 같은 하드웨어와 실행 설정에서 지연과 처리량을 측정합니다. 희귀 단어와 문맥 개수별로 결과를 나누면 전체 평균이 숨긴 차이도 볼 수 있습니다. 한 구현의 학습률 배율이나 나무 길이만으로 어떤 언어에서 항상 더 좋은 단어 벡터를 얻는다고 단정할 수 없습니다.</p>
-<p>단어별 고정 벡터와 순서를 버리는 문맥 합산은 실제 문장의 모든 관계를 표현하지 못합니다. 목록 밖 단어도 그대로는 읽을 수 없습니다. 이번 글은 정해진 단어 목록에서 어떤 예측 문제와 확률 계산을 만드는지 설명했습니다. 다음 <a href="/cs/ai/word2vec-negative-sampling">음의 표본을 이용한 학습</a>에서는 일부 비교 대상만 뽑을 때 무엇을 학습하는지가 달라지는 이유를 이어 봅니다.</p></div><ContentBoundary article="word2vec-prediction-objectives"/></section>
+<p>단어별 고정 벡터와 순서를 버리는 문맥 합산은 실제 문장의 모든 관계를 표현하지 못합니다. 목록 밖 단어도 그대로는 읽을 수 없습니다. 이번 글은 정해진 단어 목록에서 어떤 예측 문제와 확률 계산을 만드는지 설명했습니다. 다음 <a href="/cs/ai/word2vec-negative-sampling">음의 표본을 이용한 학습</a>에서는 일부 비교 대상만 뽑을 때 무엇을 학습하는지가 달라지는 이유를 이어 봅니다.</p></div></section>
 <section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">21. 다음 결과를 예측해 보세요</h2><div className={prose}><ol><li>같은 두 saw를 세 번씩 반복하면 CBOW의 평균은 어떻게 되고, 각 출현의 기울기와 같은 행에 모인 총기울기는 어떻게 되나요? (답: 8절)</li><li>cat의 경로를 계산해 얻은 0.098306을 flat softmax의 0.0929633과 다르다는 이유로 구현 오류라고 할 수 있나요? (답: 12절)</li><li>빈도 배열의 첫 값만 작아져 [1,8,4,2,1]이 됐습니다. 원본 코드가 여전히 최적 길이를 만든다고 할 수 있나요? (답: 19절)</li></ol></div></section>
 <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}}/>
 </div>;}

@@ -17,33 +17,37 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          관측은 대상 층을 나누고, drift는 분포 변화와 성능 변화를 나눠서 봅니다
+          1,680ms 요청에서 마지막 generation 900ms가 가장 오래 걸렸습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 운영에서 “관측한다”는 말은 두 가지 서로 다른 질문에 답합니다. 하나는{" "}
-            <em>무엇을 관측 대상으로 삼는가</em>이고, 다른 하나는{" "}
-            <em>그 대상이 시간에 따라 어떻게 달라지는가</em>입니다. 두 질문을 섞으면
-            “느려졌다”와 “틀리기 시작했다”를 구분하지 못합니다.
+            요청 하나가 retrieval 80ms, 첫 generation 220ms, tool 480ms, 마지막
+            generation 900ms를 차례로 거쳤습니다. 네 span의 합은 1,680ms입니다. 마지막
+            generation은 0.9초 동안 output 96 token을 만들어 약 107 token/s를 냈습니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>네 구간을 모두 더한 요청 latency는 1,680ms일까요?</li>
+            <li>가장 오래 걸린 원인은 480ms의 tool span일까요?</li>
+            <li>마지막 generation throughput은 96÷0.9≈107 token/s일까요?</li>
+          </ol>
           <p>
-            앞의 질문은 production monitoring 아래 model, system, input, output monitoring 네 층을 나누는 문제입니다. 뒤의 질문은
-            data drift, concept drift, performance drift라는 세 가지 변화 축을 가릅니다.
-          </p>
-          <p>
-            <Link to="/cs/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link> 글은 이미
-            SLI·error budget·burn rate로 “언제 사람을 호출할지”를 다뤘습니다. 이 글은 그 SLI를
-            채우는 원재료, 즉 request 하나가 남기는 trace span 구조와 token/latency 분해, 그리고
-            SLI가 서서히 나빠지는 원인을 가리키는 drift 축을 다룹니다. 겹치는 것은 링크로
-            재사용하고 다시 정의하지 않습니다.
-          </p>
-          <p>
-            이어지는 절은 관측 층 구분 → drift 세 종류 → trace/span 구조와 LLM observability →
-            token·latency 분해 → GPU·queue 신호 → error classification과 trace sampling 순서로
-            갑니다.
+            답은 <strong>예, 아니요, 예</strong>입니다. Span tree가 있으면 “전체가
+            느리다”를 어느 작업이 얼마나 썼는지로 분해할 수 있습니다. 이 사례에서는
+            마지막 generation이 전체 시간의 절반보다 길어 우선 조사할 구간입니다.
           </p>
         </div>
+        <LlmMonitoringObservabilityAndDriftViz />
         <ContentBoundary article="llm-monitoring-observability-and-drift" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            Production monitoring은 model·system·input·output 층의 신호를 모으고,
+            observability는 trace로 한 요청의 경로를 재구성합니다. 시간에 따른 변화는
+            data·concept·performance drift로 다시 나눕니다.{" "}
+            <Link to="/cs/ai/llm-serving-ops#observability-aiops">LLM 서빙 운영</Link>은
+            이 신호로 언제 사람을 호출할지를 다룹니다.
+          </p>
+        </div>
       </section>
 
       <section id="monitoring-layers" className="scroll-mt-20">
@@ -175,7 +179,6 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             8초 걸렸다”가 아니라 “테스트 실행에 5초를 썼다”를 알 수 있습니다.
           </p>
         </div>
-        <LlmMonitoringObservabilityAndDriftViz />
         <TermBreakdown
           title="한 trace tree를 이루는 span 종류"
           items={[
@@ -231,7 +234,6 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             아니라 그 nested 구조를 일반화한 표현입니다.
           </CitationBlock>
         </div>
-        <ContentBoundary article="llm-monitoring-observability-and-drift" />
       </section>
 
       <section id="token-latency-breakdown" className="scroll-mt-20">

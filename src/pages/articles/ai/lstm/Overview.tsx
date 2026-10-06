@@ -6,21 +6,25 @@ import LSTMFlowViz from "./viz/LSTMFlowViz";
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">LSTM은 recurrent state에 data-dependent retention path를 만든다</h2>
+      <h2 className="mb-6 text-2xl font-bold">이전 cell 2에서 새 cell 1.375와 hidden 0.44를 만듭니다</h2>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Vanilla RNN은 같은 nonlinear transition을 시간축으로 반복하므로 먼 과거의 영향과 gradient가 recurrent Jacobian의 긴 곱을 지나야
-          한다. LSTM(Long Short-Term Memory)은 별도의 cell state C와 multiplicative gate를 둔다. 이전 값을 얼마나 남기고 새
-          candidate를 얼마나 기록하며 현재 output으로 얼마나 공개할지를 sample과 timestep마다 조절한다.
+          한 channel에서 Cₜ₋₁=2, forget gate=0.5, input gate=0.75,
+          candidate=0.5, output gate=0.5라고 합시다. 이전 값에서 1을 남기고 새 값
+          0.375를 써서 Cₜ=1.375가 됩니다. Hidden은 0.5×tanh(1.375)≈0.44입니다.
         </p>
-        <p>
-          현재 framework에서 흔히 말하는 “standard LSTM”은 1997년 원 논문의 구조에 1999–2000년에 제안된 forget gate가 결합된 형태다. 원 논문의
-          constant-error carousel과 현대식 update를 완전히 같은 식으로 설명하면 안 되는 이유가 여기 있다. 현대 LSTM의 direct memory path는
-          forget gate가 1에 가까울 때 오래 유지된다. 그렇다고 무한한 기억이나 vanishing gradient의 완전한 제거가 보장되지는 않는다.
-        </p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>Forget gate가 남기는 이전 cell의 몫은 0.5×2=1일까요?</li>
+          <li>Input gate가 쓰는 새 몫은 0.75×0.5=0.375일까요?</li>
+          <li>Hidden state hₜ가 cell state Cₜ와 같은 1.375일까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Output gate는 완성된 cell을 그대로 복사하지 않고 tanh로 읽은 값 중 절반만 공개합니다.</p>
       </div>
 
+      <LSTMFlowViz />
+      <ContentBoundary article="lstm" />
       <TermBreakdown
         title="LSTM의 두 state와 세 gate를 먼저 분리합니다"
         items={[
@@ -31,8 +35,6 @@ export default function Overview() {
           { term: "Output gate oₜ", description: "현재 cell 내용 중 얼마를 hidden state로 공개할지 정합니다." },
         ]}
       />
-      <LSTMFlowViz />
-      <ContentBoundary article="lstm" />
 
       <div id="paper-lstm-original" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Long Short-Term Memory</p>

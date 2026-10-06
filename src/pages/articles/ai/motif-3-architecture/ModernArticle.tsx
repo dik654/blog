@@ -23,6 +23,11 @@ export default function Motif3ArchitectureArticle() {
         <LessonHeader number="00" eyebrow="2026-08-24 release receipt" title="정식 명칭은 MDLA가 아니라 GDLA이며, Motif 3는 architecture와 post-training을 함께 설계한 314B MoE다">
           Motif 3 technical report v1은 2026년 8월 10일 공개됐고, 현재 정식 checkpoint는 MIT license로 배포됩니다. 핵심 attention 이름은 <strong>Grouped Differential Latent Attention(GDLA)</strong>입니다. 모델 하나의 성과를 GDLA 단독 효과로 환원하지 않고 architecture·training system·data·post-training을 각각 읽겠습니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>전체 314B 가운데 한 token이 활성화하는 parameter는 약 13.2B일까요?</li><li>희소층마다 routed expert 384개를 모두 계산할까요?</li><li>16개 noise head를 네 번 대응시키면 64개 signal head와 같은 묶음 수가 될까요?</li></ol>
+        <p>답은 <strong>예, 아니요, 예</strong>입니다. 전체 가중치 상주량, token당 활성 계산량, GDLA의 head 대응 관계를 서로 다른 장부로 읽어야 합니다.</p>
+        <MotifGdlaViz />
+        <ContentBoundary article="motif-3-architecture" />
         <TermLesson
           name="Motif 3 system configuration"
           oneLine="314B weight capacity 가운데 token마다 약 13.2B를 활성화하고, GDLA·modified mHC·Expert-Specific PolyNorm·MTP와 7개 specialist의 MOPD를 조합한 decoder-only MoE입니다."
@@ -44,7 +49,6 @@ export default function Motif3ArchitectureArticle() {
         <LessonHeader number="01" eyebrow="두 축의 결합" title="MLA는 KV 저장 폭을 줄이고 GDA는 signal·noise head의 계산 배분을 바꾼다">
           MLA의 compressed KV와 GDA의 차분 attention은 서로 다른 문제를 풉니다. Motif 3는 두 query path가 같은 KV latent를 읽게 해 별도 noise KV cache를 만들지 않고, token별 λ와 output gate를 추가합니다.
         </LessonHeader>
-        <MotifGdlaViz />
         <div className="grid gap-5 md:grid-cols-2">
           <TermLesson name="MLA latent KV compression" oneLine="Token의 key와 value 정보를 작은 joint latent cKV로 내린 뒤 필요할 때 head representation으로 확장하는 cache 설계입니다." shape="xₜ → [cKVₜ ; rotary keyₜ] → normalized latent → K,V heads" example="Motif 3의 query/KV low-rank dimension은 1,024/512이고 expanded KV heads는 16개입니다." boundary="Low-rank compression은 정보 손실·projection compute와 맞바꾸며 모든 model에서 같은 cache 감소율을 보장하지 않습니다." />
           <TermLesson name="Grouped Differential Attention" oneLine="Signal query head를 noise query head보다 더 많이 두고, 작은 noise-head 집합의 output을 group마다 반복해 차분하는 attention입니다." shape="64 signal heads − λₜ ⊙ Repeat₄(16 noise heads)" example="g=4이면 80 query heads 중 signal 64개, noise 16개가 됩니다." boundary="두 map을 빼는 것을 실제 음향 noise source 분리나 causal relevance 증명으로 읽지 않습니다." />
@@ -190,7 +194,6 @@ export default function Motif3ArchitectureArticle() {
         <div className="not-prose rounded-lg border border-border p-5 text-sm leading-7 text-muted-foreground">
           <p><strong className="text-foreground">Artifact 경계:</strong> 정식 <a className="text-primary hover:underline" href="https://huggingface.co/Motif-Technologies/Motif-3" target="_blank" rel="noreferrer">Motif-3 model card</a>는 현재 MIT checkpoint·MTP deployment를, <a className="text-primary hover:underline" href="https://github.com/MotifTechnologies/motif3-training-example" target="_blank" rel="noreferrer">training example</a>은 B200 4×8 GPU용 train-only framework를 공개합니다. Base checkpoint에서 MTP head가 빠졌다는 설명과 instruction checkpoint의 built-in MTP를 섞지 않습니다.</p>
         </div>
-        <ContentBoundary article="motif-3-architecture" />
       </section>
     </article>
   );

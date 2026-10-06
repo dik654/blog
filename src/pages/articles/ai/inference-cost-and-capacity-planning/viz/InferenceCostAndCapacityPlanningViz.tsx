@@ -96,7 +96,12 @@ export default function InferenceCostAndCapacityPlanningViz() {
           <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
 
           <div className="mt-4 h-52 min-w-0 w-full shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              minWidth={0}
+              initialDimension={{ width: 600, height: 208 }}
+            >
               <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 4, left: -12 }}>
                 <CartesianGrid stroke="#9ca3af" strokeOpacity={0.25} strokeDasharray="2 4" />
                 <XAxis

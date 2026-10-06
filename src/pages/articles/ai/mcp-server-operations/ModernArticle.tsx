@@ -9,14 +9,17 @@ export default function ModernArticle() {
   return (
     <article className="space-y-16">
       <section id="overview" className="scroll-mt-20 space-y-7">
-        <header className="space-y-3"><p className="text-sm font-semibold text-primary">호출 성공이 아니라 effect의 끝을 봅니다</p><h2 className="text-3xl font-bold tracking-tight">Production MCP server는 model proposal을 검증된 domain effect와 영수증으로 바꿉니다</h2></header>
+        <header className="space-y-3"><p className="text-sm font-semibold text-primary">호출 성공이 아니라 effect의 끝을 봅니다</p><h2 className="text-3xl font-bold tracking-tight">MCP 서버는 호출 제안을 검증된 실행과 영수증으로 바꿉니다</h2></header>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/cs/ai/mcp-primitives">Tool schema</Link>와 <Link to="/cs/ai/mcp-transports">transport</Link>가 준비돼도 production 운영은 끝나지 않습니다. Model의 tool call은 실행 후보이고, description은 설명 data이며, timeout은 미실행 증명이 아닙니다.</p><p className="leading-8">이 글은 authorization gate 하나에서 시작해 실제 side effect와 receipt를 붙입니다. 마지막에 retry·extension·deprecation을 배포 lifecycle로 조합합니다.</p></div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>도구가 목록에 보이면 현재 사용자가 곧바로 실행할 권한도 생길까요?</li><li>쓰기 호출의 응답 시간이 끝나면 외부 변경이 생기지 않았다고 단정할 수 있을까요?</li><li>같은 작업 식별자와 실행 영수증을 재사용하면 여러 재시도의 실제 변경을 하나 이하로 제한할 수 있을까요?</li></ol>
+        <p>답은 <strong>아니요, 아니요, 예</strong>입니다. 운영 서버는 모델의 제안을 현재 권한으로 다시 검사하고, 완료 여부를 모르는 상태에서도 중복 변경을 막는 영수증을 남겨야 합니다.</p>
         <McpLearningFlowViz mode="operations" />
         <ContentBoundary article="mcp-server-operations" />
       </section>
 
       <section id="authorization" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Discovery·proposal·consent·authorization은 서로 다른 문입니다</h2><p className="leading-8">
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>도구를 찾은 뒤 실행 권한까지 네 문을 통과합니다</h2><p className="leading-8">
             Tool이 목록에 보인다는 사실은 존재를 알 뿐입니다. Model이 호출을 제안하면 host가 현재 사용자와 위험도에 맞춰 노출·확인을 판단하고 server는 token과 실제
             resource ACL을 다시 검사합니다.
           </p></div>
@@ -60,7 +63,7 @@ export default function ModernArticle() {
       </section>
 
       <section id="release" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Core·extension·legacy 경로를 분리한 뒤 failure fixture로 배포합니다</h2><p className="leading-8">작은 core 위의 Tasks 같은 extension은 capability와 revision을 trace에 기록합니다. Deprecated path는 신규 기본 경로에 섞지 않고 compatibility adapter에 가둡니다. Partial frame·wrong version·schema mismatch·timeout·late response·process crash·권한 변경·중복 retry를 고정 fixture로 주입합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Core·extension·legacy 경로를 분리한 뒤 failure fixture로 배포합니다</h2><p className="leading-8">작은 core 위의 Tasks 같은 extension은 capability와 revision을 trace에 기록합니다.</p><p>Deprecated path는 신규 기본 경로에 섞지 않고 compatibility adapter에 가둡니다.</p><p>Partial frame, 잘못된 version, schema mismatch, timeout, 늦은 response, process crash, 권한 변경, 중복 retry를 고정 fixture로 주입합니다.</p></div>
         <TermBreakdown title="Release receipt에 한 줄씩 남길 것" items={[
           { term: "Pinned revisions", description: "Protocol·SDK·server·schema revision을 함께 기록합니다.", boundary: "문서 최신판과 실제 배포 binary가 같다고 추정하지 않습니다." },
           { term: "Failure matrix", description: "정상 경로뿐 아니라 timeout·late response·cancel·권한 변경을 재현합니다.", boundary: "한 번의 demo 성공을 production evidence로 쓰지 않습니다." },

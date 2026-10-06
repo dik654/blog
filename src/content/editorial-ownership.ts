@@ -237,6 +237,40 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "math-complex-numbers-oscillations": {
+    title: "복소수·회전·진동 글이 소유하는 범위",
+    owns: [
+      "(3,4)를 네 번 회전하는 좌표 사례와 길이·누적 회전의 경계",
+      "라디안·단위원·복소 곱셈·켤레와 Euler 공식의 연결",
+      "근의 회전 대칭과 네 점 DFT의 계수 배율 검산",
+    ],
+    reuses: [
+      { label: "거듭제곱·지수함수의 기본 규칙", href: "/cs/ai/math-exponents-logarithms" },
+      { label: "벡터 길이·내적", href: "/cs/ai/math-vectors-inner-products" },
+      { label: "FFT의 분할 계산", href: "/cs/ai/fft" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "지수·사인·코사인 급수와 Euler 관계는 NIST DLMF의 식과 수렴 범위로 확인합니다." },
+      { kind: "standard", rule: "현재 위상, 누적 회전량, 수치 근사 오차와 DFT normalization을 서로 다른 기록으로 구분합니다." },
+    ],
+  },
+  "math-exponents-logarithms": {
+    title: "거듭제곱·로그 글이 소유하는 범위",
+    owns: [
+      "독립인 세 동전의 1→1/2→1/4→1/8 사례와 반복 배율",
+      "양의 밑에서 거듭제곱과 로그의 역관계·곱셈 규칙·밑 변환",
+      "아주 작은 확률을 직접 곱할 때의 underflow와 log-domain 계산 경계",
+    ],
+    reuses: [
+      { label: "확률·기댓값·분산", href: "/cs/ai/math-probability-expectation-variance" },
+      { label: "Cross-entropy의 log loss", href: "/cs/ai/cross-entropy" },
+      { label: "수치 정밀도와 안정성", href: "/cs/ai/math-numerical-precision-stability" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "로그 정의·법칙은 OpenStax의 양의 입력·밑 조건과 CPython math 구현의 실제 호출 경로로 확인합니다." },
+      { kind: "standard", rule: "독립·조건부 확률의 곱 조건과 log-domain 표현이 원래 사건의 확률을 바꾸지 않는다는 경계를 함께 적습니다." },
+    ],
+  },
   "math-differential-equations-numerical-solvers": {
     "title": "미분방정식·수치적분 글이 소유하는 범위",
     "owns": [
@@ -1400,6 +1434,22 @@ export const EDITORIAL_BOUNDARIES = {
         "rule": "가정한 행으로 원본 C++ 조회와 별도 한 단계 갱신을 실제 실행합니다. 전체 학습이나 품질·시간 벤치마크는 주장하지 않습니다."
       }
     ]
+  },
+  "text-unicode-encoding": {
+    title: "Unicode 문자열·인코딩·offset 글이 소유하는 범위",
+    owns: [
+      "같은 문자열의 code point·UTF-16·UTF-8·확장 자소군 길이 구분",
+      "NFC·NFD·NFKC·NFKD 변환과 원문·정규화 span 대응",
+      "UTF-8 유효성·surrogate·NUL 경계의 실제 구현 검증",
+    ],
+    reuses: [
+      { label: "Subword byte hashing", href: "/cs/ai/subword-static-embeddings#unicode" },
+      { label: "Tokenizer 경계와 checkpoint 계약", href: "/cs/ai/tokenizer" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "RFC 3629와 Unicode UAX #15·#29의 버전과 적용 범위를 구분한다." },
+      { kind: "project-measurement", rule: "고정 C 원문과 Node에서 같은 문자열과 malformed fixture를 실행하고 관찰 범위를 명시한다." },
+    ],
   },
   bert: {
     title: "BERT encoder visibility 글이 소유하는 범위",
@@ -11992,6 +12042,42 @@ export const EDITORIAL_BOUNDARIES = {
         "rule": "ImageNet 26–43은 Pope2021 표1의 이웃 수별 MLE 추정값입니다. 생성 자료에서의 별도 추정기 점검과 실제 이미지 추정을 구별하고 압축 모델의 최적 폭이나 정확 복원 보장으로 확대하지 않습니다."
       }
     ]
+  },
+  "math-vectors-inner-products": {
+    title: "벡터·내적·노름 글이 소유하는 범위",
+    owns: [
+      "(3,4)의 길이·가로 투영·방향 반전으로 구분하는 벡터 측정",
+      "내적·유클리드 노름·코사인 유사도·정사영의 식과 영벡터 경계",
+      "Cauchy–Schwarz 부등식과 퍼셉트론 수정 횟수 상한의 연결",
+      "PyTorch normalize·cosine_similarity의 eps 분모와 작은 벡터 동작",
+    ],
+    reuses: [
+      { label: "행렬·선형변환·SVD", href: "/cs/ai/math-matrices-svd" },
+      { label: "Gradient·directional derivative", href: "/cs/ai/math-gradients-jacobians" },
+      { label: "퍼셉트론 학습 규칙", href: "/cs/ai/perceptron" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "내적·투영·Cauchy–Schwarz 설명은 OpenStax와 Cornell 강의의 좌표·분리 가능성 조건에 귀속합니다." },
+      { kind: "standard", rule: "크기·방향·좌표 단위와 eps로 바뀐 실제 구현의 결과를 서로 구분합니다." },
+    ],
+  },
+  "math-matrices-svd": {
+    title: "행렬·선형변환·SVD 글이 소유하는 범위",
+    owns: [
+      "입력 순서와 출력별 가중치를 고정한 행렬 곱의 실제 값 추적",
+      "평균 방향과 차이 방향을 분리한 선형변환·rank·역변환의 경계",
+      "SVD의 직교 방향·특잇값과 Eckart–Young 낮은 계수 근사의 오차",
+      "수학의 열벡터 표기와 PyTorch Linear 저장 방향의 연결",
+    ],
+    reuses: [
+      { label: "벡터·내적·노름", href: "/cs/ai/math-vectors-inner-products" },
+      { label: "고차원 기하와 거리 보존", href: "/cs/ai/math-high-dimensional-geometry" },
+      { label: "LoRA의 낮은 계수 갱신", href: "/cs/ai/lora-finetuning" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "SVD·낮은 계수 근사의 보장은 MIT 강의와 Eckart–Young 정리의 노름·rank 조건에 귀속합니다." },
+      { kind: "standard", rule: "작은 특잇값을 버린 표 오차와 실제 과제의 중요도 손실을 같은 주장으로 취급하지 않습니다." },
+    ],
   },
   "math-numerical-precision-stability": {
     "title": "부동소수점 정밀도·수치 안정성·tensor shape 글이 소유하는 범위",

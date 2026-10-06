@@ -19,46 +19,40 @@ export default function InferenceRuntimeAnatomyArticle() {
     <div id="overview" className="space-y-16">
       <section id="process-anatomy" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Runtime 은 요청을 받는 process 와 GPU 를 쥔 process 로 나뉩니다
+          80 GB GPU의 72 GB 예산에서 KV pool 49 GB를 남깁니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Inference runtime 은 model 을 GPU 에 올리고 들어온 요청을 실행 가능한 batch 로 바꿔 돌리는 프로그램 전체입니다. vLLM 과 SGLang 같은
-            model serving engine 이 그 구현입니다. 첫 요청이 오기 전에 runtime 은 process 를 나누고, weight 를 나눠 싣고, GPU memory
-            지도를 확정하고, kernel 을 한 번 미리 돌려 둡니다. 이 글은 그 준비 단계만 다룹니다.
+            70B FP16 checkpoint 140 GB를 TP 8로 나누면 worker 한 개가 weight
+            17.5 GB를 맡습니다. 80 GB GPU에 utilization .9를 적용한 예산은 72 GB입니다.
+            Profile peak 4.5 GB와 CUDA graph 1 GB까지 빼면 KV pool은 49 GB입니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>TP 8의 worker 하나가 checkpoint 140 GB를 전부 읽을까요?</li>
+            <li>72−17.5−4.5−1의 결과는 49 GB일까요?</li>
+            <li>vLLM V1의 API server와 EngineCore는 같은 process일까요?</li>
+          </ol>
           <p>
-            가장 바깥에는 HTTP 요청을 받아 tokenize 하는 frontend process 가 있고, 그 안쪽에
-            scheduler 와 KV state 를 쥔 driver process 가 있습니다. vLLM V1 에서는 이 driver 가
-            <code>EngineCore</code> 라는 별도 process 로 돌고, frontend 와는 ZMQ socket 으로
-            token id 만 주고받습니다.
-          </p>
-          <p>
-            GPU 하나마다 worker process 가 하나 붙습니다. worker 안에는 model runner 객체가 있어 weight 적재와 forward 실행을 맡습니다.
-            driver 쪽의 model executor 는 여러 worker 에 같은 명령을 보내고 결과를 모읍니다. vLLM 문서는 이 원칙을 process 하나가 accelerator
-            하나를 제어한다고 적습니다.
-          </p>
-          <p>
-            이렇게 나누는 이유는 Python 의 GIL 과 CUDA context 때문입니다. tokenize 와
-            detokenize 는 CPU 를 오래 잡는데, 같은 process 에서 돌면 GPU 에 다음 batch 를 보내는
-            loop 가 그만큼 멈춥니다. process 를 나누면 frontend 가 바쁜 동안에도 driver 의 busy
-            loop 는 GPU 를 계속 채웁니다.
-          </p>
-          <p>
-            SGLang 도 같은 해부 구조를 씁니다. <code>TokenizerManager</code> 가 frontend,
-            <code>Scheduler</code> 가 driver, TpModelWorker 안의 ModelRunner 가 worker 역할이고
-            이들 역시 ZMQ 로 연결됩니다. 이름은 다르지만 요청을 받는 쪽과 GPU 를 쥔 쪽을
-            분리한다는 원칙은 같습니다.
-          </p>
-          <p>
-            scheduler 가 한 step 에서 무엇을 고르는지는{" "}
-            <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link> 글이, 요청 lifecycle 과 latency
-            분해는 <Link to="/cs/ai/vllm-serving#serving-architecture">vLLM 입문</Link> 글이
-            다룹니다. 여기서는 그 scheduler 가 돌기 전에 무엇이 준비돼야 하는지만 봅니다.
+            답은 <strong>아니요, 예, 아니요</strong>입니다. Worker는 자기 shard
+            17.5 GB만 올립니다. API server는 tokenization과 streaming을 맡고,
+            별도 EngineCore process가 scheduler와 KV state를 소유합니다.
           </p>
         </div>
         <InferenceRuntimeAnatomyViz />
         <ContentBoundary article="inference-runtime-anatomy" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            Inference runtime은 첫 요청 전에 process를 나누고 weight·activation
+            peak·KV pool·CUDA graph의 주소를 확정합니다. 현재 vLLM V1에서 API
+            server와 EngineCore는 ZMQ로 연결되고 GPU마다 worker process 하나가 붙습니다.
+          </p>
+          <p>
+            이 분리는 CPU tokenization이 driver의 GPU 제출 loop를 막지 않게 합니다.
+            Scheduler의 step 선택은 <Link to="/cs/ai/vllm-scheduler">vLLM Scheduler</Link>,
+            요청 수명은 <Link to="/cs/ai/vllm-serving#serving-architecture">vLLM 입문</Link>이 다룹니다.
+          </p>
+        </div>
         <div id="paper-vllm-arch" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="vLLM project · Architecture Overview (design docs)"
@@ -68,7 +62,8 @@ export default function InferenceRuntimeAnatomyArticle() {
           >
             vLLM 공식 설계 문서는 API server, engine core, GPU worker, DP coordinator 의 process
             종류와 ZMQ 연결, worker 하나가 accelerator 하나를 맡고 그 안에 model runner 가 하나
-            있다는 구조를 적습니다. 이 글의 driver·worker·executor·model runner 명칭은 그 문서와
+            있다는 구조를 적습니다. 2026년 10월 6일 현재 문서를 다시 확인했습니다. 이 글의
+            driver·worker·executor·model runner 명칭은 그 문서와
             <code>vllm/v1</code> 코드의 class 이름을 따랐으며, 다른 engine 의 내부 이름까지
             같다는 뜻은 아닙니다.
           </CitationBlock>

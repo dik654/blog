@@ -20,23 +20,24 @@ export default function InferenceStackStandardLevelsArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          표준을 쓴다고 해서 옮길 수 있는 것은 아닙니다
+          세 층 가운데 두 층만 그대로 옮길 수 있습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            추론 서빙 스택을 고를 때 표준을 쓰면 나중에 옮기기 쉽다고 말합니다.
-            절반만 맞습니다.
+            클러스터 A의 추론 서비스를 클러스터 B로 옮깁니다. InferencePool v1
+            객체와 요청마다 endpoint를 고르는 구현은 두 곳에서 공통입니다. GPU를
+            몇 개 띄우고 인증·용량을 확보하는 운영 매니페스트는 공급자마다 다릅니다.
           </p>
-
-          <p className="leading-7">
-            표준이라는 한 단어에 성격이 다른 세 가지가 섞여 있기 때문입니다.
-            자원의 모양을 정하는 것, 요청마다 도는 구현체, 그리고 무엇을 얼마나
-            띄울지 선언하는 것입니다.
-          </p>
-
-          <p className="leading-7">
-            앞의 둘은 실제로 공통입니다. 마지막 하나는 공급자마다 다릅니다.
-            그래서 옮기는 일은 전부 옮기는 것도 전부 새로 짜는 것도 아닙니다.
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>두 곳이 InferencePool v1을 지원하면 selector·targetPorts 선언을 재사용할 수 있을까요?</li>
+            <li>그 객체 하나가 새 공급자의 GPU capacity까지 자동으로 확보할까요?</li>
+            <li>스택을 골랐다는 사실만으로 내부 inference engine도 하나로 고정될까요?</li>
+          </ol>
+          <p>
+            답은 <strong>예, 아니요, 아니요</strong>입니다. API 객체는 옮길 수
+            있지만 provisioning·인증은 공급자 adapter가 맡습니다. 요청 경로
+            stack과 token을 만드는 engine도 별개의 선택입니다.
           </p>
         </div>
 
@@ -60,8 +61,9 @@ export default function InferenceStackStandardLevelsArticle() {
           </p>
 
           <p className="leading-7">
-            제품 비교표는 만들지 않습니다. 버전과 이름은 몇 달 단위로 바뀌므로
-            여기서 가져갈 것은 특정 제품의 우열이 아니라 층을 가르는 기준입니다.
+            표준이라는 한 단어에는 자원의 모양, 요청 경로 구현, 운영 선언이
+            섞여 있습니다. 아래에서는 각 층의 이식성, stack과 engine의 선택,
+            라우팅 정책이 실제 hit rate를 바꾸는 경로를 차례로 봅니다.
           </p>
         </div>
       </section>
@@ -151,7 +153,9 @@ export default function InferenceStackStandardLevelsArticle() {
           고르는 컴포넌트가 보는 지표로 &ldquo;the KV-cache utilization, queue
           length of pending requests, active LoRA adapters, etc.&rdquo;를
           듭니다. 같은 문서가 이 자원을 &ldquo;GA since v1.0.0&rdquo;으로
-          표시합니다. 문서를 직접 열어 확인했습니다. 이 글이 참고한 사내 정리본의
+          표시합니다. 2026년 10월 6일 현재 문서를 다시 확인했습니다. v1.5.0부터
+          <code>endpointPickerRef</code>는 API 수준에서 선택 항목이지만, 공식 문서는
+          아직 대부분의 구현에서 필요하다고 경고합니다. 이 글이 참고한 사내 정리본의
           초판에는 이 자원이 2026년 4월 릴리스에서 GA 선언됐다고 적혀 있었는데
           문서와 맞지 않아, 교차 검증에서 정정된 쪽을 따랐습니다. 위층의 제어
           자원이 공급자마다 다르다는 것은 이 문서가 다루지 않으며 그 판단은 이

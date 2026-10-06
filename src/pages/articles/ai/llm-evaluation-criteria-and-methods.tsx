@@ -17,26 +17,33 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          LLM 평가는 criteria·metric·비교 방식 세 층의 조합입니다
+          다섯 출력은 실행 점수 0.60과 의미 점수 0.63으로 서로 다르게 보입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 을 평가한다는 것은 한 번의 판단이 아니라 세 질문에 차례로 답하는 일입니다. 무엇을
-            잴지(criteria), 그것을 어떻게 숫자로 바꿀지(metric), 여러 output 을 어떤 단위로
-            비교할지(pointwise·pairwise·ranking)를 정해야 비로소 하나의 평가 방법이 완성됩니다.
+            같은 문제에 LLM이 출력 O1부터 O5까지 다섯 개를 냈습니다. Unit test를 통과한
+            출력은 O1·O2·O5 세 개라 functional correctness는 3/5=0.60입니다. 참조 답과의
+            semantic similarity는 차례로 0.95, 0.55, 0.85, 0.20, 0.60이고 평균은 0.63입니다.
           </p>
           <p>
-            <Link to="/cs/ai/prompt-structured-output#structured-output">앞 글</Link> 은 output
-            이 parse→schema→domain 사다리를 통과하는지를 봤습니다. 이 글은 그 판정을 통과한
-            output 이 얼마나 좋은지를 무엇으로 재고 무엇과 비교할지, 즉 사다리 다음에 오는
-            질문을 다룹니다.
+            O2는 실행에는 성공했지만 문장 유사도는 0.55입니다. O3는 실행에는 실패했지만
+            참조 답과 표현이 비슷해 유사도 0.85를 받았습니다. 두 metric은 서로 다른 질문에
+            답하므로 개별 출력의 순서를 다르게 매길 수 있습니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>다섯 출력 중 세 개가 통과했으므로 functional score는 0.60일까요?</li>
+            <li>O3의 semantic score가 0.85면 unit test도 통과했다고 볼 수 있을까요?</li>
+            <li>Metric 하나만 고르면 두 관점에서 항상 같은 출력 순위를 얻을까요?</li>
+          </ol>
           <p>
-            HELM 은 30 개 model 을 42 개 시나리오에서 정확도·보정·강건성·공정성·편향·독성·효율성 7 개 criteria 로 나눠 재고 BIG-bench 는 204 개
-            task 마다 서로 다른 정답 형식과 metric 을 씁니다. 같은 model 도 어떤 criteria 와 metric 을 고르느냐에 따라 결론이 달라지는 이유가 여기
-            있습니다.
+            답은 <strong>예, 아니요, 아니요</strong>입니다. 실행 성공 여부와 문장 유사도는
+            서로 대체할 수 없습니다. 평가 결론을 읽을 때는 점수보다 먼저 무엇을 측정한
+            metric인지 확인해야 합니다.
           </p>
         </div>
+        <FunctionalVsSemanticViz />
+        <ContentBoundary article="llm-evaluation-criteria-and-methods" />
         <TermBreakdown
           title="세 층의 질문"
           description="평가 방법 하나는 이 세 질문에 대한 답의 조합입니다."
@@ -46,7 +53,14 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             { term: "비교 방식 (무엇과)", description: "output 하나·둘·여럿 가운데 무엇을 견주는지입니다.", example: "pointwise 절대 점수, pairwise 승률, ranking 순서", boundary: "metric 값이 있어야 비교할 재료가 생깁니다." },
           ]}
         />
-        <ContentBoundary article="llm-evaluation-criteria-and-methods" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            LLM 평가는 무엇을 잴지(criteria), 어떻게 숫자로 바꿀지(metric), 여러 output을
+            어떤 단위로 비교할지(pointwise·pairwise·ranking)를 함께 정하는 일입니다.
+            <Link to="/cs/ai/prompt-structured-output#structured-output">앞 글</Link>의
+            parse·schema·domain 통과 여부 다음에, 통과한 결과의 품질을 재는 단계입니다.
+          </p>
+        </div>
       </section>
 
       <section id="criteria-metric" className="scroll-mt-20">
@@ -106,7 +120,6 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             개 중 하나만 맞아도 인정하는 기준으로는 70.2% 로 오릅니다.
           </p>
         </div>
-        <FunctionalVsSemanticViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Semantic similarity evaluation 의 대표 예는 BERTScore 입니다. Reference 문장과 candidate 문장의 각 token 을
