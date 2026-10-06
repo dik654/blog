@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-279.json",
+  "publicArticles": 829,
+  "addedRoutes": [
+    "philosophy-topics/identity-through-change",
+    "philosophy-topics/free-will-control-and-responsibility",
+    "philosophy-topics/reference-context-and-speech-acts",
+    "philosophy-topics/consciousness-pain-and-other-minds",
+    "philosophy-topics/aesthetic-taste-judgment-and-context",
+    "philosophy-topics/meaning-in-life-attraction-worth-and-commitment"
+  ],
+  "reviewed": 285,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive core philosophy question foundations added after checkpoint 279; 243 substantive rewrites/additions and 42 retained teaching flows in total. University curricula and professional qualification coverage now identify remaining philosophy and derivatives gaps.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density and reading-order checks.",
+    "browser": "Six routes × 390/1440 plus philosophy-topics and philosophy listings × 390/1440 = 16 checks; exact S/B/0..7 order, three figures, three review prompts, topic listing, containment, console errors and failed requests checked; 0 failed.",
+    "learning": "PASS 829 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b; actual exit 0.",
+    "build": "PASS Vite 9.54s and 1,760 static public routes + 404; actual exit 0.",
+    "graph": "PASS 3,934 concepts, 6,238 relations, 0 invariants; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 829 strict; actual exit 0.",
+    "topology": "PASS 829 strict; the six single-case foundations have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS reading experience and 91 listings with 437 prerequisite edges; actual exit 0.",
+    "language": "PASS CI-wide prose rhythm and Korean naturalness audits for 829 public articles.",
+    "mobileViewport": "All tested documents and figures stayed within 390px; viewport height 844→700 preserved scrollY after smooth scroll completed; mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px with exact section and stage order.",
+    "production": "Six public routes and two listing routes at 390/1440 = 16 checks; all content, order, containment, console and request checks passed with 0 failures.",
+    "curriculumCoverage": "MIT, Stanford, Yale and OpenStax philosophy axes plus MIT Sloan and KIFIN derivatives curricula were mapped to current coverage and explicit gaps in docs/curriculum-coverage-standard.md."
+  },
+  "commit": "a6fb2f2a31c07e0117c34ce60aa44670b298f5cc",
+  "deployment": {
+    "runId": 37496216863,
+    "conclusion": "success",
+    "production": "16 checks across articles and listings at 390/1440, 0 failed"
+  }
+}
