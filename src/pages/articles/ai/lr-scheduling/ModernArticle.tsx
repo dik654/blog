@@ -9,25 +9,24 @@ export default function LrSchedulingArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Scheduler를 배우기 전에 무엇을 세는지부터 고정합니다
+          Sample 51,200개를 열 epoch 돌리면 optimizer update는 1,000회입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <strong>Learning-rate schedule</strong>은 몇 번째 optimizer
-            update인지 읽고 그 update에 사용할 learning rate를 반환하는 함수이자
-            state machine입니다.
+            Rank당 micro-batch 16, gradient accumulation 4회, rank 8개면 한 update가
+            16×4×8=512 sample을 소비합니다. 따라서 한 epoch은 51,200÷512=100 updates,
+            열 epoch의 total budget은 1,000 updates입니다.
           </p>
-          <p>
-            이 글은 곡선 종류보다 먼저 update clock·total budget·call
-            event·resume state를 정의합니다. 고정된 clock 위에서 LR를 낮추는
-            법은
-            <a href="/cs/ai/lr-decay-policies"> decay policy</a>, cosine은
-            <a href="/cs/ai/cosine-restart-scheduling"> cosine/restart</a>, 한 번
-            올렸다 내리는 정책은 <a href="/cs/ai/one-cycle-scheduling">OneCycle</a>
-            , 시작 구간은 <a href="/cs/ai/warmup-scheduling">warmup</a>에서
-            이어집니다.
-          </p>
+          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Backward 네 번이 곧 optimizer update 네 번일까요?</li>
+            <li>한 optimizer update가 512 sample을 소비할까요?</li>
+            <li>Resume할 때 LR 숫자만 저장하면 같은 update clock이 복원될까요?</li>
+          </ol>
+          <p>답은 <strong>아니요, 예, 아니요</strong>입니다. Scheduler는 micro-batch가 아니라 parameter가 실제로 바뀐 update를 세며 cursor·budget·state·호출 순서를 함께 저장해야 합니다.</p>
         </div>
+        <ScheduleClockViz />
+        <ContentBoundary article="lr-scheduling" />
         <TermBreakdown
           title="Schedule contract의 네 물체"
           items={[
@@ -64,8 +63,6 @@ export default function LrSchedulingArticle() {
             },
           ]}
         />
-        <ScheduleClockViz />
-        <ContentBoundary article="lr-scheduling" />
       </section>
 
       <section id="update-clock" className="scroll-mt-20">

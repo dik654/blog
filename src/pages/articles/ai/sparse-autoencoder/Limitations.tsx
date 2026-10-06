@@ -13,24 +13,30 @@ export default function Limitations() {
       </div>
       <FailureModesViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Claim을 model·hook·dataset·intervention 범위로 제한한다</h3>
+        <h3>주장의 범위를 네 조건으로 제한한다</h3>
         <p>
           “모델이 기만을 생각했다”보다 “이 model checkpoint의 특정 hook에서 SAE feature j가 이 prompt set에 활성화됐고, 정해진 α의
-          intervention에서 rubric score가 변했다”라고 기록하는 편이 검증 가능합니다. 남기는 항목은 SAE checkpoint, feature index,
-          activation threshold, prompt sampling, control direction, effect size와 부작용입니다.
+          intervention에서 rubric score가 변했다”라고 기록하는 편이 검증 가능합니다.
+        </p>
+        <p>
+          SAE checkpoint, feature index, activation threshold와 prompt sampling을 남깁니다. Control direction, effect size와 부작용도 같은 기록에 포함합니다.
         </p>
 
         <h3>Feature stability는 번호가 아니라 direction과 activation으로 비교한다</h3>
         <p>
           같은 held-out activation corpus에서 width와 random seed만 바꾼 SAE를 여러 개 학습합니다. 그다음 decoder direction의
-          cosine similarity와 example별 activation overlap을 나란히 비교합니다. 한 feature가 두 directions로 갈라졌다면 index 일치율을
-          낮은 안정성으로만 기록하지 말고 split으로 분류합니다. 여러 feature가 하나로 모였다면 merge입니다. 이 비교에서도 model·hook·normalization과
-          sparsity 또는 LM loss recovery 조건을 같게 맞춰야 합니다.
+          cosine similarity와 example별 activation overlap을 나란히 비교합니다.
+        </p>
+        <p>
+          한 feature가 두 directions로 갈라졌다면 split으로 분류합니다. 여러 feature가 하나로 모였다면 merge입니다. 이 비교에서도 model·hook·normalization과 sparsity 또는 LM loss recovery 조건을 맞춥니다.
         </p>
 
         <h3>Feature에서 circuit으로 가려면 연결 증거가 더 필요하다</h3>
         <p>
-          Crosscoder와 transcoder는 여러 layer 또는 block 입출력 사이의 feature를 연결하려 하지만 ground-truth circuit을 자동으로 제공하지 않습니다. SAE로 candidate를 찾고 activation patching·attribution·targeted task evaluation으로 계산 경로를 좁히는 순서가 안전합니다. 최종 결론은 reconstruction, interpretability와 causal behavior라는 서로 다른 축에서 각각 통과해야 합니다.
+          Crosscoder와 transcoder는 여러 layer 또는 block 입출력 사이의 feature를 연결하려 하지만 ground-truth circuit을 자동으로 제공하지 않습니다.
+        </p>
+        <p>
+          SAE로 candidate를 찾고 activation patching·attribution·targeted task evaluation으로 계산 경로를 좁힙니다. 최종 결론은 reconstruction, interpretability와 causal behavior를 각각 통과해야 합니다.
         </p>
       </div>
 

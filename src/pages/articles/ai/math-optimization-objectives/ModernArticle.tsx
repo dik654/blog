@@ -12,6 +12,11 @@ export default function OptimizationObjectivesArticle() {
       <h2 className="text-2xl font-bold">1 · 가장 낮은 점수를 찾아도 쓸 수 없는 답일 수 있다</h2>
       <p className="text-lg leading-8">모델을 학습하거나 배치 크기를 고를 때는 여러 선택을 숫자로 비교합니다. 그런데 가장 낮은 오차를 낸 모델이 장치의 메모리에 들어가지 않으면 그 선택을 사용할 수 없습니다. 무엇을 바꿀지, 어떤 숫자를 낮출지, 반드시 지켜야 할 규칙이 무엇인지를 먼저 정해야 합니다.</p>
       <p>이번 글에서는 숫자 하나를 고르는 작은 문제로 이 세 가지를 분리합니다. 점수를 가장 낮게 만드는 위치를 찾은 뒤 같은 점수 규칙에 허용 범위를 추가해 보겠습니다. 탐색 방법을 고르는 일은 문제의 뜻을 확정한 다음입니다.</p>
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+      <ol className="list-decimal space-y-2 pl-6"><li>f(x)=(x−3)²+2를 모든 실수에서 최소화하면 위치 3, 점수 2일까요?</li><li>허용 범위를 [0,2]로 제한하면 위치 2, 점수 3일까요?</li><li>가장 낮은 점수 2를 만드는 위치 3이 제한 뒤에도 허용될까요?</li></ol>
+      <p>답은 <strong>예, 예, 아니요</strong>입니다. 최적화에서는 고른 위치, 그 위치의 점수, 허용 여부를 서로 다른 값으로 기록해야 합니다.</p>
+      <OptimizationProblemViz />
+      <ContentBoundary article="math-optimization-objectives" />
     </section>
     <section id="black-box" data-teach-level="B" className="space-y-6">
       <h2 className="text-2xl font-bold">2 · 선택을 받아 허용 여부와 점수를 돌려준다</h2>
@@ -77,7 +82,6 @@ export default function OptimizationObjectivesArticle() {
         assumptions={["1차원 closed interval과 convex quadratic 예시입니다.", "일반 constraint에서는 단순 clipping이 정확한 projection이 아닐 수 있습니다."]}
         interpretation="Objective가 같아도 feasible set이 바뀌면 정답 위치와 minimum value가 함께 바뀝니다."
       />
-      <OptimizationProblemViz />
       <p>이 예에서 구간 끝으로 잘라 내는 계산이 통하는 이유는 f가 3과의 거리의 제곱이기 때문입니다. 임의의 문제에서 제약 없는 답을 각 좌표별로 자르면 된다는 규칙은 아닙니다. 두 값에 각각 0≤x≤1, 0≤y≤1과 함께 x+y≤1을 요구하면 (1,1)은 좌표별 범위 안이지만 합 규칙을 어깁니다(가정).</p>
       <p>최소점이 여러 개일 수도 있습니다. 다른 함수 q(x)=(x²−1)²에서는 −1과 1이 모두 점수 0을 만듭니다(가정). argmin q={'{−1,1}'}이고 min q=0입니다. 최소점의 집합과 점수 하나를 구별하는 이유입니다.</p>
       <p>이제 이 선택·평가·제약을 실제 교재의 표준 형태에 옮겨 같은 답을 다시 확인하겠습니다.</p>
@@ -107,7 +111,6 @@ export default function OptimizationObjectivesArticle() {
       <p>목적함수가 원하는 제품 가치를 얼마나 잘 나타내는지도 별도 문제입니다. 답변 길이만 최소화하면 모든 질문에 빈 문자열을 내는 모델이 점수 0을 얻을 수 있습니다(가정). 실제로는 답변의 유용성이 사라집니다. 길이 감소와 함께 정답률을 평가하고 필요한 품질 조건을 명시해야 합니다. 수학적으로 점수를 잘 낮춘 결과가 목표를 잘 표현한 문제에서 나온 것인지는 따로 검증합니다.</p>
       <p>다음 글에서는 <a className="font-semibold text-primary underline" href="/cs/ai/math-optimization-convexity">볼록성과 매끄러움</a>이 주변과 전체의 관계를 어떻게 제한하는지 살핍니다. 이어 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradient-descent-convergence">경사하강법의 반복</a>으로 실제 위치를 이동합니다.</p>
       <ol className="list-decimal space-y-3 pl-6"><li>f(x)=(x−3)²+2를 모든 실수와 [0,2]에서 각각 최소화하면 고른 위치와 점수는 어떻게 달라질까요? (답: 8절)</li><li>x≤2를 없애고 max(0,x−2)²를 점수에 더하면 왜 x=2.5가 선택될까요? (답: 7절)</li><li>같은 f의 가능 집합이 [0,2)라면 하한 3과 최솟값은 어떤 점에서 다를까요? (답: 10절)</li></ol>
-      <ContentBoundary article="math-optimization-objectives" />
     </section>
   </article>;
 }

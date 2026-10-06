@@ -12,6 +12,11 @@ export default function VarianceSamplingArticle(){return <article className="spa
 <h2 className="text-2xl font-bold">1 · 평균은 같은데 이번에 얻을 값은 얼마나 다를까</h2>
 <p className="text-lg leading-8">매번 2점을 받는 규칙과 1점이나 3점도 받을 수 있는 규칙은 평균이 같을 수 있습니다. 평균 하나만 보고 다음 점수가 얼마나 흔들릴지 알 수는 없습니다. 몇 번 뽑은 값으로 전체 평균을 짐작할 때도 그 흔들림이 얼마나 남는지 알아야 합니다.</p>
 <p>이 글은 네 장의 기록에서 얻은 점수를 계속 사용합니다. 먼저 한 번의 값이 가운데에서 얼마나 떨어지는지 잽니다. 그다음 두 번 뽑은 평균의 흔들림과 세 관측값으로 전체의 퍼짐을 추정하는 계산을 구별합니다. 끝에서는 일부 자료만 보고 학습 방향을 정할 때 같은 계산이 무엇을 보장하는지 확인합니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>점수 3·2·2·1의 평균은 2이고 분산은 1/2일까요?</li><li>독립으로 두 번 뽑은 평균의 분산은 1/4로 줄어들까요?</li><li>한 번 뽑은 값을 두 칸에 복사해 평균내도 분산이 1/4로 줄어들까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 평균의 칸 수보다 각 값이 새로 얻은 독립 정보인지가 흔들림 감소를 결정합니다.</p>
+<SamplingNoiseViz />
+<ContentBoundary article="math-variance-sampling" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 뽑는 규칙과 모으는 규칙이 결과의 흔들림을 정한다</h2>
@@ -35,7 +40,6 @@ export default function VarianceSamplingArticle(){return <article className="spa
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 한 장의 값과 두 장의 평균을 같은 중심에 놓는다</h2>
 <p>그림의 첫 장면은 네 기록의 점수를 그대로 놓습니다. 다음은 가운데 2에서 떨어진 거리를 제곱하는 장면입니다. 세 번째는 두 장의 모든 쌍을 평균별로 모으며, 마지막에는 한 번 고른 점수를 두 칸에 복사했을 때를 비교합니다.</p>
-<SamplingNoiseViz />
 <p>두 장의 평균이 가운데로 더 모이는 까닭은 첫 점수가 한쪽으로 치우쳐도 둘째 점수가 반대쪽에서 나올 수 있기 때문입니다. 예를 들어 1과 3은 함께 평균 2를 만듭니다. 한 장을 두 번 복사하면 1과 1, 또는 3과 3이 되어 그런 상쇄 기회가 생기지 않습니다.</p>
 <p>그림은 평균이 반드시 가까워지는 한 번의 경로를 보이는 것이 아닙니다. 가능한 묶음 전체를 같은 비중으로 모은 모양입니다. 이번 두 점이 우연히 모두 1이었다면 평균도 1이라는 사실은 그대로 남습니다.</p>
 </section>
@@ -199,7 +203,6 @@ assumptions={["목표에 기여하는 모든 자료의 선택 확률이 양수�
 <p>관측값 자체의 퍼짐을 기술하려면 그 값과 비중을 정확히 정하면 됩니다. 미지의 모집단 분산을 n−1로 추정하려면 표집 조건과 유한 분산을 확인합니다. 평균의 오차 확률을 제한하려면 어떤 반복 방식으로 얻은 평균인지까지 알아야 합니다.</p>
 <p>분산이 무한하면 여기의 유한한 체비쇼프 상한을 쓸 수 없습니다. 그렇다고 모든 큰 수의 법칙이 실패하는 것은 아닙니다. i.i.d.이고 절댓값의 기댓값이 유한하면 평균의 수렴을 보이는 더 넓은 정리가 있습니다. 분산을 쓰는 이 증명의 적용 불가와 평균 자체의 수렴 불가를 구별해야 합니다.</p>
 <p>학습에서는 같은 θ의 전체 목표, 실제 표집 비중, 보정 배수와 학습률을 함께 확인합니다. 분산을 줄이려고 묶음을 키우면 계산과 저장 비용도 늘 수 있습니다. 실제 업데이트와 수렴 조건은 <a className="text-primary underline" href="/cs/ai/math-gradient-descent-convergence">경사하강 글</a>에서, 상태를 누적하는 방법은 <a className="text-primary underline" href="/cs/ai/optimizers">옵티마이저 글</a>에서 이어집니다.</p>
-<ContentBoundary article="math-variance-sampling" />
 </section>
 <section id="review" data-teach-level="8" className="space-y-6">
 <h2 className="text-2xl font-bold">19 · 뽑는 방법을 바꾸고 결과를 예측해 본다</h2>

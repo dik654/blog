@@ -18,6 +18,15 @@ export default function SandboxRuntimeIsolationArticle() {
           runc·seccomp·gVisor·Kata를 강함 순서로 외우지 않습니다. 같은
           <code>open()</code> 요청이 이동하는 경로를 한 단계씩 바꿔 봅니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Seccomp가 허용한 syscall은 여전히 shared host kernel에서 처리될까요?</li>
+          <li>gVisor의 application kernel과 Kata의 guest kernel은 syscall 처리 경로가 같을까요?</li>
+          <li>Runtime 격리 하나만으로 credential·egress·filesystem 정책까지 자동 완성될까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. 같은 open() 요청이 어느 중개층과 kernel을 지나가는지 그린 뒤 다른 배포 통제를 별도로 결합합니다.</p>
+        <RuntimeIsolationViz />
+        <ContentBoundary article="sandbox-runtime-isolation" />
         <TermLesson
           name="Linux syscall · host-kernel path"
           oneLine="Application이 file·network·process·device 기능을 요청할 때 system call을 통해 kernel service로 들어가는 기본 실행 경로입니다."
@@ -25,7 +34,6 @@ export default function SandboxRuntimeIsolationArticle() {
           example="runc 안 process의 open()도 namespace view를 적용받지만 최종 처리는 host Linux kernel이 맡습니다."
           boundary="System call path를 안다고 file permission·network route·credential policy가 자동으로 정해지는 것은 아닙니다."
         />
-        <RuntimeIsolationViz />
       </section>
 
       <section id="seccomp" className="space-y-6">
@@ -206,7 +214,6 @@ export default function SandboxRuntimeIsolationArticle() {
             { label: "Select", detail: "격리·호환성·비용 gate로 승인" },
           ]}
         />
-        <ContentBoundary article="sandbox-runtime-isolation" />
       </section>
     </article>
   );

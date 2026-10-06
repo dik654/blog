@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export type StepDef = string | { label: string; body?: ReactNode };
@@ -10,26 +10,9 @@ interface Props {
 
 export default function StepViz({ steps, children }: Props) {
   const [step, setStep] = useState(0);
-  const [isScrollable, setIsScrollable] = useState(false);
-  const canvasRef = useRef<HTMLDivElement>(null);
   const cur = steps[step];
   const label = typeof cur === "string" ? cur : cur.label;
   const body = typeof cur === "string" ? undefined : cur.body;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const update = () =>
-      setIsScrollable(canvas.scrollWidth > canvas.clientWidth + 2);
-    const frame = requestAnimationFrame(update);
-    const observer = new ResizeObserver(update);
-    observer.observe(canvas);
-    if (canvas.firstElementChild) observer.observe(canvas.firstElementChild);
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-    };
-  }, [step]);
 
   return (
     <div
@@ -68,7 +51,7 @@ export default function StepViz({ steps, children }: Props) {
             {step + 1} / {steps.length}
           </span>
         </div>
-        <div className="grid min-w-0 grid-cols-2 gap-2 sm:flex sm:overflow-x-auto">
+        <div className="hidden min-w-0 sm:flex sm:overflow-x-auto">
           {steps.map((item, i) => {
             const itemLabel = typeof item === "string" ? item : item.label;
             const isActive = i === step;
@@ -109,20 +92,15 @@ export default function StepViz({ steps, children }: Props) {
       </div>
       <AnimatePresence mode="wait">
         <motion.div
-          ref={canvasRef}
+          data-viz-canvas
           key={step}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="relative flex min-h-[220px] min-w-0 items-center justify-start overflow-x-auto bg-background p-5 sm:min-h-[290px] sm:justify-center sm:p-8 [&_svg]:relative [&_svg]:z-[1] [&_svg]:block [&_svg]:h-auto [&_svg]:min-w-[560px] sm:[&_svg]:min-w-0 [&_svg_line]:[stroke-linecap:round] [&_svg_path]:[stroke-linecap:round] [&_svg_path]:[stroke-linejoin:round]"
+          className="relative flex min-h-[220px] min-w-0 items-center justify-center overflow-hidden bg-background p-4 sm:min-h-[290px] sm:overflow-x-auto sm:p-8 [&_svg]:relative [&_svg]:z-[1] [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:min-w-0 [&_svg]:max-w-full sm:[&_svg]:w-auto [&_svg_line]:[stroke-linecap:round] [&_svg_path]:[stroke-linecap:round] [&_svg_path]:[stroke-linejoin:round]"
         >
-          {isScrollable && (
-            <span className="pointer-events-none absolute right-3 top-3 z-10 rounded-md border border-border/65 bg-background px-2.5 py-1 text-[9px] font-semibold text-muted-foreground sm:hidden">
-              ↔ 좌우로 살펴보기
-            </span>
-          )}
-          <div className="relative z-[1] flex min-w-full items-center justify-center p-1 sm:p-2">
+          <div className="relative z-[1] flex w-full min-w-0 max-w-full items-center justify-center p-1 sm:min-w-full sm:p-2">
             {children(step)}
           </div>
         </motion.div>
@@ -153,7 +131,31 @@ export default function StepViz({ steps, children }: Props) {
           </div>
         </motion.div>
       </AnimatePresence>
-      <div className="flex items-center justify-between gap-3 border-t border-border/50 bg-muted/10 px-4 py-3 sm:px-6">
+      <div
+        data-step-viz-mobile-controls
+        className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-t border-border/50 bg-muted/10 px-4 py-3 sm:hidden"
+      >
+        <button
+          type="button"
+          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          disabled={step === 0}
+          className="min-h-11 min-w-0 cursor-pointer rounded-lg border bg-background px-2 py-1.5 text-xs font-bold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-30"
+        >
+          ← 이전
+        </button>
+        <span className="whitespace-nowrap px-1 text-xs text-muted-foreground tabular-nums">
+          {step + 1} / {steps.length}
+        </span>
+        <button
+          type="button"
+          onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))}
+          disabled={step === steps.length - 1}
+          className="min-h-11 min-w-0 cursor-pointer rounded-lg border bg-background px-2 py-1.5 text-xs font-bold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-30"
+        >
+          다음 →
+        </button>
+      </div>
+      <div className="hidden items-center justify-between gap-3 border-t border-border/50 bg-muted/10 px-6 py-3 sm:flex">
         <button
           type="button"
           onClick={() => setStep((s) => Math.max(0, s - 1))}

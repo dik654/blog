@@ -23,6 +23,11 @@ export default function GradientsJacobiansArticle() {
             어떤 입력과 어떤 결과를 잇는지가 핵심입니다.
           </p>
         <p>계산 규칙은 고정하고 현재 위치 주변만 살핍니다. 먼저 입력과 결과의 개수를 구별하겠습니다.</p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>f(x,y)=x²+3y의 (2,−1)에서 입력별 변화율은 4와 3일까요?</li><li>(0.06,0.08)만큼 움직일 때 1차 변화 예측은 0.48일까요?</li><li>결과가 둘이면 변화율도 결과마다 따로 모아야 할까요?</li></ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. 각 입력의 작은 기여를 결과별로 합치는 구조가 기울기와 야코비안의 핵심입니다.</p>
+        <SensitivityShapeViz />
+        <ContentBoundary article="math-gradients-jacobians" />
       </section>
       <section id="black-box" data-teach-level="B" className="space-y-6">
         <h2 className="text-2xl font-bold">2 · 두 수를 받아 한 수를 돌려주는 계산을 살펴본다</h2>
@@ -125,7 +130,6 @@ export default function GradientsJacobiansArticle() {
         <ProgressiveDetail title="왜 다른 단위 방향은 5보다 큰 변화율을 만들 수 없을까" preview="코시–슈바르츠 부등식으로 내적의 절댓값은 두 길이의 곱을 넘지 않습니다. 단위 방향에서는 상한이 기울기 길이 5입니다.">
           <p><a className="font-semibold text-primary underline" href="/cs/ai/math-vectors-inner-products#cauchy-schwarz">코시–슈바르츠 부등식</a>은 |∇f·u|≤‖∇f‖‖u‖입니다. ‖u‖=1로 정했으므로 상한은 5입니다. 같은 방향일 때 +5, 반대일 때 −5로 등호가 성립합니다. 기울기가 0이면 모든 방향의 1차 변화율도 0이며, 감소 방향 하나를 이 정보만으로 고를 수 없습니다.</p>
         </ProgressiveDetail>
-        <SensitivityShapeViz />
         <p>이 결론은 미분 가능한 점에서 보통의 유클리드 길이로 단위 방향을 비교할 때의 국소 결과입니다. 유한한 한 걸음의 크기까지 정해 주지는 않습니다. 그 크기를 정하는 문제는 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradient-descent-convergence">경사하강법의 수렴</a>에서 다룹니다.</p>
         <p>결과 하나에서는 벡터 하나로 충분했습니다. 결과가 둘인 두 번째 가정 사례에서는 결과마다 이 계산을 반복합니다.</p>
       </section>
@@ -188,7 +192,6 @@ export default function GradientsJacobiansArticle() {
         <p>JVP는 입력 변화 v를 앞으로 보내 결과 변화 Jv를 구합니다. VJP는 결과 쪽에 부여한 비중 w를 받아 입력 쪽 기여 wᵀJ를 구합니다. 위의 J에서 출력 비중을 w=(2,−1)로 두면 wᵀJ=(−1,0)입니다(가정). 두 결과를 2F₁−F₂로 합친 값의 입력별 민감도입니다. 입력 쪽 .01과 −.02를 넣은 JVP와 시작하는 벡터의 의미가 다릅니다.</p>
         <p>일반적으로 J가 m행 n열이면 JVP의 v는 입력 쪽 길이 n, Jv는 출력 쪽 길이 m입니다. VJP의 w는 출력 쪽 길이 m이고 wᵀJ는 입력 쪽 길이 n인 행벡터입니다. 열벡터로 돌려주면 Jᵀw라고 씁니다. VJP도 계산을 역순으로 따라가며 필요한 기여만 합칠 수 있어 전체 J 저장이 필수는 아닙니다.</p>
         <p>그 역순 전달을 실제 계산 경로에서 누적하는 방법은 <a className="font-semibold text-primary underline" href="/cs/ai/reverse-mode-autodiff">역방향 자동미분</a>에서 설명합니다. 이렇게 얻은 기울기를 얼마만큼의 변경으로 바꿀지는 <a className="font-semibold text-primary underline" href="/cs/ai/optimizers">옵티마이저</a>의 역할입니다.</p>
-        <ContentBoundary article="math-gradients-jacobians" />
         <ol className="list-decimal space-y-3 pl-6">
           <li>기울기 (4,3)에서 방향 (3/5,4/5)보다 (4/5,3/5)의 증가율이 큰 이유는 무엇인가요? (답: 8절)</li>
           <li>Jv의 곱 결과가 (−0.01,−0.01)인데 실제 곱 xy의 변화는 −0.0102입니다. 남은 항은 무엇인가요? (답: 9절)</li>

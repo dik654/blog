@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation-block";
@@ -12,6 +13,11 @@ export default function VectorsInnerProductsArticle(){return <article className=
 <h2 className="text-2xl font-bold">1 · 여러 숫자로 적은 이동에서 길이와 방향을 따로 읽는다</h2>
 <p className="text-lg leading-8">오른쪽으로 3, 위로 4만큼 떨어진 점을 생각해 봅시다. 도착점을 기록하려면 두 숫자가 필요하지만 출발점에서 곧장 가는 거리는 5라는 한 숫자로 충분합니다. 가로 방향으로 얼마나 갔는지만 묻는다면 답은 3입니다. 같은 이동도 무엇을 물었는지에 따라 다른 숫자로 요약됩니다.</p>
 <p>AI도 한 대상을 여러 숫자로 나타낸 뒤 크기나 방향을 비교합니다. 다만 숫자를 줄이는 계산마다 남기는 정보와 버리는 정보가 다릅니다. 여기서는 한 이동을 계속 따라가며 전체 길이, 다른 방향과의 관계, 한 방향에 남는 부분을 차례로 계산합니다. 뒤에서는 같은 계산이 교재의 식과 실제 함수의 분모에 어떻게 들어가는지 확인합니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>벡터 (3,4)의 유클리드 길이는 5일까요?</li><li>가로 방향에 투영하면 (3,0)이 남을까요?</li><li>방향을 반대로 한 (−3,−4)도 길이는 5일까요?</li></ol>
+<p>답은 <strong>예, 예, 예</strong>입니다. 노름은 전체 크기, 내적은 두 방향의 관계, 투영은 한 기준 방향에 남는 부분을 측정합니다.</p>
+<VectorMeasurementViz/>
+<ContentBoundary article="math-vectors-inner-products" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 좌표 두 개를 넣고 질문에 맞는 값을 받는다</h2>
@@ -27,7 +33,6 @@ export default function VectorsInnerProductsArticle(){return <article className=
 </section>
 <section id="picture" data-teach-level="2" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 한 화살표에서 전체 길이와 가로 부분을 함께 본다</h2>
-<VectorMeasurementViz/>
 <p>그림의 두 축은 한 칸의 길이가 같습니다. 그래서 3과 4로 만든 직각삼각형의 빗변을 길이 5로 읽을 수 있습니다. 두 축을 서로 다른 비율로 늘려 그리면 숫자는 같아도 화면에서 보이는 각도와 길이는 달라집니다.</p>
 <p>가로 기준을 (1,0) 대신 (2,0)으로 적어도 기준선 자체는 바뀌지 않습니다. 그러므로 같은 (3,4)에서 떼어 낸 가로 부분은 여전히 (3,0)이어야 합니다. 나중에 등장할 나눗셈은 이렇게 기준 화살표의 길이에 따라 결과가 달라지는 일을 막아 줍니다.</p>
 </section>

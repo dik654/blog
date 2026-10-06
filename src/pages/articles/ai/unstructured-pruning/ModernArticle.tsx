@@ -18,6 +18,15 @@ export default function UnstructuredPruningArticle() {
             index와 irregular access 비용이 생깁니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>FP16 값 2 byte와 32-bit index 4 byte를 함께 저장하면 metadata가 없을 때 density 1/3 아래에서야 dense보다 작을까요?</li>
+          <li>Weight가 0.1이고 gradient가 −2이면 movement 신호 −gw는 0.2로 0에서 멀어질까요?</li>
+          <li>Weight의 절반을 0으로 만들면 일반 dense kernel도 자동으로 두 배 빨라질까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 제거 비율과 실제 저장량, kernel 실행 시간을 서로 다른 장부로 확인합니다.</p>
+        <UnstructuredPruningViz />
+        <ContentBoundary article="unstructured-pruning" />
         <TermBreakdown
           title="선택과 저장을 섞지 않고 한 줄씩"
           items={[
@@ -45,8 +54,6 @@ export default function UnstructuredPruningArticle() {
             },
           ]}
         />
-        <UnstructuredPruningViz />
-        <ContentBoundary article="unstructured-pruning" />
       </section>
       <section id="storage-break-even" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

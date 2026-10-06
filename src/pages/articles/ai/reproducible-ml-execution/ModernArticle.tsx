@@ -24,6 +24,15 @@ export default function ReproducibleMlExecutionArticle() {
             state가 없는 clean room에서 첫 divergence를 찾습니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>같은 seed 하나만 기록하면 다른 hardware와 library에서도 bitwise 재현이 보장될까요?</li>
+          <li>기준값 100, absolute tolerance 0.01, relative tolerance 0.001이면 허용 오차는 0.11일까요?</li>
+          <li>전체 평균이 같아도 중요한 safety slice가 달라지면 behavioral equality는 실패할 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. 필요한 같음의 수준을 먼저 정하고 immutable input·환경·난수 계보를 고정한 뒤 clean room에서 그 gate를 재검사합니다.</p>
+        <ReproductionTestViz />
+        <ContentBoundary article="reproducible-ml-execution" />
         <TermBreakdown
           title="결과가 같다는 말의 네 수준"
           items={[
@@ -61,8 +70,6 @@ export default function ReproducibleMlExecutionArticle() {
             },
           ]}
         />
-        <ReproductionTestViz />
-        <ContentBoundary article="reproducible-ml-execution" />
       </section>
 
       <section id="equivalence-level" className="scroll-mt-20">

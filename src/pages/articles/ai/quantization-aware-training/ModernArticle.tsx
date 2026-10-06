@@ -23,6 +23,15 @@ export default function QuantizationAwareTrainingArticle() {
             달리 optimizer trajectory가 새로 생깁니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>QAT optimizer는 저장용 low-bit code 자체를 master parameter로 갱신할까요?</li>
+          <li>Forward의 fake quantizer는 rounding·clipping 오차를 학습 중에 보여 줄까요?</li>
+          <li>Fake-quant checkpoint의 점수만 통과하면 실제 변환 artifact도 검증 없이 배포해도 될까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 예, 아니요</strong>입니다. Float master를 갱신하되 forward에는 저정밀 오차를 넣고, 마지막에는 실제 변환·kernel 경로를 다시 검증합니다.</p>
+        <QATLoopViz />
+        <ContentBoundary article="quantization-aware-training" />
         <TermBreakdown
           title="QAT loop의 네 물체"
           items={[
@@ -57,8 +66,6 @@ export default function QuantizationAwareTrainingArticle() {
             },
           ]}
         />
-        <QATLoopViz />
-        <ContentBoundary article="quantization-aware-training" />
       </section>
       <section id="fake-quant" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

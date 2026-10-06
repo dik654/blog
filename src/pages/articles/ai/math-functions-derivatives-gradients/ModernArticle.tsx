@@ -26,6 +26,11 @@ export default function DerivativeChainRuleArticle() {
             미분값이 있다는 사실을 정확한 미래 예측으로 과장하지 않을 수 있습니다.
           </p>
         <p>출발점은 가까운 두 입력의 결과를 비교하는 것입니다. 먼저 계산을 밖에서 관찰하겠습니다.</p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>f(x)=x²의 x=3에서 간격을 줄인 변화율은 6으로 모일까요?</li><li>3에서 0.1만큼 움직일 때 직선 예측은 9.6이고 실제 값은 9.61일까요?</li><li>x=3의 미분값 6만 알면 아무리 멀리 움직여도 실제 값을 정확히 예측할 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 미분은 한 점 주변의 1차 변화율이며, 유한한 이동에는 곡률에서 생기는 오차가 남습니다.</p>
+        <SecantTangentViz />
+        <ContentBoundary article="math-functions-derivatives-gradients" />
       </section>
       <section id="black-box" data-teach-level="B" className="space-y-6">
         <h2 className="text-2xl font-bold">2 · 입력 차이와 결과 차이를 함께 본다</h2>
@@ -103,7 +108,6 @@ export default function DerivativeChainRuleArticle() {
             물리량을 미분하면 단위도 나눕니다. 위치가 m이고 시간이 s라면 변화율 단위는 m/s입니다. 1s 동안 3m 이동했다면 구간 평균은 3m/s이고 순간 변화율은 그 구간을 해당
             시각 주변으로 줄여 얻습니다(가정).
           </p>
-        <SecantTangentViz />
         <p>한 점의 비율을 구했습니다. 이제 그 6을 이용해 가까운 결과를 예측하고 오차를 재겠습니다.</p>
       </section>
       <section id="local-linearity" data-teach-level="4" className="space-y-6">
@@ -207,7 +211,6 @@ export default function DerivativeChainRuleArticle() {
         <p><a href={PYTORCH_AUTOGRAD} className="font-semibold text-primary underline">PyTorch 2.8 Autograd mechanics의 비미분 가능 함수 규칙 2</a>는 볼록 함수에서 크기가 가장 작은 부분기울기를 사용한다고 명시합니다. ReLU의 0에 이를 적용하면 [0,1] 중 크기가 가장 작은 0을 고릅니다. 이 문서 규칙을 적용한 결과이며, 모든 프로그램이 같은 경계값을 선택한다는 주장은 아닙니다.</p>
         <p>|x|의 0도 왼쪽 기울기 −1과 오른쪽 기울기 1이 다릅니다. u=x, y=|u|로 연결하더라도 바깥 미분이 없으므로 표준 연쇄법칙의 두 미분을 곱해 답을 정할 수 없습니다. 비볼록 함수나 전체 학습의 수렴에 볼록 부분기울기의 결론을 그대로 넓히지도 않습니다.</p>
         <p>여러 좌표의 작은 변화를 동시에 다루는 방법은 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradients-jacobians">기울기와 야코비안</a>에서 이어집니다. 각 좌표의 변화율을 묶어도 현재 점에서의 정보라는 한계는 유지됩니다.</p>
-        <ContentBoundary article="math-functions-derivatives-gradients" />
         <ol className="list-decimal space-y-3 pl-6">
           <li>제곱 함수의 x=3에서 입력 간격을 0.1에서 1로 키우면 직선 예측의 오차는 어떻게 달라지나요? (답: 8절)</li>
           <li>2→7→49의 두 계산에서 바깥 미분을 2에서 구하면 왜 전체 배율 42를 얻지 못하나요? (답: 9절)</li>

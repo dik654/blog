@@ -11,6 +11,11 @@ export default function DifferentialEquationsArticle(){const sidebar=useCodeSide
 <h2 className="text-2xl font-bold">1 · 지금 줄어드는 속도로 잠시 뒤의 양을 계산한다</h2>
 <p className="text-lg leading-8">어떤 양이 1만큼 남아 있습니다. 지금은 초당 1만큼 줄어들지만 남은 양이 작아지면 줄어드는 속도도 느려집니다. 1초 뒤에 얼마나 남을까요? 처음 속도로 1초 내내 줄었다고 계산하면 0이 됩니다. 중간에 느려지는 것을 반영하려면 현재 속도를 여러 번 다시 읽어야 합니다.</p>
 <p>이 글에서는 같은 1초를 두 번 또는 네 번으로 나누어 계산합니다. 나눈 간격과 속도를 읽는 위치가 답을 어떻게 바꾸는지 확인한 뒤 실제 계산 라이브러리에서 같은 숫자가 움직이는 순서를 따라갑니다. 끝에서는 매 순간 작은 흔들림이 더해지는 경우까지 범위를 넓힙니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>x′=−x, x(0)=1을 간격 0.5의 Euler 방법으로 두 번 움직이면 끝값이 0.25일까요?</li><li>간격을 0.25로 줄이면 네 번 뒤 값이 0.31640625가 되어 정확한 e⁻¹에 더 가까워질까요?</li><li>간격을 계속 줄였을 때 계산값이 모이면, 변화 규칙 자체도 현실에 맞다고 증명될까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 간격을 줄이면 주어진 식을 더 잘 따라갈 수 있지만, 그 식이 현실을 빠짐없이 나타내는지는 별도 검증이 필요합니다.</p>
+<DecayStepsViz />
+<ContentBoundary article="math-differential-equations-numerical-solvers"/>
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 현재 양과 시간을 받아 조금 뒤의 양을 돌려준다</h2>
@@ -34,7 +39,6 @@ export default function DifferentialEquationsArticle(){const sidebar=useCodeSide
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 곡선을 짧은 선분으로 따라가는 모습을 본다</h2>
 <p>그림의 가로축은 시간이고 세로축은 남은 양입니다. 회색 점선은 계속 달라지는 속도를 반영한 경로입니다. 색 점은 실제로 계산한 시점이며 점 사이의 직선은 그때 사용한 한 번의 이동을 보여 줍니다. 모든 장면의 축과 눈금은 같습니다.</p>
-<DecayStepsViz />
 <p>첫 직선은 출발점에서 읽은 빠른 감소 속도를 끝까지 유지합니다. 실제 경로는 이동하는 동안 감소가 느려져 위쪽으로 휘므로 직선의 끝이 아래로 처집니다. 더 짧게 이동하면 그동안 속도가 바뀐 양을 덜 놓칩니다.</p>
 <p>마지막 장면은 출발점에서 한 번 읽은 속도에 더해 예상 끝점에서도 속도를 읽습니다. 두 값을 평균하면 같은 간격으로도 기준 경로에 가까워질 수 있습니다. 짧게 여러 번 움직이는 방법과 한 번 움직일 때 더 많이 확인하는 방법이 서로 다른 선택임을 보여 줍니다.</p>
 </section>
@@ -184,7 +188,6 @@ assumptions={["1차원 Brownian motion과 Itô SDE를 다룹니다.","다차원 
 <p>가령 Euler의 간격을 절반으로 줄여 호출을 두 배로 늘리는 선택과 Heun으로 바꾸어 한 단계에 두 번 호출하는 선택이 있습니다. 같은 비용에 어느 쪽이 좋은지는 문제의 매끄러움, 안정성 제약, 요구한 오차와 구현에 따라 달라집니다. 특정 사례의 작은 오차를 모든 생성 모델의 품질 향상으로 바로 확대하지 않습니다.</p>
 <p>Diffusion이나 flow에서는 시간의 진행 방향, 학습한 출력이 변화율인지 잡음인지, ODE인지 SDE인지부터 확인합니다. 이 글의 감소 사례에서 확인한 계산 규칙만으로 각 모델의 변환식을 생략할 수는 없습니다. 다음 글에서 그 모델의 식과 실제 sampler를 연결합니다.</p>
 <p><Link className="text-sky-700 underline" to="/cs/ai/diffusion-continuous-time">연속시간 diffusion·score·flow의 적용 읽기</Link></p>
-<ContentBoundary article="math-differential-equations-numerical-solvers"/>
 </section>
 <section id="predict" data-teach-level="7" className="space-y-6">
 <h2 className="text-2xl font-bold">17 · 설정을 바꾸기 전에 결과를 예측한다</h2>

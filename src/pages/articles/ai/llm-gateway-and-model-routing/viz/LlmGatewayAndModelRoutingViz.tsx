@@ -12,14 +12,14 @@ import VizFrame from "@/components/viz/VizFrame";
  */
 const SCENES = [
   "요청 도착 · 저비용 model 우선 시도",
-  "확신도 낮음 → 상위 model로 escalate",
+  "확신도 0.42 < 0.70 → 상위 model로 escalate",
   "상위 model 실행 실패 → provider fallback",
   "Fallback provider가 최종 응답 반환",
 ] as const;
 
 const NOTES = [
   "요청이 도착하면 cascade의 첫 단계인 저비용·저지연 model부터 호출합니다. 아직 다른 단계는 시도하지 않았습니다.",
-  "저비용 model의 응답 확신도가 threshold보다 낮아 그 응답을 채택하지 않고, cascade의 다음 단계인 상위 model로 넘어갑니다. 이 전환은 확신도라는 품질 신호에 반응한 것입니다.",
+  "저비용 model의 응답 확신도 0.42가 threshold 0.70보다 낮아 그 응답을 채택하지 않고, cascade의 다음 단계인 상위 model로 넘어갑니다. 이 전환은 확신도라는 품질 신호에 반응한 것입니다.",
   "상위 model 호출이 timeout으로 실패했습니다. 이번에는 확신도가 아니라 실행 자체의 실패이므로 cascade를 벗어나 provider fallback으로 전환합니다.",
   "Fallback provider가 같은 요청을 처리해 응답을 돌려줍니다. 저비용 model → 상위 model → fallback provider까지 총 세 번의 시도 끝에 결과가 확정됩니다.",
 ] as const;

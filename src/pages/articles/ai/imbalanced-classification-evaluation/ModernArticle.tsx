@@ -9,16 +9,28 @@ export default function ImbalancedClassificationEvaluationArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          불균형 평가 보고서는 decision count·prevalence·probability를 세 층으로
-          분리합니다
+          1,000건에서 같은 40건을 두 분모로 나눕니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            먼저 한 threshold에서 TP·FP·FN·TN을 셉니다. 그 count로 precision·recall을 계산하고 population prevalence가 바뀌면
-            precision이 어떻게 달라지는지 봅니다. 마지막으로 probability bin의 예측값과 실제 빈도를 비교합니다.
+            고정한 threshold에서 TP=40, FP=10, FN=10, TN=940이 나왔습니다.
+            Alert는 50건이고 실제 positive도 50건이므로 precision과 recall은
+            우연히 모두 40/50=.8입니다. 전체 positive prevalence는 5%입니다.
           </p>
-          <p>ROC-AUC나 PR-AUC 하나는 이 세 층을 대체하지 않습니다.</p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>이 threshold가 만든 alert는 50건일까요?</li>
+            <li>실제 positive 가운데 찾은 비율도 .8일까요?</li>
+            <li>예측 평균이 .75인 bin 100건에서 55건만 positive여도 잘 보정된 확률일까요?</li>
+          </ol>
+          <p>
+            답은 <strong>예, 예, 아니요</strong>입니다. 앞의 두 답은 같은 40을
+            서로 다른 50으로 나눈 결과입니다. 마지막 bin의 실제 빈도는 .55라
+            예측 .75보다 0.20 낮습니다.
+          </p>
         </div>
+        <ImbalanceEvaluationViz />
+        <ContentBoundary article="imbalanced-classification-evaluation" />
         <TermBreakdown
           title="평가 report의 네 대상"
           items={[
@@ -55,8 +67,6 @@ export default function ImbalancedClassificationEvaluationArticle() {
             },
           ]}
         />
-        <ImbalanceEvaluationViz />
-        <ContentBoundary article="imbalanced-classification-evaluation" />
       </section>
       <section id="confusion-matrix" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

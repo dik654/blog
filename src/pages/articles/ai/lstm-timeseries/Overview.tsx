@@ -1,19 +1,28 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ForecastWindowViz from "./viz/ForecastWindowViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">LSTM을 고르기 전에 예측 시점을 먼저 고정한다</h2>
+      <h2 className="mb-6 text-2xl font-bold">과거 6개 step은 입력이고 다음 3개 step은 target입니다</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-            “최근 24시간으로 다음 6시간의 전력 수요를 예측한다”는 문장에는 모델보다 중요한 계약이 들어 있다. Target과 관측 간격, 예측을 시작하는 forecast origin,
-            필요한 horizon, 그 시점에 실제로 알 수 있는 정보가 정해져야 비로소 학습 sample을 만들 수 있다.
+            Forecast origin t를 기준으로 t−5부터 t까지 여섯 관측을 input으로 묶고,
+            t+1부터 t+3까지 세 값을 target으로 묶습니다. 경계 오른쪽의 실제 미래값은
+            학습 loss나 사후 평가 때만 공개됩니다.
           </p>
-        <p>LSTM은 이 sample의 과거 값을 순서대로 읽으며 hidden·cell state를 갱신하는 함수다. 비선형 시간 의존성을 학습할 수 있지만 추세·계절성·데이터 누출을 알아서 해결하지는 않는다. Gate와 cell state의 수학은 <Link to="/cs/ai/lstm">LSTM 구조 글</Link>이 소유하고, 이 글은 window·state lifecycle·horizon과 평가 계약에 집중한다. 선형 기준선이 필요하면 <Link to="/cs/ai/arima">ARIMA 글</Link>을 함께 보면 된다.</p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>t 시점의 값은 input에 포함될까요?</li>
+          <li>t+1의 실제 target을 t 시점 feature로 넣어도 될까요?</li>
+          <li>이 sample의 input length L과 horizon H는 각각 6과 3일까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 예</strong>입니다. Forecast origin에서 실제로 알 수 없는 미래 target이나 사후 집계값을 넣으면 leakage가 됩니다.</p>
       </div>
       <ForecastWindowViz />
+      <ContentBoundary article="lstm-timeseries" />
       <ExplainedFormula
         question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"
         idea={<>Forecast origin t를 하나 고른 뒤 그 이전 L개 step을 input으로, 그 다음 H개 step을 target으로 묶습니다. Origin을 stride S만큼 이동하면 다음 sample이 생깁니다.</>}

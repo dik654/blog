@@ -11,9 +11,9 @@ export default function MemoryTraceViz() {
   const [active, setActive] = useState(0);
   const stage = stages[active];
   return (
-    <figure data-viz-canvas className="my-8 rounded-xl border p-4 sm:p-6" aria-label="결제 migration 기록의 수명에 따른 저장과 복원 과정">
+    <figure data-viz="memory-trace" className="my-8 rounded-xl border p-4 sm:p-6" aria-label="결제 migration 기록의 수명에 따른 저장과 복원 과정">
       <figcaption className="mb-4 text-base font-semibold">payment-17 실패를 새 session이 복원하는 네 단계 · 가정 사례</figcaption>
-      <div className="h-[26rem] sm:h-[22rem]" aria-live="polite">
+      <div data-viz-canvas className="sm:h-[22rem]" aria-live="polite">
         <ol className="space-y-2 text-sm leading-6">
           {[["현재 기록", stage.input], ["확인할 조건", stage.check], ["다음 저장·동작", stage.output]].map(([label, value], i) => (
             <li key={label}>
@@ -24,8 +24,16 @@ export default function MemoryTraceViz() {
         </ol>
         <p className="mt-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400">{stage.note}</p>
       </div>
-      <div data-viz-controls className="flex flex-wrap gap-2" aria-label="기록 처리 단계">
-        {stages.map((item, i) => <button key={item.label} type="button" aria-pressed={active === i} onClick={() => setActive(i)} className="rounded border px-3 py-2 text-sm aria-pressed:border-sky-500 aria-pressed:bg-sky-50 dark:aria-pressed:bg-sky-950">{item.label}</button>)}
+      <div data-viz-controls aria-label="기록 처리 단계">
+        <p data-viz-mobile-controls className="text-center text-sm font-semibold sm:hidden">{active + 1}. {stage.label}</p>
+        <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:hidden">
+          <button type="button" disabled={active === 0} onClick={() => setActive((value) => Math.max(0, value - 1))} className="min-h-11 min-w-0 rounded border px-2 text-xs disabled:opacity-35">← 이전</button>
+          <span className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">{active + 1} / {stages.length}</span>
+          <button type="button" disabled={active === stages.length - 1} onClick={() => setActive((value) => Math.min(stages.length - 1, value + 1))} className="min-h-11 min-w-0 rounded border px-2 text-xs disabled:opacity-35">다음 →</button>
+        </div>
+        <div className="hidden flex-wrap gap-2 sm:flex">
+          {stages.map((item, i) => <button key={item.label} type="button" aria-pressed={active === i} onClick={() => setActive(i)} className="rounded border px-3 py-2 text-sm aria-pressed:border-sky-500 aria-pressed:bg-sky-50 dark:aria-pressed:bg-sky-950">{item.label}</button>)}
+        </div>
       </div>
     </figure>
   );

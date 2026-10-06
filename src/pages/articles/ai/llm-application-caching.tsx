@@ -17,33 +17,41 @@ export default function LlmApplicationCachingArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          애플리케이션 캐시는 무엇을 담느냐로 다섯 갈래로 나뉩니다
+          문장이 달라도 유사도 0.97이면 검색과 LLM 호출을 건너뜁니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 애플리케이션에서 캐시는 같은 계산을 다시 하지 않으려고 결과를 저장해 두는
-            장치입니다. 그런데 “같은 계산”을 판정하는 기준이 layer마다 다릅니다. 문자 그대로
-            같은 요청인지, 의미가 비슷한 요청인지, 검색 결과인지, 도구 호출 결과인지에 따라
-            저장하는 대상과 판정 방법이 갈립니다.
+            Cache에는 이미 “환불 기간은 며칠인가요?”라는 요청과 그 답이 저장돼 있습니다.
+            새 요청은 “언제까지 환불할 수 있나요?”입니다. Cache key는 prompt·model·생성
+            options를 함께 담고, semantic hit threshold는 0.95입니다.
           </p>
           <p>
-            Application cache부터 exact-match, semantic, retrieval, embedding, tool result 다섯 종류로 나눕니다. 그리고 각
-            종류가 무엇을 key로 삼고 무엇을 hit 판정 기준으로 삼는지 봅니다.
+            두 문자열은 달라 exact-match에서는 miss입니다. 그러나 두 embedding의 cosine
+            similarity는 0.97이므로 semantic cache에서는 hit입니다. 저장된 답을 반환하면서
+            retrieval과 LLM 호출을 모두 건너뜁니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>표현이 다르지만 뜻이 비슷하므로 exact-match cache에서도 hit일까요?</li>
+            <li>유사도 0.97이 threshold 0.95 이상이므로 semantic cache는 hit일까요?</li>
+            <li>Semantic hit 뒤에도 retrieval을 실행해 문서를 다시 찾을까요?</li>
+          </ol>
           <p>
-            <Link to="/cs/ai/vllm-paged-attention#prefix-caching">vLLM paged attention</Link>{" "}
-            글은 이미 GPU 안에서 KV 값을 재사용하는 prefix caching을 다뤘습니다. 그 캐시는
-            model runtime 내부의 attention 계산 결과를 저장합니다. 이 글이 다루는 application
-            cache는 그보다 위층, 즉 애플리케이션 코드가 LLM 호출·검색·도구 실행 자체를
-            건너뛰기 위해 두는 캐시입니다. 두 층은 같은 “캐시”라는 이름을 쓰지만 저장 대상과
-            무효화 조건이 다릅니다.
-          </p>
-          <p>
-            저장 대상에서 시작해 운영 지표로 내려갑니다. 다섯 종류의 캐시 대상 → semantic cache의 유사도 threshold → cache
-            key·invalidation·TTL·staleness → cache hit/miss/hit rate → cache warming과 LRU eviction 순서입니다.
+            답은 <strong>아니요, 예, 아니요</strong>입니다. Exact match와 semantic match는
+            같은 “hit”이라는 말을 쓰지만 판정 규칙이 다릅니다. Semantic hit가 확정되면
+            뒤의 비싼 단계를 실행하지 않습니다.
           </p>
         </div>
+        <LlmApplicationCachingViz />
         <ContentBoundary article="llm-application-caching" />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            Application cache는 저장 대상에 따라 exact-match·semantic·retrieval·embedding·tool
+            result cache로 나뉩니다. <Link to="/cs/ai/vllm-paged-attention#prefix-caching">vLLM
+            prefix caching</Link>처럼 GPU runtime 안의 KV를 재사용하는 장치와 달리, 여기서는
+            애플리케이션 코드가 LLM 호출·검색·도구 실행을 건너뛰게 만드는 캐시를 다룹니다.
+          </p>
+        </div>
       </section>
 
       <section id="cache-taxonomy" className="scroll-mt-20">
@@ -74,7 +82,6 @@ export default function LlmApplicationCachingArticle() {
             합니다.
           </p>
         </div>
-        <LlmApplicationCachingViz />
         <TermBreakdown
           title="무엇을 캐싱하는가로 나눈 다섯 종류"
           description="같은 '캐시'라는 이름이지만 저장 대상과 hit 판정 기준이 다릅니다."

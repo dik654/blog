@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation-block";
@@ -13,6 +14,11 @@ export default function MatricesSvdArticle(){const sidebar=useCodeSidebar(); ret
 <h2 className="text-2xl font-bold">1 · 두 숫자를 섞는 계산에서 어떤 차이가 살아남을까</h2>
 <p className="text-lg leading-8">두 측정값이 4와 2라고 합시다. 첫 출력은 첫 값을 두 번, 둘째 값을 한 번 더해 10으로 만듭니다. 둘째 출력은 첫 값을 한 번, 둘째 값을 두 번 더해 8로 만듭니다. 두 출력에는 두 입력이 모두 들어 있지만 각각의 기여는 다릅니다. 숫자 네 개로 정한 이 규칙을 큰 표에도 적용할 수 있습니다.</p>
 <p>AI의 한 층은 이런 계산으로 여러 입력을 섞습니다. 큰 표를 저장하거나 계산하기 어려우면 일부 변화를 생략해 더 작게 표현하기도 합니다. 그때는 계산 결과가 얼마나 달라지는지 확인해야 합니다. 이 글에서는 (4,2)가 (10,8)이 되는 규칙을 계속 따라가며 무엇을 줄일 수 있고 무엇을 잃는지 살펴봅니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>(4,2)를 평균 방향 (3,3)과 차이 방향 (1,−1)으로 정확히 나눌 수 있을까요?</li><li>행렬 [[2,1],[1,2]]는 두 방향을 각각 3배와 1배로 바꿀까요?</li><li>1배인 차이 방향을 버려도 모든 입력의 출력이 보존될까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. SVD는 입력 방향별 전달 배율을 드러내지만, 작은 배율의 방향이 실제 과제에도 불필요한지는 별도로 확인해야 합니다.</p>
+<MatrixDirectionsViz />
+<ContentBoundary article="math-matrices-svd" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 입력의 순서와 두 출력 규칙을 먼저 고정한다</h2>
@@ -30,7 +36,6 @@ export default function MatricesSvdArticle(){const sidebar=useCodeSidebar(); ret
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 나누고 늘리고 합치는 경로를 한 그림으로 본다</h2>
 <p>아래 그림의 가로와 세로는 두 칸의 값입니다. 원점에서 같은 만큼 오른쪽과 위로 가는 이동이 함께 변하는 부분입니다. 거기서 오른쪽 1, 아래쪽 1만큼 움직이면 두 칸의 차이가 생깁니다. 두 축의 한 칸을 같은 길이로 그려 이동의 길이도 비교할 수 있습니다.</p>
-<MatrixDirectionsViz />
 <p>분리 화면의 마지막 점은 (4,2)입니다. 가운데 단계를 바꾸면 함께 가는 부분만 (3,3)에서 (9,9)로 늘고 남은 이동은 여전히 (1,−1)입니다. 두 이동을 잇는 순서는 계산을 보기 위한 배치입니다. 마지막 점이 (10,8)인지 확인하면 전체 규칙과 같은 결과인지 검산할 수 있습니다.</p>
 </section>
 <section id="need" data-teach-level="2" className="space-y-6">

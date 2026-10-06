@@ -7785,7 +7785,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
 ],
   "ai/inference-runtime-anatomy": [
-    { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "frontend·engine core·worker·model runner 의 process 구조와 ZMQ 연결의 근거" },
+    { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "2026-10-06 확인. API server·engine core·GPU worker·DP coordinator의 현재 process 수와 ZMQ many-to-many 연결의 근거" },
     { kind: "공식 코드", label: "vllm/v1/worker/gpu_worker.py · vllm/v1/engine/core.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/worker/gpu_worker.py", note: "init_device → load_model → determine_available_memory → initialize_from_config → compile_or_warm_up_model 순서와 KV byte 뺄셈의 근거" },
     { kind: "공식 문서", label: "vLLM Engine Arguments", href: "https://docs.vllm.ai/en/latest/configuration/engine_args.html", note: "gpu_memory_utilization·enforce_eager·load_format·distributed_executor_backend·cudagraph_capture_sizes 의 정의" },
     { kind: "공식 문서", label: "PyTorch CUDA semantics · Memory management", href: "https://docs.pytorch.org/docs/stable/notes/cuda.html#memory-management", note: "caching allocator 의 pool·reuse·fragmentation 설명의 근거" },
@@ -8422,7 +8422,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "ai/inference-cost-and-capacity-planning": [
-    { kind: "공식 문서", label: "Kubernetes · Horizontal Pod Autoscaling", href: "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/", note: "HPA 계산식, sync 15 초, tolerance 0.1, scale-down 안정화 창 5 분의 근거" },
+    { kind: "공식 문서", label: "Kubernetes · Horizontal Pod Autoscaling", href: "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/", note: "2026-10-06 확인. HPA 계산식, 기본 tolerance 0.1, scale-up 안정화 0초와 scale-down 안정화 창 300초의 근거" },
     { kind: "공식 문서", label: "NVIDIA · GPU Operator GPU sharing (time-slicing·MIG)", href: "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html", note: "Time-slicing 의 격리 부재와 MIG 의 hardware 격리 차이의 근거" },
     { kind: "공식 문서", label: "NVIDIA · MIG User Guide supported profiles", href: "https://docs.nvidia.com/datacenter/tesla/mig-user-guide/supported-mig-profiles.html", note: "80 GB A100·H100 의 MIG profile 과 가능한 instance 수의 근거" },
     { kind: "공식 문서", label: "AWS · Amazon EC2 pricing 구매 옵션", href: "https://aws.amazon.com/ec2/pricing/", note: "On-Demand·Savings Plans·Reserved·Spot·Capacity Reservations 구분의 근거. 단가는 인용하지 않음" },
@@ -10032,7 +10032,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       label:
         "Gateway API Inference Extension — InferencePool (kubernetes-sigs)",
       href: "https://gateway-api-inference-extension.sigs.k8s.io/api-types/inferencepool/",
-      note: "아래층이 표준이라는 근거와 GA since v1.0.0 표시. 문서를 직접 열어 확인함",
+      note: "2026-10-06 확인. v1 API·GA since v1.0.0, selector·targetPorts, v1.5.0부터 optional인 endpointPickerRef와 대부분 구현에서 여전히 필요한 경계의 근거",
     },
     {
       kind: "핵심 연구",

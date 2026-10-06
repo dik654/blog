@@ -17,26 +17,28 @@ export default function LlmSamplingStrategiesArticle() {
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Sampling 전략은 결정적 tie-break 과 확률 재정규화 축의 선택입니다
+          같은 다섯 token에서 top-k는 2개, top-p는 3개를 남깁니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            LLM 이 다음 token 을 고르는 규칙은 두 갈래로 나뉩니다. Greedy 와 beam search 는 점수가 가장 높은 후보를 그대로 고르는 결정적 tie-break
-            입니다. Temperature·top-k·top-p 는 확률 분포를 자르고 다시 정규화한 뒤 표본을 뽑는 확률적 규칙입니다. 이 글은 뒤쪽 세 규칙과 추론에 더 많은 연산을
-            써서 품질을 사는 test-time compute 축을 다룹니다.
+            다음 token 분포가 [0.50, 0.20, 0.15, 0.10, 0.05]라고 합시다. Temperature
+            0.5는 이를 [0.769, 0.123, 0.069, 0.031, 0.008]로 더 뾰족하게 만듭니다.
+            원본에 top-k=2를 적용하면 A·B만, top-p=0.8을 적용하면 누적 0.85가 되는
+            A·B·C까지 남습니다.
           </p>
+          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>T=0.5를 적용하면 1등 token A의 확률이 0.50보다 커질까요?</li>
+            <li>Top-k=2는 분포 모양과 상관없이 정확히 A·B 두 개만 남길까요?</li>
+            <li>Top-p=0.8은 누적 확률이 0.70인 A·B에서 멈출까요?</li>
+          </ol>
           <p>
-            확률적 규칙은 한 step 안에서 순서대로 적용됩니다. Logit 을 temperature 로 나눠 분포의 뾰족함을 조절합니다. Top-k 나 top-p 로 일부 token 만
-            남기고 남은 확률을 다시 1로 정규화한 다음 그 위에서 표본을 뽑습니다. 이 네 단계가 이 글이 다루는 전부입니다.
-          </p>
-          <p>
-            이 결정은{" "}
-            <Link to="/cs/ai/seq2seq#decoder">autoregressive decoding</Link> 의 한 step 마다
-            반복되고, 자르는 대상인 확률 분포는{" "}
-            <Link to="/cs/ai/softmax#overview">softmax normalization</Link> 이 이미 만들어 둔
-            것입니다. 이 글은 그 분포를 어떻게 자르고 다시 쓰는지를 봅니다.
+            답은 <strong>예, 예, 아니요</strong>입니다. Top-p는 누적 확률이 기준 이상이
+            되는 최소 집합이 필요하므로 C까지 포함해 0.85를 만든 뒤 재정규화합니다.
           </p>
         </div>
+        <LlmSamplingStrategiesViz />
+        <ContentBoundary article="llm-sampling-strategies" />
         <AlgorithmBlock
           title="한 decode step: logits → temperature → truncation → renormalize → sample"
           input={["logits z (vocab 크기)", "temperature T", "truncation 방식과 파라미터(k 또는 p)"]}
@@ -49,7 +51,6 @@ export default function LlmSamplingStrategiesArticle() {
           ]}
           output="선택된 token 하나 (다음 step 의 prefix 에 추가)"
         />
-        <LlmSamplingStrategiesViz />
         <TermBreakdown
           title="결정 축의 두 갈래"
           description="같은 분포를 두고 그대로 최댓값을 고르느냐, 자르고 다시 표본을 뽑느냐가 갈립니다."
@@ -58,7 +59,14 @@ export default function LlmSamplingStrategiesArticle() {
             { term: "확률적 규칙", description: "분포를 temperature 로 바꾸고 top-k 나 top-p 로 자른 뒤, 재정규화된 분포에서 표본을 뽑습니다.", example: "T=0.7, top-p=0.9 조합이 흔한 기본값", boundary: "표본추출이라 같은 prefix 에서도 매번 다른 token 이 나올 수 있습니다." },
           ]}
         />
-        <ContentBoundary article="llm-sampling-strategies" />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            확률적 decode step은 logit을 temperature로 조절하고, top-k나 top-p로
+            후보를 자른 뒤, 남은 확률을 다시 1로 만들어 표본을 뽑습니다. 이 결정은{" "}
+            <Link to="/cs/ai/seq2seq#decoder">autoregressive decoding</Link>의 매 step에서
+            반복되며 입력 분포는 <Link to="/cs/ai/softmax#overview">softmax</Link>가 만듭니다.
+          </p>
+        </div>
       </section>
 
       <section id="temperature" className="scroll-mt-20">

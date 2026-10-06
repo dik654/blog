@@ -23,6 +23,9 @@ export default function ModelArtifactRegistryArticle() {
             registry 기록과 실제 endpoint를 대조할 수 있습니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Run metadata database만 백업하면 model bytes까지 복구할 수 있을까요?</li><li>candidate 같은 alias는 시간이 지나며 다른 immutable version을 가리킬 수 있을까요?</li><li>배포 영수증에는 resolve된 version과 digest를 함께 고정해야 할까요?</li></ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. Registry는 변경 가능한 선택 이름을 실제로 배포된 변경 불가능한 artifact와 연결하고 그 일치를 검증합니다.</p>
         <TermBreakdown
           title="Registry를 이루는 네 대상"
           items={[

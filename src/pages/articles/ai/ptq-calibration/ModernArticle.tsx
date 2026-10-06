@@ -24,6 +24,15 @@ export default function PtqCalibrationArticle() {
             검증하는지만 다룹니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>PTQ calibration은 optimizer로 원래 checkpoint의 weight를 다시 학습할까요?</li>
+          <li>4096개 weight를 128개씩 묶으면 독립 scale은 32개일까요?</li>
+          <li>실제 traffic의 언어·길이를 놓친 calibration set은 배포 오차를 잘못 추정할 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. 고정된 checkpoint를 대표 표본으로 관측해 scale을 정하고, 변환된 artifact를 실제 workload에서 다시 검증합니다.</p>
+        <CalibrationPipelineViz />
+        <ContentBoundary article="ptq-calibration" />
         <TermBreakdown
           title="Calibration pipeline의 네 역할"
           items={[
@@ -56,8 +65,6 @@ export default function PtqCalibrationArticle() {
             },
           ]}
         />
-        <CalibrationPipelineViz />
-        <ContentBoundary article="ptq-calibration" />
       </section>
       <section id="quantization-axes" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">

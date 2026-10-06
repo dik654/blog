@@ -6,12 +6,12 @@ import { TabularSynthesisViz } from "../data-augmentation/viz/ModernAugmentation
 
 export default function TabularDataSynthesisArticle() {
   return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Synthetic table은 정상 범위의 값 모음이 아니라 가능한 row를 만들어야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">나이와 금액이 각각 정상 범위여도 계약 종료일이 시작일보다 빠르거나 부분합이 총액과 다르면 현실에 존재할 수 없는 row입니다. Tabular synthesis는 column histogram뿐 아니라 <strong>row 관계·entity 상태·시간 순서</strong>를 함께 보존해야 합니다.</p></div><TermBreakdown title="Synthetic row가 통과할 네 경계" items={[
+    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Synthetic table은 정상 범위의 값 모음이 아니라 가능한 row를 만들어야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">나이와 금액이 각각 정상 범위여도 계약 종료일이 시작일보다 빠르거나 부분합이 총액과 다르면 현실에 존재할 수 없는 row입니다. Tabular synthesis는 column histogram뿐 아니라 <strong>row 관계·entity 상태·시간 순서</strong>를 함께 보존해야 합니다.</p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>각 column 범위가 정상이어도 종료일이 시작일보다 빠르면 row를 거부해야 할까요?</li><li>Neighbor를 split 전에 찾으면 validation geometry가 training data에 들어갈 수 있을까요?</li><li>실제 row와 거의 같은 synthetic row가 많으면 membership·duplicate privacy 위험이 커질 수 있을까요?</li></ol><p>답은 <strong>예, 예, 예</strong>입니다. Split-local fitting, 실행 가능한 제약, utility와 privacy 검사를 같은 release gate로 묶습니다.</p><TabularSynthesisViz/><ContentBoundary article="tabular-data-synthesis"/><TermBreakdown title="Synthetic row가 통과할 네 경계" items={[
       {term:"Schema",description:"Column type·unit·range·category vocabulary를 고정합니다."},
       {term:"Constraint ledger",description:"여러 column과 row를 묶는 식·순서·entity 규칙을 실행 가능한 목록으로 둡니다.",example:"start_date≤end_date, subtotal sum=total."},
       {term:"Split-local synthesis",description:"Neighbor·generator·statistics를 split 이후 training fold에만 fit합니다."},
       {term:"Utility–privacy audit",description:"Downstream usefulness와 duplicate·membership leakage를 같은 release 표에서 평가합니다."},
-    ]}/><TabularSynthesisViz/><ContentBoundary article="tabular-data-synthesis"/></section>
+    ]}/></section>
 
     <section id="constraints" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Constraint ledger는 invalid row를 만든 뒤 눈으로 찾는 일을 실행 규칙으로 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             각 rule에는 식, 적용 entity, 허용 오차, failure action을 둡니다. range rule이 보는 것은 column 하나, relational rule은

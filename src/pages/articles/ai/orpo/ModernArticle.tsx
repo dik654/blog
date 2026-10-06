@@ -13,6 +13,9 @@ export default function ModernArticle() {
           <p className="text-lg leading-8"><strong>SFT term</strong>은 chosen response의 token likelihood를 높입니다. 그러나 chosen만 모방하면 같은 prompt의 rejected response를 명시적으로 낮추지는 않습니다. ORPO는 여기에 <strong>odds-ratio preference term</strong>을 더해 두 response의 상대 간격을 벌립니다.</p>
           <p className="leading-8">“Monolithic”은 data 수집·검증까지 한 덩어리가 된다는 뜻이 아닙니다. 별도의 reference model을 사용하지 않고 chosen imitation과 pair separation을 한 optimization stage에 둔다는 뜻입니다.</p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Chosen response의 likelihood만 높이면 rejected와의 상대 간격도 반드시 벌어질까요?</li><li>ORPO는 같은 prompt의 chosen·rejected 쌍이 필요할까요?</li><li>Reference-free라는 말이 preference pair도 필요 없다는 뜻일까요?</li></ol>
+        <p>답은 <strong>아니요, 예, 아니요</strong>입니다. ORPO는 chosen 모방 항과 두 응답의 odds 비율 항을 한 단계에서 조합하지만 pair의 품질 경계는 그대로 남습니다.</p>
         <AlignmentPipelineViz mode="orpo" />
         <ContentBoundary article="orpo" />
       </section>

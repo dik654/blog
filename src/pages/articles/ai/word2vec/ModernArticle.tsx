@@ -15,7 +15,7 @@ export default function Word2VecArticle(){const sidebar=useCodeSidebar();const c
 <p>
             번호는 단어의 뜻이 아닙니다. 책의 쪽수만 보고 내용을 알 수 없듯, 단어 번호가 2라고 해서 뜻도 2인 것은 아닙니다. 번호는 수가 저장된 자리를 찾는 데 쓰고 그 자리에
             들어 있는 값은 학습하며 바꿉니다. 먼저 이 둘을 구별하면 이후의 계산이 단순해집니다.
-          </p></div></section>
+          </p></div><p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>반경 1에서 가운데 cat은 왼쪽과 오른쪽의 saw를 서로 다른 두 관찰로 만들까요?</li><li>입력 cat [1,2,0]과 대상 saw [0,1,2]의 내적은 2일까요?</li><li>두 saw가 같은 ID 3의 행을 읽어도 문장 위치와 학습 사례까지 하나로 합칠까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. 문장 위치가 관찰을 만들고 단어 ID는 두 역할 표에서 읽을 행을 고릅니다.</p><WordPairCaseViz/><ContentBoundary article="word2vec"/></section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">2. 문장을 받고, 두 단어와 두 줄의 수를 내놓습니다</h2><div className={prose}>
 <p>전체 흐름은 세 번의 선택입니다. 먼저 문장을 단어들로 나누고 각 단어가 가진 번호를 찾습니다. 다음으로 현재 보고 있는 위치에서 가까운 이웃을 고릅니다. 마지막으로 한 단어는 입력 역할의 표에서, 다른 단어는 맞혀야 할 대상 역할의 표에서 수를 읽습니다.</p>
 <p>그 뒤에는 같은 자리의 수끼리 곱해 더하는 계산이 있습니다. 이 값으로 두 단어의 조합을 평가하고 학습 규칙에 따라 표를 고칩니다. 이 글에서는 어디서 수를 가져왔는지 분명히 하기 위해 표를 고정하겠습니다. 뒤의 학습 글에서 무엇을 바꾸는지 이해하려면, 지금은 꺼내는 값의 출처를 놓치지 않는 것이 좋습니다.</p>
@@ -28,7 +28,7 @@ export default function Word2VecArticle(){const sidebar=useCodeSidebar();const c
 <p>cat을 입력으로 두고 바로 오른쪽 saw를 맞힌다고 해 보겠습니다. 왼쪽 표에서 cat의 [1, 2, 0]을, 오른쪽 표에서 saw의 [0, 1, 2]를 읽습니다. 같은 자리끼리 곱해 더하면 1×0 + 2×1 + 0×2 = 2입니다. 이 2는 두 줄을 조합한 점수이며, 두 단어가 동의어라는 판정이나 확률은 아닙니다.</p>
 <p>이번에는 cat의 바로 왼쪽을 봅니다. 그곳도 saw이므로 같은 두 줄을 읽고 점수 2를 얻습니다. 계산할 값은 같지만 문장에서 관찰한 위치는 다릅니다. 그래서 두 번의 학습 사례로 셉니다. 현재 위치와 단어 번호를 따로 적어 둔 이유가 여기서 드러납니다.</p></div></section>
 <section id="picture" data-teach-level="1" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">4. 보는 범위를 넓히면 선택이 두 개에서 네 개가 됩니다</h2><div className={prose}>
-<p>가운데 cat에서 양쪽 한 칸만 보면 위치 1과 3의 saw를 고릅니다. 양쪽 두 칸까지 보면 위치 0의 red와 위치 4의 dog도 들어옵니다. cat 자신의 위치 2는 건너뜁니다. 아래 그림은 이 선택과 그중 한 쌍이 두 표를 읽는 과정을 나누어 보여 줍니다.</p></div><WordPairCaseViz/><div className={prose}>
+<p>가운데 cat에서 양쪽 한 칸만 보면 위치 1과 3의 saw를 고릅니다. 양쪽 두 칸까지 보면 위치 0의 red와 위치 4의 dog도 들어옵니다. cat 자신의 위치 2는 건너뜁니다. 아래 그림은 이 선택과 그중 한 쌍이 두 표를 읽는 과정을 나누어 보여 줍니다.</p></div><div className={prose}>
 <p>범위를 넓혀도 cat의 번호나 표의 크기는 바뀌지 않습니다. 달라지는 것은 이번에 함께 계산할 이웃과 그 횟수입니다. 두 번째 장면에서 네 위치를 골랐다가 세 번째 장면에서 saw 한 위치만 따라가면, 많은 사례도 같은 작은 선택의 반복이라는 점을 볼 수 있습니다.</p></div></section>
 <section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 번호표, 두 역할, 가까운 범위가 각각 필요한 이유</h2><div className={prose}>
 <p>단어마다 저장 위치를 고정하면 문장에서 같은 단어를 다시 만났을 때 같은 줄을 읽을 수 있습니다. saw의 두 위치마다 새 수를 따로 만드는 대신 번호 3의 줄을 함께 사용합니다. 여러 문장의 경험이 같은 줄에 모일 수 있는 이유입니다.</p>
@@ -80,7 +80,7 @@ export default function Word2VecArticle(){const sidebar=useCodeSidebar();const c
 <p>배포할 때 번호표와 양쪽 표의 버전·체크섬을 함께 묶고, cat 같은 표본 단어가 실제로 어느 행을 읽는지 확인합니다. 서로 맞지 않으면 새 조합을 내보내지 않고 검증된 이전 번호표·표 묶음으로 복구합니다. 출력에 어느 표를 사용할지 정한 설정도 함께 되돌려야 합니다.</p>
 <p>동일한 쌍을 재생한다고 약속한 실행에서 쌍의 해시가 달라진 경우도 먼저 배포를 멈춥니다. 처음 달라진 위치의 입력, 반경, 방향을 비교해 바뀐 코드나 자료의 버전, 변경 이력과 담당자를 확인합니다. 재현이 확인된 이전 자료·코드·번호표·설정 묶음이 복구 기준입니다. 다만 같은 쌍의 재현과 최종 학습 가중치의 비트 단위 동일성은 다른 요구입니다. 병렬 갱신 순서나 수치 계산 조건까지 같다고 확인한 것은 아닙니다.</p></div></section>
 <section id="limits" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">18. 행을 읽었다고 단어의 뜻을 이해한 것은 아닙니다</h2><div className={prose}><p>가정한 표의 값은 직접 골랐으므로 의미의 좋고 나쁨을 평가할 근거가 없습니다. 실제로는 많은 문장에서 선택한 쌍이 표를 어떻게 바꾸는지 확인해야 합니다. 가까이 등장한다는 관찰도 동의어 정답은 아닙니다. 문장 위치를 고르는 규칙이 언어의 모든 관계를 포착하지는 못합니다.</p>
-<p>단어마다 고정된 행 하나를 읽는 방법은 같은 단어의 다른 용법을 그 순간의 문맥에 맞춰 새 벡터로 만들지 않습니다. 목록에 없는 단어도 그대로는 조회할 수 없습니다. <a href="/cs/ai/subword-static-embeddings">단어를 더 작은 조각으로 나누는 방법</a>은 이 경계를 다른 방식으로 다룹니다. 먼저 <a href="/cs/ai/word2vec-prediction-objectives">선택한 행으로 예측을 만드는 방법</a>을 읽고 이어 <a href="/cs/ai/word2vec-negative-sampling">일부 비교 대상으로 학습 비용을 줄이는 방법</a>으로 넘어갈 수 있습니다.</p></div><ContentBoundary article="word2vec"/></section>
+<p>단어마다 고정된 행 하나를 읽는 방법은 같은 단어의 다른 용법을 그 순간의 문맥에 맞춰 새 벡터로 만들지 않습니다. 목록에 없는 단어도 그대로는 조회할 수 없습니다. <a href="/cs/ai/subword-static-embeddings">단어를 더 작은 조각으로 나누는 방법</a>은 이 경계를 다른 방식으로 다룹니다. 먼저 <a href="/cs/ai/word2vec-prediction-objectives">선택한 행으로 예측을 만드는 방법</a>을 읽고 이어 <a href="/cs/ai/word2vec-negative-sampling">일부 비교 대상으로 학습 비용을 줄이는 방법</a>으로 넘어갈 수 있습니다.</p></div></section>
 <section id="review" data-teach-level="8" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 같은 문장에서 다음 결과를 예측해 보세요</h2><div className={prose}><ol><li>cat에서 반경 1로 만든 쌍의 중복을 지우면 몇 건이 남으며 원래 어떤 정보가 사라지나요? (답: 9절)</li><li>가정한 표로 저자 C 구현의 가운데 쌍을 계산하면 왜 2가 아니라 1인가요? (답: 14절)</li><li>번호표의 cat과 saw만 맞바꾸었는데 표 크기는 그대로입니다. cat은 어떤 행을 읽고 무엇을 함께 복구해야 하나요? (답: 17절)</li></ol></div></section>
 <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{}}/>
 </div>;}

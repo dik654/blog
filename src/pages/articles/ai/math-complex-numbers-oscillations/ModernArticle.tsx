@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { complexCodeRefs } from "./codeRefs";
@@ -10,6 +11,11 @@ export default function ComplexNumbersArticle(){const sidebar=useCodeSidebar();r
 <h2 className="text-2xl font-bold">1 · 한 점을 돌리는 일을 두 숫자의 계산으로 바꾼다</h2>
 <p className="text-lg leading-8">원점에서 오른쪽으로 3, 위로 4 떨어진 점이 있습니다. 이 점을 원점 주위로 반시계 방향으로 한 바퀴의 1/4만큼 돌리면 어디에 도착할까요? 답은 왼쪽으로 4, 위로 3인 점입니다. 처음과 나중의 두 숫자는 다르지만 원점까지의 길이는 모두 5입니다.</p>
 <p>이 글에서는 이 점을 네 번 돌려 처음으로 되돌립니다. 어떤 숫자를 보관해야 하는지, 반복된 이동을 어떻게 계산하는지부터 확인합니다. 나중에는 같은 움직임을 짧은 수식으로 쓰고 실제 Python의 곱셈 코드가 두 숫자를 어떻게 다루는지 따라갑니다.</p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>(3,4)를 반시계로 1/4바퀴 돌리면 (−4,3)이 될까요?</li><li>돌린 뒤에도 원점까지의 길이는 5일까요?</li><li>네 번 뒤 (3,4)로 돌아왔다는 사실만으로 그동안 움직이지 않았다고 말할 수 있을까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 회전은 현재 좌표와 길이를 남기지만 몇 바퀴를 누적했는지는 좌표만으로 복원하지 못합니다.</p>
+<QuarterTurnViz />
+<ContentBoundary article="math-complex-numbers-oscillations" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 현재 위치와 돌릴 양을 받아 새 위치를 만든다</h2>
@@ -27,7 +33,6 @@ export default function ComplexNumbersArticle(){const sidebar=useCodeSidebar();r
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 같은 원 위의 점과 두 축의 그림자를 함께 본다</h2>
 <p>아래 그림에서 색 점은 현재 위치입니다. 원점에서 색 점까지의 선은 길이 5를 유지합니다. 점에서 가로축과 세로축으로 내린 가는 선을 보면 이번 위치를 두 숫자로 읽을 수 있습니다. 두 축은 같은 배율로 그렸습니다.</p>
-<QuarterTurnViz />
 <p>가로 숫자만 남기면 출발점 (3,4)와 아래쪽의 (3,−4)를 구별하지 못합니다. 두 점은 오른쪽으로 같은 만큼 떨어졌지만 다음에 움직일 위치는 다릅니다. 세로 숫자까지 함께 남겨야 어느 방향에 있는지를 알 수 있습니다.</p>
 <p>반대로 전체 그림을 매번 저장할 필요도 없습니다. 원점과 눈금의 약속이 같으면 두 숫자로 점을 되찾습니다. 이처럼 움직임에 필요한 정보는 남기고 계산하기 쉬운 형태로 적는 것이 뒤에서 쓸 표기의 역할입니다.</p>
 </section>

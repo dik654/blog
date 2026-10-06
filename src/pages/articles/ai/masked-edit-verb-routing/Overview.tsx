@@ -13,17 +13,14 @@ export default function Overview() {
           말이고, 뒤의 것은 없던 것을 만들어 내라는 말입니다.
         </p>
 
-        <p className="leading-7">
-          이 차이를 무시하고 한 모델로 전부 처리하면 어떤 요청에서는 아무 일도 일어나지 않고 어떤 요청에서는 영역이 통째로 망가집니다. 모델이 나쁜 게 아니라 각 모델이 잘하는 동작이
-          다르기 때문입니다.
-        </p>
-
-        <p className="leading-7">
-          그래서 동작 여섯 개와 설치된 모델 일곱 개를 같은 입력·같은 마스크·같은 프롬프트·같은 시드로 고정해 전부 돌렸습니다. 산출물은 산문이 아니라 선택에 쓸 수 있는 표입니다. 이
-          글은 그 표가 무엇을 말하는지와 표를 만들면서 드러난 두 가지 함정을 다룹니다.
-        </p>
-
-        <ContentBoundary article="masked-edit-verb-routing" />
+        <p>동작 여섯 개와 설치된 모델 일곱 개를 같은 입력·마스크·prompt·seed로 고정해 돌렸습니다.</p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>색 변경과 물건 교체는 둘 다 원래 형태를 보존해야 성공할까요?</li>
+          <li>더하기와 지우기는 모델에 같은 방향의 생성을 요구할까요?</li>
+          <li>이 실험에서 지우기는 일곱 모델 모두 실패했을까요?</li>
+        </ol>
+        <p>답은 <strong>아니요, 아니요, 예</strong>입니다. 색 변경은 형태 보존, 교체는 새 물건의 경계 생성, 더하기는 생성, 지우기는 있던 대상의 소거가 성공 조건입니다.</p>
 
         <p className="leading-7">
           두 함정은 각각 마스크와 지표 쪽입니다. 하나는 마스크를 넓히는 방향이 동작마다 반대라는 것입니다. 다른 하나는 같은 동작의 수치가 그림 스타일에 따라 두 배씩 달라져 절대값으로
@@ -40,6 +37,7 @@ export default function Overview() {
       </div>
 
       <VerbViz />
+      <ContentBoundary article="masked-edit-verb-routing" />
     </section>
   );
 }

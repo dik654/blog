@@ -12,14 +12,13 @@ export default function SentenceEmbeddingsArticle() {
             Encoder가 문장을 읽으면 token마다 문맥을 반영한 state가 나옵니다. 길이가 다른 token 묶음을 검색기가 그대로 비교하기는 어렵기 때문에 여러 state를 고정
             길이 vector 하나로 줄입니다. 어떤 문장끼리 가까워야 하는지는 training pair로 학습합니다.
           </p><p>여기서 두 질문을 분리해야 합니다. <strong>Pooling</strong>은 여러 token state를 vector 하나로 만드는 형태의 문제입니다. <strong>Relation objective</strong>는 그 vector의 가까움이 질문–답, paraphrase, entailment 중 무엇을 뜻할지 정하는 학습 문제입니다.</p></div>
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>State (1,1)·(3,1)·(9,9)의 mask가 1·1·0이면 masked mean은 (2,1)일까요?</li><li>Padding state를 평균에 넣으면 같은 문장도 batch 최대 길이에 따라 vector가 달라질 수 있을까요?</li><li>두 vector를 L2 norm 1로 만들면 cosine similarity는 내적과 같아질까요?</li></ol><p>답은 <strong>예, 예, 예</strong>입니다. Valid token만 한 vector로 모으고 길이를 정규화한 뒤, 학습된 관계 안에서 방향을 비교합니다.</p><SentenceVectorViz /><ContentBoundary article="sentence-embeddings" />
       <TermBreakdown title="문장 하나가 vector가 될 때 만나는 네 용어" items={[
         { term: "Token hidden state", description: "Encoder가 한 token을 문장 전체 문맥 속에서 표현한 숫자 열입니다.", example: "‘bank’의 state는 강둑 문장과 금융 문장에서 서로 달라집니다.", boundary: "문장 전체를 대표하는 vector는 아직 아닙니다." },
         { term: "Padding mask", description: "Batch 길이를 맞추려고 넣은 빈 token을 계산에서 제외하는 0·1 표시입니다.", example: "실제 token 세 개는 1, 뒤의 PAD 두 개는 0입니다." },
         { term: "Pooling", description: "여러 valid token state를 mean·CLS·last-token 같은 규칙으로 vector 하나로 줄이는 연산입니다.", boundary: "어떤 pooling이 맞는지는 checkpoint가 학습한 recipe에 달려 있습니다." },
         { term: "Sentence embedding", description: "Pooling과 normalization을 거쳐 저장·비교할 수 있게 만든 고정 길이 vector artifact입니다.", boundary: "Vector가 존재한다는 사실만으로 cosine의 의미가 정해지지는 않습니다." },
       ]} />
-      <SentenceVectorViz />
-      <ContentBoundary article="sentence-embeddings" />
     </section>
 
     <section id="pooling" className="scroll-mt-20">

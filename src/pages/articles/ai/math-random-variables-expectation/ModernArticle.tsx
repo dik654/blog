@@ -13,6 +13,11 @@ export default function RandomVariablesExpectationArticle(){return <article clas
             이 글에서는 같은 네 기록을 앞면 개수로 바꾸고 같은 숫자로 간 기록의 비중을 모읍니다. 그 비중을 반영해 평균을 구한 뒤 앞면 한 번에 2점을 더하는 점수 규칙에도
             적용합니다. 끝에서는 먼저 제곱하는 계산과 먼저 평균을 구하는 계산이 왜 다른지 확인합니다.
           </p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>두 번 던진 기록의 앞면 개수는 0·1·2 세 값으로 모일까요?</li><li>공정하고 독립인 경우 그 비중은 1/4·1/2·1/4일까요?</li><li>앞면 개수의 기댓값 1만 알면 앞뒤의 순서도 복원할 수 있을까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 확률변수는 기록을 계산에 필요한 숫자로 줄이며, 기댓값은 그 분포를 다시 한 숫자로 줄입니다.</p>
+<RandomVariableMapViz />
+<ContentBoundary article="math-random-variables-expectation" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 기록·숫자 규칙·비중을 함께 넣어야 평균이 나온다</h2>
@@ -35,7 +40,6 @@ export default function RandomVariablesExpectationArticle(){return <article clas
             그림에서 먼저 네 기록과 그 비중을 봅니다. 다음 장면은 각 기록을 앞면 개수로 옮기고 그다음은 같은 숫자로 간 비중을 모읍니다. 마지막에는 각 값이 평균에 얼마나 기여하는지
             확인합니다.
           </p>
-<RandomVariableMapViz />
 <p>‘앞·뒤’와 ‘뒤·앞’이 하나의 숫자로 합쳐져도 두 비중은 모두 남습니다. 같은 숫자가 되었다는 이유로 둘 중 하나의 1/4을 지우면 전체 비중이 1보다 작아집니다. 값을 합치는 일과 비중을 잃는 일을 혼동하지 않아야 합니다.</p>
 </section>
 <section id="why" data-teach-level="2" className="space-y-6">
@@ -140,7 +144,6 @@ assumptions={["E[X²]가 유한합니다.","등호는 X가 확률 1로 같은 �
 <p>기댓값을 반복 평균으로 해석할 때도 반복 방식이 필요합니다. 같은 분포에서 독립적으로 반복하고 절댓값 기댓값이 유한한 경우에는 평균이 기댓값으로 수렴한다는 정리를 사용할 수 있습니다. 이것은 특정 횟수에서 정확히 같아진다는 보장이 아닙니다.</p>
 <p>반대로 첫 동전 기록을 한 번만 뽑고 그 앞면 수 X를 모든 실행 칸에 복사하면 어떨까요(가정)? 각 칸만 따로 보면 원래와 같은 분포지만 몇 개를 평균해도 X 그대로입니다. 처음 X=0이나 X=2였다면 계속 0이나 2여서 기댓값 1에 가까워지지 않습니다. 같은 주변분포라는 조건만으로는 부족합니다.</p>
 <p>기댓값 주위의 흔들림과 유한한 자료의 평균은 <a className="text-primary underline" href="/cs/ai/math-variance-sampling">분산·표본평균</a>에서 이어갑니다. 이 글의 원문은 분포의 평균을 정의하며, 현실에서 어떤 자료를 뽑아 평균할지는 별도로 확인해야 합니다.</p>
-<ContentBoundary article="math-random-variables-expectation" />
 </section>
 <section id="review" data-teach-level="8" className="space-y-6">
 <h2 className="text-2xl font-bold">15 · 숫자로 줄이거나 계산 순서를 바꾸기 전에 예측한다</h2>

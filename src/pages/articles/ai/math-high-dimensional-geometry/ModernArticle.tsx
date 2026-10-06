@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation-block";
@@ -15,6 +16,11 @@ export default function HighDimensionalGeometryArticle(){const sidebar=useCodeSi
             이미지나 AI가 만든 표현은 수백에서 수십만 칸을 사용할 수 있습니다. 칸이 많다는 사실만으로 서로 다른 정보가 그만큼 많다고 할 수는 없습니다. 이 글에서는 네 칸이 함께
             변하는 작은 사례에서 출발해 어떤 정보를 줄일 수 있는지와 줄인 결과를 무엇으로 검증할지 살펴봅니다.
           </p>
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+<ol className="list-decimal space-y-2 pl-6"><li>(t,t,t,t)의 네 칸을 더해 2로 나누면 한 칸 값은 2t일까요?</li><li>이 변환은 (0,0,0,0)부터 (3,3,3,3)까지 네 점의 여섯 거리를 모두 보존할까요?</li><li>첫째 좌표 t만 남겨도 원래 거리와 같은 크기가 유지될까요?</li></ol>
+<p>답은 <strong>예, 예, 아니요</strong>입니다. 반복 좌표의 실제 자유도는 하나지만, 거리까지 보존하려면 √4=2의 배율을 함께 남겨야 합니다.</p>
+<RepeatedCoordinatesViz />
+<ContentBoundary article="math-high-dimensional-geometry" />
 </section>
 <section id="black-box" data-teach-level="B" className="space-y-6">
 <h2 className="text-2xl font-bold">2 · 점들을 받아 더 적은 칸으로 쓰고 거리를 비교한다</h2>
@@ -34,7 +40,6 @@ export default function HighDimensionalGeometryArticle(){const sidebar=useCodeSi
 <section id="picture" data-teach-level="1" className="space-y-6">
 <h2 className="text-2xl font-bold">4 · 같은 네 점을 줄이는 좋은 규칙과 나쁜 규칙을 비교한다</h2>
 <p>아래의 윗줄은 네 칸 입력에서 잰 거리를 한 눈금 위에 펼친 것입니다. 네 칸 공간 전체를 평면에 그린 그림은 아닙니다. 이 네 점은 한 방향으로 나란히 놓이므로 한 줄에서도 그 사이 거리를 정확히 나타낼 수 있습니다.</p>
-<RepeatedCoordinatesViz />
 <p>합을 2로 나누는 장면에서는 아랫줄의 점 사이 간격이 그대로입니다. 첫 칸만 남기는 장면에서는 0, 1, 2, 3이 되어 간격이 절반으로 줄어듭니다. 첫 칸에서 둘째 칸을 빼면 모두 0이 되어 서로 다른 점이 겹칩니다. 출력이 한 칸이라는 사실은 같아도 무엇을 남기는지에 따라 결과가 달라집니다.</p>
 </section>
 <section id="problem" data-teach-level="2" className="space-y-6">

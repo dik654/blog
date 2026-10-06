@@ -1,7 +1,6 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import VllmCapacityLogViz from "./viz/VllmCapacityLogViz";
 
 const CAPACITY_TERMS = [
   {
@@ -73,7 +72,10 @@ export default function Capacity() {
           계산했다면, 이제 한 replica의 남은 memory를 실제 요청 수용량으로
           바꿉니다. 같은 <code>max_model_len=65,536</code>에서 Gemma 4는 KV 88,824 token과
           maximum concurrency 1.36×, Muse Glimmer는 352,736 token과 5.38×를
-          기록했습니다. 두 모델은 각각 <code>88,824÷65,536≈1.36</code>,{" "}
+          기록했습니다.
+        </p>
+        <p>
+          두 모델은 각각 <code>88,824÷65,536≈1.36</code>,{" "}
           <code>352,736÷65,536≈5.38</code>로 startup log가 직접 맞아떨어집니다.
           Muse가 실제로 약 3.6배 많은 cache token을 확보한 결과는 KV head 2개와
           head_dim 128이라는 작은 shape가 서빙에 유리하다는 결론과 일치합니다.
@@ -83,7 +85,10 @@ export default function Capacity() {
           3.63배”라는 실측값은 같은 비율일 필요가 없습니다. 총 capacity는{" "}
           <code>남은 KV 예산 ÷ 토큰당 KV byte</code>이기 때문입니다. Weight
           quantization은 토큰당 KV byte를 바꾸지 않더라도 weight를 올린 뒤 남는
-          KV 예산을 바꿀 수 있고, Qwen의 request당 fixed recurrent state,
+          KV 예산을 바꿀 수 있습니다.
+        </p>
+        <p>
+          Qwen의 request당 fixed recurrent state,
           vision encoder·<a href="/cs/ai/cuda-graph-capture">CUDA graph</a>·
           workspace·TP 구성도 모델마다 다릅니다.
           토큰당 비용을 검증하려면 startup log의 총 token 수뿐 아니라 실제로 KV
@@ -95,7 +100,10 @@ export default function Capacity() {
         </h3>
         <p>
           Gemma의 50개 local layer가 window 1,024까지만 KV를 보존했다면 context 65,536에서 full allocation보다 훨씬 작은 증가율을 보여야
-          합니다. 그러나 실측에서는 local KV head 16개와 head_dim 256의 넓은 shape가 먼저 드러났고 concurrency는 1.36×에 머물렀습니다. 이 vLLM
+          합니다. 그러나 실측에서는 local KV head 16개와 head_dim 256의 넓은 shape가 먼저 드러났고 concurrency는 1.36×에 머물렀습니다.
+        </p>
+        <p>
+          이 vLLM
           build 또는 해당 model path가 local layer를 cache allocation에서 full attention처럼 취급했을 가능성이 큽니다.
         </p>
         <p>
@@ -113,7 +121,10 @@ export default function Capacity() {
           <code>max_model_len</code>을 줄이면 동시에 유지할 수 있는 sequence
           수가 늘어납니다. 그래서 window를 줄인 뒤 <code>max_num_seqs</code>를
           올린 것은 memory slot을 실제 scheduler concurrency로 바꾸는 올바른
-          tuning이었습니다. Hybrid allocator가 local block을 회수하는
+          tuning이었습니다.
+        </p>
+        <p>
+          Hybrid allocator가 local block을 회수하는
           model이라면 이 맞바꿈이 완화될 수 있지만, 이번 Gemma 관측처럼 절감이
           나타나지 않는 runtime에서는 기존 계산을 그대로 적용해야 합니다.
         </p>
@@ -226,8 +237,6 @@ C_{max} &\le \left\lfloor\frac{N_{capacity}}{L_{request}}\right\rfloor
         title="KV capacity와 동시성 상한"
       />
 
-      <VllmCapacityLogViz />
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="capacity-logs" className="scroll-mt-20">
           Qwen의 97,216과 5.17×은 같은 token 단위가 아닙니다
@@ -237,14 +246,19 @@ C_{max} &\le \left\lfloor\frac{N_{capacity}}{L_{request}}\right\rfloor
           runtime은 5.17×를 보고했으므로, 97,216을 Gemma·Muse의 cache token과
           같은 의미로 놓을 수 없습니다. Runtime이 concurrency 계산에 사용한
           max-length capacity는{" "}
-          <code>65,536×5.17≈338,821 token-equivalent</code>입니다. 이는 hybrid
+          <code>65,536×5.17≈338,821 token-equivalent</code>입니다.
+        </p>
+        <p>
+          이는 hybrid
           cache grouping이나 표시 방식의 차이를 확인해야 할 신호이지, 97,216개의
           slot이 물리적으로 338,821개로 늘었다는 뜻은 아닙니다.
         </p>
         <p>
           따라서 운영 상한은 maximum-concurrency 한 줄만으로 확정하지 않습니다.
           실제 prompt 길이 분포를 넣고 active sequence를 늘리면서 GPU KV usage,
-          preemption, TTFT와 inter-token latency를 함께 봅니다.{" "}
+          preemption, TTFT와 inter-token latency를 함께 봅니다.
+        </p>
+        <p>
           <code>max_num_seqs</code>는 cache를 새로 만드는 옵션이 아니라
           scheduler가 유지할 sequence의 상한이므로, cache가 허용하는 수보다
           작으면 자원을 덜 쓰고 훨씬 크게 잡는다고 memory가 늘어나지는 않습니다.
@@ -326,7 +340,10 @@ C_{direct} &= \frac{N_{log}}{L_{max}} \\
         </h3>
         <p>
           모든 사용자에게 65,536 token을 예약하지는 않습니다. 업무 로그의 input·output token p50·p95, multimodal token 수, prefix-
-          cache hit rate를 workload trace로 만들고 동시에 active한 요청의 KV 합이 예산을 넘지 않도록 admission policy를 정합니다. 마지막에는
+          cache hit rate를 workload trace로 만들고 동시에 active한 요청의 KV 합이 예산을 넘지 않도록 admission policy를 정합니다.
+        </p>
+        <p>
+          마지막에는
           beginning·middle·end needle과 실제 문서 질의를 함께 사용해 긴 context가 단순히 실행만 되는 것이 아니라 필요한 정보를 회수하는지도 확인합니다.
         </p>
       </div>

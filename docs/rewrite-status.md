@@ -2260,3 +2260,11 @@
 - `1167a112` 배포 작업 `37299527933`의 전체 감사·빌드·배포가 성공했습니다.
 - 새 6편의 실제 공개 사이트를 390·1440 폭에서 다시 열어 12개 화면 모두 실패 0건을 확인했습니다. DOM 순서, 가로 넘침, KaTeX 오류와 수식 내부 경계, SVG 글자 이탈, 장면 크기 변화, 콘솔 오류와 요청 실패가 모두 0건입니다.
 - 운영 검사 원본은 `teach-system-audit/checkpoint-195-production.json`에 기록했습니다. 전체 799편 중 남은 604편의 실제 본문 검토를 계속합니다.
+
+### 2026-10-06 · 모바일 주소 표시줄 전환 시 읽기 위치 안정화
+
+- 기존 Viz만 `dvh`에서 `svh`로 바꾼 조치는 전역 문서 shell을 다루지 못했다. root의 Tailwind `min-h-screen`과 모바일 `fixed` header를 각각 `min-h-svh`와 문서 흐름을 차지하는 `sticky` header로 교체하고, 주소 표시줄 높이에 따라 규칙이 전환될 수 있는 `max-height` media query를 제거했다.
+- `audit-reading-experience`가 raw `100dvh`뿐 아니라 `100vh`·`100lvh`와 Tailwind `h-screen`·`min-h-screen`·`max-h-screen`, 전역 shell의 stable header 구조까지 검사하도록 보강했다.
+- 모바일 실제 브라우저의 주소 표시줄 표시·숨김 회귀 검사는 배포 뒤 실기기에서 확인할 항목으로 남긴다.
+- 공용 장면 Viz 418개는 640px 미만에서 고정 높이·내부 세로 스크롤·그림 최소 폭을 해제한다. `AnimatedSceneControls`는 긴 탭 행 대신 현재 장면 이름, `이전 / 번호 / 다음`, 전체 폭 재생 버튼을 쓰는 모바일 UI를 별도로 렌더한다.
+- 공용 수업 흐름 Viz도 단계 지도를 한 열로 바꾸고, 폭 합계가 390px을 넘던 세 조작 버튼을 모바일 전용 3열로 교체했다. 데스크톱의 전체 장면 탭과 고정 control row는 640px 이상에서 유지한다.

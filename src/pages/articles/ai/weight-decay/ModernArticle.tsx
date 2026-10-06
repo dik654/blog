@@ -9,14 +9,13 @@ export default function WeightDecayArticle() {
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Weight decay는 parameter를 줄이는 update 경로입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">먼저 current weight, data gradient, learning rate, decay coefficient를 따로 봅니다. Plain SGD에서는 L2 penalty와 direct shrink가 같은 식으로 정리되지만, adaptive optimizer에서는 두 경로가 달라집니다.</p></div>
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>w=10, η=.1, λ=.02, data gradient=3이면 다음 값은 9.68일까요?</li><li>Data gradient가 0이어도 direct decay를 적용하면 9.98로 줄까요?</li><li>Adaptive optimizer 안에 L2 gradient를 넣는 것과 AdamW의 direct shrink는 항상 같은 update일까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. Task gradient 경로와 parameter를 직접 줄이는 경로를 분리해 계산합니다.</p><WeightDecayMechanismViz /><ContentBoundary article="weight-decay" />
       <TermBreakdown title="Update를 이루는 네 값" items={[
         { term: "Weight w", description: "이번 step 직전의 trainable parameter입니다.", example: "한 scalar coordinate w=10을 추적합니다." },
         { term: "Data gradient g", description: "Task loss가 weight를 어느 방향으로 바꾸려는지 나타냅니다.", example: "g=3이면 positive direction을 줄이는 step입니다." },
         { term: "Learning rate η", description: "한 update에서 gradient와 decay가 움직일 시간 간격입니다.", example: "η=.1입니다.", boundary: "Schedule이 바뀌면 누적 decay도 바뀝니다." },
         { term: "Decay coefficient λ", description: "현재 weight에 비례해 줄이는 강도입니다.", example: "λ=.02이면 step shrink factor는 1−.002입니다." },
       ]} />
-      <WeightDecayMechanismViz />
-      <ContentBoundary article="weight-decay" />
     </section>
     <section id="sgd-equivalence" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Plain SGD에서 L2 gradient는 multiplicative shrink로 정리됩니다</h2>

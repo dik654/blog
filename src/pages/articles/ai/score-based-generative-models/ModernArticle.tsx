@@ -20,6 +20,15 @@ export default function ScoreBasedGenerativeModelsArticle() {
             direction을 배울 수 있습니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Standard Gaussian에서 x=2의 score는 −2일까요?</li>
+          <li>x=−1의 score가 +1이면 두 화살표 모두 density가 높은 0을 향할까요?</li>
+          <li>Score vector 하나만 알면 normalized density 값과 global mode label도 직접 알 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. Score는 현재 위치에서 log density가 증가하는 국소 방향이며 noise level별 field를 배워 역과정을 구성합니다.</p>
+        <ScoreDiffusionViz />
+        <ContentBoundary article="score-based-generative-models" />
         <TermBreakdown
           title="Score field를 읽는 세 단계"
           items={[
@@ -47,8 +56,6 @@ export default function ScoreBasedGenerativeModelsArticle() {
             },
           ]}
         />
-        <ScoreDiffusionViz />
-        <ContentBoundary article="score-based-generative-models" />
       </section>
 
       <section id="gaussian-score" className="scroll-mt-20">

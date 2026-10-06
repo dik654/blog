@@ -20,6 +20,15 @@ export default function StructuredPruningArticle() {
             별개입니다. shape는 그대로 두고 local group의 pattern만 hardware가 읽을 수 있게 제한합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Input과 output width를 각각 75% 남기면 주된 dense arithmetic은 56.25%가 남을까요?</li>
+          <li>전체 mask가 50% sparse이면 모든 네 자리 group이 자동으로 2:4를 만족할까요?</li>
+          <li>Channel을 지우면 다음 layer의 대응 input 축도 함께 줄여야 할까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 예</strong>입니다. Graph shape를 실제로 줄이는 구조와 shape를 유지한 채 local pattern을 제한하는 구조를 구분합니다.</p>
+        <StructuredPruningViz />
+        <ContentBoundary article="structured-pruning" />
         <TermBreakdown
           title="서로 다른 두 구조"
           items={[
@@ -45,8 +54,6 @@ export default function StructuredPruningArticle() {
             },
           ]}
         />
-        <StructuredPruningViz />
-        <ContentBoundary article="structured-pruning" />
       </section>
       <CompressionTaxonomy />
       <section id="shape-propagation" className="scroll-mt-20">

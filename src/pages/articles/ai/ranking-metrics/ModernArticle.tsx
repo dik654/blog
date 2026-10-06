@@ -27,6 +27,15 @@ export default function RankingMetricsArticle() {
             뒤에 선택됩니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>첫 relevant item이 rank 4에 있으면 reciprocal rank는 0.25일까요?</li>
+          <li>Relevant item 네 개 중 상위 10개에서 세 개를 찾으면 Recall@10은 0.75일까요?</li>
+          <li>같은 relevant items라도 높은 grade를 위에 놓으면 NDCG@k가 달라질 수 있을까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. MRR은 첫 성공 위치, Recall은 회수 비율, NDCG는 grade와 순서를 평가하므로 제품 행동에 맞는 질문부터 고릅니다.</p>
+        <RankingMetricViz />
+        <ContentBoundary article="ranking-metrics" />
         <TermBreakdown
           title="Ranked list의 네 구성요소"
           items={[
@@ -63,8 +72,6 @@ export default function RankingMetricsArticle() {
             },
           ]}
         />
-        <RankingMetricViz />
-        <ContentBoundary article="ranking-metrics" />
       </section>
 
       <section id="ndcg" className="scroll-mt-20">

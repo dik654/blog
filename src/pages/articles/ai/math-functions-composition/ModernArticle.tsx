@@ -19,6 +19,11 @@ export default function MathFunctionsCompositionArticle() {
           </p>
         <p>이 글의 목표는 두 계산을 차례로 따라가며 중간에 전달하는 값과 허용 범위를 설명하는 것입니다. 그 연결을 이해하면 사진에서 점수를 만드는 모델도 같은 방식으로 읽기 시작할 수 있습니다. 계산을 연결한다는 사실만으로 모델이 잘 학습되거나 정확해지는 것은 아닙니다.</p>
         <p>먼저 밖에서 보이는 결과를 확인하고, 그 결과를 만드는 두 단계를 열어 보겠습니다.</p>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>g(x)=3x+1 다음 f(u)=u²를 적용하면 x=2는 2→7→49를 지날까요?</li><li>순서를 바꿔 f 다음 g를 적용하면 결과가 13일까요?</li><li>같은 두 함수가 들어 있으면 적용 순서와 무관하게 결과도 같을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 합성에서는 함수 목록과 함께 중간값이 흐르는 순서와 다음 함수의 입력 범위를 기록해야 합니다.</p>
+        <FunctionCompositionViz />
+        <ContentBoundary article="math-functions-composition" />
       </section>
       <section id="black-box" data-teach-level="B" className="space-y-6">
         <h2 className="text-2xl font-bold">2 · 밖에서는 2가 들어가 49가 나온다</h2>
@@ -97,7 +102,6 @@ export default function MathFunctionsCompositionArticle() {
           interpretation="함수 합성은 식을 붙이는 문법이 아니라 output 계약과 input 계약을 연결하는 실행입니다."
         />
         <AlgorithmBlock title="합성을 계산하는 순서 (의사코드)" input={['x=2, g(x)=3x+1, f(u)=u²']} steps={[{code:'x가 g의 정의역에 속하는지 확인한다',note:'2는 허용한 실수입니다.'},{code:'u ← g(x)',note:'3×2+1=7'},{code:'u가 f의 정의역에 속하는지 확인한다',note:'7도 허용한 실수입니다.'},{code:'y ← f(u)',note:'7²=49'}]} output="y=49" />
-        <FunctionCompositionViz />
         <p>그림의 1·2·3은 허용 입력 중 고른 값이고, 16·49·100도 가능한 출력 중 일부입니다. 집합 전체를 열거한 그림은 아닙니다. 같은 전달 규칙이 교재 원문에는 어떻게 적혀 있는지 확인하겠습니다.</p>
       </section>
       <section id="source" data-teach-level="5-6" className="space-y-6">
@@ -121,7 +125,6 @@ export default function MathFunctionsCompositionArticle() {
           </p>
         <p>프로그램이 난수나 저장된 상태, 시간에 따라 결과를 바꾼다면 x만으로 결과를 정할 수 없습니다. 같은 조건에서 한 결과를 정하는 함수로 기록하려면 난수 상태, 이전 상태와 필요한 외부 입력까지 입력에 포함하고 갱신된 상태도 출력으로 추적합니다. 이 글의 두 규칙에는 그런 추가 상태가 없습니다.</p>
         <p>다음 글에서는 같은 연결에서 시작값을 조금 바꿨을 때 결과가 얼마나 움직이는지 <a className="font-semibold text-primary underline" href="/cs/ai/math-functions-derivatives-gradients">미분과 연쇄법칙</a>으로 계산합니다. 여러 입력과 출력을 함께 다룰 때의 크기와 방향은 <a className="font-semibold text-primary underline" href="/cs/ai/math-gradients-jacobians">기울기와 야코비안</a>에서 확장합니다.</p>
-        <ContentBoundary article="math-functions-composition" />
         <ol className="list-decimal space-y-3 pl-6">
           <li>2를 넣는 두 규칙의 순서만 바꾸면 49 대신 어떤 수가 나오며, 어느 중간값이 달라지나요? (답: 10절)</li>
           <li>제곱 함수의 공역을 실수 전체로 선언했는데 음수 결과는 나오지 않습니다. 함수의 약속이 깨진 것일까요? (답: 7절)</li>

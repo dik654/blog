@@ -122,6 +122,16 @@ export default function ModernArticle() {
           </p>
         </div>
 
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>DeltaNet 세 층과 Attention 한 층을 16번 반복하면 각각 48층과 16층일까요?</li>
+          <li>총 64층이라는 숫자를 그대로 KV cache layer 수로 써도 될까요?</li>
+          <li>DeltaNet의 state 크기가 고정이면 과거 token 원본을 손실 없이 모두 보존할까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Attention 16층은 token별 KV를 남기고 DeltaNet 48층은 같은 shape의 recurrent state를 계속 갱신합니다.</p>
+        <HybridScheduleViz />
+        <ContentBoundary article="qwen36-hybrid-architecture" />
+
         <TermBreakdown
           title="처음 필요한 네 용어를 하나씩 고정합니다"
           items={[
@@ -164,8 +174,6 @@ export default function ModernArticle() {
           ]}
         />
 
-        <HybridScheduleViz />
-        <ContentBoundary article="qwen36-hybrid-architecture" />
       </section>
 
       <section id="attention-kv" className="scroll-mt-20 space-y-7">

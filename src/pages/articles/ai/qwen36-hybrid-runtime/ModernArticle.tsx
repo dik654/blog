@@ -88,6 +88,16 @@ export default function ModernArticle() {
           </p>
         </div>
 
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>MTP가 네 token을 제안하고 두 개만 승인하면 KV와 recurrent state도 두 token까지만 commit해야 할까요?</li>
+          <li>Model weights와 달리 request state는 동시 요청마다 따로 필요할까요?</li>
+          <li>Delta state의 shape가 context 길이와 무관하면 request당 state 비용도 0일까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. KV·Delta matrix·convolution history가 모두 같은 accepted prefix와 generation을 가리켜야 다음 token의 과거가 일치합니다.</p>
+        <HybridRuntimeFlowViz />
+        <ContentBoundary article="qwen36-hybrid-runtime" />
+
         <TermBreakdown
           title="실행 순서에 필요한 용어를 먼저 하나씩 놓습니다"
           items={[
@@ -128,8 +138,6 @@ export default function ModernArticle() {
           ]}
         />
 
-        <HybridRuntimeFlowViz />
-        <ContentBoundary article="qwen36-hybrid-runtime" />
       </section>
 
       <section id="hybrid-runtime" className="scroll-mt-20 space-y-7">

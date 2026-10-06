@@ -90,7 +90,7 @@
       "score": 33
     },
     "ai/lstm-timeseries": {
-      "fingerprint": "307b2ef011b7bd09",
+      "fingerprint": "11b07a9493aa09b8",
       "score": 32
     },
     "ai/transformer-architecture": {
@@ -114,7 +114,7 @@
       "score": 31
     },
     "ai/multi-agent-implementation": {
-      "fingerprint": "ffb841b31c36b39d",
+      "fingerprint": "dbabd060bba96099",
       "score": 30
     },
     "ai/vla-embodiment-gap": {
@@ -210,7 +210,7 @@
       "score": 26
     },
     "ai/rag-pipeline": {
-      "fingerprint": "092cfdc9fffc1d13",
+      "fingerprint": "46a94e9729314398",
       "score": 26
     },
     "ai/transfer-learning-practice": {
@@ -218,7 +218,7 @@
       "score": 26
     },
     "blockchain/autobahn-deep": {
-      "fingerprint": "342a7f3dfdad3635",
+      "fingerprint": "1e5fad5f339b3429",
       "score": 26
     },
     "blockchain/expected-consensus": {
@@ -230,7 +230,7 @@
       "score": 26
     },
     "blockchain/hotstuff-deep": {
-      "fingerprint": "699d79b410214ed5",
+      "fingerprint": "3d7c4ad6d7729e9a",
       "score": 26
     },
     "blockchain/impl-groth16": {
@@ -270,7 +270,7 @@
       "score": 24
     },
     "blockchain/narwhal-deep": {
-      "fingerprint": "9e46576ed4428408",
+      "fingerprint": "ce0691183b12a34b",
       "score": 24
     },
     "blockchain/pq-account": {
@@ -342,7 +342,7 @@
       "score": 22
     },
     "blockchain/pbft-deep": {
-      "fingerprint": "193ee31b0cb058ef",
+      "fingerprint": "b6bb4bd941692ead",
       "score": 22
     },
     "blockchain/prysm-bls": {
@@ -610,7 +610,7 @@
       "score": 14
     },
     "blockchain/avalanche-consensus": {
-      "fingerprint": "f5196ba9d78ce53c",
+      "fingerprint": "04d40f10f1e3f3ab",
       "score": 14
     },
     "blockchain/cometbft-p2p": {
@@ -634,7 +634,7 @@
       "score": 14
     },
     "blockchain/hotstuff2": {
-      "fingerprint": "e308428c711492d0",
+      "fingerprint": "148c1c16eeedbc48",
       "score": 14
     },
     "blockchain/jolteon-ditto": {
@@ -802,7 +802,7 @@
       "score": 12
     },
     "ai/bptt": {
-      "fingerprint": "c5fd044b3256705a",
+      "fingerprint": "4c37a4dc21350e83",
       "score": 10
     },
     "ai/claw-mcp": {
@@ -818,7 +818,7 @@
       "score": 10
     },
     "ai/lstm": {
-      "fingerprint": "48dc380a22c7f295",
+      "fingerprint": "8f2a38b84076a297",
       "score": 10
     },
     "ai/multiview-fusion": {
@@ -928,7 +928,7 @@
       "score": 8
     },
     "ai/gru": {
-      "fingerprint": "15297b07419011ba",
+      "fingerprint": "2770072f6cd63811",
       "score": 8
     },
     "ai/image-backbone-scaling": {
@@ -948,7 +948,7 @@
       "score": 8
     },
     "ai/rnn-language-model": {
-      "fingerprint": "80eed67c60ee5453",
+      "fingerprint": "12d2b9f3dc9b80b4",
       "score": 8,
       "reviewedAt": "2026-10-04",
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
@@ -1170,7 +1170,7 @@
       "score": 6
     },
     "blockchain/evm-advanced": {
-      "fingerprint": "213fd2e382bb7aad",
+      "fingerprint": "aa4ace5e1e5d89c5",
       "score": 6
     },
     "blockchain/helios": {

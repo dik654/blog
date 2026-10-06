@@ -18,6 +18,11 @@ export default function VideoTransformersArticle() {
             시간 관계로 나눌지에 따라 계산량과 정보 경로가 달라집니다. 먼저 tubelet 하나의 모양과 전체 token count를 고정합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>16×224×224 clip을 2×16×16 tubelet으로 자르면 token은 8×14×14=1,568개일까요?</li><li>시간 위치 8개와 공간 위치 196개를 모두 직접 연결하면 약 246만 token pair일까요?</li><li>Mask 비율 0.9이면 1,568개 중 encoder가 보는 token은 구현 반올림에 따라 약 157개일까요?</li></ol>
+        <p>답은 <strong>예, 예, 예</strong>입니다. 각 축의 block 수, attention 연결 수, 실제로 남긴 token 수를 같은 값으로 취급하지 않습니다.</p>
+        <VideoTransformerViz />
+        <ContentBoundary article="video-transformers" />
         <TermBreakdown
           title="Video tokenization의 용어"
           items={[
@@ -43,8 +48,6 @@ export default function VideoTransformersArticle() {
             },
           ]}
         />
-        <VideoTransformerViz />
-        <ContentBoundary article="video-transformers" />
       </section>
 
       <section id="tubelets" className="scroll-mt-20">

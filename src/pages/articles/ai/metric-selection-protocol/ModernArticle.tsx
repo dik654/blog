@@ -28,6 +28,9 @@ export default function MetricSelectionProtocolArticle() {
             metric이 멈출 수 있으므로 네 역할을 한 score로 섞지 않습니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>Training loss가 계속 낮아지면 최종 업무 metric도 반드시 좋아질까요?</li><li>Validation에서 checkpoint와 threshold를 고를 수 있을까요?</li><li>그 선택을 모두 끝낸 절차의 평가는 선택에 쓰지 않은 outer data에서 해야 할까요?</li></ol>
+        <p>답은 <strong>아니요, 예, 예</strong>입니다. Fit·selection·decision policy·최종 보고가 서로 다른 값을 바꾸므로 각 단계의 정보 경계를 고정해야 합니다.</p>
         <TermBreakdown
           title="후보 하나가 release되기까지의 네 역할"
           items={[

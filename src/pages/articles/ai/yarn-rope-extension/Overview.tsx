@@ -36,6 +36,14 @@ export default function Overview() {
         </p>
       </div>
 
+      <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+      <ol className="list-decimal space-y-2 pl-6">
+        <li>Runtime의 최대 입력 길이만 키우면 모델이 새 위치를 올바르게 해석한다고 보장할 수 있을까요?</li>
+        <li>원래 32K context를 128K로 확장할 때 길이 factor는 4일까요?</li>
+        <li>RoPE scaling을 적용하면 full attention 계산량과 KV cache 크기도 자동으로 줄까요?</li>
+      </ol>
+      <p>답은 <strong>아니요, 예, 아니요</strong>입니다. 입력 수용, 위치 일반화, 실제 task 성능과 serving 비용을 따로 검증합니다.</p>
+
       <figure data-viz="context-extension-checklist" className="not-prose my-9 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
         <figcaption className="mb-4 text-sm font-semibold">
           긴 문맥 지원을 판단하는 네 단계

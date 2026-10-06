@@ -5,21 +5,35 @@ import { CitationBlock } from "@/components/ui/citation";
 import { LabelSmoothingMechanismViz } from "../regularization-practice/viz/ModernRegularizationViz";
 
 export default function LabelSmoothingArticle() {
-  return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Label smoothing은 정답을 버리는 것이 아니라 target distribution을 다시 배분합니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
-            One-hot target과 uniform distribution을 따로 본 다음 둘을 ε로 섞습니다. Cross-entropy와 다른 soft-target 기법을 연결하는
-            것은 그다음입니다.
-          </p></div>
+  return <div id="overview" className="space-y-16">
+    <section id="problem" className="scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">정답 확률 1을 0.925로 낮추고 나머지 세 class에 0.025씩 나눕니다</h2>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Class가 4개이고 두 번째 class가 정답인 한 sample을 봅니다. One-hot target은
+          (0, 1, 0, 0), 모든 class를 똑같이 보는 uniform distribution은
+          (0.25, 0.25, 0.25, 0.25), smoothing strength ε는 0.1입니다.
+        </p>
+        <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+        <ol>
+          <li>두 번째 class의 최종 target probability가 그대로 1일까요?</li>
+          <li>정답이 아닌 세 class는 각각 0.025를 받을까요?</li>
+          <li>네 probability를 모두 더하면 여전히 1일까요?</li>
+        </ol>
+        <p>
+          답은 <strong>아니요, 예, 예</strong>입니다. One-hot의 90%를 남기고 uniform
+          distribution의 10%를 더하므로 최종 target은
+          (0.025, 0.925, 0.025, 0.025)가 됩니다.
+        </p>
+      </div>
+      <LabelSmoothingMechanismViz />
+      <ContentBoundary article="label-smoothing" />
       <TermBreakdown title="Target을 이루는 네 용어" items={[
         { term: "Class count K", description: "Model logit과 target probability가 가지는 class 축의 길이입니다.", example: "K=4입니다." },
         { term: "One-hot target y", description: "정답 class만 1이고 나머지는 0인 distribution입니다.", example: "두 번째 class면 (0,1,0,0)입니다." },
         { term: "Uniform prior u", description: "모든 class에 1/K씩 같은 질량을 둔 distribution입니다.", example: "(.25,.25,.25,.25)입니다.", boundary: "실제 annotator confusion model은 아닙니다." },
         { term: "Smoothing strength ε", description: "One-hot 질량 중 uniform prior로 옮길 비율입니다.", example: "ε=.1이면 hard target 90%, uniform 10%입니다." },
       ]} />
-      <LabelSmoothingMechanismViz />
-      <ContentBoundary article="label-smoothing" />
     </section>
     <section id="target" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Class별로 두 distribution의 질량을 더합니다</h2>

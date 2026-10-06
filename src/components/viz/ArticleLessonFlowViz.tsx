@@ -394,7 +394,7 @@ export default function ArticleLessonFlowViz({
               <section
                 key={`${stage.label}-${stageIndex}`}
                 data-lesson-stage
-                className="relative grid min-w-0 grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-2 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)]"
+                className="relative grid min-w-0 grid-cols-1 gap-3 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-2 sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)]"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -724,7 +724,7 @@ export default function ArticleLessonFlowViz({
 
           <div
             data-viz-controls
-            className="sticky bottom-0 z-20 min-h-[8.25rem] shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:px-5"
+            className="z-20 shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:sticky sm:bottom-0 sm:min-h-[8.25rem] sm:px-5"
           >
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <motion.div
@@ -735,7 +735,46 @@ export default function ArticleLessonFlowViz({
                 transition={reduceMotion ? { duration: 0 } : { duration: 0.3 }}
               />
             </div>
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <div data-lesson-mobile-controls className="mt-3 sm:hidden">
+              <p className="text-xs text-muted-foreground">
+                개념 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5
+              </p>
+              <div className="mt-3 grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)] gap-2">
+                <button
+                  type="button"
+                  onClick={moveBackward}
+                  disabled={safeActive === 0 && reveal === 0}
+                  className="min-h-11 min-w-0 rounded-md border border-border/70 bg-background px-1 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                >
+                  ← 이전
+                </button>
+                <button
+                  data-viz-play
+                  type="button"
+                  disabled={Boolean(reduceMotion)}
+                  onClick={togglePlayback}
+                  className="min-h-11 min-w-0 rounded-md border border-primary/35 bg-primary/[0.045] px-1 text-xs font-bold leading-4 text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {reduceMotion
+                    ? "재생 꺼짐"
+                    : playing
+                      ? "일시정지"
+                      : "흐름 재생"}
+                </button>
+                <button
+                  type="button"
+                  onClick={moveForward}
+                  disabled={
+                    safeActive === conceptSteps.length - 1 && reveal === 4
+                  }
+                  className="min-h-11 min-w-0 rounded-md border border-border/70 bg-background px-1 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                >
+                  다음 →
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-3 hidden flex-wrap items-center justify-between gap-3 sm:flex">
               <p className="text-xs text-muted-foreground">
                 개념 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5
               </p>
@@ -775,7 +814,7 @@ export default function ArticleLessonFlowViz({
             </div>
             <p
               id="lesson-flow-keyboard-help"
-              className="mt-3 text-center text-[10px] leading-5 text-muted-foreground sm:text-right"
+              className="mt-3 hidden text-right text-[10px] leading-5 text-muted-foreground sm:block"
             >
               키보드 · <kbd className="font-mono font-bold">←</kbd> 이전 컷 ·{" "}
               <kbd className="font-mono font-bold">→</kbd> 다음 컷 ·{" "}

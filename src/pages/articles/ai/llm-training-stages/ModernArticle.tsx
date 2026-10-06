@@ -16,10 +16,36 @@ const postTrainingSignals = [
 export default function LlmTrainingStagesArticle() {
   return (
     <article id="overview" className="space-y-16">
-      <section className="space-y-6">
-        <LessonHeader number="00" eyebrow="큰 방향을 정확히 말하기" title="관심이 post-training과 agentic system으로 넓어졌지만 capability의 바닥은 여전히 pretraining과 architecture가 만든다">
-          최근 LLM 연구에서 SFT·RL·distillation·tool-use environment의 비중이 커진 것은 맞습니다. 다만 이것은 앞 단계를 버렸다는 뜻이 아닙니다. <strong>Pretraining은 가능한 행동의 재료를 만들고, post-training은 그 재료를 어떤 상황에서 꺼낼지 조정하며, agent harness는 여러 turn의 실행 조건을 제공합니다.</strong>
-        </LessonHeader>
+      <section id="problem" className="space-y-6 scroll-mt-20">
+        <h2 className="text-2xl font-bold">
+          같은 coding 능력도 corpus·feedback·실행 환경이 바꾸는 자리가 다릅니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            한 coding model을 네 단계로 따라갑니다. Pretraining은 대규모 corpus의 다음
+            token으로 weight를 바꿉니다. Continued training은 objective는 그대로 두고 code
+            비중이 높은 corpus를 더 봅니다.
+          </p>
+          <p>
+            Post-training은 좋은 답·선호·test reward로
+            행동을 조정합니다. Agent harness는 학습된 model에 shell·memory·verifier를
+            연결해 여러 turn을 실행하게 합니다.
+          </p>
+          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <ol>
+            <li>Pretraining은 다음-token loss를 통해 model weight를 바꿀까요?</li>
+            <li>Continued training은 같은 objective를 code 중심 corpus에서 이어 갈 수 있을까요?</li>
+            <li>Shell과 verifier를 붙인 agent harness가 그 자체로 model weight를 다시 학습할까요?</li>
+          </ol>
+          <p>
+            답은 <strong>예, 예, 아니요</strong>입니다. 앞의 세 단계는 서로 다른 data와
+            feedback으로 weight를 학습할 수 있지만, harness는 이미 만든 artifact가 실제
+            환경에서 행동할 조건을 제공합니다. 실행 trajectory를 나중에 학습에 쓰는 것은
+            별도 training run입니다.
+          </p>
+        </div>
+        <TrainingStageFlowViz />
+        <ContentBoundary article="llm-training-stages" />
         <TermLesson
           name="LLM training stage boundary"
           oneLine="Data·feedback·environment가 모델의 어느 state를 바꾸는지 구분하는 단계 지도입니다."
@@ -27,7 +53,14 @@ export default function LlmTrainingStagesArticle() {
           example="같은 coding capability도 corpus에서 code pattern을 배우는 단계, test reward로 repository 수정 행동을 고치는 단계, 실제 shell을 허용하는 runtime 단계가 다릅니다."
           boundary="뒤 단계의 benchmark 향상을 앞 단계의 capability가 불필요하다는 증거로 읽지 않습니다."
         />
-        <TrainingStageFlowViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Pretraining은 가능한 행동의 재료를 만들고, post-training은 그 재료를 어떤
+            상황에서 꺼낼지 조정하며, agent harness는 여러 turn의 실행 조건을 제공합니다.
+            최근 SFT·RL·distillation·tool-use 연구가 커졌어도 각 단계의 input과 바뀌는
+            state를 분리해 읽어야 합니다.
+          </p>
+        </div>
       </section>
 
       <section id="pretraining" className="space-y-6">
@@ -53,7 +86,7 @@ export default function LlmTrainingStagesArticle() {
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3 id="mid-training" className="scroll-mt-20">
-            Mid-training은 pretrain과 SFT 사이에서 같은 objective를 좁은 분포로 이어 갑니다
+            Mid-training은 같은 objective를 좁은 분포에서 이어 갑니다
           </h3>
           <p>
             Mid-training은 위 next-token objective를 그대로 두고 corpus만 code·수학·특정 언어·long-context처럼 좁은 분포로 바꿔 이어 학습하는 단계입니다. 아직 labeled instruction-response 쌍을 쓰지 않는다는 점에서 뒤에 오는 SFT와 다릅니다.
@@ -139,7 +172,9 @@ export default function LlmTrainingStagesArticle() {
             만들지는 않습니다. 현대 RL 역시 reward를 쓰지만 MDP·policy optimization·credit assignment라는 수학 체계가 따로 있습니다.
           </p>
           <p>
-            <Link to="/cs/ai/motif-3-architecture">Motif 3</Link>처럼 최신 모델도 새 attention·residual·expert architecture와 SFT·RL·MOPD를 동시에 사용합니다. 이 사례는 관심의 중심이 하나에서 다른 하나로 완전히 이동했다기보다, architecture와 post-training·system co-design이 함께 커졌다는 쪽에 가깝습니다.
+            <Link to="/cs/ai/motif-3-architecture">Motif 3</Link>처럼 최신 모델도 새
+            architecture와 SFT·RL·MOPD를 함께 사용합니다. 이 사례는 architecture와
+            post-training·system co-design이 함께 커졌다는 쪽에 가깝습니다.
           </p>
         </div>
         <div id="paper-motif3-training" className="scroll-mt-24">
@@ -147,7 +182,6 @@ export default function LlmTrainingStagesArticle() {
             <EvidenceGrid problem="큰 MoE의 architecture·pretraining·specialist post-training을 하나의 모델로 조합하는 문제" contribution="GDLA·mHC·PolyNorm과 SFT·전문 teacher·MOPD·agent environment를 함께 보고" assumptions="Motif 3 v1의 model·data·training system·evaluation protocol" scope="보고서가 공개한 구성·학습 recipe·benchmark" notClaim="Architecture보다 post-training이 더 중요하다는 보편적 인과 결론" />
           </CitationBlock>
         </div>
-        <ContentBoundary article="llm-training-stages" />
       </section>
     </article>
   );

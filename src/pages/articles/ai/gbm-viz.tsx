@@ -121,55 +121,93 @@ export function XGBoostGainViz() {
 
 export function LightGBMEfficiencyViz() {
   const story = useStory(4);
-  const labels = ["row", "column", "gain", "leaf"] as const;
+  const labels = ["10,000 rows", "3,000 GOSS", "6→2 EFB", "gain 7 leaf"] as const;
   return (
     <StoryShell
-      title="GOSS는 row, EFB는 column, leaf-wise는 growth budget을 줄인다"
-      subtitle="세 기법이 서로 다른 축을 줄인다는 사실을 data table과 tree에서 따로 봅니다."
+      title="10,000 rows → 3,000 rows · 6 columns → 2 bundles · gains [3, 7, 5] → one leaf"
+      subtitle="고정된 한 사례에서 GOSS·EFB·leaf-wise growth가 각각 줄이는 축을 추적합니다."
       labels={labels}
       {...story}
     >
       <div className="grid min-w-0 gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="grid grid-cols-6 gap-1">
-          {Array.from({ length: 30 }, (_, i) => {
-            const row = Math.floor(i / 6);
-            const selected = row < 2 || row === 4;
-            return (
-              <div
-                key={i}
-                className={`h-8 border transition-all ${story.step >= 1 && i % 3 !== 0 ? "opacity-25" : "opacity-100"} ${selected ? "border-rose-500/50 bg-rose-500/10" : "border-border bg-muted/10"}`}
-              />
-            );
-          })}
-          <p className="col-span-6 mt-2 text-xs text-muted-foreground">
-            붉은 row: 큰 gradient를 유지 · 흐린 column: exclusive feature bundle
-            후보
+        <div className="min-w-0 space-y-4">
+          <div className="grid grid-cols-10 gap-0.5" aria-label="10,000개 row를 100칸으로 축약한 표본 지도">
+            {Array.from({ length: 100 }, (_, i) => {
+              const isLargeGradient = i < 20;
+              const isSampledSmallGradient = i >= 20 && i < 30;
+              const isKept = isLargeGradient || isSampledSmallGradient;
+              return (
+                <div
+                  key={i}
+                  className={`aspect-square min-w-0 border transition-all ${
+                    story.step >= 1
+                      ? isLargeGradient
+                        ? "border-rose-500/70 bg-rose-500/30 opacity-100"
+                        : isSampledSmallGradient
+                          ? "border-amber-500/70 bg-amber-500/30 opacity-100"
+                          : "border-border bg-muted/10 opacity-15"
+                      : "border-border bg-muted/20 opacity-100"
+                  }`}
+                />
+              );
+            })}
+          </div>
+          <p className="text-xs leading-5 text-muted-foreground">
+            100칸이 10,000 rows를 나타냅니다. 붉은 20칸은 큰 gradient 2,000개,
+            주황 10칸은 나머지에서 뽑은 1,000개이며, 주황 row의 통계 weight는 8입니다.
           </p>
+          <div
+            className={`space-y-2 transition-opacity ${story.step >= 2 ? "opacity-100" : "opacity-25"}`}
+            aria-label="여섯 sparse feature를 두 bundle로 묶는 과정"
+          >
+            <div className="grid grid-cols-6 gap-1">
+              {["A", "B", "C", "D", "E", "F"].map((feature) => (
+                <div key={feature} className="border border-blue-500/50 bg-blue-500/10 py-2 text-center text-xs font-black">
+                  {feature}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="border border-blue-500 bg-blue-500/15 py-2 text-center text-xs font-black">
+                bundle 1 · A/B/C
+              </div>
+              <div className="border border-violet-500 bg-violet-500/15 py-2 text-center text-xs font-black">
+                bundle 2 · D/E/F
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex items-start justify-center gap-2 pt-2">
-          <div className="space-y-2">
+        <div className="flex min-w-0 items-start justify-center pt-2">
+          <div className="w-full max-w-sm space-y-2">
             <div className="border border-primary bg-primary/10 px-5 py-3 text-center text-sm font-black">
               root
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="border border-border p-3 text-xs">leaf A</div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="border border-border p-3 text-center text-xs">
+                leaf A<br />gain 3
+              </div>
               <div
-                className={`border p-3 text-xs ${story.step >= 3 ? "border-amber-500 bg-amber-500/15 font-black" : "border-border"}`}
+                className={`border p-3 text-center text-xs ${story.step >= 3 ? "border-amber-500 bg-amber-500/15 font-black" : "border-border"}`}
               >
-                leaf B<br />
-                gain 7
+                leaf B<br />gain 7
+              </div>
+              <div className="border border-border p-3 text-center text-xs">
+                leaf C<br />gain 5
               </div>
             </div>
+            <p className={`text-center text-xs font-semibold transition-opacity ${story.step >= 3 ? "opacity-100" : "opacity-25"}`}>
+              다음 split은 leaf B 하나에만 사용
+            </p>
           </div>
         </div>
       </div>
       <p className="mt-4 text-sm leading-7 text-muted-foreground">
         {
           [
-            "원본 table은 row 수와 sparse column 수가 모두 split scan 비용을 만듭니다.",
-            "GOSS는 큰 gradient row를 남기고 작은-gradient row 일부에 보정 weight를 줍니다.",
-            "EFB는 동시에 켜지지 않는 sparse columns를 offset bin 하나에 묶습니다.",
-            "Leaf-wise growth는 같은 depth 전체가 아니라 현재 gain이 가장 큰 leaf 하나를 확장합니다.",
+            "100칸으로 축약해 그린 원본 10,000 rows와 여섯 sparse columns가 split scan 비용을 만듭니다.",
+            "GOSS는 큰-gradient 2,000 rows와 작은-gradient 표본 1,000 rows를 씁니다. 작은 표본의 통계 weight는 8입니다.",
+            "EFB는 동시에 켜지지 않는 여섯 sparse columns를 offset bin을 이용한 두 effective columns로 묶습니다.",
+            "Terminal gains가 [3, 7, 5]이면 leaf-wise growth는 gain 7인 leaf B 하나에 다음 split budget을 씁니다.",
           ][story.step]
         }
       </p>

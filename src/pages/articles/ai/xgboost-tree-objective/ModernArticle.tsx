@@ -16,6 +16,15 @@ export default function XGBoostTreeObjectiveArticle() {
           한 row씩 보지 말고 leaf 안의 first·second derivative를 합칩니다.
           Regularization λ는 작은 H에서 leaf weight가 과도해지는 것을 누릅니다.
         </LessonHeader>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>G=−6, H=2, λ=1이면 최적 leaf update는 −G/(H+λ)=2일까요?</li>
+          <li>같은 G와 H에서 λ를 키우면 update의 절댓값은 작아질까요?</li>
+          <li>Split의 local training gain이 양수이면 validation 성능도 반드시 좋아질까요?</li>
+        </ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 현재 score 주변의 2차 근사와 보이지 않은 자료의 성능을 구분합니다.</p>
+        <XGBoostGainViz />
+        <ContentBoundary article="xgboost-tree-objective" />
         <TermLesson
           name="XGBoost second-order leaf objective"
           oneLine="현재 round loss를 score 주변에서 2차 근사하고 leaf별 G·H 합과 L2 penalty로 최적 constant update를 구합니다."
@@ -23,7 +32,6 @@ export default function XGBoostTreeObjectiveArticle() {
           example="G=−6,H=2,λ=1이면 leaf update는 2입니다."
           boundary="현재 score 주변의 local quadratic approximation이며 validation improvement를 자동 보장하지 않습니다."
         />
-        <XGBoostGainViz />
         <ExplainedFormula
           question="왜 leaf weight는 −G를 H+λ로 나눌까요?"
           idea="G의 반대 부호가 loss 감소 방향이고, curvature H와 penalty λ가 그 방향으로 얼마나 멀리 움직일지 제한합니다."
@@ -189,7 +197,6 @@ export default function XGBoostTreeObjectiveArticle() {
             },
           ]}
         />
-        <ContentBoundary article="xgboost-tree-objective" />
       </section>
     </article>
   );

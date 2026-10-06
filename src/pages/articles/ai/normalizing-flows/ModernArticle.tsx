@@ -24,6 +24,9 @@ export default function NormalizingFlowsArticle() {
             연결합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>x=2z로 길이가 두 배가 되면 같은 확률 질량의 밀도는 절반이 될까요?</li><li>정확한 단일 역함수를 쓰려면 z와 x가 일대일로 대응해야 할까요?</li><li>여러 z를 하나의 x로 합치는 함수에도 같은 change-of-variables 식을 그대로 쓸 수 있을까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. 가역 변환이 늘인 부피만큼 밀도를 보정해야 표본 생성과 정확한 likelihood가 같은 함수로 연결됩니다.</p>
         <TermBreakdown
           title="좌표를 옮길 때 필요한 네 물체"
           items={[

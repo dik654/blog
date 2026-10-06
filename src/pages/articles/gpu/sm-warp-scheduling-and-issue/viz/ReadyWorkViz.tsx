@@ -35,7 +35,8 @@ export default function ReadyWorkViz() {
         <div aria-live="polite" className="mt-3 min-h-20 text-sm leading-6">{detail}</div>
       </div>
       <div data-viz-controls className="mt-3 shrink-0 border-t pt-3">
-        <div role="group" aria-label="눈금 선택" className="grid grid-cols-6 gap-2">{Array.from({length:6},(_,i)=><button type="button" key={i} aria-label={`${i+1}번째 눈금`} aria-pressed={state.active===i} onClick={()=>state.setActive(i)} className={`min-h-10 rounded-md border text-xs ${state.active===i?"border-sky-500 bg-sky-50 text-sky-900 dark:bg-sky-950 dark:text-sky-100":"border-neutral-300 dark:border-neutral-700"}`}>{i+1}</button>)}</div>
+        <p data-viz-mobile-controls className="text-center text-sm font-semibold sm:hidden">{state.active + 1}번째 눈금</p>
+        <div role="group" aria-label="눈금 선택" className="hidden grid-cols-6 gap-2 sm:grid">{Array.from({length:6},(_,i)=><button type="button" key={i} aria-label={`${i+1}번째 눈금`} aria-pressed={state.active===i} onClick={()=>state.setActive(i)} className={`min-h-10 rounded-md border text-xs ${state.active===i?"border-sky-500 bg-sky-50 text-sky-900 dark:bg-sky-950 dark:text-sky-100":"border-neutral-300 dark:border-neutral-700"}`}>{i+1}</button>)}</div>
         <div className="mt-2 grid grid-cols-3 gap-2"><button type="button" onClick={()=>state.setActive(state.active-1)} className="min-h-10 rounded-md border text-xs">이전</button><button type="button" disabled={state.reducedMotion} onClick={()=>state.setPlaying(!state.playing)} className="min-h-10 rounded-md border text-xs disabled:opacity-60">{state.reducedMotion?"재생 꺼짐":state.playing?"일시정지":"재생"}</button><button type="button" onClick={()=>state.setActive(state.active+1)} className="min-h-10 rounded-md border text-xs">다음</button></div>
         <div className="mt-2 text-xs leading-5 text-neutral-500">← → 눈금 이동 · Space 재생/정지 · 선택 순서와 지연은 가정</div>
       </div>

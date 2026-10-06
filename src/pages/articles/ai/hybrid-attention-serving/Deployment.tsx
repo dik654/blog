@@ -25,8 +25,7 @@ export default function Deployment() {
   return (
     <section id="deployment" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Muse는 local agent bundle, Gemma는 긴 multimodal context를 우선할 때
-        출발점이 된다
+        배포 목적에 따라 Muse와 Gemma의 출발점이 달라집니다
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

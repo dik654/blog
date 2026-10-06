@@ -18,6 +18,15 @@ export default function StructuredGenerationServingArticle() {
             grammar의 cache와 sequence별 matcher state는 분리해 관리해야 합니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>Schema가 같아도 tokenizer나 engine revision이 다르면 compiled grammar를 다시 만들어야 할까요?</li>
+          <li>같은 batch의 두 sequence가 matcher state 하나를 공유해도 될까요?</li>
+          <li>JSON 문법이 맞으면 실제 user ID·잔액·권한까지 자동으로 유효할까요?</li>
+        </ol>
+        <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Compile artifact는 정확한 identity로 재사용하고 sequence state와 semantic authorization은 요청별로 유지합니다.</p>
+        <StructuredServingViz />
+        <ContentBoundary article="structured-generation-serving" />
         <TermBreakdown
           title="한 request를 실행 승인까지 보내는 네 장부"
           items={[
@@ -53,8 +62,6 @@ export default function StructuredGenerationServingArticle() {
             },
           ]}
         />
-        <StructuredServingViz />
-        <ContentBoundary article="structured-generation-serving" />
       </section>
 
       <section id="dynamic-schema-cache" className="scroll-mt-20">

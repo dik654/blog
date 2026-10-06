@@ -18,6 +18,9 @@ export default function OneShotLlmPruningArticle() {
             이름보다 먼저 확인할 것은 표본입니다. 이 표본이 deployment 언어·길이·domain을 대표하는지 봅니다.
           </p>
         </div>
+        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <ol className="list-decimal space-y-2 pl-6"><li>같은 크기의 weight라도 자주 크게 활성화되는 입력 채널에 연결되면 중요도가 달라질까요?</li><li>Calibration prompt가 배포 언어·길이·도메인과 다르면 mask 품질도 달라질 수 있을까요?</li><li>정한 sparsity를 만들었다는 사실만으로 실제 GPU 지연 감소도 보장될까요?</li></ol>
+        <p>답은 <strong>예, 예, 아니요</strong>입니다. One-shot pruning은 작은 표본에서 중요도를 추정하므로 표본 대표성과 실제 kernel의 희소 패턴 지원을 따로 검증해야 합니다.</p>
         <TermBreakdown
           title="표본에서 mask까지 필요한 물체"
           items={[

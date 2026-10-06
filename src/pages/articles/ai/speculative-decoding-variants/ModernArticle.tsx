@@ -19,7 +19,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <>
 <p className="leading-8">갈래가 늘면 확인할 자리도 늘어납니다. 후보를 준비하는 부품을 싸게 바꾸는 일과 확인할 글의 모양을 바꾸는 일은 서로 다른 선택입니다. 같은 RAY를 확정하는 과정을 따라가며 두 선택이 계산 기록과 시간에 무엇을 더하는지 보겠습니다.</p>
 <p className="leading-8">앞 글의 한 줄 후보는 첫 거부 뒤를 잘랐습니다. 이 글에서는 다른 갈래의 기록을 섞지 않으면서 한 경로를 남겨야 합니다. 마지막에는 앞부분만 쓰는 모델, 보조 예측 부품, 과거 글 검색을 같은 시간 장부에 올려 비교합니다.</p>
 </div>
-
+<p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p><ol className="list-decimal space-y-2 pl-6"><li>Root 1개, 다음 갈래 2개, 그다음 갈래 4개면 준비한 자리는 모두 7개일까요?</li><li>RAY 경로가 펼친 목록 [R,A,B,X,Y,X,Y]에서 고르는 위치는 [0,1,4]일까요?</li><li>RA 뒤의 Y와 RB 뒤의 Y는 글자가 같으므로 KV 기록도 서로 바꿔 쓸 수 있을까요?</li></ol><p>답은 <strong>예, 예, 아니요</strong>입니다. Tree는 후보의 부모 관계를 보존하고 target이 승인한 한 경로의 기록만 연속 위치로 모읍니다.</p><TreeTraceViz/><ContentBoundary article="speculative-decoding-variants" />
 </section>
 <section id="black-box" data-teach-level="B" className="mb-16 scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">2. 준비한 갈래를 확인하고 한 경로의 기록을 모읍니다</h2>
@@ -58,7 +58,6 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <>
 <p className="leading-8">각 자리의 문장상 위치도 저장 순서와 다릅니다. R은 다섯째 자리이고 A와 B는 둘 다 여섯째 자리입니다. 네 개의 X·Y는 각각 자기 경로에서 일곱째 자리입니다. 저장 번호가 뒤에 있다고 더 먼 미래의 글자는 아닙니다.</p>
 <p className="leading-8">일곱 자리 모두를 확인해도 일곱 글자를 내보내지는 않습니다. 경로 선택과 기록 정리가 끝나야 세 글자 RAY를 이어 쓸 수 있습니다. 아래 장면에서는 다른 가지를 흐리게 하고 실제로 모을 세 자리만 남깁니다.</p>
 </div>
-<TreeTraceViz/>
 </section>
 <section id="why-components" data-teach-level="2" className="mb-16 scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">5. 읽을 곳을 가리는 장치와 기록을 모으는 장치가 필요합니다</h2>
@@ -360,7 +359,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <>
 <p className="leading-8">여기서는 원문 Medusa의 배열·greedy 함수 AST와 작은 배열 대역, Arctic의 실제 C++ 자료 구조, 별도 Python wrapper 분기를 실행했습니다. LayerSkip의 전체 모델 forward와 GPU 성능은 실행하지 않았습니다. 원문 코드와 가정 수치의 역할을 나누어 기록했습니다.</p>
 <p className="leading-8">실제 배포에서는 단독 생성과 후보 준비·확인·기록 정리의 시간을 같은 요청 분포에서 재어 비교합니다. 가중치 읽기의 공유, 늘어난 계산·KV·동기화와 대기열을 함께 봅니다. 하나의 평균 배율만으로 처리량이나 최악 지연의 개선을 보장하지 않습니다.</p>
 </div>
-<ContentBoundary article="speculative-decoding-variants"/><p className="leading-8">한 줄 후보의 정확한 수락·잔여 분포 유도는 <Link to="/cs/ai/vllm-spec-decode#distribution-proof">추측 디코딩의 확률 복원</Link>에서 이어집니다. 계산 기록 한 자리의 크기는 <Link to="/cs/ai/kv-cache-fundamentals">KV cache의 구조</Link>, 연산과 읽기 비용의 차이는 <Link to="/cs/ai/prefill-decode-phase-dynamics">입력 처리와 생성의 비용</Link>에서 더 살펴볼 수 있습니다.</p>
+<p className="leading-8">한 줄 후보의 정확한 수락·잔여 분포 유도는 <Link to="/cs/ai/vllm-spec-decode#distribution-proof">추측 디코딩의 확률 복원</Link>에서 이어집니다. 계산 기록 한 자리의 크기는 <Link to="/cs/ai/kv-cache-fundamentals">KV cache의 구조</Link>, 연산과 읽기 비용의 차이는 <Link to="/cs/ai/prefill-decode-phase-dynamics">입력 처리와 생성의 비용</Link>에서 더 살펴볼 수 있습니다.</p>
 </section>
 <section id="prediction-questions" data-teach-level="review" className="mb-16 scroll-mt-20">
 <h2 className="mb-6 text-2xl font-bold">26. 같은 RAY에서 조건을 하나씩 바꿔 보세요</h2>
