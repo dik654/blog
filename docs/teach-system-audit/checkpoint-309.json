@@ -29,7 +29,13 @@
     "language": "PASS prose rhythm, Korean naturalness and term-density audits for all six additions.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; numeric-path arrow SVGs remained 24px; viewport height 844 to 700 produced zero scroll shift on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment.",
+    "production": "GitHub Pages final repeat: six public routes and two listing routes at 390/1440 plus six mobile height/sidebar checks = 22 checks, zero failed. The first pass recorded one transient static-resource HTTP 503 console event on the finite-difference mobile route; all content and layout metrics passed then, and the event did not recur on the full repeat. Final report: output/playwright/derivative-advanced-production/2026-10-06T18-54-28/summary.json.",
     "curriculumCoverage": "MIT 18.642, 15.450, 18.S096 and 15.433, Basel MAR30 and MAR50, Korean derivatives solicitation advisor training and GARP risk-management coverage were mapped to implemented material and explicit remaining multi-asset, rare-event and jurisdictional gaps."
+  },
+  "commit": "80c4b5cb0de4cf9b36b68d5977a3d55b53943217",
+  "deployment": {
+    "runId": 37513569915,
+    "conclusion": "success",
+    "production": "Final repeat of 22 article, listing, mobile height and sidebar checks passed with zero failures"
   }
 }
