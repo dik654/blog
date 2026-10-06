@@ -1998,6 +1998,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "economic-history/trade-credit-and-long-distance-networks": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "은 6미나 점토판 한 사례로 실물·청구권, 신용, 중개, 결제 표준과 다중 교역망을 같은 시간 경로에서 추적합니다.", sharedGate: "전체 6미나·첫 2미나·후속 4미나가 본문·시각화·연습문제에서 같고 계약 한 건과 교역망 전체를 구분하는지 확인합니다." },
   "economic-history/colonial-plantations-slavery-and-extraction": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "설탕 판매액 100의 한 장부로 토지·강제 노동·운송·금융·제국 세금·자산 축적과 자료 누락을 같은 상품 경로에서 추적합니다.", sharedGate: "판매 100·기록 비용과 세금 55·소유주 잔여 45라는 가정이 본문·시각화·연습문제에서 같고 무임금 노동과 권리 손실을 잔여 계산에서 분리하는지 확인합니다." },
   "economic-history/decolonization-oil-shocks-and-debt": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "수출 100·석유 수입 40인 나라의 외화 장부로 탈식민, 교역조건, 개발 대출, 페트로달러 재순환과 부채 위기를 시간순으로 추적합니다.", sharedGate: "수출 100·초기 수입 90·유가 충격 뒤 수입 130·외채 130·금리 5%와 12%가 본문·시각화·연습문제에서 같은지 확인합니다." },
+  "global-history/empires-roads-taxes-and-law": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "곡물 100자루가 명부·징수·도로·현지법을 거치는 한 제국 통치 경로를 추적합니다.", sharedGate: "100=30+60+10의 장부와 아소카 칙령의 전달·집행 경계를 본문·시각화·문제에서 같게 확인합니다." },
+  "global-history/trade-religion-and-translation-networks": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "향신료 100묶음과 책 한 권이 계절풍·항구·디아스포라·번역을 서로 다른 속도로 지나는 한 연결망을 설명합니다.", sharedGate: "100→80→50의 상품 경로와 직접 관찰·전언·전설의 사료 경계를 함께 확인합니다." },
+  "global-history/conquest-disease-silver-and-oceanic-exchange": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "포토시 은 100의 생산·운송·결제와 강제 노동·감염병 비용을 같은 대양 회로에서 추적합니다.", sharedGate: "100→60→40은 설명용 수치임을 표시하고 미타·은 장부·지역별 감염 자료의 서로 다른 증거 범위를 확인합니다." },
+  "global-history/revolutions-citizenship-and-industrial-empires": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "주민 100명의 보편 선언·실제 시민 명부·제국 바깥의 차등 권리를 한 정치 장부로 추적합니다.", sharedGate: "30+40+30의 권리 장부와 1789년 선언·1885년 외교 문서의 작성자·누락된 당사자를 대조합니다." },
+  "global-history/world-wars-depression-and-mass-states": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "100가구의 노동·식량·돌봄·상실이 두 전쟁과 불황, 식민 동원과 전후 약속을 거치는 한 동원 경로를 설명합니다.", sharedGate: "25+35+25+15의 설명용 장부와 현실의 중복을 구분하고 국제연맹 10·11·22조와 미국 한 지역 자료의 범위를 확인합니다." },
+  "global-history/cold-war-decolonization-and-globalization": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "신생국 예산 100이 양극 원조·비동맹 공동 행동·개발 차관·다자 무역 규칙을 거치는 한 정책 공간 문제를 설명합니다.", sharedGate: "30+25+20+15+10의 예산과 지원 조건을 맞추고 반둥 공동성명과 마라케시 선언의 공식 목표·실제 결과 경계를 구분합니다." },
 };
 
 /**
@@ -2323,4 +2329,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "economic-history/trade-credit-and-long-distance-networks":"b7388e308d6bc6a6",
 "economic-history/colonial-plantations-slavery-and-extraction":"ddff3302dadd3429",
 "economic-history/decolonization-oil-shocks-and-debt":"17399f94928bdebf",
+"global-history/empires-roads-taxes-and-law":"46fb067d68f669e6",
+"global-history/trade-religion-and-translation-networks":"415c7e7d61fca65a",
+"global-history/conquest-disease-silver-and-oceanic-exchange":"d20cfd091d08373c",
+"global-history/revolutions-citizenship-and-industrial-empires":"a9752357be625084",
+"global-history/world-wars-depression-and-mass-states":"20dd27b389da0ccd",
+"global-history/cold-war-decolonization-and-globalization":"4ce4addba9f0542a",
 };

@@ -64,7 +64,7 @@ export const DOMAIN_META: readonly DomainMeta[] = [
     slug: "history",
     name: "역사",
     description:
-      "지난 일을 어떻게 아는지부터 생산·교역·식민 경제·산업화·국제 통화와 부채가 바뀐 순서까지, 원문과 수치를 함께 읽습니다.",
+      "지난 일을 어떻게 아는지부터 제국·교역망·혁명·세계대전·탈식민과 생산·통화·부채가 바뀐 순서까지, 원문과 수치를 함께 읽습니다.",
   },
   {
     slug: "philosophy",
@@ -116,6 +116,7 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   testimony: "history",
   "record-numbers": "history",
   "inference-from-sources": "history",
+  "global-history": "history",
   "economic-history": "history",
   reasoning: "philosophy",
   epistemology: "philosophy",

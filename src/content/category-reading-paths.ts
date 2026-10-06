@@ -21,6 +21,20 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  "global-history": {
+    organizingPrinciple: "시간순",
+    title: "제국의 도로에서 탈식민과 세계화까지",
+    description: "한 지역의 왕조 목록 대신 사람·물자·권리와 강제력이 지역 사이를 오가며 다음 시대의 선택을 만든 순서로 읽습니다.",
+    stages: [
+      { eyebrow: "01 · 기원전 3세기 무렵~600년", title: "제국·도로·세금·법", description: "멀리 떨어진 지역을 물류·재정·현지 권력과 여러 법으로 함께 다스린 방식을 봅니다.", subcategories: ["global-history-empires"] },
+      { eyebrow: "02 · 600~1500년", title: "교역·종교·번역의 연결망", description: "계절풍과 항구, 상인 공동체와 번역 기관이 물건·신앙·지식을 다른 속도로 옮긴 경로를 봅니다.", subcategories: ["global-history-networks"] },
+      { eyebrow: "03 · 1492년 무렵~18세기", title: "정복·질병·은의 대양 회로", description: "대양 정복이 생물 이동·광산 강제 노동·세계 결제 수요를 한 회로에 묶은 과정을 추적합니다.", subcategories: ["global-history-oceanic"] },
+      { eyebrow: "04 · 18세기 말~1914년", title: "혁명·시민권·산업 제국", description: "보편 권리 선언과 제한된 시민 명부, 국민국가의 동원과 제국 팽창이 함께 움직인 모순을 봅니다.", subcategories: ["global-history-revolutions"] },
+      { eyebrow: "05 · 1914~1945년", title: "세계대전·대공황·대중 국가", description: "전선과 후방, 본국과 식민지를 묶은 총력전 동원과 전간기 불황, 위임통치를 함께 읽습니다.", subcategories: ["global-history-world-wars"] },
+      { eyebrow: "06 · 1945년~1990년대 이후", title: "냉전·탈식민·세계화", description: "신생 국가가 양극 질서와 원조·부채·다자 무역 규칙 속에서 만든 선택과 연대를 봅니다.", subcategories: ["global-history-postwar"] },
+    ],
+    featuredArticles: ["empires-roads-taxes-and-law", "trade-religion-and-translation-networks", "conquest-disease-silver-and-oceanic-exchange", "revolutions-citizenship-and-industrial-empires", "world-wars-depression-and-mass-states", "cold-war-decolonization-and-globalization"],
+  },
   "economic-history": {
     organizingPrinciple: "시간순",
     title: "장부에서 교역·식민 경제·산업화·국제 부채까지",

@@ -12028,4 +12028,28 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 연구", label: "IMF · The 1980s Debt Crisis", href: "https://www.elibrary.imf.org/display/book/9781484371329/ch001.xml", note: "페트로달러 대출과 국제 부채 위기의 연결" },
     { kind: "공식 연구", label: "IMF · Macroeconomic Crisis and Adjustment", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", note: "국가별 교역조건과 조정 경로 비교" },
   ],
+  "global-history/empires-roads-taxes-and-law": [
+    { kind: "핵심 사료", label: "British Museum · Aśoka pillar edict fragment", href: "https://www.britishmuseum.org/collection/object/A_1880-21", note: "기원전 3세기 아소카 칙령을 돌에 새긴 직접 물증" },
+    { kind: "보충 읽기", label: "UNESCO · The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "페르시아·중국·로마의 군사·행정 교통망 비교" },
+  ],
+  "global-history/trade-religion-and-translation-networks": [
+    { kind: "공식 프로젝트 기록", label: "UNESCO · About the Silk Roads", href: "https://www.unesco.org/en/silk-roads/about-silk-roads?hub=196704", note: "육상 한 줄이 아닌 여러 육상·해상 연결망의 공식 개관" },
+    { kind: "비교 사료", label: "Library of Congress · The Travels of Marco Polo", href: "https://www.loc.gov/resource/gdcwdl.wdl_14300/?st=gallery", note: "여행 보고·전언·전설이 필사된 원고와 소장 기록" },
+  ],
+  "global-history/conquest-disease-silver-and-oceanic-exchange": [
+    { kind: "핵심 연구", label: "Smithsonian · The Potosí mita, 1573–1700", href: "https://www.si.edu/object/potosi-mita-1573-1700-compulsory-indian-labor-andes-jeffrey-cole%3Asiris_sil_707155", note: "포토시 은 생산을 떠받친 안데스 강제 노동 연구의 공식 서지" },
+    { kind: "선행·비교 논문", label: "The Journal of Economic History · Plague and Lethal Epidemics", href: "https://www.cambridge.org/core/journals/journal-of-economic-history/article/plague-and-lethal-epidemics-in-the-preindustrial-world/1D2D564AD8560ABACAF9D81A65F27CED", note: "전근대 유행병과 아메리카의 지역별 감염 차이를 검토한 연구" },
+  ],
+  "global-history/revolutions-citizenship-and-industrial-empires": [
+    { kind: "핵심 사료", label: "Library of Congress · Declaration of the Rights of Man and of the Citizen", href: "https://www.loc.gov/resource/gdcwdl.wdl_14430/", note: "1789년 보편 권리 선언의 초판 이미지와 채택 맥락" },
+    { kind: "비교 사료", label: "U.S. Office of the Historian · Berlin Conference report", href: "https://history.state.gov/historicaldocuments/frus1885/d228", note: "베를린 회의 직후 영토 협상과 제국적 시선을 담은 외교 기록" },
+  ],
+  "global-history/world-wars-depression-and-mass-states": [
+    { kind: "공식 문서", label: "United Nations · Covenant of the League of Nations", href: "https://www.un.org/unispal/document/auto-insert-199451/", note: "집단 안보와 위임통치가 함께 적힌 국제연맹 규약 원문" },
+    { kind: "핵심 사료", label: "U.S. National Archives · The Great Depression and World War II", href: "https://www.archives.gov/education/lessons/depression-wwii.html", note: "미국의 불황 대응과 전시 동원을 보여 주는 1929~1945년 1차 자료 모음" },
+  ],
+  "global-history/cold-war-decolonization-and-globalization": [
+    { kind: "핵심 사료", label: "UN Digital Library · Bandung Final Communiqué", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "경제 협력·자결·반식민·평화 원칙을 합의한 1955년 공동성명" },
+    { kind: "공식 문서", label: "WTO · Marrakesh Declaration", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", note: "우루과이라운드 종료와 WTO 출범의 목표·범위를 밝힌 공식 선언" },
+  ],
 };

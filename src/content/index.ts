@@ -36,6 +36,7 @@ import disputeResolution from "./dispute-resolution";
 import testimony from "./testimony";
 import recordNumbers from "./record-numbers";
 import inferenceFromSources from "./inference-from-sources";
+import globalHistory from "./global-history";
 import economicHistory from "./economic-history";
 import reasoning from "./reasoning";
 import epistemology from "./epistemology";
@@ -82,6 +83,7 @@ export const categories = [
   testimony,
   recordNumbers,
   inferenceFromSources,
+  globalHistory,
   economicHistory,
   reasoning,
   epistemology,

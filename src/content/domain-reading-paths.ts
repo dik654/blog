@@ -262,9 +262,9 @@ export const DOMAIN_READING_PATHS: Readonly<
 
   history: {
     organizingPrinciple: "혼합",
-    title: "사료를 읽는 법에서 경제사의 시간축으로",
+    title: "사료를 읽는 법에서 세계사와 경제사의 시간축으로",
     description:
-      "먼저 남은 기록을 어디까지 믿을 수 있는지 배우고, 농업 잉여와 장부에서 교역·식민 경제·산업화·국제 통화와 부채까지 변화의 순서를 따라갑니다.",
+      "먼저 남은 기록을 어디까지 믿을 수 있는지 배웁니다. 그 뒤 제국·교역망·대양 정복·혁명·세계대전·탈식민의 세계사와 생산·교역·통화·부채의 경제사를 각각 시간순으로 따라갑니다.",
     stages: [
       {
         eyebrow: "01 · 기록은 누가 만들었는가",
@@ -288,7 +288,14 @@ export const DOMAIN_READING_PATHS: Readonly<
         categories: ["inference-from-sources"],
       },
       {
-        eyebrow: "04 · 기원전 4천년기부터 1980년대까지",
+        eyebrow: "04 · 기원전 3세기 무렵부터 1990년대 이후까지",
+        title: "제국과 연결, 전쟁과 독립이 바뀐 순서",
+        description:
+          "도로와 세금으로 묶은 제국에서 교역·종교의 연결망, 대양 정복, 시민 혁명과 산업 제국, 세계대전, 탈식민과 세계화까지 시간순으로 잇습니다.",
+        categories: ["global-history"],
+      },
+      {
+        eyebrow: "05 · 기원전 4천년기부터 1980년대까지",
         title: "생산·교역·돈의 제도가 바뀐 순서",
         description:
           "곡물 장부에서 장거리 교역과 식민 상품망을 거쳐 산업화, 국제 통화 질서, 탈식민 뒤의 부채 위기까지 시간순으로 잇습니다.",
