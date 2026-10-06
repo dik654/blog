@@ -50,6 +50,19 @@ const auditedPrerequisiteClosures = new Set();
 const introducedOwners = new Map();
 const conceptDegree = new Map(Object.keys(KNOWLEDGE_CONCEPTS).map((conceptId) => [conceptId, 0]));
 
+/**
+ * Section anchors may be written directly as JSX (`id="case"`) or as data for a
+ * shared renderer (`{ id: "case", ... }`). Both forms produce the same public
+ * anchor, so the learning audit accepts both source representations.
+ */
+function sourceSectionIds(source) {
+  return new Set(
+    [...source.matchAll(/\bid\s*(?:=|:)\s*["']([^"']+)["']/g)].map(
+      (match) => match[1],
+    ),
+  );
+}
+
 for (const edge of KNOWLEDGE_EDGES) {
   if (conceptDegree.has(edge.from)) conceptDegree.set(edge.from, conceptDegree.get(edge.from) + 1);
   if (conceptDegree.has(edge.to)) conceptDegree.set(edge.to, conceptDegree.get(edge.to) + 1);
@@ -142,7 +155,7 @@ function auditPrerequisiteClosure(originRoute, conceptId, chain = []) {
   }
   if (location.sectionId) {
     const ownerSource = routeFiles(location.route).map((file) => fs.readFileSync(file, "utf8")).join("\n");
-    const ownerIds = new Set([...ownerSource.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]));
+    const ownerIds = sourceSectionIds(ownerSource);
     if (!ownerIds.has(location.sectionId)) {
       findings.push([originRoute, `선수 concept의 canonical anchor가 없습니다: ${conceptId} → ${location.route}#${location.sectionId}`]);
     }
@@ -219,7 +232,7 @@ for (const route of routes) {
   if (graphConcepts.size > 1 && graphEdges.length === 0) findings.push([route, "참조한 concept node 사이의 relation edge가 없습니다."]);
 
   const source = routeFiles(route).map((file) => fs.readFileSync(file, "utf8")).join("\n");
-  const ids = new Set([...source.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]));
+  const ids = sourceSectionIds(source);
 
   const explanations = contract.conceptExplanations ?? [];
   const explanationCounts = new Map();
@@ -321,7 +334,7 @@ for (const route of routes) {
         findings.push([route, `논문 canonical article이 없습니다: ${paper.title} → ${paper.internalHref}`]);
       } else if (location.sectionId) {
         const paperSource = routeFiles(location.route).map((file) => fs.readFileSync(file, "utf8")).join("\n");
-        const paperIds = new Set([...paperSource.matchAll(/\bid=["']([^"']+)["']/g)].map((item) => item[1]));
+        const paperIds = sourceSectionIds(paperSource);
         if (!paperIds.has(location.sectionId)) findings.push([route, `논문 canonical anchor가 없습니다: ${paper.title} → ${paper.internalHref}`]);
       }
     }
