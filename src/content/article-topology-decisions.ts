@@ -2130,6 +2130,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "파생상품 권유는 고객의 목적·재산·경험과 실제 노출을 파악하고 상품의 유리·불리한 지급과 대안을 설명해 이해를 확인하며, 권유·승인·주문·사후 변경의 증거를 남기는 연속된 책임입니다.",
     "sharedGate": "초과 1억 달러×환율 차이 200원=200억 원을 검산하고 자격·서명·수익 결과가 개별 판매 적합성을 자동 증명하지 않음을 밝힙니다."
   },
+  "markets/currency-hedging-forward-points-and-cross-currency-basis": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "환헤지는 총매출이 아니라 통화·날짜별 순노출을 찾고, 두 통화 금리가 만드는 선도포인트와 실제 조달 마찰인 교차통화 베이시스를 구분해 수량·만기·담보 위험을 함께 관리하는 일입니다.",
+    "sharedGate": "1,350×1.0075÷1.0125≈1,343원과 80만 달러의 약 10억7,467만 원을 검산하고 선도환율을 예측값과 구분합니다."
+  },
+  "markets/commodity-carry-convenience-yield-and-roll": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "원자재 선물곡선은 자금·보관비와 실물을 지금 보유하는 편의수익, 품질·장소·인도 조건이 만들며, 투자 결과는 현물 변화와 계약을 바꾸는 롤수익을 나누어 봐야 합니다.",
+    "sharedGate": "75+0.75+1−2=74.75를 검산하고 편의수익·롤수익·현물 수익과 실물 인도를 서로 다른 장부로 유지합니다."
+  },
+  "markets/option-strategies-and-structured-notes": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "옵션 전략과 구조화채권은 콜·풋의 매수·매도를 합쳐 지급 모양을 만들며, 높은 쿠폰과 원금보호 문구를 보려면 내재 옵션·장벽 경로·발행자 신용·중도 유동성을 함께 풀어야 합니다.",
+    "sharedGate": "만기 90·110·130의 100/120 콜스프레드 지급과 장벽 접촉 뒤 만기 60의 원금손실을 따로 검산합니다."
+  },
+  "markets/credit-derivatives-default-risk-and-tranches": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "CDS는 정의된 신용사건과 결제 절차에 따라 회수율 손실을 옮기며, 지수 트랜치는 여러 기업의 누적손실 구간을 나눠 평균 부도뿐 아니라 공동부도와 상대방 위험을 가격에 담습니다.",
+    "sharedGate": "연 프리미엄 200만 원·보호 지급 6,000만 원·단순 부도강도 약 3.33%를 검산하고 계약 사건과 경제적 부실을 구분합니다."
+  },
+  "markets/otc-master-agreement-collateral-netting-and-cva": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "장외파생의 상대방 위험은 기본계약과 확인서가 정한 상계집합, CSA 담보와 운영 절차를 거쳐 줄어들며, 남은 미래 양의 노출과 상대 신용을 CVA로 가격에 반영합니다.",
+    "sharedGate": "+9−7=2와 담보 뒤 0.5, 10×2%×60%=0.12를 검산하고 법률상계·담보·가격조정을 다른 층으로 유지합니다."
+  },
+  "markets/var-expected-shortfall-stress-and-model-risk": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "VaR는 정한 기간과 신뢰수준의 손실 문턱을, 예상손실은 그 바깥 꼬리의 평균을 보여 주며, 자료에 없던 복합 충격과 모형·유동성 한계는 별도 스트레스 시험과 사후검증으로 관리합니다.",
+    "sharedGate": "열 손실의 80% VaR 4·ES 8과 별도 스트레스 18을 검산하고 본문 80% 예를 규제 97.5% 기준과 구분합니다."
+  },
 };
 
 /**
@@ -2479,4 +2521,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/no-arbitrage-cost-of-carry-and-basis":"ecb9b9df99f2e09e",
 "markets/option-greeks-volatility-and-dynamic-hedging":"861495949a099543",
 "markets/option-replication-and-put-call-parity":"2037c02eea54b2fd",
+"markets/commodity-carry-convenience-yield-and-roll":"6d5c191dd5167187",
+"markets/credit-derivatives-default-risk-and-tranches":"47c2a0c642bdbb8c",
+"markets/currency-hedging-forward-points-and-cross-currency-basis":"0b40076d93a95f11",
+"markets/option-strategies-and-structured-notes":"ce373730b7741a96",
+"markets/otc-master-agreement-collateral-netting-and-cva":"126b1136e7d677df",
+"markets/var-expected-shortfall-stress-and-model-risk":"d3dd437f75f5e00f",
 };

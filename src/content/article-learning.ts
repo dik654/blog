@@ -136781,4 +136781,1378 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/currency-hedging-forward-points-and-cross-currency-basis": {
+    "entryLevel": true,
+    "entryNote": "석 달 뒤 받을 100만 달러와 같은 날 지급할 원가 20만 달러를 한 장부에 놓는 데서 시작합니다.",
+    "coreIdea": "환헤지는 총매출이 아니라 통화·날짜별 순노출을 찾고, 두 통화 금리가 만드는 선도포인트와 실제 조달 마찰인 교차통화 베이시스를 구분해 수량·만기·담보 위험을 함께 관리하는 일입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "net-currency-exposure",
+        "role": "순통화노출이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "forward-points-covered-interest",
+        "role": "선도포인트와 금리평가이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "cross-currency-basis",
+        "role": "교차통화 베이시스이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "net-currency-exposure",
+        "sectionId": "names",
+        "intuition": "순통화노출을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "100만 달러 매출에서 20만 달러 원가를 빼 80만 달러를 헤지합니다.",
+        "boundary": "예상 거래의 취소와 날짜 차이를 자동으로 반영하지는 않습니다."
+      },
+      {
+        "id": "forward-points-covered-interest",
+        "sectionId": "names",
+        "intuition": "선도포인트와 금리평가을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "현물 1,350원과 원화 3%·달러 5%에서 석 달 선도를 약 1,343원으로 계산합니다.",
+        "boundary": "미래 현물환율을 맞히는 예측식은 아닙니다."
+      },
+      {
+        "id": "cross-currency-basis",
+        "sectionId": "names",
+        "intuition": "교차통화 베이시스을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "기관의 달러 헤지 수요와 딜러 장부 제약이 실제 선도 호가를 움직입니다.",
+        "boundary": "모든 만기와 거래 상대에게 같은 고정 가산금리가 적용되지는 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 순통화노출",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "net-currency-exposure"
+        ]
+      },
+      {
+        "label": "2단계 · 선도포인트와 금리평가",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "forward-points-covered-interest"
+        ]
+      },
+      {
+        "label": "3단계 · 교차통화 베이시스",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "cross-currency-basis"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "순통화노출의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "순통화노출",
+          "100만 달러 매출에서 20만 달러 원가를 빼 80만 달러를 헤지합니다.",
+          "예상 거래의 취소와 날짜 차이를 자동으로 반영하지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "선도포인트와 금리평가이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "선도포인트와 금리평가",
+          "첫 개념과의 차이",
+          "현물 1,350원과 원화 3%·달러 5%에서 석 달 선도를 약 1,343원으로 계산합니다."
+        ],
+        "requiredConcepts": [
+          "forward-points-covered-interest"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "교차통화 베이시스이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "교차통화 베이시스",
+          "기관의 달러 헤지 수요와 딜러 장부 제약이 실제 선도 호가를 움직입니다.",
+          "모든 만기와 거래 상대에게 같은 고정 가산금리가 적용되지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "cross-currency-basis"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "CME Group · Reconciling FX Spot Futures Prices",
+          "BIS · Derivatives Markets through BIS Statistics",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "forward-points-covered-interest"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "cross-currency-basis"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "net-currency-exposure",
+          "forward-points-covered-interest",
+          "cross-currency-basis"
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure",
+          "forward-points-covered-interest",
+          "cross-currency-basis"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure",
+          "forward-points-covered-interest",
+          "cross-currency-basis"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure",
+          "forward-points-covered-interest",
+          "cross-currency-basis"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "net-currency-exposure",
+          "forward-points-covered-interest",
+          "cross-currency-basis"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · Reconciling FX Spot Futures Prices",
+        "href": "https://www.cmegroup.com/education/whitepapers/reconciling-fx-spot-futures-prices",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "현물·선물환의 호가와 두 통화 금리가 만드는 보유비용 관계를 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BIS · Derivatives Markets through BIS Statistics",
+        "href": "https://www.bis.org/publications/qr-202512/international-finance-through-lens-bis-statistics-derivatives-markets",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "FX 스왑·선도, 교차통화 베이시스와 국제 자금 흐름을 연결합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/commodity-carry-convenience-yield-and-roll": {
+    "entryLevel": true,
+    "entryNote": "현물 원유 75달러를 석 달 동안 창고에 두는 비용과 지금 쓸 수 있는 편익에서 시작합니다.",
+    "coreIdea": "원자재 선물곡선은 자금·보관비와 실물을 지금 보유하는 편의수익, 품질·장소·인도 조건이 만들며, 투자 결과는 현물 변화와 계약을 바꾸는 롤수익을 나누어 봐야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "commodity-convenience-yield",
+        "role": "원자재 편의수익이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "commodity-forward-curve",
+        "role": "원자재 선물곡선이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "commodity-roll-yield",
+        "role": "원자재 롤수익이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "commodity-convenience-yield",
+        "sectionId": "names",
+        "intuition": "원자재 편의수익을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "편의수익 2달러가 자금·보관비 1.75달러보다 조금 큽니다.",
+        "boundary": "별도 현금으로 지급되는 확정 이자가 아니며 직접 관측하기 어렵습니다."
+      },
+      {
+        "id": "commodity-forward-curve",
+        "sectionId": "names",
+        "intuition": "원자재 선물곡선을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "현물 75와 설명용 석 달 선물 74.75가 가까운 재고 가치를 드러냅니다.",
+        "boundary": "곡선 모양만으로 미래 현물가격의 방향이 확정되지는 않습니다."
+      },
+      {
+        "id": "commodity-roll-yield",
+        "sectionId": "names",
+        "intuition": "원자재 롤수익을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "75를 팔고 78을 사면 같은 수량을 유지하는 데 3이 더 듭니다.",
+        "boundary": "현물 가격 변화와 담보 이자를 합친 전체 수익은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 원자재 편의수익",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "commodity-convenience-yield"
+        ]
+      },
+      {
+        "label": "2단계 · 원자재 선물곡선",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "commodity-forward-curve"
+        ]
+      },
+      {
+        "label": "3단계 · 원자재 롤수익",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "commodity-roll-yield"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 편의수익의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "원자재 편의수익",
+          "편의수익 2달러가 자금·보관비 1.75달러보다 조금 큽니다.",
+          "별도 현금으로 지급되는 확정 이자가 아니며 직접 관측하기 어렵습니다."
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 선물곡선이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "원자재 선물곡선",
+          "첫 개념과의 차이",
+          "현물 75와 설명용 석 달 선물 74.75가 가까운 재고 가치를 드러냅니다."
+        ],
+        "requiredConcepts": [
+          "commodity-forward-curve"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 롤수익이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "원자재 롤수익",
+          "75를 팔고 78을 사면 같은 수량을 유지하는 데 3이 더 듭니다.",
+          "현물 가격 변화와 담보 이자를 합친 전체 수익은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "commodity-roll-yield"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "CME Group · Contango and Backwardation",
+          "CME Group · Delivery of WTI Futures",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "commodity-forward-curve"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "commodity-roll-yield"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "commodity-convenience-yield",
+          "commodity-forward-curve",
+          "commodity-roll-yield"
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield",
+          "commodity-forward-curve",
+          "commodity-roll-yield"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield",
+          "commodity-forward-curve",
+          "commodity-roll-yield"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield",
+          "commodity-forward-curve",
+          "commodity-roll-yield"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "commodity-convenience-yield",
+          "commodity-forward-curve",
+          "commodity-roll-yield"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CME Group · Contango and Backwardation",
+        "href": "https://www.cmegroup.com/education/courses/introduction-to-base-metals/what-is-contango-and-backwardation",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "보유비용·편의수익, 선물곡선과 만기 수렴을 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CME Group · Delivery of WTI Futures",
+        "href": "https://www.cmegroup.com/education/courses/introduction-to-crude-oil/crude-oil-fundamentals/delivery-of-wti-futures",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "WTI 선물의 실물 인도 장소와 현물시장 연결을 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/option-strategies-and-structured-notes": {
+    "entryLevel": true,
+    "entryNote": "투자금 100을 만기 원금을 만드는 채권 92와 수익 조건을 만드는 옵션 예산 8로 나누는 데서 시작합니다.",
+    "coreIdea": "옵션 전략과 구조화채권은 콜·풋의 매수·매도를 합쳐 지급 모양을 만들며, 높은 쿠폰과 원금보호 문구를 보려면 내재 옵션·장벽 경로·발행자 신용·중도 유동성을 함께 풀어야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "option-strategy-composition",
+        "role": "옵션 조합이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "embedded-derivative",
+        "role": "내재 파생상품이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "barrier-path-dependence",
+        "role": "장벽과 경로 의존성이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "option-strategy-composition",
+        "sectionId": "names",
+        "intuition": "옵션 조합을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "100 콜을 사고 120 콜을 팔아 상승 지급을 20에서 막습니다.",
+        "boundary": "합성한 지급이 거래비용과 행사 조건까지 자동으로 같게 만들지는 않습니다."
+      },
+      {
+        "id": "embedded-derivative",
+        "sectionId": "names",
+        "intuition": "내재 파생상품을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "높은 쿠폰의 반대편에 투자자가 판 하락 풋이 들어갈 수 있습니다.",
+        "boundary": "표면 상품명이나 쿠폰율만으로 정확한 옵션 방향을 알 수 없습니다."
+      },
+      {
+        "id": "barrier-path-dependence",
+        "sectionId": "names",
+        "intuition": "장벽과 경로 의존성을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "70 장벽을 접촉한 뒤 만기 60이면 원금이 60으로 줄 수 있습니다.",
+        "boundary": "만기 가격만 같으면 언제나 같은 지급이 나온다는 구조가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 옵션 조합",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "option-strategy-composition"
+        ]
+      },
+      {
+        "label": "2단계 · 내재 파생상품",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "embedded-derivative"
+        ]
+      },
+      {
+        "label": "3단계 · 장벽과 경로 의존성",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "barrier-path-dependence"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "옵션 조합의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "옵션 조합",
+          "100 콜을 사고 120 콜을 팔아 상승 지급을 20에서 막습니다.",
+          "합성한 지급이 거래비용과 행사 조건까지 자동으로 같게 만들지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "내재 파생상품이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "내재 파생상품",
+          "첫 개념과의 차이",
+          "높은 쿠폰의 반대편에 투자자가 판 하락 풋이 들어갈 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "embedded-derivative"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "장벽과 경로 의존성이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "장벽과 경로 의존성",
+          "70 장벽을 접촉한 뒤 만기 60이면 원금이 60으로 줄 수 있습니다.",
+          "만기 가격만 같으면 언제나 같은 지급이 나온다는 구조가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "barrier-path-dependence"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "Options Industry Council · Options Strategies Quick Guide",
+          "SEC Investor.gov · Structured Notes",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "embedded-derivative"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "barrier-path-dependence"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "option-strategy-composition",
+          "embedded-derivative",
+          "barrier-path-dependence"
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition",
+          "embedded-derivative",
+          "barrier-path-dependence"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition",
+          "embedded-derivative",
+          "barrier-path-dependence"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition",
+          "embedded-derivative",
+          "barrier-path-dependence"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "option-strategy-composition",
+          "embedded-derivative",
+          "barrier-path-dependence"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Options Industry Council · Options Strategies Quick Guide",
+        "href": "https://www.optionseducation.org/getattachment/007fe864-029a-490d-8dc1-3b58bd558f64/options-strategies-quick-guide.pdf?lang=en-US",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "콜스프레드 등 옵션 조합의 위험과 보상 구조를 정리합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "SEC Investor.gov · Structured Notes",
+        "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-76",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "채권·내재 파생상품, 장벽·발행자 신용·유동성 위험을 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/credit-derivatives-default-risk-and-tranches": {
+    "entryLevel": true,
+    "entryNote": "회사채 1억 원의 신용위험을 팔지 않고 연 2% 프리미엄으로 옮기는 CDS에서 시작합니다.",
+    "coreIdea": "CDS는 정의된 신용사건과 결제 절차에 따라 회수율 손실을 옮기며, 지수 트랜치는 여러 기업의 누적손실 구간을 나눠 평균 부도뿐 아니라 공동부도와 상대방 위험을 가격에 담습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "cds-spread-protection",
+        "role": "CDS 스프레드와 신용보호이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "credit-recovery-rate",
+        "role": "신용 회수율이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "credit-loss-tranche",
+        "role": "신용 손실 트랜치이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cds-spread-protection",
+        "sectionId": "names",
+        "intuition": "CDS 스프레드와 신용보호을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "명목 1억 원의 연 2% 프리미엄은 단순 연 200만 원입니다.",
+        "boundary": "회사에 나쁜 뉴스가 생길 때마다 자동 지급하는 보험은 아닙니다."
+      },
+      {
+        "id": "credit-recovery-rate",
+        "sectionId": "names",
+        "intuition": "신용 회수율을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "회수율 40%이면 설명용 보호 지급은 명목의 60%인 6,000만 원입니다.",
+        "boundary": "모든 채권과 결제방식에서 같은 값이 적용되지는 않습니다."
+      },
+      {
+        "id": "credit-loss-tranche",
+        "sectionId": "names",
+        "intuition": "신용 손실 트랜치을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "0~3% 트랜치는 1억 원 지수의 첫 300만 원 손실을 받습니다.",
+        "boundary": "평소 손실 빈도가 낮은 선순위 구간도 공동 충격에서 큰 손실을 볼 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · CDS 스프레드와 신용보호",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "cds-spread-protection"
+        ]
+      },
+      {
+        "label": "2단계 · 신용 회수율",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "credit-recovery-rate"
+        ]
+      },
+      {
+        "label": "3단계 · 신용 손실 트랜치",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "credit-loss-tranche"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "CDS 스프레드와 신용보호의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CDS 스프레드와 신용보호",
+          "명목 1억 원의 연 2% 프리미엄은 단순 연 200만 원입니다.",
+          "회사에 나쁜 뉴스가 생길 때마다 자동 지급하는 보험은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "신용 회수율이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "신용 회수율",
+          "첫 개념과의 차이",
+          "회수율 40%이면 설명용 보호 지급은 명목의 60%인 6,000만 원입니다."
+        ],
+        "requiredConcepts": [
+          "credit-recovery-rate"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "신용 손실 트랜치이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "신용 손실 트랜치",
+          "0~3% 트랜치는 1억 원 지수의 첫 300만 원 손실을 받습니다.",
+          "평소 손실 빈도가 낮은 선순위 구간도 공동 충격에서 큰 손실을 볼 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "credit-loss-tranche"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "ISDA · Credit Derivatives Determinations Committees",
+          "BIS Quarterly Review · CDS Index Tranches",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "credit-recovery-rate"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "credit-loss-tranche"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "cds-spread-protection",
+          "credit-recovery-rate",
+          "credit-loss-tranche"
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection",
+          "credit-recovery-rate",
+          "credit-loss-tranche"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection",
+          "credit-recovery-rate",
+          "credit-loss-tranche"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection",
+          "credit-recovery-rate",
+          "credit-loss-tranche"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "cds-spread-protection",
+          "credit-recovery-rate",
+          "credit-loss-tranche"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ISDA · Credit Derivatives Determinations Committees",
+        "href": "https://www.isda.org/2012/05/01/isda-paper-examines-three-year-history-of-the-isda-credit-derivatives-determinations-committees/",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "신용사건, 경매와 인도 가능 채무를 판단하는 표준 절차를 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "BIS Quarterly Review · CDS Index Tranches",
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "단일기업 CDS, 지수와 트랜치가 부도 상관을 나누는 구조를 분석합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/otc-master-agreement-collateral-netting-and-cva": {
+    "entryLevel": true,
+    "entryNote": "두 거래 상대 사이의 현재가치 +5·+4·−2·−5를 하나의 종료금액으로 줄이는 데서 시작합니다.",
+    "coreIdea": "장외파생의 상대방 위험은 기본계약과 확인서가 정한 상계집합, CSA 담보와 운영 절차를 거쳐 줄어들며, 남은 미래 양의 노출과 상대 신용을 CVA로 가격에 반영합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "close-out-netting",
+        "role": "종료 일괄상계이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "credit-support-annex",
+        "role": "CSA 담보이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "credit-valuation-adjustment",
+        "role": "신용가치조정(CVA)이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "close-out-netting",
+        "sectionId": "names",
+        "intuition": "종료 일괄상계을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "받을 9와 줄 7을 한 수취액 2로 줄입니다.",
+        "boundary": "관할과 거래 범위에서 집행 가능성이 확인되지 않으면 위험 감소를 전제할 수 없습니다."
+      },
+      {
+        "id": "credit-support-annex",
+        "sectionId": "names",
+        "intuition": "CSA 담보을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "순노출 2 가운데 현금담보 1.5를 받아 잔여 현재노출을 0.5로 줄입니다.",
+        "boundary": "가격 변화와 결제 지연, 담보가치 하락을 모두 없애지는 않습니다."
+      },
+      {
+        "id": "credit-valuation-adjustment",
+        "sectionId": "names",
+        "intuition": "신용가치조정(CVA)을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "노출 10×부도확률 2%×손실률 60%=0.12의 단순 근사입니다.",
+        "boundary": "규제와 회계 목적, 시장 입력과 모형에 따라 계산 범위가 다를 수 있습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 종료 일괄상계",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "close-out-netting"
+        ]
+      },
+      {
+        "label": "2단계 · CSA 담보",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "credit-support-annex"
+        ]
+      },
+      {
+        "label": "3단계 · 신용가치조정(CVA)",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "credit-valuation-adjustment"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "close-out-netting"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "종료 일괄상계의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "종료 일괄상계",
+          "받을 9와 줄 7을 한 수취액 2로 줄입니다.",
+          "관할과 거래 범위에서 집행 가능성이 확인되지 않으면 위험 감소를 전제할 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "close-out-netting"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "CSA 담보이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "CSA 담보",
+          "첫 개념과의 차이",
+          "순노출 2 가운데 현금담보 1.5를 받아 잔여 현재노출을 0.5로 줄입니다."
+        ],
+        "requiredConcepts": [
+          "credit-support-annex"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "신용가치조정(CVA)이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "신용가치조정(CVA)",
+          "노출 10×부도확률 2%×손실률 60%=0.12의 단순 근사입니다.",
+          "규제와 회계 목적, 시장 입력과 모형에 따라 계산 범위가 다를 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "ISDA · Master Agreement Close-out Netting Example",
+          "Basel Framework · Credit Valuation Adjustment",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "credit-support-annex"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "close-out-netting",
+          "credit-support-annex",
+          "credit-valuation-adjustment"
+        ],
+        "requiredConcepts": [
+          "close-out-netting",
+          "credit-support-annex",
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "close-out-netting",
+          "credit-support-annex",
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "close-out-netting",
+          "credit-support-annex",
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "close-out-netting",
+          "credit-support-annex",
+          "credit-valuation-adjustment"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "ISDA · Master Agreement Close-out Netting Example",
+        "href": "https://www.isda.org/a/23iME/Legal-Guidelines-for-Smart-Derivatives-Contracts-ISDA-Master-Agreement.pdf",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "기본계약의 종료사건, 거래별 종료가치와 일괄상계를 설명합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Framework · Credit Valuation Adjustment",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2023-01-01/published/2020-07-08",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "CVA와 CVA 위험, 대상 거래와 주요 위험요인을 정한 기준입니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/var-expected-shortfall-stress-and-model-risk": {
+    "entryLevel": true,
+    "entryNote": "0·0·1·1·2·2·3·4·6·10의 열 가지 하루 손실을 작은 순서로 놓는 데서 시작합니다.",
+    "coreIdea": "VaR는 정한 기간과 신뢰수준의 손실 문턱을, 예상손실은 그 바깥 꼬리의 평균을 보여 주며, 자료에 없던 복합 충격과 모형·유동성 한계는 별도 스트레스 시험과 사후검증으로 관리합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "value-at-risk",
+        "role": "위험가치(VaR)이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "expected-shortfall",
+        "role": "예상손실(ES)이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      },
+      {
+        "id": "stress-testing-model-risk",
+        "role": "스트레스 시험과 모형 위험이 핵심 사례의 현금흐름과 판단을 어떻게 나누는지 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "value-at-risk",
+        "sectionId": "names",
+        "intuition": "위험가치(VaR)을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "열 손실 가운데 설명용 80% VaR는 4입니다.",
+        "boundary": "최대손실이나 문턱을 넘지 않을 확정 보장은 아닙니다."
+      },
+      {
+        "id": "expected-shortfall",
+        "sectionId": "names",
+        "intuition": "예상손실(ES)을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "최악 두 손실 6과 10의 평균은 8입니다.",
+        "boundary": "표본에 없던 위기와 거래 유동성 고갈을 자동으로 포함하지는 않습니다."
+      },
+      {
+        "id": "stress-testing-model-risk",
+        "sectionId": "names",
+        "intuition": "스트레스 시험과 모형 위험을 생활 장부의 숫자와 지급 순서로 먼저 구분합니다.",
+        "workedExample": "복합 충격 손실 18을 자본과 현금 한도에 비교합니다.",
+        "boundary": "큰 손실 숫자 하나를 만들거나 미래 위기의 확률을 맞히는 절차는 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 위험가치(VaR)",
+        "relation": "사례의 첫 지급과 위험을 구분합니다.",
+        "concepts": [
+          "value-at-risk"
+        ]
+      },
+      {
+        "label": "2단계 · 예상손실(ES)",
+        "relation": "첫 구분을 가격과 현금흐름으로 연결합니다.",
+        "concepts": [
+          "expected-shortfall"
+        ]
+      },
+      {
+        "label": "3단계 · 스트레스 시험과 모형 위험",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "stress-testing-model-risk"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 수치 사례의 각 금액과 지급 방향을 순서대로 설명하세요.",
+        "answerChecklist": [
+          "사례 숫자",
+          "단위",
+          "지급 방향"
+        ],
+        "requiredConcepts": [
+          "value-at-risk"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "위험가치(VaR)의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "위험가치(VaR)",
+          "열 손실 가운데 설명용 80% VaR는 4입니다.",
+          "최대손실이나 문턱을 넘지 않을 확정 보장은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "value-at-risk"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "예상손실(ES)이 첫 개념과 다른 역할을 설명하세요.",
+        "answerChecklist": [
+          "예상손실(ES)",
+          "첫 개념과의 차이",
+          "최악 두 손실 6과 10의 평균은 8입니다."
+        ],
+        "requiredConcepts": [
+          "expected-shortfall"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "스트레스 시험과 모형 위험이 실제 판단을 바꾸는 지점을 설명하세요.",
+        "answerChecklist": [
+          "스트레스 시험과 모형 위험",
+          "복합 충격 손실 18을 자본과 현금 한도에 비교합니다.",
+          "큰 손실 숫자 하나를 만들거나 미래 위기의 확률을 맞히는 절차는 아닙니다."
+        ],
+        "requiredConcepts": [
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "두 공식 출처가 각각 어떤 사실과 경계를 뒷받침하는지 구분하세요.",
+        "answerChecklist": [
+          "Basel Framework · Expected Shortfall",
+          "Basel Committee · Stress Testing Principles",
+          "근거의 범위"
+        ],
+        "requiredConcepts": [
+          "expected-shortfall"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "설명용 숫자를 실제 거래의 확정 결과로 사용하면 안 되는 이유를 설명하세요.",
+        "answerChecklist": [
+          "설명용 가정",
+          "계약 조건",
+          "적용 경계"
+        ],
+        "requiredConcepts": [
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "핵심 사례의 조건 하나를 바꿔 세 개념으로 결과를 다시 계산하고 판단하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "value-at-risk",
+          "expected-shortfall",
+          "stress-testing-model-risk"
+        ],
+        "requiredConcepts": [
+          "value-at-risk",
+          "expected-shortfall",
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 번째 출처의 주장을 사례에 적용할 때 남는 한계를 반례와 함께 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "사례 적용",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "value-at-risk",
+          "expected-shortfall",
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 번째 출처의 구조가 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
+        "answerChecklist": [
+          "계약 조건",
+          "추가 전제",
+          "시장 또는 고객 차이"
+        ],
+        "requiredConcepts": [
+          "value-at-risk",
+          "expected-shortfall",
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글과 연결한 기존 글의 질문이 갈리는 지점을 현금흐름과 위험으로 설명하세요.",
+        "answerChecklist": [
+          "정본 범위",
+          "재사용",
+          "개념 경계"
+        ],
+        "requiredConcepts": [
+          "value-at-risk",
+          "expected-shortfall",
+          "stress-testing-model-risk"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Basel Framework · Expected Shortfall",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "시장위험 내부모형의 예상손실, 97.5% 신뢰수준과 유동성 기간을 정합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Basel Committee · Stress Testing Principles",
+        "href": "https://www.bis.org/publications/201810-guidelines-stress-testing-principles",
+        "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
+        "contribution": "스트레스 시험의 목표, 지배구조, 방법론, 자원과 사용 원칙을 정리합니다.",
+        "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
+        "evidenceScope": "공식 시장·감독·산업 기준 자료가 직접 설명하는 범위입니다.",
+        "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

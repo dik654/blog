@@ -30,7 +30,12 @@
 | 금리·통화 스왑 | 서로 다른 조건의 지급 교환 | 10억 고정4%·변동6%→순수취2000만, 대출 합산4000만 | `markets/swaps-and-credit-risk#mechanism` | 순현금·명목금액 구분 |
 | FRA·캡·플로어·스왑션 | 한 기간 금리 차액과 여러 기간의 의무·선택권 | 10억×(6%−4%)×0.25=약500만 원, 선지급 할인 구분 | `markets/interest-rate-derivatives-from-fra-to-swaptions#case` | MIT·CME SOFR 사례 대조 |
 | 파생상품 권유·설명·기록 | 고객 목적·재산·경험과 상품 시나리오의 대응 | 수출1억달러·매도의무2억달러·환율차200원→초과분200억원 | `markets/derivatives-suitability-disclosure-and-sales-practice#case` | 금소법·금융투자교육원 과정 대조 |
-| CDS | 신용 사건 발생 시 보호 매도자의 지급 | 10억·회수40%→채권4억+보호6억, 상대방 이행 조건 | `markets/swaps-and-credit-risk#comparison` | 동시 부도 반례 |
+| 환헤지·선도포인트·교차통화 베이시스 | 받을 통화−낼 통화의 순노출과 두 통화 조달비용 | 100만달러−20만달러, 현물1350·금리3%/5%→석달 선도 약1343원 | `markets/currency-hedging-forward-points-and-cross-currency-basis#case` | CME·BIS 근거와 과다 헤지 반례 |
+| 원자재 보유비용·편의수익·롤 | 현물 재고의 비용·운영 편익과 계약 교체 손익 | 현물75+자금0.75+보관1−편의2=석달 선물74.75 | `markets/commodity-carry-convenience-yield-and-roll#case` | CME 곡선·WTI 인도 규칙 대조 |
+| 옵션 조합·구조화채권 | 채권 부품과 내재 옵션의 만기·경로별 지급 | 투자100=채권92+옵션8, 100/120 콜스프레드·장벽70 | `markets/option-strategies-and-structured-notes#case` | OIC·SEC 근거와 발행자 신용 |
+| CDS·지수 트랜치 | 신용 사건·회수율 지급과 포트폴리오 손실 순서 | 1억·스프레드2%·회수40%→프리미엄200만·보호6000만 | `markets/credit-derivatives-default-risk-and-tranches#case` | ISDA 결정 절차·BIS 트랜치 구조 |
+| 장외 기본계약·CSA·CVA | 거래상대별 상계집합, 담보와 미래 양의 노출 | +5+4−2−5=순액2, 담보1.5 뒤0.5, 노출10×PD2%×LGD60%=0.12 | `markets/otc-master-agreement-collateral-netting-and-cva#case` | ISDA·바젤 근거와 관할 경계 |
+| VaR·예상손실·스트레스 | 손실 문턱·꼬리 평균·지정 복합 충격 | 열 손실의 80% VaR4·ES8·별도 스트레스18 | `markets/var-expected-shortfall-stress-and-model-risk#case` | 바젤97.5% ES와 설명용80% 구분 |
 | ELS·DLS | 지수·금리·환율·신용 등 조건부 발행자 채무 | 가정 문턱60%:최종61%→1060만 /59%→590만 | `markets/financial-products-and-claims#source` | 청구권·관측·상환식·발행자 구분 |
 | ELB·DLB·원금지급형 구조화증권 | 만기 원금 지급을 약속한 발행자 | 만기 약속과 중도960만 평가·발행자 부도는 별도 | 상품지도7·8절 | 실제 한국 ELB 공시·SEC 구조화 설명 |
 | ELN | 주가 등에 연동된 채무 | ETF 내부 ELN은 발행자의 신용·현금화 위험 추가 | 상품지도8절, 커버드콜9절 | JEPI 공식 위험 설명 |

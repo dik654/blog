@@ -29595,6 +29595,204 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "고객 정보·제공 문서·설명·이해 확인·주문과 사후 검토를 재구성할 수 있게 남긴 기록입니다.",
     "canonicalHref": "/finance/markets/derivatives-suitability-disclosure-and-sales-practice#names"
   },
+  "net-currency-exposure": {
+    "id": "net-currency-exposure",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "순통화노출",
+    "aliases": [
+      "net currency exposure"
+    ],
+    "definition": "같은 시점과 통화로 받을 돈에서 낼 돈을 빼 환율 변화에 실제로 민감한 금액입니다.",
+    "canonicalHref": "/finance/markets/currency-hedging-forward-points-and-cross-currency-basis#names"
+  },
+  "forward-points-covered-interest": {
+    "id": "forward-points-covered-interest",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "선도포인트와 금리평가",
+    "aliases": [
+      "forward points and covered interest parity"
+    ],
+    "definition": "현물환율을 같은 기간의 두 통화 금리로 옮겨 선도환율과의 차이를 설명하는 무차익 관계입니다.",
+    "canonicalHref": "/finance/markets/currency-hedging-forward-points-and-cross-currency-basis#names"
+  },
+  "cross-currency-basis": {
+    "id": "cross-currency-basis",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "교차통화 베이시스",
+    "aliases": [
+      "cross-currency basis"
+    ],
+    "definition": "스왑을 통한 한 통화의 조달비용이 단순한 두 통화 금리 차이에서 벗어나는 정도입니다.",
+    "canonicalHref": "/finance/markets/currency-hedging-forward-points-and-cross-currency-basis#names"
+  },
+  "commodity-convenience-yield": {
+    "id": "commodity-convenience-yield",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 편의수익",
+    "aliases": [
+      "commodity convenience yield"
+    ],
+    "definition": "실물을 지금 보유해 생산 중단을 막고 예상 밖 수요에 대응할 수 있는 운영상 편익입니다.",
+    "canonicalHref": "/finance/markets/commodity-carry-convenience-yield-and-roll#names"
+  },
+  "commodity-forward-curve": {
+    "id": "commodity-forward-curve",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 선물곡선",
+    "aliases": [
+      "commodity forward curve"
+    ],
+    "definition": "같은 원자재의 서로 다른 인도월 가격을 나란히 놓아 콘탱고와 백워데이션을 보여 주는 구조입니다.",
+    "canonicalHref": "/finance/markets/commodity-carry-convenience-yield-and-roll#names"
+  },
+  "commodity-roll-yield": {
+    "id": "commodity-roll-yield",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 롤수익",
+    "aliases": [
+      "commodity roll yield"
+    ],
+    "definition": "가까운 선물계약을 닫고 다음 만기 계약으로 옮길 때 두 가격 차이가 만드는 손익 효과입니다.",
+    "canonicalHref": "/finance/markets/commodity-carry-convenience-yield-and-roll#names"
+  },
+  "option-strategy-composition": {
+    "id": "option-strategy-composition",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 조합",
+    "aliases": [
+      "option strategy composition"
+    ],
+    "definition": "여러 콜과 풋의 행사가격·만기·매수매도 방향을 합쳐 원하는 지급 모양을 만드는 방식입니다.",
+    "canonicalHref": "/finance/markets/option-strategies-and-structured-notes#names"
+  },
+  "embedded-derivative": {
+    "id": "embedded-derivative",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "내재 파생상품",
+    "aliases": [
+      "embedded derivative"
+    ],
+    "definition": "채권이나 예금 형태의 계약 안에 들어가 기준자산에 따라 수익과 손실을 바꾸는 파생 조건입니다.",
+    "canonicalHref": "/finance/markets/option-strategies-and-structured-notes#names"
+  },
+  "barrier-path-dependence": {
+    "id": "barrier-path-dependence",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "장벽과 경로 의존성",
+    "aliases": [
+      "barrier and path dependence"
+    ],
+    "definition": "기준자산이 기간 중 정한 선을 건드렸는지에 따라 만기 지급식이 달라지는 성질입니다.",
+    "canonicalHref": "/finance/markets/option-strategies-and-structured-notes#names"
+  },
+  "cds-spread-protection": {
+    "id": "cds-spread-protection",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CDS 스프레드와 신용보호",
+    "aliases": [
+      "CDS spread and protection"
+    ],
+    "definition": "보호매수자가 정기 프리미엄을 내고 정의된 신용사건 뒤 손실 보전을 받는 계약의 가격과 지급 구조입니다.",
+    "canonicalHref": "/finance/markets/credit-derivatives-default-risk-and-tranches#names"
+  },
+  "credit-recovery-rate": {
+    "id": "credit-recovery-rate",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용 회수율",
+    "aliases": [
+      "credit recovery rate"
+    ],
+    "definition": "신용사건 뒤 기준채무의 가치가 액면금액에서 얼마나 남는지를 나타내는 비율입니다.",
+    "canonicalHref": "/finance/markets/credit-derivatives-default-risk-and-tranches#names"
+  },
+  "credit-loss-tranche": {
+    "id": "credit-loss-tranche",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용 손실 트랜치",
+    "aliases": [
+      "credit loss tranche"
+    ],
+    "definition": "신용 포트폴리오의 누적손실 가운데 계약이 부담하는 시작점과 끝점을 정한 구간입니다.",
+    "canonicalHref": "/finance/markets/credit-derivatives-default-risk-and-tranches#names"
+  },
+  "close-out-netting": {
+    "id": "close-out-netting",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "종료 일괄상계",
+    "aliases": [
+      "close-out netting"
+    ],
+    "definition": "종료사건 때 같은 기본계약 아래 거래의 현재가치를 한 통화의 순지급액으로 줄이는 법률 장치입니다.",
+    "canonicalHref": "/finance/markets/otc-master-agreement-collateral-netting-and-cva#names"
+  },
+  "credit-support-annex": {
+    "id": "credit-support-annex",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CSA 담보",
+    "aliases": [
+      "credit support annex collateral"
+    ],
+    "definition": "문턱·최소이체액·적격자산과 평가주기에 따라 장외 거래의 상대방 노출을 담보로 덮는 약정입니다.",
+    "canonicalHref": "/finance/markets/otc-master-agreement-collateral-netting-and-cva#names"
+  },
+  "credit-valuation-adjustment": {
+    "id": "credit-valuation-adjustment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용가치조정(CVA)",
+    "aliases": [
+      "credit valuation adjustment"
+    ],
+    "definition": "거래상대방의 잠재 부도로 생길 기대손실을 파생상품의 무부도 가치에서 조정한 값입니다.",
+    "canonicalHref": "/finance/markets/otc-master-agreement-collateral-netting-and-cva#names"
+  },
+  "value-at-risk": {
+    "id": "value-at-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "위험가치(VaR)",
+    "aliases": [
+      "value at risk"
+    ],
+    "definition": "정한 보유기간과 신뢰수준에서 손실분포의 경계를 보여 주는 분위수입니다.",
+    "canonicalHref": "/finance/markets/var-expected-shortfall-stress-and-model-risk#names"
+  },
+  "expected-shortfall": {
+    "id": "expected-shortfall",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "예상손실(ES)",
+    "aliases": [
+      "expected shortfall"
+    ],
+    "definition": "정한 분위수 문턱 바깥의 손실들이 평균적으로 얼마나 큰지를 보여 주는 꼬리 위험 척도입니다.",
+    "canonicalHref": "/finance/markets/var-expected-shortfall-stress-and-model-risk#names"
+  },
+  "stress-testing-model-risk": {
+    "id": "stress-testing-model-risk",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "스트레스 시험과 모형 위험",
+    "aliases": [
+      "stress testing and model risk"
+    ],
+    "definition": "지정한 극단 충격을 다시 평가하고 가격·분포·데이터·구현 가정이 틀릴 가능성까지 관리하는 과정입니다.",
+    "canonicalHref": "/finance/markets/var-expected-shortfall-stress-and-model-risk#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -53843,6 +54041,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "derivatives-suitability",
     "relation": "constrains",
     "reason": "판매 과정의 증거은 파생상품 적합성을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "net-currency-exposure",
+    "to": "forward-points-covered-interest",
+    "relation": "prerequisite",
+    "reason": "순통화노출을 먼저 구분해야 선도포인트와 금리평가이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "forward-points-covered-interest",
+    "to": "cross-currency-basis",
+    "relation": "extends",
+    "reason": "선도포인트와 금리평가의 계산을 실제 판단과 남는 위험인 교차통화 베이시스으로 확장합니다."
+  },
+  {
+    "from": "cross-currency-basis",
+    "to": "net-currency-exposure",
+    "relation": "constrains",
+    "reason": "교차통화 베이시스은 순통화노출을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "commodity-convenience-yield",
+    "to": "commodity-forward-curve",
+    "relation": "prerequisite",
+    "reason": "원자재 편의수익을 먼저 구분해야 원자재 선물곡선이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "commodity-forward-curve",
+    "to": "commodity-roll-yield",
+    "relation": "extends",
+    "reason": "원자재 선물곡선의 계산을 실제 판단과 남는 위험인 원자재 롤수익으로 확장합니다."
+  },
+  {
+    "from": "commodity-roll-yield",
+    "to": "commodity-convenience-yield",
+    "relation": "constrains",
+    "reason": "원자재 롤수익은 원자재 편의수익을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "option-strategy-composition",
+    "to": "embedded-derivative",
+    "relation": "prerequisite",
+    "reason": "옵션 조합을 먼저 구분해야 내재 파생상품이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "embedded-derivative",
+    "to": "barrier-path-dependence",
+    "relation": "extends",
+    "reason": "내재 파생상품의 계산을 실제 판단과 남는 위험인 장벽과 경로 의존성으로 확장합니다."
+  },
+  {
+    "from": "barrier-path-dependence",
+    "to": "option-strategy-composition",
+    "relation": "constrains",
+    "reason": "장벽과 경로 의존성은 옵션 조합을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "cds-spread-protection",
+    "to": "credit-recovery-rate",
+    "relation": "prerequisite",
+    "reason": "CDS 스프레드와 신용보호을 먼저 구분해야 신용 회수율이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "credit-recovery-rate",
+    "to": "credit-loss-tranche",
+    "relation": "extends",
+    "reason": "신용 회수율의 계산을 실제 판단과 남는 위험인 신용 손실 트랜치으로 확장합니다."
+  },
+  {
+    "from": "credit-loss-tranche",
+    "to": "cds-spread-protection",
+    "relation": "constrains",
+    "reason": "신용 손실 트랜치은 CDS 스프레드와 신용보호을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "close-out-netting",
+    "to": "credit-support-annex",
+    "relation": "prerequisite",
+    "reason": "종료 일괄상계을 먼저 구분해야 CSA 담보이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "credit-support-annex",
+    "to": "credit-valuation-adjustment",
+    "relation": "extends",
+    "reason": "CSA 담보의 계산을 실제 판단과 남는 위험인 신용가치조정(CVA)으로 확장합니다."
+  },
+  {
+    "from": "credit-valuation-adjustment",
+    "to": "close-out-netting",
+    "relation": "constrains",
+    "reason": "신용가치조정(CVA)은 종료 일괄상계을 현실에 적용할 때의 범위와 한계를 정합니다."
+  },
+  {
+    "from": "value-at-risk",
+    "to": "expected-shortfall",
+    "relation": "prerequisite",
+    "reason": "위험가치(VaR)을 먼저 구분해야 예상손실(ES)이 사례에서 맡는 가격 역할을 이해할 수 있습니다."
+  },
+  {
+    "from": "expected-shortfall",
+    "to": "stress-testing-model-risk",
+    "relation": "extends",
+    "reason": "예상손실(ES)의 계산을 실제 판단과 남는 위험인 스트레스 시험과 모형 위험으로 확장합니다."
+  },
+  {
+    "from": "stress-testing-model-risk",
+    "to": "value-at-risk",
+    "relation": "constrains",
+    "reason": "스트레스 시험과 모형 위험은 위험가치(VaR)을 현실에 적용할 때의 범위와 한계를 정합니다."
   },
 ];
 
