@@ -12304,4 +12304,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다."
     }
   ],
+  "markets/currency-hedging-forward-points-and-cross-currency-basis": [
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Reconciling FX Spot Futures Prices",
+      "href": "https://www.cmegroup.com/education/whitepapers/reconciling-fx-spot-futures-prices",
+      "note": "현물·선물환의 호가와 두 통화 금리가 만드는 보유비용 관계를 설명합니다."
+    },
+    {
+      "kind": "공식 연구",
+      "label": "BIS · Derivatives Markets through BIS Statistics",
+      "href": "https://www.bis.org/publications/qr-202512/international-finance-through-lens-bis-statistics-derivatives-markets",
+      "note": "FX 스왑·선도, 교차통화 베이시스와 국제 자금 흐름을 연결합니다."
+    }
+  ],
+  "markets/commodity-carry-convenience-yield-and-roll": [
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Contango and Backwardation",
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-base-metals/what-is-contango-and-backwardation",
+      "note": "보유비용·편의수익, 선물곡선과 만기 수렴을 설명합니다."
+    },
+    {
+      "kind": "공식 가이드",
+      "label": "CME Group · Delivery of WTI Futures",
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-crude-oil/crude-oil-fundamentals/delivery-of-wti-futures",
+      "note": "WTI 선물의 실물 인도 장소와 현물시장 연결을 설명합니다."
+    }
+  ],
+  "markets/option-strategies-and-structured-notes": [
+    {
+      "kind": "공식 가이드",
+      "label": "Options Industry Council · Options Strategies Quick Guide",
+      "href": "https://www.optionseducation.org/getattachment/007fe864-029a-490d-8dc1-3b58bd558f64/options-strategies-quick-guide.pdf?lang=en-US",
+      "note": "콜스프레드 등 옵션 조합의 위험과 보상 구조를 정리합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC Investor.gov · Structured Notes",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-76",
+      "note": "채권·내재 파생상품, 장벽·발행자 신용·유동성 위험을 설명합니다."
+    }
+  ],
+  "markets/credit-derivatives-default-risk-and-tranches": [
+    {
+      "kind": "공식 문서",
+      "label": "ISDA · Credit Derivatives Determinations Committees",
+      "href": "https://www.isda.org/2012/05/01/isda-paper-examines-three-year-history-of-the-isda-credit-derivatives-determinations-committees/",
+      "note": "신용사건, 경매와 인도 가능 채무를 판단하는 표준 절차를 설명합니다."
+    },
+    {
+      "kind": "공식 연구",
+      "label": "BIS Quarterly Review · CDS Index Tranches",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf",
+      "note": "단일기업 CDS, 지수와 트랜치가 부도 상관을 나누는 구조를 분석합니다."
+    }
+  ],
+  "markets/otc-master-agreement-collateral-netting-and-cva": [
+    {
+      "kind": "공식 문서",
+      "label": "ISDA · Master Agreement Close-out Netting Example",
+      "href": "https://www.isda.org/a/23iME/Legal-Guidelines-for-Smart-Derivatives-Contracts-ISDA-Master-Agreement.pdf",
+      "note": "기본계약의 종료사건, 거래별 종료가치와 일괄상계를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Credit Valuation Adjustment",
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2023-01-01/published/2020-07-08",
+      "note": "CVA와 CVA 위험, 대상 거래와 주요 위험요인을 정한 기준입니다."
+    }
+  ],
+  "markets/var-expected-shortfall-stress-and-model-risk": [
+    {
+      "kind": "공식 문서",
+      "label": "Basel Framework · Expected Shortfall",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+      "note": "시장위험 내부모형의 예상손실, 97.5% 신뢰수준과 유동성 기간을 정합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Basel Committee · Stress Testing Principles",
+      "href": "https://www.bis.org/publications/201810-guidelines-stress-testing-principles",
+      "note": "스트레스 시험의 목표, 지배구조, 방법론, 자원과 사용 원칙을 정리합니다."
+    }
+  ],
 };

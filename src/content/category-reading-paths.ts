@@ -133,9 +133,9 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "01 · 채무", title: "채권과 금리", description: "약정 지급과 현재 가격을 연결합니다.", subcategories: ["markets-bond"] },
       { eyebrow: "02 · 소유", title: "주식의 몫", description: "채무 지급 뒤 남는 청구권을 봅니다.", subcategories: ["markets-equity"] },
       { eyebrow: "03 · 상품", title: "포장과 실제 자산", description: "상품 지도·펀드·ETF·ETN·유동화를 비교합니다.", subcategories: ["markets-products"] },
-      { eyebrow: "04 · 계약", title: "손익에서 가격과 책임까지", description: "선물·옵션의 지급에서 무차익 가격·청산·헤지·판매 절차로 갑니다.", subcategories: ["markets-derivatives"] },
+      { eyebrow: "04 · 계약", title: "손익에서 가격·운영·위험관리까지", description: "선물·옵션의 지급에서 통화·원자재 헤지, 구조화 상품, 신용·장외·시장위험으로 갑니다.", subcategories: ["markets-derivatives"] },
     ],
-    featuredArticles: ["bond-pricing-and-yield-curve", "equity-claims-and-valuation", "financial-products-and-claims", "funds-etfs-and-etns", "securitization-and-tranches", "forwards-and-futures", "no-arbitrage-cost-of-carry-and-basis", "clearing-margin-and-default-waterfall", "options-and-asymmetric-payoffs", "option-replication-and-put-call-parity", "option-greeks-volatility-and-dynamic-hedging", "covered-calls-and-income-funds", "swaps-and-credit-risk", "interest-rate-derivatives-from-fra-to-swaptions", "derivatives-suitability-disclosure-and-sales-practice"],
+    featuredArticles: ["bond-pricing-and-yield-curve", "equity-claims-and-valuation", "financial-products-and-claims", "funds-etfs-and-etns", "securitization-and-tranches", "forwards-and-futures", "no-arbitrage-cost-of-carry-and-basis", "clearing-margin-and-default-waterfall", "currency-hedging-forward-points-and-cross-currency-basis", "commodity-carry-convenience-yield-and-roll", "options-and-asymmetric-payoffs", "option-replication-and-put-call-parity", "option-greeks-volatility-and-dynamic-hedging", "covered-calls-and-income-funds", "option-strategies-and-structured-notes", "swaps-and-credit-risk", "interest-rate-derivatives-from-fra-to-swaptions", "credit-derivatives-default-risk-and-tranches", "otc-master-agreement-collateral-netting-and-cva", "var-expected-shortfall-stress-and-model-risk", "derivatives-suitability-disclosure-and-sales-practice"],
   },
   circuits: {
     title: "한 회로를 계산하는 순서",

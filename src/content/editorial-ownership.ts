@@ -16097,6 +16097,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "currency-hedging-forward-points-and-cross-currency-basis": {
+    "title": "순통화노출·선도포인트와 금리평가·교차통화 베이시스 글이 소유하는 범위",
+    "owns": [
+      "100만 달러 매출·20만 달러 원가의 순노출 장부",
+      "두 통화 금리로 계산한 석 달 선도포인트",
+      "교차통화 베이시스와 과다 헤지·수량 위험"
+    ],
+    "reuses": [
+      {
+        "label": "선물의 무차익 가격과 보유비용",
+        "href": "/finance/markets/no-arbitrage-cost-of-carry-and-basis"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "commodity-carry-convenience-yield-and-roll": {
+    "title": "원자재 편의수익·원자재 선물곡선·원자재 롤수익 글이 소유하는 범위",
+    "owns": [
+      "현물 75·자금 0.75·보관 1·편의수익 2의 원자재 장부",
+      "콘탱고·백워데이션과 재고 조건의 연결",
+      "인도·품질·장소 베이시스와 롤수익의 구분"
+    ],
+    "reuses": [
+      {
+        "label": "일반 자산의 보유비용과 베이시스",
+        "href": "/finance/markets/no-arbitrage-cost-of-carry-and-basis"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "option-strategies-and-structured-notes": {
+    "title": "옵션 조합·내재 파생상품·장벽과 경로 의존성 글이 소유하는 범위",
+    "owns": [
+      "채권 92와 옵션 예산 8로 본 구조화채권 분해",
+      "100·120 콜스프레드와 장벽 70의 지급식",
+      "쿠폰·원금손실·발행자 신용·중도매각 위험의 연결"
+    ],
+    "reuses": [
+      {
+        "label": "콜·풋의 비대칭 만기 지급",
+        "href": "/finance/markets/options-and-asymmetric-payoffs"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "credit-derivatives-default-risk-and-tranches": {
+    "title": "CDS 스프레드와 신용보호·신용 회수율·신용 손실 트랜치 글이 소유하는 범위",
+    "owns": [
+      "명목 1억·스프레드 2%·회수율 40%의 CDS 장부",
+      "신용사건 판단·경매·현금결제의 절차",
+      "지수의 0~3%·3~7% 손실구간과 공동부도 위험"
+    ],
+    "reuses": [
+      {
+        "label": "스왑과 신용보호의 기초 지급",
+        "href": "/finance/markets/swaps-and-credit-risk"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "otc-master-agreement-collateral-netting-and-cva": {
+    "title": "종료 일괄상계·CSA 담보·신용가치조정(CVA) 글이 소유하는 범위",
+    "owns": [
+      "네 거래의 총가치 16·순액 2·담보 뒤 0.5 장부",
+      "기본계약·확인서·CSA와 거래 생애주기의 연결",
+      "미래 양의 노출·부도확률·손실률에서 CVA로 가는 경로"
+    ],
+    "reuses": [
+      {
+        "label": "중앙청산과 개시·변동증거금",
+        "href": "/finance/markets/clearing-margin-and-default-waterfall"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "var-expected-shortfall-stress-and-model-risk": {
+    "title": "위험가치(VaR)·예상손실(ES)·스트레스 시험과 모형 위험 글이 소유하는 범위",
+    "owns": [
+      "열 손실에서 80% VaR 4와 예상손실 8의 손계산",
+      "복합 충격 손실 18과 통계 분포의 구분",
+      "사후검증·유동성·모형 위험에서 한도와 행동으로 가는 과정"
+    ],
+    "reuses": [
+      {
+        "label": "옵션 그릭스와 동적 헤지의 국소 위험",
+        "href": "/finance/markets/option-greeks-volatility-and-dynamic-hedging"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시장 구조·계약·규제의 정의는 인용한 공식 자료의 상품·관할·시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "설명용 수치와 단순 근사를 실제 가격·손실·법률 결론이나 투자 권유로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
