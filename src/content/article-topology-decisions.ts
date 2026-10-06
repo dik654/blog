@@ -1992,6 +1992,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "준비자산 100과 순지급 20의 같은 압력을 금본위제·브레턴우즈·변동환율에서 처리해 1870년대부터 1970년대까지 이어 가는 하나의 국제 통화 질서 전환입니다. 세 제도를 떼면 앞 체제의 실패가 다음 설계의 선택지를 만든 경로가 끊깁니다.",
     sharedGate: "금100·통화500·교환5:1·순지급20·잔액80·통화/금6.25의 가정과 1870~1880년대·1930년대·1944년·1971년·1970년대 초의 시기 구분이 본문·문제에서 일치하는지 확인합니다.",
   },
+  "political-philosophy/consent-liberty-and-legitimate-power": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "100가구의 야간 영업 표결 하나로 다수결, 동의, 권한, 자유, 해악, 비례성, 이의 절차까지 강제력의 정당성 검사를 끝까지 추적합니다.", sharedGate: "100가구·찬성 60·반대 40·야간 생활 의존 15라는 가정이 본문·시각화·연습문제에서 같고 표 수와 정당성을 구분하는지 확인합니다." },
+  "philosophy-of-science/evidence-models-and-causal-explanation": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "비·우산·사고 100일 사례 하나로 관측, 모형, 예측, 상관, 개입, 인과 설명과 비인과 설명의 경계를 끝까지 추적합니다.", sharedGate: "100일·비 40일·우산 판매 42일·사고 25일·교차 빈도가 본문·시각화·연습문제에서 같고 판매 금지와 배수 개선을 구분하는지 확인합니다." },
+  "mind-and-language/behavior-meaning-and-machine-understanding": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "중국어 문답 100개와 90점 사례 하나로 행동 기준, 구문·의미, 시스템 귀속, 튜링 게임, 중국어 방과 현재 AI 판단 범위를 끝까지 추적합니다.", sharedGate: "전체 100·익숙한 80·새 조합 20·정답 90이라는 가정이 본문·시각화·연습문제에서 같고 행동·의미·의식을 구분하는지 확인합니다." },
+  "economic-history/trade-credit-and-long-distance-networks": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "은 6미나 점토판 한 사례로 실물·청구권, 신용, 중개, 결제 표준과 다중 교역망을 같은 시간 경로에서 추적합니다.", sharedGate: "전체 6미나·첫 2미나·후속 4미나가 본문·시각화·연습문제에서 같고 계약 한 건과 교역망 전체를 구분하는지 확인합니다." },
+  "economic-history/colonial-plantations-slavery-and-extraction": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "설탕 판매액 100의 한 장부로 토지·강제 노동·운송·금융·제국 세금·자산 축적과 자료 누락을 같은 상품 경로에서 추적합니다.", sharedGate: "판매 100·기록 비용과 세금 55·소유주 잔여 45라는 가정이 본문·시각화·연습문제에서 같고 무임금 노동과 권리 손실을 잔여 계산에서 분리하는지 확인합니다." },
+  "economic-history/decolonization-oil-shocks-and-debt": { action: "keep", status: "reviewed", reviewedAt: "2026-10-06", rationale: "수출 100·석유 수입 40인 나라의 외화 장부로 탈식민, 교역조건, 개발 대출, 페트로달러 재순환과 부채 위기를 시간순으로 추적합니다.", sharedGate: "수출 100·초기 수입 90·유가 충격 뒤 수입 130·외채 130·금리 5%와 12%가 본문·시각화·연습문제에서 같은지 확인합니다." },
 };
 
 /**
@@ -2311,4 +2317,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "economic-history/agrarian-surplus-and-state":"05629080863fc1ee",
 "economic-history/industrial-revolution-wages-and-energy":"e57dccb3874557ce",
 "economic-history/gold-standard-depression-bretton-woods":"c1eaf8c1e6a13961",
+"political-philosophy/consent-liberty-and-legitimate-power":"e0a0c15b4007d6b5",
+"philosophy-of-science/evidence-models-and-causal-explanation":"e0bfdcd25617fcd1",
+"mind-and-language/behavior-meaning-and-machine-understanding":"5d4e23acce8a220d",
+"economic-history/trade-credit-and-long-distance-networks":"b7388e308d6bc6a6",
+"economic-history/colonial-plantations-slavery-and-extraction":"ddff3302dadd3429",
+"economic-history/decolonization-oil-shocks-and-debt":"17399f94928bdebf",
 };

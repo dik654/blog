@@ -264,7 +264,7 @@ export const DOMAIN_READING_PATHS: Readonly<
     organizingPrinciple: "혼합",
     title: "사료를 읽는 법에서 경제사의 시간축으로",
     description:
-      "먼저 남은 기록을 어디까지 믿을 수 있는지 배우고, 농업 잉여와 장부에서 산업화와 국제 통화 질서까지 실제 변화의 순서를 따라갑니다.",
+      "먼저 남은 기록을 어디까지 믿을 수 있는지 배우고, 농업 잉여와 장부에서 교역·식민 경제·산업화·국제 통화와 부채까지 변화의 순서를 따라갑니다.",
     stages: [
       {
         eyebrow: "01 · 기록은 누가 만들었는가",
@@ -288,10 +288,10 @@ export const DOMAIN_READING_PATHS: Readonly<
         categories: ["inference-from-sources"],
       },
       {
-        eyebrow: "04 · 기원전 4천년기부터 1970년대까지",
-        title: "생산과 돈의 제도가 바뀐 순서",
+        eyebrow: "04 · 기원전 4천년기부터 1980년대까지",
+        title: "생산·교역·돈의 제도가 바뀐 순서",
         description:
-          "남부 메소포타미아의 곡물 장부, 18~19세기 영국 산업화, 19세기 말부터 1970년대의 국제 통화 질서를 시간순으로 잇습니다.",
+          "곡물 장부에서 장거리 교역과 식민 상품망을 거쳐 산업화, 국제 통화 질서, 탈식민 뒤의 부채 위기까지 시간순으로 잇습니다.",
         categories: ["economic-history"],
       },
     ],
@@ -299,9 +299,9 @@ export const DOMAIN_READING_PATHS: Readonly<
   },
   philosophy: {
     organizingPrinciple: "선수 개념순",
-    title: "생각을 검사하는 세 가지 질문",
+    title: "생각을 검사하는 여섯 가지 질문",
     description:
-      "말의 결론이 따라오는지 먼저 확인하고, 맞힌 것과 안 것을 가른 뒤, 여러 사람이 얽힌 행동을 어떤 기준으로 판단할지 살펴봅니다.",
+      "논증과 지식의 기준에서 시작해 행동·정치·과학·인공지능에 같은 검사 도구를 적용합니다.",
     stages: [
       {
         eyebrow: "01 · 결론이 따라오는가",
@@ -320,6 +320,24 @@ export const DOMAIN_READING_PATHS: Readonly<
         title: "결과·의무·성품",
         description: "한 행동의 결과, 지켜야 할 원칙, 어떤 사람이 되는지를 같은 결정 위에 겹쳐 봅니다.",
         categories: ["ethics"],
+      },
+      {
+        eyebrow: "04 · 강제력은 언제 정당한가",
+        title: "동의·자유·정당한 권력",
+        description: "결정에 참여하지 않은 사람에게도 규칙을 강제할 수 있는 조건을 동의·권리·해악으로 나눕니다.",
+        categories: ["political-philosophy"],
+      },
+      {
+        eyebrow: "05 · 설명은 무엇을 더 주는가",
+        title: "증거·모형·인과 설명",
+        description: "예측이 맞는 것, 원인을 찾는 것, 쓸모 있는 모형을 만드는 것이 어디서 갈리는지 봅니다.",
+        categories: ["philosophy-of-science"],
+      },
+      {
+        eyebrow: "06 · 행동이 곧 이해인가",
+        title: "행동·의미·기계 이해",
+        description: "정답을 내는 행동과 뜻을 이해하는 상태를 튜링의 검사와 중국어 방 반례로 비교합니다.",
+        categories: ["mind-and-language"],
       },
     ],
     showFullSequence: true,

@@ -23,14 +23,17 @@ export const CATEGORY_READING_PATHS: Readonly<
 > = {
   "economic-history": {
     organizingPrinciple: "시간순",
-    title: "장부에서 공장과 국제 통화 질서까지",
+    title: "장부에서 교역·식민 경제·산업화·국제 부채까지",
     description: "각 글은 앞 시대의 제도가 다음 시대의 선택지를 어떻게 만들고 좁혔는지 시간순으로 따라갑니다.",
     stages: [
       { eyebrow: "01 · 기원전 3100~2900년 무렵", title: "곡물과 장부", description: "생산물을 모아 나눌 때 측정·기록·권한이 함께 생기는 조건을 봅니다.", subcategories: ["economic-history-early-state"] },
-      { eyebrow: "02 · 18세기 중엽~19세기 중엽", title: "산업화", description: "임금과 에너지 가격이 기계 선택을 바꾸고 생산과 생활이 다른 속도로 움직인 과정을 봅니다.", subcategories: ["economic-history-industry"] },
-      { eyebrow: "03 · 1870년대~1970년대", title: "국제 통화 질서", description: "금 교환 약속, 대공황기의 붕괴, 브레턴우즈의 조정 장치와 변동환율 전환을 잇습니다.", subcategories: ["economic-history-money"] },
+      { eyebrow: "02 · 기원전 2천년기~1500년 무렵", title: "교역·신용·중개", description: "먼 길의 운송 위험을 장부·대출·환전·중개인이 어떻게 나눴는지 봅니다.", subcategories: ["economic-history-trade"] },
+      { eyebrow: "03 · 1500년대~19세기", title: "식민 상품망과 강제 노동", description: "무역 이익의 숫자 뒤에서 토지·노동·정치 권리가 누구에게서 빠졌는지 추적합니다.", subcategories: ["economic-history-colonial"] },
+      { eyebrow: "04 · 18세기 중엽~19세기 중엽", title: "산업화", description: "임금과 에너지 가격이 기계 선택을 바꾸고 생산과 생활이 다른 속도로 움직인 과정을 봅니다.", subcategories: ["economic-history-industry"] },
+      { eyebrow: "05 · 1870년대~1970년대", title: "국제 통화 질서", description: "금 교환 약속, 대공황기의 붕괴, 브레턴우즈의 조정 장치와 변동환율 전환을 잇습니다.", subcategories: ["economic-history-money"] },
+      { eyebrow: "06 · 1945년~1980년대", title: "탈식민·석유 충격·부채", description: "정치적 독립 뒤 남은 수출 구조와 1970년대의 싼 대출이 1980년대 부채 위기로 바뀐 경로를 봅니다.", subcategories: ["economic-history-development"] },
     ],
-    featuredArticles: ["agrarian-surplus-and-state", "industrial-revolution-wages-and-energy", "gold-standard-depression-bretton-woods"],
+    featuredArticles: ["agrarian-surplus-and-state", "trade-credit-and-long-distance-networks", "colonial-plantations-slavery-and-extraction", "industrial-revolution-wages-and-energy", "gold-standard-depression-bretton-woods", "decolonization-oil-shocks-and-debt"],
   },
   business: {
     title: "한 가게의 시작과 사업 관계 읽기",

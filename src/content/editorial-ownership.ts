@@ -1,5 +1,9 @@
 export type EvidenceClass =
-  "standard" | "primary-source" | "project-measurement" | "project-claim";
+  | "standard"
+  | "primary-source"
+  | "secondary-source"
+  | "project-measurement"
+  | "project-claim";
 
 export interface ConceptLink {
   label: string;
@@ -15685,6 +15689,12 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [],
     evidence: [{ kind: "primary-source", rule: "IMF의 제도 연표를 국가별 동일 경험으로 일반화하지 않고 가정한 금 100·지급 20을 역사 실측치와 분리합니다." }],
   },
+  "consent-liberty-and-legitimate-power": { title: "동의·자유·정당한 권력 글이 소유하는 범위", owns: ["다수결과 정치적 정당성의 분리", "동의와 해악 원칙을 같은 강제력 사례에 적용", "권한·비례성·이의 절차의 판단 순서"], reuses: [], evidence: [{ kind: "primary-source", rule: "고전 원문의 역사적 범위와 현대 적용 사이에 필요한 추가 전제를 밝힙니다." }] },
+  "evidence-models-and-causal-explanation": { title: "증거·모형·인과 설명 글이 소유하는 범위", owns: ["예측 상관과 인과 설명의 분리", "관측·모형·개입의 한 경로", "여러 설명 수준과 모형 목적의 경계"], reuses: [], evidence: [{ kind: "secondary-source", rule: "철학 개관은 경쟁 모형과 반론을 함께 제시하고 한 모형을 과학 전체의 정답으로 일반화하지 않습니다." }] },
+  "behavior-meaning-and-machine-understanding": { title: "행동·의미·기계 이해 글이 소유하는 범위", owns: ["행동 성공과 의미 이해의 분리", "튜링 검사와 중국어 방의 비교", "시스템 수준·학습·몸·의식 주장의 경계"], reuses: [], evidence: [{ kind: "primary-source", rule: "원 논문의 시험 범위와 후속 반론을 함께 제시하고 현재 AI의 의식을 단정하지 않습니다." }] },
+  "trade-credit-and-long-distance-networks": { title: "교역·신용·장거리 망 글이 소유하는 범위", owns: ["물건·대금·정보·위험의 분리", "은 6미나의 단계 상환", "직선 실크로드가 아닌 구간별 중개망"], reuses: [], evidence: [{ kind: "primary-source", rule: "개별 점토판의 직접 증거와 넓은 교역망의 비교 자료를 구분합니다." }] },
+  "colonial-plantations-slavery-and-extraction": { title: "식민 플랜테이션·노예제·수탈 글이 소유하는 범위", owns: ["시장 장부와 권리 장부의 분리", "설탕 매출 100의 대서양 가치 이전", "항해 데이터와 장기 경로의 증거 범위"], reuses: [], evidence: [{ kind: "primary-source", rule: "지배자가 남긴 수량 기록의 가치와 누락을 함께 밝히고 사람의 권리 손실을 비용 숫자로 환원하지 않습니다." }] },
+  "decolonization-oil-shocks-and-debt": { title: "탈식민·석유 충격·부채 글이 소유하는 범위", owns: ["정치적 주권과 외화 제약의 분리", "수출 100·석유 수입 40의 충격 장부", "페트로달러 재순환에서 1980년대 위기까지의 경로"], reuses: [], evidence: [{ kind: "primary-source", rule: "국제기구 자료의 기관 관점을 밝히고 지역·산유 여부·국내 정책의 차이를 함께 제시합니다." }] },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
