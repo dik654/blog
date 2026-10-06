@@ -149311,4 +149311,1444 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "markets/equity-dispersion-implied-correlation-and-variance": {
+    "entryLevel": false,
+    "entryNote": "변동성 20%인 두 종목을 절반씩 담아 상관 0과 0.5에서 지수 변동성이 14.14%와 17.32%로 달라지는 사례에서 시작합니다.",
+    "coreIdea": "옵션 디스퍼전은 구성 종목과 지수의 분산 차이를 거래하되 비중·변동성·내재상관·베가와 헤지비용을 같은 만기 장부에서 맞춰야 하며, 평균상관을 모든 종목 쌍과 위기 꼬리의 직접 관측값으로 읽지 않습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "multi-asset-correlation-risk",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "equity-index-implied-average-correlation",
+        "role": "주가지수 내재 평균상관을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "option-dispersion-variance-spread",
+        "role": "옵션 디스퍼전 분산 차이을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "correlation-surface-term-strike",
+        "role": "상관 만기·행사가 표면을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "equity-index-implied-average-correlation",
+        "sectionId": "names",
+        "intuition": "주가지수 내재 평균상관이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "분자 0.01을 분모 0.02로 나눠 0.5를 얻습니다.",
+        "boundary": "직접 관측한 모든 종목 쌍의 상관과 같지 않습니다."
+      },
+      {
+        "id": "option-dispersion-variance-spread",
+        "sectionId": "names",
+        "intuition": "옵션 디스퍼전 분산 차이이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "개별 분산 0.04와 지수 분산 0.03을 비교합니다.",
+        "boundary": "차이 0.01을 확정 수익으로 읽지 않습니다."
+      },
+      {
+        "id": "correlation-surface-term-strike",
+        "sectionId": "names",
+        "intuition": "상관 만기·행사가 표면이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "1개월 등가격과 1년 하락 구간을 다른 점으로 둡니다.",
+        "boundary": "한 점을 모든 만기와 하락 구간에 적용하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "multi-asset-correlation-risk"
+        ]
+      },
+      {
+        "label": "2단계 · 주가지수 내재 평균상관",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "equity-index-implied-average-correlation"
+        ]
+      },
+      {
+        "label": "3단계 · 옵션 디스퍼전 분산 차이",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "option-dispersion-variance-spread"
+        ]
+      },
+      {
+        "label": "4단계 · 상관 만기·행사가 표면",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "correlation-surface-term-strike"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "20%인 두 종목의 비중을 0.5씩 두고 상관 0에서 14.14%, 상관 0.5에서 17.32%, 분산 차이 0.01을 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "주가지수 내재 평균상관의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "주가지수 내재 평균상관",
+          "분자 0.01을 분모 0.02로 나눠 0.5를 얻습니다.",
+          "직접 관측한 모든 종목 쌍의 상관과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "옵션 디스퍼전 분산 차이의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "옵션 디스퍼전 분산 차이",
+          "개별 분산 0.04와 지수 분산 0.03을 비교합니다.",
+          "차이 0.01을 확정 수익으로 읽지 않습니다."
+        ],
+        "requiredConcepts": [
+          "option-dispersion-variance-spread"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "상관 만기·행사가 표면의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "상관 만기·행사가 표면",
+          "1개월 등가격과 1년 하락 구간을 다른 점으로 둡니다.",
+          "한 점을 모든 만기와 하락 구간에 적용하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "Cboe · Implied Correlation Index 백서",
+          "지수 분산 0.03과 개별 기여 0.02에서 평균상관 0.5를 역산하는 식을 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "Cboe · Implied Correlation Indices",
+          "디스퍼전을 평균 구성 종목 분산과 포트폴리오 분산의 차이로 설명한 공식 범위를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation",
+          "option-dispersion-variance-spread",
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation",
+          "option-dispersion-variance-spread",
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation",
+          "option-dispersion-variance-spread",
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "equity-index-implied-average-correlation",
+          "option-dispersion-variance-spread",
+          "correlation-surface-term-strike"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Cboe · Implied Correlation Index 백서",
+        "href": "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "지수 분산 0.03과 개별 기여 0.02에서 평균상관 0.5를 역산하는 식을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Cboe · Implied Correlation Indices",
+        "href": "https://www.cboe.com/us/indices/implied/",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "디스퍼전을 평균 구성 종목 분산과 포트폴리오 분산의 차이로 설명한 공식 범위를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/credit-tranche-base-correlation-and-default-auction": {
+    "entryLevel": false,
+    "entryNote": "명목 100의 포트폴리오 손실 7을 0~3·3~7·7~10 구간에 나누고 최종가격 35의 CDS 지급을 계산합니다.",
+    "coreIdea": "신용 트랜치는 포트폴리오 손실을 시작점과 끝점 사이에 배분하고 베이스 상관으로 구간 호가를 맞추며, 신용사건 뒤에는 계약상 경매 최종가격을 현금결제에 적용하되 모형 상관과 실제 공동부도 확률을 구분합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "default-correlation",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "credit-index-tranche-loss-allocation",
+        "role": "신용지수 트랜치 손실 배분을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "credit-base-correlation-quote",
+        "role": "신용 베이스 상관 호가을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "cds-auction-final-price-settlement",
+        "role": "CDS 경매 최종가격 결제을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "credit-index-tranche-loss-allocation",
+        "sectionId": "names",
+        "intuition": "신용지수 트랜치 손실 배분이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "손실 7에서 0~3은 3, 3~7은 4, 7~10은 0을 부담합니다.",
+        "boundary": "명목 비중만으로 각 구간의 위험을 비교하지 않습니다."
+      },
+      {
+        "id": "credit-base-correlation-quote",
+        "sectionId": "names",
+        "intuition": "신용 베이스 상관 호가이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "0~10 가격을 아래 세 구간의 합에 맞춥니다.",
+        "boundary": "실제 회사 쌍의 공동부도 확률이 아닙니다."
+      },
+      {
+        "id": "cds-auction-final-price-settlement",
+        "sectionId": "names",
+        "intuition": "CDS 경매 최종가격 결제이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "명목 1,000만 달러와 가격 35에서 단순 지급 650만 달러를 구합니다.",
+        "boundary": "미지급 프리미엄과 사건별 조건을 생략하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "default-correlation"
+        ]
+      },
+      {
+        "label": "2단계 · 신용지수 트랜치 손실 배분",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "credit-index-tranche-loss-allocation"
+        ]
+      },
+      {
+        "label": "3단계 · 신용 베이스 상관 호가",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "credit-base-correlation-quote"
+        ]
+      },
+      {
+        "label": "4단계 · CDS 경매 최종가격 결제",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "cds-auction-final-price-settlement"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "포트폴리오 손실 7을 3·4·0으로 배분하고 명목 1,000만 달러에 경매 최종가격 35를 적용해 단순 보호 지급 650만 달러를 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "신용지수 트랜치 손실 배분의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "신용지수 트랜치 손실 배분",
+          "손실 7에서 0~3은 3, 3~7은 4, 7~10은 0을 부담합니다.",
+          "명목 비중만으로 각 구간의 위험을 비교하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "신용 베이스 상관 호가의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "신용 베이스 상관 호가",
+          "0~10 가격을 아래 세 구간의 합에 맞춥니다.",
+          "실제 회사 쌍의 공동부도 확률이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "credit-base-correlation-quote"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "CDS 경매 최종가격 결제의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "CDS 경매 최종가격 결제",
+          "명목 1,000만 달러와 가격 35에서 단순 지급 650만 달러를 구합니다.",
+          "미지급 프리미엄과 사건별 조건을 생략하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "BIS · CDS index tranches",
+          "0부터 각 끝점까지의 가격을 맞추는 베이스 상관 정의와 구간별 상관 차이를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "ISDA · Big Bang Protocol",
+          "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation",
+          "credit-base-correlation-quote",
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation",
+          "credit-base-correlation-quote",
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation",
+          "credit-base-correlation-quote",
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "credit-index-tranche-loss-allocation",
+          "credit-base-correlation-quote",
+          "cds-auction-final-price-settlement"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "BIS · CDS index tranches",
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "0부터 각 끝점까지의 가격을 맞추는 베이스 상관 정의와 구간별 상관 차이를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ISDA · Big Bang Protocol",
+        "href": "https://www.isda.org/traditional-protocol/big-bang-protocol/",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/commodity-grades-location-basis-and-physical-delivery": {
+    "entryLevel": false,
+    "entryNote": "부셸당 5달러에서 품질 4센트를 빼고 지역 6.25센트를 더해 5,000부셸의 조정액 112.50달러를 계산합니다.",
+    "coreIdea": "실물인도 원자재 선물은 기준가격에 품질과 인도 장소의 계약상 차등을 적용하고 선적증서·공식 등급·무게·출고 절차를 거쳐 결제되며, 지역 현물 베이시스와 거래소 인도 가산을 구분해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "futures-basis-convergence",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "commodity-delivery-grade-differential",
+        "role": "원자재 인도 품질 차등을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "commodity-location-basis",
+        "role": "원자재 지역 베이시스을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "commodity-shipping-certificate-delivery",
+        "role": "원자재 선적증서 인도을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "commodity-delivery-grade-differential",
+        "sectionId": "names",
+        "intuition": "원자재 인도 품질 차등이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "옥수수 가격에서 부셸당 4센트를 뺍니다.",
+        "boundary": "모든 등급과 손상 조건에 같은 수를 쓰지 않습니다."
+      },
+      {
+        "id": "commodity-location-basis",
+        "sectionId": "names",
+        "intuition": "원자재 지역 베이시스이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "4.70달러−5달러=−0.30달러입니다.",
+        "boundary": "거래소가 정한 인도 지역 가산과 같은 표가 아닙니다."
+      },
+      {
+        "id": "commodity-shipping-certificate-delivery",
+        "sectionId": "names",
+        "intuition": "원자재 선적증서 인도이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "증서 인수 뒤 발행 시설에 5,000부셸 출고를 요청합니다.",
+        "boundary": "증서 취득과 실제 적재 완료를 같은 시점으로 보지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "futures-basis-convergence"
+        ]
+      },
+      {
+        "label": "2단계 · 원자재 인도 품질 차등",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "commodity-delivery-grade-differential"
+        ]
+      },
+      {
+        "label": "3단계 · 원자재 지역 베이시스",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "commodity-location-basis"
+        ]
+      },
+      {
+        "label": "4단계 · 원자재 선적증서 인도",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "commodity-shipping-certificate-delivery"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "5달러−0.04달러+0.0625달러=5.0225달러를 구하고 5,000부셸에서 기준가격 대비 112.50달러 차이를 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 인도 품질 차등의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "원자재 인도 품질 차등",
+          "옥수수 가격에서 부셸당 4센트를 뺍니다.",
+          "모든 등급과 손상 조건에 같은 수를 쓰지 않습니다."
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 지역 베이시스의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "원자재 지역 베이시스",
+          "4.70달러−5달러=−0.30달러입니다.",
+          "거래소가 정한 인도 지역 가산과 같은 표가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "commodity-location-basis"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "원자재 선적증서 인도의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "원자재 선적증서 인도",
+          "증서 인수 뒤 발행 시설에 5,000부셸 출고를 요청합니다.",
+          "증서 취득과 실제 적재 완료를 같은 시점으로 보지 않습니다."
+        ],
+        "requiredConcepts": [
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "CBOT · Corn Futures Chapter 10",
+          "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "CME Group · Warehouse Receipts vs. Shipping Certificates",
+          "선적증서를 승인 시설의 인도 약속으로 설명한 공식 범위를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential",
+          "commodity-location-basis",
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential",
+          "commodity-location-basis",
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential",
+          "commodity-location-basis",
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "commodity-delivery-grade-differential",
+          "commodity-location-basis",
+          "commodity-shipping-certificate-delivery"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CBOT · Corn Futures Chapter 10",
+        "href": "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "CME Group · Warehouse Receipts vs. Shipping Certificates",
+        "href": "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "선적증서를 승인 시설의 인도 약속으로 설명한 공식 범위를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/derivatives-investigation-audit-trail-and-legal-hold": {
+    "entryLevel": false,
+    "entryNote": "10시00분00.100초 주문, .350초 수정, .600초 취소와 10초 전 대화를 한 조사 사건으로 묶습니다.",
+    "coreIdea": "파생상품 조사는 주문·수정·취소·체결과 통신·신원 자료를 같은 시각표에 놓고 원본 형식과 메타데이터, 수집·열람 이력을 보존하며, 범위가 정해진 법적 보류로 삭제를 멈춰 다른 검토자가 재현할 수 있게 해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-sales-record-lineage",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "derivatives-sequenced-audit-trail",
+        "role": "파생상품 순서 감사기록을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "native-record-metadata-preservation",
+        "role": "금융 원본 메타데이터 보존을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "regulatory-legal-hold",
+        "role": "규제조사 법적 보류을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "derivatives-sequenced-audit-trail",
+        "sectionId": "names",
+        "intuition": "파생상품 순서 감사기록이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": ".100 주문에서 .600 취소까지 0.5초를 복원합니다.",
+        "boundary": "최종 주문 상태 한 줄과 같지 않습니다."
+      },
+      {
+        "id": "native-record-metadata-preservation",
+        "sectionId": "names",
+        "intuition": "금융 원본 메타데이터 보존이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "메신저 원본과 내보낸 PDF를 별도 파일로 둡니다.",
+        "boundary": "화면에 같은 문장이 보인다고 속성이 보존된 것은 아닙니다."
+      },
+      {
+        "id": "regulatory-legal-hold",
+        "sectionId": "names",
+        "intuition": "규제조사 법적 보류이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "주문 계정과 관련 대화의 자동 삭제를 중지합니다.",
+        "boundary": "회사 자료 전체를 영구 보관하는 명령이 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-sales-record-lineage"
+        ]
+      },
+      {
+        "label": "2단계 · 파생상품 순서 감사기록",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "derivatives-sequenced-audit-trail"
+        ]
+      },
+      {
+        "label": "3단계 · 금융 원본 메타데이터 보존",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "native-record-metadata-preservation"
+        ]
+      },
+      {
+        "label": "4단계 · 규제조사 법적 보류",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "regulatory-legal-hold"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          ".100초 주문에서 .350초 수정과 .600초 취소까지 0.5초를 계산하고 09시59분50초 대화와 10시05분 경보를 같은 시각표에 놓습니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "파생상품 순서 감사기록의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "파생상품 순서 감사기록",
+          ".100 주문에서 .600 취소까지 0.5초를 복원합니다.",
+          "최종 주문 상태 한 줄과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "금융 원본 메타데이터 보존의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "금융 원본 메타데이터 보존",
+          "메신저 원본과 내보낸 PDF를 별도 파일로 둡니다.",
+          "화면에 같은 문장이 보인다고 속성이 보존된 것은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "native-record-metadata-preservation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "규제조사 법적 보류의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "규제조사 법적 보류",
+          "주문 계정과 관련 대화의 자동 삭제를 중지합니다.",
+          "회사 자료 전체를 영구 보관하는 명령이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "CFTC · Enforcement Manual",
+          "이메일·즉시 메시지·계좌·오디오와 원본 형식 자료를 조사 입력으로 다루는 범위를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "ESMA · MiFIR Article 25",
+          "주문 특성과 그 결과 거래를 연결해 보관하는 EU 의무를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail",
+          "native-record-metadata-preservation",
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail",
+          "native-record-metadata-preservation",
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail",
+          "native-record-metadata-preservation",
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "derivatives-sequenced-audit-trail",
+          "native-record-metadata-preservation",
+          "regulatory-legal-hold"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "CFTC · Enforcement Manual",
+        "href": "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "이메일·즉시 메시지·계좌·오디오와 원본 형식 자료를 조사 입력으로 다루는 범위를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "ESMA · MiFIR Article 25",
+        "href": "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "주문 특성과 그 결과 거래를 연결해 보관하는 EU 의무를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link": {
+    "entryLevel": false,
+    "entryNote": "같은 파생상품 이익 10을 미국 적격 계약의 장기 6·단기 4와 영국 법인의 회계 손익 출발점으로 나눠 봅니다.",
+    "coreIdea": "미국 Section 1256 사례는 계약 범위·연말 시가평가·60대40 성격과 적시 헤지 식별을 확인하고, 영국 법인 사례는 회계상 파생 손익에서 세법 조정을 시작하므로 같은 이익과 상품 이름만으로 국가별 세금 결과를 옮길 수 없습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "derivatives-tax-timing",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "section-1256-year-end-mark-ledger",
+        "role": "Section 1256 연말 시가평가 장부을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "uk-corporate-derivative-accounting-link",
+        "role": "영국 법인 파생손익 회계 연결을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "tax-hedge-identification-boundary",
+        "role": "세법상 헤지 식별 경계을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "section-1256-year-end-mark-ledger",
+        "sectionId": "names",
+        "intuition": "Section 1256 연말 시가평가 장부이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "순이익 10을 일반적으로 장기 6과 단기 4로 나눕니다.",
+        "boundary": "모든 선물·옵션과 납세자에 적용하지 않습니다."
+      },
+      {
+        "id": "uk-corporate-derivative-accounting-link",
+        "sectionId": "names",
+        "intuition": "영국 법인 파생손익 회계 연결이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "회계이익 10에서 적용되는 세법 조정을 검토합니다.",
+        "boundary": "회계이익을 최종 납부세액으로 읽지 않습니다."
+      },
+      {
+        "id": "tax-hedge-identification-boundary",
+        "sectionId": "names",
+        "intuition": "세법상 헤지 식별 경계이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "재고 위험과 선물을 거래 때 식별합니다.",
+        "boundary": "경제적 상쇄나 회계 지정만으로 자동 충족되지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "derivatives-tax-timing"
+        ]
+      },
+      {
+        "label": "2단계 · Section 1256 연말 시가평가 장부",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "section-1256-year-end-mark-ledger"
+        ]
+      },
+      {
+        "label": "3단계 · 영국 법인 파생손익 회계 연결",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "uk-corporate-derivative-accounting-link"
+        ]
+      },
+      {
+        "label": "4단계 · 세법상 헤지 식별 경계",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "tax-hedge-identification-boundary"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "미국 적격 계약 순이익 10을 일반적으로 장기 6과 단기 4로 나누고 영국 법인의 회계이익 10은 세법 조정 전 출발점으로 둡니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Section 1256 연말 시가평가 장부의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "Section 1256 연말 시가평가 장부",
+          "순이익 10을 일반적으로 장기 6과 단기 4로 나눕니다.",
+          "모든 선물·옵션과 납세자에 적용하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "영국 법인 파생손익 회계 연결의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "영국 법인 파생손익 회계 연결",
+          "회계이익 10에서 적용되는 세법 조정을 검토합니다.",
+          "회계이익을 최종 납부세액으로 읽지 않습니다."
+        ],
+        "requiredConcepts": [
+          "uk-corporate-derivative-accounting-link"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "세법상 헤지 식별 경계의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "세법상 헤지 식별 경계",
+          "재고 위험과 선물을 거래 때 식별합니다.",
+          "경제적 상쇄나 회계 지정만으로 자동 충족되지 않습니다."
+        ],
+        "requiredConcepts": [
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "IRS · Form 6781 (2025)",
+          "Section 1256의 연말 시가평가·60대40 분류와 적시 식별 헤지 예외를 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "HMRC · Corporate Finance Manual CFM50020",
+          "영국 법인 파생계약 손익이 회계 처리와 연결되는 제도의 출발점을 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger",
+          "uk-corporate-derivative-accounting-link",
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger",
+          "uk-corporate-derivative-accounting-link",
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger",
+          "uk-corporate-derivative-accounting-link",
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "section-1256-year-end-mark-ledger",
+          "uk-corporate-derivative-accounting-link",
+          "tax-hedge-identification-boundary"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "IRS · Form 6781 (2025)",
+        "href": "https://www.irs.gov/pub/irs-access/f6781_accessible.pdf",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "Section 1256의 연말 시가평가·60대40 분류와 적시 식별 헤지 예외를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "HMRC · Corporate Finance Manual CFM50020",
+        "href": "https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm50020",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "영국 법인 파생계약 손익이 회계 처리와 연결되는 제도의 출발점을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "markets/fractional-investment-trust-beneficiary-certificates": {
+    "entryLevel": false,
+    "entryNote": "임대수입 1억 원에서 비용 1,500만 원을 빼고 1,000좌에 나눠 좌당 8만5천 원이 오는 길을 추적합니다.",
+    "coreIdea": "조각투자는 원자산 감정가와 투자자가 가진 법적 청구권을 구분하고 수입·비용·신탁 장부·기준일 좌수로 배분액을 추적해야 하며, 증권성 실질판단과 발행·유통 분리, 비금전신탁 수익증권 시장의 허용 범위를 확인해야 합니다.",
+    "assumedKnowledge": [
+      {
+        "id": "financial-product-claim-map",
+        "role": "이번 글의 수치·계약·운영 판단에 필요한 선수 개념입니다."
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "fractional-security-substance-test",
+        "role": "조각투자 증권성 실질판단을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "nonmonetary-trust-beneficiary-certificate",
+        "role": "비금전신탁 수익증권을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      },
+      {
+        "id": "fractional-investment-issuance-distribution-separation",
+        "role": "조각투자 발행·유통 분리을 본문의 숫자 사례와 공식 자료에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "fractional-security-substance-test",
+        "sectionId": "names",
+        "intuition": "조각투자 증권성 실질판단이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "부동산 조각의 배분·처분·운영 의존 권리를 확인합니다.",
+        "boundary": "모든 공동구매를 같은 증권으로 분류하지 않습니다."
+      },
+      {
+        "id": "nonmonetary-trust-beneficiary-certificate",
+        "sectionId": "names",
+        "intuition": "비금전신탁 수익증권이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "임대 순현금 8,500만 원의 권리를 1,000좌로 나타냅니다.",
+        "boundary": "원자산 등기 지분이나 원금보장 예금과 같지 않습니다."
+      },
+      {
+        "id": "fractional-investment-issuance-distribution-separation",
+        "sectionId": "names",
+        "intuition": "조각투자 발행·유통 분리이 사례에서 맡는 일을 숫자와 실제 행동으로 구분합니다.",
+        "workedExample": "발행 설명서와 장외거래소 체결 장부를 나눕니다.",
+        "boundary": "시장 개설이 개별 상품의 수익성과 안전을 보증하지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 선수 개념",
+        "relation": "기존 정본의 가격·계약·운영 구분을 이번 판단의 출발점으로 씁니다.",
+        "concepts": [
+          "financial-product-claim-map"
+        ]
+      },
+      {
+        "label": "2단계 · 조각투자 증권성 실질판단",
+        "relation": "사례의 숫자를 첫 업무 판단으로 바꿉니다.",
+        "concepts": [
+          "fractional-security-substance-test"
+        ]
+      },
+      {
+        "label": "3단계 · 비금전신탁 수익증권",
+        "relation": "첫 판단의 결과를 다음 계약·운영 통제로 잇습니다.",
+        "concepts": [
+          "nonmonetary-trust-beneficiary-certificate"
+        ]
+      },
+      {
+        "label": "4단계 · 조각투자 발행·유통 분리",
+        "relation": "전체 판단의 적용 범위와 남는 위험을 검사합니다.",
+        "concepts": [
+          "fractional-investment-issuance-distribution-separation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "핵심 숫자 사례의 입력·단위·계산 순서를 설명하세요.",
+        "answerChecklist": [
+          "임대수입 1억 원에서 비용 1,500만 원을 빼 배분 가능 현금 8,500만 원을 구하고 1,000좌로 나눠 좌당 8만5천 원을 계산합니다.",
+          "입력과 단위",
+          "계산 뒤 행동"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "조각투자 증권성 실질판단의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "조각투자 증권성 실질판단",
+          "부동산 조각의 배분·처분·운영 의존 권리를 확인합니다.",
+          "모든 공동구매를 같은 증권으로 분류하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "비금전신탁 수익증권의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "비금전신탁 수익증권",
+          "임대 순현금 8,500만 원의 권리를 1,000좌로 나타냅니다.",
+          "원자산 등기 지분이나 원금보장 예금과 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "nonmonetary-trust-beneficiary-certificate"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "조각투자 발행·유통 분리의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "조각투자 발행·유통 분리",
+          "발행 설명서와 장외거래소 체결 장부를 나눕니다.",
+          "시장 개설이 개별 상품의 수익성과 안전을 보증하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "첫 공식 자료가 직접 정하거나 설명하는 범위를 말하세요.",
+        "answerChecklist": [
+          "금융위원회 · 조각투자 가이드라인",
+          "상품 이름보다 권리의 실질로 증권성을 판단하고 발행·유통 규율을 검토하는 원칙을 확인합니다.",
+          "적용 범위와 확인 시점"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 공식 자료가 첫 자료와 다른 업무를 맡는 이유를 설명하세요.",
+        "answerChecklist": [
+          "금융위원회 · 비금전신탁 수익증권 장외거래소 예비인가",
+          "2026년 예비인가가 신탁 수익증권에 한정되고 투자계약증권을 포함하지 않는 범위를 확인합니다.",
+          "두 자료의 목적 차이"
+        ],
+        "requiredConcepts": [
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 입력 하나를 바꿔 결과와 통제 행동을 다시 판단하세요.",
+        "answerChecklist": [
+          "바꾼 입력",
+          "재계산",
+          "행동 변화"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test",
+          "nonmonetary-trust-beneficiary-certificate",
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 공식 자료를 다른 상품·고객·계약에 적용할 때 남는 반례를 설명하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 사실관계",
+          "반례"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test",
+          "nonmonetary-trust-beneficiary-certificate",
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 공식 자료를 하나의 기준으로 합치면 놓치는 조건을 설명하세요.",
+        "answerChecklist": [
+          "기관 목적",
+          "계약 또는 관할 범위",
+          "확인 시점"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test",
+          "nonmonetary-trust-beneficiary-certificate",
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "기존 정본과 이 글의 책임이 갈리는 지점을 숫자·계약·운영으로 설명하세요.",
+        "answerChecklist": [
+          "기존 정본",
+          "새 글 범위",
+          "책임 경계"
+        ],
+        "requiredConcepts": [
+          "fractional-security-substance-test",
+          "nonmonetary-trust-beneficiary-certificate",
+          "fractional-investment-issuance-distribution-separation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "금융위원회 · 조각투자 가이드라인",
+        "href": "https://www.fsc.go.kr/po010102/77728",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "상품 이름보다 권리의 실질로 증권성을 판단하고 발행·유통 규율을 검토하는 원칙을 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "금융위원회 · 비금전신탁 수익증권 장외거래소 예비인가",
+        "href": "https://www.fsc.go.kr/no010101/86295",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "2026년 예비인가가 신탁 수익증권에 한정되고 투자계약증권을 포함하지 않는 범위를 확인합니다.",
+        "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
+        "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
+        "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };

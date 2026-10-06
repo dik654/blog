@@ -17433,6 +17433,150 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "equity-dispersion-implied-correlation-and-variance": {
+    "title": "20% 두 개가 지수 17.32%가 되는 이유: 디스퍼전·내재상관·분산 글이 소유하는 범위",
+    "owns": [
+      "20%인 두 종목과 비중 0.5, 상관 0·0.5의 지수 변동성 계산",
+      "개별 옵션 묶음과 지수 옵션의 분산 차이·베가·헤지비용 구분",
+      "만기·행사가별 내재상관 표면과 평균값의 꼬리 위험 경계"
+    ],
+    "reuses": [
+      {
+        "label": "다중자산 상관 위험",
+        "href": "/finance/markets/multi-asset-options-correlation-and-rare-event-simulation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "credit-tranche-base-correlation-and-default-auction": {
+    "title": "손실 7이 어느 구간을 지우는가: 신용 트랜치·베이스 상관·부도 경매 글이 소유하는 범위",
+    "owns": [
+      "손실 7의 0~3·3~7·7~10 트랜치 배분",
+      "시장 트랜치 호가를 0부터 끝점까지 맞추는 베이스 상관의 해석",
+      "최종가격 35와 명목 1,000만 달러의 단순 경매 결제"
+    ],
+    "reuses": [
+      {
+        "label": "부도상관",
+        "href": "/finance/markets/hazard-rate-curve-recovery-and-credit-correlation#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "commodity-grades-location-basis-and-physical-delivery": {
+    "title": "옥수수 5,000부셸이 실제로 움직이는 법: 품질·지역 베이시스·실물인도 글이 소유하는 범위",
+    "owns": [
+      "5달러·4센트·6.25센트로 만든 옥수수 5,000부셸 인도 조정",
+      "지역 현물 베이시스와 거래소 인도 장소 가산의 구분",
+      "선적증서 인수에서 공식 무게·등급과 실제 출고까지의 절차"
+    ],
+    "reuses": [
+      {
+        "label": "선물 베이시스 수렴",
+        "href": "/finance/markets/no-arbitrage-cost-of-carry-and-basis#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "derivatives-investigation-audit-trail-and-legal-hold": {
+    "title": "0.5초 주문을 다시 재생한다: 파생상품 조사·감사기록·법적 보류 글이 소유하는 범위",
+    "owns": [
+      ".100→.350→.600초 주문 변경과 10초 전 대화의 시간순 재구성",
+      "원본 형식·메타데이터·해시·수집과 열람 이력을 보존하는 조사 꾸러미",
+      "사람·기간·자료원을 정한 법적 보류의 설정·변경·해제"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 판매기록 계보",
+        "href": "/finance/markets/derivatives-sales-records-access-retention-and-deletion#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "us-uk-derivatives-tax-mark-to-market-and-accounting-link": {
+    "title": "같은 이익 10을 두 장부로 읽기: 미국 연말평가와 영국 법인 회계 연결 글이 소유하는 범위",
+    "owns": [
+      "같은 이익 10을 미국 개인의 6·4와 영국 법인의 회계 손익으로 읽는 적용 사례",
+      "Section 1256 연말 미결제분과 적시 식별 헤지 예외의 장부 연결",
+      "영국 법인 회계 차변·대변에서 세법 조정을 시작하는 비교"
+    ],
+    "reuses": [
+      {
+        "label": "파생상품 세금 인식 시점",
+        "href": "/finance/markets/derivatives-tax-character-timing-and-jurisdiction#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
+  "fractional-investment-trust-beneficiary-certificates": {
+    "title": "건물 10억보다 좌당 8만5천 원을 먼저 본다: 조각투자·신탁 수익증권 글이 소유하는 범위",
+    "owns": [
+      "감정가 10억 원과 임대 순현금 8,500만 원·좌당 8만5천 원의 구분",
+      "원자산·신탁·발행회사·유통시장을 거친 권리와 현금 경로",
+      "2022년 증권성 실질판단과 2026년 비금전신탁 수익증권 시장 범위"
+    ],
+    "reuses": [
+      {
+        "label": "금융상품 청구권 지도",
+        "href": "/finance/markets/financial-products-claims-fees-and-liquidity#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "규격·규제·절차 수치는 인용한 공식 원문의 상품·회사·관할과 확인 시점 범위에서만 사용합니다."
+      },
+      {
+        "kind": "secondary-source",
+        "rule": "본문의 설명용 손계산을 실제 가격·세액·승인이나 법률 결론으로 일반화하지 않습니다."
+      }
+    ]
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

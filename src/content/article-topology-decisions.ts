@@ -2508,6 +2508,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "파생상품 판매 기록은 고객자료·설명서 버전·녹취·이해 확인·주문·체결·알림을 같은 시각과 사건번호로 이어 변조를 막고 열람에 응할 수 있어야 하며, 자료별 법적 근거·기간·접근권한·법적 보류와 파기를 함께 관리해야 합니다.",
     "sharedGate": "14시10분부터 14시32분까지 22분의 고객자료·18분 녹취·설명서 3판·주문을 한 사건으로 연결합니다."
   },
+  "markets/equity-dispersion-implied-correlation-and-variance": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "옵션 디스퍼전은 구성 종목과 지수의 분산 차이를 거래하되 비중·변동성·내재상관·베가와 헤지비용을 같은 만기 장부에서 맞춰야 하며, 평균상관을 모든 종목 쌍과 위기 꼬리의 직접 관측값으로 읽지 않습니다.",
+    "sharedGate": "20%인 두 종목의 비중을 0.5씩 두고 상관 0에서 14.14%, 상관 0.5에서 17.32%, 분산 차이 0.01을 계산합니다."
+  },
+  "markets/credit-tranche-base-correlation-and-default-auction": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "신용 트랜치는 포트폴리오 손실을 시작점과 끝점 사이에 배분하고 베이스 상관으로 구간 호가를 맞추며, 신용사건 뒤에는 계약상 경매 최종가격을 현금결제에 적용하되 모형 상관과 실제 공동부도 확률을 구분합니다.",
+    "sharedGate": "포트폴리오 손실 7을 3·4·0으로 배분하고 명목 1,000만 달러에 경매 최종가격 35를 적용해 단순 보호 지급 650만 달러를 계산합니다."
+  },
+  "markets/commodity-grades-location-basis-and-physical-delivery": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "실물인도 원자재 선물은 기준가격에 품질과 인도 장소의 계약상 차등을 적용하고 선적증서·공식 등급·무게·출고 절차를 거쳐 결제되며, 지역 현물 베이시스와 거래소 인도 가산을 구분해야 합니다.",
+    "sharedGate": "5달러−0.04달러+0.0625달러=5.0225달러를 구하고 5,000부셸에서 기준가격 대비 112.50달러 차이를 계산합니다."
+  },
+  "markets/derivatives-investigation-audit-trail-and-legal-hold": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "파생상품 조사는 주문·수정·취소·체결과 통신·신원 자료를 같은 시각표에 놓고 원본 형식과 메타데이터, 수집·열람 이력을 보존하며, 범위가 정해진 법적 보류로 삭제를 멈춰 다른 검토자가 재현할 수 있게 해야 합니다.",
+    "sharedGate": ".100초 주문에서 .350초 수정과 .600초 취소까지 0.5초를 계산하고 09시59분50초 대화와 10시05분 경보를 같은 시각표에 놓습니다."
+  },
+  "markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "미국 Section 1256 사례는 계약 범위·연말 시가평가·60대40 성격과 적시 헤지 식별을 확인하고, 영국 법인 사례는 회계상 파생 손익에서 세법 조정을 시작하므로 같은 이익과 상품 이름만으로 국가별 세금 결과를 옮길 수 없습니다.",
+    "sharedGate": "미국 적격 계약 순이익 10을 일반적으로 장기 6과 단기 4로 나누고 영국 법인의 회계이익 10은 세법 조정 전 출발점으로 둡니다."
+  },
+  "markets/fractional-investment-trust-beneficiary-certificates": {
+    "action": "keep",
+    "status": "reviewed",
+    "reviewedAt": "2026-10-07",
+    "rationale": "조각투자는 원자산 감정가와 투자자가 가진 법적 청구권을 구분하고 수입·비용·신탁 장부·기준일 좌수로 배분액을 추적해야 하며, 증권성 실질판단과 발행·유통 분리, 비금전신탁 수익증권 시장의 허용 범위를 확인해야 합니다.",
+    "sharedGate": "임대수입 1억 원에서 비용 1,500만 원을 빼 배분 가능 현금 8,500만 원을 구하고 1,000좌로 나눠 좌당 8만5천 원을 계산합니다."
+  },
 };
 
 /**
@@ -2905,6 +2947,12 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/ccp-default-management-hedging-auction-and-porting":"35205c38287785db",
 "markets/swaption-annuity-volatility-quotes-and-cube":"2aede1186920e4c0",
 "markets/derivatives-sales-records-access-retention-and-deletion":"5501a78d631b7ba2",
+"markets/equity-dispersion-implied-correlation-and-variance":"fb86d06ac61b5e6f",
+"markets/credit-tranche-base-correlation-and-default-auction":"b40ca4fa27676a81",
+"markets/commodity-grades-location-basis-and-physical-delivery":"c584cb1105b3149d",
+"markets/derivatives-investigation-audit-trail-and-legal-hold":"f40be1c87a2a5e1f",
+"markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link":"a6bfc0d4f25ecf80",
+"markets/fractional-investment-trust-beneficiary-certificates":"6017252d4864a59a",
 "philosophy-history/ancient-mediterranean-inquiry-virtue-and-control":"087a9f05150e5600",
 "philosophy-history/classical-india-pramana-self-and-liberation":"4bc84ed363f30015",
 "philosophy-history/colonial-modernity-race-and-decolonization":"c407c51fef396519",

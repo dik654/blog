@@ -31284,6 +31284,204 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "자료 종류별 법적 근거·보존 시작일·기간·법적 보류와 원본·파생 사본의 삭제 완료를 정하는 기준입니다.",
     "canonicalHref": "/finance/markets/derivatives-sales-records-access-retention-and-deletion#names"
   },
+  "equity-index-implied-average-correlation": {
+    "id": "equity-index-implied-average-correlation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "주가지수 내재 평균상관",
+    "aliases": [
+      "equity-index-implied-average-correlation"
+    ],
+    "definition": "지수와 구성 종목 옵션의 변동성·비중에서 거꾸로 푼 평균적인 함께 움직임입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-implied-correlation-and-variance#names"
+  },
+  "option-dispersion-variance-spread": {
+    "id": "option-dispersion-variance-spread",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "옵션 디스퍼전 분산 차이",
+    "aliases": [
+      "option-dispersion-variance-spread"
+    ],
+    "definition": "개별 종목 옵션 묶음과 지수 옵션을 반대 방향으로 거래할 때 노출되는 구성 종목 분산과 포트폴리오 분산의 차이입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-implied-correlation-and-variance#names"
+  },
+  "correlation-surface-term-strike": {
+    "id": "correlation-surface-term-strike",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "상관 만기·행사가 표면",
+    "aliases": [
+      "correlation-surface-term-strike"
+    ],
+    "definition": "만기와 행사가에 따라 달라지는 내재 평균상관을 좌표별로 모은 구조입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-implied-correlation-and-variance#names"
+  },
+  "credit-index-tranche-loss-allocation": {
+    "id": "credit-index-tranche-loss-allocation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용지수 트랜치 손실 배분",
+    "aliases": [
+      "credit-index-tranche-loss-allocation"
+    ],
+    "definition": "포트폴리오 손실을 계약의 시작점과 끝점 사이에만 배분하는 계산입니다.",
+    "canonicalHref": "/finance/markets/credit-tranche-base-correlation-and-default-auction#names"
+  },
+  "credit-base-correlation-quote": {
+    "id": "credit-base-correlation-quote",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용 베이스 상관 호가",
+    "aliases": [
+      "credit-base-correlation-quote"
+    ],
+    "definition": "0부터 특정 끝점까지의 가상 첫손실 구간 가격을 시장가에 맞추는 상관 입력입니다.",
+    "canonicalHref": "/finance/markets/credit-tranche-base-correlation-and-default-auction#names"
+  },
+  "cds-auction-final-price-settlement": {
+    "id": "cds-auction-final-price-settlement",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "CDS 경매 최종가격 결제",
+    "aliases": [
+      "cds-auction-final-price-settlement"
+    ],
+    "definition": "신용사건 뒤 경매로 정한 기준채무 가격을 사용해 보호 지급을 계산하는 절차입니다.",
+    "canonicalHref": "/finance/markets/credit-tranche-base-correlation-and-default-auction#names"
+  },
+  "commodity-delivery-grade-differential": {
+    "id": "commodity-delivery-grade-differential",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 인도 품질 차등",
+    "aliases": [
+      "commodity-delivery-grade-differential"
+    ],
+    "definition": "인도물의 등급과 상태가 계약 기준과 다를 때 기준가격에 더하거나 빼는 금액입니다.",
+    "canonicalHref": "/finance/markets/commodity-grades-location-basis-and-physical-delivery#names"
+  },
+  "commodity-location-basis": {
+    "id": "commodity-location-basis",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 지역 베이시스",
+    "aliases": [
+      "commodity-location-basis"
+    ],
+    "definition": "특정 장소의 현금가격에서 대응하는 선물가격을 뺀 값입니다.",
+    "canonicalHref": "/finance/markets/commodity-grades-location-basis-and-physical-delivery#names"
+  },
+  "commodity-shipping-certificate-delivery": {
+    "id": "commodity-shipping-certificate-delivery",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "원자재 선적증서 인도",
+    "aliases": [
+      "commodity-shipping-certificate-delivery"
+    ],
+    "definition": "승인 시설의 인도 의무를 나타내는 증서를 넘기고 보유자의 출고 요청으로 실물을 움직이는 절차입니다.",
+    "canonicalHref": "/finance/markets/commodity-grades-location-basis-and-physical-delivery#names"
+  },
+  "derivatives-sequenced-audit-trail": {
+    "id": "derivatives-sequenced-audit-trail",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "파생상품 순서 감사기록",
+    "aliases": [
+      "derivatives-sequenced-audit-trail"
+    ],
+    "definition": "주문 값의 변경 전후와 행위자·시각을 이어 거래 사건을 다시 재생할 수 있는 기록입니다.",
+    "canonicalHref": "/finance/markets/derivatives-investigation-audit-trail-and-legal-hold#names"
+  },
+  "native-record-metadata-preservation": {
+    "id": "native-record-metadata-preservation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "금융 원본 메타데이터 보존",
+    "aliases": [
+      "native-record-metadata-preservation"
+    ],
+    "definition": "전자 자료의 내용과 원래 형식·시각·작성자·수정 속성을 함께 지키는 절차입니다.",
+    "canonicalHref": "/finance/markets/derivatives-investigation-audit-trail-and-legal-hold#names"
+  },
+  "regulatory-legal-hold": {
+    "id": "regulatory-legal-hold",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "규제조사 법적 보류",
+    "aliases": [
+      "regulatory-legal-hold"
+    ],
+    "definition": "분쟁·조사와 관련된 특정 사람·기간·자료원의 예정된 삭제를 멈추는 지시입니다.",
+    "canonicalHref": "/finance/markets/derivatives-investigation-audit-trail-and-legal-hold#names"
+  },
+  "section-1256-year-end-mark-ledger": {
+    "id": "section-1256-year-end-mark-ledger",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "Section 1256 연말 시가평가 장부",
+    "aliases": [
+      "section-1256-year-end-mark-ledger"
+    ],
+    "definition": "적용 계약의 연말 미결제분을 공정가치로 처분한 것처럼 보고 손익의 성격을 나누는 미국 세금 장부입니다.",
+    "canonicalHref": "/finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link#names"
+  },
+  "uk-corporate-derivative-accounting-link": {
+    "id": "uk-corporate-derivative-accounting-link",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "영국 법인 파생손익 회계 연결",
+    "aliases": [
+      "uk-corporate-derivative-accounting-link"
+    ],
+    "definition": "영국 법인의 회계상 파생계약 차변·대변을 법인세 계산의 출발점으로 삼는 구조입니다.",
+    "canonicalHref": "/finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link#names"
+  },
+  "tax-hedge-identification-boundary": {
+    "id": "tax-hedge-identification-boundary",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "세법상 헤지 식별 경계",
+    "aliases": [
+      "tax-hedge-identification-boundary"
+    ],
+    "definition": "막으려는 위험과 파생계약을 세법이 요구하는 방식과 시점에 연결해야 예외를 검토할 수 있다는 경계입니다.",
+    "canonicalHref": "/finance/markets/us-uk-derivatives-tax-mark-to-market-and-accounting-link#names"
+  },
+  "fractional-security-substance-test": {
+    "id": "fractional-security-substance-test",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "조각투자 증권성 실질판단",
+    "aliases": [
+      "fractional-security-substance-test"
+    ],
+    "definition": "상품 이름보다 투자자가 가진 권리와 타인의 사업 운영에 따른 손익 구조로 증권 여부를 검토하는 절차입니다.",
+    "canonicalHref": "/finance/markets/fractional-investment-trust-beneficiary-certificates#names"
+  },
+  "nonmonetary-trust-beneficiary-certificate": {
+    "id": "nonmonetary-trust-beneficiary-certificate",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "비금전신탁 수익증권",
+    "aliases": [
+      "nonmonetary-trust-beneficiary-certificate"
+    ],
+    "definition": "돈이 아닌 자산을 신탁하고 그 수익권을 증권으로 표시한 권리입니다.",
+    "canonicalHref": "/finance/markets/fractional-investment-trust-beneficiary-certificates#names"
+  },
+  "fractional-investment-issuance-distribution-separation": {
+    "id": "fractional-investment-issuance-distribution-separation",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "조각투자 발행·유통 분리",
+    "aliases": [
+      "fractional-investment-issuance-distribution-separation"
+    ],
+    "definition": "상품을 만들고 투자금을 받는 일과 발행 뒤 거래시장을 운영하는 일을 다른 책임과 통제에 두는 원칙입니다.",
+    "canonicalHref": "/finance/markets/fractional-investment-trust-beneficiary-certificates#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -56462,6 +56660,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "to": "financial-record-retention-deletion-boundary",
     "relation": "constrains",
     "reason": "금융 판매기록 열람 통제의 조건이 금융 기록 보존·파기 경계을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "multi-asset-correlation-risk",
+    "to": "equity-index-implied-average-correlation",
+    "relation": "extends",
+    "reason": "다중자산 상관 위험의 기존 구분을 주가지수 내재 평균상관의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "equity-index-implied-average-correlation",
+    "to": "option-dispersion-variance-spread",
+    "relation": "produces",
+    "reason": "주가지수 내재 평균상관을 적용한 결과가 옵션 디스퍼전 분산 차이의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "option-dispersion-variance-spread",
+    "to": "correlation-surface-term-strike",
+    "relation": "constrains",
+    "reason": "옵션 디스퍼전 분산 차이의 조건이 상관 만기·행사가 표면을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "default-correlation",
+    "to": "credit-index-tranche-loss-allocation",
+    "relation": "extends",
+    "reason": "부도상관의 기존 구분을 신용지수 트랜치 손실 배분의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "credit-index-tranche-loss-allocation",
+    "to": "credit-base-correlation-quote",
+    "relation": "produces",
+    "reason": "신용지수 트랜치 손실 배분을 적용한 결과가 신용 베이스 상관 호가의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "credit-base-correlation-quote",
+    "to": "cds-auction-final-price-settlement",
+    "relation": "constrains",
+    "reason": "신용 베이스 상관 호가의 조건이 CDS 경매 최종가격 결제을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "futures-basis-convergence",
+    "to": "commodity-delivery-grade-differential",
+    "relation": "extends",
+    "reason": "선물 베이시스 수렴의 기존 구분을 원자재 인도 품질 차등의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "commodity-delivery-grade-differential",
+    "to": "commodity-location-basis",
+    "relation": "produces",
+    "reason": "원자재 인도 품질 차등을 적용한 결과가 원자재 지역 베이시스의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "commodity-location-basis",
+    "to": "commodity-shipping-certificate-delivery",
+    "relation": "constrains",
+    "reason": "원자재 지역 베이시스의 조건이 원자재 선적증서 인도을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "derivatives-sales-record-lineage",
+    "to": "derivatives-sequenced-audit-trail",
+    "relation": "extends",
+    "reason": "파생상품 판매기록 계보의 기존 구분을 파생상품 순서 감사기록의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "derivatives-sequenced-audit-trail",
+    "to": "native-record-metadata-preservation",
+    "relation": "produces",
+    "reason": "파생상품 순서 감사기록을 적용한 결과가 금융 원본 메타데이터 보존의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "native-record-metadata-preservation",
+    "to": "regulatory-legal-hold",
+    "relation": "constrains",
+    "reason": "금융 원본 메타데이터 보존의 조건이 규제조사 법적 보류을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "derivatives-tax-timing",
+    "to": "section-1256-year-end-mark-ledger",
+    "relation": "extends",
+    "reason": "파생상품 세금 인식 시점의 기존 구분을 Section 1256 연말 시가평가 장부의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "section-1256-year-end-mark-ledger",
+    "to": "uk-corporate-derivative-accounting-link",
+    "relation": "produces",
+    "reason": "Section 1256 연말 시가평가 장부을 적용한 결과가 영국 법인 파생손익 회계 연결의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "uk-corporate-derivative-accounting-link",
+    "to": "tax-hedge-identification-boundary",
+    "relation": "constrains",
+    "reason": "영국 법인 파생손익 회계 연결의 조건이 세법상 헤지 식별 경계을 적용할 수 있는 범위와 한계를 정합니다."
+  },
+  {
+    "from": "financial-product-claim-map",
+    "to": "fractional-security-substance-test",
+    "relation": "extends",
+    "reason": "금융상품 청구권 지도의 기존 구분을 조각투자 증권성 실질판단의 수치·계약·운영 판단으로 확장합니다."
+  },
+  {
+    "from": "fractional-security-substance-test",
+    "to": "nonmonetary-trust-beneficiary-certificate",
+    "relation": "produces",
+    "reason": "조각투자 증권성 실질판단을 적용한 결과가 비금전신탁 수익증권의 다음 판단과 기록을 만듭니다."
+  },
+  {
+    "from": "nonmonetary-trust-beneficiary-certificate",
+    "to": "fractional-investment-issuance-distribution-separation",
+    "relation": "constrains",
+    "reason": "비금전신탁 수익증권의 조건이 조각투자 발행·유통 분리을 적용할 수 있는 범위와 한계를 정합니다."
   },
 ];
 
