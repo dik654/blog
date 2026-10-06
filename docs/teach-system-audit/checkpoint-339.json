@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-333.json",
+  "publicArticles": 883,
+  "addedRoutes": [
+    "philosophy-history/medieval-translation-reason-and-revelation",
+    "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action",
+    "philosophy-history/early-modern-india-new-nyaya-analysis-and-language",
+    "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology",
+    "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality",
+    "philosophy-history/indigenous-land-and-latin-american-liberation"
+  ],
+  "reviewed": 339,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive philosophy-history articles added after checkpoint 333; 297 substantive rewrites/additions and 42 retained teaching flows in total. The batch extends the cross-regional history through multilingual medieval philosophy, Song-Ming Confucianism, Navya-Nyaya, modern methods, feminist philosophy, and distinct Indigenous and Latin American liberation traditions.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "One question is tracked through four language records; 10 of 100 grain sacks reveal 2 damp sacks without proving exactly 20 in the whole store; four land parcels and three markers expose ambiguous ownership language; ten streetlight complaints are tested through three interventions; promotion rates 8/40 and 18/60 are reopened by department, racialization and care; a supposedly unused 100 hectares is re-recorded as 60 seasonal, 20 water and ceremonial, and 20 regeneration hectares. Every number is marked as an explanatory case rather than a historical measurement.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/philosophy-history-expansion/2026-10-06T21-30-18-763Z/summary.json.",
+    "learning": "PASS 883 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 9.42s, 7,231 transformed modules and 1,870 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,086 concepts, 6,393 relations, 883 registered articles and zero invariants; 18 new concepts and 18 relations were added. Existing Islamic translation, Confucian ritual, pramana, methodic doubt, double consciousness and decolonial practice routes were linked through editorial boundaries rather than redefined; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS targeted additions and 883-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 883 strict; all six single-case additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 461 prerequisite edges; actual exit 0.",
+    "language": "PASS prose rhythm, Korean naturalness and term-density audits with zero uncovered findings on the six additions.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px mobile sidebar dialog opened on all six routes.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment and production browser verification.",
+    "curriculumCoverage": "MIT's historical reading sequence and Stanford Encyclopedia tradition-specific entries were used as complementary scope checks. The philosophy-history path now contains twelve overlapping time axes. Remaining explicit gaps include German idealism, existentialism, hermeneutics, critical theory, logical positivism, ordinary-language philosophy, East Asian regional transformations, additional African traditions, philosophy of religion, metaethics and applied ethics. The derivatives coverage standard separately fixes the division of labor: university finance for pricing theory, the derivatives investment solicitation adviser curriculum for exchange/OTC products, sales practice, law, ethics and disputes, bank FP curricula for customer goals and portfolio suitability, GARP for risk and operations, and current exchange/regulator sources for enforceable details."
+  },
+  "commit": null,
+  "deployment": {
+    "runId": null,
+    "conclusion": "pending",
+    "production": "pending"
+  }
+}

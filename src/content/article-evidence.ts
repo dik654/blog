@@ -12898,4 +12898,88 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "식민 통치의 정당화·인종화·경제 구조와 탈식민 정치철학의 넓은 범위를 확인합니다."
     }
   ],
+  "philosophy-history/medieval-translation-reason-and-revelation": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Medieval Philosophy",
+      "href": "https://plato.stanford.edu/entries/medieval-philosophy/",
+      "note": "비잔틴·아랍어·히브리어·라틴어의 네 큰 갈래와 양방향 번역, 문답 형식을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Maimonides",
+      "href": "https://plato.stanford.edu/entries/maimonides/",
+      "note": "유대아랍어 저작이 히브리어·라틴어로 이동하며 철학·율법·인간 지식의 한계를 새로 논쟁한 경로를 확인합니다."
+    }
+  ],
+  "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Song-Ming Confucianism",
+      "href": "https://plato.stanford.edu/archives/sum2024/entries/song-ming-confucianism/",
+      "note": "불교·도가와의 상호작용, 주희와 왕양명의 경쟁, 형이상학·윤리·교육의 연결을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Wang Yangming",
+      "href": "https://plato.stanford.edu/entries/wang-yangming/",
+      "note": "양지와 지행합일을 공부 거부가 아니라 도덕적 앎·동기·행동의 관계를 판정하는 주장으로 확인합니다."
+    }
+  ],
+  "philosophy-history/early-modern-india-new-nyaya-analysis-and-language": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Analytic Philosophy in Early Modern India",
+      "href": "https://plato.stanford.edu/archives/fall2010/entries/early-modern-india/",
+      "note": "강게샤 이후 약 네 세기의 새 나이야 기술 언어와 철학·문법·시학·법 이론의 활용을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Analysis: Early Modern Conceptions",
+      "href": "https://plato.stanford.edu/archives/fall2024/entries/analysis/s4.html",
+      "note": "분석이 전통마다 다른 목표와 절차를 가졌으며 새 나이야를 20세기 영미 분석 철학의 전사로만 읽을 수 없음을 확인합니다."
+    }
+  ],
+  "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Pragmatism",
+      "href": "https://plato.stanford.edu/archives/sum2021/entries/pragmatism/",
+      "note": "퍼스·제임스·듀이 이후 앎과 뜻을 세계 안의 탐구·행위·공동 결과에 연결한 여러 흐름을 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Analysis",
+      "href": "https://plato.stanford.edu/entries/analysis/",
+      "note": "분석 철학과 현상학이 모두 분석을 사용했지만 보존하려는 대상과 절차가 달랐음을 확인합니다."
+    }
+  ],
+  "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Feminist Philosophy",
+      "href": "https://plato.stanford.edu/archives/sum2021/entries/feminist-philosophy/",
+      "note": "페미니즘 철학이 정전에 여성을 추가하는 데 그치지 않고 지식·윤리·형이상학의 전제를 고친 역사를 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Feminist Perspectives on Power",
+      "href": "https://plato.stanford.edu/entries/feminist-power/",
+      "note": "권력·지배·교차성의 계보와 단일 축 법·통계가 만든 누락 및 내부 비판을 확인합니다."
+    }
+  ],
+  "philosophy-history/indigenous-land-and-latin-american-liberation": [
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Colonialism",
+      "href": "https://plato.stanford.edu/entries/colonialism/",
+      "note": "식민주의·정착 식민주의·원주민 부흥과 자기 결정을 과거 사건이 아니라 계속되는 법·토지·지식 구조로 확인합니다."
+    },
+    {
+      "kind": "핵심 연구",
+      "label": "Stanford Encyclopedia of Philosophy · Philosophy of Liberation",
+      "href": "https://plato.stanford.edu/entries/liberation/",
+      "note": "라틴아메리카 해방 철학의 여러 흐름과 배제된 사람의 요구에서 철학·비판·실천을 잇는 목표를 확인합니다."
+    }
+  ],
 };

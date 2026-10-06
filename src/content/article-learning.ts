@@ -146494,4 +146494,1366 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "philosophy-history/medieval-translation-reason-and-revelation": {
+    "entryLevel": true,
+    "entryNote": "한 질문의 그리스어·아랍어·히브리어·라틴어 기록 네 개에서 낱말과 전제가 바뀐 지점을 찾습니다.",
+    "coreIdea": "중세 철학은 라틴 기독교만의 정지된 시대가 아니라 그리스어·아랍어·히브리어·라틴어 문헌이 번역·주석·반박·재번역되며 권위와 논증, 인간 지식의 한계를 다시 정한 다언어 논쟁망입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "medieval-translation-commentary-network",
+        "role": "중세의 번역·주석망을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "scholastic-question-method",
+        "role": "스콜라식 문답을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "negative-theology-language-limit",
+        "role": "부정 신학과 언어의 한계을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "medieval-translation-commentary-network",
+        "sectionId": "names",
+        "intuition": "원문이 여러 언어의 번역·요약·주석·반박·재번역을 거치며 새 독자와 논쟁을 만드는 관계망입니다.",
+        "workedExample": "세계의 시작을 묻는 문장이 네 언어 기록을 거치며 존재·원인·창조의 뜻을 달리 만납니다.",
+        "boundary": "고대 그리스 지식을 라틴 유럽으로 손실 없이 전달한 한 방향의 통로가 아닙니다."
+      },
+      {
+        "id": "scholastic-question-method",
+        "sectionId": "names",
+        "intuition": "한 질문에 찬반 논거를 먼저 놓고 구분과 답을 제시한 뒤 각각의 반론에 답하는 수업·저술 방법입니다.",
+        "workedExample": "세계에 시작이 있는지를 두고 상반된 논거를 세운 뒤 증명 가능한 범위와 경전 해석의 범위를 나눕니다.",
+        "boundary": "모든 중세 지역과 저자가 같은 형식을 썼거나 권위 인용만 했다는 뜻은 아닙니다."
+      },
+      {
+        "id": "negative-theology-language-limit",
+        "sectionId": "names",
+        "intuition": "신을 인간 사물처럼 긍정하는 말의 한계를 지키기 위해 무엇이 아닌지를 말하는 접근입니다.",
+        "workedExample": "인간의 성질을 그대로 확대해 신의 속성이라 부르기보다 그 유사성이 어디서 끊기는지 표시합니다.",
+        "boundary": "신에 관해 아무 말도 하지 않거나 논증을 모두 버리는 태도와 같지 않습니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 중세의 번역·주석망",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "medieval-translation-commentary-network"
+        ]
+      },
+      {
+        "label": "2단계 · 스콜라식 문답",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "scholastic-question-method"
+        ]
+      },
+      {
+        "label": "3단계 · 부정 신학과 언어의 한계",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "negative-theology-language-limit"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "세계의 시작을 묻는 한 문장이 그리스어 원문, 아랍어 번역·주석, 히브리어 번역, 라틴어 대학 문답이라는 네 기록으로 이동합니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "중세의 번역·주석망의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "중세의 번역·주석망",
+          "세계의 시작을 묻는 문장이 네 언어 기록을 거치며 존재·원인·창조의 뜻을 달리 만납니다.",
+          "고대 그리스 지식을 라틴 유럽으로 손실 없이 전달한 한 방향의 통로가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "스콜라식 문답의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "스콜라식 문답",
+          "세계에 시작이 있는지를 두고 상반된 논거를 세운 뒤 증명 가능한 범위와 경전 해석의 범위를 나눕니다.",
+          "모든 중세 지역과 저자가 같은 형식을 썼거나 권위 인용만 했다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "scholastic-question-method"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "부정 신학과 언어의 한계의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "부정 신학과 언어의 한계",
+          "인간의 성질을 그대로 확대해 신의 속성이라 부르기보다 그 유사성이 어디서 끊기는지 표시합니다.",
+          "신에 관해 아무 말도 하지 않거나 논증을 모두 버리는 태도와 같지 않습니다."
+        ],
+        "requiredConcepts": [
+          "negative-theology-language-limit"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Medieval Philosophy",
+          "비잔틴·아랍어·히브리어·라틴어의 네 큰 갈래와 양방향 번역, 문답 형식을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Maimonides",
+          "유대아랍어 저작이 히브리어·라틴어로 이동하며 철학·율법·인간 지식의 한계를 새로 논쟁한 경로를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "negative-theology-language-limit"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network",
+          "scholastic-question-method",
+          "negative-theology-language-limit"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network",
+          "scholastic-question-method"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network",
+          "scholastic-question-method",
+          "negative-theology-language-limit"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "medieval-translation-commentary-network",
+          "scholastic-question-method",
+          "negative-theology-language-limit"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Medieval Philosophy",
+        "href": "https://plato.stanford.edu/entries/medieval-philosophy/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "비잔틴·아랍어·히브리어·라틴어의 네 큰 갈래와 양방향 번역, 문답 형식을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Maimonides",
+        "href": "https://plato.stanford.edu/entries/maimonides/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "유대아랍어 저작이 히브리어·라틴어로 이동하며 철학·율법·인간 지식의 한계를 새로 논쟁한 경로를 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/song-ming-confucianism-pattern-heartmind-and-action": {
+    "entryLevel": true,
+    "entryNote": "곡물 100자루의 조사 범위와 이미 확인된 2자루에 대한 행동 책임을 분리하는 사례에서 시작합니다.",
+    "coreIdea": "송명 유학은 불교·도가와의 논쟁 및 교육 제도 속에서 이치와 기, 사물 탐구와 마음의 수양, 도덕적 앎과 행동의 관계를 다시 세운 장기 전통입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "li-qi-pattern-configuration",
+        "role": "이치와 기을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "investigation-of-things",
+        "role": "격물궁리을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "unity-of-knowledge-and-action",
+        "role": "지행합일을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "li-qi-pattern-configuration",
+        "sectionId": "names",
+        "intuition": "사물과 관계가 마땅히 작동하는 질서인 이치와 그 질서가 구체적으로 드러나는 재료·힘인 기를 함께 설명하는 틀입니다.",
+        "workedExample": "같은 곡물 보관 원리가 있어도 자루마다 습기·온도라는 구체적 조건이 달라 결과가 달라집니다.",
+        "boundary": "서양의 형상·질료나 자연 법칙·물질과 정확히 같은 두 실체라는 뜻은 아닙니다."
+      },
+      {
+        "id": "investigation-of-things",
+        "sectionId": "names",
+        "intuition": "사물·문헌·관계의 이치를 끝까지 살피며 앎과 자기 수양을 넓히는 주희 계열의 공부입니다.",
+        "workedExample": "표본 위치·습도·환기·누수를 추가 조사하면서 손실을 숨기려는 자기 욕망도 함께 검사합니다.",
+        "boundary": "물건을 많이 모으는 경험과학이나 책 문구 암기 하나로 환원되지 않습니다."
+      },
+      {
+        "id": "unity-of-knowledge-and-action",
+        "sectionId": "names",
+        "intuition": "참으로 아는 일에는 그에 맞는 동기와 행동이 이미 포함된다는 왕양명의 주장입니다.",
+        "workedExample": "젖은 2자루를 해롭다고 말하면서 그대로 배급한다면 아직 도덕적으로 온전히 안 것이 아니라고 봅니다.",
+        "boundary": "조사·문헌·타인의 조언 없이 개인의 직감을 언제나 옳다고 인정하는 면허가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 이치와 기",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "li-qi-pattern-configuration"
+        ]
+      },
+      {
+        "label": "2단계 · 격물궁리",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "investigation-of-things"
+        ]
+      },
+      {
+        "label": "3단계 · 지행합일",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "unity-of-knowledge-and-action"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "곡물 100자루 중 10자루를 조사해 2자루의 습기를 발견한 뒤 추가 조사와 이미 확인된 위험의 조치를 구분합니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "이치와 기의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "이치와 기",
+          "같은 곡물 보관 원리가 있어도 자루마다 습기·온도라는 구체적 조건이 달라 결과가 달라집니다.",
+          "서양의 형상·질료나 자연 법칙·물질과 정확히 같은 두 실체라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "격물궁리의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "격물궁리",
+          "표본 위치·습도·환기·누수를 추가 조사하면서 손실을 숨기려는 자기 욕망도 함께 검사합니다.",
+          "물건을 많이 모으는 경험과학이나 책 문구 암기 하나로 환원되지 않습니다."
+        ],
+        "requiredConcepts": [
+          "investigation-of-things"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "지행합일의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "지행합일",
+          "젖은 2자루를 해롭다고 말하면서 그대로 배급한다면 아직 도덕적으로 온전히 안 것이 아니라고 봅니다.",
+          "조사·문헌·타인의 조언 없이 개인의 직감을 언제나 옳다고 인정하는 면허가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "unity-of-knowledge-and-action"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Song-Ming Confucianism",
+          "불교·도가와의 상호작용, 주희와 왕양명의 경쟁, 형이상학·윤리·교육의 연결을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Wang Yangming",
+          "양지와 지행합일을 공부 거부가 아니라 도덕적 앎·동기·행동의 관계를 판정하는 주장으로 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "unity-of-knowledge-and-action"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration",
+          "investigation-of-things",
+          "unity-of-knowledge-and-action"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration",
+          "investigation-of-things"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration",
+          "investigation-of-things",
+          "unity-of-knowledge-and-action"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "li-qi-pattern-configuration",
+          "investigation-of-things",
+          "unity-of-knowledge-and-action"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Song-Ming Confucianism",
+        "href": "https://plato.stanford.edu/archives/sum2024/entries/song-ming-confucianism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "불교·도가와의 상호작용, 주희와 왕양명의 경쟁, 형이상학·윤리·교육의 연결을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Wang Yangming",
+        "href": "https://plato.stanford.edu/entries/wang-yangming/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "양지와 지행합일을 공부 거부가 아니라 도덕적 앎·동기·행동의 관계를 판정하는 주장으로 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/early-modern-india-new-nyaya-analysis-and-language": {
+    "entryLevel": true,
+    "entryNote": "땅 네 구획과 표식 세 개, 5년 경작권을 대상·관계·권리 종류로 분리하는 사례에서 시작합니다.",
+    "coreIdea": "새 나이야는 대상·한정자·관계와 인식 사건을 정밀한 기술 언어로 분해해 철학뿐 아니라 문법·시학·법 이론의 논증을 검사한 약 네 세기의 분석 전통입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "navya-nyaya-analysis",
+        "role": "새 나이야의 분석을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "qualifier-relation-analysis",
+        "role": "한정자·관계 분석을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "cognition-event-analysis",
+        "role": "인식 사건 분석을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "navya-nyaya-analysis",
+        "sectionId": "names",
+        "intuition": "강게샤 이후 지식·언어·대상 관계의 모호함을 정밀한 기술 어휘로 분해하고 논증의 성립 조건을 검사한 방법입니다.",
+        "workedExample": "‘연못 옆 나무의 땅’을 후보 구획, 한정자, 관계, 권리 종류로 나눠 다시 씁니다.",
+        "boundary": "현대 기호논리의 옛 형태나 인도 철학 전체의 공통 방법이라는 뜻은 아닙니다."
+      },
+      {
+        "id": "qualifier-relation-analysis",
+        "sectionId": "names",
+        "intuition": "어떤 대상이 어떤 성질과 관계에 의해 가려지는지 드러내 모호한 지시와 범위를 좁히는 분석입니다.",
+        "workedExample": "연못과 인접한 나무가 여러 개라면 어느 나무, 어느 방향, 어느 구획인지 관계를 명시합니다.",
+        "boundary": "문장을 잘게 나누는 것만으로 실제 토지 권리와 사회적 권한이 결정되지는 않습니다."
+      },
+      {
+        "id": "cognition-event-analysis",
+        "sectionId": "names",
+        "intuition": "누가 무엇을 어떤 인식 통로와 조건에서 알았는지 하나의 인식 사건으로 분해해 참과 오류의 원인을 찾는 방법입니다.",
+        "workedExample": "측량 기록을 본 사람과 소문만 들은 사람의 인식 통로, 대상, 관계 파악을 따로 기록합니다.",
+        "boundary": "모든 인식 문제를 말의 형식만으로 해결하거나 삶의 목표와 논쟁 제도를 배제하는 방법은 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 새 나이야의 분석",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "navya-nyaya-analysis"
+        ]
+      },
+      {
+        "label": "2단계 · 한정자·관계 분석",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "qualifier-relation-analysis"
+        ]
+      },
+      {
+        "label": "3단계 · 인식 사건 분석",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "cognition-event-analysis"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "땅 네 구획 A~D와 연못·나무·길 표식 세 개를 놓고 ‘연못 옆 나무의 땅’이 어느 구획과 어떤 권리를 가리키는지 다시 씁니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "새 나이야의 분석의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "새 나이야의 분석",
+          "‘연못 옆 나무의 땅’을 후보 구획, 한정자, 관계, 권리 종류로 나눠 다시 씁니다.",
+          "현대 기호논리의 옛 형태나 인도 철학 전체의 공통 방법이라는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "한정자·관계 분석의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "한정자·관계 분석",
+          "연못과 인접한 나무가 여러 개라면 어느 나무, 어느 방향, 어느 구획인지 관계를 명시합니다.",
+          "문장을 잘게 나누는 것만으로 실제 토지 권리와 사회적 권한이 결정되지는 않습니다."
+        ],
+        "requiredConcepts": [
+          "qualifier-relation-analysis"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "인식 사건 분석의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "인식 사건 분석",
+          "측량 기록을 본 사람과 소문만 들은 사람의 인식 통로, 대상, 관계 파악을 따로 기록합니다.",
+          "모든 인식 문제를 말의 형식만으로 해결하거나 삶의 목표와 논쟁 제도를 배제하는 방법은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "cognition-event-analysis"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Analytic Philosophy in Early Modern India",
+          "강게샤 이후 약 네 세기의 새 나이야 기술 언어와 철학·문법·시학·법 이론의 활용을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Analysis: Early Modern Conceptions",
+          "분석이 전통마다 다른 목표와 절차를 가졌으며 새 나이야를 20세기 영미 분석 철학의 전사로만 읽을 수 없음을 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "cognition-event-analysis"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis",
+          "qualifier-relation-analysis",
+          "cognition-event-analysis"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis",
+          "qualifier-relation-analysis"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis",
+          "qualifier-relation-analysis",
+          "cognition-event-analysis"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "navya-nyaya-analysis",
+          "qualifier-relation-analysis",
+          "cognition-event-analysis"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Analytic Philosophy in Early Modern India",
+        "href": "https://plato.stanford.edu/archives/fall2010/entries/early-modern-india/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "강게샤 이후 약 네 세기의 새 나이야 기술 언어와 철학·문법·시학·법 이론의 활용을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Analysis: Early Modern Conceptions",
+        "href": "https://plato.stanford.edu/archives/fall2024/entries/analysis/s4.html",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "분석이 전통마다 다른 목표와 절차를 가졌으며 새 나이야를 20세기 영미 분석 철학의 전사로만 읽을 수 없음을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/modern-methods-pragmatism-analysis-and-phenomenology": {
+    "entryLevel": true,
+    "entryNote": "가로등 민원 10건과 세 번의 개입을 결과·개념·경험 장부로 나누는 사례에서 시작합니다.",
+    "coreIdea": "프래그머티즘·분석 철학·현상학은 결과를 시험하는 개입, 개념과 논증의 조건, 살아 있는 경험의 구조라는 서로 다른 질문을 발전시켰으며 분석 대 대륙이라는 두 상자보다 실제 방법의 겹침과 차이로 읽어야 합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "pragmatic-maxim",
+        "role": "프래그머틱 격률을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "conceptual-analysis-method",
+        "role": "개념 분석을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "phenomenological-description",
+        "role": "현상학적 기술을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "pragmatic-maxim",
+        "sectionId": "names",
+        "intuition": "어떤 개념이 참일 때 예상되는 실제 효과와 가능한 개입의 차이를 밝혀 그 개념의 뜻을 분명히 하는 방법입니다.",
+        "workedExample": "‘고장’이 전구 교체·배선 수리·감지기 조정 가운데 어떤 관찰 차이를 만들지 시험합니다.",
+        "boundary": "당장 이익이 되면 참이라는 단기 실용주의나 다수결의 다른 이름이 아닙니다."
+      },
+      {
+        "id": "conceptual-analysis-method",
+        "sectionId": "names",
+        "intuition": "주장의 핵심 개념, 사용 조건, 논리적 관계와 반례를 밝혀 무엇을 말하고 있는지 검사하는 여러 방법입니다.",
+        "workedExample": "민원의 ‘꺼졌다’를 전원 상실, 점멸, 기대 밝기 미달로 나누고 판정 조건을 적습니다.",
+        "boundary": "모든 철학 문제를 사전 정의 하나나 언어 직관 투표로 끝내는 단일 절차가 아닙니다."
+      },
+      {
+        "id": "phenomenological-description",
+        "sectionId": "names",
+        "intuition": "설명을 성급히 원인 이론으로 바꾸기 전에 몸·시간·공간·대상과 함께 나타나는 경험의 구조를 자세히 기술하는 방법입니다.",
+        "workedExample": "같은 어둠도 운전자, 보행자, 휠체어 이용자에게 거리와 위험이 어떻게 다르게 나타나는지 기록합니다.",
+        "boundary": "개인의 느낌을 반박할 수 없는 사실로 두거나 물리적 원인 조사를 거부하는 태도가 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 프래그머틱 격률",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "pragmatic-maxim"
+        ]
+      },
+      {
+        "label": "2단계 · 개념 분석",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "conceptual-analysis-method"
+        ]
+      },
+      {
+        "label": "3단계 · 현상학적 기술",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "phenomenological-description"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "가로등 민원 10건에서 전구 교체, 7일간 배선 관찰, 감지기 조정이라는 세 개입이 어떤 질문과 경험을 드러내는지 비교합니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "프래그머틱 격률의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "프래그머틱 격률",
+          "‘고장’이 전구 교체·배선 수리·감지기 조정 가운데 어떤 관찰 차이를 만들지 시험합니다.",
+          "당장 이익이 되면 참이라는 단기 실용주의나 다수결의 다른 이름이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "개념 분석의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "개념 분석",
+          "민원의 ‘꺼졌다’를 전원 상실, 점멸, 기대 밝기 미달로 나누고 판정 조건을 적습니다.",
+          "모든 철학 문제를 사전 정의 하나나 언어 직관 투표로 끝내는 단일 절차가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "conceptual-analysis-method"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "현상학적 기술의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "현상학적 기술",
+          "같은 어둠도 운전자, 보행자, 휠체어 이용자에게 거리와 위험이 어떻게 다르게 나타나는지 기록합니다.",
+          "개인의 느낌을 반박할 수 없는 사실로 두거나 물리적 원인 조사를 거부하는 태도가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "phenomenological-description"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Pragmatism",
+          "퍼스·제임스·듀이 이후 앎과 뜻을 세계 안의 탐구·행위·공동 결과에 연결한 여러 흐름을 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Analysis",
+          "분석 철학과 현상학이 모두 분석을 사용했지만 보존하려는 대상과 절차가 달랐음을 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "phenomenological-description"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim",
+          "conceptual-analysis-method",
+          "phenomenological-description"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim",
+          "conceptual-analysis-method"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim",
+          "conceptual-analysis-method",
+          "phenomenological-description"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "pragmatic-maxim",
+          "conceptual-analysis-method",
+          "phenomenological-description"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Pragmatism",
+        "href": "https://plato.stanford.edu/archives/sum2021/entries/pragmatism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "퍼스·제임스·듀이 이후 앎과 뜻을 세계 안의 탐구·행위·공동 결과에 연결한 여러 흐름을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Analysis",
+        "href": "https://plato.stanford.edu/entries/analysis/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "분석 철학과 현상학이 모두 분석을 사용했지만 보존하려는 대상과 절차가 달랐음을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": {
+    "entryLevel": true,
+    "entryNote": "여성 20%, 남성 30%라는 승진율 아래에서 평균이 가린 집단과 보이지 않는 노동을 찾습니다.",
+    "coreIdea": "페미니즘 철학은 사회적 위치가 지식 생산에 미치는 영향, 돌봄 관계와 의존, 여러 권력 축이 함께 만드는 제도적 누락을 분석해 기존 인식론·윤리학·형이상학의 출발점과 보편 주장을 다시 검사합니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "standpoint-epistemology",
+        "role": "입장 인식론을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "care-ethics",
+        "role": "돌봄 윤리을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "intersectionality-analysis",
+        "role": "교차성 분석을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "standpoint-epistemology",
+        "sectionId": "names",
+        "intuition": "지식이 사회적 위치와 노동 분업 속에서 만들어지며 주변화된 위치에서 지배 질서가 가린 관계를 발견할 가능성이 있다는 인식론입니다.",
+        "workedExample": "승진 결과뿐 아니라 자료 입력·평가 기준·이의 제기 과정에 누가 접근했는지 위치별로 봅니다.",
+        "boundary": "억압받는 경험이 자동으로 오류 없는 진리를 주거나 한 집단 안의 모두가 같은 관점을 가진다는 뜻은 아닙니다."
+      },
+      {
+        "id": "care-ethics",
+        "sectionId": "names",
+        "intuition": "자율적 개인만을 기본 단위로 두지 않고 의존·관계·응답 책임과 돌봄 노동의 실제 조건을 도덕 판단에 넣는 접근입니다.",
+        "workedExample": "야간 회의 참석률을 평가할 때 가족 돌봄 시간과 조직의 지원 책임을 함께 계산합니다.",
+        "boundary": "여성은 타고나게 돌봄에 적합하다거나 착한 마음만 있으면 제도 문제가 풀린다는 주장과 다릅니다."
+      },
+      {
+        "id": "intersectionality-analysis",
+        "sectionId": "names",
+        "intuition": "성별·인종화·계급·장애 같은 권력 축이 더해지는 수준을 넘어 특정 제도에서 함께 작동해 고유한 누락을 만드는 방식을 분석합니다.",
+        "workedExample": "여성과 남성 평균을 다시 부서·인종화·돌봄 책임으로 열어 어느 조합이 심사 절차에서 빠졌는지 확인합니다.",
+        "boundary": "정체성 항목을 끝없이 나열하거나 모든 차별을 한 단어로 설명하는 만능 공식이 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 입장 인식론",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "standpoint-epistemology"
+        ]
+      },
+      {
+        "label": "2단계 · 돌봄 윤리",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "care-ethics"
+        ]
+      },
+      {
+        "label": "3단계 · 교차성 분석",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "intersectionality-analysis"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "승진 후보 100명 가운데 여성 40명 중 8명, 남성 60명 중 18명이 승진한 평균을 부서·인종화·돌봄 책임과 결정 권한별로 다시 엽니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "입장 인식론의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "입장 인식론",
+          "승진 결과뿐 아니라 자료 입력·평가 기준·이의 제기 과정에 누가 접근했는지 위치별로 봅니다.",
+          "억압받는 경험이 자동으로 오류 없는 진리를 주거나 한 집단 안의 모두가 같은 관점을 가진다는 뜻은 아닙니다."
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "돌봄 윤리의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "돌봄 윤리",
+          "야간 회의 참석률을 평가할 때 가족 돌봄 시간과 조직의 지원 책임을 함께 계산합니다.",
+          "여성은 타고나게 돌봄에 적합하다거나 착한 마음만 있으면 제도 문제가 풀린다는 주장과 다릅니다."
+        ],
+        "requiredConcepts": [
+          "care-ethics"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "교차성 분석의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "교차성 분석",
+          "여성과 남성 평균을 다시 부서·인종화·돌봄 책임으로 열어 어느 조합이 심사 절차에서 빠졌는지 확인합니다.",
+          "정체성 항목을 끝없이 나열하거나 모든 차별을 한 단어로 설명하는 만능 공식이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "intersectionality-analysis"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Feminist Philosophy",
+          "페미니즘 철학이 정전에 여성을 추가하는 데 그치지 않고 지식·윤리·형이상학의 전제를 고친 역사를 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Feminist Perspectives on Power",
+          "권력·지배·교차성의 계보와 단일 축 법·통계가 만든 누락 및 내부 비판을 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "intersectionality-analysis"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology",
+          "care-ethics",
+          "intersectionality-analysis"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology",
+          "care-ethics"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology",
+          "care-ethics",
+          "intersectionality-analysis"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "standpoint-epistemology",
+          "care-ethics",
+          "intersectionality-analysis"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Feminist Philosophy",
+        "href": "https://plato.stanford.edu/archives/sum2021/entries/feminist-philosophy/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "페미니즘 철학이 정전에 여성을 추가하는 데 그치지 않고 지식·윤리·형이상학의 전제를 고친 역사를 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Feminist Perspectives on Power",
+        "href": "https://plato.stanford.edu/entries/feminist-power/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "권력·지배·교차성의 계보와 단일 축 법·통계가 만든 누락 및 내부 비판을 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "philosophy-history/indigenous-land-and-latin-american-liberation": {
+    "entryLevel": true,
+    "entryNote": "빈 땅 100헥타르라는 국가 분류에 계절·물·의례·재생의 이용 기록을 겹치는 사례에서 시작합니다.",
+    "coreIdea": "국가 지도의 빈 땅 분류는 계절 이용·공동체 법·의례·회복 시간을 지울 수 있으며, 원주민의 땅에 근거한 규범과 라틴아메리카 해방 철학은 서로 다른 전통으로서 식민 권력과 보편을 말하는 위치를 다시 묻습니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "land-based-normativity",
+        "role": "땅에 근거한 규범을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "colonial-erasure",
+        "role": "식민적 지움을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      },
+      {
+        "id": "latin-american-liberation-philosophy",
+        "role": "라틴아메리카 해방 철학을 본문의 생활 사례·시간축·자료 범위에 연결합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "land-based-normativity",
+        "sectionId": "names",
+        "intuition": "땅을 교환 가능한 면적만으로 보지 않고 생계·친족·의례·책임·세대 간 관계가 규범을 만드는 자리로 이해하는 접근입니다.",
+        "workedExample": "계절 이용 60헥타르와 물·의례 공간 20헥타르도 비어 있는 면적이 아니라 관계와 의무가 이어지는 장소로 기록합니다.",
+        "boundary": "모든 원주민 공동체가 같은 토지관을 갖거나 자연과 언제나 조화롭게 산다는 낭만적 일반화가 아닙니다."
+      },
+      {
+        "id": "colonial-erasure",
+        "sectionId": "names",
+        "intuition": "식민 법·지도·기록이 기존 공동체의 이용·법·지식과 정치적 주체성을 보이지 않는 것으로 만드는 과정입니다.",
+        "workedExample": "국가 지도는 100헥타르를 미사용지로 표시하면서 계절 이동과 재생 기간을 소유·이용의 증거에서 뺍니다.",
+        "boundary": "기록 누락 하나만을 뜻하지 않으며 모든 현대 토지 분쟁이 같은 역사와 법 구조를 가진 것도 아닙니다."
+      },
+      {
+        "id": "latin-american-liberation-philosophy",
+        "sectionId": "names",
+        "intuition": "보편을 말해 온 철학의 위치와 식민성·의존을 비판하고 배제된 사람의 요구에서 책임 있는 사유와 실천을 시작하는 흐름입니다.",
+        "workedExample": "개발 사업의 효율만 묻기 전에 누가 땅을 비었다고 명명했고 누가 결정·거부·수정 권한을 갖는지 묻습니다.",
+        "boundary": "원주민 사상 전체의 대리인이나 라틴아메리카의 하나뿐인 철학, 완성된 정치 처방이 아닙니다."
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "1단계 · 땅에 근거한 규범",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "land-based-normativity"
+        ]
+      },
+      {
+        "label": "2단계 · 식민적 지움",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "colonial-erasure"
+        ]
+      },
+      {
+        "label": "3단계 · 라틴아메리카 해방 철학",
+        "relation": "같은 사례를 앞 단계보다 넓은 판단·관계·역사 범위에서 다시 읽습니다.",
+        "concepts": [
+          "latin-american-liberation-philosophy"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
+        "answerChecklist": [
+          "국가가 미사용지라 부른 100헥타르를 공동체의 계절 이용 60, 물·의례 공간 20, 회복·재생 구역 20으로 다시 기록합니다.",
+          "설명용 수치와 역사적 통계의 구분",
+          "판단 또는 행동의 다음 단계"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "땅에 근거한 규범의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "땅에 근거한 규범",
+          "계절 이용 60헥타르와 물·의례 공간 20헥타르도 비어 있는 면적이 아니라 관계와 의무가 이어지는 장소로 기록합니다.",
+          "모든 원주민 공동체가 같은 토지관을 갖거나 자연과 언제나 조화롭게 산다는 낭만적 일반화가 아닙니다."
+        ],
+        "requiredConcepts": [
+          "land-based-normativity"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "식민적 지움의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "식민적 지움",
+          "국가 지도는 100헥타르를 미사용지로 표시하면서 계절 이동과 재생 기간을 소유·이용의 증거에서 뺍니다.",
+          "기록 누락 하나만을 뜻하지 않으며 모든 현대 토지 분쟁이 같은 역사와 법 구조를 가진 것도 아닙니다."
+        ],
+        "requiredConcepts": [
+          "colonial-erasure"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "라틴아메리카 해방 철학의 뜻과 사례에서 맡는 역할을 설명하세요.",
+        "answerChecklist": [
+          "라틴아메리카 해방 철학",
+          "개발 사업의 효율만 묻기 전에 누가 땅을 비었다고 명명했고 누가 결정·거부·수정 권한을 갖는지 묻습니다.",
+          "원주민 사상 전체의 대리인이나 라틴아메리카의 하나뿐인 철학, 완성된 정치 처방이 아닙니다."
+        ],
+        "requiredConcepts": [
+          "latin-american-liberation-philosophy"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "첫 번째 자료가 직접 다루는 범위와 이 글이 가져온 판단을 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Colonialism",
+          "식민주의·정착 식민주의·원주민 부흥과 자기 결정을 과거 사건이 아니라 계속되는 법·토지·지식 구조로 확인합니다.",
+          "자료가 직접 증명하지 않는 범위"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "두 번째 자료가 첫 자료를 어떻게 보완하거나 다른 논쟁을 여는지 설명하세요.",
+        "answerChecklist": [
+          "Stanford Encyclopedia of Philosophy · Philosophy of Liberation",
+          "라틴아메리카 해방 철학의 여러 흐름과 배제된 사람의 요구에서 철학·비판·실천을 잇는 목표를 확인합니다.",
+          "시기·지역·문제의 차이"
+        ],
+        "requiredConcepts": [
+          "latin-american-liberation-philosophy"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "사례의 숫자나 조건 하나를 바꾼 뒤 세 개념의 판단이 어떻게 달라지는지 설명하세요.",
+        "answerChecklist": [
+          "조건 변경",
+          "달라진 판단",
+          "세 개념의 역할 구분"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity",
+          "colonial-erasure",
+          "latin-american-liberation-philosophy"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "첫 자료의 개관 범위를 다른 지역·시대로 일반화할 때 생기는 반례를 제시하세요.",
+        "answerChecklist": [
+          "원문 범위",
+          "다른 지역 또는 시대",
+          "일반화의 한계"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity",
+          "colonial-erasure"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "advanced",
+        "question": "두 자료를 하나의 발전 단계로 합치면 사라지는 이견과 자료의 성격 차이를 설명하세요.",
+        "answerChecklist": [
+          "자료별 질문",
+          "내부 이견",
+          "단선적 발전 서술의 문제"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity",
+          "colonial-erasure",
+          "latin-american-liberation-philosophy"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 시간축이 포함한 사람과 문헌, 빠뜨린 목소리와 제도를 나누고 다음 조사 계획을 세우세요.",
+        "answerChecklist": [
+          "포함 범위",
+          "배제되거나 적게 남은 목소리",
+          "후속 1차 자료 또는 연구"
+        ],
+        "requiredConcepts": [
+          "land-based-normativity",
+          "colonial-erasure",
+          "latin-american-liberation-philosophy"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Colonialism",
+        "href": "https://plato.stanford.edu/entries/colonialism/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "식민주의·정착 식민주의·원주민 부흥과 자기 결정을 과거 사건이 아니라 계속되는 법·토지·지식 구조로 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Stanford Encyclopedia of Philosophy · Philosophy of Liberation",
+        "href": "https://plato.stanford.edu/entries/liberation/",
+        "problem": "철학적 주장과 역사적 배열을 어떤 문헌 범위에서 확인할지 정합니다.",
+        "contribution": "라틴아메리카 해방 철학의 여러 흐름과 배제된 사람의 요구에서 철학·비판·실천을 잇는 목표를 확인합니다.",
+        "assumptions": "학술 개관은 입구와 참고문헌을 제공하지만 전통 전체의 단일 해석은 아닙니다.",
+        "evidenceScope": "인용한 페이지가 직접 다루는 인물·문헌·시대 범위입니다.",
+        "notClaim": "이 자료의 분류가 세계 철학의 유일한 정전이나 한 문명의 우열을 증명하지 않습니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
 };
