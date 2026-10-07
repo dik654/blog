@@ -23,8 +23,8 @@ export default function TermBreakdown({
       aria-label={title}
     >
       <header className="border-b border-border/60 px-5 py-4 sm:px-6">
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
-          One term per line
+        <p className="text-[11px] font-black tracking-[0.08em] text-primary">
+          용어 정리
         </p>
         <h3 className="mt-1 text-lg font-bold leading-7 text-foreground">
           {title}

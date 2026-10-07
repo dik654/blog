@@ -1839,9 +1839,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/speculative-decoding-variants": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
-    "rationale": "같은 RAY를 선택하고 기록하는 요청에서 후보 출처와 검증 모양이 바꾸는 상태·확률·비용을 비교하는 글입니다. 각 방법의 독립 상세가 아니라 동일 경로와 단독 기준을 유지하는 비교가 중심이므로 한 글로 유지합니다. 논문별 실험 조건은 펼침으로 분리했습니다.",
-    "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 본문·6+4·4장면·원문13패널에서 맞춥니다. 실제 CPU 실행과 전체 원본 byte, 두 폭과 수식·humanize를 별도 확인합니다."
+    "reviewedAt": "2026-10-07",
+    "rationale": "큰 모델 한 번의 검증으로 여러 토큰을 확정해 순차 실행 횟수를 줄인다는 한 문장에 맞춰, 왜 실행 횟수가 줄어드는지부터 첫 불일치·후보의 출처와 모양·RAY 경로·비용·정확성으로 꼬리 질문을 잇습니다. LayerSkip·Medusa·MTP·SuffixDecoding의 원문 상세는 이 인과선을 끊지 않도록 해당 질문의 펼침 근거로 두므로 한 글로 유지합니다.",
+    "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 12개 깊이 절·3개 도식·6+4 연습·원문 코드에서 맞춥니다. 기존 세부 수치와 식은 펼침 근거에 보존하고 실제 CPU 실행·가정·논문 자기보고를 구분합니다."
   },
   "ai/fft": {
     "action": "keep",
@@ -2731,7 +2731,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/fft": "4a26bb91107c906e",
   "crypto/hash-theory": "a5cd8d47bbd208bc",
   "ai/cross-entropy": "a23db07aab820d12",
-  "ai/speculative-decoding-variants": "4ae5618c6186afe2",
+  "ai/speculative-decoding-variants": "d9e926745f65efc6",
   "crypto/crypto-primitives": "33067f5c32a87fc6",
   "ai/math-probability-expectation-variance": "109b8558d4626b83",
   "ai/math-random-variables-expectation": "839c7ae41018369a",
