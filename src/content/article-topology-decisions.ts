@@ -2004,6 +2004,36 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "농가의 현금 장부로 여러 노예무역의 장기 손상, 식민 조세와 독립 뒤 원자재 의존을 강제와 가격의 연속 경로로 읽습니다.", sharedGate: "현금작물 판매 20·운송과 중개 4·현금세 10·농가 잔여 6이 본문·시각화·연습문제에서 같은지 확인합니다." },
   "economic-history/mena-land-debt-oil-and-diversification": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "석유 계약의 판매액이 국가 예산과 가구·기업에 전달되는 장부로 토지·외채·양허·다각화를 잇되 산유국과 비산유국을 구분합니다.", sharedGate: "석유 판매 100·기업과 생산 30·부채 10·정부 가용 60, 가격 하락 뒤 판매 70·가용 30·부족 30이 본문·시각화·연습문제에서 같은지 확인합니다." },
   "economic-history/latin-america-exports-import-substitution-and-debt": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "외화 장부로 수출 호황·수입대체 산업화·국제대출과 1982년 부채위기를 국내 권력과 세계 가격이 결합한 경로로 추적합니다.", sharedGate: "첫해 수출 100·수입 80·이자 10·잔액 10과 둘째 해 수출 80·수입 80·이자 18·잔액 −18이 본문·시각화·연습문제에서 같은지 확인합니다." },
+  "economic-history/land-rights-enclosure-rent-and-urbanization": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "공동 이용권이 법정 인클로저와 도시 임대료로 이어지는 한 토지 권리·분배 경로를 같은 95→75 장부에서 추적합니다.",
+    sharedGate: "생산 100→120과 가구 몫 95→75를 권리·임대료·경계 비용으로 함께 설명하고 영국 사례의 지역 한계를 남깁니다.",
+  },
+  "economic-history/demography-family-economy-and-care": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "출생·사망의 시차가 가구 시간과 연령별 제도 수요로 이어지는 한 인구·가족경제 경로입니다.",
+    sharedGate: "1,000명당 자연증가 5→25→10을 가구 생산·돌봄·연령 구조와 연결하고 이주와 국가별 차이를 남깁니다.",
+  },
+  "economic-history/firms-banks-insurance-and-institutional-investors": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "공장 100의 조달과 손실을 회사·은행·보험의 서로 다른 청구권으로 나누고 기관투자자까지 잇는 한 금융기관사 경로입니다.",
+    sharedGate: "30+60+10=100과 화재 뒤 자산 90을 지급 순서·책임·보험 조건으로 검산하고 영미 중심 범위를 밝힙니다.",
+  },
+  "economic-history/labor-bargaining-social-insurance-and-welfare-state": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "임금 노동의 위험을 교섭과 사회보험, 보장의 충분성으로 나누는 한 노동·복지 제도 경로입니다.",
+    sharedGate: "월급 100에서 평소 95·사고 뒤 85를 계산하고 임금·노동조건·급여 범위와 비공식 노동의 공백을 함께 봅니다.",
+  },
+  "economic-history/great-inflation-disinflation-and-financialization": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "생활물가와 기대·긴축이 금리·채권·비은행 금융으로 전달되는 1965년 이후 한 거시금융 전환 경로입니다.",
+    sharedGate: "108÷114의 실질구매력을 정책·공급 충격·긴축 비용과 시장금융화에 연결하되 미국 경로를 세계화하지 않습니다.",
+  },
+  "economic-history/containers-value-chains-platforms-and-climate-transition": {
+    action: "keep", status: "reviewed", reviewedAt: "2026-10-07",
+    rationale: "판매가 100의 물건·돈·정보·위험·배출 흐름을 컨테이너에서 플랫폼과 기후 전환까지 추적하는 한 세계 생산망 경로입니다.",
+    sharedGate: "35+8+15+12+20+10=100과 운송 충격 뒤 108을 노동·재고·가격·배출 비용과 네 공식 자료에 대조합니다.",
+  },
   "global-history/empires-roads-taxes-and-law": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "곡물 100자루가 명부·징수·도로·현지법을 거치는 한 제국 통치 경로를 추적합니다.", sharedGate: "100=30+60+10의 장부와 아소카 칙령의 전달·집행 경계를 본문·시각화·문제에서 같게 확인합니다." },
   "global-history/trade-religion-and-translation-networks": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "향신료 100묶음과 책 한 권이 계절풍·항구·디아스포라·번역을 서로 다른 속도로 지나는 한 연결망을 설명합니다.", sharedGate: "100→80→50의 상품 경로와 직접 관찰·전언·전설의 사료 경계를 함께 확인합니다." },
   "global-history/conquest-disease-silver-and-oceanic-exchange": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "포토시 은 100의 생산·운송·결제와 강제 노동·감염병 비용을 같은 대양 회로에서 추적합니다.", sharedGate: "100→60→40은 설명용 수치임을 표시하고 미타·은 장부·지역별 감염 자료의 서로 다른 증거 범위를 확인합니다." },
@@ -2971,4 +3001,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "philosophy-history/early-modern-europe-doubt-experience-and-causality":"7ad96448a6e9d797",
 "philosophy-history/islamic-philosophy-translation-illumination-and-being":"ac9d120c42d51df0",
 "philosophy-history/warring-states-china-care-ritual-and-standards":"b65407bf8fbc9e1d",
+"economic-history/land-rights-enclosure-rent-and-urbanization":"cf90efdb39129f50",
+"economic-history/demography-family-economy-and-care":"f8fe7abfc7875867",
+"economic-history/firms-banks-insurance-and-institutional-investors":"1ee5a967dc153730",
+"economic-history/labor-bargaining-social-insurance-and-welfare-state":"6f1004cc9785f5f9",
+"economic-history/great-inflation-disinflation-and-financialization":"71d4252e4dd2e503",
+"economic-history/containers-value-chains-platforms-and-climate-transition":"50127fed044d6880",
 };
