@@ -2688,6 +2688,104 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "숙식·수업·필사·건물·여행과 후원이 문헌과 지식을 세대 사이에 옮기는 하나의 학습 기반 경로입니다.", sharedGate: "45+20+15+15+5=100의 운영 장부와 후원 감소 30이 교사·사본·접근권에 미치는 영향을 날란다·팀북투 자료와 대조합니다." },
   "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "계절 이동목축이 정착 도시와 물자를 교환하고 공납·역참·군사·서기관의 제국 행정으로 이어지는 하나의 초원 정치 경로입니다.", sharedGate: "100−15+25−20=90의 가축 장부와 오르혼·알타이 자료의 시대·지역 범위를 함께 확인합니다." },
   "global-history/open-web-platform-curation-and-digital-divides": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "공개 표준의 발행에서 검색·추천 노출, 이용자 반응의 되먹임과 접속·활용 격차까지 이어지는 하나의 디지털 정보 경로입니다.", sharedGate: "게시물 100→후보 20→노출 5와 클릭 40의 설명용 경로를 CERN 공개 기록·UNESCO 지침·ITU 2025 추계의 서로 다른 증거 범위와 대조합니다." },
+  "cloud/cloud-certification-roadmap-2026": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "취업용 AWS·Azure 자격증 로드맵의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-foundations-responsibility-regions": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 책임·위치·용량의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-identity-access-hierarchy": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 신원·권한·자원 계층의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-networking-request-path": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 네트워크 요청 경로의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-compute-selection": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 컴퓨팅 선택의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-storage-database-selection": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 저장소·데이터베이스 선택의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/cloud-reliability-observability-iac": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "클라우드 신뢰성·관측·IaC의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/aws-clf-c02-fast-study": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "AWS CLF-C02 빠른 공부의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/aws-saa-c03-fast-study": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "AWS SAA-C03 빠른 공부의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/aws-developer-cloudops-paths": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "AWS Developer·CloudOps 경로의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/azure-az900-fast-study": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "Azure AZ-900 빠른 공부의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/azure-az104-fast-study": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "Azure AZ-104 빠른 공부의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/azure-architect-devops-paths": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-07",
+    "rationale": "Azure Architect·DevOps 경로의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
+    "sharedGate": "지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
+  },
+  "cloud/azure-ai200-fast-study": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-07",
+    rationale: "AI-200의 네 시험 영역을 분당 요청 100건의 한 AI 백엔드 경로와 진단 고리로 이어 가는 독립 학습 단위입니다.",
+    sharedGate: "100건=캐시 60건+벡터 조회 40건이며 갱신 5건을 큐로 분리합니다. 같은 수가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻인지 확인합니다.",
+  },
 };
 
 /**
@@ -3139,4 +3237,18 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "markets/lme-metals-warrants-quality-storage-and-load-out":"5fb0d71c4e8acfd2",
 "markets/livestock-futures-live-delivery-and-cash-settlement":"5e12dee595585a5c",
 "markets/singapore-derivatives-records-complaints-and-tax-ledger":"6ff01cd6c1a31f71",
+"cloud/cloud-certification-roadmap-2026":"70ed25ddcb4ca057",
+"cloud/cloud-foundations-responsibility-regions":"236c8442e57820bd",
+"cloud/cloud-identity-access-hierarchy":"1dd06fc5ecb1f298",
+"cloud/cloud-networking-request-path":"530bebbb43b53e90",
+"cloud/cloud-compute-selection":"de6d61d92e596898",
+"cloud/cloud-storage-database-selection":"795a88fe6603a9a3",
+"cloud/cloud-reliability-observability-iac":"f479a32a5276c097",
+"cloud/aws-clf-c02-fast-study":"20eea0f9ea44573c",
+"cloud/aws-saa-c03-fast-study":"36efb0c71b038135",
+"cloud/aws-developer-cloudops-paths":"1722145b03ffa9b3",
+"cloud/azure-az900-fast-study":"9a102b8c25dfa31e",
+"cloud/azure-az104-fast-study":"d011334bd04d76ad",
+"cloud/azure-architect-devops-paths":"b04879cb0a41a724",
+"cloud/azure-ai200-fast-study":"207f163e5b2ac989",
 };

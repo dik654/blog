@@ -13327,4 +13327,190 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "UNESCO · Guidelines for the Governance of Digital Platforms", href: "https://unesdoc.unesco.org/ark:/48223/pf0000387339", note: "플랫폼 설계·콘텐츠 조정·선별의 인권·투명성·책임 원칙을 확인합니다." },
     { kind: "공식 연구", label: "ITU · Facts and Figures 2025", href: "https://www.itu.int/en/ITU-D/Statistics/Pages/facts/default.aspx", note: "온라인 약 60억 명·오프라인 22억 명과 소득·성별·도농 격차의 2025년 추계를 확인합니다." }
   ],
+  "cloud/cloud-certification-roadmap-2026": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS Certification Exam Guides",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/examguides/",
+      "note": "현행 AWS 시험 코드와 역할별 공식 범위를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · AZ-204 study guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-204",
+      "note": "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다."
+    }
+  ],
+  "cloud/cloud-foundations-responsibility-regions": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS Shared Security Responsibility Model",
+      "href": "https://docs.aws.amazon.com/whitepapers/latest/navigating-gdpr-compliance/shared-security-responsibility-model.html",
+      "note": "클라우드 자체와 클라우드 안의 보안 책임을 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Shared responsibility in the cloud",
+      "href": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
+      "note": "IaaS·PaaS·SaaS에 따라 책임 층이 이동하는 표를 확인합니다."
+    }
+  ],
+  "cloud/cloud-identity-access-hierarchy": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS IAM security best practices",
+      "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+      "note": "임시 자격·최소 권한·다중 인증과 접근 검토 원칙을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Azure RBAC overview",
+      "href": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview",
+      "note": "보안 주체·역할 정의·범위의 조합을 확인합니다."
+    }
+  ],
+  "cloud/cloud-networking-request-path": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS · Route tables for your VPC",
+      "href": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html",
+      "note": "목적지 주소에 따른 다음 경로 선택을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Virtual network traffic routing",
+      "href": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview",
+      "note": "시스템·사용자 정의 경로와 다음 홉을 확인합니다."
+    }
+  ],
+  "cloud/cloud-compute-selection": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS · Choosing an AWS compute service",
+      "href": "https://docs.aws.amazon.com/decision-guides/latest/compute-on-aws-how-to-choose/compute-on-aws-how-to-choose.html",
+      "note": "워크로드 요구에 따른 AWS 컴퓨팅 선택을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Choose an Azure compute service",
+      "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree",
+      "note": "Azure 컴퓨팅 의사결정 트리를 확인합니다."
+    }
+  ],
+  "cloud/cloud-storage-database-selection": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS database decision guide",
+      "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-aws-database/",
+      "note": "접근 패턴과 운영 요구에 따른 AWS 데이터베이스 선택을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Data store models",
+      "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview",
+      "note": "관계형·키값·문서·객체 저장 모델을 비교합니다."
+    }
+  ],
+  "cloud/cloud-reliability-observability-iac": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS Well-Architected Framework pillars",
+      "href": "https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/the-pillars-of-the-framework.html",
+      "note": "AWS의 여섯 설계 관점과 교환을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Azure Well-Architected Framework",
+      "href": "https://learn.microsoft.com/en-us/azure/well-architected/what-is-well-architected-framework",
+      "note": "Azure의 다섯 설계 관점과 교환을 확인합니다."
+    }
+  ],
+  "cloud/aws-clf-c02-fast-study": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS Certified Cloud Practitioner Exam Guide (CLF-C02)",
+      "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.pdf",
+      "note": "문항 구성, 합격 점수와 네 영역 비중을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AWS · CLF-C02 Technologies and Concepts",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-technologies-concepts.html",
+      "note": "비포괄적인 공식 기술·개념 목록을 확인합니다."
+    }
+  ],
+  "cloud/aws-saa-c03-fast-study": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS SAA-C03 Exam Guide",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03.html",
+      "note": "네 공식 설계 영역과 목표 역할을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AWS Well-Architected Framework",
+      "href": "https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/the-pillars-of-the-framework.html",
+      "note": "기능 외 설계 관점과 교환 관계를 확인합니다."
+    }
+  ],
+  "cloud/aws-developer-cloudops-paths": [
+    {
+      "kind": "공식 가이드",
+      "label": "AWS DVA-C02 Exam Guide",
+      "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-02/developer-associate-02.pdf",
+      "note": "개발·보안·배포·문제 해결 영역 비중을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "AWS SOA-C03 Exam Guide",
+      "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.pdf",
+      "note": "CloudOps의 관측·연속성·자동화·보안·망 영역을 확인합니다."
+    }
+  ],
+  "cloud/azure-az900-fast-study": [
+    {
+      "kind": "공식 가이드",
+      "label": "Microsoft Learn · AZ-900 Study Guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-900",
+      "note": "2026년 7월 기준 세 영역과 세부 과제를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Shared responsibility",
+      "href": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
+      "note": "Azure 서비스 유형별 책임 경계를 확인합니다."
+    }
+  ],
+  "cloud/azure-az104-fast-study": [
+    {
+      "kind": "공식 가이드",
+      "label": "Microsoft Learn · AZ-104 Study Guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-104",
+      "note": "2026년 4월 기준 다섯 영역과 구성·진단 과제를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · Azure Administrator Associate",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/",
+      "note": "자격 취득과 연간 갱신 조건을 확인합니다."
+    }
+  ],
+  "cloud/azure-architect-devops-paths": [
+    {
+      "kind": "공식 가이드",
+      "label": "Microsoft Learn · AZ-305 Study Guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-305",
+      "note": "2026년 4월 기준 설계 영역과 비중을 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Microsoft Learn · AZ-400 Study Guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400",
+      "note": "2026년 7월 기준 DevOps 영역과 비중을 확인합니다."
+    }
+  ],
+  "cloud/azure-ai200-fast-study": [
+    { kind: "공식 가이드", label: "Microsoft Learn · AI-200 Study Guide", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "현행 네 영역 비중과 세부 구현 과제를 확인합니다." },
+    { kind: "공식 문서", label: "Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", note: "자격 이름·역할과 AI-200 연결을 확인합니다." },
+  ],
 };

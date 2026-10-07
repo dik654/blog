@@ -153071,4 +153071,3191 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "ITU · Facts and Figures 2025", href: "https://www.itu.int/en/ITU-D/Statistics/Pages/facts/default.aspx", problem: "연결된 사람의 총계로 접근 격차가 끝났다고 보면 안 됩니다.", contribution: "약 60억 명의 온라인 인구와 22억 명의 오프라인 인구, 소득·성별·도시와 농촌의 격차를 집계합니다.", assumptions: "추계는 연도·정의·표본에 따라 수정되며 속도·안전·활용 결과를 모두 담지 않습니다.", evidenceScope: "2025년 세계 정보통신 접근의 공식 국제 추계입니다.", notClaim: "온라인으로 분류된 사람이 같은 품질과 자유로 인터넷을 쓴다는 뜻이 아닙니다.", sectionId: "limits" }
     ]
   },
+  "cloud/cloud-certification-roadmap-2026": {
+    "entryLevel": true,
+    "entryNote": "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "클라우드 자격증은 쉬운 시험 순서가 아니라 목표 직무가 내리는 결정을 먼저 정하고, 그 결정을 묻는 현행 시험 하나와 실습 두 개를 고를 때 취업 증거로 이어집니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "role-aligned-cloud-certification",
+        "role": "Role-aligned cloud certification path을 공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-portfolio-evidence-loop",
+        "role": "Cloud portfolio evidence loop을 공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "role-aligned-cloud-certification",
+        "sectionId": "names",
+        "intuition": "목표 직무의 반복 업무와 현재 역량의 차이를 가장 많이 덮는 현행 시험을 먼저 고르는 경로입니다.",
+        "workedExample": "공고 20개에서 설계·개발·운영 동사를 세어 첫 시험을 정합니다.",
+        "boundary": "시험 배지는 실제 구축·복구 경험을 대신하지 않습니다.",
+        "causalTrace": {
+          "answer": "Role-aligned cloud certification path은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "공고 20개에서 설계·개발·운영 동사를 세어 첫 시험을 정합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "시험 배지는 실제 구축·복구 경험을 대신하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-portfolio-evidence-loop",
+        "sectionId": "names",
+        "intuition": "시험에서 배운 판단을 구축·장애·복구·비용 기록으로 남기고 오답을 다시 학습에 넣는 반복 과정입니다.",
+        "workedExample": "시험 1개와 작은 실습 2개를 같은 네 주 일정에 넣습니다.",
+        "boundary": "화면 갈무리만으로 선택 이유와 재현 가능성을 증명하기 어렵습니다.",
+        "causalTrace": {
+          "answer": "Cloud portfolio evidence loop은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "시험 1개와 작은 실습 2개를 같은 네 주 일정에 넣습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "화면 갈무리만으로 선택 이유와 재현 가능성을 증명하기 어렵습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "role-aligned-cloud-certification"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Role-aligned cloud certification path의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "목표 직무의 반복 업무와 현재 역량의 차이를 가장 많이 덮는 현행 시험을 먼저 고르는 경로입니다.",
+          "공고 20개에서 설계·개발·운영 동사를 세어 첫 시험을 정합니다."
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud portfolio evidence loop이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "시험에서 배운 판단을 구축·장애·복구·비용 기록으로 남기고 오답을 다시 학습에 넣는 반복 과정입니다.",
+          "시험 1개와 작은 실습 2개를 같은 네 주 일정에 넣습니다."
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS Certification Exam Guides이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "현행 AWS 시험 코드와 역할별 공식 범위를 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · AZ-204 study guide을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud portfolio evidence loop의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "화면 갈무리만으로 선택 이유와 재현 가능성을 증명하기 어렵습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "role-aligned-cloud-certification",
+          "cloud-portfolio-evidence-loop"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS Certification Exam Guides",
+        "href": "https://docs.aws.amazon.com/aws-certification/latest/examguides/",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "현행 AWS 시험 코드와 역할별 공식 범위를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · AZ-204 study guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-204",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-foundations-responsibility-regions": {
+    "entryLevel": true,
+    "entryNote": "대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "클라우드는 하드웨어부터 데이터까지의 운영 책임을 서비스 유형에 따라 공급자와 고객이 나누고, 장애 범위와 수요에 맞춰 위치와 용량을 조절하는 방식입니다.",
+    "assumedKnowledge": [],
+    "introducedHere": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "role": "Cloud shared-responsibility boundary을 대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-failure-scope-elasticity",
+        "role": "Cloud failure scope and elasticity을 대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "sectionId": "names",
+        "intuition": "서비스 유형에 따라 공급자와 고객이 보호하고 운영할 기술 층을 나누되 데이터·계정·설정 책임은 고객에게 남기는 경계입니다.",
+        "workedExample": "가상 서버의 운영체제 패치는 고객이, 물리 호스트는 공급자가 맡습니다.",
+        "boundary": "계약과 법적 책임을 한 기술 그림만으로 모두 판단할 수 없습니다.",
+        "causalTrace": {
+          "answer": "Cloud shared-responsibility boundary은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "가상 서버의 운영체제 패치는 고객이, 물리 호스트는 공급자가 맡습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "계약과 법적 책임을 한 기술 그림만으로 모두 판단할 수 없습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-failure-scope-elasticity",
+        "sectionId": "names",
+        "intuition": "건물·가용 영역·리전처럼 장애 범위를 나누고 수요에 따라 자원 수를 늘리고 줄이는 설계입니다.",
+        "workedExample": "평소 2대에서 점심 6대로 늘리고 두 장애 단위에 나눕니다.",
+        "boundary": "자동 확장과 다중 배치만 켜도 상태·데이터 병목이 저절로 해결되지는 않습니다.",
+        "causalTrace": {
+          "answer": "Cloud failure scope and elasticity은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "평소 2대에서 점심 6대로 늘리고 두 장애 단위에 나눕니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "자동 확장과 다중 배치만 켜도 상태·데이터 병목이 저절로 해결되지는 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud shared-responsibility boundary의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "서비스 유형에 따라 공급자와 고객이 보호하고 운영할 기술 층을 나누되 데이터·계정·설정 책임은 고객에게 남기는 경계입니다.",
+          "가상 서버의 운영체제 패치는 고객이, 물리 호스트는 공급자가 맡습니다."
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud failure scope and elasticity이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "건물·가용 영역·리전처럼 장애 범위를 나누고 수요에 따라 자원 수를 늘리고 줄이는 설계입니다.",
+          "평소 2대에서 점심 6대로 늘리고 두 장애 단위에 나눕니다."
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS Shared Security Responsibility Model이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "클라우드 자체와 클라우드 안의 보안 책임을 구분합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Shared responsibility in the cloud을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "IaaS·PaaS·SaaS에 따라 책임 층이 이동하는 표를 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud failure scope and elasticity의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "자동 확장과 다중 배치만 켜도 상태·데이터 병목이 저절로 해결되지는 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-failure-scope-elasticity"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS Shared Security Responsibility Model",
+        "href": "https://docs.aws.amazon.com/whitepapers/latest/navigating-gdpr-compliance/shared-security-responsibility-model.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "클라우드 자체와 클라우드 안의 보안 책임을 구분합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Shared responsibility in the cloud",
+        "href": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "IaaS·PaaS·SaaS에 따라 책임 층이 이동하는 표를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-identity-access-hierarchy": {
+    "entryLevel": false,
+    "entryNote": "3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "클라우드 권한은 확인된 주체가 특정 조건에서 특정 자원에 특정 행동을 해도 되는지를 상하위 정책과 실제 범위로 판정하고 감사 기록을 남기는 구조입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "role": "계정과 데이터 접근은 관리형 서비스에서도 고객에게 남는 책임이라는 출발점"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cloud-policy-evaluation",
+        "role": "Cloud policy evaluation을 3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-resource-hierarchy-scope",
+        "role": "Cloud resource hierarchy and scope을 3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cloud-policy-evaluation",
+        "sectionId": "names",
+        "intuition": "주체·행동·대상·조건과 상하위 정책의 명시적 거부·허용을 합쳐 실제 접근 결과를 내는 과정입니다.",
+        "workedExample": "운영 저장소 삭제 요청은 상위 거부나 허용 부재 때문에 거절될 수 있습니다.",
+        "boundary": "기술적 허용이 조직 정책과 데이터 분류상 허용을 자동 뜻하지 않습니다.",
+        "causalTrace": {
+          "answer": "Cloud policy evaluation은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "운영 저장소 삭제 요청은 상위 거부나 허용 부재 때문에 거절될 수 있습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "기술적 허용이 조직 정책과 데이터 분류상 허용을 자동 뜻하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-resource-hierarchy-scope",
+        "sectionId": "names",
+        "intuition": "조직·계정 또는 테넌트·관리 그룹·구독·리소스 그룹·자원 계층에 정책과 역할이 미치는 범위를 정하는 구조입니다.",
+        "workedExample": "여러 구독의 허용 리전을 관리 그룹 범위에서 제한합니다.",
+        "boundary": "상위 범위 정책은 편하지만 잘못 설정하면 영향 범위도 넓습니다.",
+        "causalTrace": {
+          "answer": "Cloud resource hierarchy and scope은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "여러 구독의 허용 리전을 관리 그룹 범위에서 제한합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "상위 범위 정책은 편하지만 잘못 설정하면 영향 범위도 넓습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-policy-evaluation"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud policy evaluation의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "주체·행동·대상·조건과 상하위 정책의 명시적 거부·허용을 합쳐 실제 접근 결과를 내는 과정입니다.",
+          "운영 저장소 삭제 요청은 상위 거부나 허용 부재 때문에 거절될 수 있습니다."
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud resource hierarchy and scope이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "조직·계정 또는 테넌트·관리 그룹·구독·리소스 그룹·자원 계층에 정책과 역할이 미치는 범위를 정하는 구조입니다.",
+          "여러 구독의 허용 리전을 관리 그룹 범위에서 제한합니다."
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS IAM security best practices이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "임시 자격·최소 권한·다중 인증과 접근 검토 원칙을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Azure RBAC overview을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "보안 주체·역할 정의·범위의 조합을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud resource hierarchy and scope의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "상위 범위 정책은 편하지만 잘못 설정하면 영향 범위도 넓습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "cloud-policy-evaluation",
+          "cloud-resource-hierarchy-scope"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS IAM security best practices",
+        "href": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "임시 자격·최소 권한·다중 인증과 접근 검토 원칙을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Azure RBAC overview",
+        "href": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "보안 주체·역할 정의·범위의 조합을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-networking-request-path": {
+    "entryLevel": false,
+    "entryNote": "10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "클라우드 네트워크는 DNS가 찾은 주소의 패킷이 목적지별 경로와 보안 규칙, 상태 검사와 사설 연결을 차례로 지나 응답이 돌아오는 규칙의 묶음입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "role": "고객이 네트워크 경로와 접근 설정을 관리해야 한다는 책임 경계"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cloud-request-path",
+        "role": "Cloud request path을 10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-ingress-egress-separation",
+        "role": "Cloud ingress–egress separation을 10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cloud-request-path",
+        "sectionId": "names",
+        "intuition": "이름 해석부터 경로표·방화벽·부하 분산·백엔드·응답 경로까지 요청 한 건이 지나는 연결 사슬입니다.",
+        "workedExample": "443 접속 실패를 DNS에서 백엔드 상태까지 첫 막힌 관문 순서로 찾습니다.",
+        "boundary": "접속 성공만으로 최소 노출이나 성능 목표를 만족했다는 뜻은 아닙니다.",
+        "causalTrace": {
+          "answer": "Cloud request path은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "443 접속 실패를 DNS에서 백엔드 상태까지 첫 막힌 관문 순서로 찾습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "접속 성공만으로 최소 노출이나 성능 목표를 만족했다는 뜻은 아닙니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-ingress-egress-separation",
+        "sectionId": "names",
+        "intuition": "외부에서 시작한 연결을 받는 입구와 사설 자원이 외부로 시작하는 출구를 별도 경로와 정책으로 다루는 원칙입니다.",
+        "workedExample": "사설 앱은 NAT 출구로 업데이트를 받지만 인터넷에서 직접 들어올 수 없습니다.",
+        "boundary": "주소 변환 하나가 애플리케이션 권한이나 데이터 접근 통제를 대신하지 않습니다.",
+        "causalTrace": {
+          "answer": "Cloud ingress–egress separation은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "사설 앱은 NAT 출구로 업데이트를 받지만 인터넷에서 직접 들어올 수 없습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "주소 변환 하나가 애플리케이션 권한이나 데이터 접근 통제를 대신하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "cloud-request-path"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud request path의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "이름 해석부터 경로표·방화벽·부하 분산·백엔드·응답 경로까지 요청 한 건이 지나는 연결 사슬입니다.",
+          "443 접속 실패를 DNS에서 백엔드 상태까지 첫 막힌 관문 순서로 찾습니다."
+        ],
+        "requiredConcepts": [
+          "cloud-request-path"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud ingress–egress separation이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "외부에서 시작한 연결을 받는 입구와 사설 자원이 외부로 시작하는 출구를 별도 경로와 정책으로 다루는 원칙입니다.",
+          "사설 앱은 NAT 출구로 업데이트를 받지만 인터넷에서 직접 들어올 수 없습니다."
+        ],
+        "requiredConcepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS · Route tables for your VPC이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "목적지 주소에 따른 다음 경로 선택을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Virtual network traffic routing을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "시스템·사용자 정의 경로와 다음 홉을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud ingress–egress separation의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "주소 변환 하나가 애플리케이션 권한이나 데이터 접근 통제를 대신하지 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "cloud-request-path",
+          "cloud-ingress-egress-separation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS · Route tables for your VPC",
+        "href": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "목적지 주소에 따른 다음 경로 선택을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Virtual network traffic routing",
+        "href": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "시스템·사용자 정의 경로와 다음 홉을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-compute-selection": {
+    "entryLevel": false,
+    "entryNote": "하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "VM·컨테이너·PaaS·함수는 실행 수명, 상태, 피크, 시작 지연, 필요한 제어권과 팀이 맡을 운영 부담을 맞춰 고릅니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-failure-scope-elasticity",
+        "role": "수요와 장애 범위에 맞춰 실행 자원을 늘리고 나누는 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cloud-compute-unit-selection",
+        "role": "Cloud compute unit selection을 하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "stateless-horizontal-scaling",
+        "role": "Stateless horizontal scaling을 하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cloud-compute-unit-selection",
+        "sectionId": "names",
+        "intuition": "작업 수명·제어권·동시성·시작 지연과 운영 역량으로 VM·컨테이너·PaaS·함수 후보를 줄이는 판단입니다.",
+        "workedExample": "짧고 드문 무상태 이벤트는 함수, 운영체제 제어가 필요한 장기 작업은 VM을 우선 비교합니다.",
+        "boundary": "가격표의 실행 단가만으로 전송·로그·운영 인력 비용을 알 수 없습니다.",
+        "causalTrace": {
+          "answer": "Cloud compute unit selection은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "짧고 드문 무상태 이벤트는 함수, 운영체제 제어가 필요한 장기 작업은 VM을 우선 비교합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "가격표의 실행 단가만으로 전송·로그·운영 인력 비용을 알 수 없습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "stateless-horizontal-scaling",
+        "sectionId": "names",
+        "intuition": "요청 사이에 필요한 상태를 공유 데이터 서비스로 빼고 실행 복제본을 늘려 부하를 나누는 방식입니다.",
+        "workedExample": "장바구니를 로컬 메모리 대신 공유 저장소에 두어 어느 복제본도 처리하게 합니다.",
+        "boundary": "상태 외부화는 네트워크 지연과 공유 저장소 병목을 새로 만듭니다.",
+        "causalTrace": {
+          "answer": "Stateless horizontal scaling은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "장바구니를 로컬 메모리 대신 공유 저장소에 두어 어느 복제본도 처리하게 합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "상태 외부화는 네트워크 지연과 공유 저장소 병목을 새로 만듭니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-failure-scope-elasticity",
+          "cloud-compute-unit-selection"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud compute unit selection의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "작업 수명·제어권·동시성·시작 지연과 운영 역량으로 VM·컨테이너·PaaS·함수 후보를 줄이는 판단입니다.",
+          "짧고 드문 무상태 이벤트는 함수, 운영체제 제어가 필요한 장기 작업은 VM을 우선 비교합니다."
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Stateless horizontal scaling이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "요청 사이에 필요한 상태를 공유 데이터 서비스로 빼고 실행 복제본을 늘려 부하를 나누는 방식입니다.",
+          "장바구니를 로컬 메모리 대신 공유 저장소에 두어 어느 복제본도 처리하게 합니다."
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS · Choosing an AWS compute service이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "워크로드 요구에 따른 AWS 컴퓨팅 선택을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Choose an Azure compute service을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "Azure 컴퓨팅 의사결정 트리를 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Stateless horizontal scaling의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "상태 외부화는 네트워크 지연과 공유 저장소 병목을 새로 만듭니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "cloud-compute-unit-selection",
+          "stateless-horizontal-scaling"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS · Choosing an AWS compute service",
+        "href": "https://docs.aws.amazon.com/decision-guides/latest/compute-on-aws-how-to-choose/compute-on-aws-how-to-choose.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "워크로드 요구에 따른 AWS 컴퓨팅 선택을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Choose an Azure compute service",
+        "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "Azure 컴퓨팅 의사결정 트리를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-storage-database-selection": {
+    "entryLevel": false,
+    "entryNote": "주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "저장소는 읽고 쓰는 단위, 질의와 관계, 일관성, 지연·내구성·복구와 비용 약속을 데이터 종류마다 따로 맞춰 고릅니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-failure-scope-elasticity",
+        "role": "저장 데이터의 복제 위치와 장애 범위를 구분하는 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "cloud-data-access-pattern",
+        "role": "Cloud data access pattern을 주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-replication-backup-separation",
+        "role": "Cloud replication–backup separation을 주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "cloud-data-access-pattern",
+        "sectionId": "names",
+        "intuition": "어떤 키와 조건으로 어느 단위를 얼마나 자주 읽고 쓰는지를 기록해 저장 모델과 분할을 정하는 입력입니다.",
+        "workedExample": "주문 번호와 고객별 최근 주문 질의는 관계·인덱스 요구를 만듭니다.",
+        "boundary": "현재 접근만 최적화하면 새 질의가 비싼 재구성을 요구할 수 있습니다.",
+        "causalTrace": {
+          "answer": "Cloud data access pattern은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "주문 번호와 고객별 최근 주문 질의는 관계·인덱스 요구를 만듭니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "현재 접근만 최적화하면 새 질의가 비싼 재구성을 요구할 수 있습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-replication-backup-separation",
+        "sectionId": "names",
+        "intuition": "현재 상태의 가용성을 높이는 복제와 과거 시점으로 되돌리는 백업·버전 기록을 다른 실패에 연결하는 원칙입니다.",
+        "workedExample": "장치 고장은 복제로 넘기고 잘못된 삭제는 독립 백업에서 복원합니다.",
+        "boundary": "사본이 존재해도 키·권한·복원 시간이 맞지 않으면 목표를 지키지 못합니다.",
+        "causalTrace": {
+          "answer": "Cloud replication–backup separation은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "장치 고장은 복제로 넘기고 잘못된 삭제는 독립 백업에서 복원합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "사본이 존재해도 키·권한·복원 시간이 맞지 않으면 목표를 지키지 못합니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-failure-scope-elasticity",
+          "cloud-data-access-pattern"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud data access pattern의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "어떤 키와 조건으로 어느 단위를 얼마나 자주 읽고 쓰는지를 기록해 저장 모델과 분할을 정하는 입력입니다.",
+          "주문 번호와 고객별 최근 주문 질의는 관계·인덱스 요구를 만듭니다."
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud replication–backup separation이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "현재 상태의 가용성을 높이는 복제와 과거 시점으로 되돌리는 백업·버전 기록을 다른 실패에 연결하는 원칙입니다.",
+          "장치 고장은 복제로 넘기고 잘못된 삭제는 독립 백업에서 복원합니다."
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS database decision guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "접근 패턴과 운영 요구에 따른 AWS 데이터베이스 선택을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Data store models을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "관계형·키값·문서·객체 저장 모델을 비교합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud replication–backup separation의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "사본이 존재해도 키·권한·복원 시간이 맞지 않으면 목표를 지키지 못합니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "cloud-data-access-pattern",
+          "cloud-replication-backup-separation"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS database decision guide",
+        "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-aws-database/",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "접근 패턴과 운영 요구에 따른 AWS 데이터베이스 선택을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Data store models",
+        "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "관계형·키값·문서·객체 저장 모델을 비교합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/cloud-reliability-observability-iac": {
+    "entryLevel": false,
+    "entryNote": "12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "허용할 중단과 데이터 손실을 숫자로 정하고 관측·반복 배포·백업·전환과 비용 경보를 연결한 뒤 실제 고장으로 검증해야 운영 목표가 됩니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-replication-backup-separation",
+        "role": "고장 가용성과 과거 시점 복구를 다른 장치로 준비하는 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "rpo-rto-recovery-loop",
+        "role": "RPO/RTO recovery loop을 12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "cloud-observability-iac-loop",
+        "role": "Cloud observability and IaC loop을 12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "rpo-rto-recovery-loop",
+        "sectionId": "names",
+        "intuition": "허용 데이터 손실 구간과 복구 시간을 정하고 탐지·전환·복원 뒤 실제 결과를 목표와 비교하는 운영 고리입니다.",
+        "workedExample": "주문은 15분치까지만 잃고 60분 안에 다시 엽니다.",
+        "boundary": "백업 주기와 복제본 수만으로 실제 RPO·RTO 충족을 보장하지 않습니다.",
+        "causalTrace": {
+          "answer": "RPO/RTO recovery loop은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "주문은 15분치까지만 잃고 60분 안에 다시 엽니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "백업 주기와 복제본 수만으로 실제 RPO·RTO 충족을 보장하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "cloud-observability-iac-loop",
+        "sectionId": "names",
+        "intuition": "지표·로그·추적으로 이상과 원인을 찾고 선언한 인프라 코드로 안전하게 변경·되돌린 뒤 결과를 다시 측정하는 과정입니다.",
+        "workedExample": "오류율 경보 뒤 최근 배포를 되돌리고 Bicep·CloudFormation 상태를 맞춥니다.",
+        "boundary": "자동화는 잘못된 설정도 빠르게 퍼뜨릴 수 있어 단계 배포와 중단 기준이 필요합니다.",
+        "causalTrace": {
+          "answer": "Cloud observability and IaC loop은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "오류율 경보 뒤 최근 배포를 되돌리고 Bicep·CloudFormation 상태를 맞춥니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "자동화는 잘못된 설정도 빠르게 퍼뜨릴 수 있어 단계 배포와 중단 기준이 필요합니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-replication-backup-separation",
+          "rpo-rto-recovery-loop"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "RPO/RTO recovery loop의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "허용 데이터 손실 구간과 복구 시간을 정하고 탐지·전환·복원 뒤 실제 결과를 목표와 비교하는 운영 고리입니다.",
+          "주문은 15분치까지만 잃고 60분 안에 다시 엽니다."
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud observability and IaC loop이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "지표·로그·추적으로 이상과 원인을 찾고 선언한 인프라 코드로 안전하게 변경·되돌린 뒤 결과를 다시 측정하는 과정입니다.",
+          "오류율 경보 뒤 최근 배포를 되돌리고 Bicep·CloudFormation 상태를 맞춥니다."
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS Well-Architected Framework pillars이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "AWS의 여섯 설계 관점과 교환을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Azure Well-Architected Framework을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "Azure의 다섯 설계 관점과 교환을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Cloud observability and IaC loop의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "자동화는 잘못된 설정도 빠르게 퍼뜨릴 수 있어 단계 배포와 중단 기준이 필요합니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "rpo-rto-recovery-loop",
+          "cloud-observability-iac-loop"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS Well-Architected Framework pillars",
+        "href": "https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/the-pillars-of-the-framework.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "AWS의 여섯 설계 관점과 교환을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Azure Well-Architected Framework",
+        "href": "https://learn.microsoft.com/en-us/azure/well-architected/what-is-well-architected-framework",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "Azure의 다섯 설계 관점과 교환을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/aws-clf-c02-fast-study": {
+    "entryLevel": false,
+    "entryNote": "90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "CLF-C02는 문제의 요구 동사와 시점·책임을 찾아 클라우드 개념·보안·기술·비용의 역할 상자에 넣고 가까운 서비스를 입력과 출력으로 구분하면 빠르게 준비할 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "role": "CLF-C02 보안과 서비스 유형 문제의 공통 출발점"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "aws-clf-role-map",
+        "role": "AWS CLF-C02 role map을 90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "aws-clf-domain-time-strategy",
+        "role": "AWS CLF-C02 domain and time strategy을 90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "aws-clf-role-map",
+        "sectionId": "names",
+        "intuition": "AWS 서비스를 실행·저장·망·보안·관측·비용처럼 문제에서 맡는 역할과 시점으로 묶는 학습 지도입니다.",
+        "workedExample": "배포 전 비용 예상은 Pricing Calculator, 실제 추세는 Cost Explorer, 한도 경보는 Budgets로 가릅니다.",
+        "boundary": "공식 서비스 목록의 순서가 출제 중요도를 뜻하지 않습니다.",
+        "causalTrace": {
+          "answer": "AWS CLF-C02 role map은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "배포 전 비용 예상은 Pricing Calculator, 실제 추세는 Cost Explorer, 한도 경보는 Budgets로 가릅니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "공식 서비스 목록의 순서가 출제 중요도를 뜻하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "aws-clf-domain-time-strategy",
+        "sectionId": "names",
+        "intuition": "공식 영역 비중과 65문항의 제한 시간에 맞춰 1차 확정·표시·재검토와 오답 규칙을 운영하는 방법입니다.",
+        "workedExample": "기술 34%와 보안 30%를 우선 닫고 문항당 평균 83초를 넘긴 문제는 다시 봅니다.",
+        "boundary": "환산 합격선과 영역 비중이 실제 문항 수를 정확히 예고하지는 않습니다.",
+        "causalTrace": {
+          "answer": "AWS CLF-C02 domain and time strategy은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "기술 34%와 보안 30%를 우선 닫고 문항당 평균 83초를 넘긴 문제는 다시 봅니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "환산 합격선과 영역 비중이 실제 문항 수를 정확히 예고하지는 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "aws-clf-role-map"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "AWS CLF-C02 role map의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "AWS 서비스를 실행·저장·망·보안·관측·비용처럼 문제에서 맡는 역할과 시점으로 묶는 학습 지도입니다.",
+          "배포 전 비용 예상은 Pricing Calculator, 실제 추세는 Cost Explorer, 한도 경보는 Budgets로 가릅니다."
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "AWS CLF-C02 domain and time strategy이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "공식 영역 비중과 65문항의 제한 시간에 맞춰 1차 확정·표시·재검토와 오답 규칙을 운영하는 방법입니다.",
+          "기술 34%와 보안 30%를 우선 닫고 문항당 평균 83초를 넘긴 문제는 다시 봅니다."
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS Certified Cloud Practitioner Exam Guide (CLF-C02)이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "문항 구성, 합격 점수와 네 영역 비중을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "AWS · CLF-C02 Technologies and Concepts을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "비포괄적인 공식 기술·개념 목록을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "AWS CLF-C02 domain and time strategy의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "환산 합격선과 영역 비중이 실제 문항 수를 정확히 예고하지는 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "aws-clf-role-map",
+          "aws-clf-domain-time-strategy"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS Certified Cloud Practitioner Exam Guide (CLF-C02)",
+        "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/cloud-practitioner-02/cloud-practitioner-02.pdf",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "문항 구성, 합격 점수와 네 영역 비중을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "AWS · CLF-C02 Technologies and Concepts",
+        "href": "https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-technologies-concepts.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "비포괄적인 공식 기술·개념 목록을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/aws-saa-c03-fast-study": {
+    "entryLevel": false,
+    "entryNote": "평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "SAA-C03은 보안·복원력·성능·비용 요구와 최상급 조건을 제약표로 만들고 하나라도 어기는 보기를 지운 뒤 운영 부담이 작은 구조를 고르는 시험입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-request-path",
+        "role": "한 사용자 요청이 DNS·입구·앱·데이터를 지나는 공통 경로"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "constraint-first-cloud-architecture",
+        "role": "Constraint-first cloud architecture을 평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "aws-managed-decoupled-architecture",
+        "role": "AWS managed decoupled architecture을 평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "constraint-first-cloud-architecture",
+        "sectionId": "names",
+        "intuition": "문제의 수치·최상급·운영 조건을 먼저 고정하고 모든 필수 제약을 만족하는 서비스 조합만 남기는 설계 방법입니다.",
+        "workedExample": "최소 운영이라는 조건 때문에 직접 패치하는 단일 서버 보기를 지웁니다.",
+        "boundary": "요구에 없는 미래 규모를 위해 복잡성을 먼저 도입하면 비용과 실패면이 커집니다.",
+        "causalTrace": {
+          "answer": "Constraint-first cloud architecture은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "최소 운영이라는 조건 때문에 직접 패치하는 단일 서버 보기를 지웁니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "요구에 없는 미래 규모를 위해 복잡성을 먼저 도입하면 비용과 실패면이 커집니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "aws-managed-decoupled-architecture",
+        "sectionId": "names",
+        "intuition": "정적·동적·데이터·비동기 작업을 관리형 저장·실행·DB·큐 경계로 나눠 장애와 부하 전파를 줄이는 구조입니다.",
+        "workedExample": "S3·CloudFront, 다중 AZ 앱·DB, SQS 작업자를 분리합니다.",
+        "boundary": "큐·캐시·복제는 지연·중복·일관성과 비용을 새로 만듭니다.",
+        "causalTrace": {
+          "answer": "AWS managed decoupled architecture은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "S3·CloudFront, 다중 AZ 앱·DB, SQS 작업자를 분리합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "큐·캐시·복제는 지연·중복·일관성과 비용을 새로 만듭니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-request-path",
+          "constraint-first-cloud-architecture"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Constraint-first cloud architecture의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "문제의 수치·최상급·운영 조건을 먼저 고정하고 모든 필수 제약을 만족하는 서비스 조합만 남기는 설계 방법입니다.",
+          "최소 운영이라는 조건 때문에 직접 패치하는 단일 서버 보기를 지웁니다."
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "AWS managed decoupled architecture이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "정적·동적·데이터·비동기 작업을 관리형 저장·실행·DB·큐 경계로 나눠 장애와 부하 전파를 줄이는 구조입니다.",
+          "S3·CloudFront, 다중 AZ 앱·DB, SQS 작업자를 분리합니다."
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS SAA-C03 Exam Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "네 공식 설계 영역과 목표 역할을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "AWS Well-Architected Framework을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "기능 외 설계 관점과 교환 관계를 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "AWS managed decoupled architecture의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "큐·캐시·복제는 지연·중복·일관성과 비용을 새로 만듭니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "constraint-first-cloud-architecture",
+          "aws-managed-decoupled-architecture"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS SAA-C03 Exam Guide",
+        "href": "https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "네 공식 설계 영역과 목표 역할을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "AWS Well-Architected Framework",
+        "href": "https://docs.aws.amazon.com/wellarchitected/2025-02-25/framework/the-pillars-of-the-framework.html",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "기능 외 설계 관점과 교환 관계를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/aws-developer-cloudops-paths": {
+    "entryLevel": false,
+    "entryNote": "하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "AWS 서비스를 쓰는 코드와 이벤트·SDK·배포가 중심이면 DVA-C02, 실행 환경의 관측·용량·복구·망과 자동화가 중심이면 SOA-C03을 먼저 고릅니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-observability-iac-loop",
+        "role": "배포·관측·복구를 한 변경 고리로 이해하는 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "aws-developer-cloudops-role-boundary",
+        "role": "AWS developer–CloudOps role boundary을 하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "safe-delivery-feedback-loop",
+        "role": "Safe delivery feedback loop을 하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "aws-developer-cloudops-role-boundary",
+        "sectionId": "names",
+        "intuition": "같은 변경 경로에서 코드·SDK·이벤트 구현과 환경·관측·복구 운영 중 어느 판단에 더 무게를 두는지 나눈 경계입니다.",
+        "workedExample": "최근 작업 20개의 구현 동사와 운영 동사를 세어 첫 시험을 고릅니다.",
+        "boundary": "작은 팀에서는 두 역할이 겹치므로 시험 이름만으로 실제 직무를 단정할 수 없습니다.",
+        "causalTrace": {
+          "answer": "AWS developer–CloudOps role boundary은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "최근 작업 20개의 구현 동사와 운영 동사를 세어 첫 시험을 고릅니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "작은 팀에서는 두 역할이 겹치므로 시험 이름만으로 실제 직무를 단정할 수 없습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "safe-delivery-feedback-loop",
+        "sectionId": "names",
+        "intuition": "버전 산출물을 일부 트래픽에 먼저 배포하고 사용자 지표로 중단·승격·되돌리며 학습을 다음 변경에 반영하는 과정입니다.",
+        "workedExample": "10% 단계 배포에서 오류율이 오르면 10분 안에 이전 버전으로 돌아갑니다.",
+        "boundary": "경보 표본과 되돌리기 경로가 틀리면 자동화가 실패를 키울 수 있습니다.",
+        "causalTrace": {
+          "answer": "Safe delivery feedback loop은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "10% 단계 배포에서 오류율이 오르면 10분 안에 이전 버전으로 돌아갑니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "경보 표본과 되돌리기 경로가 틀리면 자동화가 실패를 키울 수 있습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-observability-iac-loop",
+          "aws-developer-cloudops-role-boundary"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "AWS developer–CloudOps role boundary의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "같은 변경 경로에서 코드·SDK·이벤트 구현과 환경·관측·복구 운영 중 어느 판단에 더 무게를 두는지 나눈 경계입니다.",
+          "최근 작업 20개의 구현 동사와 운영 동사를 세어 첫 시험을 고릅니다."
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Safe delivery feedback loop이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "버전 산출물을 일부 트래픽에 먼저 배포하고 사용자 지표로 중단·승격·되돌리며 학습을 다음 변경에 반영하는 과정입니다.",
+          "10% 단계 배포에서 오류율이 오르면 10분 안에 이전 버전으로 돌아갑니다."
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "AWS DVA-C02 Exam Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "개발·보안·배포·문제 해결 영역 비중을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "AWS SOA-C03 Exam Guide을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "CloudOps의 관측·연속성·자동화·보안·망 영역을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Safe delivery feedback loop의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "경보 표본과 되돌리기 경로가 틀리면 자동화가 실패를 키울 수 있습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "aws-developer-cloudops-role-boundary",
+          "safe-delivery-feedback-loop"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "AWS DVA-C02 Exam Guide",
+        "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/developer-associate-02/developer-associate-02.pdf",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "개발·보안·배포·문제 해결 영역 비중을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "AWS SOA-C03 Exam Guide",
+        "href": "https://docs.aws.amazon.com/pdfs/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.pdf",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "CloudOps의 관측·연속성·자동화·보안·망 영역을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/azure-az900-fast-study": {
+    "entryLevel": false,
+    "entryNote": "두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "AZ-900은 Azure 자원을 위치·자원 계층·실행·망·저장·신원과 관리·거버넌스·비용·관측 역할에 놓고 비슷한 도구를 출력으로 구분하면 빠르게 준비할 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "cloud-shared-responsibility-boundary",
+        "role": "AZ-900 클라우드 개념과 서비스 유형의 공통 출발점"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "azure-resource-governance-map",
+        "role": "Azure resource governance map을 두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "azure-management-tool-roles",
+        "role": "Azure management tool roles을 두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "azure-resource-governance-map",
+        "sectionId": "names",
+        "intuition": "Entra 테넌트와 관리 그룹·구독·리소스 그룹·자원 계층에 RBAC·Policy·태그·잠금을 다른 목적으로 적용하는 지도입니다.",
+        "workedExample": "여러 구독의 허용 리전을 관리 그룹 Policy로 제한합니다.",
+        "boundary": "태그는 비용 분류를 돕지만 접근을 허용하거나 차단하지 않습니다.",
+        "causalTrace": {
+          "answer": "Azure resource governance map은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "여러 구독의 허용 리전을 관리 그룹 Policy로 제한합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "태그는 비용 분류를 돕지만 접근을 허용하거나 차단하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "azure-management-tool-roles",
+        "sectionId": "names",
+        "intuition": "Advisor·Policy·Resource Lock·Service Health·Monitor처럼 비슷해 보이는 관리 도구를 권고·강제·보호·공급자 상태·워크로드 관측으로 나눈 역할입니다.",
+        "workedExample": "잘못된 리전 배포는 Policy, 삭제 보호는 Lock, 비용 권고는 Advisor를 고릅니다.",
+        "boundary": "한 도구가 다른 도구의 권한·관측·복구 기능을 모두 대신하지 않습니다.",
+        "causalTrace": {
+          "answer": "Azure management tool roles은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "잘못된 리전 배포는 Policy, 삭제 보호는 Lock, 비용 권고는 Advisor를 고릅니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "한 도구가 다른 도구의 권한·관측·복구 기능을 모두 대신하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "cloud-shared-responsibility-boundary",
+          "azure-resource-governance-map"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Azure resource governance map의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "Entra 테넌트와 관리 그룹·구독·리소스 그룹·자원 계층에 RBAC·Policy·태그·잠금을 다른 목적으로 적용하는 지도입니다.",
+          "여러 구독의 허용 리전을 관리 그룹 Policy로 제한합니다."
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Azure management tool roles이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "Advisor·Policy·Resource Lock·Service Health·Monitor처럼 비슷해 보이는 관리 도구를 권고·강제·보호·공급자 상태·워크로드 관측으로 나눈 역할입니다.",
+          "잘못된 리전 배포는 Policy, 삭제 보호는 Lock, 비용 권고는 Advisor를 고릅니다."
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · AZ-900 Study Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "2026년 7월 기준 세 영역과 세부 과제를 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Shared responsibility을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "Azure 서비스 유형별 책임 경계를 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Azure management tool roles의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "한 도구가 다른 도구의 권한·관측·복구 기능을 모두 대신하지 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "azure-resource-governance-map",
+          "azure-management-tool-roles"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Microsoft Learn · AZ-900 Study Guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-900",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "2026년 7월 기준 세 영역과 세부 과제를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Shared responsibility",
+        "href": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "Azure 서비스 유형별 책임 경계를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/azure-az104-fast-study": {
+    "entryLevel": false,
+    "entryNote": "web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "AZ-104는 신원과 범위부터 저장·컴퓨팅·가상망·관측과 복구까지 작은 환경을 실제로 만들고, 일부러 끊은 뒤 선언이 아니라 유효 권한·경로·로그에서 원인을 찾는 시험입니다.",
+    "assumedKnowledge": [
+      {
+        "id": "azure-resource-governance-map",
+        "role": "Azure의 신원·구독·리소스 그룹과 정책 범위를 읽는 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "azure-effective-state-debugging",
+        "role": "Azure effective-state debugging을 web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "azure-administration-lifecycle",
+        "role": "Azure administration lifecycle을 web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "azure-effective-state-debugging",
+        "sectionId": "names",
+        "intuition": "여러 역할·NSG·시스템 및 사용자 경로가 합쳐진 실제 적용 결과를 조회해 첫 실패 관문을 찾는 진단 방법입니다.",
+        "workedExample": "App Service의 관리 ID, Storage 역할, 사설 DNS, 유효 NSG·경로 순으로 확인합니다.",
+        "boundary": "유효 경로가 맞아도 DNS·서비스 방화벽·애플리케이션 권한이 막을 수 있습니다.",
+        "causalTrace": {
+          "answer": "Azure effective-state debugging은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "App Service의 관리 ID, Storage 역할, 사설 DNS, 유효 NSG·경로 순으로 확인합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "유효 경로가 맞아도 DNS·서비스 방화벽·애플리케이션 권한이 막을 수 있습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "azure-administration-lifecycle",
+        "sectionId": "names",
+        "intuition": "신원·거버넌스에서 저장·컴퓨팅·망을 만들고 관측·백업·복구로 결과를 검증하는 관리자 작업 순서입니다.",
+        "workedExample": "12개 자원을 Bicep으로 만들고 접속을 끊어 진단한 뒤 30분 복원을 시험합니다.",
+        "boundary": "구축 성공 화면은 지속적인 운영과 복구 능력을 증명하지 않습니다.",
+        "causalTrace": {
+          "answer": "Azure administration lifecycle은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "12개 자원을 Bicep으로 만들고 접속을 끊어 진단한 뒤 30분 복원을 시험합니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "구축 성공 화면은 지속적인 운영과 복구 능력을 증명하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "azure-resource-governance-map",
+          "azure-effective-state-debugging"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Azure effective-state debugging의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "여러 역할·NSG·시스템 및 사용자 경로가 합쳐진 실제 적용 결과를 조회해 첫 실패 관문을 찾는 진단 방법입니다.",
+          "App Service의 관리 ID, Storage 역할, 사설 DNS, 유효 NSG·경로 순으로 확인합니다."
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Azure administration lifecycle이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "신원·거버넌스에서 저장·컴퓨팅·망을 만들고 관측·백업·복구로 결과를 검증하는 관리자 작업 순서입니다.",
+          "12개 자원을 Bicep으로 만들고 접속을 끊어 진단한 뒤 30분 복원을 시험합니다."
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · AZ-104 Study Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "2026년 4월 기준 다섯 영역과 구성·진단 과제를 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · Azure Administrator Associate을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "자격 취득과 연간 갱신 조건을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Azure administration lifecycle의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "구축 성공 화면은 지속적인 운영과 복구 능력을 증명하지 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "azure-effective-state-debugging",
+          "azure-administration-lifecycle"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Microsoft Learn · AZ-104 Study Guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-104",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "2026년 4월 기준 다섯 영역과 구성·진단 과제를 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · Azure Administrator Associate",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "자격 취득과 연간 갱신 조건을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/azure-architect-devops-paths": {
+    "entryLevel": false,
+    "entryNote": "지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다.",
+    "recursiveTeaching": true,
+    "coreIdea": "요구를 신원·데이터·연속성·인프라 설계로 바꾸면 AZ-305, 소스에서 안전한 빌드·배포·관측 피드백을 만들면 AZ-400을 고르고 폐지된 AZ-204는 기술 참고로만 씁니다.",
+    "assumedKnowledge": [
+      {
+        "id": "azure-administration-lifecycle",
+        "role": "Azure 자원을 실제로 구성·관측·복구하는 관리자 수준의 기초"
+      }
+    ],
+    "introducedHere": [
+      {
+        "id": "azure-architect-devops-role-boundary",
+        "role": "Azure architect–DevOps role boundary을 지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 사례에서 설명합니다."
+      },
+      {
+        "id": "retired-cloud-credential-scope",
+        "role": "Retired cloud credential scope을 지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 사례에서 설명합니다."
+      }
+    ],
+    "conceptExplanations": [
+      {
+        "id": "azure-architect-devops-role-boundary",
+        "sectionId": "names",
+        "intuition": "무엇을 만들지 구조와 교환을 추천하는 설계 책임과 변경이 안전하게 흐를 전달 체계를 만드는 책임을 나눈 경계입니다.",
+        "workedExample": "RTO 30분의 지역 복구는 설계, 10% 단계 배포와 자동 중단은 전달 책임으로 나눕니다.",
+        "boundary": "실제 팀에서 두 역할은 관측 지표와 운영 절차를 공유합니다.",
+        "causalTrace": {
+          "answer": "Azure architect–DevOps role boundary은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "RTO 30분의 지역 복구는 설계, 10% 단계 배포와 자동 중단은 전달 책임으로 나눕니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "실제 팀에서 두 역할은 관측 지표와 운영 절차를 공유합니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      },
+      {
+        "id": "retired-cloud-credential-scope",
+        "sectionId": "names",
+        "intuition": "폐지된 시험의 기술 학습 가치는 남기되 예약 가능성·자격 취득 조건·이력서 상태를 현행 경로와 분리하는 원칙입니다.",
+        "workedExample": "AZ-204의 Functions 자료는 참고하되 2026년 10월 현행 시험처럼 표시하지 않습니다.",
+        "boundary": "대체 과정이 과거 자격과 일대일로 같은 범위를 보장하지 않습니다.",
+        "causalTrace": {
+          "answer": "Retired cloud credential scope은 이 글의 작은 사례에서 반복할 판단을 한 이름으로 묶습니다.",
+          "followUpQuestion": "그 판단을 실제 요청이나 변경에 어느 순서로 적용해야 하나요?",
+          "bottleneck": "서비스 이름과 설정을 나열하면 비슷한 보기의 역할·범위·실패 경계를 구분하기 어렵습니다.",
+          "mechanism": "AZ-204의 Functions 자료는 참고하되 2026년 10월 현행 시험처럼 표시하지 않습니다. 입력에서 조건을 하나씩 확인하고 첫 실패 또는 선택 지점을 기록합니다.",
+          "remainingCost": "대체 과정이 과거 자격과 일대일로 같은 범위를 보장하지 않습니다.",
+          "decisionRule": "공식 범위와 실제 요구를 모두 만족하고 남는 운영 비용을 설명할 수 있는 선택만 남깁니다."
+        }
+      }
+    ],
+    "conceptStages": [
+      {
+        "label": "요구와 작은 사례",
+        "relation": "요구를 수치와 행동으로 고정합니다.",
+        "concepts": [
+          "azure-administration-lifecycle",
+          "azure-architect-devops-role-boundary"
+        ]
+      },
+      {
+        "label": "판단 절차",
+        "relation": "서비스 이름 전에 역할·범위·실패 경계를 순서대로 적용합니다.",
+        "concepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ]
+      },
+      {
+        "label": "공식 범위와 검증",
+        "relation": "공식 가이드와 실제 실습 결과로 선택을 다시 확인합니다.",
+        "concepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ]
+      }
+    ],
+    "exercises": [
+      {
+        "level": "basic",
+        "question": "지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 계산이나 순서를 다시 쓰고 각 수의 뜻을 설명하세요.",
+        "answerChecklist": [
+          "지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다.",
+          "설명용 가정과 공식 시험 수치 구분",
+          "입력과 출력 단위"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary"
+        ],
+        "sectionId": "case"
+      },
+      {
+        "level": "basic",
+        "question": "Azure architect–DevOps role boundary의 역할을 본문 사례로 설명하세요.",
+        "answerChecklist": [
+          "무엇을 만들지 구조와 교환을 추천하는 설계 책임과 변경이 안전하게 흐를 전달 체계를 만드는 책임을 나눈 경계입니다.",
+          "RTO 30분의 지역 복구는 설계, 10% 단계 배포와 자동 중단은 전달 책임으로 나눕니다."
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary"
+        ],
+        "sectionId": "names"
+      },
+      {
+        "level": "basic",
+        "question": "Retired cloud credential scope이 앞 단계의 결과를 어떻게 이어받는지 설명하세요.",
+        "answerChecklist": [
+          "폐지된 시험의 기술 학습 가치는 남기되 예약 가능성·자격 취득 조건·이력서 상태를 현행 경로와 분리하는 원칙입니다.",
+          "AZ-204의 Functions 자료는 참고하되 2026년 10월 현행 시험처럼 표시하지 않습니다."
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · AZ-305 Study Guide이 이 글에서 직접 뒷받침하는 범위를 설명하세요.",
+        "answerChecklist": [
+          "2026년 4월 기준 설계 영역과 비중을 확인합니다.",
+          "공식 문서의 현재 범위",
+          "설명용 가정과 분리"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary"
+        ],
+        "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "Microsoft Learn · AZ-400 Study Guide을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "answerChecklist": [
+          "2026년 7월 기준 DevOps 영역과 비중을 확인합니다.",
+          "공급자 또는 역할 비교",
+          "최신 날짜 재확인"
+        ],
+        "requiredConcepts": [
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "basic",
+        "question": "Retired cloud credential scope의 적용 경계를 한 가지 쓰세요.",
+        "answerChecklist": [
+          "대체 과정이 과거 자격과 일대일로 같은 범위를 보장하지 않습니다.",
+          "요구 조건 확인",
+          "운영 결과 측정"
+        ],
+        "requiredConcepts": [
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "limits"
+      },
+      {
+        "level": "advanced",
+        "question": "본문의 수요·시간·자원 수를 두 배로 바꾸고 선택 절차를 다시 실행하세요.",
+        "answerChecklist": [
+          "바꾼 값과 단위",
+          "후보 재평가",
+          "비용·복구 영향",
+          "선택 이유"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "advanced",
+        "question": "본문 경로에서 한 권한·네트워크·배포 실패를 넣고 첫 실패 관문을 찾는 진단 순서를 쓰세요.",
+        "answerChecklist": [
+          "실패 가정",
+          "관문 순서",
+          "관측 자료",
+          "최소 수정과 재검증"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "picture"
+      },
+      {
+        "level": "advanced",
+        "question": "공식 가이드의 변경일이 갱신됐을 때 이 글에서 다시 확인할 주장과 자료를 적으세요.",
+        "answerChecklist": [
+          "시험 코드와 상태",
+          "영역 비중",
+          "세부 과제",
+          "공식 URL과 확인일"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "comparison"
+      },
+      {
+        "level": "advanced",
+        "question": "이 글의 판단을 보여 주는 취업용 실습 하나를 설계하고 성공·실패 증거를 정하세요.",
+        "answerChecklist": [
+          "요구 조건",
+          "IaC 또는 재현 절차",
+          "장애 주입",
+          "지표·로그·비용 결과"
+        ],
+        "requiredConcepts": [
+          "azure-architect-devops-role-boundary",
+          "retired-cloud-credential-scope"
+        ],
+        "sectionId": "limits"
+      }
+    ],
+    "papers": [
+      {
+        "title": "Microsoft Learn · AZ-305 Study Guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-305",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "2026년 4월 기준 설계 영역과 비중을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "source"
+      },
+      {
+        "title": "Microsoft Learn · AZ-400 Study Guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-400",
+        "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
+        "contribution": "2026년 7월 기준 DevOps 영역과 비중을 확인합니다.",
+        "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
+        "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
+        "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
+        "sectionId": "comparison"
+      }
+    ]
+  },
+  "cloud/azure-ai200-fast-study": {
+    entryLevel: false,
+    entryNote: "분당 요청 100건 중 60건은 캐시, 40건은 벡터 조회, 이 가운데 갱신 5건은 메시지 큐로 분리합니다.",
+    recursiveTeaching: true,
+    coreIdea: "AI-200은 모델 호출 하나보다 컨테이너·벡터 데이터·메시징·비밀·분산 추적을 한 AI 백엔드의 개발 생애로 묻는 현행 Azure 자격입니다.",
+    assumedKnowledge: [
+      { id: "azure-administration-lifecycle", role: "Azure 신원·실행·망·관측 자원을 만들고 복구하는 관리자 수준의 기초" },
+    ],
+    introducedHere: [
+      { id: "azure-ai200-backend-request-path", role: "분당 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나누는 요청 경로를 설명합니다." },
+      { id: "azure-ai200-operability-loop", role: "같은 100건을 다시 보내며 첫 실패와 복구 전후 결과를 확인하는 운영 고리를 설명합니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "azure-ai200-backend-request-path",
+        sectionId: "names",
+        intuition: "AI 기능이 실제 서비스가 되려면 요청을 받을 실행 환경, 자료를 찾을 저장소, 느린 일을 맡을 큐와 비밀 관리가 한 경로로 이어져야 합니다.",
+        workedExample: "분당 100건 중 60건은 Redis에서 답하고 40건은 벡터 저장소를 조회하며 갱신 5건은 Service Bus로 넘깁니다.",
+        boundary: "가까운 벡터를 찾고 메시지를 보관해도 답의 사실성·자료 권한·중복 처리가 자동으로 보장되지는 않습니다.",
+        causalTrace: {
+          answer: "AI-200의 핵심은 AI 백엔드 한 요청을 실행·데이터·메시징·보안 경계 끝까지 구현하는 일입니다.",
+          followUpQuestion: "왜 모델 API를 한 번 호출하는 코드만으로는 부족한가요?",
+          bottleneck: "요청량이 늘면 캐시 miss·벡터 질의·긴 갱신이 같은 응답 경로에서 지연과 실패를 퍼뜨립니다.",
+          mechanism: "100건을 캐시 60건과 벡터 조회 40건으로 나누고, 긴 갱신 5건은 작업 ID와 함께 큐로 분리합니다.",
+          remainingCost: "컨테이너·저장소·큐마다 권한·비용·재시도와 자료 일관성을 따로 운영해야 합니다.",
+          decisionRule: "문제의 병목이 실행·자료·메시지 중 어디인지 먼저 정하고 공식 범위와 실제 운영 조건을 함께 만족하는 서비스를 고릅니다.",
+        },
+      },
+      {
+        id: "azure-ai200-operability-loop",
+        sectionId: "names",
+        intuition: "구축 성공 화면보다 한 요청이 어디서 늦고 끊겼는지 찾아 고친 뒤 같은 부하로 다시 확인하는 기록이 운영 능력을 보여 줍니다.",
+        workedExample: "trace ID로 늦은 벡터 질의를 찾고 인덱스를 고친 뒤 같은 100건의 지연과 실패를 다시 측정합니다.",
+        boundary: "추적·로그·지표를 모으기만 해서는 경보 기준, 비용 상한과 복구 절차가 생기지 않습니다.",
+        causalTrace: {
+          answer: "운영 가능성 고리는 관측 자료를 실제 수정과 재검증으로 닫는 과정입니다.",
+          followUpQuestion: "왜 로그 한 줄을 찾는 데서 진단이 끝나지 않나요?",
+          bottleneck: "실행·벡터 조회·큐 소비자의 기록이 분리되면 같은 요청의 첫 실패와 이후 증상을 섞기 쉽습니다.",
+          mechanism: "trace ID로 세 구간을 잇고 첫 실패만 최소 수정한 뒤 같은 100건을 보내 오류·지연·죽은 편지 메시지를 비교합니다.",
+          remainingCost: "추적 저장 비용과 개인정보 경계, 표본 추출 때문에 모든 요청의 모든 자료를 계속 보관할 수는 없습니다.",
+          decisionRule: "수정 전후를 같은 입력과 단위로 비교하고 비밀 노출 없이 목표 지연·오류·큐 상태를 만족할 때 복구를 끝냅니다.",
+        },
+      },
+    ],
+    conceptStages: [
+      { label: "관리 기초", relation: "Azure 자원의 신원·실행·망·관측 생애를 먼저 익힙니다.", concepts: ["azure-administration-lifecycle"] },
+      { label: "AI 백엔드 요청", relation: "요청 100건을 실행·캐시·벡터 조회·메시지 경계로 나눕니다.", concepts: ["azure-administration-lifecycle", "azure-ai200-backend-request-path"] },
+      { label: "진단과 재검증", relation: "trace ID로 첫 실패를 고치고 같은 요청으로 결과를 다시 확인합니다.", concepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"] },
+    ],
+    exercises: [
+      { level: "basic", question: "분당 요청 100건을 캐시 60건과 벡터 조회 40건으로 나누고, 갱신 5건을 큐로 보내는 경로를 다시 쓰세요.", answerChecklist: ["100=60+40 장부", "갱신 5건은 40건 중 비동기 경로", "각 수의 단위와 설명용 가정"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "case" },
+      { level: "basic", question: "Azure AI-200 backend request path가 필요한 이유를 사례로 설명하세요.", answerChecklist: ["실행·자료·메시징·보안 연결", "캐시 miss와 긴 작업 분리"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "names" },
+      { level: "basic", question: "Azure AI-200 operability loop가 요청 경로의 결과를 어떻게 이어받나요?", answerChecklist: ["trace ID로 구간 연결", "최소 수정", "같은 100건 재검증"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "mechanism" },
+      { level: "basic", question: "AI-200 공식 가이드가 직접 뒷받침하는 시험 영역과 선수 능력을 쓰세요.", answerChecklist: ["컨테이너 20~25%", "데이터 25~30%", "서비스 연결 20~25%", "보안·관측·문제 해결 20~25%"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "source" },
+      { level: "basic", question: "AI-200과 폐지된 AZ-204를 같은 시험으로 보면 안 되는 이유를 설명하세요.", answerChecklist: ["AZ-204 폐지", "AI-200의 AI 백엔드 범위", "겹치는 기술과 다른 자격 상태"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "comparison" },
+      { level: "basic", question: "운영 가능성 고리의 적용 경계를 한 가지 쓰세요.", answerChecklist: ["관측만으로 복구 절차가 생기지 않음", "비용·개인정보·표본 추출 경계"], requiredConcepts: ["azure-ai200-operability-loop"], sectionId: "limits" },
+      { level: "advanced", question: "요청이 분당 1천 건으로 늘고 캐시 적중률이 30%로 내려갔을 때 데이터 경로와 비용 관측을 다시 설계하세요.", answerChecklist: ["캐시 300건과 miss 700건", "벡터 저장소 병목", "확장·인덱스·RU 또는 연결 수", "비용·지연 측정"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "mechanism" },
+      { level: "advanced", question: "작업 소비자가 같은 메시지를 두 번 받는 장애를 넣고 안전한 재처리 절차를 쓰세요.", answerChecklist: ["작업 ID", "멱등 처리", "재시도와 죽은 편지 큐", "trace와 결과 검증"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "picture" },
+      { level: "advanced", question: "공식 가이드 변경일이 갱신되면 이 글에서 다시 확인할 항목을 쓰세요.", answerChecklist: ["시험 코드와 자격 상태", "영역 비중", "세부 서비스", "언어별 갱신 차이"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "comparison" },
+      { level: "advanced", question: "AI-200 판단을 보여 줄 취업용 실습과 실패 증거를 설계하세요.", answerChecklist: ["재현 가능한 배포", "권한·인덱스·큐 장애", "추적·로그·지표", "복구 전후 지연·오류·비용"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "Microsoft Learn · AI-200 Study Guide", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", problem: "변경되는 시험 범위를 오래된 개발자 강의로 고정하면 안 됩니다.", contribution: "AI-200의 네 영역 비중과 컨테이너·데이터·메시징·운영 세부 과제를 확인합니다.", assumptions: "공식 가이드도 비포괄적이며 접수 전 변경일과 언어별 갱신 상태를 다시 확인합니다.", evidenceScope: "Microsoft가 밝힌 현행 시험 범위와 대상 역할에만 근거로 사용합니다.", notClaim: "실제 문항 수나 합격·취업을 보장한다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Microsoft Learn · Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", problem: "시험 코드와 실제 자격 이름·역할·응시 상태를 분리해 확인해야 합니다.", contribution: "현행 자격 이름과 개발 생애 전체를 다루는 역할, AI-200 연결을 확인합니다.", assumptions: "시험 운영 정보와 지원 언어는 이후 바뀔 수 있습니다.", evidenceScope: "공식 자격 페이지가 밝힌 현재 자격과 응시 정보에만 적용합니다.", notClaim: "AZ-204와 같은 범용 개발 범위를 그대로 잇는다는 뜻이 아닙니다.", sectionId: "comparison" },
+    ],
+  },
 };

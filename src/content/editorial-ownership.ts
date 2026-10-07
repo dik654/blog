@@ -17769,6 +17769,307 @@ export const EDITORIAL_BOUNDARIES = {
   "monasteries-schools-manuscripts-and-knowledge-transmission": { title: "배움의 터전·문헌 전승 글이 소유하는 범위", owns: ["학습 공동체 운영 자원 100의 다섯 몫", "제도화된 학습·문헌 전승·학술 후원의 관계", "날란다와 팀북투를 현대 대학으로 소급하지 않는 경계"], reuses: [], evidence: [{ kind: "primary-source", rule: "보존된 건물·원고·정전이 기록 밖 가정·시장·작업장·구술 지식 전체를 대표하지 않습니다." }, { kind: "secondary-source", rule: "유산 기록의 조직 설명과 당시 모든 학습자의 참여·자유·일상을 구분합니다." }] },
   "pastoral-mobility-steppe-empires-and-settled-frontiers": { title: "이동 목축·초원 제국 글이 소유하는 범위", owns: ["가축 100이 겨울·출산·교역을 거쳐 90이 되는 장부", "목초지와 도시의 상호 의존", "이동 군사·가구와 도시 행정을 함께 조직한 제국"], reuses: [], evidence: [{ kind: "primary-source", rule: "오르혼 계곡의 목축·중심지 관계를 다른 이동 사회의 단일 모형으로 확대하지 않습니다." }, { kind: "primary-source", rule: "암각화의 생활 변화와 제작자의 정확한 의미·정치 조직을 구분합니다." }] },
   "open-web-platform-curation-and-digital-divides": { title: "열린 웹·플랫폼·디지털 격차 글이 소유하는 범위", owns: ["게시물 100에서 후보 20·노출 5로 줄어드는 설명용 경로", "웹 공개와 플랫폼 선별 권력의 구분", "접속·품질·가격·기술·활용 결과의 여러 단계 격차"], reuses: [], evidence: [{ kind: "primary-source", rule: "CERN의 1993년 공개 결정을 오늘의 모든 서비스가 무료·개방이라는 주장으로 확대하지 않습니다." }, { kind: "standard", rule: "UNESCO 지침의 원칙과 국가 법·판례·플랫폼 집행 결과를 구분합니다." }, { kind: "secondary-source", rule: "ITU 추계는 연도·정의·표본을 붙이고 온라인 인구를 같은 품질·자유·활용 결과로 보지 않습니다." }] },
+  "cloud-certification-roadmap-2026": {
+    "title": "취업용 AWS·Azure 자격증 로드맵 글이 소유하는 범위",
+    "owns": [
+      "클라우드 자격증은 쉬운 시험 순서가 아니라 목표 직무가 내리는 결정을 먼저 정하고, 그 결정을 묻는 현행 시험 하나와 실습 두 개를 고를 때 취업 증거로 이어집니다.",
+      "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-foundations-responsibility-regions": {
+    "title": "클라우드 책임·위치·용량 글이 소유하는 범위",
+    "owns": [
+      "클라우드는 하드웨어부터 데이터까지의 운영 책임을 서비스 유형에 따라 공급자와 고객이 나누고, 장애 범위와 수요에 맞춰 위치와 용량을 조절하는 방식입니다.",
+      "대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-identity-access-hierarchy": {
+    "title": "클라우드 신원·권한·자원 계층 글이 소유하는 범위",
+    "owns": [
+      "클라우드 권한은 확인된 주체가 특정 조건에서 특정 자원에 특정 행동을 해도 되는지를 상하위 정책과 실제 범위로 판정하고 감사 기록을 남기는 구조입니다.",
+      "3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "계정과 데이터 접근은 관리형 서비스에서도 고객에게 남는 책임이라는 출발점",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-networking-request-path": {
+    "title": "클라우드 네트워크 요청 경로 글이 소유하는 범위",
+    "owns": [
+      "클라우드 네트워크는 DNS가 찾은 주소의 패킷이 목적지별 경로와 보안 규칙, 상태 검사와 사설 연결을 차례로 지나 응답이 돌아오는 규칙의 묶음입니다.",
+      "10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "고객이 네트워크 경로와 접근 설정을 관리해야 한다는 책임 경계",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-compute-selection": {
+    "title": "클라우드 컴퓨팅 선택 글이 소유하는 범위",
+    "owns": [
+      "VM·컨테이너·PaaS·함수는 실행 수명, 상태, 피크, 시작 지연, 필요한 제어권과 팀이 맡을 운영 부담을 맞춰 고릅니다.",
+      "하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "수요와 장애 범위에 맞춰 실행 자원을 늘리고 나누는 기초",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-storage-database-selection": {
+    "title": "클라우드 저장소·데이터베이스 선택 글이 소유하는 범위",
+    "owns": [
+      "저장소는 읽고 쓰는 단위, 질의와 관계, 일관성, 지연·내구성·복구와 비용 약속을 데이터 종류마다 따로 맞춰 고릅니다.",
+      "주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "저장 데이터의 복제 위치와 장애 범위를 구분하는 기초",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "cloud-reliability-observability-iac": {
+    "title": "클라우드 신뢰성·관측·IaC 글이 소유하는 범위",
+    "owns": [
+      "허용할 중단과 데이터 손실을 숫자로 정하고 관측·반복 배포·백업·전환과 비용 경보를 연결한 뒤 실제 고장으로 검증해야 운영 목표가 됩니다.",
+      "12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "고장 가용성과 과거 시점 복구를 다른 장치로 준비하는 기초",
+        "href": "/cs/cloud/cloud-storage-database-selection#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "aws-clf-c02-fast-study": {
+    "title": "AWS CLF-C02 빠른 공부 글이 소유하는 범위",
+    "owns": [
+      "CLF-C02는 문제의 요구 동사와 시점·책임을 찾아 클라우드 개념·보안·기술·비용의 역할 상자에 넣고 가까운 서비스를 입력과 출력으로 구분하면 빠르게 준비할 수 있습니다.",
+      "90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "CLF-C02 보안과 서비스 유형 문제의 공통 출발점",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "aws-saa-c03-fast-study": {
+    "title": "AWS SAA-C03 빠른 공부 글이 소유하는 범위",
+    "owns": [
+      "SAA-C03은 보안·복원력·성능·비용 요구와 최상급 조건을 제약표로 만들고 하나라도 어기는 보기를 지운 뒤 운영 부담이 작은 구조를 고르는 시험입니다.",
+      "평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "한 사용자 요청이 DNS·입구·앱·데이터를 지나는 공통 경로",
+        "href": "/cs/cloud/cloud-networking-request-path#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "aws-developer-cloudops-paths": {
+    "title": "AWS Developer·CloudOps 경로 글이 소유하는 범위",
+    "owns": [
+      "AWS 서비스를 쓰는 코드와 이벤트·SDK·배포가 중심이면 DVA-C02, 실행 환경의 관측·용량·복구·망과 자동화가 중심이면 SOA-C03을 먼저 고릅니다.",
+      "하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "배포·관측·복구를 한 변경 고리로 이해하는 기초",
+        "href": "/cs/cloud/cloud-reliability-observability-iac#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "azure-az900-fast-study": {
+    "title": "Azure AZ-900 빠른 공부 글이 소유하는 범위",
+    "owns": [
+      "AZ-900은 Azure 자원을 위치·자원 계층·실행·망·저장·신원과 관리·거버넌스·비용·관측 역할에 놓고 비슷한 도구를 출력으로 구분하면 빠르게 준비할 수 있습니다.",
+      "두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "AZ-900 클라우드 개념과 서비스 유형의 공통 출발점",
+        "href": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "azure-az104-fast-study": {
+    "title": "Azure AZ-104 빠른 공부 글이 소유하는 범위",
+    "owns": [
+      "AZ-104는 신원과 범위부터 저장·컴퓨팅·가상망·관측과 복구까지 작은 환경을 실제로 만들고, 일부러 끊은 뒤 선언이 아니라 유효 권한·경로·로그에서 원인을 찾는 시험입니다.",
+      "web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "Azure의 신원·구독·리소스 그룹과 정책 범위를 읽는 기초",
+        "href": "/cs/cloud/azure-az900-fast-study#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "azure-architect-devops-paths": {
+    "title": "Azure Architect·DevOps 경로 글이 소유하는 범위",
+    "owns": [
+      "요구를 신원·데이터·연속성·인프라 설계로 바꾸면 AZ-305, 소스에서 안전한 빌드·배포·관측 피드백을 만들면 AZ-400을 고르고 폐지된 AZ-204는 기술 참고로만 씁니다.",
+      "지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 숫자를 본문·Viz·의사코드·연습문제에서 같은 단위로 재사용하는 설명"
+    ],
+    "reuses": [
+      {
+        "label": "Azure 자원을 실제로 구성·관측·복구하는 관리자 수준의 기초",
+        "href": "/cs/cloud/azure-az104-fast-study#names"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "primary-source",
+        "rule": "시험 코드·명칭·영역 비중·폐지일과 서비스 역할은 공급자 공식 가이드의 확인일에 귀속합니다."
+      },
+      {
+        "kind": "project-measurement",
+        "rule": "합격·취업 효과나 성능·비용 우위는 실제 응시 결과와 같은 실습 조건의 측정 없이 보장하지 않습니다."
+      }
+    ]
+  },
+  "azure-ai200-fast-study": {
+    title: "Azure AI-200 빠른 공부 글이 소유하는 범위",
+    owns: [
+      "AI-200의 컨테이너·벡터 데이터·메시징·보안·관측 범위를 AI 백엔드 한 요청의 생애로 잇는 설명",
+      "분당 요청 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나누고 같은 입력으로 복구를 검증하는 사례",
+    ],
+    reuses: [{ label: "Azure 신원·실행·망·관측 자원을 만들고 복구하는 관리자 기초", href: "/cs/cloud/azure-az104-fast-study#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "시험 코드·자격 이름·영역 비중과 서비스 범위는 Microsoft 공식 가이드의 확인일에 귀속합니다." },
+      { kind: "project-measurement", rule: "성능·비용과 취업 효과는 같은 실습 조건의 측정이나 채용 결과 없이 보장하지 않습니다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

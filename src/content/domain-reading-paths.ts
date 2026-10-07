@@ -76,7 +76,7 @@ export const DOMAIN_READING_PATHS: Readonly<
         title: "돌리고 지키는 층",
         description:
           "연산을 실제로 수행하는 하드웨어와, 서비스를 운영하며 통제를 증명하는 절차입니다.",
-        categories: ["gpu", "isms-aml", "saas"],
+        categories: ["gpu", "isms-aml", "saas", "cloud"],
       },
     ],
     showFullSequence: false,
