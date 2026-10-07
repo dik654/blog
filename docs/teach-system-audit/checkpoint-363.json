@@ -31,7 +31,13 @@
     "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows were 27px; viewport height 844 to 700 preserved both scroll offset and the fourth-section reading anchor on all six routes; the 336px modal sidebar rendered at 282px, opened, trapped focus and locked body scroll.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment of the content commit.",
+    "production": "GitHub Pages run 37559500545 succeeded; production Playwright report output/playwright/thematic-economic-history-production/2026-10-07T02-01-52-831Z/summary.json passed 22/22 checks. Six article routes plus history listings passed desktop/mobile; mobile visualization widths were 352-354px, numeric arrows 27x27px, viewport-height change 844 to 700 preserved scroll and the fourth-section anchor with delta 0, and the 336px sidebar rendered at 282px as a focused aria-modal dialog with body scroll locked.",
     "curriculumCoverage": "MIT 14.731 and LSE thematic economic-history courses now map six cross-cutting axes. UK Parliament, UN DESA, Bank of England, ILO, the Federal Reserve, BIS, World Bank, UNCTAD and IPCC sources bound the factual claims. Remaining explicit gaps include North America, internal European comparison, Southeast and Central Asia, Oceania, war finance, commercial and bankruptcy law, and welfare finance. The derivatives standard still fixes university pricing theory, the Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk control as four mandatory audit axes."
+  },
+  "commit": "76ff0878ce7977aa26f879719d193a9bc5e549d9",
+  "deployment": {
+    "runId": 37559500545,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
