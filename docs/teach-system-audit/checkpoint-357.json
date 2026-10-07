@@ -31,13 +31,13 @@
     "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows were 27px; viewport height 844 to 700 preserved both scroll offset and the fourth-section reading anchor on all six routes; the 336px modal sidebar opened, trapped focus and locked body scroll.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending commit, CI deployment and production browser audit.",
+    "production": "GitHub Pages run 37556258617 succeeded; production Playwright report output/playwright/regional-economic-history-production/2026-10-07T01-22-39Z/summary.json passed 22/22 checks. Six article routes plus history listings passed desktop/mobile; mobile visualization widths were 352–354px, numeric arrows 27×27px, viewport-height change 844→700 preserved scroll and the fourth-section anchor (delta 0), and the 336px sidebar opened as a focused aria-modal dialog with body scroll locked.",
     "curriculumCoverage": "MIT 14.731 and the LSE economic-history curriculum now map long-run institutions and six regional axes. Remaining explicit gaps are North America, internal European comparison, Southeast and Central Asia, Oceania, and cross-cutting histories of land and family, firms and finance, labor and welfare, 1970s inflation and financialization, global value chains, platforms and climate transition. The derivatives standard also fixes university pricing theory, the Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk control as four mandatory audit axes."
   },
-  "commit": null,
+  "commit": "606c6767fdcbcf3d7a68dba71af2999116c127ce",
   "deployment": {
-    "runId": null,
-    "conclusion": "pending",
-    "production": "pending"
+    "runId": 37556258617,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
   }
 }
