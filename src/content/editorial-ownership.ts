@@ -17673,6 +17673,84 @@ export const EDITORIAL_BOUNDARIES = {
   "central-asia-pastoralism-irrigation-planning-and-corridors": { title: "중앙아시아 물·계획·회랑 글이 소유하는 범위", owns: ["물 100과 70의 배분 장부", "목축·관개 보완성과 계획 할당의 외부비용", "독립 뒤 내륙 회랑 의존"], reuses: [{ label: "공유자원 자치", href: "/economics/institutions/collective-action-commons-and-self-governance#names" }], evidence: [{ kind: "secondary-source", rule: "세계은행·ADB 지역 연구의 범위를 다섯 공화국과 모든 유역의 같은 경험으로 확대하지 않습니다." }, { kind: "primary-source", rule: "생산 할당량과 철도 물동량은 하류 건강·생태·이동권의 완전한 장부가 아닙니다." }] },
   "oceania-indigenous-land-settler-exports-and-island-economies": { title: "오세아니아 토지·수출·섬 외부소득 글이 소유하는 범위", owns: ["소득 100이 충격 뒤 75가 되는 흐름별 장부", "원주민 친족경제와 정착민 토지 전환", "송금·관광·어업권·지원금의 다른 약속"], reuses: [{ label: "공동 토지 이용권", href: "/history/economic-history/land-rights-enclosure-rent-and-urbanization#names" }, { label: "식민 수탈", href: "/history/economic-history/colonial-plantations-slavery-and-extraction#names" }], evidence: [{ kind: "primary-source", rule: "NSW 공식 개관을 모든 원주민 공동체의 고정된 경제로 일반화하지 않습니다." }, { kind: "secondary-source", rule: "2026년 태평양 전망의 지역 묶음과 설명용 가구소득 비율을 구분합니다." }] },
   "war-finance-public-debt-and-welfare-state-capacity": { title: "전쟁 재정·공공부채·복지국가 글이 소유하는 범위", owns: ["전쟁비 100의 세금·국채·화폐·징발 장부", "미래 세원을 담보로 한 장기 국채", "전후 상환·복구·사회급여의 재정계약"], reuses: [{ label: "국가 역량", href: "/politics/polity/state-capacity-tax-and-implementation#names" }, { label: "사회보험 위험분담", href: "/history/economic-history/labor-bargaining-social-insurance-and-welfare-state#names" }], evidence: [{ kind: "secondary-source", rule: "유럽 중심 전쟁경제 과정과 영국 부채사를 모든 전쟁·내전·식민지 재정 경로로 확대하지 않습니다." }, { kind: "primary-source", rule: "정부 부채 규모를 인명·소비·징발과 시민권 차등의 비용을 대신하는 단일 지표로 쓰지 않습니다." }] },
+  "equity-dispersion-pnl-attribution-and-rebalancing-costs": {
+    title: "디스퍼전 하루 손익을 해부한다: 베가·감마·리밸런싱 비용 글이 소유하는 범위",
+    owns: [
+      "변동성 변화 +1만3천 달러의 계약별 베가 손익귀속",
+      "실제 움직임 +7천·시간가치 −4천 달러의 분리",
+      "미끄러짐·수수료 −3천 달러를 포함한 하루 총손익 대사",
+    ],
+    reuses: [{ label: "옵션 디스퍼전 분산 차이", href: "/finance/markets/equity-dispersion-implied-correlation-and-variance#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
+  "credit-event-auction-orders-and-base-correlation-history": {
+    title: "1억200만 달러 주문이 91.5를 만든 법: CDS 경매·베이스 상관 이력 글이 소유하는 범위",
+    owns: [
+      "DISH DBS 매도 순잔량 1억200만 달러의 공개 주문 사다리",
+      "최종가격 91.5와 명목 1천만 달러의 단순 지급 85만 달러",
+      "단일 사건 경매가격과 날짜·끝점별 베이스 상관 이력의 분리",
+    ],
+    reuses: [{ label: "CDS 경매 최종가격 결제", href: "/finance/markets/credit-tranche-base-correlation-and-default-auction#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
+  "wti-crude-oil-cushing-storage-pipeline-and-delivery": {
+    title: "1천 배럴이 쿠싱에서 움직이는 법: WTI 저장·송유관·실물인도 글이 소유하는 범위",
+    owns: [
+      "WTI 1천 배럴·배럴당 70달러의 7만 달러 인도 장부",
+      "쿠싱 승인 시설의 펌프오버·배관 내 이전·장부상 상계",
+      "인도 통지에서 대금·소유권·저장과 이동비까지의 일정",
+    ],
+    reuses: [{ label: "원자재 인도 품질 차등", href: "/finance/markets/commodity-grades-location-basis-and-physical-delivery#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
+  "lme-metals-warrants-quality-storage-and-load-out": {
+    title: "아연 25톤을 꺼내는 법: LME 워런트·보관료·출고 글이 소유하는 범위",
+    owns: [
+      "순도 99.995%·25톤·±2%의 아연 인도 규격",
+      "전자 워런트의 소유권 이전과 취소 뒤 출고 순서",
+      "설명용 20일 보관료·FOT 1,500달러의 비용 장부",
+    ],
+    reuses: [{ label: "원자재 선적증서 인도", href: "/finance/markets/commodity-grades-location-basis-and-physical-delivery#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
+  "livestock-futures-live-delivery-and-cash-settlement": {
+    title: "소 4만 파운드와 5만 파운드 계약: 축산 선물의 실물·현금정산 글이 소유하는 범위",
+    owns: [
+      "생우 4만 파운드와 기준 등급·63% 수율의 실물인도",
+      "실제 수율 62%의 조정액 −1,396.83달러",
+      "비육우 5만 파운드와 5센트 차이의 현금정산 2,500달러",
+    ],
+    reuses: [{ label: "선물 베이시스 수렴", href: "/finance/markets/no-arbitrage-cost-of-carry-and-basis#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
+  "singapore-derivatives-records-complaints-and-tax-ledger": {
+    title: "거래가 끝난 뒤 남는 일: 싱가포르 파생상품 기록·민원·GST 글이 소유하는 범위",
+    owns: [
+      "계약 종료 뒤 적용 장부의 최소 5년 보존 계산",
+      "회사 최종답변 뒤 FIDReC 6개월 창과 15만 달러 한도",
+      "실물 인도 없는 파생상품 순실현손익의 GST 면세 공급 장부",
+    ],
+    reuses: [{ label: "파생상품 민원 증거 꾸러미", href: "/finance/markets/derivatives-complaints-dispute-resolution-and-evidence#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "거래소·법령·공공기관 원문의 상품·회사·관할·시행시점 범위에서만 규격과 절차를 사용합니다." },
+      { kind: "secondary-source", rule: "본문의 설명용 손계산을 실제 가격·세액·승인·분쟁 결론으로 일반화하지 않습니다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

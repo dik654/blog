@@ -2592,6 +2592,48 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "조각투자는 원자산 감정가와 투자자가 가진 법적 청구권을 구분하고 수입·비용·신탁 장부·기준일 좌수로 배분액을 추적해야 하며, 증권성 실질판단과 발행·유통 분리, 비금전신탁 수익증권 시장의 허용 범위를 확인해야 합니다.",
     "sharedGate": "임대수입 1억 원에서 비용 1,500만 원을 빼 배분 가능 현금 8,500만 원을 구하고 1,000좌로 나눠 좌당 8만5천 원을 계산합니다."
   },
+  "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "디스퍼전 운용 손익은 구성 종목과 지수의 변동성 변화, 실제 가격 움직임과 델타 재조정, 시간가치, 스프레드·수수료를 같은 날짜와 통화의 계약별 장부로 나눠 합계와 맞춰야 전망·모형·집행 중 어느 원인이 결과를 만들었는지 판단할 수 있습니다.",
+    sharedGate: "+13,000+7,000−4,000−3,000=+13,000달러를 계산하고 변동성·실제 움직임·시간·집행의 네 줄로 대사합니다.",
+  },
+  "markets/credit-event-auction-orders-and-base-correlation-history": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "신용사건 경매는 상계 뒤 남은 순잔량을 가격순 공개 주문으로 채워 마지막 사용 가격을 공통 결제가로 만들며, 단일 사건의 회수 결과와 여러 기업의 트랜치 호가에서 맞춘 베이스 상관의 날짜별 곡선을 다른 장부로 관리해야 합니다.",
+    sharedGate: "92.125부터 91.625까지 60을 채우고 91.5에서 42를 더해 102를 만든 뒤 1천만×8.5%=85만 달러를 계산합니다.",
+  },
+  "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "WTI 만기 인도는 1천 배럴의 계약가치만 계산하는 일이 아니라 쿠싱 승인 시설과 연결망, 인도 통지, 펌프오버·배관·장부상 상계 방식, 대금과 소유권 이전을 같은 일정에 맞추고 실제 가용 저장공간과 이동비를 따로 확인하는 과정입니다.",
+    sharedGate: "1,000×70=70,000달러와 1,000×0.12=120달러를 계산해 설명용 총 필요액 70,120달러를 만듭니다.",
+  },
+  "markets/lme-metals-warrants-quality-storage-and-load-out": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "LME 금속 선물의 인도는 승인 브랜드·순도·로트와 창고를 충족한 전자 워런트의 이전으로 끝낼 수 있지만, 실제 금속을 꺼내려면 워런트를 취소하고 출고 순번·운송·보관료와 FOT 비용을 별도 장부로 관리해야 합니다.",
+    sharedGate: "25톤의 ±2%인 24.5~25.5톤 안에 25.3톤이 드는지 확인하고 보관료 1,000+FOT 500=1,500달러를 계산합니다.",
+  },
+  "markets/livestock-futures-live-delivery-and-cash-settlement": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "축산 선물은 살아 있는 동물의 무게·등급·수율·승인 시설을 맞추는 생우 실물인도와 적격 현물거래 지수로 끝내는 비육우·돈육 현금정산을 구분하고, 두 경로 뒤에도 농가의 지역·무게·판매 방식 베이시스를 남겨야 합니다.",
+    sharedGate: "(62÷63−1)×2.20×40,000=약 −1,396.83달러와 (2.25−2.20)×50,000=2,500달러를 비교합니다.",
+  },
+  "markets/singapore-derivatives-records-complaints-and-tax-ledger": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-07",
+    rationale: "싱가포르 파생상품 한 건은 종료 뒤에도 적용 거래의 규제 기록, 회사 민원과 FIDReC 외부 구제, GST 면세 공급가액에 다른 날짜와 금액으로 남으므로 같은 거래 ID로 연결하되 고객 청구와 회사 세무 손익을 합치지 않아야 합니다.",
+    sharedGate: "2026-01-15에서 6개월 뒤와 2026-01-31에서 5년 뒤를 각각 2026-07-15·2031-01-31로 두고 S$24,000 청구와 S$30,000 GST 장부를 분리합니다.",
+  },
 };
 
 /**
@@ -3019,4 +3061,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors":"db4312bf2ae78af0",
 "economic-history/oceania-indigenous-land-settler-exports-and-island-economies":"fcf4c4b17eeea978",
 "economic-history/war-finance-public-debt-and-welfare-state-capacity":"303d0864eff25cf7",
+"markets/equity-dispersion-pnl-attribution-and-rebalancing-costs":"91989400d8465bdf",
+"markets/credit-event-auction-orders-and-base-correlation-history":"f6669fd4645397a5",
+"markets/wti-crude-oil-cushing-storage-pipeline-and-delivery":"fada4d56124c4e84",
+"markets/lme-metals-warrants-quality-storage-and-load-out":"5fb0d71c4e8acfd2",
+"markets/livestock-futures-live-delivery-and-cash-settlement":"5e12dee595585a5c",
+"markets/singapore-derivatives-records-complaints-and-tax-ledger":"6ff01cd6c1a31f71",
 };

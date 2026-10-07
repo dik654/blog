@@ -1249,4 +1249,292 @@ export const marketsArticles: Article[] = [
       component: () => import("@/pages/articles/markets/derivatives/fractional-investment-trust-beneficiary-certificates"),
     },
 
+  {
+    slug: "equity-dispersion-pnl-attribution-and-rebalancing-costs",
+    title: "디스퍼전 하루 손익을 해부한다: 베가·감마·리밸런싱 비용",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 상관을 맞혀도 비용을 빼면 손익은 달라집니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 가격 변화·하루 움직임·시간 경과·거래비용을 네 줄로 엽니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 1만3천+7천−4천−3천은 1만3천 달러입니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 종목 두 줄과 지수 한 줄이 비용 장부를 거쳐 합쳐집니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 같은 1%포인트도 계약마다 돈의 크기가 다릅니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 베가 손익·감마 재조정 손익·리밸런싱 비용에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 처음의 1만3천 달러를 종목별 거래까지 되짚습니다"
+      },
+      {
+            "id": "source",
+            "title": "8. Cboe 산식은 종목 분산과 지수 분산을 같은 30일 창에 놓습니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. Cboe의 디스퍼전 설명에 비용 항목을 다시 붙입니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 하루 손익귀속이 전략의 장기 우위를 증명하지 않습니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/equity-dispersion-pnl-attribution-and-rebalancing-costs"),
+  },
+  {
+    slug: "credit-event-auction-orders-and-base-correlation-history",
+    title: "1억200만 달러 주문이 91.5를 만든 법: CDS 경매·베이스 상관 이력",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 1억200만 달러의 매도 주문이 91.5에서 멈췄습니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 사건 판단·실물 요청·주문 사다리·현금 결제를 나눕니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 60을 먼저 채우고 91.5에서 42를 더 채워 102가 됩니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 위에서 아래로 주문을 먹으며 마지막 가격을 찾습니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 한 회사의 결제 가격과 포트폴리오 공동부도 가격은 다른 장부입니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 순잔량·경매 최종가격·베이스 상관 이력에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 2026년 DISH DBS 주문에서 85만 달러 지급까지 갑니다"
+      },
+      {
+            "id": "source",
+            "title": "8. CreditFixings 원장은 딜러 주문과 91.5의 계산 경로를 공개합니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. 주문 경매의 하루와 베이스 상관 곡선의 여러 해를 다르게 읽습니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 최종가격과 상관 곡선은 서로를 대신하지 못합니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/credit-event-auction-orders-and-base-correlation-history"),
+  },
+  {
+    slug: "wti-crude-oil-cushing-storage-pipeline-and-delivery",
+    title: "1천 배럴이 쿠싱에서 움직이는 법: WTI 저장·송유관·실물인도",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 화면의 70달러는 쿠싱의 원유 1천 배럴 약속입니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 계약 규격·저장시설·송유관 일정·대금을 나눕니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 1천 배럴×70달러에 이동비 120달러를 더합니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 만기 포지션이 통지와 시설 연결을 지나 소유권으로 바뀝니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 저장공간의 총크기와 실제로 쓸 수 있는 공간은 다릅니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 쿠싱 인도 허브·시설 간 이전·인도 통지에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 7만 달러 계약을 통지에서 송유관 표까지 따라갑니다"
+      },
+      {
+            "id": "source",
+            "title": "8. NYMEX Chapter 200은 1천 배럴과 쿠싱 연결점을 함께 정합니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. EIA의 탱크 바닥 물량은 저장능력 숫자의 경계를 보여 줍니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 실물인도 규칙도 지역 가격과 운송 차질을 없애지 않습니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/wti-crude-oil-cushing-storage-pipeline-and-delivery"),
+  },
+  {
+    slug: "lme-metals-warrants-quality-storage-and-load-out",
+    title: "아연 25톤을 꺼내는 법: LME 워런트·보관료·출고",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 아연 25톤은 창고 증서가 있어야 선물 인도가 됩니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 품질·전자 권리·보관료·출고를 네 칸으로 나눕니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 25.3톤은 허용 범위 안이고 20일 보관·출고비는 1,500달러입니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 제련소의 금속이 분석과 창고를 지나 트럭에 실립니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 전자 권리를 샀다는 것과 금속을 꺼냈다는 것은 다릅니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 워런트·워런트 취소·출고 비용에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 25.3톤의 전자 권리에서 1,500달러 비용까지 따라갑니다"
+      },
+      {
+            "id": "source",
+            "title": "8. LME 아연 규격은 순도·25톤·승인 브랜드와 창고를 함께 요구합니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. LME 창고 규칙은 워런트 취소 뒤에도 보관과 출고 책임을 남깁니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 승인 금속도 공장에 필요한 정확한 형태와 시점을 보장하지 않습니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/lme-metals-warrants-quality-storage-and-load-out"),
+  },
+  {
+    slug: "livestock-futures-live-delivery-and-cash-settlement",
+    title: "소 4만 파운드와 5만 파운드 계약: 축산 선물의 실물·현금정산",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 소 4만 파운드는 움직이지만 5만 파운드 계약은 지수로 끝날 수 있습니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 동물·등급·인도시설·가격지수를 나눕니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 63%가 62%가 되면 약 1,397달러가 줄고 5센트 지수 차이는 2,500달러입니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 한 계약은 가축시장으로, 다른 계약은 거래자료 묶음으로 갑니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 살아 있는 동물은 창고 재고처럼 오래 쌓아 둘 수 없습니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 기준 인도 단위·수율 조정·지수 현금정산에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 4만 파운드와 5만 파운드 계약을 만기까지 나란히 따라갑니다"
+      },
+      {
+            "id": "source",
+            "title": "8. CME Chapter 101은 4만 파운드와 63% 수율 조정식을 적습니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. CME 교육자료는 생우의 실물인도와 비육우·돈육의 현금정산을 구분합니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 거래소 표준은 농가의 실제 소와 가격을 완전히 같게 만들지 못합니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/livestock-futures-live-delivery-and-cash-settlement"),
+  },
+  {
+    slug: "singapore-derivatives-records-complaints-and-tax-ledger",
+    title: "거래가 끝난 뒤 남는 일: 싱가포르 파생상품 기록·민원·GST",
+    subcategory: "markets-derivatives",
+    sections: [
+      {
+            "id": "overview",
+            "title": "1. 2만4천 싱가포르달러 손실은 거래 종료 뒤에도 세 장부에 남습니다"
+      },
+      {
+            "id": "black-box",
+            "title": "2. 거래기록·회사 민원·외부 구제·세무 신고를 나눕니다"
+      },
+      {
+            "id": "case",
+            "title": "3. 1월 15일의 여섯 달 뒤와 1월 31일의 다섯 해 뒤를 따로 적습니다"
+      },
+      {
+            "id": "picture",
+            "title": "4. 주문 한 건이 고객 파일과 규제 파일과 세무 파일로 갈라집니다"
+      },
+      {
+            "id": "need",
+            "title": "5. 거래가 끝났다고 증거와 신고 의무가 함께 끝나지는 않습니다"
+      },
+      {
+            "id": "names",
+            "title": "6. 거래장부 보존기간·외부 구제 창·GST 면세 공급에 이름을 붙입니다"
+      },
+      {
+            "id": "mechanism",
+            "title": "7. 2만4천 달러 민원을 접수에서 파기·신고까지 따라갑니다"
+      },
+      {
+            "id": "source",
+            "title": "8. 싱가포르 규정은 계약 종료 뒤 적어도 5년을 셉니다"
+      },
+      {
+            "id": "comparison",
+            "title": "9. FIDReC의 여섯 달과 IRAS의 면세 공급 장부는 서로 다른 질문에 답합니다"
+      },
+      {
+            "id": "limits",
+            "title": "10. 5년·6개월·3만 달러는 모든 싱가포르 거래에 자동 적용되지 않습니다"
+      }
+],
+    component: () => import("@/pages/articles/markets/derivatives/singapore-derivatives-records-complaints-and-tax-ledger"),
+  },
 ];

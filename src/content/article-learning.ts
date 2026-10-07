@@ -208,6 +208,68 @@ function regionalEconomicHistoryLearning(
   };
 }
 
+interface AppliedDerivativeLearningInput {
+  coreIdea: string;
+  entryNote: string;
+  assumed: LearningConceptRef;
+  concepts: readonly [
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+  ];
+  numericQuestion: string;
+  numericAnswers: readonly string[];
+  changedCaseQuestion: string;
+  changedCaseAnswers: readonly string[];
+  sources: readonly [PaperReading, PaperReading, ...PaperReading[]];
+}
+
+/**
+ * 파생상품 적용 글은 가격식, 계약 규칙, 실제 처리 장부를 한 숫자 사례로
+ * 연결합니다. 공통 틀은 연습문제 수를 지키고, 구체적인 계산과 경계는 각 글의
+ * 입력에서만 정합니다.
+ */
+function appliedDerivativeLearning(
+  input: AppliedDerivativeLearningInput,
+): ArticleLearningContract {
+  const [first, second, third] = input.concepts;
+  return {
+    entryLevel: false,
+    entryNote: input.entryNote,
+    coreIdea: input.coreIdea,
+    assumedKnowledge: [input.assumed],
+    introducedHere: input.concepts.map(({ id, role }) => ({ id, role })),
+    conceptExplanations: input.concepts.map(
+      ({ id, intuition, workedExample, boundary }) => ({
+        id,
+        sectionId: "names",
+        intuition,
+        workedExample,
+        boundary,
+      }),
+    ),
+    conceptStages: [
+      { label: "출발 장부", relation: "기존 가격·계약 개념을 실제 숫자 사례의 입력으로 씁니다.", concepts: [input.assumed.id, first.id] },
+      { label: "처리 절차", relation: "입력값이 주문·인도·정산 절차를 거치는 순서를 따라갑니다.", concepts: [first.id, second.id] },
+      { label: "남은 책임", relation: "계산 뒤 비용·기록·모형 위험을 다음 장부에 남깁니다.", concepts: [second.id, third.id] },
+      { label: "공식 근거", relation: "거래소·감독기관 자료가 직접 정한 범위와 설명용 가정을 가릅니다.", concepts: [first.id, second.id, third.id] },
+    ],
+    exercises: [
+      { level: "basic", question: input.numericQuestion, answerChecklist: input.numericAnswers, requiredConcepts: [first.id, second.id], sectionId: "case" },
+      { level: "basic", question: `${first.role} 사례에서 맡는 일과 적용 경계를 설명하세요.`, answerChecklist: [first.intuition, first.boundary], requiredConcepts: [first.id], sectionId: "names" },
+      { level: "basic", question: `${second.role} 실제 숫자나 날짜를 사용해 처리 순서를 설명하세요.`, answerChecklist: [second.intuition, second.workedExample], requiredConcepts: [second.id], sectionId: "mechanism" },
+      { level: "basic", question: `${third.role} 앞선 두 단계와 따로 기록해야 하는 이유를 쓰세요.`, answerChecklist: [third.workedExample, third.boundary], requiredConcepts: [third.id], sectionId: "limits" },
+      { level: "basic", question: `${input.sources[0].title}이 직접 정하거나 보여 주는 범위를 설명하세요.`, answerChecklist: [input.sources[0].contribution, input.sources[0].evidenceScope], requiredConcepts: [first.id, second.id], sectionId: "source" },
+      { level: "basic", question: `${input.sources[1].title}을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.`, answerChecklist: [input.sources[1].contribution, input.sources[1].notClaim], requiredConcepts: [second.id, third.id], sectionId: "comparison" },
+      { level: "advanced", question: input.changedCaseQuestion, answerChecklist: input.changedCaseAnswers, requiredConcepts: [first.id, second.id, third.id], sectionId: "mechanism" },
+      { level: "advanced", question: "가격·계약·운영 장부의 합계가 맞지 않을 때 확인할 자료와 순서를 설계하세요.", answerChecklist: ["계약 식별자", "입력값과 단위", "체결·인도 기록", "잔차와 재검토"], requiredConcepts: [input.assumed.id, first.id, second.id, third.id], sectionId: "picture" },
+      { level: "advanced", question: "두 공식 자료의 관찰 시점과 적용 대상을 바꿔 쓰면 생길 수 있는 오류를 설명하세요.", answerChecklist: [input.sources[0].assumptions, input.sources[1].assumptions, "현행 원문 재확인"], requiredConcepts: [first.id, second.id, third.id], sectionId: "comparison" },
+      { level: "advanced", question: "본문의 설명용 숫자를 실제 거래 결정에 쓰기 전에 추가로 확인할 시장·법률·운영 조건을 제시하세요.", answerChecklist: ["실제 계약 범위", "현재 시장가격", "관할과 시행일", "비용과 남은 위험"], requiredConcepts: [input.assumed.id, first.id, second.id, third.id], sectionId: "limits" },
+    ],
+    papers: input.sources,
+  };
+}
+
 /**
  * 글의 난이도 계약입니다. 등록된 글은 본문 변경만으로 완료하지 않고, 입구의
  * 선수 개념·핵심 아이디어·학습 결과·논문 해설 anchor가 함께 유지돼야 합니다.
@@ -151435,4 +151497,116 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", problem: "국채 규모를 전쟁·평화기 적자와 장기 세입 제도의 변화에 연결해야 합니다.", contribution: "1688년 약 100만 파운드에서 1800년 약 5억 파운드로 늘어난 영국 부채와 전쟁기 재정 변화를 정리합니다.", assumptions: "영국 의회 연구이며 다른 국가의 통화·패전·채무불이행 경험을 대표하지 않습니다.", evidenceScope: "영국 공공부채의 역사와 현재 제도를 다룬 공식 의회 자료입니다.", notClaim: "부채 증가 전체가 전쟁 하나에서 왔거나 높은 부채가 항상 같은 결과를 냈다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
+  "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs": appliedDerivativeLearning({
+    entryNote: "네 줄을 더해 하루 손익 1만3천 달러를 맞춥니다. 변동성 +1만3천, 실제 움직임 +7천, 시간가치 −4천, 거래비용 −3천 달러입니다.",
+    coreIdea: "디스퍼전 전략의 하루 손익을 네 원인으로 나눕니다. 구성 종목과 지수의 베가, 실제 움직임과 델타 재조정, 시간가치, 거래비용입니다. 그래야 전망·모형·집행 중 어디서 결과가 생겼는지 알 수 있습니다.",
+    assumed: { id: "option-dispersion-variance-spread", role: "구성 종목 옵션과 지수 옵션 사이의 분산 차이가 전략의 출발 위험임을 설명합니다." },
+    concepts: [
+      { id: "dispersion-vega-pnl-attribution", role: "예상변동성 변화의 돈 단위 손익을 계약별로 나눕니다.", intuition: "변동성이 같은 폭으로 바뀌어도 옵션마다 가격이 움직이는 돈의 크기는 다릅니다.", workedExample: "$12,000×1.5−$10,000×0.5=$13,000입니다(가정).", boundary: "큰 표면 이동과 장중 민감도 변화는 전일 베가 하나로 전부 설명되지 않습니다." },
+      { id: "dispersion-gamma-rebalancing-pnl", role: "실제 가격 움직임과 델타 재조정에서 생긴 손익을 가릅니다.", intuition: "가격이 움직이면 옵션의 곡률과 그때마다 바꾼 주식 수량이 손익을 만듭니다.", workedExample: "종목과 지수 다리의 순효과를 +7,000달러로 둡니다(가정).", boundary: "재조정 시각과 체결가가 달라지면 같은 종가에서도 결과가 달라집니다." },
+      { id: "dispersion-rebalancing-cost-ledger", role: "위험을 되맞추는 주문의 실제 비용을 평가손익과 분리합니다.", intuition: "전망이 맞아도 스프레드·수수료·시장 충격이 벌어 둔 돈을 깎습니다.", workedExample: "미끄러짐 2천과 수수료 1천 달러를 합쳐 −3천 달러로 둡니다(가정).", boundary: "체결 자료 없이 모형 가격만 보면 집행 품질을 판단할 수 없습니다." },
+    ],
+    numericQuestion: "+13,000+7,000−4,000−3,000을 계산하고 네 줄이 각각 무엇을 뜻하는지 설명하세요.",
+    numericAnswers: ["총손익 +13,000달러", "베가 +13,000", "실제 움직임 +7,000", "시간가치·비용 −7,000"],
+    changedCaseQuestion: "거래비용이 3천에서 9천 달러로 늘고 나머지가 같다면 총손익과 계속 운용 전에 볼 항목을 계산하세요.",
+    changedCaseAnswers: ["+13,000+7,000−4,000−9,000=+7,000달러", "비용 증가 6,000달러", "헤지 빈도", "호가·시장 충격"],
+    sources: [
+      { title: "Cboe · S&P 500 Dispersion Index Methodology", href: "https://cdn.cboe.com/resources/indices/documents/methodology-the-dispersion-index.pdf", problem: "구성 종목과 지수 옵션을 같은 만기와 유효 호가 기준에 놓아야 합니다.", contribution: "가중 구성 종목 예상분산과 지수 예상분산의 차이, 30일 보간과 기업행사 처리를 정합니다.", assumptions: "공식 지수 방법론입니다. 본문의 특정 포지션 수량과 실제 운용비용은 알려 주지 않습니다.", evidenceScope: "DSPX 지수 계산에 쓰는 옵션 선택과 분산 결합 범위입니다.", notClaim: "방법론이 어떤 운용자의 하루 손익이나 장기 수익을 보장한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "Cboe · Implied Correlation", href: "https://cdn.cboe.com/resources/indices/documents/Cboe_USO_ImpliedCorrelation_0421_v2.0.2.pdf", problem: "지수와 구성 종목 옵션의 반대 포지션이 왜 상관 위험을 담는지 확인해야 합니다.", contribution: "지수 스트래들을 팔고 구성 종목 스트래들을 사는 디스퍼전 구조를 설명합니다.", assumptions: "전략 구조 설명이며 본문의 베가·감마·비용 수치는 가정입니다.", evidenceScope: "옵션 가격에 들어 있는 평균상관과 디스퍼전의 관계입니다.", notClaim: "평균상관이 모든 종목 쌍의 실제 상관이나 위기 손실을 그대로 관측한다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "markets/credit-event-auction-orders-and-base-correlation-history": appliedDerivativeLearning({
+    entryNote: "DISH DBS 경매의 매도 순잔량 1억200만 달러를 공개 주문 사다리에서 채웁니다. 최종가격 91.5와 명목 1천만 달러의 지급 85만 달러를 다시 만듭니다.",
+    coreIdea: "신용사건 경매는 실물 요청을 상계해 순잔량을 구합니다. 이를 가격순 주문으로 채워 공통 결제가를 만듭니다. 이 한 사건의 최종가격은 여러 기업의 트랜치 호가에서 뽑은 베이스 상관 이력과 다른 장부입니다.",
+    assumed: { id: "cds-auction-final-price-settlement", role: "신용사건 뒤 경매 최종가격을 CDS 현금결제에 쓰는 기본 구조를 설명합니다." },
+    concepts: [
+      { id: "credit-auction-net-open-interest", role: "상계 뒤 주문으로 채울 방향과 규모를 정합니다.", intuition: "실물로 사고팔겠다는 요청 중 서로 맞는 부분을 지우고 남은 한쪽만 경매 주문에 보냅니다.", workedExample: "DISH DBS 경매의 순잔량은 1억200만 달러 매도였습니다.", boundary: "회사 총채무나 시장 전체 CDS 명목과 같은 숫자가 아닙니다." },
+      { id: "credit-auction-order-ladder-clearing", role: "순잔량을 가격순 주문으로 채워 마지막 체결가격을 찾습니다.", intuition: "매도 잔량이면 높은 매수 주문부터 수량을 더해 필요한 크기에 처음 닿는 가격을 찾습니다.", workedExample: "91.625 이상에서 60을 채우고 91.5에서 42를 더해 102를 만듭니다.", boundary: "인도 가능한 채무와 경매의 가격 제한 규칙을 빼고 주문만 합칠 수 없습니다." },
+      { id: "base-correlation-history", role: "트랜치 호가에서 날짜·끝점별로 맞춘 상관값의 변화를 기록합니다.", intuition: "한 숫자의 자연상수가 아니라 여러 손실 구간과 날짜의 시장가격을 맞춘 모형 입력입니다.", workedExample: "2005년부터 2008년까지 CDX 끝점별 곡선이 위로 움직인 기록을 비교합니다.", boundary: "한 회사 경매의 실제 회수율이나 다음 위기의 공동부도 확률이 아닙니다." },
+    ],
+    numericQuestion: "20+10+10+20+42를 계산해 순잔량 102를 채우세요. 명목 1천만 달러에는 최종가격 91.5를 적용하세요.",
+    numericAnswers: ["주문 누계 102백만 달러", "최종가격 91.5", "지급률 8.5%", "단순 지급 850,000달러"],
+    changedCaseQuestion: "순잔량이 80이고 91.625 이상에서 60을 채웠다고 하겠습니다. 91.5에서 쓸 수량과 최종가격을 계산하세요.",
+    changedCaseAnswers: ["91.5에서 20백만 달러", "누계 80백만 달러", "최종가격 91.5", "가격 제한 별도 확인"],
+    sources: [
+      { title: "CreditFixings · DISH DBS Auction Results", href: "https://api.creditfixings.com/api/auction-results/DISHN-DDBSC", problem: "실제 최종가격을 요약 숫자가 아닌 공개 주문에서 재현해야 합니다.", contribution: "7개 딜러와 매도 순잔량 1억200만 달러를 보여 줍니다. 초기 시장 중간값 91.125와 최종가격 91.5의 주문 자료도 공개합니다.", assumptions: "본문의 CDS 명목 1천만 달러만 설명을 위한 가정입니다.", evidenceScope: "2026년 8월 4일 DISH DBS 신용사건 경매 한 건입니다.", notClaim: "91.5를 다른 회사나 다른 신용사건의 회수율로 일반화할 수 없습니다.", sectionId: "source" },
+      { title: "CreditFixings · Credit Event Auction Primer", href: "https://www.creditfixings.com/assets/credit_event_auction/docs/credit_event_auction_primer.pdf", problem: "초기 시장과 실물 요청, 주문 제출이 최종가격으로 이어지는 규칙을 알아야 합니다.", contribution: "순잔량과 가격 제한을 사용해 경매 최종가격을 만드는 일반 절차를 설명합니다.", assumptions: "입문 자료이며 모든 사건의 계약 조건과 주문 결과를 대신하지 않습니다.", evidenceScope: "신용사건 경매의 표준 작동 순서입니다.", notClaim: "경매 가격이 모든 인도 가능 채무의 장기 가치라는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "Bank of England · Extracting information from structured credit markets", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2010/extracting-information-from-structured-credit-markets.pdf", problem: "베이스 상관 곡선의 이동을 실제 공동부도 확률과 구분해야 합니다.", contribution: "2005~2008년 구조화 신용시장 자료에서 끝점별 상관 스마일과 그 이동을 분석합니다.", assumptions: "특정 시기와 모형의 시장 호가 분석이며 2026년 개별 경매 자료가 아닙니다.", evidenceScope: "CDX 트랜치 가격에서 추출한 위험 지표와 모형 경계입니다.", notClaim: "끝점마다 다른 베이스 상관이 하나의 참된 상관 구조를 뜻하지 않습니다.", sectionId: "comparison" },
+    ],
+  }),
+  "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery": appliedDerivativeLearning({
+    entryNote: "WTI 1계약 1천 배럴을 배럴당 70달러로 인수합니다. 설명용 이동비 120달러를 더해 70,120달러가 되는 장부에서 시작합니다.",
+    coreIdea: "WTI 선물의 화면 가격은 원유 1천 배럴을 넘기는 계약입니다. 쿠싱의 승인 시설과 연결망에서 통지·대금·소유권 이전 절차를 밟습니다. 저장 여유와 송유관 일정은 만기 베이시스를 바꿉니다.",
+    assumed: { id: "commodity-delivery-grade-differential", role: "원자재 실물인도에서 계약 기준과 실제 물량·품질·장소의 차이를 가격에 반영하는 구조를 설명합니다." },
+    concepts: [
+      { id: "wti-cushing-delivery-hub", role: "승인 저장시설과 송유관 연결점으로 인도 장소를 한정합니다.", intuition: "쿠싱이라는 지명보다 어느 승인 시설이 어느 배관과 실제로 연결됐는지가 인도 가능성을 정합니다.", workedExample: "1계약의 1천 배럴을 승인된 쿠싱 연결 시설에 배정합니다.", boundary: "쿠싱 전체 저장능력이 지금 당장 쓸 수 있는 빈 공간과 같지 않습니다." },
+      { id: "wti-pumpover-bookout-transfer", role: "원유를 펌프·배관·장부 중 어떤 방식으로 넘길지 정합니다.", intuition: "실물인도라도 모든 배럴이 트럭에 실려 이동하는 것은 아닙니다.", workedExample: "연결 탱크 사이 펌프오버와 배관 내 이전, 서로 맞는 의무의 장부상 상계를 구분합니다.", boundary: "시설 연결과 상대방 동의 없이 임의의 장부 입력으로 인도가 끝나지 않습니다." },
+      { id: "wti-delivery-notice-title-transfer", role: "만기 포지션을 통지·대금·소유권 이전 기록으로 닫습니다.", intuition: "가격 확정 뒤에도 구매자와 판매자, 시설, 날짜와 인도 방식을 맞춰야 원유의 주인이 바뀝니다.", workedExample: "1천×70=7만 달러에 설명용 이동비 120달러를 별도 기록합니다.", boundary: "통지 한 장이 저장료·운송지연·품질 차이까지 없애지는 않습니다." },
+    ],
+    numericQuestion: "1,000배럴×70달러와 배럴당 0.12달러의 이동비를 계산해 총 필요한 금액을 구하세요.",
+    numericAnswers: ["원유 가치 70,000달러", "이동비 120달러", "합계 70,120달러", "이동비는 설명용 가정"],
+    changedCaseQuestion: "가격이 72달러, 이동비가 배럴당 0.20달러라면 1계약의 원유 가치·이동비·합계를 계산하세요.",
+    changedCaseAnswers: ["원유 가치 72,000달러", "이동비 200달러", "합계 72,200달러", "저장료 별도"],
+    sources: [
+      { title: "NYMEX Rulebook · Light Sweet Crude Oil Futures Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", problem: "계약 크기와 허용 오차, 인도 장소·방식·대금 계산을 함께 확인해야 합니다.", contribution: "1천 배럴, 쿠싱 승인 연결 시설, 펌프오버·배관 내 이전·장부상 상계와 인도 기간을 정합니다.", assumptions: "본문의 70달러와 0.12달러 이동비는 설명용이며 실제 계약월 가격이 아닙니다.", evidenceScope: "NYMEX WTI 선물의 계약 규격과 실물인도 규칙입니다.", notClaim: "이 규칙이 모든 원유 등급·지역의 인도비용과 가격을 정한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "U.S. EIA · Working and net available shell storage capacity", href: "https://www.eia.gov/todayinenergy/detail.php?id=67866", problem: "탱크의 명목 용량과 실제 운용 가능한 저장공간을 구분해야 합니다.", contribution: "탱크 바닥 물량과 운전 제약 때문에 총 용량 전부를 꺼내 쓰거나 새로 채울 수 없는 이유를 설명합니다.", assumptions: "시설군 통계 설명이며 특정 선물 인도일의 빈 탱크와 송유관 예약을 보여 주지 않습니다.", evidenceScope: "미국 원유 저장능력 지표의 정의와 운전 경계입니다.", notClaim: "공표된 저장능력만으로 쿠싱의 당일 인도 혼잡이나 베이시스를 확정할 수 없습니다.", sectionId: "comparison" },
+    ],
+  }),
+  "markets/lme-metals-warrants-quality-storage-and-load-out": appliedDerivativeLearning({
+    entryNote: "LME 아연 25.3톤이 계약 허용 범위 24.5~25.5톤에 드는지 확인합니다. 설명용 20일 보관료 1천 달러와 상차비 500달러를 더합니다.",
+    coreIdea: "LME 금속 선물은 승인 브랜드·순도·중량을 충족한 금속의 전자 워런트를 넘깁니다. 실제 출고에는 워런트 취소 뒤에도 보관일수·출고 순번·운송과 FOT 비용이 남습니다.",
+    assumed: { id: "commodity-shipping-certificate-delivery", role: "원자재 선물에서 실물 자체보다 승인 시설이 발행한 권리 문서가 먼저 이전되는 구조를 설명합니다." },
+    concepts: [
+      { id: "lme-metal-warrant", role: "승인 금속이 승인 창고에 있다는 전자 권리를 선물 인도에 씁니다.", intuition: "금속 덩어리를 손으로 넘기기 전에 소유권과 규격을 나타내는 전자 기록이 이동합니다.", workedExample: "순도 99.995% 이상 아연 25.3톤의 승인 브랜드·창고 기록을 확인합니다.", boundary: "워런트를 가졌다고 금속이 이미 트럭에 실렸다는 뜻은 아닙니다." },
+      { id: "lme-warrant-cancellation-loadout", role: "전자 권리를 실제 출고 요청으로 바꾸고 순번을 잡습니다.", intuition: "창고 밖으로 꺼내려면 워런트를 취소하고 창고의 출고 일정과 운송수단을 맞춰야 합니다.", workedExample: "취소일 뒤 20일을 기다려 상차하는 설명용 경로를 둡니다.", boundary: "취소만으로 보관료와 출고 대기가 즉시 멈추지 않을 수 있습니다." },
+      { id: "lme-warehouse-rent-fot-ledger", role: "금속 가치와 보관·상차·재발행 비용을 따로 기록합니다.", intuition: "전자 권리의 가격과 금속을 창고 밖으로 옮기는 비용은 다른 청구입니다.", workedExample: "보관료 1,000달러와 FOT 500달러를 합쳐 1,500달러로 둡니다(가정).", boundary: "실제 창고·지역·날짜의 공표 요율을 대신하지 않습니다." },
+    ],
+    numericQuestion: "25톤의 ±2% 허용 범위를 구하고 25.3톤이 드는지 확인한 뒤 1,000+500달러를 계산하세요.",
+    numericAnswers: ["허용 범위 24.5~25.5톤", "25.3톤은 범위 안", "비용 합계 1,500달러", "금속 가치와 별도"],
+    changedCaseQuestion: "실제 중량이 25.6톤이고 보관료가 1,200달러라면 계약 허용 여부와 비용 합계를 판단하세요.",
+    changedCaseAnswers: ["25.6톤은 상한 25.5톤 초과", "계약 조정·분할 확인", "보관료+FOT=1,700달러", "현행 창고 요율 확인"],
+    sources: [
+      { title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", problem: "금속 이름만으로 인도하지 않고 순도·로트·브랜드·창고 조건을 확인해야 합니다.", contribution: "최소 순도 99.995%, 25톤 로트와 워런트 중량 허용 범위, 승인 브랜드·창고를 정합니다.", assumptions: "본문의 금속 가격과 보관·상차비는 설명용 가정입니다.", evidenceScope: "LME 아연 선물의 현행 계약 규격입니다.", notClaim: "규격 충족이 특정 공장의 형태·도착일·가공 적합성을 보장하지 않습니다.", sectionId: "source" },
+      { title: "LME · Warrants", href: "https://www.lme.com/Sustainability-and-Physical-Markets/Warehousing/LME-warrants", problem: "선물 인도에 쓰는 전자 권리와 실제 금속 출고를 구분해야 합니다.", contribution: "워런트가 승인 창고의 특정 금속을 나타내며 소유권 이전과 취소에 쓰이는 방식을 설명합니다.", assumptions: "공식 개요이며 개별 창고의 당일 출고 대기와 비용을 제시하지 않습니다.", evidenceScope: "LME 워런트의 역할과 전자 관리 범위입니다.", notClaim: "워런트 취소 즉시 물리적 금속이 출고된다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "LME · Warehouse Agreement 2026", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", problem: "보관료와 FOT, 취소·재발행·출고 기록의 책임을 확인해야 합니다.", contribution: "일별 임대료, FOT 비용, 출고 일정과 취소 워런트 기록 보존 의무를 규정합니다.", assumptions: "창고 계약의 일반 의무이며 실제 청구액은 공표 요율과 사건별 사실에 따릅니다.", evidenceScope: "LME 승인 창고와 거래소 사이의 운영 책임입니다.", notClaim: "모든 금속과 지역에서 같은 대기일수와 비용이 발생한다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "markets/livestock-futures-live-delivery-and-cash-settlement": appliedDerivativeLearning({
+    entryNote: "생우 4만 파운드의 실제 수율 62%를 기준 63%와 비교합니다. 조정액은 −1,396.83달러입니다. 비육우 5만 파운드의 5센트 지수 차이는 2,500달러입니다.",
+    coreIdea: "축산물 선물에는 실물인도 계약과 현금정산 계약이 함께 있습니다. 실물인도는 살아 있는 동물의 무게·등급·수율·시설을 맞춥니다. 현금정산은 현물 거래 지수를 씁니다. 어느 쪽도 농가의 지역 현물가격과 생산 위험을 완전히 없애지 않습니다.",
+    assumed: { id: "futures-basis-convergence", role: "선물 만기 가격과 인도 가능한 현물 또는 정산지수가 가까워지는 기본 관계를 설명합니다." },
+    concepts: [
+      { id: "livestock-par-delivery-unit", role: "조정 없이 인도할 무게·등급·수율·시설 기준을 정합니다.", intuition: "살아 있는 소마다 다른 특성을 계약에서 비교할 수 있는 표준 묶음으로 바꿉니다.", workedExample: "생우 4만 파운드와 70% Choice·30% Select, Yield Grade 3 기준을 확인합니다.", boundary: "한 농가의 실제 소 떼가 모두 기준 단위와 같다는 뜻은 아닙니다." },
+      { id: "live-cattle-hot-yield-adjustment", role: "실제 도체 수율이 기준과 다른 만큼 인도 정산액을 고칩니다.", intuition: "산 동물 무게가 같아도 도축 뒤 남는 도체 비중이 낮으면 같은 값을 주지 않습니다.", workedExample: "(62÷63−1)×$2.20×40,000=−$1,396.83입니다(가정).", boundary: "등급·개별 무게·운송·시설 비용의 다른 조정을 대신하지 않습니다." },
+      { id: "livestock-index-cash-settlement", role: "실물 대신 마지막 현물지수와 계약가격의 차이를 돈으로 끝냅니다.", intuition: "트럭과 인도시설은 줄지만 지수가 내 사업장 가격을 얼마나 따르는지가 새 위험이 됩니다.", workedExample: "($2.25−$2.20)×50,000=$2,500입니다(가정).", boundary: "지수와 농가의 실제 판매가격이 항상 같다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "(62÷63−1)×2.20×40,000과 (2.25−2.20)×50,000을 각각 계산하세요.",
+    numericAnswers: ["생우 수율 조정 약 −1,396.83달러", "비육우 가격차 0.05달러/파운드", "현금정산 +2,500달러", "실물과 지수 경로 구분"],
+    changedCaseQuestion: "생우 실제 수율이 63%라면 조정액은 얼마입니까? 비육우 마지막 지수가 2.18이라면 현금정산액은 얼마인지 계산하세요.",
+    changedCaseAnswers: ["수율 조정 0달러", "지수 차이 −0.02달러/파운드", "현금정산 −1,000달러", "지역 베이시스 별도"],
+    sources: [
+      { title: "CME · Live Cattle Futures Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf", problem: "생우 계약의 무게·등급과 도체 수율 조정을 실제 규칙에 대조해야 합니다.", contribution: "4만 파운드 거래 단위, 기준 등급과 63% 뜨거운 도체 수율 조정식을 정합니다.", assumptions: "본문의 2.20달러와 실제 수율 62%는 설명용 가정이며 적용 계약월 규칙을 다시 확인해야 합니다.", evidenceScope: "2026년 9월 시행 조항을 포함한 CME 생우 선물 규칙입니다.", notClaim: "이 한 식이 개별 도체와 시설의 모든 인도 조정을 포함한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", problem: "같은 축산업에서도 실물인도와 현금정산 계약을 구분해야 합니다.", contribution: "생우 4만 파운드는 실물인도, 비육우 5만 파운드와 돈육은 지수 현금정산이라는 구조를 설명합니다.", assumptions: "거래소 교육자료이며 최신 계약 규칙과 실제 지수 산식이 우선합니다.", evidenceScope: "CME 축산물 선물의 기초 현물과 정산 방식 비교입니다.", notClaim: "현금정산이 농가의 지역·무게·거래 방식에 따른 베이시스를 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "markets/singapore-derivatives-records-complaints-and-tax-ledger": appliedDerivativeLearning({
+    entryNote: "2026년 1월 15일 최종답변에서 외부 구제 6개월을 셉니다. 1월 31일 계약 종료에서는 기록 보존 5년을 셉니다. 고객 청구 2만4천 달러와 회사 GST 장부 3만 달러는 분리합니다.",
+    coreIdea: "싱가포르 파생상품 한 건은 종료 뒤에도 세 장부에 남습니다. 규제 기록, 고객 민원과 외부 구제, GST 신고 장부입니다. 기간과 금액은 서로 다르므로 거래 ID만 연결하고 각 판단은 따로 둡니다.",
+    assumed: { id: "derivatives-complaint-evidence-pack", role: "주문·설명·확인서·손실계산과 고객 연락을 한 민원 증거 묶음으로 연결하는 기본 구조를 설명합니다." },
+    concepts: [
+      { id: "singapore-derivatives-book-retention", role: "적용 거래의 종료 뒤 장부를 보존할 최소 기간을 정합니다.", intuition: "계약 대금이 끝난 날과 규제·분쟁 책임 때문에 자료를 지킬 마지막 날은 다릅니다.", workedExample: "2026년 1월 31일 종료에서 5년을 세어 2031년 1월 31일을 기준으로 둡니다.", boundary: "회사 지위·상품 범위·법적 보류에 따라 더 길거나 다른 조항이 적용될 수 있습니다." },
+      { id: "singapore-fidrec-referral-window", role: "회사 최종답변 뒤 외부 분쟁조정에 가져갈 기간을 셉니다.", intuition: "고객은 먼저 회사에 문제를 제기하고 해결되지 않은 뒤 정해진 창 안에서 외부 구제를 신청합니다.", workedExample: "2026년 1월 15일 최종답변의 6개월 뒤인 7월 15일을 기준으로 둡니다.", boundary: "법원 소멸시효나 모든 법인 고객의 구제 경로와 같은 개념이 아닙니다." },
+      { id: "singapore-derivatives-gst-exempt-supply", role: "실물 인도 없는 파생상품의 순실현손익을 GST 장부에 분류합니다.", intuition: "GST가 붙지 않아도 회사는 해당 금융 공급의 금액을 신고 장부에서 추적합니다.", workedExample: "순실현이익 3만 싱가포르달러를 면세 공급가액으로 둡니다(가정).", boundary: "고객 청구액이나 법인소득세상 손익과 같은 숫자라고 볼 수 없습니다." },
+    ],
+    numericQuestion: "2026년 1월 15일에서 6개월 뒤를 구하세요. 1월 31일에서 5년 뒤도 구하고, 2만4천 달러 청구가 15만 달러 한도 안인지 확인하세요.",
+    numericAnswers: ["외부 구제 기준일 2026-07-15", "기록 보존 기준일 2031-01-31", "S$24,000은 S$150,000보다 작음", "세무 금액과 별도"],
+    changedCaseQuestion: "최종답변이 2026년 3월 2일, 계약 종료가 2026년 4월 30일이면 설명용 두 기준일을 다시 계산하세요.",
+    changedCaseAnswers: ["외부 구제 기준일 2026-09-02", "기록 보존 기준일 2031-04-30", "관할·법적 보류 확인", "실제 접수 규칙 재확인"],
+    sources: [
+      { title: "Singapore Statutes Online · Derivatives Trading Regulations", href: "https://sso.agc.gov.sg/SL/SFA2001-S134-2019", problem: "계약 종료와 기록 파기 가능일을 같은 날로 보면 안 됩니다.", contribution: "적용 대상의 관련 장부와 정보를 계약·거래 만료 또는 종료 뒤 적어도 5년 보존하도록 정합니다.", assumptions: "지정된 사람과 계약에 적용되므로 회사 인허가와 상품 범위를 먼저 확인해야 합니다.", evidenceScope: "싱가포르 파생상품 거래 규정 제5조의 범위입니다.", notClaim: "싱가포르의 모든 회사·고객·자료에 같은 시작일이 자동 적용된다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "FIDReC · Consumer's Guide to Banking Disputes", href: "https://www.fidrec.com.sg/knowledgebase/article/KA-01257/en-us", problem: "회사 민원과 외부 분쟁조정의 순서·기한·금액 한도를 확인해야 합니다.", contribution: "금융회사에 먼저 제기하고 최종답변 뒤 6개월 안에 접수하는 절차와 15만 싱가포르달러 심판 한도를 안내합니다.", assumptions: "개인·개인사업자 중심 안내이며 관할 제외와 사건별 기한 판단이 남습니다.", evidenceScope: "싱가포르 금융소비자의 FIDReC 은행 분쟁 절차입니다.", notClaim: "접수 가능성이 고객의 배상 승소나 청구액 전부의 인정을 뜻하지 않습니다.", sectionId: "comparison" },
+      { title: "IRAS · Finance and GST", href: "https://www.iras.gov.sg/taxes/goods-services-tax-(gst)/specific-business-sectors/finance", problem: "고객 손익과 회사의 GST 면세 공급가액을 한 숫자로 섞지 않아야 합니다.", contribution: "실물 인도 없는 파생상품의 순실현손익을 면세 공급가액으로 보고하는 방법을 안내합니다.", assumptions: "GST 안내이며 법인소득세 처리와 개별 계약의 회계 판단을 대신하지 않습니다.", evidenceScope: "싱가포르 금융업의 파생상품 관련 GST 신고 범위입니다.", notClaim: "GST 면세가 모든 세금에서 비과세이거나 장부 기록이 불필요하다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+
 };

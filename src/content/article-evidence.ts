@@ -13224,4 +13224,31 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공개 강의", label: "LSE EH450 · The Economics of War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", note: "전쟁의 재정·물자·인력 동원과 생산·소비·인명 결과를 함께 다루는 범위를 확인합니다." },
     { kind: "공식 문서", label: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화를 확인합니다." },
   ],
+  "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs": [
+    { kind: "공식 문서", label: "Cboe · S&P 500 Dispersion Index Methodology", href: "https://cdn.cboe.com/resources/indices/documents/methodology-the-dispersion-index.pdf", note: "구성 종목과 지수의 예상분산, 유효 옵션과 30일 보간 규칙을 확인합니다." },
+    { kind: "공식 문서", label: "Cboe · Implied Correlation", href: "https://cdn.cboe.com/resources/indices/documents/Cboe_USO_ImpliedCorrelation_0421_v2.0.2.pdf", note: "지수 옵션과 구성 종목 옵션을 반대 방향으로 두는 디스퍼전 구조를 확인합니다." },
+  ],
+  "markets/credit-event-auction-orders-and-base-correlation-history": [
+    { kind: "공식 문서", label: "CreditFixings · DISH DBS Auction Results", href: "https://api.creditfixings.com/api/auction-results/DISHN-DDBSC", note: "2026년 DISH DBS 경매의 딜러 수, 순잔량, 가격별 주문과 최종가격을 확인합니다." },
+    { kind: "공식 가이드", label: "CreditFixings · Credit Event Auction Primer", href: "https://www.creditfixings.com/assets/credit_event_auction/docs/credit_event_auction_primer.pdf", note: "초기 시장, 실물 요청, 순잔량과 가격 제한이 최종가격으로 이어지는 절차를 확인합니다." },
+    { kind: "공식 연구", label: "Bank of England · Extracting information from structured credit markets", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2010/extracting-information-from-structured-credit-markets.pdf", note: "2005~2008년 베이스 상관 곡선의 이동과 단일 가우시안 모형의 경계를 확인합니다." },
+  ],
+  "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery": [
+    { kind: "공식 규격", label: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "1천 배럴 계약, 쿠싱 승인 시설, 허용 오차와 실물인도 방식을 확인합니다." },
+    { kind: "공식 문서", label: "U.S. EIA · Working and net available shell storage capacity", href: "https://www.eia.gov/todayinenergy/detail.php?id=67866", note: "탱크 바닥 물량 때문에 총 저장능력과 실제 가용 공간이 다른 이유를 확인합니다." },
+  ],
+  "markets/lme-metals-warrants-quality-storage-and-load-out": [
+    { kind: "공식 규격", label: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "아연 순도·로트·워런트 중량 허용 범위와 승인 브랜드·창고를 확인합니다." },
+    { kind: "공식 가이드", label: "LME · Warrants", href: "https://www.lme.com/Sustainability-and-Physical-Markets/Warehousing/LME-warrants", note: "워런트가 승인 창고의 특정 금속을 나타내고 취소되는 절차를 확인합니다." },
+    { kind: "공식 문서", label: "LME · Warehouse Agreement 2026", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "일별 임대료·FOT·재발행과 취소 워런트 출고 기록 의무를 확인합니다." },
+  ],
+  "markets/livestock-futures-live-delivery-and-cash-settlement": [
+    { kind: "공식 규격", label: "CME · Live Cattle Futures Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf", note: "생우 4만 파운드·기준 등급·63% 뜨거운 도체 수율 조정식을 확인합니다." },
+    { kind: "공식 가이드", label: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note: "생우 실물인도와 비육우·돈육의 지수 현금정산을 비교합니다." },
+  ],
+  "markets/singapore-derivatives-records-complaints-and-tax-ledger": [
+    { kind: "공식 문서", label: "Singapore Statutes Online · Derivatives Trading Regulations", href: "https://sso.agc.gov.sg/SL/SFA2001-S134-2019", note: "적용 장부와 정보를 계약·거래 종료 뒤 적어도 5년 보존하는 규정을 확인합니다." },
+    { kind: "공식 가이드", label: "FIDReC · Consumer's Guide to Banking Disputes", href: "https://www.fidrec.com.sg/knowledgebase/article/KA-01257/en-us", note: "회사 최종답변 뒤 6개월의 접수 창과 심판 한도를 확인합니다." },
+    { kind: "공식 가이드", label: "IRAS · Finance and GST", href: "https://www.iras.gov.sg/taxes/goods-services-tax-(gst)/specific-business-sectors/finance", note: "실물 인도 없는 파생상품의 순실현손익을 GST 면세 공급가액으로 보고하는 방법을 확인합니다." },
+  ],
 };
