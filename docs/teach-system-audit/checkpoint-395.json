@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-394.json",
+  "publicArticles": 937,
+  "addedRoutes": [],
+  "rewrittenRoutes": [
+    "ai/vllm-spec-decode"
+  ],
+  "touchedRoutes": [
+    "ai/speculative-decoding-variants"
+  ],
+  "reviewed": 395,
+  "remaining": 542,
+  "goalComplete": false,
+  "disposition": "The vLLM speculative-decoding article now closes the common algorithm, target-distribution preservation, first-rejection boundary, KV-state update and full-cycle break-even as one recursive teaching path. The neighboring variants article is explicitly scoped to Medusa, LayerSkip, MTP and SuffixDecoding. In total, 353 articles are substantive rewrites or additions and 42 retain an already sound teaching flow.",
+  "validation": {
+    "articleBoundary": "The catalog and opening paragraphs distinguish the common-mechanism article from the candidate-source and candidate-shape comparison article, with reciprocal canonical links.",
+    "recursiveTeaching": "teach-system v0.15 made prerequisite teaching a recurrence. All 14 concepts introduced by ai/vllm-spec-decode have six-field causal traces, and every non-entry canonical prerequisite reached from the article carries recursiveTeaching: true. The global learning audit covers all 937 articles.",
+    "pseudocodeVisualization": "teach-system v0.16 requires pseudocode to be a step-through process. SpecTraceViz maps five scenes to propose, accept, firstReject/discard, residual sample and commit. TreeTraceViz maps four scenes to tree proposal, path verification, KV compaction and commit. The shared AlgorithmBlock now exposes input, one active pseudocode line at a time, completed-line state, output and mobile previous/next controls.",
+    "browser": "Local and production checks passed at 320px and 390px. Document and body widths equaled the viewport, no button exceeded the viewport, both articles rendered their complete pseudocode traces, and the reciprocal scope links resolved.",
+    "learning": "PASS 937 strict registered learning contracts in GitHub Actions; actual exit 0.",
+    "graph": "PASS 4,248 concepts, 6,555 relations and 937 registered articles; actual exit 0.",
+    "formula": "PASS 1,472 explicit operation annotations; production KaTeX errors 0.",
+    "articleStructure": "PASS 937 public articles in GitHub Actions; actual exit 0.",
+    "topology": "PASS 937 strict after refreshing ai/vllm-spec-decode and ai/speculative-decoding-variants fingerprints for the clarified titles.",
+    "reading": "PASS article reading experience and learning order in GitHub Actions; actual exit 0.",
+    "language": "PASS global prose baseline and Korean naturalness audits; actual exit 0.",
+    "lint": "PASS ESLint on every changed TS, TSX and MJS file; actual exit 0.",
+    "build": "PASS locally with an 8GB Node heap and in GitHub Actions: 7,294 transformed modules, 1,978 static public routes and 404 fallback.",
+    "production": "GitHub Pages run 37616159164 succeeded: build 6m35s and deploy 19s. Production checks found zero horizontal overflow, wide controls, KaTeX errors or console errors on the two speculative-decoding routes.",
+    "skill": "teach-system v0.16 preserves the existing strategy-to-parts and S-to-7 depth order, overlays the causal question spine recursively, and now requires ordered procedures to pair pseudocode with a step-through process visualization. Ruby YAML parsing passed; the Python quick validator could not run because the local yaml module is absent."
+  },
+  "commit": "342bd568e9bc1c78d07049605e6fc5fb08828bb5",
+  "deployment": {
+    "runId": 37616159164,
+    "conclusion": "success",
+    "production": "pass"
+  }
+}

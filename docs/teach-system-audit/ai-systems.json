@@ -12741,7 +12741,7 @@
       "route": "ai/vllm-spec-decode",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-spec-decode.tsx",
       "publicPath": "cs/ai/vllm-spec-decode",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -12891,22 +12891,24 @@
         "narrowText": 0,
         "vizInternalScroll": "5장면×2폭의 PNG를 실제 읽고, 마지막 단계의 짧은 버튼·확정 글 배치를 확인했습니다. 내부 스크롤 끝에서 설명이 controls 위에 들어오고 단계 변경 시 스크롤이 처음으로 돌아옵니다. 통합 world의 frame delta0·button delta0·외부 overflow0, SVG bbox 오류0입니다.",
         "firstFifth": "통합 후 이름을 붙이는6절 앞의 사례는 실제 본문 기준 390에서20.5857%, 1440에서20.5817%입니다.",
-        "learning": "병합 후24절·기초6+심화4·논문5/공식코드1 해설 strict exit0. 두 정리의 proofIdea/counterexample을 분포 복원 증명과 동일 수락률의 비용 반례로 보충했습니다. 공유 learning과 최종 제안 JSON의 전체 문자열이 일치합니다.",
-        "formula": "다섯 수식의 일반식을 annotatedFormula에도 표시하고 두 폭 DOM에서 확인했습니다. 전역1438개 strict PASS, 최종 통합 KaTeX 오류0.",
-        "prose": "최종 전역 strict 재검토0. 정확한 확률·가정·논문 측정 조건과 고정 소스 버전을 보존했습니다.",
+        "learning": "병합 후24절·기초6+심화4·논문5/공식코드1 해설 strict exit0. 두 정리의 proofIdea/counterexample을 분포 복원 증명과 동일 수락률의 비용 반례로 보충했습니다. 공유 learning과 최종 제안 JSON의 전체 문자열이 일치합니다. 재귀 teaching closure를 포함한 현재 937편 strict require-registration 감사도 로컬과 GitHub Actions에서 통과했습니다.",
+        "formula": "다섯 수식의 일반식을 annotatedFormula에도 표시하고 두 폭 DOM에서 확인했습니다. 당시 전역 1,438개 strict PASS였고, 현재 1,472개 explicit annotation 전역 감사와 운영 DOM KaTeX 오류 0을 확인했습니다.",
+        "prose": "최종 전역 strict 재검토0. 정확한 확률·가정·논문 측정 조건과 고정 소스 버전을 보존했습니다. 현재 전역 문장 호흡 baseline과 쉬운 한국어 937편 strict 감사도 통과했습니다.",
         "graphAndOwnership": "14개 definition/canonicalHref 및 ownership owns/evidence를 실제 본문과 대조해 교정했고 공유 등록과 최종 제안 문자열이 모두 일치합니다.",
         "numeric": "theory와 chains의 독립 검산 및 원본 AST 실행으로 수락 질량(.4,.3)·보충(.3,0), 잘못된 재추출(.61,.39), 2.7731 평균·1.848733/.840333 시간 비, dependent2 vs iid1.75, KV8→6/history7, dynamic lookup [0,3,3,3,1,1,1,1]을 확인했습니다.",
-        "typescript": "최종 통합 actual app tsc -p tsconfig.app.json --noEmit exit0, /tmp/teach-all/spec18/tsc-merged-final.log. 소유 경로 git diff --check 통과. root 고정 snapshot 전체 build는 별도 pending.",
-        "keyboard": "두 폭에서 실제 focus 가능한 Viz 내부 group에 포커스해 ArrowRight로 수락, ArrowLeft로 제안 복귀를 확인했습니다. 처음 figure에 포커스한 검사 실패는 검사 대상 오류였으며 실제 group 재검사는 통과했습니다."
+        "typescript": "최종 통합 actual app tsc -p tsconfig.app.json --noEmit exit0, /tmp/teach-all/spec18/tsc-merged-final.log. 소유 경로 git diff --check 통과. 이어서 루트 production build도 통과했습니다: 7,294 modules, 정적 공개 경로 1,978개와 404 fallback. 로컬 기본 4GB 한도 실패 뒤 NODE_OPTIONS=--max-old-space-size=8192에서 actual exit 0.",
+        "keyboard": "두 폭에서 실제 focus 가능한 Viz 내부 group에 포커스해 ArrowRight로 수락, ArrowLeft로 제안 복귀를 확인했습니다. 처음 figure에 포커스한 검사 실패는 검사 대상 오류였으며 실제 group 재검사는 통과했습니다.",
+        "browserProduction": "운영 주소에서 vLLM 기본 원리 글 320px, 변형 비교 글 390px의 document/body overflow, 화면보다 넓은 버튼, KaTeX 오류, console 오류가 모두 0이었습니다. 양방향 범위 링크와 장면별 pseudocode 줄이 실제 배포 번들에 포함됐습니다.",
+        "pseudocodeProcess": "SpecTraceViz의 다섯 장면을 propose → accept → firstReject/discard → residual sample → commit 의사코드와 일대일로 연결했습니다. 공통 AlgorithmBlock도 입력·각 실행 줄·출력 장면과 이전/다음 조작을 제공하며 320px에서 넘침이 없습니다.",
+        "production": "GitHub Pages run 37616159164 success; build 6m35s, deploy 19s. commit 342bd568e9bc1c78d07049605e6fc5fb08828bb5.",
+        "recursiveTeaching": "teach-system v0.16의 재귀 설명 closure와 pseudocode step-through 규칙을 적용했습니다. 14개 도입 개념의 causalTrace와 모든 non-entry prerequisite canonical article의 recursiveTeaching 계약을 전역 감사가 확인합니다."
       },
-      "remaining": [
-        "root 고정 snapshot 전역 build·배포 검증"
-      ],
+      "remaining": [],
       "bodyFiles": [
         "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx",
-      "contentHash": "393ae63263845d687348074bf3adf27e363329feb92a409ced88e1e0853ca39d",
+      "contentHash": "4bcb676725fbcdee273a2fb042c227c30e1dc5a19636440baf3f758f95b206b4",
       "evidenceFiles": [
         "/tmp/teach-all/ai-systems-registration-18.json",
         "/tmp/teach-all/spec18/plan-before-body.json",
@@ -12927,7 +12929,8 @@
         "/tmp/world-browser-audit/teach-ai-systems-spec18-merged-final-summary.json",
         "/tmp/teach-all/humanize-ai-systems-18-final/independent-finalize.md",
         "/tmp/teach-all/humanize-ai-systems-18-props-final/independent-finalize.md",
-        "/tmp/teach-all/spec18/keyboard.json"
+        "/tmp/teach-all/spec18/keyboard.json",
+        "docs/teach-system-audit/checkpoint-395.json"
       ]
     },
     {
@@ -13117,8 +13120,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 55,
-    "rewritten-production-verified": 54,
+    "rewritten-local-verified": 54,
+    "rewritten-production-verified": 55,
     "unreviewed": 77
   },
   "localValidationSummary": {
@@ -13130,10 +13133,10 @@
     "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
     "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
     "typescript": "checkpoint255 actual npx tsc -b exit0",
-    "note": "현재 109편은 actual-body semantic review를 마쳤고 그중 54편은 운영 검증까지 완료했습니다. 미검토 77편은 완료에 포함하지 않습니다.",
+    "note": "현재 109편은 actual-body semantic review를 마쳤고 그중 55편은 운영 검증까지 완료했습니다. 미검토 77편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
     "verifiedRewrites": 109,
-    "rewrittenLocalVerified": 55,
+    "rewrittenLocalVerified": 54,
     "unreviewed": 77,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
@@ -13162,6 +13165,7 @@
     "checkpoint249Production": "docs/teach-system-audit/checkpoint-249-production.json",
     "checkpoint255Browser": "/tmp/teach-all/browser-ai-six-255/summary.json",
     "checkpoint255Dist": "/tmp/teach-all/browser-ai-six-255-dist/summary.json",
-    "checkpoint255Production": "docs/teach-system-audit/checkpoint-255-production.json"
+    "checkpoint255Production": "docs/teach-system-audit/checkpoint-255-production.json",
+    "checkpoint395Production": "docs/teach-system-audit/checkpoint-395.json"
   }
 }
