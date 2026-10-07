@@ -51,8 +51,8 @@ export const CATEGORY_READING_PATHS: Readonly<
   },
   "philosophy-history": {
     organizingPrinciple: "혼합",
-    title: "열두 시간축에서 철학의 질문이 바뀐 경로",
-    description: "서로 겹치는 시대는 각 논쟁이 뚜렷해진 시점을 기준으로 배열합니다. 한 문명이 다음 문명으로 발전했다는 한 줄 연표 대신 도시·전쟁·번역·과학·정복과 식민 통치가 여러 지역의 질문과 논증을 어떻게 바꿨는지 교차해 읽습니다.",
+    title: "열여덟 시간축에서 철학의 질문이 바뀐 경로",
+    description: "서로 겹치는 시대는 각 논쟁이 뚜렷해진 시점을 기준으로 배열합니다. 1~12단계는 여러 지역의 긴 교차사를 읽고, 13~18단계는 18~20세기 유럽 안에서 다시 갈라진 철학의 두 번째 축을 읽습니다. 한 문명이 다음 문명으로 발전했다는 한 줄 연표로 만들지 않습니다.",
     stages: [
       { eyebrow: "01 · 기원전 5세기~서기 2세기", title: "고대 지중해의 문답·덕·통제", description: "운동선수의 10시간을 나누며 아테네의 시민 문답에서 헬레니즘 시대의 생활 훈련까지 이동합니다.", subcategories: ["philosophy-history-ancient-mediterranean"] },
       { eyebrow: "02 · 기원전 5~3세기", title: "전국시대 중국의 경쟁하는 통치 기준", description: "전쟁 중인 나라의 예산 100을 겸애·예·행정 표준이 어떻게 다르게 배분하는지 봅니다.", subcategories: ["philosophy-history-warring-states"] },
@@ -66,8 +66,14 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "10 · 18세기 말~현재", title: "페미니즘 철학의 입장·돌봄·교차성", description: "승진 심사 100명의 평균 아래에서 지식의 위치와 보이지 않는 노동, 단일 축 제도의 누락을 찾습니다.", subcategories: ["philosophy-history-feminist"] },
       { eyebrow: "11 · 1870년대~20세기", title: "프래그머티즘·분석·현상학의 방법", description: "고장 난 가로등의 개입·개념·경험 기록으로 근현대의 세 방법과 서로 겹치는 경계를 봅니다.", subcategories: ["philosophy-history-modern-methods"] },
       { eyebrow: "12 · 19세기 말~20세기", title: "식민 근대의 시선과 탈식민", description: "같은 시험을 보는 100명의 서로 다른 조건에서 뒤부아와 파농이 인종 질서·자기 인식·해방을 연결한 방식을 봅니다.", subcategories: ["philosophy-history-colonial-modernity"] },
+      { eyebrow: "13 · 1780년대~1830년대", title: "독일 관념론의 자기 활동과 인정", description: "책상 60분을 60 대 0과 30 대 30으로 나누며 경험 조건·자기 활동·상호 인정과 역사적 자유를 구분합니다.", subcategories: ["philosophy-history-german-idealism"] },
+      { eyebrow: "14 · 19세기~20세기", title: "실존주의의 사실성과 자유", description: "하루 24시간 중 묶인 22시간과 고를 수 있는 2시간에서 조건·가능성·나쁜 믿음·타인의 자유를 함께 봅니다.", subcategories: ["philosophy-history-existentialism"] },
+      { eyebrow: "15 · 19세기~현재", title: "해석학의 부분·전체·역사적 대화", description: "네 단어와 앞뒤 메시지 6개를 두 번 읽으며 선이해를 자료와 대화에서 고치는 과정을 따라갑니다.", subcategories: ["philosophy-history-hermeneutics"] },
+      { eyebrow: "16 · 1920년대~1960년대", title: "논리경험주의의 관찰·확인·이론 언어", description: "센서 시험 10회와 보정 오차를 놓고 관찰 문장, 보조 가정과 보편 법칙의 확인을 나눕니다.", subcategories: ["philosophy-history-logical-empiricism"] },
+      { eyebrow: "17 · 1930년대~현재", title: "비판이론의 모순·이데올로기·해방", description: "보너스 예산 100의 평등 약속과 4명 배제를 대조해 제도의 모순과 이를 고칠 힘을 찾습니다.", subcategories: ["philosophy-history-critical-theory"] },
+      { eyebrow: "18 · 1930년대~1960년대", title: "일상언어의 쓰임과 발화행위", description: "‘내일 할게’라는 한 문장이 세 상황에서 약속·예측·거절이 되는 조건과 권한을 구분합니다.", subcategories: ["philosophy-history-ordinary-language"] },
     ],
-    featuredArticles: ["ancient-mediterranean-inquiry-virtue-and-control", "warring-states-china-care-ritual-and-standards", "classical-india-pramana-self-and-liberation", "medieval-translation-reason-and-revelation", "islamic-philosophy-translation-illumination-and-being", "song-ming-confucianism-pattern-heartmind-and-action", "early-modern-india-new-nyaya-analysis-and-language", "indigenous-land-and-latin-american-liberation", "early-modern-europe-doubt-experience-and-causality", "feminist-philosophy-standpoint-care-and-intersectionality", "modern-methods-pragmatism-analysis-and-phenomenology", "colonial-modernity-race-and-decolonization"],
+    featuredArticles: ["ancient-mediterranean-inquiry-virtue-and-control", "warring-states-china-care-ritual-and-standards", "classical-india-pramana-self-and-liberation", "medieval-translation-reason-and-revelation", "islamic-philosophy-translation-illumination-and-being", "song-ming-confucianism-pattern-heartmind-and-action", "early-modern-india-new-nyaya-analysis-and-language", "indigenous-land-and-latin-american-liberation", "early-modern-europe-doubt-experience-and-causality", "feminist-philosophy-standpoint-care-and-intersectionality", "modern-methods-pragmatism-analysis-and-phenomenology", "colonial-modernity-race-and-decolonization", "german-idealism-self-consciousness-recognition-and-history", "existentialism-facticity-freedom-and-bad-faith", "hermeneutics-part-whole-prejudice-and-understanding", "logical-empiricism-observation-confirmation-and-theory-language", "critical-theory-immanent-critique-ideology-and-emancipation", "ordinary-language-use-context-and-speech-acts"],
   },
   "global-history": {
     organizingPrinciple: "시간순",

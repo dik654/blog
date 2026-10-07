@@ -13275,4 +13275,31 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 가이드", label: "FIDReC · Consumer's Guide to Banking Disputes", href: "https://www.fidrec.com.sg/knowledgebase/article/KA-01257/en-us", note: "회사 최종답변 뒤 6개월의 접수 창과 심판 한도를 확인합니다." },
     { kind: "공식 가이드", label: "IRAS · Finance and GST", href: "https://www.iras.gov.sg/taxes/goods-services-tax-(gst)/specific-business-sectors/finance", note: "실물 인도 없는 파생상품의 순실현손익을 GST 면세 공급가액으로 보고하는 방법을 확인합니다." },
   ],
+  "philosophy-history/german-idealism-self-consciousness-recognition-and-history": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Idealism", href: "https://plato.stanford.edu/entries/idealism/", note: "독일 관념론이 정신을 수동적 관념의 그릇보다 활동으로 본 점과 버클리식 비물질론의 차이를 확인합니다." },
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger", href: "https://lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger", note: "독일 관념론에서 마르크스·니체·현상학·하이데거까지 이어지는 대학 과정의 시대와 주제 배열을 대조합니다." }
+  ],
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Existentialism", href: "https://plato.stanford.edu/archives/spr2023/entries/existentialism/", note: "사실성·초월·자유·진정성·나쁜 믿음의 관계와 저자별 차이를 확인합니다." },
+    { kind: "공개 강의", label: "MIT OpenCourseWare · Beauvoir lecture notes", href: "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/5acb66d0b3a5911956f7e1e4f0b7b1c1_MIT24_01S16_SES25.pdf", note: "보부아르의 자기와 타자, 사실성과 초월, 자유와 억압을 대학 강의의 질문 구조로 확인합니다." }
+  ],
+  "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hermeneutics", href: "https://plato.stanford.edu/archives/spr2026/entries/hermeneutics/", note: "문헌 해석 원리에서 인간 존재와 자기 해석으로 넓어진 해석학의 역사를 확인합니다." },
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger", href: "https://lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger", note: "독일 관념론에서 현상학과 하이데거로 이어지는 대학 과정의 역사적 배열을 보조 지도로 사용합니다." }
+  ],
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Critical Theory", href: "https://plato.stanford.edu/entries/critical-theory/", note: "내재적 비판·이데올로기·소외·해방과 현대의 방법 논쟁을 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel and Critical Theory", href: "https://www.philosophy.ox.ac.uk/sitefiles/lecture-prospectus-tt24.pdf", note: "자유·소외·인정·내재적 비판을 헤겔과 마르크스주의·페미니즘·탈식민 논의에 걸쳐 읽는 대학 교과 배열을 확인합니다." }
+  ],
+  "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Logical Empiricism", href: "https://plato.stanford.edu/entries/logical-empiricism/", note: "검증주의·확인·관찰 문장·이론 언어를 둘러싼 내부 차이와 역사적 변화를 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 철학 언어사의 교과 구조로 확인합니다." }
+  ],
+  "philosophy-history/ordinary-language-use-context-and-speech-acts": [
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · J. L. Austin", href: "https://plato.stanford.edu/entries/austin-jl/", note: "일상 표현의 세밀한 차이를 철학 문제의 자료로 쓰는 방법과 그 한계를 확인합니다." },
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Speech Acts", href: "https://plato.stanford.edu/entries/speech-acts/", note: "문장 내용과 말의 힘, 수행문, 적정 조건과 사회적 문제를 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "형식언어 접근과 Oxford 일상언어철학이 갈라지고 다시 만난 역사적 배열을 확인합니다." }
+  ],
 };
