@@ -911,7 +911,7 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "vllm-spec-decode",
-    title: "vLLM 추측 디코딩: 후보 검증부터 분포·KV·손익까지",
+    title: "추측 디코딩 기본 원리와 vLLM 구현: 분포·첫 거부·KV·손익",
     subcategory: "ai-llm-serving",
     sections: [
       { id: "overview", title: "1. 결론부터: 후보를 한 번에 채점해 여러 토큰을 확정합니다" },
@@ -932,7 +932,7 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "speculative-decoding-variants",
-    title: "추측 디코딩: 큰 모델 한 번의 검증으로 여러 토큰을 확정하는 방법",
+    title: "추측 디코딩 변형 비교: Medusa·LayerSkip·MTP·SuffixDecoding",
     subcategory: "ai-llm-serving",
     sections: [
       { id: "overview", title: "1. 결론부터: 큰 모델의 한 번 검증으로 여러 토큰을 확정합니다" },

@@ -5,6 +5,13 @@ import VizFrame from "@/components/viz/VizFrame";
 
 const LABELS = ["제안", "수락", "거부", "보충", "확정"] as const;
 const TITLES = ["네 후보", "두 개 수락", "첫 거부", "부족분 보충", "세 개 확정"] as const;
+const PSEUDOCODE = [
+  "candidates ← propose(prefix, count=4)",
+  "accepted ← acceptFromLeft(candidates, target, draft)",
+  "on firstReject(i): discard(candidates[i:])",
+  "replacement ← sample(positivePart(target − draft))",
+  "commit(accepted + replacement)",
+] as const;
 const STATES = [
   { result: "아직 확정하지 않음", note: "빠른 부품이 A·B·B·A를 제안했습니다. 원래 선택 비중을 지키는지 왼쪽부터 확인합니다." },
   { result: "앞의 A·B를 유지", note: "A의 수락 경계는 1, B는 0.5입니다. 비교값 0.6과 0.4에서 앞의 두 후보를 받아들입니다." },
@@ -46,6 +53,26 @@ export default function SpecTraceViz() {
             <text x={46+index*76} y="196" textAnchor="middle" className="fill-foreground text-[17px]">{active >= (index===2 ? 3 : 1) ? token : "·"}</text>
           </g>)}
         </svg>
+        <ol aria-label="현재 장면과 함께 실행되는 의사코드" className="mb-4 space-y-1.5">
+          {PSEUDOCODE.map((line, index) => (
+            <li
+              key={line}
+              aria-current={active === index ? "step" : undefined}
+              className={`flex min-w-0 gap-2 rounded-md border-l-2 px-3 py-2 ${
+                active === index
+                  ? "border-primary bg-primary/[0.07]"
+                  : index < active
+                    ? "border-primary/30 text-muted-foreground"
+                    : "border-border/60 text-muted-foreground"
+              }`}
+            >
+              <span className="shrink-0 font-mono text-[10px] font-bold text-primary">
+                {index < active ? "✓" : String(index + 1).padStart(2, "0")}
+              </span>
+              <code className="min-w-0 break-words font-mono text-[11px] leading-5">{line}</code>
+            </li>
+          ))}
+        </ol>
         <p className="font-semibold text-sm">{state.result}</p>
         <p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{state.note}</p>
       </div>

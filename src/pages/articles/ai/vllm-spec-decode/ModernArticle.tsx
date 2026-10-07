@@ -17,6 +17,7 @@ export default function ModernArticle() {
     <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1. 결론부터: 후보를 한 번에 채점해 여러 토큰을 확정합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8"><strong>이 글의 범위:</strong> 추측 디코딩의 공통 원리부터 첫 거부, 원래 분포 복원, KV 기록 갱신, vLLM의 손익 계산까지 다룹니다. 원리를 이미 알고 Medusa·LayerSkip·MTP·SuffixDecoding의 차이를 비교하려면 <Link to="/cs/ai/speculative-decoding-variants">추측 디코딩 변형 비교</Link>로 이어가면 됩니다.</p>
         <p className="leading-8"><strong>vLLM 추측 디코딩은 후보 여러 개를 큰 모델이 한 번에 검사해 순차 실행 횟수를 줄이는 기술입니다.</strong></p>
         <p className="leading-8">이 답은 바로 다음 질문을 만듭니다. 후보가 큰 모델의 선택과 다르면 어디까지 남겨야 할까요? 교체한 뒤에도 큰 모델의 선택 비중은 어떻게 지킬까요?</p>
         <p className="leading-8">이 글에서는 A → B → B → A라는 후보 네 개를 끝까지 따라갑니다. 셋째 B에서 멈추고 A로 바꿔 A → B → A를 확정합니다. 이어서 출력은 일곱 자리인데 다음 계산 기록은 왜 여섯 자리인지 실제 vLLM 코드에서 확인합니다.</p>

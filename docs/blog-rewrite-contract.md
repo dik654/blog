@@ -270,6 +270,10 @@ skill 원문은 층위 5·6에서 실제 소스 코드 발췌를 요구한다. �
   (`@/components/ui/algorithm-block`)으로 입력→단계별 연산→출력을 pseudocode로 적는다.
 - Pseudocode는 특정 언어 문법이 아니라 언어 무관 표기를 쓴다. 목표는 PyTorch·NumPy·Rust
   어디로든 한 줄씩 그대로 옮길 수 있는 정밀도이지, 특정 framework API를 가르치는 것이 아니다.
+- `AlgorithmBlock`은 정적인 코드 목록으로 끝내지 않는다. 입력 확인 → 의사코드 한 줄 실행 →
+  상태·값의 변화 → 다음 줄 → 출력을 장면별로 이동할 수 있는 과정 Viz로 구성한다. 현재 실행 중인
+  줄과 이미 끝난 줄을 시각적으로 구별하고, 각 장면의 설명은 그 줄이 받은 값·내린 판단·바꾼
+  상태를 보여 준다. 모바일에서는 단계 버튼과 이전·다음 조작부가 가로 화면을 넘지 않아야 한다.
 - 판단 기준은 2.4와 짝을 이룬다: "독자가 이 공식을 처음부터 다시 만들어낼 수 있는가?"(2.4)에
   더해 "독자가 이 절차를 지금 바로 코드로 옮길 수 있는가?"(2.5). 수식만 있고 절차가 없으면
   독자는 "왜 맞는지는 알지만 어떻게 짜는지는 모르는" 상태로 남는다.
@@ -429,7 +433,7 @@ mechanism Viz가 더 적합하다.
 - [ ] `ExplainedFormula`의 `operations`는 실제 식의 기호를 쓰는 explicit 값이며 제네릭 fallback이 아니다.
 - [ ] 코드 분석형 글(실제 오픈소스 codebase를 추적하는 글)은 핵심 단계마다 `CodeSidebar`로 열람 가능한 실제 source 함수·줄 범위 근거가 있다.
 - [ ] 최종 공식이 알려진 다단계 유도의 결과라면, 그 유도 경로 전체가 이 글 또는 연결된 canonical 선수 글에 실제로 있다 — citation 한 줄로 대체하지 않았다.
-- [ ] 구체적 절차가 있는 concept(algorithm·training procedure·sampling loop·protocol)은 `AlgorithmBlock`으로 입력→단계별 연산→출력 pseudocode가 있다 — 수식만 있고 절차가 없는 상태로 남기지 않았다.
+- [ ] 구체적 절차가 있는 concept(algorithm·training procedure·sampling loop·protocol)은 `AlgorithmBlock`으로 입력→단계별 연산→출력 pseudocode가 있고, 각 줄을 차례로 실행하며 값·판단·상태 변화를 보는 과정 Viz가 있다 — 정적인 코드 목록이나 수식만 남기지 않았다.
 - [ ] threshold·monotonic·piecewise 관계를 다루는 수식에는 mechanism Viz와 별도로 함수 그래프가 있는지 검토했다.
 - [ ] Model VRAM을 다루는 글은 parameter headline×단일 dtype으로 끝내지 않고 실제 checkpoint의 dtype별 tensor payload, GB·GiB 단위, weight residency와 KV·recurrent state·workspace·allocator headroom을 분리해 계산한다.
 - [ ] Viz가 메커니즘을 표현하며 정적 스타일 검사를 통과한다.
