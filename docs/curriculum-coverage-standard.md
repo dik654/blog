@@ -97,6 +97,12 @@
 - [LSE EH211 아프리카 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH211.htm): 노예무역·식민주의·현금작물·독립 뒤 발전을 지역별 차이와 장기 자료의 한계 속에서 읽는다.
 - [LSE EH222 중동·북아프리카 경제사](https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm): 토지·노동 권리, 교육·불평등·인구와 문서·파피루스·고고학을 사용해 주민의 생활에서 지역 변화를 본다.
 - [LSE EH225 라틴아메리카 경제사](https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH225.htm): 식민 수출, 독립 뒤 국가 형성, 세계화·산업화·불평등과 위기를 장기 비교한다.
+- [영국 의회 인클로저 개관](https://www.parliament.uk/about/living-heritage/transformingsociety/towncountry/landscape/overview/enclosingland/)과 [LSE EH308 역사경제지리](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH308.htm): 토지의 법적 경계와 공동 이용권이 생산·임대료·도시와 지역 격차로 이어지는 경로를 대조한다.
+- [UN DESA 세계 인구 보고서](https://desapublications.un.org/publications/global-population-growth-and-sustainable-development)와 [LSE EH209 가족경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm): 출생·사망·이주의 거시 장부 아래에서 결혼·가구·돌봄·여성과 아동의 노동을 확인한다.
+- [Bank of England 은행 책임 연구](https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2018/were-banks-special-contrasting-viewpoints-in-mid-nineteenth-century-britain.pdf)와 [LSE EH449 기업금융·기관투자 역사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH449.htm): 회사·은행·보험·연기금이 자금을 모으는 계약과 손실 순서의 변화를 잇는다.
+- [LSE EH442 노동시장사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm)와 [ILO 사회보장 최저기준](https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention): 임금·생산성·교섭력과 질병·실업·노령의 보장 대상·수준·조건·기간을 함께 본다.
+- [Federal Reserve 대인플레이션 역사](https://www.federalreservehistory.org/essays/great-inflation)와 [BIS 국제은행 70년](https://www.bis.org/publications/qr-202109/seven-decades-international-banking): 물가 기대·정책·공급 충격·긴축 비용과 은행에서 채권·비은행 금융으로 넓어진 자금 경로를 구분한다.
+- [World Bank 세계개발보고서 2020](https://www.worldbank.org/en/publication/wdr2020), [UNCTAD 해운보고서 2024](https://unctad.org/publication/review-maritime-transport-2024), [ILO 플랫폼 노동 보고서](https://researchrepository.ilo.org/esploro/outputs/report/World-Employment-and-Social-Outlook-2021/995218610802676), [IPCC 산업 장](https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-11/): 가치사슬·병목·플랫폼 비용·노동보호·산업 감축을 같은 공급망 장부에 넣는다.
 
 ### 현재 대응과 빈칸
 
@@ -114,10 +120,16 @@
 | 아프리카 | `africa-slave-trades-colonial-tax-and-commodity-dependence` | 여러 노예무역·현금세·원자재 의존을 연결 | 국가별 독립 경로, 도시·제조·지역통합·채무와 기후 변화 |
 | 중동·북아프리카 | `mena-land-debt-oil-and-diversification` | 토지·외채·석유 계약과 예산을 주민 생활에 연결 | 비산유국·시민권·이주 노동, 물·식량·전쟁 경제의 국가별 비교 |
 | 라틴아메리카 | `latin-america-exports-import-substitution-and-debt` | 수출·수입대체·1982년 부채 위기를 외화 장부로 연결 | 토지·노예제 이후 권리, 혁명·복지·민주화, 1990년대 이후 생산망 |
+| 토지·임대료·도시 | `land-rights-enclosure-rent-and-urbanization` | 생산 증가와 가구 몫, 공동 이용권·법적 경계·위치 편익의 임대료 이전을 구분 | 식민 토지조사·토지개혁·현대 재개발의 국가별 권리와 보상 비교 |
+| 인구·가족·돌봄 | `demography-family-economy-and-care` | 사망·출생 시차와 연령 구조를 가구의 유급 노동·무급 돌봄 배분에 연결 | 이주·주거·복지와 성별·세대별 협상력의 국가별 계량 비교 |
+| 기업·은행·보험·기관투자 | `firms-banks-insurance-and-institutional-investors` | 주식·대출·유보금·보험금의 계약과 손실 순서, 은행 책임과 기관투자의 변화를 연결 | 협동조합·국가금융·파산법·예금보험과 비은행 유동성 위험의 국가별 제도사 |
+| 노동·교섭·사회보험 | `labor-bargaining-social-insurance-and-welfare-state` | 임금·시간·안전의 집단 교섭과 아홉 사회 위험의 실제 보장 조건을 연결 | 비공식·플랫폼·이주 노동, 신청 장벽과 재정 지속성의 국가별 비교 |
+| 대인플레이션·긴축·금융화 | `great-inflation-disinflation-and-financialization` | 명목임금과 실질구매력, 기대·공급·정책, 긴축 비용과 시장금융 확대를 구분 | 미국 밖 환율·임금제도·외화부채와 자산가격·분배의 장기 비교 |
+| 컨테이너·가치사슬·플랫폼·기후 | `containers-value-chains-platforms-and-climate-transition` | 판매가 100의 생산·운송·플랫폼·대비 비용과 병목 충격을 노동·배출 전환에 연결 | 제품별 부가가치·생애주기 배출·공급망 재편과 산업정책의 실측 비교 |
 | 아직 독립 축이 없는 지역 | 기존 세계사·국가 글에 분산 | 큰 빈칸 | 북아메리카, 유럽 내부 차이, 동남·중앙아시아, 오세아니아의 독립 경제사 |
-| 횡단 주제 | 여러 글에 분산 | 큰 빈칸 | 가족·인구, 토지와 도시, 기업·금융, 노동·복지, 공급망·플랫폼·기후의 장기 변화 |
+| 남은 횡단 주제 | 앞의 여섯 독립 글과 여러 분야 글에 분산 | 첫 연결 축 있음 | 상법·파산·전쟁금융, 복지 재정, 1990년대 이후 국가별 생산망·플랫폼·기후 전환의 실측 비교 |
 
-지역 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 다음 경제사 묶음은 **토지와 가족경제, 기업·은행·보험, 노동·복지, 1970년대 인플레이션과 금융화, 세계 공급망·플랫폼·기후 전환**을 우선한다.
+지역 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 횡단 주제 여섯 편은 평균 생산량이나 제도 이름에서 멈추지 않고 **누가 어떤 권리와 비용을 가졌는지, 충격 전후 장부가 어떻게 달라졌는지, 어느 지역과 시기까지 자료를 옮겨 읽을 수 있는지**를 같은 순서로 확인한다. 다음 경제사 묶음은 북아메리카·유럽 내부·동남아시아·중앙아시아·오세아니아와 전쟁금융·상법·파산·복지 재정의 비교를 우선한다.
 
 ## 분야별 확장 방법
 

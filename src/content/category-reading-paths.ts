@@ -84,9 +84,9 @@ export const CATEGORY_READING_PATHS: Readonly<
     featuredArticles: ["empires-roads-taxes-and-law", "trade-religion-and-translation-networks", "conquest-disease-silver-and-oceanic-exchange", "revolutions-citizenship-and-industrial-empires", "world-wars-depression-and-mass-states", "cold-war-decolonization-and-globalization"],
   },
   "economic-history": {
-    organizingPrinciple: "시간순",
-    title: "장부에서 교역·식민 경제·산업화·국제 부채까지",
-    description: "각 글은 앞 시대의 제도가 다음 시대의 선택지를 어떻게 만들고 좁혔는지 시간순으로 따라갑니다.",
+    organizingPrinciple: "혼합",
+    title: "시간순 뼈대 위에 토지·가족·금융·노동·생산망을 겹쳐 읽기",
+    description: "먼저 시대와 지역의 전환을 따라간 뒤, 여러 지역을 가로지르는 제도와 생활 장부를 주제순으로 다시 연결합니다.",
     stages: [
       { eyebrow: "01 · 기원전 3100~2900년 무렵", title: "곡물과 장부", description: "생산물을 모아 나눌 때 측정·기록·권한이 함께 생기는 조건을 봅니다.", subcategories: ["economic-history-early-state"] },
       { eyebrow: "02 · 기원전 2천년기~1500년 무렵", title: "교역·신용·중개", description: "먼 길의 운송 위험을 장부·대출·환전·중개인이 어떻게 나눴는지 봅니다.", subcategories: ["economic-history-trade"] },
@@ -100,8 +100,14 @@ export const CATEGORY_READING_PATHS: Readonly<
       { eyebrow: "10 · 1500년~현재", title: "아프리카와 세계경제", description: "여러 노예무역·식민 조세·독립 뒤 산업화와 원자재 의존을 국가와 지역별 차이 속에서 읽습니다.", subcategories: ["economic-history-africa"] },
       { eyebrow: "11 · 1800년~현재", title: "중동·북아프리카의 토지·외채·석유", description: "토지와 조세 개혁, 외채 통제, 석유 계약과 다각화를 주민과 국가 장부에서 나눕니다.", subcategories: ["economic-history-mena"] },
       { eyebrow: "12 · 1500년~현재", title: "라틴아메리카의 수출·산업·외채", description: "식민 수출과 독립 뒤 세계화, 수입대체 산업화와 1982년 부채위기를 외화 흐름으로 연결합니다.", subcategories: ["economic-history-latin-america"] },
+      { eyebrow: "13 · 1600년대~현재", title: "토지 권리·임대료·도시화", description: "공동 이용권과 토지 경계가 생산·이주·교통 접근과 도시 임대료로 이어진 경로를 봅니다.", subcategories: ["economic-history-land"] },
+      { eyebrow: "14 · 전근대~현재", title: "인구 전환과 가족경제", description: "출생·사망의 시차와 가구 안의 유급·무급 노동, 돌봄과 세대 부담을 함께 봅니다.", subcategories: ["economic-history-family"] },
+      { eyebrow: "15 · 19세기~현재", title: "기업·은행·보험과 기관투자", description: "큰 자본과 위험을 주식·대출·보험·연금이 서로 다른 계약으로 모은 과정을 봅니다.", subcategories: ["economic-history-financial-institutions"] },
+      { eyebrow: "16 · 산업화~현재", title: "노동 교섭·사회보험·복지국가", description: "임금·노동조건과 질병·실업·노령의 위험을 누가 어떤 제도로 나눴는지 봅니다.", subcategories: ["economic-history-labor-welfare"] },
+      { eyebrow: "17 · 1965년~현재", title: "대인플레이션·긴축·금융화", description: "생활물가와 기대, 긴축의 실물 비용이 은행·채권·자산운용 중심의 금융 구조 변화와 만난 과정을 봅니다.", subcategories: ["economic-history-inflation-finance"] },
+      { eyebrow: "18 · 1950년대~현재", title: "컨테이너·가치사슬·플랫폼·기후", description: "생산과 노동을 멀리 나눈 표준과 중개 권력, 병목·배출·기후 전환 비용을 한 상품 장부에서 봅니다.", subcategories: ["economic-history-global-production"] },
     ],
-    featuredArticles: ["agrarian-surplus-and-state", "trade-credit-and-long-distance-networks", "colonial-plantations-slavery-and-extraction", "industrial-revolution-wages-and-energy", "gold-standard-depression-bretton-woods", "decolonization-oil-shocks-and-debt", "china-since-1800-households-markets-and-reform", "japan-money-banks-industry-and-catchup", "south-asia-markets-colonial-railways-and-development-state", "africa-slave-trades-colonial-tax-and-commodity-dependence", "mena-land-debt-oil-and-diversification", "latin-america-exports-import-substitution-and-debt"],
+    featuredArticles: ["agrarian-surplus-and-state", "trade-credit-and-long-distance-networks", "colonial-plantations-slavery-and-extraction", "industrial-revolution-wages-and-energy", "gold-standard-depression-bretton-woods", "decolonization-oil-shocks-and-debt", "china-since-1800-households-markets-and-reform", "japan-money-banks-industry-and-catchup", "south-asia-markets-colonial-railways-and-development-state", "africa-slave-trades-colonial-tax-and-commodity-dependence", "mena-land-debt-oil-and-diversification", "latin-america-exports-import-substitution-and-debt", "land-rights-enclosure-rent-and-urbanization", "demography-family-economy-and-care", "firms-banks-insurance-and-institutional-investors", "labor-bargaining-social-insurance-and-welfare-state", "great-inflation-disinflation-and-financialization", "containers-value-chains-platforms-and-climate-transition"],
   },
   business: {
     title: "한 가게의 시작과 사업 관계 읽기",

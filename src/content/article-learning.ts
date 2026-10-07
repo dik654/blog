@@ -81,11 +81,11 @@ interface RegionalEconomicHistoryLearningInput {
   numericConceptIndex?: 0 | 1 | 2;
   changedCaseQuestion: string;
   changedCaseAnswers: readonly string[];
-  sources: readonly [PaperReading, PaperReading];
+  sources: readonly [PaperReading, PaperReading, ...PaperReading[]];
 }
 
 /**
- * 지역 경제사 글은 같은 읽기 틀을 쓰되, 숫자 사례와 사료의 범위는 지역마다
+ * 경제사 글은 같은 읽기 틀을 쓰되, 숫자 사례와 사료의 범위는 글마다
  * 따로 적습니다. 이 함수는 6+4 연습문제와 세 개념의 설명 계약이 빠지는 일을
  * 막고, 실제 역사 내용을 공통 문장으로 대신하지 않습니다.
  */
@@ -111,7 +111,7 @@ function regionalEconomicHistoryLearning(
     conceptStages: [
       {
         label: "출발점",
-        relation: "앞 글의 제약을 이 지역의 생산·교역 조건에 대입합니다.",
+        relation: "앞 글의 제약을 현재 글의 생활·생산 조건에 대입합니다.",
         concepts: [input.assumed.id, first.id],
       },
       {
@@ -126,7 +126,7 @@ function regionalEconomicHistoryLearning(
       },
       {
         label: "증거 경계",
-        relation: "같은 숫자 경로를 두 자료에 대조하고 지역 평균의 한계를 남깁니다.",
+        relation: "같은 숫자 경로를 두 자료에 대조하고 관찰 범위의 한계를 남깁니다.",
         concepts: [first.id, second.id, third.id],
       },
     ],
@@ -170,7 +170,7 @@ function regionalEconomicHistoryLearning(
       },
       {
         level: "basic",
-        question: `${input.sources[1].title} 자료를 같은 지역 전체의 단일 경로로 일반화하면 안 되는 이유를 쓰세요.`,
+        question: `${input.sources[1].title} 자료를 모든 지역과 시기의 단일 경로로 일반화하면 안 되는 이유를 쓰세요.`,
         answerChecklist: [input.sources[1].assumptions, input.sources[1].notClaim],
         requiredConcepts: [second.id, third.id],
         sectionId: "comparison",
@@ -198,7 +198,7 @@ function regionalEconomicHistoryLearning(
       },
       {
         level: "advanced",
-        question: "본문의 지역 평균과 설명용 숫자를 다른 나라·시기로 옮길 때 다시 조사해야 할 권리·가격·정책 조건을 설계하세요.",
+        question: "본문의 설명 범위와 숫자를 다른 나라·시기로 옮길 때 다시 조사해야 할 권리·가격·정책 조건을 설계하세요.",
         answerChecklist: ["소유·노동 권리", "국내외 가격", "국가 역량", "지역별 반례"],
         requiredConcepts: [first.id, second.id, third.id],
         sectionId: "limits",
@@ -132967,6 +132967,116 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "위기가 국내 정책 실패나 미국 금리 하나로만 생겼거나 조정 비용이 고르게 분담됐다는 뜻은 아닙니다.",
         sectionId: "comparison",
       },
+    ],
+  }),
+  "economic-history/land-rights-enclosure-rent-and-urbanization": regionalEconomicHistoryLearning({
+    entryNote: "생산 100−임대료 25+공동 이용 20=95가 토지 경계 변경 뒤 120−35−10=75가 되는 가구 장부에서 시작합니다.",
+    coreIdea: "토지 제도의 결과는 총생산뿐 아니라 소유·임차·공동 이용권, 경계 변경 비용과 교통 편익이 임대료로 옮겨 가는 경로를 함께 봐야 판단할 수 있습니다.",
+    assumed: { id: "commons-self-governance", role: "공유자원의 이용 규칙과 감시·분쟁 해결이 공동 사용을 어떻게 유지하는지 설명합니다." },
+    concepts: [
+      { id: "common-land-use-right", role: "소유하지 않아도 가구가 방목·채취·통행에서 얻던 생활 자원을 설명합니다.", intuition: "시장 구매 없이도 연료와 사료를 얻어 가구 생계를 받치는 사용권입니다.", workedExample: "생산 100−임대료 25에 공동 이용 가치 20을 더해 생활 몫 95를 계산합니다.", boundary: "누구나 제한 없이 쓰는 무주물이나 현대 공원의 일반 이용과 같지 않습니다." },
+      { id: "parliamentary-enclosure-allocation", role: "측량·법률·재배분으로 열린 경작지와 공동지를 개인 구획으로 바꾼 제도를 설명합니다.", intuition: "흩어진 밭을 모아 울타리를 치는 동시에 이전의 사용권과 비용 부담자를 다시 정하는 절차입니다.", workedExample: "생산은 120으로 늘지만 임대료 35와 경계 비용 10, 사라진 공동 이용 20을 따로 적습니다.", boundary: "모든 토지 통합이 의회 법률을 거쳤거나 같은 보상과 이주 효과를 냈다고 보지 않습니다." },
+      { id: "location-benefit-rent-capitalization", role: "교통·시장 접근의 편익이 토지 가격과 임대료에 들어가는 경로를 설명합니다.", intuition: "역과 도로가 만든 시간 절약의 일부를 좋은 자리를 계속 쓰는 가격으로 내게 되는 과정입니다.", workedExample: "역세권 상점의 매출 증가와 월세 상승을 소유자·세입자 장부로 나눕니다.", boundary: "지가 상승 전체를 새 생산이나 토지 소유자의 노력으로 돌리지 않습니다." },
+    ],
+    numericQuestion: "변경 전 100−25+20과 변경 뒤 120−35−10을 계산하고 생산 증가와 가구 몫 변화를 나누세요.",
+    numericAnswers: ["변경 전 95", "변경 뒤 75", "생산 +20", "가구 몫 −20"],
+    changedCaseQuestion: "변경 뒤 임대료가 25에 머물고 경계 비용 10을 소유자가 부담한다면 가구 몫과 원래 95와의 차이를 계산하세요.",
+    changedCaseAnswers: ["120−25=95", "원래와 차이 0", "공동 이용 20은 여전히 사라짐", "비시장 가치 별도 조사"],
+    sources: [
+      { title: "UK Parliament · Enclosing the land", href: "https://www.parliament.uk/about/living-heritage/transformingsociety/towncountry/landscape/overview/enclosingland/", problem: "인클로저의 규모와 생산성·이주 효과를 같은 주장으로 합치지 않아야 합니다.", contribution: "1604~1914년 법률과 약 680만 에이커, 생산성 향상과 노동자 이주를 둘러싼 논쟁을 제공합니다.", assumptions: "영국 의회의 잉글랜드 중심 역사 개관이며 개별 마을의 권리와 보상은 지역 사료가 필요합니다.", evidenceScope: "의회 인클로저의 법적 규모와 넓은 역사학적 평가를 확인하는 공식 자료입니다.", notClaim: "인클로저가 모든 농업 생산성 증가나 도시 이주의 단일 원인이었다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "LSE EH308 · Historical Economic Geography", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH308.htm", problem: "농촌 토지 경계를 도시·시장·집적·지역 불평등의 장기 변화에 연결해야 합니다.", contribution: "도시 성장, 국가 시장, 제조업 집적과 지역 불평등이라는 네 비교축을 제시합니다.", assumptions: "강의계획은 질문의 범위를 정하며 개별 기반시설의 인과 효과를 직접 측정하지 않습니다.", evidenceScope: "산업화 이후 경제 활동의 위치 변화를 검토하는 2026/27 대학 과정입니다.", notClaim: "잉글랜드 인클로저와 현대 도시 재개발이 같은 법과 분배 결과를 가졌다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/demography-family-economy-and-care": regionalEconomicHistoryLearning({
+    entryNote: "1,000명당 출생 40·사망 35의 증가 5가 사망 15일 때 25가 되고 출생 18·사망 8일 때 10이 되는 순서에서 시작합니다.",
+    coreIdea: "인구 변화는 사망과 출생이 낮아지는 시차, 이주와 연령 구성, 가구 안에서 유급 노동·돌봄·교육 시간을 배분하는 권리와 비용을 함께 봐야 이해할 수 있습니다.",
+    assumed: { id: "population-stock-flow-account", role: "처음 인구에 출생·전입을 더하고 사망·전출을 빼 마지막 인구를 계산합니다." },
+    concepts: [
+      { id: "demographic-transition-sequence", role: "사망률이 먼저 낮아지고 출생률이 뒤따라 낮아지는 장기 순서를 설명합니다.", intuition: "살아남는 사람이 먼저 늘어 인구 증가가 커진 뒤 가구의 출산 선택이 바뀌며 증가가 낮아지는 과정입니다.", workedExample: "자연증가가 5→25→10으로 움직이는 세 단계 계산을 사용합니다.", boundary: "모든 나라가 같은 시점·속도·정책을 따라가는 고정 단계표가 아닙니다." },
+      { id: "household-production-allocation", role: "가구가 돌봄·식사·학습을 만들며 시간을 유급 노동과 나누는 과정을 설명합니다.", intuition: "임금이 찍히지 않아도 누군가의 시간으로 생활 서비스가 만들어지는 장부입니다.", workedExample: "여성·아동의 시장 노동이 늘 때 현금소득과 교육·돌봄 공백을 함께 적습니다.", boundary: "가구 구성원이 같은 선호와 협상력을 가진 한 사람처럼 행동한다고 가정하지 않습니다." },
+      { id: "age-dependency-structure", role: "큰 세대가 학교·노동시장·노령기로 이동하며 제도 수요를 바꾸는 관계를 설명합니다.", intuition: "사람 수가 같아도 어느 나이에 몰려 있는지가 학교·일자리·연금·돌봄의 순서를 바꿉니다.", workedExample: "어린 세대가 커져 취업한 뒤 같은 세대가 노년층으로 이동하는 예를 추적합니다.", boundary: "나이만으로 실제 취업·건강·돌봄 필요와 경제 성과를 확정하지 않습니다." },
+    ],
+    numericQuestion: "1,000명당 40−35, 40−15, 18−8의 자연증가를 계산하고 가장 큰 단계를 고르세요.",
+    numericAnswers: ["5명", "25명", "10명", "둘째 단계가 가장 큼"],
+    changedCaseQuestion: "셋째 단계에 순이주 −12명이 더해지면 총인구 변화와 자연증가의 차이를 계산하세요.",
+    changedCaseAnswers: ["자연증가 +10", "순이주 −12", "총변화 −2", "기준 인구 1,000명"],
+    sources: [
+      { title: "UN DESA · Global Population Growth and Sustainable Development", href: "https://desapublications.un.org/publications/global-population-growth-and-sustainable-development", problem: "빠른 인구 증가를 출생 수 하나가 아니라 사망과 출생 변화의 순서로 설명해야 합니다.", contribution: "높은 사망·출생에서 낮은 사망·출생으로 이동하는 인구 전환과 개발·환경의 연결을 제공합니다.", assumptions: "세계적 개관이라 나라·집단별 전환 속도와 정책 인과는 별도 자료가 필요합니다.", evidenceScope: "세계 인구 변화와 지속가능발전의 연결을 다룬 UN 보고서입니다.", notClaim: "모든 나라의 출생·사망이 같은 단계와 속도로 움직인다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "LSE EH209 · The Family Economy in History", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm", problem: "국가 인구표 아래의 결혼·가구 형성·여성·아동 노동과 돌봄을 설명해야 합니다.", contribution: "가족 행동, 생활 수준, 여성과 아동의 시장 참여, 교육·보건을 산업화의 경쟁 설명에 넣습니다.", assumptions: "강의는 영국 경험 중심이며 유럽·아시아·북아메리카 비교가 보완합니다.", evidenceScope: "1260년부터 현재까지 가족경제를 다루는 2026/27 대학 과정입니다.", notClaim: "영국의 가족 형성 모형이 세계 인구 전환의 보편 원인이라는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/firms-banks-insurance-and-institutional-investors": regionalEconomicHistoryLearning({
+    entryNote: "공장 100을 주식 30·은행대출 60·유보금 10으로 채우고 화재 손실 40과 보험금 30을 별도 장부로 나눕니다.",
+    coreIdea: "회사·은행·보험과 기관투자자는 모두 돈을 모으지만 소유권·만기·사고 조건과 손실 순서가 다르며, 위험을 분산하는 제도가 새 감시·유동성 위험도 만듭니다.",
+    assumed: { id: "maturity-transformation", role: "빨리 지급할 은행 부채와 늦게 돌아오는 대출 자산의 시점을 연결합니다." },
+    concepts: [
+      { id: "corporate-capital-pooling", role: "많은 투자자의 작은 몫을 법인에 모아 큰 사업을 조달하는 방식을 설명합니다.", intuition: "한 가족이 공장 전체 위험을 지지 않고 지분만큼 참여하게 하는 공동 장부입니다.", workedExample: "공장 100 가운데 주식 30을 잔여청구권으로 조달합니다.", boundary: "주주가 회사 자산을 개인 물건처럼 쓰거나 채권자보다 먼저 받는다는 뜻은 아닙니다." },
+      { id: "bank-liability-regime-history", role: "은행 실패 때 주주·예금자·국가의 손실 범위를 정한 제도 변화를 설명합니다.", intuition: "은행의 주인이 사업 실패를 개인 재산까지 갚는지 투자액까지만 잃는지를 정하는 선입니다.", workedExample: "19세기 영국의 무한책임과 제한된 유한책임 허용을 비교합니다.", boundary: "주주책임 하나가 예금 안전·유동성·도덕적 해이를 모두 결정하지 않습니다." },
+      { id: "institutional-investor-transition", role: "가계 저축이 보험사·연기금·기금을 거쳐 시장 자산에 배분되는 변화를 설명합니다.", intuition: "최종 저축자와 기업 사이에 장기 지급 약속을 관리하는 큰 투자자가 들어온 구조입니다.", workedExample: "보험료와 연금 적립금이 회사채·주식의 장기 자금이 되는 경로를 봅니다.", boundary: "은행이 사라지거나 시장가격 위험이 자동으로 작아졌다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "주식 30+대출 60+유보금 10과 화재 뒤 100−40+보험금 30을 각각 계산하세요.",
+    numericAnswers: ["조달 100", "남은 자산 90", "대출 청구 60은 별도", "주주 잔여 단순값 30"],
+    changedCaseQuestion: "보험금이 30이 아니라 10이고 대출 청구가 60이면 화재 뒤 자산과 단순 주주 잔여를 계산하세요.",
+    changedCaseAnswers: ["100−40+10=70", "대출 60", "주주 잔여 10", "이자·세금 생략"],
+    sources: [
+      { title: "Bank of England · Were banks special?", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2018/were-banks-special-contrasting-viewpoints-in-mid-nineteenth-century-britain.pdf", problem: "유한책임을 자금 모집의 편익만으로 보고 은행의 안전성 논쟁을 놓치지 않아야 합니다.", contribution: "19세기 중엽 영국 은행의 무한책임과 유한책임 허용 논쟁을 당시 증언과 이론에 연결합니다.", assumptions: "영국 은행 부문의 역사 연구이며 오늘의 예금보험·자본규제를 직접 평가하지 않습니다.", evidenceScope: "19세기 영국의 은행 주주책임 제도와 논쟁을 다룬 중앙은행 연구입니다.", notClaim: "유한책임이 은행 실패의 충분조건이거나 무한책임이 안전을 보장했다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "LSE EH449 · History of Corporate Finance and Institutional Investment", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH449.htm", problem: "기업의 자금 조달과 기관투자자의 성장을 같은 장기 흐름에서 봐야 합니다.", contribution: "19세기 이후 기업의 자본시장 이용과 기관투자자의 발전을 미국·영국 중심으로 다룹니다.", assumptions: "2026/27 과정은 미국과 영국에 초점을 두므로 다른 금융 경로는 보완이 필요합니다.", evidenceScope: "현대 기업금융과 기관투자의 형성을 다루는 대학원 과정입니다.", notClaim: "시장금융이 모든 나라에서 은행금융을 대체한 자연스러운 종착점이라는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/labor-bargaining-social-insurance-and-welfare-state": regionalEconomicHistoryLearning({
+    entryNote: "월급 100에서 보험료 5를 내 평소 95를 쓰고, 사고로 소득 40을 잃은 뒤 급여 25를 받아 85를 쓰는 장부에서 시작합니다.",
+    coreIdea: "노동의 생활 결과는 임금뿐 아니라 노동조건과 집단적 협상력, 질병·실업·노령 위험을 나누는 재원과 실제 보장 범위·수준·기간으로 판단해야 합니다.",
+    assumed: { id: "two-sources-of-wage-spread", role: "생산성 차이와 협상력·제도 차이가 임금 격차를 만드는 경로를 나눕니다." },
+    concepts: [
+      { id: "collective-wage-setting-history", role: "노동자와 사용자 조직이 임금·시간·안전을 함께 정한 제도를 설명합니다.", intuition: "개별 노동자가 혼자 바꾸기 어려운 공장 전체의 규칙을 여러 사람이 대표를 통해 협상하는 방식입니다.", workedExample: "같은 생산성에서도 교섭 적용 범위에 따라 임금과 안전 기준이 달라질 수 있음을 봅니다.", boundary: "노동조합이 모든 노동자를 대표하거나 결과가 언제나 같은 방향이라는 뜻은 아닙니다." },
+      { id: "social-insurance-risk-sharing", role: "보험료·세금을 모아 사고·질병·실업·노령의 소득 충격을 나누는 제도를 설명합니다.", intuition: "평소 작은 금액을 함께 내고 큰 위험을 실제로 겪은 가구에 지급하는 공동 장부입니다.", workedExample: "사고 소득 손실 40 가운데 공동 기금이 25를 지급합니다.", boundary: "기여가 모든 손실의 완전 보상이나 즉시 지급을 보장한다는 뜻은 아닙니다." },
+      { id: "welfare-coverage-adequacy", role: "대상·급여 수준·조건·기간이 생활 손실을 실제로 얼마나 메우는지 설명합니다.", intuition: "제도 이름보다 위기 때 신청 가능한지, 얼마를 언제까지 받는지를 확인하는 검사표입니다.", workedExample: "평소 가처분 95와 사고 뒤 85의 차이 10, 미보전 손실 15를 구분합니다.", boundary: "복지 지출의 GDP 비율만으로 개인의 보장과 서비스 품질을 확정하지 않습니다." },
+    ],
+    numericQuestion: "월급 100에서 보험료 5를 낸 평소 가처분과 사고로 40을 잃고 급여 25를 받은 뒤의 소득을 계산하세요.",
+    numericAnswers: ["평소 95", "사고 뒤 시장소득 60", "급여 뒤 85", "평소 대비 −10"],
+    changedCaseQuestion: "급여가 25에서 35로 늘고 보험료가 5에서 8로 늘면 평소와 사고 뒤 가처분, 둘의 차이를 계산하세요.",
+    changedCaseAnswers: ["평소 92", "사고 뒤 95", "사고 뒤가 평소보다 +3", "세금·수급기간 생략"],
+    sources: [
+      { title: "LSE EH442 · Labour Markets in Historical Perspective", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm", problem: "임금 역사를 생산성 하나가 아니라 기술·이주·성별·인종 격차와 함께 봐야 합니다.", contribution: "인적·물적 자본, 임금·생산성·기술, 국제 이주와 지역·성별·인종 격차를 네 축으로 제시합니다.", assumptions: "강의계획은 연구 질문의 범위이며 개별 제도의 인과효과를 직접 측정하지 않습니다.", evidenceScope: "노동시장의 장기 변화와 연구 방법을 다루는 2026/27 대학원 과정입니다.", notClaim: "평균임금 변화가 모든 집단의 생활과 이동성을 대표한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "ILO · Convention No. 102 FAQ", href: "https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention", problem: "사회보장을 제도 유무나 총지출이 아니라 실제 보호 조건으로 열어야 합니다.", contribution: "아홉 사회 위험과 대상 범위·급여 충분성·수급 조건·기간, 국가 책임과 공동 재원의 원칙을 제공합니다.", assumptions: "국제 최저기준 설명이며 나라별 법·급여액·행정 접근성은 별도로 확인해야 합니다.", evidenceScope: "ILO 사회보장 최저기준 협약의 체계와 적용 원칙을 설명하는 공식 자료입니다.", notClaim: "협약 가입이나 제도 명칭만으로 모든 주민이 충분히 보호된다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/great-inflation-disinflation-and-financialization": regionalEconomicHistoryLearning({
+    entryNote: "장바구니 100이 114, 월급 100이 108이 됐을 때 실질 구매력이 약 94.7로 줄어드는 계산에서 시작합니다.",
+    coreIdea: "1970년대 인플레이션은 공급 충격·수요·통화·기대와 제도 변화가 겹쳤고, 긴축의 실물 비용과 이후 채권·펀드·파생상품 중심 자금 경로의 확대를 분리해 봐야 합니다.",
+    assumed: { id: "real-interest-rate", role: "명목 금액의 증가를 물가 배율로 나눠 구매력 기준 수익과 비용을 계산합니다." },
+    concepts: [
+      { id: "expected-inflation-contract-feedback", role: "예상 물가가 임금·가격·금리 계약에 들어가 실제 물가의 지속성에 영향을 주는 과정을 설명합니다.", intuition: "내년에도 오를 것으로 생각하면 오늘 다음 계약의 숫자를 먼저 높이는 되먹임입니다.", workedExample: "장바구니 114를 예상한 노동자·기업·채권자가 임금과 가격·명목금리에 이를 넣습니다.", boundary: "기대만으로 석유·식량 공급과 총수요에서 온 모든 물가 상승을 설명하지 않습니다." },
+      { id: "disinflation-real-economy-cost", role: "물가를 낮추는 긴축이 생산·고용·주택과 채무 상환에 주는 단기 비용을 설명합니다.", intuition: "돈을 빌리고 쓰는 속도를 늦춰 가격 압력을 낮추는 동안 주문과 일자리도 함께 줄 수 있습니다.", workedExample: "높은 정책금리가 제조·건설 대출과 고용, 변동금리 상환액에 전달되는 경로를 봅니다.", boundary: "장기 물가 안정의 편익이나 긴축하지 않았을 때의 비용을 부정하는 개념이 아닙니다." },
+      { id: "market-based-financialization", role: "조달과 저축이 채권·펀드·증권화·파생상품과 자산운용자를 더 많이 거치는 변화를 설명합니다.", intuition: "기업과 가계 사이에 은행 대출만이 아니라 시장가격으로 거래되는 여러 계약과 운용자가 들어온 구조입니다.", workedExample: "비은행 차입자가 외화채권을 발행하고 국제 펀드가 사며 환율 파생상품으로 일부 위험을 바꿉니다.", boundary: "은행이 사라졌거나 위험이 경제 전체에서 자동으로 줄었다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "월급 108과 물가 114일 때 실질임금 지수 108÷114×100과 기준 대비 감소율을 계산하세요.",
+    numericAnswers: ["약 94.7", "약 5.3% 감소", "명목임금은 8% 증가", "구매력은 감소"],
+    changedCaseQuestion: "월급이 112, 물가가 114라면 실질임금 지수와 기준 대비 감소율을 계산하세요.",
+    changedCaseAnswers: ["112÷114×100≈98.2", "약 1.8% 감소", "명목 상승과 실질 상승 구분", "품목·세금 생략"],
+    sources: [
+      { title: "Federal Reserve History · The Great Inflation", href: "https://www.federalreservehistory.org/essays/great-inflation", problem: "1965~1982년 인플레이션을 석유나 통화 한 원인과 정책 성공담 하나로 줄이지 않아야 합니다.", contribution: "통화·재정, 브레턴우즈 붕괴, 에너지 충격, 실시간 자료 오류와 기대, 긴축과 침체를 한 연표에 둡니다.", assumptions: "미국 중심의 연준 역사 해설이며 다른 국가의 환율·임금·재정 제도는 별도 비교가 필요합니다.", evidenceScope: "미국 대인플레이션의 주요 사건과 정책 해석을 제공하는 중앙은행 역사 자료입니다.", notClaim: "미국의 원인과 긴축 경로가 모든 나라의 인플레이션에 같은 크기로 적용된다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "BIS · Seven decades of international banking", href: "https://www.bis.org/publications/qr-202109/seven-decades-international-banking", problem: "금융화를 금융업 규모 하나가 아니라 은행·채권·비은행 기관 사이의 자금 경로 변화로 설명해야 합니다.", contribution: "전후 국제 은행 청구권, 자본 규제 완화·금융 혁신과 비은행 채권 조달 확대를 장기 자료로 연결합니다.", assumptions: "국제 집계와 BIS 관점이므로 가계 분배·국가별 규제와 비공식 금융은 보완해야 합니다.", evidenceScope: "1950년대 이후 국제 은행과 시장금융 구조 변화를 다룬 공식 연구입니다.", notClaim: "비은행 금융 확대가 은행의 중요성이나 시스템 위험을 없앴다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/containers-value-chains-platforms-and-climate-transition": regionalEconomicHistoryLearning({
+    entryNote: "판매가 100을 부품 35·운송 8·조립 15·플랫폼 12·운영 20·대비 10으로 나누고 운송비가 16이 되는 충격에서 시작합니다.",
+    coreIdea: "컨테이너·통신·플랫폼은 생산과 노동을 먼 곳에 나눠 평균비용을 낮췄지만, 병목·협상력·노동보호·배출과 기후 재난 비용을 어디로 옮겼는지 함께 추적해야 합니다.",
+    assumed: { id: "global-value-added-chain", role: "완제품 총액에서 나라와 단계마다 새로 더한 가치와 중간재의 중복을 구분합니다." },
+    concepts: [
+      { id: "container-logistics-standardization", role: "같은 화물 상자를 배·철도·트럭 사이에서 다시 포장하지 않고 옮기는 표준을 설명합니다.", intuition: "서로 다른 운송수단이 같은 상자의 크기와 잠금·인수 절차를 약속해 갈아타는 시간을 줄이는 체계입니다.", workedExample: "부품 35를 운송·보험 8로 여러 항만과 공장 사이에 옮기는 흐름을 봅니다.", boundary: "표준 상자가 항만 혼잡·통관·전쟁·재난과 마지막 배송을 없애지는 않습니다." },
+      { id: "global-value-chain-fragmentation", role: "설계·부품·조립·판매가 여러 나라와 기업으로 나뉘는 생산 구조를 설명합니다.", intuition: "한 공장에서 완제품을 모두 만들기보다 각 단계를 잘하거나 싼 곳에 나누고 계약과 물류로 다시 잇는 방식입니다.", workedExample: "가격 100의 부품 35와 조립 15, 판매 운영 20을 서로 다른 단계에 배분합니다.", boundary: "수출 총액이 각 나라에 남는 부가가치와 임금·세금을 그대로 보여 주지는 않습니다." },
+      { id: "platform-cost-shifting", role: "플랫폼이 거래를 연결하며 대기·장비·보험·수요 변동 비용을 참여자에게 넘기는 구조를 설명합니다.", intuition: "앱 화면에는 수수료만 보이지만 주문을 기다리는 시간과 배달 장비·사고 위험은 다른 장부에 남는 구조입니다.", workedExample: "플랫폼·결제 12와 노동자가 직접 부담한 대기·연료·사회보험을 따로 적습니다.", boundary: "모든 플랫폼의 고용관계·알고리즘 통제와 비용 부담이 같다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "35+8+15+12+20+10을 더하고 운송비가 8에서 16이 될 때 다른 항목이 같다면 총비용을 계산하세요.",
+    numericAnswers: ["기준 100", "충격 뒤 108", "증가 8", "가격 유지 시 다른 몫 감소"],
+    changedCaseQuestion: "운송비가 16으로 늘었지만 재고·공급 다변화가 중단 손실 12를 막고 평소 대비 추가 관리비 3이 든다면 순충격을 비교하세요.",
+    changedCaseAnswers: ["운송 증가 8", "관리비 3", "막은 손실 12", "단순 순효과 +1", "확률·기간 별도"],
+    sources: [
+      { title: "World Bank · World Development Report 2020", href: "https://www.worldbank.org/en/publication/wdr2020", problem: "세계 가치사슬 참여를 총무역·국내 부가가치·일자리와 분배로 나눠야 합니다.", contribution: "1990년 이후 가치사슬 성장, 세계 무역의 거의 절반이라는 범위와 2008년 이후 정체를 제시합니다.", assumptions: "2019년에 공개된 세계 수준 보고서라 제품별 최신 비중과 국가 내 분배는 별도 자료가 필요합니다.", evidenceScope: "세계 가치사슬과 개발의 장기 관계를 비교한 세계은행 대표 보고서입니다.", notClaim: "가치사슬 참여율이 높으면 모든 나라와 노동자의 소득이 같은 폭으로 오른다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "UNCTAD · Review of Maritime Transport 2024", href: "https://unctad.org/publication/review-maritime-transport-2024", problem: "낮은 평균 운송비 아래의 항로 병목과 운임 변동을 실제 사건에 대조해야 합니다.", contribution: "홍해·수에즈 운하 차질, 우회 항로와 2023~24년 운임·수송능력의 변화를 제공합니다.", assumptions: "해운시장 전체 자료이며 개별 상품 가격으로의 전달률은 계약·재고·환율에 따라 달라집니다.", evidenceScope: "2024년 국제 해운과 병목을 다룬 UN 공식 보고서입니다.", notClaim: "모든 소비자가 운임 상승분을 같은 시점과 비율로 부담했다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "ILO · World Employment and Social Outlook 2021", href: "https://researchrepository.ilo.org/esploro/outputs/report/World-Employment-and-Social-Outlook-2021/995218610802676", problem: "플랫폼의 연결 편익과 노동자에게 남는 시간·소득·보호 비용을 함께 봐야 합니다.", contribution: "온라인형·지역 기반 플랫폼, 약 1만2천 명 노동자와 85개 기업 조사로 노동조건과 사업모형을 비교합니다.", assumptions: "2021년 조사 표본과 당시 플랫폼 범위이며 국가별 법과 2026년 현재 조건은 달라질 수 있습니다.", evidenceScope: "디지털 노동 플랫폼의 노동·기업 경험을 비교한 ILO 보고서입니다.", notClaim: "모든 플랫폼 노동자가 같은 소득·통제·사회보장 공백을 겪는다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "IPCC AR6 WGIII · Chapter 11 Industry", href: "https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-11/", problem: "공급망을 짧게 하거나 에너지 효율만 높이는 것으로 산업 감축을 끝내지 않아야 합니다.", contribution: "재료 수요·효율·순환 이용, 전기화·저탄소 원료와 가치사슬 전환을 함께 평가합니다.", assumptions: "산업 부문의 평가 문헌 종합이며 특정 기업의 배출량과 전환비용은 실측이 필요합니다.", evidenceScope: "산업 감축 선택지와 공급망 상호작용을 평가한 IPCC 종합 자료입니다.", notClaim: "생산 지역 이동 하나가 전체 생애주기 배출을 자동으로 줄인다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
   "global-history/empires-roads-taxes-and-law": {

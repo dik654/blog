@@ -12052,6 +12052,32 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 연구", label: "Bértola & Williamson · Globalization in Latin America Before 1940", href: "https://www.nber.org/papers/w9687", note: "19세기 말 수출 호황·운송비·관세와 불평등을 장기 비교합니다." },
     { kind: "공식 문서", label: "IMF · The Latin American Debt Crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "1970년대 대출 증가에서 1982년 가격·금리·자금 중단으로 이어진 제도적 순서를 확인합니다." },
   ],
+  "economic-history/land-rights-enclosure-rent-and-urbanization": [
+    { kind: "공식 문서", label: "UK Parliament · Enclosing the land", href: "https://www.parliament.uk/about/living-heritage/transformingsociety/towncountry/landscape/overview/enclosingland/", note: "1604~1914년 의회 인클로저의 규모와 생산성·농업 노동자 이주 논쟁을 함께 확인합니다." },
+    { kind: "공개 강의", label: "LSE EH308 · Historical Economic Geography", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH308.htm", note: "도시·국가 시장·제조업 집적·지역 불평등으로 토지와 위치의 장기 변화를 점검합니다." },
+  ],
+  "economic-history/demography-family-economy-and-care": [
+    { kind: "공식 연구", label: "UN DESA · Global Population Growth and Sustainable Development", href: "https://desapublications.un.org/publications/global-population-growth-and-sustainable-development", note: "사망과 출생이 다른 속도로 낮아지는 인구 전환과 개발·환경의 연결을 확인합니다." },
+    { kind: "공개 강의", label: "LSE EH209 · The Family Economy in History", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm", note: "결혼·가구 형성·여성·아동 노동과 교육·보건을 가족경제의 장기 질문으로 사용합니다." },
+  ],
+  "economic-history/firms-banks-insurance-and-institutional-investors": [
+    { kind: "공식 연구", label: "Bank of England · Were banks special?", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2018/were-banks-special-contrasting-viewpoints-in-mid-nineteenth-century-britain.pdf", note: "19세기 영국 은행의 무한책임과 유한책임 논쟁을 확인합니다." },
+    { kind: "공개 강의", label: "LSE EH449 · History of Corporate Finance and Institutional Investment", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH449.htm", note: "기업의 자본시장 이용과 기관투자자 발전을 19세기 이후 흐름으로 봅니다." },
+  ],
+  "economic-history/labor-bargaining-social-insurance-and-welfare-state": [
+    { kind: "공개 강의", label: "LSE EH442 · Labour Markets in Historical Perspective", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm", note: "임금·생산성·기술·이주와 지역·성별·인종 격차를 함께 확인합니다." },
+    { kind: "공식 문서", label: "ILO · Convention No. 102 FAQ", href: "https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention", note: "아홉 사회 위험과 보장 대상·급여·조건·기간의 최저기준을 확인합니다." },
+  ],
+  "economic-history/great-inflation-disinflation-and-financialization": [
+    { kind: "공식 연구", label: "Federal Reserve History · The Great Inflation", href: "https://www.federalreservehistory.org/essays/great-inflation", note: "1965~1982년 미국의 정책·에너지·기대와 긴축 비용을 한 연표에서 확인합니다." },
+    { kind: "공식 연구", label: "BIS · Seven decades of international banking", href: "https://www.bis.org/publications/qr-202109/seven-decades-international-banking", note: "국제 은행 성장과 채권·비은행 금융의 확대를 장기 구조로 확인합니다." },
+  ],
+  "economic-history/containers-value-chains-platforms-and-climate-transition": [
+    { kind: "공식 연구", label: "World Bank · World Development Report 2020", href: "https://www.worldbank.org/en/publication/wdr2020", note: "세계 가치사슬의 성장·정체와 개발·분배 조건을 확인합니다." },
+    { kind: "공식 연구", label: "UNCTAD · Review of Maritime Transport 2024", href: "https://unctad.org/publication/review-maritime-transport-2024", note: "항로 병목과 우회가 운송비·시간·소비자 가격에 닿는 경로를 확인합니다." },
+    { kind: "공식 연구", label: "ILO · World Employment and Social Outlook 2021", href: "https://researchrepository.ilo.org/esploro/outputs/report/World-Employment-and-Social-Outlook-2021/995218610802676", note: "온라인형·지역 기반 플랫폼의 사업모형과 노동조건을 비교합니다." },
+    { kind: "공식 연구", label: "IPCC AR6 WGIII · Chapter 11 Industry", href: "https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-11/", note: "재료 효율·순환·전기화·저탄소 원료를 산업 가치사슬 전환과 함께 봅니다." },
+  ],
   "global-history/empires-roads-taxes-and-law": [
     { kind: "핵심 사료", label: "British Museum · Aśoka pillar edict fragment", href: "https://www.britishmuseum.org/collection/object/A_1880-21", note: "기원전 3세기 아소카 칙령을 돌에 새긴 직접 물증" },
     { kind: "보충 읽기", label: "UNESCO · The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "페르시아·중국·로마의 군사·행정 교통망 비교" },

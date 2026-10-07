@@ -4,7 +4,7 @@ import { economicHistoryArticles } from "./articles";
 const economicHistory: Category = {
   slug: "economic-history",
   name: "경제사",
-  description: "생산물을 세고 나누던 장부에서 교역·산업화·국제 통화와 부채를 지나 중국·일본·남아시아·아프리카·중동·라틴아메리카의 서로 다른 경로까지 읽습니다.",
+  description: "생산물을 세고 나누던 장부에서 교역·산업화·국제 통화와 부채를 지나 지역별 경로와 토지·가족·금융기관·노동·물가·세계 생산망의 공통 구조까지 읽습니다.",
   subcategories: [
     { slug: "economic-history-early-state", name: "잉여와 국가 장부", description: "저장·측정·배분 권한이 함께 생긴 조건", icon: "𒀭" },
     { slug: "economic-history-trade", name: "교역과 신용", description: "거리·시간·불확실성을 장부와 중개로 나눈 방법", icon: "⇄" },
@@ -18,6 +18,12 @@ const economicHistory: Category = {
     { slug: "economic-history-africa", name: "아프리카와 세계경제", description: "노예무역·식민 조세·독립·원자재 의존", icon: "◎" },
     { slug: "economic-history-mena", name: "중동·북아프리카", description: "토지·외채·석유 계약·국가 예산과 다각화", icon: "◈" },
     { slug: "economic-history-latin-america", name: "라틴아메리카와 세계시장", description: "수출 호황·수입대체·외채 위기와 분배", icon: "◇" },
+    { slug: "economic-history-land", name: "토지 권리와 도시화", description: "공동 이용권·인클로저·임대료와 위치 가치", icon: "▱" },
+    { slug: "economic-history-family", name: "인구와 가족경제", description: "출생·사망·가구 노동·돌봄과 세대 구조", icon: "◌" },
+    { slug: "economic-history-financial-institutions", name: "기업·은행·보험", description: "자본·신용·위험과 기관투자자의 형성", icon: "▦" },
+    { slug: "economic-history-labor-welfare", name: "노동과 복지국가", description: "임금·교섭·사회보험과 보장의 범위", icon: "⚖" },
+    { slug: "economic-history-inflation-finance", name: "인플레이션과 금융화", description: "물가 기대·긴축의 비용·시장금융의 확대", icon: "↕" },
+    { slug: "economic-history-global-production", name: "세계 생산망과 플랫폼", description: "컨테이너·가치사슬·플랫폼·기후 전환", icon: "▤" },
   ],
   articles: economicHistoryArticles,
 };

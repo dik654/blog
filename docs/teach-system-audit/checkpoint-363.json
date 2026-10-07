@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-357.json",
+  "publicArticles": 907,
+  "addedRoutes": [
+    "history/economic-history/land-rights-enclosure-rent-and-urbanization",
+    "history/economic-history/demography-family-economy-and-care",
+    "history/economic-history/firms-banks-insurance-and-institutional-investors",
+    "history/economic-history/labor-bargaining-social-insurance-and-welfare-state",
+    "history/economic-history/great-inflation-disinflation-and-financialization",
+    "history/economic-history/containers-value-chains-platforms-and-climate-transition"
+  ],
+  "reviewed": 363,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive cross-cutting economic-history articles were added after checkpoint 357; 321 substantive rewrites/additions and 42 retained teaching flows in total. The batch links land, family, financial institutions, labor and welfare, inflation and financialization, and global production without treating an aggregate gain as proof that every household or worker benefited.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "Land separates output 100-25+20=95 from output 120-35-10=75; demography follows natural increase 5 to 25 to 10 per thousand; firms split funding 30+60+10=100 and fire recovery 100-40+30=90; labor compares ordinary disposable income 95 with accident income 85 after a benefit; inflation divides wage 108 by price 114 for a real index of about 94.7 and deflates fixed debt to about 87.7; the supply-chain account totals 35+8+15+12+20+10=100 and raises transport from 8 to 16 for total cost 108. Every figure is marked as an explanatory assumption rather than a historical statistic.",
+    "browser": "Six routes x 390/1440, two listing routes x 390/1440 and six mobile height/sidebar checks = 22; all passed. Local report: output/playwright/thematic-economic-history/2026-10-07T01-52-58-182Z/summary.json.",
+    "learning": "PASS 907 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 10.46s, 7,259 transformed modules and 1,918 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,158 concepts, 6,465 relations, 907 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 907-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 907 strict; all six additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 473 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm, Korean naturalness and term-density audits with zero uncovered findings.",
+    "lint": "PASS full-repository ESLint; actual exit 0.",
+    "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows were 27px; viewport height 844 to 700 preserved both scroll offset and the fourth-section reading anchor on all six routes; the 336px modal sidebar rendered at 282px, opened, trapped focus and locked body scroll.",
+    "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
+    "production": "Pending deployment of the content commit.",
+    "curriculumCoverage": "MIT 14.731 and LSE thematic economic-history courses now map six cross-cutting axes. UK Parliament, UN DESA, Bank of England, ILO, the Federal Reserve, BIS, World Bank, UNCTAD and IPCC sources bound the factual claims. Remaining explicit gaps include North America, internal European comparison, Southeast and Central Asia, Oceania, war finance, commercial and bankruptcy law, and welfare finance. The derivatives standard still fixes university pricing theory, the Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk control as four mandatory audit axes."
+  }
+}
