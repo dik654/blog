@@ -103,6 +103,12 @@
 - [LSE EH442 노동시장사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm)와 [ILO 사회보장 최저기준](https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention): 임금·생산성·교섭력과 질병·실업·노령의 보장 대상·수준·조건·기간을 함께 본다.
 - [Federal Reserve 대인플레이션 역사](https://www.federalreservehistory.org/essays/great-inflation)와 [BIS 국제은행 70년](https://www.bis.org/publications/qr-202109/seven-decades-international-banking): 물가 기대·정책·공급 충격·긴축 비용과 은행에서 채권·비은행 금융으로 넓어진 자금 경로를 구분한다.
 - [World Bank 세계개발보고서 2020](https://www.worldbank.org/en/publication/wdr2020), [UNCTAD 해운보고서 2024](https://unctad.org/publication/review-maritime-transport-2024), [ILO 플랫폼 노동 보고서](https://researchrepository.ilo.org/esploro/outputs/report/World-Employment-and-Social-Outlook-2021/995218610802676), [IPCC 산업 장](https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-11/): 가치사슬·병목·플랫폼 비용·노동보호·산업 감축을 같은 공급망 장부에 넣는다.
+- [LSE EH304 북아메리카 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH304.htm)와 [Federal Reserve History](https://www.federalreservehistory.org/essays/federal-reserve-history): 식민 정착·노예제·철도·산업·은행 공황과 중앙은행 설계를 토지·노동 권리와 대륙 시장의 한 경로에서 확인한다.
+- [LSE EH314 유럽 정치경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH314.htm)와 [LSE EH204 화폐금융사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm): 봉건 의무·국가 경쟁·의회·과세와 영국·스페인·이탈리아·프랑스·독일의 다른 금융 경로를 비교한다.
+- [LSE EH434 동아시아·동남아시아 개발사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm)와 [세계은행 동남아시아 장기 성장 연구](https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf): 식민지 이전 항구망, 식민 상품 수출과 독립 뒤 제조 수출의 현지 부가가치를 구분한다.
+- [세계은행 중앙아시아 물·에너지 연구](https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf)와 [ADB 카스피 교역회랑 연구](https://www.adb.org/publications/trade-corridors-caspian-region-present-future): 목축·관개·소련 생산 할당과 독립 뒤 철도·관로·국경 통과 의존을 잇는다.
+- [NSW Treasury 원주민 경제사](https://www.nsw.gov.au/departments-and-agencies/nsw-treasury/about-us/nsw-treasury-bicentenary/walking-a-tightrope/milestones/aboriginal-economies)와 [세계은행 태평양 경제 업데이트 2026](https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf): 원주민의 토지·친족 교환, 정착민 수출과 섬 경제의 송금·관광·어업권·지원금을 서로 다른 권리와 현금흐름으로 본다.
+- [LSE EH450 전쟁 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm)와 [영국 의회 공공부채 역사](https://commonslibrary.parliament.uk/research-briefings/cbp-8265/): 사람·물자·세금·국채의 전시 동원과 전후 상환·복구·사회급여의 재정 약속을 연결한다.
 
 ### 현재 대응과 빈칸
 
@@ -126,10 +132,15 @@
 | 노동·교섭·사회보험 | `labor-bargaining-social-insurance-and-welfare-state` | 임금·시간·안전의 집단 교섭과 아홉 사회 위험의 실제 보장 조건을 연결 | 비공식·플랫폼·이주 노동, 신청 장벽과 재정 지속성의 국가별 비교 |
 | 대인플레이션·긴축·금융화 | `great-inflation-disinflation-and-financialization` | 명목임금과 실질구매력, 기대·공급·정책, 긴축 비용과 시장금융 확대를 구분 | 미국 밖 환율·임금제도·외화부채와 자산가격·분배의 장기 비교 |
 | 컨테이너·가치사슬·플랫폼·기후 | `containers-value-chains-platforms-and-climate-transition` | 판매가 100의 생산·운송·플랫폼·대비 비용과 병목 충격을 노동·배출 전환에 연결 | 제품별 부가가치·생애주기 배출·공급망 재편과 산업정책의 실측 비교 |
-| 아직 독립 축이 없는 지역 | 기존 세계사·국가 글에 분산 | 큰 빈칸 | 북아메리카, 유럽 내부 차이, 동남·중앙아시아, 오세아니아의 독립 경제사 |
-| 남은 횡단 주제 | 앞의 여섯 독립 글과 여러 분야 글에 분산 | 첫 연결 축 있음 | 상법·파산·전쟁금융, 복지 재정, 1990년대 이후 국가별 생산망·플랫폼·기후 전환의 실측 비교 |
+| 북아메리카 | `north-america-land-slavery-railroads-and-mass-production` | 토지 수용·노예 자본·철도·은행·대량생산을 판매액과 권리의 두 장부로 연결 | 캐나다·멕시코·카리브와 미국 내부 지역·인종·성별 격차의 독립 비교 |
+| 유럽 내부 비교 | `europe-serfdom-states-industrialization-and-integration` | 농촌 의무·재정국가·산업화와 불균등 수렴을 동서·남북 차이 속에서 연결 | 오스만·합스부르크·러시아 제국과 남·동유럽의 지역 자료, 통합 이후 가구·자산 격차 |
+| 동남아시아 | `southeast-asia-ports-plantations-and-export-industrialization` | 기존 항구망·식민 수출 거점·수출 제조 전환에서 총수출과 현지 몫을 구분 | 열한 나라의 노동·기업 소유·부품 국산화·1997년 이후 사회보호 계량 비교 |
+| 중앙아시아 | `central-asia-pastoralism-irrigation-planning-and-corridors` | 목축·관개·계획 할당·내륙 회랑을 물과 이동권의 한 장부로 연결 | 다섯 공화국의 물 협정·송금·광물·에너지와 주민 건강·지역 소득의 실측 비교 |
+| 오세아니아 | `oceania-indigenous-land-settler-exports-and-island-economies` | 원주민 친족경제·정착민 토지 수출·섬 외부소득의 서로 다른 권리와 충격을 구분 | 원주민 공동체별 토지 반환·기업·복지 결과와 섬나라별 기후 이주·재정의 독립 비교 |
+| 전쟁금융·공공부채·복지국가 | `war-finance-public-debt-and-welfare-state-capacity` | 전쟁비 조달과 미래 세금, 전후 복구·부채·사회급여의 재정계약을 연결 | 패전·내전·식민지 동원, 인플레이션·채무불이행과 복지 재정의 국가별 비교 |
+| 남은 횡단 주제 | 앞의 열두 지역·횡단 글과 여러 분야 글에 분산 | 전쟁금융까지 첫 연결 축 있음 | 상법·파산, 협동조합·국가금융, 복지 재정 지속성, 1990년대 이후 생산망·플랫폼·기후 전환의 실측 비교 |
 
-지역 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 횡단 주제 여섯 편은 평균 생산량이나 제도 이름에서 멈추지 않고 **누가 어떤 권리와 비용을 가졌는지, 충격 전후 장부가 어떻게 달라졌는지, 어느 지역과 시기까지 자료를 옮겨 읽을 수 있는지**를 같은 순서로 확인한다. 다음 경제사 묶음은 북아메리카·유럽 내부·동남아시아·중앙아시아·오세아니아와 전쟁금융·상법·파산·복지 재정의 비교를 우선한다.
+첫 지역 여섯 편과 이번 지역·횡단 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF·ADB·정부 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 횡단 주제 글은 평균 생산량이나 제도 이름에서 멈추지 않고 **누가 어떤 권리와 비용을 가졌는지, 충격 전후 장부가 어떻게 달라졌는지, 어느 지역과 시기까지 자료를 옮겨 읽을 수 있는지**를 같은 순서로 확인한다. 다음 경제사 묶음은 상법·파산과 협동조합·국가금융, 복지 재정 지속성, 각 지역 내부의 계량 비교를 우선한다.
 
 ## 분야별 확장 방법
 
