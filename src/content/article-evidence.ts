@@ -13224,6 +13224,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공개 강의", label: "LSE EH450 · The Economics of War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", note: "전쟁의 재정·물자·인력 동원과 생산·소비·인명 결과를 함께 다루는 범위를 확인합니다." },
     { kind: "공식 문서", label: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화를 확인합니다." },
   ],
+  "economic-history/commercial-law-limited-liability-and-insolvency": [
+    { kind: "공식 가이드", label: "UNCITRAL · Legislative Guide on Insolvency Law", href: "https://uncitral.un.org/en/texts/insolvency/legislativeguides/insolvency_law", note: "개시·중지·절차 중 새 자금·채권자 참여·재조정과 청산 전환을 한 제도 안에서 확인합니다." },
+    { kind: "공식 문서", label: "United States Courts · Chapter 11 Bankruptcy Basics", href: "https://www.uscourts.gov/court-programs/bankruptcy/bankruptcy-basics/chapter-11-bankruptcy-basics", note: "채권 등급과 손상된 등급의 금액·인원 수락 문턱, 계획 확인 절차를 확인합니다." },
+  ],
+  "economic-history/cooperatives-member-governance-and-surplus": [
+    { kind: "공식 문서", label: "International Cooperative Alliance · Cooperative identity", href: "https://ica.coop/en/cooperatives/cooperative-identity", note: "공동 소유·민주 통제와 조합원 경제 참여, 1차 협동조합의 1인 1표 원칙을 확인합니다." },
+    { kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193", href: "https://www.ilo.org/publications/promoting-cooperatives-information-guide-ilo-recommendation-no-193", note: "협동조합의 자율성과 모든 경제 부문에서의 법·정책·교육·금융 지원 범위를 확인합니다." },
+  ],
+  "economic-history/development-banks-mandates-credit-and-governance": [
+    { kind: "공식 연구", label: "World Bank · 2017 Survey of National Development Banks", href: "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/977821525438071799", note: "금융위기 때 국가개발은행의 대출·보증 확대와 이후 되돌림, 기관별 운영 차이를 확인합니다." },
+    { kind: "공식 가이드", label: "World Bank · Role of Development Financial Institutions", href: "https://blogs.worldbank.org/en/eastasiapacific/the-role-of-development-financial-institutions-in-the-new-millennium", note: "시장 신용 공백·경기대응 역할을 분명한 임무와 건전한 지배구조 조건에 연결합니다." },
+  ],
+  "economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance": [
+    { kind: "공식 연구", label: "OECD · Pensions at a Glance 2025: Gross pension replacement rates", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/gross-pension-replacement-rates_95e3eed6.html", note: "완전 경력·평균임금 가정에서 계산한 미래 총대체율과 나라별 차이를 확인합니다." },
+    { kind: "공식 연구", label: "OECD · Automatic adjustment mechanisms in pension systems", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html", note: "기대수명·재정수지·가입자와 수급자 비율을 급여·보험료에 연결한 제도를 비교합니다." },
+  ],
+  "economic-history/regional-gdp-household-income-and-within-country-inequality": [
+    { kind: "공식 문서", label: "Eurostat · Regional economic accounts metadata", href: "https://ec.europa.eu/eurostat/cache/metadata/EN/reg_eco10_esms.htm", note: "지역 GDP의 생산 장소 기준, 지역 간 흐름 자료와 국가 PPP 사용에서 생기는 비교 한계를 확인합니다." },
+    { kind: "공식 문서", label: "Eurostat · Regions in Europe 2026: Economy", href: "https://ec.europa.eu/eurostat/web/interactive-publications/regions-2026", note: "다국적기업 자산과 국경 통근이 1인당 지역 GDP와 주민 생활의 차이를 키울 수 있음을 확인합니다." },
+  ],
+  "economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring": [
+    { kind: "공식 문서", label: "OECD · Trade in Value-Added", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "총수출의 국내·외국 부가가치와 서비스 기여·최종수요를 국가 간 투입산출표로 나누는 지표를 확인합니다." },
+    { kind: "공식 연구", label: "WTO · Global Value Chain Development Report 2025", href: "https://www.wto.org/english/res_e/publications_e/gvcreport2025_e.htm", note: "기술 변화·녹색전환·지정학 속 가치사슬 재편과 새 지역 허브·산업정책을 확인합니다." },
+  ],
   "markets/equity-dispersion-pnl-attribution-and-rebalancing-costs": [
     { kind: "공식 문서", label: "Cboe · S&P 500 Dispersion Index Methodology", href: "https://cdn.cboe.com/resources/indices/documents/methodology-the-dispersion-index.pdf", note: "구성 종목과 지수의 예상분산, 유효 옵션과 30일 보간 규칙을 확인합니다." },
     { kind: "공식 문서", label: "Cboe · Implied Correlation", href: "https://cdn.cboe.com/resources/indices/documents/Cboe_USO_ImpliedCorrelation_0421_v2.0.2.pdf", note: "지수 옵션과 구성 종목 옵션을 반대 방향으로 두는 디스퍼전 구조를 확인합니다." },
