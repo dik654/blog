@@ -31,9 +31,13 @@
     "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
     "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows 27px; viewport height 844 to 700 preserved scroll position on all six routes; the 336px modal sidebar opened, trapped focus and locked body scroll.",
     "desktopViewport": "All six articles and two listing pages stayed within 1440px.",
-    "production": "Pending deployment after the content commit.",
+    "production": "GitHub Pages run 37543388187 passed every CI audit and deployed commit 7b5490cd97bcca032ddf3c4772de561d952d72ed. The production browser report at output/playwright/derivative-specialized-gaps-production/2026-10-07T00-37-05.974Z/summary.json passed all 22 checks: six routes and two listing routes at 390/1440 plus six mobile height/sidebar checks. Production mobile visualizations measured 352-354px, visible flow arrows measured 18px, viewport height 844 to 700 shifted the reading anchor by 0px, and the 336px modal sidebar stayed inside the viewport, received focus and locked body scroll.",
     "curriculumCoverage": "The audit now maps implied correlation and dispersion, credit tranche/base-correlation/auction settlement, commodity grade/location/certificate delivery, investigation evidence and legal hold, US-UK tax application, and fractional-investment trust beneficiary certificates. Remaining explicit gaps are recorded as transaction-level PnL attribution, actual auction time series, energy and metals delivery, more jurisdictional enforcement/tax cases, and post-launch fractional-investment operations."
   },
-  "commit": null,
-  "deployment": null
+  "commit": "7b5490cd97bcca032ddf3c4772de561d952d72ed",
+  "deployment": {
+    "runId": 37543388187,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
+  }
 }
