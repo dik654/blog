@@ -31536,6 +31536,204 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "상품을 만들고 투자금을 받는 일과 발행 뒤 거래시장을 운영하는 일을 다른 책임과 통제에 두는 원칙입니다.",
     "canonicalHref": "/finance/markets/fractional-investment-trust-beneficiary-certificates#names"
   },
+  "dispersion-vega-pnl-attribution": {
+    "id": "dispersion-vega-pnl-attribution",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "디스퍼전 베가 손익귀속",
+    "aliases": [
+      "dispersion-vega-pnl-attribution"
+    ],
+    "definition": "구성 종목과 지수 옵션의 예상변동성 변화에 각 계약의 돈 단위 베가를 곱해 하루 평가손익의 원인을 나누는 장부입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-pnl-attribution-and-rebalancing-costs#names"
+  },
+  "dispersion-gamma-rebalancing-pnl": {
+    "id": "dispersion-gamma-rebalancing-pnl",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "디스퍼전 감마 재조정 손익",
+    "aliases": [
+      "dispersion-gamma-rebalancing-pnl"
+    ],
+    "definition": "구성 종목과 지수의 실제 가격 움직임에서 생긴 옵션 곡률 효과와 델타 재조정 결과를 따로 모은 손익입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-pnl-attribution-and-rebalancing-costs#names"
+  },
+  "dispersion-rebalancing-cost-ledger": {
+    "id": "dispersion-rebalancing-cost-ledger",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "디스퍼전 리밸런싱 비용 장부",
+    "aliases": [
+      "dispersion-rebalancing-cost-ledger"
+    ],
+    "definition": "델타와 위험 비중을 되맞추려고 거래하면서 생긴 스프레드·수수료·시장 충격을 평가손익과 분리한 기록입니다.",
+    "canonicalHref": "/finance/markets/equity-dispersion-pnl-attribution-and-rebalancing-costs#names"
+  },
+  "credit-auction-net-open-interest": {
+    "id": "credit-auction-net-open-interest",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용사건 경매 순잔량",
+    "aliases": [
+      "credit-auction-net-open-interest"
+    ],
+    "definition": "신용사건 경매에서 서로 맞는 실물결제 요청을 상계한 뒤 가격 주문으로 채워야 할 매수 또는 매도 규모입니다.",
+    "canonicalHref": "/finance/markets/credit-event-auction-orders-and-base-correlation-history#names"
+  },
+  "credit-auction-order-ladder-clearing": {
+    "id": "credit-auction-order-ladder-clearing",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "신용사건 경매 주문 사다리 청산",
+    "aliases": [
+      "credit-auction-order-ladder-clearing"
+    ],
+    "definition": "순잔량 방향에 맞춰 가격순으로 주문 수량을 더하고 마지막으로 사용한 가격을 결제 기준으로 정하는 절차입니다.",
+    "canonicalHref": "/finance/markets/credit-event-auction-orders-and-base-correlation-history#names"
+  },
+  "base-correlation-history": {
+    "id": "base-correlation-history",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "베이스 상관 이력",
+    "aliases": [
+      "base-correlation-history"
+    ],
+    "definition": "날짜와 신용지수 손실 끝점별로 시장 트랜치 호가에 맞춘 베이스 상관값을 나란히 둔 기록입니다.",
+    "canonicalHref": "/finance/markets/credit-event-auction-orders-and-base-correlation-history#names"
+  },
+  "wti-cushing-delivery-hub": {
+    "id": "wti-cushing-delivery-hub",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "WTI 쿠싱 인도 허브",
+    "aliases": [
+      "wti-cushing-delivery-hub"
+    ],
+    "definition": "NYMEX WTI 선물의 인도에 사용할 수 있도록 승인되고 송유관 또는 저장시설과 연결된 오클라호마 쿠싱의 시설망입니다.",
+    "canonicalHref": "/finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery#names"
+  },
+  "wti-pumpover-bookout-transfer": {
+    "id": "wti-pumpover-bookout-transfer",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "WTI 시설 간 이전",
+    "aliases": [
+      "wti-pumpover-bookout-transfer"
+    ],
+    "definition": "쿠싱의 연결 시설 사이 펌프오버, 배관 내 이전 또는 장부상 상계로 원유 인도 의무를 이행하는 방식입니다.",
+    "canonicalHref": "/finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery#names"
+  },
+  "wti-delivery-notice-title-transfer": {
+    "id": "wti-delivery-notice-title-transfer",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "WTI 인도 통지와 소유권 이전",
+    "aliases": [
+      "wti-delivery-notice-title-transfer"
+    ],
+    "definition": "만기 포지션의 구매자와 판매자를 정하고 인도 방식·시설·일정을 통지한 뒤 대금과 원유 소유권을 넘기는 절차입니다.",
+    "canonicalHref": "/finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery#names"
+  },
+  "lme-metal-warrant": {
+    "id": "lme-metal-warrant",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "LME 금속 워런트",
+    "aliases": [
+      "lme-metal-warrant"
+    ],
+    "definition": "승인 브랜드의 규격 금속이 LME 승인 창고에 있음을 나타내며 선물 실물인도에 사용할 수 있는 전자 권리입니다.",
+    "canonicalHref": "/finance/markets/lme-metals-warrants-quality-storage-and-load-out#names"
+  },
+  "lme-warrant-cancellation-loadout": {
+    "id": "lme-warrant-cancellation-loadout",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "LME 워런트 취소와 출고",
+    "aliases": [
+      "lme-warrant-cancellation-loadout"
+    ],
+    "definition": "워런트 소유자가 금속을 창고 밖으로 꺼내려는 뜻을 표시하고 출고 순번·운송·상차를 준비하는 절차입니다.",
+    "canonicalHref": "/finance/markets/lme-metals-warrants-quality-storage-and-load-out#names"
+  },
+  "lme-warehouse-rent-fot-ledger": {
+    "id": "lme-warehouse-rent-fot-ledger",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "LME 보관료·상차비 장부",
+    "aliases": [
+      "lme-warehouse-rent-fot-ledger"
+    ],
+    "definition": "금속이 창고에 머문 날의 임대료와 차량에 실을 때의 FOT 비용, 재발행 비용을 권리 가격과 따로 적는 장부입니다.",
+    "canonicalHref": "/finance/markets/lme-metals-warrants-quality-storage-and-load-out#names"
+  },
+  "livestock-par-delivery-unit": {
+    "id": "livestock-par-delivery-unit",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "축산물 기준 인도 단위",
+    "aliases": [
+      "livestock-par-delivery-unit"
+    ],
+    "definition": "축산물 선물에서 별도 조정 없이 인도할 수 있도록 정한 무게·등급·수율·시설 조건의 표준 묶음입니다.",
+    "canonicalHref": "/finance/markets/livestock-futures-live-delivery-and-cash-settlement#names"
+  },
+  "live-cattle-hot-yield-adjustment": {
+    "id": "live-cattle-hot-yield-adjustment",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "생우 뜨거운 도체 수율 조정",
+    "aliases": [
+      "live-cattle-hot-yield-adjustment"
+    ],
+    "definition": "도축 직후 도체 무게가 산 동물 무게에서 차지하는 실제 비율을 계약 기준 수율과 비교해 정산액을 고치는 계산입니다.",
+    "canonicalHref": "/finance/markets/livestock-futures-live-delivery-and-cash-settlement#names"
+  },
+  "livestock-index-cash-settlement": {
+    "id": "livestock-index-cash-settlement",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "축산물 지수 현금정산",
+    "aliases": [
+      "livestock-index-cash-settlement"
+    ],
+    "definition": "실물 인도 대신 적격 현물거래로 만든 마지막 지수와 계약가격의 차이를 계약 무게에 곱해 만기 손익을 끝내는 방식입니다.",
+    "canonicalHref": "/finance/markets/livestock-futures-live-delivery-and-cash-settlement#names"
+  },
+  "singapore-derivatives-book-retention": {
+    "id": "singapore-derivatives-book-retention",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "싱가포르 파생상품 장부 보존기간",
+    "aliases": [
+      "singapore-derivatives-book-retention"
+    ],
+    "definition": "적용 대상이 되는 파생상품 계약과 거래의 만료 또는 종료 뒤 관련 장부와 정보를 보존해야 하는 최소 기간입니다.",
+    "canonicalHref": "/finance/markets/singapore-derivatives-records-complaints-and-tax-ledger#names"
+  },
+  "singapore-fidrec-referral-window": {
+    "id": "singapore-fidrec-referral-window",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "싱가포르 FIDReC 외부 구제 창",
+    "aliases": [
+      "singapore-fidrec-referral-window"
+    ],
+    "definition": "고객이 먼저 금융회사에 민원을 제기한 뒤 최종답변을 받고 FIDReC에 분쟁을 가져갈 수 있는 신청 기간입니다.",
+    "canonicalHref": "/finance/markets/singapore-derivatives-records-complaints-and-tax-ledger#names"
+  },
+  "singapore-derivatives-gst-exempt-supply": {
+    "id": "singapore-derivatives-gst-exempt-supply",
+    "kind": "concept",
+    "domain": "economics",
+    "label": "싱가포르 파생상품 GST 면세 공급",
+    "aliases": [
+      "singapore-derivatives-gst-exempt-supply"
+    ],
+    "definition": "실물 인도 없이 제공된 파생상품의 순실현손익을 GST가 붙지 않는 금융 공급가액으로 기록하는 분류입니다.",
+    "canonicalHref": "/finance/markets/singapore-derivatives-records-complaints-and-tax-ledger#names"
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -56878,6 +57076,114 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "wartime-resource-mobilization", to: "funded-public-debt-tax-base", relation: "produces", reason: "현재 세금만으로 모자란 전쟁비를 미래 세입에 대한 장기 청구권으로 바꾸며 공공부채 시장이 커졌습니다." },
   { from: "funded-public-debt-tax-base", to: "postwar-social-fiscal-contract", relation: "produces", reason: "전쟁 뒤 남은 세원·부채·행정과 대중의 희생 보상 요구가 연금·의료·주택을 포함한 새 재정 약속을 만들었습니다." },
 
+  {
+    "from": "option-dispersion-variance-spread",
+    "to": "dispersion-vega-pnl-attribution",
+    "relation": "extends",
+    "reason": "option-dispersion-variance-spread의 기존 구분을 디스퍼전 베가 손익귀속의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "dispersion-vega-pnl-attribution",
+    "to": "dispersion-gamma-rebalancing-pnl",
+    "relation": "produces",
+    "reason": "디스퍼전 베가 손익귀속의 입력과 조건이 디스퍼전 감마 재조정 손익의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "dispersion-gamma-rebalancing-pnl",
+    "to": "dispersion-rebalancing-cost-ledger",
+    "relation": "constrains",
+    "reason": "디스퍼전 감마 재조정 손익의 결과와 제약을 확인해야 디스퍼전 리밸런싱 비용 장부의 적용 범위를 정할 수 있습니다."
+  },
+  {
+    "from": "cds-auction-final-price-settlement",
+    "to": "credit-auction-net-open-interest",
+    "relation": "extends",
+    "reason": "cds-auction-final-price-settlement의 기존 구분을 신용사건 경매 순잔량의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "credit-auction-net-open-interest",
+    "to": "credit-auction-order-ladder-clearing",
+    "relation": "produces",
+    "reason": "신용사건 경매 순잔량의 입력과 조건이 신용사건 경매 주문 사다리 청산의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "credit-auction-order-ladder-clearing",
+    "to": "base-correlation-history",
+    "relation": "constrains",
+    "reason": "신용사건 경매 주문 사다리 청산의 결과와 제약을 확인해야 베이스 상관 이력의 적용 범위를 정할 수 있습니다."
+  },
+  {
+    "from": "commodity-delivery-grade-differential",
+    "to": "wti-cushing-delivery-hub",
+    "relation": "extends",
+    "reason": "commodity-delivery-grade-differential의 기존 구분을 WTI 쿠싱 인도 허브의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "wti-cushing-delivery-hub",
+    "to": "wti-pumpover-bookout-transfer",
+    "relation": "produces",
+    "reason": "WTI 쿠싱 인도 허브의 입력과 조건이 WTI 시설 간 이전의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "wti-pumpover-bookout-transfer",
+    "to": "wti-delivery-notice-title-transfer",
+    "relation": "constrains",
+    "reason": "WTI 시설 간 이전의 결과와 제약을 확인해야 WTI 인도 통지와 소유권 이전의 적용 범위를 정할 수 있습니다."
+  },
+  {
+    "from": "commodity-shipping-certificate-delivery",
+    "to": "lme-metal-warrant",
+    "relation": "extends",
+    "reason": "commodity-shipping-certificate-delivery의 기존 구분을 LME 금속 워런트의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "lme-metal-warrant",
+    "to": "lme-warrant-cancellation-loadout",
+    "relation": "produces",
+    "reason": "LME 금속 워런트의 입력과 조건이 LME 워런트 취소와 출고의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "lme-warrant-cancellation-loadout",
+    "to": "lme-warehouse-rent-fot-ledger",
+    "relation": "constrains",
+    "reason": "LME 워런트 취소와 출고의 결과와 제약을 확인해야 LME 보관료·상차비 장부의 적용 범위를 정할 수 있습니다."
+  },
+  {
+    "from": "futures-basis-convergence",
+    "to": "livestock-par-delivery-unit",
+    "relation": "extends",
+    "reason": "futures-basis-convergence의 기존 구분을 축산물 기준 인도 단위의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "livestock-par-delivery-unit",
+    "to": "live-cattle-hot-yield-adjustment",
+    "relation": "produces",
+    "reason": "축산물 기준 인도 단위의 입력과 조건이 생우 뜨거운 도체 수율 조정의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "live-cattle-hot-yield-adjustment",
+    "to": "livestock-index-cash-settlement",
+    "relation": "constrains",
+    "reason": "생우 뜨거운 도체 수율 조정의 결과와 제약을 확인해야 축산물 지수 현금정산의 적용 범위를 정할 수 있습니다."
+  },
+  {
+    "from": "derivatives-complaint-evidence-pack",
+    "to": "singapore-derivatives-book-retention",
+    "relation": "extends",
+    "reason": "derivatives-complaint-evidence-pack의 기존 구분을 싱가포르 파생상품 장부 보존기간의 실제 장부와 절차로 확장합니다."
+  },
+  {
+    "from": "singapore-derivatives-book-retention",
+    "to": "singapore-fidrec-referral-window",
+    "relation": "produces",
+    "reason": "싱가포르 파생상품 장부 보존기간의 입력과 조건이 싱가포르 FIDReC 외부 구제 창의 계산 또는 다음 행동을 만듭니다."
+  },
+  {
+    "from": "singapore-fidrec-referral-window",
+    "to": "singapore-derivatives-gst-exempt-supply",
+    "relation": "constrains",
+    "reason": "싱가포르 FIDReC 외부 구제 창의 결과와 제약을 확인해야 싱가포르 파생상품 GST 면세 공급의 적용 범위를 정할 수 있습니다."
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
