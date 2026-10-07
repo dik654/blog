@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-387.json",
+  "publicArticles": 937,
+  "addedRoutes": [
+    "history/global-history/human-dispersal-foraging-and-social-networks",
+    "history/global-history/agriculture-settlement-and-neolithic-tradeoffs",
+    "history/global-history/cities-writing-rations-and-early-law",
+    "history/global-history/monasteries-schools-manuscripts-and-knowledge-transmission",
+    "history/global-history/pastoral-mobility-steppe-empires-and-settled-frontiers",
+    "history/global-history/open-web-platform-curation-and-digital-divides"
+  ],
+  "reviewed": 393,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six world-history foundation articles were added after checkpoint 387; 351 substantive rewrites/additions and 42 retained teaching flows in total. The batch follows survival, settlement, urban coordination, learning institutions, mobile pastoral societies and digital information order without presenting history as one inevitable ladder.",
+  "validation": {
+    "individual": "Each addition has ten teach-system sections, three responsive visualizations, three owned concepts, exact 6+4 exercises, two source-reading contracts and a bounded everyday numeric case.",
+    "numeric": "The cases trace food 100 becoming 85 after drought and network support, harvest allocation and a poor-harvest remainder of 55, a grain ledger with a missing 10, a learning institution's resource ledger, a herd changing from 100 to 90, and an exposure funnel from 100 published items to 5 viewed items. Illustrative values are marked as assumptions.",
+    "browser": "Six production routes passed 390px and 1440px overflow checks. Documents, figures and buttons had zero horizontal overflow; 390x844 to 390x700 viewport changes moved the named-section anchor and scroll position by only 2px.",
+    "learning": "PASS 937 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS app tsc -b with node --max-old-space-size=8192 as part of the production build; actual exit 0.",
+    "build": "PASS 7,294 transformed modules and 1,978 static public routes plus 404 fallback; actual exit 0.",
+    "graph": "PASS 4,248 concepts, 6,555 relations and 937 registered articles; actual exit 0.",
+    "formula": "PASS 1,472 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 937-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 937 strict; all six additions have reviewed keep decisions and source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 479 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm and Korean naturalness audits; actual exit 0.",
+    "lint": "PASS full-repository ESLint; actual exit 0.",
+    "visualization": "All six production routes render their figures without mobile or desktop overflow.",
+    "mobileViewport": "At 390px, documents, controls and figures stayed inside the viewport. Resizing the viewport height from 844px to 700px at real article positions produced at most a 2px anchor and scroll adjustment. At 336px, the 282px sidebar opened as a focused aria-modal dialog, locked body scrolling and closed without overflow.",
+    "desktopViewport": "All six articles stayed within 1440px.",
+    "production": "GitHub Pages run 37578408168 succeeded, and the six production routes passed mobile, desktop, height-change and sidebar checks with zero console errors or failed requests.",
+    "curriculumCoverage": "The batch connects anthropology, archaeology, early urban institutions, knowledge transmission, pastoral political organization and modern digital information systems. Further world-history work still needs regional political, social and everyday-life sequences and cross-regional comparisons."
+  },
+  "commit": "12169afd1aba4bbb15bafb112f97a137cc7a905e",
+  "deployment": {
+    "runId": 37578408168,
+    "conclusion": "success",
+    "production": "pass"
+  }
+}

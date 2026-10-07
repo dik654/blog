@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-393.json",
+  "publicArticles": 937,
+  "addedRoutes": [],
+  "rewrittenRoutes": [
+    "ai/speculative-decoding-variants"
+  ],
+  "reviewed": 394,
+  "remaining": 543,
+  "goalComplete": false,
+  "disposition": "The speculative-decoding article was rewritten around one causal thesis while preserving the existing teach-system flow; 352 substantive rewrites/additions and 42 retained teaching flows in total. Teach-system v0.10 now overlays a one-sentence answer, the next reader question, bottleneck, solution idea, failure boundary, reason for variants and decision criterion, and requires formula symbols to carry their domain meanings at the point of reading.",
+  "validation": {
+    "structure": "The article now has 12 causal sections. Ten detailed paper, implementation and derivation blocks remain available in progressive disclosure instead of interrupting the main explanation.",
+    "thesis": "The opening states that a small component proposes candidates and one large-model verification confirms several tokens, reducing sequential large-model generation calls. The next section immediately answers why confirming several tokens reduces call count.",
+    "formulaMeaning": "Five main formulas place Korean domain meanings directly under or beside symbols with KaTeX underbraces and aligned line breaks. Numeric substitutions follow the symbolic formulas. The repository formula audit still covers 1,472 explicit annotations; this checkpoint claims direct in-formula labeling only for the five main formulas revised here.",
+    "readerTest": "A fresh context-free reader recovered the thesis and the runtime decision rule, found no remaining catalog-like independent lists, and identified only local terminology and notation issues; those issues were corrected before deployment.",
+    "browser": "At 390px the article has zero document, figure, control or formula overflow with all ten detail blocks expanded. Fifteen rendered KaTeX display nodes, including numeric substitutions, have zero internal overflow and zero KaTeX errors. At 1440px the document also has zero overflow.",
+    "mobileViewport": "Resizing from 390x844 to 390x700 at a real paragraph produced a 2px scroll adjustment and a -2px anchor adjustment. At 336px the 282px sidebar opens as a focused aria-modal dialog, locks body scrolling, stays within the screen, closes with Escape and returns focus to the trigger.",
+    "learning": "PASS 937 exact 6+4 contracts in CI; actual exit 0.",
+    "graph": "PASS 4,248 concepts, 6,555 relations and 937 registered articles in CI; actual exit 0.",
+    "formula": "PASS 1,472 explicit operation annotations in CI; actual exit 0.",
+    "articleStructure": "PASS 937-public-article strict baseline in CI; actual exit 0.",
+    "topology": "PASS 937 strict; ai/speculative-decoding-variants fingerprint d9e926745f65efc6 and 12 reviewed sections.",
+    "reading": "PASS reading experience and 91 article listings with 479 prerequisite edges in CI; actual exit 0.",
+    "language": "PASS global prose rhythm and Korean naturalness audits in CI; actual exit 0.",
+    "lint": "PASS targeted and full-repository ESLint locally; actual exit 0.",
+    "build": "PASS locally and in CI with 7,294 transformed modules and 1,978 static public routes plus 404 fallback; actual exit 0.",
+    "production": "GitHub Pages run 37583016169 succeeded. The production article passed causal order, formula, mobile, desktop, sidebar, console-error and failed-request checks.",
+    "skill": "teach-system v0.10 validated with quick_validate.py. The causal thesis is an overlay within the existing strategy-to-parts and S-to-7 sequence, and formulas are treated as labeled diagrams rather than symbol dictionaries detached from the equation."
+  },
+  "commit": "df5133fa1578f8d46304115313e081d6cb5cf36d",
+  "deployment": {
+    "runId": 37583016169,
+    "conclusion": "success",
+    "production": "pass"
+  }
+}
