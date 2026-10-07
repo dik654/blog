@@ -151327,4 +151327,112 @@ export const ARTICLE_LEARNING: Readonly<
       }
     ]
   },
+  "economic-history/north-america-land-slavery-railroads-and-mass-production": regionalEconomicHistoryLearning({
+    entryNote: "판매 100−생산·운송 30=70이라는 소유주 장부와 임금 35를 지급한 뒤 35가 남는 장부를 비교합니다.",
+    coreIdea: "북아메리카의 대륙 시장과 대량생산은 토지 수용·노예제·철도·은행이 연결된 결과이므로 생산액과 함께 누가 이동·노동·재산의 권리를 가졌는지 봐야 합니다.",
+    assumed: { id: "common-land-use-right", role: "등록 소유권 밖에서도 공동체가 토지와 자원을 사용하던 권리를 구분합니다." },
+    concepts: [
+      { id: "settler-property-conversion", role: "원주민 토지를 정착민이 거래·담보할 수 있는 재산으로 바꾼 법과 행정을 설명합니다.", intuition: "누군가 비어 있다고 선언한 땅에는 이미 이동·사냥·경작·의례의 권리가 있을 수 있습니다.", workedExample: "철도에 준 토지와 주변 지가 상승을 이전 공동체의 손실과 함께 적습니다.", boundary: "모든 토지 이전이 같은 조약·전쟁·법 절차를 거쳤다고 보지 않습니다." },
+      { id: "slavery-capital-labor-regime", role: "사람의 노동과 법적 지위를 자산·담보로 삼은 생산과 신용 체제를 설명합니다.", intuition: "임금 35가 0이 되는 것은 싼 계약이 아니라 계약을 거부할 권리를 빼앗은 결과입니다.", workedExample: "판매 100에서 비용 30을 뺀 70과 임금 35를 더 지급한 뒤 35를 비교합니다.", boundary: "폭력과 가족 분리, 자유의 상실을 소유주 잔여와 같은 금액으로 상쇄하지 않습니다." },
+      { id: "continental-market-integration", role: "철도·통신·은행·표준이 원료와 공장, 소비시장을 대륙 규모로 연결한 과정을 설명합니다.", intuition: "운송 시간이 줄면 지역 가격이 가까워지지만 충격과 지배력도 더 멀리 전달됩니다.", workedExample: "면화·곡물·광물이 철도로 공장과 항구에 들어가고 대출과 판매대금이 돌아오는 길을 봅니다.", boundary: "시장 연결이 모든 지역과 인종 집단의 생활 개선을 보장했다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "판매 100에서 생산·운송비 30을 뺀 잔여와, 여기에 임금 35를 더 뺀 잔여를 각각 계산하세요.",
+    numericAnswers: ["강제노동 소유주 장부 70", "임금 지급 뒤 35", "차이 35", "권리 손실은 별도"],
+    changedCaseQuestion: "판매가 90으로 줄고 생산·운송비 30, 임금 35가 같다면 잔여를 다시 계산하고 누가 먼저 충격을 받는지 설명하세요.",
+    changedCaseAnswers: ["90−30−35=25", "잔여 10 감소", "임금·고용 계약 확인", "강제노동과 임금노동을 동일시하지 않음"],
+    sources: [
+      { title: "LSE EH304 · The Economic History of North America", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH304.htm", problem: "식민 정착·노예제·서부 확장·철도·금융·대공황을 끊어진 사건으로 보지 않아야 합니다.", contribution: "1600~2000년 북아메리카의 토지·노동·지역·산업·은행과 전쟁을 잇는 비교 질문을 제공합니다.", assumptions: "2026/27 공개 강의 범위이며 개별 사건의 인과 크기와 캐나다·멕시코의 상세는 별도 자료가 필요합니다.", evidenceScope: "대학 경제사 과정이 다루는 주제와 시간 범위를 확인합니다.", notClaim: "미국의 경험이 북아메리카 전체의 같은 성장 경로였다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "Federal Reserve History · Federal Reserve History", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", problem: "대륙 시장 확대와 은행 공황, 중앙은행 설계의 연결을 확인해야 합니다.", contribution: "국채와 연결된 통화 공급, 분산 준비제도의 불안정, 1913년 연준 창설과 이후 변화를 설명합니다.", assumptions: "미국 중앙은행의 기관사이며 노동·농가와 다른 나라의 금융 경험은 보완해야 합니다.", evidenceScope: "미국 연방준비제도의 설립 배경과 정책 변화입니다.", notClaim: "연준 설립이 금융 불안정을 즉시 끝냈거나 모든 위기의 원인이 같다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/europe-serfdom-states-industrialization-and-integration": regionalEconomicHistoryLearning({
+    entryNote: "수확 100−영주 의무 30−세금 10−생계 40=20과 생산 110−임대료 25−세금 15−투입 20−생계 35=15를 비교합니다.",
+    coreIdea: "유럽 경제사는 하나의 봉건제와 산업화가 아니라 지역별 농촌 의무·도시 자치·전쟁 재정·화폐와 산업이 다른 순서로 결합한 역사입니다.",
+    assumed: { id: "common-land-use-right", role: "토지 소유와 별개인 방목·채취·통행 권리가 가구 생계에 주는 몫을 설명합니다." },
+    concepts: [
+      { id: "rural-obligation-regional-divergence", role: "노동·현물·현금 의무와 이동 제한이 지역마다 다르게 바뀐 경로를 설명합니다.", intuition: "같은 수확 100이라도 무엇을 누구에게 내고 떠날 수 있는지가 달랐습니다.", workedExample: "영주 의무 30과 현금 임대료 25를 서로 다른 계약과 권리로 비교합니다.", boundary: "서유럽은 자유롭고 동유럽은 고정됐다는 두 칸짜리 지도로 줄이지 않습니다." },
+      { id: "fiscal-state-competition", role: "전쟁 경쟁이 세금·관료·국채와 대표기관의 협상을 키운 과정을 설명합니다.", intuition: "미래 세금을 약속해 오늘 전쟁비를 빌리면 국가 역량과 납세자 부담이 함께 커집니다.", workedExample: "농촌 세수와 도시 신용이 국채를 거쳐 군대와 기반시설에 쓰이는 길을 봅니다.", boundary: "국가 역량이 늘면 주민의 권리도 자동으로 늘어난다고 보지 않습니다." },
+      { id: "uneven-industrial-convergence", role: "생산성이 따라가도 지역 소득·자산·고용이 다른 속도로 움직이는 현상을 설명합니다.", intuition: "공장이 들어와도 이익 소유지와 노동 이동에 따라 지역에 남는 몫은 다릅니다.", workedExample: "생산 110으로 늘었지만 가구 잔여가 20에서 15로 줄어든 장부를 봅니다.", boundary: "국가 평균 성장률만으로 도시와 농촌, 핵심과 주변의 수렴을 확정하지 않습니다." },
+    ],
+    numericQuestion: "100−30−10−40과 110−25−15−20−35를 계산하고 생산과 가구 잔여의 변화를 구분하세요.",
+    numericAnswers: ["첫 잔여 20", "둘째 잔여 15", "생산 +10", "가구 잔여 −5"],
+    changedCaseQuestion: "둘째 장부의 현금 임대료가 15라면 새 잔여와 첫 장부와의 차이를 계산하세요.",
+    changedCaseAnswers: ["110−15−15−20−35=25", "첫 잔여보다 5 큼", "이동권 별도", "가격 변동 별도"],
+    sources: [
+      { title: "LSE EH314 · Political economy and economic policies", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH314.htm", problem: "봉건제·국가 형성·전쟁·의회·조세를 제도 하나의 승리로 설명하지 않아야 합니다.", contribution: "국가 경쟁, 절대주의와 의회, 소수자 추방, 중상주의, 화폐가치 저하와 조세 방식을 한 비교 범위에 둡니다.", assumptions: "2026/27 과정의 질문 지도이며 개별 제도의 효과는 원사료와 계량 연구로 다시 확인해야 합니다.", evidenceScope: "중세 후반부터 프랑스혁명까지 유럽 정치경제 과정의 범위입니다.", notClaim: "경쟁과 의회가 어느 곳에서나 같은 성장 효과를 냈다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "LSE EH204 · Money and Finance", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm", problem: "유럽 금융사를 영국의 은행과 국채 한 모형으로 축소하지 않아야 합니다.", contribution: "800년 이후 영국·스페인·이탈리아·프랑스·독일과 미국의 화폐·금융·위기·통합을 비교합니다.", assumptions: "강의계획이므로 설명용 농가 수치와 지역별 생활 결과를 직접 제공하지 않습니다.", evidenceScope: "중세부터 현대까지의 비교 화폐금융사 질문입니다.", notClaim: "깊은 금융시장이 자동으로 안정과 공정한 분배를 만들었다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/southeast-asia-ports-plantations-and-export-industrialization": regionalEconomicHistoryLearning({
+    entryNote: "수출 판매 100−생산 30−운송 15−세금·외부 이익 35=현지 잔여 20의 장부에서 시작합니다.",
+    coreIdea: "동남아시아의 항구 교역·식민 상품망·독립 뒤 제조 수출은 이어져 있지만, 수출액과 국내에 남은 임금·세금·기술·이익은 따로 계산해야 합니다.",
+    assumed: { id: "plantation-complex", role: "토지·강제노동·상업·운송·금융이 수출 작물 생산에 결합한 구조를 설명합니다." },
+    concepts: [
+      { id: "port-polity-trade-tax", role: "항만과 해협 접근, 상인 보호를 제공하고 세금을 거둔 기존 교역 질서를 설명합니다.", intuition: "항구는 물건이 지나가는 장소인 동시에 규칙과 안전을 팔고 세금을 걷는 정부였습니다.", workedExample: "화물 100이 항구를 지날 때 통행세와 상인 보호 비용이 어떻게 나뉘는지 봅니다.", boundary: "유럽 회사 이전의 교역이 비공식이거나 고립됐다고 보지 않습니다." },
+      { id: "colonial-export-enclave", role: "농장·광산·철도·항구가 특정 원자재 수출에 맞춰진 생산망을 설명합니다.", intuition: "수출길은 넓어져도 내륙 생활과 현지 산업을 잇는 길은 약할 수 있습니다.", workedExample: "수출 100에서 외부 몫 35와 현지 잔여 20을 구분합니다.", boundary: "수출액 전체가 현지 노동자와 정부의 소득은 아닙니다." },
+      { id: "export-oriented-industrial-transition", role: "원자재·수입대체에서 외국인투자와 제조 수출로 중심이 이동한 변화를 설명합니다.", intuition: "조립 주문이 늘어도 설계·부품·브랜드가 밖에 있으면 국내 학습과 몫은 작을 수 있습니다.", workedExample: "완제품 100에서 수입 부품 45와 현지 임금·공급·세금을 다시 나눕니다.", boundary: "조립 수출이 곧 핵심기술과 브랜드의 국내 소유를 뜻하지 않습니다." },
+    ],
+    numericQuestion: "수출 100−생산 30−운송 15−세금·외부 이익 35를 계산하세요.",
+    numericAnswers: ["현지 잔여 20", "비용 합계 80", "총수출과 현지 몫 구분", "실제 항목은 재분해"],
+    changedCaseQuestion: "운송비가 15에서 25로 늘고 다른 값이 같다면 현지 잔여와 감소분을 계산하세요.",
+    changedCaseAnswers: ["100−30−25−35=10", "잔여 10 감소", "가격 전가 여부 확인", "노동·세금 몫 별도"],
+    sources: [
+      { title: "LSE EH434 · Economic Development of East and Southeast Asia", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm", problem: "현대 수출 성장 앞의 기존 항구망과 식민 제도를 함께 설명해야 합니다.", contribution: "근세 교역·서구 식민화·전후 독립·아시아 호랑이·ASEAN을 잇는 비교 범위를 제공합니다.", assumptions: "2026/27 강의 범위이며 나라별 정책 효과와 국내 부가가치 크기는 별도 자료가 필요합니다.", evidenceScope: "동아시아와 동남아시아 장기 개발을 다루는 대학원 과정입니다.", notClaim: "열한 나라가 같은 식민 통치와 수출 제조 경로를 따랐다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "World Bank · Southeast Asia's long-term growth", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", problem: "운송비 하락이 수출 확대와 현지 산업 경쟁에 준 반대 효과를 함께 봐야 합니다.", contribution: "증기선과 수에즈 운하가 부피 큰 상품 수출과 서구 공산품 수입을 함께 늘린 경로를 설명합니다.", assumptions: "장기 지역 개관이며 설명용 100 장부와 모든 나라의 국내 부가가치를 제공하지 않습니다.", evidenceScope: "동남아시아의 장기 성장과 세계시장 연결을 다룬 세계은행 연구입니다.", notClaim: "교통 혁신이 모든 주민에게 같은 순편익을 주었다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors": regionalEconomicHistoryLearning({
+    entryNote: "물 100을 면화 60·식량 25·생활과 생태 15로 나눴다가 총량 70에서 면화 55를 유지하는 사례입니다.",
+    coreIdea: "중앙아시아의 목축·관개·소련 계획·독립 뒤 회랑은 물과 이동권, 생산 목표와 국경 통과 비용을 한 흐름에서 봐야 이해할 수 있습니다.",
+    assumed: { id: "commons-self-governance", role: "여러 사용자가 물과 목초를 함께 쓸 때 필요한 이용·감시·분쟁 규칙을 설명합니다." },
+    concepts: [
+      { id: "pastoral-irrigation-complementarity", role: "계절 목축과 오아시스 관개가 서로 다른 토지·물 규칙으로 함께 작동한 관계를 설명합니다.", intuition: "가축이 움직이는 길과 물이 흐르는 길을 막으면 한 지역의 식량 체계 전체가 바뀝니다.", workedExample: "물 100에서 식량 25와 생활·생태 15가 면화 60과 함께 유지되는 기준을 봅니다.", boundary: "유목과 관개 농업이 늘 충돌하거나 한쪽이 뒤처진 생산 방식이라고 보지 않습니다." },
+      { id: "planned-quota-external-cost", role: "중앙 생산 목표를 지키며 물·토양·건강 비용을 다른 주민과 지역에 넘긴 과정을 설명합니다.", intuition: "면화 55를 먼저 떼면 줄어든 물의 대부분을 식량과 강 하류가 감당합니다.", workedExample: "총량 70에서 면화 55 뒤 식량 10, 생활·생태 5가 남습니다.", boundary: "모든 계획경제 산출이 같은 환경 손상을 만들었다고 일반화하지 않습니다." },
+      { id: "landlocked-corridor-dependence", role: "수출입이 이웃 국가의 철도·도로·관로·통관에 좌우되는 구조를 설명합니다.", intuition: "거리가 짧아도 국경을 여러 번 지나면 시간과 정치 위험이 운송비에 붙습니다.", workedExample: "면화·광물·에너지 수출대금에서 철도 요금과 통관 지연을 빼 국가와 가구 몫을 봅니다.", boundary: "내륙국이라는 지리가 빈곤이나 특정 외교를 자동으로 결정한다는 뜻은 아닙니다." },
+    ],
+    numericQuestion: "물 100에서 60·25·15가 맞는지 확인하고, 총량 70에서 면화 55 뒤 식량 10과 생활·생태 5가 남는지 계산하세요.",
+    numericAnswers: ["기준 합계 100", "감소 뒤 합계 70", "식량 −15", "생활·생태 −10"],
+    changedCaseQuestion: "총량 70에서 면화를 40으로 줄이고 생활·생태 10을 남기면 식량에 얼마를 쓸 수 있는지 계산하세요.",
+    changedCaseAnswers: ["70−40−10=20", "식량 20", "기준보다 5 감소", "소득·생태 효과 별도"],
+    sources: [
+      { title: "World Bank · Water Energy Nexus in Central Asia", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", problem: "소련기 관개 생산과 하류 환경·생활 비용을 같은 물 흐름에서 확인해야 합니다.", contribution: "대규모 관개와 하천 전환, 농업 생산·에너지·아랄해의 연결을 설명합니다.", assumptions: "지역 개관이며 설명용 배분 수치와 오늘의 모든 유역 조건을 제공하지 않습니다.", evidenceScope: "중앙아시아의 물·에너지·농업 협력을 다룬 세계은행 연구입니다.", notClaim: "면화 하나만이 모든 환경·건강 결과의 충분 원인이라는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "ADB · Trade Corridors in the Caspian Region", href: "https://www.adb.org/publications/trade-corridors-caspian-region-present-future", problem: "실크로드 부활이라는 표현 대신 시기별 교역축과 실제 통관·운송 조건을 구분해야 합니다.", contribution: "해상 교역 우위, 러시아·소련의 북향 연결, 에너지 관로와 2010년대 유라시아 철도를 비교합니다.", assumptions: "카스피 회랑 중심 연구라 다섯 공화국 내부의 모든 생활경제를 대표하지 않습니다.", evidenceScope: "카스피 지역의 과거와 현재 무역 회랑을 다룬 ADB 연구입니다.", notClaim: "새 철도 하나가 내륙국의 비용과 정치 의존을 자동으로 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/oceania-indigenous-land-settler-exports-and-island-economies": regionalEconomicHistoryLearning({
+    entryNote: "가구소득 100을 국내생산 35·송금 25·관광 30·지원금 10으로 나누고 충격 뒤 75를 계산합니다.",
+    coreIdea: "오세아니아 경제사는 원주민의 토지·친족 교환과 정착민 수출경제, 작은 섬의 송금·관광·어업권·지원금이 서로 다른 권리와 충격 경로를 가진다는 점에서 읽어야 합니다.",
+    assumed: { id: "common-land-use-right", role: "시장 매매 밖의 공동 토지·자원 사용권이 생활을 지탱하는 방식을 설명합니다." },
+    concepts: [
+      { id: "indigenous-kinship-economy", role: "토지·바다·지식·식량의 사용을 친족 의무와 상호 교환으로 조직한 경제를 설명합니다.", intuition: "돈을 받지 않은 교환도 누가 돌보고 나누며 다음 세대에 지식을 넘기는지 정합니다.", workedExample: "식량·자원·지식·노래의 교환을 현금 매출과 별도의 권리 장부에 적습니다.", boundary: "여러 원주민 공동체가 같은 규칙과 고정된 전통을 가졌다고 보지 않습니다." },
+      { id: "settler-export-land-conversion", role: "토지를 양모·곡물·광물 수출용 사유지와 광구로 바꾼 과정과 권리 손실을 설명합니다.", intuition: "수출액 증가는 그 전에 그 땅으로 생활하던 사람의 손실과 동시에 일어날 수 있습니다.", workedExample: "양모·금 수출의 소득과 토지 접근·이동·식량 기반의 변화를 두 장부로 둡니다.", boundary: "모든 토지 이전이 같은 계약이나 저항·보상 과정을 거쳤다고 보지 않습니다." },
+      { id: "small-island-external-income-mix", role: "섬 가구와 정부가 송금·관광·어업권·지원금에 기대는 서로 다른 현금흐름을 설명합니다.", intuition: "모두 외화여도 관광객 감소와 해외 취업, 어업권 계약은 다른 충격을 받습니다.", workedExample: "35+25+30+10=100이 관광 10·송금 20으로 줄어 75가 되는 사례를 봅니다.", boundary: "작은 섬을 자립하지 못하는 한 유형으로 묶거나 외부소득을 모두 원조로 부르지 않습니다." },
+    ],
+    numericQuestion: "35+25+30+10과 35+20+10+10을 계산하고 감소분을 구하세요.",
+    numericAnswers: ["충격 전 100", "충격 뒤 75", "감소 25", "관광 −20·송금 −5"],
+    changedCaseQuestion: "관광이 20으로 회복되고 송금이 30으로 늘면 총소득과 기준 100과의 차이를 계산하세요.",
+    changedCaseAnswers: ["35+30+20+10=95", "기준보다 5 적음", "흐름별 위험 다름", "물가·인구 이동 별도"],
+    sources: [
+      { title: "NSW Treasury · Aboriginal economies", href: "https://www.nsw.gov.au/departments-and-agencies/nsw-treasury/about-us/nsw-treasury-bicentenary/walking-a-tightrope/milestones/aboriginal-economies", problem: "식민 정착을 경제사의 시작으로 삼아 그 이전의 생산·교환·지식을 지우지 않아야 합니다.", contribution: "식량·자원·지식·노래의 교역과 친족·의례, 식민 수탈 뒤의 적응을 공식 역사 자료로 설명합니다.", assumptions: "뉴사우스웨일스 정부의 개관이며 모든 호주와 태평양 공동체를 대표하지 않습니다.", evidenceScope: "뉴사우스웨일스 원주민 경제의 교환과 식민 충격을 다룬 공식 자료입니다.", notClaim: "원주민 경제가 하나의 변하지 않는 체계였다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "World Bank · Pacific Economic Update, May 2026", href: "https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf", problem: "태평양 섬 경제의 외부소득을 한 항목으로 합치지 않아야 합니다.", contribution: "관광·송금 중심 경제와 어업권료·지원금 같은 주권 수입, 기후·교통·기반시설 제약을 구분합니다.", assumptions: "2026년 지역 전망이며 설명용 가구소득 100의 비율을 제공하지 않습니다.", evidenceScope: "태평양 섬나라의 최근 성장·재정·외부충격을 다룬 세계은행 보고서입니다.", notClaim: "호주·뉴질랜드와 모든 섬나라가 같은 경제 구조를 가졌다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "economic-history/war-finance-public-debt-and-welfare-state-capacity": regionalEconomicHistoryLearning({
+    entryNote: "전쟁비 100을 세금 35·국채 40·화폐 15·징발 10으로 마련하고 전후 예산 100을 다시 나눕니다.",
+    coreIdea: "전쟁 재정은 현재의 사람과 물자를 미래 세입에 대한 국채로 옮기며, 전후에는 상환과 복구·연금·의료를 둘러싼 새 사회 재정계약으로 이어집니다.",
+    assumed: { id: "state-capacity", role: "국가가 세금을 걷고 규칙을 집행하며 공공서비스를 전달하는 능력을 설명합니다." },
+    concepts: [
+      { id: "wartime-resource-mobilization", role: "세금·차입·화폐·징발·배급으로 민간 자원을 전쟁에 옮긴 과정을 설명합니다.", intuition: "정부 지출 100은 새 물자를 만드는 동시에 가계가 쓸 사람·식량·연료를 줄입니다.", workedExample: "35+40+15+10=100으로 조달 수단과 부담 시점을 나눕니다.", boundary: "전쟁비 총액이나 무기 생산량만으로 인명·소비·식민지 동원 비용을 평가하지 않습니다." },
+      { id: "funded-public-debt-tax-base", role: "미래 세입을 담보로 현재 전쟁비를 장기 국채로 조달한 제도를 설명합니다.", intuition: "국채는 세금을 없애지 않고 오늘의 납부를 이자와 원금이 붙은 미래 납부로 옮깁니다.", workedExample: "전쟁 국채 40의 이자와 상환을 전후 예산에서 매년 지급하는 경로를 봅니다.", boundary: "정부 부채가 가계부채와 완전히 같거나 발행 즉시 파산을 뜻한다고 보지 않습니다." },
+      { id: "postwar-social-fiscal-contract", role: "전쟁 뒤 세금과 보험료를 받는 대신 연금·의료·주택·고용을 넓힌 약속을 설명합니다.", intuition: "동원에 참여한 시민은 복구 비용뿐 아니라 평시의 안전과 보장을 요구합니다.", workedExample: "전후 예산 100을 부채 40·복구 30·사회급여 20·국방 10으로 나눕니다.", boundary: "모든 참전국과 식민지 주민이 같은 보장과 시민권을 받았다고 보지 않습니다." },
+    ],
+    numericQuestion: "35+40+15+10과 40+30+20+10을 계산하고 두 장부가 각각 무엇을 뜻하는지 설명하세요.",
+    numericAnswers: ["전시 조달 100", "전후 지출 100", "조달 수단과 지출 목적 구분", "국채는 미래 세금과 연결"],
+    changedCaseQuestion: "전후 이자·상환이 40에서 50으로 늘고 총예산 100, 복구 30과 국방 10이 같다면 사회급여에 얼마가 남는지 계산하세요.",
+    changedCaseAnswers: ["100−50−30−10=10", "사회급여 10", "기준보다 10 감소", "증세·차환 선택 별도"],
+    sources: [
+      { title: "LSE EH450 · The Economics of War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", problem: "전쟁을 전투와 무기 생산만으로 보고 국가 형성·재원·소비·인명 비용을 놓치지 않아야 합니다.", contribution: "16~20세기 유럽 전쟁의 재정·물자·인력 동원과 배분, 경제·인간 결과를 한 과정에 둡니다.", assumptions: "2026/27 유럽 중심 과정이며 내전·식민지·비공식 보호의 다른 경로는 보완해야 합니다.", evidenceScope: "전쟁 경제와 국가 형성을 다루는 대학원 강의 범위입니다.", notClaim: "전쟁이 국가 역량이나 복지국가를 발전시킨 바람직한 원인이었다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", problem: "국채 규모를 전쟁·평화기 적자와 장기 세입 제도의 변화에 연결해야 합니다.", contribution: "1688년 약 100만 파운드에서 1800년 약 5억 파운드로 늘어난 영국 부채와 전쟁기 재정 변화를 정리합니다.", assumptions: "영국 의회 연구이며 다른 국가의 통화·패전·채무불이행 경험을 대표하지 않습니다.", evidenceScope: "영국 공공부채의 역사와 현재 제도를 다룬 공식 의회 자료입니다.", notClaim: "부채 증가 전체가 전쟁 하나에서 왔거나 높은 부채가 항상 같은 결과를 냈다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
 };

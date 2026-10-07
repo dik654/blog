@@ -4,7 +4,7 @@ import { economicHistoryArticles } from "./articles";
 const economicHistory: Category = {
   slug: "economic-history",
   name: "경제사",
-  description: "생산물을 세고 나누던 장부에서 교역·산업화·국제 통화와 부채를 지나 지역별 경로와 토지·가족·금융기관·노동·물가·세계 생산망의 공통 구조까지 읽습니다.",
+  description: "생산물을 세고 나누던 장부에서 교역·산업화·국제 통화와 부채를 지나 여러 지역의 토지·노동·가족·금융기관·전쟁 재정·세계 생산망까지 읽습니다.",
   subcategories: [
     { slug: "economic-history-early-state", name: "잉여와 국가 장부", description: "저장·측정·배분 권한이 함께 생긴 조건", icon: "𒀭" },
     { slug: "economic-history-trade", name: "교역과 신용", description: "거리·시간·불확실성을 장부와 중개로 나눈 방법", icon: "⇄" },
@@ -24,6 +24,12 @@ const economicHistory: Category = {
     { slug: "economic-history-labor-welfare", name: "노동과 복지국가", description: "임금·교섭·사회보험과 보장의 범위", icon: "⚖" },
     { slug: "economic-history-inflation-finance", name: "인플레이션과 금융화", description: "물가 기대·긴축의 비용·시장금융의 확대", icon: "↕" },
     { slug: "economic-history-global-production", name: "세계 생산망과 플랫폼", description: "컨테이너·가치사슬·플랫폼·기후 전환", icon: "▤" },
+    { slug: "economic-history-north-america", name: "북아메리카 경제사", description: "토지 수용·노예제·철도·대량생산과 금융", icon: "▰" },
+    { slug: "economic-history-europe", name: "유럽 내부의 여러 경로", description: "농촌 의무·재정국가·산업화와 통합", icon: "▥" },
+    { slug: "economic-history-southeast-asia", name: "동남아시아 경제사", description: "항구·식민 수출·독립과 제조 공급망", icon: "⌁" },
+    { slug: "economic-history-central-asia", name: "중앙아시아 경제사", description: "목축·관개·계획경제와 내륙 회랑", icon: "⌘" },
+    { slug: "economic-history-oceania", name: "오세아니아 경제사", description: "원주민 토지·정착민 수출과 섬 경제", icon: "◍" },
+    { slug: "economic-history-war-finance", name: "전쟁·국채·복지국가", description: "동원 재원과 미래 세금, 전후 재정 약속", icon: "▣" },
   ],
   articles: economicHistoryArticles,
 };
