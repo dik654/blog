@@ -87,6 +87,7 @@ export const CATEGORY_DOMAIN: Readonly<Record<string, DomainSlug>> = {
   tee: "cs",
   "isms-aml": "cs",
   saas: "cs",
+  cloud: "cs",
   scarcity: "economics",
   firms: "economics",
   labor: "economics",

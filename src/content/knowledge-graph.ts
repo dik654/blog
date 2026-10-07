@@ -31788,6 +31788,230 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "open-web-architecture-history": { id: "open-web-architecture-history", kind: "concept", domain: "history", label: "열린 웹 구조", aliases: ["open web architecture"], definition: "공개 표준과 링크를 이용해 서로 다른 주체가 문서를 만들고 연결할 수 있게 한 설계입니다.", canonicalHref: "/history/global-history/open-web-platform-curation-and-digital-divides#names" },
   "algorithmic-content-curation": { id: "algorithmic-content-curation", kind: "concept", domain: "history", label: "알고리즘 선별", aliases: ["algorithmic content curation"], definition: "규칙과 예측 모형이 검색·추천·차단에서 콘텐츠의 순서와 노출을 정하는 과정입니다.", canonicalHref: "/history/global-history/open-web-platform-curation-and-digital-divides#names" },
   "multi-level-digital-divide": { id: "multi-level-digital-divide", kind: "concept", domain: "history", label: "디지털 격차", aliases: ["multi-level digital divide"], definition: "접속 여부뿐 아니라 품질·가격·기기·기술과 실제 활용 결과에서 생기는 차이입니다.", canonicalHref: "/history/global-history/open-web-platform-curation-and-digital-divides#names" },
+  "role-aligned-cloud-certification": {
+    "id": "role-aligned-cloud-certification",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Role-aligned cloud certification path",
+    "definition": "목표 직무의 반복 업무와 현재 역량의 차이를 가장 많이 덮는 현행 시험을 먼저 고르는 경로입니다.",
+    "canonicalHref": "/cs/cloud/cloud-certification-roadmap-2026#names"
+  },
+  "cloud-portfolio-evidence-loop": {
+    "id": "cloud-portfolio-evidence-loop",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud portfolio evidence loop",
+    "definition": "시험에서 배운 판단을 구축·장애·복구·비용 기록으로 남기고 오답을 다시 학습에 넣는 반복 과정입니다.",
+    "canonicalHref": "/cs/cloud/cloud-certification-roadmap-2026#names"
+  },
+  "cloud-shared-responsibility-boundary": {
+    "id": "cloud-shared-responsibility-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud shared-responsibility boundary",
+    "definition": "서비스 유형에 따라 공급자와 고객이 보호하고 운영할 기술 층을 나누되 데이터·계정·설정 책임은 고객에게 남기는 경계입니다.",
+    "canonicalHref": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+  },
+  "cloud-failure-scope-elasticity": {
+    "id": "cloud-failure-scope-elasticity",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud failure scope and elasticity",
+    "definition": "건물·가용 영역·리전처럼 장애 범위를 나누고 수요에 따라 자원 수를 늘리고 줄이는 설계입니다.",
+    "canonicalHref": "/cs/cloud/cloud-foundations-responsibility-regions#names"
+  },
+  "cloud-policy-evaluation": {
+    "id": "cloud-policy-evaluation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud policy evaluation",
+    "definition": "주체·행동·대상·조건과 상하위 정책의 명시적 거부·허용을 합쳐 실제 접근 결과를 내는 과정입니다.",
+    "canonicalHref": "/cs/cloud/cloud-identity-access-hierarchy#names"
+  },
+  "cloud-resource-hierarchy-scope": {
+    "id": "cloud-resource-hierarchy-scope",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud resource hierarchy and scope",
+    "definition": "조직·계정 또는 테넌트·관리 그룹·구독·리소스 그룹·자원 계층에 정책과 역할이 미치는 범위를 정하는 구조입니다.",
+    "canonicalHref": "/cs/cloud/cloud-identity-access-hierarchy#names"
+  },
+  "cloud-request-path": {
+    "id": "cloud-request-path",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud request path",
+    "definition": "이름 해석부터 경로표·방화벽·부하 분산·백엔드·응답 경로까지 요청 한 건이 지나는 연결 사슬입니다.",
+    "canonicalHref": "/cs/cloud/cloud-networking-request-path#names"
+  },
+  "cloud-ingress-egress-separation": {
+    "id": "cloud-ingress-egress-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud ingress–egress separation",
+    "definition": "외부에서 시작한 연결을 받는 입구와 사설 자원이 외부로 시작하는 출구를 별도 경로와 정책으로 다루는 원칙입니다.",
+    "canonicalHref": "/cs/cloud/cloud-networking-request-path#names"
+  },
+  "cloud-compute-unit-selection": {
+    "id": "cloud-compute-unit-selection",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud compute unit selection",
+    "definition": "작업 수명·제어권·동시성·시작 지연과 운영 역량으로 VM·컨테이너·PaaS·함수 후보를 줄이는 판단입니다.",
+    "canonicalHref": "/cs/cloud/cloud-compute-selection#names"
+  },
+  "stateless-horizontal-scaling": {
+    "id": "stateless-horizontal-scaling",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Stateless horizontal scaling",
+    "definition": "요청 사이에 필요한 상태를 공유 데이터 서비스로 빼고 실행 복제본을 늘려 부하를 나누는 방식입니다.",
+    "canonicalHref": "/cs/cloud/cloud-compute-selection#names"
+  },
+  "cloud-data-access-pattern": {
+    "id": "cloud-data-access-pattern",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud data access pattern",
+    "definition": "어떤 키와 조건으로 어느 단위를 얼마나 자주 읽고 쓰는지를 기록해 저장 모델과 분할을 정하는 입력입니다.",
+    "canonicalHref": "/cs/cloud/cloud-storage-database-selection#names"
+  },
+  "cloud-replication-backup-separation": {
+    "id": "cloud-replication-backup-separation",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud replication–backup separation",
+    "definition": "현재 상태의 가용성을 높이는 복제와 과거 시점으로 되돌리는 백업·버전 기록을 다른 실패에 연결하는 원칙입니다.",
+    "canonicalHref": "/cs/cloud/cloud-storage-database-selection#names"
+  },
+  "rpo-rto-recovery-loop": {
+    "id": "rpo-rto-recovery-loop",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "RPO/RTO recovery loop",
+    "definition": "허용 데이터 손실 구간과 복구 시간을 정하고 탐지·전환·복원 뒤 실제 결과를 목표와 비교하는 운영 고리입니다.",
+    "canonicalHref": "/cs/cloud/cloud-reliability-observability-iac#names"
+  },
+  "cloud-observability-iac-loop": {
+    "id": "cloud-observability-iac-loop",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Cloud observability and IaC loop",
+    "definition": "지표·로그·추적으로 이상과 원인을 찾고 선언한 인프라 코드로 안전하게 변경·되돌린 뒤 결과를 다시 측정하는 과정입니다.",
+    "canonicalHref": "/cs/cloud/cloud-reliability-observability-iac#names"
+  },
+  "aws-clf-role-map": {
+    "id": "aws-clf-role-map",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AWS CLF-C02 role map",
+    "definition": "AWS 서비스를 실행·저장·망·보안·관측·비용처럼 문제에서 맡는 역할과 시점으로 묶는 학습 지도입니다.",
+    "canonicalHref": "/cs/cloud/aws-clf-c02-fast-study#names"
+  },
+  "aws-clf-domain-time-strategy": {
+    "id": "aws-clf-domain-time-strategy",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AWS CLF-C02 domain and time strategy",
+    "definition": "공식 영역 비중과 65문항의 제한 시간에 맞춰 1차 확정·표시·재검토와 오답 규칙을 운영하는 방법입니다.",
+    "canonicalHref": "/cs/cloud/aws-clf-c02-fast-study#names"
+  },
+  "constraint-first-cloud-architecture": {
+    "id": "constraint-first-cloud-architecture",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Constraint-first cloud architecture",
+    "definition": "문제의 수치·최상급·운영 조건을 먼저 고정하고 모든 필수 제약을 만족하는 서비스 조합만 남기는 설계 방법입니다.",
+    "canonicalHref": "/cs/cloud/aws-saa-c03-fast-study#names"
+  },
+  "aws-managed-decoupled-architecture": {
+    "id": "aws-managed-decoupled-architecture",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AWS managed decoupled architecture",
+    "definition": "정적·동적·데이터·비동기 작업을 관리형 저장·실행·DB·큐 경계로 나눠 장애와 부하 전파를 줄이는 구조입니다.",
+    "canonicalHref": "/cs/cloud/aws-saa-c03-fast-study#names"
+  },
+  "aws-developer-cloudops-role-boundary": {
+    "id": "aws-developer-cloudops-role-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "AWS developer–CloudOps role boundary",
+    "definition": "같은 변경 경로에서 코드·SDK·이벤트 구현과 환경·관측·복구 운영 중 어느 판단에 더 무게를 두는지 나눈 경계입니다.",
+    "canonicalHref": "/cs/cloud/aws-developer-cloudops-paths#names"
+  },
+  "safe-delivery-feedback-loop": {
+    "id": "safe-delivery-feedback-loop",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Safe delivery feedback loop",
+    "definition": "버전 산출물을 일부 트래픽에 먼저 배포하고 사용자 지표로 중단·승격·되돌리며 학습을 다음 변경에 반영하는 과정입니다.",
+    "canonicalHref": "/cs/cloud/aws-developer-cloudops-paths#names"
+  },
+  "azure-resource-governance-map": {
+    "id": "azure-resource-governance-map",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Azure resource governance map",
+    "definition": "Entra 테넌트와 관리 그룹·구독·리소스 그룹·자원 계층에 RBAC·Policy·태그·잠금을 다른 목적으로 적용하는 지도입니다.",
+    "canonicalHref": "/cs/cloud/azure-az900-fast-study#names"
+  },
+  "azure-management-tool-roles": {
+    "id": "azure-management-tool-roles",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Azure management tool roles",
+    "definition": "Advisor·Policy·Resource Lock·Service Health·Monitor처럼 비슷해 보이는 관리 도구를 권고·강제·보호·공급자 상태·워크로드 관측으로 나눈 역할입니다.",
+    "canonicalHref": "/cs/cloud/azure-az900-fast-study#names"
+  },
+  "azure-effective-state-debugging": {
+    "id": "azure-effective-state-debugging",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Azure effective-state debugging",
+    "definition": "여러 역할·NSG·시스템 및 사용자 경로가 합쳐진 실제 적용 결과를 조회해 첫 실패 관문을 찾는 진단 방법입니다.",
+    "canonicalHref": "/cs/cloud/azure-az104-fast-study#names"
+  },
+  "azure-administration-lifecycle": {
+    "id": "azure-administration-lifecycle",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Azure administration lifecycle",
+    "definition": "신원·거버넌스에서 저장·컴퓨팅·망을 만들고 관측·백업·복구로 결과를 검증하는 관리자 작업 순서입니다.",
+    "canonicalHref": "/cs/cloud/azure-az104-fast-study#names"
+  },
+  "azure-architect-devops-role-boundary": {
+    "id": "azure-architect-devops-role-boundary",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Azure architect–DevOps role boundary",
+    "definition": "무엇을 만들지 구조와 교환을 추천하는 설계 책임과 변경이 안전하게 흐를 전달 체계를 만드는 책임을 나눈 경계입니다.",
+    "canonicalHref": "/cs/cloud/azure-architect-devops-paths#names"
+  },
+  "retired-cloud-credential-scope": {
+    "id": "retired-cloud-credential-scope",
+    "kind": "concept",
+    "domain": "computer-science",
+    "label": "Retired cloud credential scope",
+    "definition": "폐지된 시험의 기술 학습 가치는 남기되 예약 가능성·자격 취득 조건·이력서 상태를 현행 경로와 분리하는 원칙입니다.",
+    "canonicalHref": "/cs/cloud/azure-architect-devops-paths#names"
+  },
+  "azure-ai200-backend-request-path": {
+    id: "azure-ai200-backend-request-path",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Azure AI-200 backend request path",
+    definition: "컨테이너가 받은 AI 요청을 캐시·벡터 저장소·메시지 큐로 나누고 신원과 설정을 지키며 결과를 돌려주는 실행 경로입니다.",
+    canonicalHref: "/cs/cloud/azure-ai200-fast-study#names",
+  },
+  "azure-ai200-operability-loop": {
+    id: "azure-ai200-operability-loop",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Azure AI-200 operability loop",
+    definition: "한 trace ID로 실행·데이터·메시지 구간의 첫 실패를 찾고 최소 수정 뒤 같은 요청으로 지연·오류·비용을 다시 확인하는 과정입니다.",
+    canonicalHref: "/cs/cloud/azure-ai200-fast-study#names",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -57292,6 +57516,162 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "open-web-architecture-history", to: "algorithmic-content-curation", relation: "produces", reason: "발행할 수 있는 문서가 크게 늘면서 이용자에게 보일 순서를 정하는 검색과 추천의 역할이 커졌습니다." },
   { from: "algorithmic-content-curation", to: "multi-level-digital-divide", relation: "constrains", reason: "접속한 뒤에도 추천·차단·언어 규칙이 발견과 참여 기회를 다르게 만듭니다." },
   { from: "open-web-architecture-history", to: "multi-level-digital-divide", relation: "contrasts", reason: "공개 표준이 준 발행 가능성과 기기·가격·기술·노출에서 남은 격차를 구분합니다." },
+  {
+    "from": "role-aligned-cloud-certification",
+    "to": "cloud-portfolio-evidence-loop",
+    "relation": "produces",
+    "reason": "Role-aligned cloud certification path의 결과를 실제 학습·운영 절차로 이어 가면 Cloud portfolio evidence loop이 됩니다."
+  },
+  {
+    "from": "cloud-shared-responsibility-boundary",
+    "to": "cloud-failure-scope-elasticity",
+    "relation": "produces",
+    "reason": "Cloud shared-responsibility boundary의 결과를 실제 학습·운영 절차로 이어 가면 Cloud failure scope and elasticity이 됩니다."
+  },
+  {
+    "from": "cloud-shared-responsibility-boundary",
+    "to": "cloud-policy-evaluation",
+    "relation": "prerequisite",
+    "reason": "계정과 데이터 접근은 관리형 서비스에서도 고객에게 남는 책임이라는 출발점을 알아야 Cloud policy evaluation 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "cloud-policy-evaluation",
+    "to": "cloud-resource-hierarchy-scope",
+    "relation": "produces",
+    "reason": "Cloud policy evaluation의 결과를 실제 학습·운영 절차로 이어 가면 Cloud resource hierarchy and scope이 됩니다."
+  },
+  {
+    "from": "cloud-shared-responsibility-boundary",
+    "to": "cloud-request-path",
+    "relation": "prerequisite",
+    "reason": "고객이 네트워크 경로와 접근 설정을 관리해야 한다는 책임 경계을 알아야 Cloud request path 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "cloud-request-path",
+    "to": "cloud-ingress-egress-separation",
+    "relation": "produces",
+    "reason": "Cloud request path의 결과를 실제 학습·운영 절차로 이어 가면 Cloud ingress–egress separation이 됩니다."
+  },
+  {
+    "from": "cloud-failure-scope-elasticity",
+    "to": "cloud-compute-unit-selection",
+    "relation": "prerequisite",
+    "reason": "수요와 장애 범위에 맞춰 실행 자원을 늘리고 나누는 기초을 알아야 Cloud compute unit selection 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "cloud-compute-unit-selection",
+    "to": "stateless-horizontal-scaling",
+    "relation": "produces",
+    "reason": "Cloud compute unit selection의 결과를 실제 학습·운영 절차로 이어 가면 Stateless horizontal scaling이 됩니다."
+  },
+  {
+    "from": "cloud-failure-scope-elasticity",
+    "to": "cloud-data-access-pattern",
+    "relation": "prerequisite",
+    "reason": "저장 데이터의 복제 위치와 장애 범위를 구분하는 기초을 알아야 Cloud data access pattern 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "cloud-data-access-pattern",
+    "to": "cloud-replication-backup-separation",
+    "relation": "produces",
+    "reason": "Cloud data access pattern의 결과를 실제 학습·운영 절차로 이어 가면 Cloud replication–backup separation이 됩니다."
+  },
+  {
+    "from": "cloud-replication-backup-separation",
+    "to": "rpo-rto-recovery-loop",
+    "relation": "prerequisite",
+    "reason": "고장 가용성과 과거 시점 복구를 다른 장치로 준비하는 기초을 알아야 RPO/RTO recovery loop 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "rpo-rto-recovery-loop",
+    "to": "cloud-observability-iac-loop",
+    "relation": "produces",
+    "reason": "RPO/RTO recovery loop의 결과를 실제 학습·운영 절차로 이어 가면 Cloud observability and IaC loop이 됩니다."
+  },
+  {
+    "from": "cloud-shared-responsibility-boundary",
+    "to": "aws-clf-role-map",
+    "relation": "prerequisite",
+    "reason": "CLF-C02 보안과 서비스 유형 문제의 공통 출발점을 알아야 AWS CLF-C02 role map 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "aws-clf-role-map",
+    "to": "aws-clf-domain-time-strategy",
+    "relation": "produces",
+    "reason": "AWS CLF-C02 role map의 결과를 실제 학습·운영 절차로 이어 가면 AWS CLF-C02 domain and time strategy이 됩니다."
+  },
+  {
+    "from": "cloud-request-path",
+    "to": "constraint-first-cloud-architecture",
+    "relation": "prerequisite",
+    "reason": "한 사용자 요청이 DNS·입구·앱·데이터를 지나는 공통 경로을 알아야 Constraint-first cloud architecture 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "constraint-first-cloud-architecture",
+    "to": "aws-managed-decoupled-architecture",
+    "relation": "produces",
+    "reason": "Constraint-first cloud architecture의 결과를 실제 학습·운영 절차로 이어 가면 AWS managed decoupled architecture이 됩니다."
+  },
+  {
+    "from": "cloud-observability-iac-loop",
+    "to": "aws-developer-cloudops-role-boundary",
+    "relation": "prerequisite",
+    "reason": "배포·관측·복구를 한 변경 고리로 이해하는 기초을 알아야 AWS developer–CloudOps role boundary 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "aws-developer-cloudops-role-boundary",
+    "to": "safe-delivery-feedback-loop",
+    "relation": "produces",
+    "reason": "AWS developer–CloudOps role boundary의 결과를 실제 학습·운영 절차로 이어 가면 Safe delivery feedback loop이 됩니다."
+  },
+  {
+    "from": "cloud-shared-responsibility-boundary",
+    "to": "azure-resource-governance-map",
+    "relation": "prerequisite",
+    "reason": "AZ-900 클라우드 개념과 서비스 유형의 공통 출발점을 알아야 Azure resource governance map 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "azure-resource-governance-map",
+    "to": "azure-management-tool-roles",
+    "relation": "produces",
+    "reason": "Azure resource governance map의 결과를 실제 학습·운영 절차로 이어 가면 Azure management tool roles이 됩니다."
+  },
+  {
+    "from": "azure-resource-governance-map",
+    "to": "azure-effective-state-debugging",
+    "relation": "prerequisite",
+    "reason": "Azure의 신원·구독·리소스 그룹과 정책 범위를 읽는 기초을 알아야 Azure effective-state debugging 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "azure-effective-state-debugging",
+    "to": "azure-administration-lifecycle",
+    "relation": "produces",
+    "reason": "Azure effective-state debugging의 결과를 실제 학습·운영 절차로 이어 가면 Azure administration lifecycle이 됩니다."
+  },
+  {
+    "from": "azure-administration-lifecycle",
+    "to": "azure-architect-devops-role-boundary",
+    "relation": "prerequisite",
+    "reason": "Azure 자원을 실제로 구성·관측·복구하는 관리자 수준의 기초을 알아야 Azure architect–DevOps role boundary 판단을 같은 요청 경로에 적용할 수 있습니다."
+  },
+  {
+    "from": "azure-architect-devops-role-boundary",
+    "to": "retired-cloud-credential-scope",
+    "relation": "produces",
+    "reason": "Azure architect–DevOps role boundary의 결과를 실제 학습·운영 절차로 이어 가면 Retired cloud credential scope이 됩니다."
+  },
+  {
+    from: "azure-administration-lifecycle",
+    to: "azure-ai200-backend-request-path",
+    relation: "prerequisite",
+    reason: "Azure의 신원·실행·망·관측 자원을 만들고 운영하는 기초가 있어야 AI 백엔드 한 요청의 서비스 경계를 실제로 구성할 수 있습니다.",
+  },
+  {
+    from: "azure-ai200-backend-request-path",
+    to: "azure-ai200-operability-loop",
+    relation: "produces",
+    reason: "AI 백엔드의 전체 요청 경로를 먼저 그려야 추적·로그·큐 기록에서 첫 실패를 찾아 같은 입력으로 다시 검증할 수 있습니다.",
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

@@ -11,6 +11,7 @@ import gpu from "./gpu";
 import tee from "./tee";
 import ismsAml from "./isms-aml";
 import saas from "./saas";
+import cloud from "./cloud";
 import scarcity from "./scarcity";
 import firms from "./firms";
 import labor from "./labor";
@@ -61,6 +62,7 @@ export const categories = [
   tee,
   ismsAml,
   saas,
+  cloud,
   scarcity,
   prices,
   marketFailure,

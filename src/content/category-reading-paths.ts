@@ -21,6 +21,54 @@ export interface CategoryReadingPath {
 export const CATEGORY_READING_PATHS: Readonly<
   Partial<Record<string, CategoryReadingPath>>
 > = {
+  cloud: {
+    organizingPrinciple: "선수 개념순",
+    title: "공통 원리에서 AWS·Azure 자격증과 취업 실습까지",
+    description:
+      "목표 직무를 먼저 고르고, 책임·권한·망·실행·저장·복구라는 공통 원리를 익힌 뒤 공급자별 현행 시험 범위와 실습으로 올라갑니다.",
+    stages: [
+      {
+        eyebrow: "01 · 목표",
+        title: "직무에서 시험을 거꾸로 고르기",
+        description: "공고의 역할 동사와 현재 경험을 세어 첫 시험과 네 주 실습을 정합니다.",
+        subcategories: ["cloud-roadmap"],
+      },
+      {
+        eyebrow: "02 · 공통 기초",
+        title: "한 요청이 지나는 여섯 경계",
+        description: "공유 책임, 권한, 네트워크, 실행, 저장, 관측·복구를 공급자 이름보다 먼저 배웁니다.",
+        subcategories: ["cloud-foundations"],
+      },
+      {
+        eyebrow: "03 · AWS",
+        title: "기초에서 설계·개발·CloudOps로",
+        description: "CLF-C02 뒤 SAA-C03 또는 DVA-C02·SOA-C03을 목표 직무에 맞춰 고릅니다.",
+        subcategories: ["cloud-aws"],
+      },
+      {
+        eyebrow: "04 · Azure",
+        title: "기초에서 관리·AI 개발·설계·DevOps로",
+        description: "AZ-900 뒤 AZ-104를 실습하고 AI-200, AZ-305 또는 AZ-400을 목표 직무에 맞춰 고릅니다.",
+        subcategories: ["cloud-azure"],
+      },
+    ],
+    featuredArticles: [
+      "cloud-certification-roadmap-2026",
+      "cloud-foundations-responsibility-regions",
+      "cloud-identity-access-hierarchy",
+      "cloud-networking-request-path",
+      "cloud-compute-selection",
+      "cloud-storage-database-selection",
+      "cloud-reliability-observability-iac",
+      "aws-clf-c02-fast-study",
+      "aws-saa-c03-fast-study",
+      "aws-developer-cloudops-paths",
+      "azure-az900-fast-study",
+      "azure-az104-fast-study",
+      "azure-ai200-fast-study",
+      "azure-architect-devops-paths",
+    ],
+  },
   "philosophy-topics": {
     organizingPrinciple: "주제순",
     title: "같음·책임·말·경험·취향·의미를 나누는 여섯 질문",
