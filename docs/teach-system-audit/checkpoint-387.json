@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-381.json",
+  "publicArticles": 931,
+  "addedRoutes": [
+    "philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history",
+    "philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith",
+    "philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding",
+    "philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation",
+    "philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language",
+    "philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts"
+  ],
+  "reviewed": 387,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six modern philosophy history articles were added after checkpoint 381; 345 substantive rewrites/additions and 42 retained teaching flows in total. The batch adds German idealism, existentialism, hermeneutics, critical theory, logical empiricism and ordinary language philosophy as overlapping modern axes rather than a single ladder of progress.",
+  "validation": {
+    "individual": "Each addition has ten teach-system sections, three responsive visualizations, three owned concepts, exact 6+4 exercises, two source-reading contracts and a bounded everyday numeric case.",
+    "numeric": "The cases trace a 60-minute shared desk, a 24-hour constrained day, a four-word message with six context messages, a 100-unit bonus promised to ten people but paid to six, ten sensor trials with a 1.5-degree calibration issue, and one utterance across three contexts. All illustrative values are marked as assumptions.",
+    "browser": "Six routes x 390/1440, six mobile height checks and the mobile sidebar passed locally and in production. Local report: output/playwright/philosophy-modern-six-local/2026-10-07/summary.json. Production report: output/playwright/philosophy-modern-six-production/2026-10-07/summary.json.",
+    "learning": "PASS 931 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with node --max-old-space-size=8192 as part of the production build; actual exit 0.",
+    "build": "PASS Vite 10.30s, 7,287 transformed modules and 1,966 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,230 concepts, 6,537 relations, 931 registered articles and zero invariants; 18 concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 931-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 931 strict; all six additions have reviewed keep decisions and final source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 479 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm and Korean naturalness audits with zero material failures. The separate ko-natural extraction had zero errors; 74 long-sentence review warnings remained across the new source, mainly names and condition comparisons.",
+    "lint": "PASS full-repository ESLint and targeted ESLint; actual exit 0.",
+    "visualization": "PASS philosophy-history visualization style audit across 22 source files. Each new route renders three figures without mobile or desktop overflow.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px. Resizing from 390x844 to 390x700 at actual article positions 7,286-7,612px preserved scroll and the named-section anchor with delta 0 on all six routes. Production vertical arrow bounds were at most 18x45px. The 336px mobile sidebar was an aria-modal dialog, held focus and locked body scrolling.",
+    "desktopViewport": "All six articles stayed within 1440px.",
+    "production": "GitHub Pages run 37572535795 succeeded. The six production routes passed mobile, desktop, height-change and sidebar checks with zero console errors or warnings.",
+    "curriculumCoverage": "MIT philosophy materials, Oxford modern philosophy and critical theory materials, and the Stanford Encyclopedia of Philosophy supplied the gap questions and source boundaries. Remaining philosophy work includes East Asian and African regional developments, logic, philosophy of religion, metaethics, applied ethics and internal debates within the modern schools. Derivatives remain governed by university pricing, Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk governance."
+  },
+  "commit": "a9c6ab01d39c9bda5584591529607ffd4408640b",
+  "deployment": {
+    "runId": 37572535795,
+    "conclusion": "success",
+    "production": "pass"
+  }
+}
