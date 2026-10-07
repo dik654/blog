@@ -13302,4 +13302,29 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Speech Acts", href: "https://plato.stanford.edu/entries/speech-acts/", note: "문장 내용과 말의 힘, 수행문, 적정 조건과 사회적 문제를 확인합니다." },
     { kind: "공개 강의", label: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "형식언어 접근과 Oxford 일상언어철학이 갈라지고 다시 만난 역사적 배열을 확인합니다." }
   ],
+  "global-history/human-dispersal-foraging-and-social-networks": [
+    { kind: "공식 연구", label: "Smithsonian Human Origins · Social Life", href: "https://humanorigins.si.edu/human-characteristics/social-life", note: "약 13만 년 전 장거리 자원 교환을 초기 사회망의 물질 단서로 확인합니다." },
+    { kind: "공식 문서", label: "UNESCO · Willandra Lakes Region", href: "https://whc.unesco.org/en/list/167/", note: "1만8천 년보다 앞선 야생 풀씨 가공과 맷돌 흔적을 확인합니다." }
+  ],
+  "global-history/agriculture-settlement-and-neolithic-tradeoffs": [
+    { kind: "공식 문서", label: "UNESCO · Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405/", note: "기원전 7400~6200년의 장기 정착·밀집 주거·지붕 출입 흔적을 확인합니다." },
+    { kind: "공개 강의", label: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/resources/mitsts_007f10_lec02/", note: "농경의 결과 크기와 변화 속도를 나누는 기술사 교과 질문을 확인합니다." }
+  ],
+  "global-history/cities-writing-rations-and-early-law": [
+    { kind: "핵심 사료", label: "The Met · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/322609", note: "기원전 2028년 무렵 전령의 맥주·빵·기름·양파 배급 점토판을 확인합니다." },
+    { kind: "핵심 사료", label: "Musée du Louvre · The Code of Hammurabi", href: "https://collections.louvre.fr/en/ark:/53355/cl010174436", note: "282개 판단과 왕권 표현이 새겨진 함무라비 비문의 성격을 확인합니다." }
+  ],
+  "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": [
+    { kind: "공식 문서", label: "UNESCO · Archaeological Site of Nalanda Mahavihara", href: "https://whc.unesco.org/en/list/1502/", note: "약 800년에 걸친 주거·교육·종교 건물과 조직된 지식 전달을 확인합니다." },
+    { kind: "공식 문서", label: "UNESCO · Timbuktu", href: "https://whc.unesco.org/en/list/119/", note: "산코레·코란 학교와 원고 거래·상업도시의 관계를 확인합니다." }
+  ],
+  "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers": [
+    { kind: "공식 문서", label: "UNESCO · Orkhon Valley Cultural Landscape", href: "https://whc.unesco.org/en/list/1081", note: "목축 사회와 행정·종교 중심의 공생 관계를 확인합니다." },
+    { kind: "공식 문서", label: "UNESCO · Petroglyphic Complexes of the Mongolian Altai", href: "https://whc.unesco.org/en/list/1382", note: "약 1만2천 년의 암각화에서 사냥·목축·말 중심 이동의 변화를 확인합니다." }
+  ],
+  "global-history/open-web-platform-curation-and-digital-divides": [
+    { kind: "공식 프로젝트 기록", label: "CERN · Where the web was born", href: "https://home.cern/science/computing/the-birth-of-the-web/where-web-was-born/", note: "1989년 웹 제안과 1993년 퍼블릭 도메인 공개 결정을 확인합니다." },
+    { kind: "공식 문서", label: "UNESCO · Guidelines for the Governance of Digital Platforms", href: "https://unesdoc.unesco.org/ark:/48223/pf0000387339", note: "플랫폼 설계·콘텐츠 조정·선별의 인권·투명성·책임 원칙을 확인합니다." },
+    { kind: "공식 연구", label: "ITU · Facts and Figures 2025", href: "https://www.itu.int/en/ITU-D/Statistics/Pages/facts/default.aspx", note: "온라인 약 60억 명·오프라인 22억 명과 소득·성별·도농 격차의 2025년 추계를 확인합니다." }
+  ],
 };

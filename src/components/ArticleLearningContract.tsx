@@ -175,18 +175,18 @@ export function ArticleLessonPrimer({
     <section
       data-lesson-primer
       className="not-prose mb-10 overflow-hidden rounded-xl border border-border/70 bg-card"
-      aria-label="본문을 이해하기 위한 수업 순서"
+      aria-label="본문을 읽은 뒤 개념을 연결하는 복습 지도"
     >
       <div className="border-b border-border/60 bg-muted/20 p-5 sm:p-6">
-        <p className="text-xs font-bold text-primary">본문에 들어가기 전에</p>
+        <p className="text-xs font-bold text-primary">본문을 읽은 뒤</p>
         <h2 className="mt-2 text-xl font-black leading-8 text-foreground">
-          전체 흐름을 본 뒤, 낯선 개념을 하나씩 확대합니다
+          방금 본 흐름을 개념 이름과 연결합니다
         </h2>
         <p className="mt-3 max-w-4xl text-sm leading-7 text-foreground/80">
-          위쪽 지도에서 이 글의 개념명과 연결 순서를 먼저 한눈에 봅니다. 노드를
-          선택하면 아래 스토리보드가 익숙한 장면, 정의, 앞뒤 형태, 작은 예와
-          실패 경계를 함께 보여 줍니다. 재생 버튼은 같은 구조를 5컷으로 다시
-          펼쳐 설명합니다.
+          위쪽 지도에는 본문에서 설명한 개념과 연결 순서가 나옵니다. 노드를
+          선택하면 방금 읽은 장면, 정의, 앞뒤 관계, 작은 예와 적용할 수 없는
+          경계를 함께 볼 수 있습니다. 재생 버튼은 같은 구조를 다섯 단계로 다시
+          펼칩니다.
         </p>
       </div>
 
@@ -196,8 +196,8 @@ export function ArticleLessonPrimer({
       />
 
       <p className="border-t border-border/60 px-5 py-4 text-xs leading-5 text-muted-foreground sm:px-6">
-        이제 아래 본문을 처음부터 읽습니다. 용어 사전·개념 그래프·연습문제는
-        설명을 끊지 않도록 본문 뒤의 복습 영역으로 옮겼습니다.
+        헷갈리는 노드만 골라 다시 본 뒤, 아래 용어 카드와 연습문제로 이해한
+        내용을 확인합니다.
       </p>
     </section>
   );

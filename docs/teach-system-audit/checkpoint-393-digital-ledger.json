@@ -1,0 +1,21 @@
+{
+  "sections": ["overview", "black-box", "case", "picture", "need", "names", "mechanism", "source", "comparison", "limits"],
+  "concepts": [
+    {"id":"open-web-architecture-history","name":"열린 웹 구조","aliases":[],"avoid":["무료 웹"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"algorithmic-content-curation","name":"알고리즘 선별","aliases":[],"avoid":[],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"multi-level-digital-divide","name":"디지털 격차","aliases":[],"avoid":["접속 격차만"],"defined_in":"names","used_in":["mechanism","comparison","limits"]}
+  ],
+  "questions": [
+    {"id":"publish-visible","text":"발행된 100과 실제로 본 5는 왜 다른가","raised_in":"case","answered_in":"mechanism"},
+    {"id":"access-equality","text":"접속 인구가 늘어도 왜 참여 조건은 같지 않은가","raised_in":"picture","answered_in":"limits"}
+  ],
+  "setups": [],
+  "facts": [
+    {"id":"exposure-funnel","value":"100 → 20 → 5","meaning":"게시물·추천 후보·실제 노출의 설명용 경로","source":"unverified","as_of":"2026-10-07","status":"current","sections":["overview","case","mechanism"]},
+    {"id":"feedback-clicks","value":"40","meaning":"한 게시물이 받는 설명용 클릭 수","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"],"disambiguated":true},
+    {"id":"web-release","value":"1993년 4월 30일","meaning":"CERN이 웹 소프트웨어를 퍼블릭 도메인에 둔 날짜","source":"doc","as_of":"2026-10-07","status":"current","sections":["source"]},
+    {"id":"online-population","value":"약 60억 명","meaning":"ITU 2025 온라인 인구 추계","source":"doc","as_of":"2025","status":"current","sections":["limits"]},
+    {"id":"offline-population","value":"22억 명","meaning":"ITU 2025 오프라인 인구 추계","source":"doc","as_of":"2025","status":"current","sections":["limits"]}
+  ],
+  "knows_after": {"overview":"발행과 발견을 구분합니다.","black-box":"망·웹·호스팅·검색·추천·광고를 나눕니다.","case":"노출 경로를 계산합니다.","picture":"연결과 평등을 구분합니다.","need":"희소한 주의를 배분하는 힘을 봅니다.","names":"세 개념의 정식 이름과 경계를 압니다.","mechanism":"클릭의 되먹임을 추적합니다.","source":"CERN 공개 결정의 범위를 압니다.","comparison":"플랫폼 거버넌스의 권리 문제를 봅니다.","limits":"ITU 추계와 활용 격차를 구분합니다."}
+}

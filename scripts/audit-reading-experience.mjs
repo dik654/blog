@@ -87,12 +87,16 @@ const introducedSection = contractView.slice(
 
 const contract = {
   publicArticles: catalog.length,
-  primerBeforeBody:
-    primerIndex !== -1 && bodyIndex !== -1 && primerIndex < bodyIndex,
-  primerBeforeTermBearingOnboarding:
-    primerIndex !== -1 &&
-    onboardingIndex !== -1 &&
-    primerIndex < onboardingIndex,
+  entryGuideBeforeBody:
+    onboardingIndex !== -1 && bodyIndex !== -1 && onboardingIndex < bodyIndex,
+  primerAfterBody:
+    primerIndex !== -1 && bodyIndex !== -1 && bodyIndex < primerIndex,
+  primerBeforeReview:
+    primerIndex !== -1 && reviewIndex !== -1 && primerIndex < reviewIndex,
+  namelessEntryGuide:
+    articleOnboarding.includes("작은 사례를 따라 전체 흐름부터 잡습니다") &&
+    articleOnboarding.includes("!learning &&") &&
+    articleOnboarding.includes("필요한 용어와 적용 경계는 뒤에서 정리합니다"),
   reviewAfterBody:
     bodyIndex !== -1 && reviewIndex !== -1 && bodyIndex < reviewIndex,
   newLessonVizMounted: contractView.includes("<ArticleLessonFlowViz"),
