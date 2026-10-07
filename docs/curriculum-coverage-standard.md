@@ -109,6 +109,12 @@
 - [세계은행 중앙아시아 물·에너지 연구](https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf)와 [ADB 카스피 교역회랑 연구](https://www.adb.org/publications/trade-corridors-caspian-region-present-future): 목축·관개·소련 생산 할당과 독립 뒤 철도·관로·국경 통과 의존을 잇는다.
 - [NSW Treasury 원주민 경제사](https://www.nsw.gov.au/departments-and-agencies/nsw-treasury/about-us/nsw-treasury-bicentenary/walking-a-tightrope/milestones/aboriginal-economies)와 [세계은행 태평양 경제 업데이트 2026](https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf): 원주민의 토지·친족 교환, 정착민 수출과 섬 경제의 송금·관광·어업권·지원금을 서로 다른 권리와 현금흐름으로 본다.
 - [LSE EH450 전쟁 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm)와 [영국 의회 공공부채 역사](https://commonslibrary.parliament.uk/research-briefings/cbp-8265/): 사람·물자·세금·국채의 전시 동원과 전후 상환·복구·사회급여의 재정 약속을 연결한다.
+- [MIT 14.731 Economic History](https://ocw.mit.edu/courses/14-731-economic-history-fall-2006/pages/syllabus/)의 근대 기업·불평등·응용 경제사 질문과 [Oxford Corporate Insolvency Law](https://www.law.ox.ac.uk/content/corporate-insolvency-law)의 청산·구조조정 비교를 상법·도산의 범위표로 쓴다. 실제 절차는 UNCITRAL 입법지침과 미국 연방법원 안내에 대조한다.
+- [ICA 협동조합 정체성](https://ica.coop/en/cooperatives/cooperative-identity)과 [ILO 권고 193호 안내](https://www.ilo.org/publications/promoting-cooperatives-information-guide-ilo-recommendation-no-193): 공동 소유·민주 통제·회원 경제 참여와 국가 지원 속 자율성의 경계를 확인한다.
+- [세계은행 국가개발은행 조사](https://documents.worldbank.org/en/publication/documents-reports/documentdetail/977821525438071799)와 [개발금융기관 개관](https://blogs.worldbank.org/en/eastasiapacific/the-role-of-development-financial-institutions-in-the-new-millennium): 신용 공백·경기대응 역할을 추가성·임무·지배구조·손실 공개와 함께 본다.
+- [OECD Pensions at a Glance 2025](https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/gross-pension-replacement-rates_95e3eed6.html)와 [연금 자동조정 비교](https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html): 부과방식 재정·대체율·가입자 대비 수급자 변화와 자동조정을 같은 가정에서 비교한다.
+- [Eurostat 지역계정 메타데이터](https://ec.europa.eu/eurostat/cache/metadata/EN/reg_eco10_esms.htm)와 [Regions in Europe 2026](https://ec.europa.eu/eurostat/web/interactive-publications/regions-2026): 생산 장소의 GDP와 거주 가계 소득, 국가 PPP·통근·다국적기업·행정경계의 측정 효과를 구분한다.
+- [OECD TiVA](https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html)와 [WTO Global Value Chain Development Report 2025](https://www.wto.org/english/res_e/publications_e/gvcreport2025_e.htm): 총수출을 국내·외국 부가가치로 나누고 기술·녹색전환·지정학 속 공급망 재편을 비용·위험과 함께 본다.
 
 ### 현재 대응과 빈칸
 
@@ -138,9 +144,15 @@
 | 중앙아시아 | `central-asia-pastoralism-irrigation-planning-and-corridors` | 목축·관개·계획 할당·내륙 회랑을 물과 이동권의 한 장부로 연결 | 다섯 공화국의 물 협정·송금·광물·에너지와 주민 건강·지역 소득의 실측 비교 |
 | 오세아니아 | `oceania-indigenous-land-settler-exports-and-island-economies` | 원주민 친족경제·정착민 토지 수출·섬 외부소득의 서로 다른 권리와 충격을 구분 | 원주민 공동체별 토지 반환·기업·복지 결과와 섬나라별 기후 이주·재정의 독립 비교 |
 | 전쟁금융·공공부채·복지국가 | `war-finance-public-debt-and-welfare-state-capacity` | 전쟁비 조달과 미래 세금, 전후 복구·부채·사회급여의 재정계약을 연결 | 패전·내전·식민지 동원, 인플레이션·채무불이행과 복지 재정의 국가별 비교 |
-| 남은 횡단 주제 | 앞의 열두 지역·횡단 글과 여러 분야 글에 분산 | 전쟁금융까지 첫 연결 축 있음 | 상법·파산, 협동조합·국가금융, 복지 재정 지속성, 1990년대 이후 생산망·플랫폼·기후 전환의 실측 비교 |
+| 상법·도산 | `commercial-law-limited-liability-and-insolvency` | 법인격에서 집단적 중지·채권 분류·청산가치와 계속기업가치·투표·배분까지 연결 | 국가별 담보·노동·조세·환경 청구 순위와 중소기업 절차의 실제 기간·회수율 비교 |
+| 협동조합 | `cooperatives-member-governance-and-surplus` | 1인 1표, 이용고 배당, 공동 적립금을 한 해의 매출·비용·총회 장부에 연결 | 소비자·농업·금융·노동자 조합의 국가별 자본 조달·참여·생존율 비교 |
+| 개발은행·국가금융 | `development-banks-mandates-credit-and-governance` | 민간신용 감소와 정책금융 완충을 추가성·임무·심사·손실·퇴출 기준에 연결 | 사업·기업 단위의 반사실 비교, 보조금 상당액과 장기 부실·민간자금 동원 실측 |
+| 부과방식 연금 | `pay-as-you-go-pensions-demography-and-fiscal-balance` | 가입자·임금·보험료율·수급자·급여의 연간 장부를 대체율과 자동조정에 연결 | 국가별 세대·성별·소득분위 순부담과 건강·고용·빈곤 효과의 장기 비교 |
+| 지역 GDP·주민소득 | `regional-gdp-household-income-and-within-country-inequality` | 생산 장소와 거주 가계의 세후소득을 통근·소유·이전·경계 효과로 구분 | 유럽 밖 같은 해상도의 지역 소득·물가·가구 분포 자료와 경계 개편 뒤 시계열 비교 |
+| 부가가치 무역·공급망 재편 | `gross-exports-domestic-value-added-and-supply-chain-rewiring` | 총수출 100을 국내 직접·간접 60과 외국 투입 40으로 대사하고 조달 변경 뒤 몫을 다시 계산 | 개별 제품·기업의 공급자 집중·대체 기간·원가·임금·배출과 정책 보조금 실측 |
+| 남은 횡단 주제 | 앞의 서른 경제사 글과 여러 분야 글에 분산 | 제도·측정·공급망까지 첫 연결 축 있음 | 지역 내부 분포계정, 국가별 법·복지·정책금융 비교, 1990년대 이후 플랫폼·기후 전환의 실측 비교 |
 
-첫 지역 여섯 편과 이번 지역·횡단 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF·ADB·정부 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 횡단 주제 글은 평균 생산량이나 제도 이름에서 멈추지 않고 **누가 어떤 권리와 비용을 가졌는지, 충격 전후 장부가 어떻게 달라졌는지, 어느 지역과 시기까지 자료를 옮겨 읽을 수 있는지**를 같은 순서로 확인한다. 다음 경제사 묶음은 상법·파산과 협동조합·국가금융, 복지 재정 지속성, 각 지역 내부의 계량 비교를 우선한다.
+지역·횡단·제도·측정 글은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·OECD·Eurostat·WTO·ILO·정부 자료의 관찰 단위와 기관 관점을 밝히고, MIT·LSE·Oxford 과정의 질문으로 빠진 권리·생활·법·자료 유형을 다시 확인한다. 평균 생산량이나 제도 이름에서 멈추지 않고 **누가 어떤 권리와 비용을 가졌는지, 충격 전후 장부가 어떻게 달라졌는지, 생산 장소의 숫자가 주민과 국내에 실제로 얼마나 남는지, 어느 지역과 시기까지 자료를 옮겨 읽을 수 있는지**를 같은 순서로 확인한다. 다음 경제사 묶음은 국가별 상법·복지·정책금융과 지역 내부 분포계정의 실측 비교를 우선한다.
 
 ## 분야별 확장 방법
 

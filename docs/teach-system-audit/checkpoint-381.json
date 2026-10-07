@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-375.json",
+  "publicArticles": 925,
+  "addedRoutes": [
+    "history/economic-history/commercial-law-limited-liability-and-insolvency",
+    "history/economic-history/cooperatives-member-governance-and-surplus",
+    "history/economic-history/development-banks-mandates-credit-and-governance",
+    "history/economic-history/pay-as-you-go-pensions-demography-and-fiscal-balance",
+    "history/economic-history/regional-gdp-household-income-and-within-country-inequality",
+    "history/economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring"
+  ],
+  "reviewed": 381,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six economic-history institution and measurement articles were added after checkpoint 375; 339 substantive rewrites/additions and 42 retained teaching flows in total. The batch closes first-pass gaps in corporate insolvency, cooperative governance, development banking, PAYG pensions, regional accounts and trade in value added while preserving country and evidence boundaries.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order, topology and final targeted ESLint checks.",
+    "numeric": "The cases reconcile liquidation recovery 15/50=30% versus assumed reorganization recovery 35/50=70%; cooperative surplus 30 and patronage dividend 1.5; total credit 130 to 120 with a 15-unit policy offset; PAYG benefit 48 and an assumed 19.2% contribution rate after demography changes; regional GDP gaps of 3x versus household-income gaps of about 1.33x; and gross exports 100 split into domestic value added 60 and foreign value added 40, then 70/30 after an assumed input shift. All illustrative values are marked as assumptions.",
+    "browser": "Six routes x 390/1440, six mobile height checks and four sidebar assertions = 22 local checks; all passed. Local report: output/playwright/economic-history-institutions-local/2026-10-07/summary.json.",
+    "learning": "PASS 925 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with node --max-old-space-size=8192; actual exit 0.",
+    "build": "PASS Vite 9.75s, 7,280 transformed modules and 1,954 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,212 concepts, 6,519 relations, 925 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 925-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 925 strict; all six additions have reviewed keep decisions and final source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 479 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm, Korean naturalness and term-density audits with zero uncovered findings.",
+    "lint": "PASS full-repository ESLint and final targeted ESLint; actual exit 0.",
+    "visualization": "PASS visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; all three shared visualizations on every new route were checked in Chromium.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; each route had three figures ending at x=372px and numeric arrows were 27px in production. Resizing from 390x844 to 390x700 at actual article scroll positions 8,914–9,062px preserved scroll and the mechanism-section anchor with delta 0 on all six routes. The 336px mobile sidebar was an aria-modal dialog, held focus and locked body scrolling.",
+    "desktopViewport": "All six articles stayed within 1440px.",
+    "production": "GitHub Pages run 37569422649 succeeded; production Playwright report output/playwright/economic-history-institutions-production/2026-10-07/summary.json passed 22/22 checks with no console errors, page errors or failed requests.",
+    "curriculumCoverage": "MIT 14.731 and Oxford Corporate Insolvency Law supply curriculum-level gap questions. UNCITRAL, U.S. Courts, ICA, ILO, World Bank, OECD, Eurostat and WTO bind the actual legal, institutional and measurement claims. Derivatives coverage remains governed by four fixed axes: university pricing theory, Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk governance. Remaining work includes country-level insolvency, welfare and development-finance comparisons, subnational distribution accounts and firm/product-level supply-chain evidence."
+  },
+  "commit": "2041cd817271558507967bc32ef017ad561579e7",
+  "deployment": {
+    "runId": 37569422649,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
+  }
+}
