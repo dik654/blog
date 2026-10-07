@@ -4,7 +4,7 @@ import PoSValidatorViz from "./viz/PoSValidatorViz";
 import PoSFlowViz from "./viz/PoSFlowViz";
 export default function ProofOfStake(){return <section id="pos" data-teach-level="6" className="space-y-6 [&_p]:leading-8">
 <h2 className="text-2xl font-bold">9. 지분 40은 매번 당첨된다는 뜻이 아닙니다</h2>
-<p>같은 네 참여자가 10·20·30·40의 자원을 프로토콜에 담보로 등록했다고 놓습니다(가정). 이 지분으로 제안할 기회와 투표 무게를 정합니다. 실제로 검증에 참여하는 사람을 validator, 블록을 내놓을 사람을 proposer라고 부릅니다. 누가 선택되는지는 현재 상태와 검증 가능한 무작위 선택 규칙에 따릅니다.</p>
+<p>같은 네 참여자가 10·20·30·40의 자원을 프로토콜에 담보로 등록했다고 놓습니다(가정). 이 지분으로 제안할 기회와 투표 무게를 정합니다. 실제로 검증에 참여하는 사람은 검증자(validator)입니다. 블록을 내놓을 사람은 제안자(proposer)입니다. 누가 선택되는지는 현재 상태와 검증 가능한 무작위 선택 규칙에 따릅니다.</p>
 <PoSValidatorViz />
 <ExplainedFormula question="자원 40을 가진 D의 한 번 선택 확률은 얼마일까요?" idea="단순 지분 비례 선택에서는 각 참여자의 자원을 전체 자원으로 나눕니다." formula={String.raw`P(i)=\frac{s_i}{\sum_j s_j}`} annotatedFormula={String.raw`P(i)=\frac{\overbrace{s_i}^{\text{참여자 한 명의 지분}}}{\underbrace{\sum_j s_j}_{\text{선택 대상의 전체 지분}}}`} operations={[{expression:String.raw`s_i`,annotation:["이 참여자에게 인정한 지분입니다."]},{expression:String.raw`\sum_j s_j`,annotation:["모든 대상의 지분을 더해 비율의 분모로 씁니다."]}]} terms={[{symbol:"sᵢ",name:"인정 지분",description:"현재 선택에서 가중치로 사용하는 값입니다."},{symbol:"P(i)",name:"선택 확률",description:"단순 비례 모형에서 한 번 선택될 확률입니다."}]} assumptions={["10·20·30·40은 같은 단위로 표시한 설명용 가정입니다.","실제 프로토콜의 등록 조건·잔액 제한·위원회 선택과 무작위성 규칙을 따로 확인합니다."]} interpretation="합계 100에서 D는 40/100=0.4입니다. 장기 평균의 비율이며 다음 한 번의 선택을 보장하지 않습니다. A가 여러 키로 나눠도 같은 합계 지분만 인정한다면 총 무게는 10입니다." />
 <p>D가 X를 제안하더라도 다른 참여자는 잔액 90이 맞는지 다시 계산합니다. 유효한 X를 지지하는 A·B·D의 표가 같은 투표 문맥에 모였다면 합계는 70입니다. C를 제외했다고 인원 과반수 3명만 세는 대신 각 표의 지분을 합합니다.</p>

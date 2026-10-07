@@ -14,8 +14,8 @@ export default function Overview() {
         </p>
 
         <p className="leading-7">
-          텍스트로 이미지를 만드는 파이프라인에는 최소 세 부품이 있습니다. 이미지를 잠재 표현으로 바꾸는
-          autoencoder, 문장을 임베딩으로 바꾸는 text encoder, 그리고 잡음을 걷어 내는 denoiser입니다. 영상
+          텍스트로 이미지를 만드는 파이프라인에는 최소 세 부품이 있습니다. 이미지를 잠재 표현으로 바꾸는 부품은
+          autoencoder입니다. 문장을 임베딩으로 바꾸는 부품은 text encoder입니다. 잡음을 걷어 내는 부품은 denoiser입니다. 영상
           모델이면 시간축을 다루는 모듈이 더해지고, text encoder가 둘 이상인 구성도 있습니다.
         </p>
 

@@ -81,9 +81,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/vllm-spec-decode": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
-    "rationale": "같은 네 후보가 확률 보정·점수 index·출력과 유효 KV·시간 비용을 통과하는 한 generation cycle을 설명합니다. MTP·EAGLE 구조의 상세는 변형 정본으로 이어가며 이 글은 동일 검증 계약에 필요한 차이를 설명합니다.",
-    "sharedGate": "p(.7,.3)/q(.4,.6),후보ABBA·비교값.6/.4/.8/.2·결과ABA와A2/Y 3,history 4→7·computed 3→8→6 및E[Y]2.7731·시간비 1.848733/.840333을 6+4·본문·5장면에 맞춥니다. pinned 전체 5소스와 11패널,5식,390/1440 및 actual TS와 source byte 동일성을 확인합니다."
+    "reviewedAt": "2026-10-07",
+    "rationale": "같은 A·B·B·A 요청이 큰 모델 실행 감소에서 시작해 확률 보정·첫 거부·점수 index·출력과 유효 KV·전체 시간 손익으로 이어지는 한 generation cycle을 설명합니다. EAGLE·MTP와 동적 깊이는 이 검증 계약에서 달라지는 후보 준비 방법과 운영 선택으로 접어 두며, 자세한 변형 구조는 별도 정본으로 연결합니다.",
+    "sharedGate": "p(.7,.3)/q(.4,.6), 후보 A·B·B·A·비교값 .6/.4/.8/.2·결과 A·B·A와 A=2/Y=3, history 4→7·computed 3→8→6 및 E[Y]=2.7731·시간비 1.848733/.840333을 6+4 문제·13개 인과 절·5장면에 맞춥니다. pinned 전체 5소스와 11패널, 의미를 식 안에 붙인 5개 수식, 390/1440 화면과 실제 TypeScript·source byte 동일성을 확인합니다."
   },
   "ai/retrieval-ranking-funnel": {
     action: "keep",
@@ -1840,8 +1840,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "action": "keep",
     "status": "implemented",
     "reviewedAt": "2026-10-07",
-    "rationale": "큰 모델 한 번의 검증으로 여러 토큰을 확정해 순차 실행 횟수를 줄인다는 한 문장에 맞춰, 왜 실행 횟수가 줄어드는지부터 첫 불일치·후보의 출처와 모양·RAY 경로·비용·정확성으로 꼬리 질문을 잇습니다. LayerSkip·Medusa·MTP·SuffixDecoding의 원문 상세는 이 인과선을 끊지 않도록 해당 질문의 펼침 근거로 두므로 한 글로 유지합니다.",
-    "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 12개 깊이 절·3개 도식·6+4 연습·원문 코드에서 맞춥니다. 기존 세부 수치와 식은 펼침 근거에 보존하고 실제 CPU 실행·가정·논문 자기보고를 구분합니다."
+    "rationale": "큰 모델 한 번의 검증으로 여러 토큰을 확정해 순차 실행 횟수를 줄인다는 한 문장에 맞춰, 왜 실행 횟수가 줄어드는지부터 첫 불일치·후보의 출처와 모양·RAY 경로·비용·정확성으로 꼬리 질문을 잇습니다. Medusa 경로를 먼저 끝까지 추적하고 LayerSkip·MTP·SuffixDecoding도 각각 답·꼬리 질문·병목·같은 RAY 사례·남는 비용·선택 기준을 기본 화면의 독립 절에서 닫습니다.",
+    "sharedGate": "prefix4·7입력·17/10칸·RAY [0,1,4]·KV [4,5,8]→[4,5,6]·글/기록7, LayerSkip 4층의 12개 층·자리 작업, MTP 1.85/(v+.016)와 x<.917, suffix score1.875와 전체 시간비80/14를 15개 깊이 절·도식·6+4 연습·원문 코드에서 맞춥니다. 여섯 도입 개념의 재귀 인과 계약을 검사하고 실제 CPU 실행·가정·논문 자기보고를 구분합니다."
   },
   "ai/fft": {
     "action": "keep",
@@ -2731,7 +2731,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/fft": "4a26bb91107c906e",
   "crypto/hash-theory": "a5cd8d47bbd208bc",
   "ai/cross-entropy": "a23db07aab820d12",
-  "ai/speculative-decoding-variants": "d9e926745f65efc6",
+  "ai/speculative-decoding-variants": "3ed0caaefbd83e10",
   "crypto/crypto-primitives": "33067f5c32a87fc6",
   "ai/math-probability-expectation-variance": "109b8558d4626b83",
   "ai/math-random-variables-expectation": "839c7ae41018369a",
@@ -2937,7 +2937,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/tokenizer": "87660ba663da6629",
   "ai/vae": "147d459b37db9ccd",
   "ai/vllm-paged-attention": "ea303e6227016d05",
-  "ai/vllm-spec-decode": "d4e161bdd3651539",
+  "ai/vllm-spec-decode": "a6e102324a5e0728",
   "ai/vllm-scheduler": "2b8865e6dc083b80",
   "ai/retrieval-ranking-funnel": "50578b053322609e",
   "ai/model-vram-budgeting": "b08d63b9f969e0e3",

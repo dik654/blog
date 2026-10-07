@@ -43,7 +43,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">6. 다항식 커밋먼트의 인터페이스와 세 계열</h2>
-<p className="leading-8">함수 전체를 고정하는 작업은 Commit, 특정 위치의 값을 여는 작업은 Open, 이를 확인하는 작업은 Verify입니다. 이 인터페이스를 다항식 커밋먼트, PCS라고 합니다. 고정 이후 답을 바꾸기 어려운 성질은 evaluation binding입니다.</p>
+<p className="leading-8">함수 전체를 고정하는 작업은 약정(Commit)입니다. 특정 위치의 값을 드러내는 작업은 열기(Open)입니다. 그 값을 확인하는 작업은 검증(Verify)입니다. 이 인터페이스를 다항식 커밋먼트, PCS라고 합니다. 고정 이후 답을 바꾸기 어려운 성질은 evaluation binding입니다.</p>
 <p className="leading-8">KZG는 준비된 군 원소와 페어링을 사용해 몫 관계를 검사합니다. IPA는 다항식 평가를 벡터 내적으로 바꾸고 양쪽 벡터를 반복해서 접습니다. FRI 계열은 넓은 평가표가 낮은 차수 함수에 가까운지 일부 위치를 읽어 검사합니다.</p>
 <p className="leading-8">SRS는 미리 만든 구조화된 공개 자료입니다. KZG의 비밀 지수 τ 자체를 알고 있으면 거짓 답에 맞는 몫 값을 꾸밀 수 있으므로 그 지수가 알려지지 않았다는 조건이 필요합니다. 이 조건은 공개 자료의 크기나 파일 해시와 다른 문제입니다.</p>
 

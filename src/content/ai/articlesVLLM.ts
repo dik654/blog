@@ -911,106 +911,23 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "vllm-spec-decode",
-    title: "추측 디코딩: 네 후보를 확인하고 세 출력을 확정하는 과정",
+    title: "vLLM 추측 디코딩: 후보 검증부터 분포·KV·손익까지",
     subcategory: "ai-llm-serving",
     sections: [
-  {
-    "id": "overview",
-    "title": "1. 후보 네 개를 한 번에 확인하고 세 개를 확정합니다"
-  },
-  {
-    "id": "black-box",
-    "title": "2. 제안과 확인과 기록 갱신이 한 바퀴를 이룹니다"
-  },
-  {
-    "id": "small-case",
-    "title": "3. A는 일곱 몫, B는 세 몫이어야 합니다"
-  },
-  {
-    "id": "cycle-map",
-    "title": "4. 같은 후보를 준비부터 확정까지 따라갑니다"
-  },
-  {
-    "id": "why-components",
-    "title": "5. 거부 뒤에는 고르는 규칙과 기록의 길이를 함께 바꿉니다"
-  },
-  {
-    "id": "names",
-    "title": "6. 빠른 제안과 기준 모델에 이름을 붙입니다"
-  },
-  {
-    "id": "request-trace",
-    "title": "7. 셋째 B에서 멈추어 A·B·A를 확정합니다"
-  },
-  {
-    "id": "distribution-proof",
-    "title": "8. 두 선택 경로를 더하면 원래 확률로 돌아옵니다"
-  },
-  {
-    "id": "source-accept",
-    "title": "9. 실제 kernel은 같은 token의 두 확률을 읽습니다"
-  },
-  {
-    "id": "source-residual",
-    "title": "10. 부족분에 같은 배율을 곱해도 선택 비중은 같습니다"
-  },
-  {
-    "id": "acceptance-length",
-    "title": "11. 버퍼 길이와 확정 길이와 사용자 출력 길이를 나눕니다"
-  },
-  {
-    "id": "verification-pass",
-    "title": "12. 마지막 확정 입력과 네 후보가 다섯 점수를 만듭니다"
-  },
-  {
-    "id": "kv-commit",
-    "title": "13. 확정 글은 일곱 자리지만 계산된 기록은 여섯 자리입니다"
-  },
-  {
-    "id": "acceptance-tail",
-    "title": "14. 평균은 각 위치까지 모두 수락될 확률을 더합니다"
-  },
-  {
-    "id": "cost-model",
-    "title": "15. 독립·동일 확률 모형에서만 등비 합으로 줄입니다"
-  },
-  {
-    "id": "serving-break-even",
-    "title": "16. 확정 길이를 한 바퀴의 전체 시간과 비교합니다"
-  },
-  {
-    "id": "speedup-model",
-    "title": "17. 검증 비용을 1로 둔 원 논문의 식을 읽습니다"
-  },
-  {
-    "id": "weight-traffic",
-    "title": "18. 읽은 가중치를 나누는 장부는 실제 시간과 다릅니다"
-  },
-  {
-    "id": "paper-measurements",
-    "title": "19. 논문의 측정 조건을 가정한 숫자와 구분합니다"
-  },
-  {
-    "id": "paper-eagle",
-    "title": "20. 다음 token이 바뀌면 그 뒤 feature도 달라집니다"
-  },
-  {
-    "id": "paper-mtp",
-    "title": "21. 여러 미래를 학습한 head도 검증을 거칩니다"
-  },
-  {
-    "id": "dynamic-policy",
-    "title": "22. 고정 구현은 현재 batch 크기로 설정표를 조회합니다"
-  },
-  {
-    "id": "boundary",
-    "title": "23. 정확성의 전제와 실행한 검사의 범위를 확인합니다"
-  },
-  {
-    "id": "prediction-questions",
-    "title": "24. 같은 후보에서 다음 결과를 예상해 보세요"
-  }
-],
+      { id: "overview", title: "1. 결론부터: 후보를 한 번에 채점해 여러 토큰을 확정합니다" },
+      { id: "black-box", title: "2. 왜 여러 토큰을 확정하면 큰 모델 실행이 줄어들까요?" },
+      { id: "small-case", title: "3. 앞의 둘을 남기고 셋째를 A로 바꿉니다" },
+      { id: "causal-stop", title: "4. 첫 거부 뒤의 후보는 다른 앞 문장을 가정했습니다" },
+      { id: "why-components", title: "5. 출력 규칙과 다음 계산 기록을 함께 맞춰야 합니다" },
+      { id: "names", title: "6. 네 동작에 이름을 붙입니다" },
+      { id: "request-trace", title: "7. 후보 준비부터 다음 회차까지 한 요청을 추적합니다" },
+      { id: "distribution-proof", title: "8. 수락 경로와 교체 경로를 더하면 기준 모델 분포가 됩니다" },
+      { id: "state-commit", title: "9. 출력은 일곱 자리지만 유효 KV는 여섯 자리입니다" },
+      { id: "acceptance-tail", title: "10. 평균 확정 수는 첫 거부가 어디서 나는지를 모두 더한 값입니다" },
+      { id: "serving-break-even", title: "11. 평균 2.7731개를 확정해도 한 회차가 33ms면 느립니다" },
+      { id: "boundary", title: "12. 후보 방식보다 먼저 분포·상태·전체 시간을 확인합니다" },
+      { id: "prediction-questions", title: "13. 결론에서 생긴 세 질문에 답해 보세요" },
+    ],
     component: () => import("@/pages/articles/ai/vllm-spec-decode"),
   },
   {
@@ -1025,11 +942,14 @@ export const vllmServingArticles: Article[] = [
       { id: "why-components", title: "5. 바꿀 수 있는 곳은 후보의 출처와 후보의 모양 두 곳입니다" },
       { id: "names", title: "6. 이 과정을 추측 디코딩이라고 부릅니다" },
       { id: "request-trace", title: "7. 일곱 후보에서 RAY 한 경로만 확정합니다" },
-      { id: "variants", title: "8. 변형은 후보를 더 싸고 더 잘 맞게 만들려고 생겼습니다" },
-      { id: "cost", title: "9. 이득은 이름이 아니라 한 회차의 시간 장부로 결정됩니다" },
-      { id: "correctness", title: "10. 빨라져도 원래 모델의 답을 바꾸면 괜찮을까요?" },
-      { id: "boundary", title: "11. 결국 줄여야 하는 것은 큰 모델의 순차 실행 횟수입니다" },
-      { id: "prediction-questions", title: "12. 결론에서 생긴 꼬리 질문에 답해 보세요" },
+      { id: "variants", title: "8. 변형마다 어느 비용을 줄이고 무엇을 더 내는지 따로 봅니다" },
+      { id: "layer-skip", title: "9. LayerSkip은 모델 두 벌 대신 같은 모델의 앞층과 뒷층을 나눉니다" },
+      { id: "mtp", title: "10. MTP는 이미 고른 토큰과 앞 상태로 다음 후보를 만듭니다" },
+      { id: "suffix", title: "11. SuffixDecoding은 과거 문장이 반복될 때 후보를 검색합니다" },
+      { id: "cost", title: "12. 이득은 이름이 아니라 한 회차의 시간 장부로 결정됩니다" },
+      { id: "correctness", title: "13. 빨라져도 원래 모델의 답을 바꾸면 괜찮을까요?" },
+      { id: "boundary", title: "14. 결국 줄여야 하는 것은 큰 모델의 순차 실행 횟수입니다" },
+      { id: "prediction-questions", title: "15. 결론에서 생긴 꼬리 질문에 답해 보세요" },
     ],
     component: () => import("@/pages/articles/ai/speculative-decoding-variants"),
   },

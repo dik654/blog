@@ -20,7 +20,7 @@ export default function ModernFilecoinPdp() {
     <section id="dataset-artifact" className="space-y-6"><header><p className="text-sm font-semibold text-primary">01 · Dataset artifact</p><h2 className="mt-2 text-2xl font-bold">Ordered piece roots와 leaf counts를 하나의 logical array로 고정하고 contract schedule에 연결한다</h2></header><p>
             Dataset receipt에는 set ID, provider/listener, ordered piece identifiers·roots·leaf counts를 기록합니다.
             total challenge range, mutation revision, next challenge epoch와 source artifact digests도 함께 남깁니다.
-            예제에서 piece A는 60 leaves, B는 40 leaves이므로 logical indices 0–59는 A, 60–99는 B입니다. Piece order나 leaf
+            예제에서 piece A는 60 leaves입니다. Piece B는 40 leaves입니다. 따라서 logical indices 0–59는 A에 속하고 60–99는 B에 속합니다. Piece order나 leaf
             count를 바꾸면 root bytes가 같아도 다른 dataset입니다.
           </p><ExplainedFormula question="Logical challenge index가 어느 piece의 어느 leaf인지 어떻게 찾을까?" idea={<>앞선 pieces의 leaf counts를 누적한 prefix offset으로 전체 배열을 구간화합니다.</>} formula={String.raw`o_i=\sum_{j<i}L_j,\qquad o_i\le c<o_i+L_i,\qquad local=c-o_i`}
     annotatedFormula={String.raw`o_i=\underbrace{\sum_{j<i}L_j,\qquad o_i\le c<o_i+L_i,\qquad local=c-o_i}_{\text{허용 경계 판정}}`}

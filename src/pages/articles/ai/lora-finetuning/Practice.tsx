@@ -108,8 +108,8 @@ Q(\widetilde W)&\ne q_W+Q(sBA)\\
           그래서 전환 비용이 base 크기가 아니라 adapter 크기에 비례합니다.
         </p>
         <p>
-          이 방식이 성립하려면 kernel과 관리 정책이 둘 다 필요합니다. Rank·target module이 서로 다른 adapter를 하나의 batched 연산으로 묶는 kernel,
-          그리고 자주 쓰지 않는 adapter를 GPU 메모리에서 내리고 다시 올리는 관리 정책입니다. Merge 전용 경로보다 구현이 복잡한 대신 adapter 전환 지연을 base
+          이 방식이 성립하려면 kernel과 관리 정책이 둘 다 필요합니다. 먼저 kernel은 rank·target module이 서로 다른 adapter를 하나의 batched 연산으로 묶습니다.
+          관리 정책은 자주 쓰지 않는 adapter를 GPU 메모리에서 내리고 다시 올립니다. Merge 전용 경로보다 구현이 복잡한 대신 adapter 전환 지연을 base
           재로드 없이 요청 단위로 낮출 수 있습니다.
         </p>
       </div>

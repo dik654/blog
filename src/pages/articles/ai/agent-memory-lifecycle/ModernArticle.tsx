@@ -12,7 +12,7 @@ export default function AgentMemoryLifecycleArticle() {
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">배포를 이어받은 새 session이 같은 결정을 복원할 수 있을까요?</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="text-lg leading-8">첫 session에서 결제 migration을 중단했습니다. 실패한 test는 <code>payment-17</code>, 이미 만든 backup은 <code>artifact://bk-42</code>, 다음 안전한 행동은 schema 수정입니다. 새 session에는 긴 대화 대신 여섯 줄짜리 요약만 전달됩니다.</p>
+        <p className="text-lg leading-8">첫 session에서 결제 migration을 중단했습니다. 실패한 test는 <code>payment-17</code>입니다. 이미 만든 backup은 <code>artifact://bk-42</code>입니다. 다음 안전한 행동은 schema 수정입니다. 새 session에는 긴 대화 대신 여섯 줄짜리 요약만 전달됩니다.</p>
         <p>설명을 읽기 전에 세 결과를 예측해 보세요.</p>
         <ol>
           <li>요약이 목표는 보존했지만 실패한 test를 빠뜨리면 다음 행동은 같을까요?</li>

@@ -23,8 +23,8 @@ export default function Indexing2D() {
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Image에서는 x축을 column, y축을 row에 대응시키면 좌표 계산이
-          직관적입니다. 하지만 C/C++의 flat row-major allocation에는 행 경계
+          이미지의 x축은 <span className="whitespace-nowrap">열(column)</span>에 대응시킵니다.
+          y축은 <span className="whitespace-nowrap">행(row)</span>에 대응시킵니다. 하지만 C/C++의 flat row-major allocation에는 행 경계
           표시가 없으므로, <code>(row, col)</code>을 마지막에 linear offset으로
           바꿔야 합니다. 이 두 단계를 섞으면 width·height를 뒤집거나 rectangular
           image에서만 드러나는 bug가 생깁니다.
@@ -44,14 +44,14 @@ export default function Indexing2D() {
 \mathrm{offset}&=\mathrm{row}\times W+\mathrm{col}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\mathrm{col}&=\underbrace{b_xB_x+t_x,}_{\text{오른쪽 항으로 결과 계산}}\\
-\mathrm{row}&=\underbrace{b_yB_y+t_y,}_{\text{오른쪽 항으로 결과 계산}}\\
-\mathrm{offset}&=\underbrace{\mathrm{row}\times W+\mathrm{col}.}_{\text{row width 계산}}
+\mathrm{col}&=\underbrace{b_xB_x}_{\text{block의 시작 열}}+\underbrace{t_x}_{\text{block 안의 열}}\\
+\mathrm{row}&=\underbrace{b_yB_y}_{\text{block의 시작 행}}+\underbrace{t_y}_{\text{block 안의 행}}\\
+\mathrm{offset}&=\underbrace{\mathrm{row}\times W}_{\text{앞서 지나온 원소 수}}+\underbrace{\mathrm{col}}_{\text{현재 행 안의 위치}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`b_xB_x+t_x,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재","col을 더합니다."] },
-          { expression: String.raw`b_yB_y+t_y,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재","col을 더합니다."] },
-          { expression: String.raw`\mathrm{row}\times W+\mathrm{col}.`, annotation: ["row width이(가) 식의 결과에 기여하는 방식을","계산합니다.","완전히 지나온 row가 row개이고 각 row에 width개","원소가 있으므로 row × width만큼 건너간 뒤 현재"] },
+          { expression: String.raw`b_xB_x+t_x`, annotation: ["block의 시작 열과 block 안의 열 번호를 더합니다."] },
+          { expression: String.raw`b_yB_y+t_y`, annotation: ["block의 시작 행과 block 안의 행 번호를 더합니다."] },
+          { expression: String.raw`\mathrm{row}\times W+\mathrm{col}`, annotation: ["완전히 지나온 행의 원소 수에 현재 행의 열 위치를 더합니다."] },
         ]}
         terms={[
           {

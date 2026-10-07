@@ -75,7 +75,7 @@ export default function ModernArticle(){return <div className="space-y-16">
 </div></section>
 <section id="intermediary-myth" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 영란은행 원문의 두 그림을 같은 사례에 적용합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">McLeay·Radia·Thomas의 2014년 공보에서 인쇄 16쪽 Figure 1은 대출 직후 세 부문의 장부를, 19쪽 Figure 2는 서로 다른 은행을 이용하는 매수자와 매도자의 거래를 보여 줍니다. PDF에서는 각각 3쪽과 6쪽입니다. 두 그림의 막대는 실측 규모가 아닌 설명용이며, 본문의 20·80·92·8도 독자가 계산하도록 만든 가정입니다.</p>
-<p className="leading-8">Figure 1의 새 대출과 새 예금 막대에 각각 10을 대입하면 7절이 됩니다. 중앙은행 준비금 막대가 즉시 늘지 않는 점도 같습니다. Figure 2에서 구매자의 은행을 A, 판매자의 은행을 B로 읽고 지급액을 6으로 정하면 8절의 준비금 이동이 됩니다. 이후 원금 4 상환은 이 글이 추가한 계산입니다.</p>
+<p className="leading-8">Figure 1의 새 대출과 새 예금 막대에 각각 10을 대입하면 7절이 됩니다. 중앙은행 준비금 막대가 즉시 늘지 않는 점도 같습니다. Figure 2에서 구매자의 은행은 A로 읽습니다. 판매자의 은행은 B로 읽고 지급액을 6으로 정하면 8절의 준비금 이동이 됩니다. 이후 원금 4 상환은 이 글이 추가한 계산입니다.</p>
 <p className="leading-8">Figure 2의 마지막 줄은 대출 은행이 예금과 자금을 다시 확보하는 상황까지 이어집니다. 예금 창조와 자금 조달은 한 은행의 서로 연결된 활동입니다. 이 자료를 근거로 은행에 저축자의 자금 유치가 필요 없다고 결론 내릴 수 없습니다.</p>
 </div><SourceApplication source="McLeay·Radia·Thomas (2014) · Figure 2" excerpt="which the buyer’s bank uses to settle the transaction." application="A가 준비금 6을 B에 넘기는 줄입니다. 고객별 예금의 주인만 읽으면 은행 사이 지급 수단의 감소를 놓칩니다."/><CitationBlock source="Money creation in the modern economy · Figures 1–2" citeKey={2} href={BOE}>해당 공식 자료의 설명 범위와 본문의 가정 사례를 함께 확인합니다.</CitationBlock></section>
 <section id="journal" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 실제 회계의 차변·대변으로 다시 적어도 같은 결과입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">

@@ -71,7 +71,7 @@ export default function DerivativeChainRuleArticle() {
           {[['입력 차이로 출력 차이를 나눈다', '차분몫(difference quotient)', '두 점 사이의 평균 변화율'], ['간격을 줄일 때 모이는 값을 본다', '극한(limit), h→0', 'h가 0에 가까워질 때의 행동'], ['양쪽 비율이 같은 값에 모인다', '미분계수(derivative), f′(x)', '한 점 주변의 변화율'], ['변화율로 가까운 결과를 예상한다', '국소 선형 근사', '현재 값에 1차 변화 예측을 더함'], ['연결된 전달 비율을 곱한다', '연쇄법칙(chain rule)', '같은 변화가 연속 단계를 거친 결과']].map(row => <tr key={row[0]} className="border-t border-border">{row.map(cell => <td key={cell} className="min-w-[190px] p-3 align-top">{cell}</td>)}</tr>)}
         </tbody></table></div>
         <p>
-            입력을 x, 입력 간격을 h, 제곱 함수를 f(x)=x²로 적겠습니다. f′(3)=6은 x=3에서의 미분계수이고 각 x에 미분계수를 대응시킨 f′(x)=2x는 도함수입니다.
+            입력은 x로 적겠습니다. 입력 간격은 h이고, 제곱 함수는 f(x)=x²입니다. f′(3)=6은 x=3에서의 미분계수이고 각 x에 미분계수를 대응시킨 f′(x)=2x는 도함수입니다.
           </p>
         <p>이 표기를 쓰면 앞에서 여러 번 한 빼기와 나누기를 하나의 식으로 정리할 수 있습니다.</p>
       </section>

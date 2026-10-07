@@ -36,7 +36,7 @@ export default function ModernDH() { return <article className="space-y-14">
  <section id="names" data-teach-level="3" className="space-y-5"><h2 className="text-2xl font-bold">6. 공개값·공유값·인증에 이름을 붙입니다</h2>
   <p>반복 계산을 시작하는 5를 생성원 g, 숨긴 6·15를 비밀 지수 a·b, 공개한 8·19를 A·B라고 씁니다. mod 23은 23으로 나눈 나머지를 뜻합니다. 양쪽이 얻은 2는 공유값 Z이며 실제 암호화에 넣을 바이트 열쇠와는 구별합니다.</p>
   <p>이 교환이 <strong>DH 키 합의</strong>입니다. 대화마다 새 비밀을 만들면 ephemeral DH라고 부릅니다. 상대 신원과 대화 내용을 확인하는 것은 인증, 공유값에서 용도별 열쇠를 만드는 함수는 KDF입니다. 예측할 수 없는 비밀을 만드는 방법은 <Link to="/cs/crypto/csprng">암호용 난수 생성기</Link>에서 다룹니다.</p>
-  <div id="security" className="space-y-4 scroll-mt-20"><p>세 가지 계산 문제도 구분합니다. A에서 a를 찾는 문제는 DLP, A·B만으로 공유값을 만드는 문제는 CDH, 어떤 후보가 그 공유값인지 구별하는 문제는 DDH입니다. 이 이름들의 정확한 정의는 <Link to="/cs/crypto/discrete-log#applications">이산로그 가정 설명</Link>과 연결됩니다.</p><p>
+  <div id="security" className="space-y-4 scroll-mt-20"><p>세 가지 계산 문제도 구분합니다. A에서 a를 찾는 문제는 이산로그 문제(DLP)입니다. A·B만으로 공유값을 만드는 문제는 계산 DH 문제(CDH)입니다. 어떤 후보가 그 공유값인지 구별하는 문제는 판별 DH 문제(DDH)입니다. 이 이름들의 정확한 정의는 <Link to="/cs/crypto/discrete-log#applications">이산로그 가정 설명</Link>과 연결됩니다.</p><p>
             DLP를 풀면 CDH를 풀 수 있고 CDH를 풀면 계산 결과와 후보를 비교해 DDH도 판정할 수 있습니다. 반대로 DLP가 어렵다는 이유만으로 CDH가 어렵다고 결론낼 수는
             없습니다. CDH는 어려운데 DDH 판정은 쉬운 공간도 있으므로 보안 주장은 정확한 공간과 문제를 지정해야 합니다.
           </p></div>

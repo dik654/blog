@@ -189,10 +189,13 @@ export default function ExplainedFormula({
         data-formula-annotation-mode={
           annotatedFormula && operations?.length ? "explicit" : "inferred"
         }
-        className="min-w-0 overflow-x-auto rounded-lg border border-border/70 bg-background px-4 py-5 sm:px-6"
+        className="-mx-4 min-w-0 overflow-x-auto rounded-lg border border-border/70 bg-background px-0 py-5 sm:mx-0 sm:px-6"
       >
         <Math display>{annotatedFormula ?? formula}</Math>
-        <div data-formula-operations className="mt-4 border-t border-border/60 pt-4">
+        <div
+          data-formula-operations
+          className="mt-4 border-t border-border/60 px-3 pt-4 sm:px-0"
+        >
           <p className="text-xs font-bold text-primary">이 식 안에서 연산이 하는 일</p>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
             식을 계산 순서대로 펼치고, 각 단계가 무엇을 뜻하는지 확인합니다.

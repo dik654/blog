@@ -67,7 +67,7 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
 <section id="trace" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">10. 원 논문의 변환으로 같은 요청을 끝까지 계산합니다</h2>
 <AlgorithmBlock title="p=17, R=32에서 7과 5를 넣고 1을 꺼내기" input={["일반 숫자 7과 5, p′=15, R² mod17=4"]} steps={[{code:"enter(7): REDC(7*4)=REDC(28); m=4; (28+4*17)/32=3",note:"입력에 R²을 곱한 뒤 REDC로 R 하나를 지워 내부 7R을 만듭니다."},{code:"enter(5): REDC(20); m=12; (20+12*17)/32=7",note:"두 번째 입력도 같은 형식으로 바꿉니다."},{code:"multiply: REDC(3*7); m=27; (21+27*17)/32=15",note:"앞 절에서 계산한 동일한 곱셈입니다."},{code:"leave(15): m=15*15 mod32=1; (15+17)/32=1",note:"출력 경계에서 남은 R을 지워 일반 답 1을 얻습니다."}]} output="1. 직접 계산한 7×5 mod17과 같습니다." />
 <p>
-            Montgomery의 1985년 원문 519쪽은 같은 변환을 REDC라고 적고 소수를 포함한 법을 N, 취소 상수를 N′라고 씁니다. N=17과 N′=15를 넣으면 위의
+            Montgomery의 1985년 원문 519쪽은 같은 변환을 REDC라고 적습니다. 소수를 포함한 법(modulus)은 N으로 쓰고, 취소 상수는 N′로 씁니다. N=17과 N′=15를 넣으면 위의
             T=21, m=27, t=15입니다. 원문은 N이 꼭 소수일 필요는 없지만 이 글의 유한체에서는 소수를 사용합니다.
           </p>
 <p>

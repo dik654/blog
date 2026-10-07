@@ -10,8 +10,8 @@ export default function CAP() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           CAP의 formal model에서 consistency는 모든 operation이 한 복사본에서
-          원자적으로 실행된 것처럼 보이는 <strong>linearizability</strong>,
-          availability는 non-failing node가 받은 모든 요청에 결국 non-error
+          원자적으로 실행된 것처럼 보이는 <strong>linearizability</strong>입니다.
+          Availability는 non-failing node가 받은 모든 요청에 결국 non-error
           response를 돌려주는 성질입니다. Partition tolerance는 세 번째 기능을
           켜는 선택지가 아니라, node 집합 사이 메시지가 임의로 손실되는 execution을
           system model에 포함한다는 뜻입니다.

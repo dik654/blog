@@ -43,9 +43,9 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">6. 세 메시지·추출기·시뮬레이터를 구분합니다</h2>
-<p className="leading-8">먼저 보내는 값을 commitment, 뒤의 질문을 challenge, 마지막 답을 response라고 합니다. 이 세 메시지 구조가 Sigma protocol입니다. 여기서는 비밀 지수의 지식을 보이는 Schnorr 방식을 사용합니다.</p>
+<p className="leading-8">먼저 보내는 값은 약속(commitment)입니다. 뒤이어 받는 질문은 도전값(challenge)이고, 마지막에 보내는 답은 응답(response)입니다. 이 세 메시지 구조가 Sigma protocol입니다. 여기서는 비밀 지수의 지식을 보이는 Schnorr 방식을 사용합니다.</p>
 <p className="leading-8">같은 첫 메시지에 대한 서로 다른 두 응답에서 비밀을 구하는 절차는 추출기, extractor입니다. 비밀 없이 실제 대화처럼 보이는 자료를 만드는 가상의 절차는 시뮬레이터, simulator입니다. 시뮬레이터가 있다는 것이 영지식 정의의 중심입니다.</p>
-<p className="leading-8">값을 나중에 바꾸기 어렵게 묶는 성질은 binding, 값이 무엇인지 드러내지 않는 성질은 hiding입니다. Pedersen commitment는 두 성질이 서로 다른 전제에 기대는 예입니다. 대화 전체의 영지식은 개별 자료 하나의 hiding보다 더 넓은 조건입니다.</p>
+<p className="leading-8">값을 나중에 바꾸기 어렵게 묶는 성질은 결합성(binding)입니다. 값이 무엇인지 드러내지 않는 성질은 은닉성(hiding)입니다. Pedersen commitment는 두 성질이 서로 다른 전제에 기대는 예입니다. 대화 전체의 영지식은 개별 자료 하나의 hiding보다 더 넓은 조건입니다.</p>
 
 <p data-stage-bridge="names" className="text-sm leading-7 text-muted-foreground">메시지와 보안 도구에 이름을 붙였습니다. 두 응답에서 4가 나오는 계산을 끝냅니다.</p>
 </section>

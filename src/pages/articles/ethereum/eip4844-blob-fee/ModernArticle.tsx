@@ -47,8 +47,8 @@ export default function ModernBlobFee() {
   </section>
   <section id="names" data-teach-level="3" className="space-y-5">
    <h2 className="text-2xl font-bold">6. 자료 묶음은 blob, 가격용 기록은 excess입니다</h2>
-   <p>앞의 자료 묶음을 <strong>blob</strong>, 사용량 단위를 <strong>blob gas</strong>라고 부릅니다. blob 하나는 131,072 blob gas를 사용합니다. 이름에 gas가 들어가도 프로그램 실행에 사용하는 execution gas와 별도 장부입니다.</p>
-   <p><code>blob_gas_used</code>는 블록이 사용한 양이고 <code>excess_blob_gas</code>는 다음 가격으로 넘기는 누적 초과분입니다. <strong>target</strong>은 목표, <strong>max</strong>는 최대입니다. <strong>blob base fee</strong>는 blob gas 한 단위의 기본 가격이며 ETH 최소 단위인 wei로 표현합니다.</p>
+   <p>앞에서 본 자료 묶음은 <strong className="whitespace-nowrap">자료 묶음(blob)</strong>입니다. 그 묶음의 사용량은 <strong className="whitespace-nowrap">자료 가스(blob gas)</strong>로 셉니다. blob 하나는 131,072 blob gas를 사용합니다. 이름에 gas가 들어가도 프로그램 실행에 사용하는 execution gas와 별도 장부입니다.</p>
+   <p><code>blob_gas_used</code>는 블록이 사용한 양입니다. <code>excess_blob_gas</code>는 다음 가격으로 넘기는 누적 초과분입니다. 장기적으로 맞출 사용량은 <strong className="whitespace-nowrap">목표(target)</strong>입니다. 한 블록이 넘을 수 없는 한도는 <strong className="whitespace-nowrap">최대(max)</strong>입니다. blob gas 한 단위의 기본 가격은 <strong className="whitespace-nowrap">자료 기본료(blob base fee)</strong>이며 ETH 최소 단위인 wei로 표현합니다.</p>
    <p>따라서 사례의 2·5·3·4를 실제 입력으로 쓰려면 모두 131,072를 곱합니다. 262,144+655,360−393,216=524,288 blob gas입니다. 일부 숫자만 개수로 남겨 두면 서로 다른 단위를 더하게 됩니다.</p>
   </section>
   <section id="excess-update" data-teach-level="4" className="space-y-5">

@@ -60,7 +60,7 @@ export default function Article(){const sidebar=useCodeSidebar();return <div cla
             채워졌다고 가정하는 다른 계산을 덧붙이면 초기화와 경계 처리를 따로 해야 합니다.
           </p></div><CodePanel title="학습용 변형: 32×32 block과 축별 경계 검사" code={transposeCode} /><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">다음 재사용 조각은 block의 첫 위치에서 왼쪽 값을 0으로 둡니다. 이는 block 안에서만 이웃을 더하는 규칙입니다. 전체 배열에서 바로 앞 원소를 더하는 계산이라면 앞 block의 마지막 값을 따로 읽어 오는 경계 처리가 필요합니다. 동적 shared 공간은 block당 thread 수에 float 크기를 곱해 할당합니다.</p></div><CodePanel title="학습용 변형: block 안 이웃 값의 재사용" code={tileCode} /></section>
 <section id="aos-soa" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 필요한 항목끼리 붙여 놓아도 주소 간격이 달라집니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">위치 x·y·z와 mass를 각각 float로 가진 기록을 가정합니다. 한 기록이 16바이트이고 32개 작업이 서로 다른 기록의 x만 읽으면 x 주소는 16바이트씩 떨어집니다. 정렬된 512바이트 범위의 sector 16개에서 유효한 128바이트를 읽어 이용 비율은 25%입니다.</p>
-<p className="leading-8">x 값만 별도 배열에 모으면 간격은 4바이트입니다. 같은 32개 값을 정렬된 sector 4개에서 읽어 주소 이용 비율이 100%가 됩니다. 기록별로 묶는 배치를 AoS, 항목별 배열로 모으는 배치를 SoA라고 부릅니다.</p>
+<p className="leading-8">x 값만 별도 배열에 모으면 간격은 4바이트입니다. 같은 32개 값을 정렬된 sector 4개에서 읽어 주소 이용 비율이 100%가 됩니다. 기록별로 묶는 배치는 구조체 배열(AoS)입니다. 항목별 배열로 모으는 배치는 배열 구조체(SoA)입니다.</p>
 <p className="leading-8">
             한 작업이 기록의 모든 항목을 곧바로 쓰면 기록별 배치도 유용할 수 있습니다. 작은 기록 묶음 안에서 항목별 배열을 두는 AoSoA는 항목의 연속성과 기록 묶음의 가까운 배치를
             절충합니다. 어떤 배치를 고를지는 실제로 읽는 항목과 다음 계산의 접근 방식에 달려 있습니다.

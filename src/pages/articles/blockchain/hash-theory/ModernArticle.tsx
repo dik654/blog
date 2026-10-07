@@ -33,7 +33,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 앞에서 본 역할에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">입력을 일정 길이 결과로 바꾸는 공개 계산을 해시라고 하고 결과를 다이제스트라고 합니다. 입력을 나누는 한 묶음은 블록, 계산 도중 유지하는 값은 상태입니다. 끝 표시와 길이 등을 붙여 필요한 형식으로 만드는 과정이 패딩입니다.</p>
 <p className="leading-8">이전 상태와 한 블록을 받아 새 상태로 만드는 계산은 압축 함수입니다. 이런 함수를 차례로 연결하는 구조를 Merkle–Damgård 방식이라고 부릅니다. SHA-256의 블록은 512비트이고 연결 상태는 256비트입니다. 이를 h₀=IV, hᵢ=C(hᵢ₋₁,mᵢ), H(M)=hₖ로 적습니다. mᵢ는 패딩을 마친 i번째 블록이고 k는 그 블록 수입니다. 여기서 압축은 원본을 복원하는 파일 압축이라는 뜻이 아닙니다.</p>
-<p className="leading-8">SHA-3는 더 큰 내부 상태의 일부에 입력을 섞고 그 상태 전체를 바꿉니다. 직접 입출력하는 부분은 rate, 나머지는 capacity라고 부릅니다. 이 방식은 스펀지 구조이며 뒤에서 같은 abc를 넣어 비교합니다.</p>
+<p className="leading-8">SHA-3는 더 큰 내부 상태의 일부에 입력을 섞고 그 상태 전체를 바꿉니다. 직접 입출력하는 부분은 입력 영역(rate)입니다. 나머지는 보호 영역(capacity)입니다. 이 방식은 스펀지 구조이며 뒤에서 같은 abc를 넣어 비교합니다.</p>
 </div></section>
 <section id="padding" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 표준의 24비트를 실제 64바이트에 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">FIPS 180-4의 5.1.1절은 abc 자체를 패딩 예로 사용합니다. 원래 길이 24 뒤에 1비트, 0비트 423개, 길이를 적은 64비트를 붙입니다. 앞의 80은 1비트와 0비트 일곱 개이므로 남은 416비트가 52개의 00 바이트와 정확히 대응합니다.</p>
@@ -84,7 +84,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">FIPS 202의 상태 배치와 다섯 단계에 따라 별도로 만든 Python 모형을 실제 실행했습니다. abc뿐 아니라 빈 입력과 135·136·137바이트 입력의 SHA3-256이 hashlib와 일치했습니다. 이 모형은 설명용 검산이며 RustCrypto의 keccak 의존 라이브러리를 실행한 결과와 구별합니다.</p>
 </div><CodeViewButton label="직접 만든 24라운드 모형과 비교" onClick={()=>sidebar.open("keccak-model",codeRefs["keccak-model"])}/><CitationBlock source="NIST FIPS 202 · 3.2절, Algorithm 7·8·9, 6.1절" href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf" citeKey={2}>상태 배치·다섯 단계·흡수와 출력·SHA3-256의 suffix를 읽고 같은 바이트를 대입했습니다.</CitationBlock></section>
 <section id="source-sponge" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">15. 원문의 06과 마지막 80이 들어가는 위치를 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">같은 RustCrypto commit의 sha3 패키지는 0.12.0입니다. 원문은 Sha3_256의 rate를 U136, 출력 길이를 U32, 패딩 상수를 06으로 정합니다. update는 absorb_u64_le로 입력을 흡수하고 finalize_into는 pad 뒤에 f1600을 한 번 적용한 다음 read_state를 부릅니다.</p>
+<p className="leading-8">같은 RustCrypto commit의 sha3 패키지는 0.12.0입니다. 원문에서 Sha3_256의 입력 영역(rate)은 U136입니다. 출력 길이는 U32이며, 패딩 상수는 06입니다. update는 absorb_u64_le로 입력을 흡수하고 finalize_into는 pad 뒤에 f1600을 한 번 적용한 다음 read_state를 부릅니다.</p>
 <p className="leading-8">pad 원문에서 현재 위치가 3이면 word_offset=3/8=0, byte_offset=3%8=3입니다. 따라서 06을 첫 64비트 값의 24번째 비트부터 XOR합니다. 다음 줄은 state[136/8−1], 즉 state[16]의 최상위 비트를 XOR합니다. abc에서 계산한 두 값과 정확히 맞습니다.</p>
 <p className="leading-8">현재 위치가 135이면 두 연산이 마지막 바이트를 함께 바꾸어 06 XOR 80=86이 됩니다. 입력이 이미 136바이트를 채웠다면 그 블록을 먼저 처리하고 새 패딩 블록이 필요합니다. 135와 136의 차이는 단순히 00 한 바이트를 덜 붙이는 정도가 아닙니다.</p>
 <p className="leading-8">pad와 read_state 원문도 수정하지 않고 Rust에서 실행했습니다. 이 작은 호출 예제는 State1600과 위치만 제공하는 SpongeCursor 대체 형식을 명시적으로 두었습니다. 실제 cursor의 흡수나 keccak 의존성의 f1600은 연결하지 않았습니다. 따라서 여기의 네이티브 확인 범위는 패딩 위치와 little-endian 출력이며 전체 sha3 API 실행은 아닙니다.</p>

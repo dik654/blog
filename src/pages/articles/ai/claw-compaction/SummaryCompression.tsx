@@ -206,8 +206,8 @@ Conversation summary:
         <h3>배포 전에는 base와 candidate를 1·3·5회 반복해서 비교합니다</h3>
         <p>
           압축률만 높이는 변경은 쉽게 좋은 결과처럼 보입니다. 평가에서는 현재
-          production policy를 base, 새 selection·schema를 candidate로 두고 모든
-          외부 조건을 고정합니다. 특히 compaction 직후 agent가 같은 edit를 다시
+          현재 운영 정책은 <strong className="whitespace-nowrap">기준안(base)</strong>으로 둡니다. 새 selection·schema는
+          <strong className="whitespace-nowrap">후보안(candidate)</strong>으로 두고 모든 외부 조건을 고정합니다. 특히 compaction 직후 agent가 같은 edit를 다시
           실행했는지까지 세어야 token 절감이 duplicate effect 비용으로 바뀌는
           회귀를 잡을 수 있습니다.
         </p>

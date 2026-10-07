@@ -37,6 +37,7 @@ fi
 run node scripts/audit-prose-readability.mjs --strict "--route=$ROUTE"
 run node scripts/audit-korean-naturalness.mjs --strict "--route=$ROUTE"
 run node scripts/audit-term-density.mjs --strict "$ROUTE"
+run node scripts/audit-term-pair-wrapping.mjs --strict "$ROUTE"
 run node scripts/audit-article-reading-order.mjs --strict
 
 if [ "$FULL" = "--full" ]; then

@@ -160,8 +160,8 @@ export default function KnowledgeGraphConstructionArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Property graph 를 이루는 것은 셋입니다. Entity 를 담은 node, node 사이의 방향 있는 관계인 edge, 그리고 둘 모두에 key-value 로 붙일
-            수 있는 property 입니다. Neo4j 공식 문서는 이를 "node 는 도메인의 개별 대상을, relationship 은 source node 와 target node
+            Property graph를 이루는 것은 셋입니다. 대상을 담는 칸은 노드(node)입니다. 노드 사이의 방향 있는 관계는 엣지(edge)입니다. 둘 모두에 key-value로 붙일
+            수 있는 값은 속성(property)입니다. Neo4j 공식 문서는 이를 "node 는 도메인의 개별 대상을, relationship 은 source node 와 target node
             사이의 연결을 설명한다"고 정의합니다.
           </p>
           <p>

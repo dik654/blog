@@ -26,7 +26,7 @@
       "score": 40
     },
     "ai/claw-compaction": {
-      "fingerprint": "c0ea493dc7a16ad4",
+      "fingerprint": "4e28a3ceccde9e12",
       "score": 42
     },
     "ai/claw-permissions": {
@@ -166,7 +166,7 @@
       "score": 28
     },
     "blockchain/distributed-systems": {
-      "fingerprint": "b5872c9ea89b9c7d",
+      "fingerprint": "f0ebb8817d940cc0",
       "score": 28
     },
     "blockchain/filecoin-ipc": {
@@ -246,7 +246,7 @@
       "score": 26
     },
     "blockchain/filecoin-pdp": {
-      "fingerprint": "d9625ebebdbb8f14",
+      "fingerprint": "07d9fe00c30c0652",
       "score": 25
     },
     "blockchain/lotus-market": {
@@ -822,7 +822,7 @@
       "score": 10
     },
     "ai/multiview-fusion": {
-      "fingerprint": "4e164173f37d6b7c",
+      "fingerprint": "98155f76cde3d9e7",
       "score": 10
     },
     "ai/qwen-korean-consistency": {
@@ -920,7 +920,7 @@
       "score": 8
     },
     "ai/dpo": {
-      "fingerprint": "5b2462e45e8abecf",
+      "fingerprint": "f76fbcfaf0f25056",
       "score": 8
     },
     "ai/embedding-serving-contract": {
@@ -1162,7 +1162,7 @@
       "score": 6
     },
     "ai/tensor-and-pipeline-parallel-inference": {
-      "fingerprint": "d7584ef4e2699f7c",
+      "fingerprint": "4e6289f210e89169",
       "score": 6
     },
     "ai/visual-representation-tokenizers": {
@@ -1210,7 +1210,7 @@
       "score": 6
     },
     "crypto/halo2": {
-      "fingerprint": "d952eb7e1da9e635",
+      "fingerprint": "6062ed647b779a7b",
       "score": 6
     },
     "crypto/hash-theory": {
@@ -1234,7 +1234,7 @@
       "score": 6
     },
     "gpu/b300-switchless-network": {
-      "fingerprint": "27bcad6a30616d9d",
+      "fingerprint": "5633b2abde1aa869",
       "score": 6
     },
     "gpu/hw-network": {
@@ -1276,7 +1276,7 @@
       "score": 6
     },
     "firms/why-firms-exist": {
-      "fingerprint": "5c8786c9a34a527d",
+      "fingerprint": "d2ff64bffe78e909",
       "score": 8,
       "reviewedAt": "2026-10-05",
       "note": "Actualbody and independentreview:4 short repeated1..6 insidecost arrays are onecase with explicit assumptions.3 dense totalcost arrays movedton0..6 tables; no longparagraphs/headings/editorialjargon. Independent report /tmp/teach-all/root-firms-independent-theory.json PASS."

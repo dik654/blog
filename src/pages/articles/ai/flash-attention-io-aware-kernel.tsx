@@ -117,7 +117,7 @@ export default function Article(){
         <p className="leading-8">사이드바는 고정한 commit의 파일 원문 전체입니다. 이 일반 함수에서는 한 행을 네 실행 스레드가 나누어 처리합니다. 스레드 하나의 몫을 lane이라고 부릅니다. online_softmax 안의 최대값은 네 lane 사이에서 합치지만 합계는 아직 각 lane의 부분합입니다. 다음 절의 FA4 특수 경로는 이 배치를 그대로 사용하지 않습니다.</p>
       </div>
 <CodeViewButton label="공식 소스 · online_softmax 213–251행" onClick={() => sidebar.open("softmax", codeRefs.softmax)} /><SourceApplication source={"공식 코드의 갱신식"} excerpt={"row_sum[r] * row_scale[r]"} application={"이 식은 lane별 부분합에 적용됩니다. 네 부분합을 마지막에 더하면 1.135335×e⁻²+e⁻³+1≈1.203438입니다."} /><CitationBlock source={"공식 코드의 갱신식"} citeKey={2} href={"https://github.com/Dao-AILab/flash-attention/blob/e9515d5dee6ade134a33d6020d38d01ef0596996/flash_attn/cute/softmax.py"}>2026-10-04에 고정한 공식 원문입니다.</CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">(가정) 산술을 확인하려고 각 조각의 첫 항을 lane 0, 둘째 항을 lane 1에 두고 나머지 두 lane의 합은 0으로 둡니다. 첫 부분합은 [e⁻²,1,0,0]입니다. 둘째까지 처리하면 [e⁻⁴+e⁻³,e⁻²+1,0,0], 약 [0.068103,1.135335,0,0]이 됩니다. 이는 부분합의 논리적 배정이며 실제로 지원되는 작은 GPU 배열 배치를 실행한 결과는 아닙니다.</p>
+        <p className="leading-8">(가정) 산술을 확인하려고 각 조각의 첫 항은 레인 0(lane 0)에 둡니다. 둘째 항은 레인 1(lane 1)에 두고 나머지 두 레인의 합은 0으로 둡니다. 첫 부분합은 [e⁻²,1,0,0]입니다. 둘째까지 처리하면 [e⁻⁴+e⁻³,e⁻²+1,0,0], 약 [0.068103,1.135335,0,0]이 됩니다. 이는 부분합의 논리적 배정이며 실제로 지원되는 작은 GPU 배열 배치를 실행한 결과는 아닙니다.</p>
         <p className="leading-8">finalize의 width=4 합산이 이 네 값을 합쳐 1.203438을 만듭니다. 추가 가중치와 별도 배율을 쓰지 않는 이번 조건에서 반환값은 그 역수입니다. 이후 row_sum 저장 칸은 로그 지수합으로 덮어씁니다. 같은 변수도 함수 진입 전의 부분합과 종료 뒤의 통계가 다릅니다.</p>
         <p className="leading-8">
             분자 보정은 rescale_O가 맡습니다. 이 함수에 e⁻²를 넘기면 첫 가중합 4.270671이 약 0.577972로 줄어듭니다. 새 값의 가중합 6e⁻³+8을 더하면

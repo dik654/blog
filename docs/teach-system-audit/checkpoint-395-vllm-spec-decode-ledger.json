@@ -1,0 +1,53 @@
+{
+  "sections": [
+    "overview",
+    "black-box",
+    "small-case",
+    "causal-stop",
+    "why-components",
+    "names",
+    "request-trace",
+    "distribution-proof",
+    "state-commit",
+    "acceptance-tail",
+    "serving-break-even",
+    "boundary",
+    "prediction-questions"
+  ],
+  "concepts": [
+    {"id":"speculative-draft-verify-cycle","name":"추측 디코딩의 제안·검증 회차","defined_in":"names","used_in":["request-trace","distribution-proof","state-commit","serving-break-even"]},
+    {"id":"speculative-rejection-sampling","name":"거부 뒤 부족분 표집","defined_in":"names","used_in":["distribution-proof","boundary"]},
+    {"id":"speculative-suffix-causality","name":"첫 거부 뒤 후보의 인과 경계","defined_in":"names","used_in":["request-trace","state-commit","boundary"]},
+    {"id":"speculative-serving-break-even","name":"추측 디코딩 손익분기","defined_in":"names","used_in":["acceptance-tail","serving-break-even","boundary"]}
+  ],
+  "questions": [
+    {"id":"why-fewer-runs","text":"여러 토큰을 확정하면 왜 큰 모델 실행 횟수가 줄어드는가","raised_in":"overview","answered_in":"black-box"},
+    {"id":"why-residual","text":"거부 뒤 target 전체에서 다시 뽑으면 왜 원래 분포가 깨지는가","raised_in":"small-case","answered_in":"distribution-proof"},
+    {"id":"why-truncate","text":"셋째 후보를 바꾼 뒤 넷째 후보를 왜 계속 쓸 수 없는가","raised_in":"small-case","answered_in":"causal-stop"},
+    {"id":"why-kv-shorter","text":"출력은 일곱 자리인데 왜 유효 KV는 여섯 자리인가","raised_in":"request-trace","answered_in":"state-commit"},
+    {"id":"when-faster","text":"평균 확정 수가 커도 언제 느려지는가","raised_in":"acceptance-tail","answered_in":"serving-break-even"}
+  ],
+  "facts": [
+    {"id":"probability-ledger","value":"p=(.7,.3), q=(.4,.6)","meaning":"target과 proposer의 설명용 선택 비중","source":"unverified","as_of":"2026-10-07","status":"current","sections":["small-case","distribution-proof"]},
+    {"id":"candidate-trace","value":"ABBA + [.6,.4,.8,.2] -> ABA","meaning":"첫 거부와 교체를 보여 주는 설명용 요청","source":"unverified","as_of":"2026-10-07","status":"current","sections":["small-case","causal-stop","request-trace"]},
+    {"id":"state-trace","value":"history 4->7, computed 3->8->6","meaning":"출력 길이와 유효 KV 길이의 설명용 경로","source":"code","as_of":"2026-10-07","status":"current","sections":["request-trace","state-commit"]},
+    {"id":"expected-length","value":"E[Y]=2.7731","meaning":"iid alpha=.7, K=4 모형의 평균 확정 길이","source":"paper","as_of":"2026-10-07","status":"current","sections":["acceptance-tail","serving-break-even"]},
+    {"id":"fast-break-even","value":"27.731/15=1.848733","meaning":"검증 12ms인 설명용 시간 비","source":"unverified","as_of":"2026-10-07","status":"current","sections":["serving-break-even"]},
+    {"id":"slow-break-even","value":"27.731/33=.840333","meaning":"검증 30ms인 설명용 반례","source":"unverified","as_of":"2026-10-07","status":"current","sections":["serving-break-even"]}
+  ],
+  "knows_after": {
+    "overview":"한 문장 결론과 다음 질문을 압니다.",
+    "black-box":"여러 토큰 확정이 순차 실행을 줄이는 이유를 압니다.",
+    "small-case":"A와 B의 선택 비중과 첫 거부를 계산합니다.",
+    "causal-stop":"첫 거부 뒤 후보가 무효인 이유를 설명합니다.",
+    "why-components":"분포와 상태를 함께 보존해야 함을 압니다.",
+    "names":"동작에 표준 이름을 붙입니다.",
+    "request-trace":"같은 요청을 끝까지 추적합니다.",
+    "distribution-proof":"수락과 교체가 target 분포를 복원함을 계산합니다.",
+    "state-commit":"출력과 유효 KV 길이를 구분합니다.",
+    "acceptance-tail":"평균 확정 수의 출처와 가정을 압니다.",
+    "serving-break-even":"전체 시간 장부로 실제 이득을 판단합니다.",
+    "boundary":"구현·논문·부하별 경계를 구분합니다.",
+    "prediction-questions":"핵심 결론을 다른 조건에 적용합니다."
+  }
+}

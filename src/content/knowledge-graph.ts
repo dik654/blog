@@ -17901,7 +17901,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Draft & Verify layer skipping"
     ],
     "definition": "학습한 한 모델의 앞 층으로 후보를 만들고 중간 상태를 저장해 뒤 층의 검증에 재사용합니다. 추가 모델 가중치가 없다는 것과 추가 메모리가 없다는 것은 다릅니다. 층 수의 비율은 exit 상태·KV·마지막 입력과 실제 실행 시간을 대신하지 않습니다.",
-    "canonicalHref": "/cs/ai/speculative-decoding-variants#self-source"
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#layer-skip"
   },
   "mtp-head-draft-chain": {
     "id": "mtp-head-draft-chain",
@@ -17928,7 +17928,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "MTP break-even condition"
     ],
     "definition": "한 후보의 평균 출력 1+α와 후보·검증의 전체 시간 c+v를 같은 단독 생성 기준으로 비교합니다. 직렬·추가 비용 0·출력 길이 미절단이라는 시간 모형입니다. x=B/B*에서 max(1,2x)/max(1,x)를 가정하면 이득은 0<x<.917이며 보편 GPU batch 한도가 아닙니다.",
-    "canonicalHref": "/cs/ai/speculative-decoding-variants#mtp-cost"
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#mtp"
   },
   "tree-speculation-candidate-tree": {
     "id": "tree-speculation-candidate-tree",
@@ -17942,7 +17942,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Speculation tree"
     ],
     "definition": "같은 앞 글에서 가능한 여러 다음 선택을 가지로 준비하고 한 경로를 남기는 후보 구조입니다. 깊이와 총 후보 수를 구별합니다. 확정 길이가 길어도 확인 비용 4.2이면 비 .7742라 chain의 2.533/1.7=1.49보다 느립니다.",
-    "canonicalHref": "/cs/ai/speculative-decoding-variants#tree-cost"
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#request-trace"
   },
   "tree-attention-verification": {
     "id": "tree-attention-verification",
@@ -17956,7 +17956,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Tree-based parallel decoding"
     ],
     "definition": "각 자리가 자기 조상과 자신만 읽게 한 뒤 부모 점수로 다음 후보를 확인하고 선택한 경로의 계산 기록을 남깁니다. 마스크가 같은 조건을 보이는 것과 sampling 분포를 보존하는 것은 별개입니다. Medusa typical fast의 확률 문턱은 exact residual 보정과 다르며 허용 칸 수가 실제 GPU 연산 수는 아닙니다.",
-    "canonicalHref": "/cs/ai/speculative-decoding-variants#mask"
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#request-trace"
   },
   "suffix-decoding": {
     "id": "suffix-decoding",
@@ -17969,7 +17969,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Suffix tree speculation"
     ],
     "definition": "현재 입력의 끝부분과 같은 과거 기록을 찾아 관찰 빈도가 높은 다음 글을 후보로 만드는 방식입니다. 빈도 점수는 target 수락 확률의 보장이 아닙니다. 조회·갱신·반환 비용이 남으며 고정 wrapper의 None 오류와 C++의 strict 길이 조건을 현재 버전의 범위로 구분합니다.",
-    "canonicalHref": "/cs/ai/speculative-decoding-variants#suffix-source"
+    "canonicalHref": "/cs/ai/speculative-decoding-variants#suffix"
   },
   "inference-cost-per-token": {
     id: "inference-cost-per-token",

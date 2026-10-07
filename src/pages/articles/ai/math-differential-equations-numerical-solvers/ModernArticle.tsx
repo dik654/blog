@@ -161,7 +161,7 @@ assumptions={["필요한 매끄러움과 오차 전파 조건 아래 전체 오�
 </section>
 <section id="ode-sde-boundary" data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">14 · 무작위 흔들림은 시간의 제곱근 크기로 더한다</h2>
-<p>이번에는 같은 감소 규칙에 작은 무작위 흔들림을 더합니다. 평균적으로 이동시키는 항을 drift, 흔들림의 누적을 나타내는 과정을 Brownian motion W라고 부릅니다. 이들을 함께 쓴 확률 미분방정식(stochastic differential equation, SDE)은 같은 시작값에서도 여러 표본 경로를 만들 수 있습니다.</p>
+<p>이번에는 같은 감소 규칙에 작은 무작위 흔들림을 더합니다. 평균적으로 이동시키는 항은 표류항(drift)입니다. 흔들림이 누적되는 과정은 브라운 운동(Brownian motion) W입니다. 이들을 함께 쓴 확률 미분방정식(stochastic differential equation, SDE)은 같은 시작값에서도 여러 표본 경로를 만들 수 있습니다.</p>
 <p>길이 h인 시간 구간의 Brownian 증가량은 평균 0, 분산 h입니다. 서로 겹치지 않는 구간의 증가량은 독립입니다. 따라서 평균 0, 분산 1인 표준 정규 난수 ε에 √h를 곱해 증가량을 만들 수 있습니다. h=0.04이면 표준편차는 0.2입니다.</p>
 <ExplainedFormula question="감소와 무작위 변화를 한 단계에 어떻게 함께 넣나요?" idea="현재 상태의 평균 변화에는 h를 곱하고 무작위 증가량에는 √h를 곱합니다. 두 항은 시간에 대한 크기 변화가 다릅니다."
 formula={String.raw`dx=f(t,x)\,dt+g(t,x)\,dW,\qquad x_{n+1}=x_n+h f(t_n,x_n)+g(t_n,x_n)\sqrt h\,\varepsilon_n`}

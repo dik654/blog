@@ -52,8 +52,8 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
 <p className="leading-8">줄을 더 만들거나 저장 자리를 네 벌로 늘려도 계산 자리 하나라는 가정은 그대로입니다. 입력을 일찍 준비해 두는 일과 동시에 계산할 수 있는 양을 늘리는 일은 구분해야 합니다. 그림의 네 묶음은 9·14·19·24ms에 돌아오므로 두 자리를 잘 재사용해도 계산 자리를 채울 수 있습니다. 추가 공간이 필요한지는 값의 크기와 기다림의 길이까지 보고 결정합니다.</p>
 </div></section>
 <section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 순서 있는 줄은 stream이고 완료 표식은 event입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
-            명령을 제출하는 CPU 쪽을 host, 계산하는 GPU 쪽을 device라고 부릅니다. GPU에서 실행하는 함수는 kernel이며 데이터를 잠시 두는 저장 영역은
-            buffer입니다. 앞의 보내기와 가져오기는 각각 host-to-device와 device-to-host라 줄여서 H2D와 D2H라고 합니다.
+            명령을 제출하는 CPU 쪽은 호스트(host)입니다. 계산하는 GPU 쪽은 디바이스(device)입니다. GPU에서 실행하는 함수는 kernel이며 데이터를 잠시 두는 저장 영역은
+            buffer입니다. 호스트에서 디바이스로 보내는 전송(host-to-device)은 H2D라고 줄입니다. 디바이스에서 호스트로 가져오는 전송(device-to-host)은 D2H라고 줄입니다.
           </p>
 <p className="leading-8">
             한 stream 안에 제출한 작업은 정해진 순서를 따릅니다. 다른 stream 사이에 필요한 순서는 event로 연결할 수 있습니다. 다음 표에서 같은 사례의 역할과 이름을

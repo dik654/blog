@@ -19,7 +19,8 @@ export default function Addressing() {
           question="Node pair와 link 번호만으로 충돌하지 않는 /30 주소를 어떻게 만드는가?"
           idea={
             <p>
-              작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과 무관한 pair
+              작은 node 번호는 <span className="whitespace-nowrap">작은 번호(a)</span>로 둡니다.
+              큰 node 번호는 <span className="whitespace-nowrap">큰 번호(b)</span>로 둡니다. 이 순서로 정렬하면 방향과 무관한 pair
               identity가 됩니다. 두 번호를 second octet에 넣고 link 번호를 third
               octet에 넣어 cable마다 고유한 /30을 만듭니다.
             </p>
@@ -30,14 +31,14 @@ export default function Addressing() {
             h_a &= .1,\qquad h_b=.2
           \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-            o_2 &= \underbrace{100+10a+b}_{\text{second octet 계산}} \\
-            \mathrm{net}(a,b,\ell) &= \underbrace{10.o_2.\ell.0/30}_{\text{기준량당 비율}} \\
-            h_a &= \underbrace{.1,\qquad h_b=.2}_{\text{오른쪽 항으로 결과 계산}}
+            \underbrace{o_2}_{\text{node pair를 담는 둘째 octet}} &= \underbrace{100}_{\text{사설 주소 기준}}+\underbrace{10a+b}_{\text{정렬한 두 node 번호}} \\
+            \underbrace{\mathrm{net}(a,b,\ell)}_{\text{cable의 subnet}} &= 10.\underbrace{o_2}_{\text{node pair}}.\underbrace{\ell}_{\text{link 번호}}.0/30 \\
+            \underbrace{h_a}_{\text{작은 node의 host}} &= .1,\qquad \underbrace{h_b}_{\text{큰 node의 host}}=.2
           \end{aligned}`}
           operations={[
-            { expression: String.raw`100+10a+b`, annotation: ["second octet이(가) 식의 결과에 기여하는 방식을","계산합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
-            { expression: String.raw`10.o_2.\ell.0/30`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
-            { expression: String.raw`.1,\qquad h_b=.2`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","작은 node 번호를 a, 큰 번호를 b로 정렬하면 방향과","무관한 pair identity가 됩니다."] },
+            { expression: String.raw`100+10a+b`, annotation: ["정렬한 두 node 번호를 둘째 octet 하나에 넣습니다."] },
+            { expression: String.raw`10.o_2.\ell.0/30`, annotation: ["node pair와 link 번호를 합쳐 cable 하나의 subnet을 만듭니다."] },
+            { expression: String.raw`h_a=.1,\ h_b=.2`, annotation: ["작은 node에는 첫 host를, 큰 node에는 둘째 host를 줍니다."] },
           ]}
           terms={[
             { symbol: "a,b", name: "sorted node IDs", description: "a<b가 되도록 정렬한 1–8 범위의 두 server 번호입니다." },

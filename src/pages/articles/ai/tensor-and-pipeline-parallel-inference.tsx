@@ -64,7 +64,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             합쳐야 합니다. 이쪽이 row parallelism 입니다.
           </p>
           <p>
-            Megatron-LM 은 MLP 의 첫 GEMM 을 column, 둘째 GEMM 을 row 로 자릅니다. 그 사이의 GeLU 때문입니다. 첫 GEMM 을 row 로 자르면
+            Megatron-LM은 MLP의 첫 GEMM을 열(column) 방향으로 자릅니다. 둘째 GEMM은 행(row) 방향으로 자릅니다. 그 사이의 GeLU 때문입니다. 첫 GEMM 을 row 로 자르면
             GeLU(X₁A₁ + X₂A₂) 를 계산하기 전에 부분합을 합쳐야 하지만 column 으로 자르면 GeLU(XA₁) 과 GeLU(XA₂) 를 따로 적용해도 결과가 같습니다. 그
             열 조각이 둘째 GEMM 의 row 입력으로 그대로 들어갑니다.
           </p>
