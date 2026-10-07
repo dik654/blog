@@ -13200,4 +13200,28 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "2026년 예비인가가 신탁 수익증권에 한정되고 투자계약증권을 포함하지 않는 범위를 확인합니다."
     }
   ],
+  "economic-history/north-america-land-slavery-railroads-and-mass-production": [
+    { kind: "공개 강의", label: "LSE EH304 · The Economic History of North America", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH304.htm", note: "식민 정착·노예제·서부 확장·철도·은행·대공황과 전후 경제를 잇는 1600~2000년의 질문 범위를 확인합니다." },
+    { kind: "공식 문서", label: "Federal Reserve History · Federal Reserve History", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", note: "분산 준비제도의 공황과 1913년 연준 설립, 대공황·전시 금융의 제도 변화를 확인합니다." },
+  ],
+  "economic-history/europe-serfdom-states-industrialization-and-integration": [
+    { kind: "공개 강의", label: "LSE EH314 · Political economy and economic policies", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH314.htm", note: "봉건제·국가 형성·전쟁·의회·화폐와 과세를 비교하는 정치경제 범위를 확인합니다." },
+    { kind: "공개 강의", label: "LSE EH204 · Money and Finance", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm", note: "800년 이후 영국·스페인·이탈리아·프랑스·독일의 다른 화폐·금융 경로를 확인합니다." },
+  ],
+  "economic-history/southeast-asia-ports-plantations-and-export-industrialization": [
+    { kind: "공개 강의", label: "LSE EH434 · Economic Development of East and Southeast Asia", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm", note: "식민지 이전 교역에서 식민화·독립·ASEAN과 현대 성장까지의 비교 범위를 확인합니다." },
+    { kind: "공식 연구", label: "World Bank · Southeast Asia's long-term growth", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note: "증기선과 수에즈 운하가 원자재 수출과 서구 공산품 수입 경쟁을 함께 키운 경로를 확인합니다." },
+  ],
+  "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors": [
+    { kind: "공식 연구", label: "World Bank · Water Energy Nexus in Central Asia", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "소련기 관개·하천 전환과 농업 생산, 에너지, 아랄해 비용의 연결을 확인합니다." },
+    { kind: "공식 연구", label: "ADB · Trade Corridors in the Caspian Region", href: "https://www.adb.org/publications/trade-corridors-caspian-region-present-future", note: "해상 교역 우위와 러시아·소련의 북향 연결, 현대 철도·관로 회랑을 비교합니다." },
+  ],
+  "economic-history/oceania-indigenous-land-settler-exports-and-island-economies": [
+    { kind: "공식 문서", label: "NSW Treasury · Aboriginal economies", href: "https://www.nsw.gov.au/departments-and-agencies/nsw-treasury/about-us/nsw-treasury-bicentenary/walking-a-tightrope/milestones/aboriginal-economies", note: "원주민 공동체의 식량·자원·지식·노래 교환과 친족·의례의 역할을 확인합니다." },
+    { kind: "공식 연구", label: "World Bank · Pacific Economic Update, May 2026", href: "https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf", note: "관광·송금 중심 경제와 어업권료·지원금 중심 경제의 다른 외부소득 구조를 확인합니다." },
+  ],
+  "economic-history/war-finance-public-debt-and-welfare-state-capacity": [
+    { kind: "공개 강의", label: "LSE EH450 · The Economics of War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", note: "전쟁의 재정·물자·인력 동원과 생산·소비·인명 결과를 함께 다루는 범위를 확인합니다." },
+    { kind: "공식 문서", label: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화를 확인합니다." },
+  ],
 };
