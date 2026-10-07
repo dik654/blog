@@ -67,6 +67,147 @@ export interface ArticleLearningContract {
   papers?: readonly PaperReading[];
 }
 
+interface RegionalEconomicHistoryLearningInput {
+  coreIdea: string;
+  entryNote: string;
+  assumed: LearningConceptRef;
+  concepts: readonly [
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+  ];
+  numericQuestion: string;
+  numericAnswers: readonly string[];
+  numericConceptIndex?: 0 | 1 | 2;
+  changedCaseQuestion: string;
+  changedCaseAnswers: readonly string[];
+  sources: readonly [PaperReading, PaperReading];
+}
+
+/**
+ * 지역 경제사 글은 같은 읽기 틀을 쓰되, 숫자 사례와 사료의 범위는 지역마다
+ * 따로 적습니다. 이 함수는 6+4 연습문제와 세 개념의 설명 계약이 빠지는 일을
+ * 막고, 실제 역사 내용을 공통 문장으로 대신하지 않습니다.
+ */
+function regionalEconomicHistoryLearning(
+  input: RegionalEconomicHistoryLearningInput,
+): ArticleLearningContract {
+  const [first, second, third] = input.concepts;
+  return {
+    entryLevel: false,
+    entryNote: input.entryNote,
+    coreIdea: input.coreIdea,
+    assumedKnowledge: [input.assumed],
+    introducedHere: input.concepts.map(({ id, role }) => ({ id, role })),
+    conceptExplanations: input.concepts.map(
+      ({ id, intuition, workedExample, boundary }) => ({
+        id,
+        sectionId: "names",
+        intuition,
+        workedExample,
+        boundary,
+      }),
+    ),
+    conceptStages: [
+      {
+        label: "출발점",
+        relation: "앞 글의 제약을 이 지역의 생산·교역 조건에 대입합니다.",
+        concepts: [input.assumed.id, first.id],
+      },
+      {
+        label: "제도 변화",
+        relation: "권리와 거래 규칙의 변화가 생산과 배분을 바꾸는 경로를 봅니다.",
+        concepts: [first.id, second.id],
+      },
+      {
+        label: "현재의 제약",
+        relation: "앞선 제도가 오늘의 정책 선택과 외부 충격에 남긴 조건을 봅니다.",
+        concepts: [second.id, third.id],
+      },
+      {
+        label: "증거 경계",
+        relation: "같은 숫자 경로를 두 자료에 대조하고 지역 평균의 한계를 남깁니다.",
+        concepts: [first.id, second.id, third.id],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: input.numericQuestion,
+        answerChecklist: input.numericAnswers,
+        requiredConcepts: [
+          input.concepts[input.numericConceptIndex ?? 0].id,
+        ],
+        sectionId: "case",
+      },
+      {
+        level: "basic",
+        question: `${first.role} 본문의 작은 사례에서 무엇을 뜻하며 어디까지 설명하는지 쓰세요.`,
+        answerChecklist: [first.intuition, first.boundary],
+        requiredConcepts: [first.id],
+        sectionId: "names",
+      },
+      {
+        level: "basic",
+        question: `${second.role} 앞선 제도와 뒤의 결과 사이에서 어떤 경로를 만드는지 설명하세요.`,
+        answerChecklist: [second.intuition, second.workedExample],
+        requiredConcepts: [first.id, second.id],
+        sectionId: "mechanism",
+      },
+      {
+        level: "basic",
+        question: `${third.role} 이름만 보고 성공이나 실패를 단정할 수 없는 이유를 쓰세요.`,
+        answerChecklist: [third.workedExample, third.boundary],
+        requiredConcepts: [third.id],
+        sectionId: "limits",
+      },
+      {
+        level: "basic",
+        question: `${input.sources[0].title} 자료가 직접 보여 주는 범위와 남겨 두는 한계를 구분하세요.`,
+        answerChecklist: [input.sources[0].evidenceScope, input.sources[0].notClaim],
+        requiredConcepts: [first.id, second.id],
+        sectionId: "source",
+      },
+      {
+        level: "basic",
+        question: `${input.sources[1].title} 자료를 같은 지역 전체의 단일 경로로 일반화하면 안 되는 이유를 쓰세요.`,
+        answerChecklist: [input.sources[1].assumptions, input.sources[1].notClaim],
+        requiredConcepts: [second.id, third.id],
+        sectionId: "comparison",
+      },
+      {
+        level: "advanced",
+        question: input.changedCaseQuestion,
+        answerChecklist: input.changedCaseAnswers,
+        requiredConcepts: [first.id, second.id, third.id],
+        sectionId: "mechanism",
+      },
+      {
+        level: "advanced",
+        question: `선수 개념인 ${input.assumed.role} 조건이 바뀌면 세 핵심 개념의 연결이 어떻게 달라질지 인과 경로를 그리세요.`,
+        answerChecklist: ["바뀐 출발 조건", "중간 제도", "분배 결과", "대안 원인"],
+        requiredConcepts: [input.assumed.id, first.id, second.id, third.id],
+        sectionId: "picture",
+      },
+      {
+        level: "advanced",
+        question: "두 자료의 관찰 단위·시기·측정 방법을 비교하고, 같은 결론을 지지하는 부분과 충돌할 수 있는 부분을 나누세요.",
+        answerChecklist: ["관찰 단위와 시기", "측정·식별 조건", "공통 설명", "충돌 가능성"],
+        requiredConcepts: [first.id, second.id, third.id],
+        sectionId: "comparison",
+      },
+      {
+        level: "advanced",
+        question: "본문의 지역 평균과 설명용 숫자를 다른 나라·시기로 옮길 때 다시 조사해야 할 권리·가격·정책 조건을 설계하세요.",
+        answerChecklist: ["소유·노동 권리", "국내외 가격", "국가 역량", "지역별 반례"],
+        requiredConcepts: [first.id, second.id, third.id],
+        sectionId: "limits",
+      },
+    ],
+    papers: input.sources,
+  };
+}
+
 /**
  * 글의 난이도 계약입니다. 등록된 글은 본문 변경만으로 완료하지 않고, 입구의
  * 선수 개념·핵심 아이디어·학습 결과·논문 해설 anchor가 함께 유지돼야 합니다.
@@ -132503,6 +132644,331 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "IMF · Macroeconomic Crisis and Adjustment", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", problem: "1970~80년대 공통 충격이 여러 개발도상국에서 왜 다른 결과를 냈는지 비교합니다.", contribution: "교역조건·은행 신용·수출 수요와 국가별 조정 경로를 비교합니다.", assumptions: "선정된 국가 표본과 당시 거시 지표의 범위에서 해석해야 합니다.", evidenceScope: "산유국·비산유국과 국가별 충격 차이의 비교 근거입니다.", notClaim: "개발도상국 전체를 하나의 평균 경로로 설명한다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
+  "economic-history/china-since-1800-households-markets-and-reform": regionalEconomicHistoryLearning({
+    entryNote: "농가가 생산 100에서 의무 60을 내고 40을 남기는 장부로 출발해, 1978년 뒤 잔여 청구권과 지역 실험의 의미를 읽습니다.",
+    coreIdea: "중국의 장기 경제 변화는 시장의 단순한 개방이 아니라 가구의 생산 유인, 계획가격과 시장가격의 병존, 지역별 실험을 중앙의 제도 변경으로 넓힌 순서로 이해해야 합니다.",
+    assumed: { id: "agrarian-surplus", role: "생산량에서 생계·종자·의무를 뺀 뒤 누가 남는 몫을 쓸 수 있는지 구분합니다." },
+    concepts: [
+      {
+        id: "household-responsibility-residual-claim",
+        role: "가구 책임제가 생산 의무를 채운 뒤 남는 생산물의 사용권과 판매 유인을 어떻게 바꿨는지 설명합니다.",
+        intuition: "공동 생산량만 보던 장부에 각 가구가 의무를 넘겨 생산한 몫을 직접 쓸 수 있는 칸을 만든 제도 변화입니다.",
+        workedExample: "생산 100에서 의무 60을 내고 40을 남기던 농가가 추가로 10을 생산하면 잔여가 50으로 늘어나는 설명용 장부입니다.",
+        boundary: "토지의 완전한 사유화나 농업 밖 모든 시장화와 같지 않으며 지역·작물·시기별 계약과 집행 차이가 남습니다.",
+      },
+      {
+        id: "dual-track-reform",
+        role: "계획 물량과 가격을 유지하면서 초과분을 시장에서 거래한 이중 경로의 이익과 비용을 설명합니다.",
+        intuition: "기존 의무 칸을 한 번에 지우지 않고 그 옆에 추가 생산과 시장가격을 적는 새 칸을 둔 전환 방식입니다.",
+        workedExample: "계획 의무 60은 정해진 가격으로 넘기고 초과 생산 10은 시장가격으로 팔아 기존 배분과 새 유인을 함께 둡니다.",
+        boundary: "두 가격의 차이는 우회 거래와 지대 추구를 만들 수 있어 모든 부문의 안정적 전환을 자동으로 보장하지 않습니다.",
+      },
+      {
+        id: "special-economic-zone-experiment",
+        role: "특정 지역에서 무역·투자 규칙을 먼저 바꾸고 성과와 부작용을 본 뒤 확대하는 정책 실험을 설명합니다.",
+        intuition: "나라 전체의 규칙을 한날에 바꾸기 전에 몇 도시를 시험 구역으로 삼아 새 생산·수출 경로를 실제로 돌려 보는 방식입니다.",
+        workedExample: "연안 특구가 외국 투자·수출 가공·지역 재량을 먼저 받아 일자리와 세입, 토지비와 이주 노동 조건을 함께 바꿉니다.",
+        boundary: "특구의 성장은 항만 위치·중앙 지원·세계 수요에도 의존하므로 다른 내륙 지역에서 같은 결과를 보장하지 않습니다.",
+      },
+    ],
+    numericQuestion: "생산 100에서 의무 60을 내면 기존 잔여는 얼마이며, 추가 생산 10을 가구가 보유할 때 새 잔여는 얼마인지 계산하세요.",
+    numericAnswers: ["기존 잔여 40", "새 잔여 50", "추가 생산의 잔여 청구권"],
+    changedCaseQuestion: "의무량이 60에서 70으로 늘고 추가 생산이 10에서 5로 줄었다고 가정해 잔여를 다시 계산하고 생산 유인이 달라지는 경로를 설명하세요.",
+    changedCaseAnswers: ["100+5−70=35", "기존 40보다 5 감소", "의무와 잔여 청구권의 변화", "실제 역사 수치가 아닌 민감도 사례"],
+    sources: [
+      {
+        title: "World Bank · Reflections on 40 Years of China’s Reforms",
+        href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf",
+        problem: "1978년 이후 중국의 농촌·기업·대외 개방 개혁이 어떤 순서와 제도 결합으로 진행됐는지 설명해야 합니다.",
+        contribution: "가구 책임제, 이중 경로, 특구와 지방 실험을 점진적 개혁의 구체적인 단계로 정리합니다.",
+        assumptions: "세계은행과 중국 연구자들의 회고적 종합이며 지역별 패자와 대안적 해석을 별도 자료로 확인해야 합니다.",
+        evidenceScope: "개혁개방 40년의 주요 제도 전환과 성장·빈곤 감소를 잇는 장기 정책 검토입니다.",
+        notClaim: "개혁의 모든 변화가 한 정책에서 나왔거나 비용과 분배 문제가 없었다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "LSE · The Economic History of China since 1800",
+        href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm",
+        problem: "중국 경제사를 제도나 문화 한 가지 원인으로 줄이지 않고 장기 쟁점을 빠짐없이 배치해야 합니다.",
+        contribution: "지리·국가·제도·성별·인적 자본·이동·교역·재난을 함께 비교하는 대학 과정의 질문 지도를 제공합니다.",
+        assumptions: "강의계획은 연구 결과 자체가 아니라 읽을 주제와 논쟁의 범위를 보여 주는 교육 자료입니다.",
+        evidenceScope: "1800년 이후 중국 경제사의 비교 질문과 자료 영역을 점검하는 커리큘럼 근거입니다.",
+        notClaim: "열거된 요인이 같은 크기의 원인이거나 하나의 합의된 중국 성장 설명이라는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
+  "economic-history/japan-money-banks-industry-and-catchup": regionalEconomicHistoryLearning({
+    entryNote: "공장 투자 100을 기업 자금 20·은행 대출 60·공공 기반 20으로 나누는 장부에서 일본의 산업 추격을 시작합니다.",
+    coreIdea: "일본의 산업화와 전후 추격은 통화 통일·은행 신용·공공 기반과 기업의 학습·경쟁이 결합한 결과이며, 산업정책 한 가지를 성공의 충분조건으로 옮길 수 없습니다.",
+    assumed: { id: "factor-price-induced-innovation", role: "노동·에너지·자본의 상대 가격이 채택할 기술과 설비의 수익성을 바꾸는 출발점을 제공합니다." },
+    concepts: [
+      {
+        id: "meiji-monetary-unification",
+        role: "엔·중앙은행·은행권으로 결제 단위와 최종 지급 규칙을 통일한 과정을 설명합니다.",
+        intuition: "지역마다 달랐던 돈과 환산표를 전국 장부의 한 단위로 맞춰 세금·대출·장거리 거래를 비교하게 만든 변화입니다.",
+        workedExample: "공장 투자 100과 대출 60을 같은 엔 단위로 계약하고 은행 간 지급을 중앙은행 장부에서 끝냅니다.",
+        boundary: "통화 단위가 같아져도 모든 지역과 기업이 같은 금리·담보·신용을 얻는 것은 아닙니다.",
+      },
+      {
+        id: "priority-production-policy-japan",
+        role: "전후 부족한 석탄·철강·자금을 핵심 부문에 먼저 배분한 복구 정책의 경로를 설명합니다.",
+        intuition: "모든 공장에 조금씩 나누기보다 다른 산업의 가동에 필요한 연료와 소재를 먼저 살리는 병목 해소 방식입니다.",
+        workedExample: "은행 대출과 수입 자재를 석탄·철강에 먼저 배정해 전력·운송·기계 생산의 다음 투입을 늘립니다.",
+        boundary: "선별 지원은 잘못된 기업 보호와 정치적 배분을 낳을 수 있어 경쟁·수출 수요·거시 안정과 따로 평가해야 합니다.",
+      },
+      {
+        id: "catchup-structural-transformation",
+        role: "농업에서 제조·서비스로 노동과 자본이 옮겨 가며 생산성이 높아지는 추격 성장의 조건을 설명합니다.",
+        intuition: "사람과 돈이 낮은 생산성의 일에서 더 많은 가치를 만드는 공장과 서비스로 이동하고 그 안에서도 기술을 배우는 과정입니다.",
+        workedExample: "공공 기반 20이 항만·전력 비용을 낮추고 은행 대출 60과 기업 자금 20이 설비·기술·수출 학습에 들어갑니다.",
+        boundary: "부문 이동만으로 임금·성별 기회·중소기업 생산성이 자동으로 같아지거나 고령화 제약이 사라지지 않습니다.",
+      },
+    ],
+    numericQuestion: "공장 투자 100을 기업 자금 20, 은행 대출 60, 공공 기반 20으로 조달할 때 합계와 은행 대출 비중을 계산하세요.",
+    numericAnswers: ["합계 100", "은행 대출 비중 60%", "자금과 공공 기반을 구분"],
+    changedCaseQuestion: "은행 대출이 60에서 40으로 줄고 기업 자금이 그대로라면 투자 100을 유지하는 데 필요한 추가 자금과 가능한 조정 경로를 설명하세요.",
+    changedCaseAnswers: ["추가 자금 20", "투자 축소 또는 다른 금융", "담보·금리 제약", "공공 기반은 기업 현금과 다름"],
+    sources: [
+      {
+        title: "Bank of Japan Currency Museum · Modern Currency History",
+        href: "https://www.imes.boj.or.jp/cm/english/history/content/",
+        problem: "에도기의 여러 화폐에서 엔·일본은행·은행권으로 이어진 통화 제도 전환의 순서를 확인해야 합니다.",
+        contribution: "근대 화폐법과 중앙은행 설립, 은행권 발행을 공식 박물관 연표와 소장 자료로 연결합니다.",
+        assumptions: "화폐사 전시 자료이며 기업 금융과 산업 성과의 인과 크기를 직접 추정하지는 않습니다.",
+        evidenceScope: "일본 통화 단위와 발권·중앙은행 제도의 역사적 전환점을 확인하는 공식 자료입니다.",
+        notClaim: "통화 통일만으로 일본의 산업화와 전후 고도성장이 설명된다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "RIETI · Industrial Policy in Japan: 70-Year History since World War II",
+        href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html",
+        problem: "전후 일본의 산업정책이 복구·무역 자유화·성장과 쇠퇴 산업에 어떤 역할을 했는지 구분해야 합니다.",
+        contribution: "우선생산과 산업별 정책을 시기별로 정리하고 시장 경쟁·기업 투자와의 결합을 검토합니다.",
+        assumptions: "정책사적 해석이며 지원을 받지 않은 기업과 반사실적 성장 경로를 함께 살펴야 합니다.",
+        evidenceScope: "제2차 세계대전 뒤 일본 산업정책의 도구와 변화에 관한 연구기관의 장기 검토입니다.",
+        notClaim: "정부가 승자를 정확히 골랐거나 다른 나라가 같은 정책으로 같은 성과를 낸다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
+  "economic-history/south-asia-markets-colonial-railways-and-development-state": regionalEconomicHistoryLearning({
+    entryNote: "산지 가격 10에 운송 2·세금 1·손실 1을 더해 도착가격 14를 만드는 장부에서 남아시아의 시장 연결을 읽습니다.",
+    coreIdea: "남아시아의 장기 변화는 철도와 시장 통합의 편익만으로 설명되지 않으며 식민 조세·교역 방향, 분할 뒤 개발국가와 1991년 외환 전환이 권리와 가격에 준 효과를 함께 봐야 합니다.",
+    assumed: { id: "trade-intermediation", role: "생산자와 먼 시장 사이에서 정보·운송·신용·정산을 잇는 사람과 조직의 역할을 제공합니다." },
+    concepts: [
+      {
+        id: "colonial-market-integration",
+        role: "철도·법·통화가 지역 가격을 잇는 동시에 식민 수출과 조세 징수를 강화한 양면을 설명합니다.",
+        intuition: "두 시장 사이의 길과 가격표를 연결하면 거래 기회가 늘지만 누가 길의 방향과 요금을 정하는지가 분배를 바꿉니다.",
+        workedExample: "산지 가격 10에 운송 2·세금 1·손실 1을 더한 도착가격 14가 다른 시장 가격 16보다 낮아 거래 여지 2를 만듭니다.",
+        boundary: "가격 차이 감소가 기근 보호·농가 소득·산업화의 개선을 모두 뜻하지 않으며 강제와 수출 편향을 따로 봐야 합니다.",
+      },
+      {
+        id: "developmental-state-south-asia",
+        role: "독립 뒤 계획·공기업·허가·개발금융으로 산업과 기반시설을 만든 국가의 역할을 설명합니다.",
+        intuition: "민간 장부만으로 오래 걸리거나 수익이 불확실한 전력·철강·기계·교육에 국가가 자금과 순서를 붙이는 방식입니다.",
+        workedExample: "철도와 전력, 중공업 투자를 계획하고 외화를 배분해 수입 기계가 꼭 필요한 산업의 생산 능력을 먼저 만듭니다.",
+        boundary: "국가 계획은 행정 역량·책임성·민간 경쟁에 따라 성과가 달라지며 남아시아 여러 나라의 경로가 같지 않습니다.",
+      },
+      {
+        id: "foreign-exchange-liberalization-india",
+        role: "1991년 전후 인도의 외환 부족 대응과 무역·산업 허가 완화가 기업 선택을 바꾼 경로를 설명합니다.",
+        intuition: "달러가 부족해 꼭 필요한 수입도 막히는 상황에서 환율·관세·수입 허가와 기업 진입 규칙을 함께 다시 짠 변화입니다.",
+        workedExample: "수입 부품 비용과 수출 수입을 새 환율로 계산하고 기업이 허가 없이 더 많은 업종에 투자하도록 선택지를 넓힙니다.",
+        boundary: "자유화가 모든 지역·계층의 생산성·고용을 같은 속도로 높이거나 농업·비공식 노동 문제를 해결하지는 않습니다.",
+      },
+    ],
+    numericQuestion: "산지 가격 10에 운송 2, 세금 1, 손실 1을 더한 도착가격과 다른 시장 가격 16에 대한 거래 여지를 계산하세요.",
+    numericAnswers: ["도착가격 14", "거래 여지 2", "수량·품질·금융비용은 생략"],
+    changedCaseQuestion: "운송비가 2에서 5로 오르면 도착가격과 거래 여지가 어떻게 바뀌는지 계산하고 철도 효과의 조건을 설명하세요.",
+    changedCaseAnswers: ["도착가격 17", "거래 여지 −1", "운송비가 가격 연결을 제약", "수요·품질 조건은 별도"],
+    sources: [
+      {
+        title: "NBER · Railroads of the Raj",
+        href: "https://www.nber.org/papers/w16487",
+        problem: "식민 인도의 철도가 교역비용·지역 간 가격 차이·소득에 준 효과를 구분해 측정해야 합니다.",
+        contribution: "철도망과 지역 자료를 무역 모형에 결합해 접근성 변화와 실질소득의 관계를 추정합니다.",
+        assumptions: "모형의 교역비용·가격 자료와 철도 배치 식별에 의존하며 식민 지배의 권리 손실 전체를 측정하지 않습니다.",
+        evidenceScope: "식민 인도의 철도 연결과 지역 교역·가격·실질소득을 다룬 계량 경제사 연구입니다.",
+        notClaim: "철도가 식민 통치의 다른 비용을 상쇄했거나 모든 지역과 계층에 같은 편익을 줬다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "Reserve Bank of India · Chronology of Indian Monetary History",
+        href: "https://www.rbi.org.in/scripts/His_Choronological.aspx",
+        problem: "식민 통화 제도에서 독립 뒤 계획금융과 1991년 외환 개혁으로 이어진 전환점을 확인해야 합니다.",
+        contribution: "중앙은행·환율·국유화·외환관리와 자유화의 주요 사건을 공식 연표로 제공합니다.",
+        assumptions: "중앙은행 제도사라 가구·지역·비공식 금융의 생활 효과는 다른 자료로 보완해야 합니다.",
+        evidenceScope: "인도 통화·은행·외환 제도의 공식 연대와 정책 전환을 확인하는 자료입니다.",
+        notClaim: "공식 제도 변경일에 실제 금융 접근과 기업 행동이 전국에서 동시에 바뀌었다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
+  "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence": regionalEconomicHistoryLearning({
+    entryNote: "현금작물 판매 20에서 운송·중개 4와 현금세 10을 빼 농가 현금 6이 남는 장부로 강제와 시장 연결을 함께 봅니다.",
+    coreIdea: "아프리카의 세계경제 편입은 여러 노예무역의 장기 손상, 식민 국가의 현금세와 노동 동원, 독립 뒤 남은 원자재·운송 구조가 겹친 결과이며 대륙 평균 하나로 설명할 수 없습니다.",
+    assumed: { id: "colonial-extraction", role: "정치 권력으로 토지·노동·세금·교역 이익을 이전하는 경로를 먼저 구분합니다." },
+    concepts: [
+      {
+        id: "slave-trade-long-run-damage",
+        role: "대서양·인도양·사하라 노예무역이 인구·신뢰·국가 형성에 남긴 장기 손상을 설명합니다.",
+        intuition: "사람이 빠져나간 수만 세는 것이 아니라 납치 위험이 공동체의 협력·정착·제도에 남긴 흔적까지 보는 개념입니다.",
+        workedExample: "노예 수출 노출이 큰 지역과 작은 지역의 현재 신뢰를 비교하되 전쟁·식민 정책·측정 오차를 중간 경로로 확인합니다.",
+        boundary: "오늘의 모든 격차를 노예무역 하나가 결정했다는 운명론이 아니며 지역별 교역 형태와 후속 제도를 구분해야 합니다.",
+      },
+      {
+        id: "colonial-fiscal-extraction-africa",
+        role: "현금세·강제 노동·독점 유통이 농가를 임금노동과 현금작물 생산으로 밀어 넣은 재정 경로를 설명합니다.",
+        intuition: "현금이 없던 가구에도 돈으로 낼 세금을 부과해 광산·농장 노동이나 수출작물 판매에 들어가게 만드는 방식입니다.",
+        workedExample: "현금작물 판매 20에서 운송·중개 4와 현금세 10을 내면 농가가 생활과 투자에 쓸 현금은 6만 남습니다.",
+        boundary: "세금의 이름과 세율만으로 실제 강제 정도를 알 수 없으며 회피·이주·현지 권력과 공공서비스의 차이를 봐야 합니다.",
+      },
+      {
+        id: "commodity-dependence-africa",
+        role: "소수 원자재의 가격과 운송망이 수출·세입·환율을 함께 흔드는 의존 구조를 설명합니다.",
+        intuition: "나라의 외화 지갑과 정부 세입이 한두 상품 가격에 같이 매달려 가격이 떨어질 때 여러 지출이 동시에 줄어드는 상태입니다.",
+        workedExample: "현금작물 가격이 내려 판매가 20에서 14가 되면 같은 비용·세금 아래 농가 잔여와 정부 수입 사이의 충돌이 커집니다.",
+        boundary: "원자재 수출 자체가 실패라는 뜻은 아니며 계약·세금·안정기금·가공·생산성 투자에 따라 결과가 달라집니다.",
+      },
+    ],
+    numericQuestion: "현금작물 판매 20에서 운송·중개 4와 현금세 10을 뺄 때 농가 현금 잔여를 계산하고 각 몫의 상대를 구분하세요.",
+    numericAnswers: ["농가 잔여 6", "운송·중개 몫 4", "국가 세금 10"],
+    numericConceptIndex: 1,
+    changedCaseQuestion: "국제가격 하락으로 판매액이 20에서 14로 줄고 비용과 세금이 그대로라면 잔여를 계산하고 부담 이전 경로를 설명하세요.",
+    changedCaseAnswers: ["14−4−10=0", "농가 잔여가 6에서 0", "고정 현금세의 부담 증가", "세율·수량이 같다는 설명용 가정"],
+    sources: [
+      {
+        title: "NBER · The Long-Term Effects of Africa’s Slave Trades",
+        href: "https://www.nber.org/papers/w13367",
+        problem: "여러 노예무역의 역사적 노출과 오늘의 경제 성과 사이 장기 관계를 측정하고 가능한 경로를 구분해야 합니다.",
+        contribution: "노예 수출 추정치와 현재 소득 자료, 식별 전략을 결합해 장기 음의 관계를 분석합니다.",
+        assumptions: "역사 자료의 누락·민족 위치·식별 변수와 후속 제도의 경로에 의존하는 계량 연구입니다.",
+        evidenceScope: "아프리카 내부의 역사적 노예무역 노출 차이와 장기 발전 결과의 관계를 검토합니다.",
+        notClaim: "대륙의 현재 결과가 노예무역 하나로 고정됐거나 모든 지역에 같은 크기의 효과가 있다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "African Economic History Network · Taxation in Africa since Colonial Times",
+        href: "https://www.aehnetwork.org/textbook/taxation-in-africa-since-colonial-times/",
+        problem: "식민 현금세의 징수 목적과 노동·생산·국가 역량에 준 효과를 시기와 지역별로 구분해야 합니다.",
+        contribution: "식민 조세의 형태, 강제 집행, 독립 뒤 세수 구조와 국가 형성을 비교하는 경제사 개관을 제공합니다.",
+        assumptions: "넓은 대륙 비교라 국가·지방별 세율과 실제 집행은 개별 사료로 다시 확인해야 합니다.",
+        evidenceScope: "식민기부터 독립 이후까지 아프리카 조세 제도의 장기 비교를 위한 교육·연구 자료입니다.",
+        notClaim: "세금이 모든 지역에서 같은 목적으로 걷혔거나 국가 역량에 한 방향의 효과만 냈다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
+  "economic-history/mena-land-debt-oil-and-diversification": regionalEconomicHistoryLearning({
+    entryNote: "석유 판매 100에서 생산·기업 몫 30과 부채 상환 10을 빼 정부가 60을 쓰는 장부로 토지·외채·석유 제도를 연결합니다.",
+    coreIdea: "중동·북아프리카의 경제사는 토지·조세 권리와 외채 통제, 석유 계약과 국가 예산, 이주 노동과 비석유 생산을 함께 봐야 하며 산유국 모형을 지역 전체에 적용할 수 없습니다.",
+    assumed: { id: "petrodollar-recycling", role: "석유 수입이 국제 은행과 대출을 거쳐 산유국·수입국의 외화 장부를 잇는 경로를 제공합니다." },
+    concepts: [
+      {
+        id: "oil-concession-contract",
+        role: "국가와 기업이 탐사·생산 권리, 비용, 로열티·세금과 생산 몫을 나누는 계약을 설명합니다.",
+        intuition: "땅속 자원의 가치가 저절로 정부 돈이 되는 것이 아니라 누가 캐고 얼마를 먼저 빼며 남은 몫을 나눌지 적은 규칙입니다.",
+        workedExample: "석유 판매 100에서 생산비와 기업 몫 30을 빼고 국가 몫의 세금·배당·로열티를 정부 장부로 옮깁니다.",
+        boundary: "모든 양허가 같은 소유권 이전을 뜻하지 않으며 계약 시기·국영기업·원가 회계와 세율을 따로 확인해야 합니다.",
+      },
+      {
+        id: "resource-fiscal-linkage",
+        role: "석유 가격과 생산량이 정부 수입·지출·부채·국부펀드에 전달되는 경로를 설명합니다.",
+        intuition: "국제 유가의 변화가 회사 매출에서 멈추지 않고 국가 예산과 임금·보조금·건설 계약으로 흘러가는 연결입니다.",
+        workedExample: "판매 100에서 기업·생산 30과 부채 10을 빼 정부 가용 60을 만들고 가격 하락 때 가용액이 30으로 줄어듭니다.",
+        boundary: "석유 GDP와 정부가 바로 쓸 현금은 같지 않으며 헤지·세금 시차·기금 적립과 부채 만기를 구분해야 합니다.",
+      },
+      {
+        id: "economic-diversification-mena",
+        role: "비석유 수출·세입·생산성·민간 고용의 원천을 넓혀 가격 충격 의존을 줄이는 과정을 설명합니다.",
+        intuition: "석유 돈으로 유지되는 서비스 비중만 늘리는 것을 넘어 외부 수요와 기술, 세금과 일자리의 지갑을 여러 개 만드는 일입니다.",
+        workedExample: "정부 발주가 줄어도 이어지는 비석유 수출과 국민 민간 고용, 생산성 높은 기업의 세입 기여를 따로 측정합니다.",
+        boundary: "비석유 GDP 비중 상승만으로 다각화를 선언할 수 없으며 이주 노동·보조금·수입 투입 의존을 함께 봐야 합니다.",
+      },
+    ],
+    numericQuestion: "석유 판매 100에서 생산·기업 몫 30과 부채 상환 10을 뺄 때 정부 가용 수입을 계산하고 각 청구권을 구분하세요.",
+    numericAnswers: ["정부 가용 수입 60", "생산·기업 몫 30", "부채 상환 10"],
+    changedCaseQuestion: "석유 판매가 100에서 70으로 줄고 나머지 금액이 같다면 정부 가용액과 기존 지출 60에 대한 부족액을 계산하세요.",
+    changedCaseAnswers: ["정부 가용액 30", "지출 대비 부족 30", "지출 삭감·세금·차입·기금 인출", "가격 외 조건은 고정"],
+    sources: [
+      {
+        title: "LSE · Economic History of the Middle East and North Africa",
+        href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm",
+        problem: "지역 경제사를 석유와 국가 평균에서 벗어나 토지·노동 권리와 주민 생활, 다양한 자료로 구성해야 합니다.",
+        contribution: "법적 권리·교육·불평등·인구와 지역 문서·파피루스·고고학을 잇는 아래로부터의 과정 범위를 제시합니다.",
+        assumptions: "강의계획은 증거 자체가 아니라 질문과 읽을 자료의 범위를 정하는 커리큘럼 문서입니다.",
+        evidenceScope: "중동·북아프리카 장기 경제사의 주제와 자료 다양성을 점검하는 대학 과정 근거입니다.",
+        notClaim: "산유국의 국가 장부가 비산유국과 모든 주민의 경험을 대표한다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "IMF · The Middle East and North Africa in a Changing Oil Market",
+        href: "https://www.imf.org/external/pubs/ft/med/2003/eng/okogu/okogu.htm",
+        problem: "회사 주도의 게시가격에서 산유국 협상력·소유 몫 변화로 이어진 석유시장 전환을 설명해야 합니다.",
+        contribution: "1960~70년대 가격 결정과 재산권 이전, 산유국 수입 변화와 다각화 과제를 연결합니다.",
+        assumptions: "IMF의 지역·석유시장 검토이며 노동·시민권·환경 비용은 다른 관점과 자료가 필요합니다.",
+        evidenceScope: "20세기 후반 산유국과 국제 석유회사의 가격·소유 관계 변화를 설명하는 제도사 자료입니다.",
+        notClaim: "석유 계약 변화가 지역의 개발·분배 성과를 자동으로 결정했다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
+  "economic-history/latin-america-exports-import-substitution-and-debt": regionalEconomicHistoryLearning({
+    entryNote: "수출 100−수입 80−이자 10=외화 10이 가격과 금리 충격 뒤 80−80−18=−18로 바뀌는 장부에서 시작합니다.",
+    coreIdea: "라틴아메리카의 세계시장 경로는 수출 호황·관세와 불평등, 수입대체 산업화의 생산 능력과 비용, 외화부채와 갑작스러운 자금 중단이 시기와 국가별로 결합한 역사입니다.",
+    assumed: { id: "balance-of-payments-adjustment", role: "외화 수입과 지급의 차이를 환율·준비자산·차입·국내 수요 조정으로 메우는 출발점을 제공합니다." },
+    concepts: [
+      {
+        id: "export-led-growth-latin-america",
+        role: "원자재·농산물·제조품 수출이 외화·세입·투자를 늘리는 동시에 가격·토지 구조에 의존한 경로를 설명합니다.",
+        intuition: "세계시장에 팔아 들어온 외화로 기계와 공공재를 사지만 판매 가격과 이익의 소유자가 국내 선택지를 함께 정하는 성장 방식입니다.",
+        workedExample: "수출 100에서 수입 80과 이자 10을 내고 남은 외화 10을 준비자산·설비·상환에 배분합니다.",
+        boundary: "수출액 증가가 국내 부가가치·고른 토지 소유·실질임금과 공공서비스 개선을 자동으로 뜻하지 않습니다.",
+      },
+      {
+        id: "import-substitution-industrialization",
+        role: "관세·개발금융·공기업으로 수입하던 상품을 국내에서 생산하려 한 산업 전략을 설명합니다.",
+        intuition: "완제품을 계속 사는 대신 기계와 기술을 들여와 국내 공장에서 철강·자동차·화학 제품을 만드는 능력을 기르는 방식입니다.",
+        workedExample: "완제품 관세와 개발은행 대출로 국내 생산을 늘리되 수입 기계·부품에 필요한 외화와 작은 시장의 비용을 함께 계산합니다.",
+        boundary: "보호받은 모든 산업이 생산성 높은 수출기업이 되는 것은 아니며 나라 크기·환율·교육·경쟁 조건이 결과를 바꿉니다.",
+      },
+      {
+        id: "sudden-stop-debt-overhang",
+        role: "해외 대출이 급히 끊기고 기존 외채 의무가 투자·재정 선택을 누르는 위기 경로를 설명합니다.",
+        intuition: "새 돈으로 만기를 잇던 통로가 갑자기 닫혀 수입·투자·복지를 한꺼번에 줄이거나 비싼 조건을 받아들여야 하는 상황입니다.",
+        workedExample: "수출가격 하락으로 수출이 80이 되고 이자가 18로 올라 외화 잔액이 −18이 되면 환율·긴축·재협상을 선택합니다.",
+        boundary: "경상적자 하나만으로 반드시 발생하지 않으며 만기·통화·은행 노출·정책 신뢰와 국제 금리를 함께 봐야 합니다.",
+      },
+    ],
+    numericQuestion: "첫해 수출 100−수입 80−이자 10과 둘째 해 수출 80−수입 80−이자 18의 외화 잔액을 각각 계산하세요.",
+    numericAnswers: ["첫해 +10", "둘째 해 −18", "잔액 변화 −28"],
+    changedCaseQuestion: "둘째 해에 수입을 80에서 65로 줄이면 외화 잔액이 얼마가 되는지 계산하고 생활·투자에 전가될 비용을 설명하세요.",
+    changedCaseAnswers: ["80−65−18=−3", "적자 15 개선", "수입 압축의 물가·생산 비용", "원금·환율은 생략"],
+    sources: [
+      {
+        title: "NBER · Globalization in Latin America Before 1940",
+        href: "https://www.nber.org/papers/w9687",
+        problem: "1870~1913년 세계화가 수출·성장·관세와 불평등에 준 효과를 함께 설명해야 합니다.",
+        contribution: "운송비·교역조건·관세·임금과 토지 희소성을 장기 비교해 성장과 분배의 다른 경로를 제시합니다.",
+        assumptions: "장기 국가 자료와 지역 평균에 의존하며 토착·아프리카계 공동체와 국가별 정치의 상세를 보완해야 합니다.",
+        evidenceScope: "제1차 세계대전 전 라틴아메리카 세계화의 가격·무역·불평등을 비교한 경제사 연구입니다.",
+        notClaim: "개방이 곧 낮은 관세였거나 모든 나라의 성장과 불평등이 같은 원인에서 나왔다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "IMF · The Latin American Debt Crisis",
+        href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml",
+        problem: "1970년대 상업은행 대출이 1982년 지급 곤란과 지역 부채 위기로 전환된 순서를 확인해야 합니다.",
+        contribution: "석유 충격 뒤 대출 증가, 세계 침체·실질금리·원자재 가격과 멕시코의 채무 곤란을 제도사로 잇습니다.",
+        assumptions: "IMF의 기관사 관점이므로 채무국 시민·정부와 민간 채권자의 책임·비용 해석을 함께 봐야 합니다.",
+        evidenceScope: "1970~80년대 라틴아메리카 국제대출과 채무 조정의 주요 전환을 다룬 역사 자료입니다.",
+        notClaim: "위기가 국내 정책 실패나 미국 금리 하나로만 생겼거나 조정 비용이 고르게 분담됐다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+    ],
+  }),
   "global-history/empires-roads-taxes-and-law": {
     entryLevel: true,
     entryNote: "제국사를 모른다고 가정하고 곡물 100자루를 수도·군대·도로·구휼에 나누는 장부에서 시작합니다.",
