@@ -1,0 +1,20 @@
+{
+  "sections": ["overview", "black-box", "case", "picture", "need", "names", "mechanism", "source", "comparison", "limits"],
+  "concepts": [
+    {"id":"seasonal-mobility-foraging","name":"계절 이동","aliases":[],"avoid":["떠돌이 생활"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"prehistoric-risk-sharing-network","name":"위험 분담망","aliases":[],"avoid":["관계 보험"],"defined_in":"names","used_in":["mechanism","source","limits"]},
+    {"id":"archaeological-proxy-evidence","name":"고고학적 대리 지표","aliases":[],"avoid":["간접 증거 하나"],"defined_in":"names","used_in":["source","comparison","limits"]}
+  ],
+  "questions": [
+    {"id":"drought-buffer","text":"가뭄으로 줄어든 식량을 이동과 관계가 얼마나 메우는가","raised_in":"case","answered_in":"mechanism"},
+    {"id":"object-meaning","text":"먼 물건으로 관계의 모양을 어디까지 알 수 있는가","raised_in":"picture","answered_in":"source"}
+  ],
+  "setups": [],
+  "facts": [
+    {"id":"food-normal","value":"60 + 25 + 15 = 100","meaning":"평소 식량의 세 출처","source":"unverified","as_of":"2026-10-07","status":"current","sections":["overview","case","mechanism"]},
+    {"id":"food-drought","value":"30 + 35 + 20 = 85","meaning":"가뭄 뒤 설명용 식량 합계","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"]},
+    {"id":"exchange-distance","value":"300킬로미터","meaning":"Smithsonian이 소개한 약 13만 년 전 집단 사이 자원 이동 거리","source":"doc","as_of":"2026-10-07","status":"current","sections":["source"]},
+    {"id":"willandra-date","value":"1만8천 년","meaning":"윌란드라 야생 풀씨 가공 흔적의 이른 시기","source":"doc","as_of":"2026-10-07","status":"current","sections":["comparison"]}
+  ],
+  "knows_after": {"overview":"이동과 관계를 생존 기술로 읽습니다.","black-box":"계절·장소·관계·기억을 나눕니다.","case":"설명용 식량 장부를 계산합니다.","picture":"물건과 행동을 구분합니다.","need":"관계와 기억의 완충 기능을 압니다.","names":"세 개념의 정식 이름과 경계를 압니다.","mechanism":"가뭄 대응을 같은 숫자로 추적합니다.","source":"장거리 물질 단서의 범위를 압니다.","comparison":"식물 가공의 지역 증거를 읽습니다.","limits":"보존 편향과 일반화 한계를 압니다."}
+}

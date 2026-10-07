@@ -1,0 +1,20 @@
+{
+  "sections": ["overview", "black-box", "case", "picture", "need", "names", "mechanism", "source", "comparison", "limits"],
+  "concepts": [
+    {"id":"domestication-process-history","name":"작물화·가축화 과정","aliases":[],"avoid":["한 번의 발명"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"sedentary-settlement-dependence","name":"정착 의존","aliases":[],"avoid":["움직일 수 없음"],"defined_in":"names","used_in":["mechanism","source","limits"]},
+    {"id":"neolithic-transition-tradeoff","name":"농경 전환의 손익","aliases":[],"avoid":["신석기 교환조건"],"defined_in":"names","used_in":["mechanism","comparison","limits"]}
+  ],
+  "questions": [
+    {"id":"harvest-access","text":"수확량과 지금 먹을 수 있는 양은 왜 다른가","raised_in":"case","answered_in":"mechanism"},
+    {"id":"revolution-speed","text":"큰 변화가 꼭 갑작스러운 변화인가","raised_in":"overview","answered_in":"comparison"}
+  ],
+  "setups": [],
+  "facts": [
+    {"id":"harvest-ledger","value":"15 + 65 + 20 = 100","meaning":"종자·현재 소비·비축의 설명용 분배","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"]},
+    {"id":"poor-harvest","value":"50 + 20 − 15 = 55","meaning":"다음 해 흉작 뒤 소비 가능량","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"]},
+    {"id":"catalhoyuk-layers","value":"18개 거주층","meaning":"차탈회위크의 장기 거주 층위","source":"doc","as_of":"2026-10-07","status":"current","sections":["source"]},
+    {"id":"catalhoyuk-dates","value":"기원전 7400~6200년","meaning":"UNESCO가 제시한 차탈회위크 거주 시기","source":"doc","as_of":"2026-10-07","status":"current","sections":["source"]}
+  ],
+  "knows_after": {"overview":"농경을 긴 변화로 봅니다.","black-box":"재배·가축화·정착·저장·밀도를 나눕니다.","case":"수확과 소비 가능량을 구분합니다.","picture":"정착의 투자와 의존을 봅니다.","need":"생산 증가의 비용을 함께 봅니다.","names":"세 개념의 정식 이름과 경계를 압니다.","mechanism":"흉작과 배급을 같은 장부에서 추적합니다.","source":"차탈회위크 자료의 범위를 압니다.","comparison":"결과 크기와 변화 속도를 나눕니다.","limits":"단선 발전 설명을 피합니다."}
+}

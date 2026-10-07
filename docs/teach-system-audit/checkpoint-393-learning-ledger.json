@@ -1,0 +1,19 @@
+{
+  "sections": ["overview", "black-box", "case", "picture", "need", "names", "mechanism", "source", "comparison", "limits"],
+  "concepts": [
+    {"id":"institutionalized-learning-history","name":"제도화된 학습","aliases":[],"avoid":["옛 대학"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"manuscript-transmission-chain","name":"문헌 전승","aliases":[],"avoid":["책 이동"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"scholarly-patronage-system","name":"학술 후원","aliases":[],"avoid":["돈 대기"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]}
+  ],
+  "questions": [
+    {"id":"knowledge-infrastructure","text":"책 밖에서 무엇이 지식 전달을 지속시키는가","raised_in":"overview","answered_in":"names"},
+    {"id":"patronage-drop","text":"후원이 줄면 사본과 교사에게 어떤 일이 번지는가","raised_in":"case","answered_in":"mechanism"}
+  ],
+  "setups": [],
+  "facts": [
+    {"id":"resource-ledger","value":"45 + 20 + 15 + 15 + 5 = 100","meaning":"학습 공동체의 설명용 운영 자원","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"]},
+    {"id":"patronage-drop","value":"30","meaning":"설명용 후원 감소 규모","source":"unverified","as_of":"2026-10-07","status":"current","sections":["mechanism"],"disambiguated":true},
+    {"id":"nalanda-duration","value":"약 800년","meaning":"UNESCO가 설명한 날란다의 제도 지속 기간","source":"doc","as_of":"2026-10-07","status":"current","sections":["source"]}
+  ],
+  "knows_after": {"overview":"지식의 생활 기반을 봅니다.","black-box":"후원·생활·수업·필사·여행을 잇습니다.","case":"운영 자원 100을 계산합니다.","picture":"문헌 이동과 제도 지속을 구분합니다.","need":"입학과 교육 경계를 봅니다.","names":"세 개념의 정식 이름과 경계를 압니다.","mechanism":"후원 감소의 연쇄 효과를 봅니다.","source":"날란다 자료의 범위를 압니다.","comparison":"팀북투의 시장과 학습을 잇습니다.","limits":"보존된 정전의 편향을 압니다."}
+}

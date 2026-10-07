@@ -2682,6 +2682,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "내재적 비판·이데올로기 비판·도구적 이성은 사회의 약속과 실제 제도의 모순을 찾고 그 모순을 자연스럽게 만드는 관행에서 공동 변화의 조건으로 이어지는 한 비판 과정입니다.", sharedGate: "보너스 예산 100을 공개 대상 10명에게 나누면 각 10이지만 실제 대상 6명은 약 16.7, 빠진 4명은 0임을 대조합니다." },
   "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "관찰 문장·확인·이론 언어와 보조 가정은 과학 문장이 경험과 논리에 연결돼 시험되고 수정되는 하나의 추론 경로입니다.", sharedGate: "센서 시험 10회 중 적중 8·어긋남 2를 기록하고 실패 두 번의 +1.5도 보정 오차 뒤 입력 조건과 새 예측을 다시 씁니다." },
   "philosophy-history/ordinary-language-use-context-and-speech-acts": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "쓰임과 문맥·발화행위·적정 조건은 같은 문장 내용이 상황에 따라 다른 행위를 하고 권한과 절차에 따라 성립하거나 빗나가는 한 언어 행위 구조입니다.", sharedGate: "‘내일 할게’ 한 문장을 세 상황에 놓아 담당자의 약속 1건, 제삼자의 예측에서 약속 0건, 권한 없는 선언의 성립 실패를 구분합니다." },
+  "global-history/human-dispersal-foraging-and-social-networks": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "계절 이동·집단 사이 위험 분담·고고학적 증거 한계를 식량 100의 가뭄 대응으로 잇는 하나의 선사 생활 경로입니다.", sharedGate: "60+25+15=100이 가뭄 뒤 30+35+20=85가 되는 설명용 장부와 장거리 물질 흔적의 증거 범위를 함께 확인합니다." },
+  "global-history/agriculture-settlement-and-neolithic-tradeoffs": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "재배·가축화·정착·저장·인구 밀도의 서로 다른 변화를 수확과 배급의 손익에서 함께 설명하는 한 농경 전환 경로입니다.", sharedGate: "100=15+65+20과 다음 해 50+20−15=55를 맞추고 차탈회위크·MIT 자료의 지역·교과 범위를 구분합니다." },
+  "global-history/cities-writing-rations-and-early-law": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "도시 분업이 장부와 단위를 요구하고 빠진 배급이 증인·재판·사례형 법문으로 이어지는 하나의 도시 조정 경로입니다.", sharedGate: "곡물 100의 다섯 몫과 기록 오류 10을 맞추고 배급 점토판·함무라비 비문의 관찰 범위를 구분합니다." },
+  "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "숙식·수업·필사·건물·여행과 후원이 문헌과 지식을 세대 사이에 옮기는 하나의 학습 기반 경로입니다.", sharedGate: "45+20+15+15+5=100의 운영 장부와 후원 감소 30이 교사·사본·접근권에 미치는 영향을 날란다·팀북투 자료와 대조합니다." },
+  "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "계절 이동목축이 정착 도시와 물자를 교환하고 공납·역참·군사·서기관의 제국 행정으로 이어지는 하나의 초원 정치 경로입니다.", sharedGate: "100−15+25−20=90의 가축 장부와 오르혼·알타이 자료의 시대·지역 범위를 함께 확인합니다." },
+  "global-history/open-web-platform-curation-and-digital-divides": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "공개 표준의 발행에서 검색·추천 노출, 이용자 반응의 되먹임과 접속·활용 격차까지 이어지는 하나의 디지털 정보 경로입니다.", sharedGate: "게시물 100→후보 20→노출 5와 클릭 40의 설명용 경로를 CERN 공개 기록·UNESCO 지침·ITU 2025 추계의 서로 다른 증거 범위와 대조합니다." },
 };
 
 /**
@@ -3037,6 +3043,12 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "global-history/revolutions-citizenship-and-industrial-empires":"a9752357be625084",
 "global-history/world-wars-depression-and-mass-states":"20dd27b389da0ccd",
 "global-history/cold-war-decolonization-and-globalization":"4ce4addba9f0542a",
+"global-history/human-dispersal-foraging-and-social-networks":"42e32e851c709bda",
+"global-history/agriculture-settlement-and-neolithic-tradeoffs":"e79c61b1bbfcac63",
+"global-history/cities-writing-rations-and-early-law":"6ce476ecb2300863",
+"global-history/monasteries-schools-manuscripts-and-knowledge-transmission":"fbf39b68492e7d36",
+"global-history/pastoral-mobility-steppe-empires-and-settled-frontiers":"b1e71d51eb1663d0",
+"global-history/open-web-platform-curation-and-digital-divides":"6141f406b6d9431c",
 "philosophical-traditions/confucian-ritual-role-and-humane-rule":"64e5a05381ce48c5",
 "philosophical-traditions/daoist-names-noncoercive-action-and-change":"91fcac8ea91ecfab",
 "philosophical-traditions/buddhist-aggregates-impermanence-and-not-self":"0532cf19dec6cabf",

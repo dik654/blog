@@ -1,0 +1,18 @@
+{
+  "sections": ["overview", "black-box", "case", "picture", "need", "names", "mechanism", "source", "comparison", "limits"],
+  "concepts": [
+    {"id":"seasonal-transhumant-pastoralism","name":"계절 이동목축","aliases":[],"avoid":["떠돌이 목축"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"pasture-settled-reciprocity","name":"목초지와 도시의 상호 의존","aliases":[],"avoid":["목초지 상호성"],"defined_in":"names","used_in":["mechanism","source","comparison","limits"]},
+    {"id":"mobile-imperial-administration","name":"이동 사회의 제국 행정","aliases":[],"avoid":["이동 제국 행정"],"defined_in":"names","used_in":["mechanism","source","limits"]}
+  ],
+  "questions": [
+    {"id":"herd-ledger","text":"연말 가축 감소와 교역·공납의 역할을 어떻게 함께 읽는가","raised_in":"case","answered_in":"mechanism"},
+    {"id":"city-steppe","text":"이동 목축과 도시가 왜 서로 기대는가","raised_in":"picture","answered_in":"source"}
+  ],
+  "setups": [],
+  "facts": [
+    {"id":"herd-year","value":"100 − 15 + 25 − 20 = 90","meaning":"가축 무리의 설명용 한 해 장부","source":"unverified","as_of":"2026-10-07","status":"current","sections":["case","mechanism"]},
+    {"id":"altai-duration","value":"약 1만2천 년","meaning":"몽골 알타이 암각화가 보여 주는 장기 범위","source":"doc","as_of":"2026-10-07","status":"current","sections":["comparison"]}
+  ],
+  "knows_after": {"overview":"이동 사회와 도시를 한 정치 공간에서 봅니다.","black-box":"목초·가축·이동·교역·행정을 잇습니다.","case":"가축 100의 한 해를 계산합니다.","picture":"소유권과 경로·협상을 구분합니다.","need":"넓은 공간의 동원 능력을 봅니다.","names":"세 개념의 정식 이름과 경계를 압니다.","mechanism":"가축이 곡물·공납·역참으로 바뀌는 길을 봅니다.","source":"오르혼의 공생 관계를 읽습니다.","comparison":"알타이의 생활 변화를 읽습니다.","limits":"정착 문서와 민족 서사의 편향을 압니다."}
+}

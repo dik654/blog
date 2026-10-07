@@ -81,7 +81,9 @@ export default function ArticleOnboarding({
   const firstScope = learningScope?.[0];
   const lastScope = learningScope?.at(-1);
   const scopePreview =
-    firstScope && lastScope
+    learning
+      ? "작은 사례와 전체 흐름부터 보고, 필요한 용어와 적용 경계는 뒤에서 정리합니다."
+      : firstScope && lastScope
       ? firstScope === lastScope
         ? `${firstScope.label}의 핵심 원리와 적용 경계를 설명합니다.`
         : `${firstScope.label}에서 출발해 ${lastScope.label}까지 순서대로 연결합니다.`
@@ -105,7 +107,9 @@ export default function ArticleOnboarding({
 
       <div className="max-w-3xl">
         <p className="text-lg font-black leading-7 text-foreground sm:text-xl">
-          {flow?.question ?? `${article.title}에서 무엇을 먼저 봐야 할까요?`}
+          {learning
+            ? "작은 사례를 따라 전체 흐름부터 잡습니다"
+            : flow?.question ?? `${article.title}에서 무엇을 먼저 봐야 할까요?`}
         </p>
         <p className="mt-2 text-sm leading-7 text-foreground/75">
           {learning ? (
@@ -130,8 +134,8 @@ export default function ArticleOnboarding({
         </p>
       </div>
 
-      {effectiveBeginnerStart &&
-        !learning?.entryLevel &&
+      {!learning &&
+        effectiveBeginnerStart &&
         effectiveBeginnerStart.href !== hrefForRoute(routeKey) && (
           <Link
             to={effectiveBeginnerStart.href}

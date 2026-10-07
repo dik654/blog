@@ -151938,4 +151938,227 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Stanford Encyclopedia of Philosophy · Speech Acts", href: "https://plato.stanford.edu/entries/speech-acts/", problem: "문장 내용과 말로 수행한 행위의 관계를 설명합니다.", contribution: "내용과 힘, 수행문, 적정 조건과 대화 규범을 정리합니다.", assumptions: "발화행위 분류와 성립 조건에는 이론별 이견이 있습니다.", evidenceScope: "20세기 이후 발화행위 이론과 현대 응용의 학술 개관입니다.", notClaim: "문장 형태만으로 말의 힘이 언제나 결정된다는 뜻이 아닙니다.", sectionId: "comparison" }
     ]
   },
+  "global-history/human-dispersal-foraging-and-social-networks": {
+    entryLevel: true,
+    entryNote: "농경 이전 사회를 외울 배경으로 두지 않고 스무 명의 식량 100단위가 가뭄 뒤 85가 되는 사례에서 시작합니다.",
+    coreIdea: "농경 이전의 사람들은 계절에 맞춰 익숙한 장소를 오가고 먼 집단과 물건·정보·도움을 주고받으며 환경 위험을 나눴으며, 우리는 그 관계를 남은 물건과 인체 흔적으로 제한해서 추정합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "seasonal-mobility-foraging", role: "목적지 없는 방랑과 구분되는 반복 이동을 설명합니다." },
+      { id: "prehistoric-risk-sharing-network", role: "한곳의 식량 부족을 장소와 관계 사이에 나누는 구조를 설명합니다." },
+      { id: "archaeological-proxy-evidence", role: "직접 기록이 없는 행동을 물질 흔적으로 추정하는 범위를 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "seasonal-mobility-foraging", sectionId: "names", intuition: "먹이와 물의 주기에 맞춰 익숙한 여러 장소를 다시 찾는 생활입니다.", workedExample: "가까운 먹이가 30 줄면 먼 계절 장소에서 10을 더 얻습니다.", boundary: "목적지 없이 계속 떠돌거나 거처가 없다는 뜻은 아닙니다." },
+      { id: "prehistoric-risk-sharing-network", sectionId: "names", intuition: "교환과 의무로 한 장소의 실패를 다른 집단과 시기에 나눕니다.", workedExample: "이웃 교환을 15에서 20으로 늘려 부족 일부를 메웁니다.", boundary: "모든 이웃이 같은 가뭄을 겪으면 완충력이 줄어듭니다." },
+      { id: "archaeological-proxy-evidence", sectionId: "names", intuition: "사라진 행동을 남은 물건·층위·인체 흔적으로 추정합니다.", workedExample: "내륙의 바다 조개로 장거리 이동이나 여러 차례 교환을 검토합니다.", boundary: "흔적 하나가 이동 주체와 교환의 뜻을 확정하지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "생활", relation: "계절에 따라 장소를 반복해서 오갑니다.", concepts: ["seasonal-mobility-foraging"] },
+      { label: "관계", relation: "장소와 집단을 연결해 한곳의 실패를 나눕니다.", concepts: ["prehistoric-risk-sharing-network"] },
+      { label: "증거", relation: "남은 흔적으로 앞의 행동과 관계를 제한해서 추정합니다.", concepts: ["archaeological-proxy-evidence"] }
+    ],
+    exercises: [
+      { level: "basic", question: "가뭄 뒤 식량이 100에서 85로 줄어드는 계산을 쓰세요.", answerChecklist: ["60→30", "25→35", "15→20", "합계 85"], requiredConcepts: ["seasonal-mobility-foraging", "prehistoric-risk-sharing-network"], sectionId: "case" },
+      { level: "basic", question: "계절 이동과 목적지 없는 방랑의 차이를 설명하세요.", answerChecklist: ["계절 주기", "익숙한 장소", "반복 경로"], requiredConcepts: ["seasonal-mobility-foraging"], sectionId: "names" },
+      { level: "basic", question: "위험 분담망이 저장고처럼 작동하는 사례와 한계를 하나씩 쓰세요.", answerChecklist: ["식량·정보·도움", "광역 가뭄"], requiredConcepts: ["prehistoric-risk-sharing-network"], sectionId: "need" },
+      { level: "basic", question: "고고학적 대리 지표가 직접 관찰과 다른 이유를 쓰세요.", answerChecklist: ["남은 흔적", "행동 추정", "다른 설명 가능성"], requiredConcepts: ["archaeological-proxy-evidence"], sectionId: "names" },
+      { level: "basic", question: "Smithsonian 자료의 300킬로미터 자원 교환 흔적이 직접 보여 주는 것과 보여 주지 않는 것을 나누세요.", answerChecklist: ["장거리 관계 가능성", "가격·시장 형태는 모름"], requiredConcepts: ["archaeological-proxy-evidence", "prehistoric-risk-sharing-network"], sectionId: "source" },
+      { level: "basic", question: "윌란드라의 맷돌 흔적이 큰 사냥만으로 수렵채집을 설명하지 못하게 하는 이유를 쓰세요.", answerChecklist: ["야생 풀씨", "수집·분쇄", "식물 지식"], requiredConcepts: ["archaeological-proxy-evidence"], sectionId: "comparison" },
+      { level: "advanced", question: "가까운 먹이가 20으로 더 줄고 이웃도 가뭄을 겪는다면 15의 부족을 어떻게 다시 계산하고 조사할지 설계하세요.", answerChecklist: ["바뀐 합계", "교환 한계", "저장·식단·추가 이동", "가정 표시"], requiredConcepts: ["seasonal-mobility-foraging", "prehistoric-risk-sharing-network"], sectionId: "mechanism" },
+      { level: "advanced", question: "먼 조개가 직접 이동·중간 교환·선물 가운데 어느 경로로 왔는지 구분할 추가 증거를 제안하세요.", answerChecklist: ["산지 분석", "연대", "중간 유적", "사용 흔적"], requiredConcepts: ["archaeological-proxy-evidence"], sectionId: "picture" },
+      { level: "advanced", question: "작은 이동 집단이 늘 평등했다는 주장에 반례를 찾을 조사 계획을 세우세요.", answerChecklist: ["매장·영양·노동 흔적", "연령·성별·지위", "지역 비교", "보존 편향"], requiredConcepts: ["archaeological-proxy-evidence"], sectionId: "limits" },
+      { level: "advanced", question: "오늘의 수렵채집 공동체를 선사시대의 살아 있는 화석으로 다루면 생기는 오류를 설명하세요.", answerChecklist: ["현재 국가·시장 관계", "역사적 변화", "환경 차이", "직접 유추 제한"], requiredConcepts: ["seasonal-mobility-foraging", "prehistoric-risk-sharing-network"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Smithsonian Human Origins · Social Life", href: "https://humanorigins.si.edu/human-characteristics/social-life", problem: "농경 이전 집단을 고립된 작은 무리로만 보지 않아야 합니다.", contribution: "먼 산지 자원과 조개의 이동을 장거리 사회망의 물질 단서로 소개합니다.", assumptions: "물건의 이동 경로와 관계의 뜻은 다른 유적·연대 자료로 더 확인해야 합니다.", evidenceScope: "초기 인류 사회망 확대를 소개하는 Smithsonian 공식 교육 자료입니다.", notClaim: "현대 시장·화폐 가격·고정된 교역로가 있었다는 직접 증거가 아닙니다.", sectionId: "source" },
+      { title: "UNESCO · Willandra Lakes Region", href: "https://whc.unesco.org/en/list/167/", problem: "수렵채집을 큰 사냥 한 가지로 줄이는 통념을 피해야 합니다.", contribution: "1만8천 년보다 앞선 야생 풀씨 가공과 맷돌 흔적을 소개합니다.", assumptions: "한 지역의 생태와 보존 조건을 다른 대륙에 그대로 적용하지 않습니다.", evidenceScope: "윌란드라의 장기 거주·장례·식물 가공 흔적을 설명하는 공식 유산 기록입니다.", notClaim: "모든 농경 이전 집단이 같은 식단·기술·이동 주기를 가졌다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "global-history/agriculture-settlement-and-neolithic-tradeoffs": {
+    entryLevel: true,
+    entryNote: "농경을 한순간의 발명으로 외우지 않고 수확 100을 종자 15·소비 65·비축 20으로 나누는 마을에서 시작합니다.",
+    coreIdea: "재배·가축화·정착·저장은 서로 다른 속도로 진행됐고 생산과 인구를 늘리는 동안 노동·질병·격차·흉작 의존과 창고를 통제하는 힘도 바꿨습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "domestication-process-history", role: "첫 재배와 여러 세대에 걸친 생물 변화의 차이를 설명합니다." },
+      { id: "sedentary-settlement-dependence", role: "집·밭·창고 투자가 이동 비용을 높이는 상태를 설명합니다." },
+      { id: "neolithic-transition-tradeoff", role: "농경 전환이 만든 이익과 비용을 함께 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "domestication-process-history", sectionId: "names", intuition: "사람의 반복된 선택과 관리로 식물과 동물의 특성이 여러 세대에 걸쳐 달라집니다.", workedExample: "다음 해 심을 씨앗 15 가운데 원하는 특성의 씨를 남깁니다.", boundary: "한 번 씨를 심은 순간이나 인간이 생물을 완전히 통제한 상태와 같지 않습니다." },
+      { id: "sedentary-settlement-dependence", sectionId: "names", intuition: "집·밭·창고에 쌓은 투자가 많을수록 장소를 떠나는 비용이 커집니다.", workedExample: "흉작에도 창고와 다음 파종지를 지키려 배급을 조정합니다.", boundary: "정착이 곧 농경이거나 이동이 완전히 끝났다는 뜻은 아닙니다." },
+      { id: "neolithic-transition-tradeoff", sectionId: "names", intuition: "생산·저장·인구의 이익과 노동·질병·격차의 비용을 같은 변화에서 봅니다.", workedExample: "비축 20은 흉작을 버티게 하지만 창고의 배급 권한도 만듭니다.", boundary: "모든 지역이 같은 손익을 같은 순서로 겪었다는 뜻은 아닙니다." }
+    ],
+    conceptStages: [
+      { label: "생물 변화", relation: "재배와 선택이 여러 세대에 걸쳐 특성을 바꿉니다.", concepts: ["domestication-process-history"] },
+      { label: "장소 투자", relation: "집·밭·창고가 이동 비용과 저장 능력을 함께 키웁니다.", concepts: ["sedentary-settlement-dependence"] },
+      { label: "생활의 손익", relation: "생산 증가와 노동·질병·격차를 한 장부에 놓습니다.", concepts: ["neolithic-transition-tradeoff"] }
+    ],
+    exercises: [
+      { level: "basic", question: "수확 100에서 종자 15와 비축 20, 소비 65가 어떻게 나뉘는지 계산하세요.", answerChecklist: ["15+65+20=100", "종자·비축은 즉시 소비 몫이 아님"], requiredConcepts: ["neolithic-transition-tradeoff"], sectionId: "case" },
+      { level: "basic", question: "재배와 작물화·가축화 과정의 차이를 설명하세요.", answerChecklist: ["생장 조건 관리", "여러 세대의 특성 변화"], requiredConcepts: ["domestication-process-history"], sectionId: "black-box" },
+      { level: "basic", question: "정착 의존이 흉작 때 이동을 어렵게 하는 이유를 쓰세요.", answerChecklist: ["집·밭·창고 투자", "떠나는 비용", "배급 선택"], requiredConcepts: ["sedentary-settlement-dependence"], sectionId: "names" },
+      { level: "basic", question: "농경 전환의 손익에서 이익 두 가지와 비용 두 가지를 쓰세요.", answerChecklist: ["생산·저장·인구", "노동·질병·격차·흉작 의존"], requiredConcepts: ["neolithic-transition-tradeoff"], sectionId: "names" },
+      { level: "basic", question: "차탈회위크의 18개 거주층과 지붕 출입이 직접 보여 주는 범위를 설명하세요.", answerChecklist: ["장기 정착", "밀집 주거", "사회 전체의 평등은 모름"], requiredConcepts: ["sedentary-settlement-dependence"], sectionId: "source" },
+      { level: "basic", question: "MIT 자료가 농경의 결과 크기와 변화 속도를 나누어 묻게 하는 이유를 쓰세요.", answerChecklist: ["결과는 큼", "지역별 긴 과정", "한순간 혁명과 구분"], requiredConcepts: ["domestication-process-history", "neolithic-transition-tradeoff"], sectionId: "comparison" },
+      { level: "advanced", question: "다음 해 수확이 40이라면 비축 20과 종자 15 뒤 소비 가능량과 부족분을 다시 계산하세요.", answerChecklist: ["40+20=60", "60−15=45", "기준 소비 65보다 20 부족", "가정 표시"], requiredConcepts: ["neolithic-transition-tradeoff"], sectionId: "mechanism" },
+      { level: "advanced", question: "공동 창고가 위험을 줄이면서 권력 격차를 키울 수 있는 두 경로를 그리세요.", answerChecklist: ["비축", "배급 규칙", "접근권", "감사·협의 장치"], requiredConcepts: ["sedentary-settlement-dependence", "neolithic-transition-tradeoff"], sectionId: "need" },
+      { level: "advanced", question: "농경이 건강을 악화했다는 주장을 지역별로 검증할 자료를 설계하세요.", answerChecklist: ["치아·뼈·병원체 흔적", "식단", "인구 밀도", "시기 비교"], requiredConcepts: ["neolithic-transition-tradeoff"], sectionId: "limits" },
+      { level: "advanced", question: "농사와 사냥·채집·이동 목축을 섞은 공동체가 단선 발전 단계에 맞지 않는 이유를 설명하세요.", answerChecklist: ["혼합 생계", "환경·계절", "지역별 순서", "되돌림 가능성"], requiredConcepts: ["domestication-process-history", "sedentary-settlement-dependence"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "UNESCO · Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405/", problem: "정착을 추상적인 발전 단계보다 실제 주거와 거주 기간에서 확인해야 합니다.", contribution: "기원전 7400~6200년의 18개 거주층과 밀집 주택·지붕 출입을 설명합니다.", assumptions: "보존된 건물 배치만으로 가구 권력과 모든 주민의 경험을 확정하지 않습니다.", evidenceScope: "차탈회위크의 장기 정착과 주거 구조를 설명하는 공식 유산 기록입니다.", notClaim: "모든 초기 농경 정착지가 같은 집·인구·권력 구조를 가졌다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/resources/mitsts_007f10_lec02/", problem: "농경을 갑작스럽고 한 방향인 혁명으로만 설명하지 않아야 합니다.", contribution: "농경을 식량 생산과 세계 형성으로 나누고 변화의 속도와 결과의 크기를 따로 묻습니다.", assumptions: "강의 노트의 문제 틀은 지역별 고고학 자료를 대신하지 않습니다.", evidenceScope: "MIT 기술사 과정에서 신석기 전환을 다루는 공개 강의 자료입니다.", notClaim: "농경의 원인과 결과가 모든 지역에서 같았다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "global-history/cities-writing-rations-and-early-law": {
+    entryLevel: true,
+    entryNote: "왕 이름보다 곡물 100바구니를 다섯 몫으로 나누고 빠진 배급 10을 찾는 도시 창고에서 시작합니다.",
+    coreIdea: "초기 도시는 농촌 수확·창고·전문 노동을 연결했고 행정 문자는 배급과 빚을 오래 기억하게 했으며 사례형 법 모음은 분쟁의 판단을 보이게 했지만 기록 밖 사람과 차등 권리는 남았습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "administrative-writing-system", role: "배급·빚·인수·날짜를 조직의 기억으로 남기는 체계를 설명합니다." },
+      { id: "urban-labor-specialization", role: "서로 다른 일을 맡은 사람들이 생산물과 권리에 기대는 구조를 설명합니다." },
+      { id: "casuistic-law-collection", role: "구체적 사건과 판단을 조건문처럼 모은 초기 법문을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "administrative-writing-system", sectionId: "names", intuition: "사람의 기억을 넘어 배급·빚·인수·날짜를 다시 확인할 수 있게 남깁니다.", workedExample: "노동자 몫 40이 장부에 30으로 적힌 차이를 인장과 다른 기록에 대조합니다.", boundary: "문자가 모든 주민의 목소리와 권리를 똑같이 기록했다는 뜻은 아닙니다." },
+      { id: "urban-labor-specialization", sectionId: "names", intuition: "농민·장인·관리·상인이 다른 일을 맡고 서로의 생산물에 기대어 삽니다.", workedExample: "곡물 100을 노동자 40·장인 20·사원 15·관리 10·비축 15로 나눕니다.", boundary: "모든 직업이 자유롭게 선택됐거나 보상이 공평했다는 뜻은 아닙니다." },
+      { id: "casuistic-law-collection", sectionId: "names", intuition: "구체적 사건의 조건과 판단을 ‘만약 이러면 이렇게 한다’는 꼴로 모읍니다.", workedExample: "빠진 곡물 10의 단위·인장·증인·신분을 확인해 판단합니다.", boundary: "현대의 포괄적 법전이나 모든 사람에게 같은 권리를 보장하는 헌법과 같지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "일의 분화", relation: "서로 다른 직업의 생산과 배급이 맞물립니다.", concepts: ["urban-labor-specialization"] },
+      { label: "기록", relation: "배급과 빚을 단위·날짜·인장과 함께 남깁니다.", concepts: ["administrative-writing-system"] },
+      { label: "판단", relation: "기록과 증인을 사건별 법문에 대조합니다.", concepts: ["casuistic-law-collection"] }
+    ],
+    exercises: [
+      { level: "basic", question: "곡물 100바구니의 다섯 몫을 더하고 노동자 기록이 40에서 30이면 얼마가 빠지는지 계산하세요.", answerChecklist: ["40+20+15+10+15=100", "10 부족"], requiredConcepts: ["urban-labor-specialization", "administrative-writing-system"], sectionId: "case" },
+      { level: "basic", question: "도시 분업이 큰 마을과 다른 조정 문제를 만드는 이유를 쓰세요.", answerChecklist: ["전문 노동", "농촌 수확", "배급·교환"], requiredConcepts: ["urban-labor-specialization"], sectionId: "black-box" },
+      { level: "basic", question: "행정 문자가 기억을 늘리면서 기록되지 않은 사람을 만들 수 있는 이유를 설명하세요.", answerChecklist: ["장부의 지속", "기록 권한", "구술·무급 노동 누락"], requiredConcepts: ["administrative-writing-system"], sectionId: "picture" },
+      { level: "basic", question: "사례형 법 모음과 현대 법전의 차이를 설명하세요.", answerChecklist: ["사건별 조건", "판단 모음", "보편 권리와 구분"], requiredConcepts: ["casuistic-law-collection"], sectionId: "names" },
+      { level: "basic", question: "메트로폴리탄박물관의 배급 점토판이 직접 보여 주는 일상 행정을 쓰세요.", answerChecklist: ["맥주·빵·기름·양파", "전령", "배급 기록"], requiredConcepts: ["administrative-writing-system"], sectionId: "source" },
+      { level: "basic", question: "루브르가 함무라비 비문을 현대적 의미의 법전으로 부르지 않는 이유를 쓰세요.", answerChecklist: ["282개 판단", "왕권 표현", "현대 포괄 법전과 차이"], requiredConcepts: ["casuistic-law-collection"], sectionId: "comparison" },
+      { level: "advanced", question: "빠진 곡물 10이 측정 오차·기록 오류·횡령 가운데 무엇인지 가를 절차를 설계하세요.", answerChecklist: ["단위", "인장·복수 장부", "증인", "판단 권한"], requiredConcepts: ["administrative-writing-system", "casuistic-law-collection"], sectionId: "mechanism" },
+      { level: "advanced", question: "문자가 없는 도시 또는 도시가 아닌 문자 사회가 가능한 반례를 검토하세요.", answerChecklist: ["도시·문자 분리", "다른 기록 매체", "고고학 자료", "단선 전파 비판"], requiredConcepts: ["administrative-writing-system", "urban-labor-specialization"], sectionId: "limits" },
+      { level: "advanced", question: "점토판에 많이 기록된 품목이 당시 사람에게 가장 중요했다고 단정할 수 없는 이유를 쓰세요.", answerChecklist: ["기관의 기록 목적", "보존 편향", "기록 밖 노동", "다른 자료"], requiredConcepts: ["administrative-writing-system"], sectionId: "limits" },
+      { level: "advanced", question: "사례형 법 모음이 분쟁 예측 가능성을 높이면서 신분 격차를 고정할 수 있는 경로를 설명하세요.", answerChecklist: ["공개된 판단", "유사 사건 비교", "신분별 처벌", "집행 차이"], requiredConcepts: ["casuistic-law-collection"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "The Metropolitan Museum of Art · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/322609", problem: "초기 문자를 문학과 왕의 비문만으로 설명하지 않아야 합니다.", contribution: "기원전 2028년 무렵 전령에게 준 맥주·빵·기름·양파 배급 기록을 보여 줍니다.", assumptions: "박물관 해설과 남은 점토판은 도시의 모든 노동과 배급을 대표하지 않습니다.", evidenceScope: "일상 행정 기록의 형식과 품목을 보여 주는 1차 유물입니다.", notClaim: "당시 모든 주민이 글을 읽거나 장부에 동등하게 기록됐다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Musée du Louvre · The Code of Hammurabi", href: "https://collections.louvre.fr/en/ark:/53355/cl010174436", problem: "함무라비 비문을 현대의 포괄적 법전과 같은 것으로 읽지 않아야 합니다.", contribution: "기원전 1750년 무렵 282개 판단과 왕권 표현이 새겨진 비문의 성격을 설명합니다.", assumptions: "비문에 적힌 판단과 실제 재판·집행은 다른 문서와 함께 확인해야 합니다.", evidenceScope: "함무라비 비문과 사례형 판단 모음의 공식 소장 기록입니다.", notClaim: "모든 사람이 같은 권리·절차·형벌을 보장받았다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": {
+    entryLevel: true,
+    entryNote: "위대한 책 목록보다 학습 공동체의 자원 100을 숙식·수업·필사·건물·여행에 나누는 장부에서 시작합니다.",
+    coreIdea: "지식은 책만으로 이어지지 않았으며 교사와 학습자의 생활, 필사와 번역, 건물과 시장, 정치·종교·상업 후원이 함께 작동할 때 다른 장소와 세대로 전달됐습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "institutionalized-learning-history", role: "사람·장소·시간·생활비와 교육 규칙을 묶는 학습 체계를 설명합니다." },
+      { id: "manuscript-transmission-chain", role: "필사·번역·보관·판매·여행이 문헌을 이어 주는 과정을 설명합니다." },
+      { id: "scholarly-patronage-system", role: "교육과 필사의 비용을 누가 대고 무엇을 요구했는지 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "institutionalized-learning-history", sectionId: "names", intuition: "교사·학습자·장소·시간과 생활 지원을 꾸준히 묶어 가르칩니다.", workedExample: "자원 100 가운데 숙식 45와 수업 20을 배정합니다.", boundary: "과거의 사원·수도원·학교가 현대 대학과 같은 조직이었다는 뜻은 아닙니다." },
+      { id: "manuscript-transmission-chain", sectionId: "names", intuition: "문헌은 필사·번역·보관·판매와 사람의 여행을 거쳐 이어집니다.", workedExample: "필사 재료 15와 여행·번역 5가 사본을 다른 도시로 옮깁니다.", boundary: "남은 정전이 당시 사회의 모든 지식과 말하기를 대표하지 않습니다." },
+      { id: "scholarly-patronage-system", sectionId: "names", intuition: "통치자·재단·상인·공동체가 숙식·교사·사본 비용을 댑니다.", workedExample: "후원이 30 줄면 먼저 새 사본과 방문 교사를 줄이는 선택이 생깁니다.", boundary: "후원이 언제나 간섭 없이 지식의 자유를 넓혔다는 뜻은 아닙니다." }
+    ],
+    conceptStages: [
+      { label: "생활 기반", relation: "먹고 머물며 배울 사람과 장소를 조직합니다.", concepts: ["institutionalized-learning-history"] },
+      { label: "전승", relation: "필사·번역·보관·여행으로 문헌을 옮깁니다.", concepts: ["manuscript-transmission-chain"] },
+      { label: "자원과 권한", relation: "비용을 대는 주체가 규모와 교육 경계를 바꿉니다.", concepts: ["scholarly-patronage-system"] }
+    ],
+    exercises: [
+      { level: "basic", question: "운영 자원 100의 다섯 몫을 더하고 가장 큰 두 몫을 쓰세요.", answerChecklist: ["45+20+15+15+5=100", "숙식 45", "수업 20"], requiredConcepts: ["institutionalized-learning-history"], sectionId: "case" },
+      { level: "basic", question: "제도화된 학습이 책 한 권의 존재와 다른 이유를 쓰세요.", answerChecklist: ["교사·학습자", "장소·시간", "생활 지원·규칙"], requiredConcepts: ["institutionalized-learning-history"], sectionId: "names" },
+      { level: "basic", question: "문헌 전승의 다섯 경로를 쓰고 하나가 끊길 때의 결과를 설명하세요.", answerChecklist: ["필사·번역·보관·판매·여행", "사본·접근 감소"], requiredConcepts: ["manuscript-transmission-chain"], sectionId: "names" },
+      { level: "basic", question: "학술 후원이 교육을 넓히면서 경계를 만들 수 있는 이유를 쓰세요.", answerChecklist: ["비용 지원", "교육 주제·입학 조건", "후원자 권한"], requiredConcepts: ["scholarly-patronage-system"], sectionId: "need" },
+      { level: "basic", question: "UNESCO의 날란다 자료가 직접 보여 주는 조직된 지식 전달의 흔적을 쓰세요.", answerChecklist: ["약 800년", "주거·교육·종교 건물", "조직된 전달"], requiredConcepts: ["institutionalized-learning-history"], sectionId: "source" },
+      { level: "basic", question: "팀북투에서 원고 거래와 도시 시장이 학습을 함께 떠받친 방식을 설명하세요.", answerChecklist: ["원고 매매", "상업도시", "코란 학교·산코레"], requiredConcepts: ["manuscript-transmission-chain", "scholarly-patronage-system"], sectionId: "comparison" },
+      { level: "advanced", question: "후원이 100에서 70으로 줄 때 숙식·수업·필사·건물·여행을 어떻게 조정할지 두 방안을 비교하세요.", answerChecklist: ["합계 70", "사본·교사 영향", "접근권", "가정 표시"], requiredConcepts: ["institutionalized-learning-history", "scholarly-patronage-system"], sectionId: "mechanism" },
+      { level: "advanced", question: "문헌 수가 많다는 사실과 사회 전체의 지식 다양성을 구분할 조사 계획을 세우세요.", answerChecklist: ["구술 전승", "가정·시장·작업장", "성별·신분", "보존 편향"], requiredConcepts: ["manuscript-transmission-chain"], sectionId: "limits" },
+      { level: "advanced", question: "날란다와 팀북투를 현대 대학의 두 지점처럼 설명할 때 생기는 오류를 쓰세요.", answerChecklist: ["종교 수행", "정치 후원", "상업 시장", "조직·입학 차이"], requiredConcepts: ["institutionalized-learning-history", "scholarly-patronage-system"], sectionId: "limits" },
+      { level: "advanced", question: "전쟁·화재·후원 중단 가운데 하나가 문헌 전승에 미치는 연쇄 효과를 그리세요.", answerChecklist: ["사람과 건물", "사본", "이동·번역", "복구 경로"], requiredConcepts: ["manuscript-transmission-chain", "scholarly-patronage-system"], sectionId: "mechanism" }
+    ],
+    papers: [
+      { title: "UNESCO · Archaeological Site of Nalanda Mahavihara", href: "https://whc.unesco.org/en/list/1502/", problem: "지식 전달을 남은 책만으로 설명하지 않아야 합니다.", contribution: "약 800년 동안 이어진 주거·교육·종교 건물과 조직된 지식 전달의 흔적을 설명합니다.", assumptions: "유적과 정전은 입학하지 못한 사람과 구술·생활 지식 전체를 보여 주지 않습니다.", evidenceScope: "날란다의 건물·제도 지속과 학술 교류를 설명하는 공식 유산 기록입니다.", notClaim: "날란다가 현대 대학과 같은 학위·학과·자치 구조를 가졌다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "UNESCO · Timbuktu", href: "https://whc.unesco.org/en/list/119/", problem: "배움을 종교기관 안의 수업만으로 좁히지 않아야 합니다.", contribution: "산코레와 코란 학교, 원고 거래가 활발한 상업도시의 관계를 설명합니다.", assumptions: "보존된 모스크와 원고는 당시 도시 주민의 모든 지식과 참여 범위를 대표하지 않습니다.", evidenceScope: "팀북투의 종교·교육·상업 기능을 설명하는 공식 유산 기록입니다.", notClaim: "원고 거래가 누구에게나 같은 교육 기회와 지식의 자유를 주었다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "global-history/pastoral-mobility-steppe-empires-and-settled-frontiers": {
+    entryLevel: true,
+    entryNote: "이동 목축 사회를 빈 공간의 침입자로 보지 않고 가축 100마리가 겨울·출산·교역을 거쳐 90이 되는 한 해에서 시작합니다.",
+    coreIdea: "계절 이동목축은 풀과 물을 따라 정해진 경로를 이용했고 이동 가구와 도시가 곡물·가축·통행을 주고받는 관계 위에서 공납·역참·군사와 서기관을 함께 둔 초원 제국이 형성됐습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "seasonal-transhumant-pastoralism", role: "환경 주기에 맞춘 정해진 이동을 설명합니다." },
+      { id: "pasture-settled-reciprocity", role: "이동 가구와 정착 도시가 물자와 통행에서 서로 기대는 관계를 설명합니다." },
+      { id: "mobile-imperial-administration", role: "움직이는 군사·가구와 도시 행정을 함께 조직한 통치를 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "seasonal-transhumant-pastoralism", sectionId: "names", intuition: "풀과 물의 계절 변화에 맞춰 가축과 거처를 정해진 경로로 옮깁니다.", workedExample: "겨울 저지대 손실 뒤 봄 목초지에서 출산과 무리 회복을 맞춥니다.", boundary: "목적지 없는 방랑이나 모든 재산을 늘 들고 다니는 생활과 같지 않습니다." },
+      { id: "pasture-settled-reciprocity", sectionId: "names", intuition: "이동 가구와 정착 지역이 목초·곡물·가축·통행을 주고받습니다.", workedExample: "가축 20마리를 곡물·공납·의례 의무와 바꿉니다.", boundary: "교환이 언제나 평화롭거나 힘이 대등했다는 뜻은 아닙니다." },
+      { id: "mobile-imperial-administration", sectionId: "names", intuition: "움직이는 군사·가구와 도시의 세금·서기관·역참을 함께 조직합니다.", workedExample: "공납 가축을 역참과 군대의 물자로 배분합니다.", boundary: "전투 능력 하나만으로 넓은 제국이 유지됐다는 뜻은 아닙니다." }
+    ],
+    conceptStages: [
+      { label: "생태와 이동", relation: "풀·물·가축 상태에 맞춰 경로를 고릅니다.", concepts: ["seasonal-transhumant-pastoralism"] },
+      { label: "교환", relation: "이동 가구와 도시가 가축·곡물·통행을 맞바꿉니다.", concepts: ["pasture-settled-reciprocity"] },
+      { label: "통치", relation: "교환망을 공납·역참·군사와 도시 행정으로 묶습니다.", concepts: ["mobile-imperial-administration"] }
+    ],
+    exercises: [
+      { level: "basic", question: "가축 100마리가 겨울 15 손실·봄 25 출산·교역과 공납 20을 거쳐 90이 되는 계산을 쓰세요.", answerChecklist: ["100−15=85", "85+25=110", "110−20=90"], requiredConcepts: ["seasonal-transhumant-pastoralism", "pasture-settled-reciprocity"], sectionId: "case" },
+      { level: "basic", question: "계절 이동목축과 목적지 없는 방랑의 차이를 설명하세요.", answerChecklist: ["계절", "정해진 경로", "목초·물 관리"], requiredConcepts: ["seasonal-transhumant-pastoralism"], sectionId: "names" },
+      { level: "basic", question: "목초지와 도시의 상호 의존에서 양쪽이 주고받는 것을 쓰세요.", answerChecklist: ["가축·말·운송", "곡물·직물·시장·통행"], requiredConcepts: ["pasture-settled-reciprocity"], sectionId: "black-box" },
+      { level: "basic", question: "이동 사회의 제국 행정이 전투 능력만으로 설명되지 않는 이유를 쓰세요.", answerChecklist: ["공납", "서기관·세금", "역참·도시"], requiredConcepts: ["mobile-imperial-administration"], sectionId: "names" },
+      { level: "basic", question: "오르혼 계곡 자료가 목축과 행정·종교 중심의 관계를 어떻게 설명하는지 쓰세요.", answerChecklist: ["공생 관계", "목축 사회", "행정·종교 중심"], requiredConcepts: ["pasture-settled-reciprocity", "mobile-imperial-administration"], sectionId: "source" },
+      { level: "basic", question: "몽골 알타이 암각화가 이동 목축을 변하지 않은 전통으로 보지 못하게 하는 이유를 쓰세요.", answerChecklist: ["약 1만2천 년", "사냥→목축", "말 중심 이동"], requiredConcepts: ["seasonal-transhumant-pastoralism"], sectionId: "comparison" },
+      { level: "advanced", question: "겨울 손실이 25로 늘고 출산이 15로 줄면 교역 전후 가축 수를 다시 계산하세요.", answerChecklist: ["100−25=75", "75+15=90", "90−20=70", "가정 표시"], requiredConcepts: ["seasonal-transhumant-pastoralism", "pasture-settled-reciprocity"], sectionId: "mechanism" },
+      { level: "advanced", question: "국경·광산·사유화가 이동 경로를 막을 때 생기는 연쇄 효과를 그리세요.", answerChecklist: ["목초 접근", "가축 손실", "교역·부채", "정치 갈등"], requiredConcepts: ["seasonal-transhumant-pastoralism", "pasture-settled-reciprocity"], sectionId: "limits" },
+      { level: "advanced", question: "정착 국가 문서가 이동 집단을 적이나 조공자로 과장했는지 검증할 자료를 제안하세요.", answerChecklist: ["여러 언어 문서", "고고학", "환경 자료", "교역 흔적"], requiredConcepts: ["pasture-settled-reciprocity", "mobile-imperial-administration"], sectionId: "limits" },
+      { level: "advanced", question: "초원 제국을 한 현대 국민의 직선 조상으로 설명할 때 빠지는 이동과 혼합을 쓰세요.", answerChecklist: ["여러 언어·집단", "연합 변화", "도시와 정착민", "후대 민족 서사"], requiredConcepts: ["mobile-imperial-administration"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "UNESCO · Orkhon Valley Cultural Landscape", href: "https://whc.unesco.org/en/list/1081", problem: "목축 사회와 도시·행정 중심을 서로 반대되는 세계로 보지 않아야 합니다.", contribution: "목축 사회와 행정·종교 중심의 공생 관계 및 여러 초원 제국의 흔적을 설명합니다.", assumptions: "오르혼 계곡의 관계가 다른 초원·사막·산지 사회를 모두 대표하지 않습니다.", evidenceScope: "오르혼의 장기 목축 전통과 튀르크·위구르·몽골 중심지를 설명하는 공식 유산 기록입니다.", notClaim: "이동 사회가 늘 하나의 중앙집권 국가였거나 도시와 갈등이 없었다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "UNESCO · Petroglyphic Complexes of the Mongolian Altai", href: "https://whc.unesco.org/en/list/1382", problem: "이동 목축을 시작부터 변하지 않은 생활로 설명하지 않아야 합니다.", contribution: "약 1만2천 년의 암각화에서 큰 사냥·목축·말 중심 이동의 변화를 설명합니다.", assumptions: "그림의 제작자·의미·사회 조직은 다른 유물과 환경 자료로 더 확인해야 합니다.", evidenceScope: "몽골 알타이 암각화의 장기 생활 변화에 관한 공식 유산 기록입니다.", notClaim: "모든 이동 목축 사회가 같은 시기에 말 중심 생활로 바뀌었다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "global-history/open-web-platform-curation-and-digital-divides": {
+    entryLevel: true,
+    entryNote: "인터넷 연표보다 게시물 100개가 후보 20개와 실제 노출 5개로 줄어드는 한 이용자의 화면에서 시작합니다.",
+    coreIdea: "공개 표준의 웹은 발행과 연결을 넓혔지만 기기·가격·언어의 접근 조건과 검색·플랫폼의 추천 규칙이 실제로 보이는 정보와 참여 기회를 다시 나누며 이용자 반응은 다음 노출과 제작 선택으로 되돌아갑니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "open-web-architecture-history", role: "공개 표준과 링크가 여러 주체의 발행을 가능하게 한 구조를 설명합니다." },
+      { id: "algorithmic-content-curation", role: "검색·추천·차단이 콘텐츠의 순서와 노출을 정하는 과정을 설명합니다." },
+      { id: "multi-level-digital-divide", role: "접속 여부 뒤에 남는 품질·가격·기술·활용 결과의 차이를 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "open-web-architecture-history", sectionId: "names", intuition: "공개 표준과 링크로 서로 다른 주체가 자기 문서를 만들고 연결합니다.", workedExample: "자기 서버의 페이지를 주소와 링크로 다른 사이트에 잇습니다.", boundary: "모든 서비스가 무료이거나 중개자 없이 작동한다는 뜻은 아닙니다." },
+      { id: "algorithmic-content-curation", sectionId: "names", intuition: "규칙과 예측 모형이 검색·추천·차단에서 보일 순서를 정합니다.", workedExample: "게시물 100개에서 후보 20개와 실제 노출 5개를 고릅니다.", boundary: "한 알고리즘이 이용자의 인식을 완전히 결정한다는 뜻은 아닙니다." },
+      { id: "multi-level-digital-divide", sectionId: "names", intuition: "접속 여부와 함께 속도·가격·기기·기술·활용 결과의 차이를 봅니다.", workedExample: "같은 접속자라도 데이터 요금과 속도 때문에 영상 수업 사용이 달라집니다.", boundary: "온라인 인구 비율 하나로 측정이 끝나지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "발행과 연결", relation: "공개 표준과 링크가 서로 다른 서버의 문서를 잇습니다.", concepts: ["open-web-architecture-history"] },
+      { label: "발견과 노출", relation: "검색과 추천이 정보가 보이는 순서를 정합니다.", concepts: ["algorithmic-content-curation"] },
+      { label: "참여 조건", relation: "기기·가격·언어·기술과 활용 결과의 차이를 확인합니다.", concepts: ["multi-level-digital-divide"] }
+    ],
+    exercises: [
+      { level: "basic", question: "게시물 100개가 후보 20개와 실제 노출 5개로 줄어드는 두 선택 단계를 쓰세요.", answerChecklist: ["언어·관심·설정", "화면 공간·순위", "설명용 가정"], requiredConcepts: ["algorithmic-content-curation"], sectionId: "case" },
+      { level: "basic", question: "인터넷·웹·플랫폼의 역할을 각각 한 문장으로 구분하세요.", answerChecklist: ["데이터 전송 기반", "문서 연결 서비스", "검색·추천·계정 규칙"], requiredConcepts: ["open-web-architecture-history", "algorithmic-content-curation"], sectionId: "black-box" },
+      { level: "basic", question: "열린 웹 구조가 모든 서비스의 무료·무중개를 뜻하지 않는 이유를 쓰세요.", answerChecklist: ["공개 표준", "호스팅·도메인·브라우저", "사업·국가 규칙"], requiredConcepts: ["open-web-architecture-history"], sectionId: "names" },
+      { level: "basic", question: "디지털 격차를 접속 여부 밖의 네 요소로 설명하세요.", answerChecklist: ["품질", "가격", "기기·기술", "활용 결과"], requiredConcepts: ["multi-level-digital-divide"], sectionId: "names" },
+      { level: "basic", question: "CERN의 1993년 공개 결정이 웹 확산의 어떤 조건을 바꿨는지 쓰세요.", answerChecklist: ["웹 소프트웨어", "퍼블릭 도메인", "사용·개선 가능"], requiredConcepts: ["open-web-architecture-history"], sectionId: "source" },
+      { level: "basic", question: "UNESCO 지침이 삭제뿐 아니라 추천 순서와 이의 제기를 다루는 이유를 쓰세요.", answerChecklist: ["콘텐츠 조정·선별", "표현·정보 접근", "투명성·책임"], requiredConcepts: ["algorithmic-content-curation"], sectionId: "comparison" },
+      { level: "advanced", question: "클릭 40이 다음 노출·광고 수입·제작 형식으로 되돌아가는 경로와 끊을 수 있는 지점을 그리세요.", answerChecklist: ["반응 신호", "노출 증가", "수입·팔로어", "품질·다양성·신고 규칙"], requiredConcepts: ["algorithmic-content-curation"], sectionId: "mechanism" },
+      { level: "advanced", question: "같은 게시물 100개를 시간순·친구순·예상 반응순으로 보일 때 결과와 위험을 비교하세요.", answerChecklist: ["순위 기준", "노출 분포", "편향·조작", "이용자 선택"], requiredConcepts: ["algorithmic-content-curation"], sectionId: "mechanism" },
+      { level: "advanced", question: "ITU의 온라인·오프라인 인구 집계만으로 디지털 격차가 끝났는지 판정할 수 없는 이유를 쓰세요.", answerChecklist: ["속도·가격", "도시·농촌·성별·소득", "기술·활용", "연도·정의"], requiredConcepts: ["multi-level-digital-divide"], sectionId: "limits" },
+      { level: "advanced", question: "플랫폼 권력이 크지만 완전한 통제와 같지 않은 반례를 국가·시장·이용자 층에서 하나씩 제시하세요.", answerChecklist: ["국가 차단·법", "다른 플랫폼·사업모형", "공유·거부·우회", "범위 구분"], requiredConcepts: ["algorithmic-content-curation", "multi-level-digital-divide"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "CERN · Where the web was born", href: "https://home.cern/science/computing/the-birth-of-the-web/where-web-was-born/", problem: "웹의 확산을 발명가 한 사람의 아이디어만으로 설명하지 않아야 합니다.", contribution: "1989년 제안과 첫 웹사이트, 1993년 4월 30일 웹 소프트웨어의 퍼블릭 도메인 공개를 기록합니다.", assumptions: "초기의 공개 조건과 오늘의 플랫폼 시장·국가 규칙은 분리해 읽습니다.", evidenceScope: "CERN이 기록한 웹의 탄생과 공개 결정의 공식 역사입니다.", notClaim: "오늘의 모든 웹 서비스가 개방적이거나 무료라는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "UNESCO · Guidelines for the Governance of Digital Platforms", href: "https://unesdoc.unesco.org/ark:/48223/pf0000387339", problem: "플랫폼 권력을 게시물 삭제 한 가지로 좁히지 않아야 합니다.", contribution: "플랫폼 설계·콘텐츠 조정·선별에 인권·투명성·이용자 정보·책임 원칙을 제시합니다.", assumptions: "국제 지침은 법률 자체나 한 나라의 집행 결과가 아닙니다.", evidenceScope: "2023년 플랫폼 거버넌스 국제 지침의 원칙과 절차 범위입니다.", notClaim: "원칙을 발표하면 국가와 플랫폼의 실제 권리 충돌이 자동으로 해결된다는 뜻이 아닙니다.", sectionId: "comparison" },
+      { title: "ITU · Facts and Figures 2025", href: "https://www.itu.int/en/ITU-D/Statistics/Pages/facts/default.aspx", problem: "연결된 사람의 총계로 접근 격차가 끝났다고 보면 안 됩니다.", contribution: "약 60억 명의 온라인 인구와 22억 명의 오프라인 인구, 소득·성별·도시와 농촌의 격차를 집계합니다.", assumptions: "추계는 연도·정의·표본에 따라 수정되며 속도·안전·활용 결과를 모두 담지 않습니다.", evidenceScope: "2025년 세계 정보통신 접근의 공식 국제 추계입니다.", notClaim: "온라인으로 분류된 사람이 같은 품질과 자유로 인터넷을 쓴다는 뜻이 아닙니다.", sectionId: "limits" }
+    ]
+  },
 };

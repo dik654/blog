@@ -80,7 +80,6 @@ export default function ArticlePage({ domain }: { domain: string }) {
 
   return (
     <ArticleLayout title={result.article.title}>
-      {learning && <ArticleLessonPrimer contract={learning} />}
       <ArticleOnboarding
         category={result.category}
         article={result.article}
@@ -95,6 +94,7 @@ export default function ArticlePage({ domain }: { domain: string }) {
           {createElement(ArticleComponent)}
         </Suspense>
       </div>
+      {learning && <ArticleLessonPrimer contract={learning} />}
       {learning && <ArticleLearningContractView contract={learning} />}
       {evidence && (
         <ArticleEvidenceRail
