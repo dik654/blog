@@ -84,6 +84,41 @@
 
 자격 과정은 대학 가격이론의 대체 교재가 아니라 현장 누락 검사표로 쓴다. 파생상품투자권유자문인력 과정에서는 장내·장외 상품, 투자권유 실무, 법규·윤리·세제·AML·분쟁을 확인하고, 은행권 자산관리사(FP) 과정에서는 고객 자료·재무 목표, 금융상품·주식·채권·파생금융상품과 투자설계 절차의 연결을 확인한다. GARP는 위험모형과 운영 통제를, 대학 금융론은 무차익과 가치평가를 맡긴다. 실제 숫자와 효력은 거래소·감독기관·국제기준 원문에 다시 대조한다. 13개 과목과 보수·FP·FRM 항목별 경로는 [파생상품 교과·자격 과정 대조표](derivatives-curriculum-coverage.md)에 따로 기록했다. 다음 보강은 실제 디스퍼전 손익귀속과 신용 경매 시계열, 에너지·금속의 인도 규칙, 추가 국가의 제재·세무와 조각투자 시장 개장 뒤 사례다.
 
+앞으로 파생상품 글은 `대학의 가격 원리 + 파생상품투자권유자문인력의 판매·법규 범위 + 은행 FP/PB의 고객 장부 + FRM의 위험 통제` 네 축을 고정 검사표로 사용한다. 어느 한 축만 통과한 글은 분야를 다룬 것으로 세지 않는다.
+
+## 경제사 교과과정 대조
+
+### 기준 자료
+
+- [MIT 14.731 Economic History](https://ocw.mit.edu/courses/14-731-economic-history-fall-2006/pages/syllabus/): 고대 로마에서 맬서스·인구, 영국 금융제도, 산업혁명, 노예제, 기업, 대공황과 전쟁·불평등까지 제도와 계량 증거를 잇는다.
+- [LSE 경제사 학부 과목 목록](https://www.lse.ac.uk/economic-history/study/economic-history-undergraduate-programmes/undergraduate-economic-history-courses): 세계경제의 장기 변화와 함께 중국·남아시아·아프리카·중동·라틴아메리카, 가족경제·호황과 불황 같은 지역·주제 과목을 독립 축으로 둔다.
+- [LSE EH218 중국 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm): 지리·국가·제도·문화·성별·인적 자본·이동·교역·재난을 1800년 이후 중국의 경쟁 설명으로 다룬다.
+- [LSE EH307 남아시아 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH307.htm): 식민 이전 시장, 식민 제도와 철도, 독립 뒤 국가·산업·생활의 변화를 지역 자료로 비교한다.
+- [LSE EH211 아프리카 경제사](https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH211.htm): 노예무역·식민주의·현금작물·독립 뒤 발전을 지역별 차이와 장기 자료의 한계 속에서 읽는다.
+- [LSE EH222 중동·북아프리카 경제사](https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm): 토지·노동 권리, 교육·불평등·인구와 문서·파피루스·고고학을 사용해 주민의 생활에서 지역 변화를 본다.
+- [LSE EH225 라틴아메리카 경제사](https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH225.htm): 식민 수출, 독립 뒤 국가 형성, 세계화·산업화·불평등과 위기를 장기 비교한다.
+
+### 현재 대응과 빈칸
+
+| 교과 축 | 현재 정본 | 판정 | 다음 보강 질문 |
+| --- | --- | --- | --- |
+| 생산·잉여·국가 | `agrarian-surplus-and-state` | 장부·재고·배분 권한의 입구 있음 | 토지소유·지대·관개·공동체와 국가 형성의 지역 비교 |
+| 장거리 교역·신용 | `trade-credit-and-long-distance-networks` | 물건·대금·정보·위험을 구분 | 회사·보험·은행·중앙은행의 형성과 상법·파산의 변화 |
+| 노예제·식민 상품망 | `colonial-plantations-slavery-and-extraction` | 시장 장부와 강제·권리 장부를 함께 봄 | 인도양·아시아의 계약노동과 식민 토지·조세의 추가 비교 |
+| 산업혁명·생활 수준 | `industrial-revolution-wages-and-energy` | 임금·에너지·기술과 생활의 시차를 연결 | 도시 위생·가족 노동·노동조합·기업 조직과 제2차 산업혁명 |
+| 국제 통화·대공황 | `gold-standard-depression-bretton-woods` | 금본위·전간기 붕괴·브레턴우즈의 조정 규칙을 연결 | 상업은행·보험·증권시장과 전쟁금융의 장기 제도사 |
+| 탈식민·석유·부채 | `decolonization-oil-shocks-and-debt` | 정치 주권과 외화 제약을 분리 | 복지·산업정책·냉전 원조와 1970년대 인플레이션·금융화 |
+| 중국 | `china-since-1800-households-markets-and-reform` | 가구 책임·이중 경로·특구를 한 숫자 장부로 연결 | 19세기 조세·전쟁·산업, 집단화의 지역 차이, 부동산·지방재정 |
+| 일본 | `japan-money-banks-industry-and-catchup` | 통화 통일·은행·전후 산업 추격을 연결 | 제국 경제, 노동·젠더, 자산 거품·장기침체와 고령화 |
+| 남아시아 | `south-asia-markets-colonial-railways-and-development-state` | 철도 가격 효과·식민 권력·계획과 외환 전환을 구분 | 분할·토지제도·기근, 국가별 경로와 비공식 경제·디지털화 |
+| 아프리카 | `africa-slave-trades-colonial-tax-and-commodity-dependence` | 여러 노예무역·현금세·원자재 의존을 연결 | 국가별 독립 경로, 도시·제조·지역통합·채무와 기후 변화 |
+| 중동·북아프리카 | `mena-land-debt-oil-and-diversification` | 토지·외채·석유 계약과 예산을 주민 생활에 연결 | 비산유국·시민권·이주 노동, 물·식량·전쟁 경제의 국가별 비교 |
+| 라틴아메리카 | `latin-america-exports-import-substitution-and-debt` | 수출·수입대체·1982년 부채 위기를 외화 장부로 연결 | 토지·노예제 이후 권리, 혁명·복지·민주화, 1990년대 이후 생산망 |
+| 아직 독립 축이 없는 지역 | 기존 세계사·국가 글에 분산 | 큰 빈칸 | 북아메리카, 유럽 내부 차이, 동남·중앙아시아, 오세아니아의 독립 경제사 |
+| 횡단 주제 | 여러 글에 분산 | 큰 빈칸 | 가족·인구, 토지와 도시, 기업·금융, 노동·복지, 공급망·플랫폼·기후의 장기 변화 |
+
+지역 여섯 편은 한 지역을 하나의 정책 성공담이나 반복되는 위기로 만들지 않는다. 각 글은 설명용 숫자 장부를 사용하되 세계은행·중앙은행·NBER·IMF 자료의 관찰 단위와 기관 관점을 밝히고, LSE 과정의 지역별 질문으로 빠진 권리·생활·자료 유형을 다시 확인한다. 다음 경제사 묶음은 **토지와 가족경제, 기업·은행·보험, 노동·복지, 1970년대 인플레이션과 금융화, 세계 공급망·플랫폼·기후 전환**을 우선한다.
+
 ## 분야별 확장 방법
 
 같은 표를 다음 순서로 확장한다.

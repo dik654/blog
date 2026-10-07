@@ -12028,6 +12028,30 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 연구", label: "IMF · The 1980s Debt Crisis", href: "https://www.elibrary.imf.org/display/book/9781484371329/ch001.xml", note: "페트로달러 대출과 국제 부채 위기의 연결" },
     { kind: "공식 연구", label: "IMF · Macroeconomic Crisis and Adjustment", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", note: "국가별 교역조건과 조정 경로 비교" },
   ],
+  "economic-history/china-since-1800-households-markets-and-reform": [
+    { kind: "공식 연구", label: "World Bank · Reflections on 40 Years of China’s Reforms", href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf", note: "가구 책임제·이중 경로·특구 실험을 1978년 뒤 점진적 개혁의 순서로 대조합니다." },
+    { kind: "공개 강의", label: "LSE · The Economic History of China since 1800", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm", note: "지리·국가·제도·성별·인적 자본·이동·교역·재난을 지역 경제사의 누락 검사표로 사용합니다." },
+  ],
+  "economic-history/japan-money-banks-industry-and-catchup": [
+    { kind: "공식 문서", label: "Bank of Japan Currency Museum · Modern Currency History", href: "https://www.imes.boj.or.jp/cm/english/history/content/", note: "근대 화폐법·엔·일본은행·은행권으로 이어지는 통화 제도 연표를 확인합니다." },
+    { kind: "공식 연구", label: "RIETI · Industrial Policy in Japan", href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html", note: "전후 우선생산과 산업정책의 시기별 역할을 시장 경쟁·기업 투자와 함께 읽습니다." },
+  ],
+  "economic-history/south-asia-markets-colonial-railways-and-development-state": [
+    { kind: "핵심 연구", label: "Donaldson · Railroads of the Raj", href: "https://www.nber.org/papers/w16487", note: "식민 인도의 철도 접근성·교역비용·지역 가격·실질소득을 계량적으로 대조합니다." },
+    { kind: "공식 문서", label: "Reserve Bank of India · Chronology of Indian Monetary History", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "식민 통화에서 독립 뒤 계획금융과 1991년 외환 전환까지의 공식 연표를 확인합니다." },
+  ],
+  "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence": [
+    { kind: "핵심 연구", label: "Nunn · The Long-Term Effects of Africa’s Slave Trades", href: "https://www.nber.org/papers/w13367", note: "노예무역 노출과 장기 발전 결과의 관계, 자료와 식별 한계를 함께 검토합니다." },
+    { kind: "보충 읽기", label: "African Economic History Network · Taxation in Africa since Colonial Times", href: "https://www.aehnetwork.org/textbook/taxation-in-africa-since-colonial-times/", note: "현금세·강제 집행·독립 뒤 세수 구조를 지역과 시기별로 비교합니다." },
+  ],
+  "economic-history/mena-land-debt-oil-and-diversification": [
+    { kind: "공개 강의", label: "LSE · Economic History of the Middle East and North Africa", href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm", note: "토지·노동 권리와 주민 생활, 지역 문서·고고학을 포함하는 아래로부터의 질문 지도를 사용합니다." },
+    { kind: "공식 연구", label: "IMF · The Middle East and North Africa in a Changing Oil Market", href: "https://www.imf.org/external/pubs/ft/med/2003/eng/okogu/okogu.htm", note: "게시가격 협상과 소유권 이전이 산유국의 몫과 예산에 들어온 순서를 확인합니다." },
+  ],
+  "economic-history/latin-america-exports-import-substitution-and-debt": [
+    { kind: "핵심 연구", label: "Bértola & Williamson · Globalization in Latin America Before 1940", href: "https://www.nber.org/papers/w9687", note: "19세기 말 수출 호황·운송비·관세와 불평등을 장기 비교합니다." },
+    { kind: "공식 문서", label: "IMF · The Latin American Debt Crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "1970년대 대출 증가에서 1982년 가격·금리·자금 중단으로 이어진 제도적 순서를 확인합니다." },
+  ],
   "global-history/empires-roads-taxes-and-law": [
     { kind: "핵심 사료", label: "British Museum · Aśoka pillar edict fragment", href: "https://www.britishmuseum.org/collection/object/A_1880-21", note: "기원전 3세기 아소카 칙령을 돌에 새긴 직접 물증" },
     { kind: "보충 읽기", label: "UNESCO · The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "페르시아·중국·로마의 군사·행정 교통망 비교" },

@@ -15695,6 +15695,60 @@ export const EDITORIAL_BOUNDARIES = {
   "trade-credit-and-long-distance-networks": { title: "교역·신용·장거리 망 글이 소유하는 범위", owns: ["물건·대금·정보·위험의 분리", "은 6미나의 단계 상환", "직선 실크로드가 아닌 구간별 중개망"], reuses: [], evidence: [{ kind: "primary-source", rule: "개별 점토판의 직접 증거와 넓은 교역망의 비교 자료를 구분합니다." }] },
   "colonial-plantations-slavery-and-extraction": { title: "식민 플랜테이션·노예제·수탈 글이 소유하는 범위", owns: ["시장 장부와 권리 장부의 분리", "설탕 매출 100의 대서양 가치 이전", "항해 데이터와 장기 경로의 증거 범위"], reuses: [], evidence: [{ kind: "primary-source", rule: "지배자가 남긴 수량 기록의 가치와 누락을 함께 밝히고 사람의 권리 손실을 비용 숫자로 환원하지 않습니다." }] },
   "decolonization-oil-shocks-and-debt": { title: "탈식민·석유 충격·부채 글이 소유하는 범위", owns: ["정치적 주권과 외화 제약의 분리", "수출 100·석유 수입 40의 충격 장부", "페트로달러 재순환에서 1980년대 위기까지의 경로"], reuses: [], evidence: [{ kind: "primary-source", rule: "국제기구 자료의 기관 관점을 밝히고 지역·산유 여부·국내 정책의 차이를 함께 제시합니다." }] },
+  "china-since-1800-households-markets-and-reform": {
+    title: "중국의 가구·시장·개혁 글이 소유하는 범위",
+    owns: ["생산 100·의무 60·잔여 40에서 추가 생산 10의 권리 변화", "가구 책임제와 이중 경로·특구 실험의 순서", "중국 장기 변화를 시장 개방 한 문장으로 줄이지 않는 지역·권리 차이"],
+    reuses: [{ label: "농업 잉여와 배분 권한", href: "/history/economic-history/agrarian-surplus-and-state#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "개혁 회고 자료의 제도 연표와 설명용 가구 장부를 구분하고 정책 성과를 모든 지역·가구에 일반화하지 않습니다." },
+      { kind: "secondary-source", rule: "대학 커리큘럼은 누락 주제 점검에 쓰며 열거된 요인을 합의된 단일 인과 설명으로 다루지 않습니다." },
+    ],
+  },
+  "japan-money-banks-industry-and-catchup": {
+    title: "일본의 통화·은행·산업 추격 글이 소유하는 범위",
+    owns: ["공장 투자 100의 기업 자금·은행 대출·공공 기반 구분", "엔과 중앙은행 형성에서 전후 우선생산까지의 제도 순서", "산업정책과 기업 경쟁·세계 수요·구조 전환의 역할 분리"],
+    reuses: [{ label: "요소 가격과 기술 선택", href: "/history/economic-history/industrial-revolution-wages-and-energy#source" }],
+    evidence: [
+      { kind: "primary-source", rule: "일본은행의 공식 화폐 연표가 직접 보여 주는 발권·통화 제도와 산업 성과의 인과 주장을 구분합니다." },
+      { kind: "secondary-source", rule: "산업정책 회고는 지원받지 않은 기업과 반사실적 성장 경로를 남겨 두고 다른 나라에 그대로 복제하지 않습니다." },
+    ],
+  },
+  "south-asia-markets-colonial-railways-and-development-state": {
+    title: "남아시아의 시장·철도·개발국가 글이 소유하는 범위",
+    owns: ["산지 10에서 도착가격 14와 거래 여지 2가 생기는 가격 경로", "철도의 시장 통합과 식민 수출·조세 방향성의 동시 추적", "독립 뒤 계획과 1991년 외환 전환의 연속·단절"],
+    reuses: [{ label: "교역 중개와 장거리 신용", href: "/history/economic-history/trade-credit-and-long-distance-networks#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "철도 연구의 모형·자료 범위와 식민 지배의 전체 권리 비용을 구분하며 계량 결과를 도덕적 순편익으로 바꾸지 않습니다." },
+      { kind: "secondary-source", rule: "인도 중앙은행 연표를 남아시아 전체의 단일 경로로 일반화하지 않고 국가·지역·비공식 금융의 차이를 남깁니다." },
+    ],
+  },
+  "africa-slave-trades-colonial-tax-and-commodity-dependence": {
+    title: "아프리카의 노예무역·식민 조세·원자재 의존 글이 소유하는 범위",
+    owns: ["현금작물 20에서 비용 4·세금 10·농가 잔여 6의 권리 장부", "여러 노예무역의 장기 손상과 식민 현금세의 연결", "대륙 평균을 피한 원자재·운송·국가별 경로"],
+    reuses: [{ label: "식민 수탈과 강제 노동", href: "/history/economic-history/colonial-plantations-slavery-and-extraction#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "노예무역 노출의 계량 관계를 운명론으로 읽지 않고 자료 누락·식별·후속 제도의 중간 경로를 밝힙니다." },
+      { kind: "secondary-source", rule: "식민 조세의 대륙 비교를 개별 국가·지역의 세율·집행·공공서비스를 대신하는 사실로 쓰지 않습니다." },
+    ],
+  },
+  "mena-land-debt-oil-and-diversification": {
+    title: "중동·북아프리카의 토지·외채·석유 글이 소유하는 범위",
+    owns: ["석유 판매 100에서 기업·생산 30·부채 10·정부 가용 60의 계약 장부", "양허 계약에서 국가 예산과 국부펀드로 이어지는 재정 경로", "산유국과 비산유국·시민과 이주 노동의 차이를 남긴 다각화 기준"],
+    reuses: [{ label: "페트로달러 재순환", href: "/history/economic-history/decolonization-oil-shocks-and-debt#names" }],
+    evidence: [
+      { kind: "primary-source", rule: "석유시장 자료의 가격·소유권 변화와 설명용 100단위 장부를 구분하고 국가별 계약·원가·세율을 확인합니다." },
+      { kind: "secondary-source", rule: "지역 대학 과정의 아래로부터의 질문을 사용해 석유 중심 거시 설명이 토지·노동·시민권을 지우지 않게 합니다." },
+    ],
+  },
+  "latin-america-exports-import-substitution-and-debt": {
+    title: "라틴아메리카의 수출·수입대체·부채 글이 소유하는 범위",
+    owns: ["수출 100의 외화 +10이 가격·금리 충격 뒤 −18이 되는 장부", "수출 호황과 수입대체 산업화의 생산 능력·비용 분리", "1982년 부채위기의 국제 조건·국내 노출·분배 비용 연결"],
+    reuses: [{ label: "국제수지 조정", href: "/history/economic-history/gold-standard-depression-bretton-woods#mechanism" }],
+    evidence: [
+      { kind: "primary-source", rule: "장기 세계화 연구의 국가 평균과 토지·상품·정치 차이를 구분해 개방을 단일 원인으로 만들지 않습니다." },
+      { kind: "secondary-source", rule: "IMF 제도사는 기관 관점을 밝혀 사용하고 채무국 주민·정부·민간 채권자의 다른 책임과 사회적 비용을 함께 남깁니다." },
+    ],
+  },
   "empires-roads-taxes-and-law": { title: "제국·도로·세금·법 글이 소유하는 범위", owns: ["곡물 100자루로 본 제국 물류", "세금 명부의 재정 가시성", "중앙 명령과 현지법의 중첩"], reuses: [], evidence: [{ kind: "primary-source", rule: "칙령의 존재와 제국 전역의 실제 집행을 구분하고, 여러 제국의 도로를 같은 통제력으로 환산하지 않습니다." }, { kind: "secondary-source", rule: "광역 비교 자료는 길의 군사·행정 기능을 찾는 데 쓰고 지역별 통치의 상세를 대신하지 않습니다." }] },
   "trade-religion-and-translation-networks": { title: "교역·종교·번역망 글이 소유하는 범위", owns: ["향신료 100묶음의 계절풍 경로", "디아스포라의 신뢰와 배제", "번역 기관을 통한 지식 이동"], reuses: [], evidence: [{ kind: "primary-source", rule: "여행 필사본의 직접 관찰·전언·전설을 나눠 읽습니다." }, { kind: "secondary-source", rule: "실크로드라는 후대 이름을 한 직통 도로나 고정된 참여자로 표현하지 않습니다." }] },
   "conquest-disease-silver-and-oceanic-exchange": { title: "대양 정복·질병·은 글이 소유하는 범위", owns: ["은 100의 포토시·유럽·아시아 경로", "미타 강제 노동의 비용", "작물·가축·병원체의 지역별 충격"], reuses: [], evidence: [{ kind: "primary-source", rule: "은 장부로 보이는 흐름과 기록 밖 노동·질병 손실을 구분합니다." }, { kind: "secondary-source", rule: "100·60·40은 설명용 수치이며 실제 고정 비율로 인용하지 않습니다." }] },
