@@ -18,6 +18,7 @@ export default function ModernArticle() {
     <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1. 결론부터: 큰 모델의 한 번 검증으로 여러 토큰을 확정합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8"><strong>이 글의 범위:</strong> 공통 검증 원리를 짧게 복습한 뒤, 후보를 만드는 방법과 후보 모양이 달라질 때 비용이 어떻게 바뀌는지 비교합니다. 첫 거부 뒤 후보를 버리는 이유, 원래 분포를 지키는 계산, vLLM의 KV 갱신부터 보려면 <Link to="/cs/ai/vllm-spec-decode">추측 디코딩 기본 원리와 vLLM 구현</Link>부터 읽으면 됩니다.</p>
         <p className="leading-8"><strong>이 기술은 작은 모델이 답을 대신 쓰는 기술이 아닙니다. 작은 부품이 미리 쓴 후보를 큰 모델이 한 번에 검사하고, 맞은 토큰 여러 개를 확정해 큰 모델의 순차 생성 횟수를 줄이는 기술입니다.</strong></p>
         <p className="leading-8">이 한 문장은 곧 질문을 낳습니다. 큰 모델은 앞 토큰을 알아야 다음 토큰을 고를 수 있는데, 후보가 있다고 어떻게 여러 단계를 한꺼번에 확인할 수 있을까요? 2절에서 생성 순서가 바뀌는 이유를 보고, 3절에서 R·A·Y 세 토큰을 실제 한 회차에 넣어 보겠습니다.</p>
         <p className="leading-8">그다음에는 후보가 틀릴 때 무엇이 버려지는지, 후보를 만드는 시간까지 넣어도 정말 빨라지는지 묻겠습니다. 여러 변형은 이 두 문제에 답하려고 생겼습니다.</p>
