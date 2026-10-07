@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-369.json",
+  "publicArticles": 919,
+  "addedRoutes": [
+    "finance/markets/equity-dispersion-pnl-attribution-and-rebalancing-costs",
+    "finance/markets/credit-event-auction-orders-and-base-correlation-history",
+    "finance/markets/wti-crude-oil-cushing-storage-pipeline-and-delivery",
+    "finance/markets/lme-metals-warrants-quality-storage-and-load-out",
+    "finance/markets/livestock-futures-live-delivery-and-cash-settlement",
+    "finance/markets/singapore-derivatives-records-complaints-and-tax-ledger"
+  ],
+  "reviewed": 375,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six applied derivatives articles were added after checkpoint 369; 333 substantive rewrites/additions and 42 retained teaching flows in total. The batch connects dispersion P&L, an actual credit-event auction, WTI delivery, LME warrants, livestock settlement and Singapore post-trade duties to the four fixed curriculum axes: university pricing theory, Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk governance.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order, topology and final targeted ESLint checks.",
+    "numeric": "The cases reconcile +13,000+7,000−4,000−3,000=+13,000 dollars for dispersion; fill DISH DBS net open interest 20+20+20+42=102 million at 91.5 and calculate 10 million×8.5%=850,000 dollars; value 1,000 WTI barrels at 70,000 dollars plus an assumed 120-dollar movement cost; place a 25.3-tonne zinc lot inside the 24.5–25.5-tonne range and add an assumed 1,500-dollar storage/load-out cost; calculate about −1,396.83 dollars for live cattle and 2,500 dollars for feeder cattle; and separate a Singapore complaint date, five-year retention date and assumed S$30,000 GST ledger. Assumed quantities and prices are marked as explanatory inputs.",
+    "browser": "Six routes x 390/1440, six mobile height checks and four sidebar assertions = 22 local checks; all passed. Local report: output/playwright/derivative-applied-ledgers/2026-10-07/summary.json.",
+    "learning": "PASS 919 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with node --max-old-space-size=8192; actual exit 0.",
+    "build": "PASS Vite 10.69s, 7,273 transformed modules and 1,942 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,194 concepts, 6,501 relations, 919 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 919-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 919 strict; all six additions have reviewed keep decisions and final source fingerprints, while the shared renderer retained its existing fingerprint.",
+    "reading": "PASS reading experience and 91 article listings with 479 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm, Korean naturalness and term-density audits with zero uncovered findings.",
+    "lint": "PASS full-repository ESLint before the final source-tuple reduction and final targeted ESLint after it; actual exit 0.",
+    "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; all three shared visualizations on every new route were checked in Chromium.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; each route had three figures ending at x=372px and numeric arrows were 27px in production. Resizing from 390x844 to 390x700 at actual article scroll positions 8,041–8,473px preserved scroll and the mechanism-section anchor with delta 0 on all six routes. The 336px mobile sidebar was an aria-modal dialog, held focus and locked body scrolling.",
+    "desktopViewport": "All six articles stayed within 1440px.",
+    "production": "GitHub Pages run 37566696383 succeeded; production Playwright report output/playwright/derivative-applied-ledgers-production/2026-10-07/summary.json passed 22/22 checks with no console errors, page errors or failed requests.",
+    "curriculumCoverage": "MIT Sloan derivatives courses supply no-arbitrage and pricing questions; the Korea Financial Investment Institute derivatives-advice curriculum supplies product, sales, regulation and ethics gaps; Korea Banking Institute FP/PB curricula supply customer-data and planning workflow; GARP FRM supplies risk governance. Cboe, CreditFixings, Bank of England, CME/NYMEX, EIA, LME, Singapore legislation, FIDReC and IRAS bound the applied claims. Remaining derivatives gaps include public trading-ledger P&L attribution, repeated credit-auction/tranche-date comparison, more commodity delivery systems, more jurisdictions and post-launch fractional-investment cases."
+  },
+  "commit": "b08048528f901527785e357ef57f567d9ac6f09f",
+  "deployment": {
+    "runId": 37566696383,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
+  }
+}
