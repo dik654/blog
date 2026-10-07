@@ -89280,21 +89280,21 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "self-speculative-decoding",
-        "sectionId": "self-source",
+        "sectionId": "variants",
         "intuition": "학습한 한 모델의 앞 층으로 후보를 만들고 중간 상태를 저장해 뒤 층의 검증에 재사용합니다.",
         "workedExample": "4층·첫 1층·후보 A와 Y의 사례에서 R·A의 앞 상태를 저장하고 마지막 Y의 앞 층도 계산합니다. 앞 3자리와 뒤 3×3자리로 층·자리 작업은 12개입니다.",
         "boundary": "추가 모델 가중치가 없다는 것과 추가 메모리가 없다는 것은 다릅니다. 층 수의 비율은 exit 상태·KV·마지막 입력과 실제 실행 시간을 대신하지 않습니다."
       },
       {
         "id": "mtp-head-draft-chain",
-        "sectionId": "mtp",
+        "sectionId": "variants",
         "intuition": "DeepSeek-V3의 순차 MTP는 앞 깊이의 상태와 이미 지정한 다음 token을 합쳐 더 뒤의 글자를 예측합니다.",
         "workedExample": "기존 네 자리의 상태와 다음 R의 embedding을 각각 정규화해 이어 붙이고 d×2d 투영·Transformer block·공유 head를 거쳐 A의 점수를 만듭니다.",
         "boundary": "Medusa의 같은 상태에서 여러 미래를 예측하는 head와 같은 구조가 아닙니다. 모듈 하나와 전체 층 수만으로 후보 시간 비나 수락률을 구할 수 없습니다."
       },
       {
         "id": "mtp-speculation-utility-boundary",
-        "sectionId": "mtp-cost",
+        "sectionId": "cost",
         "intuition": "한 후보의 평균 출력 1+α와 후보·검증의 전체 시간 c+v를 같은 단독 생성 기준으로 비교합니다.",
         "workedExample": "별도 시간 가정 α=.85,c=.016에서 v=1,1.5,2이면 비는 약 1.8209,1.2203,.9177이고 이득 조건은 v<1.834입니다.",
         "boundary": "직렬·추가 비용 0·출력 길이 미절단이라는 시간 모형입니다. x=B/B*에서 max(1,2x)/max(1,x)를 가정하면 이득은 0<x<.917이며 보편 GPU batch 한도가 아닙니다.",
@@ -89303,21 +89303,21 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "tree-speculation-candidate-tree",
-        "sectionId": "tree-cost",
+        "sectionId": "cost",
         "intuition": "같은 앞 글에서 가능한 여러 다음 선택을 가지로 준비하고 한 경로를 남기는 후보 구조입니다.",
         "workedExample": "R의 두 갈래와 각 두 자식은 후보 6개·root 포함 입력 7개입니다. 폭 3,2,2에서는 후보 21개·입력 22개이며 조건부 포함률 .89,.85,.8의 평균 출력은 3.2517입니다.",
         "boundary": "깊이와 총 후보 수를 구별합니다. 확정 길이가 길어도 확인 비용 4.2이면 비 .7742라 chain의 2.533/1.7=1.49보다 느립니다."
       },
       {
         "id": "tree-attention-verification",
-        "sectionId": "mask",
+        "sectionId": "request-trace",
         "intuition": "각 자리가 자기 조상과 자신만 읽게 한 뒤 부모 점수로 다음 후보를 확인하고 선택한 경로의 계산 기록을 남깁니다.",
         "workedExample": "7×7 표에는 17개, root 행·열을 뺀 표에는 10개의 허용 칸이 있습니다. RAY의 [0,1,4]는 KV [4,5,8]에서 [4,5,6]으로 복사되고 글·기록 길이가 모두 7이 됩니다.",
         "boundary": "마스크가 같은 조건을 보이는 것과 sampling 분포를 보존하는 것은 별개입니다. Medusa typical fast의 확률 문턱은 exact residual 보정과 다르며 허용 칸 수가 실제 GPU 연산 수는 아닙니다."
       },
       {
         "id": "suffix-decoding",
-        "sectionId": "suffix-source",
+        "sectionId": "variants",
         "intuition": "현재 입력의 끝부분과 같은 과거 기록을 찾아 관찰 빈도가 높은 다음 글을 후보로 만드는 방식입니다.",
         "workedExample": "8개 기록에서 A·Y·B·Y의 경로 비중은 .75,.625,.25,.25이고 합은 1.875입니다. 고정 Arctic C++은 네 후보와 부모 [-1,0,-1,2]를 실제로 반환했습니다.",
         "boundary": "빈도 점수는 target 수락 확률의 보장이 아닙니다. 조회·갱신·반환 비용이 남으며 고정 wrapper의 None 오류와 C++의 strict 길이 조건을 현재 버전의 범위로 구분합니다."
@@ -89368,7 +89368,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "tree-attention-verification"
         ],
-        "sectionId": "buffers"
+        "sectionId": "request-trace"
       },
       {
         "level": "basic",
@@ -89380,7 +89380,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "tree-attention-verification"
         ],
-        "sectionId": "commit"
+        "sectionId": "request-trace"
       },
       {
         "level": "basic",
@@ -89392,7 +89392,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "mtp-head-draft-chain"
         ],
-        "sectionId": "mtp"
+        "sectionId": "variants"
       },
       {
         "level": "basic",
@@ -89404,7 +89404,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "mtp-speculation-utility-boundary"
         ],
-        "sectionId": "mtp-cost"
+        "sectionId": "cost"
       },
       {
         "level": "basic",
@@ -89416,7 +89416,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "self-speculative-decoding"
         ],
-        "sectionId": "self-cost"
+        "sectionId": "cost"
       },
       {
         "level": "basic",
@@ -89428,7 +89428,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "suffix-decoding"
         ],
-        "sectionId": "suffix"
+        "sectionId": "variants"
       },
       {
         "level": "advanced",
@@ -89441,7 +89441,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "tree-speculation-candidate-tree"
         ],
-        "sectionId": "tree-cost"
+        "sectionId": "cost"
       },
       {
         "level": "advanced",
@@ -89454,7 +89454,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "mtp-speculation-utility-boundary"
         ],
-        "sectionId": "batch-boundary"
+        "sectionId": "cost"
       },
       {
         "level": "advanced",
@@ -89466,7 +89466,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "tree-attention-verification"
         ],
-        "sectionId": "sampling-boundary"
+        "sectionId": "correctness"
       },
       {
         "level": "advanced",
@@ -89479,14 +89479,14 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "suffix-decoding"
         ],
-        "sectionId": "hybrid-cost"
+        "sectionId": "cost"
       }
     ],
     "papers": [
       {
         "title": "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding (v4)",
         "href": "https://arxiv.org/html/2404.16710v4",
-        "sectionId": "self-speculative",
+        "sectionId": "variants",
         "problem": "별도 후보 모델의 가중치를 추가하지 않으면서 빠르고 유용한 후보를 얻는 문제입니다.",
         "contribution": "앞 층에서 후보를 만들도록 학습하고 그 중간 상태와 계산 기록을 뒤 층의 검증에서 다시 사용합니다.",
         "assumptions": "해당 학습 방법과 호환되는 checkpoint의 exit 위치를 사용하며 일반 앞 층의 출력을 바로 후보로 쓰지 않습니다.",
@@ -89496,7 +89496,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "title": "DeepSeek-V3 Technical Report (v2)",
         "href": "https://arxiv.org/html/2412.19437v2",
-        "sectionId": "mtp",
+        "sectionId": "variants",
         "problem": "순차 미래 예측 모듈의 입력과 학습 목표를 단순 병렬 head와 혼동하는 문제입니다.",
         "contribution": "식 21–23의 embedding·정규화·투영·block·공유 head에 기존 상태와 다음 R을 넣어 A의 예측 경로를 설명합니다.",
         "assumptions": "DeepSeek-V3 보고서 v2의 순차 모듈 구조에 한정하며 다른 MTP 모델의 층 구성과 동일하다고 놓지 않습니다.",
@@ -89506,7 +89506,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "title": "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads (v3)",
         "href": "https://arxiv.org/html/2401.10774v3",
-        "sectionId": "commit",
+        "sectionId": "request-trace",
         "problem": "별도 후보 모델 없이 여러 미래 위치의 후보를 만들고 가지별 앞 글을 지켜 검증하는 문제입니다.",
         "contribution": "같은 RAY에서 root·후보·경로 선택과 KV 모으기를 원문 Algorithm 1 및 고정 구현에 대응합니다.",
         "assumptions": "greedy 경로와 typical sampling을 나누고 Medusa-1과 Medusa-2의 학습 조건을 구별합니다.",
@@ -89516,7 +89516,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "title": "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification (v4)",
         "href": "https://arxiv.org/html/2305.09781v4",
-        "sectionId": "sampling-boundary",
+        "sectionId": "correctness",
         "problem": "여러 형제 후보를 검증하며 원래 기준 분포를 보존하는 순서와 확률 갱신을 정하는 문제입니다.",
         "contribution": "Algorithm 2의 거부된 제안 제거와 잔여 분포 재정규화를 작은 (.7,.3)/(.4,.6)에 적용해 (1,0)을 얻습니다.",
         "assumptions": "논문의 후보 선택·조건부 분포·중복 처리와 검증 순서를 함께 따릅니다. 임의 tree의 sampler에는 자동 적용하지 않습니다.",
@@ -89526,7 +89526,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "title": "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications (v3)",
         "href": "https://arxiv.org/html/2411.04975v3",
-        "sectionId": "suffix",
+        "sectionId": "variants",
         "problem": "반복되는 입력과 출력에서 다음 후보를 모델 실행보다 싸게 찾고 검색 실패 비용까지 판단하는 문제입니다.",
         "contribution": "C·D·SCORE에 과거 8개 기록을 적용해 .75/.625/.25/.25와 합 1.875를 만들고 native 구현의 부모 번호까지 확인합니다.",
         "assumptions": "2025-10-07 v3 논문의 관찰 빈도 점수와 고정 ArcticInference의 count 분모·조회 길이 조건을 구분합니다.",
