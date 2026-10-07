@@ -2676,6 +2676,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "총수출을 외국 투입·국내 직접·국내 간접 부가가치로 풀고 조달처 변경 뒤 새 몫을 다시 맞추는 과정은 공급망의 실제 소득 귀속과 재편 비용·위험을 함께 판단하는 한 측정 체계입니다.",
     sharedGate: "외국 40+국내 직접 20+국내 간접 40=100과 국내 부가가치 60을 맞추고 외국 투입 10을 바꾸면 국내 70·외국 30이 됨을 검산합니다.",
   },
+  "philosophy-history/german-idealism-self-consciousness-recognition-and-history": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "후기 칸트 철학에서 경험의 조건, 자기 활동, 자연과 자유, 다른 주체의 인정과 역사적 제도를 함께 설명하는 하나의 논쟁 경로입니다.", sharedGate: "책상 60분을 일방 사용 60 대 0과 공동 규칙 30 대 30으로 비교하고 두 주체의 발언·수정 자격을 확인합니다." },
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "실존주의의 사실성·초월·나쁜 믿음은 주어진 조건 안에서 가능성을 만들고 그 선택이 자신과 타인에게 지는 책임을 설명하는 한 구조입니다.", sharedGate: "하루 24시간에서 수면 8·노동 9·돌봄 3·통근 2=22시간과 현재 선택 2시간, 조건 조정 뒤 4시간을 대조합니다." },
+  "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "해석학적 순환·선이해·지평 융합은 독자가 부분과 전체를 왕복하고 역사적 관점을 자료와 대화에서 고치는 하나의 이해 과정입니다.", sharedGate: "‘내일 회의 그대로’ 네 단어를 앞뒤 메시지 6개와 두 번 읽어 모두 유지에서 시간 유지·자료 변경으로 해석을 고칩니다." },
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "내재적 비판·이데올로기 비판·도구적 이성은 사회의 약속과 실제 제도의 모순을 찾고 그 모순을 자연스럽게 만드는 관행에서 공동 변화의 조건으로 이어지는 한 비판 과정입니다.", sharedGate: "보너스 예산 100을 공개 대상 10명에게 나누면 각 10이지만 실제 대상 6명은 약 16.7, 빠진 4명은 0임을 대조합니다." },
+  "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "관찰 문장·확인·이론 언어와 보조 가정은 과학 문장이 경험과 논리에 연결돼 시험되고 수정되는 하나의 추론 경로입니다.", sharedGate: "센서 시험 10회 중 적중 8·어긋남 2를 기록하고 실패 두 번의 +1.5도 보정 오차 뒤 입력 조건과 새 예측을 다시 씁니다." },
+  "philosophy-history/ordinary-language-use-context-and-speech-acts": { action: "keep", status: "reviewed", reviewedAt: "2026-10-07", rationale: "쓰임과 문맥·발화행위·적정 조건은 같은 문장 내용이 상황에 따라 다른 행위를 하고 권한과 절차에 따라 성립하거나 빗나가는 한 언어 행위 구조입니다.", sharedGate: "‘내일 할게’ 한 문장을 세 상황에 놓아 담당자의 약속 1건, 제삼자의 예측에서 약속 0건, 권한 없는 선언의 성립 실패를 구분합니다." },
 };
 
 /**
@@ -2683,6 +2689,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": "e74aa6a5433b639a",
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": "9593d8790a820b54",
+  "philosophy-history/german-idealism-self-consciousness-recognition-and-history": "2a1c58fc635c3b3e",
+  "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": "6d1afc33f3ed649e",
+  "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language": "e925e55c1098bcd5",
+  "philosophy-history/ordinary-language-use-context-and-speech-acts": "b6445a49a7b5ab0e",
   "philosophy-history/early-modern-india-new-nyaya-analysis-and-language": "a1b3209071a4b1a3",
   "philosophy-history/feminist-philosophy-standpoint-care-and-intersectionality": "277f9a78d8806b21",
   "philosophy-history/indigenous-land-and-latin-american-liberation": "f483240a48ec18da",

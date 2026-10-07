@@ -151716,5 +151716,226 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "IRAS · Finance and GST", href: "https://www.iras.gov.sg/taxes/goods-services-tax-(gst)/specific-business-sectors/finance", problem: "고객 손익과 회사의 GST 면세 공급가액을 한 숫자로 섞지 않아야 합니다.", contribution: "실물 인도 없는 파생상품의 순실현손익을 면세 공급가액으로 보고하는 방법을 안내합니다.", assumptions: "GST 안내이며 법인소득세 처리와 개별 계약의 회계 판단을 대신하지 않습니다.", evidenceScope: "싱가포르 금융업의 파생상품 관련 GST 신고 범위입니다.", notClaim: "GST 면세가 모든 세금에서 비과세이거나 장부 기록이 불필요하다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
-
+  "philosophy-history/german-idealism-self-consciousness-recognition-and-history": {
+    entryLevel: true,
+    entryNote: "책상 60분을 60 대 0과 30 대 30으로 나누는 사례에서 자유와 상호 인정의 조건을 시작합니다.",
+    coreIdea: "독일 관념론은 세계를 마음속 관념으로 줄인 한 교리가 아니라 경험을 가능하게 하는 조건, 자신을 규정하는 활동, 자연과 자유, 타인과 제도 속 인정의 관계를 다시 세운 여러 후기 칸트 철학입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "transcendental-condition-of-experience", role: "대상 경험과 판단이 성립하는 조건을 설명합니다." },
+      { id: "self-positing-activity", role: "자아를 이유를 세우고 자신을 규정하는 활동으로 설명합니다." },
+      { id: "mutual-recognition", role: "자유가 타인과 공동 제도에서 실제가 되는 조건을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "transcendental-condition-of-experience", sectionId: "names", intuition: "대상을 경험하고 판단하려면 이미 작동해야 하는 인식의 조건입니다.", workedExample: "시간 순서와 인과 관계 없이 사건 경험이 가능한지 묻습니다.", boundary: "경험 밖의 초자연적 세계를 뜻하지 않습니다." },
+      { id: "self-positing-activity", sectionId: "names", intuition: "자아를 고정된 물건보다 이유를 세우고 자신을 규정하는 활동으로 봅니다.", workedExample: "책상 사용 요구를 말하고 반론에 답하면서 자기 입장을 고칩니다.", boundary: "개인이 마음먹으면 모든 사회 조건을 만들 수 있다는 뜻이 아닙니다." },
+      { id: "mutual-recognition", sectionId: "names", intuition: "서로를 이유·권리·자유를 가진 주체로 받아들이고 행동 범위를 조정합니다.", workedExample: "두 이용자 모두 시간표 작성과 이의 제기에 참여합니다.", boundary: "칭찬이나 심리적 호감만을 가리키지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 경험 조건", relation: "무엇이 대상 경험과 판단을 가능하게 하는지 묻습니다.", concepts: ["transcendental-condition-of-experience"] },
+      { label: "2단계 · 자기 활동", relation: "조건 안에서 이유를 세우고 행동하는 주체를 봅니다.", concepts: ["self-positing-activity"] },
+      { label: "3단계 · 상호 인정", relation: "자유가 다른 주체와 제도 속에서 실제가 되는 경로를 봅니다.", concepts: ["mutual-recognition"] }
+    ],
+    exercises: [
+      { level: "basic", question: "책상 60분을 60 대 0으로 쓰는 규칙과 30 대 30으로 쓰는 규칙의 차이를 설명하세요.", answerChecklist: ["60 대 0", "두 주체의 같은 자격", "공동 규칙과 수정 절차"], requiredConcepts: ["mutual-recognition"], sectionId: "case" },
+      { level: "basic", question: "초월론적 조건의 뜻과 사례를 설명하세요.", answerChecklist: ["경험과 판단의 조건", "시간 또는 인과", "초자연적 세계와 구분"], requiredConcepts: ["transcendental-condition-of-experience"], sectionId: "names" },
+      { level: "basic", question: "자기 활동의 뜻과 사례를 설명하세요.", answerChecklist: ["고정된 물건과 구분", "이유와 행동", "사회 조건의 한계"], requiredConcepts: ["self-positing-activity"], sectionId: "names" },
+      { level: "basic", question: "상호 인정의 뜻과 사례를 설명하세요.", answerChecklist: ["다른 자유로운 주체", "상호 제한", "제도와 참여"], requiredConcepts: ["mutual-recognition"], sectionId: "names" },
+      { level: "basic", question: "SEP 관념론 개관이 독일 관념론과 버클리식 비물질론을 어떻게 구분하는지 설명하세요.", answerChecklist: ["정신의 활동", "관념의 재료", "여러 독일 관념론 체계"], requiredConcepts: ["self-positing-activity"], sectionId: "source" },
+      { level: "basic", question: "피히테의 인정 논의에서 다른 사람의 부름이 맡는 역할을 설명하세요.", answerChecklist: ["다른 의지", "자기 자유의 이해", "서로의 자유 영역"], requiredConcepts: ["mutual-recognition"], sectionId: "comparison" },
+      { level: "advanced", question: "책상 필요가 40분과 20분으로 다를 때 상호 인정에 맞는 규칙을 설계하세요.", answerChecklist: ["필요 공개", "같은 발언 자격", "수정 절차", "결과 재검토"], requiredConcepts: ["self-positing-activity", "mutual-recognition"], sectionId: "mechanism" },
+      { level: "advanced", question: "독일 관념론을 ‘모든 것은 생각이다’로 줄일 때 사라지는 질문 세 가지를 제시하세요.", answerChecklist: ["객관적 경험", "자연", "사회 제도와 자유"], requiredConcepts: ["transcendental-condition-of-experience", "self-positing-activity"], sectionId: "need" },
+      { level: "advanced", question: "인정만으로 해결되지 않는 자원·법·폭력의 반례를 만드세요.", answerChecklist: ["심리적 인정", "물질 또는 법적 비대칭", "추가 제도"], requiredConcepts: ["mutual-recognition"], sectionId: "comparison" },
+      { level: "advanced", question: "헤겔의 역사 목적론을 식민주의와 유럽중심주의 관점에서 비판하세요.", answerChecklist: ["지역 서열", "자유의 단선적 전개", "배제된 역사", "후대 비판"], requiredConcepts: ["mutual-recognition"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · Idealism", href: "https://plato.stanford.edu/entries/idealism/", problem: "관념론의 여러 형태와 독일 관념론의 고유한 문제를 구분합니다.", contribution: "정신을 수동적 관념의 그릇보다 활동으로 본 후기 칸트 철학의 차이를 설명합니다.", assumptions: "학술 개관은 개별 저자의 원문 논증을 대신하지 않습니다.", evidenceScope: "칸트·피히테·셸링·헤겔을 포함한 관념론의 역사적 개관입니다.", notClaim: "독일 관념론의 모든 저자가 하나의 체계를 공유했다는 근거가 아닙니다.", sectionId: "source" },
+      { title: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", problem: "자기 자유와 다른 주체의 자유가 어떻게 연결되는지 설명합니다.", contribution: "피히테와 헤겔에서 인정의 상호성이 맡는 규범적 역할을 정리합니다.", assumptions: "인정은 물질 자원과 법적 권리의 별도 분석을 요구합니다.", evidenceScope: "근대 인정론에서 현대 사회철학까지의 학술 개관입니다.", notClaim: "모든 사회 갈등이 인정 부족 하나로 환원된다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": {
+    entryLevel: true,
+    entryNote: "하루 24시간 중 이미 묶인 22시간과 당장 고를 수 있는 2시간의 차이에서 시작합니다.",
+    coreIdea: "실존주의의 자유는 조건이 없는 선택이 아니라 몸·과거·사회적 위치라는 사실성을 인정하면서 가능성을 만들고 그 선택이 자신과 타인의 자유에 미치는 결과를 책임지는 문제입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "existential-facticity", role: "선택을 제한하는 몸·과거·사회적 조건을 설명합니다." },
+      { id: "existential-transcendence", role: "주어진 조건을 해석하고 가능성을 만드는 움직임을 설명합니다." },
+      { id: "existential-bad-faith", role: "사실성과 가능성 중 하나를 지우는 자기 왜곡을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "existential-facticity", sectionId: "names", intuition: "몸·과거·사회적 위치처럼 이미 주어진 조건입니다.", workedExample: "수면 8시간과 노동·돌봄·통근 14시간을 먼저 적습니다.", boundary: "사실성이 사람의 미래를 전부 결정한다는 뜻은 아닙니다." },
+      { id: "existential-transcendence", sectionId: "names", intuition: "주어진 조건을 해석하고 아직 없는 가능성을 향해 행동하는 움직임입니다.", workedExample: "근무 시간을 협상하고 남은 2시간의 쓰임을 고릅니다.", boundary: "현실 제약을 마음으로 지우는 초능력을 뜻하지 않습니다." },
+      { id: "existential-bad-faith", sectionId: "names", intuition: "사실성과 가능성 중 하나만 내세워 자신의 상황과 선택을 왜곡합니다.", workedExample: "‘아무것도 못 바꾼다’와 ‘의지만 있으면 다 된다’가 양쪽 실패입니다.", boundary: "억압받는 상태 자체를 개인의 도덕적 결함이라 부르는 말이 아닙니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 사실성", relation: "현재 선택을 묶는 몸·시간·사회 조건을 적습니다.", concepts: ["existential-facticity"] },
+      { label: "2단계 · 초월", relation: "조건 안에서 혼자 또는 함께 만들 가능성을 찾습니다.", concepts: ["existential-transcendence"] },
+      { label: "3단계 · 나쁜 믿음", relation: "조건이나 가능성 한쪽을 지우는 설명을 검사합니다.", concepts: ["existential-bad-faith"] }
+    ],
+    exercises: [
+      { level: "basic", question: "24시간 장부에서 이미 묶인 시간과 당장 선택할 수 있는 시간을 계산하세요.", answerChecklist: ["8+9+3+2=22", "남은 2시간", "조건 변화 뒤 4시간"], requiredConcepts: ["existential-facticity", "existential-transcendence"], sectionId: "case" },
+      { level: "basic", question: "사실성의 뜻과 하루 장부의 예를 설명하세요.", answerChecklist: ["몸과 과거", "사회적 위치", "22시간 조건"], requiredConcepts: ["existential-facticity"], sectionId: "names" },
+      { level: "basic", question: "실존적 초월의 뜻과 사례를 설명하세요.", answerChecklist: ["가능성", "해석과 계획", "현실 제약"], requiredConcepts: ["existential-transcendence"], sectionId: "names" },
+      { level: "basic", question: "나쁜 믿음이 두 방향으로 생기는 이유를 설명하세요.", answerChecklist: ["사실성에 고정", "무제한 자유", "둘의 긴장"], requiredConcepts: ["existential-bad-faith"], sectionId: "names" },
+      { level: "basic", question: "SEP 실존주의 개관이 사실성과 자유를 어떻게 함께 설명하는지 말하세요.", answerChecklist: ["주어진 조건", "조건을 해석", "미래 선택"], requiredConcepts: ["existential-facticity", "existential-transcendence"], sectionId: "source" },
+      { level: "basic", question: "보부아르에게 자기 자유와 타인의 자유가 왜 연결되는지 설명하세요.", answerChecklist: ["자기와 타자", "억압의 물질 조건", "다른 사람의 가능성"], requiredConcepts: ["existential-transcendence"], sectionId: "comparison" },
+      { level: "advanced", question: "근무·돌봄·통근 시간 하나를 바꾸고 새 선택 장부를 만드세요.", answerChecklist: ["변경 조건", "새 시간 합계", "혼자와 공동 변화 구분", "타인의 자유"], requiredConcepts: ["existential-facticity", "existential-transcendence"], sectionId: "mechanism" },
+      { level: "advanced", question: "실존주의를 개인 책임론으로 쓸 때 생기는 반례를 제시하세요.", answerChecklist: ["구조적 제약", "선택 비용", "피해자 비난", "제도 변화"], requiredConcepts: ["existential-facticity", "existential-bad-faith"], sectionId: "need" },
+      { level: "advanced", question: "사르트르와 보부아르를 자유와 억압의 관계에서 비교하세요.", answerChecklist: ["자기 선택", "타인의 자유", "물질 조건", "공통점과 차이"], requiredConcepts: ["existential-transcendence", "existential-bad-faith"], sectionId: "comparison" },
+      { level: "advanced", question: "실존주의의 불안·부조리·나쁜 믿음을 같은 말로 합치면 무엇을 놓치는지 설명하세요.", answerChecklist: ["저자별 개념", "문학과 논증", "역사적 맥락", "일반화 한계"], requiredConcepts: ["existential-bad-faith"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · Existentialism", href: "https://plato.stanford.edu/archives/spr2023/entries/existentialism/", problem: "실존주의의 역사와 핵심 개념을 내부 차이와 함께 설명합니다.", contribution: "사실성과 초월의 긴장, 자유·진정성·나쁜 믿음의 관계를 정리합니다.", assumptions: "실존주의라는 후대 분류와 저자의 자기 분류를 구분해야 합니다.", evidenceScope: "19~20세기 유럽 실존주의의 주요 저자와 논쟁입니다.", notClaim: "모든 제약이 개인 선택으로 극복된다는 주장이 아닙니다.", sectionId: "source" },
+      { title: "MIT OpenCourseWare · Beauvoir lecture notes", href: "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/5acb66d0b3a5911956f7e1e4f0b7b1c1_MIT24_01S16_SES25.pdf", problem: "보부아르의 자유를 자기와 타자, 억압의 관계에서 읽습니다.", contribution: "사실성·초월과 다른 사람의 자유를 대학 강의의 질문 구조로 연결합니다.", assumptions: "강의 노트는 보부아르 전체 저작의 원문을 대신하지 않습니다.", evidenceScope: "MIT 서양철학 과정의 보부아르 강의 자료입니다.", notClaim: "억압받는 개인에게 더 나은 태도만 요구하는 근거가 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": {
+    entryLevel: true,
+    entryNote: "‘내일 회의 그대로’라는 네 단어를 앞뒤 메시지 6개와 두 번 읽는 사례에서 시작합니다.",
+    coreIdea: "해석학은 부분과 전체를 왕복하고 독자의 선이해를 자료와 대화에서 고치며, 낯선 과거와 현재 질문이 모두 달라지는 새 이해의 문맥을 만드는 과정입니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "hermeneutic-circle", role: "부분과 전체를 오가며 해석을 고치는 방법을 설명합니다." },
+      { id: "hermeneutic-fore-understanding", role: "읽기 전에 이미 가진 언어·경험·기대를 설명합니다." },
+      { id: "fusion-of-horizons", role: "낯선 문헌과 현재 독자가 새 공통 문맥을 만드는 과정을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "hermeneutic-circle", sectionId: "names", intuition: "부분을 전체로 읽고 달라진 전체 이해로 부분을 다시 읽습니다.", workedExample: "네 단어를 메시지 6개와 대조한 뒤 다시 읽습니다.", boundary: "근거 없이 같은 주장을 반복하는 순환논증과 다릅니다." },
+      { id: "hermeneutic-fore-understanding", sectionId: "names", intuition: "읽기 전에 이미 가진 언어·경험·기대가 질문을 시작하게 합니다.", workedExample: "팀의 평소 말버릇을 알아 ‘그대로’를 일정 유지로 예상합니다.", boundary: "선입견을 사실로 고정하거나 비판을 막는 면허가 아닙니다." },
+      { id: "fusion-of-horizons", sectionId: "names", intuition: "낯선 문헌과 현재 독자의 질문이 대화하며 새 문맥을 만듭니다.", workedExample: "과거 회의 기록의 표현과 현재 팀 규칙을 함께 고칩니다.", boundary: "차이를 없애 한쪽 관점에 흡수하는 동화와 다릅니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 선이해", relation: "읽기 전에 가진 기대를 숨기지 않고 적습니다.", concepts: ["hermeneutic-fore-understanding"] },
+      { label: "2단계 · 부분과 전체", relation: "문장과 문맥을 왕복하며 반례에 맞춰 고칩니다.", concepts: ["hermeneutic-circle"] },
+      { label: "3단계 · 지평 융합", relation: "과거와 현재의 질문이 모두 달라지는 새 문맥을 만듭니다.", concepts: ["fusion-of-horizons"] }
+    ],
+    exercises: [
+      { level: "basic", question: "네 단어의 첫 해석을 메시지 6개가 어떻게 바꾸는지 설명하세요.", answerChecklist: ["첫 가정", "자료 4·참석자 1·시간 1", "시간 유지와 자료 변경"], requiredConcepts: ["hermeneutic-circle"], sectionId: "case" },
+      { level: "basic", question: "해석학적 순환의 뜻과 사례를 설명하세요.", answerChecklist: ["부분", "전체", "다시 읽기", "순환논증과 구분"], requiredConcepts: ["hermeneutic-circle"], sectionId: "names" },
+      { level: "basic", question: "선이해의 뜻과 고쳐야 하는 조건을 설명하세요.", answerChecklist: ["출발 기대", "자료와 반례", "고정된 편견과 구분"], requiredConcepts: ["hermeneutic-fore-understanding"], sectionId: "names" },
+      { level: "basic", question: "지평 융합의 뜻과 동화의 차이를 설명하세요.", answerChecklist: ["낯선 문헌", "현재 질문", "새 문맥", "차이 보존"], requiredConcepts: ["fusion-of-horizons"], sectionId: "names" },
+      { level: "basic", question: "해석학이 문헌 기술에서 자기 이해의 철학으로 넓어진 경로를 설명하세요.", answerChecklist: ["슐라이어마허와 딜타이", "하이데거", "가다머"], requiredConcepts: ["hermeneutic-circle", "hermeneutic-fore-understanding"], sectionId: "source" },
+      { level: "basic", question: "가다머의 지평 융합에서 익숙한 것과 낯선 것이 어떻게 바뀌는지 설명하세요.", answerChecklist: ["대화", "공통 지평", "양쪽의 변화"], requiredConcepts: ["fusion-of-horizons"], sectionId: "comparison" },
+      { level: "advanced", question: "회의 메시지에 새 반례 하나를 더하고 해석을 다시 고치세요.", answerChecklist: ["새 단서", "첫 해석의 문제", "수정된 전체", "확인 질문"], requiredConcepts: ["hermeneutic-circle", "hermeneutic-fore-understanding"], sectionId: "mechanism" },
+      { level: "advanced", question: "선이해를 인정하는 것과 상대주의가 다른 이유를 논증하세요.", answerChecklist: ["출발 관점", "공개 근거", "반례와 수정", "더 나은 설명"], requiredConcepts: ["hermeneutic-fore-understanding", "hermeneutic-circle"], sectionId: "need" },
+      { level: "advanced", question: "권력 차이가 큰 대화에서 지평 융합이 실패하는 반례를 만드세요.", answerChecklist: ["발언 기회", "기록 또는 번역 권한", "한쪽 기준", "보완 절차"], requiredConcepts: ["fusion-of-horizons"], sectionId: "comparison" },
+      { level: "advanced", question: "기록되지 않은 목소리를 해석 연구에 넣을 조사 계획을 세우세요.", answerChecklist: ["문헌 보존 조건", "침묵을 동의로 보지 않기", "다른 자료", "사실과 의미 구분"], requiredConcepts: ["hermeneutic-fore-understanding", "fusion-of-horizons"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · Hermeneutics", href: "https://plato.stanford.edu/archives/spr2026/entries/hermeneutics/", problem: "해석학의 대상이 문헌 해석에서 인간 존재로 넓어진 경로를 설명합니다.", contribution: "슐라이어마허·딜타이·하이데거·가다머의 질문과 차이를 개관합니다.", assumptions: "철학적 해석학은 법·역사 등 개별 분야의 증거 규칙을 대신하지 않습니다.", evidenceScope: "근대 이후 철학적 해석학의 주요 논쟁입니다.", notClaim: "모든 해석이 같은 근거를 가진다는 상대주의의 근거가 아닙니다.", sectionId: "source" },
+      { title: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", problem: "역사적 독자와 낯선 문헌 사이에서 이해가 생기는 과정을 설명합니다.", contribution: "선판단의 적극적 역할, 대화와 지평 융합을 정리합니다.", assumptions: "대화 참여자의 실제 권력 차이는 별도 분석이 필요합니다.", evidenceScope: "가다머의 철학적 해석학과 그 영향입니다.", notClaim: "대화가 모든 갈등과 배제를 자동으로 화해시킨다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": {
+    entryLevel: true,
+    entryNote: "보너스 예산 100에서 공개 대상 10명과 실제 지급 대상 6명을 대조하는 사례에서 시작합니다.",
+    coreIdea: "비판이론은 사회가 내건 자유·평등·합리성의 약속과 실제 제도의 모순을 찾고, 지배를 자연스럽게 보이게 하는 관행과 생각을 분석하며, 당사자가 제도를 바꿀 힘을 얻는 해방의 조건을 묻습니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "immanent-critique", role: "제도의 약속과 실제 작동의 모순에서 비판을 시작합니다." },
+      { id: "ideology-critique", role: "지배를 자연스럽게 보이게 하는 관행과 생각을 분석합니다." },
+      { id: "instrumental-reason", role: "수단의 효율이 목표와 권력의 질문을 밀어내는 과정을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "immanent-critique", sectionId: "names", intuition: "제도가 스스로 인정한 기준과 실제 작동의 모순에서 비판을 시작합니다.", workedExample: "‘모든 직원’이라는 공지와 계약직 4명 배제를 대조합니다.", boundary: "현재 구성원이 받아들이는 모든 규칙을 그대로 옳다고 두는 내부 평가가 아닙니다." },
+      { id: "ideology-critique", sectionId: "names", intuition: "지배 관계를 자연스럽고 피할 수 없는 것으로 보이게 하는 생각·관행·감정을 분석합니다.", workedExample: "‘계약직은 원래 제외된다’는 말이 어떻게 반복되는지 봅니다.", boundary: "상대가 틀리고 비판자만 진실을 안다는 낙인과 다릅니다." },
+      { id: "instrumental-reason", sectionId: "names", intuition: "목표의 정당성보다 정해진 목표를 이루는 수단 계산만 앞섭니다.", workedExample: "빠른 배분 계산이 누가 목표를 정했는지 묻는 일을 밀어냅니다.", boundary: "효율 계산이나 기술 자체가 언제나 지배라는 뜻은 아닙니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 내재적 비판", relation: "공개 약속과 실제 배분의 모순을 찾습니다.", concepts: ["immanent-critique"] },
+      { label: "2단계 · 이데올로기 비판", relation: "모순을 자연스럽게 보이게 한 관행과 감정을 추적합니다.", concepts: ["ideology-critique"] },
+      { label: "3단계 · 수단과 해방", relation: "효율 계산의 목표와 당사자의 변화 권한을 다시 묻습니다.", concepts: ["instrumental-reason"] }
+    ],
+    exercises: [
+      { level: "basic", question: "예산 100을 10명과 6명에게 나눌 때 각 몫을 계산하고 약속의 모순을 설명하세요.", answerChecklist: ["각 10", "약 16.7과 0", "4명 배제"], requiredConcepts: ["immanent-critique"], sectionId: "case" },
+      { level: "basic", question: "내재적 비판의 뜻과 사례를 설명하세요.", answerChecklist: ["제도의 자체 기준", "실제 작동", "모순"], requiredConcepts: ["immanent-critique"], sectionId: "names" },
+      { level: "basic", question: "이데올로기 비판의 뜻과 사례를 설명하세요.", answerChecklist: ["지배 관계", "자연스러움", "관행과 감정"], requiredConcepts: ["ideology-critique"], sectionId: "names" },
+      { level: "basic", question: "도구적 이성의 뜻과 효율 계산의 경계를 설명하세요.", answerChecklist: ["수단 계산", "목표의 정당성", "효율 자체와 구분"], requiredConcepts: ["instrumental-reason"], sectionId: "names" },
+      { level: "basic", question: "SEP 비판이론 개관에서 내재적 비판이 안과 밖의 기준을 어떻게 잇는지 설명하세요.", answerChecklist: ["사회 안의 규범", "현재 현실의 모순", "급진적 변화"], requiredConcepts: ["immanent-critique"], sectionId: "source" },
+      { level: "basic", question: "Oxford 강의가 헤겔과 비판이론을 어떤 개념으로 연결하는지 설명하세요.", answerChecklist: ["자유", "소외", "인정 또는 내재적 비판", "선택적 계승"], requiredConcepts: ["immanent-critique"], sectionId: "comparison" },
+      { level: "advanced", question: "계약직을 포함한 뒤에도 남는 임금·평가·발언권 문제를 조사하세요.", answerChecklist: ["새 배분", "평가 기준", "권력 차이", "결과 재검토"], requiredConcepts: ["immanent-critique", "ideology-critique"], sectionId: "mechanism" },
+      { level: "advanced", question: "비판자가 당사자의 진짜 이해를 혼자 안다고 선언할 때 생기는 문제를 설명하세요.", answerChecklist: ["관점의 위치", "당사자 경험", "비판의 자기 반성", "공동 수정"], requiredConcepts: ["ideology-critique"], sectionId: "need" },
+      { level: "advanced", question: "도구적 이성이 유용한 계산과 지배적 계산으로 갈리는 사례를 만드세요.", answerChecklist: ["주어진 목표", "효율", "목표 결정권", "배제된 질문"], requiredConcepts: ["instrumental-reason", "immanent-critique"], sectionId: "comparison" },
+      { level: "advanced", question: "초기 프랑크푸르트학파의 범위를 페미니즘·인종·탈식민 비판으로 재검토하세요.", answerChecklist: ["유럽 남성 중심", "빠진 권력 축", "기본 단위의 수정", "새 자료"], requiredConcepts: ["ideology-critique", "immanent-critique"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · Critical Theory", href: "https://plato.stanford.edu/entries/critical-theory/", problem: "비판의 기준과 사회 현실, 해방의 관계를 설명합니다.", contribution: "내재적 비판·이데올로기·소외·해방의 여러 입장을 현대 논쟁까지 정리합니다.", assumptions: "프랑크푸르트학파 안에도 세대와 방법의 차이가 있습니다.", evidenceScope: "프랑크푸르트학파와 현대 비판이론의 학술 개관입니다.", notClaim: "비판자가 당사자보다 참된 의식을 자동으로 가진다는 근거가 아닙니다.", sectionId: "source" },
+      { title: "University of Oxford · Hegel and Critical Theory", href: "https://www.philosophy.ox.ac.uk/sitefiles/lecture-prospectus-tt24.pdf", problem: "헤겔의 개념이 후대 비판이론에서 어떻게 다시 쓰였는지 배열합니다.", contribution: "자유·소외·인정·내재적 비판을 마르크스주의·페미니즘·탈식민 논의와 연결합니다.", assumptions: "강의 개요는 각 전통의 원문과 내부 이견을 대신하지 않습니다.", evidenceScope: "Oxford 철학 강의의 교과 범위와 주제 배열입니다.", notClaim: "후대 비판이 헤겔의 체계를 그대로 받아들였다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "philosophy-history/logical-empiricism-observation-confirmation-and-theory-language": {
+    entryLevel: true,
+    entryNote: "센서 시험 10회 중 적중 8회와 어긋남 2회를 보정 전후로 읽는 사례에서 시작합니다.",
+    coreIdea: "논리경험주의는 과학 문장을 관찰·논리·이론 언어에 연결하려 한 여러 연구 계획이며, 보편 법칙을 한 번에 검증하는 단일 교리보다 공개된 기록과 보조 가정, 확인의 구조를 둘러싼 내부 논쟁으로 이해해야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "observation-sentence", role: "특정 조건의 측정 기록을 공개된 문장으로 만듭니다." },
+      { id: "confirmation-relation", role: "관찰이 가설을 어느 정도 지지하는지 설명합니다." },
+      { id: "theoretical-language", role: "직접 보이지 않는 대상과 측정을 잇는 용어 체계를 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "observation-sentence", sectionId: "names", intuition: "특정 조건과 시각에 무엇을 기록했는지 공동으로 검사할 수 있게 씁니다.", workedExample: "시험 3에서 독립 온도계는 19.5도였고 경보는 울리지 않았습니다.", boundary: "이론이나 언어 규칙이 전혀 섞이지 않은 순수 감각 조각이 아닙니다." },
+      { id: "confirmation-relation", sectionId: "names", intuition: "관찰 증거가 가설을 얼마나 어떤 조건에서 지지하는지 따집니다.", workedExample: "10회 중 8회의 적중과 실패 조건을 함께 봅니다.", boundary: "몇 번 맞았다고 보편 법칙이 최종 증명된다는 뜻은 아닙니다." },
+      { id: "theoretical-language", sectionId: "names", intuition: "직접 보이지 않는 대상과 관계를 포함해 예측과 설명을 만듭니다.", workedExample: "센서 내부 저항과 보정 곡선을 관찰값에 연결합니다.", boundary: "관찰어로 완전히 번역되지 않으면 무의미하다는 한 입장만을 뜻하지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 관찰 문장", relation: "측정 조건과 결과를 다른 사람이 검사할 수 있게 적습니다.", concepts: ["observation-sentence"] },
+      { label: "2단계 · 이론 언어", relation: "관찰값과 예측을 잇는 용어와 보조 가정을 밝힙니다.", concepts: ["theoretical-language"] },
+      { label: "3단계 · 확인", relation: "적중과 어긋남이 가설을 어느 정도 지지하는지 봅니다.", concepts: ["confirmation-relation"] }
+    ],
+    exercises: [
+      { level: "basic", question: "10회 시험의 적중률과 두 실패 뒤 발견한 보정 오차를 설명하세요.", answerChecklist: ["8÷10=80%", "실패 2회", "+1.5도 보정", "입력 조건 재검토"], requiredConcepts: ["observation-sentence", "confirmation-relation"], sectionId: "case" },
+      { level: "basic", question: "관찰 문장의 뜻과 순수 감각 조각과의 차이를 설명하세요.", answerChecklist: ["조건과 시각", "공동 검사", "측정 규칙"], requiredConcepts: ["observation-sentence"], sectionId: "names" },
+      { level: "basic", question: "확인 관계와 완전 검증의 차이를 설명하세요.", answerChecklist: ["증거의 지지", "조건", "보편 법칙", "최종 증명 아님"], requiredConcepts: ["confirmation-relation"], sectionId: "names" },
+      { level: "basic", question: "이론 언어가 관찰과 연결되는 예를 설명하세요.", answerChecklist: ["직접 보이지 않는 대상", "예측", "측정 또는 대응 규칙"], requiredConcepts: ["theoretical-language"], sectionId: "names" },
+      { level: "basic", question: "SEP가 논리경험주의를 단일 검증주의로 보지 않는 이유를 설명하세요.", answerChecklist: ["구성원 차이", "보편 법칙 문제", "확인과 이론 용어"], requiredConcepts: ["confirmation-relation", "theoretical-language"], sectionId: "source" },
+      { level: "basic", question: "Oxford 자료에서 형식언어와 일상언어의 진단 방법을 비교하세요.", answerChecklist: ["논리적 형식화", "실제 쓰임", "후대 결합"], requiredConcepts: ["theoretical-language"], sectionId: "comparison" },
+      { level: "advanced", question: "센서 법칙과 보조 가정을 구분한 재시험 계획을 세우세요.", answerChecklist: ["입력 정의", "보정과 전원", "새 예측", "수정 전 공개"], requiredConcepts: ["observation-sentence", "theoretical-language", "confirmation-relation"], sectionId: "mechanism" },
+      { level: "advanced", question: "완전 검증 원리가 과학의 보편 법칙을 밀어내는 반례를 만드세요.", answerChecklist: ["무한하거나 미래의 사례", "유한 관찰", "의미 문제", "점진적 확인"], requiredConcepts: ["confirmation-relation"], sectionId: "need" },
+      { level: "advanced", question: "한 실패가 이론과 보조 가정 중 무엇을 반박하는지 판단하기 어려운 이유를 설명하세요.", answerChecklist: ["복합 예측", "보조 가정", "추가 시험", "임의 수정 방지"], requiredConcepts: ["theoretical-language", "confirmation-relation"], sectionId: "mechanism" },
+      { level: "advanced", question: "관찰의 이론 의존성과 공동 검사의 가능성을 함께 논증하세요.", answerChecklist: ["장비와 언어 규칙", "반복", "교차 보정", "공개 오류 규칙"], requiredConcepts: ["observation-sentence", "theoretical-language"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · Logical Empiricism", href: "https://plato.stanford.edu/entries/logical-empiricism/", problem: "논리경험주의의 역사와 내부 논쟁을 단일 구호에서 분리합니다.", contribution: "검증주의·확인·관찰 문장·이론 언어의 변화와 이견을 정리합니다.", assumptions: "운동의 구성원과 시기에 따라 입장이 다릅니다.", evidenceScope: "빈 학단과 베를린학파 및 후대 과학철학의 학술 개관입니다.", notClaim: "모든 구성원이 엄격한 검증 원리 하나를 공유했다는 근거가 아닙니다.", sectionId: "source" },
+      { title: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", problem: "20세기 분석 철학의 형식언어와 일상언어 접근을 역사적으로 비교합니다.", contribution: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명합니다.", assumptions: "한 강의 자료의 배열은 전체 분석 철학사의 유일한 구분이 아닙니다.", evidenceScope: "Oxford의 철학 언어사 교육 자료입니다.", notClaim: "한 전통이 실패하고 다른 전통이 완전히 승리했다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
+  "philosophy-history/ordinary-language-use-context-and-speech-acts": {
+    entryLevel: true,
+    entryNote: "‘내일 할게’라는 같은 문장을 약속·예측·거절의 세 상황에 놓는 사례에서 시작합니다.",
+    coreIdea: "일상언어철학은 표현의 뜻을 실제 활동과 문맥에서 조사하고, 같은 문장 내용으로도 약속·질문·명령처럼 다른 행위를 하며 권한·절차·상대의 이해에 따라 그 행위가 성립하거나 빗나간다는 점을 보여 줍니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "language-use-and-context", role: "표현의 역할을 실제 활동과 앞뒤 대화에서 확인합니다." },
+      { id: "speech-act", role: "말함으로써 수행하는 약속·질문·경고 같은 행위를 설명합니다." },
+      { id: "felicity-conditions", role: "말의 행위가 성립하는 권한·절차·진지함의 조건을 설명합니다." }
+    ],
+    conceptExplanations: [
+      { id: "language-use-and-context", sectionId: "names", intuition: "표현의 역할을 실제 활동·관계·앞뒤 발화에서 확인합니다.", workedExample: "요청 뒤의 ‘내일 할게’를 약속으로 이해합니다.", boundary: "가장 흔한 사용이 언제나 옳고 바꿀 수 없다는 뜻은 아닙니다." },
+      { id: "speech-act", sectionId: "names", intuition: "말함으로써 약속·질문·경고·사과·임명 같은 행위를 합니다.", workedExample: "담당자가 내일 일을 하겠다는 의무를 맡습니다.", boundary: "입 밖으로 나온 모든 소리나 듣는 사람에게 생긴 모든 효과와 같지 않습니다." },
+      { id: "felicity-conditions", sectionId: "names", intuition: "발화행위가 성립하려면 권한·절차·진지함·이해 같은 조건이 필요합니다.", workedExample: "승인 권한이 없는 사람의 계약 승인은 성립하지 않을 수 있습니다.", boundary: "문장이 문법적으로 맞거나 사실이라는 조건만을 뜻하지 않습니다." }
+    ],
+    conceptStages: [
+      { label: "1단계 · 쓰임과 문맥", relation: "같은 문장이 놓인 실제 활동과 앞뒤 대화를 확인합니다.", concepts: ["language-use-and-context"] },
+      { label: "2단계 · 발화행위", relation: "그 말로 약속·예측·명령 중 무엇을 했는지 구분합니다.", concepts: ["speech-act"] },
+      { label: "3단계 · 적정 조건", relation: "권한과 절차가 행위를 성립시키거나 빗나가게 하는지 봅니다.", concepts: ["felicity-conditions"] }
+    ],
+    exercises: [
+      { level: "basic", question: "같은 ‘내일 할게’가 상황 A와 B에서 약속 1건과 0건이 되는 이유를 설명하세요.", answerChecklist: ["같은 문장 내용", "요청에 대한 담당자의 답", "제삼자 예측"], requiredConcepts: ["language-use-and-context", "speech-act"], sectionId: "case" },
+      { level: "basic", question: "쓰임과 문맥의 뜻과 사례를 설명하세요.", answerChecklist: ["실제 활동", "앞뒤 발화", "흔한 사용의 한계"], requiredConcepts: ["language-use-and-context"], sectionId: "names" },
+      { level: "basic", question: "발화행위의 뜻과 문장 내용의 차이를 설명하세요.", answerChecklist: ["말로 한 일", "약속 또는 질문", "같은 내용과 다른 힘"], requiredConcepts: ["speech-act"], sectionId: "names" },
+      { level: "basic", question: "적정 조건의 뜻과 권한 없는 승인 사례를 설명하세요.", answerChecklist: ["권한", "절차", "성립 실패"], requiredConcepts: ["felicity-conditions"], sectionId: "names" },
+      { level: "basic", question: "Austin에게 일상언어가 철학의 정밀한 첫 자료인 이유를 설명하세요.", answerChecklist: ["상황의 세부", "참·거짓 외 평가", "최종 판결 아님"], requiredConcepts: ["language-use-and-context"], sectionId: "source" },
+      { level: "basic", question: "발화행위 개관에서 내용과 힘을 어떻게 구분하는지 설명하세요.", answerChecklist: ["문장 내용", "약속·질문·명령", "문맥 조건"], requiredConcepts: ["speech-act"], sectionId: "comparison" },
+      { level: "advanced", question: "‘문을 닫는다’는 같은 내용을 진술·질문·명령으로 바꿔 조건을 적으세요.", answerChecklist: ["같은 내용", "세 가지 힘", "화자와 상대", "상황"], requiredConcepts: ["language-use-and-context", "speech-act"], sectionId: "mechanism" },
+      { level: "advanced", question: "행위가 성립했지만 적절하지 않은 약속의 반례를 만드세요.", answerChecklist: ["약속 성립", "진지함 부족", "불이행 또는 남용", "효과와 구분"], requiredConcepts: ["speech-act", "felicity-conditions"], sectionId: "need" },
+      { level: "advanced", question: "의도만으로 발화행위의 힘을 모두 정할 수 없는 이유를 설명하세요.", answerChecklist: ["관습", "상대의 이해", "제도적 권한", "대화 흐름"], requiredConcepts: ["language-use-and-context", "felicity-conditions"], sectionId: "comparison" },
+      { level: "advanced", question: "사회적 권력이 적정 조건의 받아들임을 막는 사례와 보완책을 제시하세요.", answerChecklist: ["같은 발화", "믿어 주지 않음", "직급·성별·인종화 등", "절차 개선"], requiredConcepts: ["speech-act", "felicity-conditions"], sectionId: "limits" }
+    ],
+    papers: [
+      { title: "Stanford Encyclopedia of Philosophy · J. L. Austin", href: "https://plato.stanford.edu/entries/austin-jl/", problem: "일상 표현의 미세한 차이를 철학 조사에 어떻게 쓰는지 설명합니다.", contribution: "참·거짓뿐 아니라 부적절·무례·무의미·행위 실패를 상황 특징과 함께 나눕니다.", assumptions: "영어의 일상 쓰임이 모든 언어와 시대의 최종 기준은 아닙니다.", evidenceScope: "Austin의 일상언어 방법과 지각·지식·행위 연구입니다.", notClaim: "평범한 표현은 언제나 옳고 고칠 수 없다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Stanford Encyclopedia of Philosophy · Speech Acts", href: "https://plato.stanford.edu/entries/speech-acts/", problem: "문장 내용과 말로 수행한 행위의 관계를 설명합니다.", contribution: "내용과 힘, 수행문, 적정 조건과 대화 규범을 정리합니다.", assumptions: "발화행위 분류와 성립 조건에는 이론별 이견이 있습니다.", evidenceScope: "20세기 이후 발화행위 이론과 현대 응용의 학술 개관입니다.", notClaim: "문장 형태만으로 말의 힘이 언제나 결정된다는 뜻이 아닙니다.", sectionId: "comparison" }
+    ]
+  },
 };

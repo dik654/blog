@@ -31752,6 +31752,24 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "definition": "실물 인도 없이 제공된 파생상품의 순실현손익을 GST가 붙지 않는 금융 공급가액으로 기록하는 분류입니다.",
     "canonicalHref": "/finance/markets/singapore-derivatives-records-complaints-and-tax-ledger#names"
   },
+  "transcendental-condition-of-experience": { id: "transcendental-condition-of-experience", kind: "concept", domain: "philosophy", label: "초월론적 조건", aliases: ["transcendental condition"], definition: "대상을 경험하고 판단하려면 이미 작동해야 하는 인식의 조건입니다.", canonicalHref: "/philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history#names" },
+  "self-positing-activity": { id: "self-positing-activity", kind: "concept", domain: "philosophy", label: "자기 활동", aliases: ["self-positing activity"], definition: "자아를 고정된 물건보다 이유를 세우고 자신을 규정하는 활동으로 보는 관점입니다.", canonicalHref: "/philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history#names" },
+  "mutual-recognition": { id: "mutual-recognition", kind: "concept", domain: "philosophy", label: "상호 인정", aliases: ["mutual recognition", "Anerkennung"], definition: "서로를 이유·권리·자유를 가진 주체로 받아들이고 행동 범위를 조정하는 관계입니다.", canonicalHref: "/philosophy/philosophy-history/german-idealism-self-consciousness-recognition-and-history#names" },
+  "existential-facticity": { id: "existential-facticity", kind: "concept", domain: "philosophy", label: "사실성", aliases: ["facticity"], definition: "몸·과거·사회적 위치처럼 이미 주어져 지금의 선택을 제한하는 조건입니다.", canonicalHref: "/philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith#names" },
+  "existential-transcendence": { id: "existential-transcendence", kind: "concept", domain: "philosophy", label: "실존적 초월", aliases: ["existential transcendence"], definition: "주어진 조건을 해석하고 아직 없는 가능성을 향해 계획하고 행동하는 움직임입니다.", canonicalHref: "/philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith#names" },
+  "existential-bad-faith": { id: "existential-bad-faith", kind: "concept", domain: "philosophy", label: "나쁜 믿음", aliases: ["bad faith", "mauvaise foi"], definition: "사실성과 가능성 중 하나만 내세워 자신의 상황과 선택을 왜곡하는 태도입니다.", canonicalHref: "/philosophy/philosophy-history/existentialism-facticity-freedom-and-bad-faith#names" },
+  "hermeneutic-circle": { id: "hermeneutic-circle", kind: "method", domain: "philosophy", label: "해석학적 순환", aliases: ["hermeneutic circle"], definition: "부분을 전체로 읽고 달라진 전체 이해로 부분을 다시 읽는 왕복입니다.", canonicalHref: "/philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding#names" },
+  "hermeneutic-fore-understanding": { id: "hermeneutic-fore-understanding", kind: "concept", domain: "philosophy", label: "선이해", aliases: ["fore-understanding", "pre-understanding", "Vorurteil"], definition: "읽기 전에 이미 가진 언어·경험·기대이며 질문을 시작하게 하는 조건입니다.", canonicalHref: "/philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding#names" },
+  "fusion-of-horizons": { id: "fusion-of-horizons", kind: "concept", domain: "philosophy", label: "지평 융합", aliases: ["fusion of horizons", "Horizontverschmelzung"], definition: "낯선 문헌과 현재 독자의 질문이 대화하며 새 이해의 문맥을 만드는 과정입니다.", canonicalHref: "/philosophy/philosophy-history/hermeneutics-part-whole-prejudice-and-understanding#names" },
+  "immanent-critique": { id: "immanent-critique", kind: "method", domain: "philosophy", label: "내재적 비판", aliases: ["immanent critique"], definition: "제도가 스스로 인정한 기준과 실제 작동의 모순에서 비판을 시작하는 방법입니다.", canonicalHref: "/philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation#names" },
+  "ideology-critique": { id: "ideology-critique", kind: "method", domain: "philosophy", label: "이데올로기 비판", aliases: ["ideology critique"], definition: "지배 관계를 자연스럽고 피할 수 없는 것으로 보이게 하는 생각·관행·감정을 분석하는 방법입니다.", canonicalHref: "/philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation#names" },
+  "instrumental-reason": { id: "instrumental-reason", kind: "concept", domain: "philosophy", label: "도구적 이성", aliases: ["instrumental reason"], definition: "목표의 정당성보다 정해진 목표를 이루는 수단 계산만 앞서는 이성의 사용입니다.", canonicalHref: "/philosophy/philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation#names" },
+  "observation-sentence": { id: "observation-sentence", kind: "concept", domain: "philosophy", label: "관찰 문장", aliases: ["observation sentence", "protocol sentence"], definition: "특정 조건과 시각에 무엇을 기록했는지 공동으로 검사할 수 있게 쓴 문장입니다.", canonicalHref: "/philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language#names" },
+  "confirmation-relation": { id: "confirmation-relation", kind: "concept", domain: "philosophy", label: "확인 관계", aliases: ["confirmation relation"], definition: "관찰 증거가 가설을 얼마나, 어떤 조건에서 지지하는지 나타내는 관계입니다.", canonicalHref: "/philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language#names" },
+  "theoretical-language": { id: "theoretical-language", kind: "concept", domain: "philosophy", label: "이론 언어", aliases: ["theoretical language"], definition: "직접 보이지 않는 대상과 관계를 포함해 예측과 설명을 만드는 용어 체계입니다.", canonicalHref: "/philosophy/philosophy-history/logical-empiricism-observation-confirmation-and-theory-language#names" },
+  "language-use-and-context": { id: "language-use-and-context", kind: "method", domain: "philosophy", label: "쓰임과 문맥", aliases: ["use and context"], definition: "표현의 역할을 실제 활동·관계·앞뒤 발화에서 확인하는 접근입니다.", canonicalHref: "/philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts#names" },
+  "speech-act": { id: "speech-act", kind: "concept", domain: "philosophy", label: "발화행위", aliases: ["speech act", "illocution"], definition: "말함으로써 수행하는 약속·질문·경고·사과·임명 같은 행위입니다.", canonicalHref: "/philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts#names" },
+  "felicity-conditions": { id: "felicity-conditions", kind: "concept", domain: "philosophy", label: "적정 조건", aliases: ["felicity conditions"], definition: "발화행위가 제대로 성립하고 수행되려면 필요한 권한·절차·진지함·이해의 조건입니다.", canonicalHref: "/philosophy/philosophy-history/ordinary-language-use-context-and-speech-acts#names" },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -57220,6 +57238,24 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     "relation": "constrains",
     "reason": "싱가포르 FIDReC 외부 구제 창의 결과와 제약을 확인해야 싱가포르 파생상품 GST 면세 공급의 적용 범위를 정할 수 있습니다."
   },
+  { from: "transcendental-condition-of-experience", to: "self-positing-activity", relation: "extends", reason: "경험의 조건을 수동적 형식에 머물지 않고 자신을 규정하는 주체의 활동으로 확장합니다." },
+  { from: "self-positing-activity", to: "mutual-recognition", relation: "extends", reason: "혼자 설정한 자유가 다른 자유로운 주체와의 관계에서 실제가 되는 조건으로 확장합니다." },
+  { from: "transcendental-condition-of-experience", to: "mutual-recognition", relation: "constrains", reason: "자유의 사회적 조건을 경험과 판단의 구조 전체와 분리하지 않게 합니다." },
+  { from: "existential-facticity", to: "existential-transcendence", relation: "constrains", reason: "아직 만들 가능성은 몸·과거·사회적 위치라는 실제 조건 안에서만 선택됩니다." },
+  { from: "existential-transcendence", to: "existential-bad-faith", relation: "constrains", reason: "가능성을 과장하거나 지우는 두 방향의 자기 왜곡을 판정하게 합니다." },
+  { from: "existential-facticity", to: "existential-bad-faith", relation: "constrains", reason: "사실성에 자신을 고정하거나 사실성을 부정하는 양쪽 실패를 제한합니다." },
+  { from: "hermeneutic-fore-understanding", to: "hermeneutic-circle", relation: "constrains", reason: "부분과 전체의 왕복은 독자가 이미 가진 기대를 숨기지 않고 자료로 고치는 과정입니다." },
+  { from: "hermeneutic-circle", to: "fusion-of-horizons", relation: "extends", reason: "문헌 내부의 부분·전체 왕복을 과거와 현재 독자의 역사적 대화로 넓힙니다." },
+  { from: "hermeneutic-fore-understanding", to: "fusion-of-horizons", relation: "constrains", reason: "새 공통 문맥은 출발 관점의 차이를 없애지 않고 드러내며 형성됩니다." },
+  { from: "immanent-critique", to: "ideology-critique", relation: "extends", reason: "제도의 약속과 실제의 모순에서 그 모순을 자연스럽게 보이게 하는 관행과 생각으로 분석을 넓힙니다." },
+  { from: "instrumental-reason", to: "ideology-critique", relation: "extends", reason: "효율 계산이 목표와 권력의 질문을 밀어내는 과정을 지배의 재생산과 연결합니다." },
+  { from: "immanent-critique", to: "instrumental-reason", relation: "constrains", reason: "수단의 효율을 제도가 스스로 내건 자유·평등 기준에 다시 대조합니다." },
+  { from: "observation-sentence", to: "confirmation-relation", relation: "produces", reason: "조건을 적은 관찰 기록이 가설을 지지하거나 문제를 드러내는 증거가 됩니다." },
+  { from: "theoretical-language", to: "confirmation-relation", relation: "constrains", reason: "이론 용어와 보조 가정이 어떤 관찰을 예측하는지에 따라 확인 관계의 범위가 정해집니다." },
+  { from: "observation-sentence", to: "theoretical-language", relation: "constrains", reason: "이론 언어는 공개된 측정과 추론 규칙에 연결되어야 시험할 수 있습니다." },
+  { from: "language-use-and-context", to: "speech-act", relation: "produces", reason: "앞뒤 대화와 관계를 확인하면 같은 문장으로 약속·예측·명령 중 무엇을 했는지 드러납니다." },
+  { from: "felicity-conditions", to: "speech-act", relation: "constrains", reason: "권한·절차·진지함과 상대의 이해가 발화행위의 성립과 수행 범위를 정합니다." },
+  { from: "language-use-and-context", to: "felicity-conditions", relation: "extends", reason: "실제 쓰임의 관찰을 말로 한 행위가 성공하거나 빗나가는 조건 분석으로 넓힙니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {
