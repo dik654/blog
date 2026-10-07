@@ -33,6 +33,8 @@ jobs:
 
       - run: npm run audit:formula -- --strict --require-explicit
 
+      - run: npm run audit:pseudocode -- --strict
+
       - run: npm run audit:articles -- --strict --all-articles
 
       - run: npm run audit:topology -- --strict
