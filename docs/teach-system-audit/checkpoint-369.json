@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-07",
+  "baselineCheckpoint": "checkpoint-363.json",
+  "publicArticles": 913,
+  "addedRoutes": [
+    "history/economic-history/north-america-land-slavery-railroads-and-mass-production",
+    "history/economic-history/europe-serfdom-states-industrialization-and-integration",
+    "history/economic-history/southeast-asia-ports-plantations-and-export-industrialization",
+    "history/economic-history/central-asia-pastoralism-irrigation-planning-and-corridors",
+    "history/economic-history/oceania-indigenous-land-settler-exports-and-island-economies",
+    "history/economic-history/war-finance-public-debt-and-welfare-state-capacity"
+  ],
+  "reviewed": 369,
+  "remaining": 544,
+  "goalComplete": false,
+  "disposition": "Six substantive economic-history articles were added after checkpoint 363; 327 substantive rewrites/additions and 42 retained teaching flows in total. The batch adds North America, internal European comparison, Southeast Asia, Central Asia, Oceania and war finance while separating output from rights, household residuals, external costs and future tax claims.",
+  "validation": {
+    "individual": "Six additions passed exact 6+4 learning, graph, visualization, prose, Korean, term-density, reading-order and ESLint checks.",
+    "numeric": "North America compares owner residue 70 under coerced labor with 35 after an illustrative wage 35; Europe compares household residues 20 and 15 despite output rising from 100 to 110; Southeast Asia leaves a local residue of 20 from exports 100; Central Asia reallocates water from 60+25+15=100 to 55+10+5=70; Oceania changes a four-source income account from 100 to 75; war finance separates funding 35+40+15+10=100 from postwar uses 40+30+20+10=100. Every figure is marked as an explanatory assumption rather than a historical statistic.",
+    "browser": "Six routes x 390/1440, six mobile height checks and four sidebar assertions = 22; all passed. Local report: output/playwright/economic-history-regional-expansion-local/2026-10-07T02-30-00/summary.json.",
+    "learning": "PASS 913 exact 6+4 contracts; actual exit 0.",
+    "typescript": "PASS actual app tsc -b with NODE_OPTIONS=--max-old-space-size=8192.",
+    "build": "PASS Vite 10.31s, 7,266 transformed modules and 1,930 static public routes plus 404; actual exit 0.",
+    "graph": "PASS 4,176 concepts, 6,483 relations, 913 registered articles and zero invariants; 18 new concepts and 18 relations were added; actual exit 0.",
+    "formula": "PASS 1,471 explicit operation annotations; actual exit 0.",
+    "articleStructure": "PASS 913-public-article strict baseline; actual exit 0.",
+    "topology": "PASS 913 strict; all six additions have reviewed keep decisions and current source fingerprints.",
+    "reading": "PASS reading experience and 91 article listings with 473 prerequisite edges; actual exit 0.",
+    "language": "PASS global prose rhythm, Korean naturalness and term-density audits with zero uncovered findings.",
+    "lint": "PASS full-repository ESLint; actual exit 0.",
+    "visualization": "PASS strict visualization style audit with zero errors. The 4,030 review notices are static SVG-text prompts; the three shared visualizations on every new route were checked in Chromium.",
+    "mobileViewport": "All tested documents, controls and figures stayed within 390px; visualization widths were 352-354px and numeric arrows were 27x27px; viewport height 844 to 700 preserved the fourth-section reading anchor on all six routes with delta 0; the mobile sidebar was 336px wide, focused and body-scroll locking.",
+    "desktopViewport": "All six articles stayed within 1440px.",
+    "production": "GitHub Pages run 37562543468 succeeded; production Playwright report output/playwright/economic-history-regional-expansion-production/2026-10-07T02-40-47Z/summary.json passed 22/22 checks with no console errors, page errors or failed requests.",
+    "curriculumCoverage": "LSE EH304, EH314, EH204, EH434 and EH450 map the regional and war-economy questions. Federal Reserve History, World Bank, ADB, NSW Treasury and the UK Parliament bound the claims. Remaining economic-history gaps include commercial and bankruptcy law, cooperatives and state finance, welfare fiscal sustainability and within-region empirical comparison. The derivatives standard still requires four simultaneous audit axes: university pricing theory, the Korean derivatives-advice certification, bank FP/PB customer practice and FRM risk governance."
+  },
+  "commit": "79fac2879e3495edf31a75c919db78aada8593a8",
+  "deployment": {
+    "runId": 37562543468,
+    "conclusion": "success",
+    "production": "22 passed, 0 failed"
+  }
+}
