@@ -458,7 +458,7 @@ mechanism Viz가 더 적합하다.
 ## 8. 실행과 보고
 
 - 중간 승인을 기다리지 않고 정해진 범위를 페이지별 DoD 순서로 연속 진행한다.
-- `npm run audit:viz -- --strict <변경한 Viz 경로>`와 `npm run build`를 실행한다.
+- `npm run audit:viz -- --strict <변경한 Viz 경로>`, `npm run audit:pseudocode -- --strict`와 `npm run build`를 실행한다.
 - 모든 글은 `npm run audit:learning -- --strict --require-registration <category/article>`를 실행한다. 전역 완료는 `--all-articles` 검사까지 통과해야 하며 등록·기초/심화 문제·필수 concept·논문 해설 anchor가 누락되면 완료하지 않는다.
 - 전역 learning·article·Viz 감사는 공개 catalog route의 실제 import closure만 읽는다. 같은 디렉터리에 남아 있지만 entry가 import하지 않는 legacy 파일은 현재 글의 본문·anchor·Viz 증거로 인정하지 않는다.
 - Playwright 검사는 최소 desktop 1440px와 mobile 390px에서 수행한다.

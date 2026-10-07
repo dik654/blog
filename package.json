@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build && node scripts/generate-static-routes.mjs",
     "lint": "eslint .",
     "audit:viz": "node scripts/audit-viz-style.mjs",
+    "audit:pseudocode": "node scripts/audit-pseudocode-visualization.mjs",
     "audit:articles": "node scripts/audit-article-contract.mjs",
     "audit:graph": "node scripts/audit-knowledge-graph.mjs",
     "audit:learning": "node scripts/audit-learning-contract.mjs",
