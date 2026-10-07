@@ -66,8 +66,8 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            MLA는 압축을 두 단계로 나눕니다. token의 hidden state h_t를 작은 latent c_t^KV로 내리는 down-projection, 그리고 그
-            latent에서 head별 key·value를 다시 만드는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
+            MLA는 압축을 두 단계로 나눕니다. token의 hidden state h_t를 작은 latent c_t^KV로 내리는 단계는 down-projection입니다. 그
+            latent에서 head별 key·value를 다시 만드는 단계는 up-projection입니다. 캐시에 남는 것은 첫 단계의 결과 하나뿐입니다.
           </p>
           <p>
             KV down projection은 W^DKV라는 하나의 행렬로 h_t를 d_c 차원 latent로 내립니다. K와 V를 따로 내리지 않고 같은 latent를 공유하는 것이

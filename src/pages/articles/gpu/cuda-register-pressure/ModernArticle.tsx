@@ -69,7 +69,7 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
           </p></div></section>
 <section id="live-range" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">9. 값을 언제까지 보존하느냐가 자리 재사용을 바꿉니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
             실제 물리 register 수를 변수 선언문에서 그대로 세기는 어렵습니다. 값을 다 읽었다면 같은 칸에 다음 값을 놓을 수 있고 상수나 짧은 계산은 보관 대신 다시 계산할 수도
-            있습니다. 앞의 선택을 register reuse, 뒤의 선택을 rematerialization이라고 합니다.
+            있습니다. 앞의 선택은 레지스터 재사용(register reuse)입니다. 뒤의 선택은 재계산(rematerialization)입니다.
           </p>
 <p className="leading-8">예를 들어 x=7에서 a=x+1=8, y=2a=16을 차례로 계산하고 x를 다시 쓰지 않는다고 가정합니다. 설명용 값 배치에서는 x의 마지막 사용 뒤 그 칸을 a에 줄 수 있습니다. 이와 달리 마지막에 a+x를 구하려면 x=7을 계속 보존해야 합니다. 실제 명령 선택과 인자·주소 register까지 포함한 배정 수는 대상 컴파일 결과로 확인합니다.</p>
 <p className="leading-8">base+i×stride 주소를 다시 만드는 선택도 입력들이 아직 남아 있어야 가능합니다. 재계산은 추가 명령과 의존을 만들므로 무조건 싸지 않습니다. 부동소수점 계산을 옮기거나 합치는 최적화는 반올림과 프로그램 의미의 제약도 지켜야 합니다.</p>

@@ -82,7 +82,7 @@ assumptions={["각도는 양의 가로축에서 반시계로 잰 라디안입니
 </section>
 <section id="complex-plane" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">9 · i를 곱하면 두 좌표가 (−b,a)로 바뀐다</h2>
-<p>좌표 (a,b)를 z=a+bi로 적습니다. 실수부는 a, 허수부는 b입니다. 허수부 자체를 bi와 혼동하지 않습니다. i²=−1을 사용하면 i(a+bi)=ai−b=−b+ai이므로 앞에서 정한 회전 규칙이 그대로 나옵니다. (3+4i)i=−4+3i이며 네 번 곱하면 i⁴=1 때문에 처음 값입니다.</p>
+<p>좌표 (a,b)를 z=a+bi로 적습니다. 실수부는 a입니다. 허수부는 b입니다. 허수부 자체를 bi와 혼동하지 않습니다. i²=−1을 사용하면 i(a+bi)=ai−b=−b+ai이므로 앞에서 정한 회전 규칙이 그대로 나옵니다. (3+4i)i=−4+3i이며 네 번 곱하면 i⁴=1 때문에 처음 값입니다.</p>
 <ExplainedFormula question="두 좌표를 묶어도 길이와 반사를 계산할 수 있나요?" idea="i의 제곱을 −1로 계산하면 켤레와의 곱에서 교차항이 지워져 두 좌표의 제곱합만 남습니다."
 formula={String.raw`\begin{gathered}z=a+bi,\quad i^2=-1,\quad\bar z=a-bi\\|z|=\sqrt{a^2+b^2},\qquad z\bar z=|z|^2\end{gathered}`}
 annotatedFormula={String.raw`\begin{gathered}\begin{gathered}z=a+bi,\quad i^2=-1,\quad\bar z=a-bi\\|z|=\sqrt{a^2+b^2},\qquad z\bar z=|z|^2\end{gathered}\\[8pt](3+4i)(3-4i)=9-16i^2=25,\qquad |3+4i|=5\end{gathered}`}

@@ -54,7 +54,7 @@ export default function ModernArticle() {
             </ol>
           </article>
         </div>
-        <p className="mt-4 text-sm leading-7 text-muted-foreground">한 묶음의 계산량은 늘지만 가중치를 읽고 실행을 시작하는 일을 덜 반복할 수 있습니다. 실제 이득은 9절의 전체 시간 장부로 확인합니다.</p>
+        <p className="mt-4 text-sm leading-7 text-muted-foreground">한 묶음의 계산량은 늘지만 가중치를 읽고 실행을 시작하는 일을 덜 반복할 수 있습니다. 실제 이득은 12절의 전체 시간 장부로 확인합니다.</p>
       </figure>
     </section>
 
@@ -92,8 +92,8 @@ export default function ModernArticle() {
     <section id="names" data-teach-level="3" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">6. 이 과정을 추측 디코딩이라고 부릅니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">지금까지는 이름 없이 동작부터 보았습니다. 값싼 후보 생성 단계를 <strong>draft</strong>, 최종 결정을 내리는 큰 모델을 <strong>target</strong>, 후보가 검사를 통과하는 일을 <strong>acceptance</strong>라고 부릅니다. 이 전체 방식이 <strong>speculative decoding, 추측 디코딩</strong>입니다.</p>
-        <p className="leading-8">4절에서 본 여러 갈래 후보는 <strong>token tree</strong>, 각 자리가 자기 앞 경로만 읽게 하는 표는 <strong>attention mask</strong>라고 부릅니다. 3절의 key·value 계산 기록은 <strong>KV cache</strong>입니다.</p>
+        <p className="leading-8">지금까지는 이름 없이 동작부터 보았습니다. 후보를 싸게 만드는 단계는 <strong className="whitespace-nowrap">초안(draft)</strong>입니다. 최종 결정을 내리는 큰 모델은 <strong className="whitespace-nowrap">기준 모델(target)</strong>입니다. 후보가 검사를 통과하면 <strong className="whitespace-nowrap">수락(acceptance)</strong>했다고 합니다. 이 전체 방식은 <strong className="whitespace-nowrap">추측 디코딩(speculative decoding)</strong>입니다.</p>
+        <p className="leading-8">4절에서 본 여러 갈래 후보는 <strong className="whitespace-nowrap">후보 트리(token tree)</strong>입니다. 각 자리가 자기 앞 경로만 읽게 하는 표는 <strong className="whitespace-nowrap">어텐션 마스크(attention mask)</strong>입니다. 3절의 키·값 계산 기록은 <strong className="whitespace-nowrap">KV 캐시(cache)</strong>입니다.</p>
         <p className="leading-8">각 이름의 작은 예와 구분할 경계는 아래에 모았습니다. 새 원리를 더하는 목록이 아니라, R·A·Y 사례에서 이미 본 부분을 짧게 가리키는 손잡이입니다.</p>
       </div>
       <ProgressiveDetail title="R·A·Y 사례의 용어를 한 번에 확인하기" preview="draft·target·acceptance·후보 갈래·읽기 허용 표·앞 계산 기록을 사례와 연결합니다." label="용어가 필요할 때 펼쳐 읽기">
@@ -124,6 +124,9 @@ export default function ModernArticle() {
         <p className="leading-8"><strong>중간 결론은 간단합니다.</strong> 여러 후보를 함께 계산하는 이유는 모두 출력하려는 것이 아니라, 큰 모델 실행 한 번에서 연속으로 승인할 경로 하나를 길게 찾기 위해서입니다.</p>
       </div>
       <TreeTraceViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">후보 트리를 넓히면 RAY처럼 살아남는 경로를 포함할 가능성은 커집니다. 동시에 큰 모델이 확인할 입력 수도 늘어납니다. 깊이 3에서 폭을 3·2·2로 잡으면 후보는 21개이고 시작점까지 22자리를 확인합니다. 따라서 확정 길이와 전체 검증 시간을 함께 재야 하며, 아래 원문 추적 뒤 12절에서 같은 시간 장부에 넣습니다. (가정)</p>
+      </div>
       <ProgressiveDetail title="실제 Medusa 배열·mask·KV 이동까지 보기" preview="7×7 표의 17칸, 후보 행 선택, KV [4,5,8]→[4,5,6]을 원문 코드와 맞춥니다.">
         <span id="mask" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -162,41 +165,21 @@ export default function ModernArticle() {
     </section>
 
     <section id="variants" data-teach-level="5" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">8. 변형은 후보를 더 싸고 더 잘 맞게 만들려고 생겼습니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">8. 변형마다 어느 비용을 줄이고 무엇을 더 내는지 따로 봅니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">기본 방식은 별도의 작은 draft model이 후보를 씁니다. 그런데 모델을 두 벌 올리면 가중치와 운영 부담이 늘고, 작은 모델의 문체가 target과 다르면 수락 길이도 짧아집니다. 각 변형은 이 비용 가운데 하나를 줄이려 합니다.</p>
+        <p className="leading-8">기본 방식은 별도의 작은 초안 모델이 후보를 씁니다. 모델을 두 벌 올리면 가중치와 운영 부담이 늘고, 초안 모델의 선택이 기준 모델과 자주 다르면 첫 오답 뒤 후보를 버립니다. 그래서 변형은 후보의 출처나 모양을 바꿉니다.</p>
+        <p className="leading-8">이름만 모아 놓으면 무엇이 달라졌는지 알기 어렵습니다. 다음 세 절은 모두 앞의 R·A·Y 사례로 돌아갑니다. LayerSkip은 같은 모델의 앞층을 초안으로 쓰고, MTP는 학습 때 붙인 미래 예측 부품을 다시 쓰며, SuffixDecoding은 과거 출력에서 반복 구간을 찾습니다.</p>
+        <p className="leading-8">각 절에서 후보를 만든 경로, 큰 모델이 그대로 해야 하는 일, 새로 생기는 상태와 실패 비용을 끝까지 확인합니다. 이 내용을 알아야 마지막 시간 장부에서 세 방법을 같은 기준으로 비교할 수 있습니다.</p>
       </div>
-      <div className="not-prose my-8 grid gap-4">
-        <article className="rounded-xl border border-border/70 bg-card p-5">
-          <p className="text-xs font-bold text-primary">막힌 점 1 · 모델 두 벌의 가중치와 운영 부담</p>
-          <h3 className="mt-2 text-base font-black">LayerSkip은 같은 모델의 앞 layer에서 먼저 나옵니다</h3>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">layer는 입력을 차례로 바꾸는 모델의 한 단계입니다. 별도 모델을 없애려고 앞 단계에서 일찍 후보를 냅니다. 대신 중간 출력도 쓸 만하도록 학습해야 하며, 앞 상태와 계산 기록을 보관하는 비용이 새로 남습니다.</p>
-        </article>
-        <article className="rounded-xl border border-border/70 bg-card p-5">
-          <p className="text-xs font-bold text-primary">막힌 점 2 · 한 줄 후보는 첫 오답 뒤를 모두 잃음</p>
-          <h3 className="mt-2 text-base font-black">Medusa는 여러 예측 head와 후보 tree를 붙입니다</h3>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">head는 같은 내부 상태를 토큰 점수로 바꾸는 작은 출력 갈래입니다. 여러 head가 미래 후보를 만들고 tree로 검증합니다. 첫 후보가 틀릴 위험은 줄지만, tree가 넓어질수록 target이 확인할 자리도 늘어납니다.</p>
-        </article>
-        <article className="rounded-xl border border-border/70 bg-card p-5">
-          <p className="text-xs font-bold text-primary">막힌 점 3 · 학습 때 만든 미래 예측 부품이 추론 때 놀고 있음</p>
-          <h3 className="mt-2 text-base font-black">DeepSeek-V3는 MTP module을 후보 생성에 다시 씁니다</h3>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">MTP module은 학습 중에 두 번째·세 번째 미래 토큰까지 차례로 예측하도록 붙인 작은 계산 블록입니다. 이를 후보 생성에 재사용합니다. 후보 비용은 작지만 수락률과 한꺼번에 처리하는 요청 수에 따른 검증 비용을 함께 재야 합니다.</p>
-        </article>
-        <article className="rounded-xl border border-border/70 bg-card p-5">
-          <p className="text-xs font-bold text-primary">막힌 점 4 · 반복되는 문장을 매번 모델로 다시 계산함</p>
-          <h3 className="mt-2 text-base font-black">SuffixDecoding은 과거 출력에서 다음 구간을 찾습니다</h3>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">반복되는 입력에서는 최근 문장 끝과 같은 과거 구간 뒤를 후보로 씁니다. 모델 계산은 거의 없지만 처음 보는 문장에서는 후보를 못 찾고 검색 비용만 남습니다.</p>
-        </article>
-      </div>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">이름을 외울 필요는 없습니다. <strong>후보를 어디서 얻는가, target이 몇 자리를 확인하는가, 무엇을 저장하는가, 틀렸을 때 무엇을 버리는가</strong>를 물으면 모든 변형을 같은 표준으로 비교할 수 있습니다.</p>
-      </div>
+    </section>
+
+    <section id="layer-skip" data-teach-level="5" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">9. LayerSkip은 모델 두 벌 대신 같은 모델의 앞층과 뒷층을 나눕니다</h2>
       <span id="self-speculative" />
       <span id="self-source" />
-      <ProgressiveDetail title="LayerSkip의 상태 재사용과 실제 코드" preview="앞 layer가 만든 상태와 마지막 후보의 계산이 어디에 남는지 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">후보를 준비하는 부품을 바꾸어 보겠습니다. LayerSkip은 한 모델의 앞쪽 층에서 먼저 빠져나와 후보를 만든 뒤 뒤쪽 층으로 확인하는 self-speculative decoding을 사용합니다. 별도 모델 가중치를 두 벌 둘 필요를 줄이는 접근입니다.</p>
-<p className="leading-8">아무 checkpoint에서 앞 층의 출력을 바로 읽으면 정확한 후보가 된다고 보장하지 않습니다. LayerSkip은 뒤 층일수록 더 자주 건너뛰는 학습과 중간 층의 출력에도 적용하는 학습 목표를 사용합니다. 읽을 수 있는 중간 상태와 유용한 후보를 내는 중간 상태는 다릅니다.</p>
+<p className="leading-8"><strong>LayerSkip은 별도 초안 모델 대신 같은 모델의 앞층에서 후보를 만들고 뒷층에서 검증합니다.</strong> 그래서 모델 가중치를 두 벌 올리는 부담을 줄일 수 있습니다.</p>
+<p className="leading-8">그러면 아무 모델이나 중간층에서 빠져나오면 될까요? 일반 체크포인트는 중간층이 좋은 토큰을 내도록 학습되지 않았습니다. LayerSkip은 뒤쪽 층을 더 자주 건너뛰게 학습하고, 중간층 출력에도 학습 목표를 줍니다. 읽을 수 있는 중간 상태와 쓸 만한 후보를 내는 중간 상태는 다릅니다.</p>
 <p className="leading-8">RAY라는 같은 글을 이어 쓰되 이 구현의 회차 시작을 맞추겠습니다. 이번에는 R을 이미 출력했지만 R의 KV는 아직 없다고 둡니다. 기존 네 자리 기록 뒤에서 앞 층이 R을 읽어 A를, 다시 A를 읽어 Y를 제안합니다. 그 과정의 중간 상태를 저장해 뒤 층에서 재사용합니다.</p>
 </div>
 <CitationBlock citeKey={15} source="LayerSkip v4 — §4.1–4.3" href="https://arxiv.org/html/2404.16710v4">같은 R·A·Y의 앞 층 상태를 저장하는 이유를 논문의 self-drafting·verification·cache reuse에 연결합니다.</CitationBlock>
@@ -213,12 +196,18 @@ export default function ModernArticle() {
           </p>
 </div>
 <CodeViewButton label="앞 층 상태를 저장하고 이어 쓰는 원문" onClick={() => sidebar.open("self-cache", codeRefs["self-cache"])}/><CodeViewButton label="확정 출력과 다음 입력을 나누는 원문" onClick={() => sidebar.open("self-loop", codeRefs["self-loop"])}/>
-      </ProgressiveDetail>
-      <span id="mtp" />
-      <ProgressiveDetail title="DeepSeek-V3 MTP의 입력과 수식" preview="이전 깊이의 상태와 이미 고른 다음 토큰이 module 안에서 만나는 위치를 봅니다.">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">32층 가운데 8층에서 후보를 낸다고 해서 후보 시간이 자동으로 전체의 25%가 되지는 않습니다. 앞층 상태 저장, 마지막 후보 입력, 나머지 24층의 병렬 검증과 KV 정리가 남기 때문입니다. exit 깊이를 고를 때는 후보 시간·연속 수락 길이·검증 시간·추가 상태 메모리를 함께 재야 합니다.</p>
+        <p className="leading-8"><strong>선택 경계는 분명합니다.</strong> 별도 초안 모델의 가중치와 운영 비용이 부담이고, 중간층에서도 잘 예측하도록 학습된 체크포인트가 있으며, 저장한 앞층 상태를 재사용한 전체 회차가 더 짧을 때 LayerSkip이 후보가 됩니다.</p>
+      </div>
+    </section>
+
+    <section id="mtp" data-teach-level="5" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">10. MTP는 이미 고른 토큰과 앞 상태로 다음 후보를 만듭니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">DeepSeek-V3의 MTP는 학습 중 더 먼 미래도 예측하도록 붙인 순차 모듈입니다. 이전 깊이의 상태와 바로 다음 토큰의 embedding을 각각 정규화해 이어 붙이고 선형 투영으로 합칩니다. 그 결과를 Transformer block에 넣은 뒤 공유 output head로 그다음 글자의 분포를 만듭니다.</p>
-<p className="leading-8">기존 네 자리의 마지막 상태가 다음 R을 고른 경우를 생각해 보세요. 첫 MTP 모듈은 그 상태와 R의 embedding을 함께 받아 다음 A를 예측합니다. 둘째 깊이가 있다면 앞 깊이의 상태와 A를 함께 받아 더 뒤를 예측합니다. 다음 글자의 정체를 주지 않고 같은 상태에서 여러 독립 미래를 고르는 구조와 다릅니다.</p>
+<p className="leading-8"><strong>DeepSeek-V3의 MTP는 앞 깊이의 상태와 방금 고른 토큰을 합쳐 그다음 후보를 차례로 만듭니다.</strong> 학습할 때 더 먼 미래도 예측하도록 붙인 순차 모듈을 추론 때 다시 쓰는 방식입니다.</p>
+<p className="leading-8">왜 같은 마지막 상태에서 미래 여러 자리를 바로 읽지 않고 방금 고른 토큰을 다시 넣을까요? 둘째 미래 토큰은 첫째 미래 토큰에 따라 달라집니다. 기존 네 자리의 마지막 상태가 R을 골랐다면 첫 모듈은 그 상태와 R의 embedding을 함께 받아 A를 예측합니다. 둘째 깊이는 앞 깊이의 상태와 A를 받아 더 뒤를 예측합니다.</p>
+<p className="leading-8">실제 모듈은 이전 깊이의 상태와 바로 다음 토큰의 embedding을 각각 정규화해 이어 붙인 뒤 선형 투영으로 합칩니다. 그 결과를 Transformer block에 넣고 공유 output head로 그다음 글자의 분포를 만듭니다.</p>
 <p className="leading-8">보고서의 식(21)은 두 d차원 벡터를 이어 2d로 만든 뒤 d×2d 행렬로 다시 d차원으로 보냅니다. 식(22)의 block과 식(23)의 공유 head가 이어집니다. 이 차원을 맞추면 네 부품의 역할과 다음 토큰 정보가 들어가는 위치를 실제 수식에서 찾을 수 있습니다.</p>
 <p className="leading-8">
             Medusa의 여러 head는 같은 마지막 hidden state에서 서로 다른 미래 위치의 후보를 냅니다. DeepSeek-V3의 순차 모듈과 학습·입력 관계가 같다고 읽으면
@@ -226,16 +215,22 @@ export default function ModernArticle() {
           </p>
 </div>
 <ExplainedFormula question="앞 상태와 다음 토큰은 어디서 만날까요?" idea="보고서의 순차 깊이 k에서 두 상태를 정규화하고 이어 붙여 새 모듈에 넣습니다." formula={String.raw`\begin{aligned}h_i^{\prime k}&=M_k[\operatorname{RMSNorm}(h_i^{k-1});\operatorname{RMSNorm}(\operatorname{Emb}(t_{i+k}))]\\h^k&=\operatorname{TRM}_k(h^{\prime k})\\P_{i+k+1}^k&=\operatorname{OutHead}(h_i^k)\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}\underbrace{a_i^k}_{\text{앞 상태}}&=\operatorname{RMSNorm}(h_i^{k-1})\\\underbrace{u_i^k}_{\text{다음 토큰}}&=\operatorname{Emb}(t_{i+k})\\\underbrace{e_i^k}_{\text{정규화한 토큰}}&=\operatorname{RMSNorm}(u_i^k)\\\underbrace{h_i^{\prime k}}_{\text{합친 상태}}&=M_k[a_i^k;e_i^k]\\\underbrace{h_i^k}_{\text{후보 상태}}&=\operatorname{TRM}_k(h_i^{\prime k})\\\underbrace{P_{i+k+1}^k}_{\text{다음 분포}}&=\operatorname{OutHead}(h_i^k)\end{aligned}`} terms={[{"symbol": "h_i^{k-1}", "name": "이전 깊이의 상태", "description": "k=1이면 기존 네 자리의 main model 상태입니다."}, {"symbol": "t_{i+k}", "name": "이미 지정한 다음 토큰", "description": "작은 사례의 첫 깊이에서는 R입니다."}, {"symbol": "M_k", "name": "두 입력을 합치는 투영", "description": "d×2d 행렬이 2d차원 입력을 d차원으로 만듭니다."}]} operations={[{"expression": "[h;\\operatorname{Emb}(R)]", "annotation": ["각각 정규화한 두 d차원 입력을 이어 붙입니다."]}, {"expression": "\\operatorname{OutHead}(h_i^1)", "annotation": ["그다음 A를 포함한 후보의 점수를 만듭니다."]}]} assumptions={["DeepSeek-V3 report v2의 식 21–23 구조입니다.", "모듈을 반복 실행하는 모든 구현의 비용이나 수락률을 이 식만으로 알 수는 없습니다."]} interpretation="공유 embedding·공유 head와 별도 block·projection을 구분합니다."/><CitationBlock citeKey={18} source="DeepSeek-V3 Technical Report v2 — §2.2 equations 21–23" href="https://arxiv.org/html/2412.19437v2">네 자리의 마지막 상태와 R을 식에 넣어 A의 예측이 생기는 경로를 확인합니다.</CitationBlock>
-      </ProgressiveDetail>
-      <span id="suffix" />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">후보 하나의 수락 확률이 .85라도 검증이 단독 생성의 두 배라면 후보 비용을 .016으로 가정한 시간 비는 1.85/2.016≈.9177입니다. 잘 맞는 후보라는 사실만으로는 이득이 되지 않습니다. 모듈 실행 시간과 기준 모델의 여러 자리 검증 시간을 같은 부하에서 재야 합니다. (가정)</p>
+        <p className="leading-8"><strong>MTP를 고를 조건은 두 가지입니다.</strong> 해당 모델이 실제로 호환되는 MTP 가중치와 실행 경로를 제공해야 하고, MTP를 추론 때 켰을 때의 전체 회차 시간이 확정 토큰 수에 비해 짧아야 합니다.</p>
+      </div>
+    </section>
+
+    <section id="suffix" data-teach-level="5" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">11. SuffixDecoding은 과거 문장이 반복될 때 후보를 검색합니다</h2>
       <span id="suffix-source" />
       <span id="suffix-boundary" />
-      <ProgressiveDetail title="SuffixDecoding의 빈도·C++ 실행·miss 경계" preview="과거 8개 기록에서 후보와 부모 번호를 꺼내고, 조회가 빗나갈 때 남는 비용을 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">
-            이제 후보를 만드는 일을 과거 출력 검색으로 바꾸겠습니다. 저장한 글 8개에서 R 뒤 A가 6번, B가 2번 나왔다고 합시다. A 뒤에는 Y가 5번, X가 1번이고 B 뒤에는
+            <strong>SuffixDecoding은 현재 문장 끝과 같은 과거 구간을 찾아 그 뒤에 자주 나온 글자를 후보로 냅니다.</strong> 저장한 글 8개에서 R 뒤 A가 6번, B가 2번 나왔다고 합시다. A 뒤에는 Y가 5번, X가 1번이고 B 뒤에는
             두 번 모두 Y가 나왔습니다. 같은 RAY 후보를 학습 모델 대신 기록에서 얻는 예입니다. (가정)
           </p>
+<p className="leading-8">검색이 모델 실행보다 싸다면 왜 모든 요청에서 먼저 찾아보지 않을까요? 처음 보는 문장에는 맞는 과거 구간이 없고, 구간을 찾더라도 과거에 자주 나온 글자가 기준 모델의 현재 선택과 같다는 보장이 없기 때문입니다.</p>
 <p className="leading-8">
             R 다음 A의 빈도 비중은 6/8=.75입니다. RAY 전체 경로의 비중은 .75×5/6=.625입니다. RB는 .25이고 RBY도 .25입니다. 네 후보를 이 순서로 꺼내면
             부모 번호는 [-1,0,-1,2]이고 경로 비중의 합은 1.875입니다.
@@ -286,11 +281,14 @@ export default function ModernArticle() {
           </p>
 </div>
 <CodeViewButton label="현재 요청과 전역 기록의 실제 조회" onClick={() => sidebar.open("suffix-wrapper", codeRefs["suffix-wrapper"])}/><CodeViewButton label="요청 종료와 출력 기록 반환의 원문" onClick={() => sidebar.open("suffix-state", codeRefs["suffix-state"])}/>
-      </ProgressiveDetail>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-8">반복 구간을 찾지 못하면 큰 모델은 평소처럼 한 토큰을 만듭니다. 그때도 조회와 자료 구조 갱신 시간은 이미 썼습니다. 단독 생성 25ms와 검색 .02ms를 가정하면 후보가 없는 회차는 25.02ms이고 시간 비는 25/25.02≈.9992입니다. (가정)</p>
+        <p className="leading-8"><strong>따라서 로그·코드·구조화 문서처럼 반복이 많은 입력에서는 검토할 가치가 큽니다.</strong> 처음 보는 문장이 많은 입력에서는 적중률과 후보 길이가 낮아질 수 있으므로, 검색 실패율·검색 시간·fallback 시간을 포함한 전체 장부로 선택합니다.</p>
+      </div>
     </section>
 
     <section id="cost" data-teach-level="6" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">9. 이득은 이름이 아니라 한 회차의 시간 장부로 결정됩니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">12. 이득은 이름이 아니라 한 회차의 시간 장부로 결정됩니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">변형이 달라도 비교식은 같습니다. 한 회차의 평균 확정 수를 E[Y], 평소 한 토큰 시간을 T₁, 후보 준비·target 검증·기록 정리 시간을 각각 T_d·T_v·T_c라고 쓰겠습니다. 전체 회차 시간 T는 T_d+T_v+T_c이고, T₁=1로 놓으면 속도 비 S는 E[Y]/T가 됩니다. (가정)</p>
         <p className="leading-8">평균 1.85개를 확정해도 회차 시간이 1.016이면 약 1.82배지만, 검증이 무거워져 2.016이 되면 약 0.92배입니다. 수락률이 높다는 사실만으로 빠르다고 결론낼 수 없는 이유입니다. (가정)</p>
@@ -377,7 +375,7 @@ export default function ModernArticle() {
 
     <section id="correctness" data-teach-level="6" className="mb-16 scroll-mt-20">
       <span id="sampling-boundary" />
-      <h2 className="mb-6 text-2xl font-bold">10. 빨라져도 원래 모델의 답을 바꾸면 괜찮을까요?</h2>
+      <h2 className="mb-6 text-2xl font-bold">13. 빨라져도 원래 모델의 답을 바꾸면 괜찮을까요?</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">앞 절의 시간 장부가 1보다 크다고 끝은 아닙니다. 빨라진 방법이 원래 큰 모델과 다른 규칙으로 글자를 고르면, 같은 일을 더 빨리 한 것이 아니기 때문입니다. 따라서 속도를 잰 다음에는 출력 규칙도 보존되는지 확인해야 합니다.</p>
 <p className="leading-8">항상 가장 점수가 높은 글자를 고르는 greedy 방식은 같은 조건의 최고 점수 글자를 따라가면 됩니다. 확률에 따라 뽑는 sampling 방식은 여러 번 생성했을 때 각 글자가 나오는 비율까지 지켜야 합니다.</p>
@@ -428,7 +426,7 @@ export default function ModernArticle() {
     </section>
 
     <section id="boundary" data-teach-level="7" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">11. 결국 줄여야 하는 것은 큰 모델의 순차 실행 횟수입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">14. 결국 줄여야 하는 것은 큰 모델의 순차 실행 횟수입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8"><strong>이 글의 결론으로 돌아오겠습니다.</strong> 추측 디코딩은 작은 모델이 답을 대신 쓰는 기술이 아닙니다. 후보를 먼저 준비하고 큰 모델이 여러 위치를 한 번에 검증해, 비싼 큰 모델을 차례로 실행하는 횟수를 줄이는 기술입니다.</p>
         <p className="leading-8">변형은 이 원리를 바꾸지 않습니다. 같은 모델의 앞 layer, 보조 head, 순차 MTP module, 과거 출력 검색은 모두 후보를 더 싸고 잘 맞게 만들려는 방법입니다. 한 줄과 tree는 그 후보를 어느 모양으로 검증할지 정합니다.</p>
@@ -449,11 +447,11 @@ export default function ModernArticle() {
     </section>
 
     <section id="prediction-questions" data-teach-level="review" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">12. 결론에서 생긴 꼬리 질문에 답해 보세요</h2>
+      <h2 className="mb-6 text-2xl font-bold">15. 결론에서 생긴 꼬리 질문에 답해 보세요</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">왜 큰 모델이 토큰 세 개를 연속으로 승인하면 큰 모델의 생성 실행을 세 번에서 검증 한 번으로 줄일 수 있을까요? 줄어들지 않는 계산도 함께 설명해 보세요. (답: 2절)</p>
         <p className="leading-8">후보 [R,A,B,X,Y,X,Y]에서 RAY만 승인됐다면 왜 같은 글자 Y가 있는 다른 갈래의 계산 기록을 쓸 수 없을까요? (답: 7절)</p>
-        <p className="leading-8">회차당 평균 확정 수가 1.85로 같아도 전체 회차 시간이 1.016에서 2.016으로 늘면 왜 이득이 손해로 바뀔까요? (답: 9절)</p>
+        <p className="leading-8">회차당 평균 확정 수가 1.85로 같아도 전체 회차 시간이 1.016에서 2.016으로 늘면 왜 이득이 손해로 바뀔까요? (답: 12절)</p>
       </div>
     </section>
 

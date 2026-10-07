@@ -17,6 +17,7 @@
     "audit:prose": "node scripts/audit-prose-readability.mjs",
     "audit:korean": "node scripts/audit-korean-naturalness.mjs",
     "audit:terms": "node scripts/audit-term-density.mjs",
+    "audit:term-pairs": "node scripts/audit-term-pair-wrapping.mjs",
     "audit:topology": "node scripts/audit-article-topology.mjs",
     "test:audit-learning-routes": "node --test scripts/audit-learning-routes.test.mjs",
     "preview": "vite preview"

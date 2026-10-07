@@ -82,7 +82,7 @@ export default function MarketPowerAndMarkupArticle() {
       <section id="names" data-teach-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">6. 수요·한계수입·한계비용을 서로 다른 값으로 읽는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-7">가격마다 팔리는 양의 관계를 수요라고 부릅니다. 이번 글의 수요는 가격을 13에서 판매량만큼 뺀 값으로 둡니다. 판매량을 q, 가격을 p로 쓰면 p = 13 − q입니다. 가격이 음수가 되지 않는 0부터 13까지의 수량을 다룹니다.</p>
+          <p className="leading-7">가격마다 팔리는 양의 관계를 수요라고 부릅니다. 이번 글의 수요는 가격을 13에서 판매량만큼 뺀 값으로 둡니다. 판매량은 q로 쓰겠습니다. 가격은 p로 쓰겠습니다. 그러면 p = 13 − q입니다. 가격이 음수가 되지 않는 0부터 13까지의 수량을 다룹니다.</p>
           <p className="leading-7">
             매출은 가격과 수량의 곱이고 이익은 매출에서 비용을 뺀 값입니다. 수량을 아주 조금 늘릴 때의 매출 변화율을 한계수입, 비용 변화율을 한계비용이라고 부릅니다. 여기서는
             한계비용이 7입니다.

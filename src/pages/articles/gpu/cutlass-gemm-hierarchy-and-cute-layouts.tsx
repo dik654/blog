@@ -24,9 +24,9 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            CUTLASS 가 만드는 GEMM kernel 은 출력 행렬 C 를 세 단계로 자릅니다. 한 threadblock 이
-            맡는 threadblock tile, 그 안에서 한 warp 가 맡는 warp tile, 그리고 tensor core
-            명령 한 번이 계산하는 MMA tile 입니다. 각 층은 자기 층의 memory 에서 아래 층의
+            CUTLASS 가 만드는 GEMM kernel 은 출력 행렬 C 를 세 단계로 자릅니다. 한 threadblock이
+            맡는 구간은 threadblock tile입니다. 그 안에서 한 warp가 맡는 구간은 warp tile입니다. Tensor core
+            명령 한 번이 계산하는 구간은 MMA tile입니다. 각 층은 자기 층의 memory 에서 아래 층의
             memory 로 데이터를 옮기는 책임을 집니다.
           </p>
           <p>

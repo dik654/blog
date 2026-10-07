@@ -7,7 +7,7 @@ export default function VramBudgetingComponents() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>Known floor는 residency·full context·cache 결정으로 나뉩니다</h2>
         <p className="leading-8">
-          Known floor를 실제로 채우는 결정은 세 가지입니다. Weight 전체가 GPU에 동시에 상주해야 한다는 model residency, 공식 최대 길이를 그대로 예산에 넣는 full context 가정, 그리고 KV cache의 dtype을 낮춰 그 값을 줄이는 cache optimization입니다.
+          Known floor를 실제로 채우는 결정은 세 가지입니다. Weight 전체가 GPU에 동시에 상주해야 한다는 조건은 model residency입니다. 공식 최대 길이를 그대로 예산에 넣는 조건은 full context 가정입니다. KV cache의 dtype을 낮춰 그 값을 줄이는 결정은 cache optimization입니다.
         </p>
 
         <h3 id="model-residency" className="scroll-mt-20">

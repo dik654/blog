@@ -53,8 +53,8 @@ export default function ModernAA() {
   </section>
   <section id="names" data-teach-level="3" className="space-y-5">
    <h2 className="text-2xl font-bold">6. 이제 UserOperation·bundler·EntryPoint에 이름을 붙입니다</h2>
-   <p>사용자가 서명한 요청이 <strong>UserOperation</strong>입니다. 이를 모아 바깥 거래를 제출하는 전달자는 <strong>bundler</strong>, 계정과 비용 검증을 공통으로 처리하는 계약은 <strong>EntryPoint</strong>라고 부릅니다. 이 세 역할의 연결을 정한 표준이 ERC-4337입니다.</p>
-   <p>규칙을 실행하는 계정은 <strong>smart account</strong>, 비용을 대신 부담하는 계약은 <strong>paymaster</strong>입니다. 요청 번호인 <strong>nonce</strong>는 같은 요청의 재사용을 막습니다. 이 글의 nonce는 key=0인 순서열의 7이며 다른 순서열과는 구별합니다.</p>
+   <p>사용자가 서명한 요청이 <strong>UserOperation</strong>입니다. 여러 요청을 모아 바깥 거래를 제출하는 전달자는 <strong>bundler</strong>입니다. 계정과 비용 검증을 공통으로 처리하는 계약은 <strong>EntryPoint</strong>입니다. 이 세 역할의 연결을 정한 표준이 ERC-4337입니다.</p>
+   <p>규칙을 실행하는 계정은 <strong>smart account</strong>입니다. 비용을 대신 부담하는 계약은 <strong>paymaster</strong>입니다. 요청 번호인 <strong>nonce</strong>는 같은 요청의 재사용을 막습니다. 이 글의 nonce는 key=0인 순서열의 7이며 다른 순서열과는 구별합니다.</p>
    <p>임시로 제한된 열쇠는 <strong>session key</strong>입니다. 이것은 ERC-4337이 모든 계정에 자동 제공하는 기능이 아니라 계정이 구현할 권한 정책입니다. 일반적인 외부 소유 계정인 EOA는 기본 서명 규칙으로 거래를 시작하며, 아래에서 설명할 코드 위임을 통해 프로그램 기능을 연결할 수도 있습니다.</p>
   </section>
   <section id="erc4337" data-teach-level="4" className="space-y-5">

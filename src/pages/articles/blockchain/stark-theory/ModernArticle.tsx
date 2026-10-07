@@ -43,7 +43,7 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">6. 실행표·대수 조건·차수 검사를 잇습니다</h2>
-<p className="leading-8">중간 상태표는 execution trace입니다. 인접 행과 공개 끝점에 적용할 대수 조건은 AIR, Algebraic Intermediate Representation입니다. 이웃 행의 조건은 transition, 시작·끝의 조건은 boundary constraint라고 합니다.</p>
+<p className="leading-8">중간 상태표는 execution trace입니다. 인접 행과 공개 끝점에 적용할 대수 조건은 AIR, Algebraic Intermediate Representation입니다. 이웃 행의 조건은 전이 조건(transition)입니다. 시작·끝의 조건은 경계 조건(boundary constraint)입니다.</p>
 <p className="leading-8">각 조건을 다항식의 정확한 나눗셈으로 바꾸고 가중치를 줘 합친 것은 composition polynomial입니다. 같은 낮은 차수 함수를 더 많은 점에서 계산하는 과정은 LDE, low-degree extension입니다.</p>
 <p className="leading-8">Merkle commitment는 표를 고정하고 FRI는 그 표가 정한 차수의 함수에 가까운지 검사합니다. 이 조합이 STARK 계열 증명에 사용됩니다. transparent는 비밀 준비값을 가진 의식이 필요 없다는 뜻이며 암호 가정이 없다는 뜻은 아닙니다.</p>
 

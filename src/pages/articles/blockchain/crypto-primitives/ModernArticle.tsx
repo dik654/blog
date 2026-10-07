@@ -70,7 +70,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div><CodeViewButton label="두 작은 라운드와 289개 입력 전수 계산" onClick={()=>sidebar.open("round",codeRefs["round"])}/><CitationBlock source="Poseidon · USENIX Security 2021, 2.2–2.3절" href={POSEIDON} citeKey={2}>상수 더하기·비선형 층·혼합의 역할을 읽고 설명용 F₁₇ 모형으로 대입했습니다. 이 모형의 상수·행렬·라운드 수는 실제 Poseidon 매개변수가 아닙니다.</CitationBlock></section>
 <section id="capacity" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 일부 출력을 버리는 것과 비밀을 숨기는 것은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">두 칸을 모두 내보내는 순열은 입력을 되찾을 수 있습니다. 그런데 위 모형에서 첫 칸만 내보내면 289개 상태가 17개 출력으로 모이고 출력마다 입력이 17개씩 대응합니다. 상태 전체의 가역성과 일부만 출력하는 해시의 압축을 구별해야 합니다.</p>
-<p className="leading-8">스펀지에서는 입력을 받아들이는 부분을 rate, 나머지를 capacity라고 부릅니다. 공개 해시의 capacity는 개인키처럼 비밀인 공간을 뜻하지 않습니다. 입력과 초기값과 순열을 알면 내부 전체를 계산할 수 있습니다. 숨겨지는 값의 의미와 직접 입출력하지 않는 좌표의 역할을 섞지 않습니다.</p>
+<p className="leading-8">스펀지에서 입력을 받아들이는 부분은 입력 영역(rate)입니다. 나머지는 보호 영역(capacity)입니다. 공개 해시의 capacity는 개인키처럼 비밀인 공간을 뜻하지 않습니다. 입력과 초기값과 순열을 알면 내부 전체를 계산할 수 있습니다. 숨겨지는 값의 의미와 직접 입출력하지 않는 좌표의 역할을 섞지 않습니다.</p>
 <p className="leading-8">이상적인 순열을 가정한 일반적인 용량 경계와 출력의 생일 충돌 경계를 함께 보면, capacity가 c개의 체 원소이고 출력이 n비트일 때 충돌 안전성의 비트 수는 대략 min(c log₂p,n)/2를 넘겨 기대하지 않습니다. 이것은 특정 라운드 수의 Poseidon이 그 안전성을 달성한다는 증명이 아닙니다. 체·너비·상수·행렬·라운드·패딩·용도 구분까지 분석된 인스턴스와 맞아야 합니다.</p>
 <p className="leading-8">x⁵은 x², x⁴, x⁵ 순서로 세 번의 체 곱셈으로 계산할 수 있습니다. 너비 t, 전체 라운드 수 R_F, 부분 라운드 수 R_P라면 이 단순 계산법의 비선형 곱셈 수는 3(tR_F+R_P)입니다. 선형 혼합·입력 흡수·여러 순열 호출과 증명 체계의 제약식 비용은 별도로 셉니다. 같은 곱셈 수라고 라운드를 합쳐도 안전성이 유지된다는 뜻은 아니며 CPU 실행 시간도 이 수만으로 결정되지 않습니다.</p>
 </div></section>

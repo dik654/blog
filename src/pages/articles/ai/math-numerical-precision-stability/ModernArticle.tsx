@@ -68,7 +68,7 @@ export default function NumericalPrecisionArticle(){const sidebar=useCodeSidebar
 </section>
 <section id="precision" data-teach-level="4" className="space-y-6">
 <h2 className="text-2xl font-bold">7 · 저장하는 소수부 10 bit에 숨은 1이 더해진다</h2>
-<p>양의 정규수는 (1+소수부)×2ᴱ로 적습니다. 앞의 1은 정규화하면 항상 있으므로 따로 저장하지 않습니다. 저장한 소수부 bit 수를 f, 이 1까지 센 이진 정밀도를 p=f+1로 구별합니다. FP16은 f=10이지만 p=11입니다.</p>
+<p>양의 정규수는 (1+소수부)×2ᴱ로 적습니다. 앞의 1은 정규화하면 항상 있으므로 따로 저장하지 않습니다. 저장한 소수부 비트 수는 f입니다. 이 1까지 센 이진 정밀도는 p=f+1이므로 두 값을 구별해야 합니다. FP16은 f=10이지만 p=11입니다.</p>
 <ExplainedFormula question="자리 간격과 한 번의 반올림 오차는 같은 값인가요?" idea="[1,2)에서 소수부를 한 칸 올리면 2의 −f제곱만큼 움직입니다. 최근접 반올림은 보통 그 반 칸 안에서 선택합니다."
 formula={String.raw`p=f+1,\quad\varepsilon=2^{-f},\quad u=\varepsilon/2=2^{-p},\quad\operatorname{gap}_{[2^E,2^{E+1})}=2^{E-f}`}
 annotatedFormula={String.raw`\begin{gathered}p=f+1,\quad\varepsilon=\underbrace{2^{-f}}_{\text{1에서 위쪽 한 칸}},\quad u=\underbrace{2^{-p}}_{\text{상대 오차 상한}}\\\operatorname{gap}_{[2^E,2^{E+1})}=2^{E-f}\\f=10:\quad\varepsilon=2^{-10}=2\delta,\quad u=2^{-11}=\delta\end{gathered}`}

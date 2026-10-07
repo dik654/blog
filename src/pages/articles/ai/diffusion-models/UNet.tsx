@@ -77,8 +77,9 @@ export default function UNet() {
 
         <h3>Text conditioning과 architecture 변화</h3>
         <p>
-          Text-to-image U-Net은 image feature를 query, text embedding을
-          key/value로 쓰는 cross-attention 등을 통해 condition을 주입할 수 있다.
+          Text-to-image U-Net은 이미지 특징을 <strong className="whitespace-nowrap">질문(query)</strong>으로
+          씁니다. 텍스트 임베딩은 찾을 주소와 내용인 <strong className="whitespace-nowrap">키·값(key/value)</strong>으로
+          쓰며, cross-attention을 거쳐 condition을 주입할 수 있습니다.
           그러나 모든 diffusion model이 U-Net이나 cross-attention을 쓰는 것은
           아니며, DiT 계열은 patch token을 처리하는 Transformer backbone을
           사용합니다. Attention 계산 자체는{" "}

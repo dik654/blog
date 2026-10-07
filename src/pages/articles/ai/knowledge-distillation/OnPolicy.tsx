@@ -121,7 +121,7 @@ export default function OnPolicy() {
       <div id="source-thinking-machines-opd" className="not-prose my-8 scroll-mt-24 border-l border-border pl-4">
         <p className="text-xs font-bold text-muted-foreground">구현 읽기 · Thinking Machines Lab On-Policy Distillation</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          공개 구현 글은 SFT를 off-policy+dense, RL을 on-policy+sparse, on-policy distillation을 on-policy+dense로 비교하고 per-token reverse KL recipe를 설명합니다. 이는 구현 가능한 한 사례이며 reverse KL·discount 0·해당 benchmark 비용 비교를 모든 task의 보편 설정으로 간주하면 안 됩니다.
+          공개 구현 글은 SFT를 비정책·밀집(off-policy+dense) 방식으로 분류합니다. RL은 정책 내·희소(on-policy+sparse) 방식이며, on-policy distillation은 정책 내·밀집(on-policy+dense) 방식입니다. 이 구분으로 토큰별 역방향 KL 방법을 설명합니다. 이는 구현 가능한 한 사례이며 reverse KL·discount 0·해당 benchmark 비용 비교를 모든 task의 보편 설정으로 간주하면 안 됩니다.
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://thinkingmachines.ai/blog/on-policy-distillation/" target="_blank" rel="noreferrer">공개 recipe와 측정 범위 보기</a>
       </div>

@@ -101,7 +101,7 @@ export default function Overview() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Discriminator는 고정된 generator에 대한 density ratio를 배운다</h3>
         <p>
-          Original GAN은 real을 label 1, fake를 label 0으로 둔 binary classification 문제와 generator 문제를 결합한다.
+          Original GAN은 실제 자료(real)에 라벨 1을 둡니다. 생성 자료(fake)에는 라벨 0을 두며, 이 이진 분류 문제와 생성자 문제를 결합합니다.
           Generator가 고정돼 있고 discriminator가 어떤 함수든 표현하며 최적으로 학습된다고 하자. 이 이상적 조건에서는 한 위치의 real density가
           generated density보다 얼마나 큰지가 최적 출력으로 나타난다.
         </p>

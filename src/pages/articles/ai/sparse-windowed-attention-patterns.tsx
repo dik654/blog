@@ -202,8 +202,8 @@ export default function SparseWindowedAttentionPatternsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Hybrid attention 은 한 attention 안에서 window·global mask 를 섞지 않습니다. layer 자체를 두 종류로 나눕니다. 일부 layer 는
-            window 만 보는 local layer, 나머지는 그 layer 가 다루는 전체 문맥을 보는 global layer 입니다. KV cache 총량은 local layer
+            Hybrid attention 은 한 attention 안에서 window·global mask 를 섞지 않습니다. layer 자체를 두 종류로 나눕니다. Window만 보는 층은
+            local layer입니다. 그 층이 다루는 전체 문맥을 보는 나머지 층은 global layer입니다. KV cache 총량은 local layer
             비율이 높을수록 줄어들고 원거리 정보는 global layer 를 지날 때만 한 번에 전달됩니다.
           </p>
           <p>
@@ -266,8 +266,8 @@ export default function SparseWindowedAttentionPatternsArticle() {
             연산으로 바꿔, 어떤 block 을 볼지를 매 query 마다 content 기반으로 고릅니다.
           </p>
           <p>
-            NSA 가 함께 돌리는 branch 는 셋입니다. Block 32 개를 stride 16 으로 묶어 압축하는 branch, 압축 단계의 attention score 로 중요도를
-            매겨 64 크기 block 16 개를 고르는 선택 branch, 최근 512 token 을 보는 sliding-window branch입니다.
+            NSA 가 함께 돌리는 branch 는 셋입니다. 첫째는 block 32개를 stride 16으로 묶는 압축 branch입니다. 둘째는 압축 단계의 attention score로 중요도를
+            매겨 크기 64인 block 16개를 고르는 선택 branch입니다. 셋째는 최근 512 token을 보는 sliding-window branch입니다.
           </p>
           <p>
             이 가운데 선택 branch 만 놓고 보면 BigBird 의 고정 random block 자리에 학습된 중요도 순위가 들어간 모습입니다. 나머지 두 branch 는 이 글의

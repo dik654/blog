@@ -153,6 +153,13 @@ function auditPrerequisiteClosure(originRoute, conceptId, chain = []) {
   if (!owner.introducedHere.some((concept) => concept.id === conceptId)) {
     findings.push([originRoute, `canonical article이 선수 concept를 직접 설명한다고 선언하지 않았습니다: ${conceptId} → ${location.route}`]);
   }
+  const origin = ARTICLE_LEARNING[originRoute];
+  if (origin?.recursiveTeaching && !owner.entryLevel && !owner.recursiveTeaching) {
+    findings.push([
+      originRoute,
+      `재귀 설명이 중간 글에서 끊깁니다: ${conceptId} → ${location.route}. canonical article에 recursiveTeaching: true가 필요합니다.`,
+    ]);
+  }
   if (location.sectionId) {
     const ownerSource = routeFiles(location.route).map((file) => fs.readFileSync(file, "utf8")).join("\n");
     const ownerIds = sourceSectionIds(ownerSource);
@@ -255,6 +262,17 @@ for (const route of routes) {
     })) {
       if (!value || value.trim().length < 20) {
         findings.push([route, `${explanation.id}의 ${field} 설명이 충분하지 않습니다.`]);
+      }
+    }
+    if (contract.recursiveTeaching) {
+      if (!explanation.causalTrace) {
+        findings.push([route, `${explanation.id}의 재귀 인과 설명이 없습니다.`]);
+      } else {
+        for (const [field, value] of Object.entries(explanation.causalTrace)) {
+          if (!value || value.trim().length < 20) {
+            findings.push([route, `${explanation.id}의 재귀 인과 ${field} 설명이 충분하지 않습니다.`]);
+          }
+        }
       }
     }
     if (KNOWLEDGE_CONCEPTS[explanation.id].kind === "theorem") {

@@ -21,7 +21,7 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
             모델 조건이 있으면 비교한 길이와 실제로 생략할 길이가 달라지므로 두 값을 같은 말로 넘기지 않습니다.
           </p></div></section>
 
-<section id="request-trace" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. R2의 여섯 자리를 찾아 계산으로 넘깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이제 입력 번호를 token ID, 같은 앞 기록을 재사용한 길이를 hit 길이라고 부르겠습니다. R1의 기록이 남은 상태에서 R2가 들어옵니다. 같은 재사용 영역의 시작점에서 R1과 R2의 번호 열을 비교합니다. 앞의 1부터 6까지 같고 7과 9에서 달라지므로 공유 길이는 6입니다.</p><p>
+<section id="request-trace" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. R2의 여섯 자리를 찾아 계산으로 넘깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>이제 입력 번호는 토큰 ID(token ID)라고 부르겠습니다. 같은 앞 기록을 재사용한 길이는 적중 길이(hit length)라고 부르겠습니다. R1의 기록이 남은 상태에서 R2가 들어옵니다. 같은 재사용 영역의 시작점에서 R1과 R2의 번호 열을 비교합니다. 앞의 1부터 6까지 같고 7과 9에서 달라지므로 공유 길이는 6입니다.</p><p>
             기존 8자리 구간을 6과 2로 나눈 뒤 앞 6의 저장 위치 목록을 돌려줍니다. 사용하는 동안 이 경로를 보호하고 R2의 9·10에 해당하는 새 위치를 확보합니다. 계산이 끝나면
             그 두 위치를 공통 경로 뒤의 새 가지에 등록합니다.
           </p><p>

@@ -43,9 +43,9 @@ export default function Article() { return <article className="space-y-16">
 </section>
 <section id="names" data-teach-level="3" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">6. 행의 등식과 다항식 조건을 구별합니다</h2>
-<p className="leading-8">검사할 조건은 relation, 공개 입력과 출력은 instance, 개인 값과 중간값은 witness입니다. 이 글에서는 공개값(3,16), 개인값(4,12)이며 모두 합친 벡터를 z=(1,3,16,4,12)로 적습니다.</p>
+<p className="leading-8">검사할 조건은 관계(relation)입니다. 공개 입력과 출력은 공개 사례(instance)입니다. 개인 값과 중간값은 비공개 증거(witness)입니다. 이 글에서는 공개값(3,16), 개인값(4,12)이며 모두 합친 벡터를 z=(1,3,16,4,12)로 적습니다.</p>
 <p className="leading-8">두 선형식의 곱과 다른 선형식을 같게 두는 행들의 모음은 R1CS, Rank-1 Constraint System입니다. 각 행의 계수 세 묶음을 A,B,C로 둡니다. 선형식은 각 자리의 값에 계수를 곱해 더한 것입니다.</p>
-<p className="leading-8">여러 행을 서로 다른 점에서의 값으로 옮긴 다항식 조건은 QAP, Quadratic Arithmetic Program입니다. 정해진 모든 점에서 0이 되는 다항식은 vanishing polynomial, 이를 나누어 얻는 것은 quotient라고 부릅니다.</p>
+<p className="leading-8">여러 행을 서로 다른 점에서의 값으로 옮긴 다항식 조건은 QAP, Quadratic Arithmetic Program입니다. 정해진 모든 점에서 0이 되는 다항식은 소멸 다항식(vanishing polynomial)입니다. 이를 나누어 얻는 다항식은 몫 다항식(quotient)입니다.</p>
 
 <p data-stage-bridge="names" className="text-sm leading-7 text-muted-foreground">계수표와 다항식의 역할에 이름을 붙였습니다. 계수표를 실제로 곱합니다.</p>
 </section>

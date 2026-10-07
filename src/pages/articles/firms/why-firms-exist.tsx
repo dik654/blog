@@ -129,7 +129,7 @@ export default function WhyFirmsExistArticle() {
       <section id="boundary" data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10. 하나 더 들일 때의 차이는 안의 비용 빼기 밖의 비용이다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-7">안에 들인 작업 수를 n, 다음 작업의 안쪽 비용을 aₙ₊₁, 밖의 작업당 비용을 b라고 쓰겠습니다. 앞에서부터 n개를 들일 수 있고 다른 작업의 비용은 바뀌지 않는다는 조건입니다. 설립·전환 비용도 아직 0입니다.</p>
+          <p className="leading-7">안에 들인 작업 수는 n이라고 쓰겠습니다. 다음 작업의 안쪽 비용은 aₙ₊₁이고, 밖의 작업당 비용은 b입니다. 앞에서부터 n개를 들일 수 있고 다른 작업의 비용은 바뀌지 않는다는 조건입니다. 설립·전환 비용도 아직 0입니다.</p>
           <p className="leading-7">
             전체 비용은 안에서 처리하는 비용을 더한 뒤 남은 6 − n개에 밖의 비용 b를 곱해 더합니다. 하나 더 들이면 원래 합계에서 밖의 b 하나가 빠지고 안의 aₙ₊₁ 하나가
             추가됩니다. 따라서 차이가 음수이면 비용이 줄고 양수이면 늘어납니다. 0이면 동률입니다.

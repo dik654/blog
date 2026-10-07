@@ -7,7 +7,7 @@ export default function MultiGpuVramStrategies() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h2>Known floor를 넘으면 2-way 분배·offloading·unified memory로 나눕니다</h2>
         <p className="leading-8">
-          Known floor가 device 하나의 usable capacity를 넘으면 세 갈래로 대응합니다. Weight를 두 GPU에 나누는 2-way 구성, 일부를 CPU host memory로 내리는 offloading, 애초에 GPU와 host가 큰 주소 공간을 공유하는 unified/large memory입니다.
+          Known floor가 device 하나의 usable capacity를 넘으면 세 갈래로 대응합니다. Weight를 두 GPU에 나누는 방식은 2-way 구성입니다. 일부를 CPU host memory로 내리는 방식은 offloading입니다. GPU와 host가 처음부터 큰 주소 공간을 공유하는 방식은 unified/large memory입니다.
         </p>
 
         <h3 id="two-way-gpu-configuration" className="scroll-mt-20">

@@ -67,8 +67,8 @@ export default function PrecomputeOffload() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          사전계산을 쓸 수 없을 때 남는 손잡이는 셋입니다. 부품을 필요할 때만 장치로 올리는 offload, 중간 값을
-          버리고 역전파에서 다시 계산하는 gradient checkpointing, 그리고 배치·해상도·프레임 수를 줄이는 것입니다.
+          사전계산을 쓸 수 없을 때 남는 손잡이는 셋입니다. 부품을 필요할 때만 장치로 올리는 방법은 offload입니다. 중간 값을
+          버리고 역전파에서 다시 계산하는 방법은 gradient checkpointing입니다. 마지막 방법은 배치·해상도·프레임 수를 줄이는 것입니다.
           앞의 둘은 메모리를 시간과 바꾸고 마지막은 학습 조건 자체를 바꿉니다.
         </p>
 

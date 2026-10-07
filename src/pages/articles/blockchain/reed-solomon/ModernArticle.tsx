@@ -27,7 +27,7 @@ export default function ModernReedSolomon() { return <article className="space-y
   <p>실수 계산으로 증가량을 −1/2라고 해석해도 틀립니다. 이 사례는 7 안의 계산이며 2×4 mod7=1을 사용합니다. 양쪽이 숫자를 해석하는 범위와 위치 순서, 원본을 규칙으로 바꾸는 방법을 함께 알아야 합니다.</p>
  </section>
  <section id="names" data-teach-level="3" className="space-y-5"><h2 className="text-2xl font-bold">6. 원본의 크기와 보낸 기록의 크기를 구분합니다</h2>
-  <p>한 번에 계산하는 값 하나를 심벌이라 합니다. 원본 심벌 수는 k, 만든 기록 수는 n이며 사례는 k=2, n=4입니다. 올바른 규칙에서 나온 전체 목록을 부호어라고 합니다. 7 안의 계산 공간은 유한체 F₇, 위치들은 평가점입니다.</p>
+  <p>한 번에 계산하는 값 하나를 심벌이라 합니다. 원본 심벌 수는 k입니다. 만든 기록 수는 n이며 사례는 k=2, n=4입니다. 올바른 규칙에서 나온 전체 목록을 부호어라고 합니다. 7 안의 계산 공간은 유한체 F₇, 위치들은 평가점입니다.</p>
   <p>위치를 알지만 값이 없는 경우는 소실(erasure)입니다. 위치를 모르는 잘못된 값은 오류(error)입니다. 같은 부호를 쓰기 위해 정한 체·평가점·원본 배치·바이트 표현의 묶음은 프로파일이라고 부르겠습니다. 이름이 같은 RS(4,2)라도 프로파일이 다르면 호환되지 않습니다.</p>
  </section>
  <section id="encoding" data-teach-level="4" className="space-y-5"><h2 className="text-2xl font-bold">7. 원본을 계수로 놓고 네 위치에서 계산합니다</h2>

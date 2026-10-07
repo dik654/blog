@@ -46,7 +46,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <section id="names" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 상태·라운드·S-box·선형 혼합의 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">두 칸을 함께 부르는 말이 상태이고 칸 수를 폭 t라고 씁니다. 상수 덧셈부터 마지막 혼합까지 한 묶음을 라운드라고 합니다. 수 하나에 다섯제곱 같은 비선형 변환을 적용하는 부분은 S-box입니다. 비선형이라는 말은 덧셈과 상수배만으로 같은 변환을 만들 수 없다는 뜻입니다.</p>
 <p className="leading-8">마지막 혼합은 첫 수와 둘째 수를 일정한 비율로 더합니다. 이 비율을 표로 적은 것이 행렬입니다. 이번 표는 첫 줄 (1,1), 둘째 줄 (1,2)입니다. 따라서 입력 (a,b)를 (a+b,a+2b)로 바꿉니다.</p>
-<p className="leading-8">모든 칸에 S-box를 적용하는 라운드는 full round, 정해진 한 칸에만 적용하는 라운드는 partial round라고 부릅니다. 양끝에 full round를 두고 가운데에 partial round를 두는 설계가 HADES입니다. 한 칸만 비선형으로 바꾸더라도 그 뒤의 혼합은 상태 전체에 적용됩니다.</p>
+<p className="leading-8">모든 칸에 S-box를 적용하는 라운드는 전체 라운드(full round)입니다. 정해진 한 칸에만 적용하는 라운드는 부분 라운드(partial round)입니다. 양끝에 full round를 두고 가운데에 partial round를 두는 설계가 HADES입니다. 한 칸만 비선형으로 바꾸더라도 그 뒤의 혼합은 상태 전체에 적용됩니다.</p>
 </div></section>
 <section id="round" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">7. 한 라운드의 숫자와 일반식을 나란히 맞춥니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">첫 칸의 다섯제곱은 4²=16, 4⁴=256≡1, 4⁵=4입니다. 둘째 칸은 6²=36≡2, 6⁴=4, 6⁵=24≡7입니다. 이제 첫 줄의 4+7은 11이고 둘째 줄의 4+2×7은 18≡1입니다.</p>

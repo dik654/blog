@@ -63,7 +63,7 @@ export default function DifferentialAttentionArticle() {
             결과입니다. 두 map 은 계산 방식이 표준 attention 과 완전히 같고 다른 점은 나중에 하나를 다른 하나에서 뺀다는 것뿐입니다.
           </p>
           <p>
-            남겨 두는 쪽을 signal attention, 빼는 데 쓰는 쪽을 noise attention 이라 부릅니다. 이 이름은 정답을 미리 아는 분류표가 아니라 두 map 의
+            남겨 두는 쪽은 신호 어텐션(signal attention)입니다. 빼는 데 쓰는 쪽은 잡음 어텐션(noise attention)입니다. 이 이름은 정답을 미리 아는 분류표가 아니라 두 map 의
             역할을 가리키는 이름입니다. Noise map 이 실제로 무관한 token 만 가리킨다는 보장은 없고 학습이 공통 성분으로 추정한 분포를 근사할 뿐입니다.
           </p>
           <p>
