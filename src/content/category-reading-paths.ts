@@ -55,6 +55,7 @@ export const CATEGORY_READING_PATHS: Readonly<
     featuredArticles: [
       "cloud-certification-roadmap-2026",
       "kubernetes-request-path-and-cka",
+      "kubernetes-network-packet-path",
       "cloud-foundations-responsibility-regions",
       "cloud-identity-access-hierarchy",
       "cloud-networking-request-path",

@@ -4333,6 +4333,42 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Container를 별도 machine으로 보지 않고 host kernel 위 process에 namespace·cgroup·mount·capability 정책을 적용해 보이는 자원과 사용 한도를 제한한 실행 경계로 이해하는 개념입니다.",
     canonicalHref: "/cs/ai/agent-sandbox-security#overview",
   },
+  "kubernetes-packet-boundary-ledger": {
+    id: "kubernetes-packet-boundary-ledger",
+    kind: "method",
+    domain: "distributed-systems",
+    label: "Kubernetes packet boundary ledger",
+    definition:
+      "한 연결의 network namespace, Service backend 선택, node route, encapsulation, policy hook과 server socket마다 입력 tuple·변환·출력 tuple·관측 증거를 기록해 첫 실패 경계를 찾는 방법입니다.",
+    canonicalHref: "/cs/cloud/kubernetes-network-packet-path#map",
+  },
+  "kubernetes-service-backend-translation": {
+    id: "kubernetes-service-backend-translation",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Kubernetes Service backend translation",
+    definition:
+      "Service virtual IP와 port로 시작한 새 연결을 Ready EndpointSlice의 실제 Pod IP와 port로 바꾸고 연결 상태에 그 선택을 유지하는 데이터 경로입니다.",
+    canonicalHref: "/cs/cloud/kubernetes-network-packet-path#service-path",
+  },
+  "calico-routing-encapsulation-decision": {
+    id: "calico-routing-encapsulation-decision",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Calico routing and encapsulation decision",
+    definition:
+      "목적지 Pod가 같은 node인지, underlay가 Pod CIDR을 아는지, 다른 subnet인지에 따라 host route·direct route·IP-in-IP·VXLAN 운반 방식을 고르고 route와 outer packet으로 검증하는 판단입니다.",
+    canonicalHref: "/cs/cloud/kubernetes-network-packet-path#calico-path",
+  },
+  "kubernetes-policy-dataplane-separation": {
+    id: "kubernetes-policy-dataplane-separation",
+    kind: "method",
+    domain: "computer-science",
+    label: "Kubernetes policy and dataplane separation",
+    definition:
+      "NetworkPolicy의 desired allow·deny 조건과 CNI가 iptables·nftables·eBPF hook에 만든 실제 집행 상태를 나눠 읽고 새 연결 결과로 일치 여부를 검증하는 방법입니다.",
+    canonicalHref: "/cs/cloud/kubernetes-network-packet-path#policy-dataplane",
+  },
   "kubernetes-reconciliation-request-path": {
     id: "kubernetes-reconciliation-request-path",
     kind: "concept",
@@ -57991,6 +58027,36 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "kubernetes-reconciliation-request-path",
     relation: "prerequisite",
     reason: "Container가 host 위 process와 resource boundary라는 점을 알아야 PodSpec이 node runtime에서 무엇으로 실행되는지 추적할 수 있습니다.",
+  },
+  {
+    from: "kubernetes-reconciliation-request-path",
+    to: "kubernetes-packet-boundary-ledger",
+    relation: "extends",
+    reason: "Desired state에서 Ready endpoint까지의 control-plane 전환을 이해한 뒤 실제 client 연결의 주소·route·policy·socket 증거까지 진단 범위를 확장합니다.",
+  },
+  {
+    from: "kubernetes-packet-boundary-ledger",
+    to: "kubernetes-service-backend-translation",
+    relation: "prerequisite",
+    reason: "한 연결의 입력·출력 tuple을 경계별로 기록해야 Service VIP가 실제 backend Pod IP로 바뀌는 순간과 구현 mode를 분리할 수 있습니다.",
+  },
+  {
+    from: "kubernetes-service-backend-translation",
+    to: "calico-routing-encapsulation-decision",
+    relation: "prerequisite",
+    reason: "Service가 선택한 실제 Pod IP가 정해져야 같은 node route, direct route, IP-in-IP 또는 VXLAN 가운데 목적지 node로 가는 경로를 고를 수 있습니다.",
+  },
+  {
+    from: "calico-routing-encapsulation-decision",
+    to: "kubernetes-policy-dataplane-separation",
+    relation: "prerequisite",
+    reason: "Packet이 지나는 interface·route·tunnel을 알아야 NetworkPolicy 선언이 실제 어느 host hook과 dataplane state에서 집행되는지 검증할 수 있습니다.",
+  },
+  {
+    from: "kubernetes-policy-dataplane-separation",
+    to: "kubernetes-first-failed-transition-diagnosis",
+    relation: "extends",
+    reason: "Object condition 중심의 first-failure 진단을 새 연결의 allow·deny 결과와 kernel dataplane evidence까지 확장합니다.",
   },
   {
     from: "kubernetes-reconciliation-request-path",

@@ -13,6 +13,21 @@ const sections: Article["sections"] = [
   { id: "limits", title: "한계와 다음 학습" },
 ];
 
+const kubernetesNetworkSections: Article["sections"] = [
+  { id: "overview", title: "한 문장 답" },
+  { id: "case", title: "GET 한 건의 수치 사례" },
+  { id: "map", title: "여섯 패킷 경계" },
+  { id: "pod-boundary", title: "namespace·pause·veth" },
+  { id: "service-path", title: "Service backend 선택" },
+  { id: "calico-path", title: "Calico route·overlay" },
+  { id: "mtu-egress", title: "MTU·SNAT·conntrack" },
+  { id: "policy-dataplane", title: "policy와 데이터 플레인" },
+  { id: "edge-mesh", title: "Gateway·service mesh" },
+  { id: "evidence", title: "증거 수집 runbook" },
+  { id: "source-map", title: "33편 현재화 지도" },
+  { id: "limits", title: "한계와 예측 질문" },
+];
+
 export const cloudArticles: Article[] = [
   {
     slug: "cloud-certification-roadmap-2026",
@@ -34,6 +49,13 @@ export const cloudArticles: Article[] = [
     subcategory: "cloud-roadmap",
     sections,
     component: () => import("@/pages/articles/cloud/kubernetes-request-path-and-cka"),
+  },
+  {
+    slug: "kubernetes-network-packet-path",
+    title: "Kubernetes 패킷 경로: namespace에서 Calico·Gateway·eBPF까지",
+    subcategory: "cloud-roadmap",
+    sections: kubernetesNetworkSections,
+    component: () => import("@/pages/articles/cloud/kubernetes-network-packet-path"),
   },
   {
     slug: "cloud-identity-access-hierarchy",

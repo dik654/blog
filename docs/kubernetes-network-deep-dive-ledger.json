@@ -1,0 +1,131 @@
+{
+  "sections": [
+    "overview",
+    "case",
+    "map",
+    "pod-boundary",
+    "service-path",
+    "calico-path",
+    "mtu-egress",
+    "policy-dataplane",
+    "edge-mesh",
+    "evidence",
+    "source-map",
+    "limits"
+  ],
+  "concepts": [
+    {
+      "id": "packet-layer-boundary",
+      "name": "패킷 경계 원장",
+      "aliases": [],
+      "avoid": ["네트워크가 알아서", "CNI가 다 처리"],
+      "defined_in": "map",
+      "used_in": ["service-path", "calico-path", "policy-dataplane", "edge-mesh", "evidence"]
+    },
+    {
+      "id": "service-dnat",
+      "name": "Service 목적지 변환",
+      "aliases": ["Service DNAT"],
+      "avoid": ["Service 서버"],
+      "defined_in": "service-path",
+      "used_in": ["policy-dataplane", "evidence"]
+    },
+    {
+      "id": "calico-routing-encapsulation",
+      "name": "Calico 라우팅·캡슐화 결정",
+      "aliases": [],
+      "avoid": ["Calico 터널"],
+      "defined_in": "calico-path",
+      "used_in": ["mtu-egress", "policy-dataplane", "evidence"]
+    },
+    {
+      "id": "policy-dataplane-separation",
+      "name": "정책 선언과 데이터 플레인 분리",
+      "aliases": [],
+      "avoid": ["NetworkPolicy 방화벽"],
+      "defined_in": "policy-dataplane",
+      "used_in": ["evidence", "limits"]
+    }
+  ],
+  "questions": [
+    {
+      "id": "where-404",
+      "text": "404와 timeout은 어느 경계에서 갈라지는가?",
+      "raised_in": "overview",
+      "answered_in": "edge-mesh"
+    },
+    {
+      "id": "why-1450",
+      "text": "MTU 1500인 망에서 Pod MTU가 왜 1450이 되는가?",
+      "raised_in": "case",
+      "answered_in": "mtu-egress"
+    },
+    {
+      "id": "where-policy",
+      "text": "NetworkPolicy YAML은 실제 패킷을 어디에서 막는가?",
+      "raised_in": "map",
+      "answered_in": "policy-dataplane"
+    }
+  ],
+  "setups": [
+    {
+      "id": "one-request",
+      "text": "client Pod 10.244.1.12가 Service 10.96.20.15:8080을 호출하고 backend Pod 10.244.2.34가 선택된다.",
+      "setup_in": "case",
+      "payoff_in": "evidence"
+    },
+    {
+      "id": "mtu-budget",
+      "text": "underlay MTU는 1500 B이고 VXLAN outer header는 IPv4 기준 50 B다.",
+      "setup_in": "case",
+      "payoff_in": "mtu-egress"
+    }
+  ],
+  "facts": [
+    {
+      "id": "vxlan-port",
+      "value": "UDP 4789",
+      "meaning": "VXLAN capture filter의 기본 목적지 포트",
+      "source": "Calico official documentation",
+      "as_of": "2026-10-08",
+      "status": "current",
+      "sections": ["calico-path", "evidence"]
+    },
+    {
+      "id": "mtu-values",
+      "value": "1500/1480/1450 B",
+      "meaning": "1500 B underlay에서 plain/IP-in-IP IPv4/VXLAN IPv4 workload MTU 예시",
+      "source": "Calico official MTU documentation",
+      "as_of": "2026-10-08",
+      "status": "current",
+      "sections": ["mtu-egress"]
+    },
+    {
+      "id": "ipvs-lifecycle",
+      "value": "deprecated since Kubernetes v1.35",
+      "meaning": "kube-proxy IPVS mode의 현재 수명 주기",
+      "source": "Kubernetes official virtual IP documentation",
+      "as_of": "2026-10-08",
+      "status": "current",
+      "sections": ["policy-dataplane", "source-map"]
+    },
+    {
+      "id": "ingress-lifecycle",
+      "value": "Ingress API frozen; Gateway API recommended",
+      "meaning": "새 edge routing 기능의 공식 권장 방향",
+      "source": "Kubernetes official Ingress and Gateway API documentation",
+      "as_of": "2026-10-08",
+      "status": "current",
+      "sections": ["edge-mesh", "source-map"]
+    }
+  ],
+  "knows_after": {
+    "map": "CNI, Service, policy, edge가 서로 다른 경계를 맡는다는 것을 안다.",
+    "pod-boundary": "Pod network namespace와 host veth가 만들어지는 이유를 안다.",
+    "service-path": "Service VIP가 backend Pod IP로 바뀌는 지점과 conntrack의 역할을 안다.",
+    "calico-path": "same-node·direct·IP-in-IP·VXLAN 중 실제 경로를 증거로 구분한다.",
+    "mtu-egress": "캡슐화 overhead로 workload MTU를 계산하고 조건부 SNAT를 설명한다.",
+    "policy-dataplane": "NetworkPolicy 선언과 iptables·nftables·eBPF 집행을 분리한다.",
+    "evidence": "명령 출력에서 첫 실패 경계를 찾고 정상/실패를 판독한다."
+  }
+}
