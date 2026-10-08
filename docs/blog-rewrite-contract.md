@@ -116,10 +116,12 @@ skill 원문은 층위 5·6에서 실제 소스 코드 발췌를 요구한다. �
 ### 1.2 목록의 읽기 순서
 
 - 카테고리와 소분류의 article listing은 생성 시각·파일 concat·알파벳 순서가 아니라 실제 학습 순서를 따른다. 기본 순서는 `entry-level → prerequisite → 핵심 mechanism → 변형·비교 → 구현 → 평가·운영`이다.
-- 같은 목록 안에서 A가 B의 `assumedKnowledge`이거나 knowledge graph의 `prerequisite` source이면 A를 B보다 먼저 표시한다. 직접 의존하지 않는 글끼리는 manifest의 의도된 순서를 stable tie-breaker로 유지한다.
+- 순서의 정본은 `category reading path → 같은 목록의 검토된 선수 관계 → 시작 글 → subcategory의 명시 커리큘럼 → manifest fallback`으로 적용한다. 카테고리 path가 그 목록의 모든 글을 포함하면 그 순서를 그대로 사용한다. 긴 핵심 목록은 제목 정규식으로 추측하지 않고 `article-reading-curricula.ts`에 검토한 slug 순서를 둔다.
+- `assumedKnowledge`의 concept owner가 명시 커리큘럼을 거꾸로 만드는 경우에는 자동 owner edge를 목록의 hard prerequisite로 쓰지 않는다. 이런 edge는 관련 글 링크로 남기고, 검토한 커리큘럼이 기초 글보다 사례·구현 글을 앞세우지 않게 한다. 명시 커리큘럼이 없는 목록은 같은 목록의 선수 관계를 지키는 stable topological sort를 적용한 뒤 manifest 순서를 마지막 기준으로 쓴다.
+- 전체 선수 그래프의 학습 깊이와 글 역할은 위치 설명 badge와 검토 자료에 사용한다. 화면에는 `시작 글`, `선수 N단계`, `구현·운영`처럼 현재 글의 성격을 짧게 표시하며, 실제 번호는 적용된 커리큘럼 순서를 따른다.
 - 상위 소분류 목록도 category reading path의 stage 순서를 보존한다. 한 subcategory의 유일한 글로 바로 이동할 때도 선행 단계가 다른 subcategory에 있으면 입구 설명에서 그 경로를 알려 준다.
 - 순환 prerequisite는 임의 순서로 숨기지 않고 audit failure로 다룬다. 예외적인 병렬 읽기 경로라면 관계를 `prerequisite`가 아닌 적절한 relation으로 고치거나 같은 단계임을 명시한다.
-- 목록 UI는 현재 정렬이 읽기 순서임을 표시하고 1부터 번호를 붙인다. 새 글을 추가하면 본문뿐 아니라 같은 subcategory의 상대 위치와 prerequisite 역전을 함께 검토한다.
+- 목록 UI는 현재 정렬이 읽기 순서임을 표시하고 1부터 번호를 붙인다. 새 글을 추가하면 본문뿐 아니라 같은 subcategory의 상대 위치와 prerequisite 역전을 함께 검토한다. 명시 커리큘럼의 누락·중복·삭제된 slug와 category featured path의 역순은 `audit:order -- --strict`가 실패시킨다.
 
 ### 1.2.1 시간순·주제순과 세계 지식의 뼈대 (2026-10-06 추가 요청)
 
@@ -338,12 +340,47 @@ skill 원문은 층위 5·6에서 실제 소스 코드 발췌를 요구한다. �
 -- --strict --require-explicit`에서 식 하나씩 이를 검사한다. 단순 표기나 이미 충분히 설명된
 inline math에는 이 블록을 반복하지 않는다.
 
+Data object를 공통 template로 출력하는 글도 수식을 일반 paragraph 문자열로 우회하지 않는다.
+계산의 핵심 관계는 section에 연결된 구조화 formula field로 저장하고 `ExplainedFormula`가 KaTeX로
+렌더한다. 화면 문장에서 `Q/(c_p·ΔT)`처럼 ASCII·Unicode 식을 다시 적을 수는 있지만, 그것이 유일한
+수식 표현이면 완료로 보지 않는다. 반대로 일반 문장 속 기호를 정규식으로 추측해 자동 변환하지
+않는다. 명시적인 LaTeX source만 렌더해야 통화 기호·코드·로그를 수식으로 오인하지 않는다.
+
 수식이 그리는 관계가 threshold·monotonic 증가·piecewise saturation처럼 그래프로 볼 때 더 잘
 읽히면, `ExplainedFormula` 옆에 실제 함수 그래프(순수 수학 함수는 `mafs`, 데이터 계열 비교는
 `recharts`)를 추가한다. 이 그래프는 상태 전이나 pipeline을 그리는 mechanism Viz(4장)를
 대체하지 않으며, "입력이 바뀌면 식의 출력이 어떻게 움직이는가"라는 별도 질문에 답한다. 모든
 식에 그래프가 필요한 것은 아니다 — AND/OR gate처럼 이산적인 조건식에는 흐름을 보여 주는
 mechanism Viz가 더 적합하다.
+
+### 3.1 숫자를 독자가 다시 계산할 수 있게 쓴다
+
+- 답이 맞더라도 독자가 각 숫자의 출처와 곱하는 이유를 앞 절에서 되찾아야 하면 설명을 마친 것이
+  아니다. 계산을 시작하기 전에 `무엇 한 건을 세는가`와 포함·제외 범위를 먼저 고정한다.
+- 첫 등장에서는 `8×2×2=32바이트`처럼 뜻 없는 숫자열로 압축하지 않는다. `8행 × 행마다 2개 =
+  16개`, `16개 × 값마다 2바이트 = 32바이트`처럼 한 줄에서 단위를 한 번만 바꾸고, 각 항의 이름과
+  단위를 식 바로 옆에 둔다. 이미 유도한 계산을 뒤에서 요약할 때만 짧은 표기를 쓸 수 있다.
+- 반복 횟수는 곱하기 전에 만든다. `8행 ÷ 묶음마다 2행 = 4묶음`을 먼저 보여 주고, 왜 각 묶음이
+  같은 배열을 다시 읽는지 설명한 다음 `4묶음 × 묶음마다 64바이트`를 계산한다. 한 번만 세는 항목도
+  왜 반복되지 않는지 밝힌다.
+- 비율의 분자와 분모는 같은 작업 범위를 세어야 한다. 전체 sequence의 FLOP를 tile 하나의 byte로
+  나누거나, 연간 이익을 월간 투자액으로 나누는 식으로 범위를 섞지 않는다.
+- 이상적인 한 번 읽기, cache 미재사용, 세금·metadata·정렬·임시 결과 제외 같은 가정은 결과 뒤의
+  단서로 미루지 않고 그 가정이 숫자를 바꾸는 계산 줄에 붙인다. footprint·traffic, 명목 금액·실제
+  현금 이동, 모형값·실측값처럼 자주 섞이는 장부를 이름부터 분리한다.
+- 세 번 이상 변환하거나 두 장부를 비교하는 계산은 `CalculationWalkthrough` 같은 세로 계산 장부로
+  기본 화면에 펼쳐 둔다. 각 행에는 `구할 값 / 단위가 붙은 계산 / 결과 / 이 행이 필요한 이유`가
+  있어야 하며 320px에서는 표나 가로 화살표 대신 한 열로 읽혀야 한다.
+- 계산 장부는 숫자를 다시 계산하는 설명이지 그 자체로 구조를 보여 주는 Viz가 아니다. 결과가 배열의
+  모양, 반복되는 묶음, 데이터 이동, 공간 크기, 확률 표본, 자금 흐름처럼 눈에 보이는 관계에 달렸다면
+  실제 칸·묶음·경로·면적·표본을 그린 Viz를 함께 둔다. Viz의 각 장면은 장부의 같은 숫자와 단위를
+  사용하고, 무엇이 한 번 생기며 무엇이 여러 번 반복되는지 그림에서 바로 셀 수 있어야 한다.
+- 후보를 만들고 거른 뒤 하나를 고르는 계산은 `후보 한 장의 구성 → 선택축별 후보 생성 → 각 필터의
+  조건과 탈락 예 → 단계마다 제거·생존 수 → 실제 측정 또는 선택 → 재사용 조건`을 서로 다른 장면으로
+  보여 준다. 숫자 `36→21→9→1`만 카드에 적거나 필터 코드를 본문에 옮기는 것으로 대신하지 않는다.
+- 전수 검수에서는 고위험 계산식(`숫자×숫자×숫자`, byte·FLOP·throughput 비율, 여러 기간이나
+  반복 횟수가 섞인 식)을 우선 찾는다. 자동 검사는 후보를 찾을 뿐 의미가 충분한지 대신 판정하지
+  않으며, 각 후보는 문맥 없는 독자가 결과를 가리고 다시 계산할 수 있는지 사람이 확인한다.
 
 ## 4. Viz
 
@@ -380,6 +417,14 @@ mechanism Viz가 더 적합하다.
 - `/cs/ai/flash-attention`처럼 슬래시로 시작하는 세 조각은 **공개 href**, 곧 브라우저 주소다. `canonicalHref`·`internalHref`·`reuses[].href`·본문 `<Link to=...>`가 전부 여기에 해당한다.
 - 둘 사이의 변환은 `src/lib/routes.ts`(앱)와 `scripts/lib/route-href.mjs`(감사 스크립트)에서만 한다. 문자열을 직접 이어 붙이지 않는다. href에서 route key를 되찾을 때는 앞이 아니라 뒤에서 두 조각을 읽으므로, 대분류 도입 이전의 두 조각 주소도 그대로 해석된다.
 - 대분류 도입 이전 주소는 `LegacyRouteRedirect`가 새 주소로 넘긴다. 정적 배포에서도 살아 있도록 `generate-static-routes.mjs`가 옛 경로의 `index.html`을 함께 생성한다. 이 안전망이 있다고 해서 새 글에 옛 형식 href를 쓰지는 않는다.
+- GitHub Pages처럼 앱이 하위 경로에 배포될 때 일반 `<a href="/cs/…">`가 site root로 빠지지
+  않게 한다. 새 내부 링크는 React Router `Link`와 `src/lib/routes.ts`의 공개 href helper를
+  사용한다. 이전 글에 남은 root-relative anchor는 runtime의 base-path bridge가 실제 `BASE_URL`을
+  붙이고 같은 탭의 보통 클릭은 client navigation으로 넘긴다. 새 탭·주소 복사도 `/blog/…`처럼
+  배포 base가 포함된 실제 주소를 가져야 한다.
+- Article component의 dynamic import가 배포 교체 중 사라진 이전 chunk를 요청해 실패하면, 최신
+  index와 manifest를 받도록 같은 route에서 한 번만 문서를 다시 불러온다. 같은 실패가 반복되면
+  무한 reload하지 않고 article load error boundary가 원인과 재시도 동작을 보여 준다.
 
 
 - 현재 공개 article 수·slug·제목을 보존하는 것을 목표로 삼지 않는다. Knowledge graph의 학습 단위가 기존 route 경계를 넘으면 article을 새로 만들고, 한 글에 독립 수업이 여러 개면 분리하며, 같은 수업이 중복되면 병합한다. 잘못된 이름은 바꾸고 더 이상 독립 학습 가치가 없는 route는 redirect를 남긴 뒤 제거할 수 있다.
@@ -421,7 +466,7 @@ mechanism Viz가 더 적합하다.
 - [ ] 표·카드·칩은 설명 뒤의 비교·참조에만 쓰며 본문 인과관계를 대신하지 않는다.
 - [ ] 내부 운영어와 복합 제목을 줄이고, mechanism 뒤에 쉬운 재진술이나 작은 예가 있다.
 - [ ] 기본 화면만 읽어도 문제·mechanism·결론·핵심 한계가 이어지며, 펼침 영역은 질문형 제목과 결론 preview를 가진 보충 설명만 담는다.
-- [ ] 카테고리 listing에서 prerequisite 글이 dependent 글보다 먼저 나오고 읽기 순서 번호가 보인다.
+- [ ] 카테고리 listing에서 prerequisite 글이 dependent 글보다 먼저 나오고, 직접 연결되지 않은 글도 전역 선수 깊이와 글의 역할에 따라 입문→원리→메커니즘→구현·운영 순으로 놓이며 읽기 번호와 배치 근거가 보인다.
 - [ ] 짧은 수업 안내 다음에 실제 본문이 오고, 용어 사전·개념 그래프·문제는 본문 뒤의 복습 영역에 있다.
 - [ ] 처음 설명하는 용어 카드가 390px·1440px에서 최소 250px 폭을 확보하며 긴 정의를 좁은 열에 압축하지 않는다.
 - [ ] 초심자 선수 개념과 전문적인 계산·전제가 함께 있다.
@@ -431,6 +476,10 @@ mechanism Viz가 더 적합하다.
 - [ ] 핵심 논문마다 현재 글의 paper reading note 또는 별도 canonical paper article로 이어지는 내부 해설 경로가 있다.
 - [ ] 주요 KaTeX가 질문·아이디어·식·기호·전제·해석 순서를 따른다.
 - [ ] `ExplainedFormula`의 `operations`는 실제 식의 기호를 쓰는 explicit 값이며 제네릭 fallback이 아니다.
+- [ ] 여러 단계 계산은 작업 범위가 먼저 고정되고, 모든 항의 뜻·단위·반복 이유가 결과보다 앞에 있으며, 분자와 분모가 같은 작업을 센다.
+- [ ] 세 번 이상 변환하거나 장부 가정을 비교하는 계산은 모바일 세로 계산 장부에서 다시 계산할 수 있고, 생략한 비용과 근사 조건이 해당 계산 줄에 붙어 있다.
+- [ ] 배열·묶음·이동·공간·확률·자금 흐름이 계산 결과를 좌우하는 절에는 텍스트 계산 장부와 별도로 실제 구조를 그린 Viz가 있고, 같은 숫자를 장면에서 직접 셀 수 있다.
+- [ ] 후보 생성·가지치기·선택 계산에는 후보 한 장, 생성축, 필터별 탈락 예와 개수, 생존 수, 실측 선택, 재사용 조건이 장면별로 보인다.
 - [ ] 코드 분석형 글(실제 오픈소스 codebase를 추적하는 글)은 핵심 단계마다 `CodeSidebar`로 열람 가능한 실제 source 함수·줄 범위 근거가 있다.
 - [ ] 최종 공식이 알려진 다단계 유도의 결과라면, 그 유도 경로 전체가 이 글 또는 연결된 canonical 선수 글에 실제로 있다 — citation 한 줄로 대체하지 않았다.
 - [ ] 구체적 절차가 있는 concept(algorithm·training procedure·sampling loop·protocol)은 `AlgorithmBlock`으로 입력→단계별 연산→출력 pseudocode가 있고, 각 줄을 차례로 실행하며 값·판단·상태 변화를 보는 과정 Viz가 있다 — 정적인 코드 목록이나 수식만 남기지 않았다.
@@ -454,6 +503,142 @@ mechanism Viz가 더 적합하다.
 - [ ] desktop과 mobile에서 overflow, 겹침, 간격, 수식 순서를 검사했다.
 - [ ] TypeScript와 production build가 통과한다.
 - [ ] 미통과 항목을 숨기거나 “완료”로 보고하지 않는다.
+
+### 7.1 AI 인프라 솔루션 엔지니어 지원용 P0 보강
+
+- 공개 자료만 사용해 `B300 GPU 128개 = 8-GPU 노드 16대`라는 설명용 가정에서 출발한다. 실제 회사 프로젝트의 구매안·가격·벤더 제안·미공개 토폴로지는 쓰지 않는다.
+- 기존 정본인 GPU interconnect, RDMA·RoCE, collective network, B300 switchless, 일반 전력·냉각, 데이터센터 site readiness는 재정의하지 않고 선수 글로 연결한다.
+- 새 정본은 다음 여섯 학습 arc로 분리한다: 요구사항에서 통합 구성·BOM으로 내려가는 설계, OS·driver·CUDA·NCCL·DOCA-OFED 호환성, Kubernetes·Slurm 선택, AI 학습 스토리지, B300 랙 전력·열 제거 산정, 구축·검수·인수인계.
+- `NCCL`, `DOCA`, `OFED`, `Slurm` 같은 약어는 먼저 실제 장애나 숫자 사례에서 역할을 보여 준 뒤 이름을 붙인다. 제품 목록이나 용어 사전만으로 본문을 구성하지 않는다.
+- 전력·냉각 수치는 평균·피크·명판·시설 여유를 분리하고, 액체가 칩에 직접 닿는 DLC와 공기 배기열을 물로 옮기는 RDHx를 같은 방식으로 부르지 않는다.
+- 버전 숫자는 기준일과 공식 release/compatibility matrix에 귀속한다. 특정 버전을 그대로 복사하게 하지 않고 OS·kernel·driver·firmware·CUDA·collective·NIC stack·scheduler/container 조합을 한 원장으로 검증하는 절차를 설명한다.
+- 각 글은 면접에서 바로 설명할 수 있는 산출물 하나를 남긴다: 요구사항표·호환성 원장·스케줄러 선택표·I/O 예산·전력/냉각 예산·FAT/SAT/acceptance ledger.
+
+### 7.2 HW·Cloud 심화 기준 (2026-10-08 추가 요청)
+
+- HW와 Cloud 글은 개념 지도나 자격증 범위표만으로 완료하지 않는다. 지도 글은 방향을 고르는
+  역할로 한정하고, 실제 설계·구축·운영 능력은 별도의 canonical engineering article이나 같은
+  글의 실습 절에서 닫는다.
+- 첫 화면을 `한 문장 답은`, 제품 정의, 시험 목적이나 스펙 비교로 열지 않는다. 실제로 실패한 요청·
+  납품·부하·복구 장면을 먼저 보여 주고, 독자가 아직 답을 모르는 질문을 남긴다. 이어서 같은 사건을
+  이름 없는 책임 경로와 작은 숫자로 다시 본 뒤에만 부품·서비스·약어의 표준 이름을 공개한다.
+- 레거시 HW 글 앞에 짧은 요약 카드만 붙여 적용 완료로 세지 않는다. 최소한 같은 사례로 `S 사건 →
+  B 전체 경로 → 0 작은 계산 → 1 이름 없는 관문 그림 → 2 관문이 나뉜 이유 → 3 역할과 표준 이름`을
+  본문 기본 화면에서 닫고, 기존 수식·원문·현장 명령은 그 뒤의 층위 4~7로 읽혀야 한다.
+- 모든 심화 글은 `teach-system`의 `blog` 순서를 따른다. 먼저 실제 장애나 납품 장면과 작은 숫자를
+  보여 주고, 이름 없는 처리 경로를 따라간 뒤, 표준 용어와 실제 설정·명령·구조체를 공개한다.
+  약어 사전, 서비스 카드, 명령 모음만 앞에 붙인 글은 심화 완료로 세지 않는다.
+- 실무형 글은 다음 여섯 증거를 모두 갖춘다.
+  1. 입력 가정·단위·출처·미확정 값을 구분한 **설계 원장**
+  2. 그대로 실행하거나 검토할 수 있는 **실제 명령·설정·API 요청**
+  3. 정상 상태와 고장 상태를 구별하는 **출력·로그·카운터 예시**
+  4. 숫자가 BOM·용량·성능·복구 판단으로 이어지는 **계산 과정**
+  5. 한 장애를 증상에서 원인·격리·복구·재발 방지까지 잇는 **실패 추적**
+  6. 제안·구축·운영·검수에서 다시 쓸 수 있는 **현장 산출물**
+- 명령과 출력은 출처의 실물을 그대로 짧게 인용하거나, 직접 만든 예시라면 `(예시 출력)` 또는
+  `(가정)`이라고 표시한다. 실행하지 않은 결과를 실측처럼 쓰지 않는다. 정상 출력만 싣지 않고
+  어떤 필드·exit code·counter가 실패를 가르는지 바로 옆에서 설명한다.
+- HW 심화 글은 최소한 `workload → 부품·topology → firmware/driver → 관측 명령 → 고장 격리 →
+  교체·rollback → acceptance`를 같은 사례로 추적한다. 제품 비교 글은 스펙표보다 workload와
+  측정 방법, 전력·냉각·serviceability, 공급·지원 경계를 먼저 비교한다.
+- Cloud 심화 글은 최소한 `client request → identity/policy → DNS·route·firewall → compute →
+  data → telemetry → recovery` 가운데 해당 경로를 실제 IAM policy, route table, IaC state,
+  CLI/API 결과로 추적한다. AWS·Azure 서비스 이름은 공통 mechanism을 설명한 뒤 붙인다.
+- 각 심화 글은 핵심 판단을 직접 뒷받침하는 1차 자료를 원칙적으로 5개 이상 사용한다. 공식
+  specification·vendor support matrix·공식 source·표준·대학/HPC 센터 실습을 우선하며, YouTube는
+  현장 맥락과 복습용 보충 자료로만 둔다. 영상만으로 제품 사양·호환성·안전 기준을 확정하지 않는다.
+- 전체 HW·Cloud 전수 보강은 한꺼번에 완료로 표시하지 않는다. 글별로 `입문 초안 / 설계 원장 추가 /
+  실물 추가 / 실패 추적 추가 / 화면·감사 통과` 상태를 남긴다. 기존에 자동 감사만 통과한 글은
+  이 기준을 다시 확인하기 전까지 심화 완료가 아니다.
+- `npm run audit:hw-cloud-teach`는 36편의 사건 우선 입구, 이른 원장 배치, 레거시 HW의 4단계 본문
+  연결과 5~7단계 현장 드릴 장착을 검사하는 최소 회귀 gate다. 이 검사가 통과해도 4단계가 같은 사례를
+  실제로 추적하는지, 5·6단계의 원문을 옮겨 적지 않았는지, 7단계가 장애·복구를 닫는지와 390px·1440px
+  화면을 글별로 확인하기 전에는 teach-system 완료로 보고하지 않는다.
+
+### 7.3 스토리지 심화 기준 (2026-10-08 추가 요청)
+
+- “스토리지를 깊이 안다”는 제품명이나 최대 GB/s를 외우는 뜻으로 쓰지 않는다. 한 번의 read/write를
+  `application → page cache·VFS → filesystem → block/protocol queue → device 또는 storage node →
+  durability acknowledgement`까지 추적하고, 각 층의 owner·queue·completion 조건을 설명할 수 있어야
+  한다. 원격 경로라면 client·NIC·fabric·metadata/data server·disk까지 같은 시간축에 놓는다.
+- 모든 성능 주장은 workload fingerprint를 먼저 고정한다. 최소한 access pattern, block/request size,
+  read/write ratio, concurrency·queue depth, sync/fsync 정책, working set, file count·size distribution,
+  cache 상태, burst/sustained 구간을 적는다. 평균 aggregate 처리량만으로 통과시키지 않고 p99 tail,
+  slowest rank, achieved depth와 application wall time을 함께 본다.
+- `throughput ≈ IOPS × request size`와 `outstanding I/O ≈ arrival rate × latency`를 작은 수치 사례에
+  적용하되, queue를 늘리면 무한히 빨라진다는 결론을 내리지 않는다. 포화 뒤에는 latency와 tail이
+  커지며 CPU·PCIe·network·controller·media 가운데 먼저 찬 자원을 확인한다.
+- block·file·object를 API 이름으로만 비교하지 않는다. namespace·metadata·locking·consistency,
+  writeback·`fsync`·atomic rename, multipart/commit과 “성공 응답 뒤 무엇이 보존되는가”를 장애 시나리오로
+  구분한다. snapshot은 backup과, replication은 독립 복구 사본과 같다고 쓰지 않는다.
+- 장치 층은 NVMe queue뿐 아니라 NAND page/block, FTL, garbage collection, write amplification,
+  over-provisioning, endurance(TBW·DWPD), power-loss protection, firmware·thermal throttling을 포함한다.
+  분산 층은 replication·erasure coding의 raw/usable/effective capacity, failure domain, degraded mode,
+  rebuild/backfill·scrub 중 성능과 두 번째 장애 위험을 포함한다.
+- AI/HPC 스토리지는 dataset streaming, small-file metadata, local staging/cache, shared source of truth,
+  checkpoint burst, restart RTO를 별도 예산으로 계산한다. GDS·fio·IOR·mdtest 수치는 실제 data loader와
+  checkpoint replay의 합격을 대신하지 않으며, 정상 상태와 degraded/rebuild 상태를 모두 시험한다.
+- Naver D2·Kakao·우아한형제들·당근 등 기술 블로그와 발표는 실제 운영 제약·실패·trade-off를 보여 주는
+  사례로 사용한다. 글의 날짜·workload·규모·당시 제품 버전을 표시하고 그 회사의 수치를 보편 법칙처럼
+  일반화하지 않는다. 정확한 syscall·protocol·filesystem·device semantics와 현재 버전은 kernel·RFC·
+  specification·공식 project 문서로 다시 확인한다.
+- 스토리지 심화 글은 최소한 workload 원장, end-to-end I/O 경로, raw→usable→effective 용량 장부,
+  정상·장애 상태 benchmark, 복구·restore drill, 운영 telemetry와 acceptance 기준을 산출물로 남긴다.
+
+### 7.4 기술 자격 로드맵 기준 (2026-10-08 추가 요청)
+
+- 자격 글도 정의나 시험 정보로 시작하지 않는다. 실제 장애·설계 질문에서 독자가 멈춘 장면을 먼저
+  보여 주고, 공식 시험 범위가 그 빈칸을 어디까지 확인하는지 뒤에서 이름 붙인다.
+- 시험명·상태·가격·문항 수·시간·언어·유효기간·영역 비중은 공식 자격 페이지와 공식 Study Guide에
+  귀속하고 확인일을 붙인다. 응시 직전 재확인 안내를 두며 비공식 dump나 기억에 의존하지 않는다.
+- 공식 비중을 문항 수에 곱한 값은 학습 장부의 배분으로만 사용한다. 실제 시험에서 영역별 문항이
+  정확히 그 수만큼 나온다고 주장하지 않는다.
+- Associate 자격의 “개념을 설명한다”와 Professional·현장 역할의 “설치·검증·장애 복구한다”를
+  구분한다. 합격을 구축 경력이나 제품별 숙련의 증명으로 표현하지 않는다.
+- 각 시험 목표는 `설명할 사례 → 실행할 명령·실습 → 보관할 출력 → 연결할 canonical article`로
+  변환한다. 자격 준비가 별도의 암기 작업이 아니라 기존 설계·운영 포트폴리오의 gap ledger가 되게 한다.
+- 마지막 절에는 지원 직무가 추가로 요구하는 BOM·RFP·전력·냉각·storage·commissioning 범위와 다음
+  단계 자격을 분리해, 지금 응시할지 실습을 먼저 할지 결정할 수 있는 기준을 남긴다.
+
+### 7.5 공개 강의 기반 gap 보강 기준 (2026-10-08 추가 요청)
+
+- 공개 강의는 빠진 질문을 찾는 discovery map으로 사용한다. 제품 사양·호환 조합·API semantics·시험
+  정보는 공식 specification, 현재 문서, source code와 model card에서 다시 확인하고, 영상만으로 현재
+  사실을 확정하지 않는다.
+- 강의마다 `강의가 보여 준 전체 흐름 → 기존 canonical owner → 실제로 빠진 인과·실물 → 이번에 넣지
+  않을 범위`를 research ledger에 남긴다. 같은 정의를 여러 글에 복사하지 않고, 글의 독자 질문과 직접
+  이어지는 빈칸만 해당 정본에 보강한다.
+- AI hardware supply-chain 강의의 시장점유율·roadmap·지정학 수치는 게시 시점의 보조 맥락으로만 읽는다.
+  인프라 설계 글에는 accelerator die·HBM·advanced package·server·fabric·power/cooling 가운데 한 단계의
+  제약이 BOM·lead time·acceptance에 어떤 위험을 만드는지만 공식 자료로 다시 연결한다.
+- 축소 교육용 model과 배포 model은 parameter 수, active path, layer·expert, tokenizer, context와 modality를
+  같은 표에서 구분한다. 교육용 실행 성공이나 VRAM 실측을 production model의 memory·throughput·GPU 수
+  근거로 확대하지 않는다. 인프라 산정에서는 total weight residency, active compute, KV·recurrent state,
+  workspace와 headroom을 각각 기록한다.
+- Kubernetes Operator는 `CRD를 관리한다`는 정의로 끝내지 않는다. 같은 객체의 desired state와 observed
+  state를 읽고, idempotent reconcile, generation·resourceVersion, status-only event filter, conflict retry,
+  finalizer, worker concurrency와 status condition을 한 장애에서 추적한다. GPU Operator와 workload scheduler의
+  책임도 분리한다.
+- 자격 강의는 공식 blueprint를 외우는 대체재가 아니다. NCA-AIIO 과정에서 다루는 GPU inventory,
+  CUDA·container runtime, Triton serving, Slurm, Base Command Manager, GPU Operator와 DCGM을 `무엇을 소유하는가
+  → 무엇을 확인하는가 → 정상·실패 출력 → 다음 P0 정본`으로 연결한다. Associate 설명 범위와 실제 구축·복구
+  능력은 계속 별도 증거로 둔다.
+- 강의의 코드·실습을 인용할 때 repository와 revision, 교육 목적, 측정 hardware와 synthetic benchmark
+  경계를 표시한다. 공식 제품을 재현했다거나 일반 성능을 입증했다고 표현하지 않는다.
+- Fine-tuning 강의는 방법 이름을 늘리는 데 쓰지 않는다. `data·template·loss mask → trainable scope →
+  checkpoint resume → held-out evaluation → immutable artifact → promotion`의 한 실행 생애에서 빠진
+  상태를 찾는다. Adapter 저장 파일과 중단 뒤 학습을 잇는 checkpoint를 구분하고, optimizer·scheduler·
+  RNG와 data cursor를 복원하지 못하면 같은 학습의 재개라고 단정하지 않는다.
+- MLflow·Databricks 강의는 UI 사용법보다 경계를 먼저 가르친다. Run metadata의 backend store와 큰
+  artifact store, local SQLite와 팀용 tracking server, open-source MLflow와 Databricks managed service,
+  Unity Catalog의 `catalog.schema.model`, mutable alias와 실제 serving endpoint를 구분한다. GenAI 평가는
+  dataset·trace·prompt·judge·scorer version을 함께 고정하며 code scorer의 offline 범위와 production
+  monitoring을 같은 기능으로 쓰지 않는다.
+- Kubernetes 입문 강의와 CKA 강의는 resource 목록으로 합치지 않는다. 한 Pod 생성 요청을
+  `kubectl → API server → persisted intent → scheduler binding → kubelet → CRI·CNI·CSI → Service·DNS·
+  Gateway`로 추적하고, 장애가 나면 원하는 상태·관측 상태·event·component log를 이 순서에 대조한다.
+  CKA 글은 공식 시험 version과 영역 비중을 확인일과 함께 고정하고, 시험 시간 단축 요령과 production
+  변경 통제·backup·HA 운영 능력을 별도 증거로 둔다.
 
 ## 8. 실행과 보고
 

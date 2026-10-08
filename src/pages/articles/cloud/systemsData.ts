@@ -1,10 +1,17 @@
 import type { CloudCertificationArticleData } from "./CloudCertificationArticle";
+import {
+  computeSelectionDepth,
+  networkingRequestPathDepth,
+  reliabilityObservabilityIacDepth,
+  storageDatabaseSelectionDepth,
+} from "./cloudEngineeringDepth";
 
 export const networkingRequestPathData: CloudCertificationArticleData = {
+  engineeringDepth: networkingRequestPathDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. 클라우드 네트워크 문제는 패킷이 다음 목적지를 고르는 과정입니다", bridge: "제품 이름보다 이동 경로를 먼저 잡았습니다. 브라우저 요청 하나가 지나가는 관문을 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. 클라우드 네트워크는 서버를 선으로 잇는 그림이 아니라, 출발 주소의 패킷이 이름을 주소로 바꾸고 경로표와 방화벽을 통과해 알맞은 앞문과 사설 자원에 도착한 뒤 응답이 돌아오는 규칙의 묶음입니다.",
-      "왜 자원이 실행 중인데도 접속이 안 될까요? 이름 해석, 경로, 허용 규칙, 앞문의 상태 검사, 응답 경로 중 하나만 어긋나도 같은 증상이 납니다. 시험은 증상에서 어느 층을 볼지 묻습니다.",
+    { id: "overview", level: "S", title: "1. 서버는 실행 중인데 브라우저는 5초 뒤 timeout이 났습니다", bridge: "같은 증상을 만드는 관문이 여러 개입니다. 제품명 없이 한 요청의 첫 실패 지점을 찾습니다.", paragraphs: [
+      "(가정) `shop.example`의 서버 상태는 정상이고 443 규칙도 보입니다. 하지만 브라우저 요청은 5초 뒤 timeout이 났습니다. 어떤 client는 공개 주소를 받고 다른 client는 사설 주소를 받았으며, backend 상태 검사도 실패하고 있었습니다.",
+      "‘네트워크 문제’라고 부르는 것만으로는 어느 설정을 고칠지 정할 수 없습니다. 이름이 주소로 바뀌는 순간부터 다음 길 선택, 통과 허용, 앞문의 대상 선택과 응답이 돌아오는 길까지 같은 요청을 한 관문씩 따라갑니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 이름·길·문지기·목적지를 순서대로 봅니다", bridge: "연결 실패를 네 관문으로 나눴습니다. 실제 주소 범위와 포트로 내려갑니다.", paragraphs: [
       "사용자가 이름을 입력하면 주소를 찾고, 패킷의 목적지 주소와 가장 잘 맞는 경로를 고릅니다. 각 경계의 허용 규칙이 포트와 출발지를 검사하고, 앞문은 살아 있는 실행 자원으로 요청을 나눕니다.",
@@ -82,10 +89,11 @@ export const networkingRequestPathData: CloudCertificationArticleData = {
 };
 
 export const computeSelectionData: CloudCertificationArticleData = {
+  engineeringDepth: computeSelectionDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. 실행 서비스는 코드가 아니라 운영해야 할 단위를 보고 고릅니다", bridge: "같은 코드를 여러 방식으로 실행할 수 있음을 봤습니다. 요청과 운영 책임이 어디서 갈리는지 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. 가상 서버, 컨테이너, 관리형 웹 플랫폼, 함수 중 무엇을 고를지는 언어나 유행이 아니라 실행 시간, 상태, 확장 모양, 시작 지연, 운영체제 제어와 팀이 맡을 운영 부담으로 정합니다.",
-      "왜 가장 관리가 적은 서비스를 늘 쓰지 않을까요? 관리형일수록 빠르게 시작할 수 있지만 실행 시간, 네트워크, 런타임, 배포 방식과 지역 지원에 제약이 생깁니다. 요구가 그 경계를 넘으면 더 낮은 층을 직접 맡습니다.",
+    { id: "overview", level: "S", title: "1. 평균 초당 한 건인 API가 점심 1분 동안 무너졌습니다", bridge: "평균 사용량은 작았지만 피크와 시작 시간이 선택을 바꿨습니다. 실행 단위의 생애부터 봅니다.", paragraphs: [
+      "(가정) API는 하루 평균 초당 한 건만 받았고 요청 하나는 0.2초면 끝났습니다. 사용량 기반 실행이 가장 싸 보였지만 점심 1분 동안 초당 100건이 몰리자 새 실행 단위가 늦게 뜨고 연결 수가 먼저 차서 응답 목표를 놓쳤습니다.",
+      "같은 코드를 가상 서버, 컨테이너, 관리형 웹 플랫폼과 함수에서 모두 실행할 수 있다는 사실은 선택 기준이 아닙니다. 요청이 얼마나 오래 살고 어디에 상태를 두며, 어느 제어가 필요하고 누가 패치·확장·복구를 맡는지부터 정해야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 요청·작업·상시 프로세스를 먼저 구분합니다", bridge: "실행 모양을 세 가지로 나눴습니다. 하루 요청 수와 작업 시간으로 후보를 줄입니다.", paragraphs: [
       "짧고 독립된 요청은 필요할 때만 실행하기 쉽습니다. 몇 시간 걸리는 영상 변환은 중간 상태와 재시도가 필요합니다. 항상 연결을 유지하는 서버는 예측 가능한 용량과 긴 실행 수명이 중요합니다.",
@@ -164,10 +172,11 @@ export const computeSelectionData: CloudCertificationArticleData = {
 };
 
 export const storageDatabaseSelectionData: CloudCertificationArticleData = {
+  engineeringDepth: storageDatabaseSelectionDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. 저장소는 데이터 모양보다 읽고 쓰는 약속으로 고릅니다", bridge: "파일처럼 보이는 데이터도 접근 약속이 다르면 다른 저장소가 필요합니다. 한 주문이 남기는 기록을 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. 객체·블록·파일·관계형·키값 저장소 중 무엇을 고를지는 확장성이라는 한 단어가 아니라 읽는 단위, 갱신 방식, 관계와 질의, 일관성, 지연, 내구성, 복구와 비용을 함께 맞춰 정합니다.",
-      "왜 한 저장소에 모두 넣지 않을까요? 상품 사진은 전체 객체로 읽고, 운영체제 디스크는 작은 블록을 자주 바꾸며, 주문은 여러 항목의 관계와 거래 규칙을 지켜야 합니다. 같은 바이트라도 필요한 약속이 다릅니다.",
+    { id: "overview", level: "S", title: "1. 사진 저장은 성공했는데 주문 재고가 두 번 줄었습니다", bridge: "둘 다 byte를 저장했지만 성공의 약속이 달랐습니다. 한 주문이 남기는 기록을 끝까지 따라갑니다.", paragraphs: [
+      "(가정) 상품 사진 업로드와 주문 기록을 같은 ‘확장 가능한 저장소’ 기준으로 골랐습니다. 사진은 잘 보였지만 재시도된 주문이 두 번 반영됐고, 재고와 결제 기록을 함께 되돌릴 방법도 없었습니다.",
+      "저장소를 고를 때 먼저 물어야 할 것은 제품명이 아니라 성공의 의미입니다. 전체 덩어리를 바꿀지 작은 위치를 덮어쓸지, 여러 기록을 함께 확정해야 하는지, 어떤 질문으로 다시 찾고 어느 장애 뒤까지 남겨야 하는지를 한 요청에서 분리합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 쓰기·보존·찾기·복구의 네 질문을 먼저 던집니다", bridge: "저장 요구를 네 질문으로 나눴습니다. 주문 100건의 크기와 접근 횟수로 수를 넣습니다.", paragraphs: [
       "한 번 쓰고 거의 바꾸지 않는지, 일부를 덮어쓰는지 먼저 봅니다. 몇 개의 복사본과 어느 거리의 장애를 견뎌야 하는지, 어떤 키와 조건으로 찾는지, 삭제·오염 뒤 어느 시점으로 돌아갈지도 정합니다.",
@@ -246,10 +255,11 @@ export const storageDatabaseSelectionData: CloudCertificationArticleData = {
 };
 
 export const reliabilityObservabilityIacData: CloudCertificationArticleData = {
+  engineeringDepth: reliabilityObservabilityIacDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. 안정적인 시스템은 고장을 막는 시스템보다 목표 시간 안에 돌아오는 시스템입니다", bridge: "고장을 0으로 만들 수 없다는 데서 시작했습니다. 실패 전후에 필요한 장치를 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. 클라우드 운영은 복제본을 많이 두는 일이 아니라, 허용할 중단과 데이터 손실을 먼저 정하고 이를 만족하도록 관측·자동 배포·백업·전환과 비용 경보를 설계한 뒤 실제 고장으로 검증하는 일입니다.",
-      "왜 모니터 화면이 많은데도 장애를 늦게 알까요? 사용자가 겪는 실패를 나타내는 지표와 원인을 찾는 로그·추적이 구분되지 않았거나, 경보 뒤 누가 무엇을 할지 정하지 않았기 때문입니다.",
+    { id: "overview", level: "S", title: "1. 경보는 초록색이었지만 고객 주문은 47분 동안 멈췄습니다", bridge: "자원 지표와 사용자의 성공이 달랐습니다. 목표·관측·변경·복구가 끊긴 지점을 찾습니다.", paragraphs: [
+      "(가정) CPU와 메모리 경보는 모두 정상 범위였지만 결제 이후 주문 확정 요청이 47분 동안 실패했습니다. 백업은 매일 만들어졌으나 마지막 복구 연습은 없었고, 급한 수동 수정은 다음 배포에서 다시 덮였습니다.",
+      "복제본 수나 대시보드 수는 이 사건의 완료 조건이 아닙니다. 허용할 중단과 데이터 손실을 숫자로 먼저 정하고, 사용자의 실패를 보는 신호부터 변경 이력, 복구 사본과 실제 전환까지 같은 시간축에서 이어야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 목표·관측·변경·복구가 한 고리로 이어집니다", bridge: "운영을 네 단계로 나눴습니다. 주문 서비스의 허용 중단과 손실을 숫자로 정합니다.", paragraphs: [
       "사업이 허용하는 중단 시간과 데이터 손실을 정하면 복제와 백업 주기가 결정됩니다. 지표·로그·추적이 이상을 알려 주고, 같은 코드로 반복 가능한 배포가 수정과 되돌리기를 빠르게 합니다. 복구 뒤에는 실제 목표를 지켰는지 확인합니다.",

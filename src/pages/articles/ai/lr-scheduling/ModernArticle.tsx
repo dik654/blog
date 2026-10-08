@@ -7,14 +7,14 @@ import { ScheduleClockViz } from "./viz/ModernLrScheduleViz";
 export default function LrSchedulingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <section id="overview" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Sample 51,200개를 열 epoch 돌리면 optimizer update는 1,000회입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Rank당 micro-batch 16, gradient accumulation 4회, rank 8개면 한 update가
-            16×4×8=512 sample을 소비합니다. 따라서 한 epoch은 51,200÷512=100 updates,
+            Rank 하나가 micro-batch마다 16 sample을 읽고 이를 4회 누적하며 rank가 8개라면, 한 update는
+            16 sample/회 × 4회/rank × 8 rank = 512 sample을 소비합니다. 따라서 한 epoch은 51,200÷512=100 updates,
             열 epoch의 total budget은 1,000 updates입니다.
           </p>
           <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>

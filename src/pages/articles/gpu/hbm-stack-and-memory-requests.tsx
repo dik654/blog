@@ -83,11 +83,11 @@ export default function Article() {
       </div>
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">논리 주소 148바이트와 물리 행·열 사이에 남는 정보를 확인했습니다. 공식 인터페이스 수치로 넓은 통로를 계산합니다.</p>
     </section>
-    <section id="source" data-teach-level="5" className="scroll-mt-20">
+    <section id="source" data-calculation-explained data-teach-level="5" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8 · HBM3의 1024비트 폭에 가정한 속도를 곱합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">Synopsys의 HBM3 PHY 설명은 16개의 64비트 channel과 32개의 32비트 pseudo-channel을 제시합니다. 두 표현 모두 총 데이터 폭 1024비트입니다. 여기서는 선 하나당 초당 8기가비트를 보낸다고 놓습니다(속도는 계산 가정).</p>
-        <p className="leading-8">1024×8Gb/s÷8 =1024GB/s, 즉 스택 하나의 이론상 1.024TB/s입니다. 8개 스택을 같은 조건으로 동시에 쓰면 8.192TB/s가 됩니다. 이것은 신호 데이터 폭으로 구한 상한입니다. Refresh·명령 대기·읽기 쓰기 전환·접근 불균형을 차감한 측정값은 아닙니다.</p>
+        <p className="leading-8">데이터 선 1,024개 × 선마다 8Gb/s = 8,192Gb/s이고, 1바이트가 8비트이므로 8로 나누면 1,024GB/s입니다. 곧 스택 하나의 이론상 대역폭은 1.024TB/s입니다. 8개 스택을 같은 조건으로 동시에 쓰면 8.192TB/s가 됩니다. 이것은 신호 데이터 폭으로 구한 상한입니다. Refresh·명령 대기·읽기 쓰기 전환·접근 불균형을 차감한 측정값은 아닙니다.</p>
         <p className="leading-8">64개 덧셈의 768바이트를 1.024TB/s로 나누면 0.75ns입니다. 이 값은 데이터가 통로를 가득 채워 흐르는 정상 상태의 물량 비율입니다. 한 kernel이나 첫 응답이 0.75ns에 끝난다는 예측은 아닙니다. 요청과 주소 해석, 행 동작, 돌아오는 대기가 별도로 있습니다.</p>
       </div>
       <SourceApplication source="Synopsys HBM3 PHY ·interface features" excerpt="16 independent 64-bit memory channels" application="16×64 = 1024비트. 가정한 8Gb/s/pin을 곱하고 8로 나누면 스택당 1.024TB/s입니다. 유효 768바이트를 나눈 0.75ns를 응답 지연으로 오해하지 않습니다." /><CitationBlock source="Synopsys HBM3 PHY ·interface features" citeKey={1} href="https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm3-phy.html">Synopsys HBM3 PHY ·interface features</CitationBlock>

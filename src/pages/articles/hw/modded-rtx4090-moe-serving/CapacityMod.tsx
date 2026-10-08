@@ -4,7 +4,7 @@ import CapacityModViz from "./viz/CapacityModViz";
 
 export default function CapacityMod() {
   return (
-    <section id="capacity-mod" className="mb-16 scroll-mt-20">
+    <section id="capacity-mod" data-calculation-explained className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         48GB 개조는 칩을 더 촘촘한 걸로 바꾸는 것이지 버스를 넓히는 게 아니다
       </h2>
@@ -27,10 +27,12 @@ export default function CapacityMod() {
           대역폭 공식엔 밀도 항이 없다
         </h3>
         <p className="leading-7">
-          GDDR6X의 유효 대역폭은 <code>핀 speed(Gbps) × 버스 폭(bit) ÷ 8</code>로 정해진다. 정품 4090의 21Gbps 핀 speed와
-          384-bit 버스를 넣으면 21 × 384 ÷ 8 ≈ 1,008GB/s가 나온다. 이 식 어디에도 칩 밀도(1GB냐 2GB냐)는 들어가지 않는다.
-          밀도는 용량을 정하고, 핀 speed와 버스 폭은 대역폭을 정한다. 두 축이 독립이라서 48GB 개조 카드의 이론 대역폭도 여전히
-          약 1,008GB/s다.
+          GDDR6X의 유효 대역폭은 <code>핀 speed(Gbps) × 버스 폭(bit) ÷ 8</code>로 정해진다. 정품 4090에서는 pin마다 21Gb/s를
+          보내고 pin이 384개다. 따라서 전체 bit 전송률은 <code>21Gb/s/pin × 384pin = 8,064Gb/s</code>다.
+        </p>
+        <p className="leading-7">
+          1byte가 8bit이므로 8로 나누면 약 1,008GB/s가 나온다. 이 식에는 칩 하나의 저장 용량이 들어가지 않는다.
+          칩 밀도는 전체 용량을 정하고, pin speed와 버스 폭은 대역폭을 정한다. 그래서 48GB 개조 카드의 이론 대역폭도 약 1,008GB/s다.
         </p>
         <p className="leading-7">
           그래서 이 개조가 푸는 문제와 못 푸는 문제가 갈린다. Weight 상주 여부(들어가느냐 안 들어가느냐)는 용량 문제라서 개조로

@@ -29,6 +29,13 @@ export const cloudArticles: Article[] = [
     component: () => import("@/pages/articles/cloud/cloud-foundations-responsibility-regions"),
   },
   {
+    slug: "kubernetes-request-path-and-cka",
+    title: "Kubernetes 요청 경로와 CKA v1.35: Pending에서 복구까지",
+    subcategory: "cloud-roadmap",
+    sections,
+    component: () => import("@/pages/articles/cloud/kubernetes-request-path-and-cka"),
+  },
+  {
     slug: "cloud-identity-access-hierarchy",
     title: "클라우드 권한은 주체·행동·대상·범위를 함께 판정합니다",
     subcategory: "cloud-foundations",

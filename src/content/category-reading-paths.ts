@@ -54,6 +54,7 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
     featuredArticles: [
       "cloud-certification-roadmap-2026",
+      "kubernetes-request-path-and-cka",
       "cloud-foundations-responsibility-regions",
       "cloud-identity-access-hierarchy",
       "cloud-networking-request-path",
@@ -529,7 +530,7 @@ export const CATEGORY_READING_PATHS: Readonly<
   },
   gpu: {
   "title": "GPU를 하드웨어 예산에서 커널 성능까지 읽는 네 단계",
-  "description": "64개 배열의 코드에서 출발해 NVIDIA·AMD 실행 단위와 HBM의 실제 접근 경로를 비교하고, CUDA·HIP 최적화와 특화 가속으로 이어갑니다.",
+  "description": "B300 128 GPU 제안의 요구사항·소프트웨어·스케줄러·스토리지·전력·검수를 먼저 닫고, NVIDIA·AMD 실행 단위와 CUDA·HIP 최적화, 특화 가속으로 내려갑니다.",
   "stages": [
     {
       "eyebrow": "01 · 시스템 예산",
@@ -568,6 +569,13 @@ export const CATEGORY_READING_PATHS: Readonly<
     }
   ],
   "featuredArticles": [
+    "nvidia-nca-aiio-study-guide",
+    "ai-infrastructure-b300-128-blueprint",
+    "ai-cluster-software-compatibility",
+    "kubernetes-vs-slurm-gpu-scheduling",
+    "ai-cluster-storage-io",
+    "b300-rack-power-cooling",
+    "ai-infrastructure-commissioning-acceptance",
     "cuda-basics",
     "gpu-architecture",
     "cuda-thread-hierarchy",

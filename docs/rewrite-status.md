@@ -2695,3 +2695,268 @@
 - 운영 카테고리는 14개 글을 모두 노출했다. 각 글을 390×844와 1440×1000에서 총 28회 열어 HTTP 200, 문서·도식·버튼의 가로 넘침 0, 단계형 의사코드의 다음 장면 전환을 확인했다. 늦게 불러온 구성 요소 한 건은 `networkidle`과 마지막 절 렌더링 뒤 다시 검사해 그림 4개와 단계 전환이 정상임을 확인했다.
 - 모바일 14편의 사이드바는 모두 336px 안에서 포커스를 받은 `aria-modal` 대화상자로 열렸고 본문 스크롤을 잠갔다. 화살표의 최대 경계는 22.5px였으며 콘솔 오류와 페이지 오류는 없었다.
 - 대표 세 글의 실제 본문 문단을 화면 위에서 약 220px에 둔 뒤 높이를 844px에서 700px로 바꿨다. 문단 위치와 스크롤 위치 변화가 모두 0px여서 주소 표시줄이 나타나는 상황에도 읽던 줄이 유지됐다. SOA-C03 글의 한국어 시험 종료 공지와 AWS 공식 링크도 운영 화면에서 확인했다.
+
+### AI 인프라 솔루션 엔지니어 지원용 P0 보강 착수 (2026-10-08)
+
+- 기존 GPU 카테고리의 정본을 대조했다. PCIe·NVLink, RDMA·RoCE, NCCL collective, DGX B300 switchless, 일반 전력·냉각, 데이터센터 site readiness는 이미 있으므로 중복 글을 만들지 않는다.
+- 남은 공백을 여섯 arc로 고정했다: `B300 128 GPU 통합 설계`, `소프트웨어 호환성 원장`, `Kubernetes와 Slurm 선택`, `AI 학습 스토리지`, `B300 랙 전력·냉각 산정`, `구축·검수·인수인계`.
+- 실제 싱가포르 프로젝트의 미공개 정보를 사용하지 않는다. 공개 NVIDIA·Kubernetes·SchedMD·싱가포르 IMDA/BCA·KISA 자료와 명시한 설명용 가정만 사용한다.
+- 구현·학습 계약·개념 그래프·근거·읽기 경로·브라우저 검증은 진행 중이다.
+
+### AI 인프라 솔루션 엔지니어 지원용 P0 보강 완료 (2026-10-08)
+
+- GPU 128개를 8-GPU 노드 16대로 펼치는 B300 통합 설계, OS·driver·CUDA·NCCL·DOCA-OFED 호환성, Kubernetes와 Slurm 선택, AI storage I/O, rack 전력·냉각, FAT·SAT·운영 인수의 여섯 글을 추가했다. 실제 회사 결정을 자신이 설계했다고 포장하지 않고 공개 사양을 이용한 별도 역설계라는 경계를 모든 관련 글에 남겼다.
+- 각 글은 `S → B → 0 → … → 7`의 열 절, 하나의 수치 사례, 선택표, 용어 경계, 단계형 의사코드, 공식 근거 두 개와 복습 질문 세 개를 갖는다. GPU 128개=16노드, 분산 HBM 36,864GB, storage 기준선 1.6Tb/s·200GB/s, DGX B300 16대의 평균 232kW·피크 304kW, 설명용 액체 유량 약 5.0kg/s를 같은 인과 흐름에서 계산했다.
+- 사용자가 제시한 미눅스 영상 7개를 RAID·인프라 입문·장애 원인·화재와 연속성·현장 커뮤니케이션의 보충 강의로 분류했다. NVIDIA GTC의 NCCL·AI 데이터센터 세션, Texas A&M Slurm 실습, Virginia Tech local storage 실습, Open Compute Project와 University of Lille의 액체 냉각 강의도 시청 목적과 적용 경계를 적어 연결했다. 제품 수치와 호환성 판단은 NVIDIA·Kubernetes·SchedMD·IMDA·KISA 공식 문서에 귀속했다.
+- 공개 catalog는 957편, 개념 그래프는 4,288개 개념·6,594개 관계가 됐다. 새 여섯 글 모두 기초 6문제·심화 4문제, 근거 manifest, editorial ownership, GPU 읽기 경로를 등록했다.
+- 글 계약·학습 계약·개념 그래프·시각화·읽기 경험·읽기 순서·문장 호흡·쉬운 한국어·용어 밀도·의사코드 Viz·토폴로지 감사와 전체 ESLint가 통과했다. `ko-natural` 문서형·합니다체·실무자 어휘 검사도 오류 0건이며, 남은 길이 경고는 TypeScript object 한 줄에 여러 UI 필드를 둔 구조와 전문 용어가 포함된 긴 필드를 문맥에서 검토한 결과다.
+- 기본 4GB Node heap의 첫 production build는 TypeScript 단계에서 메모리가 부족했다. 8GB heap으로 같은 명령을 다시 실행해 7,323개 모듈과 정적 공개 경로 2,020개 및 404 fallback을 만들었다.
+- 로컬 production 빌드의 여섯 글을 1440×1000과 390×844에서 총 12회 열었다. 전체 화면에서 열 절·수치 카드·선택표·용어·의사코드·공식 근거·복습 문제가 렌더링됐고 모바일은 한 열로 자연스럽게 쌓였다. 콘솔 오류·경고는 0건이며 화면은 `output/playwright/*ai-*`, `output/playwright/*slurm*`, `output/playwright/*b300*` 파일에 남겼다.
+
+### HW·Cloud 깊이 재판정과 전수 보강 착수 (2026-10-08)
+
+- 위의 P0 여섯 글은 구조·학습 계약·화면 검사는 통과했지만, 본문이 절마다 두 문단과 근거 두 개에
+  머물렀다. 실제 BOM·port map, 호환성 명령과 출력, Slurm/Kubernetes 설정, I/O benchmark,
+  배전·냉각 원장, FAT/SAT evidence가 부족하므로 **심화 완료를 철회하고 입문 초안으로 재분류**했다.
+- Cloud 14편도 현행 시험 경로와 공통 개념을 찾는 지도 역할은 하지만, 실제 IAM policy evaluation,
+  route·NAT·private endpoint, Terraform state와 drift, CLI/API 결과, 장애 주입과 복구가 부족하다.
+  지도 글은 보존하고 별도의 engineering canon과 실습 경로를 연결한다.
+- 기존 HW 14편은 깊이가 균일하지 않다. memory·network·power/cooling처럼 수식과 설계 판단이 있는
+  글도 있으나 실제 BMC/Redfish·EDAC/MCE·ethtool/devlink·RDMA·fio·NCCL 명령과 정상/실패 출력,
+  BOM·cable ledger·rack elevation·acceptance 문서가 전반적으로 부족하다.
+- 전수 보강의 공통 완료 기준을 rewrite contract 7.2에 추가했다. 첫 작업 묶음은 지원 시점에 바로
+  쓰는 AI 인프라 P0 여섯 글이며, 이후 HW의 부품→topology→운영 경로와 Cloud의 요청→권한→망→
+  compute→data→관측→복구 경로 순서로 진행한다.
+- 이번 상태는 **진행 중**이다. 글별 실물·실패 추적·근거·한국어·브라우저 검사를 모두 통과하기
+  전에는 HW·Cloud 전체 완료로 보고하지 않는다.
+
+### AI 인프라 P0·HW·Cloud 첫 심화 패스 완료 (2026-10-08)
+
+- P0 여섯 글을 입문 초안에서 실제 검토용 자료로 다시 보강했다. `128 B300 GPU=8-GPU node 16대`
+  기준의 요구사항→BOM 추적, DGX OS·kernel·driver·CUDA·NCCL·DOCA-OFED·NIC firmware·container
+  toolkit 호환성 원장, Slurm/Kubernetes 설정과 실패 상태, fio·IOR·mdtest storage 시험, AC/DC
+  rack 전력과 물측 열수송 sanity check, FAT→SAT→node→cluster→workload→운영 인수 evidence를 넣었다.
+  공개 release snapshot과 설명용 가정, 실제 현장 측정값을 서로 구분했다.
+- 기존 HW 15편에는 각 부품을 실제로 확인하는 field lab을 붙였다. GPU·CPU·memory·NVMe·shared
+  storage·power/cooling·site·Ethernet·NVLink·RDMA·NCCL마다 판단 원장, 실제 명령, 정상/실패 예시
+  출력, 장애 격리 순서와 공식 근거를 제공한다. 예시 출력은 실측이 아니라는 표식을 공통으로 렌더링한다.
+- Cloud 14편에는 자격증 지도를 보존하면서 별도의 engineering lab을 붙였다. account와 identity를
+  먼저 확인한 뒤 IAM/RBAC, DNS→route→filter→listener, compute health, object/database recovery,
+  Terraform plan·CloudFormation drift·Bicep what-if, telemetry·fault injection·rollback으로 한 요청과
+  변경 한 건을 끝까지 추적한다.
+- 사용자 제공 미눅스 영상 7개, 대학 강의와 NVIDIA/OCP 세션을 학습 보조 자료로 연결했다. Velog는
+  초보자가 막히는 질문을 찾는 용도로 검토했지만 제품 사양의 근거로 채택하지 않았다. Google·Meta·
+  CoreWeave·Clio Labs·Azure Engineering 자료는 대규모 fabric, RoCE, scheduler goodput, multi-node
+  장애, 안전한 배포의 운영 사례로만 사용하고, version·전력·명령 semantics는 공식 문서에 귀속했다.
+- 이번 심화 범위는 P0 6편+기존 HW 15편+Cloud 14편, 모두 35편이다. 첫 전수 심화 패스는 닫았지만
+  실제 싱가포르 현장의 OEM BOM·port map·PDU 계측·수질·유량·FAT/SAT 원본을 확보한 상태는 아니다.
+  따라서 글의 수치는 견적 승인이나 설비 시공 승인이 아니라 면접·사전 설계 검토의 기준선이다.
+- 공개 957편의 TypeScript, 글·학습 계약, 개념 그래프 4,288개·관계 6,594개, 읽기 순서, 문장 호흡,
+  쉬운 한국어, 용어, 수식, 시각화, 의사코드와 topology 검사가 통과했다. Node 8GB 한도의 production
+  build는 7,328개 모듈과 정적 공개 경로 2,020개 및 404 fallback을 만들었다.
+- 같은 UI 변경 묶음에서 대표 P0·HW·Cloud 글을 390px와 1440px로 열어 공통 실습 블록, 표의
+  가로 scroll 경계와 문서 폭을 확인했다. 마지막 출처 행 보강 뒤에는 관리 환경의 새 port binding이
+  허용되지 않아 preview를 재기동하지 못했으나 TypeScript와 production build는 다시 통과했다.
+
+### 아티클 첫 진입 404·KaTeX 렌더링 복구 (2026-10-08)
+
+- GitHub Pages의 `/blog/` 하위 배포에서 이전 글의 `<a href="/cs/…">`가 도메인 root로 빠지던 경로를
+  확인했다. runtime base-path bridge가 기존 root-relative 내부 링크의 실제 `href`에 `/blog`를 붙이고,
+  같은 탭의 일반 클릭은 React Router로 넘긴다. 새 탭 열기와 주소 복사도 배포 base를 포함한다.
+- 배포가 교체되는 순간 이전 문서가 사라진 lazy chunk를 요청하는 경우도 분리했다. 동적 import의
+  module-load 오류는 route별 session guard 아래 문서를 한 번만 다시 받고, 반복 실패는 무한 새로고침
+  대신 본문 error boundary와 수동 재시도 버튼으로 남긴다.
+- data object 기반 공통 글 template에 section별 구조화 formula field를 추가했다. AI 인프라 P0 여섯
+  글의 노드 수, 호환성 gate, scheduler wave, storage throughput, 전력·수측 유량, 검수 evidence 계산을
+  `ExplainedFormula`로 렌더링하며 질문·연산·기호·전제·해석을 함께 보여 준다. 일반 문장의 기호를
+  정규식으로 추측해 수식으로 바꾸지는 않는다.
+- KaTeX renderer는 각 결과에 `rendered/error` 상태 표식을 남긴다. 새 식과 연산 조각 26개를 KaTeX의
+  `throwOnError`로 직접 검사해 오류 0건을 확인했고, production CSS와 font asset도 산출물에 포함됐다.
+- `audit:runtime`을 CI에 추가해 base-path bridge, SPA navigation, lazy chunk 1회 복구, error boundary,
+  정적 404 fallback, KaTeX CSS·상태 표식, 구조화 수식과 P0 여섯 글 적용을 계속 검사한다. 수식·한국어·
+  topology·문장·글·학습·읽기 계약, ESLint와 `/blog/` production build가 통과했으며 7,331개 모듈,
+  정적 공개 경로 2,020개와 404 fallback을 생성했다.
+- 이번 변경의 새 브라우저 자동 검사는 관리 환경의 Chromium macOS sandbox가 `Input/output error (5)`로
+  시작되지 않아 실행하지 못했다. 대신 정적 route shell이 root와 동일한 최신 asset을 가리키는지,
+  번들에 복구 코드가 포함됐는지, KaTeX CSS·font와 26개 식의 parser 결과를 산출물에서 확인했다.
+
+### 계산 과정을 머릿속에서 복원하지 않게 하는 전수 보강 (2026-10-08)
+
+- 독자가 `8×2×2=32`를 보며 각 2가 무엇인지 앞 문단에서 되찾아야 했던 문제를 전역 편집 기준으로
+  올렸다. `teach-system` v0.17은 작업 범위 고정 → 모양 → 원소 수 → 값마다 byte → 반복 읽기·쓰기
+  → 전체 traffic → 같은 범위의 비율 순서를 요구하며, 반복 횟수와 생략한 비용을 결과보다 먼저 밝힌다.
+- `CalculationWalkthrough`를 추가했다. 세 번 이상 단위가 바뀌거나 장부 가정을 비교하는 계산은
+  구할 값·단위가 붙은 식·결과·그 행이 필요한 이유를 세로로 보여 주며 320px에서도 가로 표나 큰
+  화살표 없이 한 열로 읽힌다.
+- `attention-kernel-anatomy-and-backends`의 128/320바이트와 4/1.6FLOP/B를 배열 모양부터 다시
+  유도했다. Decode의 `4×8×2`는 QK 32FLOP와 PV 32FLOP로 분리했고, 4,096길이의 prefill·decode·
+  GQA·16GiB 전송·roofline 기준도 같은 장부로 펼쳤다.
+- 공개 957편에서 세 항 이상 곱, byte·FLOP·throughput 비율처럼 범위를 섞기 쉬운 계산을 검사했다.
+  정제된 첫 목록은 31편 50곳이었다. 공간 크기 표기처럼 계산이 아닌 경우는 그 뜻을 밝혔고, 실제
+  계산은 각 항의 이름·단위·반복 이유를 바로 붙여 전부 수정했다. 현재 `audit:calculations --strict`는
+  미전환 0편/0곳이며 CI에도 같은 검사를 넣었다.
+- 수식 주석 1,474개, 계산 설명, 문장 호흡, 한국어, 대상 글의 learning·article·Viz 계약, TypeScript와
+  production build를 다시 검사했다. 빌드는 7,332개 module과 정적 public route 2,020개를 생성했다.
+- 390×844와 1,440×1,000 실제 Chromium 확인은 현재 실행 환경이 local port와 Chromium의 macOS
+  rendezvous 등록을 모두 거부해 실행하지 못했다. 정적 Viz 검사와 build는 통과했지만, 이 화면 검사는
+  환경 제한이 풀린 뒤 남은 확인 항목이다.
+- 전역 topology 감사에서 이번 계산 보강으로 바뀐 fingerprint는 갱신했다. 아직 실패로 남는 항목은
+  동시에 진행 중인 cloud 자격증 글 14편의 stale fingerprint이며, 계산 설명 31편에는 남은 항목이 없다.
+
+### 계산 구조 시각화와 학습 순서 정렬 보강 (2026-10-08)
+
+- 텍스트 계산 장부만 있어도 시각화가 있다고 판정하던 검사를 고쳤다. 공개 957편에서 세 항 이상 곱,
+  byte·FLOP·대역폭 비율처럼 범위를 섞기 쉬운 계산은 계산 장부와 별도로 셀·묶음·이동 경로·공간을
+  실제 도형으로 보여 줘야 한다. 강화한 `audit:calculations -- --strict`의 미전환 결과는 0편/0곳이다.
+- `attention-kernel-anatomy-and-backends`의 7·11·12·18절에는 QK/PV 셀, Q·K·V·O의 128B 배열,
+  K/V 재읽기로 320B가 되는 경로, decode 72B, prefill 정사각형과 decode 한 행, GQA 공유, Triton
+  36개 후보의 생성·15개 탈락·9개 생존·실측 선택을 각각 실제 장면으로 추가했다.
+- 계산 구조가 빠졌던 MoE, imitation learning, 추론 비용, KV cache, 지수, admission, roofline,
+  지도학습 tensor, 학습 메모리, Word2Vec, 유한체·hash·PLONK, MOS capacitor, CUTLASS·CuTe와 GPU
+  memory 글에도 결과 숫자를 직접 셀 수 있는 구조 Viz를 연결했다.
+- article listing은 category reading path, 검토한 subcategory 커리큘럼, 시작 글, 같은 목록의 선수 관계,
+  manifest fallback 순서로 정렬한다. NLP는 tokenizer→분포 의미론→RNN, LLM 이론은 학습 단계→data→
+  SFT→RLHF→RL 기초·reward→preference 방법, LLM serving은 KV cache→vLLM→scheduler→prefill/decode→
+  paged cache→kernel→추측 디코딩→분산·운영, GPU는 CUDA 실행→thread→architecture→memory→profile→
+  CUTLASS·Triton, 파생상품은 선도·선물→무차익·청산→옵션→평가·그릭스→스왑·금리·신용→위험·운영
+  순서가 되도록 고정했다.
+- `audit:order -- --strict`는 94개 목록과 474개 적용 prerequisite edge를 검사한다. 명시 커리큘럼의
+  누락·중복·stale slug·역순과 전체가 등록된 category featured curriculum의 역순도 실패로 처리한다.
+- 학습 계약 957편, 개념 그래프 4,288개·관계 6,594개, 수식 주석 1,474개, 문장 호흡 재검토 0건,
+  쉬운 한국어 오류 0건, 읽기 경험·의사코드·runtime·topology·Viz 정적 검사가 통과했다. 본문과 공통
+  실습 블록이 바뀐 27편의 topology fingerprint는 기존 keep 판단과 shared gate를 다시 확인해 갱신했다.
+- Node 8GB 한도의 production build는 7,339개 module과 정적 공개 경로 2,020개 및 404 fallback을
+  생성했다. 390px·1,440px 브라우저 재검사는 관리 환경이 `127.0.0.1` listen을 `EPERM`으로 거부했고
+  Playwright CLI도 browser session을 만들지 못해 완료하지 못했다. 이번 새 Viz의 실제 화면 검사는
+  정적 overflow 계약과 build 통과까지만 확인된 상태다.
+
+### AI 클러스터 스토리지 심화와 Elice 자료 반영 (2026-10-08)
+
+- `ai-cluster-storage-io`를 제품·최대 GB/s 소개에서 한 I/O의 완료 경로와 복구 acceptance 글로 다시
+  썼다. 4MiB 요청이 application→page cache·VFS→blk-mq 또는 remote protocol→device·durable tier를
+  지나는 과정, 8GiB/s를 2,048 IOPS와 평균 8.2 in-flight로 바꾸는 계산, `write`·`fsync`·rename·directory
+  `fsync`와 distributed checkpoint publish의 서로 다른 완료 경계를 포함한다.
+- Raw 2PB를 8+2 EC와 20% reserve를 거쳐 1.28PB 계획 용량으로 바꾸고, workload fingerprint·benchmark→
+  application·raw→recoverable·정상→degraded→rebuild→restore 원장을 추가했다. fio·IOR·mdtest와 실제
+  data loader, PyTorch DCP async save, Ceph recovery 예시는 각각 증명하는 범위를 분리했다.
+- Elice Cloud 도움말에서 ECI의 block·object·PFS와 DataHub의 S3 호환 공개 범위를 확인했다. Elice B300
+  기술 글에서는 GPU·NIC·NVMe inventory, topology, host/guest 동일 version·benchmark 대조법만
+  가져왔다. 공개되지 않은 PFS 제품·보호 방식·storage GB/s는 추정하지 않고 discovery·PoC 질문으로
+  남겼으며 NCCL 결과를 storage 결과로 바꾸지 않았다.
+- NAVER D2 Alluxio, Kakao Iceberg, 우아한형제들 Aurora, 당근 DynamoDB→S3 사례는 당시 제품 숫자가
+  아니라 source of truth·cache invalidation·small file와 compaction·실제 workload 측정·online source
+  격리라는 운영 질문으로 사용했다. Linux·NVMe·Ceph·MLCommons·PyTorch 공식 문서를 semantics와
+  현재 시험 절차의 1차 근거로 두었다.
+- 글·학습·개념 그래프·한국어·문장 호흡·용어·수식·계산·읽기 경험·Viz·의사코드·runtime 감사가
+  통과했다. Node 8GB 한도의 production build는 7,339개 module과 정적 공개 경로 2,020개 및 404
+  fallback을 생성했다. 정적 route shell, 본문 bundle, KaTeX CSS·font와 `data-math-status`도 확인했다.
+  실제 Chromium 검사는 관리 환경이 `127.0.0.1:4173` listen을 `EPERM`으로 거부해 실행하지 못했다.
+
+### HW·Infra·Cloud 35편의 teach-system 인과 흐름 재이관 (2026-10-08)
+
+- 사용자 검토에서 첫 심화 패스가 근거·표·명령은 늘렸지만, 독자가 한 사건의 꼬리 질문을 따라가는
+  수업 흐름은 부족하다고 판정됐다. 특히 정답 선언으로 시작하고 작은 사례 직후 설계 원장이 끼어들며,
+  제품·약어 비교가 기본 방식의 실패 이유보다 먼저 보이는 문제가 있었다. 따라서 앞선 “심화 패스 완료”는
+  자료 coverage 완료로만 해석하고 teach-system 본문 완료 판정은 철회했다.
+- P0 6편과 Cloud 14편은 첫 문단을 결론 정의에서 실제 실패 사건으로 바꿨다. 같은 글의 B→0→1→2→3
+  절이 그 사건의 책임 경로·작은 수치·잘못된 첫 해법·부품이 필요한 이유·표준 이름으로 이어지고,
+  설계 원장은 층위 4 이후에만 나타나도록 위치를 옮겼다.
+- 기존 HW 15편에는 공통 요약 상자가 아니라 실제 본문인 `HardwareTeachOpening`을 연결했다. 글마다 서로
+  다른 `(가정)` 사건과 수치를 사용하며 `S 사건 → B 이름 없는 전체 경로 → 0 계산 → 1 세 관문 그림 →
+  2 관문을 나눈 이유 → 3 역할·표준 이름·경계`를 읽는다. 이어 `HardwareTeachMechanism`이 기존 구현·수식
+  본문을 4단계로 연결하고, 현장 드릴은 `실제 명령 5 → 정상 출력 추적 6 → 실패 출력·조치 7`을 드러낸다.
+  GPU 비교, vendor 비교, server/desktop, server CPU, NVMe, storage, memory, 전력·냉각, site readiness,
+  Ethernet, interconnect, RDMA, collective, 개조 4090, B300 switchless의 사례를 서로 복제하지 않았다.
+- Storage 기준 글은 Linux master의 실제 `struct address_space`를 2026-10-08 원문과 다시 대조하고,
+  PyTorch DCP 2.14 tutorial의 반복 `async_save`·Future 대기 코드를 주석만 덜어 실었다. Elice 자료는
+  block·object·PFS 공개 interface와 B300의 inventory·topology·동일 조건 비교 방법까지만 사용하며,
+  공개되지 않은 storage 구현·성능을 계속 PoC 질문으로 남겼다.
+- `audit:hw-cloud-teach`를 추가했다. 구조화된 P0·Cloud 20편의 overview가 `(가정)` 사건으로 시작하는지,
+  결론 선언이 먼저 나오지 않는지, 기존 HW 15편이 S→3 입구를 실제 route에 연결했는지, 층위 0~2에
+  설계 원장이 끼어들지 않는지를 검사한다. 또한 기존 HW가 4단계 본문 연결과 5~7 현장 드릴을 실제
+  route에 포함하는지 검사한다. 35편별 사건과 근거 경계는 `docs/hw-infra-cloud-teach-system-ledger.md`에
+  고정했다. 이 검사는 인과 흐름의 회귀 방지이며, 실제 현장 원본과 브라우저 DoD를 대신하지 않는다.
+- 레거시 HW 15편의 topology를 다시 판정했다. GPU·memory·NVMe·network·RDMA·collective·전력·site 등
+  각 글이 유지해야 할 단일 질문과 shared gate를 등록했고, 본문 변경 뒤 오래된 HW·Cloud 지문 29개를
+  실제 import closure와 대조해 갱신했다. 전역 topology strict 검사가 다시 통과한다.
+- TypeScript, ESLint, 957편 learning·article·graph, 한국어·문장 호흡, 용어, 수식·계산, 읽기 경험,
+  Viz·의사코드·runtime·topology와 `audit:hw-cloud-teach`를 다시 검사했다. Node 8GB production build는
+  7,341개 module과 정적 공개 route 2,020개, 최신 asset을 가리키는 404 fallback 및 KaTeX CSS·font를
+  만들었다. 390px·1,440px 브라우저 재검사는 실행 환경이 `127.0.0.1:4173` listen을 `EPERM`으로
+  거부해 실행하지 못했으며, 이는 완료되지 않은 화면 검수 항목으로 남긴다.
+
+### NCA-AIIO 자격 로드맵 추가 (2026-10-08 · 검수 중)
+
+- NVIDIA의 현행 NCA-AIIO 자격 페이지와 2026년 1월 공식 Study Guide를 기준으로 시험 형식·역할·세 영역을
+  다시 확인했다. 확인값은 영어 50문항·60분·미화 125달러·2년 유효이며, 비중은 AI 기초 38%·인프라
+  40%·운영 22%다. 가격·정책·범위는 응시 직전 재확인하도록 근거 날짜를 고정했다.
+- 새 글 `nvidia-nca-aiio-study-guide`는 자격 정의로 시작하지 않는다. GPU 16개가 보이지만 2-node 작업이
+  시작하지 못하는 사건에서 출발해 네 책임 구간을 열고, 38·40·22%를 19·20·11개의 학습 장부로 바꾼 뒤
+  exam blueprint·evidence map·role boundary라는 이름을 붙인다.
+- 공식 목표를 GPU·network·software compatibility·scheduler·storage·power/cooling·commissioning의 기존
+  P0 정본과 연결했다. `nvidia-smi`·DCGM 첫 점검의 정상·실패 예시와 3주 32시간 설명용 계획을 두되,
+  실제 B300 계측이나 합격 보장으로 표현하지 않았다.
+- Associate 자격의 기초 개념 설명과 NCP-AII의 배포·검증, NCP-AIO의 운영·최적화, 실제 지원 포트폴리오의
+  BOM·RFP·시설·인수 증거를 분리했다. 학습 계약·개념 그래프·근거·편집 소유권·topology·읽기 경로와
+  HW·Cloud 전수 감사를 36편 기준으로 갱신했다.
+- 958편의 learning·graph·article·formula·calculation·reading·runtime·order·prose·Korean·terms·topology와
+  HW·Cloud 36편 감사를 통과했다. ESLint와 Node 8GB 조건의 production build도 통과해 7,344개 module,
+  정적 public route 2,022개와 404 fallback을 생성했다. 새 route HTML·bundle, KaTeX CSS·font와
+  `data-math-status` 계약을 정적으로 확인했다.
+- 390px·1,440px 실제 브라우저 검수는 관리 환경이 `127.0.0.1:4173` listen을 `EPERM`으로 거부해
+  실행하지 못했다. 따라서 화면 검수는 완료로 표시하지 않는다.
+
+### freeCodeCamp AI infrastructure 네 강의 gap 보강 (2026-10-08)
+
+- `Inside the AI Hardware Engine`은 한 GPU가 설계·foundry·HBM·advanced packaging·network·data center로
+  이어지는 지도로 사용했다. B300 정본에는 die·HBM·package·server/fabric·facility 지연을 BOM 행, 대체
+  SKU, 재검수 조건으로 연결한 공급 위험 원장을 추가했다. 강의의 시장·roadmap 서술은 현재 사양이나
+  계약 납기의 근거로 쓰지 않고 NVIDIA·TSMC 공식 자료와 OEM 문서로 다시 확인하도록 경계를 남겼다.
+- `GLM-5.3-Flash From Scratch`의 25.7M 교육용 축소 모델과 공개 model card의 320B total·18B active 모델을
+  분리했다. B300 글은 total parameter, active parameter/token, context, dtype·quantization, runtime
+  workspace와 동시성 계측을 받은 뒤에만 VRAM·GPU 수·fabric·storage를 결정한다. 교육 코드의 VRAM과
+  synthetic 결과를 production sizing 값으로 확대하지 않는다.
+- `Kubernetes Operator Best Practices`에서 빠져 있던 controller 생애를 scheduler 정본에 넣었다.
+  `generation/observedGeneration`, `resourceVersion`과 409 conflict, idempotent reconcile, finalizer,
+  `MaxConcurrentReconciles`를 GPU Operator의 `ClusterPolicy` 관측 절차와 정상·실패 출력으로 연결했다.
+  Operator의 node software 수렴과 Kubernetes·Slurm의 workload scheduling 책임도 분리했다.
+- `NCA-AIIO Free Study Course`는 GPU·CUDA/driver, Container Toolkit, Triton, Slurm, Base Command Manager,
+  GPU Operator·DCGM을 하나의 제품 목록이 아닌 책임 경로로 다시 썼다. host `nvidia-smi`→container GPU
+  주입→Triton readiness→Slurm allocation→DCGM health를 같은 incident에서 검사하되 각 초록불이
+  증명하는 범위를 구분하는 lab ladder를 추가했다.
+- 강의별 정본·빈칸·제외 범위와 URL은 `docs/freecodecamp-ai-infra-gap-ledger.md`에 고정했다. 영상은 학습
+  지도와 빈칸 발견에 쓰고, 본문 수치·API 의미·명령은 NVIDIA·Kubernetes·SchedMD·공식 model card로
+  검증한다는 규칙도 글쓰기 계약에 추가했다.
+- 958편 learning·article·formula·한국어와 HW·Infra·Cloud teach-system 36편 감사를 통과했다. ESLint와
+  Node 8GB TypeScript/production build도 통과했고, GitHub Pages의 `/blog/` base 조건에서 7,344개 module,
+  정적 public route 2,022개와 404 fallback을 다시 생성했다. 세 정본과 세 legacy route의 실제 HTML,
+  `/blog/assets/…` 참조, KaTeX CSS·font, 1,474개 수식 렌더 계약을 정적으로 확인했다.
+- 실제 390px·1,440px Chromium 검수는 시도했으나 관리 환경이 local listen을 `EPERM`으로 거부하고
+  Chromium도 macOS MachPort rendezvous 등록 권한 오류로 종료했다. 그러므로 새로고침 후 DOM·overflow
+  검수는 완료로 표시하지 않으며, 정적 경로·fallback·lazy chunk 1회 복구·본문 error boundary까지가
+  이 환경에서 확인한 범위다.
+
+### Fine-tuning·MLflow·Kubernetes 과정과 CKA 브라우저 실습 보강 (2026-10-08)
+
+- freeCodeCamp의 LLM Fine-Tuning, MLflow·Databricks MLOps, Kubernetes 6시간 과정, CKA 2026 과정을
+  개념 목록으로 옮기지 않고 기존 정본의 빠진 운영 경계를 찾는 데 사용했다. Fine-tuning 글에는 adapter
+  저장과 optimizer·scheduler·RNG·data cursor를 포함한 resume checkpoint를 분리했고, MLflow 글에는
+  고정 response trace와 scorer code·judge prompt/model의 versioned evaluation lineage를 추가했다.
+  Registry 글에는 Unity Catalog의 `catalog.schema.model`·alias·고정 version과 endpoint loaded revision의
+  차이를 넣었다.
+- 새 `kubernetes-request-path-and-cka` 글은 3 desired·2 Ready 사건에서 API server→scheduler→kubelet→
+  CRI/CNI/CSI→readiness→EndpointSlice로 내려간다. 계획 105 req/s, 현재 70 req/s, 유입 90 req/s에서
+  초당 20건이 밀리는 같은 사례를 수식·명령·정상/실패 출력·연습문제로 유지한다. CKA v1.35의 공식
+  영역은 40시간 설명용 실습 원장으로 바꿨다.
+- KodeKloud 공개 노트는 Core concepts→scheduling→maintenance→security→storage→networking→
+  design/kubeadm→troubleshooting의 8단계 링크 지도로 연결했다. 저장소 루트에서 명시적 license 파일을
+  확인하지 못해 PNG를 복제하지 않고 원본 image index를 링크했으며, 본문 그림은 반응형 React/CSS로
+  새로 작성했다.
+- 여덟 공개 CKA lab의 self-contained task, 시간 제한, web terminal, 결과 상태 검증 구조를 비교해
+  Pending scheduling·Service selector·NotReady runtime 세 문제를 새로 만들었다. Browser CLI는 실제
+  shell이나 cluster credential을 쓰지 않는 deterministic simulator이며 context→diagnosis→fix→verify
+  evidence로 채점한다. 실제 동작은 연결된 kind·kubeadm lab에서 다시 검증한다.
+- 네 글의 learning contract와 4,298개 concept·6,610개 relation graph, topology, Korean, term pair,
+  formula·calculation, runtime·KaTeX·404 fallback, Viz와 ESLint를 검사했다. Node 8GB production build는
+  7,347개 module과 정적 public route 2,024개를 생성했고 새 route HTML과 interactive lab bundle을
+  확인했다. 실제 브라우저 검수는 local listen이 `EPERM`으로 차단되어 완료로 표시하지 않는다.

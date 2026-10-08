@@ -2968,6 +2968,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Full fine-tuning과 parameter-efficient fine-tuning(PEFT)의 용어 경계, alpha·scaling·dropout 등 adapter hyperparameter",
       "Trainable parameter ratio·memory footprint·compute budget으로 나눈 fine-tuning resource 장부",
       "하나의 base 위에서 여러 adapter를 동시에 서빙하는 multi-LoRA serving과 요청 단위 adapter switching 경계",
+      "Adapter 배포 저장과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint의 경계",
 ],
     reuses: [
       {
@@ -3364,7 +3365,7 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "experiment-tracking": {
     title: "실험 provenance 글이 소유하는 범위",
-    owns: ["Experiment specification digest와 execution attempt identity의 분리", "URI·digest·schema·size·producer를 포함한 immutable artifact reference", "실패 attempt까지 보존하는 provenance receipt"],
+    owns: ["Experiment specification digest와 execution attempt identity의 분리", "URI·digest·schema·size·producer를 포함한 immutable artifact reference", "실패 attempt까지 보존하는 provenance receipt", "Dataset·trace·scorer code·judge prompt/model을 함께 고정하는 생성형 AI 평가 계보"],
     reuses: [{ label: "Training run lineage", href: "/cs/ai/training-pipeline" }, { label: "Evaluation selection receipt", href: "/cs/ai/metric-selection-protocol" }],
     evidence: [
       { kind: "primary-source", rule: "MLflow 초기 component claim은 project paper의 시대·design 범위로 제한한다." },
@@ -3382,7 +3383,7 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "model-artifact-registry": {
     title: "Model artifact registry 글이 소유하는 범위",
-    owns: ["Backend metadata와 artifact object store의 공동 integrity lifecycle", "Mutable alias를 immutable version으로 고정하는 promotion receipt", "Registry version과 실제 endpoint artifact·serving config parity"],
+    owns: ["Backend metadata와 artifact object store의 공동 integrity lifecycle", "Mutable alias를 immutable version으로 고정하는 promotion receipt", "Registry version과 실제 endpoint artifact·serving config parity", "Unity Catalog의 catalog.schema.model 이름·alias와 serving endpoint의 고정 version 경계"],
     reuses: [{ label: "Content-addressed artifact", href: "/cs/ai/experiment-tracking#artifact-reference" }, { label: "Deployment release gate", href: "/cs/ai/model-deployment" }],
     evidence: [
       { kind: "standard", rule: "MLflow store·registry·alias semantics는 현재 공식 문서와 배포 mode 범위로 제한한다." },
@@ -17787,6 +17788,23 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "kubernetes-request-path-and-cka": {
+    title: "Kubernetes 요청 경로와 CKA 실습 글이 소유하는 범위",
+    owns: [
+      "Desired state가 API server·scheduler·kubelet·runtime·network·storage·readiness를 지나 Ready endpoint로 수렴하는 요청 경로",
+      "3개 Pod×초당 35건=계획 용량 105건, Ready 2개=현재 용량 70건, 유입 90건에서 초당 20건이 밀리는 장애 장부",
+      "CKA v1.35 영역을 context 확인·증거 수집·최소 변경·검증·rollback 기록으로 바꾸는 40시간 실습 계획",
+      "Pending scheduling·Service selector·NotReady runtime 세 사건을 제한형 CLI에서 풀고 결과 상태로 채점하는 브라우저 실습",
+    ],
+    reuses: [
+      { label: "Container와 host process의 자원 경계", href: "/cs/ai/agent-sandbox-security#overview" },
+      { label: "Kubernetes와 Slurm의 GPU scheduling 경계", href: "/cs/hw/kubernetes-vs-slurm-gpu-scheduling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Component·API·kubeadm·시험 버전과 영역 비중은 확인일의 Kubernetes·Linux Foundation·CNCF 공식 문서 범위로 제한합니다." },
+      { kind: "project-measurement", rule: "Pod 수·처리량·명령 출력은 진단 순서를 설명하기 위한 가상 사례이며 실제 cluster 성능 측정값이 아닙니다." },
+    ],
+  },
   "cloud-foundations-responsibility-regions": {
     "title": "클라우드 책임·위치·용량 글이 소유하는 범위",
     "owns": [
@@ -18062,12 +18080,133 @@ export const EDITORIAL_BOUNDARIES = {
     title: "Azure AI-200 빠른 공부 글이 소유하는 범위",
     owns: [
       "AI-200의 컨테이너·벡터 데이터·메시징·보안·관측 범위를 AI 백엔드 한 요청의 생애로 잇는 설명",
-      "분당 요청 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나누고 같은 입력으로 복구를 검증하는 사례",
+      "분당 요청 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나눈 뒤 같은 입력으로 복구를 검증하는 사례",
     ],
     reuses: [{ label: "Azure 신원·실행·망·관측 자원을 만들고 복구하는 관리자 기초", href: "/cs/cloud/azure-az104-fast-study#names" }],
     evidence: [
       { kind: "primary-source", rule: "시험 코드·자격 이름·영역 비중과 서비스 범위는 Microsoft 공식 가이드의 확인일에 귀속합니다." },
       { kind: "project-measurement", rule: "성능·비용과 취업 효과는 같은 실습 조건의 측정이나 채용 결과 없이 보장하지 않습니다." },
+    ],
+  },
+  "nvidia-nca-aiio-study-guide": {
+    title: "NCA-AIIO 학습 로드맵 글이 소유하는 범위",
+    owns: [
+      "NCA-AIIO의 현행 형식·역할과 38%·40%·22% 공식 범위를 50칸의 19·20·11 학습 장부로 바꾸는 방법",
+      "공식 시험 목표를 현장 질문·명령·정상/실패 출력·AI 인프라 P0 산출물에 연결하는 evidence map",
+      "Associate 자격의 개념 설명과 Professional·현장 배포·복구 증거를 분리해 지원 자료에 표현하는 역할 경계",
+    ],
+    reuses: [
+      { label: "B300 128 GPU 요구사항과 BOM 추적성", href: "/cs/gpu/ai-infrastructure-b300-128-blueprint" },
+      { label: "OS부터 NCCL·DOCA-OFED까지 호환성 원장", href: "/cs/gpu/ai-cluster-software-compatibility" },
+      { label: "Kubernetes·Slurm scheduler 선택", href: "/cs/gpu/kubernetes-vs-slurm-gpu-scheduling" },
+      { label: "AI storage I/O·restore 검증", href: "/cs/gpu/ai-cluster-storage-io" },
+      { label: "B300 rack 전력·냉각 계산", href: "/cs/gpu/b300-rack-power-cooling" },
+      { label: "FAT·SAT·운영 인수 원장", href: "/cs/gpu/ai-infrastructure-commissioning-acceptance" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "시험명·형식·가격·유효기간·비중·목표는 확인일이 있는 NVIDIA 공식 자격 페이지와 2026년 1월 Study Guide에 귀속합니다." },
+      { kind: "project-measurement", rule: "자격 취득을 실제 B300 설계·구축 경험으로 표현하지 않고 명령·계산·장애·검수 artifact를 별도 증거로 제시합니다." },
+    ],
+  },
+  "ai-infrastructure-b300-128-blueprint": {
+    title: "B300 128 GPU 통합 설계 글이 소유하는 범위",
+    owns: [
+      "사업 조건인 GPU 128개를 8-GPU 노드 16대의 연산·망·저장·시설·운영 요구와 검수 항목으로 펼치는 추적성",
+      "공개 reference architecture와 실제 발주 가능한 BOM을 구분하고 미확정 값·담당자·시험 방법을 남기는 제안 절차",
+      "실제 회사 프로젝트에서 맡은 범위와 공개 사양을 이용해 별도로 역설계한 면접 사례의 증거 경계",
+    ],
+    reuses: [
+      { label: "GPU 내부·노드 간 연결의 물리 경계", href: "/cs/gpu/gpu-interconnects" },
+      { label: "RDMA와 RoCE의 packet·lossless fabric 기초", href: "/cs/gpu/rdma-roce" },
+      { label: "서버 전력에서 냉각까지 이어지는 기초", href: "/cs/gpu/hw-power-cooling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "GPU·메모리·NIC·DPU 수량은 확인일을 적은 NVIDIA 공개 HGX B300 reference architecture에 귀속하고 OEM BOM으로 단정하지 않는다." },
+      { kind: "project-claim", rule: "싱가포르 프로젝트의 실제 의사결정과 개인이 다시 계산한 가상 제안은 담당 범위·가정·검증 상태를 표시해 구분한다." },
+    ],
+  },
+  "ai-cluster-software-compatibility": {
+    title: "GPU 클러스터 software compatibility 글이 소유하는 범위",
+    owns: [
+      "OS·kernel·system firmware·GPU driver·CUDA·NCCL·DOCA-OFED·NIC firmware·container image를 한 변경 원장으로 묶는 방법",
+      "NCCL·OFED·DOCA가 계산·집단 통신·RDMA driver와 SDK 경로에서 각각 맡는 책임",
+      "canary 한 대에서 16노드까지 장치 열거·P2P·RDMA·collective를 단계적으로 검증하는 upgrade gate",
+    ],
+    reuses: [
+      { label: "NCCL collective와 transport 선택의 기초", href: "/cs/gpu/gpu-collective-network" },
+      { label: "RDMA verb·queue·RoCE packet 경로", href: "/cs/gpu/rdma-roce" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "호환 version은 확인일이 있는 NVIDIA DGX OS release notes와 DOCA profile 문서의 한 release 조합에 귀속한다." },
+      { kind: "project-measurement", rule: "지원 표의 조합도 실제 node image·firmware·fabric에서 단일 GPU부터 multi-node NCCL까지 통과하기 전에는 운영 적합으로 판정하지 않는다." },
+    ],
+  },
+  "kubernetes-vs-slurm-gpu-scheduling": {
+    title: "Kubernetes와 Slurm 선택 글이 소유하는 범위",
+    owns: [
+      "장기 서비스와 완료형 batch job의 생애를 요청·대기·gang allocation·실행·회수로 비교하는 scheduler 선택 기준",
+      "16노드에서 8노드 작업 네 개를 받을 때 동시 두 작업과 대기 두 작업으로 나뉘는 자원 원장",
+      "Kubernetes와 Slurm을 함께 쓸 때 GPU·node·queue·장애 복구의 최종 소유자를 하나로 정하는 운영 경계",
+    ],
+    reuses: [
+      { label: "분산 GPU 작업의 collective 대기 원인", href: "/cs/gpu/gpu-collective-network" },
+      { label: "GPU cluster software stack의 host·container 경계", href: "/cs/gpu/ai-cluster-software-compatibility" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Slurm allocation·job step과 Kubernetes Job·GPU Operator 책임은 각 프로젝트 공식 문서에 귀속한다." },
+      { kind: "project-measurement", rule: "scheduler 선택은 이름이나 익숙함이 아니라 queue wait·GPU utilization·startup failure·recovery time을 같은 workload에서 측정해 검증한다." },
+    ],
+  },
+  "ai-cluster-storage-io": {
+    title: "AI 클러스터 storage I/O 글이 소유하는 범위",
+    owns: [
+      "Application syscall에서 page cache·filesystem·block 또는 remote protocol·device·durability acknowledgement까지 한 I/O의 완료 경계를 추적하는 방법",
+      "Dataset read·checkpoint write·metadata operation을 request size·concurrency·sync·cache 상태와 묶어 throughput·IOPS·tail latency로 예산화하는 방법",
+      "Raw capacity를 replication·EC·failure domain·운영 reserve·snapshot 비용을 거쳐 recoverable capacity로 바꾸는 원장",
+      "Shared filesystem·local NVMe cache·object storage의 source of truth와 commit 경계를 정하고 정상·degraded·rebuild·restore 시험으로 채택하는 기준",
+    ],
+    reuses: [
+      { label: "NVMe queue와 device path의 기초", href: "/cs/gpu/hw-nvme-storage" },
+      { label: "SATA·SAS·NVMe 성능 지표 비교", href: "/cs/gpu/hw-storage-comparison" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Syscall·page cache·VFS·blk-mq·durability semantics는 Linux 공식 문서에, GPU당 처리량 기준은 NVIDIA 확인 버전에 각각 귀속한다." },
+      { kind: "project-claim", rule: "Elice 공개 문서는 제공 interface와 B300 검증 방법까지만 근거로 삼고 미공개 PFS 제품·보호 방식·성능을 추정하지 않는다." },
+      { kind: "project-measurement", rule: "이론 합산 처리량과 보호 구성을 dataset 크기·file 분포·동시 checkpoint·network contention·failure·rebuild·실제 restore를 재현한 end-to-end 측정 없이 납품 성능이나 복구 보장으로 약속하지 않는다." },
+      { kind: "secondary-source", rule: "NAVER·Kakao·우아한형제들·당근 사례는 당시 workload의 운영 질문만 가져오고 제품 숫자·version·최적값은 현재 설계에 일반화하지 않는다." },
+    ],
+  },
+  "b300-rack-power-cooling": {
+    title: "B300 128 GPU 전력·냉각 글이 소유하는 범위",
+    owns: [
+      "DGX B300 16대의 공개 평균 232kW와 피크 304kW를 랙·A/B feed·냉각 예산으로 펼치는 설명용 계산",
+      "rear-door heat exchanger와 direct liquid cooling을 열을 포착하는 위치·water loop·잔여 공랭 부하로 구분하는 경계",
+      "열 포착률과 공급·환수 온도 차이에서 유량을 계산하되 설비 승인 도면과 분리하는 evidence boundary",
+    ],
+    reuses: [
+      { label: "IT load·PUE·냉각의 일반 기초", href: "/cs/gpu/hw-power-cooling" },
+      { label: "데이터센터 site power·rack·network readiness", href: "/cs/gpu/datacenter-site-readiness" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "평균·피크 전력과 rack density는 NVIDIA DGX B300 data center guide의 exact revision에 귀속하고 HGX OEM 서버에 자동 적용하지 않는다." },
+      { kind: "project-claim", rule: "싱가포르 고온 운영과 시설 적합성은 IMDA·BCA 기준 및 실제 colo 설비 조건을 확인하기 전에는 가능성이나 설계 가정으로만 표현한다." },
+    ],
+  },
+  "ai-infrastructure-commissioning-acceptance": {
+    title: "AI 인프라 구축·검수 글이 소유하는 범위",
+    owns: [
+      "요구사항 ID·BOM 행·시험 절차·합격 기준·결과 artifact·예외 승인자를 연결하는 acceptance ledger",
+      "FAT·SAT·성능 검증·운영 인수를 장소와 책임, 증거의 차이로 구분하는 구축 종료 조건",
+      "16노드의 firmware·GPU·RDMA·NCCL·scheduler·storage·power fault를 정상과 고장 상태에서 확인하는 검수 순서",
+    ],
+    reuses: [
+      { label: "site 준비 상태와 handoff 경계", href: "/cs/gpu/datacenter-site-readiness" },
+      { label: "호환 원장과 단계적 cluster preflight", href: "/cs/gpu/ai-cluster-software-compatibility" },
+      { label: "B300 128 GPU 요구사항과 BOM 추적성", href: "/cs/gpu/ai-infrastructure-b300-128-blueprint" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "노드 provisioning·Slurm·GPU·NCCL 검증 절차는 NVIDIA B300 deployment guide에 귀속하고 계약별 acceptance threshold는 발주 문서에서 별도로 정한다." },
+      { kind: "project-claim", rule: "CSAP 획득 여부는 특정 cloud service의 공식 인증 범위를 확인해 표현하며 개별 서버·GPU 구매가 곧 인증을 뜻한다고 쓰지 않는다." },
     ],
   },
 } as const satisfies Record<string, EditorialBoundary>;

@@ -121,14 +121,14 @@ export default function CnnFoundationArticle() {
           }
         />
       </section>
-      <section id="shared-kernel" className="scroll-mt-20">
+      <section id="shared-kernel" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           같은 kernel을 여러 위치에서 재사용하므로 parameter 수가 resolution과
           분리됩니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            3×3, input channel 3, output channel 32라면 bias 제외 weight는 3×3×3×32=864개입니다. 32×32 image와 224×224
+            Filter 하나가 세로 3칸·가로 3칸이고 입력 channel 3개에서 값을 받아 출력 channel 32개를 만든다면, bias를 뺀 weight 수는 세로 3 × 가로 3 × 입력 channel 3 × 출력 channel 32 = 864개입니다. 32×32 image와 224×224
             image는 같은 864개를 쓰지만 큰 image는 더 많은 window를 처리하므로 activation과 FLOPs는 커집니다.
           </p>
         </div>

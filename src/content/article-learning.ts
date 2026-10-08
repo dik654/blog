@@ -93,6 +93,78 @@ interface RegionalEconomicHistoryLearningInput {
   sources: readonly [PaperReading, PaperReading, ...PaperReading[]];
 }
 
+interface AiInfrastructureLearningInput {
+  coreIdea: string;
+  entryNote: string;
+  entryLevel?: true;
+  recursiveTeaching?: true;
+  assumedKnowledge: readonly LearningConceptRef[];
+  concepts: readonly [
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">,
+    ...(LearningConceptRef & Omit<ConceptExplanationContract, "id" | "sectionId">)[],
+  ];
+  numericQuestion: string;
+  numericAnswers: readonly string[];
+  changedCaseQuestion: string;
+  changedCaseAnswers: readonly string[];
+  sources: readonly [PaperReading, PaperReading, ...PaperReading[]];
+}
+
+function aiInfrastructureLearning(
+  input: AiInfrastructureLearningInput,
+): ArticleLearningContract {
+  const [first, second] = input.concepts;
+  return {
+    entryLevel: input.entryLevel ?? false,
+    entryNote: input.entryNote,
+    ...(input.recursiveTeaching ? { recursiveTeaching: true as const } : {}),
+    coreIdea: input.coreIdea,
+    assumedKnowledge: input.assumedKnowledge,
+    introducedHere: input.concepts.map(({ id, role }) => ({ id, role })),
+    conceptExplanations: input.concepts.map(
+      ({ id, intuition, workedExample, boundary, causalTrace }) => ({
+        id,
+        sectionId: "names",
+        intuition,
+        workedExample,
+        boundary,
+        ...(causalTrace ? { causalTrace } : {}),
+      }),
+    ),
+    conceptStages: [
+      {
+        label: "선수 경계",
+        relation: "기존 정본의 측정·장치 경계를 새 설계의 입력으로 사용합니다.",
+        concepts: input.assumedKnowledge.map((concept) => concept.id),
+      },
+      {
+        label: "설계 판단",
+        relation: "작은 수치 사례에서 첫 번째 새 개념으로 선택 기준을 만듭니다.",
+        concepts: [...input.assumedKnowledge.map((concept) => concept.id), first.id],
+      },
+      {
+        label: "운영 산출물",
+        relation: "첫 판단의 결과를 나머지 개념과 연결해 검증 가능한 원장으로 닫습니다.",
+        concepts: input.concepts.map((concept) => concept.id),
+      },
+    ],
+    exercises: [
+      { level: "basic", question: input.numericQuestion, answerChecklist: input.numericAnswers, requiredConcepts: [first.id], sectionId: "case" },
+      { level: "basic", question: `${first.role} 실제 사례와 적용 경계를 설명하세요.`, answerChecklist: [first.intuition, first.workedExample, first.boundary], requiredConcepts: [first.id], sectionId: "names" },
+      { level: "basic", question: `${second.role} 첫 개념의 결과와 어떻게 연결되는지 설명하세요.`, answerChecklist: [second.intuition, second.workedExample, second.boundary], requiredConcepts: [first.id, second.id], sectionId: "names" },
+      { level: "basic", question: `${input.sources[0].title}가 본문 판단을 직접 뒷받침하는 범위는 무엇인가요?`, answerChecklist: [input.sources[0].contribution, input.sources[0].evidenceScope, input.sources[0].notClaim], requiredConcepts: [first.id], sectionId: "source" },
+      { level: "basic", question: `${input.sources[1].title}를 사례에 적용할 때 남겨야 할 전제와 한계를 쓰세요.`, answerChecklist: [input.sources[1].assumptions, input.sources[1].evidenceScope, input.sources[1].notClaim], requiredConcepts: [second.id], sectionId: "comparison" },
+      { level: "basic", question: "본문의 공개 기준선과 실제 프로젝트 확정값을 구분하는 방법을 쓰세요.", answerChecklist: ["가정 표시", "확인일과 version", "현장 measurement", "담당자와 재검증"], requiredConcepts: [first.id, second.id], sectionId: "limits" },
+      { level: "advanced", question: input.changedCaseQuestion, answerChecklist: input.changedCaseAnswers, requiredConcepts: [first.id, second.id], sectionId: "mechanism" },
+      { level: "advanced", question: "핵심 구성요소 하나가 실패한 상태에서 첫 실패 지점과 rollback을 찾는 시험을 설계하세요.", answerChecklist: ["고정된 baseline", "한 번에 한 fault", "같은 timestamp", "first failure", "rollback", "재시험"], requiredConcepts: [first.id, second.id], sectionId: "picture" },
+      { level: "advanced", question: "두 공식 자료의 제품·version·측정 범위를 비교하고 서로 대신할 수 없는 주장을 쓰세요.", answerChecklist: ["제품 경계", "version과 확인일", "측정 조건", "일반화 금지"], requiredConcepts: [first.id, second.id], sectionId: "comparison" },
+      { level: "advanced", question: "면접에서 실제 담당 범위와 별도로 만든 역설계안을 과장 없이 설명하는 답변을 작성하세요.", answerChecklist: ["실제 역할", "하지 않은 결정", "공개 근거", "명시된 가정", "산출물", "남은 검증"], requiredConcepts: [first.id, second.id], sectionId: "limits" },
+    ],
+    papers: input.sources,
+  };
+}
+
 /**
  * 경제사 글은 같은 읽기 틀을 쓰되, 숫자 사례와 사료의 범위는 글마다
  * 따로 적습니다. 이 함수는 6+4 연습문제와 세 개념의 설명 계약이 빠지는 일을
@@ -26083,6 +26155,10 @@ export const ARTICLE_LEARNING: Readonly<
         id: "multi-lora-serving-and-adapter-switching",
         role: "Merge 대신 여러 adapter를 하나의 base 위에서 동시에 서빙하고 요청마다 바꿔 끼우는 방법을 설명합니다.",
       },
+      {
+        id: "training-checkpoint-resume-state",
+        role: "배포용 adapter 저장과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint를 구분합니다.",
+      },
 ],
     conceptExplanations: [
       {
@@ -26208,6 +26284,16 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "서로 다른 rank·target module을 가진 adapter를 하나의 batched kernel로 묶는 구현과 adapter 상주·교체 정책이 없으면 이 방식은 성립하지 않습니다.",
       },
+      {
+        id: "training-checkpoint-resume-state",
+        sectionId: "checkpoint-resume",
+        intuition:
+          "교재만 저장하면 읽던 페이지는 남지만, 채점표·진도표·섞어 둔 문제 순서는 사라지는 것과 같습니다.",
+        workedExample:
+          "Step 1,800 checkpoint가 adapter와 함께 optimizer·scheduler·RNG·sampler cursor를 복구하면 1,801번째 update부터 이어 가지만, adapter만 불러오면 새 학습 attempt입니다.",
+        boundary:
+          "Model 또는 adapter weight가 같아도 optimizer moment·learning rate·data order가 다르면 중단 전 학습의 정확한 재개라고 부를 수 없습니다.",
+      },
 ],
     conceptStages: [
       {
@@ -26250,6 +26336,16 @@ export const ARTICLE_LEARNING: Readonly<
         relation:
           "Base chat template의 serialized token에서 assistant target loss를 고정",
         concepts: ["sft", "response-loss-mask", "lora-token-loss-contract"],
+      },
+      {
+        label: "Resume and promotion",
+        relation:
+          "학습을 이어 갈 mutable state와 배포할 immutable adapter artifact를 분리하고 각각의 검증 기록을 남김",
+        concepts: [
+          "training-checkpoint-resume-state",
+          "lora-trainable-scope-contract",
+          "train-validation-test",
+        ],
       },
       {
         label: "Serving artifact",
@@ -26429,8 +26525,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "QLoRA checkpoint에서 unmerged·merged bf16·merged-requantized 세 artifact의 lineage와 quality/memory/p95 승인표를 설계하라.",
+          "QLoRA checkpoint에서 학습 재개 state와 unmerged·merged bf16·merged-requantized 배포 artifact의 lineage와 quality/memory/p95 승인표를 설계하라.",
         answerChecklist: [
+          "optimizer/scheduler/RNG/data cursor",
           "base/adapter hashes",
           "merge dtype",
           "requant method/group/scale",
@@ -26443,6 +26540,7 @@ export const ARTICLE_LEARNING: Readonly<
           "dynamic adapter tradeoff",
         ],
         requiredConcepts: [
+          "training-checkpoint-resume-state",
           "lora-merge-equivalence",
           "lora-requantization-boundary",
           "qlora-precision-path",
@@ -31289,6 +31387,10 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "content-addressed-artifact-reference",
         "role": "Artifact 위치·bytes digest·schema·producer를 한 reference로 묶습니다."
+      },
+      {
+        "id": "versioned-genai-evaluation-lineage",
+        "role": "Dataset·trace·scorer code·judge prompt/model을 함께 versioning해 점수 변화의 원인을 구분합니다."
       }
     ],
     "conceptExplanations": [
@@ -31305,6 +31407,13 @@ export const ARTICLE_LEARNING: Readonly<
         "intuition": "파일 위치와 바이트 내용, 해석 형식과 생산 실행을 함께 가리킵니다.",
         "workedExample": "[0.2,0.8]과 [0.1,0.9]는 UTF-8 9바이트·평균 0.50이 같지만 SHA-256은 3a865fbc…와 79cd929e…로 다릅니다.",
         "boundary": "신뢰할 기준 기록과 실제 보존 파일이 필요하며 hash 일치만으로 악의적 출처 변조를 막지는 못합니다."
+      },
+      {
+        "id": "versioned-genai-evaluation-lineage",
+        "sectionId": "mlflow-genai-evaluation",
+        "intuition": "같은 답안지를 다른 채점 기준으로 다시 매겼다면 학생 실력이 오른 것이 아니라 채점자가 바뀐 것입니다.",
+        "workedExample": "고정된 100개 response trace의 통과율이 78%에서 86%가 되었을 때 model output은 그대로이고 judge instruction v2만 바뀌었다면 scorer revision의 영향으로 기록합니다.",
+        "boundary": "Judge model과 prompt를 고정해도 사람 기준과의 타당성·slice 대표성·production drift가 자동으로 보장되지는 않습니다."
       }
     ],
     "conceptStages": [
@@ -31328,6 +31437,14 @@ export const ARTICLE_LEARNING: Readonly<
         "concepts": [
           "experiment-spec-attempt-identity",
           "content-addressed-artifact-reference"
+        ]
+      },
+      {
+        "label": "Evaluation lineage",
+        "relation": "저장한 response trace를 versioned scorer·judge로 다시 평가하고 점수 변화의 owner를 분리",
+        "concepts": [
+          "content-addressed-artifact-reference",
+          "versioned-genai-evaluation-lineage"
         ]
       }
     ],
@@ -31386,15 +31503,19 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "같은 두 배열의 평균이 모두 0.50이어도 예측 파일이 같다고 할 수 없는 이유는 무엇인가요?",
+        "question": "같은 100개 response trace의 통과율이 78%에서 86%로 바뀌었을 때 먼저 비교할 평가 계보는 무엇인가요?",
         "answerChecklist": [
-          "집계 손실정보",
-          "서로 다른내용",
-          "행별값 확인"
+          "dataset revision",
+          "trace digest",
+          "scorer code version",
+          "judge prompt와 model",
+          "environment",
+          "model 재실행 여부"
         ],
-        "sectionId": "why-identity",
+        "sectionId": "mlflow-genai-evaluation",
         "requiredConcepts": [
-          "content-addressed-artifact-reference"
+          "content-addressed-artifact-reference",
+          "versioned-genai-evaluation-lineage"
         ]
       },
       {
@@ -31454,16 +31575,21 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "MLflow 2018 논문의 API 예시와 현재 run_id 명세는 각각 무엇을 근거로 삼나요?",
+        "question": "MLflow에 저장한 trace를 새 judge로 재평가할 때 이전 점수와 직접 비교할 수 있는 receipt를 설계하세요.",
         "answerChecklist": [
-          "역사적설계",
-          "확인일 API",
-          "버전구분",
-          "전체자동수집아님"
+          "trace digest",
+          "dataset revision",
+          "scorer registered version",
+          "judge instruction과 model",
+          "evaluation environment",
+          "old/new score",
+          "model output 재사용 표시",
+          "promotion gate"
         ],
-        "sectionId": "paper-mlflow-lifecycle",
+        "sectionId": "mlflow-genai-evaluation",
         "requiredConcepts": [
-          "experiment-spec-attempt-identity"
+          "experiment-spec-attempt-identity",
+          "versioned-genai-evaluation-lineage"
         ]
       }
     ],
@@ -31691,16 +31817,19 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "tracking-store-artifact-integrity", role: "Backend metadata와 artifact objects가 함께 복구되는지 검사합니다." },
       { id: "mutable-alias-resolution-receipt", role: "Alias가 승인 시점에 가리킨 immutable version을 고정합니다." },
       { id: "registry-deployment-version-parity", role: "Registry와 실제 endpoint가 같은 artifact·config를 쓰는지 대조합니다." },
+      { id: "unity-catalog-serving-version-boundary", role: "Unity Catalog의 3단계 이름·alias와 serving endpoint의 고정 model version을 구분합니다." },
     ],
     conceptExplanations: [
       { id: "tracking-store-artifact-integrity", sectionId: "store-integrity", intuition: "도서관 목록과 실제 서고가 둘 다 복구되어야 책을 다시 읽을 수 있습니다.", workedExample: "Backend URI가 가리키는 model object의 존재·readability·digest·schema를 모두 검사합니다.", boundary: "Database row만 남아도 replayable run은 아닙니다." },
       { id: "mutable-alias-resolution-receipt", sectionId: "alias-promotion", intuition: "오늘의 우승자 표지는 옮겨가므로 승인서에는 고정 선수 번호를 적습니다.", workedExample: "candidate를 v17로 resolve하고 digest·policy·approver·time을 receipt에 고정합니다.", boundary: "Alias만 저장하면 재할당 뒤 과거 승인을 재현할 수 없습니다." },
       { id: "registry-deployment-version-parity", sectionId: "deployment-parity", intuition: "승인 명단의 제품과 매장에 놓인 제품의 serial number가 같은지 봅니다.", workedExample: "Registry v21 digest와 endpoint startup attestation의 model·container·config digest를 비교합니다.", boundary: "Canary에서는 여러 approved version과 traffic fraction이 의도적으로 공존할 수 있습니다." },
+      { id: "unity-catalog-serving-version-boundary", sectionId: "databricks-unity-catalog", intuition: "회사 주소록의 정식 이름과 오늘 운영 중인 제품 일련번호는 서로 다른 식별자입니다.", workedExample: "catalog.schema.model의 Champion alias를 v21로 resolve한 뒤 endpoint에는 v21을 명시하고 실제 loaded version을 다시 확인합니다.", boundary: "Endpoint가 READY여도 이전 version을 계속 서빙할 수 있으므로 상태 값만으로 registry parity를 증명할 수 없습니다." },
     ],
     conceptStages: [
       { label: "Storage", relation: "Metadata와 required artifacts의 공동 integrity를 검사", concepts: ["tracking-store-artifact-integrity"] },
       { label: "Promotion", relation: "Mutable alias를 immutable version·digest receipt로 고정", concepts: ["tracking-store-artifact-integrity", "mutable-alias-resolution-receipt"] },
       { label: "Deployment", relation: "Promotion receipt와 runtime attestation을 대조", concepts: ["mutable-alias-resolution-receipt", "registry-deployment-version-parity"] },
+      { label: "Managed serving", relation: "Unity Catalog 이름·alias를 immutable version으로 resolve하고 endpoint loaded revision과 대조", concepts: ["mutable-alias-resolution-receipt", "unity-catalog-serving-version-boundary", "registry-deployment-version-parity"] },
     ],
     exercises: [
       { level: "basic", question: "Backend store와 artifact store의 역할을 구분하라.", answerChecklist: ["run metadata", "metrics", "URI", "weights", "large objects", "separate lifecycle"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "overview" },
@@ -31708,10 +31837,10 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "DB row는 있지만 object가 삭제된 run을 판정하라.", answerChecklist: ["metadata true", "exists false", "replay false", "dangling", "exclude promotion", "repair"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "store-integrity" },
       { level: "basic", question: "Immutable version과 mutable alias를 구분하라.", answerChecklist: ["version fixed", "alias moves", "intent", "resolve", "history", "receipt"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
       { level: "basic", question: "Promotion receipt의 일곱 필드를 쓰라.", answerChecklist: ["model", "alias", "version", "digest", "policy", "approver", "time"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
-      { level: "basic", question: "Registry champion v21, endpoint v17인 상태를 판정하라.", answerChecklist: ["registry valid", "endpoint stale", "parity false", "runtime probe", "rollout", "repair"], requiredConcepts: ["registry-deployment-version-parity"], sectionId: "deployment-parity" },
+      { level: "basic", question: "Unity Catalog의 Champion alias는 v21인데 endpoint가 v17을 서빙하는 상태를 판정하라.", answerChecklist: ["three-level model name", "alias resolves v21", "endpoint stale v17", "parity false", "runtime probe", "rollout or rollback"], requiredConcepts: ["unity-catalog-serving-version-boundary", "registry-deployment-version-parity"], sectionId: "databricks-unity-catalog" },
       { level: "advanced", question: "Backend DB와 object store의 공동 restore drill을 설계하라.", answerChecklist: ["recovery point", "DB restore", "object versioning", "credentials", "digest job", "RPO/RTO"], requiredConcepts: ["tracking-store-artifact-integrity"], sectionId: "store-integrity" },
       { level: "advanced", question: "Alias 재할당 뒤 과거 승인을 감사하는 절차를 설계하라.", answerChecklist: ["alias history", "resolve time", "version", "digest", "approver", "policy revision"], requiredConcepts: ["mutable-alias-resolution-receipt"], sectionId: "alias-promotion" },
-      { level: "advanced", question: "Canary 두 version의 deployment parity receipt를 설계하라.", answerChecklist: ["rollout ID", "approved versions", "endpoint", "traffic fraction", "artifact digest", "serving config"], requiredConcepts: ["registry-deployment-version-parity"], sectionId: "deployment-parity" },
+      { level: "advanced", question: "Unity Catalog model의 두 version을 canary로 내보낼 deployment parity receipt를 설계하라.", answerChecklist: ["catalog.schema.model", "resolved versions", "aliases only as intent", "endpoint", "traffic fraction", "artifact digest", "serving config", "loaded revision"], requiredConcepts: ["unity-catalog-serving-version-boundary", "mutable-alias-resolution-receipt", "registry-deployment-version-parity"], sectionId: "databricks-unity-catalog" },
       { level: "advanced", question: "Registry pointer는 맞지만 object bytes가 변한 사건을 탐지하라.", answerChecklist: ["load bytes", "rehash", "digest mismatch", "quarantine", "audit event", "restore"], requiredConcepts: ["tracking-store-artifact-integrity", "registry-deployment-version-parity"], sectionId: "store-integrity" },
     ],
     papers: [
@@ -88901,7 +89030,7 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "prefill-vs-decode-attention-kernel",
         "sectionId": "regimes",
         "intuition": "배열 크기와 실제 전송량, 비인과 512 FLOP의 4/1.6 비교, decode와 GQA의 분모를 구별합니다.",
-        "workedExample": "전체 비인과 512 FLOP를 네 배열 최소 장부 128바이트로 나누면 4, KV를 query 묶음마다 다시 읽는 320바이트로 나누면 1.6 FLOP/B입니다.",
+        "workedExample": "8행×2값/행=16값이고 값마다 2바이트라 배열 하나는 32바이트입니다. Q·K·V 읽기와 O 쓰기를 한 번씩 세면 128바이트라서 512/128=4 FLOP/B입니다. Query 8행을 2행씩 나눈 네 묶음이 K·V 64바이트를 각각 되읽으면 4×64+Q/O 64=320바이트라서 1.6 FLOP/B입니다.",
         "boundary": "Footprint는 저장 용량이고 traffic은 이동량입니다. N/b와 2g/b는 해당 최소 장부·재사용 가정의 기준 비율이며 실제 병목이나 지연 상한이 아닙니다."
       },
       {
@@ -89019,11 +89148,13 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "level": "basic",
         "sectionId": "regimes",
-        "question": "전체 비인과 계산 512 FLOP를 최소 QKVO 장부 128바이트와 KV를 각 query 묶음마다 다시 읽는 320바이트로 나누세요. 이 값이 보장하는 범위는 무엇인가요?",
+        "question": "전체 비인과 계산 512 FLOP에서 배열 하나의 32바이트, 한 번 이동 장부 128바이트, K·V 재읽기 장부 320바이트를 각 항의 뜻과 단위를 붙여 유도하세요. 마지막 query 한 행의 64 FLOP와 72바이트도 같은 방식으로 계산하세요.",
         "answerChecklist": [
-          "각각 4와 1.6 FLOP/B이며 같은 512 FLOP를 분자로 쓴 비교입니다.",
-          "배열 크기는 실제 HBM 전송량이 아닙니다. 재사용·임시 결과·보조 저장을 확인해야 합니다.",
-          "이 기준 비율은 실측시간, 계산 병목, 지연 상한을 보장하지 않습니다."
+          "8행×2값/행=16값, 16값×2바이트/값=32바이트이며 Q·K·V 읽기와 O 쓰기 합계는 128바이트입니다.",
+          "8 query행÷2행/묶음=4묶음이고, 묶음마다 K 32+V 32=64바이트를 읽어 256바이트입니다. Q 읽기와 O 쓰기 64바이트를 더하면 320바이트입니다.",
+          "같은 512 FLOP를 나눠 각각 4와 1.6 FLOP/B를 얻습니다. 분자의 작업 범위는 같습니다.",
+          "Decode는 QK 32+PV 32=64 FLOP이고 K·V 64바이트와 Q·O 8바이트를 더해 72바이트, 곧 8/9 FLOP/B입니다.",
+          "Footprint와 HBM traffic을 구별하고 cache 재사용·LSE·임시 결과·보조 이동을 확인해야 합니다. 이 기준 비율은 실측시간이나 병목을 보장하지 않습니다."
         ],
         "requiredConcepts": [
           "prefill-vs-decode-attention-kernel"
@@ -153198,9 +153329,9 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Microsoft Learn · AZ-204 study guide을 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
+        "question": "Microsoft Learn · AI-200 study guide를 첫 자료와 함께 읽어야 하는 이유를 설명하세요.",
         "answerChecklist": [
-          "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다.",
+          "현행 AI-200의 개발자 역할과 네 영역을 확인합니다.",
           "공급자 또는 역할 비교",
           "최신 날짜 재확인"
         ],
@@ -153295,16 +153426,96 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "Microsoft Learn · AZ-204 study guide",
-        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-204",
+        "title": "Microsoft Learn · AI-200 study guide",
+        "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200",
         "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
-        "contribution": "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다.",
+        "contribution": "현행 AI-200의 개발자 역할과 네 영역을 확인합니다.",
         "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
         "evidenceScope": "공식 기관이 밝힌 현재 시험 범위 또는 서비스 역할에만 근거로 사용합니다.",
         "notClaim": "실제 시험 문항의 정확한 출제 횟수나 합격·취업을 보장한다는 뜻이 아닙니다.",
         "sectionId": "comparison"
       }
     ]
+  },
+  "cloud/kubernetes-request-path-and-cka": {
+    entryLevel: true,
+    entryNote: "세 replica 중 두 개만 Ready라 현재 용량 70 req/s가 입력 90 req/s보다 20 req/s 부족한 사건에서 시작합니다.",
+    recursiveTeaching: true,
+    coreIdea: "Kubernetes 장애는 resource 이름을 나열해 푸는 것이 아니라 desired state가 API에 저장되고 scheduler·kubelet·runtime·network·storage를 거쳐 Ready endpoint와 client 성공이 되는 전환 중 첫 실패 경계를 찾는 문제이며, CKA 준비도 이 경로의 반복 복구 lab으로 바꿔야 합니다.",
+    assumedKnowledge: [],
+    introducedHere: [
+      { id: "kubernetes-reconciliation-request-path", role: "원하는 replica 수가 저장된 API object에서 Ready endpoint와 client 성공으로 바뀌는 전체 경로를 설명합니다." },
+      { id: "kubernetes-first-failed-transition-diagnosis", role: "Pod condition·event·node service·plugin·endpoint 증거에서 마지막 성공 다음의 첫 실패 전환을 찾습니다." },
+      { id: "cka-lab-evidence-loop", role: "공식 CKA 영역을 장애 재현·수정·acceptance·rollback 산출물로 바꿉니다." },
+    ],
+    conceptExplanations: [
+      {
+        id: "kubernetes-reconciliation-request-path",
+        sectionId: "names",
+        intuition: "주문서에 적은 세 개와 실제로 준비된 세 개가 같아질 때까지 여러 담당자가 같은 상태표를 보며 빈칸을 줄이는 경로입니다.",
+        workedExample: "Deployment는 3개를 원하지만 2개만 Ready이고, process당 35 req/s라 현재 용량은 70 req/s입니다.",
+        boundary: "API object가 저장됐거나 container가 Running이라는 한 상태만으로 client 요청 성공을 보장하지 않습니다.",
+        causalTrace: {
+          answer: "원하는 상태를 저장·배치·node 실행·준비·traffic 게시의 연속된 전환으로 읽습니다.",
+          followUpQuestion: "그중 어느 전환이 멈췄는지 어떻게 찾나요?",
+          bottleneck: "Pending·Running·Ready 같은 상태 이름만 보면 서로 다른 owner의 실패가 한 단어에 섞입니다.",
+          mechanism: "API에서 stored object와 condition을 읽고 scheduler binding, kubelet·runtime·plugin, readiness와 endpoint를 순서대로 대조합니다.",
+          remainingCost: "Component가 모두 초록색이어도 application dependency와 client SLO는 별도로 실패할 수 있습니다.",
+          decisionRule: "마지막 성공 전환 다음의 owner evidence를 확인하고 실제 client request로 acceptance를 닫습니다.",
+        },
+      },
+      {
+        id: "kubernetes-first-failed-transition-diagnosis",
+        sectionId: "mechanism",
+        intuition: "여섯 개 문을 지난 택배가 어디까지 도착했는지 보고, 마지막으로 통과한 문 바로 다음 문부터 조사합니다.",
+        workedExample: "PodScheduled=False·Insufficient cpu이면 image pull·CNI·readiness보다 앞선 placement 단계가 첫 실패입니다.",
+        boundary: "Event는 수명이 짧고 managed cluster는 host·control-plane 접근이 제한될 수 있어 배포판별 증거 경로가 필요합니다.",
+        causalTrace: {
+          answer: "가장 넓은 object 상태에서 condition·event·node log·endpoint 순으로 첫 false를 찾습니다.",
+          followUpQuestion: "첫 false를 고친 뒤 무엇으로 복구를 확인하나요?",
+          bottleneck: "수정 명령의 종료 코드와 Pod Running만 보면 Ready·endpoint·client failure가 남을 수 있습니다.",
+          mechanism: "수정 전 증거를 저장하고 동일 query를 다시 실행한 뒤 EndpointSlice와 synthetic request의 latency·error를 확인합니다.",
+          remainingCost: "일시적인 수렴과 재발 가능한 capacity·policy 문제를 구분하려면 시간 구간과 load가 필요합니다.",
+          decisionRule: "Condition 회복뿐 아니라 원래 3 Ready와 90 req/s SLO가 회복될 때 사건을 닫습니다.",
+        },
+      },
+      {
+        id: "cka-lab-evidence-loop",
+        sectionId: "comparison",
+        intuition: "정답 명령을 한 번 입력하는 대신 고장 전·고장 중·수정 후 사진을 같은 양식으로 남겨 다음 장애에서도 순서를 재사용합니다.",
+        workedExample: "40시간 설명용 예산을 Troubleshooting 12h, Architecture 10h, Networking 8h, Workloads 6h, Storage 4h의 반복 lab으로 나눕니다.",
+        boundary: "이 시간은 합격 보장이나 실제 영역별 문항 수가 아니며 production change control·backup·security 경험을 대신하지 않습니다.",
+        causalTrace: {
+          answer: "공식 시험 비중을 읽기 시간이 아니라 재현할 장애와 보관할 출력에 배분합니다.",
+          followUpQuestion: "시험에서 빠르게 고친 결과를 현장 능력으로 어떻게 확장하나요?",
+          bottleneck: "시간 제한 lab은 change approval·rollback·독립 restore·장기 SLO를 생략할 수 있습니다.",
+          mechanism: "각 lab에 context, symptom, before evidence, 최소 수정, after acceptance와 rollback을 한 묶음으로 저장합니다.",
+          remainingCost: "대규모 HA·upgrade·provider 지원 경계와 조직 절차는 별도 현장 연습이 필요합니다.",
+          decisionRule: "CKA 범위는 command fluency로 검증하고 production 주장은 별도 runbook과 복구 drill 증거가 있을 때만 합니다.",
+        },
+      },
+    ],
+    conceptStages: [
+      { label: "Desired → Ready", relation: "저장된 의도에서 node 실행과 endpoint 게시까지 전체 경로를 봅니다.", concepts: ["kubernetes-reconciliation-request-path"] },
+      { label: "First failure", relation: "각 전환의 condition·event·log에서 첫 실패 owner를 좁힙니다.", concepts: ["kubernetes-reconciliation-request-path", "kubernetes-first-failed-transition-diagnosis"] },
+      { label: "Lab → evidence", relation: "공식 CKA 범위를 재현·복구·acceptance 기록으로 바꿉니다.", concepts: ["kubernetes-first-failed-transition-diagnosis", "cka-lab-evidence-loop"] },
+    ],
+    exercises: [
+      { level: "basic", question: "3개×35 req/s 계획과 Ready 2개×35 req/s 현실의 용량 gap을 계산하고 각 수의 뜻을 쓰세요.", answerChecklist: ["105 req/s", "70 req/s", "입력 90 req/s", "20 req/s gap", "설명용 가정", "queue 또는 거절"], requiredConcepts: ["kubernetes-reconciliation-request-path"], sectionId: "case" },
+      { level: "basic", question: "API server·scheduler·kubelet이 같은 Pod에서 맡는 일을 순서대로 설명하세요.", answerChecklist: ["HTTP API", "stored object", "unscheduled Pod", "binding", "node agent", "container health"], requiredConcepts: ["kubernetes-reconciliation-request-path"], sectionId: "names" },
+      { level: "basic", question: "PodScheduled=False와 Insufficient cpu에서 container log가 없는 이유를 설명하세요.", answerChecklist: ["node 미선정", "placement 실패", "container 미생성", "event", "resource request", "node capacity"], requiredConcepts: ["kubernetes-first-failed-transition-diagnosis"], sectionId: "mechanism" },
+      { level: "basic", question: "Running과 Ready, EndpointSlice 게시가 서로 다른 완료 조건인 이유를 쓰세요.", answerChecklist: ["process 시작", "readiness", "traffic candidate", "endpoint", "client request", "SLO"], requiredConcepts: ["kubernetes-reconciliation-request-path", "kubernetes-first-failed-transition-diagnosis"], sectionId: "mechanism" },
+      { level: "basic", question: "CKA v1.35 공식 다섯 영역과 확인일을 쓰고 가장 큰 영역을 고르세요.", answerChecklist: ["2026-10-08", "Troubleshooting 30%", "Architecture 25%", "Networking 20%", "Workloads 15%", "Storage 10%"], requiredConcepts: ["cka-lab-evidence-loop"], sectionId: "comparison" },
+      { level: "advanced", question: "ContainerCreating에서 멈춘 Pod의 첫 실패 경계를 찾는 명령 순서를 설계하세요.", answerChecklist: ["context", "condition", "event", "node", "kubelet", "runtime", "CNI/CSI", "acceptance"], requiredConcepts: ["kubernetes-first-failed-transition-diagnosis"], sectionId: "mechanism" },
+      { level: "advanced", question: "Service는 존재하지만 client timeout인 사건을 Pod에서 Gateway까지 추적하세요.", answerChecklist: ["Ready", "EndpointSlice", "selector", "CoreDNS", "NetworkPolicy", "Service route", "Gateway", "synthetic request"], requiredConcepts: ["kubernetes-reconciliation-request-path", "kubernetes-first-failed-transition-diagnosis"], sectionId: "mechanism" },
+      { level: "advanced", question: "etcd snapshot 성공과 실제 control-plane restore 성공을 구분하는 acceptance를 설계하세요.", answerChecklist: ["snapshot status", "PKI", "encryption key", "config", "isolated restore", "API objects", "workload read/write", "RTO"], requiredConcepts: ["cka-lab-evidence-loop"], sectionId: "comparison" },
+      { level: "advanced", question: "CKA Troubleshooting 12시간을 세 lab과 각 before/after 증거로 나누세요.", answerChecklist: ["node NotReady", "component failure", "Service timeout", "context", "before evidence", "minimal fix", "after acceptance", "rollback"], requiredConcepts: ["kubernetes-first-failed-transition-diagnosis", "cka-lab-evidence-loop"], sectionId: "comparison" },
+      { level: "basic", question: "CKA 합격과 GPU Kubernetes cluster 운영 능력 사이에 남는 gap을 설명하세요.", answerChecklist: ["device plugin", "operator", "driver/CUDA", "RDMA", "collective", "topology placement", "gang scheduling", "commissioning"], requiredConcepts: ["cka-lab-evidence-loop"], sectionId: "limits" },
+    ],
+    papers: [
+      { title: "Kubernetes Components", href: "https://kubernetes.io/docs/concepts/overview/components/", problem: "Pod 상태를 component 이름 목록이 아니라 owner가 있는 전환 경로로 읽어야 합니다.", contribution: "Control plane과 node component의 공식 책임을 제공합니다.", assumptions: "배포판과 managed service에 따라 process 위치·접근·log 경로는 다릅니다.", evidenceScope: "Upstream Kubernetes component responsibility와 현재 문서 범위입니다.", notClaim: "모든 cluster의 실제 설치 topology와 장애 원인을 자동으로 판정한다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Linux Foundation · Certified Kubernetes Administrator", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", problem: "변경되는 시험 version·형식·영역 비중을 강의 기억으로 고정하지 않아야 합니다.", contribution: "확인일 현재 v1.35, 2시간 performance-based exam과 다섯 영역 비중을 제공합니다.", assumptions: "시험 환경은 Kubernetes release 뒤 바뀔 수 있어 접수 직전에 다시 확인합니다.", evidenceScope: "공식 시험 형식과 curriculum 영역에만 사용합니다.", notClaim: "영역 비중이 실제 문항 수나 합격·production 경험을 보장한다는 뜻이 아닙니다.", sectionId: "comparison" },
+    ],
   },
   "cloud/cloud-foundations-responsibility-regions": {
     "entryLevel": true,
@@ -154485,7 +154696,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "AWS database decision guide",
-        "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-aws-database/",
+        "href": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/databases-on-aws-how-to-choose.html",
         "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
         "contribution": "접근 패턴과 운영 요구에 따른 AWS 데이터베이스 선택을 확인합니다.",
         "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",
@@ -156201,7 +156412,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "azure-administration-lifecycle", role: "Azure 신원·실행·망·관측 자원을 만들고 복구하는 관리자 수준의 기초" },
     ],
     introducedHere: [
-      { id: "azure-ai200-backend-request-path", role: "분당 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나누는 요청 경로를 설명합니다." },
+      { id: "azure-ai200-backend-request-path", role: "분당 100건을 캐시 60건·벡터 조회 40건·비동기 갱신 5건으로 나눈 요청 경로를 설명합니다." },
       { id: "azure-ai200-operability-loop", role: "같은 100건을 다시 보내며 첫 실패와 복구 전후 결과를 확인하는 운영 고리를 설명합니다." },
     ],
     conceptExplanations: [
@@ -156209,13 +156420,13 @@ export const ARTICLE_LEARNING: Readonly<
         id: "azure-ai200-backend-request-path",
         sectionId: "names",
         intuition: "AI 기능이 실제 서비스가 되려면 요청을 받을 실행 환경, 자료를 찾을 저장소, 느린 일을 맡을 큐와 비밀 관리가 한 경로로 이어져야 합니다.",
-        workedExample: "분당 100건 중 60건은 Redis에서 답하고 40건은 벡터 저장소를 조회하며 갱신 5건은 Service Bus로 넘깁니다.",
-        boundary: "가까운 벡터를 찾고 메시지를 보관해도 답의 사실성·자료 권한·중복 처리가 자동으로 보장되지는 않습니다.",
+        workedExample: "분당 100건 중 60건은 Redis에서 답합니다. 40건은 벡터 저장소를 조회하며 갱신 5건은 Service Bus로 넘깁니다.",
+        boundary: "가까운 벡터를 찾았으며 메시지를 보관했어도 답의 사실성·자료 권한·중복 처리가 자동으로 보장되지는 않습니다.",
         causalTrace: {
           answer: "AI-200의 핵심은 AI 백엔드 한 요청을 실행·데이터·메시징·보안 경계 끝까지 구현하는 일입니다.",
           followUpQuestion: "왜 모델 API를 한 번 호출하는 코드만으로는 부족한가요?",
           bottleneck: "요청량이 늘면 캐시 miss·벡터 질의·긴 갱신이 같은 응답 경로에서 지연과 실패를 퍼뜨립니다.",
-          mechanism: "100건을 캐시 60건과 벡터 조회 40건으로 나누고, 긴 갱신 5건은 작업 ID와 함께 큐로 분리합니다.",
+          mechanism: "100건을 캐시 60건과 벡터 조회 40건으로 나눕니다. 긴 갱신 5건은 작업 ID와 함께 큐로 분리합니다.",
           remainingCost: "컨테이너·저장소·큐마다 권한·비용·재시도와 자료 일관성을 따로 운영해야 합니다.",
           decisionRule: "문제의 병목이 실행·자료·메시지 중 어디인지 먼저 정하고 공식 범위와 실제 운영 조건을 함께 만족하는 서비스를 고릅니다.",
         },
@@ -156223,14 +156434,14 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "azure-ai200-operability-loop",
         sectionId: "names",
-        intuition: "구축 성공 화면보다 한 요청이 어디서 늦고 끊겼는지 찾아 고친 뒤 같은 부하로 다시 확인하는 기록이 운영 능력을 보여 줍니다.",
-        workedExample: "trace ID로 늦은 벡터 질의를 찾고 인덱스를 고친 뒤 같은 100건의 지연과 실패를 다시 측정합니다.",
+        intuition: "구축 성공 화면보다 한 요청의 지연과 중단 위치를 찾아 수정한 뒤 같은 부하로 다시 확인하는 기록이 운영 능력을 보여 줍니다.",
+        workedExample: "trace ID로 늦은 벡터 질의를 찾습니다. 인덱스를 고친 뒤 같은 100건의 지연과 실패를 다시 측정합니다.",
         boundary: "추적·로그·지표를 모으기만 해서는 경보 기준, 비용 상한과 복구 절차가 생기지 않습니다.",
         causalTrace: {
           answer: "운영 가능성 고리는 관측 자료를 실제 수정과 재검증으로 닫는 과정입니다.",
           followUpQuestion: "왜 로그 한 줄을 찾는 데서 진단이 끝나지 않나요?",
           bottleneck: "실행·벡터 조회·큐 소비자의 기록이 분리되면 같은 요청의 첫 실패와 이후 증상을 섞기 쉽습니다.",
-          mechanism: "trace ID로 세 구간을 잇고 첫 실패만 최소 수정한 뒤 같은 100건을 보내 오류·지연·죽은 편지 메시지를 비교합니다.",
+          mechanism: "trace ID로 세 구간을 이은 뒤 첫 실패만 최소 수정합니다. 같은 100건을 보내 오류·지연·죽은 편지 메시지를 비교합니다.",
           remainingCost: "추적 저장 비용과 개인정보 경계, 표본 추출 때문에 모든 요청의 모든 자료를 계속 보관할 수는 없습니다.",
           decisionRule: "수정 전후를 같은 입력과 단위로 비교하고 비밀 노출 없이 목표 지연·오류·큐 상태를 만족할 때 복구를 끝냅니다.",
         },
@@ -156239,17 +156450,17 @@ export const ARTICLE_LEARNING: Readonly<
     conceptStages: [
       { label: "관리 기초", relation: "Azure 자원의 신원·실행·망·관측 생애를 먼저 익힙니다.", concepts: ["azure-administration-lifecycle"] },
       { label: "AI 백엔드 요청", relation: "요청 100건을 실행·캐시·벡터 조회·메시지 경계로 나눕니다.", concepts: ["azure-administration-lifecycle", "azure-ai200-backend-request-path"] },
-      { label: "진단과 재검증", relation: "trace ID로 첫 실패를 고치고 같은 요청으로 결과를 다시 확인합니다.", concepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"] },
+      { label: "진단과 재검증", relation: "trace ID로 첫 실패를 수정한 뒤 같은 요청으로 결과를 다시 확인합니다.", concepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"] },
     ],
     exercises: [
-      { level: "basic", question: "분당 요청 100건을 캐시 60건과 벡터 조회 40건으로 나누고, 갱신 5건을 큐로 보내는 경로를 다시 쓰세요.", answerChecklist: ["100=60+40 장부", "갱신 5건은 40건 중 비동기 경로", "각 수의 단위와 설명용 가정"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "case" },
+      { level: "basic", question: "분당 요청 100건을 캐시 60건과 벡터 조회 40건으로 나눈 뒤 갱신 5건을 큐로 보내는 경로를 다시 쓰세요.", answerChecklist: ["100=60+40 장부", "갱신 5건은 40건 중 비동기 경로", "각 수의 단위와 설명용 가정"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "case" },
       { level: "basic", question: "Azure AI-200 backend request path가 필요한 이유를 사례로 설명하세요.", answerChecklist: ["실행·자료·메시징·보안 연결", "캐시 miss와 긴 작업 분리"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "names" },
       { level: "basic", question: "Azure AI-200 operability loop가 요청 경로의 결과를 어떻게 이어받나요?", answerChecklist: ["trace ID로 구간 연결", "최소 수정", "같은 100건 재검증"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "mechanism" },
       { level: "basic", question: "AI-200 공식 가이드가 직접 뒷받침하는 시험 영역과 선수 능력을 쓰세요.", answerChecklist: ["컨테이너 20~25%", "데이터 25~30%", "서비스 연결 20~25%", "보안·관측·문제 해결 20~25%"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "source" },
       { level: "basic", question: "AI-200과 폐지된 AZ-204를 같은 시험으로 보면 안 되는 이유를 설명하세요.", answerChecklist: ["AZ-204 폐지", "AI-200의 AI 백엔드 범위", "겹치는 기술과 다른 자격 상태"], requiredConcepts: ["azure-ai200-backend-request-path"], sectionId: "comparison" },
       { level: "basic", question: "운영 가능성 고리의 적용 경계를 한 가지 쓰세요.", answerChecklist: ["관측만으로 복구 절차가 생기지 않음", "비용·개인정보·표본 추출 경계"], requiredConcepts: ["azure-ai200-operability-loop"], sectionId: "limits" },
-      { level: "advanced", question: "요청이 분당 1천 건으로 늘고 캐시 적중률이 30%로 내려갔을 때 데이터 경로와 비용 관측을 다시 설계하세요.", answerChecklist: ["캐시 300건과 miss 700건", "벡터 저장소 병목", "확장·인덱스·RU 또는 연결 수", "비용·지연 측정"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "mechanism" },
-      { level: "advanced", question: "작업 소비자가 같은 메시지를 두 번 받는 장애를 넣고 안전한 재처리 절차를 쓰세요.", answerChecklist: ["작업 ID", "멱등 처리", "재시도와 죽은 편지 큐", "trace와 결과 검증"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "picture" },
+      { level: "advanced", question: "요청이 분당 1천 건으로 늘며 캐시 적중률이 30%로 내려갔을 때 데이터 경로와 비용 관측을 다시 설계하세요.", answerChecklist: ["캐시 300건과 miss 700건", "벡터 저장소 병목", "확장·인덱스·RU 또는 연결 수", "비용·지연 측정"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "mechanism" },
+      { level: "advanced", question: "작업 소비자가 같은 메시지를 두 번 받는 장애를 넣은 뒤 안전한 재처리 절차를 쓰세요.", answerChecklist: ["작업 ID", "멱등 처리", "재시도와 죽은 편지 큐", "trace와 결과 검증"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "picture" },
       { level: "advanced", question: "공식 가이드 변경일이 갱신되면 이 글에서 다시 확인할 항목을 쓰세요.", answerChecklist: ["시험 코드와 자격 상태", "영역 비중", "세부 서비스", "언어별 갱신 차이"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "comparison" },
       { level: "advanced", question: "AI-200 판단을 보여 줄 취업용 실습과 실패 증거를 설계하세요.", answerChecklist: ["재현 가능한 배포", "권한·인덱스·큐 장애", "추적·로그·지표", "복구 전후 지연·오류·비용"], requiredConcepts: ["azure-ai200-backend-request-path", "azure-ai200-operability-loop"], sectionId: "limits" },
     ],
@@ -156258,4 +156469,322 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Microsoft Learn · Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", problem: "시험 코드와 실제 자격 이름·역할·응시 상태를 분리해 확인해야 합니다.", contribution: "현행 자격 이름과 개발 생애 전체를 다루는 역할, AI-200 연결을 확인합니다.", assumptions: "시험 운영 정보와 지원 언어는 이후 바뀔 수 있습니다.", evidenceScope: "공식 자격 페이지가 밝힌 현재 자격과 응시 정보에만 적용합니다.", notClaim: "AZ-204와 같은 범용 개발 범위를 그대로 잇는다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
+  "gpu/nvidia-nca-aiio-study-guide": aiInfrastructureLearning({
+    entryLevel: true,
+    recursiveTeaching: true,
+    entryNote: "GPU 16개가 보이지만 2-node 작업이 시작하지 못하는 사건에서 출발해 공식 38%·40%·22%를 19·20·11개의 학습 장부와 host→container→serving→scheduler→health 실습으로 바꿉니다.",
+    coreIdea: "NCA-AIIO는 AI 인프라·운영의 폭을 점검하는 Associate 자격이며, CUDA·Container Toolkit·Triton·Slurm·BCM·GPU Operator·DCGM의 책임을 설명·명령·출력·P0 산출물에 연결할 때 지원 직무의 빈칸을 찾는 증거 지도가 됩니다.",
+    assumedKnowledge: [],
+    concepts: [
+      {
+        id: "nca-aiio-objective-evidence-map",
+        role: "NCA-AIIO의 공식 목표를 현장 질문·명령·출력·P0 산출물에 연결하는 증거 지도를 설명합니다.",
+        intuition: "시험 목차의 각 줄 옆에 실제로 열어 볼 계기판과 제출할 점검표를 붙이는 것과 같습니다.",
+        workedExample: "GPU monitoring 목표를 nvidia-smi·DCGM 출력, compatibility manifest와 acceptance ledger에 연결합니다.",
+        boundary: "명령 출력을 모아도 원인 격리·복구·재발 방지를 수행했다는 뜻은 아닙니다.",
+        causalTrace: {
+          answer: "공식 목표마다 설명과 실행 증거를 붙이면 시험 오답과 실무 빈칸이 같은 표에 남습니다.",
+          followUpQuestion: "왜 공식 과정을 듣고 모의 문제만 풀어서는 부족합니까?",
+          bottleneck: "용어 선택 문제는 맞힐 수 있어도 실제 장애에서 첫 확인 지점과 정상·실패 출력을 말하지 못할 수 있습니다.",
+          mechanism: "목표 한 줄을 16-GPU 사건으로 설명하고 명령·계산을 실행한 뒤 원본 출력과 P0 원장을 연결합니다.",
+          remainingCost: "실습 환경, 실패 재현과 출력 판독에 공식 과정 7시간보다 더 많은 시간이 듭니다.",
+          decisionRule: "각 목표에 2분 설명, 실행 증거, 실패 판독과 다음 원장이 모두 있을 때 학습 완료로 표시합니다.",
+        },
+      },
+      {
+        id: "associate-practice-evidence-boundary",
+        role: "Associate 자격의 개념 설명과 Professional·현장 수행 증거의 역할 경계를 설명합니다.",
+        intuition: "운전 이론 시험 합격과 실제 차량을 점검하고 고장 상황에서 복구한 기록을 다른 증거로 보는 것과 같습니다.",
+        workedExample: "Power·cooling 요구를 식별하는 답과 B300 rack의 평균·피크·A/B feed·유량 원장을 분리합니다.",
+        boundary: "Associate라고 해서 실무 가치가 없는 것도 아니고, Professional 자격만으로 특정 고객 현장 경험이 생기는 것도 아닙니다.",
+        causalTrace: {
+          answer: "자격과 현장 산출물의 주장을 분리하면 현재 역량을 과장하지 않으면서 학습 속도와 실행력을 함께 보여 줄 수 있습니다.",
+          followUpQuestion: "그렇다면 자격을 딴 뒤 무엇을 이력서에 따로 적어야 합니까?",
+          bottleneck: "자격 이름만 적으면 BOM·network·storage·facility·acceptance를 직접 다뤘는지 알 수 없습니다.",
+          mechanism: "NCA 합격 여부와 별도로 공개 기준의 B300 역설계, 명령 원본, 계산과 검수 원장을 포트폴리오 artifact로 제시합니다.",
+          remainingCost: "역설계안은 실제 회사 의사결정과 현장 실측이 아니므로 가정·미확정·담당 범위를 계속 표시해야 합니다.",
+          decisionRule: "설명 능력은 자격으로, 실행·복구 능력은 재현 가능한 artifact로, 실제 경력은 담당 범위로 각각 주장합니다.",
+        },
+      },
+    ],
+    numericQuestion: "공식 비중 38%·40%·22%를 50문항 크기의 학습 장부에 적용해 영역별 수를 계산하고 이 수의 한계를 설명하세요.",
+    numericAnswers: ["50×0.38=19", "50×0.40=20", "50×0.22=11", "합계 50", "실제 영역별 출제 수 보장 아님"],
+    changedCaseQuestion: "공식 과정 뒤 host GPU는 정상인데 Triton readiness가 503일 때 Container Toolkit·serving·scheduler·DCGM 책임을 섞지 않는 진단 순서를 설계하세요.",
+    changedCaseAnswers: ["host nvidia-smi", "container nvidia-smi", "runtime 설정", "Triton model repository·backend log", "Slurm allocation은 별도", "DCGM health는 별도", "TTFT·TPS acceptance"],
+    sources: [
+      {
+        title: "NVIDIA · NCA-AIIO Exam Study Guide (Jan 2026)",
+        href: "https://dam-cdn.nvd.orangelogic.com/AssetLink/x874j05hy3m3r2sor84kpvp70750m468.pdf",
+        problem: "공식 시험 범위와 Associate 역할을 비공식 요약이나 오래된 강의로 고정하면 안 됩니다.",
+        contribution: "세 영역의 세부 목표, 추천 과정 단원, AI 인프라·운영에 새로 들어오는 IT 전문가라는 역할 경계를 제공합니다.",
+        assumptions: "2026년 1월판이며 응시 직전에 공식 자격 페이지와 최신 guide를 다시 확인합니다.",
+        evidenceScope: "NVIDIA가 밝힌 시험 목표와 권장 준비 범위에 적용합니다.",
+        notClaim: "실제 문항을 공개하거나 합격·취업·독립 구축 능력을 보장한다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+      {
+        title: "NVIDIA · Certification Programs",
+        href: "https://www.nvidia.com/en-us/learn/certification/",
+        problem: "Associate와 Professional 자격이 증명하는 행동 수준을 구분해야 합니다.",
+        contribution: "NCA-AIIO와 NCP-AII·NCP-AIO·NCP-AIN·NCP-ARI의 현재 역할을 구분합니다.",
+        assumptions: "가격·형식·자격 구성은 바뀔 수 있어 확인일을 고정합니다.",
+        evidenceScope: "공식 자격 포트폴리오의 현재 이름과 수준에 적용합니다.",
+        notClaim: "상위 자격 취득이 특정 고객의 BOM·RFP·시설 승인 경험을 대신한다는 뜻은 아닙니다.",
+        sectionId: "comparison",
+      },
+      {
+        title: "NVIDIA · Container Toolkit and Triton Quickstart",
+        href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/sample-workload.html",
+        problem: "Host GPU, container GPU injection과 model serving 준비를 하나의 정상 신호로 합치면 첫 실패를 찾을 수 없습니다.",
+        contribution: "Container에서 nvidia-smi를 실행해 device injection을 확인하는 공식 sample을 제공하며 Triton 문서의 ready endpoint와 다음 경계를 나눕니다.",
+        assumptions: "실제 container runtime과 image digest를 고정하고 Kubernetes에서는 target CRI 설정을 확인합니다.",
+        evidenceScope: "Host에서 container까지 GPU를 노출하는 경계의 설치·검증입니다.",
+        notClaim: "CUDA application correctness, Triton model readiness, multi-node 통신과 성능 SLO를 함께 보장한다는 뜻은 아닙니다.",
+        sectionId: "source",
+      },
+    ],
+  }),
+  "gpu/ai-infrastructure-b300-128-blueprint": aiInfrastructureLearning({
+    entryNote: "B300 GPU 128개를 8-GPU 노드 16대로 나누고, 모델의 total·active parameter와 logic·HBM·package·fabric·facility 공급 경로를 발주·검수 원장으로 펼칩니다.",
+    coreIdea: "대규모 AI 인프라 제안은 GPU 수나 모델 headline을 받아 적는 일이 아니라 workload의 weight residency·active compute·runtime state를 compute·network·storage·facility·공급 위험·acceptance test에 같은 ID로 연결하는 일입니다.",
+    assumedKnowledge: [
+      { id: "b300-port-split-identity", role: "B300 physical port와 OS·RDMA endpoint를 실제 BOM·시험 단위로 추적합니다." },
+      { id: "rack-electrical-redundancy-envelope", role: "노드 수를 rack의 average·peak·N−1 전력 조건으로 연결합니다." },
+    ],
+    concepts: [
+      {
+        id: "workload-infrastructure-traceability",
+        role: "고객 목표를 설계 결정·BOM·시험에 같은 ID로 연결하는 추적성을 설명합니다.",
+        intuition: "주문서의 각 물건 옆에 왜 필요한지와 어떤 검사로 받을지를 같은 번호로 붙이는 것과 같습니다.",
+        workedExample: "GPU 128개 요구를 16노드, network·storage·rack 항목과 acceptance test에 연결합니다.",
+        boundary: "ID가 이어져도 처음 workload 목표가 틀렸다면 큰 BOM을 정당화하지 못합니다.",
+      },
+      {
+        id: "b300-reference-bom-boundary",
+        role: "공개 reference architecture와 실제 발주 BOM의 경계를 설명합니다.",
+        intuition: "표준 주택 도면을 출발점으로 쓰되 실제 땅의 전기·배관·법규를 반영한 시공 도면과 구분하는 것과 같습니다.",
+        workedExample: "8-GPU 노드 16대의 기준 수량에서 실제 switch port·optic 양 끝·cable 길이·support SKU를 다시 확정합니다.",
+        boundary: "공개 reference의 수량을 그대로 복사해도 현장 호환성·가격·납기·지원이 보장되지는 않습니다.",
+      },
+    ],
+    numericQuestion: "B300 GPU 128개를 8-GPU node로 구성할 때 node 수와 288GB/GPU 기준 전체 HBM을 계산하세요.",
+    numericAnswers: ["128÷8=16 nodes", "128×288=36,864GB", "분산된 총량", "연속 memory 아님"],
+    changedCaseQuestion: "GLM-5.3-Flash 320B total·18B active라는 요청을 받고 교육용 25.7M 모델의 VRAM 결과를 근거로 쓰지 않으면서 sizing·공급·검수 원장을 설계하세요.",
+    changedCaseAnswers: ["checkpoint revision·dtype별 byte", "전체 weight residency", "active token compute", "context·batch·runtime state", "HBM·package·NIC 납기", "target runtime TTFT·TPS·p99", "교육 모델 일반화 금지"],
+    sources: [
+      { title: "NVIDIA HGX AI Factory Components", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html", problem: "B300 한 node의 공개 구성 단위를 알아야 합니다.", contribution: "8 GPU·8 ConnectX-8·1 BlueField-3·memory와 local storage 기준을 제공합니다.", assumptions: "NVIDIA-Certified HGX B300 reference configuration을 출발점으로 사용합니다.", evidenceScope: "공개 reference의 node hardware 요소와 nominal capability입니다.", notClaim: "특정 OEM SKU·현장 cable·가격·지원 조건이 자동 확정된다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "NVIDIA HGX AI Factory Logical Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/network-logical-architecture.html", problem: "Compute·converged·OOB network와 확장 단위를 분리해야 합니다.", contribution: "4-node building block과 spine-leaf·network plane 역할을 설명합니다.", assumptions: "문서의 Spectrum-X reference와 공개 scalable unit 경계를 따릅니다.", evidenceScope: "공식 logical architecture와 확장 방식입니다.", notClaim: "16-node switch BOM을 32-node 표의 단순 절반으로 만들 수 있다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "Z.ai · GLM-5.3-Flash model card", href: "https://huggingface.co/zai-org/GLM-5.3-Flash", problem: "Total parameter와 active parameter를 GPU memory와 token 처리량의 같은 숫자로 쓰면 안 됩니다.", contribution: "실제 공개 모델의 320B total·18B active와 hybrid sparse/linear architecture를 제공합니다.", assumptions: "정확한 checkpoint revision·tensor dtype·target runtime·context와 batch를 별도 고정합니다.", evidenceScope: "공개 모델의 구조와 headline parameter 범위입니다.", notClaim: "18B×dtype만으로 전체 weight residency·VRAM·처리량·GPU 수를 확정한다는 뜻은 아닙니다.", sectionId: "source" },
+    ],
+  }),
+  "gpu/ai-cluster-software-compatibility": aiInfrastructureLearning({
+    entryNote: "16노드 중 15대가 image A, 한 대가 B이면 15/16 배포 성공이어도 하나의 128-GPU 작업은 시작하지 못할 수 있습니다.",
+    coreIdea: "GPU cluster 호환성은 최신 package 모음이 아니라 OS·kernel·GPU/NIC driver·firmware·CUDA·NCCL·DOCA-OFED·container와 scheduler 조합을 release 행으로 고정하고 계산·통신 경로로 검증하는 계약입니다.",
+    assumedKnowledge: [
+      { id: "nccl-algbw-busbw-boundary", role: "NCCL collective 결과를 correctness·algorithm bandwidth·bus bandwidth와 hardware counter로 나눕니다." },
+      { id: "roce-v2-gid-routing", role: "NIC software와 firmware 변경 뒤 실제 RDMA path를 확인합니다." },
+    ],
+    concepts: [
+      {
+        id: "gpu-cluster-compatibility-manifest",
+        role: "OS부터 image digest까지 한 release 행으로 고정하는 호환성 원장을 설명합니다.",
+        intuition: "합주단 16명이 같은 악보 판본과 조율 기준을 가져야 한 곡을 함께 시작할 수 있는 것과 같습니다.",
+        workedExample: "16/16 nodes의 kernel·driver·firmware·CUDA·NCCL·DOCA-OFED와 container digest를 비교합니다.",
+        boundary: "버전 문자열이 같아도 cable·topology·workload 성능과 장시간 안정성이 자동으로 보장되지는 않습니다.",
+      },
+      {
+        id: "doca-ofed-profile-boundary",
+        role: "NCCL·DOCA·OFED의 자리와 DOCA Host profile 선택 경계를 설명합니다.",
+        intuition: "도로 주행에 필요한 운전 장치와 차량용 개발 도구 전체를 필요에 따라 다른 꾸러미로 설치하는 것과 같습니다.",
+        workedExample: "ConnectX RDMA driver·tool만 필요하면 doca-ofed를 검토하고 BlueField 추가 기능은 더 넓은 profile에서 확인합니다.",
+        boundary: "DOCA 전체를 설치해도 ConnectX가 BlueField 전용 DPA library를 실행하는 것은 아닙니다.",
+      },
+    ],
+    numericQuestion: "16노드 중 15대만 같은 manifest를 통과했을 때 node 비율과 16-node 공동 작업의 준비 상태를 설명하세요.",
+    numericAnswers: ["15/16=93.75%", "공동 작업 ready 아님", "차이 node 격리", "16/16 preflight"],
+    changedCaseQuestion: "kernel과 NIC firmware를 함께 바꾸는 rollout을 1→4→16 nodes로 설계하세요.",
+    changedCaseAnswers: ["baseline snapshot", "canary reboot", "device inventory", "RDMA", "NCCL", "rollback image", "확대 gate"],
+    sources: [
+      { title: "NVIDIA DGX OS 7 Release Notes", href: "https://docs.nvidia.com/dgx/dgx-os-7-user-guide/release_notes.html", problem: "독립 package의 latest를 섞지 않고 검증된 조합을 찾아야 합니다.", contribution: "DGX system별 OS·kernel·driver·CUDA·NCCL·DOCA OFED·firmware 조합을 제공합니다.", assumptions: "확인일의 current release와 target system을 함께 기록합니다.", evidenceScope: "NVIDIA가 공개한 DGX software stack 지원 조합입니다.", notClaim: "모든 application·topology의 correctness와 성능을 대신 검증한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "NVIDIA DOCA Profiles", href: "https://docs.nvidia.com/doca/sdk/doca-profiles/", problem: "필요한 networking 기능보다 넓은 package를 무조건 설치하지 않아야 합니다.", contribution: "doca-all·networking·ofed·roce·host-basic의 포함 요소와 권장 장치를 구분합니다.", assumptions: "Target OS·device와 current DOCA release support를 확인합니다.", evidenceScope: "DOCA Host installation profile의 기능 범위입니다.", notClaim: "Profile 선택만으로 firmware·kernel·application 호환 시험이 끝난다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "gpu/kubernetes-vs-slurm-gpu-scheduling": aiInfrastructureLearning({
+    entryNote: "16노드에서 8노드 작업 네 개를 받으면 두 개만 동시에 실행하고 나머지 두 개는 자원 반환을 기다립니다.",
+    coreIdea: "Slurm과 Kubernetes는 제품 선호가 아니라 완료되는 다중 노드 batch의 queue·allocation·gang 요구와 계속 실행되는 service의 discovery·autoscaling·rolling update 요구를 비교해 선택하며, GPU Operator의 reconcile은 workload scheduling과 별도 책임으로 운영합니다.",
+    assumedKnowledge: [
+      { id: "collective-rank-semantics", role: "한 communicator의 rank들이 같은 collective에 함께 참여해야 하는 공동 시작 조건을 제공합니다." },
+    ],
+    concepts: [
+      {
+        id: "gpu-workload-scheduler-choice",
+        role: "Batch와 service의 생애에서 Slurm·Kubernetes 첫 후보를 고르는 방법을 설명합니다.",
+        intuition: "예약 시간에 여러 사람이 한꺼번에 쓰는 실험실과 손님을 계속 받는 매장을 서로 다른 운영표로 관리하는 것과 같습니다.",
+        workedExample: "8-node training queue에는 Slurm을, 계속 떠 있는 inference API에는 Kubernetes를 첫 후보로 놓고 남는 통합 비용을 비교합니다.",
+        boundary: "한 workload에 유리한 선택이 cluster의 모든 workload와 운영 조직에 그대로 최적이라는 뜻은 아닙니다.",
+      },
+      {
+        id: "gang-scheduling-resource-ownership",
+        role: "필요한 node 묶음의 동시 시작과 한 GPU의 최종 소유자를 설명합니다.",
+        intuition: "여덟 명이 함께 출발해야 하는 경기에서 한 명씩 따로 출발권을 줘서는 경기가 시작되지 않는 것과 같습니다.",
+        workedExample: "A와 B에 8 nodes씩 묶어 주고 C·D는 기다리며, 같은 GPU를 두 control plane이 동시에 배정하지 않게 합니다.",
+        boundary: "동시 시작만 보장해도 network topology·fairness·checkpoint·application progress가 자동으로 해결되지는 않습니다.",
+      },
+    ],
+    numericQuestion: "16노드에 각 8노드를 요구하는 job 네 개가 들어오면 동시 실행과 대기 job 수를 계산하세요.",
+    numericAnswers: ["동시 2 jobs", "각 8 nodes", "대기 2 jobs", "부분 할당 금지"],
+    changedCaseQuestion: "GPU Operator에서 spec generation은 8인데 status의 observed generation은 7이고 update conflict와 finalizer 정체가 함께 보일 때 진단·복구 순서를 설계하세요.",
+    changedCaseAnswers: ["desired·observed 세대 비교", "resourceVersion", "최신 객체 refetch", "제한된 RetryOnConflict", "idempotent no-op", "deletionTimestamp", "외부 정리 뒤 finalizer 제거", "worker concurrency 검토"],
+    sources: [
+      { title: "SchedMD Slurm Quick Start", href: "https://slurm.schedmd.com/quickstart.html", problem: "대규모 Linux cluster에서 자원 경쟁과 병렬 job 실행을 관리해야 합니다.", contribution: "자원 할당·병렬 실행·대기열 조정과 node·partition·job·job step을 정의합니다.", assumptions: "Slurm cluster configuration과 site policy가 이미 명시돼 있습니다.", evidenceScope: "Slurm workload manager의 공식 architecture와 기본 semantics입니다.", notClaim: "Service discovery·rolling update·Kubernetes API를 대신 제공한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "Kubernetes Jobs", href: "https://kubernetes.io/docs/concepts/workloads/controllers/job/", problem: "완료되는 container workload의 성공 수와 retry를 관리해야 합니다.", contribution: "Job이 Pod를 만들고 완료를 추적하는 semantics를 설명합니다.", assumptions: "Target Kubernetes version과 별도 queue·gang extension의 상태를 확인합니다.", evidenceScope: "기본 Kubernetes Job의 완료·병렬·retry 동작입니다.", notClaim: "다중 노드 GPU gang scheduling과 fair queue가 기본 Job 하나로 완성된다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "Kubernetes API Concepts · Finalizers · client-go retry", href: "https://kubernetes.io/docs/reference/using-api/api-concepts/", problem: "Controller가 stale object를 갱신하거나 삭제 전에 외부 자원을 남기면 desired state로 안전하게 수렴하지 못합니다.", contribution: "resourceVersion과 watch semantics를 정의하며 finalizer·RetryOnConflict 공식 문서와 함께 update·delete 생애를 닫습니다.", assumptions: "CRD의 generation·status subresource semantics와 target controller-runtime version을 확인합니다.", evidenceScope: "Kubernetes API object update conflict와 deletion lifecycle입니다.", notClaim: "Predicate나 worker 수를 하나 고르면 모든 외부 API side effect가 자동으로 idempotent해진다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "gpu/ai-cluster-storage-io": aiInfrastructureLearning({
+    entryLevel: true,
+    recursiveTeaching: true,
+    entryNote: "4MiB 요청으로 8GiB/s를 내려면 초당 2,048회가 필요하고 평균 4ms라면 약 8.2개의 요청이 계속 진행 중이어야 함을 계산한 뒤, write 반환부터 restore까지 완료 경계를 추적합니다.",
+    coreIdea: "AI storage의 깊이는 제품 목록이 아니라 한 I/O의 실제 경로, workload fingerprint, raw에서 recoverable까지의 용량, checkpoint commit과 정상·degraded·rebuild·restore 증거를 한 원장으로 설명하는 데서 드러납니다.",
+    assumedKnowledge: [],
+    concepts: [
+      {
+        id: "ai-storage-io-budget",
+        role: "Dataset·checkpoint가 겹치는 시간창의 처리량·IOPS·metadata 예산을 설명합니다.",
+        intuition: "창고 크기뿐 아니라 모든 작업자가 같은 시간에 물건을 꺼내고 다시 넣을 때 문과 통로가 감당하는 양을 세는 것과 같습니다.",
+        workedExample: "128 GPU의 200GB/s sizing 기준과 8TB/120s checkpoint 66.7GB/s를 별도 workload 항목으로 둡니다.",
+        boundary: "Aggregate 지침이 개별 client 처리량·small-file latency·장애 중 성능을 보장하지 않습니다.",
+        causalTrace: {
+          answer: "처리량은 초당 옮길 byte이며 요청 크기로 나누면 초당 완료해야 할 요청 수가 됩니다.",
+          followUpQuestion: "같은 8GiB/s라도 요청이 작아지면 왜 더 어려워집니까?",
+          bottleneck: "4KiB 요청은 4MiB 요청보다 천 배 많은 완료를 요구해 queue·CPU·metadata가 먼저 찰 수 있습니다.",
+          mechanism: "요청 크기·client 수·latency를 고정하고 IOPS와 평균 in-flight 수를 계산한 뒤 실측 depth와 대조합니다.",
+          remainingCost: "평균값은 p99와 slowest rank, cache miss, retry와 장애 중 성능을 숨깁니다.",
+          decisionRule: "Aggregate GB/s뿐 아니라 workload fingerprint와 application wall time이 함께 맞을 때만 용량 산정에 씁니다.",
+        },
+      },
+      {
+        id: "ai-storage-tier-commit-boundary",
+        role: "공유 storage·local NVMe cache·object archive의 보존과 commit 경계를 설명합니다.",
+        intuition: "작업대 위 복사본은 다시 가져올 수 있지만 원본 장부와 마지막 저장점은 공동 금고에 남겨야 하는 것과 같습니다.",
+        workedExample: "Dataset shard는 node-local NVMe에 cache하고 완료 checkpoint는 공유 영역에 원자적으로 commit합니다.",
+        boundary: "Local NVMe를 빠르다는 이유로 유일한 checkpoint 원본으로 쓰면 node 장애에서 복구할 수 없습니다.",
+        causalTrace: {
+          answer: "데이터가 다시 만들어질 수 있는지와 어느 장애 뒤까지 살아야 하는지가 저장 위치를 정합니다.",
+          followUpQuestion: "가까운 저장 공간이 가장 빠르다면 전부 그곳에 두면 되지 않습니까?",
+          bottleneck: "계산 node가 사라질 때 local copy도 함께 사라지고 여러 worker가 한 완료 세대를 공유할 수도 없습니다.",
+          mechanism: "재생성 가능한 cache, 공동 작업 중인 checkpoint, 장기 원본을 분리하고 각각의 publish 조건을 둡니다.",
+          remainingCost: "계층 사이 복사, invalidation, namespace와 lifecycle 운영 비용이 남습니다.",
+          decisionRule: "속도 순위가 아니라 source of truth, 공유 범위, 허용 손실과 restore 목표로 tier를 고릅니다.",
+        },
+      },
+      {
+        id: "storage-io-completion-path",
+        role: "한 read·write가 application에서 page cache·filesystem·queue·device 또는 remote service를 거쳐 언제 완료되는지 설명합니다.",
+        intuition: "택배 접수 문자를 배송 완료로 착각하지 않고 접수·이동·도착·수령 확인을 따로 보는 것과 같습니다.",
+        workedExample: "4MiB pwrite, file fsync, 같은 filesystem rename, directory fsync와 restore checksum을 서로 다른 완료 지점으로 기록합니다.",
+        boundary: "O_DIRECT는 cache 효과를 줄일 뿐 O_SYNC·fsync와 같은 durability 약속이 아니며 remote storage의 ack 의미는 제품별로 다시 확인해야 합니다.",
+        causalTrace: {
+          answer: "호출 반환, kernel writeback, 장치 완료, 세대 공개와 application restore는 서로 다른 완료입니다.",
+          followUpQuestion: "어느 단계가 느리거나 실패했는지 어떻게 찾습니까?",
+          bottleneck: "GPU·disk 사용률만 보면 같은 요청이 page cache, filesystem, network, device 중 어디서 기다렸는지 알 수 없습니다.",
+          mechanism: "같은 4MiB 요청의 syscall 시각을 block queue와 원격 client·NIC·server 시각에 맞춰 첫 대기 구간을 찾습니다.",
+          remainingCost: "관측 도구 자체의 overhead와 제품별 remote acknowledgement 의미가 남습니다.",
+          decisionRule: "요청 ID 또는 같은 시간창으로 application 반환부터 durable publish까지 이어질 때만 원인을 확정합니다.",
+        },
+      },
+      {
+        id: "storage-degraded-recovery-acceptance",
+        role: "정상 성능과 장애 감지·degraded 동작·rebuild 경합·최종 restore를 하나의 acceptance로 묶습니다.",
+        intuition: "소화기가 있다는 설명이 아니라 화재 경보부터 대피와 복구까지 실제 훈련 기록을 요구하는 것과 같습니다.",
+        workedExample: "Node 하나를 중단한 채 dataset read와 checkpoint를 유지하고 p99·slowest rank·rebuild ETA·reserve를 기록한 뒤 다른 node 수로 마지막 complete checkpoint를 복원합니다.",
+        boundary: "Replication 수나 8+2 EC 설정만으로 failure-domain 배치, rebuild 중 SLO와 application restore를 증명할 수 없습니다.",
+        causalTrace: {
+          answer: "보호 설정은 장애를 견딜 가능성을 말할 뿐 고객의 작업이 복구된 사실을 증명하지 않습니다.",
+          followUpQuestion: "정상 benchmark를 통과한 뒤 어떤 시험이 더 필요합니까?",
+          bottleneck: "장애 뒤 degraded read와 rebuild가 foreground I/O를 다투고 여유 공간이 줄어 두 번째 장애 위험이 커집니다.",
+          mechanism: "한 failure domain을 중단하고 workload를 유지한 채 감지·degraded·rebuild·active 상태와 마지막 checkpoint restore를 잇습니다.",
+          remainingCost: "Fault injection의 운영 위험, 긴 rebuild 시간과 반복 시험 비용이 남습니다.",
+          decisionRule: "정상·degraded·rebuild SLO와 다른 node 수에서의 checksum restore가 모두 RPO·RTO 안에 들어올 때 채택합니다.",
+        },
+      },
+    ],
+    numericQuestion: "4MiB 요청으로 8GiB/s를 내고 평균 latency가 4ms일 때 필요한 IOPS와 Little's Law 기준 평균 in-flight 수를 계산하세요.",
+    numericAnswers: ["8GiB/s÷4MiB=2,048 IOPS", "L=λW", "2,048×0.004≈8.2", "queue depth는 분포·client 수와 실측으로 검증"],
+    changedCaseQuestion: "8TB checkpoint를 60초로 줄이고 지속 dataset read 40GB/s가 겹칠 때 payload 기준선을 계산하고 추가 시험 항목을 설계하세요.",
+    changedCaseAnswers: ["8TB/60s≈133.3GB/s", "합계≈173.3GB/s", "replication overhead", "metadata", "client·network", "GPU wait", "failure rebuild"],
+    sources: [
+      { title: "NVIDIA HGX AI Factory Certified Storage", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/nvidia-certified-storage.html", problem: "GPU cluster 성장에 맞는 storage aggregate 기준선이 필요합니다.", contribution: "약 12.5Gb/s/GPU의 선형 sizing guideline을 제공합니다.", assumptions: "HGX AI Factory reference의 guideline이며 workload mix를 별도로 측정합니다.", evidenceScope: "공개 aggregate storage bandwidth sizing 출발점입니다.", notClaim: "모든 certified product가 해당 workload의 checkpoint SLA를 자동으로 보장한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "NVIDIA HGX AI Factory Node Configurations", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/appendix-node-configurations.html", problem: "Training node의 local storage 최소 구성을 확인해야 합니다.", contribution: "CPU socket별 training NVMe와 boot drive 권고를 제공합니다.", assumptions: "Reference node의 local storage minimum을 cache·staging 출발점으로 사용합니다.", evidenceScope: "공식 node-level local NVMe 구성 지침입니다.", notClaim: "Local NVMe가 shared durable storage와 backup을 대신한다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "Linux VFS, blk-mq and fsync", href: "https://docs.kernel.org/filesystems/vfs.html", problem: "Application의 read·write 반환과 device·durability 완료를 같은 사건으로 오해하기 쉽습니다.", contribution: "Page cache address_space·writeback과 filesystem operation 경계를 설명하며 blk-mq·fsync 문서와 함께 한 I/O 경로를 추적하게 합니다.", assumptions: "실제 filesystem·mount·device와 remote client semantics를 별도로 확인합니다.", evidenceScope: "Linux kernel과 system call의 공식 책임 경계입니다.", notClaim: "모든 distributed filesystem의 server-side durability가 Linux local fsync와 같다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "MLCommons Storage", href: "https://github.com/mlcommons/storage", problem: "Microbenchmark 숫자만으로 AI training과 checkpoint가 끝나는 시간을 예측하기 어렵습니다.", contribution: "Training·checkpoint workload, file·object backend와 manifest를 포함한 재현 가능한 benchmark 틀을 제공합니다.", assumptions: "대상 model·node 수·dataset·software manifest와 실제 checkpoint format을 맞춥니다.", evidenceScope: "AI storage benchmark의 공식 workload와 실행 절차입니다.", notClaim: "한 benchmark 결과가 모든 loader·filesystem·object layout을 대표한다는 뜻은 아닙니다.", sectionId: "mechanism" },
+      { title: "PyTorch Distributed Checkpoint", href: "https://docs.pytorch.org/tutorials/recipes/distributed_async_checkpoint_recipe.html", problem: "GPU 정지 시간을 줄이려 async checkpoint를 사용하면 저장 완료 시각을 잘못 기록할 수 있습니다.", contribution: "CPU staging, background save와 반환 Future의 완료 경계를 설명합니다.", assumptions: "API version, memory headroom, Future failure 처리와 restore test를 고정합니다.", evidenceScope: "PyTorch DCP async_save의 공식 동작과 비용입니다.", notClaim: "async_save 반환 즉시 durable checkpoint가 완성된다는 뜻은 아닙니다.", sectionId: "need" },
+      { title: "Elice Cloud와 B300 기술 자료", href: "https://help.elice.io/help/docs/cloud-overview", problem: "지원 회사의 공개 정보와 미공개 storage 구현을 구분해야 합니다.", contribution: "Block·object·PFS interface를 확인하고 B300 글의 inventory·topology·동일 조건 host/guest 검증법을 설계 질문에 적용합니다.", assumptions: "PFS 제품·보호 방식·SLO는 discovery와 PoC에서 답을 받습니다.", evidenceScope: "Elice가 현재 공개한 cloud storage interface와 검증 방법입니다.", notClaim: "Elice PFS의 vendor·EC 구성·200GB/s 보장을 공개 자료로 확인했다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "gpu/b300-rack-power-cooling": aiInfrastructureLearning({
+    entryNote: "공개 planning 값 14.5kW average·19kW peak를 B300 16대에 곱해 232kW·304kW를 만들고 4대 rack 4개와 2대 rack 8개를 비교합니다.",
+    coreIdea: "B300 128 GPU 시설 설계는 16 nodes의 average·peak power를 A/B N−1 rack path에 배치하고 같은 heat를 air·water capture·facility rejection까지 이어 RDHx와 DLC의 접점을 구분하는 일입니다.",
+    assumedKnowledge: [
+      { id: "rack-electrical-redundancy-envelope", role: "한 feed 상실 뒤 남은 breaker·PDU·UPS capacity와 rack p95를 비교합니다." },
+      { id: "power-cooling-release-gate", role: "Power·temperature·throttle·valid work와 fan/pump failure를 같은 trace에서 검증합니다." },
+    ],
+    concepts: [
+      {
+        id: "b300-rack-power-thermal-budget",
+        role: "B300 node 수를 rack average·peak·N−1 전력과 heat rejection으로 연결합니다.",
+        intuition: "건물에 들어오는 전기의 양만큼 열이 계속 쌓이므로 들어오는 길과 빠져나가는 길을 같은 장부에 적는 것과 같습니다.",
+        workedExample: "16대의 평균 232kW·피크 304kW를 4×고밀도 또는 8×저밀도 rack에 배치합니다.",
+        boundary: "Server planning 합에는 network·storage·CDU·RDHx와 facility loss가 아직 포함되지 않습니다.",
+      },
+      {
+        id: "rdhx-dlc-cooling-boundary",
+        role: "RDHx와 DLC가 열을 물로 받는 지점과 잔열 경계를 설명합니다.",
+        intuition: "방 안으로 나온 뜨거운 바람을 문에서 식히는 방식과 열원 표면에서 바로 물로 받는 방식의 차이입니다.",
+        workedExample: "공랭 B300 네 대의 배기열은 active RDHx가 물로 옮기며 GPU cold plate를 쓰는 DLC로 부르지 않습니다.",
+        boundary: "두 방식 모두 facility water가 있어도 유량·수질·압력·누수·서비스 절차가 같지는 않습니다.",
+      },
+    ],
+    numericQuestion: "B300 16대에서 14.5kW average와 19kW peak를 사용해 server 전력과 4대 rack의 rack당 값을 계산하세요.",
+    numericAnswers: ["16×14.5=232kW", "16×19=304kW", "rack당 58kW average", "rack당 76kW peak", "보조 장비 제외"],
+    changedCaseQuestion: "평균 232kW의 90%를 ΔT 10°C 물로 운반할 때 cp≈4.18kJ/kg·K로 질량 유량과 air 잔열을 계산하고 설비 검증 항목을 쓰세요.",
+    changedCaseAnswers: ["water heat=208.8kW", "flow≈5.0kg/s", "air residual≈23.2kW", "pressure loss", "pump curve", "water quality", "condensation", "N+1"],
+    sources: [
+      { title: "NVIDIA Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", problem: "B300 rack density의 average·peak power와 cooling pattern을 알아야 합니다.", contribution: "4-system active RDHx high-density와 2-system traditional air-cooled pattern을 제시합니다.", assumptions: "NVIDIA planning estimate를 site·OEM 값으로 교체하기 전 출발점으로 사용합니다.", evidenceScope: "B300 공개 deployment pattern과 power·cooling planning 기준입니다.", notClaim: "모든 data center가 76kW rack과 동일 inlet·water 조건을 지원한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "IMDA Tropical Data Centre Standard", href: "https://www.imda.gov.sg/how-we-can-help/green-dc-roadmap/tropical-dc-standard", problem: "Tropical climate에서 operating temperature를 안전하게 높이는 절차가 필요합니다.", contribution: "SS 697:2023의 목적과 gradual temperature increase 방법을 안내합니다.", assumptions: "Server vendor environment와 facility risk assessment를 함께 만족합니다.", evidenceScope: "싱가포르 tropical DC 운영 온도와 냉각 에너지 지침입니다.", notClaim: "모든 B300 inlet을 임의로 26°C 이상으로 올려도 된다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
+  "gpu/ai-infrastructure-commissioning-acceptance": aiInfrastructureLearning({
+    entryNote: "16노드마다 inventory·health·stress·network identity 네 묶음을 요구해 최소 64개 node-level evidence를 만들고 cluster·facility 시험을 별도로 둡니다.",
+    coreIdea: "AI 인프라 납품은 power-on이 아니라 요구사항→BOM→version manifest→FAT·SAT·performance·failure test→artifact·예외→운영 handover를 acceptance ledger로 추적해 고객이 독립 운영할 때 끝납니다.",
+    assumedKnowledge: [
+      { id: "b300-reference-bom-boundary", role: "실제 발주 BOM의 각 행을 검수 대상 serial·port·support 항목으로 사용합니다." },
+      { id: "gpu-cluster-compatibility-manifest", role: "시험한 OS·driver·firmware·library·image 조합을 고정합니다." },
+      { id: "switchless-collective-measurement-boundary", role: "NCCL 결과와 nominal rate·NIC counter·application result를 분리합니다." },
+    ],
+    concepts: [
+      {
+        id: "ai-infrastructure-acceptance-ledger",
+        role: "요구·시험·환경·threshold·artifact·예외와 서명을 한 행으로 연결하는 원장을 설명합니다.",
+        intuition: "물건을 받았다는 서명만 남기지 않고 주문 조건마다 검사표와 원본 결과를 영수증처럼 붙이는 것과 같습니다.",
+        workedExample: "REQ-NET-03을 16-node NCCL test, version manifest, log artifact와 재시험 날짜에 연결합니다.",
+        boundary: "체크 표시만 있고 입력·명령·threshold·원본 결과가 없으면 같은 시험을 재현할 수 없습니다.",
+      },
+      {
+        id: "fat-sat-operational-handover",
+        role: "FAT·SAT·성능·운영 인수가 서로 증명하는 범위를 설명합니다.",
+        intuition: "공장에서 제품을 확인하고 집에서 설치를 확인한 뒤 실제 사용자가 비상 절차를 해보는 세 검사가 서로 다른 것과 같습니다.",
+        workedExample: "출하 전 serial·firmware, 현장 A/B feed·cable, 운영팀의 restore·escalation을 각 단계에서 확인합니다.",
+        boundary: "FAT pass로 site cooling을, benchmark pass로 운영팀의 장애 복구 능력을 대신 증명할 수 없습니다.",
+      },
+    ],
+    numericQuestion: "16노드마다 네 node-level 시험 묶음을 수행할 때 최소 결과 수를 계산하고 아직 별도인 시험을 쓰세요.",
+    numericAnswers: ["16×4=64", "pair·rail", "16-node collective", "storage", "power·cooling N−1", "운영 handover"],
+    changedCaseQuestion: "한 node가 health는 통과하지만 pair NCCL 성능이 낮을 때 first failure를 찾는 재시험과 예외 처리를 설계하세요.",
+    changedCaseAnswers: ["manifest diff", "port·rail isolation", "pair swap", "NIC counters", "threshold", "risk owner", "기한", "재시험"],
+    sources: [
+      { title: "NVIDIA B300 BasePOD and SuperPOD Deployment Guide", href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html", problem: "B300 node·network·scheduler·collective를 실제 deployment에서 검증해야 합니다.", contribution: "Service 상태, Slurm·GPU·multi-node NCCL validation 절차를 제공합니다.", assumptions: "문서의 B300 Mission Control·Base Command Manager 환경을 현재 target에 맞춰 적용합니다.", evidenceScope: "공식 B300 deployment와 계층별 validation 예시입니다.", notClaim: "해당 명령만 실행하면 고객 workload·storage·facility acceptance가 모두 끝난다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "KISA 클라우드서비스 보안인증제 안내", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", problem: "Hardware 보안 기능과 cloud service 인증 주장을 분리해야 합니다.", contribution: "현재 CSAP 안내서·공지와 인증 제도 자료의 공식 경로를 제공합니다.", assumptions: "제안 시점의 대상 service·등급·유효 증서와 최신 평가 기준을 다시 확인합니다.", evidenceScope: "한국 cloud service 보안인증의 공식 안내 범위입니다.", notClaim: "GPU server 납품이나 개별 보안 기능만으로 cloud service 전체가 인증된다는 뜻은 아닙니다.", sectionId: "comparison" },
+    ],
+  }),
 };

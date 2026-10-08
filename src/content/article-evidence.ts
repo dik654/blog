@@ -2390,6 +2390,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://people.eecs.berkeley.edu/~alig/papers/mlflow.pdf",
       "note": "2026-10-04 원문 확인. 실제 log_artifact 호출의 생산 실행 연결"
     },
+    {
+      kind: "공식 문서",
+      label: "MLflow · Registering and Versioning Scorers",
+      href: "https://mlflow.org/docs/latest/genai/eval-monitor/scorers/versioning/",
+      note: "Judge·scorer 정의를 version으로 고정하고 latest와 explicit version loading을 구분하는 현재 계약",
+    },
+    {
+      kind: "공식 문서",
+      label: "MLflow · Develop code-based scorers",
+      href: "https://mlflow.org/docs/latest/genai/eval-monitor/scorers/custom/tutorial/",
+      note: "Application trace 생성과 저장된 trace의 scorer 반복 평가를 분리하는 현재 workflow",
+    },
+    {
+      kind: "공개 강의",
+      label: "freeCodeCamp · Learn MLOps with MLflow and Databricks",
+      href: "https://www.youtube.com/watch?v=tVskbekONlw",
+      note: "전체 lifecycle과 실습의 discovery map이며 API·storage·permission의 현재 사실은 공식 문서로 재검증",
+    },
 ],
   "ai/learning-curve-tracking": [
     {
@@ -2417,6 +2435,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "MLflow Model Registry Workflows",
       href: "https://mlflow.org/docs/latest/ml/model-registry/workflow/",
       note: "Immutable versions·tags·mutable aliases와 alias-based loading의 현재 workflow",
+    },
+    {
+      kind: "공식 문서",
+      label: "MLflow Backend Stores",
+      href: "https://mlflow.org/docs/latest/self-hosting/architecture/backend-store/",
+      note: "SQLite·relational database backend와 artifact store의 분리, schema migration·backup 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "Databricks · Models in Unity Catalog",
+      href: "https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/",
+      note: "catalog.schema.model identity, version·alias와 상위 catalog·schema permission의 현재 lifecycle",
+    },
+    {
+      kind: "공식 문서",
+      label: "Databricks · Custom model serving endpoints",
+      href: "https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints",
+      note: "Unity Catalog full model name·explicit version을 endpoint served entity로 배포하는 현재 API",
     },
   ],
   "ai/reproducible-ml-execution": [
@@ -3069,6 +3105,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
       href: "https://arxiv.org/abs/2311.03285",
       note: "Unified paging과 batched GEMM으로 여러 LoRA adapter를 동시에 서빙하는 방법",
+    },
+    {
+      kind: "공식 문서",
+      label: "Hugging Face Transformers · Resume training",
+      href: "https://huggingface.co/docs/transformers/trainer_recipes#resume-training-from-a-checkpoint",
+      note: "Model·optimizer·scheduler·RNG state를 잇는 checkpoint resume와 model-only 저장의 경계",
+    },
+    {
+      kind: "공식 문서",
+      label: "Hugging Face PEFT · Checkpoint format",
+      href: "https://huggingface.co/docs/peft/main/developer_guides/checkpoint",
+      note: "Adapter weights·config와 별도 base model dependency를 설명하는 현재 format",
+    },
+    {
+      kind: "공개 강의",
+      label: "freeCodeCamp · LLM Fine-Tuning Course",
+      href: "https://www.youtube.com/watch?v=CcrC5zSv1iA",
+      note: "SFT·PEFT·DPO·tooling·multimodal 범위의 discovery map이며 실행 의미는 공식 구현 문서로 재검증",
     },
 ],
   "ai/image-video-lora-architecture": [
@@ -13336,9 +13390,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 문서",
-      "label": "Microsoft Learn · AZ-204 study guide",
-      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-204",
-      "note": "AZ-204가 2026년 7월 31일 폐지됐음을 확인합니다."
+      "label": "Microsoft Learn · AI-200 study guide",
+      "href": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200",
+      "note": "현행 AI-200의 개발자 역할과 네 영역을 확인합니다."
     }
   ],
   "cloud/cloud-foundations-responsibility-regions": [
@@ -13354,6 +13408,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility",
       "note": "IaaS·PaaS·SaaS에 따라 책임 층이 이동하는 표를 확인합니다."
     }
+  ],
+  "cloud/kubernetes-request-path-and-cka": [
+    { kind: "공식 문서", label: "Kubernetes Components", href: "https://kubernetes.io/docs/concepts/overview/components/", note: "Control plane과 node component의 공식 책임" },
+    { kind: "공식 문서", label: "Kubernetes Scheduler", href: "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/", note: "Pending Pod의 filtering·scoring·binding 경로" },
+    { kind: "공식 문서", label: "Kubernetes Troubleshooting Clusters", href: "https://kubernetes.io/docs/tasks/debug/debug-cluster/", note: "Cluster·node·component 장애 조사 경로" },
+    { kind: "공식 가이드", label: "Linux Foundation · CKA", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "확인일 현재 Kubernetes v1.35, 2시간 performance-based exam과 영역 비중" },
+    { kind: "공식 가이드", label: "CNCF Certification Curriculum", href: "https://github.com/cncf/curriculum", note: "CKA 공개 curriculum과 revision history" },
+    { kind: "공개 강의", label: "freeCodeCamp · Learn Kubernetes in 6 Hours", href: "https://www.youtube.com/watch?v=_4uQI4ihGVU", note: "Application·CRI/CNI/CSI·workload·Gateway 전체 흐름을 찾는 discovery map" },
+    { kind: "공개 강의", label: "freeCodeCamp · CKA Exam Preparation 2026", href: "https://www.youtube.com/watch?v=l57xKN6OBhY", note: "kubeadm·HA·network·storage·troubleshooting lab 지도이며 시험 사실은 공식 페이지로 재검증" },
+    { kind: "보충 읽기", label: "KodeKloud · Certified Kubernetes Administrator Course Notes", href: "https://github.com/kodekloudhub/certified-kubernetes-administrator-course", note: "Core concepts·scheduling·maintenance·security·storage·networking·kubeadm·troubleshooting과 mock exam으로 이어지는 공개 학습 지도" },
+    { kind: "보충 읽기", label: "KodeKloud · CKA image index", href: "https://github.com/kodekloudhub/certified-kubernetes-administrator-course/tree/master/images", note: "원본 그림은 링크로 제공하고, 명시적 repository license를 확인하지 못해 본문에는 복제하지 않음" },
+    { kind: "보충 읽기", label: "bmuschko/cka-crash-course", href: "https://github.com/bmuschko/cka-crash-course", note: "Self-contained exercise와 solution을 분리하는 실습 구조 참고" },
+    { kind: "보충 읽기", label: "chadmcrowell/CKA-Exercises", href: "https://github.com/chadmcrowell/CKA-Exercises", note: "CKA domain과 결과 상태 중심의 문제·부분 검증 구조 참고" },
+    { kind: "보충 읽기", label: "xooooooooox/cka-exercises", href: "https://github.com/xooooooooox/cka-exercises", note: "검색·quiz·진도·정적 web app 구조 참고. Repository 표기상 MIT license" },
+    { kind: "보충 읽기", label: "devopshubproject/cka-lab", href: "https://github.com/devopshubproject/cka-lab", note: "Kubeadm cluster에서 푸는 scenario형 연습 범위 참고" },
+    { kind: "보충 읽기", label: "edixos/cka-labs", href: "https://github.com/edixos/cka-labs", note: "Bootstrap·security·scheduling·network·storage·troubleshooting module 구성 참고" },
+    { kind: "보충 읽기", label: "simonbbbb/CKA-Hand-on-lab", href: "https://github.com/simonbbbb/CKA-Hand-on-lab", note: "Task·solution·setup과 hands-on interface 구성 참고. MIT license" },
+    { kind: "보충 읽기", label: "sailor-sh/CK-X", href: "https://github.com/sailor-sh/CK-X", note: "시간 제한·web terminal·자동 결과 검증 구조 참고" },
+    { kind: "보충 읽기", label: "stephrobert/kubernetes-dsoxlab-training", href: "https://github.com/stephrobert/kubernetes-dsoxlab-training", note: "검증 가능한 lab·test·curriculum 구조 참고. CC-BY-4.0 license" },
   ],
   "cloud/cloud-identity-access-hierarchy": [
     {
@@ -13401,7 +13474,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       "kind": "공식 가이드",
       "label": "AWS database decision guide",
-      "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choosing-aws-database/",
+      "href": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/databases-on-aws-how-to-choose.html",
       "note": "접근 패턴과 운영 요구에 따른 AWS 데이터베이스 선택을 확인합니다."
     },
     {
@@ -13512,5 +13585,95 @@ export const ARTICLE_EVIDENCE: Readonly<
   "cloud/azure-ai200-fast-study": [
     { kind: "공식 가이드", label: "Microsoft Learn · AI-200 Study Guide", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "현행 네 영역 비중과 세부 구현 과제를 확인합니다." },
     { kind: "공식 문서", label: "Azure AI Cloud Developer Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-cloud-developer-associate/", note: "자격 이름·역할과 AI-200 연결을 확인합니다." },
+  ],
+  "gpu/nvidia-nca-aiio-study-guide": [
+    {
+      kind: "공식 가이드",
+      label: "NVIDIA · NCA-AIIO Certification",
+      href: "https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/",
+      note: "50문항·60분·영어·125달러·2년 유효기간과 38%·40%·22% 공식 비중을 확인합니다.",
+    },
+    {
+      kind: "공식 가이드",
+      label: "NVIDIA · NCA-AIIO Exam Study Guide (Jan 2026)",
+      href: "https://dam-cdn.nvd.orangelogic.com/AssetLink/x874j05hy3m3r2sor84kpvp70750m468.pdf",
+      note: "세 영역의 세부 목표와 Associate 역할 경계를 확인합니다.",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · DCGM User Guide",
+      href: "https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html",
+      note: "GPU discovery·health·diagnostic 개념을 실제 첫 점검 증거로 연결합니다.",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA · DGX BasePOD B300 Deployment Guide",
+      href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html",
+      note: "Associate 범위 뒤에 이어지는 provisioning·Slurm·GPU·NCCL 검증의 실제 깊이를 확인합니다.",
+    },
+    { kind: "공식 문서", label: "NVIDIA · Container Toolkit", href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html", note: "Host driver와 container runtime의 GPU 주입 경계를 실제 설정·sample workload로 확인합니다." },
+    { kind: "공식 문서", label: "NVIDIA · Triton Inference Server Quickstart", href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/getting_started/quickstart.html", note: "Readiness 200과 model serving 준비의 범위를 확인합니다." },
+    { kind: "공식 문서", label: "NVIDIA · Base Command Manager", href: "https://docs.nvidia.com/base-command-manager/", note: "Cluster provisioning·workload management·infrastructure monitoring의 상위 책임을 확인합니다." },
+    { kind: "공개 강의", label: "NCA-AIIO Free Study Course · freeCodeCamp", href: "https://www.youtube.com/watch?v=0WjfKQdfeMU", note: "GPU·CUDA·Container Toolkit·Triton·Slurm·BCM·GPU Operator·DCGM의 복습 지도입니다. 시험 사실과 현재 명령은 공식 문서에서 다시 확인합니다." },
+  ],
+  "gpu/ai-infrastructure-b300-128-blueprint": [
+    { kind: "공식 문서", label: "NVIDIA HGX AI Factory · Components", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html", note: "HGX B300 한 노드의 GPU·메모리·NIC·DPU·로컬 저장장치 기준을 확인합니다." },
+    { kind: "공식 문서", label: "NVIDIA HGX AI Factory · Logical Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/network-logical-architecture.html", note: "동서·북남·관리망과 확장 단위를 확인합니다." },
+    { kind: "공개 강의", label: "IT 취준생 필독, IT 인프라의 모든 것 · 미눅스", href: "https://youtu.be/aRLYr6xJDqE", note: "서버·스토리지·네트워크·시설의 큰 그림을 잡는 복습 자료이며 제품 수량의 근거로 쓰지 않습니다." },
+    { kind: "공개 강의", label: "일 잘하는 IT 엔지니어들의 결정적 공통점 · 미눅스", href: "https://youtu.be/xLJPvEvU7-c", note: "요구사항 확인과 현장 커뮤니케이션 관점을 보충하며 공식 설계 규격을 대신하지 않습니다." },
+    { kind: "공개 강의", label: "Understanding the Interconnected AI Data Centers of the Future · NVIDIA GTC", href: "https://developer.nvidia.com/gtc/2020/video/s21992-vid", note: "공간·전력·냉각·연결성을 한 데이터센터 계획으로 묶는 관점을 익힌 뒤 B300 최신 수치는 현재 공식 가이드에서 다시 확인합니다." },
+    { kind: "공개 강의", label: "Inside the AI Hardware Engine · freeCodeCamp", href: "https://www.youtube.com/watch?v=FGT7LZbZe-g", note: "Logic·foundry·HBM·advanced packaging·network·data center의 전체 경로에서 BOM 납기 위험을 찾는 보조 지도입니다. 시장 수치·roadmap은 현재 사양이나 계약 납기의 근거로 쓰지 않습니다." },
+    { kind: "공개 강의", label: "Build & Train GLM-5.3-Flash From Scratch · freeCodeCamp", href: "https://www.youtube.com/watch?v=-gfgQfw2g_E", note: "25.7M 교육 모델의 구조·학습·검증을 이해하는 자료입니다. 실제 320B model의 VRAM·성능·GPU sizing 근거로 확대하지 않습니다." },
+    { kind: "공식 문서", label: "Z.ai · GLM-5.3-Flash", href: "https://huggingface.co/zai-org/GLM-5.3-Flash", note: "320B total·18B active와 실제 공개 architecture를 교육용 축소 모델과 구분합니다." },
+    { kind: "공식 문서", label: "TSMC · 2025 Annual Report, 3DFabric", href: "https://investor.tsmc.com/static/annualReports/2025/english/pdf/2025_tsmc_ar_e_ch5.pdf", note: "CoWoS가 logic과 HBM을 통합하는 packaging 단계임을 확인합니다." },
+  ],
+  "gpu/ai-cluster-software-compatibility": [
+    { kind: "공식 문서", label: "NVIDIA DGX OS 7 Release Notes", href: "https://docs.nvidia.com/dgx/dgx-os-7-user-guide/release_notes.html", note: "OS·kernel·driver·CUDA·NCCL·DOCA-OFED·firmware를 한 release 행으로 확인합니다." },
+    { kind: "공식 문서", label: "NVIDIA DOCA Profiles", href: "https://docs.nvidia.com/doca/sdk/doca-profiles/", note: "doca-ofed·doca-roce·doca-networking의 설치 범위와 경계를 확인합니다." },
+    { kind: "공개 강의", label: "서버죽었다고 달려오라던 고객의 황당한 원인 · 미눅스", href: "https://youtu.be/sbrIUS4lwQk", note: "장애 증상과 실제 원인을 분리하는 현장 사례로 보고, 호환 버전 판단은 공식 release matrix로 검증합니다." },
+    { kind: "공개 강의", label: "책에선 배울 수 없는 IT 인프라 · 미눅스", href: "https://youtu.be/83dxKmbryu0", note: "현장 점검 습관을 보충하는 자료이며 특정 NVIDIA software stack의 지원 근거는 아닙니다." },
+    { kind: "공개 강의", label: "Multi-GPU Communication Libraries for Scaling HPC and AI Workloads · NVIDIA GTC 2025", href: "https://www.youtube.com/watch?v=kyQtbyR536I", note: "CUDA-aware MPI·NVSHMEM·NCCL의 역할을 비교하며, 이 글에서는 특히 NCCL이 scheduler나 NIC driver가 아니라는 경계를 확인합니다." },
+  ],
+  "gpu/kubernetes-vs-slurm-gpu-scheduling": [
+    { kind: "공식 문서", label: "Slurm Quick Start Administrator Guide", href: "https://slurm.schedmd.com/quickstart.html", note: "Slurm의 자원 할당·job 실행·queue 관리 책임을 확인합니다." },
+    { kind: "공식 문서", label: "Kubernetes Jobs", href: "https://kubernetes.io/docs/concepts/workloads/controllers/job/", note: "완료형 workload와 Job controller의 책임을 확인합니다." },
+    { kind: "공식 문서", label: "NVIDIA GPU Operator", href: "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html", note: "Kubernetes 노드의 GPU driver·device plugin·container toolkit 운영 범위를 확인합니다." },
+    { kind: "공개 강의", label: "IT 인프라 입문. 서버 데이터 처리 핵심 지표 · 미눅스", href: "https://youtu.be/19nnY2aaAoI", note: "CPU·메모리·I/O 지표를 작업 병목과 연결하는 입문 복습 자료입니다." },
+    { kind: "공개 강의", label: "Using the Slurm Scheduler on Composable Resources · Texas A&M HPRC", href: "https://hprc.tamu.edu/training/aces_slurm.html", note: "SBATCH·single/multi-node·GPU 작업·사용량 확인·실패 진단을 실습하며 Slurm의 batch job 생애를 익힙니다." },
+    { kind: "공개 강의", label: "Kubernetes Operator Best Practices · freeCodeCamp", href: "https://www.youtube.com/watch?v=hAsz5GAbBQE", note: "resourceVersion·generation·update conflict·predicate·finalizer·concurrent reconcile의 빈칸을 찾는 보조 자료입니다. Semantics는 Kubernetes·controller-runtime 공식 문서로 확인합니다." },
+    { kind: "공식 문서", label: "Kubebuilder · Good Practices", href: "https://go.kubebuilder.io/reference/good-practices.html", note: "Idempotent reconciliation과 controller 책임 경계를 확인합니다." },
+    { kind: "공식 문서", label: "Kubernetes · API Concepts and Finalizers", href: "https://kubernetes.io/docs/reference/using-api/api-concepts/", note: "resourceVersion, optimistic concurrency와 watch semantics를 확인하고 finalizer 문서와 함께 삭제 생애를 추적합니다." },
+    { kind: "공식 코드", label: "client-go · RetryOnConflict", href: "https://pkg.go.dev/k8s.io/client-go/util/retry", note: "Conflict마다 최신 객체를 다시 읽어 제한된 backoff로 update하는 공식 패턴을 확인합니다." },
+  ],
+  "gpu/ai-cluster-storage-io": [
+    { kind: "공식 문서", label: "NVIDIA HGX AI Factory · Storage Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/storage.html", note: "GPU당 처리량 기준과 공유·로컬 저장 경로의 역할을 확인합니다." },
+    { kind: "공식 규격", label: "SNIA SSS Performance Test Specification", href: "https://www.snia.org/solid-state-sss", note: "저장장치 성능 측정의 preconditioning·steady-state 경계를 확인합니다." },
+    { kind: "공식 문서", label: "Linux VFS와 blk-mq", href: "https://docs.kernel.org/block/blk-mq.html", note: "Application I/O가 page cache·filesystem·bio/request·device queue를 통과하는 경계를 확인합니다." },
+    { kind: "공식 문서", label: "Linux fsync(2)", href: "https://man7.org/linux/man-pages/man2/fsync.2.html", note: "write 반환, file fsync와 directory entry durability를 서로 다른 완료 조건으로 둡니다." },
+    { kind: "공식 문서", label: "MLCommons Storage", href: "https://github.com/mlcommons/storage", note: "AI training과 checkpoint workload를 file·object backend에서 재현할 때 manifest와 실행 조건을 고정하는 기준을 확인합니다." },
+    { kind: "공식 문서", label: "PyTorch Distributed Checkpoint", href: "https://docs.pytorch.org/tutorials/recipes/distributed_async_checkpoint_recipe.html", note: "Async checkpoint의 GPU 재개 시점, CPU staging과 실제 저장 완료 Future를 구분합니다." },
+    { kind: "공식 문서", label: "Ceph recovery state", href: "https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/", note: "Degraded·recovering·backfilling·active+clean 상태와 rebuild 중 성능 시험 방법을 학습합니다. Elice가 Ceph를 쓴다는 뜻은 아닙니다." },
+    { kind: "공식 문서", label: "Elice Cloud Overview", href: "https://help.elice.io/help/docs/cloud-overview", note: "ECI의 block·object·parallel filesystem과 DataHub object interface 공개 범위를 확인합니다." },
+    { kind: "공식 문서", label: "Elice · B300 GPU 가상화", href: "https://elice.io/ko/resources/blog/eci-b300-gpu-virtualization", note: "GPU·NIC·NVMe inventory, topology와 host/guest 동일 version·benchmark 대조법을 익히되 NCCL 결과를 storage 성능으로 확대하지 않습니다." },
+    { kind: "프로젝트 실측", label: "NAVER D2 · Alluxio 도입기", href: "https://d2.naver.com/helloworld/3863967", note: "HDFS 원본과 locality cache 사이 persistence·metadata sync 질문을 가져옵니다. 당시 version의 성능값은 재사용하지 않습니다." },
+    { kind: "프로젝트 실측", label: "Kakao · Apache Iceberg 운영", href: "https://tech.kakao.com/posts/694", note: "Commit 간격·small file·compaction·snapshot/orphan 정리가 연결되는 운영 trade-off를 확인합니다." },
+    { kind: "프로젝트 실측", label: "우아한형제들 · Aurora storage 비교", href: "https://techblog.woowahan.com/2621/", note: "Media 이름이 아니라 실제 query·engine·instance 조합을 시험하는 방법을 참고합니다." },
+    { kind: "프로젝트 실측", label: "당근 · DynamoDB change pipeline", href: "https://medium.com/daangn/dynamodb-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B3%80%EA%B2%BD-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0-feat-kinesis-1733db06066", note: "Online source의 부하를 격리하고 access pattern에서 object layout을 정하는 질문을 가져옵니다." },
+    { kind: "공개 강의", label: "IT 엔지니어라면 알아야 할 RAID 핵심 완벽 정리 · 미눅스", href: "https://youtu.be/P2KaU04KbLE", note: "RAID 0·1·5·6의 용량·장애 허용 trade-off를 복습하되 분산 AI 스토리지 성능 근거로 확대하지 않습니다." },
+    { kind: "공개 강의", label: "IT 인프라 입문. 서버 데이터 처리 핵심 지표 · 미눅스", href: "https://youtu.be/19nnY2aaAoI", note: "처리량·IOPS·지연시간을 구분하는 입문 자료로 활용합니다." },
+    { kind: "공개 강의", label: "Interactive and Batch Jobs with Volatile Storage · Virginia Tech ARC", href: "https://docs.arc.vt.edu/videos/video_set_jobs.html", note: "공유 저장소의 파일을 node-local 임시 저장소로 옮겨 계산한 뒤 결과를 되돌리는 cache 경로를 실습 관점에서 확인합니다." },
+  ],
+  "gpu/b300-rack-power-cooling": [
+    { kind: "공식 가이드", label: "NVIDIA Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", note: "DGX B300 평균·피크 전력과 고밀도·저밀도 랙 배치 기준을 확인합니다." },
+    { kind: "공식 규격", label: "IMDA Tropical Data Centre Standard", href: "https://www.imda.gov.sg/how-we-can-help/green-dc-roadmap/tropical-dc-standard", note: "싱가포르 열대 기후 데이터센터의 고온·고습 운영 맥락을 확인합니다." },
+    { kind: "공개 강의", label: "국가정보자원관리원 화재, IT엔지니어가 본 진짜 문제점 · 미눅스", href: "https://youtu.be/a1p3W54Vg_o", note: "화재와 복구를 단일 장비가 아닌 전력·냉각·운영 연속성 문제로 보는 보충 사례이며 공식 사고조사 자료는 아닙니다." },
+    { kind: "공개 강의", label: "Direct-to-Chip Liquid Cooling AI Cluster Architectures · Open Compute Project", href: "https://www.youtube.com/watch?v=hMWMF5TFfLw", note: "cluster-level 설계와 liquid cooling 구성요소의 큰 그림을 익히고 실제 유량·수질·압력 조건은 OEM 설계서로 확정합니다." },
+    { kind: "공개 강의", label: "Energy Efficient Hardware · University of Lille", href: "https://webtv.univ-lille.fr/video/11601/energy-efficient-hardware", note: "HPC의 direct liquid cooling과 높은 냉각수 온도 운전이 냉동기·폐열 활용에 미치는 영향을 보충합니다." },
+  ],
+  "gpu/ai-infrastructure-commissioning-acceptance": [
+    { kind: "공식 가이드", label: "NVIDIA DGX BasePOD B300 Deployment Guide", href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html", note: "노드 provisioning부터 Slurm·GPU·NCCL 검증까지 구축 순서를 확인합니다." },
+    { kind: "공식 문서", label: "KISA 클라우드서비스 보안인증 공지", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", note: "CSAP 관련 최신 공지와 인증 범위는 KISA 원문에서 별도로 확인합니다." },
+    { kind: "공개 강의", label: "책에선 배울 수 없는 IT 인프라 · 미눅스", href: "https://youtu.be/83dxKmbryu0", note: "현장 인수·장애 대응의 맥락을 보충하되 계약상 합격 기준은 요구사항과 시험 기록으로 닫습니다." },
+    { kind: "공개 강의", label: "서버죽었다고 달려오라던 고객의 황당한 원인 · 미눅스", href: "https://youtu.be/sbrIUS4lwQk", note: "고객이 말한 증상과 층별 점검 결과를 분리하는 복습 사례로 활용합니다." },
   ],
 };

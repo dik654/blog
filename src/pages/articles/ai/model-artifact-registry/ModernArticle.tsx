@@ -9,8 +9,7 @@ export default function ModelArtifactRegistryArticle() {
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Model registry는 이름표 목록이 아니라 immutable artifact를 production
-          선택으로 연결하는 경계입니다
+          Registry는 승인한 model과 실제 배포를 연결합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -241,6 +240,76 @@ export default function ModelArtifactRegistryArticle() {
             deployment receipt를 제공한다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
+        <div id="databricks-unity-catalog" className="mt-10 scroll-mt-24">
+          <h3 className="text-xl font-bold">
+            Notebook 밖에서는 model을 찾지 못했습니다
+          </h3>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              (가정) 개발자는 laptop에서 MLflow server를 띄우고 `mlflow.db`와 local
+              model directory에 weight를 기록했습니다. Notebook에서는 잘 열렸지만
+              배포 worker는 그 laptop의 파일과 credential을 읽을 수 없었습니다. Run이
+              사라진 것이 아니라 팀 경계 밖의 저장소에 있었던 사건입니다.
+            </p>
+            <p>
+              혼자 실험할 때는 한 host의 SQLite와 local directory로 기록과 큰 파일을
+              함께 보관할 수 있습니다. 팀이 함께 쓰기 시작하면 기록용 database, model을
+              둘 object storage와 tracking server의 접근 권한을 나눠 운영해야 합니다.
+            </p>
+            <p>
+              Databricks를 쓰면 이 역할 일부를 managed MLflow와 Unity Catalog가 맡습니다.
+              그래도 model을 찾는 이름과 실행 권한이 저절로 같아지는 것은 아닙니다.
+            </p>
+          </div>
+          <div className="not-prose my-8 max-w-full overflow-x-auto">
+            <table className="w-full min-w-[820px] border-collapse text-left text-sm">
+              <thead><tr className="border-y border-border bg-muted/30"><th className="px-3 py-3">경계</th><th className="px-3 py-3">local 실습</th><th className="px-3 py-3">팀·production</th><th className="px-3 py-3">복구 시험</th></tr></thead>
+              <tbody className="divide-y divide-border">{[
+                ["Run metadata", "SQLite on one host", "shared SQL backend 또는 managed tracking", "DB와 schema migration을 함께 복원"],
+                ["큰 model 파일", "local directory", "object store·managed file storage", "URI가 아니라 실제 bytes와 digest를 읽음"],
+                ["Model identity", "짧은 local name", "catalog.schema.model + immutable version", "다른 workspace identity로 load"],
+                ["Promotion", "사람이 파일 경로 변경", "권한이 있는 주체가 alias 이동", "alias history와 resolve된 version 대조"],
+                ["Serving", "notebook process", "endpoint가 고정 model version을 load", "READY·model version·test prediction 확인"],
+              ].map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell} className="px-3 py-3 leading-6 text-muted-foreground">{cell}</td>)}</tr>)}</tbody>
+            </table>
+          </div>
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
+            <p>
+              Unity Catalog의 model 이름은 `catalog.schema.model`처럼 세 단계로 읽습니다.
+              첫 단계는 조직의 data domain, 두 번째는 팀이나 lifecycle 경계, 마지막은
+              registered model입니다. 이름을 안다고 load할 수 있는 것은 아닙니다. 상위
+              catalog·schema를 사용할 권한과 model 실행 권한을 함께 확인해야 합니다.
+            </p>
+          </div>
+          <pre className="not-prose my-6 max-w-full overflow-x-auto rounded-xl border border-border bg-muted/20 p-4 text-sm leading-6"><code>{`import mlflow
+from mlflow import MlflowClient
+
+model_name = "prod.ml_team.claims_model"
+client = MlflowClient()
+
+# 움직이는 이름은 결정 시점에 한 번만 해석한다.
+resolved = client.get_model_version_by_alias(model_name, "Champion")
+deploy_choice = {
+    "model_name": model_name,
+    "alias": "Champion",
+    "resolved_version": resolved.version,
+    "source_run_id": resolved.run_id,
+}
+
+# 배포 설정에는 alias가 아니라 위에서 고정한 version을 넣는다.
+model_uri = f"models:/{model_name}/{deploy_choice['resolved_version']}"`}</code></pre>
+          <div className="not-prose my-6 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-xl border border-emerald-600/30 bg-emerald-500/5 p-4"><p className="text-xs font-bold uppercase tracking-wide">정상 판독 · 예시 출력</p><pre className="mt-3 whitespace-pre-wrap rounded-lg bg-background p-3 text-xs leading-5"><code>{`name: prod.ml_team.claims_model
+Champion → version 22
+endpoint loaded_version: 22
+state: READY`}</code></pre><p className="mt-3 text-sm leading-6 text-muted-foreground">Alias 해석 결과와 endpoint가 실제로 읽은 version이 같습니다. Model digest와 test prediction까지 통과해야 parity를 닫습니다.</p></div>
+            <div className="rounded-xl border border-rose-600/30 bg-rose-500/5 p-4"><p className="text-xs font-bold uppercase tracking-wide">실패 판독 · 예시 출력</p><pre className="mt-3 whitespace-pre-wrap rounded-lg bg-background p-3 text-xs leading-5"><code>{`Champion → version 22
+endpoint loaded_version: 21
+state: READY`}</code></pre><p className="mt-3 text-sm leading-6 text-muted-foreground">Endpoint가 READY여도 승인한 model을 싣지 않았습니다. READY와 registry parity를 서로 다른 gate로 둡니다.</p></div>
+          </div>
+          <CitationBlock source="MLflow · Backend Stores" citeKey={3} href="https://mlflow.org/docs/latest/self-hosting/architecture/backend-store/">현재 문서는 run·model·trace의 metadata를 backend store에 두고 큰 weight 같은 파일을 artifact store에 둡니다. SQLite는 현재 기본 local backend지만 높은 동시성의 production에서는 shared relational database를 검토해야 합니다.</CitationBlock>
+          <CitationBlock source="Databricks · Models in Unity Catalog" citeKey={4} href="https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/">공식 lifecycle은 세 단계 model 이름, version과 alias, 상위 catalog·schema 권한을 함께 사용합니다. Alias를 이동할 권한과 model을 실행할 권한은 별도로 검토해야 합니다.</CitationBlock>
+        </div>
       </section>
 
       <section id="deployment-parity" className="scroll-mt-20">
@@ -253,7 +322,14 @@ export default function ModelArtifactRegistryArticle() {
             controller는 promotion receipt와 이 runtime attestation을 비교합니다. 이때 alias가 v21을 가리켜도 오래된 pod가 v17을 들고
             있다면 registry는 맞지만 deployment parity는 실패한 상태입니다.
           </p>
+          <p>
+            Databricks Model Serving을 쓰는 경우에도 생성 요청의 `served_entities`에
+            Unity Catalog model의 전체 이름과 version을 고정하고, 배포 뒤 endpoint
+            상태와 실제 test prediction을 읽습니다. Cold start나 `READY` 표시는
+            model digest·input signature·업무 지표를 대신하지 않습니다.
+          </p>
         </div>
+        <CitationBlock source="Databricks · Create custom model serving endpoints" citeKey={5} href="https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints">현재 공식 API는 Unity Catalog의 전체 model 이름과 명시적인 version을 served entity에 지정합니다. Endpoint 생성 권한, resource access와 READY 상태는 별도 조건입니다.</CitationBlock>
       </section>
     </div>
   );

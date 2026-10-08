@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -103,6 +104,21 @@ export default function CutlassCollectivesAndTileSchedulersArticle() {
             stage 4 에 192 KB 를 써서 SM 당 threadblock 하나만 남습니다.
           </p>
         </div>
+<FactorStructureViz
+  eyebrow="pipeline stage의 shared memory"
+  title="stage 한 벌은 A 16KB와 B 16KB이고, stage 수만큼 그대로 쌓입니다"
+  description="각 작은 칸은 16KB tile 하나입니다. 한 stage에는 A와 B 두 칸이 필요하므로 32KB씩 늘어납니다."
+  factors={[
+    {label:"A tile",value:"16KB",detail:"128×64×2B",marks:1,nextOperator:"+"},
+    {label:"B tile",value:"16KB",detail:"64×128×2B",marks:1,accent:true},
+    {label:"stage 3",value:"3벌",detail:"32KB 묶음 세 개",marks:3},
+    {label:"stage 4",value:"4벌",detail:"32KB 묶음 네 개",marks:4},
+  ]}
+  equation="stage당 (16KB + 16KB) = 32KB · stage3=96KB · stage4=128KB"
+  result="stage를 늘릴수록 resident block 여유 감소"
+  note="Threadblock 상한 227KB 전부를 mainloop가 쓸 수는 없습니다. epilogue와 정렬 여유를 빼고, K iteration 수가 stage보다 충분한지도 확인합니다."
+/>
+
         <ExplainedFormula
           question="Stage 수와 shared memory 사용량은 어떤 관계인가요?"
           idea="Stage 한 벌은 A tile 과 B tile 의 bytes 에 barrier 몫을 더한 크기이고, 자동 계산은 carveout 을 뺀 용량을 그 크기로 나눈 몫을 stage 수로 씁니다."

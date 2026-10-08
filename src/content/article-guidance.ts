@@ -89,16 +89,16 @@ const CATEGORY_STARTS: Record<string, GuidanceLink> = {
   },
 };
 
-const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
+export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
   "ai-foundations": {
     label: "딥러닝 전체 지도",
     href: "/cs/ai/deep-learning-overview",
     reason: "퍼셉트론에서 학습·평가까지 공통 좌표를 먼저 잡습니다.",
   },
   "ai-nlp": {
-    label: "분포 의미론",
-    href: "/cs/ai/distributional-semantics",
-    reason: "텍스트를 벡터로 표현하는 출발점부터 잡습니다.",
+    label: "토크나이저 기초",
+    href: "/cs/ai/tokenizer",
+    reason: "문자열이 모델이 읽는 token ID가 되는 경계부터 잡습니다.",
   },
   "ai-vision": {
     label: "CNN 기초",
@@ -121,9 +121,9 @@ const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     reason: "도구 호출·루프·검증이라는 공통 실행 모델을 먼저 봅니다.",
   },
   "ai-llm-serving": {
-    label: "vLLM 서빙 구조",
-    href: "/cs/ai/vllm-serving",
-    reason: "요청·KV cache·scheduler가 만나는 전체 경로를 먼저 봅니다.",
+    label: "KV Cache 기초",
+    href: "/cs/ai/kv-cache-fundamentals",
+    reason: "요청마다 무엇을 저장하는지 잡은 뒤 scheduler와 runtime으로 갑니다.",
   },
   "ai-llm-theory": {
     label: "Transformer 아키텍처",
@@ -170,6 +170,21 @@ const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     href: "/cs/ai/dezero-autodiff",
     reason: "계산 그래프와 gradient가 이후 레이어 구현의 기반입니다.",
   },
+  "gpu-fundamentals": {
+    label: "CUDA 실행 기초",
+    href: "/cs/gpu/cuda-basics",
+    reason: "Kernel·thread·block·grid의 실행 단위에서 시작해 SM·warp·memory hierarchy로 올라갑니다.",
+  },
+  "markets-derivatives": {
+    label: "선도와 선물의 출발점",
+    href: "/finance/markets/forwards-and-futures",
+    reason: "미래 가격을 고정하는 가장 단순한 계약에서 옵션·스왑·구조화 상품으로 올라갑니다.",
+  },
+  "cloud-foundations": {
+    label: "Cloud 책임과 region 기초",
+    href: "/cs/cloud/cloud-foundations-responsibility-regions",
+    reason: "공급자와 사용자의 책임, region·zone 경계를 먼저 구분합니다.",
+  },
   "ai-practical-data": {
     label: "EDA 워크플로우",
     href: "/cs/ai/eda-workflow",
@@ -196,9 +211,9 @@ const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     reason: "pooling·contrastive 학습·retrieval 평가의 기준을 먼저 잡습니다.",
   },
   "ai-practical-compression": {
-    label: "모델 압축 파이프라인",
-    href: "/cs/ai/compression-pipeline",
-    reason: "양자화·pruning·distillation의 역할과 측정 경계를 먼저 봅니다.",
+    label: "양자화 기초",
+    href: "/cs/ai/quantization",
+    reason: "숫자를 줄이는 가장 작은 단위부터 압축·배포 파이프라인으로 갑니다.",
   },
   "ai-practical-llm": {
     label: "LoRA Fine-tuning",
@@ -262,6 +277,14 @@ const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     reason: "transport·upgrade·muxer·behaviour의 조립 순서를 먼저 봅니다.",
   },
 };
+
+export function isDeclaredSubcategoryStart(
+  categorySlug: string,
+  article: Article,
+): boolean {
+  const start = SUBCATEGORY_STARTS[article.subcategory];
+  return start?.href === articleHref(categorySlug, article.slug);
+}
 
 export function inferArticleIntent(article: Article): ArticleIntent {
   const override = ARTICLE_INTENT_OVERRIDES[article.slug];

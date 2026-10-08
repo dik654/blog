@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
@@ -48,6 +49,21 @@ export default function TrainingMemoryBudgetArticle() {
             120GB가 듭니다. 게다가 여기에는 activation이 아직 더해지지 않았습니다.
           </p>
         </div>
+<FactorStructureViz
+  eyebrow="parameter 하나의 학습 장부"
+  title="parameter마다 16바이트를 잡고, 그 묶음을 75억 번 둡니다"
+  description="Weight·gradient·optimizer state는 더해서 parameter 한 개의 고정 상태를 만듭니다. 그다음 전체 parameter 수를 곱합니다."
+  factors={[
+    {label:"weight",value:"2B",detail:"BF16 weight 한 값",marks:2,nextOperator:"+"},
+    {label:"gradient",value:"2B",detail:"BF16 gradient 한 값",marks:2,nextOperator:"+"},
+    {label:"optimizer state",value:"12B",detail:"FP32 master·두 moment 가정",marks:12,accent:true},
+    {label:"parameter 수",value:"7.5×10⁹",detail:"앞의 16B 묶음을 반복",marks:8},
+  ]}
+  equation="(2B + 2B + 12B) × 7.5×10⁹ parameters"
+  result="120GB"
+  note="Activation, 임시 buffer, allocator 여유와 분산 shard는 아직 더하지 않은 논리 장부입니다."
+/>
+
         <ExplainedFormula
           question="Adam으로 mixed-precision 학습할 때 parameter 하나당 메모리는 몇 byte일까요?"
           idea={<>Forward·backward에 쓰는 FP16 사본과, optimizer가 정밀도를 위해 따로 유지하는 FP32 master weight·momentum·variance를 모두 더합니다. Adam은 momentum과 variance 두 state를 모두 쓰므로 optimizer state만 12byte(=4×3)입니다.</>}

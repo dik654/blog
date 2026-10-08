@@ -4,6 +4,10 @@ import PowerSizing from "./datacenter-site-readiness/PowerSizing";
 import FloorLoad from "./datacenter-site-readiness/FloorLoad";
 import Seismic from "./datacenter-site-readiness/Seismic";
 import ReadinessGate from "./datacenter-site-readiness/ReadinessGate";
+import HardwareFieldLab from "./HardwareFieldLab";
+import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
+import { siteReadinessFieldLab } from "./hardwareFieldLabs";
+import { hardwareTeachCases } from "./hardwareTeachCases";
 
 /**
  * 랙에 들어가는지는 무게와 냉각으로 먼저 갈립니다
@@ -13,12 +17,16 @@ import ReadinessGate from "./datacenter-site-readiness/ReadinessGate";
 export default function DatacenterSiteReadinessArticle() {
   return (
     <div className="space-y-16">
-      <Overview />
-      <CoolingType />
-      <PowerSizing />
-      <FloorLoad />
-      <Seismic />
-      <ReadinessGate />
+      <HardwareTeachOpening data={hardwareTeachCases.siteReadiness} />
+      <HardwareTeachMechanism data={hardwareTeachCases.siteReadiness}>
+        <Overview />
+        <CoolingType />
+        <PowerSizing />
+        <FloorLoad />
+        <Seismic />
+        <ReadinessGate />
+      </HardwareTeachMechanism>
+      <HardwareFieldLab data={siteReadinessFieldLab} />
     </div>
   );
 }

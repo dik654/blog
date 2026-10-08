@@ -66,7 +66,7 @@ export default function HyperConnectionsResidualStreamsArticle() {
         <ContentBoundary article="hyper-connections-residual-streams" />
       </section>
 
-      <section id="streams" className="scroll-mt-20">
+      <section id="streams" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Hyper-connection 은 hidden vector 를 n 개로 복제해 나란히 흘려보냅니다
         </h2>
@@ -77,8 +77,8 @@ export default function HyperConnectionsResidualStreamsArticle() {
             늘어납니다.
           </p>
           <p>
-            늘어난 stream 은 공짜가 아닙니다. Hidden 4096, sequence 2048, batch 1, bf16 이면
-            stream 하나의 활성값은 2048×4096×2B=16 MiB 입니다. n=4 면 층마다 이 hyper hidden
+            늘어난 stream 은 공짜가 아닙니다. Batch 1에서 sequence 2,048위치마다 hidden 값 4,096개를
+            BF16 2바이트로 두면 stream 하나는 2,048위치 × 위치마다 4,096개 × 값마다 2바이트 = 16MiB입니다. n=4이면 층마다 이 hyper hidden
             matrix 가 64 MiB 로, 표준 residual 의 네 배를 메모리에 들고 있어야 합니다.
           </p>
           <p>

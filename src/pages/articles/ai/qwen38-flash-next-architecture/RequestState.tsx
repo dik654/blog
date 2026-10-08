@@ -4,7 +4,7 @@ import RequestStateViz from "./viz/RequestStateViz";
 
 export default function RequestState() {
   return (
-    <section id="request-state" className="scroll-mt-20">
+    <section id="request-state" data-calculation-explained className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">요청 하나가 남기는 상태는 세 종류입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
@@ -14,8 +14,8 @@ export default function RequestState() {
         </p>
 
         <p className="leading-7">
-          비례해서 커지는 쪽은 희소 attention 층의 K/V입니다. 층 12개에서 키와 값 두 종류, KV head 2개,
-          head 차원 256, BF16이므로 토큰당 12 × 2 × 2 × 256 × 2 = 24,576 바이트입니다. 24 KiB이고, 262,144
+          비례해서 커지는 쪽은 희소 attention 층의 K/V입니다. 희소 attention 12층마다 K·V 2종류, 종류마다 KV head 2개,
+          head마다 값 256개를 BF16 2바이트로 남깁니다. 따라서 token당 12층 × K·V 2종류 × KV head 2개 × head마다 256개 × 값마다 2바이트 = 24,576바이트입니다. 24KiB이고, 262,144
           토큰을 모두 채우면 6 GiB입니다.
         </p>
 
@@ -25,8 +25,8 @@ export default function RequestState() {
         </p>
 
         <p className="leading-7">
-          indexer도 자기 몫을 쌓습니다. 층마다 공유 key head 하나를 128차원으로 저장하므로 토큰당 12 × 128 ×
-          2 = 3,072 바이트가 더 붙습니다. 앞의 24 KiB에 3 KiB가 얹히는 셈이고, 이 두 번째 캐시는 Qwen3.6에는
+          indexer도 자기 몫을 쌓습니다. 희소 attention 12층마다 공유 key head 하나의 값 128개를 BF16 2바이트로 저장하므로
+          token당 12층 × 층마다 128개 × 값마다 2바이트 = 3,072바이트가 더 붙습니다. 앞의 24KiB에 3KiB가 얹히는 셈이고, 이 두 번째 cache는 Qwen3.6에는
           없던 항목입니다.
         </p>
 

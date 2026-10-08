@@ -1,5 +1,5 @@
 import { Navigate, useParams, useLocation } from "react-router-dom";
-import { Suspense, createElement, lazy, useEffect, useRef } from "react";
+import { Suspense, createElement, useEffect, useRef } from "react";
 import { categories, getArticle } from "@/content";
 import ArticleLayout from "@/components/ArticleLayout";
 import ArticleEvidenceRail from "@/components/articles/article-evidence-rail";
@@ -13,12 +13,17 @@ import { getArticleConceptFlow } from "@/content/article-guidance";
 import { useDenseTermFlow } from "@/components/articles/dense-term-flow";
 import { domainOf } from "@/content/domains";
 import { articleHref } from "@/lib/routes";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
+import ArticleLoadBoundary from "@/components/articles/article-load-boundary";
 
 const articleComponents = new Map(
   categories.flatMap((category) =>
     category.articles.map(
       (article) =>
-        [`${category.slug}/${article.slug}`, lazy(article.component)] as const,
+        [
+          `${category.slug}/${article.slug}`,
+          lazyWithReload(article.component, `${category.slug}/${article.slug}`),
+        ] as const,
     ),
   ),
 );
@@ -86,13 +91,15 @@ export default function ArticlePage({ domain }: { domain: string }) {
         flow={conceptFlow}
       />
       <div ref={articleBodyRef} data-article-body>
-        <Suspense
-          fallback={
-            <p className="text-muted-foreground animate-pulse">로딩 중...</p>
-          }
-        >
-          {createElement(ArticleComponent)}
-        </Suspense>
+        <ArticleLoadBoundary key={`${category}/${articleSlug}`}>
+          <Suspense
+            fallback={
+              <p className="text-muted-foreground animate-pulse">로딩 중...</p>
+            }
+          >
+            {createElement(ArticleComponent)}
+          </Suspense>
+        </ArticleLoadBoundary>
       </div>
       {learning && <ArticleLessonPrimer contract={learning} />}
       {learning && <ArticleLearningContractView contract={learning} />}

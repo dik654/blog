@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
@@ -8,6 +9,10 @@ import NumericPath from "@/pages/articles/world-systems/NumericPath";
 import SourceApplication from "@/pages/articles/world-systems/SourceApplication";
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import AttentionKernelAnatomyAndBackendsViz from "./attention-kernel-anatomy-and-backends/viz/AttentionKernelAnatomyAndBackendsViz";
+import AttentionScaleViz from "./attention-kernel-anatomy-and-backends/viz/AttentionScaleViz";
+import AttentionArithmeticViz from "./attention-kernel-anatomy-and-backends/viz/AttentionArithmeticViz";
+import AttentionTrafficViz from "./attention-kernel-anatomy-and-backends/viz/AttentionTrafficViz";
+import AutotuneCandidateViz from "./attention-kernel-anatomy-and-backends/viz/AutotuneCandidateViz";
 import {codeRefs,fileTrees,projectMetas} from "./attention-kernel-anatomy-and-backends/codeRefs";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function Article(){
@@ -100,6 +105,7 @@ export default function Article(){
 <p>전체 비인과 16조각은 행렬곱 512 FLOP입니다. 미래 조각을 건너뛰되 대각선 조각의 네 칸을 모두 행렬곱으로 처리하는 모형에서는 10×32=320 FLOP입니다. 허용한 연결 36개만 정확히 계산하는 이상적 산술은 36×4d=288 FLOP입니다. 이후 어느 장부를 쓰는지 함께 표시하겠습니다.</p>
 <p>기존의 큰 조각 예도 같은 식입니다. B_r=B_c=d=128이면 QK와 PV가 각각 4,194,304 FLOP이고 지수는 16,384회입니다. B_r=B_c=64, d=128이면 두 곱이 각각 1,048,576 FLOP, 지수는 4,096회입니다.</p>
 </div>
+<AttentionArithmeticViz />
 <ExplainedFormula question="같은 조각의 두 종류 비용은 어떻게 기록하나요?" idea="행렬곱의 곱셈·덧셈 수와 지수 호출 수를 각각 셉니다. 서로 다른 단위를 임의로 합치지 않습니다." formula={String.raw`F_{\rm mm}=4B_rB_cd,\quad E_{\exp}=B_rB_c`} annotatedFormula={String.raw`\begin{aligned}F_{\rm mm}&=\underbrace{4B_rB_cd}_{\text{두 행렬곱}}\\E_{\exp}&=\underbrace{B_rB_c}_{\text{점수 칸 수}}\\B_r&=B_c=d=2\\F_{\rm mm}&=32,\quad E_{\exp}=4\end{aligned}`} operations={[{expression:String.raw`2B_rB_cd`,annotation:["각 결과 칸의 d개 곱·합을 세어","한 행렬곱 비용을 얻음"]},{expression:String.raw`B_rB_c`,annotation:["점수 칸마다 필요한","지수 호출을 별도로 셈"]}]} terms={[{symbol:"B_r,B_c",name:"조각의 두 변",description:"관심 위치 수와 비교 위치 수입니다."},{symbol:"d",name:"행의 성분 수",description:"사례에서는 2입니다."},{symbol:"F_mm, E_exp",name:"연산 수와 호출 수",description:"FLOP와 지수 호출이라는 서로 다른 단위입니다."}]} assumptions={["곱셈·덧셈을 각각 1 FLOP로 세는 통상 행렬곱 장부입니다.","마스크·최대·합산·주소 계산·시작 비용을 포함한 전체 실행시간이 아닙니다."]} interpretation="동일한 조각을 처리해도 어떤 연산기를 기다리는지에 따라 최적의 배치가 달라집니다."/>
 </section>
 <section id="causal" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">8 · 10조각과 36개 연결을 원문 범위에 대입한다</h2><div className={prose}>
@@ -126,22 +132,119 @@ export default function Article(){
 {code("split-launch","원문: 두 커널을 실행하는 조건")}{code("split-combine","원문: LSE와 부분 출력 합치기")}
 <NumericPath title="가정한 한 행의 분할 장부" steps={[{label:"세 부분",value:"3 / 3 / 2개",detail:"서로 겹치지 않는 key"},{label:"부분 출력",value:"2 / 5 / 7.5",detail:"각 부분 안에서 정규화"},{label:"합치기 비중",value:"3/8 · 3/8 · 2/8",detail:"LSE에서 계산"},{label:"전체 출력",value:"4.5",detail:"원래 여덟 값의 평균"}]}/>
 </section>
-<section id="regimes" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">11 · 배열의 크기와 실제로 이동한 바이트를 구별한다</h2><div className={prose}>
-<p>이 절의 4와 1.6 비교는 미래를 가리지 않는 전체 비인과 계산의 512 FLOP를 분자로 씁니다. 숫자 하나를 2바이트에 두면 Q, K, V, O가 각각 8×2×2=32바이트입니다. 네 배열을 한 번씩 읽거나 쓰는 최소 장부는 128바이트여서 512÷128=4 FLOP/B입니다.</p>
-<p>하지만 관심 묶음 네 개가 각각 K와 V의 64바이트를 다시 읽고, Q 읽기와 O 쓰기에는 합계 64바이트를 쓴다면 총량은 4×64+64=320바이트입니다. 같은 512 FLOP를 나누면 1.6 FLOP/B입니다. 캐시에서 재사용한 비율에 따라 실제 HBM 이동량은 달라집니다.</p>
-<p>메모리 footprint는 어느 시점에 차지한 저장 용량입니다. 한 배열을 반복해서 읽는 traffic과 같지 않습니다. 128바이트라는 배열 크기를 곧장 실제 HBM 전송량이라고 부르면 재읽기, 임시 결과, LSE와 다른 부가 이동을 놓칩니다.</p>
-<p>마지막 한 query의 decode는 행렬곱 4×8×2=64 FLOP입니다. K와 V의 64바이트에 Q 읽기 4바이트와 O 쓰기 4바이트를 포함하면 64/72=8/9 FLOP/B입니다. KV만 분모로 잡아 1이라고 쓰는 근사는 Q와 O가 작은 긴 문맥의 비교에 해당합니다.</p>
+<section id="regimes" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">11 · 배열 모양에서 실제 이동량까지 한 줄씩 센다</h2><div className={prose}>
+<p><strong>이 절의 한 문장 답은 이렇습니다.</strong> FLOP/B는 같은 일을 끝내는 계산량을 그 일을 하며 실제로 옮긴 바이트로 나눈 값이므로, 배열의 크기만 세지 말고 그 배열을 몇 번 읽고 썼는지까지 세어야 합니다.</p>
+<p>먼저 비교 범위를 고정하겠습니다. 7절에서 계산한 미래를 가리지 않는 전체 작업은 2×2 조각 16개를 처리하며, 조각마다 QK와 PV 두 행렬곱에 32 FLOP를 씁니다. 따라서 두 장부 모두 분자는 512 FLOP입니다. 지금 비교할 것은 같은 답을 만들 때 자료를 한 번만 가져오는 경우와 K·V를 되읽는 경우입니다.</p>
 </div>
-
+<AttentionTrafficViz />
+<CalculationWalkthrough
+  title="장부 A · 모든 배열을 한 번만 옮기는 이상적인 하한"
+  question="128바이트와 4 FLOP/B는 어디에서 나오나요?"
+  scope="여덟 query의 비인과 출력을 모두 계산합니다. Q·K·V는 한 번씩 읽고 O는 한 번 씁니다."
+  steps={[
+    {label:"전체 행렬곱 수",expression:"16조각 × 조각마다 32 FLOP",result:"512 FLOP",reason:"가로 4조각과 세로 4조각이 만나 16조각이며, 각 조각은 QK 16 FLOP와 PV 16 FLOP를 수행합니다."},
+    {label:"배열 하나의 원소 수",expression:"8행 × 행마다 2개",result:"16개",reason:"Q·K·V·O는 모두 여덟 위치를 두 성분으로 표현합니다."},
+    {label:"배열 하나의 저장 크기",expression:"16개 × 값마다 2바이트",result:"32바이트",reason:"한 숫자를 2바이트에 저장한다는 이 글의 가정을 적용합니다."},
+    {label:"한 번 이동할 때의 총량",expression:"Q 읽기 32 + K 읽기 32 + V 읽기 32 + O 쓰기 32",result:"128바이트",reason:"입력 세 배열은 한 번씩 읽고, 결과 배열은 한 번 쓰는 이상적인 장부입니다."},
+    {label:"바이트당 계산량",expression:"512 FLOP ÷ 128바이트",result:"4 FLOP/B",reason:"분자와 분모가 모두 여덟 query의 전체 작업을 가리킵니다."},
+  ]}
+  conclusion="자료를 완벽히 재사용해 Q·K·V를 한 번씩만 읽는다면 기준값은 4 FLOP/B입니다."
+  caveats={["K·V 재읽기, LSE, 임시 결과, 주소 계산과 정렬에 따른 추가 이동을 세지 않은 하한입니다.","128바이트는 Q·K·V·O가 차지하는 합계 크기이면서, 이 특별한 한 번 읽기·쓰기 가정에서만 이동량과 같은 숫자입니다."]}
+/>
+<div className={prose}>
+<p>이제 K와 V를 재사용하지 못하는 경우를 보겠습니다. query 행은 둘씩 묶으므로 <strong>8행을 묶음마다 2행으로 나눠 query 묶음 네 개</strong>가 생깁니다. 각 묶음은 자기 출력 두 행을 계산하려고 K 전체와 V 전체를 다시 훑는다고 가정합니다. 반면 Q의 각 행은 한 묶음에만 속하고 O의 각 행도 한 번만 완성되므로 Q 읽기와 O 쓰기에는 반복 횟수 4를 붙이지 않습니다.</p>
+</div>
+<CalculationWalkthrough
+  title="장부 B · query 묶음 사이에서 K·V를 재사용하지 못하는 경우"
+  question="같은 512 FLOP인데 왜 320바이트와 1.6 FLOP/B가 되나요?"
+  scope="장부 A와 같은 여덟 query의 비인과 출력입니다. 다만 query 두 행짜리 묶음마다 K·V 전체를 다시 읽습니다."
+  steps={[
+    {label:"query 묶음 수",expression:"8 query행 ÷ 묶음마다 2행",result:"4묶음",reason:"각 query 묶음이 K·V를 몇 번 훑는지 정하려면 먼저 반복 횟수를 만들어야 합니다."},
+    {label:"묶음 하나가 읽는 K·V",expression:"K 32바이트 + V 32바이트",result:"묶음마다 64바이트",reason:"query 묶음 하나가 비교 대상 여덟 행과 가져올 값 여덟 행을 모두 사용합니다."},
+    {label:"네 묶음의 K·V 이동량",expression:"4묶음 × 묶음마다 64바이트",result:"256바이트",reason:"이 장부에서는 한 묶음이 읽은 K·V가 다음 묶음의 읽기를 줄여 주지 않는다고 가정합니다."},
+    {label:"한 번만 옮기는 Q·O",expression:"Q 읽기 32 + O 쓰기 32",result:"64바이트",reason:"각 query 행은 한 묶음에서만 읽고 그 행의 출력도 한 번만 씁니다."},
+    {label:"전체 이동량",expression:"K·V 256 + Q·O 64",result:"320바이트",reason:"같은 전체 작업에 필요한 두 종류의 이동을 합칩니다."},
+    {label:"바이트당 계산량",expression:"512 FLOP ÷ 320바이트",result:"1.6 FLOP/B",reason:"계산량은 같고, 되읽기 때문에 분모만 128바이트에서 320바이트로 늘었습니다."},
+  ]}
+  conclusion="같은 답을 계산해도 K·V를 query 묶음마다 다시 읽으면 바이트당 계산량은 4에서 1.6으로 내려갑니다."
+  caveats={["이 320바이트는 query 묶음 사이의 cache 재사용이 전혀 없다는 비교용 장부입니다.","실제 HBM traffic은 cache 적중으로 줄 수도 있고, LSE·임시 결과·정렬 때문에 이 장부보다 늘 수도 있으므로 profiler로 확인해야 합니다."]}
+/>
+<ExplainedFormula question="4와 1.6의 차이를 식 한 줄에서 어떻게 읽나요?" idea="분자의 전체 작업은 그대로 두고, 분모에서 K·V가 네 query 묶음마다 반복된다는 사실만 바꿉니다." formula={String.raw`I=F/T`} annotatedFormula={String.raw`I=\frac{\underbrace{512\ \mathrm{FLOP}}_{\text{여덟 query의 같은 전체 계산}}}{\underbrace{4(32+32)}_{\text{묶음마다 K·V 재읽기}}+\underbrace{32+32}_{\text{Q 읽기·O 쓰기 한 번}}\ \mathrm{B}}=1.6\ \mathrm{FLOP/B}`} operations={[{expression:String.raw`4(32+32)`,annotation:["query 묶음 네 개가", "K 32B와 V 32B를 각각 다시 읽음"]},{expression:String.raw`32+32`,annotation:["모든 Q행 읽기와 O행 쓰기는", "전체 작업에서 각각 한 번만 셈"]},{expression:String.raw`\frac{512}{320}`,annotation:["같은 전체 작업의 계산량을", "그 작업의 이동량으로 나눔"]}]} terms={[{symbol:"I",name:"연산 강도",description:"실제로 옮긴 1바이트마다 수행한 FLOP입니다."},{symbol:"F",name:"같은 작업의 계산량",description:"여덟 query 전체의 QK와 PV를 합친 512 FLOP입니다."},{symbol:"T",name:"같은 작업의 이동량",description:"여기서는 K·V를 네 번 읽는 비교 장부의 320바이트입니다."}]} assumptions={["미래를 가리지 않는 전체 16조각의 행렬곱만 FLOP로 셉니다.","query 묶음 사이의 K·V cache 재사용은 없고, LSE와 임시 결과는 제외합니다."]} interpretation="4와 1.6은 서로 다른 계산을 비교한 값이 아닙니다. 같은 512 FLOP에서 자료를 얼마나 되읽는지만 바꾼 두 기준값입니다."/>
+<div className={prose}>
+<p>이 차이가 저장 크기와 이동량의 차이입니다. K 배열은 네 번 읽어도 어느 한 시점에 차지하는 자리인 <strong>footprint가 32바이트</strong>인 채로 남습니다. 그러나 읽을 때마다 32바이트가 실제 메모리 경계를 건넜다면 <strong>traffic은 128바이트</strong>가 됩니다. 따라서 Q·K·V·O의 합계 크기 128바이트를 아무 조건 없이 실제 HBM 이동량이라고 부를 수는 없습니다.</p>
+<p>마지막으로 새 토큰 하나만 만드는 decode에서는 작업 범위가 달라집니다. 새 query와 새 출력은 한 행뿐이지만, 이미 쌓인 K와 V의 여덟 행은 모두 읽습니다. 원래 문단의 <code>4×8×2</code>는 이 두 행렬곱을 한 줄로 합쳐 쓴 표기라서, 아래에서는 QK와 PV를 나눠 셉니다.</p>
+</div>
+<CalculationWalkthrough
+  title="장부 C · 마지막 query 한 행을 계산하는 decode"
+  question="64 FLOP와 72바이트는 각각 무엇을 센 값인가요?"
+  scope="새 query 한 행이 기존 key·value 여덟 행을 읽어 출력 한 행을 만듭니다."
+  steps={[
+    {label:"QK 행렬곱",expression:"2 FLOP/곱·합 × 1 query × 8 key × 2성분",result:"32 FLOP",reason:"query 한 행과 key 여덟 행의 점수 여덟 개를 만듭니다."},
+    {label:"PV 행렬곱",expression:"2 FLOP/곱·합 × 1 query × 8 value × 2성분",result:"32 FLOP",reason:"점수 여덟 개로 value 여덟 행을 섞어 출력 한 행을 만듭니다."},
+    {label:"decode 계산량",expression:"QK 32 + PV 32",result:"64 FLOP",reason:"같은 query 한 행을 끝내는 두 행렬곱을 합칩니다."},
+    {label:"K·V 읽기",expression:"2배열 × 배열마다 8행 × 행마다 2개 × 값마다 2바이트",result:"64바이트",reason:"과거 여덟 위치의 K와 V는 그대로 남아 있어 둘 다 전체를 읽습니다."},
+    {label:"Q 읽기와 O 쓰기",expression:"2배열 × 배열마다 1행 × 행마다 2개 × 값마다 2바이트",result:"8바이트",reason:"새 query와 새 출력은 각각 한 행이라 4바이트씩입니다."},
+    {label:"decode 전체 이동량",expression:"K·V 64 + Q·O 8",result:"72바이트",reason:"한 query의 계산을 끝내는 데 포함한 네 배열의 이동을 합칩니다."},
+    {label:"decode의 바이트당 계산량",expression:"64 FLOP ÷ 72바이트",result:"8/9 ≈ 0.889 FLOP/B",reason:"한 query라는 같은 범위의 계산량과 이동량을 나눕니다."},
+  ]}
+  conclusion="Q와 O까지 포함하면 8/9 FLOP/B입니다. KV만 분모로 세면 64÷64=1 FLOP/B가 됩니다."
+  caveats={["KV만 세어 1 FLOP/B라고 쓰는 값은 문맥이 길어 Q·O의 8바이트가 작다고 보는 근사입니다.","Softmax, cache line, page table, metadata와 다른 보조 이동은 이 작은 장부에 넣지 않았습니다."]}
+/>
 </section>
-<section id="large-ledger" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">12 · 큰 입력의 비율도 측정 조건과 함께 읽는다</h2><div className={prose}>
-<p>N=4,096, d=128, 2바이트의 비인과 계산은 행렬곱 8,589,934,592 FLOP입니다. QKVO를 한 번씩 읽고 쓰는 4MiB 장부로 나누면 2,048 FLOP/B입니다. 이것은 재읽기와 보조 저장을 뺀 기준 비율입니다. 모든 prefill의 실제 이동량이나 연산 병목을 보장하지 않습니다.</p>
-<p>같은 길이의 decode 한 head는 약 2.1 MFLOP에 KV 2MiB여서 KV 중심의 비율은 1 FLOP/B입니다. 길이가 8,192가 되면 4,194,304 FLOP와 KV 4MiB로 함께 늘어 여전히 1입니다. 요청마다 서로 다른 KV를 읽는 조건에서는 batch를 늘려도 이 비율이 자동으로 오르지 않습니다.</p>
-<p>여러 query head가 같은 KV를 공유하는 GQA에서는 실제 공유 읽기가 중요합니다. g=8, 길이 4,096, d=128이면 16,777,216 FLOP를 KV 2,097,152바이트와 Q/O 4,096바이트로 나눠 약 7.9844 FLOP/B입니다. KV가 지배하고 한 번 읽은 KV를 여덟 head가 재사용한다는 근사에서 8이 됩니다.</p>
-<p>Batch 32, layer 32, KV head 8의 각 2MiB를 모두 HBM에서 한 번 읽는 별도 가정이면 16GiB입니다. 3.35TB/s로 나눈 약 5.128ms는 이 전송량의 처리량 하한입니다. 저장 용량만으로 얻은 실제 step 시간이나 모든 환경의 지연 상한이 아닙니다.</p>
-<p>가정한 H100 최고 처리량 989TFLOP/s와 3.35TB/s의 비는 약 295 FLOP/B입니다. 앞의 기준 비율을 이 선과 비교하면 무엇을 측정할지 가늠할 수 있습니다. 실제 이동량, 달성 처리량, 시작 비용, 작업 수를 확인한 뒤 병목을 판단해야 합니다.</p>
+<section id="large-ledger" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">12 · 큰 입력도 같은 계산 장부로 확장한다</h2><div className={prose}>
+<p>숫자가 커져도 순서는 바뀌지 않습니다. 먼저 같은 작업의 FLOP를 세고, 그다음 어떤 배열을 몇 번 옮기는지 세며, 마지막에 둘을 나눕니다. 여기서는 길이 4,096, 성분 수 128, 값마다 2바이트인 한 attention head를 기준으로 잡겠습니다.</p>
 </div>
-
+<AttentionScaleViz />
+<CalculationWalkthrough
+  title="큰 장부 A · 길이 4,096의 비인과 prefill"
+  question="8,589,934,592 FLOP와 4MiB는 어떻게 만들어지나요?"
+  scope="query 4,096행이 key 4,096행을 모두 보는 한 head입니다. Q·K·V는 한 번씩 읽고 O는 한 번 쓴다는 이상적 하한을 사용합니다."
+  steps={[
+    {label:"QK 행렬곱",expression:"2 FLOP/곱·합 × 4,096 query × 4,096 key × 128성분",result:"4,294,967,296 FLOP",reason:"모든 query-key 쌍의 점수를 만들며, 곱셈과 덧셈을 각각 1 FLOP로 셉니다."},
+    {label:"PV 행렬곱",expression:"2 FLOP/곱·합 × 4,096 query × 4,096 value × 128성분",result:"4,294,967,296 FLOP",reason:"점수로 value를 섞는 두 번째 행렬곱의 모양이 같습니다."},
+    {label:"전체 계산량",expression:"QK 4,294,967,296 + PV 4,294,967,296",result:"8,589,934,592 FLOP",reason:"같은 prefill 작업을 끝내는 두 행렬곱을 합칩니다."},
+    {label:"배열 하나의 크기",expression:"4,096행 × 행마다 128개 × 값마다 2바이트",result:"1,048,576바이트 = 1MiB",reason:"Q·K·V·O 네 배열은 이 사례에서 같은 모양입니다."},
+    {label:"한 번 이동 장부",expression:"배열마다 1MiB × Q·K·V·O 네 배열",result:"4MiB = 4,194,304바이트",reason:"입력 세 배열을 한 번 읽고 출력 한 배열을 한 번 쓰는 하한입니다."},
+    {label:"바이트당 계산량",expression:"8,589,934,592 FLOP ÷ 4,194,304바이트",result:"2,048 FLOP/B",reason:"분자와 분모가 같은 한 head의 전체 prefill을 셉니다."},
+  ]}
+  conclusion="2,048 FLOP/B는 배열을 한 번씩만 옮기는 기준값이며 모든 prefill의 실제 비율이 아닙니다."
+  caveats={["점수·확률 전체 배열은 쓰지 않는다고 보며 K·V 재읽기, LSE, 임시 결과와 cache line 이동을 제외합니다.","실제 HBM traffic을 profiler로 재면 분모가 달라지고 연산 강도도 함께 달라집니다."]}
+/>
+<div className={prose}>
+<p>Decode에서는 새 query가 한 행뿐이므로 query끼리 짝을 만드는 4,096×4,096 계산이 사라집니다. 대신 과거 K와 V의 4,096행은 계속 읽어야 합니다. 여러 query head가 같은 K·V를 함께 쓰면 계산량은 head 수만큼 늘지만 K·V 읽기는 한 번으로 재사용할 수 있어 비율이 달라집니다.</p>
+</div>
+<CalculationWalkthrough
+  title="큰 장부 B · decode 한 head와 GQA 여덟 head"
+  question="왜 한 head는 약 1이고, K·V를 여덟 head가 공유하면 약 8 FLOP/B인가요?"
+  scope="길이 4,096의 K·V를 새 query가 읽습니다. 먼저 한 head를 세고, 이어 같은 K·V를 query head 여덟 개가 실제로 공유해 읽는 경우만 바꿉니다."
+  steps={[
+    {label:"한 head의 계산량",expression:"QK와 PV 2회 × 2 FLOP/곱·합 × 4,096위치 × 128성분",result:"2,097,152 FLOP",reason:"새 query 한 행이 과거 4,096행을 점수 계산과 값 혼합에 한 번씩 사용합니다."},
+    {label:"한 head의 K·V 읽기",expression:"K·V 2배열 × 4,096행 × 행마다 128개 × 값마다 2바이트",result:"2,097,152바이트 = 2MiB",reason:"과거 기록 두 종류의 전체 길이를 읽습니다."},
+    {label:"한 head의 Q·O",expression:"Q·O 2배열 × 1행 × 행마다 128개 × 값마다 2바이트",result:"512바이트",reason:"새 입력과 출력은 각각 한 행뿐입니다."},
+    {label:"한 head의 정확한 기준 비율",expression:"2,097,152 FLOP ÷ (2,097,152 + 512)바이트",result:"약 0.9998 FLOP/B",reason:"KV만 분모로 두면 정확히 1이고, Q·O까지 넣으면 조금 작아집니다."},
+    {label:"query head 여덟 개의 계산량",expression:"한 head 2,097,152 FLOP × 8 head",result:"16,777,216 FLOP",reason:"각 query head는 자기 출력을 계산하므로 두 행렬곱을 각각 수행합니다."},
+    {label:"공유한 K·V와 각 head의 Q·O",expression:"K·V 2,097,152 + (Q·O 512 × 8 head)",result:"2,101,248바이트",reason:"K·V는 한 번만 읽어 여덟 head가 쓰되 Q와 O는 head마다 따로 있습니다."},
+    {label:"GQA의 기준 비율",expression:"16,777,216 FLOP ÷ 2,101,248바이트",result:"약 7.9844 FLOP/B",reason:"KV가 분모 대부분을 차지한다고 근사하면 8 FLOP/B입니다."},
+  ]}
+  conclusion="GQA의 약 8은 head가 여덟 개라서 자동으로 생기지 않습니다. 한 번 읽은 K·V를 여덟 query head가 실제로 공유한다는 조건이 필요합니다."
+  caveats={["문맥 길이를 8,192로 두 배 늘리면 한 head의 계산량과 K·V가 함께 두 배가 되어 KV 중심 근사 1은 유지됩니다.","요청마다 서로 다른 K·V를 읽으면 batch를 늘려도 요청 사이의 재사용은 생기지 않습니다."]}
+/>
+<div className={prose}>
+<p>마지막 장부는 비율을 시간 하한과 비교 기준으로 바꿉니다. 저장된 K·V 16GiB가 있다는 사실만으로 전송 시간을 정할 수는 없습니다. 그 16GiB를 이번 step에서 HBM으로부터 실제로 한 번 모두 읽는다는 가정까지 있어야 대역폭으로 나눌 수 있습니다.</p>
+</div>
+<CalculationWalkthrough
+  title="큰 장부 C · 16GiB 읽기와 roofline 기준선"
+  question="5.128ms와 295 FLOP/B는 무엇을 뜻하나요?"
+  scope="Batch 32, layer 32, KV head 8이 각각 2MiB를 한 step에서 HBM으로부터 한 번 읽는다고 가정합니다. 비교 장치는 계산 989TFLOP/s, HBM 3.35TB/s의 기준 성능을 냅니다."
+  steps={[
+    {label:"한 step의 KV 이동량",expression:"32요청 × 32층 × 층마다 8 KV head × head마다 2MiB",result:"16,384MiB = 16GiB",reason:"저장 용량이 아니라 이번 step에서 이 전부를 한 번 읽는다는 이동 가정을 붙였습니다."},
+    {label:"대역폭만 본 시간 하한",expression:"17,179,869,184바이트 ÷ 3.35×10¹²바이트/초",result:"약 0.005128초 = 5.128ms",reason:"이동량을 초당 이동 가능량으로 나누며, 계산과 시작 비용이 완전히 겹친 이상적인 하한입니다."},
+    {label:"장치의 균형점",expression:"989×10¹² FLOP/초 ÷ 3.35×10¹²바이트/초",result:"약 295 FLOP/B",reason:"초 단위가 서로 지워져 장치가 계산과 메모리를 같은 시간에 소진하는 연산 강도가 남습니다."},
+    {label:"앞 장부와 비교",expression:"decode 약 1 또는 GQA 약 8 < 장치 기준 약 295",result:"이동량을 먼저 측정할 후보",reason:"기준선보다 훨씬 낮으므로 이상 모형에서는 HBM 이동이 먼저 제한될 가능성이 큽니다."},
+  ]}
+  conclusion="5.128ms는 16GiB 전송만의 처리량 하한이고, 295 FLOP/B는 장치 기준선입니다. 둘 다 실제 step 지연을 단독으로 보장하지 않습니다."
+  caveats={["989TFLOP/s와 3.35TB/s는 가정한 H100의 최고 기준이며 실제 달성 처리량은 kernel과 설정에 따라 낮습니다.","Cache 적중, 시작 비용, 작업 수, 다른 연산과의 겹침을 측정한 뒤 최종 병목을 판단해야 합니다."]}
+/>
 </section>
 <section id="generations" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">13 · 출력 행을 나누면 부분 출력을 합치는 일이 줄어든다</h2><div className={prose}>
 <p>GPU의 thread들이 함께 실행되는 작은 묶음을 warp라고 합니다. 여러 warp가 협력하는 thread block은 실행 일감이고, 그것을 처리하는 물리 장치가 SM입니다. 관심 행 묶음 네 개를 만들었다고 SM 네 개를 지정한 것은 아닙니다.</p>
@@ -188,12 +291,19 @@ export default function Article(){
 {code("selector","원문: 선택 조건 모으기")}{code("validate","원문: 지원하지 않는 이유")}{code("backend-select","원문: 명시 선택과 자동 선택")}{code("priorities","원문: 조건별 우선순위")}
 <SourceApplication source="vLLM cuda.py · get_attn_backend_cls" excerpt="if invalid_reasons:" application="A를 명시하고 A가 조건을 만족하지 못하면 B로 넘어가기 전에 종료합니다. 자동 선택과 강제 선택의 결과가 다릅니다."/>
 </section>
-<section id="autotune-source" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">18 · Triton의 실제 후보는 36개에서 걸러진다</h2><div className={prose}>
-<p>Triton v3.6.0의 fused-attention 튜토리얼을 별도로 보겠습니다. 이 코드는 조각 크기, warp 수, pipeline 단수를 후보로 만들고 autotune 장식자에 넘깁니다. 고정 commit 7c56a5e의 CUDA 일반 경로는 B_M 두 값, B_N 세 값, stage 세 값, warp 두 값으로 2×3×3×2=36개입니다.</p>
-<p>GPU 능력을 (9,0)으로 가정하면 keep 함수는 면적이 128²보다 작고 warp가 8인 후보를 버려 21개를 남깁니다. N_CTX=64를 넣은 다음 가지치기는 B_M이 64보다 큰 후보를 버려 9개를 남깁니다. HEAD_DIM=128로 두면 여기서 남은 B_N이 정적 차원 제한도 넘지 않습니다.</p>
-<p>이 원문 후보 생성식과 두 필터의 몸체를 의존성을 대체한 CPU 실행으로 확인했습니다. GPU 컴파일이나 벤치마크를 실행하지 않았습니다. N_CTX=8을 넣으면 남는 후보가 0개이므로 앞의 작은 사례가 이 튜토리얼에서 그대로 실행된다고 부를 수 없습니다.</p>
-<p>실제 autotune key는 N_CTX, HEAD_DIM, FP8_OUTPUT, warp_specialize입니다. 테스트 환경의 PYTEST_VERSION이 있으면 후보를 하나로 줄이는 분기도 있습니다. “항상 16개 후보를 causal·bucket마다 측정한다”거나 “첫 요청에 반드시 몇 초가 든다”는 고정 결론은 이 소스로부터 나오지 않습니다.</p>
-<p>앞서 본 FA2의 수동 선택표와 이 튜토리얼의 측정 기반 선택은 다른 방법입니다. 엔진의 backend 선택, kernel 내부의 설정 선택, 컴파일된 코드의 재사용을 구별해야 처음 한 번의 지연과 반복 호출의 지연도 올바르게 측정할 수 있습니다.</p>
+<section id="autotune-source" data-teach-level="5" data-calculation-explained className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">18 · Triton은 36개 실행법을 만들고, 9개만 재서 하나를 고른다</h2><div className={prose}>
+<p><strong>이 절의 한 문장 답부터 잡겠습니다.</strong> Triton의 autotune은 가장 빠른 실행법을 미리 아는 기능이 아닙니다. 같은 계산을 하는 여러 작업 지시서를 만들고, 조건에 맞지 않는 지시서를 먼저 버린 뒤, 남은 지시서의 실행 시간을 재 가장 빠른 하나를 고릅니다.</p>
+<p>그러면 작업 지시서 한 장에는 무엇이 적힐까요? 한 번에 맡을 query 행 수, 한 번에 훑을 key 열 수, 다음 자료를 미리 준비할 단계 수, 함께 일할 warp 묶음 수가 적힙니다. 출력의 뜻은 그대로 두고 GPU에 일을 나누는 모양만 바꾸는 네 손잡이입니다.</p>
+</div>
+<AutotuneCandidateViz />
+<div className={prose}>
+<p>이제 원문의 이름을 붙이겠습니다. Query 행 수는 <code>BLOCK_M</code>, key 열 수는 <code>BLOCK_N</code>입니다. 준비 단계 수는 <code>num_stages</code>, warp 묶음 수는 <code>num_warps</code>입니다. 고정 commit 7c56a5e의 CUDA 일반 경로는 각 손잡이에 2개·3개·3개·2개의 값을 두므로 <code>2×3×3×2=36</code>개 후보를 만듭니다.</p>
+<p>첫 필터는 CUDA 장치 능력의 첫 숫자가 9일 때, 조각 면적이 <code>128×128</code>보다 작으면서 warp가 8인 후보를 버립니다. 이 조건에 걸리는 조각 모양은 5개이고 각 모양에는 stage가 3개씩 있습니다. 따라서 15개가 사라지고 21개가 남습니다.</p>
+<p>두 번째 필터에는 실제 입력 길이가 들어갑니다. <code>N_CTX=64</code>이면 한 번에 128개 query 행을 맡겠다는 <code>BLOCK_M=128</code> 후보는 모두 버립니다. 첫 필터를 통과한 후보 중 <code>BLOCK_M=64</code>인 것은 <code>BLOCK_N</code> 세 값, stage 세 값, warp 4 한 값의 조합이라 정확히 9개입니다. <code>HEAD_DIM=128</code>에서는 이 아홉 후보의 <code>BLOCK_N</code>이 모두 128 이하라 더 줄지 않습니다.</p>
+<p>여기까지는 빠른 후보를 고른 과정이 아닙니다. 실행하지 않을 후보만 지운 과정입니다. 그다음 autotune이 남은 후보를 실제로 실행해 시간을 비교합니다. 공식 API에서 <code>key</code>는 어떤 인자 값이 바뀌었을 때 후보들을 다시 평가할지 정합니다. 이 원문의 key는 <code>N_CTX</code>, <code>HEAD_DIM</code>, <code>FP8_OUTPUT</code>, <code>warp_specialize</code>입니다.</p>
+<p>이 글에서는 후보 생성식과 두 필터의 Python 몸체만 의존성을 바꾼 CPU 실행으로 확인했습니다. GPU에서 후보 9개를 컴파일하거나 시간을 재지는 않았으므로 최종 승자와 첫 호출 시간을 주장하지 않습니다. <code>N_CTX=8</code>을 넣으면 가장 작은 <code>BLOCK_M=64</code>도 길이보다 커서 이 필터는 후보를 0개 돌려줍니다. 앞의 여덟 위치 사례는 계산 원리를 설명하지만 이 튜토리얼 설정의 실행 가능한 입력 예는 아닙니다.</p>
+<p>테스트 환경에 <code>PYTEST_VERSION</code>이 있으면 원문은 탐색 전에 후보 목록 자체를 한 개로 바꿉니다. 따라서 후보 수와 첫 호출 비용은 실행 환경과 입력 key를 확인한 뒤에만 말할 수 있습니다. 더 깊은 Triton 실행 모델은 <Link to="/cs/gpu/triton-kernel-programming-and-compiler#launch-and-autotune">Triton kernel과 autotune 글</Link>에서 같은 방식으로 이어집니다.</p>
+<p>마지막으로 선택의 층을 나눠야 합니다. vLLM의 backend 선택은 어느 attention 구현을 쓸지 고릅니다. 지금 본 autotune은 선택된 Triton kernel 안에서 어떤 작업 지시서를 쓸지 고릅니다. 컴파일 결과를 다시 쓰는 cache는 이미 고른 코드를 반복 호출할 때의 일입니다. 이 세 시간을 섞지 않아야 첫 호출과 반복 호출을 올바르게 비교할 수 있습니다.</p>
 </div>
 {code("autotune","원문: 후보와 필터, 실제 key")}{code("observation","검증: 원문 분기의 CPU 관찰 범위")}
 </section>

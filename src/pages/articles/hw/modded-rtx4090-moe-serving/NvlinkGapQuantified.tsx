@@ -30,7 +30,7 @@ const SPECS = [
 
 export default function NvlinkGapQuantified() {
   return (
-    <section id="nvlink-gap-quantified" className="mb-16 scroll-mt-20">
+    <section id="nvlink-gap-quantified" data-calculation-explained className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         4090은 3090보다도, A100·H100보다도 GPU 간 대역폭이 한 자릿수 낮다
       </h2>
@@ -54,9 +54,12 @@ export default function NvlinkGapQuantified() {
         </h3>
         <p className="leading-7">
           <a href="/cs/gpu/gpu-interconnects#pcie-transaction-bandwidth-latency">PCIe raw bandwidth 공식</a>{" "}
-          <code>R_GT/s × L × 128/130 ÷ 8</code>에 4090의 PCIe Gen4 x16(16GT/s, 16 lane)을 넣으면 16 × 16 ×
-          128/130 ÷ 8 ≈ 31.5GB/s 편도가 나온다. 두 방향을 동시에 쓰는 duplex 합으로도 약 63GB/s다. 이 숫자는 protocol
-          overhead를 뺀 raw 상한이라 실제 collective 통신에서 관측되는 goodput은 이보다 더 낮다.
+          <code>R_GT/s × L × 128/130 ÷ 8</code>에 4090의 PCIe Gen4 x16을 넣는다. Lane마다 16GT/s × 16 lane = 256GT/s이고,
+          encoding에서 실제 데이터가 차지하는 128/130을 곱한다. 마지막으로 8bit/byte로 나누면 편도 약 31.5GB/s가 나온다.
+        </p>
+        <p className="leading-7">
+          두 방향을 동시에 쓰는 duplex 합은 약 63GB/s다. 이 숫자는 protocol overhead를 뺀 raw 상한이다.
+          실제 collective 통신에서 관측되는 goodput은 이보다 더 낮다.
         </p>
 
         <h3 id="3090-nvlink-baseline" className="mt-6 mb-3 scroll-mt-24 text-xl font-semibold">

@@ -7,6 +7,7 @@ import ArticlePage from "@/pages/ArticlePage";
 import DomainPage from "@/pages/DomainPage";
 import LegacyRouteRedirect from "@/pages/LegacyRouteRedirect";
 import { DOMAIN_META } from "@/content/domains";
+import InternalLinkBridge from "@/components/InternalLinkBridge";
 
 /**
  * 대분류 세그먼트는 `:domain` 같은 동적 조각이 아니라 실제 slug로 선언합니다.
@@ -16,6 +17,7 @@ import { DOMAIN_META } from "@/content/domains";
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <InternalLinkBridge />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />

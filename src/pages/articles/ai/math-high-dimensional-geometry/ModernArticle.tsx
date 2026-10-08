@@ -118,11 +118,11 @@ assumptions={["n≥2인 유한 점 집합과 0<ε<1을 고정합니다.","이 �
 <CodeViewButton label="실제 원문 · 정수 변환과 자동 모드의 거부" onClick={()=>sidebar.open("auto",projectionCodeRefs.auto)} />
 <CitationBlock source="scikit-learn 1.7.2 · random_projection.py" citeKey={2} href="https://github.com/scikit-learn/scikit-learn/blob/25dee604bae18205b01548348388baf7a1cdfe0e/sklearn/random_projection.py">전체 소스와 라이선스를 보존했습니다. 같은 네 점을 실제 행렬 곱과 크기 검사에 대입했으며 직접 고른 행렬, 확률 보장, 자동 선택의 정수 처리를 구별했습니다.</CitationBlock>
 </section>
-<section id="intrinsic-dimension" data-teach-level="6" className="space-y-6">
+<section id="intrinsic-dimension" data-calculation-explained data-teach-level="6" className="space-y-6">
 <h2 className="text-2xl font-bold">12 · 실제로 변하는 자유도와 추정한 숫자의 범위를 구별한다</h2>
 <p>p(t)=(t,t,t,t)에서 t를 모든 실수로 움직이면 네 좌표 안의 직선입니다. 자유롭게 바꾸는 값이 하나라 내재 차원은 1입니다. 이 직선을 잰 표본 행렬에서 평균을 빼고 rank를 구해도 1입니다. 평균을 빼는 이유는 위치의 이동과 변하는 방향을 구분하기 위해서입니다.</p>
 <p>비선형 모양에서는 선형 rank와 내재 차원이 다를 수 있습니다. 원 (cosθ,sinθ)은 각도 하나로 국소적으로 움직이므로 내재 차원이 1입니다. 하지만 원 위의 점들은 평면의 두 방향을 펼치므로 충분히 여러 방향의 표본을 모은 행렬의 rank는 2입니다. 원 전체를 하나의 직선 방향으로만 표현할 수는 없습니다.</p>
-<p>Pope 등의 ICLR 2021 논문 표 1은 ImageNet의 224×224×3=150,528개 색상 좌표를 사용하는 자료에서 내재 차원을 추정합니다. 이웃 수를 3, 5, 10, 20으로 바꿀 때 결과는 각각 26, 38, 43, 43입니다. 여기서 이웃 수는 JL의 출력 차원 k와 다른 설정입니다. MNIST의 추정값 7, 11, 12, 13도 같은 표에 있습니다.</p>
+<p>Pope 등의 ICLR 2021 논문 표 1은 ImageNet의 한 image는 세로 224칸 × 가로 224칸 × 칸마다 색 channel 3개 = 150,528개 색상 좌표를 사용합니다. Pope 등의 ICLR 2021 논문 표 1은 이런 자료에서 내재 차원을 추정합니다. 이웃 수를 3, 5, 10, 20으로 바꿀 때 결과는 각각 26, 38, 43, 43입니다. 여기서 이웃 수는 JL의 출력 차원 k와 다른 설정입니다. MNIST의 추정값 7, 11, 12, 13도 같은 표에 있습니다.</p>
 <p>추정기는 가까운 이웃까지의 거리 비를 사용합니다. 논문 식 (2)는 각 점의 이웃 거리 로그 비를 평균한 뒤 역수를 취합니다. 주변의 밀도가 거의 일정하다는 가정과 매끄러운 자료 생성 조건 등이 필요하며 이웃 수가 바뀌면 편향과 변동도 달라집니다. 이 숫자는 자료와 추정법에 묶인 실험 결과입니다.</p>
 <p>이 연구는 별도로 생성 모델이 만든 자료에서 추정법을 점검한 뒤 실제 이미지 자료에도 적용했습니다. ImageNet의 26–43을 생성 모델 실험에만 해당하는 값으로 읽는 것도 틀립니다. 반대로 이 추정치를 모든 이미지의 확정된 자유도나 정확한 복원에 충분한 좌표 수로 읽을 수도 없습니다.</p>
 <div id="paper-intrinsic-dimension"><CitationBlock source="Pope et al. · ICLR 2021, §3 식 (2), 표 1" citeKey={3} href={ID}>실제 표의 이웃 수와 추정치를 함께 읽습니다. 이미지 자료의 결과와 추정 도구를 점검한 별도 생성 자료 실험을 구분하며 최적 압축 폭으로 바꾸어 주장하지 않습니다.</CitationBlock></div>

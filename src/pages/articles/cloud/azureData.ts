@@ -1,10 +1,17 @@
 import type { CloudCertificationArticleData } from "./CloudCertificationArticle";
+import {
+  azureAi200Depth,
+  azureArchitectDevopsDepth,
+  azureAz104Depth,
+  azureAz900Depth,
+} from "./cloudEngineeringDepth";
 
 export const azureAz900Data: CloudCertificationArticleData = {
+  engineeringDepth: azureAz900Depth,
   sections: [
-    { id: "overview", level: "S", title: "1. AZ-900은 Azure 이름을 클라우드 역할 지도에 붙이는 시험입니다", bridge: "기초 시험의 핵심을 한 문장으로 잡았습니다. 세 영역이 한 자원 배치에서 어떻게 만나는지 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. AZ-900을 빠르게 준비하려면 Azure 서비스를 낱개로 외우지 말고, 위치와 자원 계층, 실행·망·저장, 신원·보안, 관리·거버넌스·비용·관측이라는 역할 지도를 만든 뒤 요구를 알맞은 칸에 넣어야 합니다.",
-      "왜 관리와 거버넌스가 시험의 큰 부분일까요? 자원을 만드는 법만 알아서는 조직의 비용, 정책, 잠금, 상태와 장애를 관리할 수 없기 때문입니다. 기초 시험도 기술 서비스와 운영 통제를 함께 묻습니다.",
+    { id: "overview", level: "S", title: "1. 자원은 만들었지만 잘못된 구독의 비용이 계속 늘었습니다", bridge: "기술 서비스만 보고 계층과 통제를 놓쳤습니다. 한 자원이 놓이는 위치부터 정책·비용까지 따라갑니다.", paragraphs: [
+      "(가정) 실습용 자원을 만들었는데 팀이 보던 구독이 아니라 개인 구독에 놓였습니다. 기능은 정상이라 며칠 동안 눈치채지 못했고, 예산 경보와 삭제 잠금도 다른 범위에 있어 비용이 계속 늘었습니다.",
+      "Azure 이름을 외우는 것만으로는 이 문제를 막지 못합니다. 자원이 어느 위치와 계층에 속하고, 어떤 실행·망·저장 역할을 맡으며, 신원·정책·비용·관측이 어느 범위에서 적용되는지 한 장면에서 이어야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 자원은 위치·계층·정책·관측 안에서 움직입니다", bridge: "Azure 자원을 둘러싼 네 경계를 봤습니다. 작은 팀의 자원 수와 예산으로 내려갑니다.", paragraphs: [
       "자원은 리전과 가용 영역에 놓이고, 리소스 그룹·구독·관리 그룹의 계층 안에서 관리됩니다. 신원과 역할이 접근을 정하고 Policy와 잠금, 태그가 배치와 운영 규칙을 돕습니다.",
@@ -87,10 +94,11 @@ export const azureAz900Data: CloudCertificationArticleData = {
 };
 
 export const azureAz104Data: CloudCertificationArticleData = {
+  engineeringDepth: azureAz104Depth,
   sections: [
-    { id: "overview", level: "S", title: "1. AZ-104는 Azure 자원을 만들고 고장 난 경로를 복구하는 시험입니다", bridge: "관리자 시험의 결론을 먼저 잡았습니다. 한 요청이 운영 환경을 지나는 데 필요한 다섯 능력을 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. AZ-104를 빨리 준비하려면 포털 메뉴를 외우기보다 신원과 범위 → 저장소 → 실행 자원 → 가상망 → 관측과 복구의 순서로 작은 환경을 직접 만들고, 일부러 끊은 뒤 유효 권한·경로·지표에서 원인을 찾아야 합니다.",
-      "왜 AZ-900보다 손이 많이 갈까요? AZ-104는 서비스를 설명하는 데서 끝나지 않고 사용자·역할·정책, 저장 접근, VM·컨테이너·App Service, VNet과 사설 연결, 경보·백업을 실제로 구성하고 해석하는 과제를 담습니다.",
+    { id: "overview", level: "S", title: "1. VM은 실행 중인데 사설 저장소에 닿지 못했습니다", bridge: "포털의 초록 상태만으로는 첫 실패 지점을 알 수 없습니다. 범위부터 복구까지 한 요청을 따라갑니다.", paragraphs: [
+      "(가정) VM은 `running`이고 저장소의 사설 연결도 만들어져 있습니다. 그런데 애플리케이션은 공개 주소를 해석한 뒤 timeout이 났고, 관리자는 역할·DNS·경로·방화벽 중 무엇을 먼저 봐야 할지 몰라 규칙만 넓혔습니다.",
+      "AZ-104의 핵심은 메뉴 위치가 아니라 이 사건을 재현하고 좁히는 능력입니다. 현재 신원과 범위, 저장 접근, 실행 상태, 가상망 경로, 지표와 복구 증거를 순서대로 모아 첫 번째 불일치를 찾습니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 관리자 작업은 범위·배치·연결·상태를 한꺼번에 맞춥니다", bridge: "다섯 영역이 한 환경에서 만난다는 점을 봤습니다. 자원 12개와 장애 시간으로 수를 넣습니다.", paragraphs: [
       "먼저 관리 그룹·구독·리소스 그룹에 사용자와 정책을 붙입니다. 저장소와 실행 자원을 배치하고 VNet·서브넷·NSG·DNS·부하 분산으로 경로를 만듭니다. 배포 뒤에는 지표·로그·경보와 백업을 구성합니다.",
@@ -176,10 +184,11 @@ export const azureAz104Data: CloudCertificationArticleData = {
 };
 
 export const azureArchitectDevopsData: CloudCertificationArticleData = {
+  engineeringDepth: azureArchitectDevopsDepth,
   sections: [
-    { id: "overview", level: "S", title: "1. Azure 상위 경로는 설계와 전달 중 맡을 결정을 먼저 고릅니다", bridge: "시험 이름보다 역할을 먼저 정했습니다. 같은 변경을 설계자와 DevOps 엔지니어가 어떻게 다르게 보는지 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. 요구를 신원·데이터·복구·인프라 구조로 바꾸는 일을 목표로 하면 AZ-104 기반 위에 AZ-305를, 코드가 안전하게 빌드·시험·배포·관측되는 전달 체계를 목표로 하면 선행 실무를 갖춘 뒤 AZ-400을 고릅니다.",
-      "왜 폐지된 AZ-204 강의가 여전히 검색될까요? 시험은 폐지돼도 App Service, Functions, 메시징, 관리 ID 같은 개발 기술은 남기 때문입니다. 현행 개발자 자격 AI-200은 AI 백엔드에 초점을 두므로 같은 범위로 바꿔 읽을 수도 없습니다.",
+    { id: "overview", level: "S", title: "1. 복구 구조는 맞았지만 배포 한 번이 두 지역을 함께 망가뜨렸습니다", bridge: "구조 설계와 변경 전달의 빈칸이 달랐습니다. 같은 사건에서 두 역할의 결정을 나눕니다.", paragraphs: [
+      "(가정) 두 지역에 복구 가능한 구조를 만들었지만 같은 pipeline이 잘못된 설정을 두 지역에 동시에 배포했습니다. 구조를 고른 사람은 배포 ring과 승인 단계를 정하지 않았고, 전달을 맡은 사람은 지역별 복구 목표를 몰랐습니다.",
+      "상위 자격 경로는 난도 순서만으로 고르면 안 됩니다. 요구를 신원·데이터·복구와 인프라 구조로 바꾸는 판단과, 변경을 빌드·시험·승인·배포·관측·rollback하는 판단 중 어느 쪽을 맡을지 먼저 정해야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 설계는 무엇을 만들지, DevOps는 변경이 어떻게 흐를지 정합니다", bridge: "두 역할의 경계를 잡았습니다. 한 서비스의 복구와 배포 목표를 숫자로 정합니다.", paragraphs: [
       "설계자는 사업 요구를 신원·거버넌스·관측, 저장, 연속성과 인프라 선택으로 바꿉니다. DevOps 엔지니어는 작업 추적, 소스 관리, 빌드·릴리스 파이프라인, 보안과 관측 피드백을 연결합니다.",
@@ -264,10 +273,11 @@ export const azureArchitectDevopsData: CloudCertificationArticleData = {
 };
 
 export const azureAi200Data: CloudCertificationArticleData = {
+  engineeringDepth: azureAi200Depth,
   sections: [
-    { id: "overview", level: "S", title: "1. AI-200은 모델 사용법보다 AI 백엔드의 전체 생애를 묻습니다", bridge: "현재 Azure 개발자 경로의 중심을 한 문장으로 잡았습니다. 왜 컨테이너와 데이터·메시징·운영을 함께 묻는지 펼칩니다.", paragraphs: [
-      "한 문장 답은 이렇습니다. AI-200을 빠르게 준비하려면 AI 호출 코드만 외워서는 안 됩니다. 컨테이너가 요청을 받고 벡터 데이터를 찾은 뒤, 느린 작업은 메시지로 넘깁니다. 이 경로에 비밀·설정·추적을 붙여 직접 운영해야 합니다.",
-      "왜 이름에 AI가 붙었는데 모델 학습 비중이 보이지 않을까요? 이 자격은 Azure에서 AI 기능을 품은 애플리케이션의 뒷단을 구현하는 개발자를 대상으로 합니다. 시험의 중심은 실행·데이터·서비스 연결·보안과 문제 해결입니다.",
+    { id: "overview", level: "S", title: "1. 모델 응답은 왔지만 사용자는 40초 동안 빈 화면을 봤습니다", bridge: "AI 호출 한 번은 성공했지만 백엔드 전체는 실패했습니다. 요청이 실행·자료·비동기 작업·운영 신호를 지나는 길을 엽니다.", paragraphs: [
+      "(가정) 모델 API는 3초 만에 답했지만 애플리케이션은 벡터 검색 재시도와 긴 후처리를 같은 요청 안에서 기다려 40초 뒤 timeout이 났습니다. 비밀은 이미지에 들어 있었고, 어느 구간이 느렸는지 보여 줄 trace도 없었습니다.",
+      "이 사건을 고치려면 모델 호출법보다 넓은 경로가 필요합니다. 컨테이너가 요청을 받고 자료를 찾고, 오래 걸리는 일은 메시지로 넘기며, 비밀·설정·권한과 분산 추적을 붙여 끝까지 운영해야 합니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 한 요청은 실행·자료·비동기 작업·운영 신호를 차례로 지납니다", bridge: "시험의 네 영역을 한 요청으로 묶었습니다. 요청 100건을 넣어 각 부품이 맡는 양을 봅니다.", paragraphs: [
       "사용자 요청은 App Service·Container Apps·AKS 같은 실행 환경에 들어옵니다. 애플리케이션은 Cosmos DB나 PostgreSQL에서 자료와 벡터를 찾고, Redis 캐시를 확인하며, 오래 걸리는 일은 Service Bus나 Event Grid로 넘깁니다.",

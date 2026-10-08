@@ -7,6 +7,7 @@ import {
   inferArticleIntent,
 } from "@/content/article-guidance";
 import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
+import { getArticleReadingPlacement } from "@/content/subcategory-navigation";
 import { articleHref } from "@/lib/routes";
 
 interface Props {
@@ -19,6 +20,7 @@ export default function ArticleCard({ article, categorySlug, index }: Props) {
   const Thumb = thumbnails[article.subcategory];
   const intent = inferArticleIntent(article);
   const evidence = ARTICLE_EVIDENCE[`${categorySlug}/${article.slug}`] ?? [];
+  const placement = getArticleReadingPlacement({ slug: categorySlug }, article);
   const paperCount = evidence.filter(
     (item) => item.kind.includes("논문") || item.kind.includes("연구"),
   ).length;
@@ -44,6 +46,9 @@ export default function ArticleCard({ article, categorySlug, index }: Props) {
           <div className="mb-1 flex flex-wrap items-center gap-2">
             <span className="font-mono text-xs font-black text-foreground/55">
               읽기 {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="rounded border border-border px-1.5 py-0.5 text-xs font-semibold text-muted-foreground">
+              {placement.label}
             </span>
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
               {intent}

@@ -27,10 +27,10 @@ export default function Article() {
       <NumericPath title="한 번의 요청이 돌아오는 길" steps={[{"label": "입력 준비", "value": "두 배열"}, {"label": "계산 요청", "value": "각 칸 더하기"}, {"label": "완료 확인", "value": "결과 회수"}]} />
       <p data-stage-bridge="black-box" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">제출과 완료를 나눴습니다. 이제 번호와 데이터 크기를 고정합니다.</p>
     </section>
-    <section id="case" data-teach-level="0" className="scroll-mt-20">
+    <section id="case" data-calculation-explained data-teach-level="0" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">3 · 64칸을 더하면 입력 512바이트와 출력 256바이트가 필요합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">원소 64개짜리 배열 두 개를 더한다고 놓습니다(가정). 원소 하나는 4바이트이고 결과도 64개입니다. 두 입력의 크기는 64×4×2 = 512바이트, 출력은 64×4 = 256바이트입니다. 유효 데이터의 읽기와 쓰기를 합하면 768바이트이고 덧셈은 64번입니다.</p>
+        <p className="leading-8">원소 64개짜리 배열 두 개를 더한다고 놓습니다(가정). 원소 하나는 4바이트이고 결과도 64개입니다. 입력은 배열마다 원소 64개 × 원소마다 4바이트 = 256바이트이고 이런 배열이 두 개라서 512바이트입니다. 출력은 원소 64개 × 원소마다 4바이트 = 256바이트입니다. 유효 데이터의 읽기와 쓰기를 합하면 768바이트이고 덧셈은 64번입니다.</p>
         <p className="leading-8">64개 작업을 한 묶음으로 제출합니다. 배열 번호는 0부터 63까지입니다. 37번 작업은 첫 배열 37번과 둘째 배열 37번을 읽어 결과 37번을 씁니다. 이 예는 경로를 눈으로 따라가기 위한 크기이며 장치를 충분히 바쁘게 하는 성능 시험은 아닙니다.</p>
       </div>
       <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">64개·768바이트를 이후 절에서도 그대로 사용합니다. 번호가 주소로 바뀌는 곳을 펼칩니다.</p>
