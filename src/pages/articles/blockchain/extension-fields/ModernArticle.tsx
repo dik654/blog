@@ -13,9 +13,9 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <a
 <p>두 값 A=(1+u)v²w와 B=(2+u)v²w를 곱한다고 합시다. 문자가 많아 보여도 할 일은 항을 곱하고 정해 둔 규칙으로 높은 거듭제곱을 줄이는 것입니다. 이번 규칙은 u²=−1, v³=9+u, w²=v이며 답은 (6+28u)v²입니다.</p>
 <p>이 계산을 먼저 손으로 풀고 실제 BN254 구현에 같은 값을 넣습니다. 숫자 열두 칸을 어떤 순서로 저장하는지, 곱셈이 아래층의 계산을 어떻게 부르는지, 바이트로 내보낼 때 무엇이 달라지는지 한 결과를 끝까지 따라가겠습니다.</p>
 </section>
-<section id="black-box" data-teach-level="B" className="space-y-5"><h2 className="text-2xl font-bold">2. 두 입력과 세 규칙을 받아 같은 모양으로 돌려줍니다</h2>
+<section id="black-box" data-calculation-explained data-teach-level="B" className="space-y-5"><h2 className="text-2xl font-bold">2. 두 입력과 세 규칙을 받아 같은 모양으로 돌려줍니다</h2>
 <p>계산기에 들어가는 것은 두 입력과 계수의 나머지 기준 p, 세 문자에 대한 규칙입니다. 각 계수는 0부터 p−1 사이의 숫자입니다. 곱한 뒤에도 u의 지수는 0·1, v의 지수는 0·1·2, w의 지수는 0·1 중 하나가 되도록 정리합니다.</p>
-<p>따라서 계수가 놓일 자리는 2×3×2=12개입니다. 이번 두 입력은 v²w와 uv²w 자리만 사용합니다. 출력에서는 v²와 uv² 자리의 계수가 각각 6과 28이고 나머지 열 자리는 0이 됩니다.</p>
+<p>u 지수는 0·1의 2가지, v 지수는 0·1·2의 3가지, w 지수는 0·1의 2가지입니다. 각 선택을 하나씩 묶으므로 계수가 놓일 자리는 u 2가지 × v 3가지 × w 2가지 = 12개입니다. 이번 두 입력은 v²w와 uv²w 자리만 사용합니다. 출력에서는 v²와 uv² 자리의 계수가 각각 6과 28이고 나머지 열 자리는 0이 됩니다.</p>
 </section>
 <section id="case" data-teach-level="0" className="space-y-5"><h2 className="text-2xl font-bold">3. 같은 두 입력의 곱에서 6과 28이 나옵니다</h2>
 <p>먼저 (1+u)(2+u)=2+3u+u²=1+3u입니다. 바깥의 문자들은 v²w·v²w=v⁴w²입니다. w²를 v로 바꾸면 v⁵이고 v³를 9+u로 바꾸면 (9+u)v²입니다.</p>

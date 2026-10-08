@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
@@ -63,6 +64,20 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
 <p>p′는 pp′≡−1 mod R을 만족하도록 미리 정합니다. p=17과 R=32에서는 p′=15입니다. 17×15=255가 32로 나눈 나머지 31, 즉 −1이기 때문입니다.</p>
 <ExplainedFormula question="T=21을 어떻게 32로 정확히 나눌 수 있나요?" idea="낮은 비트를 없애 줄 p의 배수를 고릅니다. p의 배수를 더하므로 mod p의 의미는 유지되고, R로 나누면 역원 배율이 적용됩니다." formula={String.raw`\begin{gathered}m=(Tp')\bmod R\\u=(T+mp)/R\\\operatorname{REDC}(T)=\begin{cases}u-p&u\ge p\\u&u<p\end{cases}\end{gathered}`} annotatedFormula={String.raw`\begin{gathered}m=21\cdot15\bmod32=27\\T+mp=21+27\cdot17=480\\u=480/32=15\end{gathered}`} operations={[{expression:String.raw`T+mp\equiv T-T=0\pmod R`,annotation:["m의 선택 때문에 R로 정확히 나누어떨어집니다."]},{expression:String.raw`uR\equiv T\pmod p`,annotation:["더한 mp는 p의 배수입니다.","R의 역원을 곱하면 u≡TR⁻¹ mod p입니다."]}]} terms={[{symbol:"p′",name:"낮은 자리 취소 상수",description:"p의 음의 역원을 R로 줄인 값입니다."},{symbol:"m",name:"더할 p의 배수",description:"0≤m<R로 고릅니다."},{symbol:"u",name:"정확한 나눗셈 결과",description:"최종 범위보다 클 수 있어 p를 한 번 뺍니다."}]} assumptions={["0≤T<pR이며 gcd(p,R)=1입니다.","T+mp의 상위 비트가 잘리지 않게 계산합니다."]} interpretation="T<pR과 m<R에서 0≤T+mp<2pR이므로 0≤u<2p입니다. 따라서 p를 많아야 한 번 빼면 0≤결과<p가 됩니다. 범위 증명이 한 번의 보정을 정당화합니다." />
 <p>두 내부 입력이 각각 p보다 작으면 T&lt;p²&lt;pR이므로 이 조건을 만족합니다. 범위를 무시해 T=1088=2×17×32를 넣으면 m=0, u=34이고 한 번 빼도 17이 남습니다. 이 값은 정규 범위 밖이므로 같은 보정 규칙을 임의의 입력에 쓸 수 없습니다.</p>
+<FactorStructureViz
+  eyebrow="REDC 입력 범위"
+  title="내부 곱 T가 pR보다 작을 때만 한 번 빼는 보정으로 정규 범위에 돌아옵니다"
+  description="p=17, R=32에서 허용 경계는 544입니다. 일부러 T=1088을 넣으면 경계의 두 배라 한 번의 보정으로 끝나지 않습니다."
+  factors={[
+    {label:"modulus",value:"p=17",detail:"정규 결과는 0 이상 17 미만",marks:17},
+    {label:"radix",value:"R=32",detail:"Montgomery 계산의 2의 거듭제곱",marks:8},
+    {label:"허용 경계",value:"pR=544",detail:"보정 규칙이 전제한 T의 위쪽 경계",marks:8,accent:true},
+    {label:"범위 밖 입력",value:"T=1088",detail:"2×p×R이라 경계의 두 배",marks:16},
+  ]}
+  equation="T=1088 → m=0 → u=T/R=34 → u−p=17"
+  result="17은 정규 범위 밖"
+  note="두 내부 입력이 각각 p보다 작을 때 생기는 T에는 원래 T<p²<pR 조건이 붙습니다. 임의의 T에 같은 한 번 보정을 적용하지 않습니다."
+/>
 </section>
 <section id="trace" data-teach-level="5" className="space-y-5"><h2 className="text-2xl font-bold">10. 원 논문의 변환으로 같은 요청을 끝까지 계산합니다</h2>
 <AlgorithmBlock title="p=17, R=32에서 7과 5를 넣고 1을 꺼내기" input={["일반 숫자 7과 5, p′=15, R² mod17=4"]} steps={[{code:"enter(7): REDC(7*4)=REDC(28); m=4; (28+4*17)/32=3",note:"입력에 R²을 곱한 뒤 REDC로 R 하나를 지워 내부 7R을 만듭니다."},{code:"enter(5): REDC(20); m=12; (20+12*17)/32=7",note:"두 번째 입력도 같은 형식으로 바꿉니다."},{code:"multiply: REDC(3*7); m=27; (21+27*17)/32=15",note:"앞 절에서 계산한 동일한 곱셈입니다."},{code:"leave(15): m=15*15 mod32=1; (15+17)/32=1",note:"출력 경계에서 남은 R을 지워 일반 답 1을 얻습니다."}]} output="1. 직접 계산한 7×5 mod17과 같습니다." />
@@ -75,6 +90,8 @@ export default function ModernFieldArithmetic(){const sidebar=useCodeSidebar();r
             넣은 결과입니다. 입력·상수는 처음에 바꾸고 반복 계산 사이에는 내부 형식을 유지한다는 이유도 여기서 이어집니다.
           </p>
 <div id="paper-montgomery"><CitationBlock source="Montgomery (1985) · pp. 519–520, Algorithm REDC" citeKey={1} href="https://doi.org/10.1090/S0025-5718-1985-0777282-X">원 논문의 입력 범위와 한 번의 보정 증명, R²을 이용한 진입과 출력을 같은 작은 사례에 적용했습니다.</CitationBlock></div>
+
+
 </section>
 <section id="source" data-teach-level="6" className="space-y-5"><h2 className="text-2xl font-bold">11. 실제 64비트 코드에도 7과 5를 넣습니다</h2>
 <p>이번 실험은 p=17의 MontConfig를 직접 구현하고 연산 함수를 덮어쓰지 않아 아래 기본 Rust 경로를 사용합니다. 보통 사용하는 derive(MontConfig)는 별도의 연산 코드를 생성할 수 있으므로 같은 숫자 결과만으로 실행 경로까지 같다고 판단하지 않습니다.</p>

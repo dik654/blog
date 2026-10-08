@@ -1,3 +1,4 @@
+import { SpatialRangeViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -191,7 +192,7 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
         />
       </section>
 
-      <section id="sim-to-real-and-domain-randomization" className="scroll-mt-20">
+      <section id="sim-to-real-and-domain-randomization" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Domain randomization은 sim 색상·질감·조명을 흔들어 real gap을 줄입니다
         </h2>
@@ -203,7 +204,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
           <p>
             Domain randomization은 이 gap을 줄이기 위해 simulation의 물체 색상·질감·조명 개수와
             위치, camera 위치와 화각을 매 episode 무작위로 바꿔 학습합니다. Tobin et al.은 camera
-            위치를 원래 지점 기준 10×5×10cm 범위, 화각을 ±5% 범위에서 무작위화했습니다.
+            위치를 원래 지점에서 가로 10cm·세로 5cm·깊이 10cm인 상자 범위 안에서, 화각은 기준값의 ±5% 안에서 무작위화했습니다.
+            10×5×10cm는 세 방향의 허용 폭이며 부피를 계산하는 식이 아닙니다.
           </p>
           <p>
             이렇게 학습한 detector를 real Fetch robot에 그대로 배포한 실험에서 40번 중 38번(95%),
@@ -244,7 +246,8 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
             <p><strong>비주장:</strong> 이 무작위화 범위가 모든 real 환경의 변화 폭을 덮는다는 뜻은 아닙니다.</p>
           </CitationBlock>
         </div>
-      </section>
+      <SpatialRangeViz />
+</section>
 
       <section id="comparison-and-boundary" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">네 개념은 서로 다른 실패를 막지, 서로를 대체하지 않습니다</h2>

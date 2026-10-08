@@ -95,9 +95,9 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">같은 [3,4,0]을 넣은 Poseidon2의 첫 출력 칸은 <code>0f2021db8d04204e74cec23e5bd3fe4562e2cac46ab33fe7310325c5b0d0b1eb</code>입니다. 원래 Poseidon의 출력과 다르므로 이름 뒤에 2가 붙은 구현을 기존 루트 계산에 그대로 교체할 수 없습니다.</p>
 <p className="leading-8">이 선형 계산의 변경은 실제 CPU 연산과 증명 형식에 따라 다른 비용 차이를 만듭니다. 이번에는 결과와 경로를 확인했으며 속도 향상률이나 증명 크기를 측정하지 않았습니다.</p>
 </div><CodeViewButton label="원문의 초기 혼합과 full·partial 경로" onClick={()=>sidebar.open("poseidon2",codeRefs["poseidon2"])}/><CodeViewButton label="세 칸에서 외부·내부 행렬을 계산하는 원문" onClick={()=>sidebar.open("mix2",codeRefs["mix2"])}/></section>
-<section id="constraints" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 같은 설정의 240을 전체 증명 비용과 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="constraints" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 같은 설정의 240을 전체 증명 비용과 구분합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">일반적인 이차 곱셈 제약으로 다섯제곱 하나를 세 식으로 표현한다고 합시다. 폭 3에서 full round 8개는 S-box 8×3=24개이고 partial round 56개는 56개입니다. 합계 80개에 제약 세 개씩 쓰므로 비선형 곱셈 제약은 240개입니다.</p>
-<p className="leading-8">비교를 위해 같은 64라운드를 모두 full round로 바꾸었다고 가정하면 64×3×3=576개입니다. 이는 비용을 설명하는 가상 비교이며 그렇게 고친 설정의 보안을 인정한 것이 아닙니다. 원논문의 partial round 57개 예에서는 같은 계산이 3×(8×3+57)=243이 됩니다.</p>
+<p className="leading-8">비교를 위해 같은 64라운드를 모두 full round로 바꾸었다고 가정하겠습니다. 라운드마다 세 칸에 S-box를 적용하고 S-box 하나를 곱셈 제약 3개로 나타내므로 64라운드 × 라운드마다 3개 S-box × S-box마다 3개 제약 = 576개입니다. 이는 비용을 설명하는 가상 비교이며 그렇게 고친 설정의 보안을 인정한 것이 아닙니다. 원 논문의 partial round 57개 예에서는 full round 8개가 S-box 8×3=24개를, partial round가 첫 칸의 S-box 57개를 만듭니다. 합계 81개 S-box × S-box마다 제약 3개 = 243개입니다.</p>
 <p className="leading-8">상수 덧셈과 상수배는 R1CS의 선형 결합에 들어갈 수 있어서 이 비선형 곱셈 수에 더하지 않았습니다. 그렇다고 CPU의 덧셈·메모리 접근·증명 작성 시간이 0이라는 뜻은 아닙니다. 특수 gate, lookup, 여러 연산을 묶는 최적화와 입력 검사 비용도 별도로 고려해야 합니다.</p>
 <p className="leading-8">R1CS는 두 선형 결합의 곱이 다른 선형 결합과 같다는 식으로 제약을 쓰는 형식입니다. 이번 240은 그 형식으로 직접 전개한 비선형 부분의 계산값입니다. 실제 회로를 컴파일하거나 증명을 생성해 측정한 숫자는 아닙니다.</p>
 </div></section>

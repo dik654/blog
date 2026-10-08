@@ -54,7 +54,7 @@
       "score": 36
     },
     "gpu/modded-rtx4090-moe-serving": {
-      "fingerprint": "ea093437e530e35e",
+      "fingerprint": "113e6f8ba31eded3",
       "score": 36
     },
     "blockchain/helios-state": {
@@ -426,7 +426,7 @@
       "score": 20
     },
     "gpu/hw-gpu-comparison": {
-      "fingerprint": "3a2a40354684a28f",
+      "fingerprint": "b939e13c4ceba44d",
       "score": 20
     },
     "isms-aml/isms-access-control": {
@@ -678,11 +678,11 @@
       "score": 14
     },
     "gpu/hw-server-vs-desktop": {
-      "fingerprint": "bab352415387ef61",
+      "fingerprint": "c3ab0a7bb8e72694",
       "score": 14
     },
     "gpu/hw-storage-comparison": {
-      "fingerprint": "46634745556ddc95",
+      "fingerprint": "26e5fdbdde46fea1",
       "score": 14
     },
     "gpu/kzg-gpu": {
@@ -878,13 +878,13 @@
       "score": 10
     },
     "gpu/gpu-collective-network": {
-      "fingerprint": "8dbc191d0201c18d",
+      "fingerprint": "4abd95e318822a80",
       "score": 10,
       "reviewedAt": "2026-10-04",
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/hw-nvme-storage": {
-      "fingerprint": "a422c6e42f139167",
+      "fingerprint": "425385691ee4ef06",
       "score": 10
     },
     "p2p/bittorrent": {
@@ -1002,8 +1002,8 @@
       "score": 8
     },
     "crypto/poseidon-hash": {
-      "fingerprint": "c7ebab65fea55df0",
-      "score": 8
+      "fingerprint": "ac920f6102941b26",
+      "score": 6
     },
     "crypto/proofofsql": {
       "fingerprint": "1ac130429af31b96",
@@ -1022,13 +1022,13 @@
       "score": 8
     },
     "gpu/gpu-interconnects": {
-      "fingerprint": "edd03d5a424fd6b3",
+      "fingerprint": "e8313137e33b8e1a",
       "score": 8,
       "reviewedAt": "2026-10-04",
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/hw-power-cooling": {
-      "fingerprint": "1cc8a36920903f08",
+      "fingerprint": "9074cd2966541085",
       "score": 8
     },
     "gpu/msm-gpu-impl": {
@@ -1138,7 +1138,7 @@
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "ai/hyper-connections-residual-streams": {
-      "fingerprint": "1a4924d540c89a84",
+      "fingerprint": "3f44bb12e037c32d",
       "score": 6
     },
     "ai/image-augmentation-transforms": {
@@ -1162,7 +1162,7 @@
       "score": 6
     },
     "ai/tensor-and-pipeline-parallel-inference": {
-      "fingerprint": "4e6289f210e89169",
+      "fingerprint": "0c14bd159e7b6804",
       "score": 6
     },
     "ai/visual-representation-tokenizers": {
@@ -1214,7 +1214,7 @@
       "score": 6
     },
     "crypto/hash-theory": {
-      "fingerprint": "7e79ca36005ff118",
+      "fingerprint": "b062276b2ea617b0",
       "score": 6
     },
     "crypto/nova": {
@@ -1234,17 +1234,17 @@
       "score": 6
     },
     "gpu/b300-switchless-network": {
-      "fingerprint": "5633b2abde1aa869",
+      "fingerprint": "b8015663462d4a96",
       "score": 6
     },
     "gpu/hw-network": {
-      "fingerprint": "d01e28e3204ec767",
+      "fingerprint": "c04d74b03caaf6ae",
       "score": 6,
       "reviewedAt": "2026-10-04",
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
     },
     "gpu/rdma-roce": {
-      "fingerprint": "4202970665623ef5",
+      "fingerprint": "0903a1ab3f58b6e0",
       "score": 6,
       "reviewedAt": "2026-10-04",
       "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
@@ -1280,6 +1280,10 @@
       "score": 8,
       "reviewedAt": "2026-10-05",
       "note": "Actualbody and independentreview:4 short repeated1..6 insidecost arrays are onecase with explicit assumptions.3 dense totalcost arrays movedton0..6 tables; no longparagraphs/headings/editorialjargon. Independent report /tmp/teach-all/root-firms-independent-theory.json PASS."
+    },
+    "ai/kv-cache-fundamentals": {
+      "fingerprint": "f38add71feb463f6",
+      "score": 6
     }
   }
 }

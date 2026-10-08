@@ -20,9 +20,9 @@ export default function Article() { return <article className="space-y-16">
 
 <p data-stage-bridge="black-box" className="text-sm leading-7 text-muted-foreground">공간의 최고점과 검증 작업을 따로 세기로 했습니다. 크기를 정한 한 사례를 만듭니다.</p>
 </section>
-<section id="case" data-teach-level="0" className="scroll-mt-20 space-y-6">
+<section id="case" data-calculation-explained data-teach-level="0" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">3. 104만 8576행에 64개 값이 있다면</h2>
-<p className="leading-8">실행표가 2²⁰=1,048,576행,64열이며 각 값이 4바이트라고 합시다. 원본은 1,048,576×64×4=268,435,456바이트, 즉 256MiB입니다. 표를 8배 많은 위치에서 평가하면 2GiB입니다. 모두 설명용 가정이며 특정 증명기의 실측값은 아닙니다.</p>
+<p className="leading-8">실행표가 2²⁰=1,048,576행,64열이며 각 값이 4바이트라고 합시다. 원본은 1,048,576행 × 행마다 64개 값 × 값마다 4바이트 = 268,435,456바이트, 즉 256MiB입니다. 표를 8배 많은 위치에서 평가하면 2GiB입니다. 모두 설명용 가정이며 특정 증명기의 실측값은 아닙니다.</p>
 <p className="leading-8">넓힌 표의 입력과 출력 두 개를 동시에 보관하면 4GiB이고 원본까지 유지하면 4.25GiB입니다. 최종 증거가 작더라도 이 자료들은 별도로 존재할 수 있습니다. 비교할 검증 사례는 페어링쌍 4개와 공개 입력 3개의 연산으로 정합니다.</p>
 
 <p data-stage-bridge="case" className="text-sm leading-7 text-muted-foreground">원본 256MiB와 중간 4.25GiB를 계산했습니다. 같은 시간에 남는 것을 그립니다.</p>
@@ -57,11 +57,11 @@ export default function Article() { return <article className="space-y-16">
 <ExplainedFormula question="최대 메모리는 어떻게 계산하나요?" idea="각 시점에 살아 있는 버퍼의 크기를 더하고, 시간에 따른 합의 최댓값을 고릅니다." formula={String.raw`M_{\mathrm{peak}}=\max_t\sum_{b\in\mathrm{live}(t)}\mathrm{bytes}(b)`} annotatedFormula={String.raw`M_{\mathrm{peak}}=\max_t\sum_{b\in\mathrm{live}(t)}\mathrm{bytes}(b)`} operations={[{"expression": "\\mathrm{live}(t)", "annotation": ["시각t에 아직 해제되지 않은 버퍼만 셉니다."]}, {"expression": "\\max_t", "annotation": ["모든 순간의 합 중 장치가 감당해야 할 가장 큰 합입니다."]}]} terms={[{"symbol": "b", "name": "버퍼", "description": "원본·평가값·해시·작업공간 등입니다."}, {"symbol": "t", "name": "실행 시점", "description": "같이 살아 있는지 판정합니다."}, {"symbol": "bytes", "name": "크기", "description": "같은 바이트 단위로 더합니다."}]} interpretation="가정한 최고점은 256MiB+4GiB+(512MiB−32B)입니다." assumptions={["각 버퍼의 실제 원소 크기와 패딩을 사용합니다.", "서로 다른 장치의 용량은 한 장치의 자유 공간처럼 합치지 않습니다."]} /><AlgorithmBlock title="메모리 최고점 산정 (의사코드)" input={["버퍼별 바이트 수와 할당·해제 시점"]} steps={[{"code": "각 시점의 할당은 live 집합에 넣고 해제는 제거", "note": "동일 공간 재사용은 중복 합산하지 않습니다."}, {"code": "현재합←Σ bytes(live); peak←max(peak,현재합)", "note": "장치별로 따로 계산합니다."}, {"code": "측정한 할당기·런타임 여유를 추가해 계산값과 실측 최고점 비교", "note": "논리 배열 크기와 프로세스 사용량을 구분합니다."}]} output="장치별 예상 최고점과 남는 여유" />
 <p data-stage-bridge="mechanism" className="text-sm leading-7 text-muted-foreground">동시 유지와 먼저 해제의 2GiB 차이를 계산했습니다. 공식 구현 문서의 최고점 식에 다른 암호 작업을 넣습니다.</p>
 </section>
-<section id="source" data-teach-level="5" className="scroll-mt-20 space-y-6">
+<section id="source" data-calculation-explained data-teach-level="5" className="scroll-mt-20 space-y-6">
 <h2 className="text-2xl font-bold">8. MSM은 순차적으로 바뀌는 작업공간의 최댓값을 셉니다</h2>
 <p className="leading-8">ICICLE2.8.0 공식 문서는 스칼라와 인덱스가 살아 있는 단계, 스칼라·점·버킷이 살아 있는 단계의 최댓값으로 메모리를 추정합니다. 해당 버전 알고리즘의 생존 시점 사례이며 현재 최신판에 보편적으로 적용되는 공식이라는 뜻은 아닙니다.</p>
 <p className="leading-8">같은 2²⁰개 항에 스칼라 32바이트, 점 64바이트, 버킷점 96바이트, 스칼라 256비트, 창 16비트, 사전계산배수 1, 배치 1을 가정합니다. 창 묶음은 16개입니다. 스칼라 32MiB, 인덱스약 384MiB, 점 64MiB, 버킷 96MiB여서 max(32+384,32+64+96)=416MiB입니다.</p>
-<p className="leading-8">창을 18비트로 바꾸면 묶음은 15개로 줄지만 버킷은 96×15×2¹⁸바이트=360MiB로 늘어납니다. 인덱스 360MiB와 스칼라 32MiB인 단계는 392MiB, 점과 버킷 단계는 456MiB이므로 새 최고점은 456MiB입니다. 연산 묶음이 줄어도 메모리가 늘어나는 반례입니다.</p>
+<p className="leading-8">창을 18비트로 바꾸면 묶음은 15개로 줄지만 버킷은 점마다 96바이트 × 15묶음 × 묶음마다 2¹⁸개 = 377,487,360바이트, 곧 360MiB로 늘어납니다. 인덱스 360MiB와 스칼라 32MiB인 단계는 392MiB, 점과 버킷 단계는 456MiB이므로 새 최고점은 456MiB입니다. 연산 묶음이 줄어도 메모리가 늘어나는 반례입니다.</p>
 <div id="source-icicle"><CitationBlock source="ICICLE2.8.0 · MSM / Memory usage estimation" citeKey={1} href="https://dev.ingonyama.com/2.8.0/icicle/primitives/msm"><p className="leading-8">원문: <q>max(scalars + scalarIndices, scalars + points + buckets)</q></p><p className="leading-8">창 16에서는 max(416,192)=416MiB, 창 18에서는 max(392,456)=456MiB입니다. 구체적인 값은 자료형과 파라미터 가정에서 나왔으며 전체 증명기의 실측값은 아닙니다.</p></CitationBlock></div>
 <p data-stage-bridge="source" className="text-sm leading-7 text-muted-foreground">공식 식에서 416→456MiB가 되는 조건을 계산했습니다. 확인자의 비용은 다른 식으로 셉니다.</p>
 </section>

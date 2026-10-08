@@ -1,0 +1,316 @@
+import type { EngineeringDepthData } from "../../cloud/EngineeringDepthBlocks";
+
+const checkedAt = "2026-10-08";
+
+export const ncaAiioDepth = {
+  ledgers: [
+    {
+      section: "mechanism",
+      title: "시험 목표를 현장 증거로 바꾸는 P0 학습 원장",
+      question: "공식 목표를 한 번 설명한 뒤 무엇을 실행하고 어떤 산출물을 남겨야 합니까?",
+      columns: ["공식 범위", "먼저 답할 현장 질문", "이어 읽을 정본", "남길 증거"],
+      rows: [
+        [
+          "GPU·CPU·AI workload",
+          "왜 이 workload에 GPU가 필요하며 학습과 추론의 요구가 어떻게 다른가?",
+          "GPU 비교 → B300 128 GPU 설계",
+          "workload 요구사항표, GPU·node 수 산식, 미확정 값 목록",
+        ],
+        [
+          "Cluster·고속 network·DPU",
+          "한 node 안의 GPU 경로와 node 사이 경로가 어디에서 갈리는가?",
+          "GPU Interconnects → RDMA·RoCE → GPU Collective Network",
+          "topology 출력, port·rail 표, 2→4→전체 node 통신 시험",
+        ],
+        [
+          "Software stack",
+          "같은 container인데 한 node만 통신하지 못하면 어느 version부터 비교할까?",
+          "GPU 클러스터 호환성",
+          "OS·kernel·driver·firmware·CUDA·NCCL·DOCA-OFED manifest",
+        ],
+        [
+          "Orchestration·job scheduling",
+          "GPU가 비어 있는데 다중 node 작업이 왜 시작하지 못하는가?",
+          "Kubernetes와 Slurm",
+          "queue·allocation 상태, scheduler 선택표, 실패 후 회수 기록",
+        ],
+        [
+          "Storage·monitoring",
+          "GPU가 기다리는 원인이 compute인지 data path인지 어떻게 가를까?",
+          "AI 클러스터 스토리지",
+          "I/O fingerprint, checkpoint 시간, 정상·degraded·restore 결과",
+        ],
+        [
+          "Power·cooling·facility",
+          "GPU 수를 rack 전력과 제거해야 할 열로 어떻게 바꿀까?",
+          "B300 전력·냉각 → 데이터센터 site readiness",
+          "평균·피크·A/B feed·열 포착률·유량·N−1 원장",
+        ],
+        [
+          "운영·인수",
+          "장비가 켜진 상태와 고객이 독립 운영할 수 있는 상태를 어떻게 구분할까?",
+          "AI 인프라 구축·검수",
+          "FAT·SAT·성능·장애·handover acceptance ledger",
+        ],
+      ],
+      conclusion: "NCA-AIIO는 이 일곱 줄을 빠짐없이 보는 폭의 기준입니다. 지원용 설득력은 마지막 열의 원본 출력과 원장에서 생깁니다.",
+    },
+    {
+      section: "mechanism",
+      title: "여섯 도구를 한 제품처럼 뭉개지 않는 책임 지도",
+      question: "NCA 과정에서 만나는 도구는 각각 어느 상태를 소유하며 어디서 다음 도구로 넘깁니까?",
+      columns: ["도구", "소유하는 책임", "첫 확인", "대신하지 않는 것"],
+      rows: [
+        ["CUDA·GPU driver", "Host가 GPU를 발견하고 user-space 연산이 device와 통신", "nvidia-smi, CUDA sample", "Container 배치·cluster queue"],
+        ["NVIDIA Container Toolkit", "Container runtime에 요청한 GPU device·library를 주입", "nvidia-ctk config, container nvidia-smi", "Host driver 설치와 CUDA application correctness"],
+        ["Triton Inference Server", "Model repository를 load하고 inference endpoint를 제공", "/v2/health/ready, model status", "GPU hardware health·서비스 SLO 전체"],
+        ["Slurm", "Node·GPU allocation, job step, queue·accounting", "sinfo, squeue, sacct", "Bare-metal provisioning과 Kubernetes reconcile"],
+        ["Base Command Manager", "Cluster provisioning·image·관리·monitoring의 상위 운영", "Node image·provisioning state", "각 job의 application logic"],
+        ["GPU Operator·DCGM", "Kubernetes GPU software lifecycle·GPU telemetry/diagnostics", "ClusterPolicy condition, dcgmi", "Gang scheduling·고객 workload sizing"],
+      ],
+      conclusion: "명령 하나가 통과하면 바로 다음 책임 경계로 이동합니다. Container에서 GPU가 보인다는 사실은 Triton model ready, Slurm allocation, multi-node NCCL과 시설 합격을 각각 따로 확인해야 한다는 뜻입니다.",
+    },
+    {
+      section: "comparison",
+      title: "NCA-AIIO와 다음 단계의 역할 경계",
+      question: "어느 자격을 지금 준비하고, 어느 수준은 실제 경험 뒤로 미뤄야 합니까?",
+      columns: ["단계", "공식 역할", "지금의 판단", "자격 밖에서 보완할 일"],
+      rows: [
+        [
+          "NCA-AIIO",
+          "AI infrastructure·operations의 foundational concepts 설명",
+          "현재 빈 용어와 전체 지도를 빠르게 메우는 1차 목표",
+          "명령 실행, 계산, 장애 재현과 제안 산출물",
+        ],
+        [
+          "NCP-AII",
+          "고급 NVIDIA AI infrastructure 배포·구성·검증",
+          "실제 server·network bring-up을 반복한 뒤 검토",
+          "OEM 지원 절차, physical layer, firmware와 현장 검수",
+        ],
+        [
+          "NCP-AIO",
+          "AI infrastructure monitoring·troubleshooting·optimization",
+          "운영 당직과 반복 장애 복구 경험을 쌓은 뒤 검토",
+          "Slurm·Kubernetes·Base Command Manager의 실제 cluster 실습",
+        ],
+        [
+          "엘리스 지원 포트폴리오",
+          "공식 자격이 아니라 지원 직무의 제안·구축 증거",
+          "NCA와 병행해 지금 작성",
+          "요구사항→BOM→전력·냉각→검수까지 B300 case study",
+        ],
+      ],
+      conclusion: "지금은 NCA-AIIO로 폭을 정리하되, 지원을 NCP 취득까지 미루지 않습니다. P0 산출물로 Associate 자격이 증명하지 않는 실행 깊이를 함께 보여 줍니다.",
+    },
+  ],
+  evidence: [
+    {
+      section: "source",
+      eyebrow: "실물 1 · 첫 15분 점검",
+      title: "GPU가 보인다는 말에서 topology와 health 증거로 내려갑니다",
+      question: "16개 GPU가 열거됐다는 사실과 2-node 작업 준비가 됐다는 사실을 구분할 수 있습니까?",
+      body: "시험에서는 GPU architecture·monitoring의 목적을 설명하는 수준이 중심입니다. 지원 준비에서는 한 단계 더 내려가 장치 수, GPU 간 경로와 기본 진단 결과를 같은 node ID로 보관합니다. 아래 출력은 형식을 보여 주기 위한 예시이며 실제 B300 계측값이 아닙니다.",
+      language: "shell",
+      command: [
+        "nvidia-smi -L",
+        "nvidia-smi topo -m",
+        "dcgmi discovery -l",
+        "dcgmi diag -r 2",
+      ].join("\n"),
+      normal: {
+        label: "정상 판독 · 예시 출력",
+        output: [
+          "(예시 출력 — 실측 아님)",
+          "GPU 0 ... GPU 15                         # 두 node 합계 16 GPU",
+          "GPU0↔GPU7: NVLink/NVSwitch local path",
+          "DCGM diagnostic: Pass",
+        ].join("\n"),
+        reading: "Inventory·topology·health가 기준과 맞았다는 뜻입니다. 아직 node 사이 RDMA, collective, scheduler allocation과 실제 workload 성능은 별도 시험으로 남습니다.",
+      },
+      failure: {
+        label: "실패 판독 · 예시 출력",
+        output: [
+          "(예시 출력 — 실측 아님)",
+          "GPU 0 ... GPU 15",
+          "GPU7: diagnostic Fail",
+          "Topology: one expected peer path missing",
+        ].join("\n"),
+        reading: "장치가 열거됐어도 health와 path가 실패할 수 있습니다. 이 상태에서 scheduler나 storage를 바꾸지 말고 GPU error, PCIe·NVLink path, firmware·driver manifest를 먼저 대조합니다.",
+      },
+      source: {
+        label: "NVIDIA DCGM User Guide",
+        href: "https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html",
+        location: "dcgmi discovery와 diagnostics 사용 범위",
+      },
+    },
+    {
+      section: "limits",
+      eyebrow: "실물 2 · 3주 완성안",
+      title: "공식 7시간 과정 뒤에 25시간의 산출물 학습을 붙입니다",
+      question: "빨리 응시하면서도 면접에서 자격 이름만 남지 않게 하려면 무엇을 끝내야 합니까?",
+      body: "공식 페이지의 7시간은 권장 self-paced 과정의 통상 완료 시간입니다. 아래 32시간은 합격 보장이 아니라 이 글의 독자를 위한 설명용 계획입니다. 이미 아는 항목은 진단 문제로 통과시키고, 틀린 항목에 시간을 다시 배분합니다.",
+      language: "text",
+      command: [
+        "1주차 10h = 공식 과정 7h + Study Guide 목표별 설명 3h",
+        "2주차 12h = topology·호환성·network·scheduler·storage 실습",
+        "3주차 10h = 전력·냉각·BOM·검수 원장 + 50문항 모의 장부",
+        "완료 = 점수 + 명령 원본 + 실패 판독 + 10분 B300 설명",
+      ].join("\n"),
+      normal: {
+        label: "통과 조건",
+        output: [
+          "50문항 장부: 오답마다 공식 목표 ID 기록",
+          "P0 산출물: 6개 중 최소 4개 완성",
+          "B300 case: 가정·미확정·실측을 구분해 10분 설명",
+        ].join("\n"),
+        reading: "시험 오답이 어느 현장 산출물의 빈칸인지 연결돼 있습니다. 자격과 포트폴리오가 서로 다른 증거로 남습니다.",
+      },
+      failure: {
+        label: "재학습 조건",
+        output: [
+          "용어 정의는 가능하지만 장애의 첫 확인 지점을 말하지 못함",
+          "공식 비중은 외웠지만 명령·출력·계산 artifact가 없음",
+          "실제 담당 범위와 역설계안을 구분하지 못함",
+        ].join("\n"),
+        reading: "응시 자체를 무조건 미룰 필요는 없습니다. 다만 이 상태를 구축 경험으로 표현하지 말고 해당 P0 글의 실습 한 개를 끝낸 뒤 지원 자료에 넣습니다.",
+      },
+      source: {
+        label: "NVIDIA NCA-AIIO Certification",
+        href: "https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/",
+        location: "권장 과정 7시간과 현행 시험 안내",
+      },
+    },
+    {
+      section: "source",
+      eyebrow: "실물 2 · container 경계",
+      title: "Host에서 보이는 GPU가 container에도 들어오는지 확인합니다",
+      question: "Host driver 정상과 container runtime GPU 주입 정상을 어느 명령에서 나눕니까?",
+      body: "NVIDIA Container Toolkit은 host driver를 대신 설치하는 제품이 아닙니다. Runtime 설정을 preview·적용한 뒤 같은 host에서 container가 GPU를 열거하는지 확인합니다. Kubernetes를 쓴다면 Docker가 아니라 실제 containerd·CRI 설정으로 같은 경계를 검증합니다.",
+      language: "shell",
+      command: [
+        "nvidia-smi",
+        "sudo nvidia-ctk runtime configure --runtime=docker",
+        "sudo systemctl restart docker",
+        "sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi",
+      ].join("\n"),
+      normal: {
+        label: "정상 판독",
+        output: "Host와 container가 의도한 GPU UUID·driver version을 열거함",
+        reading: "GPU injection 경계까지 통과했습니다. CUDA sample·model load·multi-node 통신은 다음 시험입니다.",
+      },
+      failure: {
+        label: "실패 판독 · 예시",
+        output: "docker: could not select device driver \"\" with capabilities: [[gpu]]",
+        reading: "Application을 고치기 전에 runtime 등록과 daemon 설정, toolkit log를 확인합니다. Host nvidia-smi도 실패하면 toolkit보다 driver 경계로 돌아갑니다.",
+      },
+      source: {
+        label: "NVIDIA Container Toolkit install and sample workload",
+        href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/sample-workload.html",
+        location: "Docker GPU sample과 nvidia-smi verification",
+      },
+    },
+    {
+      section: "comparison",
+      eyebrow: "실물 3 · service·queue·health 세 문",
+      title: "200 OK·RUNNING·DCGM Pass가 각각 무엇만 증명하는지 구분합니다",
+      question: "추론 endpoint, job scheduler, GPU health의 초록불을 하나의 ‘정상’으로 합치지 않았습니까?",
+      body: "같은 incident ID로 세 출력을 보관하되 각 도구의 완료 조건을 유지합니다. Triton readiness는 server와 model 준비, Slurm은 allocation과 job state, DCGM은 GPU 관리·진단 경계를 보여 줍니다.",
+      language: "shell",
+      command: [
+        "curl -i localhost:8000/v2/health/ready",
+        "squeue -j <job-id> -o '%.18i %.9T %.6D %R'",
+        "dcgmi diag -r 2",
+      ].join("\n"),
+      normal: {
+        label: "세 경계 통과 · 예시 출력",
+        output: "HTTP/1.1 200 OK\n4821 RUNNING 2 dgx-[01-02]\nDCGM diagnostic: Pass",
+        reading: "세 도구가 맡은 준비 상태는 통과했습니다. Target request의 TTFT·TPS·오류율과 multi-node collective는 별도 acceptance로 남습니다.",
+      },
+      failure: {
+        label: "책임이 갈리는 출력 · 예시",
+        output: "HTTP 503 / job RUNNING / DCGM Pass",
+        reading: "GPU와 allocation이 정상이어도 model repository·backend·memory admission 때문에 serving이 준비되지 않을 수 있습니다. 이때 scheduler를 교체하지 않습니다.",
+      },
+      source: {
+        label: "NVIDIA Triton Inference Server Quickstart",
+        href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/getting_started/quickstart.html",
+        location: "ready endpoint의 200·non-200 의미",
+      },
+    },
+  ],
+  sources: [
+    {
+      label: "NVIDIA · NCA-AIIO Certification",
+      href: "https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/",
+      claim: "시험 형식·가격·언어·유효기간, 대상 독자와 38%·40%·22% 영역 비중을 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · NCA-AIIO Exam Study Guide (Jan 2026)",
+      href: "https://dam-cdn.nvd.orangelogic.com/AssetLink/x874j05hy3m3r2sor84kpvp70750m468.pdf",
+      claim: "세 영역의 세부 목표, 추천 과정 단원과 Associate 역할 경계를 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · Certification Programs",
+      href: "https://www.nvidia.com/en-us/learn/certification/",
+      claim: "NCA-AIIO와 NCP-AII·NCP-AIO·NCP-AIN·NCP-ARI가 현재 별도 자격으로 운영되는지 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · NCP-AI Infrastructure",
+      href: "https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-professional/",
+      claim: "배포·구성·검증, server·network 설치와 physical layer 관리가 Professional 단계임을 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · NCP-AI Operations",
+      href: "https://www.nvidia.com/en-us/learn/certification/ai-operations-professional/",
+      claim: "Monitoring·troubleshooting·optimization과 Slurm·Kubernetes 실습이 Professional 운영 단계임을 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · DCGM User Guide",
+      href: "https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html",
+      claim: "GPU discovery·health·diagnostic 명령을 개념 학습 뒤 남길 첫 운영 증거로 사용했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · GPU Operator",
+      href: "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html",
+      claim: "Kubernetes에서 driver·container toolkit·device plugin·monitoring 요소를 운영하는 공식 범위를 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · DGX BasePOD B300 Deployment Guide",
+      href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html",
+      claim: "Associate의 개념 범위를 실제 provisioning·Slurm·GPU·NCCL 검증으로 확장할 때의 공식 배포 순서를 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · Container Toolkit",
+      href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html",
+      claim: "Docker·containerd runtime 설정과 GPU device injection을 host driver 설치와 분리해 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · Triton Inference Server Quickstart",
+      href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/getting_started/quickstart.html",
+      claim: "Readiness endpoint 200이 server·model 준비를 뜻하며 GPU health나 latency SLO 전체를 대신하지 않는 경계를 확인했습니다.",
+      checkedAt,
+    },
+    {
+      label: "SchedMD · Slurm Overview",
+      href: "https://slurm.schedmd.com/overview.html",
+      claim: "slurmctld·slurmd·slurmdbd와 allocation·execution·accounting 책임을 cluster provisioning과 구분했습니다.",
+      checkedAt,
+    },
+    {
+      label: "NVIDIA · Base Command Manager",
+      href: "https://docs.nvidia.com/base-command-manager/",
+      claim: "BCM이 cluster provisioning·workload management·infrastructure monitoring을 묶는 상위 cluster manager임을 확인했습니다.",
+      checkedAt,
+    },
+  ],
+} satisfies EngineeringDepthData;

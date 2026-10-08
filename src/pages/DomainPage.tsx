@@ -4,7 +4,10 @@ import { domains } from "@/content";
 import type { Category } from "@/content";
 import { DOMAIN_READING_PATHS } from "@/content/domain-reading-paths";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
-import { countArticlesInSubcategory } from "@/content/subcategory-navigation";
+import {
+  countArticlesInSubcategory,
+  sortArticlesForReading,
+} from "@/content/subcategory-navigation";
 import { articleHref, categoryHref } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -64,7 +67,7 @@ export default function DomainPage({ domain }: { domain: string }) {
         stage.categories.flatMap((categorySlug) => {
           const category = group.categories.find((item) => item.slug === categorySlug);
           return category
-            ? category.articles.map((article) => ({ category, article }))
+            ? sortArticlesForReading(category, category.articles).map((article) => ({ category, article }))
             : [];
         }),
       )

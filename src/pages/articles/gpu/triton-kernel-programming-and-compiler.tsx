@@ -92,7 +92,7 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
         <ContentBoundary article="triton-kernel-programming-and-compiler" />
       </section>
 
-      <section id="launch-and-autotune" className="scroll-mt-20">
+      <section id="launch-and-autotune" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           num_warps 와 num_stages 는 자원 배치를, autotune 은 그 조합을 고릅니다
         </h2>
@@ -104,14 +104,14 @@ export default function TritonKernelProgrammingAndCompilerArticle() {
             반복되는 load 를 몇 단계 앞서 미리 읽을지 정하는 software pipelining 깊이입니다.
           </p>
           <p>
-            Matmul tile 을 128 × 128 × 32 로 잡고 num_warps = 8 을 주면 thread 256개가 output
-            tile 16384 원소를 나눠 갖습니다. Warp 하나가 2048 원소, thread 하나가 fp32 accumulator
-            64개를 register 로 들고 있는 셈입니다. num_warps 를 4 로 줄이면 thread 당 128개가
-            되어 register 압박이 커집니다.
+            Matmul tile을 M 128행 × N 128열 × K 깊이 32로 잡으면 출력은 128×128=16,384개입니다.
+            num_warps=8이면 8 warp × warp마다 32 thread = 256 thread가 출력을 나눕니다. Warp 하나는
+            16,384÷8=2,048개, thread 하나는 16,384÷256=64개 fp32 accumulator를 register에 둡니다.
+            num_warps를 4로 줄이면 128 thread가 나누므로 thread마다 128개가 되어 register 압박이 커집니다.
           </p>
           <p>
             num_stages = 3 이면 K 루프의 A tile(128 × 32)과 B tile(32 × 128)을 3단계 분량,
-            fp16 기준 3 × 8192 × 2 byte = 48 KB 를 shared memory 에 미리 올려 둡니다. 단계를 늘릴수록
+            A와 B tile은 단계마다 각각 128×32와 32×128, 합계 8,192개 값을 가집니다. FP16 값마다 2바이트이고 3단계를 보관하므로 3단계 × 단계마다 8,192개 × 값마다 2바이트 = 49,152바이트, 곧 48KiB를 shared memory에 미리 올려 둡니다. 단계를 늘릴수록
             load 지연이 가려지지만 shared memory 가 그만큼 늘어 SM 에 함께 놓일 수 있는
             instance 수가 줄어듭니다. 이 자원 계산은 <Link to="/cs/gpu/cuda-shared-memory#overview">shared memory</Link> 글의
             규칙을 그대로 따릅니다.

@@ -27,6 +27,12 @@ try {
   const { CATEGORY_READING_PATHS } = await server.ssrLoadModule(
     "/src/content/category-reading-paths.ts",
   );
+  const { SUBCATEGORY_ARTICLE_CURRICULA } = await server.ssrLoadModule(
+    "/src/content/article-reading-curricula.ts",
+  );
+  const { isDeclaredSubcategoryStart } = await server.ssrLoadModule(
+    "/src/content/article-guidance.ts",
+  );
 
   for (const category of categories) {
     const listedSubcategories = sortSubcategoriesForReading(
@@ -69,6 +75,66 @@ try {
       const position = new Map(
         diagnostics.orderedRoutes.map((route, index) => [route, index]),
       );
+      const declaredStart = articles.find((article) =>
+        isDeclaredSubcategoryStart(category.slug, article),
+      );
+      if (
+        declaredStart &&
+        diagnostics.orderedRoutes[0] !==
+          `${category.slug}/${declaredStart.slug}`
+      ) {
+        failures.push(
+          `${category.slug}/${subcategory.slug}: 시작 글이 첫 번째가 아닙니다 (${declaredStart.slug})`,
+        );
+      }
+      const curriculum = SUBCATEGORY_ARTICLE_CURRICULA[subcategory.slug];
+      if (curriculum) {
+        const duplicateSlugs = curriculum.filter(
+          (slug, index) => curriculum.indexOf(slug) !== index,
+        );
+        if (duplicateSlugs.length > 0) {
+          failures.push(
+            `${category.slug}/${subcategory.slug}: curriculum 중복 (${[...new Set(duplicateSlugs)].join(", ")})`,
+          );
+        }
+        const articleSlugs = new Set(articles.map((article) => article.slug));
+        const stale = curriculum.filter((slug) => !articleSlugs.has(slug));
+        const missing = articles
+          .map((article) => article.slug)
+          .filter((slug) => !curriculum.includes(slug));
+        if (stale.length > 0 || missing.length > 0) {
+          failures.push(
+            `${category.slug}/${subcategory.slug}: curriculum coverage 불일치 (stale=${stale.join(",") || "없음"}; missing=${missing.join(",") || "없음"})`,
+          );
+        }
+        let previous = -1;
+        for (const slug of curriculum) {
+          const current = position.get(`${category.slug}/${slug}`);
+          if (current === undefined) continue;
+          if (current < previous) {
+            failures.push(
+              `${category.slug}/${subcategory.slug}: 명시한 curriculum 역순 (${slug})`,
+            );
+          }
+          previous = current;
+        }
+      }
+      const featured = CATEGORY_READING_PATHS[category.slug]?.featuredArticles ?? [];
+      const featuredRank = new Map(featured.map((slug, index) => [slug, index]));
+      if (articles.every((article) => featuredRank.has(article.slug))) {
+        let previous = -1;
+        for (const route of diagnostics.orderedRoutes) {
+          const slug = route.slice(category.slug.length + 1);
+          const current = featuredRank.get(slug);
+          if (current === undefined) continue;
+          if (current < previous) {
+            failures.push(
+              `${category.slug}/${subcategory.slug}: category featured curriculum 역순 (${slug})`,
+            );
+          }
+          previous = current;
+        }
+      }
       for (const [route, dependencies] of Object.entries(
         diagnostics.dependencies,
       )) {

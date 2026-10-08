@@ -4,6 +4,10 @@ import MemoryChannels from "./server-cpu-lineup-comparison/MemoryChannels";
 import CoreCharacter from "./server-cpu-lineup-comparison/CoreCharacter";
 import ProductTiers from "./server-cpu-lineup-comparison/ProductTiers";
 import SelectionGate from "./server-cpu-lineup-comparison/SelectionGate";
+import HardwareFieldLab from "./HardwareFieldLab";
+import HardwareTeachOpening, { HardwareTeachMechanism } from "./HardwareTeachOpening";
+import { serverCpuFieldLab } from "./hardwareFieldLabs";
+import { hardwareTeachCases } from "./hardwareTeachCases";
 
 /**
  * GPU 서버의 CPU는 레인과 채널로 고릅니다
@@ -13,12 +17,16 @@ import SelectionGate from "./server-cpu-lineup-comparison/SelectionGate";
 export default function ServerCpuLineupComparisonArticle() {
   return (
     <div className="space-y-16">
-      <Overview />
-      <LaneBudget />
-      <MemoryChannels />
-      <CoreCharacter />
-      <ProductTiers />
-      <SelectionGate />
+      <HardwareTeachOpening data={hardwareTeachCases.serverCpu} />
+      <HardwareTeachMechanism data={hardwareTeachCases.serverCpu}>
+        <Overview />
+        <LaneBudget />
+        <MemoryChannels />
+        <CoreCharacter />
+        <ProductTiers />
+        <SelectionGate />
+      </HardwareTeachMechanism>
+      <HardwareFieldLab data={serverCpuFieldLab} />
     </div>
   );
 }

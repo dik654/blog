@@ -15,7 +15,7 @@ import MultiHeadLatentAttentionMechanicsViz from "./multi-head-latent-attention-
 export default function MultiHeadLatentAttentionMechanicsArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <section id="problem" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           MLA 는 decode 에서 key·value 를 복원하지 않고 latent 를 그대로 씁니다
         </h2>
@@ -41,7 +41,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           </p>
           <p>
             수치로 봅니다. DeepSeek-V2(236B)는 d_model=5120, head 128개, head 차원 128을 씁니다. 표준 방식이라면 layer 하나가 token
-            하나마다 key·value를 합쳐 128×128×2=32768개 원소를 캐시해야 합니다. MLA는 이것을 latent 차원 512와 위치 전용 차원 64를 더한 576개 원소로
+            하나마다 128 head × head마다 128개 값 × K·V 2종류 = 32,768개 원소를 cache해야 합니다. MLA는 이것을 latent 차원 512와 위치 전용 차원 64를 더한 576개 원소로
             줄입니다. 원소 수 기준 약 56.9배입니다.
           </p>
         </div>
@@ -259,7 +259,7 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
         />
       </section>
 
-      <section id="boundary" className="scroll-mt-20">
+      <section id="boundary" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Absorption 은 메모리 왕복을 줄이는 대신 head당 곱셈을 늘리는 교환입니다
         </h2>
@@ -313,8 +313,9 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           preview="MHA는 2·n_h·d_h, GQA는 2·n_g·d_h, MLA는 d_c+d_h^R 개 원소입니다. DeepSeek-V2 숫자를 넣으면 MLA 는 GQA의 group 2.25개와 같은 크기입니다."
         >
           <p>
-            MHA: 2×128×128=32768. GQA를 group 8개로 예로 들면 2×8×128=2048. MLA:
-            512+64=576. 576을 2×128로 나누면 2.25가 나와, 논문이 말한 "GQA 2.25 group과
+            MHA는 K·V 2종류 × 128 head × head마다 128개 값 = 32,768개입니다. GQA를 KV group 8개로 예로 들면
+            K·V 2종류 × 8 group × group마다 128개 값 = 2,048개입니다. MLA는 내용 latent 512개와 위치 전용 64개를 합쳐
+            576개입니다. 576을 K·V 두 종류와 head 폭 128의 곱으로 나누면 2.25가 나와, 논문이 말한 "GQA 2.25 group과
             같은 크기"라는 문장이 그대로 재현됩니다.
           </p>
           <p>

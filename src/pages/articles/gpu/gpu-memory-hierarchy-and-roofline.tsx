@@ -1,3 +1,4 @@
+import { RooflineArithmeticViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "@/pages/articles/world-systems/NumericPath";
@@ -77,13 +78,13 @@ export default function Article() {
       </div>
       <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">주소 공간·물리 계층·측정 단위를 분리했습니다. 같은 64개 사례에서 상한을 계산합니다.</p>
     </section>
-    <section id="mechanism" data-teach-level="4" className="scroll-mt-20">
+    <section id="mechanism" data-teach-level="4" data-calculation-explained className="scroll-mt-20">
       <span id="transactions" className="scroll-mt-20" />
       <span id="latency-bandwidth" className="scroll-mt-20" />
       <span id="roofline-bound" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">7 · 1/12 FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">64개 덧셈의 유효 연산 강도는 64/768=1/12 FLOP/B입니다. 측정 경계의 실제 전송량도 768바이트라고 가정합니다. 이때 1TB/s×1/12=약 83.3GFLOP/s가 데이터 이동 속도로 정해지는 상한입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
+        <p className="leading-8">같은 64개 덧셈에서 계산량은 64 FLOP이고 유효 읽기·쓰기는 768바이트입니다. 따라서 연산 강도는 64 FLOP ÷ 768바이트 = 1/12 FLOP/B입니다. 이 유효량이 실제 DRAM 이동량과 같다고 가정하겠습니다.</p><p className="leading-8">대역폭 상한 1TB/s는 초당 10¹²바이트입니다. 여기에 바이트마다 1/12 FLOP를 곱하면 초당 계산 상한은 10¹² byte/s × 1/12 FLOP/byte = 약 83.3GFLOP/s입니다. 계산 상한 1TFLOP/s보다 낮으므로 이상적인 정상 상태에서는 이동이 먼저 제한합니다.</p>
         <p className="leading-8">같은 계산을 시간으로 보면 64÷10¹² =0.064ns의 계산 물량과 768÷10¹² =0.768ns의 이동 물량을 비교합니다. 더 큰 0.768ns는 포화된 장치의 처리량 모델입니다. 64개만 제출한 실제 kernel이 그 시간에 완료된다는 예측은 아닙니다. 요청 시작과 메모리 응답을 기다리는 시간이 남습니다.</p>
         <p className="leading-8">
             계산 상한과 이동 상한이 만나는 점은 1TFLOP/s÷1TB/s =1FLOP/B입니다. 이를 ridge point라고 부릅니다. 같은 경계의 실제 byte가 늘면 연산 강도는
@@ -93,7 +94,8 @@ export default function Article() {
         <p className="leading-8">실측 유효 768바이트를 1μs에 처리했다면 유효 대역폭은 0.768GB/s입니다(시간 가정). 이것은 유효 요청 기준입니다. DRAM counter가 읽기와 쓰기에 다른 byte를 보고하면 그 값을 같은 구간 시간으로 나눈 물리 대역폭을 별도로 표시해야 합니다.</p>
       </div>
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">83.3GFLOP/s 상한과 64개 작업의 실제 완료 시간을 구별했습니다. 공식 문서의 바이트 정의에 대입합니다.</p>
-    </section>
+    <RooflineArithmeticViz mode="intensity" />
+</section>
     <section id="source" data-teach-level="5" className="scroll-mt-20">
       <span id="paper-cuda-best-practices-memory" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">8 · 공식 대역폭 식의 읽기와 쓰기에 512와 256을 넣습니다</h2>
@@ -105,7 +107,7 @@ export default function Article() {
       <SourceApplication source="CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation" excerpt="effective bandwidth" application="(512B +256B)/1μs =0.768GB/s. 유효 바이트 기준 값과 DRAM counter 기준 값을 섞지 않습니다." /><CitationBlock source="CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation" citeKey={1} href="https://docs.nvidia.com/cuda/archive/13.0.2/cuda-c-best-practices-guide/index.html">CUDA Best Practices13.0.2 ·Effective Bandwidth Calculation</CitationBlock>
       <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">바이트 식과 sector 규칙을 각자의 관측 위치에 두었습니다. 실제 코드가 내는 읽기·쓰기를 다시 확인합니다.</p>
     </section>
-    <section id="comparison" data-teach-level="6" className="scroll-mt-20">
+    <section id="comparison" data-teach-level="6" data-calculation-explained className="scroll-mt-20">
       <span id="paper-roofline-williams" className="scroll-mt-20" />
       <span id="paper-nsight-compute-roofline" className="scroll-mt-20" />
       <span id="evidence" className="scroll-mt-20" />
@@ -119,7 +121,8 @@ export default function Article() {
       </div>
       <CodeViewButton label="vectorAdd의 실제 읽기 2회·쓰기 1회" onClick={() => sidebar.open("cuda-kernel", codeRefs["cuda-kernel"])} /><SourceApplication source="NVIDIA vectorAdd · 3f1c509 · 52행" excerpt="C[i] = A[i] + B[i] + 0.0f;" application="Compiler가 추가 0.0f를 제거한 64개 덧셈 모델에서 64FLOP·유효 768B입니다. Tensor 행렬 peak를 이 scalar 계산 상한으로 쓰지 않습니다." /><CitationBlock source="NVIDIA vectorAdd · 3f1c509 · 52행" citeKey={2} href="https://github.com/NVIDIA/cuda-samples/blob/3f1c50965017932fc81e6d94a3fc9e04c105b312/Samples/0_Introduction/vectorAdd/vectorAdd.cu">NVIDIA vectorAdd · 3f1c509 · 52행</CitationBlock><CitationBlock source="Williams 외 ·Roofline(2009)" citeKey={3} href="https://escholarship.org/uc/item/78h8v7mr">연산 강도와 대역폭·계산 상한을 결합하는 모델. 실제 병목 원인의 완전한 진단은 아닙니다.</CitationBlock><CitationBlock source="NVIDIA Nsight Compute ·2026-10-04 확인 ·Profiling Guide" citeKey={4} href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html">메모리 계층·실행 pipe·scheduler counter의 정의를 함께 확인합니다.</CitationBlock>
       <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">상한과 counter를 같은 연산 종류에 맞췄습니다. 서로 다른 병목을 개선하는 방법을 마지막으로 나눕니다.</p>
-    </section>
+    <RooflineArithmeticViz mode="boundary" />
+</section>
     <section id="limits" data-teach-level="7" className="scroll-mt-20">
       <span id="latency-launch-bound" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">10 · 상한에 못 미치는 이유에 따라 다음 실험을 고릅니다</h2>

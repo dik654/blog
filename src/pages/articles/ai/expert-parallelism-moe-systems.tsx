@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
@@ -92,6 +93,21 @@ export default function Article(){
         <p className="leading-8">균형이면 GPU 하나가 4096개 expert 입력을 받습니다. 세 행렬의 연산은 입력 하나당 6×4096×11008 FLOP이므로 합계 약 1.108TFLOP입니다. 가정한 유효 600TFLOP/s에서는 약 1.847ms입니다. 가장 바쁜 GPU가 1.75배를 받으면 그 계산만 약 3.232ms로 늘어납니다.</p>
         <p className="leading-8">한 token의 dispatch→계산→combine은 의존하는 순서입니다. 많은 chunk의 서로 다른 단계를 겹치면 처리량이 좋아질 수 있지만 통신도 SM·메모리 자원을 씁니다. 두 시간의 max는 이상적인 겹침의 하한이며 실제 한 layer의 완료 시간을 보장하지 않습니다.</p>
       </div>
+<FactorStructureViz
+  eyebrow="2048개 token의 왕복"
+  title="token 수·두 목적지·hidden 폭·원소 byte를 곱하면 이동량이 보입니다"
+  description="작은 칸은 각 축이 반복된다는 뜻입니다. 실제 2048개와 4096개 칸은 화면 폭에 맞게 줄여 그렸고 정확한 수는 오른쪽에 적었습니다."
+  factors={[
+    {label:"GPU 한 장의 token",value:"2048",detail:"이 token 묶음 전체를 보냅니다.",marks:8},
+    {label:"token마다 목적지",value:"2 experts",detail:"top-2라 입력 복사본이 두 개입니다.",marks:2},
+    {label:"입력 한 벌의 숫자",value:"4096",detail:"expert 하나가 받을 hidden 폭입니다.",marks:8},
+    {label:"숫자 하나",value:"2 B",detail:"FP16 한 원소의 논리 크기입니다.",marks:2,accent:true},
+  ]}
+  equation="2048 token × 2 expert × 4096원소 × 2B = 32MiB dispatch"
+  result="왕복 64MiB · 균형이면 입력 4096개/GPU"
+  note="GPU 8개에 균등하다는 가정에서 1/8 로컬을 빼면 원격 왕복 기대값은 56MiB입니다. 실제 routing 쏠림은 가장 바쁜 GPU의 입력 칸을 늘립니다."
+/>
+
 <ExplainedFormula question={"8개 GPU 중 한 개가 이 layer에서 몇 바이트를 보내는가?"} idea={"token마다 top-k개의 expert 입력을 만들고 계산 뒤 같은 폭의 결과를 받습니다. 로컬 복사본은 외부 link의 전송량에서 뺍니다."} formula={"B_{logical}=2mkdb,\\qquad E[B_{remote}]=2mkdb(1-1/G)"} annotatedFormula={"B_{logical}=\\underbrace{2}_{\\text{보내기와 되돌리기}}\\underbrace{m k}_{\\text{expert 입력 수}}\\underbrace{d b}_{\\text{입력 하나의 바이트}}"} operations={[{"expression": "mk", "annotation": ["2048개 token 각각을 expert 두 개에 배정합니다."]}, {"expression": "db", "annotation": ["hidden 4096개 × 원소당 2B = 8192B입니다."]}, {"expression": "1-1/G", "annotation": ["균등 배정 가정에서 8개 중 다른 GPU 7개의 몫을 셉니다."]}]} terms={[{"symbol": "m,k", "name": "token과 선택 수", "description": "GPU당 2048개, top-2입니다."}, {"symbol": "d,b", "name": "폭과 저장 단위", "description": "4096개와 FP16 2바이트입니다."}, {"symbol": "G", "name": "GPU 수", "description": "각각 expert 8개를 가진 GPU 8개입니다."}]} assumptions={["균등 routing을 가정한 기대값입니다.", "서로 다른 expert에 대한 논리 복사본 기준이며 node별 전송 공유·압축·padding·metadata는 별도입니다."]} interpretation={"논리 왕복은 64MiB, 기대 remote 왕복은 56MiB입니다. 이를 가정한 유효 50GB/s로 나누면 약 1.174ms이며 고정 지연과 경합은 추가됩니다."} />
 <AlgorithmBlock title={"한 token의 두 목적지를 보존해 결과를 합칩니다 (의사코드)"} input={["token 37의 x: FP16 원소 4096개=8KiB", "expert=[13,42], weight=[.25,.75], expert당 GPU=floor(expert/8)"]} steps={[{"code": "for (e, w) in [(13,.25), (42,.75)]: dispatch(token=37, expert=e, payload=x)", "note": "GPU 1과 GPU 5로 같은 입력을 보내되 expert 식별자를 함께 보존합니다."}, {"code": "on destination GPU: y_e = expert_FFN[e](x)", "note": "목적 GPU 안에서도 선택한 expert의 weight를 써야 합니다."}, {"code": "return_to_origin(token=37, expert=e, payload=y_e)", "note": "반환 결과를 원래 token과 연결합니다."}, {"code": "wait until both y_13 and y_42 arrive; y = .25*y_13 + .75*y_42", "note": "한 경로가 늦으면 결합 완료도 늦어집니다."}]} output={"폭 4096인 결과 y. 두 입력과 두 반환의 논리 payload는 32KiB이며 metadata는 제외합니다."} />
       <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">평균 전송량과 끝을 늦추는 부하를 분리했습니다. 실제 API의 수신 개수 계약을 봅니다.</p>

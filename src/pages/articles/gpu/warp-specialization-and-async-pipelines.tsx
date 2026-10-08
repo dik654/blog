@@ -116,7 +116,7 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
         />
       </section>
 
-      <section id="warpgroup-wgmma" className="scroll-mt-20">
+      <section id="warpgroup-wgmma" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Warpgroup 4개 warp 가 wgmma 한 명령을 shared memory 에서 냅니다
         </h2>
@@ -134,9 +134,9 @@ export default function WarpSpecializationAndAsyncPipelinesArticle() {
             <code>ldmatrix</code> 없이 바로 명령을 낼 수 있습니다.
           </p>
           <p>
-            숫자를 넣어 봅니다. Threadblock tile 128×128×64 를 consumer warpgroup 2개가 64×128 씩
-            나누면, K 16 짜리 <code>wgmma.m64n128k16</code> 을 stage 하나에 4번 냅니다. 64×128 fp32
-            accumulator 8,192개는 128 thread 가 64개씩 듭니다. 앞 절의 232 register 예산 안에서
+            숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 64입니다. Consumer warpgroup 2개가 M 방향을
+            나누면 각각 M 64행 × N 128열을 맡습니다. <code>wgmma.m64n128k16</code> 한 번은 K를 16만큼 진행하므로 K 64÷16=4번 냅니다.
+            출력 accumulator는 M 64 × N 128 = 8,192개이고, warpgroup의 128 thread가 나누면 thread마다 8,192÷128=64개를 듭니다. 앞 절의 232 register 예산 안에서
             tile 을 128×256 으로 키우면 accumulator 만 128개가 됩니다.
           </p>
           <p>

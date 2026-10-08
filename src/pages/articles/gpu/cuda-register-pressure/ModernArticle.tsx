@@ -87,11 +87,11 @@ export default function Article(){const [codeKey,setCodeKey]=useState<string|nul
           </p>
 <p className="leading-8">또 block 안에서 warp 8개 중 5개가 먼저 끝나면 남은 warp는 3개입니다. block은 아직 끝나지 않았지만 active warp 수는 줄어듭니다. 시간이 어떻게 분배되는지와 block 안 일감 차이를 보고 원인을 좁혀야 합니다.</p>
 </div><TailOccupancyViz/></section>
-<section id="spill-path" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 내려놓은 값의 읽기량과 실제 외부 전송량은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
+<section id="spill-path" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. 내려놓은 값의 읽기량과 실제 외부 전송량은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">
             Compiler가 register에 계속 둘 수 없는 값을 다른 저장 공간에 내려놓는 일을 spill이라고 합니다. 기본 local-memory 경로에서는 thread별 주소로
             저장하지만 실제 저장 공간은 device memory에 있습니다. 이름의 local은 thread의 주소 범위를 가리킵니다.
           </p>
-<p className="leading-8">각 thread가 반복마다 4-byte 값 하나를 정확히 한 번 저장하고 한 번 읽는다고 가정합니다. 2²⁰ threads가 1,000번 반복하면 한 방향의 요청량은 1,048,576×1,000×4=4,194,304,000 bytes이고 양방향 합은 8,388,608,000 bytes입니다. 8.388608 GB 또는 7.8125 GiB입니다(가정).</p>
+<p className="leading-8">각 thread가 반복마다 4-byte 값 하나를 정확히 한 번 저장하고 한 번 읽는다고 가정합니다. 2²⁰ threads가 1,000번 반복하면 한 방향의 요청량은 1,048,576 thread × thread마다 1,000회 × 회마다 4바이트 = 4,194,304,000바이트입니다. 저장과 읽기 두 방향을 합치면 8,388,608,000바이트입니다. 8.388608 GB 또는 7.8125 GiB입니다(가정).</p>
 <p className="leading-8">이 합은 실행한 local 읽기·쓰기의 논리 byte입니다. L1에서 처리한 접근도 명령과 내부 대역폭을 쓰지만 모든 byte가 DRAM으로 내려가지는 않습니다. L1 miss가 L2에서 처리될 수도 있습니다. 실제 전송량은 메모리 계층별로 따로 확인합니다.</p>
 <p className="leading-8">가령 양방향 8.388608 GB가 모두 DRAM을 통과하고 그 전송에 유효 3 TB/s를 얻는다고 추가 가정하면 전송량÷대역폭은 약 2.7962 ms입니다. 다른 계산과 겹치거나 실제 전송량·대역폭이 달라질 수 있으므로 kernel에 그 시간만큼 추가된다는 보장은 없습니다.</p>
 <p className="leading-8">

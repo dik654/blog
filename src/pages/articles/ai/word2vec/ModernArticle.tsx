@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
@@ -47,6 +48,21 @@ export default function Word2VecArticle(){const sidebar=useCodeSidebar();const c
 <ExplainedFormula question="한 자리만 1인 벡터가 왜 W의 한 행을 고르나요?" idea={<p>각 행에 붙는 계수가 0 또는 1입니다. 선택한 행의 계수만 1이므로 합에도 그 행만 남습니다.</p>} formula={String.raw`v_i=e_i^\top W=W[i,:]`} annotatedFormula={String.raw`\begin{aligned}v_i&=\underbrace{e_i^\top W}_{\text{행별 계수를 곱해 더하기}}=W[i,:]\\e_2^\top&=(0,0,1,0,0)\\v_2&=0W[0]+0W[1]+1W[2]\\&\quad+0W[3]+0W[4]=(1,2,0)\end{aligned}`} operations={[{expression:String.raw`e_i^\top W`,annotation:["ID i의 자리만 1로 두고","그 행만 합에 남김"]}]} terms={[{symbol:"i",name:"단어 ID",description:"0부터 V−1까지의 행 번호입니다."},{symbol:"W",name:"입력 표",description:"V개 단어에 각각 d개의 수를 둔 V×d 행렬입니다."},{symbol:"e_i",name:"한 자리만 1인 벡터",description:"길이 V이며 ID i의 계수만 1입니다."}]} assumptions={["이 조회에서는 표를 미리 고정하고 행을 읽는 동안 바꾸지 않습니다.","가정한 V=5, d=3이며 ID가 표의 범위 안에 있습니다."]} interpretation="ID 2는 세 수 [1,2,0]을 읽습니다. 2라는 번호가 수의 크기나 의미의 거리를 정하지 않습니다."/>
 <div className={prose}><p>cat의 번호를 2에서 4로 바꾸더라도 대응하는 행을 함께 4번으로 옮기면 같은 값을 읽습니다. ID 차이 1이 의미의 가까움 1을 뜻하지 않는 이유입니다. 의미 비교에 사용할 값은 학습된 행에 있으며, 번호 순서는 임의로 정할 수 있습니다.</p></div></section>
 <section id="dual-tables" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">8. 같은 ID라도 두 표의 역할은 분리됩니다</h2><div className={prose}><p>cat을 입력으로, saw를 예측 대상으로 두면 W[2]와 U[3]을 읽습니다. W[2]와 U[2]를 모두 읽는 것이 아닙니다. 같은 단어가 반대 역할로 등장할 때 비로소 다른 표의 같은 ID 행을 읽습니다.</p></div>
+<FactorStructureViz
+  eyebrow="단어 표 두 장"
+  title="단어 5개마다 숫자 3개인 표를 입력용과 출력용으로 한 장씩 둡니다"
+  description="각 표는 5행×3열입니다. 같은 단어 목록을 쓰지만 두 표의 값과 학습 역할은 서로 다릅니다."
+  factors={[
+    {label:"서로 다른 표",value:"2장",detail:"입력 표와 출력 표",marks:2,accent:true},
+    {label:"표마다 단어",value:"V=5",detail:"행 다섯 개",marks:5},
+    {label:"단어마다 숫자",value:"d=3",detail:"열 세 개",marks:3},
+    {label:"숫자 하나",value:"4B",detail:"FP32 한 값",marks:4},
+  ]}
+  equation="2 tables × 5 words × 3 values × 4B"
+  result="120B"
+  note="V=10,000과 d=300이면 표 자체는 24MB입니다. optimizer state와 다른 dtype은 별도 장부입니다."
+/>
+
 <ExplainedFormula question="두 역할을 바꾸면 점수도 같을까요?" idea={<p>표가 서로 다르므로 입력 ID와 출력 ID를 바꾸면 다른 두 행을 조합합니다. 각 성분을 곱해 더해 확인합니다.</p>} formula={String.raw`s(i,o)=W[i,:]\cdot U[o,:]`} annotatedFormula={String.raw`\begin{aligned}s(i,o)&=\underbrace{\sum_{k=1}^{d}W_{ik}U_{ok}}_{\text{같은 성분을 곱해 더하기}}\\s(2,3)&=(1,2,0)\cdot(0,1,2)=2\\s(3,2)&=(0,1,1)\cdot(2,0,1)=1\end{aligned}`} operations={[{expression:String.raw`W_{ik}U_{ok}`,annotation:["입력 i와 예측 대상 o의","같은 성분끼리 곱함"]},{expression:String.raw`\sum_{k=1}^{d}`,annotation:["d개 성분의 곱을 더해","쌍의 점수 하나를 만듦"]}]} terms={[{symbol:"i,o",name:"입력·출력 ID",description:"두 표에서 각각 읽을 행의 번호입니다."},{symbol:"d",name:"행의 길이",description:"가정한 표에서는 3입니다."},{symbol:"s(i,o)",name:"쌍의 점수",description:"두 행의 내적이며 아직 확률로 바꾼 값이 아닙니다."}]} assumptions={["단어별 입력·출력 표의 값을 공유하지 않는 모형입니다.","이 수들은 학습 결과가 아닌 설명용 가정입니다."]} interpretation="cat→saw는 2, saw→cat은 1입니다. 중심 위치가 같아도 입력과 예측 방향을 기록해야 계산을 재현할 수 있습니다."/>
 <div className={prose}><p>두 표가 별도 매개변수라는 사실은 모든 순간의 값이나 기울기가 반드시 다르다는 뜻이 아닙니다. 초기값이나 특정 사례에서 우연히 같을 수 있습니다. 별도 표이므로 각 역할의 학습 계산이 따로 값을 바꿀 수 있다는 뜻입니다. 같은 모양만 보고 하나의 표로 합쳐도 된다고 결론내리면 안 됩니다.</p>
 <p>단어별 표 두 개를 쓰는 조건에서 필요한 수는 2Vd개입니다. 지금은 2×5×3 = 30개이고 수당 4바이트라면 120바이트입니다. V=10,000, d=300이면 표마다 300만 개, 합쳐 600만 개입니다. FP32의 수당 4바이트를 적용한 표 자체의 크기는 24,000,000바이트, 즉 24 MB입니다. 다른 자료형이나 학습 중 추가 저장 공간은 별도로 계산합니다.</p>

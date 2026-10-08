@@ -106,7 +106,7 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
         </div>
       </section>
 
-      <section id="recurrent-state" className="scroll-mt-20">
+      <section id="recurrent-state" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           고정 크기 state 하나로 다음 token 출력을 계산합니다
         </h2>
@@ -118,10 +118,10 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             고정됩니다.
           </p>
           <p>
-            State 크기를 숫자로 보면 차이가 분명합니다. d=128, FP16 attention에서 token 하나가
-            남기는 key와 value는 512 byte이므로 문맥이 65,536 token(64K)이면 attention 기록은
-            32 MiB까지 자랍니다. 같은 d에서 FP32 recurrent state는 128×128×4 byte, 즉 64
-            KiB로 고정되어 있고 문맥이 64K든 100만이든 그대로입니다.
+            State 크기를 숫자로 보면 차이가 분명합니다. d=128인 FP16 attention에서 token 하나가 남기는 기록은
+            K·V 2종류 × 종류마다 128개 값 × 값마다 2바이트 = 512바이트입니다. 문맥 65,536 token을 모두 남기면
+            65,536 × 512바이트 = 32MiB입니다. 같은 d의 FP32 recurrent state는 128행 × 128열 × 값마다 4바이트 =
+            65,536바이트, 곧 64KiB로 고정되어 문맥이 64K든 100만이든 그대로입니다.
           </p>
           <p>
             두 값의 비는 512배입니다. Attention은 매 token마다 기록을 추가하므로 읽고 쓰는 byte가 문맥에 비례해 늘지만 recurrent linear

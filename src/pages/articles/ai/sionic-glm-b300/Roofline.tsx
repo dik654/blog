@@ -1,3 +1,4 @@
+import { BandwidthLaneViz } from "@/components/articles/calculation-structure-gallery";
 import {
   GLM_B300_DERIVED,
   GLM_B300_PROJECT_MEASUREMENTS as M,
@@ -131,6 +132,7 @@ P_{\mathrm{attainable}}&\le\underbrace{\min\!\left(P_{\mathrm{peak}},\ I\,B_{\ma
           </a>
         </p>
       </div>
-    </section>
+    <BandwidthLaneViz />
+</section>
   );
 }

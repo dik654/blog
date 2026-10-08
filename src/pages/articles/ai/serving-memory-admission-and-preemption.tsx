@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
@@ -34,7 +35,22 @@ export default function Article() {
 <section id="footprint" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">10. 한 block의 2MiB는 모델의 저장 모양에서 나옵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>지금까지 block 개수만 셌습니다. byte로 바꾸려면 key와 value 각각의 저장 크기를 알아야 합니다. 32층이 각각 KV head 8개, head 차원 128, 숫자당 2byte를 저장한다고 둡니다. 토큰당 2×32×8×128×2=131072byte, 즉 128KiB입니다. (가정)</p><p>16토큰 block은 2MiB이므로 C의 첫 9block은 18MiB입니다. 같은 구조에서 입력 1000토큰은 63block, 126MiB입니다. 보존 길이가 1500까지 간다면 94block, 188MiB가 됩니다. 마지막 block의 빈 위치도 배정 용량에 포함합니다.</p><p>
             길이에 따라 늘어나는 이러한 공간이 sequence-length-dependent allocation입니다. 아래 식은 입력과 생성 상한을 합친 최대 보존 길이를 계산합니다.
             실제 종료 시 마지막 출력의 KV가 아직 없다면 한 위치 적을 수 있으며 수용 즉시 이 상한 전부를 예약한다는 식은 아닙니다.
-          </p></div><ExplainedFormula
+          </p></div>
+<FactorStructureViz
+  eyebrow="KV block의 실제 크기"
+  title="token 하나의 128KiB를 먼저 만든 뒤 16개 위치를 묶습니다"
+  description="층·KV head·head 폭·K/V·dtype 축을 한 token에 모두 곱하고, 마지막에 block의 16 token을 곱합니다."
+  factors={[
+    {label:"layer",value:"32",detail:"모든 KV 층",marks:8},
+    {label:"KV head × 폭",value:"8 × 128",detail:"층 하나의 K 또는 V",marks:8,accent:true},
+    {label:"K·V × dtype",value:"2 × 2B",detail:"두 tensor의 BF16 payload",marks:4},
+    {label:"block 길이",value:"16 token",detail:"한 배정 칸에 담는 위치",marks:16},
+  ]}
+  equation="2(K·V) × 32층 × 8head × 128원소 × 2B × 16token"
+  result="2MiB / block"
+  note="C의 9block은 18MiB입니다. 마지막 block의 빈 위치도 배정 용량에 포함하며 metadata와 정렬 비용은 별도입니다."
+/>
+<ExplainedFormula
           question="요청 하나가 끝까지 갔을 때 GPU KV pool에서 차지하는 byte는 얼마인가요?"
           idea="Token 수를 block 단위로 올림해 block 수를 얻고, model 구조가 정하는 block당 byte를 곱합니다. 마지막 block의 빈자리도 이 요청의 몫입니다."
           formula={String.raw`F_r=\left\lceil \frac{L_p+L_g}{B}\right\rceil\cdot B\cdot 2\,n_{layer}\,n_{kv}\,d_h\,s`}
@@ -88,9 +104,24 @@ export default function Article() {
 
 <section id="source-v0-swap" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. CPU 공간 실패를 다른 방식으로 바꿔 읽지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>v0.6.6은 사용자가 모드를 지정하지 않았을 때 단일 생성 경로에는 RECOMPUTE, 여러 경로인 그룹에는 SWAP을 선택합니다. 이 결정 뒤 _swap_out에서 CPU 공간을 검사합니다. 공간이 없으면 RuntimeError를 발생시키며 자동으로 재계산 모드로 바꾸지 않습니다.</p><p>이 버전의 swap_space 기본값은 GPU당 4GiB입니다. 2MiB 단위라면 2048block이며 94block 요청 21개 분량입니다. 이는 byte 용량 비교이며 실제 정책에서 그런 요청 21개를 동시에 교환한다는 보장이 아닙니다.</p><p>C를 되가져올 때도 저장된 10block만 세면 부족할 수 있습니다. 다음 위치를 추가할 공간과 원문의 lookahead 및 복사 관련 수요까지 확인합니다. 단순 사례에서는 10개를 되가져오고 한 개를 더 써야 하므로 free10으로는 재개할 수 없습니다.</p></div><CodeViewButton label="V0 원문: 재계산과 교환 모드 선택" onClick={() => sidebar.navigate("v0-mode", codeRefs["v0-mode"])} /><CodeViewButton label="V0 원문: CPU 공간 부족 시 오류" onClick={() => sidebar.navigate("v0-swap-failure", codeRefs["v0-swap-failure"])} /><CodeViewButton label="V0 원문: 되가져올 block과 추가 수요" onClick={() => sidebar.navigate("v0-swap-admission", codeRefs["v0-swap-admission"])} /><CodeViewButton label="V0 원문: swap_space의 기본 용량" onClick={() => sidebar.navigate("v0-swap-default", codeRefs["v0-swap-default"])} /></section>
 
-<section id="recovery-cost" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 계산 시간과 왕복 전송 시간을 같은 요청으로 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>8B 모델의 161토큰을 다시 처리하는 큰 행렬 연산을 2Pn으로 근사하면 2×8×10⁹×161입니다. 유효 계산 속도를 400TFLOP/s로 가정하면 6.44ms입니다. C의 20MiB를 25GB/s로 왕복 복사하는 시간은 2×20×2²⁰/(25×10⁹)초, 약 1.678ms입니다. (가정)</p><p>더 긴 1500토큰 사례에서는 재계산이 24TFLOP, 약 60ms입니다. 188MiB 왕복은 약 15.77ms입니다. 20MiB와 188MiB는 각각 편도 크기이며 왕복이라 2를 곱했습니다. 두 수치는 실측이 아니며 재계산 근사는 attention의 길이 제곱 항과 실행 준비 비용을 생략하고 전송 근사는 경합과 복사 준비를 생략합니다.</p><p>전송 배열의 배치도 중요합니다. 각 층의 key와 value를 block별로 따로 복사한다면 94×32×2=6016조각이고 각 조각은 16×8×128×2=32768byte입니다. 실제 구현은 여러 복사를 묶거나 데이터를 다르게 배치할 수 있으므로 6016번의 개별 전송 호출로 단정하지 않습니다.</p><p>재계산은 GPU 연산을 쓰고 교환은 호스트 공간과 연결 대역폭을 씁니다. 길어진 재계산이 다른 요청의 토큰 간격을 늘릴 수 있고 교환도 같은 연결을 쓰는 작업을 지연시킬 수 있습니다. 전체 요청의 완료 시간과 중단 빈도를 함께 재야 선택할 수 있습니다.</p></div></section>
+<section id="recovery-cost" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 계산 시간과 왕복 전송 시간을 같은 요청으로 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>8B 모델의 161 token을 다시 처리하는 큰 행렬 연산은 token마다 parameter 하나에 곱셈·덧셈 2 FLOP를 쓴다고 근사합니다. 계산량은 2 FLOP/parameter/token × 8×10⁹ parameter × 161 token = 2.576×10¹² FLOP입니다. 유효 계산 속도 400×10¹² FLOP/s로 나누면 0.00644초, 곧 6.44ms입니다. (가정)</p><p>C의 20MiB는 편도 크기입니다. CPU로 내보내고 다시 가져오므로 20MiB × 2방향 = 40MiB를 옮깁니다. 이를 25×10⁹ byte/s로 나누면 약 0.001678초, 곧 1.678ms입니다.</p><p>더 긴 1500토큰 사례에서는 재계산이 24TFLOP, 약 60ms입니다. 188MiB 왕복은 약 15.77ms입니다. 20MiB와 188MiB는 각각 편도 크기이며 왕복이라 2를 곱했습니다. 두 수치는 실측이 아니며 재계산 근사는 attention의 길이 제곱 항과 실행 준비 비용을 생략하고 전송 근사는 경합과 복사 준비를 생략합니다.</p><p>전송 배열의 배치도 중요합니다. 94 block을 32층의 K와 V로 각각 나누면 94 block × block마다 32층 × 층마다 K·V 2종류 = 6,016조각입니다. 조각 하나는 block마다 16 token × KV head 8개 × head마다 128개 값 × 값마다 2바이트 = 32,768바이트입니다. 실제 구현은 여러 복사를 묶거나 데이터를 다르게 배치할 수 있으므로 6,016번의 개별 전송 호출로 단정하지 않습니다.</p><p>재계산은 GPU 연산을 쓰고 교환은 호스트 공간과 연결 대역폭을 씁니다. 길어진 재계산이 다른 요청의 토큰 간격을 늘릴 수 있고 교환도 같은 연결을 쓰는 작업을 지연시킬 수 있습니다. 전체 요청의 완료 시간과 중단 빈도를 함께 재야 선택할 수 있습니다.</p></div></section>
 
-<section id="hybrid-fixed-state" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 길이가 짧아도 처음부터 필요한 상태가 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>과거 토큰 전체의 KV 대신 정해진 모양의 상태를 갱신하는 recurrent 층이 섞이면 다른 항을 더해야 합니다. 이처럼 요청마다 필요한 고정 상태를 따로 확보하는 것이 fixed recurrent-state allocation입니다. 상태 한 벌은 길이에 따라 계속 자라지 않아도 첫 실행부터 저장할 수 있어야 합니다.</p><p>48층이 각각 48×128×128개의 2byte 숫자를 상태 한 벌로 가진다고 가정하면 층당 1.5MiB, 합계 72MiB입니다. attention 16층은 앞의 head 조건에서 토큰당 64KiB, 16토큰 block당 1MiB입니다. 특정 공개 모델의 실제 전체 할당량을 인용한 값은 아닙니다. (가정)</p><p>100토큰은 KV 7MiB에 고정 상태 72MiB를 더해 79MiB입니다. 1500토큰은 94+72=166MiB입니다. 짧은 요청에서도 고정 항이 커서 길이만 보고 수용 개수를 늘리기 어렵습니다.</p><p>이 합계에는 convolution history, 상태 복사본과 prefix checkpoint, allocator padding이 없습니다. 실제 engine은 상태 종류별 group과 병렬 분할을 처리하므로 논리 byte를 곧바로 같은 물리 block 개수로 보지 않습니다. 아래 식은 그 차이를 생략한 용량 모형입니다.</p></div><ExplainedFormula
+<section id="hybrid-fixed-state" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 길이가 짧아도 처음부터 필요한 상태가 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>과거 토큰 전체의 KV 대신 정해진 모양의 상태를 갱신하는 recurrent 층이 섞이면 다른 항을 더해야 합니다. 이처럼 요청마다 필요한 고정 상태를 따로 확보하는 것이 fixed recurrent-state allocation입니다. 상태 한 벌은 길이에 따라 계속 자라지 않아도 첫 실행부터 저장할 수 있어야 합니다.</p><p>48층이 각각 48×128×128개의 2byte 숫자를 상태 한 벌로 가진다고 가정하면 층당 1.5MiB, 합계 72MiB입니다. attention 16층은 앞의 head 조건에서 토큰당 64KiB, 16토큰 block당 1MiB입니다. 특정 공개 모델의 실제 전체 할당량을 인용한 값은 아닙니다. (가정)</p><p>100토큰은 KV 7MiB에 고정 상태 72MiB를 더해 79MiB입니다. 1500토큰은 94+72=166MiB입니다. 짧은 요청에서도 고정 항이 커서 길이만 보고 수용 개수를 늘리기 어렵습니다.</p><p>이 합계에는 convolution history, 상태 복사본과 prefix checkpoint, allocator padding이 없습니다. 실제 engine은 상태 종류별 group과 병렬 분할을 처리하므로 논리 byte를 곧바로 같은 물리 block 개수로 보지 않습니다. 아래 식은 그 차이를 생략한 용량 모형입니다.</p></div>
+<FactorStructureViz
+  eyebrow="길이에 따라 자라는 상태와 고정 상태"
+  title="attention 16층의 token별 기록과 48층의 고정 행렬을 따로 셉니다"
+  description="왼쪽 묶음은 token이 늘 때마다 커집니다. 오른쪽 묶음은 요청마다 한 벌이며 token 길이를 다시 곱하지 않습니다."
+  factors={[
+    {label:"attention KV layer",value:"16층",detail:"token마다 64KiB가 늘어나는 부분",marks:16,accent:true,nextOperator:"+"},
+    {label:"한 block",value:"16 token",detail:"attention 쪽에서 1MiB",marks:16,nextOperator:"+"},
+    {label:"고정 state layer",value:"48층",detail:"길이와 무관한 48개 행렬",marks:12},
+    {label:"층당 state",value:"1.5MiB",detail:"48×128×128×2B",marks:6},
+  ]}
+  equation="attention: 16층 × token별 64KiB × 16token = 1MiB/block · fixed: 48층 × 1.5MiB = 72MiB/request"
+  result="서로 다른 두 예산"
+  note="고정 72MiB에 token 길이를 다시 곱하지 않습니다. 공개 모델의 실제 allocator 사용량이 아니라 모양을 구분하기 위한 가정입니다."
+/>
+<ExplainedFormula
           question="두 상태를 같은 byte 단위로 환산한다면 필요한 공간을 어떻게 셀까요?"
           idea="전체 입력의 attention KV와 요청당 고정 상태를 더하는 용량 모형입니다. 실제 engine의 chunk 할당과 group별 공간 배정은 별도로 확인합니다."
           formula={String.raw`N_{need}(r)=\left\lceil \frac{L_p}{B}\right\rceil+\left\lceil \frac{n_{rec}\,S_{rec}}{\beta}\right\rceil`}
@@ -109,8 +140,8 @@ export default function Article() {
           interpretation="β=1MiB라면 100토큰의 7개와 고정 72개를 더해 79MiB입니다. 1500토큰은 94+72=166MiB입니다. 이는 가정한 상태 한 벌의 논리 용량이며 실제 engine의 물리 용량과 구별합니다."
         /><p>상태를 교환한다면 이 가정에서는 층당 1.5MiB씩 48묶음으로 표현할 수 있습니다. 실제 복사 횟수와 전송 효율은 배치 방식에 달려 있습니다. 상태를 버렸다면 토큰 이력으로 복원해야 하며 checkpoint 재사용 여부도 확인합니다. <Link to="/cs/ai/hybrid-kv-cache-allocation">Hybrid KV Cache 글</Link>에서 실제 group별 용량을 이어 봅니다.</p></section>
 
-<section id="paper-vllm" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 논문의 복구 정책은 그 실험과 함께 읽습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>PagedAttention 논문 §4.5는 가장 늦게 온 요청을 먼저 중단하고 요청의 block을 함께 내보내는 정책을 설명합니다. C의 이전 위치를 모두 읽어야 다음 토큰을 계산할 수 있으므로 C의 일부 KV만 남기는 것으로 전체 계산을 계속할 수 없다는 대응입니다.</p><p>논문은 교환한 요청들이 끝날 때까지 새 요청을 받지 않는 정책 아래에서 CPU로 내보낸 block 수가 GPU 전체 block 수를 넘지 않는다고 설명합니다. 이 상한은 원문의 정책에 붙은 결과이며 모든 교환 시스템의 보편적인 CPU 용량 법칙이 아닙니다.</p><p>§7.3의 OPT-13B·ShareGPT 실험은 작은 block의 잘게 나뉜 전송이 불리하고 block16–64에서는 두 방식의 전체 성능이 비슷했다고 보고합니다. 본문의 6.44ms나 60ms가 그 논문의 실측값인 것은 아닙니다.</p></div><div id="paper-preemption" className="mt-8 scroll-mt-20"><CitationBlock source="PagedAttention · arXiv:2309.06180v1 §4.5" citeKey={1} href="https://arxiv.org/html/2309.06180v1#S4.SS5"><q>either evict all or none of the blocks of a sequence</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C가 단일 생성 경로이며 공유가 없는 사례에서는 block10개를 함께 해제합니다. 실제 공유 block의 다른 참조가 살아 있으면 그 공간 전체가 곧바로 free가 된다고 계산할 수 없습니다.</p></div></div><ProgressiveDetail title="논문의 800KB와 본문의 128KiB는 왜 다른가요?" preview="모델 구조가 다르며 논문의 byte 표기도 다시 계산해야 합니다."><p>
-            논문 §3의 OPT-13B 식은 2×5120×40×2=819200byte입니다. 원문은 800KB라고 쓰지만 이 값은 800KiB입니다. 본문의 128KiB는 다른 head
+<section id="paper-vllm" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 논문의 복구 정책은 그 실험과 함께 읽습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>PagedAttention 논문 §4.5는 가장 늦게 온 요청을 먼저 중단하고 요청의 block을 함께 내보내는 정책을 설명합니다. C의 이전 위치를 모두 읽어야 다음 토큰을 계산할 수 있으므로 C의 일부 KV만 남기는 것으로 전체 계산을 계속할 수 없다는 대응입니다.</p><p>논문은 교환한 요청들이 끝날 때까지 새 요청을 받지 않는 정책 아래에서 CPU로 내보낸 block 수가 GPU 전체 block 수를 넘지 않는다고 설명합니다. 이 상한은 원문의 정책에 붙은 결과이며 모든 교환 시스템의 보편적인 CPU 용량 법칙이 아닙니다.</p><p>§7.3의 OPT-13B·ShareGPT 실험은 작은 block의 잘게 나뉜 전송이 불리하고 block16–64에서는 두 방식의 전체 성능이 비슷했다고 보고합니다. 본문의 6.44ms나 60ms가 그 논문의 실측값인 것은 아닙니다.</p></div><div id="paper-preemption" className="mt-8 scroll-mt-20"><CitationBlock source="PagedAttention · arXiv:2309.06180v1 §4.5" citeKey={1} href="https://arxiv.org/html/2309.06180v1#S4.SS5"><q>either evict all or none of the blocks of a sequence</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C가 단일 생성 경로이며 공유가 없는 사례에서는 block10개를 함께 해제합니다. 실제 공유 block의 다른 참조가 살아 있으면 그 공간 전체가 곧바로 free가 된다고 계산할 수 없습니다.</p></div></div><ProgressiveDetail title="논문의 800KB와 본문의 128KiB는 왜 다른가요?" preview="모델 구조가 다르며 논문의 byte 표기도 다시 계산해야 합니다."><p>
+            논문 §3의 OPT-13B 식은 K·V 2종류 × hidden 폭 5,120 × 40층 × 값마다 2바이트 = 819,200바이트입니다. 원문은 800KB라고 쓰지만 이 값은 800KiB입니다. 본문의 128KiB는 다른 head
             구조를 가정했습니다. A100 40GB에서 가중치 약 65%·동적 상태 약 30%, 기존 시스템의 KV 활용률 20.4–38.2% 역시 논문 조건의 수치이며 모든 배포의 비율이
             아닙니다.
           </p></ProgressiveDetail></section>

@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -120,7 +121,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         />
       </section>
 
-      <section id="efficiency" className="scroll-mt-20">
+      <section id="efficiency" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           서버를 고를 때는 throughput per dollar 와 per watt 로 비교합니다
         </h2>
@@ -141,8 +142,10 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           </p>
           <p>
             Total cost of ownership(TCO) 은 장비를 소유할 때 드는 비용을 수명 전체에 걸쳐 더한 값입니다. 구매가에 전력·냉각·공간·운영 인력이 모두 들어갑니다.
-            GPU 8 장 서버를 $250,000 에 사서 4 년 쓴다고 가정하면 장비만 250,000 / (4 × 8,760 × 8) ≈ $0.89/GPU-h 입니다. 여기에 700 W
-            × 8 × PUE 1.3 에 $0.12/kWh 를 곱한 전력이 약 $0.11/GPU-h 더해집니다.
+            GPU 8장 서버를 $250,000에 사서 4년 내내 쓴다고 가정하겠습니다. 총 사용 가능 시간은 4년 × 해마다 8,760시간 × 서버마다 GPU 8장 =
+            280,320 GPU-h이므로 장비비는 $250,000 ÷ 280,320 GPU-h ≈ $0.89/GPU-h입니다. 전력은 GPU마다 700W × 8장 =
+            5.6kW이고, PUE 1.3을 곱하면 시설 전체가 7.28kW를 씁니다. 시간당 $0.12/kWh라면 서버 전력비는 약 $0.87/h이며,
+            GPU 8장으로 나누면 약 $0.11/GPU-h가 더해집니다.
           </p>
           <p>
             이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면 token 당 실제 비용은 2.5 배가 되어 $2/GPU-h
@@ -203,6 +206,20 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             하나를 고를 수밖에 없습니다. 그 간격은 다음 절의 reserved·on-demand 분배와 autoscaling 이 메웁니다.
           </p>
         </div>
+<FactorStructureViz
+  eyebrow="Headroom의 월 비용"
+  title="9장에서 12장으로 늘릴 때 새로 빌리는 세 장만 비용에 더합니다"
+  description="파란 칸 세 개가 추가 GPU 세 장입니다. 장당 시간 가격과 한 달의 720시간을 같은 추가분에 곱합니다."
+  factors={[
+    {label:"추가 GPU",value:"3장",detail:"12장−기존 9장입니다.",marks:3,accent:true},
+    {label:"장당 시간 가격",value:"$2/GPU-h",detail:"설명용 가격 가정입니다.",marks:2},
+    {label:"한 달 가동",value:"720h",detail:"30일×24시간입니다.",marks:6},
+  ]}
+  equation="추가 3 GPU × $2/GPU-h × 720h"
+  result="$4,320 / month"
+  note="12장 전체 비용이 아니라 9장 계획과 비교한 추가 비용입니다. 평균 트래픽의 cost/token은 실제 사용한 token을 분모로 다시 계산합니다."
+/>
+
         <ExplainedFormula
           question="Peak 트래픽과 GPU 당 처리량에서 GPU 를 몇 장 두어야 하나요?"
           idea="Peak 요청량을 token 으로 바꾸고, GPU 당 SLO 처리량에 목표 utilization 을 곱한 값으로 나누면 무릎 앞에서 운영할 GPU 수가 나옵니다. Raw headroom과 목표 구간의 planning margin은 따로 셉니다."
@@ -236,7 +253,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         />
       </section>
 
-      <section id="scaling" className="scroll-mt-20">
+      <section id="scaling" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           기본 부하는 reserved 로, peak 는 autoscaling 으로 채웁니다
         </h2>
@@ -247,9 +264,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           </p>
           <p>
             그래서 하루 종일 있는 기본 부하는 reserved 로, 낮에만 있는 peak 는 on-demand 로
-            채웁니다. 기본 6 장을 약정 40 % 할인 가정($1.2/GPU-h) 으로 한 달 6 × 1.2 × 720 =
-            $5,184, peak 6 시간 동안의 추가 6 장을 on-demand $2 로 6 × 2 × 180 = $2,160, 합
-            $7,344 입니다. 12 장을 모두 on-demand 로 두면 $17,280 입니다.
+            채웁니다. 기본 부하는 GPU 6장 × 장마다 $1.2/GPU-h × 한 달 720시간 = $5,184입니다.
+            Peak는 하루 6시간씩 30일이므로 180시간이며, 추가 GPU 6장 × 장마다 $2/GPU-h × 180시간 = $2,160입니다.
+            두 비용을 더하면 $7,344입니다. GPU 12장을 모두 on-demand로 한 달 내내 두면 12장 × $2/GPU-h × 720시간 = $17,280입니다.
           </p>
           <p>
             늘리는 방향은 둘입니다. Scale-up 은 replica 하나를 더 큰 GPU 나 더 많은 GPU(tensor parallel) 로 키웁니다. scale-out 은 같은

@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
@@ -22,7 +23,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">먼저 파일을 끝냈다는 표시와 원래 길이를 붙입니다. SHA-256은 이번 세 바이트 뒤에 80을 붙이고 00을 52바이트 붙인 뒤, 길이 24를 8바이트 0000000000000018로 적습니다. 합계는 3+1+52+8=64바이트입니다.</p>
 <p className="leading-8">첫 네 바이트 61 62 63 80을 큰 자리부터 읽으면 32비트 정수 61626380입니다. 마지막 네 바이트는 00000018입니다. 글자에서 정수로 옮겨 가는 이 순서가 뒤의 코드와 표준에서 계속 유지되어야 합니다.</p>
 </div></section>
-<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 입력·채움·반복 계산·출력의 네 장면을 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="picture" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 해시 계산의 네 장면을 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">아래 그림은 같은 abc가 64바이트 묶음이 되고 여덟 개의 32비트 값에 섞인 뒤 32바이트 결과가 되는 흐름입니다. 내부 값도 그림의 결과도 16진수로 적었습니다. 중간 숫자가 공개되어 있다는 사실 자체는 비밀 유출이 아닙니다.</p>
 </div><HashJourneyViz/></section>
 <section id="why" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 정해진 크기의 계산을 반복하면 긴 입력도 처리할 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -57,13 +58,28 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 <p className="leading-8">길이 64바이트를 이미 처리했다면 버퍼가 비어도 원래 길이는 512비트입니다. 따라서 버퍼 길이만 보고 0길이 메시지의 패딩을 붙이면 잘못된 결과가 됩니다. 원문은 총길이를 len64_padding_be에 넘겨 마지막 블록을 만들고 결과를 to_be_bytes로 출력합니다.</p>
 <p className="leading-8">이 패키지의 상태 저장용 직렬화에는 little-endian 코드도 있습니다. 중간 상태를 저장하는 형식과 외부 다이제스트 형식이 다른 것입니다. to_le_bytes라는 한 줄만 찾아서 SHA-256의 결과 바이트 순서라고 설명해서는 안 됩니다.</p>
 </div><CodeViewButton label="원문의 상태·전체 길이·최종 출력" onClick={()=>sidebar.open("stream",codeRefs["stream"])}/></section>
-<section id="input-security" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 아무 충돌 찾기와 정해진 결과 맞히기는 다른 문제입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
+<section id="input-security" data-calculation-explained data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 아무 충돌 찾기와 정해진 결과 맞히기는 다른 문제입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">공격 목표를 세 가지로 나누겠습니다. 정해진 출력에 맞는 입력을 찾는 것이 역상 공격입니다. abc가 먼저 정해진 뒤 같은 결과를 내는 다른 입력을 찾는 것은 제2역상 공격입니다. 입력 두 개를 자유롭게 골라 결과가 같게 만드는 것은 충돌 공격입니다.</p>
-<p className="leading-8">출력이 공정하게 16가지 중 하나가 되는 이상적인 4비트 함수를 생각해 봅시다. 서로 다른 입력 다섯 개를 평가할 때 아무 두 출력의 충돌 확률은 1−(16×15×14×13×12)/16⁵=4097/8192로 약 50.01%입니다. 반면 미리 정한 출력 하나를 다섯 번 안에 맞힐 확률은 1−(15/16)⁵로 약 27.58%입니다.</p>
+<p className="leading-8">출력이 공정하게 16가지 중 하나가 되는 이상적인 4비트 함수를 생각해 봅시다. 서로 다른 입력 다섯 개가 모두 다른 출력을 낼 확률부터 셉니다. 첫 출력은 16/16, 둘째는 15/16이고 그 뒤에는 14/16, 13/16, 12/16이 남습니다.</p><p className="leading-8">다섯 비율을 모두 곱한 뒤 1에서 빼면, 아무 두 출력이 충돌할 확률은 4097/8192입니다. 약 50.01%입니다. 미리 정한 출력 하나를 다섯 번 안에 맞힐 확률은 약 27.58%입니다.</p>
 <p className="leading-8">충돌에서는 이전 출력 모두가 다음 출력의 비교 대상이 되어 쌍이 빠르게 늘어납니다. n비트의 이상적인 함수에서 고전적 일반 공격의 규모를 역상·제2역상 약 2ⁿ, 충돌 약 2⁽ⁿ⁄²⁾라고 적는 이유입니다. 이는 실제 알고리즘의 모든 구조 공격이나 아주 긴 메시지에 대한 특수 공격을 배제하는 보증이 아닙니다.</p>
 <p className="leading-8">실제로 SHA-256의 첫 한 바이트만 비교해 보았습니다. trial:7과 trial:11은 모두 24로 시작했고 12개 후보 안에서 한 쌍이 나왔습니다. abc의 첫 바이트 ba를 고정하면 target:265에서 맞아 266개 후보를 확인했습니다. 이 횟수는 이번 입력열의 관측값이며 기대 횟수도 전체 256비트 충돌도 아닙니다.</p>
 <p className="leading-8">256비트 결과를 64비트로 잘라 저장한다면 이상적인 충돌 규모는 약 2³²입니다. 가능한 비밀번호가 적으면 출력이 길어도 후보를 하나씩 대입할 수 있습니다. 양자 공격의 질의·메모리·회로 비용도 별도 모형을 요구하므로 이 고전적 식만으로 양자 안전성을 결론 내리지 않습니다.</p>
-</div></section>
+</div>
+<FactorStructureViz
+  eyebrow="16칸에서 다섯 번 뽑기"
+  title="앞에서 차지한 출력 칸을 하나씩 빼면 모두 다를 확률이 보입니다"
+  description="첫 입력은 16칸 어디든 갈 수 있습니다. 충돌하지 않으려면 둘째는 남은 15칸, 셋째는 14칸처럼 선택지가 줄어듭니다."
+  factors={[
+    {label:"첫 출력",value:"16/16",detail:"아직 차지한 칸이 없음",marks:16},
+    {label:"둘째 출력",value:"15/16",detail:"첫 칸 하나를 피함",marks:15},
+    {label:"셋째 출력",value:"14/16",detail:"두 칸을 피함",marks:14},
+    {label:"넷째·다섯째",value:"13/16 · 12/16",detail:"이미 쓴 칸이 계속 늘어남",marks:13,accent:true},
+  ]}
+  equation="P(충돌)=1−(16×15×14×13×12)/16⁵"
+  result="4097/8192 ≈ 50.01%"
+  note="이는 다섯 출력 가운데 아무 두 개가 같은 생일형 충돌입니다. 미리 정한 출력 하나를 맞히는 preimage 확률과 분모가 다릅니다."
+/>
+</section>
 <section id="length-extension" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">12. H(key || abc)를 인증값으로 쓰면 뒤를 잇는 경로가 생깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">이번에는 자기 컴퓨터 안의 작은 검증자를 가정합니다. 설명용 키는 key! 네 바이트이고 메시지는 abc입니다. 검증자가 SHA-256(key || 메시지)만 인증값으로 비교한다고 합시다. 공격자는 일반적으로 키를 모르더라도 그 길이를 맞히고 기존 32바이트 결과를 알면 다음 계산을 시도할 수 있습니다.</p>
 <p className="leading-8">원래 키와 메시지의 길이는 7바이트입니다. 여기에 붙는 패딩은 57바이트라 처리한 길이가 64바이트가 됩니다. 기존 결과는 이 시점의 전체 연결 상태이므로 여덟 u32로 읽어 새 시작 상태로 사용할 수 있습니다. 뒤에 느낌표 !를 붙이고 총길이를 65바이트로 잡아 계산을 이어 갑니다.</p>
@@ -108,7 +124,7 @@ export default function ModernArticle(){const sidebar=useCodeSidebar();return <d
 </div></section>
 <section id="verification" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. 맞춘 결과와 실행하지 않은 범위를 함께 남깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
 <p className="leading-8">보존한 실행은 세 층으로 나뉩니다. 원문 그대로의 SHA-256 compact 함수는 별도 Rust 호출 예제에서 실행했습니다. SHA-3의 pad와 read_state도 원문을 실행했지만 주변 형식은 작은 대체 형식입니다. 전체 SHA-3와 SHAKE 라운드는 따로 작성한 Python 모형으로 실행해 hashlib와 대조했습니다.</p>
-<p className="leading-8">SHA-256은 빈 입력과 abc, a를 55·56·63·64·65·128번 반복한 입력을 확인했습니다. 네이티브 함수에 전체 블록을 한 번에 주거나 한 블록씩 주어도 같았습니다. Python의 스트리밍 입력, 두 필드의 모호함, 첫 바이트만 비교한 두 공격 목표, 로컬 길이 확장과 HMAC 차이도 기록했습니다.</p>
+<p className="leading-8">SHA-256은 빈 입력, abc, 그리고 a를 여러 길이로 반복한 입력으로 확인했습니다. 경계 길이는 55, 56, 63, 64, 65, 128바이트입니다. 전체를 한 번에 주거나 한 블록씩 주어도 결과는 같았습니다.</p><p className="leading-8">추가 검사는 Python 스트리밍 입력과 두 필드의 모호함을 다룹니다. 첫 바이트만 비교하는 두 공격 목표, 로컬 길이 확장, HMAC의 차이도 기록했습니다.</p>
 <p className="leading-8">이 결과는 모든 입력의 정확성이나 일정한 실행 시간, 하드웨어별 성능을 입증하지 않습니다. 전체 Cargo 패키지와 런타임 CPU 분기, 실제 sponge_cursor·keccak 의존성 경로는 이번 네이티브 실행에 포함하지 않았습니다. 사용하는 버전과 대상 장치에 따라 그 경로를 따로 확인해야 합니다.</p>
 <p className="leading-8">FIPS 180-4와 FIPS 202는 모두 2015년 판을 사용했습니다. 2026년 10월 4일 확인한 NIST 페이지의 개정 계획은 새 규격이 이미 발행되었다는 뜻으로 읽지 않았습니다. 원문 commit과 파일 SHA, 호출 예제와 관측 결과를 함께 보존해 이후 버전과 구별했습니다.</p>
 </div><CodeViewButton label="검산 전체와 실행 범위" onClick={()=>sidebar.open("checks",codeRefs["checks"])}/><CitationBlock source="RustCrypto hashes · f6c786d 고정 원문" href={PIN} citeKey={3}>sha2 0.11.0·sha3 0.12.0의 원문과 라이선스를 보존했습니다. 함수 일부의 네이티브 실행과 자체 모형 실행을 구별합니다.</CitationBlock></section>

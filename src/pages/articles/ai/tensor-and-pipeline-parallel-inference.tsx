@@ -357,7 +357,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
         </div>
       </section>
 
-      <section id="decode-impact" className="scroll-mt-20">
+      <section id="decode-impact" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Decode 에서는 byte 가 아니라 layer 마다 붙는 latency 가 TPOT 을 정합니다
         </h2>
@@ -368,8 +368,11 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             token 이 batch 수만큼이라 byte 는 작지만 α 가 layer 마다 두 번씩 그대로 붙습니다.
           </p>
           <p>
-            70B, 80 layer, TP 8 에서 α 를 5 μs 로 잡으면 token 마다 80 × 2 × 5 = 0.8 ms 가 통신 하한이고
-            byte 항을 더하면 약 1 ms 입니다. weight 읽기 5.2 ms 에 더하면 TPOT 은 6 ms 대이고 통신이
+            70B 모델의 80개 layer가 layer마다 collective 2회를 수행하고 collective마다 고정 시작 비용 α=5μs가 든다고 잡으면,
+            token마다 <code>80 layer × layer마다 2회 × 회마다 5μs = 800μs</code>입니다. 단위를 바꾸면 0.8ms입니다.
+          </p>
+          <p>
+            전송 byte에 비례하는 시간까지 더하면 통신 시간은 약 1ms입니다. Weight 읽기 5.2ms에 더하면 TPOT은 6ms대이고 통신이
             그 중 약 16% 입니다. TP 를 16 으로 올려 weight 읽기를 2.6 ms 로 줄여도 통신은 줄지 않아
             비율은 28% 로 오릅니다.
           </p>

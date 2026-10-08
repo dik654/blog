@@ -1,3 +1,4 @@
+import FactorStructureViz from "@/components/articles/factor-structure-viz";
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -48,6 +49,20 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <ExplainedFormula question="같은 배율을 m번 적용한 뒤 n번 더 적용하면 어떻게 적을까요?" idea="같은 밑의 반복을 이어 붙이면 총 적용 횟수는 m+n입니다. 이 구조를 유지하며 지수의 범위를 넓힙니다." formula={String.raw`a^m a^n=a^{m+n}`} annotatedFormula={String.raw`\begin{gathered}a^m a^n=a^{m+n}\\[8pt](1/2)^1(1/2)^2=(1/2)^{\underbrace{1+2}_{\text{이어 붙인 횟수}}}=1/8\end{gathered}`} operations={[{expression:String.raw`2^3\cdot2^2=8\cdot4=32=2^5`,annotation:["같은 밑 2의 다섯 번 곱셈을 두 구간으로 나누었습니다."]},{expression:String.raw`3^2\cdot3^3=9\cdot27=243`,annotation:["밑이 모두 3이면 지수 2와 3을 더할 수 있습니다."]}]} terms={[{symbol:"a",name:"밑",description:"여기서는 양수인 공통 배율입니다."},{symbol:"m, n",name:"지수",description:"처음에는 반복 횟수로 읽고 이후 실수까지 확장합니다."},{symbol:"m+n",name:"합친 지수",description:"같은 배율의 두 구간을 이어 붙인 정도입니다."}]} assumptions={["양의 밑 a를 사용합니다. 같은 밑끼리의 곱이어야 합니다.","실수 지수는 정수 횟수만으로 정의하지 않습니다. 양의 밑에서 유리수 지수를 거쳐 연속적으로 확장할 수 있습니다."]} interpretation="3²×2³은 9×8=72입니다. 밑이 다르므로 3⁵=243이나 2⁵=32로 바꿀 수 없습니다." />
 <p>a⁰=1로 두어야 aᵐa⁰=aᵐ을 유지합니다. 음수 지수는 반대 배율을 적용합니다. 2⁻³=1/2³=1/8이며 (1/2)³과 같습니다. 반대로 (1/2)⁻³=8입니다. 음수 지수가 결과를 음수로 만든다는 뜻은 아닙니다.</p>
 <p>분수 지수도 같은 규칙을 유지합니다. 2^(1/2)를 두 번 곱하면 2¹=2여야 하므로 양의 값 √2입니다. 1/3에 대응하는 지수처럼 정수가 아닌 값을 다루려면 이런 확장이 필요합니다. 이 글의 실수 지수와 로그는 양의 밑을 전제로 합니다.</p>
+<FactorStructureViz
+  eyebrow="지수를 눈으로 세기"
+  title="2를 다섯 번 곱한다는 말이 2⁵입니다"
+  description="앞의 세 묶음이 2³=8을 만들고, 같은 밑 2를 두 번 더 붙이면 지수의 반복 횟수도 3+2=5가 됩니다."
+  factors={[
+    {label:"첫째 2",value:"2",detail:"곱할 수 한 번",marks:2},
+    {label:"둘째 2",value:"2",detail:"곱할 수 두 번",marks:2},
+    {label:"셋째 2",value:"2",detail:"여기까지 2³=8",marks:2,accent:true},
+    {label:"넷째·다섯째",value:"2 × 2",detail:"같은 밑을 두 번 더 붙임",marks:4},
+  ]}
+  equation="(2 × 2 × 2) × (2 × 2) = 2³ × 2² = 2⁵"
+  result="32"
+  note="양의 정수 지수에서는 지수가 곱셈의 반복 횟수입니다. 0·음수·실수 지수는 이 관계를 보존하도록 뒤 절에서 확장합니다."
+/>
 </section>
 <section id="logarithms" data-teach-level="4" className="space-y-6"><h2 className="text-2xl font-bold">8 · 결과 1/8에서 필요한 지수 −3을 되찾는다</h2>
 <p>밑 2를 기준으로 1/8을 만들려면 세 번 곱하는 방향과 반대로 가야 합니다. 2⁻³=1/8이므로 log₂(1/8)=−3입니다. 처음 사용한 밑 1/2에서는 (1/2)³=1/8이라 밑 1/2에서 로그값은 3입니다. 같은 양에 서로 다른 기준을 사용했습니다.</p>
@@ -65,7 +80,9 @@ export default function ExponentsLogarithmsArticle(){const sidebar=useCodeSideba
 <ExplainedFormula question="계산기가 주는 자연로그로 밑 2의 값을 어떻게 구할까요?" idea="같은 양의 로그를 기준 배율 하나의 로그로 나눕니다. 이번 1/8은 자연로그에서 −3ln2이므로 ln2로 나누면 −3입니다." formula={String.raw`\log_b x=\frac{\log_a x}{\log_a b}`} annotatedFormula={String.raw`\begin{gathered}\log_b x=\frac{\log_a x}{\log_a b}\\[8pt]\log_2(1/8)=\frac{\underbrace{\ln(1/8)}_{-3\ln2}}{\underbrace{\ln2}_{\text{기준 배율의 값}}}=-3\end{gathered}`} operations={[{expression:String.raw`\log_2 8=\ln8/\ln2=3`,annotation:["같은 변환을 8에도 대입합니다."]},{expression:String.raw`-\ln(1/8)=3\ln2\approx2.079442`,annotation:["음의 로그로 측정한 비용은 자연로그 단위에서 이 값입니다."]}]} terms={[{symbol:"a, b",name:"두 기준 밑",description:"양수이며 1이 아닌 두 값입니다."},{symbol:String.raw`\log_a b`,name:"단위 변환의 분모",description:"기준 배율 b를 밑 a에서 읽은 고정된 수입니다."},{symbol:"x",name:"원래 양",description:"단위를 바꾸어도 x 자체는 변하지 않습니다."}]} assumptions={["x>0, a>0, b>0이며 a와 b는 모두 1이 아닙니다.","값의 순서를 보존하는 양의 변환인지 보려면 분모의 부호도 확인합니다."]} interpretation="밑 2와 e는 모두 1보다 커서 변환 계수 1/ln2가 양수입니다. 그러나 밑 1/2로 바꾸면 ln(1/2)가 음수라 값의 부호와 순서가 뒤집힙니다." />
 <p>한 사건의 음의 로그를 밑 2로 재면 단위는 bit, 자연로그로 재면 nat입니다. 확률 1/8의 비용은 3 bit 또는 3ln2≈2.079442 nat입니다. 두 단위 사이의 양의 상수배는 단독 목적함수의 최솟값을 만드는 위치를 보존합니다. 함수값의 크기는 달라집니다.</p>
 <p>미분값도 같은 상수배가 되므로 같은 학습률을 사용한 한 번의 이동은 달라질 수 있습니다. 다른 비용과 더할 때 한 항의 밑만 바꾸면 전체의 공통 상수배가 아닙니다. 그 항이 차지하는 상대 비중이 바뀌어 최적 위치도 달라질 수 있습니다.</p>
-<ProgressiveDetail title="한 비용만 단위를 바꾸면 최적 위치가 달라지는 예" preview="한 사건의 음의 로그 비용에 θ²를 더합니다. 첫 항만 1/ln2배 하면 두 항의 균형이 바뀝니다."><div className="space-y-5"><p>설명용 모형에서 q(θ)=exp(−(θ−1)²)로 두면 q는 0보다 크고 1 이하입니다(가정). 자연로그 비용 −lnq=(θ−1)²에 추가 비용 θ²를 더하면 미분은 2(θ−1)+2θ이고 최소 위치는 θ=1/2입니다.</p><p>첫 항만 밑 2로 바꾸면 (θ−1)²/ln2+θ²입니다. 미분을 0으로 놓으면 θ=1/(1+ln2)≈0.590616입니다. 두 식 모두 양의 이차항을 가지므로 이 위치가 각각 유일한 최소입니다. 전체 식을 같은 양의 상수로 곱한 경우와 구별해야 합니다.</p></div></ProgressiveDetail>
+<ProgressiveDetail title="한 비용만 단위를 바꾸면 최적 위치가 달라지는 예" preview="한 사건의 음의 로그 비용에 θ²를 더합니다. 첫 항만 1/ln2배 하면 두 항의 균형이 바뀝니다."><div className="space-y-5"><p>설명용 모형에서 q(θ)=exp(−(θ−1)²)로 두면 q는 0보다 크고 1 이하입니다(가정). 자연로그 비용 −lnq=(θ−1)²에 추가 비용 θ²를 더하면 미분은 2(θ−1)+2θ이고 최소 위치는 θ=1/2입니다.</p><p>첫 항만 밑 2로 바꾸면 (θ−1)²/ln2+θ²입니다. 미분을 0으로 놓으면 θ=1/(1+ln2)≈0.590616입니다. 두 식 모두 양의 이차항을 가지므로 이 위치가 각각 유일한 최소입니다. 전체 식을 같은 양의 상수로 곱한 경우와 구별해야 합니다.</p></div>
+
+</ProgressiveDetail>
 </section>
 <section id="applications" data-teach-level="5" className="space-y-6"><h2 className="text-2xl font-bold">11 · 낮게 예측한 실제 사건에는 큰 비용을 준다</h2>
 <p>실제로 일어난 사건에 모형이 준 확률을 q라고 합시다. 비용 −log₂q는 q=1이면 0, q=1/2이면 1, q=1/8이면 3입니다. 덜 일어날 것이라고 본 사건이 실제로 일어났을수록 더 큰 값을 받습니다. 한 사건의 이런 정보량을 놀람도(surprisal)라고 합니다.</p>

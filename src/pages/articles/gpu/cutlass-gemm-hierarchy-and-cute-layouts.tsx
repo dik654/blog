@@ -1,3 +1,4 @@
+import { LayoutTransformViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
@@ -18,7 +19,7 @@ import CutlassGemmHierarchyAndCuteLayoutsViz from "./cutlass-gemm-hierarchy-and-
 export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="tile-hierarchy" className="scroll-mt-20">
+      <section id="tile-hierarchy" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           GEMM 은 threadblock, warp, MMA tile 로 세 번 잘립니다
         </h2>
@@ -37,14 +38,14 @@ export default function CutlassGemmHierarchyAndCuteLayoutsArticle() {
             <Link to="/cs/gpu/cuda-matrix-multiply#tiled">CUDA GEMM shared-tile 재사용</Link> 에 있습니다.
           </p>
           <p>
-            숫자를 넣어 봅니다. Threadblock tile 이 128×128×32 이고 warp 4개(128 thread)가
-            2×2 로 나누면 warp tile 은 64×64×32 입니다. Ampere 의 fp16 명령{" "}
-            <code>mma.sync.m16n8k16</code> 은 16×8 출력을 K 16 만큼 진행하므로, warp 하나는
-            M 방향 4개, N 방향 8개, K 방향 2번, 곧 64번의 MMA 명령으로 k-iteration 하나를 끝냅니다.
+            숫자를 넣어 봅니다. Threadblock tile은 M 128행 × N 128열 × K 깊이 32입니다. Warp 4개를 M 방향 2개와 N 방향 2개로
+            나누면 warp 하나는 M 128÷2=64행, N 128÷2=64열, K 깊이 32를 맡습니다. Ampere의 fp16 명령{" "}
+            <code>mma.sync.m16n8k16</code>은 한 번에 M 16행 × N 8열을 만들며 K를 16만큼 진행합니다. 따라서 warp 하나는
+            M 방향 64÷16=4번, N 방향 64÷8=8번, K 방향 32÷16=2번, 모두 4×8×2=64번 명령을 내야 한 K 구간을 끝냅니다.
           </p>
           <p>
-            Warp tile 64×64 의 fp32 accumulator 는 4096개이고 32 thread 가 나눠 들면 thread 당
-            128개 register 입니다. 여기에 A·B fragment 와 주소 계산이 더해지므로 64×64 는
+            Warp tile의 출력은 64행 × 64열 = 4,096개 fp32 accumulator입니다. 이를 warp의 32 thread가 나누면
+            thread마다 4,096÷32=128개를 register에 둡니다. 여기에 A·B fragment 와 주소 계산이 더해지므로 64×64 는
             register 예산이 허락하는 warp tile 의 윗선에 가깝습니다. 이보다 키우면{" "}
             <Link to="/cs/gpu/cuda-register-pressure#spill-path">spill</Link> 이 나고, 줄이면
             shared memory 읽기가 MMA 당 늘어납니다.
@@ -210,7 +211,8 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             나눠 주는 연산이 정확히 이것입니다.
           </p>
         </div>
-      </section>
+      <LayoutTransformViz mode="layout" />
+</section>
 
       <section id="tv-partition" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
@@ -275,7 +277,7 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
         />
       </section>
 
-      <section id="swizzle" className="scroll-mt-20">
+      <section id="swizzle" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Swizzle 은 행 번호로 chunk 번호를 XOR 해 bank conflict 를 없앱니다
         </h2>
@@ -337,9 +339,10 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
             <code>SmemLayoutAtomA</code> 로 들어갑니다.
           </p>
         </ProgressiveDetail>
-      </section>
+      <LayoutTransformViz mode="swizzle" />
+</section>
 
-      <section id="evidence" className="scroll-mt-20">
+      <section id="evidence" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           계층과 layout 규칙은 CUTLASS 문서와 CuTe 소스에서 읽었습니다
         </h2>
@@ -409,7 +412,8 @@ L(c) &= \underbrace{\sum_{i} c_i\, d_i}_{\text{좌표와 stride 의 내적}},\qq
           다음 글: <Link to="/cs/gpu/cutlass-collectives-and-tile-schedulers">CUTLASS collective, tile scheduler, Stream-K, cluster</Link>,
           그리고 이 층을 언제 고를지는 <Link to="/cs/gpu/cuda-kernel-fusion#kernel-stack">CUTLASS·CuTe·Triton 선택 층</Link>.
         </p>
-      </section>
+      <LayoutTransformViz mode="hierarchy" />
+</section>
     </div>
   );
 }

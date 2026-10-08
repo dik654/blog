@@ -1,3 +1,4 @@
+import { CapacitorGeometryViz } from "@/components/articles/calculation-structure-gallery";
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
@@ -165,6 +166,7 @@ return <div className="space-y-16">
         <div className="prose prose-neutral my-6 max-w-none dark:prose-invert">
           <p className="leading-7"><em>같은 예제의 10 nm·100 µm²·0.5 V를 따라가면 0.345 pF에서 0.173 pC, 다시 전자 약 108만 개로 이어집니다.</em></p>
         </div>
+<CapacitorGeometryViz />
 </section>
 
 <section id="source-supply" data-teach-level="6" className="scroll-mt-20">

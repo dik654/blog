@@ -57,12 +57,12 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">각 조각에서 평균을 먼저 내고 두 평균을 반씩 섞으면 어떨까요? 첫 평균은 약 3.761594, 둘째는 7.905148이므로 약 5.833371이 됩니다. 정답 7.376113과 다릅니다. 두 조각이 전체에서 차지하는 가중치가 같지 않기 때문입니다.</p><p className="leading-8">기준값도 버릴 수 없습니다. 첫 합은 점수에서 3을 뺀 결과이고 둘째 합은 5를 뺀 결과입니다. 3에서 5로 기준을 옮기는 e⁻²를 곱해야 두 합의 크기를 직접 비교할 수 있습니다. 따라서 남길 것은 평균 하나가 아니라 기준값과 정규화 전의 두 합입니다.</p></div>
       <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">조각을 합칠 자리를 찾았습니다. 왜 이 구조가 필요한지 바이트로 확인합니다.</p>
     </section>
-    <section id="need" data-teach-level="2" className="scroll-mt-20">
+    <section id="need" data-calculation-explained data-teach-level="2" className="scroll-mt-20">
       <span id="problem" className="scroll-mt-20" />
       <h2 className="mb-6 text-2xl font-bold">5 · 계산보다 중간 행렬의 왕복이 커질 수 있다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p className="leading-8">(가정) 크기 효과를 따로 봅니다. 위치 4,096개에 성분 64개를 두고 숫자 하나를 2바이트에 저장합니다. 위치를 가리거나 무작위로 연결을 끊지 않습니다. 점수를 만들고 값을 가져오는 입력 배열 세 개는 각각 4,096×64×2=512KiB, 합계 1.5MiB입니다.</p>
-        <p className="leading-8">위치마다 4,096개 위치와 비교하면 점수가 4,096²개 생깁니다. 점수 배열과 정규화한 가중치 배열은 각각 32MiB입니다. 각각 한 번 쓰고 한 번 읽으면 32×2×2=128MiB가 이동합니다. 필요한 두 조각을 계산한 뒤 바로 소비하면 이 전체 배열의 저장을 피할 수 있습니다.</p>
+        <p className="leading-8">(가정) 크기 효과를 따로 봅니다. 위치 4,096개에 성분 64개를 두고 숫자 하나를 2바이트에 저장합니다. 위치를 가리거나 무작위로 연결을 끊지 않습니다. Q·K·V 배열은 각각 4,096위치 × 위치마다 64개 값 = 262,144개 값입니다. 값마다 2바이트이므로 배열 하나는 524,288바이트, 곧 512KiB이며 세 배열의 합은 1.5MiB입니다.</p>
+        <p className="leading-8">위치마다 4,096개 위치와 비교하면 점수가 4,096²개 생깁니다. 점수 배열과 정규화한 가중치 배열은 각각 4,096²개 값 × 값마다 2바이트 = 32MiB입니다. 32MiB짜리 배열 2개를 각각 한 번 쓰고 한 번 읽으므로 이동량은 배열마다 32MiB × 2배열 × 쓰기·읽기 2회 = 128MiB입니다. 필요한 두 조각을 계산한 뒤 바로 소비하면 이 전체 배열의 저장을 피할 수 있습니다.</p>
         <p className="leading-8">128MiB는 입력 세 배열 합의 약 85.33배입니다. 출력 배열까지 포함한 네 배열 합 2MiB를 분모로 삼아야 64배가 됩니다. 독립 계산 묶음 32개·입력 8건이면 32GiB이고 가정한 2TB/s로 나눈 17.18ms는 이 왕복만의 처리량 하한입니다. 실제 실행시간이나 모든 attention의 병목을 단정하는 숫자가 아닙니다.</p>
         <p className="leading-8">이 숫자는 점수와 가중치를 별도 배열에 남기는 설명용 구현의 장부입니다. 실제 라이브러리는 이미 여러 계산을 합쳐 중간 저장을 피할 수 있습니다. 함수 이름만 보고 모든 호출에 128MiB의 왕복을 붙이지 않습니다.</p>
       </div>

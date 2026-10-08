@@ -1,11 +1,17 @@
+import type { ComponentProps } from "react";
 import LessonSection from "@/components/articles/lesson-section";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock, { type AlgorithmStep } from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import FlowRail from "../world-systems/FlowRail";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
+import {
+  EngineeringDepthBlocks,
+  type EngineeringDepthData,
+} from "./EngineeringDepthBlocks";
 
 type SectionId =
   | "overview"
@@ -25,6 +31,11 @@ export interface CloudArticleSection {
   title: string;
   bridge: string;
   paragraphs: readonly [string, string, ...string[]];
+}
+
+export interface CloudArticleFormula {
+  section: SectionId;
+  content: ComponentProps<typeof ExplainedFormula>;
 }
 
 export interface CloudCertificationArticleData {
@@ -69,6 +80,16 @@ export interface CloudCertificationArticleData {
     href: string;
     linkLabel: string;
   };
+  relatedArticles?: {
+    title: string;
+    description: string;
+    items: readonly {
+      label: string;
+      href: string;
+      task: string;
+      evidence: string;
+    }[];
+  };
   sources: readonly [
     {
       source: string;
@@ -88,6 +109,8 @@ export interface CloudCertificationArticleData {
     },
   ];
   review: readonly [string, string, string];
+  engineeringDepth?: EngineeringDepthData;
+  formulas?: readonly CloudArticleFormula[];
 }
 
 function DecisionMatrix({ data }: { data: CloudCertificationArticleData["decision"] }) {
@@ -139,6 +162,27 @@ function ExamScope({ data }: { data: NonNullable<CloudCertificationArticleData["
   );
 }
 
+function RelatedArticles({ data }: { data: NonNullable<CloudCertificationArticleData["relatedArticles"]> }) {
+  return (
+    <nav className="not-prose my-8 min-w-0 border-y border-border py-5" aria-label={data.title}>
+      <p className="text-xs font-bold text-primary">이어 할 실습</p>
+      <h3 className="mt-1 text-lg font-semibold text-foreground">{data.title}</h3>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{data.description}</p>
+      <ol className="mt-4 grid gap-3 lg:grid-cols-2">
+        {data.items.map((item, index) => (
+          <li key={item.href} className="min-w-0 rounded-xl border border-border bg-background p-4">
+            <a className="font-semibold text-primary underline underline-offset-4" href={item.href}>
+              {index + 1}. {item.label}
+            </a>
+            <p className="mt-2 text-sm leading-6 text-foreground">{item.task}</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">남길 증거 · {item.evidence}</p>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
 export default function CloudCertificationArticle({ data }: { data: CloudCertificationArticleData }) {
   return (
     <div className="space-y-16">
@@ -157,6 +201,22 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
               </p>
             ))}
           </div>
+          {data.formulas
+            ?.filter((formula) => formula.section === section.id)
+            .map((formula, index) => (
+              <ExplainedFormula
+                key={`${section.id}-${formula.content.question}-${index}`}
+                title={formula.content.title}
+                question={formula.content.question}
+                idea={formula.content.idea}
+                formula={formula.content.formula}
+                annotatedFormula={formula.content.annotatedFormula}
+                operations={formula.content.operations}
+                terms={formula.content.terms}
+                assumptions={formula.content.assumptions}
+                interpretation={formula.content.interpretation}
+              />
+            ))}
           {section.id === "black-box" ? (
             <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} />
           ) : null}
@@ -166,13 +226,16 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
           {section.id === "picture" ? <DecisionMatrix data={data.decision} /> : null}
           {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
           {section.id === "mechanism" ? (
-            <AlgorithmBlock
-              title={data.algorithm.title}
-              input={data.algorithm.input}
-              steps={data.algorithm.steps}
-              output={data.algorithm.output}
-              repeatUntil={data.algorithm.repeatUntil}
-            />
+            <>
+              <AlgorithmBlock
+                title={data.algorithm.title}
+                input={data.algorithm.input}
+                steps={data.algorithm.steps}
+                output={data.algorithm.output}
+                repeatUntil={data.algorithm.repeatUntil}
+              />
+              {data.relatedArticles ? <RelatedArticles data={data.relatedArticles} /> : null}
+            </>
           ) : null}
           {section.id === "source" ? (
             <>
@@ -212,6 +275,9 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
                 {data.sources[1].note}
               </CitationBlock>
             </>
+          ) : null}
+          {data.engineeringDepth ? (
+            <EngineeringDepthBlocks data={data.engineeringDepth} section={section.id} />
           ) : null}
           {section.id === "limits" ? <ReviewPrompts questions={[...data.review]} /> : null}
         </LessonSection>
