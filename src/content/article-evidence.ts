@@ -13409,6 +13409,21 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "IaaS·PaaS·SaaS에 따라 책임 층이 이동하는 표를 확인합니다."
     }
   ],
+  "cloud/kubernetes-network-packet-path": [
+    { kind: "공식 문서", label: "Kubernetes v1.37 · Network Plugins", href: "https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/", note: "Pod sandbox와 CNI plugin의 현재 책임 경계" },
+    { kind: "공식 문서", label: "Kubernetes v1.37 · Virtual IPs and Service Proxies", href: "https://kubernetes.io/docs/reference/networking/virtual-ips/", note: "Service backend 변환, iptables·nftables와 IPVS deprecation" },
+    { kind: "공식 문서", label: "Kubernetes · Network Policies", href: "https://kubernetes.io/docs/concepts/services-networking/network-policies/", note: "NetworkPolicy selector·ingress·egress semantics와 CNI 지원 경계" },
+    { kind: "공식 문서", label: "Kubernetes · Ingress", href: "https://kubernetes.io/docs/concepts/services-networking/ingress/", note: "Ingress API 동결과 Gateway 권장 상태" },
+    { kind: "공식 규격", label: "Gateway API v1.6.1 · Getting started", href: "https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/", note: "Standard channel CRD와 controller·conformance 경계" },
+    { kind: "공식 문서", label: "Calico 3.33 · Architecture", href: "https://docs.tigera.io/calico/latest/reference/architecture/overview", note: "Felix와 BGP route distribution component 책임" },
+    { kind: "공식 문서", label: "Calico 3.33 · Tigera Operator API", href: "https://docs.tigera.io/calico/latest/reference/installation/api/", note: "Installation 기본값, cluster routing mode와 BIRD IP-in-IP route programming의 v3.33 deprecation·v3.35 제거 예정" },
+    { kind: "공식 문서", label: "Calico 3.33 · Overlay networking", href: "https://docs.tigera.io/calico/latest/networking/configuring/vxlan-ipip", note: "Direct route·IP-in-IP·VXLAN·CrossSubnet 선택" },
+    { kind: "공식 문서", label: "Calico 3.33 · Configure MTU", href: "https://docs.tigera.io/calico/latest/networking/configuring/mtu", note: "1500 B underlay의 plain·IP-in-IP·VXLAN workload MTU와 적용 경계" },
+    { kind: "공식 문서", label: "Calico 3.33 · Workloads outside the cluster", href: "https://docs.tigera.io/calico/latest/networking/configuring/workloads-outside-cluster", note: "natOutgoing과 destination pool에 따른 조건부 SNAT" },
+    { kind: "공식 문서", label: "Cilium 1.20.1 · Kubernetes Without kube-proxy", href: "https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/", note: "Socket LB·per-packet 경로와 kernel·cgroup 조건" },
+    { kind: "공식 문서", label: "Istio · Ambient data plane", href: "https://istio.io/latest/docs/ambient/architecture/data-plane/", note: "Node별 L4 ztunnel과 선택적 L7 waypoint의 현재 경로" },
+    { kind: "보충 읽기", label: "장성필 기술블로그 · Kubernetes category", href: "https://hackjsp.tistory.com/category/Kubernetes", note: "Network 10·Security 2·Database Operator 8·Istio 13편의 실습 주제와 재현 순서 참고. 현재 semantics는 공식 문서로 재검증" },
+  ],
   "cloud/kubernetes-request-path-and-cka": [
     { kind: "공식 문서", label: "Kubernetes Components", href: "https://kubernetes.io/docs/concepts/overview/components/", note: "Control plane과 node component의 공식 책임" },
     { kind: "공식 문서", label: "Kubernetes Scheduler", href: "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/", note: "Pending Pod의 filtering·scoring·binding 경로" },

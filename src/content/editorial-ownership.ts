@@ -17788,6 +17788,23 @@ export const EDITORIAL_BOUNDARIES = {
       }
     ]
   },
+  "kubernetes-network-packet-path": {
+    title: "Kubernetes 패킷 경로 심화 글이 소유하는 범위",
+    owns: [
+      "10.244.1.12:43120에서 시작한 연결이 Service 10.96.20.15:8080을 거쳐 backend 10.244.2.34:8080으로 바뀌고 다른 node에 도착하는 전체 packet 경로",
+      "Network namespace·pause container·veth에서 Service DNAT 또는 socket rewrite, Calico direct·IP-in-IP·VXLAN과 policy hook까지의 책임 경계",
+      "Underlay MTU 1500 B에서 IPv4 IP-in-IP 1480 B와 VXLAN 1450 B를 재현하는 byte 원장",
+      "hackjsp Kubernetes 33편을 Network·Security·Database Operator·Istio 경로로 재배치하고 2026년 공식 수명 주기로 현재화하는 기준",
+    ],
+    reuses: [
+      { label: "Kubernetes desired state와 first-failed-transition 진단", href: "/cs/cloud/kubernetes-request-path-and-cka#mechanism" },
+      { label: "Container와 host process의 Linux 자원 경계", href: "/cs/ai/agent-sandbox-security#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Kubernetes·Calico·Cilium·Gateway API·Istio의 현재 mode와 lifecycle은 2026-10-08 공식 문서와 실제 cluster version에 귀속합니다." },
+      { kind: "project-measurement", rule: "IP·port·MTU·packet path는 설명용 가정이며 production 성능·호환성은 같은 배포판과 underlay에서 route·capture·load test로 다시 측정합니다." },
+    ],
+  },
   "kubernetes-request-path-and-cka": {
     title: "Kubernetes 요청 경로와 CKA 실습 글이 소유하는 범위",
     owns: [

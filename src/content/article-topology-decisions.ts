@@ -2788,6 +2788,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "취업용 AWS·Azure 자격증 로드맵의 한 질문을 작은 사례에서 공식 범위·선택 절차·실습 경계까지 이어 가는 독립 학습 단위입니다.",
     "sharedGate": "공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 수치가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻으로 이어지는지 확인합니다."
   },
+  "cloud/kubernetes-network-packet-path": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-08",
+    rationale: "Client Pod의 한 연결을 network namespace, Service backend 선택, Calico route·encapsulation, MTU·SNAT, policy hook, Gateway·service mesh와 server socket까지 추적합니다. 2024년 KANS 실습 소재는 현재 Kubernetes v1.37, Calico 3.33, Cilium 1.20.1과 Gateway API v1.6.1 공식 문서로 다시 검증합니다.",
+    sharedGate: "10.244.1.12:43120→10.96.20.15:8080→10.244.2.34:8080과 underlay 1500 B→VXLAN workload 1450 B 사례가 본문·Viz·수식·실습·연습문제에서 같은 주소와 단위로 이어지는지 확인합니다.",
+  },
   "cloud/kubernetes-request-path-and-cka": {
     action: "keep",
     status: "implemented",
@@ -2902,6 +2909,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/azure-az104-fast-study": "51c22c0e7e7fe587",
   "cloud/azure-az900-fast-study": "0b9d6e45df939363",
   "cloud/cloud-certification-roadmap-2026": "8a376a78f6cfa377",
+  "cloud/kubernetes-network-packet-path": "20c3988f69dbfa88",
   "cloud/kubernetes-request-path-and-cka": "cbcfa7e6677bf4fe",
   "cloud/cloud-compute-selection": "ac3877efe4f7a0f4",
   "cloud/cloud-foundations-responsibility-regions": "44bc2ecc3fcd886d",
