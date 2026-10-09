@@ -78,7 +78,7 @@ export const networkingRequestPathData: CloudCertificationArticleData = {
     { code: "응답_경로와_흐름_로그를_확인한다()", note: "비대칭 경로와 첫 거절 지점을 찾습니다." },
   ], output: "첫 실패 관문 + 최소 수정 규칙", repeatUntil: "DNS·경로·정책·대상이 바뀔 때마다 같은 순서로 다시 추적합니다." },
   sources: [
-    { source: "AWS VPC User Guide", excerpt: "control where network traffic is directed", application: "연결 실패를 서버 상태 하나로 보지 않고 목적지별 다음 경로 선택부터 확인하는 기준으로 씁니다.", citation: "AWS, Route tables for your VPC", href: "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html", note: "VPC 경로표의 목적과 가장 구체적인 경로 선택을 설명하는 공식 문서입니다." },
+    { source: "AWS VPC User Guide", excerpt: "determine where network traffic from your subnet or gateway is directed", application: "연결 실패를 서버 상태 하나로 보지 않고 목적지별 다음 경로 선택부터 확인하는 기준으로 씁니다.", citation: "AWS, Route tables for your VPC", href: "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html", note: "VPC 경로표의 목적과 가장 구체적인 경로 선택을 설명하는 공식 문서입니다." },
     { source: "Microsoft Learn · Virtual network traffic routing", excerpt: "Azure automatically creates system routes", application: "시스템 경로와 사용자 정의 경로가 함께 만든 유효 경로를 확인하는 근거로 씁니다.", citation: "Microsoft Learn, Virtual network traffic routing", href: "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview", note: "Azure VNet의 시스템 경로, 사용자 정의 경로와 다음 홉을 설명하는 공식 문서입니다." },
   ],
   review: [
@@ -161,7 +161,7 @@ export const computeSelectionData: CloudCertificationArticleData = {
     { code: "전체_비용 = 실행 + 전송 + 로그 + 운영_시간", note: "가격표 밖의 운영 비용을 포함합니다." },
   ], output: "선택한 실행 방식 + 탈락 이유 + 이전 조건", repeatUntil: "부하 모양이나 필요한 제어가 바뀔 때마다 다시 비교합니다." },
   sources: [
-    { source: "AWS Decision Guides · Compute", excerpt: "choose the right compute service", application: "제품 목록을 외우기보다 워크로드 요구와 관리 수준으로 실행 서비스를 비교하는 근거로 씁니다.", citation: "AWS, Choosing an AWS compute service", href: "https://docs.aws.amazon.com/decision-guides/latest/compute-on-aws-how-to-choose/compute-on-aws-how-to-choose.html", note: "AWS의 가상 머신, 컨테이너, 서버리스 등 컴퓨팅 선택을 비교하는 공식 결정 가이드입니다." },
+    { source: "AWS Decision Guides · Compute", excerpt: "Choosing the right compute service entails matching these workload", application: "제품 목록을 외우기보다 워크로드 요구와 관리 수준으로 실행 서비스를 비교하는 근거로 씁니다.", citation: "AWS, Choosing an AWS compute service", href: "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/choosing-aws-compute-service.html", note: "AWS의 가상 머신, 컨테이너, 서버리스 등 컴퓨팅 선택을 비교하는 공식 결정 가이드입니다." },
     { source: "Azure Architecture Center · Compute decision tree", excerpt: "select a candidate compute service", application: "실행 모양과 제어 요구로 Azure 컴퓨팅 후보를 줄이는 순서에 사용합니다.", citation: "Microsoft Learn, Choose an Azure compute service", href: "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/compute-decision-tree", note: "워크로드 특성에 따라 Azure 컴퓨팅 서비스를 고르는 공식 의사결정 자료입니다." },
   ],
   review: [
@@ -245,7 +245,7 @@ export const storageDatabaseSelectionData: CloudCertificationArticleData = {
   ], output: "데이터별 저장소 + 접근 키 + 복구 설계", repeatUntil: "새 질의나 데이터 증가율, 복구 목표가 바뀔 때마다 다시 평가합니다." },
   sources: [
     { source: "AWS Decision Guide · Choosing an AWS database service", excerpt: "establish the criteria for making your database choice", application: "서비스 이름보다 데이터 특성·접근 패턴·성능과 운영 요구로 데이터베이스를 고르는 기준으로 씁니다.", citation: "AWS Decision Guides, Choosing an AWS database service", href: "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/databases-on-aws-how-to-choose.html", note: "AWS 데이터베이스 범주와 선택 기준을 정리한 공식 지침입니다." },
-    { source: "Azure Architecture Center · Data store models", excerpt: "different types of data stores", application: "한 애플리케이션 안에서도 주문·사진처럼 요구가 다른 데이터를 별도 저장 모델에 두는 근거로 씁니다.", citation: "Microsoft Learn, Understand data store models", href: "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview", note: "Azure에서 관계형·키값·문서·객체 등 저장 모델의 성질을 비교하는 공식 자료입니다." },
+    { source: "Azure Architecture Center · Data store models", excerpt: "A single data store rarely satisfies all access patterns efficiently", application: "한 애플리케이션 안에서도 주문·사진처럼 요구가 다른 데이터를 별도 저장 모델에 두는 근거로 씁니다.", citation: "Microsoft Learn, Understand data store models", href: "https://learn.microsoft.com/en-us/azure/architecture/data-guide/technology-choices/understand-data-store-models", note: "Azure에서 관계형·키값·문서·객체 등 저장 모델의 성질을 비교하는 공식 자료입니다." },
   ],
   review: [
     "주문 200KB와 사진 2GB를 같은 표에 넣지 않는 이유는 무엇인가요? (답: 3절)",

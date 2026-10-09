@@ -15,9 +15,10 @@ export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, 
         question="m-bit bloom에 n개 항목을 k개 위치로 표시하면 false-positive 확률을 어떻게 근사할까요?"
         idea="한 bit가 끝까지 0일 확률을 지수로 근사한 뒤, 조회한 k개 bit가 모두 1일 확률을 구합니다. Ethereum log bloom은 고정 parameter를 쓰므로 식은 직관·fixture 설계에 사용합니다."
         formula={String.raw`p_{fp}\approx\left(1-e^{-kn/m}\right)^k`}
-        annotatedFormula={String.raw`\underbrace{p_{fp}}_{\text{false-positive 확률 계산}}\approx\left(1-e^{-kn/m}\right)^k`}
+        annotatedFormula={String.raw`p_{fp}\approx\left(1-\underbrace{e^{-kn/m}}_{\text{한 bit가 아직 0일 확률}}\right)^{k}`}
         operations={[
-          { expression: String.raw`p_{fp}`, annotation: ["false-positive 확률이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 bit가 끝까지 0일 확률을 지수로 근사한 뒤, 조회한","k개 bit가 모두 1일 확률을 구합니다."] },
+          { expression: String.raw`e^{-kn/m}`, annotation: ["n개 항목이 각각 k개 위치를 켠 뒤에도","특정 bit가 0으로 남을 확률의 지수 근사","m=2048, k=3, n=100이 예시"] },
+          { expression: String.raw`\left(1-e^{-kn/m}\right)^k`, annotation: ["조회한 k개 bit가 전부 1일 확률 ≈0.25%","negative는 부재 확정, positive는 후보라","receipt/log 원문을 반드시 확인"] },
         ]}
         terms={[
           { symbol: "p_{fp}", name: "false-positive 확률", description: "실제 항목이 없지만 후보로 통과할 근사 확률" },

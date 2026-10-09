@@ -46,9 +46,11 @@ export default function ExecutionTrace({
             </>
           }
           formula={"(o,g,A)={\\rm EVM}_{f}(T,E_H,D_R)"}
-          annotatedFormula={String.raw`(o,g,A)=\underbrace{{\rm EVM}_{f}(T,E_H,D_R)}_{\text{Output · gas · accesses 계산}}`}
+          annotatedFormula={String.raw`\underbrace{(o,g,A)}_{\text{output·gas·접근 key}}=\underbrace{{\rm EVM}_{f}}_{\text{fork f의 opcode·gas 규칙}}(\underbrace{T}_{\text{call tx}},\underbrace{E_H}_{\text{block H 환경}},\underbrace{D_R}_{\text{root R에 증명된 state}})`}
           operations={[
-            { expression: String.raw`{\rm EVM}_{f}(T,E_H,D_R)`, annotation: ["Output · gas · accesses이(가) 식의 결과에","기여하는 방식을 계산합니다.","EVM은 transaction만 보는 함수가 아닙니다."] },
+            { expression: String.raw`{\rm EVM}_{f}`, annotation: ["timestamp와 chain schedule이 고른 fork f","opcode·gas 규칙이 fork마다 다르므로","같은 T라도 f가 바뀌면 결과가 바뀜"] },
+            { expression: String.raw`(T,E_H,D_R)`, annotation: ["call tx, block H의 number·timestamp·","base fee, R에 proof로 검증된 state view","셋을 고정해야 output이 하나로 결정"] },
+            { expression: String.raw`(o,g,A)`, annotation: ["return/revert bytes, 사용 gas,","실제 접근한 account·slot key 집합","빠진 key는 proof를 받아 같은 H로 재실행"] },
           ]}
           terms={[
             {

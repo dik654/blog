@@ -15,9 +15,10 @@ export default function Topics({ onCodeRef }: { onCodeRef: (key: string, ref: Co
         question="서로 다른 chain·fork의 같은 message 이름을 topic에서 어떻게 분리할까요?"
         idea="Fork version과 genesis validators root를 SSZ ForkData로 commitment한 뒤 hash의 앞 4 bytes를 routing digest로 씁니다. 이 짧은 값은 실용적 domain separation이며 cryptographic identity 전체를 대체하지 않습니다."
         formula={String.raw`d_f=\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`}
-        annotatedFormula={String.raw`d_f=\underbrace{\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}}_{\text{포크 다이제스트 계산}}`}
+        annotatedFormula={String.raw`d_f=\operatorname{SHA256}(\underbrace{\operatorname{SSZ}(v_f,g)}_{\text{fork·network ForkData}})_{0:4}`}
         operations={[
-          { expression: String.raw`\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`, annotation: ["포크 다이제스트이(가) 식의 결과에 기여하는 방식을","계산합니다.","Fork version과 genesis validators","root를 SSZ ForkData로 commitment한 뒤"] },
+          { expression: String.raw`\operatorname{SSZ}(v_f,g)`, annotation: ["활성 fork version 4 B와 genesis","validators root를 ForkData로 직렬화","fork나 chain 중 하나만 달라도 바뀜"] },
+          { expression: String.raw`\operatorname{SHA256}(\operatorname{SSZ}(v_f,g))_{0:4}`, annotation: ["32-byte hash의 앞 4 bytes만 topic에 사용","같은 beacon_block 이름도 digest가 다르면","다른 topic, collision 불가능은 보장 안 함"] },
         ]}
         terms={[
           { symbol: "d_f", name: "포크 다이제스트", description: "topic에 들어가는 4-byte fork digest" },

@@ -34,16 +34,16 @@ S_{role,phase} &= \operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
 K &= \operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-PRK &= \underbrace{\operatorname{HKDF\!\text{-}Extract}(salt,IKM),}_{\text{input keying material 계산}}\\
-S_{role,phase} &= \underbrace{\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
-(PRK,label,H(T),L),}_{\text{domain-separation label 계산}}\\
-K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).}_{\text{오른쪽 항으로 결과 계산}}
+PRK &= \underbrace{\operatorname{HKDF\!\text{-}Extract}(salt,IKM)}_{\text{균일한 PRK로 압축}},\\
+S_{role,phase} &= \operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
+(PRK,\underbrace{label}_{\text{용도·방향}},\underbrace{H(T)}_{\text{transcript}},L),\\
+K &= \underbrace{\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K)}_{\text{AEAD key로 분리}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{HKDF\!\text{-}Extract}(salt,IKM),`, annotation: ["input keying material이(가) 식의 결과에","기여하는 방식을 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,"] },
+          { expression: String.raw`\operatorname{HKDF\!\text{-}Extract}(salt,IKM)`, annotation: ["PSK·ECDHE shared secret·0 중 하나를", "salt와 HMAC해 균일한 pseudorandom key로", "raw ECDHE output을 바로 쓰지 않음"] },
           { expression: String.raw`\operatorname{HKDF\!\text{-}Expand\!\text{-}Label}
-(PRK,label,H(T),L),`, annotation: ["domain-separation label이(가) 식의 결과에","기여하는 방식을 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,"] },
-          { expression: String.raw`\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","HKDF-Extract가 salt와 input key","material을 PRK로 압축하고,","HKDF-Expand-Label이 protocol"] },
+(PRK,label,H(T),L)`, annotation: ["같은 PRK라도 label이 c hs traffic과", "s ap traffic으로 다르면 별도 secret", "H(T)가 이번 handshake에 결속"] },
+          { expression: String.raw`\operatorname{ExpandLabel}(S_{role,phase},\text{"key"},\varnothing,L_K)`, annotation: ["방향·단계별 secret에서 다시 \"key\"", "label로 AEAD가 요구하는 길이 L_K의 key", "iv는 같은 secret에서 다른 label로"] },
         ]}
         terms={[
           {

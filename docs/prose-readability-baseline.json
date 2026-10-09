@@ -21,10 +21,6 @@
       "fingerprint": "8d8b73f5e19d0ff8",
       "score": 43
     },
-    "ai/claw-api-client": {
-      "fingerprint": "7da4f682d8b25236",
-      "score": 40
-    },
     "ai/claw-compaction": {
       "fingerprint": "4e28a3ceccde9e12",
       "score": 42
@@ -34,16 +30,16 @@
       "score": 42
     },
     "blockchain/filecoin-storacha": {
-      "fingerprint": "aa98e19c6c148abf",
+      "fingerprint": "d7e36e6bbe5b99ce",
       "score": 41
+    },
+    "ai/claw-api-client": {
+      "fingerprint": "7da4f682d8b25236",
+      "score": 40
     },
     "gpu/ec-gpu-gen": {
       "fingerprint": "c533921e8a2c673e",
       "score": 37
-    },
-    "blockchain/aa-fundamentals": {
-      "fingerprint": "69fff2d20faccd2e",
-      "score": 36
     },
     "blockchain/prysm": {
       "fingerprint": "89b6f69575db6be0",
@@ -54,11 +50,11 @@
       "score": 36
     },
     "gpu/modded-rtx4090-moe-serving": {
-      "fingerprint": "113e6f8ba31eded3",
+      "fingerprint": "94763cd5489dbbdb",
       "score": 36
     },
     "blockchain/helios-state": {
-      "fingerprint": "179bb98a0a01716d",
+      "fingerprint": "20370bd97403457a",
       "score": 35
     },
     "blockchain/prysm-engine-api": {
@@ -66,7 +62,7 @@
       "score": 34
     },
     "blockchain/prysm-finality": {
-      "fingerprint": "f877d0c95c0dd581",
+      "fingerprint": "e4ab7abc5ca12d1f",
       "score": 34
     },
     "blockchain/reth-cli": {
@@ -89,10 +85,6 @@
       "fingerprint": "2fffbcd070dda53d",
       "score": 33
     },
-    "ai/lstm-timeseries": {
-      "fingerprint": "60ce787f31369d37",
-      "score": 30
-    },
     "ai/transformer-architecture": {
       "fingerprint": "f55fb34afdffc84d",
       "score": 32
@@ -102,7 +94,7 @@
       "score": 32
     },
     "blockchain/helios-execution": {
-      "fingerprint": "83e3b0262a9182da",
+      "fingerprint": "292d8cbafd9624dd",
       "score": 32
     },
     "blockchain/cometbft-state": {
@@ -113,12 +105,12 @@
       "fingerprint": "e36479038221932b",
       "score": 31
     },
-    "ai/multi-agent-implementation": {
-      "fingerprint": "dbabd060bba96099",
+    "ai/lstm-timeseries": {
+      "fingerprint": "730d47093c784c70",
       "score": 30
     },
-    "ai/vla-embodiment-gap": {
-      "fingerprint": "0eff9cf0ab6f8fb1",
+    "ai/multi-agent-implementation": {
+      "fingerprint": "dbabd060bba96099",
       "score": 30
     },
     "blockchain/proofs-post": {
@@ -142,7 +134,7 @@
       "score": 29
     },
     "blockchain/reth-chainspec": {
-      "fingerprint": "7f6704a2d4a46e86",
+      "fingerprint": "d0ddf819c57e4f69",
       "score": 29
     },
     "gpu/filecoin-gpu-proofs": {
@@ -154,11 +146,11 @@
       "score": 28
     },
     "ai/llm-serving-ops": {
-      "fingerprint": "b76e04e1a5bdeb2d",
+      "fingerprint": "8a99e0555fa80e6a",
       "score": 28
     },
     "ai/resnet": {
-      "fingerprint": "8a91d8f0e249483f",
+      "fingerprint": "946eb3b30c5d6a32",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -174,15 +166,15 @@
       "score": 28
     },
     "blockchain/lotus-miner": {
-      "fingerprint": "b0f4f2d0bc6e550d",
+      "fingerprint": "4ea375fa904bc9e1",
       "score": 28
     },
     "blockchain/mysticeti": {
-      "fingerprint": "d08e071b07bc82eb",
+      "fingerprint": "e439bba68914b5a4",
       "score": 28
     },
     "blockchain/prysm-validator-client": {
-      "fingerprint": "93800bc4cb280dfd",
+      "fingerprint": "b58441632caf77cb",
       "score": 28
     },
     "isms-aml/isms-auth-management": {
@@ -197,12 +189,8 @@
       "fingerprint": "1db24dde228301e4",
       "score": 27
     },
-    "crypto/sp1": {
-      "fingerprint": "3eb0c1b11d26fec1",
-      "score": 27
-    },
     "ai/arima": {
-      "fingerprint": "d6f941f9132379f1",
+      "fingerprint": "270280d84f628049",
       "score": 26
     },
     "ai/mixture-of-experts": {
@@ -210,15 +198,15 @@
       "score": 26
     },
     "ai/rag-pipeline": {
-      "fingerprint": "46a94e9729314398",
+      "fingerprint": "b38e739b111ec10f",
       "score": 26
     },
     "ai/transfer-learning-practice": {
-      "fingerprint": "0ce765a777f652f5",
+      "fingerprint": "485562950c1fb1fb",
       "score": 26
     },
     "blockchain/autobahn-deep": {
-      "fingerprint": "1e5fad5f339b3429",
+      "fingerprint": "b0b580b08762edfa",
       "score": 26
     },
     "blockchain/expected-consensus": {
@@ -226,11 +214,11 @@
       "score": 26
     },
     "blockchain/filecoin-proofs": {
-      "fingerprint": "e0c0db55e25d95ad",
+      "fingerprint": "b779ad61bd786f86",
       "score": 26
     },
     "blockchain/hotstuff-deep": {
-      "fingerprint": "3d7c4ad6d7729e9a",
+      "fingerprint": "176ed1ed80410d51",
       "score": 26
     },
     "blockchain/impl-groth16": {
@@ -238,11 +226,11 @@
       "score": 26
     },
     "blockchain/impl-plonk": {
-      "fingerprint": "d91a8cf54e84dd6c",
+      "fingerprint": "9df24ed852a47ef3",
       "score": 26
     },
     "blockchain/pos-theory": {
-      "fingerprint": "069c3f5f0b7e039a",
+      "fingerprint": "7cc703e3e1542666",
       "score": 26
     },
     "blockchain/filecoin-pdp": {
@@ -252,10 +240,6 @@
     "blockchain/lotus-market": {
       "fingerprint": "4c611bbc68e56a59",
       "score": 25
-    },
-    "ai/ensemble-methods": {
-      "fingerprint": "cbe3cbe0760dc755",
-      "score": 24
     },
     "blockchain/cometbft-abci": {
       "fingerprint": "60a770738fb491a0",
@@ -273,20 +257,16 @@
       "fingerprint": "ce0691183b12a34b",
       "score": 24
     },
-    "blockchain/pq-account": {
-      "fingerprint": "a0f2dbbe3d6e1d1f",
-      "score": 24
-    },
     "blockchain/prysm-beacon-db": {
       "fingerprint": "6ae1df8b41eb5520",
       "score": 24
     },
     "blockchain/prysm-beacon-state": {
-      "fingerprint": "1d0b96236f9f1239",
+      "fingerprint": "5cf6f78b3bbfcba2",
       "score": 24
     },
     "blockchain/prysm-p2p-libp2p": {
-      "fingerprint": "235de87d0305704f",
+      "fingerprint": "bb7db2dc9ec0039e",
       "score": 24
     },
     "blockchain/prysm-sync": {
@@ -295,14 +275,6 @@
     },
     "blockchain/uniswap-v4": {
       "fingerprint": "af093af1cfcac3aa",
-      "score": 24
-    },
-    "crypto/crypto-primitives": {
-      "fingerprint": "aa3315cdc48c359d",
-      "score": 24
-    },
-    "gpu/cuda-sync-streams": {
-      "fingerprint": "8af12e290f2d5426",
       "score": 24
     },
     "gpu/ec-gpu-ops": {
@@ -314,7 +286,7 @@
       "score": 24
     },
     "p2p/quic-fundamentals": {
-      "fingerprint": "784c87f19f50271d",
+      "fingerprint": "88f323e41316a10c",
       "score": 24
     },
     "blockchain/filecoin-lotus": {
@@ -346,15 +318,7 @@
       "score": 22
     },
     "blockchain/prysm-bls": {
-      "fingerprint": "f1573b18701c7569",
-      "score": 22
-    },
-    "blockchain/rwa-composition": {
-      "fingerprint": "23d6a05ce64bcc0f",
-      "score": 22
-    },
-    "gpu/cuda-shared-memory": {
-      "fingerprint": "9d4b24ffb3431c72",
+      "fingerprint": "cf0888d0ca37f148",
       "score": 22
     },
     "blockchain/impl-elliptic-curve": {
@@ -362,7 +326,7 @@
       "score": 21
     },
     "blockchain/proofs-porep": {
-      "fingerprint": "bc63c414e4210f36",
+      "fingerprint": "445cc2ac346689a0",
       "score": 21
     },
     "blockchain/proofs-snark": {
@@ -381,16 +345,12 @@
       "fingerprint": "496eb0dc42b12e60",
       "score": 20
     },
-    "blockchain/bft-theory": {
-      "fingerprint": "2196f925019b7dc5",
-      "score": 20
-    },
     "blockchain/commonware-crypto-p2p": {
       "fingerprint": "2acfce770630e930",
       "score": 20
     },
     "blockchain/consensus-comparison": {
-      "fingerprint": "5b39082df890a615",
+      "fingerprint": "5bc41c279d243f57",
       "score": 20
     },
     "blockchain/impl-field-arithmetic": {
@@ -402,31 +362,23 @@
       "score": 20
     },
     "blockchain/prysm-epoch-processing": {
-      "fingerprint": "23aa695102fb162d",
+      "fingerprint": "7e57c4d10e17e7a9",
       "score": 20
     },
     "blockchain/prysm-gossipsub": {
-      "fingerprint": "071266206df546d5",
+      "fingerprint": "a92f9d2973f296fa",
       "score": 20
     },
     "blockchain/reth-block-execution": {
-      "fingerprint": "ce71b681f29a00f9",
+      "fingerprint": "e20ff4ab16a1e72d",
       "score": 20
     },
     "blockchain/tendermint-bft": {
       "fingerprint": "db70cedede51a134",
       "score": 20
     },
-    "crypto/csprng": {
-      "fingerprint": "7e951a827eb36299",
-      "score": 20
-    },
-    "gpu/cuda-thread-hierarchy": {
-      "fingerprint": "c323cf22a5e63b4e",
-      "score": 20
-    },
     "gpu/hw-gpu-comparison": {
-      "fingerprint": "b939e13c4ceba44d",
+      "fingerprint": "80aab51653a6df34",
       "score": 20
     },
     "isms-aml/isms-access-control": {
@@ -438,7 +390,7 @@
       "score": 20
     },
     "blockchain/reth-alloy-primitives": {
-      "fingerprint": "225fb9ab86bc290b",
+      "fingerprint": "957db452ac8410f7",
       "score": 19
     },
     "blockchain/reth-sync": {
@@ -453,28 +405,16 @@
       "fingerprint": "10933236665a6d14",
       "score": 18
     },
-    "ai/feature-engineering": {
-      "fingerprint": "08aff2a7ce624885",
-      "score": 18
-    },
-    "ai/fft": {
-      "fingerprint": "816f58bbce5e2f27",
-      "score": 18
-    },
     "ai/neural-network": {
       "fingerprint": "8fede6dd1a3bbd92",
       "score": 18
     },
     "ai/seq2seq": {
-      "fingerprint": "9631b13caabb32e1",
+      "fingerprint": "010d338383b09bd3",
       "score": 18
     },
     "ai/training-pipeline": {
-      "fingerprint": "92a652141ddf26ef",
-      "score": 18
-    },
-    "ai/vllm-serving": {
-      "fingerprint": "a1a375fefb9705d9",
+      "fingerprint": "0b9c7c9363010760",
       "score": 18
     },
     "blockchain/berachain": {
@@ -510,11 +450,11 @@
       "score": 18
     },
     "blockchain/helios-bootstrap": {
-      "fingerprint": "96f1a05f2465438f",
+      "fingerprint": "81585d69c1b04f53",
       "score": 18
     },
     "blockchain/helios-consensus": {
-      "fingerprint": "f69315f1f9e4d287",
+      "fingerprint": "9926a204ecc41332",
       "score": 18
     },
     "blockchain/lotus-chain": {
@@ -526,7 +466,7 @@
       "score": 18
     },
     "blockchain/prysm-block-processing": {
-      "fingerprint": "40d1e82a86528a70",
+      "fingerprint": "df8e1b42c6b1e0b7",
       "score": 18
     },
     "gpu/gpu-proof-pipeline": {
@@ -538,63 +478,43 @@
       "score": 18
     },
     "p2p/tls-fundamentals": {
-      "fingerprint": "716128a9f95022a9",
+      "fingerprint": "75359860b238c84d",
       "score": 18
     },
     "ai/claw-hooks": {
       "fingerprint": "a5fc102fee03f61e",
       "score": 16
     },
-    "ai/llm-serving-capacity": {
-      "fingerprint": "42850ae25e79c6e1",
-      "score": 16
-    },
     "ai/rlhf": {
       "fingerprint": "0ce6c3ce57591c35",
       "score": 16
     },
-    "ai/sparse-autoencoder": {
-      "fingerprint": "ff52ce019ecb08d1",
-      "score": 16
-    },
-    "ai/text-unicode-encoding": {
-      "fingerprint": "9b5ef163b17f066d",
-      "score": 16
-    },
     "ai/vae": {
-      "fingerprint": "0ffc422e7a860bab",
-      "score": 16
-    },
-    "blockchain/crypto-theory": {
-      "fingerprint": "e71c4e8dac297beb",
+      "fingerprint": "a79cfa2e863b7962",
       "score": 16
     },
     "blockchain/dai-maker": {
       "fingerprint": "19b87f415d5ff71e",
       "score": 16
     },
-    "crypto/elliptic-curves": {
-      "fingerprint": "594e5629981052eb",
-      "score": 16
-    },
     "p2p/discv5": {
-      "fingerprint": "a1c45de208f91d4e",
+      "fingerprint": "72aef3d4fc089f1b",
       "score": 16
     },
     "p2p/libp2p": {
       "fingerprint": "1b6a3222a0fb64c5",
       "score": 16
     },
+    "ai/claw-worker-boot": {
+      "fingerprint": "7f0fd01de2069ea4",
+      "score": 15
+    },
     "ai/compression-pipeline": {
-      "fingerprint": "1d8bbc2924a4528f",
+      "fingerprint": "21778800a11f754a",
       "score": 14
     },
     "ai/distributional-semantics": {
-      "fingerprint": "fe6b05c06074fc32",
-      "score": 14
-    },
-    "ai/ecod": {
-      "fingerprint": "3bb8b936f7fc0880",
+      "fingerprint": "e0a58e90ca117f12",
       "score": 14
     },
     "ai/skills-anatomy": {
@@ -602,11 +522,11 @@
       "score": 14
     },
     "ai/tokenizer": {
-      "fingerprint": "204abe9981803463",
+      "fingerprint": "440178e2abf2b56a",
       "score": 14
     },
     "ai/vision-transformer": {
-      "fingerprint": "7221d8ca0aa1d594",
+      "fingerprint": "f5fbc3e338ecfad3",
       "score": 14
     },
     "blockchain/avalanche-consensus": {
@@ -622,12 +542,8 @@
       "score": 14
     },
     "blockchain/commonware-simplex": {
-      "fingerprint": "a6af479cab7cf4a7",
+      "fingerprint": "94a55ec72edfeadd",
       "score": 14
-    },
-    "blockchain/cosmos-sdk": {
-      "fingerprint": "82ae2167793e1f97",
-      "score": 12
     },
     "blockchain/curve-stable": {
       "fingerprint": "f7dd4df7625517f4",
@@ -646,23 +562,15 @@
       "score": 14
     },
     "blockchain/merkle-patricia-trie": {
-      "fingerprint": "6f39fc8f63ed6545",
-      "score": 14
-    },
-    "blockchain/node-architecture": {
-      "fingerprint": "951a3f179217867e",
+      "fingerprint": "e4a4d5f708a602ec",
       "score": 14
     },
     "blockchain/prysm-forkchoice": {
-      "fingerprint": "a45852a6a2f16449",
+      "fingerprint": "dd5234c5b581460e",
       "score": 14
     },
     "blockchain/prysm-ssz": {
-      "fingerprint": "ad0f4009abe5cac2",
-      "score": 14
-    },
-    "blockchain/rollup-fundamentals": {
-      "fingerprint": "69e18aaad939b4ff",
+      "fingerprint": "aa41b920441c1390",
       "score": 14
     },
     "blockchain/usdc-circle": {
@@ -673,16 +581,12 @@
       "fingerprint": "6469f24014453ba0",
       "score": 14
     },
-    "gpu/hw-memory": {
-      "fingerprint": "9fa668dd88f74250",
-      "score": 14
-    },
     "gpu/hw-server-vs-desktop": {
-      "fingerprint": "c3ab0a7bb8e72694",
+      "fingerprint": "e2f61272a6753112",
       "score": 14
     },
     "gpu/hw-storage-comparison": {
-      "fingerprint": "26e5fdbdde46fea1",
+      "fingerprint": "0db5c40a500c4ea7",
       "score": 14
     },
     "gpu/kzg-gpu": {
@@ -697,24 +601,16 @@
       "fingerprint": "429d04406f30ce34",
       "score": 14
     },
-    "ai/claw-worker-boot": {
-      "fingerprint": "7f0fd01de2069ea4",
-      "score": 15
-    },
     "ai/claw-policy-engine": {
       "fingerprint": "69dc2b9767d0d95d",
       "score": 12
     },
-    "ai/hybrid-kv-cache-allocation": {
-      "fingerprint": "a29535f1ccc84a79",
+    "ai/claw-recovery": {
+      "fingerprint": "4faa09991707b4c6",
       "score": 12
     },
     "ai/image-training-stages": {
       "fingerprint": "f828d5e20c90bd54",
-      "score": 12
-    },
-    "ai/math-variance-sampling": {
-      "fingerprint": "f19fe73fdff4eccc",
       "score": 12
     },
     "ai/on-policy-distillation": {
@@ -725,8 +621,8 @@
       "fingerprint": "4340676e963614c9",
       "score": 12
     },
-    "blockchain/consensus-mechanisms": {
-      "fingerprint": "f935393657682abb",
+    "blockchain/cosmos-sdk": {
+      "fingerprint": "82ae2167793e1f97",
       "score": 12
     },
     "blockchain/erasure-coding": {
@@ -741,36 +637,12 @@
       "fingerprint": "e2e7e4ba45b3b75a",
       "score": 12
     },
-    "blockchain/stablecoin-overview": {
-      "fingerprint": "516f5aee2abac8c0",
-      "score": 12
-    },
     "blockchain/tusk": {
       "fingerprint": "57b99d5b8ace9a1b",
       "score": 12
     },
-    "crypto/binary-field-proving": {
-      "fingerprint": "12c5d60f8632143b",
-      "score": 12
-    },
-    "crypto/diffie-hellman": {
-      "fingerprint": "3cdf2a04b5d0b6ec",
-      "score": 12
-    },
-    "crypto/discrete-log": {
-      "fingerprint": "ff1680bb0f8e0a41",
-      "score": 12
-    },
-    "crypto/reed-solomon": {
-      "fingerprint": "a8ab1871d07323ae",
-      "score": 12
-    },
     "crypto/scroll-zkevm": {
       "fingerprint": "a180dd8eef99e661",
-      "score": 12
-    },
-    "gpu/cuda-basics": {
-      "fingerprint": "2a1e3499bb193ecf",
       "score": 12
     },
     "gpu/gpu-witness-gen": {
@@ -782,23 +654,19 @@
       "score": 12
     },
     "p2p/content-addressing": {
-      "fingerprint": "009f4acab0184bcf",
+      "fingerprint": "63d6a78b36a13aa3",
       "score": 12
     },
     "p2p/discv4": {
-      "fingerprint": "c412f8c1029375c7",
+      "fingerprint": "660251effa740701",
       "score": 12
     },
     "p2p/libp2p-noise": {
-      "fingerprint": "7717530a0b8181f3",
+      "fingerprint": "23ad424465517be2",
       "score": 12
     },
     "p2p/rqbit": {
       "fingerprint": "9c1ad57e4be09005",
-      "score": 12
-    },
-    "ai/claw-recovery": {
-      "fingerprint": "4faa09991707b4c6",
       "score": 12
     },
     "ai/bptt": {
@@ -817,24 +685,12 @@
       "fingerprint": "21081bf2cc329cd5",
       "score": 10
     },
-    "ai/lstm": {
-      "fingerprint": "8f2a38b84076a297",
-      "score": 10
-    },
     "ai/multiview-fusion": {
-      "fingerprint": "98155f76cde3d9e7",
+      "fingerprint": "0f2bf114643ba15a",
       "score": 10
     },
     "ai/qwen-korean-consistency": {
       "fingerprint": "d615e1e564da10c3",
-      "score": 10
-    },
-    "ai/word2vec-negative-sampling": {
-      "fingerprint": "2591bb9f631f225f",
-      "score": 10
-    },
-    "blockchain/aave-v3": {
-      "fingerprint": "564bdc110e17ea65",
       "score": 10
     },
     "blockchain/commonware-deep-dive": {
@@ -850,15 +706,15 @@
       "score": 10
     },
     "blockchain/helios-types": {
-      "fingerprint": "0a0bb1b6d514a0d6",
+      "fingerprint": "7f5013b9e91cf5dd",
       "score": 10
     },
     "blockchain/prysm-state-cache": {
-      "fingerprint": "475d6f44d4fb0547",
+      "fingerprint": "659b9a78e32690a8",
       "score": 10
     },
     "blockchain/prysm-sync-committee": {
-      "fingerprint": "a4fb4d19907b7d57",
+      "fingerprint": "6be02c6bdf63dd82",
       "score": 10
     },
     "blockchain/reth-mev": {
@@ -869,22 +725,16 @@
       "fingerprint": "f8669e011aca58d5",
       "score": 10
     },
-    "crypto/sparse-multiplication": {
-      "fingerprint": "f7bafee12453cdf9",
-      "score": 10
-    },
     "gpu/cuda-matrix-multiply": {
       "fingerprint": "dfcc32bd797fe585",
       "score": 10
     },
     "gpu/gpu-collective-network": {
-      "fingerprint": "4abd95e318822a80",
-      "score": 10,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "fingerprint": "8a356631565cffeb",
+      "score": 10
     },
     "gpu/hw-nvme-storage": {
-      "fingerprint": "425385691ee4ef06",
+      "fingerprint": "b87c1300fd1fedf1",
       "score": 10
     },
     "p2p/bittorrent": {
@@ -892,7 +742,7 @@
       "score": 10
     },
     "p2p/gossip-fundamentals": {
-      "fingerprint": "8579330327ea41af",
+      "fingerprint": "04c815d48ee0e8ab",
       "score": 10
     },
     "p2p/libp2p-tcp": {
@@ -903,20 +753,12 @@
       "fingerprint": "b4d41c19f195cc4c",
       "score": 9
     },
-    "crypto/field-arithmetic": {
-      "fingerprint": "f1b8af8a680aceda",
-      "score": 9
-    },
-    "ai/augmentation-evaluation": {
-      "fingerprint": "56e7097d95e69527",
-      "score": 8
-    },
     "ai/cnn-translation-equivariance": {
       "fingerprint": "cf4c64a226cfacf3",
       "score": 8
     },
     "ai/dezero-nn": {
-      "fingerprint": "8f2090439cbe2d72",
+      "fingerprint": "596384ece4e77907",
       "score": 8
     },
     "ai/dpo": {
@@ -939,19 +781,13 @@
       "fingerprint": "81dc28e0ed0ff689",
       "score": 8
     },
-    "ai/math-gradient-descent-convergence": {
-      "fingerprint": "d84f0797e5aa28a7",
-      "score": 8
-    },
-    "ai/orpo": {
-      "fingerprint": "8aa214662df475fe",
+    "ai/lstm": {
+      "fingerprint": "8f2a38b84076a297",
       "score": 8
     },
     "ai/rnn-language-model": {
       "fingerprint": "12d2b9f3dc9b80b4",
-      "score": 8,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "score": 8
     },
     "ai/self-distillation": {
       "fingerprint": "c34ee0bc7f5383e8",
@@ -961,60 +797,28 @@
       "fingerprint": "e80670a08d2f23a7",
       "score": 8
     },
-    "ai/subword-static-embeddings": {
-      "fingerprint": "addb94fd905c9dbe",
-      "score": 8
-    },
     "ai/tabular-deep-learning": {
       "fingerprint": "9b76c424d52a3e1d",
-      "score": 8
-    },
-    "ai/word2vec-prediction-objectives": {
-      "fingerprint": "196f41479479ad03",
       "score": 8
     },
     "blockchain/commonware-storage": {
       "fingerprint": "d4ca9c24e15eb957",
       "score": 8
     },
-    "blockchain/ethereum-future-roadmap": {
-      "fingerprint": "ae4a125de87655c9",
-      "score": 8
-    },
     "blockchain/lsm-tree": {
       "fingerprint": "2c995c6b4751c009",
       "score": 8
     },
-    "crypto/frobenius-optimization": {
-      "fingerprint": "e9c79786da7667c0",
-      "score": 8
-    },
-    "crypto/jolt": {
-      "fingerprint": "09f3aa9780acf39a",
-      "score": 8
-    },
     "crypto/libiop": {
-      "fingerprint": "1b4c24192255c35b",
+      "fingerprint": "82406a2e47ea8c80",
       "score": 8
-    },
-    "crypto/mpc": {
-      "fingerprint": "141259a9247fe222",
-      "score": 8
-    },
-    "crypto/poseidon-hash": {
-      "fingerprint": "ac920f6102941b26",
-      "score": 6
     },
     "crypto/proofofsql": {
       "fingerprint": "1ac130429af31b96",
       "score": 8
     },
-    "crypto/snark-overview": {
-      "fingerprint": "6f359cb12b70b1b1",
-      "score": 8
-    },
-    "crypto/stark-theory": {
-      "fingerprint": "70c521e82b911173",
+    "firms/why-firms-exist": {
+      "fingerprint": "d2ff64bffe78e909",
       "score": 8
     },
     "gpu/gpu-arch-hopper": {
@@ -1022,13 +826,11 @@
       "score": 8
     },
     "gpu/gpu-interconnects": {
-      "fingerprint": "e8313137e33b8e1a",
-      "score": 8,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "fingerprint": "8be01e2e453e9e4c",
+      "score": 8
     },
     "gpu/hw-power-cooling": {
-      "fingerprint": "9074cd2966541085",
+      "fingerprint": "fbfc2001452f3c30",
       "score": 8
     },
     "gpu/msm-gpu-impl": {
@@ -1103,12 +905,8 @@
       "fingerprint": "9cb1db3296c429ae",
       "score": 6
     },
-    "ai/claude-code-hooks": {
-      "fingerprint": "7bc68bb155c07977",
-      "score": 6
-    },
     "ai/claw-subagent-orchestration": {
-      "fingerprint": "0c33582a0faf4d35",
+      "fingerprint": "0e28a17e101c0b2c",
       "score": 6
     },
     "ai/cnn-receptive-fields": {
@@ -1117,10 +915,6 @@
     },
     "ai/continued-pretraining": {
       "fingerprint": "c7c99e3599222ba2",
-      "score": 6
-    },
-    "ai/cross-entropy": {
-      "fingerprint": "7f4488c0f5f4e605",
       "score": 6
     },
     "ai/deepfake-dataset-governance": {
@@ -1133,32 +927,14 @@
     },
     "ai/denoising-masked-autoencoders": {
       "fingerprint": "8d8261e585f5ce9f",
-      "score": 6,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "score": 6
     },
     "ai/hyper-connections-residual-streams": {
       "fingerprint": "3f44bb12e037c32d",
       "score": 6
     },
-    "ai/image-augmentation-transforms": {
-      "fingerprint": "b49927b3951ce209",
-      "score": 6
-    },
-    "ai/mcp-server-operations": {
-      "fingerprint": "f11851082a24da75",
-      "score": 6
-    },
-    "ai/reward-design-for-verifiable-rl": {
-      "fingerprint": "712c57d07011475c",
-      "score": 6
-    },
     "ai/sequence-modeling-tabular": {
       "fingerprint": "5c6bc00d45a0ebba",
-      "score": 6
-    },
-    "ai/sionic-glm-b300": {
-      "fingerprint": "dce4d0dddce2ff8a",
       "score": 6
     },
     "ai/tensor-and-pipeline-parallel-inference": {
@@ -1170,7 +946,7 @@
       "score": 6
     },
     "blockchain/evm-advanced": {
-      "fingerprint": "aa4ace5e1e5d89c5",
+      "fingerprint": "e1b947048f9802bf",
       "score": 6
     },
     "blockchain/helios": {
@@ -1186,11 +962,11 @@
       "score": 6
     },
     "blockchain/prysm-slot-processing": {
-      "fingerprint": "5ab507bfa46d1bbd",
+      "fingerprint": "f40865c264f36a29",
       "score": 6
     },
     "blockchain/reth-eip1559": {
-      "fingerprint": "6a76d2f192ceaa62",
+      "fingerprint": "6a33d25060d99ff2",
       "score": 6
     },
     "blockchain/reth-exex": {
@@ -1198,62 +974,36 @@
       "score": 6
     },
     "blockchain/reth-trie": {
-      "fingerprint": "37963e74022bed8d",
-      "score": 6
-    },
-    "blockchain/uniswap-v2": {
-      "fingerprint": "1017a3f2da9f51ac",
-      "score": 6
-    },
-    "crypto/fft": {
-      "fingerprint": "69e68f6555a44c71",
+      "fingerprint": "9384812175ec4ddd",
       "score": 6
     },
     "crypto/halo2": {
       "fingerprint": "6062ed647b779a7b",
       "score": 6
     },
-    "crypto/hash-theory": {
-      "fingerprint": "b062276b2ea617b0",
-      "score": 6
-    },
-    "crypto/nova": {
-      "fingerprint": "bf9b5182ef299162",
-      "score": 6
-    },
-    "crypto/plonk": {
-      "fingerprint": "a7d9328948dd6b51",
-      "score": 6
-    },
     "crypto/plonky3": {
       "fingerprint": "4b30a16c4822d27f",
       "score": 6
     },
-    "crypto/zk-theory": {
-      "fingerprint": "d7ae9ff29a7293fd",
+    "crypto/poseidon-hash": {
+      "fingerprint": "ac920f6102941b26",
       "score": 6
     },
     "gpu/b300-switchless-network": {
-      "fingerprint": "b8015663462d4a96",
+      "fingerprint": "965712808677889e",
       "score": 6
     },
     "gpu/hw-network": {
-      "fingerprint": "c04d74b03caaf6ae",
-      "score": 6,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "fingerprint": "e3bde072394c85ba",
+      "score": 6
     },
     "gpu/rdma-roce": {
-      "fingerprint": "0903a1ab3f58b6e0",
-      "score": 6,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "브라우저에서 확인된 공유 도식의 폭·좌표·긴 문자열 줄바꿈만 교정했습니다. 본문·설명·수치의 문장 내용은 기존과 같아 문장 검수 결정을 유지합니다."
+      "fingerprint": "2e71dbdbfa207abe",
+      "score": 6
     },
     "gpu/warp-stall-reasons-and-issue-utilization": {
       "fingerprint": "007358e7b7d60e24",
-      "score": 6,
-      "reviewedAt": "2026-10-04",
-      "reviewNote": "모바일 조작부가 그림을 가리지 않도록 버튼만 W0 선택 등 짧은 단계명으로 줄였습니다. 긴 장면 제목과 본문·수치 설명은 그대로 유지되어 기존 문장 검수 결정을 유지합니다."
+      "score": 6
     },
     "isms-aml/aml-fds-deep": {
       "fingerprint": "dc872bb120159689",
@@ -1273,16 +1023,6 @@
     },
     "p2p/iroh": {
       "fingerprint": "7138fb15dcf78525",
-      "score": 6
-    },
-    "firms/why-firms-exist": {
-      "fingerprint": "d2ff64bffe78e909",
-      "score": 8,
-      "reviewedAt": "2026-10-05",
-      "note": "Actualbody and independentreview:4 short repeated1..6 insidecost arrays are onecase with explicit assumptions.3 dense totalcost arrays movedton0..6 tables; no longparagraphs/headings/editorialjargon. Independent report /tmp/teach-all/root-firms-independent-theory.json PASS."
-    },
-    "ai/kv-cache-fundamentals": {
-      "fingerprint": "f38add71feb463f6",
       "score": 6
     }
   }

@@ -44,14 +44,14 @@ export default function Stability() {
           0&<h\lambda<2
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          x_{n+\underbrace{1}_{\text{amplification factor 계산}}}&=\underbrace{(1-h\lambda)x_n}_{\text{amplification factor 계산}} \\
-          |1-h\lambda|&<1 \\
-          0&<\underbrace{h\lambda<2}_{\text{허용 경계 판정}}
+          x_{n+1}&=\underbrace{(1-h\lambda)}_{\text{한 step 배율}}x_n \\
+          \underbrace{|1-h\lambda|<1}_{\text{줄어들 조건}} \\
+          0&<\underbrace{h\lambda<2}_{\text{안정 step 범위}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`(1-h\lambda)x_n`, annotation: ["amplification factor이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
-          { expression: String.raw`1`, annotation: ["amplification factor이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
-          { expression: String.raw`h\lambda<2`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","한 번의 update를 이전 값에 곱하는 배율로 정리합니다."] },
+          { expression: String.raw`(1-h\lambda)`, annotation: ["Euler 한 step은 이전 값에 1−hλ를 곱함","λ=10 s⁻¹, h=0.25 s면 1−2.5=−1.5"] },
+          { expression: String.raw`|1-h\lambda|<1`, annotation: ["반복해도 크기가 줄려면 배율 절댓값이 1 미만","|−1.5|>1이라 부호·크기가 번갈아 폭주"] },
+          { expression: String.raw`h\lambda<2`, annotation: ["절댓값 조건을 풀면 0<hλ<2","λ=10 s⁻¹이면 h<0.2 s","안정해도 h가 크면 정확도는 낮음"] },
         ]}
         terms={[
           {

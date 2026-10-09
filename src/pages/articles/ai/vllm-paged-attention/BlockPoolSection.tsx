@@ -45,13 +45,13 @@ export default function BlockPoolSection({ onCodeRef }: { onCodeRef: (key: strin
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
 \operatorname{ref}(b)
-&=\underbrace{\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]}_{\text{오른쪽 항으로 결과 계산}} \\
+&=\underbrace{\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]}_{\text{live request table에서 b를 가리키는 entry 수}} \\
 \operatorname{reusable}(b)
-&\Longrightarrow \operatorname{ref}(b)=\underbrace{0}_{\text{오른쪽 항으로 결과 계산}}
+&\Longrightarrow \underbrace{\operatorname{ref}(b)=0}_{\text{아무도 안 볼 때만 덮어쓰기}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]`, annotation: ["오른쪽에 사례의 값을 대입해 왼쪽 값을 계산합니다.","외부 pin이 없는 단순 모형에서 live request의 block table을 보며","block b를 가리키는 entry 수를 셉니다."] },
-          { expression: String.raw`0`, annotation: ["오른쪽에 사례의 값을 대입해 왼쪽 값을 계산합니다.","외부 pin이 없는 단순 모형에서 live request의 block table을 보며","block b를 가리키는 entry 수를 셉니다."] },
+          { expression: String.raw`\sum_{r\in\mathcal R}\sum_i \mathbf1[T_r[i]=b]`, annotation: ["live request r마다 block table T_r의 entry 중","physical block b를 가리키는 것을 세어 더합니다.","A와 B가 P7을 공유하면 ref(P7)=2"] },
+          { expression: String.raw`\operatorname{ref}(b)=0`, annotation: ["A가 끝나도 ref=1이라 덮어쓸 수 없고 B도 참조를","놓아 0이 된 뒤에야 free queue에서 재사용합니다.","hash 조회 항목만 지우는 동작과는 다릅니다"] },
         ]}
         terms={REF_TERMS}
         assumptions={[

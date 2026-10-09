@@ -42,11 +42,12 @@ export default function EffectiveTip({
         question="Alice가 실제로 낸 금액 중 얼마가 burn되고 얼마가 proposer에게 갈까?"
         idea="Fee cap은 총 per-gas 가격의 상한이고 priority cap은 tip의 상한입니다. 먼저 두 상한 안에서 유효 tip을 정한 뒤 실제 gas used를 곱해 burn과 tip을 분리합니다."
         formula={String.raw`\begin{aligned}P_e&=\min(P_m,F_m-B)\\&=3\ \mathrm{gwei/gas}\\[2pt]C_b&=BU\\&=512{,}500\ \mathrm{gwei}\\[2pt]C_t&=P_eU\\&=75{,}000\ \mathrm{gwei}\\[2pt]C&=C_b+C_t\\&=587{,}500\ \mathrm{gwei}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}P_e&=\underbrace{\min(P_m,F_m-B)}_{\text{경계 후보 선택}}\\&=\underbrace{3\ \mathrm{gwei/gas}}_{\text{기준량당 비율}}\\[2pt]C_b&=\underbrace{BU}_{\text{Execution fee 계산}}\\&=512{,}500\ \mathrm{gwei}\\[2pt]C_t&=P_eU\\&=75{,}000\ \mathrm{gwei}\\[2pt]C&=C_b+C_t\\&=587{,}500\ \mathrm{gwei}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P_e&=\underbrace{\min(P_m,F_m-B)}_{\text{두 cap 중 작은 tip}}\\&=3\ \mathrm{gwei/gas}\\[2pt]C_b&=\underbrace{BU}_{\text{base fee × gas, burn}}\\&=512{,}500\ \mathrm{gwei}\\[2pt]C_t&=\underbrace{P_eU}_{\text{tip × gas, proposer}}\\&=75{,}000\ \mathrm{gwei}\\[2pt]C&=\underbrace{C_b+C_t}_{\text{Alice의 총 지불}}\\&=587{,}500\ \mathrm{gwei}\end{aligned}`}
         operations={[
-          { expression: String.raw`\min(P_m,F_m-B)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Fee cap은 총 per-gas 가격의 상한이고","priority cap은 tip의 상한입니다."] },
-          { expression: String.raw`3\ \mathrm{gwei/gas}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Fee cap은 총 per-gas 가격의 상한이고","priority cap은 tip의 상한입니다."] },
-          { expression: String.raw`BU`, annotation: ["Execution fee이(가) 식의 결과에 기여하는 방식을","계산합니다.","Fee cap은 총 per-gas 가격의 상한이고","priority cap은 tip의 상한입니다."] },
+          { expression: String.raw`\min(P_m,F_m-B)`, annotation: ["priority cap 3과 fee cap 40−20.5=19.5 중","작은 3 gwei/gas가 유효 tip","F_m<B면 이 block에서 실행 불가"] },
+          { expression: String.raw`BU`, annotation: ["base fee 20.5 × gas used 25,000","512,500 gwei는 protocol이 burn"] },
+          { expression: String.raw`P_eU`, annotation: ["유효 tip 3 × 25,000 = 75,000 gwei","block beneficiary(proposer) 몫"] },
+          { expression: String.raw`C_b+C_t`, annotation: ["587,500 gwei = 0.0005875 ETH","max fee 40 전부가 아니라 B+P_e만 냄"] },
         ]}
         terms={[
           { symbol: "F_m", name: "Max fee cap", description: "Sender가 허용한 총 가격 상한입니다. 예시는 40 gwei/gas입니다." },

@@ -31,9 +31,10 @@ export default function Overview() {
         question="입력 vector 하나를 두 class 중 하나로 어떻게 나눌까?"
         idea={<>먼저 <M>{"w"}</M>가 중요하게 보는 방향으로 input을 projection하고, bias로 경계 위치를 옮깁니다. 마지막 step function은 score의 부호만 남깁니다.</>}
         formula={String.raw`z=w^\top x+b=\sum_{i=1}^{d}w_i x_i+b,\qquad \hat y=H(z)=\begin{cases}1&z>0\\0&z\le 0\end{cases}`}
-        annotatedFormula={String.raw`z=w^\top x+b=\sum_{i=1}^{d}w_i x_i+b,\qquad \hat y=H(z)=\begin{cases}1&z>\underbrace{0}_{\text{Heaviside step 계산}}\\0&z\le 0\end{cases}`}
+        annotatedFormula={String.raw`z=\underbrace{w^\top x+b}_{\text{projection + 경계 이동}}=\sum_{i=1}^{d}w_i x_i+b,\qquad \hat y=\underbrace{H(z)}_{\text{부호만 남김}}=\begin{cases}1&z>0\\0&z\le 0\end{cases}`}
         operations={[
-          { expression: String.raw`0`, annotation: ["Heaviside step이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 w 가 중요하게 보는 방향으로 input을","projection하고, bias로 경계 위치를 옮깁니다."] },
+          { expression: String.raw`w^\top x+b`, annotation: ["input을 w가 중요하게 보는 방향으로 projection","bias b로 경계를 원점에서 평행 이동","z=0인 곳이 결정 경계 hyperplane"] },
+          { expression: String.raw`H(z)`, annotation: ["score의 부호만 남겨 0 또는 1","z>0이면 1, z≤0이면 0 (z=0은 convention)","positive region은 half-space 하나"] },
         ]}
         terms={[
           { symbol: "x\\in\\mathbb{R}^{d}", name: "input vector", description: "분류할 sample의 d개 feature입니다." },
@@ -48,9 +49,10 @@ export default function Overview() {
         question="분류를 틀렸을 때 결정 경계를 어느 방향으로 움직일까?"
         idea={<>정답 <M>{"y"}</M>와 예측 <M>{"\\hat y"}</M>의 차이에 input을 곱해, 틀린 sample을 올바른 쪽으로 보내는 방향으로 weight와 bias를 이동합니다.</>}
         formula={String.raw`w\leftarrow w+\eta(y-\hat y)x,\qquad b\leftarrow b+\eta(y-\hat y)`}
-        annotatedFormula={String.raw`w\le\underbrace{ftarrow w+\eta(y-\hat y)x,\qquad b\leftarrow b+\eta(y-\hat y)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`w\leftarrow w+\underbrace{\eta(y-\hat y)x}_{\text{틀린 sample 쪽으로}},\qquad b\leftarrow b+\underbrace{\eta(y-\hat y)}_{\text{경계 평행 이동}}`}
         operations={[
-          { expression: String.raw`ftarrow w+\eta(y-\hat y)x,\qquad b\leftarrow b+\eta(y-\hat y)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정답 y 와 예측 \\hat y 의 차이에 input을 곱해,","틀린 sample을 올바른 쪽으로 보내는 방향으로","weight와 bias를 이동합니다."] },
+          { expression: String.raw`\eta(y-\hat y)x`, annotation: ["맞히면 y−ŷ=0이라 update 없음","y=1, ŷ=0이면 +ηx: x 쪽으로 경계를 당김","y=0, ŷ=1이면 −ηx: x에서 멀어짐"] },
+          { expression: String.raw`\eta(y-\hat y)`, annotation: ["bias는 input 없이 같은 부호로 이동","η가 한 mistake가 경계를 움직이는 크기"] },
         ]}
         terms={[
           { symbol: "y\\in\\{0,1\\}", name: "target", description: "sample의 정답 label입니다." },

@@ -29,14 +29,14 @@ e_i&=x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},\\
 Z_0&=[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-N&=\underbrace{\frac HP\frac WP,\qquad x_p^{(i)}\in\mathbb R^{P^2C},}_{\text{오른쪽 항으로 결과 계산}}\\
-e_i&=\underbrace{x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},}_{\text{position embedding 계산}}\\
-Z_0&=\underbrace{[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.}_{\text{오른쪽 항으로 결과 계산}}
+N&=\underbrace{\frac HP\frac WP}_{\text{patch token 개수}},\qquad x_p^{(i)}\in\underbrace{\mathbb R^{P^2C}}_{\text{펼친 patch 길이}},\\
+e_i&=\underbrace{x_p^{(i)}E}_{\text{D차원 투영}}+\underbrace{p_i}_{\text{grid 위치}},\qquad E\in\mathbb R^{P^2C\times D},\\
+Z_0&=\underbrace{[e_{\mathrm{cls}};e_1;\ldots;e_N]}_{\text{[CLS]+patch N개}}\in\mathbb R^{(N+1)\times D}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\frac HP\frac WP,\qquad x_p^{(i)}\in\mathbb R^{P^2C},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
-          { expression: String.raw`x_p^{(i)}E+p_i,\qquad E\in\mathbb R^{P^2C\times D},`, annotation: ["position embedding이(가) 식의 결과에 기여하는","방식을 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
-          { expression: String.raw`[e_{\mathrm{cls}};e_1;\ldots;e_N]\in\mathbb R^{(N+1)\times D}.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Patch 한 변 P가 spatial sampling 간격을","정합니다."] },
+          { expression: String.raw`\frac HP\frac WP`, annotation: ["세로·가로를 P 간격으로 잘라", "patch 수 N을 셉니다", "224×224, P=16이면 14×14=196"] },
+          { expression: String.raw`x_p^{(i)}E+p_i`, annotation: ["펼친 P²C 값을 모든 patch가 공유하는", "E로 D차원에 투영한 뒤", "i번째 grid 위치 벡터 p_i를 더합니다"] },
+          { expression: String.raw`[e_{\mathrm{cls}};e_1;\ldots;e_N]`, annotation: ["[CLS] 하나와 patch token N개를 쌓아", "길이 N+1 sequence를 만듭니다", "N=196이면 197"] },
         ]}
         terms={[
           { symbol: "H,W,C", name: "image shape", description: "높이·너비·channel 수로, batch axis를 제외한 한 image의 tensor shape입니다." },
@@ -63,15 +63,16 @@ y_{r,s,d}&=k_d^\top v_{r,s}+b_d,\\
 \operatorname{flatten}(K_d)&=E_{:,d}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-k_d&=\underbrace{\operatorname{flatten}(K_d),}_{\text{d-th convolution kernel 계산}}\\
-v_{r,s}&=\underbrace{\operatorname{patch}_{P}(x;r,s),}_{\text{flattened patch 계산}}\\
-y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d,}_{\text{flattened patch 계산}}\\
-\operatorname{flatten}(K_d)&=E_{:,d}.
+k_d&=\underbrace{\operatorname{flatten}(K_d)}_{\text{kernel을 벡터로}},\\
+v_{r,s}&=\underbrace{\operatorname{patch}_{P}(x;r,s)}_{\text{(r,s) patch를 벡터로}},\\
+y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d}_{\text{patch 하나의 d번째 좌표}},\\
+\operatorname{flatten}(K_d)&=\underbrace{E_{:,d}}_{\text{E의 d번째 열과 동일}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{flatten}(K_d),`, annotation: ["d-th convolution kernel이(가) 식의 결과에","기여하는 방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
-          { expression: String.raw`\operatorname{patch}_{P}(x;r,s),`, annotation: ["flattened patch이(가) 식의 결과에 기여하는","방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
-          { expression: String.raw`k_d^\top v_{r,s}+b_d,`, annotation: ["flattened patch이(가) 식의 결과에 기여하는","방식을 계산합니다.","Kernel size와 stride를 P로 둔","convolution은 각 P×P 영역을 겹치지 않게"] },
+          { expression: String.raw`\operatorname{flatten}(K_d)`, annotation: ["d번째 P×P×C conv kernel을", "patch와 같은 순서로 펼친 벡터"] },
+          { expression: String.raw`\operatorname{patch}_{P}(x;r,s)`, annotation: ["stride P로 (r,s)칸의 P×P×C 값을", "겹침 없이 읽어 펼칩니다"] },
+          { expression: String.raw`k_d^\top v_{r,s}+b_d`, annotation: ["kernel과 patch의 dot product + bias", "= 펼친 patch × E의 열 d와 같은 값"] },
+          { expression: String.raw`E_{:,d}`, annotation: ["conv weight D개를 E의 열 순서대로", "놓으면 두 구현의 출력이 일치합니다", "flatten 순서가 다르면 깨집니다"] },
         ]}
         terms={[
           { symbol: "K_d", name: "d-th convolution kernel", description: "D개 output token coordinate 중 d번째 값을 만드는 P×P×C weight입니다." },

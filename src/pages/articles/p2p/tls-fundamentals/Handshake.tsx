@@ -39,14 +39,14 @@ T_n &= \operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),\\
 \operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)&=\mathrm{true}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-T_n &= \underbrace{\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),}_{\text{transcript hash 계산}}\\
-\sigma &= \underbrace{\operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),}_{\text{TLS 1.3 signature 계산}}\\
-\operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)&=\underbrace{\mathrm{true}.}_{\text{TLS 1.3 signature 계산}}
+T_n &= \operatorname{Hash}(\underbrace{M_1\,\|\,M_2\,\|\cdots\|\,M_n}_{\text{ClientHello부터 순서대로}}),\\
+\sigma &= \operatorname{Sign}_{sk_{cert}}(\underbrace{\text{context}}_{\text{TLS 전용 접두}}\,\|\,\underbrace{T_n}_{\text{이번 협상 전체}}),\\
+\underbrace{\operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)}_{\text{인증서 공개키로 검사}}&=\mathrm{true}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n),`, annotation: ["transcript hash이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
-          { expression: String.raw`\operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n),`, annotation: ["TLS 1.3 signature context이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
-          { expression: String.raw`\mathrm{true}.`, annotation: ["TLS 1.3 signature context이(가) 식의","결과에 기여하는 방식을 계산합니다.","각 handshake message의 직렬화 bytes를","순서대로 누적해 transcript hash를 만들고, 서버는"] },
+          { expression: String.raw`\operatorname{Hash}(M_1\,\|\,M_2\,\|\cdots\|\,M_n)`, annotation: ["직렬화된 handshake message를 순서대로", "이어 붙여 누적 hash", "ALPN·key share 한 byte만 바뀌어도 다름"] },
+          { expression: String.raw`\operatorname{Sign}_{sk_{cert}}(\text{context}\,\|\,T_n)`, annotation: ["서버가 certificate 개인키로 서명", "context 문자열이 다른 protocol 서명과", "혼동되지 않게 domain을 분리"] },
+          { expression: String.raw`\operatorname{Verify}_{pk_{cert}}(\sigma,\text{context}\,\|\,T_n)`, annotation: ["client가 인증서 공개키로 같은 입력을 검증", "참이면 private key 소유만 증명", "hostname 유효성은 별도 정책"] },
         ]}
         terms={[
           {

@@ -33,12 +33,12 @@ X_i&=\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},\\
 \hat y_i&=F_\theta(X_i).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},}_{\text{오른쪽 항으로 결과 계산}}\\
-\hat y_i&=\underbrace{F_\theta(X_i).}_{\text{오른쪽 항으로 결과 계산}}
+X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}}_{\text{관측·mask·metadata 묶음}},\\
+\hat y_i&=\underbrace{F_\theta(X_i)}_{\text{episode 단위 예측}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 view의 관측값만 모으지 않고, 보이는지 나타내는","mask와 좌표·시각·센서 정보를 담은 metadata를 한","tuple로 묶습니다."] },
-          { expression: String.raw`F_\theta(X_i).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 view의 관측값만 모으지 않고, 보이는지 나타내는","mask와 좌표·시각·센서 정보를 담은 metadata를 한","tuple로 묶습니다."] },
+          { expression: String.raw`\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}`, annotation: ["view v마다 관측 x, 보이는지 m, 좌표·시각 c","V_i가 sample마다 달라도 한 episode","label y_i는 image가 아니라 이 묶음에 붙음"] },
+          { expression: String.raw`F_\theta(X_i)`, annotation: ["가변 개수 tuple을 받아 하나의 prediction","split도 episode가 새지 않게 group 단위로"] },
         ]}
         terms={[
           { symbol: "i,v", name: "sample and view index", description: "i는 같은 대상·사건을 묶은 episode, v는 그 안의 camera·sensor·시점 index입니다." },
@@ -65,12 +65,12 @@ X_i'&=\pi X_i,\\
 F_\theta(X_i')&=F_\theta(X_i)\quad(\forall\pi).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-X_i'&=\underbrace{\pi X_i,}_{\text{오른쪽 항으로 결과 계산}}\\
-F_\theta(X_i')&=\underbrace{F_\theta(X_i)\quad(\forall\pi).}_{\text{오른쪽 항으로 결과 계산}}
+X_i'&=\underbrace{\pi X_i}_{\text{순서만 바꾼 episode}},\\
+F_\theta(X_i')&=\underbrace{F_\theta(X_i)}_{\text{output 불변}}\quad(\forall\pi).
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\pi X_i,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 원소를 다른 순서로 나열한 permutation은 같은","set입니다."] },
-          { expression: String.raw`F_\theta(X_i)\quad(\forall\pi).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 원소를 다른 순서로 나열한 permutation은 같은","set입니다."] },
+          { expression: String.raw`\pi X_i`, annotation: ["view 내용은 그대로, 나열 순서만 재배열","[front, side, top]→[top, front, side]"] },
+          { expression: String.raw`F_\theta(X_i)`, annotation: ["어떤 π를 넣어도 같은 output이어야 set 처리","mean pooling은 합·분모 불변이라 통과","순서 고정 concat은 slot 의미 고정일 때만"] },
         ]}
         terms={[
           { symbol: "π", name: "permutation", description: "View 내용은 그대로 둔 채 나열 순서만 바꾸는 일대일 재배열입니다." },

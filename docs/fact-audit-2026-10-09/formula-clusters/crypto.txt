@@ -1,0 +1,2 @@
+src/pages/articles/crypto/diffie-hellman/Protocol.tsx
+src/pages/articles/crypto/diffie-hellman/Security.tsx

@@ -29,12 +29,12 @@ export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref:
 &\Rightarrow \theta_{t+1}=1.95.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\theta_{t+1}&=\underbrace{\theta_t-\eta g_t,}_{\text{current gradient 계산}}\\
+\theta_{t+1}&=\theta_t-\underbrace{\eta g_t}_{\text{gradient 반대로 이동}},\\
 \theta_t=2,\ \eta=0.1,\ g_t=0.5
 &\Rightarrow \theta_{t+1}=1.95.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\theta_t-\eta g_t,`, annotation: ["current gradient이(가) 식의 결과에 기여하는","방식을 계산합니다.","Gradient가 loss가 가장 빠르게 커지는 방향을","가리키므로 그 반대 방향으로 learning rate만큼"] },
+          { expression: String.raw`\eta g_t`, annotation: ["loss가 가장 빨리 커지는 방향 g_t에 η를 곱해","그 반대로 뺌: η=0.1, g_t=0.5면 0.05 감소","θ=2 → 1.95"] },
         ]}
         terms={[
           { symbol: "θ_t", name: "current parameter", description: "Update 전에 optimizer가 읽은 parameter 값입니다." },

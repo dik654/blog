@@ -20,6 +20,12 @@ const cloud: Category = {
       icon: "☁️",
     },
     {
+      slug: "cloud-kubernetes",
+      name: "Kubernetes 운영",
+      description: "Pod 하나가 Ready가 되는 요청 경로와 한 연결의 패킷 경로를 끝까지 추적합니다.",
+      icon: "☸️",
+    },
+    {
       slug: "cloud-aws",
       name: "AWS Certification",
       description: "CLF-C02·SAA-C03·DVA-C02·SOA-C03의 공식 범위와 선택 기준입니다.",

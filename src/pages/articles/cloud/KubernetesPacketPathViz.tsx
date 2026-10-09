@@ -81,7 +81,7 @@ export default function KubernetesPacketPathViz() {
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{path.summary}</p>
       </figcaption>
 
-      <div className="flex gap-2 overflow-x-auto border-b border-border p-3" role="tablist" aria-label="패킷 경로 선택">
+      <div className="grid grid-cols-2 gap-2 border-b border-border p-3 sm:flex sm:flex-wrap" role="tablist" aria-label="패킷 경로 선택">
         {(Object.keys(paths) as PathKey[]).map((key) => (
           <button
             key={key}
@@ -89,7 +89,7 @@ export default function KubernetesPacketPathViz() {
             role="tab"
             aria-selected={selected === key}
             onClick={() => setSelected(key)}
-            className={`min-h-11 shrink-0 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+            className={`min-h-11 min-w-0 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
               selected === key
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-background text-muted-foreground hover:text-foreground"
@@ -101,7 +101,7 @@ export default function KubernetesPacketPathViz() {
       </div>
 
       <div className="p-4 sm:p-5">
-        <div className="overflow-x-auto rounded-lg border border-border bg-muted/10 p-3 font-mono text-xs leading-6 text-foreground sm:text-sm">
+        <div className="break-all rounded-lg border border-border bg-muted/10 p-3 font-mono text-xs leading-6 text-foreground sm:text-sm">
           {path.packet}
         </div>
         <ol className="mt-4 grid gap-3 lg:grid-cols-5">

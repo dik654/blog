@@ -29,9 +29,11 @@ export default function GossipFundamentalsArticle() {
           question="단순한 random-contact push 모델에서 다음 round의 informed 비율을 어떻게 근사할까?"
           idea="현재 informed 비율 iₜ가 각각 한 peer를 균등하게 고른다고 두고, 아직 uninformed인 비율 1-iₜ 가운데 적어도 한 push를 받을 몫을 평균장으로 근사한다."
           formula={String.raw`i_{t+1}\approx 1-(1-i_t)e^{-i_t}`}
-          annotatedFormula={String.raw`\underbrace{i_{t+1}\approx 1-(1-i_t)e^{-i_t}}_{\text{No-push approximation 계산}}`}
+          annotatedFormula={String.raw`i_{t+1}\approx 1-\underbrace{(1-i_t)}_{\text{아직 모르는 비율}}\underbrace{e^{-i_t}}_{\text{push를 못 받을 확률}}`}
           operations={[
-            { expression: String.raw`i_{t+1}\approx 1-(1-i_t)e^{-i_t}`, annotation: ["No-push approximation이(가) 식의 결과에","기여하는 방식을 계산합니다.","현재 informed 비율 iₜ가 각각 한 peer를 균등하게","고른다고 두고, 아직 uninformed인 비율 1-iₜ"] },
+            { expression: String.raw`(1-i_t)`, annotation: ["round t에 아직 message를 모르는", "node의 비율"] },
+            { expression: String.raw`e^{-i_t}`, annotation: ["informed node 각각이 peer 하나를 균등히", "고를 때 특정 uninformed node가", "한 번도 안 뽑힐 확률의 평균장 근사"] },
+            { expression: String.raw`1-(1-i_t)e^{-i_t}`, annotation: ["둘을 곱한 '여전히 모르는 비율'을", "1에서 빼면 다음 round의 informed 비율", "i_t가 작을수록 빠르게 증가"] },
           ]}
           terms={[
             { symbol: "i_t", name: "Informed fraction", description: "round t에 message를 아는 node의 비율" },

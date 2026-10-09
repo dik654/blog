@@ -12134,7 +12134,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "global-history/empires-roads-taxes-and-law": [
     { kind: "핵심 사료", label: "British Museum · Aśoka pillar edict fragment", href: "https://www.britishmuseum.org/collection/object/A_1880-21", note: "기원전 3세기 아소카 칙령을 돌에 새긴 직접 물증" },
-    { kind: "보충 읽기", label: "UNESCO · The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "페르시아·중국·로마의 군사·행정 교통망 비교" },
+    { kind: "보충 읽기", label: "UNESCO · The Maintenance of Empire", href: "https://web.archive.org/web/20241002144309id_/https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "페르시아·중국·로마의 군사·행정 교통망 비교" },
   ],
   "global-history/trade-religion-and-translation-networks": [
     { kind: "공식 프로젝트 기록", label: "UNESCO · About the Silk Roads", href: "https://www.unesco.org/en/silk-roads/about-silk-roads?hub=196704", note: "육상 한 줄이 아닌 여러 육상·해상 연결망의 공식 개관" },
@@ -12153,7 +12153,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 사료", label: "U.S. National Archives · The Great Depression and World War II", href: "https://www.archives.gov/education/lessons/depression-wwii.html", note: "미국의 불황 대응과 전시 동원을 보여 주는 1929~1945년 1차 자료 모음" },
   ],
   "global-history/cold-war-decolonization-and-globalization": [
-    { kind: "핵심 사료", label: "UN Digital Library · Bandung Final Communiqué", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "경제 협력·자결·반식민·평화 원칙을 합의한 1955년 공동성명" },
+    { kind: "핵심 사료", label: "UN Yearbook on Human Rights for 1955 · Bandung Final Communiqué (Extracts, p. 339)", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "연감 전체 PDF(34MB) 안의 발췌본. 경제 협력·자결·반식민·평화 원칙을 합의한 1955년 공동성명" },
     { kind: "공식 문서", label: "WTO · Marrakesh Declaration", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", note: "우루과이라운드 종료와 WTO 출범의 목표·범위를 밝힌 공식 선언" },
   ],
   "philosophical-traditions/confucian-ritual-role-and-humane-rule": [
@@ -13362,11 +13362,11 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "global-history/agriculture-settlement-and-neolithic-tradeoffs": [
     { kind: "공식 문서", label: "UNESCO · Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405/", note: "기원전 7400~6200년의 장기 정착·밀집 주거·지붕 출입 흔적을 확인합니다." },
-    { kind: "공개 강의", label: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/resources/mitsts_007f10_lec02/", note: "농경의 결과 크기와 변화 속도를 나누는 기술사 교과 질문을 확인합니다." }
+    { kind: "공개 강의", label: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/ae9b46872b750c4e7274489b59090aa9_MITSTS_007F10_lec06_notes.pdf", note: "농경의 결과 크기와 변화 속도를 나누는 기술사 교과 질문을 확인합니다." }
   ],
   "global-history/cities-writing-rations-and-early-law": [
-    { kind: "핵심 사료", label: "The Met · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/322609", note: "기원전 2028년 무렵 전령의 맥주·빵·기름·양파 배급 점토판을 확인합니다." },
-    { kind: "핵심 사료", label: "Musée du Louvre · The Code of Hammurabi", href: "https://collections.louvre.fr/en/ark:/53355/cl010174436", note: "282개 판단과 왕권 표현이 새겨진 함무라비 비문의 성격을 확인합니다." }
+    { kind: "핵심 사료", label: "The Met · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/327069", note: "기원전 2028년 무렵 전령의 맥주·빵·기름·양파 배급 점토판을 확인합니다." },
+    { kind: "핵심 사료", label: "Musée du Louvre · The Code of Hammurabi", href: "https://www.louvre.fr/en/the-code-of-hammurabi", note: "282개 판단과 왕권 표현이 새겨진 함무라비 비문의 성격을 확인합니다." }
   ],
   "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": [
     { kind: "공식 문서", label: "UNESCO · Archaeological Site of Nalanda Mahavihara", href: "https://whc.unesco.org/en/list/1502/", note: "약 800년에 걸친 주거·교육·종교 건물과 조직된 지식 전달을 확인합니다." },
@@ -13414,13 +13414,13 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Kubernetes v1.37 · Virtual IPs and Service Proxies", href: "https://kubernetes.io/docs/reference/networking/virtual-ips/", note: "Service backend 변환, iptables·nftables와 IPVS deprecation" },
     { kind: "공식 문서", label: "Kubernetes · Network Policies", href: "https://kubernetes.io/docs/concepts/services-networking/network-policies/", note: "NetworkPolicy selector·ingress·egress semantics와 CNI 지원 경계" },
     { kind: "공식 문서", label: "Kubernetes · Ingress", href: "https://kubernetes.io/docs/concepts/services-networking/ingress/", note: "Ingress API 동결과 Gateway 권장 상태" },
-    { kind: "공식 규격", label: "Gateway API v1.6.1 · Getting started", href: "https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/", note: "Standard channel CRD와 controller·conformance 경계" },
+    { kind: "공식 규격", label: "Gateway API v1.6 · Getting started(확인일 문서 v1.6.1 manifest, 최신 v1.6.3)", href: "https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/", note: "Standard channel CRD와 controller·conformance 경계" },
     { kind: "공식 문서", label: "Calico 3.33 · Architecture", href: "https://docs.tigera.io/calico/latest/reference/architecture/overview", note: "Felix와 BGP route distribution component 책임" },
     { kind: "공식 문서", label: "Calico 3.33 · Tigera Operator API", href: "https://docs.tigera.io/calico/latest/reference/installation/api/", note: "Installation 기본값, cluster routing mode와 BIRD IP-in-IP route programming의 v3.33 deprecation·v3.35 제거 예정" },
     { kind: "공식 문서", label: "Calico 3.33 · Overlay networking", href: "https://docs.tigera.io/calico/latest/networking/configuring/vxlan-ipip", note: "Direct route·IP-in-IP·VXLAN·CrossSubnet 선택" },
     { kind: "공식 문서", label: "Calico 3.33 · Configure MTU", href: "https://docs.tigera.io/calico/latest/networking/configuring/mtu", note: "1500 B underlay의 plain·IP-in-IP·VXLAN workload MTU와 적용 경계" },
     { kind: "공식 문서", label: "Calico 3.33 · Workloads outside the cluster", href: "https://docs.tigera.io/calico/latest/networking/configuring/workloads-outside-cluster", note: "natOutgoing과 destination pool에 따른 조건부 SNAT" },
-    { kind: "공식 문서", label: "Cilium 1.20.1 · Kubernetes Without kube-proxy", href: "https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/", note: "Socket LB·per-packet 경로와 kernel·cgroup 조건" },
+    { kind: "공식 문서", label: "Cilium 1.20 stable(확인일 1.20.2) · Kubernetes Without kube-proxy", href: "https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/", note: "Socket LB·per-packet 경로와 kernel·cgroup 조건" },
     { kind: "공식 문서", label: "Istio · Ambient data plane", href: "https://istio.io/latest/docs/ambient/architecture/data-plane/", note: "Node별 L4 ztunnel과 선택적 L7 waypoint의 현재 경로" },
     { kind: "보충 읽기", label: "장성필 기술블로그 · Kubernetes category", href: "https://hackjsp.tistory.com/category/Kubernetes", note: "Network 10·Security 2·Database Operator 8·Istio 13편의 실습 주제와 재현 순서 참고. 현재 semantics는 공식 문서로 재검증" },
   ],
@@ -13475,7 +13475,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       "kind": "공식 가이드",
       "label": "AWS · Choosing an AWS compute service",
-      "href": "https://docs.aws.amazon.com/decision-guides/latest/compute-on-aws-how-to-choose/compute-on-aws-how-to-choose.html",
+      "href": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/choosing-aws-compute-service.html",
       "note": "워크로드 요구에 따른 AWS 컴퓨팅 선택을 확인합니다."
     },
     {
@@ -13495,7 +13495,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       "kind": "공식 문서",
       "label": "Microsoft Learn · Data store models",
-      "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview",
+      "href": "https://learn.microsoft.com/en-us/azure/architecture/data-guide/technology-choices/understand-data-store-models",
       "note": "관계형·키값·문서·객체 저장 모델을 비교합니다."
     }
   ],
@@ -13514,6 +13514,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "cloud/aws-clf-c02-fast-study": [
+    { kind: "공식 가이드", label: "AWS · Certified Cloud Practitioner 자격 페이지", href: "https://aws.amazon.com/certification/certified-cloud-practitioner/", note: "시험 시간 90분·65문항·100 USD는 Exam Guide PDF가 아니라 이 자격 페이지에 적혀 있습니다. 2026-10-09 확인." },
     {
       "kind": "공식 가이드",
       "label": "AWS Certified Cloud Practitioner Exam Guide (CLF-C02)",

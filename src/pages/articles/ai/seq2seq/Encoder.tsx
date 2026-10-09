@@ -25,11 +25,11 @@ export default function Encoder({
         question="Source를 읽은 encoder state를 decoder 계산의 시작점으로 어떻게 넘길까?"
         idea={<>Encoder의 마지막 hidden·cell state를 그대로 쓰거나 learned projection을 거쳐 decoder의 initial state로 변환합니다. Encoder와 decoder dimension이 다르면 projection이 interface adapter 역할을 합니다.</>}
         formula={String.raw`\begin{aligned}(h_j^E,C_j^E)&=\operatorname{LSTM}_E(e(x_j),h_{j-1}^E,C_{j-1}^E)\\s_0^D&=W_hh_S^E+b_h\\m_0^D&=W_CC_S^E+b_C\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}(h_j^E,C_j^E)&=\underbrace{\operatorname{LSTM}_E(e(x_j),h_{j-1}^E,C_{j-1}^E)}_{\text{encoder states 계산}}\\s_0^D&=\underbrace{W_hh_S^E+b_h}_{\text{source length 계산}}\\m_0^D&=\underbrace{W_CC_S^E+b_C}_{\text{source length 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}(h_j^E,C_j^E)&=\underbrace{\operatorname{LSTM}_E(e(x_j),h_{j-1}^E,C_{j-1}^E)}_{\text{source 한 token 읽기}}\\s_0^D&=\underbrace{W_hh_S^E+b_h}_{\text{hidden handoff}}\\m_0^D&=\underbrace{W_CC_S^E+b_C}_{\text{cell handoff}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{LSTM}_E(e(x_j),h_{j-1}^E,C_{j-1}^E)`, annotation: ["encoder states이(가) 식의 결과에 기여하는 방식을","계산합니다.","Encoder의 마지막 hidden·cell state를","그대로 쓰거나 learned projection을 거쳐"] },
-          { expression: String.raw`W_hh_S^E+b_h`, annotation: ["source length이(가) 식의 결과에 기여하는 방식을","계산합니다.","Encoder의 마지막 hidden·cell state를","그대로 쓰거나 learned projection을 거쳐"] },
-          { expression: String.raw`W_CC_S^E+b_C`, annotation: ["source length이(가) 식의 결과에 기여하는 방식을","계산합니다.","Encoder의 마지막 hidden·cell state를","그대로 쓰거나 learned projection을 거쳐"] },
+          { expression: String.raw`\operatorname{LSTM}_E(e(x_j),h_{j-1}^E,C_{j-1}^E)`, annotation: ["x_j 임베딩과 직전 state로 j번째 state 갱신","source 길이 S까지 반복하면","마지막 (h_S, C_S)만 decoder에 넘김"] },
+          { expression: String.raw`W_hh_S^E+b_h`, annotation: ["h_S를 decoder hidden 폭으로 변환","두 dimension이 같으면 그대로 써도 됨","다르면 W_h가 interface adapter"] },
+          { expression: String.raw`W_CC_S^E+b_C`, annotation: ["C_S를 decoder memory 초기값으로","padding batch면 실제 길이 S의 state 사용","이후 decoder는 source를 다시 못 봄"] },
         ]}
         terms={[
           { symbol: "h_j^E,C_j^E", name: "encoder states", description: "Source position j까지 읽은 LSTM의 공개 state와 cell state입니다." },

@@ -270,8 +270,9 @@ const contract = {
     !articleOnboarding.includes('.join(" · ")'),
   editorialBoundaryProgressivelyDisclosed:
     contentBoundary.includes("<ProgressiveDetail") &&
-    contentBoundary.includes("본문의 핵심 흐름을 읽는 데 먼저 외울 필요는 없습니다") &&
-    contentBoundary.includes("이 글이 직접 설명하는 내용") &&
+    contentBoundary.includes("이 글의 범위 펼쳐 보기") &&
+    contentBoundary.includes("이 글에서 답하는 것") &&
+    contentBoundary.includes("이어 읽을 내용") &&
     !contentBoundary.includes("lg:grid-cols-3"),
 };
 

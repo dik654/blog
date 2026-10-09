@@ -25,14 +25,14 @@ export default function PoRep() {
           C_{R_i}&=C(R_i)
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          R_i&=\underbrace{E(D,i)}_{\text{encoded replica 계산}}\\
-          C_D&=\underbrace{C(D)}_{\text{sector data 계산}}\\
-          C_{R_i}&=\underbrace{C(R_i)}_{\text{encoded replica 계산}}
+          R_i&=\underbrace{E(D,i)}_{\text{D와 identity i로 encoding}}\\
+          C_D&=\underbrace{C(D)}_{\text{원본 commitment}}\\
+          C_{R_i}&=\underbrace{C(R_i)}_{\text{replica별로 다른 commitment}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`E(D,i)`, annotation: ["encoded replica이(가) 식의 결과에 기여하는","방식을 계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
-          { expression: String.raw`C(D)`, annotation: ["sector data이(가) 식의 결과에 기여하는 방식을","계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
-          { expression: String.raw`C(R_i)`, annotation: ["encoded replica이(가) 식의 결과에 기여하는","방식을 계산합니다.","Replica-specific encoding은 D와","identifier를 함께 입력으로 받아 encoded"] },
+          { expression: String.raw`E(D,i)`, annotation: ["sector data D와 replica identity i","(provider·sector·ticket)를 함께 받아","i마다 다른 encoded replica"] },
+          { expression: String.raw`C(D)`, annotation: ["replica와 무관한 원본 data의","commitment. 같은 D면 모든 replica가 공유"] },
+          { expression: String.raw`C(R_i)`, annotation: ["encoded replica의 commitment.","replica_id₁≠replica_id₂면 같은 D라도","C_R₁≠C_R₂여야 dedup attack 차단"] },
         ]}
         terms={[
           { symbol: "D", name: "sector data", description: "Padding·piece layout까지 확정된 source sector bytes입니다." },

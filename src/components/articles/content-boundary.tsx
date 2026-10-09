@@ -21,20 +21,19 @@ export default function ContentBoundary({
   const boundary = EDITORIAL_BOUNDARIES[article];
 
   return (
-    <aside className="not-prose my-6" aria-label="콘텐츠 소유권과 근거 경계">
+    <aside className="not-prose my-6" aria-label="이 글에서 다루는 범위와 근거">
       <ProgressiveDetail
         className="my-0"
-        label="검증 범위 펼쳐 보기"
+        label="이 글의 범위 펼쳐 보기"
         title={boundary.title}
-        preview="이 글이 직접 설명하는 내용과 연결 글·근거의 책임을 분리해 과도한 주장을 막습니다."
+        preview="이 글에서 답하는 질문, 이어 읽을 내용, 판단에 사용한 자료의 범위를 확인합니다."
       >
         <p>
-          아래 항목은 독자가 출처와 설명의 경계를 확인하고 싶을 때 보는 편집
-          명세입니다. 본문의 핵심 흐름을 읽는 데 먼저 외울 필요는 없습니다.
+          본문은 아래 질문에 답합니다. 더 깊은 계산이나 다른 운영 단계는 연결된 글에서 이어 읽을 수 있습니다.
         </p>
 
         <section>
-          <h4>이 글이 직접 설명하는 내용</h4>
+          <h4>이 글에서 답하는 것</h4>
           <ul>
             {boundary.owns.map((item) => (
               <li key={item}>{item}</li>
@@ -43,7 +42,7 @@ export default function ContentBoundary({
         </section>
 
         <section>
-          <h4>다른 글의 정본 설명을 재사용하는 내용</h4>
+          <h4>이어 읽을 내용</h4>
           <ul>
             {boundary.reuses.map((item) => (
               <li key={`${item.href}-${item.label}`}>
@@ -54,7 +53,7 @@ export default function ContentBoundary({
         </section>
 
         <section>
-          <h4>근거를 읽는 방법</h4>
+          <h4>판단에 사용한 자료의 범위</h4>
           <ul>
             {boundary.evidence.map((item) => (
               <li key={`${item.kind}-${item.rule}`}>

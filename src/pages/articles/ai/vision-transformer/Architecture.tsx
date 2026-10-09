@@ -22,14 +22,14 @@ export default function Architecture() {
 \mathcal L&=(1-\lambda)\mathcal L_{\mathrm{cls}}+\lambda\mathcal L_{\mathrm{dist}}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\mathcal L_{\mathrm{cls}}&=\underbrace{\operatorname{CE}(y,p_{\mathrm{cls}}),}_{\text{오른쪽 항으로 결과 계산}}\\
-\mathcal L_{\mathrm{dist}}&=\underbrace{\operatorname{CE}(y_T,p_{\mathrm{dist}}),}_{\text{teacher target 계산}}\\
-\mathcal L&=\underbrace{(1-\lambda)\mathcal L_{\mathrm{cls}}+\lambda\mathcal L_{\mathrm{dist}}.}_{\text{오른쪽 항으로 결과 계산}}
+\mathcal L_{\mathrm{cls}}&=\underbrace{\operatorname{CE}(y,p_{\mathrm{cls}})}_{\text{정답 label 손실}},\\
+\mathcal L_{\mathrm{dist}}&=\underbrace{\operatorname{CE}(y_T,p_{\mathrm{dist}})}_{\text{teacher 모방 손실}},\\
+\mathcal L&=\underbrace{(1-\lambda)\mathcal L_{\mathrm{cls}}}_{\text{정답 몫}}+\underbrace{\lambda\mathcal L_{\mathrm{dist}}}_{\text{teacher 몫}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{CE}(y,p_{\mathrm{cls}}),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Student는 class token head로 정답","label을 학습하는 동시에 별도의 distillation","token head로 teacher prediction을"] },
-          { expression: String.raw`\operatorname{CE}(y_T,p_{\mathrm{dist}}),`, annotation: ["teacher target이(가) 식의 결과에 기여하는 방식을","계산합니다.","Student는 class token head로 정답","label을 학습하는 동시에 별도의 distillation"] },
-          { expression: String.raw`(1-\lambda)\mathcal L_{\mathrm{cls}}+\lambda\mathcal L_{\mathrm{dist}}.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Student는 class token head로 정답","label을 학습하는 동시에 별도의 distillation","token head로 teacher prediction을"] },
+          { expression: String.raw`\operatorname{CE}(y,p_{\mathrm{cls}})`, annotation: ["class token head의 예측 p_cls를", "정답 label y와 cross-entropy로 비교"] },
+          { expression: String.raw`\operatorname{CE}(y_T,p_{\mathrm{dist}})`, annotation: ["별도 distillation token head의 예측을", "teacher 출력 y_T와 cross-entropy로 비교", "y_T는 hard class 또는 soft 분포"] },
+          { expression: String.raw`(1-\lambda)\mathcal L_{\mathrm{cls}}+\lambda\mathcal L_{\mathrm{dist}}`, annotation: ["lambda가 두 supervision의 비중을 정함", "0이면 정답만, 1이면 teacher만 따릅니다", "teacher가 틀린 slice는 그대로 전수"] },
         ]}
         terms={[
           { symbol: "p_cls", name: "class-token prediction", description: "Ground-truth class label을 읽는 student의 일반 classification head output입니다." },
@@ -49,10 +49,12 @@ C_{\mathrm{window}}&\propto \frac{N}{M^2}(M^2)^2=N M^2.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
 C_{\mathrm{global}}&\propto N^2,\\
-C_{\mathrm{window}}&\propto \frac{N}{M^2}(M^2)^2=\underbrace{N M^2.}_{\text{기준량당 비율}}
+C_{\mathrm{window}}&\propto \underbrace{\frac{N}{M^2}}_{\text{window 수}}\underbrace{(M^2)^2}_{\text{window당 score}}=\underbrace{N M^2}_{\text{N에 선형}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`N M^2.`, annotation: ["total tokens이(가) 식의 결과에 기여하는 방식을","계산합니다.","N개 token 전체를 서로 비교하면 N² score가","필요합니다."] },
+          { expression: String.raw`\frac{N}{M^2}`, annotation: ["token N개를 M²개씩 묶으면", "window는 N/M²개"] },
+          { expression: String.raw`(M^2)^2`, annotation: ["한 window 안 M² token끼리 전부 비교", "window당 M⁴ score"] },
+          { expression: String.raw`N M^2`, annotation: ["global N² 대신 N·M²", "M은 고정이라 N에 선형으로 늘어남"] },
         ]}
         terms={[
           { symbol: "N", name: "total tokens", description: "한 stage의 전체 spatial token 개수입니다." },
@@ -69,12 +71,13 @@ N_{\mathrm{vis}}&=(1-\rho)N=vN,\\
 \frac{C_{\mathrm{attn,vis}}}{C_{\mathrm{attn,all}}}&\approx\frac{(vN)^2}{N^2}=v^2.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-N_{\mathrm{vis}}&=\underbrace{(1-\rho)N=vN,}_{\text{오른쪽 항으로 결과 계산}}\\
-\frac{C_{\mathrm{attn,vis}}}{C_{\mathrm{attn,all}}}&\approx\frac{(vN)^2}{N^2}=\underbrace{v^2.}_{\text{기준량당 비율}}
+N_{\mathrm{vis}}&=\underbrace{(1-\rho)N}_{\text{안 가린 patch 수}}=vN,\\
+\frac{C_{\mathrm{attn,vis}}}{C_{\mathrm{attn,all}}}&\approx\underbrace{\frac{(vN)^2}{N^2}}_{\text{score 수 비율}}=\underbrace{v^2}_{\text{mask 75\%면 1/16}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`(1-\rho)N=vN,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Mask token을 encoder 앞에 넣지 않고","visible token만 encoder에 보냅니다."] },
-          { expression: String.raw`v^2.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Mask token을 encoder 앞에 넣지 않고","visible token만 encoder에 보냅니다."] },
+          { expression: String.raw`(1-\rho)N`, annotation: ["mask ratio rho만큼 뺀 visible patch만", "encoder sequence에 넣습니다", "rho=.75이면 N의 25%"] },
+          { expression: String.raw`\frac{(vN)^2}{N^2}`, annotation: ["visible token끼리의 pairwise score를", "전체 N² score와 비교한 비율"] },
+          { expression: String.raw`v^2`, annotation: ["v=.25이면 1/16", "attention-score 항만 본 근사", "decoder·MLP 비용은 별도"] },
         ]}
         terms={[
           { symbol: "ρ,v", name: "mask and visible fractions", description: "가린 patch 비율과 encoder가 실제로 읽는 patch 비율이며 v=1−ρ입니다." },

@@ -36,15 +36,16 @@ export default function Benchmark() {
 I_{A,B}&=\Delta_{AB}-\Delta_A-\Delta_B.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\Delta_A&=\underbrace{m_A-m_0,}_{\text{변화량 계산}}\\
-\Delta_B&=\underbrace{m_B-m_0,}_{\text{변화량 계산}}\\
-\Delta_{AB}&=\underbrace{m_{AB}-m_0,}_{\text{변화량 계산}}\\
-I_{A,B}&=\Delta_{AB}-\Delta_A-\Delta_B.
+\Delta_A&=\underbrace{m_A-m_0,}_{\text{A 단독 gain}}\\
+\Delta_B&=\underbrace{m_B-m_0,}_{\text{B 단독 gain}}\\
+\Delta_{AB}&=\underbrace{m_{AB}-m_0,}_{\text{결합 gain}}\\
+I_{A,B}&=\underbrace{\Delta_{AB}-\Delta_A-\Delta_B.}_{\text{합보다 더·덜 얻은 몫}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`m_A-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
-          { expression: String.raw`m_B-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
-          { expression: String.raw`m_{AB}-m_0,`, annotation: ["baseline metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","Baseline 대비 같은 방향의 gain을 정의하고 결합","gain에서 두 단일 gain을 뺍니다."] },
+          { expression: String.raw`m_A-m_0,`, annotation: ["A stage만 적용한 artifact가 baseline보다","얼마나 나아졌는지입니다. throughput 100→130이면 30"] },
+          { expression: String.raw`m_B-m_0,`, annotation: ["B stage만 적용한 단독 gain입니다.","100→120이면 20"] },
+          { expression: String.raw`m_{AB}-m_0,`, annotation: ["두 stage와 recovery·calibration까지 적용한","결합 gain입니다. 100→145면 45"] },
+          { expression: String.raw`\Delta_{AB}-\Delta_A-\Delta_B.`, annotation: ["결합 gain에서 단독 gain 둘을 뺀 interaction입니다.","45−30−20=−5면 두 stage가 서로의 이득을","5만큼 깎았고, 0이면 additive, 양수면 synergy"] },
         ]}
         terms={[
           {
@@ -95,17 +96,18 @@ D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
 \mathcal P&=\{a\in\mathcal A:D(a)=0\}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-c_j&=\underbrace{f_j(a)-f_j(b),}_{\text{cost-oriented metric 계산}}\\
-a\succeq b&\iff c_j\le\underbrace{0\quad(\forall j),}_{\text{오른쪽 항으로 결과 계산}}\\
-a\succ b&\iff a\succeq b\ \land\ \min_j c_j<\underbrace{0,}_{\text{경계 후보 선택}}\\
+c_j&=\underbrace{f_j(a)-f_j(b),}_{\text{축 j에서 a가 b보다 나쁜 정도}}\\
+a\succeq b&\iff \underbrace{c_j\le0\quad(\forall j),}_{\text{모든 축에서 나쁘지 않음}}\\
+a\succ b&\iff a\succeq b\ \land\ \underbrace{\min_j c_j<0,}_{\text{한 축은 확실히 좋음}}\\
 \mathcal A&=\{a:F(a)=1\},\\
-D(a)&=\mathbf1[\exists b\in\mathcal A:b\succ a],\\
+D(a)&=\underbrace{\mathbf1[\exists b\in\mathcal A:b\succ a],}_{\text{지배당하면 1}}\\
 \mathcal P&=\{a\in\mathcal A:D(a)=0\}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`f_j(a)-f_j(b),`, annotation: ["cost-oriented metric이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 후보가 다른 후보보다"] },
-          { expression: String.raw`0\quad(\forall j),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 후보가 다른 후보보다"] },
-          { expression: String.raw`0,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 후보가 다른 후보보다"] },
+          { expression: String.raw`f_j(a)-f_j(b),`, annotation: ["작을수록 좋게 맞춘 j번째 축에서 a가 b보다","얼마나 나쁜지입니다. quality loss .5 대 .7이면","c=−.2, 즉 a가 그 축에서 더 좋습니다"] },
+          { expression: String.raw`c_j\le0\quad(\forall j),`, annotation: ["quality loss·p95·memory 모든 축에서","a가 b보다 나쁘지 않을 때만 a⪰b입니다."] },
+          { expression: String.raw`\min_j c_j<0,`, annotation: ["거기에 적어도 한 축에서 확실히 좋으면","a가 b를 지배합니다. A(.5, 8ms, 10GB)는","B(.7, 9ms, 12GB)를 세 축 모두에서 이깁니다"] },
+          { expression: String.raw`\mathbf1[\exists b\in\mathcal A:b\succ a],`, annotation: ["guardrail 통과 집합 안에 a를 지배하는 b가","하나라도 있으면 1이고 frontier에서 빠집니다.","C(.3, 11ms, 8GB)는 A와 tradeoff라 둘 다 남습니다"] },
         ]}
         terms={[
           {

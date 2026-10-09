@@ -34,9 +34,11 @@ export default function StateInterface({
           </>
         }
         formula={String.raw`\begin{aligned}B_{\rm deep}&=\sum_{j=1}^{F}S_j\\B_{\rm COW}&\approx\sum_{j\in W,\ r_j>1}S_j+B_{\rm meta}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}B_{\rm deep}&=\underbrace{\sum_{j=1}^{F}S_j}_{\text{Backing size 계산}}\\B_{\rm COW}&\approx\sum_{j\in W,\ r_j>1}S_j+B_{\rm meta}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}B_{\rm deep}&=\underbrace{\sum_{j=1}^{F}S_j}_{\text{모든 field 복제}}\\B_{\rm COW}&\approx\underbrace{\sum_{j\in W,\ r_j>1}S_j}_{\text{처음 쓰는 공유 field만}}+\underbrace{B_{\rm meta}}_{\text{refcount·dirty 관리}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{j=1}^{F}S_j`, annotation: ["Backing size이(가) 식의 결과에 기여하는 방식을","계산합니다.","Deep copy는 모든 field를 복제하지만","field-granular COW는 실제로 처음 쓰는"] },
+          { expression: String.raw`\sum_{j=1}^{F}S_j`, annotation: ["BeaconState의 F개 field를 전부 복제","예: 8+2+1 MB → 약 11 MB"] },
+          { expression: String.raw`\sum_{j\in W,\ r_j>1}S_j`, annotation: ["이 branch가 처음 쓰는 field W 중","다른 view와 공유 중(r_j>1)인 것만 분리","첫 field만 수정하면 약 8 MB"] },
+          { expression: String.raw`B_{\rm meta}`, annotation: ["reference count·dirty bit 등 관리 비용","작고 자주 쓰는 field가 많으면 이득 상쇄"] },
         ]}
         terms={[
           {

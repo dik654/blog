@@ -29,7 +29,7 @@ export const certificationRoadmapData: CloudCertificationArticleData = {
       "실습 산출물은 큰 서비스일 필요가 없습니다. 구조도 한 장, 코드로 만든 자원, 비용 상한, 일부러 낸 장애와 복구 기록, 선택하지 않은 대안의 이유가 있으면 판단 과정을 보여 줄 수 있습니다.",
     ] },
     { id: "names", level: "3", title: "6. 기초·설계·운영 경로에 공식 이름을 붙입니다", bridge: "맡을 결정을 먼저 봤습니다. 이제 AWS와 Azure의 시험 이름을 그 결정에 붙입니다.", paragraphs: [
-      "AWS의 기초 입구는 AWS Certified Cloud Practitioner(CLF-C02)입니다. 설계 쪽 첫 실무 신호는 Solutions Architect – Associate(SAA-C03), 개발은 Developer – Associate(DVA-C02), 운영은 CloudOps Engineer – Associate(SOA-C03)로 이어집니다.",
+      "AWS의 기초 입구는 AWS Certified Cloud Practitioner(CLF-C02)입니다. 설계 쪽 첫 실무 신호는 Solutions Architect – Associate(SAA-C03), 개발은 Developer – Associate(DVA-C02, 2026년 11월 30일까지 응시 가능하고 그 뒤는 DVA-C03), 운영은 CloudOps Engineer – Associate(SOA-C03)로 이어집니다.",
       "Azure의 기초 입구는 Azure Fundamentals(AZ-900), 관리 실무는 Azure Administrator(AZ-104)입니다. AI 백엔드 개발은 AI-200, 설계는 AZ-104 자격과 AZ-305를 함께 요구하는 Solutions Architect Expert, DevOps는 AZ-400으로 이어집니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 공고에서 시험과 포트폴리오를 고르는 절차", bridge: "시험 이름을 역할에 연결했습니다. 같은 선택을 새 공고에도 반복할 수 있게 절차로 만듭니다.", paragraphs: [
@@ -87,7 +87,7 @@ export const certificationRoadmapData: CloudCertificationArticleData = {
     { name: "Azure 설계·DevOps", weight: "305 / 400", focus: "AZ-305의 설계 판단과 AZ-400의 전달 파이프라인을 목표 직무에 맞춰 고릅니다." },
   ] },
   sources: [
-    { source: "AWS Certification · Exam Guides", excerpt: "validate a candidate’s ability", application: "시험을 서비스 이름 모음이 아니라 역할별 능력 검증으로 나누는 기준으로 사용합니다.", citation: "AWS Certification Exam Guides", href: "https://docs.aws.amazon.com/aws-certification/latest/examguides/", note: "AWS가 현재 제공하는 시험 코드와 각 시험 가이드로 이어지는 공식 색인입니다." },
+    { source: "AWS Certification · Exam Guides", excerpt: "validates the ability to design solutions based on the AWS Well-Architected Framework", application: "시험을 서비스 이름 모음이 아니라 역할별 능력 검증으로 나누는 기준으로 사용합니다.", citation: "AWS Certification Exam Guides", href: "https://docs.aws.amazon.com/aws-certification/latest/examguides/", note: "AWS가 현재 제공하는 시험 코드와 각 시험 가이드로 이어지는 공식 색인입니다." },
     { source: "Microsoft Learn · AI-200 study guide", excerpt: "Developing AI Cloud Solutions on Azure", application: "폐지된 AZ-204와 현행 AI-200을 구분하고 AI 백엔드 개발 범위를 현재 로드맵에 넣습니다.", citation: "Microsoft Learn, Study guide for Exam AI-200", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-200", note: "현행 AI-200의 대상 역할과 컨테이너·데이터·서비스 연결·운영 영역을 밝힌 공식 가이드입니다." },
   ],
   review: [

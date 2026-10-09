@@ -20,9 +20,10 @@ export default function CheckpointManagement({ onCodeRef }: { onCodeRef: (key: s
         question="Checkpoint link가 supermajority를 얻었다고 언제 판정할까요?"
         idea="부동소수점 2/3를 사용하지 않고 정수 balance 양쪽을 곱해 비교합니다. 이렇게 하면 모든 client가 rounding 차이 없이 같은 판정을 냅니다."
         formula={String.raw`3W_{s\rightarrow t}\;\ge\;2W_{active}`}
-        annotatedFormula={String.raw`3W_{s\rightarrow t}\;\ge\underbrace{\;2W_{active}}_{\text{링크 지지 잔액 계산}}`}
+        annotatedFormula={String.raw`\underbrace{3W_{s\rightarrow t}}_{\text{link 지지 잔액 × 3}}\;\ge\;\underbrace{2W_{active}}_{\text{전체 활성 잔액 × 2}}`}
         operations={[
-          { expression: String.raw`\;2W_{active}`, annotation: ["링크 지지 잔액이(가) 식의 결과에 기여하는 방식을","계산합니다.","부동소수점 2/3를 사용하지 않고 정수 balance 양쪽을","곱해 비교합니다."] },
+          { expression: String.raw`3W_{s\rightarrow t}`, annotation: ["같은 source→target link를 지지한","active·unslashed validator 잔액 합 × 3","63 ETH면 189, 68 ETH면 204"] },
+          { expression: String.raw`2W_{active}`, annotation: ["기준 epoch state의 total active × 2","96 ETH면 192: 189<192 부족, 204 통과","정수 곱 비교라 client마다 같은 판정"] },
         ]}
         terms={[
           { symbol: "s, t", name: "출발·도착 체크포인트", description: "vote의 source·target checkpoint" },

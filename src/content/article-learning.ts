@@ -100755,7 +100755,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/onprem-k8s-inference-platform": {
     coreIdea:
-      "온프레미스 추론 인프라를 만드는 일은 라우팅 알고리즘을 고르는 일이 아니라 그 알고리즘이 설 자리를 만드는 일입니다. 엔드포인트 선택에 모델 서버 지표가 들어갈 확장점, 파드 묶음을 복제 단위로 다루는 추상, 고정된 총량을 나누는 정책, 그리고 게이트웨이에서 내려온 항목들의 새 주인이 그 자리입니다.",
+      "온프레미스에서 모델을 직접 돌리려면 일을 옮기는 순서가 필요합니다. 게이트웨이가 하던 일의 새 담당자를 정하고, 모델 서버 상태를 읽는 선택기를 요청 경로에 둡니다. 여러 Pod는 한 복제본으로 함께 배치하고, 고정된 가속기 수는 서비스 우선순위에 따라 나눕니다.",
     assumedKnowledge: [
       { id: "replica-routing-load-balancing", role: "복제본을 고르는 규칙 자체입니다." },
       { id: "prefill-decode-execution-phase", role: "요청 비용의 분산이 큰 이유입니다." },
@@ -100765,9 +100765,9 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     introducedHere: [
       { id: "gateway-responsibility-decomposition", role: "글 전체의 문제 설정을 세웁니다." },
-      { id: "service-abstraction-metric-blindness", role: "기본 추상이 못 하는 것을 정의합니다." },
-      { id: "endpoint-selection-extension-point", role: "그 한계를 푸는 구조와 대가를 정의합니다." },
-      { id: "group-scheduled-replica", role: "복제본이 파드 하나가 아닐 때의 추상을 정의합니다." },
+      { id: "service-abstraction-metric-blindness", role: "기본 Service가 보지 못하는 상태를 설명합니다." },
+      { id: "endpoint-selection-extension-point", role: "모델 서버 상태를 읽는 선택기를 어디에 연결하는지 설명합니다." },
+      { id: "group-scheduled-replica", role: "여러 Pod를 한 복제본으로 함께 배치하는 방법을 설명합니다." },
       { id: "rollout-capacity-floor", role: "갱신이 용량에 거는 제약을 조건으로 고정합니다." },
       { id: "fixed-pool-reallocation", role: "온프레미스 고유 제약과 세 가지 정리 방식을 세웁니다." },
       { id: "model-residency-restart-cost", role: "재배분 주기의 하한을 정의합니다." },
@@ -100779,7 +100779,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "한 사람이 하던 일을 팀으로 나눌 때, 목록을 적지 않으면 아무도 안 맡는 일이 생깁니다.",
         workedExample:
-          "이름 변환과 키 관리는 앞단 프록시에 남고, 복제본 선택은 클러스터 확장점으로 내려가며, 부하 상태 노출은 모델 서버가 맡습니다.",
+          "이름 변환과 키 관리는 앞단 프록시에 남고, 복제본 선택은 클러스터 안의 선택기가 맡으며, 부하 상태는 모델 서버가 알려 줍니다.",
         boundary:
           "새 주인이 지정되지 않은 항목은 장애를 내지 않고 사라집니다. 사용량 집계나 요청 기록처럼 없어도 당장 티가 안 나는 항목이 특히 그렇습니다.",
       },
@@ -100819,7 +100819,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "네 대로 돌리던 일을 한 대 정비하는 동안 세 대로 버틸 수 있어야 정비를 시작할 수 있습니다.",
         workedExample:
-          "복제본 N개 중 k개를 동시에 내릴 때 (N−k)·μ가 그 시간대 도착률 λ보다 커야 하며, 이 부등식을 k에 대해 풀면 한 번에 내릴 수 있는 수의 상한이 나옵니다.",
+          "복제본 네 개가 초당 30건씩 처리할 때 하나를 내리면 초당 90건만 받을 수 있습니다. 저녁에 초당 100건이 들어오면 갱신할 수 없고, 새벽에 초당 50건이 들어오면 두 개를 내려도 남은 두 개가 감당합니다.",
         boundary:
           "새 복제본이 뜨자마자 처리율 μ를 낸다고 가정한 계산입니다. 적재와 예열이 끝나기 전에는 그보다 낮고, 부등식이 아슬아슬한 구간에서는 대기열이 급격히 길어지므로 여유를 두고 씁니다.",
       },
@@ -100852,7 +100852,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         label: "01 선택의 자리",
-        relation: "지표가 들어갈 확장점을 만듦",
+        relation: "모델 서버 지표를 읽는 선택기를 연결함",
         concepts: ["service-abstraction-metric-blindness", "endpoint-selection-extension-point", "replica-routing-load-balancing", "prefill-decode-execution-phase", "paged-kv-block-allocation"],
       },
       {
@@ -100876,14 +100876,14 @@ export const ARTICLE_LEARNING: Readonly<
         level: "basic",
         question:
           "외부 제공자용 게이트웨이가 하던 일을 자체 클러스터로 옮길 때 항목별 주인을 세 갈래로 나누고, 주인을 지정하지 않으면 무엇이 일어나는지 쓰세요.",
-        answerChecklist: ["앞단 프록시에 남는 항목", "클러스터 확장점으로 내려가는 항목", "모델 서버가 노출하는 값으로 대체되는 항목", "주인 없는 항목은 조용히 사라짐", "당장 장애가 안 나는 항목일수록 위험"],
+        answerChecklist: ["앞단 프록시에 남는 항목", "클러스터 안의 선택기가 맡는 항목", "모델 서버가 알려 주는 상태", "주인 없는 항목은 조용히 사라짐", "당장 장애가 안 나는 항목일수록 위험"],
         requiredConcepts: ["gateway-responsibility-decomposition"],
         sectionId: "overview",
       },
       {
         level: "basic",
         question:
-          "기본 서비스 추상이 추론 요청 분배에 맞지 않는 이유를 두 가지 쓰세요.",
+          "기본 Service가 추론 요청을 고르게 나누기 어려운 이유를 두 가지 쓰세요.",
         answerChecklist: ["요청 하나의 비용 분산이 큼", "요청 수를 고르게 나눠도 부하는 고르지 않음", "모델 서버가 캐시 상태를 가짐", "연결 수준 규칙은 그 상태를 볼 수 없음"],
         requiredConcepts: ["service-abstraction-metric-blindness", "prefill-decode-execution-phase"],
         sectionId: "service-abstraction-gap",
@@ -100891,7 +100891,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "엔드포인트 선택 확장점이 무엇을 분리하는지 설명하고, 선택기가 보는 모델 서버 지표를 세 가지 쓰세요.",
+          "별도 엔드포인트 선택기가 무엇을 맡는지 설명하고, 선택기가 보는 모델 서버 지표를 세 가지 쓰세요.",
         answerChecklist: ["엔드포인트 묶음을 자원으로 선언", "선택을 별도 구성요소로 분리", "대기 중인 요청 수", "캐시 사용 상황", "적재된 어댑터", "값이 모델 서버에서 옴"],
         requiredConcepts: ["endpoint-selection-extension-point", "replica-routing-load-balancing"],
         sectionId: "service-abstraction-gap",
@@ -100899,7 +100899,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "여러 노드에 걸친 모델을 기본 배포 추상으로 올렸을 때 파드 하나가 죽으면 무엇이 일어나는지 설명하세요.",
+          "여러 노드에 걸친 모델을 기본 Deployment로 올렸을 때 Pod 하나가 죽으면 무엇이 일어나는지 설명하세요.",
         answerChecklist: ["죽은 파드 하나만 새로 생성", "나머지는 이미 초기화를 마침", "대부분의 분산 실행이 재합류를 지원하지 않음", "반쪽만 살아 있는 복제본이 남음", "요청은 못 하면서 가속기는 점유"],
         requiredConcepts: ["group-scheduled-replica"],
         sectionId: "group-replica",
@@ -100907,8 +100907,8 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "복제본 4개 중 1개를 갱신하는 동안 살아 있는 복제본이 감당해야 하는 조건을 부등식으로 쓰고, 온프레미스에서 이것이 실제 제약이 되는 이유를 설명하세요.",
-        answerChecklist: ["(N−k)·μ > λ", "N=4, k=1이면 3μ > λ", "클라우드는 새 복제본을 먼저 띄움", "온프레미스에는 여유분이 없음", "내렸다 올리는 순서밖에 쓸 수 없음"],
+          "복제본 4개가 초당 30건씩 처리하고 초당 100건이 들어올 때, 하나를 갱신하면 왜 요청이 밀리는지 계산하고 온프레미스에서 이것이 실제 제약이 되는 이유를 설명하세요.",
+        answerChecklist: ["남은 복제본 3개", "초당 90건 처리", "초당 10건이 밀림", "클라우드는 새 복제본을 먼저 띄움", "온프레미스에는 여유분이 없음"],
         requiredConcepts: ["rollout-capacity-floor", "little-law-stable-system"],
         sectionId: "rollout-ratio",
       },
@@ -123271,7 +123271,7 @@ export const ARTICLE_LEARNING: Readonly<
         contribution:
           "총계를 적기 전에 그것을 만든 계산을 전부 적었습니다. 배의 수에 한 척당 인원을 곱하고, 어림한 값에는 어림이라고 적고, 종자의 수는 전투원과 같다고 가정하겠다고 밝혔습니다. 총계 뒤에는 셀 수 없는 것들을 따로 적어 경계를 긋고, 그 총계로 하루치 식량을 계산해 보였습니다.",
         assumptions:
-          "한 척에 200명, 오십노선에 여든 남짓, 몰이꾼 2만, 유럽 육군 30만, 종자를 전투원과 같게 둔 것이 모두 저자가 정한 값입니다. 배의 수 1,207척과 기병 8만의 출처는 적혀 있지 않습니다.",
+          "한 척에 200명, 오십노선에 여든 남짓, 몰이꾼 2만, 유럽 육군 30만, 종자를 전투원과 같게 둔 것이 모두 저자가 정한 값입니다. 배의 수 1,207척은 7권 89절에서 민족별 척수를 더한 합계로, 기병 8만은 7권 87절에 먼저 나오지만 어떻게 세었는지는 적혀 있지 않습니다.",
         evidenceScope:
           "Project Gutenberg의 Macaulay 영역본 전사본(eBook 2456)으로 7권 184~187절과 그에 붙은 영역자 주석을 읽었습니다. 본문의 아라비아 숫자는 영역자가 주석에 풀어 둔 값을 따랐고, 1 메딤노스가 48 코이닉스라는 환산과 식량 계산이 틀렸다는 지적도 같은 주석의 것입니다. facsimile이 아니므로 쪽수를 적지 않고 권·절 번호까지만 적습니다.",
         notClaim:
@@ -124349,7 +124349,7 @@ export const ARTICLE_LEARNING: Readonly<
         contribution:
           "조항들의 번역과 함께, 글 자체가 자기를 부르는 문장을 본문 끝에 옮겨 두고 머리말에 전승의 내력을 적었습니다. 바빌로니아 학교에서 열두 장쯤으로 나뉘고 첫 단어로 불린 일과 아시리아에서 다른 이름으로 읽힌 일이 거기 적혀 있습니다. 표제와 조항 번호는 이 판이 붙인 것입니다.",
         assumptions:
-          "아시리아에서의 이름은 머리말이 보이는 바라는 꼴로 적었으므로 확정이 아닙니다. 존스가 기원전 3천년으로 잡은 제작 연대와 현재 루브르가 제시하는 약 기원전 1750년은 다릅니다. 학교 판본의 연대를 대조하지 않았으므로 머리말의 시간 간격은 채택하지 않습니다. 조항 번호는 사라진 분량의 추정을 포함하고, gentleman·poor man·servant는 영역자가 고른 말입니다.",
+          "아시리아에서의 이름은 머리말이 보이는 바라는 꼴로 적었으므로 확정이 아닙니다. 존스가 기원전 3천년기(표제지에는 B.C. 2285-2242)로 잡은 제작 연대와 현재 루브르가 제시하는 약 기원전 1750년은 다릅니다. 학교 판본의 연대를 대조하지 않았으므로 머리말의 시간 간격은 채택하지 않습니다. 조항 번호는 사라진 분량의 추정을 포함하고, gentleman·poor man·servant는 영역자가 고른 말입니다.",
         evidenceScope:
           "Project Gutenberg의 Johns 영역본 전사본(eBook 17150)으로 표제, 머리말, 본문 끝 문장을 읽었습니다. facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수 대신 해당 대목의 위치만 적습니다. 아카드어 원문은 읽지 않았습니다.",
         notClaim:
@@ -134216,7 +134216,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "British Museum · Aśoka pillar edict fragment", href: "https://www.britishmuseum.org/collection/object/A_1880-21", problem: "제국의 공개 명령이 어떤 물체와 장소를 통해 전달됐는지 확인합니다.", contribution: "기원전 3세기 아소카 주요 기둥 칙령 6호 조각의 재질·크기·출처를 제공합니다.", assumptions: "소장품 판독과 연대는 박물관 기록을 따릅니다.", evidenceScope: "왕의 명령을 돌에 새긴 1차 물증입니다.", notClaim: "칙령 내용이 제국 모든 지역에서 그대로 집행됐다는 증거는 아닙니다.", sectionId: "source" },
-      { title: "UNESCO · The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", problem: "서로 다른 제국의 길을 상업 한 기능으로 단순화하지 않아야 합니다.", contribution: "페르시아·중국·로마의 도로·운하·역참을 군사·행정 유지와 함께 비교합니다.", assumptions: "넓은 비교를 위한 교육 자료라 지역별 상세 사료가 더 필요합니다.", evidenceScope: "여러 제국의 군사·행정 교통망을 기능별로 비교한 넓은 개관입니다.", notClaim: "세 제국의 행정 제도와 통제력이 같았다는 뜻이 아닙니다.", sectionId: "comparison" },
+      { title: "UNESCO · The Maintenance of Empire", href: "https://web.archive.org/web/20241002144309id_/https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", problem: "서로 다른 제국의 길을 상업 한 기능으로 단순화하지 않아야 합니다.", contribution: "페르시아·중국·로마의 도로·운하·역참을 군사·행정 유지와 함께 비교합니다.", assumptions: "넓은 비교를 위한 교육 자료라 지역별 상세 사료가 더 필요합니다.", evidenceScope: "여러 제국의 군사·행정 교통망을 기능별로 비교한 넓은 개관입니다.", notClaim: "세 제국의 행정 제도와 통제력이 같았다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
   "global-history/trade-religion-and-translation-networks": {
@@ -134400,7 +134400,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "냉전 종식과 세계화를 한 방향의 수렴으로 설명하면 빠지는 지속성과 새 권력 중심을 쓰세요.", answerChecklist: ["동맹·핵·국경 지속", "중국·유럽·지역 기구", "공급망·금융·플랫폼 통제"], requiredConcepts: ["bipolar-order", "postcolonial-development-order"], sectionId: "limits" },
     ],
     papers: [
-      { title: "Final Communiqué of the Asian-African Conference", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", problem: "비동맹을 두 진영과 같은 거리를 두는 소극적 태도로만 읽지 않아야 합니다.", contribution: "1955년 반둥 회의가 경제·문화 협력, 인권·자결, 식민주의 비판과 평화 원칙을 합의한 원문을 제공합니다.", assumptions: "29개 참가국의 공동 문장이 이후 모든 외교 선택의 일치를 뜻하지 않습니다.", evidenceScope: "아시아·아프리카 29개국이 합의한 반둥 회의의 1차 공동성명입니다.", notClaim: "비동맹이 하나의 정부나 완성된 경제 체제를 만들었다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Final Communiqué of the Asian-African Conference (Extracts in UN Yearbook on Human Rights for 1955, p. 339)", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", problem: "비동맹을 두 진영과 같은 거리를 두는 소극적 태도로만 읽지 않아야 합니다.", contribution: "1955년 반둥 회의가 경제·문화 협력, 인권·자결, 식민주의 비판과 평화 원칙을 합의한 원문을 제공합니다.", assumptions: "29개 참가국의 공동 문장이 이후 모든 외교 선택의 일치를 뜻하지 않습니다.", evidenceScope: "아시아·아프리카 29개국이 합의한 반둥 회의의 1차 공동성명입니다.", notClaim: "비동맹이 하나의 정부나 완성된 경제 체제를 만들었다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "WTO · Marrakesh Declaration", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", problem: "1990년대 다자 무역 규칙의 확대가 시장 접근과 국내 의무를 함께 만든 방식을 봅니다.", contribution: "우루과이라운드 종료와 WTO 체제의 목표·범위를 밝힌 공식 선언을 제공합니다.", assumptions: "공식 목표와 국가별 실제 분배 결과는 무역·산업 자료로 따로 검증합니다.", evidenceScope: "우루과이라운드 종료와 WTO 출범 목표를 밝힌 1994년 1차 공식 문서입니다.", notClaim: "같은 규칙이 모든 회원국에 같은 이익과 조정 비용을 주었다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
@@ -153050,7 +153050,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "UNESCO · Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405/", problem: "정착을 추상적인 발전 단계보다 실제 주거와 거주 기간에서 확인해야 합니다.", contribution: "기원전 7400~6200년의 18개 거주층과 밀집 주택·지붕 출입을 설명합니다.", assumptions: "보존된 건물 배치만으로 가구 권력과 모든 주민의 경험을 확정하지 않습니다.", evidenceScope: "차탈회위크의 장기 정착과 주거 구조를 설명하는 공식 유산 기록입니다.", notClaim: "모든 초기 농경 정착지가 같은 집·인구·권력 구조를 가졌다는 뜻이 아닙니다.", sectionId: "source" },
-      { title: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/resources/mitsts_007f10_lec02/", problem: "농경을 갑작스럽고 한 방향인 혁명으로만 설명하지 않아야 합니다.", contribution: "농경을 식량 생산과 세계 형성으로 나누고 변화의 속도와 결과의 크기를 따로 묻습니다.", assumptions: "강의 노트의 문제 틀은 지역별 고고학 자료를 대신하지 않습니다.", evidenceScope: "MIT 기술사 과정에서 신석기 전환을 다루는 공개 강의 자료입니다.", notClaim: "농경의 원인과 결과가 모든 지역에서 같았다는 뜻이 아닙니다.", sectionId: "comparison" }
+      { title: "MIT OpenCourseWare · The Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/ae9b46872b750c4e7274489b59090aa9_MITSTS_007F10_lec06_notes.pdf", problem: "농경을 갑작스럽고 한 방향인 혁명으로만 설명하지 않아야 합니다.", contribution: "농경을 식량 생산과 세계 형성으로 나누고 변화의 속도와 결과의 크기를 따로 묻습니다.", assumptions: "강의 노트의 문제 틀은 지역별 고고학 자료를 대신하지 않습니다.", evidenceScope: "MIT 기술사 과정에서 신석기 전환을 다루는 공개 강의 자료입니다.", notClaim: "농경의 원인과 결과가 모든 지역에서 같았다는 뜻이 아닙니다.", sectionId: "comparison" }
     ]
   },
   "global-history/cities-writing-rations-and-early-law": {
@@ -153086,8 +153086,8 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "사례형 법 모음이 분쟁 예측 가능성을 높이면서 신분 격차를 고정할 수 있는 경로를 설명하세요.", answerChecklist: ["공개된 판단", "유사 사건 비교", "신분별 처벌", "집행 차이"], requiredConcepts: ["casuistic-law-collection"], sectionId: "limits" }
     ],
     papers: [
-      { title: "The Metropolitan Museum of Art · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/322609", problem: "초기 문자를 문학과 왕의 비문만으로 설명하지 않아야 합니다.", contribution: "기원전 2028년 무렵 전령에게 준 맥주·빵·기름·양파 배급 기록을 보여 줍니다.", assumptions: "박물관 해설과 남은 점토판은 도시의 모든 노동과 배급을 대표하지 않습니다.", evidenceScope: "일상 행정 기록의 형식과 품목을 보여 주는 1차 유물입니다.", notClaim: "당시 모든 주민이 글을 읽거나 장부에 동등하게 기록됐다는 뜻이 아닙니다.", sectionId: "source" },
-      { title: "Musée du Louvre · The Code of Hammurabi", href: "https://collections.louvre.fr/en/ark:/53355/cl010174436", problem: "함무라비 비문을 현대의 포괄적 법전과 같은 것으로 읽지 않아야 합니다.", contribution: "기원전 1750년 무렵 282개 판단과 왕권 표현이 새겨진 비문의 성격을 설명합니다.", assumptions: "비문에 적힌 판단과 실제 재판·집행은 다른 문서와 함께 확인해야 합니다.", evidenceScope: "함무라비 비문과 사례형 판단 모음의 공식 소장 기록입니다.", notClaim: "모든 사람이 같은 권리·절차·형벌을 보장받았다는 뜻이 아닙니다.", sectionId: "comparison" }
+      { title: "The Metropolitan Museum of Art · Cuneiform tablet: record of rations", href: "https://www.metmuseum.org/art/collection/search/327069", problem: "초기 문자를 문학과 왕의 비문만으로 설명하지 않아야 합니다.", contribution: "기원전 2028년 무렵 전령에게 준 맥주·빵·기름·양파 배급 기록을 보여 줍니다.", assumptions: "박물관 해설과 남은 점토판은 도시의 모든 노동과 배급을 대표하지 않습니다.", evidenceScope: "일상 행정 기록의 형식과 품목을 보여 주는 1차 유물입니다.", notClaim: "당시 모든 주민이 글을 읽거나 장부에 동등하게 기록됐다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Musée du Louvre · The Code of Hammurabi", href: "https://www.louvre.fr/en/the-code-of-hammurabi", problem: "함무라비 비문을 현대의 포괄적 법전과 같은 것으로 읽지 않아야 합니다.", contribution: "기원전 1750년 무렵 282개 판단과 왕권 표현이 새겨진 비문의 성격을 설명합니다.", assumptions: "비문에 적힌 판단과 실제 재판·집행은 다른 문서와 함께 확인해야 합니다.", evidenceScope: "함무라비 비문과 사례형 판단 모음의 공식 소장 기록입니다.", notClaim: "모든 사람이 같은 권리·절차·형벌을 보장받았다는 뜻이 아닙니다.", sectionId: "comparison" }
     ]
   },
   "global-history/monasteries-schools-manuscripts-and-knowledge-transmission": {
@@ -153441,7 +153441,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryLevel: false,
     entryNote: "client Pod 10.244.1.12가 Service 10.96.20.15:8080을 호출하고 다른 node의 backend Pod 10.244.2.34:8080이 선택되는 한 연결에서 시작합니다.",
     recursiveTeaching: true,
-    coreIdea: "Kubernetes 네트워크는 CNI·Service·overlay·policy·Gateway 제품 목록이 아니라 한 연결의 주소 공간, backend 선택, node route, encapsulation, policy hook과 socket 결과를 차례로 증명해 첫 실패 경계를 찾는 시스템입니다.",
+    coreIdea: "Kubernetes 네트워크는 제품 이름을 외우는 목록이 아닙니다. 한 연결이 보는 주소, 실제 Pod 선택, 목적지 node까지의 길, 바깥 header, 통신 허용 규칙, 서버 응답을 차례로 확인해 처음 실패한 구간을 찾는 과정입니다.",
     assumedKnowledge: [
       { id: "kubernetes-reconciliation-request-path", role: "API object가 controller와 node component를 거쳐 실제 상태로 수렴한다는 출발점을 재사용합니다." },
     ],
@@ -153514,9 +153514,9 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     conceptStages: [
-      { label: "한 요청 고정", relation: "세 IP와 한 HTTP 요청을 고정해 모든 층이 같은 사건을 설명하게 합니다.", concepts: ["kubernetes-reconciliation-request-path", "kubernetes-packet-boundary-ledger"] },
-      { label: "주소 선택과 운반", relation: "Service backend 선택 결과를 Pod route와 overlay decision의 입력으로 넘깁니다.", concepts: ["kubernetes-service-backend-translation", "calico-routing-encapsulation-decision"] },
-      { label: "집행과 증거", relation: "정책 선언을 실제 hook과 새 연결 결과에 대조해 first-failure 경계를 닫습니다.", concepts: ["kubernetes-packet-boundary-ledger", "kubernetes-policy-dataplane-separation"] },
+      { label: "전체 경로", relation: "주소 확인에서 서버 응답까지 여섯 경계를 먼저 봅니다.", concepts: ["kubernetes-reconciliation-request-path", "kubernetes-packet-boundary-ledger"] },
+      { label: "같은 요청 고정", relation: "세 IP와 한 HTTP 요청을 고정한 뒤 Service가 고른 Pod 주소를 실제 운반 경로로 넘깁니다.", concepts: ["kubernetes-packet-boundary-ledger", "kubernetes-service-backend-translation", "calico-routing-encapsulation-decision"] },
+      { label: "허용 규칙과 결과", relation: "선언한 정책을 실제 규칙과 새 연결 결과에 대조해 처음 실패한 구간을 확정합니다.", concepts: ["kubernetes-packet-boundary-ledger", "kubernetes-policy-dataplane-separation"] },
     ],
     exercises: [
       { level: "basic", question: "10.244.1.12가 10.96.20.15:8080을 호출해 10.244.2.34:8080으로 가는 세 주소의 역할을 쓰세요.", answerChecklist: ["client Pod IP", "Service VIP", "backend Pod IP", "source port 43120", "target port 8080", "설명용 가정"], requiredConcepts: ["kubernetes-packet-boundary-ledger", "kubernetes-service-backend-translation"], sectionId: "case" },
@@ -153528,20 +153528,20 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "같은 node 통신은 되지만 다른 node Pod 통신만 실패하는 사건의 조사 순서를 설계하세요.", answerChecklist: ["EndpointSlice", "ip route get", "BGP 또는 VXLAN", "tunnel link", "outer capture", "remote decapsulation", "MTU", "underlay ACL"], requiredConcepts: ["kubernetes-packet-boundary-ledger", "calico-routing-encapsulation-decision"], sectionId: "evidence" },
       { level: "advanced", question: "정책 변경 뒤 기존 keep-alive는 성공하고 새 연결은 실패하는 결과를 설명하고 시험을 고치세요.", answerChecklist: ["conntrack", "established flow", "new TCP connection", "same timestamp", "policy state", "flow result", "rollback", "acceptance"], requiredConcepts: ["kubernetes-service-backend-translation", "kubernetes-policy-dataplane-separation"], sectionId: "evidence" },
       { level: "advanced", question: "Ingress·Gateway API·service mesh가 CNI를 대체하지 않는 이유를 한 외부 요청의 hop으로 설명하세요.", answerChecklist: ["external listener", "L7 host/path", "Service backend", "Pod route", "CNI", "mesh proxy", "identity/mTLS", "server socket"], requiredConcepts: ["kubernetes-packet-boundary-ledger", "kubernetes-service-backend-translation"], sectionId: "edge-mesh" },
-      { level: "advanced", question: "2024년 IPVS·Ingress·sidecar 중심 실습안을 2026년 현재 기준으로 갱신하는 검증표를 만드세요.", answerChecklist: ["Kubernetes v1.37", "IPVS deprecated", "nftables", "Ingress frozen", "Gateway API v1.6.1", "Cilium 1.20.1", "Calico 3.33", "Istio ambient"], requiredConcepts: ["kubernetes-packet-boundary-ledger", "kubernetes-policy-dataplane-separation"], sectionId: "source-map" },
+      { level: "advanced", question: "2024년 IPVS·Ingress·sidecar 중심 실습안을 2026년 현재 기준으로 갱신하는 검증표를 만드세요.", answerChecklist: ["Kubernetes v1.37", "IPVS deprecated", "nftables", "Ingress frozen", "Gateway API v1.6", "Cilium 1.20", "Calico 3.33", "Istio ambient"], requiredConcepts: ["kubernetes-packet-boundary-ledger", "kubernetes-policy-dataplane-separation"], sectionId: "source-map" },
     ],
     papers: [
       { title: "Kubernetes · Virtual IPs and Service Proxies", href: "https://kubernetes.io/docs/reference/networking/virtual-ips/", problem: "Service VIP가 실제 server 주소처럼 보이면 backend 선택과 proxy mode의 수명 주기를 혼동합니다.", contribution: "iptables·IPVS·nftables mode와 Service backend 변환, traffic policy의 현재 semantics를 제공합니다.", assumptions: "Linux node와 kube-proxy를 쓰는 경로이며 eBPF 대체 구현은 별도 문서를 봅니다.", evidenceScope: "Upstream Kubernetes v1.37 문서의 Service proxy 동작과 IPVS deprecation입니다.", notClaim: "모든 managed cluster가 같은 mode와 chain 이름을 쓴다는 뜻이 아닙니다.", sectionId: "policy-dataplane" },
       { title: "Calico 3.33 · Configure overlay networking", href: "https://docs.tigera.io/calico/latest/networking/configuring/vxlan-ipip", problem: "Calico를 하나의 고정 tunnel 방식으로 보면 underlay 조건과 mode별 overhead를 설명할 수 없습니다.", contribution: "No overlay·IP-in-IP·VXLAN·CrossSubnet 선택과 BGP 경계를 제공합니다.", assumptions: "실제 설치의 Installation·IPPool과 cloud restriction을 함께 확인합니다.", evidenceScope: "Calico Open Source 3.33의 overlay configuration입니다.", notClaim: "특정 mode가 모든 cluster에서 성능·운영 면에 우월하다는 뜻이 아닙니다.", sectionId: "calico-path" },
-      { title: "Cilium 1.20.1 · Kubernetes Without kube-proxy", href: "https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/", problem: "eBPF라는 이름만으로 Service가 packet 단계에서 변환된다고 단정하면 socket-level 경로를 놓칩니다.", contribution: "Socket LB와 kube-proxy replacement의 kernel·cgroup 조건과 검증 명령을 제공합니다.", assumptions: "Cilium stable 문서와 지원 kernel 기능을 만족하는 설치입니다.", evidenceScope: "Cilium 1.20.1 kube-proxy-free dataplane입니다.", notClaim: "eBPF 사용만으로 모든 CNI가 같은 hook·map·관측 결과를 낸다는 뜻이 아닙니다.", sectionId: "policy-dataplane" },
-      { title: "Gateway API v1.6.1 · Getting started", href: "https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/", problem: "Ingress annotation을 계속 확장하면 구현체별 역할과 지원 수준을 비교하기 어렵습니다.", contribution: "Standard channel resource와 controller·CRD 설치 및 conformance 경계를 제공합니다.", assumptions: "사용할 controller의 구현 표와 release channel을 별도로 확인합니다.", evidenceScope: "Gateway API v1.6.1 Standard channel입니다.", notClaim: "CRD 설치만으로 실제 Gateway infrastructure가 자동 준비된다는 뜻이 아닙니다.", sectionId: "edge-mesh" },
+      { title: "Cilium 1.20 stable(확인일 1.20.2) · Kubernetes Without kube-proxy", href: "https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/", problem: "eBPF라는 이름만으로 Service가 packet 단계에서 변환된다고 단정하면 socket-level 경로를 놓칩니다.", contribution: "Socket LB와 kube-proxy replacement의 kernel·cgroup 조건과 검증 명령을 제공합니다.", assumptions: "Cilium stable 문서와 지원 kernel 기능을 만족하는 설치입니다.", evidenceScope: "Cilium 1.20 stable(확인일 1.20.2) kube-proxy-free dataplane입니다.", notClaim: "eBPF 사용만으로 모든 CNI가 같은 hook·map·관측 결과를 낸다는 뜻이 아닙니다.", sectionId: "policy-dataplane" },
+      { title: "Gateway API v1.6 · Getting started(확인일 문서 v1.6.1, 최신 v1.6.3)", href: "https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/", problem: "Ingress annotation을 계속 확장하면 구현체별 역할과 지원 수준을 비교하기 어렵습니다.", contribution: "Standard channel resource와 controller·CRD 설치 및 conformance 경계를 제공합니다.", assumptions: "사용할 controller의 구현 표와 release channel을 별도로 확인합니다.", evidenceScope: "Gateway API v1.6 Standard channel(확인일 문서 v1.6.1, 최신 release v1.6.3)입니다.", notClaim: "CRD 설치만으로 실제 Gateway infrastructure가 자동 준비된다는 뜻이 아닙니다.", sectionId: "edge-mesh" },
     ],
   },
   "cloud/kubernetes-request-path-and-cka": {
     entryLevel: true,
     entryNote: "세 replica 중 두 개만 Ready라 현재 용량 70 req/s가 입력 90 req/s보다 20 req/s 부족한 사건에서 시작합니다.",
     recursiveTeaching: true,
-    coreIdea: "Kubernetes 장애는 resource 이름을 나열해 푸는 것이 아니라 desired state가 API에 저장되고 scheduler·kubelet·runtime·network·storage를 거쳐 Ready endpoint와 client 성공이 되는 전환 중 첫 실패 경계를 찾는 문제이며, CKA 준비도 이 경로의 반복 복구 lab으로 바꿔야 합니다.",
+    coreIdea: "Kubernetes 장애는 자원 이름을 외워서 푸는 문제가 아닙니다. 원하는 상태가 저장된 뒤 실행할 node 선택, container 시작, 네트워크·저장장치 연결, 준비 확인, 사용자 요청 성공으로 이어지는 과정에서 처음 멈춘 곳을 찾습니다. CKA 준비도 이 순서로 고장을 반복해서 복구하는 실습으로 바꿉니다.",
     assumedKnowledge: [],
     introducedHere: [
       { id: "kubernetes-reconciliation-request-path", role: "원하는 replica 수가 저장된 API object에서 Ready endpoint와 client 성공으로 바뀌는 전체 경로를 설명합니다." },
@@ -154806,7 +154806,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "Microsoft Learn · Data store models",
-        "href": "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/data-store-overview",
+        "href": "https://learn.microsoft.com/en-us/azure/architecture/data-guide/technology-choices/understand-data-store-models",
         "problem": "변경될 수 있는 시험·서비스 범위를 기억이나 비공식 요약으로 고정하지 않아야 합니다.",
         "contribution": "관계형·키값·문서·객체 저장 모델을 비교합니다.",
         "assumptions": "공식 가이드도 비포괄적일 수 있으며 시험 접수 전 현재 버전과 변경일을 다시 확인합니다.",

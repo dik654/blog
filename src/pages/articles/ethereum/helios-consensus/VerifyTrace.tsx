@@ -21,9 +21,10 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
         question="512-position committee에서 2/3 supermajority가 되는 최소 참여 position 수는 몇 개일까요?"
         idea="부동소수점 비율 대신 양쪽을 정수로 곱해 client마다 같은 경계를 만듭니다. Equality도 포함하는 사양 판정을 그대로 읽습니다."
         formula={String.raw`3p\ge 2N\qquad\Longrightarrow\qquad p_{min}=\left\lceil\frac{2N}{3}\right\rceil=342\;(N=512)`}
-        annotatedFormula={String.raw`3p\ge 2N\qquad\Longrightarrow\qquad p_{min}=\underbrace{\left\lceil\frac{2N}{3}\right\rceil=342\;(N=512)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{3p\ge 2N}_{\text{정수 2/3 판정}}\qquad\Longrightarrow\qquad p_{min}=\underbrace{\left\lceil\frac{2N}{3}\right\rceil}_{\text{최소 참여 position}}=342\;(N=512)`}
         operations={[
-          { expression: String.raw`\left\lceil\frac{2N}{3}\right\rceil=342\;(N=512)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","부동소수점 비율 대신 양쪽을 정수로 곱해 client마다"] },
+          { expression: String.raw`3p\ge 2N`, annotation: ["참여 bit 수 p의 3배가 2N 이상인지","부동소수점 없이 정수로만 비교","341이면 1,023<1,024라 탈락"] },
+          { expression: String.raw`\left\lceil\frac{2N}{3}\right\rceil`, annotation: ["N=512면 1024/3≈341.3을 올림해 342","342면 1,026≥1,024로 통과","bit만 세고 BLS·branch 검사는 못 뺌"] },
         ]}
         terms={[
           { symbol: "N", name: "Committee position 수", description: "Network preset의 sync committee size; 예시는 512 positions" },
@@ -43,9 +44,11 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
         question="선택된 position들이 바로 이 network·fork의 attested header에 서명했다는 것을 어떻게 확인할까요?"
         idea="Set bit의 public keys를 group에서 집계하고, header object root에 sync-committee domain을 붙인 signing root와 aggregate signature의 pairing 관계를 비교합니다."
         formula={String.raw`PK_A=\sum_{i:b_i=1}PK_i,\quad m=HTR(H,D_{sync}),\quad e(PK_A,H_2(m))\stackrel{?}{=}e(G_1,\Sigma)`}
-        annotatedFormula={String.raw`PK_A=\underbrace{\sum_{i:b_i=1}PK_i,\quad m=HTR(H,D_{sync}),\quad e(PK_A,H_2(m))\stackrel{?}{=}e(G_1,\Sigma)}_{\text{Sync domain 계산}}`}
+        annotatedFormula={String.raw`PK_A=\underbrace{\sum_{i:b_i=1}PK_i}_{\text{set bit 공개키 합}},\quad m=\underbrace{HTR(H,D_{sync})}_{\text{header + sync domain}},\quad \underbrace{e(PK_A,H_2(m))\stackrel{?}{=}e(G_1,\Sigma)}_{\text{aggregate pairing 비교}}`}
         operations={[
-          { expression: String.raw`\sum_{i:b_i=1}PK_i,\quad m=HTR(H,D_{sync}),\quad e(PK_A,H_2(m))\stackrel{?}{=}e(G_1,\Sigma)`, annotation: ["Sync domain이(가) 식의 결과에 기여하는 방식을","계산합니다.","Set bit의 public keys를 group에서","집계하고, header object root에"] },
+          { expression: String.raw`\sum_{i:b_i=1}PK_i`, annotation: ["sync_committee_bits가 1인 position의","trusted committee 공개키를 G1에서 합산","bit 17을 끄면 PK_A가 달라짐"] },
+          { expression: String.raw`HTR(H,D_{sync})`, annotation: ["attested header root에 domain type·","fork version·genesis root를 붙인 root","다른 network genesis면 m이 달라짐"] },
+          { expression: String.raw`e(PK_A,H_2(m))\stackrel{?}{=}e(G_1,\Sigma)`, annotation: ["aggregate Σ가 PK_A의 비밀키들로 m에","서명한 것인지 pairing 등식으로 확인","통과해도 finality·execution은 별개"] },
         ]}
         terms={[
           { symbol: "b_i", name: "참여 bit", description: "Position i가 aggregate signature에 참여했는지 나타내는 Boolean" },

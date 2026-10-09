@@ -59,7 +59,7 @@ const data: WorldHistoryArticleData = {
     { term: "제국적 민족주의", description: "자국 국민의 결속과 우월성을 외부 영토 지배와 자원 확보의 근거로 잇는 정치입니다.", example: "본국의 대표 정부가 식민지에는 다른 법을 적용합니다.", boundary: "모든 민족주의가 제국 팽창으로 이어지는 것은 아닙니다." },
   ] },
   sources: [
-    { source: "Library of Congress · 1789 Declaration of Rights", excerpt: "free and equal in their rights", application: "보편 문장을 100명 사례의 실제 선거 명부와 대조해 선언과 적용 범위를 구분합니다.", citation: "Library of Congress, World Digital Library item 2021668069", href: "https://www.loc.gov/resource/gdcwdl.wdl_14430/", note: "1789년 권리 선언 초판 이미지와 채택 과정, 프랑스 혁명 맥락을 제공하는 의회도서관 기록입니다." },
+    { source: "Library of Congress · 1789 Declaration of Rights", excerpt: "Adopted by the National Assembly during its Sessions on August 20, 21, 25 and 26, 1789", application: "보편 문장을 100명 사례의 실제 선거 명부와 대조해 선언과 적용 범위를 구분합니다.", citation: "Library of Congress, World Digital Library item 2021668069", href: "https://www.loc.gov/resource/gdcwdl.wdl_14430/", note: "1789년 권리 선언 초판 이미지와 채택 과정, 프랑스 혁명 맥락을 제공하는 의회도서관 기록입니다." },
     { source: "U.S. Office of the Historian · Berlin Conference report", excerpt: "secured all that they wished for", application: "영토 협상에 참여한 국가와 문서에서 사라진 아프리카 당사자를 나눠 제국의 주권 배분을 읽습니다.", citation: "Foreign Relations of the United States, 1885, document 228", href: "https://history.state.gov/historicaldocuments/frus1885/d228", note: "베를린 회의 뒤 콩고·프랑스·포르투갈의 영토 주장과 당시 외교관의 제국적 시선을 담은 1차 외교 문서입니다." },
   ],
   review: [

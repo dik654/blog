@@ -34,10 +34,10 @@ export default function Distributional() {
           </>
         }
         formula={String.raw`\begin{aligned}X_{wc}&=\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}\\I_{t,\delta}&=\mathbf 1[x_t=w,\ x_{t+\delta}=c]\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}X_{wc}&=\underbrace{\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}}_{\text{distance weight 계산}}\\I_{t,\delta}&=\underbrace{\mathbf 1[x_t=w,\ x_{t+\delta}=c]}_{\text{indicator 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X_{wc}&=\underbrace{\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}}_{\text{window 안 가중 누적}}\\I_{t,\delta}&=\underbrace{\mathbf 1[x_t=w,\ x_{t+\delta}=c]}_{\text{pair 관측 indicator}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}`, annotation: ["distance weight이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 target position t 주변의 offset δ를","순회하고 target이 w, 이웃이 c일 때 cell을"] },
-          { expression: String.raw`\mathbf 1[x_t=w,\ x_{t+\delta}=c]`, annotation: ["indicator이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 target position t 주변의 offset δ를","순회하고 target이 w, 이웃이 c일 때 cell을"] },
+          { expression: String.raw`\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}`, annotation: ["corpus의 모든 위치 t와 offset δ를 돌며","(w,c) pair가 보일 때마다 ω(δ)만큼 누적","ω≡1이면 단순 count, 가까울수록 크면 가중"] },
+          { expression: String.raw`\mathbf 1[x_t=w,\ x_{t+\delta}=c]`, annotation: ["위치 t가 w이고 t+δ가 c이면 1, 아니면 0","[고양이, 우유, 마신다]에 window 1이면","X(우유,고양이)·X(우유,마신다)가 각 1 증가"] },
         ]}
         terms={[
           {
@@ -93,10 +93,10 @@ export default function Distributional() {
           </>
         }
         formula={String.raw`\begin{aligned}\operatorname{PMI}(w,c)&=\log\frac{P(w,c)}{P(w)P(c)}\\\operatorname{PPMI}(w,c)&=\max(0,\operatorname{PMI}(w,c))\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\operatorname{PMI}(w,c)&=\underbrace{\log\frac{P(w,c)}{P(w)P(c)}}_{\text{기준량당 비율}}\\\operatorname{PPMI}(w,c)&=\underbrace{\max(0,\operatorname{PMI}(w,c))}_{\text{경계 후보 선택}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{PMI}(w,c)&=\underbrace{\log\frac{P(w,c)}{P(w)P(c)}}_{\text{독립 기대 대비 log 비율}}\\\operatorname{PPMI}(w,c)&=\underbrace{\max(0,\operatorname{PMI}(w,c))}_{\text{음수 association 절단}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\log\frac{P(w,c)}{P(w)P(c)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Joint probability를 두 marginal의 곱으로","나눕니다."] },
-          { expression: String.raw`\max(0,\operatorname{PMI}(w,c))`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Joint probability를 두 marginal의 곱으로","나눕니다."] },
+          { expression: String.raw`\log\frac{P(w,c)}{P(w)P(c)}`, annotation: ["실제 joint를 독립 기대 P(w)P(c)로 나눔","0.02/(0.1×0.1)=2 → log 2≈0.693","양수면 우연보다 자주 함께 나온 pair"] },
+          { expression: String.raw`\max(0,\operatorname{PMI}(w,c))`, annotation: ["기대보다 드문 pair의 음수 PMI는 0으로","신뢰하기 어려운 negative association 제거","0.693은 양수라 PPMI도 0.693"] },
         ]}
         terms={[
           {

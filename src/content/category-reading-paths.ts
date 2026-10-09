@@ -23,9 +23,9 @@ export const CATEGORY_READING_PATHS: Readonly<
 > = {
   cloud: {
     organizingPrinciple: "선수 개념순",
-    title: "공통 원리에서 AWS·Azure 자격증과 취업 실습까지",
+    title: "공통 원리에서 Kubernetes, AWS·Azure 자격증과 취업 실습까지",
     description:
-      "목표 직무를 먼저 고르고, 책임·권한·망·실행·저장·복구라는 공통 원리를 익힌 뒤 공급자별 현행 시험 범위와 실습으로 올라갑니다.",
+      "목표 직무를 먼저 고르고, 책임·권한·망·실행·저장·복구라는 공통 원리를 익힌 뒤 Kubernetes 요청·패킷 경로를 추적하고, 마지막에 공급자별 현행 시험 범위와 실습으로 올라갑니다.",
     stages: [
       {
         eyebrow: "01 · 목표",
@@ -40,13 +40,19 @@ export const CATEGORY_READING_PATHS: Readonly<
         subcategories: ["cloud-foundations"],
       },
       {
-        eyebrow: "03 · AWS",
+        eyebrow: "03 · Kubernetes",
+        title: "Pod 하나와 연결 하나를 끝까지 추적하기",
+        description: "원하는 개수가 Ready endpoint가 되는 경로와 Service 주소가 실제 Pod에 닿는 패킷 경로를 공식 문서·명령으로 확인합니다.",
+        subcategories: ["cloud-kubernetes"],
+      },
+      {
+        eyebrow: "04 · AWS",
         title: "기초에서 설계·개발·CloudOps로",
         description: "CLF-C02 뒤 SAA-C03 또는 DVA-C02·SOA-C03을 목표 직무에 맞춰 고릅니다.",
         subcategories: ["cloud-aws"],
       },
       {
-        eyebrow: "04 · Azure",
+        eyebrow: "05 · Azure",
         title: "기초에서 관리·AI 개발·설계·DevOps로",
         description: "AZ-900 뒤 AZ-104를 실습하고 AI-200, AZ-305 또는 AZ-400을 목표 직무에 맞춰 고릅니다.",
         subcategories: ["cloud-azure"],
@@ -54,14 +60,14 @@ export const CATEGORY_READING_PATHS: Readonly<
     ],
     featuredArticles: [
       "cloud-certification-roadmap-2026",
-      "kubernetes-request-path-and-cka",
-      "kubernetes-network-packet-path",
       "cloud-foundations-responsibility-regions",
       "cloud-identity-access-hierarchy",
       "cloud-networking-request-path",
       "cloud-compute-selection",
       "cloud-storage-database-selection",
       "cloud-reliability-observability-iac",
+      "kubernetes-request-path-and-cka",
+      "kubernetes-network-packet-path",
       "aws-clf-c02-fast-study",
       "aws-saa-c03-fast-study",
       "aws-developer-cloudops-paths",
@@ -470,7 +476,7 @@ export const CATEGORY_READING_PATHS: Readonly<
   ],
   "featuredArticles": [
     "finite-field-theory",
-    "elliptic-curve",
+    "elliptic-curves",
     "snark-overview",
     "groth16",
     "plonk",
@@ -525,7 +531,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       "libp2p",
       "libp2p-tcp",
       "bittorrent",
-      "ipfs",
+      "content-addressing",
       "iroh",
     ],
   },
@@ -545,7 +551,15 @@ export const CATEGORY_READING_PATHS: Readonly<
       ]
     },
     {
-      "eyebrow": "02 · 실행 모델",
+      "eyebrow": "02 · AI 클러스터 구축",
+      "title": "요구사항에서 BOM·호환성·스케줄러·스토리지·전력·검수까지",
+      "description": "B300 128 GPU 한 제안을 설계 → 소프트웨어 호환성 → Kubernetes·Slurm 선택 → 스토리지 → 랙 전력·냉각 → 구축·검수 순서로 닫고, 마지막에 NCA-AIIO 자격 범위를 같은 증거에 대응시킵니다.",
+      "subcategories": [
+        "hw-ai-cluster"
+      ]
+    },
+    {
+      "eyebrow": "03 · 실행 모델",
       "title": "CUDA·HIP 실행과 메모리 요청",
       "description": "같은 원소의 번호와 주소를 thread·warp 또는 wave에서 추적하고, register·shared memory·LDS·HBM의 역할을 구분합니다.",
       "subcategories": [
@@ -553,7 +567,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       ]
     },
     {
-      "eyebrow": "03 · 특화 가속",
+      "eyebrow": "04 · 특화 가속",
       "title": "MSM·NTT·증명 파이프라인",
       "description": "수학 연산의 병렬성을 kernel에 배치하고 CPU·GPU 경계 비용까지 포함해 성능을 측정합니다.",
       "subcategories": [
@@ -561,7 +575,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       ]
     },
     {
-      "eyebrow": "04 · 가속기 설계",
+      "eyebrow": "05 · 가속기 설계",
       "title": "PE 한 칸에서 시스톨릭 배열까지",
       "description": "GPU가 소프트웨어로 만드는 재사용을 이번에는 RTL 배선 자체로 만듭니다. 실제 오픈소스 NPU 저장소를 코드 단위로 추적합니다.",
       "subcategories": [
@@ -570,13 +584,13 @@ export const CATEGORY_READING_PATHS: Readonly<
     }
   ],
   "featuredArticles": [
-    "nvidia-nca-aiio-study-guide",
     "ai-infrastructure-b300-128-blueprint",
     "ai-cluster-software-compatibility",
     "kubernetes-vs-slurm-gpu-scheduling",
     "ai-cluster-storage-io",
     "b300-rack-power-cooling",
     "ai-infrastructure-commissioning-acceptance",
+    "nvidia-nca-aiio-study-guide",
     "cuda-basics",
     "gpu-architecture",
     "cuda-thread-hierarchy",

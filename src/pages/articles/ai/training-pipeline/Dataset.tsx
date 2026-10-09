@@ -48,11 +48,11 @@ export default function Dataset() {
         question="한 training step에서 accelerator가 데이터를 기다린 비율과 실제 처리량을 어떻게 구할까?"
         idea={<>Step 시간을 batch 대기와 device 계산으로 나눕니다. 대기 비율이 크면서 accelerator utilization이 낮다면 model보다 input path를 먼저 최적화할 근거가 됩니다.</>}
         formula={String.raw`\begin{aligned}t_{\mathrm{step}}&=t_{\mathrm{wait}}+t_{\mathrm{compute}},\\r_{\mathrm{wait}}&=\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},\\Q&=\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}t_{\mathrm{step}}&=\underbrace{t_{\mathrm{wait}}+t_{\mathrm{compute}},}_{\text{오른쪽 항으로 결과 계산}}\\r_{\mathrm{wait}}&=\underbrace{\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},}_{\text{기준량당 비율}}\\Q&=\underbrace{\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.}_{\text{항별 기여 누적}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}t_{\mathrm{step}}&=\underbrace{t_{\mathrm{wait}}}_{\text{batch 대기}}+\underbrace{t_{\mathrm{compute}}}_{\text{device 계산}},\\r_{\mathrm{wait}}&=\underbrace{\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}}}_{\text{accelerator 놀린 비율}},\\Q&=\underbrace{\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}}_{\text{samples/s}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`t_{\mathrm{wait}}+t_{\mathrm{compute}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
-          { expression: String.raw`\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}},`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
-          { expression: String.raw`\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}.`, annotation: ["index마다","Step 시간을 batch 대기와 device 계산으로","나눕니다."] },
+          { expression: String.raw`t_{\mathrm{wait}}+t_{\mathrm{compute}}`, annotation: ["batch 기다린 시간과 device 계산 시간의 합","CUDA는 비동기라 event·profiler로 경계 동기화"] },
+          { expression: String.raw`\frac{t_{\mathrm{wait}}}{t_{\mathrm{step}}}`, annotation: ["step 중 input path 때문에 쉰 비율","크고 accelerator utilization도 낮으면","model보다 input path부터 최적화"] },
+          { expression: String.raw`\frac{N_{\mathrm{samples}}}{\sum t_{\mathrm{step}}}`, annotation: ["측정 구간의 처리 sample 수를 총 step 시간으로","warmup 제외, sequence면 valid tokens/s도","worker 늘려도 r_wait 그대로면 다른 병목"] },
         ]}
         terms={[
           { symbol: "t_wait", name: "data wait time", description: "다음 batch가 준비되기를 training process가 기다린 wall-clock 시간입니다." },

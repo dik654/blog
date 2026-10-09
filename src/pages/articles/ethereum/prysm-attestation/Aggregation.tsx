@@ -93,10 +93,11 @@ export default function Aggregation({ onCodeRef }: Props) {
           question="Slot 35의 committee 2 투표는 64개 attestation subnet 중 어디로 갈까요?"
           idea={<>Epoch 안에서 먼저 지난 committee 수를 세고 현재 committee index를 더한 뒤 subnet 수로 나눈 나머지를 씁니다.</>}
           formula={String.raw`\begin{aligned}u&=c\,(s\bmod S)+j\\s_{net}&=u\bmod N\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}u&=\underbrace{c\,(s\bmod S)+j}_{\text{slot 계산}}\\s_{net}&=\underbrace{u\bmod N}_{\text{slot 계산}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}u&=\underbrace{c\,(s\bmod S)}_{\text{epoch 안 지난 committee}}+\underbrace{j}_{\text{이 slot의 index}}\\s_{net}&=\underbrace{u\bmod N}_{\text{64개 subnet 중 하나}}\end{aligned}`}
           operations={[
-            { expression: String.raw`c\,(s\bmod S)+j`, annotation: ["slot이(가) 식의 결과에 기여하는 방식을 계산합니다.","Epoch 안에서 먼저 지난 committee 수를 세고 현재","committee index를 더한 뒤 subnet 수로 나눈","나머지를 씁니다."] },
-            { expression: String.raw`u\bmod N`, annotation: ["slot이(가) 식의 결과에 기여하는 방식을 계산합니다.","Epoch 안에서 먼저 지난 committee 수를 세고 현재","committee index를 더한 뒤 subnet 수로 나눈","나머지를 씁니다."] },
+            { expression: String.raw`c\,(s\bmod S)`, annotation: ["slot 35 mod 32 = 3 slot이 지났고","slot당 c=4 committee → 12개 지남"] },
+            { expression: String.raw`j`, annotation: ["현재 slot 안의 committee index 2","12+2=14"] },
+            { expression: String.raw`u\bmod N`, annotation: ["N=64 subnet으로 나눈 나머지 14번 topic","투표 유효성은 안 바꾸고 gossip만 분산"] },
           ]}
           terms={[
             { symbol: "s", name: "slot", description: "투표 duty의 slot 번호입니다." },
@@ -183,14 +184,14 @@ h&=\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)\\
 h\bmod m&=0
 \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-m&=\underbrace{\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)}_{\text{기준량당 비율}}\\
-h&=\underbrace{\operatorname{u64}\!\left(H(\sigma)_{\underbrace{0}_{\text{selection modulo 계산}}:8}\right)}_{\text{허용 경계 판정}}\\
-h\bmod m&=0
+m&=\underbrace{\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)}_{\text{committee당 modulo}}\\
+h&=\underbrace{\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)}_{\text{proof hash 앞 8 B}}\\
+\underbrace{h\bmod m}_{\text{1/m 확률 추첨}}&=0
 \end{aligned}`}
           operations={[
-            { expression: String.raw`\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
-            { expression: String.raw`\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
-            { expression: String.raw`0`, annotation: ["selection modulo이(가) 식의 결과에 기여하는","방식을 계산합니다.","Validator가 slot selection proof에","먼저 서명하고 그 hash를 modulo test에 넣습니다."] },
+            { expression: String.raw`\max\!\left(1,\left\lfloor\frac{n}{A}\right\rfloor\right)`, annotation: ["committee n=128을 목표 A=16으로 나눠 m=8","작은 committee라도 최소 1"] },
+            { expression: String.raw`\operatorname{u64}\!\left(H(\sigma)_{0:8}\right)`, annotation: ["DOMAIN_SELECTION_PROOF로 slot에 서명한","σ를 sha256한 앞 8 bytes를 정수로","개인키 없이는 조작 불가, 검증은 가능"] },
+            { expression: String.raw`h\bmod m`, annotation: ["h가 m의 배수면 aggregator","1/8 확률 × 128명 = 기대 16명"] },
           ]}
           terms={[
             { symbol: "n", name: "committee size", description: "이 slot·committee에 배정된 validator 수, 단위는 명입니다." },

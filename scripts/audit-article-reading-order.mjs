@@ -17,6 +17,23 @@ function flattenSubcategories(subcategories) {
   ]);
 }
 
+function indexSubcategoryDescendants(subcategories, index = new Map()) {
+  for (const subcategory of subcategories) {
+    const descendants = new Set([subcategory.slug]);
+    const childIndex = indexSubcategoryDescendants(
+      subcategory.children ?? [],
+      index,
+    );
+    for (const child of subcategory.children ?? []) {
+      for (const slug of childIndex.get(child.slug) ?? []) {
+        descendants.add(slug);
+      }
+    }
+    index.set(subcategory.slug, descendants);
+  }
+  return index;
+}
+
 try {
   const { categories } = await server.ssrLoadModule("/src/content/index.ts");
   const {
@@ -41,6 +58,44 @@ try {
     );
     const path = CATEGORY_READING_PATHS[category.slug];
     if (path) {
+      const descendantsBySubcategory = indexSubcategoryDescendants(
+        category.subcategories,
+      );
+      const duplicateFeatured = path.featuredArticles.filter(
+        (slug, index) => path.featuredArticles.indexOf(slug) !== index,
+      );
+      if (duplicateFeatured.length > 0) {
+        failures.push(
+          `${category.slug}: featured article 중복 (${[...new Set(duplicateFeatured)].join(", ")})`,
+        );
+      }
+      const articleBySlug = new Map(
+        category.articles.map((article) => [article.slug, article]),
+      );
+      for (const slug of path.featuredArticles) {
+        const article = articleBySlug.get(slug);
+        if (!article) {
+          failures.push(`${category.slug}: 존재하지 않는 featured article (${slug})`);
+          continue;
+        }
+        const hasStage = path.stages.some((stage) =>
+          stage.subcategories.some(
+            (subcategory) => {
+              const descendants = descendantsBySubcategory.get(subcategory);
+              return (
+                descendants?.has(article.subcategory) ||
+                article.subcategory === subcategory ||
+                article.subcategory.startsWith(`${subcategory}-`)
+              );
+            },
+          ),
+        );
+        if (!hasStage) {
+          failures.push(
+            `${category.slug}: featured article의 읽기 단계가 없습니다 (${slug} → ${article.subcategory})`,
+          );
+        }
+      }
       const stageBySlug = new Map();
       path.stages.forEach((stage, index) => {
         stage.subcategories.forEach((slug) => stageBySlug.set(slug, index));

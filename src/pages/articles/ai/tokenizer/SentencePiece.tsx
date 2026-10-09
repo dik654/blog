@@ -44,10 +44,11 @@ export default function SentencePiece() {
           </>
         }
         formula={String.raw`\begin{aligned}P(\mathbf s)&=\prod_{i=1}^{m}p(s_i)\\\mathbf s^*&=\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}P(\mathbf s)&=\underbrace{\prod_{i=1}^{m}p(s_i)}_{\text{piece probability 계산}}\\\mathbf s^*&=\underbrace{\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P(\mathbf s)&=\underbrace{\prod_{i=1}^{m}p(s_i)}_{\text{독립 piece 확률의 곱}}\\\mathbf s^*&=\underbrace{\arg\max_{\mathbf s\in S(X)}}_{\text{가능한 분할 중 최고}}\underbrace{\sum_{i=1}^{m}\log p(s_i)}_{\text{log 확률 합}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\prod_{i=1}^{m}p(s_i)`, annotation: ["piece probability이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 경로에 들어 있는 piece가 독립적으로 생성된다는 단순한","model을 두고 piece probability를 곱합니다."] },
-          { expression: String.raw`\arg\max_{\mathbf s\in S(X)}\sum_{i=1}^{m}\log p(s_i)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","한 경로에 들어 있는 piece가 독립적으로 생성된다는 단순한","model을 두고 piece probability를 곱합니다."] },
+          { expression: String.raw`\prod_{i=1}^{m}p(s_i)`, annotation: ["한 분할 경로의 piece들이 독립으로 생성됐다고","보고 각 piece 확률을 곱합니다.","[▁안, 녕]이면 0.01×0.02=0.0002"] },
+          { expression: String.raw`\sum_{i=1}^{m}\log p(s_i)`, annotation: ["작은 확률의 곱 대신 log를 더합니다.","[▁안, 녕]은 −4.61+(−3.91)=−8.52,","[▁안녕]은 −6.21"] },
+          { expression: String.raw`\arg\max_{\mathbf s\in S(X)}`, annotation: ["문자열을 빈틈없이 덮는 모든 분할 S(X) 중","log 합이 가장 큰(0에 가까운) 경로를 Viterbi로","고릅니다. −6.21 > −8.52라 [▁안녕]이 이깁니다"] },
         ]}
         terms={[
           {

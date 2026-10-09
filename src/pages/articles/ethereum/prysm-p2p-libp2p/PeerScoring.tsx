@@ -15,9 +15,10 @@ export default function PeerScoring({ onCodeRef }: { onCodeRef: (key: string, re
         question="오래된 peer 행동이 현재 연결 판단을 영원히 지배하지 않게 하려면 어떻게 점수를 갱신할까요?"
         idea="직전 점수에 0과 1 사이의 감쇠율을 곱한 뒤 이번 관찰의 가중합을 더합니다. Hard protocol violation은 이 soft score와 별도 ban·close gate로 둘 수 있습니다."
         formula={String.raw`S_{t+1}=\lambda S_t+\sum_k w_kx_{k,t}`}
-        annotatedFormula={String.raw`S_{t+1}=\underbrace{\lambda S_t+\sum_k w_kx_{k,t}}_{\text{감쇠율 계산}}`}
+        annotatedFormula={String.raw`S_{t+1}=\underbrace{\lambda S_t}_{\text{감쇠한 과거 점수}}+\underbrace{\sum_k w_kx_{k,t}}_{\text{이번 관찰 가중합}}`}
         operations={[
-          { expression: String.raw`\lambda S_t+\sum_k w_kx_{k,t}`, annotation: ["감쇠율이(가) 식의 결과에 기여하는 방식을 계산합니다.","직전 점수에 0과 1 사이의 감쇠율을 곱한 뒤 이번 관찰의","가중합을 더합니다."] },
+          { expression: String.raw`\lambda S_t`, annotation: ["직전 점수 10에 λ=0.8을 곱해 8","오래된 행동이 영원히 지배하지 못하게 감쇠"] },
+          { expression: String.raw`\sum_k w_kx_{k,t}`, annotation: ["유효 응답·invalid·timeout 축 k마다","가중치 w_k × 관찰값, 예: 유효 응답 +3","8+3=11, hard violation은 별도 ban gate"] },
         ]}
         terms={[
           { symbol: "S_t", name: "현재 피어 점수", description: "시각 t까지 누적·감쇠된 운영 점수" },

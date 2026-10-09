@@ -29,9 +29,9 @@ export default function PrefixSet({
           </>
         }
         formula={"N_{\\rm nibble}=2B"}
-        annotatedFormula={String.raw`N_{\rm nibble}=\underbrace{2B}_{\text{Path digits 계산}}`}
+        annotatedFormula={String.raw`N_{\rm nibble}=\underbrace{2B}_{\text{byte마다 branch 선택 2번}}`}
         operations={[
-          { expression: String.raw`2B`, annotation: ["Path digits이(가) 식의 결과에 기여하는 방식을","계산합니다.","Nibble 하나는 4 bit이고 byte 하나는 8","bit이므로 byte마다"] },
+          { expression: String.raw`2B`, annotation: ["byte는 8 bit, nibble은 4 bit이므로","byte마다 radix-16 branch 선택이 2번","Keccak-256 key B=32 → 64 nibbles"] },
         ]}
         terms={[
           {

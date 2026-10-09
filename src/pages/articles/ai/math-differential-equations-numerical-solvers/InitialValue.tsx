@@ -31,11 +31,12 @@ export default function InitialValue() {
           x(t)&=x_0e^{-\lambda t}
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \frac{dx}{dt}&=-\lambda x, & x(0)&=x_0 \\
-          x(t)&=\underbrace{x_0e^{-\lambda t}}_{\text{state trajectory 계산}}
+          \frac{dx}{dt}&=\underbrace{-\lambda x}_{\text{현재 양에 비례해 감소}}, & x(0)&=x_0 \\
+          x(t)&=\underbrace{x_0e^{-\lambda t}}_{\text{출발점이 고른 경로}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`x_0e^{-\lambda t}`, annotation: ["state trajectory이(가) 식의 결과에 기여하는","방식을 계산합니다.","매 순간 양의 일정 비율이 사라진다면 변화율은 현재 값에 음의","상수를 곱한 값입니다."] },
+          { expression: String.raw`-\lambda x`, annotation: ["매 순간 현재 양의 λ 비율만큼 사라짐","λ는 s⁻¹ 단위라 λt가 무차원"] },
+          { expression: String.raw`x_0e^{-\lambda t}`, annotation: ["x_0에서 출발해 지수적으로 줄어드는 유일한 해","λ=2, x₀=1이면 0.5초 뒤 e⁻¹≈0.368","미분해도 −λ×자기 자신이라 법칙을 정확히 만족"] },
         ]}
         terms={[
           {

@@ -80,9 +80,9 @@ export default function PrefixCaching({ onCodeRef }: { onCodeRef: (key: string, 
           </>
         }
         formula={String.raw`H_i=\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)`}
-        annotatedFormula={String.raw`H_i=\underbrace{\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`H_i=\operatorname{Hash}\!\left(\underbrace{H_{i-1}}_{\text{앞 prefix 전체}},\;\underbrace{x_i}_{\text{이 block 16 token}},\;\underbrace{e_i}_{\text{adapter·image·salt}}\right)`}
         operations={[
-          { expression: String.raw`\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)`, annotation: ["이 식에 적힌 경계와 전제가 맞는지 함께 확인합니다.","현재 block token만 hash하지 않고 parent","hash를 함께 넣어 앞선 전체 prefix 순서를","연결합니다."] },
+          { expression: String.raw`\operatorname{Hash}\!\left(H_{i-1},\;x_i,\;e_i\right)`, annotation: ["parent hash를 넣으므로 같은 16 token이라도","앞 문맥이 다르면 key가 달라 hit가 아닙니다.","LoRA·image·tenant salt가 다르면 e_i로 갈라집니다"] },
         ]}
         terms={HASH_TERMS}
         assumptions={[
@@ -105,12 +105,12 @@ n_{miss} &= n_{prompt}-n_{hit} \\
 0 &\le n_{hit}\le n_{prompt}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-n_{miss} &= \underbrace{n_{prompt}-n_{hit}}_{\text{오른쪽 항으로 결과 계산}} \\
-0 &\le \underbrace{n_{hit}\le n_{prompt}}_{\text{허용 경계 판정}}
+n_{miss} &= \underbrace{n_{prompt}-n_{hit}}_{\text{실제로 prefill할 token}} \\
+0 &\le \underbrace{n_{hit}\le n_{prompt}}_{\text{hit는 prompt 길이를 못 넘음}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`n_{prompt}-n_{hit}`, annotation: ["오른쪽에 사례의 값을 대입해 왼쪽 값을 계산합니다.","Prompt 전체에서 연속으로 hit한 full-block","prefix를 뺍니다."] },
-          { expression: String.raw`n_{hit}\le n_{prompt}`, annotation: ["이 식에 적힌 경계와 전제가 맞는지 함께 확인합니다.","Prompt 전체에서 연속으로 hit한 full-block","prefix를 뺍니다."] },
+          { expression: String.raw`n_{prompt}-n_{hit}`, annotation: ["prompt 길이에서 첫 block부터 연속으로 hit한","full-block prefix 길이를 뺀 만큼만 prefill합니다.","35 token 중 32 token hit면 3 token만 남습니다"] },
+          { expression: String.raw`n_{hit}\le n_{prompt}`, annotation: ["hit 길이는 0(전부 miss)에서 prompt 전체 사이이고","중간 block만 같은 경우는 더하지 않습니다.","prefill 절감이지 decode 계산은 그대로입니다"] },
         ]}
         terms={SAVING_TERMS}
         assumptions={[
@@ -133,12 +133,12 @@ h_{tok} &= \frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q} \\
 h_{req} &= \frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-h_{tok} &= \underbrace{\frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q}}_{\text{기준량당 비율}} \\
-h_{req} &= \underbrace{\frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}}_{\text{기준량당 비율}}
+h_{tok} &= \frac{\overbrace{\sum_{q\in Q} n^{hit}_q}^{\text{재사용한 token 합}}}{\underbrace{\sum_{q\in Q} n^{query}_q}_{\text{조회한 token 합}}} \\
+h_{req} &= \frac{\overbrace{\left|\{q\in Q : n^{hit}_q>0\}\right|}^{\text{한 token이라도 hit한 request}}}{\underbrace{|Q|}_{\text{전체 request}}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q}`, annotation: ["관심 token 수를 한 block의 slot 수 또는 전체 조회량과 비교합니다.","구간 Q의 hit token 합을 조회 token 합으로 나눈","값이며 재사용한 token의 비중입니다."] },
-          { expression: String.raw`\frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}`, annotation: ["관심 token 수를 한 block의 slot 수 또는 전체 조회량과 비교합니다.","한 token이라도 hit한 request 수를 전체 request","수로 나눈 값이며 hit 길이를 반영하지 않습니다."] },
+          { expression: String.raw`\frac{\sum_{q\in Q} n^{hit}_q}{\sum_{q\in Q} n^{query}_q}`, annotation: ["구간 Q의 hit token 합을 조회 token 합으로 나눈","재사용 token 비중입니다. 10 request × 35 token","중 9개가 32 token hit면 288/350≈82.29%"] },
+          { expression: String.raw`\frac{\left|\{q\in Q : n^{hit}_q>0\}\right|}{|Q|}`, annotation: ["한 token이라도 hit한 request 수를 전체로 나눠","hit 길이를 반영하지 않습니다. 같은 사례면 9/10=90%,","두 값 차이 7.71%p는 시간 절감률이 아닙니다"] },
         ]}
         terms={HIT_TERMS}
         assumptions={[

@@ -35,14 +35,14 @@ m_{BA}&=m(A(B(\theta_0))),\\
 \Delta_{\mathrm{order}}(m)&=m_{AB}-m_{BA}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-m_{AB}&=\underbrace{m(B(A(\theta_0))),}_{\text{frozen baseline 계산}}\\
-m_{BA}&=\underbrace{m(A(B(\theta_0))),}_{\text{frozen baseline 계산}}\\
-\Delta_{\mathrm{order}}(m)&=\underbrace{m_{AB}-m_{BA}.}_{\text{변화량 계산}}
+m_{AB}&=\underbrace{m(B(A(\theta_0))),}_{\text{A 먼저, B 나중 metric}}\\
+m_{BA}&=\underbrace{m(A(B(\theta_0))),}_{\text{B 먼저, A 나중 metric}}\\
+\Delta_{\mathrm{order}}(m)&=\underbrace{m_{AB}-m_{BA}.}_{\text{순서 효과}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`m(B(A(\theta_0))),`, annotation: ["frozen baseline이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
-          { expression: String.raw`m(A(B(\theta_0))),`, annotation: ["frozen baseline이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
-          { expression: String.raw`m_{AB}-m_{BA}.`, annotation: ["paired metric이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 baseline과 budget에서 두 순서의 최종","metric 차이를 직접 계산합니다."] },
+          { expression: String.raw`m(B(A(\theta_0))),`, annotation: ["같은 frozen baseline θ0에 A(예: pruning)를","먼저, B(예: quantization)를 나중에 적용한","artifact의 paired metric입니다."] },
+          { expression: String.raw`m(A(B(\theta_0))),`, annotation: ["같은 θ0에 B를 먼저, A를 나중에 적용하되","sparsity·bit·recovery compute 예산은 같게 둡니다."] },
+          { expression: String.raw`m_{AB}-m_{BA}.`, annotation: ["두 순서의 최종 metric 차이가 순서 효과입니다.","quality .82 대 .79면 .03이고, run noise가","이보다 큰지 보기 전엔 순서를 확정하지 않습니다"] },
         ]}
         terms={[
           {

@@ -322,18 +322,18 @@ export const llmBaseArticles: Article[] = [
   },
   {
     slug: "onprem-k8s-inference-platform",
-    title: "온프레미스 추론 인프라는 라우팅 규칙이 설 자리를 만드는 일입니다",
+    title: "온프레미스 Kubernetes에서 모델 서버를 배치하고 요청을 나누는 순서",
     subcategory: "ai-llm-serving",
     sections: [
-      { id: "overview", title: "게이트웨이가 혼자 하던 일이 흩어집니다" },
-      { id: "service-abstraction-gap", title: "기본 서비스 추상에는 모델 서버의 상태가 들어갈 자리가 없습니다" },
+      { id: "overview", title: "직접 운영하면 먼저 일의 새 담당자를 정해야 합니다" },
+      { id: "control-plane", title: "게이트웨이가 하던 일마다 새 담당자를 정합니다" },
+      { id: "service-abstraction-gap", title: "기본 Service는 어느 모델 서버가 바쁜지 모릅니다" },
       {
         id: "group-replica",
-        title: "복제본이 파드 하나가 아닐 때 배포 추상이 먼저 깨집니다",
+        title: "큰 모델에서는 복제본 하나가 여러 Pod 묶음입니다",
         subsections: [{ id: "rollout-ratio", title: "갱신 중에 남는 용량을 미리 계산해 둡니다" }],
       },
       { id: "fixed-pool", title: "총량이 고정이면 오토스케일은 늘리기가 아니라 뺏기입니다" },
-      { id: "control-plane", title: "게이트웨이를 걷어 내면 그 안에 있던 일들이 드러납니다" },
       { id: "platform-gate", title: "직접 돌리기로 결정하기 전에 네 가지를 답할 수 있어야 합니다" },
     ],
     component: () => import("@/pages/articles/ai/onprem-k8s-inference-platform"),

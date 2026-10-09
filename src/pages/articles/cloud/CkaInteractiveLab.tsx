@@ -297,7 +297,7 @@ export default function CkaInteractiveLab() {
     const missing = scenario.requiredEvidence.filter((item) => !simulator.evidence.includes(item));
     setGradeMessage(
       missing.length === 0
-        ? `통과 · ${formatTime(elapsed)}에 원인 증거, 최소 변경, acceptance를 모두 남겼습니다.`
+        ? `통과 · ${formatTime(elapsed)}에 원인 기록, 최소 변경, 완료 확인을 모두 남겼습니다.`
         : `아직 미완료 · ${missing.map((item) => evidenceLabels[item]).join(", ")} 단계가 필요합니다.`,
     );
   }
@@ -310,7 +310,7 @@ export default function CkaInteractiveLab() {
           <div className="min-w-0">
             <h3 id="cka-lab-title" className="text-xl font-bold text-foreground">문제를 읽고 CLI에서 직접 복구하세요</h3>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-              이 창은 실제 cluster나 임의 shell을 실행하지 않는 deterministic simulator입니다. 이 글의 상태·event·수정·검증 경로를 안전하게 반복하고, 아래 원본 lab은 kind 또는 kubeadm cluster에서 별도로 실행합니다.
+              이 창은 실제 cluster나 shell을 실행하지 않는 모의 실습입니다. 같은 명령에는 정해진 결과를 보여 줍니다. 여기서 상태·event·수정·검증 순서를 익힌 뒤, 실제 실습은 kind 또는 kubeadm cluster에서 별도로 실행합니다.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2 text-xs font-semibold">
@@ -319,7 +319,7 @@ export default function CkaInteractiveLab() {
           </div>
         </div>
 
-        <div className="mt-5 flex max-w-full gap-2 overflow-x-auto pb-1" role="tablist" aria-label="CKA 실습 문제">
+        <div className="mt-5 grid max-w-full grid-cols-2 gap-2 sm:flex sm:flex-wrap" role="tablist" aria-label="CKA 실습 문제">
           {scenarios.map((item, index) => (
             <button
               key={item.id}
@@ -327,7 +327,7 @@ export default function CkaInteractiveLab() {
               role="tab"
               aria-selected={index === scenarioIndex}
               onClick={() => reset(index)}
-              className={`min-h-11 shrink-0 rounded-lg border px-4 text-sm font-semibold ${index === scenarioIndex ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:border-primary/50"}`}
+              className={`min-h-11 min-w-0 rounded-lg border px-3 text-sm font-semibold sm:px-4 ${index === scenarioIndex ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:border-primary/50"}`}
             >
               {index + 1}. {item.domain}
             </button>

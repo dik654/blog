@@ -33,15 +33,15 @@ export default function AEvsVAE() {
           \Sigma_\phi(x)&=\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \text{AE: }z&=\underbrace{f_\phi(x)}_{\text{deterministic code 계산}} \\
+          \text{AE: }z&=\underbrace{f_\phi(x)}_{\text{input당 code 한 점}} \\
           \text{VAE: }q_\phi(z\mid x)
-          &=\underbrace{\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)}_{\text{허용 경계 판정}} \\
-          \Sigma_\phi(x)&=\underbrace{\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)}_{\text{허용 경계 판정}}
+          &=\underbrace{\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)}_{\text{input당 분포 하나}} \\
+          \Sigma_\phi(x)&=\underbrace{\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)}_{\text{축 사이 covariance 0}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`f_\phi(x)`, annotation: ["deterministic code이(가) 식의 결과에 기여하는","방식을 계산합니다.","AE는 input마다"] },
-          { expression: String.raw`\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","AE는 input마다"] },
-          { expression: String.raw`\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","AE는 input마다"] },
+          { expression: String.raw`f_\phi(x)`, annotation: ["같은 x는 항상 같은 latent 점으로", "prior와 비교할 대상이 없어", "random sampling 생성이 보장되지 않음"] },
+          { expression: String.raw`\mathcal N\!\left(\mu_\phi(x),\Sigma_\phi(x)\right)`, annotation: ["encoder가 중심 mu와 covariance를 출력", "prior p(z)와 KL로 비교할 수 있어", "sampling objective를 세울 수 있음"] },
+          { expression: String.raw`\operatorname{diag}\!\left(\sigma_\phi^2(x)\right)`, annotation: ["축별 분산 sigma²만 두고 나머지는 0", "KL을 dimension별 closed form으로 계산"] },
         ]}
         terms={[
           { symbol: "f_\\phi(x)", name: "deterministic code", description: "같은 input은 같은 latent point로 갑니다." },

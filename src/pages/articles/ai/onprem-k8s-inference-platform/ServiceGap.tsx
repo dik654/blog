@@ -6,11 +6,11 @@ import EndpointViz from "./viz/EndpointViz";
 export default function ServiceGap() {
   return (
     <section id="service-abstraction-gap" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">기본 서비스 추상에는 모델 서버의 상태가 들어갈 자리가 없습니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">기본 Service는 어느 모델 서버가 바쁜지 모릅니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          쿠버네티스에서 같은 일을 하는 파드 여러 개 앞에 두는 것은 서비스입니다. 서비스는 준비 상태인 파드 목록을 들고 있다가 들어온 연결을 그중 하나로 보냅니다. 고르는 기준은 연결
-          수준의 단순한 규칙이고 그 파드가 지금 무엇을 하고 있는지는 보지 않습니다.
+          쿠버네티스에서는 같은 일을 하는 Pod 여러 개 앞에 Service를 둡니다. Service는 준비된 Pod 목록에서
+          한 곳으로 연결을 보냅니다. 이때 그 Pod가 긴 요청을 계산 중인지, 캐시가 얼마나 남았는지는 보지 않습니다.
         </p>
 
         <p className="leading-7">
@@ -24,8 +24,9 @@ export default function ServiceGap() {
         </p>
 
         <p className="leading-7">
-          그래서 필요한 것은 더 나은 분배 알고리즘이 아니라, 분배를 결정하는 지점에 모델 서버의 지표가 들어갈 자리입니다. 이 자리를 표준화하는 확장이 최근에 자리 잡았습니다. 모델을
-          서빙하는 엔드포인트 묶음을 하나의 자원으로 선언하고 그 묶음 안에서 어느 엔드포인트로 보낼지는 별도의 선택기가 정하게 하는 구조입니다.
+          그래서 분배 규칙만 바꾸면 끝나지 않습니다. 모델 서버의 대기열과 캐시 값을 읽는 선택기를 요청 경로에
+          연결해야 합니다. Gateway API Inference Extension은 모델 서버 묶음을 하나의 자원으로 선언하고,
+          별도 선택기가 그 안에서 요청을 받을 서버를 고르게 합니다.
         </p>
       </div>
 
@@ -78,16 +79,15 @@ export default function ServiceGap() {
         href="https://kubernetes.io/blog/2025/06/05/introducing-gateway-api-inference-extension/"
       >
         일반적인 순환 분배와 최소 요청 분배가 모델 정체성·요청 중요도·모델 서버의 실시간 지표를 보지 못한다는
-        문제 제기, 모델을 서빙하는 엔드포인트 묶음을 자원으로 선언하고 엔드포인트 선택을 확장 지점으로 빼는
+        문제 제기, 모델을 서빙하는 엔드포인트 묶음을 자원으로 선언하고 엔드포인트 선택을 별도 선택기에 맡기는
         구조, 선택에 대기열 깊이와 캐시 사용률·어댑터 적재 상황 같은 모델 서버 지표를 쓴다는 설명이 이
         문서에 있습니다. 구체적인 가중치와 성능 수치는 구현과 버전에 따라 달라지므로 이 글은 구조만 다룹니다.
       </CitationBlock>
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          어떤 규칙으로 저울질할지, 특히 캐시 적중과 부하 균형이 어떻게 맞서는지는{" "}
-          <Link to="/cs/ai/disaggregated-prefill-decode-serving#routing">복제본 라우팅</Link>이 소유합니다. 이
-          절은 그 규칙이 놓일 자리를 클러스터가 어떻게 마련하는지만 다뤘습니다.
+          캐시 적중과 부하 균형이 맞설 때 어느 쪽을 택하는지는{" "}
+          <Link to="/cs/ai/disaggregated-prefill-decode-serving#routing">복제본 라우팅</Link>에서 이어 봅니다.
         </p>
       </div>
     </section>

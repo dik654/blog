@@ -32,15 +32,16 @@ export default function HeunRungeKutta() {
           x_{n+1}&=x_n+\frac h2(k_1+k_2)
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          k_1&=\underbrace{f(x_n,t_n)}_{\text{starting slope 계산}} \\
-          \widetilde x&=\underbrace{x_n+h k_1}_{\text{Euler predictor 계산}} \\
-          k_2&=\underbrace{f(\widetilde x,t_n+h)}_{\text{Euler predictor 계산}} \\
-          x_{n+1}&=x_n+\frac h2(k_1+k_2)
+          k_1&=\underbrace{f(x_n,t_n)}_{\text{출발점 기울기}} \\
+          \widetilde x&=\underbrace{x_n+h k_1}_{\text{Euler 예상 도착점}} \\
+          k_2&=\underbrace{f(\widetilde x,t_n+h)}_{\text{도착점 기울기}} \\
+          x_{n+1}&=x_n+\underbrace{\frac h2(k_1+k_2)}_{\text{두 기울기 평균}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`f(x_n,t_n)`, annotation: ["starting slope이(가) 식의 결과에 기여하는 방식을","계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
-          { expression: String.raw`x_n+h k_1`, annotation: ["Euler predictor이(가) 식의 결과에 기여하는","방식을 계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
-          { expression: String.raw`f(\widetilde x,t_n+h)`, annotation: ["Euler predictor이(가) 식의 결과에 기여하는","방식을 계산합니다.","현재 기울기로 provisional endpoint를 만든 뒤","그 끝의 기울기를 다시 측정합니다."] },
+          { expression: String.raw`f(x_n,t_n)`, annotation: ["현재 state에서 vector field 1회 평가","Euler가 쓰는 유일한 기울기"] },
+          { expression: String.raw`x_n+h k_1`, annotation: ["k_1로 h만큼 직진한 임시 끝점","최종 답이 아니라 k_2를 재기 위한 predictor"] },
+          { expression: String.raw`f(\widetilde x,t_n+h)`, annotation: ["예상 도착점에서 기울기를 한 번 더 평가","step당 NFE가 2가 되는 이유"] },
+          { expression: String.raw`\frac h2(k_1+k_2)`, annotation: ["두 slope의 trapezoid 평균으로 이동","곡률의 첫 효과를 반영해 global error O(h²)"] },
         ]}
         terms={[
           {

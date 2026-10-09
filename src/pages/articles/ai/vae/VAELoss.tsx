@@ -37,14 +37,16 @@ export default function VAELoss() {
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
           \ell_{\mathrm B}
-          &=\underbrace{-\sum_i x_i\log\pi_i}_{\text{로그 비용 변환}} \\
-          &\quad-\sum_i(1-x_i)\log(1-\pi_i) \\
+          &=\underbrace{-\sum_i x_i\log\pi_i}_{\text{x=1인 위치의 비용}} \\
+          &\quad\underbrace{-\sum_i(1-x_i)\log(1-\pi_i)}_{\text{x=0인 위치의 비용}} \\
           \ell_{\mathrm G}
-          &=\underbrace{\sum_i\frac{(x_i-\mu_i)^2}{2s^2}+C}_{\text{기준량당 비율}}
+          &=\sum_i\underbrace{\frac{(x_i-\mu_i)^2}{2s^2}}_{\text{분산으로 나눈 오차}}+\underbrace{C}_{\text{gradient 무관}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`-\sum_i x_i\log\pi_i`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Binary 관측은 각 위치의 Bernoulli log","probability를, fixed-variance","continuous 관측은 Gaussian log"] },
-          { expression: String.raw`\sum_i\frac{(x_i-\mu_i)^2}{2s^2}+C`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Binary 관측은 각 위치의 Bernoulli log","probability를, fixed-variance","continuous 관측은 Gaussian log"] },
+          { expression: String.raw`-\sum_i x_i\log\pi_i`, annotation: ["pixel i가 1인데 sigmoid 확률 pi_i가", "낮을수록 -log pi_i가 커짐", "BCE의 앞 절반"] },
+          { expression: String.raw`-\sum_i(1-x_i)\log(1-\pi_i)`, annotation: ["pixel i가 0인데 pi_i가 높을수록 커짐", "두 합이 Bernoulli -log p(x|z) = BCE"] },
+          { expression: String.raw`\frac{(x_i-\mu_i)^2}{2s^2}`, annotation: ["decoder mean과의 제곱 오차를", "고정 분산 s²로 나눔", "s²가 작을수록 MSE 계수 1/(2s²) 증가"] },
+          { expression: String.raw`C`, annotation: ["s를 고정하면 log(2 pi s²) 항은 상수", "parameter gradient에 기여하지 않음"] },
         ]}
         terms={[
           { symbol: "x_i", name: "observation", description: "Bernoulli에서는 0 또는 1, Gaussian에서는 연속값입니다." },
@@ -81,16 +83,17 @@ export default function VAELoss() {
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
           D(x)&=\underbrace{\mathbb E_{q_\phi(z\mid x)}
-          [\log p_\theta(x\mid z)]}_{\text{확률 가중 평균}} \\
-          R(x)&=\underbrace{\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)}_{\text{허용 경계 판정}} \\
-          \mathcal L(x)&=\underbrace{D(x)-R(x)}_{\text{data-fit term 계산}} \\
-          \log p_\theta(x)&\ge\mathcal L(x)
+          [\log p_\theta(x\mid z)]}_{\text{z로 x를 설명한 정도}} \\
+          R(x)&=\underbrace{\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)}_{\text{prior에서 벗어난 비용}} \\
+          \mathcal L(x)&=\underbrace{D(x)-R(x)}_{\text{ELBO}} \\
+          \log p_\theta(x)&\ge\underbrace{\mathcal L(x)}_{\text{evidence의 하한}}
         \end{aligned}`}
         operations={[
           { expression: String.raw`\mathbb E_{q_\phi(z\mid x)}
-          [\log p_\theta(x\mid z)]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의","data fit과 posterior–prior KL로 계산"] },
-          { expression: String.raw`\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의","data fit과 posterior–prior KL로 계산"] },
-          { expression: String.raw`D(x)-R(x)`, annotation: ["data-fit term이(가) 식의 결과에 기여하는 방식을","계산합니다.","approximate posterior q를 도입해","Jensen inequality를 적용하면, decoder의"] },
+          [\log p_\theta(x\mid z)]`, annotation: ["encoder posterior에서 뽑은 z로", "decoder가 x를 얼마나 잘 설명하는지", "reparameterized sample로 근사"] },
+          { expression: String.raw`\operatorname{KL}\!\left(q_\phi(z\mid x)\,\|\,p(z)\right)`, annotation: ["input별 posterior q가 prior N(0,I)에서", "멀어질수록 커지는 정보 비용", "Gaussian이면 closed form"] },
+          { expression: String.raw`D(x)-R(x)`, annotation: ["data fit에서 KL 비용을 뺀 값이 ELBO", "학습 code는 보통 -ELBO를 loss로 최소화"] },
+          { expression: String.raw`\ge\mathcal L(x)`, annotation: ["Jensen inequality로 얻은 하한", "둘의 차이는 KL(q(z|x)||p(z|x))", "q가 true posterior에 가까울수록 tight"] },
         ]}
         terms={[
           { symbol: String.raw`\log p_\theta(x)`, name: "log evidence", description: "latent를 적분한 data likelihood이며 직접 계산이 어려울 수 있습니다." },
@@ -110,16 +113,15 @@ export default function VAELoss() {
           \right)
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \operatorname{KL}(q\|p)&=\underbrace{\sum_j K_j}_{\text{dimension contribution 계산}} \\
-          K_j&=\underbrace{-\frac12\left(
-          1+\log\sigma_j^2-\mu_j^2-\sigma_j^2
-          \right)}_{\text{로그 비용 변환}}
+          \operatorname{KL}(q\|p)&=\underbrace{\sum_j K_j}_{\text{latent 축별 비용의 합}} \\
+          K_j&=-\frac12\left(
+          1+\underbrace{\log\sigma_j^2-\sigma_j^2}_{\text{분산이 1에서 벗어난 비용}}-\underbrace{\mu_j^2}_{\text{중심이 0에서 벗어난 비용}}
+          \right)
         \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_j K_j`, annotation: ["dimension contribution이(가) 식의 결과에","기여하는 방식을 계산합니다.","두 Gaussian의 KL 공식을 dimension별로","적용하면 mean displacement, variance와"] },
-          { expression: String.raw`-\frac12\left(
-          1+\log\sigma_j^2-\mu_j^2-\sigma_j^2
-          \right)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","두 Gaussian의 KL 공식을 dimension별로","적용하면 mean displacement, variance와","log-volume 차이의 합으로 정리됩니다."] },
+          { expression: String.raw`\sum_j K_j`, annotation: ["diagonal covariance라 축끼리 독립", "latent dimension j마다 KL을 더함", "sampling 없이 closed form"] },
+          { expression: String.raw`\mu_j^2`, annotation: ["posterior 중심이 prior mean 0에서", "멀어질수록 커지는 mean penalty"] },
+          { expression: String.raw`1+\log\sigma_j^2-\mu_j^2-\sigma_j^2`, annotation: ["sigma²=1, mu=0이면 괄호 안이 0 → K_j=0", "분산이 1보다 작거나 커도 비용 증가", "-1/2를 곱해 KL은 항상 0 이상"] },
         ]}
         terms={[
           { symbol: "j", name: "latent dimension", description: "diagonal covariance이므로 dimension별 기여를 더합니다." },

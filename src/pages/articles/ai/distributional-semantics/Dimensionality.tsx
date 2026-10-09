@@ -40,9 +40,10 @@ export default function Dimensionality() {
           </>
         }
         formula={String.raw`M\approx U_k\Sigma_kV_k^\top,\qquad E_{\mathrm{word}}=U_k\Sigma_k^p`}
-        annotatedFormula={String.raw`M\approx U_k\Sigma_kV_k^\top,\qquad E_{\mathrm{word}}=\underbrace{U_k\Sigma_k^p}_{\text{singular values 계산}}`}
+        annotatedFormula={String.raw`M\approx \underbrace{U_k\Sigma_kV_k^\top}_{\text{상위 k 방향 근사}},\qquad E_{\mathrm{word}}=\underbrace{U_k\Sigma_k^p}_{\text{k차원 word vector}}`}
         operations={[
-          { expression: String.raw`U_k\Sigma_k^p`, annotation: ["singular values이(가) 식의 결과에 기여하는","방식을 계산합니다.","SVD의 singular value가 큰 방향 k개만","남깁니다."] },
+          { expression: String.raw`U_k\Sigma_kV_k^\top`, annotation: ["singular value 큰 k방향만 남긴 근사","M=diag(3,1), k=1이면 diag(3,0)","버린 error 1²=1은 같은 rank에서 최소"] },
+          { expression: String.raw`U_k\Sigma_k^p`, annotation: ["U_k의 row: 단어가 latent 방향에 놓인 좌표","Σ_k^p로 방향별 scale을 얼마나 흡수할지 결정","p=0·1/2·1은 별도 design choice"] },
         ]}
         terms={[
           {
@@ -107,9 +108,10 @@ export default function Dimensionality() {
           </>
         }
         formula={String.raw`\operatorname{cos}(u,v)=\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}`}
-        annotatedFormula={String.raw`\operatorname{cos}(u,v)=\underbrace{\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{cos}(u,v)=\frac{\underbrace{u^\top v}_{\text{좌표 정렬 합}}}{\underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{크기 제거}}}`}
         operations={[
-          { expression: String.raw`\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Dot product를 두 vector norm으로 나누면","scale을 제거한 angle similarity가 됩니다."] },
+          { expression: String.raw`u^\top v`, annotation: ["같은 부호 coordinate 기여를 합한 dot product","같은 방향이면 크고 orthogonal이면 0"] },
+          { expression: String.raw`\lVert u\rVert_2\lVert v\rVert_2`, annotation: ["두 L2 norm의 곱으로 나눠 scale 제거","norm엔 빈도·factor scale이 섞여 있음","zero vector면 정의 안 됨, OOV 처리 필요"] },
         ]}
         terms={[
           {

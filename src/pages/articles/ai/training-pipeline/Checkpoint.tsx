@@ -36,11 +36,11 @@ export default function Checkpoint() {
         question="저장 후 재개가 중단 없는 실행과 같은 training trajectory인지 어떻게 검사할까?"
         idea={<>같은 초기 contract에서 연속 실행의 최종 state와 K번째 checkpoint를 새 process에서 불러 M번 더 update한 state를 비교합니다. Equality 범위는 deterministic mode와 hardware 조건에 맞게 정합니다.</>}
         formula={String.raw`\begin{aligned}\theta_{K+M}^{\mathrm{continuous}}&=\operatorname{Run}(C,K+M),\\\theta_{K+M}^{\mathrm{resume}}&=\operatorname{Run}(\operatorname{Load}(S_K),M),\\\delta_{\mathrm{resume}}&=\|\theta_{K+M}^{\mathrm{continuous}}-\theta_{K+M}^{\mathrm{resume}}\|.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\theta_{K+M}^{\mathrm{continuous}}&=\underbrace{\operatorname{Run}(C,K+M),}_{\text{initial run contract 계산}}\\\theta_{K+M}^{\mathrm{resume}}&=\underbrace{\operatorname{Run}(\operatorname{Load}(S_K),M),}_{\text{checkpoint state 계산}}\\\delta_{\mathrm{resume}}&=\underbrace{\|\theta_{K+M}^{\mathrm{continuous}}-\theta_{K+M}^{\mathrm{resume}}\|.}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\theta_{K+M}^{\mathrm{continuous}}&=\underbrace{\operatorname{Run}(C,K+M)}_{\text{중단 없는 reference}},\\\theta_{K+M}^{\mathrm{resume}}&=\underbrace{\operatorname{Run}(\operatorname{Load}(S_K),M)}_{\text{새 process에서 재개}},\\\delta_{\mathrm{resume}}&=\underbrace{\|\theta_{K+M}^{\mathrm{continuous}}-\theta_{K+M}^{\mathrm{resume}}\|}_{\text{두 trajectory 차이}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{Run}(C,K+M),`, annotation: ["initial run contract이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 초기 contract에서 연속 실행의 최종 state와","K번째 checkpoint를 새 process에서 불러 M번"] },
-          { expression: String.raw`\operatorname{Run}(\operatorname{Load}(S_K),M),`, annotation: ["checkpoint state이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 초기 contract에서 연속 실행의 최종 state와","K번째 checkpoint를 새 process에서 불러 M번"] },
-          { expression: String.raw`\|\theta_{K+M}^{\mathrm{continuous}}-\theta_{K+M}^{\mathrm{resume}}\|.`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 초기 contract에서 연속 실행의 최종 state와","K번째 checkpoint를 새 process에서 불러 M번","더 update한 state를 비교합니다."] },
+          { expression: String.raw`\operatorname{Run}(C,K+M)`, annotation: ["같은 code·data·seed C에서 출발해","K+M update를 한 process로 쭉 실행한 기준"] },
+          { expression: String.raw`\operatorname{Run}(\operatorname{Load}(S_K),M)`, annotation: ["K번째 update 뒤 저장한 S_K를","완전히 새 process가 load해 M번 더 update","optimizer·scheduler·RNG·sampler까지 복원"] },
+          { expression: String.raw`\|\theta_{K+M}^{\mathrm{continuous}}-\theta_{K+M}^{\mathrm{resume}}\|`, annotation: ["두 최종 parameter의 norm 차이","허용 오차 안이면 resume이 trajectory 보존","크면 첫 어긋난 update의 LR·RNG 비교"] },
         ]}
         terms={[
           { symbol: "C", name: "initial run contract", description: "Code·data·config·seed·environment를 포함한 공통 초기 조건입니다." },

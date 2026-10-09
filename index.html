@@ -2,6 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (() => {
+        const guardKey = "blog:startup-asset-reload";
+        const retryParam = "__asset_retry";
+        const guardWindowMs = 60_000;
+        let recoveryStarted = false;
+
+        const showLoadError = () => {
+          const render = () => {
+            if (!document.body || document.getElementById("startup-asset-error")) return;
+            const box = document.createElement("main");
+            box.id = "startup-asset-error";
+            box.style.cssText = "max-width:40rem;margin:4rem auto;padding:1.25rem;font:16px/1.6 system-ui,sans-serif";
+            box.innerHTML = '<h1 style="font-size:1.25rem">페이지 파일을 불러오지 못했습니다</h1><p>배포 파일이 교체되는 동안 이전 주소가 남았습니다. 아래 버튼을 눌러 최신 파일로 다시 연결해 주세요.</p><button style="min-height:44px;padding:.65rem 1rem;font:inherit" type="button">최신 페이지 불러오기</button>';
+            box.querySelector("button").addEventListener("click", () => {
+              try { sessionStorage.removeItem(guardKey); } catch {}
+              const url = new URL(location.href);
+              url.searchParams.set(retryParam, String(Date.now()));
+              location.replace(url.href);
+            });
+            document.body.replaceChildren(box);
+          };
+          if (document.body) render();
+          else addEventListener("DOMContentLoaded", render, { once: true });
+        };
+
+        const recover = () => {
+          if (recoveryStarted) return;
+          recoveryStarted = true;
+          const now = Date.now();
+          let previous = 0;
+          try { previous = Number(sessionStorage.getItem(guardKey) || 0); } catch {}
+          if (previous && now - previous < guardWindowMs) {
+            showLoadError();
+            return;
+          }
+          try { sessionStorage.setItem(guardKey, String(now)); } catch {}
+          const url = new URL(location.href);
+          url.searchParams.set(retryParam, String(now));
+          location.replace(url.href);
+        };
+
+        addEventListener("error", (event) => {
+          const element = event.target;
+          const assetUrl = element && (element.src || element.href);
+          if (typeof assetUrl === "string" && assetUrl.includes("/assets/")) recover();
+        }, true);
+        addEventListener("unhandledrejection", (event) => {
+          const message = String(event.reason && (event.reason.message || event.reason));
+          if (/dynamically imported module|module script|Loading chunk|ChunkLoadError/i.test(message)) recover();
+        });
+
+        addEventListener("load", () => {
+          setTimeout(() => {
+            try { sessionStorage.removeItem(guardKey); } catch {}
+            const url = new URL(location.href);
+            if (!url.searchParams.has(retryParam)) return;
+            url.searchParams.delete(retryParam);
+            history.replaceState(history.state, "", url.href);
+          }, 3_000);
+        }, { once: true });
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>blog-temp</title>

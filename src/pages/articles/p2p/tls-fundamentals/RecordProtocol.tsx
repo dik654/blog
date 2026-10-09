@@ -33,14 +33,14 @@ N_i &= IV \oplus \operatorname{encode}_{96}(i),\\
 P_i &= \text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-N_i &= \underbrace{IV \oplus \operatorname{encode}_{96}(i),}_{\text{per-record nonce 계산}}\\
-(C_i,\tau_i) &= \underbrace{\operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i),}_{\text{per-record nonce 계산}}\\
-P_i &= \underbrace{\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.}_{\text{record sequence number 계산}}
+N_i &= \underbrace{IV}_{\text{방향별 고정 IV}} \oplus \underbrace{\operatorname{encode}_{96}(i)}_{\text{순번을 96bit로}},\\
+(C_i,\tau_i) &= \operatorname{AEAD\_Encrypt}(K,N_i,\underbrace{P_i}_{\text{숨길 내용}},\underbrace{A_i}_{\text{인증만 하는 header}}),\\
+P_i &= \underbrace{\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}}_{\text{진짜 type은 암호문 안에}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`IV \oplus \operatorname{encode}_{96}(i),`, annotation: ["per-record nonce이(가) 식의 결과에 기여하는","방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
-          { expression: String.raw`\operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i),`, annotation: ["per-record nonce이(가) 식의 결과에 기여하는","방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
-          { expression: String.raw`\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}.`, annotation: ["record sequence number이(가) 식의 결과에","기여하는 방식을 계산합니다.","Handshake에서 파생한 static IV에 증가하는","record sequence number를 같은 길이로"] },
+          { expression: String.raw`IV \oplus \operatorname{encode}_{96}(i)`, annotation: ["traffic secret에서 파생한 96-bit IV에", "0부터 증가하는 record 순번을 XOR", "i=5면 마지막 부분이 5인 다섯 번째 nonce"] },
+          { expression: String.raw`\operatorname{AEAD\_Encrypt}(K,N_i,P_i,A_i)`, annotation: ["같은 K라도 N_i가 record마다 달라", "nonce 재사용 없이 암호문 C_i와 tag 생성", "header A_i는 평문이지만 tag로 변조 검출"] },
+          { expression: String.raw`\text{content}\,\|\,\text{inner type}\,\|\,\text{zero padding}`, annotation: ["outer type은 application_data로 보이고", "실제 content type은 plaintext 끝에 숨김", "padding은 길이 패턴만 완화"] },
         ]}
         terms={[
           {

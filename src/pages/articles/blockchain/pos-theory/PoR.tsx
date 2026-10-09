@@ -20,9 +20,11 @@ export default function PoR() {
         question="File block의 20%가 사라졌을 때 k개를 균등 독립 표본으로 뽑아 한 개 이상 탐지할 확률은?"
         idea="모든 sample이 남아 있는 80%에서 나올 확률을 먼저 구한 뒤 1에서 뺍니다. 실제 PoR theorem은 sampling뿐 아니라 encoding·authenticator·extractor 조건을 더합니다."
         formula={String.raw`P(\mathrm{detect})=1-(1-\rho)^k`}
-        annotatedFormula={String.raw`P(\mathrm{detect})=\underbrace{1-(1-\rho)^k}_{\text{detection probability 계산}}`}
+        annotatedFormula={String.raw`P(\mathrm{detect})=1-\underbrace{(1-\rho)^k}_{\text{k개 전부 놓칠 확률}}`}
         operations={[
-          { expression: String.raw`1-(1-\rho)^k`, annotation: ["detection probability이(가) 식의 결과에","기여하는 방식을 계산합니다.","모든 sample이 남아 있는 80%에서 나올 확률을 먼저","구한 뒤 1에서 뺍니다."] },
+          { expression: String.raw`1-\rho`, annotation: ["한 sample이 남아 있는 block에서 나올","확률. ρ=0.2면 0.8"] },
+          { expression: String.raw`(1-\rho)^k`, annotation: ["독립 k개 전부 손실을 비껴갈 확률.","k=5면 0.8⁵≈0.328, PASS 한 번이","손실을 놓칠 확률"] },
+          { expression: String.raw`1-(1-\rho)^k`, annotation: ["적어도 하나 missing block을 뽑을","확률. 1−0.328≈0.672"] },
         ]}
         terms={[
           { symbol: String.raw`\rho`, name: "missing fraction", description: "Challenge population에서 prover가 올바르게 답할 수 없는 block 비율입니다." },

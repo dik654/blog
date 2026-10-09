@@ -27,10 +27,10 @@ export default function Loop() {
         question="Micro-batch를 A번 모을 때 실제 update가 보는 batch 크기는 얼마일까?"
         idea={<>Rank 하나의 micro-batch 크기 Bmicro를 A회 누적하고 W개 data-parallel rank가 서로 다른 sample의 gradient를 평균내면 한 optimizer update가 반영하는 sample 수가 곱으로 늘어납니다.</>}
         formula={String.raw`\begin{aligned}B_{\mathrm{effective}}&=B_{\mathrm{micro}}\times A\times W,\\\bar L&=\frac{1}{A}\sum_{r=1}^{A}L_r.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}B_{\mathrm{effective}}&=\underbrace{B_{\mathrm{micro}}\times A\times W,}_{\text{accumulation steps 계산}}\\\bar L&=\underbrace{\frac{1}{A}\sum_{r=1}^{A}L_r.}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}B_{\mathrm{effective}}&=\underbrace{B_{\mathrm{micro}}\times A\times W}_{\text{update당 sample 수}},\\\bar L&=\underbrace{\frac{1}{A}\sum_{r=1}^{A}L_r}_{\text{누적 loss 평균}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`B_{\mathrm{micro}}\times A\times W,`, annotation: ["accumulation steps이(가) 식의 결과에 기여하는","방식을 계산합니다.","Rank 하나의 micro-batch 크기 Bmicro를 A회","누적하고 W개 data-parallel rank가 서로 다른"] },
-          { expression: String.raw`\frac{1}{A}\sum_{r=1}^{A}L_r.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Rank 하나의 micro-batch 크기 Bmicro를 A회","누적하고 W개 data-parallel rank가 서로 다른","sample의 gradient를 평균내면 한 optimizer"] },
+          { expression: String.raw`B_{\mathrm{micro}}\times A\times W`, annotation: ["rank당 micro-batch × 누적 횟수 × rank 수","B_micro=16, A=4, W=8이면 512 samples","scheduler가 세는 step은 이 update 단위"] },
+          { expression: String.raw`\frac{1}{A}\sum_{r=1}^{A}L_r`, annotation: ["A개 micro-batch loss를 더해 A로 나눔","각 loss를 A로 나눠 backward한 것과 같음","마지막 미완성 누적은 실제 개수로 재정규화"] },
         ]}
         terms={[
           { symbol: "B_micro", name: "per-rank micro-batch", description: "한 rank가 forward/backward 한 번에 처리하는 sample 수입니다." },
@@ -57,10 +57,10 @@ export default function Loop() {
         question="Loss scaling이 learning rate를 바꾸지 않으면서 작은 FP16 gradient를 어떻게 지킬까?"
         idea={<>Backward 전에 loss를 s배 하면 gradient도 s배 커집니다. Optimizer가 사용하기 전에 다시 s로 나누면 원래 gradient가 복원되며, overflow가 발견되면 update를 건너뛰고 scale을 줄일 수 있습니다.</>}
         formula={String.raw`\begin{aligned}g_{\mathrm{scaled}}&=\nabla_{\theta}(sL)=s\nabla_{\theta}L,\\g&=g_{\mathrm{scaled}}/s.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}g_{\mathrm{scaled}}&=\underbrace{\nabla_{\theta}(sL)=s\nabla_{\theta}L,}_{\text{unscaled loss 계산}}\\g&=\underbrace{g_{\mathrm{scaled}}/s.}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}g_{\mathrm{scaled}}&=\underbrace{\nabla_{\theta}(sL)=s\nabla_{\theta}L}_{\text{s배 키운 gradient}},\\g&=\underbrace{g_{\mathrm{scaled}}/s}_{\text{원래 gradient 복원}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`\nabla_{\theta}(sL)=s\nabla_{\theta}L,`, annotation: ["unscaled loss이(가) 식의 결과에 기여하는 방식을","계산합니다.","Backward 전에 loss를 s배 하면 gradient도","s배 커집니다."] },
-          { expression: String.raw`g_{\mathrm{scaled}}/s.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Backward 전에 loss를 s배 하면 gradient도","s배 커집니다."] },
+          { expression: String.raw`\nabla_{\theta}(sL)=s\nabla_{\theta}L`, annotation: ["loss를 s배 하고 backward하면","gradient도 정확히 s배","FP16에서 0이 될 작은 값을 표현 범위 안으로"] },
+          { expression: String.raw`g_{\mathrm{scaled}}/s`, annotation: ["optimizer 전에 s로 나눠 원래 gradient 복원","unscale 뒤에 clip해야 threshold가 유효","overflow면 update 건너뛰고 s를 줄임"] },
         ]}
         terms={[
           { symbol: "L", name: "unscaled loss", description: "원래 최적화하려는 batch objective입니다." },

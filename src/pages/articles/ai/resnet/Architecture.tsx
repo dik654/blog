@@ -57,9 +57,10 @@ export default function Architecture({
           </>
         }
         formula={String.raw`P_{\mathrm{basic}}=2(3^2C^2)=18C^2`}
-        annotatedFormula={String.raw`P_{\mathrm{basic}}=\underbrace{2(3^2C^2)=18C^2}_{\text{BasicBlock parameter 계산}}`}
+        annotatedFormula={String.raw`P_{\mathrm{basic}}=\underbrace{2}_{\text{3×3 conv 두 개}}(\underbrace{3^2}_{\text{kernel 면적}}\underbrace{C^2}_{\text{입력×출력 channel}})=18C^2`}
         operations={[
-          { expression: String.raw`2(3^2C^2)=18C^2`, annotation: ["BasicBlock parameter이(가) 식의 결과에","기여하는 방식을 계산합니다.","Bias를 생략한 convolution parameter는","kernel area×input channel×output"] },
+          { expression: String.raw`3^2C^2`, annotation: ["bias를 뺀 conv 하나의 weight는","kernel 면적 9 × 입력 C × 출력 C입니다.","C→C라 C²이 됩니다"] },
+          { expression: String.raw`2(3^2C^2)=18C^2`, annotation: ["BasicBlock엔 같은 3×3 conv가 두 개라","9C²를 두 번 더해 18C²입니다.","width가 큰 뒤쪽 stage일수록 C²으로 커집니다"] },
         ]}
         terms={[
           {
@@ -90,10 +91,10 @@ export default function Architecture({
           </>
         }
         formula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=CB+9B^2+BC\\&=2CB+9B^2\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=\underbrace{CB+9B^2+BC}_{\text{3×3 spatial mixing 계산}}\\&=\underbrace{2CB+9B^2}_{\text{3×3 spatial mixing 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P_{\mathrm{bottle}}&=\underbrace{CB}_{\text{1×1 축소 C→B}}+\underbrace{9B^2}_{\text{3×3, B 폭에서}}+\underbrace{BC}_{\text{1×1 복원 B→C}}\\&=\underbrace{2CB+9B^2}_{\text{projection 둘+spatial 하나}}\end{aligned}`}
         operations={[
-          { expression: String.raw`CB+9B^2+BC`, annotation: ["3×3 spatial mixing이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 1×1은 C에서 B로 channel을 줄이고, 3×3은 더","작은 B width에서 spatial mixing을 수행한 뒤"] },
-          { expression: String.raw`2CB+9B^2`, annotation: ["3×3 spatial mixing이(가) 식의 결과에 기여하는","방식을 계산합니다.","첫 1×1은 C에서 B로 channel을 줄이고, 3×3은 더","작은 B width에서 spatial mixing을 수행한 뒤"] },
+          { expression: String.raw`CB+9B^2+BC`, annotation: ["첫 1×1이 C→B로 줄이는 데 CB, 가운데 3×3이","좁은 B 폭에서 섞는 데 9B², 마지막 1×1이","B→C로 되돌리는 데 BC를 씁니다."] },
+          { expression: String.raw`2CB+9B^2`, annotation: ["두 projection을 합치면 2CB, 여기에 9B²입니다.","BasicBlock의 18C²과 달리 비싼 3×3이 B²에만","걸리므로 B≪C일 때 싸집니다(expansion 4면 C=4B)"] },
         ]}
         terms={[
           {

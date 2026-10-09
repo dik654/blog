@@ -56,9 +56,10 @@ export default function Discv4Article() {
           question="Packet 앞의 32-byte hash는 정확히 어떤 byte들을 묶는가?"
           idea="서명을 포함한 packet 나머지를 다시 hash하면 손상되거나 다른 framing인 datagram을 먼저 걸러낼 수 있다. Identity 증명은 이 hash가 아니라 뒤의 signature 검증이 맡는다."
           formula={String.raw`h=\operatorname{keccak256}(\sigma\parallel t\parallel d)`}
-          annotatedFormula={String.raw`h=\underbrace{\operatorname{keccak256}(\sigma\parallel t\parallel d)}_{\text{Concatenation 계산}}`}
+          annotatedFormula={String.raw`\underbrace{h}_{\text{packet 맨 앞 32 byte}}=\operatorname{keccak256}(\underbrace{\sigma}_{\text{서명 65B}}\parallel\underbrace{t}_{\text{type 1B}}\parallel\underbrace{d}_{\text{RLP data}})`}
           operations={[
-            { expression: String.raw`\operatorname{keccak256}(\sigma\parallel t\parallel d)`, annotation: ["Concatenation이(가) 식의 결과에 기여하는 방식을","계산합니다.","서명을 포함한 packet 나머지를 다시 hash하면","손상되거나 다른 framing인 datagram을 먼저 걸러낼"] },
+            { expression: String.raw`\sigma\parallel t\parallel d`, annotation: ["hash 뒤에 오는 packet 나머지 전부:", "65-byte 서명, 1-byte type, RLP list", "순서와 길이를 바꾸지 않고 이어 붙임"] },
+            { expression: String.raw`\operatorname{keccak256}(\sigma\parallel t\parallel d)`, annotation: ["수신자가 재계산해 앞 32 byte와 비교", "손상·다른 framing은 여기서 걸러짐", "identity 증명은 뒤의 sign(t||d) 검증 몫"] },
           ]}
           terms={[
             { symbol: "h", name: "Packet hash", description: "Packet 맨 앞의 32-byte Keccak-256 결과" },

@@ -33,8 +33,14 @@ const gpu: Category = {
         {
           slug: "hw-infra",
           name: "Infrastructure",
-          description: "전력, 냉각, 네트워크, 랙마운트",
+          description: "전력, 냉각, 네트워크, interconnect, 데이터센터 반입",
           icon: "🏗️",
+        },
+        {
+          slug: "hw-ai-cluster",
+          name: "AI Cluster Build",
+          description: "B300 128 GPU 설계·호환성·스케줄러·스토리지·전력·검수, NCA-AIIO",
+          icon: "🧱",
         },
       ],
     },

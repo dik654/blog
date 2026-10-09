@@ -33,9 +33,9 @@ export default function ProcessSlot({
           </>
         }
         formula={String.raw`i=s\bmod H`}
-        annotatedFormula={String.raw`i=\underbrace{s\bmod H}_{\text{Current slot 계산}}`}
+        annotatedFormula={String.raw`i=\underbrace{s\bmod H}_{\text{ring buffer 칸}}`}
         operations={[
-          { expression: String.raw`s\bmod H`, annotation: ["Current slot이(가) 식의 결과에 기여하는 방식을","계산합니다.","최근 H개 slot을 고정 크기 vector에 보관하므로","slot 번호를 H로 나눈 나머지를 index로 사용합니다."] },
+          { expression: String.raw`s\bmod H`, annotation: ["slot s를 window H=8,192로 나눈 나머지","slot 8,205 → index 13, slot 13 값을 덮음","block_roots·state_roots 같은 칸에 기록"] },
         ]}
         terms={[
           {

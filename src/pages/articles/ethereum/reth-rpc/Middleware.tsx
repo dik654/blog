@@ -40,11 +40,11 @@ export default function Middleware() {
         question="Burst 20개를 허용하면서 평균 초당 5개로 제한하려면 요청을 언제 받아야 할까?"
         idea="Token bucket은 시간에 따라 token을 보충하고 요청 cost만큼 차감합니다. Global bucket만 두지 않고 caller·method cost에 맞는 budget을 겹쳐 expensive query가 값싼 조회를 굶기지 않게 합니다."
         formula={String.raw`\begin{aligned}T'&=\min(C,T+r\Delta t)\\ \mathrm{allow}(q)&\iff T'\ge w_q\\ T_{\mathrm{next}}&=T'-w_q\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}T'&=\underbrace{\min(C,T+r\Delta t)}_{\text{경계 후보 선택}}\\ \mathrm{allow}(q)&\iff T'\ge \underbrace{w_q}_{\text{Request weight 계산}}\\ T_{\mathrm{next}}&=\underbrace{T'-w_q}_{\text{Request weight 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T'&=\underbrace{\min(C,T+r\Delta t)}_{\text{보충 후 잔고, 상한 C}}\\ \mathrm{allow}(q)&\iff T'\ge \underbrace{w_q}_{\text{요청 q의 cost}}\\ T_{\mathrm{next}}&=\underbrace{T'-w_q}_{\text{허용 후 차감}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\min(C,T+r\Delta t)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
-          { expression: String.raw`w_q`, annotation: ["Request weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
-          { expression: String.raw`T'-w_q`, annotation: ["Request weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token bucket은 시간에 따라 token을 보충하고","요청 cost만큼 차감합니다."] },
+          { expression: String.raw`\min(C,T+r\Delta t)`, annotation: ["r=5 token/s로 Δt초만큼 보충하되","burst 상한 C=20을 넘기지 않습니다","빈 bucket도 2초 뒤면 10 token"] },
+          { expression: String.raw`w_q`, annotation: ["method·range·body size로 정한 cost","잔고 T'가 w_q 이상일 때만 허용","비싼 range query일수록 w_q가 큼"] },
+          { expression: String.raw`T'-w_q`, annotation: ["허용한 요청의 cost만큼 차감","다음 요청은 이 잔고에서 시작"] },
         ]}
         terms={[
           { symbol: "T,T'", name: "Token balance", description: "보충 전후 남은 request-cost token입니다." },

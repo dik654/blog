@@ -12626,12 +12626,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "onprem-k8s-inference-platform": {
-    title: "온프레미스 추론 인프라 글이 소유하는 범위",
+    title: "이 글에서 답하는 질문과 이어 읽을 내용",
     owns: [
-      "외부 게이트웨이의 항목들이 자체 클러스터에서 어디로 배치되는지의 분해",
-      "기본 서비스 추상이 추론 분배에 맞지 않는 두 가지 이유",
-      "엔드포인트 묶음 선언과 선택기 분리라는 확장점 구조와 그 대가",
-      "여러 노드에 걸친 복제본을 그룹 단위로 다루는 추상과 부분 배치 문제",
+      "외부 게이트웨이가 하던 일마다 자체 클러스터의 새 담당자를 정하는 순서",
+      "기본 Service가 추론 서버의 부하를 보지 못하는 두 가지 이유",
+      "모델 서버 묶음과 별도 선택기를 요청 경로에 연결하는 방법과 그 대가",
+      "여러 노드에 걸친 복제본을 한 Pod 묶음으로 배치하는 방법과 부분 배치 문제",
       "그룹 단위 갱신이 만드는 용량 하한 조건과 온프레미스에서의 의미",
       "고정 총량에서 자동 확장이 재배분이 된다는 성질과 세 가지 정리 방식",
       "재기동 비용이 재배분 규칙의 반응 주기 하한을 정한다는 관계",
@@ -17815,7 +17815,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Container와 host process의 자원 경계", href: "/cs/ai/agent-sandbox-security#overview" },
-      { label: "Kubernetes와 Slurm의 GPU scheduling 경계", href: "/cs/hw/kubernetes-vs-slurm-gpu-scheduling" },
+      { label: "Kubernetes와 Slurm의 GPU scheduling 경계", href: "/cs/gpu/kubernetes-vs-slurm-gpu-scheduling" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Component·API·kubeadm·시험 버전과 영역 비중은 확인일의 Kubernetes·Linux Foundation·CNCF 공식 문서 범위로 제한합니다." },

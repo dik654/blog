@@ -34,9 +34,10 @@ export default function SkipConnection() {
           </>
         }
         formula={String.raw`\frac{\partial\mathcal L}{\partial x}=\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)`}
-        annotatedFormula={String.raw`\frac{\partial\mathcal L}{\partial x}=\underbrace{\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\frac{\partial\mathcal L}{\partial x}=\underbrace{\frac{\partial\mathcal L}{\partial y}}_{\text{뒤에서 온 gradient}}\left(\underbrace{I}_{\text{shortcut 경로}}+\underbrace{J_F(x)}_{\text{residual branch 경로}}\right)`}
         operations={[
-          { expression: String.raw`\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Output y=x+F(x)를 x로 미분하면 shortcut의","identity Jacobian과 residual","branch의 Jacobian이 더해집니다."] },
+          { expression: String.raw`I+J_F(x)`, annotation: ["y=x+F(x)를 x로 미분하면 parameter 없는","shortcut의 I와 residual branch의 Jacobian이","더해집니다. J_F가 작아도 I는 남습니다"] },
+          { expression: String.raw`\frac{\partial\mathcal L}{\partial y}\left(I+J_F(x)\right)`, annotation: ["block output에 도착한 upstream gradient를","두 경로의 합에 통과시켜 앞 block으로 보냅니다.","J_F만 연속으로 곱해지는 경로가 아니게 됩니다"] },
         ]}
         terms={[
           {
@@ -81,9 +82,10 @@ export default function SkipConnection() {
           </>
         }
         formula={String.raw`x_L=x_l+\sum_{i=l}^{L-1}F_i(x_i)`}
-        annotatedFormula={String.raw`x_L=\underbrace{x_l+\sum_{i=l}^{L-1}F_i(x_i)}_{\text{누적 residual 계산}}`}
+        annotatedFormula={String.raw`x_L=\underbrace{x_l}_{\text{시작 state 그대로}}+\underbrace{\sum_{i=l}^{L-1}F_i(x_i)}_{\text{중간 block update의 합}}`}
         operations={[
-          { expression: String.raw`x_l+\sum_{i=l}^{L-1}F_i(x_i)`, annotation: ["누적 residual이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 block의 xₗ₊₁=xₗ+Fₗ(xₗ)를 연속해서","대입하면, 먼 state는 시작 state와 중간"] },
+          { expression: String.raw`\sum_{i=l}^{L-1}F_i(x_i)`, annotation: ["x_{l+1}=x_l+F_l(x_l)을 L까지 연속 대입하면","중간 residual branch들의 출력이 곱이 아니라","합으로 쌓입니다."] },
+          { expression: String.raw`x_l+\sum_{i=l}^{L-1}F_i(x_i)`, annotation: ["먼 state x_L이 시작 state x_l을 그대로 품으므로","representation과 gradient에 짧은 경로가 생깁니다.","identity shortcut이 유지될 때만 이 형태입니다"] },
         ]}
         terms={[
           {

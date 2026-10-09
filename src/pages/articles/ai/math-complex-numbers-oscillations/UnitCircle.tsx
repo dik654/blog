@@ -14,9 +14,10 @@ export default function UnitCircle() {
         question="한 바퀴를 도는 점의 위치를 두 좌표로 어떻게 나타낼까?"
         idea={<>단위원 위의 점은 원점에서 거리가 항상 1입니다. 회전각 θ에서 가로축으로 내린 좌표가 cos θ, 세로축 좌표가 sin θ이므로 두 좌표의 제곱합은 언제나 1입니다.</>}
         formula={String.raw`u(\theta)=(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`}
-        annotatedFormula={String.raw`u(\theta)=\underbrace{(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1}_{\text{horizontal coordinate 계산}}`}
+        annotatedFormula={String.raw`u(\theta)=(\underbrace{\cos\theta}_{\text{가로 좌표}},\underbrace{\sin\theta}_{\text{세로 좌표}}),\qquad \underbrace{\cos^2\theta+\sin^2\theta}_{\text{원점까지 거리의 제곱}}=1`}
         operations={[
-          { expression: String.raw`(\cos\theta,\sin\theta),\qquad \cos^2\theta+\sin^2\theta=1`, annotation: ["horizontal coordinate이(가) 식의 결과에","기여하는 방식을 계산합니다.","단위원 위의 점은 원점에서 거리가 항상 1입니다."] },
+          { expression: String.raw`(\cos\theta,\sin\theta)`, annotation: ["가로축에서 반시계로 theta만큼 돈 점의", "가로 좌표가 cos, 세로 좌표가 sin", "90° 넘는 각도·음의 각도도 같은 규칙"] },
+          { expression: String.raw`\cos^2\theta+\sin^2\theta=1`, annotation: ["피타고라스: 두 좌표의 제곱합은", "반지름 1의 제곱이라 각도와 무관하게 1"] },
         ]}
         terms={[
           { symbol: "u(\\theta)", name: "unit-circle point", description: "각도 θ에 놓인 2차원 좌표입니다." },

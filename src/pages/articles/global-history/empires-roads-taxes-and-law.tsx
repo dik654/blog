@@ -60,7 +60,7 @@ const data: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "British Museum · Aśoka pillar edict fragment", excerpt: "part of Major Pillar Edict VI", application: "돌에 새긴 왕의 명령을 제국 전체의 완전한 집행 증거가 아니라 공개 전달 장치의 물증으로 읽습니다.", citation: "British Museum, pillar 1880.21", href: "https://www.britishmuseum.org/collection/object/A_1880-21", note: "기원전 3세기 아소카 주요 기둥 칙령 6호 조각의 재질·크기·출토 맥락을 제공하는 소장품 기록입니다." },
-    { source: "UNESCO · The Maintenance of Empire", excerpt: "military and administrative highways", application: "페르시아·중국·로마의 길을 상업 한 기능으로만 보지 않고 군사·행정 전달망과 함께 비교합니다.", citation: "UNESCO Silk and Spice Routes, The Maintenance of Empire", href: "https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "여러 제국의 도로·운하·역참을 행정과 군사 유지의 관점에서 비교한 교육 자료입니다." },
+    { source: "UNESCO · The Maintenance of Empire", excerpt: "military and administrative highways", application: "페르시아·중국·로마의 길을 상업 한 기능으로만 보지 않고 군사·행정 전달망과 함께 비교합니다.", citation: "UNESCO Silk and Spice Routes, The Maintenance of Empire", href: "https://web.archive.org/web/20241002144309id_/https://en.unesco.org/silkroad/sites/default/files/knowledge-bank-article/the%20maintenance%20of%20empire.pdf", note: "여러 제국의 도로·운하·역참을 행정과 군사 유지의 관점에서 비교한 교육 자료입니다. 원 UNESCO 주소는 2026-10-09 현재 실크로드 홈으로 리다이렉트되어 2024-10-02 Wayback 사본을 연결합니다." },
   ],
   review: [
     "곡물 100자루가 중앙이 자유롭게 쓰는 100자루가 아닌 이유는 무엇인가요? (답: 3·7절)",

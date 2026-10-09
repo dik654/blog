@@ -18,9 +18,11 @@ export default function ProcessBlock({ onCodeRef }: { onCodeRef: (key: string, r
         question="검증된 RANDAO reveal 하나가 epoch mix를 어떻게 갱신할까요?"
         idea={<>이전 32-byte mix와 reveal의 hash를 bitwise XOR합니다. 어느 한쪽만으로 결과를 정할 수 없게 기여를 누적하지만, reveal을 제출하지 않는 선택까지 없애지는 않습니다.</>}
         formula={String.raw`R_e' = R_e \oplus H(\sigma_{e,p})`}
-        annotatedFormula={String.raw`R_e' = \underbrace{R_e \oplus H(\sigma_{e,p})}_{\text{RANDAO reveal 계산}}`}
+        annotatedFormula={String.raw`R_e' = \underbrace{R_e}_{\text{이전 epoch mix}} \oplus \underbrace{H(\sigma_{e,p})}_{\text{reveal의 32-byte hash}}`}
         operations={[
-          { expression: String.raw`R_e \oplus H(\sigma_{e,p})`, annotation: ["RANDAO reveal이(가) 식의 결과에 기여하는 방식을","계산합니다.","이전 32-byte mix와 reveal의 hash를","bitwise XOR합니다."] },
+          { expression: String.raw`R_e`, annotation: ["epoch e 위치에 저장된 32-byte mix","앞선 proposer들의 reveal이 누적된 값"] },
+          { expression: String.raw`H(\sigma_{e,p})`, annotation: ["proposer p가 DOMAIN_RANDAO로 서명한","BLS reveal을 mix와 같은 32-byte로 hash","서명·proposer·domain 검증을 먼저 통과"] },
+          { expression: String.raw`R_e \oplus H(\sigma_{e,p})`, annotation: ["bit마다 XOR해 새 mix R_e'를 만듭니다","어느 한쪽만으로는 결과를 정할 수 없지만","reveal을 안 내는 선택의 bias는 남음"] },
         ]}
         terms={[
           { symbol: "R_e", name: "previous epoch mix", description: "현재 epoch e의 historical-vector 위치에 저장된 32-byte 값입니다." },

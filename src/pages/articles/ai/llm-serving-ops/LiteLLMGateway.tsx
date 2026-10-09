@@ -91,12 +91,12 @@ D_{\mathrm{remain}}&=D_{\mathrm{total}}-T_{\mathrm{elapsed}}\\
 T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\underbrace{D_{\mathrm{remain}}}_{\text{다음 시도 예산 계산}}&=\underbrace{D_{\mathrm{total}}-T_{\mathrm{elapsed}}}_{\text{소진한 시간 계산}}\\
-T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
+\underbrace{D_{\mathrm{remain}}}_{\text{남은 시도 시간}}&=\underbrace{D_{\mathrm{total}}-T_{\mathrm{elapsed}}}_{\text{deadline에서 쓴 시간 차감}}\\
+\underbrace{T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}}_{\text{다음 시도 예상 소요}}&<D_{\mathrm{remain}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`D_{\mathrm{total}}-T_{\mathrm{elapsed}}`, annotation: ["소진한 시간이(가) 식의 결과에 기여하는 방식을 계산합니다.","전체 deadline에서 이미 쓴 시간을 빼고, 다음 시도의","예상 backoff·실행·응답 전달 시간이 그 안에 들어올","때만 재시도합니다."] },
-          { expression: String.raw`D_{\mathrm{remain}}`, annotation: ["다음 시도 예산이(가) 식의 결과에 기여하는 방식을","계산합니다.","전체 deadline에서 이미 쓴 시간을 빼고, 다음 시도의","예상 backoff·실행·응답 전달 시간이 그 안에 들어올"] },
+          { expression: String.raw`D_{\mathrm{total}}-T_{\mathrm{elapsed}}`, annotation: ["사용자 end-to-end deadline에서 인증·queue·","이전 attempt까지 이미 쓴 시간을 뺀 나머지입니다."] },
+          { expression: String.raw`T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}`, annotation: ["jitter 포함 backoff 대기와 선택한 backend의","예상 connect·TTFT를 더한 다음 시도 비용입니다.","남은 시간에 못 들어오면 fail-fast합니다"] },
         ]}
         terms={[
           {
@@ -146,9 +146,9 @@ T_{\mathrm{backoff}}+\widehat T_{\mathrm{attempt}}&<D_{\mathrm{remain}}
           </>
         }
         formula={String.raw`\lambda_{\mathrm{backend}}=\lambda_{\mathrm{client}}\,\mathbb E[A]`}
-        annotatedFormula={String.raw`\lambda_{\mathrm{backend}}=\underbrace{\lambda_{\mathrm{client}}\,\mathbb E[A]}_{\text{확률 가중 평균}}`}
+        annotatedFormula={String.raw`\underbrace{\lambda_{\mathrm{backend}}}_{\text{runtime이 받는 요청률}}=\underbrace{\lambda_{\mathrm{client}}}_{\text{gateway 유입률}}\,\underbrace{\mathbb E[A]}_{\text{요청당 평균 시도 수}}`}
         operations={[
-          { expression: String.raw`\lambda_{\mathrm{client}}\,\mathbb E[A]`, annotation: ["backend arrival rate이(가) 식의 결과에","기여하는 방식을 계산합니다.","Client request 하나가 backend를 평균 몇 번","호출하는지 세면, 장애 중 실제 arrival rate를"] },
+          { expression: String.raw`\lambda_{\mathrm{client}}\,\mathbb E[A]`, annotation: ["gateway로 들어온 요청률에 요청 하나가 만든","평균 backend 시도 수(첫 시도 포함)를 곱합니다.","평균 1.4회면 backend 호출이 40% 많습니다"] },
         ]}
         terms={[
           {

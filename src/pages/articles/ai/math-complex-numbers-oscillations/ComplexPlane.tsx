@@ -13,9 +13,13 @@ export default function ComplexPlane() {
         question="복소수 하나에서 평면 좌표·길이·반대 회전 정보를 어떻게 읽을까?"
         idea={<>실수부 a를 가로 좌표, 허수부 b를 세로 좌표로 읽습니다. 원점까지의 거리는 피타고라스 정리로 구하고, conjugate는 세로 좌표의 부호를 바꾸어 실수축에 대해 반사합니다.</>}
         formula={String.raw`z=a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2`}
-        annotatedFormula={String.raw`z=\underbrace{a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2}_{\text{complex conjugate 계산}}`}
+        annotatedFormula={String.raw`z=\underbrace{a+bi}_{\text{가로 a, 세로 b}},\quad \underbrace{i^2=-1}_{\text{곱셈 규칙}},\quad |z|=\underbrace{\sqrt{a^2+b^2}}_{\text{원점까지 거리}},\quad \overline z=\underbrace{a-bi}_{\text{실수축 반사}},\quad z\overline z=|z|^2`}
         operations={[
-          { expression: String.raw`a+bi,\quad i^2=-1,\quad |z|=\sqrt{a^2+b^2},\quad \overline z=a-bi,\quad z\overline z=|z|^2`, annotation: ["complex conjugate이(가) 식의 결과에 기여하는","방식을 계산합니다.","실수부 a를 가로 좌표, 허수부 b를 세로 좌표로 읽습니다."] },
+          { expression: String.raw`a+bi`, annotation: ["실수부 a는 가로 좌표,", "허수부 b는 세로 좌표", "덧셈은 좌표별로 따로"] },
+          { expression: String.raw`i^2=-1`, annotation: ["이 규칙 하나로 곱셈이", "크기 곱·각도 덧셈이 됩니다", "i를 곱하면 90° 회전"] },
+          { expression: String.raw`\sqrt{a^2+b^2}`, annotation: ["피타고라스 정리로 구한", "원점에서 z까지의 vector 길이"] },
+          { expression: String.raw`a-bi`, annotation: ["세로 좌표 부호만 뒤집어", "실수축에 대해 반사 = phase 부호 반전"] },
+          { expression: String.raw`z\overline z=|z|^2`, annotation: ["z와 conjugate를 곱하면", "허수부가 사라지고 길이의 제곱만 남음"] },
         ]}
         terms={[
           { symbol: "a", name: "real part", description: "복소평면의 가로 좌표입니다." },
