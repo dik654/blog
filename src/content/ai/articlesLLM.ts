@@ -558,7 +558,7 @@ export const llmArticles: Article[] = [
     "id": "limits",
     "title": "10 · 같은 key의 수정과 전체 기억 보존은 다른 조건이다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence"),
   },
   {
@@ -874,7 +874,7 @@ export const llmArticles: Article[] = [
     "id": "limits",
     "title": "10 · 좋은 점수가 실제 성공을 뜻하는지 계속 검증한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/reward-design-for-verifiable-rl"),
   },
 ];

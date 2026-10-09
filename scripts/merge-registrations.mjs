@@ -111,6 +111,9 @@ function literalValue(node) {
   if (ts.isNumericLiteral(node)) return Number(node.text);
   if (node.kind === ts.SyntaxKind.TrueKeyword) return true;
   if (node.kind === ts.SyntaxKind.FalseKeyword) return false;
+  // null 을 getText() 로 넘기면 문자열 "null" 이 되어 LEDGER 의 sourceIndex key 가 어긋나고 행이 중복된다.
+  if (node.kind === ts.SyntaxKind.NullKeyword) return null;
+  if (ts.isPrefixUnaryExpression(node) && ts.isNumericLiteral(node.operand)) return -Number(node.operand.text);
   if (ts.isArrayLiteralExpression(node)) return node.elements.map(literalValue);
   if (ts.isObjectLiteralExpression(node)) {
     const out = {};
@@ -508,6 +511,12 @@ function mergeLedger(module, arr) {
       batch: preservedBatch,
       updatedAt: new Date().toISOString().slice(0, 10),
     };
+    // 내용이 그대로면 updatedAt 도 그대로 둔다. 같은 모듈을 다시 병합해도 파일이 바뀌지 않게 하기 위해서다.
+    if (existing !== undefined) {
+      const { updatedAt: _prev, ...before } = ledger.rows[existing];
+      const { updatedAt: _next, ...after } = merged;
+      if (JSON.stringify(before) === JSON.stringify(after)) merged.updatedAt = ledger.rows[existing].updatedAt;
+    }
     if (existing !== undefined) {
       ledger.rows[existing] = merged;
       updated += 1;

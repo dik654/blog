@@ -2020,7 +2020,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       { id: "byte-level-tokenization", role: "UTF-8 byte 256개를 초기 alphabet으로 삼아 UNK 비율을 0으로 만드는 mechanism을 한국어 byte 예로 보입니다." },
       { id: "token-id-embedding-matrix", role: "Token ID가 가리키는 embedding matrix의 V×d 크기와 메모리 비용을 수치로 연결합니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "tokenizer-pipeline-contract",
@@ -2113,7 +2113,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Vocabulary 128,000, d_model 4096, FP16이면 embedding matrix 하나는 128,000×4,096×2byte≈0.98 GiB입니다.",
         boundary: "같은 ID라도 tokenizer 버전이나 vocabulary가 다르면 가리키는 row의 의미가 달라져 checkpoint와 정확히 맞아야 합니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "문자 입력",
@@ -2405,7 +2405,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "GPT-2의 language-model 성능이나 이 tokenizer가 모든 언어에서 최적이라는 주장은 아닙니다.",
         sectionId: "paper-gpt2-bytebpe",
       },
-],
+  ],
   },
   "ai/distributional-semantics": {
     coreIdea:
@@ -11859,7 +11859,7 @@ export const ARTICLE_LEARNING: Readonly<
         role: "Held-out language-model loss를 scale별로 비교하는 관측값으로 사용합니다.",
       },
       { id: "depth-efficiency", role: "일반 deep network의 depth 표현력 개념을 Transformer의 width·depth 축 분리와 비교합니다." },
-],
+  ],
     introducedHere: [
       {
         id: "token-embedding",
@@ -11896,7 +11896,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "transformer-ffn-block", role: "Position-wise FFN sublayer 하나의 parameter 계약을 formal하게 이름 붙입니다." },
       { id: "residual-stream", role: "Residual 덧셈이 쌓여 만드는 공유 통로와 gradient 안정화 역할을 설명합니다." },
       { id: "rmsnorm", role: "Pre-norm·post-norm 자리에 실제로 들어가는 RMSNorm의 계산과 LayerNorm과의 차이를 보입니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "token-embedding",
@@ -12011,7 +12011,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "RMSNorm(x)=x/√(mean(x_i²)+ε)·γ로, LayerNorm의 평균·분산 두 reduction 대신 제곱평균 하나만 계산합니다.",
         boundary: "Bias 항이 없고 평균을 빼지 않으므로 입력이 0 근처가 아니면 LayerNorm과 다른 scale을 만들 수 있습니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "Model class",
@@ -12307,7 +12307,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "모든 architecture·규모에서 RMSNorm이 LayerNorm보다 항상 더 빠르거나 품질이 같다는 universal 결론은 아닙니다.",
         sectionId: "paper-rmsnorm",
       },
-],
+  ],
   },
   "ai/generative-theory": {
     "entryLevel": true,
@@ -17489,7 +17489,7 @@ export const ARTICLE_LEARNING: Readonly<
         "role": "동일 seed·split·budget에서 regularization 한 축만 비교합니다."
       },
       { id: "overfitting", role: "Gap의 다른 원인을 모두 배제한 뒤 남는, regularization이 실제로 다루는 대상을 정의합니다." },
-],
+  ],
     "conceptExplanations": [
       {
         "id": "observed-generalization-gap",
@@ -17514,7 +17514,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Train NLL .18로 낮은데 leakage·pipeline mismatch·label noise·distribution shift가 모두 배제되고도 validation NLL .31이 남으면 이 gap은 overfitting입니다.",
         boundary: "Gap이 있다고 곧바로 overfitting은 아니며, 네 원인 중 하나라도 남아 있으면 regularization으로 gap이 줄지 않습니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "01 두 위험",
@@ -22963,7 +22963,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "weight-vs-activation-quantization-target", role: "Weight quantization과 activation quantization이 겨냥하는 대상을 구분합니다." },
       { id: "dynamic-vs-static-activation-quantization", role: "Static quantization이 쓰는 calibration dataset과 dynamic quantization의 실행 시 계산을 대조합니다." },
       { id: "outlier-activation-and-handling", role: "Outlier activation이 만드는 saturation 문제와 SmoothQuant·AWQ의 outlier handling을 추가합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "quantization-scale-granularity", sectionId: "scale-granularity", intuition: "모든 값이 같은 자를 쓸지 작은 그룹마다 다른 자를 쓸지 정합니다.", workedExample: "4096 weights를 group 128로 나누면 scale 32개가 필요합니다.", boundary: "작은 group이 항상 task quality나 kernel speed를 높이지 않습니다." },
       { id: "ptq-calibration-coverage", sectionId: "coverage", intuition: "연습 표본으로 만든 자가 실제 traffic에서도 넘치지 않는지 구간별로 봅니다.", workedExample: "전체 .01%여도 긴 한국어 layer 20이 4%면 worst slice는 실패 후보입니다.", boundary: "낮은 saturation만으로 task quality를 보장하지 않습니다." },
@@ -22995,7 +22995,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Activation 대부분이 [-2,2]인데 한 channel만 20까지 나가면 scale이 20 기준으로 커져 나머지 channel의 rounding error가 커집니다.",
         boundary: "Outlier handling은 난이도를 옮길 뿐 없애지 않으며, SmoothQuant·AWQ 모두 논문 조건 밖 model·bit width의 동일 품질을 보장하지 않습니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 checkpoint", relation: "Float checkpoint와 calibration data 역할을 분리하고, 학습 후 변환하는 PTQ와 학습 중 재보정하는 QAT의 경계를 정합니다.", concepts: ["affine-uniform-quantizer", "quantization-scale-granularity", "ptq-vs-qat-tradeoff"] },
       { label: "01 observe", relation: "공유 범위마다 tensor 통계를 모으고, weight·activation 중 어느 대상을 보는지와 scale을 언제 계산할지를 정합니다.", concepts: ["quantization-scale-granularity", "weight-vs-activation-quantization-target", "dynamic-vs-static-activation-quantization"] },
@@ -23017,7 +23017,7 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", problem: "LLM activation outlier가 W8A8 PTQ를 어렵게 합니다.", contribution: "동등한 channel scaling으로 난이도를 activation에서 weight로 옮깁니다.", assumptions: "논문의 model·calibration·INT8 kernel 조건입니다.", evidenceScope: "SmoothQuant 변환과 실험입니다.", notClaim: "모든 model·bit width의 품질과 속도를 보장하지 않습니다.", sectionId: "paper-smoothquant" },
       { title: "AWQ", href: "https://arxiv.org/abs/2306.00978", problem: "Weight-only PTQ에서 소수 salient weight를 잘못 다루면 품질이 크게 떨어집니다.", contribution: "Activation 크기를 기준으로 channel마다 다른 scale을 줘 salient weight를 보호하는 channel-wise scaling을 제시합니다.", assumptions: "논문의 model·calibration·kernel 조건입니다.", evidenceScope: "AWQ 논문이 보고한 channel-wise scaling 변환과 그 실험 범위입니다.", notClaim: "모든 model·bit width에서 동일 품질과 속도를 보장하지 않습니다.", sectionId: "paper-awq" },
-],
+  ],
   },
   "ai/quantization-aware-training": {
     coreIdea: "QAT는 float master weight를 유지하고 forward에는 fake quantization을 넣어 배포 오차를 노출하며, backward에는 STE surrogate를 사용한 뒤 converted artifact와 실제 kernel에서 다시 검증하는 재학습 절차입니다.",
@@ -23574,7 +23574,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "structured-pruning-granularity", role: "Attention head·layer·expert 중 어느 단위를 지우는지에 따른 shape·품질 profile을 고정합니다." },
       { id: "expert-importance-estimation", role: "MoE expert pruning 전에 어떤 expert가 실제로 쓰이는지 재는 방법을 추가합니다." },
       { id: "sparse-kernel-execution", role: "구조적 sparsity가 실제 연산 감소로 바뀌는 kernel 조건을 고정합니다." },
-],
+  ],
     "conceptExplanations": [
       {
         "id": "structured-pruning-shape-propagation",
@@ -23618,7 +23618,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "NVIDIA Ampere Sparse Tensor Core는 2:4 pattern에서만 2배 처리량을 내고, 임의 위치 sparsity는 같은 GPU에서도 가속되지 않습니다.",
         boundary: "Eligible pattern이어도 kernel·builder가 그 tactic을 실제로 선택해야 하며, 선택 여부는 별도로 확인해야 합니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 Landscape", relation: "Model compression의 세 lever와 pruning 안의 structured·unstructured 축을 고정합니다.", concepts: ["model-compression-and-pruning-taxonomy"] },
       { label: "01 Dependency & shape", relation: "현재 output과 다음 input의 공유 dimension을 찾아 channel·head 제거를 graph 전체로 전파합니다.", concepts: ["structured-pruning-shape-propagation"] },
@@ -23750,7 +23750,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "임의 pattern의 unstructured sparsity에도 같은 2배가 적용된다는 뜻은 아닙니다.",
         sectionId: "sparse-kernel-execution",
       },
-]
+  ]
   },
   "ai/one-shot-llm-pruning": {
     "entryLevel": true,
@@ -24262,7 +24262,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "feature-distillation-alignment", role: "Layer·position·dimension을 projection으로 맞춰 feature loss를 계산합니다." },
       { id: "teacher-student-distillation-framework", role: "Teacher/student 역할과 knowledge distillation 전체 절차의 이름을 고정합니다." },
       { id: "distillation-scope-taxonomy", role: "Task-specific distillation과 capability distillation을 목표 범위로 구분합니다." },
-],
+  ],
     "conceptExplanations": [
       {
         "id": "distillation-signal-interface",
@@ -24322,7 +24322,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "감성분류 하나만 배포한다면 그 task의 held-out 정확도만 보는 task-specific distillation으로 충분하지만, 코딩·추론·대화를 두루 다루는 assistant는 benchmark suite 평균으로 검증하는 capability distillation이 필요합니다.",
         boundary: "Task-specific distillation은 학습에 없던 새 task로 일반화를 보장하지 않고, capability distillation은 폭넓은 데이터가 필요해 특정 task 하나만 보면 좁게 학습한 student보다 못할 수 있습니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "00 interface",
@@ -24709,7 +24709,7 @@ export const ARTICLE_LEARNING: Readonly<
         "role": "고정 teacher sequence에서 생기는 state mismatch의 출발점입니다."
       },
       { id: "on-vs-off-policy-learning", role: "λ=1의 student rollout distribution 학습과 λ=0의 teacher distribution 모방을 on-policy·off-policy 학습 구분의 한 사례로 잇습니다." },
-],
+  ],
     "introducedHere": [
       {
         "id": "autoregressive-state-distribution-mismatch",
@@ -26007,7 +26007,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "hybrid-candidate-generation-and-depth-budget", role: "Sparse·dense를 합치는 hybrid union과 first-stage retriever 이름, top-k retrieval·rerank depth 예산을 고정합니다." },
       { id: "colbert-late-interaction-maxsim", role: "Token 단위 MaxSim으로 bi-encoder와 cross-encoder 사이를 절충하는 late interaction을 추가합니다." },
       { id: "precision-at-k-and-mrr-ranking-evaluation", role: "Candidate recall과 다른 질문에 답하는 Precision@k·MRR 평가 지표를 고정합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "bm25-lexical-ranking", sectionId: "retrieval", intuition: "드문 query term은 크게 보고 반복 term의 이득은 포화시킵니다.", workedExample: "제품 code·법 조항 번호 query의 exact-term 후보를 빠르게 만듭니다.", boundary: "동의어·paraphrase vocabulary mismatch는 놓칠 수 있습니다." },
       { id: "hnsw-ann-index", sectionId: "retrieval", intuition: "위층 proximity graph에서 지역을 찾고 아래층에서 가까운 이웃을 좁힙니다.", workedExample: "efSearch별 exact-subset Recall@50·p95·bytes를 기록합니다.", boundary: "Approximate index 누락과 embedding 품질 실패를 분리해야 합니다." },
@@ -26036,7 +26036,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Top-5 중 relevant 3개면 Precision@5=0.6이고, 세 query의 첫 정답 순위가 2·1·(없음)이면 MRR=(0.5+1+0)/3=0.5입니다.",
         boundary: "MRR은 첫 relevant만 보고 나머지 정답 위치는 반영하지 않으며, Reciprocal Rank Fusion과는 대상과 계산 시점이 다릅니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 universe", relation: "Tenant·ACL·valid-time으로 candidate universe를 고정합니다.", concepts: ["rag-pre-retrieval-access-control"] },
       { label: "01 recall lanes · hybrid depth", relation: "Lexical·dense 후보를 만들고 반대되는 실패를 hybrid union으로 보완한 뒤 depth 예산을 정합니다.", concepts: ["bm25-lexical-ranking", "hnsw-ann-index", "embedding-role-instruction-contract", "hybrid-candidate-generation-and-depth-budget"] },
@@ -26063,7 +26063,7 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", problem: "First-stage candidates의 정교한 relevance ranking", contribution: "Query–passage cross-encoder reranking을 제시", assumptions: "MS MARCO·TREC-CAR와 논문 model", evidenceScope: "해당 benchmark reranking", notClaim: "후보 누락 복구나 무제한 candidate의 비용 효율을 보장하지 않음", sectionId: "reading-cross-encoder" },
       { title: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", problem: "서로 다른 retrieval rank list 결합", contribution: "1/(k+rank) 기반 RRF를 제안", assumptions: "논문의 TREC·LETOR experiment", evidenceScope: "SIGIR 2009의 RRF 정의와 TREC·LETOR 비교 실험 범위", notClaim: "고정 k의 보편 우위를 보장하지 않음", sectionId: "reading-rrf" },
       { title: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", href: "https://arxiv.org/abs/2004.12832", problem: "Cross-encoder 수준 정확도와 bi-encoder 수준 검색 시점 비용 사이의 절충", contribution: "문서 token embedding을 미리 계산해 두고 query token과의 MaxSim으로 relevance를 계산하는 late interaction을 제시", assumptions: "논문의 MS MARCO passage ranking corpus·model·조건", evidenceScope: "SIGIR 2020의 MS MARCO passage re-ranking·retrieval 실험 범위", notClaim: "모든 corpus·index 구현에서 저장 공간 증가를 상쇄한다는 보장은 아님", sectionId: "reading-colbert" },
-],
+  ],
   },
   "ai/lora-finetuning": {
     coreIdea:
@@ -26159,7 +26159,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "training-checkpoint-resume-state",
         role: "배포용 adapter 저장과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint를 구분합니다.",
       },
-],
+  ],
     conceptExplanations: [
       {
         id: "lora-trainable-scope-contract",
@@ -26294,7 +26294,7 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "Model 또는 adapter weight가 같아도 optimizer moment·learning rate·data order가 다르면 중단 전 학습의 정확한 재개라고 부를 수 없습니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "Adaptation boundary",
@@ -26608,7 +26608,7 @@ export const ARTICLE_LEARNING: Readonly<
           "모든 base model·batch 구성·hardware에서 같은 배율의 throughput·adapter 수 증가를 보장한다는 뜻은 아님",
         sectionId: "reading-s-lora",
       },
-],
+  ],
   },
   "ai/multi-agent-implementation": {
     coreIdea:
@@ -26661,7 +26661,7 @@ export const ARTICLE_LEARNING: Readonly<
         role: "LLM advisory와 실제 설비 command의 권한 경로를 분리합니다.",
       },
       { id: "multi-agent-system-and-orchestrator", role: "여러 agent instance로 나뉜 전체 구성, worker를 부르고 합치는 orchestrator 역할, 역할을 나누는 specialization과 나뉜 agent를 맞추는 coordination을 이름 붙입니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "multiagent-baseline-gain",
@@ -26743,7 +26743,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Researcher·implementer·reviewer가 서로 다른 tool 권한을 갖고, coordinator가 join 시점에 각 worker 결과를 받아 다음 단계로 넘깁니다.",
         boundary: "Agent 수를 늘리는 것 자체가 이득이 아니고, 아래 baseline gain 수식으로 실제 순이득을 확인해야 합니다.",
       },
-],
+  ],
     conceptStages: [
       {
         label: "System definition",
@@ -32307,7 +32307,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "agentic-trajectory-training-loop", role: "Tool action·observation·effect·verifier를 training trajectory로 만듭니다." },
       { id: "paradigm-limit-evidence-boundary", role: "현재 recipe의 soft limit과 구조적 hard limit 주장의 근거를 나눕니다." },
       { id: "llm-mid-training-stage", role: "Pretrain과 SFT 사이에서 같은 objective를 좁은 corpus 분포로 이어가는 단계를 정의합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "llm-training-stage-boundary", sectionId: "overview", intuition: "같은 coding 능력도 code를 읽어 표현을 만드는 단계, test reward로 행동을 고치는 단계, shell을 실제 실행하는 단계가 다릅니다.", workedExample: "Corpus→continued mixture→SFT/RL/OPD→sandbox harness 순서로 input과 state owner를 적습니다.", boundary: "Post-training 성과가 pretraining·architecture 불필요성을 뜻하지 않습니다." },
       { id: "autoregressive-pretraining-objective", sectionId: "pretraining", intuition: "앞 token을 보고 실제 다음 token에 높은 확률을 주도록 모든 위치의 비용을 평균합니다.", workedExample: "길이 4 target의 NLL 네 개를 더해 4로 나눕니다.", boundary: "낮은 token loss가 factuality·safety·tool success를 보장하지 않습니다." },
@@ -32315,7 +32315,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "agentic-trajectory-training-loop", sectionId: "agentic-training", intuition: "도구를 쓰면 다음 문제 상태가 달라지므로 action과 observation 전체가 한 sample이 됩니다.", workedExample: "repo search→edit→test fail→log inspect→test pass를 effect receipt와 저장합니다.", boundary: "Final reward 하나만으로 어느 token·action이 원인인지 자동 알 수 없습니다." },
       { id: "paradigm-limit-evidence-boundary", sectionId: "limits", intuition: "현재 recipe로 아직 못 고친 실패와 paradigm이 원리상 못 고치는 실패를 관찰만으로 구분하지 않습니다.", workedExample: "Long-horizon drift에 context·RL·architecture intervention을 같은 budget에서 비교합니다.", boundary: "Soft·hard limit은 공식 taxonomy가 아니며 matched intervention 근거가 필요합니다." },
       { id: "llm-mid-training-stage", sectionId: "mid-training", intuition: "일반 교재로 기초를 익힌 뒤, 전공 서적으로 옮겨 가되 아직 문제 풀이 정답지는 보지 않는 단계와 같습니다.", workedExample: "Pretraining 말기 mixture에서 code 비중을 10%에서 40%로 올려 수백억 token을 더 학습하면, 이후 SFT가 더 적은 demonstration만으로도 code 목표 행동에 도달하기 쉬워집니다.", boundary: "Labeled instruction-response 쌍을 아직 쓰지 않는다는 점에서 SFT와 다르고, 조직마다 범위가 달라 이름보다 data·objective·checkpoint handoff를 확인해야 합니다." },
-],
+  ],
     conceptStages: [
       { label: "00 stage map", relation: "각 단계가 받는 input과 바꾸는 state를 분리합니다.", concepts: ["llm-training-stage-boundary"] },
       { label: "01 substrate", relation: "Causal next-token objective로 capability 바닥을 만듭니다.", concepts: ["autoregressive-pretraining-objective"] },
@@ -41801,7 +41801,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "memory-compression-vs-forgetting", role: "요약해 남기는 compression과 완전히 지우는 forgetting을 다른 gate로 구분합니다." },
       { id: "memory-salience-scoring", role: "Recency·importance·relevance 가중합으로 어떤 기억이 남을지 정하는 salience score를 도입합니다." },
       { id: "memory-contamination-and-grounding", role: "오염된 기억이 판단을 왜곡하는 위험과 source로 되짚어 검증하는 grounding을 짝으로 고정합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "working-state-long-term-memory-boundary", sectionId: "overview", intuition: "오늘 할 일과 여러 달 재사용할 사용자 선호, 긴 원문 log, 반복 절차를 같은 서랍에 영구 보관하지 않습니다.", workedExample: "현재 migration의 failed test는 working state, 동의된 언어 선호는 long-term memory, stdout은 artifact, build 절차는 versioned procedure입니다.", boundary: "Model 안에 자동으로 생기는 인간식 장기 기억이 아니며 source·동의·expiry·update·delete·tenant isolation이 필요합니다." },
       { id: "context-compaction-fidelity", sectionId: "compaction", intuition: "긴 일지를 줄여도 다음 작업자가 결정을 뒤집지 않게 objective·reason·unresolved·artifact·next action을 보존합니다.", workedExample: "50개 tool 원문은 URI·digest로 옮기고 6개 필수 state key 중 4개만 정확히 복원되면 fidelity는 4/6입니다.", boundary: "요약 문장이 자연스럽거나 짧다는 것과 state가 충실하다는 것은 다르며 already-executed effect도 별도 보존해야 합니다." },
@@ -41840,7 +41840,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "잘못 말한 예산 100만원이 semantic memory로 저장되면 이후 세 번의 추천이 모두 그 값을 참조합니다.",
         boundary: "Grounding은 source·turn id·문서 존재 여부만 확인하며, 그 source 내용 자체가 최신이거나 옳다는 것까지 보장하지는 않습니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "Classify", relation: "Working state·memory·artifact·procedure를 수명으로, episodic·semantic·procedural을 내용 종류로 분류", concepts: ["working-state-long-term-memory-boundary", "episodic-semantic-procedural-memory-types"] },
       { label: "Govern", relation: "Owner·source·consent·expiry·delete path 부착", concepts: ["context-source-provenance-freshness", "working-state-long-term-memory-boundary"] },
@@ -41876,7 +41876,7 @@ export const ARTICLE_LEARNING: Readonly<
         "notClaim": "높은 사실 회상률이 후속 행동 성공을 보장하지 않습니다.",
         "sectionId": "paper-memoryarena"
       },
-],
+  ],
   },
   "ai/context-window-optimization": {
     entryLevel: true,
@@ -41891,7 +41891,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "lost-in-the-middle-effect", role: "GPT-3.5-Turbo 실제 수치로 위치에 따른 U자형 정확도 낙폭을 보여줍니다." },
       { id: "prompt-compression", role: "LLMLingua류 token 단위 압축이 최대 20배까지 성능 손실을 거의 남기지 않고 줄이는 방법을 소개합니다." },
       { id: "context-compression", role: "Evidence·history를 요약·추출로 줄이는 일반 기법과 정보 손실 trade-off를 구분합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "context-token-budget-allocation", sectionId: "budget", intuition: "가방 용량에서 돌아올 때 필요한 공간을 먼저 남기고 지침·질문·근거·기록·tool 결과를 따로 셉니다.", workedExample: "128k limit에 sys 8k·task 4k·retrieval 40k·history 30k·tool 20k·output 16k면 118k를 쓰고 10k가 남습니다.", boundary: "Token 합은 품질 함수가 아니며 provider serialization·special token·tool schema를 실제 tokenizer로 세야 합니다." },
       { id: "lost-in-middle-position-evaluation", sectionId: "position", intuition: "같은 단서를 앞·가운데·끝에 번갈아 두고 주변 방해 문서 수를 고정해 놓치는 위치를 찾습니다.", workedExample: "같은 fact를 20개 document 중 1·10·20번째에 두고 exact answer·citation·multi-hop score를 비교합니다.", boundary: "원 논문의 관측이 모든 model·task에서 같은 U자형 곡선으로 재현되는 법칙은 아닙니다." },
@@ -41900,7 +41900,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "lost-in-the-middle-effect", sectionId: "position", intuition: "같은 단서를 책의 앞·중간·뒤 어디에 두느냐에 따라 독자가 그 단서를 기억해 쓰는 정도가 달라집니다.", workedExample: "GPT-3.5-Turbo는 20개 문서 중 정답이 1번째면 75.8%, 10번째면 53.8%, 20번째면 63.2%를 기록했습니다.", boundary: "이 수치는 해당 model·실험 조건의 결과이며 모든 model·context length에서 같은 낙폭이 재현되지는 않습니다." },
       { id: "prompt-compression", sectionId: "compression", intuition: "긴 설명서에서 뜻이 크게 바뀌지 않는 단어만 골라 지우면 짧아진 설명서도 여전히 통합니다.", workedExample: "LLMLingua는 작은 model의 perplexity로 저정보 token을 반복 삭제해 최대 20배 압축을 보고했습니다.", boundary: "압축률이 커질수록 의미 손실 위험도 커지므로 압축 뒤 answer quality를 별도로 검증해야 합니다." },
       { id: "context-compression", sectionId: "compression", intuition: "창고에 쌓인 서류 전체를 옮기는 대신 필요한 내용만 요약해 옮기는 것과 같습니다.", workedExample: "LongLLMLingua는 NaturalQuestions에서 token을 4배 줄이면서 GPT-3.5-Turbo 성능을 최대 21.4% 올렸습니다.", boundary: "요약은 정보 손실을 동반하므로 압축 뒤에도 필수 evidence checklist가 남는지 검증해야 합니다." },
-],
+  ],
     conceptStages: [
       { label: "Budget", relation: "Output reserve 포함 source별 token 장부와 headroom 계산", concepts: ["context-token-budget-allocation"] },
       { label: "Relevance", relation: "Noise와 dilution이 relevant 비율을 낮춰 실제 utilization이 떨어지는 mechanism", concepts: ["context-relevance-degradation"] },
@@ -41925,7 +41925,7 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Lost in the Middle: How Language Models Use Long Contexts", href: "https://arxiv.org/abs/2307.03172", problem: "긴 context를 받는 model이 relevant information을 위치와 길이에 무관하게 실제 활용하는지 측정하는 문제", contribution: "Multi-document QA와 key-value retrieval에서 evidence 위치를 바꾼 evaluation protocol과 위치 민감도 관측을 제시", assumptions: "논문의 model·prompt·dataset·context length·retrieval arrangement", evidenceScope: "해당 long-context model과 두 task의 evidence 위치별 성능", notClaim: "모든 최신 model·task가 같은 U자형 곡선을 보이거나 앞뒤 복제로 문제가 해결된다는 뜻은 아님", sectionId: "paper-lost-in-middle" },
       { title: "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models", href: "https://arxiv.org/abs/2310.05736", problem: "점점 길어지는 prompt가 inference 비용과 지연을 늘리지만 그 중 일부만 실제로 필요한 문제", contribution: "Budget controller와 작은 model의 perplexity 기반 반복적 token-level 압축 알고리즘을 제안", assumptions: "GSM8K·BBH·ShareGPT 등 논문 데이터셋과 저자 구현·model 조건", evidenceScope: "해당 4개 데이터셋에서 관측한 최대 20배 압축과 성능 손실 정도", notClaim: "다른 model·domain·prompt 종류에서 같은 압축률이나 손실 없는 결과가 보장된다는 뜻은 아님", sectionId: "paper-llmlingua" },
       { title: "LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression", href: "https://arxiv.org/abs/2310.06839", problem: "긴 context에서 비용·지연뿐 아니라 위치 편향까지 함께 성능을 떨어뜨리는 문제", contribution: "질문 인지 압축과 조각 재배치로 압축과 위치 편향 완화를 함께 다루는 방법을 제안", assumptions: "NaturalQuestions·LooGLE 등 논문 벤치마크와 GPT-3.5-Turbo 조건", evidenceScope: "해당 벤치마크에서 관측한 token 감소율·성능 변화·비용 절감 수치", notClaim: "모든 model·workload에서 같은 폭의 성능 향상이나 비용 절감이 재현된다는 뜻은 아님", sectionId: "paper-longllmlingua" },
-],
+  ],
   },
   "ai/prompt-engineering": {
     entryLevel: true,
@@ -41941,7 +41941,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "instruction-following-capability", role: "지시를 따르는 능력이 pretraining이 아니라 SFT·RLHF로 학습된다는 관점을 소개합니다." },
       { id: "prompt-sensitivity", role: "같은 의미의 표현을 바꿨을 때 완료율·형식 준수율이 달라지는 현상을 수치 예로 보여줍니다." },
       { id: "prompt-robustness-mitigation", role: "표현 variant 평가와 ensemble로 그 변동을 줄이는 설계를 설명합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "prompt-input-contract", sectionId: "overview", intuition: "동료에게 일을 맡길 때 목표·자료·금지·납품 양식을 한 요청서에 넣는 것과 같습니다.", workedExample: "상담원용 문의 요약에 issue·urgency·evidence_quote와 unknown 규칙을 둡니다.", boundary: "자세한 prompt가 없는 지식이나 권한을 만들지는 않습니다.", counterexample: "'전문가처럼 잘 써라'만으로는 완료를 판정할 수 없습니다." },
       { id: "prompt-instruction-evidence-boundary", sectionId: "overview", intuition: "업무 지시서와 검토할 고객 문서를 다른 칸에 놓습니다.", workedExample: "System policy·task·retrieved evidence에 label과 delimiter를 붙입니다.", boundary: "Delimiter는 읽는 역할을 보일 뿐 runtime authorization을 만들지 않습니다.", counterexample: "Evidence의 '이전 지시를 무시하라'를 상위 instruction으로 승격하면 안 됩니다." },
@@ -41951,7 +41951,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "instruction-following-capability", sectionId: "instruction-following", intuition: "지시를 잘 알아듣는 신입과 말은 잘하지만 업무 지시를 못 알아듣는 사람의 차이와 같습니다.", workedExample: "Pretraining만 마친 model에 '요약해 줘'라고 하면 이어쓰기를 계속할 수 있지만, SFT·RLHF를 거친 model은 그 요청을 지시로 알아듣고 응답합니다.", boundary: "이 능력이 있다고 model이 항상 사실을 알거나 안전하다는 뜻은 아니며 별도의 evidence·policy 계층이 필요합니다." },
       { id: "prompt-sensitivity", sectionId: "prompt-sensitivity", intuition: "같은 부탁을 다른 말투로 했을 뿐인데 상대 반응이 달라지는 것과 비슷합니다.", workedExample: "'표를 만들어라'와 '표 형식으로 정리해라'가 같은 model에서 성공률 92%와 71%로 갈립니다.", boundary: "한 표현에서 잘 나온 결과를 그 prompt의 대표 성능으로 보고하면 이 변동을 숨기게 됩니다." },
       { id: "prompt-robustness-mitigation", sectionId: "prompt-sensitivity", intuition: "한 사람에게만 말해 보지 않고 여러 표현으로 물어본 뒤 공통된 답을 신뢰하는 방식입니다.", workedExample: "표현 4개로 만든 evaluation set의 평균 84%·최저 71%를 함께 보고하거나, 4개 응답의 다수결로 최종 답을 고릅니다.", boundary: "표현 개수를 늘릴수록 evaluation 비용도 늘어나므로 몇 개의 variant를 쓸지 미리 정해야 합니다." },
-],
+  ],
     conceptStages: [
       { label: "00 Capability", relation: "Model이 지시를 따르는 능력 자체가 학습된 것임을 먼저 확인합니다.", concepts: ["instruction-following-capability"] },
       { label: "01 Contract", relation: "요청과 evidence 역할을 분리합니다.", concepts: ["prompt-input-contract", "prompt-instruction-evidence-boundary"] },
@@ -42030,7 +42030,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "user-prompt-role", role: "Request마다 바뀌는 task 입력과 demonstration이 놓이는 turn 자리를 설명합니다." },
       { id: "prompt-template-substitution", role: "Placeholder에 사용자 입력과 demonstration을 채우는 변수 치환으로 최종 prompt가 조립되는 과정을 설명합니다." },
       { id: "demonstration-example-selection-strategy", role: "무작위 선택과 유사도 기반 선택의 비용·관련성 trade-off와 leakage 위험을 구분합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "in-context-learning-demonstration", sectionId: "few-shot", intuition: "시험지 앞에 이번 문제의 풀이 견본을 붙이는 방식입니다.", workedExample: "'broken'→negative와 'thanks'→positive example을 현재 request에 넣습니다.", boundary: "Model weight는 바뀌지 않고 context가 끝나면 example도 사라집니다.", counterexample: "영구적으로 새 지식을 학습한 것으로 볼 수 없습니다." },
       { id: "prompt-zero-few-shot-boundary", sectionId: "few-shot", intuition: "설명서만 주는 방식과 실제 견본을 주는 방식을 먼저 비교합니다.", workedExample: "Zero-shot 72%, few-shot 81%와 추가 token·TTFT를 같은 fixture에서 봅니다.", boundary: "Example 수의 보편적 최적값은 없습니다.", counterexample: "Few-shot이 항상 fine-tuning보다 싸거나 안전하지 않습니다." },
@@ -42040,7 +42040,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "user-prompt-role", sectionId: "prompt-roles", intuition: "손님이 그날 실제로 주문하는 내용으로, 매번 달라지는 요청서입니다.", workedExample: "Demonstration 두 쌍을 user turn 앞에 예시로 붙이고 그 뒤에 실제 질문을 이어 넣습니다.", boundary: "User turn에 섞인 문장이 system 규칙처럼 읽히지 않도록 label과 delimiter로 구분해야 합니다." },
       { id: "prompt-template-substitution", sectionId: "prompt-template", intuition: "빈칸이 있는 양식에 그날그날 다른 내용을 채워 최종 서류를 완성하는 과정입니다.", workedExample: "{{examples}} 자리에 예시 3개를 이어 붙이면 template 코드를 고치지 않고도 few-shot 조건을 4개로 늘릴 수 있습니다.", boundary: "치환은 문자열을 조립할 뿐이며 조립된 결과가 스스로 문법이나 schema를 지키는지는 별도로 검증해야 합니다." },
       { id: "demonstration-example-selection-strategy", sectionId: "example-selection", intuition: "예시를 뽑을 때 아무거나 몇 개 집을지, 지금 손님과 닮은 사례를 찾아 줄지 정하는 선택입니다.", workedExample: "Pool 500개에서 무작위 5개는 비용이 없지만, embedding top-5 검색은 관련성은 오르되 조회 지연이 더해집니다.", boundary: "검색에 쓰는 pool이 평가용 held-out set과 겹치면 train/eval leakage가 생기므로 미리 분리해야 합니다." },
-],
+  ],
     conceptStages: [
       { label: "00 Roles", relation: "System/user 메시지 역할과 template 치환으로 prompt가 조립되는 자리를 먼저 잡습니다.", concepts: ["system-prompt-role", "user-prompt-role", "prompt-template-substitution"] },
       { label: "01 Demo", relation: "한 demonstration이 context에서 하는 일을 정의합니다.", concepts: ["in-context-learning-demonstration"] },
@@ -42077,7 +42077,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "structured-prompting-design-layer", role: "Prompt 문장으로 원하는 모양을 보여주는 설계와 decoder 강제를 다른 층으로 구분합니다." },
       { id: "output-constraint-spectrum", role: "Prompt·decode·post-hoc 세 층 가운데 무엇이 출력을 좁히는지 통칭하는 상위 개념을 소개합니다." },
       { id: "json-mode-syntax-guarantee", role: "JSON mode가 문법만 보장하고 schema는 보장하지 않는 경계를 구체적인 예로 보여줍니다." },
-],
+  ],
     conceptExplanations: [
       { id: "prompt-structured-output-contract", sectionId: "structured-output", intuition: "사람이 읽는 문장이 아니라 program이 읽을 record의 설계도입니다.", workedExample: "status enum, item_id string|null, reason 조건을 schema로 정합니다.", boundary: "Schema가 실제 item 존재나 사실성을 보장하지 않습니다.", counterexample: "'JSON으로 답해'는 consumer contract가 아닙니다." },
       { id: "prompt-output-validation-ladder", sectionId: "structured-output", intuition: "서로 다른 질문을 묻는 네 문을 차례로 통과합니다.", workedExample: "Parse 뒤 field/type을 검사하고 catalog lookup과 evidence span을 확인합니다.", boundary: "앞 단계 성공은 뒤 단계 성공을 뜻하지 않습니다.", counterexample: "Schema-valid hallucinated ID는 domain validator에서 실패합니다." },
@@ -42086,7 +42086,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "structured-prompting-design-layer", sectionId: "prompt-design-layer", intuition: "설계도를 그려 보여주는 일과 그 설계도대로만 조립되게 기계를 잠그는 일은 다른 작업입니다.", workedExample: "Prompt에 status·item_id field 예시를 적어 두면 model은 그 모양을 따르려 하지만 다른 형태를 내도 막을 장치는 없습니다.", boundary: "설계 문장을 아무리 정교하게 써도 decoder가 다른 token을 생성하는 것을 물리적으로 막지는 못합니다." },
       { id: "output-constraint-spectrum", sectionId: "json-mode-boundary", intuition: "출입을 막는 방법이 안내문·잠긴 문·마지막 검문 세 층으로 나뉘는 것과 같습니다.", workedExample: "Prompt 설계, JSON mode·grammar mask, post-hoc validator를 겹쳐 쓰면 각 층이 놓친 실패를 다음 층이 잡습니다.", boundary: "세 층 가운데 하나만 갖추고 나머지 실패까지 막혔다고 보고하면 안 됩니다." },
       { id: "json-mode-syntax-guarantee", sectionId: "json-mode-boundary", intuition: "봉투가 제대로 봉해졌는지는 확인하지만 안에 필요한 서류가 다 들었는지는 안 보는 검사입니다.", workedExample: "JSON mode를 켜면 `{\"result\": true}`처럼 항상 parse되는 JSON이 나오지만 status·item_id field 누락은 막지 못합니다.", boundary: "JSON mode 통과를 field 존재나 값의 정확성 증명으로 쓰면 안 되고 schema validation을 그대로 둬야 합니다." },
-],
+  ],
     conceptStages: [
       { label: "00 Contract", relation: "Consumer가 필요한 record를 정의합니다.", concepts: ["prompt-structured-output-contract"] },
       { label: "01 Design", relation: "Consumer contract를 prompt 문장으로 보여주는 설계와 decoder 강제를 다른 층으로 구분합니다.", concepts: ["structured-prompting-design-layer"] },
@@ -43629,7 +43629,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "grammar-constrained-decoding-technique", role: "Derivation 판정을 생성 시점으로 옮겨 다음 symbol 후보를 미리 줄이는 기법 이름을 고정합니다." },
       { id: "structured-decoding-formalism-taxonomy", role: "Regex·CFG·JSON schema 가운데 무엇으로 허용 규칙을 적을지 축을 추가합니다." },
       { id: "xgrammar-constrained-decoding-engine", role: "그 검사를 vocabulary 규모에서 빠르게 만드는 구현 이름을 소개합니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "formal-alphabet-string-language",
@@ -43672,7 +43672,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Vocabulary 대부분은 context-independent로 미리 걸러 두고 매 step에는 나머지 소수 token만 검사합니다.",
         boundary: "논문이 보고한 benchmark 조건 범위의 결과이며 모든 tokenizer·engine 조합에서 같은 배율을 보장하지 않습니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 define", relation: "Symbol에서 language membership까지 정의합니다.", concepts: ["formal-alphabet-string-language"] },
       { label: "01 derive", relation: "Production으로 start symbol을 terminal string으로 전개합니다.", concepts: ["grammar-production-derivation"] },
@@ -43707,7 +43707,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "regular-language-context-free-hierarchy", role: "Finite automaton이 인식하는 정규언어가 CFG보다 좁은 Chomsky hierarchy 한 단계임을 고정합니다." },
       { id: "lr-glr-parsing-pda-implementation", role: "PDA 이론 모델을 LR의 단일 stack과 GLR의 다중 stack으로 실제 구현하는 방식을 더합니다." },
       { id: "incremental-syntax-tree-parser-state-machine", role: "다음 글 tree-sitter의 선수 개념인 parser state machine과 incremental syntax tree를 연결합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "finite-automaton-memory-boundary", sectionId: "finite-memory", intuition: "유한한 상태 번호만으로는 제한 없이 커지는 열린 괄호 수를 모두 다른 상태로 기억할 수 없습니다.", workedExample: "최대 깊이 3이면 state 0·1·2·3으로 근사할 수 있지만 arbitrary balanced parentheses에는 고정 상한이 없습니다.", boundary: "제품이 maximum depth를 고정하면 finite approximation이 가능하지만 이론적 무한 언어와는 다릅니다." },
       { id: "context-free-grammar-recursion", sectionId: "cfg-recursion", intuition: "상자 안에 같은 종류의 상자를 다시 넣는 production으로 nesting depth를 미리 정하지 않습니다.", workedExample: "value→array와 array→[values]가 서로 돌아 [[0],1]을 derive합니다.", boundary: "Declaration-before-use나 cross-field equality 같은 semantic constraint를 CFG만으로 모두 표현하지 않습니다." },
@@ -43715,7 +43715,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "regular-language-context-free-hierarchy", sectionId: "regular-cfg-hierarchy", intuition: "Finite automaton이 인식하는 언어 class가 정규언어이고, 그보다 넓은 언어를 만들려면 CFG의 재귀가 필요합니다.", workedExample: "a*b*는 정규표현식으로 판정되지만, (()())처럼 짝을 맞춰야 하는 언어는 S → ( S ) | ε 같은 CFG 재귀가 있어야 표현됩니다.", boundary: "정규언어가 CFG의 진부분집합이라는 관계이지, 모든 CFG 언어가 정규언어를 포함한다는 뜻은 아닙니다." },
       { id: "lr-glr-parsing-pda-implementation", sectionId: "lr-glr-parsing", intuition: "LR은 lookahead로 다음 action을 하나로 정해 stack 하나를 쓰고, GLR은 여러 action이 가능하면 stack을 늘려 병렬로 추적합니다.", workedExample: "충돌이 2개면 GLR은 stack을 2개로 fork해 각각 진행하다가 몇 토큰 뒤 하나만 남은 stack을 채택합니다.", boundary: "GLR은 여러 stack을 유지하는 만큼 LR보다 메모리·시간 비용이 커서 충돌이 드문 문법에는 LR이 더 흔히 쓰입니다." },
       { id: "incremental-syntax-tree-parser-state-machine", sectionId: "parser-bridge", intuition: "Parser state machine은 LR·GLR이 들고 있는 state·stack·전이 table이고, incremental syntax tree는 편집된 범위만 다시 parsing해 갱신한 결과물입니다.", workedExample: "숫자 1을 10으로 바꾸면 parser state machine은 그 토큰 주변만 재실행하고 나머지 tree는 재사용합니다.", boundary: "이 절은 다음 글의 tree-sitter 구현 세부는 다루지 않고 두 이름을 정의하는 선수 개념만 고정합니다." },
-],
+  ],
     conceptStages: [
       { label: "00 limit", relation: "Finite control state의 memory 한계를 먼저 봅니다.", concepts: ["finite-automaton-memory-boundary"] },
       { label: "01 hierarchy", relation: "그 한계가 규정하는 정규언어와 CFG 사이의 Chomsky hierarchy 한 단계를 확인합니다.", concepts: ["regular-language-context-free-hierarchy"] },
@@ -43746,13 +43746,13 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "lexer-tokenization", role: "원본 문자열을 token sequence로 바꾸는 lexer 단계를 추가합니다." },
       { id: "parse-tree-cst-ast-representation", role: "Parse tree·CST·AST를 구분해 tree-sitter가 유지하는 표현이 어느 쪽인지 고정합니다." },
       { id: "parser-error-recovery", role: "문법 오류가 있어도 나머지를 parsing하는 error recovery와 tree-sitter의 ERROR node를 더합니다." },
-],
+  ],
     conceptExplanations: [{ id: "incremental-parser-boundary", sectionId: "source-tree", intuition: "이미 쓴 문서를 고쳐 tree를 갱신하는 도구와 아직 쓰지 않은 다음 token을 제한하는 도구를 구분합니다.", workedExample: "Tree-sitter는 source+old tree→new CST이고 matcher는 prefix+vocabulary→bitmask입니다.", boundary: "Error recovery가 invalid continuation을 허용하는 decoder semantics라는 뜻은 아닙니다." },
       { id: "finite-state-machine-dfa-nfa-lexer-foundation", sectionId: "fsm-dfa-nfa", intuition: "DFA는 각 state에서 다음 state가 하나로 정해지고, NFA는 여러 state로 동시에 갈 수 있거나 입력 없이 이동할 수 있습니다.", workedExample: "숫자 token 패턴을 DFA로 컴파일하면 digit을 읽을 때마다 정확히 하나의 다음 state로만 이동합니다.", boundary: "FSM은 유한 state만으로 판정하므로 깊이 상한이 없는 nesting은 article1의 finite-automaton 한계와 동일하게 표현하지 못합니다." },
       { id: "lexer-tokenization", sectionId: "lexer-tokenization", intuition: "Lexer는 문자 하나하나를 보는 대신 미리 컴파일한 DFA로 token 경계를 빠르게 찾습니다.", workedExample: "`const x=1`을 `const`·`x`·`=`·`1`이라는 4개 token으로 나눕니다.", boundary: "Lexer의 출력은 token sequence일 뿐이고 문법적으로 유효한지는 parser가 별도로 판정합니다." },
       { id: "parse-tree-cst-ast-representation", sectionId: "parse-tree-cst-ast", intuition: "CST는 문법 규칙과 punctuation을 그대로 남기고, AST는 연산자·피연산자 같은 의미 단위만 남깁니다.", workedExample: "`1 + 2 * 3`에서 CST는 expr·term·factor 규칙 node를 모두 갖지만 AST는 `+(1, *(2,3))` 하나로 축약됩니다.", boundary: "Tree-sitter가 유지하는 것은 편집기가 원본 위치를 다시 가리켜야 하는 CST 쪽이며 모든 도구가 AST를 쓴다는 뜻은 아닙니다." },
       { id: "parser-error-recovery", sectionId: "error-recovery", intuition: "오류가 난 구간만 error node로 막아 두고 나머지는 계속 parsing합니다.", workedExample: "`{\"a\":`처럼 값이 빠진 입력에서도 tree-sitter는 ERROR node를 포함한 부분 tree를 반환합니다.", boundary: "Error-tolerant tree가 있다는 것이 프로그램이 컴파일·실행 가능하다는 뜻은 아닙니다." },
-],
+  ],
     conceptStages: [
       { label: "00 lex", relation: "FSM·DFA·NFA를 기반으로 lexer가 문자열을 token으로 바꿉니다.", concepts: ["finite-state-machine-dfa-nfa-lexer-foundation", "lexer-tokenization"] },
       { label: "01 tree shape", relation: "Token sequence를 parse tree로 만들고 CST·AST 표현을 구분합니다.", concepts: ["parse-tree-cst-ast-representation"] },
@@ -43812,13 +43812,13 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "syntactic-semantic-validity-boundary", role: "Parse/schema success와 세계·권한·정책 의미를 분리합니다." },
       { id: "constrained-decoding-mask-computation-overhead", role: "매 token마다 mask를 계산하는 비용과 사전 compile로 줄이는 방법을 고정합니다." },
       { id: "structured-generation-runtime-integration", role: "Structured generation이 serving engine batching loop에 통합되는 지점을 더합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "dynamic-schema-mask-cache", sectionId: "dynamic-schema-cache", intuition: "양식·tokenizer·compiler가 모두 같을 때만 같은 도장을 재사용합니다.", workedExample: "Schema hash+tokenizer revision+engine revision이 같은 request만 compiled artifact를 공유합니다.", boundary: "Artifact를 공유해도 generated prefix matcher state는 sequence별입니다." },
       { id: "syntactic-semantic-validity-boundary", sectionId: "semantic-policy", intuition: "주소 형식이 맞는 것과 실제 권한 있는 주소인 것은 다른 검사입니다.", workedExample: "Schema-valid payment도 user 존재·잔액·authorization·limit을 별도 검사합니다.", boundary: "Parseable output을 곧바로 executable·safe·true로 취급하지 않습니다." },
       { id: "constrained-decoding-mask-computation-overhead", sectionId: "constraint-overhead", intuition: "매 token마다 vocabulary 전체를 FSM 전이로 검사하면 비용이 vocabulary 크기에 비례해 커집니다.", workedExample: "Vocabulary 32,000개면 순진한 구현은 step마다 최대 32,000번 전이를 검사하지만, 미리 compile하면 조회 한 번으로 줄어듭니다.", boundary: "Compile은 step당 비용을 줄일 뿐 schema·tokenizer가 바뀌면 다시 compile해야 합니다." },
       { id: "structured-generation-runtime-integration", sectionId: "runtime-integration", intuition: "Compile·mask·state 관리를 실제 serving loop 안에 배치해야 요청마다 다른 grammar를 batch로 처리할 수 있습니다.", workedExample: "같은 batch에서 request A는 tool name을, B는 amount value를 생성 중이면 engine은 각각 다른 matcher state로 mask를 적용합니다.", boundary: "이 통합 지점이 있다고 해서 모든 serving engine이 같은 API나 성능을 낸다는 뜻은 아닙니다." },
-],
+  ],
     conceptStages: [
       { label: "00 cache", relation: "Dynamic schema artifact와 sequence state를 관리합니다.", concepts: ["dynamic-schema-mask-cache"] },
       { label: "01 overhead", relation: "매 token mask 계산 비용과 사전 compile로 줄이는 방법을 봅니다.", concepts: ["constrained-decoding-mask-computation-overhead"] },
@@ -43971,7 +43971,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "sandbox-execution-timeout-budget", role: "Program 실행 시간에 상한을 두고 초과 시 강제 종료합니다." },
       { id: "code-execution-feedback-loop", role: "실행 결과·에러 메시지를 다음 model 호출 input으로 돌려줍니다." },
       { id: "llm-program-repair", role: "Feedback을 근거로 model이 program을 스스로 고치게 합니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "deterministic-runtime-control-flow",
@@ -44029,7 +44029,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "재시도 예산 3회 안에 같은 에러가 반복되면 loop를 멈추고 human escalation으로 넘깁니다.",
         boundary: "반복 수정이 항상 수렴하지 않고, 예산 없이 반복하면 매 시도가 round-trip과 token 비용을 다시 더합니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 execute", relation: "명시적 control flow를 runtime이 실행합니다.", concepts: ["deterministic-runtime-control-flow"] },
       { label: "01 authorize", relation: "허용 capability만 program에 연결합니다.", concepts: ["code-mode-capability-binding"] },
@@ -47379,7 +47379,7 @@ export const ARTICLE_LEARNING: Readonly<
         "notClaim": "모든 Blackwell 제품과 dtype에 동일한 tcgen05 지원이 있다는 뜻이 아닙니다.",
         "sectionId": "tmem-official-source"
       },
-],
+  ],
   },
   "ai/vllm-serving": {
     recursiveTeaching: true,
@@ -53150,7 +53150,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "embodied-closed-loop-release-gate", role: "Nominal success뿐 아니라 perturbation·latency·contact·recovery trajectory로 embodied policy를 승인합니다." },
       { id: "vlm-to-vla-transfer", role: "VLM의 semantic·상식 지식이 부족한 robot data를 보완하며 physical action policy로 이식되는 이유와 메커니즘을 정의합니다." },
       { id: "grounding-and-action-space-alignment", role: "언어 지시를 object·좌표·action으로 잇는 세 grounding과 VLM output space를 robot action space에 맞추는 정렬 문제를 구분합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "vla-embodiment-gap", sectionId: "overview", intuition: "사진에서 컵을 맞히는 답안은 손을 어느 방향으로 얼마나 움직일지 적힌 운동 명령이 아닙니다.", workedExample: "‘컵’ grounding 뒤에도 pixel→3D pose→gripper trajectory→contact→re-observation의 다섯 계약을 통과해야 합니다.", boundary: "VLM benchmark 향상을 임의 robot의 physical action generalization으로 곧바로 확대하지 않습니다." },
       { id: "robot-action-representation-contract", sectionId: "action-interface", intuition: "같은 목적지도 지도 좌표, 운전대 각도, 바퀴 torque 중 무엇을 내느냐에 따라 실행기가 달라집니다.", workedExample: "6-DoF pose 10개를 chunk로 예측하면 호출은 줄지만 새 observation을 반영하지 않는 horizon이 늘어납니다.", boundary: "Diffusion·flow head가 더 복잡하다는 이유로 direct coordinate/token head보다 항상 우월하지 않습니다." },
@@ -53160,7 +53160,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "embodied-closed-loop-release-gate", sectionId: "closed-loop-release", intuition: "한 번 정답 action을 맞힌 것보다 움직인 뒤 달라진 장면에서 안전하게 계속하거나 복구하는지가 중요합니다.", workedExample: "Cup pose·camera yaw·lighting을 한 축씩 바꾸고 observation-to-action p95, success, slip recovery trace를 같은 generation에 기록합니다.", boundary: "평균 success와 offline action accuracy만으로 OOD·real-time·contact-rich release를 승인하지 않습니다." },
       { id: "vlm-to-vla-transfer", sectionId: "overview", intuition: "사진과 글로만 배운 상식을 실제 손동작으로 옮기려면 그 지식을 로봇이 알아듣는 명령으로 다시 번역해야 합니다.", workedExample: "LAION-5B는 58억 5천만 image-text pair를 공개했지만 OpenVLA·Octo의 robot demonstration은 각각 97만·80만 trajectory에 그치고, RT-2는 이 transfer로 unseen 평가 success를 32%에서 62%로 올렸다고 보고합니다.", boundary: "VLM benchmark 향상이 곧 embodied AI 전체의 physical action 성능 향상은 아니며, 62%라는 수치도 RT-2 논문 자기보고 범위로 제한됩니다." },
       { id: "grounding-and-action-space-alignment", sectionId: "action-interface", intuition: "단어를 사물에 연결하고, 그 사물을 공간 좌표에 연결하고, 그 좌표를 손동작으로 연결하는 세 다리를 하나씩 건넙니다.", workedExample: "RT-2는 6-DoF pose delta·gripper·episode 종료까지 8개 action 차원을 각 256개 bin으로 나눠 언어 token ID를 재사용하는 방식으로 action-space alignment를 풉니다.", boundary: "Spatial reasoning이 틀려 잘못된 좌표를 내면 action grounding이 정확해도 결과 action은 틀리며, 세 grounding 중 하나만 검증해서는 전체 정확도를 보장할 수 없습니다." },
-],
+  ],
     conceptStages: [
       { label: "00 spatial prerequisite", relation: "Image의 의미와 coordinate output 차이를 확인합니다.", concepts: ["cnn-task-spatial-contract"] },
       { label: "01 embodiment gap", relation: "Semantic grounding에서 physical execution까지 추가되는 경계를 펼치고, VLM→VLA transfer가 왜 필요한지 정의합니다.", concepts: ["vla-embodiment-gap", "vlm-to-vla-transfer"] },
@@ -53196,7 +53196,7 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "RADAR and SO-101 recovery evaluations", href: "https://arxiv.org/abs/2602.10980", problem: "Nominal success 밖의 dynamics·noise·failure recovery를 평가합니다.", contribution: "Perturbation robustness와 real-robot failure taxonomy를 별도 평가합니다.", assumptions: "각 benchmark의 models·robots·tasks·perturbation입니다.", evidenceScope: "Closed-loop release slice가 필요한 독립 평가입니다.", notClaim: "모든 physical failure가 VLM representation 때문이라는 뜻은 아닙니다.", sectionId: "paper-radar" },
       { title: "A Survey of Embodied AI: From Simulators to Research Tasks", href: "https://arxiv.org/abs/2103.04918", problem: "Internet dataset 학습과 구분되는 embodied agent 연구의 simulator·task·평가 범위를 정리합니다.", contribution: "Agent가 자기 몸으로 환경과 상호작용하며 egocentric perception으로 배운다는 embodied AI 정의와 연구 분류를 제시합니다.", assumptions: "2021년 survey 시점에 공개된 simulator·benchmark·연구 범위입니다.", evidenceScope: "이 글이 VLA를 embodied AI의 한 사례로 놓을 때 쓰는 정의 출처입니다.", notClaim: "이후 등장한 VLA·foundation model 계열의 성능이나 taxonomy를 규정하지 않습니다.", sectionId: "paper-embodied-ai-survey" },
       { title: "LAION-5B", href: "https://arxiv.org/abs/2210.08402", problem: "Web-scale image-text pretraining에 쓸 수 있는 공개 규모의 dataset 부재를 다룹니다.", contribution: "CLIP-filtered image-text pair 58억 5천만 개(영어 23억 2천만 개 포함)를 공개합니다.", assumptions: "논문이 공개한 시점의 crawling·filtering 절차와 language 분포입니다.", evidenceScope: "Internet-scale pretraining과 robot demonstration data 규모 차이를 보여 주는 대표 수치입니다.", notClaim: "이 corpus가 VLM 또는 RT-2 학습에 직접 쓰였다는 뜻은 아닙니다.", sectionId: "paper-laion5b" },
-],
+  ],
   },
  "ai/bert": {
     entryLevel: true,
@@ -54122,7 +54122,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "모든 judge model·domain에서 사람 labeler를 대체할 수 있다는 뜻은 아님",
         sectionId: "paper-rlaif",
       },
-],
+  ],
   },
   "ai/dpo": {
     entryLevel: true,
@@ -76227,7 +76227,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "yarn-context-extension-release-gate", role: "위치·길이·task·serving을 고정한 paired validation을 정의합니다." },
       { id: "rope-based-context-extension-family", role: "RoPE 를 positional encoding 의 한 방식으로 놓고, PI·NTK-aware·YaRN 이 속하는 RoPE scaling 방법군을 정의합니다." },
       { id: "long-context-scope-decomposition", role: "Long-context modeling 을 위치·메모리·평가 세 문제로 나누고, native/extended context length 와 extrapolation 실패를 수치로 설명합니다." },
-],
+  ],
     conceptExplanations: [
       { id: "rope-relative-rotation-geometry", sectionId: "rope-foundation", intuition: "시계 바늘 두 개의 절대 각도보다 서로 몇 칸 떨어졌는지가 두 위치의 상대 거리를 나타냅니다.", workedExample: "Position m=5와 n=2가 같은 frequency theta로 회전하면 query-key dot product의 위치 항은 차이 3theta로 정리됩니다.", boundary: "Relative geometry가 학습 범위 밖의 모든 거리에서 attention 의미를 보존한다는 보장은 없습니다." },
       { id: "rope-frequency-wavelength-spectrum", sectionId: "rope-foundation", intuition: "빠른 바늘은 가까운 차이를 세밀하게 보고 느린 바늘은 멀리 가도 천천히 변합니다.", workedExample: "Wavelength 8인 pair는 8 tokens마다 한 바퀴, wavelength 4096인 pair는 원래 2048 context에서 반 바퀴만 봅니다.", boundary: "Dimension별 역할은 학습으로 바뀔 수 있으며 고주파=local concept라는 고정 의미표가 아닙니다." },
@@ -76237,7 +76237,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "yarn-context-extension-release-gate", sectionId: "implementation", intuition: "긴 상자가 들어간다는 검사와 상자 속 필요한 물건을 찾는 검사를 따로 합니다.", workedExample: "32K baseline과 128K candidate를 초·중·후 evidence, multi-hop task, short prompt, KV·TTFT·concurrency에서 paired 비교합니다.", boundary: "Needle 한 종류와 최대 길이 1회 성공은 분석형 long-context 활용이나 production capacity를 보장하지 않습니다." },
       { id: "rope-based-context-extension-family", sectionId: "rope-foundation", intuition: "지도를 그리는 방법이 여러 가지이듯 순서를 표현하는 방법도 여러 가지이고, RoPE 는 그 중 회전을 쓰는 한 가지입니다.", workedExample: "PI 는 position 을 줄이고, NTK-aware 는 base 를 바꾸고, YaRN 은 둘을 frequency band 별로 섞습니다. 셋 다 checkpoint 를 재학습하지 않는다는 목표는 같습니다.", boundary: "이 방법군은 position 표현만 바꿀 뿐, attention 계산량이나 KV cache 크기는 바꾸지 않습니다." },
       { id: "long-context-scope-decomposition", sectionId: "long-context-scope", intuition: "긴 상자가 통과한다는 검사, 상자 안 물건을 찾는 검사, 창고 공간이 남는지 검사는 서로 다른 질문입니다.", workedExample: "L=4096, L′=32768 이면 s=8 입니다. d=128, base=10000 에서 가장 느린 dimension(i=63)은 native 동안 27.1도만 돌아, 조정 없이 늘리면 216.8도라는 한 번도 본 적 없는 위상으로 이동합니다.", boundary: "이 3분할은 위치 문제의 해법(PI·NTK·YaRN)이 메모리나 평가 문제까지 자동으로 해결한다고 읽지 않기 위한 경계입니다." },
-],
+  ],
     conceptStages: [
       { label: "Scope", relation: "Long-context 를 세 문제로 나누고 RoPE 를 positional encoding 의 한 방식으로 놓습니다.", concepts: ["rope-based-context-extension-family", "long-context-scope-decomposition"] },
       { label: "Geometry", relation: "회전 dot product와 frequency spectrum을 연결합니다.", concepts: ["rope-relative-rotation-geometry", "rope-frequency-wavelength-spectrum", "scaled-dot-product-attention"] },
@@ -76844,7 +76844,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "gpu-profiling-nsys-ncu-roles", role: "Timeline 으로 어디를 볼지 정하는 도구와 counter 로 이유를 보는 도구의 역할을 나누고 kernel timeline 의 간격을 읽습니다." },
       { id: "nsight-throughput-percent-of-peak", role: "DRAM·L2·L1·shared·Tensor throughput 퍼센트의 분모가 roofline 의 theoretical peak 이며 100 에서 뺀 값이 utilization gap 임을 고정합니다." },
       { id: "cache-hit-rate-l1-l2", role: "Sector 기준 hit rate 를 정의하고 L2 miss 가 DRAM throughput 을 만드는 관계로 counter 상관의 예를 듭니다." },
-],
+  ],
     conceptExplanations: [
       { id: "compute-memory-bottleneck", sectionId: "overview", intuition: "느린 구간을 곱셈 수 하나로 단정하지 않고 실제로 기다리는 자원을 먼저 찾습니다.", workedExample: "Peak FLOPS가 높아도 HBM traffic이 같고 ready warp가 부족하면 elapsed가 거의 줄지 않을 수 있습니다.", boundary: "Spec sheet만으로 병목을 확정하지 않고 timeline·achieved ledger·counter로 가설을 검사합니다.", counterexample: "Peak의 20%라는 숫자 하나만으로 compute-bound나 memory-bound를 판정할 수 없습니다." },
       { id: "cuda-kernel-timing-protocol", sectionId: "measurement-protocol", intuition: "배달 요청 접수와 배달 완료 시간이 다르듯 launch 반환과 GPU 완료를 구분합니다.", workedExample: "Warm-up 뒤 같은 stream의 start/stop event와 stop sync로 kernel 반복 median/p95를 구합니다.", boundary: "CPU wall time과 GPU event time은 포함 범위가 다르며 concurrent streams도 기록합니다.", counterexample: "Launch call만 CPU timer로 재면 enqueue overhead를 kernel time으로 오해합니다." },
@@ -76872,7 +76872,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "Q_L2 100 GB 에 L2 hit 20% 면 DRAM byte 는 80 GB 이고, elapsed 0.03 s 와 peak 3.35 TB/s 로 나누면 DRAM throughput 약 80% 입니다. Hit 를 80% 로 올리면 같은 Q_L2 에서 20 GB 가 됩니다.",
         boundary: "Hit rate 는 sector 기준이라 uncoalesced 접근은 hit 가 높아도 throughput 을 채우며, L2 miss 가 모두 DRAM 요청이 된다는 식은 write-back 과 compression 을 무시한 근사입니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 바닥", relation: "Compute·memory bottleneck을 정의하고 Host lifecycle·Roofline 정본을 재사용하며 두 profiler 의 역할을 나눕니다.", concepts: ["compute-memory-bottleneck", "cuda-host-device-kernel-lifecycle", "gpu-roofline-peak-achieved", "gpu-profiling-nsys-ncu-roles"] },
       { label: "01 Time", relation: "비동기 timing 경계를 고정합니다.", concepts: ["cuda-kernel-timing-protocol"] },
@@ -76905,7 +76905,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "어느 unit 이 90% 라는 사실만으로 그 unit 을 줄이면 elapsed 가 준다고 단정할 수 없습니다.",
         sectionId: "paper-nsight-compute-profiling-guide",
       },
-],
+  ],
   },
   "gpu/cuda-register-pressure": {
     "entryLevel": true,
@@ -77328,7 +77328,7 @@ export const ARTICLE_LEARNING: Readonly<
       { title:"NVIDIA CUTLASS documentation · Overview", href:"https://docs.nvidia.com/cutlass/latest/overview.html", problem:"Modern NVIDIA GPU의 GEMM·data movement·epilogue를 reusable hierarchy로 구성하는 문제", contribution:"CUTLASS collective와 CuTe layout·tensor·copy/MMA atom programming layers", assumptions:"확인한 CUTLASS documentation revision과 supported NVIDIA architectures", evidenceScope:"CUTLASS/CuTe component·programming-model 설명", notClaim:"특정 tile·collective의 보편적인 최고 성능 아님", sectionId:"paper-cutlass-stack" },
       { title:"Triton programming guide · Introduction", href:"https://triton-lang.org/main/programming-guide/chapter-1/introduction.html", problem:"GPU locality·parallelism을 thread보다 높은 blocked-program abstraction에서 표현하는 문제", contribution:"Blocked program model과 compiler dataflow scheduling", assumptions:"확인한 Triton documentation·compiler·supported backend와 target shape", evidenceScope:"Triton programming model과 compiler-owned optimization 범위", notClaim:"모든 kernel·GPU에서 handwritten CUDA/CUTLASS보다 빠르거나 자동 portable하다는 뜻 아님", sectionId:"paper-triton-stack" },
       { title:"NVIDIA CUDA Programming Guide · CUDA Graphs", href:"https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html", problem:"짧은 kernel이 많을 때 launch 제출 비용이 end-to-end의 큰 비중이 되는 문제", contribution:"Graph 정의와 실행을 분리해 setup을 instantiate 때 한 번 내고 replay마다 적은 비용으로 띄우는 work submission model", assumptions:"같은 workflow가 반복 실행되고 capture 구간의 topology·주소가 고정됨", evidenceScope:"CPU launch 비용 절감과 반복 workflow의 graph semantics", notClaim:"Graph가 kernel 사이 HBM traffic이나 GPU 쪽 실행 시간을 줄인다는 뜻 아님", sectionId:"paper-cuda-graphs-vs-fusion" },
-],
+  ],
   },
   "gpu/cuda-persistent-kernels": {
     entryLevel: true,
@@ -77343,7 +77343,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id:"gpu-persistent-kernel-release-gate", role:"Ordering·tail·progress·shutdown과 latency를 함께 검증합니다." },
       { id: "persistent-work-assignment-static-dynamic", role: "Static 과 dynamic 배분이 각각 마지막 wave 와 atomic 에서 비용을 내는 것을 SM 132개·tile 1,000개 예로 셉니다." },
       { id: "gpu-work-stealing-load-balancing", role: "Queue 를 block 별로 나누는 work stealing 의 contention 분산과 load-balance 비율이라는 선택 기준을 둡니다." },
-],
+  ],
     conceptExplanations: [
       { id:"gpu-persistent-kernel-work-queue", sectionId:"overview", intuition:"직원을 주문마다 부르지 않고 상주 workers가 queue에서 다음 일을 꺼냅니다.", workedExample:"Resident blocks가 publish→dequeue→execute→complete를 반복합니다.", boundary:"Kernel lifetime과 task lifetime이 분리됩니다.", counterexample:"큰 source code나 Megakernel과 같은 뜻이 아닙니다." },
       { id:"gpu-persistent-worker-residency-contract", sectionId:"worker-residency", intuition:"상주 직원이 모든 작업대를 차지하지 않도록 공간을 예약합니다.", workedExample:"Register·shared budget으로 worker blocks를 제한해 collectives가 progress할 SM을 남깁니다.", boundary:"최대 resident blocks가 최적 worker 수라는 뜻은 아닙니다.", counterexample:"모든 SM 점유는 다른 streams를 굶길 수 있습니다." },
@@ -77352,7 +77352,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id:"gpu-persistent-kernel-release-gate", sectionId:"release-gate", intuition:"Launch 절감뿐 아니라 queue correctness와 다른 work progress까지 통과해야 합니다.", workedExample:"Loss·duplicate·ordering, depth p95, clean shutdown과 end-to-end를 baseline과 비교합니다.", boundary:"Pinned task-size distribution과 GPU/runtime에 귀속합니다.", counterexample:"평균 latency만 좋아지고 shutdown hang이 있으면 채택하지 않습니다." },
       { id: "persistent-work-assignment-static-dynamic", sectionId: "work-assignment", intuition: "배달 구역을 미리 정해 주는 것(static)과 배달원이 돌아올 때마다 다음 주문을 하나씩 받아 가는 것(dynamic)의 차이입니다.", workedExample: "SM 132개에 tile 1,000개를 static 으로 나누면 76개 block 이 8개, 56개가 7개를 맡아 8t 에 끝나며 이상값 7.58t 대비 5.5% 불균형입니다. Dynamic 은 atomic 1,000번을 내며 atomic 왕복 1 µs 가정에 tile 50 µs 면 2%, 5 µs 면 20% 입니다.", boundary: "Atomic 왕복 1 µs 는 가정값이며 같은 주소 contention 은 block 수에 따라 달라지므로 자기 GPU 에서 재야 합니다. Tile 시간이 고르면 static 이 이깁니다." },
       { id: "gpu-work-stealing-load-balancing", sectionId: "work-assignment", intuition: "각자 자기 바구니에서 일을 꺼내다가 바구니가 비면 옆 사람 바구니 끝에서 하나 가져오는 것입니다.", workedExample: "Queue 가 132개면 queue 당 contention 이 평균 1/132 로 줄고, 주인은 tail·도둑은 head 를 만지게 해 마지막 한 항목에서만 CAS 로 겨룹니다. Load balance 는 가장 늦은 block 시간을 평균으로 나눈 비율로 재며 1 에 가까울수록 고릅니다.", boundary: "빈 queue 를 도는 도둑의 polling 과 모든 queue 가 비었음을 확인하는 종료 판정이 남으며, tile 이 고르고 많으면 static 이 더 쌉니다." },
-],
+  ],
     conceptStages: [
       { label: "00 실행", relation: "Kernel lifecycle·sync·residency를 재사용합니다.", concepts: ["cuda-host-device-kernel-lifecycle", "cuda-synchronization-scope", "gpu-register-residency-budget"] },
       { label: "01 Workers", relation: "Long-lived worker와 resource partition을 고정합니다.", concepts: ["gpu-persistent-kernel-work-queue", "gpu-persistent-worker-residency-contract"] },
@@ -77394,7 +77394,7 @@ export const ARTICLE_LEARNING: Readonly<
         notClaim: "Tile 시간이 고르지 않은 irregular workload 에서 static 배분이 load balance 를 보장한다는 뜻이 아닙니다.",
         sectionId: "paper-cutlass-persistent-scheduler",
       },
-],
+  ],
   },
   "gpu/cfd-finite-volume-gpu": {
     entryLevel: false,
@@ -84418,7 +84418,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "vram-budgeting-components", role: "Model residency·full context·cache optimization을 known floor를 구성하는 실무 결정으로 묶습니다." },
       { id: "multi-gpu-vram-strategies", role: "2-way GPU 분배·CPU/GPU offloading·unified memory를 known floor 초과 시의 세 대응으로 정리합니다." },
       { id: "moe-vram-serving-tradeoff", role: "Active parameter가 decode bandwidth를 실제로 얼마나 줄이는지와 consumer/workstation GPU에서의 함의를 수치로 잇습니다." },
-],
+  ],
     conceptExplanations: [
       {
         id: "model-weight-payload-ledger",
@@ -84483,7 +84483,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample: "80B total·3B active MoE는 BF16 기준 decode마다 약 6GiB만 읽어, 같은 dtype의 80B dense가 매 step 읽을 160GiB보다 약 26배 적습니다.",
         boundary: "Active parameter가 작다는 사실이 capacity 요구까지 줄이지는 않아, consumer GPU에서는 bandwidth보다 total residency가 먼저 막힐 수 있습니다.",
       },
-],
+  ],
     conceptStages: [
       { label: "00 count", relation: "Parameter와 byte 단위를 고정하고 Q8·NVFP4 같은 quantization level의 평균 bit 폭까지 확장합니다.", concepts: ["bit-byte", "model-weight-payload-ledger", "quantization-level-vram-tradeoff"] },
       { label: "01 growth", relation: "Token·request·execution 성장축을 나눕니다.", concepts: ["kv-cache-decode-state", "lossy-recurrent-state", "model-request-memory-growth-classes"] },
@@ -84511,7 +84511,7 @@ export const ARTICLE_LEARNING: Readonly<
       { title: "Qwen3-Next official architecture announcement", href: "https://qwen.ai/blog?id=qwen3-next", problem: "높은 total capacity와 낮은 active compute를 hybrid sequence model에서 결합합니다.", contribution: "80B total·약 3B active MoE와 hybrid attention·MTP를 공개합니다.", assumptions: "해당 official release와 benchmark 조건입니다.", evidenceScope: "Total/active ledger가 다른 공개 model 사례입니다.", notClaim: "Active 수만으로 임의 hardware의 latency·full-context admission을 결정하지 않습니다.", sectionId: "paper-qwen3-next" },
       { title: "NVIDIA Transformer Engine NVFP4 format", href: "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html", problem: "4-bit floating-point tensor와 scale metadata를 표현합니다.", contribution: "E2M1 value와 block/tensor scaling contract를 문서화합니다.", assumptions: "지원 Blackwell hardware·software와 실제 NVFP4 artifact입니다.", evidenceScope: "Format과 metadata를 weight ledger에 넣는 근거입니다.", notClaim: "특정 model checkpoint·quality·dual-GPU speedup 보장이 아닙니다.", sectionId: "paper-nvfp4" },
       { title: "llama.cpp GGUF quantize tool README (Q8_0 benchmark)", href: "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md", problem: "GGUF의 여러 quantization type이 실제로 어느 정도 크기·속도·품질을 내는지 한 reference model로 비교합니다.", contribution: "Llama-3.1-8B에서 Q8_0가 8.5008bit/weight·7.95GiB로 나온다는 실측 표를 공개합니다.", assumptions: "해당 llama.cpp revision과 표에 쓰인 정확한 Llama-3.1-8B checkpoint·측정 조건입니다.", evidenceScope: "Q8_0 block-scale overhead가 만드는 평균 bit 폭을 검증하는 project 실측 근거입니다.", notClaim: "다른 model·revision에서 같은 bit 폭이나 품질을 보장한다는 뜻은 아닙니다.", sectionId: "paper-q8-quantization" },
-],
+  ],
   },
   "ai/supervised-learning-loop": {
     "entryLevel": true,
@@ -133031,7 +133031,7 @@ export const ARTICLE_LEARNING: Readonly<
         "notClaim": "작은 수의 계산은 현재 하드웨어에서 상용 공개키 암호를 해독한 결과가 아닙니다.",
         "sectionId": "source"
       },
-]},
+  ]},
   "crypto/ml-kem-and-noisy-equations": {"coreIdea": "공통 곱의 상쇄로 작은 비트를 복원하고 재암호화로 캡슐을 검증한 뒤, 별도 인증된 프로토콜에서 공유 비밀을 사용합니다.", "entryLevel": true, "entryNote": "17로 나눈 작은 계산은 교육용입니다. FIPS203과 PQClean의 실제 파라미터를 뒤에서 구분합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "module-lwe-noisy-equations", "role": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다."}, {"id": "ml-kem-noise-cancellation", "role": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다."}, {"id": "kem-encapsulation-and-rejection", "role": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다."}], "conceptExplanations": [{"id": "module-lwe-noisy-equations", "sectionId": "names", "intuition": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다.", "workedExample": "17로 나누는 장난감 계산에서 A=[[2,3],[4,1]], s=[1,2], e=[1,0]이면 t=[9,6]입니다.", "boundary": "두 차원의 작은 예는 손으로도 풀 수 있어 안전하지 않습니다. 실제 차원·분포·파라미터에 대한 계산 난도가 중요합니다."}, {"id": "ml-kem-noise-cancellation", "sectionId": "mechanism", "intuition": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다.", "workedExample": "u=[6,5], v=6에서 s·u=16을 빼면 mod17에서 7이고, 0보다 비트1의 중심8에 가깝습니다.", "boundary": "남은 오류가 너무 크거나 압축 오차가 허용 범위를 벗어나면 잘못 복원할 수 있습니다."}, {"id": "kem-encapsulation-and-rejection", "sectionId": "source", "intuition": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다.", "workedExample": "ML-KEM-768은 1,184바이트 공개 키와 1,088바이트 캡슐로 32바이트 공유 비밀을 만듭니다.", "boundary": "길이·공개 키 등의 외부 입력 검사는 별도입니다. 암묵적 거절만으로 상대의 신원이나 전체 통신의 인증이 생기지 않습니다."}], "conceptStages": [{"label": "오류를 섞은 모듈 격자 방정식", "relation": "비밀을 아는 쪽은 큰 공통 항을 지우지만 공개값만 보는 쪽은 오류가 섞인 관계를 풀어야 합니다.", "concepts": ["module-lwe-noisy-equations"]}, {"label": "암호문에서 큰 항을 상쇄하고 비트 읽기", "relation": "서로 모르는 비밀을 쓰더라도 같은 큰 항을 만들 수 있어 그 차이만 읽습니다.", "concepts": ["ml-kem-noise-cancellation"]}, {"label": "키 캡슐화와 암묵적 거절", "relation": "수신자가 복원한 값을 그대로 믿지 않고 같은 캡슐이 재생성되는지 확인합니다.", "concepts": ["kem-encapsulation-and-rejection"]}], "exercises": [{"level": "basic", "question": "17로 나눈 계산에서 A의 첫 행 [2,3]과 s=[1,2], 오류1로 공개값 첫 성분을 구하세요.", "answerChecklist": ["2×1+3×2+1=9입니다.", "둘째 행에서는 4×1+1×2+0=6이므로 t=[9,6]입니다."], "sectionId": "case", "requiredConcepts": ["module-lwe-noisy-equations"]}, {"level": "basic", "question": "임시 벡터 r=[1,1]과 오류 e1=[0,1]일 때 u를 계산하세요.", "answerChecklist": ["전치 행렬의 곱은 [2+4,3+1]=[6,4]입니다.", "오류를 더하면 u=[6,5]이며 계산은 mod17입니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "basic", "question": "비트1을 중심8로 나타낼 때 v와 수신자의 상쇄 결과를 구하세요.", "answerChecklist": ["t·r+8=9+6+8=23이고 mod17에서 v=6입니다.", "s·u=1×6+2×5=16이라 6−16 mod17=7입니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "basic", "question": "작은 사례의 결과7을 비트1로 읽는 이유와 안전성의 한계를 설명하세요.", "answerChecklist": ["원 위 거리에서 7은 0보다 8에 가까워 비트1로 읽습니다.", "작은 차원·작은 수 예제이므로 보안 파라미터로 사용할 수 없습니다."], "sectionId": "mechanism", "requiredConcepts": ["module-lwe-noisy-equations", "ml-kem-noise-cancellation"]}, {"level": "basic", "question": "ML-KEM-768의 공개 키·캡슐·공유 비밀 길이는 각각 얼마인가요?", "answerChecklist": ["FIPS203 표3에서 공개 키 1,184바이트, 캡슐 1,088바이트입니다.", "공유 비밀은 32바이트이며 768이라는 이름은 비밀 키의 비트 길이가 아닙니다."], "sectionId": "comparison", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "basic", "question": "정상 길이 캡슐의 재암호화 결과가 다를 때 수신자가 어떤 값을 내보내나요?", "answerChecklist": ["비밀 z와 받은 캡슐에 결속한 대체 키를 선택합니다.", "내부 일치 여부를 그대로 반환하지 않으며 외부 프로토콜에서 이후 인증 검사를 해야 합니다."], "sectionId": "source", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "같은 사례에서 v에 더하는 오류가 −4로 바뀌면 복원 비트는 어떻게 바뀌나요?", "answerChecklist": ["원래 남은 값7에서4를 빼면3입니다.", "3은 중심8보다0에 가까워 비트0으로 잘못 읽어 오류 크기의 경계를 보여 줍니다."], "sectionId": "limits", "requiredConcepts": ["ml-kem-noise-cancellation"]}, {"level": "advanced", "question": "공개 키가 공격자의 것으로 바뀌었는데 ML-KEM 계산은 정상일 때 무엇이 실패하나요?", "answerChecklist": ["공유 비밀은 잘 만들어져도 의도한 상대와 공유했다는 보장이 없습니다.", "인증서·서명·사전 공유 신뢰 등으로 키와 상대의 신원을 결속해야 합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "수신자가 새 캡슐마다 같은 공개 키를 쓰는 것만으로 과거 세션의 전방 비밀성이 보장되나요?", "answerChecklist": ["장기 복호 비밀키가 나중에 유출되면 보관된 캡슐이 해독될 수 있습니다.", "임시 키 사용·삭제·인증된 프로토콜 구성이 전방 비밀성의 전제를 결정합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}, {"level": "advanced", "question": "표준을 구현한 저장소를 읽었다는 사실과 제품의 인증·부채널 안전성을 왜 구분해야 하나요?", "answerChecklist": ["코드 경로를 확인하는 일과 특정 빌드·장치의 검증 또는 인증은 다릅니다.", "난수·시간·전력 누출·오류 주입·입력 검사를 실제 실행 환경에서 별도로 평가해야 합니다."], "sectionId": "limits", "requiredConcepts": ["kem-encapsulation-and-rejection"]}]},
   "crypto/post-quantum-signatures": {"coreIdea": "메시지에 결속한 응답을 공개 정보로 재구성하되 마스크·거절·힌트의 조건을 지키며, 해시 기반 서명의 다른 비용과 배포 경계까지 비교합니다.", "entryLevel": true, "entryNote": "작은 mod17 행렬과 길이4 해시 사슬은 교육용입니다. 표준 파라미터와 실제 고정 C 원문을 뒤에서 대조합니다.", "assumedKnowledge": [], "introducedHere": [{"id": "ml-dsa-masked-response", "role": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다."}, {"id": "ml-dsa-rejection-and-hints", "role": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다."}, {"id": "slh-dsa-hash-tree-signatures", "role": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다."}, {"id": "post-quantum-signature-deployment", "role": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다."}], "conceptExplanations": [{"id": "ml-dsa-masked-response", "sectionId": "mechanism", "intuition": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다.", "workedExample": "mod17 장난감에서 y=[2,1], c=1, s=[1,2]이면 z=[3,3]이고 Az−ct=[6,9]=Ay−ce입니다.", "boundary": "실제 ML-DSA는 큰 다항식·희소 challenge·높은 비트·hint와 거절을 사용합니다. 작은 c=1 사례 자체는 안전한 서명이 아닙니다."}, {"id": "ml-dsa-rejection-and-hints", "sectionId": "source", "intuition": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다.", "workedExample": "절댓값이4 미만이어야 하는 장난감 조건에서 [3,3]은 통과하고 [4,3]은 거절합니다.", "boundary": "장난감 임계값은 실제 표준의 상수가 아닙니다. 거절·난수·힌트 검사를 생략한 구현은 표준과 같은 보장을 주장할 수 없습니다."}, {"id": "slh-dsa-hash-tree-signatures", "sectionId": "comparison", "intuition": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다.", "workedExample": "길이4의 장난감 해시 사슬에서 H²(x)를 보여 주면 검증자는 두 번 더 해시해 공개 끝값 H⁴(x)를 확인합니다.", "boundary": "사슬 하나는 안전한 다회용 서명이 아닙니다. 실제 SLH-DSA에는 checksum·FORS·WOTS+·hypertree와 주소 분리가 들어갑니다."}, {"id": "post-quantum-signature-deployment", "sectionId": "limits", "intuition": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다.", "workedExample": "ML-DSA-44 공개 키1,312바이트·서명2,420바이트와 SLH-DSA-128s 공개 키32바이트·서명7,856바이트의 배포 비용을 비교합니다.", "boundary": "서명 크기만으로 속도·가스·안전성을 순위 매기지 않습니다. 구현·파라미터·메시지·플랫폼 조건이 필요합니다."}], "conceptStages": [{"label": "ML-DSA의 가린 응답과 재구성", "relation": "검증자는 비밀을 받지 않고도 같은 약속과 메시지가 묶였는지 다시 계산합니다.", "concepts": ["ml-dsa-masked-response"]}, {"label": "서명 후보 거절과 제한된 힌트", "relation": "새 마스크를 썼다는 사실만으로 비밀이 가려지는 것은 아니어서 공개할 응답의 범위를 검사합니다.", "concepts": ["ml-dsa-rejection-and-hints"]}, {"label": "SLH-DSA의 해시 사슬과 인증 경로", "relation": "짧은 공개 루트 하나에 많은 서명용 요소를 묶되 각 요소의 사용 규칙이 필요합니다.", "concepts": ["slh-dsa-hash-tree-signatures"]}, {"label": "양자내성 서명 배포와 교체 경계", "relation": "서명 파일이 검증된다는 사실과 기존 권한을 모두 옮겼다는 사실은 다릅니다.", "concepts": ["post-quantum-signature-deployment"]}], "exercises": [{"level": "basic", "question": "비밀 [1,2]와 마스크 [2,1], challenge1의 장난감 응답 z를 계산하세요.", "answerChecklist": ["성분별로 더하면 z=[3,3]입니다.", "마스크는 매 시도 새로 선택하며 이 두 차원 계산은 실제 서명 파라미터가 아닙니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-dsa-masked-response"]}, {"level": "basic", "question": "공개 t=[9,6]일 때 A의 두 행 [2,3]·[4,1]로 Az−ct를 구하세요.", "answerChecklist": ["Az=[15,15]이고 ct=[9,6]입니다.", "차이는 [6,9]이며 Ay=[7,9]에서 ce=[1,0]을 뺀 값과 같습니다."], "sectionId": "mechanism", "requiredConcepts": ["ml-dsa-masked-response"]}, {"level": "basic", "question": "응답 성분의 절댓값이4 미만이어야 한다면 [4,3]은 왜 거절하나요?", "answerChecklist": ["첫 성분4는 엄격한 미만 조건을 만족하지 않습니다.", "표준에서도 응답과 남은 값의 크기를 제한하지만 실제 상수는 장난감4와 다릅니다."], "sectionId": "source", "requiredConcepts": ["ml-dsa-rejection-and-hints"]}, {"level": "basic", "question": "공개 키와 메시지가 같아도 context가 다르면 검증자는 무엇을 다시 확인하나요?", "answerChecklist": ["context의 길이와 바이트를 메시지 요약에 포함해야 합니다.", "다른 용도에서 만든 서명이 같은 승인으로 재사용되지 않도록 같은 문맥으로 검증합니다."], "sectionId": "source", "requiredConcepts": ["ml-dsa-masked-response", "post-quantum-signature-deployment"]}, {"level": "basic", "question": "ML-DSA-44와 SLH-DSA-128s의 공개 키·서명 크기를 비교하세요.", "answerChecklist": ["ML-DSA-44는 공개 키1,312바이트·서명2,420바이트입니다.", "SLH-DSA-128s는 공개 키32바이트·서명7,856바이트이므로 키가 작아도 서명이 더 큽니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures", "post-quantum-signature-deployment"]}, {"level": "basic", "question": "해시 사슬의 H²(x)를 받았을 때 공개 끝값 H⁴(x)를 어떻게 확인하나요?", "answerChecklist": ["받은 값에 H를 두 번 적용합니다.", "이 확인만으로 임의 메시지의 다회용 서명이 되지는 않습니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures"]}, {"level": "advanced", "question": "H²(x)를 알면 H³(x)도 만들 수 있다는 사실은 단순 해시 사슬 서명에 어떤 문제를 주나요?", "answerChecklist": ["앞으로 해시하는 것은 쉬워 더 뒤의 위치를 공격자도 계산할 수 있습니다.", "실제 방식은 여러 사슬의 숫자 표현과 checksum, 제한된 사용 및 인증 나무를 함께 설계합니다."], "sectionId": "comparison", "requiredConcepts": ["slh-dsa-hash-tree-signatures"]}, {"level": "advanced", "question": "동일한 마스크로 서로 다른 challenge의 응답을 만들면 왜 위험할 수 있나요?", "answerChecklist": ["두 응답을 빼면 마스크가 사라져 비밀에 관한 관계가 노출됩니다.", "장난감 z1=y+c1s와 z2=y+c2s의 차이는 (c1−c2)s이며 실제 구현도 난수와 내부 nonce 규칙을 지켜야 합니다."], "sectionId": "limits", "requiredConcepts": ["ml-dsa-masked-response", "ml-dsa-rejection-and-hints"]}, {"level": "advanced", "question": "올바른 서명이 붙은 펌웨어가 오래된 취약 버전이라면 서명 검사만으로 설치해도 되나요?", "answerChecklist": ["서명은 해당 키와 바이트의 관계를 확인하며 최신성·무해함까지 증명하지 않습니다.", "버전 하향 방지·권한 정책·폐기 키와 복구 경로를 별도로 검사해야 합니다."], "sectionId": "limits", "requiredConcepts": ["post-quantum-signature-deployment"]}, {"level": "advanced", "question": "2026년 기준 ML-DSA·SLH-DSA의 최종 표준과 Falcon·HQC의 상태를 구분하세요.", "answerChecklist": ["FIPS204·205는 2024년 최종 표준으로 발표됐습니다.", "Falcon 기반 FN-DSA와 HQC는 NIST의 후속 표준화 작업 중이며 이미 최종 FIPS라고 부르지 않습니다."], "sectionId": "limits", "requiredConcepts": ["post-quantum-signature-deployment"]}]},
   "crypto/quantum-key-distribution": {

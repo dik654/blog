@@ -58,7 +58,7 @@ export const firmsArticles: Article[] = [
     "id": "handoff",
     "title": "13. 같은 일을 끝내는 전체 비용으로 예측한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/firms/why-firms-exist"),
   },
   {
@@ -118,7 +118,7 @@ export const firmsArticles: Article[] = [
     "id": "handoff",
     "title": "13. 같은 방법의 절약과 방법을 바꾸는 절약을 각각 계산한다"
   }
-],
+  ],
     component: () =>
       import("@/pages/articles/firms/scale-and-cost-structure"),
   },
@@ -187,7 +187,7 @@ export const firmsArticles: Article[] = [
     "id": "handoff",
     "title": "15. 가격과 수량에서 남는 돈까지 한 번에 따라간다"
   }
-],
+  ],
     component: () =>
       import("@/pages/articles/firms/market-power-and-markup"),
   },

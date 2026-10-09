@@ -392,7 +392,7 @@ export const agentArticles: Article[] = [
     "id": "prediction-questions",
     "title": "12. 부분합과 전체 결과를 구분해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/tool-calling-lifecycle-and-costs"),
   },
   {
@@ -725,7 +725,7 @@ export const agentArticles: Article[] = [
     "id": "prediction-questions",
     "title": "11. 재시도 전에 무엇을 알아야 할까요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/agent-failure-modes-and-recovery"),
   },
   {

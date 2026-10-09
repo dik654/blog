@@ -226,83 +226,83 @@ const gpu: Category = {
       title: "CUDA 컴파일: 덧셈 하나가 GPU 명령이 되는 과정",
       subcategory: "gpu-fundamentals",
       sections: [
-  {
+    {
     "id": "overview",
     "title": "1 · 같은 계산도 실행할 장치에 맞는 명령으로 바꿔야 합니다"
-  },
-  {
+    },
+    {
     "id": "black-box",
     "title": "2 · 계산 방법과 실행 대상을 받아 배포 파일을 만듭니다"
-  },
-  {
+    },
+    {
     "id": "case",
     "title": "3 · 여덟 자리 중 3번에서 7과 5를 더합니다"
-  },
-  {
+    },
+    {
     "id": "picture",
     "title": "4 · 번역 표현이 바뀌어도 값의 이동은 유지됩니다"
-  },
-  {
+    },
+    {
     "id": "why",
     "title": "5 · 중간 표현과 장치용 결과를 함께 두는 이유가 있습니다"
-  },
-  {
+    },
+    {
     "id": "names",
     "title": "6 · 계산을 옮기는 단계와 결과물에 이름을 붙입니다"
-  },
-  {
+    },
+    {
     "id": "trace",
     "title": "7 · 0번 block의 3번 thread가 같은 12를 기록합니다"
-  },
-  {
+    },
+    {
     "id": "pipeline",
     "title": "8 · 실제 소스에서 역할을 확인하고 공개된 컴파일 단계로 읽습니다"
-  },
-  {
+    },
+    {
     "id": "ptx-and-sass",
     "title": "9 · 공식 PTX 출력에서 위치 3과 합 12를 찾습니다"
-  },
-  {
+    },
+    {
     "id": "sass-trace",
     "title": "10 · 같은 문서의 SASS에서 FADD의 입력과 출력을 따라갑니다"
-  },
-  {
+    },
+    {
     "id": "ptxas-optimizations",
     "title": "11 · 다 쓴 주소 자리를 값이 다시 쓰면 저장 공간을 아낍니다"
-  },
-  {
+    },
+    {
     "id": "fatbin-and-jit",
     "title": "12 · A100과 H100은 같은 묶음에서 다른 이미지를 고릅니다"
-  },
-  {
+    },
+    {
     "id": "capabilities",
     "title": "13 · 대상의 저장 한도와 명령 지원을 따로 확인합니다"
-  },
-  {
+    },
+    {
     "id": "unrolling",
     "title": "14 · 반복을 네 개씩 묶으면 제어는 줄고 동시에 든 값은 늘 수 있습니다"
-  },
-  {
+    },
+    {
     "id": "classic-optimizations",
     "title": "15 · 반복 계산과 쓰이지 않는 값을 줄이는 원리도 적용됩니다"
-  },
-  {
+    },
+    {
     "id": "floating-options",
     "title": "16 · 수학적으로 같은 식도 반올림 횟수가 바뀌면 결과가 달라집니다"
-  },
-  {
+    },
+    {
     "id": "isa-analysis",
     "title": "17 · 배포 이미지와 자원 보고를 확인한 뒤 시간을 잽니다"
-  },
-  {
+    },
+    {
     "id": "evidence",
     "title": "18 · 고정 문서의 역할을 나눠 원문과 사례를 대조합니다"
-  },
-  {
+    },
+    {
     "id": "limits",
     "title": "19 · 번역 결과와 실행 결과를 구별하며 다시 예측합니다"
-  }
-],
+    }
+    ],
       component: () => import("@/pages/articles/gpu/cuda-compilation-and-isa-analysis"),
     },
     {
@@ -374,71 +374,71 @@ const gpu: Category = {
       title: "GPU 명령 발행: 배치된 일과 지금 시작할 수 있는 일",
       subcategory: "gpu-fundamentals",
       sections: [
-  {
+    {
     "id": "overview",
     "title": "1 · 일이 많이 남아 있어도 지금 시작할 수 있는 일은 없을 수 있습니다"
-  },
-  {
+    },
+    {
     "id": "black-box",
     "title": "2 · 맡은 일 중 준비된 명령을 하나 골라 내보냅니다"
-  },
-  {
+    },
+    {
     "id": "case",
     "title": "3 · 네 묶음 중 한 묶음의 첫 결과가 더 늦게 도착합니다"
-  },
-  {
+    },
+    {
     "id": "picture",
     "title": "4 · 먼저 보낸 결과를 기다리는 동안 다른 묶음을 선택합니다"
-  },
-  {
+    },
+    {
     "id": "why",
     "title": "5 · 기다리는 값과 선택할 일을 따로 관리해야 합니다"
-  },
-  {
+    },
+    {
     "id": "names",
     "title": "6 · 작업 묶음과 세 상태를 이름으로 구별합니다"
-  },
-  {
+    },
+    {
     "id": "trace",
     "title": "7 · 여섯째 clock에는 네 warp가 모두 다음 결과를 기다립니다"
-  },
-  {
+    },
+    {
     "id": "sm-structure",
     "title": "8 · 실제 배치 단위와 발행 상한을 연결합니다"
-  },
-  {
+    },
+    {
     "id": "issue-scoreboard",
     "title": "9 · 공식 후보 조건에 같은 여섯째 clock을 넣습니다"
-  },
-  {
+    },
+    {
     "id": "profiler-states",
     "title": "10 · 어디에서 기다리는지와 후보에서 밀렸는지를 구별합니다"
-  },
-  {
+    },
+    {
     "id": "latency-hiding",
     "title": "11 · 매 순간 네 후보보다 네 개의 독립된 일이 필요합니다"
-  },
-  {
+    },
+    {
     "id": "memory-and-bubbles",
     "title": "12 · 긴 읽기 지연은 요청 수와 실제 수용량을 함께 봅니다"
-  },
-  {
+    },
+    {
     "id": "divergence",
     "title": "13 · 조건이 갈리면 같은 명령의 참여 자리도 줄어듭니다"
-  },
-  {
+    },
+    {
     "id": "thread-scheduling",
     "title": "14 · Lane별 진행 상태가 있어도 동기화 규칙은 필요합니다"
-  },
-  {
+    },
+    {
     "id": "evidence",
     "title": "15 · 원문의 정의와 모형의 가정값을 구별합니다"
-  },
-  {
+    },
+    {
     "id": "limits",
     "title": "16 · 명령을 더 낼 수 있는 이유와 유효한 일을 구별합니다"
-  }
-],
+    }
+    ],
       component: () => import("@/pages/articles/gpu/sm-warp-scheduling-and-issue"),
     },
     {
@@ -531,47 +531,47 @@ const gpu: Category = {
       title: "GPU memory hierarchy 와 roofline: 네 가지 bound",
       subcategory: "gpu-fundamentals",
       sections: [
-  {
+    {
     "id": "overview",
     "title": "1 · 계산기는 놀고 있는데 왜 프로그램은 끝나지 않을까요"
-  },
-  {
+    },
+    {
     "id": "black-box",
     "title": "2 · 가까운 곳에서 찾으면 먼 저장 장치로 가지 않습니다"
-  },
-  {
+    },
+    {
     "id": "case",
     "title": "3 · 64번 더하려고 유효 768바이트를 읽고 씁니다"
-  },
-  {
+    },
+    {
     "id": "picture",
     "title": "4 · 연속 128바이트는 32바이트 조각 4개에 들어갑니다"
-  },
-  {
+    },
+    {
     "id": "need",
     "title": "5 · 같은 요청을 합치고 중간값을 재사용하면 이동을 줄일 수 있습니다"
-  },
-  {
+    },
+    {
     "id": "names",
     "title": "6 · 저장 계층과 주소 공간은 다른 분류입니다"
-  },
-  {
+    },
+    {
     "id": "mechanism",
     "title": "7 · 1/12 FLOP/B에 1TB/s를 곱하면 약 83.3GFLOP/s입니다"
-  },
-  {
+    },
+    {
     "id": "source",
     "title": "8 · 공식 대역폭 식의 읽기와 쓰기에 512와 256을 넣습니다"
-  },
-  {
+    },
+    {
     "id": "comparison",
     "title": "9 · 실제 코드의 한 덧셈과 분석 도구의 여러 자원을 대조합니다"
-  },
-  {
+    },
+    {
     "id": "limits",
     "title": "10 · 상한에 못 미치는 이유에 따라 다음 실험을 고릅니다"
-  }
-],
+    }
+    ],
       component: () => import("@/pages/articles/gpu/gpu-memory-hierarchy-and-roofline"),
     },
     {

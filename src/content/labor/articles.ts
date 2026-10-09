@@ -74,7 +74,7 @@ export const laborArticles: Article[] = [
     "id": "handoff",
     "title": "17. 임금 차이의 이유와 측정의 범위를 함께 묻는다"
   }
-],
+  ],
     component: () =>
       import("@/pages/articles/labor/wage-floor-natural-experiment"),
   },

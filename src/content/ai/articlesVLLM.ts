@@ -122,7 +122,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "15. 표본과 분모를 바꿨을 때 결과를 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/serving-latency-metrics-and-slo"),
   },
   {
@@ -250,7 +250,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "15. 남은 양과 시간의 의미를 먼저 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/vllm-scheduler"),
   },
   {
@@ -326,7 +326,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "17. 다음 배정을 먼저 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/continuous-batching-step-anatomy"),
   },
   {
@@ -430,7 +430,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "24. 조건을 바꿔 다음 결과를 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/prefill-decode-phase-dynamics"),
   },
   {
@@ -534,7 +534,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "24. 조건을 바꾸어 다음 결과를 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/disaggregated-prefill-decode-serving"),
   },
   {
@@ -630,7 +630,7 @@ export const vllmServingArticles: Article[] = [
     "id": "review",
     "title": "22. 같은 사례를 바꾸어 예측해 봅니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/inference-optimization-layers"),
   },
   {
@@ -710,7 +710,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "18. 같은 사례에서 다음 값을 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/vllm-paged-attention"),
   },
   {
@@ -810,7 +810,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "23. 조건을 바꾸면 다음 판정은 어떻게 될까요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/serving-memory-admission-and-preemption"),
   },
   {
@@ -906,7 +906,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "22. 같은 입력에서 다음 경계를 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/prefix-caching-radix-attention"),
   },
   {
@@ -1054,7 +1054,7 @@ export const vllmServingArticles: Article[] = [
     "id": "prediction-questions",
     "title": "24. 값을 바꾸기 전에 다음 결과를 예상해 보세요"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/kv-cache-fundamentals"),
   },
   {
@@ -1102,7 +1102,7 @@ export const vllmServingArticles: Article[] = [
     "id": "limits",
     "title": "10 · 같은 shape와 오차 기준으로 시간을 재야 한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/flash-attention-io-aware-kernel"),
   },
   {
@@ -1194,7 +1194,7 @@ export const vllmServingArticles: Article[] = [
     "id": "review",
     "title": "21 · 마지막 위치의 결과를 다시 예측한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/attention-kernel-anatomy-and-backends"),
   },
   {
@@ -1442,7 +1442,7 @@ export const vllmServingArticles: Article[] = [
             "id": "limits",
             "title": "10 · 작은 decode에서는 고정 지연이 남는다"
       }
-],
+  ],
     component: () => import("@/pages/articles/ai/expert-parallelism-moe-systems"),
   },
   {
@@ -1563,7 +1563,7 @@ export const vllmServingArticles: Article[] = [
     "id": "review",
     "title": "21. 조건을 바꾸어 예측해 봅니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/cuda-graph-capture"),
   },
   {
@@ -1659,7 +1659,7 @@ export const vllmServingArticles: Article[] = [
     "id": "review",
     "title": "22. 다음 실행을 예측해 봅니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/launch-overhead-and-cpu-gpu-synchronization"),
   },
 ];

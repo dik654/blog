@@ -345,7 +345,7 @@ export const dlFoundationArticles: Article[] = [
     "id": "applications",
     "title": "14 · 거리를 보존했는지와 과제를 해결했는지를 따로 확인한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/math-high-dimensional-geometry"),
   },
   {
@@ -425,7 +425,7 @@ export const dlFoundationArticles: Article[] = [
     "id": "review",
     "title": "18 · 바꾸기 전에 다음 저장값을 예측한다"
   }
-],
+  ],
     component: () => import("@/pages/articles/ai/math-numerical-precision-stability"),
   },
   {
