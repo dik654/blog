@@ -73,13 +73,13 @@ export default function ConsequenceDutyAndCharacterArticle() {
       <LessonSection id="source" level="5" title="8. 밀·칸트·아리스토텔레스의 원문 질문을 대조합니다" bridge="세 전통이 행동·원칙·성품 중 어디에 초점을 두는지 원문에서 확인했습니다. 같은 답을 내는 경우와 충돌을 나눕니다.">
         <div className="space-y-6">
           <SourceApplication source="J. S. Mill · Utilitarianism, Chapter II" excerpt="right in proportion as they tend to promote happiness" application="도시락 결정이 회사 비용만이 아니라 모든 영향받는 사람의 고통과 안전에 어떤 결과를 만드는지 묻게 됩니다." />
-          <SourceApplication source="Immanuel Kant · Groundwork, Second Section (T. K. Abbott 역)" excerpt="Act only on that maxim whereby thou canst at the same time will that it should become a universal law" application="알고 있는 위험을 비용 때문에 숨기는 규칙을 누구나 사용해도 성분 표시 약속이 유지되는지 시험합니다." />
-          <SourceApplication source="Aristotle · Nicomachean Ethics, Book II ch. 6 (D. P. Chase 역)" excerpt="a state apt to exercise deliberate choice, being in the relative mean, determined by reason" application="회수 한 번의 외형뿐 아니라 책임자가 정직과 신중함을 반복 가능한 습관으로 만드는지 봅니다." />
+          <SourceApplication source="Immanuel Kant · Groundwork, Second Section, Ak. 4:421 (T. K. Abbott 역)" excerpt="Act only on that maxim whereby thou canst at the same time will that it should become a universal law" application="알고 있는 위험을 비용 때문에 숨기는 규칙을 누구나 사용해도 성분 표시 약속이 유지되는지 시험합니다." />
+          <SourceApplication source="Aristotle · Nicomachean Ethics, Book II ch. 6, 1106b36–1107a2 (D. P. Chase 역)" excerpt="a state apt to exercise deliberate choice, being in the relative mean, determined by reason" application="회수 한 번의 외형뿐 아니라 책임자가 정직과 신중함을 반복 가능한 습관으로 만드는지 봅니다." />
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <CitationBlock source="Mill, Utilitarianism II" citeKey={1} href="https://www.gutenberg.org/files/11224/old/11224-h/11224-h.htm">행동의 옳음을 행복과 고통에 미치는 경향으로 설명하는 원문입니다.</CitationBlock>
-          <CitationBlock source="Kant, Groundwork II" citeKey={2} href="https://www.gutenberg.org/files/5682/5682-h/5682-h.htm">행동의 준칙을 보편 법칙으로 의지할 수 있는지 묻는 원문입니다.</CitationBlock>
-          <CitationBlock source="Aristotle, Nicomachean Ethics II" citeKey={3} href="https://www.gutenberg.org/files/8438/8438-h/8438-h.htm">덕을 선택과 습관에 연결하는 원문입니다(링크는 D. P. Chase 역). 같은 정의를 W. D. Ross 역은 “a state of character concerned with choice”로 옮기는 것처럼, 밀·칸트(T. K. Abbott 역)·아리스토텔레스 번역의 낱말을 하나의 현대 분류와 완전히 같다고 보지 않습니다.</CitationBlock>
+          <CitationBlock source="Kant, Groundwork II" citeKey={2} href="https://www.gutenberg.org/files/5682/5682-h/5682-h.htm">행동의 준칙을 보편 법칙으로 의지할 수 있는지 묻는 원문입니다. 번역본마다 쪽수가 달라서 칸트 연구는 학술원판 전집(Akademie-Ausgabe)의 권:쪽으로 위치를 적습니다. 이 정식은 전집 4권 421쪽 7–8행(Ak. 4:421)에 있고, 독일어로는 “handle nur nach derjenigen Maxime, durch die du zugleich wollen kannst, daß sie ein allgemeines Gesetz werde”입니다(korpora.org 전집 본문, 2026-10-09 확인).</CitationBlock>
+          <CitationBlock source="Aristotle, Nicomachean Ethics II" citeKey={3} href="https://www.gutenberg.org/files/8438/8438-h/8438-h.htm">덕을 선택과 습관에 연결하는 원문입니다(링크는 D. P. Chase 역). 같은 정의를 W. D. Ross 역은 “a state of character concerned with choice”로 옮기는 것처럼, 밀·칸트(T. K. Abbott 역)·아리스토텔레스 번역의 낱말을 하나의 현대 분류와 완전히 같다고 보지 않습니다. 아리스토텔레스 연구는 베커(Bekker) 판의 쪽·단·행으로 위치를 적는데, 이 정의는 1106b36에서 시작해 1107a2까지 이어집니다(그리스어 “ἔστιν ἄρα ἡ ἀρετὴ ἕξις προαιρετική”, Perseus Bywater 판 본문, 2026-10-09 확인).</CitationBlock>
         </div>
       </LessonSection>
 

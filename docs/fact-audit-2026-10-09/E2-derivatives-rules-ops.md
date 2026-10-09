@@ -518,3 +518,114 @@ OLD:
 NEW:
     { kind: "공식 규격", label: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", note: "생우 4만 파운드·기준 등급·추정 63% 뜨거운 도체 수율 조정식과 60% 하한·5% 수량 편차를 확인합니다." },
 ```
+
+## 후속 작업 결과
+처리일 2026-10-09. 모든 인용은 아래 주소를 직접 열어(PDF는 `pdftotext`) 연속 문장을 대조한 뒤 넣었다. 봇 차단(403·타임아웃) 원본은 웹 아카이브 `id_` 원본 사본으로 대조했고, 원 주소는 사람에게는 살아 있으므로 href는 원 주소를 유지하고 note에 사본 날짜를 적었다.
+
+| 항목 | 처리 | 근거·인용 위치 |
+|---|---|---|
+| (6) KRX 청산결제 | 적용 + 공용파일 목록 | https://global.krx.co.kr/contents/GLB/06/0603/0603010802/GLB0603010802.jsp (Settlement of Futures Transactions) — "There are futures specific settlement methods such as daily mark-to-market, offsetting transactions, and final settlement."; 반대거래 "any time before the closing of the market on the last trading day"; "Final settlement is conducted in two ways: cash settlement and physical delivery." → `C` 9절 둘째 문단을 두 문단(일일정산·반대거래·최종결제 정의, 현금/실물 구분)으로 교체, 2번 출처 note에 이 페이지 명시, evidence에 항목 추가·기존 "KRX 주문과 결제"를 "KRX 주문유형"으로 정정. 페이지의 실물인도 상품 목록(10년 국채 등)은 현행성 확인이 안 돼 본문에 넣지 않음 |
+| (17) 금소법 제28조 직링크 | 적용 + 공용파일 목록 | https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357 — "[시행 2026. 1. 2.] [법률 제21065호, 2025. 10. 1., 타법개정]", 제28조 ①~⑧ 전체 표시(⑦ "제3항 및 제4항에 반하는 특약으로서 일반금융소비자에게 불리한 것은 무효로 한다. <신설 2023. 7. 11.>" 포함). 같은 조문의 다른 링크 번호(…2345 등)는 항 하나만 보여 제외. `C:444` href·note 교체(위키문헌 2차 확인 문구 삭제) |
+| (23) LME 아연 규격 | 적용 + 공용파일 목록 | lme.com 직접 조회는 2026-10-09에도 403. 웹 아카이브 2026-09-08 사본 https://web.archive.org/web/20260908135119/https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications — "Special high-grade zinc of 99.995% purity (minimum) must conform to the chemical composition of one of the following standards: BS EN 1179:2003 / ISO 752:2004 / ASTM B6-23 / GB/T 470-2008", "Lot size 25 tonnes", "Warrant 25 tonnes (with a tolerance of +/-2%)", "must be of an LME-approved brand", "must be stored in an LME approved warehouse". `A` 8절에 네 표준 한 문장 추가, excerpt를 원문 연속 문구로, href를 현행 경로(/en/metals/…)로, note 갱신. Rulebook PDF 자체는 열지 않음(규격 페이지가 Rulebook 우선을 명시) |
+| (29) NYMEX Chapter 200 | 적용(본문 정정) | cmegroup PDF는 403. 웹 아카이브 2026-05-05 사본(파일 해시가 2025-07-27·2025-10-10 사본과 같음) https://web.archive.org/web/20260505042106id_/https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf — 200105.A.1 "a Notice of Intention to Accept delivery by 3:00 p.m. on the first business day after the final day of trading … indicate the name(s) of the buyer(s), the number of contracts"; 200105.A.2 "On the first business day following Notice Day, the buyer's clearing member shall provide … Delivery Instructions" (f. outgoing pipeline or storage facility); 200105.E "The Notice Day shall be the second business day after the final day of trading"; 200107.B "On the third business day following the last day of trading, the clearing member shall obtain from any buyer margin equal to the full value of the product to be delivered"; 200107.A Payment Date "the twentieth day of the month following the delivery month"; 200102.B 1,000배럴·±2%(book-out·in-tank·in-line 제외). **기존 7절 "다음 영업일에 인수 의사를 내고 시설을 지정"은 부정확**(시설은 T+3 인도 지시서에서 지정) → T/T+1/T+2/T+3 두 문단으로 교체, 8절에 T+3 전액 증거금·지급일 추가, note 갱신 |
+| (30) CBOT Chapter 10 | 적용(본문 정정) + 공용파일 목록 | cmegroup PDF는 403. 웹 아카이브 2026-01-07 사본(2025-02-18 사본과 해시 동일) https://web.archive.org/web/20260107142440id_/https://www.cmegroup.com/rulebook/CBOT/I/10.pdf — CORN DIFFERENTIALS: No. 3 "at 2 cents … if on account of broken corn and foreign material only (BCFM between 3.1 and 4%)", "at 2 cents … if on account of total damage only (total damage between 5.1 and 7%)", "at 4 cents … on account of both"; 10105 "(FOR ALL CONTRACT MONTHS UP TO AND INCLUDING DECEMBER 2027)"와 "(FOR ALL CONTRACT MONTHS COMMENCING WITH MARCH 2028)" 두 표 모두 Ottawa-Chillicothe "premium of 6.25 cents", St. Louis-East St. Louis·Alton만 16.25→24센트. **기존 8절의 "손상 조건에 4센트"(실제는 BCFM+손상 둘 다일 때)와 "2027년 12월까지 Ottawa 6.25센트"(2028년 이후에도 같음)는 오도** → 두 문단으로 교체, note·공용 contribution/note 갱신 |
+| (31) CME Livestock | 적용 + 공용파일 목록 | 원 주소 타임아웃. 웹 아카이브 2025-11-17 사본 https://web.archive.org/web/20251117010800/https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html — "At expiration, rather than calling for the delivery of physical cattle, Feeder Cattle futures are settled in cash at a price equal to the CME Feeder Cattle Index on the last day of trading."; "Feeder Cattle futures trade in units of 50,000 pounds"; "Live Cattle futures trade in units of 40,000 pounds … Live Cattle is a physically-delivered futures contract". excerpt는 원문 연속 문구라 유지, href를 `.html` 정본으로, note 갱신 |
+| 경미: KRX 호가·최종거래일·가격제한 | 적용 | https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp — "Tick Size & Value 0.05 point(KRW 12,500)", "Last Trading Day Second Thursday of the contract month", "Final Settlement Day The following day of the last trading day", "Daily Price Limit ① ±8% ② ±15% ③ ±20% price limits are applied to the futures base price(①tier only during 08:45~09:00 and Night-Session)". `C` 8절 첫 문단을 0.05×25만=1만2,500원, 2포인트=40칸×1만2,500=50만 원(3절과 일치) 문단과 최종거래일·가격제한 문단으로 교체 |
+| 경미: ISDA 응답 마감·교체 통지 | 적용 | https://www.isda.org/collateral-management-sop/ — "responses should be received as soon as possible after receipt of the call and no later than one hour prior to closing of the securities market and two hours prior to cash deadlines"; "Although T+0 requests should be accommodated, it is recommended to give anticipated substitutions at least T+3 business days' ahead, but T+5 days is optimal for notice in case securities are rehypothecated". `O` 8절에 두 문단 추가(16시/17시 → 둘 다 15시 가정 사례) |
+| 경미: IRRBB 여섯 시나리오·15% | 적용 | https://www.bis.org/committees/bcbs/basel-framework/standard/srp/31/inforce/2026-01-01/published/2024-07-16 — SRP31.90 "parallel shock up; parallel shock down; steepener shock (short rates down and long rates up); flattener shock (short rates up and long rates down); short rates shock up; and short rates shock down", "a historical time series ranging from January 2000 to December 2023"; SRP31.82 "compares the bank's maximum ∆EVE, under the six prescribed interest rate shock scenarios … with 15% of its Tier 1 capital". `P` 8절 둘째 문단을 여섯 충격 문단 + 15% 이상치 문단(Tier 1 100→15 가정 사례)으로 교체 |
+| 경미: 현물월 한도 25% | 적용 | https://www.cftc.gov/IndustryOversight/MarketSurveillance/SpeculativeLimits/index.htm — "Each spot month limit is set at or below 25% of estimated deliverable supply." `P` 포지션 한도 글 8절에 한 문단 추가(100만→25만 가정 사례, 5절 시장지배와 연결) |
+| 경미: KRX 변동성지수선물·CAR 3년·CKA 1년 | 적용 | https://trn.krx.co.kr/pages/0101?cmd=base — "1단계 … 선물상품(변동성지수선물 제외) 및 옵션매수 거래가 가능합니다"; https://www.moneysense.gov.sg/investments/understanding-specified-investment-products/ (Last updated on 2 July 2026) — "The outcome of your Customer Account Review will expire after 3 years if you have transacted in a listed SIP only once or not at all during that period", "The outcome of your Customer Knowledge Assessment is only valid for a year", "Have made at least 6 transactions in unlisted SIPs in the last 3 years", 안전장치 "receive advice on whether the product is suitable … or explain to you the general features and risks". `J` 3절·numericCase 1단계 문구, 9절 둘째 문단을 유효기간 문단+안전장치 문단으로 교체 |
+
+고친 글 파일: `src/pages/articles/markets/derivatives/derivative-curriculum-gaps-data.ts`(krx 8·9절·출처 note, 판매기록 출처 href·note), `derivative-applied-ledgers-data.ts`(WTI 7·8절·출처 note, LME 8절·출처, Livestock 출처), `derivative-specialized-market-gaps-data.ts`(CBOT 8절·출처 note), `derivative-professional-practice-data.ts`(IRRBB 8절, 포지션 한도 8절), `derivative-jurisdiction-data.ts`(한국·싱가포르 3·9절·numericCase), `derivative-operations-and-governance-data.ts`(담보 운영 8절).
+검증: 10개 route `bash scripts/check-article.sh` — prose-readability(다른 글의 "재검토 필요")만 미통과, 나머지 통과. `npx eslint` 6개 파일 오류 0.
+
+## 후속 공용 파일 수정 목록
+모든 old 문자열은 2026-10-09 현재 해당 파일에서 1회만 나옴을 확인했다.
+
+### src/content/article-evidence.ts
+```
+OLD:
+      "label": "KRX 주문과 결제",
+      "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+      "note": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다."
+    }
+NEW:
+      "label": "KRX 주문유형",
+      "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+      "note": "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX 선물 결제(Settlement of Futures Transactions)",
+      "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010802/GLB0603010802.jsp",
+      "note": "체결 뒤 결제를 일일정산·반대거래·최종결제로 나누고 최종결제를 현금결제와 실물인수도로 구분합니다."
+    }
+```
+```
+OLD:
+      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+NEW:
+      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357",
+```
+```
+OLD:
+href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "아연 순도·로트·워런트 중량 허용 범위와 승인 브랜드·창고를 확인합니다." }
+NEW:
+href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "아연 순도 99.995%·네 화학 조성 표준·25톤 로트·워런트 ±2%와 승인 브랜드·창고를 확인합니다(자동 조회 403이라 2026-09-08 웹 아카이브 사본으로 대조)." }
+```
+```
+OLD:
+href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "1천 배럴 계약, 쿠싱 승인 시설, 허용 오차와 실물인도 방식을 확인합니다." }
+NEW:
+href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "1천 배럴 계약, 쿠싱 승인 시설, 허용 오차와 실물인도 방식, T+1 인수 의사 통지·T+3 전액 인도증거금을 확인합니다." }
+```
+```
+OLD:
+      "note": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다."
+NEW:
+      "note": "3등급 할인(한 조건 2센트·두 조건 4센트), 2027년 12월물까지와 2028년 3월물부터의 두 지역 가산표, 인도 장소를 확인합니다."
+```
+```
+OLD:
+href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note:
+NEW:
+href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html", note:
+```
+
+### src/content/article-learning.ts
+```
+OLD:
+        "title": "KRX 주문과 결제",
+        "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다.",
+NEW:
+        "title": "KRX 주문유형",
+        "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
+        "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
+        "contribution": "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.",
+```
+```
+OLD:
+        "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+NEW:
+        "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357",
+```
+```
+OLD:
+{ title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications",
+NEW:
+{ title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications",
+```
+```
+OLD:
+        "contribution": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다.",
+NEW:
+        "contribution": "3등급 할인(한 조건 2센트·두 조건 4센트), 2027년 12월물까지와 2028년 3월물부터의 두 지역 가산표, 인도 장소를 확인합니다.",
+```
+```
+OLD:
+{ title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview",
+NEW:
+{ title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html",
+```

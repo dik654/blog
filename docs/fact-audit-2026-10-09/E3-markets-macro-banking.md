@@ -471,3 +471,271 @@ old:
 new:
 "label": "CME Understanding Margin Changes", "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes", "note": "선물 증거금과 일별 평가·유지 요건의 공식 설명입니다. 2026-10-09 재확인 시 자동 조회 불가(시간 초과·403)라 발췌는 검색 요약으로만 확인해 미검증입니다."
 ```
+
+## 후속 작업 결과
+처리일 2026-10-09. 적용 4 · 확인만(이미 반영) 1 · 부분 보류 2(아래 각 항목 안).
+
+| 항목 | 결과 |
+|---|---|
+| #11 covered-calls 금감원 소비자경보 | **적용(사본 근거, 원 주소 재대조 필요)**. fss.or.kr은 2026-10-09에도 "대국민 서비스 중단(2026.10.08 18:00 ~ 10.10 24:00)" 공지만 반환했고 Wayback은 "Temporarily Offline"이었다. 대신 삼성화재가 소비자보호 자료로 게시한 같은 보도자료 PDF(https://samsungfire.com/download/consumer/ca_d71.pdf, 4쪽, PDF 작성자 메타데이터 "금융감독원", 머리 "보도 2024.7.29.(월) 조간 배포 2024.7.26.(금) … 소비자경보 2024-26호")를 내려받아 3쪽을 쪽 이미지로 대조했다. 인용: "커버드콜 ETF 종목명에 기재된 분배율은 운용사가 제시하는 목표 분배율을 의미할 뿐, 사전에 약정된 확정분배율이 아님에 유의", "커버드콜 ETF 종목명의 “프리미엄”은 옵션 프리미엄*을 의미할 뿐, 사전적 의미의 “고급스럽고, 좋은” 상품을 의미하는 것이 아님", 919원 표(매월 NAV 5% 하락·매월 NAV 1% 분배 가정, 100+95+…+57=919 재계산 일치). 10절 셋째 문단 뒤에 두 문단과 citeKey 11 인용 블록을 넣었다. **보류 부분**: 상품명 변경 조치(2024-09)는 금감원 원문을 찾지 못해(2차 보도만 있음) 넣지 않고 본문에 "확인하지 못해 다루지 않는다"고 적었다. fss.or.kr 재개 뒤 원 주소(보도자료 게시물)로 href를 바꾸는 일이 남는다. |
+| #19 why-per-head-stalls 1차 통계 | **적용**. Maddison Project Database 2023: GGDC 페이지(https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023)가 연결한 dataverse.nl 파일 mpd2023_web.xlsx를 내려받아 Regional data 시트 World 행을 읽음(1820년 GDPpc 1,127.7·인구 1,042,017천, 1950년 3,360.2, 2022년 16,676.7·7,802,034천; 단위는 Notes 시트 "Real GDP per capita in 2011$", "Population, mid-year (thousands)"). UN WPP 2024: WPP2024_Demographic_Indicators_Medium.csv.gz를 내려받아 World 행 TFR 1950=4.8519, 2023=2.2505 확인. 부품 4 첫 문단에 인구 7.5배·1인당 GDP 약 15배, 셋째 문단 뒤에 출산율 문단을 넣고 citeKey 2·3 인용 블록 추가. "인과는 보여 주지 않는다"는 범위와 "첫째 판정(농업 생산성)은 통계로 확인하지 않은 일반적 서술"이라는 범위 문장은 남겼다. |
+| #12 forwards-and-futures CME 두 페이지 | **적용**. Chrome으로 두 페이지를 렌더링해 본문을 읽음. understanding-margin-changes(Matthew Waldis, 25 MAR 2020): "We mark positions to market twice a day to prevent losses from accumulating over time." / ferrous contango 2강: "When a market is in contango, the forward price of a futures contract is higher than the spot price.", "as the futures contract approaches maturity, the futures price will converge with the spot price, otherwise an arbitrage opportunity would exist." 두 인용 블록의 "미검증" 문구를 원문 인용으로 바꾸고, 8절 첫 문장의 비문("문구는 … 알 수 있습니다")을 원문 취지("손실이 쌓이지 않게")에 맞게 고쳤다. |
+| #10 funds-etfs-and-etns 현행 KRX 규정 | **적용(수치 변경)**. KRX 법무포털(https://rule.krx.co.kr/)에서 유가증권시장 업무규정(제61차 개정, 2026-09-14 시행, 규정 제2497호)과 시행세칙(제177차, 세칙 제2499호) 현행 전문을 열어 확인. **2020년 수치는 현행과 다르다**: 제20조의4제2항 LP 괴리율 의무는 "2%(해외기초자산의 경우 5%를 말한다…)"(개정 2026.8.18·9.9, 부칙상 2026-08-19·09-14 시행), 세칙 제134조의5 투자유의 지정예고는 "규정 제20조의4제2항 또는 제3항에서 정한 비율의 2배 이상"(즉 4%/10%), 제134조의6 예고 후 10매매거래일 이내 재해당 시 지정. 기본예탁금은 업무규정 제87조의2제1항제2호(1배 초과 배율, 음의 배율 포함, 개인 매수)와 세칙 제111조의3(1단계 1천만원 미만(면제 포함)·2단계 1천만원·3단계 1천만원 초과 3천만원 이하, 최초 계좌는 2·3단계, 단일종목 상품 3천만원 이상 현금). 사전교육은 거래소 규정에 없어 FSC 2026-04-21 보도자료(https://www.fsc.go.kr/po010101/86751, "현재 국내상장 및 해외상장 레버리지 ETF·ETN에 투자하는 경우 사전교육(1시간)을 받아야 했다")로 확인. 7절 사례 선을 1만300/1만600 → 1만200/1만500, 투자유의 1만600 → 1만400으로 고치고 2020년 수치(3%/6%, 6%/12%)는 연혁으로 남겼다. 9절은 현행 조문 기준으로 다시 썼다. **보류 부분**: 2020 발표의 신용거래 제외·위탁증거금 100%는 현행 원문을 확인하지 못해 본문에 그렇게 적었다. 인용 블록 citeKey 7(업무규정)·8(시행세칙)·9(FSC 2026)를 추가하고 FSC 2020을 10으로 옮겨 기존 Global X Europe과 겹치던 citeKey 6 중복을 없앴다. |
+| (선택) SEC leveraged ETF alert 주소 | **확인만**. src 전체에서 `sec.gov/files/investor/pubs/leveragedetfs-alert.htm`은 이미 없고, 본문·article-evidence·registration 모두 investor.gov 주소(…/investor-alerts/sec)로 바뀌어 있다. 2026-10-09 curl로 그 페이지 200, 제목 "Leveraged and Inverse ETFs", 날짜 "Aug. 29, 2023"를 확인했다. sec.gov 원 주소는 여전히 403. 추가 조치 없음. |
+
+고친 글 파일(직접 수정):
+- `src/pages/articles/markets/covered-calls-and-income-funds.tsx`
+- `src/pages/articles/macro/why-per-head-stalls.tsx`
+- `src/pages/articles/markets/forwards-and-futures.tsx`
+- `src/pages/articles/markets/funds-etfs-and-etns.tsx`
+
+검증: 4개 route마다 audit-learning-contract(--require-registration)·viz-style·korean-naturalness·term-density·term-pair-wrapping 통과, knowledge-graph·reading-order 통과. prose-readability는 covered-calls에 새 긴 문단이 걸려 둘로 나눈 뒤 4개 글 모두 "재검토 필요" 목록에서 빠짐(rc=1은 다른 글 항목). `npx eslint` 4개 파일 통과. check-article.sh의 merge-registrations 단계는 공용 파일을 쓰므로 돌리지 않았다. 아래 공용 파일 수정 목록은 13쌍 모두 2026-10-09에 각 파일에서 old가 정확히 1번 나오는 것을 확인했고, 적용한 사본을 TypeScript 파서로 읽어 구문 오류 0을 확인했다.
+
+참고(통합자): `article-evidence.ts`·`finance-audit-current.ts`·`registrations/funds-etfs-and-etns.ts`에 FSC 2020 항목이 **두 번 연속** 들어가 있다(앞 원장 (1-b)가 두 번 적용된 것으로 보임). 아래 해당 쌍은 그 중복 두 항목을 한꺼번에 old로 잡아 하나로 줄이고 새 항목 셋을 앞에 넣는다.
+
+## 후속 공용 파일 수정 목록
+통합자가 위에서 아래 순서로 적용한다. 각 old는 2026-10-09 현재 해당 파일에서 한 번만 나온다.
+
+### `src/content/article-evidence.ts`
+```
+old:
+      "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+new:
+      "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융감독원 · 커버드콜 ETF 명칭 및 수익구조에 대한 소비자 경보(주의) 발령 (소비자경보 2024-26호, 2024-07-26 배포·07-29 조간)",
+      "href": "https://samsungfire.com/download/consumer/ca_d71.pdf",
+      "note": "2026-10-09 원문 확인(쪽 이미지 대조). 종목명 분배율은 운용사가 제시하는 목표 분배율일 뿐 확정분배율이 아니고, 분배율은 분배기준일 NAV 대비라 투자원금과 무관하며, 종목명의 “프리미엄”은 옵션 프리미엄을 뜻한다는 문구와 919원 표(3쪽, 매월 NAV 5% 하락·매월 NAV 1% 분배 가정)의 출처. 한국 관할. 금감원 누리집(fss.or.kr)이 2026-10-08~10 전기설비 점검으로 중단되어, 삼성화재가 소비자보호 자료로 게시한 같은 보도자료 PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+    }
+```
+```
+old:
+      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). 정의 문구는 검색 요약으로만 확인해 미검증입니다."
+new:
+      "note": "2026-10-09 브라우저 렌더링으로 원문 대조. “When a market is in contango, the forward price of a futures contract is higher than the spot price.”와 만기 수렴 문장(“as the futures contract approaches maturity, the futures price will converge with the spot price”) 확인."
+```
+```
+old:
+      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). “marks positions to market twice a day”는 검색 요약으로만 확인해 미검증입니다."
+new:
+      "note": "2026-10-09 브라우저 렌더링으로 원문 대조(Matthew Waldis, 2020-03-25). “We mark positions to market twice a day to prevent losses from accumulating over time.” 확인. 미국 CME Clearing 관행."
+```
+```
+old:
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+      "href": "https://fsc.go.kr/po010101/74332",
+      "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+      "href": "https://fsc.go.kr/po010101/74332",
+      "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+    }
+new:
+    {
+      "kind": "공식 문서",
+      "label": "한국거래소 · 유가증권시장 업무규정 (제61차 일부개정, 2026-09-14 시행, 규정 제2497호)",
+      "href": "https://rule.krx.co.kr/",
+      "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제20조의4제2항·제3항 LP 괴리율 2%(해외 기초자산 5%), 제87조의2제1항제2호 1배 초과 배율(음의 배율 포함) ETF·ETN 개인 매수 시 기본예탁금, 제106조의4 투자유의종목, 제38조의2 체결 방법 변경, 제26조제1항제2호의3 매매거래정지. 한국 관할. 조문별 고정 주소가 없어 포털 첫 화면으로 연결"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국거래소 · 유가증권시장 업무규정 시행세칙 (제177차 일부개정, 2026-09-14 시행, 세칙 제2499호)",
+      "href": "https://rule.krx.co.kr/",
+      "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제134조의5·제134조의6 장종료시 실시간 괴리율이 규정 비율의 2배 이상이면 지정예고, 10매매거래일 이내 재해당 시 투자유의종목 지정. 제111조의3 기본예탁금 1단계 1천만원 미만(면제 포함)·2단계 1천만원·3단계 1천만원 초과 3천만원 이하, 최초 계좌는 2·3단계, 단일종목 상품 3천만원 이상(현금). 한국 관할"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 국내-해외상장 ETF 간 비대칭 규제 해소를 위한 자본시장법 시행령 개정안 국무회의 의결 (2026-04-21 보도자료)",
+      "href": "https://www.fsc.go.kr/po010101/86751",
+      "note": "2026-10-09 원문 확인. 국내상장·해외상장 레버리지 ETF·ETN 사전교육 1시간, 단일종목 레버리지·인버스 ETF·ETN 심화 사전교육 1시간 추가(금융투자협회 규정 개정). 한국 관할"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+      "href": "https://fsc.go.kr/po010101/74332",
+      "note": "2026-10-09 원문 확인. 2020년 발표 시점의 방안: 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육·신용거래 제외·위탁증거금 100%. 괴리율 수치는 현행 거래소 규정(2%·5%, 투자유의 2배)과 다름. 한국 관할"
+    }
+```
+
+### `src/content/registrations/finance-audit-current.ts`
+```
+old:
+    "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
+    "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+  }
+new:
+    "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
+    "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융감독원 · 커버드콜 ETF 명칭 및 수익구조에 대한 소비자 경보(주의) 발령 (소비자경보 2024-26호, 2024-07-26 배포·07-29 조간)",
+    "href": "https://samsungfire.com/download/consumer/ca_d71.pdf",
+    "note": "2026-10-09 원문 확인(쪽 이미지 대조). 종목명 분배율은 운용사가 제시하는 목표 분배율일 뿐 확정분배율이 아니고, 분배율은 분배기준일 NAV 대비라 투자원금과 무관하며, 종목명의 “프리미엄”은 옵션 프리미엄을 뜻한다는 문구와 919원 표(3쪽, 매월 NAV 5% 하락·매월 NAV 1% 분배 가정)의 출처. 한국 관할. 금감원 누리집(fss.or.kr)이 2026-10-08~10 전기설비 점검으로 중단되어, 삼성화재가 소비자보호 자료로 게시한 같은 보도자료 PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+  }
+```
+```
+old:
+    "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). 정의 문구는 검색 요약으로만 확인해 미검증입니다."
+new:
+    "note": "2026-10-09 브라우저 렌더링으로 원문 대조. “When a market is in contango, the forward price of a futures contract is higher than the spot price.”와 만기 수렴 문장(“as the futures contract approaches maturity, the futures price will converge with the spot price”) 확인."
+```
+```
+old:
+    "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). “marks positions to market twice a day”는 검색 요약으로만 확인해 미검증입니다."
+new:
+    "note": "2026-10-09 브라우저 렌더링으로 원문 대조(Matthew Waldis, 2020-03-25). “We mark positions to market twice a day to prevent losses from accumulating over time.” 확인. 미국 CME Clearing 관행."
+```
+```
+old:
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+  }
+new:
+  {
+    "kind": "공식 문서",
+    "label": "한국거래소 · 유가증권시장 업무규정 (제61차 일부개정, 2026-09-14 시행, 규정 제2497호)",
+    "href": "https://rule.krx.co.kr/",
+    "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제20조의4제2항·제3항 LP 괴리율 2%(해외 기초자산 5%), 제87조의2제1항제2호 1배 초과 배율(음의 배율 포함) ETF·ETN 개인 매수 시 기본예탁금, 제106조의4 투자유의종목, 제38조의2 체결 방법 변경, 제26조제1항제2호의3 매매거래정지. 한국 관할. 조문별 고정 주소가 없어 포털 첫 화면으로 연결"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "한국거래소 · 유가증권시장 업무규정 시행세칙 (제177차 일부개정, 2026-09-14 시행, 세칙 제2499호)",
+    "href": "https://rule.krx.co.kr/",
+    "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제134조의5·제134조의6 장종료시 실시간 괴리율이 규정 비율의 2배 이상이면 지정예고, 10매매거래일 이내 재해당 시 투자유의종목 지정. 제111조의3 기본예탁금 1단계 1천만원 미만(면제 포함)·2단계 1천만원·3단계 1천만원 초과 3천만원 이하, 최초 계좌는 2·3단계, 단일종목 상품 3천만원 이상(현금). 한국 관할"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · 국내-해외상장 ETF 간 비대칭 규제 해소를 위한 자본시장법 시행령 개정안 국무회의 의결 (2026-04-21 보도자료)",
+    "href": "https://www.fsc.go.kr/po010101/86751",
+    "note": "2026-10-09 원문 확인. 국내상장·해외상장 레버리지 ETF·ETN 사전교육 1시간, 단일종목 레버리지·인버스 ETF·ETN 심화 사전교육 1시간 추가(금융투자협회 규정 개정). 한국 관할"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 2020년 발표 시점의 방안: 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육·신용거래 제외·위탁증거금 100%. 괴리율 수치는 현행 거래소 규정(2%·5%, 투자유의 2배)과 다름. 한국 관할"
+  }
+```
+
+### `src/content/registrations/forwards-and-futures.ts`
+```
+old:
+    "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). 정의 문구는 검색 요약으로만 확인해 미검증입니다."
+new:
+    "note": "2026-10-09 브라우저 렌더링으로 원문 대조. “When a market is in contango, the forward price of a futures contract is higher than the spot price.”와 만기 수렴 문장(“as the futures contract approaches maturity, the futures price will converge with the spot price”) 확인."
+```
+```
+old:
+    "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). “marks positions to market twice a day”는 검색 요약으로만 확인해 미검증입니다."
+new:
+    "note": "2026-10-09 브라우저 렌더링으로 원문 대조(Matthew Waldis, 2020-03-25). “We mark positions to market twice a day to prevent losses from accumulating over time.” 확인. 미국 CME Clearing 관행."
+```
+
+### `src/content/registrations/funds-etfs-and-etns.ts`
+```
+old:
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+  }
+new:
+  {
+    "kind": "공식 문서",
+    "label": "한국거래소 · 유가증권시장 업무규정 (제61차 일부개정, 2026-09-14 시행, 규정 제2497호)",
+    "href": "https://rule.krx.co.kr/",
+    "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제20조의4제2항·제3항 LP 괴리율 2%(해외 기초자산 5%), 제87조의2제1항제2호 1배 초과 배율(음의 배율 포함) ETF·ETN 개인 매수 시 기본예탁금, 제106조의4 투자유의종목, 제38조의2 체결 방법 변경, 제26조제1항제2호의3 매매거래정지. 한국 관할. 조문별 고정 주소가 없어 포털 첫 화면으로 연결"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "한국거래소 · 유가증권시장 업무규정 시행세칙 (제177차 일부개정, 2026-09-14 시행, 세칙 제2499호)",
+    "href": "https://rule.krx.co.kr/",
+    "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제134조의5·제134조의6 장종료시 실시간 괴리율이 규정 비율의 2배 이상이면 지정예고, 10매매거래일 이내 재해당 시 투자유의종목 지정. 제111조의3 기본예탁금 1단계 1천만원 미만(면제 포함)·2단계 1천만원·3단계 1천만원 초과 3천만원 이하, 최초 계좌는 2·3단계, 단일종목 상품 3천만원 이상(현금). 한국 관할"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · 국내-해외상장 ETF 간 비대칭 규제 해소를 위한 자본시장법 시행령 개정안 국무회의 의결 (2026-04-21 보도자료)",
+    "href": "https://www.fsc.go.kr/po010101/86751",
+    "note": "2026-10-09 원문 확인. 국내상장·해외상장 레버리지 ETF·ETN 사전교육 1시간, 단일종목 레버리지·인버스 ETF·ETN 심화 사전교육 1시간 추가(금융투자협회 규정 개정). 한국 관할"
+  },
+  {
+    "kind": "공식 문서",
+    "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+    "href": "https://fsc.go.kr/po010101/74332",
+    "note": "2026-10-09 원문 확인. 2020년 발표 시점의 방안: 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육·신용거래 제외·위탁증거금 100%. 괴리율 수치는 현행 거래소 규정(2%·5%, 투자유의 2배)과 다름. 한국 관할"
+  }
+```
+
+### `src/content/article-evidence.ts`
+```
+old:
+      note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+    },
+new:
+      note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+    },
+    {
+      kind: "공식 문서",
+      label:
+        "Jutta Bolt · Jan Luiten van Zanden, Maddison Project Database, version 2023 (Groningen Growth and Development Centre)",
+      href: "https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023",
+      note: "2026-10-09에 mpd2023_web.xlsx(dataverse.nl 배포 파일)를 내려받아 Regional data 시트의 World GDP pc·World Population을 읽음. 1820년 1,127.7달러·1,042,017천 명, 1950년 3,360.2달러, 2022년 16,676.7달러·7,802,034천 명(2011년 달러, 연중 인구). 7.5배·15배는 이 글이 나눈 비율. 방법은 Bolt · Van Zanden (2024), Journal of Economic Surveys, DOI 10.1111/joes.12618",
+    },
+    {
+      kind: "공식 문서",
+      label:
+        "United Nations, DESA Population Division, World Population Prospects 2024, Demographic Indicators (Medium variant)",
+      href: "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+      note: "2026-10-09에 배포 CSV를 내려받아 Location=World 행의 TFR(여성 1명당 출생아 수)을 읽음. 1950년 4.8519, 2023년 2.2505. 소득과 출산이 같은 기간에 함께 움직였다는 것만 뒷받침하고 인과는 뒷받침하지 않음",
+    },
+```
+
+### `src/content/registrations/why-per-head-stalls.ts`
+```
+old:
+    note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+  },
+new:
+    note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+  },
+  {
+    kind: "공식 문서",
+    label:
+      "Jutta Bolt · Jan Luiten van Zanden, Maddison Project Database, version 2023 (Groningen Growth and Development Centre)",
+    href: "https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023",
+    note: "2026-10-09에 mpd2023_web.xlsx(dataverse.nl 배포 파일)를 내려받아 Regional data 시트의 World GDP pc·World Population을 읽음. 1820년 1,127.7달러·1,042,017천 명, 1950년 3,360.2달러, 2022년 16,676.7달러·7,802,034천 명(2011년 달러, 연중 인구). 7.5배·15배는 이 글이 나눈 비율. 방법은 Bolt · Van Zanden (2024), Journal of Economic Surveys, DOI 10.1111/joes.12618",
+  },
+  {
+    kind: "공식 문서",
+    label:
+      "United Nations, DESA Population Division, World Population Prospects 2024, Demographic Indicators (Medium variant)",
+    href: "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+    note: "2026-10-09에 배포 CSV를 내려받아 Location=World 행의 TFR(여성 1명당 출생아 수)을 읽음. 1950년 4.8519, 2023년 2.2505. 소득과 출산이 같은 기간에 함께 움직였다는 것만 뒷받침하고 인과는 뒷받침하지 않음",
+  },
+```

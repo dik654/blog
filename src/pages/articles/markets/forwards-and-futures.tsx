@@ -72,17 +72,17 @@ export default function Article() {
 <p className="leading-8">계약 교체를 롤오버, 이 경로가 수익에 미치는 영향을 롤 수익이라고 합니다. 먼 만기의 선물가격이 더 높은 곡선은 콘탱고, 더 낮은 곡선은 백워데이션이라고 부릅니다. 31만5000원짜리 선물 계약을 새로 맺는 순간 차액 1만5000원이 곧바로 확정 손실이 되는 것은 아닙니다. 새 계약 가격이 이후 30만 원으로 내려온다는 가정이 손실을 만듭니다. 담보 현금의 이자와 보수까지 합해야 펀드 전체 성과가 됩니다.</p>
         </div>
 
-<CitationBlock source="CME · Contango, Backwardation and Convergence" citeKey={4} href="https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation">CME · Contango, Backwardation and Convergence. 2026-10-09 재확인 시 자동 조회가 막혀(시간 초과·403) 페이지 원문을 다시 대조하지 못했습니다. 콘탱고 정의와 만기 수렴 문구는 검색 요약으로만 확인한 상태입니다(미검증).</CitationBlock>
+<CitationBlock source="CME · Contango, Backwardation and Convergence" citeKey={4} href="https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation">“When a market is in contango, the forward price of a futures contract is higher than the spot price.” 만기 수렴은 “as the futures contract approaches maturity, the futures price will converge with the spot price, otherwise an arbitrage opportunity would exist.” CME Institute 철강(ferrous) 과정 2강 · 2026-10-09 브라우저로 렌더링한 페이지 원문과 대조했습니다.</CitationBlock>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">최종 대금 3000만 원과 중간 현금 100만 원을 따로 계산했습니다. 거래소 원문의 정산 방식과 맞춰 봅니다.</p>
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8. 거래소의 중간 평가는 만기를 기다리지 않습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-<p className="leading-8">CME 자료의 다음 문구는 중간 평가가 계약 이행을 관리하는 방법임을 알 수 있습니다. 실제 평가 빈도와 고객 납부 시한은 상품·청산·중개 계약에 따라 확인해야 합니다.</p>
+<p className="leading-8">CME 자료의 다음 문구를 보면 중간 평가는 손실이 쌓이지 않게 막아 계약 이행을 관리하는 방법입니다. 실제 평가 빈도와 고객 납부 시한은 상품·청산·중개 계약에 따라 확인해야 합니다.</p>
 <p className="leading-8">예시의 100만 원은 손실이 확정되어 영원히 회복되지 않는다는 뜻이 아닙니다. 가격이 되돌아오면 반대 방향 정산이 생길 수 있어도 오늘 요구된 돈은 오늘 필요합니다.</p>
         </div>
 <SourceApplication source="CME · Understanding Margin Changes, margin philosophies" excerpt="We mark positions to market twice a day" application="100톤×(31만−30만)=100만 원입니다. 가정한 매수 포지션은 100만 원을 받고 매도 포지션은 냅니다. 실제 계약 승수와 정산가는 거래소 명세를 따릅니다." />
-<CitationBlock source="CME · Understanding Margin Changes, margin philosophies" citeKey={1} href="https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes">원문 위치: CME · Understanding Margin Changes, margin philosophies · 2026-10-04 확인. 2026-10-09 재확인 시 자동 조회가 막혀(시간 초과·403) “We mark positions to market twice a day” 발췌를 페이지 원문으로 다시 대조하지 못했고 검색 요약으로만 확인했습니다(미검증). 예시의 금액은 별도 가정입니다.</CitationBlock>
+<CitationBlock source="CME · Understanding Margin Changes, margin philosophies" citeKey={1} href="https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes">“We mark positions to market twice a day to prevent losses from accumulating over time.” Matthew Waldis(CME Clearing), 2020-03-25 글 · 2026-10-09 브라우저로 렌더링한 페이지 원문과 대조했습니다. 미국 CME Clearing의 관행이며, 예시의 금액은 별도 가정입니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">중간 정산의 문구를 100만 원 현금 이동에 적용했습니다. 다음에는 같은 규칙이 다른 시장에서 무엇을 요구하는지 비교합니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">

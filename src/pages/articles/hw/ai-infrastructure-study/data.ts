@@ -162,6 +162,7 @@ export const softwareCompatibilityData: AiInfrastructureArticleData = {
     { id: "names", level: "3", title: "6. NCCL·DOCA·OFED가 맡는 자리를 붙입니다", bridge: "호스트와 컨테이너의 경계를 봤습니다. 이제 자주 섞이는 세 이름을 실제 경로의 자리로 구분합니다.", paragraphs: [
       "여러 GPU가 합계·복사·모으기 같은 집단 연산을 수행하도록 토폴로지에 맞는 경로를 고르는 라이브러리가 NVIDIA Collective Communications Library(NCCL, ‘니클’)입니다. NCCL은 스케줄러가 아니며 케이블과 스위치를 대신하지 않습니다.",
       "OpenFabrics Enterprise Distribution(OFED)은 RDMA용 커널 드라이버·사용자 라이브러리·도구 묶음을 가리킵니다. NVIDIA Data Center Infrastructure-on-a-Chip Architecture(DOCA)는 BlueField·ConnectX용 더 넓은 SDK와 패키지 체계입니다. 현재 `doca-ofed` profile은 MLNX_OFED와 비슷한 드라이버·도구만 설치하고 추가 DOCA 기능은 넣지 않습니다.",
+      "이름에 같은 OFED가 붙어도 만든 곳은 둘입니다. OpenFabrics Alliance는 OFED를 linux-rdma와 kernel.org 코드에서 가져온 OpenFabrics 배포판이라고 소개합니다. MLNX_OFED는 NVIDIA가 자사 network adapter 전체에 맞춘 별도 software stack입니다. NVIDIA 문서는 MLNX_OFED가 DOCA-OFED로 옮겨 갔고, 2024년 10월 LTS가 마지막 단독 release이며, 2025년 1월부터 새 기능은 DOCA-OFED에만 들어간다고 적습니다(2026-10-09 확인). 그래서 원장에는 ‘OFED’라고만 쓰지 않고 어느 배포판의 몇 버전인지까지 적습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 한 행짜리 호환성 원장으로 검증합니다", bridge: "각 이름의 자리를 찾았습니다. 이제 버전 목록을 실제 변경 절차로 바꿉니다.", paragraphs: [
       "먼저 벤더가 함께 검증한 OS release를 기준 행으로 잡습니다. 그 행에 kernel, GPU driver, system firmware, NIC firmware, CUDA, NCCL, DOCA-OFED, container runtime과 orchestration version을 적고 package repository snapshot과 image digest를 붙입니다.",
@@ -420,7 +421,7 @@ export const storageIoData: AiInfrastructureArticleData = {
     { term: "Shared·parallel filesystem", description: "여러 client가 같은 file namespace를 보고 병렬로 읽고 쓰는 계층입니다.", example: "128 ranks가 shard를 쓰고 하나의 checkpoint 세대를 공개합니다.", boundary: "POSIX라는 이름만으로 metadata scale·stripe·장애 중 성능이 보장되지는 않습니다." },
     { term: "Object storage", description: "File tree보다 key·version·lifecycle을 중심으로 원본과 artifact를 보관하는 계층입니다.", example: "장기 dataset과 완료 checkpoint를 version별 key로 남깁니다.", boundary: "여러 file의 atomic rename이나 POSIX lock을 그대로 기대할 수 없습니다." },
     { term: "페이지 캐시(page cache)", description: "파일 내용을 메모리에 보관하고 dirty·writeback 상태를 관리하는 OS 영역입니다.", example: "짧은 buffered read가 장치가 아니라 DRAM의 cached page를 읽을 수 있습니다.", boundary: "Cache hit 처리량을 장치나 공유 storage의 성능으로 보고하면 안 됩니다." },
-    { term: "직접 입출력(direct I/O)", description: "Page cache 영향을 줄이고 application buffer와 장치 사이 전송을 시도하는 방식입니다.", example: "fio의 `direct=1`로 local NVMe baseline을 잽니다.", boundary: "`O_DIRECT`만으로 data·metadata의 영속 저장을 보장하지 않으며 정렬·filesystem 조건이 있습니다." },
+    { term: "직접 입출력(direct I/O)", description: "Page cache 영향을 줄이고 application buffer와 장치 사이 전송을 시도하는 방식입니다.", example: "fio의 `direct=1`로 local NVMe baseline을 잽니다.", boundary: "`O_DIRECT`만으로 data·metadata의 영속 저장을 보장하지 않습니다. open(2)에 따르면 buffer 주소·길이·file offset의 정렬 조건은 filesystem과 kernel마다 다르고, Linux 2.6부터는 대개 장치의 logical block size(보통 512바이트) 배수입니다. 어긋난 요청은 EINVAL로 실패하거나 buffered I/O로 바뀔 수 있습니다." },
     { term: "꼬리 지연(tail latency)", description: "요청 분포에서 가장 느린 쪽의 응답 시간입니다.", example: "128 ranks 중 가장 느린 rank의 p99 read가 다음 training step을 늦춥니다.", boundary: "평균 latency와 aggregate 처리량만으로는 tail을 알 수 없습니다." },
   ] },
   algorithm: { title: "4MiB read와 checkpoint 한 세대의 완료 경로", input: ["path", "offset", "4MiB buffer", "8TB checkpoint", "120초 deadline"], steps: [

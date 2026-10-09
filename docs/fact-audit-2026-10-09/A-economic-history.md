@@ -1356,3 +1356,197 @@ new:
 ```
 문턱8.33과 1780=100·1840 노동자당 산출146/실질임금112(Allen 2009 +46%·+12%)가 본문·문제에서 일치하는지 확인합니다.
 ```
+
+## 후속 작업 결과 (A1)
+담당: 후속 작업 #19, #37, #40, #41, #42, #43, #44. 확인일 2026-10-09. 새 출처는 글의 `sources`를 바꾸지 않고 아래 `후속 공용 파일 수정 목록 (A1)`의 `article-evidence.ts` 항목으로 올렸다.
+
+| # | 처리 | 근거(열어 본 주소·인용 위치) |
+|---|---|---|
+| 19 | 적용 — MENA 9절: "최신 수치로 확인하지 않았습니다" 문장을 바꾸고 IMF 2025 GCC 보고서 문단 추가(쿠웨이트 흑자·바레인 적자의 원인, 비탄화수소 수출 GDP 대비 5~7/20~26/60%+, 세입의 탄화수소 비중이 높음) | IMF, *Gulf Cooperation Council (GCC)—Enhancing Resilience to Global Shocks: Economic Prospects and Policy Challenges for the GCC Countries*, Policy Paper, Dec 2025(완성 2025-11-20). imf.org PDF는 curl 403 → https://web.archive.org/web/20260905222233/https://www.imf.org/-/media/files/publications/pp/2025/english/ppea2025043.pdf 로 원문 확인. ¶8: "This wide variation in fiscal performance is largely explained by differences in hydrocarbon revenues, which have been highest in Kuwait and lowest in Bahrain." ¶34: "Moreover, the hydrocarbon share of government revenue remains elevated across the GCC, calling for continued non-hydrocarbon revenue mobilization to reduce dependence on volatile hydrocarbon revenue, particularly in Kuwait and to a lesser extent Qatar." 무역통합 절: "non-hydrocarbon exports show large differences, ranging from 5-7 percent of GDP in Kuwait, Qatar, and Saudi Arabia to 20-26 percent of GDP in Bahrain and Oman and over 60 percent of GDP in the UAE". 나라별 세입 비중 수치(그림 23)는 그림이라 텍스트 추출이 안 돼 옮기지 않았다고 본문에 명시. |
+| 37 | 부분 적용 — 남아시아 4절에 문단 추가(17세기 상인·은행가 세력, 1757 플라시, 1765 벵골 조세권=디와니). 식민 이전 직물·해상 교역의 규모는 미확인이라고 본문에 명시 | Tirthankar Roy, "Rethinking the Origins of British India: State Formation and Military-Fiscal Undertakings in an Eighteenth Century World Region", LSE Economic History Working Paper 142/10, June 2010, https://www.lse.ac.uk/Economic-History/Assets/Documents/WorkingPapers/Economic-History/2010/WP142.pdf (200, pdftotext). p.4: "the seventeenth century had empowered the landed gentry, merchants, bankers, scribes, and other literate officers of the state." / "The European trade settlements attracted merchants and bankers from all over India. The first major military encounter between the Company and a provincial army, the battle of Plassey (1757)…" p.16: "And in 1765, the Company received the taxation rights of Bengal from the Mughal Emperor." 보류분: 식민 이전 직물·해상 교역망의 1차 근거. Om Prakash, "From market-determined to coercion-based: Textile manufacturing in eighteenth century Bengal" (LSE GEHN Pune 회의 원고, https://www.lse.ac.uk/Economic-History/Assets/Documents/Research/GEHN/GEHNConferences/conf8/PUNEPrakash.pdf, 200)와 Bishnupriya Gupta 원고(PUNEGupta.pdf, 200)는 내용이 맞지만 각각 "should not be quoted without the author's written permission" / "preliminary draft, not be cited"라고 적혀 있어 쓰지 않음. Roy, "Where is Bengal?" (Past & Present 213, 2011)은 LSE Research Online(eprint 41582)에 전문 없음. 출판본(Riello & Roy eds., *How India Clothed the World*, Brill 2009의 Prakash 장)을 확인하면 보강 가능. |
+| 40 | 적용 — 플랜테이션 10절: "폐지 연도와 다른 소유주 보상 제도는 따로 확인하지 않았습니다" 문장을 없애고 두 문단 추가(영국 1807·1833/1834·도제 1838·2천만 파운드 보상, 프랑스 1848·미국 1865·브라질 1888). 프랑스·미국·브라질의 소유주 보상 여부는 미확인이라고 본문에 명시 | 영국: The National Archives 연구 안내 "British transatlantic slave trade records", https://www.nationalarchives.gov.uk/help-with-your-research/research-guides/british-transatlantic-slave-trade-records/ (200): "the Abolition of the Slave Trade Act was passed in Britain on 25 March 1807. It was declared that from the 1 May 1807 ‘all manner of dealing…’" / "Slavery was abolished in 1834 but in reality for many of those enslaved it continued until at least 1838 through apprenticeship schemes." / "When slavery was abolished, legislation followed which awarded colonial planters twenty million pounds in compensation." 법 이름·날짜: legislation.gov.uk "Slavery Abolition Act 1833 (repealed 19.11.1998)", https://www.legislation.gov.uk/ukpga/Will4/3-4/73/contents (200) s.12: "all slaves in the British Colonies emancipated from the 1st August 1834; from which Time slavery shall be abolished throughout the British Dominions." 미국: National Archives Milestone Documents, https://www.archives.gov/milestone-documents/13th-amendment (200): "Passed by Congress on January 31, 1865, and ratified on December 6, 1865, the 13th Amendment abolished slavery in the United States." 브라질: Planalto, https://www.planalto.gov.br/ccivil_03/leis/lim/lim3353.htm (200): "LEI Nº 3.353, DE 13 DE MAIO DE 1888. Declara extincta a escravidão no Brazil." / "Art. 1.° E’ declarada extincta, desde a data desta Lei, a escravidão no Brazil." 프랑스: Légifrance JORFTEXT000000295898 — curl 403, WebFetch로 열람: 제목 "Décret du 27 avril 1848 relatif à l'abolition de l'esclavage dans les colonies et possessions françaises", 제1조 "L'esclavage sera entièrement aboli dans toutes les colonies et possessions françaises, deux mois après la promulgation du présent décret dans chacune d'elles." (자동 조회 403, WebFetch 요약 도구 경유 확인). parliament.uk Living Heritage는 403, Wayback 404·CDX 일시 중단. UCL LBS는 이번에도 403. |
+| 41 | 적용 — 아프리카 9절: 영수증 세액 '1902년분 오두막세 3실링'(영국남아프리카회사 북동로디지아 행정부 발행)과 교재 본문의 나탈 1849·세입 75% 추가, "세액까지는 옮기지 않았습니다"를 "3실링이 가구 현금소득의 몇 %인지는 알 수 없음"으로 교체 | 교재 대표 이미지 https://www.aehnetwork.org/wp-content/uploads/2023/10/Hut-tax-Abel-image-1.png 를 내려받아 판독: "BRITISH SOUTH AFRICA COMPANY. / Administration of North Eastern Rhodesia. / HUT TAX. … the sum of Three Shillings, Hut Tax for the year 1902." (3실링 인지 부착). 페이지 캡션: "Feature image: Hut tax receipt North East Rhodesia 1902 from Pamusoroi!". 교재 PDF https://www.aehnetwork.org/wp-content/uploads/2023/10/Abel-Gwaindepi-Taxation-in-colonial-Africa-2.pdf : "It was charged on every hut found at an African homestead. It was first introduced in the Natal Colony in 1849 and grew to contribute 75 percent of all Natal revenues." |
+| 42 | 적용 — MENA 4절: 1881-12-20 무하렘 칙령·오스만 공공부채관리국(부채 절반 감축, 국가 수입 일부를 담보로 이전), 1960-09-10~14 바그다드 회의 OPEC 창립 5개국 추가 | 오스만: SALT(오스만은행 기록 보관 기관) Google Arts & Culture 전시 "Ottoman Bank Museum – Redressing the Situation", https://artsandculture.google.com/exhibit/QQl_9M51 (200): "A solution was finally reached on 20 December 1881 with the issuance of the Muharrem Decree. It foresaw the reduction of the Ottoman debt by half along with the establishment of the Administration of the Ottoman Public Debt, to which a sizeable portion of state revenues would be surrendered as a guarantee for debt repayments." OPEC: opec.org 직접 403 → https://web.archive.org/web/20221220215828/https://opec.org/opec_web/en/about_us/24.htm (Brief History): "The Organization of the Petroleum Exporting Countries (OPEC) is a permanent, intergovernmental Organization, created at the Baghdad Conference on September 10–14, 1960, by Iran, Iraq, Kuwait, Saudi Arabia and Venezuela." |
+| 43 | 적용 — 라틴아메리카 6절에 문단 추가(표 1의 1876~80=100 → 1936~38=64.1, "1860년대 대비 63%", 교역조건 정의, 프레비시–싱어 가설 명칭) | CEPAL 저장소 https://repositorio.cepal.org/handle/11362/29973 → PDF https://repositorio.cepal.org/bitstreams/08ac817a-864c-4df6-961c-7745a3b2fae9/download (200, 66쪽, E/CN.12/89/Rev.1, 27 April 1950). p.8: "the price relation turned steadily against primary production from the 1870's until the Second World War." / "With the same amount of primary products, only 63 per cent of the finished manufactures which could be bought in the 1860's were to be had in the 1930's". p.9 표 1 "Ratio of prices of primary commodities to those of manufactured goods (average import and export prices, according to data of the Board of trade) Base: 1876-80 = 100 … 1936-38 64.1". 'Prebisch–Singer' 명칭 자체는 이 문서에 없으므로 본문은 "흔히 … 부릅니다"로만 씀. |
+| 44 | 적용 — 동남아 2절의 "아직 1차 자료로 확인하지 않았습니다"를 강제재배제도 1830~70·1870~1900 자유주의 시기로 교체, 4절에 문단 추가(1855 보링 조약·관세 3% 고정·국내세 자율권 상실, 말라야 고무 1897년 345에이커→1922년 230만 에이커, 1910 가격 정점) | 강제재배·보링은 이 글의 기존 출처와 같은 세계은행 간행본: Akiyama & Larson (eds.), *Rural Development and Agricultural Growth in Indonesia, the Philippines and Thailand*, World Bank/Asia Pacific Press 2004, https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf (200). Hayami 2장 p.25: "shortly after the 1855 signing of the so-called Bowring Treaty with Britain, which opened the kingdom to trade with the West." p.26: "Export and import duties were fixed at the flat rate of 3 per cent ad valorem, and internal taxes such as excise taxes, transportation tolls and even land taxes were not allowed to change by will of the kingdom alone." Kawagoe 6장 표 6.4(pp.180–182): "Cultivating system introduced (1830-70). Production of sugar, coffee, indigo and other crops is pushed to compulsory planting." / "Cultivating system abolished. Liberal period (1870-1900), when private capital from European nations is intensified." 말라야 고무: John Drabble(전 시드니대 경제사 Reader), "Change in the Malaysian economy circa 1800–1990", Economic History of Malaysia, https://www.ehm.my/publications/articles/change-in-the-malaysian-economy-circa-1800%E2%80%931990 (200): "Between 1897 and 1922, the total acreage under rubber in Malaya surged from just 345 acres to 2.3 million acres (roughly 900,000 hectares), split between 60 per cent European and 40 per cent Asian. The impetus came from steeply rising, albeit volatile, market prices for rubber, which peaked in 1910. This was derived demand from the fast-developing automobile industries in the West, especially in the United States, which needed rubber for tyres." 셋 다 1차 사료가 아니라 표준 경제사 문헌이다. |
+
+고친 글 파일: `src/pages/articles/economic-history/economic-history-regional-data.ts`(남아시아 4절, 아프리카 9절, MENA 4·9절, 라틴아메리카 6절), `src/pages/articles/economic-history/economic-history-regional-expansion-data.ts`(동남아 2·4절), `src/pages/articles/economic-history/colonial-plantations-slavery-and-extraction.tsx`(10절).
+검증: 6개 route 모두 `bash scripts/check-article.sh` — 실패는 prose-readability의 다른 글(infrastructure/materials-waste-and-circularity, infrastructure/housing-land-and-supply, markets/covered-calls-and-income-funds) "재검토 필요"뿐이고 해당 글들 항목은 없음. `npx eslint` 세 파일 통과.
+
+## 후속 공용 파일 수정 목록 (A1)
+old는 2026-10-09 현재 `src/content/article-evidence.ts`에 정확히 한 번 나오는 조각이다(grep -cF로 확인). 모두 기존 항목 뒤에 새 증거 항목을 덧붙인다.
+
+### src/content/article-evidence.ts
+
+#40
+old:
+```
+note: "1825년 배상금과 차입·이자 1억1,200만 프랑 상환에 50년 더 걸림." },
+```
+new:
+```
+note: "1825년 배상금과 차입·이자 1억1,200만 프랑 상환에 50년 더 걸림." },
+    { kind: "공식 문서", label: "The National Archives (UK) · British transatlantic slave trade records", href: "https://www.nationalarchives.gov.uk/help-with-your-research/research-guides/british-transatlantic-slave-trade-records/", note: "1807년 3월 25일 노예무역 폐지법 통과·5월 1일 시행, 1834년 폐지와 1838년까지의 도제, 농장주 보상 2천만 파운드. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Slavery Abolition Act 1833 (3 & 4 Will. 4 c. 73), legislation.gov.uk", href: "https://www.legislation.gov.uk/ukpga/Will4/3-4/73/contents", note: "s.12 1834년 8월 1일 해방. 1998년 폐지된 법의 남은 조문. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Décret du 27 avril 1848 relatif à l'abolition de l'esclavage (Légifrance)", href: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000295898", note: "제1조: 각 식민지 공포 두 달 뒤 완전 폐지. 자동 조회 403, 열람 도구로 제목·제1조 확인 2026-10-09." },
+    { kind: "공식 문서", label: "U.S. National Archives · 13th Amendment (1865)", href: "https://www.archives.gov/milestone-documents/13th-amendment", note: "1865년 1월 31일 의회 통과, 12월 6일 비준. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Brasil · Lei nº 3.353, de 13 de maio de 1888 (Planalto)", href: "https://www.planalto.gov.br/ccivil_03/leis/lim/lim3353.htm", note: "브라질 노예제 폐지 법률 원문. 확인 2026-10-09." },
+```
+
+#37
+old:
+```
+note: "1992년 3월 LERMS(이중 환율), 1993년 3월 1일 시장 단일 환율로 대체. 확인 2026-10-09." },
+```
+new:
+```
+note: "1992년 3월 LERMS(이중 환율), 1993년 3월 1일 시장 단일 환율로 대체. 확인 2026-10-09." },
+    { kind: "핵심 연구", label: "Roy · Rethinking the Origins of British India (LSE Economic History WP 142/10, 2010)", href: "https://www.lse.ac.uk/Economic-History/Assets/Documents/WorkingPapers/Economic-History/2010/WP142.pdf", note: "17세기 상인·은행가 세력, 1757 플라시, 1765 벵골 조세권(디와니) 이전. 확인 2026-10-09." },
+```
+
+#41
+old:
+```
+note: "현금세·강제 집행·독립 뒤 세수 구조를 지역과 시기별로 비교합니다." },
+```
+new:
+```
+note: "현금세·강제 집행·독립 뒤 세수 구조를 지역과 시기별로 비교합니다. 대표 이미지 1902년 북동로디지아 오두막세 영수증의 세액은 3실링, 본문은 나탈 1849년 도입·세입 75%. 확인 2026-10-09." },
+```
+
+#42 #19
+old:
+```
+note: "게시가격 협상과 소유권 이전이 산유국의 몫과 예산에 들어온 순서를 확인합니다." },
+```
+new:
+```
+note: "게시가격 협상과 소유권 이전이 산유국의 몫과 예산에 들어온 순서를 확인합니다." },
+    { kind: "공식 문서", label: "SALT · Ottoman Bank Museum: Redressing the Situation (1881 Muharrem Decree)", href: "https://artsandculture.google.com/exhibit/QQl_9M51", note: "1881년 12월 20일 무하렘 칙령, 부채 절반 감축과 오스만 공공부채관리국 설립. 확인 2026-10-09." },
+    { kind: "공식 문서", label: "OPEC · Brief History", href: "https://web.archive.org/web/20221220215828/https://opec.org/opec_web/en/about_us/24.htm", note: "1960년 9월 10~14일 바그다드 회의, 창립 5개국. 원 주소(opec.org)는 자동 조회 403이라 2022-12-20 사본. 확인 2026-10-09." },
+    { kind: "공식 연구", label: "IMF · GCC—Enhancing Resilience to Global Shocks: Economic Prospects and Policy Challenges (Dec 2025)", href: "https://www.imf.org/en/publications/policy-papers/issues/2025/12/05/gulf-cooperation-council-gcc-enhancing-resilience-to-global-shocks-economic-prospects-and-572372", note: "재정 성과 차이는 대부분 탄화수소 수입 차이, 세입의 탄화수소 비중은 여전히 높음(특히 쿠웨이트·카타르), 비탄화수소 수출 GDP 대비 5~7·20~26·60%+. PDF는 자동 조회 403이라 web.archive.org 2026-09-05 사본으로 확인 2026-10-09." },
+```
+
+#43
+old:
+```
+note: "E/CN.12/89/REV.1. 수입대체 전략의 출발점으로 인용." },
+```
+new:
+```
+note: "E/CN.12/89/REV.1. 수입대체 전략의 출발점으로 인용. 표 1(1876~80=100 → 1936~38=64.1)과 '1860년대 대비 63%' 서술을 PDF 원문에서 확인 2026-10-09." },
+```
+
+#44
+old:
+```
+note: "증기선과 수에즈 운하가 원자재 수출과 서구 공산품 수입 경쟁을 함께 키운 경로를 확인합니다." },
+```
+new:
+```
+note: "증기선과 수에즈 운하가 원자재 수출과 서구 공산품 수입 경쟁을 함께 키운 경로를 확인합니다. 같은 책 pp.25–26 1855 보링 조약·관세 3% 고정, 6장(Kawagoe) 표 6.4 강제재배제도 1830~70. 확인 2026-10-09." },
+    { kind: "보충 읽기", label: "Drabble · Change in the Malaysian economy circa 1800–1990 (Economic History of Malaysia)", href: "https://www.ehm.my/publications/articles/change-in-the-malaysian-economy-circa-1800%E2%80%931990", note: "말라야 고무 재배 면적 1897년 345에이커→1922년 230만 에이커, 고무 가격 1910년 정점. 확인 2026-10-09." },
+```
+
+## 후속 작업 결과 (A2)
+처리일 2026-10-09. 본문 파일 4개(`economic-history-regional-expansion-data.ts`, `economic-history-thematic-data.ts`, `economic-history-institutional-data.ts`, `gold-standard-depression-bretton-woods.tsx`)만 고쳤다. 새 출처는 `sources`를 건드리지 않고 아래 공용 파일 목록(A2)의 `article-evidence.ts` 쌍으로 넘겼다. 검증: 고친 9개 route 모두 `check-article.sh`에서 prose-readability(다른 글 firms/why-firms-exist·infrastructure/materials-waste-and-circularity의 '재검토 필요')만 걸렸고 나머지 검사 통과, `npx eslint` 4개 파일 통과.
+
+- #49 북아메리카 — 적용(5절 두 문단). Fogel: 노벨위원회 1993 발표문 Wayback 사본(https://web.archive.org/web/2025/https://www.nobelprize.org/prizes/economic-sciences/1993/press-release/, 원 주소 403) "Fogel's scientific breakthrough was his book (1964) on the role of the railways in the American economy." / "He found that they were not absolutely necessary in explaining economic development and that their effect on the growth of GNP was less than three per cent." Fishlow: FHWA 'Appendix B Economic Returns from Transportation Investment'(https://www.fhwa.dot.gov/policy/otps/060320a/appb.cfm)가 원서 쪽수와 함께 인용한 "Fishlow concludes that before 1859 the direct advantages of the railroad were fairly modest because of the prior development of the canal and the steamboat." / "…railroad returns to capital, in the shape of net earnings and transport cost savings alone, fully justified the investment even before 1860. Fifteen percent per annum on the investment …"(주 3: 1965, p.301). 원서 두 권은 archive.org 대출본(railroadsamerica0000robe_v8b7, americanrailroad0000fish)이라 본문 검색 불가("Item not available"), Fogel 1979 JEH 초록에는 수치 없음. 그래서 Fishlow는 '반론'이 아니라 '다른 질문(자극의 크기와 경로)'으로 썼다.
+- #50 유럽 — 적용(4절 마지막 문장 교체, 6절 새 문단). 1807: GHDI 영역본 PDF(https://germanhistorydocs.org/en/the-holy-roman-empire-1648-1815/the-prussian-october-edict-of-1807-october-9-1807.pdf) §1 "Every inhabitant of our States is competent … to own or mortgage landed property of every kind", §10 "no new relation of serfdom … can be created", §12 "From Martinmas, one thousand eight hundred and ten (1810) all serfdom shall cease throughout our whole realm." 1861: 러시아 대통령도서관 전자전시 PDF(https://www.prlib.ru/sites/default/files/u535/160-letie_podpisaniya_manifest_ob_otmene_krepostnogo_prava_v_rossii.pdf) "Император Александр II 19 февраля (3 марта) 1861 г. … подписал Манифест об отмене крепостного права" / "помещичьи крестьяне … получали личную свободу и право распоряжаться своим имуществом. Помещики сохраняли собственность на всю принадлежавшую им землю, но были обязаны предоставить крестьянам усадьбу за выкуп …, а также полевой надел в постоянное пользование, отказаться от которого крестьяне не имели права в течение 9 лет. За пользование землёй крестьяне отбывали барщину или платили оброк." 1834: Ploeckl 2010, Oxford Discussion Papers in Economic and Social History No. 84(https://www.nuff.ox.ac.uk/Economics/History/Paper84/ploeckl84.pdf) "After the Prussia-Hesse and the Bavaria-Wuerttemberg unions agreed in March 1833 to a merger by the start of 1834, Saxony as well as the Thuringian principalities joined as well. On the first of January 1834 the Zollverein came officially into force. Two years later Baden, Nassau and Frankfurt acceded. Over the next two decades Braunschweig, Luxembourg (1842), Hannover, Oldenburg (1854) became members as well." 19~20세기 sources는 Ploeckl 2010(1차 연구)을 evidence로 올린다. 하노버 가입 연도는 원문 괄호가 모호해 따로 적지 않았다. GHDI의 관세동맹 문서는 사이트 검색이 JS 렌더링이라 찾지 못함.
+- #51 인구 — 적용(8절 새 문단, 9절 하이널 서지). UN WPP 2024 중위 CSV(https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz) Republic of Korea 행: 1960 CBR 42.073·CDR 12.967·NatChangeRT 29.106, 1990 15.525·5.724·9.801, 2023 4.568·6.677·−2.109 → 본문은 소수 첫째 자리 반올림(42.1−13.0=29.1, 15.5−5.7=9.8, 4.6−6.7=−2.1 검산 일치). 하이널: Crossref(https://api.crossref.org/works?query.bibliographic=European+marriage+patterns+in+perspective+Hajnal) DOI 10.4324/9781315127019-7 "European Marriage Patterns in Perspective", container "Population in History", page "101-144"(2017 재간본); Open Library OL18424366W "Population in history", D. V. Glass·D. E. C. Eversley, first_publish_year 1965, 출판사 Arnold. 1965년 원판 쪽수는 직접 보지 못해 본문에 '2017년 재간본 기준'으로 적었다.
+- #56 전쟁재정 — 적용(9절). legislation.gov.uk 제정 원문 스캔 PDF(https://www.legislation.gov.uk/ukpga/Geo6/9-10/81/pdfs/ukpga_19460081_en.pdf, 5쪽을 pdftoppm으로 읽음) "An Act to provide for the establishment of a comprehensive health service for England and Wales … [6th November 1946.]" / §1(2) "The services so provided shall be free of charge, except where any provision of this Act expressly provides for the making and recovery of charges." 시행일: 영국 의회 Living Heritage 'NHS Act page 2' Wayback 사본(https://web.archive.org/web/20251010213338/https://www.parliament.uk/about/living-heritage/transformingsociety/livinglearning/coll-9-health1/health-01/nhs-act-page-2/, 원 주소 Cloudflare 403) "The National Health Service Act came into effect on 5 July 1948. … There was separate legislation produced for Scotland and Northern Ireland." (Parliamentary Archives HL/PO/PU/1/1946/9&10G6c81)
+- #60 상법 — 적용(4절 문장 교체, 5절 중지 용어, 10절 새 문단). govinfo 미국 연방 법령집 원문(https://www.govinfo.gov/content/pkg/STATUTE-92/pdf/STATUTE-92-Pg2549.pdf) "PUBLIC LAW 95-598—NOV. 6, 1978 … An Act To establish a uniform Law on the Subject of Bankruptcies." / 장 목록 "7. LIQUIDATION … 11. REORGANIZATION" / §362 "Automatic stay (a) … a petition filed under section 301, 302, or 303 of this title operates as a stay, applicable to all entities" / §1104(a)(1) "for cause, including fraud, dishonesty, incompetence, or gross mismanagement" / §1107(a) "a debtor in possession shall have all the rights … and powers, and shall perform all the functions and duties … of a trustee serving in a case under this chapter."(92 Stat. 2628–2629). 영국: legislation.gov.uk Insolvency Act 1986 Sch. B1 para 6(https://www.legislation.gov.uk/ukpga/1986/45/schedule/B1/paragraph/6) "A person may be appointed as administrator of a company only if he is qualified to act as an insolvency practitioner in relation to the company." / para 59 "The administrator of a company may do anything necessary or expedient for the management of the affairs, business and property of the company." / "Sch. B1 inserted (15.9.2003) by 2002 c. 40". UNCITRAL 지침 랜딩(재확인) "a stay to protect the assets of the insolvency estate that includes actions by secured creditors". 이로써 기타 목록의 '상법 자동 중지(§362) 용어 구분'도 처리.
+- #61 개발은행 — 적용(4절). 세계은행 IBRD 안내(https://www.worldbank.org/en/who-we-are/ibrd) "Created in 1944 to help Europe rebuild after World War II, IBRD joins with IDA …"; 세계은행 역사(https://www.worldbank.org/en/about/history) "In July 1944 … delegates from 44 countries met for the United Nations Monetary and Financial Conference held at the Mount Washington Hotel in Bretton Woods". BNDES: 브라질 대통령실 법령 원문(https://www.planalto.gov.br/ccivil_03/leis/1950-1969/l1628.htm) "LEI No 1.628, DE 20 DE JUNHO DE 1952. … cria o Banco Nacional do Desenvolvimento Econômico"; BNDES 역사 페이지(https://www.bndes.gov.br/wps/portal/site/home/quem-somos/historia) 역대 총재 "Ary Frederico Torres JUL/1952 a JUN/1953".
+- #62 지역소득 — 적용(4절 분포계정 두 문장, 6절 NUTS 첫 설명, 8절 가계계정 새 문단). Eurostat API(https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nama_10r_2hhinc?geo=BE10&time=2021&unit=MIO_EUR&lang=en) label "Income of households by NUTS 2 region", na_item: D1 Compensation of employees, D4 Property income, B5N Balance of primary incomes/national income, net, D5 Current taxes on income, wealth, etc., D61 Net social contributions, D62 Social benefits other than social transfers in kind, B6N Disposable income, net. 메타데이터(https://ec.europa.eu/eurostat/cache/metadata/en/reg_eco10_esms.htm) "There are only regional accounts for the household sector, and transactions are limited to income distribution and redistribution." / "Quality is assured by strict application of ESA 2010 concepts". NUTS 개관(https://ec.europa.eu/eurostat/web/nuts/overview) "NUTS 1: major socio-economic regions NUTS 2: basic regions (for regional policies) NUTS 3: small regions (for specific diagnoses) The NUTS 2024 classification is valid from 1 January 2024. It lists 92 regions at NUTS 1, 244 regions at NUTS 2 and 1 165 regions at NUTS 3 level." EG DNA: Eurostat KS-TC-21-010(https://ec.europa.eu/eurostat/web/products-statistical-working-papers/-/ks-tc-21-010, 2022-05-06) "producing estimates on household income and consumption that are in line with national accounts aggregates, but build onto micro data. In this final report of the Joint OECD-Eurostat Expert Group on Disparities in a National Accounts framework (EG DNA) …"; 2011 출범은 OECD 발표 슬라이드(UNSD 게시, https://unstats.un.org/unsd/statcom/groups/NetEconStat/Meetings/GDPSprintSecondMeeting/Beyond_GDP_2nd_meeting_session_3_EG_disparities.pdf) "2011: Launch of OECD/Eurostat EG DNA". DINA: WID 지침 2025년 10월판 PDF(https://wid.world/document/distributional-national-accounts-dina-guidelines-2025-methods-and-concepts-used-in-the-world-inequality-database) "The goal is to provide estimates of the distribution of income and wealth that are harmonized over time and across countries, that are consistent with the macroeconomic aggregates produced by national statistical institutes, and that can therefore be viewed as a distributional extension of the existing international SNA." OECD 데이터셋 페이지는 403.
+- 기타 목록 처리:
+  - 상법 '자동 중지'(§362) 용어 구분 — 적용(#60 항목 참조).
+  - 협동조합 '교육 3'과 ICA 5원칙 — 적용(7절 한 문장 추가). https://ica.coop/en/cooperatives/cooperative-identity "Members allocate surpluses for any or all of the following purposes: developing their cooperative, possibly by setting up reserves, part of which at least would be indivisible; benefiting members in proportion to their transactions with the cooperative; and supporting other activities approved by the membership." / "5. Education, Training, and Information Cooperatives provide education and training for their members, elected representatives, managers, and employees … They inform the general public …"
+  - 금본위 'fundamental disequilibrium' — 적용(9절 새 문단, tsx). 세계금위원회 공개 1944년 협정문 발췌(https://www.gold.org/sites/default/files/documents/after-the-gold-standard/1944jul22.pdf) Art. IV Sec. 5 "(a) A member shall not propose a change in the par value of its currency except to correct a fundamental disequilibrium. (b) … only after consultation with the Fund." / (c)(i) "does not exceed ten percent of the initial par value, the Fund shall raise no objection" / (ii) "may either concur or object, but shall declare its attitude within seventy-two hours if the member so requests" / (iii) "longer period". 등록 모듈(`registrations/gold-standard-depression-bretton-woods.ts`)에는 해당 문단이 없어 이관 쌍 없음(grep 확인).
+  - 컨테이너 1956 Ideal X·ISO 668 — 보류: iso.org/standard/76912.html 403(Cloudflare), Ideal X 1차 자료 미확보.
+  - 아프리카 마케팅 보드, 라틴아메리카 달러 변동금리 신디케이트론(원죄), MENA `petrodollar-recycling` 연결, 오세아니아 PNA Vessel Day Scheme, 토지 차액지대·인클로저 절차, TiVA EXGR_DDC/IDC, 남아시아 Donaldson 인용, 플랜테이션 동산 노예제 vs 계약노동, 산업혁명 Pomeranz 대분기, 농업 잉여 Englund·Nissen-Damerow-Englund — 보류: 한 줄 정의를 넘는 문단·학습계약 수정이 필요하거나(petrodollar는 article-learning 연결 문제) 원문 인용 확보에 별도 조사가 필요해 이번 범위(짧은 연도·제도명·정의)를 넘음.
+
+## 후속 공용 파일 수정 목록 (A2)
+통합자가 위에서부터 순서대로 적용한다. 각 old는 2026-10-09 현재 `src/content/article-evidence.ts`에 한 번만 나오는 각 배열의 마지막 항목 줄이다(A1 목록은 이 배열들을 건드리지 않음). new는 old 줄 + 새 항목.
+
+### src/content/article-evidence.ts
+```old
+    { kind: "공식 문서", label: "National Archives · Pacific Railway Act (1862)", href: "https://www.archives.gov/milestone-documents/pacific-railway-act", note: "1862년 7월 1일, 대륙횡단 철도에 연방 토지·대출 지원." },
+```
+```new
+    { kind: "공식 문서", label: "National Archives · Pacific Railway Act (1862)", href: "https://www.archives.gov/milestone-documents/pacific-railway-act", note: "1862년 7월 1일, 대륙횡단 철도에 연방 토지·대출 지원." },
+    { kind: "공식 문서", label: "Nobel Prize · The Prize in Economic Sciences 1993 press release (Fogel·North)", href: "https://web.archive.org/web/2025/https://www.nobelprize.org/prizes/economic-sciences/1993/press-release/", note: "Fogel 1964 철도 연구의 반사실 추정, GNP 성장 효과 3% 미만. 원 주소는 자동 조회 403이라 Wayback 사본, 확인 2026-10-09." },
+    { kind: "공식 문서", label: "FHWA · Economic Returns from Transportation Investment, Appendix B (Fishlow 1965·Fogel 1964 해제)", href: "https://www.fhwa.dot.gov/policy/otps/060320a/appb.cfm", note: "Fishlow 1965 p.301 인용: 1860년 이전에도 투자액 연 15% 수익, 1859년 이전 직접 이득은 운하·증기선 때문에 작음. 원서는 대출본이라 본문 미확인." },
+```
+
+```old
+    { kind: "공식 문서", label: "European Union · History of the EU 1945–59", href: "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en", note: "1957년 3월 25일 로마조약 서명(EEC·Euratom), 1958년 1월 1일 발효." },
+```
+```new
+    { kind: "공식 문서", label: "European Union · History of the EU 1945–59", href: "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en", note: "1957년 3월 25일 로마조약 서명(EEC·Euratom), 1958년 1월 1일 발효." },
+    { kind: "핵심 사료", label: "GHDI · The Prussian October Edict of 1807 (October 9, 1807)", href: "https://germanhistorydocs.org/en/the-holy-roman-empire-1648-1815/the-prussian-october-edict-of-1807-october-9-1807.pdf", note: "토지 소유·저당의 신분 제한 폐지, 새 예속 금지, 1810년 마르틴 축일부터 예속 종료. 영역본 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Президентская библиотека · 160-летие подписания Манифеста об отмене крепостного права", href: "https://www.prlib.ru/sites/default/files/u535/160-letie_podpisaniya_manifest_ob_otmene_krepostnogo_prava_v_rossii.pdf", note: "1861년 2월 19일(신력 3월 3일) 선언 서명, 인신 자유·지주 토지 소유 유지·분여지 9년 거절 불가·부역 또는 지대." },
+    { kind: "핵심 연구", label: "Ploeckl · The Zollverein and the Formation of a Customs Union (Oxford Discussion Papers in Economic and Social History 84, 2010)", href: "https://www.nuff.ox.ac.uk/Economics/History/Paper84/ploeckl84.pdf", note: "1833년 3월 두 관세동맹 합병 합의, 1834년 1월 1일 발효와 이후 가입 순서를 협상 모형으로 분석." },
+```
+
+```old
+    { kind: "공식 문서", label: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화, 제2차 세계대전 뒤 복지국가 창설을 확인합니다. 자동 조회 403이라 사본으로 확인 2026-10-09." },
+```
+```new
+    { kind: "공식 문서", label: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화, 제2차 세계대전 뒤 복지국가 창설을 확인합니다. 자동 조회 403이라 사본으로 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "National Health Service Act 1946 (c. 81) as enacted", href: "https://www.legislation.gov.uk/ukpga/Geo6/9-10/81/enacted", note: "1946년 11월 6일 제정, 1조 포괄적 보건 서비스 설립 의무와 원칙적 무료." },
+    { kind: "공식 문서", label: "UK Parliament Living Heritage · 1946 NHS Act", href: "https://web.archive.org/web/20251010213338/https://www.parliament.uk/about/living-heritage/transformingsociety/livinglearning/coll-9-health1/health-01/nhs-act-page-2/", note: "1948년 7월 5일 시행, 스코틀랜드·북아일랜드 별도 입법. 원 주소는 자동 조회 403이라 2025-10-10 사본." },
+```
+
+```old
+    { kind: "공식 문서", label: "UNCITRAL · Model Law on Cross-Border Insolvency (1997)", href: "https://uncitral.un.org/en/texts/insolvency/modellaw/cross-border_insolvency", note: "1997년 5월 30일 채택." },
+```
+```new
+    { kind: "공식 문서", label: "UNCITRAL · Model Law on Cross-Border Insolvency (1997)", href: "https://uncitral.un.org/en/texts/insolvency/modellaw/cross-border_insolvency", note: "1997년 5월 30일 채택." },
+    { kind: "핵심 사료", label: "Bankruptcy Reform Act of 1978 (Public Law 95-598, 92 Stat. 2549)", href: "https://www.govinfo.gov/content/pkg/STATUTE-92/pdf/STATUTE-92-Pg2549.pdf", note: "1978년 11월 6일, 미국법전 11편 제정. 7장 청산·11장 재조정, §362 자동 중지, §1104 관재인 임명 사유, §1107 점유 채무자." },
+    { kind: "핵심 사료", label: "Insolvency Act 1986, Schedule B1 paras 6·59 (legislation.gov.uk)", href: "https://www.legislation.gov.uk/ukpga/1986/45/schedule/B1/paragraph/59", note: "관리인은 도산실무가 자격자만(para 6), 회사 업무·사업·재산 관리에 필요한 모든 일(para 59). 2003-09-15 삽입." },
+```
+
+```old
+    { kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193 (R193 para. 1 인용)", href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@ed_emp/@emp_ent/@coop/documents/publication/wcms_311447.pdf", note: "협동조합의 자율성과 모든 경제 부문에서의 법·정책·교육·금융 지원 범위를 확인합니다." },
+```
+```new
+    { kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193 (R193 para. 1 인용)", href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@ed_emp/@emp_ent/@coop/documents/publication/wcms_311447.pdf", note: "협동조합의 자율성과 모든 경제 부문에서의 법·정책·교육·금융 지원 범위를 확인합니다." },
+    { kind: "공식 문서", label: "ICA · Cooperative identity: 3원칙(조합원 경제 참여)·5원칙(교육·훈련·정보)", href: "https://ica.coop/en/cooperatives/cooperative-identity", note: "잉여의 세 용도(적립금 포함 발전·거래 비례 혜택·조합원 승인 기타 활동)와 교육 원칙의 대상. 확인 2026-10-09." },
+```
+
+```old
+    { kind: "공식 문서", label: "KfW · History of KfW", href: "https://www.kfw.de/About-KfW/Förderauftrag-und-Geschichte/Geschichte-der-KfW/", note: "1948년 전후 복구를 위해 설립." },
+```
+```new
+    { kind: "공식 문서", label: "KfW · History of KfW", href: "https://www.kfw.de/About-KfW/Förderauftrag-und-Geschichte/Geschichte-der-KfW/", note: "1948년 전후 복구를 위해 설립." },
+    { kind: "공식 문서", label: "World Bank · IBRD", href: "https://www.worldbank.org/en/who-we-are/ibrd", note: "1944년 전후 유럽 재건을 위해 설립. 1944년 7월 브레턴우즈 44개국 회의는 세계은행 역사 페이지에서 확인." },
+    { kind: "핵심 사료", label: "Lei nº 1.628, de 20 de junho de 1952 (Planalto)", href: "https://www.planalto.gov.br/ccivil_03/leis/1950-1969/l1628.htm", note: "브라질 국가경제개발은행(BNDE, 현 BNDES) 설립 법률." },
+```
+
+```old
+    { kind: "공식 문서", label: "Eurostat · Regions in Europe 2026: Economy", href: "https://ec.europa.eu/eurostat/web/interactive-publications/regions-2026", note: "다국적기업 자산과 국경 통근이 1인당 지역 GDP와 주민 생활의 차이를 키울 수 있음을 확인합니다." },
+```
+```new
+    { kind: "공식 문서", label: "Eurostat · Regions in Europe 2026: Economy", href: "https://ec.europa.eu/eurostat/web/interactive-publications/regions-2026", note: "다국적기업 자산과 국경 통근이 1인당 지역 GDP와 주민 생활의 차이를 키울 수 있음을 확인합니다." },
+    { kind: "공식 문서", label: "Eurostat · Income of households by NUTS 2 region (nama_10r_2hhinc)", href: "https://ec.europa.eu/eurostat/databrowser/view/nama_10r_2hhinc/default/table", note: "피용자 보수·재산소득·순1차소득·소득세·사회부담금·사회급여·순처분가능소득, ESA 2010. API 레이블로 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Eurostat · NUTS overview", href: "https://ec.europa.eu/eurostat/web/nuts/overview", note: "NUTS 1·2·3 정의, 2024년판 92·244·1,165개 지역." },
+    { kind: "공식 연구", label: "Eurostat · Distributional national account estimates for household income and consumption (KS-TC-21-010, 2022)", href: "https://ec.europa.eu/eurostat/web/products-statistical-working-papers/-/ks-tc-21-010", note: "OECD–Eurostat EG DNA 최종 보고서. 2011년 출범은 OECD 발표 슬라이드(UNSD 게시)에서 확인." },
+    { kind: "공식 연구", label: "World Inequality Lab · Distributional National Accounts Guidelines (October 2025)", href: "https://wid.world/document/distributional-national-accounts-dina-guidelines-2025-methods-and-concepts-used-in-the-world-inequality-database", note: "거시 총량과 일치하는 소득·부 분포를 SNA의 분배적 확장으로 만드는 DINA 방법." },
+```
+
+```old
+    { kind: "공개 강의", label: "LSE EH209 · The Family Economy in History", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm", note: "결혼·가구 형성·여성·아동 노동과 교육·보건을 가족경제의 장기 질문으로 사용합니다." },
+```
+```new
+    { kind: "공개 강의", label: "LSE EH209 · The Family Economy in History", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm", note: "결혼·가구 형성·여성·아동 노동과 교육·보건을 가족경제의 장기 질문으로 사용합니다." },
+    { kind: "공식 연구", label: "UN DESA · World Population Prospects 2024, Demographic Indicators (Medium)", href: "https://population.un.org/wpp/", note: "한국 1960 CBR 42.1·CDR 13.0, 1990 15.5·5.7, 2023 4.6·6.7(1,000명당). 중위 지표 CSV(WPP2024_Demographic_Indicators_Medium.csv.gz)로 확인 2026-10-09." },
+    { kind: "핵심 연구", label: "Hajnal · European Marriage Patterns in Perspective (Glass & Eversley eds., Population in History, 1965)", href: "https://doi.org/10.4324/9781315127019-7", note: "유럽 결혼 유형 명칭의 원전. 2017 Routledge 재간본 101~144쪽, 서지만 확인." },
+```
+
+```old
+    { kind: "공식 문서", label: "Bank of England Quarterly Bulletin 1970 Q1 · Holdings of gold and foreign exchange 1924–31", href: "https://www.bankofengland.co.uk/quarterly-bulletin/1970/q1/bank-of-englands-holdings-of-gold-and-foreign-exchange-1924-31", note: "1925년 4월 말~1931년 9월 금본위 기간." },
+```
+```new
+    { kind: "공식 문서", label: "Bank of England Quarterly Bulletin 1970 Q1 · Holdings of gold and foreign exchange 1924–31", href: "https://www.bankofengland.co.uk/quarterly-bulletin/1970/q1/bank-of-englands-holdings-of-gold-and-foreign-exchange-1924-31", note: "1925년 4월 말~1931년 9월 금본위 기간." },
+    { kind: "핵심 사료", label: "Articles of Agreement of the International Monetary Fund, 1944 (World Gold Council 발췌본)", href: "https://www.gold.org/sites/default/files/documents/after-the-gold-standard/1944jul22.pdf", note: "4조 5항: 근본적 불균형 교정 목적의 평가 변경만, 기금 협의, 누적 10%·추가 10%(72시간)·그 이상 단계." },
+```

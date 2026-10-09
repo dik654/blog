@@ -71,6 +71,8 @@ export default function MediaAttentionAndPublicBeliefArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · EU 원문은 추천의 주요 기준을 설명하게 합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">EU 디지털서비스법 제27조는 해당 온라인 플랫폼의 추천 시스템에 쓰이는 주요 기준을 이용자가 이해할 수 있게 설명하도록 규정합니다. 100개 중 10개를 고르는 기준에 관해 확인할 문서가 생기는 것입니다.</p>
+          <p className="leading-8">같은 10칸을 채우는 방법은 둘로 나눌 수 있습니다. 지난주에 본 영상 기록으로 이용자의 관심사를 추정해 순서를 정할 수도 있고, 그런 기록 없이 최신순으로 채울 수도 있습니다(가정). 개인정보로 그 사람의 관심·행동 등을 평가하거나 예측하는 앞의 자동 처리를 프로파일링이라고 부릅니다(EU 개인정보보호규정 GDPR 제4조 4호).</p>
+          <p className="leading-8">디지털서비스법 제38조는 큰 서비스에 이 선택권을 요구합니다. EU 안의 월평균 활성 이용자가 4,500만 명 이상이어서 초대형 온라인 플랫폼·검색엔진으로 지정된 서비스는 추천 시스템마다 프로파일링에 기반하지 않은 선택지를 적어도 하나 제공해야 합니다(제33조·제38조, 2026-10-09 원문 확인). 이용자가 10칸을 채우는 방식을 고를 수 있게 되지만, 그 선택지가 어떤 게시물을 보여 줄지까지 법이 정하지는 않습니다.</p>
           <p className="leading-8">이 규칙이 모든 게시물의 진위를 보증하거나 모든 나라의 서비스에 같은 방식으로 적용되는 것은 아닙니다. 적용 대상과 법의 예외, 서비스가 제공되는 관할을 먼저 확인합니다.</p>
         </div>
         <SourceApplication source="EU Regulation 2022/2065 · Article 27(1)" excerpt="the main parameters used in their recommender systems" application="게시물100개 중 추천10개를 고르는 주요 기준을 약관에서 확인합니다. 노출1천 회나 구매2건의 인과 효과를 법이 대신 입증해 주지는 않습니다." />

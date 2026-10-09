@@ -118,6 +118,7 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
       paragraphs: [
         "2026년 10월 8일 확인 기준으로 NCA-AIIO는 영어 50문항, 60분, 미화 125달러의 원격 감독 시험이며 유효기간은 2년입니다. NVIDIA는 응시 전 현재 페이지와 정책을 다시 확인하라고 안내합니다.",
         "NCP-AII는 server·network 설치, physical layer, firmware와 system 검증으로 내려갑니다. NCP-AIO는 monitoring·troubleshooting·optimization과 실제 cluster 도구 숙련을 요구합니다. 지금은 NCA로 전체 지도를 닫고, P0 case study로 지원 직무의 깊이를 별도로 증명합니다.",
+        "두 단계의 차이는 시험 형식에서 바로 보입니다. NCP-AIO는 객관식 30문항과 hands-on lab 3개를 한 번의 120분 안에 함께 풀고, 응시료는 미화 500달러입니다. Lab은 Slurm·Kubernetes·Base Command Manager가 도는 실제 cluster를 Linux 명령줄로 다루게 합니다(2026-10-09 공식 페이지 확인). NCA-AIIO의 60분 50문항과 달리 개념을 고르는 것만으로는 통과할 수 없는 형식입니다.",
       ],
     },
     {

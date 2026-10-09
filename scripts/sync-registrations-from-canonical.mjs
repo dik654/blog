@@ -132,8 +132,20 @@ for (const file of modules) {
   const exp = exportsOf(sf);
   const edits = []; // [start, end, replacement]
   const notes = [];
+  // PATCH 와 같은 이름의 전체 export 가 함께 있으면 PATCH 의 key 를 전체 export 로 합치고 PATCH 선언은 지운다.
+  const absorbed = new Map(); // whole name -> [[key, text]]
+  for (const [name, { decl, init }] of exp) {
+    const whole = PATCH_TO_WHOLE[name];
+    if (!whole || !exp.has(whole) || !ts.isObjectLiteralExpression(init)) continue;
+    const keys = [...objectMap(init, sf).keys()].filter((k) => CANON[whole].has(k));
+    absorbed.set(whole, keys.map((k) => [k, CANON[whole].get(k)]));
+    const statement = decl.parent.parent;
+    edits.push([statement.getFullStart(), statement.getEnd(), ""]);
+    notes.push(`${name}: ${whole} 에 합침`);
+  }
   for (const [name, { decl, init }] of exp) {
     const whole = PATCH_TO_WHOLE[name] ?? name;
+    if (whole !== name && exp.has(whole)) continue;
     if (CANON[whole]) {
       if (!ts.isObjectLiteralExpression(init)) continue;
       const keys = [...objectMap(init, sf).keys()];
@@ -145,6 +157,7 @@ for (const file of modules) {
       // PATCH 는 정본 전체 값으로 바꾸므로 whole export 로 이름을 바꾼다.
       const nameNode = decl.name;
       if (whole !== name) edits.push([nameNode.getStart(sf), nameNode.getEnd(), whole]);
+      for (const [k, v] of absorbed.get(whole) ?? []) if (!kept.some(([kk]) => kk === k)) kept.push([k, v]);
       edits.push([decl.initializer.getStart(sf), decl.initializer.getEnd(), objText(kept)]);
     } else if (name === "EDGES" && ts.isArrayLiteralExpression(init)) {
       const kept = [];

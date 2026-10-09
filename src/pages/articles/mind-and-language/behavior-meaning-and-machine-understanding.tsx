@@ -82,11 +82,12 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
 
       <LessonSection id="comparison" level="6" title="9. 중국어 방은 기호 규칙만으로 의미가 생기는지 반문합니다" bridge="작업자의 구문 처리와 시스템 전체의 이해를 둘러싼 반론을 나눴습니다. 판단 범위를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">설의 중국어 방 사고실험에서 중국어를 모르는 사람은 영어 규칙에 따라 중국어 기호를 조작해 밖에서는 자연스러운 답을 만듭니다. 설은 구문 규칙을 실행하는 사실만으로 의미 이해가 충분히 생기지 않는다고 주장합니다.</p>
+          <p className="leading-8">설이 1980년 학술지 『Behavioral and Brain Sciences』 3권 3호(417–424쪽)에 실은 논문 「Minds, Brains, and Programs」가 이 사고실험의 원 출전입니다. 설의 중국어 방 사고실험에서 중국어를 모르는 사람은 영어 규칙에 따라 중국어 기호를 조작해 밖에서는 자연스러운 답을 만듭니다. 설은 구문 규칙을 실행하는 사실만으로 의미 이해가 충분히 생기지 않는다고 주장합니다.</p>
           <p className="leading-8">대표 반론은 방 안 사람 하나가 아니라 규칙·기억·입출력을 합친 시스템 전체가 이해한다고 봅니다. 또 몸과 센서로 세계에 연결되거나 학습 과정이 포함되면 고정 규칙실과 다르다는 반론도 있습니다. 사고실험은 이 답들을 자동으로 끝내지 않고 이해를 어느 수준에 귀속할지 묻게 합니다.</p>
         </div>
         <SourceApplication source="Stanford Encyclopedia · Chinese Room Argument" excerpt="syntactic manipulation is not sufficient for meaning" application="규칙실의 90점은 공개 능력의 증거로 남지만, 기호가 무엇을 뜻하는지 설명하는 추가 관계가 필요한지 묻게 합니다." />
         <CitationBlock source="Stanford Encyclopedia of Philosophy, The Chinese Room Argument" citeKey={2} href="https://plato.stanford.edu/entries/chinese-room/">설의 원 논증과 시스템·로봇·뇌 시뮬레이션 반론을 함께 정리한 전문 개관입니다.</CitationBlock>
+        <CitationBlock source="John R. Searle, Minds, Brains, and Programs, Behavioral and Brain Sciences 3(3), 1980, 417–424" citeKey={3} href="https://doi.org/10.1017/S0140525X00005756">중국어 방 논증의 원 논문입니다. 서지는 Crossref DOI 기록으로 확인했고(2026-10-09), 같은 호에 실린 동료 논평과 설의 답변은 이 글에서 다루지 않습니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 행동·구현·학습·몸·의식을 서로 다른 주장으로 남깁니다" bridge="하나의 시험이나 사고실험으로 넓은 마음 개념을 닫지 않는 기준을 세웠습니다. 아래 질문으로 같은 90점을 다시 해석합니다.">

@@ -319,8 +319,12 @@ export default function WhyPerHeadStallsArticle() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
-            이 글이 다룬 셈은 1798년에 적혔고 그 뒤 두 세기 동안 사람도 늘고 한 사람 몫도 함께 올랐습니다. 고리가 말한
-            대로 되지 않았습니다. 그러면 무엇을 배울 수 있습니까.
+            이 글이 다룬 셈은 1798년에 적혔고 그 뒤 두 세기 동안 사람도 늘고 한 사람 몫도 함께 올랐습니다. 세계 전체를
+            추정한 가장 이른 해인 1820년에 세계 인구는 약 10억 4천만 명이었고 2022년에는 약 78억 명이 됐습니다. 같은 기간
+            생산 전체를 사람 수로 나눈 1인당 GDP는 2011년 달러 기준 1,128달러에서 16,677달러로 올랐습니다. 사람이 약
+            7.5배 느는 동안 한 사람 몫은 약 15배가 된 셈입니다. 숫자는 흐로닝언대학교의 Maddison Project Database 2023
+            세계 추정치이고, 이 1인당 GDP는 식량만이 아니라 생산 전체의 몫입니다. 고리가 말한 대로 되지 않았습니다. 그러면
+            무엇을 배울 수 있습니까.
           </p>
 
           <p className="leading-7">
@@ -332,7 +336,16 @@ export default function WhyPerHeadStallsArticle() {
           <p className="leading-7">
             깨진 것은 둘입니다. 첫째, 거두는 양이 더하기로만 늘지 않았습니다. 같은 땅에서 거두는 양 자체가 바뀌었고 그 변화는
             더해지는 것이 아니라 곱해지는 쪽에 가까웠습니다. 둘째, 한 사람 몫이 늘었을 때 사람 수가 그만큼 늘지 않았습니다.
-            고리의 마지막 화살표가 약해졌고 넉넉해질수록 아이를 덜 낳는 쪽으로 오히려 방향이 뒤집힌 곳도 있습니다. 이 두 판정은 20세기 농업 생산성과 출산율에 관한 일반적인 서술이고, 이 글은 그 통계 자료를 직접 인용하지 않았습니다.
+            고리의 마지막 화살표가 약해졌고 넉넉해질수록 아이를 덜 낳는 쪽으로 오히려 방향이 뒤집힌 곳도 있습니다.
+          </p>
+
+          <p className="leading-7">
+            둘째 판정에는 숫자를 붙일 수 있습니다. 여성 한 명이 평생 낳을 것으로 보는 아이 수인 합계출산율은 세계
+            평균으로 1950년 4.85명이었고 2023년에는 2.25명입니다. 같은 기간 세계 1인당 GDP는 1950년 3,360달러에서
+            2022년 16,677달러(2011년 달러)로 올랐습니다. 앞의 숫자는 유엔의 세계인구전망(World Population Prospects
+            2024)이고 뒤의 숫자는 Maddison Project Database 2023입니다. 두 표는 몫이 늘던 시기에 출산이 줄었다는 것만
+            보여 주고, 소득이 출산을 줄였다는 인과까지 보여 주지는 않습니다. 첫째 판정인 농업 생산성의 곱셈적 증가는 이
+            글이 통계로 따로 확인하지 않은 일반적인 서술입니다.
           </p>
 
           <p className="leading-7">
@@ -363,6 +376,28 @@ export default function WhyPerHeadStallsArticle() {
             과 같은 구조입니다 — 결론보다 조건이 먼저입니다.
           </p>
         </ProgressiveDetail>
+
+        <CitationBlock
+          source="Jutta Bolt · Jan Luiten van Zanden, Maddison Project Database, version 2023 (Groningen Growth and Development Centre), Regional data 시트"
+          citeKey={2}
+          href="https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023"
+        >
+          배포 파일 mpd2023_web.xlsx의 Regional data 시트에서 World GDP pc와 World Population 열을 읽었습니다. 1820년 1,127.7달러와
+          1,042,017(천 명), 1950년 3,360.2달러와 2,518,196(천 명), 2022년 16,676.7달러와 7,802,034(천 명)입니다. 단위는
+          Notes 시트의 “Real GDP per capita in 2011$”와 “Population, mid-year (thousands)”입니다. 7.5배와 15배는 이 값으로
+          이 글이 나눈 비율입니다. 2026-10-09에 GGDC 페이지가 연결한 dataverse.nl 파일을 내려받아 확인했습니다.
+          방법은 Bolt · Van Zanden (2024), Journal of Economic Surveys, DOI 10.1111/joes.12618에 있습니다.
+        </CitationBlock>
+
+        <CitationBlock
+          source="United Nations, Department of Economic and Social Affairs, Population Division, World Population Prospects 2024, Demographic Indicators (Medium variant)"
+          citeKey={3}
+          href="https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz"
+        >
+          WPP2024_Demographic_Indicators_Medium.csv에서 Location이 World인 행의 TFR(합계출산율, 여성 1명당 출생아 수) 열을
+          읽었습니다. 1950년 4.8519, 2023년 2.2505입니다.
+          2026-10-09에 유엔 인구국 배포 파일을 내려받아 확인했습니다.
+        </CitationBlock>
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">

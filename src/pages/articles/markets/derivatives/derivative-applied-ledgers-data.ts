@@ -167,12 +167,13 @@ export const wtiDeliveryLedgerData: DerivativeDeepArticleData = {
       "만기 포지션을 실제 인수·인도로 바꾸겠다는 문서를 인도 통지라고 부릅니다. 통지를 받은 청산회원은 정해진 상대와 인도 의무를 이어 갑니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 7만 달러 계약을 통지에서 송유관 표까지 따라갑니다", bridge: "처음의 1천 배럴과 70달러를 실제 운영 순서에 다시 넣습니다.", paragraphs: [
-      "매수 청산회원은 마지막 거래일 다음 영업일에 1계약 인수 의사를 내고 시설을 지정합니다. 청산소 배정 뒤 매도자는 인도월 첫날부터 원유가 고르게 흐를 수 있도록 수취 물량과 송유관 일정을 준비합니다.",
+      "마지막 거래일을 T라고 하겠습니다. 매수 청산회원은 T+1영업일 오후 3시까지 매수자 이름과 계약 수 1을 적은 인수 의사 통지를 청산소에 냅니다. 청산소는 이 통지를 매도 측 인도 통지와 크기대로 짝지어 T+2영업일(통지일)에 양쪽에 알립니다.",
+      "받을 시설은 그다음에 정합니다. 매수 청산회원은 통지일 다음 영업일인 T+3에 인도 방법과 받을 송유관·저장시설을 적은 인도 지시서를 매도 측과 거래소에 보냅니다. 매도자는 인도월 첫날부터 원유가 고르게 흐를 수 있도록 수취 물량과 송유관 일정을 준비합니다.",
       "최종가격 70달러×1천 배럴=7만 달러를 대금 기준으로 삼습니다. 배럴당 0.12달러의 시설 간 이전비 120달러는 별도 청구로 둡니다(가정). 수량 증서와 소유권 문서가 대금과 맞으면 인도 장부를 닫습니다.",
     ] },
     { id: "source", level: "5", title: "8. NYMEX Chapter 200은 1천 배럴과 쿠싱 연결점을 함께 정합니다", bridge: "계약 크기와 인도 방법을 현행 원문에 대조합니다.", paragraphs: [
       "Chapter 200은 거래 단위를 1천 미국 배럴로 둡니다. 쿠싱의 지정 저장시설·송유관 연결점에서 인도하도록 정합니다. 시설 간 이전, 시스템 안 이전과 탱크 안 소유권 이전을 서로 다른 방법으로 열어 둡니다.",
-      "원문은 매수자의 전액 인도증거금과 계약가치가 최종가격×1천×계약 수라고 적습니다. 본문의 7만 달러는 이 식에 가정한 70달러를 넣은 결과입니다.",
+      "원문은 마지막 거래일 뒤 셋째 영업일에 매수자에게서 인도할 원유의 전액 가치만큼 증거금을 받게 합니다. 대금은 인도월 다음 달 20일(지급일)에 치르고, 계약가치는 마지막 거래일 정산가격×1,000×계약 수입니다. 본문의 7만 달러는 이 식에 가정한 70달러를 넣은 결과입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. EIA의 탱크 바닥 물량은 저장능력 숫자의 경계를 보여 줍니다", bridge: "계약상 인도 가능성과 물리적 운영 여유를 비교합니다.", paragraphs: [
       "EIA는 탱크와 배관을 작동하려면 최소 물량을 남겨야 한다고 설명합니다. 그래서 총용량과 작업 가능한 저장용량은 다릅니다. 명목상 빈 공간만 보고 인도 능력을 판단하면 안 되는 이유입니다.",
@@ -200,7 +201,7 @@ export const wtiDeliveryLedgerData: DerivativeDeepArticleData = {
     { term: "인도 통지", description: "만기 포지션을 실제 받을 사람과 넘길 사람의 의무로 바꾸는 문서입니다.", example: "청산소가 1계약의 매수자와 매도자를 배정합니다.", boundary: "통지 전에 창고·송유관 계약이 자동 확보되지는 않습니다." },
   ] },
   sources: [
-    { source: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", excerpt: "1,000 U.S. barrels ... delivery in Cushing", application: "70달러를 1천 배럴에 곱하고 쿠싱의 허용 시설·방법·통지·지급 순서에 대조합니다.", citation: "NYMEX Rulebook, Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "현행 계약 규칙입니다. cmegroup.com 원본은 2026-10-09 자동 조회 403·타임아웃이라 직접 대조하지 못했습니다. 인도 방식(펌프오버·배관 내 이전·장부상 상계·탱크 내 이전)은 NYMEX의 CFTC 제출본으로, 1,000배럴과 ±2% 허용 오차는 검색 요약으로만 확인했고, 인수 통지 시점과 인도 증거금 조항은 원문 대조를 하지 못했습니다. 실제 거래 전 최신 규칙과 청산회원 일정을 다시 확인합니다." },
+    { source: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", excerpt: "1,000 U.S. barrels ... delivery in Cushing", application: "70달러를 1천 배럴에 곱하고 쿠싱의 허용 시설·방법·통지·지급 순서에 대조합니다.", citation: "NYMEX Rulebook, Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "현행 계약 규칙입니다. cmegroup.com 원본은 2026-10-09 자동 조회 403·타임아웃이라 2026-05-05 웹 아카이브 사본(2025년 7월 판과 같은 파일)으로 200102.B(1,000배럴·±2%), 200104(인도 방식), 200105(T+1 15시 인수 의사 통지·T+2 통지일·인도 지시서), 200107(T+3 전액 증거금·지급일)을 대조했습니다. 실제 거래 전 최신 규칙과 청산회원 일정을 다시 확인합니다." },
     { source: "U.S. EIA · What are tank bottoms?", excerpt: "working storage capacity ... shell capacity", application: "탱크 총용량에서 펌프 운전에 필요한 최소 물량을 빼 실제 인도 여유를 판단합니다.", citation: "U.S. Energy Information Administration, Tank Bottoms", href: "https://www.eia.gov/todayinenergy/detail.php?id=67866", note: "2026년 쿠싱 저장 자료가 설명하는 물리적 운영 경계이며 특정 계약의 가용 탱크를 보장하지 않습니다." },
   ],
   review: [
@@ -241,7 +242,7 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
       "20일 뒤 실물을 꺼내면 보관료 250달러와 출고비 1,250달러를 별도 장부에 붙입니다(가정). 워런트를 취소하고 차량 시간을 잡은 뒤 실제 로트와 서류가 일치하는지 확인해 출고를 끝냅니다.",
     ] },
     { id: "source", level: "5", title: "8. LME 아연 규격은 순도·25톤·승인 브랜드와 창고를 함께 요구합니다", bridge: "숫자 사례를 현행 상품 규격에 대조합니다.", paragraphs: [
-      "LME 아연 규격은 최소 순도 99.995%와 25톤 로트를 정합니다. 워런트 오차 ±2%, 승인 브랜드와 승인 창고도 명시합니다. 25.3톤은 무게 범위 안이지만 순도와 브랜드가 틀리면 인도할 수 없습니다.",
+      "LME 아연 규격은 최소 순도 99.995%와 25톤 로트를 정합니다. 워런트 오차 ±2%, 승인 브랜드와 승인 창고도 명시합니다. 순도는 BS EN 1179·ISO 752·ASTM B6·GB/T 470 가운데 한 표준의 화학 조성을 맞춰야 합니다. 25.3톤은 무게 범위 안이지만 순도와 브랜드가 틀리면 인도할 수 없습니다.",
       "거래가격은 톤당 미국 달러로 표시됩니다. 실제 25.3톤의 결제와 요금은 계약·창고 기록을 따라야 하며 본문의 2,800달러는 가정입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. LME 창고 규칙은 워런트 취소 뒤에도 보관과 출고 책임을 남깁니다", bridge: "전자 권리와 물리적 이동의 경계를 원문에서 확인합니다.", paragraphs: [
@@ -270,7 +271,7 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
     { term: "출고 비용 장부", description: "보관료·트럭 적재·재워런트 비용을 금속값과 나눈 기록입니다.", example: "가정한 보관·출고비 합계는 1,500달러입니다.", boundary: "창고·지역·금속마다 실제 요금이 다릅니다." },
   ] },
   sources: [
-    { source: "LME · Zinc Contract Specifications", excerpt: "99.995% purity · 25 tonnes · approved warehouse", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, Zinc contract specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "아연 상품 규격 페이지입니다. lme.com은 2026-10-09 자동 조회 403(봇 차단)이라 원문을 직접 열지 못했고, 순도·25톤 로트·승인 창고 문구는 검색 엔진 요약으로만 2차 확인했습니다. 실제 인도 전 현행 Rulebook을 다시 확인합니다." },
+    { source: "LME · Zinc Contract Specifications", excerpt: "Special high-grade zinc of 99.995% purity (minimum)", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, LME Zinc contract specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "아연 상품 규격 페이지입니다. lme.com은 2026-10-09 자동 조회 403(봇 차단)이라 2026-09-08 웹 아카이브 사본으로 원문을 대조했습니다. 같은 페이지에 'Warrant 25 tonnes (with a tolerance of +/-2%)', 승인 브랜드·승인 창고 요건과 네 가지 화학 조성 표준이 있습니다. 세부 조항은 페이지가 안내하는 LME Rulebook이 우선합니다." },
     { source: "LME · Warehouse Agreement 2026", excerpt: "rent must accrue on a daily basis", application: "워런트 취소 기록, 일별 보관료와 합의한 출고 일정을 1,500달러 비용 장부에 연결합니다.", citation: "LME Warehouse Agreement", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "2026년 개정 자료의 창고 운영 규칙이며 본문 요율은 설명용 가정입니다." },
   ],
   review: [
@@ -341,7 +342,7 @@ export const livestockSettlementData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "CME · Live Cattle Futures Chapter 101", excerpt: "Par delivery units shall have an estimated average hot yield of 63%", application: "62% 수율과 2.20달러를 현행 조정식에 넣어 −1,396.83달러를 계산하고, 60% 하한과 5% 수량 편차를 함께 확인합니다.", citation: "CME Submission No. 25-157 (CFTC 제출본), Chapter 101", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", note: "CME가 CFTC에 낸 규칙 개정 제출본입니다(2025-05-07 발효, 2026년 10월물부터 적용). cmegroup.com 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 같은 문서의 CFTC 사본으로 확인했습니다. 실제 계약월의 현행 장을 다시 확인합니다." },
-    { source: "CME · Livestock Overview", excerpt: "Feeder Cattle futures are settled in cash", application: "생우의 실물인도와 비육우 5만 파운드의 지수 현금정산을 같은 가격위험 아래 비교합니다.", citation: "CME Group, The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note: "상품별 거래 단위와 정산 방식을 설명하는 거래소 교육자료이며 최신 규칙이 우선합니다. 이 페이지는 2026-10-09 자동 조회 타임아웃이라 인용문을 원문 대조하지 못했습니다. 비육우 선물이 5만 파운드×CME Feeder Cattle Index로 현금정산된다는 사실은 CFTC 제출본 검색 결과로 2차 확인했습니다." },
+    { source: "CME · Livestock Overview", excerpt: "Feeder Cattle futures are settled in cash", application: "생우의 실물인도와 비육우 5만 파운드의 지수 현금정산을 같은 가격위험 아래 비교합니다.", citation: "CME Group, The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html", note: "상품별 거래 단위와 정산 방식을 설명하는 거래소 교육자료이며 최신 규칙이 우선합니다. cmegroup.com은 2026-10-09 자동 조회 타임아웃이라 2025-11-17 웹 아카이브 사본으로 대조했습니다. 원문은 'At expiration, rather than calling for the delivery of physical cattle, Feeder Cattle futures are settled in cash at a price equal to the CME Feeder Cattle Index on the last day of trading'이고, 5만 파운드 단위와 생우 4만 파운드 실물인도도 같은 페이지에 있습니다." },
   ],
   review: [
     "62% 수율의 4만 파운드 생우 조정액과 5센트 차이의 5만 파운드 현금정산액을 계산하세요. (답: 3·7절)",

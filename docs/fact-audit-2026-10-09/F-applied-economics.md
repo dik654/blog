@@ -1051,3 +1051,206 @@ new: "id": "climate-risk-components", "kind": "concept", "domain": "economics", 
 old: "id": "climate-financial-transmission", "kind": "concept", "domain": "economics", "label": "기후 손실의 금융 전달", "definition": "재난 손실과 보험 조건 변화가 담보·대출·지방 재정에 전달되는 경로입니다.", "canonicalHref": "/economics/infrastructure/climate-risk-and-exposure#comparison"}
 new: "id": "climate-financial-transmission", "kind": "concept", "domain": "economics", "label": "기후 손실의 금융 전달", "definition": "재난 손실과 보험 조건 변화가 담보·대출·지방 재정에 전달되는 경로입니다.", "canonicalHref": "/economics/infrastructure/climate-risk-and-exposure#mechanism"}
 ```
+
+## 후속 작업 결과
+
+1. **#33 DSA 제38조 — 적용.** 근거: https://publications.europa.eu/resource/celex/32022R2065.ENG.xhtml (2026-10-09 원문 XHTML 직접 조회). 제38조 "In addition to the requirements set out in Article 27, providers of very large online platforms and of very large online search engines that use recommender systems shall provide at least one option for each of their recommender systems which is not based on profiling as defined in Article 4, point (4), of Regulation (EU) 2016/679." / 제33조(1) "average monthly active recipients of the service in the Union equal to or higher than 45 million". 프로파일링 정의(GDPR 제4조 4호)는 EUR-Lex 자동 조회가 막혀 gdpr-info.eu 전재본(https://gdpr-info.eu/art-4-gdpr/)의 "'profiling' means any form of automated processing of personal data consisting of the use of personal data to evaluate certain personal aspects relating to a natural person"로 문구를 대조했다. `institutions/media-attention-and-public-belief` 5절(source)에 두 문단 추가: 100개 중 10칸을 시청 기록 기반/최신순으로 채우는 두 방법(가정) → 프로파일링 이름 → 제38조 대상(4,500만 명·지정)과 의무 → 법이 선택지의 내용까지 정하지 않는다는 범위.
+2. **#17 거래비용 이론 — 적용(새 절).** 원 논문: Williamson, "Transaction-Cost Economics: The Governance of Contractual Relations", J. Law & Econ. 22(2) 233–261. Chicago Unbound(https://chicagounbound.uchicago.edu/jle/vol22/iss2/3/)는 PDF가 없어 공개 JSTOR 사본(http://www.edegan.com/pdfs/Williamson%20(1979)%20-%20Transaction%20Cost%20Economics.pdf, 30쪽)을 받아 `pdftotext`와 `pdftoppm -r 110` 이미지로 대조했다. 인용 위치: 239쪽 "the three critical dimensions for characterizing transactions are (1) uncertainty, (2) the frequency with which transactions recur, and (3) the degree to which durable transaction-specific investments are incurred"(이미지 확인), 240쪽 "the supplier is effectively "locked into" the transaction to a significant degree"(이미지 확인), 242쪽 "joined as they are in an idiosyncratic condition of bilateral monopoly, both buyer and seller are strategically situated to bargain over the disposition of any incremental gain … Efficient adaptations which would otherwise be made thus result in costly haggling or even go unmentioned"(이미지 확인), 246쪽 "Specialized governance structures are much easier to justify for recurrent transactions than for identical transactions that occur only occasionally", 250쪽 "bilateral structures, where the autonomy of the parties is maintained, and unified structures, where the transaction is removed from the market and organized within the firm subject to an authority relation", 254쪽 "increasing the degree of uncertainty makes it more imperative that the parties devise a machinery to "work things out"—since contractual gaps will be larger and the occasions for sequential adaptations will increase"(이미지 확인). `firms/why-firms-exist`에 13절 `specific-assets`("전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다")를 새로 넣고 기존 13절 handoff를 14절로 바꿨다. 순서는 사례(전용 설비로 양쪽이 묶임) → 재협상 확률 1/2 × 흥정 비용 2 = 1(가정) → b = 4 + 1 = 5 → 최저 3·4개(18)에서 4·5개(20)로 이동(11절 표와 같은 계산, 안쪽 1~6 불변) → 이름(거래 특유 투자·자산 특수성, 홀드업은 1979년 논문에 없는 말이며 원문은 쌍방 독점의 흥정으로 설명) → 세 차원(불확실성=확률 1/2, 빈도=12절 설립비) → 판단 규칙은 10절 식 그대로이고 b만 바뀜, 쌍방 구조·통합 구조 비교. 새 식은 쓰지 않았다(10절의 판단 규칙 재사용). 12절 끝의 "서지만 확인" 문단은 삭제하고 13절로 넘기는 연결 문장으로 바꿨다. ReviewPrompts의 절 번호(3·10·12)는 바뀌지 않는다. 새 개념은 절 안에서 사례→기제→남는 비용→선택 규칙까지 닫았고 학습 계약 개념은 새로 등록하지 않았다.
+3. **#30 Spence 분리 조건 — 적용.** 원문: https://www.sfu.ca/~allen/Spence.pdf (SFU 교수 페이지의 JSTOR 사본, 21쪽). 인쇄 358쪽 "A Critical Assumption" 소절을 `pdftoppm` 이미지로 대조: "It is not difficult to see that a signal will not effectively distinguish one applicant from another, unless the costs of signaling are negatively correlated with productive capability." `institutions/education-skills-and-signals` 3절에 문단 추가: 임금 차이 합계 1,200만 원, 취득 비용 600만/1,800만 원(가정) → 높은 쪽만 취득, 비용이 같으면 구별 불가 → 358쪽 인용. 기존 "서지만 확인했습니다" 문구는 삭제하고 정본 글 링크는 유지했다.
+4. **#34 Ostrom 설계 원리 — 적용.** 원전: Ostrom, *Governing the Commons*(Cambridge University Press, 1990) 공개 스캔(https://wtf.tw/ref/ostrom_1990.pdf, 295쪽)의 89~90쪽을 `pdftoppm -r 120` 이미지로 읽었다. 90쪽 표 3.1 "Design principles illustrated by long-enduring CPR institutions"의 2(제공 규칙과 현지 조건 일치)·3(Collective-choice arrangements: "Most individuals affected by the operational rules can participate in modifying the operational rules")·4(Monitoring: "Monitors, who actively audit CPR conditions and appropriator behavior, are accountable to the appropriators or are the appropriators")·5(Graduated sanctions)·6(Conflict-resolution mechanisms: "rapid access to low-cost local arenas") 원리와 짝지었고, 같은 쪽 "This list of design principles is still quite speculative. I am not yet willing to argue that these design principles are necessary conditions"를 범위 문장으로 넣었다. `institutions/culture-norms-and-coordination` 10절(limits)의 "짝짓지 않습니다" 문단을 대응 문단 + 범위 문단 + 대응표(5행)로 교체. 사례의 3장 출처(Törbel 목초지, 필리핀 zanjera 관개)도 원문에서 확인. 링크는 해적판 우려가 있는 스캔 대신 출판사 DOI(10.1017/CBO9780511807763)로 올린다.
+5. **#12 한국 생산자책임재활용제도 — 적용.** 근거: law.go.kr 「자원의 절약과 재활용촉진에 관한 법률」 [시행 2026. 8. 20.] [법률 제21370호] 본문(lsInfoR.do?lsiSeq=283445 응답, 2026-10-09). 제16조제1항(재활용의무생산자: 대통령령으로 정하는 제품·포장재의 제조업자나 수입업자, 포장재는 판매업자 포함, "회수하여 재활용하여야 한다"), 제16조제3항(재활용사업공제조합에 분담금), 제17조제1항("연간 출고량 중 재활용하여야 하는 양의 비율(이하 "재활용의무율"이라 한다)을 … 고시"), 제19조제1항("재활용에 드는 비용에 그 100분의 30 이하의 금액을 더한 금액(이하 "재활용부과금")"). 대상 품목은 시행령 [시행 2026. 5. 12.] [대통령령 제36269호] 제18조(종이팩·유리병·금속캔·합성수지 포장재, 1회용 봉투·쇼핑백, 전지류 등). `infrastructure/materials-waste-and-circularity` 9절(comparison)에 네 문단 추가: 법 구조 → 의무율 70%(가정)이면 의무량 70kg, 회수 60kg이면 10kg 부족 → 공제조합 분담금 → 부과금 = 10kg × kg당 2,000원(12만원÷60kg, 가정) = 2만원, 가산 포함 2만~2만 6,000원. 6절(names)의 "법령 원문으로 확인하지 않았습니다"를 "9절에서 법령 원문으로 봅니다"로 바꿨다. (원장의 "6절"은 teach-level 6을 가리키며 글의 절 번호로는 9절이다.) 실제 품목별 의무율 고시 수치는 열지 않아 넣지 않았다.
+6. **#39 HDB Plus·Prime — 적용(정부 도메인 1차 안내로 교체).** hdb.gov.sg는 2026-10-09에도 403/404(conditions-after-buying 등), mnd.gov.sg 서면답변 페이지는 본문이 비어 있었고 Wayback은 429였다. 대신 싱가포르 정부(Isomer) 도메인의 HDB 안내 사이트 https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/ ("Last updated 24 June 2026")를 직접 열었다: "buyers of Plus and Prime flats will need to live in their flats for a longer minimum occupation period (MOP) of at least 10 years. If they choose to sell their flat after the MOP, Plus and Prime flat owners will have to pay a percentage of the resale price of the flat, reflective of the extra subsidies they received." / 표: Standard "5-year MOP · Renting out of whole flat allowed after MOP · No subsidy recovery upon resale of flat", Plus·Prime "10-year MOP · No rental of whole flat · Subsidy recovery upon resale of flat" / "Existing flats and flats launched by HDB before the October 2024 sales launch will not be affected by the Standard, Plus, and Prime classification." `infrastructure/housing-land-and-supply` 6절의 EdgeProp 의존 두 문단을 MyNiceHome 링크·Standard 5년 대비 Plus 10년 비교·2024-10 이전 분양분 제외·403 경위 문단으로 교체했다.
+
+검증: 여섯 route 모두 `bash scripts/check-article.sh`에서 learning·graph·viz·Korean·term·reading-order 통과, 실패는 prose-readability의 fingerprint "재검토 필요"뿐(긴 문단 경고는 문단을 나눠 0건). 고친 여섯 파일 `npx eslint` 통과.
+
+## 후속 공용 파일 수정 목록
+
+### src/content/article-evidence.ts
+
+```
+old:
+      "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+new:
+      "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EU Regulation 2022/2065 · Article 38, Article 33(1)",
+      "href": "https://publications.europa.eu/resource/celex/32022R2065.ENG.xhtml",
+      "note": "초대형 온라인 플랫폼·검색엔진(EU 월평균 활성 이용자 4,500만 명 이상, 지정)은 추천 시스템마다 프로파일링에 기반하지 않은 선택지를 최소 1개 제공. 원문 XHTML로 2026-10-09 확인. 프로파일링 정의(GDPR 제4조 4호)는 전재본으로 문구만 대조."
+```
+
+```
+old:
+전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+new:
+전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "O. E. Williamson · Transaction-Cost Economics: The Governance of Contractual Relations (1979)",
+      "href": "https://doi.org/10.1086/466942",
+      "note": "The Journal of Law and Economics 22(2), 233–261. 공개 JSTOR 사본의 239·240·242·246·250·254쪽을 이미지와 텍스트로 대조했습니다(2026-10-09). 13절의 전용 설비·재협상 확률 1/2·흥정 비용 2·b=5는 원문의 측정값이 아니라 본문 가정이며, '홀드업'이라는 단어는 이 논문에 없습니다."
+```
+
+```
+old:
+      "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+new:
+      "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Michael Spence · Job Market Signaling (1973), A Critical Assumption, p.358",
+      "href": "https://doi.org/10.2307/1882010",
+      "note": "The Quarterly Journal of Economics 87(3), 355–374. 신호 비용이 생산 능력과 음의 상관을 가지지 않으면 신호가 지원자를 구별하지 못한다는 358쪽 소절을 공개 사본 이미지로 대조했습니다(2026-10-09). 3절의 1,200만·600만·1,800만 원은 본문 가정입니다."
+```
+
+```
+old:
+본문 10개 가게 계산은 연구 실측이 아닙니다."}],
+new:
+본문 10개 가게 계산은 연구 실측이 아닙니다."}, {"kind": "핵심 사료", "label": "Elinor Ostrom · Governing the Commons (1990), Table 3.1, p.90", "href": "https://doi.org/10.1017/CBO9780511807763", "note": "오래 유지된 공유자원 제도의 설계 원리 여덟 개. 본문의 분담 규칙·규칙 변경·관찰·단계적 대응·이의 절차를 원리 2·3·4·5·6에 짝지었습니다. 같은 쪽에서 저자는 목록이 추측 단계이며 필요조건이라고 주장하지 않는다고 밝힙니다. 공개 스캔의 89~90쪽 이미지로 2026-10-09 대조."}],
+```
+
+```
+old:
+보고서와 방법론의 범위를 확인하며 사례의 60%회수율과 섞지 않습니다."}],
+new:
+보고서와 방법론의 범위를 확인하며 사례의 60%회수율과 섞지 않습니다."}, {"kind": "공식 문서", "label": "자원의 절약과 재활용촉진에 관한 법률 제16조·제17조·제19조", "href": "https://www.law.go.kr/법령/자원의절약과재활용촉진에관한법률", "note": "법률 제21370호(2026-08-20 시행). 재활용의무생산자의 회수·재활용 의무, 공제조합 분담금, 재활용의무율 고시, 미이행 시 재활용 비용+30% 이하의 재활용부과금. 2026-10-09 원문 확인. 9절의 의무율 70%·kg당 2,000원은 본문 가정."}, {"kind": "공식 문서", "label": "자원의 절약과 재활용촉진에 관한 법률 시행령 제18조", "href": "https://www.law.go.kr/법령/자원의절약과재활용촉진에관한법률시행령", "note": "대통령령 제36269호(2026-05-12 시행). 재활용의무 대상 제품·포장재(종이팩·유리병·금속캔·합성수지 포장재, 1회용 봉투·쇼핑백, 전지류 등). 2026-10-09 원문 확인."}],
+```
+
+```
+old:
+      "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+new:
+      "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "HDB · MyNiceHome, HDB Flat Types and Classifications",
+      "href": "https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/",
+      "note": "2024년 10월 분양분부터 Standard(MOP 5년·MOP 뒤 전체 임대 가능·보조금 환수 없음)와 Plus·Prime(MOP 10년·전체 임대 불가·매각 시 보조금 환수) 구분. 그 이전 분양분은 적용 제외. 페이지 갱신 2026-06-24, 2026-10-09 확인. hdb.gov.sg 원 페이지는 자동 조회 불가(403)."
+```
+
+### src/content/firms/articles.ts
+
+```
+old:
+    "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
+  },
+  {
+    "id": "handoff",
+    "title": "13. 같은 일을 끝내는 전체 비용으로 예측한다"
+new:
+    "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
+  },
+  {
+    "id": "specific-assets",
+    "title": "13. 전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다"
+  },
+  {
+    "id": "handoff",
+    "title": "14. 같은 일을 끝내는 전체 비용으로 예측한다"
+```
+
+### src/content/article-topology-decisions.ts
+
+```
+old:
+    "rationale": "같은 여섯 작업의 전체 비용 비교에서 계약의 범위·원문·한계비용 증명·설립비 반례까지 이어지는 13절의 단일 설명입니다.",
+new:
+    "rationale": "같은 여섯 작업의 전체 비용 비교에서 계약의 범위·원문·한계비용 증명·설립비 반례와 거래 특유 투자(Williamson 1979)까지 이어지는 14절의 단일 설명입니다.",
+```
+
+(`firms/why-firms-exist`의 topology fingerprint `8ccb1917e0359056`은 절 추가로 바뀌므로 통합자가 재계산한다.)
+
+### src/content/registrations/why-firms-exist.ts
+
+check-article의 병합 단계가 등록 모듈로 정본을 덮어쓰므로 같은 변경을 등록 모듈에도 적용한다.
+
+```
+old:
+  "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
+},
+{
+  "id": "handoff",
+  "title": "13. 같은 일을 끝내는 전체 비용으로 예측한다"
+new:
+  "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
+},
+{
+  "id": "specific-assets",
+  "title": "13. 전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다"
+},
+{
+  "id": "handoff",
+  "title": "14. 같은 일을 끝내는 전체 비용으로 예측한다"
+```
+
+```
+old:
+  "rationale": "같은 여섯 작업의 전체 비용 비교에서 계약의 범위·원문·한계비용 증명·설립비 반례까지 이어지는 13절의 단일 설명입니다.",
+new:
+  "rationale": "같은 여섯 작업의 전체 비용 비교에서 계약의 범위·원문·한계비용 증명·설립비 반례와 거래 특유 투자(Williamson 1979)까지 이어지는 14절의 단일 설명입니다.",
+```
+
+```
+old:
+    "note": "거래 활동의 비용 및 실제 자료가 더 필요하다는 단락을 공식 검색 본문에서 확인했습니다. 전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+new:
+    "note": "거래 활동의 비용 및 실제 자료가 더 필요하다는 단락을 공식 검색 본문에서 확인했습니다. 전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+  },
+  {
+    "kind": "핵심 논문",
+    "label": "O. E. Williamson · Transaction-Cost Economics: The Governance of Contractual Relations (1979)",
+    "href": "https://doi.org/10.1086/466942",
+    "note": "The Journal of Law and Economics 22(2), 233–261. 공개 JSTOR 사본의 239·240·242·246·250·254쪽을 이미지와 텍스트로 대조했습니다(2026-10-09). 13절의 전용 설비·재협상 확률 1/2·흥정 비용 2·b=5는 원문의 측정값이 아니라 본문 가정이며, '홀드업'이라는 단어는 이 논문에 없습니다."
+```
+
+### src/content/registrations/media-attention-and-public-belief.ts
+
+```
+old:
+    "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+new:
+    "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "EU Regulation 2022/2065 · Article 38, Article 33(1)",
+    "href": "https://publications.europa.eu/resource/celex/32022R2065.ENG.xhtml",
+    "note": "초대형 온라인 플랫폼·검색엔진(EU 월평균 활성 이용자 4,500만 명 이상, 지정)은 추천 시스템마다 프로파일링에 기반하지 않은 선택지를 최소 1개 제공. 원문 XHTML로 2026-10-09 확인. 프로파일링 정의(GDPR 제4조 4호)는 전재본으로 문구만 대조."
+```
+
+### src/content/registrations/education-skills-and-signals.ts
+
+```
+old:
+    "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+new:
+    "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+  },
+  {
+    "kind": "핵심 논문",
+    "label": "Michael Spence · Job Market Signaling (1973), A Critical Assumption, p.358",
+    "href": "https://doi.org/10.2307/1882010",
+    "note": "The Quarterly Journal of Economics 87(3), 355–374. 신호 비용이 생산 능력과 음의 상관을 가지지 않으면 신호가 지원자를 구별하지 못한다는 358쪽 소절을 공개 사본 이미지로 대조했습니다(2026-10-09). 3절의 1,200만·600만·1,800만 원은 본문 가정입니다."
+```
+
+### src/content/registrations/housing-land-and-supply.ts
+
+```
+old:
+    "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+new:
+    "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "HDB · MyNiceHome, HDB Flat Types and Classifications",
+    "href": "https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/",
+    "note": "2024년 10월 분양분부터 Standard(MOP 5년·MOP 뒤 전체 임대 가능·보조금 환수 없음)와 Plus·Prime(MOP 10년·전체 임대 불가·매각 시 보조금 환수) 구분. 그 이전 분양분은 적용 제외. 페이지 갱신 2026-06-24, 2026-10-09 확인. hdb.gov.sg 원 페이지는 자동 조회 불가(403)."
+```
+
+(`culture-norms-and-coordination`·`materials-waste-and-circularity`는 등록 모듈이 없어 article-evidence.ts 쌍만 적용한다.)

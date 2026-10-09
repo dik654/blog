@@ -267,8 +267,8 @@ export const ncaAiioDepth = {
     {
       label: "NVIDIA · NCP-AI Operations",
       href: "https://www.nvidia.com/en-us/learn/certification/ai-operations-professional/",
-      claim: "Monitoring·troubleshooting·optimization과 Slurm·Kubernetes 실습이 Professional 운영 단계임을 확인했습니다.",
-      checkedAt,
+      claim: "Monitoring·troubleshooting·optimization과 Slurm·Kubernetes 실습이 Professional 운영 단계임을 확인했습니다. 2026-10-09 재확인: “includes 30 multiple choice questions, 3 hands-on lab exercises, and has a 120-minute time limit”, Price $500, 유효기간 2년.",
+      checkedAt: "2026-10-09",
     },
     {
       label: "NVIDIA · DCGM User Guide",

@@ -149764,10 +149764,10 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "KRX 주문과 결제",
+        "title": "KRX 주문유형",
         "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
         "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
-        "contribution": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다.",
+        "contribution": "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.",
         "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
         "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
         "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
@@ -150970,7 +150970,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "금융소비자보호법 제28조",
-        "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+        "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357",
         "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
         "contribution": "기록·유지관리·변조 방지와 분쟁 목적 열람의 법률 구조를 확인합니다.",
         "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
@@ -151692,7 +151692,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "CBOT · Corn Futures Chapter 10",
         "href": "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf",
         "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
-        "contribution": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다.",
+        "contribution": "3등급 할인(한 조건 2센트·두 조건 4센트), 2027년 12월물까지와 2028년 3월물부터의 두 지역 가산표, 인도 장소를 확인합니다.",
         "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
         "evidenceScope": "인용한 거래소·감독기관·국제기준 문서가 직접 다룬 범위입니다.",
         "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
@@ -152715,7 +152715,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseQuestion: "실제 중량이 25.6톤이고 보관료가 1,200달러라면 계약 허용 여부와 비용 합계를 판단하세요.",
     changedCaseAnswers: ["25.6톤은 상한 25.5톤 초과", "계약 조정·분할 확인", "보관료+출고비=1,200+1,250=2,450달러", "현행 창고 요율 확인"],
     sources: [
-      { title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", problem: "금속 이름만으로 인도하지 않고 순도·로트·브랜드·창고 조건을 확인해야 합니다.", contribution: "최소 순도 99.995%, 25톤 로트와 워런트 중량 허용 범위, 승인 브랜드·창고를 정합니다.", assumptions: "본문의 금속 가격과 보관·상차비는 설명용 가정입니다.", evidenceScope: "LME 아연 선물의 현행 계약 규격입니다.", notClaim: "규격 충족이 특정 공장의 형태·도착일·가공 적합성을 보장하지 않습니다.", sectionId: "source" },
+      { title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", problem: "금속 이름만으로 인도하지 않고 순도·로트·브랜드·창고 조건을 확인해야 합니다.", contribution: "최소 순도 99.995%, 25톤 로트와 워런트 중량 허용 범위, 승인 브랜드·창고를 정합니다.", assumptions: "본문의 금속 가격과 보관·상차비는 설명용 가정입니다.", evidenceScope: "LME 아연 선물의 현행 계약 규격입니다.", notClaim: "규격 충족이 특정 공장의 형태·도착일·가공 적합성을 보장하지 않습니다.", sectionId: "source" },
       { title: "LME · Warrants", href: "https://www.lme.com/Sustainability-and-Physical-Markets/Warehousing/LME-warrants", problem: "선물 인도에 쓰는 전자 권리와 실제 금속 출고를 구분해야 합니다.", contribution: "워런트가 승인 창고의 특정 금속을 나타내며 소유권 이전과 취소에 쓰이는 방식을 설명합니다.", assumptions: "공식 개요이며 개별 창고의 당일 출고 대기와 비용을 제시하지 않습니다.", evidenceScope: "LME 워런트의 역할과 전자 관리 범위입니다.", notClaim: "워런트 취소 즉시 물리적 금속이 출고된다는 뜻은 아닙니다.", sectionId: "comparison" },
       { title: "LME · Warehouse Agreement 2026", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", problem: "보관료와 FOT, 취소·재발행·출고 기록의 책임을 확인해야 합니다.", contribution: "일별 임대료, FOT 비용, 출고 일정과 취소 워런트 기록 보존 의무를 규정합니다.", assumptions: "창고 계약의 일반 의무이며 실제 청구액은 공표 요율과 사건별 사실에 따릅니다.", evidenceScope: "LME 승인 창고와 거래소 사이의 운영 책임입니다.", notClaim: "모든 금속과 지역에서 같은 대기일수와 비용이 발생한다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
@@ -152735,7 +152735,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseAnswers: ["수율 조정 0달러", "지수 차이 −0.02달러/파운드", "현금정산 −1,000달러", "지역 베이시스 별도"],
     sources: [
       { title: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", problem: "생우 계약의 무게·등급과 도체 수율 조정을 실제 규칙에 대조해야 합니다.", contribution: "4만 파운드 거래 단위, 기준 등급과 63% 뜨거운 도체 수율 조정식을 정합니다.", assumptions: "본문의 2.20달러와 실제 수율 62%는 설명용 가정이며 적용 계약월 규칙을 다시 확인해야 합니다.", evidenceScope: "2025-05-07 발효·2026년 10월물부터 적용되는 개정(25-157)을 반영한 CME 생우 선물 규칙입니다. 4만 파운드·70/30·63% 규격 자체는 기존 시행분입니다.", notClaim: "이 한 식이 개별 도체와 시설의 모든 인도 조정을 포함한다는 뜻은 아닙니다.", sectionId: "source" },
-      { title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", problem: "같은 축산업에서도 실물인도와 현금정산 계약을 구분해야 합니다.", contribution: "생우 4만 파운드는 실물인도, 비육우 5만 파운드와 돈육은 지수 현금정산이라는 구조를 설명합니다.", assumptions: "거래소 교육자료이며 최신 계약 규칙과 실제 지수 산식이 우선합니다.", evidenceScope: "CME 축산물 선물의 기초 현물과 정산 방식 비교입니다.", notClaim: "현금정산이 농가의 지역·무게·거래 방식에 따른 베이시스를 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html", problem: "같은 축산업에서도 실물인도와 현금정산 계약을 구분해야 합니다.", contribution: "생우 4만 파운드는 실물인도, 비육우 5만 파운드와 돈육은 지수 현금정산이라는 구조를 설명합니다.", assumptions: "거래소 교육자료이며 최신 계약 규칙과 실제 지수 산식이 우선합니다.", evidenceScope: "CME 축산물 선물의 기초 현물과 정산 방식 비교입니다.", notClaim: "현금정산이 농가의 지역·무게·거래 방식에 따른 베이시스를 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
   "markets/singapore-derivatives-records-complaints-and-tax-ledger": appliedDerivativeLearning({

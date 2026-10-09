@@ -13,6 +13,12 @@
 - Playwright로 변경 route 약 440개를 1,440px·390px에서 점검. KaTeX 오류·console 오류·가로 넘침은 0으로 정리했다. 기존부터 있던 결함 두 건도 함께 고쳤다: 파생상품 두 글의 학습 계약에 똑같이 두 번 들어간 복습 질문(React 중복 key 경고), `FlowRail` 카드가 화살표로 이어진 긴 토큰 때문에 모바일 폭을 넘던 문제(`min-w-0`·`overflow-wrap:anywhere`).
 - 남은 실패는 모두 이번 변경과 무관한 기존 Viz 기준이다: 모바일에서 Viz 프레임이 844px보다 큼(약 150건), 장면 전환 때 프레임·버튼 높이 변화(약 75건). 이번 세션의 Viz 파일 수정은 macro 3개 Viz의 출처 문구뿐이다.
 
+## 후속 작업 처리 (같은 날 2차, `BRIEF-followup.md`)
+- 원장 7개(A·B2·D1·E1·E2·E3·F)의 `## 후속 작업` 약 53항목을 8개 묶음으로 나눠 1차 자료를 직접 열고 반영했다. 각 원장 끝 `## 후속 작업 결과`에 항목별 근거 URL·인용 위치·보류 사유가 있다. 공용 파일 수정 71쌍은 `apply-shared.py --section="후속 공용 파일 수정 목록…"`으로 적용했다.
+- 반영 중 기존 본문의 오류도 정정했다: KRX 레버리지 ETF LP 괴리율 3%/6%→현행 2%/5%(투자유의 4%/10%), NYMEX 인수 통지 순서(T+1 15시 통지→T+3 시설 지정), CBOT 4센트 할인 조건(두 기준 모두 해당할 때, 하나면 2센트), Slurm DRAIN 예시 출력(실제 문자열 `gpu count too low (7 < 8)`), 깃대 반례 귀속(Bromberger, Salmon 1989 47쪽).
+- 새 절: `firms/why-firms-exist` 13절 "전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다"(Williamson 1979 원문 대조, 14절로 밀림, topology 결정 갱신).
+- 등록 모듈 노후화(F #7): `src/content/registrations/*.ts`가 정본보다 낡아 `merge-registrations.mjs --all`이 약 26,000줄을 되돌리는 상태였다. `scripts/sync-registrations-from-canonical.mjs`로 정본에서 다시 만들고, sync→merge가 정본을 바꾸지 않는 고정점임을 확인했다. merge의 `null`→`"null"` 버그(LEDGER 행 중복)도 고쳤다. **정본 공용 파일을 직접 고친 뒤에는 이 sync를 한 번 돌린다.**
+
 ## 다음에 할 수 있는 일
-- 각 원장 `## 후속 작업`(글 전체를 다시 써야 하는 공백).
-- 위 Viz 높이·흔들림 기준 위반은 별도 회차로 정리.
+- 보류로 남은 후속 항목(각 원장 `## 후속 작업 결과`의 보류 줄): 남아시아 식민 이전 직물·해상 교역 규모(A #37 일부), A 기타 목록 10건(마케팅 보드, 원죄, petrodollar 연결, PNA VDS, 차액지대, TiVA 지표명, Donaldson, 동산 노예제, Pomeranz, Englund)과 컨테이너 Ideal X·ISO 668, FRA 결제식(E1), 커버드콜 글의 금감원 원 주소 교체와 상품명 변경 조치(E3 — fss.or.kr 점검 종료 후), SNIA PTS 3.1절(D1), KRX 실물인수도 상품 목록(E2).
+- 기존 Viz 높이(모바일 844px 초과)·장면 전환 흔들림 기준 위반 약 225건.

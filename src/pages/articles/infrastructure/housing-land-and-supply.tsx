@@ -83,8 +83,10 @@ export default function HousingLandAndSupplyArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">싱가포르 정부는 일반적인 새 HDB 주택의 구매자가 99년 동안 주택 권리를 소유한다고 설명합니다. 이것은 거주할 때마다 임대료를 내는 단순 임차와 다릅니다. 기간이 없는 소유권과도 다릅니다.</p>
           <p className="leading-8">10억이라는 같은 판매금액을 비교하더라도 남은 기간과 처분 조건이 다르면 같은 권리를 산 것이 아닙니다. 이 글의 10억 가정에 HDB의 실제 가격이나 거래 자격을 대입한 것은 아닙니다.</p>
-          <p className="leading-8">같은 99년 권리 안에서도 처분 조건이 갈립니다. 위 정부 설명은 &ldquo;2023년 3월 기준&rdquo;으로 쓰였고, 그 뒤 2024년 10월 분양분부터 HDB는 새 주택을 Standard·Plus·Prime으로 나눴습니다. 보도에 따르면 Plus·Prime 주택은 최소 거주 기간이 10년이고 되팔 때 받은 보조금 일부를 환수당하며, 최소 거주 기간이 지나도 집 전체를 임대할 수 없습니다.</p>
-          <p className="leading-8">같은 99년 주택이라도 10년을 살아야 팔 수 있고 팔 때 보조금 일부를 돌려줘야 한다면, 같은 값을 주고 산 권리의 내용이 달라집니다. 이 유형 규칙은 HDB 공식 페이지가 2026-10-09 자동 조회를 막아(403) 보조 출처(EdgeProp 2024년 보도)로만 확인했습니다.</p>
+          <p className="leading-8">같은 99년 권리 안에서도 처분 조건이 갈립니다. 위 정부 설명은 &ldquo;2023년 3월 기준&rdquo;으로 쓰였고, 그 뒤 2024년 10월 분양분부터 HDB는 새 주택을 입지에 따라 Standard·Plus·Prime으로 나눴습니다.</p>
+          <p className="leading-8">팔기 전에 직접 살아야 하는 기간을 최소 거주 기간(MOP)이라고 부릅니다. HDB의 주택 안내 사이트 <a className="text-sky-700 underline dark:text-sky-300" href="https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/">MyNiceHome</a>은 Standard 주택에 MOP 5년, 그 뒤 집 전체 임대 허용, 되팔 때 보조금 환수 없음을 적습니다. Plus·Prime 주택에는 MOP 10년, 집 전체 임대 불가, 되팔 때 보조금 환수가 붙습니다.</p>
+          <p className="leading-8">Standard 주택은 5년을 살면 팔 수 있지만 Plus 주택은 10년을 살아야 하고, 팔 때 받은 추가 보조금을 반영해 매각가의 일정 비율을 내야 합니다. 같은 99년 주택이라도 같은 값을 주고 산 권리의 내용이 달라지는 이유입니다. 같은 페이지는 2024년 10월 분양 이전에 공급된 주택에는 이 구분이 적용되지 않는다고 적습니다.</p>
+          <p className="leading-8">hdb.gov.sg 원 페이지는 2026-10-09에도 자동 조회를 막아(403) 같은 정부 도메인의 MyNiceHome 안내(2026-06-24 갱신)로 확인했습니다.</p>
           <p className="leading-8">2026-10-04 확인 기준으로 다른 나라 주택은 등기·토지 임차권·용도 규정·대출 계약을 각각 확인해야 합니다. 국가 평균 자가보유율 하나로 권리의 내용까지 같다고 볼 수 없습니다.</p>
         </div>
         <SourceApplication source="Singapore Government · Do HDB flat buyers own their flat?" excerpt="own the rights to their flats for 99 years" application="같은 10억이라도 기간이 정해진 권리인지 먼저 확인합니다. 사례의 3억 토지 여력 계산에는 판매하는 권리의 기간과 조건이 이미 반영돼야 합니다." />

@@ -111,8 +111,22 @@ export default function Article() {
             작은 경제 변화도 행동을 바꿉니다. 가게 1곳이 문을 닫아 9곳만 남으면 모두 내더라도 18−16=2만원이 남습니다. 원래 4만원보다 줄어듭니다. 이 사례에서 같은 관행을
             유지했는데도 결과가 달라진 이유는 납부자 수입니다.
           </p>
-          <p className="leading-8">Ostrom의 원문 인터뷰 역시 장기간 유지된 제도의 공통 원리를 찾는 일과 그 원리를 각 체계에 적용하는 방식을 구분합니다. 그는 오래 버틴 체계들의 공통점을 &ldquo;설계 원리(design principles)&rdquo;라고 불렀고, 이 글의 분담 규칙·관찰·이의 절차도 그런 층위의 장치입니다.</p>
-          <p className="leading-8">각 장치가 Ostrom의 원리 목록 중 어느 것과 대응하는지는 1990년 원전으로 따로 확인해야 하며 여기서는 짝짓지 않습니다. 이 글의 가게 계산은 실증 결과가 아니라 원인을 분리하기 위한 가정입니다. 문화·비용·권리·집행을 각각 기록할 때 비교가 선명해집니다.</p>
+          <p className="leading-8">Ostrom의 원문 인터뷰 역시 장기간 유지된 제도의 공통 원리를 찾는 일과 그 원리를 각 체계에 적용하는 방식을 구분합니다. 그는 오래 버틴 체계들의 공통점을 &ldquo;설계 원리(design principles)&rdquo;라고 불렀습니다.</p>
+          <p className="leading-8">1990년 책 『Governing the Commons』 90쪽 표 3.1은 이 원리를 여덟 개로 적습니다. 그중 다섯 개가 이 글의 장치와 짝지어집니다. 회비 2만원을 누구에게 얼마나 걷을지 정하는 분담 규칙은 둘째 원리, 그 규칙을 누가 바꾸는지는 셋째 원리에 해당합니다. 납부와 청소를 확인하는 관찰은 넷째, 미납 대응을 안내·정정·반복 위반으로 나누는 일은 다섯째, 이의 절차는 여섯째 원리입니다.</p>
+          <p className="leading-8">같은 쪽에서 Ostrom은 이 목록이 아직 추측 단계이며 제도가 오래가기 위한 필요조건이라고 주장할 준비가 되지 않았다고 씁니다. 표를 이끈 3장의 사례도 스위스 산지 목초지나 필리핀 관개 조직처럼 여럿이 함께 쓰는 자원을 관리하는 제도입니다. 공동 청소 회비는 그 틀을 빌려 읽는 것이고, 이 글의 가게 계산은 실증 결과가 아니라 원인을 분리하기 위한 가정입니다. 문화·비용·권리·집행을 각각 기록할 때 비교가 선명해집니다.</p>
+        </div>
+        <div className="my-6 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <caption className="mb-3 text-left text-sm leading-6">이 글의 장치와 Ostrom(1990) 표 3.1의 원리. 원리 설명은 원문을 줄여 옮긴 것입니다.</caption>
+            <thead><tr><th scope="col" className="p-2">이 글의 장치</th><th scope="col" className="p-2">표 3.1의 원리</th><th scope="col" className="p-2">원문의 요지</th></tr></thead>
+            <tbody>{[
+              ["분담 규칙", "2. 이용·제공 규칙과 현지 조건의 일치", "노동·물자·돈을 요구하는 제공 규칙이 현지 조건에 맞춰집니다."],
+              ["규칙을 바꿀 사람", "3. 집단적 선택 장치", "규칙의 영향을 받는 사람 대부분이 규칙 수정에 참여합니다."],
+              ["납부·청소 관찰", "4. 감시", "감시자는 이용자에게 책임을 지거나 이용자 자신입니다."],
+              ["안내·정정·반복 위반 대응", "5. 단계적 제재", "위반의 심각성과 맥락에 따라 단계를 나눠 제재합니다."],
+              ["이의 절차", "6. 갈등 해결 장치", "싸고 빠르게 이용할 수 있는 현지의 해결 자리가 있습니다."],
+            ].map(([device, principle, gist]) => <tr key={device} className="border-t border-border"><th scope="row" className="p-2 font-normal">{device}</th><td className="p-2">{principle}</td><td className="p-2">{gist}</td></tr>)}</tbody>
+          </table>
         </div>
 
         <CitationBlock source="Elinor Ostrom · Nobel 인터뷰 원문" citeKey={3} href="https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/164465-ostrom-williamson-interview-transcript/">원문에서 장기간 유지된 제도의 공통 원리를 실제 적용할 방식은 체계마다 다르다고 설명합니다. 본문 10개 가게 계산은 연구 실측이 아닙니다.</CitationBlock>
