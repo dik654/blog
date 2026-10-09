@@ -174,7 +174,7 @@ export function ArticleLessonPrimer({
   return (
     <section
       data-lesson-primer
-      className="not-prose mb-10 overflow-hidden rounded-xl border border-border/70 bg-card"
+      className="not-prose mb-10 overflow-clip rounded-xl border border-border/70 bg-card"
       aria-label="본문을 읽은 뒤 개념을 연결하는 복습 지도"
     >
       <div className="border-b border-border/60 bg-muted/20 p-5 sm:p-6">

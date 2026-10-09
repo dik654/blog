@@ -39,13 +39,13 @@ export default function TwoKindsViz() {
         role="group"
         aria-label="연설과 사건이 서로 다른 방법으로 만들어졌음을 보이는 그림"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary max-[390px]:[&_[data-viz-mobile-controls]>p]:min-h-[3rem]"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
+          <h4 className="mt-2 text-base font-bold max-[390px]:min-h-[3rem]">{SCENES[s]}</h4>
 
           <div className="mt-4 w-full min-w-0 overflow-x-auto">
             <svg
@@ -160,7 +160,7 @@ export default function TwoKindsViz() {
             </svg>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground max-[390px]:min-h-[15.75rem] min-[390px]:max-sm:min-h-[12.25rem]">
             {NOTES[s]}
           </p>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type {
@@ -74,7 +74,7 @@ function ConceptGlyph({
       viewBox="0 0 72 56"
       role="img"
       aria-label={`${concept.label} · ${kind}`}
-      className={large ? "h-16 w-20 sm:h-20 sm:w-24" : "h-10 w-12 sm:h-14 sm:w-[4.5rem]"}
+      className={large ? "h-14 w-[4.5rem] sm:h-20 sm:w-24" : "h-10 w-12 sm:h-14 sm:w-[4.5rem]"}
     >
       <title>{concept.label}</title>
       {kind === "input" ? (
@@ -185,7 +185,7 @@ function FlowShape({
       </p>
       <ConceptGlyph concept={concept} index={index} selected={selected} large />
       <p
-        className={`max-w-40 break-words text-xs font-bold leading-5 ${selected ? "text-primary" : "text-foreground/75"}`}
+        className={`max-w-40 break-words text-xs font-bold leading-5 max-sm:text-[11px] max-sm:leading-4 ${selected ? "text-primary" : "text-foreground/75"}`}
       >
         {concept.label}
       </p>
@@ -237,10 +237,42 @@ export default function ArticleLessonFlowViz({
   const [reveal, setReveal] = useState(4);
   const [playing, setPlaying] = useState(false);
   const reduceMotion = useReducedMotion();
+  const mapStripRef = useRef<HTMLDivElement>(null);
   const safeActive = Math.min(active, Math.max(conceptSteps.length - 1, 0));
   const step = conceptSteps[safeActive];
   const previous = conceptSteps[safeActive - 1]?.concept;
   const next = conceptSteps[safeActive + 1]?.concept;
+
+  // 모바일(<640px)에서는 개념 지도가 한 줄 가로 스크롤 스트립이라 선택 노드가
+  // 화면 밖에 있을 수 있다. 스트립이 실제로 가로 스크롤 컨테이너일 때만
+  // 그 안에서 스크롤 위치를 맞춘다. 데스크톱은 overflow가 visible 이라 아무 일도
+  // 하지 않으며, window 스크롤은 건드리지 않는다.
+  useEffect(() => {
+    const strip = mapStripRef.current;
+    if (!strip || getComputedStyle(strip).overflowX !== "auto") return;
+    if (strip.scrollWidth <= strip.clientWidth) return;
+    const selected = strip.querySelector<HTMLElement>(
+      '[role="tab"][aria-selected="true"]',
+    );
+    if (!selected) return;
+    const stripRect = strip.getBoundingClientRect();
+    const nodeRect = selected.getBoundingClientRect();
+    const margin = 12;
+    if (
+      nodeRect.left >= stripRect.left + margin &&
+      nodeRect.right <= stripRect.right - margin
+    ) {
+      return;
+    }
+    const left =
+      strip.scrollLeft +
+      (nodeRect.left - stripRect.left) -
+      (stripRect.width - nodeRect.width) / 2;
+    strip.scrollTo({
+      left: Math.max(0, left),
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  }, [reduceMotion, safeActive]);
 
   useEffect(() => {
     if (!playing || reduceMotion) return;
@@ -363,17 +395,25 @@ export default function ArticleLessonFlowViz({
         </p>
       </figcaption>
 
-      <div data-viz-canvas className="min-w-0 px-4 py-5 sm:px-6 sm:py-6">
+      {/*
+       * 모바일(<640px) 압축 원칙. index.css 의 모바일 공통 규칙이 figure/canvas 를
+       * 자연 높이로 두므로(내부 스크롤 금지), 프레임을 뷰포트(844px) 아래로 두려면
+       * 레이아웃 자체를 줄여야 한다. 개념 지도는 단계별 세로 쌓기 대신 한 줄
+       * 가로 스크롤 스트립(선택 노드 강조·자동 스크롤)으로, 스토리보드는 다섯 컷을
+       * 전부 펼치는 대신 컷 버튼을 탭으로 써서 한 컷씩 보여 준다. 모든 모바일
+       * 전용 규칙은 `max-sm:` 변형이라 sm 이상의 데스크톱 렌더는 그대로다.
+       */}
+      <div data-viz-canvas className="min-w-0 px-4 py-4 sm:px-6 sm:py-6">
         <div
           data-lesson-overview-map
           className="overflow-hidden rounded-xl border border-border/65 bg-card"
         >
-          <div className="flex items-center justify-between gap-3 border-b border-border/55 bg-muted/20 px-4 py-3">
-            <div>
+          <div className="flex items-center justify-between gap-3 border-b border-border/55 bg-muted/20 px-4 py-3 max-sm:py-2">
+            <div className="max-sm:flex max-sm:items-baseline max-sm:gap-2">
               <p className="text-[10px] font-black uppercase tracking-[0.16em] text-primary">
                 Always-visible map
               </p>
-              <p className="mt-1 text-xs font-semibold text-foreground/75">
+              <p className="mt-1 text-xs font-semibold text-foreground/75 max-sm:mt-0">
                 {stageGroups.length}개 단계 · {conceptSteps.length}개 개념
               </p>
             </div>
@@ -389,28 +429,38 @@ export default function ArticleLessonFlowViz({
             </div>
           </div>
 
-          <div role="tablist" aria-label="이 글의 전체 개념 지도">
+          {/*
+           * `overflow-x-auto` 는 리터럴 클래스여야 한다. sweep 이 뷰포트를 넘는 요소를
+           * 찾을 때 `.overflow-x-auto` 조상이 있는지로 가로 스크롤 영역을 면제하기
+           * 때문이다. sm 이상은 overflow-x-visible 로 되돌려 데스크톱과 같다.
+           */}
+          <div
+            ref={mapStripRef}
+            role="tablist"
+            aria-label="이 글의 전체 개념 지도"
+            className="overflow-x-auto sm:overflow-x-visible max-sm:flex max-sm:items-stretch max-sm:overscroll-x-contain"
+          >
             {stageGroups.map(({ stage, stageIndex, steps }, groupIndex) => (
               <section
                 key={`${stage.label}-${stageIndex}`}
                 data-lesson-stage
-                className="relative grid min-w-0 grid-cols-1 gap-3 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-2 sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)]"
+                className="relative grid min-w-0 grid-cols-1 gap-3 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-2 sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)] max-sm:shrink-0 max-sm:content-start max-sm:gap-1.5 max-sm:border-b-0 max-sm:border-r max-sm:py-2 max-sm:last:border-r-0"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-[10px] font-black text-primary">
                       {String(groupIndex + 1).padStart(2, "0")}
                     </span>
-                    <p className="text-xs font-black leading-5 text-foreground">
+                    <p className="text-xs font-black leading-5 text-foreground max-sm:whitespace-nowrap">
                       {stage.label}
                     </p>
                   </div>
-                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground">
+                  <p className="mt-1 text-[10px] leading-4 text-muted-foreground max-sm:hidden">
                     {stage.relation}
                   </p>
                 </div>
 
-                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-2 max-sm:flex-nowrap">
                   {steps.map(({ candidate, index }, conceptIndex) => {
                     const selected = index === safeActive;
                     return (
@@ -482,13 +532,23 @@ export default function ArticleLessonFlowViz({
               </section>
             ))}
           </div>
+
+          {/* 모바일 스트립에서는 단계 설명을 숨기므로 선택 노드의 단계 설명만 한 줄로 보여 준다. */}
+          <p
+            data-lesson-stage-caption
+            className="hidden border-t border-border/55 px-3 py-2 text-[10px] leading-4 text-muted-foreground max-sm:block"
+          >
+            <span className="font-black text-foreground">{step.stage.label}</span>
+            {" · "}
+            {step.stage.relation}
+          </p>
         </div>
 
         <details
           data-concept-detail
-          className="group mt-4 rounded-xl border border-border/65 bg-muted/[0.1]"
+          className="group mt-4 rounded-xl border border-border/65 bg-muted/[0.1] max-sm:mt-3"
         >
-          <summary className="cursor-pointer list-none px-4 py-4 marker:hidden sm:px-5">
+          <summary className="cursor-pointer list-none px-4 py-4 marker:hidden sm:px-5 max-sm:py-3">
             <div className="flex min-w-0 items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] font-black text-primary">
@@ -497,7 +557,7 @@ export default function ArticleLessonFlowViz({
                 <p className="mt-1 break-words text-sm font-black leading-6 text-foreground">
                   {step.concept.label}
                 </p>
-                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground max-sm:group-open:hidden">
                   {step.concept.definition}
                 </p>
               </div>
@@ -522,8 +582,9 @@ export default function ArticleLessonFlowViz({
               : { duration: 0.28, ease: "easeOut" }
           }
         >
-          <div className="flex flex-col gap-3 border-b border-border/55 bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
+          {/* 모바일에서는 바로 위 summary 가 같은 제목을 보여 주므로 컷 버튼만 남긴다. */}
+          <div className="flex flex-col gap-3 border-b border-border/55 bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between max-sm:py-3">
+            <div className="min-w-0 max-sm:hidden">
               <p className="font-mono text-[10px] font-black text-primary">
                 FOCUS {String(safeActive + 1).padStart(2, "0")} ·{" "}
                 {step.stage.label}
@@ -532,6 +593,10 @@ export default function ArticleLessonFlowViz({
                 {step.concept.label}
               </h4>
             </div>
+            {/*
+             * 데스크톱은 누적(현재 컷까지 전부 강조), 모바일은 탭(현재 컷만 강조).
+             * 같은 버튼이 두 역할을 하므로 "지난 컷"만 breakpoint 별로 색을 가른다.
+             */}
             <div
               className="grid grid-cols-5 gap-1.5"
               aria-label="현재 개념의 설명 단계"
@@ -540,14 +605,17 @@ export default function ArticleLessonFlowViz({
                 <button
                   key={label}
                   type="button"
+                  aria-current={index === reveal ? "step" : undefined}
                   onClick={() => {
                     setPlaying(false);
                     setReveal(index);
                   }}
-                  className={`rounded-md border px-2 py-1.5 text-[10px] font-bold transition-colors ${
-                    index <= reveal
+                  className={`rounded-md border px-2 py-1.5 text-[10px] font-bold transition-colors max-sm:px-1 max-sm:whitespace-nowrap ${
+                    index === reveal
                       ? "border-primary/40 bg-primary/[0.055] text-primary"
-                      : "border-border/55 bg-background text-muted-foreground"
+                      : index < reveal
+                        ? "max-sm:border-border/55 max-sm:bg-background max-sm:text-muted-foreground sm:border-primary/40 sm:bg-primary/[0.055] sm:text-primary"
+                        : "border-border/55 bg-background text-muted-foreground"
                   }`}
                 >
                   {label}
@@ -556,11 +624,15 @@ export default function ArticleLessonFlowViz({
             </div>
           </div>
 
-          <div data-concept-storyboard className="min-w-0 p-4 sm:p-5">
+          {/*
+           * 모바일 한 컷 보기: 다섯 패널 중 `reveal` 과 같은 것만 보인다(`max-sm:hidden`).
+           * 마운트 조건(reveal >= k)은 데스크톱 누적 보기와 동일하게 두고 표시만 가른다.
+           */}
+          <div data-concept-storyboard className="min-w-0 p-4 sm:p-5 max-sm:p-3">
             <div className="grid min-w-0 gap-3 lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-stretch">
               <motion.section
                 data-concept-intuition
-                className="relative min-w-0 overflow-hidden rounded-xl border border-primary/30 bg-primary/[0.04] p-4 [overflow-wrap:anywhere] sm:p-5"
+                className={`relative min-w-0 overflow-hidden rounded-xl border border-primary/30 bg-primary/[0.04] p-4 [overflow-wrap:anywhere] sm:p-5 max-sm:p-3 ${reveal === 0 ? "" : "max-sm:hidden"}`}
                 initial={reduceMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
@@ -575,13 +647,13 @@ export default function ArticleLessonFlowViz({
                 <p className="text-[10px] font-black uppercase tracking-[0.14em] text-primary">
                   먼저 볼 장면
                 </p>
-                <p className="mt-3 text-sm font-semibold leading-7 text-foreground/85">
+                <p className="mt-3 text-sm font-semibold leading-7 text-foreground/85 max-sm:mt-2 max-sm:leading-6">
                   {step.explanation?.intuition ?? step.stage.relation}
                 </p>
               </motion.section>
 
               <motion.div
-                className="flex items-center justify-center"
+                className="flex items-center justify-center max-sm:hidden"
                 aria-hidden="true"
                 animate={
                   playing && !reduceMotion
@@ -600,7 +672,7 @@ export default function ArticleLessonFlowViz({
                   <motion.section
                     key={`${step.id}-definition`}
                     data-concept-definition
-                    className="min-w-0 rounded-xl border border-border/65 bg-background p-4 [overflow-wrap:anywhere] sm:p-5"
+                    className={`min-w-0 rounded-xl border border-border/65 bg-background p-4 [overflow-wrap:anywhere] sm:p-5 max-sm:p-3 ${reveal === 1 ? "" : "max-sm:hidden"}`}
                     initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.28 }}
@@ -608,22 +680,23 @@ export default function ArticleLessonFlowViz({
                     <p className="text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground">
                       이 장면의 개념
                     </p>
-                    <div className="mt-3 flex items-start gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-primary/35 bg-primary/[0.06] font-mono text-[10px] font-black text-primary">
+                    {/* 모바일은 번호 배지와 제목(바로 위 summary 와 중복)을 숨기고 정의 본문을 전체 폭으로 편다. */}
+                    <div className="mt-3 flex items-start gap-3 max-sm:mt-2">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-primary/35 bg-primary/[0.06] font-mono text-[10px] font-black text-primary max-sm:hidden">
                         {String(safeActive + 1).padStart(2, "0")}
                       </span>
                       <div className="min-w-0">
-                        <h5 className="break-words text-lg font-black leading-7 text-foreground">
+                        <h5 className="break-words text-lg font-black leading-7 text-foreground max-sm:hidden">
                           {step.concept.label}
                         </h5>
-                        <p className="mt-1.5 text-sm leading-7 text-foreground/75">
+                        <p className="mt-1.5 text-sm leading-7 text-foreground/75 max-sm:mt-0 max-sm:leading-6">
                           {step.concept.definition}
                         </p>
                       </div>
                     </div>
                   </motion.section>
                 ) : (
-                  <div className="flex min-h-36 items-center justify-center rounded-xl border border-dashed border-border/65 bg-background px-4 text-center text-xs leading-5 text-muted-foreground">
+                  <div className="flex min-h-36 items-center justify-center rounded-xl border border-dashed border-border/65 bg-background px-4 text-center text-xs leading-5 text-muted-foreground max-sm:hidden">
                     장면을 먼저 본 뒤 ‘정의’ 컷에서 이름을 연결합니다.
                   </div>
                 )}
@@ -635,7 +708,7 @@ export default function ArticleLessonFlowViz({
                 <motion.div
                   key={`${step.id}-shape`}
                   data-concept-shape
-                  className="mt-3 flex min-w-0 flex-col items-center gap-2 rounded-xl border border-border/60 bg-background p-4 sm:flex-row sm:justify-center"
+                  className={`mt-3 flex min-w-0 flex-col items-center gap-2 rounded-xl border border-border/60 bg-background p-4 sm:flex-row sm:justify-center max-sm:mt-0 max-sm:flex-row max-sm:items-start max-sm:justify-center ${reveal === 2 ? "" : "max-sm:hidden"}`}
                   aria-label={`${step.concept.label}의 전체 연결 위치`}
                   initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -653,7 +726,8 @@ export default function ArticleLessonFlowViz({
                     index={safeActive > 0 ? safeActive : "IN"}
                     caption="Before"
                   />
-                  <span className="rotate-90 self-center sm:rotate-0">
+                  {/* 모바일은 세 도형을 한 줄에 두어야 해서(80px 도형 × 3) 화살표 자리가 없다. Before/Now/Next 캡션이 순서를 맡는다. */}
+                  <span className="rotate-90 self-center sm:rotate-0 max-sm:hidden">
                     <FlowArrow active={playing} />
                   </span>
                   <FlowShape
@@ -662,7 +736,7 @@ export default function ArticleLessonFlowViz({
                     caption="Now"
                     selected
                   />
-                  <span className="rotate-90 self-center sm:rotate-0">
+                  <span className="rotate-90 self-center sm:rotate-0 max-sm:hidden">
                     <FlowArrow active={playing} />
                   </span>
                   <FlowShape
@@ -680,13 +754,13 @@ export default function ArticleLessonFlowViz({
               ) : null}
             </AnimatePresence>
 
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 max-sm:mt-0">
               <AnimatePresence initial={false}>
                 {reveal >= 3 ? (
                   <motion.section
                     key={`${step.id}-example`}
                     data-concept-example
-                    className="min-w-0 border-l border-primary/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    className={`min-w-0 border-l border-primary/50 bg-background px-4 py-3 [overflow-wrap:anywhere] ${reveal === 3 ? "" : "max-sm:hidden"}`}
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -705,7 +779,7 @@ export default function ArticleLessonFlowViz({
                   <motion.section
                     key={`${step.id}-boundary`}
                     data-concept-boundary
-                    className="min-w-0 border-l border-amber-600/50 bg-background px-4 py-3 [overflow-wrap:anywhere]"
+                    className={`min-w-0 border-l border-amber-600/50 bg-background px-4 py-3 [overflow-wrap:anywhere] ${reveal === 4 ? "" : "max-sm:hidden"}`}
                     initial={reduceMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -724,7 +798,7 @@ export default function ArticleLessonFlowViz({
 
           <div
             data-viz-controls
-            className="z-20 shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:sticky sm:bottom-0 sm:min-h-[8.25rem] sm:px-5"
+            className="sticky bottom-0 z-20 shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:min-h-[8.25rem] sm:px-5 max-sm:py-3"
           >
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <motion.div
@@ -735,11 +809,12 @@ export default function ArticleLessonFlowViz({
                 transition={reduceMotion ? { duration: 0 } : { duration: 0.3 }}
               />
             </div>
-            <div data-lesson-mobile-controls className="mt-3 sm:hidden">
+            <div data-lesson-mobile-controls className="mt-2 sm:hidden">
               <p className="text-xs text-muted-foreground">
-                개념 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5
+                개념 {safeActive + 1}/{conceptSteps.length} · 컷 {reveal + 1}/5 ·{" "}
+                {REVEAL_LABELS[reveal]}
               </p>
-              <div className="mt-3 grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)] gap-2">
+              <div className="mt-2 grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)] gap-2">
                 <button
                   type="button"
                   onClick={moveBackward}

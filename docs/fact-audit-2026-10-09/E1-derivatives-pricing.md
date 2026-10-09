@@ -494,3 +494,33 @@ NEW:
       "note": "Review of Financial Studies 14(1):113–147. 보유자가 계속 들고 갈 때의 조건부 기대지급을 최소제곱 회귀로 추정해 미국형 옵션을 몬테카를로로 평가합니다."
     }
 ```
+
+## 후속 작업 결과 (3차)
+담당: 보류였던 "경미: FRA 결제식". 처리일 2026-10-10. 글: `src/pages/articles/markets/derivatives/derivative-data.ts`(`ratesData`, route `markets/interest-rate-derivatives-from-fra-to-swaptions`).
+
+| 항목 | 처리 | 근거·내용 |
+|---|---|---|
+| FRA 결제식 | 적용(식 1개 + 3절 둘째 문단 교체 + numericCase "차액" detail 보강) + 공용파일 목록 | 1차 자료: Federal Reserve Board, *Trading and Capital-Markets Activities Manual*, Section 4315.1 "Forward Rate Agreements"(해당 절 면주 "February 1998"), 전체 PDF https://www.federalreserve.gov/boarddocs/supmanual/trading/trading.pdf (200, 2.5 MB, pdftotext; 절별 PDF 4000p2.pdf도 200). 연속 문장: "Settlement on an FRA contract is made in advance, that is at the settlement date of the contract. The settlement sum is calculated by discounting the interest differential due from the maturity date to the settlement date using the relevant market rate." / "Let f = the FRA rate (as a decimal), s = the spot rate at maturity (as a decimal), t = the tenor of the notional principal in number of days, P = the notional principal, and V = the sum due at settlement. Assume that the basis is actual/360-day. The interest due the buyer before discounting is (s − f)P(t/360). The discount factor is 1 − s(t/360). V is the sum due at settlement: V = [(s − f)P(t/360)][1 − s(t/360)]" / "The basis used in discounting is actual/360-day for all currencies except pounds sterling, which uses an actual/365-day count convention." → `formulas`(section `case`)에 이 식을 `ExplainedFormula`로 넣고 글의 숫자(10억·4%·6%·(가정) 90일/360)를 대입: 차액 500만 원, 할인계수 0.985, 결제금 492만 5천 원. **주의**: 연준 지침서의 할인계수는 1−s(t/360)(단리 할인 근사)이고, 흔히 쓰는 1/(1+s·t/360) 나눗셈 형태는 1차 자료에서 확인하지 못함 — RBI 1999 FRA/IRS 지침(https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=612, WebFetch)은 식 없음, HMRC CFM13150(https://www.gov.uk/hmrc-internal-manuals/corporate-finance-manual/cfm13150, 200)은 "computed and discounted back to the settlement date"까지만, ACI 공식 사이트 syllabus는 검색에서 못 찾음(제3자 호스팅 사본만), ISDA 정의집은 유료. 그래서 assumptions에 "1+s(t/360)로 나누는 형태를 적은 1차 자료는 확인하지 못해 쓰지 않았다"와 두 식의 차이(이 사례 약 1,108원)를 명시하고, 본문의 "계약서가 쓰는 할인식을 확인해야 한다" 단서는 유지. |
+
+검증: KaTeX throwOnError 렌더 5개 식 오류 0, `node scripts/audit-formula-annotations.mjs --strict --require-explicit` 통과, `bash scripts/check-article.sh markets/interest-rate-derivatives-from-fra-to-swaptions` 통과, `npx eslint src/pages/articles/markets/derivatives/derivative-data.ts` 통과.
+
+## 후속 공용 파일 수정 목록 (3차)
+old는 2026-10-10 현재 `src/content/article-evidence.ts`에 1회만 나옴(grep -c 1). `markets/interest-rate-derivatives-from-fra-to-swaptions` 배열 끝(CME 항목)에 항목 1개 추가.
+
+### src/content/article-evidence.ts
+```old
+      "note": "SOFR 선물·옵션으로 OIS와 캡·플로어 노출을 구성하는 현재 사례를 설명합니다."
+    }
+  ],
+```
+```new
+      "note": "SOFR 선물·옵션으로 OIS와 캡·플로어 노출을 구성하는 현재 사례를 설명합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Federal Reserve Board · Trading and Capital-Markets Activities Manual §4315.1 Forward Rate Agreements",
+      "href": "https://www.federalreserve.gov/boarddocs/supmanual/trading/trading.pdf",
+      "note": "FRA 결제금을 이자 차액을 만기일에서 결제일까지 시장금리로 할인한 금액으로 정의하고 V=(s−f)P(t/360)[1−s(t/360)] 식과 actual/360(파운드는 actual/365) 기준을 적습니다. 1998년 2월 절, 전체 PDF 2026-10-10 확인."
+    }
+  ],
+```

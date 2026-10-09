@@ -15,13 +15,13 @@ export default function ReceiptProofViz() {
     <figcaption className="mb-3 text-sm leading-6">네 기록 A40·B70·C20·D90 가운데 C만 받았을 때의 검증입니다. 그림의 해시는 앞부분만 표시합니다.</figcaption>
     <div data-viz-canvas tabIndex={0} role="group" aria-label="영수증 검증의 네 장면" onKeyDown={controls.onKeyDown} className="flex h-[min(530px,calc(100svh-150px))] flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="min-h-0 flex-1 overflow-y-auto px-1 py-3">
-        <h3 className="text-lg font-semibold">{scene.title}</h3>
-        <div className="my-5 space-y-4">
+        <h3 className="min-h-[3.5rem] text-lg font-semibold min-[390px]:min-h-[1.75rem] sm:min-h-0">{scene.title}</h3>
+        <div className="my-5 min-h-[10.375rem] space-y-4 min-[390px]:min-h-[8.625rem] sm:min-h-0">
           <p className="border-b border-border pb-3 text-base">{scene.input}</p>
           <p className="text-sm font-mono leading-7">{scene.operation}</p>
           <p className="border-t border-border pt-3 text-lg font-semibold">{scene.output}</p>
         </div>
-        <p className="text-sm leading-7">{scene.note}</p>
+        <p className="min-h-[7rem] text-sm leading-7 min-[390px]:min-h-[5.25rem] sm:min-h-0">{scene.note}</p>
       </div>
       <AnimatedSceneControls {...controls} labels={scenes.map(s => s.label)} />
     </div>

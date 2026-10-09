@@ -194,7 +194,7 @@ export default function FourKindsViz() {
             </svg>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-h-[14rem] min-[390px]:min-h-[10.5rem] sm:min-h-0">
             {NOTES[s]}
           </p>
         </div>

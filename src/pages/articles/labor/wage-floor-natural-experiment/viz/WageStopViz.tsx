@@ -11,7 +11,9 @@ export default function WageStopViz() {
   return <LaborSceneFrame title="한 시간의 시급과 전체 임금 증가를 구분한다"
     description="3시간과 4시간의 수입·임금 합계·남는 돈을 같은 기간에서 비교합니다."
     note="(가정) 노동시간에 따른 수입은 13n−n²/2, 필요한 시급은 n+3이며 다른 비용은 생략합니다."
-    labels={labels} notes={notes} render={s => <>
+    labels={labels} notes={notes}
+    renderClassName="min-h-[14.875rem] sm:min-h-0" noteClassName="min-h-[8.75rem] min-[390px]:min-h-[7rem] sm:min-h-0"
+    render={s => <>
       <div className="grid grid-cols-2 gap-3 text-sm leading-7">
         {[3, 4].map(n => { const p = laborPlan(n, s === 3 ? 9 : 0); return <div key={n} className="border-l-2 border-primary/50 pl-3">
           <p className="font-bold">{n}시간 · 시급 {p.wage}</p><p>수입 {f(p.revenue)}</p>

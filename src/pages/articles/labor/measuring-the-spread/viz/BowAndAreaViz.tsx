@@ -79,13 +79,13 @@ export default function BowAndAreaViz() {
         role="group"
         aria-label="대각선과 곡선 사이 넓이로 쏠린 정도를 한 숫자로 만드는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col [&_[data-viz-mobile-controls]>p]:min-h-[3rem] overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
+          <h4 className="mt-2 text-base font-bold min-h-[3rem] sm:min-h-0">{SCENES[s]}</h4>
 
           <div className="mt-4 w-full min-w-0 overflow-x-auto">
             <svg
@@ -183,7 +183,7 @@ export default function BowAndAreaViz() {
             </svg>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-h-[14rem] min-[390px]:min-h-[10.5rem] sm:min-h-0">
             {NOTES[s]}
           </p>
         </div>

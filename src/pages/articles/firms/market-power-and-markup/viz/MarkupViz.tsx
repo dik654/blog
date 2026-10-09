@@ -20,16 +20,16 @@ export default function MarkupViz() {
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{SCENES[s]}</h4>
-        {s < 4 ? <div className="grid grid-cols-2 gap-3 text-sm leading-7" aria-live="polite">
+        {s < 4 ? <div className="grid min-h-[12rem] grid-cols-2 gap-3 text-sm leading-7 sm:min-h-0" aria-live="polite">
           <div><p>수량 · 가격</p><p className="font-bold">{v.quantity} · {v.price}</p></div>
           <div><p>이익</p><p className="font-bold">{v.profit}</p></div>
           <div><p>한계수입 · 비용</p><p className="font-bold">{v.marginalRevenue} · {v.marginalCost}</p></div>
           <div><p>가격 기준 마크업</p><p className="font-bold">{((v.markup ?? 0) * 100).toFixed(2)}%</p></div>
           <div className="col-span-2"><p>탄력성 절댓값 {Math.abs(v.elasticity ?? 0).toFixed(4)}</p><p>{s === 3 ? "생산 한도의 경계 · 내부 등식 제외" : "매끄러운 내부 최적점"}</p></div>
-        </div> : <div className="space-y-4 text-sm leading-7" aria-live="polite">
+        </div> : <div className="min-h-[12rem] space-y-4 text-sm leading-7 sm:min-h-0" aria-live="polite">
           {[6, 3].map(q => { const w = welfare(q); return <div key={q} className="border-l-2 border-primary/50 pl-3"><p className="font-bold">수량 {q} · 가격 {w.price}</p><p>소비자 {w.consumer} + 생산자 {w.producer} = {w.total}</p><p>기준 18보다 작은 잉여 {w.lost}</p></div>; })}
         </div>}
-        <p className="text-sm leading-7">{NOTES[s]}</p>
+        <p className="min-h-[10.5rem] text-sm leading-7 min-[390px]:min-h-[8.75rem] sm:min-h-0">{NOTES[s]}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={SCENES} />
     </div>

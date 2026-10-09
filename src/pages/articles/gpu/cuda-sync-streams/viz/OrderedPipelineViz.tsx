@@ -24,8 +24,8 @@ export default function OrderedPipelineViz() {
           </div>
         </div>)}
         <div className="flex justify-between font-mono text-xs"><span>0</span><span>6</span><span>12</span><span>18</span><span>24ms</span></div>
-        <p className="mt-5 text-sm leading-6">{descriptions[s.active]}</p>
-        <div className="mt-3 grid grid-cols-2 gap-3 text-xs leading-5">{jobs.map(([h,he,ke,de],j)=><p key={j}><strong>{String.fromCharCode(65+j)}</strong> 보내기 {h}–{he}<br/>계산 {ke-5}–{ke}<br/>가져오기 {ke}–{de}ms</p>)}</div>
+        <p className="mt-5 min-h-[4.5rem] text-sm leading-6 sm:min-h-0">{descriptions[s.active]}</p>
+        <div className="mt-3 grid min-h-[8.25rem] grid-cols-2 gap-3 text-xs leading-5 sm:min-h-0">{jobs.map(([h,he,ke,de],j)=><p key={j}><strong>{String.fromCharCode(65+j)}</strong> 보내기 {h}–{he}<br/>계산 {ke-5}–{ke}<br/>가져오기 {ke}–{de}ms</p>)}</div>
       </div><AnimatedSceneControls {...s} labels={labels}/>
     </div>
   </figure>;

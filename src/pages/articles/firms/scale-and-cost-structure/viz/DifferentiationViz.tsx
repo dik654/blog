@@ -29,7 +29,7 @@ export default function DifferentiationViz() {
           <p>{s === 0 ? "180 × 3 = 540" : `C 생산 390 + 추가 ${EXTRA[s]} = ${total}`}</p>
           <p className="font-bold">{s === 0 ? "비교 기준 540" : `기준 540에서 ${separate - total >= 0 ? "절약" : "증가"} ${Math.abs(separate - total)}`}</p>
         </div>
-        <p className="text-sm leading-7">{NOTES[s]}</p>
+        <p className="min-h-[10.5rem] text-sm leading-7 min-[390px]:min-h-[7rem] sm:min-h-0">{NOTES[s]}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={SCENES} />
     </div>

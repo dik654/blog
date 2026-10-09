@@ -58,13 +58,13 @@ export default function ExchangeBalanceViz() {
         role="group"
         aria-label="거래 하나에서 한 해 전체로 넓힌 등식의 양변"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col max-[389px]:[&_[data-viz-mobile-controls]>p]:min-h-[3rem] overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
+          <h4 className="mt-2 text-base font-bold min-h-[3rem] min-[390px]:min-h-0">{SCENES[s]}</h4>
 
           <div className="mt-4 w-full min-w-0 overflow-x-auto">
             <svg

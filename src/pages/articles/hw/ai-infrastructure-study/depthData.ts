@@ -665,7 +665,7 @@ export const storageIoDepth = {
       question: "최고 성능 한 번이 아니라 장애 뒤에도 고객의 일을 끝낼 수 있습니까?",
       columns: ["상태", "주입·조건", "함께 볼 지표", "통과 기준 예"],
       rows: [
-        ["정상 steady state", "precondition 후 30분 이상 대표 workload", "app wall time·p99·slowest rank·client/NIC/server/drive", "dataset·checkpoint SLO와 error 0"],
+        ["정상 steady state", "PTS식 precondition과 Steady State(5라운드 창, 범위 20%·기울기 10% 이내) 확인 뒤 대표 workload 30분 이상(가정)", "app wall time·p99·slowest rank·client/NIC/server/drive", "dataset·checkpoint SLO와 error 0"],
         ["degraded", "허용된 drive·node·path 하나 중단", "retry·queue·tail·GPU wait·data availability", "무중단 또는 합의한 failover 시간"],
         ["rebuild/backfill", "복구 traffic과 실제 workload 동시 실행", "rebuild ETA·foreground SLO·공간·두 번째 실패 여유", "SLO 하한과 reserve 유지"],
         ["metadata fault", "metadata service failover·작은 파일 폭주", "create/open/stat p99·lock·client recovery", "namespace 일관성과 mdtest/application 목표"],
