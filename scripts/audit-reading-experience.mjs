@@ -192,7 +192,7 @@ const contract = {
   allWideVizTablesHaveMobileCards: wideVizTableFiles.length === 0,
   mobileLessonControls:
     lessonViz.includes("data-lesson-mobile-controls") &&
-    lessonViz.includes("sm:sticky sm:bottom-0") &&
+    lessonViz.includes("sticky bottom-0") &&
     lessonViz.includes("grid-cols-1") &&
     lessonViz.includes(
       "grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)]",
