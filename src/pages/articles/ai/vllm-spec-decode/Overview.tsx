@@ -105,15 +105,11 @@ export default function Overview() {
 \bar A &= \frac{1}{C}\sum_{c=1}^{C}A_c \\
 \bar Y &= \frac{1}{C}\sum_{c=1}^{C}Y_c
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-0 \le A_c &\le \underbrace{K}_{\text{허용 경계 판정}} \\
-\bar A &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}A_c}_{\text{기준량당 비율}} \\
-\bar Y &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}Y_c}_{\text{기준량당 비율}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}0 \le \underbrace{A_c}_{\text{연속 수락 draft 수}} &\le \underbrace{K}_{\text{미리 만든 후보 수}} \\\bar A &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}A_c}_{\text{cycle당 평균 수락}} \\\bar Y &= \underbrace{\frac{1}{C}\sum_{c=1}^{C}Y_c}_{\text{cycle당 평균 확정}}\end{aligned}`}
         operations={[
-          { expression: String.raw`K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
-          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}A_c`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
-          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}Y_c`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","첫 거부 전까지 수락된 draft 수와 실제 sequence에","반영된 token 수를 나누어 셉니다."] },
+          { expression: String.raw`0 \le A_c`, annotation: ["첫 거부 전까지 연속 수락된 draft 수","하나도 못 맞히면 0, 전부 맞히면 K"] },
+          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}A_c`, annotation: ["C개 verify cycle의 수락 수를 평균","correction·bonus token은 빼고 셉니다"] },
+          { expression: String.raw`\frac{1}{C}\sum_{c=1}^{C}Y_c`, annotation: ["sequence에 실제 반영된 token 평균","예: draft 3개 수락 + 1개 확정이면","A=3, Y=4"] },
         ]}
         terms={ACCEPTANCE_TERMS}
         assumptions={[
@@ -152,11 +148,9 @@ export default function Overview() {
         }
         formula={String.raw`B_{W,\,\mathrm{per\ token}}
 \;\approx\; \frac{B_W}{\mathbb{E}[Y]}`}
-        annotatedFormula={String.raw`\underbrace{B_{W,\,\mathrm{per\ token}}
-\;\approx\; \frac{B_W}{\mathbb{E}[Y]}}_{\text{확률 가중 평균}}`}
+        annotatedFormula={String.raw`\underbrace{B_{W,\,\mathrm{per\ token}}}_{\text{token 하나가 진 weight read}}\;\approx\;\frac{\underbrace{B_W}_{\text{verify 1회 weight read}}}{\underbrace{\mathbb{E}[Y]}_{\text{그 1회로 확정한 token}}}`}
         operations={[
-          { expression: String.raw`B_{W,\,\mathrm{per\ token}}
-\;\approx\; \frac{B_W}{\mathbb{E}[Y]}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Target weight를 verify 한 번에 한 차례","읽었다고 근사하고, 그 결과로 확정한 token 수에 비용을","나눕니다."] },
+          { expression: String.raw`\frac{B_W}{\mathbb{E}[Y]}`, annotation: ["verify 한 번에 읽은 target weight를","그 cycle이 확정한 token 수로 나눕니다","예: E[Y]=3.5면 token당 약 1/3.5"] },
         ]}
         terms={BANDWIDTH_TERMS}
         assumptions={[

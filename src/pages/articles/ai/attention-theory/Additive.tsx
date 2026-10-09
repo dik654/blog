@@ -24,11 +24,12 @@ export default function Additive() {
         question="decoder state와 encoder state의 차원이 달라도 위치별 compatibility를 어떻게 학습할까?"
         idea={<>두 state를 공통 attention space로 따로 투영한 뒤 더하고 tanh를 적용합니다. 마지막 vector va가 그 joint feature를 scalar score로 읽습니다.</>}
         formula={String.raw`\begin{aligned}z_{ti}&=W_qs_{t-1}+W_kh_i\\e_{ti}&=v_a^\top\tanh(z_{ti})\\\alpha_{ti}&=\operatorname{softmax}_i(e_{ti})\\c_t&=\sum_i\alpha_{ti}h_i\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}z_{ti}&=\underbrace{W_qs_{t-1}+W_kh_i}_{\text{decoder state 계산}}\\e_{ti}&=\underbrace{v_a^\top\tanh(z_{ti})}_{\text{score readout 계산}}\\\alpha_{ti}&=\underbrace{\operatorname{softmax}_i(e_{ti})}_{\text{선택 비율 정규화}}\\c_t&=\sum_i\alpha_{ti}h_i\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}z_{ti}&=\underbrace{W_qs_{t-1}+W_kh_i}_{\text{공통 공간의 query+key}}\\e_{ti}&=\underbrace{v_a^\top\tanh(z_{ti})}_{\text{위치 i의 정렬 점수}}\\\alpha_{ti}&=\underbrace{\operatorname{softmax}_i(e_{ti})}_{\text{source 위치별 비중}}\\c_t&=\underbrace{\sum_i\alpha_{ti}h_i}_{\text{비중대로 섞은 context}}\end{aligned}`}
         operations={[
-          { expression: String.raw`W_qs_{t-1}+W_kh_i`, annotation: ["decoder state이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 state를 공통 attention space로 따로","투영한 뒤 더하고 tanh를 적용합니다."] },
-          { expression: String.raw`v_a^\top\tanh(z_{ti})`, annotation: ["score readout이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 state를 공통 attention space로 따로","투영한 뒤 더하고 tanh를 적용합니다."] },
-          { expression: String.raw`\operatorname{softmax}_i(e_{ti})`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","두 state를 공통 attention space로 따로","투영한 뒤 더하고 tanh를 적용합니다."] },
+          { expression: String.raw`W_qs_{t-1}+W_kh_i`, annotation: ["차원이 다른 decoder state와 encoder", "state를 같은 attention 공간으로 옮겨 더합니다"] },
+          { expression: String.raw`v_a^\top\tanh(z_{ti})`, annotation: ["tanh로 만든 joint feature를", "v_a가 scalar alignment score로 읽습니다"] },
+          { expression: String.raw`\operatorname{softmax}_i(e_{ti})`, annotation: ["모든 source 위치의 score를 함께 비교해", "합이 1인 상대 비중 α_ti로 바꿉니다"] },
+          { expression: String.raw`\sum_i\alpha_{ti}h_i`, annotation: ["encoder state를 α_ti만큼 섞어", "이번 출력 시점의 context c_t를 만듭니다"] },
         ]}
         terms={[
           { symbol: "s_{t-1}", name: "decoder state", description: "다음 target token을 만들기 직전의 query 역할입니다." },

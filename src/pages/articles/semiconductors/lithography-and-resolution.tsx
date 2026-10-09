@@ -54,7 +54,7 @@ return <div className="space-y-16">
             양성·음성 감광막의 색을 고정하지 않고 무늬가 감광막을 거쳐 아래 층으로 전달된다는 순서에 집중합니다.
           </p>
    <p className="leading-7"><em>레티클 무늬는 감광막에 기록된 뒤 가공을 거쳐 아래 층의 창이 됩니다.</em></p>
-  </div><CitationBlock source="ASML, ‘Six crucial steps in semiconductor manufacturing’, Photoresist coating·Lithography·Etch 절" citeKey={1} href="https://www.asml.com/en/company/stories/2021/semiconductor-manufacturing-process-steps">장비 제조사의 공식 설명은 감광막 도포, 레티클 투영 노광, 베이크·현상, 열린 자리의 식각을 순서대로 제시합니다. 이 글의 200·120 nm 선과 창은 해당 공정의 제품 치수가 아닙니다.</CitationBlock>
+  </div><CitationBlock source="ASML, ‘Six crucial steps in semiconductor manufacturing’ (주소의 2021 게시, 페이지 표기 2023-10-04 갱신), Photoresist coating·Lithography·Etch 절" citeKey={1} href="https://www.asml.com/en/company/stories/2021/semiconductor-manufacturing-process-steps">장비 제조사의 공식 설명은 감광막 도포, 레티클 투영 노광, 베이크·현상, 열린 자리의 식각을 순서대로 제시합니다. 이 글의 200·120 nm 선과 창은 해당 공정의 제품 치수가 아닙니다.</CitationBlock>
 </section>
 
 <section id="resolution" data-teach-level="5" className="scroll-mt-20">

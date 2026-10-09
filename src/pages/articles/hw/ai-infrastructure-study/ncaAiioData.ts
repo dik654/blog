@@ -214,7 +214,7 @@ export const ncaAiioStudyGuideData: AiInfrastructureArticleData = {
       application: "이 문장을 역할 경계로 사용합니다. 자격 취득을 독립적인 128-GPU 설계·구축 경험으로 확대하지 않습니다.",
       citation: "NVIDIA · NCA-AIIO Exam Study Guide",
       href: "https://dam-cdn.nvd.orangelogic.com/AssetLink/x874j05hy3m3r2sor84kpvp70750m468.pdf",
-      note: "2026년 1월판의 job description, responsibilities와 세 영역 세부 목표를 확인했습니다.",
+      note: "2026년 1월판의 job description, responsibilities와 세 영역 세부 목표를 확인했습니다. 본문 꼬리 표기는 “Jan26”이고 PDF 파일은 2026-06-25에 다시 저장됐습니다(확인일 2026-10-09).",
     },
     {
       source: "NVIDIA Certification Program",

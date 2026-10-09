@@ -66,8 +66,8 @@ export default function DecolonizationOilShocksAndDebtArticle() {
       <LessonSection id="mechanism" level="4" title="7. 싼 대출이 금리 상승 뒤 부채 위기로 바뀌는 경로를 계산합니다" bridge="같은 빚의 이자가 6.5에서 15.6으로 뛰는 경로를 봤습니다. 탈식민과 석유 충격의 실제 순서를 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">처음 외채가 100이고 금리가 5%라면 연 이자는 5입니다. 석유 부족 30을 빌리면 외채는 130, 같은 금리의 이자는 6.5가 됩니다. 수출 100으로 감당할 수 있다고 판단할 수 있습니다.</p>
-          <p className="leading-8">이후 국제 금리가 12%로 오르면 이자는 15.6이 됩니다. 동시에 원자재 수출액이 100에서 80으로 떨어지면 이자/수출 비율은 6.5%에서 19.5%로 세 배가 됩니다. 원금을 갚기 전에도 외화 부족이 커집니다.</p>
-          <p className="leading-8">정부가 지출과 수입을 급히 줄이면 국내 경기와 고용이 악화됩니다. 새로 빌려 이자를 내면 만기 위험이 커집니다. 채권자도 대출을 회수하지 못하므로 채무 재조정·긴급 금융·정책 조건이 국제 협상의 대상이 됩니다.</p>
+          <p className="leading-8">이후 국제 금리가 12%(가정)로 오르면 이자는 15.6이 됩니다. 동시에 원자재 수출액이 100에서 80으로 떨어지면 이자/수출 비율은 6.5%에서 19.5%로 세 배가 됩니다. 원금을 갚기 전에도 외화 부족이 커집니다.</p>
+          <p className="leading-8">정부가 지출과 수입을 급히 줄이면 국내 경기와 고용이 악화됩니다. 새로 빌려 이자를 내면 만기 위험이 커집니다. 채권자도 대출을 회수하지 못하므로 채무 재조정·긴급 금융·정책 조건이 국제 협상의 대상이 됩니다. 5%와 12%는 설명용 가정이고, 실제 금리가 어디까지 올랐는지와 협상이 어떤 이름으로 진행됐는지는 8절의 연표에서 봅니다.</p>
         </div>
       </LessonSection>
 
@@ -75,6 +75,7 @@ export default function DecolonizationOilShocksAndDebtArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">유엔이 창설된 1945년에는 약 7억5천만 명이 식민 통치에 의존한 영토에 살았습니다. 1960년 유엔 총회 결의 1514는 식민지 민족의 자결과 독립을 선언했습니다. 정치적 독립이 빠르게 늘어난 시기와 새 국가가 산업·교육·보건 투자를 확대하려던 시기가 겹칩니다.</p>
           <p className="leading-8">1973~74년 석유 가격 급등은 비산유 개발도상국의 외화 부족을 키웠습니다. 산유국 달러가 국제 은행을 거쳐 대출로 재순환되며 당장의 조정을 늦췄지만 외채가 쌓였습니다. 1979년 뒤 두 번째 석유 충격과 높은 세계 금리, 수출 수요 둔화가 상환 조건을 바꿨습니다.</p>
+          <p className="leading-8">7절의 '금리 5%→12%' 가정을 실제 사건에 대 보면 순서가 이렇습니다. IMF의 1980년대 부채위기 장에 따르면 국제 은행의 순대출은 1977년 680억 달러에서 1980년 1,600억 달러로 늘었고, 그 가운데 3분의 1 가까이가 비산유 개발도상국으로 갔습니다. 1979년 10월 6일 폴 볼커 의장의 연방준비제도가 통화 긴축으로 방향을 바꿨고, 연방기금금리는 1980년 말 사상 최고인 20%에 이르렀습니다. IMF 장은 미국 금리가 1981년 6월 20%로 정점에 올랐다고 적습니다. 1982년 8월 멕시코 재무장관 헤수스 실바 에르소그가 당시 800억 달러에 이른 외채를 더는 갚을 수 없다고 통보하면서 위기가 본격화했습니다. 채권국의 대응은 1985년 제임스 베이커 미 재무장관의 '베이커 플랜'과 1989년 3월 니컬러스 브래디 재무장관의 '브래디 플랜'으로 이어졌고, IMF와 세계은행은 1996년 최빈 채무국 대상의 과다채무빈곤국(HIPC) 이니셔티브를 시작했습니다. 연도와 금리는 연방준비제도 역사 자료(Fed History의 'Anti-Inflation Measures'·'Latin American Debt Crisis')와 IMF HIPC 안내에서 확인했습니다(확인일 2026-10-09).</p>
         </div>
         <SourceApplication source="United Nations · Decolonization" excerpt="some 750 million people" application="1945년의 정치적 출발점을 확인하되, 독립한 여러 국가의 경제 구조가 같았다고 보지 않습니다." />
         <CitationBlock source="United Nations, Decolonization" citeKey={1} href="https://www.un.org/en/global-issues/decolonization/">1945년 비자치 영토 인구, 1960년 독립 부여 선언과 이후 제도 경로를 정리한 공식 자료입니다.</CitationBlock>
@@ -84,10 +85,11 @@ export default function DecolonizationOilShocksAndDebtArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">석유 수출국은 가격 상승으로 큰 외화 흑자를 얻었지만 국내 흡수 능력, 인구, 정치 제도에 따라 투자 결과가 달랐습니다. 비산유국은 수입비 부담을 받았고, 다른 원자재 가격이 함께 오른 나라는 충격 일부를 상쇄했습니다.</p>
           <p className="leading-8">동아시아 일부 국가는 제조업 수출과 토지·교육 정책을 결합했고, 라틴아메리카 여러 국가는 국제 은행 대출 노출이 컸습니다. 아프리카 국가 안에서도 산유 여부와 전쟁·식민 유산·시장 크기가 달랐습니다. ‘개발도상국’ 평균은 이 차이를 숨길 수 있습니다.</p>
+          <p className="leading-8">아래 세 번째 자료의 결론도 같은 방향입니다. 첫 석유 충격(1974)은 표본 국가 가운데 인도네시아와 나이지리아를 뺀 모든 나라의 교역조건을 악화시켰습니다. 그런데도 저자들은 충격의 크기와 이후 위기의 규모 사이에 직접 관계가 없었고, 부채위기를 두 석유 충격의 악영향에 곧바로 돌릴 수 없다고 결론짓습니다. 멕시코와 나이지리아처럼 석유를 수출하는 나라도 부진했고, 1970년대의 과도하고 생산성 낮은 투자를 줄이는 일부 투자 삭감은 필요했다고 봅니다.</p>
         </div>
         <SourceApplication source="IMF · The 1980s Debt Crisis" excerpt="Petro-dollars were ‘recycled’ in the form of loans" application="30의 부족을 대출로 메우는 선택이 1970년대에는 유동성을 주었지만 금리·수출 조건이 바뀐 뒤 같은 계약이 위기의 전달 경로가 됩니다." />
         <CitationBlock source="IMF, Chapter 1: The 1980s Debt Crisis" citeKey={2} href="https://www.elibrary.imf.org/display/book/9781484371329/ch001.xml">브레턴우즈 붕괴, 석유 충격, 국제 은행 대출과 1980년대 위기의 연결을 기관 역사에서 설명합니다.</CitationBlock>
-        <CitationBlock source="IMF, Macroeconomic Crisis and Adjustment" citeKey={3} href="https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml">산유국·비산유국의 교역조건과 1970~80년대 자금 흐름이 국가별로 달랐음을 비교합니다.</CitationBlock>
+        <CitationBlock source="I. M. D. Little, Richard Cooper, W. Max Corden & Sarath Rajapatirana, Macroeconomic Crisis and Adjustment, Finance & Development 32(1), 1995" citeKey={3} href="https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml">IMF 잡지에 실렸지만 내용은 세계은행 비교연구 프로젝트의 요약입니다. 첫 석유 충격의 교역조건 효과, 1970년대 석유 수입의 은행 재순환, 1979년 뒤 변동금리 부담, 그리고 충격 크기와 위기 규모 사이에 직접 관계가 없었다는 결론을 확인했습니다(확인일 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 부채 위기를 국내 실책이나 외부 충격 하나로만 설명하지 않습니다" bridge="정치적 권한과 세계 가격·통화·채권 관계를 한 경로에 놓았습니다. 아래 질문으로 외화 장부를 다시 계산합니다.">

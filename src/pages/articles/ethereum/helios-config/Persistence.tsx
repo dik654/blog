@@ -35,9 +35,10 @@ export default function Persistence({ title, onCodeRef }: Props) {
         question="Checkpoint가 age policy 안에 있는지 어떤 단위로 판단하는가?"
         idea="검사 시각과 checkpoint가 대표하는 finalized 시각의 차이를 같은 초 단위로 계산한 뒤 configured maximum과 비교합니다. Root의 수학적 유효성과 source trust는 별도 조건입니다."
         formula={String.raw`a=t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)`}
-        annotatedFormula={String.raw`a=\underbrace{t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`a=\underbrace{t_{\text{check}}-t_{\text{finalized}}}_{\text{checkpoint 나이(초)}},\qquad \operatorname{fresh}=\underbrace{\bigl(0\le a\le A_{\max}\bigr)}_{\text{config 최대 age 이내}}`}
         operations={[
-          { expression: String.raw`t_{\text{check}}-t_{\text{finalized}},\qquad \operatorname{fresh}=\bigl(0\le a\le A_{\max}\bigr)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","검사 시각과 checkpoint가 대표하는 finalized","시각의 차이를 같은 초 단위로 계산한 뒤 configured","maximum과 비교합니다."] },
+          { expression: String.raw`t_{\text{check}}-t_{\text{finalized}}`, annotation: ["startup 검사 시각에서 finalized 시각을","같은 초 단위로 빼 checkpoint 나이를 얻음"] },
+          { expression: String.raw`\bigl(0\le a\le A_{\max}\bigr)`, annotation: ["나이가 음수(미래 시각)면 거부","pinned config의 최대 age를 넘어도 거부","통과해도 source·root 검증은 별도"] },
         ]}
         terms={[
           { symbol: "t_{\\text{check}}", name: "검사 시각", description: "이번 startup receipt에 기록한 wall-clock seconds입니다." },

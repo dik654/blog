@@ -87,33 +87,11 @@ n_r^{need} &= \max\!\left(0,\;n_r^{target}-n_r^{computed}\right) \\
 0 \le n_r^{sched} &\le n_r^{need} \\
 \sum_{r\in\mathcal S} n_r^{sched} &\le B_{tok}
 \end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-\underbrace{n_r^{need}}_{\text{허용 경계 판정}} &= \underbrace{\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)}_{\text{경계 후보 선택}} \\
-0 \le n_r^{sched} &\le n_r^{need} \\
-\sum_{r\in\mathcal S} n_r^{sched} &\le \underbrace{B_{tok}}_{\text{오른쪽 항으로 결과 계산}}
-\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{n_r^{need}}_{\text{남은 계산량}} &= \max\!\left(0,\;\underbrace{n_r^{target}-n_r^{computed}}_{\text{목표까지 남은 거리}}\right) \\0 \le \underbrace{n_r^{sched}}_{\text{이번 배정량}} &\le n_r^{need} \\\underbrace{\sum_{r\in\mathcal S} n_r^{sched}}_{\text{모든 요청 배정 합}} &\le \underbrace{B_{tok}}_{\text{iteration 예산}}\end{aligned}`}
           operations={[
-            {
-              expression: String.raw`\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)`,
-              annotation: [
-                "목표 위치에서 계산한 위치를 빼고 음수이면 0으로 제한합니다.",
-                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
-              ],
-            },
-            {
-              expression: String.raw`n_r^{need}`,
-              annotation: [
-                "선택한 모든 요청의 배정량 합이 예산을 넘지 않아야 합니다.",
-                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
-              ],
-            },
-            {
-              expression: String.raw`B_{tok}`,
-              annotation: [
-                "선택한 모든 요청의 배정량 합이 예산을 넘지 않아야 합니다.",
-                "이번 사례에서 R1과 R2는 각각 1이고 P는 3입니다.",
-              ],
-            },
+            { expression: String.raw`\max\!\left(0,\;n_r^{target}-n_r^{computed}\right)`, annotation: ["목표 위치에서 계산한 위치를 빼고","음수면 0으로 자릅니다","예: R1은 9−8=1, P는 남은 입력 12"] },
+            { expression: String.raw`0 \le n_r^{sched}`, annotation: ["남은 양 중 요청별 상한·잔여 예산을","통과한 만큼만 배정합니다","예: P는 12 → 상한 4 → 잔여 3"] },
+            { expression: String.raw`\sum_{r\in\mathcal S} n_r^{sched}`, annotation: ["이번 iteration에 배정한 양을 모두 더해","예산 B_tok=5 이하인지 봅니다","예: 1+1+3=5"] },
           ]}
           terms={GAP_TERMS}
           assumptions={[

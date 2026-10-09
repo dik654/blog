@@ -12,14 +12,14 @@ export default function LangGraph() {
 \rho(\rho(x,a),a)&=\rho(x,a)
 \end{aligned}`}
   annotatedFormula={String.raw`\begin{aligned}
-\rho(\underbrace{\rho(x,a)}_{\text{reducer 계산}},b)&=\underbrace{\rho(x,\rho(a,b))}_{\text{reducer 계산}}\\
-\rho(x,a)&=\underbrace{\rho(a,x)}_{\text{reducer 계산}}\\
-\rho(\rho(x,a),a)&=\rho(x,a)
+\underbrace{\rho(\rho(x,a),b)}_{\text{a 먼저 합친 뒤 b}}&=\underbrace{\rho(x,\rho(a,b))}_{\text{a·b 묶어 한 번에}}\\
+\underbrace{\rho(x,a)}_{\text{x에 a 도착}}&=\underbrace{\rho(a,x)}_{\text{순서 뒤바뀜}}\\
+\underbrace{\rho(\rho(x,a),a)}_{\text{같은 a가 retry로 재도착}}&=\rho(x,a)
 \end{aligned}`}
   operations={[
-    { expression: String.raw`\rho(x,\rho(a,b))`, annotation: ["reducer이(가) 식의 결과에 기여하는 방식을 계산합니다.","재시도와 도착 순서 변화에 강한 set-like merge라면","결합법칙·교환법칙·멱등성을 확인합니다."] },
-    { expression: String.raw`\rho(a,x)`, annotation: ["reducer이(가) 식의 결과에 기여하는 방식을 계산합니다.","재시도와 도착 순서 변화에 강한 set-like merge라면","결합법칙·교환법칙·멱등성을 확인합니다."] },
-    { expression: String.raw`\rho(x,a)`, annotation: ["reducer이(가) 식의 결과에 기여하는 방식을 계산합니다.","재시도와 도착 순서 변화에 강한 set-like merge라면","결합법칙·교환법칙·멱등성을 확인합니다."] },
+    { expression: String.raw`\rho(x,\rho(a,b))`, annotation: ["결합법칙: branch 결과를 어떻게", "묶어 합쳐도 join state가 같습니다"] },
+    { expression: String.raw`\rho(a,x)`, annotation: ["교환법칙: worker 도착 순서가", "바뀌어도 결과가 같습니다"] },
+    { expression: String.raw`\rho(\rho(x,a),a)`, annotation: ["멱등성: 같은 receipt가 두 번 와도", "set union은 한 번만 반영", "list append라면 중복이 생깁니다"] },
   ]} terms={[{symbol:"rho",name:"reducer",description:"현재 channel 값과 branch update를 새 state로 합치는 함수입니다."},{symbol:"x",name:"accumulated state",description:"Join 전까지 저장된 기존 channel 값입니다."},{symbol:"a,b",name:"parallel updates",description:"같은 super-step 또는 retry에서 들어온 worker 결과입니다."}]} assumptions={["순서가 의미 있는 log는 commutative set이 아니라 stable event ID와 ordered reducer를 사용합니다.","같은 artifact ID의 내용 충돌은 조용히 dedup하지 않고 conflict로 올립니다.","Reducer property를 unit/property test하고 framework default overwrite를 그대로 가정하지 않습니다."]} interpretation="Set union은 같은 receipt가 retry로 두 번 와도 결과가 같지만 list append는 중복됩니다. Ordered history가 필요하면 event ID·sequence와 dedup 규칙을 따로 둡니다."/><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             Checkpointer가 저장하는 것은 정해진 경계의 state입니다. node 중간은 저장하지 않으므로 resume 시 node가 처음부터 재실행될 수 있습니다.
             Database insert와 outbox event는 stable operation key의 unique constraint로 같은 transaction에 쓰고 sender는

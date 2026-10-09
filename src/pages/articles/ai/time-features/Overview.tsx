@@ -38,10 +38,13 @@ export default function Overview() {
       <ExplainedFormula
         question="Forecasting용 table의 한 row는 어떤 질문을 하나의 target으로 고정할까?"
         idea={<>Entity i에서 forecast origin c까지 알 수 있는 history로, c 뒤의 horizon h 동안 정의된 target을 예측합니다. 따라서 input과 label 양쪽에 시간 경계가 들어갑니다.</>}
-        formula={String.raw`\hat y_{i,c,h}=f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)`}
-        annotatedFormula={String.raw`\hat y_{i,c,h}=\underbrace{f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)}_{\text{허용 경계 판정}}`}
+        formula={String.raw`\hat y_{i,c,h}=f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right),\,h\right)`}
+        annotatedFormula={String.raw`\underbrace{\hat y_{i,c,h}}_{\text{entity·cutoff·horizon 질문}}=f_{\theta}\!\left(\underbrace{\Phi}_{\text{lag·window 변환}}\!\left(\underbrace{\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}}_{\text{c까지 도착한 기록}}\right),\,\underbrace{h}_{\text{예측할 미래 구간}}\right)`}
         operations={[
-          { expression: String.raw`f_{\theta}\!\left(\Phi\!\left(\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Entity i에서 forecast origin c까지 알 수","있는 history로, c 뒤의 horizon h 동안 정의된","target을 예측합니다."] },
+          { expression: String.raw`\hat y_{i,c,h}`, annotation: ["한 row = 매장 A, cutoff 8월 1일,","horizon 7일이라는 하나의 질문","label은 cutoff 뒤 7일 매출입니다"] },
+          { expression: String.raw`\Phi`, annotation: ["고른 과거 기록을 lag·window·calendar","좌표로 바꾸는 feature map"] },
+          { expression: String.raw`\{r: r.\mathrm{entity}=i,\ r.\mathrm{available\_time}\le c\}`, annotation: ["매장 A의 기록 중 8월 1일 자정까지","실제로 도착한 것만 고릅니다","다른 매장 history는 섞지 않습니다"] },
+          { expression: String.raw`,\,h`, annotation: ["같은 history라도 7일 뒤와 1일 뒤는","다른 target이라 horizon h도 질문에 넣습니다"] },
         ]}
         terms={[
           { symbol: "i", name: "entity", description: "서로 history가 섞이면 안 되는 매장·사용자·센서 같은 예측 단위입니다." },
@@ -49,7 +52,7 @@ export default function Overview() {
           { symbol: "h", name: "forecast horizon", description: "Cutoff 뒤 얼마 동안 또는 몇 step 뒤의 target을 맞힐지 정합니다." },
           { symbol: "Φ", name: "time-feature map", description: "유효한 과거 record를 lag·window·calendar coordinates로 바꿉니다." },
         ]}
-        assumptions={["Entity key·timezone·event/available timestamp의 clock 기준이 고정돼 있습니다.", "Target interval은 input history와 겹치지 않도록 문제별로 명시합니다.", "Training과 serving은 같은 cutoff rule과 late-arrival policy를 사용합니다."]}
+        assumptions={["Entity key·timezone·event/available timestamp의 clock 기준이 고정돼 있습니다.", "Target interval은 input history와 겹치지 않도록 문제별로 명시합니다.", "Training과 serving은 같은 cutoff rule과 late-arrival policy를 사용합니다.", "Feature Φ는 cutoff c까지의 history만 요약하고 h에 의존하지 않습니다. Horizon마다 model을 따로 두는 direct 방식이면 h를 입력 대신 f의 첨자로 읽습니다."]}
         interpretation="좋은 시계열 feature는 미래를 잘 요약한 값이 아니라 prediction 당시 재현할 수 있는 과거를 잘 요약한 값입니다."
       />
 

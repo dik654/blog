@@ -2,7 +2,7 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: overview·two-ratios·per-head 절. 숫자는 Malthus(1798) 초판 25~27쪽 */
+/** 본문 대응: overview·two-ratios·per-head 절. 숫자는 Malthus(1798) 초판 24~26쪽 */
 const SCENES = [
   "섬 하나를 100년 동안 따라갑니다",
   "한쪽은 곱으로, 다른 쪽은 더하기로 늡니다",
@@ -10,14 +10,14 @@ const SCENES = [
   "더 멀리 가면 차이가 벌어집니다",
 ] as const;
 
-/** Malthus 25~26쪽: 섬 인구 700만에서 시작해 25년마다 두 배 */
+/** Malthus 21~24쪽: 섬 인구 700만에서 시작해 25년마다 두 배(100년 뒤 숫자는 24쪽) */
 const START = 7;
 const STEPS = [0, 25, 50, 75, 100] as const;
 const people = (i: number) => START * 2 ** i;
 /** 식량은 25년마다 지금 생산량만큼씩 더해집니다 */
 const food = (i: number) => START * (i + 1);
 
-/** Malthus 27쪽: 세계로 넓혔을 때의 두 수열 */
+/** Malthus 25쪽("512 to 10"은 26쪽 첫 줄): 세계로 넓혔을 때의 두 수열 */
 const WORLD_P = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512] as const;
 const WORLD_F = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -56,7 +56,7 @@ export default function TwoRatiosViz() {
       eyebrow="두 줄의 늘어남"
       title="총량은 둘 다 늘어나는데 한 사람 몫은 내려갑니다"
       description="늘어나는 방식이 곱이냐 더하기냐가 다르면, 두 줄을 나눈 값은 시간이 갈수록 한쪽으로 기웁니다."
-      note="숫자는 Malthus(1798) 초판 25~27쪽의 예시 그대로입니다. 단위는 그가 쓴 100만 명입니다."
+      note="숫자는 Malthus(1798) 초판 21~26쪽의 예시 그대로입니다. 단위는 그가 쓴 100만 명입니다."
     >
       <div
         data-viz-canvas

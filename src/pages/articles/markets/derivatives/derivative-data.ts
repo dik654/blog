@@ -60,7 +60,7 @@ export const noArbitrageData: DerivativeDeepArticleData = {
     { term: "베이시스 수렴", description: "이 글에서 선물−현물로 정한 가격 차이가 결제일에 같은 인도 대상을 향해 줄어드는 현상입니다.", example: "남은 보유기간이 짧아지며 자금비용과 배당 조정도 작아집니다.", boundary: "인도 품질·장소·결제 실패가 다른데도 무조건 0이 된다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "CME Group · Equity Index Fair Value", excerpt: "cash, financing charges, and dividends", application: "현물 100에 자금비용 5를 더하고 배당 2를 빼 복제비용 103을 계산합니다.", citation: "CME Group, Equity Index Fair Value", href: "https://www.cmegroup.com/trading/equity-index/fairvalue.html", note: "주가지수 선물의 공정가치를 현금지수·자금조달비용·배당으로 연결하고 실제 호가와의 차이를 설명하는 거래소 자료입니다." },
+    { source: "CME Group · Equity Index Fair Value", excerpt: "Fair value is the theoretical assumption of where a futures contract should be priced given such things as the current index level, index dividends, days to expiration and interest rates.", application: "현물 100에 자금비용 5를 더하고 배당 2를 빼 복제비용 103을 계산합니다.", citation: "CME Group, Equity Index Fair Value", href: "https://www.cmegroup.com/trading/equity-index/fairvalue.html", note: "주가지수 선물의 공정가치를 현금지수·금리·배당으로 연결하고(식: Cash [1+r (x/360)] - Dividends) 실제 호가와의 차이를 설명하는 거래소 자료입니다. cmegroup.com은 2026-10-09 자동 조회 403(봇 차단)이라 web.archive.org 2026-04-12 사본으로 문구를 확인했습니다." },
     { source: "MIT Sloan · 15.401 Finance Theory I", excerpt: "Forward and Futures Contracts", application: "계약 정의 뒤 무차익 가격과 헤지를 배우는 순서를 따라 가격과 전망을 분리합니다.", citation: "MIT OpenCourseWare, 15.401 course outline", href: "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf", note: "선도·선물, 무차익 가격, 헤지, 옵션의 성질과 이항모형으로 이어지는 대학 금융론 과정표입니다." },
   ],
   review: [
@@ -105,7 +105,7 @@ export const clearingData: DerivativeDeepArticleData = {
       "개시증거금 모형의 높은 신뢰수준도 손실이 불가능하다는 뜻이 아닙니다. 과거 자료, 가정한 청산기간, 가격 충격과 상관관계가 모형 바깥에서 달라질 수 있으므로 스트레스 시험과 공동 재원이 더 필요합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 규정의 손실 분담 순서는 누가 먼저 돈을 내는지 보여 줍니다", bridge: "청산소라는 이름만 보지 않고 실제 재원 순서를 읽습니다.", paragraphs: [
-      "CFTC가 정리한 청산 규칙의 예에서는 부도 회원의 개시증거금과 보증기금 부담분이 먼저 쓰이고, 그 뒤 청산소가 정한 자기자본과 비부도 회원의 공동기금·추가 부담이 이어집니다. 이 순서는 손실이 누구에게 전가되는지 보여 줍니다.",
+      "CFTC 스트레스 시험 보고서(2016)가 정리한 예에서는 부도 회원의 개시증거금과 보증기금 부담분이 먼저 쓰이고, 그 뒤 청산소가 미리 정한 자기자본 일부와 비부도 회원의 보증기금·추가 부담이 이어집니다. 이 순서는 손실이 누구에게 전가되는지 보여 줍니다. 재원의 크기는 CFTC 규칙이 따로 정합니다. 2013년 최종 규칙은 시스템적으로 중요한 청산소 등이 가장 큰 노출을 만드는 회원 하나(일부는 두 회원)의 부도를 덮을 재원을 갖추게 하고, 사후에 걷는 평가분담금은 이 계산에 넣지 못하게 합니다.",
       "모든 청산소가 같은 금액과 세부 순서를 쓰지는 않습니다. 투자자는 자기 중개사와의 고객 약정도 따로 봐야 합니다. 고객 재산 분리, 회원 부도 때 포지션 이전 가능성, 현금 납부 시간은 중앙청산소의 큰 구조와 다른 층의 규칙입니다.",
     ] },
     { id: "limits", level: "7", title: "10. 청산소가 있어도 유동성·집중·모형 위험은 남습니다", bridge: "신용 보호 장치가 만들어 내는 새 취약점까지 보고 다음 옵션 가격 글로 갑니다.", paragraphs: [
@@ -130,8 +130,8 @@ export const clearingData: DerivativeDeepArticleData = {
     { term: "손실 분담 순서", description: "회원 부도 뒤 부도자 재원·청산소 자본·공동 재원 등을 사용하는 규정된 차례입니다.", example: "부도 회원이 맡긴 담보를 먼저 소진한 뒤 다음 층으로 갑니다.", boundary: "모든 청산소와 상품의 순서·한도가 같다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "CFTC · Supervisory Stress Test of CCPs", excerpt: "variation margin transfers gains and losses", application: "첫날 손실 8의 지급과 잠재 미래 손실을 위한 개시증거금 12를 다른 장부로 둡니다.", citation: "U.S. CFTC, Supervisory Stress Test of CCPs", href: "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/cftcstresstest111516.pdf", note: "변동증거금·개시증거금의 역할과 중앙청산소의 스트레스 손실 흡수 능력을 설명한 감독기관 자료입니다." },
-    { source: "CFTC · DCO default resources rule", excerpt: "defaulting clearing member's initial margin", application: "부도 회원 재원에서 청산소와 비부도 회원 재원으로 이어지는 순서를 실제 규정 구조와 대조합니다.", citation: "U.S. CFTC, Derivatives Clearing Organization General Provisions", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html", note: "파생상품 청산기구가 손실을 처리할 때 쓸 수 있는 재원과 순서를 다룬 공식 최종 규칙입니다." },
+    { source: "CFTC · Supervisory Stress Test of CCPs", excerpt: "The daily transfer of gains and losses is referred to as variation margin.", application: "첫날 손실 8의 지급과 잠재 미래 손실을 위한 개시증거금 12를 다른 장부로 둡니다.", citation: "U.S. CFTC, Supervisory Stress Test of CCPs", href: "https://www.cftc.gov/sites/default/files/idc/groups/public/%40newsroom/documents/file/cftcstresstest111516.pdf", note: "변동증거금·개시증거금의 역할과 중앙청산소의 스트레스 손실 흡수 능력을 설명한 감독기관 자료입니다." },
+    { source: "CFTC · DCO 국제기준 최종 규칙", excerpt: "the default of the clearing member creating the largest financial exposure", application: "손실 분담 순서와 별도로, 청산소가 미리 갖춰야 할 재원의 크기와 평가분담금 제외 규칙을 확인합니다.", citation: "U.S. CFTC, Derivatives Clearing Organizations and International Standards, 78 FR 72476 (2013-12-02)", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-27849.html", note: "시스템적으로 중요한 청산소 등이 가장 큰 노출을 만드는 회원(일부는 두 회원)의 부도를 극단적이지만 그럴듯한 상황에서 덮을 재원을 갖추게 하고, 그 계산에 평가분담금을 넣지 못하게 한 최종 규칙입니다. 부도 재원의 사용 순서 자체는 1번 출처 CFTC 스트레스 시험 보고서 §6(Sequence of Resource Use in a Default)에 있습니다(2026-10-09 확인)." },
   ],
   review: [
     "개시증거금 12와 첫날 변동증거금 8은 각각 어떤 위험을 다루나요? (답: 3·4절)",
@@ -200,7 +200,7 @@ export const replicationData: DerivativeDeepArticleData = {
     { term: "풋콜 등식", description: "같은 기초자산·행사가격·만기의 유럽형 콜과 풋을 현물과 안전한 현금에 연결하는 무차익 관계입니다.", example: "금리 0에서 C+100=S+P를 맞춥니다.", boundary: "미국형 행사, 배당, 자금·거래 비용을 무시한 채 그대로 쓰지 않습니다." },
   ] },
   sources: [
-    { source: "MIT Sloan · 15.401 Finance Theory I", excerpt: "The Binomial Model", application: "두 미래 상태의 옵션 지급을 주식과 현금으로 복제한 뒤 연속시간 모형으로 넘어갑니다.", citation: "MIT OpenCourseWare, 15.401 course outline", href: "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf", note: "옵션의 성질, 이항모형, 블랙숄즈 모형과 실물옵션으로 이어지는 학부 금융론의 학습 순서를 보여 줍니다." },
+    { source: "MIT Sloan · 15.401 Finance Theory I", excerpt: "Binomial and Black-Scholes pricing models", application: "두 미래 상태의 옵션 지급을 주식과 현금으로 복제한 뒤 연속시간 모형으로 넘어갑니다.", citation: "MIT OpenCourseWare, 15.401 course outline", href: "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/fc2d55329f1bf7e5af23b4724ee594c2_MIT15_401F08_courseOutline.pdf", note: "옵션의 성질, 이항모형, 블랙숄즈 모형과 실물옵션으로 이어지는 대학원(MIT Sloan MBA 핵심 과목, OCW 표기 Level: Graduate) 금융론의 학습 순서를 보여 줍니다." },
     { source: "Options Industry Council · Put-Call Parity", excerpt: "same underlying, strike price and expiration", application: "금리 0인 사례의 C+100=100+P를 맞추고 풋 가격 10을 확인합니다.", citation: "Options Industry Council, Put-Call Parity", href: "https://www.optionseducation.org/advancedconcepts/put-call-parity", note: "같은 조건의 유럽형 콜·풋과 현물·현금 사이의 무차익 관계 및 현실의 거래 제약을 설명하는 업계 교육 자료입니다." },
   ],
   review: [
@@ -270,7 +270,7 @@ export const greeksData: DerivativeDeepArticleData = {
     { term: "동적 헤지와 모형 위험", description: "변하는 민감도에 따라 거래를 다시 맞추며, 가정과 현실의 차이로 생기는 손실도 관리하는 과정입니다.", example: "새 델타 0.58에 맞춰 주식 0.08주를 더 삽니다.", boundary: "자주 거래하면 모든 위험과 비용이 사라진다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "Options Industry Council · Volatility & the Greeks", excerpt: "guideposts, not guaranteed predictions", application: "델타·감마·세타·베가를 옵션 한 단위의 가격 변화 근사에 쓰고 단위와 국소성의 한계를 밝힙니다.", citation: "Options Industry Council, Volatility & the Greeks", href: "https://www.optionseducation.org/advancedconcepts/volatility-the-greeks", note: "역사적·내재변동성과 주요 그릭스의 역할, 이론적 민감도의 한계를 설명하는 옵션 교육 자료입니다." },
+    { source: "Options Industry Council · Volatility & the Greeks", excerpt: "It is not guaranteed that the future performance of the stock will behave according to the historical numbers.", application: "델타·감마·세타·베가를 옵션 한 단위의 가격 변화 근사에 쓰고 단위와 국소성의 한계를 밝힙니다.", citation: "Options Industry Council, Volatility & the Greeks", href: "https://www.optionseducation.org/advancedconcepts/volatility-the-greeks", note: "역사적·내재변동성과 주요 그릭스의 역할, 이론적 민감도의 한계를 설명하는 옵션 교육 자료입니다." },
     { source: "OCC · Characteristics and Risks of Standardized Options", excerpt: "characteristics and risks", application: "모형 민감도에서 실제 계약의 행사·결제·손실·증거금 조건으로 돌아갑니다.", citation: "Options Clearing Corporation, Options Disclosure Document", href: "https://www.theocc.com/company-information/documents-and-archives/options-disclosure-document", note: "미국 상장 옵션의 권리·의무와 위험을 설명하는 공식 옵션 공시문서의 현재 배포 페이지입니다." },
   ],
   review: [
@@ -411,7 +411,7 @@ export const salesPracticeData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "국가법령정보센터 · 금융소비자보호법 제17·19조", excerpt: "일반금융소비자가 이해할 수 있도록 설명", application: "고객 정보 파악·부적합 권유 금지와 상품 위험 설명·이해 확인을 환헤지 상담의 순서에 대입합니다.", citation: "금융소비자 보호에 관한 법률 제19조", href: "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033001899", note: "2026년 1월 2일 시행 법문에서 일반금융소비자에 대한 설명의무와 투자성 상품의 중요 사항을 확인할 수 있습니다." },
-    { source: "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정", excerpt: "직무윤리·분쟁예방·법규", application: "상품 계산과 함께 권유 실무, 소비자 보호, 분쟁과 준법을 하나의 직무 과정으로 배열합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력 과정", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "장내·장외 파생상품, 투자권유 실무, 직무윤리, 법규와 분쟁 예방을 함께 다루는 공식 사전 의무교육 과정입니다." },
+    { source: "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정", excerpt: "직무윤리 · 분쟁조정 · 자본시장법 · 협회규정", application: "상품 계산과 함께 권유 실무, 소비자 보호, 분쟁과 준법을 하나의 직무 과정으로 배열합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력 과정", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "장내·장외 파생상품, 투자권유 실무, 직무윤리, 법규와 분쟁조정을 함께 다루는 공식 사전 의무교육 과정입니다. 인용문은 과정표 1~4번 과목명을 · 로 이어 옮긴 것입니다(2026-10-09 확인)." },
   ],
   review: [
     "월 1억 달러 수출에 2억 달러 매도 의무가 과다 헤지가 될 수 있는 이유는 무엇인가요? (답: 3절)",

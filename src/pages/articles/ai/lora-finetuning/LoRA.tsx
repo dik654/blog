@@ -37,15 +37,10 @@ A&\in\mathbb R^{r\times d_{\mathrm{in}}}\\
 B&\in\mathbb R^{d_{\mathrm{out}}\times r}\\
 s&=\frac{\alpha}{r}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-y&=\underbrace{Wx+sBAx}_{\text{오른쪽 항으로 결과 계산}}\\
-A&\in\mathbb R^{r\times d_{\mathrm{in}}}\\
-B&\in\mathbb R^{d_{\mathrm{out}}\times r}\\
-s&=\underbrace{\frac{\alpha}{r}}_{\text{기준량당 비율}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y&=\underbrace{Wx}_{\text{고정된 base 출력}}+\underbrace{sBAx}_{\text{adapter branch}}\\A&\in\underbrace{\mathbb R^{r\times d_{\mathrm{in}}}}_{\text{입력 차원을 r로 축소}}\\B&\in\underbrace{\mathbb R^{d_{\mathrm{out}}\times r}}_{\text{r을 출력 차원으로 복원}}\\s&=\underbrace{\frac{\alpha}{r}}_{\text{update 배율}}\end{aligned}`}
         operations={[
-          { expression: String.raw`Wx+sBAx`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Base output Wx는 그대로 두고 adapter","branch BAx를 더합니다."] },
-          { expression: String.raw`\frac{\alpha}{r}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Base output Wx는 그대로 두고 adapter","branch BAx를 더합니다."] },
+          { expression: String.raw`Wx+sBAx`, annotation: ["base output Wx는 그대로 두고", "A로 줄였다 B로 늘린 update를 더합니다", "d=4096, r=8이면 A 8×4096, B 4096×8"] },
+          { expression: String.raw`\frac{\alpha}{r}`, annotation: ["rank를 바꿀 때 update 크기가", "따라 변하는 정도를 맞추는 convention", "최적값을 보장하는 상수는 아닙니다"] },
         ]}
         terms={[
           { symbol: "W", name: "frozen base weight", description: "Shape dout×din인 pretrained linear weight입니다." },
@@ -65,13 +60,10 @@ N_{\mathrm{LoRA}}&=r(d_{\mathrm{in}}+d_{\mathrm{out}})\\
 \operatorname{rank}(BA)&\le \min(\operatorname{rank}A,\operatorname{rank}B)\\
 &\le r
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{오른쪽 항으로 결과 계산}}\\
-\operatorname{rank}(BA)&\le \min(\operatorname{rank}A,\operatorname{rank}B)\\
-&\le r
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}N_{\mathrm{LoRA}}&=\underbrace{r(d_{\mathrm{in}}+d_{\mathrm{out}})}_{\text{A와 B의 scalar 수}}\\\operatorname{rank}(BA)&\le \underbrace{\min(\operatorname{rank}A,\operatorname{rank}B)}_{\text{좁은 쪽이 상한}}\\&\le \underbrace{r}_{\text{독립 변화 방향 최대 수}}\end{aligned}`}
         operations={[
-          { expression: String.raw`r(d_{\mathrm{in}}+d_{\mathrm{out}})`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Full matrix는 din·dout개의 값을 가지지만 두","adapter는 r(din+dout)개만 가집니다."] },
+          { expression: String.raw`r(d_{\mathrm{in}}+d_{\mathrm{out}})`, annotation: ["full update d_in·d_out 대신", "r=8, 4096×4096이면 8·8192=65,536개", "약 1,678만의 0.39%입니다"] },
+          { expression: String.raw`\min(\operatorname{rank}A,\operatorname{rank}B)`, annotation: ["행렬 곱의 rank는 두 인자의", "rank보다 클 수 없고 중간 폭이 r이라", "BA의 update rank는 최대 8입니다"] },
         ]}
         terms={[
           { symbol: "N_LoRA", name: "adapter parameters", description: "한 target weight에 추가되는 A와 B의 scalar 수입니다." },

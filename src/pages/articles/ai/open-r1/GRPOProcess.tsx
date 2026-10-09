@@ -65,9 +65,11 @@ export default function GRPOProcess({
           </>
         }
         formula={String.raw`\widehat A_i=\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j`}
-        annotatedFormula={String.raw`\widehat A_i=\underbrace{\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{\widehat A_i}_{\text{상대 advantage}}=\frac{\overbrace{r_i-\overline r}^{\text{group 평균보다 나은 정도}}}{\underbrace{s_r+\varepsilon}_{\text{group reward 퍼짐}}},\qquad \underbrace{\overline r=\frac1G\sum_{j=1}^{G}r_j}_{\text{같은 prompt 평균 reward}}`}
         operations={[
-          { expression: String.raw`\frac{r_i-\overline r}{s_r+\varepsilon},\qquad \overline r=\frac1G\sum_{j=1}^{G}r_j`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 prompt에서 뽑은 G개 reward의 평균을 기준으로","각 completion이 group보다"] },
+          { expression: String.raw`\overline r=\frac1G\sum_{j=1}^{G}r_j`, annotation: ["같은 prompt에서 뽑은 G개 completion의", "평균 reward가 value function 대신", "그 문제의 난도 기준선이 됩니다"] },
+          { expression: String.raw`r_i-\overline r`, annotation: ["평균보다 나은 completion은 양수,", "못한 completion은 음수 신호"] },
+          { expression: String.raw`s_r+\varepsilon`, annotation: ["group 표준편차로 나눠 scale을 맞춤", "prompt 난도 bias가 생길 수 있어", "TRL은 끄거나 batch scaling 선택 가능"] },
         ]}
         terms={[
           {
@@ -136,14 +138,14 @@ c_{i,t}&=\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i\\
 \ell_{i,t}&=\min(u_{i,t},c_{i,t})
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-u_{i,t}&=\underbrace{\rho_{i,t}\widehat A_i}_{\text{sequence advantage 계산}}\\
-c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i}_{\text{sequence advantage 계산}}\\
-\ell_{i,t}&=\underbrace{\min(u_{i,t},c_{i,t})}_{\text{경계 후보 선택}}
+u_{i,t}&=\underbrace{\rho_{i,t}}_{\text{새/rollout 확률비}}\underbrace{\widehat A_i}_{\text{completion 신호}}\\
+c_{i,t}&=\underbrace{\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)}_{\text{신뢰 구간 안 ratio}}\widehat A_i\\
+\ell_{i,t}&=\underbrace{\min(u_{i,t},c_{i,t})}_{\text{보수적인 쪽 선택}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\rho_{i,t}\widehat A_i`, annotation: ["sequence advantage이(가) 식의 결과에 기여하는","방식을 계산합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,"] },
-          { expression: String.raw`\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)\widehat A_i`, annotation: ["sequence advantage이(가) 식의 결과에 기여하는","방식을 계산합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,"] },
-          { expression: String.raw`\min(u_{i,t},c_{i,t})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","새 policy와 rollout policy의","probability ratio에 advantage를 곱하고,","ratio를 신뢰 구간 밖으로 밀어 얻는 추가 이득은"] },
+          { expression: String.raw`\rho_{i,t}\widehat A_i`, annotation: ["completion의 advantage를 그 안의", "모든 token에 같은 부호로 전달하고", "확률비만큼 키우거나 줄입니다"] },
+          { expression: String.raw`\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)`, annotation: ["ratio를 1±ε 밖으로 밀어도", "더는 이득이 늘지 않게 자릅니다"] },
+          { expression: String.raw`\min(u_{i,t},c_{i,t})`, annotation: ["둘 중 작은 값을 써서 한 rollout", "batch로 policy가 멀리 가지 않게 함", "구현 loss는 이 값의 음수"] },
         ]}
         terms={[
           {

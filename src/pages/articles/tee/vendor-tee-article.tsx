@@ -201,10 +201,12 @@ export default function VendorTeeArticle({ vendor }: { vendor: VendorKey }) {
           question="같은 page bytes라도 주소·순서·type이 달라진 build를 왜 다른 identity로 볼 수 있는가?"
           idea={<>측정 ledger는 직전 digest에 event type·주소·page digest를 순서대로 접어 넣습니다. 아래 식은 네 제품의 실제 encoding이 아니라 measurement의 순서·주소 binding을 이해하기 위한 공통 모형입니다.</>}
           formula={String.raw`D_i=H\!\left(D_{i-1}\,\|\,t_i\,\|\,a_i\,\|\,H(P_i)\right)`}
-          annotatedFormula={String.raw`D_i=\underbrace{H\!\left(D_{i-1}\,\|\,t_i\,\|\,a_i\,\|\,H(P_i)\right)}_{\text{허용 경계 판정}}`}
+          annotatedFormula={String.raw`D_i=H\!\left(\underbrace{D_{i-1}}_{\text{직전 ledger digest}}\,\|\,\underbrace{t_i}_{\text{event type}}\,\|\,\underbrace{a_i}_{\text{주소}}\,\|\,\underbrace{H(P_i)}_{\text{page digest}}\right)`}
           operations={[
-            { expression: String.raw`H\!\left(D_{i-1}\,\|\,t_i\,\|\,a_i\,\|\,H(P_i)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","측정 ledger는 직전 digest에 event","type·주소·page digest를 순서대로 접어 넣습니다."] },
-          ]}
+          { expression: String.raw`D_{i-1}`, annotation: ["직전 digest를 입력에 넣어 순서를 묶음"] },
+          { expression: String.raw`t_i\,\|\,a_i`, annotation: ["event type과 주소를 함께 접어 넣어", "같은 page bytes도 주소·type이 다르면 다른 D"] },
+          { expression: String.raw`H(P_i)`, annotation: ["page 내용 digest", "실제 vendor encoding이 아닌 공통 모형"] },
+        ]}
           terms={[
             { symbol: "D_i", name: "누적 measurement", description: "i번째 measured event까지 순서대로 접은 identity digest입니다." },
             { symbol: "t_i", name: "Event type", description: "Code·data·configuration처럼 vendor가 정의한 측정 종류입니다." },

@@ -16,9 +16,11 @@ export default function G1Curve() {
         question="Affine point addition은 두 점에서 결과 좌표를 어떻게 계산할까요?"
         idea="두 점을 지나는 line slope λ를 계산하고 cubic의 세 intersection x 좌표 합 관계를 사용합니다. Field division은 denominator inverse이므로 P=Q·P=−Q 예외를 먼저 분리합니다."
         formula={String.raw`\lambda=(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1`}
-        annotatedFormula={String.raw`\lambda=\underbrace{(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1}_{\text{field inverse 계산}}`}
+        annotatedFormula={String.raw`\lambda=\underbrace{(y_2-y_1)(x_2-x_1)^{-1}}_{\text{두 점을 잇는 기울기}},\qquad x_3=\underbrace{\lambda^2-x_1-x_2}_{\text{세 교점 x합에서 역산}},\qquad y_3=\underbrace{\lambda(x_1-x_3)-y_1}_{\text{교점 y를 뒤집음}}`}
         operations={[
-          { expression: String.raw`(y_2-y_1)(x_2-x_1)^{-1},\qquad x_3=\lambda^2-x_1-x_2,\qquad y_3=\lambda(x_1-x_3)-y_1`, annotation: ["field inverse이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 점을 지나는 line slope λ를 계산하고 cubic의","세 intersection x 좌표 합 관계를 사용합니다."] },
+          { expression: String.raw`(y_2-y_1)(x_2-x_1)^{-1}`, annotation: ["y 차에 x 차의 field inverse를 곱함","P=Q, P=−Q면 분모가 0이라 따로 분기","예: F17, (5,1)·(6,3) → λ=2"] },
+          { expression: String.raw`\lambda^2-x_1-x_2`, annotation: ["직선과 cubic의 세 교점 x 합이 λ²","예: 4−5−6=−7≡10 (mod 17)"] },
+          { expression: String.raw`\lambda(x_1-x_3)-y_1`, annotation: ["세 번째 교점의 y를 반전한 값","예: 2(5−10)−1=−11≡6 → P+Q=(10,6)"] },
         ]}
         terms={[
           { symbol: String.raw`\lambda`, name: "line slope", description: "두 affine points를 잇는 field-valued 기울기입니다." },
@@ -40,9 +42,10 @@ export default function G1Curve() {
         question="Jacobian coordinates는 왜 반복 scalar multiplication의 inversion을 줄일까요?"
         idea="여러 (X,Y,Z)가 같은 affine point를 나타내도록 denominator power를 Z에 미룹니다. Add/double에서는 multiplication과 square만 수행하고 최종 serialization에서 inverse 한 번으로 affine에 돌아옵니다."
         formula={String.raw`x=XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)`}
-        annotatedFormula={String.raw`x=\underbrace{XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)}_{\text{Jacobian coordinates 계산}}`}
+        annotatedFormula={String.raw`x=\underbrace{XZ^{-2}}_{\text{분모를 Z 제곱으로 미룸}},\qquad y=\underbrace{YZ^{-3}}_{\text{분모를 Z 세제곱으로 미룸}},\qquad \underbrace{(X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)}_{\text{같은 점의 여러 표현}}`}
         operations={[
-          { expression: String.raw`XZ^{-2},\qquad y=YZ^{-3},\qquad (X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)`, annotation: ["Jacobian coordinates이(가) 식의 결과에","기여하는 방식을 계산합니다.","여러 (X,Y,Z)가 같은 affine point를 나타내도록","denominator power를 Z에 미룹니다."] },
+          { expression: String.raw`XZ^{-2}`, annotation: ["add·double 동안은 곱셈·제곱만 하고","affine으로 돌아갈 때 inverse 한 번"] },
+          { expression: String.raw`(X,Y,Z)\sim(\mu^2X,\mu^3Y,\mu Z)`, annotation: ["0 아닌 μ로 스케일해도 같은 affine 점","예: (20,40,2)와 (5,5,1)은 μ=2 관계","raw tuple 대신 X/Z²·Y/Z³로 비교"] },
         ]}
         terms={[
           { symbol: "X,Y,Z", name: "Jacobian coordinates", description: "반복 group operation에 사용하는 projective representation입니다." },

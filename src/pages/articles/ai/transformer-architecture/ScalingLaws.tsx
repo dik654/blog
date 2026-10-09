@@ -46,9 +46,11 @@ export default function ScalingLaws() {
           </>
         }
         formula={String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`}
-        annotatedFormula={String.raw`\underbrace{L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}}_{\text{irreducible floor 계산}}`}
+        annotatedFormula={String.raw`L(N,D)\approx\underbrace{L_\infty}_{\text{scale로 못 없앨 바닥}}+\underbrace{aN^{-\alpha}}_{\text{model 크기 부족분}}+\underbrace{bD^{-\beta}}_{\text{data 부족분}}`}
         operations={[
-          { expression: String.raw`L(N,D)\approx L_\infty+aN^{-\alpha}+bD^{-\beta}`, annotation: ["irreducible floor이(가) 식의 결과에 기여하는","방식을 계산합니다.","무한한 model·data에서도 남는 irreducible","term에 parameter-limited term과"] },
+          { expression: String.raw`L_\infty`, annotation: ["model·data가 무한해도 남는 loss","data 분포와 objective가 정하는 바닥"] },
+          { expression: String.raw`aN^{-\alpha}`, annotation: ["parameter가 모자라 생기는 loss","N을 키우면 power law로 줄어듭니다","a·α는 실험 family에 fit한 값"] },
+          { expression: String.raw`bD^{-\beta}`, annotation: ["training token이 모자라 생기는 loss","Chinchilla는 70B를 1.4T token으로,","parameter당 약 20 token을 배분"] },
         ]}
         terms={[
           {

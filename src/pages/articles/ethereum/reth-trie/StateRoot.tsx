@@ -25,9 +25,11 @@ export default function StateRoot({
         formula={
           "r_{\\rm state}={\\rm TrieRoot}\\!\\left\\{ {\\rm keccak}(a)\\mapsto {\\rm RLP}(n,b,r_{\\rm storage},h_{\\rm code}) \\right\\}"
         }
-        annotatedFormula={String.raw`r_{\rm state}=\underbrace{{\rm TrieRoot}\!\left\{ {\rm keccak}(a)\mapsto {\rm RLP}(n,b,r_{\rm storage},h_{\rm code}) \right\}}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\underbrace{r_{\rm state}}_{\text{header의 state root}}={\rm TrieRoot}\!\left\{ \underbrace{{\rm keccak}(a)}_{\text{주소를 hash한 path}}\mapsto \underbrace{{\rm RLP}(n,b,r_{\rm storage},h_{\rm code})}_{\text{account leaf value}} \right\}`}
         operations={[
-          { expression: String.raw`{\rm TrieRoot}\!\left\{ {\rm keccak}(a)\mapsto {\rm RLP}(n,b,r_{\rm storage},h_{\rm code}) \right\}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Address를 hash한 path에 account 네 필드를","RLP로 넣고, account가 가진 storage trie","root도 그 value 안에 중첩합니다."] },
+          { expression: String.raw`{\rm keccak}(a)`, annotation: ["address a를 Keccak-256으로 hash해", "trie 안에서 이 account가 놓일 path로 씁니다"] },
+          { expression: String.raw`{\rm RLP}(n,b,r_{\rm storage},h_{\rm code})`, annotation: ["account의 nonce·balance·code hash와", "storage root를 RLP로 묶은 leaf value", "storage trie root가 이 안에 중첩됩니다"] },
+          { expression: String.raw`r_{\rm state}`, annotation: ["모든 account path를 접은 trie의 root", "A의 balance만 바뀌어도 값이 달라지고", "header root와 다르면 block을 거절합니다"] },
         ]}
         terms={[
           {

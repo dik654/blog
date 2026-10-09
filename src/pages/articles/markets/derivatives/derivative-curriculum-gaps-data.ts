@@ -61,7 +61,7 @@ export const krxDerivativesMechanicsData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "한국거래소 · 코스피200 선물 명세", excerpt: "Contract Size · Tick Size · Cash Settlement", application: "330에서 328로 움직인 1계약의 손익에 승수와 결제방식을 적용합니다.", citation: "KRX, KOSPI 200 Futures", href: "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp", note: "현재 종목 규격은 거래 시점의 KRX 계약명세에서 다시 확인합니다." },
-    { source: "한국거래소 · 주문과 결제", excerpt: "Limit · Market · IOC · FOK", application: "주문 수량의 처리와 체결 뒤 일일정산·반대거래·최종결제를 구분합니다.", citation: "KRX, Types of Orders and Futures Settlement", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp", note: "주문유형과 결제 절차의 시장 공통 설명이며 회원사별 추가 기준은 별도입니다." },
+    { source: "한국거래소 · 주문유형", excerpt: "Limit · Market · IOC · FOK", application: "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.", citation: "KRX, Order Types", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp", note: "주문유형만 설명하는 페이지입니다. 체결 뒤 일일정산·반대거래·최종결제는 이 페이지에 없고 상품명세(1번 출처)와 KRX 청산결제 규정에서 확인합니다. 회원사별 추가 기준은 별도입니다." },
   ],
   review: [
     "330에 산 1계약이 328로 정산될 때 손익을 계산해 보세요. (답: 1·3절)",
@@ -105,7 +105,7 @@ export const portfolioCompressionData: DerivativeDeepArticleData = {
       "적용 주기와 의무는 회사 지위와 거래 관계에 따라 달라집니다. 이 글의 세 계약은 규칙의 구조를 보여 주는 교육용 사례입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. BIS는 총 명목 감소만으로 위험 감소를 읽지 말라고 경계합니다", bridge: "운영 성과와 위험 판단에 서로 다른 숫자를 씁니다.", paragraphs: [
-      "BIS 설명은 압축이 총 명목을 크게 줄일 수 있지만 그 수치 하나가 시장 참가자의 위험을 곧바로 말해 주지는 않는다고 지적합니다. 총 명목은 계약 활동과 구조를 보는 척도에 가깝습니다.",
+      "BIS 2015년 12월호 설명은 장외파생상품 명목 잔액이 2014년 말 629조 달러에서 2015년 6월 말 553조 달러로 12% 줄었고 압축이 그 감소를 이끌었다고 적으면서도, 명목 잔액의 변화가 실제로 보유한 위험의 변화를 반드시 반영하지는 않는다고 지적합니다. 총 명목은 계약 활동과 구조를 보는 척도에 가깝습니다.",
       "압축 성과에는 제거한 계약 수와 명목을 쓰고, 남은 위험에는 현재가치·민감도·상대방 노출·현금 부족 시나리오를 씁니다. 두 표를 한 열로 합치지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 압축은 부도 위험과 현금 부족을 없애지 않습니다", bridge: "장부가 가벼워진 뒤에도 남는 위험을 확인합니다.", paragraphs: [
@@ -130,8 +130,8 @@ export const portfolioCompressionData: DerivativeDeepArticleData = {
     { term: "총 명목 경계", description: "총 명목 감소와 실제 위험 감소를 서로 다른 지표로 보는 원칙입니다.", example: "200을 없앤 뒤에도 현재가치와 현금 스트레스를 다시 잽니다.", boundary: "명목 감소율을 손실 감소율로 바꾸지 않습니다." },
   ] },
   sources: [
-    { source: "CFTC · 스왑 압축 규칙", excerpt: "termination and replacement with a reduced number", application: "100·60·40 세 계약의 종료와 대체, 위험 허용 범위와 기록을 연결합니다.", citation: "CFTC, Confirmation, Portfolio Reconciliation and Portfolio Compression", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자 규칙의 적용 범위입니다." },
-    { source: "BIS · 거래 압축과 명목원금", excerpt: "compression tears up offsetting contracts", application: "총 명목 200 감소와 시장·상대방 위험의 변화를 다른 지표로 봅니다.", citation: "BIS Quarterly Review, September 2015", href: "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf", note: "총 명목 감소가 위험 자체의 같은 비율 감소를 뜻하지 않는다는 측정 경계를 사용합니다." },
+    { source: "CFTC · 스왑 압축 규칙", excerpt: "replace the terminated swaps with other swaps whose combined notional value", application: "100·60·40 세 계약의 종료와 대체, 위험 허용 범위와 기록을 연결합니다.", citation: "CFTC, Confirmation, Portfolio Reconciliation and Portfolio Compression", href: "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2012-21414", note: "미국 스왑 딜러·주요 스왑 참가자 규칙의 적용 범위입니다." },
+    { source: "BIS · 거래 압축과 명목원금", excerpt: "Trade compression - a process of tearing up trades to eliminate economically redundant derivatives positions", application: "총 명목 200 감소와 시장·상대방 위험의 변화를 다른 지표로 봅니다.", citation: "BIS Quarterly Review, December 2015, \"Outstanding OTC derivatives positions dwindle as compression gains further traction\"", href: "https://www.bis.org/publ/qtrpdf/r_qt1512w.htm", note: "총 명목 감소가 위험 자체의 같은 비율 감소를 뜻하지 않는다는 측정 경계를 사용합니다." },
   ],
   review: [
     "+100·−60·−40의 순액과 총 명목을 각각 계산해 보세요. (답: 1·3절)",
@@ -167,7 +167,7 @@ export const collateralOptimizationData: DerivativeDeepArticleData = {
       "유동성 완충은 예상 밖 호출과 지급을 견디려고 남겨 두는 현금과 쉽게 현금화할 자산입니다. 비용을 조금 더 내더라도 완충을 지키는 해가 실제로 더 안전할 수 있습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. B를 5만 쓰고 나머지 5를 A로 채웁니다", bridge: "집중한도가 최저비용 해를 어떻게 바꾸는지 계산합니다.", paragraphs: [
-      "B의 인정가치 한도가 5라면 시장가 5÷0.85=5.89만 배정합니다. 남은 인정가치 5는 A 시장가 5÷0.95=5.27로 채웁니다.",
+      "B의 인정가치 한도가 5라면 시장가 5÷0.85≈5.88만 배정합니다. 남은 인정가치 5는 A 시장가 5÷0.95≈5.26으로 채웁니다(둘 다 소수 셋째 자리에서 반올림).",
       "두 자산의 결제 위치와 마감 시각을 확인하고 지시를 보냅니다. 실제 결제된 가치가 10인지 대사한 뒤 남은 현금과 채권으로 다음 날 스트레스를 다시 돌립니다.",
     ] },
     { id: "source", level: "5", title: "8. BCBS·IOSCO는 적격성·할인율·집중·잘못된 방향을 함께 봅니다", bridge: "비청산 증거금의 국제 원칙을 최적화 제약에 넣습니다.", paragraphs: [
@@ -200,7 +200,7 @@ export const collateralOptimizationData: DerivativeDeepArticleData = {
     { term: "유동성 완충", description: "예상 밖 증거금과 지급을 위해 남겨 두는 현금과 고유동성자산입니다.", example: "오늘 담보를 낸 뒤 내일 호출도 견디는지 봅니다.", boundary: "평상시 비용 최소화와 같은 목표가 아닙니다." },
   ] },
   sources: [
-    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "liquid and able to hold their value", application: "적격성·할인율·집중·잘못된 방향의 위험을 배정 제약으로 둡니다.", citation: "BCBS-IOSCO, Margin requirements for non-centrally cleared derivatives", href: "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf", note: "국제 최소 원칙이며 관할 규칙과 계약의 자산 목록을 다시 확인합니다." },
+    { source: "BCBS·IOSCO · 비청산 증거금", excerpt: "Assets should be highly liquid and should, after accounting for an appropriate haircut, be able to hold their value in a time of financial stress", application: "적격성·할인율·집중·잘못된 방향의 위험을 배정 제약으로 둡니다.", citation: "Basel Framework MGN20.29, Margin requirements for non-centrally cleared derivatives", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true", note: "BCBS-IOSCO 비청산 증거금 기준을 담은 바젤 프레임워크 MGN 장입니다. IOSCO 원 주소(ioscopd403.pdf)는 2026-10-09 자동 조회 403이라 같은 기준의 BIS 통합본으로 바꿨습니다. 국제 최소 원칙이며 관할 규칙과 계약의 자산 목록을 다시 확인합니다." },
     { source: "ISDA · 담보 운영 권고", excerpt: "Eligibility · Haircuts · Concentration · Substitution", application: "계산한 A·B 배정을 실제 교체·수탁·결제 절차에 연결합니다.", citation: "ISDA, Collateral Management Suggested Operational Practices", href: "https://www.isda.org/collateral-management-sop/", note: "업계 운영 권고이며 개별 CSA와 현지 법률이 우선합니다." },
   ],
   review: [
@@ -281,6 +281,36 @@ export const ccpDefaultManagementData: DerivativeDeepArticleData = {
 };
 
 export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
+  formulas: [
+    {
+      section: "mechanism",
+      content: {
+        title: "Bachelier 지급 스왑션 가격",
+        question: "normal 변동성 70bp를 넣으면 3개월×10년, 행사가 4.10% 지급 스왑션의 프리미엄은 얼마인가요?",
+        idea: "선도스왑금리가 만기까지 bp 단위 정규분포로 움직인다고 보고, 만기 때 (선도−행사가)의 양수 부분을 평균한 뒤 명목과 연금계수로 현금 단위로 바꿉니다.",
+        formula: String.raw`P=N\,A\left[(F-K)\,\Phi(d)+\sigma_N\sqrt{T}\,\varphi(d)\right],\qquad d=\frac{F-K}{\sigma_N\sqrt{T}}`,
+        annotatedFormula: String.raw`P=\underbrace{N\,A}_{\text{명목×연금계수}}\Big[\underbrace{(F-K)\,\Phi(d)}_{\text{선도 기준 내재가치 몫}}+\underbrace{\sigma_N\sqrt{T}\,\varphi(d)}_{\text{남은 기간의 흔들림 몫}}\Big]`,
+        operations: [
+          { expression: String.raw`\sigma_N\sqrt{T}=70\text{bp}\times\sqrt{0.25}=35\text{bp}`, annotation: "3개월 동안 쌓이는 선도금리의 표준편차입니다." },
+          { expression: String.raw`d=\frac{4.00\%-4.10\%}{35\text{bp}}=\frac{-10}{35}=-0.2857`, annotation: "행사가가 선도보다 10bp 높아 지급 스왑션은 외가격입니다." },
+          { expression: String.raw`\Phi(-0.2857)=0.3875,\quad \varphi(-0.2857)=0.3830`, annotation: "누적확률과 밀도를 구합니다." },
+          { expression: String.raw`-10\times0.3875+35\times0.3830=-3.88+13.40=9.53\text{bp}`, annotation: "음수인 내재가치 몫보다 흔들림 몫이 커서 옵션 가치가 양수입니다." },
+          { expression: String.raw`P=1\text{억}\times8.5\times0.000953\approx81\text{만 원}`, annotation: "bp 값을 명목 1억과 연금계수 8.5로 현금 단위로 바꿉니다." },
+        ],
+        terms: [
+          { symbol: String.raw`F,\ K`, name: "선도스왑금리·행사가", description: "사례에서는 4.00%와 4.10%입니다." },
+          { symbol: String.raw`A`, name: "스왑 연금계수", description: "고정금리 1단위 지급의 현재가치 합입니다. 사례에서는 8.5입니다." },
+          { symbol: String.raw`\sigma_N`, name: "normal 변동성", description: "선도금리 변화의 연 표준편차를 bp로 적은 값입니다. 사례에서는 70bp(가정)입니다." },
+          { symbol: String.raw`\Phi,\ \varphi`, name: "표준정규 누적분포·밀도", description: "외가격 정도 d에서의 행사 가능성과 그 근처 밀도입니다." },
+        ],
+        assumptions: [
+          "(가정) N=1억 원, A=8.5, F=4.00%, K=4.10%, T=0.25년, σ_N=70bp입니다.",
+          "lognormal 호가라면 Black 식을 쓰며, 같은 숫자를 다른 식에 넣으면 다른 가격이 나옵니다.",
+        ],
+        interpretation: "3절의 85만 원은 행사가 차이를 스왑 가치로 옮긴 값이고, 이 지급 스왑션에는 불리한 쪽입니다. 남은 3개월의 흔들림을 넣은 프리미엄은 약 81만 원입니다.",
+      },
+    },
+  ],
   sections: [
     { id: "overview", level: "S", title: "1. 3개월 뒤 10년 스왑을 고르는 권리는 세 좌표로 가격을 찾습니다", bridge: "만기 하나짜리 옵션 표를 금리시장에 맞게 넓힙니다.", paragraphs: [
       "3개월 뒤 시작하는 10년 고정금리 지급 스왑션을 생각하겠습니다. 옵션 만기 3개월, 기초 스왑 만기 10년, 행사가가 현재 선도스왑금리보다 10bp 높은지가 가격표의 세 좌표입니다.",
@@ -299,7 +329,7 @@ export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
       "모형을 호가에 보정해 빈 행사가와 만기의 값을 채우고 스왑션 가격·델타·베가를 계산합니다. 다음 날에는 새 호가와 손익을 비교해 보간과 모형 가정을 검증합니다.",
     ] },
     { id: "need", level: "2", title: "5. normal 70bp와 lognormal 20%는 같은 숫자표에 넣을 수 없습니다", bridge: "변동성의 단위와 분포 가정을 구분합니다.", paragraphs: [
-      "normal 변동성은 금리 변화 폭을 bp 단위로 다루며 금리가 0 아래로 갈 가능성을 자연스럽게 표현할 수 있습니다. lognormal 변동성은 금리의 비율 변화와 양의 수준을 중심으로 해석합니다.",
+      "normal 변동성은 금리 변화 폭을 bp 단위로 다루며 금리가 0 아래로 갈 가능성을 자연스럽게 표현할 수 있습니다. lognormal 변동성은 금리의 비율 변화와 양의 수준을 중심으로 해석합니다. 등가격 근처에서는 normal 변동성이 대략 lognormal 변동성×선도금리입니다. 선도금리 4%에서 lognormal 20%는 약 80bp에 해당하므로, normal 70bp(lognormal로 약 17.5%)와는 다른 시장 판단입니다(근사).",
       "shifted lognormal은 금리에 이동값을 더해 음수 근처를 다룹니다. 호가 유형과 이동값을 기록하지 않으면 같은 숫자를 넣어도 다른 가격과 민감도가 나옵니다.",
     ] },
     { id: "names", level: "3", title: "6. 스왑 연금계수·변동성 호가형·스왑션 큐브에 이름을 붙입니다", bridge: "금리 차이·확률 가정·좌표표를 서로 나눕니다.", paragraphs: [
@@ -308,10 +338,10 @@ export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
     ] },
     { id: "mechanism", level: "4", title: "7. 3개월×10년×+10bp 한 점을 평가 엔진에 넣습니다", bridge: "금리곡선과 변동성 큐브가 만나는 계산 순서를 봅니다.", paragraphs: [
       "곡선에서 선도금리 4.00%와 연금계수 8.5를 만들고 행사가 4.10%와 비교합니다. 큐브에서 3개월×10년의 +10bp 지점 변동성을 찾거나 주변 호가로 보간합니다.",
-      "호가형에 맞는 Bachelier 또는 Black 계열 식에 명목·만기·금리·연금계수·변동성을 넣습니다. 계산값을 시장가격과 비교하고 차이가 크면 호가 시각·관례·보간·보정 상태를 조사합니다.",
+      "호가형에 맞는 Bachelier 또는 Black 계열 식에 명목·만기·금리·연금계수·변동성을 넣습니다. normal 호가라면 아래 Bachelier 식을 씁니다. 계산값을 시장가격과 비교하고 차이가 크면 호가 시각·관례·보간·보정 상태를 조사합니다.",
     ] },
     { id: "source", level: "5", title: "8. CME 자료는 만기·테너·moneyness 호가에서 전체 표면을 만듭니다", bridge: "실제 청산 평가 절차가 어떤 자료를 섞는지 확인합니다.", paragraphs: [
-      "CME의 스왑션 평가 설명은 옵션 만기, 기초 스왑 tenor와 ATM 대비 행사가별 normal 변동성을 모으고, 보정 모형으로 전체 표면을 구성하는 과정을 보여 줍니다. 곡선과 표면을 함께 써 가격을 냅니다.",
+      "2차 자료로 확인한 범위에서 CME의 청산 스왑션 평가는 옵션 만기, 기초 스왑 tenor와 ATM 대비 행사가별 normal 변동성을 회원 제출값으로 모으고, 보정 모형(shifted SABR)으로 전체 표면을 구성합니다. 아래 출처의 CME 원문은 이번 확인에서 본문 대조를 하지 못했습니다. 곡선과 표면을 함께 써 가격을 냅니다.",
       "특정 시점의 청산 방법론은 할인 기준과 상품 범위가 바뀔 수 있습니다. 현재 거래를 평가할 때는 최신 방법론과 시장 관례를 다시 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. LSEG 큐브는 만기·스왑기간·행사가와 두 호가형을 함께 제공합니다", bridge: "큐브라는 이름이 실제로 세 축을 뜻하는지 확인합니다.", paragraphs: [
@@ -340,7 +370,7 @@ export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
     { term: "스왑션 변동성 큐브", description: "옵션 만기·기초 스왑 만기·행사가별 내재변동성을 놓은 세 축 자료입니다.", example: "3개월×10년×+10bp 좌표를 찾습니다.", boundary: "빈 구간은 관측값이 아니라 보간·모형 결과일 수 있습니다." },
   ] },
   sources: [
-    { source: "CME Group · 스왑션 평가 방법", excerpt: "expiry · tenor · moneyness · normal volatility", application: "3개월×10년×+10bp 호가를 곡선·보정·전체 표면과 연결합니다.", citation: "CME Group, SOFR Discounting and Price Alignment Transition", href: "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf", note: "2020년 전환 설명의 평가 구조를 사용하며 현재 할인·청산 방법은 최신 문서를 확인합니다." },
+    { source: "CME Group · 스왑션 평가 방법", excerpt: "expiry · tenor · moneyness · normal volatility", application: "3개월×10년×+10bp 호가를 곡선·보정·전체 표면과 연결합니다.", citation: "CME Group, SOFR Discounting and Price Alignment Transition", href: "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf", note: "2020년 전환 설명의 평가 구조를 사용하며 현재 할인·청산 방법은 최신 문서를 확인합니다. 이 PDF는 2026-10-09 자동 조회 403이고 web.archive.org 사본(2024-06-18)도 중간에 잘려 본문을 대조하지 못했습니다. 회원 제출 변동성 큐브와 shifted SABR 보정이라는 방향은 2차 자료(Clarus FT, Swaptions Clearing at CME)로만 확인했습니다." },
     { source: "LSEG · 스왑션 변동성 큐브", excerpt: "option expiries · swap tenors · strike or delta", application: "큐브의 세 축과 normal Bachelier·Black 호가형을 구분합니다.", citation: "LSEG, IRD Swaption Volatility Cubes", href: "https://www.lseg.com/en/data-catalogue/fixed-income/derived/ird-swaps-swaption-volatility-cubes", note: "데이터 상품 설명이며 개별 호가의 정확성과 거래 가능성을 보장하는 자료는 아닙니다." },
   ],
   review: [
@@ -382,7 +412,7 @@ export const derivativesRecordsPrivacyData: DerivativeDeepArticleData = {
     ] },
     { id: "source", level: "5", title: "8. 금융소비자보호법은 기록·변조 방지·열람을 한 조문에 둡니다", bridge: "판매 증거가 회사 내부 자료로만 남지 않는 이유를 확인합니다.", paragraphs: [
       "금융소비자보호법 제28조는 정해진 업무 자료를 기록하고 종류별 기간 동안 유지·관리하며 멸실·위조·변조를 막을 대책을 요구합니다. 분쟁조정이나 소송을 위한 소비자의 열람도 규정합니다.",
-      "정확한 자료 종류·기간·열람 기한과 제한 사유는 시행령 등 현재 규정을 함께 봐야 합니다. 이 글은 모든 파생상품 기록에 단일 기간을 제시하지 않습니다.",
+      "열람 기한의 상한은 법률이 직접 정합니다. 제28조 제4항은 요구받은 날부터 10일 이내의 범위에서 대통령령으로 정한 기간 안에 열람하게 하도록 하고, 열람을 제한하거나 거절할 수 있는 사유는 제5항이 정합니다. 반면 기록할 자료의 종류와 종류별 보존 기간은 시행령이 정하므로 함께 봐야 합니다. 이 글은 모든 파생상품 기록에 단일 기간을 제시하지 않습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 금융위원회 안내는 고난도 상품의 녹취와 숙려를 판매 흐름에 넣습니다", bridge: "녹음 여부보다 그 뒤 의사 확인까지 봅니다.", paragraphs: [
       "금융위원회 안내는 고난도 금융투자상품의 판매·계약 과정을 녹취하고 숙려기간 뒤 고객이 청약 의사를 다시 표시하는 구조를 설명합니다. 녹취 파일 제공 경로도 안내합니다.",
@@ -410,8 +440,8 @@ export const derivativesRecordsPrivacyData: DerivativeDeepArticleData = {
     { term: "보존과 파기 경계", description: "자료별 근거·기간·법적 보류·삭제 범위와 완료 증거를 정하는 기준입니다.", example: "원본과 색인·사본의 파기를 추적합니다.", boundary: "모든 자료에 같은 기간을 붙이지 않습니다." },
   ] },
   sources: [
-    { source: "국가법령정보센터 · 금융소비자보호법", excerpt: "자료의 기록 및 유지·관리", application: "18분 녹취와 문서·주문 자료의 변조 방지, 소비자 열람과 종류별 보존을 연결합니다.", citation: "금융소비자 보호에 관한 법률 제28조", href: "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704", note: "2026년 시행 법률을 기준으로 하며 세부 종류·기간·기한은 현재 시행령과 감독규정을 함께 확인합니다." },
-    { source: "금융위원회 · 고난도 금융상품 보호장치", excerpt: "녹취 및 숙려 기간", application: "녹취·요약설명서·숙려 뒤 청약 의사 확인을 판매 시간줄에 놓습니다.", citation: "금융위원회, 고난도 금융투자상품 투자자 보호 강화", href: "https://fsc.go.kr/no010101/75872", note: "제도 도입 안내이므로 현재 상품·고객·거래장소별 적용과 예외는 최신 규정을 다시 확인합니다." },
+    { source: "국가법령정보센터 · 금융소비자보호법", excerpt: "제28조(자료의 기록 및 유지ㆍ관리 등)", application: "18분 녹취와 문서·주문 자료의 변조 방지, 소비자 열람과 종류별 보존을 연결합니다.", citation: "금융소비자 보호에 관한 법률 제28조", href: "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704", note: "2026년 1월 2일 시행 법률을 기준으로 하며 세부 종류·기간은 현재 시행령과 감독규정을 함께 확인합니다. 국가법령정보센터 페이지는 조문 본문을 스크립트로 불러와 자동 조회로는 본문이 보이지 않아, 제28조 문언은 위키문헌 법령 사본으로 2차 확인했습니다(2026-10-09)." },
+    { source: "금융위원회 · 고난도 금융상품 보호장치", excerpt: "2영업일 이상의 숙려기간이 보장됩니다", application: "녹취·요약설명서·숙려 뒤 청약 의사 확인을 판매 시간줄에 놓습니다.", citation: "금융위원회, 고난도 금융투자상품 투자자 보호 강화", href: "https://fsc.go.kr/no010101/75872", note: "제도 도입 안내이므로 현재 상품·고객·거래장소별 적용과 예외는 최신 규정을 다시 확인합니다." },
   ],
   review: [
     "14시10분부터 14시32분까지 어떤 자료를 같은 사건으로 묶어야 하나요? (답: 1·3절)",

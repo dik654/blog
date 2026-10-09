@@ -30,9 +30,11 @@ export default function ModernKohakuProviderArticle() {
         question="Adapter를 교체해도 critical methods의 의미와 최소 신뢰 수준이 유지되었는가?"
         idea={<>각 method의 결과 parity와 provenance policy를 함께 검사합니다. 신뢰 수준은 우주의 절대 순서가 아니라 application이 미리 정한 ordered policy labels입니다.</>}
         formula={String.raw`\begin{aligned}A=\bigwedge_{m\in M_{crit}}\big(&[r_a(m)=r_o(m)]\\&\land[T_a(m)\ge T_{req}(m)]\big)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}A=\bigwedge_{m\in M_{crit}}\big(&[r_a(m)=r_o(m)]\\&\land[T_a(m)\ge \underbrace{T_{req}(m)]\big)}_{\text{판정 조건 결합}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}A=\underbrace{\bigwedge_{m\in M_{crit}}}_{\text{critical method 전부}}\big(&\underbrace{[r_a(m)=r_o(m)]}_{\text{결과가 oracle과 같음}}\\&\land\underbrace{[T_a(m)\ge T_{req}(m)]}_{\text{provenance가 정책 이상}}\big)\end{aligned}`}
         operations={[
-          { expression: String.raw`T_{req}(m)]\big)`, annotation: ["observed trust label이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 method의 결과 parity와 provenance","policy를 함께 검사합니다."] },
+          { expression: String.raw`\bigwedge_{m\in M_{crit}}`, annotation: ["balance·code·receipt·logs가","모두 통과해야 A=true"] },
+          { expression: String.raw`[r_a(m)=r_o(m)]`, annotation: ["같은 chain·block tag fixture에서","candidate 결과가 oracle과 일치"] },
+          { expression: String.raw`[T_a(m)\ge T_{req}(m)]`, annotation: ["실제 거친 경로의 trust label이","method별 최소 요구 이상인지 검사","getLogs bypass는 값이 같아도 실패"] },
         ]}
         terms={[
           { symbol: "M_crit", name: "critical methods", description: "Balance·code·receipt·logs처럼 release에서 비교하기로 정한 method 집합입니다." },

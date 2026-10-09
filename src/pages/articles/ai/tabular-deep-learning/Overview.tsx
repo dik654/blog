@@ -43,9 +43,11 @@ export default function Overview() {
         question="서로 뜻이 다른 column을 neural model은 어떤 공통 경로로 prediction까지 보낼까?"
         idea={<>먼저 schema가 raw row를 단위와 category가 명확한 feature vector로 바꾸고, encoder가 task에 유용한 representation을 학습합니다. Prediction head는 그 representation만 받아 target 형식의 output을 냅니다.</>}
         formula={String.raw`\hat y_i=h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)`}
-        annotatedFormula={String.raw`\hat y_i=\underbrace{h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\hat y_i=\underbrace{h_{\phi}}_{\text{prediction head}}\!\left(\underbrace{\operatorname{Enc}_{\theta}}_{\text{학습하는 encoder}}\!\left(\underbrace{T_{\text{schema}}(x_i)}_{\text{schema 변환}}\right)\right)`}
         operations={[
-          { expression: String.raw`h_{\phi}\!\left(\operatorname{Enc}_{\theta}\!\left(T_{\text{schema}}(x_i)\right)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","먼저 schema가 raw row를 단위와 category가","명확한 feature vector로 바꾸고, encoder가","task에 유용한 representation을 학습합니다."] },
+          { expression: String.raw`T_{\text{schema}}(x_i)`, annotation: ["raw row를 단위·category가 명확한","feature vector로 바꾸는 규칙","train fold에서만 fit해 serving에 고정"] },
+          { expression: String.raw`\operatorname{Enc}_{\theta}`, annotation: ["task에 유용한 representation을 학습","baseline보다 나은지가 딥러닝의 가치"] },
+          { expression: String.raw`h_{\phi}`, annotation: ["representation만 받아","target 형식의 output을 냄"] },
         ]}
         terms={[
           { symbol: "x_i", name: "raw row", description: "한 entity와 cutoff에 해당하는 수치형·범주형 관측값입니다." },

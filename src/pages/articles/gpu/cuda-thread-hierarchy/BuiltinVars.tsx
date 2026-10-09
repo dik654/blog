@@ -43,9 +43,10 @@ export default function BuiltinVars() {
           </>
         }
         formula={String.raw`G=\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor`}
-        annotatedFormula={String.raw`G=\underbrace{\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{G}_{\text{launch할 block 수}}=\underbrace{\left\lceil\frac{N}{B}\right\rceil}_{\text{나머지면 block 추가}}=\underbrace{\left\lfloor\frac{N+B-1}{B}\right\rfloor}_{\text{정수 나눗셈 구현}}`}
         operations={[
-          { expression: String.raw`\left\lceil\frac{N}{B}\right\rceil=\left\lfloor\frac{N+B-1}{B}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정수 나눗셈은 나머지를 버리므로, 나머지가 하나라도 있을 때","block 하나를 더 만드는 ceiling division을","사용합니다."] },
+          { expression: String.raw`\left\lceil\frac{N}{B}\right\rceil`, annotation: ["원소 N개를 block당 B개씩 맡길 때", "나머지가 남으면 block을 하나 더 만듭니다", "N=1,000, B=256 → G=4"] },
+          { expression: String.raw`\left\lfloor\frac{N+B-1}{B}\right\rfloor`, annotation: ["B−1을 더해 정수 나눗셈으로 올림", "1,255/256 → 4, 총 1,024 threads", "마지막 24개는 idx ≥ 1,000이라 쉽니다"] },
         ]}
         terms={[
           {

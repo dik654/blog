@@ -56,9 +56,10 @@ export default function Overview({
         question="여러 ExEx가 있을 때 node가 보존해야 할 가장 느린 checkpoint는 어디일까?"
         idea="각 extension이 durable하게 끝냈다고 보고한 높이 중 최솟값을 공통 안전 경계로 사용합니다. Head와의 차이는 backlog이며, 느린 consumer가 계속 뒤처지면 buffer가 유한하다는 사실을 운영자가 확인해야 합니다."
         formula={String.raw`h_{\mathrm{safe}}=\min_i h_i,\qquad L=H-h_{\mathrm{safe}}`}
-        annotatedFormula={String.raw`h_{\mathrm{safe}}=\underbrace{\min_i h_i,\qquad L=H-h_{\mathrm{safe}}}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`h_{\mathrm{safe}}=\underbrace{\min_i h_i}_{\text{가장 느린 ExEx}},\qquad L=\underbrace{H-h_{\mathrm{safe}}}_{\text{head와의 backlog}}`}
         operations={[
-          { expression: String.raw`\min_i h_i,\qquad L=H-h_{\mathrm{safe}}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 extension이 durable하게 끝냈다고 보고한 높이","중 최솟값을 공통 안전 경계로 사용합니다."] },
+          { expression: String.raw`\min_i h_i`, annotation: ["각 ExEx가 durable commit한 높이 중 최솟값","A=100, B=97이면 safe=97","100 이전을 지우면 B replay가 끊김"] },
+          { expression: String.raw`H-h_{\mathrm{safe}}`, annotation: ["canonical head와 공통 경계의 차이","105−97 = 8 blocks lag"] },
         ]}
         terms={[
           { symbol: "h_i", name: "ExEx finished height", description: "Extension i가 자신의 파생 상태까지 durable commit한 마지막 canonical block입니다." },

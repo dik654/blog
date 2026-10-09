@@ -39,9 +39,10 @@ export default function UseCases() {
         question="3명 guardian 중 2명 threshold에서 몇 개의 guardian 조합이 recovery를 승인할 수 있을까요?"
         idea="순서와 무관하게 threshold만큼 고르는 조합 수를 셉니다. 조합 수가 많다는 것은 availability가 높다는 뜻이지만, guardian 독립성이 없으면 실제 안전성은 그만큼 늘지 않습니다."
         formula={String.raw`N_{paths}=\binom{n}{t}=\frac{n!}{t!(n-t)!}`}
-        annotatedFormula={String.raw`N_{paths}=\underbrace{\binom{n}{t}=\frac{n!}{t!(n-t)!}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`N_{paths}=\underbrace{\binom{n}{t}}_{\text{승인 가능한 guardian 조합}}=\underbrace{\frac{n!}{t!(n-t)!}}_{\text{순서 중복을 나눠 제거}}`}
         operations={[
-          { expression: String.raw`\binom{n}{t}=\frac{n!}{t!(n-t)!}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","순서와 무관하게 threshold만큼 고르는 조합 수를","셉니다."] },
+          { expression: String.raw`\binom{n}{t}`, annotation: ["n명 중 threshold t명을 순서 없이 고름","n=3, t=2면 AB·AC·BC 3가지 경로"] },
+          { expression: String.raw`\frac{n!}{t!(n-t)!}`, annotation: ["3!=6가지 순서를 2!·1!=2로 나눠 3","같은 cloud에 묶이면 실제 실패는 하나"] },
         ]}
         terms={[
           { symbol: "n", name: "Guardians", description: "등록한 서로 구분되는 guardian 수입니다." },

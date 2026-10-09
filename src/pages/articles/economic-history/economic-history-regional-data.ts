@@ -30,8 +30,8 @@ export const chinaSince1800Data: WorldHistoryArticleData = {
       "가족이 추가 10자루를 남기면 소비·저축·농기구 구매가 달라질 수 있습니다. 농촌의 소득과 노동 이동은 향진기업과 도시 공장에 수요·자금·인력을 제공하지만, 이동 허가와 공공서비스 접근이 그 경로를 제한합니다.",
       "특구의 수출 주문은 부품 수입·가공·항만·외화 수입을 연결합니다. 지방정부는 토지와 인프라를 제공하고 세입을 얻지만 부채와 토지 의존도 함께 쌓을 수 있습니다.",
     ] },
-    { id: "source", level: "5", title: "8. 세계은행 개혁 연표는 가구·기업·가격·특구가 차례로 겹친 과정을 보여 줍니다", bridge: "100자루 사례를 1978년 이후의 실제 제도 순서에 대조합니다.", paragraphs: [
-      "세계은행의 40년 개혁 자료는 1978년 농촌 실험, 1979년 대외 개방, 1980년 첫 네 경제특구, 1980년대의 기업·가격 개혁을 따로 기록합니다. 이 순서는 개혁이 단일 법 한 번으로 끝나지 않았음을 보여 줍니다.",
+    { id: "source", level: "5", title: "8. Hofman의 개혁 연표는 가구·기업·가격·특구가 차례로 겹친 과정을 보여 줍니다", bridge: "100자루 사례를 1978년 이후의 실제 제도 순서에 대조합니다.", paragraphs: [
+      "세계은행 소속이던 버트 호프만은 2018년 푸단대 강연문에 '중국 개혁 40단계' 연표를 붙였습니다. 이 연표는 1978년 덩샤오핑의 중앙공작회의 연설과 제11기 3중전회, 1979년 대외 개방 착수와 가구책임제의 제한적 공식 용인(비공식으로는 1976년 시작), 1980년 첫 네 경제특구, 1984~1987년의 국유기업 개혁을 따로 적습니다. 계획 가격과 시장 가격을 함께 굴린 이중 경로는 연표가 아니라 강연 본문이 가장 중요한 전환 제도로 서술합니다. 이 순서는 개혁이 단일 법 한 번으로 끝나지 않았음을 보여 줍니다.",
       "본문의 60·40·10은 이 제도의 방향을 이해하기 위한 수치입니다. 실제 가구의 의무와 소득은 지역·작물·시기에 따라 달랐고 공식 연표만으로 생활 결과를 추정할 수 없습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. LSE 과정은 지리·국가·젠더·교육·재난을 성장률과 함께 보게 합니다", bridge: "개혁 성공담만으로 중국 경제사를 닫지 않습니다.", paragraphs: [
@@ -60,8 +60,8 @@ export const chinaSince1800Data: WorldHistoryArticleData = {
     { term: "경제특구 실험", description: "외국 투자·수출·기업 규칙을 한정된 지역에서 먼저 시험한 정책 방식입니다.", example: "1980년 첫 네 특구를 만든 뒤 다른 지역으로 넓혔습니다.", boundary: "특구 지정만으로 성장 효과가 보장되지는 않습니다." },
   ] },
   sources: [
-    { source: "World Bank · Reflections on 40 Years of China’s Reforms", excerpt: "First 4 special economic zones", application: "1978년 농촌 개혁부터 1980년 특구까지 서로 다른 제도가 겹친 순서를 확인합니다.", citation: "World Bank, Reflections on Forty Years of China’s Reforms", href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf", note: "개혁 연표와 단계적 실험을 확인했으며 100자루 사례는 이 글의 설명용 가정입니다." },
-    { source: "LSE · Chinese Economic History since 1800", excerpt: "institutions, states, gender, human capital", application: "성장을 가격 개혁 하나로 좁히지 않고 지리·국가·젠더·교육·무역·재난의 질문으로 다시 엽니다.", citation: "LSE EH218, Chinese Economic History since 1800", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm", note: "2026/27에는 중단된 과목이지만 공개된 내용 범위는 지역 경제사의 누락 검사표로 사용했습니다." },
+    { source: "Bert Hofman · Reflections on Forty Years of China’s Reforms", excerpt: "First 4 special economic zones", application: "1978년 3중전회부터 1979년 가구책임제 공식 용인과 1980년 특구까지 서로 다른 제도가 겹친 순서를 확인합니다.", citation: "Bert Hofman, Reflections on Forty Years of China’s Reforms (speech, Fudan University Fanhai School of International Finance, January 2018)", href: "https://thedocs.worldbank.org/en/doc/934911517472447837-0070022018/original/Reflectionson40yearsofreformsfinal.pdf", note: "세계은행 문서 저장소에 실렸지만 각주 1이 저자 개인 의견이며 세계은행에 귀속하지 말라고 밝힌 강연문입니다. 연표는 Annex 1을 읽었습니다. 원 주소(pubdocs.worldbank.org)는 404라 현재 주소로 바꿨습니다(확인일 2026-10-09). 100자루 사례는 이 글의 설명용 가정입니다." },
+    { source: "LSE · Chinese Economic History since 1800: Economic Growth in a Historical Perspective", excerpt: "(2) Institutions, (3) States, (4) Culture, (5) Social Capital, (6) Gender, (7) Human capital", application: "성장을 가격 개혁 하나로 좁히지 않고 지리·국가·젠더·교육·무역·재난의 질문으로 다시 엽니다.", citation: "LSE EH218, Chinese Economic History since 1800: Economic Growth in a Historical Perspective", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm", note: "2026/27에는 중단된 과목이지만 공개된 내용 범위는 지역 경제사의 누락 검사표로 사용했습니다." },
   ],
   review: [
     "수확 100·의무 60·추가 생산 10일 때 가구가 남기는 몫을 계산해 보세요. (답: 3절)",
@@ -86,7 +86,7 @@ export const japanIndustrializationData: WorldHistoryArticleData = {
     ] },
     { id: "picture", level: "1", title: "4. 1871년 엔·1882년 중앙은행·전후 복구·고도성장의 순서를 잇습니다", bridge: "공장보다 먼저 필요한 결제와 신용의 기반을 봅니다.", paragraphs: [
       "메이지 정부는 1871년 새 화폐 조례로 엔·전·리를 두고, 여러 정부·민간 은행권이 섞인 문제를 거쳐 1882년 일본은행을 세웠습니다. 철도·우편·교육과 관영 사업 일부는 민간 기업의 다음 투자를 위한 기반이 됐습니다.",
-      "전쟁 동원과 식민지 지배가 남긴 파괴 뒤 1945~1973년에는 복구·수출·설비투자·도시 이동이 빠르게 진행됐습니다. 이 성장은 전쟁과 제국의 비용을 지운 채 성공 모형으로만 읽을 수 없습니다.",
+      "전쟁 동원과 식민지 지배가 남긴 파괴 뒤 1945~1973년에는 복구·수출·설비투자·도시 이동이 빠르게 진행됐습니다. 오카자키 데쓰지에 따르면 이 기간 연평균 성장률은 7.6%였고, 일본 경제는 1949년 계획·통제 체제에서 시장경제로 넘어가며 달러당 360엔의 고정환율을 정했습니다. 이 성장은 전쟁과 제국의 비용을 지운 채 성공 모형으로만 읽을 수 없습니다.",
     ] },
     { id: "need", level: "2", title: "5. 산업정책의 존재와 산업정책이 모든 성장을 만들었다는 주장은 다릅니다", bridge: "지원받은 산업과 실제 성과 사이의 인과를 다시 확인합니다.", paragraphs: [
       "정부는 석탄·철강에 자원을 우선 배정하고 수입·외환·기술 도입을 관리했습니다. 그러나 지원 산업이 성장했다는 사실만으로 지원이 없을 때의 결과보다 더 좋았다고 확정할 수는 없습니다.",
@@ -104,8 +104,8 @@ export const japanIndustrializationData: WorldHistoryArticleData = {
       "일본은행 화폐박물관은 1871년 엔 도입, 1872년 국립은행 제도, 1877년 전쟁 금융과 인플레이션, 1882년 일본은행 설립을 이어 설명합니다. 국립은행은 국영은행이 아니라 법에 따른 민간은행이었습니다.",
       "통화 제도의 통일은 거래비용을 줄였지만 산업화의 충분조건은 아니었습니다. 농민이 낸 세금과 노동자의 생활, 전쟁 비용과 제국의 자원 이동을 별도 장부에 남겨야 합니다.",
     ] },
-    { id: "comparison", level: "6", title: "9. RIETI 연구는 전후 정책의 역할을 민간 경쟁과 구조 이동에 대조합니다", bridge: "정책 성공담을 반사실과 함께 읽습니다.", paragraphs: [
-      "RIETI의 전후 일본 연구는 1945~1973년 빠른 성장과 여러 산업정책을 정리하면서도, 좁은 의미의 산업 지원만이 성장을 만든 것은 아니라고 봅니다. 인적자본·경쟁·개방·기술 수용 같은 조건을 함께 제시합니다.",
+    { id: "comparison", level: "6", title: "9. 오카자키의 RIETI 글은 전후 산업정책의 효과를 유보하고 부작용까지 적습니다", bridge: "정책 성공담을 효과의 불확실성과 비용과 함께 읽습니다.", paragraphs: [
+      "오카자키 데쓰지가 쓰고 RIETI가 전재한 글은 산업정책의 목표와 수단이 시기마다 크게 바뀌었다고 정리합니다. 가장 부족했던 석탄과 철강에 물자를 몰아준 우선 생산 정책(1947~1948년)에 대해서도, 1947년 1월 정책 시작 뒤 석탄 생산이 늘었지만 정책 전부터 이미 늘고 있었으므로 정책 덕분인지는 분명하지 않다고 씁니다. 섬유 생산 감소는 이 정책의 부작용이었고, 부흥금융금고 채권을 일본은행이 사들여 돈을 푼 일은 인플레이션을 키웠다고 봅니다.",
       "따라서 공장 자금 100의 정부 몫 20이 필요했다는 가정과, 그 20이 어느 사업에 얼마의 추가 생산을 만들었는지는 다른 질문입니다. 후자는 비교 대상과 장기 비용이 필요합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 일본의 경로를 다른 나라의 복사 가능한 처방으로 만들지 않습니다", bridge: "시기·국제질서·사회관계가 다른 경우를 남깁니다.", paragraphs: [
@@ -131,7 +131,7 @@ export const japanIndustrializationData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "Bank of Japan Currency Museum · Modern Times", excerpt: "Birth of the yen", application: "1871년 화폐 단위와 1882년 중앙은행이 공장 금융 앞의 결제 기반을 만든 순서를 확인합니다.", citation: "Bank of Japan Currency Museum, Historical events and currencies in use", href: "https://www.imes.boj.or.jp/cm/english/history/content/", note: "공식 화폐 연표를 사용하며 공장 100의 자금 구성은 설명용 가정입니다." },
-    { source: "RIETI · Industrial Policy in Japan", excerpt: "recovery and high growth", application: "1945~1973년 정책·민간 경쟁·구조전환을 함께 읽고 지원의 존재와 인과효과를 구분합니다.", citation: "RIETI, Industrial Policy in Japan: 70-Year History since World War II", href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html", note: "전후 산업정책의 시기 구분과 반론을 확인했으며 다른 나라의 처방으로 그대로 옮기지 않습니다." },
+    { source: "Okazaki Tetsuji (RIETI) · Industrial Policy in Japan", excerpt: "recovery and high growth", application: "1945~1973년 정책의 시기 구분과 우선 생산의 불확실한 효과·부작용을 함께 읽고 지원의 존재와 인과효과를 구분합니다.", citation: "Okazaki Tetsuji, 'Industrial Policy in Japan: 70-Year History since World War II', Japan SPOTLIGHT, March/April 2017 (RIETI 전재)", href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html", note: "전후 산업정책의 시기 구분, 연평균 7.6% 성장, 우선 생산의 효과 유보와 부작용 서술을 확인했습니다(확인일 2026-10-09). 다른 나라의 처방으로 그대로 옮기지 않습니다." },
   ],
   review: [
     "자기자금 20·대출 60·공공 기반 20의 권리와 의무가 왜 다른지 설명해 보세요. (답: 3절)",
@@ -156,7 +156,7 @@ export const southAsiaMarketsStatesData: WorldHistoryArticleData = {
     ] },
     { id: "picture", level: "1", title: "4. 무굴 시장·회사 지배·철도·계획경제·1991년 전환을 잇습니다", bridge: "식민 이전과 이후를 단절 하나로만 보지 않습니다.", paragraphs: [
       "1600년 무렵의 면직물·농업·해상 상업에는 현지 상인과 금융업자, 국가의 조세가 이미 얽혀 있었습니다. 동인도회사는 무역 회사에서 조세와 군사 권력을 가진 통치자로 변했습니다.",
-      "철도와 항만은 지역 가격을 연결하면서 원료 수출과 군사 이동에도 쓰였습니다. 1947년 분할 뒤 인도·파키스탄·방글라데시·스리랑카 등은 토지·산업·무역 정책을 서로 다르게 선택했습니다.",
+      "철도와 항만은 지역 가격을 연결하면서 원료 수출과 군사 이동에도 쓰였습니다. 1947년 인도·파키스탄 분할, 1948년 실론(오늘날 스리랑카) 독립, 1971년 방글라데시의 파키스탄 분리 독립 뒤 각국은 토지·산업·무역 정책을 서로 다르게 선택했습니다. 실론은 1947년 분할로 생긴 나라가 아니라 1948년에 따로 독립했습니다.",
     ] },
     { id: "need", level: "2", title: "5. 기반시설의 편익과 식민 통치의 목적을 한 점수로 합치지 않습니다", bridge: "철도가 소득을 높였다는 결과와 권력 관계를 함께 봅니다.", paragraphs: [
       "철도는 운송비와 지역 가격 차이를 줄이고 교역과 일부 실질소득을 늘릴 수 있습니다. 동시에 노선·요금·조달·보증 수익이 제국의 군사·수출 목적과 투자자에게 유리하게 설계될 수 있습니다.",
@@ -175,7 +175,7 @@ export const southAsiaMarketsStatesData: WorldHistoryArticleData = {
       "이 결과는 식민 통치 전체가 주민에게 이로웠다는 판정이 아닙니다. 철도라는 한 기반시설의 특정 경로를 다른 수탈·기근·정치 권리와 구분해 측정한 것입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. RBI 연표는 계획·은행 확대·1991년 위기를 서로 다른 시기로 나눕니다", bridge: "식민기 시장 통합 뒤 독립국가의 선택을 한 덩어리로 만들지 않습니다.", paragraphs: [
-      "인도준비은행의 역사 자료는 1950년대 계획경제, 1968~1985년 은행 국유화와 지점 확대, 1985~1991년 초기 자유화, 1991년 외환 위기와 개혁을 나눕니다. 정책 목적과 금융 통제는 시기마다 달랐습니다.",
+      "인도준비은행의 역사 자료는 1950년대 계획경제, 1968~1985년 은행 국유화와 지점 확대, 1985~1991년 초기 자유화, 1991년 외환 위기와 개혁을 나눕니다. 정책 목적과 금융 통제는 시기마다 달랐습니다. 같은 은행의 외환시장 개관은 1992년 3월 이중 환율을 쓰는 자유화 환율관리제도(LERMS)를 도입했고, 1993년 3월 1일부터 시장 수급으로 정해지는 단일 환율이 이를 대체했다고 적습니다.",
       "인도의 경로를 남아시아 전체로 부르면 파키스탄·방글라데시·스리랑카·네팔·부탄·몰디브의 전쟁·이주·수출 구조와 제도가 사라집니다. 이 글은 지역 입구이며 국가별 글이 더 필요합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 성장률 하나로 제국·분할·카스트·젠더의 분배를 닫지 않습니다", bridge: "가격과 소득 자료가 말하지 못하는 생활 조건을 남깁니다.", paragraphs: [
@@ -200,8 +200,8 @@ export const southAsiaMarketsStatesData: WorldHistoryArticleData = {
     { term: "외환 자유화", description: "공식 배분을 줄이고 시장 환율과 경상 거래의 교환 범위를 넓히는 전환입니다.", example: "인도는 1992년 이중 환율을 거쳐 1993년 단일화했습니다.", boundary: "모든 자본 이동의 무제한 자유와 같지 않습니다." },
   ] },
   sources: [
-    { source: "NBER · Railroads of the Raj", excerpt: "decreased trade costs and price gaps", application: "가격 10과 16 사이에서 철도가 운송비를 줄이는 경로를 실제 지역 자료의 추정과 대조합니다.", citation: "Donaldson, Railroads of the Raj, NBER Working Paper 16487", href: "https://www.nber.org/papers/w16487", note: "철도의 특정 인과 경로를 확인하며 식민 통치 전체의 순효과로 확대하지 않습니다." },
-    { source: "Reserve Bank of India · RBI History", excerpt: "Crisis and Reforms 1991 to 2000", application: "독립 뒤 계획·은행 확대·초기 자유화·1991년 위기를 서로 다른 제도 시기로 나눕니다.", citation: "Reserve Bank of India, History Project", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "인도 공식 금융 연표이며 남아시아 다른 국가의 경로를 대신하지 않습니다." },
+    { source: "NBER · Railroads of the Raj", excerpt: "decreased trade costs and interregional price gaps", application: "가격 10과 16 사이에서 철도가 운송비를 줄이는 경로를 실제 지역 자료의 추정과 대조합니다.", citation: "Donaldson, Railroads of the Raj, NBER Working Paper 16487 (2010); 출판본 'Railroads of the Raj: Estimating the Impact of Transportation Infrastructure', American Economic Review 108(4-5), 2018, pp. 899–934", href: "https://www.nber.org/papers/w16487", note: "철도의 특정 인과 경로를 확인하며 식민 통치 전체의 순효과로 확대하지 않습니다." },
+    { source: "Reserve Bank of India · RBI History", excerpt: "Crisis and Reforms 1991 to 2000", application: "독립 뒤 계획·은행 확대·초기 자유화·1991년 위기를 서로 다른 제도 시기로 나눕니다.", citation: "Reserve Bank of India, History Project", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "인도 공식 금융 연표이며 남아시아 다른 국가의 경로를 대신하지 않습니다. 연표 페이지는 시기 제목만 주므로 1992~1993년 환율 단일화는 RBI 외환시장 개관(rbi.org.in/scripts/FS_Overview.aspx?fn=5)으로 확인했습니다(확인일 2026-10-09)." },
   ],
   review: [
     "가격 10에 운송 2·세금 1·손실 1을 더하고 B가격 16과의 차이를 계산해 보세요. (답: 3절)",
@@ -246,7 +246,8 @@ export const africaWorldEconomyData: WorldHistoryArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 아프리카 경제사 교재는 식민 조세를 지역별 협상과 국가 역량으로 읽습니다", bridge: "현금세를 일방 명령 하나로 단순화하지 않습니다.", paragraphs: [
       "African Economic History Network의 조세 장은 1900년 이후 어떤 세금을 누구에게 걷었는지, 식민·독립 정부의 세입 구조와 사회정치 조건을 비교합니다. 유럽 정착민과 아프리카 주민의 부담도 같지 않았습니다.",
-      "본문의 세금 10은 제도의 작동을 보는 숫자입니다. 실제 오두막세·인두세·관세와 소비세의 비중은 시기와 나라, 지방 권력과 현금경제 접근에 따라 달랐습니다.",
+      "이 교재는 식민기에는 아프리카 주민이 내는 세금과 유럽 정착민이 내는 세금의 종류 자체를 구분했다고 쓰고, 1902년 북동로디지아(오늘날 잠비아 동부)에서 발행된 오두막세 영수증을 실례로 싣습니다. 오두막세는 집 한 채마다 매긴 현금세였습니다. 독립 뒤에는 소비세가 지배적인 세원으로 커졌다고 정리합니다.",
+      "본문의 세금 10은 제도의 작동을 보는 숫자입니다. 실제 오두막세·인두세·관세와 소비세의 비중은 시기와 나라, 지방 권력과 현금경제 접근에 따라 달랐고, 이 글은 영수증에 적힌 세액까지는 옮기지 않았습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 50여 개 국가를 원자재 의존 한 문장으로 묶지 않습니다", bridge: "대륙 평균이 가리는 국가와 지역의 경로를 남깁니다.", paragraphs: [
       "코코아 농가 중심 경제, 구리 광산 지역, 석유 수출국, 제조·관광·디지털 서비스가 큰 경제는 서로 다릅니다. 같은 식민 제국 안에서도 토지·교육·세금과 현지 정치의 결합이 달랐습니다.",
@@ -270,7 +271,7 @@ export const africaWorldEconomyData: WorldHistoryArticleData = {
     { term: "원자재 의존", description: "외화·세입·고용이 소수 원자재의 국제 가격에 크게 묶인 상태입니다.", example: "가격이 절반이면 농가와 국가 장부가 함께 흔들립니다.", boundary: "자원 보유 자체를 실패 원인으로 보지 않습니다." },
   ] },
   sources: [
-    { source: "NBER · The Long-Term Effects of Africa’s Slave Trades", excerpt: "adverse effect on economic development", application: "노예무역 노출과 장기 경제성과의 관계를 자료·식별 가정과 함께 읽습니다.", citation: "Nunn, The Long-Term Effects of Africa’s Slave Trades, NBER Working Paper 13367", href: "https://www.nber.org/papers/w13367", note: "장기 관계에 대한 연구이며 모든 국가의 현재 차이를 하나의 원인으로 설명하지 않습니다." },
+    { source: "NBER · The Long-Term Effects of Africa’s Slave Trades", excerpt: "adverse effect on economic development", application: "노예무역 노출과 장기 경제성과의 관계를 자료·식별 가정과 함께 읽습니다.", citation: "Nunn, The Long-Term Effects of Africa’s Slave Trades, NBER Working Paper 13367 (2007); 출판본 Quarterly Journal of Economics 123(1), 2008, pp. 139–176", href: "https://www.nber.org/papers/w13367", note: "장기 관계에 대한 연구이며 모든 국가의 현재 차이를 하나의 원인으로 설명하지 않습니다." },
     { source: "African Economic History Network · Taxation in Africa", excerpt: "taxation in Africa since 1900", application: "현금세 10 사례를 식민·독립 정부의 세목과 지역별 정치 조건에 대조합니다.", citation: "African Economic History Network, Taxation in Africa since colonial times", href: "https://www.aehnetwork.org/textbook/taxation-in-africa-since-colonial-times/", note: "아프리카 학생과 교사를 위한 학술 교재의 조세 장이며 실제 부담은 국가별 자료가 더 필요합니다." },
   ],
   review: [
@@ -295,7 +296,7 @@ export const menaLandOilData: WorldHistoryArticleData = {
       "석유 판매가 70으로 줄고 다른 항목이 그대로라면 가용 수입은 30이고 기존 지출 60과의 차이는 30입니다. 실제 계약·세율·예산이 아니라 가격 의존을 보는 가정입니다.",
     ] },
     { id: "picture", level: "1", title: "4. 토지·조세 개혁에서 외채 통제와 석유 국유화까지 잇습니다", bridge: "지역을 종교나 자원 한 가지로 설명하지 않습니다.", paragraphs: [
-      "19세기 오스만과 이집트의 토지·조세·군사 개혁은 농민의 권리와 국가 수입을 다시 정했습니다. 면화·운하·철도 투자는 세계시장과 연결됐지만 외채와 유럽의 재정 통제도 키웠습니다.",
+      "19세기 오스만과 이집트의 토지·조세·군사 개혁은 농민의 권리와 국가 수입을 다시 정했습니다. 면화·운하·철도 투자는 세계시장과 연결됐지만 외채와 유럽의 재정 통제도 키웠습니다. 이집트에서는 헤디브 이스마일 치하의 국가가 1876년 4월 지급불능에 빠지자, 프랑스와 영국이 그해 5월 공공부채금고(Caisse de la Dette publique)를 세우게 했고, 1882년부터는 영국이 이집트를 점령했습니다.",
       "20세기 석유 양허 계약은 외국 회사와 산유국 사이의 소유·가격·세금 규칙을 만들었습니다. 독립·국유화·OPEC 협상 뒤 국가 몫이 커졌고, 이 수입은 도시·복지·이주 노동과 국부펀드의 기반이 됐습니다.",
     ] },
     { id: "need", level: "2", title: "5. 석유가 많다는 사실보다 계약과 예산 연결이 경제 구조를 만듭니다", bridge: "자원량과 국가 역량·분배를 분리합니다.", paragraphs: [
@@ -314,8 +315,8 @@ export const menaLandOilData: WorldHistoryArticleData = {
       "LSE의 중동·북아프리카 경제사 과정은 장기 성과뿐 아니라 토지·노동의 법적 권리, 교육·불평등·인구 변화와 종교 공동체의 생활을 다룹니다. 지역 문서·파피루스·연대기·고고학 자료도 함께 봅니다.",
       "따라서 석유 100의 국가 장부는 지역 전체를 설명하는 출발점이 아닙니다. 산유국에서도 누가 시민권과 공공서비스를 얻는지, 비산유국에서는 송금·식량·관광과 부채가 어떻게 작동하는지 따로 봐야 합니다.",
     ] },
-    { id: "comparison", level: "6", title: "9. IMF 자료는 1970년대 계약 변화와 현재의 다각화 한계를 연결합니다", bridge: "역사적 수입 증가와 장기 구조 변화가 같은지 비교합니다.", paragraphs: [
-      "IMF의 석유시장 검토는 1960년대 회사가 정한 게시가격에서 1970년대 가격 협상과 소유권 이전으로 산유국의 몫이 커진 과정을 설명합니다. 최근 자료는 비석유 부문이 늘어도 걸프 재정과 수출이 여전히 석유에 크게 연결됐음을 보여 줍니다.",
+    { id: "comparison", level: "6", title: "9. 2003년 IMF 검토는 1970년대 계약 변화와 다각화 과제를 연결합니다", bridge: "역사적 수입 증가와 장기 구조 변화가 같은지 비교합니다.", paragraphs: [
+      "오코구(Bright E. Okogu)가 2003년에 쓴 IMF의 석유시장 검토는 숫자로 이 변화를 보여 줍니다. 1960년대에는 국제 석유회사들이 배럴당 1.80달러로 가격을 고정했습니다. 1970년에는 산유국 로열티를 계산하는 기준인 '게시가격'을 다시 협상했고, 1973년 가격 충격과 그 뒤 산유국으로 넘어간 소유권이 석유산업의 새 시대를 열었다고 이 검토는 씁니다. 같은 글은 대부분의 MENA 산유국이 경제정책을 탄화수소 부문에서 벗어나는 다각화에 맞춰 왔다고 적습니다. 다만 2003년 자료이므로, 오늘날 걸프 재정과 수출이 석유에 얼마나 묶여 있는지는 이 글에서 최신 수치로 확인하지 않았습니다.",
       "비석유 GDP 비중 상승만으로 다각화를 끝냈다고 판단하지 않습니다. 비석유 수출·민간 생산성·국민 고용과 정부 지원이 끊겼을 때의 지속성을 함께 봐야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 중동·북아프리카를 산유국·분쟁·종교라는 한 모습으로 만들지 않습니다", bridge: "국가와 도시·농촌·시민권의 차이를 남깁니다.", paragraphs: [
@@ -340,8 +341,8 @@ export const menaLandOilData: WorldHistoryArticleData = {
     { term: "경제 다각화", description: "수출·세입·생산성·고용의 원천을 여러 산업으로 넓히는 과정입니다.", example: "비석유 수출과 민간 고용이 석유 지출 없이도 이어지는지 봅니다.", boundary: "국내 서비스 비중 상승만으로 완료를 선언하지 않습니다." },
   ] },
   sources: [
-    { source: "LSE · Economic History of the Middle East and North Africa", excerpt: "view from below", application: "석유 장부를 토지·노동 권리, 주민 생활과 지역 자료의 질문으로 다시 엽니다.", citation: "LSE EH222, Economic History of the Middle East and North Africa", href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm", note: "2025/26 공개 과정의 범위와 방법을 지역 경제사의 누락 검사표로 사용했습니다." },
-    { source: "IMF · The Middle East and North Africa in a Changing Oil Market", excerpt: "transfer of property rights", application: "1970년대 게시가격 협상과 산유국의 소유·수입 몫 변화가 예산에 들어오는 경로를 확인합니다.", citation: "IMF, The Middle East and North Africa in a Changing Oil Market", href: "https://www.imf.org/external/pubs/ft/med/2003/eng/okogu/okogu.htm", note: "석유시장 전환의 역사 자료이며 모든 MENA 경제를 산유국 모형으로 설명하지 않습니다." },
+    { source: "LSE · Economic History of the Middle East and North Africa", excerpt: "view from below", application: "석유 장부를 토지·노동 권리, 주민 생활과 지역 자료의 질문으로 다시 엽니다.", citation: "LSE EH222, Economic History of the Middle East and North Africa", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH222.htm", note: "2026/27 판 과정 안내에는 '휴강(Suspended in 2026/27)'이 표시돼 있지만 강의 설명은 2025/26 판과 같습니다. 2025/26 판 주소는 LSE 달력 첫 화면으로 301 리다이렉트돼 2026/27 판으로 바꿨습니다(확인일 2026-10-09). 과정의 범위와 방법을 지역 경제사의 누락 검사표로 사용했습니다." },
+    { source: "IMF · The Middle East and North Africa in a Changing Oil Market", excerpt: "transfer of property rights", application: "1970년대 게시가격 협상과 산유국의 소유·수입 몫 변화가 예산에 들어오는 경로를 확인합니다.", citation: "Bright E. Okogu, The Middle East and North Africa in a Changing Oil Market, IMF, 2003", href: "https://www.imf.org/external/pubs/ft/med/2003/eng/okogu/okogu.htm", note: "2003년 석유시장 전환의 역사 자료이며 현재 재정 의존도의 근거로 쓰지 않습니다. 모든 MENA 경제를 산유국 모형으로 설명하지도 않습니다. 이집트 1876~1882년 연표는 Les clés du Moyen-Orient의 스테판 말사뉴 인터뷰에서 확인했습니다(확인일 2026-10-09)." },
   ],
   review: [
     "석유 판매 100에서 기업·생산 30과 부채 10을 뺀 정부 가용 수입을 계산해 보세요. (답: 3절)",
@@ -373,7 +374,7 @@ export const latinAmericaWorldMarketData: WorldHistoryArticleData = {
       "나라와 산업별 결과는 달랐습니다. 브라질·멕시코의 큰 시장, 남미 소국과 카리브해 경제를 같은 보호율로 비교할 수 없으며 교육·토지·거시 안정 조건도 함께 봐야 합니다.",
     ] },
     { id: "names", level: "3", title: "6. 수출 주도 성장·수입대체 산업화·갑작스러운 자금 중단에 이름을 붙입니다", bridge: "세 시기의 외화 획득과 산업 전략을 구분합니다.", paragraphs: [
-      "수출 주도 성장은 원자재나 제조품을 세계시장에 팔아 투자·재정·수입 능력을 키우는 경로입니다. 수입대체 산업화는 수입하던 상품을 국내에서 만들도록 관세·금융·공기업을 쓰는 전략입니다.",
+      "수출 주도 성장은 원자재나 제조품을 세계시장에 팔아 투자·재정·수입 능력을 키우는 경로입니다. 수입대체 산업화는 수입하던 상품을 국내에서 만들도록 관세·금융·공기업을 쓰는 전략입니다. 이 전략의 출발점으로 흔히 꼽히는 문서가 유엔 라틴아메리카경제위원회(ECLA)의 라울 프레비시 보고서 『라틴아메리카의 경제 발전과 그 주요 문제』(1950, 문서번호 E/CN.12/89/REV.1)입니다.",
       "갑작스러운 자금 중단은 해외 대출과 투자가 빠르게 끊겨 만기 연장과 경상수지 조정을 강요하는 상황입니다. 외화부채가 크고 수출가격이 떨어질 때 충격이 커집니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 적자 18이 환율·물가·임금·정부 예산으로 번지는 길을 봅니다", bridge: "외화 부족을 국민 전체의 같은 손실로 만들지 않습니다.", paragraphs: [
@@ -385,7 +386,7 @@ export const latinAmericaWorldMarketData: WorldHistoryArticleData = {
       "지역 평균은 토지제도·수출품·이민과 국가 재정의 차이를 숨깁니다. 상관 관계를 모든 나라의 같은 인과로 옮기지 않고 국가별 자료를 다시 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. IMF 기록은 1982년 가격·금리·대출 중단이 함께 온 과정을 보여 줍니다", bridge: "둘째 해의 적자 18을 실제 국제금융 전환에 대조합니다.", paragraphs: [
-      "IMF 역사 자료는 1970년대 석유 충격 뒤 상업은행 대출이 늘고, 1980년대 세계 침체·높은 실질금리·원자재 가격 하락 속에서 1982년 멕시코의 지급 곤란이 지역 위기로 번진 순서를 설명합니다.",
+      "IMF가 펴낸 험프리스(Norman K. Humphreys)의 『IMF 역사 사전』 서론은 1970년대 석유 충격 뒤 상업은행 대출이 늘고, 1980년대 세계 침체·높은 실질금리·원자재 가격 하락 속에서 1982년 멕시코의 지급 곤란이 지역 위기로 번진 순서를 설명합니다. 연방준비제도 역사 자료에 따르면 멕시코가 1982년 8월 더는 갚을 수 없다고 통보한 외채는 800억 달러였습니다. 채권국의 대응도 단계가 있었습니다. 1985년 제임스 베이커 미 재무장관의 '베이커 플랜'에 이어, 1989년 니컬러스 브래디 재무장관은 대출 원금을 영구히 줄이는 '브래디 플랜'을 내놓았습니다.",
       "위기를 국내 정책 실패나 외부 금리 하나로만 설명하지 않습니다. 외화 만기, 환율, 재정과 은행 노출, 국제 채권자의 대응이 함께 결과를 만들었습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 라틴아메리카와 카리브해를 반복되는 위기 한 문장으로 만들지 않습니다", bridge: "나라·수출품·정치 체제의 차이를 남깁니다.", paragraphs: [
@@ -411,7 +412,7 @@ export const latinAmericaWorldMarketData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "NBER · Globalization in Latin America Before 1940", excerpt: "globalization and inequality", application: "19세기 말 수출 호황·운송비·높은 관세와 불평등이 함께 움직인 경로를 확인합니다.", citation: "Bértola and Williamson, Globalization in Latin America Before 1940, NBER Working Paper 9687", href: "https://www.nber.org/papers/w9687", note: "지역 장기 비교 연구이며 나라별 토지·상품·정치 차이는 별도 자료가 필요합니다." },
-    { source: "IMF · The Debt Crisis", excerpt: "Mexico announced it was unable to service its debts", application: "1970년대 대출에서 1982년 금리·가격·대출 중단으로 이어진 순서를 외화 −18 사례에 대조합니다.", citation: "IMF, The Silent Revolution, Introduction: The debt crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "IMF의 제도사 자료이며 위기의 책임과 사회적 비용에 대한 유일한 관점으로 쓰지 않습니다." },
+    { source: "IMF · Historical Dictionary of the IMF", excerpt: "Mexico announced it was unable to service its debts", application: "1970년대 대출에서 1982년 금리·가격·대출 중단으로 이어진 순서를 외화 −18 사례에 대조합니다.", citation: "Norman K. Humphreys, Historical Dictionary of the International Monetary Fund (2nd ed.), IMF, 2000, 'Introduction' § The debt crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "IMF가 펴낸 역사 사전의 서론이며 Boughton의 『Silent Revolution』과는 다른 책입니다. 원문은 지급불능 통보를 연차총회 장소와 한 문장에 묶어 쓰므로, 통보 시점(1982년 8월)과 외채 800억 달러, 브래디 플랜의 원금 감면은 연방준비제도 역사 자료 'Latin American Debt Crisis'로 따로 확인했습니다. 자동 조회는 403이라 브라우저 요청으로 서지를 확인했습니다(확인일 2026-10-09). 위기의 책임과 사회적 비용에 대한 유일한 관점으로 쓰지 않습니다." },
   ],
   review: [
     "첫해 100−80−10과 둘째 해 80−80−18의 외화 잔액을 계산해 보세요. (답: 3절)",

@@ -21,13 +21,14 @@ export const northAmericaEconomicHistoryData: WorldHistoryArticleData = {
     { id: "need", level: "2", title: "5. 생산성이 오른 이유와 그 생산을 가능하게 한 권리를 나눠야 합니다", bridge: "기술의 편익과 강제·수용의 비용을 같은 숫자로 상쇄하지 않습니다.", paragraphs: [
       "철도가 시장 접근을 넓혀 토지의 산출과 가격을 높였다는 설명은 운송 효과를 보여 줍니다. 그러나 그 토지를 누가 이전에 사용했고 누구에게 소유권이 넘어갔는지, 건설 노동과 금융 위험을 누가 부담했는지는 생산성 계수만으로 답할 수 없습니다.",
       "노예 노동이 수출을 늘렸다는 사실은 노예제가 효율적이거나 정당했다는 뜻이 아닙니다. 강제가 만든 산출과 사람의 권리 박탈을 별도 장부로 남겨야 경제 설명이 폭력을 편익으로 바꾸지 않습니다.",
+      "산출이 왜 늘었는지도 따로 물어야 합니다. 앨런 옴스테드와 폴 로드는 「남북전쟁 이전 면화 경제의 생물학적 혁신과 생산성 증가」(Journal of Economic History 68(4), 2008)에서 142개 플랜테이션의 509개 작황 연도 기록을 써서, 노동자 한 명이 하루에 따는 면화 양이 1801~1862년 약 4배로 늘었음을 보였습니다. 이들은 새 면화 품종의 개발과 확산을 그 주된 원인으로 봅니다. 산출 증가를 강제의 효율로 바로 읽지 않아야 하는 한 가지 이유입니다.",
     ] },
     { id: "names", level: "3", title: "6. 정착민 재산 전환·노예 자본 장부·대륙 시장 통합에 이름을 붙입니다", bridge: "서로 다른 제도가 한 성장률 안에서 어떻게 겹쳤는지 구분합니다.", paragraphs: [
       "정착민 재산 전환은 이미 존재하던 공동체의 영토와 사용권을 국가가 측량·조약·법률로 개인 매매 가능한 토지로 바꾼 과정입니다. 노예 자본 장부는 사람을 노동자이면서 매매·담보 가능한 재산으로 취급한 계약과 회계를 가리킵니다.",
       "대륙 시장 통합은 운하·철도·전신·통화·은행 규칙이 먼 지역의 가격과 주문을 연결한 변화입니다. 통합은 평균 운송비를 낮출 수 있지만 토지 투기·철도 파산·지역 독점과 금융 공황도 함께 만들었습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 토지 수용에서 담보·철도·공장 임금으로 이어지는 경로를 추적합니다", bridge: "한 단계의 이익이 다음 단계에서 누구의 자산이 되는지 봅니다.", paragraphs: [
-      "국가가 토지 경계를 정하고 처분하면 정착민과 회사는 토지를 담보로 신용을 얻을 수 있습니다. 철도는 농산물·광물·사람을 항구와 공장에 연결하고 주변 지가와 세수를 높이지만, 노선 밖 지역과 강제 이주된 공동체에는 같은 편익이 돌아가지 않습니다.",
+      "국가가 토지 경계를 정하고 처분하면 정착민과 회사는 토지를 담보로 신용을 얻을 수 있습니다. 1862년의 두 법률이 대표적입니다. 5월 20일의 홈스테드법은 측량된 공유지 160에이커를 적은 수수료와 5년 거주·경작 조건으로 성인 가장에게 넘겼고, 7월 1일의 태평양철도법은 대륙횡단 철도 건설에 연방 토지와 대출을 지원했습니다(미국 국립기록관리청 Milestone Documents). 철도는 농산물·광물·사람을 항구와 공장에 연결하고 주변 지가와 세수를 높이지만, 노선 밖 지역과 강제 이주된 공동체에는 같은 편익이 돌아가지 않습니다.",
       "도시 공장은 표준화된 부품과 임금노동을 결합해 단가를 낮췄습니다. 판매 증가가 임금·근로시간·주거·기업 이익으로 어떻게 나뉘는지는 노동조합, 이민법, 인종 차별, 경쟁과 경기침체에 따라 달라졌습니다.",
     ] },
     { id: "source", level: "5", title: "8. LSE 북아메리카 경제사 과정은 식민지에서 냉전까지 권리와 시장을 함께 묻습니다", bridge: "한 사건을 떼어내지 않고 수업의 전체 질문 순서에 놓습니다.", paragraphs: [
@@ -35,7 +36,7 @@ export const northAmericaEconomicHistoryData: WorldHistoryArticleData = {
       "이 목록은 인과를 증명하는 자료가 아니라 누락 검사표입니다. 캐나다·미국·멕시코와 카리브해, 원주민 공동체·노예·이민자·여성의 경로가 같지 않다는 점을 각 주제에서 다시 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 연준 역사는 분산된 은행과 공황이 중앙은행 설계로 이어진 과정을 보여 줍니다", bridge: "대륙 시장의 성장과 결제 안전이 자동으로 함께 오르지 않았음을 확인합니다.", paragraphs: [
-      "Federal Reserve History는 19세기 주별 은행과 국법은행 체제, 반복된 은행 공황, 수요에 맞춰 늘기 어려운 통화를 1913년 연준 설립의 배경으로 설명합니다. 연방·지역 이해의 충돌은 12개 준비은행과 중앙 이사회를 결합한 구조에 남았습니다.",
+      "Federal Reserve History는 19세기 주별 은행과 국법은행 체제, 반복된 은행 공황, 수요에 맞춰 늘기 어려운 통화를 1913년 연준 설립의 배경으로 설명합니다. 연방·지역 이해의 충돌은 지역 준비은행과 중앙 이사회를 결합한 구조에 남았습니다. 1913년 12월 23일 윌슨 대통령이 서명한 연방준비법은 준비은행을 8~12개 두도록 했고, 실제로는 12개가 세워져 지금도 12개 연방준비은행이 있습니다.",
       "철도·공장·농업 신용이 커질수록 결제와 유동성의 충격도 멀리 번졌습니다. 중앙은행이 생겼다는 사실만으로 대공황을 막지 못했고 이후 예금보험·감독·재정정책이 별도로 바뀌었습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 미국의 산업화 경로를 북아메리카 전체의 단일 경험으로 만들지 않습니다", bridge: "국가·지역·인종·성별·법적 지위와 시기를 다시 나눕니다.", paragraphs: [
@@ -61,7 +62,7 @@ export const northAmericaEconomicHistoryData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "LSE EH304 · The Economic History of North America", excerpt: "Colonial development; ... Slavery; Westward expansion", application: "토지·노예제·철도·금융·전쟁·대공황을 하나의 장기 질문 순서에 놓습니다.", citation: "LSE EH304, The Economic History of North America: from Colonial Times to the Cold War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH304.htm", note: "2026/27 안내에는 휴강으로 표시되지만 과목 범위는 공개돼 있습니다. 설명용 100 장부의 수치를 제공하는 자료는 아닙니다." },
-    { source: "Federal Reserve History · Overview", excerpt: "enhance the stability of the American banking system", application: "분산된 은행·비탄력적 통화·공황에서 중앙은행 설계로 이어진 경로를 확인합니다.", citation: "Federal Reserve History, Overview: The History of the Federal Reserve", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", note: "미국 중앙은행의 공식 역사 개관이며 북아메리카의 토지·노동사 전체를 대표하지 않습니다." },
+    { source: "Federal Reserve History · Overview", excerpt: "enhance the stability of the American banking system", application: "분산된 은행·비탄력적 통화·공황에서 중앙은행 설계로 이어진 경로를 확인합니다.", citation: "Federal Reserve History, Overview: The History of the Federal Reserve", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", note: "미국 중앙은행의 공식 역사 개관이며 북아메리카의 토지·노동사 전체를 대표하지 않습니다. 개관 페이지는 준비은행 수를 적지 않으므로, 법률의 8~12개 조항과 서명일은 같은 사이트의 'Federal Reserve Act Signed'에서, 현재 12개는 연준 이사회의 구조 안내에서 확인했습니다(확인일 2026-10-09)." },
   ],
   review: [
     "판매액 100에서 비용 20·10과 임금 35를 뺀 두 장부의 잔여를 계산해 보세요. (답: 3절)",
@@ -86,7 +87,7 @@ export const europeInternalEconomicHistoryData: WorldHistoryArticleData = {
     ] },
     { id: "picture", level: "1", title: "4. 봉건 의무·도시와 국가 경쟁·산업화·전쟁·분단과 통합을 겹쳐 봅니다", bridge: "서유럽 한 지역의 순서를 대륙 전체의 시계로 쓰지 않습니다.", paragraphs: [
       "중세와 근세의 정치 단위는 왕국·공국·도시국가·교회 영지처럼 겹쳤습니다. 이동하는 상인·기술자와 세원을 놓고 경쟁한 국가는 특권을 주거나 추방했고, 전쟁을 위해 관료·세금·국채를 키웠습니다.",
-      "산업화는 영국에서 먼저 빨라졌지만 벨기에·프랑스·독일·북유럽·남유럽·동유럽은 다른 자원과 제도로 뒤따랐습니다. 두 세계대전, 사회주의 계획경제, 전후 복지와 유럽 통합은 무역 장벽을 낮추는 동시에 지역 산업의 재편 비용을 만들었습니다.",
+      "산업화는 영국에서 먼저 빨라졌지만 벨기에·프랑스·독일·북유럽·남유럽·동유럽은 다른 자원과 제도로 뒤따랐습니다. 두 세계대전, 사회주의 계획경제, 전후 복지와 유럽 통합은 무역 장벽을 낮추는 동시에 지역 산업의 재편 비용을 만들었습니다. 통합의 대표 이정표는 1957년 3월 25일 서명하고 1958년 1월 1일 발효한 로마조약으로, 이 두 조약이 유럽경제공동체(EEC)와 유럽원자력공동체를 세웠습니다(EU 공식 역사 페이지, 확인일 2026-10-09). 농노 해방과 관세동맹 같은 19세기 이정표의 연도는 이 글에서 아직 1차 자료로 확인하지 않았습니다.",
     ] },
     { id: "need", level: "2", title: "5. 국가 경쟁이 성장을 도왔다는 설명에는 전쟁과 배제의 비용도 들어가야 합니다", bridge: "경쟁·의회·재산권을 자동으로 좋은 제도라고 부르지 않습니다.", paragraphs: [
       "여러 국가의 경쟁은 상인과 자본이 옮길 선택지를 만들어 세율·법원·통화를 개선할 압력을 줄 수 있습니다. 반대로 전쟁은 징병·약탈·부채·인플레이션을 만들고, 군주가 소수자 재산을 몰수하거나 특권 독점을 팔 유인도 키웠습니다.",
@@ -147,7 +148,7 @@ export const southeastAsiaEconomicHistoryData: WorldHistoryArticleData = {
       "이 숫자는 특정 나라의 역사 통계가 아닙니다. 수출액이 커졌다는 사실과 산지·항구·노동자·국가에 남은 부가가치가 커졌다는 판단을 분리하기 위한 설명용 장부입니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 항구의 교역세·농장과 광산의 노동·수입품·외화 몫을 나눕니다", bridge: "동남아시아를 향신료를 내보낸 수동적 주변부로만 보지 않습니다.", paragraphs: [
-      "유럽 지배 전에도 항구국가와 상인망은 중국·인도·서아시아와 물품·은·신용·종교를 교환했습니다. 식민 회사와 정부는 항구·토지·조세·독점 규칙을 바꾸며 쌀·설탕·고무·주석·석유 수출을 확대했습니다.",
+      "유럽 지배 전에도 항구국가와 상인망은 중국·인도·서아시아와 물품·은·신용·종교를 교환했습니다. 식민 회사와 정부는 항구·토지·조세·독점 규칙을 바꾸며 쌀·설탕·고무·주석·석유 수출을 확대했습니다. 9절에서 다시 볼 하야미 유지로는 19세기의 교역이 필리핀의 스페인 정복자나 인도네시아의 네덜란드 동인도회사 같은 이전 식민 체제에서 흔했던, 세금 등을 통한 열대 상품의 강제 수집을 대체했다고 씁니다. 공식 식민지가 아니던 태국에도 영국 식민지 버마·말라야와 비슷한 방식으로 자유무역이 강요됐다고 봅니다. 자바 강제재배제도나 말라야 고무 붐 같은 개별 제도의 연도는 이 글에서 아직 1차 자료로 확인하지 않았습니다.",
       "중국·인도와 역내 이주 노동, 현지 농민과 기업, 유럽·일본·미국 자본의 역할은 나라와 업종마다 달랐습니다. 독립 뒤 수입대체와 수출 제조업, ASEAN 공급망도 같은 시점과 정책으로 움직이지 않았습니다.",
     ] },
     { id: "case", level: "0", title: "3. 수출 100에서 비용 80을 빼 현지 몫 20을 확인합니다", bridge: "총수출과 국내에 남는 소득을 같은 값으로 쓰지 않습니다.", paragraphs: [
@@ -171,11 +172,11 @@ export const southeastAsiaEconomicHistoryData: WorldHistoryArticleData = {
       "외화를 기계·부품 수입과 공장 건설에 쓰면 제조 수출이 가능해집니다. 단기 외화대출로 토지와 공장을 늘린 뒤 환율이 떨어지고 자금이 빠지면 현지 통화 부채가 급증해 은행·기업·노동자의 위기로 번질 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. LSE EH434는 식민지 이전 교역·식민화·독립 뒤 성장 경로를 함께 다룹니다", bridge: "현대 수출 성공담 앞의 항구와 식민 제도를 복원합니다.", paragraphs: [
-      "LSE EH434는 근세 동아시아와 동남아시아의 풍부한 상품과 국제무역 접근, 서구 식민화, 전후 독립·아시아 호랑이·ASEAN과 오늘의 세계경제를 연결합니다. 중국·일본과 동남아시아의 차이도 함께 비교합니다.",
+      "LSE EH434는 근세 동아시아와 동남아시아의 풍부한 상품과 국제무역 접근, 서구 식민화, 전후 독립·아시아 호랑이·ASEAN과 오늘의 세계경제를 연결합니다. 아편전쟁 이후의 중국, 메이지 일본, 전후 '아시아 호랑이'와 ASEAN도 같은 과정에서 다룹니다.",
       "이 강의계획은 질문의 범위를 보여 줄 뿐, 식민 수출이나 외국인투자의 효과를 한 방향으로 확정하지 않습니다. 나라·상품·시기별 자료로 소유와 국내 부가가치를 다시 봐야 합니다.",
     ] },
-    { id: "comparison", level: "6", title: "9. 세계은행 역사 연구는 운송비 하락이 수출과 수입품 경쟁을 함께 키웠다고 설명합니다", bridge: "교역비용 감소의 편익과 산업 재편을 같은 사건에서 봅니다.", paragraphs: [
-      "세계은행의 동남아시아 장기 성장 연구는 증기선과 1869년 수에즈 운하가 유럽까지의 운송비를 낮춰 쌀 같은 부피 큰 상품의 수출을 가능하게 했다고 설명합니다. 동시에 서구 공산품이 더 싸게 들어와 현지 수공업과 경쟁했습니다.",
+    { id: "comparison", level: "6", title: "9. 세계은행이 펴낸 하야미의 농업개발사 연구는 운송비 하락이 수출과 수입품 경쟁을 함께 키웠다고 설명합니다", bridge: "교역비용 감소의 편익과 산업 재편을 같은 사건에서 봅니다.", paragraphs: [
+      "세계은행이 2004년에 펴낸 『인도네시아·필리핀·태국의 농촌 개발과 농업 성장』 2장에서 하야미 유지로는 증기선과 1869년 수에즈 운하가 유럽까지의 운송비를 낮춰 쌀 같은 부피 큰 상품의 수출을 가능하게 했다고 설명합니다. 동시에 서구 공산품이 더 싸게 들어와 현지 수공업과 경쟁했습니다.",
       "교통 혁신은 시장을 넓혔지만 농업·광산으로 노동을 옮기고 식민 수출 구조를 강화할 수도 있었습니다. 항구 가격과 내륙 가격, 현지 산업 고용을 함께 봐야 순효과를 판단할 수 있습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 동남아시아 열한 나라를 한 번의 수출 기적으로 묶지 않습니다", bridge: "전쟁·독립 시기·체제·섬과 대륙의 차이를 남깁니다.", paragraphs: [
@@ -201,7 +202,7 @@ export const southeastAsiaEconomicHistoryData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "LSE EH434 · Economic Development of East and Southeast Asia", excerpt: "early modern ... international trade ... Western colonisation", application: "식민지 이전 교역에서 식민화·독립·ASEAN·현대 성장까지의 질문 순서를 잡습니다.", citation: "LSE EH434, Economic Development of East and Southeast Asia", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm", note: "2026/27 대학원 과정의 범위이며 개별 국가의 정책 효과를 단독으로 증명하지 않습니다." },
-    { source: "World Bank · Southeast Asia's long-term growth", excerpt: "steamship and the opening of the Suez Canal", application: "운송비 하락이 원자재 수출과 서구 공산품 수입 경쟁을 동시에 키운 경로를 확인합니다.", citation: "World Bank, An East Asian Renaissance, Southeast Asian long-run growth background", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note: "장기 지역 개관이며 설명용 100 장부나 모든 나라의 국내 부가가치를 제공하는 자료는 아닙니다." },
+    { source: "World Bank (Akiyama & Larson eds.) · Hayami, agricultural development in Southeast Asia", excerpt: "steamship and the opening of the Suez Canal", application: "운송비 하락이 원자재 수출과 서구 공산품 수입 경쟁을 동시에 키운 경로를 확인합니다.", citation: "Yujiro Hayami, 'An ecological and historical perspective on agricultural development in Southeast Asia', in Takamasa Akiyama & Donald F. Larson (eds.), Rural Development and Agricultural Growth in Indonesia, the Philippines and Thailand, World Bank/Asia Pacific Press, 2004, ch. 2, p. 27", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note: "세계은행이 펴낸 편저의 한 장이며, 이전에 붙어 있던 'An East Asian Renaissance'(Gill & Kharas 2007)와는 다른 문서입니다. 표지·판권면과 2장 본문을 PDF에서 확인했습니다(확인일 2026-10-09). 설명용 100 장부나 모든 나라의 국내 부가가치를 제공하는 자료는 아닙니다." },
   ],
   review: [
     "100−30−15−35를 계산하고 수출액과 현지 잔여가 다른 이유를 설명해 보세요. (답: 3절)",
@@ -241,7 +242,7 @@ export const centralAsiaEconomicHistoryData: WorldHistoryArticleData = {
       "새 회랑이 운송일을 줄여도 국경마다 서류·검사·환적이 겹치면 비용이 남습니다. 물·전력 교환과 철도·관세 협력이 끊기면 한 나라의 생산 결정이 이웃의 식량·전력·수출에 전달됩니다.",
     ] },
     { id: "source", level: "5", title: "8. 세계은행은 소련기 관개 확대가 생산과 아랄해 비용을 함께 만들었다고 기록합니다", bridge: "생산 목표와 하류 생활의 손실을 같은 물 흐름에서 확인합니다.", paragraphs: [
-      "세계은행의 중앙아시아 물·에너지 연구는 1970~1989년 저수지·운하·펌프가 크게 늘고, 강물이 관개로 전환돼 아랄해 유입이 줄었다고 설명합니다. 관개는 면화·곡물·과일과 일자리를 댔지만 환경 비용을 남겼습니다.",
+      "세계은행의 2004년 시르다리야 유역 물·에너지 협력 보고서는 Box 1에서 두 강 전체를 요약합니다. 1970~1989년 저수지·운하·펌프가 크게 늘어 관개 면적이 아무다리야 유역에서 150%, 시르다리야 유역에서 130% 확대됐고, 강물 대부분이 관개로 전환돼 아랄해 면적이 50% 줄었다고 씁니다. 관개는 면화·곡물·과일과 일자리를 댔지만 환경 비용을 남겼습니다. 같은 보고서 부록은 7절의 물·전력 교환이 실제 제도로 맺어진 예로 1998년 3월 17일 카자흐스탄·키르기스스탄·우즈베키스탄의 협정을 싣습니다.",
       "지역 전체 수치와 설명용 100은 다릅니다. 실제 유역에서는 취수량·증발·누수·토양염·작물 가격과 주민 건강 자료를 국가·수로별로 대조해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. ADB는 1500년 이후 교역축과 소련의 북향 연결, 21세기 새 회랑을 구분합니다", bridge: "실크로드 부활이라는 한 문장 대신 경로·상품·통관을 따집니다.", paragraphs: [
@@ -270,7 +271,7 @@ export const centralAsiaEconomicHistoryData: WorldHistoryArticleData = {
     { term: "내륙 회랑 의존", description: "수출입이 여러 국경·철도·항만·관세 체계를 거쳐야 하는 구조입니다.", example: "중국·카스피·유럽까지 환적과 통관을 반복합니다.", boundary: "내륙국이라는 지리가 성장률을 고정한다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "World Bank · Water Energy Nexus in Central Asia", excerpt: "most of the water ... diverted for irrigation", application: "소련기 관개 인프라와 면화 생산, 아랄해 유입 감소를 같은 물 흐름으로 읽습니다.", citation: "World Bank, Water Energy Nexus in Central Asia", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "지역 장기 개관이며 설명용 물 100의 배분이나 현재 국가별 계약을 제공하는 자료는 아닙니다." },
+    { source: "World Bank · Water Energy Nexus in Central Asia", excerpt: "most of the water ... diverted for irrigation", application: "소련기 관개 인프라와 면화 생산, 아랄해 유입 감소를 같은 물 흐름으로 읽습니다.", citation: "World Bank, Water Energy Nexus in Central Asia: Improving Regional Cooperation in the Syr Darya Basin, January 2004", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "시르다리야 유역 물·전력 교환 협력에 관한 2004년 보고서이며(아무다리야는 다루지 않는다고 각주에 밝힘), 소련기 관개와 아랄해 서술은 Box 1의 요약입니다(확인일 2026-10-09). 설명용 물 100의 배분이나 현재 국가별 계약을 제공하는 자료는 아닙니다." },
     { source: "ADB · Trade Corridors in the Caspian Region", excerpt: "all the trade links ran north", application: "해상무역 우위·러시아와 소련의 북향 연결·파이프라인·중국 유럽 철도를 시간순으로 구분합니다.", citation: "Asian Development Bank, Trade Corridors in the Caspian Region: Present and Future", href: "https://www.adb.org/publications/trade-corridors-caspian-region-present-future", note: "2021년 회랑 연구이며 실제 기업 운임·통관시간은 노선과 시점별 자료가 필요합니다." },
   ],
   review: [
@@ -300,22 +301,23 @@ export const oceaniaEconomicHistoryData: WorldHistoryArticleData = {
     ] },
     { id: "need", level: "2", title: "5. 토지 수출의 성장과 원주민 경제의 손실을 같은 국부 증가로 합치지 않습니다", bridge: "소유권 전환 전후의 생산과 권리를 두 장부로 남깁니다.", paragraphs: [
       "목장·광산·도시의 시장가치가 늘어도 사냥·채집·어업·의례·돌봄과 공동체의 자치권이 사라질 수 있습니다. 보상 없는 토지 전환은 새 소유자의 자산 증가와 이전 권리자의 손실을 동시에 만듭니다.",
+      "이 권리 문제는 법의 연표에도 남았습니다. 뉴질랜드에서는 1840년 2월 6일 와이탕이에서 영국 측 윌리엄 홉슨 대령과 마오리 족장들이 와이탕이 조약에 서명했습니다. 영어본 2조는 마오리의 토지·숲·어장 소유를 보장하면서 왕실만 마오리 토지를 살 수 있는 '독점 선매권'을 두었고, 마오리어본과 해석이 달랐습니다(와이탕이 재판소 안내). 호주에서는 1992년 6월 3일 고등법원이 마보 판결(Mabo v Queensland (No 2))을 내렸고, 1993년 12월 24일 재가된 원주민 권원법(Native Title Act 1993, No. 110)의 전문은 고등법원이 유럽 정착 당시 호주가 무주지(terra nullius)였다는 이론을 거부하고 원주민의 관습에 따른 권원을 보통법이 인정한다고 판시했다고 적습니다. 같은 전문은 원주민의 토지 상실이 대부분 보상 없이 이뤄졌다고 밝힙니다.",
       "작은 섬의 관광과 송금은 현금과 일자리를 주지만 항공·호텔·해외 노동시장에 충격을 전달합니다. 외부소득이 크다는 이유로 취약하다고 단정하기보다 완충 자산·이주권·재정지원·지역 식량과 에너지의 대체 능력을 봅니다.",
     ] },
     { id: "names", level: "3", title: "6. 원주민 친족경제·정착민 수출 토지 전환·섬 외부소득 조합에 이름을 붙입니다", bridge: "현금시장 밖의 권리와 외부 연결을 함께 읽는 도구를 만듭니다.", paragraphs: [
       "원주민 친족경제는 생산·교환·토지 관리가 가족·언어집단·의례·세대 책임과 연결된 구조입니다. 정착민 수출 토지 전환은 공동체 영토를 왕령지·개인 임대·목장·광산으로 바꿔 외부 시장 상품을 생산한 과정입니다.",
-      "섬 외부소득 조합은 현지 생산에 송금·관광·어업권·지원금·공공임금을 더해 가계와 국가 장부를 유지하는 구조입니다. 각 흐름의 충격 시점과 사용 권리가 달라 총액만으로 안정성을 알 수 없습니다.",
+      "섬 외부소득 조합은 현지 생산에 송금·관광·어업권·지원금·공공임금을 더해 가계와 국가 장부를 유지하는 구조입니다. 이 생각은 버트럼과 워터스가 「남태평양 소국의 MIRAB 경제」(Pacific Viewpoint 26(3), 1985)에서 이주(Migration)·송금(Remittances)·원조(Aid)·관료제(Bureaucracy)의 머리글자로 이름 붙인 MIRAB 모형에서 왔고, 이 글은 여기에 관광과 어업권을 더해 넓혀 씁니다. 각 흐름의 충격 시점과 사용 권리가 달라 총액만으로 안정성을 알 수 없습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 토지와 바다의 권리가 수출·송금·관광·재정으로 바뀌는 길을 봅니다", bridge: "대륙과 섬의 다른 규모를 권리·현금흐름이라는 같은 질문으로 비교합니다.", paragraphs: [
       "호주·뉴질랜드에서 토지 임대와 소유권은 목장·농장·광산을 담보와 수출 기반으로 만들었습니다. 항구와 철도, 은행과 영국·아시아 수요가 가격을 정했고 임금·세금·기업 이익과 원주민의 토지 상실을 다르게 배분했습니다.",
       "태평양 섬에서는 배타적경제수역의 어업권, 해외 이주자의 송금, 관광객 지출과 공여 자금이 정부 서비스와 수입 식품·연료를 댑니다. 사이클론·화산·해수면·항공 중단은 여러 흐름을 동시에 흔들 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. NSW 정부 기록은 원주민 경제가 식민지 이전부터 교환·지식·토지 관리로 작동했음을 보여 줍니다", bridge: "정착 이후만을 경제사의 시작으로 삼지 않습니다.", paragraphs: [
-      "NSW Treasury의 원주민 경제사는 식량·원료·도구·지식·노래가 넓은 교환망을 따라 이동했고, 친족과 의례가 경제 관계를 조직했다고 설명합니다. 식민지 확장은 토지와 자원을 빼앗았지만 원주민은 어업·관광·임대·목축 등으로 적응하고 자율성을 지키려 했습니다.",
+      "NSW Treasury의 원주민 경제사는 식량·원료 같은 물건뿐 아니라 지식·노래와 혼인 상대까지 넓은 교환망을 따라 이동했고, 친족과 의례가 경제 관계를 조직했다고 설명합니다. 식민지 확장은 토지와 자원을 빼앗았지만 원주민은 어업·관광·임대·목축 등으로 적응하고 자율성을 지키려 했습니다.",
       "정부 개관도 NSW의 사례와 기록 보존 범위를 가집니다. 대륙 전체와 마오리·태평양 섬 공동체의 제도를 대신하지 않으므로 지역별 당사자 자료를 더해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 세계은행 태평양 보고서는 관광·송금·어업권·지원금이 서로 다른 경제 기반임을 구분합니다", bridge: "섬 경제를 작고 고립됐다는 한 문장으로 끝내지 않습니다.", paragraphs: [
-      "World Bank Pacific Economic Update는 관광·송금 중심 국가와 어업권·협약 지급 같은 주권 수입 중심 국가, 상품 수출 중심 국가를 구분합니다. 항공·수요·재난과 지원금 조건이 성장·세입·고용에 다르게 닿습니다.",
+      "World Bank Pacific Economic Update는 관광·송금 중심 국가(팔라우·사모아·통가·바누아투)와 어업 허가 수입·신탁기금 수입·공여 지원 같은 주권 수입 중심 국가(미크로네시아연방·마셜제도·키리바시·나우루·투발루)를 구분하고, 피지·솔로몬제도 같은 나라는 따로 다룹니다. 항공·수요·재난과 지원금 조건이 성장·세입·고용에 다르게 닿습니다.",
       "이 분류는 현재 정책 분석이며 오세아니아 전체의 역사 모형이 아닙니다. 장기 자료에서는 식민 행정·독립·이주권·토지와 해양 권리의 변화에 현재 현금흐름을 연결해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 호주·뉴질랜드와 수천 개 섬을 오세아니아 평균 하나로 묶지 않습니다", bridge: "나라·섬·도시·원주민 공동체와 디아스포라의 차이를 남깁니다.", paragraphs: [
@@ -385,7 +387,7 @@ export const warFinanceWelfareData: WorldHistoryArticleData = {
       "강의계획은 질문 지도이며 각 전쟁의 인과와 규모를 직접 증명하는 자료는 아닙니다. 군비·세금·임금·사망·영양·민간소비와 식민지 동원 자료를 사건별로 다시 대조해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 영국 의회 재정사는 1688년 이후 전쟁과 장기부채, 20세기 복지 확대를 한 연표에 둡니다", bridge: "빚이 많았다는 사실보다 어떤 세금과 제도가 함께 생겼는지 봅니다.", paragraphs: [
-      "House of Commons Library는 영국 국채가 1688년 약 100만 파운드에서 10년 뒤 1,500만, 1800년 무렵 약 5억 파운드로 늘었다고 정리합니다. 1689~2016년 전쟁기의 평균 적자는 GDP의 6.7%, 평화기의 1.0%였다고 제시합니다.",
+      "House of Commons Library는 영국 국채가 1688년 약 100만 파운드에서 10년 뒤 1,500만, 1800년 무렵 약 5억 파운드로 늘었다고 정리합니다. 1689~2016년 전쟁기의 평균 적자는 GDP의 6.7%, 평화기의 1.0%였다고 제시합니다. 같은 브리핑은 20세기 지출 증가의 큰 부분을 제2차 세계대전 뒤 복지국가의 창설로 돌립니다. 1950년대 이후 실질 국방비는 대체로 평평했고 보건·교육 지출은 2000년대까지 꾸준히 늘었다는 것입니다. 그 출발점의 하나가 1942년 11월 윌리엄 베버리지가 낸 보고서 『사회보험과 관련 서비스(Social Insurance and Allied Services)』였습니다(영국 의회 Living Heritage 안내, 확인일 2026-10-09).",
       "이 수치는 영국의 장기 재정 기록입니다. 전쟁 뒤 부채가 높아도 세원·성장·금리·만기가 다르면 지속 가능성이 달라지고, 복지 확대가 전쟁의 자동 결과라는 뜻도 아닙니다.",
     ] },
     { id: "limits", level: "7", title: "10. 유럽의 재정국가와 복지국가 경로를 모든 전쟁과 국가에 적용하지 않습니다", bridge: "패전·식민지·내전·약한 세원과 비공식 보호의 다른 경로를 남깁니다.", paragraphs: [
@@ -411,7 +413,7 @@ export const warFinanceWelfareData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "LSE EH450 · Economic History of War in Europe", excerpt: "resource mobilisation - finance, material inputs, human capital", application: "전쟁을 국가 형성·금융·물자·사람·생산·소비와 인간 비용으로 나눠 읽습니다.", citation: "LSE EH450, Topics in the Economic History of War in Europe", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", note: "2026/27 대학원 과정의 비교 범위이며 설명용 100 장부의 수치를 제공하는 자료는 아닙니다." },
-    { source: "House of Commons Library · Public finances", excerpt: "average deficit during years of war was 6.7% of GDP", application: "1688년 이후 세원·국채와 전쟁기 적자, 20세기 부채를 장기 연표에 놓습니다.", citation: "House of Commons Library, The public finances: a historical overview", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "영국의 장기 재정사이며 다른 나라의 전쟁·복지 경로와 현재의 지속 가능성을 직접 결정하지 않습니다." },
+    { source: "House of Commons Library · Public finances", excerpt: "average deficit during years of war was 6.7% of GDP", application: "1688년 이후 세원·국채와 전쟁기 적자, 20세기 부채를 장기 연표에 놓습니다.", citation: "House of Commons Library (Philip Brien & Matthew Keep), The public finances: a historical overview, 2018", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "필립 브라이언·매슈 킵이 2018년 3월 20일 펴낸 브리핑(CBP-8265)입니다. 원 페이지와 PDF는 자동 조회가 403이라 2025-08-18·2026-08-25 사본으로 수치를 확인했습니다(확인일 2026-10-09). 영국의 장기 재정사이며 다른 나라의 전쟁·복지 경로와 현재의 지속 가능성을 직접 결정하지 않습니다." },
   ],
   review: [
     "35+40+15+10과 40+30+20+10을 각각 계산하고 두 장부의 시점 차이를 설명하세요. (답: 3절)",

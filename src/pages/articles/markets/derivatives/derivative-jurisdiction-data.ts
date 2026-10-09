@@ -201,7 +201,7 @@ export const japanAustraliaLeverageData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "Japan FSA · 개인 장외 FX", excerpt: "４％以上の証拠金", application: "증거금 4%를 최대 25배로 바꾸고 현금 100의 1% 충격 손실 25를 계산합니다.", citation: "金融庁, いわゆる外国為替証拠金取引について", href: "https://www.fsa.go.jp/ordinary/iwagai/index.html", note: "일본 개인 장외 FX의 증거금·로스컷·등록 업체 확인을 설명하는 금융청 공식 안내입니다." },
-    { source: "ASIC · CFD product intervention and distribution", excerpt: "30:1 to a 2:1", application: "기초자산별 배수와 설계·유통 의무를 현금 100의 노출·손실 비교에 적용합니다.", citation: "ASIC, Priorities for supervision of market intermediaries (2025–26)", href: "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/", note: "호주 소매 CFD 개입 조치의 내용·기한과 복잡상품 유통 감독 우선순위를 설명하는 공식 페이지입니다." },
+    { source: "ASIC · CFD product intervention order", excerpt: "30:1 for CFDs referencing an exchange rate for a major currency pair", application: "기초자산별 배수(주요 통화쌍 30배~암호자산 2배)를 현금 100의 노출·손실 비교에 적용합니다.", citation: "ASIC, 20-254MR ASIC product intervention order strengthens CFD protections", href: "https://asic.gov.au/about-asic/news-centre/find-a-media-release/2020-releases/20-254mr-asic-product-intervention-order-strengthens-cfd-protections/", note: "2021년 3월 29일부터 적용된 호주 소매 CFD 개입 조치의 배수를 밝힌 ASIC 보도자료입니다. 이 조치가 다시 제정되지 않으면 2027년 5월 23일 만료된다는 일정은 ASIC 시장중개인 감독 우선순위 페이지(2026-10-09 확인)에 있습니다." },
   ],
   review: [
     "4% 증거금이 왜 25배 이하인지 설명하고 1% 손실을 계산해 보세요. (답: 1·3·8절)",
@@ -241,7 +241,7 @@ export const usRegulatoryMapData: DerivativeDeepArticleData = {
       "별도의 선물 계좌에 넣은 100은 FCM 분리 계정에서 추적하고 20의 증거금과 손익을 반영합니다. 계약별 확인서와 계좌 명세를 이어 놓아야 어느 기관과 파산 절차가 실제 문제를 다루는지 알 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. SEC 자료에서 증권기반스왑의 별도 문을 확인합니다", bridge: "일반 스왑과 증권기반스왑을 같은 규칙으로 뭉개지 않습니다.", paragraphs: [
-      "SEC는 도드프랭크법 아래 증권기반스왑 시장을 맡고, CFTC는 스왑을 맡으며 혼합스왑은 함께 규제한다고 설명합니다. 증권기반스왑 딜러의 영업행위 기준에는 거래상대 자격 확인, 중요한 위험·특성·유인·이해충돌과 일일 가격 표시가 포함됩니다.",
+      "SEC는 도드프랭크법 아래 증권기반스왑 시장을 맡고, CFTC는 스왑을 맡으며 혼합스왑은 함께 규제한다고 설명합니다. 증권기반스왑 딜러의 영업행위 기준은 이 안내 페이지가 아니라 SEC 규칙 17 CFR 240.15Fh-3이 정하며, 거래상대 자격 확인, 중요한 위험·특성과 유인·이해충돌 공시, 일일 가격 표시(daily mark)가 여기에 들어갑니다.",
       "본문의 단일 회사 신용스왑은 경계를 그리기 위한 전형적 사례입니다. 실제 계약이 증권기반스왑인지 여부는 법적 정의와 지수 구성, 계약 조건을 대입해 판단해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. CFTC는 고객 돈 100을 회사 돈과 분리하도록 요구합니다", bridge: "판매 설명과 별도로 보관 장부가 지키는 범위를 봅니다.", paragraphs: [
@@ -270,7 +270,7 @@ export const usRegulatoryMapData: DerivativeDeepArticleData = {
     { term: "FCM 고객자금 분리", description: "선물 고객의 돈과 재산을 중개회사 자기 자산에서 떼어 보관하는 장치입니다.", example: "100 중 쓰지 않은 80도 고객 계정 표시를 유지합니다.", boundary: "시장 손실 보전이나 예금보험과 같지 않습니다." },
   ] },
   sources: [
-    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "미국 SEC·CFTC의 상품 관할 분할과 증권기반스왑 제도 자료를 모은 공식 페이지입니다." },
+    { source: "SEC · Security-Based Swap Markets", excerpt: "SEC regulates security-based swaps", application: "금리스왑과 단일 회사 신용스왑의 관할·영업행위 문을 구분합니다.", citation: "U.S. Securities and Exchange Commission, Security-Based Swap Markets", href: "https://www.sec.gov/about/divisions-offices/division-trading-markets/security-based-swap-markets", note: "미국 SEC·CFTC의 상품 관할 분할과 증권기반스왑 제도 자료를 모은 공식 페이지입니다. 이 페이지는 관할 분할만 설명합니다. 딜러 영업행위 기준(거래상대 자격·공시·일일 가격 표시)은 17 CFR 240.15Fh-3 조문(코넬 LII 사본, 2026-10-09 확인)에 근거합니다." },
     { source: "CFTC · Futures Commission Merchants", excerpt: "kept apart (segregated)", application: "고객 현금 100과 필요 증거금 20을 회사 자기 자산과 분리하는 장부로 적용합니다.", citation: "Commodity Futures Trading Commission, Futures Commission Merchants", href: "https://www.cftc.gov/IndustryOversight/Intermediaries/FCMs/fcmsegregationfunds.html", note: "FCM 고객자금 분리, 계정 표시와 파산 시 한계를 설명하는 CFTC 공식 안내입니다." },
   ],
   review: [

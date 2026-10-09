@@ -24,10 +24,12 @@ export default function ModernNttGpuArticle() {
     <section id="stage-tile" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">01 · Stage tile</p><h2 className="mt-2 text-2xl font-bold">한 thread의 butterfly index를 먼저 증명하고 여러 stage를 tile로 묶는다</h2></header>
       <ExplainedFormula question="Radix-2 stage s에서 thread t가 어느 두 원소를 읽을까?" idea={<>Stage의 half-span h를 기준으로 thread를 group과 group 안 j로 나누면 겹치지 않는 butterfly pair를 만듭니다.</>} formula={String.raw`h=2^s,\quad j=t\bmod h,\quad g=\left\lfloor\frac{t}{h}\right\rfloor,\quad (i_0,i_1)=(2hg+j,\,2hg+j+h)`}
-      annotatedFormula={String.raw`h=\underbrace{2^s,\quad j=t\bmod h,\quad g=\left\lfloor\frac{t}{h}\right\rfloor,\quad (i_0,i_1)=(2hg+j,\,2hg+j+h)}_{\text{기준량당 비율}}`}
+      annotatedFormula={String.raw`\underbrace{h=2^s}_{\text{pair 간 거리}},\quad \underbrace{j=t\bmod h}_{\text{group 안 위치}},\quad \underbrace{g=\left\lfloor\frac{t}{h}\right\rfloor}_{\text{몇 번째 group}},\quad (i_0,i_1)=\underbrace{(2hg+j,\,2hg+j+h)}_{\text{겹치지 않는 pair}}`}
       operations={[
-        { expression: String.raw`2^s,\quad j=t\bmod h,\quad g=\left\lfloor\frac{t}{h}\right\rfloor,\quad (i_0,i_1)=(2hg+j,\,2hg+j+h)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Stage의 half-span h를 기준으로 thread를","group과 group 안 j로 나누면 겹치지 않는","butterfly pair를 만듭니다."] },
-      ]} terms={[
+  { expression: String.raw`h=2^s`, annotation: ["stage s의 butterfly 두 입력 사이 거리","N=8, s=1이면 h=2"] },
+  { expression: String.raw`j=t\bmod h`, annotation: ["thread t를 길이 2h group 안 offset과","group 번호로 나눕니다","t=3 → j=1, g=1"] },
+  { expression: String.raw`(2hg+j,\,2hg+j+h)`, annotation: ["group 시작 2hg에 j를 더한 위치와","h만큼 떨어진 위치를 짝짓습니다","2·2·1+1 = 5 → (5, 7)"] },
+]} terms={[
         {symbol:"s",name:"Stage index",description:"0부터 log₂N−1까지 butterfly span을 정합니다."},
         {symbol:"h",name:"Half-span",description:"Butterfly 두 입력 사이 거리입니다."},
         {symbol:"t",name:"Logical butterfly index",description:"0부터 N/2−1까지 독립 pair 하나를 가리킵니다."},
@@ -45,10 +47,11 @@ export default function ModernNttGpuArticle() {
     <section id="twiddle-contract" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Twiddle contract</p><h2 className="mt-2 text-2xl font-bold">Twiddle table은 값 배열이 아니라 field·direction·stage index의 artifact다</h2></header>
       <ExplainedFormula question="Butterfly의 twiddle이 두 output을 어떻게 만들까?" idea={<>두 번째 입력에 현재 stage의 root power를 곱한 뒤 합과 차를 동시에 계산합니다.</>} formula={String.raw`u=x_{i_0},\quad v=\omega^{q(s,j)}x_{i_1},\quad (y_{i_0},y_{i_1})=(u+v,\,u-v)`}
-      annotatedFormula={String.raw`u=\underbrace{x_{i_0},\quad v=\omega^{q(s,j)}x_{i_1},\quad (y_{i_0},y_{i_1})=(u+v,\,u-v)}_{\text{Root of unity 계산}}`}
+      annotatedFormula={String.raw`\underbrace{u=x_{i_0}}_{\text{첫 입력 그대로}},\quad \underbrace{v=\omega^{q(s,j)}x_{i_1}}_{\text{둘째 입력×twiddle}},\quad (y_{i_0},y_{i_1})=\underbrace{(u+v,\,u-v)}_{\text{합과 차 동시 출력}}`}
       operations={[
-        { expression: String.raw`x_{i_0},\quad v=\omega^{q(s,j)}x_{i_1},\quad (y_{i_0},y_{i_1})=(u+v,\,u-v)`, annotation: ["Root of unity이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 번째 입력에 현재 stage의 root power를 곱한","뒤 합과 차를 동시에 계산합니다."] },
-      ]} terms={[
+  { expression: String.raw`\omega^{q(s,j)}x_{i_1}`, annotation: ["stage·offset·방향이 정한 root power를","둘째 입력에 곱합니다","direction tag가 반대면 round-trip 실패"] },
+  { expression: String.raw`(u+v,\,u-v)`, annotation: ["같은 field에서 합과 차를 두 output으로","한 butterfly가 두 위치를 함께 갱신"] },
+]} terms={[
         {symbol:"x",name:"Stage input",description:"현재 stage가 읽는 field-element buffer입니다."},
         {symbol:"y",name:"Stage output",description:"Butterfly 결과 buffer이며 in-place일 수도 있습니다."},
         {symbol:"i_0,i_1",name:"Butterfly indices",description:"Stage tile mapping이 정한 두 positions입니다."},
@@ -62,10 +65,11 @@ export default function ModernNttGpuArticle() {
     <section id="permutation-plan" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">03 · Permutation plan</p><h2 className="mt-2 text-2xl font-bold">Bit reversal을 없앤 것이 아니라 어느 경계에서 요구하는지 명시한다</h2></header>
       <ExplainedFormula question="k-bit index의 bit-reversed 위치를 어떻게 계산할까?" idea={<>Index의 k개 binary digits 순서를 뒤집어 새 위치를 만듭니다.</>} formula={String.raw`i=\sum_{r=0}^{k-1}b_r2^r,\qquad rev_k(i)=\sum_{r=0}^{k-1}b_r2^{k-1-r}`}
-      annotatedFormula={String.raw`i=\underbrace{\sum_{r=0}^{k-1}b_r2^r,\qquad rev_k(i)=\sum_{r=0}^{k-1}b_r2^{k-1-r}}_{\text{Bit-reversed index 계산}}`}
+      annotatedFormula={String.raw`\underbrace{i=\sum_{r=0}^{k-1}b_r2^r}_{\text{i를 k bit로 분해}},\qquad \underbrace{rev_k(i)=\sum_{r=0}^{k-1}b_r2^{k-1-r}}_{\text{bit 순서를 뒤집은 위치}}`}
       operations={[
-        { expression: String.raw`\sum_{r=0}^{k-1}b_r2^r,\qquad rev_k(i)=\sum_{r=0}^{k-1}b_r2^{k-1-r}`, annotation: ["Bit-reversed index이(가) 식의 결과에 기여하는","방식을 계산합니다.","Index의 k개 binary digits 순서를 뒤집어 새","위치를 만듭니다."] },
-      ]} terms={[
+  { expression: String.raw`\sum_{r=0}^{k-1}b_r2^r`, annotation: ["index를 zero-pad한 k개 binary digit으로","N=8, k=3: i=3 = 011₂"] },
+  { expression: String.raw`\sum_{r=0}^{k-1}b_r2^{k-1-r}`, annotation: ["r번째 bit를 k-1-r 자리로 옮깁니다","011₂ → 110₂ = 6"] },
+]} terms={[
         {symbol:"i",name:"Original index",description:"0부터 N−1까지의 array position입니다."},
         {symbol:"k",name:"Index bits",description:"N=2^k를 표현하는 bit 수입니다."},
         {symbol:"b_r",name:"Binary digit",description:"i의 r번째 낮은-order bit입니다."},
@@ -89,10 +93,11 @@ export default function ModernNttGpuArticle() {
             butterfly/s와 occupancy·bank conflicts·stalls, H2D/D2H도 같이 기록합니다.
           </p>
       <ExplainedFormula question="Out-of-place radix-2 NTT의 최소 requested traffic을 어떻게 추정할까?" idea={<>각 stage가 N field elements를 한 번 읽고 한 번 쓴다고 단순화해 stage 수만큼 합합니다.</>} formula={String.raw`B_{req}=2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}`}
-      annotatedFormula={String.raw`B_{req}=\underbrace{2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}}_{\text{기준량당 비율}}`}
+      annotatedFormula={String.raw`B_{req}=\underbrace{2Ns_F}_{\text{stage당 read+write}}\underbrace{\log_2N}_{\text{stage 수}},\qquad BW_{req}=\frac{B_{req}}{\underbrace{t_{stages}}_{\text{NTT kernel 시간}}}`}
       operations={[
-        { expression: String.raw`2Ns_F\log_2N,\qquad BW_{req}=\frac{B_{req}}{t_{stages}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 stage가 N field elements를 한 번 읽고","한 번 쓴다고 단순화해 stage 수만큼 합합니다."] },
-      ]} terms={[
+  { expression: String.raw`2Ns_F\log_2N`, annotation: ["stage마다 N개 원소를 한 번 읽고 쓰는","out-of-place 상한 모델","2×8×32B×3 = 1,536B"] },
+  { expression: String.raw`\frac{B_{req}}{t_{stages}}`, annotation: ["알고리즘 요청 bytes를 stage 시간으로 나눔","HBM achieved BW와는 따로 기록"] },
+]} terms={[
         {symbol:"B_{req}",name:"Requested bytes",description:"Cache·transaction amplification 전 algorithmic read/write bytes입니다."},
         {symbol:"N",name:"Domain size",description:"Transform field elements 수입니다."},
         {symbol:"s_F",name:"Field element bytes",description:"Device internal representation의 aligned element 크기입니다."},

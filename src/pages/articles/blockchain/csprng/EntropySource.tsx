@@ -14,9 +14,10 @@ export default function EntropySource() {
         question="공격자가 한 번에 맞힐 가능성이 가장 큰 raw outcome으로부터 몇 bit를 보수적으로 셀까요?"
         idea="Shannon entropy의 평균 대신 가장 높은 확률 pmax 하나를 봅니다. 가장 쉬운 결과가 1/8 확률이라면 최악의 한 번 추측에 대해 3-bit보다 강하다고 말할 수 없습니다."
         formula={String.raw`H_\infty(X)=-\log_2\!\left(\max_x \Pr[X=x]\right)`}
-        annotatedFormula={String.raw`H_\infty(X)=\underbrace{-\log_2\!\left(\max_x \Pr[X=x]\right)}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`H_\infty(X)=\underbrace{-\log_2}_{\text{확률을 bit로}}\!\left(\underbrace{\max_x \Pr[X=x]}_{\text{가장 쉬운 추측 확률}}\right)`}
         operations={[
-          { expression: String.raw`-\log_2\!\left(\max_x \Pr[X=x]\right)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Shannon entropy의 평균 대신 가장 높은 확률","pmax 하나를 봅니다."] },
+          { expression: String.raw`\max_x \Pr[X=x]`, annotation: ["평균이 아니라 공격자가 한 번에","맞힐 가장 쉬운 outcome의 확률 pmax"] },
+          { expression: String.raw`-\log_2\!\left(\max_x \Pr[X=x]\right)`, annotation: ["pmax=1/8이면 −log₂(1/8)=3 bits","128-bit buffer에 복사해도 3 bits 그대로"] },
         ]}
         terms={[
           { symbol: "X", name: "raw-source random variable", description: "고정한 sampling window에서 관찰한 outcome입니다." },
@@ -30,9 +31,10 @@ export default function EntropySource() {
         question="h bit의 min-entropy만 가진 seed로 만든 256-bit key는 얼마나 강할까요?"
         idea="Generator output 길이가 길어져도 공격자는 가능한 seed를 열거해 key 후보를 재생성할 수 있습니다. Guessing work의 상한은 출력 길이가 아니라 seed의 실제 entropy와 DRBG security strength 중 작은 값에 묶입니다."
         formula={String.raw`b_{\mathrm{effective}}\le \min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)`}
-        annotatedFormula={String.raw`b_{\mathrm{effective}}\le \underbrace{\min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`b_{\mathrm{effective}}\le \min\!\left(\underbrace{H_\infty(S)}_{\text{seed의 실제 entropy}},\,\underbrace{b_{\mathrm{DRBG}}}_{\text{DRBG 보안 강도}},\,\underbrace{b_{\mathrm{key}}}_{\text{key 길이}}\right)`}
         operations={[
-          { expression: String.raw`\min\!\left(H_\infty(S),\,b_{\mathrm{DRBG}},\,b_{\mathrm{key}}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Generator output 길이가 길어져도 공격자는 가능한","seed를 열거해 key 후보를 재생성할 수 있습니다."] },
+          { expression: String.raw`H_\infty(S)`, annotation: ["공격자는 seed를 열거해 key를 재생성","8-bit seed면 후보가 256개뿐입니다"] },
+          { expression: String.raw`b_{\mathrm{key}}`, annotation: ["256-bit key라도 min이 8을 고르므로","유효 강도는 8 bits를 넘지 못합니다","output을 늘려도 올라가지 않습니다"] },
         ]}
         terms={[
           { symbol: "S", name: "seed material", description: "Instantiate에 들어간 전체 entropy-bearing input입니다." },

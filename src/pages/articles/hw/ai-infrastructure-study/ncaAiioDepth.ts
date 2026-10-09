@@ -141,7 +141,7 @@ export const ncaAiioDepth = {
       source: {
         label: "NVIDIA DCGM User Guide",
         href: "https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html",
-        location: "dcgmi discovery와 diagnostics 사용 범위",
+        location: "dcgmi discovery -l 예시(dcgmi diag -r의 run level·출력은 dcgmi diag 명령 참조에서 확인)",
       },
     },
     {
@@ -205,9 +205,9 @@ export const ncaAiioDepth = {
         reading: "Application을 고치기 전에 runtime 등록과 daemon 설정, toolkit log를 확인합니다. Host nvidia-smi도 실패하면 toolkit보다 driver 경계로 돌아갑니다.",
       },
       source: {
-        label: "NVIDIA Container Toolkit install and sample workload",
-        href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/sample-workload.html",
-        location: "Docker GPU sample과 nvidia-smi verification",
+        label: "NVIDIA Container Toolkit install guide",
+        href: "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html",
+        location: "nvidia-ctk runtime configure --runtime=docker와 Docker 재시작(마지막 docker run 검증 명령은 sample-workload 페이지)",
       },
     },
     {

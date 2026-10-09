@@ -27,9 +27,10 @@ export default function Timeout({
         question="Round가 반복될수록 정상 message를 기다릴 예산을 어떻게 늘릴까요?"
         idea={<>초기 timeout에 round별 delta를 더하는 단순 schedule은 network delay가 안정된 뒤 언젠가 기다림이 실제 delay를 넘도록 만듭니다. Step별 base와 delta는 따로 둡니다.</>}
         formula={String.raw`T_s(r)=T_{s,0}+r\,\Delta_s`}
-        annotatedFormula={String.raw`T_s(r)=\underbrace{T_{s,0}+r\,\Delta_s}_{\text{변화량 계산}}`}
+        annotatedFormula={String.raw`T_s(r)=\underbrace{T_{s,0}}_{\text{step의 첫 대기 예산}}+\underbrace{r\,\Delta_s}_{\text{round마다 늘린 예산}}`}
         operations={[
-          { expression: String.raw`T_{s,0}+r\,\Delta_s`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","초기 timeout에 round별 delta를 더하는 단순","schedule은 network delay가 안정된 뒤 언젠가","기다림이 실제 delay를 넘도록 만듭니다."] },
+          { expression: String.raw`T_{s,0}`, annotation: ["Propose·Prevote·Precommit마다","따로 둔 round 0의 대기 예산"] },
+          { expression: String.raw`r\,\Delta_s`, annotation: ["round가 하나 오를 때마다 Δ_s를 더 기다려","GST 뒤 안정된 delay를 결국 넘고","honest proposer와 vote가 한 round에 모임"] },
         ]}
         terms={[
           { symbol: "s", name: "Consensus step", description: "Propose·Prevote·Precommit 중 timer step입니다." },

@@ -24,9 +24,11 @@ export default function SszInternal({ title, onCodeRef: _onCodeRef }: Props) {
         question="Generalized index 13의 Merkle branch는 몇 단계이며 어느 방향으로 내려가는가?"
         idea="Index를 binary로 쓰고 맨 앞의 root bit를 제거합니다. 남은 bit 수가 branch depth이며 각 bit가 이동 방향을 정합니다."
         formula={String.raw`13_{10}=1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101`}
-        annotatedFormula={String.raw`13_{10}=\underbrace{1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`13_{10}=\underbrace{1101_2}_{\text{맨 앞 1이 root}}\quad\Rightarrow\quad \operatorname{depth}(13)=\underbrace{\lfloor\log_2 13\rfloor=3}_{\text{sibling hash 3개}},\quad \operatorname{path}=\underbrace{101}_{\text{오른·왼·오른}}`}
         operations={[
-          { expression: String.raw`1101_2\quad\Rightarrow\quad \operatorname{depth}(13)=\lfloor\log_2 13\rfloor=3,\quad \operatorname{path}=101`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Index를 binary로 쓰고 맨 앞의 root bit를","제거합니다."] },
+          { expression: String.raw`13_{10}=1101_2`, annotation: ["13을 binary로 쓰면 1101","맨 앞 1은 root 자리라 경로가 아님"] },
+          { expression: String.raw`\lfloor\log_2 13\rfloor=3`, annotation: ["root bit 뒤에 남는 bit 수가 depth","leaf→root에 sibling 3개를 결합"] },
+          { expression: String.raw`\operatorname{path}=101`, annotation: ["남은 bit 1·0·1을 root부터 읽어","right→left→right로 내려갑니다"] },
         ]}
         terms={[
           { symbol: "13", name: "Generalized index", description: "검증할 tree node의 heap-style 번호입니다." },

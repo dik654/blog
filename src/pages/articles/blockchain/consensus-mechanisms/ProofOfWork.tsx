@@ -26,8 +26,8 @@ export default function ProofOfWork() {
           \mathbb{E}[N]&=\frac{1}{p}=\frac{2^b}{T}
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          p&=\underbrace{\Pr[H<T]=\frac{T}{2^b}}_{\text{기준량당 비율}}\\
-          \mathbb{E}[N]&=\underbrace{\frac{1}{p}=\frac{2^b}{T}}_{\text{확률 가중 평균}}
+          p&=\underbrace{\Pr[H<T]=\frac{T}{2^b}}_{\text{target 아래 출력 비율}}\\
+          \mathbb{E}[N]&=\underbrace{\frac{1}{p}=\frac{2^b}{T}}_{\text{첫 성공까지 평균 시도}}
         \end{aligned}`}
         operations={[
           { expression: String.raw`\Pr[H<T]=\frac{T}{2^b}`, annotation: ["허용되는 T개 출력을 전체 2^b개 출력으로 나눕니다.","서로 다른 입력의 hash가 독립 균등 출력처럼 동작한다는 모형입니다."] },

@@ -76276,15 +76276,15 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "cuda-memory-transfer-amortization",
-        "role": "이동과 전체 시간을 64개·768바이트 사례에서 설명합니다."
+        "role": "원소 64개·768바이트를 GPU로 옮기는 시간이 계산 시간보다 길면 GPU가 빨라도 전체가 늦어진다는 손익을 세웁니다."
       },
       {
         "id": "cuda-parallel-workload-fit",
-        "role": "작업의 독립성과 재사용을 64개·768바이트 사례에서 설명합니다."
+        "role": "64개 원소가 서로 독립이고 다시 읽히는지를 보고 GPU에 맡길 만한 일인지 고르는 기준을 세웁니다."
       },
       {
         "id": "cuda-measurement-release-gate",
-        "role": "정확성과 성능 확인을 64개·768바이트 사례에서 설명합니다."
+        "role": "CPU 결과와 비교하고 길이 63·64·65 경계를 시험한 뒤 같은 환경에서 시간을 재야 kernel을 내보낼 수 있다는 관문을 세웁니다."
       }
     ],
     "conceptExplanations": [
@@ -88555,31 +88555,31 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "gpu-cache-levels-l1-l2",
-        "role": "Cache의 공유 범위를 64개·768바이트 사례에서 설명합니다."
+        "role": "같은 768바이트 요청이 SM 단위 L1과 GPU 전체 L2 중 어디서 다시 쓰일 수 있는지 공유 범위로 구분합니다."
       },
       {
         "id": "cuda-local-constant-memory-space",
-        "role": "주소 공간과 저장 위치를 64개·768바이트 사례에서 설명합니다."
+        "role": "local·constant라는 이름이 저장 위치나 속도를 뜻하지 않고 주소 공간의 접근 규칙을 뜻한다는 점을 구분합니다."
       },
       {
         "id": "gpu-memory-transaction-sector",
-        "role": "요청을 sector로 세는 방법을 64개·768바이트 사례에서 설명합니다."
+        "role": "768바이트 요청을 32바이트 sector 수로 세어 병합된 접근과 흩어진 접근의 전송량 차이를 계산합니다."
       },
       {
         "id": "gpu-memory-latency-bandwidth",
-        "role": "대기와 처리량을 64개·768바이트 사례에서 설명합니다."
+        "role": "왕복 500 ns에서 1 TB/s를 유지하려면 500 KB가 동시에 진행 중이어야 한다는 지연·처리량 관계를 세웁니다."
       },
       {
         "id": "gpu-execution-pipe-utilization",
-        "role": "실제 실행 pipe 확인을 64개·768바이트 사례에서 설명합니다."
+        "role": "roofline 선 아래의 측정점을 보고 실제로 바빴던 실행 pipe와 놀았던 pipe를 profiler로 가려냅니다."
       },
       {
         "id": "compute-memory-bound-kernel",
-        "role": "계산과 메모리 상한을 64개·768바이트 사례에서 설명합니다."
+        "role": "768바이트를 1μs에 처리한 유효 대역폭과 연산량을 계산·메모리 상한에 놓아 어느 쪽이 먼저 막는지 판정합니다."
       },
       {
         "id": "latency-launch-bound-kernel",
-        "role": "지연과 launch 비용을 64개·768바이트 사례에서 설명합니다."
+        "role": "64개처럼 작은 일에서는 계산·메모리 상한보다 launch와 동기화 지연이 전체 시간을 정한다는 경우를 구분합니다."
       }
     ],
     "conceptExplanations": [
@@ -116635,7 +116635,7 @@ export const ARTICLE_LEARNING: Readonly<
         "problem": "충전·방전 에너지의 행방과 초당 전환 횟수가 평균 전력으로 이어지는 과정을 분명히 해야 합니다.",
         "contribution": "원본 22쪽은 공급 CV²와 저장 ½CV², 23쪽은 방전 손실, 24쪽은 완전 주기 에너지 CV²와 평균 fCV²를 제시합니다.",
         "assumptions": "이상적인 CMOS 전환과 부하 용량의 완전 충전·방전을 전제합니다. 강의안의 이상 정적 전력 0은 실제 누설 0을 뜻하지 않습니다.",
-        "evidenceScope": "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.",
+        "evidenceScope": "공식 PDF 22–25쪽의 식과 에너지 장부를 직접 확인했습니다. 10 pF·3.3 V·1 MHz·1 µA는 글의 가정입니다.",
         "notClaim": "강의안이 1 µA를 측정했거나 모든 CMOS 회로의 전력 손실을 CV²만으로 설명한다는 뜻이 아닙니다.",
         "sectionId": "energy-ledger"
       }
@@ -119222,7 +119222,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Arm, Cortex-M0+ Devices Generic User Guide",
         "href": "https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957",
         "problem": "인터럽트 요청의 pending·허용·우선순위와 처리 함수 진입을 설명합니다.",
-        "contribution": "DUI 0662A §4.2.6·§4.2.7, 인쇄 4-6·4-7쪽에서 주변 장치 요청 유지와 비활성 상태에서도 가능한 pending을 구분합니다.",
+        "contribution": "DUI 0662A §4.2.5–§4.2.7, 인쇄 4-5–4-7쪽에서 우선순위 레지스터, 주변 장치 요청 유지와 비활성 상태에서도 가능한 pending을 구분합니다.",
         "assumptions": "Arm Cortex-M0+ 공통 동작이며 칩별 배선·지연은 별도입니다.",
         "evidenceScope": "Arm 공식 사용자 안내서의 해당 쪽을 확인했습니다.",
         "notClaim": "본문 가상 마감이나 ISR 실행 시간을 Arm이 보증한다는 뜻은 아닙니다.",
@@ -120021,7 +120021,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "FreeRTOS, RTOS Fundamentals and Task Priorities",
         "href": "https://www.freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals",
         "problem": "작업이 여럿일 때 정해진 시각 안에 결과를 내도록 CPU 실행 순서를 정합니다.",
-        "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다.",
+        "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다. 스크립트 렌더링 페이지라 본문 문장은 자동 조회로 대조하지 못했습니다(2026-10-09).",
         "assumptions": "선점 가능한 FreeRTOS 설정의 한 코어 사례로 적용합니다.",
         "evidenceScope": "FreeRTOS 공식 설명을 확인했습니다. 세 가상 작업과 46%는 본문 수치입니다.",
         "notClaim": "이 예제가 실제 FreeRTOS/RP2040의 타이밍 벤치마크라는 뜻은 아닙니다.",
@@ -120041,7 +120041,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "FreeRTOS, FreeRTOS mutexes",
         "href": "https://freertos.org/Real-time-embedded-RTOS-mutexes.html",
         "problem": "공유 자원 보호와 우선순위 역전의 영향을 줄입니다.",
-        "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다.",
+        "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다. 스크립트 렌더링 페이지라 본문 문장은 자동 조회로 대조하지 못했습니다(2026-10-09).",
         "assumptions": "본문의 남은 2ms 임계 구간은 독립적인 가정입니다.",
         "evidenceScope": "FreeRTOS 공식 뮤텍스 문서의 상속·ISR 경계를 확인했습니다.",
         "notClaim": "상속이 임계 구간 자체의 실행 시간을 없애거나 모든 마감을 보장한다는 뜻은 아닙니다.",
@@ -121162,7 +121162,7 @@ export const ARTICLE_LEARNING: Readonly<
         assumptions:
           "먹을 것이 25년마다 지금 거두는 양만큼씩만 더 늘 수 있다고 두고, 사람 수는 제약이 없으면 25년마다 두 배가 된다고 둡니다. 뒤쪽 비율은 당시 미국의 관찰에서 가져왔습니다. 땅이 늘지 않는다는 것과 사람 수가 먹을 것의 넉넉함에 반응한다는 것도 전제입니다.",
         evidenceScope:
-          "Internet Archive의 1798년 초판 스캔(430쪽)을 내려받아 해당 장을 읽었습니다. 14쪽의 두 비율 선언과 26쪽의 100년 셈은 쪽 이미지를 직접 열어 대조했고, 21·25·28쪽은 같은 스캔 OCR 본문의 쪽 머리글로 확인했습니다. 이후 판본에서 저자가 논지를 상당히 수정했으나 이 글은 초판만 읽었습니다.",
+          "Internet Archive의 1798년 초판 스캔(430쪽)을 내려받아 해당 장을 읽었습니다. 두 비율 선언은 14쪽, 미국 25년 배가는 20~21쪽, 100년 셈은 24쪽, 세계 수열은 25쪽, 512 대 10은 26쪽 첫 줄이며, 쪽수는 같은 스캔 OCR 본문의 쪽 머리글로 확인했습니다(2026-10-09 재대조, 쪽 이미지로 따로 대조하지는 않음). 이후 판본에서 저자가 논지를 상당히 수정했으나 이 글은 초판만 읽었습니다.",
         notClaim:
           "이 글은 저자의 결론을 지지하지도 기각하지도 않습니다. 실제로 지난 두 세기 동안 사람과 한 사람 몫이 함께 올랐으므로 예측 자체는 빗나갔고, 이 글이 하는 일은 어느 가정이 깨졌는지를 짚는 데까지입니다. 또 되먹임 고리의 네 단계는 저자의 서술을 이 글이 그림으로 정리한 것이고, 한 사람 몫의 시간 경로와 g(y) 표기도 원문에 없습니다.",
         sectionId: "the-check",
@@ -121704,7 +121704,7 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       {
         title:
-          "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」 (19차 2013 · 21차 2023 개정)",
+          "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」 (19차 2013, 2023년 개정 통합본 ICLS/21/2023/RES. II)",
         href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@dgreports/@stat/documents/normativeinstrument/wcms_230304.pdf",
         problem:
           "나라마다 다르게 세던 일과 일자리 통계를 견줄 수 있게 하려면 누구를 무엇으로 세는지를 조항으로 고정해야 했고, 동시에 노동시장의 모습이 나라마다 다르다는 사정도 담아야 했습니다.",
@@ -121964,7 +121964,7 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       {
         title:
-          "David Ricardo, 『On the Principles of Political Economy, and Taxation』 (1817) 초판, 7장",
+          "David Ricardo, 『On the Principles of Political Economy, and Taxation』 (1817) 초판, 6장(3판 기준 7장)",
         href: "https://www.gutenberg.org/ebooks/33310",
         problem:
           "한 나라가 모든 물건을 더 적은 품으로 만들 수 있을 때에도 교역이 양쪽에 이득인지, 그리고 같은 논리가 왜 한 나라 안에서는 다르게 작동하는지를 함께 설명해야 했습니다.",
@@ -121973,7 +121973,7 @@ export const ARTICLE_LEARNING: Readonly<
         assumptions:
           "자본이 국경을 넘기 어렵다는 것이 가장 큰 전제이며, 그 근거로 재산을 멀리 두는 불안과 고향을 떠나기 꺼리는 마음을 듭니다. 값을 노동으로 재는 설정도 전제이고, 두 나라의 한 몫이 같은 양을 뜻한다고 둡니다.",
         evidenceScope:
-          "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 7장 전체를 읽었습니다. 이 글의 다른 원자료와 달리 facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 장 번호까지만 적습니다.",
+          "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 6장 「On Foreign Trade」 전체를 읽었습니다(초판은 V*장 중복 번호 때문에 외국무역이 VI장이고, 3판부터 7장입니다). 이 글의 다른 원자료와 달리 facsimile이 아니라 전사본이므로 쪽 이미지로 대조하지 못했고, 그래서 쪽수를 적지 않고 장 번호까지만 적습니다.",
         notClaim:
           "이 글은 오늘날 자본이 얼마나 움직이는지, 그래서 어떤 결론이 성립하는지를 판정하지 않습니다. 그 판정에는 이 글이 읽지 않은 자료가 필요합니다. 또 본문의 비율 표기와 '결론이 아니라 전제를 읽는 절차'는 이 글이 정리한 것이고 원문에 그 꼴로 있지 않습니다. 교역의 이득이 왜 생기는지의 메커니즘은 1단계의 글이 소유하므로 여기서 다시 세우지 않았습니다.",
         sectionId: "the-assumption",
@@ -124835,7 +124835,7 @@ export const ARTICLE_LEARNING: Readonly<
         "problem": "임대료 외 약정 비용을 빠뜨리거나 임대인의 모든 청구를 유효하게 보는 문제입니다.",
         "contribution": "청소·관리·수선 등 부담 항목을 계약·공개서와 법적 범위에 대조해 월 비용에 반영합니다.",
         "assumptions": "호주 NSW의 해당 소매 임대차이며 개별 청구의 유효성은 사실관계와 법에 따라 달라집니다.",
-        "evidenceScope": "공식 본문의 정의·계약 및 공개서 명시·직접적이고 합리적인 관련 범위를 읽었습니다.",
+        "evidenceScope": "2026-10-09 원 페이지는 응답하지 않아 재대조하지 못했고, 같은 기관 Retail Tenancy Guide의 web.archive.org 2026-05-03 사본에서 outgoings 예시와 미공개 outgoings는 내지 않아도 될 수 있다는 문장만 확인했습니다. 직접적·합리적 관련 요건은 확인하지 못했습니다.",
         "notClaim": "다른 관할권의 비용 전가를 판정하거나 모든 항목의 청구가 허용된다는 뜻은 아닙니다."
       }
     ]
@@ -124952,7 +124952,7 @@ export const ARTICLE_LEARNING: Readonly<
         "question": "고정비 800만 원, 한 주문의 판매가 8천 원과 추가 비용 2천 원에서 월 최소 주문 수를 구하세요.",
         "answerChecklist": [
           "한 주문의 공헌이익은 6천 원입니다.",
-          "800만 원 ÷ 6천 원 = 1,333.33…건이므로 최소 1,334건입니다. 하루 평균과 매일 같은 정수 목표를 구별하면 30일에 약 44.45건과 45건입니다."
+          "800만 원 ÷ 6천 원 = 1,333.33…건이므로 최소 1,334건입니다. 하루 평균과 매일 같은 정수 목표를 구별하면 1,333.33÷30≈44.44건(1,334건 기준 1,334÷30≈44.47건)과 45건입니다."
         ],
         "sectionId": "mechanism",
         "requiredConcepts": [
@@ -125842,17 +125842,17 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "한국 식품위생법 제39조",
-        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0039&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=285339&joNo=0039&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
         "sectionId": "mechanism",
         "problem": "시설 인수만으로 음식점 영업 절차까지 끝났다고 읽는 문제입니다.",
         "contribution": "같은 인수의 지급 조건과 실제 영업 이전·지위승계 신고 수리 순서를 확인합니다.",
-        "assumptions": "2026-10-04 시행 중인 법률 제21065호이며 실제 영업 양도인지 판단해야 합니다.",
+        "assumptions": "2026-10-09 확인한 2026-10-08 시행판(법률 제21525호)이며 승계 신고 기한은 1개월입니다. 실제 영업 양도인지 판단해야 합니다.",
         "evidenceScope": "제39조 실제 HTML의 승계·신고·수리와 제한 규정 연결을 읽었습니다.",
         "notClaim": "장비만 산 모든 거래가 영업양도라거나 계약으로 신고 수리를 대신할 수 있다는 뜻은 아닙니다."
       },
       {
         "title": "한국 식품위생법 제78조",
-        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&joNo=0078&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
+        "href": "https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=285339&joNo=0078&joBrNo=00&docCls=jo&urlMode=lsScJoRltInfoR",
         "sectionId": "mechanism",
         "problem": "장비가 정상 작동하면 행정상 과거 문제도 없다고 읽는 문제입니다.",
         "contribution": "같은 가게의 위반·처분 이력을 인수 전에 확인할 이유를 설명합니다.",
@@ -126087,7 +126087,7 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "mechanism",
         "problem": "보증금이 아직 돌아오지 않았다는 이유로 퇴직 정산 기한도 자동 연장된다고 읽는 문제입니다.",
         "contribution": "임금·환불 300만 원과 통장 100만 원의 가정에서 지급일의 200만 원 부족을 별도로 계산합니다.",
-        "assumptions": "2026-10-02 시행 조문을 2026-10-04 확인했습니다.",
+        "assumptions": "2026-10-04 확인 당시 시행 조문을 읽었고 2026-10-09 같은 링크가 2026-10-08 시행판(법률 제21533호)을 보여 주며 제36조 문언은 같음을 다시 확인했습니다.",
         "evidenceScope": "조문 전체의 사유 발생부터 14일과 특별한 사정·당사자 합의에 따른 기일 연장을 읽었습니다.",
         "notClaim": "모든 해고·퇴직 절차나 개별 분쟁의 결론을 이 조문만으로 판정하지 않습니다."
       },
@@ -126625,7 +126625,7 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source",
         "problem": "잔여 예산을 현재 토지 가격으로 읽거나 비용·이익을 중복 차감하는 문제입니다.",
         "contribution": "같은 100·70·15 사례에서 포함 항목과 시점 조정을 구분하고 토지 취득 전후에 고정하는 값을 바꿉니다.",
-        "assumptions": "2019년 지침의 설명이며 2026년 최신 전문기준 전체를 대신하지 않습니다.",
+        "assumptions": "2019년 10월 펴내 2020-02-01 발효한 문서이며 2026-10-09 RICS는 같은 문서를 Professional Standard로 분류합니다. 2026년 최신 전문기준 전체를 대신하지 않습니다.",
         "evidenceScope": "실제 PDF의 용어집,6.1~6.3,7.1,B1.2.8~9,B3을 읽고 인쇄24쪽 식을 화면으로 확인했습니다.",
         "notClaim": "개별 감정평가·시장 거래가격·적정 할인율을 확정하지 않습니다."
       },
@@ -128764,23 +128764,23 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "grid-connection-constraint",
-        "sectionId": "mechanism",
-        "intuition": "먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.",
-        "workedExample": "먼 발전의 단가를 MWh당 5만 원, 공장 근처 대체 공급을 10만 원으로 둡니다(가정). 먼 곳에서 80MWh를 받아 400만 원, 가까운 곳에서 20MWh를 받아 200만 원을 냅니다. 에너지 조달비는 합계 600만 원입니다.",
-        "boundary": "저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다."
+        "sectionId": "names",
+        "intuition": "전기를 장거리로 옮기는 길이 송전망이고, 그 길에 새 발전소나 공장을 연결할 조건을 망 접속이라고 부릅니다. 이 사례의 접속 제약은 발전소가 100MWh를 만들 수 있어도 그 한 시간의 공급을 80MWh로 제한합니다.",
+        "workedExample": "발전소가 내보낼 수 있는 100과 길이 허용하는 80을 동시에 지켜야 하므로 이 단순한 한 경로에서는 작은 쪽인 80이 도착 상한입니다. 나머지 20MWh는 공장 근처의 다른 공급원에서 구하거나 사용을 줄여야 합니다(가정).",
+        "boundary": "IEA 보고서가 모든 공장의 접속량을 계산해 주는 것은 아닙니다. 실제 80이라는 한도는 해당 망사업자의 접속 검토, 보강 공사 범위와 공급 개시일 문서에서 확인해야 합니다."
       },
       {
         "id": "electricity-system-cost",
-        "sectionId": "comparison",
-        "intuition": "미국 FERC의 시장 안내는 독립 운영자가 도매시장을 여는 지역과 발전·송전·배전을 함께 맡는 전력회사가 있는 지역을 구분합니다. 따라서 미국 전력요금 하나로 사례의 600만 원 청구 방식을 정할 수 없습니다.",
+        "sectionId": "mechanism",
+        "intuition": "최종 전력 시스템 비용에는 에너지 조달비 600만 원 외에 망 유지, 운영, 고장 대비와 저장 비용도 들어갑니다. 600만 원은 최종 청구서의 일부입니다.",
         "workedExample": "길의 제약이 없어서 먼 곳에서 100MWh를 모두 살 수 있었다면 500만 원입니다. 두 조건의 차이 100만 원은 이 한 시간의 추가 조달비입니다. 이것만으로 송전선 건설비를 회수할 수 있는지는 연간 혼잡 시간과 공사비를 더 알아야 합니다.",
-        "boundary": "전력 가격과 공급 안정성의 경계는 계약상 받을 권리, 실제 연결 용량, 정전 때의 대체 수단에 있습니다. 낮은 평균 요금과 연간 발전량만으로 공장의 생산 손실을 추정할 수 없습니다."
+        "boundary": "같은 100MWh라도 지역 도매 규칙, 소매 계약, 망 요금, 수요를 줄여 달라는 약정이 다르면 지급액이 달라집니다. 미국 FERC 안내처럼 독립 운영자 지역과 통합 전력회사 지역이 나뉘므로 요금 하나로 청구 방식을 정할 수 없습니다."
       },
       {
         "id": "power-price-reliability-boundary",
         "sectionId": "limits",
-        "intuition": "저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다.",
-        "workedExample": "최종 전력 시스템 비용에는 망 유지, 운영, 고장 대비와 저장 비용도 들어갑니다. 600만 원은 최종 청구서 전체가 아니며, 실제 도매시장에서는 단가 결정과 혼잡 비용의 배분 방식도 계약에 따라 달라집니다.",
+        "intuition": "전력 가격과 공급 안정성의 경계는 계약상 받을 권리, 실제 연결 용량, 정전 때의 대체 수단에 있습니다. 낮은 평균 요금과 연간 발전량만으로 공장의 생산 손실을 추정할 수 없습니다.",
+        "workedExample": "저장 설비가 20MWh를 담을 수 있어도 한 시간에 5MW만 낼 수 있다면 그 시간의 부족 20MWh를 모두 채우지 못합니다(가정). 저장량과 방전 속도를 함께 확인해야 합니다.",
         "boundary": "실제 투자에서는 최대 사용량의 시간표와 접속일을 맞추고, 공급 지연과 정전 때 손실을 계산합니다. 100·80·20 모델은 이 질문을 열어 주지만 복잡한 전력 흐름이나 고장 확률을 대신 계산하지는 않습니다."
       }
     ],
@@ -128956,17 +128956,17 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "food-value-chain-gap",
-        "sectionId": "mechanism",
-        "intuition": "처음의 한 단위를 10개 묶음으로 늘려 봅니다(가정). 출하 1,000원, 선별·저장 300원, 운송 200원이 들면 가게에 들어오기까지 1,500원입니다. 모두 팔면 개당 150원이지만 2개를 버리면 판매 가능한 8개당 187.5원이 됩니다.",
-        "workedExample": "처음의 한 단위를 10개 묶음으로 늘려 봅니다(가정). 출하 1,000원, 선별·저장 300원, 운송 200원이 들면 가게에 들어오기까지 1,500원입니다. 모두 팔면 개당 150원이지만 2개를 버리면 판매 가능한 8개당 187.5원이 됩니다.",
-        "boundary": "작황이 나빠져 가격이 올라도 보관 물량과 대체 수입이 충격을 줄일 수 있습니다. 반대로 농가가격이 그대로여도 폐기율, 연료비나 임금이 오르면 소매가격이 바뀝니다."
+        "sectionId": "names",
+        "intuition": "농가에서 소비자까지 같은 수량의 판매가격 차이를 식품 가치사슬의 가격 간격으로 읽습니다. 운송과 가공처럼 추가된 서비스의 비용과 이익을 모두 담습니다.",
+        "workedExample": "농가 출하액 100원에 선별·저장 30원, 운송 20원, 소매 50원이 더해져 소비자가 200원을 냅니다(가정). 농가 몫은 100÷200=50%이고, 각 단계의 구매액을 또 더하면 앞 단계 돈을 중복해 세므로 추가된 금액만 잇습니다.",
+        "boundary": "나머지 50%가 유통업자의 순이익은 아닙니다. 추가 금액에서 노동과 전기, 임차료 같은 비용을 빼야 각 사업자의 이익이 남습니다."
       },
       {
         "id": "perishable-bargaining-power",
-        "sectionId": "comparison",
-        "intuition": "미국 농무부 ERS의 Food Dollar는 미국에서 생산한 식품에 대한 지출이 어디로 가는지 나누는 통계입니다. 그 안의 농가 몫은 농가의 순이익률과 다릅니다.",
-        "workedExample": "소매 단계가 총 500원을 추가로 회수해야 한다면 전체 필요액은 2,000원입니다. 8개로 나눠 개당 250원을 받아야 같은 총액을 회수합니다. 200원에서 250원으로 올라도 이 가정에서는 총이익이 늘었다고 볼 수 없습니다.",
-        "boundary": "같은 품질·수량·기간으로 맞췄는데 비용은 그대로이고 특정 단계의 순마진만 커졌다면 계약과 구매자 집중도를 조사할 이유가 생깁니다. 가격 차이 자체만으로 누가 폭리를 취했는지는 확정되지 않습니다."
+        "sectionId": "names",
+        "intuition": "시간이 지나면서 판매 가능한 양이나 품질이 줄어드는 성질이 부패성이고, 거래를 거절하거나 다음 기회를 기다릴 힘이 협상력입니다. 물건이 상하는 속도, 구매자의 수, 보관과 자금 여유가 그 힘을 바꿉니다.",
+        "workedExample": "내일 상할 물건 10단위를 가진 농가는 오늘 사겠다는 구매자를 쉽게 거절하기 어렵습니다(가정). 보관하면 다음 구매자를 기다릴 수 있지만 냉장 설비와 전기, 먼저 지급한 돈의 부담이 생깁니다.",
+        "boundary": "구매자가 소수이고 반품까지 요구할 수 있다면 농가가 더 많은 위험을 떠안을 수 있습니다. 저장 시설과 공동 판매가 비용을 낮추는 시설인지 거래 조건을 바꾸는 시설인지 구분해서 봅니다."
       },
       {
         "id": "food-price-causality-boundary",
@@ -129147,23 +129147,23 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "water-full-service-cost",
-        "sectionId": "mechanism",
-        "intuition": "가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.",
-        "workedExample": "가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.",
-        "boundary": "이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있습니다. 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다."
+        "sectionId": "names",
+        "intuition": "취수와 정수, 배관의 유지와 교체까지 넣어 서비스의 전체 비용을 셉니다. 이 글의 90은 한 해 필요한 현금 지출을 단순화한 값이며 감가상각을 계산한 회계 비용과 같지 않습니다.",
+        "workedExample": "한 해 정수·운영에 60, 배관 교체에 30이 필요하면 서비스에 필요한 자원은 합계 90입니다(가정). 정부 지원 10이 같은 요금을 대신 내는 돈이라면 서비스 비용에 다시 더해 100이라고 쓰면 안 됩니다.",
+        "boundary": "요금을 낮추려고 교체 30을 미루면 올해 수입과 지출은 맞을 수 있습니다. 그러나 설비 상태가 나빠지면 누수와 단수의 비용이 뒤로 넘어가므로 현재와 미래 이용자의 부담을 함께 봅니다."
       },
       {
         "id": "water-tariff-incidence",
-        "sectionId": "comparison",
-        "intuition": "싱가포르 PUB는 물 생산·공급 요금, 물 절약과 희소성을 반영하는 세금, 사용한 물 처리의 세금을 구분합니다. 하나의 단가 안에 어떤 비용과 정책 목적이 들어 있는지 먼저 읽어야 합니다.",
-        "workedExample": "사용량과 무관하게 받는 기본 금액을 늘리면 수입은 안정되지만 적게 쓰는 집의 부담이 커질 수 있습니다. 사용량별 가격을 높이면 절수를 유도할 수 있지만 가구원 수가 많은 저소득 가구가 불리할 수 있습니다.",
-        "boundary": "부담 가능성과 안정 공급을 함께 보려면 가구 소득 대비 청구액, 수질, 공급 시간, 누수와 미연결 가구를 봅니다. 낮은 요금만으로 공정성을 판정할 수 없습니다."
+        "sectionId": "names",
+        "intuition": "돈을 최종적으로 누가 내는지 보는 질문이 부담 귀속입니다. 같은 서비스 비용 90도 가구가 전부 내거나 세금이 일부를 대신할 수 있습니다.",
+        "workedExample": "가구 수입 80과 정부 지급 10이면 서비스 90을 충당합니다. 가구 수입을 60으로 낮추고 지원은 10에 두면 총수입은 70, 부족액은 20입니다(가정). 지원을 더 받거나 다른 수입을 마련하지 않으면 교체나 운영을 줄여야 합니다.",
+        "boundary": "사용량과 무관하게 받는 기본 금액을 늘리면 수입은 안정되지만 적게 쓰는 집의 부담이 커질 수 있습니다. 사용량별 가격을 높이면 절수를 유도할 수 있지만 가구원 수가 많은 저소득 가구가 불리할 수 있습니다."
       },
       {
         "id": "water-affordability-reliability",
         "sectionId": "limits",
-        "intuition": "이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있습니다. 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다.",
-        "workedExample": "어떤 요금표든 수도 서비스의 전체 비용을 사라지게 하지는 않습니다. 요금·세금·차입 중 누가 언제 부담할지를 바꾸므로 차입을 쓰면 뒤의 상환 재원도 적습니다.",
+        "intuition": "부담 가능성과 안정 공급을 함께 보려면 가구 소득 대비 청구액, 수질, 공급 시간, 누수와 미연결 가구를 봅니다. 낮은 요금만으로 공정성을 판정할 수 없습니다.",
+        "workedExample": "이미 연결된 집의 요금을 낮추면 물을 많이 쓰는 집이 더 큰 금액을 지원받을 수 있습니다. 연결되지 않은 집은 여전히 다른 판매자에게 더 비싸게 물을 살 수 있으므로 연결비 지원과 매달 요금 지원은 서로 다른 문제를 풉니다.",
         "boundary": "90의 가정 장부는 부담 이전을 보여 줄 뿐 실제 공사 수명이나 물 수요를 추정하지 않습니다. 실제 조정에서는 사업자의 설비 상태와 현지 지원 규칙을 대조합니다."
       }
     ],
@@ -129337,24 +129337,24 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "transport-accessibility",
-        "sectionId": "mechanism",
-        "intuition": "한 달 왕복 1,000분을 아끼고 추가 요금 2만 원, 월세 10만 원을 낸다는 사례를 다시 봅니다. 시간을 쉴 때 쓸지 일을 더 할지는 개인의 선택입니다. 16시간 40분에 시급을 곱한 값이 통장에 자동으로 들어오지는 않습니다.",
+        "sectionId": "names",
+        "intuition": "주어진 시간과 비용 안에서 갈 수 있는 일자리와 서비스의 범위를 교통 접근성이라고 부릅니다. 속도가 같아도 주변 일자리와 환승망이 다르면 접근성은 다릅니다.",
         "workedExample": "한 달 왕복 1,000분을 아끼고 추가 요금 2만 원, 월세 10만 원을 낸다는 사례를 다시 봅니다. 시간을 쉴 때 쓸지 일을 더 할지는 개인의 선택입니다. 16시간 40분에 시급을 곱한 값이 통장에 자동으로 들어오지는 않습니다.",
-        "boundary": "노선이 좋아진 뒤 사람이 더 모여 혼잡과 대기가 늘 수 있습니다. 다른 상권의 소비가 새 역 주변으로 옮겨 온 것이라면 한 지역의 매출 증가를 나라 전체의 새 매출로 세기 어렵습니다."
+        "boundary": "열차가 빨라도 배차가 드물면 대기가 길어지고, 정류장까지 안전하게 걷기 어렵거나 마지막 운행이 이르면 일부 사람은 그 노선을 쓸 수 없습니다. 차량 속도만으로 접근성을 재지 않는 이유입니다."
       },
       {
         "id": "transit-land-rent-shift",
-        "sectionId": "comparison",
-        "intuition": "영국 MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.",
+        "sectionId": "names",
+        "intuition": "좋아진 위치의 이익이 임대료에 반영되는 경로가 교통 이익의 지대 이동입니다. 여기서 지대는 토지의 위치와 이용권에서 얻는 수입을 뜻합니다.",
         "workedExample": "집주인은 월세 인상의 수입을 얻고 교통 운영자는 요금을 받습니다. 정부는 공사비와 운영 지원을 부담할 수 있습니다. 통근자 이익을 계산한 뒤 임대료 상승액을 사회 전체의 새 이익으로 그대로 더하면 같은 접근성 가치를 두 번 셀 수 있습니다.",
-        "boundary": "공사비 초과, 개통 지연, 유지비, 소음과 이주 부담도 지역별로 나눠 봅니다. 특히 평균 이용자 수가 맞아도 출근시간 한 방향에 수요가 몰리면 필요한 차량과 설비가 달라집니다."
+        "boundary": "접근성 향상도 모든 주민에게 같지 않습니다. 기존 임차인이 월세를 감당하지 못해 더 먼 곳으로 이동하면 원래 기대한 시간 절약을 누리지 못할 수 있습니다."
       },
       {
         "id": "transport-benefit-boundary",
         "sectionId": "limits",
-        "intuition": "노선이 좋아진 뒤 사람이 더 모여 혼잡과 대기가 늘 수 있습니다. 다른 상권의 소비가 새 역 주변으로 옮겨 온 것이라면 한 지역의 매출 증가를 나라 전체의 새 매출로 세기 어렵습니다.",
-        "workedExample": "접근성 향상도 모든 주민에게 같지 않습니다. 기존 임차인이 월세를 감당하지 못해 더 먼 곳으로 이동하면 원래 기대한 시간 절약을 누리지 못할 수 있습니다.",
-        "boundary": "교통 편익 계산의 경계는 시간·소득·지가가 무엇을 대표하는지에 있습니다. 같은 1,000분을 실제 절약했는지 먼저 확인한 뒤 편익의 분배와 추가 비용을 계산합니다."
+        "intuition": "교통 편익 계산의 경계는 시간·소득·지가가 무엇을 대표하는지에 있습니다. 같은 1,000분을 실제 절약했는지 먼저 확인한 뒤 편익의 분배와 추가 비용을 계산합니다.",
+        "workedExample": "잉글랜드 MHCLG의 평가 지침처럼 토지가치 변화와 다른 편익을 합칠 때는 중복을 확인합니다. 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영한다면 둘을 독립 편익으로 더하지 않습니다.",
+        "boundary": "노선이 좋아진 뒤 사람이 더 모여 혼잡과 대기가 늘 수 있습니다. 다른 상권의 소비가 새 역 주변으로 옮겨 온 것이라면 한 지역의 매출 증가를 나라 전체의 새 매출로 세기 어렵습니다."
       }
     ],
     "conceptStages": [
@@ -129527,23 +129527,23 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "housing-residual-land",
-        "sectionId": "mechanism",
-        "intuition": "처음 판매 10억 원, 토지 외 비용·정상 이익 7억 원을 고정합니다. 허가나 공사 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 2억5천만 원입니다(가정). 토지를 아직 안 샀다면 제안 가격을 낮출 수 있습니다.",
+        "sectionId": "names",
+        "intuition": "판매가치에서 사업 비용과 정상 이익을 빼 토지에 남는 금액을 주택 토지 잔여가치라고 부릅니다. 판매 10억 원에서 토지 외 비용·정상 이익 7억 원을 뺀 3억 원이 이 값입니다(가정).",
         "workedExample": "처음 판매 10억 원, 토지 외 비용·정상 이익 7억 원을 고정합니다. 허가나 공사 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 2억5천만 원입니다(가정). 토지를 아직 안 샀다면 제안 가격을 낮출 수 있습니다.",
-        "boundary": "새 공급이 늘어도 소득이 낮은 가구가 보증금이나 대출 조건을 충족하지 못할 수 있습니다. 기존 임차인의 이주 비용과 일자리에서 멀어지는 비용도 남습니다."
+        "boundary": "판매 예상이 10억에서 9억으로 줄면 원래 조건에서도 토지 잔여가치는 2억입니다. 가격과 비용의 작은 변화가 마지막에 남는 토지 금액에는 큰 비율로 나타납니다."
       },
       {
         "id": "housing-permit-lag",
-        "sectionId": "comparison",
-        "intuition": "싱가포르 정부는 일반적인 새 HDB 주택의 구매자가 99년 동안 주택 권리를 소유한다고 설명합니다. 이것은 거주할 때마다 임대료를 내는 단순 임차와 다르면서, 기간이 없는 소유권과도 다릅니다.",
-        "workedExample": "이미 토지비 3억 원을 지급했다면 땅값을 소급해 줄일 수 없습니다. 판매가나 다른 비용이 그대로라면 요구했던 이익 1억 원 중 5천만 원을 잃습니다. 토지 거래 전 계산과 거래 후 손익은 다른 결정을 만듭니다.",
+        "sectionId": "names",
+        "intuition": "권리 확인과 인허가, 기반 시설, 시공 때문에 수요 증가가 입주로 이어지는 데 걸리는 시간이 공급의 허가 시간입니다. 허가 건수가 늘었다는 통계와 완공 물량은 다릅니다.",
+        "workedExample": "허가를 기다리는 동안 돈을 빌려 두었다면 이자와 관리비를 계속 냅니다. 지연으로 금융·관리 비용이 5천만 원 늘면 토지에 남는 금액은 3억에서 2억5천만 원이 되고, 이미 토지비 3억 원을 지급했다면 요구했던 이익 1억 원 중 5천만 원을 잃습니다(가정).",
         "boundary": "반대로 공급을 제한한 채 구매 보조만 늘리면 지을 수 있는 양이 짧은 기간에 늘지 않아 가격에 일부 반영될 수 있습니다. 얼마나 반영되는지는 지역 수요와 공급 조건을 따로 확인해야 합니다."
       },
       {
         "id": "housing-affordability-distribution",
         "sectionId": "limits",
-        "intuition": "새 공급이 늘어도 소득이 낮은 가구가 보증금이나 대출 조건을 충족하지 못할 수 있습니다. 기존 임차인의 이주 비용과 일자리에서 멀어지는 비용도 남습니다.",
-        "workedExample": "판매 예상이 10억에서 9억으로 줄면 원래 조건에서도 토지 잔여가치는 2억입니다. 가격과 비용의 작은 변화가 마지막에 남는 토지 금액에는 큰 비율로 나타납니다.",
+        "intuition": "가구가 실제 감당하는 주거비는 매매가나 월세 외에도 대출 이자, 관리비, 교통비에 걸칩니다. 주거비 부담의 분배를 보려면 가구 소득과 거주 권리도 함께 봅니다.",
+        "workedExample": "새 공급이 늘어도 소득이 낮은 가구가 보증금이나 대출 조건을 충족하지 못할 수 있습니다. 기존 임차인의 이주 비용과 일자리에서 멀어지는 비용도 남습니다.",
         "boundary": "실제 선택에서는 거래가, 신규 허가·착공·입주, 공실과 월세, 가구 소득과 대출 부담을 시간순으로 읽습니다. 10억의 사업 계산으로 모든 가구의 살림을 대신 판단할 수 없습니다."
       }
     ],
@@ -129716,16 +129716,16 @@ export const ARTICLE_LEARNING: Readonly<
     "conceptExplanations": [
       {
         "id": "climate-risk-components",
-        "sectionId": "mechanism",
-        "intuition": "B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60입니다. 지급이 복구를 도울 수 있지만 보험금이 손상 자체를 없애지는 않습니다.",
-        "workedExample": "B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60입니다. 지급이 복구를 도울 수 있지만 보험금이 손상 자체를 없애지는 않습니다.",
-        "boundary": "같은 지역에 건물이 늘면 날씨가 그대로여도 노출이 커집니다. 배수 시설이 낡거나 보강되면 취약성이 바뀝니다. 기후 변화까지 있으면 과거 발생 빈도가 미래를 그대로 대표하지 않을 수 있습니다."
+        "sectionId": "names",
+        "intuition": "같은 홍수라도 위해(손실을 일으킬 수 있는 자연적·인위적 물리 사건의 가능성), 노출(그곳에 놓인 사람과 자산), 취약성(피해 민감성과 대응·적응 능력의 부족)을 나누어 보면 손실이 왜 다른지 설명할 수 있습니다.",
+        "workedExample": "동일 홍수에서 A는 자산 100에 손상 비율 10%를 적용해 10, B는 자산 300에 20%를 적용해 60의 손실이 생깁니다(가정). 노출과 취약성의 차이가 같은 위해에서 다른 손실을 만듭니다.",
+        "boundary": "사례의 10%와 20%는 취약성 가운데 민감성만 단순화한 값이고 복구 기간이나 회복 능력의 차이는 들어 있지 않습니다. 실제 위험은 세 숫자를 언제나 단순 곱하는 공식 하나로 정해지지 않습니다."
       },
       {
         "id": "climate-financial-transmission",
-        "sectionId": "comparison",
-        "intuition": "UNDRR은 위험 지역에 있는 사람, 주택과 기반 시설 등을 노출에 포함합니다. 따라서 사례의 자산 300만으로 지역 B의 위험 전체를 대표할 수 없습니다. 거주 인구, 병원 접근과 생활 기반도 따로 조사합니다.",
-        "workedExample": "다음 해에 보험료가 오르거나 보장 한도가 줄면 소유자의 지출과 잔여 부담이 커집니다. 대출자는 담보 복구 가능성과 보험 조건을 다시 살필 수 있습니다. 이 경로가 기후 손실의 금융 전달입니다.",
+        "sectionId": "mechanism",
+        "intuition": "다음 해에 보험료가 오르거나 보장 한도가 줄면 소유자의 지출과 잔여 부담이 커집니다. 대출자는 담보 복구 가능성과 보험 조건을 다시 살필 수 있습니다. 이 경로가 기후 손실의 금융 전달입니다.",
+        "workedExample": "B의 손실 60 중 보험이 40을 지급하고 소유자가 20을 부담한다고 놓습니다(가정). 총물리 손실은 여전히 60이고, 다음 계약에서 보장이 줄면 소유자 몫 20이 더 커지는 쪽으로 손실이 옮겨 갑니다.",
         "boundary": "연간 예상 손실을 계산하려면 다양한 사건의 확률과 각 사건의 손실을 함께 알아야 합니다. 이번 사건의 손실 60만으로 연 보험료나 대출 손실률을 정할 수 없습니다."
       },
       {
@@ -133375,7 +133375,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "정당화된 참인 믿음에 네 번째 조건만 붙이는 접근이 계속 반례를 만날 수 있는 이유를 쓰세요.", answerChecklist: ["조건들의 독립성", "나쁜 행운 뒤 좋은 행운"], requiredConcepts: ["justified-true-belief", "epistemic-luck"], sectionId: "comparison" },
     ],
     papers: [
-      { title: "Edmund L. Gettier · Is Justified True Belief Knowledge?", href: "https://academic.oup.com/analysis/article-abstract/23/6/121/109949", problem: "지식을 정당화된 참인 믿음으로 분석하는 세 조건이 충분한지 묻습니다.", contribution: "세 조건을 충족하지만 지식으로 보기 어려운 짧은 반례를 제시했습니다.", assumptions: "명제적 지식과 정당화 조건을 분석 대상으로 둡니다.", evidenceScope: "1963년 원 논문의 문제 설정과 반례 구조에 한정합니다.", notClaim: "논문이 지식의 최종 네 번째 조건을 제시했다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Edmund L. Gettier · Is Justified True Belief Knowledge?", href: "https://doi.org/10.1093/analys/23.6.121", problem: "지식을 정당화된 참인 믿음으로 분석하는 세 조건이 충분한지 묻습니다.", contribution: "세 조건을 충족하지만 지식으로 보기 어려운 짧은 반례를 제시했습니다.", assumptions: "명제적 지식과 정당화 조건을 분석 대상으로 둡니다.", evidenceScope: "1963년 원 논문의 문제 설정과 반례 구조에 한정합니다.", notClaim: "논문이 지식의 최종 네 번째 조건을 제시했다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "Stanford Encyclopedia of Philosophy · The Analysis of Knowledge", href: "https://plato.stanford.edu/entries/knowledge-analysis/", problem: "게티어 이후 여러 지식 분석이 어떤 반례를 만나는지 비교합니다.", contribution: "인식적 행운·안전성·신뢰성 등 후속 접근의 차이를 정리합니다.", assumptions: "경쟁 이론을 하나의 합의된 답이 아니라 논쟁 중인 후보로 다룹니다.", evidenceScope: "현대 인식론의 비교 해설과 참고문헌 지도입니다.", notClaim: "백과사전의 분류가 논쟁을 종결한다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
@@ -133412,7 +133412,7 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [
       { title: "J. S. Mill · Utilitarianism, Chapter II", href: "https://www.gutenberg.org/files/11224/old/11224-h/11224-h.htm", problem: "행동의 옳음을 어떤 결과 기준으로 평가할지 설명합니다.", contribution: "행동이 행복을 늘리고 고통을 줄이는 경향을 판단의 중심에 둡니다.", assumptions: "행복과 고통, 영향받는 이들의 이익을 비교할 수 있다고 봅니다.", evidenceScope: "고전적 공리주의의 원문 표현을 확인하는 데 사용합니다.", notClaim: "현대 결과주의의 모든 변형이 밀의 문장과 같다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "Immanuel Kant · Groundwork, Section II", href: "https://www.gutenberg.org/files/5682/5682-h/5682-h.htm", problem: "욕구와 결과에 흔들리지 않는 행위 원칙의 형식을 찾습니다.", contribution: "자신의 준칙을 보편적 법칙으로 의지할 수 있는지 시험합니다.", assumptions: "이성적 행위자와 준칙의 보편화 가능성을 중심에 둡니다.", evidenceScope: "보편화와 사람을 대하는 의무의 원문 배경입니다.", notClaim: "모든 의무 충돌의 순서를 한 문장으로 해결한다는 뜻이 아닙니다.", sectionId: "source" },
-      { title: "Aristotle · Nicomachean Ethics, Book II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h", problem: "좋은 삶과 좋은 행동을 반복 가능한 성품과 연결합니다.", contribution: "덕을 선택과 습관으로 형성되는 성품의 상태로 설명합니다.", assumptions: "행위자의 삶 전체와 실천적 판단을 평가 단위로 둡니다.", evidenceScope: "덕·성품·습관의 고전 원문을 확인하는 데 한정합니다.", notClaim: "고대 그리스의 덕 목록을 현대 조직에 그대로 복사한다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Aristotle · Nicomachean Ethics, Book II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", problem: "좋은 삶과 좋은 행동을 반복 가능한 성품과 연결합니다.", contribution: "덕을 선택과 습관으로 형성되는 성품의 상태로 설명합니다.", assumptions: "행위자의 삶 전체와 실천적 판단을 평가 단위로 둡니다.", evidenceScope: "덕·성품·습관의 고전 원문을 확인하는 데 한정합니다.", notClaim: "고대 그리스의 덕 목록을 현대 조직에 그대로 복사한다는 뜻이 아닙니다.", sectionId: "source" },
     ],
   },
   "economic-history/agrarian-surplus-and-state": {
@@ -133464,7 +133464,7 @@ export const ARTICLE_LEARNING: Readonly<
     conceptExplanations: [
       { id: "factor-price-induced-innovation", sectionId: "source", intuition: "사람이 비싸고 연료가 싸면 사람의 일을 기계와 에너지로 바꾸는 발명이 돈을 아끼기 쉬워집니다.", workedExample: "주급 10·석탄 15에서는 기계 비용 90이 사람 비용 100보다 낮지만 주급 6에서는 기계 74가 사람 60보다 비쌉니다.", boundary: "상대 가격은 기술 지식·시장·제국·신용과 함께 작동하는 가설이며 영국 산업화의 유일한 원인이 아닙니다." },
       { id: "labor-saving-technology", sectionId: "names", intuition: "같은 생산에 직접 필요한 사람 시간을 기계와 에너지로 일부 바꿉니다.", workedExample: "노동자 10명의 일을 기계 한 대와 노동자 4명이 맡습니다.", boundary: "상품 가격 하락과 수요 증가, 기계 제작·정비 직무 때문에 경제 전체 고용이 같은 비율로 줄지는 않습니다." },
-      { id: "productivity-wage-gap", sectionId: "comparison", intuition: "한 사람이 더 많이 만들어도 늘어난 몫이 노동자의 구매력으로 바로 가지 않을 수 있습니다.", workedExample: "1770=100일 때 1840년 노동자당 생산 143.9와 소비 임금 127.1이 다른 속도를 보입니다.", boundary: "지수 계열과 기준년을 맞춰야 하며 평균 임금은 지역·성별·나이·노동시간과 가구 안 분배를 숨깁니다." },
+      { id: "productivity-wage-gap", sectionId: "comparison", intuition: "한 사람이 더 많이 만들어도 늘어난 몫이 노동자의 구매력으로 바로 가지 않을 수 있습니다.", workedExample: "1780=100일 때 1840년 노동자당 산출 146과 실질임금 112가 다른 속도를 보입니다(Allen 2009의 +46%·+12%).", boundary: "지수 계열과 기준년을 맞춰야 하며 평균 임금은 지역·성별·나이·노동시간과 가구 안 분배를 숨깁니다." },
     ],
     conceptStages: [
       { label: "기계 선택", relation: "상대 가격이 노동 절약 기술의 비용 문턱을 바꿉니다.", concepts: ["factor-price-induced-innovation", "labor-saving-technology"] },
@@ -133478,7 +133478,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "노동 절약 기술이 경제 전체의 일자리를 반드시 같은 비율로 줄이지 않는 이유를 설명하세요.", answerChecklist: ["상품 수요 변화", "새 직무와 산업"], requiredConcepts: ["labor-saving-technology"], sectionId: "names" },
       { level: "basic", question: "10w와 50+4w를 비교해 기계가 더 싸지는 주급 문턱을 계산하세요.", answerChecklist: ["6w>50", "w>8.33"], requiredConcepts: ["factor-price-induced-innovation"], sectionId: "mechanism" },
       { level: "advanced", question: "석탄비가 15에서 35로 오르면 채택 문턱이 11.67로 오르는 과정을 설명하세요.", answerChecklist: ["기계 고정비 70", "70/6 계산"], requiredConcepts: ["factor-price-induced-innovation", "labor-saving-technology"], sectionId: "mechanism" },
-      { level: "advanced", question: "1770=100 기준의 1840년 생산 143.9와 소비 임금 127.1에서 말할 수 있는 것과 없는 것을 구분하세요.", answerChecklist: ["속도 차이", "개인별 생활 확정 불가"], requiredConcepts: ["productivity-wage-gap"], sectionId: "comparison" },
+      { level: "advanced", question: "1780=100 기준의 1840년 노동자당 산출 146과 실질임금 112에서 말할 수 있는 것과 없는 것을 구분하세요.", answerChecklist: ["속도 차이", "개인별 생활 확정 불가"], requiredConcepts: ["productivity-wage-gap"], sectionId: "comparison" },
       { level: "advanced", question: "고임금·싼 에너지 가설을 다른 지역에 적용할 때 추가로 맞춰야 할 역사 조건을 설계하세요.", answerChecklist: ["시장·신용·기술", "교역·제국·제도"], requiredConcepts: ["factor-price-induced-innovation"], sectionId: "limits" },
       { level: "advanced", question: "평균 가구소득이 올라가도 아동 노동과 식단 자료를 함께 봐야 하는 이유를 설명하세요.", answerChecklist: ["소득의 구성", "지역·성별·나이의 분배"], requiredConcepts: ["productivity-wage-gap"], sectionId: "comparison" },
     ],
@@ -133556,7 +133556,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "다수결·기본권·독립 심사가 충돌할 때 세 장치가 각각 맡는 역할을 구분하세요.", answerChecklist: ["결정", "보호선", "구제·해석"], requiredConcepts: ["normative-political-legitimacy", "harm-principle"], sectionId: "limits" },
     ],
     papers: [
-      { title: "John Locke · Second Treatise of Government", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h", problem: "자유로운 사람들이 공동 정치 권력을 만들고 다수 결정에 묶이는 근거를 설명합니다.", contribution: "동의·다수·알려진 법·재산 보호·공공선으로 입법 권력의 출처와 범위를 연결합니다.", assumptions: "17세기 자연법·재산·정치 공동체 논의를 역사적 문맥에서 읽어야 합니다.", evidenceScope: "동의와 제한된 정치 권력에 관한 1차 철학 원문입니다.", notClaim: "현대 민주주의·보통선거·인권의 모든 조건이 완성돼 있다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "John Locke · Second Treatise of Government", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h.htm", problem: "자유로운 사람들이 공동 정치 권력을 만들고 다수 결정에 묶이는 근거를 설명합니다.", contribution: "동의·다수·알려진 법·재산 보호·공공선으로 입법 권력의 출처와 범위를 연결합니다.", assumptions: "17세기 자연법·재산·정치 공동체 논의를 역사적 문맥에서 읽어야 합니다.", evidenceScope: "동의와 제한된 정치 권력에 관한 1차 철학 원문입니다.", notClaim: "현대 민주주의·보통선거·인권의 모든 조건이 완성돼 있다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "John Stuart Mill · On Liberty", href: "https://www.gutenberg.org/files/34901/34901-h/34901-h.htm", problem: "사회와 다수가 개인의 행동에 간섭할 수 있는 범위를 정해야 합니다.", contribution: "타인에게 가는 해악 방지를 강제의 중심 근거로 제시합니다.", assumptions: "성인 능력·자기 관련 행동·사회적 피해의 경계를 둘러싼 역사적 전제를 가집니다.", evidenceScope: "해악 원칙과 생활·사상의 자유를 읽는 1차 원문입니다.", notClaim: "현실의 모든 위험과 공공재 문제에 자동 답을 주는 공식이 아닙니다.", sectionId: "comparison" },
     ],
   },
@@ -133593,7 +133593,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "사고의 물리·심리·제도 설명이 함께 참일 수 있는 이유를 질문 수준으로 구분하세요.", answerChecklist: ["서로 다른 수준", "질문·개입 수단"], requiredConcepts: ["scientific-model"], sectionId: "limits" },
     ],
     papers: [
-      { title: "Stanford Encyclopedia · Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation/", problem: "참인 과학 문장이 현상을 설명한다는 말의 구조와 범위를 밝혀야 합니다.", contribution: "법칙·통계·인과·통합·실용적 설명과 대표 반례를 비교합니다.", assumptions: "여러 철학 모형을 역사적 논쟁과 함께 정리한 전문 개관입니다.", evidenceScope: "설명 모형과 비대칭 반례의 개념 근거로 사용합니다.", notClaim: "모든 과학 분야에 하나의 설명 모형이 충분하다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "Stanford Encyclopedia · 20th Century Theories of Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation-20th/", problem: "참인 과학 문장이 현상을 설명한다는 말의 구조와 범위를 밝혀야 합니다.", contribution: "법칙·통계·인과·통합·실용적 설명과 대표 반례를 비교합니다.", assumptions: "여러 철학 모형을 역사적 논쟁과 함께 정리한 전문 개관입니다.", evidenceScope: "설명 모형과 비대칭 반례의 개념 근거로 사용합니다.", notClaim: "모든 과학 분야에 하나의 설명 모형이 충분하다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "Stanford Encyclopedia · Causal Approaches to Scientific Explanation", href: "https://plato.stanford.edu/entries/causal-explanation-science/", problem: "원인 정보를 설명의 깊이와 개입 가능한 관계로 어떻게 나타낼지 정해야 합니다.", contribution: "기제·개입주의·설명 깊이와 비인과 설명의 경계를 비교합니다.", assumptions: "가능한 개입과 관계의 안정성을 해석하는 추가 이론이 필요합니다.", evidenceScope: "우산 판매와 노면 개선의 개입 비교를 설명하는 개념 자료입니다.", notClaim: "실제로 조작할 수 없는 관계는 모두 원인이 아니라는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
@@ -133630,7 +133630,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "현재 언어 모델의 자기 보고를 증거로 사용할 때 행동·내부 상태·의식 주장을 어떻게 나눌지 설계하세요.", answerChecklist: ["보고도 출력", "독립 행동·기제 증거", "의식 추론 한계"], requiredConcepts: ["behavioral-criterion", "intentionality-mind"], sectionId: "limits" },
     ],
     papers: [
-      { title: "A. M. Turing · Computing Machinery and Intelligence", href: "https://academic.oup.com/mind/article/LIX/236/433/986238", problem: "기계가 생각한다는 모호한 질문을 공개적으로 토론할 수 있는 형태로 바꿔야 합니다.", contribution: "문자 대화에서 판정자가 사람과 기계를 구별하는 모방 게임과 학습 기계 논의를 제안합니다.", assumptions: "텍스트 행동이 지적 능력의 관련 증거라는 전제를 두며 시험 조건을 정해야 합니다.", evidenceScope: "모방 게임과 대표 반론을 확인하는 1950년 원 논문입니다.", notClaim: "시험 통과가 모든 종류의 이해·의식·도덕적 지위를 자동으로 증명한다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "A. M. Turing · Computing Machinery and Intelligence", href: "https://doi.org/10.1093/mind/LIX.236.433", problem: "기계가 생각한다는 모호한 질문을 공개적으로 토론할 수 있는 형태로 바꿔야 합니다.", contribution: "문자 대화에서 판정자가 사람과 기계를 구별하는 모방 게임과 학습 기계 논의를 제안합니다.", assumptions: "텍스트 행동이 지적 능력의 관련 증거라는 전제를 두며 시험 조건을 정해야 합니다.", evidenceScope: "모방 게임과 대표 반론을 확인하는 1950년 원 논문입니다.", notClaim: "시험 통과가 모든 종류의 이해·의식·도덕적 지위를 자동으로 증명한다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "Stanford Encyclopedia · Chinese Room Argument", href: "https://plato.stanford.edu/entries/chinese-room/", problem: "형식 프로그램의 성공이 언어 이해에 충분한지 검사해야 합니다.", contribution: "설의 사고실험과 시스템·로봇·뇌 시뮬레이션 등 주요 반론을 비교합니다.", assumptions: "사고실험의 직관과 이해를 귀속하는 시스템 수준에 대한 판단이 필요합니다.", evidenceScope: "원 논증과 반론 지형을 균형 있게 확인하는 전문 개관입니다.", notClaim: "어떤 물리적 기계도 생각할 수 없다는 결론이나 약한 AI의 유용성을 부정하는 주장이 아닙니다.", sectionId: "comparison" },
     ],
   },
@@ -133668,7 +133668,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "The Met · Cuneiform tablet: loan of silver", href: "https://www.metmuseum.org/art/collection/search/325858", problem: "고대 장거리 상인이 채무량과 서로 다른 상환 시점을 어떻게 기록했는지 확인합니다.", contribution: "은 6미나·다음 수확의 3분의 1·후속 상환을 적은 실제 점토판과 상인망 배경을 제공합니다.", assumptions: "소장품 해설과 판독을 특정 카네시 계약의 맥락으로 사용합니다.", evidenceScope: "기원전 20~19세기 상업 신용의 1차 물증입니다.", notClaim: "한 점토판이 고대 전체 시장 규모와 평균 계약 조건을 대표한다는 뜻이 아닙니다.", sectionId: "source" },
-      { title: "UNESCO · The Silk Roads: A Brief History with Documents", href: "https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents", problem: "여러 지역과 시대의 교역 연결을 한 직선 길로 단순화하지 않아야 합니다.", contribution: "중국·인도·중앙아시아·지중해·이슬람권의 사료와 육상·해상 연결을 함께 제시합니다.", assumptions: "실크로드는 후대의 묶음 이름이며 시기별 경로와 참여자가 달랐습니다.", evidenceScope: "다중 교역망과 문화·기술 이동의 비교 자료입니다.", notClaim: "1,500년 동안 같은 경로와 제도가 유지됐다는 뜻이 아닙니다.", sectionId: "comparison" },
+      { title: "Xinru Liu · The Silk Roads: A Brief History with Documents (Bedford/St. Martin's, 2012)", href: "https://web.archive.org/web/20241223184033/https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents", problem: "여러 지역과 시대의 교역 연결을 한 직선 길로 단순화하지 않아야 합니다.", contribution: "중국·인도·중앙아시아·지중해·이슬람권의 사료와 육상·해상 연결을 함께 제시합니다.", assumptions: "실크로드는 후대의 묶음 이름이며 시기별 경로와 참여자가 달랐습니다.", evidenceScope: "다중 교역망과 문화·기술 이동의 비교 자료입니다.", notClaim: "1,500년 동안 같은 경로와 제도가 유지됐다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
   },
   "economic-history/colonial-plantations-slavery-and-extraction": {
@@ -133704,7 +133704,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "대서양 플랜테이션 모형을 인도양·아시아 식민 경제에 적용할 때 먼저 달리 봐야 할 조건을 쓰세요.", answerChecklist: ["노동 법적 형태", "상품·현지 국가·토지 권리"], requiredConcepts: ["plantation-complex", "chattel-slavery"], sectionId: "limits" },
     ],
     papers: [
-      { title: "SlaveVoyages · Trans-Atlantic Slave Trade Database", href: "https://www.slavevoyages.org/blog/the-transatlantic-slave-trade-database/163", problem: "불완전한 선박·항구 기록에서 대서양 노예 무역의 규모와 경로를 복원해야 합니다.", contribution: "항해 자료·코드북·추정 자료와 누락을 보완하는 방법을 공개합니다.", assumptions: "기록되지 않은 항해와 불완전한 승선·하선 정보에 추정 가정이 필요합니다.", evidenceScope: "무역 경로·수량·자료 한계를 확인하는 역사 데이터입니다.", notClaim: "항구 장부가 노예로 만든 사람의 삶과 행위 전체를 대표한다는 뜻이 아닙니다.", sectionId: "source" },
+      { title: "David Eltis · Trans-Atlantic Slave Trade Database Methodology (SlaveVoyages)", href: "https://legacy.slavevoyages.org/blog/methodology-trans-atlantic", problem: "불완전한 선박·항구 기록에서 대서양 노예 무역의 규모와 경로를 복원해야 합니다.", contribution: "항해 자료·코드북·추정 자료와 누락을 보완하는 방법을 공개합니다.", assumptions: "기록되지 않은 항해와 불완전한 승선·하선 정보에 추정 가정이 필요합니다.", evidenceScope: "무역 경로·수량·자료 한계를 확인하는 역사 데이터입니다.", notClaim: "항구 장부가 노예로 만든 사람의 삶과 행위 전체를 대표한다는 뜻이 아닙니다.", sectionId: "source" },
       { title: "Nunn & Wantchekon · The Slave Trade and the Origins of Mistrust in Africa", href: "https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221", problem: "노예 무역 노출의 장기 사회적 흔적이 현재 신뢰와 관련되는지 검토합니다.", contribution: "역사적 수출 자료와 개인 조사, 여러 식별 전략으로 관계와 가능한 경로를 분석합니다.", assumptions: "역사적 노출 측정·식별 변수·현재 조사 응답의 비교 가능성에 의존합니다.", evidenceScope: "아프리카 내부의 장기 신뢰 차이에 관한 계량 연구입니다.", notClaim: "현재 결과를 노예 무역 하나가 결정하거나 모든 지역에 같은 효과가 있다는 뜻이 아닙니다.", sectionId: "comparison" },
       { title: "Frankema, Williamson & Woltjer · An Economic Rationale for the African Scramble", href: "https://www.nber.org/papers/w21213", problem: "19세기 상품 가격과 교역 변화가 아프리카 식민 쟁탈의 경제적 조건을 어떻게 바꿨는지 측정합니다.", contribution: "다섯 아프리카 지역의 가격·물량·구성 자료로 상품 호황과 식민 통치 뒤 특화를 분석합니다.", assumptions: "지역 집계와 가격 자료의 범위 안에서 제국주의의 경제 요인 하나를 검토합니다.", evidenceScope: "18세기 말부터 20세기 전반 아프리카 상품 교역의 계량 분석입니다.", notClaim: "상품 가격만이 식민지화를 일으켰거나 수출 성장이 주민 후생을 보장했다는 뜻이 아닙니다.", sectionId: "comparison" },
     ],
@@ -133780,17 +133780,17 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseAnswers: ["100+5−70=35", "기존 40보다 5 감소", "의무와 잔여 청구권의 변화", "실제 역사 수치가 아닌 민감도 사례"],
     sources: [
       {
-        title: "World Bank · Reflections on 40 Years of China’s Reforms",
-        href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf",
+        title: "Bert Hofman · Reflections on Forty Years of China’s Reforms (speech, Jan. 2018)",
+        href: "https://thedocs.worldbank.org/en/doc/934911517472447837-0070022018/original/Reflectionson40yearsofreformsfinal.pdf",
         problem: "1978년 이후 중국의 농촌·기업·대외 개방 개혁이 어떤 순서와 제도 결합으로 진행됐는지 설명해야 합니다.",
         contribution: "가구 책임제, 이중 경로, 특구와 지방 실험을 점진적 개혁의 구체적인 단계로 정리합니다.",
-        assumptions: "세계은행과 중국 연구자들의 회고적 종합이며 지역별 패자와 대안적 해석을 별도 자료로 확인해야 합니다.",
+        assumptions: "세계은행 소속 저자의 개인 강연문(세계은행 귀속 금지 각주)이며 지역별 패자와 대안적 해석을 별도 자료로 확인해야 합니다.",
         evidenceScope: "개혁개방 40년의 주요 제도 전환과 성장·빈곤 감소를 잇는 장기 정책 검토입니다.",
         notClaim: "개혁의 모든 변화가 한 정책에서 나왔거나 비용과 분배 문제가 없었다는 뜻은 아닙니다.",
         sectionId: "source",
       },
       {
-        title: "LSE · The Economic History of China since 1800",
+        title: "LSE EH218 · Chinese Economic History since 1800: Economic Growth in a Historical Perspective",
         href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH218.htm",
         problem: "중국 경제사를 제도나 문화 한 가지 원인으로 줄이지 않고 장기 쟁점을 빠짐없이 배치해야 합니다.",
         contribution: "지리·국가·제도·성별·인적 자본·이동·교역·재난을 함께 비교하는 대학 과정의 질문 지도를 제공합니다.",
@@ -133844,10 +133844,10 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "source",
       },
       {
-        title: "RIETI · Industrial Policy in Japan: 70-Year History since World War II",
+        title: "Okazaki Tetsuji · Industrial Policy in Japan: 70-Year History since World War II (RIETI)",
         href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html",
         problem: "전후 일본의 산업정책이 복구·무역 자유화·성장과 쇠퇴 산업에 어떤 역할을 했는지 구분해야 합니다.",
-        contribution: "우선생산과 산업별 정책을 시기별로 정리하고 시장 경쟁·기업 투자와의 결합을 검토합니다.",
+        contribution: "우선생산과 산업별 정책을 시기별로 정리하고, 우선생산의 석탄 증산 효과가 불분명했으며 섬유 감산·인플레이션 부작용이 있었다고 적습니다.",
         assumptions: "정책사적 해석이며 지원을 받지 않은 기업과 반사실적 성장 경로를 함께 살펴야 합니다.",
         evidenceScope: "제2차 세계대전 뒤 일본 산업정책의 도구와 변화에 관한 연구기관의 장기 검토입니다.",
         notClaim: "정부가 승자를 정확히 골랐거나 다른 나라가 같은 정책으로 같은 성과를 낸다는 뜻은 아닙니다.",
@@ -133916,7 +133916,7 @@ export const ARTICLE_LEARNING: Readonly<
     concepts: [
       {
         id: "slave-trade-long-run-damage",
-        role: "대서양·인도양·사하라 노예무역이 인구·신뢰·국가 형성에 남긴 장기 손상을 설명합니다.",
+        role: "대서양·사하라·홍해·인도양 노예무역이 인구·신뢰·국가 형성에 남긴 장기 손상을 설명합니다.",
         intuition: "사람이 빠져나간 수만 세는 것이 아니라 납치 위험이 공동체의 협력·정착·제도에 남긴 흔적까지 보는 개념입니다.",
         workedExample: "노예 수출 노출이 큰 지역과 작은 지역의 현재 신뢰를 비교하되 전쟁·식민 정책·측정 오차를 중간 경로로 확인합니다.",
         boundary: "오늘의 모든 격차를 노예무역 하나가 결정했다는 운명론이 아니며 지역별 교역 형태와 후속 제도를 구분해야 합니다.",
@@ -133998,7 +133998,7 @@ export const ARTICLE_LEARNING: Readonly<
     sources: [
       {
         title: "LSE · Economic History of the Middle East and North Africa",
-        href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm",
+        href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH222.htm",
         problem: "지역 경제사를 석유와 국가 평균에서 벗어나 토지·노동 권리와 주민 생활, 다양한 자료로 구성해야 합니다.",
         contribution: "법적 권리·교육·불평등·인구와 지역 문서·파피루스·고고학을 잇는 아래로부터의 과정 범위를 제시합니다.",
         assumptions: "강의계획은 증거 자체가 아니라 질문과 읽을 자료의 범위를 정하는 커리큘럼 문서입니다.",
@@ -134061,7 +134061,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "source",
       },
       {
-        title: "IMF · The Latin American Debt Crisis",
+        title: "Humphreys · Historical Dictionary of the IMF (2000), Introduction: The debt crisis",
         href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml",
         problem: "1970년대 상업은행 대출이 1982년 지급 곤란과 지역 부채 위기로 전환된 순서를 확인해야 합니다.",
         contribution: "석유 충격 뒤 대출 증가, 세계 침체·실질금리·원자재 가격과 멕시코의 채무 곤란을 제도사로 잇습니다.",
@@ -134602,7 +134602,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "Chinese Text Project · Analects, Wei Zheng",
-        "href": "https://ctext.org/analects/wei-zheng/ens",
+        "href": "https://ctext.org/analects/wei-zheng",
         "problem": "『논어』의 덕치와 형벌 비교를 실제 곡물 배분 절차에 대입해 읽어야 합니다.",
         "contribution": "위정편 2.1·2.3의 한문 원문과 고전 번역을 함께 제공합니다.",
         "assumptions": "고대 문장의 정치적 이상과 실제 국가 운영은 별도 사료로 확인합니다.",
@@ -135256,7 +135256,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "Gita Supersite · Bhagavad Gita 2.47",
-        "href": "https://www.gitasupersite.in/dv/bhagavadgita/2.47",
+        "href": "https://www.gitasupersite.in/read/srimad/2/47",
         "problem": "널리 인용되는 구절을 결과를 신경 쓰지 말라는 생산성 표어로 만들지 않아야 합니다.",
         "contribution": "행위·열매·동기·무행동에 관한 네 부분과 여러 번역·주석을 제공합니다.",
         "assumptions": "번역과 주석 전통에 따라 권한·열매·동기의 설명이 달라짐을 전제로 합니다.",
@@ -135266,7 +135266,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "Gita Supersite · Bhagavad Gita 3.19",
-        "href": "https://www.gitasupersite.in/dv/bhagavadgita/3.19",
+        "href": "https://www.gitasupersite.in/read/srimad/3/19",
         "problem": "집착을 줄이는 일이 무행동이 아니라 반복되는 행위의 수행이라는 점을 함께 확인해야 합니다.",
         "contribution": "해야 할 행위를 집착 없이 수행하라는 3장의 원문과 여러 주석을 제공합니다.",
         "assumptions": "전쟁 서사와 계층적 의무의 역사적 맥락을 현대 직업윤리에 그대로 옮기지 않습니다.",
@@ -135395,8 +135395,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "Library of Congress · The Incoherence of the Philosophers이 직접 보여 주는 내용과 별도 자료가 필요한 내용을 나누세요.",
         "answerChecklist": [
-          "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
-          "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
+          "『철학자들의 모순』 1884~85년 이집트 아랍어 인쇄본(92쪽)의 이미지와 서지 정보를 제공합니다.",
+          "한 인쇄본의 존재는 필사본 전승, 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
         ],
         "requiredConcepts": [
           "falsafa-natural-causation",
@@ -135476,10 +135476,10 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "Library of Congress · The Incoherence of the Philosophers",
         "href": "https://www.loc.gov/item/2021666178/",
         "problem": "알가잘리의 인과 논증을 후대의 반과학 이야기와 분리해 저작과 판본의 위치부터 확인해야 합니다.",
-        "contribution": "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
-        "assumptions": "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다.",
-        "evidenceScope": "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다.",
-        "notClaim": "이 필사본 하나로 당시 독자·교육·자연 탐구의 실제 반응을 모두 알 수 있다는 뜻이 아닙니다.",
+        "contribution": "『철학자들의 모순』 1884~85년 이집트 아랍어 인쇄본(92쪽, Bibliotheca Alexandrina 소장, World Digital Library 디지털화)의 이미지와 서지 정보를 제공합니다.",
+        "assumptions": "한 인쇄본의 존재는 필사본 전승, 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다.",
+        "evidenceScope": "저작이 20개 논의로 짜인 판본 구성을 확인하는 참고 판본이며, 필사본이나 비판 교정본은 아닙니다.",
+        "notClaim": "이 인쇄본 하나로 당시 독자·교육·자연 탐구의 실제 반응을 모두 알 수 있다는 뜻이 아닙니다.",
         "sectionId": "source"
       },
       {
@@ -137533,10 +137533,10 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "CFTC · DCO default resources rule",
-        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html",
+        "title": "CFTC · DCO 국제기준 최종 규칙(2013-27849)",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-27849.html",
         "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
-        "contribution": "회원 채무불이행 때 사용할 손실 흡수 재원과 순서를 다룹니다.",
+        "contribution": "가장 큰 노출을 만드는 회원의 부도를 덮을 재원 규모와 평가분담금 제외를 정합니다. 사용 순서는 스트레스 시험 보고서 §6이 설명합니다.",
         "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
         "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
         "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
@@ -138452,7 +138452,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "금융투자교육원 · 파생상품투자권유자문인력 사전 의무과정",
         "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
         "problem": "본문 사례의 가격·위험·판매 절차 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
-        "contribution": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다.",
+        "contribution": "상품 지식과 권유 실무·윤리·법규·분쟁조정을 함께 둔 공식 교육과정입니다.",
         "assumptions": "설명용 수치, 관할, 계약 조건과 자료의 적용 시점을 구분합니다.",
         "evidenceScope": "공식 시장·감독·교육 자료 또는 대학 공개 강의가 설명하는 범위입니다.",
         "notClaim": "이 자료 하나가 모든 시장과 고객의 실제 가격·위험·법적 결론을 자동으로 정하지 않습니다.",
@@ -139813,8 +139813,8 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     "papers": [
       {
-        "title": "Basel Framework · Expected Shortfall",
-        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "title": "Basel Framework · Expected Shortfall (MAR33)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/33.htm?inforce=20230101&published=20200327",
         "problem": "본문의 가격·계약·위험 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
         "contribution": "시장위험 내부모형의 예상손실, 97.5% 신뢰수준과 유동성 기간을 정합니다.",
         "assumptions": "설명용 숫자, 상품·관할·계약 조건과 자료의 적용 시점을 구분합니다.",
@@ -140236,7 +140236,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -140465,7 +140465,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -140504,8 +140504,8 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "Basel Framework · Volatility Surface Risk",
-        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "title": "Basel Framework · Volatility Surface Risk (MAR99.22)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/99.htm?inforce=20230101&published=20200327",
         "problem": "본문의 가격·위험·통제 가운데 공식 자료가 직접 뒷받침하는 범위를 확인합니다.",
         "contribution": "행사가와 만기 전반의 변동성 위험요인, 관측 가격과 재보정 원칙을 정합니다.",
         "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
@@ -140694,7 +140694,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -140923,7 +140923,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -141610,7 +141610,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -141850,7 +141850,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -142090,7 +142090,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -142129,8 +142129,8 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "Basel Framework · Market Risk",
-        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+        "title": "Basel Framework · Market Risk (MAR31)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327",
         "problem": "본문의 가격·위험·통제 가운데 원문이 직접 뒷받침하는 범위를 확인합니다.",
         "contribution": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다.",
         "assumptions": "설명용 숫자와 자료의 상품·표본·관할·시행시점을 구분합니다.",
@@ -142330,7 +142330,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -142561,7 +142561,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "advanced",
         "question": "두 번째 공식 출처의 기준이 실제 결론을 자동으로 정하지 않는 이유를 설명하세요.",
         "answerChecklist": [
-          "공식 기준",
+          "공식 문서",
           "추가 전제",
           "상품·기관·시장 차이"
         ],
@@ -143274,8 +143274,8 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "source"
       },
       {
-        "title": "ASIC · CFD product intervention and distribution",
-        "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+        "title": "ASIC · CFD product intervention order (20-254MR)",
+        "href": "https://asic.gov.au/about-asic/news-centre/find-a-media-release/2020-releases/20-254mr-asic-product-intervention-order-strengthens-cfd-protections/",
         "problem": "본문의 국가별 상품·고객·계약 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
         "contribution": "소매 CFD 레버리지 범위와 상품 개입 기한, 목표시장 유통 감독을 확인합니다.",
         "assumptions": "설명용 숫자와 공식 자료의 고객·상품·관할·시행시점을 구분합니다.",
@@ -144421,7 +144421,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "IFRS Foundation · IFRS 9",
-        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/",
+        "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=26",
         "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
         "contribution": "헤지관계의 공식 지정과 문서화, 효과 요건을 확인합니다.",
         "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
@@ -144431,7 +144431,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "IFRS 9 · Rebalancing guidance",
-        "href": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on",
+        "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=97",
         "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
         "contribution": "위험관리 목적이 유지될 때 헤지비율을 재조정하는 조건을 확인합니다.",
         "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
@@ -145040,19 +145040,6 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
-        "answerChecklist": [
-          "FATF · Securities sector risk-based approach",
-          "적용 대상",
-          "확인 시점"
-        ],
-        "requiredConcepts": [
-          "derivatives-aml-risk-path"
-        ],
-        "sectionId": "source"
-      },
-      {
-        "level": "basic",
         "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
         "answerChecklist": [
           "금융정보분석원 · 의심거래보고",
@@ -145258,19 +145245,6 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "첫 공식 자료가 직접 정한 대상과 확인 시점을 설명하세요.",
-        "answerChecklist": [
-          "Financial Ombudsman Service · Business evidence",
-          "적용 대상",
-          "확인 시점"
-        ],
-        "requiredConcepts": [
-          "derivatives-complaint-evidence-pack"
-        ],
-        "sectionId": "source"
-      },
-      {
-        "level": "basic",
         "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
         "answerChecklist": [
           "금융투자교육원 · 파생상품투자권유자문인력",
@@ -145354,7 +145328,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "금융투자교육원 · 파생상품투자권유자문인력",
         "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
         "problem": "본문의 파생상품 업무 판단 가운데 공식 문서가 직접 정한 범위를 확인합니다.",
-        "contribution": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다.",
+        "contribution": "분쟁조정 과목(분쟁조정시스템·분쟁조정사례, 2시간)이 별도로 있음을 확인합니다.",
         "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
         "evidenceScope": "인용한 공식 기관 문서가 직접 정한 범위입니다.",
         "notClaim": "이 자료 하나가 다른 국가·계약과 개별 분쟁·세액의 결론을 자동으로 정하지 않습니다.",
@@ -146308,7 +146282,7 @@ export const ARTICLE_LEARNING: Readonly<
         "title": "금융투자교육원 파생상품투자권유자문인력",
         "href": "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853",
         "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
-        "contribution": "상품·영업·법규·윤리·분쟁 예방의 교육 범위를 확인합니다.",
+        "contribution": "상품·투자권유 절차·법규·윤리·분쟁조정의 교육 범위를 확인합니다.",
         "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
         "evidenceScope": "인용한 공식 기관·대학 문서가 직접 다룬 범위입니다.",
         "notClaim": "이 자료 하나가 다른 국가·계약과 개별 거래의 가격·승인·분쟁 결론을 자동으로 정하지 않습니다.",
@@ -146791,7 +146765,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "Hong Kong SFC Complex Products",
-        "href": "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+        "href": "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
         "problem": "본문의 파생상품 계산·계약·영업 판단 가운데 공식 자료가 직접 정한 범위를 확인합니다.",
         "contribution": "장내 선물·주식 파생상품과 복잡상품 요건을 확인합니다.",
         "assumptions": "설명용 수치와 공식 자료의 상품·고객·관할·시행시점을 구분합니다.",
@@ -147562,7 +147536,7 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "본문의 수치 사례에서 입력과 판단 순서를 설명하세요.",
         "answerChecklist": [
-          "9세기 번역, 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다.",
+          "8~10세기 번역 운동(절정 9세기), 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다.",
           "설명용 수치와 역사적 통계의 구분",
           "행동 또는 판단의 다음 단계"
         ],
@@ -150005,7 +149979,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "BIS 거래 압축 설명",
-        "href": "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf",
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt1512w.htm",
         "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
         "contribution": "총 명목 감소를 위험 감소로 바로 읽지 않는 측정 경계를 확인합니다.",
         "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
@@ -150240,7 +150214,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "BCBS·IOSCO 비청산 증거금",
-        "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf",
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
         "problem": "본문의 계산·계약·운영 판단 가운데 공식 자료가 직접 정하거나 설명한 범위를 확인합니다.",
         "contribution": "적격성·할인율·집중과 잘못된 방향의 위험을 최적화 제약으로 확인합니다.",
         "assumptions": "본문의 숫자는 설명용이며 자료의 상품·회사·관할·시행시점과 구분합니다.",
@@ -152481,7 +152455,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseAnswers: ["100−30−25−35=10", "잔여 10 감소", "가격 전가 여부 확인", "노동·세금 몫 별도"],
     sources: [
       { title: "LSE EH434 · Economic Development of East and Southeast Asia", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm", problem: "현대 수출 성장 앞의 기존 항구망과 식민 제도를 함께 설명해야 합니다.", contribution: "근세 교역·서구 식민화·전후 독립·아시아 호랑이·ASEAN을 잇는 비교 범위를 제공합니다.", assumptions: "2026/27 강의 범위이며 나라별 정책 효과와 국내 부가가치 크기는 별도 자료가 필요합니다.", evidenceScope: "동아시아와 동남아시아 장기 개발을 다루는 대학원 과정입니다.", notClaim: "열한 나라가 같은 식민 통치와 수출 제조 경로를 따랐다는 뜻은 아닙니다.", sectionId: "source" },
-      { title: "World Bank · Southeast Asia's long-term growth", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", problem: "운송비 하락이 수출 확대와 현지 산업 경쟁에 준 반대 효과를 함께 봐야 합니다.", contribution: "증기선과 수에즈 운하가 부피 큰 상품 수출과 서구 공산품 수입을 함께 늘린 경로를 설명합니다.", assumptions: "장기 지역 개관이며 설명용 100 장부와 모든 나라의 국내 부가가치를 제공하지 않습니다.", evidenceScope: "동남아시아의 장기 성장과 세계시장 연결을 다룬 세계은행 연구입니다.", notClaim: "교통 혁신이 모든 주민에게 같은 순편익을 주었다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "Hayami · Agricultural development in Southeast Asia (Akiyama & Larson eds., World Bank 2004, ch. 2)", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", problem: "운송비 하락이 수출 확대와 현지 산업 경쟁에 준 반대 효과를 함께 봐야 합니다.", contribution: "증기선과 수에즈 운하가 부피 큰 상품 수출과 서구 공산품 수입을 함께 늘린 경로를 설명합니다.", assumptions: "세계은행 편저의 농업개발사 장이며 설명용 100 장부와 모든 나라의 국내 부가가치를 제공하지 않습니다.", evidenceScope: "동남아시아의 장기 성장과 세계시장 연결을 다룬 세계은행 연구입니다.", notClaim: "교통 혁신이 모든 주민에게 같은 순편익을 주었다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
   "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors": regionalEconomicHistoryLearning({
@@ -152498,7 +152472,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseQuestion: "총량 70에서 면화를 40으로 줄이고 생활·생태 10을 남기면 식량에 얼마를 쓸 수 있는지 계산하세요.",
     changedCaseAnswers: ["70−40−10=20", "식량 20", "기준보다 5 감소", "소득·생태 효과 별도"],
     sources: [
-      { title: "World Bank · Water Energy Nexus in Central Asia", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", problem: "소련기 관개 생산과 하류 환경·생활 비용을 같은 물 흐름에서 확인해야 합니다.", contribution: "대규모 관개와 하천 전환, 농업 생산·에너지·아랄해의 연결을 설명합니다.", assumptions: "지역 개관이며 설명용 배분 수치와 오늘의 모든 유역 조건을 제공하지 않습니다.", evidenceScope: "중앙아시아의 물·에너지·농업 협력을 다룬 세계은행 연구입니다.", notClaim: "면화 하나만이 모든 환경·건강 결과의 충분 원인이라는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "World Bank · Water Energy Nexus in Central Asia: Syr Darya Basin (2004)", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", problem: "소련기 관개 생산과 하류 환경·생활 비용을 같은 물 흐름에서 확인해야 합니다.", contribution: "대규모 관개와 하천 전환, 농업 생산·에너지·아랄해의 연결을 설명합니다.", assumptions: "지역 개관이며 설명용 배분 수치와 오늘의 모든 유역 조건을 제공하지 않습니다.", evidenceScope: "중앙아시아의 물·에너지·농업 협력을 다룬 세계은행 연구입니다.", notClaim: "면화 하나만이 모든 환경·건강 결과의 충분 원인이라는 뜻은 아닙니다.", sectionId: "source" },
       { title: "ADB · Trade Corridors in the Caspian Region", href: "https://www.adb.org/publications/trade-corridors-caspian-region-present-future", problem: "실크로드 부활이라는 표현 대신 시기별 교역축과 실제 통관·운송 조건을 구분해야 합니다.", contribution: "해상 교역 우위, 러시아·소련의 북향 연결, 에너지 관로와 2010년대 유라시아 철도를 비교합니다.", assumptions: "카스피 회랑 중심 연구라 다섯 공화국 내부의 모든 생활경제를 대표하지 않습니다.", evidenceScope: "카스피 지역의 과거와 현재 무역 회랑을 다룬 ADB 연구입니다.", notClaim: "새 철도 하나가 내륙국의 비용과 정치 의존을 자동으로 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
@@ -152517,25 +152491,25 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseAnswers: ["35+30+20+10=95", "기준보다 5 적음", "흐름별 위험 다름", "물가·인구 이동 별도"],
     sources: [
       { title: "NSW Treasury · Aboriginal economies", href: "https://www.nsw.gov.au/departments-and-agencies/nsw-treasury/about-us/nsw-treasury-bicentenary/walking-a-tightrope/milestones/aboriginal-economies", problem: "식민 정착을 경제사의 시작으로 삼아 그 이전의 생산·교환·지식을 지우지 않아야 합니다.", contribution: "식량·자원·지식·노래의 교역과 친족·의례, 식민 수탈 뒤의 적응을 공식 역사 자료로 설명합니다.", assumptions: "뉴사우스웨일스 정부의 개관이며 모든 호주와 태평양 공동체를 대표하지 않습니다.", evidenceScope: "뉴사우스웨일스 원주민 경제의 교환과 식민 충격을 다룬 공식 자료입니다.", notClaim: "원주민 경제가 하나의 변하지 않는 체계였다는 뜻은 아닙니다.", sectionId: "source" },
-      { title: "World Bank · Pacific Economic Update, May 2026", href: "https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf", problem: "태평양 섬 경제의 외부소득을 한 항목으로 합치지 않아야 합니다.", contribution: "관광·송금 중심 경제와 어업권료·지원금 같은 주권 수입, 기후·교통·기반시설 제약을 구분합니다.", assumptions: "2026년 지역 전망이며 설명용 가구소득 100의 비율을 제공하지 않습니다.", evidenceScope: "태평양 섬나라의 최근 성장·재정·외부충격을 다룬 세계은행 보고서입니다.", notClaim: "호주·뉴질랜드와 모든 섬나라가 같은 경제 구조를 가졌다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "World Bank · Pacific Economic Update, May 2026", href: "https://thedocs.worldbank.org/en/doc/a04d2954d291f783c8a729d0a7342f51-0070062026/original/Pacific-Economic-Update-May-2026-Full-report.pdf", problem: "태평양 섬 경제의 외부소득을 한 항목으로 합치지 않아야 합니다.", contribution: "관광·송금 중심 경제와 어업 허가·신탁기금·공여 지원 같은 주권 수입 중심 경제를 구분하고 피지·솔로몬제도는 따로 다룹니다.", assumptions: "2026년 지역 전망이며 설명용 가구소득 100의 비율을 제공하지 않습니다.", evidenceScope: "태평양 섬나라의 최근 성장·재정·외부충격을 다룬 세계은행 보고서입니다.", notClaim: "호주·뉴질랜드와 모든 섬나라가 같은 경제 구조를 가졌다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
   "economic-history/war-finance-public-debt-and-welfare-state-capacity": regionalEconomicHistoryLearning({
-    entryNote: "전쟁비 100을 세금 35·국채 40·화폐 15·징발 10으로 마련하고 전후 예산 100을 다시 나눕니다.",
+    entryNote: "전쟁비 100을 현재 세금 35·국내 국채 40·해외차입 15·중앙은행 화폐신용 10으로 마련하고 전후 예산 100을 서비스 40·사회급여 30·전쟁부채 이자 20·재건 10으로 다시 나눕니다.",
     coreIdea: "전쟁 재정은 현재의 사람과 물자를 미래 세입에 대한 국채로 옮기며, 전후에는 상환과 복구·연금·의료를 둘러싼 새 사회 재정계약으로 이어집니다.",
     assumed: { id: "state-capacity", role: "국가가 세금을 걷고 규칙을 집행하며 공공서비스를 전달하는 능력을 설명합니다." },
     concepts: [
       { id: "wartime-resource-mobilization", role: "세금·차입·화폐·징발·배급으로 민간 자원을 전쟁에 옮긴 과정을 설명합니다.", intuition: "정부 지출 100은 새 물자를 만드는 동시에 가계가 쓸 사람·식량·연료를 줄입니다.", workedExample: "35+40+15+10=100으로 조달 수단과 부담 시점을 나눕니다.", boundary: "전쟁비 총액이나 무기 생산량만으로 인명·소비·식민지 동원 비용을 평가하지 않습니다." },
-      { id: "funded-public-debt-tax-base", role: "미래 세입을 담보로 현재 전쟁비를 장기 국채로 조달한 제도를 설명합니다.", intuition: "국채는 세금을 없애지 않고 오늘의 납부를 이자와 원금이 붙은 미래 납부로 옮깁니다.", workedExample: "전쟁 국채 40의 이자와 상환을 전후 예산에서 매년 지급하는 경로를 봅니다.", boundary: "정부 부채가 가계부채와 완전히 같거나 발행 즉시 파산을 뜻한다고 보지 않습니다." },
-      { id: "postwar-social-fiscal-contract", role: "전쟁 뒤 세금과 보험료를 받는 대신 연금·의료·주택·고용을 넓힌 약속을 설명합니다.", intuition: "동원에 참여한 시민은 복구 비용뿐 아니라 평시의 안전과 보장을 요구합니다.", workedExample: "전후 예산 100을 부채 40·복구 30·사회급여 20·국방 10으로 나눕니다.", boundary: "모든 참전국과 식민지 주민이 같은 보장과 시민권을 받았다고 보지 않습니다." },
+      { id: "funded-public-debt-tax-base", role: "미래 세입을 담보로 현재 전쟁비를 장기 국채로 조달한 제도를 설명합니다.", intuition: "국채는 세금을 없애지 않고 오늘의 납부를 이자와 원금이 붙은 미래 납부로 옮깁니다.", workedExample: "국내 국채 40과 해외차입 15의 이자 20을 전후 예산에서 매년 지급하는 경로를 봅니다.", boundary: "정부 부채가 가계부채와 완전히 같거나 발행 즉시 파산을 뜻한다고 보지 않습니다." },
+      { id: "postwar-social-fiscal-contract", role: "전쟁 뒤 세금과 보험료를 받는 대신 연금·의료·주택·고용을 넓힌 약속을 설명합니다.", intuition: "동원에 참여한 시민은 복구 비용뿐 아니라 평시의 안전과 보장을 요구합니다.", workedExample: "전후 예산 100을 일반 서비스 40·사회급여 30·전쟁부채 이자 20·재건 10으로 나눕니다.", boundary: "모든 참전국과 식민지 주민이 같은 보장과 시민권을 받았다고 보지 않습니다." },
     ],
     numericQuestion: "35+40+15+10과 40+30+20+10을 계산하고 두 장부가 각각 무엇을 뜻하는지 설명하세요.",
     numericAnswers: ["전시 조달 100", "전후 지출 100", "조달 수단과 지출 목적 구분", "국채는 미래 세금과 연결"],
-    changedCaseQuestion: "전후 이자·상환이 40에서 50으로 늘고 총예산 100, 복구 30과 국방 10이 같다면 사회급여에 얼마가 남는지 계산하세요.",
-    changedCaseAnswers: ["100−50−30−10=10", "사회급여 10", "기준보다 10 감소", "증세·차환 선택 별도"],
+    changedCaseQuestion: "전후 전쟁부채 이자가 20에서 30으로 늘고 총예산 100, 일반 서비스 40과 재건 10이 같다면 사회급여에 얼마가 남는지 계산하세요.",
+    changedCaseAnswers: ["100−30−40−10=20", "사회급여 20", "기준 30보다 10 감소", "증세·차환 선택 별도"],
     sources: [
-      { title: "LSE EH450 · The Economics of War", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", problem: "전쟁을 전투와 무기 생산만으로 보고 국가 형성·재원·소비·인명 비용을 놓치지 않아야 합니다.", contribution: "16~20세기 유럽 전쟁의 재정·물자·인력 동원과 배분, 경제·인간 결과를 한 과정에 둡니다.", assumptions: "2026/27 유럽 중심 과정이며 내전·식민지·비공식 보호의 다른 경로는 보완해야 합니다.", evidenceScope: "전쟁 경제와 국가 형성을 다루는 대학원 강의 범위입니다.", notClaim: "전쟁이 국가 역량이나 복지국가를 발전시킨 바람직한 원인이었다는 뜻은 아닙니다.", sectionId: "source" },
-      { title: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", problem: "국채 규모를 전쟁·평화기 적자와 장기 세입 제도의 변화에 연결해야 합니다.", contribution: "1688년 약 100만 파운드에서 1800년 약 5억 파운드로 늘어난 영국 부채와 전쟁기 재정 변화를 정리합니다.", assumptions: "영국 의회 연구이며 다른 국가의 통화·패전·채무불이행 경험을 대표하지 않습니다.", evidenceScope: "영국 공공부채의 역사와 현재 제도를 다룬 공식 의회 자료입니다.", notClaim: "부채 증가 전체가 전쟁 하나에서 왔거나 높은 부채가 항상 같은 결과를 냈다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "LSE EH450 · Topics in the Economic History of War in Europe", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", problem: "전쟁을 전투와 무기 생산만으로 보고 국가 형성·재원·소비·인명 비용을 놓치지 않아야 합니다.", contribution: "16~20세기 유럽 전쟁의 재정·물자·인력 동원과 배분, 경제·인간 결과를 한 과정에 둡니다.", assumptions: "2026/27 유럽 중심 과정이며 내전·식민지·비공식 보호의 다른 경로는 보완해야 합니다.", evidenceScope: "전쟁 경제와 국가 형성을 다루는 대학원 강의 범위입니다.", notClaim: "전쟁이 국가 역량이나 복지국가를 발전시킨 바람직한 원인이었다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", problem: "국채 규모를 전쟁·평화기 적자와 장기 세입 제도의 변화에 연결해야 합니다.", contribution: "1688년 약 100만 파운드에서 1800년 약 5억 파운드로 늘어난 영국 부채와 전쟁기 재정 변화를 정리합니다.", assumptions: "영국 의회 연구이며 다른 국가의 통화·패전·채무불이행 경험을 대표하지 않습니다.", evidenceScope: "영국 공공부채의 역사와 현재 제도를 다룬 공식 의회 자료입니다.", notClaim: "부채 증가 전체가 전쟁 하나에서 왔거나 높은 부채가 항상 같은 결과를 냈다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
   "economic-history/commercial-law-limited-liability-and-insolvency": regionalEconomicHistoryLearning({
@@ -152642,7 +152616,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseQuestion: "총수출 120 가운데 외국 투입 36, 국내 직접 24, 국내 간접 60이라면 국내·외국 부가가치 비중을 계산하세요.",
     changedCaseAnswers: ["국내 가치 24+60=84", "국내 비중 70%", "외국 비중 30%", "가격·물량 변화 별도"],
     sources: [
-      { title: "OECD · Trade in Value-Added", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", problem: "총수출을 마지막 수출국이 모두 만든 국내소득으로 읽는 중복과 귀속 문제를 풀어야 합니다.", contribution: "국가 간 투입산출표로 총수출의 국내·외국 부가가치, 서비스 기여와 최종수요 목적지를 계산하는 지표를 설명합니다.", assumptions: "업종 평균 투입구조와 국제표 정합화 가정이 있으며 판별 연도와 개정 이력을 확인해야 합니다.", evidenceScope: "OECD TiVA 지표의 목적·구성·공개판 범위를 설명하는 공식 페이지입니다.", notClaim: "2020년까지의 업종 평균이 2026년 개별 기업·제품 공급망을 실시간으로 보여 준다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "OECD · Trade in Value-Added", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", problem: "총수출을 마지막 수출국이 모두 만든 국내소득으로 읽는 중복과 귀속 문제를 풀어야 합니다.", contribution: "국가 간 투입산출표로 총수출의 국내·외국 부가가치, 서비스 기여와 최종수요 목적지를 계산하는 지표를 설명합니다.", assumptions: "업종 평균 투입구조와 국제표 정합화 가정이 있으며 판별 연도와 개정 이력을 확인해야 합니다.", evidenceScope: "OECD TiVA 지표의 목적·구성·공개판 범위를 설명하는 공식 페이지입니다.", notClaim: "2022년까지(2025년 판)의 업종 평균이 2026년 개별 기업·제품 공급망을 실시간으로 보여 준다는 뜻은 아닙니다.", sectionId: "source" },
       { title: "WTO · Global Value Chain Development Report 2025", href: "https://www.wto.org/english/res_e/publications_e/gvcreport2025_e.htm", problem: "최근 공급망 변화를 세계화의 단순 후퇴나 국내화 비율 하나로 판단하지 않아야 합니다.", contribution: "기술 변화·녹색전환·지정학 속 생산·무역·투자의 재편과 새 지역 허브, 산업정책을 함께 다룹니다.", assumptions: "여러 기관의 세계 개관이며 특정 기업의 조달처·재고·원가를 실시간으로 보여 주지 않습니다.", evidenceScope: "2025년 세계 가치사슬의 변화·회복력·정책 쟁점을 다룬 국제기구 공동 보고서입니다.", notClaim: "국내 부가가치 상승만으로 생산성·임금·배출·공급 안정이 개선됐다고 볼 수 있다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
@@ -152702,18 +152676,18 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   }),
   "markets/lme-metals-warrants-quality-storage-and-load-out": appliedDerivativeLearning({
-    entryNote: "LME 아연 25.3톤이 계약 허용 범위 24.5~25.5톤에 드는지 확인합니다. 설명용 20일 보관료 1천 달러와 상차비 500달러를 더합니다.",
+    entryNote: "LME 아연 25.3톤이 계약 허용 범위 24.5~25.5톤에 드는지 확인합니다. 설명용 20일 보관료 250달러와 출고비 1,250달러를 더합니다.",
     coreIdea: "LME 금속 선물은 승인 브랜드·순도·중량을 충족한 금속의 전자 워런트를 넘깁니다. 실제 출고에는 워런트 취소 뒤에도 보관일수·출고 순번·운송과 FOT 비용이 남습니다.",
     assumed: { id: "commodity-shipping-certificate-delivery", role: "원자재 선물에서 실물 자체보다 승인 시설이 발행한 권리 문서가 먼저 이전되는 구조를 설명합니다." },
     concepts: [
       { id: "lme-metal-warrant", role: "승인 금속이 승인 창고에 있다는 전자 권리를 선물 인도에 씁니다.", intuition: "금속 덩어리를 손으로 넘기기 전에 소유권과 규격을 나타내는 전자 기록이 이동합니다.", workedExample: "순도 99.995% 이상 아연 25.3톤의 승인 브랜드·창고 기록을 확인합니다.", boundary: "워런트를 가졌다고 금속이 이미 트럭에 실렸다는 뜻은 아닙니다." },
       { id: "lme-warrant-cancellation-loadout", role: "전자 권리를 실제 출고 요청으로 바꾸고 순번을 잡습니다.", intuition: "창고 밖으로 꺼내려면 워런트를 취소하고 창고의 출고 일정과 운송수단을 맞춰야 합니다.", workedExample: "취소일 뒤 20일을 기다려 상차하는 설명용 경로를 둡니다.", boundary: "취소만으로 보관료와 출고 대기가 즉시 멈추지 않을 수 있습니다." },
-      { id: "lme-warehouse-rent-fot-ledger", role: "금속 가치와 보관·상차·재발행 비용을 따로 기록합니다.", intuition: "전자 권리의 가격과 금속을 창고 밖으로 옮기는 비용은 다른 청구입니다.", workedExample: "보관료 1,000달러와 FOT 500달러를 합쳐 1,500달러로 둡니다(가정).", boundary: "실제 창고·지역·날짜의 공표 요율을 대신하지 않습니다." },
+      { id: "lme-warehouse-rent-fot-ledger", role: "금속 가치와 보관·상차·재발행 비용을 따로 기록합니다.", intuition: "전자 권리의 가격과 금속을 창고 밖으로 옮기는 비용은 다른 청구입니다.", workedExample: "톤당 하루 0.50달러×25톤×20일=250달러 보관료와 톤당 50달러×25톤=1,250달러 출고비를 합쳐 1,500달러로 둡니다(가정).", boundary: "실제 창고·지역·날짜의 공표 요율을 대신하지 않습니다." },
     ],
-    numericQuestion: "25톤의 ±2% 허용 범위를 구하고 25.3톤이 드는지 확인한 뒤 1,000+500달러를 계산하세요.",
+    numericQuestion: "25톤의 ±2% 허용 범위를 구하고 25.3톤이 드는지 확인한 뒤 250+1,250달러를 계산하세요.",
     numericAnswers: ["허용 범위 24.5~25.5톤", "25.3톤은 범위 안", "비용 합계 1,500달러", "금속 가치와 별도"],
     changedCaseQuestion: "실제 중량이 25.6톤이고 보관료가 1,200달러라면 계약 허용 여부와 비용 합계를 판단하세요.",
-    changedCaseAnswers: ["25.6톤은 상한 25.5톤 초과", "계약 조정·분할 확인", "보관료+FOT=1,700달러", "현행 창고 요율 확인"],
+    changedCaseAnswers: ["25.6톤은 상한 25.5톤 초과", "계약 조정·분할 확인", "보관료+출고비=1,200+1,250=2,450달러", "현행 창고 요율 확인"],
     sources: [
       { title: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", problem: "금속 이름만으로 인도하지 않고 순도·로트·브랜드·창고 조건을 확인해야 합니다.", contribution: "최소 순도 99.995%, 25톤 로트와 워런트 중량 허용 범위, 승인 브랜드·창고를 정합니다.", assumptions: "본문의 금속 가격과 보관·상차비는 설명용 가정입니다.", evidenceScope: "LME 아연 선물의 현행 계약 규격입니다.", notClaim: "규격 충족이 특정 공장의 형태·도착일·가공 적합성을 보장하지 않습니다.", sectionId: "source" },
       { title: "LME · Warrants", href: "https://www.lme.com/Sustainability-and-Physical-Markets/Warehousing/LME-warrants", problem: "선물 인도에 쓰는 전자 권리와 실제 금속 출고를 구분해야 합니다.", contribution: "워런트가 승인 창고의 특정 금속을 나타내며 소유권 이전과 취소에 쓰이는 방식을 설명합니다.", assumptions: "공식 개요이며 개별 창고의 당일 출고 대기와 비용을 제시하지 않습니다.", evidenceScope: "LME 워런트의 역할과 전자 관리 범위입니다.", notClaim: "워런트 취소 즉시 물리적 금속이 출고된다는 뜻은 아닙니다.", sectionId: "comparison" },
@@ -152734,7 +152708,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseQuestion: "생우 실제 수율이 63%라면 조정액은 얼마입니까? 비육우 마지막 지수가 2.18이라면 현금정산액은 얼마인지 계산하세요.",
     changedCaseAnswers: ["수율 조정 0달러", "지수 차이 −0.02달러/파운드", "현금정산 −1,000달러", "지역 베이시스 별도"],
     sources: [
-      { title: "CME · Live Cattle Futures Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf", problem: "생우 계약의 무게·등급과 도체 수율 조정을 실제 규칙에 대조해야 합니다.", contribution: "4만 파운드 거래 단위, 기준 등급과 63% 뜨거운 도체 수율 조정식을 정합니다.", assumptions: "본문의 2.20달러와 실제 수율 62%는 설명용 가정이며 적용 계약월 규칙을 다시 확인해야 합니다.", evidenceScope: "2026년 9월 시행 조항을 포함한 CME 생우 선물 규칙입니다.", notClaim: "이 한 식이 개별 도체와 시설의 모든 인도 조정을 포함한다는 뜻은 아닙니다.", sectionId: "source" },
+      { title: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", problem: "생우 계약의 무게·등급과 도체 수율 조정을 실제 규칙에 대조해야 합니다.", contribution: "4만 파운드 거래 단위, 기준 등급과 63% 뜨거운 도체 수율 조정식을 정합니다.", assumptions: "본문의 2.20달러와 실제 수율 62%는 설명용 가정이며 적용 계약월 규칙을 다시 확인해야 합니다.", evidenceScope: "2025-05-07 발효·2026년 10월물부터 적용되는 개정(25-157)을 반영한 CME 생우 선물 규칙입니다. 4만 파운드·70/30·63% 규격 자체는 기존 시행분입니다.", notClaim: "이 한 식이 개별 도체와 시설의 모든 인도 조정을 포함한다는 뜻은 아닙니다.", sectionId: "source" },
       { title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", problem: "같은 축산업에서도 실물인도와 현금정산 계약을 구분해야 합니다.", contribution: "생우 4만 파운드는 실물인도, 비육우 5만 파운드와 돈육은 지수 현금정산이라는 구조를 설명합니다.", assumptions: "거래소 교육자료이며 최신 계약 규칙과 실제 지수 산식이 우선합니다.", evidenceScope: "CME 축산물 선물의 기초 현물과 정산 방식 비교입니다.", notClaim: "현금정산이 농가의 지역·무게·거래 방식에 따른 베이시스를 없앤다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
@@ -152939,7 +152913,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       { title: "Stanford Encyclopedia of Philosophy · Logical Empiricism", href: "https://plato.stanford.edu/entries/logical-empiricism/", problem: "논리경험주의의 역사와 내부 논쟁을 단일 구호에서 분리합니다.", contribution: "검증주의·확인·관찰 문장·이론 언어의 변화와 이견을 정리합니다.", assumptions: "운동의 구성원과 시기에 따라 입장이 다릅니다.", evidenceScope: "빈 학단과 베를린학파 및 후대 과학철학의 학술 개관입니다.", notClaim: "모든 구성원이 엄격한 검증 원리 하나를 공유했다는 근거가 아닙니다.", sectionId: "source" },
-      { title: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", problem: "20세기 분석 철학의 형식언어와 일상언어 접근을 역사적으로 비교합니다.", contribution: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명합니다.", assumptions: "한 강의 자료의 배열은 전체 분석 철학사의 유일한 구분이 아닙니다.", evidenceScope: "Oxford의 철학 언어사 교육 자료입니다.", notClaim: "한 전통이 실패하고 다른 전통이 완전히 승리했다는 뜻이 아닙니다.", sectionId: "comparison" }
+      { title: "Timothy Williamson · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", problem: "20세기 분석 철학의 형식언어와 일상언어 접근을 역사적으로 비교합니다.", contribution: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명합니다.", assumptions: "한 철학자의 회고적 서술은 전체 분석 철학사의 유일한 구분이 아닙니다.", evidenceScope: "Belgrade Philosophical Annual 게재용 윌리엄슨 논문(Oxford 철학과 호스팅 PDF)입니다.", notClaim: "한 전통이 실패하고 다른 전통이 완전히 승리했다는 뜻이 아닙니다.", sectionId: "comparison" }
     ]
   },
   "philosophy-history/ordinary-language-use-context-and-speech-acts": {
@@ -153211,11 +153185,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "role-aligned-cloud-certification",
-        "role": "Role-aligned cloud certification path을 공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 사례에서 설명합니다."
+        "role": "공고 20개의 반복 업무와 현재 역량 차이를 가장 많이 덮는 현행 시험을 첫 시험으로 고릅니다."
       },
       {
         "id": "cloud-portfolio-evidence-loop",
-        "role": "Cloud portfolio evidence loop을 공고 20개와 4주 40시간을 공통 원리 10시간, 시험 범위 14시간, 실습 10시간, 오답 6시간으로 나눕니다. 사례에서 설명합니다."
+        "role": "4주 40시간 가운데 실습 10시간·오답 6시간을 구축·장애·복구 기록으로 남겨 다음 학습에 되먹입니다."
       }
     ],
     "conceptExplanations": [
@@ -153626,11 +153600,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "cloud-shared-responsibility-boundary",
-        "role": "Cloud shared-responsibility boundary을 대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 사례에서 설명합니다."
+        "role": "서버 2대·6대를 VM·PaaS·SaaS로 운영할 때 공급자와 고객이 각각 맡는 층을 나눕니다."
       },
       {
         "id": "cloud-failure-scope-elasticity",
-        "role": "Cloud failure scope and elasticity을 대당 초당 50건인 서버가 평소 80건에는 2대, 점심 260건에는 6대 필요합니다. 사례에서 설명합니다."
+        "role": "점심 260건에 6대를 가용 영역에 나눠 둘 때 견디는 장애 범위와 늘리고 줄이는 범위를 함께 정합니다."
       }
     ],
     "conceptExplanations": [
@@ -153866,11 +153840,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "cloud-policy-evaluation",
-        "role": "Cloud policy evaluation을 3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 사례에서 설명합니다."
+        "role": "명시적 거부·허용과 상하위 정책을 합쳐 36개 개별 권한 결정이 실제로 허용·거부되는 결과를 냅니다."
       },
       {
         "id": "cloud-resource-hierarchy-scope",
-        "role": "Cloud resource hierarchy and scope을 3명에게 12개 행동을 따로 붙이는 36개 결정을 읽기·배포·감사 역할 3개로 묶습니다. 사례에서 설명합니다."
+        "role": "읽기·배포·감사 역할 3개를 어느 계층에 붙일 때 어디까지 상속되는지 범위를 정합니다."
       }
     ],
     "conceptExplanations": [
@@ -154107,11 +154081,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "cloud-request-path",
-        "role": "Cloud request path을 10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 사례에서 설명합니다."
+        "role": "이름 해석부터 경로표·방화벽·부하 분산·백엔드까지 요청 한 건이 지나는 칸을 순서대로 확인합니다."
       },
       {
         "id": "cloud-ingress-egress-separation",
-        "role": "Cloud ingress–egress separation을 10.0.0.0/24의 256개 주소를 공개 앞 구역 128개와 사설 뒤 구역 128개로 나눕니다. 사례에서 설명합니다."
+        "role": "공개 128개·사설 128개 주소 구역에서 밖에서 들어오는 연결과 안에서 나가는 연결을 다른 경로와 정책으로 나눕니다."
       }
     ],
     "conceptExplanations": [
@@ -154348,11 +154322,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "cloud-compute-unit-selection",
-        "role": "Cloud compute unit selection을 하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 사례에서 설명합니다."
+        "role": "하루 총 4.8시간이지만 피크 초당 100건인 작업에 VM·컨테이너·PaaS·함수 중 무엇이 맞는지 수명·동시성으로 고릅니다."
       },
       {
         "id": "stateless-horizontal-scaling",
-        "role": "Stateless horizontal scaling을 하루 8만6400건을 건당 0.2초 처리하면 총 실행 4.8시간이지만 피크는 초당 100건입니다. 사례에서 설명합니다."
+        "role": "상태를 공유 저장소로 빼서 피크 초당 100건을 복제본 여러 개에 나눠 받을 수 있게 합니다."
       }
     ],
     "conceptExplanations": [
@@ -154589,11 +154563,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "cloud-data-access-pattern",
-        "role": "Cloud data access pattern을 주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 사례에서 설명합니다."
+        "role": "주문 100건 200KB와 사진 1천 장 2GB의 읽기·쓰기 방식 차이로 저장 모델을 고릅니다."
       },
       {
         "id": "cloud-replication-backup-separation",
-        "role": "Cloud replication–backup separation을 주문 100건은 200KB이고 사진 1천 장은 2GB이므로 거래 데이터와 객체를 분리합니다. 사례에서 설명합니다."
+        "role": "복제는 지금 상태를 살려 두고 백업은 과거 시점으로 되돌린다는 차이를 서로 다른 장애에 연결합니다."
       }
     ],
     "conceptExplanations": [
@@ -154830,11 +154804,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "rpo-rto-recovery-loop",
-        "role": "RPO/RTO recovery loop을 12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 사례에서 설명합니다."
+        "role": "12시 장애에서 RPO 15분·RTO 60분을 목표로 정하고 실제 복구 결과를 그 목표와 비교합니다."
       },
       {
         "id": "cloud-observability-iac-loop",
-        "role": "Cloud observability and IaC loop을 12시 장애에서 RPO 15분, RTO 60분을 정해 11시45분 이후 손실과 13시 복구 마감을 검증합니다. 사례에서 설명합니다."
+        "role": "지표·로그·추적으로 원인을 찾고 인프라 코드로 바꾸거나 되돌린 뒤 같은 지표로 다시 확인합니다."
       }
     ],
     "conceptExplanations": [
@@ -155071,11 +155045,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "aws-clf-role-map",
-        "role": "AWS CLF-C02 role map을 90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 사례에서 설명합니다."
+        "role": "AWS 서비스를 실행·저장·망·보안·관측·비용처럼 문제에서 맡는 역할로 묶어 시험 보기를 줄입니다."
       },
       {
         "id": "aws-clf-domain-time-strategy",
-        "role": "AWS CLF-C02 domain and time strategy을 90분에 65문항이면 문항당 평균 약 83초이며 50문항은 채점, 15문항은 미채점입니다. 사례에서 설명합니다."
+        "role": "90분 65문항, 문항당 약 83초를 공식 영역 비중에 맞춰 1차 확정·표시·재검토로 나눕니다."
       }
     ],
     "conceptExplanations": [
@@ -155312,11 +155286,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "constraint-first-cloud-architecture",
-        "role": "Constraint-first cloud architecture을 평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 사례에서 설명합니다."
+        "role": "평소 100·행사 1천 요청/초, RPO 15분·RTO 60분, 두 명 팀이라는 제약을 먼저 고정해 후보 구조를 줄입니다."
       },
       {
         "id": "aws-managed-decoupled-architecture",
-        "role": "AWS managed decoupled architecture을 평소 100, 행사 1천 요청/초, 정적 500GB, RPO 15분, RTO 60분인 두 명 팀의 쇼핑몰을 설계합니다. 사례에서 설명합니다."
+        "role": "정적 500GB·동적 요청·DB·비동기 작업을 관리형 경계로 나눠 행사 부하와 장애가 번지지 않게 합니다."
       }
     ],
     "conceptExplanations": [
@@ -155553,11 +155527,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "aws-developer-cloudops-role-boundary",
-        "role": "AWS developer–CloudOps role boundary을 하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 사례에서 설명합니다."
+        "role": "하루 10회 배포 중 실패 1회를 놓고 코드를 고치는 개발 판단과 5분 탐지·10분 복구하는 운영 판단을 나눕니다."
       },
       {
         "id": "safe-delivery-feedback-loop",
-        "role": "Safe delivery feedback loop을 하루 10회 배포 중 1회 실패를 5분 안에 탐지하고 10분 안에 되돌립니다. 사례에서 설명합니다."
+        "role": "새 버전을 일부 트래픽에 먼저 내보내 지표로 중단·승격·되돌리기를 정하고 결과를 다음 배포에 반영합니다."
       }
     ],
     "conceptExplanations": [
@@ -155794,11 +155768,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "azure-resource-governance-map",
-        "role": "Azure resource governance map을 두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 사례에서 설명합니다."
+        "role": "두 팀의 자원 20개에 RBAC·Policy·태그·잠금이 각각 무엇을 막고 기록하는지 계층별로 나눕니다."
       },
       {
         "id": "azure-management-tool-roles",
-        "role": "Azure management tool roles을 두 팀의 자원 20개를 리소스 그룹으로 나누고 월 예산 100만원을 태그·예산·경보로 추적합니다. 사례에서 설명합니다."
+        "role": "월 예산 100만원을 지키는 데 Advisor·Policy·Lock·Service Health·Monitor가 각각 권고·강제·보호·공급자 상태·관측 중 무엇을 맡는지 나눕니다."
       }
     ],
     "conceptExplanations": [
@@ -156035,11 +156009,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "azure-effective-state-debugging",
-        "role": "Azure effective-state debugging을 web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 사례에서 설명합니다."
+        "role": "여러 역할·NSG·경로가 합쳐진 실제 적용 결과를 조회해 12개 자원 중 접근이 막힌 첫 관문을 찾습니다."
       },
       {
         "id": "azure-administration-lifecycle",
-        "role": "Azure administration lifecycle을 web 그룹 8개와 data 그룹 4개, 모두 12개 자원을 역할로 나누고 VM을 30분 안에 복원합니다. 사례에서 설명합니다."
+        "role": "web 8개·data 4개 자원을 신원·거버넌스부터 만들고 VM을 30분 안에 복원하는 데까지 관리자 작업 순서를 잇습니다."
       }
     ],
     "conceptExplanations": [
@@ -156276,11 +156250,11 @@ export const ARTICLE_LEARNING: Readonly<
     "introducedHere": [
       {
         "id": "azure-architect-devops-role-boundary",
-        "role": "Azure architect–DevOps role boundary을 지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 사례에서 설명합니다."
+        "role": "지역 장애 RTO 30분을 견디는 구조를 고르는 설계 책임과 하루 20회 배포를 10%·5분 관찰로 흘리는 전달 책임을 나눕니다."
       },
       {
         "id": "retired-cloud-credential-scope",
-        "role": "Retired cloud credential scope을 지역 장애 RTO 30분, 하루 20회 배포, 첫 10%에 5분 관찰 뒤 전체 승격을 설계합니다. 사례에서 설명합니다."
+        "role": "폐지된 AZ-204의 기술 내용은 쓰되 예약 가능성·선행 자격·이력서 표기는 현행 경로와 분리합니다."
       }
     ],
     "conceptExplanations": [
@@ -156884,7 +156858,7 @@ export const ARTICLE_LEARNING: Readonly<
     changedCaseAnswers: ["manifest diff", "port·rail isolation", "pair swap", "NIC counters", "threshold", "risk owner", "기한", "재시험"],
     sources: [
       { title: "NVIDIA B300 BasePOD and SuperPOD Deployment Guide", href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html", problem: "B300 node·network·scheduler·collective를 실제 deployment에서 검증해야 합니다.", contribution: "Service 상태, Slurm·GPU·multi-node NCCL validation 절차를 제공합니다.", assumptions: "문서의 B300 Mission Control·Base Command Manager 환경을 현재 target에 맞춰 적용합니다.", evidenceScope: "공식 B300 deployment와 계층별 validation 예시입니다.", notClaim: "해당 명령만 실행하면 고객 workload·storage·facility acceptance가 모두 끝난다는 뜻은 아닙니다.", sectionId: "source" },
-      { title: "KISA 클라우드서비스 보안인증제 안내", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", problem: "Hardware 보안 기능과 cloud service 인증 주장을 분리해야 합니다.", contribution: "현재 CSAP 안내서·공지와 인증 제도 자료의 공식 경로를 제공합니다.", assumptions: "제안 시점의 대상 service·등급·유효 증서와 최신 평가 기준을 다시 확인합니다.", evidenceScope: "한국 cloud service 보안인증의 공식 안내 범위입니다.", notClaim: "GPU server 납품이나 개별 보안 기능만으로 cloud service 전체가 인증된다는 뜻은 아닙니다.", sectionId: "comparison" },
+      { title: "KISA 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", problem: "Hardware 보안 기능과 cloud service 인증 주장을 분리해야 합니다.", contribution: "CSAP를 “클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도”로 정의한 KISA 공식 안내를 제공합니다(이전 isms.kisa.or.kr 경로는 2026-10-09 DNS 해석 실패).", assumptions: "제안 시점의 대상 service·등급·유효 증서와 최신 평가 기준을 다시 확인합니다.", evidenceScope: "한국 cloud service 보안인증의 공식 안내 범위입니다.", notClaim: "GPU server 납품이나 개별 보안 기능만으로 cloud service 전체가 인증된다는 뜻은 아닙니다.", sectionId: "comparison" },
     ],
   }),
 };

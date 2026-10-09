@@ -69,10 +69,10 @@ export default function ModernGiwaChainArticle() {
           question="두 processes가 같은 GIWA network generation을 검증한다고 언제 말할까?"
           idea={<>Chain identity, rollup rules, L1 origin과 binary/config revisions를 canonical manifest에 넣어 digest를 비교합니다.</>}
           formula={"G=H(\\mathrm{chainID}\\|\\mathrm{genesis}\\|\\mathrm{rollupCfg}\\|\\mathrm{L1}\\|v_{node}\\|v_{reth})"}
-          annotatedFormula={String.raw`G=\underbrace{H(\mathrm{chainID}\|\mathrm{genesis}\|\mathrm{rollupCfg}\|\mathrm{L1}\|v_{node}\|v_{reth})}_{\text{Rollup config 계산}}`}
+          annotatedFormula={String.raw`\underbrace{G}_{\text{network generation ID}}=H(\underbrace{\mathrm{chainID}\|\mathrm{genesis}}_{\text{chain 정체}}\|\underbrace{\mathrm{rollupCfg}}_{\text{derivation 규칙}}\|\underbrace{\mathrm{L1}}_{\text{L1 source}}\|\underbrace{v_{node}\|v_{reth}}_{\text{binary 버전}})`}
           operations={[
-            { expression: String.raw`H(\mathrm{chainID}\|\mathrm{genesis}\|\mathrm{rollupCfg}\|\mathrm{L1}\|v_{node}\|v_{reth})`, annotation: ["Rollup config이(가) 식의 결과에 기여하는 방식을","계산합니다.","Chain identity, rollup rules, L1","origin과 binary/config revisions를"] },
-          ]}
+          { expression: String.raw`H(\mathrm{chainID}\|\mathrm{genesis}\|\mathrm{rollupCfg}\|\mathrm{L1}\|v_{node}\|v_{reth})`, annotation: ["chainID 91342·genesis·rollup 규칙·","L1 source·binary 버전을 한 digest로","genesis 같아도 config 다르면 G 다름"] },
+        ]}
           terms={[
             { symbol: "G", name: "Network-generation digest", description: "Canary·rollback에서 비교할 node identity입니다." },
             { symbol: "H", name: "Hash", description: "Canonical field encoding을 digest하는 검토된 hash입니다." },
@@ -138,10 +138,11 @@ export default function ModernGiwaChainArticle() {
           question="같은 L1 view에서 같은 safe payload를 만들려면 무엇을 고정해야 할까?"
           idea={<>Ordered canonical L1 inputs, batch bytes, system configuration과 activated derivation rules를 deterministic function의 입력으로 둡니다.</>}
           formula={"P_h=\\operatorname{Derive}_v(L1_{o:k},B_{o:k},C),\\qquad S_h=\\operatorname{Exec}_v(S_{h-1},P_h)"}
-          annotatedFormula={String.raw`P_h=\underbrace{\operatorname{Derive}_v(L1_{o:k},B_{o:k},C),\qquad S_h=\operatorname{Exec}_v(S_{h-1},P_h)}_{\text{Canonical L1 inputs 계산}}`}
+          annotatedFormula={String.raw`\underbrace{P_h}_{\text{safe payload}}=\operatorname{Derive}_v(\underbrace{L1_{o:k}}_{\text{canonical L1 입력}},\underbrace{B_{o:k}}_{\text{batch data}},\underbrace{C}_{\text{rollup config}}),\qquad \underbrace{S_h}_{\text{실행 state}}=\operatorname{Exec}_v(S_{h-1},P_h)`}
           operations={[
-            { expression: String.raw`\operatorname{Derive}_v(L1_{o:k},B_{o:k},C),\qquad S_h=\operatorname{Exec}_v(S_{h-1},P_h)`, annotation: ["Canonical L1 inputs이(가) 식의 결과에","기여하는 방식을 계산합니다.","Ordered canonical L1 inputs, batch","bytes, system configuration과"] },
-          ]}
+          { expression: String.raw`\operatorname{Derive}_v(L1_{o:k},B_{o:k},C)`, annotation: ["origin o..k의 L1 data·batch·config로","op-node가 height h payload를 재현","sequencer 응답만으론 safe parity 아님"] },
+          { expression: String.raw`\operatorname{Exec}_v(S_{h-1},P_h)`, annotation: ["op-reth가 parent state에 payload 실행","두 구현의 state root가 같아야 parity"] },
+        ]}
           terms={[
             { symbol: "P_h", name: "Derived L2 payload", description: "Height h에서 op-node가 Engine에 제안할 payload입니다." },
             { symbol: "L1_{o:k}", name: "Canonical L1 inputs", description: "Origin o부터 k까지의 ordered blocks·receipts·beacon data입니다." },
@@ -160,10 +161,11 @@ export default function ModernGiwaChainArticle() {
           question="Unsafe 120·safe 118·finalized 115의 관계를 어떻게 읽을까?"
           idea={<>세 숫자를 하나의 finality 점수가 아니라 같은 canonical ancestry 위의 서로 다른 confirmation cursors로 둡니다.</>}
           formula={"H_{\\mathrm{finalized}}\\preceq H_{\\mathrm{safe}}\\preceq H_{\\mathrm{unsafe}},\\qquad(115\\preceq118\\preceq120)"}
-          annotatedFormula={String.raw`\underbrace{H_{\mathrm{finalized}}\preceq H_{\mathrm{safe}}\preceq H_{\mathrm{unsafe}},\qquad(115\preceq118\preceq120)}_{\text{Finalized head 계산}}`}
+          annotatedFormula={String.raw`\underbrace{H_{\mathrm{finalized}}}_{\text{L1 finalized까지}}\preceq \underbrace{H_{\mathrm{safe}}}_{\text{L1 batch로 재현}}\preceq \underbrace{H_{\mathrm{unsafe}}}_{\text{sequencer 최신}},\qquad(115\preceq118\preceq120)`}
           operations={[
-            { expression: String.raw`H_{\mathrm{finalized}}\preceq H_{\mathrm{safe}}\preceq H_{\mathrm{unsafe}},\qquad(115\preceq118\preceq120)`, annotation: ["Finalized head이(가) 식의 결과에 기여하는 방식을","계산합니다.","세 숫자를 하나의 finality 점수가 아니라 같은","canonical ancestry 위의 서로 다른"] },
-          ]}
+          { expression: String.raw`H_{\mathrm{finalized}}\preceq H_{\mathrm{safe}}`, annotation: ["finalized 115는 safe 118의 조상","L1 origin까지 finalized된 L2 구간"] },
+          { expression: String.raw`H_{\mathrm{safe}}\preceq H_{\mathrm{unsafe}}`, annotation: ["safe 118은 unsafe 120의 조상","120은 sequencer만 만든 최신 block","높이 차 5가 5초·출금 완료는 아님"] },
+        ]}
           terms={[
             { symbol: "H_{\\mathrm{unsafe}}", name: "Unsafe head", description: "Sequencer가 만든 최신 L2 head입니다." },
             { symbol: "H_{\\mathrm{safe}}", name: "Safe head", description: "Canonical L1 batch input에서 derivation된 L2 head입니다." },
@@ -218,10 +220,11 @@ export default function ModernGiwaChainArticle() {
           question="Transaction T의 외부 effect를 승인할 최소 조건은 무엇일까?"
           idea={<>Network generation, execution receipt, 요구한 head status와 idempotent application policy를 모두 AND로 확인합니다.</>}
           formula={"A_T=A_G\\land A_{\\mathrm{exec}}\\land A_{\\mathrm{head}\\ge p}\\land A_{\\mathrm{effect}}"}
-          annotatedFormula={String.raw`A_T=\underbrace{A_G\land A_{\mathrm{exec}}\land A_{\mathrm{head}\ge p}\land A_{\mathrm{effect}}}_{\text{판정 조건 결합}}`}
+          annotatedFormula={String.raw`\underbrace{A_T}_{\text{외부 effect 승인}}=\underbrace{A_G}_{\text{generation 일치}}\land \underbrace{A_{\mathrm{exec}}}_{\text{실행 receipt}}\land \underbrace{A_{\mathrm{head}\ge p}}_{\text{요구 head 도달}}\land \underbrace{A_{\mathrm{effect}}}_{\text{idempotent fence}}`}
           operations={[
-            { expression: String.raw`A_G\land A_{\mathrm{exec}}\land A_{\mathrm{head}\ge p}\land A_{\mathrm{effect}}`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Network generation, execution","receipt, 요구한 head status와","idempotent application policy를 모두"] },
-          ]}
+          { expression: String.raw`A_{\mathrm{head}\ge p}`, annotation: ["요구 policy p 이상의 head에 들었는지","unsafe receipt가 valid해도 p=safe면 0"] },
+          { expression: String.raw`A_G\land A_{\mathrm{exec}}\land A_{\mathrm{head}\ge p}\land A_{\mathrm{effect}}`, annotation: ["네 조건이 모두 참일 때만 A_T=1","A_T=1이어도 reserve 충분성은 별개"] },
+        ]}
           terms={[
             { symbol: "A_T", name: "Application acceptance", description: "외부 effect를 승인해도 되면 1입니다." },
             { symbol: "A_G", name: "Generation match", description: "Expected GIWA chain/source/config digest와 같으면 1입니다." },

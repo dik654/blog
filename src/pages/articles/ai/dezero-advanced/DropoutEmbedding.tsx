@@ -20,20 +20,21 @@ export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: strin
       <div className="not-prose my-8"><DropEmbedViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="Inverted dropout은 일부 값을 0으로 만들면서 왜 평균 출력은 유지할까요?"
-        idea={<>Keep probability만큼만 값이 남으므로 남은 값은 그 확률로 나눠 키웁니다. Drop되면 0, keep되면 x/(1-p)가 되고 두 경우의 확률 가중 평균은 원래 x입니다.</>}
+        idea={<>Keep probability만큼만 값이 남으므로 남은 값은 그 확률로 나눠 키웁니다. Drop되면 0, keep되면 x/(1-p)가 되고 두 경우를 각 확률로 가중해 평균하면 원래 x입니다.</>}
         formula={String.raw`\begin{aligned}
 y&=\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),\\
 x=2,\ p=.25&\Rightarrow y\in\{0,\ 2/.75\},\\
 \mathbb{E}[y]&=.25\cdot0+.75\cdot(2/.75)=2.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-y&=\underbrace{\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),}_{\text{기준량당 비율}}\\
-x=2,\ p=.25&\Rightarrow y\in\{0,\ 2/.75\},\\
-\mathbb{E}[y]&=\underbrace{.25\cdot0+.75\cdot(2/.75)=2.}_{\text{확률 가중 평균}}
+y&=\underbrace{\frac{m}{1-p}}_{\text{keep이면 확대}}x,\quad \underbrace{m\sim\operatorname{Bernoulli}(1-p)}_{\text{원소별 keep mask}},\\
+x=2,\ p=.25&\Rightarrow \underbrace{y\in\{0,\ 2/.75\}}_{\text{drop 0, keep 약 2.667}},\\
+\mathbb{E}[y]&=\underbrace{.25\cdot0}_{\text{drop 25\%}}+\underbrace{.75\cdot(2/.75)}_{\text{keep 75\%}}=2.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{m}{1-p}x,\quad m\sim\operatorname{Bernoulli}(1-p),`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Keep probability만큼만 값이 남으므로 남은 값은","그 확률로 나눠 키웁니다."] },
-          { expression: String.raw`.25\cdot0+.75\cdot(2/.75)=2.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Keep probability만큼만 값이 남으므로 남은 값은","그 확률로 나눠 키웁니다."] },
+          { expression: String.raw`m\sim\operatorname{Bernoulli}(1-p)`, annotation: ["원소마다 1-p 확률로 mask 1(keep),","p 확률로 mask 0(drop)을 뽑음"] },
+          { expression: String.raw`\frac{m}{1-p}`, annotation: ["keep된 값만 1/(1-p)배로 키움","p=.25면 2가 2/.75≈2.667"] },
+          { expression: String.raw`.75\cdot(2/.75)`, annotation: ["keep 확률 .75 × 확대값 2/.75 = 2","drop 쪽 .25·0을 더해도 평균은 x=2"] },
         ]}
         terms={[
           { symbol: "p", name: "drop probability", description: "Train mode에서 activation을 0으로 만드는 확률입니다." },

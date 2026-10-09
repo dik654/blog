@@ -51,9 +51,9 @@ export default function ClimateRiskAndExposureArticle() {
       <section id="names" data-teaching-level="3" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">3 · 위해·노출·취약성의 상호작용으로 위험을 읽습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">피해를 일으킬 수 있는 홍수 같은 자연 현상을 위해라고 부릅니다. 일상어의 위험과 구별하기 위해 여기서는 현상 자체에 이 말을 씁니다.</p>
+          <p className="leading-8">인명·건강 피해나 재산·기반 시설·생계의 손실을 일으킬 수 있는 자연적 또는 인위적 물리 사건이나 추세가 일어날 가능성을 위해라고 부릅니다. 홍수 같은 자연 현상만이 아니라 사람이 만든 사건도 포함하는 정의입니다(IPCC AR6 WGII 용어집). 일상어의 위험과 구별하기 위해 여기서는 그 사건 자체에 이 말을 씁니다.</p>
           <p className="leading-8">위해가 닿는 곳에 사람과 자산이 놓인 상태는 노출입니다. 사례의 자산 100과 300은 노출을 금액으로 단순화한 값입니다.</p>
-          <p className="leading-8">같은 현상에서 더 쉽게 손상되는 성질은 취약성입니다. 사례의 10%와 20%는 특정 홍수에서의 손상 비율로 취약성 차이를 표현한 가정입니다. 실제 위험은 세 숫자를 언제나 단순 곱하는 공식 하나로 정해지지 않습니다.</p>
+          <p className="leading-8">같은 위해에 부정적 영향을 받기 쉬운 성향이나 소인을 취약성이라고 부릅니다. IPCC 용어집은 여기에 피해 민감성과 함께 대응·적응 능력의 부족도 넣습니다. 사례의 10%와 20%는 특정 홍수에서의 손상 비율로 그중 민감성만 단순화해 표현한 가정이고, 복구 기간이나 회복 능력의 차이는 이 숫자에 들어 있지 않습니다. 실제 위험은 세 숫자를 언제나 단순 곱하는 공식 하나로 정해지지 않습니다.</p>
         </div>
         <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">원문의 세 요소와 사례의 단순화를 연결했습니다. 이제 손실 뒤의 지급을 따라갑니다.</p>
       </section>
@@ -70,9 +70,10 @@ export default function ClimateRiskAndExposureArticle() {
         <h2 className="mb-6 text-2xl font-bold">5 · IPCC는 세 요소가 서로 작용한다고 설명합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IPCC AR6 WGII의 그림 1.4는 위해, 노출, 취약성의 상호작용을 제시합니다. 사례에서 홍수를 같게 놓고도 노출과 손상 비율 때문에 10과 60이 달라졌다는 해석이 이 틀에 해당합니다.</p>
+          <p className="leading-8">같은 그림 캡션은 세 요소가 대응(responses)에 의해 형성된다고 덧붙이고, 그림 1.5는 대응이 위해·취약성·노출 각각을 조정하는 역할을 이번 평가의 새 강조점으로 둡니다. 4절에서 방재로 손상 비율을 20%에서 10%로 줄인 것과 보험이 40을 지급한 것이 그런 대응의 예입니다. IPCC 용어집은 기후 변화에 대한 사람의 대응에서도 위험이 생길 수 있다고 적으므로, 대응은 위험을 줄이기만 하는 장치로 볼 수 없습니다.</p>
           <p className="leading-8">다만 실제 피해는 물의 깊이와 지속 시간, 설비 위치에 따라 비선형으로 달라집니다. 100×10%라는 식은 이해를 위한 조건부 회계 예시이며 IPCC가 제시한 보편 피해 함수가 아닙니다.</p>
         </div>
-        <SourceApplication source="IPCC AR6 WGII · Chapter 1, Figure 1.4" excerpt="Risk results from interactions among the determinants of risk—hazard, vulnerability, and exposure" application="동일 홍수에서 A는 100×10%=10, B는 300×20%=60입니다. 특정 사건의 가정 계산이며 발생확률과 인명 손실을 생략했습니다." />
+        <SourceApplication source="IPCC AR6 WGII · Chapter 1, Figure 1.4" excerpt="Risk results from interactions among the determinants of risk—hazard, vulnerability, and exposure, shaped by responses" application="동일 홍수에서 A는 100×10%=10, B는 300×20%=60입니다. 특정 사건의 가정 계산이며 발생확률과 인명 손실을 생략했습니다." />
         <CitationBlock source="IPCC AR6 WGII · Chapter 1, Figure 1.4" citeKey={1} href="https://www.ipcc.ch/report/ar6/wg2/downloads/report/IPCC_AR6_WGII_Chapter01.pdf">기후 위험의 세 요소와 상호작용을 설명하는 IPCC 평가.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">원문 틀과 단순 곱셈의 경계를 확인했습니다. 지역별 측정 범위를 맞춥니다.</p>
       </section>
@@ -80,7 +81,7 @@ export default function ClimateRiskAndExposureArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · UNDRR의 노출 정의에는 사람과 기반 시설도 있습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">UNDRR은 위험 지역에 있는 사람, 주택과 기반 시설 등을 노출에 포함합니다. 따라서 사례의 자산 300만으로 지역 B의 위험 전체를 대표할 수 없습니다. 거주 인구, 병원 접근과 생활 기반도 따로 조사합니다.</p>
-          <p className="leading-8">부유한 해안 도시와 자산가격이 낮은 농촌을 피해액만으로 순위 매기면 생계 손실과 회복 능력의 차이가 가려집니다. 국가 비교에서는 같은 통화가격 외에 인구·자산 대비 손실과 복구 기간을 맞춥니다.</p>
+          <p className="leading-8">부유한 해안 도시와 자산가격이 낮은 농촌을 피해액만으로 순위 매기면 생계 손실과 회복 능력의 차이가 가려집니다. 회복 능력은 3절에서 본 취약성의 한 요소(대응·적응 능력)이고, UNDRR도 노출된 요소의 취약성과 역량을 노출과 결합해야 정량적 위험을 추정할 수 있다고 설명합니다. 국가 비교에서는 같은 통화가격 외에 인구·자산 대비 손실과 복구 기간을 맞춥니다.</p>
           <p className="leading-8">지도와 건축 규칙은 현지 기관의 관할입니다. 2026-10-04 확인한 국제 정의를 특정 필지의 안전 확인서처럼 사용하지 않습니다.</p>
         </div>
         <SourceApplication source="UNDRR · Exposure terminology" excerpt="The situation of people, infrastructure, housing, production capacities and other tangible human assets located in hazard-prone areas." application="B의 자산 300은 노출의 일부입니다. 사람과 병원·도로가 어디에 있는지 더해야 같은 피해 60의 생활상 의미를 비교할 수 있습니다." />

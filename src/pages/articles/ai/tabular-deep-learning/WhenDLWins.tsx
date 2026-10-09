@@ -43,13 +43,14 @@ e_{m,i}&=y_i-\hat y_{m,i},\\
 &=\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-e_{m,i}&=\underbrace{y_i-\hat y_{m,i},}_{\text{오른쪽 항으로 결과 계산}}\\
+\underbrace{e_{m,i}}_{\text{model m의 row i 오차}}&=y_i-\underbrace{\hat y_{m,i}}_{\text{out-of-fold 예측}},\\
 \rho_{e_A,e_B}
-&=\underbrace{\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.}_{\text{lag별 공분산}}
+&=\frac{\overbrace{\operatorname{Cov}(e_A,e_B)}^{\text{같은 row에서 함께 틀림}}}{\underbrace{\sigma_{e_A}\sigma_{e_B}}_{\text{오차 scale 제거}}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`y_i-\hat y_{m,i},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Validation row마다"] },
-          { expression: String.raw`\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Validation row마다"] },
+          { expression: String.raw`y_i-\hat y_{m,i}`, annotation: ["training에 안 쓴 validation row마다", "두 model의 오차를 같은 단위로 기록"] },
+          { expression: String.raw`\operatorname{Cov}(e_A,e_B)`, annotation: ["같은 row에서 같은 방향으로 틀리면", "양수: 평균을 내도 잘 상쇄되지 않음"] },
+          { expression: String.raw`\frac{\operatorname{Cov}(e_A,e_B)}{\sigma_{e_A}\sigma_{e_B}}`, annotation: ["−1~1로 표준화한 오차 상관", "낮거나 음수면 ensemble 후보", "다만 blend gain 보장은 아님"] },
         ]}
         terms={[
           { symbol: "e_m,i", name: "out-of-fold error", description: "Model m이 해당 row를 training에 보지 않은 상태에서 만든 prediction error입니다." },

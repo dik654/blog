@@ -4,9 +4,11 @@ export default function ModernArticle(){return <article className="space-y-14"><
             Evaluator는 앞 결과를 다음 입력으로 삼아 repeated squaring을 T번 수행하지만 verifier는 짧은 proof를 확인합니다. T는 seconds가 아니라
             operations라 target hardware에서 재측정해야 합니다.
           </p><Flow/></section><section id="contract" className="space-y-5"><h2 className="text-2xl font-bold">Sequential evaluation 경계</h2><p>Toy x=3 mod17,T=4이면 9→13→16→1입니다. 작은 known-order group에서는 exponent를 order로 줄여 delay를 건너뛸 수 있으므로 secure VDF 예가 아닙니다.</p></section><section id="wesolowski" className="space-y-5"><h2 className="text-2xl font-bold">Wesolowski quotient proof</h2><ExplainedFormula question="Verifier는 2^T squarings를 어떻게 짧은 식으로 확인하는가?" idea={<>2^T를 transcript challenge prime ℓ로 나눈 quotient q와 remainder r를 exponent law에 사용합니다.</>} formula={String.raw`2^T=q\ell+r,\quad \pi=x^q,\quad y\stackrel?=\pi^\ell x^r`}
-annotatedFormula={String.raw`2^T=\underbrace{q\ell+r,\quad \pi=x^q,\quad y\stackrel?=\pi^\ell x^r}_{\text{Remainder 계산}}`}
+annotatedFormula={String.raw`\underbrace{2^T=q\ell+r}_{\text{지수를 ℓ로 나눔}},\quad \underbrace{\pi=x^q}_{\text{evaluator의 증명}},\quad \underbrace{y\stackrel?=\pi^\ell x^r}_{\text{짧은 검증}}`}
 operations={[
-  { expression: String.raw`q\ell+r,\quad \pi=x^q,\quad y\stackrel?=\pi^\ell x^r`, annotation: ["Remainder이(가) 식의 결과에 기여하는 방식을","계산합니다.","2^T를 transcript challenge prime ℓ로","나눈 quotient q와 remainder r를"] },
+  { expression: String.raw`2^T=q\ell+r`, annotation: ["T번 squaring의 지수 2^T를","challenge prime ℓ로 나눈 몫 q와 나머지 r","T=4, ℓ=5면 16=3·5+1"] },
+  { expression: String.raw`\pi=x^q`, annotation: ["evaluator가 몫 지수로 계산해 보내는","group element 하나가 proof입니다","q=3이면 π=x³"] },
+  { expression: String.raw`y\stackrel?=\pi^\ell x^r`, annotation: ["verifier는 2^T번 대신 π^ℓ와 x^r만 계산해","π^ℓx^r=x^(qℓ+r)=x^(2^T)를 확인합니다","예: y=π⁵x 검사"] },
 ]} terms={[{symbol:"ℓ",name:"Challenge prime",description:"x,y,T,domain 뒤 hash-to-prime으로 얻습니다."},{symbol:"π",name:"Quotient proof",description:"Evaluator가 계산한 x^q group element입니다."},{symbol:"r",name:"Remainder",description:"Verifier가 빠르게 계산하는 2^T modℓ입니다."}]} assumptions={["Unknown-order group과 논문의 sequentiality assumption을 사용합니다.","y를 고정한 뒤 domain-separated challenge를 생성합니다."]} interpretation="T=4,ℓ=5이면 16=3·5+1, q=3,r=1이고 verifier는 y=π⁵x를 검사합니다."/></section><section id="release" className="space-y-5"><h2 className="text-2xl font-bold">Timing release gate</h2><p>
             Group generation, T, hash-to-prime/domain, proof encoding과 wrong y/π/T fixtures를 pin한 뒤 core
             count별 evaluation p50/p99, verify time과 proof bytes를 나눠 측정합니다.

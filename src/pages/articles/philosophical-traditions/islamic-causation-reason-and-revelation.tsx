@@ -30,9 +30,10 @@ const data: TraditionArticleData = {
       "자연 인과 모형에서는 불의 열과 솜의 가연성이 적절한 산소 조건에서 연소를 일으키는 가까운 원인입니다. 신은 이 질서와 존재의 궁극 원인이 될 수 있습니다. 이 모형은 만들어진 사물에도 실제 인과 능력을 둡니다.",
       "우인론적 모형에서는 불과 솜의 접촉이 연소를 스스로 필연적으로 만들지 않고, 신이 접촉과 함께 연소를 창조합니다. 두 모형 모두 젖은 솜이 왜 안 타는지 조건을 조사할 수 있지만, 자연의 힘과 기적 가능성을 설명하는 형이상학은 다릅니다.",
     ] },
-    { id: "source", level: "5", title: "8. 알가잘리의 『철학자들의 모순』이 겨냥한 연결을 확인합니다", bridge: "두 인과 모형이 같은 관찰과 다른 형이상학을 가질 수 있음을 봤습니다. 알가잘리의 스무 번째 논의가 부정한 범위를 확인합니다.", paragraphs: [
+    { id: "source", level: "5", title: "8. 알가잘리의 『철학자들의 모순』이 겨냥한 연결을 확인합니다", bridge: "두 인과 모형이 같은 관찰과 다른 형이상학을 가질 수 있음을 봤습니다. 『철학자들의 모순』 20개 논의 가운데 인과를 다룬 열일곱 번째 논의가 부정한 범위를 확인합니다.", paragraphs: [
       "알가잘리는 원인으로 믿는 것과 결과로 믿는 것 사이의 연결이 자기 안에서 필연적인 것은 아니라고 논합니다. 불과 솜, 음식과 포만, 목 베임과 죽음 같은 짝을 들며 신이 함께 일어나는 두 사건을 창조한다고 설명합니다.",
       "이 주장은 경험에서 원인을 찾는 모든 작업이 무의미하다는 문장이 아닙니다. 알가잘리도 평소의 질서와 인간의 예측을 설명해야 했습니다. 정확한 쟁점은 관찰된 동반을 자연물의 독립적이고 필연적인 힘으로 확정할 수 있는가입니다.",
+      "그래서 열일곱 번째 논의를 우인론 한 모형으로만 읽으면 안 됩니다. Stanford 철학백과의 알가잘리 항목(§7, 2026-10-09 확인)은 그가 신이 결과를 직접 창조하는 길과, 신이 만든 자연 사물을 거쳐 결과를 내는 2차 원인(secondary causality)의 길을 모두 열어 두고 적어도 두 가지 일관된 응답을 내놓는다고 정리합니다. 7절의 두 모형은 알가잘리 바깥의 두 진영이 아니라 알가잘리 안에서도 함께 검토된 선택지이고, 그가 끝까지 거부한 것은 그 연결이 자기 안에서 필연적이라는 주장입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 이븐 시나와 이븐 루시드의 자연 인과 옹호를 같은 질문에 놓습니다", bridge: "알가잘리가 부정한 것이 규칙성 전체가 아니라 필연적 연결임을 확인했습니다. 반대편의 답도 하나로 합치지 않습니다.", paragraphs: [
       "이븐 시나는 자연 사물이 가까운 원인으로 작용하면서 존재와 인과 질서는 궁극 원인에 의존한다고 설명했습니다. 원인을 아는 것은 사물을 아는 일이며, 경험과 논증은 자연적 힘을 파악하는 데 필요했습니다.",
@@ -60,7 +61,7 @@ const data: TraditionArticleData = {
     { term: "필연적 연결 논쟁", description: "원인과 결과의 결합이 사물 자체의 힘 때문에 달리 될 수 없는지 묻는 논쟁입니다.", example: "열 번 탄 솜이 11번째에도 타리라는 예측과 타지 않을 수 없다는 주장을 나눕니다.", boundary: "관찰된 규칙이나 일상적 인과 표현을 모두 부정하는 질문과 같지 않습니다." },
   ] },
   sources: [
-    { source: "Library of Congress · The Incoherence of the Philosophers", excerpt: "The Incoherence of the Philosophers", application: "알가잘리 저작의 판본과 전체 논의 속에서 불과 솜의 예가 속한 인과 문제의 문헌 위치를 확인합니다.", citation: "al-Ghazālī, Tahāfut al-falāsifah, Library of Congress", href: "https://www.loc.gov/item/2021666178/", note: "알가잘리 저작의 아랍어 필사본 디지털 이미지와 서지 정보를 제공하는 미국 의회도서관 자료입니다." },
+    { source: "Library of Congress · The Incoherence of Philosophers", excerpt: "The Incoherence of Philosophers", application: "알가잘리 저작이 20개 논의로 짜여 있음을 확인하고, 불과 솜의 예가 그 가운데 인과를 다룬 열일곱 번째 논의에 속한다는 문헌 위치를 잡습니다.", citation: "al-Ghazālī, Tahāfut al-falāsifah, Egypt, [1884–1885] printed edition, 92 pp., Library of Congress", href: "https://www.loc.gov/item/2021666178/", note: "1884~85년 이집트에서 찍은 아랍어 인쇄본(92쪽, Bibliotheca Alexandrina 소장본을 World Digital Library가 디지털화)의 이미지와 서지를 제공하는 미국 의회도서관 레코드입니다. 필사본이나 비판 교정본이 아니라 참고 판본입니다. 라이브 페이지는 봇 차단으로 자동 조회 불가라 2026-02-07 Wayback 사본으로 서지를 2차 확인했습니다(2026-10-09)." },
     { source: "Stanford Encyclopedia of Philosophy · Causation in Arabic and Islamic Thought", excerpt: "no necessary connections", application: "칼람 내부의 차이, 이븐 시나의 자연 인과, 알가잘리와 이븐 루시드의 반론을 한 승패 이야기로 만들지 않고 비교합니다.", citation: "Stanford Encyclopedia of Philosophy, Causation in Arabic and Islamic Thought, revised 2025", href: "https://plato.stanford.edu/entries/arabic-islamic-causation/", note: "9~12세기 칼람과 팔사파의 인과·행위자성 논쟁을 1차 문헌과 현대 연구에 따라 검토한 동료 검토 개관입니다." },
   ],
   review: [

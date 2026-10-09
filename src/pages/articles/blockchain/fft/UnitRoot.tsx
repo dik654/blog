@@ -20,9 +20,11 @@ export default function UnitRoot() {
         question="Fₚ에서 크기 n NTT를 위한 primitive root를 어떻게 만들까요?"
         idea="전체 곱셈군의 generator g를 (p−1)/n번 거듭제곱하면 order를 n으로 줄일 수 있습니다."
         formula={String.raw`n\mid(p-1),\quad \omega=g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n`}
-        annotatedFormula={String.raw`n\mid(p-1),\quad \omega=\underbrace{g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{n\mid(p-1)}_{\text{크기 n subgroup 존재}},\quad \omega=\underbrace{g^{(p-1)/n}}_{\text{order를 n으로 축소}},\quad \underbrace{\operatorname{ord}(\omega)=n}_{\text{평가점 n개가 모두 다름}}`}
         operations={[
-          { expression: String.raw`g^{(p-1)/n},\quad \operatorname{ord}(\omega)=n`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 곱셈군의 generator g를 (p−1)/n번","거듭제곱하면 order를 n으로 줄일 수 있습니다."] },
+          { expression: String.raw`n\mid(p-1)`, annotation: ["곱셈군 크기 p−1을 n이 나눠야","order n인 원소가 존재합니다"] },
+          { expression: String.raw`g^{(p-1)/n}`, annotation: ["generator g를 (p−1)/n번 거듭제곱해","order를 p−1에서 n으로 줄입니다","F₁₇, g=3, n=8이면 ω=3²=9"] },
+          { expression: String.raw`\operatorname{ord}(\omega)=n`, annotation: ["ω의 거듭제곱 n개가 서로 달라야","NTT 평가점이 겹치지 않습니다","ω=4는 order 4라 크기 8에 못 씁니다"] },
         ]}
         terms={[
           {

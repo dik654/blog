@@ -22,10 +22,10 @@ export default function PruningArchival({
           </>
         }
         formula={String.raw`N_{\rm replay,max}=R-1`}
-        annotatedFormula={String.raw`N_{\rm replay,max}=\underbrace{R-1}_{\text{Maximum replay steps 계산}}`}
+        annotatedFormula={String.raw`N_{\rm replay,max}=\underbrace{R}_{\text{snapshot 간격}}\underbrace{-1}_{\text{보존 slot 제외}}`}
         operations={[
-          { expression: String.raw`R-1`, annotation: ["Maximum replay steps이(가) 식의 결과에","기여하는 방식을 계산합니다.","가장 가까운 보존 state에서 요청 slot까지","block/empty-slot transition을"] },
-        ]}
+  { expression: String.raw`R-1`, annotation: ["가장 가까운 보존 snapshot 바로 다음부터","다음 snapshot 직전까지 transition을 재생","R=32면 최악 31 step"] },
+]}
         terms={[
           {
             symbol: "R",

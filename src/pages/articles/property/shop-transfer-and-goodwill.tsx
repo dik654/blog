@@ -51,7 +51,7 @@ export default function ShopTransferAndGoodwillArticle() {
         <FlowRail
           title="(가정) 총 3천300만 원의 지급 조건을 맞추는 순서"
           steps={[
-            { actor: "처음 합의", movement: "시설·재고·남은 약속의 목록과 실패 시 반환 조건을 정한 뒤 300만 원을 지급합니다.", receives: "기존 점주가 먼저 지급하기로 한 돈을 받습니다." },
+            { actor: "처음 합의", movement: "시설·재고·남은 약속의 목록과 실패 시 반환 조건을 정한 뒤 300만 원을 지급합니다.", receives: "기존 점주가 새 점주로부터 먼저 받기로 한 300만 원을 받습니다." },
             { actor: "인수 조건 확인", movement: "시설 상태, 장소 사용 계약, 필요한 영업 절차와 책임 분담을 확인합니다.", receives: "새 점주가 실제로 무엇을 이어받는지 확인합니다." },
             { actor: "인수일 정산", movement: "재고가 약정한 300만 원이면 총액 3천300만 원에서 먼저 낸 300만 원을 뺀 3천만 원을 지급합니다.", receives: "새 점주는 합의한 대상을, 기존 점주는 남은 대금을 받습니다." },
           ]}
@@ -93,10 +93,11 @@ export default function ShopTransferAndGoodwillArticle() {
             차감합니다. 양도 전 할인행사가 만든 일시적 매출과 미사용 선불권을 별도 표시합니다.
           </p>
           <p className="leading-7">계약에는 임대인 동의 또는 새 임대차, 필요한 영업 지위승계·신고, 가맹본부와 장비 소유자의 승인 등을 거래에 맞춰 조건으로 둡니다. 어떤 자료로 완료를 판단할지, 조건이 언제까지 실패하면 먼저 낸 300만 원을 누가 언제 반환할지 정합니다. 영업의 실제 이전과 신고 수리, 잔금의 순서도 업종에 맞춰 정해야 합니다. 필요한 절차를 계약서 한 문장으로 대신하거나 이미 약정한 지급을 임의로 미루는 방식은 아닙니다.</p>
-          <p className="leading-7">예를 들어 한국 음식점의 영업자 지위를 승계했다면 식품위생법 제39조의 신고 절차를 따로 확인합니다. 같은 법 제78조는 종전 영업자의 행정 제재처분 효과나 진행 중인 절차가 양수인에게 이어질 수 있는 조건과 예외를 정합니다. 장비가 잘 작동하는지에 더해 위반·처분 이력을 인수 전에 확인해야 하는 이유입니다.</p>
+          <p className="leading-7">예를 들어 한국 음식점의 영업자 지위를 승계했다면 식품위생법 제39조 제3항에 따라 승계한 날부터 1개월 이내에 그 사실을 신고해야 합니다. 같은 법 제78조는 종전 영업자에게 내려진 행정 제재처분의 효과가 그 처분기간이 끝난 날부터 1년간 양수인에게 승계되고, 진행 중인 절차도 양수인에게 계속할 수 있다고 정합니다.</p>
+          <p className="leading-7">다만 양수인이 양수할 때 그 처분이나 위반 사실을 알지 못했음을 증명하면 승계되지 않습니다. 장비가 잘 작동하는지에 더해 위반·처분 이력을 인수 전에 확인해 두어야 그 증명도 할 수 있습니다(2026-10-08 시행판, 2026-10-09 확인).</p>
           <p className="leading-7">인수일에는 장비 시험과 재고 수량, 열쇠·전화·계정 접근 권한을 확인해 서명합니다. 카드와 배달 대금은 주문일과 입금일이 다르므로 인수 전 주문의 정산·환불을 누가 맡는지 정합니다. 사업 양도의 실질에 따라 고용관계와 채무의 승계가 문제 될 수 있어 직원 동의와 정산 책임을 계약서 문장만으로 임의 소멸시켜서는 안 됩니다.</p>
         </div>
-        <CitationBlock source="한국 식품위생법 제39조·제78조" citeKey={5} href="https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=277149&amp;joNo=0039&amp;joBrNo=00&amp;docCls=jo&amp;urlMode=lsScJoRltInfoR">2026-10-04 시행 중인 조문의 영업자 지위승계·신고와 행정 제재처분 효과의 승계·예외를 확인했습니다. 음식점의 영업 이전 여부와 필요한 절차는 실제 거래 내용에 맞춰 판단합니다.</CitationBlock>
+        <CitationBlock source="한국 식품위생법 제39조·제78조" citeKey={5} href="https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=285339&amp;joNo=0039&amp;joBrNo=00&amp;docCls=jo&amp;urlMode=lsScJoRltInfoR">2026-10-08 시행판(법률 제21525호)의 제39조 제3항 1개월 이내 신고와 제78조의 처분기간 종료 후 1년 승계·선의 증명 예외를 2026-10-09 확인했습니다. 이전 링크(lsiSeq=277149)는 조문 없이 머리말만 보여 교체했습니다. 음식점의 영업 이전 여부와 필요한 절차는 실제 거래 내용에 맞춰 판단합니다.</CitationBlock>
 
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">3천300만 원의 지급 조건을 잡았습니다. 고객정보 이전의 별도 의무를 확인합니다.</p>
       </section>
@@ -127,7 +128,7 @@ export default function ShopTransferAndGoodwillArticle() {
         </div>
         <SourceApplication source="한국 상가건물 임대차보호법 제10조의4 제1항" excerpt="권리금을 지급받는 것을 방해하여서는 아니 된다" application="시설 2천만 원·재고 300만 원·영업상 이점 1천만 원에 합의해도 법은 임대인의 특정 방해행위와 기간·예외를 다룹니다. 합의된 양도대금만으로 새 임대차가 자동 성립하지 않으므로 장소 사용 조건을 잔금 전에 확인합니다." />
         <CitationBlock source="한국 상가건물 임대차보호법 제10조의3·제10조의4" citeKey={2} href="https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651">2026-05-12 시행 조문에서 권리금 정의와 보호 기간·방해행위·예외를 읽었습니다. 가격 합의가 곧 새 임대차를 성립시키지는 않습니다.</CitationBlock>
-        <CitationBlock source="NSW Small Business Commissioner: Transferring your lease" citeKey={4} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease">호주 NSW의 retail lease 양도 동의와 공개 절차를 안내합니다.</CitationBlock>
+        <CitationBlock source="NSW Small Business Commissioner: Transferring your lease" citeKey={4} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/transferring-your-lease">호주 NSW의 retail lease 양도 동의와 공개 절차를 안내합니다. 2026-10-09 재확인 때 이 페이지는 응답이 없었고 보관 사본도 없어 원문을 다시 대조하지 못했습니다. 위 서술은 2026-10-04 열람에 기댄 것입니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
             권리금 보호와 새 임대차의 성립을 구분했습니다. 이제 미래 손님에게 기대한 돈이 얼마나 달라질 수 있는지 봅니다.
           </p>

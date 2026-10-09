@@ -68,16 +68,20 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
           <p className="leading-8">판매액 100 가운데 35는 운송과 보험, 정제를 맡은 조직의 수입이 됩니다. 제국 재정은 세금 10을 받고 소유주는 잔여 45를 다시 투자할 수 있습니다. 같은 거래가 여러 지역의 자본 축적을 연결합니다.</p>
           <p className="leading-8">반대편에는 무임금 노동, 인구 손실, 토지 집중, 한두 수출품 의존이 남습니다. 이 결과는 판매액 합계에서 자동으로 빠지지 않습니다. 누가 어떤 자산과 기술을 쌓았고 누가 위험과 단일 작물 의존을 떠안았는지 따로 추적해야 합니다.</p>
           <p className="leading-8">한 상품의 이익이 산업화 전체를 혼자 일으켰다고 말하려면 규모와 대체 경로를 계산해야 합니다. 다만 강제 노동에서 나온 부가 특정 지역의 제조·부동산·금융으로 들어간 경로를 지운 채 산업화를 순수한 국내 혁신으로만 설명할 수도 없습니다.</p>
+          <p className="leading-8">이 저울질에는 이름이 붙은 오래된 논쟁이 있습니다. 에릭 윌리엄스는 『자본주의와 노예제(Capitalism and Slavery)』(1944)에서 노예제와 노예무역의 이윤이 영국 산업화에 기여했다고 주장했고, 이 주장이 윌리엄스 테제로 불립니다.</p>
+          <p className="leading-8">스탠리 엥거먼은 「노예무역과 18세기 영국의 자본 형성: 윌리엄스 테제에 대한 논평」(Business History Review 46(4), 1972)에서 노예무역 이윤을 영국 자본 형성과 견주며 테제를 따졌습니다. 조지프 이니코리의 『아프리카인과 잉글랜드 산업혁명』(Cambridge University Press, 2002)은 대서양 경제와 아프리카인의 노동이 산업혁명으로 이어진 경로를 다시 강조했습니다. 위 문단의 '규모와 대체 경로 계산'은 이 논쟁에서 각 쪽이 내놓는 계산을 가리킵니다.</p>
         </div>
       </LessonSection>
 
       <LessonSection id="source" level="5" title="8. 항해 기록이 보여 주는 수와 보여 주지 못하는 삶을 나눕니다" bridge="선박 단위 기록과 전체 추정치의 차이를 확인했습니다. 장기 영향 연구와 대조합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">SlaveVoyages는 선박이 출발하고 도착한 항구, 항해 연도, 배에 태워진 사람과 도착한 사람의 수를 모아 대서양 노예 무역을 복원합니다. 기록이 없는 항해와 불완전한 위치는 별도의 추정 자료와 방법 문서로 다룹니다.</p>
+          <p className="leading-8">기록값과 추정값은 숫자부터 다릅니다. 이 데이터베이스를 지원한 미국 국립인문재단(NEH)의 소개에 따르면 기록된 항해는 57개 기여자의 자료에서 모은 34,948건입니다.</p>
+          <p className="leading-8">기록에 빠진 항해까지 보정한 사이트의 추정(Estimates) 페이지는 아프리카를 떠나 아메리카로 끌려간 사람을 약 1,252만 명, 주로 아메리카에 내린 사람을 약 1,070만 명으로 봅니다. 두 추정치의 차이인 약 180만 명이 대서양 횡단 항해에서 숨진 사람의 규모입니다. NEH 소개는 이 생존자 수의 기간을 1526~1866년으로 적습니다.</p>
           <p className="leading-8">이 자료는 무역의 규모와 이동 경로, 항해 중 사망을 세는 데 강합니다. 그러나 노예로 만든 사람 각자의 삶은 모두 담지 못합니다. 항구 장부가 거래 주체의 기록인 만큼 당사자의 구술과 재판 기록, 편지, 발굴 자료를 함께 읽어야 합니다.</p>
         </div>
         <SourceApplication source="SlaveVoyages · Database methodology" excerpt="inferring information about both places of trade and numbers" application="기록된 항해와 추정한 전체 규모를 구분하면 누락을 숨기지 않으면서 경로와 수량을 비교할 수 있습니다." />
-        <CitationBlock source="SlaveVoyages, Trans-Atlantic Slave Trade Database" citeKey={1} href="https://www.slavevoyages.org/blog/the-transatlantic-slave-trade-database/163">자료 파일과 코드북, 전체 규모를 추정하는 보완 자료의 역할을 설명합니다.</CitationBlock>
+        <CitationBlock source="David Eltis, The Trans-Atlantic Slave Trade Database: Methodology (SlaveVoyages)" citeKey={1} href="https://legacy.slavevoyages.org/blog/methodology-trans-atlantic">자료 파일과 코드북, 전체 규모를 추정하는 보완 자료의 역할을 설명하고 승선 12,520,000명·하선 1,070만 명 추정을 밝힙니다. 원 주소(slavevoyages.org/blog/the-transatlantic-slave-trade-database/163)는 자바스크립트 없이는 본문이 보이지 않아 같은 에세이의 정적 사본을 연결했습니다(확인일 2026-10-09). 항해 건수 34,948건은 NEH 프로젝트 소개(neh.gov/project/transatlantic-slave-trade-database)에서 확인했습니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 노예 무역과 식민 상품 특화의 긴 흔적을 대조합니다" bridge="현재의 차이를 과거 하나로 자동 설명하지 않으면서 장기 경로를 검토했습니다. 지역 일반화의 한계를 정리합니다.">
@@ -92,6 +96,8 @@ export default function ColonialPlantationsSlaveryAndExtractionArticle() {
       <LessonSection id="limits" level="7" title="10. 대서양 한 모형을 모든 제국과 강제 노동에 그대로 씌우지 않습니다" bridge="시장 장부와 권리 장부를 함께 읽는 기준을 세웠습니다. 아래 질문으로 100단위 매출을 다시 해석합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">스페인·포르투갈·영국·프랑스·네덜란드 제국의 법과 상품, 시기, 현지 정치가 달랐습니다. 인도양 노예 무역, 아시아의 강제 재배, 아프리카의 조세 노동도 대서양 플랜테이션과 같은 도식으로만 설명할 수 없습니다.</p>
+          <p className="leading-8">장부 밖으로 밀려난 청구권이 폐지 뒤에 어떻게 처리됐는지는 아이티 사례가 분명하게 보여 줍니다. 노예 반란으로 독립한 아이티에 프랑스 국왕 샤를 10세는 1825년 칙령으로 독립을 인정하는 대가 1억 5천만 프랑을 요구했고, 1838년 개정으로 남은 액수가 6천만 프랑으로 줄었습니다.</p>
+          <p className="leading-8">아이티는 배상금에 그것을 갚으려 빌린 차입금과 이자까지 합친 1억 1,200만 프랑을 갚는 데 그 뒤로도 50년이 더 걸렸습니다. 돈은 노예로 일한 사람이 아니라 옛 소유주 쪽으로 갔습니다. 소유주의 잔여가 어떤 청구권을 인정하지 않았는지에 따라 커졌다는 이 글의 주장이 폐지 뒤에도 이어진 실례입니다. 각 제국의 노예제 폐지 연도와 다른 소유주 보상 제도는 이 글에서 따로 확인하지 않았습니다.</p>
           <p className="leading-8">노예로 만든 사람과 식민지 주민은 수동적인 숫자가 아니었습니다. 도주·반란·협상·자급 생산·지식 보존으로 체제를 바꿨습니다. 경제사는 지배자가 남긴 장부의 계산을 복원하면서 그 장부가 지운 행위자와 권리를 다시 넣어야 합니다.</p>
         </div>
         <ReviewPrompts questions={[

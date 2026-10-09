@@ -26,16 +26,11 @@ g_1=\frac{dy}{dx}&=3x^2,\\
 g_2=\frac{dg_1}{dx}&=6x,\\
 x=2&\Rightarrow g_1=12,\quad g_2=12.
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-y&=\underbrace{x^3,}_{\text{오른쪽 항으로 결과 계산}}\\
-g_1=\frac{dy}{dx}&=\underbrace{3x^2,}_{\text{기준량당 비율}}\\
-g_2=\frac{dg_1}{dx}&=\underbrace{6x,}_{\text{기준량당 비율}}\\
-x=2&\Rightarrow g_1=12,\quad g_2=12.
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y&=\underbrace{x^3,}_{\text{forward 출력}}\\g_1=\frac{dy}{dx}&=\underbrace{3x^2,}_{\text{기록된 1차 gradient}}\\g_2=\frac{dg_1}{dx}&=\underbrace{6x,}_{\text{1차 gradient를 다시 미분}}\\x=2&\Rightarrow \underbrace{g_1=12,\quad g_2=12.}_{\text{값만 우연히 같음}}\end{aligned}`}
         operations={[
-          { expression: String.raw`x^3,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 backward의 결과 3x²를 단순 숫자로 만들면 다시","미분할 creator가 없습니다."] },
-          { expression: String.raw`3x^2,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 backward의 결과 3x²를 단순 숫자로 만들면 다시","미분할 creator가 없습니다."] },
-          { expression: String.raw`6x,`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","첫 backward의 결과 3x²를 단순 숫자로 만들면 다시","미분할 creator가 없습니다."] },
+          { expression: String.raw`3x^2`, annotation: ["create_graph=true로 backward 안의", "Mul·Pow도 graph에 기록해 g₁이", "creator chain을 가진 Variable이 됩니다"] },
+          { expression: String.raw`6x`, annotation: ["x.grad를 비운 뒤 g₁에서 backward를", "다시 호출해 2차 미분을 얻습니다"] },
+          { expression: String.raw`g_1=12,\quad g_2=12`, annotation: ["x=2면 3·4=12, 6·2=12로 같지만", "식은 다르니 여러 x에서 확인합니다"] },
         ]}
         terms={[
           { symbol: "g₁", name: "first derivative Variable", description: "create_graph=true인 backward가 creator chain과 함께 만든 gradient입니다." },

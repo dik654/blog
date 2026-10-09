@@ -31,7 +31,7 @@ const data: TraditionArticleData = {
       "이 방법이 언제나 옳지는 않습니다. 댐 붕괴처럼 즉시 큰 조치가 필요한 때도 있고, 관리자가 무위라는 말로 방치를 정당화할 수도 있습니다. 억지 개입을 줄인다는 주장은 행동하지 않은 사람의 책임과 결과를 함께 검사해야 합니다.",
     ] },
     { id: "source", level: "5", title: "8. 『도덕경』 1·2·37장의 이름과 무위를 함께 읽습니다", bridge: "작은 개입도 상황에 따라 실패할 수 있음을 봤습니다. 원문의 이름·대립·무위를 하나의 공식으로 뭉치지 않습니다.", paragraphs: [
-      "1장은 말할 수 있는 도와 이름 붙일 수 있는 이름이 늘 그대로인 도와 이름이 아니라고 시작합니다. 2장은 아름다움과 추함, 어려움과 쉬움이 서로를 낳는다고 놓고 성인의 무위를 말합니다. 37장은 도가 늘 무위이면서도 이루지 않는 것이 없다고 적습니다.",
+      "1장은 말할 수 있는 도와 이름 붙일 수 있는 이름이 늘 그대로인 도와 이름이 아니라고 시작합니다. 2장은 아름다움과 추함, 어려움과 쉬움이 서로를 낳는다고 놓고 성인의 무위를 말합니다. 37장은 도가 늘 무위이면서도 이루지 않는 것이 없다고 적고(道常無為而無不為), 제후와 왕이 이를 지킬 수 있으면 만물이 스스로 변할 것이라고 잇습니다(萬物將自化). 2절에서 말한 ‘스스로 변할 여지’의 원문 근거가 이 구절입니다.",
       "세 장을 함께 보면 무위는 이름과 욕망이 만든 과도한 조작을 줄이고 사물의 변화를 차지하지 않는 태도와 이어집니다. 그러나 편집 시기와 판본, 각 장의 층위를 고려해야 하며 한 저자의 완성된 체계처럼 단정할 수 없습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 무위를 목적 없는 행동 하나로 고정하기 어려운 이유를 봅니다", bridge: "원문의 여러 장을 연결하되 단일 체계로 만들지 않았습니다. 현대 연구가 제시하는 번역의 갈림길을 확인합니다.", paragraphs: [
@@ -54,13 +54,14 @@ const data: TraditionArticleData = {
     { label: "실제 도달", value: "60", detail: "첫 선택의 작물 도달량" },
     { label: "나눠 조정", value: "85 도달", detail: "40·30·30과 단계별 되먹임" },
   ] },
-  terms: { title: "도가의 개입 문제를 읽는 세 개념", items: [
+  terms: { title: "도가의 개입 문제를 읽는 네 개념", items: [
     { term: "도(道)", description: "만물이 생기고 변하는 길과 흐름을 가리키며 하나의 고정된 대상 이름으로 다 담기 어려운 개념입니다.", example: "물·흙·논이 서로 반응하는 실제 흐름을 먼저 봅니다.", boundary: "서양 철학의 실체나 자연 법칙 하나와 바로 같은 말로 놓을 수 없습니다." },
     { term: "이름의 구분", description: "이름이 차이를 만들어 소통과 행동을 가능하게 하면서 반대편·욕망·경쟁도 만드는 작용입니다.", example: "최대 개방을 성공이라고 부르면 실제 도달량 60을 놓칠 수 있습니다.", boundary: "모든 이름을 버리거나 참·거짓 판단을 포기하라는 뜻은 아닙니다." },
     { term: "무위(無為)", description: "사물의 흐름을 자기 욕망과 고정된 목적에 맞춰 억지로 조작하는 행위를 줄이는 태도입니다.", example: "40·30·30으로 물을 보내며 매번 다음 수문 폭을 바꿉니다.", boundary: "아무것도 하지 않기, 책임 회피, 작은 행동만 하기와 같지 않습니다." },
+    { term: "자연(自然)", description: "글자 그대로 ‘스스로 그러함’으로, 무위와 짝을 이루는 말입니다. Stanford 철학백과 Laozi 항목은 흔히 ‘naturalness’나 ‘spontaneity’로 옮긴다고 정리합니다.", example: "수문을 최대로 열기 전에 물이 지형을 따라 스스로 찾는 흐름부터 살핍니다.", boundary: "오늘의 ‘자연환경’이나 사람 손이 전혀 닿지 않은 야생만 가리키는 말로 좁힐 수 없습니다." },
   ] },
   sources: [
-    { source: "Chinese Text Project · Dao De Jing", excerpt: "does nothing, yet nothing is left undone", application: "1·2·37장의 이름·상호 구분·무위를 물 100의 두 개입 방식에 대입합니다.", citation: "Dao De Jing 1, 2, 37, Chinese Text Project", href: "https://ctext.org/dao-de-jing/ens", note: "『도덕경』의 한문 원문, 판본·출토문헌 대조와 James Legge 영어 번역을 제공하는 고전 원문 데이터베이스입니다." },
+    { source: "Chinese Text Project · Dao De Jing (James Legge 역)", excerpt: "The Dao in its regular course does nothing (for the sake of doing it), and so there is nothing which it does not do", application: "1·2·37장의 이름·상호 구분·무위를 물 100의 두 개입 방식에 대입합니다.", citation: "Dao De Jing 1, 2, 37, Chinese Text Project", href: "https://ctext.org/dao-de-jing/ens", note: "『도덕경』의 한문 원문, 판본·출토문헌 대조와 James Legge 영어 번역을 제공하는 고전 원문 데이터베이스입니다. 사이트가 자동 조회를 막아 2026-09-02 Wayback 사본으로 37장 Legge 번역 문장을 2차 확인했습니다(2026-10-09)." },
     { source: "Stanford Encyclopedia of Philosophy · Laozi", excerpt: "does not mean total inaction", application: "무위를 비행동·비강제·비목적 등 경쟁 번역으로 나누고 수문 사례의 동작 횟수와 개입 성격을 구분합니다.", citation: "Stanford Encyclopedia of Philosophy, Laozi", href: "https://plato.stanford.edu/entries/laozi/", note: "『노자』의 도·덕·자연·무위 해석과 판본·저자 문제를 검토하는 동료 검토 철학 개관입니다." },
   ],
   review: [

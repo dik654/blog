@@ -3,6 +3,33 @@
 
 데이터 파일 약어(모두 `src/pages/articles/markets/derivatives/`): D=`derivative-data.ts`, M=`derivative-model-data.ts`, A=`derivative-advanced-model-data.ts`, R=`derivative-risk-data.ts`, C=`derivative-curriculum-gaps-data.ts`, S=`derivative-specialized-market-gaps-data.ts`, L=`derivative-applied-ledgers-data.ts`, O=`derivative-operations-and-governance-data.ts`. 근거 링크 사본은 `src/content/article-evidence.ts`의 `"markets/<slug>"` 키에도 같은 href가 있으므로 LINK 판정은 두 곳 모두에 적용된다.
 
+## 적용 결과
+적용일 2026-10-09. 21건 중 적용 21(그중 일부 항목은 후속 작업 병행 4), 공용 파일 이관 2(1·2·3·4번의 article-evidence/learning 사본), 보류 0. 수식은 `DerivativeDeepArticle`에 `formulas` 필드를 새로 붙여(기존 `WorldHistoryArticle` 복사본 + `CloudCertificationArticle`과 같은 `{ section, content: ExplainedFormula props }` 모양) 5편에 7개를 넣었다. 숫자는 Python으로 재계산했다.
+
+| # | 처리 | 내용 |
+|---|---|---|
+| 1 | 적용 + 공용파일 목록 | `D` 2번 출처를 CFTC 2013-27849(DCO 국제기준, 78 FR 72476)로 교체하고 excerpt를 원문(Cover One 문장)으로, 1번 출처 excerpt를 "The daily transfer of gains and losses is referred to as variation margin."으로. 9절 문단은 순서를 스트레스 시험 보고서(2016) §6에 귀속하고 2013 규칙의 재원 규모·평가분담금 제외를 덧붙임. evidence·learning 사본은 아래 목록 |
+| 2 | 적용 + 공용파일 목록 | `M` 변동성 표면 출처 → MAR99 장 URL, citation MAR99.22(5), excerpt 원문 |
+| 3 | 적용 + 공용파일 목록 | `A` LSV 출처 → MAR31 장 URL, MAR31.4·31.26(5), excerpt 원문 |
+| 4 | 적용 + 공용파일 목록 | `R` ES 출처 → MAR33 장 URL, MAR33.3 원문 문장 |
+| 5 | 적용 | `D` note "학부" → "대학원(MIT Sloan MBA 핵심 과목, OCW 표기 Level: Graduate)", `M` note도 같은 문구로 통일 |
+| 6 | 적용 | CME fair value excerpt를 원문 문장으로, note에 식과 403·아카이브 사본 명시 |
+| 7 | 적용 | OIC excerpt를 실제 문장으로 |
+| 8 | 적용 | MIT 15.401 excerpt → "Binomial and Black-Scholes pricing models" |
+| 9 | 적용 | MAR50.3(5) 실제 문장으로 |
+| 10 | 적용 | Cboe 백서 실제 문장으로 |
+| 11 | 적용 | 저자 순서 Zhang·Blanchet·Glynn·Giesecke, WSC 2009 |
+| 12 | 적용 | CME SOFR FAQ: "할인계수와 무이표금리(연속복리, ACT/365.25)", 선도금리는 할인계수 비율로 유도; excerpt·note 교정 |
+| 13 | 적용(범위 명시) + 후속 | 8절 본문을 "2차 자료로 확인한 범위에서…, CME 원문은 본문 대조 못 함"으로, note에 403·아카이브 잘림·Clarus 2차 확인 명시 |
+| 14 | 적용 | 5절에 CRR·Black-Scholes(1973)·Merton(1973) 계보 문단 + `ExplainedFormula` 2개(CRR u·d·q, BS 콜 → 풋콜 등식 풋 6.70; CRR 2/10/100/1,000단계 5.42/6.42/6.67/6.70) |
+| 15 | 적용(이름) + 후속 | 6절에 Dupire(1994)·Heston(1993)·Merton(1976)과 각 모형의 "보정 대상 매개변수" 문단. 식·원 논문 인용은 후속 |
+| 16 | 적용 + 후속 | 6절에 Vasicek(1977)·HJM(1992) 명명, `ExplainedFormula` 2개(바시첵 dr=κ(θ−r)dt+σdW → 0.2bp·6.30bp; HJM μ=σ∫σds → 2bp/년·0.0079bp/일). Hull-White 확장은 후속 |
+| 17 | 적용 + 후속 | 베이스 상관 글 6절에 1요인 가우시안 코풀라(Li, 2000) 정의(√ρ·M+√(1−ρ)·Z, 문턱 Φ⁻¹(PD)), 해저드 글 7절에 같은 이름 |
+| 18 | 적용 + 후속 | MC 글 5절에 Longstaff-Schwartz(2001) 최소제곱 MC 문단(조기상환과 보유자 행사 구분) |
+| 19 | 적용 | 7절 `ExplainedFormula`(Bachelier 지급 스왑션: σ_N√T=35bp, d=−0.2857, 9.53bp → 약 81만 원), 5절에 σ_N≈σ_B·F 근사(20%×4%=80bp, 70bp≈17.5%) |
+| 20 | 적용 | 6절 `ExplainedFormula`(λ=½σ²S²Δt/ΔS²≤½ ⇔ Δt≤ΔS²/(σ²S²): 0.25년, S=110에서 0.207년, λ=0.02로 0.2 재현) |
+| 21 | 적용 | 4절 `ExplainedFormula`(CVA=(1−R)∫EE*dPD ≈ LGD·ΣEE·ΔPD·DF, 한 칸 0.12, WWR 0.54), 8절에 CRE53.24 MPOR 하한 5/10/20영업일·CRE53.25 분쟁 시 2배(원문 재확인) |
+
 ## 요약
 - 발견: WRONG 1 · OUTDATED 0 · MISLEADING 1 · CALC 0 · LINK 10 · MISSING 8 · UNVERIFIED 1
 - 29편의 수치 사례 전부(이항 풋 7.99/6.29, DF₂ 0.9067·선도 5.88%, 이토 1.59, MC 표준오차 2.39→1.25, FD 0.2, HJM 2bp, 생존 98.02%, CIP 선도 1,343, SIMM √64=8, 분산 14.14%/17.32%, 희귀사건 상대오차 31.6%, 트랜치 3·4·0, 그릭스 +1.45, 백테스트 승수 1.83 등)을 Python으로 재계산했고 **계산 오류는 0건**이다.
@@ -249,3 +276,89 @@
 | cmegroup.com 교육·FAQ 페이지 8건(D:344, M:63·273, R:63·133·134, M:203, D:63) | 라이브 403(봇 차단) | web.archive.org 2026년 4~9월 스냅샷(curl)으로 전부 원문 확인 |
 | https://www.theocc.com/…/options-disclosure-document (D:274) | 라이브 403(봇 차단) | archive 2026-10-01 스냅샷으로 확인 |
 | https://www.bis.org/publ/qtrpdf/r_qt0503g.pdf (R:274, S:133) | 200이지만 HTML 초록으로 리다이렉트 | …/cds-index-tranches-and-pricing-credit-risk-correlations_1.pdf 원문 PDF로 확인 |
+
+## 후속 작업
+- (13) CME 청산 스왑션 평가 방법론 원문(공개 PDF 또는 CFTC 제출본)을 찾아 `C` 2번 출처를 교체하고 8절의 "2차 자료" 단서를 지운다.
+- (15) Dupire 국소변동성 식 σ_loc²=2∂_T C/(K²∂_KK C), Heston 분산 과정, Merton 점프 강도의 `ExplainedFormula`와 원 논문(Dupire 1994 Risk, Heston 1993 RFS, Merton 1976 JFE) 서지를 `article-evidence.ts`에 추가. 이번에는 인용 출처(MIT 18.642 lec17, MAR31)에 식이 없어 이름만 넣었다.
+- (16) Hull-White(1990) 확장(θ(t)로 현재 곡선 재현)은 인용 출처에 없어 넣지 않았다. HJM(1992)·Vasicek(1977) 원 논문 서지도 evidence 추가 후보.
+- (17·18) Li(2000) "On Default Correlation: A Copula Function Approach", Longstaff-Schwartz(2001) RFS 서지를 해당 글 evidence에 추가(데이터 `sources`는 2개 고정이라 넣지 못함).
+- 경미 MISSING(표 미기재): no-arbitrage 일반식 F=S(1+rτ)−D, FRA 결제식, 배당 있는 풋콜 등식 — 각 글 식 추가 여부 판단.
+
+## 공용 파일 수정 목록
+통합자가 순서대로 적용. 모든 old 문자열은 해당 파일에서 1회만 나옴을 2026-10-09에 확인했다.
+
+### src/content/article-evidence.ts
+```
+OLD:
+      "label": "CFTC · DCO default resources rule",
+      "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html",
+      "note": "회원 채무불이행 때 사용할 손실 흡수 재원과 순서를 다룹니다."
+NEW:
+      "label": "CFTC · DCO 국제기준 최종 규칙(2013-27849)",
+      "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-27849.html",
+      "note": "가장 큰 노출을 만드는 회원(일부는 두 회원)의 부도를 덮을 재원과 평가분담금 제외를 정합니다. 손실 재원 사용 순서는 CFTC 스트레스 시험 보고서 §6에 있습니다."
+```
+```
+OLD:
+      "label": "Basel Framework · Expected Shortfall",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+      "label": "Basel Framework · Expected Shortfall (MAR33)",
+      "href": "https://www.bis.org/basel_framework/chapter/MAR/33.htm?inforce=20230101&published=20200327",
+```
+```
+OLD:
+      "label": "Basel Framework · Volatility Surface Risk",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+      "label": "Basel Framework · Volatility Surface Risk (MAR99.22)",
+      "href": "https://www.bis.org/basel_framework/chapter/MAR/99.htm?inforce=20230101&published=20200327",
+```
+```
+OLD:
+      "label": "Basel Framework · Market Risk",
+      "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+      "label": "Basel Framework · Market Risk (MAR31)",
+      "href": "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327",
+```
+
+### src/content/article-learning.ts
+```
+OLD:
+        "title": "CFTC · DCO default resources rule",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-07970.html",
+NEW:
+        "title": "CFTC · DCO 국제기준 최종 규칙(2013-27849)",
+        "href": "https://www.cftc.gov/LawRegulation/FederalRegister/FinalRules/2013-27849.html",
+```
+```
+OLD:
+        "contribution": "회원 채무불이행 때 사용할 손실 흡수 재원과 순서를 다룹니다.",
+NEW:
+        "contribution": "가장 큰 노출을 만드는 회원의 부도를 덮을 재원 규모와 평가분담금 제외를 정합니다. 사용 순서는 스트레스 시험 보고서 §6이 설명합니다.",
+```
+```
+OLD:
+        "title": "Basel Framework · Expected Shortfall",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+        "title": "Basel Framework · Expected Shortfall (MAR33)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/33.htm?inforce=20230101&published=20200327",
+```
+```
+OLD:
+        "title": "Basel Framework · Volatility Surface Risk",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+        "title": "Basel Framework · Volatility Surface Risk (MAR99.22)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/99.htm?inforce=20230101&published=20200327",
+```
+```
+OLD:
+        "title": "Basel Framework · Market Risk",
+        "href": "https://www.bis.org/baselframework/BaselFramework.pdf",
+NEW:
+        "title": "Basel Framework · Market Risk (MAR31)",
+        "href": "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327",
+```

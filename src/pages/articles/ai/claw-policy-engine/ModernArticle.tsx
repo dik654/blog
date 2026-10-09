@@ -70,10 +70,11 @@ export default function ModernPolicyArticle() {
           question="lane-17이 merge-ready green contract를 만족하려면 어떤 조건이 모두 참이어야 하는가?"
           idea={<>Green은 점수를 평균내는 방식이 아니라 conjunction입니다. 관측 level이 충분하고 test·base·recovery 근거가 있으며 blocking flake가 없어야 합니다. 앞 네 값이 1이어도 blocking flake가 1이면 전체는 0입니다.</>}
           formula={String.raw`\begin{aligned}G&=Q\land P\land F\\&\quad\land C\land\neg B\\Q=P=F=C&=1\\B=1&\Rightarrow G=0\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}G&=\underbrace{Q\land P\land F}_{\text{판정 조건 결합}}\\&\quad\land C\land\neg B\\Q=P=F=C&=\underbrace{1}_{\text{Level 충족 계산}}\\B=1&\Rightarrow G=0\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}G&=\underbrace{Q\land P\land F}_{\text{level·command·base 충족}}\\&\quad\land \underbrace{C}_{\text{recovery 근거}}\land\underbrace{\neg B}_{\text{blocking flake 없음}}\\Q=P=F=C&=\underbrace{1}_{\text{앞 네 근거는 모두 참}}\\B=1&\Rightarrow \underbrace{G=0}_{\text{lane-17 green 아님}}\end{aligned}`}
           operations={[
-            { expression: String.raw`Q\land P\land F`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Green은 점수를 평균내는 방식이 아니라","conjunction입니다."] },
-            { expression: String.raw`1`, annotation: ["Level 충족이(가) 식의 결과에 기여하는 방식을","계산합니다.","Green은 점수를 평균내는 방식이 아니라","conjunction입니다."] },
+            { expression: String.raw`Q\land P\land F`, annotation: ["요구 level 이상, exit 0 test command,", "fresh base가 모두 참이어야 합니다", "점수 평균이 아니라 conjunction입니다"] },
+            { expression: String.raw`\land\neg B`, annotation: ["blocking known flake가 있으면", "이 마지막 항이 0이 됩니다"] },
+            { expression: String.raw`\Rightarrow G=0`, annotation: ["lane-17은 Q·P·F·C가 모두 1이어도", "flake B=1 하나로 전체가 0입니다"] },
           ]}
           terms={[
             { symbol: "Q", name: "Level 충족", description: "관측한 test level이 contract가 요구한 최소 level 이상인지를 나타냅니다." },

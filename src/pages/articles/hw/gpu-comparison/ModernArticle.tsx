@@ -30,11 +30,12 @@ export default function ModernGpuComparisonArticle(){return <article className="
             inference 요구에 그대로 적용해서도 안 됩니다.
           </p>
     <ExplainedFormula question="후보 GPU가 workload를 안정적으로 담을 수 있는지 어떤 예산으로 검사할까?" idea={<>고정 weight뿐 아니라 request마다 늘어나는 state와 runtime workspace, fragmentation·운영 headroom을 합쳐 usable device memory보다 작은지 봅니다.</>} formula={String.raw`\begin{aligned}M_{need}&=M_{weight}+C\,M_{state}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le M_{usable}\end{aligned}`}
-    annotatedFormula={String.raw`\begin{aligned}M_{need}&=\underbrace{M_{weight}+C\,M_{state}}_{\text{고정 memory 계산}}\\&\quad+M_{workspace}+M_{headroom}\\[3pt]M_{need}&\le \underbrace{M_{usable}}_{\text{실사용 가능 capacity 계산}}\end{aligned}`}
+    annotatedFormula={String.raw`\begin{aligned}M_{need}&=\underbrace{M_{weight}}_{\text{request 무관 고정분}}+\underbrace{C\,M_{state}}_{\text{동시 작업×state}}\\&\quad+\underbrace{M_{workspace}+M_{headroom}}_{\text{runtime·운영 여유}}\\[3pt]M_{need}&\le \underbrace{M_{usable}}_{\text{reserve 뺀 실사용분}}\end{aligned}`}
     operations={[
-      { expression: String.raw`M_{weight}+C\,M_{state}`, annotation: ["고정 memory이(가) 식의 결과에 기여하는 방식을","계산합니다.","고정 weight뿐 아니라 request마다"] },
-      { expression: String.raw`M_{usable}`, annotation: ["실사용 가능 capacity이(가) 식의 결과에 기여하는","방식을 계산합니다.","고정 weight뿐 아니라 request마다"] },
-    ]} terms={[
+  { expression: String.raw`M_{weight}+C\,M_{state}`, annotation: ["weight는 고정이지만 KV cache 같은 state는","동시 request 수 C에 비례해 늘어납니다","24GB board에 weight 22GB면 C가 남지 않음"] },
+  { expression: String.raw`M_{workspace}+M_{headroom}`, annotation: ["kernel workspace·graph capture와","fragmentation·변동 input 여유를 더합니다"] },
+  { expression: String.raw`M_{usable}`, annotation: ["표기 용량에서 runtime·OS reserve를 뺀 값","이 부등식이 latency SLA까지 보장하진 않음"] },
+]} terms={[
       {symbol:"M_{need}",name:"필요한 총 memory",description:"Workload profile을 실행하기 위해 동시에 resident해야 할 allocation의 합입니다."},
       {symbol:"M_{weight}",name:"고정 memory",description:"Model weight·constant table처럼 request와 무관한 allocation입니다."},
       {symbol:"C",name:"동시 작업 수",description:"동시에 resident한 request·batch slot 수입니다."},
@@ -70,10 +71,11 @@ export default function ModernGpuComparisonArticle(){return <article className="
             benchmark의 순위를 다른 workload에 옮기지 않습니다.
           </p>
     <ExplainedFormula question="구매 비용이 아니라 실제 처리량 기준 비용을 어떻게 비교할까?" idea={<>같은 SLA와 quality를 만족한 후보만 대상으로 일정 기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로 나눕니다.</>} formula={String.raw`C_{work}=\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`}
-    annotatedFormula={String.raw`C_{work}=\underbrace{\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}}_{\text{기준량당 비율}}`}
+    annotatedFormula={String.raw`C_{work}=\frac{\underbrace{C_{hardware}+C_{energy}+C_{ops}}_{\text{기간 총비용}}}{\underbrace{N_{valid\ work}}_{\text{SLA 통과 output 수}}}`}
     operations={[
-      { expression: String.raw`\frac{C_{hardware}+C_{energy}+C_{ops}}{N_{valid\ work}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","같은 SLA와 quality를 만족한 후보만 대상으로 일정","기간의 장비·전력·운영비를 그 기간 완료한 유효 작업 수로","나눕니다."] },
-    ]} terms={[
+  { expression: String.raw`C_{hardware}+C_{energy}+C_{ops}`, annotation: ["같은 기간의 장비 환산비·전력·냉각과","downtime·engineer time을 합칩니다"] },
+  { expression: String.raw`N_{valid\ work}`, annotation: ["correctness·quality·latency SLA를","모두 통과한 output만 분모에 넣습니다","OOM·downtime이 잦은 싼 board는 단가↑"] },
+]} terms={[
       {symbol:"C_{work}",name:"유효 작업당 비용",description:"선택한 기간에 SLA와 quality를 통과한 output 하나를 만드는 총비용입니다."},
       {symbol:"C_{hardware}",name:"기간 환산 장비비",description:"구매·임대·감가와 필요한 server 부품을 포함합니다."},
       {symbol:"C_{energy}",name:"전력·냉각 비용",description:"Wall-power measurement와 시설 PUE 경계를 명시합니다."},

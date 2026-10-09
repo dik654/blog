@@ -21,9 +21,10 @@ export default function Leakage() {
         question="Rolling-origin fold에서 training과 validation의 시간 방향을 어떻게 고정할까?"
         idea={<>j번째 origin cⱼ에서는 cutoff보다 충분히 앞선 rows만 training에 두고, origin부터 horizon H까지의 rows를 validation에 둡니다. Gap g는 label 확정이나 overlapping window가 경계를 넘는 것을 막기 위한 선택적 간격입니다.</>}
         formula={String.raw`\mathcal D^{(j)}_{\mathrm{train}}=\{r:t_r<c_j-g\},\qquad \mathcal D^{(j)}_{\mathrm{val}}=\{r:c_j\le t_r<c_j+H\}`}
-        annotatedFormula={String.raw`\mathcal D^{(j)}_{\mathrm{train}}=\underbrace{\{r:t_r<c_j-g\},\qquad \mathcal D^{(j)}_{\mathrm{val}}=\{r:c_j\le t_r<c_j+H\}}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\mathcal D^{(j)}_{\mathrm{train}}=\underbrace{\{r:t_r<c_j-g\}}_{\text{gap 앞의 과거 rows}},\qquad \mathcal D^{(j)}_{\mathrm{val}}=\underbrace{\{r:c_j\le t_r<c_j+H\}}_{\text{origin 뒤 H 구간}}`}
         operations={[
-          { expression: String.raw`\{r:t_r<c_j-g\},\qquad \mathcal D^{(j)}_{\mathrm{val}}=\{r:c_j\le t_r<c_j+H\}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","j번째 origin cⱼ에서는 cutoff보다"] },
+          { expression: String.raw`\{r:t_r<c_j-g\}`, annotation: ["origin cⱼ보다 gap g만큼 더 앞선 rows만","training에 넣습니다","g는 label 확정·window overlap을 끊는 폭"] },
+          { expression: String.raw`\{r:c_j\le t_r<c_j+H\}`, annotation: ["origin cⱼ부터 cⱼ+H 직전까지가 평가 구간","다음 fold는 origin을 한 칸 전진시켜","같은 과거→미래 방향을 반복합니다"] },
         ]}
         terms={[
           { symbol: "c_j", name: "forecast origin", description: "j번째 backtest에서 실제 prediction을 내는 것처럼 취급할 cutoff입니다." },

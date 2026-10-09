@@ -82,27 +82,31 @@ export default function ShopFitoutAndOpeningArticle() {
         <h2 className="mb-6 text-2xl font-bold">7. 공사는 사용 동의에서 영업 신고까지 이어집니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">같은 4천800만 원 공사는 임대차에서 허용한 작업 범위와 필요한 임대인 동의를 서면으로 확인하고 실측하는 데서 시작합니다. 4천만 원 기본 견적과 전기·배기 800만 원을 합의하고 자재·수량·부가세 포함 여부·제외 항목을 같은 표에서 맞춥니다. 위 계산은 세금 납부액을 생략한 자금 비교입니다. 실제 계약에서는 각 금액의 세금 기준까지 맞춰야 합니다.</p>
-          <p className="leading-7">추가 작업은 착수 전에 범위·금액·일정 영향과 승인자를 기록합니다. 800만 원이 늘었다고 개업일이 반드시 밀리지는 않습니다. 이미 예정한 작업과 함께 끝낼 수 있는지, 허가·자재·선행 작업을 더 기다려야 하는지에 따라 30일 안에 끝나는지가 달라집니다.</p>
+          <p className="leading-7">추가 작업은 착수 전에 범위·금액·일정 영향과 승인자를 기록합니다. 800만 원이 늘었다고 개업일이 반드시 밀리지는 않습니다. 이미 예정한 작업과 함께 끝낼 수 있는지, 허가·자재·선행 작업을 더 기다려야 하는지에 따라 30일 안에 끝나는지가 달라집니다. 건축물대장의 용도가 업종과 맞지 않아 「건축법」 제19조의 용도변경(허가 또는 신고)이 필요하다면 그 기간은 공사 일정 안에 묻지 말고 별도 칸으로 둡니다.</p>
           <p className="leading-7">
             철거 전에는 건물 관리 규칙과 전기·가스 차단, 반출 경로를 정합니다. 벽과 바닥을 닫기 전에 배관·방수·배선 상태를 찍고 장비를 함께 켜 전기 부하와 배기·배수 작동을
             확인합니다. 시공사에게 받을 시험 결과와 도면, 장비 보증서도 잔금 조건에 연결합니다.
           </p>
           <p className="leading-7">30일 중 신고와 검사에 필요한 날짜를 따로 잡습니다. 음식점은 한국 식품위생법상 시설기준과 영업자 교육·종사자 건강진단 등의 적용 요건을 관할 위생부서에서 확인합니다. 소방 안전시설 완비증명과 의무보험은 다중이용업소 해당 여부 등에 따라 달라지므로 모든 작은 음식점에 똑같이 적용하지 않습니다.</p>
+          <p className="leading-7">해당 여부는 숫자로 판정할 수 있습니다. 법제처 생활법령 안내(2026-09-15 기준 작성, 2026-10-09 확인)에 따르면 휴게음식점·제과점·일반음식점은 영업장 바닥면적 합계가 100㎡ 이상이면 다중이용업소이고, 영업장이 지하층에 있으면 66㎡ 이상부터 해당합니다.</p>
+          <p className="leading-7">다만 영업장이 지상 1층이나 지상과 직접 닿는 층에 있고 주된 출입구가 건물 밖 지면과 바로 이어지면 면적과 관계없이 제외됩니다(내부 계단으로 이어진 복층 영업장은 이 예외에서 빠집니다). 예를 들어 2층 120㎡ 매장은 해당하고, 지하 70㎡ 매장도 해당하며, 길에서 바로 들어오는 1층 150㎡ 매장은 해당하지 않습니다(면적은 모두 가정).</p>
           <p className="leading-7">
             개업 직전에는 신고·등록 문서의 주소와 영업자, 계약서의 사용 범위가 맞는지 봅니다. 결제단말과 사업용 입금계좌를 연결해 시험 결제·취소를 하고 초도 재료의 보관과 직원 교육을
             끝냅니다. 첫날부터 주문과 정산을 연결하는 방법은 일상 운영 글에서 이어집니다.
           </p>
         </div>
 
-        <CitationBlock source="법제처 · 음식점 화재배상책임보험 가입과 소방 안전 의무" citeKey={7} href="https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365">2026-08-15 안내를 2026-10-04 확인. 면적·층·출입구와 업종별 대상 및 제외 조건을 확인합니다.</CitationBlock>
+        <CitationBlock source="법제처 · 음식점 화재배상책임보험 가입과 소방 안전 의무" citeKey={7} href="https://easylaw.go.kr/CSP/OnhunqueansInfoRetrieve.laf?onhunqnaAstSeq=91&onhunqueSeq=4365">페이지 하단에 &ldquo;2026년 9월 15일 기준으로 작성&rdquo;이라고 적힌 안내를 2026-10-09 확인. 면적 100㎡(지하 66㎡)·층·출입구와 업종별 대상 및 제외 조건을 확인합니다.</CitationBlock>
         <CitationBlock source="법제처 · 음식점 건강진단" citeKey={8} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=4&cciNo=1&cnpClsNo=1&csmSeq=839&popMenu=ov">2026-09-15 기준 안내를 2026-10-04 확인. 식품위생법 제40조의 대상·시기·예외를 확인합니다.</CitationBlock>
-        <CitationBlock source="법제처 · 식품위생교육" citeKey={10} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&amp;csmSeq=839&amp;ccfNo=4&amp;cciNo=1&amp;cnpClsNo=2">2026-09-15 기준 안내의 제41조 교육·대리·예외를 확인했습니다. 예고된 10월 8일 변경을 10월 4일 현재 규정에 적용하지 않습니다.</CitationBlock>
+        <CitationBlock source="법제처 · 식품위생교육" citeKey={10} href="https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&amp;csmSeq=839&amp;ccfNo=4&amp;cciNo=1&amp;cnpClsNo=2">2026-09-15 기준 안내의 제41조 교육·대리·예외를 확인했습니다. 식품위생법의 2026-10-08 시행분(법률 제21525호, 결격조항 정비)은 이미 시행됐지만 제40조·제41조 내용은 바뀌지 않았습니다(2026-10-09 확인). 같은 안내 상단이 예고하는 다음 개정은 2026-12-31 시행분입니다.</CitationBlock>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공사와 개업 준비의 순서를 잡았습니다. 사업자등록이 맡는 역할을 원문으로 한정합니다.</p>
       </section>
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8. 영업 신고와 사업자등록을 서로 다른 문서로 준비한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">시설을 만들었으면 업종의 시설기준과 신고·허가를 확인해야 합니다. 세무서의 사업자등록은 납세자를 등록하는 절차이므로 시설을 영업에 써도 된다는 승인과 같지 않습니다.</p>
+          <p className="leading-7">등록을 신청할 때 개인사업자는 과세유형도 고릅니다. 같은 국세청 안내에 따르면 연간 공급대가(부가세를 포함한 매출) 예상액이 1억400만 원 미만이면 간이과세자, 그 이상이면 일반과세자이며, 1억400만 원 미만이어도 간이과세를 적용받을 수 없는 사업자가 따로 정해져 있습니다.</p>
+          <p className="leading-7">하루 매출 30만 원(가정)으로 360일 영업을 예상하면 연 1억800만 원이라 일반과세자이고, 하루 25만 원이면 9천만 원이라 제외 대상이 아닌 한 간이과세를 고를 수 있습니다. 유형은 4천800만 원 공사의 세금계산서를 받기 전, 등록 신청 단계에서 정해집니다(2026-10-09 확인).</p>
         </div>
         <SourceApplication source="국세청 · 사업자등록 신청 절차" excerpt="사업개시 전 또는 사업을 시작한 날로부터 20일 이내" application="30일 공사 중 임대차계약서와 업종 신고에 필요한 서류를 준비합니다. 등록 신청 자체는 개업 전에도 가능하므로 4천800만 원 공사 관련 증빙을 받을 사업자 정보를 정하되, 영업 시작은 업종별 요건 충족과 별도로 판단합니다." />
         <CitationBlock source="국세청 · 사업자등록 신청 절차" citeKey={1} href="https://g.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7777&mi=2444">2026-10-04 확인. 원문 문구와 위 사례 적용의 근거입니다.</CitationBlock>

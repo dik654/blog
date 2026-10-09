@@ -1,4 +1,79 @@
 # A-economic-history 감사 원장
+
+## 적용 결과
+적용일 2026-10-09. 본문 파일 10개(`economic-history-{regional,regional-expansion,thematic,institutional}-data.ts`, tsx 6편)만 직접 고쳤고, 공용 파일 수정은 원장 끝 `## 공용 파일 수정 목록`(62쌍, old 유일성 스크립트 확인)에 적었다. 등록 모듈(`src/content/registrations/*.ts`)이 있는 6편(agrarian·colonial·decolonization·gold·industrial·trade-credit)은 같은 old→new를 등록 모듈에도 적용해야 한다(목록에 표시). 이번 적용 중 추가로 1차 확인한 자료: 와이탕이 재판소 'About the treaty'(1840-02-06·2조 선매권), AustLII Mabo [1992] HCA 23 2024 사본(1992-06-03), Native Title Act 1993 원문 PDF 전문(terra nullius 거부), Crossref 초록(Stephenson 2018·Humphries & Schneider 2019·Eichengreen & Sachs 1985·Olmstead & Rhode 2008), Crossref 서지(Engerman 1972·Inikori 2002), Open Library(Williams 1944), 미국 국립기록관리청(Homestead Act 1862-05-20·Pacific Railway Act 1862-07-01).
+
+집계: 본문 적용 56건(그중 부분 적용 11건, #41은 세액만 후속) · 공용 파일 목록으로만 이관 4건 · 후속 작업만 2건. 본문 적용 건 다수도 공용 파일 쌍을 함께 가진다.
+
+| # | 판정 | 처리 |
+|---|---|---|
+| 1 | WRONG | 적용 — '빵 240개' 문장 삭제, Monaco 2005의 MSVO 3,75 에머밀 장부(기준값 1과 2/5 바리그, 비정규 서기 연습)로 교체 |
+| 2 | WRONG | 적용(source·citation·9절 제목·본문을 Hayami 2004 2장으로) + 공용파일 목록(evidence·learning·articles.ts) |
+| 3 | WRONG | 적용(Humphreys, Historical Dictionary of the IMF 2000; 월·장소 주의를 note에) + 공용파일 목록 |
+| 4 | WRONG | 적용(Emma Griffin, P&P 239(1) pp.71–111) + 공용파일 목록(evidence, 등록 모듈) |
+| 5 | CALC | 공용파일 목록으로 이관 — learning entryNote·workedExample·changedCase를 본문 항목명(세금35·국내채40·해외채15·화폐신용10 / 서비스40·급여30·이자20·재건10)과 100−30−40−10=20으로 |
+| 6 | OUTDATED | 적용(TiVA 2025판 81개·50개 업종·1995~2022, 2023판은 보관판; 10절 제목 2022년) + 공용파일 목록(articles.ts·learning·evidence) |
+| 7 | MISLEADING | 적용(Okazaki 실제 서술: 우선생산 효과 불분명·섬유 감산·RFB 채권 인플레이션; 7.6%·1949 시장경제 전환 보강) + 공용파일 목록 |
+| 8 | MISLEADING | 적용(1978 3중전회·1979 가구책임제 공식 용인(비공식 1976)·1980 특구·1984~87 기업개혁, 이중경로는 본문 서술) + 공용파일 목록 |
+| 9 | MISLEADING | 적용(1947 분할·1948 실론·1971 방글라데시) |
+| 10 | MISLEADING | 적용('카네시(퀼테페) 출토로 추정', 1966년 기증품) |
+| 11 | MISLEADING | 적용(citation에 부제·2004, note를 Box 1 요약으로; 150%·130%·아랄해 50%·1998-03-17 협정 보강) + 공용파일 목록 |
+| 12 | MISLEADING | 공용파일 목록으로 이관(KG 정의 '4천년기 말~3천년기 초', 등록 모듈) |
+| 13 | MISLEADING | 적용('상품 수출 중심' 삭제, TR·SR 국가명과 피지·솔로몬 별도) + 공용파일 목록 |
+| 14 | MISLEADING | 적용 |
+| 15 | MISLEADING | 공용파일 목록으로 이관(learning role에 홍해) |
+| 16 | MISLEADING | 적용(1913-12-23 법은 8~12개, 현재 12개; note에 두 출처) + 공용파일 목록(evidence 추가) |
+| 17 | MISLEADING | 적용('1973~74년과 1979~81년') |
+| 18 | MISLEADING | 적용('두 번'의 주체 명확화) |
+| 19 | UNVERIFIED | 적용 — '최근 자료' 문장을 Okogu 2003 시점으로 한정하고 최신 의존도는 확인하지 않았다고 본문에 명시. 최신 수치 보강은 후속 |
+| 20 | UNVERIFIED | 적용 — 143.9·127.1 삭제, Allen 2009 '+46% vs +12%(1780–1840)'와 2024 논문 '평평' 서술로 교체, 복습 문항 수정 + 공용파일 목록(learning·topology, 등록 모듈) |
+| 21 | LINK | 적용(1988.433.2) |
+| 22 | LINK | 적용(thedocs 주소, Hofman 연설문 귀속) + 공용파일 목록 |
+| 23 | LINK | 적용(Xinru Liu 2012, 아카이브 2024-12-23 사본 + 301 note) + 공용파일 목록(등록 모듈) |
+| 24 | LINK | 적용(연속 원문 excerpt, 정식 과목명) + 공용파일 목록 |
+| 25 | LINK | 적용(interregional, AER 2018 병기) + 공용파일 목록 |
+| 26 | LINK | 적용(Okazaki·Japan SPOTLIGHT 2017) + 공용파일 목록 |
+| 27 | LINK | 적용(2026_EH222, 휴강 note) + 공용파일 목록 |
+| 28 | LINK | 적용(Eltis·legacy 정적 사본) + 공용파일 목록(등록 모듈) |
+| 29 | LINK | 적용(Fig. 5 실제 문장으로 excerpt 교체) + 공용파일 목록(등록 모듈) |
+| 30 | LINK | 공용파일 목록으로 이관(Merwin, F&D 1964; 등록 모듈) |
+| 31 | LINK | 적용(실제 문장 excerpt) + 공용파일 목록(evidence note) |
+| 32 | LINK | 적용(본문 citation에 저자·연도) + 공용파일 목록(evidence·learning 제목) |
+| 33 | LINK | 적용(href를 가이드 PDF로, R193 para.1 병기) + 공용파일 목록 |
+| 34 | LINK | 부분 적용 — `sources`는 정확히 2개라 배열 추가 불가, 9절 본문에 ILO WESO 2021·IPCC AR6 WGIII 11장을 이름으로 명시(evidence에는 이미 있음) |
+| 35 | MISSING | 적용(연체 시 월 이자 조항, 증인·봉투 66.245.17b, 3·4·8절 연결) |
+| 36 | MISSING | 적용(9절 본문·note) + 공용파일 목록(RBI FS_Overview evidence 추가) |
+| 37 | MISSING | 후속 작업 |
+| 38 | MISSING | 적용(34,948건·1,252만·1,070만·차이 약 180만) + 공용파일 목록 |
+| 39 | MISSING | 적용(Williams 1944·Engerman 1972·Inikori 2002, 서지 확인) + 공용파일 목록 |
+| 40 | MISSING | 부분 적용(아이티 1825·1838·1억1,200만 프랑) — 폐지 연도·영국 1833 보상은 후속 |
+| 41 | MISSING | 적용(1902 북동로디지아 오두막세 영수증, 정착민/아프리카인 세목 구분, Nunn QJE 2008) — 영수증 세액은 후속 |
+| 42 | MISSING | 부분 적용(이집트 1876 파산·Caisse·1882 점령, Okogu 1.80달러·1970·1973) — 1881 오스만 공채관리국·1960 OPEC은 후속 |
+| 43 | MISSING | 부분 적용(Prebisch 1950 서지, 베이커 1985·브래디 1989) — 교역조건 가설 내용은 후속 |
+| 44 | MISSING | 부분 적용(Hayami 인용: 강제 수집 대체·태국 자유무역 강요) — 1830 강제재배·1855 보링·말라야 고무는 후속 |
+| 45 | MISSING | 적용(와이탕이 1840-02-06·2조 선매권, Mabo 1992-06-03, NTA 1993 No.110 1993-12-24 재가·전문) + 공용파일 목록(evidence 추가) |
+| 46 | MISSING | 적용(MIRAB Bertram & Watters 1985) + 공용파일 목록(KG·evidence) |
+| 47 | MISSING | 적용(1925-04~1931-09, 1933-04-20, 1971-08-15, 1973-03; Eichengreen & Sachs 초록) + 공용파일 목록 |
+| 48 | MISSING | 적용(Stephenson·Humphries & Schneider 초록, 남성 건축 노동자 계열 명시) + 공용파일 목록 |
+| 49 | MISSING | 부분 적용(Olmstead & Rhode 2008, 홈스테드법·태평양철도법 1862) — Fogel/Fishlow는 후속 |
+| 50 | MISSING | 부분 적용(로마조약 1957-03-25·1958-01-01 발효) — 1807·1861·1834와 19~20세기 sources는 후속 |
+| 51 | MISSING | 부분 적용(EH209 가구 형성·근면 혁명, 하이널 유럽 결혼 유형 명칭) — UN WPP CBR/CDR 대조는 후속 |
+| 52 | MISSING | 적용(8절 연표: 은행대출 680억→1,600억, 볼커 1979-10-06, 20%, 멕시코 1982-08 800억, 베이커·브래디, HIPC 1996; 7절 12%에 (가정)) + 공용파일 목록 |
+| 53 | MISSING | 적용(1857·1862·1875 52 대 82·1878 City of Glasgow·1879 유보책임) |
+| 54 | MISSING | 적용(1883·1884·1889·1927, 1935-08-14, 1942-11, C102 1952) + 공용파일 목록 |
+| 55 | MISSING | 적용(항등식 48%×32/80=19.2%, OECD 32.6→55.2→67.7·한국 29.3→122.0, 독일 1889·70→65(1916), 미국 1935) + 공용파일 목록 |
+| 56 | MISSING | 부분 적용(Commons 브리핑의 복지국가 문장·베버리지 1942) — NHS 1948은 후속 |
+| 57 | MISSING | 적용(1979-10-06·20%·1981-07~1982-11·약 11%) + 공용파일 목록 |
+| 58 | MISSING | 적용(충격 크기와 위기 규모 무관 결론, 멕시코·나이지리아, 저자 4인) + 공용파일 목록 |
+| 59 | MISSING | 적용(1844 로치데일 28명·1895-08-19 ICA·1995 선언) + 공용파일 목록 |
+| 60 | MISSING | 부분 적용(1855·1856-07-14, UNCITRAL 모델법 1997-05-30) — 1978 Bankruptcy Reform Act·관리인/DIP 문장은 후속 |
+| 61 | MISSING | 부분 적용(KfW 1948, 64개 기관·41% 되돌림) — IBRD 1944·BNDES 1952는 후속 |
+| 62 | MISSING | 후속 작업 |
+
+원장 '글별 검증 기록'의 추가 빠진 내용 가운데 1차 인용이 있던 것도 적용했다: 중앙아시아 Box 1 관개 150%·130%·1998-03-17 협정, 일본 1945~73 연평균 7.6%·1949 시장경제 전환·360엔, 오세아니아 NSW 인용에 없던 '도구' 삭제, 개발은행 64개 응답 기관.
+
+검증: 고친 28개 route 모두 `bash scripts/check-article.sh economic-history/<slug>` 실행 — learning contract·knowledge graph·viz·쉬운 한국어·용어 밀집·용어 쌍·읽기 순서 통과. 유일한 실패는 prose-readability의 '재검토 필요'인데 전부 다른 카테고리 글이고 economic-history 항목은 0건(처음 실행 때 잡힌 colonial·gold·industrial의 긴 문단은 나눠서 해소). `npx eslint` 10개 파일 통과. land-rights·regional-gdp 두 편은 고칠 발견이 없거나 후속 작업만 있어 본문을 건드리지 않았다.
+
 확인일: 2026-10-09. 글 30편. 열어 본 URL 약 145개(직접 성공 약 95 / 직접 실패 약 50 — 실패분은 web.archive.org·curl UA·Crossref·기관 API로 2차 확인, 끝내 1차 확인 못 한 항목은 아래 '열지 못한 자료'에 표시).
 
 감사 방법: 30편을 5묶음(6편씩)으로 나눠 다섯 감사자가 병렬로 BRIEF·공통 하위 브리프에 따라 수행했고, 통합자가 WRONG 4건 전부를 독립 재확인(Crossref 10.1093/pastj/gtx061 저자 Emma Griffin, Met API 327384 = 1988.433.2, 아카이브 CDLJ 2005:1 전문에 '240'·'bread' 0건, IMF elibrary 9781475507249/ch01 `<title>Introduction in: Historical Dictionary of the IMF</title>`, World Bank 문서 361941468140660327 제목 'Rural development and agricultural growth in Indonesia, the Philippines and Thailand')한 뒤 합쳤다. 번호는 통합 후 심각도 순으로 다시 매겼고, 글별 기록의 '발견 #n'은 통합 번호다.
@@ -502,3 +577,782 @@
 | https://openknowledge.worldbank.org/handle/10986/29815 | 403 | documents1 PDF로 대체 |
 | https://www.fjc.gov/history/timeline/bankruptcy-reform-act-1978 | 200이나 본문 비어 있음 | 미대체(1978 Code 연도는 발견 #4에서 US Courts 안내의 장(chapter) 구조로만 간접 언급, 추가 확인 필요) |
 | web.archive.org 전반 | WebFetch 도구 자체가 차단("unable to fetch from web.archive.org") | curl `web/<year>id_/` 경로로 우회 |
+
+## 후속 작업
+1차 자료로 확인하지 못했거나 글 전체 재구성이 필요해 이번에 넣지 않은 항목이다. 본문에서 미확인 범위를 밝혀 둔 곳은 괄호에 적었다.
+
+- #19 MENA: 걸프 재정·수출의 현재 석유 의존도를 IMF REO(중동·중앙아시아) 최신호 또는 GCC Article IV 수치로 보강(본문 9절이 "최신 수치로 확인하지 않았습니다"라고 밝힘).
+- #37 남아시아: 식민 이전 직물·금융·해상 교역망과 동인도회사의 1765년 디와니(조세권) 전환을 받칠 1차 사료·표준 문헌(Tirthankar Roy 등)을 찾아 4절과 sources/evidence에 추가.
+- #40 플랜테이션: 노예제 폐지 연도(영국 1807 무역 금지·1833 폐지법, 프랑스 1848, 미국 1865, 브라질 1888)와 영국 1833년 소유주 보상(약 2천만 파운드). UCL LBS는 Cloudflare 차단, TNA 교육 페이지는 404였음(본문 10절이 "따로 확인하지 않았습니다"라고 밝힘).
+- #41 아프리카: 1902년 북동로디지아 오두막세 영수증의 실제 세액(교재 삽화 판독 필요).
+- #42 MENA: 1881년 오스만 공채관리국(Decree of Muharrem)은 Tunçer 2015 서지만 확인, OPEC 1960 바그다드 창립은 opec.org 402·history.state.gov 404로 미확인.
+- #43 라틴아메리카: Prebisch 1950 보고서의 교역조건 악화 논지(프레비시–싱어 가설) 내용을 원문으로 확인한 뒤 6절에 한 문장 추가.
+- #44 동남아: 자바 강제재배제도(1830~1870), 1855년 보링 조약, 1890~1910년대 말라야 고무 붐을 1차 자료로 확인(본문 2절이 미확인이라고 밝힘).
+- #49 북아메리카: Fogel 1964 『Railroads and American Economic Growth』의 사회적 절약 추정과 Fishlow 1965 반론.
+- #50 유럽: 1807 프로이센 10월 칙령, 1861 러시아 농노 해방령, 1834 독일 관세동맹(dhm.de LeMO 404)과 19~20세기 산업화를 다루는 sources(본문 4절이 미확인이라고 밝힘).
+- #51 인구: UN World Population Prospects의 실제 조출생률·조사망률 한 사례(국가·연도)와 설명용 40·35·15·18·8 대조. 하이널 1965 원 게재 연도·쪽 확인.
+- #56 전쟁재정: NHS 1948 출범을 영국 정부·의회 1차 자료로 확인.
+- #60 상법: 1978년 Bankruptcy Reform Act(FJC 페이지 본문 비어 있음)와 10절 '영국계·미국계 절차'(관리인 중심 vs 채무자 점유 DIP) 설명 한 문장(본문 4절이 미확인이라고 밝힘).
+- #61 개발은행: IBRD 1944·BNDES 1952 설립 연도를 기관 1차 자료로 확인.
+- #62 지역소득: Eurostat 지역 가계계정(nama_10r_2hhinc, ESA 2010, 1차 소득→처분가능소득)과 분포계정(OECD–Eurostat DNA, WID DINA)의 이름·작성 규칙, NUTS 1·2·3 첫 등장 설명.
+- 글별 기록의 기타 빠진 내용(1차 인용 없음): 아프리카 마케팅 보드, 상법 '자동 중지'(미국 §362) 용어 구분, 협동조합 '교육 3'과 ICA 5원칙, 금본위 'fundamental disequilibrium', 라틴아메리카 달러 변동금리 신디케이트론(원죄), MENA 학습계약의 assumed 개념 `petrodollar-recycling`이 본문과 연결되지 않음, 오세아니아 PNA Vessel Day Scheme, 토지 글 차액지대·인클로저 절차, 컨테이너 1956 Ideal X·ISO 668, TiVA 국내 직접·간접가치 지표명(KWW 2014 또는 EXGR_DDC/IDC), 남아시아 Donaldson '교역 이득이 실질소득 효과의 거의 전부', 플랜테이션 동산 노예제 vs 계약노동 구분, 산업혁명 Pomeranz 대분기, 농업 잉여 Englund·Nissen-Damerow-Englund.
+
+
+## 공용 파일 수정 목록
+통합자가 위에서부터 순서대로 적용한다. 각 old는 2026-10-09 현재 해당 파일에 정확히 한 번 나온다(스크립트로 확인). 줄번호는 적지 않았다. new가 여러 줄이면 기존 항목 뒤에 새 증거 항목을 덧붙이는 경우다(들여쓰기는 대상 파일에 맞춘다).
+
+### src/content/article-evidence.ts
+
+발견 #4
+
+※ 같은 old→new를 `src/content/registrations/industrial-revolution-wages-and-energy.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "비판적 읽기", label: "Horrell & Humphries · Diets, Hunger and Living Standards", href: "https://academic.oup.com/past/article/239/1/71/4794719", note: "가구 예산과 자서전으로 지역·성별·나이의 생활 차이를 보완" },
+```
+new:
+```
+{ kind: "비판적 읽기", label: "Emma Griffin · Diets, Hunger and Living Standards (Past & Present 239, 2018)", href: "https://academic.oup.com/past/article/239/1/71/4794719", note: "가구 예산과 자서전으로 지역·성별·나이의 생활 차이를 보완. 저자는 Crossref 10.1093/pastj/gtx061로 확인(2026-10-09)." },
+    { kind: "핵심 연구", label: "Allen · Engels' pause (2009)", href: "https://www.nuffield.ox.ac.uk/Users/Allen/engelspause.pdf", note: "1780~1840년 노동자당 산출 +46%, Feinstein 실질임금 +12%. 확인 2026-10-09." },
+    { kind: "비판적 읽기", label: "Stephenson · 'Real' wages? London building trades, 1650–1800 (EcHR 71(1))", href: "https://doi.org/10.1111/ehr.12491", note: "기관 기록 임금 계열이 실제 지급액보다 높다는 반론. Crossref 초록으로 확인 2026-10-09." },
+    { kind: "비판적 읽기", label: "Humphries & Schneider · Spinning the industrial revolution (EcHR 72(1))", href: "https://doi.org/10.1111/ehr.12693", note: "손방적에 고임금 경제가 없었다는 반론. Crossref 초록으로 확인 2026-10-09." },
+```
+
+발견 #29
+
+※ 같은 old→new를 `src/content/registrations/industrial-revolution-wages-and-energy.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "후속 논문", label: "Allen · Technical change, globalization, and the labour market", href: "https://academic.oup.com/ooec/article/3/Supplement_1/i178/7708096", note: "1770~1840년 생산성과 실질임금의 장기 지수 비교" },
+```
+new:
+```
+{ kind: "후속 논문", label: "Allen · Technical change, globalization, and the labour market", href: "https://academic.oup.com/ooec/article/3/Supplement_1/i178/7708096", note: "1770~1840년 노동자당 산출 증가와 평균 실질임금 정체(그림 5). 표에는 이 구간 수치가 없음." },
+```
+
+발견 #30
+
+※ 같은 old→new를 `src/content/registrations/gold-standard-depression-bretton-woods.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "후속 분석", label: "IMF · The Road to Bretton Woods", href:
+```
+new:
+```
+{ kind: "후속 분석", label: "Merwin · The Road to Bretton Woods (Finance & Development 1(2), 1964)", href:
+```
+
+발견 #47
+
+※ 같은 old→new를 `src/content/registrations/gold-standard-depression-bretton-woods.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "공식 연구", label: "Ghosh · Measure to Measure", href: "https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm", note: "44개국 회의와 조정 가능한 고정환율·IMF의 설계 목적" },
+```
+new:
+```
+{ kind: "공식 연구", label: "Ghosh · Measure to Measure", href: "https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm", note: "44개국 회의와 조정 가능한 고정환율·IMF의 설계 목적" },
+    { kind: "핵심 연구", label: "Eichengreen & Sachs · Exchange Rates and Economic Recovery in the 1930s (JEH 45(4), 1985)", href: "https://doi.org/10.1017/S0022050700035178", note: "1930년대 통화 절하가 먼저 시작한 나라에 이득이었다는 비교 실증. 초록으로 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Federal Reserve History · Roosevelt's Gold Program", href: "https://www.federalreservehistory.org/essays/roosevelts-gold-program", note: "1933년 4월 20일 금본위 공식 정지." },
+    { kind: "공식 문서", label: "Federal Reserve History · Gold Convertibility Ends", href: "https://www.federalreservehistory.org/essays/gold-convertibility-ends", note: "1971년 8월 15일 금 창구 폐쇄." },
+    { kind: "공식 문서", label: "Bank of England Quarterly Bulletin 1970 Q1 · Holdings of gold and foreign exchange 1924–31", href: "https://www.bankofengland.co.uk/quarterly-bulletin/1970/q1/bank-of-englands-holdings-of-gold-and-foreign-exchange-1924-31", note: "1925년 4월 말~1931년 9월 금본위 기간." },
+```
+
+발견 #23
+
+※ 같은 old→new를 `src/content/registrations/trade-credit-and-long-distance-networks.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "비교 사료", label: "UNESCO · Silk Roads with Documents", href: "https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents", note: "여러 지역의 사료로 본 육상·해상 교역망" },
+```
+new:
+```
+{ kind: "비교 사료", label: "Xinru Liu · The Silk Roads: A Brief History with Documents (Bedford/St. Martin's, 2012)", href: "https://web.archive.org/web/20241223184033/https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents", note: "UNESCO 실크로드 사이트가 소개한 단행본. 원 주소는 unesco.org/en/silkroads로 301 리다이렉트돼 2024-12-23 사본. 확인 2026-10-09." },
+```
+
+발견 #28 #38
+
+※ 같은 old→new를 `src/content/registrations/colonial-plantations-slavery-and-extraction.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "공식 프로젝트 기록", label: "SlaveVoyages Database", href: "https://www.slavevoyages.org/blog/the-transatlantic-slave-trade-database/163", note: "항해 기록·추정 자료와 방법" },
+```
+new:
+```
+{ kind: "공식 프로젝트 기록", label: "Eltis · Trans-Atlantic Slave Trade Database Methodology (SlaveVoyages)", href: "https://legacy.slavevoyages.org/blog/methodology-trans-atlantic", note: "항해 기록·추정 자료와 방법, 승선 12,520,000명·하선 1,070만 명 추정. 원 주소는 JS 셸만 반환해 정적 사본. 확인 2026-10-09." },
+    { kind: "공식 프로젝트 기록", label: "NEH · Transatlantic Slave Trade Database", href: "https://www.neh.gov/project/transatlantic-slave-trade-database", note: "기록 항해 34,948건, 약 1,250만 명 승선·약 1,070만 명 생존(1526~1866)." },
+    { kind: "비판적 읽기", label: "Engerman · The Slave Trade and British Capital Formation: A Comment on the Williams Thesis (BHR 46(4), 1972)", href: "https://doi.org/10.2307/3113341", note: "윌리엄스 테제 규모 논쟁. 서지 확인 2026-10-09." },
+    { kind: "비판적 읽기", label: "Inikori · Africans and the Industrial Revolution in England (CUP, 2002)", href: "https://doi.org/10.1017/CBO9780511583940", note: "윌리엄스 테제 재평가. 서지 확인 2026-10-09." },
+    { kind: "보충 읽기", label: "LSU · France–Haiti indebtedness", href: "https://lsu.edu/cffs/france-haiti-indebtedness.php", note: "1825년 배상금과 차입·이자 1억1,200만 프랑 상환에 50년 더 걸림." },
+```
+
+발견 #52
+
+※ 같은 old→new를 `src/content/registrations/decolonization-oil-shocks-and-debt.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ kind: "공식 연구", label: "IMF · Macroeconomic Crisis and Adjustment", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", note: "국가별 교역조건과 조정 경로 비교" },
+```
+new:
+```
+{ kind: "공식 연구", label: "Little, Cooper, Corden & Rajapatirana · Macroeconomic Crisis and Adjustment (F&D 32(1), 1995)", href: "https://www.elibrary.imf.org/view/journals/022/0032/001/article-A014-en.xml", note: "국가별 교역조건과 조정 경로 비교. 충격 크기와 위기 규모 사이 직접 관계 없음." },
+    { kind: "공식 문서", label: "Federal Reserve History · Anti-Inflation Measures", href: "https://www.federalreservehistory.org/essays/anti-inflation-measures", note: "1979년 10월 6일 긴축 전환, 1980년 말 연방기금금리 20%." },
+    { kind: "공식 문서", label: "Federal Reserve History · Latin American Debt Crisis", href: "https://www.federalreservehistory.org/essays/latin-american-debt-crisis", note: "1982년 8월 멕시코 지급불능 통보(외채 800억 달러), 브래디 플랜의 원금 감면." },
+    { kind: "공식 문서", label: "IMF · Debt relief under the HIPC Initiative", href: "https://www.imf.org/en/About/Factsheets/Sheets/2023/Debt-relief-under-the-heavily-indebted-poor-countries-initiative-HIPC", note: "1996년 HIPC 이니셔티브 시작." },
+```
+
+발견 #22 #8
+
+old:
+```
+{ kind: "공식 연구", label: "World Bank · Reflections on 40 Years of China’s Reforms", href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf", note: "가구 책임제·이중 경로·특구 실험을 1978년 뒤 점진적 개혁의 순서로 대조합니다." },
+```
+new:
+```
+{ kind: "보충 읽기", label: "Bert Hofman · Reflections on Forty Years of China’s Reforms (Fudan FISF speech, Jan. 2018)", href: "https://thedocs.worldbank.org/en/doc/934911517472447837-0070022018/original/Reflectionson40yearsofreformsfinal.pdf", note: "저자 개인 의견이며 세계은행에 귀속하지 말라는 각주가 있는 강연문. Annex 1 연표: 1978 3중전회, 1979 가구책임제 공식 용인(비공식 1976)·대외 개방, 1980 첫 네 특구. 원 주소 404라 현재 주소. 확인 2026-10-09." },
+```
+
+발견 #24
+
+old:
+```
+{ kind: "공개 강의", label: "LSE · The Economic History of China since 1800", href:
+```
+new:
+```
+{ kind: "공개 강의", label: "LSE EH218 · Chinese Economic History since 1800: Economic Growth in a Historical Perspective", href:
+```
+
+발견 #26 #7
+
+old:
+```
+{ kind: "공식 연구", label: "RIETI · Industrial Policy in Japan", href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html", note: "전후 우선생산과 산업정책의 시기별 역할을 시장 경쟁·기업 투자와 함께 읽습니다." },
+```
+new:
+```
+{ kind: "공식 연구", label: "Okazaki Tetsuji · Industrial Policy in Japan: 70-Year History since World War II (Japan SPOTLIGHT 2017, RIETI 전재)", href: "https://www.rieti.go.jp/en/papers/contribution/okazaki/06.html", note: "전후 산업정책의 시기 구분, 우선생산의 불확실한 효과와 섬유 감산·인플레이션 부작용을 읽습니다." },
+```
+
+발견 #36
+
+old:
+```
+{ kind: "공식 문서", label: "Reserve Bank of India · Chronology of Indian Monetary History", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "식민 통화에서 독립 뒤 계획금융과 1991년 외환 전환까지의 공식 연표를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "Reserve Bank of India · Chronology of Indian Monetary History", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "식민 통화에서 독립 뒤 계획금융과 1991년 외환 전환까지의 공식 연표를 확인합니다." },
+    { kind: "공식 문서", label: "Reserve Bank of India · Foreign Exchange Market Overview", href: "https://rbi.org.in/scripts/FS_Overview.aspx?fn=5", note: "1992년 3월 LERMS(이중 환율), 1993년 3월 1일 시장 단일 환율로 대체. 확인 2026-10-09." },
+```
+
+발견 #25
+
+old:
+```
+{ kind: "핵심 연구", label: "Donaldson · Railroads of the Raj", href: "https://www.nber.org/papers/w16487",
+```
+new:
+```
+{ kind: "핵심 연구", label: "Donaldson · Railroads of the Raj (NBER WP 16487; AER 108(4-5), 2018)", href: "https://www.nber.org/papers/w16487",
+```
+
+발견 #41
+
+old:
+```
+{ kind: "핵심 연구", label: "Nunn · The Long-Term Effects of Africa’s Slave Trades", href:
+```
+new:
+```
+{ kind: "핵심 연구", label: "Nunn · The Long-Term Effects of Africa’s Slave Trades (NBER WP 13367; QJE 123(1), 2008)", href:
+```
+
+발견 #27
+
+old:
+```
+href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm", note: "토지·노동 권리와 주민 생활, 지역 문서·고고학을 포함하는 아래로부터의 질문 지도를 사용합니다." },
+```
+new:
+```
+href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH222.htm", note: "토지·노동 권리와 주민 생활, 지역 문서·고고학을 포함하는 아래로부터의 질문 지도를 사용합니다. 2026/27 휴강(Suspended) 표시, 강의 설명은 2025/26 판과 동일. 2025/26 주소는 301 리다이렉트. 확인 2026-10-09." },
+```
+
+발견 #42 #19
+
+old:
+```
+{ kind: "공식 연구", label: "IMF · The Middle East and North Africa in a Changing Oil Market", href:
+```
+new:
+```
+{ kind: "공식 연구", label: "Okogu · The Middle East and North Africa in a Changing Oil Market (IMF, 2003)", href:
+```
+
+발견 #3
+
+old:
+```
+{ kind: "공식 문서", label: "IMF · The Latin American Debt Crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "1970년대 대출 증가에서 1982년 가격·금리·자금 중단으로 이어진 제도적 순서를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "Humphreys · Historical Dictionary of the IMF (2000), Introduction: The debt crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "1970년대 대출 증가에서 1982년 가격·금리·자금 중단으로 이어진 제도적 순서를 확인합니다. Boughton의 Silent Revolution과는 다른 책." },
+    { kind: "핵심 사료", label: "Prebisch · The economic development of Latin America and its principal problems (ECLA, 1950)", href: "https://repositorio.cepal.org/handle/11362/29973", note: "E/CN.12/89/REV.1. 수입대체 전략의 출발점으로 인용." },
+```
+
+발견 #54
+
+old:
+```
+{ kind: "공식 문서", label: "ILO · Convention No. 102 FAQ", href: "https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention", note: "아홉 사회 위험과 보장 대상·급여·조건·기간의 최저기준을 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "ILO · Convention No. 102 FAQ", href: "https://www.ilo.org/frequently-asked-questions-social-security-minimum-standards-convention", note: "1952년 채택된 협약 102호의 아홉 사회 위험과 보장 대상·급여·조건·기간의 최저기준을 확인합니다." },
+    { kind: "공식 문서", label: "SSA · Otto von Bismarck", href: "https://www.ssa.gov/history/ottob.html", note: "독일 1883 질병·1884 산재·1889 노령보험, 1927 실업보험. 자동 조회 403이라 web.archive.org 2025 사본. 확인 2026-10-09." },
+    { kind: "공식 문서", label: "SSA · Brief History (Social Security Act 1935)", href: "https://www.ssa.gov/history/briefhistory3.html", note: "1935년 8월 14일 서명. 자동 조회 403이라 사본." },
+    { kind: "공식 문서", label: "UK Parliament · Beveridge Report 1942", href: "https://www.parliament.uk/about/living-heritage/transformingsociety/livinglearning/coll-9-health1/coll-9-health/", note: "1942년 11월 Social Insurance and Allied Services. 자동 조회 403이라 2025-12-05 사본." },
+```
+
+발견 #31
+
+old:
+```
+{ kind: "공개 강의", label: "LSE EH442 · Labour Markets in Historical Perspective", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm", note: "임금·생산성·기술·이주와 지역·성별·인종 격차를 함께 확인합니다." },
+```
+new:
+```
+{ kind: "공개 강의", label: "LSE EH442 · Labour Markets in Historical Perspective", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH442.htm", note: "임금 수준·생산성·신기술 채택, 이주, 지역·성별·인종 격차를 네 부분으로 다루는 범위를 확인합니다." },
+```
+
+발견 #57
+
+old:
+```
+{ kind: "공식 연구", label: "Federal Reserve History · The Great Inflation", href: "https://www.federalreservehistory.org/essays/great-inflation", note: "1965~1982년 미국의 정책·에너지·기대와 긴축 비용을 한 연표에서 확인합니다." },
+```
+new:
+```
+{ kind: "공식 연구", label: "Federal Reserve History · The Great Inflation", href: "https://www.federalreservehistory.org/essays/great-inflation", note: "1965~1982년 미국의 정책·에너지·기대와 긴축 비용을 한 연표에서 확인합니다. 침체 1981-07~1982-11, 실업 약 11%." },
+    { kind: "공식 문서", label: "Federal Reserve History · Anti-Inflation Measures", href: "https://www.federalreservehistory.org/essays/anti-inflation-measures", note: "1979년 10월 6일 볼커 발표, 1980년 말 연방기금금리 20%." },
+```
+
+발견 #16
+
+old:
+```
+{ kind: "공식 문서", label: "Federal Reserve History · Federal Reserve History", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", note: "분산 준비제도의 공황과 1913년 연준 설립, 대공황·전시 금융의 제도 변화를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "Federal Reserve History · Federal Reserve History", href: "https://www.federalreservehistory.org/essays/federal-reserve-history", note: "분산 준비제도의 공황과 1913년 연준 설립, 대공황·전시 금융의 제도 변화를 확인합니다." },
+    { kind: "공식 문서", label: "Federal Reserve History · Federal Reserve Act Signed", href: "https://www.federalreservehistory.org/essays/federal-reserve-act-signed", note: "1913년 12월 23일 서명, 준비은행 8~12개 규정(현재 12개)." },
+    { kind: "핵심 연구", label: "Olmstead & Rhode · Biological Innovation and Productivity Growth in the Antebellum Cotton Economy (JEH 68(4), 2008)", href: "https://doi.org/10.1017/S0022050708000831", note: "1801~1862년 일일 면화 채취량 약 4배, 새 품종이 주된 원인. 초록 확인 2026-10-09." },
+    { kind: "공식 문서", label: "National Archives · Homestead Act (1862)", href: "https://www.archives.gov/milestone-documents/homestead-act", note: "1862년 5월 20일, 측량 공유지 160에이커·5년 거주." },
+    { kind: "공식 문서", label: "National Archives · Pacific Railway Act (1862)", href: "https://www.archives.gov/milestone-documents/pacific-railway-act", note: "1862년 7월 1일, 대륙횡단 철도에 연방 토지·대출 지원." },
+```
+
+발견 #50
+
+old:
+```
+{ kind: "공개 강의", label: "LSE EH204 · Money and Finance", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm", note: "800년 이후 영국·스페인·이탈리아·프랑스·독일의 다른 화폐·금융 경로를 확인합니다." },
+```
+new:
+```
+{ kind: "공개 강의", label: "LSE EH204 · Money and Finance", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm", note: "800년 이후 영국·스페인·이탈리아·프랑스·독일의 다른 화폐·금융 경로를 확인합니다." },
+    { kind: "공식 문서", label: "European Union · History of the EU 1945–59", href: "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en", note: "1957년 3월 25일 로마조약 서명(EEC·Euratom), 1958년 1월 1일 발효." },
+```
+
+발견 #2
+
+old:
+```
+{ kind: "공식 연구", label: "World Bank · Southeast Asia's long-term growth", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note:
+```
+new:
+```
+{ kind: "공식 연구", label: "Hayami · An ecological and historical perspective on agricultural development in Southeast Asia (Akiyama & Larson eds., World Bank 2004, ch. 2)", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note:
+```
+
+발견 #11
+
+old:
+```
+{ kind: "공식 연구", label: "World Bank · Water Energy Nexus in Central Asia", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "소련기 관개·하천 전환과 농업 생산, 에너지, 아랄해 비용의 연결을 확인합니다." },
+```
+new:
+```
+{ kind: "공식 연구", label: "World Bank · Water Energy Nexus in Central Asia: Improving Regional Cooperation in the Syr Darya Basin (2004)", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "시르다리야 유역 물·전력 협력 보고서. 소련기 관개·하천 전환과 아랄해 비용은 Box 1 요약에서 확인합니다." },
+```
+
+발견 #13 #45 #46
+
+old:
+```
+note: "관광·송금 중심 경제와 어업권료·지원금 중심 경제의 다른 외부소득 구조를 확인합니다." },
+```
+new:
+```
+note: "관광·송금 중심 경제(팔라우·사모아·통가·바누아투)와 주권 수입 중심 경제(FSM·RMI·키리바시·나우루·투발루)를 구분하고 피지·솔로몬은 따로 다룹니다." },
+    { kind: "공식 문서", label: "Waitangi Tribunal · About the treaty", href: "https://www.waitangitribunal.govt.nz/en/about/the-treaty", note: "1840년 2월 6일 서명, 영어본 2조 토지 보장과 왕실 독점 선매권, 두 텍스트의 차이. 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Native Title Act 1993 (No. 110, 1993) as made", href: "https://www.legislation.gov.au/C2004A04665/asmade/details", note: "1993년 12월 24일 재가. 전문이 고등법원의 terra nullius 거부와 원주민 권원 인정을 적음." },
+    { kind: "핵심 사료", label: "Mabo v Queensland (No 2) [1992] HCA 23 (3 June 1992)", href: "https://web.archive.org/web/2024id_/http://www.austlii.edu.au/au/cases/cth/HCA/1992/23.html", note: "AustLII 원 주소는 자동 조회 403이라 2024 사본. 확인 2026-10-09." },
+    { kind: "핵심 연구", label: "Bertram & Watters · The MIRAB Economy in South Pacific Microstates (Pacific Viewpoint 26(3), 1985)", href: "https://doi.org/10.1111/apv.263002", note: "섬 외부소득 조합 개념의 원형인 MIRAB 모형. 서지 확인." },
+```
+
+발견 #32
+
+old:
+```
+{ kind: "공개 강의", label: "LSE EH450 · The Economics of War", href:
+```
+new:
+```
+{ kind: "공개 강의", label: "LSE EH450 · Topics in the Economic History of War in Europe", href:
+```
+
+발견 #32 #56
+
+old:
+```
+{ kind: "공식 문서", label: "UK Parliament · Government borrowing, debt and debt interest", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화, 제2차 세계대전 뒤 복지국가 창설을 확인합니다. 자동 조회 403이라 사본으로 확인 2026-10-09." },
+```
+
+발견 #60
+
+old:
+```
+{ kind: "공식 문서", label: "United States Courts · Chapter 11 Bankruptcy Basics", href: "https://www.uscourts.gov/court-programs/bankruptcy/bankruptcy-basics/chapter-11-bankruptcy-basics", note: "채권 등급과 손상된 등급의 금액·인원 수락 문턱, 계획 확인 절차를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "United States Courts · Chapter 11 Bankruptcy Basics", href: "https://www.uscourts.gov/court-programs/bankruptcy/bankruptcy-basics/chapter-11-bankruptcy-basics", note: "채권 등급과 손상된 등급의 금액·인원 수락 문턱, 계획 확인 절차를 확인합니다." },
+    { kind: "핵심 사료", label: "Joint Stock Companies Act 1856 (원문)", href: "https://www.irishstatutebook.ie/1856/en/act/pub/0047/print.html", note: "1856년 7월 14일, Limited Liability Act 1855 폐지·대체." },
+    { kind: "공식 문서", label: "UNCITRAL · Model Law on Cross-Border Insolvency (1997)", href: "https://uncitral.un.org/en/texts/insolvency/modellaw/cross-border_insolvency", note: "1997년 5월 30일 채택." },
+```
+
+발견 #33 #59
+
+old:
+```
+{ kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193", href: "https://www.ilo.org/publications/promoting-cooperatives-information-guide-ilo-recommendation-no-193", note:
+```
+new:
+```
+{ kind: "공식 문서", label: "ICA · History of the cooperative movement", href: "https://ica.coop/en/cooperatives/history-cooperative-movement", note: "1844년 로치데일 장인 28명의 첫 근대 협동조합, 1895년 8월 19일 ICA 창립." },
+    { kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193 (R193 para. 1 인용)", href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@ed_emp/@emp_ent/@coop/documents/publication/wcms_311447.pdf", note:
+```
+
+발견 #61
+
+old:
+```
+{ kind: "공식 연구", label: "World Bank · 2017 Survey of National Development Banks", href: "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/977821525438071799", note:
+```
+new:
+```
+{ kind: "공식 문서", label: "KfW · History of KfW", href: "https://www.kfw.de/About-KfW/Förderauftrag-und-Geschichte/Geschichte-der-KfW/", note: "1948년 전후 복구를 위해 설립." },
+    { kind: "공식 연구", label: "World Bank · 2017 Survey of National Development Banks (64개 기관 응답, 되돌림 41%)", href: "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/977821525438071799", note:
+```
+
+발견 #55
+
+old:
+```
+{ kind: "공식 연구", label: "OECD · Automatic adjustment mechanisms in pension systems", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html", note: "기대수명·재정수지·가입자와 수급자 비율을 급여·보험료에 연결한 제도를 비교합니다." },
+```
+new:
+```
+{ kind: "공식 연구", label: "OECD · Automatic adjustment mechanisms in pension systems", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html", note: "기대수명·재정수지·가입자와 수급자 비율을 급여·보험료에 연결한 제도를 비교하고, 순수 부과식의 '가입자/수급자 × 보험료율 = 평균 대체율' 항등식을 적습니다." },
+    { kind: "공식 연구", label: "OECD · Pensions at a Glance 2025: Demographic old-age to working-age ratio", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/demographic-old-age-to-working-age-ratio_25476b96.html", note: "20~64세 100명당 65세 이상, OECD 32.6(2024)→55.2(2054)→67.7(2084). 자동 조회 403이라 2026-09-17 사본." },
+```
+
+발견 #6
+
+old:
+```
+{ kind: "공식 문서", label: "OECD · Trade in Value-Added", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "총수출의 국내·외국 부가가치와 서비스 기여·최종수요를 국가 간 투입산출표로 나누는 지표를 확인합니다." },
+```
+new:
+```
+{ kind: "공식 문서", label: "OECD · Trade in Value-Added (2025 edition)", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "총수출의 국내·외국 부가가치와 서비스 기여·최종수요를 국가 간 투입산출표로 나누는 지표를 확인합니다. 현행 2025년 판은 81개 경제·50개 업종·1995~2022년, 2023년 판(76개·1995~2020)은 보관판. 확인 2026-10-09." },
+```
+
+### src/content/article-learning.ts
+
+발견 #20
+
+※ 같은 old→new를 `src/content/registrations/industrial-revolution-wages-and-energy.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+workedExample: "1770=100일 때 1840년 노동자당 생산 143.9와 소비 임금 127.1이 다른 속도를 보입니다."
+```
+new:
+```
+workedExample: "1780=100일 때 1840년 노동자당 산출 146과 실질임금 112가 다른 속도를 보입니다(Allen 2009의 +46%·+12%)."
+```
+
+발견 #20
+
+※ 같은 old→new를 `src/content/registrations/industrial-revolution-wages-and-energy.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+question: "1770=100 기준의 1840년 생산 143.9와 소비 임금 127.1에서 말할 수 있는 것과 없는 것을 구분하세요."
+```
+new:
+```
+question: "1780=100 기준의 1840년 노동자당 산출 146과 실질임금 112에서 말할 수 있는 것과 없는 것을 구분하세요."
+```
+
+발견 #23
+
+※ 같은 old→new를 `src/content/registrations/trade-credit-and-long-distance-networks.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ title: "UNESCO · The Silk Roads: A Brief History with Documents", href: "https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents",
+```
+new:
+```
+{ title: "Xinru Liu · The Silk Roads: A Brief History with Documents (Bedford/St. Martin's, 2012)", href: "https://web.archive.org/web/20241223184033/https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents",
+```
+
+발견 #28
+
+※ 같은 old→new를 `src/content/registrations/colonial-plantations-slavery-and-extraction.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+{ title: "SlaveVoyages · Trans-Atlantic Slave Trade Database", href: "https://www.slavevoyages.org/blog/the-transatlantic-slave-trade-database/163",
+```
+new:
+```
+{ title: "David Eltis · Trans-Atlantic Slave Trade Database Methodology (SlaveVoyages)", href: "https://legacy.slavevoyages.org/blog/methodology-trans-atlantic",
+```
+
+발견 #22 #8
+
+old:
+```
+        title: "World Bank · Reflections on 40 Years of China’s Reforms",
+        href: "https://pubdocs.worldbank.org/en/934911517472447837/reflections-on-40-years-of-reforms-final.pdf",
+```
+new:
+```
+        title: "Bert Hofman · Reflections on Forty Years of China’s Reforms (speech, Jan. 2018)",
+        href: "https://thedocs.worldbank.org/en/doc/934911517472447837-0070022018/original/Reflectionson40yearsofreformsfinal.pdf",
+```
+
+발견 #22
+
+old:
+```
+assumptions: "세계은행과 중국 연구자들의 회고적 종합이며 지역별 패자와 대안적 해석을 별도 자료로 확인해야 합니다.",
+```
+new:
+```
+assumptions: "세계은행 소속 저자의 개인 강연문(세계은행 귀속 금지 각주)이며 지역별 패자와 대안적 해석을 별도 자료로 확인해야 합니다.",
+```
+
+발견 #24
+
+old:
+```
+        title: "LSE · The Economic History of China since 1800",
+```
+new:
+```
+        title: "LSE EH218 · Chinese Economic History since 1800: Economic Growth in a Historical Perspective",
+```
+
+발견 #7 #26
+
+old:
+```
+        title: "RIETI · Industrial Policy in Japan: 70-Year History since World War II",
+```
+new:
+```
+        title: "Okazaki Tetsuji · Industrial Policy in Japan: 70-Year History since World War II (RIETI)",
+```
+
+발견 #7
+
+old:
+```
+contribution: "우선생산과 산업별 정책을 시기별로 정리하고 시장 경쟁·기업 투자와의 결합을 검토합니다.",
+```
+new:
+```
+contribution: "우선생산과 산업별 정책을 시기별로 정리하고, 우선생산의 석탄 증산 효과가 불분명했으며 섬유 감산·인플레이션 부작용이 있었다고 적습니다.",
+```
+
+발견 #15
+
+old:
+```
+role: "대서양·인도양·사하라 노예무역이 인구·신뢰·국가 형성에 남긴 장기 손상을 설명합니다."
+```
+new:
+```
+role: "대서양·사하라·홍해·인도양 노예무역이 인구·신뢰·국가 형성에 남긴 장기 손상을 설명합니다."
+```
+
+발견 #27
+
+old:
+```
+        href: "https://www.lse.ac.uk/resources/calendar2025-2026/courseGuides/EH/2025_EH222.htm",
+```
+new:
+```
+        href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH222.htm",
+```
+
+발견 #3
+
+old:
+```
+        title: "IMF · The Latin American Debt Crisis",
+```
+new:
+```
+        title: "Humphreys · Historical Dictionary of the IMF (2000), Introduction: The debt crisis",
+```
+
+발견 #2
+
+old:
+```
+{ title: "World Bank · Southeast Asia's long-term growth", href:
+```
+new:
+```
+{ title: "Hayami · Agricultural development in Southeast Asia (Akiyama & Larson eds., World Bank 2004, ch. 2)", href:
+```
+
+발견 #2
+
+old:
+```
+assumptions: "장기 지역 개관이며 설명용 100 장부와 모든 나라의 국내 부가가치를 제공하지 않습니다.", evidenceScope: "동남아시아의 장기 성장과 세계시
+```
+new:
+```
+assumptions: "세계은행 편저의 농업개발사 장이며 설명용 100 장부와 모든 나라의 국내 부가가치를 제공하지 않습니다.", evidenceScope: "동남아시아의 장기 성장과 세계시
+```
+
+발견 #11
+
+old:
+```
+{ title: "World Bank · Water Energy Nexus in Central Asia", href:
+```
+new:
+```
+{ title: "World Bank · Water Energy Nexus in Central Asia: Syr Darya Basin (2004)", href:
+```
+
+발견 #13
+
+old:
+```
+contribution: "관광·송금 중심 경제와 어업권료·지원금 같은 주권 수입, 기후·교통·기반시설 제약을 구분합니다."
+```
+new:
+```
+contribution: "관광·송금 중심 경제와 어업 허가·신탁기금·공여 지원 같은 주권 수입 중심 경제를 구분하고 피지·솔로몬제도는 따로 다룹니다."
+```
+
+발견 #5
+
+old:
+```
+entryNote: "전쟁비 100을 세금 35·국채 40·화폐 15·징발 10으로 마련하고 전후 예산 100을 다시 나눕니다."
+```
+new:
+```
+entryNote: "전쟁비 100을 현재 세금 35·국내 국채 40·해외차입 15·중앙은행 화폐신용 10으로 마련하고 전후 예산 100을 서비스 40·사회급여 30·전쟁부채 이자 20·재건 10으로 다시 나눕니다."
+```
+
+발견 #5
+
+old:
+```
+workedExample: "전후 예산 100을 부채 40·복구 30·사회급여 20·국방 10으로 나눕니다."
+```
+new:
+```
+workedExample: "전후 예산 100을 일반 서비스 40·사회급여 30·전쟁부채 이자 20·재건 10으로 나눕니다."
+```
+
+발견 #5
+
+old:
+```
+workedExample: "전쟁 국채 40의 이자와 상환을 전후 예산에서 매년 지급하는 경로를 봅니다."
+```
+new:
+```
+workedExample: "국내 국채 40과 해외차입 15의 이자 20을 전후 예산에서 매년 지급하는 경로를 봅니다."
+```
+
+발견 #5
+
+old:
+```
+changedCaseQuestion: "전후 이자·상환이 40에서 50으로 늘고 총예산 100, 복구 30과 국방 10이 같다면 사회급여에 얼마가 남는지 계산하세요.",
+    changedCaseAnswers: ["100−50−30−10=10", "사회급여 10", "기준보다 10 감소", "증세·차환 선택 별도"],
+```
+new:
+```
+changedCaseQuestion: "전후 전쟁부채 이자가 20에서 30으로 늘고 총예산 100, 일반 서비스 40과 재건 10이 같다면 사회급여에 얼마가 남는지 계산하세요.",
+    changedCaseAnswers: ["100−30−40−10=20", "사회급여 20", "기준 30보다 10 감소", "증세·차환 선택 별도"],
+```
+
+발견 #32
+
+old:
+```
+{ title: "LSE EH450 · The Economics of War", href:
+```
+new:
+```
+{ title: "LSE EH450 · Topics in the Economic History of War in Europe", href:
+```
+
+발견 #32
+
+old:
+```
+{ title: "UK Parliament · Government borrowing, debt and debt interest", href:
+```
+new:
+```
+{ title: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href:
+```
+
+발견 #6
+
+old:
+```
+notClaim: "2020년까지의 업종 평균이 2026년 개별 기업·제품 공급망을 실시간으로 보여 준다는 뜻은 아닙니다."
+```
+new:
+```
+notClaim: "2022년까지(2025년 판)의 업종 평균이 2026년 개별 기업·제품 공급망을 실시간으로 보여 준다는 뜻은 아닙니다."
+```
+
+### src/content/knowledge-graph.ts
+
+발견 #12
+
+※ 같은 old→new를 `src/content/registrations/agrarian-surplus-and-state.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+definition: "기원전 4천년기 말 남부 메소포타미아에서 수 표시와 그림 문자를 점토판에 적어
+```
+new:
+```
+definition: "기원전 4천년기 말~3천년기 초(우루크 III·젬데트 나스르기) 남부 메소포타미아에서 수 표시와 그림 문자를 점토판에 적어
+```
+
+발견 #46
+
+old:
+```
+definition: "작은 섬 경제의 가구와 정부 수입이 국내 생산뿐 아니라 송금·관광·어업권료·지원금과 같은 서로 다른 외부 흐름으로 구성된 구조입니다."
+```
+new:
+```
+definition: "작은 섬 경제의 가구와 정부 수입이 국내 생산뿐 아니라 송금·관광·어업권료·지원금과 같은 서로 다른 외부 흐름으로 구성된 구조입니다. Bertram & Watters(1985)의 MIRAB(이주·송금·원조·관료제) 모형을 관광·어업권까지 넓힌 개념입니다."
+```
+
+### src/content/economic-history/articles.ts
+
+발견 #8
+
+old:
+```
+{ id: "source", title: "세계은행 개혁 연표는 가구·기업·가격·특구가 차례로 겹친 과정을 보여 줍니다" },
+```
+new:
+```
+{ id: "source", title: "Hofman의 개혁 연표는 가구·기업·가격·특구가 차례로 겹친 과정을 보여 줍니다" },
+```
+
+발견 #7
+
+old:
+```
+{ id: "comparison", title: "RIETI 연구는 전후 정책의 역할을 민간 경쟁과 구조 이동에 대조합니다" },
+```
+new:
+```
+{ id: "comparison", title: "오카자키의 RIETI 글은 전후 산업정책의 효과를 유보하고 부작용까지 적습니다" },
+```
+
+발견 #19
+
+old:
+```
+{ id: "comparison", title: "IMF 자료는 1970년대 계약 변화와 현재의 다각화 한계를 연결합니다" },
+```
+new:
+```
+{ id: "comparison", title: "2003년 IMF 검토는 1970년대 계약 변화와 다각화 과제를 연결합니다" },
+```
+
+발견 #2
+
+old:
+```
+{ id: "comparison", title: "세계은행 역사 연구는 운송비 하락이 수출과 수입품 경쟁을 함께 키웠다고 설명합니다" },
+```
+new:
+```
+{ id: "comparison", title: "세계은행이 펴낸 하야미의 농업개발사 연구는 운송비 하락이 수출과 수입품 경쟁을 함께 키웠다고 설명합니다" },
+```
+
+발견 #6
+
+old:
+```
+{ id: "limits", title: "2020년까지의 업종 평균으로 2026년 개별 제품의 원산지와 위험을 단정하지 않습니다" },
+```
+new:
+```
+{ id: "limits", title: "2022년까지의 업종 평균으로 2026년 개별 제품의 원산지와 위험을 단정하지 않습니다" },
+```
+
+### src/content/article-topology-decisions.ts
+
+발견 #20
+
+※ 같은 old→new를 `src/content/registrations/industrial-revolution-wages-and-energy.ts`에도 적용할 것. 이 글은 등록 모듈이 정본이라, 공용 파일만 고치면 `check-article.sh`의 merge-registrations가 원래 값으로 되돌린다.
+
+old:
+```
+문턱8.33과 1770=100·1840 생산143.9/소비임금127.1이 본문·문제에서 일치하는지 확인합니다.
+```
+new:
+```
+문턱8.33과 1780=100·1840 노동자당 산출146/실질임금112(Allen 2009 +46%·+12%)가 본문·문제에서 일치하는지 확인합니다.
+```

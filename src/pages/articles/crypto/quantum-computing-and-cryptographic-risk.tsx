@@ -106,19 +106,23 @@ export default function Article() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">2026년 Babbush 등의 연구는 secp256k1의 256비트 이산로그에 대해 논리 큐비트 1,200개 미만·Toffoli 게이트 9천만 개 미만인 구성과, 1,450개 미만·7천만 개 미만인 구성을 제시합니다. 공간과 연산 수를 맞바꾸는 두 선택지입니다.</p>
           <p className="leading-8">물리 오류율 10⁻³, 평면 연결 등의 초전도 장치 가정에서 50만 개 미만의 물리 큐비트와 분 단위 시간을 추정합니다. 이는 그런 장치를 실제로 만들고 암호를 해독했다는 보고가 아닙니다. 숨긴 회로에 관한 검증 자료와, 하드웨어가 가정대로 동작한다는 증거도 구분해야 합니다.</p>
+          <p className="leading-8">8절의 15 인수분해를 2048비트 RSA 정수로 키운 추정은 별도 논문에 있습니다. Gidney(2025-05-21, arXiv 2505.15917)는 잡음 있는 물리 큐비트 100만 개 미만으로 2048비트 RSA 정수를 1주 미만에 인수분해할 수 있다고 추정합니다.</p>
+          <p className="leading-8">장치 가정은 최근접 연결의 정사각 격자, 균등 게이트 오류율 0.1%, 표면 부호 주기 1 µs, 제어 시스템 반응 시간 10 µs입니다. 같은 저자가 공저한 2019년 추정은 큐비트 2천만 개·8시간이었으므로, 이번 추정은 큐비트를 약 20분의 1로 줄이는 대신 시간을 늘린 선택입니다.</p>
+          <p className="leading-8">두 추정을 나란히 놓으면 RSA-2048은 100만 개 미만·1주 미만, secp256k1 이산로그는 50만 개 미만·분 단위입니다. 두 논문 모두 물리 오류율 0.1%(10⁻³)와 평면 격자 연결을 가정하지만 회로 구성과 시간 계산은 따로 했습니다. 따라서 이 숫자는 같은 기계로 두 문제를 푸는 비교가 아니라 각 논문의 가정 안에서 읽어야 합니다. 어느 쪽도 그런 장치가 이미 있다는 보고가 아닙니다.</p>
           <p className="leading-8">논리 큐비트는 알고리즘이 다루는 계산 단위이며 실제 장치에서는 오류 정정으로 논리 오류율을 충분히 낮추어 구현합니다. 실제 잡음 있는 물리 큐비트 여러 개와 반복 검사를 이용해 그 동작을 지탱합니다. 필요한 배수는 오류율·정정 코드·연결·요구 정확도에 따라 달라집니다.</p>
           <p className="leading-8">서로 다른 논문에서 가장 작은 큐비트 수와 가장 짧은 시간만 골라 합칠 수는 없습니다. 소자 종류와 게이트 속도, 정정 일정이 다르면 존재하지 않는 기계의 사양이 됩니다.</p>
         </div>
 
         <SourceApplication source="Babbush 외 · §II.2와 초록의 물리 자원 조건" excerpt="fewer than half a million physical qubits" application="원문의 50만 개 미만은 물리 큐비트 수입니다. 앞의 논리 큐비트 1,200개와 같은 단위가 아닙니다. 지정 오류율·연결·정정 조건으로 대응시킨 추정이며, 네 후보 계산을 실제 칩에서 50만 번 실행한 수치도 아닙니다." />
         <CitationBlock source="Babbush 외 · 2026 ECDLP 자원 추정" citeKey={3} href="https://arxiv.org/abs/2603.28846v2">2026-04-15 수정된 v2를 2026-10-04 확인했습니다. §II.2의 논리·물리 자원 가정을 대조합니다. 저자는 v2에서 검증 자료의 영지식 증명 건전성을 해칠 수 있던 소프트웨어 오류를 수정했다고 명시합니다. 이 수정 여부와 실제 양자 하드웨어의 실현 여부는 별개입니다.</CitationBlock>
+        <CitationBlock source="Gidney · 2025 RSA-2048 자원 추정" citeKey={6} href="https://arxiv.org/abs/2505.15917">초록의 큐비트 수·시간·장치 가정을 2026-10-09 확인했습니다. 실제 하드웨어에서 인수분해를 실행한 결과가 아니라 지정한 오류율·연결·주기 조건에서의 비용 추정입니다.</CitationBlock>
         <CitationBlock source="IBM Quantum Learning · Grover introduction" citeKey={4} href="https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction">공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">이 구분을 실제로 교체할 암호의 목록에 적용합니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10 · 키 교환·서명·해시·광학 통신은 바꿔야 할 이유가 다릅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">RSA의 인수분해 가정과 Diffie–Hellman·타원곡선 계열의 이산로그 가정은 Shor의 영향을 받습니다. ECDSA·BLS 서명과 이산로그 기반 증명·커밋도 각각 검토해야 합니다. 초기 설정에서 비밀을 삭제했더라도 공개 군 원소의 이산로그를 계산하는 능력이 생기는 문제는 남습니다.</p>
+          <p className="leading-8">RSA의 인수분해 가정(9절의 2048비트 추정)과 Diffie–Hellman·타원곡선 계열의 이산로그 가정은 Shor의 영향을 받습니다. ECDSA·BLS 서명과 이산로그 기반 증명·커밋도 각각 검토해야 합니다. 초기 설정에서 비밀을 삭제했더라도 공개 군 원소의 이산로그를 계산하는 능력이 생기는 문제는 남습니다.</p>
           <p className="leading-8">Grover의 검색 개선을 모든 암호의 보안 수치가 똑같이 절반이 된다는 규칙으로 쓰면 안 됩니다. 해시의 원상 찾기와 충돌 찾기는 다른 문제이고 병렬화·메모리·회로 비용도 다릅니다.</p>
           <p className="leading-8">장기간 비밀이어야 하는 통신은 지금 기록한 암호문을 미래에 푸는 상황을 고려합니다. 서명에서는 공개키 노출과 새로운 승인 위조가 문제입니다. 키만 바꾸고 인증서·펌웨어·복구·백업 경로에 예전 서명이 남아 있으면 전환이 끝난 것이 아닙니다.</p>
           <p className="leading-8">양자내성암호인 PQC는 일반 컴퓨터에서 계산합니다. 양자키분배인 QKD는 물리 신호로 공유 비밀을 만드는 별도 체계입니다. 아래 글에서 각각의 방정식·서명·통신 경로를 이어갑니다.</p>

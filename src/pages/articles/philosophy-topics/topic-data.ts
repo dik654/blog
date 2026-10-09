@@ -31,8 +31,8 @@ export const identityData: PhilosophyTopicArticleData = {
       "재료의 진품성을 중시하는 전시라면 B의 지위가 커질 수 있습니다. 반대로 통근자의 책임 보험은 A의 연속된 관리 기록을 볼 가능성이 큽니다. 이 차이는 아무 답이나 된다는 뜻이 아니라, 판단 목적과 대상 종류에 맞는 지속 기준을 이유와 함께 내야 한다는 뜻입니다.",
     ] },
     { id: "source", level: "5", title: "8. 플루타르코스의 테세우스 배를 두 자전거에 대입합니다", bridge: "현대 자전거 장부가 오래된 논쟁과 같은 구조임을 원전으로 확인합니다.", paragraphs: [
-      "플루타르코스는 아테네 사람들이 테세우스의 배에서 썩은 나무를 빼고 새 목재를 넣어 보존했다고 기록합니다. 철학자들은 이 배가 같은 배인지 논쟁했고, 기록 자체가 변화하면서도 남는 것의 대표 사례가 됐습니다.",
-      "이 원전은 정답을 주는 논문이 아니라 실제 보존 행위가 논쟁을 낳았다는 증거입니다. 자전거 사례에서는 목재를 부품으로, 항해와 보존 기록을 사용 이력으로 바꿔 같은 기준 충돌을 드러냅니다.",
+      "플루타르코스는 아테네 사람들이 테세우스의 배에서 낡은 목재를 때때로 빼고 튼튼한 새 목재를 넣어 보존했다고 기록합니다. 철학자들은 이 배가 같은 배인지 논쟁했고, 기록 자체가 변화하면서도 남는 것의 대표 사례가 됐습니다.",
+      "이 원전은 정답을 주는 논문이 아니라 실제 보존 행위가 논쟁을 낳았다는 증거입니다. 다만 플루타르코스의 기록에는 교체(자전거 A에 해당)만 있습니다. 빼낸 옛 판자를 모아 원래 배치대로 다시 짜는 두 번째 배(자전거 B에 해당)는 17세기 토머스 홉스가 『물체론(De Corpore)』 2부 11장에서 덧붙인 변형이고, 이 판본에서 비로소 같은 배라고 주장할 후보가 둘이 됩니다(Stanford 철학백과 Material Constitution, 2026-10-09 확인). 자전거 사례는 목재를 부품으로, 항해와 보존 기록을 사용 이력으로 바꿔 이 홉스판의 기준 충돌을 드러냅니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 지속 이론은 시간이 흐르는 존재 방식을 다르게 그립니다", bridge: "고대 사례에서 기준 충돌을 확인했습니다. 현대 형이상학은 지속 자체를 설명하는 두 큰 그림도 비교합니다.", paragraphs: [
       "한 견해는 자전거 전체가 매 순간 존재하면서 성질만 바뀐다고 봅니다. 다른 견해는 자전거가 여러 시간 부분을 가진 긴 존재이고, 1년 차와 10년 차가 그 서로 다른 부분이라고 봅니다. 둘은 변화를 표현하는 문법부터 다릅니다.",
@@ -60,8 +60,8 @@ export const identityData: PhilosophyTopicArticleData = {
     { term: "지속 기준", description: "무엇이 보존될 때 한 대상이 시간을 건너 계속된다고 볼지를 정하는 기준입니다.", example: "보험은 연속된 소유·수리 기록을, 전시는 원재료를 더 볼 수 있습니다.", boundary: "모든 사물과 사람에게 하나의 기준이 그대로 적용된다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "Plutarch · Life of Theseus 23.1", excerpt: "taking away the old timbers", application: "낡은 목재를 계속 바꾼 배와 자전거 A를 연결하고, 보존 행위가 동일성 논쟁을 만든 지점을 확인합니다.", citation: "Plutarch, Theseus 23.1, Perseus Digital Library", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A2008.01.0067%3Achapter%3D23%3Asection%3D1", note: "테세우스의 배에서 낡은 목재를 교체했다는 고대 기록과 후대 철학 논쟁의 출발점을 확인할 수 있는 원문입니다." },
-    { source: "Stanford Encyclopedia of Philosophy · Identity Over Time", excerpt: "How do things persist through change?", application: "연속 존재와 시간 부분이라는 현대의 두 그림이 변화와 동일성을 어떻게 다르게 설명하는지 비교합니다.", citation: "Identity Over Time, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/identity-time/", note: "시간을 거친 동일성, 지속, 변화의 주요 논증과 쟁점을 정리한 동료 검토 철학 백과 항목입니다." },
+    { source: "Plutarch · Life of Theseus 23.1", excerpt: "They took away the old timbers from time to time", application: "낡은 목재를 계속 바꾼 배와 자전거 A를 연결하고, 보존 행위가 동일성 논쟁을 만든 지점을 확인합니다.", citation: "Plutarch, Theseus 23.1, Perseus Digital Library", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A2008.01.0067%3Achapter%3D23%3Asection%3D1", note: "테세우스의 배에서 낡은 목재를 교체했다는 고대 기록과 후대 철학 논쟁의 출발점을 확인할 수 있는 원문입니다." },
+    { source: "Stanford Encyclopedia of Philosophy · Identity Over Time", excerpt: "a well-known distinction between numerical and qualitative identity", application: "연속 존재와 시간 부분이라는 현대의 두 그림이 변화와 동일성을 어떻게 다르게 설명하는지 비교합니다.", citation: "Identity Over Time, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/identity-time/", note: "시간을 거친 동일성, 지속, 변화의 주요 논증과 쟁점을 정리한 동료 검토 철학 백과 항목입니다." },
   ],
   review: [
     "자전거 A와 B가 각각 유리한 지속 기준은 무엇인가요? (답: 2·7절)",
@@ -106,7 +106,7 @@ export const freedomData: PhilosophyTopicArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. 프랑크푸르트 사례는 다른 선택지가 꼭 필요한지 묻습니다", bridge: "통제의 범위를 봤으니 책임에 대안이 반드시 필요한지 반례로 검사합니다.", paragraphs: [
       "한 사람이 자기 이유로 문을 열기로 했지만, 뒤에서 감시하던 장치가 마음을 바꾸면 강제로 열게 만들 준비를 했다고 하겠습니다. 실제로는 장치가 개입하지 않았고 사람은 원래 계획대로 문을 열었습니다. 그는 달리 할 기회가 없었지만 행동의 실제 원천은 자기 이유였습니다.",
-      "이런 프랑크푸르트식 사례는 ‘다르게 할 수 있어야만 책임이 있다’는 원칙에 도전합니다. 논쟁은 장치가 개입하지 않았어도 작은 대안이 남는지, 행위의 원천만으로 충분한지 이어집니다. 사례 하나가 논쟁을 끝냈다고 말해서는 안 됩니다.",
+      "이런 프랑크푸르트식 사례는 ‘다르게 할 수 있어야만 책임이 있다’는 원칙, 곧 대안 가능성 원칙(Principle of Alternative Possibilities, PAP)에 도전합니다. 출전은 해리 프랑크푸르트의 논문 「대안 가능성과 도덕적 책임(Alternate Possibilities and Moral Responsibility)」(Journal of Philosophy 66, 1969)입니다. 논쟁은 장치가 개입하지 않았어도 작은 대안이 남는지, 행위의 원천만으로 충분한지 이어집니다. 사례 하나가 논쟁을 끝냈다고 말해서는 안 됩니다.",
     ] },
     { id: "limits", level: "7", title: "10. 무작위 선택이나 느낌만으로 자유를 증명하지 않습니다", bridge: "대안과 원천이 갈릴 수 있음을 확인했습니다. 자주 생기는 오해를 경계로 남깁니다.", paragraphs: [
       "양자적이거나 신경계의 무작위 사건이 행동을 바꾼다고 해도 그 사건이 행위자의 통제를 늘리는지는 별도 문제입니다. 동전 던지기처럼 우연히 정해진 선택은 미리 정해진 선택과 다르지만, 곧바로 내가 선택을 이끌었다는 뜻은 아닙니다.",
@@ -201,7 +201,7 @@ export const languageData: PhilosophyTopicArticleData = {
   ] },
   sources: [
     { source: "Bertrand Russell · On Denoting", excerpt: "A phrase may be denoting", application: "기술구를 단순 이름으로 보지 않고 문장 전체의 존재·유일성 조건으로 분석하는 이유를 지시 실패 사례에 적용합니다.", citation: "Bertrand Russell, On Denoting, Mind 14 (1905)", href: "https://humanum.arts.cuhk.edu.hk/humftp/E-text/Russell/denoting.htm", note: "기술구와 지시 문제를 논리적 분석으로 다룬 러셀의 1905년 논문 공개 본문입니다." },
-    { source: "Stanford Encyclopedia of Philosophy · Speech Acts", excerpt: "we do things with words", application: "같은 내용이 주장·부탁·약속이 될 수 있고 각각 다른 성공 조건을 가진다는 점을 상환 사례에 대입합니다.", citation: "Speech Acts, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/speech-acts/", note: "발화 내용, 발화수반력, 수행적 발화와 성공 조건을 정리한 동료 검토 철학 백과 항목입니다." },
+    { source: "Stanford Encyclopedia of Philosophy · Speech Acts", excerpt: "Austin, in How To Do Things With Words, details the conditions that must be met for a given speech act to be performed felicitously", application: "같은 내용이 주장·부탁·약속이 될 수 있고 각각 다른 성공 조건을 가진다는 점을 상환 사례에 대입합니다.", citation: "Speech Acts, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/speech-acts/", note: "발화 내용, 발화수반력, 수행적 발화와 성공 조건을 정리한 동료 검토 철학 백과 항목입니다." },
   ],
   review: [
     "‘은행 앞’의 지시를 사전만으로 확정할 수 없는 이유는 무엇인가요? (답: 1·7절)",
@@ -315,7 +315,7 @@ export const aestheticsData: PhilosophyTopicArticleData = {
       "그러나 누가 좋은 판단자인지는 다시 논쟁이 됩니다. 교육 기회와 작품 접근이 불평등한 사회에서 기존 전문가의 합의는 배제를 되풀이할 수 있습니다. 흄의 조건은 권위 명단보다 판단 과정을 검사하는 질문으로 쓰는 편이 낫습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 현대 미학은 미적 성질과 판단의 여러 조건을 나눕니다", bridge: "좋은 판단자의 조건에서 미적 개념 자체의 성격으로 넓힙니다.", paragraphs: [
-      "어떤 이론은 균형·우아함·긴장 같은 미적 성질이 색·소리·구성과 연결되지만 단순 측정값으로 환원되지는 않는다고 봅니다. 다른 논의는 특별한 무관심, 쾌, 주의 방식이나 사회적 실천이 미적 판단을 이루는지 묻습니다.",
+      "프랭크 시블리의 논문 「미적 개념(Aesthetic Concepts)」(1959)은 균형·우아함·긴장 같은 미적 성질이 색·소리·구성과 연결되지만, 그런 비미적 조건을 확인한다고 미적 개념의 적용이 정해지지는 않는다고 봅니다. 다른 논의는 칸트의 『판단력 비판』(1790)이 내세운 무관심(disinterest)에서 시작해, 쾌, 주의 방식이나 사회적 실천이 미적 판단을 이루는지 묻습니다.",
       "하나의 목록이 모든 예술과 자연 경험을 설명하지는 않습니다. 음악의 시간 구조, 그림의 화면, 건축의 사용성, 음식의 맛은 서로 다른 감각과 맥락을 가집니다. 공통 개념을 쓰되 매체별 특징을 지워서는 안 됩니다.",
     ] },
     { id: "limits", level: "7", title: "10. 전문가 합의나 다수결을 작품 가치의 자동 판정기로 쓰지 않습니다", bridge: "공유 가능한 이유와 권력의 문제를 함께 봤습니다. 판단의 경계를 분명히 합니다.", paragraphs: [
@@ -341,7 +341,7 @@ export const aestheticsData: PhilosophyTopicArticleData = {
   ] },
   sources: [
     { source: "David Hume · Of the Standard of Taste", excerpt: "practice in a particular art", application: "연습·비교·섬세한 감각·편견 점검이 첫 호감을 어떻게 더 검토 가능한 판단으로 바꾸는지 공연 사례에 적용합니다.", citation: "David Hume, Of the Standard of Taste (1757), Early Modern Texts", href: "https://www.earlymoderntexts.com/assets/pdfs/hume1757essay2.pdf", note: "취향의 다양성과 판단 기준의 가능성을 함께 논한 흄의 에세이를 현대화한 공개 본문입니다." },
-    { source: "Stanford Encyclopedia of Philosophy · The Concept of the Aesthetic", excerpt: "aesthetic concepts and judgment", application: "미적 성질·경험·태도·판단이 서로 어떤 관계인지 나누고 하나의 매체 기준을 전체 예술에 일반화하지 않습니다.", citation: "The Concept of the Aesthetic, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/aesthetic-concept/", note: "미적 개념과 판단, 미적 태도와 경험에 관한 주요 현대 논쟁을 정리한 동료 검토 백과 항목입니다." },
+    { source: "Stanford Encyclopedia of Philosophy · The Concept of the Aesthetic", excerpt: "how to square the allegedly perceptual basis of aesthetic judgments with the fact that we give reasons in support of them", application: "미적 성질·경험·태도·판단이 서로 어떤 관계인지 나누고 하나의 매체 기준을 전체 예술에 일반화하지 않습니다.", citation: "The Concept of the Aesthetic, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/aesthetic-concept/", note: "미적 개념과 판단, 미적 태도와 경험에 관한 주요 현대 논쟁을 정리한 동료 검토 백과 항목입니다." },
   ],
   review: [
     "호감 60표와 근거 있는 미적 판단은 어떻게 다른가요? (답: 3·4절)",
@@ -385,7 +385,7 @@ export const meaningData: PhilosophyTopicArticleData = {
       "이 주장은 고대 폴리스의 시민관과 인간 기능 논증에 기대므로 오늘의 유일한 답으로 쓸 수 없습니다. 한 주 시간표에서는 행복을 순간 쾌락으로만 보지 않고, 반복하는 활동과 성품·관계의 변화를 보게 하는 비교 기준으로 사용합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 현대 논쟁은 주관주의·객관주의·결합설을 비교합니다", bridge: "고대의 잘 삶에서 오늘의 의미 논쟁으로 돌아와 세 입장의 장단점을 같은 사례에 놓습니다.", paragraphs: [
-      "주관주의는 사람이 원하는 목표와의 연결을 강조해 소외된 삶을 피합니다. 객관주의는 가치가 욕구에만 달리지 않는다고 보아 해롭거나 하찮은 목표의 문제를 다룹니다. 결합설은 가치 있는 대상에 긍정적으로 관여할 때 의미가 커진다고 봅니다.",
+      "주관주의는 사람이 원하는 목표와의 연결을 강조해 소외된 삶을 피합니다. 객관주의는 가치가 욕구에만 달리지 않는다고 보아 해롭거나 하찮은 목표의 문제를 다룹니다. 결합설은 가치 있는 대상에 긍정적으로 관여할 때 의미가 커진다고 봅니다. 대표 논자는 수전 울프(Susan Wolf, 『삶의 의미와 그것이 중요한 이유(Meaning in Life and Why It Matters)』, 2010)이고, Stanford 철학백과는 그의 표어를 “주관적 끌림이 객관적 끌 만함을 만날 때 의미가 생긴다(Meaning arises when subjective attraction meets objective attractiveness)”로 인용합니다.",
       "세 입장은 행복, 도덕, 의미의 관계와 극심한 고통 속 의미, 죽음과 유산, 공동체의 가치 판단을 다르게 설명합니다. 어느 한 표어를 선택하는 데 그치지 말고 실제 사례가 각 이론에 제기하는 반례를 확인해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 삶의 의미를 행복·도덕·우주의 목적 하나와 같게 두지 않습니다", bridge: "세 이론의 역할을 비교했습니다. 개인에게 책임을 몰아주지 않도록 경계를 남깁니다.", paragraphs: [
@@ -410,8 +410,8 @@ export const meaningData: PhilosophyTopicArticleData = {
     { term: "결합 관점", description: "마음이 끌리는 참여와 가치 있는 대상이 만날 때 의미가 생긴다고 보는 입장입니다.", example: "가르치는 관심이 실제 관계와 도움 속에서 능력과 약속으로 자랍니다.", boundary: "끌림과 가치를 숫자로 더하면 의미 점수가 나온다는 이론은 아닙니다." },
   ] },
   sources: [
-    { source: "Aristotle · Nicomachean Ethics, Book I", excerpt: "activity of soul in accordance with virtue", application: "잘 삶을 순간의 즐거운 상태보다 시간에 걸쳐 능력과 성품을 실현하는 활동으로 보는 관점을 100시간 사례에 대입합니다.", citation: "Aristotle, Nicomachean Ethics I.7, Perseus Digital Library", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7", note: "인간의 좋음과 행복을 기능·덕·활동 및 완전한 삶과 연결하는 『니코마코스 윤리학』 1권 원문 번역입니다." },
-    { source: "Stanford Encyclopedia of Philosophy · The Meaning of Life", excerpt: "meaningfulness of life", application: "주관주의·객관주의·결합설이 끌림과 가치의 관계를 어떻게 다르게 설명하는지 한 주 시간표에 대입합니다.", citation: "The Meaning of Life, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/life-meaning/", note: "삶의 의미를 둘러싼 초자연주의와 자연주의, 주관·객관·결합 관점을 정리한 동료 검토 백과 항목입니다." },
+    { source: "Aristotle · Nicomachean Ethics, Book I (H. Rackham 역)", excerpt: "the active exercise of his soul's faculties in conformity with excellence or virtue", application: "잘 삶을 순간의 즐거운 상태보다 시간에 걸쳐 능력과 성품을 실현하는 활동으로 보는 관점을 100시간 사례에 대입합니다.", citation: "Aristotle, Nicomachean Ethics I.7, Perseus Digital Library", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7", note: "인간의 좋음과 행복을 기능·덕·활동 및 완전한 삶과 연결하는 『니코마코스 윤리학』 1권 원문 번역입니다." },
+    { source: "Stanford Encyclopedia of Philosophy · The Meaning of Life", excerpt: "A large majority of contemporary analytic philosophers have been interested in meaning in life, that is, in the meaningfulness that a person’s life could exhibit", application: "주관주의·객관주의·결합설이 끌림과 가치의 관계를 어떻게 다르게 설명하는지 한 주 시간표에 대입합니다.", citation: "The Meaning of Life, Stanford Encyclopedia of Philosophy", href: "https://plato.stanford.edu/entries/life-meaning/", note: "삶의 의미를 둘러싼 초자연주의와 자연주의, 주관·객관·결합 관점을 정리한 동료 검토 백과 항목입니다." },
   ],
   review: [
     "행복·도덕·의미가 겹치면서도 같은 평가가 아닌 이유는 무엇인가요? (답: 4절)",

@@ -30,10 +30,11 @@ export default function VoteCommit({
         question="어느 precommit 집합이 특정 block의 Commit이 될까요?"
         idea={<>유효한 서명을 validator별 한 번만 세고, 같은 height·round·BlockID를 가리키는 voting power만 합합니다. 개수가 아니라 당시 validator snapshot의 weight가 기준입니다.</>}
         formula={String.raw`\begin{aligned}W&=\sum_{i\in V_h}w_i,\\ W_B&=\sum_{i\in S_B}w_i>\frac{2}{3}W\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}W&=\underbrace{\sum_{i\in V_h}w_i,}_{\text{Historical validator set 계산}}\\ W_B&=\underbrace{\sum_{i\in S_B}w_i>\frac{2}{3}W}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}W&=\underbrace{\sum_{i\in V_h}w_i}_{\text{height h 전체 power}},\\ W_B&=\underbrace{\sum_{i\in S_B}w_i}_{\text{같은 BlockID power}}>\underbrace{\frac{2}{3}W}_{\text{Commit 문턱}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{i\in V_h}w_i,`, annotation: ["Historical validator set이(가) 식의","결과에 기여하는 방식을 계산합니다.","유효한 서명을 validator별 한 번만 세고, 같은","height·round·BlockID를 가리키는 voting"] },
-          { expression: String.raw`\sum_{i\in S_B}w_i>\frac{2}{3}W`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","유효한 서명을 validator별 한 번만 세고, 같은","height·round·BlockID를 가리키는 voting","power만 합합니다."] },
+          { expression: String.raw`\sum_{i\in V_h}w_i`, annotation: ["그 height 당시 validator snapshot의","voting power를 모두 더합니다","예시는 전체 power 100"] },
+          { expression: String.raw`\sum_{i\in S_B}w_i`, annotation: ["같은 height·round·BlockID의 유효","precommit power를 validator별 한 번씩","nil·absent 서명은 더하지 않습니다"] },
+          { expression: String.raw`\frac{2}{3}W`, annotation: ["100의 2/3≈66.67보다 커야 하므로","67이면 Commit, 66이면 미달"] },
         ]}
         terms={[
           { symbol: "V_h", name: "Historical validator set", description: "Height h에서 유효한 validator set snapshot입니다." },

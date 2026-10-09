@@ -17,9 +17,11 @@ export default function Schnorr() {
         question="Verifier는 secret x를 보지 않고 서명자의 응답을 어떻게 확인할까요?"
         idea="Signer는 nonce commitment R을 먼저 고정하고 challenge e에 대해 s=k+ex로 응답합니다. 양변에 G를 곱하면 공개된 P=xG만으로 같은 관계를 검사할 수 있습니다."
         formula={String.raw`R=kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP`}
-        annotatedFormula={String.raw`R=\underbrace{kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP}_{\text{Fiat–Shamir challenge 계산}}`}
+        annotatedFormula={String.raw`R=\underbrace{kG}_{\text{nonce 먼저 고정}},\quad e=\underbrace{H(\mathsf{tag}\Vert R\Vert P\Vert m)}_{\text{문맥 묶은 challenge}},\quad s=\underbrace{k+ex}_{\text{x를 가린 응답}}\pmod q,\quad \underbrace{sG\stackrel?=R+eP}_{\text{공개값만으로 검증}}`}
         operations={[
-          { expression: String.raw`kG,\quad e=H(\mathsf{tag}\Vert R\Vert P\Vert m),\quad s=k+ex\pmod q,\quad sG\stackrel?=R+eP`, annotation: ["Fiat–Shamir challenge이(가) 식의 결과에","기여하는 방식을 계산합니다.","Signer는 nonce commitment R을 먼저","고정하고 challenge e에 대해 s=k+ex로"] },
+          { expression: String.raw`H(\mathsf{tag}\Vert R\Vert P\Vert m)`, annotation: ["verifier의 무작위 challenge 대신","domain·R·공개키·message를 hash","다른 문맥에서 응답 재사용을 막음"] },
+          { expression: String.raw`k+ex`, annotation: ["nonce k가 secret x를 가린 response","k가 반복·노출되면 x도 드러납니다"] },
+          { expression: String.raw`sG\stackrel?=R+eP`, annotation: ["양변에 G를 곱하면 kG+exG=R+eP","x 없이 공개된 P=xG만으로 확인"] },
         ]}
         terms={[
           { symbol: "x,P=xG", name: "secret·public key", description: "x는 scalar field의 비밀값이고 P는 공개 group point입니다." },
@@ -34,9 +36,10 @@ export default function Schnorr() {
         question="같은 nonce k를 두 메시지에 쓰면 왜 secret x가 드러날까요?"
         idea="같은 R에서 challenge만 e₁,e₂로 달라지면 두 response의 차이에서 k가 지워지고 x에 대한 일차식 하나가 남습니다."
         formula={String.raw`s_1-s_2=(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q`}
-        annotatedFormula={String.raw`s_1-s_2=\underbrace{(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q}_{\text{field inverse 계산}}`}
+        annotatedFormula={String.raw`\underbrace{s_1-s_2}_{\text{같은 k가 지워짐}}=(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)\underbrace{(e_1-e_2)^{-1}}_{\text{challenge 차의 역원}}\pmod q`}
         operations={[
-          { expression: String.raw`(e_1-e_2)x\pmod q\quad\Longrightarrow\quad x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q`, annotation: ["field inverse이(가) 식의 결과에 기여하는 방식을","계산합니다.","같은 R에서 challenge만 e₁,e₂로 달라지면 두","response의 차이에서 k가 지워지고 x에 대한 일차식"] },
+          { expression: String.raw`s_1-s_2=(e_1-e_2)x\pmod q`, annotation: ["같은 R=kG로 두 message에 서명하면","(k+e₁x)−(k+e₂x)에서 k가 사라지고","x에 대한 일차식 하나가 남습니다"] },
+          { expression: String.raw`x=(s_1-s_2)(e_1-e_2)^{-1}\pmod q`, annotation: ["e₁≠e₂면 scalar field에서 역원이 있어","공개된 s·e만으로 private key 복원"] },
         ]}
         terms={[
           { symbol: "s_1,s_2", name: "responses", description: "동일 nonce로 만든 두 공개 서명의 response입니다." },

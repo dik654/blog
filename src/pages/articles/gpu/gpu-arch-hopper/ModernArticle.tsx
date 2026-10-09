@@ -30,10 +30,11 @@ export default function ModernHopperArticle(){return <article className="space-y
             transfer를 발행하고 consumer는 completion barrier 이후 shared tile을 사용합니다.
           </p>
     <ExplainedFormula question="두 단계 pipeline이 steady state에서 tile 하나당 얼마나 걸리는지 어떻게 근사할까?" idea={<>Load와 compute를 겹치면 매 tile마다 둘을 더하지 않고 더 느린 단계가 cadence를 정합니다. 처음 채우기와 마지막 비우기 비용은 별도로 남습니다.</>} formula={String.raw`\begin{aligned}T_{stage}&=\max(T_{copy},T_{compute})\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
-    annotatedFormula={String.raw`\begin{aligned}T_{stage}&=\underbrace{\max(T_{copy},T_{compute})}_{\text{경계 후보 선택}}\\[3pt]T_{pipe}&\approx T_{fill}+(L-1)T_{stage}+T_{drain}\end{aligned}`}
+    annotatedFormula={String.raw`\begin{aligned}T_{stage}&=\underbrace{\max(T_{copy},T_{compute})}_{\text{느린 단계가 cadence}}\\[3pt]T_{pipe}&\approx\underbrace{T_{fill}}_{\text{처음 채우기}}+\underbrace{(L-1)T_{stage}}_{\text{나머지 tile}}+\underbrace{T_{drain}}_{\text{마지막 비우기}}\end{aligned}`}
     operations={[
-      { expression: String.raw`\max(T_{copy},T_{compute})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Load와 compute를 겹치면 매 tile마다"] },
-    ]} terms={[
+          { expression: String.raw`\max(T_{copy},T_{compute})`, annotation: ["load와 compute를 겹치면 둘의 합이 아니라", "느린 쪽이 tile 하나의 cadence를 정함", "copy 3µs, compute 5µs → 약 5µs"] },
+          { expression: String.raw`(L-1)T_{stage}`, annotation: ["첫 tile 뒤 L−1개가 이 cadence로 흐름", "fill·drain이 따로 남아 L×5µs와 다름", "겹침이 막히면 합에 가까워집니다"] },
+        ]} terms={[
       {symbol:"L",name:"Tile stage 수",description:"K축 또는 workload를 따라 처리하는 tile 개수입니다."},
       {symbol:"T_{pipe}",name:"전체 pipeline 시간",description:"Fill부터 마지막 drain까지 L tiles를 완료하는 근사 elapsed time입니다."},
       {symbol:"T_{copy}",name:"Tile transfer 시간",description:"TMA가 source에서 shared/DSM으로 옮기고 arrival을 알릴 때까지의 시간입니다."},

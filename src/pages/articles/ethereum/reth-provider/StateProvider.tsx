@@ -14,10 +14,12 @@ export default function StateProvider({ onCodeRef }: { onCodeRef: (key: string, 
         question="Execution overlay가 있는 query는 key k를 어느 source에서 읽어야 할까요?"
         idea="이번 실행에서 k가 변경됐다면 overlay 값을 우선하고, 변경 기록이 없을 때만 pinned base snapshot으로 내려갑니다. 삭제 tombstone도 ‘없음’과 구분된 overlay 값입니다."
         formula={String.raw`R_V(k)=\begin{cases}O_V(k),&k\in\operatorname{dom}(O_V)\\B_V(k),&\text{otherwise}\end{cases}`}
-        annotatedFormula={String.raw`\underbrace{R_V(k)}_{\text{view read 결과 계산}}=\begin{cases}O_V(k),&k\in\operatorname{dom}(O_V)\\B_V(k),&\text{otherwise}\end{cases}`}
+        annotatedFormula={String.raw`\underbrace{R_V(k)}_{\text{view V의 읽기}}=\begin{cases}\underbrace{O_V(k)}_{\text{이번 실행 변경}},&\underbrace{k\in\operatorname{dom}(O_V)}_{\text{overlay에 기록 있음}}\\\underbrace{B_V(k)}_{\text{고정 base}},&\text{otherwise}\end{cases}`}
         operations={[
-          { expression: String.raw`R_V(k)`, annotation: ["view read 결과이(가) 식의 결과에 기여하는 방식을","계산합니다.","이번 실행에서 k가 변경됐다면 overlay 값을 우선하고,","변경 기록이 없을 때만 pinned base"] },
-        ]}
+  { expression: String.raw`k\in\operatorname{dom}(O_V)`, annotation: ["k가 이번 실행에서 변경·삭제됐는지","먼저 overlay key 집합에서 확인합니다"] },
+  { expression: String.raw`O_V(k)`, annotation: ["기록이 있으면 overlay 값을 우선합니다","base 10, overlay 7이면 7","tombstone이면 base로 내려가지 않음"] },
+  { expression: String.raw`B_V(k)`, annotation: ["기록이 없을 때만 같은 block/root에","고정한 base snapshot에서 읽습니다"] },
+]}
         terms={[
           { symbol: "R_V(k)", name: "view read 결과", description: "view V에서 key k를 조회한 value 또는 typed absence" },
           { symbol: "O_V", name: "overlay", description: "view V의 미커밋·실행 중 변경과 tombstone" },

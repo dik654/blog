@@ -18,10 +18,11 @@ export default function Forward() {
         question="B개 sample을 Dᵢₙ차원에서 Dₒᵤₜ차원으로 한 번에 어떻게 옮길까?"
         idea={<>Input feature 축 Dᵢₙ을 weight의 첫 축과 contraction하고, output feature 축 Dₒᵤₜ을 남깁니다. Bias는 batch마다 복사하지 않고 마지막 축에 broadcast합니다.</>}
         formula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=XW+b\in\mathbb R^{B\times D_{\rm out}}\\A&=\phi(Z)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=\underbrace{XW+b\in\mathbb R^{B\times D_{\rm out}}}_{\text{output width 계산}}\\A&=\underbrace{\phi(Z)}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=\underbrace{XW}_{\text{입력 feature 축 합산}}+\underbrace{b}_{\text{row마다 broadcast}}\in\underbrace{\mathbb R^{B\times D_{\rm out}}}_{\text{sample 축은 유지}}\\A&=\underbrace{\phi(Z)}_{\text{원소별 nonlinearity}}\end{aligned}`}
         operations={[
-          { expression: String.raw`XW+b\in\mathbb R^{B\times D_{\rm out}}`, annotation: ["output width이(가) 식의 결과에 기여하는 방식을","계산합니다.","Input feature 축 Dᵢₙ을 weight의 첫 축과","contraction하고, output feature 축"] },
-          { expression: String.raw`\phi(Z)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Input feature 축 Dᵢₙ을 weight의 첫 축과","contraction하고, output feature 축","Dₒᵤₜ을 남깁니다."] },
+          { expression: String.raw`XW`, annotation: ["X의 D_in 축과 W의 첫 축을 contraction", "784→128 layer라면 pixel 784개를", "hidden unit 128개로 섞습니다"] },
+          { expression: String.raw`b`, annotation: ["output channel별 offset 하나를", "batch로 복사하지 않고 B개 row에 더함"] },
+          { expression: String.raw`\phi(Z)`, annotation: ["shape (B, D_out)은 그대로 두고", "각 원소에 activation을 적용합니다"] },
         ]}
         terms={[
           { symbol: "B", name: "batch size", description: "같은 parameter로 함께 처리하는 sample 수입니다." },

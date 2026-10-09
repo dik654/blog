@@ -35,10 +35,10 @@ export default function ModernHardwareSecurityArticle() {
           question="Payroll key를 자동 지급하려면 어떤 조건을 동시에 만족해야 하는가?"
           idea={<>기밀성 하나만 보지 않고 measurement 무결성, freshness, 업무 policy를 Boolean gate로 결합합니다. 하나라도 0이면 자동 지급은 0입니다.</>}
           formula={String.raw`A=C\land I\land F\land P`}
-          annotatedFormula={String.raw`A=\underbrace{C\land I\land F\land P}_{\text{판정 조건 결합}}`}
+          annotatedFormula={String.raw`\underbrace{A}_{\text{key 자동 지급}}=\underbrace{C}_{\text{기밀성}}\land\underbrace{I}_{\text{measurement 무결성}}\land\underbrace{F}_{\text{freshness}}\land\underbrace{P}_{\text{업무 policy}}`}
           operations={[
-            { expression: String.raw`C\land I\land F\land P`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","기밀성 하나만 보지 않고 measurement 무결성,","freshness, 업무 policy를 Boolean","gate로 결합합니다."] },
-          ]}
+          { expression: String.raw`C\land I\land F\land P`, annotation: ["기밀성만으로는 부족해 네 조건을 모두 요구", "C=1이어도 F=0이면 replay일 수 있어 A=0", "암호화된 VM이라는 이름만으로 지급 안 함"] },
+        ]}
           terms={[
             { symbol: "C", name: "Confidentiality control", description: "선택한 배포에서 host가 private memory를 직접 읽지 못한다는 조건입니다." },
             { symbol: "I", name: "Integrity appraisal", description: "Image·TCB·configuration이 허용 reference와 맞는다는 조건입니다." },

@@ -22,10 +22,11 @@ export default function ModernCudaMatrixMultiplyArticle() {
         <header><p className="text-sm font-semibold text-primary">01 · Output mapping</p><h2 className="mt-2 text-2xl font-bold">2차원 thread 하나가 C의 원소 하나를 맡는다</h2></header>
         <p>M×K 행렬 A와 K×N 행렬 B를 곱하면 C는 M×N입니다. 2차원 global index로 <code>row</code>와 <code>col</code>을 만들고, 유효한 thread만 K축을 순회합니다. Grid·block·index의 정의와 ceiling launch는 <a className="text-primary hover:underline" href="/cs/gpu/cuda-thread-hierarchy#indexing-2d">CUDA thread hierarchy</a>에서 재사용합니다.</p>
         <ExplainedFormula question="한 output C[row,col]을 어떤 값들로 계산하고 전체 계산량은 얼마일까?" idea={<>A의 row에서 K개, B의 column에서 K개를 같은 k로 짝지어 곱하고 누산합니다. 곱과 덧셈을 각각 한 FLOP로 세는 관례라면 대략 2MNK FLOPs입니다.</>} formula={String.raw`C_{ij}=\sum_{k=0}^{K-1}A_{ik}B_{kj},\qquad F\approx2MNK`}
-        annotatedFormula={String.raw`C_{ij}=\underbrace{\sum_{k=0}^{K-1}A_{ik}B_{kj},\qquad F\approx2MNK}_{\text{Output 원소 계산}}`}
+        annotatedFormula={String.raw`C_{ij}=\underbrace{\sum_{k=0}^{K-1}A_{ik}B_{kj}}_{\text{K번 곱해 누산}},\qquad \underbrace{F\approx2MNK}_{\text{전체 FLOP 수}}`}
         operations={[
-          { expression: String.raw`\sum_{k=0}^{K-1}A_{ik}B_{kj},\qquad F\approx2MNK`, annotation: ["Output 원소이(가) 식의 결과에 기여하는 방식을","계산합니다.","A의 row에서 K개, B의 column에서 K개를 같은 k로","짝지어 곱하고 누산합니다."] },
-        ]} terms={[
+  { expression: String.raw`\sum_{k=0}^{K-1}A_{ik}B_{kj}`, annotation: ["A의 row i와 B의 column j를 같은 k로","짝지어 곱하고 thread 하나가 누산합니다","K=4면 output 하나당 4번 MAC"] },
+  { expression: String.raw`F\approx2MNK`, annotation: ["output MN개가 각각 K번 FMA하고","FMA를 2 FLOP로 세면 2MNK","M=N=K=4면 16×4×2=128 FLOPs"] },
+]} terms={[
           { symbol: "A,B", name: "Input matrices", description: "A는 M×K, B는 K×N이며 reduction 축 K의 크기가 같아야 합니다." },
           { symbol: "C_{ij}", name: "Output 원소", description: "Output row i와 column j가 만나는 한 scalar입니다." },
           { symbol: "i,j,k", name: "Index 역할", description: "i·j는 output 좌표이고 k는 곱해 더하는 reduction 좌표입니다." },
@@ -46,10 +47,12 @@ export default function ModernCudaMatrixMultiplyArticle() {
         <p><strong>Tiling</strong>은 큰 행렬을 block이 다룰 작은 조각으로 나누는 방법입니다. Threads가 A tile과 B tile을 coalesced하게 shared memory로 옮긴 뒤 <code>__syncthreads()</code>로 load 완료를 맞추고, tile 내부의 값을 여러 output 계산에 재사용합니다. 다음 tile을 덮어쓰기 전에도 barrier가 필요합니다. Shared memory의 scope·bank와 barrier 의미는 각각 <a className="text-primary hover:underline" href="/cs/gpu/cuda-shared-memory">shared-memory 정본</a>, <a className="text-primary hover:underline" href="/cs/gpu/cuda-sync-streams#overview">동기화 정본</a>을 따릅니다.</p>
         <TileReuseViz />
         <ExplainedFormula question="T×T tile에서 global load 한 번이 얼마나 재사용되는지 어떻게 근사할까?" idea={<>한 K tile마다 A와 B에서 각각 T² values를 load하고 T² output threads가 T번 MAC합니다. 따라서 tile이 커질수록 global byte당 계산이 늘지만 resource 비용도 함께 늘어납니다.</>} formula={String.raw`I_{tile}\approx\frac{2T^3\ \mathrm{FLOP}}{2T^2s\ \mathrm{byte}}=\frac{T}{s}\ \mathrm{FLOP/byte}`}
-        annotatedFormula={String.raw`I_{tile}\approx\frac{2T^3\ \mathrm{FLOP}}{2T^2s\ \mathrm{byte}}=\underbrace{\frac{T}{s}\ \mathrm{FLOP/byte}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`I_{tile}\approx\frac{\overbrace{2T^3\ \mathrm{FLOP}}^{\text{T×T thread가 T번 MAC}}}{\underbrace{2T^2s\ \mathrm{byte}}_{\text{A·B tile load}}}=\underbrace{\frac{T}{s}\ \mathrm{FLOP/byte}}_{\text{tile이 클수록 재사용↑}}`}
         operations={[
-          { expression: String.raw`\frac{T}{s}\ \mathrm{FLOP/byte}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 K tile마다"] },
-        ]} terms={[
+  { expression: String.raw`2T^3\ \mathrm{FLOP}`, annotation: ["T² output thread가 한 K tile에서","각각 T번 MAC(2 FLOP)을 합니다"] },
+  { expression: String.raw`2T^2s\ \mathrm{byte}`, annotation: ["A tile과 B tile에서 T²개씩,","원소당 s byte를 global에서 load합니다"] },
+  { expression: String.raw`\frac{T}{s}\ \mathrm{FLOP/byte}`, annotation: ["load한 값 하나를 T번 재사용한 효과","FP32(s=4)에서 T=4면 1, T=32면 8","실제 값은 profiler traffic으로 재계산"] },
+]} terms={[
           { symbol: "T", name: "정사각 tile 한 변", description: "교육용 block tile의 row·column 길이입니다." },
           { symbol: "s", name: "원소 byte 수", description: "FP32라면 4 bytes입니다." },
           { symbol: "I_{tile}", name: "Tile-level arithmetic intensity 근사", description: "해당 stage의 requested global bytes 대비 계산량입니다." },
@@ -67,11 +70,11 @@ export default function ModernCudaMatrixMultiplyArticle() {
           </p>
         <GemmMeasurementViz />
         <ExplainedFormula question="GEMM에서 achieved FLOP/s와 achieved bandwidth를 같은 실행에서 어떻게 계산할까?" idea={<>정의한 useful FLOPs와 requested bytes를 동일한 elapsed time으로 나눕니다. Profiler가 보고한 actual DRAM bytes도 별도로 보존해 coalescing·cache 효과와 algorithmic traffic을 구분합니다.</>} formula={String.raw`\begin{aligned}P_{ach}&=\frac{2MNK}{t}\\[3pt]B_{eff}&=\frac{B_{read}+B_{write}}{t}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}P_{ach}&=\underbrace{\frac{2MNK}{t}}_{\text{기준량당 비율}}\\[3pt]B_{eff}&=\underbrace{\frac{B_{read}+B_{write}}{t}}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P_{ach}&=\frac{\underbrace{2MNK}_{\text{useful FLOPs}}}{\underbrace{t}_{\text{kernel 시간}}}\\[3pt]B_{eff}&=\frac{\underbrace{B_{read}+B_{write}}_{\text{requested bytes}}}{t}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{2MNK}{t}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정의한 useful FLOPs와 requested bytes를","동일한 elapsed time으로 나눕니다."] },
-          { expression: String.raw`\frac{B_{read}+B_{write}}{t}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정의한 useful FLOPs와 requested bytes를","동일한 elapsed time으로 나눕니다."] },
-        ]} terms={[
+  { expression: String.raw`\frac{2MNK}{t}`, annotation: ["정의한 GEMM 연산량을 CUDA event로 잰","같은 kernel 시간으로 나눕니다","2.15 GFLOP/0.20 ms ≈ 10.7 TFLOP/s"] },
+  { expression: String.raw`\frac{B_{read}+B_{write}}{t}`, annotation: ["알고리즘이 요청한 read/write bytes를","같은 t로 나눠 effective bandwidth","profiler의 실제 DRAM bytes와 따로 보관"] },
+]} terms={[
           { symbol: "M,N,K", name: "GEMM shape", description: "동일 후보끼리 고정하는 output row·column과 reduction 길이입니다." },
           { symbol: "t", name: "Kernel elapsed time", description: "Warm-up 뒤 동일 stream CUDA events로 잰 seconds입니다." },
           { symbol: "P_{ach}", name: "Achieved FLOP/s", description: "FMA=2 FLOPs 관례의 useful GEMM work를 시간으로 나눈 값입니다." },

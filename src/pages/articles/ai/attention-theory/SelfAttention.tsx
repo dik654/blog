@@ -35,11 +35,11 @@ export default function SelfAttention({
         question="같은 input sequence가 질문·주소·content라는 서로 다른 역할을 어떻게 동시에 맡을까?"
         idea={<>X 자체를 세 번 복사하는 것이 아니라 서로 다른 learned matrix로 투영합니다. 같은 token도 query일 때와 key/value일 때 다른 좌표를 가질 수 있습니다.</>}
         formula={String.raw`\begin{aligned}Q&=XW_Q\\K&=XW_K\\V&=XW_V\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}Q&=\underbrace{XW_Q}_{\text{오른쪽 항으로 결과 계산}}\\K&=\underbrace{XW_K}_{\text{오른쪽 항으로 결과 계산}}\\V&=\underbrace{XW_V}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}Q&=\underbrace{XW_Q}_{\text{질문 역할 투영}}\\K&=\underbrace{XW_K}_{\text{주소 역할 투영}}\\V&=\underbrace{XW_V}_{\text{content 역할 투영}}\end{aligned}`}
         operations={[
-          { expression: String.raw`XW_Q`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
-          { expression: String.raw`XW_K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
-          { expression: String.raw`XW_V`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","X 자체를 세 번 복사하는 것이 아니라 서로 다른","learned matrix로 투영합니다."] },
+          { expression: String.raw`XW_Q`, annotation: ["n개 token 표현 X를 W_Q로 투영해", "각 token이 무엇을 찾는지 정합니다"] },
+          { expression: String.raw`XW_K`, annotation: ["같은 X를 다른 행렬 W_K로 투영해", "각 위치가 대표하는 주소를 만듭니다"] },
+          { expression: String.raw`XW_V`, annotation: ["W_V 투영은 선택됐을 때 실제로", "읽혀 갈 content를 만듭니다"] },
         ]}
         terms={[
           { symbol: "X\\in\\mathbb R^{n\\times d_{model}}", name: "shared source", description: "n개 token의 현재 layer representation입니다." },
@@ -70,11 +70,12 @@ export default function SelfAttention({
         question="한 개의 attention distribution 대신 여러 representation subspace에서 병렬로 읽으려면?"
         idea={<>model dimension을 H개 head의 projection으로 나누어 각자 score와 weighted sum을 계산하고, 결과를 concat한 뒤 output projection으로 다시 섞습니다.</>}
         formula={String.raw`\begin{aligned}Q_h&=XW_h^Q,\quad K_h=XW_h^K\\V_h&=XW_h^V\\a_h&=\operatorname{Attention}(Q_h,K_h,V_h)\\Y&=\operatorname{Concat}(a_1,\ldots,a_H)\\\operatorname{MHA}(X)&=YW_O\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}Q_h&=\underbrace{XW_h^Q,\quad K_h=XW_h^K}_{\text{오른쪽 항으로 결과 계산}}\\V_h&=\underbrace{XW_h^V}_{\text{오른쪽 항으로 결과 계산}}\\a_h&=\underbrace{\operatorname{Attention}(Q_h,K_h,V_h)}_{\text{head output 계산}}\\Y&=\operatorname{Concat}(a_1,\ldots,a_H)\\\operatorname{MHA}(X)&=YW_O\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}Q_h&=\underbrace{XW_h^Q,\quad K_h=XW_h^K}_{\text{head h의 질문·주소 subspace}}\\V_h&=\underbrace{XW_h^V}_{\text{head h의 content}}\\a_h&=\underbrace{\operatorname{Attention}(Q_h,K_h,V_h)}_{\text{head h가 따로 읽은 결과}}\\Y&=\underbrace{\operatorname{Concat}(a_1,\ldots,a_H)}_{\text{H개 head 이어 붙이기}}\\\operatorname{MHA}(X)&=\underbrace{YW_O}_{\text{model 차원으로 재혼합}}\end{aligned}`}
         operations={[
-          { expression: String.raw`XW_h^Q,\quad K_h=XW_h^K`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와","weighted sum을 계산하고, 결과를 concat한 뒤"] },
-          { expression: String.raw`XW_h^V`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와","weighted sum을 계산하고, 결과를 concat한 뒤"] },
-          { expression: String.raw`\operatorname{Attention}(Q_h,K_h,V_h)`, annotation: ["head output이(가) 식의 결과에 기여하는 방식을","계산합니다.","model dimension을 H개 head의","projection으로 나누어 각자 score와"] },
+          { expression: String.raw`XW_h^Q,\quad K_h=XW_h^K`, annotation: ["head마다 다른 projection으로", "비교에 쓸 subspace를 따로 만듭니다"] },
+          { expression: String.raw`XW_h^V`, annotation: ["head h가 weighted sum으로 읽어 갈", "content도 head별로 투영합니다"] },
+          { expression: String.raw`\operatorname{Attention}(Q_h,K_h,V_h)`, annotation: ["각 head가 자기 score와 softmax로", "독립된 attention read를 계산합니다"] },
+          { expression: String.raw`YW_O`, annotation: ["H개 head 출력을 concat한 뒤", "W_O로 섞어 model dimension에 맞춥니다"] },
         ]}
         terms={[
           { symbol: "H", name: "number of query heads", description: "병렬 attention projection의 수입니다." },

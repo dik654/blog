@@ -88,7 +88,7 @@ export default function Article() {
         </div>
 
         <SourceApplication source="UNESCO · 문화다양성 선언 제 1조" excerpt="Culture takes diverse forms across time and space." application="A시장 10곳의 월 2만원 약속은 지역·시대·구성원에 따른 한 사례입니다. 다른 시장도 같은 목적을 가질 수 있지만 참여 방식과 비용 분담은 달라질 수 있습니다." />
-        <CitationBlock source="UNESCO · 문화다양성 선언 제 1조" citeKey={1} href="https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity">2001-11-02 채택. 같은 선언의 두 짧은 인용은 합계 21단어입니다. 확인 2026-10-04.</CitationBlock>
+        <CitationBlock source="UNESCO · 문화다양성 선언 제 1조" citeKey={1} href="https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity">2001-11-02 채택. 같은 선언의 두 짧은 인용은 8단어와 11단어로 합계 19단어입니다. 확인 2026-10-04, 단어 수 재확인 2026-10-09.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">관행이 바뀔 수 있다는 경계를 확인했습니다. 오래 이어졌다는 이유로 정당해지지 않는 부분도 있습니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -111,7 +111,8 @@ export default function Article() {
             작은 경제 변화도 행동을 바꿉니다. 가게 1곳이 문을 닫아 9곳만 남으면 모두 내더라도 18−16=2만원이 남습니다. 원래 4만원보다 줄어듭니다. 이 사례에서 같은 관행을
             유지했는데도 결과가 달라진 이유는 납부자 수입니다.
           </p>
-          <p className="leading-8">Ostrom의 원문 인터뷰 역시 장기간 유지된 제도의 공통 원리를 찾는 일과 그 원리를 각 체계에 적용하는 방식을 구분합니다. 이 글의 가게 계산은 실증 결과가 아니라 원인을 분리하기 위한 가정입니다. 문화·비용·권리·집행을 각각 기록할 때 비교가 선명해집니다.</p>
+          <p className="leading-8">Ostrom의 원문 인터뷰 역시 장기간 유지된 제도의 공통 원리를 찾는 일과 그 원리를 각 체계에 적용하는 방식을 구분합니다. 그는 오래 버틴 체계들의 공통점을 &ldquo;설계 원리(design principles)&rdquo;라고 불렀고, 이 글의 분담 규칙·관찰·이의 절차도 그런 층위의 장치입니다.</p>
+          <p className="leading-8">각 장치가 Ostrom의 원리 목록 중 어느 것과 대응하는지는 1990년 원전으로 따로 확인해야 하며 여기서는 짝짓지 않습니다. 이 글의 가게 계산은 실증 결과가 아니라 원인을 분리하기 위한 가정입니다. 문화·비용·권리·집행을 각각 기록할 때 비교가 선명해집니다.</p>
         </div>
 
         <CitationBlock source="Elinor Ostrom · Nobel 인터뷰 원문" citeKey={3} href="https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/164465-ostrom-williamson-interview-transcript/">원문에서 장기간 유지된 제도의 공통 원리를 실제 적용할 방식은 체계마다 다르다고 설명합니다. 본문 10개 가게 계산은 연구 실측이 아닙니다.</CitationBlock>

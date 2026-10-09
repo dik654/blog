@@ -46,15 +46,11 @@ R&=\frac{k}{n}\\[3pt]
 O_{extra}&=\frac{n-k}{k}\\[3pt]
 E_{max}&=n-k
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-R&=\underbrace{\frac{k}{n}}_{\text{기준량당 비율}}\\[3pt]
-O_{extra}&=\underbrace{\frac{\underbrace{n-k}_{\text{Maximum erasures 계산}}}{k}}_{\text{기준량당 비율}}\\[3pt]
-E_{max}&=n-k
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}R&=\frac{\underbrace{k}_{\text{원본 symbol}}}{\underbrace{n}_{\text{저장한 전체 symbol}}}\\[3pt]O_{extra}&=\frac{\underbrace{n-k}_{\text{repair symbol}}}{\underbrace{k}_{\text{원본 기준}}}\\[3pt]E_{max}&=\underbrace{n-k}_{\text{잃어도 되는 최대 수}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{k}{n}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는","원본 대비 추가 저장량입니다."] },
-          { expression: String.raw`\frac{n-k}{k}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는","원본 대비 추가 저장량입니다."] },
-          { expression: String.raw`n-k`, annotation: ["Maximum erasures이(가) 식의 결과에 기여하는","방식을 계산합니다.","Code rate는 전체 encoded symbol 중","source 정보의 비율이고, extra overhead는"] },
+          { expression: String.raw`\frac{k}{n}`, annotation: ["저장한 symbol 중 원본 정보의 비율","예: (10,6)이면 6/10=60%"] },
+          { expression: String.raw`\frac{n-k}{k}`, annotation: ["원본 대비 더 저장한 repair의 비율","분모가 k라 rate와 다릅니다","예: 4/6≈66.7% 추가"] },
+          { expression: String.raw`E_{max}`, annotation: ["MDS code는 아무 k개만 남으면 복원","예: 10개 중 4개까지 잃어도 됨"] },
         ]}
         terms={[
           {

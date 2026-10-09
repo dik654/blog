@@ -17,10 +17,11 @@ export default function Vectors() {
       <ExplainedFormula
         question="Vector를 더하거나 scalar 배율로 늘리면 각 좌표는 어떻게 바뀔까요?"
         idea={<>같은 위치의 좌표끼리 더하고, scalar는 모든 좌표에 같은 배율로 곱합니다. 이 두 연산이 여러 방향을 조합하는 linear combination의 출발점입니다.</>}
-        formula={String.raw`x=(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)`}
-        annotatedFormula={String.raw`x=\underbrace{(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)}_{\text{vector addition 계산}}`}
+        formula={String.raw`x=(3,4),\quad y=(-1,2)\qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)`}
+        annotatedFormula={String.raw`\underbrace{x=(3,4),\quad y=(-1,2)}_{\text{같은 의미의 두 좌표쌍}}\qquad\Longrightarrow\qquad \underbrace{x+y=(2,6)}_{\text{좌표끼리 덧셈}},\quad \underbrace{2x=(6,8)}_{\text{모든 좌표 2배}}`}
         operations={[
-          { expression: String.raw`(3,4),quad y=(-1,2)qquad\Longrightarrow\qquad x+y=(2,6),\quad 2x=(6,8)`, annotation: ["vector addition이(가) 식의 결과에 기여하는","방식을 계산합니다.","같은 위치의 좌표끼리 더하고, scalar는 모든 좌표에 같은","배율로 곱합니다."] },
+          { expression: String.raw`x+y=(2,6)`, annotation: ["첫 좌표끼리 3+(-1)=2,", "둘째 좌표끼리 4+2=6을 더합니다", "좌표 의미가 대응해야 해석이 성립"] },
+          { expression: String.raw`2x=(6,8)`, annotation: ["scalar 2를 모든 좌표에 똑같이 곱해", "(3,4)가 방향은 그대로, 길이만 2배"] },
         ]}
         terms={[
           { symbol: "x,y", name: "2차원 vector", description: "각각 두 개의 대응하는 좌표를 가진 대상입니다." },

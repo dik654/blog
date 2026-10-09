@@ -17,16 +17,19 @@ export default function LRStrategy() {
         question="서로 scale이 다른 layer의 update 충격을 어떤 무차원 비율로 비교할까?"
         idea={<>Learning rate와 update direction norm의 곱을 현재 parameter norm으로 나눕니다. 같은 η라도 gradient와 weight scale이 다르면 상대 이동량은 달라집니다.</>}
         formula={String.raw`\rho_{\ell}=\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}`}
-        annotatedFormula={String.raw`\rho_{\ell}=\underbrace{\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\rho_{\ell}=\frac{\underbrace{\|\Delta\theta_{\ell}\|_2}_{\text{한 번 update 이동량}}}{\underbrace{\|\theta_{\ell}\|_2+\varepsilon}_{\text{현재 weight 크기}}}=\frac{\underbrace{\eta_{\ell}\|g_{\ell}\|_2}_{\text{LR과 방향 norm의 곱}}}{\|\theta_{\ell}\|_2+\varepsilon}`}
         operations={[
-          { expression: String.raw`\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Learning rate와 update direction","norm의 곱을 현재 parameter norm으로 나눕니다."] },
+          { expression: String.raw`\|\Delta\theta_{\ell}\|_2`, annotation: ["optimizer update 한 번에 layer ℓ의","parameter가 움직인 거리"] },
+          { expression: String.raw`\|\theta_{\ell}\|_2+\varepsilon`, annotation: ["그 layer weight의 현재 크기로 나눠","layer마다 다른 scale을 지웁니다","ε은 norm이 0에 가까울 때의 바닥값"] },
+          { expression: String.raw`\eta_{\ell}\|g_{\ell}\|_2`, annotation: ["같은 이동량을 LR과 update 방향 norm의","곱으로 다시 쓴 것","같은 η라도 gradient가 크면 ρ가 큼"] },
         ]}
         terms={[
           { symbol: "Δθ_ℓ", name: "one-update displacement", description: "Optimizer update 한 번으로 layer parameter가 움직인 vector입니다." },
           { symbol: "ρ_ℓ", name: "relative update ratio", description: "현재 parameter scale 대비 update 크기인 dimensionless 진단값입니다." },
           { symbol: "ε", name: "numerical floor", description: "Norm이 매우 작은 새 parameter에서 분모가 0이 되는 것을 막습니다." },
+          { symbol: "g_ℓ", name: "update direction", description: "Plain SGD에서는 layer ℓ의 gradient이고, Adam류에서는 optimizer가 정규화한 update 방향입니다." },
         ]}
-        assumptions={["Optimizer의 momentum·adaptive scaling·weight decay를 반영한 실제 Δθ를 쓰는 편이 정확합니다.", "ρ가 작다고 validation gain이나 representation 보존이 자동으로 보장되지는 않습니다.", "Layer별 histogram과 loss spike를 같은 optimizer-update clock에 맞춥니다."]}
+        assumptions={["두 번째 등호 ‖Δθ‖=η‖g‖는 momentum·weight decay 없는 plain SGD에서만 정확합니다. Adam류 optimizer에서는 g를 raw gradient가 아니라 m̂/(√v̂+ε)처럼 정규화된 update 방향으로 읽어야 합니다.", "Optimizer의 momentum·adaptive scaling·weight decay를 반영한 실제 Δθ를 쓰는 편이 정확합니다.", "ρ가 작다고 validation gain이나 representation 보존이 자동으로 보장되지는 않습니다.", "Layer별 histogram과 loss spike를 같은 optimizer-update clock에 맞춥니다."]}
         interpretation="Unfreeze 직후 lower block의 ρ가 head보다 훨씬 크다면 작은 LR·warmup 또는 optimizer state 재설계를 검토할 근거가 됩니다."
       />
       <div className="not-prose my-8"><LRStrategyViz /></div>

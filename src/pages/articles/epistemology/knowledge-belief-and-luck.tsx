@@ -12,14 +12,14 @@ export default function KnowledgeBeliefAndLuckArticle() {
       <LessonSection id="overview" level="S" title="1. 정답을 맞혔다는 사실만으로는 안다고 할 수 없습니다" bridge="정답과 지식 사이에 판단 경로가 있다는 질문을 세웠습니다. 그 경로를 네 부분으로 나눕니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">길을 나서며 시계를 봤고 정확히 12시라고 생각했습니다. 실제로도 12시였습니다. 그런데 그 시계가 어제 12시에 멈춘 것이었다면, 정답을 맞힌 사람에게 “시간을 알았다”고 말하기는 어렵습니다.</p>
-          <p className="leading-8">이 글은 믿음의 내용만 채점하지 않습니다. 그 믿음이 사실과 어떤 경로로 이어졌는지 봅니다. 멈춘 시계 열 개라는 작은 사례로 참·믿음·근거를 모두 갖춘 듯한 판단에 우연이 어떻게 끼어드는지 추적합니다.</p>
+          <p className="leading-8">이 글은 믿음의 내용만 채점하지 않습니다. 그 믿음이 사실과 어떤 경로로 이어졌는지 봅니다. 러셀이 든 멈춘 시계를 열 개로 늘린 작은 사례로 참·믿음·근거를 모두 갖춘 듯한 판단에 우연이 어떻게 끼어드는지 추적합니다.</p>
         </div>
       </LessonSection>
 
       <LessonSection id="black-box" level="B" title="2. 믿음·사실·근거와 사실에 닿은 경로를 나눕니다" bridge="머릿속 판단, 바깥 사실, 판단 이유와 둘 사이의 연결을 나눴습니다. 멈춘 시계에 숫자를 붙입니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">사람이 어떤 문장을 받아들이는 것은 머릿속 상태입니다. 그 문장이 실제 세계와 맞는지는 바깥의 사실입니다. 왜 받아들였는지를 설명하는 증거나 절차는 근거입니다. 세 가지가 모두 있어도 근거가 우연히 사실과 맞아떨어질 수 있습니다.</p>
-          <p className="leading-8">따라서 마지막에는 작은 변화에도 같은 판단이 계속 맞을지를 묻습니다. 한 minute만 일찍 봤거나, 옆의 시계를 골랐거나, 고장이 다른 시각에 났어도 맞았을까요? 이런 가까운 경우를 바꾸어 보는 것이 행운을 찾는 한 방법입니다.</p>
+          <p className="leading-8">따라서 마지막에는 작은 변화에도 같은 판단이 계속 맞을지를 묻습니다. 1분만 일찍 봤거나, 옆의 시계를 골랐거나, 고장이 다른 시각에 났어도 맞았을까요? 이런 가까운 경우를 바꾸어 보는 것이 행운을 찾는 한 방법입니다.</p>
         </div>
         <FlowRail title="한 믿음을 지식 후보로 검사하는 순서" steps={[
           { actor: "사람의 판단", movement: "무엇을 믿는지 분명히 적습니다.", receives: "검사할 문장" },
@@ -74,9 +74,11 @@ export default function KnowledgeBeliefAndLuckArticle() {
       <LessonSection id="source" level="5" title="8. 게티어의 짧은 반례가 세 조건을 흔듭니다" bridge="정당화·참·믿음의 합이 충분하지 않다는 원래 질문을 확인했습니다. 대표적인 보완책들이 무엇을 고치는지 비교합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">에드먼드 게티어의 1963년 논문은 제목 자체로 “정당화된 참인 믿음이 지식인가”를 묻고, 세 조건을 갖추었지만 지식이라고 보기 어려운 사례를 제시했습니다. 핵심은 단순한 찍기가 아니라, 그럴듯한 근거에서 한 단계 잘못 갔다가 별도의 우연으로 결론이 참이 되는 구조입니다.</p>
+          <p className="leading-8">논문의 두 번째 사례를 따라가면 그 구조가 보입니다. 스미스에게는 존스가 포드 차를 가졌다고 믿을 강한 증거가 있습니다. 이 믿음을 f라고 부릅니다. 스미스는 친구 브라운이 지금 어디 있는지 전혀 모르면서도 f에서 “존스가 포드를 가졌거나 브라운이 바르셀로나에 있다”라는 선언 문장 h를 이끌어 내 받아들입니다. 실제로는 존스에게 포드가 없고, 우연히 브라운이 바르셀로나에 있습니다. 그래서 h는 참이고, 스미스는 h를 믿으며, 좋은 증거에서 연역했으니 정당화도 있습니다. 그런데 h를 참으로 만든 것은 스미스가 전혀 몰랐던 브라운의 위치입니다.</p>
+          <p className="leading-8">이 반례는 두 전제 위에 섭니다. 첫째, 거짓인 명제도 정당하게 믿을 수 있습니다(f는 거짓이지만 증거는 좋았습니다). 둘째, 정당하게 믿는 명제에서 논리적으로 따라 나오는 명제를 연역해 받아들이면 그 결론도 정당화됩니다(h는 f에서 따라 나옵니다). 민아의 경우에는 “이 시계가 가고 있다”는 거짓 믿음이 f 자리에, 실제 시각이 우연히 4시였다는 사실이 바르셀로나의 브라운 자리에 놓입니다. 논문의 첫 번째 사례(취직할 사람의 주머니에 동전 열 개가 있다는 믿음)도 같은 구조입니다. 포드·바르셀로나 문장은 Stanford 철학백과 The Analysis of Knowledge가 인용한 원문과 대조했습니다(2026-10-09 확인).</p>
         </div>
         <SourceApplication source="Gettier · Analysis 23(6), 1963" excerpt="Is Justified True Belief Knowledge?" application="민아의 판단은 믿음·참·정당화를 각각 통과하는 듯하지만 고장과 실제 시각의 우연한 일치가 남습니다." />
-        <CitationBlock source="Edmund L. Gettier, Analysis 23(6), 121–123" citeKey={1} href="https://academic.oup.com/analysis/article-abstract/23/6/121/109949">공식 논문 기록과 초록을 기준으로 제목·서지 정보를 확인했습니다. 멈춘 시계 열 개는 원 논문의 사례가 아니라 이 글의 가정입니다.</CitationBlock>
+        <CitationBlock source="Edmund L. Gettier, Analysis 23(6), 121–123" citeKey={1} href="https://doi.org/10.1093/analys/23.6.121">제목·서지는 Crossref의 DOI 기록으로 확인했습니다(출판사 페이지는 자동 조회 불가, 2026-10-09). 멈춘 시계는 게티어가 아니라 러셀의 사례입니다(Bertrand Russell, Human Knowledge: Its Scope and Limits, London: George Allen and Unwin, 1948). 시계를 열 개로 늘리고 시각을 정한 수치 설정만 이 글의 가정입니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 신뢰성·안전성·지적 성품은 다른 곳을 고칩니다" bridge="한 가지 정답 대신 서로 다른 수선 위치를 비교했습니다. 어느 기준도 쉽게 닫히지 않는 경계를 남깁니다.">

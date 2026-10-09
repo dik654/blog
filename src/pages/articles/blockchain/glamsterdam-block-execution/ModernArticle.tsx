@@ -10,7 +10,7 @@ export default function GlamsterdamBlockExecutionArticle() { const sidebar=useCo
 <p>
             블록 하나를 받아들이려면 누가 제안했는지 확인하고 거래 자료를 받고 실제 실행 결과가 맞는지 검사해야 합니다. 이 일을 모두 같은 순간에 몰아넣으면 자료를 전파하고 거래를
             실행할 시간이 부족해집니다. 거래가 접근할 상태를 미리 알 수 있으면 저장소 읽기와 실행 준비도 나눌 수 있습니다.
-          </p><p>Glamsterdam의 ePBS와 블록 접근 목록은 이 두 문제를 다룹니다. 2026-10-04 기준 관련 EIP는 Review이고 업그레이드의 메인넷 활성화 날짜는 비어 있습니다. 이 글의 동작은 제안과 고정한 개발 명세의 설명이며 현재 메인넷의 활성 기능이라고 전제하지 않습니다.</p><CitationBlock source="EIP-7773 · Glamsterdam" citeKey={1} href="https://eips.ethereum.org/EIPS/eip-7773">7732·7928의 예정 목록과 활성화 상태. 메인넷 적용 여부는 별도로 확인합니다.</CitationBlock>
+          </p><p>Glamsterdam의 ePBS와 블록 접근 목록은 이 두 문제를 다룹니다.</p><p>2026-10-09 기준 EIP-7732(ePBS)와 EIP-7928(블록 접근 목록)은 2026-10-06에 Review에서 Last Call로 넘어갔고 이의 제기 마감은 2026-11-01입니다. Last Call은 최종 확정(Final) 직전의 공개 검토 단계일 뿐 메인넷 적용 일정이 아닙니다.</p><p>업그레이드 묶음을 정하는 EIP-7773은 아직 Review이고 메인넷 활성화 칸은 비어 있습니다. 이 글의 동작은 제안과 고정한 개발 명세의 설명이며 현재 메인넷의 활성 기능이라고 전제하지 않습니다.</p><CitationBlock source="EIP-7773 · Glamsterdam" citeKey={1} href="https://eips.ethereum.org/EIPS/eip-7773">7732·7928의 예정 목록과 활성화 상태. 메인넷 적용 여부는 별도로 확인합니다.</CitationBlock>
 <p data-stage-bridge="overview" className="text-sm text-muted-foreground">전달과 실행의 시간을 나누는 목표를 잡았습니다. 각 일을 맡는 역할을 먼저 그립니다.</p>
 </section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">2. 내용을 만드는 사람, 고르는 사람, 검사하는 사람</h2>
@@ -45,7 +45,7 @@ export default function GlamsterdamBlockExecutionArticle() { const sidebar=useCo
           </p><p>
             PTC는 자료가 제때 보였는지와 관련 가용성을 확인합니다. 그것만으로 X=95의 계산을 모두 검사했다고 읽지 않습니다. 실행 검증은 거래 순서·이전 상태·가스와 실제 접근을
             확인하고 계산해 만든 목록을 블록이 약속한 hash와 대조합니다. 90 대신 89를 주장하거나 필요한 X를 누락했다면 받아들일 수 없습니다.
-          </p><p>개발 명세의 bid 처리에서는 제작자 활성 상태·서명·지급 여력·slot·부모를 검사합니다. 예를 들어 지급 조건이 0.01 ETH라면 10,000,000 Gwei로 표현합니다. 이 숫자는 설명용이며 실제 입찰 시세가 아닙니다. 지급 처리와 실제 내용 공개가 따로 움직이므로 자료 미공개·지연에 관한 합의 규칙도 필요합니다.</p><CitationBlock source="EIP-7732 · ePBS" citeKey={2} href="https://eips.ethereum.org/EIPS/eip-7732">제안·제작 분리와 자료 도착 확인, 실행 검증의 시간 분리를 설명합니다. Review 상태의 제안입니다.</CitationBlock>
+          </p><p>개발 명세의 bid 처리에서는 제작자 활성 상태·서명·지급 여력·slot·부모를 검사합니다. 예를 들어 지급 조건이 0.01 ETH라면 10,000,000 Gwei로 표현합니다. 이 숫자는 설명용이며 실제 입찰 시세가 아닙니다. 지급 처리와 실제 내용 공개가 따로 움직이므로 자료 미공개·지연에 관한 합의 규칙도 필요합니다.</p><CitationBlock source="EIP-7732 · ePBS" citeKey={2} href="https://eips.ethereum.org/EIPS/eip-7732">제안·제작 분리와 자료 도착 확인, 실행 검증의 시간 분리를 설명합니다. 2026-10-09 기준 Last Call(마감 2026-11-01) 상태의 제안입니다.</CitationBlock>
 <p data-stage-bridge="mechanism" className="text-sm text-muted-foreground">실제 계산과 지급 조건을 다른 검사로 추적했습니다. 공개 명세가 두 검사를 어떻게 표현하는지 봅니다.</p>
 </section>
 <section id="source" data-teach-level="5" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">8. 개발 명세는 bid와 payload를 서로 다른 구조로 둔다</h2>

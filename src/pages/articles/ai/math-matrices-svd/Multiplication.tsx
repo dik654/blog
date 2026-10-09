@@ -28,9 +28,10 @@ export default function Multiplication() {
         question="왜 A가 p×m이고 B가 m×n일 때만 AB를 만들 수 있을까요?"
         idea={<>AB의 (i,j) entry는 A의 i번째 row와 B의 j번째 column의 dot product입니다. 두 vector가 공유하는 중간 좌표가 m개로 같아야 곱하고 더할 수 있습니다.</>}
         formula={String.raw`A\in\mathbb R^{p\times m},\ B\in\mathbb R^{m\times n}\quad\Longrightarrow\quad (AB)_{ij}=\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}`}
-        annotatedFormula={String.raw`A\in\mathbb R^{p\times m},\ B\in\mathbb R^{m\times n}\quad\Longrightarrow\quad (AB)_{ij}=\underbrace{\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}}_{\text{composed map 계산}}`}
+        annotatedFormula={String.raw`\underbrace{A\in\mathbb R^{p\times m}}_{\text{m개를 읽어 p개 출력}},\ \underbrace{B\in\mathbb R^{m\times n}}_{\text{n개를 읽어 m개 출력}}\quad\Longrightarrow\quad (AB)_{ij}=\underbrace{\sum_{r=1}^{m}A_{ir}B_{rj}}_{\text{중간 좌표 m개를 맞춰 합산}},\quad \underbrace{AB\in\mathbb R^{p\times n}}_{\text{B 다음 A를 한 번에}}`}
         operations={[
-          { expression: String.raw`\sum_{r=1}^{m}A_{ir}B_{rj},\quad AB\in\mathbb R^{p\times n}`, annotation: ["composed map이(가) 식의 결과에 기여하는 방식을","계산합니다.","AB의 (i,j) entry는 A의 i번째 row와 B의","j번째 column의 dot product입니다."] },
+          { expression: String.raw`\sum_{r=1}^{m}A_{ir}B_{rj}`, annotation: ["A의 i번째 row와 B의 j번째 column이", "공유하는 중간 좌표 m개를 곱해 더합니다"] },
+          { expression: String.raw`AB\in\mathbb R^{p\times n}`, annotation: ["n차원 input을 p차원 output으로 보내는", "합성 map이며 오른쪽 B가 먼저 실행됩니다"] },
         ]}
         terms={[
           { symbol: "m", name: "contracted dimension", description: "B가 만드는 중간 coordinate 수이면서 A가 읽는 coordinate 수입니다." },

@@ -31,9 +31,11 @@ export default function Fp6() {
         question="Fp² 위 3차 표현이 왜 Fp 위 6차원일까요?"
         idea="상위 basis 1,v,v²마다 Fp² coefficient 하나가 있고, 각 Fp² coefficient는 다시 Fp 좌표 두 개를 가집니다. 차원은 tower 단계의 곱으로 셉니다."
         formula={String.raw`[\mathbb F_{p^6}:\mathbb F_p]=[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6`}
-        annotatedFormula={String.raw`[\mathbb F_{p^6}:\mathbb F_p]=\underbrace{[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6}_{\text{오른쪽 항으로 결과 계산}}`}
+        annotatedFormula={String.raw`\underbrace{[\mathbb F_{p^6}:\mathbb F_p]}_{\text{Fp 좌표 총수}}=\underbrace{[\mathbb F_{p^6}:\mathbb F_{p^2}]}_{\text{상위 basis 3칸}}\,\underbrace{[\mathbb F_{p^2}:\mathbb F_p]}_{\text{칸당 Fp 2개}}=3\cdot2=6`}
         operations={[
-          { expression: String.raw`[\mathbb F_{p^6}:\mathbb F_{p^2}]\,[\mathbb F_{p^2}:\mathbb F_p]=3\cdot2=6`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","상위 basis 1,v,v²마다"] },
+          { expression: String.raw`[\mathbb F_{p^6}:\mathbb F_{p^2}]`, annotation: ["상위 basis 1,v,v²마다 Fp² 계수 하나","그래서 Fp² 위 차원은 3"] },
+          { expression: String.raw`[\mathbb F_{p^2}:\mathbb F_p]`, annotation: ["Fp² 계수 하나는 (a,b) 두 Fp 값","그래서 Fp 위 차원은 2"] },
+          { expression: String.raw`3\cdot2=6`, annotation: ["tower 단계 차원을 곱해 논리 좌표 6개","원소 수는 6이 아니라 p⁶개"] },
         ]}
         terms={[
           { symbol: "[K:F]", name: "extension degree", description: "K를 F-vector space로 볼 때 필요한 basis 원소 수입니다." },

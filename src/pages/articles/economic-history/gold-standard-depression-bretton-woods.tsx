@@ -74,20 +74,22 @@ export default function GoldStandardDepressionBrettonWoodsArticle() {
       <LessonSection id="source" level="5" title="8. 1870년대부터 1930년대 붕괴까지의 순서를 확인합니다" bridge="금본위제의 성립·전쟁 뒤 복원·대공황기 붕괴를 한 단계로 뭉개지 않고 나눴습니다. 1944년의 새 설계가 고친 부분을 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">IMF의 국제 통화 체제 역사 자료는 주요 통화가 1870~1880년대에 금본위제로 옮겨 갔고, 제1차 세계대전까지 체제가 이어졌다고 정리합니다. 전쟁 뒤에는 수정된 형태로 복원됐지만 전후 디플레이션과 대공황기의 경제·정치 압력을 견디지 못하고 1930년대에 무너졌습니다.</p>
-          <p className="leading-8">이 연표는 모든 나라가 같은 제도에 같은 기간 참여했다는 뜻이 아닙니다. 영국은 1931년 금 교환을 중단했고, 미국과 금 블록 국가들의 시점은 달랐습니다. 원자재 수출국은 가격 급락과 지급 압력을 먼저 겪기도 했습니다.</p>
+          <p className="leading-8">이 연표는 모든 나라가 같은 제도에 같은 기간 참여했다는 뜻이 아닙니다. 영국은 1925년 4월 말 금본위로 돌아갔다가 1931년 9월 금 교환을 중단했고, 미국은 1933년 4월 20일 루스벨트 대통령의 포고로 금본위를 공식 정지했습니다. 금 블록 국가들의 시점은 또 달랐고, 원자재 수출국은 가격 급락과 지급 압력을 먼저 겪기도 했습니다.</p>
+          <p className="leading-8">이탈 시점이 왜 중요한지는 4절의 장부로 읽을 수 있습니다. 금 교환을 지키는 동안에는 준비자산 유출을 국내 긴축으로 막아야 했고, 이탈한 나라는 그 제약에서 먼저 벗어났습니다.</p>
+          <p className="leading-8">나라별 이탈 시점과 경기 회복의 관계를 비교한 대표 연구가 Barry Eichengreen과 Jeffrey Sachs의 「1930년대의 환율과 경기 회복(Exchange Rates and Economic Recovery in the 1930s)」(Journal of Economic History 45(4), 1985)입니다. 초록에 따르면 이 연구는 1930년대의 통화 절하가 먼저 시작한 나라에 이득이 됐음을 보이고, 개별 절하가 이웃에 준 영향은 부정적이었지만 여러 나라가 함께 절하했다면 서로에게 이득이 될 수 있었다고 봅니다. 이 글은 초록만 확인했고 나라별 추정치는 옮기지 않았습니다.</p>
         </div>
         <SourceApplication source="IMF · Reserve Accumulation and International Monetary Stability" excerpt="collapse in the 1930s" application="준비자산 20의 유출을 국내 긴축만으로 막으려는 약속은 여러 나라가 동시에 침체를 겪을 때 정치적으로 유지하기 더 어려워집니다." />
-        <CitationBlock source="International Monetary Fund, 2010 supplementary information" citeKey={1} href="https://www.elibrary.imf.org/view/journals/007/2010/034/article-A001-en.xml">금본위제에서 브레턴우즈와 1970년대 변동환율까지의 큰 연표와 조정 방식을 확인했습니다.</CitationBlock>
+        <CitationBlock source="International Monetary Fund, 2010 supplementary information" citeKey={1} href="https://www.elibrary.imf.org/view/journals/007/2010/034/article-A001-en.xml">금본위제에서 브레턴우즈와 1970년대 변동환율까지의 큰 연표와 조정 방식을 확인했습니다. 영국의 1925~31년 금본위 기간은 잉글랜드은행 계간지(1970년 1분기)의 금·외환 보유 기록에서, 미국의 1933년 4월 20일 정지는 연방준비제도 역사 자료의 'Roosevelt's Gold Program'에서 따로 확인했습니다(확인일 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 1944년의 조정 가능한 고정환율이 무엇을 바꿨는지 봅니다" bridge="브레턴우즈가 고정환율을 그대로 복원하지 않고 대출·조정·자본 이동의 여지를 둔 이유를 확인했습니다. 국가별 차이와 후속 붕괴의 범위를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">1944년 44개국 대표는 전간기의 초인플레이션과 디플레이션, 금본위제 붕괴, 경쟁적 평가절하와 무역 제한을 겪은 뒤 새 체제를 설계했습니다. 달러를 금에 연결하고 다른 통화는 달러에 고정하되, 지속적인 국제수지 문제에는 비율을 조정할 수 있게 했습니다.</p>
           <p className="leading-8">IMF는 일시적인 지급 부족에 자금을 제공하는 장치였습니다. 자본 이동을 넓게 자유화하는 오늘의 질서와도 달랐습니다. 국내 고용과 사회정책을 위한 여지를 지키면서 교역의 환율 기준을 제공하려는 절충이었습니다.</p>
-          <p className="leading-8">그러나 달러 준비자산을 세계에 공급하려면 미국이 달러를 국외로 내보내야 했고, 국외 달러가 금 보유에 비해 커질수록 금 교환 약속의 신뢰가 약해졌습니다. 1971년 달러의 금 교환 중단과 1970년대 초 주요 통화의 변동 전환은 이 체제의 끝을 이루는 서로 다른 사건입니다.</p>
+          <p className="leading-8">그러나 달러 준비자산을 세계에 공급하려면 미국이 달러를 국외로 내보내야 했고, 국외 달러가 금 보유에 비해 커질수록 금 교환 약속의 신뢰가 약해졌습니다. 1971년 8월 15일 닉슨 대통령이 '금 창구'를 닫아 달러의 금 교환을 중단한 일과, 1973년 3월 서독을 비롯한 주요 통화가 변동환율로 옮겨 간 일은 이 체제의 끝을 이루는 서로 다른 사건입니다.</p>
         </div>
         <SourceApplication source="IMF · Measure to Measure" excerpt="delegates of 44 nations gathered" application="한 나라의 준비자산 20 문제를 개별 긴축에만 맡기지 않고 국제 대출과 합의된 환율 조정의 문제로 옮겼습니다." />
-        <CitationBlock source="Atish Rex Ghosh, Measure to Measure, Finance & Development 2014" citeKey={2} href="https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm">브레턴우즈 회의의 문제의식, 조정 가능한 환율, IMF의 역할과 이후 체제 변화를 설명합니다.</CitationBlock>
+        <CitationBlock source="Atish Rex Ghosh, Measure to Measure, Finance & Development 2014" citeKey={2} href="https://www.imf.org/external/pubs/ft/fandd/2014/09/ghosh.htm">브레턴우즈 회의의 문제의식, 조정 가능한 환율, IMF의 역할과 이후 체제 변화를 설명합니다. 1971년 8월 15일은 연방준비제도 역사 자료의 'Gold Convertibility Ends'에서, 1973년 3월 변동 전환은 독일 연방은행의 1973년 브레턴우즈 종료 해설에서 따로 확인했습니다(확인일 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 국가마다 들어오고 나간 시기와 비용은 달랐습니다" bridge="1870년대부터 1970년대까지를 하나의 세계 경험으로 평평하게 만들지 않을 기준을 세웠습니다. 같은 20단위 사례로 제도 차이를 다시 설명할 수 있습니다.">

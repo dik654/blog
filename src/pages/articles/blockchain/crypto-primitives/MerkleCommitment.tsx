@@ -15,11 +15,11 @@ export default function MerkleCommitment() {
         question="Depth d의 binary Merkle proof는 root를 어떻게 복원할까요?"
         idea="Leaf index의 i번째 bit가 현재 hash를 왼쪽에 놓을지 오른쪽에 놓을지 정합니다. 각 level에서 sibling과 순서 있게 hash해 trusted root와 비교합니다."
         formula={String.raw`h_0=H(0x00\Vert k\Vert v),\qquad h_{i+1}=\begin{cases}H(0x01\Vert h_i\Vert s_i)&b_i=0\\H(0x01\Vert s_i\Vert h_i)&b_i=1\end{cases}`}
-        annotatedFormula={String.raw`h_0=H(0x00\Vert k\Vert v),\qquad h_{i+1}=\begin{cases}H(0x01\Vert \underbrace{h_i}_{\text{running hash 계산}}\Vert \underbrace{s_i}_{\text{sibling 계산}})&\underbrace{b_i}_{\text{path bit 계산}}=0\\H(0x01\Vert s_i\Vert h_i)&b_i=1\end{cases}`}
+        annotatedFormula={String.raw`\underbrace{h_0=H(0x00\Vert k\Vert v)}_{\text{leaf 영역 hash}},\qquad h_{i+1}=\begin{cases}H(0x01\Vert \underbrace{h_i}_{\text{지금까지 올린 root}}\Vert \underbrace{s_i}_{\text{proof의 이웃}})&\underbrace{b_i}_{\text{index의 i번째 bit}}=0\\H(0x01\Vert s_i\Vert h_i)&b_i=1\end{cases}`}
         operations={[
-          { expression: String.raw`h_i`, annotation: ["running hash이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
-          { expression: String.raw`s_i`, annotation: ["sibling이(가) 식의 결과에 기여하는 방식을 계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
-          { expression: String.raw`b_i`, annotation: ["path bit이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf index의 i번째 bit가 현재 hash를 왼쪽에","놓을지 오른쪽에 놓을지 정합니다."] },
+          { expression: String.raw`H(0x00\Vert k\Vert v)`, annotation: ["key와 value를 leaf tag 0x00과 묶어","출발 hash h_0를 만듭니다"] },
+          { expression: String.raw`H(0x01\Vert h_i\Vert s_i)`, annotation: ["bit가 0이면 내 hash가 왼쪽,","sibling이 오른쪽에 놓여 한 level 올라감","bit가 1이면 순서를 뒤집습니다"] },
+          { expression: String.raw`b_i`, annotation: ["level마다 index bit 하나를 소비","256-depth면 sibling 256개,","256×32=8,192 bytes (압축 전)"] },
         ]}
         terms={[
           { symbol: "h_i", name: "running hash", description: "Leaf에서 i level 올라온 subtree root입니다." },

@@ -52,9 +52,10 @@ export default function ModernArticle() {
         question="User write보다 storage에 실제로 몇 배를 썼는지 어떻게 계산할까?"
         idea="WAL, flush와 compaction output 중 포함할 byte 범위를 먼저 선언한 뒤 동일 관측 구간의 physical written bytes를 accepted user bytes로 나눕니다."
         formula={String.raw`WA=\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}`}
-        annotatedFormula={String.raw`WA=\underbrace{\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`WA=\frac{\underbrace{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}_{\text{storage가 실제로 쓴 bytes}}}{\underbrace{B_{\mathrm{user}}}_{\text{user가 맡긴 bytes}}}`}
         operations={[
-          { expression: String.raw`\frac{B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}}{B_{\mathrm{user}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","WAL, flush와 compaction output 중","포함할 byte 범위를 먼저 선언한 뒤 동일 관측 구간의","physical written bytes를 accepted"] },
+          { expression: String.raw`B_{\mathrm{WAL}}+B_{\mathrm{flush}}+B_{\mathrm{compaction}}`, annotation: ["같은 구간에 WAL·flush·compaction이","물리적으로 쓴 bytes를 모두 더함","20+20+60 = 100 MB"] },
+          { expression: String.raw`B_{\mathrm{user}}`, annotation: ["성공한 logical user write bytes로 나눔","100/20 → WA=5"] },
         ]}
         terms={[
           { symbol: "WA", name: "Write amplification", description: "User byte 한 개당 선언한 storage layer가 쓴 bytes 비율입니다." },
@@ -70,9 +71,10 @@ export default function ModernArticle() {
         question="Compaction이 ingest를 못 따라갈 때 stall threshold는 언제 찰까?"
         idea="Foreground arrival rate에서 background service rate를 뺀 값만큼 compaction debt가 늘어난다고 보는 작은 fluid model입니다."
         formula={String.raw`t_{\mathrm{limit}}=\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}`}
-        annotatedFormula={String.raw`t_{\mathrm{limit}}=\underbrace{\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`t_{\mathrm{limit}}=\frac{\underbrace{D_{\mathrm{limit}}-D_0}_{\text{stall까지 남은 debt}}}{\underbrace{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}_{\text{debt 증가 속도}}}`}
         operations={[
-          { expression: String.raw`\frac{D_{\mathrm{limit}}-D_0}{\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Foreground arrival rate에서","background service rate를 뺀 값만큼","compaction debt가 늘어난다고 보는 작은 fluid"] },
+          { expression: String.raw`D_{\mathrm{limit}}-D_0`, annotation: ["stall threshold까지 남은 compaction debt","예시에서 1 GB 여유"] },
+          { expression: String.raw`\max(\lambda_{\mathrm{ingest}}-\mu_{\mathrm{compact}},\,0)`, annotation: ["ingest가 compaction보다 빠른 만큼 debt 증가","80−60 = 20 MB/s → 1 GB에 약 50초","service가 더 빠르면 0, 평균상 안 참"] },
         ]}
         terms={[
           { symbol: "D", name: "Compaction debt", description: "처리해야 할 pending bytes 또는 대응되는 engine backlog입니다." },

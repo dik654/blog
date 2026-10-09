@@ -37,9 +37,11 @@ export default function Runtime() {
             </p>
           }
           formula={String.raw`S_{\mathrm{total}}=\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}`}
-          annotatedFormula={String.raw`S_{\mathrm{total}}=\underbrace{\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`S_{\mathrm{total}}=\frac{1}{\underbrace{(1-f)}_{\text{가속 못 받는 비율}}+\underbrace{\frac{f}{S_{\mathrm{local}}}}_{\text{가속된 kernel 몫}}}`}
           operations={[
-            { expression: String.raw`\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 시간에서 그 kernel이 차지하던 비율만 가속의 혜택을","받습니다."] },
+            { expression: String.raw`(1-f)`, annotation: ["launch·collective·sampling 등","그대로 남는 시간 비율, f=0.4면 0.6"] },
+            { expression: String.raw`\frac{f}{S_{\mathrm{local}}}`, annotation: ["kernel 비율 f가 S배 줄어든 시간","4배 빠르면 0.4 / 4 = 0.1"] },
+            { expression: String.raw`\frac{1}{(1-f)+\frac{f}{S_{\mathrm{local}}}}`, annotation: ["원래 시간 1을 새 시간으로 나눈 전체 speedup","1 / (0.6 + 0.1) ≈ 1.43배"] },
           ]}
           terms={[
             { symbol: "f", name: "개선 대상 비율", description: "기존 전체 시간 중 개선할 구간이 차지하는 0에서 1 사이의 비율입니다." },

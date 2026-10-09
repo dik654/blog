@@ -70,11 +70,11 @@ export default function HousingLandAndSupplyArticle() {
       <section id="source" data-teaching-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5 · 개발 평가 원문은 정상 이익까지 비용에 넣습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">RICS의 개발 부동산 평가 안내는 완성 가치에서 개발 비용을 뺄 때 사업자의 이익도 그 비용에 포함합니다. 사례의 7억 원에는 공사 5억 원, 금융·허가 등 1억 원, 정상 이익 1억 원이 이미 들어 있습니다.</p>
+          <p className="leading-8">RICS의 개발 부동산 평가 전문 표준(professional standard)은 완성 가치에서 개발 비용을 뺄 때 사업자의 이익도 그 비용에 포함합니다. 사례의 7억 원에는 공사 5억 원, 금융·허가 등 1억 원, 정상 이익 1억 원이 이미 들어 있습니다.</p>
           <p className="leading-8">우리 사례에서 3억의 토지 잔여가치는 예상 수입과 비용을 놓고 계산한 결과입니다. 그것만으로 기존 주민의 편익이나 나라 전체의 순이익을 확정하지 못합니다.</p>
         </div>
         <SourceApplication source="RICS Valuation of development property · 6.1.1, p.24" excerpt="including profit" application="10억에서 정상 이익 1억을 이미 포함한 7억을 빼면 3억입니다. 정상 이익을 다시 한 번 빼지 않습니다. 일반 개발사업의 유도는 토지개발 글에서 이어집니다." />
-        <CitationBlock source="RICS Valuation of development property · 6.1.1, p.24" citeKey={1} href="https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf">개발 비용에 정상 이익을 포함하는 RICS 잔여 평가 설명입니다.</CitationBlock>
+        <CitationBlock source="RICS Valuation of development property · 6.1.1, p.24" citeKey={1} href="https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf">개발 비용에 정상 이익을 포함하는 RICS 잔여 평가 설명입니다. 링크한 PDF는 2019년 10월 guidance note 1판(2020-02-01 발효)이고 인용문과 24쪽은 이 판 기준입니다. 2026-10-09 확인한 <a className="text-sky-700 underline dark:text-sky-300" href="https://www.rics.org/profession-standards/rics-standards-and-guidance/sector-standards/valuation-standards/valuation-of-development-property">RICS 현행 페이지</a>는 같은 문서를 Professional Standard로 분류하며 내용은 같습니다.</CitationBlock>
         <p className="mt-4 leading-8"><Link className="text-sky-700 underline dark:text-sky-300" to="/economics/property/land-development-residual#mechanism">토지개발의 잔여가치 계산</Link>에서는 같은 원리로 여러 자금 제공자와 인허가 비용을 더 자세히 추적합니다.</p>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">사업 가치와 사회적 편익을 분리했습니다. 나라별 소유권의 기간도 확인합니다.</p>
       </section>
@@ -83,10 +83,12 @@ export default function HousingLandAndSupplyArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">싱가포르 정부는 일반적인 새 HDB 주택의 구매자가 99년 동안 주택 권리를 소유한다고 설명합니다. 이것은 거주할 때마다 임대료를 내는 단순 임차와 다릅니다. 기간이 없는 소유권과도 다릅니다.</p>
           <p className="leading-8">10억이라는 같은 판매금액을 비교하더라도 남은 기간과 처분 조건이 다르면 같은 권리를 산 것이 아닙니다. 이 글의 10억 가정에 HDB의 실제 가격이나 거래 자격을 대입한 것은 아닙니다.</p>
+          <p className="leading-8">같은 99년 권리 안에서도 처분 조건이 갈립니다. 위 정부 설명은 &ldquo;2023년 3월 기준&rdquo;으로 쓰였고, 그 뒤 2024년 10월 분양분부터 HDB는 새 주택을 Standard·Plus·Prime으로 나눴습니다. 보도에 따르면 Plus·Prime 주택은 최소 거주 기간이 10년이고 되팔 때 받은 보조금 일부를 환수당하며, 최소 거주 기간이 지나도 집 전체를 임대할 수 없습니다.</p>
+          <p className="leading-8">같은 99년 주택이라도 10년을 살아야 팔 수 있고 팔 때 보조금 일부를 돌려줘야 한다면, 같은 값을 주고 산 권리의 내용이 달라집니다. 이 유형 규칙은 HDB 공식 페이지가 2026-10-09 자동 조회를 막아(403) 보조 출처(EdgeProp 2024년 보도)로만 확인했습니다.</p>
           <p className="leading-8">2026-10-04 확인 기준으로 다른 나라 주택은 등기·토지 임차권·용도 규정·대출 계약을 각각 확인해야 합니다. 국가 평균 자가보유율 하나로 권리의 내용까지 같다고 볼 수 없습니다.</p>
         </div>
         <SourceApplication source="Singapore Government · Do HDB flat buyers own their flat?" excerpt="own the rights to their flats for 99 years" application="같은 10억이라도 기간이 정해진 권리인지 먼저 확인합니다. 사례의 3억 토지 여력 계산에는 판매하는 권리의 기간과 조건이 이미 반영돼야 합니다." />
-        <CitationBlock source="Singapore Government · Do HDB flat buyers own their flat?" citeKey={2} href="https://www.gov.sg/explainers/do-hdb-flat-buyers-own-their-flat/">싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인.</CitationBlock>
+        <CitationBlock source="Singapore Government · Do HDB flat buyers own their flat?" citeKey={2} href="https://www.gov.sg/explainers/do-hdb-flat-buyers-own-their-flat/">싱가포르 HDB 권리의 기간에 대한 정부 설명. 페이지에 &ldquo;accurate as of March 2023&rdquo;로 적힌 설명을 2026-10-04 재확인했으며, 2024년 10월 도입된 Standard·Plus·Prime 구분보다 앞선 자료입니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">집의 가격과 소유권의 기간을 구분했습니다. 공급 증가가 해결하지 못하는 경계를 봅니다.</p>
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">

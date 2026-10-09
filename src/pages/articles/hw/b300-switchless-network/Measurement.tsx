@@ -49,16 +49,11 @@ export default function Measurement() {
               =800\ \mathrm{GB/s} \\
             \rho_{\mathrm{bus}} &= \frac{787.211}{800}\approx0.984
           \end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-            R_{\mathrm{line}} &= \underbrace{\frac{16\times400\ \mathrm{Gb/s}}{8}
-              =800\ \mathrm{GB/s}}_{\text{기준량당 비율}} \\
-            \rho_{\mathrm{bus}} &= \underbrace{\frac{787.211}{800}\approx0.984}_{\text{기준량당 비율}}
-          \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned} R_{\mathrm{line}} &= \frac{\underbrace{16\times400\ \mathrm{Gb/s}}_{\text{16 link nominal 합}}}{\underbrace{8}_{\text{bit를 byte로}}} =800\ \mathrm{GB/s} \\ \rho_{\mathrm{bus}} &= \frac{\underbrace{787.211}_{\text{측정 busbw}}}{\underbrace{800}_{\text{line rate 기준}}}\approx0.984 \end{aligned}`}
           operations={[
-            { expression: String.raw`\frac{16\times400\ \mathrm{Gb/s}}{8}
-              =800\ \mathrm{GB/s}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","먼저 16개 logical link의 nominal line","rate를 bit에서 byte로 바꿉니다."] },
-            { expression: String.raw`\frac{787.211}{800}\approx0.984`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","먼저 16개 logical link의 nominal line","rate를 bit에서 byte로 바꿉니다."] },
-          ]}
+          { expression: String.raw`\frac{16\times400\ \mathrm{Gb/s}}{8}`, annotation: ["16개 logical link nominal rate 합을", "8로 나눠 byte 단위로 바꾼 상한", "6400 Gb/s → 800 GB/s"] },
+          { expression: String.raw`\frac{787.211}{800}\approx0.984`, annotation: ["all-reduce busbw를 이 상한과 비교", "98.4%는 구성 검산값이지", "wire payload 비율은 아닙니다"] },
+        ]}
           terms={[
             { symbol: "R_{\\mathrm{line}}", name: "nominal aggregate line rate", description: "한 방향의 16개 400Gb/s logical link를 decimal GB/s로 더한 값입니다." },
             { symbol: "787.211", name: "measured nccl-tests busbw", description: "프로젝트의 2-node all_reduce_perf ledger가 출력한 average bus bandwidth입니다." },

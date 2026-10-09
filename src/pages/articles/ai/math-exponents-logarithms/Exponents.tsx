@@ -11,9 +11,9 @@ export default function Exponents() {
         question="같은 배율 a를 m번 적용한 뒤 n번 더 적용하면 전체 적용 횟수는 얼마인가?"
         idea={<>앞의 반복 곱셈과 뒤의 반복 곱셈을 한 줄로 이어 붙이면 a가 모두 m+n번 나타납니다.</>}
         formula={String.raw`a^m a^n=a^{m+n}`}
-        annotatedFormula={String.raw`a^m a^n=\underbrace{a^{m+n}}_{\text{combined count 계산}}`}
+        annotatedFormula={String.raw`\underbrace{a^m}_{\text{m번 적용}}\underbrace{a^n}_{\text{n번 더 적용}}=\underbrace{a^{m+n}}_{\text{총 m+n번 적용}}`}
         operations={[
-          { expression: String.raw`a^{m+n}`, annotation: ["combined count이(가) 식의 결과에 기여하는 방식을","계산합니다.","앞의 반복 곱셈과 뒤의 반복 곱셈을 한 줄로 이어 붙이면 a가","모두 m+n번 나타납니다."] },
+          { expression: String.raw`a^{m+n}`, annotation: ["두 반복 곱셈을 이어 붙이면", "같은 밑 a가 m+n번 나타납니다", "2³×2²=8×4=32=2⁵"] },
         ]}
         terms={[
           { symbol: "a", name: "base · 밑", description: "반복해서 곱하는 양수 배율입니다." },

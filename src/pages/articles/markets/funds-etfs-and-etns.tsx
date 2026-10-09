@@ -69,6 +69,10 @@ export default function Article() {
 <p className="leading-8">투자자는 ETF 한 좌를 1만100원에 삽니다. AP가 같은 자산 바스켓을 한 좌당 1만 원에 조달했다고 합시다. 설정·매도 비용이 60원이라면 좌당 40원의 차익이 남습니다. 이 가정에서는 새 ETF 매도가 늘고 괴리를 줄이는 힘이 생깁니다.</p>
 <p className="leading-8">비용이 130원이거나 기초시장이 휴장이라 자산을 살 수 없으면 그 거래가 성립하지 않습니다. AP의 존재는 언제나 NAV에 팔 수 있다는 보증이 아닙니다. 처음 투자자는 마지막에 1만1000원에 팔아 900원을 받습니다.</p>
 <p className="leading-8">같은 가격에 산 ETN이 약정대로 1만1000원을 지급해도 수익은 비용 전 900원입니다. 그러나 발행자가 부도나 계약 청구액의 40%만 회수한다는 별도 가정을 넣으면 4400원을 받고 5700원을 잃습니다. 이 40%는 시장 전망이 아니라 법적 청구권 차이를 드러내는 가정입니다.</p>
+<p className="leading-8">위의 AP 차익거래는 미국식 설명입니다. 한국 상장 ETF·ETN에는 괴리 폭에 규정상 선이 따로 그어져 있습니다. 순자산가치(ETN은 지표가치)가 1만 원인 상품이라면 국내 기초자산은 시장가격 1만300원, 해외 기초자산은 1만600원이 그 선입니다.</p>
+<p className="leading-8">금융위원회의 2020년 5월 18일 보도자료는 이 3%와 6%를 “규정상 괴리율 의무 범위”라고 부릅니다. 같은 자료는 호가를 내어 거래를 받쳐 주는 유동성공급자(LP)의 괴리율 관리 평가를 분기에서 월간으로 줄이겠다고 적었습니다. 괴리율은 시장가격에서 지표가치를 뺀 값을 지표가치로 나눈 비율이므로 1만100원 사례의 괴리율은 1%입니다.</p>
+<p className="leading-8">같은 발표는 괴리율이 의무 범위의 두 배인 6%(해외 기초자산 12%)를 넘으면 거래소가 투자유의종목으로 지정하도록 기준을 30%에서 낮추고, 지정된 종목은 단일가로 매매하며 괴리가 정상화되기 어려우면 거래를 정지하겠다고 밝혔습니다. 1만 원짜리 국내 기초자산 상품이라면 1만600원을 넘는 순간부터 이 조치의 대상입니다.</p>
+<p className="leading-8">이 숫자들은 2020년 발표 시점의 방안이고 이후 한국거래소 규정이 바뀌었을 수 있습니다. 2026-10-09 기준으로 거래소 규정 원문에서는 다시 확인하지 못했습니다.</p>
         </div>
 
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">같은 지수와 매수가격에서도 부도 때 회수 경로가 갈립니다. 공식 설명서의 소유 문구에 사례를 대입합니다.</p>
@@ -92,11 +96,15 @@ export default function Article() {
 <p className="leading-8">같은 지수 100→110→100에서 일일 3배는 100→130→94.55입니다. 반대 방향을 목표로 하는 인버스 −1배는 100→90→98.18, −2배는 100→80→94.55, −3배는 100→70→89.09입니다. 각 날 지수 수익률에 목표 배수를 곱해 전날 펀드 가치에 적용한 값입니다. 비용과 추적 오차는 제외했습니다. 서로 반대인 상품도 이 왕복 경로에서는 둘 다 손실입니다.</p>
 <p className="leading-8">실제 TQQQ와 SQQQ의 2026년 9월 28일 요약설명서는 Nasdaq-100의 하루 성과에 각각 +3배와 −3배를 목표로 합니다. TQQQ의 “three times (3x) the daily performance”에서 daily가 기간 조건입니다. 여러 날 보유가 언제나 손실이라는 뜻도 아닙니다. 지수가 100→110→121로 연속 상승하면 가정한 일일 2배 상품은 100→120→144입니다. 누적 44%는 지수 누적 21%의 두 배 42%보다 큽니다.</p>
 <p className="leading-8">자기 돈 100에 빌린 돈 100을 더해 지수 자산 200을 샀다고 합시다. 수량을 고정하면 다른 경로가 됩니다. 지수가 100→110→100일 때 자산은 200→220→200이고 빚을 뺀 자기 몫은 100→120→100입니다. 재설정을 안 했기 때문입니다. 실제 차입에는 이자와 <Link to="/finance/risk/margin-collateral-and-leverage">담보 부족에 따른 상환 요구</Link>가 있고 펀드 안의 파생계약에도 비용과 상대방 위험이 있습니다.</p>
+<p className="leading-8">한국에서는 일일 2배·3배 같은 레버리지 상품을 사기 전에 넘어야 할 문턱이 있습니다. 금융위원회 2020년 5월 18일 발표는 레버리지(±2배) ETF·ETN을 사려는 개인 일반투자자(전문투자자 제외)에게 기본예탁금 1,000만 원을 적용하고, 신용거래 대상에서 빼고, 위탁증거금 100%를 받겠다고 했습니다.</p>
+<p className="leading-8">기본예탁금은 증권사가 매매 주문을 받기 전에 계좌에 맡겨 두도록 요구하는 최소 금액입니다. 같은 발표는 복리효과·괴리율·롤오버효과 같은 내재 위험을 다루는 사전 온라인 교육 이수도 의무화했습니다. 이 요건 역시 2020년 발표 기준이며 2026-10-09 현재 거래소 규정 원문으로는 재확인하지 못했습니다.</p>
+
         </div>
 <SourceApplication source="SEC ETN Bulletin · What is an ETN?" excerpt="ETNs are unsecured debt obligations of financial institutions." application="1만1000원 지급 약속은 발행자의 채무입니다. 가정한 40% 회수에서는 4400원만 돌아오며 ETF 재산의 지분과 청구 대상이 다릅니다." />
-<CitationBlock source="SEC ETN Bulletin · What is an ETN?" citeKey={2} href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-50">원문 위치: SEC ETN Bulletin · What is an ETN? · 2026-10-04 확인. 예시의 금액은 별도 가정입니다.</CitationBlock><CitationBlock source="SEC · Leveraged and Inverse ETFs" citeKey={3} href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-12">SEC · Leveraged and Inverse ETFs</CitationBlock>
+<CitationBlock source="SEC ETN Bulletin · What is an ETN?" citeKey={2} href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-50">원문 위치: SEC ETN Bulletin · What is an ETN? · 2026-10-04 확인. 예시의 금액은 별도 가정입니다.</CitationBlock><CitationBlock source="SEC · Updated Investor Bulletin: Leveraged and Inverse ETFs" citeKey={3} href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/sec">“Most leveraged and inverse ETFs “reset” daily, meaning that they are designed to achieve their stated objectives on a daily basis.” · 2026-10-09 원문 확인. 이전 링크(investor-bulletins-12)는 다른 게시물로 연결돼 교체했습니다.</CitationBlock>
 <CitationBlock source="ProShares · TQQQ Summary Prospectus, 2026-09-28" citeKey={4} href="https://prod.proshares.com/globalassets/proshares/prospectuses/tqqq_summary_prospectus.pdf">ProShares · TQQQ Summary Prospectus, 2026-09-28</CitationBlock>
 <CitationBlock source="ProShares · SQQQ Summary Prospectus, 2026-09-28" citeKey={5} href="https://prod.proshares.com/globalassets/proshares/prospectuses/sqqq_summary_prospectus.pdf">ProShares · SQQQ Summary Prospectus, 2026-09-28</CitationBlock>
+<CitationBlock source="금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)" citeKey={6} href="https://fsc.go.kr/po010101/74332">“규정상 괴리율 의무 범위(국내 기초자산 3%, 해외 기초자산 6%)”, 투자유의종목 적출요건 “괴리율 30% → 6% or 12%”, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할, 2020년 발표 시점의 방안 · 2026-10-09 원문 확인(현행 거래소 규정과는 대조하지 못함).</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공식 채무 문구와 일일 재설정 계산으로 위험의 두 축을 확인했습니다. 마지막으로 매도 시점에 남는 비용을 봅니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">

@@ -13,7 +13,7 @@ export const philosophyHistoryArticles: Article[] = [
       { id: "need", title: "5. 이름을 외우는 연표만으로는 논쟁의 이유를 알 수 없습니다" },
       { id: "names", title: "6. 문답 검사·덕의 습관·통제 구분에 이름을 붙입니다" },
       { id: "mechanism", title: "7. 믿음을 질문하고 행동을 고른 뒤 결과를 다시 해석합니다" },
-      { id: "source", title: "8. MIT 과정은 플라톤에서 칸트까지 질문과 시대 변화를 함께 읽습니다" },
+      { id: "source", title: "8. MIT 과정은 플라톤에서 뒤부아·보부아르까지 질문과 시대 변화를 함께 읽습니다" },
       { id: "comparison", title: "9. 고대 윤리는 소크라테스에서 스토아까지 하나의 덕 이론이 아닙니다" },
       { id: "limits", title: "10. 그리스 철학을 서양 전체의 시작이나 보편 이성의 단일 원천으로 만들지 않습니다" },
     ],
@@ -62,7 +62,7 @@ export const philosophyHistoryArticles: Article[] = [
     sections: [
       { id: "overview", title: "1. 번역된 책 한 권은 답이 아니라 새 질문을 만드는 재료였습니다" },
       { id: "black-box", title: "2. 번역·논증·직관·경전 해석의 네 지식 작업을 엽니다" },
-      { id: "case", title: "3. 9세기·11세기·12세기·17세기의 네 정거장을 잇습니다" },
+      { id: "case", title: "3. 8~10세기·11세기·12세기·17세기의 네 정거장을 잇습니다" },
       { id: "picture", title: "4. 바그다드에서 라틴 서방과 이스파한까지 여러 갈래가 뻗습니다" },
       { id: "need", title: "5. 알가잘리 이후 철학이 끝났다는 이야기를 자료와 맞춰 봅니다" },
       { id: "names", title: "6. 번역·주석 사슬·조명적 앎·존재의 우위에 이름을 붙입니다" },

@@ -28,9 +28,11 @@ export default function LowRank() {
         question="Rank k만 남길 때 어떤 근사가 전체 entry의 squared error를 가장 작게 만들까요?"
         idea={<>Singular value가 큰 rank-one component부터 k개 남깁니다. Orthonormal components는 서로 error를 섞지 않으므로 버린 방향의 squared singular value가 Frobenius error로 정확히 더해집니다.</>}
         formula={String.raw`A_k=\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`}
-        annotatedFormula={String.raw`A_k=\underbrace{\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`A_k=\underbrace{\sum_{i=1}^{k}\sigma_i u_i v_i^\top}_{\text{큰 성분 k개만 남김}},\qquad \underbrace{\min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2}_{\text{rank k 중 최소 오차}}=\lVert A-A_k\rVert_F^2=\underbrace{\sum_{i>k}\sigma_i^2}_{\text{버린 성분의 제곱합}}`}
         operations={[
-          { expression: String.raw`\sum_{i=1}^{k}\sigma_i u_i v_i^\top,\qquad \min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2=\lVert A-A_k\rVert_F^2=\sum_{i>k}\sigma_i^2`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Singular value가 큰 rank-one","component부터 k개 남깁니다."] },
+          { expression: String.raw`\sum_{i=1}^{k}\sigma_i u_i v_i^\top`, annotation: ["singular value가 큰 rank-one 성분부터","k개를 더해 rank-k 근사를 만듦"] },
+          { expression: String.raw`\min_{\operatorname{rank}(B)\le k}\lVert A-B\rVert_F^2`, annotation: ["rank≤k인 모든 행렬 B 가운데","Frobenius 오차가 가장 작은 것이 A_k"] },
+          { expression: String.raw`\sum_{i>k}\sigma_i^2`, annotation: ["orthonormal 성분은 오차를 섞지 않아","버린 σᵢ²가 그대로 오차로 더해짐"] },
         ]}
         terms={[
           { symbol: "A_k", name: "truncated SVD", description: "가장 큰 singular value와 대응 vector k쌍만 남긴 rank-k matrix입니다." },

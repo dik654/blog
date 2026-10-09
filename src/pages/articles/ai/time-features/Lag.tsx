@@ -24,9 +24,10 @@ export default function Lag() {
         question="같은 entity의 k번째 이전 관측값을 현재 forecasting row에 어떻게 붙일까?"
         idea={<>Entity별로 유효한 record를 시간순으로 정렬한 뒤 현재 index n보다 k칸 앞의 값을 선택합니다. Difference는 두 확정된 lag level을 빼 level보다 변화를 강조합니다.</>}
         formula={String.raw`\operatorname{lag}_k(i,n)=y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}`}
-        annotatedFormula={String.raw`\operatorname{lag}_k(i,n)=\underbrace{y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}}_{\text{변화량 계산}}`}
+        annotatedFormula={String.raw`\operatorname{lag}_k(i,n)=\underbrace{y_{i,n-k}}_{\text{같은 entity k칸 앞 값}},\qquad \Delta_k y_{i,n}=\underbrace{y_{i,n}-y_{i,n-k}}_{\text{k step 사이 변화}}`}
         operations={[
-          { expression: String.raw`y_{i,n-k},\qquad \Delta_k y_{i,n}=y_{i,n}-y_{i,n-k}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","Entity별로 유효한 record를 시간순으로 정렬한 뒤","현재 index n보다"] },
+          { expression: String.raw`\operatorname{lag}_k(i,n)=y_{i,n-k}`, annotation: ["entity i의 history 안에서만 정렬해","현재 row n보다 k개 앞 관측을 복사","불규칙 거래면 이전 7개 거래 ≠ 최근 7일"] },
+          { expression: String.raw`y_{i,n}-y_{i,n-k}`, annotation: ["현재 level에서 k-step 전 level을 빼","level 대신 변화를 y와 같은 단위로 남김","두 값 모두 cutoff에 available해야 함"] },
         ]}
         terms={[
           { symbol: "i", name: "entity", description: "Lag가 다른 매장·사용자·sensor history로 넘어가지 않게 하는 group key입니다." },

@@ -50,9 +50,10 @@ export default function Mtp() {
             </p>
           }
           formula={String.raw`\mathrm{throughput}=\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}`}
-          annotatedFormula={String.raw`\mathrm{throughput}=\underbrace{\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}}_{\text{확률 가중 평균}}`}
+          annotatedFormula={String.raw`\mathrm{throughput}=\frac{\underbrace{\mathbb{E}[L_{\mathrm{commit}}]}_{\text{cycle당 확정 token}}}{\underbrace{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}_{\text{cycle 전체 시간}}}`}
           operations={[
-            { expression: String.raw`\frac{\mathbb{E}[L_{\mathrm{commit}}]}{T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 verification cycle이 끝날 때 실제로 확정한","token 수를 그 cycle의 전체 시간으로 나눕니다."] },
+            { expression: String.raw`\mathbb{E}[L_{\mathrm{commit}}]`, annotation: ["verification cycle 하나가 실제로","확정한 token 수의 평균(acceptance)"] },
+            { expression: String.raw`T_{\mathrm{draft}}+T_{\mathrm{verify}}+T_{\mathrm{sample}}`, annotation: ["후보 생성·main 검증·sampling 후처리를","모두 더한 cycle 시간","acceptance 2배여도 이게 2배 넘게 늘면 손해"] },
           ]}
           terms={[
             { symbol: "L_{\\mathrm{commit}}", name: "committed length", description: "한 cycle에서 앞에서부터 실제 sequence에 확정한 token 수입니다." },
@@ -77,9 +78,10 @@ export default function Mtp() {
             </p>
           }
           formula={String.raw`Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}`}
-          annotatedFormula={String.raw`\underbrace{Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}}_{\text{확률 가중 평균}}`}
+          annotatedFormula={String.raw`\underbrace{Q_{\mathrm{weight/token}}}_{\text{token당 weight byte}}\approx\frac{\underbrace{Q_{\mathrm{main/cycle}}}_{\text{cycle당 main weight read}}}{\underbrace{\mathbb{E}[L_{\mathrm{commit}}]}_{\text{cycle당 확정 token}}}`}
           operations={[
-            { expression: String.raw`Q_{\mathrm{weight/token}}\approx\frac{Q_{\mathrm{main/cycle}}}{\mathbb{E}[L_{\mathrm{commit}}]}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Cycle마다"] },
+            { expression: String.raw`Q_{\mathrm{main/cycle}}`, annotation: ["cycle마다 main weight를 한 번 읽는","traffic, 예: 6.65GB"] },
+            { expression: String.raw`\mathbb{E}[L_{\mathrm{commit}}]`, annotation: ["그 한 번의 read를 확정 token이 나눠 가짐","평균 3.5개면 약 1.9GB/token","KV·draft traffic은 따로 남음"] },
           ]}
           terms={[
             { symbol: "Q_{\\mathrm{main/cycle}}", name: "cycle당 main traffic", description: "한 verification cycle의 main-model weight traffic이며 단위는 byte/cycle입니다." },

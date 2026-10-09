@@ -77,7 +77,7 @@ export default function BehaviorMeaningAndMachineUnderstandingArticle() {
           <p className="leading-8">이 게임의 힘은 시험 가능한 기준을 준다는 데 있습니다. 그러나 튜링 시험을 통과했다는 말에서 곧바로 모든 종류의 지능, 의미 이해, 의식이 증명됐다고 넓히면 원래 과제의 범위를 넘어섭니다.</p>
         </div>
         <SourceApplication source="A. M. Turing · Computing Machinery and Intelligence" excerpt="I propose to consider the question, ‘Can machines think?’" application="정의가 흔들리는 질문을 문자 대화에서 드러나는 구체적 판정 과제로 바꾸되, 그 과제가 재는 능력의 범위를 적어야 합니다." />
-        <CitationBlock source="A. M. Turing, Computing Machinery and Intelligence, Mind 59, 1950" citeKey={1} href="https://academic.oup.com/mind/article/LIX/236/433/986238">모방 게임, 디지털 컴퓨터, 반론과 학습 기계를 다룬 원 논문입니다.</CitationBlock>
+        <CitationBlock source="A. M. Turing, Computing Machinery and Intelligence, Mind 59, 1950" citeKey={1} href="https://doi.org/10.1093/mind/LIX.236.433">모방 게임, 디지털 컴퓨터, 반론과 학습 기계를 다룬 원 논문입니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 중국어 방은 기호 규칙만으로 의미가 생기는지 반문합니다" bridge="작업자의 구문 처리와 시스템 전체의 이해를 둘러싼 반론을 나눴습니다. 판단 범위를 정리합니다.">

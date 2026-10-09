@@ -36,9 +36,10 @@ export default function ModernDAGConsensusArticle() {
             contract가 있어야 성립합니다.
           </p>
       <ExplainedFormula question="n=3f+1에서 서로 다른 두 DAG vertex의 q=2f+1 parent sets는 최소 몇 개의 parent를 공유하는가?" idea={<>각 set가 전체 n개 중 q개를 고르므로 두 크기의 합에서 전체 크기를 뺀 만큼은 반드시 중복됩니다. n=4,f=1,q=3이면 2q-n=2입니다. 이 causal overlap은 DAG가 완전히 갈라지는 것을 막는 재료지만 그 자체로 anchor commit은 아닙니다.</>} formula={String.raw`|P_x\cap P_y|\ge 2q-n=f+1`}
-      annotatedFormula={String.raw`|P_x\cap P_y|\ge 2q-n=\underbrace{f+1}_{\text{허용 경계 판정}}`}
+      annotatedFormula={String.raw`\underbrace{|P_x\cap P_y|}_{\text{두 vertex의 공통 parent}}\ge \underbrace{2q-n}_{\text{n을 넘친 중복분}}=\underbrace{f+1}_{\text{fault 수보다 하나 더}}`}
       operations={[
-        { expression: String.raw`f+1`, annotation: ["Minimum overlap이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 set가 전체 n개 중 q개를 고르므로 두 크기의 합에서","전체 크기를 뺀 만큼은 반드시 중복됩니다."] },
+        { expression: String.raw`2q-n`, annotation: ["두 parent set 크기를 더해 전체 n을","넘는 만큼은 반드시 겹칩니다","예: n=4, q=3이면 2·3−4=2"] },
+        { expression: String.raw`f+1`, annotation: ["겹친 parent가 최대 fault 수 f를 넘어","DAG가 완전히 갈라지지 않습니다","단 이것만으로 실행 순서는 안 정해짐"] },
       ]} terms={[{symbol:"P_x,P_y",name:"Parent sets",description:"같은 round의 두 certified vertices가 참조한 이전 round certificate 집합입니다."},{symbol:"q",name:"Parent threshold",description:"예시에서 한 vertex가 요구하는 distinct previous-round certificates 수입니다."},{symbol:"f",name:"Byzantine bound",description:"고정 membership에서 허용한 최대 faulty validator 수입니다."},{symbol:"f+1",name:"Minimum overlap",description:"최대 fault 수보다 큰 교집합 크기입니다."}]} assumptions={["n=3f+1 equal-weight fixed membership과 distinct valid certificates를 사용합니다.","Protocol version이 실제로 q=2f+1 parent rule을 요구한다고 고정합니다.","Certificate의 data-availability 전제와 retention 기간을 별도로 만족합니다.","Overlap만으로 total order·fairness·application validity가 생기지 않습니다."]} interpretation="n=4에서는 두 3-parent sets가 최소 2개를 공유합니다. 하지만 x와 y가 서로를 참조하지 않는다면 어느 것을 먼저 실행할지는 여전히 정해지지 않으므로 ordering rule이 필요합니다." />
       <div id="paper-narwhal-tusk"><CitationBlock source="Danezis et al. — Narwhal and Tusk" citeKey={1} href="https://arxiv.org/abs/2105.11827"><p><strong>문제:</strong> Reliable transaction dissemination을 consensus ordering과 분리해 leader data bottleneck을 줄입니다.</p><p><strong>기여:</strong> Narwhal DAG mempool과 이를 HotStuff 또는 asynchronous Tusk ordering에 결합하는 구조를 제시합니다.</p><p><strong>전제와 범위:</strong> 논문의 authenticated membership·fault·worker·WAN workload 범위입니다. 보고된 throughput을 payload·hardware가 다른 chain의 상한으로 일반화하지 않습니다.</p></CitationBlock></div>
     </section>

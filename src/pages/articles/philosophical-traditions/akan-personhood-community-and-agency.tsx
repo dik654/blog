@@ -24,14 +24,14 @@ const data: TraditionArticleData = {
     ] },
     { id: "names", level: "3", title: "6. 생물학적 인간·도덕적 인격·관계적 행위자성에 이름을 붙입니다", bridge: "기본 대우와 성품 평가가 다른 질문임을 봤습니다. 세 이름을 100시간 장부에 붙입니다.", paragraphs: [
       "생물학적 인간은 태어남과 생명에 근거해 사람으로 대우받는 지위를 가리킵니다. 성취하는 도덕적 인격은 좋은 성품과 책임 있는 행동을 길러 공동체의 존중을 얻는 규범적 평가입니다. 관계적 행위자성은 타인과 제도 속에서 능력을 얻고 다시 관계를 바꾸는 힘입니다.",
-      "현대 아칸 철학 해석에서는 ‘person’의 번역과 두 지위의 관계를 두고 논쟁이 있습니다. 도덕적 인격이 부족하다는 평가는 인간이 아니라는 생물학적 판정이나 시민권 박탈과 같지 않습니다. 이 글은 구분의 철학적 용도를 설명합니다.",
+      "현대 아칸 철학 해석에서는 ‘person’의 번역과 두 지위의 관계를 두고 논쟁이 있습니다. 도덕적 인격이 부족하다는 평가는 인간이 아니라는 생물학적 판정이나 시민권 박탈과 같지 않습니다. Stanford 철학백과의 아칸 항목은 이 기본 대우의 근거를 오크라(okra, 사람의 가장 안쪽 자아이자 본질)를 지녔다는 사실에서 찾습니다. 오크라를 지닌 사람은 성취와 무관하게 줄일 수 없는 존중과 그에 맞는 권리를 갖는다는 것입니다. 이 글은 구분의 철학적 용도를 설명합니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 100시간의 기여·돌봄·정당한 면제·비판을 한 장부에 놓습니다", bridge: "세 개념을 구분했으니 공동체가 기여를 평가하는 과정을 다시 설계합니다. 시간 합계와 이유 심사를 나눕니다.", paragraphs: [
       "직접 수리 70, 식사·돌봄 20, 기록·안전 10을 모두 적으면 공사가 여러 관계에 기대고 있음을 볼 수 있습니다. 환자 돌봄 때문에 현장에 못 온 가구는 기여 형태가 달랐고, 건강 때문에 아무 일도 못 한 주민에게는 정당한 면제가 필요합니다.",
       "거부한 가구는 이유를 공개하고 다른 사람은 그 비판이 공동 안전을 위한지 사적 이익을 위한지 답합니다. 평가는 한 번의 점수보다 반복된 성품과 행동을 보되, 당사자가 반박할 기회를 둡니다. 그래야 공동체의 인정이 권력자의 호감과 같아지는 것을 막을 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. 아칸 인격론에서 사람의 구성과 도덕적 성취를 구분합니다", bridge: "기여의 형태와 평가 절차를 함께 뒀습니다. 현대 철학자가 아칸 개념을 어떻게 재구성하는지 확인합니다.", paragraphs: [
-      "아칸 인격론에 관한 철학 연구는 오크라·순숨·호남 같은 구성 요소와 함께, 사람됨을 공동체 속 도덕적 성취로 말하는 관용 표현을 분석합니다. 일부 해석은 인간이 태어나면서 사람인 동시에 더 충실한 도덕적 인격을 점차 이룬다고 봅니다.",
+      "아칸 인격론에 관한 철학 연구는 오크라 같은 구성 요소와 함께, 사람됨을 공동체 속 도덕적 성취로 말하는 관용 표현을 분석합니다. 칭찬할 때 쓰는 ‘oye onipa paa(그녀는 진짜 사람이다)’가 그런 표현입니다. Stanford 철학백과 항목은 이 논쟁을 두 현대 아칸 철학자의 대비로 정리합니다. 콰시 위레두(Kwasi Wiredu)는 사람됨을 개인의 성취를 통해 정도에 따라 이루어 가는 것으로 봅니다. 콰메 기에케(Kwame Gyekye)는 인간은 나이나 사회적 지위와 무관하게 사람이며, 사람됨이 공동체 속에서 온전히 실현될 수는 있어도 살아가며 새로 획득하는 것은 아니라고 봅니다. 순숨(sunsum)·호남(honam) 같은 다른 구성 요소의 분석은 이 글이 인용한 자료에 없어 다루지 않습니다(2026-10-09 확인).",
       "이는 문자로 고정된 단일 교리의 요약이 아닙니다. 구전 표현, 언어 분석, 민족지와 현대 철학자의 논증을 통해 재구성된 논쟁입니다. 서로 다른 연구자가 공동체의 우선성, 개인의 의지와 인격의 정도를 다르게 설명합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 아프리카 윤리의 공동체 강조와 인간의 기본 대우를 함께 읽습니다", bridge: "아칸 인격론이 현대의 철학적 재구성이기도 함을 확인했습니다. 더 넓은 아프리카 윤리와 연결하되 범위를 섞지 않습니다.", paragraphs: [
@@ -61,7 +61,7 @@ const data: TraditionArticleData = {
   ] },
   sources: [
     { source: "Stanford Encyclopedia of Philosophy · Akan Philosophy of the Person", excerpt: "Akan Philosophy of the Person", application: "인간의 구성에 대한 형이상학과 도덕적 사람됨의 성취라는 규범적 논의를 구분해 10가구 사례에 적용합니다.", citation: "Stanford Encyclopedia of Philosophy, Akan Philosophy of the Person", href: "https://plato.stanford.edu/entries/akan-person/", note: "아칸의 사람 개념을 언어·민족지·현대 아프리카 철학 논쟁과 함께 검토하는 동료 검토 개관입니다." },
-    { source: "Stanford Encyclopedia of Philosophy · African Ethics", excerpt: "the ethics of the well-being of others", application: "공동선·상호 도움과 인간 존엄을 함께 읽고, 아칸 논의를 아프리카 전체의 한 목소리로 일반화하지 않습니다.", citation: "Stanford Encyclopedia of Philosophy, African Ethics, Spring 2025 archive", href: "https://plato.stanford.edu/archives/spr2025/entries/african-ethics/", note: "여러 아프리카 윤리 전통의 인간주의·공동체·의무·권리 논쟁을 비교하는 철학 개관이며 단일 문화의 1차 사료는 아닙니다." },
+    { source: "Stanford Encyclopedia of Philosophy · African Ethics", excerpt: "compassion, solidarity, reciprocity, cooperation, interdependence, and social well-being", application: "공동선·상호 도움과 인간 존엄을 함께 읽고, 아칸 논의를 아프리카 전체의 한 목소리로 일반화하지 않습니다.", citation: "Stanford Encyclopedia of Philosophy, African Ethics, Spring 2025 archive", href: "https://plato.stanford.edu/archives/spr2025/entries/african-ethics/", note: "여러 아프리카 윤리 전통의 인간주의·공동체·의무·권리 논쟁을 비교하는 철학 개관이며 단일 문화의 1차 사료는 아닙니다." },
   ],
   review: [
     "직접 수리 70만 기록하면 사라지는 기여와 판단은 무엇인가요? (답: 3·7절)",

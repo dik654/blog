@@ -15,9 +15,10 @@ export default function Norm() {
         question="Vector x=(3,4)의 원점으로부터 길이는 얼마일까요?"
         idea={<>서로 직각인 coordinate의 이동량을 제곱해 더한 뒤 제곱근을 취합니다. 제곱은 음수 좌표도 양의 거리 기여로 바꾸고, 제곱근은 단위를 원래 scale로 돌립니다.</>}
         formula={String.raw`\lVert x\rVert_2=\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5`}
-        annotatedFormula={String.raw`\lVert x\rVert_2=\underbrace{\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5}_{\text{L2 norm 계산}}`}
+        annotatedFormula={String.raw`\lVert x\rVert_2=\sqrt{\underbrace{\sum_{j=1}^{d}x_j^2}_{\text{축별 이동량 제곱 합}}}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\underbrace{\sqrt{3^2+4^2}=5}_{\text{원점에서 직선거리}}`}
         operations={[
-          { expression: String.raw`\sqrt{\sum_{j=1}^{d}x_j^2}\qquad\Longrightarrow\qquad \lVert(3,4)\rVert_2=\sqrt{3^2+4^2}=5`, annotation: ["L2 norm이(가) 식의 결과에 기여하는 방식을 계산합니다.","서로 직각인 coordinate의 이동량을 제곱해 더한 뒤","제곱근을 취합니다."] },
+          { expression: String.raw`\sum_{j=1}^{d}x_j^2`, annotation: ["직각인 축의 이동량을 제곱해 더하면", "음수 좌표도 양의 거리 기여가 됩니다"] },
+          { expression: String.raw`\sqrt{3^2+4^2}=5`, annotation: ["가로 3, 세로 4 이동은 9+16=25이고", "제곱근으로 원래 scale인 5로 돌립니다"] },
         ]}
         terms={[
           { symbol: "x_j", name: "j번째 coordinate", description: "Vector를 이루는 한 방향의 signed 값입니다." },

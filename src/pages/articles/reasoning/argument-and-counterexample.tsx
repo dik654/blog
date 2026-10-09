@@ -81,11 +81,11 @@ export default function ArgumentAndCounterexampleArticle() {
 
       <LessonSection id="comparison" level="6" title="9. 묵가의 원인 구분으로 조건을 더 세밀하게 봅니다" bridge="같은 ‘원인’이라는 말 안에서도 필요한 조건과 충분한 묶음을 나눴습니다. 현실 논증의 남는 한계를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">중국 묵가의 『묵자』 「경상」은 어떤 일이 생기기 전에 반드시 필요한 것을 이유나 원인으로 설명합니다. 주석 전통은 필요한 조건과 그것만으로 일이 생기게 하는 더 큰 원인 묶음을 나눠 읽습니다. 이는 “카드 결제는 전자제품 가게이기 위한 조건인가”와 “카드 결제만으로 업종이 정해지는가”를 분리하는 데 도움이 됩니다.</p>
+          <p className="leading-8">중국 묵가의 『묵자』 「경상」은 어떤 일이 생기기 전에 반드시 필요한 것을 이유나 원인으로 설명합니다. 같은 책의 해설 편인 「경설상(經說上)」은 이를 두 가지로 나눕니다. ‘작은 이유(소고, 小故)’는 있어도 반드시 그렇게 되지는 않지만 없으면 반드시 그렇게 되지 않는 필요 조건이고, ‘큰 이유(대고, 大故)’는 있으면 반드시 그렇게 되는 더 큰 원인 묶음입니다(有之必然，無之必不然). 이는 “카드 결제는 전자제품 가게이기 위한 조건인가”와 “카드 결제만으로 업종이 정해지는가”를 분리하는 데 도움이 됩니다.</p>
           <p className="leading-8">우리 사례에서 카드 결제는 전자제품 가게 40곳이 공통으로 가진 속성이지만, 다른 업종 50곳도 가집니다. 따라서 업종을 정하는 충분한 표지가 아닙니다. 필요한 조건과 충분한 조건을 바꾸어 말하는 순간 둘째 추론의 빈틈이 생깁니다.</p>
         </div>
         <SourceApplication source="Mozi · Canon I" excerpt="what it must get before it will come about" application="필요한 조건 하나를 찾았다는 사실과 그 조건만으로 결과가 정해진다는 주장을 나눠야 합니다." />
-        <CitationBlock source="Chinese Text Project, Mozi · Canon I와 주석" citeKey={2} href="https://ctext.org/mozi/canon-i">원문과 번역은 원인·이름·분류를 짧은 경문과 해설로 나눕니다. 현대 논리 기호와 완전히 같은 체계라고 동일시하지 않습니다.</CitationBlock>
+        <CitationBlock source="Chinese Text Project, Mozi · Canon I와 경설(Exposition of Canon I), A. C. Graham 역" citeKey={2} href="https://ctext.org/mozi/canon-i">원문과 번역은 원인·이름·분류를 짧은 경문(經)과 같은 책 안의 해설(經說)로 나눕니다. 소고·대고 구분은 후대 주석이 아니라 「경설상」 본문에 있습니다(ctext는 자동 조회 불가라 2024-12-07 Wayback 사본과 zh.wikisource 「經說上」으로 2026-10-09 확인). 현대 논리 기호와 완전히 같은 체계라고 동일시하지 않습니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 현실의 논증은 불확실한 전제와 숨은 선택을 남깁니다" bridge="형식·사실·확률·말의 뜻을 따로 검사할 경계를 세웠습니다. 아래 질문으로 같은 사례를 다시 판단할 수 있습니다.">

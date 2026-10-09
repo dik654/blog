@@ -11,9 +11,10 @@ export default function ProductRule() {
         question="여러 양수를 곱한 값을 로그 공간에서는 어떻게 계산하는가?"
         idea={<>각 값이 밑 a를 몇 번 적용한 결과인지 따로 구한 뒤 그 횟수를 더합니다. 나눗셈은 음의 지수 때문에 뺄셈으로 바뀝니다.</>}
         formula={String.raw`\log_a(uv)=\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v`}
-        annotatedFormula={String.raw`\log_a(uv)=\underbrace{\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`\log_a(uv)=\underbrace{\log_a u+\log_a v}_{\text{지수 횟수의 합}},\qquad \log_a\!\left(\frac uv\right)=\underbrace{\log_a u-\log_a v}_{\text{지수 횟수의 차}}`}
         operations={[
-          { expression: String.raw`\log_a u+\log_a v,\qquad \log_a\!\left(\frac uv\right)=\log_a u-\log_a v`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 값이 밑 a를 몇 번 적용한 결과인지 따로 구한 뒤 그","횟수를 더합니다."] },
+          { expression: String.raw`\log_a u+\log_a v`, annotation: ["u=aᵐ, v=aⁿ이면 uv=aᵐ⁺ⁿ이라","곱의 log는 m+n으로 더해집니다","0.5³의 log는 3log0.5"] },
+          { expression: String.raw`\log_a u-\log_a v`, annotation: ["나누면 v의 지수 n을 빼 u/v=aᵐ⁻ⁿ","그래서 log는 m−n이 됩니다"] },
         ]}
         terms={[
           { symbol: "u,v", name: "positive inputs", description: "곱하거나 나눌 0보다 큰 값입니다." },

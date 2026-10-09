@@ -19,9 +19,11 @@ export default function RewardsPenalties({ onCodeRef }: { onCodeRef: (key: strin
         question="Validator i의 한 participation flag reward는 어떤 세 요인의 곱일까요?"
         idea={<>개인 effective balance가 만드는 base reward에 flag 중요도와 그 flag에 참여한 전체 active balance 비율을 곱합니다. Spec은 overflow를 피하기 위해 increment와 integer division으로 계산합니다.</>}
         formula={String.raw`r_{i,f}=b_i\,\frac{w_f}{W}\,\frac{A_f}{A}`}
-        annotatedFormula={String.raw`r_{i,f}=\underbrace{b_i\,\frac{w_f}{W}\,\frac{A_f}{A}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`r_{i,f}=\underbrace{b_i}_{\text{개인 base reward}}\,\underbrace{\frac{w_f}{W}}_{\text{flag 비중}}\,\underbrace{\frac{A_f}{A}}_{\text{참여 balance 비율}}`}
         operations={[
-          { expression: String.raw`b_i\,\frac{w_f}{W}\,\frac{A_f}{A}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","개인 effective balance가 만드는 base","reward에 flag 중요도와 그 flag에 참여한 전체","active balance 비율을 곱합니다."] },
+          { expression: String.raw`b_i`, annotation: ["effective balance에서 나온 validator i의","기준 Gwei, toy example b=100"] },
+          { expression: String.raw`\frac{w_f}{W}`, annotation: ["fork가 정한 flag weight 몫","toy example 1/4"] },
+          { expression: String.raw`\frac{A_f}{A}`, annotation: ["그 flag에 참여한 active balance 비율","3/4이면 100·1/4·3/4 = 18.75 Gwei","실제 값은 integer 순서·rounding을 따름"] },
         ]}
         terms={[
           { symbol: "b_i", name: "base reward", description: "Validator i의 effective-balance increments와 전체 active balance 제곱근에서 계산한 기준 Gwei입니다." },

@@ -52,9 +52,10 @@ export default function ExtensionAttempts() {
         question="목표 길이 L′의 모든 position을 원래 학습 범위 [0,L) 안에 넣으려면?"
         idea={<>확장 배율 s=L′/L만큼 position index를 줄인 뒤 RoPE를 계산합니다. 가장 먼 상대 거리도 L 안으로 들어오지만 가까운 거리의 각도 차이까지 s배 촘촘해집니다.</>}
         formula={String.raw`s=\frac{L'}{L},\qquad m'=\frac{m}{s}=m\frac{L}{L'}`}
-        annotatedFormula={String.raw`s=\underbrace{\frac{L'}{L},\qquad m'=\frac{m}{s}=m\frac{L}{L'}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`s=\underbrace{\frac{L'}{L}}_{\text{확장 배율}},\qquad m'=\underbrace{\frac{m}{s}}_{\text{position을 s배 압축}}=m\frac{L}{L'}`}
         operations={[
-          { expression: String.raw`\frac{L'}{L},\qquad m'=\frac{m}{s}=m\frac{L}{L'}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","확장 배율 s=L′/L만큼 position index를 줄인","뒤 RoPE를 계산합니다."] },
+          { expression: String.raw`\frac{L'}{L}`, annotation: ["학습 길이 L=4096을 L′=32768로","늘리면 s=8입니다"] },
+          { expression: String.raw`\frac{m}{s}`, annotation: ["모든 position index를 s로 나눠","가장 먼 32767도 4096 안에 넣습니다","대가로 가까운 거리 각도 차도 1/8"] },
         ]}
         terms={[
           { symbol: "L", name: "original context", description: "checkpoint가 adaptation 전에 학습한 최대 sequence length입니다." },
@@ -83,9 +84,10 @@ export default function ExtensionAttempts() {
         question="고주파는 덜 바꾸고 저주파는 더 느리게 만드는 base scaling은 어떻게 생길까?"
         idea={<>position 전체를 줄이지 않고 RoPE base를 키웁니다. i=0인 최고 frequency는 그대로이고, i가 커질수록 새 base의 영향이 강해져 저주파가 더 느려집니다.</>}
         formula={String.raw`b'=b\,s^{d/(d-2)},\qquad \theta_i'=(b')^{-2i/d}`}
-        annotatedFormula={String.raw`b'=\underbrace{b\,s^{d/(d-2)},\qquad \theta_i'=(b')^{-2i/d}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`b'=\underbrace{b\,s^{d/(d-2)}}_{\text{base를 약 s배로 키움}},\qquad \theta_i'=\underbrace{(b')^{-2i/d}}_{\text{i가 클수록 느린 회전}}`}
         operations={[
-          { expression: String.raw`b\,s^{d/(d-2)},\qquad \theta_i'=(b')^{-2i/d}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","position 전체를 줄이지 않고 RoPE base를","키웁니다."] },
+          { expression: String.raw`b\,s^{d/(d-2)}`, annotation: ["d=128, b=10000, s=8이면","지수 128/126≈1.016이라 b′≈82,685","position 자체는 줄이지 않습니다"] },
+          { expression: String.raw`(b')^{-2i/d}`, annotation: ["i=0은 지수가 0이라 최고 주파수 그대로","i가 커질수록 커진 base의 영향으로","저주파가 더 느려집니다"] },
         ]}
         terms={[
           { symbol: "b'", name: "scaled RoPE base", description: "목표 extension factor를 반영해 키운 frequency base입니다." },

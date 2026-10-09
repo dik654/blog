@@ -21,12 +21,12 @@ export default function ModernMsmNttArticle() {
       <header><p className="text-sm font-semibold text-primary">01 · Fixed workload</p><h2 className="mt-2 text-2xl font-bold">먼저 points·scalars·polynomials와 representation을 고정한다</h2></header>
       <p>측정 단위는 “한 proof”처럼 모호하면 안 됩니다. Curve·field·domain size <code>N</code>, MSM 항 수 <code>m</code>, scalar bit length, point coordinate format, batch 수, input seed, SRS와 backend revision을 receipt에 남깁니다. Affine point를 GPU에서 Jacobian으로 바꾸거나 field 값을 Montgomery domain으로 바꾸는 비용도 어느 구간에 포함하는지 밝혀야 합니다.</p>
       <ExplainedFormula question="MSM이 계산하는 값과 window 분해는 GPU 작업을 어떻게 만든다고 볼 수 있을까?" idea={<>각 scalar를 w-bit digits로 나누면 같은 digit을 가진 points를 bucket에 모을 수 있습니다. Window들은 부분적으로 병렬화할 수 있지만 같은 bucket update와 마지막 weighted reduction은 dependency를 갖습니다.</>} formula={String.raw`\begin{aligned}Q&=\sum_{i=0}^{m-1}[s_i]P_i\\s_i&=\sum_{j=0}^{J-1}d_{i,j}2^{jw}\\J&=\lceil b/w\rceil\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}Q&=\underbrace{\sum_{i=0}^{m-1}[s_i]P_i}_{\text{Input point 계산}}\\s_i&=\underbrace{\sum_{j=0}^{J-1}d_{i,j}2^{jw}}_{\text{Window digit 계산}}\\J&=\underbrace{\lceil b/w\rceil}_{\text{기준량당 비율}}\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}\underbrace{Q}_{\text{MSM 결과 점}}&=\sum_{i=0}^{m-1}\underbrace{[s_i]P_i}_{\text{scalar배 point}}\\s_i&=\sum_{j=0}^{J-1}\underbrace{d_{i,j}}_{\text{w-bit digit}}\underbrace{2^{jw}}_{\text{window 자리값}}\\\underbrace{J}_{\text{window 수}}&=\lceil b/w\rceil\end{aligned}`}
       operations={[
-        { expression: String.raw`\sum_{i=0}^{m-1}[s_i]P_i`, annotation: ["Input point이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 scalar를 w-bit digits로 나누면 같은","digit을 가진 points를 bucket에 모을 수"] },
-        { expression: String.raw`\sum_{j=0}^{J-1}d_{i,j}2^{jw}`, annotation: ["Window digit이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 scalar를 w-bit digits로 나누면 같은","digit을 가진 points를 bucket에 모을 수"] },
-        { expression: String.raw`\lceil b/w\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 scalar를 w-bit digits로 나누면 같은","digit을 가진 points를 bucket에 모을 수","있습니다."] },
-      ]} terms={[
+          { expression: String.raw`\sum_{i=0}^{m-1}[s_i]P_i`, annotation: ["m개 point를 각 scalar만큼 더해 합산","GPU 작업의 최종 출력 Q"] },
+          { expression: String.raw`\sum_{j=0}^{J-1}d_{i,j}2^{jw}`, annotation: ["scalar를 w-bit digit으로 쪼개","같은 digit의 point를 bucket에 모음","w=2면 window당 nonzero bucket 3개"] },
+          { expression: String.raw`\lceil b/w\rceil`, annotation: ["scalar bit를 덮는 window 수","b=8, w=2면 digit 4개","w를 키우면 window↓, bucket 공간↑"] },
+        ]} terms={[
         {symbol:"Q",name:"MSM output",description:"모든 scalar-point 항을 group law로 더한 곡선점입니다."},
         {symbol:"P_i",name:"Input point",description:"선택한 curve와 subgroup의 i번째 point입니다."},
         {symbol:"s_i",name:"Scalar",description:"Subgroup order 아래의 i번째 integer scalar입니다."},
@@ -44,10 +44,11 @@ export default function ModernMsmNttArticle() {
       <p>MSM에서 thread마다 point를 처리하면 여러 thread가 같은 bucket을 갱신할 수 있습니다. Atomic update, thread-local buckets 뒤 merge, sort·segmented reduction 같은 선택지는 충돌·workspace·extra passes를 서로 바꿉니다. Bucket 합을 만든 뒤에는 큰 digit부터 running sum을 누적하는 weighted reduction이 필요하므로 “point가 독립”이라는 설명만으로 전체 MSM이 embarrassingly parallel이라고 할 수 없습니다.</p>
       <p>Radix-2 NTT의 한 stage에서는 서로 겹치지 않는 pair가 동시에 butterfly를 수행하지만, stage <code>k+1</code>의 입력은 stage <code>k</code>의 output입니다. Block 안에서 끝나는 작은 stage는 shared memory와 block barrier로 묶을 수 있지만 여러 blocks가 참여하는 경계는 kernel launch를 나누거나 cooperative 조건을 검증해야 합니다.</p>
       <ExplainedFormula question="한 NTT butterfly가 어떤 두 값을 만들며 왜 stage 사이에 synchronization이 필요할까?" idea={<>Pair의 두 input에서 하나는 그대로, 다른 하나는 stage별 twiddle로 곱한 뒤 합과 차를 만듭니다. 다음 stage가 이 두 output을 다시 섞으므로 이전 stage 완료가 선행되어야 합니다.</>} formula={String.raw`u'=u+\omega^k v,\qquad v'=u-\omega^k v`}
-      annotatedFormula={String.raw`u'=\underbrace{u+\omega^k v,\qquad v'=u-\omega^k v}_{\text{Root of unity 계산}}`}
+      annotatedFormula={String.raw`\underbrace{u'}_{\text{합 출력}}=u+\underbrace{\omega^k v}_{\text{twiddle 곱한 짝}},\qquad \underbrace{v'}_{\text{차 출력}}=u-\omega^k v`}
       operations={[
-        { expression: String.raw`u+\omega^k v,\qquad v'=u-\omega^k v`, annotation: ["Root of unity이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pair의 두 input에서 하나는 그대로, 다른 하나는","stage별 twiddle로 곱한 뒤 합과 차를 만듭니다."] },
-      ]} terms={[
+          { expression: String.raw`\omega^k v`, annotation: ["짝의 한쪽에 stage별 twiddle을 곱함","k는 stage와 pair index가 정함"] },
+          { expression: String.raw`u-\omega^k v`, annotation: ["같은 곱을 재사용해 합과 차를 만듦","다음 stage가 두 출력을 다시 섞으므로","먼저 읽으면 race, stage 간 sync 필요"] },
+        ]} terms={[
         {symbol:"u,v",name:"Butterfly inputs",description:"현재 stage에서 짝지어진 두 field elements입니다."},
         {symbol:String.raw`\omega`,name:"Root of unity",description:"Transform domain을 생성하는 N-th root입니다."},
         {symbol:"k",name:"Twiddle exponent",description:"Stage와 pair index가 정하는 exponent입니다."},
@@ -66,10 +67,13 @@ export default function ModernMsmNttArticle() {
             합이 아니라 timeline의 가장 긴 경로를 봅니다.
           </p>
       <ExplainedFormula question="Proof workload의 device resident byte와 겹친 실행 시간을 어떻게 상한으로 잡을까?" idea={<>동시에 살아 있는 allocations만 합하고, 겹치지 않는 dependency 경로는 더하되 transfer와 compute가 실제로 겹치는 구간은 더 큰 쪽을 critical path로 둡니다.</>} formula={String.raw`\begin{aligned}B_{live}&=B_P+B_s+B_{poly}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}B_{live}&=\underbrace{B_P+B_s+B_{poly}}_{\text{Polynomial bytes 계산}}\\&\quad+B_{tw}+B_{work}\\T_{chunk}&\approx\max(T_{H2D},T_{kernel})\\&\quad+T_{barrier}\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}\underbrace{B_{live}}_{\text{동시 생존 bytes}}&=\underbrace{B_P+B_s+B_{poly}}_{\text{point·scalar·poly}}\\&\quad+\underbrace{B_{tw}+B_{work}}_{\text{twiddle·scratch}}\\T_{chunk}&\approx\underbrace{\max(T_{H2D},T_{kernel})}_{\text{겹친 전송·연산}}\\&\quad+\underbrace{T_{barrier}}_{\text{직렬 경계}}\end{aligned}`}
       operations={[
-        { expression: String.raw`B_P+B_s+B_{poly}`, annotation: ["Polynomial bytes이(가) 식의 결과에 기여하는","방식을 계산합니다.","동시에 살아 있는 allocations만 합하고, 겹치지 않는","dependency 경로는 더하되 transfer와"] },
-      ]} terms={[
+          { expression: String.raw`B_P+B_s+B_{poly}`, annotation: ["동시에 resident한 MSM base·scalar와","현재 round field buffer만 합산"] },
+          { expression: String.raw`B_{tw}+B_{work}`, annotation: ["NTT twiddle table과 bucket·scratch"] },
+          { expression: String.raw`\max(T_{H2D},T_{kernel})`, annotation: ["copy와 kernel이 겹치면 긴 쪽만 남음","max(4ms, 7ms)=7ms"] },
+          { expression: String.raw`T_{barrier}`, annotation: ["sync·final reduction은 겹칠 수 없음","7+1≈8ms, 직렬이면 4+7+1=12ms"] },
+        ]} terms={[
         {symbol:"B_P",name:"Point bytes",description:"현재 resident MSM bases와 point partials입니다."},
         {symbol:"B_s",name:"Scalar bytes",description:"현재 batch의 scalar digits 또는 원본 scalars입니다."},
         {symbol:"B_{poly}",name:"Polynomial bytes",description:"현재 round의 input/output field buffers입니다."},

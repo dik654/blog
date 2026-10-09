@@ -62,10 +62,11 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           </>
         }
         formula={"3p\\ge 2N"}
-        annotatedFormula={String.raw`3p\ge \underbrace{2N}_{\text{Participating positions 계산}}`}
+        annotatedFormula={String.raw`\underbrace{3p}_{\text{참여 position×3}}\ge \underbrace{2N}_{\text{전체 position×2}}`}
         operations={[
-          { expression: String.raw`2N`, annotation: ["Participating positions이(가) 식의 결과에","기여하는 방식을 계산합니다.","부동소수점 비율 대신 정수끼리 교차 곱하면 client마다"] },
-        ]}
+  { expression: String.raw`3p`, annotation: ["SyncAggregate bit가 1인 참여자 수를","세 배 해 p/N≥2/3을 정수로 바꿉니다","p=350이면 1,050"] },
+  { expression: String.raw`2N`, annotation: ["전체 committee position 수를 두 배 합니다","N=512면 1,024 → 1,050≥1,024 통과","서명·branch 검증은 별도로 먼저"] },
+]}
         terms={[
           {
             symbol: "p",

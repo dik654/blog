@@ -27,11 +27,12 @@ export default function SoftmaxCEGradient() {
         question="서로 coupling된 softmax probability를 거쳐도 logit gradient를 간단히 계산할 수 있을까?"
         idea={<>Softmax Jacobian을 cross-entropy의 probability gradient와 곱합니다. One-hot target의 합이 1이라는 조건을 사용하면 자기 class와 다른 class의 항이 정리되어 p−y만 남습니다.</>}
         formula={String.raw`\begin{aligned}p_j&=\frac{e^{z_j}}{\sum_ke^{z_k}}\\[-1pt]L&=-\sum_i y_i\log p_i\\[3pt]\frac{\partial p_i}{\partial z_j}&=p_i(\delta_{ij}-p_j)\\[3pt]\frac{\partial L}{\partial z_j}&=p_j-y_j\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}p_j&=\underbrace{\frac{e^{z_j}}{\sum_ke^{z_k}}}_{\text{기준량당 비율}}\\[-1pt]L&=\underbrace{-\sum_i y_i\log p_i}_{\text{로그 비용 변환}}\\[3pt]\frac{\partial p_i}{\partial z_j}&=\underbrace{p_i(\delta_{ij}-p_j)}_{\text{기준량당 비율}}\\[3pt]\frac{\partial L}{\partial z_j}&=p_j-y_j\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_j&=\underbrace{\frac{e^{z_j}}{\sum_ke^{z_k}}}_{\text{logit을 class 확률로}}\\[-1pt]L&=\underbrace{-\sum_i y_i\log p_i}_{\text{target이 본 surprisal}}\\[3pt]\frac{\partial p_i}{\partial z_j}&=\underbrace{p_i(\delta_{ij}-p_j)}_{\text{자기 항+class 간 coupling}}\\[3pt]\frac{\partial L}{\partial z_j}&=\underbrace{p_j-y_j}_{\text{예측 확률 − target}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{e^{z_j}}{\sum_ke^{z_k}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Softmax Jacobian을 cross-entropy의","probability gradient와 곱합니다."] },
-          { expression: String.raw`-\sum_i y_i\log p_i`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Softmax Jacobian을 cross-entropy의","probability gradient와 곱합니다."] },
-          { expression: String.raw`p_i(\delta_{ij}-p_j)`, annotation: ["Kronecker delta이(가) 식의 결과에 기여하는","방식을 계산합니다.","Softmax Jacobian을 cross-entropy의","probability gradient와 곱합니다."] },
+          { expression: String.raw`\frac{e^{z_j}}{\sum_ke^{z_k}}`, annotation: ["K개 logit을 합이 1인 확률로 바꿔", "한 logit을 바꾸면 모든 p가 움직입니다"] },
+          { expression: String.raw`-\sum_i y_i\log p_i`, annotation: ["target mass y가 있는 class의", "확률에 음의 log를 걸어 평균냅니다"] },
+          { expression: String.raw`p_i(\delta_{ij}-p_j)`, annotation: ["i=j면 p_j(1−p_j)인 diagonal 항,", "i≠j면 −p_ip_j인 coupling 항입니다"] },
+          { expression: String.raw`p_j-y_j`, annotation: ["chain rule 후 Σy=1로 정리되면", "정답 class는 p−1로 logit을 올리고", "나머지는 p만큼 내립니다"] },
         ]}
         terms={[
           { symbol: "z_j", name: "logit", description: "Class j의 normalized 전 score입니다." },
@@ -60,11 +61,11 @@ export default function SoftmaxCEGradient() {
         question="정답 확률을 직접 만들지 않고도 categorical NLL을 안정적으로 계산하려면?"
         idea={<>모든 logit에서 최댓값 m을 빼도 softmax는 변하지 않습니다. Exp의 입력을 0 이하로 옮겨 overflow를 막고 log-sum-exp와 정답 logit의 차이로 loss를 계산합니다.</>}
         formula={String.raw`\begin{aligned}m&=\max_k z_k\\[2pt]\operatorname{LSE}(z)&=m+\log\sum_k e^{z_k-m}\\[2pt]L&=\operatorname{LSE}(z)-z_y\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}m&=\underbrace{\max_k z_k}_{\text{경계 후보 선택}}\\[2pt]\operatorname{LSE}(z)&=\underbrace{m+\log\sum_k e^{z_k-m}}_{\text{로그 비용 변환}}\\[2pt]L&=\underbrace{\operatorname{LSE}(z)-z_y}_{\text{log-sum-exp 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}m&=\underbrace{\max_k z_k}_{\text{빼 줄 최대 logit}}\\[2pt]\operatorname{LSE}(z)&=\underbrace{m+\log\sum_k e^{z_k-m}}_{\text{overflow 없는 정규화 항}}\\[2pt]L&=\underbrace{\operatorname{LSE}(z)-z_y}_{\text{정답 logit과의 차이}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\max_k z_k`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","모든 logit에서 최댓값 m을 빼도 softmax는 변하지","않습니다."] },
-          { expression: String.raw`m+\log\sum_k e^{z_k-m}`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","모든 logit에서 최댓값 m을 빼도 softmax는 변하지","않습니다."] },
-          { expression: String.raw`\operatorname{LSE}(z)-z_y`, annotation: ["log-sum-exp이(가) 식의 결과에 기여하는 방식을","계산합니다.","모든 logit에서 최댓값 m을 빼도 softmax는 변하지","않습니다."] },
+          { expression: String.raw`\max_k z_k`, annotation: ["logits (1000, 999)에서 m=1000을", "골라 exp 입력을 0 이하로 옮깁니다"] },
+          { expression: String.raw`m+\log\sum_k e^{z_k-m}`, annotation: ["(0, −1)에 exp를 취해 더하고", "m을 다시 더해 log Σe^z를 복원합니다"] },
+          { expression: String.raw`\operatorname{LSE}(z)-z_y`, annotation: ["정답이 첫 class면", "1000+ln(1+e⁻¹)−1000≈0.313 nat", "확률 tensor 없이 NLL을 얻습니다"] },
         ]}
         terms={[
           { symbol: "m", name: "maximum logit", description: "수치 안정화를 위해 모든 logits에서 빼는 기준값입니다." },

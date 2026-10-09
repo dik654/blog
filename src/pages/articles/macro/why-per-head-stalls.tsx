@@ -12,8 +12,8 @@ import CheckLoopViz from "./why-per-head-stalls/viz/CheckLoopViz";
  * 총량이 늘어도 한 사람 몫은 제자리일 수 있습니다
  *
  * 경제 2단계 6편, 거시 1편. contract 1.3의 층위 사다리를 따른다. 원자료는
- * Malthus(1798) 초판이고 25~27쪽의 숫자와 문장은 초판 facsimile 쪽
- * 이미지로 대조했다. 이 글은 그의 결론을 지지하지 않는다 — 셈을 끝까지
+ * Malthus(1798) 초판이고 쪽수(14·20~21·21~24·25~26쪽)는 Internet Archive
+ * 초판 스캔의 OCR 본문에 찍힌 쪽 머리글 기준이다(2026-10-09 재대조). 이 글은 그의 결론을 지지하지 않는다 — 셈을 끝까지
  * 따라가 보이고, 예측이 빗나간 뒤에 어느 가정이 깨졌는지를 짚는 것이
  * 목적이다.
  */
@@ -118,22 +118,22 @@ export default function WhyPerHeadStallsArticle() {
         />
 
         <CitationBlock
-          source="T. R. Malthus, 『An Essay on the Principle of Population』 (London: J. Johnson, 1798) 초판, 14·21·25~28쪽"
+          source="T. R. Malthus, 『An Essay on the Principle of Population』 (London: J. Johnson, 1798) 초판, 14·20~26쪽"
           citeKey={1}
           href="https://archive.org/details/essayonprincipl00malt"
         >
           두 비율의 선언은 초판 14쪽입니다 — “Population, when unchecked,
           increases in a geometrical ratio. Subsistence increases only in an
-          arithmetical ratio.” 섬의 100년 셈은 25~26쪽에 있고, 원문은 “the
+          arithmetical ratio.” 미국에서 25년마다 두 배가 됐다는 관찰은 20~21쪽(“In the United States of America … the population has been found to double itself in twenty-five years”)이고, 이것을 셈의 규칙으로 삼겠다는 말이 21쪽에서 이어집니다. 700만 명의 섬(“this Island”) 설정은 21~23쪽, 100년 뒤의 숫자는 24쪽이고, 원문은 “the
           population would be one hundred and twelve millions, and the means of
           subsistence only equal to the support of thirty-five millions; which
           would leave a population of seventy-seven millions totally unprovided
-          for”입니다. 세계로 넓힌 두 수열(1·2·4·8… 대 1·2·3·4…)과 225년 뒤의
-          “512 to 10”은 28쪽입니다. 25년마다 두 배라는 비율은 당시 미국의 관찰을
-          근거로 삼은 것이라고 21쪽에 적습니다. Internet Archive의
-          1798년 초판 스캔을 내려받아 읽었고, 14쪽과 26쪽의 문장은 해당 쪽 이미지를 직접 열어
-          대조했고, 21·25·28쪽은 같은 스캔의 OCR 본문에 찍힌 쪽 머리글로
-          확인했습니다.
+          for”입니다. 세계로 넓힌 두 수열(1·2·4·8… 대 1·2·3·4…)은 25쪽이고, 225년 뒤(원문은
+          “two centuries and a quarter”)의 “512 to 10”은 25쪽에서 시작한 문장이
+          26쪽 첫 줄에서 끝납니다. Internet Archive의 1798년 초판 스캔을
+          내려받아 읽었고, 쪽수는 같은 스캔의 OCR 본문에 찍힌 쪽 머리글로
+          확인했습니다(2026-10-09 재대조). 쪽 이미지로 따로 대조하지는
+          않았습니다.
         </CitationBlock>
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
@@ -332,7 +332,7 @@ export default function WhyPerHeadStallsArticle() {
           <p className="leading-7">
             깨진 것은 둘입니다. 첫째, 거두는 양이 더하기로만 늘지 않았습니다. 같은 땅에서 거두는 양 자체가 바뀌었고 그 변화는
             더해지는 것이 아니라 곱해지는 쪽에 가까웠습니다. 둘째, 한 사람 몫이 늘었을 때 사람 수가 그만큼 늘지 않았습니다.
-            고리의 마지막 화살표가 약해졌고 넉넉해질수록 아이를 덜 낳는 쪽으로 오히려 방향이 뒤집힌 곳도 있습니다.
+            고리의 마지막 화살표가 약해졌고 넉넉해질수록 아이를 덜 낳는 쪽으로 오히려 방향이 뒤집힌 곳도 있습니다. 이 두 판정은 20세기 농업 생산성과 출산율에 관한 일반적인 서술이고, 이 글은 그 통계 자료를 직접 인용하지 않았습니다.
           </p>
 
           <p className="leading-7">

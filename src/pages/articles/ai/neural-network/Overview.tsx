@@ -28,11 +28,11 @@ export default function Overview() {
         question="L개의 layer가 있는 MLP 전체를 하나의 예측 함수로 어떻게 표현할까?"
         idea={<>각 layer는 이전 activation을 affine transformation으로 옮긴 뒤 activation φ를 적용합니다. 이 관계를 재귀적으로 반복하면 전체 network는 parameter θ를 가진 함수 합성이 됩니다.</>}
         formula={String.raw`\begin{aligned}a^{(0)}&=x\\z^{(\ell)}&=a^{(\ell-1)}W^{(\ell)}+b^{(\ell)}\\a^{(\ell)}&=\phi^{(\ell)}\!\left(z^{(\ell)}\right)\\F_\theta(x)&=f^{(L)}_\theta\circ\cdots\circ f^{(1)}_\theta(x)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}a^{(0)}&=\underbrace{x}_{\text{오른쪽 항으로 결과 계산}}\\z^{(\ell)}&=\underbrace{a^{(\ell-1)}W^{(\ell)}+b^{(\ell)}}_{\text{오른쪽 항으로 결과 계산}}\\a^{(\ell)}&=\underbrace{\phi^{(\ell)}\!\left(z^{(\ell)}\right)}_{\text{허용 경계 판정}}\\F_\theta(x)&=f^{(L)}_\theta\circ\cdots\circ f^{(1)}_\theta(x)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}a^{(0)}&=\underbrace{x}_{\text{관측 feature}}\\z^{(\ell)}&=\underbrace{a^{(\ell-1)}W^{(\ell)}+b^{(\ell)}}_{\text{이전 표현을 섞고 이동}}\\a^{(\ell)}&=\underbrace{\phi^{(\ell)}\!\left(z^{(\ell)}\right)}_{\text{접히지 않게 비선형}}\\F_\theta(x)&=\underbrace{f^{(L)}_\theta\circ\cdots\circ f^{(1)}_\theta(x)}_{\text{L개 layer 합성}}\end{aligned}`}
         operations={[
-          { expression: String.raw`x`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 layer는 이전 activation을 affine","transformation으로 옮긴 뒤 activation","φ를 적용합니다."] },
-          { expression: String.raw`a^{(\ell-1)}W^{(\ell)}+b^{(\ell)}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","각 layer는 이전 activation을 affine","transformation으로 옮긴 뒤 activation","φ를 적용합니다."] },
-          { expression: String.raw`\phi^{(\ell)}\!\left(z^{(\ell)}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 layer는 이전 activation을 affine","transformation으로 옮긴 뒤 activation","φ를 적용합니다."] },
+          { expression: String.raw`a^{(\ell-1)}W^{(\ell)}+b^{(\ell)}`, annotation: ["이전 layer 표현을 weight로 섞고", "bias로 이동하는 affine 단계"] },
+          { expression: String.raw`\phi^{(\ell)}\!\left(z^{(\ell)}\right)`, annotation: ["nonlinear activation이 있어야", "affine layer들이 하나로 접히지 않고", "XOR 같은 경계를 표현합니다"] },
+          { expression: String.raw`f^{(L)}_\theta\circ\cdots\circ f^{(1)}_\theta(x)`, annotation: ["affine+activation 묶음을 L번 반복한", "end-to-end 예측 함수, parameter는 θ"] },
         ]}
         terms={[
           { symbol: "a^{(\\ell)}", name: "layer activation", description: "Layer ℓ이 다음 layer에 넘기는 learned representation입니다." },

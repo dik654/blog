@@ -36,9 +36,11 @@ export default function Applications({
           </>
         }
         formula={String.raw`\hat u_{\text{tgt}} = \hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`}
-        annotatedFormula={String.raw`\hat u_{\text{tgt}} = \underbrace{\hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\hat u_{\text{tgt}} = \underbrace{\hat u_{\text{tgt}}^{\,\text{pos}}}_{\text{CFG 적용 예측}} + \underbrace{w_{\text{id}}}_{\text{identity 강도}} \underbrace{\left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)}_{\text{reference 유무 차이}}`}
         operations={[
-          { expression: String.raw`\hat u_{\text{tgt}}^{\,\text{pos}} + w_{\text{id}} \left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","표준 CFG가 \"text 조건 있음 vs 없음\"의 예측 차이를","증폭하듯, identity guidance는","\"reference가 context에 있음 vs 없음\"의 예측"] },
+          { expression: String.raw`\hat u_{\text{tgt}}^{\,\text{pos}}`, annotation: ["text 조건까지 CFG로 보정된","target 위치 velocity 예측에서 출발"] },
+          { expression: String.raw`\left(\hat u_{\text{tgt}}^{\,\text{ref}} - \hat u_{\text{tgt}}^{\,\text{noref}}\right)`, annotation: ["reference를 context에 넣은 예측과","뺀 예측의 차이 = identity 방향"] },
+          { expression: String.raw`w_{\text{id}}`, annotation: ["delta를 얼마나 더할지 정하는 scale","0이면 꺼지고, 올리면 identity가 강해짐","대신 매 step forward pass가 늘어남"] },
         ]}
         terms={[
           {

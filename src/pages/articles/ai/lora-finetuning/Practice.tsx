@@ -162,15 +162,10 @@ Wx+sBAx&=(W+sBA)x\\
 &=W'x\\
 W'&=W+sBA
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-Wx+sBAx&=\underbrace{(\underbrace{W+sBA}_{\text{adapter delta 계산}})x}_{\text{adapter delta 계산}}\\
-&=\underbrace{W'x}_{\text{merged weight 계산}}\\
-W'&=W+sBA
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{Wx+sBAx}_{\text{unmerged: 두 경로 합}}&=(\underbrace{W+sBA}_{\text{base+adapter delta}})x\\&=\underbrace{W'x}_{\text{merged: matmul 한 번}}\\W'&=W+sBA\end{aligned}`}
         operations={[
-          { expression: String.raw`(W+sBA)x`, annotation: ["adapter delta이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
-          { expression: String.raw`W'x`, annotation: ["merged weight이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
-          { expression: String.raw`W+sBA`, annotation: ["adapter delta이(가) 식의 결과에 기여하는 방식을","계산합니다.","분배법칙으로 W와 sBA를 먼저 더한 새 weight를 만들","수 있습니다."] },
+          { expression: String.raw`(W+sBA)x`, annotation: ["분배법칙으로 base weight와", "low-rank delta를 먼저 더해 둡니다"] },
+          { expression: String.raw`W'x`, annotation: ["합친 W′ 하나로 같은 linear output", "dropout이 꺼진 같은 dtype이면", "logit max error가 수치 오차 안이어야 함"] },
         ]}
         terms={[
           { symbol: "W", name: "base weight", description: "Adapter와 호환되는 원본 linear weight입니다." },
@@ -188,13 +183,10 @@ W'&=W+sBA
 Q(\widetilde W)&\ne q_W+Q(sBA)\\
 &\text{(generally)}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-\widetilde W&=\underbrace{D(q_W,s_W)+sBA}_{\text{base quantized artifact 계산}}\\
-Q(\widetilde W)&\ne q_W+Q(sBA)\\
-&\text{(generally)}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\widetilde W&=\underbrace{D(q_W,s_W)}_{\text{4-bit base 복원}}+\underbrace{sBA}_{\text{학습된 delta}}\\\underbrace{Q(\widetilde W)}_{\text{다시 quantize}}&\ne \underbrace{q_W+Q(sBA)}_{\text{원래 code에 delta만 추가}}\\&\text{(generally)}\end{aligned}`}
         operations={[
-          { expression: String.raw`D(q_W,s_W)+sBA`, annotation: ["base quantized artifact이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantizer Q는 rounding과 clipping이","있는 비선형 연산이므로 일반적으로 덧셈을 보존하지 않습니다."] },
+          { expression: String.raw`D(q_W,s_W)+sBA`, annotation: ["frozen 4-bit code를 dequantize해", "higher precision delta를 더합니다"] },
+          { expression: String.raw`q_W+Q(sBA)`, annotation: ["rounding·clipping은 덧셈을 보존하지 않아", "requantize하면 새 code·scale·오차를 가진", "별도 artifact가 됩니다"] },
         ]}
         terms={[
           { symbol: "Q,D", name: "quantize · dequantize", description: "Real-valued weight와 low-bit code/metadata 사이 변환입니다." },

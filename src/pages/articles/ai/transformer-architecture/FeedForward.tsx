@@ -39,9 +39,11 @@ export default function FeedForward() {
           </>
         }
         formula={String.raw`\operatorname{FFN}(x_t)=W_2\,\phi(W_1x_t+b_1)+b_2`}
-        annotatedFormula={String.raw`\operatorname{FFN}(x_t)=\underbrace{W_2\,\phi(W_1x_t+b_1)+b_2}_{\text{nonlinear activation 계산}}`}
+        annotatedFormula={String.raw`\operatorname{FFN}(x_t)=\underbrace{W_2}_{\text{d\_ff→d\_model 복귀}}\,\underbrace{\phi}_{\text{비선형 선택}}(\underbrace{W_1x_t+b_1}_{\text{d\_model→d\_ff 확장}})+b_2`}
         operations={[
-          { expression: String.raw`W_2\,\phi(W_1x_t+b_1)+b_2`, annotation: ["nonlinear activation이(가) 식의 결과에","기여하는 방식을 계산합니다.","첫 linear projection이 d_model에서","d_ff로 넓히고 activation이 feature를"] },
+          { expression: String.raw`W_1x_t+b_1`, annotation: ["token 하나의 feature를 d_ff로 넓힘", "d_model=4, d_ff=8이면 4·8+8개", "parameter"] },
+          { expression: String.raw`\phi`, annotation: ["원 논문은 ReLU로 넓힌 feature를", "비선형으로 고릅니다"] },
+          { expression: String.raw`W_2\,\phi(W_1x_t+b_1)+b_2`, annotation: ["residual에 더하려고 d_model로 되돌림", "8·4+4개를 더해 총 76개", "같은 W₁·W₂를 모든 position이 공유"] },
         ]}
         terms={[
           {
@@ -170,10 +172,10 @@ export default function FeedForward() {
           </>
         }
         formula={String.raw`\begin{aligned}y_{\mathrm{pre}}&=x+F(\operatorname{Norm}(x))\\y_{\mathrm{post}}&=\operatorname{Norm}(x+F(x))\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{pre}}&=\underbrace{x+F(\operatorname{Norm}(x))}_{\text{normalization 계산}}\\y_{\mathrm{post}}&=\underbrace{\operatorname{Norm}(x+F(x))}_{\text{normalization 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y_{\mathrm{pre}}&=\underbrace{x}_{\text{정규화 안 된 stream}}+F(\underbrace{\operatorname{Norm}(x)}_{\text{입력만 정규화}})\\y_{\mathrm{post}}&=\underbrace{\operatorname{Norm}(x+F(x))}_{\text{더한 결과를 정규화}}\end{aligned}`}
         operations={[
-          { expression: String.raw`x+F(\operatorname{Norm}(x))`, annotation: ["normalization이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pre-norm은 sublayer에 들어가기 전에 x를","정규화하고 update를 원래 x에 더합니다."] },
-          { expression: String.raw`\operatorname{Norm}(x+F(x))`, annotation: ["normalization이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pre-norm은 sublayer에 들어가기 전에 x를","정규화하고 update를 원래 x에 더합니다."] },
+          { expression: String.raw`x+F(\operatorname{Norm}(x))`, annotation: ["pre-norm: sublayer 입력만 정규화하고", "update는 원래 x에 그대로 더함", "많은 deep model이 쓰는 배치"] },
+          { expression: String.raw`\operatorname{Norm}(x+F(x))`, annotation: ["post-norm: 더한 뒤 stream 자체를", "정규화, 원 Transformer의 배치", "순서가 바뀌면 forward·Jacobian 모두 달라짐"] },
         ]}
         terms={[
           {

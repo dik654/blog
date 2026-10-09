@@ -77,14 +77,16 @@ export default function TransportAccessAndLandValueArticle() {
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">측정할 출발지와 기회가 분명해졌습니다. 평가 지침이 중복을 막는 방법을 봅니다.</p>
       </section>
       <section id="comparison" data-teaching-level="6" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">6 · 영국의 평가 원칙은 이익을 두 번 세지 말라고 요구합니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">6 · 잉글랜드의 평가 원칙은 이익을 두 번 세지 말라고 요구합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">영국 MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.</p>
+          <p className="leading-8">MHCLG의 사업 평가 안내는 토지가치 변화와 다른 편익을 합칠 때 중복을 확인하도록 합니다. 이 안내는 머리말에 &ldquo;Applies to England&rdquo;라고 적힌 잉글랜드의 주택·재생 사업 평가 지침입니다(2026-02-18 갱신). 이 원칙을 사례에 적용하면 1,000분 절약의 가치와 월세 상승 10만 원이 같은 접근성 개선을 반영하는지부터 봅니다.</p>
+          <p className="leading-8">교통 사업에는 교통부(DfT)의 평가 지침 TAG가 따로 있습니다. TAG Unit A2.2(2025년 5월판)는 토지가치 상승에 토지로 자본화된 모든 영향이 담기므로 광역 경제 효과나 함께 시행한 다른 사업의 효과까지 섞여 중복 계산이나 편익의 잘못된 귀속이 생길 수 있다고 경고합니다.</p>
+          <p className="leading-8">그래서 토지가치 상승, 직접 교통 편익, 다른 광역 경제 효과가 얼마나 겹치는지 경제 서술(Economic Narrative)에서 따져 보도록 합니다. 사례에 대입하면 월세 상승 10만 원 안에 통근 시간 1,000분의 가치가 이미 들어 있는지부터 묻는 것이 같은 질문입니다(2026-10-09 확인).</p>
           <p className="leading-8">서울이나 런던, 뭄바이의 사업에 동일한 시간가치를 넣을 수는 없습니다. 소득, 대체 교통, 요금, 일자리 분포와 토지 규칙이 다르므로 현지 평가 지침과 자료가 필요합니다.</p>
-          <p className="leading-8">국가별 비교는 2026-10-04 확인 기준이며, 영국 지침을 다른 나라의 법적 의무로 적용하는 것은 아닙니다.</p>
+          <p className="leading-8">국가별 비교는 2026-10-04 확인 기준이며, 잉글랜드 지침을 다른 나라의 법적 의무로 적용하는 것은 아닙니다.</p>
         </div>
         <SourceApplication source="UK MHCLG Appraisal Guide · 4.39" excerpt="it is essential that there is no double counting of impacts" application="시간 절약 1,000분의 가치를 계산한 뒤 그 개선이 월세 10만 원에도 반영됐다면 둘을 독립 편익으로 바로 더하지 않습니다." />
-        <CitationBlock source="UK MHCLG Appraisal Guide · 4.39" citeKey={2} href="https://www.gov.uk/government/publications/the-mhclg-appraisal-guide/the-mhclg-appraisal-guide">영국 평가 지침의 중복 계산 경계. 2026-10-04 확인.</CitationBlock>
+        <CitationBlock source="UK MHCLG Appraisal Guide · 4.39" citeKey={2} href="https://www.gov.uk/government/publications/the-mhclg-appraisal-guide/the-mhclg-appraisal-guide">잉글랜드 주택·재생 사업 평가 지침(&ldquo;Applies to England&rdquo;, 2026-02-18 갱신)의 중복 계산 경계. 2026-10-04 확인, 적용 범위 2026-10-09 재확인. 교통 사업 쪽 근거는 <a className="text-sky-700 underline dark:text-sky-300" href="https://assets.publishing.service.gov.uk/media/6899eafbe7be62b4f0643223/tag-unit-a2-2-induced-investment-unit-may-25.pdf">DfT TAG Unit A2.2(2025년 5월)</a>입니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">시간과 토지의 편익을 합칠 조건을 확인했습니다. 예측이 달라지는 경계를 살핍니다.</p>
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">

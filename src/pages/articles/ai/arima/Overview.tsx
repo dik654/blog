@@ -37,11 +37,11 @@ export default function Overview() {
         question="ARMA가 같은 parameter로 모든 시점을 설명하려면 어떤 통계량이 시간에 대해 안정돼야 할까?"
         idea={<>시점 t 자체가 아니라 lag k만 같으면 같은 covariance를 갖도록 두면, 고정된 AR·MA coefficient가 시간 전체에 동일한 dependence를 설명할 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\mathbb E[Z_t]&=\mu\\\operatorname{Var}(Z_t)&=\sigma^2<\infty\\\operatorname{Cov}(Z_t,Z_{t-k})&=\gamma(k)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\mathbb E[Z_t]&=\underbrace{\mu}_{\text{확률 가중 평균}}\\\operatorname{Var}(Z_t)&=\underbrace{\sigma^2<\infty}_{\text{분산 규모}}\\\operatorname{Cov}(Z_t,Z_{t-k})&=\underbrace{\gamma(k)}_{\text{lag별 공분산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathbb E[Z_t]&=\underbrace{\mu}_{\text{시점과 무관한 평균}}\\\operatorname{Var}(Z_t)&=\underbrace{\sigma^2<\infty}_{\text{일정하고 유한한 흔들림}}\\\operatorname{Cov}(Z_t,Z_{t-k})&=\underbrace{\gamma(k)}_{\text{lag k에만 의존}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\mu`, annotation: ["stationary representation이(가) 식의","결과에 기여하는 방식을 계산합니다.","시점 t 자체가 아니라 lag k만 같으면 같은","covariance를 갖도록 두면, 고정된 AR·MA"] },
-          { expression: String.raw`\sigma^2<\infty`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","시점 t 자체가 아니라 lag k만 같으면 같은","covariance를 갖도록 두면, 고정된 AR·MA","coefficient가 시간 전체에 동일한"] },
-          { expression: String.raw`\gamma(k)`, annotation: ["autocovariance이(가) 식의 결과에 기여하는 방식을","계산합니다.","시점 t 자체가 아니라 lag k만 같으면 같은","covariance를 갖도록 두면, 고정된 AR·MA"] },
+          { expression: String.raw`\mu`, annotation: ["차분된 series의 평균이 t에 따라", "바뀌지 않아야 상수 c 하나로 설명됩니다"] },
+          { expression: String.raw`\sigma^2<\infty`, annotation: ["분산도 시점마다 같고 유한해야", "같은 coefficient가 모든 구간에 맞습니다"] },
+          { expression: String.raw`\gamma(k)`, annotation: ["두 시점의 공분산이 달력 위치가 아닌", "lag k에만 의존해야 고정된 AR·MA", "coefficient가 전체 dependence를 설명합니다"] },
         ]}
         terms={[
           { symbol: "Z_t", name: "stationary representation", description: "원 series Yt를 필요에 따라 변환·차분한 뒤 ARMA에 넣는 값입니다." },
@@ -58,11 +58,11 @@ export default function Overview() {
         question="추세가 있는 level series를 ARMA가 다룰 변화량으로 어떻게 바꿀까?"
         idea={<>Difference operator는 현재 level에서 직전 level을 빼 increment를 남깁니다. d번 반복한 Zt=(1−B)^dYt에 stationary ARMA를 맞추고, forecast는 누적해 원래 level로 되돌립니다.</>}
         formula={String.raw`\begin{aligned}BY_t&=Y_{t-1}\\\Delta Y_t&=(1-B)Y_t=Y_t-Y_{t-1}\\Z_t&=\Delta^dY_t=(1-B)^dY_t\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}BY_t&=\underbrace{Y_{t-1}}_{\text{오른쪽 항으로 결과 계산}}\\\Delta Y_t&=\underbrace{(1-B)Y_t=Y_t-Y_{t-1}}_{\text{변화량 계산}}\\Z_t&=\underbrace{\Delta^dY_t=(1-B)^dY_t}_{\text{변화량 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}BY_t&=\underbrace{Y_{t-1}}_{\text{한 lag 뒤의 level}}\\\Delta Y_t&=\underbrace{(1-B)Y_t=Y_t-Y_{t-1}}_{\text{직전 대비 증가분}}\\Z_t&=\underbrace{\Delta^dY_t=(1-B)^dY_t}_{\text{d번 차분한 ARMA 입력}}\end{aligned}`}
         operations={[
-          { expression: String.raw`Y_{t-1}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Difference operator는 현재 level에서 직전","level을 빼 increment를 남깁니다."] },
-          { expression: String.raw`(1-B)Y_t=Y_t-Y_{t-1}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","Difference operator는 현재 level에서 직전","level을 빼 increment를 남깁니다."] },
-          { expression: String.raw`\Delta^dY_t=(1-B)^dY_t`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","Difference operator는 현재 level에서 직전","level을 빼 increment를 남깁니다."] },
+          { expression: String.raw`Y_{t-1}`, annotation: ["backshift B는 series를 한 칸 밀어", "현재 위치에 직전 level을 놓습니다"] },
+          { expression: String.raw`(1-B)Y_t=Y_t-Y_{t-1}`, annotation: ["현재 level에서 직전 level을 빼", "추세 대신 increment만 남깁니다"] },
+          { expression: String.raw`\Delta^dY_t=(1-B)^dY_t`, annotation: ["stationary해질 때까지 d번 차분한 값을", "ARMA에 넣고, forecast는 누적해", "원래 level로 되돌립니다"] },
         ]}
         terms={[
           { symbol: "B", name: "backshift operator", description: "시계열을 한 lag 뒤로 이동시키는 연산자입니다." },

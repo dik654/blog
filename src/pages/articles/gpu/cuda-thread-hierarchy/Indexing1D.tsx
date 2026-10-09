@@ -30,10 +30,11 @@ export default function Indexing1D() {
           </>
         }
         formula={String.raw`i=\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`}
-        annotatedFormula={String.raw`i=\underbrace{\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x}_{\text{global logical index 계산}}`}
+        annotatedFormula={String.raw`i=\underbrace{\mathrm{blockIdx}.x\times\mathrm{blockDim}.x}_{\text{앞 block들이 차지한 칸}}+\underbrace{\mathrm{threadIdx}.x}_{\text{block 안 offset}}`}
         operations={[
-          { expression: String.raw`\mathrm{blockIdx}.x\times\mathrm{blockDim}.x+\mathrm{threadIdx}.x`, annotation: ["global logical index이(가) 식의 결과에","기여하는 방식을 계산합니다.","blockIdx.x 앞에 있는 block들이 각각","blockDim.x개 자리를 차지하므로 그 길이를 건너뛴 뒤,"] },
-        ]}
+  { expression: String.raw`\mathrm{blockIdx}.x\times\mathrm{blockDim}.x`, annotation: ["현재 block 앞의 block들이 각각","blockDim.x개 자리를 차지하므로 건너뜁니다","2×256 = 512"] },
+  { expression: String.raw`+\mathrm{threadIdx}.x`, annotation: ["현재 block 안 thread 위치를 더해","전체 배열의 고유 위치를 얻습니다","512+5=517, N=515면 접근 금지"] },
+]}
         terms={[
           {
             symbol: "blockIdx.x",

@@ -29,14 +29,19 @@ return <div className="space-y-16">
             읽기를 마치겠다고 알릴 수 있지만 클록 한 칸은 여전히 필요합니다.
           </p>
    <p className="leading-7">RP2040에서 I2C0의 SDA/SCL을 GPIO16/17에 놓는 것은 가능한 핀 선택의 한 예입니다. 실제 센서의 주소, 레지스터 자동 증가, 전기적 풀업, 속도 허용은 센서 데이터시트를 확인해야 합니다.</p>
+   <p className="leading-7">같은 63클록이라도 클록 상한에 따라 시간이 달라집니다. UM10204 Rev. 7.0은 속도 모드를 네 가지로 둡니다. Standard-mode는 100 kbit/s, Fast-mode는 400 kbit/s, Fast-mode Plus(Fm+)는 1 Mbit/s, High-speed(Hs) 모드는 3.4 Mbit/s까지입니다.</p>
+   <p className="leading-7">센서와 컨트롤러가 모두 Fm+를 지원한다면 63클록은 63×1 µs=63 µs입니다. Hs 모드는 전용 입출력 단과 별도 전기 특성표(표 12·13)를 따르므로 클록 숫자만 바꿔 적용하지 않습니다.</p>
+   <p className="leading-7">400 kHz라는 숫자도 클록 한 주기 2.5 µs 안에 규격의 최소 시간이 들어가야 성립합니다. 표 11(인쇄 44쪽)의 Fast-mode 최소값은 SCL LOW 1.3 µs, HIGH 0.6 µs입니다. 둘을 더하면 1.9 µs이고 2.5−1.9=0.6 µs가 남습니다. 상승·하강 시간과 부하가 이 여유를 넘기면 설정값이 400 kHz여도 그 주기가 유지되지 않습니다.</p>
+   <p className="leading-7">버스에 컨트롤러가 둘 이상이면 “다른 장치의 점유”에도 규칙이 있습니다. §3.1.8(인쇄 11쪽)의 <strong>중재(arbitration)</strong>입니다. 컨트롤러는 버스가 비어 있을 때만 거래를 시작합니다. 두 컨트롤러가 거의 동시에 START를 내면 SCL이 HIGH인 동안 비트마다 SDA를 자기가 보낸 값과 비교합니다. HIGH를 보냈는데 SDA가 LOW로 보이면 그 컨트롤러가 진 것이고, SDA 출력을 끄고 버스가 빈 뒤 거래를 처음부터 다시 시작합니다. 이긴 쪽의 거래는 손상되지 않습니다.</p>
+   <p className="leading-7">예를 들어 다른 컨트롤러가 주소 0x20(0100000)을, 우리 컨트롤러가 0x48(1001000)을 보낸다고 가정하면 첫 비트에서 우리 쪽이 1, 상대가 0이므로 우리 쪽이 집니다. 그러면 157.5 µs 앞에 상대 거래 전체가 더해집니다.</p>
    <p className="leading-7"><em>I²C의 두 선은 편하지만 주소·응답과 공유 버스의 대기를 함께 셉니다.</em></p>
-  </div><CitationBlock source="NXP, UM10204 I²C-bus specification and user manual, Rev. 7.0 (2021), §3.1.4–3.1.6·3.1.9–3.1.10, 인쇄 9–14쪽" citeKey={1} href="https://www.nxp.com/docs/en/user-guide/UM10204.pdf">NXP 공식 규격은 SDA/SCL 두 선, 표준 모드·Fast-mode, 매 바이트 뒤 아홉 번째 ACK 클록과 반복 START를 설명합니다. 본문의 네 바이트 센서 거래는 규격의 실측 사례가 아닙니다.</CitationBlock></section>
+  </div><CitationBlock source="NXP, UM10204 I²C-bus specification and user manual, Rev. 7.0 (2021), §3(속도 모드)·§3.1.4–3.1.10, 인쇄 9–14쪽, 표 11(44쪽)" citeKey={1} href="https://www.nxp.com/docs/en/user-guide/UM10204.pdf">NXP 공식 규격은 SDA/SCL 두 선, 네 속도 모드(100 kbit/s·400 kbit/s·1 Mbit/s·3.4 Mbit/s), 매 바이트 뒤 아홉 번째 ACK 클록과 반복 START, 다중 컨트롤러의 비트 단위 중재를 설명합니다. 0x20 컨트롤러는 설명용 가정입니다. 본문의 네 바이트 센서 거래는 규격의 실측 사례가 아닙니다.</CitationBlock></section>
 
 <section id="count" data-teach-level="4" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">8. I²C 400 kHz에서 일곱 묶음은 최소 157.5 µs입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
    <p className="leading-7">주소+쓰기, 레지스터 위치, 주소+읽기 세 묶음과 수신 데이터 네 묶음입니다. 각 묶음은 데이터 8클록과 응답 1클록이므로 (3+4)×9=63클록입니다. 클록이 400 kHz라면 1클록이 2.5 µs여서 63×2.5=157.5 µs입니다. 100 kHz라면 630 µs입니다.</p>
    <p className="leading-7">START·반복 START·STOP의 시간, 장치의 클록 스트레칭, 소프트웨어·버스 대기는 위 숫자에 넣지 않았습니다. 배선의 상승 시간이 허용 속도에 맞는지도 확인해야 합니다. 센서가 SCL을 오래 낮게 잡으면 실제 벽시계 시간은 크게 늘 수 있습니다. 157.5 µs는 일정한 비트 클록만 센 하한입니다.</p>
    <p className="leading-7"><em>통신 속도 표기 400 kbit/s를 데이터 네 바이트에 바로 나누면 주소와 응답을 빠뜨립니다.</em></p>
-  </div><SerialBusViz /><ExplainedFormula question="이 가상 I²C 읽기의 비트 클록 시간은?" idea="주소·위치·읽기 주소·데이터까지 바이트 묶음을 세고 각각 응답 클록을 붙입니다." formula={String.raw`t_{\mathrm{clk}}=N_{\mathrm{clk}}/f_{\mathrm{SCL}}`} annotatedFormula={String.raw`t_{\mathrm{clk}}=N_{\mathrm{clk}}/f_{\mathrm{SCL}}`} operations={[{expression:String.raw`N_{\mathrm{clk}}=7\times9=63`,annotation:"주소·위치 세 묶음과 데이터 네 묶음입니다."},{expression:String.raw`1/f_{\mathrm{SCL}}=2.5\,\mu s`,annotation:"400 kHz 클록 한 주기입니다."},{expression:String.raw`t_{\mathrm{clk}}=157.5\,\mu s`,annotation:"63×2.5 µs, START·대기는 제외합니다."}]} terms={[{symbol:"N",name:"클록 수",description:"아홉 번째 응답 비트를 포함한 63개입니다."},{symbol:"f",name:"SCL 빈도",description:"가정한 400 kHz입니다."},{symbol:"t",name:"순수 클록 시간",description:"실제 완료 시간의 하한일 뿐입니다."}]} assumptions={["센서가 7비트 주소와 1바이트 위치·4바이트 연속 읽기를 지원합니다.","400 kHz가 유지되고 클록 스트레칭·START/STOP 시간은 제외합니다."]} interpretation="이 가상 I²C 거래의 비트 클록만 157.5 µs입니다. 전체 응답은 더 길 수 있습니다." /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
+  </div><SerialBusViz /><ExplainedFormula question="이 가상 I²C 읽기의 비트 클록 시간은?" idea="주소·위치·읽기 주소·데이터까지 바이트 묶음을 세고 각각 응답 클록을 붙입니다." formula={String.raw`t_{\mathrm{clk}}=N_{\mathrm{clk}}/f_{\mathrm{SCL}}`} annotatedFormula={String.raw`t_{\mathrm{clk}}=N_{\mathrm{clk}}/f_{\mathrm{SCL}}`} operations={[{expression:String.raw`N_{\mathrm{clk}}=7\times9=63`,annotation:"주소·위치 세 묶음과 데이터 네 묶음입니다."},{expression:String.raw`1/f_{\mathrm{SCL}}=2.5\,\mu s`,annotation:"400 kHz 클록 한 주기입니다."},{expression:String.raw`t_{\mathrm{clk}}=157.5\,\mu s`,annotation:"63×2.5 µs, START·대기는 제외합니다."}]} terms={[{symbol:"N",name:"클록 수",description:"아홉 번째 응답 비트를 포함한 63개입니다."},{symbol:"f",name:"SCL 빈도",description:"가정한 400 kHz입니다."},{symbol:"t",name:"순수 클록 시간",description:"실제 완료 시간의 하한일 뿐입니다."}]} assumptions={["센서가 7비트 주소와 1바이트 위치·4바이트 연속 읽기를 지원합니다.","400 kHz가 유지되고(표 11의 LOW 1.3 µs·HIGH 0.6 µs 이상) 클록 스트레칭·START/STOP 시간과 다른 컨트롤러와의 중재 대기는 제외합니다."]} interpretation="이 가상 I²C 거래의 비트 클록만 157.5 µs입니다. 전체 응답은 더 길 수 있습니다." /><div className="prose prose-neutral my-6 max-w-none dark:prose-invert"><p className="leading-7">
             추가 클록 스트레칭을 200 µs로 가정하면 157.5+200=357.5 µs이며 다른 제어 시간은 아직 남습니다. 반대로 400 kHz가 실제로 측정한 전체 클록 주기를
             뜻한다면 그 주기 안의 상승 시간을 다시 더하지 않습니다. 설정한 속도와 측정한 선의 주기를 구분해야 합니다.
           </p></div></section>
@@ -81,7 +86,7 @@ return <div className="space-y-16">
 <section id="choice" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">14. 가장 짧은 클록 시간만으로 버스를 고르지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert">
    <p className="leading-7">
             가상 하한은 I²C 157.5 µs, SPI 40 µs, UART 순수 네 바이트 347.2 µs입니다. 실제 완료 시간은 지원 장치와 배선 수, 주소·선택 방식에 따라
-            달라집니다. 풀업과 부하를 확인하고 다른 장치의 점유와 클록 스트레칭, 오류 처리와 소프트웨어 대기도 함께 계산해야 합니다. 앞 글의 1 ms 마감에 I²C 157.5 µs만
+            달라집니다. 풀업과 부하를 확인하고 다른 컨트롤러와의 중재(7절)와 클록 스트레칭, 오류 처리와 소프트웨어 대기도 함께 계산해야 합니다. 앞 글의 1 ms 마감에 I²C 157.5 µs만
             대입해 ‘안전하다’고 결론 내릴 수 없습니다.
           </p>
    <p className="leading-7"><strong>읽고 나서 예측해 보세요.</strong> I²C의 일곱 묶음은 몇 클록입니까? (답: 8·9절) UART 네 바이트는 왜 32비트가 아닙니까? (답: 13절) SPI의 40 µs를 보장 지연으로 쓸 수 있습니까? (답: 12·14절)</p>

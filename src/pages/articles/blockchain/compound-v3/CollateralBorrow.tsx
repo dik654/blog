@@ -11,9 +11,10 @@ export default function CollateralBorrow() {
         question="같은 collateral에서 borrow gate와 liquidation gate는 어떻게 다른 결과를 낼까요?"
         idea="Base debt를 음수 liquidity로 두고 collateral value에 gate별 factor를 곱해 더합니다. Borrow gate는 새 risk를 막고 liquidation gate는 protocol intervention 시점을 정합니다."
         formula={String.raw`L_{borrow}=-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}`}
-        annotatedFormula={String.raw`L_{borrow}=\underbrace{-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}}_{\text{base debt value 계산}}`}
+        annotatedFormula={String.raw`L_{borrow}=\underbrace{-D}_{\text{빚은 음수}}+\underbrace{\sum_iV_iCF_{b,i}}_{\text{보수적 borrow 한도}},\qquad L_{liq}=-D+\underbrace{\sum_iV_iCF_{l,i}}_{\text{청산 전 버팀 한도}}`}
         operations={[
-          { expression: String.raw`-D+\sum_iV_iCF_{b,i},\qquad L_{liq}=-D+\sum_iV_iCF_{l,i}`, annotation: ["base debt value이(가) 식의 결과에 기여하는","방식을 계산합니다.","Base debt를 음수 liquidity로 두고","collateral value에 gate별 factor를 곱해"] },
+          { expression: String.raw`-D+\sum_iV_iCF_{b,i}`, annotation: ["담보 가치에 낮은 CF_b를 곱해 더하고","base debt를 뺍니다. 0 이상이어야 borrow","예: $1,000×75%−$800 = −$50"] },
+          { expression: String.raw`L_{liq}=-D+\sum_iV_iCF_{l,i}`, annotation: ["같은 담보에 더 높은 CF_l을 곱합니다","예: $1,000×85%−$800=$50 → 아직 안전","debt $900이면 −$50 → liquidatable"] },
         ]}
         terms={[
           { symbol: "D", name: "base debt value", description: "Borrow index와 base price가 반영된 debt입니다." },

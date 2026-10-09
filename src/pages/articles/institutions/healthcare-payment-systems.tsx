@@ -80,6 +80,8 @@ export default function HealthcarePaymentSystemsArticle() {
         <h2 className="mb-6 text-2xl font-bold">6 · 한국·잉글랜드·미국의 지급 규칙은 적용 범위부터 다릅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">한국 국민건강보험공단은 급여 항목을 안내합니다. 비용 부담도 구분해 설명합니다. 사례의 20%를 실제 진료에 일괄 적용할 수 없고 급여 여부와 진료 종류 등을 확인해야 합니다.</p>
+          <p className="leading-8">4절의 지급 방식으로 보면 한국은 건별 지급이 근간입니다. 건강보험심사평가원 안내에 따르면 한국은 의료보험 도입 때부터 진료 행위의 사용량과 가격으로 진료비를 지불하는 행위별수가제(fee-for-service)를 채택했고, 이를 보완하려고 질병군별 포괄수가제(DRG)와 요양병원·보건기관 등의 정액수가제를 함께 씁니다.</p>
+          <p className="leading-8">포괄수가제는 7개 질병군에 대해 2013년 7월부터 전국 모든 의료기관에 적용됐습니다. 사례의 10만 원이 검사·처치 항목별 가격을 더한 값이면 행위별수가제, 같은 질병군 입원 한 건에 미리 정한 금액이면 포괄수가제에 해당합니다. 1절의 &lsquo;지급자 확인&rsquo;도 한국에서는 심평원의 심사와 국민건강보험공단의 지급으로 나뉩니다(<a className="text-sky-700 underline dark:text-sky-300" href="https://www.hira.or.kr/dummy.do?pgmid=HIRAA020028000000">심평원 수가제도 안내</a>, 2026-10-09 확인).</p>
           <p className="leading-8">미국 CMS의 fee schedule은 Original Medicare의 해당 서비스 지급표입니다. 사례의 10만 원처럼 서비스를 얼마에 살지 정하는 층의 규칙이며 미국 전체 민간보험 가격표가 아닙니다.</p>
           <p className="leading-8">잉글랜드의 2026/27 NHS Payment Scheme은 적용 대상 서비스의 지급을 정합니다. 스코틀랜드 등 영국 전체의 동일 규칙도, NHS의 총재원 규모를 정하는 규칙도 아닙니다. 제도 비교는 2026-10-04 확인 기준입니다.</p>
         </div>

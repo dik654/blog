@@ -25,9 +25,10 @@ export default function TwoDimensional() {
         question="전체 cell의 β가 숨겨졌을 때 s번 sample로 한 번 이상 숨김을 만날 확률은 얼마일까요?"
         idea="각 sample이 공개된 cell만 고를 확률은 1-β입니다. 독립적으로 s번 모두 놓칠 확률을 구한 뒤 1에서 뺍니다."
         formula={String.raw`P_{detect}=1-(1-\beta)^s`}
-        annotatedFormula={String.raw`P_{detect}=\underbrace{1-(1-\beta)^s}_{\text{Detection probability 계산}}`}
+        annotatedFormula={String.raw`P_{detect}=\underbrace{1}_{\text{전체 확률}}-\underbrace{(1-\beta)^s}_{\text{s번 모두 놓침}}`}
         operations={[
-          { expression: String.raw`1-(1-\beta)^s`, annotation: ["Detection probability이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 sample이 공개된 cell만 고를 확률은 1-β입니다."] },
+          { expression: String.raw`(1-\beta)^s`, annotation: ["한 sample이 공개 cell만 고를 확률 1-β를","독립 s번 곱해 모두 놓칠 확률을 구함","β=1/2, s=10이면 0.5^10≈0.098%"] },
+          { expression: String.raw`1-(1-\beta)^s`, annotation: ["한 번이라도 숨긴 cell을 만날 확률","1-0.5^10≈99.902%(toy bound)"] },
         ]}
         terms={[
           {

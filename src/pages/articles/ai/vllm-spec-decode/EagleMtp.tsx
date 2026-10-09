@@ -133,19 +133,15 @@ export default function EagleMtp() {
         }
         formula={String.raw`\begin{aligned}
 t_C(K)&=t_D(K)+t_V(K)+t_R(K) \\
-S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
+S(K)&\approx\frac{\mathbb{E}[Y_K]\,t_T(1)}{t_C(K)} \\
 \text{benefit}&\Longleftrightarrow
-\mathbb{E}[Y_K],t_T(1)>t_C(K)
+\mathbb{E}[Y_K]\,t_T(1)>t_C(K)
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-\underbrace{t_C(K)}_{\text{확률 가중 평균}}&=\underbrace{t_D(K)+t_V(K)+t_R(K)}_{\text{오른쪽 항으로 결과 계산}} \\
-S(K)&\approx\frac{\mathbb{E}[Y_K],t_T(1)}{t_C(K)} \\
-\text{benefit}&\Longleftrightarrow
-\mathbb{E}[Y_K],t_T(1)>t_C(K)
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{t_C(K)}_{\text{한 cycle 실제 시간}}&=\underbrace{t_D(K)}_{\text{후보 제안}}+\underbrace{t_V(K)}_{\text{target 검증}}+\underbrace{t_R(K)}_{\text{runtime 정리}} \\S(K)&\approx\frac{\mathbb{E}[Y_K]\,t_T(1)}{t_C(K)} \\\text{benefit}&\Longleftrightarrow\underbrace{\mathbb{E}[Y_K]\,t_T(1)}_{\text{target-only였다면 든 시간}}>t_C(K)\end{aligned}`}
         operations={[
-          { expression: String.raw`t_D(K)+t_V(K)+t_R(K)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 cycle에서 확정한 token을 target-only로","만들었을 기준 시간과,","proposal·verification·runtime을 모두"] },
-          { expression: String.raw`t_C(K)`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 cycle에서 확정한 token을 target-only로","만들었을 기준 시간과,","proposal·verification·runtime을 모두"] },
+          { expression: String.raw`t_D(K)+t_V(K)+t_R(K)`, annotation: ["depth K 후보 생성 + target verify +","scheduling·sampling·cache commit","비용을 모두 더한 cycle 시간"] },
+          { expression: String.raw`\frac{\mathbb{E}[Y_K]\,t_T(1)}{t_C(K)}`, annotation: ["한 cycle이 확정한 평균 token 수를","target-only로 만들 때 걸릴 시간을","실제 cycle 시간으로 나눈 속도비"] },
+          { expression: String.raw`\mathbb{E}[Y_K]\,t_T(1)>t_C(K)`, annotation: ["이 부등식이 서야 S>1, 즉 이득","acceptance가 높아도 proposer가 느리면","통과하지 못합니다"] },
         ]}
         terms={SPEEDUP_TERMS}
         assumptions={[

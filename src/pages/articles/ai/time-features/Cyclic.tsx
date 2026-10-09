@@ -17,9 +17,10 @@ export default function Cyclic() {
         question="주기 T의 위치 x를 경계가 끊기지 않는 두 좌표로 어떻게 바꿀까?"
         idea={<>한 주기 T를 2π radian 한 바퀴에 대응시키고 angle의 가로·세로 좌표를 사용합니다. x=0과 x=T는 같은 point이고 T−1과 0도 원 위에서 가까워집니다.</>}
         formula={String.raw`\phi_T(x)=\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)`}
-        annotatedFormula={String.raw`\phi_T(x)=\underbrace{\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\phi_T(x)=\underbrace{\left(\cos\underbrace{\frac{2\pi x}{T}}_{\text{주기 안 위치의 각도}},\ \sin\frac{2\pi x}{T}\right)}_{\text{단위원 위 좌표 두 개}}`}
         operations={[
-          { expression: String.raw`\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 주기 T를 2π radian 한 바퀴에 대응시키고","angle의 가로·세로 좌표를 사용합니다."] },
+          { expression: String.raw`\frac{2\pi x}{T}`, annotation: ["한 주기 T를 2π 한 바퀴에 대응","T=24면 1시간이 2π/24"] },
+          { expression: String.raw`\left(\cos\frac{2\pi x}{T},\ \sin\frac{2\pi x}{T}\right)`, annotation: ["각도의 가로·세로 좌표로 표현","x=0과 x=T가 같은 점이 되어","23시와 0시도 원 위에서 가까움"] },
         ]}
         terms={[
           { symbol: "x", name: "phase position", description: "Hour·weekday처럼 주기 안에서의 위치를 나타내며 원래 단위는 hour·day 등입니다." },
@@ -35,9 +36,10 @@ export default function Cyclic() {
         question="원 위에서 두 시점의 거리는 실제 circular separation과 어떻게 연결될까?"
         idea={<>두 unit-circle vector의 squared Euclidean distance를 전개하면 angle 차이의 cosine으로 정리됩니다. 경계를 사이에 둔 두 위치도 작은 angle 차이를 가지므로 거리가 작습니다.</>}
         formula={String.raw`\|\phi_T(x)-\phi_T(x^{\prime})\|_2^2=2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)`}
-        annotatedFormula={String.raw`\|\phi_T(x)-\phi_T(x^{\prime})\|_2^2=\underbrace{2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{\|\phi_T(x)-\phi_T(x^{\prime})\|_2^2}_{\text{두 encoding 사이 거리}}=2-2\cos\!\left(\underbrace{\frac{2\pi(x-x^{\prime})}{T}}_{\text{두 시점의 각도 차}}\right)`}
         operations={[
-          { expression: String.raw`2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","두 unit-circle vector의 squared","Euclidean distance를 전개하면 angle 차이의","cosine으로 정리됩니다."] },
+          { expression: String.raw`\frac{2\pi(x-x^{\prime})}{T}`, annotation: ["두 시점의 위치 차를 각도로 바꿈","T=24에서 23시·0시는 cos에선 2π/24 차"] },
+          { expression: String.raw`2-2\cos\!\left(\frac{2\pi(x-x^{\prime})}{T}\right)`, annotation: ["unit vector 두 개의 squared 거리 전개","각도 차가 작을수록 0에 가까움","23시·0시: 2−2cos(2π/24) ≈ 0.068"] },
         ]}
         terms={[
           { symbol: String.raw`x-x^{\prime}`, name: "phase difference", description: "두 위치의 차이며 cosine의 주기성 때문에 T만큼 다른 값은 같은 위상으로 취급됩니다." },

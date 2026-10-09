@@ -46,12 +46,12 @@ c_{n,k}&=\mathbf 1[V(q_n,o_{n,k})=1]\\
 \widehat{\mathrm{pass@1}}&=\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산}}\\
-\widehat{\mathrm{pass@1}}&=\underbrace{\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}}_{\text{sample별 판정 계산}}
+c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{verifier 통과면 1}}\\
+\widehat{\mathrm{pass@1}}&=\underbrace{\frac1{NK}}_{\text{전체 sample 수로 나눔}}\underbrace{\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}}_{\text{통과한 completion 수}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\mathbf 1[V(q_n,o_{n,k})=1]`, annotation: ["sample별 판정이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 problem에서 K개의 독립적인 completion을","sampling하고 verifier가 맞다고 판정한"] },
-          { expression: String.raw`\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}`, annotation: ["sample별 판정이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 problem에서 K개의 독립적인 completion을","sampling하고 verifier가 맞다고 판정한"] },
+          { expression: String.raw`\mathbf 1[V(q_n,o_{n,k})=1]`, annotation: ["n번째 문제의 k번째 completion을", "parser·test로 채점해 맞으면 1, 아니면 0"] },
+          { expression: String.raw`\frac1{NK}\sum_{n=1}^{N}\sum_{k=1}^{K}c_{n,k}`, annotation: ["문제마다 K개를 sampling해 평균한", "sampling 분포의 성공 확률 추정", "AIME는 K=64회, MATH-500은 4회"] },
         ]}
         terms={[
           {
@@ -101,9 +101,11 @@ c_{n,k}&=\underbrace{\mathbf 1[V(q_n,o_{n,k})=1]}_{\text{sample별 판정 계산
           </>
         }
         formula={String.raw`\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`}
-        annotatedFormula={String.raw`\underbrace{\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{\operatorname{SE}(\widehat p)}_{\text{accuracy 흔들림}}\approx\sqrt{\frac{\overbrace{\widehat p(1-\widehat p)}^{\text{한 문제 성패 분산}}}{\underbrace{N_{\mathrm{eff}}}_{\text{독립 관측 수}}}}`}
         operations={[
-          { expression: String.raw`\operatorname{SE}(\widehat p)\approx\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","독립 Bernoulli 근사를 쓰면 success","probability의 표준오차를 대략 계산할 수 있습니다."] },
+          { expression: String.raw`\widehat p(1-\widehat p)`, annotation: ["맞음/틀림 Bernoulli 하나의 분산", "accuracy가 0.5 근처일 때 가장 큼"] },
+          { expression: String.raw`N_{\mathrm{eff}}`, annotation: ["같은 문제의 K개 sample은 서로 닮아", "독립 관측으로 세면 과대평가", "AIME라면 사실상 문항 30개 수준"] },
+          { expression: String.raw`\sqrt{\frac{\widehat p(1-\widehat p)}{N_{\mathrm{eff}}}}`, annotation: ["p̂=0.5, N_eff=30이면 √(0.25/30)≈0.09", "몇 문제 차이가 오차 안에 들 수 있음"] },
         ]}
         terms={[
           {

@@ -24,16 +24,12 @@ export default function Tradeoff() {
 \overline\Delta&>\delta_{\min},\\
 L_{95}(B)&\le L_{\max},\qquad M(B)\le M_{\max}.
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-\Delta_s&=\underbrace{m(B;s)-m(A;s),}_{\text{변화량 계산}}\\
-\overline\Delta&=\underbrace{\frac1S\sum_{s=1}^{S}\Delta_s,}_{\text{변화량 계산}}\\
-\overline\Delta&>\underbrace{\delta_{\min},}_{\text{경계 후보 선택}}\\
-L_{95}(B)&\le L_{\max},\qquad M(B)\le M_{\max}.
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\Delta_s&=\underbrace{m(B;s)-m(A;s)}_{\text{같은 seed의 품질 차}},\\\overline\Delta&=\underbrace{\frac1S\sum_{s=1}^{S}\Delta_s}_{\text{seed 쌍 평균 이득}},\\\overline\Delta&>\underbrace{\delta_{\min}}_{\text{감수할 최소 이득}},\\L_{95}(B)&\le\underbrace{L_{\max}}_{\text{p95 latency 예산}},\qquad M(B)\le\underbrace{M_{\max}}_{\text{memory 예산}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`m(B;s)-m(A;s),`, annotation: ["paired quality metric이(가) 식의 결과에","기여하는 방식을 계산합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을"] },
-          { expression: String.raw`\frac1S\sum_{s=1}^{S}\Delta_s,`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을","짝지어 제거합니다."] },
-          { expression: String.raw`\delta_{\min},`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","같은 seed에서 후보 B와 기준 A의 metric 차이를","먼저 구해 initialization·sampling 변동을","짝지어 제거합니다."] },
+          { expression: String.raw`m(B;s)-m(A;s)`, annotation: ["같은 seed s로 돌린 후보 B와 기준 A의","metric을 빼 initialization·sampling","변동을 짝지어 지웁니다"] },
+          { expression: String.raw`\frac1S\sum_{s=1}^{S}\Delta_s`, annotation: ["S개 seed 쌍의 차이를 평균해","B가 A보다 얻는 평균 이득을 구합니다"] },
+          { expression: String.raw`\delta_{\min}`, annotation: ["측정 변동과 운영 복잡도를 감수할 만큼","이득이 큰지 확인합니다"] },
+          { expression: String.raw`M(B)\le M_{\max}`, annotation: ["품질이 이겨도 target runtime에서 잰","p95 latency·peak memory가 한도를","넘으면 선택하지 않습니다"] },
         ]}
         terms={[
           { symbol: "m(A;s)", name: "paired quality metric", description: "같은 split·seed·search budget에서 후보 A가 얻은 target metric입니다." },

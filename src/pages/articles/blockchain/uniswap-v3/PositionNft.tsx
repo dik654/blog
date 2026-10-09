@@ -14,9 +14,10 @@ export default function PositionNft() {
         question="Position 범위 안에서 발생한 수수료만 어떻게 분리할까요?"
         idea="Global per-liquidity fee growth에서 lower 아래와 upper 위에 해당하는 growth를 현재 tick 방향 규칙으로 계산해 뺍니다. Position은 직전 inside snapshot 이후 증가분만 받습니다."
         formula={String.raw`f_{inside}=f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}`}
-        annotatedFormula={String.raw`f_{inside}=\underbrace{f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`f_{inside}=\underbrace{f_{global}}_{\text{풀 전체 누적}}-\underbrace{f_{below}-f_{above}}_{\text{범위 밖 성장}},\qquad fee=\underbrace{L}_{\text{position 유동성}}\,\underbrace{(f_{inside}-f_{last})}_{\text{직전 snapshot 이후}}/\underbrace{2^{128}}_{\text{Q128 배율 해제}}`}
         operations={[
-          { expression: String.raw`f_{global}-f_{below}-f_{above},\qquad fee=L\,(f_{inside}-f_{last})/2^{128}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Global per-liquidity fee growth에서","lower 아래와 upper 위에 해당하는 growth를 현재","tick 방향 규칙으로 계산해 뺍니다."] },
+          { expression: String.raw`f_{global}-f_{below}-f_{above}`, annotation: ["풀 전체 per-liquidity 수수료에서","lower 아래·upper 위 몫을 빼 범위 안만 남김","비스케일 예: 10−2−3 = inside 5"] },
+          { expression: String.raw`L\,(f_{inside}-f_{last})/2^{128}`, annotation: ["지난 snapshot 이후 늘어난 inside에","position 유동성 L을 곱해 owed fee로 환산","(5−1)×100 = 비스케일 400"] },
         ]}
         terms={[
           { symbol: "f_global", name: "global fee growth", description: "Pool 전체에서 token별로 누적한 Q128 per-liquidity counter입니다." },

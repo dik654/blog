@@ -103,10 +103,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "AML 운영 변경을 승인할 최소 통제 묶음은 무엇인가?",
     idea: "고객확인, 모니터링, case·report, governance evidence는 서로 대신할 수 없으므로 모두 검증된 경우에만 운영 변경을 승인합니다.",
     formula: String.raw`A=C\land M\land D\land G`,
-    annotatedFormula: String.raw`A=\underbrace{C\land M\land D\land G}_{\text{판정 조건 결합}}`,
+    annotatedFormula: String.raw`\underbrace{A}_{\text{제한 운영 투입}}=\underbrace{C}_{\text{CDD}}\land\underbrace{M}_{\text{모니터링}}\land\underbrace{D}_{\text{case 결정}}\land\underbrace{G}_{\text{governance}}`,
     operations: [
-      { expression: String.raw`C\land M\land D\land G`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","고객확인, 모니터링, case·report,","governance evidence는 서로 대신할 수 없으므로","모두 검증된 경우에만 운영 변경을 승인합니다."] },
-    ],
+          { expression: String.raw`C\land M\land D\land G`, annotation: ["CDD·모니터링·case 결정·governance는", "서로 대신할 수 없어 하나만 0이어도 A=0", "신고 receipt가 없으면 D=0 → 승인 보류"] },
+        ],
     terms: [
       { symbol: "C", name: "CDD readiness", description: "고객·실제소유자·목적·자금 원천과 refresh 상태가 재현 가능합니다." },
       { symbol: "M", name: "Monitoring readiness", description: "거래 입력, rule/model version, alert reason과 case linkage가 검증됐습니다." },
@@ -189,9 +189,9 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "다단계 법인 구조의 간접 지분은 어떻게 계산하는가?",
     idea: "한 경로에서 각 단계 지분을 곱하고, 동일 자연인으로 이어지는 독립 경로가 여러 개면 법적 기준과 중복 여부를 확인해 합산합니다.",
     formula: String.raw`b_{\mathrm{indirect}}=\prod_{j=1}^{k}s_j`,
-    annotatedFormula: String.raw`b_{\mathrm{indirect}}=\underbrace{\prod_{j=1}^{k}s_j}_{\text{Indirect ownership 계산}}`,
+    annotatedFormula: String.raw`\underbrace{b_{\mathrm{indirect}}}_{\text{이 경로의 간접 지분}}=\underbrace{\prod_{j=1}^{k}s_j}_{\text{단계별 지분의 곱}}`,
     operations: [
-      { expression: String.raw`\prod_{j=1}^{k}s_j`, annotation: ["Indirect ownership이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 경로에서 각 단계 지분을 곱하고, 동일 자연인으로 이어지는","독립 경로가 여러 개면 법적 기준과 중복 여부를 확인해"] },
+      { expression: String.raw`\prod_{j=1}^{k}s_j`, annotation: ["법인 고객에서 자연인까지 한 소유 경로의","각 단계 지분율을 곱합니다","한울무역←A 60%, A←김민지 50% → 30%"] },
     ],
     terms: [
       { symbol: "s_j", name: "Ownership share at level j", description: "소유 사슬의 j번째 법인이 다음 법인에 가진 지분율입니다." },
@@ -281,9 +281,11 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "여러 시나리오의 잔여 노출을 내부 planning model로 어떻게 비교하는가?",
     idea: "각 시나리오의 가능성과 영향에 통제가 줄이는 비율을 적용해 합산하되, 불확실성과 법적 최소 의무를 별도로 유지합니다.",
     formula: String.raw`R_{\mathrm{res}}=\sum_{s=1}^{n}p_sL_s(1-m_s)`,
-    annotatedFormula: String.raw`R_{\mathrm{res}}=\underbrace{\sum_{s=1}^{n}p_sL_s(1-m_s)}_{\text{Residual exposure index 계산}}`,
+    annotatedFormula: String.raw`R_{\mathrm{res}}=\sum_{s=1}^{n}\underbrace{p_s}_{\text{발생 가능성}}\underbrace{L_s}_{\text{영향}}\underbrace{(1-m_s)}_{\text{통제 뒤 남는 비율}}`,
     operations: [
-      { expression: String.raw`\sum_{s=1}^{n}p_sL_s(1-m_s)`, annotation: ["Residual exposure index이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 시나리오의 가능성과 영향에 통제가 줄이는 비율을 적용해","합산하되, 불확실성과 법적 최소 의무를 별도로 유지합니다."] },
+      { expression: String.raw`p_sL_s`, annotation: ["시나리오별 가능성×영향이 통제 전 노출","(0.10, 100) → 10, (0.05, 200) → 10"] },
+      { expression: String.raw`(1-m_s)`, annotation: ["검증된 통제 효과 m을 빼고 남는 비율","10×0.40=4, 10×0.75=7.5"] },
+      { expression: String.raw`\sum_{s=1}^{n}`, annotation: ["시나리오 잔여를 더한 내부 비교 지표","4+7.5 = 11.5, 법적 의무 면제 근거 아님"] },
     ],
     terms: [
       { symbol: "s", name: "Risk scenario", description: "행위자·경로·상품·피해가 구체화된 하나의 자금세탁 위험 시나리오입니다." },
@@ -365,10 +367,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     question: "승인된 STR을 외부 제출해 filed 상태로 바꿀 최소 조건은 무엇인가?",
     idea: "합리적 의심 결정, 완전한 narrative, 추적 가능한 evidence, confidentiality와 authority가 모두 있어야 제출하며, accepted receipt가 있어야 filed로 기록합니다.",
     formula: String.raw`S=D\land N\land E\land C`,
-    annotatedFormula: String.raw`S=\underbrace{D\land N\land E\land C}_{\text{판정 조건 결합}}`,
+    annotatedFormula: String.raw`\underbrace{S}_{\text{제출 시도 가능}}=\underbrace{D}_{\text{승인된 의심 결정}}\land\underbrace{N}_{\text{narrative}}\land\underbrace{E}_{\text{evidence 추적}}\land\underbrace{C}_{\text{기밀 제출 통제}}`,
     operations: [
-      { expression: String.raw`D\land N\land E\land C`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","합리적 의심 결정, 완전한 narrative, 추적 가능한","evidence, confidentiality와","authority가 모두 있어야 제출하며, accepted"] },
-    ],
+          { expression: String.raw`D\land N\land E\land C`, annotation: ["결정·narrative·evidence가 모두 1이어도", "상담 직원이 payload를 보면 C=0 → S=0", "S는 내부 gate, filed는 receipt 뒤"] },
+        ],
     terms: [
       { symbol: "D", name: "Authorized suspicion decision", description: "지정된 책임자가 합리적 의심 근거와 제출 결정을 승인했습니다." },
       { symbol: "N", name: "Narrative completeness", description: "Who·what·when·where·how와 profile mismatch·검토 결과가 사실과 추론으로 구분됐습니다." },

@@ -44,10 +44,11 @@ export default function Modeling() {
         question="Likelihood가 좋아지는 만큼 parameter가 늘어나는 후보를 같은 기준으로 어떻게 비교할까?"
         idea={<>AIC와 BIC는 maximized log-likelihood에 complexity penalty를 더합니다. AIC는 parameter당 2, BIC는 sample size가 커질수록 log n만큼 벌점을 주어 서로 다른 목적의 근사 기준을 만듭니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{AIC}&=-2\log\hat L+2k\\\operatorname{BIC}&=-2\log\hat L+k\log n\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\operatorname{AIC}&=\underbrace{-2\log\hat L+2k}_{\text{로그 비용 변환}}\\\operatorname{BIC}&=\underbrace{-2\log\hat L+k\log n}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{AIC}&=\underbrace{-2\log\hat L}_{\text{적합이 나쁠수록 큼}}+\underbrace{2k}_{\text{parameter당 2}}\\\operatorname{BIC}&=-2\log\hat L+\underbrace{k\log n}_{\text{parameter당 log n}}\end{aligned}`}
         operations={[
-          { expression: String.raw`-2\log\hat L+2k`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","AIC와 BIC는 maximized","log-likelihood에 complexity","penalty를 더합니다."] },
-          { expression: String.raw`-2\log\hat L+k\log n`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","AIC와 BIC는 maximized","log-likelihood에 complexity","penalty를 더합니다."] },
+          { expression: String.raw`-2\log\hat L`, annotation: ["최대 likelihood가 클수록 작아지는 fit 항","AIC와 BIC가 같은 값을 공유합니다"] },
+          { expression: String.raw`2k`, annotation: ["AR·MA·trend 등 추정 parameter 하나를","늘릴 때마다 AIC에 2를 더합니다"] },
+          { expression: String.raw`k\log n`, annotation: ["BIC는 parameter당 log n을 더해","n이 e²≈7.4를 넘으면 AIC보다 무겁고","n=100이면 parameter당 약 4.6"] },
         ]}
         terms={[
           { symbol: "\\hat L", name: "maximized likelihood", description: "같은 observations와 likelihood family에서 적합한 model의 최대 likelihood입니다." },
@@ -62,9 +63,10 @@ export default function Modeling() {
         question="Residual 여러 lag에 설명되지 않은 autocorrelation이 남았는지 한 통계량으로 어떻게 확인할까?"
         idea={<>Ljung–Box statistic은 lag 1부터 h까지 residual autocorrelation의 제곱을 sample-size correction과 함께 누적합니다. 개별 spike가 아니라 여러 lag의 공동 lack-of-fit을 검정합니다.</>}
         formula={String.raw`Q(h)=n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`}
-        annotatedFormula={String.raw`Q(h)=\underbrace{n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`Q(h)=\underbrace{n(n+2)}_{\text{작은 표본 보정}}\underbrace{\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}}_{\text{lag 1..h 잔차 상관 누적}}`}
         operations={[
-          { expression: String.raw`n(n+2)\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Ljung–Box statistic은 lag 1부터 h까지","residual autocorrelation의 제곱을","sample-size correction과 함께 누적합니다."] },
+          { expression: String.raw`n(n+2)`, annotation: ["Box–Pierce의 n 대신 n(n+2)를 곱해","유한 표본의 chi-square 근사를 개선"] },
+          { expression: String.raw`\sum_{k=1}^{h}\frac{\hat\rho_k^2}{n-k}`, annotation: ["lag 1부터 h까지 residual 자기상관을","제곱해 부호와 무관하게 누적","개별 spike가 아닌 공동 lack-of-fit"] },
         ]}
         terms={[
           { symbol: "\\hat\\rho_k", name: "residual autocorrelation", description: "Fitted model의 residual에서 계산한 lag-k sample correlation입니다." },

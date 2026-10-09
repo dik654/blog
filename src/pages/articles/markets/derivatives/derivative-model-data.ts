@@ -71,6 +71,65 @@ export const minimumVarianceHedgeData: DerivativeDeepArticleData = {
 };
 
 export const optionPricingData: DerivativeDeepArticleData = {
+  formulas: [
+    {
+      section: "need",
+      content: {
+        title: "CRR 나무의 배수와 가격 가중치",
+        question: "칸을 촘촘히 나눌 때 상승·하락 배수와 가격 가중치를 어떻게 정해야 블랙숄즈 값으로 모일까요?",
+        idea: "콕스·로스·루빈스타인(1979)은 한 칸 길이 Δt와 연 변동성 σ로 상승배수를 정하고 하락배수를 그 역수로 둡니다. 가중치 q는 2절의 (1.05−0.8)÷(1.2−0.8)과 같은 무차익 조건입니다.",
+        formula: String.raw`u=e^{\sigma\sqrt{\Delta t}},\qquad d=\frac{1}{u},\qquad q=\frac{e^{r\Delta t}-d}{u-d}`,
+        annotatedFormula: String.raw`\underbrace{u=e^{\sigma\sqrt{\Delta t}}}_{\text{한 칸 상승배수}},\qquad \underbrace{d=\frac{1}{u}}_{\text{오르내리면 제자리}},\qquad \underbrace{q=\frac{e^{r\Delta t}-d}{u-d}}_{\text{현금 증가율의 위치}}`,
+        operations: [
+          { expression: String.raw`u=e^{0.2\times\sqrt{1}}=1.2214`, annotation: "연 변동성 20%와 한 칸 1년(2년 만기를 두 칸으로 나눔)을 넣어 상승배수를 얻습니다." },
+          { expression: String.raw`d=\frac{1}{1.2214}=0.8187`, annotation: "하락배수를 상승의 역수로 두면 한 번 오르고 한 번 내린 주가가 처음 값으로 돌아옵니다." },
+          { expression: String.raw`q=\frac{1.05-0.8187}{1.2214-0.8187}=\frac{0.2313}{0.4027}=0.5743`, annotation: "한 칸 현금 증가율 e^{rΔt}=1.05가 하락·상승 배수 사이 어디에 있는지가 가격 가중치입니다." },
+          { expression: String.raw`P_{2}=5.42\to P_{10}=6.42\to P_{100}=6.67\to P_{1000}=6.70`, annotation: "칸 수를 늘려 Δt를 줄이면 같은 유럽형 풋의 나무 값이 블랙숄즈 값 6.70으로 모입니다(Python 재계산)." },
+        ],
+        terms: [
+          { symbol: String.raw`u,\ d`, name: "상승·하락배수", description: "한 칸 동안 주가에 곱하는 두 값입니다. 변동성과 칸 길이에서 정합니다." },
+          { symbol: String.raw`q`, name: "가격 가중치", description: "상승 가지에 붙이는 위험중립 가중치입니다. 실제 상승확률이 아닙니다." },
+          { symbol: String.raw`\sigma`, name: "연 변동성", description: "주가 수익률의 연 표준편차입니다. 이 예에서는 20%(가정)입니다." },
+          { symbol: String.raw`\Delta t`, name: "한 칸 길이", description: "만기 T를 칸 수 N으로 나눈 시간(년)입니다." },
+          { symbol: String.raw`r`, name: "무위험금리", description: "연속복리 연율입니다. ln1.05≈4.88%로 두어 한 칸 증가율이 1.05가 되게 했습니다." },
+        ],
+        assumptions: [
+          "(가정) S=K=100, T=2년, σ=20%, r=ln1.05≈4.88%(연속복리), 배당 없음, 유럽형 풋입니다.",
+          "3~4절의 1.2·0.8 나무는 손계산을 위해 고른 배수라 이 수열의 한 항이 아닙니다.",
+        ],
+        interpretation: "배수를 변동성에서 정했기 때문에 칸을 늘릴수록 나무 값이 5.42, 6.42, 6.67, 6.70으로 한 값에 모입니다. 그 극한이 다음 식의 블랙숄즈 값입니다.",
+      },
+    },
+    {
+      section: "need",
+      content: {
+        title: "블랙숄즈 유럽형 콜 공식",
+        question: "칸을 끝없이 잘게 나눈 극한에서 유럽형 콜 가격은 어떤 닫힌 식이 될까요?",
+        idea: "블랙·숄즈(1973)와 머튼(1973)의 식은 콜을 주식 일부와 차입으로 계속 복제하는 비용입니다. 첫 항은 복제에 쥔 주식, 둘째 항은 행사가를 내는 차입입니다. 풋은 풋콜 등식으로 얻어 위 나무 수열과 비교합니다.",
+        formula: String.raw`C=S\,\Phi(d_1)-Ke^{-rT}\Phi(d_2),\qquad d_1=\frac{\ln(S/K)+\left(r+\tfrac12\sigma^2\right)T}{\sigma\sqrt{T}},\qquad d_2=d_1-\sigma\sqrt{T}`,
+        annotatedFormula: String.raw`C=\underbrace{S\,\Phi(d_1)}_{\text{복제에 쥐는 주식 가치}}-\underbrace{Ke^{-rT}}_{\text{행사가의 현재가치}}\,\underbrace{\Phi(d_2)}_{\text{위험중립 행사 확률}}`,
+        operations: [
+          { expression: String.raw`d_1=\frac{0+(0.04879+0.02)\times2}{0.2\sqrt{2}}=\frac{0.13758}{0.28284}=0.4864`, annotation: "등가격이라 ln(S/K)=0입니다. 금리와 분산의 절반을 2년 동안 쌓고 2년 표준편차로 나눕니다." },
+          { expression: String.raw`d_2=0.4864-0.2828=0.2036`, annotation: "d₁에서 2년 표준편차 σ√T를 한 번 뺍니다." },
+          { expression: String.raw`\Phi(0.4864)=0.6867,\quad \Phi(0.2036)=0.5807`, annotation: "표준정규 누적확률로 바꿉니다." },
+          { expression: String.raw`Ke^{-rT}=100\,e^{-0.04879\times2}=100\,e^{-0.09758}=90.70`, annotation: "행사가 100을 2년 동안 연속복리로 할인합니다." },
+          { expression: String.raw`C=100\times0.6867-90.70\times0.5807=68.67-52.67=16.00`, annotation: "주식 몫에서 차입 몫을 빼 콜 가격을 얻습니다." },
+          { expression: String.raw`P=C-S+Ke^{-rT}=16.00-100+90.70=6.70`, annotation: "풋콜 등식으로 같은 조건의 유럽형 풋을 얻으면 CRR 1,000단계 값 6.70과 일치합니다." },
+        ],
+        terms: [
+          { symbol: String.raw`C,\ P`, name: "콜·풋 가격", description: "유럽형 옵션의 오늘 이론가격입니다." },
+          { symbol: String.raw`S,\ K`, name: "주가·행사가", description: "이 예에서는 둘 다 100입니다." },
+          { symbol: String.raw`T`, name: "만기", description: "남은 기간(년)입니다. 이 예에서는 2년입니다." },
+          { symbol: String.raw`\Phi`, name: "표준정규 누적분포", description: "표준정규 변수가 그 값 이하일 확률입니다." },
+        ],
+        assumptions: [
+          "변동성·금리가 일정하고 배당·거래비용·점프가 없으며 연속적으로 재조정할 수 있다고 둡니다.",
+          "OIC가 말하듯 조기행사가 있는 미국형 주식 옵션에는 이 식 대신 이항모형을 주로 씁니다.",
+        ],
+        interpretation: "같은 입력에서 콜 16.00, 풋 6.70입니다. CRR 나무가 이 값으로 모이므로 나무는 블랙숄즈 가정 아래 같은 가격을 이산적으로 근사합니다. 미국형 풋처럼 중간 선택이 있으면 나무가 이 식보다 넓게 쓰입니다.",
+      },
+    },
+  ],
   sections: [
     { id: "overview", level: "S", title: "1. 주가가 100에서 두 번 움직이는 나무를 그립니다", bridge: "공식보다 먼저 오늘·중간·만기의 선택을 봅니다.", paragraphs: [
       "주가 100이 한 기간마다 20% 오르거나 내린다고 하겠습니다. 두 기간 뒤 가능한 값은 144, 96, 64입니다. 행사가격 100인 풋은 만기에 각각 0, 4, 36을 지급합니다.",
@@ -91,6 +150,7 @@ export const optionPricingData: DerivativeDeepArticleData = {
     { id: "need", level: "2", title: "5. 나무를 촘촘히 만들면 연속시간 공식에 가까워집니다", bridge: "한두 갈래 계산과 시장의 연속 움직임을 연결합니다.", paragraphs: [
       "기간을 잘게 나누면 가능한 경로가 늘고 나무 가격은 일정한 가정 아래 블랙숄즈 가격에 가까워집니다. 블랙숄즈는 유럽형 옵션을 연속적으로 복제한다는 생각을 닫힌 식으로 표현합니다.",
       "그러나 배당, 금리·변동성 변화, 점프와 거래비용이 있으면 단순 식의 가정과 실제 시장이 달라집니다. 미국형은 각 시점의 행사 선택이 있어 나무나 수치 방법을 많이 씁니다.",
+      "수렴하려면 배수를 아무렇게나 고르면 안 됩니다. 콕스·로스·루빈스타인(Cox-Ross-Rubinstein, 1979)의 나무는 상승배수를 연 변동성과 한 칸 길이에서 정하고, 그 극한이 블랙·숄즈(Black-Scholes, 1973)와 머튼(Merton, 1973)이 유도한 닫힌 식입니다. (가정) 변동성 20%, 연속복리 금리 ln1.05≈4.88%, 2년 만기 행사가 100 유럽형 풋을 그 나무로 계산하면 2단계 5.42, 10단계 6.42, 100단계 6.67, 1,000단계 6.70으로 블랙숄즈 값 6.70에 다가갑니다. 3~4절의 1.2·0.8 나무는 손계산을 위해 고른 배수라 6.29가 이 수열의 한 항은 아닙니다.",
     ] },
     { id: "names", level: "3", title: "6. 위험중립 가중치·역진 계산·조기행사 경계에 이름을 붙입니다", bridge: "가격 가중치, 뒤에서 앞으로 계산하는 법, 행동이 갈리는 선을 구분합니다.", paragraphs: [
       "위험중립 가중치는 주식의 할인된 가격이 나무에서 맞도록 만든 가격 계산용 가중치입니다. 역진 계산은 만기 지급에서 시작해 각 이전 가지의 기다린 가치를 할인하는 방법입니다.",
@@ -130,7 +190,7 @@ export const optionPricingData: DerivativeDeepArticleData = {
     { term: "조기행사 경계", description: "즉시 행사가치와 계속 보유가치가 같아져 행동이 갈리는 주가와 시간의 선입니다.", example: "주가 80에서 20이 15.24보다 커 풋을 행사합니다.", boundary: "미국형이라는 이유만으로 모든 노드에서 일찍 행사하는 것은 아닙니다." },
   ] },
   sources: [
-    { source: "MIT OpenCourseWare · Options", excerpt: "payoff, binomial tree and replication", application: "두 기간 나무를 만기 지급에서 역진해 복제 가격과 조기행사 선택을 계산합니다.", citation: "MIT Sloan 15.401 Finance Theory I, Options", href: "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/resources/options/", note: "콜·풋 지급, 이항 나무와 복제를 연결하는 대학원 금융론 자료입니다." },
+    { source: "MIT OpenCourseWare · Options", excerpt: "payoff, binomial tree and replication", application: "두 기간 나무를 만기 지급에서 역진해 복제 가격과 조기행사 선택을 계산합니다.", citation: "MIT Sloan 15.401 Finance Theory I, Options", href: "https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/resources/options/", note: "콜·풋 지급, 이항 나무와 복제를 연결하는 대학원(MIT Sloan MBA 핵심 과목, OCW 표기 Level: Graduate) 금융론 자료입니다." },
     { source: "Options Industry Council · Black-Scholes Formula", excerpt: "American-style equity options and binomial model", application: "유럽형 블랙숄즈와 조기행사 가능한 미국형 주식 옵션의 이항모형 사용 경계를 구분합니다.", citation: "Options Industry Council, Black-Scholes Formula", href: "https://www.optionseducation.org/advancedconcepts/black-scholes-formula", note: "옵션 이론가격의 주요 입력과 미국형 조기행사 때문에 쓰는 이항모형을 설명합니다." },
   ],
   review: [
@@ -201,7 +261,7 @@ export const volatilitySurfaceData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "CME Group · Introduction to CVOL Skew", excerpt: "difference in implied volatility", application: "같은 델타의 콜과 풋을 비교해 −6 변동성포인트의 의미와 두 점 지표의 한계를 설명합니다.", citation: "CME Group, Introduction to CVOL Skew", href: "https://www.cmegroup.com/education/courses/introduction-to-cvol/introduction-to-cvol-skew", note: "위험반전과 전체 풋·콜 가격을 쓰는 스큐 측정의 차이를 설명합니다." },
-    { source: "Basel Framework · Market Risk", excerpt: "volatility surface across strike and tenor", application: "행사가와 만기 전반의 표면을 위험요인으로 보정·검증하고 대용 표면의 차이를 관리합니다.", citation: "Basel Framework, MAR33 and MAR99", href: "https://www.bis.org/baselframework/BaselFramework.pdf", note: "옵션 장부의 변동성 표면 위험요인, 실제 가격 관측과 재보정 원칙을 정한 현행 기준입니다." },
+    { source: "Basel Framework · Market Risk", excerpt: "Liquid options at moneyness, tenor and option expiry points may be used to calibrate level, volatility, drift and correlation parameters for a single-name or benchmark volatility surface.", application: "행사가와 만기 전반의 표면을 위험요인으로 보정·검증하고 대용 표면의 차이를 관리합니다.", citation: "Basel Framework, MAR99.22(5)", href: "https://www.bis.org/basel_framework/chapter/MAR/99.htm?inforce=20230101&published=20200327", note: "옵션 변동성 표면을 보정한 매개변수도 새 자료가 들어올 때마다 갱신·재보정해야 하고, 다른 표면의 대용으로 쓰면 추가 기저 위험을 얹어야 한다고 정한 장입니다. 이전에 인용한 통합 PDF(BaselFramework.pdf)는 2026-10-09 404라 장 페이지로 바꿨습니다." },
   ],
   review: [
     "90 풋 30%와 110 콜 24%에서 −6%포인트를 계산하고 의미를 설명해 보세요. (답: 3절)",
@@ -241,7 +301,7 @@ export const yieldCurveData: DerivativeDeepArticleData = {
       "거래를 새 곡선으로 평가한 뒤 각 핵심만기 금리를 조금 움직여 손익 민감도를 구합니다. 2년 위험은 2년 선물이나 스왑으로, 10년 위험은 장기 수단으로 따로 맞춥니다. 총 듀레이션이 0이어도 만기별 위험은 남을 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. CME의 SOFR 곡선은 예상과 할인을 같은 데이터 항목으로 공개합니다", bridge: "곡선이 실제 시장 자료와 어떻게 연결되는지 확인합니다.", paragraphs: [
-      "CME의 SOFR 자료 설명은 만기별 할인계수와 선도금리를 제공하고, USD SOFR OIS 현금흐름의 예상과 할인에 곡선을 사용한다고 밝힙니다. 거래 가격은 곡선의 각 점과 계약 지급일을 함께 사용합니다.",
+      "CME의 SOFR 자료 설명은 만기별 할인계수와 무이표금리(연속복리, ACT/365.25 기준)를 제공하고, USD SOFR OIS 현금흐름의 예상과 할인에 곡선을 사용한다고 밝힙니다. 선도금리는 이 자료에 따로 실려 있지 않으며 두 할인계수의 비율로 유도합니다. 거래 가격은 곡선의 각 점과 계약 지급일을 함께 사용합니다.",
       "본문의 0.96과 0.9067은 부트스트랩 원리를 손으로 보는 수치입니다. 실제 CME 곡선의 관측값이 아니며, 실무에서는 복리 익일금리와 정확한 결제 관행을 적용해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. BIS의 기준금리 전환은 할인과 기간 자금 위험을 분리합니다", bridge: "익일금리 곡선과 기간 기준금리의 경제적 차이를 봅니다.", paragraphs: [
@@ -270,7 +330,7 @@ export const yieldCurveData: DerivativeDeepArticleData = {
     { term: "핵심만기 민감도", description: "곡선의 특정 만기 지점이 움직일 때 거래 가치가 얼마나 변하는지 나타냅니다.", example: "2년과 10년 위험을 서로 다른 선물·스왑으로 맞춥니다.", boundary: "총 듀레이션이 0이라고 모든 곡선 모양의 위험이 사라지지는 않습니다." },
   ] },
   sources: [
-    { source: "CME Group · SOFR Third-Party Data FAQ", excerpt: "forecasting and discounting cashflows", application: "SOFR 곡선의 할인계수와 예상금리를 손계산한 두 점 곡선의 실제 시장 대응에 연결합니다.", citation: "CME Group, SOFR Third-Party Data FAQ", href: "https://www.cmegroup.com/market-data/faq-sofr-third-party-data.html", note: "SOFR OIS 곡선의 할인계수·선도금리와 현금흐름 평가 용도를 설명합니다." },
+    { source: "CME Group · SOFR Third-Party Data FAQ", excerpt: "The curve is used for forecasting the SOFR OIS index rate as well as discounting the cashflows for any swap referencing USD-SOFR-OIS-COMPOUND index.", application: "SOFR 곡선의 할인계수와 예상금리를 손계산한 두 점 곡선의 실제 시장 대응에 연결합니다.", citation: "CME Group, SOFR Third-Party Data FAQ", href: "https://www.cmegroup.com/market-data/faq-sofr-third-party-data.html", note: "SOFR OIS 곡선의 할인계수·무이표금리 필드와 현금흐름 평가 용도를 설명합니다. 선도금리 필드는 없습니다. cmegroup.com은 2026-10-09 자동 조회 403이라 web.archive.org 2026-04-20 사본으로 확인했습니다." },
     { source: "BIS · Beyond LIBOR", excerpt: "OIS rates for discounting and valuation", application: "담보 할인 곡선과 기간 자금·기준금리 예상 곡선이 갈리는 경제적 배경을 설명합니다.", citation: "BIS, Beyond LIBOR: a primer on the new benchmark rates", href: "https://www.bis.org/publications/beyond-libor-primer-new-benchmark-rates", note: "새 기준금리의 성격과 파생상품 할인·가치평가의 OIS 전환을 설명하는 공식 자료입니다." },
   ],
   review: [
@@ -281,6 +341,35 @@ export const yieldCurveData: DerivativeDeepArticleData = {
 };
 
 export const xvaData: DerivativeDeepArticleData = {
+  formulas: [
+    {
+      section: "picture",
+      content: {
+        title: "CVA 정의식과 한 칸 근사",
+        question: "0.12는 어떤 식을 한 기간으로 줄인 값인가요?",
+        idea: "CVA는 미래 각 시점의 기대 양의 노출에 그 구간에 상대방이 처음 부도날 확률과 손실률을 곱해 모두 더한 값입니다. 4절의 0.12는 그 합을 한 칸으로 묶은 경우입니다.",
+        formula: String.raw`\mathrm{CVA}=(1-R)\int_0^T \mathrm{EE}^{*}(t)\,dPD(t)\approx \mathrm{LGD}\sum_{i}\mathrm{EE}(t_i)\,\Delta PD(t_i)\,DF(t_i)`,
+        annotatedFormula: String.raw`\mathrm{CVA}=\underbrace{(1-R)}_{\text{부도 때 잃는 비율}}\int_0^T\underbrace{\mathrm{EE}^{*}(t)}_{\text{할인한 기대 양의 노출}}\,\underbrace{dPD(t)}_{\text{그 순간 처음 부도날 확률}}`,
+        operations: [
+          { expression: String.raw`\mathrm{LGD}=1-R=1-0.40=0.60`, annotation: "회수율 40%를 빼 손실률을 얻습니다." },
+          { expression: String.raw`\sum_i\to\text{한 칸 }(0\sim1\text{년}),\ DF=1`, annotation: "설명을 위해 1년을 한 구간으로 묶고 할인을 무시합니다." },
+          { expression: String.raw`0.60\times10\times0.02\times1=0.12`, annotation: "노출 10, 그 구간 부도확률 2%를 곱하면 4절의 0.12입니다." },
+          { expression: String.raw`0.60\times18\times0.05=0.54`, annotation: "잘못된 방향의 위험이 있으면 EE를 부도 조건부 노출로 바꿔야 하며, 4절의 충격 사례가 그 경우입니다." },
+        ],
+        terms: [
+          { symbol: String.raw`R,\ \mathrm{LGD}`, name: "회수율·손실률", description: "부도 때 돌려받는 비율과 잃는 비율(1−R)입니다." },
+          { symbol: String.raw`\mathrm{EE}(t)`, name: "기대 양의 노출", description: "시점 t에 상대방에게 받을 가치의 양수 부분 평균입니다. *는 할인한 값입니다." },
+          { symbol: String.raw`\Delta PD(t_i)`, name: "구간 부도확률", description: "t_{i−1}과 t_i 사이에 처음 부도날 확률입니다." },
+          { symbol: String.raw`DF(t_i)`, name: "할인계수", description: "그 시점 손실을 오늘 가치로 바꾸는 값입니다." },
+        ],
+        assumptions: [
+          "(가정) 노출 10, 1년 부도확률 2%, 회수율 40%, 할인 무시, 노출과 부도는 독립입니다.",
+          "실무 계산은 여러 시점·경로의 EE와 만기별 부도확률 곡선을 쓰며, 규제 CVA와 회계 CVA는 입력과 목적이 다를 수 있습니다.",
+        ],
+        interpretation: "0.12는 CVA 합을 한 칸으로 줄인 근사입니다. 구간을 나누면 시점마다 노출과 부도확률이 달라지고, 노출과 부도가 함께 움직이면 독립 가정의 곱이 손실을 과소평가합니다.",
+      },
+    },
+  ],
   sections: [
     { id: "overview", level: "S", title: "1. 모형가격 10이 실제 거래 장부에서는 9.2가 됩니다", bridge: "거래상대·자금·담보 비용을 가격 밖에 숨기지 않습니다.", paragraphs: [
       "부도도 자금비용도 없는 모형에서 은행이 받을 파생상품 가치가 10이라고 하겠습니다. 실제 거래에는 상대방 부도 손실 0.6, 자기 신용 효과 0.2, 무담보 자금비용 0.3과 개시증거금 조달비용 0.1이 붙습니다.",
@@ -295,7 +384,7 @@ export const xvaData: DerivativeDeepArticleData = {
       "실제 비용은 미래 증거금 분포, 만기별 조달 스프레드, 할인과 회수 조건을 여러 시점에 적용합니다. 0.1은 개시증거금과 현재가치를 덮는 변동증거금의 역할이 다르다는 점을 손으로 보는 값입니다.",
     ] },
     { id: "picture", level: "1", title: "4. 노출과 부도 가능성이 함께 커지면 손실이 네 배 넘게 뜁니다", bridge: "독립 가정과 잘못된 방향의 관계를 나란히 놓습니다.", paragraphs: [
-      "평소 미래 양의 노출이 10, 부도확률 2%, 손실률 60%라면 단순 기대손실은 10×0.02×0.60=0.12입니다. 노출과 상대방 부도를 서로 독립으로 보는 계산입니다.",
+      "평소 미래 양의 노출이 10, 부도확률 2%, 손실률 60%라면 단순 기대손실은 10×0.02×0.60=0.12입니다. 노출과 상대방 부도를 서로 독립으로 보고, 아래 CVA 식의 시간 구간을 한 칸으로 묶은 근사입니다.",
       "시장 충격 때 노출이 18로 늘고 상대방 부도확률도 5%로 오르면 18×0.05×0.60=0.54입니다. 노출만 1.8배인데 손실은 4.5배가 됩니다. 같은 원인이 두 입력을 함께 악화시킨 결과입니다.",
     ] },
     { id: "need", level: "2", title: "5. 담보를 많이 받는 것과 자금 부담을 줄이는 것은 다릅니다", bridge: "신용위험 감소가 유동성 위험을 키울 수 있는 경로를 봅니다.", paragraphs: [
@@ -311,7 +400,7 @@ export const xvaData: DerivativeDeepArticleData = {
       "CVA·DVA·FVA·MVA의 정의와 부호, 공통 자료를 문서화하고 항 사이 중복을 검사합니다. 거래 체결 전 가격, 일별 손익, 헤지와 자금 계획이 같은 계약·곡선 버전을 쓰는지도 맞춥니다.",
     ] },
     { id: "source", level: "5", title: "8. 바젤의 상대방 위험 기준은 담보와 청산기간을 함께 봅니다", bridge: "오늘 담보만 빼는 계산이 부족한 근거를 확인합니다.", paragraphs: [
-      "바젤 상대방 신용위험 기준은 미래 시장요인에서 예상 노출을 계산하고, 담보 가격 변화와 재마진·거래 대체에 걸리는 기간을 반영합니다. 유동성이 낮거나 거래가 많은 상계집합은 더 긴 위험기간이 적용될 수 있습니다.",
+      "바젤 상대방 신용위험 기준은 미래 시장요인에서 예상 노출을 계산하고, 담보 가격 변화와 재마진·거래 대체에 걸리는 기간을 반영합니다. CRE53.24는 위험기간의 감독 하한을 환매조건부 거래만 있는 상계집합 5영업일, 그 밖의 상계집합 10영업일로 두고, 거래가 5,000건을 넘거나 유동성이 낮은 담보·대체하기 어려운 장외파생상품이 들어 있는 상계집합은 20영업일로 둡니다. 직전 두 분기에 위험기간보다 오래 끈 마진콜 분쟁이 두 번을 넘으면 다음 두 분기 동안 그 하한의 두 배 이상을 써야 합니다(CRE53.25).",
       "따라서 현재 담보가 충분하다는 사실만으로 미래 노출을 0으로 둘 수 없습니다. 시장이 움직인 뒤 담보를 요구하고 실제로 받아 거래를 대체할 때까지 시간 차이가 남습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. ISDA의 담보 운영은 계산값이 실제 자산 이동이 되는 길을 보여 줍니다", bridge: "가격 조정과 매일의 담보 업무를 연결합니다.", paragraphs: [

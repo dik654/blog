@@ -13,10 +13,10 @@ export default function CometArchitecture() {
         question="하나의 signed principal에서 현재 공급·차입 balance를 어떻게 복원할까요?"
         idea="부호가 economic role을 고르고 절댓값에 해당 index를 곱합니다. Present value를 principal로 되돌릴 때 supply는 내림, borrow는 올림해 protocol이 과소 부채를 기록하지 않게 합니다."
         formula={String.raw`V(p)=\begin{cases}pI_s/I_0&p\ge0\\-(-p)I_b/I_0&p<0\end{cases}`}
-        annotatedFormula={String.raw`V(\underbrace{p}_{\text{signed principal 계산}})=\begin{cases}pI_s/\underbrace{I_0}_{\text{index scale 계산}}&p\ge0\\-(-p)I_b/I_0&p<0\end{cases}`}
+        annotatedFormula={String.raw`V(\underbrace{p}_{\text{부호가 공급·차입 선택}})=\begin{cases}\underbrace{pI_s/I_0}_{\text{공급 현재가치}}&p\ge0\\\underbrace{-(-p)I_b/I_0}_{\text{차입 현재가치}}&p<0\end{cases}`}
         operations={[
-          { expression: String.raw`I_0`, annotation: ["index scale이(가) 식의 결과에 기여하는 방식을","계산합니다.","부호가 economic role을 고르고 절댓값에 해당","index를 곱합니다."] },
-          { expression: String.raw`p`, annotation: ["signed principal이(가) 식의 결과에 기여하는","방식을 계산합니다.","부호가 economic role을 고르고 절댓값에 해당","index를 곱합니다."] },
+          { expression: String.raw`pI_s/I_0`, annotation: ["양수 principal은 supply index로 전진","예: scale 1, p=1,000, I_s=1.05","→ 1,050 supply"] },
+          { expression: String.raw`-(-p)I_b/I_0`, annotation: ["음수면 절댓값에 borrow index를 곱해","다시 음수로 둡니다","예: p=−500, I_b=1.08 → −540"] },
         ]}
         terms={[
           { symbol: "p", name: "signed principal", description: "양수는 base supply, 음수는 base borrow입니다." },
@@ -31,9 +31,11 @@ export default function CometArchitecture() {
         question="Comet의 supply와 borrow rate는 utilization에서 어떻게 갈라질까요?"
         idea="두 curve가 U를 공유하지만 각각 base·kink·low/high slope를 가집니다. Aave처럼 borrow rate×U×(1−reserve factor)로 supply rate를 유도한다고 가정하지 않습니다."
         formula={String.raw`U=\frac{B}{S},\qquad r_j(U)=\begin{cases}b_j+m_{j,L}U&U\le K_j\\b_j+m_{j,L}K_j+m_{j,H}(U-K_j)&U>K_j\end{cases}`}
-        annotatedFormula={String.raw`U=\frac{B}{S},\qquad r_j(U)=\begin{cases}b_j+m_{j,L}U&U\le \underbrace{K_j}_{\text{기준량당 비율}}\\b_j+m_{j,L}K_j+m_{j,H}(U-K_j)&U>K_j\end{cases}`}
+        annotatedFormula={String.raw`U=\underbrace{\frac{B}{S}}_{\text{빌려 간 비율}},\qquad r_j(U)=\begin{cases}\underbrace{b_j+m_{j,L}U}_{\text{kink 전 완만한 구간}}&U\le K_j\\b_j+m_{j,L}K_j+\underbrace{m_{j,H}(U-K_j)}_{\text{kink 초과분 가파름}}&U>K_j\end{cases}`}
         operations={[
-          { expression: String.raw`K_j`, annotation: ["model kink이(가) 식의 결과에 기여하는 방식을","계산합니다.","두 curve가 U를 공유하지만 각각","base·kink·low/high slope를 가집니다."] },
+          { expression: String.raw`\frac{B}{S}`, annotation: ["index로 전진시킨 borrow 총량을","supply 총량으로 나눈 utilization","S=0이면 0을 반환"] },
+          { expression: String.raw`b_j+m_{j,L}U`, annotation: ["supply·borrow가 각자 base와 low slope로","U에 비례해 오릅니다"] },
+          { expression: String.raw`m_{j,H}(U-K_j)`, annotation: ["kink K를 넘은 만큼만 high slope 적용","예: U=90%, K=80%면 supply","1%+3%·0.8+20%·0.1=5.4%, borrow 16%"] },
         ]}
         terms={[
           { symbol: "B,S", name: "present-value totals", description: "Base borrow·supply principal을 각각 index로 전진시킨 총량입니다." },

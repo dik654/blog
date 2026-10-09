@@ -73,7 +73,7 @@ export default function IndustrialRevolutionWagesAndEnergyArticle() {
 
       <LessonSection id="source" level="5" title="8. 고임금·저에너지 가격 설명을 원 논문에서 확인합니다" bridge="영국의 상대 가격이 노동 절약 기술의 유인을 만들었다는 가설을 확인했습니다. 생산성과 임금이 실제로 같은 속도였는지 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">경제사가 로버트 앨런은 18세기 영국의 임금이 국제적으로 높고 에너지가 싸서, 자본과 에너지로 노동을 대신하는 기술이 수익성 있어졌다고 설명합니다. 그는 이 가격 구조 자체도 국제 교역의 성공, 중상주의와 제국의 결과였다고 연결합니다.</p>
+          <p className="leading-8">경제사가 로버트 앨런은 주로 남성 건축 노동자의 임금 계열에 기대어, 18세기 영국의 임금이 국제적으로 높고 에너지가 싸서, 자본과 에너지로 노동을 대신하는 기술이 수익성 있어졌다고 설명합니다. 그는 이 가격 구조 자체도 국제 교역의 성공, 중상주의와 제국의 결과였다고 연결합니다.</p>
           <p className="leading-8">우리 가정의 주급 8.33 문턱은 그 논문의 실측값이 아닙니다. 논문이 제시한 상대 가격의 작동 방식을 눈에 보이게 만든 작은 모델입니다. 실제 역사 주장은 도시별 임금, 연료 가격, 기계의 성능과 사용 범위를 자료로 확인해야 합니다.</p>
         </div>
         <SourceApplication source="Robert C. Allen · Economic History Review 64(2)" excerpt="wages were very high ... and energy was very cheap" application="주급 10과 석탄비 15인 가정에서는 기계 비용 90이 사람 비용 100보다 낮아지지만, 어느 값 하나만 바뀌어도 채택 문턱이 달라집니다." />
@@ -82,22 +82,25 @@ export default function IndustrialRevolutionWagesAndEnergyArticle() {
 
       <LessonSection id="comparison" level="6" title="9. 1770~1840년 생산성과 임금의 다른 속도를 대조합니다" bridge="산업화 초기의 생산과 생활이 늦고 고르지 않게 변했다는 자료를 확인했습니다. 영국 경험을 일반화할 수 있는 범위를 정합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">앨런의 장기 자료에서는 1770을 100으로 놓았을 때 1840년 실질 국내총생산/노동자가 143.9, 실질 소비 임금이 127.1입니다. 70년 동안 생산성이 늘었지만 소비할 수 있는 임금은 더 느리게 움직였습니다. 같은 기간 안에서도 10년 단위 변화는 고르지 않았습니다.</p>
-          <p className="leading-8">다른 생활 수준 연구는 1830~1840년대 농업 가구와 광업·제조 가구의 소득과 식단이 크게 달랐고, 산업 지역의 높은 가구소득 일부가 어린 자녀의 노동에서 왔음을 보여 줍니다. 평균 실질임금 상승을 모두의 같은 개선으로 읽을 수 없습니다.</p>
+          <p className="leading-8">숫자부터 보겠습니다. 앨런의 2009년 논문 「엥겔스의 정체(Engels' pause)」는 크래프츠·할리의 영국 국내총생산 추정으로 1780~1840년 노동자당 산출이 46% 늘었고, 같은 기간 파인스타인의 실질임금 지수는 12%만 올랐다고 적습니다. 1780년을 100으로 놓으면 1840년 노동자당 산출은 146, 실질임금은 112입니다.</p>
+          <p className="leading-8">앨런의 2024년 논문도 산업혁명기(1770~1840)에 노동자당 산출은 늘었는데 평균 실질임금은 거의 평평했다고 정리합니다. 따라서 60년 동안 생산성이 늘었어도 소비할 수 있는 임금은 훨씬 느리게 움직였다고 읽어야 합니다.</p>
+          <p className="leading-8">에마 그리핀의 생활 수준 연구는 1830~1840년대 농업 가구와 광업·제조 가구의 소득과 식단이 크게 달랐고, 산업 지역의 높은 가구소득 일부가 어린 자녀의 노동에서 왔음을 보여 줍니다. 평균 실질임금 상승을 모두의 같은 개선으로 읽을 수 없습니다.</p>
         </div>
-        <SourceApplication source="Oxford Open Economics · Table 2" excerpt="1770 = 100" application="1840년 생산성 143.9와 소비 임금 127.1을 같은 기준년에서 비교하면 방향은 같아도 속도와 분배가 다름을 볼 수 있습니다." />
-        <CitationBlock source="Robert C. Allen, Technical change, globalization, and the labour market, 2024" citeKey={2} href="https://academic.oup.com/ooec/article/3/Supplement_1/i178/7708096">1620년 이후 영국·미국의 생산성과 임금을 장기 구간으로 비교하며 1770~1840년의 느린 임금 성장을 다룹니다.</CitationBlock>
-        <CitationBlock source="Sara Horrell & Jane Humphries, Past & Present 239, 2018" citeKey={3} href="https://academic.oup.com/past/article/239/1/71/4794719">19세기 가구 예산과 자서전을 함께 사용해 지역·성별·나이에 따른 식단과 생활 차이를 분석합니다.</CitationBlock>
+        <SourceApplication source="Oxford Open Economics · Fig. 5" excerpt="the average wage level remained unchanged even as output per worker rose (Fig. 5)" application="1780=100일 때 1840년 노동자당 산출 146과 실질임금 112를 같은 기준년에서 비교하면 방향은 같아도 속도와 분배가 다름을 볼 수 있습니다." />
+        <CitationBlock source="Robert C. Allen, Technical change, globalization, and the labour market, 2024" citeKey={2} href="https://academic.oup.com/ooec/article/3/Supplement_1/i178/7708096">1620년 이후 영국·미국의 생산성과 임금을 장기 구간으로 비교하며 1770~1840년의 느린 임금 성장을 다룹니다. 1770~1840 구간은 그림 5(출처 Allen 2017)로만 제시되고 표 수치는 없습니다. 46%와 12%는 Allen, Engels' pause(2009, nuffield.ox.ac.uk 사본)에서 옮겼습니다(확인일 2026-10-09).</CitationBlock>
+        <CitationBlock source="Emma Griffin, Diets, Hunger and Living Standards During the British Industrial Revolution, Past & Present 239(1), 2018, pp. 71–111" citeKey={3} href="https://academic.oup.com/past/article/239/1/71/4794719">19세기 가구 예산과 자서전을 함께 사용해 지역·성별·나이에 따른 식단과 생활 차이를 분석합니다. 1830~40년대 농업 가구 주 소득 11실링 6펜스 대 광업 가구 29실링, 산업 지역 아동 소득 약 40% 비중이 이 논문에 있습니다(저자는 Crossref 10.1093/pastj/gtx061로 확인, 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 영국 한 사례를 산업화의 보편 법칙으로 만들지 않습니다" bridge="기술 채택의 가격 가설과 생활 결과의 지역 차이를 구분했습니다. 아래 질문으로 손익 문턱과 역사적 한계를 다시 확인합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">산업화는 영국에서 한 번 완성되어 다른 곳으로 복사된 단일 과정이 아닙니다. 중국·인도·일본·유럽 대륙·아메리카의 에너지, 노동, 국가 재정, 제국 관계, 토지와 시장 조건이 달랐습니다. 어떤 지역은 기술을 바꾸어 채택했고 어떤 지역은 국가가 자본과 기반 시설을 집중했습니다.</p>
           <p className="leading-8">또한 값싼 면화와 원료, 노예제와 식민지 시장, 지식과 숙련, 특허와 신용을 가격표의 바깥으로 밀어내면 영국의 비용 우위가 어디서 왔는지 놓칩니다. 고임금·싼 에너지는 검증할 설명 축이지 모든 원인을 대신하는 결론이 아닙니다.</p>
+          <p className="leading-8">그 설명 축의 전제인 임금 자료 자체도 반론을 받았습니다. 존 스티븐슨의 「'실질' 임금? 런던 건축업의 도급업자·노동자와 임금, 1650~1800」(Economic History Review 71(1))은 기관 기록에 남은 임금이 대형 건축 도급업자가 등장한 17세기 이후의 계약 구조를 반영한 값이라, 런던 건축 노동자가 실제로 받은 임금은 현재 추정보다 상당히 낮았다고 봅니다.</p>
+          <p className="leading-8">제인 험프리스와 벤저민 슈나이더의 「산업혁명을 잣다(Spinning the industrial revolution)」(Economic History Review 72(1))는 산업화의 선도 부문이던 손방적에 '고임금 경제'가 없었다고 봅니다. 여성과 아동이 주로 맡은 방적은 생산성과 임금이 모두 낮았고, 제니 방적기와 수력 방적기가 나오기 전에 임금이 크게 오르지도 않았다는 것입니다. 두 연구의 요지는 Crossref에 실린 초록으로 확인했습니다(확인일 2026-10-09).</p>
         </div>
         <ReviewPrompts questions={[
           "주급 w일 때 기계 방식이 사람 10명보다 싸지는 문턱은 어떻게 구하나요? (답: 7절)",
-          "1770~1840년의 생산성과 소비 임금 지수는 같은 방향 속에서도 무엇이 달랐나요? (답: 9절)",
+          "1780~1840년 노동자당 산출과 실질임금은 같은 방향 속에서도 무엇이 달랐나요? (답: 9절)",
           "고임금·싼 에너지 설명만으로 영국 산업화를 닫을 수 없는 이유는 무엇인가요? (답: 10절)",
         ]} />
       </LessonSection>

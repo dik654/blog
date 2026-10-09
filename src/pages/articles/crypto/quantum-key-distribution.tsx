@@ -231,7 +231,7 @@ export default function Article() {
         </div>
         <CitationBlock source="NSA · QKD and Quantum Cryptography" citeKey={7} href="https://www.nsa.gov/Cybersecurity/Quantum-Key-Distribution-QKD-and-Quantum-Cryptography-QC/">2026-10-04 확인. NSS 대상 결론과 구현·신뢰 중계·가용성 한계에 한정해 읽었습니다.</CitationBlock>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">마지막은 상대 인증입니다. ITU-T X.1711은 2026-03-16 승인된 권고이며 §7.2.2는 공개 대화의 출처와 무결성 확인을 요구합니다. 미리 공유한 키로 메시지를 인증하거나, 양자내성 서명으로 상대를 인증할 수 있습니다. 후자를 택하면 인증에는 해당 서명의 계산상 가정이 들어갑니다. 키 생성 장치만으로 모든 보안이 정보이론적으로 보장되는 것은 아닙니다.</p>
+          <p className="leading-8">마지막은 상대 인증입니다. ITU-T X.1711은 2026년 3월 승인된 권고(ITU 권고 목록의 판 표기 03/26 기준, 승인 일자는 확인하지 못함)이며 §7.2.2는 공개 대화의 출처와 무결성 확인을 요구합니다. 미리 공유한 키로 메시지를 인증하거나, 양자내성 서명으로 상대를 인증할 수 있습니다. 후자를 택하면 인증에는 해당 서명의 계산상 가정이 들어갑니다. 키 생성 장치만으로 모든 보안이 정보이론적으로 보장되는 것은 아닙니다.</p>
           <p className="leading-8">인증용 비밀을 소비하는 방식에서는 다음 실행에 남겨 둘 몫도 고려합니다. 키를 얻은 뒤에는 암호화 알고리즘·키 보관·재사용 방지·삭제가 필요합니다. QKD가 응용 데이터의 암호화나 공개 서명 자체를 대신하지는 않습니다.</p>
         </div>
         <div id="paper-x1711" className="scroll-mt-20"><CitationBlock source="ITU-T X.1711 (03/2026) · §1, §7.2.2 Note 4" citeKey={8} href="https://www.itu.int/rec/T-REC-X.1711">§7.2.2의 PQC 인증 결합과 현재 판을 대조했습니다. §1은 개별 보안 증명·구현 보안을 이 프레임워크의 규정 범위에서 제외하므로 제품 안전 인증서로 읽지 않습니다.</CitationBlock></div>

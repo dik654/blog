@@ -12,10 +12,11 @@ export default function Utf8() {
       <ExplainedFormula
         question="UTF-8 byte 수가 문자와 언어에 따라 달라지는 이유는 무엇일까?"
         idea={<>작은 code point는 payload bit가 적어 한 byte에 들어가고, 더 큰 번호는 payload를 여러 byte에 나눕니다. ASCII는 1 byte, 한글 음절 ‘가’ U+AC00은 3 byte입니다.</>}
-        formula={String.raw`\mathrm{UTF8}(U+0041)=\mathtt{41}_{16}\;(1\ byte),\qquad \mathrm{UTF8}(U+AC00)=\mathtt{EA\ B0\ 80}_{16}\;(3\ bytes)`}
-        annotatedFormula={String.raw`\mathrm{UTF8}(U+0041)=\underbrace{\mathtt{41}_{16}\;(1\ byte),\qquad \mathrm{UTF8}(U+AC00)=\mathtt{EA\ B0\ 80}_{16}\;(3\ bytes)}_{\text{code point A 계산}}`}
+        formula={String.raw`\mathrm{UTF8}(U+0041)=\mathtt{41}_{16}\;(1\text{ byte}),\qquad \mathrm{UTF8}(U+AC00)=\mathtt{EA\ B0\ 80}_{16}\;(3\text{ bytes})`}
+        annotatedFormula={String.raw`\mathrm{UTF8}(\underbrace{U+0041}_{\text{문자 A}})=\underbrace{\mathtt{41}_{16}\;(1\text{ byte})}_{\text{ASCII 번호 그대로}},\qquad \mathrm{UTF8}(\underbrace{U+AC00}_{\text{한글 가}})=\underbrace{\mathtt{EA\ B0\ 80}_{16}\;(3\text{ bytes})}_{\text{payload를 세 byte에 분할}}`}
         operations={[
-          { expression: String.raw`\mathtt{41}_{16}\;(1\ byte),\qquad \mathrm{UTF8}(U+AC00)=\mathtt{EA\ B0\ 80}_{16}\;(3\ bytes)`, annotation: ["code point A이(가) 식의 결과에 기여하는 방식을","계산합니다.","작은 code point는 payload bit가 적어 한","byte에 들어가고, 더 큰 번호는 payload를 여러"] },
+          { expression: String.raw`\mathtt{41}_{16}\;(1\text{ byte})`, annotation: ["작은 번호는 payload bit가 적어", "ASCII와 같은 한 byte 0x41에 들어감"] },
+          { expression: String.raw`\mathtt{EA\ B0\ 80}_{16}\;(3\text{ bytes})`, annotation: ["U+AC00은 payload bit가 많아", "0xEA 0xB0 0x80 세 byte에 나눠 담음", "그래서 한글 text는 byte가 길어짐"] },
         ]}
         terms={[
           { symbol: "U+0041", name: "code point A", description: "ASCII와 같은 번호를 유지해 UTF-8 한 byte 0x41이 됩니다." },

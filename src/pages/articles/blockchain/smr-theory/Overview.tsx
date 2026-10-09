@@ -40,12 +40,12 @@ export default function Overview() {
           S_m&=\delta^*(S_0,[c_1,\ldots,c_m])
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          (S_i,r_i)&=\underbrace{\delta(S_{i-1},c_i)}_{\text{ordered command 계산}}\\
-          S_m&=\underbrace{\delta^*(S_0,[c_1,\ldots,c_m])}_{\text{오른쪽 항으로 결과 계산}}
+          \underbrace{(S_i,r_i)}_{\text{새 state·결과}}&=\delta(\underbrace{S_{i-1}}_{\text{직전 state}},\underbrace{c_i}_{\text{log i번 명령}})\\
+          S_m&=\delta^*(\underbrace{S_0}_{\text{공통 시작 state}},\underbrace{[c_1,\ldots,c_m]}_{\text{committed prefix}})
         \end{aligned}`}
         operations={[
-          { expression: String.raw`\delta(S_{i-1},c_i)`, annotation: ["ordered command이(가) 식의 결과에 기여하는","방식을 계산합니다.","State transition δ가 결정적이면 동일한 시작","state에 동일한 ordered command prefix를"] },
-          { expression: String.raw`\delta^*(S_0,[c_1,\ldots,c_m])`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","State transition δ가 결정적이면 동일한 시작","state에 동일한 ordered command prefix를","하나씩 적용한 결과가 귀납적으로 같습니다."] },
+          { expression: String.raw`\delta(S_{i-1},c_i)`, annotation: ["결정적 transition으로 명령 하나 적용","clock·randomness는 command에 고정"] },
+          { expression: String.raw`\delta^*(S_0,[c_1,\ldots,c_m])`, annotation: ["같은 시작 state에 같은 prefix를","하나씩 적용하면 귀납적으로 같은 S_m","digest가 갈리면 세 조건을 각각 검사"] },
         ]}
         terms={[
           { symbol: "S_0,S_i", name: "replica state", description: "공통 initial state와 i번째 command 적용 뒤 state입니다." },

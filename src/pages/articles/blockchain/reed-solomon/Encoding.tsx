@@ -31,9 +31,10 @@ export default function Encoding() {
         question="Coefficient source가 어떤 codeword로 변환되는지 한 식으로 어떻게 고정할까요?"
         idea="k개 source symbol을 degree&lt;k polynomial의 coefficient로 놓고 profile에 기록한 서로 다른 n개 point에서 평가합니다."
         formula={String.raw`p(x)=\sum_{j=0}^{k-1}m_jx^j,\qquad c_i=p(\alpha_i)\quad(0\le i<n)`}
-        annotatedFormula={String.raw`p(x)=\underbrace{\sum_{j=0}^{k-1}m_jx^j,\qquad c_i=p(\alpha_i)\quad(0\le i<n)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`p(x)=\underbrace{\sum_{j=0}^{k-1}m_jx^j}_{\text{source k개를 계수로}},\qquad c_i=\underbrace{p(\alpha_i)}_{\text{고정 점에서 평가}}\quad\underbrace{(0\le i<n)}_{\text{shard n개}}`}
         operations={[
-          { expression: String.raw`\sum_{j=0}^{k-1}m_jx^j,\qquad c_i=p(\alpha_i)\quad(0\le i<n)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","k개 source symbol을 degree k","polynomial의 coefficient로 놓고","profile에 기록한 서로 다른 n개 point에서"] },
+          { expression: String.raw`\sum_{j=0}^{k-1}m_jx^j`, annotation: ["source symbol k개를 degree<k 다항식의","계수로 놓습니다"] },
+          { expression: String.raw`p(\alpha_i)`, annotation: ["profile이 순서까지 고정한 n개 점에서","평가해 shard index i에 결속합니다","GF(7) 예: k=2, n=4, rate 1/2"] },
         ]}
         terms={[
           { symbol: "m_j", name: "source symbol", description: "같은 field에서 해석한 j번째 coefficient입니다." },

@@ -38,15 +38,11 @@ y&=\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x\\
 \nabla_{q_W,s_W}\mathcal L&=0\\
 \nabla_{A,B}\mathcal L&\ne0
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-y&=\underbrace{\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x}_{\text{quantized base storage 계산}}\\
-&\quad+\frac{\alpha}{r}BAx\\
-\nabla_{q_W,s_W}\mathcal L&=\underbrace{0}_{\text{quantized base storage 계산}}\\
-\nabla_{A,B}\mathcal L&\ne0
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y&=\underbrace{\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x}_{\text{4-bit 저장, bf16 등으로 연산}}\\&\quad+\underbrace{\frac{\alpha}{r}BAx}_{\text{학습되는 adapter}}\\\nabla_{q_W,s_W}\mathcal L&=\underbrace{0}_{\text{base code는 고정}}\\\nabla_{A,B}\mathcal L&\ne\underbrace{0}_{\text{gradient는 A·B로}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x`, annotation: ["quantized base storage이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantized code와 scale로 base","weight를 저장하고 forward 때 compute"] },
-          { expression: String.raw`0`, annotation: ["quantized base storage이(가) 식의 결과에","기여하는 방식을 계산합니다.","Quantized code와 scale로 base","weight를 저장하고 forward 때 compute"] },
+          { expression: String.raw`\operatorname{cast}_{c}\!\bigl(D(q_W,s_W)\bigr)x`, annotation: ["low-bit code와 scale로 저장한 base를", "forward 때 compute dtype으로 복원해", "matmul합니다"] },
+          { expression: String.raw`\nabla_{q_W,s_W}\mathcal L`, annotation: ["frozen base엔 gradient·optimizer를", "만들지 않아 quantizer error를", "직접 고치지 않습니다"] },
+          { expression: String.raw`\nabla_{A,B}\mathcal L`, annotation: ["loss gradient는 그 layer를 지나", "higher precision인 adapter A와 B에", "도달해 학습됩니다"] },
         ]}
         terms={[
           { symbol: "q_W,s_W", name: "quantized base storage", description: "Low-bit code와 block/group별 quantization metadata입니다." },

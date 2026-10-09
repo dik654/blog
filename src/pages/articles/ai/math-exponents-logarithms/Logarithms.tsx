@@ -15,9 +15,10 @@ export default function Logarithms() {
         question="a를 몇 제곱해야 양수 x가 되는가?"
         idea={<>로그값 y를 지수 자리에 되돌려 넣었을 때 aʸ=x가 되도록 정의합니다.</>}
         formula={String.raw`y=\log_a x\quad\Longleftrightarrow\quad a^y=x`}
-        annotatedFormula={String.raw`y=\underbrace{\log_a x\quad\Longleftrightarrow\quad a^y=x}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`\underbrace{y=\log_a x}_{\text{몇 제곱인지 묻기}}\quad\Longleftrightarrow\quad \underbrace{a^y=x}_{\text{그 지수로 되돌리기}}`}
         operations={[
-          { expression: String.raw`\log_a x\quad\Longleftrightarrow\quad a^y=x`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","로그값 y를 지수 자리에 되돌려 넣었을 때 aʸ=x가 되도록","정의합니다."] },
+          { expression: String.raw`y=\log_a x`, annotation: ["a를 몇 번 곱해야 x가 되는지 묻습니다","2를 세 번 곱하면 8이므로 log₂8=3"] },
+          { expression: String.raw`a^y=x`, annotation: ["답 y를 지수 자리에 넣으면 x로 돌아옵니다","10⁻²=0.01이므로 log₁₀0.01=−2"] },
         ]}
         terms={[
           { symbol: "x", name: "logarithm input", description: "0보다 커야 하는 원래 scale의 값입니다." },

@@ -23,7 +23,7 @@ const data: TraditionArticleData = {
       "그렇다고 부당한 대우를 참고 개인의 마음만 바꾸라는 뜻은 아닙니다. 조건을 분석하면 상대의 행동, 조직의 권력과 내 반응을 구분해 바꿀 수 있습니다. 무아는 책임 주체를 없애는 면허가 아니라 고정된 정체성 없이도 원인과 결과를 보는 문제를 남깁니다.",
     ] },
     { id: "names", level: "3", title: "6. 다섯 집합·무상·무아에 이름을 붙입니다", bridge: "괴로움을 줄이는 실제 목적과 사회적 조건을 함께 봤습니다. 용어를 한 번 붙인 뒤 다시 10초 사례로 돌아갑니다.", paragraphs: [
-      "다섯 집합은 몸·물질, 느낌, 지각, 의지적 형성, 의식으로 경험을 분석하는 틀입니다. 무상은 조건 지어진 현상이 생기고 변하고 사라진다는 성격입니다. 무아는 이 집합을 영원하고 독립적이며 완전히 통제되는 자기라고 동일시하기 어렵다는 가르침입니다.",
+      "다섯 집합은 몸·물질, 느낌, 지각, 의지적 형성, 의식으로 경험을 분석하는 틀입니다. 무상은 조건 지어진 현상이 생기고 변하고 사라진다는 성격입니다. 무아는 이 집합을 영원하고 독립적이며 완전히 통제되는 자기라고 동일시하기 어렵다는 가르침입니다. 팔리어로는 집합을 khandha, 무상을 anicca, 무아를 anattā라고 부릅니다. SN 22.59의 경명도 ‘무아의 특징 경(Anattalakkhaṇa Sutta)’이고, 경은 무상(anicca)에서 곧바로 무아로 건너뛰지 않고 그 사이에 괴로움(고, dukkha)을 따로 묻는 3단계 검사를 씁니다.",
       "무아와 자아가 전혀 없다는 현대 문장을 무조건 같은 것으로 두면 원문의 수행 맥락과 해석 논쟁을 놓칩니다. ‘이것은 내 것이고 이것이 나다’라는 동일시를 각 집합에 대입해 검사하는 절차를 먼저 봅니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 느낌에서 자동 반응으로 가는 사이에 관찰을 넣습니다", bridge: "세 개념을 경험 검사로 되돌렸습니다. 관찰이 조건 사슬의 다음 부분을 어떻게 바꾸는지 봅니다.", paragraphs: [
@@ -61,7 +61,7 @@ const data: TraditionArticleData = {
     { term: "무아", description: "다섯 집합을 영원하고 독립적이며 완전히 통제되는 자기라고 동일시하기 어렵다는 가르침입니다.", example: "느낌에 사라지라고 명령해도 뜻대로 되지 않음을 봅니다.", boundary: "행위의 책임·인과·관습적으로 부르는 사람까지 모두 없다는 허무주의와 같지 않습니다." },
   ] },
   sources: [
-    { source: "SuttaCentral · SN 22.59", excerpt: "Is it fitting to regard it as self?", application: "다섯 집합마다 변화·고통·통제 질문을 10초의 몸·느낌·지각·형성·의식에 반복해 대입합니다.", citation: "Saṁyutta Nikāya 22.59, translated by Bhikkhu Sujato", href: "https://suttacentral.net/SN22.59/en/sujato?reference=main", note: "팔리 경전과 번역, 문단 대응을 제공하는 SuttaCentral의 공개 원문 페이지입니다." },
+    { source: "SuttaCentral · SN 22.59", excerpt: "is it fit to be regarded thus: ‘This is mine, I am this, this is my self’?", application: "다섯 집합마다 변화·고통·통제 질문을 10초의 몸·느낌·지각·형성·의식에 반복해 대입합니다.", citation: "Saṁyutta Nikāya 22.59, translated by Bhikkhu Sujato", href: "https://suttacentral.net/SN22.59/en/sujato?reference=main", note: "팔리 경전과 번역, 문단 대응을 제공하는 SuttaCentral의 공개 원문 페이지입니다. 인용문은 Sujato 역 6.6–6.7 문단이며, 자바스크립트 앱이라 SuttaCentral bilara API로 전문을 대조했습니다(2026-10-09)." },
     { source: "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy", excerpt: "five types of aggregates", application: "무아의 형이상학적 해석과 수행 목적, 인격 연속성 논쟁을 나눠 허무주의로 단순화하지 않습니다.", citation: "Stanford Encyclopedia of Philosophy, Mind in Indian Buddhist Philosophy", href: "https://plato.stanford.edu/entries/mind-indian-buddhism/", note: "다섯 집합·무아·의존 발생과 후대 학파의 쟁점을 검토하는 동료 검토 철학 개관입니다." },
   ],
   review: [

@@ -19,11 +19,11 @@ export default function MNIST() {
         question="784→128→10 MLP가 학습해야 하는 parameter는 몇 개인가?"
         idea={<>Dense layer마다 weight 수 Din×Dout과 output bias Dout을 더합니다. Activation은 이 예에서 trainable parameter를 추가하지 않습니다.</>}
         formula={String.raw`\begin{aligned}N_1&=784\times128+128\\N_2&=128\times10+10\\N_\theta&=N_1+N_2=101{,}770\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}N_1&=\underbrace{784\times128+128}_{\text{first-layer weights 계산}}\\N_2&=\underbrace{128\times10+10}_{\text{output layer 계산}}\\N_\theta&=\underbrace{N_1+N_2=101{,}770}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}N_1&=\underbrace{784\times128}_{\text{pixel–hidden 연결}}+\underbrace{128}_{\text{hidden bias}}\\N_2&=\underbrace{128\times10}_{\text{hidden–class 연결}}+\underbrace{10}_{\text{class bias}}\\N_\theta&=N_1+N_2=\underbrace{101{,}770}_{\text{학습할 parameter}}\end{aligned}`}
         operations={[
-          { expression: String.raw`784\times128+128`, annotation: ["first-layer weights이(가) 식의 결과에","기여하는 방식을 계산합니다.","Dense layer마다"] },
-          { expression: String.raw`128\times10+10`, annotation: ["output layer이(가) 식의 결과에 기여하는 방식을","계산합니다.","Dense layer마다"] },
-          { expression: String.raw`N_1+N_2=101{,}770`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Dense layer마다"] },
+          { expression: String.raw`784\times128+128`, annotation: ["hidden unit 128개가 pixel 784개 전부와", "연결: 100,352 weight + 128 bias", "N_1 = 100,480"] },
+          { expression: String.raw`128\times10+10`, annotation: ["hidden 128개를 class logit 10개로", "1,280 weight + 10 bias = 1,290"] },
+          { expression: String.raw`N_1+N_2=101{,}770`, annotation: ["100,480 + 1,290 = 101,770", "activation은 parameter를 더하지 않음", "batch size도 이 값을 바꾸지 않습니다"] },
         ]}
         terms={[
           { symbol: "784\\times128", name: "first-layer weights", description: "각 hidden unit이 모든 input pixel과 연결되는 parameter 수입니다." },

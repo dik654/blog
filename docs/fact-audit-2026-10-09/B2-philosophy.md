@@ -1,6 +1,68 @@
 # B2-philosophy 감사 원장
 확인일: 2026-10-09. 글 36편. 열어 본 URL 158개(성공 125 / 실패 33).
 
+## 적용 결과
+적용일: 2026-10-09. 발견 53건 중 글 본문 파일에 직접 적용 49건(그중 12건은 공용 파일 교체도 함께 필요), 공용 파일 목록으로만 이관 4건(#12·#22·#31·#32), 보류 0건. 일부만 적용하고 나머지를 후속 작업으로 남긴 것 1건(#40). 공용 파일 교체 문자열은 이 원장 끝 `## 공용 파일 수정 목록`에 있다.
+
+| # | 조치 | 비고 |
+|---|---|---|
+| 1 | 적용 | 8절 bridge "스무 번째" → "20개 논의 가운데 … 열일곱 번째" |
+| 2 | 적용 + 공용파일 목록으로 이관 | tsx sources[0]: 제목·excerpt를 LOC 레코드 제목으로, citation에 1884–85 인쇄본·92쪽, note를 인쇄본·Wayback 2차 확인으로. evidence(kind→"비교 사료")·learning 문장은 공용 목록 |
+| 3 | 적용 + 공용파일 목록으로 이관 | tsx SourceApplication·CitationBlock을 scientific-explanation-20th로, excerpt를 원문 연속 문장으로 |
+| 4 | 적용 | 한비자: 「정법」에서 상앙의 법·신불해의 술 종합, 신도의 세는 「난세」 |
+| 5 | 적용 | MIT 과정 후반(더글러스·뒤부아·칸트 인종론)을 적고 이 글의 범위를 근대 인식론 구간으로 한정 |
+| 6 | 적용 + 공용파일 목록으로 이관 | 절 제목 "플라톤에서 뒤부아·보부아르까지", "such as" 예시 열거임을 명시. articles.ts 절 제목은 공용 목록 |
+| 7 | 적용 + 공용파일 목록으로 이관 | 본문·numericCase·3절 제목을 "8~10세기(절정 9세기)"로. learning·topology·articles.ts·registrations는 공용 목록 |
+| 8 | 적용 | "과제" → "읽기 자료"(엘리자베스 서신 선집, 캐번디시 Observations pp.125–49). sources는 2개 고정이라 href는 syllabus 유지, 본문에 readings 페이지 명시 |
+| 9 | 적용 | 멈춘 시계 = 러셀(Human Knowledge, 1948), 열 개 설정만 가정. 1절 도입문도 수정 |
+| 10 | 적용 | "주석 전통" → 「경설상」의 소고·대고, CitationBlock 제목·설명 수정 |
+| 11 | 적용 + 공용파일 목록으로 이관 | modern-expansion-data sources: Williamson 논문으로 귀속, note에서 "대학 자료" 삭제 |
+| 12 | 공용파일 목록으로 이관 | article-evidence.ts만 해당 |
+| 13 | 적용 | "완성" → "지고(至高, param)에 이름, 주석 전통은 해탈로 읽음" |
+| 14 | 적용 + 공용파일 목록으로 이관 | href를 /read/srimad/2/47, /read/srimad/3/19로 |
+| 15 | 적용 | 2.47 excerpt를 Sivananda 낱말 풀이 연속 구간으로, 3.19는 산스크리트 원문으로 |
+| 16 | 적용 | 『순자』 예론 excerpt를 페이지의 한문 원문(简体, Wayback 사본 그대로)으로, note에 영어 번역 없음 명시 |
+| 17 | 적용 | Legge 37장 원문 문장으로 교체 |
+| 18 | 적용 | Sujato 6.6–6.7 원문으로 교체 |
+| 19 | 적용 | SEP African Ethics의 실제 구절로 교체(2026-10-09 현행 항목에서도 문자열 확인) |
+| 20 | 적용 | Abbott 역 원문으로 교체, 출처 라벨에 역자 |
+| 21 | 적용 | Chase 역 원문으로 교체(Gutenberg 8438에서 문자열 재확인), Ross 역 문구는 CitationBlock 설명에 비교로 |
+| 22 | 공용파일 목록으로 이관 | tsx는 이미 .htm. evidence·learning만 해당 |
+| 23 | 적용 + 공용파일 목록으로 이관 | tsx CitationBlock href .htm |
+| 24 | 적용 + 공용파일 목록으로 이관 | 두 tsx CitationBlock href를 DOI로 |
+| 25 | 적용 + 공용파일 목록으로 이관 | Rackham 역 원문으로 excerpt 교체(Perseus에서 재확인) |
+| 26 | 적용 | "a well-known distinction between numerical and qualitative identity" (SEP에서 재확인) |
+| 27 | 적용 | Austin 문장으로 교체(SEP에서 재확인) |
+| 28 | 적용 | "how to square the allegedly perceptual basis …"(SEP에서 재확인) |
+| 29 | 적용 | SEP 첫 문장 연속 구간으로 교체(아포스트로피는 원문의 ’) |
+| 30 | 적용 | "They took away the old timbers from time to time"(Perseus에서 재확인) |
+| 31 | 공용파일 목록으로 이관 | 404·아카이브 없음 → evidence 항목 삭제 제안 |
+| 32 | 공용파일 목록으로 이관 | 위와 같음 |
+| 33 | 적용 | excerpt "frustration and oppression", note에 노트 제목 |
+| 34 | 적용 + 공용파일 목록으로 이관 | Legge 실제 문장, href를 확인된 /analects/wei-zheng로, note에 Wayback 2차 확인 |
+| 35 | 적용 | SEP spr2023 연속 문장 "constrained by our facticity …"(재확인) |
+| 36 | 적용 | 8절에 2차 원인 허용 문단 추가 |
+| 37 | 적용 | 6절에 오크라→줄일 수 없는 존중·권리, 8절에 위레두·기에케 이름 |
+| 38 | 적용 | 8절에 萬物將自化, terms에 自然(제목 "네 개념"으로) |
+| 39 | 적용 | 3절 문단과 terms에 에픽테토스 『엥케이리디온』 1장 |
+| 40 | 일부 적용 / 후속 작업 | 『니야야 수트라』·바츠야야나(4세기)·『프라마나사뭇차야』·『프라마나바르티카』 명시(SEP에서 확인). 수트라 장절 번호 1.1.3은 1차 원문 미확인이라 넣지 않음 → 후속 작업 |
+| 41 | 적용 | 세 명제(세계 영원성·보편자만 앎·육체 부활 부정) |
+| 42 | 적용 | 1903·1952·1961 저작명 |
+| 43 | 적용 | 『탐구』 4절 1부·5절 1부·7절, 『프롤레고메나』(1783) 서문 |
+| 44 | 적용 | 8절에 게티어 사례 Ⅱ(포드·바르셀로나)와 두 전제 문단 |
+| 45 | 적용 + 공용파일 목록으로 이관 | "썩은 나무"→"낡은 목재", 홉스 『물체론』 재조립 변형 문장. sources 2개 고정이라 SEP Material Constitution은 evidence에 추가 제안 |
+| 46 | 적용 | PAP 이름과 Frankfurt 1969 서지 |
+| 47 | 적용 | Wolf 2010과 표어 |
+| 48 | 적용 | Sibley(1959)·Kant(1790, 무관심) |
+| 49 | 적용 | 상호성 조건 추가 |
+| 50 | 적용 | 팔리어 khandha·anicca·anattā, 고(dukkha), 경명 |
+| 51 | 적용 | adhikāra·phala·hetu·akarman·saṅga 병기, 해탈(mokṣa) 정의 |
+| 52 | 적용 | 본문을 SEP가 다루는 오크라로 좁히고, 순숨·호남은 인용 자료에 없어 다루지 않는다고 명시 |
+| 53 | 적용 + 공용파일 목록으로 이관 | SEP Otto Neurath(2026-10-09 열람)로 사회주의 정치 참여·1934/1940 망명·통일과학을 본문에 적고, 근거 항목은 evidence에 추가 제안 |
+
+원장 밖 수정 1건: `epistemology/knowledge-belief-and-luck.tsx` 2절의 오타 "한 minute만" → "1분만".
+
+
 작업 방식: 36편을 6개 묶음(핵심 주제 6편·전통 6편·주제 6편·철학사 A/B/C 각 6편)으로 나눠 병렬 감사한 뒤 합쳤다. 각 글의 조립 tsx·데이터 객체·카탈로그(`src/content/<cat>/index.ts`, `articles.ts`)·`article-evidence.ts`·`article-learning.ts`·`knowledge-graph.ts` 항목을 전부 읽었고, `sources[].href`와 evidence href 전부를 실제로 열었다(WebFetch가 요약만 돌려주는 SEP 장문 페이지는 curl로 받아 excerpt 문자열을 직접 검색). ctext.org·academic.oup.com·loc.gov 등 봇 차단 페이지는 Wayback·Crossref·Wikisource·SuttaCentral API·실브라우저로 2차 확인했다. 글 파일은 수정하지 않았다.
 
 본문 데이터 파일 약칭: `philosophy-history-data.ts` = `src/pages/articles/philosophy-history/philosophy-history-data.ts`, `philosophy-history-expansion-data.ts`·`philosophy-history-modern-expansion-data.ts` = 같은 폴더, `topic-data.ts` = `src/pages/articles/philosophy-topics/topic-data.ts`, `article-evidence.ts`·`article-learning.ts`·`knowledge-graph.ts` = `src/content/`.
@@ -571,3 +633,301 @@
 | https://www.iasp-pain.org/resources/terminology/ | 403 | https://web.archive.org/web/2025/https://www.iasp-pain.org/resources/terminology/ (200)에서 IASP 2020 정의 주석 확인 |
 | https://www.gutenberg.org/cache/epub/36120/pg36120.txt | 200이나 'Of the Standard of Taste' 미수록 | econlib 원문으로 대체 |
 | https://lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger | 404 | Wayback 스냅샷 없음(archive.org/wayback/available 응답 비어 있음) |
+
+## 후속 작업
+- #40 『니야야 수트라』 1.1.3(네 프라마나 열거 조목)의 장절 번호: 이번에 연 1차 원문(archive.org djvu 404, univie PDF 텍스트 추출 불가)으로 확인하지 못해 본문에 번호를 넣지 않았다. 원문이나 신뢰할 번역으로 확인되면 classical-india 6절에 번호를 더한다. 디그나가 『프라마나사뭇차야』의 해당 장(1장 지각 장)도 같은 방식으로 확인 후 추가.
+- 글별 검증 기록의 권고 수준 결손(발견 표에 올라 있지 않아 이번에 손대지 않음): mind-and-language에 Searle 1980(Behavioral and Brain Sciences 3) 서지 추가, political-philosophy 묵시적 동의 대목에 로크 『통치론』 §119 인용, philosophy-of-science 깃대 반례의 출전 귀속(Bromberger 1966/Salmon 1989), consciousness 8절의 Block 1995 이름, reference-context 9절의 Austin(1962)·Searle 이름, warring-states의 전국시대 연대, ethics 원문 위치(Ak. 4:421, NE 1106b36) 표기.
+- 원장 #16·#17·#34의 ctext 페이지는 라이브가 봇 차단이라 Wayback 사본에서만 문자열을 확인했다. 영어 번역을 인용하고 싶으면 Hutton·Knoblock 등 번역본을 별도 출처(article-evidence)로 올린다.
+- #31·#32: Oxford Lifelong Learning에 대체 과정 페이지가 있는지 확인하지 않고 삭제를 제안했다. 같은 시대 배열을 보여 주는 현행 공개 강의 자료를 찾으면 다시 넣는다.
+
+## 공용 파일 수정 목록
+
+통합자가 위에서부터 순서대로 적용한다. 각 old 문자열은 해당 파일에서 한 번만 나오도록 앞뒤 문맥을 붙였다(2026-10-09 기준 파일에서 확인).
+
+### src/content/article-evidence.ts
+
+**#2 islamic-causation LOC 레코드 (WRONG)**
+```
+old:
+      "kind": "핵심 사료",
+      "label": "Library of Congress · The Incoherence of the Philosophers",
+      "href": "https://www.loc.gov/item/2021666178/",
+      "note": "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다."
+new:
+      "kind": "비교 사료",
+      "label": "Library of Congress · The Incoherence of Philosophers",
+      "href": "https://www.loc.gov/item/2021666178/",
+      "note": "1884~85년 이집트 아랍어 인쇄본(92쪽, Bibliotheca Alexandrina 소장, World Digital Library 디지털화)의 이미지와 서지입니다. 필사본·비판 교정본이 아닙니다. 라이브 페이지 자동 조회 불가, 2026-02-07 Wayback 사본으로 서지 2차 확인(2026-10-09)."
+```
+(`kind`는 `ArticleEvidenceKind` 유니온 안에서 고름: "핵심 사료"→"비교 사료".)
+
+**#3 evidence-models SEP 항목 은퇴 (OUTDATED)**
+```
+old:
+    { kind: "보충 읽기", label: "SEP · Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation/", note: "법칙·통계·인과·통합 설명과 반례의 전문 개관" },
+new:
+    { kind: "보충 읽기", label: "SEP · 20th Century Theories of Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation-20th/", note: "법칙·통계·인과·통합 설명과 반례의 전문 개관. 옛 'Scientific Explanation' 항목은 은퇴 후 이 제목으로 재발행(2026-10-09 확인)" },
+```
+
+**#22 Aristotle NE 경로 통일 (LINK)**
+```
+old:
+href: "https://www.gutenberg.org/files/8438/8438-h/8438-h", note: "덕·성품·습관을 읽는 고전 원문" },
+new:
+href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", note: "덕·성품·습관을 읽는 고전 원문(D. P. Chase 역)" },
+```
+
+**#23 Locke 경로 통일 (LINK)**
+```
+old:
+href: "https://www.gutenberg.org/files/7370/7370-h/7370-h", note: "동의·다수·입법 권한과 공공선의 1차 원문" },
+new:
+href: "https://www.gutenberg.org/files/7370/7370-h/7370-h.htm", note: "동의·다수·입법 권한과 공공선의 1차 원문" },
+```
+
+**#24 OUP 403 → DOI (LINK)**
+```
+old:
+href: "https://academic.oup.com/analysis/article-abstract/23/6/121/109949", note: "정당화된 참인 믿음의 충분성을 흔드는 원 논문" },
+new:
+href: "https://doi.org/10.1093/analys/23.6.121", note: "정당화된 참인 믿음의 충분성을 흔드는 원 논문. 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)" },
+```
+```
+old:
+href: "https://academic.oup.com/mind/article/LIX/236/433/986238", note: "모방 게임과 학습 기계의 원 논문" },
+new:
+href: "https://doi.org/10.1093/mind/LIX.236.433", note: "모방 게임과 학습 기계의 원 논문. 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)" },
+```
+
+**#34 Analects 링크를 확인된 경로로 (LINK, 본문 tsx와 일치)**
+```
+old:
+      "label": "Chinese Text Project · Analects, Wei Zheng",
+      "href": "https://ctext.org/analects/wei-zheng/ens",
+new:
+      "label": "Chinese Text Project · Analects, Wei Zheng",
+      "href": "https://ctext.org/analects/wei-zheng",
+```
+
+**#14 Gita Supersite 빈 SPA 경로 → 실제 구절 경로 (LINK)**
+```
+old:
+      "href": "https://www.gitasupersite.in/dv/bhagavadgita/2.47",
+      "note": "『기타』 2.47의 산스크리트 원문과 전통별 주석을 비교할 수 있는 핵심 문헌 자료입니다."
+new:
+      "href": "https://www.gitasupersite.in/read/srimad/2/47",
+      "note": "『기타』 2.47의 산스크리트 원문과 전통별 주석을 비교할 수 있는 핵심 문헌 자료입니다."
+```
+```
+old:
+      "href": "https://www.gitasupersite.in/dv/bhagavadgita/3.19",
+      "note": "『기타』 3.19의 행위 요가 논증을 확인하는 비교용 핵심 문헌 자료입니다."
+new:
+      "href": "https://www.gitasupersite.in/read/srimad/3/19",
+      "note": "『기타』 3.19의 행위 요가 논증을 확인하는 비교용 핵심 문헌 자료입니다."
+```
+
+**#25 meaning-in-life Perseus는 Rackham 역 (LINK)**
+```
+old:
+      "label": "Aristotle · Nicomachean Ethics, Book I",
+      "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7",
+new:
+      "label": "Aristotle · Nicomachean Ethics, Book I (H. Rackham 역)",
+      "href": "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0054%3Abook%3D1%3Achapter%3D7",
+```
+
+**#45 identity-through-change 홉스 재조립 변형의 근거 추가 (MISSING; 본문 sources는 2개 고정이라 여기에 추가)**
+```
+old:
+      "href": "https://plato.stanford.edu/entries/identity-time/",
+      "note": "시간을 거친 동일성과 지속 이론을 정리한 동료 검토 연구입니다."
+    }
+  ],
+new:
+      "href": "https://plato.stanford.edu/entries/identity-time/",
+      "note": "시간을 거친 동일성과 지속 이론을 정리한 동료 검토 연구입니다."
+    },
+    {
+      "kind": "보충 읽기",
+      "label": "Stanford Encyclopedia of Philosophy · Material Constitution",
+      "href": "https://plato.stanford.edu/entries/material-constitution/",
+      "note": "옛 판자를 모아 다시 짠 두 번째 배는 플루타르코스가 아니라 홉스가 덧붙인 변형이라는 귀속을 확인합니다(2026-10-09)."
+    }
+  ],
+```
+
+**#31 · #32 Oxford 'Hegel to Heidegger' 404, 아카이브 없음 (LINK) — 항목 삭제**
+```
+old:
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger", href: "https://lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger", note: "독일 관념론에서 마르크스·니체·현상학·하이데거까지 이어지는 대학 과정의 시대와 주제 배열을 대조합니다." }
+new:
+(이 줄 전체 삭제. 바로 앞 Recognition 항목 끝의 쉼표는 그대로 둬도 된다)
+```
+```
+old:
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger", href: "https://lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger", note: "독일 관념론에서 현상학과 하이데거로 이어지는 대학 과정의 역사적 배열을 보조 지도로 사용합니다." }
+new:
+(이 줄 전체 삭제)
+```
+
+**#11 · #12 Williamson 논문 귀속 (MISLEADING)**
+```
+old:
+    { kind: "공개 강의", label: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 철학 언어사의 교과 구조로 확인합니다." }
+new:
+    { kind: "후속 분석", label: "Timothy Williamson · How did we get here from there? (Belgrade Philosophical Annual)", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명하는 윌리엄슨의 논문(Oxford 철학과 호스팅 PDF)입니다." },
+    { kind: "보충 읽기", label: "Stanford Encyclopedia of Philosophy · Otto Neurath", href: "https://plato.stanford.edu/entries/neurath/", note: "노이라트의 1921~34년 빈 사회주의 정치 참여, 1934·1940년 망명과 통일과학 운동을 확인합니다(#53, 2026-10-09)." }
+```
+```
+old:
+    { kind: "공개 강의", label: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "형식언어 접근과 Oxford 일상언어철학이 갈라지고 다시 만난 역사적 배열을 확인합니다." }
+new:
+    { kind: "후속 분석", label: "Timothy Williamson · How did we get here from there? (Belgrade Philosophical Annual)", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "형식언어 접근과 Oxford 일상언어철학이 갈라지고 다시 만난 역사를 정리한 윌리엄슨의 논문(Oxford 철학과 호스팅 PDF)입니다." }
+```
+
+### src/content/article-learning.ts
+
+**#2 islamic-causation LOC (WRONG)** — 아래 세 쌍은 각각 한 번만 나온다(첫째는 answerChecklist, 둘째는 papers 블록).
+```
+old:
+          "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
+          "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
+new:
+          "『철학자들의 모순』 1884~85년 이집트 아랍어 인쇄본(92쪽)의 이미지와 서지 정보를 제공합니다.",
+          "한 인쇄본의 존재는 필사본 전승, 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다."
+```
+```
+old:
+        "contribution": "『철학자들의 모순』 아랍어 필사본 이미지와 서지 정보를 제공합니다.",
+        "assumptions": "필사본의 존재는 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다.",
+        "evidenceScope": "알가잘리 저작의 문헌 정체성과 전승을 확인하는 핵심 1차 사료입니다.",
+        "notClaim": "이 필사본 하나로 당시 독자·교육·자연 탐구의 실제 반응을 모두 알 수 있다는 뜻이 아닙니다.",
+new:
+        "contribution": "『철학자들의 모순』 1884~85년 이집트 아랍어 인쇄본(92쪽, Bibliotheca Alexandrina 소장, World Digital Library 디지털화)의 이미지와 서지 정보를 제공합니다.",
+        "assumptions": "한 인쇄본의 존재는 필사본 전승, 특정 번역과 현대 해석의 정확성을 자동으로 보장하지 않습니다.",
+        "evidenceScope": "저작이 20개 논의로 짜인 판본 구성을 확인하는 참고 판본이며, 필사본이나 비판 교정본은 아닙니다.",
+        "notClaim": "이 인쇄본 하나로 당시 독자·교육·자연 탐구의 실제 반응을 모두 알 수 있다는 뜻이 아닙니다.",
+```
+(라벨 "Library of Congress · The Incoherence of the Philosophers"는 LOC 레코드 제목 "The Incoherence of Philosophers."와 다르다. 통합자가 원하면 article-learning.ts 두 곳(question 문장, papers title)과 article-evidence.ts label을 함께 "Library of Congress · The Incoherence of Philosophers"로 바꾼다. 본문 tsx는 이미 바꿨다.)
+
+**#3**
+```
+old:
+      { title: "Stanford Encyclopedia · Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation/",
+new:
+      { title: "Stanford Encyclopedia · 20th Century Theories of Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation-20th/",
+```
+
+**#22**
+```
+old:
+      { title: "Aristotle · Nicomachean Ethics, Book II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h", problem:
+new:
+      { title: "Aristotle · Nicomachean Ethics, Book II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", problem:
+```
+
+**#23**
+```
+old:
+      { title: "John Locke · Second Treatise of Government", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h", problem:
+new:
+      { title: "John Locke · Second Treatise of Government", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h.htm", problem:
+```
+
+**#24**
+```
+old:
+      { title: "Edmund L. Gettier · Is Justified True Belief Knowledge?", href: "https://academic.oup.com/analysis/article-abstract/23/6/121/109949",
+new:
+      { title: "Edmund L. Gettier · Is Justified True Belief Knowledge?", href: "https://doi.org/10.1093/analys/23.6.121",
+```
+```
+old:
+      { title: "A. M. Turing · Computing Machinery and Intelligence", href: "https://academic.oup.com/mind/article/LIX/236/433/986238",
+new:
+      { title: "A. M. Turing · Computing Machinery and Intelligence", href: "https://doi.org/10.1093/mind/LIX.236.433",
+```
+
+**#14**
+```
+old:
+        "title": "Gita Supersite · Bhagavad Gita 2.47",
+        "href": "https://www.gitasupersite.in/dv/bhagavadgita/2.47",
+new:
+        "title": "Gita Supersite · Bhagavad Gita 2.47",
+        "href": "https://www.gitasupersite.in/read/srimad/2/47",
+```
+```
+old:
+        "title": "Gita Supersite · Bhagavad Gita 3.19",
+        "href": "https://www.gitasupersite.in/dv/bhagavadgita/3.19",
+new:
+        "title": "Gita Supersite · Bhagavad Gita 3.19",
+        "href": "https://www.gitasupersite.in/read/srimad/3/19",
+```
+
+**#34** (article-learning.ts:134605 부근, 같은 papers 블록의 Analects 항목)
+```
+old:
+        "href": "https://ctext.org/analects/wei-zheng/ens",
+new:
+        "href": "https://ctext.org/analects/wei-zheng",
+```
+
+**#11**
+```
+old:
+      { title: "University of Oxford · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", problem: "20세기 분석 철학의 형식언어와 일상언어 접근을 역사적으로 비교합니다.", contribution: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명합니다.", assumptions: "한 강의 자료의 배열은 전체 분석 철학사의 유일한 구분이 아닙니다.", evidenceScope: "Oxford의 철학 언어사 교육 자료입니다.",
+new:
+      { title: "Timothy Williamson · How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", problem: "20세기 분석 철학의 형식언어와 일상언어 접근을 역사적으로 비교합니다.", contribution: "논리실증주의와 일상언어철학의 문제 설정 및 후대 결합을 설명합니다.", assumptions: "한 철학자의 회고적 서술은 전체 분석 철학사의 유일한 구분이 아닙니다.", evidenceScope: "Belgrade Philosophical Annual 게재용 윌리엄슨 논문(Oxford 철학과 호스팅 PDF)입니다.",
+```
+
+**#7 islamic-philosophy 번역 운동 연대 (MISLEADING)** — article-learning.ts:147565
+```
+old:
+          "9세기 번역, 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다.",
+new:
+          "8~10세기 번역 운동(절정 9세기), 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다.",
+```
+
+### src/content/article-topology-decisions.ts
+
+**#7** (:2546)
+```
+old:
+    "sharedGate": "9세기 번역, 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다."
+new:
+    "sharedGate": "8~10세기 번역 운동(절정 9세기), 11세기 이븐 시나, 12세기 수흐라와르디, 17세기 물라 사드라라는 네 정거장을 잇습니다."
+```
+
+### src/content/philosophy-history/articles.ts (절 제목을 본문과 일치)
+
+**#6**
+```
+old:
+      { id: "source", title: "8. MIT 과정은 플라톤에서 칸트까지 질문과 시대 변화를 함께 읽습니다" },
+new:
+      { id: "source", title: "8. MIT 과정은 플라톤에서 뒤부아·보부아르까지 질문과 시대 변화를 함께 읽습니다" },
+```
+**#7**
+```
+old:
+      { id: "case", title: "3. 9세기·11세기·12세기·17세기의 네 정거장을 잇습니다" },
+new:
+      { id: "case", title: "3. 8~10세기·11세기·12세기·17세기의 네 정거장을 잇습니다" },
+```
+
+### src/content/registrations/*.ts (위 공용 파일의 원본 등록 파일 — 생성 파이프라인이 있으면 같은 교체를 반영해야 재생성 때 되돌아가지 않음)
+
+브리프의 공용 파일 목록에는 없지만 cluster 본문 파일도 아니므로 직접 고치지 않았다. 같은 문자열이 다음 위치에 있다(2026-10-09 grep 기준).
+- `registrations/evidence-models-and-causal-explanation.ts:52, :60` — #3과 같은 교체(scientific-explanation/ → scientific-explanation-20th/, 제목 갱신).
+- `registrations/philosophical-traditions.ts:531, :1648` — #34 `"https://ctext.org/analects/wei-zheng/ens"` → `"https://ctext.org/analects/wei-zheng"`. `:1322, :1402, :1703` — #2 LOC 라벨(선택). 이 파일의 "아랍어 필사본" 문장도 article-learning.ts #2와 같은 교체.
+- `registrations/philosophy-topics.ts:1681, :1778` — #25 Perseus 항목(라벨에 Rackham 역 표기, 선택).
+- `registrations/philosophy-history-modern-six.ts:226, :289, :294` — #11·#12 Williamson 교체와 동일. `:272, :281` — #31·#32 Hegel to Heidegger 줄 삭제.
+- `registrations/philosophy-history-current.ts:1075, :1949` — #7 "9세기 번역," → "8~10세기 번역 운동(절정 9세기),".
+- `registrations/behavior-meaning-and-machine-understanding.ts:52, :60`, `registrations/knowledge-belief-and-luck.ts:51, :59` — #24 OUP → DOI 교체와 동일.
+- `registrations/consequence-duty-and-character.ts:52, :61` — #22 `8438-h/8438-h"` → `8438-h/8438-h.htm"`.
+- `registrations/consent-liberty-and-legitimate-power.ts:52, :60` — #23 `7370-h/7370-h"` → `7370-h/7370-h.htm"`.
+- `registrations/philosophical-traditions.ts:1185, :1195, :1690, :1696` — #14 Gita `/dv/bhagavadgita/2.47` → `/read/srimad/2/47`, `/dv/bhagavadgita/3.19` → `/read/srimad/3/19`. `:1324, :1405` — #2 "아랍어 필사본" 문장 교체.
+- 이 밖에 identity-through-change·logical-empiricism 등록 파일에 evidence 항목이 따로 있으면 #45 Material Constitution, #53 Neurath 항목도 같이 추가한다.

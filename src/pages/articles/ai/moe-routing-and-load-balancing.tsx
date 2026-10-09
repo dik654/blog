@@ -123,8 +123,8 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
           annotatedFormula={String.raw`b_i^{(t+1)}=\underbrace{b_i^{(t)}}_{\text{이전 step bias}}+\underbrace{\gamma}_{\text{고정 step 크기}}\cdot\underbrace{\operatorname{sign}\!\left(\bar{c}^{(t)}-c_i^{(t)}\right)}_{\text{과부하면 }-1\text{, 부족하면 }+1}`}
           operations={[
             { expression: String.raw`\bar{c}^{(t)}-c_i^{(t)}`, annotation: ["평균 부하에서 expert i의 실제 부하를 빼", "과부하·부족 방향 확인"] },
-            { expression: String.raw`\gamma\cdot\operatorname{sign}(\cdot)`, annotation: ["방향에 고정 step 크기를 곱해", "이번 step의 bias 변화량 계산"] },
-            { expression: String.raw`b_i^{(t)}+\gamma\cdot\operatorname{sign}(\cdot)`, annotation: ["이전 bias에 변화량을 더해", "다음 step 선택 점수에 쓸 bias 확정"] },
+            { expression: String.raw`\gamma\cdot\operatorname{sign}`, annotation: ["부하 크기와 무관하게 한 step에", "bias를 정확히 γ=0.001만 움직입니다"] },
+            { expression: String.raw`b_i^{(t)}+\gamma\cdot\operatorname{sign}`, annotation: ["과부하 expert 0은 0 → −0.001 → −0.002", "다음 step top-k 선택 점수에만 씁니다"] },
           ]}
           terms={[
             { symbol: "b_i", name: "Expert i의 bias", description: "Top-k 선택 점수에만 더하고 combine weight에는 쓰지 않습니다." },

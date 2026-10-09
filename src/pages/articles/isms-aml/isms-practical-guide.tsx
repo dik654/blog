@@ -140,10 +140,11 @@ export default function IsmsPracticalGuide() {
           question="요구한 통제 모집단 중 재현 가능한 검토 증거가 있는 비율을 어떻게 표시할까?"
           idea="분자는 정책과 일치하는 증거 chain이 끝까지 연결된 항목 수, 분모는 같은 기간·범위의 전체 모집단 수로 둡니다. 비율과 함께 미매칭 건수·예외 사유를 공개해야 높은 숫자가 누락을 숨기지 않습니다."
           formula={String.raw`C=\frac{N_{\mathrm{verified}}}{N_{\mathrm{population}}}\times100\%`}
-          annotatedFormula={String.raw`C=\underbrace{\frac{N_{\mathrm{verified}}}{N_{\mathrm{population}}}\times100\%}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`C=\frac{\underbrace{N_{\mathrm{verified}}}_{\text{증거 chain 완결 건수}}}{\underbrace{N_{\mathrm{population}}}_{\text{같은 범위 전체 모집단}}}\times100\%`}
           operations={[
-            { expression: String.raw`\frac{N_{\mathrm{verified}}}{N_{\mathrm{population}}}\times100\%`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","분자는 정책과 일치하는 증거 chain이 끝까지 연결된 항목","수, 분모는 같은 기간·범위의 전체 모집단 수로 둡니다."] },
-          ]}
+          { expression: String.raw`N_{\mathrm{verified}}`, annotation: ["정책과 일치하는 증거가 끝까지 이어진 항목", "예: 회수가 모두 확인된 퇴직자 50명"] },
+          { expression: String.raw`N_{\mathrm{population}}`, annotation: ["같은 기간·범위의 전체 모집단, 퇴직자 52명", "C=96.2%, 100%로 반올림하지 않고", "남은 2명을 예외로 추적합니다"] },
+        ]}
           terms={[
             { symbol: "N_{\\mathrm{population}}", name: "검토 모집단", description: "예를 들어 심사기간 퇴직자 52명처럼 source와 cutoff가 고정된 전체 대상입니다." },
             { symbol: "N_{\\mathrm{verified}}", name: "검증 완료 건", description: "계정 회수·token 폐기·SLA·실패 test까지 정해진 checklist를 통과한 대상입니다." },

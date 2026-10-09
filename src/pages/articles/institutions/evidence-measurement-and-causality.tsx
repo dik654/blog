@@ -73,6 +73,7 @@ export default function Article() {
         <h2 className="mb-6 text-2xl font-bold">추가감소 1을 원인으로 읽을 수 있는 조건을 적습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">먼저 A의 단순 감소 2와 B의 감소 1을 같은 단위로 계산합니다. 이어 A도 개입 없이 B와 같은 추세를 따랐을 것이라고 가정해 추가감소 1을 얻습니다. 이전 여러 기간의 움직임과 측정 조건을 보는 것이 이 가정을 검토하는 데 도움을 줍니다. 과거가 비슷했다고 미래 가정까지 증명되는 것은 아닙니다.</p>
+          <p className="leading-8">두 집단 각각의 전후 변화를 구한 뒤 그 차이를 다시 빼는 이 계산, 곧 −2 − (−1) = −1을 이중차분(difference-in-differences)이라고 부르고, A도 개입 없이 B와 같은 추세를 따랐으리라는 가정을 평행 추세(parallel trends) 가정이라고 부릅니다. 문헌과 교과서에서 같은 설계를 찾을 때 쓰는 이름입니다.</p>
           <p className="leading-8">A만 집을 비우는 시간이 늘었다면 추가감소에는 그 변화가 섞입니다. 이 경우 B의 1을 빼는 계산은 맞아도 장치 효과라는 해석은 흔들립니다. 재실시간을 관측하고 더 적절한 비교 또는 새 실험을 설계해야 합니다.</p>
           <p className="leading-8">
             두 집단 사이에 장치 사용법이 퍼지거나 B도 다른 절약 장치를 달았다면 비교 조건이 다시 바뀝니다. 누가 어떤 개입을 받았는지 기록해야 하는 이유입니다. 계산은 같은 사례를
@@ -117,7 +118,7 @@ export default function Article() {
           </p>
         </div>
 
-        <CitationBlock source="ICH · E8(R1), §5.3 및 §6" citeKey={3} href="https://database.ich.org/sites/default/files/E8-R1_Guideline_Step4_2022_0204%20%281%29.pdf">배정 이후 탈락·측정·분석의 차이도 결과 해석에 영향을 준다는 설계 원칙.</CitationBlock>
+        <CitationBlock source="ICH · E8(R1), §5.5·§5.6" citeKey={3} href="https://database.ich.org/sites/default/files/E8-R1_Guideline_Step4_2022_0204%20%281%29.pdf">§5.5 Methods to Reduce Bias는 무작위 배정이 배정 시점의 차이만 다루고 연구 중 생기는 차이로 인한 편향은 막지 못한다고 설명하고, §5.6은 가정이 결과에 주는 영향을 보는 민감도 분석을 미리 계획하도록 합니다. 배정 이후 탈락·측정·분석의 차이도 결과 해석에 영향을 준다는 설계 원칙입니다(2026-10-09 절 번호 재확인).</CitationBlock>
         <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">좋은 근거는 강한 단정이 아니라 측정·비교·범위의 조건이 드러나는 설명입니다. 세 질문에 답하며 각각을 확인합니다.</p>
         <ReviewPrompts questions={["A만 계기를 바꿨다면 추가감소 1을 그대로 장치 효과라고 말할 수 있을까요? (답: 8절)", "참가자를 무작위로 두 집단에 배정하면 전국의 모든 집을 대표하게 될까요? (답: 9절)", "표본 평균만 있고 개별 관측값이 없다면 무엇을 아직 계산할 수 없을까요? (답: 10절)"]} />
       </section>

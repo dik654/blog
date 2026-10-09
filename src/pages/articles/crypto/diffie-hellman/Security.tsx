@@ -35,10 +35,12 @@ export default function Security() {
           question="Raw DH output에서 방향과 용도가 분리된 session key를 어떻게 만들까요?"
           idea="Extract가 raw shared material을 고정 길이 pseudorandom key로 모으고, Expand가 transcript hash와 label을 info에 넣어 client/server·handshake/application key를 서로 다른 domain으로 만듭니다."
           formula={String.raw`\operatorname{PRK}=\operatorname{HKDF\!\!-Extract}(salt,Z),\qquad K_{role,purpose}=\operatorname{HKDF\!\!-Expand}(\operatorname{PRK},\,label\parallel H(transcript),\,L)`}
-          annotatedFormula={String.raw`\operatorname{PRK}=\underbrace{\operatorname{HKDF\!\!-Extract}(salt,Z),\qquad K_{role,purpose}=\operatorname{HKDF\!\!-Expand}(\operatorname{PRK},\,label\parallel H(transcript),\,L)}_{\text{transcript digest 계산}}`}
+          annotatedFormula={String.raw`\operatorname{PRK}=\underbrace{\operatorname{HKDF\!\!-Extract}(salt,Z)}_{\text{raw 출력을 균일 key로}},\qquad K_{role,purpose}=\operatorname{HKDF\!\!-Expand}(\operatorname{PRK},\,\underbrace{label\parallel H(transcript)}_{\text{방향·단계·세션 결속}},\,\underbrace{L}_{\text{key 길이}})`}
           operations={[
-            { expression: String.raw`\operatorname{HKDF\!\!-Extract}(salt,Z),\qquad K_{role,purpose}=\operatorname{HKDF\!\!-Expand}(\operatorname{PRK},\,label\parallel H(transcript),\,L)`, annotation: ["transcript digest이(가) 식의 결과에 기여하는","방식을 계산합니다.","Extract가 raw shared material을 고정","길이 pseudorandom key로 모으고, Expand가"] },
-          ]}
+  { expression: String.raw`\operatorname{HKDF\!\!-Extract}(salt,Z)`, annotation: ["raw DH output Z를 바로 쓰지 않고","고정 길이 pseudorandom key로 모읍니다"] },
+  { expression: String.raw`label\parallel H(transcript)`, annotation: ["label이 c→s와 s→c 방향 key를 갈라","reflection을 줄이고, transcript hash가","이 세션의 A/B·role을 key에 묶습니다"] },
+  { expression: String.raw`\operatorname{HKDF\!\!-Expand}`, annotation: ["같은 PRK에서 role·purpose별 key를","label마다 따로 뽑습니다","info가 비면 두 용도가 같은 key를 공유"] },
+]}
           terms={[
             { symbol: "Z", name: "raw DH output", description: "검증된 peer public value와 local secret에서 얻은 input keying material입니다." },
             { symbol: "salt", name: "extract salt", description: "Protocol schedule이 정한 optional non-secret salt입니다." },

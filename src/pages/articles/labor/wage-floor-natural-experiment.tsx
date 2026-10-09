@@ -306,7 +306,8 @@ export default function WageFloorNaturalExperimentArticle() {
             Neumark·Wascher의 1995년 NBER 작업논문은 230곳의 급여 기록을 이용해 전화 조사 자료를 재검토했습니다. 저자들은 전화 조사 쪽 고용 변화의 변동이 더 크며
             자신들의 급여 자료에서는 뉴저지의 상대 고용 감소가 나타난다고 보고했습니다.
           </p>
-          <p className="leading-7">Card·Krueger의 1998년 NBER 작업논문은 BLS의 ES-202 행정자료에서 뉴저지가 비슷하거나 조금 더 빠른 고용 증가를 보인다고 보고했습니다. 또한 앞선 급여 표본의 일부 가맹점주와 주별·격주·월별 보고 간격이 결과 차이에 관련된다고 분석했습니다. 양쪽이 어떤 자료와 기간을 비교했는지가 논쟁의 일부였습니다.</p>
+          <p className="leading-7">Card·Krueger의 1998년 NBER 작업논문은 BLS의 ES-202 행정자료에서 뉴저지가 비슷하거나 조금 더 빠른 고용 증가를 보인다고 보고했습니다. 또한 Neumark·Wascher의 급여 표본이 BLS 자료와도, 자신들의 앞선 표본과도 다르게 나온 이유를 1995년 EPI 연구에 펜실베이니아 자료를 처음 제공한 한 가맹점주가 소유한 소수 매장에서 찾았습니다.</p>
+          <p className="leading-7">그 표본의 고용 추세가 자료를 주별·격주·월별로 보고한 매장끼리 크게 다르다는 점도 함께 지적했습니다. 양쪽이 어떤 자료와 기간을 비교했는지가 논쟁의 일부였습니다.</p>
           <p className="leading-7">여기서는 두 작업논문의 초록에 보고된 쟁점을 확인했습니다. 이를 2000년 출판본 전체나 그 뒤의 모든 연구를 검증한 결론으로 취급하지 않습니다. “급여 자료이므로 무조건 정답”이나 “전화 조사 결과이므로 무조건 무효”라는 선택 대신, 자료의 오류·대표성·기간·추정 대상을 함께 확인해야 한다는 점을 배웁니다.</p>
         </div>
         <CitationBlock source="Neumark·Wascher · NBER Working Paper 5224 (1995)" citeKey={2} href="https://www.nber.org/system/files/working_papers/w5224/w5224.pdf">공개 작업논문 초록의 실제 페이지를 읽었습니다. 여기서는 자료와 보고 결론의 차이만 소개하며 전체 추정표를 재현했다고 주장하지 않습니다.</CitationBlock>

@@ -62,16 +62,12 @@ export default function Applications() {
           \lVert w_M\rVert_2 &\le R\sqrt{M}\\
           M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
         \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-          w_M\cdot w^* &\ge \underbrace{M\gamma}_{\text{margin 계산}}\\
-          w_M\cdot w^* &\le \underbrace{\lVert w_M\rVert_2}_{\text{허용 경계 판정}}\lVert w^*\rVert_2=\lVert w_M\rVert_2\\
-          \lVert w_M\rVert_2 &\le \underbrace{R\sqrt{M}}_{\text{weight after M mistakes 계산}}\\
-          M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad M\le\left(\frac{R}{\gamma}\right)^2
-        \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}w_M\cdot w^* &\ge \underbrace{M\gamma}_{\text{실수마다 margin만큼 전진}}\\w_M\cdot w^* &\le \lVert w_M\rVert_2\lVert w^*\rVert_2=\underbrace{\lVert w_M\rVert_2}_{\text{정답 방향 길이 1}}\\\lVert w_M\rVert_2 &\le \underbrace{R\sqrt{M}}_{\text{길이는 √M로만 성장}}\\M\gamma &\le R\sqrt{M}\quad\Longrightarrow\quad \underbrace{M\le\left(\frac{R}{\gamma}\right)^2}_{\text{실수 횟수 상한}}\end{aligned}`}
         operations={[
-          { expression: String.raw`M\gamma`, annotation: ["margin이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이","R 때문에 √M보다"] },
-          { expression: String.raw`\lVert w_M\rVert_2`, annotation: ["weight after M mistakes이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이"] },
-          { expression: String.raw`R\sqrt{M}`, annotation: ["weight after M mistakes이(가) 식의 결과에","기여하는 방식을 계산합니다.","각 실수 update는 정답 separator 방향으로 적어도","γ만큼 전진하지만, 전체 weight 길이는 input 길이"] },
+          { expression: String.raw`M\gamma`, annotation: ["실수 update w←w+yx마다 정답 방향", "성분이 margin γ 이상 늘어납니다"] },
+          { expression: String.raw`\lVert w_M\rVert_2\lVert w^*\rVert_2=\lVert w_M\rVert_2`, annotation: ["Cauchy–Schwarz로 방향 성분은", "전체 weight 길이를 넘지 못합니다"] },
+          { expression: String.raw`R\sqrt{M}`, annotation: ["input 길이가 R 이하라 길이 제곱이", "실수마다 R²까지만 늘어납니다"] },
+          { expression: String.raw`M\le\left(\frac{R}{\gamma}\right)^2`, annotation: ["Mγ ≤ R√M을 풀면 M의 상한이 나오고", "R=5, γ=1이면 최대 25번입니다"] },
         ]}
         terms={[
           { symbol: String.raw`M`, name: "mistake count", description: "Update가 일어난 분류 실수의 누적 횟수입니다." },

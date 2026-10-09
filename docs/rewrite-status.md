@@ -2993,3 +2993,13 @@
   거부했고, 직접 실행한 Chromium도 MachPort rendezvous 등록을 `Permission denied (1100)`로 종료했다.
   따라서 DOM 가로 넘침과 사이드바 클릭은 완료로 표시하지 않으며, 모바일 정적 계약과 production build
   검증까지가 이 환경에서 확인한 범위다.
+
+### 10월 신규 정본 248편 사실 감사·수정과 수식 주석 전면 재작성 (2026-10-09)
+
+- 2026-10-01 이후 추가된 정본 248편을 10개 분야로 나눠 1차 자료를 직접 열어 대조했다(원장 `docs/fact-audit-2026-10-09/`). 발견은 모두 308건이다. 시험 수치·제품 사양·수치 계산은 거의 전부 맞았고, 결함은 인용문 비원문·이동한 링크·서지 오기·빠진 제도·연도에 몰려 있었다. 대표 정정: Past & Present 2018 논문 저자(Griffin), Met 소장품 번호(327069), 알가잘리 인과 논의(17번째), Ricardo 초판 외국무역 장(6장), Malthus 1798 쪽수, DVA-C03 전환(2026-10-27 등록·DVA-C02는 11-30 마감), EIP-7732·7928 Last Call, Cilium 1.20 stable·Gateway API v1.6.x 버전 표기, KISA CSAP 주소, ERC-4337 prefund의 paymaster 전제.
+- 빠진 내용은 1차 자료로 확인한 것만 채웠다: 한국 가맹사업법(정보공개서 14일·가맹금 예치·영업지역·필수품목·리뉴얼 비용 40%), 상가임대차보호법(환산보증금 식·지역 한도·5% 상한·관리비 내역 청구권), 점포철거비 폐업일별 한도, 주요 경제사 제도·연도, FIPS 203 ML-KEM-768 파라미터와 실패 확률, I2C 속도 모드와 중재, 수율의 음이항 모형, Gidney 2025 RSA-2048 추정, 파생상품 모형 계보(CRR·Black-Scholes·HJM drift·Vasicek·FD 안정 조건·Bachelier·CVA). 1차 자료로 확인하지 못한 항목은 본문에 넣지 않고 각 원장의 `## 후속 작업`에 남겼다.
+- 이관 스크립트가 남긴 뜻 없는 수식 주석(`…이(가) 식의 결과에 기여하는 방식을 계산합니다`, `오른쪽 항으로 결과 계산`, 중첩 underbrace, `기준량당 비율`·`판정 조건 결합` 같은 범용 라벨)을 약 480개 파일에서 다시 썼다. 각 항·분자·분모에 그 글에서의 뜻을 붙이고 글의 수치를 대입했다. 이 과정에서 실제 식 오류도 고쳤다: 해시 commitment 벡터 길이 k+2→k+3, Montgomery n′/N′ 혼용과 T<pR 전제, `\gets`·`\lesssim` 깨짐, `quad` 백슬래시 누락, 범위를 벗어난 underbrace 다수.
+- 감사에서 바뀐 공용 파일 수정은 `docs/fact-audit-2026-10-09/apply-shared.py`로 원장의 old→new 목록을 그대로 적용하고, 같은 문자열이 남아 있던 `src/content/registrations/*.ts`에도 반영해 다음 병합 때 되돌아가지 않게 했다.
+- 학습 계약의 기계 생성 개념 역할 36개와 Cloud 범위 상자 13개의 템플릿 문장을 사람이 읽는 문장으로 바꿨다.
+- learning·graph·formula·calculation·pseudocode·article·topology·reading·order·prose·Korean·runtime·HW·Cloud 감사, ESLint, tsc, GitHub Pages production build(7,350 modules)를 통과했다. topology 지문 156건은 HEAD와 구조 항목을 대조해 바뀐 것이 파생상품 공통 컴포넌트의 수식 렌더 추가와 수율 글 식 1개뿐임을 확인한 뒤 갱신했다. prose baseline 167건은 점수 상승 0건(지문 변화만)을 확인하고 해당 지문만 바꿨다.
+- 브라우저 점검(Chromium 1,440px·390px, 변경 route 약 440개)에서 KaTeX `\text{}` 안 아래첨자 4곳과 `\left\lfloor` 안 underbrace가 SVG 경로를 깨뜨리는 식 4곳을 고쳤고, 저장소 전체 KaTeX 식 7,172개를 파싱 오류 0으로 확인했다. 함께 발견한 기존 결함인 파생상품 두 글의 중복 복습 질문(React 중복 key)과 `FlowRail` 카드의 모바일 가로 넘침도 고쳤다. 남은 실패는 이번 변경과 무관한 기존 Viz 높이(844px 초과)·장면 전환 흔들림 기준이며 별도 회차로 남긴다.

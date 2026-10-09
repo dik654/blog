@@ -66,6 +66,8 @@ export default function Article() {
           <p className="leading-8">오류가 섞인 선형 관계를 학습하는 문제를 Learning with Errors, 줄여서 LWE라고 부릅니다. 앞의 표와 벡터는 역할을 보여 주기 위한 축소판입니다.</p>
           <p className="leading-8">격자는 몇 개의 기준 벡터를 정수 배수로 더해 만든 점들의 배열입니다. 작은 오류는 정확한 점에서 조금 벗어난 위치를 만듭니다. 이 그림은 이름을 이해하는 직관이며 모든 격자 문제가 어렵다는 뜻은 아닙니다.</p>
           <p className="leading-8">ML-KEM은 다항식을 성분으로 갖는 Module-LWE 구조를 씁니다. FIPS203의 다항식의 계수 개수 n은 256(차수255 이하), 계수의 나눗수 q는 3329이며 x의 256제곱+1로 다항식을 줄입니다. 모듈 차원 k는 2·3·4 중 하나입니다.</p>
+          <p className="leading-8">k 말고도 표준이 함께 고르는 숫자가 네 개 더 있습니다. FIPS203 표 2(인쇄 39쪽)에서 ML-KEM-768은 k=3, η1=2, η2=2, du=10, dv=4입니다. η(에타)는 비밀과 오류 다항식의 계수를 뽑는 폭입니다. η=2이면 각 계수는 −2부터 2 사이의 작은 정수로 나옵니다.</p>
+          <p className="leading-8">du와 dv는 캡슐의 두 부분 u와 v를 계수당 몇 비트로 압축해 보낼지를 정합니다. dv=4이면 0부터 3328까지를 16칸으로 나눠 보내므로 한 칸 폭이 3329/16≈208이고, 반올림으로 생기는 오차는 최대 약 104입니다. 압축이 아낀 크기만큼 이 오차가 앞의 작은 오류에 더해집니다.</p>
           <p className="leading-8">공개 표는 짧은 씨앗에서 재생성하고 다항식 곱에는 NTT라는 변환을 이용합니다. 압축은 캡슐 크기를 줄이는 대신 복원 오차를 더합니다. 17의 예제는 다항식·압축·난수 분포를 모두 생략했습니다.</p>
           <p className="leading-8">KEM은 Key-Encapsulation Mechanism의 약자입니다. 새 공유 비밀을 만드는 기능이지 임의의 문서 전체를 직접 암호화하거나 작성자를 인증하는 서명 기능이 아닙니다.</p>
         </div>
@@ -109,13 +111,14 @@ export default function Article() {
         </div>
 
         <SourceApplication source="NIST SP 800-227 · Recommendations for KEMs" excerpt="establish a shared secret key over a public channel" application="전송하는 것은 본문 데이터 전체가 아니라 공유 비밀을 복원하게 하는 캡슐입니다. 이후 데이터 보호에는 별도 대칭키 암호가 필요합니다." />
-        <CitationBlock source="NIST SP 800-227 · Recommendations for KEMs" citeKey={3} href="https://csrc.nist.gov/pubs/sp/800/227/final">2025-09-18 최종 권고. KEM의 기능과 이를 통신 프로토콜에 조합할 때 필요한 검사를 읽습니다.</CitationBlock>
+        <CitationBlock source="NIST SP 800-227 · Recommendations for KEMs" citeKey={3} href="https://csrc.nist.gov/pubs/sp/800/227/final">2025년 9월 최종 권고(NIST 게시 페이지 기준, 일자는 확인하지 못함). KEM의 기능과 이를 통신 프로토콜에 조합할 때 필요한 검사를 읽습니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">숫자 복원과 통신 보안이 실패하는 조건을 마지막으로 나눕니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">10 · 작은 오류·정상 난수·인증된 상대가 모두 필요합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">작은 예에서 둘째 오류 e2를 −4로 바꾸면 남은 값은 7−4=3입니다. 8보다0에 가까워 비트0으로 잘못 읽습니다. 실제 표준은 분포·압축·파라미터를 함께 정해 복원 실패 가능성을 관리합니다.</p>
+          <p className="leading-8">작은 예에서 둘째 오류 e2를 −4로 바꾸면 남은 값은 7−4=3입니다. 8보다0에 가까워 비트0으로 잘못 읽습니다.</p>
+          <p className="leading-8">실제 표준은 6절의 η·du·dv를 함께 정해 이 실패 가능성을 수치로 묶습니다. FIPS203 표 1(인쇄 15쪽)이 적은 복호 실패율, 즉 정상적으로 만든 키와 캡슐인데도 복원한 비밀 K′이 K와 달라질 확률은 ML-KEM-512 2<sup>−138.8</sup>, ML-KEM-768 2<sup>−164.8</sup>(약 2.5×10<sup>−50</sup>), ML-KEM-1024 2<sup>−174.8</sup>입니다. 이 값은 해시 함수와 XOF(출력 길이를 원하는 만큼 늘릴 수 있는 해시)가 균등 무작위 함수처럼 동작한다는 가정 아래 계산한 것입니다.</p>
           <p className="leading-8">상대의 공개 키를 인증하지 않으면 공격자와 정상적으로 비밀을 만들 수 있습니다. 장기 복호 비밀키가 유출되면 저장된 캡슐도 다시 분석할 수 있으므로 전방 비밀성은 임시 키 사용과 삭제를 포함한 전체 프로토콜의 성질입니다.</p>
           <p className="leading-8">기존 방식과 PQC를 함께 쓰는 hybrid 구성도 두 바이트열을 아무렇게나 잇는 것으로 끝나지 않습니다. 결합 함수·인증·알고리즘 협상·하향 전환 방지를 명세대로 구성해야 합니다.</p>
           <p className="leading-8">실장에서는 난수 품질, 입력 검증, 일정한 실행 시간, 전력·오류 주입 등의 부채널을 확인합니다. 이 글은 고정 소스의 경로와 작은 산술을 확인했으며 실제 장치의 부채널 안전성이나 FIPS 준수 여부는 검증하지 않았습니다.</p>

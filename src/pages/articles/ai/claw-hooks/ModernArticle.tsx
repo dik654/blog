@@ -46,10 +46,10 @@ export default function ModernHooksArticle() {
           question="Matching hook 세 개를 순차 실행하면 tool이 시작되기 전 최소 지연은 얼마인가?"
           idea={<>순차 실행에서는 각 hook의 시간이 겹치지 않으므로 더합니다. 40 ms, 70 ms, 25 ms가 걸렸다면 hook 자체 지연만 135 ms이며 process spawn과 scheduler 지연은 여기에 더해집니다.</>}
           formula={String.raw`\begin{aligned}T_{pre}&=\sum_{i=1}^{m}t_i\\&=40+70+25=135\ \mathrm{ms}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}T_{pre}&=\underbrace{\sum_{i=1}^{m}t_i}_{\text{Pre-hook 지연 계산}}\\&=\underbrace{40+70+25=135\ \mathrm{ms}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{T_{pre}}_{\text{tool 시작 전 지연}}&=\underbrace{\sum_{i=1}^{m}t_i}_{\text{matching hook 시간 합}}\\&=\underbrace{40}_{\text{hook 1}}+\underbrace{70}_{\text{hook 2}}+\underbrace{25}_{\text{hook 3}}=\underbrace{135\ \mathrm{ms}}_{\text{spawn 제외 최소}}\end{aligned}`}
           operations={[
-            { expression: String.raw`\sum_{i=1}^{m}t_i`, annotation: ["Pre-hook 지연이(가) 식의 결과에 기여하는 방식을","계산합니다.","순차 실행에서는 각 hook의 시간이 겹치지 않으므로","더합니다."] },
-            { expression: String.raw`40+70+25=135\ \mathrm{ms}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","순차 실행에서는 각 hook의 시간이 겹치지 않으므로","더합니다."] },
+            { expression: String.raw`\sum_{i=1}^{m}t_i`, annotation: ["matching hook m개가 등록 순서대로", "하나씩 돌아 시간이 겹치지 않으므로", "각 hook 시간을 그대로 더합니다"] },
+            { expression: String.raw`40+70+25=135\ \mathrm{ms}`, annotation: ["세 hook이 40·70·25 ms면 hook 자체만", "135 ms이고, process spawn과", "scheduler 지연은 그 위에 더해집니다"] },
           ]}
           terms={[
             { symbol: "m", name: "Matching hook 수", description: "현재 event와 tool matcher를 통과해 실제로 실행되는 command 개수입니다." },

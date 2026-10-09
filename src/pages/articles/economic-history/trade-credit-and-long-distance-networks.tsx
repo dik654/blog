@@ -30,8 +30,8 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
 
       <LessonSection id="case" level="0" title="3. 은 6미나 대출과 두 번의 상환을 따라갑니다" bridge="빚의 양과 시간을 두 칸으로 나눴습니다. 실물과 청구권이 서로 다른 속도로 움직이는 모습을 봅니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">기원전 20~19세기 무렵 카네시의 점토판 하나는 두 사람이 상인 아슈르이디에게 은 6미나, 약 3kg을 빚졌다고 적습니다. 그중 3분의 1은 다음 수확 때, 나머지는 뒤에 갚도록 했습니다. 6미나를 단순히 나누면 첫 상환 2미나, 뒤 상환 4미나입니다.</p>
-          <p className="leading-8">이 기록은 오늘날 은행 대출 계약과 같지 않습니다. 그래도 누가 누구에게 얼마를 언제 갚는지, 한 번에 갚지 못하는 시간을 어떻게 약속으로 바꿨는지 보여 줍니다. 수확 시점은 채무자의 현금 흐름과 상환일을 연결합니다.</p>
+          <p className="leading-8">기원전 20~19세기 무렵 카네시 출토로 추정되는 점토판 하나는 두 사람이 상인 아슈르이디에게 은 6미나, 약 3kg을 빚졌다고 적습니다. 그중 3분의 1은 다음 수확 때, 나머지는 뒤에 갚도록 했습니다. 6미나를 단순히 나누면 첫 상환 2미나, 뒤 상환 4미나입니다.</p>
+          <p className="leading-8">이 기록은 오늘날 은행 대출 계약과 같지 않습니다. 다만 기한까지 갚지 못하면 달마다 이자가 붙는다는 조항과 증인 명단은 이미 들어 있었습니다(8절). 그래도 누가 누구에게 얼마를 언제 갚는지, 한 번에 갚지 못하는 시간을 어떻게 약속으로 바꿨는지 보여 줍니다. 수확 시점은 채무자의 현금 흐름과 상환일을 연결합니다.</p>
         </div>
         <NumericPath title="6미나를 시간으로 나눈 약속" steps={[
           { label: "전체 채무", value: "6미나", detail: "약 3kg의 은" },
@@ -73,11 +73,11 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
 
       <LessonSection id="source" level="5" title="8. 기원전 20~19세기 은 대출 점토판을 읽습니다" bridge="한 계약이 장거리 교역의 신용과 가족망을 보여 주는 범위를 확인했습니다. 더 넓은 교역망과 비교합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">메트로폴리탄 미술관의 점토판은 카네시에서 발견됐고, 은 채무의 양과 두 상환 시점을 기록합니다. 같은 지역의 편지와 계약은 아슈르 상인들이 당나귀 대상으로 주석과 직물을 가져와 금·은과 바꾸고 가족·동업자와 거래를 관리했음을 보여 줍니다.</p>
-          <p className="leading-8">점토판 하나는 당시 모든 거래의 평균 이자율이나 사회 전체의 신용 접근성을 말해 주지 않습니다. 특정 상인 관계의 실재와 기록 방식을 보여 주는 1차 물증으로 쓰고, 시장 규모는 여러 문서와 발굴 맥락으로 확인해야 합니다.</p>
+          <p className="leading-8">메트로폴리탄 미술관의 점토판은 카네시(오늘날 튀르키예의 퀼테페) 출토로 추정됩니다. 발굴 기록 없이 1966년에 기증된 유물이라 미술관도 출토지를 'probably'로만 적습니다. 점토판은 은 채무의 양과 두 상환 시점을 기록하고, 그 시점까지 갚지 못하면 월 단위 이자가 붙는다고 정합니다. 증인 이름도 본문에 적혀 있고, 증인들의 인장은 점토판을 감쌌던 점토 봉투(접근번호 66.245.17b)에 찍혀 있습니다. 4절에서 말한 기록·증인·평판이라는 집행 장치가 이 한 점의 유물 안에 함께 들어 있는 셈입니다. 같은 지역의 편지와 계약은 아슈르 상인들이 당나귀 대상으로 주석과 직물을 가져와 금·은과 바꾸고 가족·동업자와 거래를 관리했음을 보여 줍니다.</p>
+          <p className="leading-8">다만 이자 조항이 있다는 사실과 이자율이 얼마였는지는 다른 문제입니다. 점토판 하나는 당시 모든 거래의 평균 이자율이나 사회 전체의 신용 접근성을 말해 주지 않습니다. 특정 상인 관계의 실재와 기록 방식을 보여 주는 1차 물증으로 쓰고, 시장 규모는 여러 문서와 발굴 맥락으로 확인해야 합니다.</p>
         </div>
         <SourceApplication source="The Met · Cuneiform tablet: loan of silver" excerpt="6 minas ... one third ... by the next harvest" application="전체 6미나를 2미나와 4미나로 나누면 상품 판매와 수확의 시간에 맞춘 단계 상환을 눈으로 볼 수 있습니다." />
-        <CitationBlock source="The Metropolitan Museum of Art, Cuneiform tablet: loan of silver" citeKey={1} href="https://www.metmuseum.org/art/collection/search/325858">점토판의 연대·출토지·채무량·상환 일정과 아시리아 상인망의 배경을 제공하는 소장품 기록입니다.</CitationBlock>
+        <CitationBlock source="The Metropolitan Museum of Art, Cuneiform tablet: loan of silver" citeKey={1} href="https://www.metmuseum.org/art/collection/search/325858">점토판의 연대·추정 출토지·채무량·상환 일정·연체 이자 조항·증인 봉투(66.245.17b)와 아시리아 상인망의 배경을 제공하는 소장품 기록입니다. 출토지는 미술관 기록상 'probably from Kültepe (Karum Kanesh)'이고 1966년 기증품입니다(확인일 2026-10-09, 원 페이지는 자동 조회가 차단돼 Met Collection API와 2025-01-21 사본으로 대조).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 실크로드는 하나의 도로가 아니라 갈아타는 여러 망이었습니다" bridge="긴 거리의 교역을 단일 출발지와 목적지의 직통 거래로 보지 않았습니다. 이득과 위험의 불균등을 정리합니다.">
@@ -85,8 +85,8 @@ export default function TradeCreditAndLongDistanceNetworksArticle() {
           <p className="leading-8">오늘날 실크로드라고 부르는 연결은 1,500년 넘게 이어진 육상 길과 해상 항로의 묶음입니다. 비단만이 아니라 면직물, 향신료, 말, 유리, 도자기, 종교, 기술이 여러 중개 도시와 제국의 경계를 거쳤습니다.</p>
           <p className="leading-8">대부분의 상인이 중국에서 지중해까지 전 구간을 직접 간 것은 아닙니다. 물건은 구간마다 소유자와 운송 수단을 바꾸고, 언어와 통화도 달라졌습니다. 그래서 어느 한 제국의 흥망, 통행세, 전쟁, 항구 변화가 전체 망의 경로와 가격을 바꿀 수 있었습니다.</p>
         </div>
-        <SourceApplication source="UNESCO · The Silk Roads: A Brief History with Documents" excerpt="overland trails and sea lanes" application="한 직선 도로 대신 여러 구간의 상인·도시·해상 항로가 물건과 정보를 넘기는 연결망으로 읽습니다." />
-        <CitationBlock source="UNESCO Silk Roads Programme" citeKey={2} href="https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents">중국·인도·중앙아시아·지중해·이슬람권의 여러 1차 사료를 함께 묶은 자료 안내입니다.</CitationBlock>
+        <SourceApplication source="Xinru Liu · The Silk Roads: A Brief History with Documents" excerpt="overland trails and sea lanes" application="한 직선 도로 대신 여러 구간의 상인·도시·해상 항로가 물건과 정보를 넘기는 연결망으로 읽습니다." />
+        <CitationBlock source="Xinru Liu, The Silk Roads: A Brief History with Documents (Bedford/St. Martin's, 2012)" citeKey={2} href="https://web.archive.org/web/20241223184033/https://en.unesco.org/silkroad/publications/silk-roads-brief-history-documents">UNESCO 실크로드 프로그램 사이트가 소개한 단행본으로, UNESCO 간행물은 아닙니다. 발췌문은 그 소개 페이지에 실린 출판사 소개 글입니다. 원 주소는 unesco.org/en/silkroads로 301 리다이렉트돼 2024-12-23 사본을 연결했습니다(확인일 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="limits" level="7" title="10. 교역의 확대를 모두의 번영으로 곧장 바꾸지 않습니다" bridge="상품·대금·정보·위험이 다른 경로로 움직인다는 틀을 세웠습니다. 아래 질문으로 신용과 교역망의 범위를 다시 확인합니다.">

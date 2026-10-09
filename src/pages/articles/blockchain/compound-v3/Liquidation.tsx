@@ -14,9 +14,10 @@ export default function Liquidation() {
         question="Protocol이 보유한 collateral의 ask discount는 어떻게 정해질까요?"
         idea="Asset liquidation factor가 남긴 haircut 여유에 storeFrontPriceFactor를 곱해 discount를 만들고 oracle price에서 뺍니다. Buyer는 baseAmount와 minAmount를 함께 고정합니다."
         formula={String.raw`d=SF\,(1-LF),\qquad P_{ask}=P_{oracle}(1-d)`}
-        annotatedFormula={String.raw`d=\underbrace{SF\,(1-LF),\qquad P_{ask}=P_{oracle}(1-d)}_{\text{storefront price factor 계산}}`}
+        annotatedFormula={String.raw`d=\underbrace{SF}_{\text{판매 유인 비율}}\,\underbrace{(1-LF)}_{\text{haircut 여유}},\qquad P_{ask}=\underbrace{P_{oracle}(1-d)}_{\text{buyer 할인 가격}}`}
         operations={[
-          { expression: String.raw`SF\,(1-LF),\qquad P_{ask}=P_{oracle}(1-d)`, annotation: ["storefront price factor이(가) 식의 결과에","기여하는 방식을 계산합니다.","Asset liquidation factor가 남긴","haircut 여유에 storeFrontPriceFactor를"] },
+          { expression: String.raw`SF\,(1-LF)`, annotation: ["absorb 때 깎아 둔 haircut 1−LF 중","SF만큼만 buyer 할인으로 넘깁니다","예: 50%×(1−90%)=5%"] },
+          { expression: String.raw`P_{oracle}(1-d)`, annotation: ["oracle 가격에서 할인율 d를 뺀 ask","예: $100 collateral → $95","absorb caller 보너스가 아님"] },
         ]}
         terms={[
           { symbol: "SF", name: "storefront price factor", description: "Governance가 collateral sale incentive에 적용하는 global factor입니다." },

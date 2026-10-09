@@ -15,9 +15,10 @@ export default function InitialSync({ onCodeRef }: { onCodeRef: (key: string, re
         question="BeaconBlocksByRange 요청이 가리키는 slot들은 무엇일까요?"
         idea="Start slot에서 step만큼 이동한 count개의 위치를 요청합니다. Response는 empty slot을 생략할 수 있으므로 요청 위치 수와 block 수가 같다고 가정하지 않습니다."
         formula={String.raw`s_i=s_{start}+i\,\Delta s,\qquad 0\le i<c`}
-        annotatedFormula={String.raw`s_i=\underbrace{s_{start}+i\,\Delta s,\qquad 0\le i<c}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`s_i=\underbrace{s_{start}+i\,\Delta s}_{\text{i번째 요청 slot}},\qquad \underbrace{0\le i<c}_{\text{count개 위치}}`}
         operations={[
-          { expression: String.raw`s_{start}+i\,\Delta s,\qquad 0\le i<c`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Start slot에서 step만큼 이동한 count개의","위치를 요청합니다."] },
+          { expression: String.raw`s_{start}+i\,\Delta s`, annotation: ["start slot에서 step만큼 i번 이동","start=101, step=1 → 101+i"] },
+          { expression: String.raw`0\le i<c`, annotation: ["i는 0부터 count−1까지, 위치 c개","count=4 → 101·102·103·104","empty slot은 응답에서 빠질 수 있음"] },
         ]}
         terms={[
           { symbol: "s_{start}", name: "시작 슬롯", description: "range 요청의 첫 slot" },

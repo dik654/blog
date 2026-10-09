@@ -20,9 +20,10 @@ export default function StateRootCaching({
           </>
         }
         formula={String.raw`N_s=t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor`}
-        annotatedFormula={String.raw`N_s=\underbrace{t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`N_s=\underbrace{t-c}_{\text{처리할 slot 수}},\qquad N_e=\underbrace{\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor}_{\text{넘는 epoch boundary 수}}`}
         operations={[
-          { expression: String.raw`t-c,\qquad N_e=\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 slot을 한 번씩 처리하므로 slot step은 차이와","같습니다."] },
+          { expression: String.raw`t-c`, annotation: ["slot을 하나씩 전진하므로 차이가 step 수","c=30, t=33이면 3번"] },
+          { expression: String.raw`\left\lfloor\frac{t}{E}\right\rfloor-\left\lfloor\frac{c}{E}\right\rfloor`, annotation: ["t와 c가 속한 epoch 번호의 차","(c, t] 안 boundary 개수와 같음","33/32→1, 30/32→0: transition 1번"] },
         ]}
         terms={[
           {

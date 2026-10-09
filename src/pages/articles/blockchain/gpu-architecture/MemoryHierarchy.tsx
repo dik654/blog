@@ -38,11 +38,11 @@ export default function MemoryHierarchy() {
           formula={
             "\\begin{aligned} I&=\\frac{F}{Q}\\\\ P_{\\mathrm{bound}}&=\\min\\left(P_{\\mathrm{peak}},\\ I B_{\\mathrm{peak}}\\right) \\end{aligned}"
           }
-          annotatedFormula={String.raw`\begin{aligned} I&=\underbrace{\frac{F}{Q}}_{\text{기준량당 비율}}\\ P_{\mathrm{bound}}&=\underbrace{\min\left(P_{\mathrm{peak}},\ I B_{\mathrm{peak}}\right)}_{\text{경계 후보 선택}} \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned} I&=\frac{\underbrace{F}_{\text{실행한 FLOP}}}{\underbrace{Q}_{\text{HBM 이동 byte}}}\\ P_{\mathrm{bound}}&=\min\left(\underbrace{P_{\mathrm{peak}}}_{\text{compute 천장}},\ \underbrace{I B_{\mathrm{peak}}}_{\text{memory 천장}}\right) \end{aligned}`}
           operations={[
-            { expression: String.raw`\frac{F}{Q}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","실행한 연산 수를 HBM에서 이동한 byte로 나눈","arithmetic intensity와 장치의 peak","compute·peak bandwidth를 결합하면 이상적인"] },
-            { expression: String.raw`\min\left(P_{\mathrm{peak}},\ I B_{\mathrm{peak}}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","실행한 연산 수를 HBM에서 이동한 byte로 나눈","arithmetic intensity와 장치의 peak","compute·peak bandwidth를 결합하면 이상적인"] },
-          ]}
+          { expression: String.raw`\frac{F}{Q}`, annotation: ["HBM에서 옮긴 byte 하나당 몇 FLOP을","하는지가 arithmetic intensity입니다","단위는 FLOP/byte, 예: I=2"] },
+          { expression: String.raw`\min\left(P_{\mathrm{peak}},\ I B_{\mathrm{peak}}\right)`, annotation: ["compute 천장과 intensity×bandwidth 중","낮은 쪽이 이상적 처리량 상한입니다","2×3TB/s=6TFLOP/s < 60이면 memory 쪽"] },
+        ]}
           terms={[
             {
               symbol: "F",

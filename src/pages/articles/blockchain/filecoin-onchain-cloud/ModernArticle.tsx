@@ -301,10 +301,11 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`D=H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)`}
-          annotatedFormula={String.raw`D=\underbrace{H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)}_{\text{Piece identifier 계산}}`}
+          annotatedFormula={String.raw`\underbrace{D}_{\text{service generation ID}}=H(\underbrace{C\|P\|S}_{\text{client·provider·dataset}}\|\underbrace{\{(c_i,z_i)\}}_{\text{piece CID·크기}}\|\underbrace{V\|R\|G}_{\text{contract·rail·context}})`}
           operations={[
-            { expression: String.raw`H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)`, annotation: ["Piece identifier이(가) 식의 결과에 기여하는","방식을 계산합니다.","Off-chain upload와 on-chain","identities·contract versions을"] },
-          ]}
+          { expression: String.raw`\{(c_i,z_i)\}`, annotation: ["업로드한 piece마다 CID와 size를","같은 순서·encoding으로 기록"] },
+          { expression: String.raw`H(C\|P\|S\|\{(c_i,z_i)\}\|V\|R\|G)`, annotation: ["off-chain upload와 on-chain ID를","canonical manifest 하나로 묶어 hash","PieceCID 같아도 provider 다르면 D 다름"] },
+        ]}
           terms={[
             {
               symbol: "D",
@@ -628,10 +629,11 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`F_{required}=r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}`}
-          annotatedFormula={String.raw`F_{required}=\underbrace{r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}}_{\text{허용 경계 판정}}`}
+          annotatedFormula={String.raw`F_{required}=\underbrace{r\,L}_{\text{rate×lockup 기간}}+\underbrace{F_{fixed}}_{\text{lifecycle 고정 reserve}},\qquad ready\iff \underbrace{F_{available}}_{\text{다른 rail 뺀 잔액}}\ge F_{required}`}
           operations={[
-            { expression: String.raw`r\,L+F_{fixed},\qquad ready\iff F_{available}\ge F_{required}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정해진 lockup horizon의 variable","obligation과 lifecycle fixed","reserve를 합쳐 available funds와"] },
-          ]}
+          { expression: String.raw`r\,L`, annotation: ["epoch당 rate × 미래 lockup epoch 수","새 piece로 rate가 늘면 이 항도 커짐"] },
+          { expression: String.raw`F_{available}\ge F_{required}`, annotation: ["다른 rail 예약분을 뺀 usable balance가","rate×lockup+fixed 이상이어야 admission","현재 결제는 되도 늘어난 합보다 작으면 거절"] },
+        ]}
           terms={[
             {
               symbol: "F_{required}",
@@ -747,10 +749,12 @@ export default function ModernFilecoinOnchainCloud() {
             </>
           }
           formula={String.raw`A=U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}`}
-          annotatedFormula={String.raw`A=\underbrace{U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}}_{\text{판정 조건 결합}}`}
+          annotatedFormula={String.raw`\underbrace{A}_{\text{service 채택}}=\underbrace{U_{bytes}\land D_{chain}}_{\text{저장·chain 결속}}\land \underbrace{P_{period}\land R_{pay}}_{\text{proof·결제 상태}}\land \underbrace{Q_{retrieve}\land O_{recover}}_{\text{조회·복구 준비}}`}
           operations={[
-            { expression: String.raw`U_{bytes}\land D_{chain}\land P_{period}\land R_{pay}\land Q_{retrieve}\land O_{recover}`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Upload, on-chain identity, proof","state, payment state와","retrieval·recovery를 독립 gates로"] },
-          ]}
+          { expression: String.raw`U_{bytes}\land D_{chain}`, annotation: ["upload 성공과 chain 결속만으로는","proof-gated payment 준비 완료 아님"] },
+          { expression: String.raw`P_{period}\land R_{pay}`, annotation: ["proof period 상태와 rail 정산이","validator verdict와 일치해야 함"] },
+          { expression: String.raw`Q_{retrieve}\land O_{recover}`, annotation: ["실제 retrieval sample을 CID로 검증","proof·payment가 맞아도 실패면 A=0"] },
+        ]}
           terms={[
             {
               symbol: "A",

@@ -25,9 +25,9 @@ export default function Hypothesis() {
 &\Rightarrow \widehat{\Delta}=1.5\text{ min}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\widehat{\Delta}&=\underbrace{\bar{y}_A-\bar{y}_B,}_{\text{변화량 계산}}\\
+\widehat{\Delta}&=\underbrace{\bar{y}_A}_{\text{slice A 평균}}-\underbrace{\bar{y}_B}_{\text{slice B 평균}},\\
 \bar{y}_A=12.0\text{ min},\ \bar{y}_B=10.5\text{ min}
-&\Rightarrow \widehat{\Delta}=1.5\text{ min}.
+&\Rightarrow \underbrace{\widehat{\Delta}=1.5\text{ min}}_{\text{metric 단위 effect}}.
 \end{aligned}`}
         operations={[
           { expression: String.raw`\bar{y}_A-\bar{y}_B`, annotation: ["같은 정의로 잰 A의 평균 12.0분에서 B의 평균 10.5분을 뺍니다.", "관측 effect는 원래 metric 단위인 1.5분으로 남습니다."] },

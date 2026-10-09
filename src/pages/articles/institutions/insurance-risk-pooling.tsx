@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
@@ -53,6 +54,8 @@ export default function InsuranceRiskPoolingArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">여러 사람의 돈으로 약정 사고를 나누는 공동 장부가 보험 위험 풀입니다. 각자가 내는 돈은 보험료, 사고 뒤 받는 돈은 보험금입니다.</p>
           <p className="leading-8">계약이 지급하지 않는 사고나 조건을 면책이라고 부릅니다. 지급액의 최대값은 보상 한도이며, 가입자가 먼저 부담하는 금액은 자기부담금입니다. 셋은 같은 뜻이 아닙니다.</p>
+          <p className="leading-8">2절의 두 현상에도 이름이 있습니다. 자기 위험을 보험사보다 잘 아는 사람이 더 많이 가입해 사고가 처음 예상한 20명보다 늘어나는 쪽을 역선택(adverse selection)이라고 하고, 가입한 뒤 보장을 믿고 예방을 줄여 사고 비용이 커지는 쪽을 도덕적 해이(moral hazard)라고 합니다.</p>
+          <p className="leading-8">역선택은 Akerlof의 1970년 논문(The Quarterly Journal of Economics 84권 3호)과 Rothschild·Stiglitz의 1976년 보험시장 논문(같은 학술지 90권 4호)으로 이어지는 문제이며, 이 글에서는 두 논문의 서지만 확인했습니다. 두 현상이 어떤 숫자로 시장을 무너뜨리거나 자기부담금으로 줄어드는지는 <Link className="text-sky-700 underline dark:text-sky-300" to="/economics/market-failure/information-asymmetry#unravelling">정보 비대칭 글의 역선택 절</Link>과 <Link className="text-sky-700 underline dark:text-sky-300" to="/economics/market-failure/information-asymmetry#hidden-action">숨은 행동 절</Link>에서 사례로 설명합니다.</p>
           <p className="leading-8">다수의 가입자가 한 재난으로 함께 손해를 입는 상황은 동시 사고의 위험입니다. 사람 수가 늘어도 손실이 함께 움직이면 공동 장부가 동시에 부족해질 수 있습니다.</p>
         </div>
         <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">지급 조건의 이름을 정했습니다. 같은 사고를 계약 계산에 넣습니다.</p>
@@ -84,14 +87,14 @@ export default function InsuranceRiskPoolingArticle() {
           <p className="leading-8">제도 설명은 2026-10-04 확인 기준입니다. 이 글의 보험료와 한도는 실제 상품 조건이 아닙니다.</p>
         </div>
         <SourceApplication source="US NFIP · Eligibility, frequently asked questions" excerpt="most homeowners insurance does not cover flood damage" application="300만 원 손실이라도 면책된 홍수라면 이 계약에서 지급하지 않을 수 있습니다. 230만 원 한도를 계산하기 전에 보장 사건인지 확인합니다." />
-        <CitationBlock source="US NFIP · Eligibility, frequently asked questions" citeKey={2} href="https://www.floodsmart.gov/get-insured/eligibility">미국 일반 주택보험과 홍수보험의 구분. 2026-10-04 확인.</CitationBlock>
+        <CitationBlock source="US NFIP · Eligibility, frequently asked questions" citeKey={2} href="https://www.floodsmart.gov/get-insured/eligibility">미국 일반 주택보험과 홍수보험의 구분. 2026-10-04 확인. 2026-10-09 재확인 때는 이 페이지가 자동 조회를 차단(403)해 원문을 다시 대조하지 못했고, 같은 문구가 FEMA/NFIP 공식 자료 제목에 있다는 것만 검색으로 확인했습니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">보험의 이름보다 보장되는 사건을 확인했습니다. 많은 사고가 한꺼번에 생길 때를 봅니다.</p>
       </section>
       <section id="limits" data-teaching-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">7 · 동시에 500명이 손해를 입으면 인원수만으로 버틸 수 없습니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">최초 조건처럼 1인당 300만 원을 지급하는 사고가 500명에게 생기면 총 15억 원이 필요합니다(가정). 보험료 1억 원만으로는 부족합니다. 계약상 지급 약속을 지키려면 자본과 미리 쌓은 준비, 다른 보험자와 나누는 계약이 필요합니다.</p>
-          <p className="leading-8">독립적인 작은 사고를 모을 때의 효과를 지역 전체 재난에 그대로 적용하면 안 됩니다. 가입 지역과 사고 원인의 집중, 지급 능력과 보장 중단 가능성을 함께 봅니다.</p>
+          <p className="leading-8">서로 독립적인 작은 사고를 많이 모을수록 실제 사고 비율이 예상 비율에 가까워지는 성질을 대수의 법칙이라고 합니다. 이 효과를 지역 전체 재난에 그대로 적용하면 안 됩니다. 가입 지역과 사고 원인의 집중, 지급 능력과 보장 중단 가능성을 함께 봅니다.</p>
           <p className="leading-8">남는 4천만 원을 이익으로 판단하려면 운영비와 미래 지급 의무를 확인해야 합니다. 보험은 약정된 재정 부담을 옮기는 장치이며 실제 안전과 모든 손실을 보장하지는 않습니다.</p>
         </div>
         <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">계약의 경계와 동시 손실의 한계를 확인했습니다. 지급액과 남은 부담을 다시 나눠 봅니다.</p>

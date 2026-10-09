@@ -21,13 +21,14 @@ B_{\mathrm{docs}}&=L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}\\
 \sum_{c\in K_q}\ell(c)&\le B_{\mathrm{docs}}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\underbrace{B_{\mathrm{docs}}}_{\text{chunk token cost 계산}}&=\underbrace{L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}}_{\text{경계 후보 선택}}\\
-&\quad-L_{\mathrm{query}}-L_{\mathrm{output}}\\
-\sum_{c\in K_q}\ell(c)&\le B_{\mathrm{docs}}
+\underbrace{B_{\mathrm{docs}}}_{\text{문서에 쓸 예산}}&=\underbrace{L_{\max}}_{\text{context 상한}}-\underbrace{L_{\mathrm{system}}-L_{\mathrm{history}}}_{\text{문서 아닌 입력}}\\
+&\quad-L_{\mathrm{query}}-\underbrace{L_{\mathrm{output}}}_{\text{답변 예약분}}\\
+\underbrace{\sum_{c\in K_q}\ell(c)}_{\text{고른 chunk 길이 합}}&\le B_{\mathrm{docs}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","모델 최대 길이에서 문서가 아닌 입력과 예약한 출력 길이를","먼저 뺍니다."] },
-          { expression: String.raw`B_{\mathrm{docs}}`, annotation: ["chunk token cost이(가) 식의 결과에 기여하는","방식을 계산합니다.","모델 최대 길이에서 문서가 아닌 입력과 예약한 출력 길이를","먼저 뺍니다."] },
+          { expression: String.raw`L_{\max}-L_{\mathrm{system}}-L_{\mathrm{history}}`, annotation: ["context 상한에서 system·history를 먼저", "8,192 − 500 − 1,000"] },
+          { expression: String.raw`-L_{\mathrm{query}}-L_{\mathrm{output}}`, annotation: ["질문 200과 답변 예약 1,500까지 빼면", "문서 예산 B_docs = 4,992 token"] },
+          { expression: String.raw`\sum_{c\in K_q}\ell(c)`, annotation: ["metadata 포함 chunk 길이 합이", "예산을 넘으면 tail truncation 대신", "명시적 선택 규칙으로 고릅니다"] },
         ]}
         terms={[
           { symbol: "L_max", name: "model context limit", description: "Input과 output을 합친 tokenizer 기준 최대 길이입니다." },

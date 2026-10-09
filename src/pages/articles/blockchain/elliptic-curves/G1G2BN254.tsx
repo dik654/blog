@@ -19,9 +19,10 @@ export default function G1G2BN254() {
         question="Pairing은 두 입력군의 scalar multiplication을 결과군에서 어떻게 보존할까요?"
         idea="Bilinearity는 각 입력의 scalar가 결과 exponent의 곱으로 이동하게 합니다. SNARK verifier는 secret discrete log를 계산하지 않고 여러 pairing 결과의 곱이 identity인지 확인해 선형 관계를 검사합니다."
         formula={String.raw`e([a]P,[b]Q)=e(P,Q)^{ab},\qquad \prod_{i=1}^{k}e(P_i,Q_i)\stackrel?=1_{G_T}`}
-        annotatedFormula={String.raw`e([a]P,[b]Q)=\underbrace{e(P,Q)^{ab},\qquad \prod_{i=1}^{k}e(P_i,Q_i)\stackrel?=1_{G_T}}_{\text{target group 계산}}`}
+        annotatedFormula={String.raw`e(\underbrace{[a]P}_{\text{G1 쪽 scalar}},\underbrace{[b]Q}_{\text{G2 쪽 scalar}})=\underbrace{e(P,Q)^{ab}}_{\text{지수의 곱으로 이동}},\qquad \underbrace{\prod_{i=1}^{k}e(P_i,Q_i)\stackrel?=1_{G_T}}_{\text{verifier의 선형 관계 검사}}`}
         operations={[
-          { expression: String.raw`e(P,Q)^{ab},\qquad \prod_{i=1}^{k}e(P_i,Q_i)\stackrel?=1_{G_T}`, annotation: ["target group이(가) 식의 결과에 기여하는 방식을","계산합니다.","Bilinearity는 각 입력의 scalar가 결과","exponent의 곱으로 이동하게 합니다."] },
+          { expression: String.raw`e(P,Q)^{ab}`, annotation: ["입력 두 군의 scalar a·b가","G_T 결과의 exponent ab로 합쳐집니다","discrete log를 몰라도 곱 관계를 비교"] },
+          { expression: String.raw`\prod_{i=1}^{k}e(P_i,Q_i)\stackrel?=1_{G_T}`, annotation: ["SNARK verifier는 k개 pairing 곱이","G_T identity인지 한 번에 확인","point 출처·setup 안전성은 별도"] },
         ]}
         terms={[
           { symbol: "G_1,G_2", name: "source groups", description: "같은 prime order q를 가진 서로 다른 additive input groups입니다." },
