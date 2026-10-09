@@ -14,7 +14,9 @@ export default function TwoPredictionsViz() {
   return <LaborSceneFrame title="같은 최저시급을 서로 다른 출발점에 적용한다"
     description="경쟁 기준과 동일 임금 고용주의 노동시간을 여섯 조건에서 비교합니다."
     note="(가정) 같은 생산·노동공급 관계를 유지한 연속 시간 모형입니다. 1992년 관측치를 예측한 그래프가 아닙니다."
-    labels={labels} notes={notes} render={s => {
+    labels={labels} notes={notes}
+    renderClassName="min-h-[17rem] min-[390px]:min-h-[13.5rem] sm:min-h-0" noteClassName="min-h-[10.5rem] min-[390px]:min-h-[8.75rem] sm:min-h-0"
+    render={s => {
       const F = floors[s], n = monopsonyHours(F), p = laborPlan(n, F);
       return <div className="space-y-4 text-sm leading-7">
         <p className="font-bold">{F === 0 ? "최저시급 제한 없음" : `최저시급 ${F}`}</p>

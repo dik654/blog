@@ -629,3 +629,41 @@ OLD:
 NEW:
 { title: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html",
 ```
+
+## 후속 작업 결과 (3차)
+담당: (6) 항목의 남은 부분 "실물인도 상품 목록 현행성". 처리일 2026-10-10. 글: `src/pages/articles/markets/derivatives/derivative-curriculum-gaps-data.ts`(`krxDerivativesMechanicsData`, route `markets/krx-derivatives-contract-orders-and-daily-settlement`) 9절 셋째 문단을 두 문단으로 교체.
+
+| 항목 | 처리 | 근거(열어 본 주소·결과·인용) |
+|---|---|---|
+| 현행 규정 조문 | 적용 | KRX 법무포털 https://rule.krx.co.kr/ → 현행 규정 > 업무규정 > 파생상품시장규정 > "파생상품시장 업무규정"(브라우저 새 탭, 본문 iframe `rule.krx.co.kr/out/regulation/regulationView.do`). 머리글 "[일부개정 2026. 4. 15 규정 제2432호 <시행일 : 2026. 6. 29>]". 조문(각 ①항 연속 문장): 제14조 "주가지수선물거래의 최종결제는 최종거래일까지 소멸되지 아니한 미결제약정수량(이하 "최종결제수량"이라 한다)에 대하여 최종결제차금(최종거래일의 정산가격과 최종결제가격과의 차이에 최종결제수량 및 거래승수를 곱하여 산출되는 금액을 말한다. 이하 같다)을 수수하는 방법으로 한다." / 제21조의5 변동성지수선물·제27조 주식선물·제37조의5 ETF선물·제42조 국채선물(<개정 2010. 9. 1., 2017. 2. 8.>)·제43조의5 단기금리선물·제60조 일반상품선물(<개정 2015. 10. 21.>) 모두 "…의 최종결제는 최종결제수량에 대하여 최종결제차금을 수수하는 방법으로 한다." / 제48조 "통화선물거래의 최종결제는 최종결제수량에 대하여 통화와 최종결제대금을 수수하는 방법으로 한다." / 제144조 "회원과 위탁자는 최종결제수량에 대하여 현금을 수수하거나 기초자산을 수수하는 방법으로 최종결제를 하여야 한다." |
+| 상품 명세 대조 | 적용 | global.krx.co.kr 상품 명세(모두 200, curl): KOSPI 200 Futures(GLB0201040201) "Final Settlement Cash"; 3-Year(…0501)·5-Year(…0502)·10-Year(…0503, "Listing date February 25, 2008")·30-Year KTB Futures(…0506) "Final Settlement Cash"; Three-Month KOFR Futures(…0505) "Final Settlement Cash"; US Dollar Futures(…0601) "Final Settlement Physical Delivery … Delivery Versus Payment Settlement of Currency Futures"; JPY(…0603)·EUR(…0604) "Final Settlement Physical Delivery"; CNH(…0605) "Final Settlement Physical Delivery"; US Dollar Options(…0602) "Final Settlement Cash"; Gold Futures(…0703) "Settlement type Cash settlement … refer to 「 The rule §60. Final Settlement」"; Lean Hog Futures(…0702) "Final Settlement Cash Settlement"; ETF Futures(…0801) "Settlement Cash settlement". Single Stock Futures(…0401) 명세 표에는 결제방법 칸이 없어 규정 제27조만으로 적음. |
+| 옛 서술의 현행성 | 불일치 확인·본문에 명시 | KRX "Settlement of Futures Transactions"(https://global.krx.co.kr/contents/GLB/06/0603/0603010802/GLB0603010802.jsp, 200, 2026-10-10 재확인)은 지금도 "For the transactions of 10-year KTB futures, USD futures, JPY futures, EUR futures, and Gold futures, … final settlement is made by physical delivery"라고 적지만, 현행 업무규정 제42조(국채선물)·제60조(일반상품선물)와 10년 국채·금 선물 명세는 현금결제 → 이 안내 페이지의 상품 목록은 현행과 어긋남. 본문에 "안내 페이지는 10년 국채선물과 금선물까지 실물인도로 적고 있어 현행 규정·명세와 어긋나므로 거래 시점의 규정과 종목 명세로 다시 확인"이라고 적음. 기존 evidence 항목("KRX 선물 결제")의 note는 세 구분만 말하므로 그대로 두되, 아래 목록에서 상품 목록 불일치를 note에 덧붙임. |
+
+검증: `bash scripts/check-article.sh markets/krx-derivatives-contract-orders-and-daily-settlement` 통과, `npx eslint src/pages/articles/markets/derivatives/derivative-curriculum-gaps-data.ts` 통과. 브라우저 탭은 작업 뒤 닫음.
+
+## 후속 공용 파일 수정 목록 (3차)
+old는 2026-10-10 현재 `src/content/article-evidence.ts`에 1회만 나옴(grep -c 1). `markets/krx-derivatives-contract-orders-and-daily-settlement` 배열 끝("KRX 선물 결제" 항목)의 note를 고치고 항목 2개 추가.
+
+### src/content/article-evidence.ts
+```old
+      "note": "체결 뒤 결제를 일일정산·반대거래·최종결제로 나누고 최종결제를 현금결제와 실물인수도로 구분합니다."
+    }
+  ],
+```
+```new
+      "note": "체결 뒤 결제를 일일정산·반대거래·최종결제로 나누고 최종결제를 현금결제와 실물인수도로 구분합니다. 이 페이지의 실물인도 상품 목록(10년 국채·금 선물 포함)은 현행 업무규정·명세(현금결제)와 어긋납니다(2026-10-10 확인)."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX 파생상품시장 업무규정(규정 제2432호, 2026-04-15 일부개정·2026-06-29 시행) 최종결제방법 조문",
+      "href": "https://rule.krx.co.kr/",
+      "note": "제14조·제21조의5·제27조·제37조의5·제42조·제43조의5·제60조는 최종결제차금 수수(현금결제), 제48조 통화선물은 통화와 최종결제대금 수수(실물인수도), 제144조는 현금 또는 기초자산 수수. 법무포털 현행 규정 화면에서 2026-10-10 확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX 미국달러선물 명세(Final Settlement: Physical Delivery)",
+      "href": "https://global.krx.co.kr/contents/GLB/02/0201/0201040601/GLB0201040601.jsp",
+      "note": "미국달러·엔·유로·위안 선물은 Physical Delivery, 3·5·10·30년 국채·KOFR·금·돈육·ETF 선물과 미국달러옵션은 Cash. 각 명세 페이지 2026-10-10 확인."
+    }
+  ],
+```

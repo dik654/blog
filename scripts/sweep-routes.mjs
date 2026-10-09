@@ -23,7 +23,8 @@ function opt(name, fallback) {
 const base = opt("base", "http://localhost:5199").replace(/\/$/, "");
 const outRoot = opt("out", "output/playwright/sweep");
 const noScreenshot = args.includes("--no-screenshot");
-let routes = args.filter((arg) => !arg.startsWith("--") && !/^https?:/.test(arg) && !arg.startsWith("output"));
+const optionValues = new Set(["--base", "--out"].flatMap((name) => { const i = args.indexOf(name); return i >= 0 && i + 1 < args.length ? [args[i + 1]] : []; }));
+let routes = args.filter((arg) => !arg.startsWith("--") && !optionValues.has(arg));
 if (args.includes("--registrations")) {
   const dir = "src/content/registrations";
   const modules = fs.existsSync(dir) ? fs.readdirSync(dir).filter((name) => name.endsWith(".ts")) : [];
@@ -83,31 +84,61 @@ async function measureViz(page) {
       const r = el.getBoundingClientRect();
       return { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) };
     };
+    const visible = (el) => el.getClientRects().length > 0;
+    const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    // 페이지 스크롤이 멈출 때까지 기다린다. html 에 scroll-behavior: smooth 가 걸려 있어
+    // scrollIntoView 직후에 재면 스크롤 도중의 좌표가 잡혀 수천 px 의 가짜 흔들림이 나온다.
+    const settle = async () => {
+      let last = -1;
+      for (let i = 0; i < 40; i += 1) {
+        await frame();
+        if (window.scrollY === last) return;
+        last = window.scrollY;
+      }
+    };
     for (const [index, canvas] of canvases.entries()) {
-      canvas.scrollIntoView({ block: "start" });
+      canvas.scrollIntoView({ block: "start", behavior: "instant" });
+      await settle();
       await new Promise((r) => setTimeout(r, 80));
-      const buttons = [...canvas.querySelectorAll("[data-viz-controls] button[aria-pressed]")];
+      // 장면 버튼(aria-pressed)은 데스크톱 컨트롤에만 있다. 모바일에서는 display:none 이라
+      // 좌표가 전부 0 으로 잡히므로, 보이는 버튼(이전/다음/재생)만 흔들림 측정 대상으로 삼고
+      // 장면 전환은 보이는 "다음" 버튼으로 한다.
+      const sceneButtons = [...canvas.querySelectorAll("[data-viz-controls] button[aria-pressed]")];
+      const controlButtons = [...canvas.querySelectorAll("[data-viz-controls] button")].filter(visible);
+      const sceneButtonsVisible = sceneButtons.some(visible);
+      const nextButton = controlButtons.find((b) => /다음|next/i.test(b.textContent || b.getAttribute("aria-label") || ""));
+      const scenes = sceneButtons.length;
       const baseFrame = rect(canvas);
+      const baseScroll = window.scrollY;
       // control 은 frame 기준 상대 좌표로 잰다 (sticky control 이 page scroll 로 움직이는 것은 흔들림이 아님)
       const relative = (b) => {
         const r = rect(b);
         const f = rect(canvas);
         return { x: r.x - f.x, y: r.y - f.y, w: r.w, h: r.h };
       };
-      const baseButtons = buttons.map(relative);
+      const baseButtons = controlButtons.map(relative);
       let maxFrameDelta = 0;
       let maxButtonDelta = 0;
-      for (const button of buttons) {
+      let scrolled = 0;
+      const steps = sceneButtonsVisible
+        ? sceneButtons
+        : nextButton
+          ? Array.from({ length: Math.max(scenes - 1, 0) }, () => nextButton)
+          : [];
+      for (const button of steps) {
+        if (button.disabled) break;
         button.click();
         await new Promise((r) => setTimeout(r, 120));
-        const frame = rect(canvas);
+        await settle();
+        scrolled = Math.max(scrolled, Math.abs(window.scrollY - baseScroll));
+        const frameRect = rect(canvas);
         maxFrameDelta = Math.max(
           maxFrameDelta,
-          Math.abs(frame.x - baseFrame.x),
-          Math.abs(frame.w - baseFrame.w),
-          Math.abs(frame.h - baseFrame.h),
+          Math.abs(frameRect.x - baseFrame.x),
+          Math.abs(frameRect.w - baseFrame.w),
+          Math.abs(frameRect.h - baseFrame.h),
         );
-        buttons.forEach((b, i) => {
+        controlButtons.forEach((b, i) => {
           const r = relative(b);
           const b0 = baseButtons[i];
           maxButtonDelta = Math.max(
@@ -122,11 +153,12 @@ async function measureViz(page) {
       const canvasOverflow = canvas.scrollWidth > canvas.clientWidth + 1;
       results.push({
         index,
-        scenes: buttons.length,
+        scenes,
         frameHeight: baseFrame.h,
         fitsViewport: baseFrame.h <= window.innerHeight,
         maxFrameDelta,
         maxButtonDelta,
+        scrolled,
         canvasHorizontalOverflow: canvasOverflow,
       });
     }

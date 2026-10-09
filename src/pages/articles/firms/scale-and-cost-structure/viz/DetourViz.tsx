@@ -20,7 +20,7 @@ export default function DetourViz() {
     <div data-viz-canvas tabIndex={0} role="group" aria-label="수량별 세 생산 방법의 비용" onKeyDown={scenes.onKeyDown}
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
-        <h4 className="text-base font-bold">{c.quantity}개 · 최저 {c.minimum} · 방법 {c.minimizers.join(" 또는 ")}</h4>
+        <h4 className="min-h-[3rem] text-base font-bold min-[390px]:min-h-[1.5rem] sm:min-h-0">{c.quantity}개 · 최저 {c.minimum} · 방법 {c.minimizers.join(" 또는 ")}</h4>
         <div className="space-y-4" aria-live="polite">
           {c.rows.map(m => <div key={m.id} className="border-l-2 border-primary/50 pl-3">
             <p className="text-sm font-bold">{m.id} · {m.label} {m.total === c.minimum ? "(최저)" : ""}</p>
@@ -28,7 +28,7 @@ export default function DetourViz() {
             <p className="mt-1 text-sm text-muted-foreground">하나당 평균 {Number(m.average.toFixed(2))}</p>
           </div>)}
         </div>
-        <p className="text-sm leading-7">{NOTES[scenes.active]}</p>
+        <p className="min-h-[10.5rem] text-sm leading-7 min-[390px]:min-h-[8.75rem] sm:min-h-0">{NOTES[scenes.active]}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={SCENES} />
     </div>

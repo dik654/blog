@@ -739,3 +739,60 @@ new:
     note: "2026-10-09에 배포 CSV를 내려받아 Location=World 행의 TFR(여성 1명당 출생아 수)을 읽음. 1950년 4.8519, 2023년 2.2505. 소득과 출산이 같은 기간에 함께 움직였다는 것만 뒷받침하고 인과는 뒷받침하지 않음",
   },
 ```
+
+## 후속 작업 결과 (3차)
+처리일 2026-10-10. 담당 2건: 금감원 소비자경보 원 주소 교체(보류) · 상품명 변경 조치(적용).
+
+| 항목 | 판정 | 근거 URL·인용·보류 사유 |
+|---|---|---|
+| #11-(a) fss.or.kr 원 주소로 citeKey 11·evidence href 교체 | **보류** | 2026-10-10 curl: https://www.fss.or.kr/ 와 https://www.fss.or.kr/fss/bbs/B0000188/list.do?menuNo=200218 모두 HTTP 200이지만 본문은 `<title>금융감독원 대국민 서비스 중단 안내</title>`(점검 2026.10.08 18:00 ~ 10.10 24:00)라 게시물 검색 불가. Wayback CDX(`fss.or.kr/fss/bbs/B0000188/view.do?menuNo=200218&nttId=1368*~1374*`, matchType=prefix)로 2024-07~08 보도자료 사본 60여 건을 훑고 이웃 게시물을 직접 열어 날짜를 맞춤(nttId 137323=2024-07-24 은행권 내부통제 점검결과, 137326·137346·137349, 137352=2024-07-29 위메프·티몬 합동 현장점검) — 2024-07-26 배포 커버드콜 경보 게시물은 Wayback에 수집된 적이 없음. 소비자경보 게시판(B0000175) 사본은 2024-11 이후(nttId 138761, 187545=2024-32호 공개매수)만 있음. korea.kr(정책브리핑) 검색도 해당 보도자료 없음. Internet Archive 자체도 이날 간헐적으로 "Temporarily Offline"이었음. **재시도 시점: 2026-10-11 00:00 점검 종료 이후** fss.or.kr 보도자료 검색("커버드콜")으로 nttId를 받아 href를 바꿀 것. 글의 citeKey 11 본문·evidence note의 "삼성화재 사본" 설명은 사실 그대로라 손대지 않음. |
+| #11-(b) 상품명 변경 조치(2024-09) 1차 원문 | **적용 + 공용파일 목록으로 이관** | 금감원·거래소·협회 문서는 못 찾음(fss.or.kr 중단, KIND 뷰어 `acptNo=20240923000063` "[KODEX 미국배당커버드콜액티브] ETF기타시장안내"는 본문이 JS 렌더링이라 curl로 읽지 못함, 미래에셋 공지가 링크한 koscom 공시 relay는 404). 대신 지시문이 1차로 인정한 **운용사 공시** 두 건을 원문 HTML로 직접 읽음(둘 다 HTTP 200, 2026-10-10). ① https://investments.miraeasset.com/tigeretf/ko/customer/notice/view.do?detailsKey=557 — "커버드콜 월배당 ETF 9종 명칭 변경 사전 안내의 건 2024.09.19", 표 9종(TIGER 미국배당+3%프리미엄다우존스 → TIGER 미국배당다우존스타겟커버드콜1호, … TIGER 배당프리미엄액티브 → TIGER 배당커버드콜액티브), "2. 효력 발생일 : 2024년 9월 25일", "3. 변경 사유 : 커버드콜 ETF 목표분배수익률, 수익구조 등 투자에 있어 투자자 오인발생 가능성을 고려, 상장명 명칭 변경을 통해 투자자 보호를 강화하고자 함", "기존의 ETF 운용 전략 및 타겟 분배율은 변함이 없는 점 참고 부탁 드리며". ② https://www.samsungfund.com/etf/lounge/notice-view.do?no=62474 — "Kodex ETF 5종 명칭 변경 안내 2024.09.23", "2024년 9월 25일부로 Kodex ETF 5종의 펀드명 변경 사항이 있어 아래와 같이 공지드립니다.", "투자전략 인지 제고를 위한 종목명 변경", 표(483280 Kodex 미국AI테크TOP10+15%프리미엄 → Kodex 미국AI테크TOP10타겟커버드콜, 481060 Kodex 미국30년국채+12%프리미엄(합성 H) → Kodex 미국30년국채타겟커버드콜(합성 H), 483290, 441640, 475080). 보조로 삼성 규약 변경 공시 https://www.samsungfund.com/fund/lounge/announcement/fund-view.do?no=227331 ("명칭 변경(KODEX 미국30년국채+12%프리미엄 → KODEX 미국30년국채타겟커버드콜), 커버드콜 공시서식 개정 반영", "3. 효력발생일 : 2024-09-25") 확인. **본문**: 10절 여섯째 문단 끝의 "이후 상품명을 바꾼 조치는 금융감독원 원문으로 확인하지 못해 여기서 다루지 않습니다." 범위 문장을 지우고, 그 뒤에 문단 3개(날짜·사례 이름 먼저 → 미래에셋 공지의 사유 인용 → 919원 계산이 새 이름에도 적용되며 감독당국 요구 문서 자체는 미확인이라는 범위)를 넣고 citeKey 12(미래에셋)·13(삼성) 인용 블록을 citeKey 11 뒤에 추가. 2차 보도(mt.co.kr 등)는 근거로 쓰지 않음. |
+
+고친 글 파일: `src/pages/articles/markets/covered-calls-and-income-funds.tsx`. 검증: `bash scripts/check-article.sh markets/covered-calls-and-income-funds` — learning contract·knowledge graph·viz·naturalness·term-density·term-pair·reading-order 통과, prose-readability는 처음 긴 문단 1개가 걸려 둘로 나눈 뒤 이 글은 재검토 목록에서 빠짐(남은 rc=1은 firms/why-firms-exist). `npx eslint` 통과.
+
+## 후속 공용 파일 수정 목록 (3차)
+각 old는 2026-10-10 현재 해당 파일에서 한 번만 나온다(python count==1 확인). 두 파일 모두 기존 금감원 소비자경보(삼성화재 사본) 항목 바로 뒤에 두 항목을 추가한다.
+
+### `src/content/article-evidence.ts`
+```old
+PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+    }
+```
+```new
+PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "미래에셋자산운용 · 커버드콜 월배당 ETF 9종 명칭 변경 사전 안내의 건 (TIGER ETF 공지사항, 2024-09-19)",
+      "href": "https://investments.miraeasset.com/tigeretf/ko/customer/notice/view.do?detailsKey=557",
+      "note": "2026-10-10 원문 확인. 미래에셋자산운용 TIGER ETF 공지사항(2024-09-19). “2. 효력 발생일 : 2024년 9월 25일”, “3. 변경 사유 : 커버드콜 ETF 목표분배수익률, 수익구조 등 투자에 있어 투자자 오인발생 가능성을 고려, 상장명 명칭 변경을 통해 투자자 보호를 강화하고자 함”, “기존의 ETF 운용 전략 및 타겟 분배율은 변함이 없는 점 참고 부탁 드리며”. 변경 전·후 9종 표(TIGER 미국배당+3%프리미엄다우존스 → TIGER 미국배당다우존스타겟커버드콜1호 등). 한국 관할. 운용사 공지이며 감독당국이 운용사에 보낸 요구 문서 자체는 확인하지 못했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "삼성자산운용 · Kodex ETF 5종 명칭 변경 안내 (Kodex 공지사항, 2024-09-23)",
+      "href": "https://www.samsungfund.com/etf/lounge/notice-view.do?no=62474",
+      "note": "2026-10-10 원문 확인. 삼성자산운용 Kodex 공지사항(2024-09-23). “2024년 9월 25일부로 Kodex ETF 5종의 펀드명 변경 사항이 있어 아래와 같이 공지드립니다.”, 사유 “투자전략 인지 제고를 위한 종목명 변경”, 표 5종(481060 Kodex 미국30년국채+12%프리미엄(합성 H) → Kodex 미국30년국채타겟커버드콜(합성 H) 등). 같은 운용사의 규약 변경 공시(https://www.samsungfund.com/fund/lounge/announcement/fund-view.do?no=227331, 2024-09-25, 효력발생일 2024-09-25)도 같은 명칭 변경을 적습니다. 한국 관할."
+    }
+```
+
+### `src/content/registrations/finance-audit-current.ts`
+```old
+PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+  }
+```
+```new
+PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "미래에셋자산운용 · 커버드콜 월배당 ETF 9종 명칭 변경 사전 안내의 건 (TIGER ETF 공지사항, 2024-09-19)",
+    "href": "https://investments.miraeasset.com/tigeretf/ko/customer/notice/view.do?detailsKey=557",
+    "note": "2026-10-10 원문 확인. 미래에셋자산운용 TIGER ETF 공지사항(2024-09-19). “2. 효력 발생일 : 2024년 9월 25일”, “3. 변경 사유 : 커버드콜 ETF 목표분배수익률, 수익구조 등 투자에 있어 투자자 오인발생 가능성을 고려, 상장명 명칭 변경을 통해 투자자 보호를 강화하고자 함”, “기존의 ETF 운용 전략 및 타겟 분배율은 변함이 없는 점 참고 부탁 드리며”. 변경 전·후 9종 표(TIGER 미국배당+3%프리미엄다우존스 → TIGER 미국배당다우존스타겟커버드콜1호 등). 한국 관할. 운용사 공지이며 감독당국이 운용사에 보낸 요구 문서 자체는 확인하지 못했습니다."
+  },
+  {
+    "kind": "공식 문서",
+    "label": "삼성자산운용 · Kodex ETF 5종 명칭 변경 안내 (Kodex 공지사항, 2024-09-23)",
+    "href": "https://www.samsungfund.com/etf/lounge/notice-view.do?no=62474",
+    "note": "2026-10-10 원문 확인. 삼성자산운용 Kodex 공지사항(2024-09-23). “2024년 9월 25일부로 Kodex ETF 5종의 펀드명 변경 사항이 있어 아래와 같이 공지드립니다.”, 사유 “투자전략 인지 제고를 위한 종목명 변경”, 표 5종(481060 Kodex 미국30년국채+12%프리미엄(합성 H) → Kodex 미국30년국채타겟커버드콜(합성 H) 등). 같은 운용사의 규약 변경 공시(https://www.samsungfund.com/fund/lounge/announcement/fund-view.do?no=227331, 2024-09-25, 효력발생일 2024-09-25)도 같은 명칭 변경을 적습니다. 한국 관할."
+  }
+```

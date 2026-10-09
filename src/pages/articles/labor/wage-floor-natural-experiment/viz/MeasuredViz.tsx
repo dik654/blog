@@ -10,7 +10,9 @@ export default function MeasuredViz() {
   return <LaborSceneFrame title="논문 표의 행과 비교 대상을 먼저 읽는다"
     description="Card·Krueger(1994) 표 3의 관측값을 설명용 노동시간 모형과 구분합니다."
     note="정규직 환산(FTE)은 관리자 포함 전일제 수에 시간제 수의 절반을 더한 이 논문의 측정치입니다."
-    labels={labels} notes={notes} render={s => <div className="space-y-4 text-sm leading-7">
+    labels={labels} notes={notes}
+    renderClassName="min-h-[13.5rem] min-[390px]:min-h-[12.75rem] sm:min-h-0" noteClassName="min-h-[10.5rem] min-[390px]:min-h-[8.75rem] sm:min-h-0"
+    render={s => <div className="space-y-4 text-sm leading-7">
       {s === 0 ? <><p>2~3월 · 첫 조사 410곳</p><p>4월 1일 · 뉴저지 법정 최저시급 4.25 → 5.05달러</p><p>11~12월 · 후속 조사</p><p>펜실베이니아의 법정 최저시급은 4.25달러 유지</p></> : s <= 2 ? <>
         <div className="grid grid-cols-2 gap-3"><div className="border-l-2 border-primary/50 pl-3"><p>뉴저지 변화</p><p className="text-xl font-bold">+{s === 1 ? "0.59" : "0.47"}</p></div><div className="border-l-2 border-primary/50 pl-3"><p>펜실베이니아 변화</p><p className="text-xl font-bold">−{s === 1 ? "2.16" : "2.28"}</p></div></div>
         <p>논문 보고 변화 차이 {s === 1 ? "2.76 · 표준오차 1.36" : "2.75 · 표준오차 1.34"}</p><p>{s === 1 ? "각 시점의 자료가 있는 가게 평균" : "두 시점 모두 자료가 있는 같은 가게"}</p>

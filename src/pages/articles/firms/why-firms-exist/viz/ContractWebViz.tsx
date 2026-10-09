@@ -20,14 +20,14 @@ export default function ContractWebViz() {
         className="flex h-[37rem] min-h-[32rem] min-w-0 flex-col gap-5 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
         <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{s + 1}. {SCENES[s]}</h4>
-        <p className="border-y border-border py-3 text-sm leading-7">{s === 0 ? "요청자 ↔ 담당자: 매번 조건 합의" : s === 3 ? "발주자 ↔ 외부 공급자: 기본 계약 + 개별 주문" : "회사 ↔ 근로자: 보수·업무 범위 등을 먼저 합의"}</p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <p className="min-h-[5.125rem] border-y border-border py-3 text-sm leading-7 min-[390px]:min-h-[3.4rem] sm:min-h-0">{s === 0 ? "요청자 ↔ 담당자: 매번 조건 합의" : s === 3 ? "발주자 ↔ 외부 공급자: 기본 계약 + 개별 주문" : "회사 ↔ 근로자: 보수·업무 범위 등을 먼저 합의"}</p>
+        <div className="grid min-h-[15rem] grid-cols-2 gap-3 sm:min-h-0 sm:grid-cols-3">
           {Array.from({ length: 6 }, (_, i) => <div key={i} className="border-l-2 border-primary/50 pl-3 text-sm leading-6">
             <p className="font-bold">작업 {i + 1}</p>
             <p>{s === 0 ? "조건 협상 → 실행" : s === 1 ? "세부 배정은 나중에" : s === 3 ? "주문 → 이행 확인" : "허용 범위 확인 → 배정"}</p>
           </div>)}
         </div>
-        <p aria-live="polite" className="text-sm leading-7">{NOTES[s]}</p>
+        <p aria-live="polite" className="min-h-[7rem] text-sm leading-7 min-[390px]:min-h-[5.25rem] sm:min-h-0">{NOTES[s]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>

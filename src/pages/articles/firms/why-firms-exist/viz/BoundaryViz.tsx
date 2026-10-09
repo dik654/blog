@@ -27,17 +27,17 @@ export default function BoundaryViz() {
           <p className="text-lg font-bold">안 {c.n}개 · 현재 {coordinationTotal(c.n, c.outside)}</p>
           <p className="mt-1 text-sm">최저 {options.minimum} · 안 {options.minimizers.join("개 또는 ")}개</p>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid min-h-[13rem] grid-cols-3 gap-2 min-[390px]:min-h-[9rem] sm:min-h-0">
           {INSIDE.map((inside, i) => <div key={i} className="border-l-2 border-primary/50 pl-2">
             <p className="text-xs">일 {i + 1} · {i < c.n ? "안" : "밖"}</p>
             <p className="mt-1 text-base font-bold">비용 {i < c.n ? inside : c.outside}</p>
             <p className="mt-1 text-xs leading-5 text-muted-foreground">안 {inside} / 밖 {c.outside}</p>
           </div>)}
         </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-4" aria-label="안에서 처리하는 개수별 전체 비용">
+        <div className="grid min-h-[9rem] grid-cols-2 gap-x-4 gap-y-2 text-sm min-[390px]:min-h-[6.5rem] sm:min-h-0 sm:grid-cols-4" aria-label="안에서 처리하는 개수별 전체 비용">
           {options.totals.map((total, n) => <p key={n} className={options.minimizers.includes(n) ? "font-bold text-primary" : "text-muted-foreground"}>안 {n}개 → {total}{options.minimizers.includes(n) ? " (최저)" : ""}</p>)}
         </div>
-        <p className="text-sm leading-7">{c.note}</p>
+        <p className="min-h-[7rem] text-sm leading-7 min-[390px]:min-h-[5.25rem] sm:min-h-0">{c.note}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>

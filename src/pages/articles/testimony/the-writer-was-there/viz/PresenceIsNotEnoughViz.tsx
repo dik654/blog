@@ -122,7 +122,7 @@ export default function PresenceIsNotEnoughViz() {
             </svg>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground max-[390px]:min-h-[17.5rem] min-[390px]:max-sm:min-h-[12.25rem]">
             {NOTES[s]}
           </p>
         </div>

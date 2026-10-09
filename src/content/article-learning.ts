@@ -133967,7 +133967,7 @@ export const ARTICLE_LEARNING: Readonly<
   "economic-history/mena-land-debt-oil-and-diversification": regionalEconomicHistoryLearning({
     entryNote: "석유 판매 100에서 생산·기업 몫 30과 부채 상환 10을 빼 정부가 60을 쓰는 장부로 토지·외채·석유 제도를 연결합니다.",
     coreIdea: "중동·북아프리카의 경제사는 토지·조세 권리와 외채 통제, 석유 계약과 국가 예산, 이주 노동과 비석유 생산을 함께 봐야 하며 산유국 모형을 지역 전체에 적용할 수 없습니다.",
-    assumed: { id: "petrodollar-recycling", role: "석유 수입이 국제 은행과 대출을 거쳐 산유국·수입국의 외화 장부를 잇는 경로를 제공합니다." },
+    assumed: { id: "petrodollar-recycling", role: "석유 수입이 국제 은행과 대출을 거쳐 산유국·수입국의 외화 장부를 잇는 경로를 제공합니다. 본문 7절은 IMF 1975년 연차보고서의 1974년 석유 융자(산유국 7곳 차입 약정 약 28억 SDR)와 연방준비제도 역사 자료의 미국 은행 중개로 이 경로를 확인합니다." },
     concepts: [
       {
         id: "oil-concession-contract",

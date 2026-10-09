@@ -19,6 +19,7 @@ export default function PriceChoiceViz() {
       className="flex h-[37rem] min-w-0 flex-col gap-4 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
         <h4 className="text-base font-bold">{SCENES[s]}</h4>
+        <div className="flex min-h-[18.5rem] flex-col gap-4 sm:min-h-0">
         <div className="grid grid-cols-2 gap-3">
           {[a, b].map(v => <div className="border-l-2 border-primary/50 pl-3 text-sm leading-7" key={v.quantity}>
             <p className="font-bold">가격 {v.price} · {v.quantity}개</p>
@@ -30,7 +31,8 @@ export default function PriceChoiceViz() {
           <p>새 한 개 +9</p><p>다른 세 개 −3</p><p className="font-bold">매출 증가 +6</p>
           {s === 3 && <><p>추가 생산 비용 −7</p><p className="font-bold">이익 변화 −1</p></>}
         </div>}
-        <p className="text-sm leading-7">{NOTES[s]}</p>
+        </div>
+        <p className="min-h-[7rem] text-sm leading-7 min-[390px]:min-h-[5.25rem] sm:min-h-0">{NOTES[s]}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={SCENES} />
     </div>
