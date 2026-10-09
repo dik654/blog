@@ -51,6 +51,8 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: "true"
+          # tsc -b over the large content modules needs more than the default ~4GB heap.
+          NODE_OPTIONS: --max-old-space-size=8192
 
       - uses: actions/upload-pages-artifact@v3
         with:
