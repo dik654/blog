@@ -86,7 +86,7 @@ export const bankingArticles: Article[] = [
     "id": "predict",
     "title": "20. 한 조건을 바꾸고 장부를 먼저 예상해 보세요"
   }
-],
+  ],
     component: () =>
       import("@/pages/articles/banking/bank-balance-sheet-and-deposit-creation"),
   },
@@ -167,7 +167,7 @@ export const bankingArticles: Article[] = [
     "id": "review",
     "title": "18. 조건을 바꾼 뒤 금리와 장부를 먼저 예측해 봅니다"
   }
-],
+  ],
     component: () =>
       import("@/pages/articles/banking/central-bank-and-policy-transmission"),
   },
@@ -248,7 +248,7 @@ export const bankingArticles: Article[] = [
     "id": "review",
     "title": "18. 순서와 부도 조건을 바꾸기 전에 결과를 예상해 봅니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/banking/payment-clearing-settlement"),
   },
   {

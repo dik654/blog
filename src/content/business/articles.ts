@@ -46,7 +46,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 높은 성장률 하나로 좋은 사업이라고 판단할 수 없습니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/business-model-cashflow"),
   },
   {
@@ -94,7 +94,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 손익분기점에 도달해도 투자금 회수가 끝난 것은 아닙니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/shop-unit-economics"),
   },
   {
@@ -142,7 +142,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 입지 점수는 미래 매출의 보증서가 아닙니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/shop-site-selection"),
   },
   {
@@ -190,7 +190,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 완성 사진은 준공·영업 가능·회수 가능의 증거가 아닙니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/shop-fitout-and-opening"),
   },
   {
@@ -286,7 +286,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 평균 매출이 높아도 점주 한 사람의 삶은 다를 수 있습니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/franchise-incentives"),
   },
   {
@@ -334,7 +334,7 @@ export const businessArticles: Article[] = [
     "id": "limits",
     "title": "10. 공급망 재편이 곧 한 국가의 승리라는 결론은 빠릅니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/business/supply-chain-bargaining"),
   },
 ];

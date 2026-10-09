@@ -46,7 +46,7 @@ export const propertyArticles: Article[] = [
     "id": "limits",
     "title": "10. 권리금과 보증금, 시설값은 서로 다른 청구권입니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/property/commercial-lease-and-rent"),
   },
   {
@@ -94,7 +94,7 @@ export const propertyArticles: Article[] = [
     "id": "limits",
     "title": "10. 과거 매출이 앞으로의 영업권 가치를 보장하지 않습니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/property/shop-transfer-and-goodwill"),
   },
   {
@@ -142,7 +142,7 @@ export const propertyArticles: Article[] = [
     "id": "limits",
     "title": "10. 양도와 지원금도 확정 조건과 지급 날짜를 따진다"
   }
-],
+  ],
     component: () => import("@/pages/articles/property/shop-closure-and-restoration"),
   },
   {
@@ -190,7 +190,7 @@ export const propertyArticles: Article[] = [
     "id": "limits",
     "title": "10. 개발 호재라는 말에는 확률과 비용이 빠져 있습니다"
   }
-],
+  ],
     component: () => import("@/pages/articles/property/land-development-residual"),
   },
 ];

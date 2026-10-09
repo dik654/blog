@@ -470,7 +470,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "Pure self-attention의 token uniformity와 skip connection·MLP 역할을 분석한 연구",
     },
     { kind: "핵심 논문", label: "Root Mean Square Layer Normalization", href: "https://arxiv.org/abs/1910.07467", note: "평균을 빼지 않고 제곱평균만으로 재정규화하는 RMSNorm을 제안하고 실행 시간 절감을 보고한 연구" },
-],
+  ],
   "ai/bert": [
     { kind: "핵심 논문", label: "BERT: Pre-training of Deep Bidirectional Transformers", href: "https://arxiv.org/abs/1810.04805", note: "양방향 encoder visibility와 BERT pretraining의 원문" },
   ],
@@ -555,7 +555,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "평가 논문", label: "SO-101 real-robot VLA failure and recovery benchmark", href: "https://arxiv.org/abs/2606.08881", note: "실제 저비용 robot의 failure taxonomy와 recovery를 final success와 분리한 독립 평가" },
     { kind: "핵심 논문", label: "A Survey of Embodied AI: From Simulators to Research Tasks", href: "https://arxiv.org/abs/2103.04918", note: "인터넷 dataset이 아니라 자기 몸으로 환경과 상호작용하며 배우는 embodied AI 정의의 출처이며 이후 VLA 계열의 성능을 규정하지 않음" },
     { kind: "핵심 논문", label: "LAION-5B", href: "https://arxiv.org/abs/2210.08402", note: "58억 5천만 image-text pair 규모의 공식 artifact이며 robot demonstration data 규모(수십만 trajectory)와의 자릿수 차이를 보여 주는 대표 수치, VLM/RT-2 학습에 직접 쓰였다는 근거는 아님" },
-],
+  ],
   "ai/word2vec": [
     {
       "kind": "핵심 논문",
@@ -891,7 +891,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     { kind: "핵심 논문", label: "Language Models are Unsupervised Multitask Learners (GPT-2)", href: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf", note: "UTF-8 byte 256개를 unicode로 매핑해 BPE를 적용하는 byte-level BPE encoder" },
     { kind: "공식 코드", label: "openai/gpt-2 — src/encoder.py", href: "https://github.com/openai/gpt-2/blob/master/src/encoder.py", note: "bytes_to_unicode()의 256-byte lookup table 구현" },
-],
+  ],
   "ai/math-matrices-svd": [
     {
       kind: "공개 강의",
@@ -2844,7 +2844,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2309.00267",
       note: "사람 대신 AI judge가 preference label을 매기는 RLAIF 변형의 실험 근거",
     },
-],
+  ],
   "ai/dpo": [
     { kind: "핵심 논문", label: "Direct Preference Optimization", href: "https://arxiv.org/abs/2305.18290", note: "KL-regularized reward objective를 chosen·rejected policy log-ratio loss로 재매개화" },
     { kind: "공식 문서", label: "Hugging Face TRL · DPO Trainer", href: "https://huggingface.co/docs/trl/dpo_trainer", note: "Reference handling·loss variant·data format을 확인하는 implementation surface" },
@@ -2926,7 +2926,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/ptq-calibration": [
     { kind: "핵심 논문", label: "SmoothQuant", href: "https://proceedings.mlr.press/v202/xiao23c.html", note: "Activation outlier 난이도를 equivalent scaling으로 이동하는 W8A8 PTQ" },
     { kind: "핵심 논문", label: "AWQ", href: "https://arxiv.org/abs/2306.00978", note: "Activation 크기 기준 channel-wise scaling으로 salient weight를 보호하는 outlier handling" },
-],
+  ],
   "ai/quantization-aware-training": [
     { kind: "핵심 논문", label: "Quantization and Training of Neural Networks", href: "https://arxiv.org/abs/1712.05877", note: "Affine integer quantization과 quantization-aware training의 기준 연구" },
   ],
@@ -2966,7 +2966,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "ShortGPT: Layers in Large Language Models are More Redundant Than You Expect", href: "https://arxiv.org/abs/2403.03853", note: "Block Influence 점수로 25% layer를 지우고 최대 1.49배 속도를 낸 layer pruning" },
     { kind: "핵심 논문", label: "Not All Experts are Equal: Efficient Expert Pruning and Skipping for Mixture-of-Experts Large Language Models", href: "https://arxiv.org/abs/2402.14800", note: "Mixtral 8x7B expert 2~4개 제거의 실제 성능 하락 폭을 보고한 MoE expert pruning" },
     { kind: "핵심 논문", label: "Accelerating Sparse Deep Neural Networks", href: "https://arxiv.org/abs/2104.08378", note: "2:4 structured sparsity에서만 2배 처리량을 내는 Ampere Sparse Tensor Core 조건" },
-],
+  ],
   "ai/one-shot-llm-pruning": [
     {
       "kind": "핵심 논문",
@@ -3003,7 +3003,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "teacher intermediate representation을 hint로 전달하는 feature distillation",
     },
     { kind: "핵심 논문", label: "Hinton, Vinyals, Dean — Distilling the Knowledge in a Neural Network (MNIST/speech 실험 수치)", href: "https://arxiv.org/abs/1503.02531", note: "MNIST test error 67(large)/146(small baseline)/74(T=20 distilled), speech test frame accuracy 58.9%/61.1%/60.8%·WER 10.9%/10.7%/10.7%" },
-],
+  ],
   "ai/sequence-distillation": [
     {
       kind: "핵심 논문",
@@ -3080,7 +3080,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Efficient and robust approximate nearest neighbor search using HNSW", href: "https://arxiv.org/abs/1603.09320", note: "Multi-layer proximity graph approximate-neighbor index" },
     { kind: "핵심 논문", label: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking" },
     { kind: "핵심 논문", label: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", href: "https://arxiv.org/abs/2004.12832", note: "문서 token embedding을 미리 계산해 두고 query token과 MaxSim으로 비교하는 late interaction" },
-],
+  ],
   "ai/lora-finetuning": [
     {
       kind: "핵심 논문",
@@ -3124,7 +3124,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://www.youtube.com/watch?v=CcrC5zSv1iA",
       note: "SFT·PEFT·DPO·tooling·multimodal 범위의 discovery map이며 실행 의미는 공식 구현 문서로 재검증",
     },
-],
+  ],
   "ai/image-video-lora-architecture": [
     {
       kind: "공식 문서",
@@ -3291,7 +3291,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://arxiv.org/abs/2602.16313",
       "note": "2026-10-05 원문 확인. memory-action-evaluation 절에서 기억 회상 90/100과 후속 과제 성공 8/20을 구분합니다. 숫자는 가정이며 논문 benchmark 결과가 아닙니다."
     },
-],
+  ],
   "ai/context-window-optimization": [
     {
       kind: "핵심 논문",
@@ -3301,7 +3301,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     { kind: "핵심 논문", label: "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models", href: "https://arxiv.org/abs/2310.05736", note: "작은 model perplexity 기반 token-level 압축, 저자 데이터셋에서 최대 20배 압축·손실 최소 자기보고" },
     { kind: "핵심 논문", label: "LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression", href: "https://arxiv.org/abs/2310.06839", note: "질문 인지 압축·재배치, NaturalQuestions 4배 감소·성능 최대 21.4%↑, LooGLE 비용 94.0%↓ 저자 자기보고" },
-],
+  ],
   "ai/mcp-protocol": [
     {
       kind: "공식 문서",
@@ -4184,7 +4184,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/grammar-constrained-generation": [
     { kind: "핵심 논문", label: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models", href: "https://arxiv.org/abs/2411.15100", note: "Context-independent token 사전 분류와 CFG stack 재사용으로 constrained decoding overhead를 줄이는 엔진" },
-],
+  ],
   "ai/cfg-pushdown-automata": [],
   "ai/incremental-parsing-tree-sitter": [
     {
@@ -4422,7 +4422,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://arxiv.org/pdf/2401.00588",
       "note": "2026-10-04 고정 원문 확인. 2×를 서비스의 절대 차이 상한과 이론 하한의 관계로 교정"
     },
-],
+  ],
   "ai/vllm-paged-attention": [
     {
       kind: "핵심 논문",
@@ -4503,7 +4503,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://github.com/vllm-project/vllm/blob/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/single_type_kv_cache_manager.py",
       "note": "2026-10-04 고정 원문 확인. 35→38→49의 수요 및 partial-hit CoW 추가 ref"
     },
-],
+  ],
   "ai/vllm-spec-decode": [
     {
       "kind": "공식 코드",
@@ -4609,7 +4609,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://github.com/dik654/ojs-agents/blob/c6b0fb756aa66a33e9f0b1cd4a53c2ee1202a618/products/office-secretary/experiments/MODEL_SIZE_DECISION.md",
       "note": "2026-10-04 원문 확인. 원문인증열람확인,32PING측정과일반성능한계"
     },
-],
+  ],
   "ai/agent-run-contract": [
     {
       kind: "공식 문서",
@@ -4637,7 +4637,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
       "note": "2026-10-04 원문 확인. 26/27과 0.7의 서로 다른 판정"
     },
-],
+  ],
   "ai/harness-failure-ablation": [
     {
       kind: "공식 문서",
@@ -4671,7 +4671,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://www.anthropic.com/engineering/building-effective-agents",
       "note": "2026-10-04 원문 확인. 파일 선택과 고정 검사·반영 권한 분리"
     },
-],
+  ],
   "ai/agent-code-mode": [
     {
       kind: "공식 문서",
@@ -7062,7 +7062,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA Nsight Systems 2025.1 User Guide", href: "https://docs.nvidia.com/nsight-systems/2025.1/UserGuide/index.html", note: "CPU/GPU timeline·CUDA trace의 release-pinned profiler 문서" },
     { kind: "공식 문서", label: "NVIDIA Nsight Compute Profiling Guide · GPU Speed Of Light / Memory Workload Analysis / Metrics Reference", href: "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html", note: "Throughput = achieved / peak sustained 백분율, active·elapsed 분모, sector 기준 hit rate 정의의 근거" },
     { kind: "공식 문서", label: "NVIDIA Nsight Systems User Guide · CUDA Trace / Timeline View", href: "https://docs.nvidia.com/nsight-systems/UserGuide/index.html", note: "CUDA API trace 와 workload trace 의 구분, CPU range 에서 launch 된 GPU activity 의 timeline 투영, kernel 에서 Nsight Compute 를 띄우는 연결의 근거" },
-],
+  ],
   "gpu/cuda-register-pressure": [
     {
       "kind": "공식 문서",
@@ -7106,12 +7106,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
       note: "Graph 정의·실행 분리로 CPU launch 비용을 상각한다는 공식 설명 — traffic 절감을 주장하지 않음",
     },
-],
+  ],
   "gpu/cuda-persistent-kernels": [
     { kind: "핵심 논문", label: "A Study of Persistent Threads Style GPU Programming", href: "https://doi.org/10.1109/InPar.2012.6339596", note: "Persistent worker와 work distribution use cases의 2012 primary study이며 현대 GPU speedup 보장은 아님" },
     { kind: "공식 문서", label: "NVIDIA CUDA C++ Programming Guide 12.8.1", href: "https://docs.nvidia.com/cuda/archive/12.8.1/cuda-c-programming-guide/index.html", note: "Grid·block residency·atomic·memory ordering과 cooperative execution primitive의 pinned semantics" },
     { kind: "공식 문서", label: "NVIDIA CUTLASS · Efficient GEMM in CUDA · Persistent kernels / Tile Scheduler", href: "https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/efficient_gemm.md", note: "SM 수만큼의 persistent block 과 Tile Scheduler 의 static 배분, ping-pong 설계의 근거" },
-],
+  ],
   "gpu/cfd-finite-volume-gpu": [
     { kind: "공식 문서", label: "NASA Glenn · Navier–Stokes Equation", href: "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/navier-strokes-equation/", note: "Mass·momentum·energy conservation equations와 CFD의 물리적 출발점" },
     { kind: "공식 문서", label: "OpenFOAM Foundation · Technical Guides", href: "https://openfoam.org/guides/", note: "Finite-volume CFD equation·model·solver guidance의 공식 진입점" },
@@ -7416,7 +7416,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://zkevm.ethereum.foundation/blog/sp1-fv",
       "note": "JALR 100+1→100 장난감 사례로 과거 completeness bug와 정리의 h_valid_pc 전제를 구분했습니다. EF 보고서상 v6.1.0 수정 통보이며 현재 고정 v6.4.0에 같은 버그가 남았다는 주장이 아닙니다."
     },
-],
+  ],
   "isms-aml/vasp-custody-management": [
     { kind: "공식 문서", label: "금융위원회 · 가상자산이용자보호법 시행 Q&A", href: "https://www.fsc.go.kr/po020201/83937", note: "2026-08-14 확인한 국내 콜드월렛 경제적 가치 80%·일일 산정 경계이며 PoR·지급능력·key safety 보장은 아님" },
     { kind: "공식 가이드", label: "FATF · Updated Guidance for VA and VASPs", href: "https://www.fatf-gafi.org/content/dam/fatf/documents/recommendations/Updated-Guidance-VA-VASP.pdf", note: "VASP와 third-party custody의 risk-based control 원칙이며 특정 wallet·custodian·PoR 제품 승인은 아님" },
@@ -7704,7 +7704,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Qwen3-Next · official architecture announcement", href: "https://qwen.ai/blog?id=qwen3-next", note: "80B total·약 3B active MoE와 hybrid attention·MTP의 공개 사례이며 active 수만으로 hardware latency·full-context admission을 확정하지 않음" },
     { kind: "공식 문서", label: "NVIDIA Transformer Engine · NVFP4 format", href: "https://docs.nvidia.com/deeplearning/transformer-engine-releases/release-2.15/user-guide/features/low_precision_training/nvfp4/nvfp4.html", note: "Blackwell NVFP4 value·block/tensor scale format 근거이며 특정 model checkpoint·dual-GPU speedup·quality 보장은 아님" },
     { kind: "공식 코드", label: "llama.cpp GGUF quantize tool README (Q8_0 benchmark)", href: "https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md", note: "Q8_0 block-scale overhead가 만드는 8.5bit/weight 평균 폭의 project 실측 근거이며 다른 model·revision의 값을 보장하지 않음" },
-],
+  ],
   "ai/supervised-learning-loop": [
     { kind: "보충 읽기", label: "Deep Learning Book · Machine Learning Basics", href: "https://www.deeplearningbook.org/contents/ml.html", note: "Input·target·model·objective와 generalization의 기본 역할 정본" },
     { kind: "핵심 논문", label: "Automatic Differentiation in Machine Learning: a Survey", href: "https://jmlr.org/papers/v18/17-468.html", note: "Forward·reverse derivative 계산과 optimizer update의 책임 분리" },
@@ -7775,7 +7775,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://arxiv.org/html/2403.02310v3",
       "note": "2026-10-04 확인. τ8, n_t2, chunk6 then batch total8"
     },
-],
+  ],
   "ai/serving-memory-admission-and-preemption": [
     { kind: "핵심 논문", label: "Efficient Memory Management for Large Language Model Serving with PagedAttention", href: "https://arxiv.org/abs/2309.06180", note: "FCFS·all-or-nothing eviction과 recompute·swap 정의, block 크기별 비교, OPT-13B token당 800 KB와 20.4~38.2% 활용률의 출처" },
     { kind: "공식 문서", label: "vLLM Optimization and Tuning — Preemption", href: "https://docs.vllm.ai/en/latest/configuration/optimization.html", note: "V1 기본 preemption mode RECOMPUTE와 preemption을 줄이는 설정 조정 방향" },
@@ -7837,7 +7837,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
       "note": "2026-10-04 확인. free100MiB×0.9 vs token80MiB chooses80MiB; host byte capacity"
     },
-],
+  ],
   "ai/inference-runtime-anatomy": [
     { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "2026-10-06 확인. API server·engine core·GPU worker·DP coordinator의 현재 process 수와 ZMQ many-to-many 연결의 근거" },
     { kind: "공식 코드", label: "vllm/v1/worker/gpu_worker.py · vllm/v1/engine/core.py", href: "https://github.com/vllm-project/vllm/blob/main/vllm/v1/worker/gpu_worker.py", note: "init_device → load_model → determine_available_memory → initialize_from_config → compile_or_warm_up_model 순서와 KV byte 뺄셈의 근거" },
@@ -7881,7 +7881,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://sre.google/sre-book/service-level-objectives/",
       "note": "2026-10-04 확인. client clock, nearest-rank,5min windows,288denominator,99%"
     },
-],
+  ],
   "ai/prefill-decode-phase-dynamics": [
     { kind: "핵심 논문", label: "Roofline: An Insightful Visual Performance Model for Multicore Architectures", href: "https://doi.org/10.1145/1498765.1498785", note: "Arithmetic intensity 와 ridge point 로 compute·memory 병목을 판정하는 원 model" },
     { kind: "핵심 논문", label: "Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve", href: "https://arxiv.org/abs/2403.02310", note: "Chunked prefill 과 stall-free scheduling 으로 decode 간섭을 다룬 OSDI 2024 연구, 수치는 저자 자기보고" },
@@ -7935,7 +7935,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://www.nvidia.com/en-us/data-center/h100/",
       "note": "2026-10-04 확인. FP16 표의 sparsity 각주와 3.35 TB/s를 확인하며 dense989는 반올림 참조 가정입니다."
     },
-],
+  ],
   "gpu/sm-warp-scheduling-and-issue": [
     {
       "kind": "공식 문서",
@@ -8881,7 +8881,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://developers.openai.com/api/docs/guides/function-calling",
       "note": "2026-10-04 원문 확인. 모델제안·외부실행·결과재입력분리"
     },
-],
+  ],
   "ai/multimodal-retrieval-and-visual-grounding": [
     { kind: "핵심 논문", label: "Radford et al. · CLIP (ICML 2021)", href: "https://arxiv.org/abs/2103.00020", note: "Image-text 대조학습과 공유 embedding 공간 수치의 근거" },
     { kind: "핵심 논문", label: "Faysse et al. · ColPali (ICLR 2025)", href: "https://arxiv.org/abs/2407.01449", note: "Screenshot retrieval 인덱싱 속도·ViDoRe 성능 수치의 근거" },
@@ -8925,7 +8925,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods",
       "note": "2026-10-04 원문 확인. 의도한효과의반복동일성과비멱등재시도조건"
     },
-],
+  ],
   "ai/rl-foundations-for-llm-post-training": [
     { kind: "핵심 논문", label: "Policy Gradient Methods for Reinforcement Learning with Function Approximation", href: "https://proceedings.neurips.cc/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html", note: "Policy gradient theorem의 형식적 정의와 증명의 출처" },
     { kind: "공식 문서", label: "Reinforcement Learning: An Introduction (2nd ed.)", href: "https://mitpress.mit.edu/9780262039246/reinforcement-learning/", note: "Return·MDP·REINFORCE 정의의 표준 교과서 출처" },
@@ -9031,7 +9031,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://arxiv.org/pdf/2104.08894",
       "note": "ImageNet 26·38·43·43과 이웃 수 3·5·10·20을 함께 읽고 실제 자료의 추정과 별도 생성 자료 검증을 구별합니다."
     },
-],
+  ],
   "ai/math-numerical-precision-stability": [
     {
       "kind": "핵심 논문",
@@ -10325,7 +10325,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/62cc78db14ad37dede55c361711ba2ae_6002_l22.pdf",
       "note": "4쪽 Example 1의 부품별 전력식에 가상 12 V 회로의 각 전압·전류를 넣습니다."
     },
-],
+  ],
   "circuits/storage-elements-and-transients": [
     { kind: "공개 강의", label: "MIT OCW 6.002 Lecture 12, ‘Capacitors and First-Order Systems’, 4–5·10–11쪽", href: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/84f4b553fc6a1ddd7007465041c4e213_6002_l12.pdf", note: "축전기 q=Cv, i=C dv/dt와 RC 지수 응답·초기 조건을 공식 강의안에서 확인했다. 수치는 글의 가정이다." },
     { kind: "공개 강의", label: "MIT OCW 8.02 Chapter 11, ‘Inductance’ (2007), 10·17–19쪽", href: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/f5c35823a7faac0d893754ab42804e7e_chap11inductance.pdf", note: "½LI², RL 상승식과 L/R 시간 상수·자기장 에너지 장부를 공식 PDF에서 확인했다. 1 H는 가정이다." },
@@ -11893,16 +11893,16 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "crypto/quantum-computing-and-cryptographic-risk": [    {
-      "kind": "핵심 논문",
-      "label": "Grover · A fast quantum mechanical algorithm for database search",
-      "href": "https://arxiv.org/abs/quant-ph/9605043",
-      "note": "네 후보의 진폭 [−0.5,0.5,0.5,0.5]와 반사 결과를 원문의 연산에 대입합니다."
-    },     {
-      "kind": "핵심 논문",
-      "label": "Shor · Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms",
-      "href": "https://arxiv.org/abs/quant-ph/9508027",
-      "note": "15·밑2·첫 공간256에서 주기4와 측정64, 최대공약수3·5를 연결한 교육용 계산입니다."
-    }, {"kind": "공식 문서", "label": "Babbush 외 · 2026 ECDLP 자원 추정 · v2", "href": "https://arxiv.org/abs/2603.28846v2", "note": "2026-04-15 수정 v2를 2026-10-04 확인. §II.2의 논리·물리 자원 조건을 대조합니다. v2는 검증 자료의 ZKP 건전성에 영향을 주던 소프트웨어 오류를 수정했습니다."}, {"kind": "공식 문서", "label": "IBM Quantum Learning · Grover introduction", "href": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction", "note": "공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다."}, {"kind": "공식 문서", "label": "NIST · Post-Quantum Cryptography", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}, {"kind": "핵심 논문", "label": "Gidney · How to factor 2048 bit RSA integers with less than a million noisy qubits", "href": "https://arxiv.org/abs/2505.15917", "note": "2025-05-21 v1 초록을 2026-10-09 확인. 잡음 있는 물리 큐비트 100만 개 미만·1주 미만, 최근접 정사각 격자·게이트 오류율 0.1%·표면 부호 주기 1 µs·반응 시간 10 µs 가정의 추정이며 실제 인수분해 실행이 아닙니다."}],
+    "kind": "핵심 논문",
+    "label": "Grover · A fast quantum mechanical algorithm for database search",
+    "href": "https://arxiv.org/abs/quant-ph/9605043",
+    "note": "네 후보의 진폭 [−0.5,0.5,0.5,0.5]와 반사 결과를 원문의 연산에 대입합니다."
+  },     {
+    "kind": "핵심 논문",
+    "label": "Shor · Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms",
+    "href": "https://arxiv.org/abs/quant-ph/9508027",
+    "note": "15·밑2·첫 공간256에서 주기4와 측정64, 최대공약수3·5를 연결한 교육용 계산입니다."
+  }, {"kind": "공식 문서", "label": "Babbush 외 · 2026 ECDLP 자원 추정 · v2", "href": "https://arxiv.org/abs/2603.28846v2", "note": "2026-04-15 수정 v2를 2026-10-04 확인. §II.2의 논리·물리 자원 조건을 대조합니다. v2는 검증 자료의 ZKP 건전성에 영향을 주던 소프트웨어 오류를 수정했습니다."}, {"kind": "공식 문서", "label": "IBM Quantum Learning · Grover introduction", "href": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/grover-algorithm/introduction", "note": "공식 강의의 제곱근 질의 개선과 실제 장치 비용 구별. 본문을 읽었으며 연결된 동영상 전체 시청을 주장하지 않습니다."}, {"kind": "공식 문서", "label": "NIST · Post-Quantum Cryptography", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}, {"kind": "핵심 논문", "label": "Gidney · How to factor 2048 bit RSA integers with less than a million noisy qubits", "href": "https://arxiv.org/abs/2505.15917", "note": "2025-05-21 v1 초록을 2026-10-09 확인. 잡음 있는 물리 큐비트 100만 개 미만·1주 미만, 최근접 정사각 격자·게이트 오류율 0.1%·표면 부호 주기 1 µs·반응 시간 10 µs 가정의 추정이며 실제 인수분해 실행이 아닙니다."}],
   "crypto/ml-kem-and-noisy-equations": [{"kind": "공식 문서", "label": "FIPS 203 · Algorithm 18, Tables 1–3", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf", "note": "2024 최종 표준 §6·8. 표 1(인쇄 15쪽) 복호 실패율 ML-KEM-768 2^−164.8, 표 2(인쇄 39쪽) k=3·η1=2·η2=2·du=10·dv=4. 2025-11-17 errata 안내가 있으므로 구현 시 최신 정정표도 확인합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-KEM-768 kem.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_kem/ml-kem-768/clean/kem.c", "note": "136–163행의 원문 바이트와 라이선스를 코드 패널에 보존했습니다. 본문 사례의 작은 수는 이 코드의 파라미터가 아닙니다."}, {"kind": "공식 문서", "label": "NIST SP 800-227 · Recommendations for KEMs", "href": "https://csrc.nist.gov/pubs/sp/800/227/final", "note": "2025년 9월 최종 권고(NIST 게시 페이지는 월까지만 표기, 일자 미확인). KEM의 기능과 이를 통신 프로토콜에 조합할 때 필요한 검사를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 203 최종본·정정 안내", "href": "https://csrc.nist.gov/pubs/fips/203/final", "note": "2026-10-04 확인. 정정표 파일은 접근 제한으로 직접 읽지 못했으며 정정 내용을 추측하지 않습니다."}],
   "crypto/post-quantum-signatures": [{"kind": "공식 문서", "label": "FIPS 204 · Algorithms 7–8, Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf", "note": "ML-DSA 최종 표준. 서명·검증, domain context와 key/signature 크기를 대조합니다."}, {"kind": "공식 문서", "label": "PQClean · ML-DSA-44 sign.c · 0586a824", "href": "https://github.com/PQClean/PQClean/blob/0586a824fc0d49df0b6b6e9179d8d15d06d0974f/crypto_sign/ml-dsa-44/clean/sign.c", "note": "135–194행 생성과265–328행 검증을 보존했습니다. 난수·인코딩·일치 검사의 실제 순서를 읽습니다."}, {"kind": "공식 문서", "label": "FIPS 205 · §6–10와 Table 2", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.205.pdf", "note": "SLH-DSA 최종 표준. WOTS+·FORS·hypertree의 역할과12개 파라미터 묶음의 크기를 확인합니다."}, {"kind": "공식 문서", "label": "NIST PQC · 최신 표준화 상태", "href": "https://csrc.nist.gov/Projects/Post-Quantum-Cryptography", "note": "2026-10-04 확인. FIPS203·204·205와 후속 Falcon·HQC 표준화 상태를 구분합니다."}, {"kind": "공식 문서", "label": "FIPS 204 · 최신 정정 안내", "href": "https://csrc.nist.gov/pubs/fips/204/final", "note": "2026-07-31 정정 예정 항목 안내가 추가됐습니다. 정정표 파일은 접근 제한으로 직접 열지 못했으며 구체 정정 내용을 추정하지 않습니다."}],
   "crypto/quantum-key-distribution": [
