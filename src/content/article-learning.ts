@@ -145040,6 +145040,19 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
+        "question": "자동 경보, 분석 사건, STR 결정이 왜 서로 다른 단계인지 사례로 설명하세요.",
+        "answerChecklist": [
+          "1,000 입금·20 손실·980 출금이 경보를 띄워도 그 자체로 신고 결정은 아닙니다.",
+          "조사자가 고객 목적·자금 출처와 연결 기록을 보고 사건 판단을 남깁니다.",
+          "STR 여부는 권한자가 결정하고, 경보·사건·신고 상태를 따로 기록합니다."
+        ],
+        "requiredConcepts": [
+          "derivatives-trade-funding-lineage"
+        ],
+        "sectionId": "mechanism"
+      },
+      {
+        "level": "basic",
         "question": "두 번째 공식 자료와 첫 자료의 관할·목적 차이를 설명하세요.",
         "answerChecklist": [
           "금융정보분석원 · 의심거래보고",
@@ -145242,6 +145255,19 @@ export const ARTICLE_LEARNING: Readonly<
           "derivatives-complaint-evidence-pack"
         ],
         "sectionId": "source"
+      },
+      {
+        "level": "basic",
+        "question": "회사 최종 답변에 무엇이 들어가야 고객이 다음 구제 경로로 넘어갈 수 있는지 설명하세요.",
+        "answerChecklist": [
+          "보상 여부와 그 근거",
+          "외부 조정·중재 기관과 신청 기한",
+          "국가·상품·계약 법인에 따라 기관과 기한이 달라짐"
+        ],
+        "requiredConcepts": [
+          "derivatives-dispute-redress-path"
+        ],
+        "sectionId": "mechanism"
       },
       {
         "level": "basic",
