@@ -52,12 +52,13 @@ Z&=\sum_{t=1}^{T}m_t\\
 \mathcal L_{\mathrm{SFT}}&=-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{loss mask 계산}}\\
-\mathcal L_{\mathrm{SFT}}&=\underbrace{-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})}_{\text{로그 비용 변환}}
+Z&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{학습할 token 수}}\\
+\mathcal L_{\mathrm{SFT}}&=-\underbrace{\frac1Z}_{\text{token당 평균}}\sum_{t=1}^{T}\underbrace{m_t}_{\text{prompt면 0}}\underbrace{\log p_\theta(y_t\mid x,y_{<t})}_{\text{정답 prefix 뒤 정답 확률}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["loss mask이(가) 식의 결과에 기여하는 방식을","계산합니다.","Teacher forcing으로 이전 정답 token을","context에 넣고 다음 정답 token의 negative"] },
-          { expression: String.raw`-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Teacher forcing으로 이전 정답 token을","context에 넣고 다음 정답 token의 negative","log-likelihood를 합합니다."] },
+          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["mask가 1인 assistant token만 셉니다", "prompt·padding 위치는 0"] },
+          { expression: String.raw`\log p_\theta(y_t\mid x,y_{<t})`, annotation: ["teacher forcing: 이전 정답 token을", "context에 넣고 다음 정답 token에", "둔 확률의 log"] },
+          { expression: String.raw`-\frac1Z\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid x,y_{<t})`, annotation: ["reasoning trace·답·종료 token의 NLL을", "Z로 나눠 길이에 무관한 scale로"] },
         ]}
         terms={[
           {

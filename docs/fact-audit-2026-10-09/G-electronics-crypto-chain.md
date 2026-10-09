@@ -1,6 +1,28 @@
 # G-electronics-crypto-chain 감사 원장
 확인일: 2026-10-09. 글 29편. 열어 본 URL 101개(성공 99 / 실패 2). PDF 원문 24건은 내려받아 `pdftotext`로 본문·쪽번호를 대조했고, 스캔본(Wilson 1931·Shockley 1949·Kirchhoff 1845·BB84 1984)은 해당 쪽을 이미지로 렌더링해 직접 읽었다. 고정 `codebase/` 스냅샷 18개 파일은 전부 upstream raw 파일과 바이트 단위 `diff`로 대조했고, 태그→커밋 대응(Pico SDK 2.2.0, FreeRTOS V11.2.0, MCUboot v2.2.0)은 GitHub API로 확인했다. 수치 사례는 전부 Python으로 재계산했다.
 
+## 적용 결과
+적용일: 2026-10-09. 글 본문 파일 11개를 직접 고쳤고, 공용 파일(article-evidence·article-learning·registrations)의 대응 문구는 맨 끝 `## 공용 파일 수정 목록`으로 넘겼다. 집계: 적용 12 · 보류 0 · 후속 0 · 공용 파일 old→new 31쌍(발견 10건에 걸침: 1·3·4·5·6·7·9·10·11·12).
+
+| # | 결과 | 글 파일에서 한 일 · 비고 |
+|---|---|---|
+| 1 | 적용 + 공용파일 목록으로 이관 | `glamsterdam-block-execution/ModernArticle.tsx` 개요: "2026-10-09 기준 EIP-7732·EIP-7928은 2026-10-06 Last Call, 마감 2026-11-01; EIP-7773은 Review, 메인넷 활성화 칸 비어 있음"으로 갱신하고 Last Call이 메인넷 일정이 아님을 덧붙임. EIP-7732 CitationBlock의 "Review 상태" → "2026-10-09 기준 Last Call(마감 2026-11-01)". evidence note 3건은 article-evidence·registrations/web3-audit-current 양쪽 목록에 올림. |
+| 2 | 적용 | `serial-buses-and-tradeoffs.tsx` 7절에 UM10204 Rev. 7.0의 네 속도 모드(100 k·400 k·1 M·3.4 Mbit/s)와 Fm+ 63 µs 계산, 표 11(인쇄 44쪽) Fast-mode t_LOW 1.3 µs·t_HIGH 0.6 µs로 2.5 µs 주기의 여유 0.6 µs 계산, §3.1.8(인쇄 11쪽) 중재 규칙(SCL HIGH 동안 SDA 비교, HIGH를 보냈는데 LOW면 패배·SDA 출력 끔·버스가 빈 뒤 재시작)과 0x20 대 0x48 첫 비트 사례(가정)를 넣음. ExplainedFormula 가정과 14절 "다른 장치의 점유"를 중재로 연결, CitationBlock 범위 갱신. 비고: 원장이 "표 10"이라 적은 Fast-mode 타이밍 표는 Rev. 7.0에서 **표 11**("Characteristics of the SDA and SCL bus lines…", 44쪽)이다(표 10은 I/O 단 특성). 2026-10-09 PDF를 내려받아 대조함. |
+| 3 | 적용 + 공용파일 목록으로 이관 | `ml-kem-and-noisy-equations.tsx` 6절에 FIPS 203 표 2(인쇄 39쪽/PDF 48쪽) ML-KEM-768 k=3·η1=2·η2=2·du=10·dv=4, η의 뜻(−2…2), dv=4 압축 폭 3329/16≈208·최대 반올림 오차 ≈104를 추가. 10절에 표 1(인쇄 15쪽/PDF 24쪽) 복호 실패율 2^−138.8 / 2^−164.8(≈2.5×10^−50) / 2^−174.8과 해시·XOF 무작위성 가정을 넣음. 원장의 "Table 1(p.23)"은 PDF 24쪽·인쇄 15쪽으로 확인. |
+| 4 | 적용 + 공용파일 목록으로 이관 | `yield-defect-and-packaging.tsx` 12절에 Murphy 모형(Y=∫e^{−A₀D}f(D)dD, 포아송은 특수한 경우)과 음이항 모형·군집 매개변수 α 문단, 그리고 ExplainedFormula `Y=(1+D₀A_c/α)^−α`(λ=0.1: 포아송 0.9048·α=5 0.9057·α=1 0.9091; λ=0.4: 0.6703 대 α=1 0.7143)을 추가. α=1.5~2 전형값은 강의안 인용. 비고: 원장의 쪽번호(17–18·26–28쪽)는 실제 PDF와 맞지 않아, 슬라이드 이미지를 렌더링해 확인한 PDF 19쪽(Murphy 적분식)·23쪽(감마 f(D), α=cluster parameter, Y_gamma)·25쪽(α→∞ 포아송, α=1.5~2)을 썼다. 강의안 25쪽의 "α→0이면 Seeds 모형"은 수학적으로 α=1일 때 1/(1+A₀D₀)가 되는 것과 어긋나므로 본문에 옮기지 않았다. |
+| 5 | 적용 + 공용파일 목록으로 이관 | `quantum-computing-and-cryptographic-risk.tsx` 9절에 Gidney 2025(arXiv 2505.15917, 2025-05-21): 잡음 있는 물리 큐비트 100만 개 미만·1주 미만, 장치 가정(최근접 정사각 격자, 오류율 0.1%, 표면 부호 주기 1 µs, 반응 시간 10 µs), 2019년 2천만 개·8시간과의 비교, ECDLP 추정과 나란히 놓되 서로 다른 회로·시간 계산이라는 경고를 두 문단으로 넣고 CitationBlock(citeKey 6)을 추가. 10절 RSA 문장에 9절 참조 추가. evidence 항목 추가는 공용 목록으로. |
+| 6 | 적용 + 공용파일 목록으로 이관 | `switching-energy-and-leakage.tsx` CitationBlock "22–24쪽" → "22–25쪽", 본문 "24쪽은 완전 주기 CV², 25쪽은 평균 전력식 P_D=f·E_D=f·C_LV_DD²". |
+| 7 | 적용 + 공용파일 목록으로 이관 | `interrupts-and-latency-budget.tsx` source를 "NVIC priority·pending 설명, DUI 0662A, §4.2.5–§4.2.7 (인쇄 4-5–4-7쪽)"로 넓힘. §4.2.5가 인쇄 4-5쪽임을 Arm PDF 쪽 꼬리말로 확인. |
+| 8 | 적용 | `storage-elements-and-transients.tsx` 두 곳의 "6쪽" → "6–7쪽". 비고: 2026-10-09 PDF를 다시 pdftotext로 보니 **6쪽에도** "RC dvC/dt + vC = vI"가 KCL 식 바로 아래에 있다(7쪽은 vI=VI 상수로 둔 예제). 원 표기는 틀리지 않았고, 원장 제안대로 범위를 넓혀도 정확하다. |
+| 9 | 적용 + 공용파일 목록으로 이관 | `scheduling-and-real-time.tsx` FreeRTOS CitationBlock 2개에 "스크립트 렌더링이라 2026-10-09 본문 문장을 자동 조회로 대조하지 못함(서지·주소만 확인), 동작은 고정 tasks.c와 Reference Manual V10.0.0 PDF로 확인" 범위를 적고, 뮤텍스 주소의 302 이동 경로를 표기. href는 그대로 둠. |
+| 10 | 적용 + 공용파일 목록으로 이관 | `quantum-key-distribution.tsx` "2026-03-16 승인" → "2026년 3월 승인(ITU 권고 목록의 03/26 기준, 승인 일자는 확인하지 못함)". |
+| 11 | 적용 + 공용파일 목록으로 이관 | `ml-kem-and-noisy-equations.tsx` "2025-09-18 최종 권고" → "2025년 9월 최종 권고(NIST 게시 페이지 기준, 일자는 확인하지 못함)". |
+| 12 | 적용 + 공용파일 목록으로 이관 | `lithography-and-resolution.tsx` ASML source에 "(주소의 2021 게시, 페이지 표기 2023-10-04 갱신)" 추가. |
+
+번호 없는 "빠진 내용" 메모(수율 글의 KGD·웨이퍼 프로브 수율 분모, 리소그래피 글의 k₁ 하한·액침 NA)는 발견으로 등재되지 않았고 원장도 "치명적이지 않음"으로 두어 이번에는 고치지 않았다.
+
+검증(2026-10-09): 고친 11개 route마다 `check-article.sh`의 개별 감사(learning-contract·viz-style·prose-readability·korean-naturalness·term-density·term-pair-wrapping)를 실행. `merge-registrations`는 공용 파일을 쓰므로 건너뜀(이 route 중 7개에 registration 모듈이 있음). prose-readability의 전역 `--strict` 실패는 다른 글의 "재검토 필요" 때문이며, 처음 추가한 긴 문단 탓에 이 클러스터 4개 글(glamsterdam·serial-buses·ml-kem·quantum-risk)이 잡혀서 문단을 나눈 뒤 다시 돌렸고, 이제 이 11개 route는 하나도 목록에 없다. 나머지 감사는 전부 통과. `npx eslint`(11개 파일) 통과. `npm run audit:formula -- --strict --require-explicit` 통과(explainedFormulas 1475, missingExplicitAnnotations 0).
+
 ## 요약
 - 발견: WRONG 0 · OUTDATED 1 · MISLEADING 0 · CALC 0 · LINK 3 · MISSING 4 · UNVERIFIED 4
 - 가장 중요한 발견
@@ -301,3 +323,131 @@ CALC 판정은 0건이다(아래 글별 기록의 CALC 행 참조 — 전수 재
 | https://www.nxp.com/docs/en/user-guide/UM10204.pdf | 404(curl, 비브라우저 UA) | WebFetch 200으로 PDF 수신 후 pdftotext 대조(일치). |
 | https://www.raspberrypi.com/documentation/pico-sdk/hardware.html | 403(curl) | WebFetch 200(일치). |
 | https://www.itu.int/epublications/publication/itu-t-x-1711-2026-03-framework-of-quantum-key-distribution-qkd-protocols-in-qkd-networks | 200(존재 확인만, 전문 미열람) | 권고 목록 페이지(T-REC-X.1711)로 판·시행 상태 확인; 승인 일자(16일)는 UNVERIFIED. |
+
+## 공용 파일 수정 목록
+통합자가 위에서부터 순서대로 적용한다. 모든 old 문자열은 2026-10-09 기준 해당 파일에서 한 번만 나온다(`grep -cF`로 확인). registrations 파일은 merge 시 정본을 덮어쓰므로 article-evidence와 같은 변경을 함께 적는다.
+
+### src/content/article-evidence.ts
+
+1-a. (발견 1) EIP-7773 note
+```
+old: "note": "7732·7928의 예정 목록과 활성화 상태. 메인넷 적용 여부는 별도로 확인합니다. 확인일2026-10-04."
+new: "note": "7732·7928의 예정 목록과 활성화 상태. 2026-10-09 기준 EIP-7773은 Review이고 메인넷 활성화 칸은 비어 있습니다. 메인넷 적용 여부는 별도로 확인합니다. 확인일 2026-10-09."
+```
+1-b. (발견 1) EIP-7732 note
+```
+old: 실행 검증의 시간 분리를 설명합니다. Review 상태의 제안입니다. 확인일2026-10-04."
+new: 실행 검증의 시간 분리를 설명합니다. 2026-10-06에 Review에서 Last Call(마감 2026-11-01)로 바뀐 제안입니다. 확인일 2026-10-09."
+```
+1-c. (발견 1) EIP-7928 note
+```
+old: 인덱스와 검증 조건을 설명합니다. 제안의 성능 가능성과 실측은 구분합니다. 확인일2026-10-04."
+new: 인덱스와 검증 조건을 설명합니다. 제안의 성능 가능성과 실측은 구분합니다. 2026-10-06부터 Last Call(마감 2026-11-01). 확인일 2026-10-09."
+```
+3. (발견 3) FIPS 203 label·note
+```
+old: "label": "FIPS 203 · Algorithm 18, Tables 2–3", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf", "note": "2024 최종 표준 §6·8.
+new: "label": "FIPS 203 · Algorithm 18, Tables 1–3", "href": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf", "note": "2024 최종 표준 §6·8. 표 1(인쇄 15쪽) 복호 실패율 ML-KEM-768 2^−164.8, 표 2(인쇄 39쪽) k=3·η1=2·η2=2·du=10·dv=4.
+```
+11. (발견 11) SP 800-227 note
+```
+old: "note": "2025-09-18 최종 권고. KEM의 기능과
+new: "note": "2025년 9월 최종 권고(NIST 게시 페이지는 월까지만 표기, 일자 미확인). KEM의 기능과
+```
+5. (발견 5) quantum-risk에 Gidney 2025 항목 추가 (NIST 항목 뒤)
+```
+old: "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}],
+new: "note": "2026-10-04 확인. 표준화 상태는 최종 FIPS와 후보 선정·표준 작성 중인 상태를 나눠 읽습니다."}, {"kind": "핵심 논문", "label": "Gidney · How to factor 2048 bit RSA integers with less than a million noisy qubits", "href": "https://arxiv.org/abs/2505.15917", "note": "2025-05-21 v1 초록을 2026-10-09 확인. 잡음 있는 물리 큐비트 100만 개 미만·1주 미만, 최근접 정사각 격자·게이트 오류율 0.1%·표면 부호 주기 1 µs·반응 시간 10 µs 가정의 추정이며 실제 인수분해 실행이 아닙니다."}],
+```
+6-a. (발견 6) switching label
+```
+old: "MIT OCW 6.012 Lecture 14, ‘CMOS’ (2005), 22–24쪽"
+new: "MIT OCW 6.012 Lecture 14, ‘CMOS’ (2005), 22–25쪽"
+```
+6-b. (발견 6) switching note
+```
+old: 완전 주기당 CV²와 평균 전력식을 확인했다.
+new: 완전 주기당 CV²(24쪽)와 평균 전력식 P_D=f·E_D(25쪽)를 확인했다.
+```
+7. (발견 7) interrupts note
+```
+old: "note": "DUI 0662A §4.2.6·§4.2.7, 인쇄 4-6·4-7쪽에서 주변 장치 요청 유지와
+new: "note": "DUI 0662A §4.2.5–§4.2.7, 인쇄 4-5–4-7쪽에서 우선순위 레지스터, 주변 장치 요청 유지와
+```
+4. (발견 4) yield label
+```
+old: "MIT OCW 2.830J Lecture 10 Yield Modeling, 원본 6–7·14·17·30쪽"
+new: "MIT OCW 2.830J Lecture 10 Yield Modeling, 원본 6–7·14·17·19·23·25·30쪽"
+```
+9-a. (발견 9) FreeRTOS fundamentals note
+```
+old: "note": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다."
+new: "note": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다. 스크립트 렌더링 페이지라 2026-10-09 본문 문장을 자동 조회로 대조하지 못했습니다(서지·주소만 확인)."
+```
+9-b. (발견 9) FreeRTOS mutexes note
+```
+old: "note": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다."
+new: "note": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다. 주소는 Documentation/02-Kernel/02-Kernel-features/02-Queues-mutexes-and-semaphores/04-Mutexes로 302 이동하며, 스크립트 렌더링이라 2026-10-09 본문 문장을 자동 조회로 대조하지 못했습니다(서지·주소만 확인). 동작은 tasks.c 원문으로 확인."
+```
+10. (발견 10) ITU-T X.1711 note
+```
+old: "note": "2026-03-16 승인·05-12 게시·in force를 확인했습니다.
+new: "note": "2026년 3월판(03/26)·in force를 확인했습니다. 승인·게시 일자는 전문 페이지를 열지 못해 2026-10-09 재확인에서 확인하지 못했습니다.
+```
+12. (발견 12) ASML label
+```
+old: "label": "ASML, Six crucial steps in semiconductor manufacturing",
+new: "label": "ASML, Six crucial steps in semiconductor manufacturing (2023-10-04 갱신)",
+```
+
+### src/content/article-learning.ts
+
+6. (발견 6)
+```
+old: "evidenceScope": "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다.
+new: "evidenceScope": "공식 PDF 22–25쪽의 식과 에너지 장부를 직접 확인했습니다.
+```
+7. (발견 7)
+```
+old: "contribution": "DUI 0662A §4.2.6·§4.2.7, 인쇄 4-6·4-7쪽에서 주변 장치 요청 유지와
+new: "contribution": "DUI 0662A §4.2.5–§4.2.7, 인쇄 4-5–4-7쪽에서 우선순위 레지스터, 주변 장치 요청 유지와
+```
+9-a. (발견 9)
+```
+old: "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다.",
+new: "contribution": "공식 가이드는 준비된 최고 우선순위 작업의 실행과 실시간 마감의 의미를 설명합니다. 스크립트 렌더링 페이지라 본문 문장은 자동 조회로 대조하지 못했습니다(2026-10-09).",
+```
+9-b. (발견 9)
+```
+old: "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다.",
+new: "contribution": "뮤텍스의 기본 우선순위 상속과 ISR에서 뮤텍스를 기다리지 않는 이유를 설명합니다. 스크립트 렌더링 페이지라 본문 문장은 자동 조회로 대조하지 못했습니다(2026-10-09).",
+```
+
+### src/content/registrations/web3-audit-current.ts
+위 article-evidence의 1-a·1-b·1-c와 **같은 old→new 세 쌍**을 그대로 적용한다(세 old 문자열 모두 이 파일에서도 한 번씩만 나옴).
+
+### src/content/registrations/root-audit-ml-kem-and-noisy-equations.ts
+위 article-evidence의 3·11과 같은 old→new 두 쌍을 적용한다.
+
+### src/content/registrations/root-audit-quantum-computing-and-cryptographic-risk.ts
+이 파일은 배열 끝이 `}]};`라 쉼표 형태가 다르다. 다음 쌍을 적용한다(old는 한 번만 나옴).
+```
+old: 나눠 읽습니다."}]};
+new: 나눠 읽습니다."}, {"kind": "핵심 논문", "label": "Gidney · How to factor 2048 bit RSA integers with less than a million noisy qubits", "href": "https://arxiv.org/abs/2505.15917", "note": "2025-05-21 v1 초록을 2026-10-09 확인. 잡음 있는 물리 큐비트 100만 개 미만·1주 미만, 최근접 정사각 격자·게이트 오류율 0.1%·표면 부호 주기 1 µs·반응 시간 10 µs 가정의 추정이며 실제 인수분해 실행이 아닙니다."}]};
+```
+
+### src/content/registrations/switching-energy-and-leakage.ts
+위 6-a·6-b(article-evidence)를 적용하고, 학습 계약 쪽은 키에 따옴표가 없으므로 다음 쌍을 쓴다(각 old는 이 파일에서 한 번씩 나옴).
+```
+old: evidenceScope: "공식 PDF 22–24쪽의 식과 에너지 장부를 직접 확인했습니다.
+new: evidenceScope: "공식 PDF 22–25쪽의 식과 에너지 장부를 직접 확인했습니다.
+```
+
+### src/content/registrations/yield-defect-and-packaging.ts
+위 article-evidence의 4를 적용한다.
+
+### src/content/registrations/scheduling-and-real-time.ts
+위 article-learning의 9-a·9-b 쌍(`"contribution"` 형태)을 적용한다(두 old 모두 이 파일에서 한 번씩 나옴).
+
+### src/content/registrations/qkd-current.ts
+위 article-evidence의 10을 적용한다.

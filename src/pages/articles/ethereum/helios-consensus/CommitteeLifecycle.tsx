@@ -18,9 +18,10 @@ export default function CommitteeLifecycle({ title, onCodeRef: _onCodeRef }: Pro
         question="어떤 sync committee가 signature slot을 담당하는지 어떻게 계산할까요?"
         idea="Slot을 epoch으로, epoch을 committee period로 두 번 정수 나눗셈합니다. Mainnet preset에서는 두 상수의 곱이 8,192 slots입니다."
         formula={String.raw`period(s)=\left\lfloor\frac{\lfloor s/S_{epoch}\rfloor}{E_{period}}\right\rfloor=\left\lfloor\frac{s}{8192}\right\rfloor`}
-        annotatedFormula={String.raw`period(s)=\underbrace{\left\lfloor\frac{\lfloor s/S_{epoch}\rfloor}{E_{period}}\right\rfloor=\left\lfloor\frac{s}{8192}\right\rfloor}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`period(s)=\biggl\lfloor\frac{\underbrace{\lfloor s/S_{epoch}\rfloor}_{\text{epoch 번호}}}{\underbrace{E_{period}}_{\text{period당 epoch}}}\biggr\rfloor=\underbrace{\left\lfloor\frac{s}{8192}\right\rfloor}_{\text{mainnet 한 번 나눗셈}}`}
         operations={[
-          { expression: String.raw`\left\lfloor\frac{\lfloor s/S_{epoch}\rfloor}{E_{period}}\right\rfloor=\left\lfloor\frac{s}{8192}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Slot을 epoch으로, epoch을 committee","period로 두 번 정수 나눗셈합니다."] },
+          { expression: String.raw`\lfloor s/S_{epoch}\rfloor`, annotation: ["signature slot을 32 slots/epoch로 묶음","slot 8,192 → epoch 256"] },
+          { expression: String.raw`\left\lfloor\frac{s}{8192}\right\rfloor`, annotation: ["두 floor는 32×256=8,192 한 번과 같음","8,191 → period 0, 8,192 → period 1","8,192 서명을 period 0으로 검증 금지"] },
         ]}
         terms={[
           { symbol: "s", name: "Signature slot", description: "Aggregate signature가 생성된 beacon slot" },

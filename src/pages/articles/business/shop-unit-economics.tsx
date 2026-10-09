@@ -99,13 +99,14 @@ export default function ShopUnitEconomicsArticle() {
         <h2 className="mb-6 text-2xl font-bold">9. 점주와 임대인의 숫자는 다른 속도로 움직입니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">점주는 고객 수가 줄면 잔당 공헌이익을 잃지만 약정 임대료는 계속 냅니다. 건물주는 공실 때 임대료를 잃고 보증금 반환·수리비를 내야 합니다. 같은 거리의 가게라도 두 사람의 손익표는 다릅니다.</p>
-          <p className="leading-7">국가마다 임금·세금·영업시간·임대료 전가 방식이 다릅니다. GOV.UK 안내는 비주거 부동산의 business rates와 감면·면제, 지역별 차이를 설명합니다. 호주 NSW의 소매 임차인은 임대료 외에 부담할 outgoings가 계약과 임대인의 공개서에 어떻게 적혔는지 확인합니다. 청소·관리·수선 등의 비용이며 법에서 허용한 범위도 맞아야 합니다.</p>
+          <p className="leading-7">국가마다 임금·세금·영업시간·임대료 전가 방식이 다릅니다. GOV.UK 안내는 비주거 부동산의 business rates와 감면·면제, 지역별 차이를 설명합니다. 호주 NSW의 소매 임차인은 임대료 외에 부담할 outgoings가 계약과 임대인의 공개서에 어떻게 적혔는지 확인합니다.</p>
+          <p className="leading-7">같은 기관의 소매 임차 안내(Retail Tenancy Guide)는 토지세·청소·보안·지방세·수도와 공과금 같은 항목을 예로 들고, 공개서에 밝히지 않은 outgoings는 내지 않아도 될 수 있다고 설명합니다.</p>
           <p className="leading-7">월별 부동산 비용이 늘면 나누는 식의 위쪽인 고정비 800만 원을 고칩니다. 주문마다 드는 비용이 바뀌면 아래쪽인 잔당 공헌이익 4천 원을 고칩니다. 현지 계약과 제도는 두 금액 모두에 영향을 줄 수 있습니다.</p>
         </div>
         <SourceApplication source="Business Queensland · Break-even point" excerpt="This is the point where your total revenue (sales or turnover) equals total costs." application="월 2천 잔이면 매출 1,200만 원, 주문별 비용 400만 원, 고정비 800만 원입니다. 두 비용의 합이 1,200만 원이므로 이 사례에 포함한 비용만큼은 정확히 충당합니다." />
         <CitationBlock source="Business Queensland · Break-even point" citeKey={2} href="https://www.business.qld.gov.au/running-business/finance/essentials/break-even-profit">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
         <CitationBlock source="GOV.UK · Business rates overview" citeKey={3} href="https://www.gov.uk/introduction-to-business-rates">비주거 사용의 과세와 감면·면제를 확인했습니다. 스코틀랜드·북아일랜드의 처리 차이, 잉글랜드·웨일스의 감면 절차를 구분하는 안내이며 모든 점포가 같은 세액을 부담한다는 뜻은 아닙니다.</CitationBlock>
-        <CitationBlock source="NSW Small Business Commissioner · What are outgoings?" citeKey={4} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-are-outgoings">임대료 외 약정 비용과 계약·공개서의 명시, 점포와의 직접적·합리적 관련 및 건물 운영 등의 범위를 확인했습니다. 임대인이 정한 모든 항목이 자동으로 유효하다는 뜻은 아닙니다.</CitationBlock>
+        <CitationBlock source="NSW Small Business Commissioner · What are outgoings?" citeKey={4} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-are-outgoings">2026-10-09 이 페이지는 응답하지 않았고 보관 사본도 없어 원문을 다시 대조하지 못했습니다. 대신 같은 기관 Retail Tenancy Guide의 web.archive.org 2026-05-03 사본에서 &ldquo;Any outgoings the lessee must pay (e.g. land tax, cleaning, security, council rates, water/utility charges, etc)&rdquo;와 &ldquo;Undisclosed outgoings might not have to be paid.&rdquo;를 확인했습니다. 점포와의 직접적·합리적 관련 같은 세부 요건은 확인하지 못했습니다. 임대인이 정한 모든 항목이 자동으로 유효하다는 뜻은 아닙니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">비용 범위를 정해야 기준선도 정해집니다. 마지막으로 점주 노동과 투자 회수를 추가합니다.</p>
       </section>
       <section id="limits" data-teach-level="7" className="scroll-mt-20">

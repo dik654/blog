@@ -23,9 +23,11 @@ export default function Rolling() {
         question="Cutoff c 직전 W시간 동안 확정된 값의 평균을 어떻게 정의할까?"
         idea={<>Entity i의 record 중 event time은 왼쪽 경계 c−W 이상, 오른쪽 경계 c보다 작고 available time도 c 이하인 집합만 선택합니다. 그 집합의 count로 합을 나눕니다.</>}
         formula={String.raw`\mathcal W_{i,c}=\{r_i:c-W\le t^{\mathrm{event}}_r<c,\ t^{\mathrm{avail}}_r\le c\},\qquad \mu_{i,c,W}=\frac{1}{|\mathcal W_{i,c}|}\sum_{r\in\mathcal W_{i,c}}v_r`}
-        annotatedFormula={String.raw`\mathcal W_{i,c}=\underbrace{\{r_i:c-W\le t^{\mathrm{event}}_r<c,\ t^{\mathrm{avail}}_r\le c\},\qquad \mu_{i,c,W}=\frac{1}{|\mathcal W_{i,c}|}\sum_{r\in\mathcal W_{i,c}}v_r}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\mathcal W_{i,c}=\{r_i:\underbrace{c-W\le t^{\mathrm{event}}_r<c}_{\text{발생 시각이 최근 W 안}},\ \underbrace{t^{\mathrm{avail}}_r\le c}_{\text{c까지 도착}}\},\qquad \mu_{i,c,W}=\underbrace{\frac{1}{|\mathcal W_{i,c}|}}_{\text{유효 record 수로 나눔}}\underbrace{\sum_{r\in\mathcal W_{i,c}}v_r}_{\text{창 안 값의 합}}`}
         operations={[
-          { expression: String.raw`\{r_i:c-W\le t^{\mathrm{event}}_r<c,\ t^{\mathrm{avail}}_r\le c\},\qquad \mu_{i,c,W}=\frac{1}{|\mathcal W_{i,c}|}\sum_{r\in\mathcal W_{i,c}}v_r`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Entity i의 record 중 event time은 왼쪽","경계 c−W 이상, 오른쪽 경계 c보다"] },
+          { expression: String.raw`c-W\le t^{\mathrm{event}}_r<c`, annotation: ["발생 시각이 [c−W, c) 안인 record만","W=7일이면 정확히 7일 전은 포함하고","cutoff 시각 자체는 제외합니다"] },
+          { expression: String.raw`t^{\mathrm{avail}}_r\le c`, annotation: ["발생이 창 안이어도 cutoff 뒤에","도착한 record는 그날 쓸 수 없습니다"] },
+          { expression: String.raw`\frac{1}{|\mathcal W_{i,c}|}`, annotation: ["창 안 값의 합을 유효 record 수로 나눔","평균 10이 1건인지 100건인지는","이 count를 함께 저장해야 구분됩니다"] },
         ]}
         terms={[
           { symbol: "[c−W,c)", name: "half-open window", description: "정확히 왼쪽 경계는 포함하고 현재 cutoff는 제외하는 시간 구간입니다." },
@@ -41,9 +43,11 @@ export default function Rolling() {
         question="EMA는 과거를 모두 쓰면서 최근 값에 더 큰 비중을 어떻게 줄까?"
         idea={<>현재 cutoff 이전에 확정된 새 값이 들어올 때 이전 상태를 (1−α)만큼 남기고 새 값을 α만큼 섞습니다. α가 크면 빠르게 반응하고 작으면 오래 기억합니다.</>}
         formula={String.raw`s_n=\alpha y_{n-1}+(1-\alpha)s_{n-1},\qquad 0<\alpha\le1`}
-        annotatedFormula={String.raw`s_n=\underbrace{\alpha y_{n-1}+(1-\alpha)s_{n-1},\qquad 0<\alpha\le1}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`s_n=\underbrace{\alpha y_{n-1}}_{\text{직전 확정값 몫}}+\underbrace{(1-\alpha)s_{n-1}}_{\text{이전 기억 몫}},\qquad \underbrace{0<\alpha\le1}_{\text{반응 속도 범위}}`}
         operations={[
-          { expression: String.raw`\alpha y_{n-1}+(1-\alpha)s_{n-1},\qquad 0<\alpha\le1`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","현재 cutoff 이전에 확정된 새 값이 들어올 때 이전","상태를 (1−α)만큼 남기고 새 값을 α만큼 섞습니다."] },
+          { expression: String.raw`\alpha y_{n-1}`, annotation: ["cutoff 전에 확정된 최신 값을","α만큼 섞습니다","현재 row의 target은 쓰지 않습니다"] },
+          { expression: String.raw`(1-\alpha)s_{n-1}`, annotation: ["이전 EMA 상태를 1−α만큼 남깁니다","먼 과거 weight는 매번 1−α배로 줄어듦"] },
+          { expression: String.raw`0<\alpha\le1`, annotation: ["α가 크면 새 값에 빠르게 반응하고","작으면 과거를 오래 기억합니다"] },
         ]}
         terms={[
           { symbol: "s_n", name: "EMA state", description: "n번째 prediction row에서 사용할 cutoff 이전의 exponentially weighted summary입니다." },

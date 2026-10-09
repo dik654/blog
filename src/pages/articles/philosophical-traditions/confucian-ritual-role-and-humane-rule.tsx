@@ -60,8 +60,8 @@ const data: TraditionArticleData = {
     { term: "덕치", description: "지도자의 성품과 모범이 명령·처벌보다 앞서 사람들이 따를 기준을 만든다는 정치 원리입니다.", example: "관리 자신이 먼저 책임을 보이고 배분 이유를 공개합니다.", boundary: "좋은 지도자 한 명이 법·견제·행정 능력을 대신할 수 있다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "Chinese Text Project · Analects, Wei Zheng", excerpt: "lead them by virtue", application: "형벌을 피하는 행동과 부끄러움을 배운 행동을 곡물 100자루의 두 회의에 대입해 구분합니다.", citation: "The Analects, Wei Zheng 2.1·2.3, Chinese Text Project", href: "https://ctext.org/analects/wei-zheng/ens", note: "『논어』 위정편의 한문 원문, 판본 정보와 James Legge 영어 번역을 함께 제공하는 고전 원문 데이터베이스입니다." },
-    { source: "Chinese Text Project · Xunzi, Treatise on Ritual Propriety", excerpt: "desires cannot be without seeking", application: "욕망의 총량과 곡물 100의 부족이 다툼을 만들 때 예가 배분 기준과 경계를 세우는 기능을 읽습니다.", citation: "Xunzi, Li Lun, Chinese Text Project", href: "https://ctext.org/xunzi/li-lun/ens", note: "욕망·물자 부족·다툼과 예의 기원을 잇는 『순자』 예론의 한문 원문과 판본 정보를 제공합니다." },
+    { source: "Chinese Text Project · Analects, Wei Zheng (James Legge 역)", excerpt: "If they be led by virtue, and uniformity sought to be given them by the rules of propriety, they will have the sense of shame", application: "형벌을 피하는 행동과 부끄러움을 배운 행동을 곡물 100자루의 두 회의에 대입해 구분합니다.", citation: "The Analects, Wei Zheng 2.1·2.3, Chinese Text Project", href: "https://ctext.org/analects/wei-zheng", note: "『논어』 위정편의 한문 원문, 판본 정보와 James Legge 영어 번역을 함께 제공하는 고전 원문 데이터베이스입니다. 사이트가 자동 조회를 막아 2019-06-24 Wayback 사본으로 Legge 번역 문장을 2차 확인했습니다(2026-10-09)." },
+    { source: "Chinese Text Project · Xunzi, 禮論 (한문 원문)", excerpt: "人生而有欲，欲而不得，则不能无求", application: "욕망의 총량과 곡물 100의 부족이 다툼을 만들 때 예가 배분 기준과 경계를 세우는 기능을 읽습니다.", citation: "Xunzi, Li Lun, Chinese Text Project", href: "https://ctext.org/xunzi/li-lun/ens", note: "욕망·물자 부족·다툼과 예의 기원을 잇는 『순자』 예론의 한문 원문과 판본 정보를 제공합니다. 이 페이지에는 영어 번역이 없어 한문 원문을 그대로 인용했습니다(“사람은 나면서 욕망이 있고, 욕망을 얻지 못하면 구하지 않을 수 없다”). 사이트가 자동 조회를 막아 2023-06-10 Wayback 사본으로 2차 확인했습니다(2026-10-09)." },
   ],
   review: [
     "곡물 배분 숫자가 같아도 두 회의의 도덕적 결과가 달라질 수 있는 이유는 무엇인가요? (답: 3·4절)",

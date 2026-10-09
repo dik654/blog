@@ -97,18 +97,12 @@ m_{\mathrm{correct}}(x)&=(p(x)-q(x))_+ \\
 m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
 &=p(x)
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-a(x)&=\underbrace{\min\!\left(1,\frac{p(x)}{q(x)}\right)}_{\text{기준량당 비율}} \\
-r(x)&=\underbrace{\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}}_{\text{기준량당 비율}} \\
-m_{\mathrm{accept}}(x)&=\underbrace{\min(p(x),q(x))}_{\text{경계 후보 선택}} \\
-m_{\mathrm{correct}}(x)&=(p(x)-q(x))_+ \\
-m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\
-&=p(x)
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}a(x)&=\underbrace{\min\!\left(1,\frac{p(x)}{q(x)}\right)}_{\text{draft 과대분만 거부}} \\r(x)&=\underbrace{\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}}_{\text{target에만 남은 질량}} \\m_{\mathrm{accept}}(x)&=\underbrace{\min(p(x),q(x))}_{\text{두 모델 공통 질량}} \\m_{\mathrm{correct}}(x)&=\underbrace{(p(x)-q(x))_+}_{\text{거부 뒤 보충 질량}} \\m_{\mathrm{out}}(x)&=m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x) \\&=\underbrace{p(x)}_{\text{target 분포 그대로}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\min\!\left(1,\frac{p(x)}{q(x)}\right)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
-          { expression: String.raw`\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
-          { expression: String.raw`\min(p(x),q(x))`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Draft가 token x를 낼 확률 q(x) 에","acceptance probability를 곱하면 두 모델이","공통으로 가진 확률 질량 min(p(x),q(x)) 만 먼저"] },
+          { expression: String.raw`\min\!\left(1,\frac{p(x)}{q(x)}\right)`, annotation: ["target이 draft 이상 준 token은 항상 수락","draft가 과하게 준 token은","p/q 확률로만 수락합니다"] },
+          { expression: String.raw`\frac{(p(x)-q(x))_+}{\sum_z (p(z)-q(z))_+}`, annotation: ["거부되면 target이 draft보다 더 준","몫만 모아 합이 1이 되게 정규화하고","거기서 correction token을 뽑습니다"] },
+          { expression: String.raw`\min(p(x),q(x))`, annotation: ["q(x)·a(x)를 풀면 이 값입니다","draft 제안이 그대로 확정되는 질량"] },
+          { expression: String.raw`m_{\mathrm{accept}}(x)+m_{\mathrm{correct}}(x)`, annotation: ["공통 질량 + target에만 남은 질량","= p(x): 출력 분포가 target과 같음","전체 재샘플이면 이 합이 깨집니다"] },
         ]}
         terms={REJECTION_TERMS}
         assumptions={[
@@ -225,16 +219,11 @@ I_i &= \prod_{j=1}^{i}R_j \\
 A &= \sum_{i=1}^{K} I_i \\
 \mathbb{E}[A] &= \sum_{i=1}^{K}\Pr(A\ge i)
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-R_j &\in \{0,1\} \\
-I_i &= \underbrace{\prod_{j=1}^{i}R_j}_{\text{오른쪽 항으로 결과 계산}} \\
-A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{오른쪽 항으로 결과 계산}} \\
-\mathbb{E}[A] &= \underbrace{\sum_{i=1}^{K}\Pr(A\ge i)}_{\text{확률 가중 평균}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{R_j}_{\text{j번째 수락 여부}} &\in \{0,1\} \\I_i &= \underbrace{\prod_{j=1}^{i}R_j}_{\text{앞 i개가 모두 수락}} \\A &= \underbrace{\sum_{i=1}^{K} I_i}_{\text{첫 거부 전 연속 길이}} \\\mathbb{E}[A] &= \underbrace{\sum_{i=1}^{K}\Pr(A\ge i)}_{\text{위치별 생존 확률 합}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\prod_{j=1}^{i}R_j`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
-          { expression: String.raw`\sum_{i=1}^{K} I_i`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
-          { expression: String.raw`\sum_{i=1}^{K}\Pr(A\ge i)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","i번째 draft가 개별적으로 맞았는지만 세면 안 됩니다."] },
+          { expression: String.raw`\prod_{j=1}^{i}R_j`, annotation: ["1번부터 i번 draft가 하나라도 거부되면 0","i번째까지 확정하려면","앞 draft가 전부 수락돼야 합니다"] },
+          { expression: String.raw`\sum_{i=1}^{K} I_i`, annotation: ["prefix 사건 indicator를 K개 더하면","첫 거부 전까지 수락된 draft 수","correction·bonus token은 제외"] },
+          { expression: String.raw`\sum_{i=1}^{K}\Pr(A\ge i)`, annotation: ["i번째까지 살아남을 확률을 더합니다","먼 위치일수록 이 tail이 빨리 줄어","K를 늘려도 E[A]는 덜 늘 수 있음"] },
         ]}
         terms={PREFIX_TERMS}
         assumptions={[

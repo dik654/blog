@@ -53,17 +53,11 @@ export default function KVCacheManagerSection({ onCodeRef }: { onCodeRef: (key: 
 \left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
 -m^{owned}
 \right)`}
-        annotatedFormula={String.raw`m^{alloc}=\underbrace{\max\!\left(
-0,\;
-\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
--m^{owned}
-\right)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`m^{alloc}=\max\!\left(\underbrace{0}_{\text{음수면 추가 없음}},\;\underbrace{\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil}_{\text{보존할 slot의 block 수}}-\underbrace{m^{owned}}_{\text{이미 연결된 block}}\right)`}
         operations={[
-          { expression: String.raw`\max\!\left(
-0,\;
-\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil
--m^{owned}
-\right)`, annotation: ["관심 token 수를 한 block의 slot 수 또는 전체 조회량과 비교합니다.","실행 뒤 보존해야 할 전체 token 위치를 block 수로","올림한 다음 이미 연결된 block 수를 뺍니다."] },
+          { expression: String.raw`\left\lceil\frac{n^{computed}+n^{new}+n^{look}}{B}\right\rceil`, annotation: ["계산된 token+새 token+lookahead를","B slot짜리 block 수로 올림합니다","B=16, 35+3+0=38이면 ⌈38/16⌉=3"] },
+          { expression: String.raw`m^{owned}`, annotation: ["이미 가진 block 3개를 빼면 추가 0개","기존 partial block 안에 들어갑니다"] },
+          { expression: String.raw`m^{alloc}`, annotation: ["11 token을 더 보존하면 49 slot","⌈49/16⌉=4라 free pool에서 1개 추가","max(0, …)가 음수 요청을 0으로 막음"] },
         ]}
         terms={ALLOC_TERMS}
         assumptions={[

@@ -27,11 +27,12 @@ export default function Multiplicative() {
         question="query와 key의 compatibility를 어느 정도의 parameter와 비선형성으로 계산할까?"
         idea={<>dot은 현재 representation의 좌표계를 그대로 비교하고, bilinear는 learned metric W를 사이에 두며, additive는 공통 hidden space에서 nonlinear scorer를 학습합니다.</>}
         formula={String.raw`\begin{aligned}e_{\rm dot}&=q^\top k\\e_{\rm bilinear}&=q^\top Wk\\z&=W_qq+W_kk\\e_{\rm additive}&=v_a^\top\tanh(z)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}e_{\rm dot}&=\underbrace{q^\top k}_{\text{dot score 계산}}\\e_{\rm bilinear}&=\underbrace{q^\top Wk}_{\text{오른쪽 항으로 결과 계산}}\\z&=\underbrace{W_qq+W_kk}_{\text{bilinear metric 계산}}\\e_{\rm additive}&=v_a^\top\tanh(z)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}e_{\rm dot}&=\underbrace{q^\top k}_{\text{같은 좌표계 그대로 비교}}\\e_{\rm bilinear}&=\underbrace{q^\top Wk}_{\text{학습한 metric으로 비교}}\\z&=\underbrace{W_qq+W_kk}_{\text{공통 hidden 공간 합}}\\e_{\rm additive}&=\underbrace{v_a^\top\tanh(z)}_{\text{작은 network가 채점}}\end{aligned}`}
         operations={[
-          { expression: String.raw`q^\top k`, annotation: ["dot score이(가) 식의 결과에 기여하는 방식을","계산합니다.","dot은 현재 representation의 좌표계를 그대로","비교하고, bilinear는 learned metric W를"] },
-          { expression: String.raw`q^\top Wk`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","dot은 현재 representation의 좌표계를 그대로","비교하고, bilinear는 learned metric W를","사이에 두며, additive는 공통 hidden"] },
-          { expression: String.raw`W_qq+W_kk`, annotation: ["bilinear metric이(가) 식의 결과에 기여하는","방식을 계산합니다.","dot은 현재 representation의 좌표계를 그대로","비교하고, bilinear는 learned metric W를"] },
+          { expression: String.raw`q^\top k`, annotation: ["parameter 없이 query와 key를 내적합니다", "두 vector의 마지막 차원이 같아야 합니다"] },
+          { expression: String.raw`q^\top Wk`, annotation: ["학습 행렬 W로 key를 query와 비교하기", "좋은 좌표계로 옮긴 뒤 내적합니다"] },
+          { expression: String.raw`W_qq+W_kk`, annotation: ["additive는 q와 k를 각각 투영해 더해", "차원이 달라도 비교할 수 있게 합니다"] },
+          { expression: String.raw`v_a^\top\tanh(z)`, annotation: ["tanh 비선형성과 readout v_a가", "joint feature를 scalar score로 줄입니다"] },
         ]}
         terms={[
           { symbol: "q^\\top k", name: "dot score", description: "추가 parameter 없이 같은 차원의 두 vector를 비교합니다." },
@@ -62,11 +63,11 @@ export default function Multiplicative() {
         question="key dimension이 커질 때 dot-product logits가 softmax를 지나치게 포화시키지 않게 하려면?"
         idea={<>초기화 근처에서 q와 k 성분이 독립이고 분산이 1이라고 보면, dk개 곱의 합인 qᵀk의 분산은 dk입니다. √dk로 나누면 logit variance의 차원 의존성을 줄일 수 있습니다.</>}
         formula={String.raw`\begin{aligned}\operatorname{Var}(q^\top k)&=d_k\\S&=\frac{QK^\top+M}{\sqrt{d_k}}\\\operatorname{Attention}(Q,K,V)&=\operatorname{softmax}(S)V\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\operatorname{Var}(q^\top k)&=\underbrace{d_k}_{\text{분산 규모}}\\S&=\underbrace{\frac{QK^\top+M}{\sqrt{d_k}}}_{\text{기준량당 비율}}\\\operatorname{Attention}(Q,K,V)&=\underbrace{\operatorname{softmax}(S)V}_{\text{선택 비율 정규화}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\operatorname{Var}(q^\top k)&=\underbrace{d_k}_{\text{차원에 비례해 커짐}}\\S&=\frac{\underbrace{QK^\top}_{\text{모든 query·key 내적}}+\underbrace{M}_{\text{차단 위치 }-\infty}}{\underbrace{\sqrt{d_k}}_{\text{차원 효과 상쇄}}}\\\operatorname{Attention}(Q,K,V)&=\underbrace{\operatorname{softmax}(S)V}_{\text{row별 비중으로 value 읽기}}\end{aligned}`}
         operations={[
-          { expression: String.raw`d_k`, annotation: ["key/query head dimension이(가) 식의","결과에 기여하는 방식을 계산합니다.","초기화 근처에서 q와 k 성분이 독립이고 분산이 1이라고","보면, dk개 곱의 합인 qᵀk의 분산은 dk입니다."] },
-          { expression: String.raw`\frac{QK^\top+M}{\sqrt{d_k}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초기화 근처에서 q와 k 성분이 독립이고 분산이 1이라고","보면, dk개 곱의 합인 qᵀk의 분산은 dk입니다."] },
-          { expression: String.raw`\operatorname{softmax}(S)V`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","초기화 근처에서 q와 k 성분이 독립이고 분산이 1이라고","보면, dk개 곱의 합인 qᵀk의 분산은 dk입니다."] },
+          { expression: String.raw`d_k`, annotation: ["분산 1인 성분 곱 d_k개를 더하므로", "qᵀk의 분산이 head 차원 d_k만큼 커집니다"] },
+          { expression: String.raw`\frac{QK^\top+M}{\sqrt{d_k}}`, annotation: ["nq×nk score 행렬에 mask를 더하고", "표준편차 √d_k로 나눠 softmax가", "지나치게 뾰족해지지 않게 합니다"] },
+          { expression: String.raw`\operatorname{softmax}(S)V`, annotation: ["각 query row의 score를 합이 1인", "weight로 바꿔 V의 content를 섞습니다"] },
         ]}
         terms={[
           { symbol: "d_k", name: "key/query head dimension", description: "multi-head attention에서 한 head의 query와 key 마지막 차원입니다." },

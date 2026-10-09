@@ -77,12 +77,12 @@ export default function AgrarianSurplusAndStateArticle() {
           <p className="leading-8">따라서 이 유물은 초기 문자가 경제 정보를 저장하는 데 쓰였다는 강한 증거지만, 100가구가 12자루씩 냈다거나 특정 왕이 세금을 걷었다는 증거는 아닙니다. 이 글의 1200자루 사례는 유물의 실제 번역이 아니라 장부가 맡는 기능을 보여 주는 가정입니다.</p>
         </div>
         <SourceApplication source="The Met · proto-cuneiform grain account" excerpt="deliveries and distributions of grain" application="들어온 곡물과 나간 곡물을 구분하는 장부라는 해석은 가능하지만, 동사가 없으므로 정확한 거래와 행위자를 확정할 수는 없습니다." />
-        <CitationBlock source="The Metropolitan Museum of Art, accession 1988.433.4" citeKey={1} href="https://www.metmuseum.org/art/collection/search/327384">기원전 3100~2900년 무렵으로 분류된 행정 장부의 사진, 재료, 수 표시와 해석 경계를 확인했습니다.</CitationBlock>
+        <CitationBlock source="The Metropolitan Museum of Art, accession 1988.433.2" citeKey={1} href="https://www.metmuseum.org/art/collection/search/327384">기원전 3100~2900년 무렵으로 분류된 행정 장부의 사진, 재료, 수 표시와 해석 경계를 확인했습니다. 접근번호는 Met Collection API(objectID 327384)의 accessionNumber로 대조했습니다(확인일 2026-10-09).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 장부는 국가의 존재를 혼자 증명하지 못합니다" bridge="여러 점토판의 계산 형식은 행정 능력을 보여 주지만 권력의 정당성과 범위는 별도 증거가 필요함을 확인했습니다. 단선적인 인과를 정리합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">Cuneiform Digital Library Initiative가 분석한 여러 원시 설형문자 장부는 앞면에 거래별 곡물 양을 적고 뒷면에 합계를 두는 관행을 보여 줍니다. 빵 240개와 각 제품에 필요한 곡물 양을 함께 적은 교육용 장부는 계산 체계의 구조를 풀어내는 열쇠가 되기도 했습니다.</p>
+          <p className="leading-8">Cuneiform Digital Library Initiative가 분석한 여러 원시 설형문자 장부는 앞면에 거래별 곡물 양을 적고 뒷면에 합계를 두는 관행을 보여 줍니다. 같은 논문이 다루는 에머밀 배급 장부(MSVO 3, 75)에서는 뒷면 한 칸이 1과 2/5 '바리그'(곡물 부피 단위)를 기준값으로 줍니다. 저자는 이 기준값으로 가중평균을 내면 장부에 적힌 다른 값들이 설명된다고 보고, 이 칸을 장부를 푸는 열쇠라고 부릅니다. 다만 같은 방식을 쓴 장부가 달리 확인되지 않아, 이 점토판은 정규 행정 문서가 아니라 비정규 서기 연습으로 분류됩니다.</p>
           <p className="leading-8">이 자료들은 측정 단위, 합계, 항목 분류, 기록자의 훈련이 있었다는 증거입니다. 그러나 기록 조직이 마을 공동체인지, 사원인지, 궁정인지, 얼마나 강제할 수 있었는지는 출토 맥락과 건축·인장·묘지·토지 자료를 함께 보아야 합니다. 출처를 알 수 없는 점토판은 비교 가치가 있어도 공간과 조직을 복원하는 힘이 약합니다.</p>
         </div>
         <SourceApplication source="CDLI · Unusual Accounting Practices" excerpt="listing ... a number of transactions" application="1200자루 총계만 있는 장부보다 가구별 12자루와 배분 항목을 함께 적은 장부가 차이 20의 위치를 더 잘 좁힙니다." />

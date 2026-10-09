@@ -33,9 +33,11 @@ export default function NeuralApproach() {
           </>
         }
         formula={String.raw`u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k`}
-        annotatedFormula={String.raw`\underbrace{u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`\underbrace{u_w^\top v_c}_{\text{학습된 pair score}}\approx \underbrace{\operatorname{PMI}(w,c)}_{\text{실제 동시출현 연관}}\underbrace{-\log k}_{\text{negative 수만큼 이동}}`}
         operations={[
-          { expression: String.raw`u_w^\top v_c\approx \operatorname{PMI}(w,c)-\log k`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Positive pair를 corpus에서, negative","context를 noise distribution에서 k개","sampling해 이진 분류합니다."] },
+          { expression: String.raw`u_w^\top v_c`, annotation: ["target row와 context row의 내적이","SGNS optimum에서 가까워지는 값"] },
+          { expression: String.raw`\operatorname{PMI}(w,c)`, annotation: ["pair가 독립 baseline보다","얼마나 자주 함께 나오는지"] },
+          { expression: String.raw`-\log k`, annotation: ["negative를 k개 뽑을수록 아래로 이동","PMI=4, k=5면 4−log 5≈2.39"] },
         ]}
         terms={[
           {

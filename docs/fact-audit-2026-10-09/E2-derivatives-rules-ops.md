@@ -3,6 +3,43 @@
 
 데이터 파일 약칭: `J`=`src/pages/articles/markets/derivatives/derivative-jurisdiction-data.ts`, `P`=`…/derivative-professional-practice-data.ts`, `O`=`…/derivative-operations-and-governance-data.ts`, `C`=`…/derivative-curriculum-gaps-data.ts`, `A`=`…/derivative-applied-ledgers-data.ts`, `S`=`…/derivative-specialized-market-gaps-data.ts`, `D`=`…/derivative-data.ts`, `R`=`…/derivative-risk-data.ts`, `L`=`src/content/article-learning.ts`.
 
+## 적용 결과
+적용일 2026-10-09. 표의 31건 중 적용 30(그중 후속 작업 병행 7), 공용 파일 목록으로만 이관 1(#2), 보류 0. 표 밖 글별 기록의 "경미" 5건은 후속 작업으로 남겼다. 사실·인용문은 원장 근거를 따르되 kifin·ASIC 20-254MR·BIS r_qt1512w·KoFIU·CFTC 2012-21414·금융위 75872/86295·ISDA·AASB 9·BIS MAR/CRE 장 페이지는 2026-10-09에 직접 다시 열어 문구를 대조했다.
+
+| # | 처리 | 내용 |
+|---|---|---|
+| 1 | 적용 + 공용파일 목록 | `P` 9절: "분쟁조정 과목 2시간(분쟁조정시스템·분쟁조정사례)"로 정정, excerpt "분쟁조정 · 분쟁조정시스템 · 분쟁조정사례"(과정표 칸을 ·로 이음, note에 명시) |
+| 2 | 공용파일 목록 | `article-learning.ts` LME 학습 계약 4곳을 본문의 250+1,250=1,500으로, changedCase는 1,200+1,250=2,450으로 |
+| 3 | 적용 + 공용파일 목록 | `J` 8절 둘째 문장을 17 CFR 240.15Fh-3 근거로 고치고 SEC 출처 note에 귀속 범위 명시. 15Fh-3은 `sources` 2개 제한 때문에 evidence에 추가 |
+| 4 | 적용 + 공용파일 목록 | `A` 8절: 규격은 기존 시행분, 25-157(2025-05-07 발효, 2026년 10월물 적용)과 2026-09-22 정리 개정 구분, "추정 평균" 63%; excerpt 원문, href를 CFTC 제출본으로 |
+| 5 | 적용 | `S` 9절에 토큰증권법(2026-01-15 국회 통과, 공포 1년 뒤 시행) 이후 투자계약증권 유통 허용 예정 문장 추가 |
+| 6 | 적용 + 후속 | `C` citation "KRX, Order Types", source·application·note를 주문유형으로 한정. 정산 출처 추가는 후속 |
+| 7 | 적용 + 공용파일 목록 | `C` BIS QR 2015년 12월호 r_qt1512w로 교체, excerpt 원문, 9절에 629→553조 달러(−12%)와 명목≠위험 문장 |
+| 8 | 적용 + 공용파일 목록 | `J` 2번 출처를 ASIC 20-254MR로, excerpt 원문, note에 2027-05-23 만기는 우선순위 페이지 근거라고 명시 |
+| 9 | 적용 | excerpt "파생금융상품투자(12)", note에 과목 구조 |
+| 10 | 적용 + 공용파일 목록 | IFRS 9 6.4.1(b) 원문, href AASB 9 공개 편집본 p.26 |
+| 11 | 적용 + 공용파일 목록 | B6.5.7 원문, href AASB 9 p.97(페이지 번호는 pdftotext로 확인) |
+| 12 | 적용 + 공용파일 목록 | `O` excerpt "파생상품 중심 투자권유 절차와 유의사항"(8번 과목명) |
+| 13 | 적용 + 공용파일 목록 | `D` excerpt "직무윤리 · 분쟁조정 · 자본시장법 · 협회규정", note "분쟁 예방"→"분쟁조정" |
+| 14 | 적용 + 공용파일 목록 | 호스트 www.sfc.hk |
+| 15 | 적용 + 공용파일 목록 | Basel MGN20.29 통합본으로 교체, excerpt 원문, note에 IOSCO 403 |
+| 16 | 적용 | excerpt "Options, futures, swaps, forward rate agreements and any other derivative", note에 FATF 403·불가리아 FSC 사본 2차 확인 |
+| 17 | 적용 + 후속 | excerpt "제28조(자료의 기록 및 유지ㆍ관리 등)", note에 JS 미렌더링·위키문헌 2차 확인. 조문 직링크(lsJoLnkSeq)는 후속 |
+| 18 | 적용 | CFTC § 23.500 원문 일부 |
+| 19 | 적용 | KoFIU 원문 |
+| 20 | 적용 | "Native File Production" |
+| 21 | 적용 | "payment of the single net amount discharges the payment obligations" |
+| 22 | 적용 | "2영업일 이상의 숙려기간이 보장됩니다"(재조회 결과 원래 excerpt "녹취 및 숙려 기간"도 보도자료 소제목에 실제로 있었음 — 원장 판정은 일부 과잉이었으나 본문 문장으로 교체해 문제 없음) |
+| 23 | 적용(범위 명시) + 후속 | LME note에 403·검색 요약 2차 확인 명시 |
+| 24 | 적용 | 5.88·5.26(반올림 명시) |
+| 25 | 적용 | `P` 8절에 과세대상·기본 20%/탄력 10%·연 250만 원 공제·5월 신고(2026-10-09 국세청 확인) + (가정) 700만 원 → 49.5만 원 계산 |
+| 26 | 적용 | 60% 미만 인도 불가·±5%(2,000파운드) 수량 편차 |
+| 27 | 적용 | 제28조④ 10일 상한·⑤ 제한·거절 사유는 법률, 자료 종류·기간은 시행령으로 구분 |
+| 28 | 적용 | MiFIR 제25조 5년 |
+| 29 | 적용(범위 명시) + 후속 | NYMEX note에 확인 범위(CFTC 제출본/검색 요약/미대조 조항) 명시 |
+| 30 | 적용(범위 명시) + 후속 | CBOT·CME 두 note에 확인 범위 명시 |
+| 31 | 적용(범위 명시) + 후속 | CME Livestock note에 타임아웃·CFTC 제출본 2차 확인 명시 |
+
 ## 요약
 - 발견: WRONG 2 · OUTDATED 0 · MISLEADING 4 · CALC 1 · LINK 17 · MISSING 4 · UNVERIFIED 4
 - 가장 중요한 발견
@@ -285,3 +322,199 @@
 | https://www.law.go.kr/LSW/lsInfoP.do?lsId=001534 | "해당 법령이 존재하지 않습니다" | — |
 | https://www.irs.gov/pub/irs-prior/p550--2025.pdf (WebFetch 본문 추출) | 바이너리만 반환 | 로컬 pdftotext로 추출 성공 |
 | https://www.aasb.gov.au/…/AASB9_12-14_COMPdec22_01-23.pdf (WebFetch 본문 추출) | 바이너리만 반환 | 로컬 pdftotext로 추출 성공 |
+
+## 후속 작업
+- (6) KRX 청산결제(일일정산·최종결제) 공식 페이지를 찾아 `C` krx 글의 근거로 연결(데이터 `sources`는 2개 고정 → evidence 추가).
+- (17) 금소법 제28조 조문 직링크(`lsLinkCommonInfo.do?lsJoLnkSeq=…`) 확인 후 href 교체.
+- (23) LME Rulebook·아연 규격 원문을 브라우저로 열어 순도·로트·허용오차 문구 원문 대조.
+- (29) NYMEX Chapter 200 원문(또는 CFTC 제출본 전문)으로 인수 통지 시점·인도 증거금 조항 대조.
+- (30) CBOT Chapter 10 원문으로 4센트 손상 할인 조건과 2027년 12월물·2028년 3월물 경계 대조.
+- (31) CME Livestock 교육 페이지 원문 대조 또는 계약명세 페이지로 교체.
+- 표 밖 경미 MISSING: KRX 호가단위 0.05pt=12,500원·최종거래일(둘째 목요일)·가격제한 ±8/15/20%(`C` krx 8절), ISDA 권고 응답 마감·교체 사전통지 T+3~T+5(`O` 담보 운영 8절), IRRBB 여섯 충격 시나리오·Tier 1 15% 이상치 기준(`P` 7절), 현물월 한도 25%(`P` 포지션 한도 8절), KRX 1단계 변동성지수선물 제외·CAR 3년·CKA 1년(`J` 한국·싱가포르).
+
+## 공용 파일 수정 목록
+통합자가 순서대로 적용. 모든 old 문자열은 해당 파일에서 1회만 나옴을 2026-10-09에 확인했다.
+
+### src/content/article-learning.ts (LME, 발견 #2)
+```
+OLD:
+설명용 20일 보관료 1천 달러와 상차비 500달러를 더합니다.
+NEW:
+설명용 20일 보관료 250달러와 출고비 1,250달러를 더합니다.
+```
+```
+OLD:
+보관료 1,000달러와 FOT 500달러를 합쳐 1,500달러로 둡니다(가정).
+NEW:
+톤당 하루 0.50달러×25톤×20일=250달러 보관료와 톤당 50달러×25톤=1,250달러 출고비를 합쳐 1,500달러로 둡니다(가정).
+```
+```
+OLD:
+25.3톤이 드는지 확인한 뒤 1,000+500달러를 계산하세요.
+NEW:
+25.3톤이 드는지 확인한 뒤 250+1,250달러를 계산하세요.
+```
+```
+OLD:
+"보관료+FOT=1,700달러"
+NEW:
+"보관료+출고비=1,200+1,250=2,450달러"
+```
+
+### src/content/article-learning.ts (그 밖)
+```
+OLD:
+        "contribution": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다.",
+NEW:
+        "contribution": "분쟁조정 과목(분쟁조정시스템·분쟁조정사례, 2시간)이 별도로 있음을 확인합니다.",
+```
+```
+OLD:
+        "contribution": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다.",
+NEW:
+        "contribution": "상품 지식과 권유 실무·윤리·법규·분쟁조정을 함께 둔 공식 교육과정입니다.",
+```
+```
+OLD:
+        "contribution": "상품·영업·법규·윤리·분쟁 예방의 교육 범위를 확인합니다.",
+NEW:
+        "contribution": "상품·투자권유 절차·법규·윤리·분쟁조정의 교육 범위를 확인합니다.",
+```
+```
+OLD:
+        "title": "ASIC · CFD product intervention and distribution",
+        "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+NEW:
+        "title": "ASIC · CFD product intervention order (20-254MR)",
+        "href": "https://asic.gov.au/about-asic/news-centre/find-a-media-release/2020-releases/20-254mr-asic-product-intervention-order-strengthens-cfd-protections/",
+```
+```
+OLD:
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf",
+NEW:
+        "href": "https://www.bis.org/publ/qtrpdf/r_qt1512w.htm",
+```
+```
+OLD:
+        "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/",
+NEW:
+        "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=26",
+```
+```
+OLD:
+        "href": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on",
+NEW:
+        "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=97",
+```
+```
+OLD:
+        "href": "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+NEW:
+        "href": "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+```
+```
+OLD:
+        "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf",
+NEW:
+        "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+```
+```
+OLD:
+      { title: "CME · Live Cattle Futures Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf",
+NEW:
+      { title: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf",
+```
+```
+OLD:
+evidenceScope: "2026년 9월 시행 조항을 포함한 CME 생우 선물 규칙입니다.",
+NEW:
+evidenceScope: "2025-05-07 발효·2026년 10월물부터 적용되는 개정(25-157)을 반영한 CME 생우 선물 규칙입니다. 4만 파운드·70/30·63% 규격 자체는 기존 시행분입니다.",
+```
+
+### src/content/article-evidence.ts
+```
+OLD:
+      "note": "분쟁예방·제재와 주요 분쟁사례가 별도 과목인 점을 확인합니다."
+NEW:
+      "note": "분쟁조정 과목(분쟁조정시스템·분쟁조정사례, 2시간)이 별도로 있음을 확인합니다."
+```
+```
+OLD:
+      "note": "상품 지식과 권유 실무·윤리·법규·분쟁 예방을 함께 둔 공식 교육과정입니다."
+NEW:
+      "note": "상품 지식과 권유 실무·윤리·법규·분쟁조정을 함께 둔 공식 교육과정입니다."
+```
+```
+OLD:
+      "note": "상품·영업·법규·윤리·분쟁 예방의 교육 범위를 확인합니다."
+NEW:
+      "note": "상품·투자권유 절차·법규·윤리·분쟁조정의 교육 범위를 확인합니다."
+```
+```
+OLD:
+      "note": "SEC·CFTC의 상품 관할과 증권기반스왑 영업행위 범위를 확인합니다."
+    },
+NEW:
+      "note": "SEC·CFTC·공동 규제의 상품 관할 분할을 확인합니다."
+    },
+    {
+      "kind": "공식 규정",
+      "label": "17 CFR 240.15Fh-3 · SBS 딜러 영업행위 기준",
+      "href": "https://www.law.cornell.edu/cfr/text/17/240.15Fh-3",
+      "note": "거래상대 자격 확인, 중요한 위험·특성·유인·이해충돌 공시, 일일 가격 표시(daily mark)를 정한 조문입니다(eCFR은 2026-10-09 자동 조회 차단이라 코넬 LII 사본)."
+    },
+```
+```
+OLD:
+      "label": "ASIC · CFD product intervention and distribution",
+      "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+      "note": "소매 CFD 레버리지 범위와 상품 개입 기한, 목표시장 유통 감독을 확인합니다."
+NEW:
+      "label": "ASIC · CFD product intervention order (20-254MR)",
+      "href": "https://asic.gov.au/about-asic/news-centre/find-a-media-release/2020-releases/20-254mr-asic-product-intervention-order-strengthens-cfd-protections/",
+      "note": "기초자산별 레버리지 상한(30:1~2:1)과 계좌 잔액 한도 손실 보호를 확인합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "ASIC · Priorities for supervision of market intermediaries",
+      "href": "https://asic.gov.au/regulatory-resources/markets/market-supervision/asic-s-priorities-for-the-supervision-of-market-intermediaries/",
+      "note": "CFD 개입 조치의 2027-05-23 만기와 목표시장 유통 감독을 확인합니다."
+```
+```
+OLD:
+      "label": "BIS 거래 압축 설명",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt1509.pdf",
+NEW:
+      "label": "BIS Quarterly Review 2015년 12월 · 거래 압축",
+      "href": "https://www.bis.org/publ/qtrpdf/r_qt1512w.htm",
+```
+```
+OLD:
+      "href": "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/",
+NEW:
+      "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=26",
+```
+```
+OLD:
+      "href": "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on",
+NEW:
+      "href": "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=97",
+```
+```
+OLD:
+      "href": "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+NEW:
+      "href": "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products",
+```
+```
+OLD:
+      "href": "https://www.iosco.org/library/pubdocs/pdf/ioscopd403.pdf",
+NEW:
+      "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mgn?allChapters=true",
+```
+```
+OLD:
+    { kind: "공식 규격", label: "CME · Live Cattle Futures Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf", note: "생우 4만 파운드·기준 등급·63% 뜨거운 도체 수율 조정식을 확인합니다." },
+NEW:
+    { kind: "공식 규격", label: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", note: "생우 4만 파운드·기준 등급·추정 63% 뜨거운 도체 수율 조정식과 60% 하한·5% 수량 편차를 확인합니다." },
+```

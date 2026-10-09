@@ -95,7 +95,7 @@ export default function ShopClosureAndRestorationArticle() {
           </p>
         </div>
 
-        <CitationBlock source="한국 근로기준법 제36조" citeKey={7} href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1029728519">2026-10-02 시행 조문을 2026-10-04 확인했습니다. 지급 사유 발생 때부터 14일 이내 청산과 특별한 사정이 있을 때의 합의 연장을 구분합니다.</CitationBlock>
+        <CitationBlock source="한국 근로기준법 제36조" citeKey={7} href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1029728519">2026-10-04 확인 당시 시행 조문을 읽었고, 2026-10-09 같은 링크가 2026-10-08 시행판(법률 제21533호)을 보여 주는 것을 다시 확인했습니다. 제36조 문언은 바뀌지 않았습니다. 지급 사유 발생 때부터 14일 이내 청산과 특별한 사정이 있을 때의 합의 연장을 구분합니다.</CitationBlock>
         <CitationBlock source="한국 개인정보 보호법 제21조" citeKey={8} href="https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029335625">2026-09-11 시행 조문을 2026-10-04 확인. 불필요한 정보 파기와 법정 보존 자료의 분리 관리를 구분합니다.</CitationBlock>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">각 거래의 마지막 날짜를 찾았습니다. 신고 뒤 남는 세무 기한을 원문으로 확인합니다.</p>
       </section>
@@ -116,7 +116,7 @@ export default function ShopClosureAndRestorationArticle() {
         </div>
         <SourceApplication source="대법원 2002다52657 · 판결요지 [2]" excerpt="원상복구할 의사 없이 임차인이 설치한 시설을 그대로 이용하여 타에 다시 임대하려 하는 경우" application="600만 원 견적을 자동으로 공제하지 않고 실제 반환 합의와 시설 사용을 확인합니다. 이 판결은 특정 사실관계에서 공제를 부정했으므로 모든 복구 의무가 없어진다는 결론으로 확대할 수 없습니다." />
         <CitationBlock source="대법원 2002다52657 · 판결요지 [2]" citeKey={2} href="https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367">2026-10-04 확인. 이 절의 원문과 관할 범위를 확인합니다.</CitationBlock>
-        <CitationBlock source="NSW · What to do at the end of the lease" citeKey={5} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease">Make good 항목에서 최초 기록과 계약상 반환 상태, 공사 대신 금전 정산을 합의하는 경우를 확인합니다. 한국 법의 공제 범위를 정하는 자료는 아닙니다.</CitationBlock>
+        <CitationBlock source="NSW · What to do at the end of the lease" citeKey={5} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease">Make good 항목에서 최초 기록과 계약상 반환 상태, 공사 대신 금전 정산을 합의하는 경우를 확인합니다. 2026-10-09 재확인 때는 페이지가 응답하지 않아 검색 색인의 문장으로만 대조했습니다. 한국 법의 공제 범위를 정하는 자료는 아닙니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
             판결이 어떤 상황에 대한 판단인지 확인했습니다. 이제 시설을 넘길 수 있는지와 그 뒤에도 남는 채무를 따져 봅니다.
           </p>
@@ -128,9 +128,12 @@ export default function ShopClosureAndRestorationArticle() {
           <p className="leading-7">보증금 정산표의 금액은 이 글의 가정입니다. 실제로는 임대차 계약, 인도 당시 상태, 공사 견적, 합의서, 지역 판례와 세무 기준으로 각각 확인해야 합니다.</p>
           <p className="leading-7">재고를 다른 사업으로 옮기거나 버리는 방식, 직원 퇴직 정산, 리스 장비 반납, 고객 개인정보가 담긴 계정 폐기는 서로 다른 계약과 법의 문제입니다. 폐업 신고 수리 화면 한 장을 모든 채무가 사라졌다는 증거로 쓰지 않습니다.</p>
           <p className="leading-7">철거비 지원도 확정 전에는 돌려받을 돈에 넣지 않습니다. 중소벤처기업부의 2025년 1월 영상 03:50에는 최대 400만 원이, 같은 해 7월 영상 01:53에는 400만 원에서 600만 원으로의 변경이 표시됩니다. 두 화면과 게시기관의 자막 전사를 대조하면 두 발표 사이에 지원 한도가 확대됐음을 알 수 있습니다. 7월 30일 보도자료는 확대 한도의 적용을 2025년 7월 11일 이후 폐업과 연결합니다.</p>
-          <p className="leading-7">2026년 1월 19일 공고는 면적 3.3㎡당 20만 원 한도, 부가세 제외, 사업자등록 업체 시공과 지출 증빙, 중복지원 제외를 함께 둡니다. 이 공고를 적용하고 인정 전용면적이 33㎡라고 가정하면 면적 기준 한도는 33 ÷ 3.3 × 20만 = 200만 원입니다. 이것만으로 200만 원 지급이 확정되지는 않습니다.</p>
+          <p className="leading-7">2026년 1월 19일 공고(한국 소상공인시장진흥공단, 『희망리턴패키지 원스톱폐업지원』)는 한도를 두 개 겹쳐 둡니다. 하나는 폐업일에 따른 최대한도로, 2023-01-01~2025-07-10에 폐업했으면 400만 원, 2025-07-11 이후 폐업했으면 600만 원입니다. 다른 하나는 전용면적 3.3㎡당 20만 원입니다. 지원액은 두 한도 중 작은 값을 넘지 못하고, 전자세금계산서의 공급가액만 인정해 부가세는 빠집니다.</p>
+          <p className="leading-7">이 사례의 점포가 2025-09-30에 폐업했고 인정 전용면적이 33㎡라고 가정하면 폐업일 한도는 600만 원, 면적 한도는 33 ÷ 3.3 × 20만 = 200만 원이므로 min(600만, 200만) = 200만 원이 상한입니다. 같은 33㎡ 점포가 2025-03-10에 폐업했다면 min(400만, 200만) = 200만 원으로 결과가 같습니다.</p>
+          <p className="leading-7">면적이 99㎡(가정)라면 면적 한도가 99 ÷ 3.3 × 20만 = 600만 원으로 커져, 폐업일이 2025-03-10이면 min(400만, 600만) = 400만 원, 2025-09-30이면 600만 원이 상한이 됩니다. 어느 경우든 이 금액은 신청할 수 있는 상한일 뿐 지급 확정액은 아닙니다.</p>
+          <p className="leading-7">같은 공고에는 상한 계산 전에 걸러지는 조건도 있습니다. 2023-01-01 이후 폐업한 경우만 지원하고, 점포철거비는 주민등록번호 기준 1회만 받을 수 있습니다. 국세청에 사업자등록이 된 업체를 통해 철거해야 하며 점주가 스스로 철거하면 지원하지 않습니다. 지원금을 받은 날부터 3년 동안은 같은 장소에서 다시 창업하는 것이 제한됩니다(2026-01-19 공고, 2026-10-09 확인).</p>
           <p className="leading-7">공고의 정산 서류에는 공사내역서와 세금계산서 또는 카드전표, 업체에 지급한 사실을 확인할 자료, 철거 전후 사진 등이 들어갑니다. 임대인이 보증금에서 600만 원을 공제한 정산서만으로 이 조건을 갖췄다고 볼 수 없습니다. 직접 업체에 지급한 경로에서도 지원 대상과 인정 비용을 따로 심사받아야 합니다.</p>
-          <p className="leading-7">따라서 견적 600만 원에서 영상의 최대 지원금 600만 원을 바로 빼지 않습니다. 신청 시점 공고의 대상 공사·면적·폐업일과 심사 결과를 확인한 뒤 지원금 지급일도 보증금 반환일과 따로 적습니다. 위 계산은 2026년 1월 공고를 읽는 예이며 이후 변경 여부와 남은 예산까지 확인한 현재 신청 결과는 아닙니다.</p>
+          <p className="leading-7">따라서 견적 600만 원에서 영상의 최대 지원금 600만 원을 바로 빼지 않습니다. 33㎡ 사례의 상한은 200만 원이고, 그마저 신청 시점 공고의 대상 공사·폐업일·1회 한정 여부와 심사 결과를 확인한 뒤에 정해집니다. 지원금 지급일도 보증금 반환일과 따로 적습니다. 위 계산은 2026년 1월 공고를 읽는 예이며 이후 변경 여부와 남은 예산까지 확인한 현재 신청 결과는 아닙니다.</p>
         </div>
 
         <CitationBlock source="중소벤처기업부 · 2025 소상공인 지원사업 영상" citeKey={9} href="https://www.youtube.com/watch?v=T6KNxj3hawQ&t=230s">2025-01-23 공개 영상의 03:50 화면에서 250만 원→400만 원을 확인했습니다. 아래 게시기관 전사와 대조했으며 당시 발표의 근거로 씁니다.</CitationBlock>

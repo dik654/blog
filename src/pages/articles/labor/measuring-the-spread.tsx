@@ -166,6 +166,7 @@ export default function MeasuringTheSpreadArticle() {
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="leading-7">
+            가로에 사람의 누적 비율, 세로에 몫의 누적 비율을 두는 지금의 관례에서는
             고르지 않게 나뉘면 선이 그 아래로 처집니다. 그런데 시작점과 끝점은
             바뀌지 않습니다. 아무도 가지지 않은 상태에서 시작하고 전부 더하면
             100%가 되는 것은 어떤 분배에서나 같기 때문입니다. 그래서 두 분배의
@@ -174,11 +175,12 @@ export default function MeasuringTheSpreadArticle() {
             것입니다.
           </p>
 
-          <p className="leading-7">
-            위 그림의 두 번째 장면이 그가 실제로 그린 자료입니다. 프로이센에서 1892년에는 아래 70.1%가 전체 소득의
+          <p className="leading-7">위 그림의 두 번째 장면은 그가 쓴 자료(214쪽 표)를 지금의 관례대로 다시 그린 것입니다. 프로이센에서 1892년에는 아래 70.1%가 전체 소득의
             41.2%를 가졌는데 1901년에는 아래 60.5%가 31.7%를 가졌습니다. 1901년 선이 1892년 선보다 아래에
-            놓입니다. 그래서 더 쏠렸다고 읽습니다.
-          </p>
+            놓입니다. 그래서 더 쏠렸다고 읽습니다.</p>
+          <p className="leading-7">Lorenz 자신의 218쪽 그림은 세로축이 사람 수의 비율(Percents of Number),
+            가로축이 소득의 비율(Percents of Total Income)로 지금과 두 축이 바뀌어 있어 같은 곡선이 대각선 위쪽으로 휩니다.
+            217쪽 본문은 어느 축에 무엇을 놓을지 정하지 않았으므로, 축을 바꿔도 활이 더 휠수록 더 쏠렸다는 읽기 규칙은 같습니다.</p>
         </div>
 
         <CitationBlock
@@ -298,12 +300,13 @@ export default function MeasuringTheSpreadArticle() {
         />
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
-          <p className="leading-7">
-            여기서 경계를 하나 분명히 해야 합니다. 이 나눗셈은{" "}
+          <p className="leading-7">여기서 경계를 하나 분명히 해야 합니다. 이 나눗셈은{" "}
             <strong>Lorenz의 1905년 글에 없습니다.</strong> 그는 곡선을 그리는
             방법과 읽는 규칙까지만 적었고 넓이를 재어 한 숫자로 바꾸는 일은 이후의 작업입니다. 위 식은 그의 곡선에서 이 글이
-            이어 적은 것이고 프로이센의 0.357과 0.394도 그의 표를 이 글이 계산한 값입니다.
-          </p>
+            이어 적은 것이고 프로이센의 0.357과 0.394도 그의 표를 이 글이 계산한 값입니다.</p>
+          <p className="leading-7">이 넓이 비가 통계표에서
+            지니계수(Gini coefficient)라고 부르는 값입니다. 이탈리아 통계학자 Corrado Gini가 1912년에 평균차를 이용한 계산식을 내놓았고,
+            1914년 논문에서 Lorenz 곡선과 균등선 사이 넓이를 삼각형 넓이로 나눈 비가 자신의 집중비 R이 다가가는 극한값임을 보였습니다.</p>
 
           <p className="leading-7">
             <em>

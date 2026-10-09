@@ -89,9 +89,10 @@ export default function Rendering() {
           question="Event가 재전송되거나 순서가 바뀔 수 있을 때 같은 화면 상태를 어떻게 재현할까?"
           idea={<>화면을 직접 덧그리지 않고, 이전 state와 다음 event를 입력으로 받는 결정적 reducer를 둡니다. Sequence가 이미 적용한 값 이하이면 duplicate로 무시하고, 다음 번호가 건너뛰면 gap을 복구한 뒤 적용합니다.</>}
           formula={String.raw`S_{k+1}=\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1`}
-          annotatedFormula={String.raw`S_{k+1}=\underbrace{\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1}_{\text{next normalized event 계산}}`}
+          annotatedFormula={String.raw`\underbrace{S_{k+1}=\delta(S_k,e_{k+1})}_{\text{같은 state·event면 같은 화면}},\qquad \underbrace{\operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1}_{\text{바로 다음 번호만 적용}}`}
           operations={[
-            { expression: String.raw`\delta(S_k,e_{k+1}),\qquad \operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1`, annotation: ["next normalized event이(가) 식의 결과에","기여하는 방식을 계산합니다.","화면을 직접 덧그리지 않고, 이전 state와 다음","event를 입력으로 받는 결정적 reducer를 둡니다."] },
+            { expression: String.raw`\delta(S_k,e_{k+1})`, annotation: ["화면을 덧그리지 않고 이전 state와", "다음 event로 결정적 reducer를 돌려", "다음 render state를 만듭니다"] },
+            { expression: String.raw`\operatorname{seq}(e_{k+1})=\operatorname{seq}(S_k)+1`, annotation: ["번호가 적용한 값 이하면 duplicate로 무시,", "번호가 건너뛰면 gap을 복구한 뒤 적용합니다"] },
           ]}
           terms={[
             { symbol: "S_k", name: "render state", description: "현재 text buffer, tool call별 상태, permission prompt, usage와 terminal outcome입니다." },

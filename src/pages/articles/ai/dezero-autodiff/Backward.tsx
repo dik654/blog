@@ -27,17 +27,12 @@ y&=x^2+x^2,\\
 &=2x+2x,\\
 x=3&\Rightarrow \frac{\partial y}{\partial x}=12.
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-y&=\underbrace{x^2+x^2,}_{\text{shared input 계산}}\\
-\frac{\partial y}{\partial x}
-&=\underbrace{\frac{\partial x^2}{\partial x}+\frac{\partial x^2}{\partial x}}_{\text{기준량당 비율}}\\
-&=\underbrace{2x+2x,}_{\text{shared input 계산}}\\
-x=3&\Rightarrow \frac{\partial y}{\partial x}=12.
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}y&=\underbrace{x^2}_{\text{branch 1}}+\underbrace{x^2}_{\text{branch 2}},\\\frac{\partial y}{\partial x}&=\underbrace{\frac{\partial x^2}{\partial x}}_{\text{branch 1 기여}}+\underbrace{\frac{\partial x^2}{\partial x}}_{\text{branch 2 기여}}\\&=\underbrace{2x+2x,}_{\text{두 cotangent 합산}}\\x=3&\Rightarrow \underbrace{\frac{\partial y}{\partial x}=12.}_{\text{6+6, 덮어쓰면 6}}\end{aligned}`}
         operations={[
-          { expression: String.raw`x^2+x^2,`, annotation: ["shared input이(가) 식의 결과에 기여하는 방식을","계산합니다.","전체 출력은 두 branch 출력의 합이므로 x를 조금","움직였을 때 각 branch가 만드는 변화량도 더해집니다."] },
-          { expression: String.raw`\frac{\partial x^2}{\partial x}+\frac{\partial x^2}{\partial x}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 출력은 두 branch 출력의 합이므로 x를 조금","움직였을 때 각 branch가 만드는 변화량도 더해집니다."] },
-          { expression: String.raw`2x+2x,`, annotation: ["shared input이(가) 식의 결과에 기여하는 방식을","계산합니다.","전체 출력은 두 branch 출력의 합이므로 x를 조금","움직였을 때 각 branch가 만드는 변화량도 더해집니다."] },
+          { expression: String.raw`x^2+x^2`, annotation: ["같은 Variable x가 두 제곱 branch에", "함께 쓰여 역전파 경로가 둘로 갈립니다"] },
+          { expression: String.raw`\frac{\partial x^2}{\partial x}+\frac{\partial x^2}{\partial x}`, annotation: ["Add의 backward가 seed 1을 두 입력에", "그대로 보내 각 branch가 따로 미분합니다"] },
+          { expression: String.raw`2x+2x`, annotation: ["x에서 다시 만난 두 기여를 prev+gx로", "더한 뒤에야 앞쪽 creator로 보냅니다"] },
+          { expression: String.raw`\frac{\partial y}{\partial x}=12`, annotation: ["x=3이면 branch마다 6씩 보내 12이고,", "마지막 6만 남기면 틀린 gradient입니다"] },
         ]}
         terms={[
           { symbol: "x", name: "shared input", description: "두 제곱 branch가 함께 참조하는 입력 Variable입니다." },

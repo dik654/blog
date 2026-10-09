@@ -60,7 +60,7 @@ export const equityDispersionData: DerivativeDeepArticleData = {
     { term: "상관 표면", description: "만기와 행사가에 따라 달라지는 내재 상관을 좌표별로 모은 표입니다.", example: "1개월 등가격과 1년 하락 구간을 다른 점으로 둡니다.", boundary: "빈 좌표를 채우는 방법과 모형에 따라 값이 달라집니다." },
   ] },
   sources: [
-    { source: "Cboe · Implied Correlation Index 백서", excerpt: "average implied correlation", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, Implied Correlation Index White Paper", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했으며 두 종목 수치는 설명용 가정입니다." },
+    { source: "Cboe · Implied Correlation Index 백서", excerpt: "The implied correlation is a measure of the average correlation between SPX index components", application: "지수 분산 0.03과 개별 기여 0.02를 식에 넣어 상관 0.5를 풉니다.", citation: "Cboe, Implied Correlation Index White Paper", href: "https://cdn.cboe.com/resources/indices/documents/Implied_Correlation-WhitePaper-v1.0.5.pdf", note: "평균상관 식과 지수 산출 구조를 확인했으며 두 종목 수치는 설명용 가정입니다." },
     { source: "Cboe · Implied Correlation Indices", excerpt: "spread between average component variance and portfolio variance", application: "개별 분산 0.04와 지수 분산 0.03의 차이를 디스퍼전의 출발점으로 읽습니다.", citation: "Cboe, Implied Correlation Indices", href: "https://www.cboe.com/us/indices/implied/", note: "현재 지수 설명과 구성 원리를 확인하며 실제 전략의 수수료·헤지 손익은 별도입니다." },
   ],
   review: [
@@ -93,7 +93,7 @@ export const creditTrancheAuctionData: DerivativeDeepArticleData = {
       "그래서 가격 모형에는 함께 부도나는 정도가 들어갑니다. 이 입력은 관측된 자연 상수가 아니라 호가와 모형에서 역산한 값이라 구간마다 서로 맞지 않을 수 있습니다.",
     ] },
     { id: "names", level: "3", title: "6. 손실 트랜치·베이스 상관·CDS 경매 최종가격에 이름을 붙입니다", bridge: "앞에서 본 구간·호가·결제의 표준 용어를 정리합니다.", paragraphs: [
-      "포트폴리오 손실의 시작점과 끝점 사이만 맡는 계약을 신용지수 트랜치라고 부릅니다. 0부터 각 끝점까지의 가상 구간을 시장가격에 맞추는 상관 입력을 베이스 상관이라고 부릅니다.",
+      "포트폴리오 손실의 시작점과 끝점 사이만 맡는 계약을 신용지수 트랜치라고 부릅니다. 0부터 각 끝점까지의 가상 구간을 시장가격에 맞추는 상관 입력을 베이스 상관이라고 부릅니다. 이 상관은 어느 모형 안에서 역산했는지가 붙어야 뜻이 생깁니다. 시장 관행은 1요인 가우시안 코풀라(Li, 2000)입니다. 회사마다 공통 요인 M과 고유 요인 Z를 섞은 값 √ρ·M+√(1−ρ)·Z를 만들고, 이 값이 부도확률 PD에 해당하는 문턱 Φ⁻¹(PD) 아래로 떨어지면 부도로 봅니다. 그 ρ 하나를 구간 가격에 맞춰 푼 값이 베이스 상관입니다.",
       "신용사건 뒤 정해진 절차로 찾은 기준채무의 가격을 경매 최종가격이라고 부릅니다. 이 값은 현금결제의 회수 가격으로 쓰입니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 손실 7과 최종가격 35를 계약 장부 끝까지 따라갑니다", bridge: "처음의 두 숫자를 평가와 결제 단계에 다시 씁니다.", paragraphs: [
@@ -200,8 +200,8 @@ export const commodityDeliveryData: DerivativeDeepArticleData = {
     { term: "선적증서", description: "승인 시설이 보유자 요청 때 계약 상품을 인도하겠다는 의무를 나타내는 양도 가능한 문서입니다.", example: "증서를 받은 뒤 발행 시설에 출고를 요청합니다.", boundary: "즉시 적재 완료나 특정 곡물 더미의 소유를 뜻하지 않습니다." },
   ] },
   sources: [
-    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 지역 6.25센트를 더하는 범위와 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "2026년 10월 확인한 규정이며 2028년 3월물부터 일부 지역표가 바뀌므로 거래 시점에 다시 확인합니다." },
-    { source: "CME Group · Warehouse Receipts vs. Shipping Certificates", excerpt: "commitment ... to deliver", application: "선적증서를 승인 시설의 인도 약속으로 읽고 출고 장소와 후속 절차를 구분합니다.", citation: "CME Group, Warehouse Receipts vs. Shipping Certificates FAQ", href: "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions", note: "증서의 일반 구조를 확인하며 옥수수의 세부 인도 조건은 현행 Rulebook이 우선합니다." },
+    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 지역 6.25센트를 더하는 범위와 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "옥수수 선물 규정입니다. 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 직접 대조하지 못했습니다. Ottawa-Chillicothe 6.25센트 가산은 CME 공지 검색 결과로 확인했지만, 4센트 손상 할인 조건과 2027년 12월물·2028년 3월물 경계는 원문 대조를 하지 못했습니다. 거래 시점에 현행 규정을 다시 확인합니다." },
+    { source: "CME Group · Warehouse Receipts vs. Shipping Certificates", excerpt: "commitment ... to deliver", application: "선적증서를 승인 시설의 인도 약속으로 읽고 출고 장소와 후속 절차를 구분합니다.", citation: "CME Group, Warehouse Receipts vs. Shipping Certificates FAQ", href: "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions", note: "증서의 일반 구조를 확인하며 옥수수의 세부 인도 조건은 현행 Rulebook이 우선합니다. 이 페이지는 2026-10-09 자동 조회 타임아웃이라 선적증서 정의 문구를 검색 요약으로만 2차 확인했습니다." },
   ],
   review: [
     "5달러에서 4센트를 빼고 6.25센트를 더한 5,000부셸 조정액을 계산해 보세요. (답: 3절)",
@@ -246,7 +246,7 @@ export const derivativesInvestigationData: DerivativeDeepArticleData = {
     ] },
     { id: "comparison", level: "6", title: "9. EU MiFIR는 주문 특성과 그 결과 거래의 연결을 보존하도록 합니다", bridge: "미국의 조사 자료와 유럽의 거래기록 의무가 만나는 지점을 봅니다.", paragraphs: [
       "MiFIR Article 25는 주문의 특성을 담은 관련 자료를 보관하고 주문과 그 결과로 생긴 거래를 연결할 수 있어야 한다고 정합니다. .100초 주문과 뒤따른 수정·취소가 별도 줄이어도 같은 흐름으로 재구성해야 합니다.",
-      "EU 규정의 적용 대상과 보존 기간을 다른 관할에 그대로 옮기지 않습니다. 회사 지위, 상품과 시행 중인 기술기준을 확인한 뒤 내부 보존표를 정합니다.",
+      "MiFIR 제25조는 투자회사가 금융상품의 모든 주문·거래 관련 자료를 5년 동안 감독당국이 쓸 수 있게 보관하도록 정합니다. 다만 EU 규정의 적용 대상과 이 5년을 다른 관할에 그대로 옮기지 않습니다. 회사 지위, 상품과 시행 중인 기술기준을 확인한 뒤 내부 보존표를 정합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 완전한 시간표도 거래 의도를 자동으로 증명하지 않습니다", bridge: "기록의 완전성과 법적 판단 사이에 남는 거리를 확인합니다.", paragraphs: [
       "빠른 취소는 정상적인 위험 관리나 시장 변화에 반응한 결과일 수 있습니다. 가격·호가 깊이, 반복 패턴, 실제 체결 의사와 반대 증거를 함께 봐야 합니다.",
@@ -270,7 +270,7 @@ export const derivativesInvestigationData: DerivativeDeepArticleData = {
     { term: "법적 보류", description: "분쟁이나 조사와 관련된 정해진 자료의 예정된 삭제를 잠시 멈추는 지시입니다.", example: "대상 계정과 기간의 자동 삭제를 중지합니다.", boundary: "회사 자료 전체를 영구 보관하는 명령이 아닙니다." },
   ] },
   sources: [
-    { source: "CFTC · Enforcement Manual", excerpt: "native file data", application: "주문·통신·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "미국 CFTC 조사 절차의 일반 지침이며 개별 사건 요청과 법률 자문을 대신하지 않습니다." },
+    { source: "CFTC · Enforcement Manual", excerpt: "Native File Production", application: "주문·통신·오디오를 원본 형식과 메타데이터가 있는 조사 꾸러미로 모읍니다.", citation: "CFTC, Division of Enforcement Manual", href: "https://www.cftc.gov/LawRegulation/EnforcementManual.pdf", note: "미국 CFTC 조사 절차의 일반 지침이며 개별 사건 요청과 법률 자문을 대신하지 않습니다." },
     { source: "ESMA · MiFIR Article 25", excerpt: "relevant data relating to all orders", application: "주문 특성과 그 결과 거래를 연결해 .100→.350→.600의 순서를 보존합니다.", citation: "ESMA Interactive Single Rulebook, MiFIR Article 25", href: "https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-25-obligation-maintain-records", note: "EU 적용 대상 회사의 기록 의무이며 다른 관할의 기간과 범위를 자동으로 정하지 않습니다." },
   ],
   review: [
@@ -385,7 +385,7 @@ export const fractionalTrustCertificatesData: DerivativeDeepArticleData = {
       "모든 공동구매나 선불 구매가 자동으로 증권이 되는 것은 아닙니다. 계약상 권리, 사업 운영 의존과 손익 구조를 개별 사실관계에서 확인합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 2026년 예비인가는 신탁 수익증권 유통시장과 투자계약증권을 구분합니다", bridge: "새 시장의 허용 범위를 최신 금융위원회 발표에서 확인합니다.", paragraphs: [
-      "금융위원회는 2026년 2월 두 회사에 비금전신탁 수익증권 장외거래소 예비인가를 의결했습니다. 발표는 이 범위를 신탁 수익증권으로 한정하고 투자계약증권은 포함하지 않는다고 밝혔습니다.",
+      "금융위원회는 2026년 2월 두 회사에 비금전신탁 수익증권 장외거래소 예비인가를 의결했습니다. 발표는 이번 인가가 신탁 수익증권 장외거래중개업만을 뜻한다고 밝혔습니다. 같은 발표는 2026년 1월 15일 국회를 통과한 토큰증권법(공포 1년 뒤 시행)이 시행되면 투자계약증권도 장외거래소를 통한 유통이 허용될 예정이라고 덧붙였으므로, 투자계약증권 제외는 이번 인가 범위에 대한 설명입니다.",
       "예비인가가 모든 조각투자 상품의 상장이나 원금 안전을 승인한 것은 아닙니다. 본인가, 개별 발행 심사와 시장 규칙을 각각 확인해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 신탁과 거래소가 있어도 공실·평가·매도 위험은 남습니다", bridge: "권리 보호 장치가 투자 성과 보장이 되는 경계를 막습니다.", paragraphs: [

@@ -33,14 +33,15 @@ export default function Session({
           &\quad\land compatible(status)
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          C_{shared}&=\underbrace{C_{local}\cap C_{peer}}_{\text{local capabilities 계산}}\\
-          ready&=\underbrace{secure\land(C_{shared}^{eth}\ne\varnothing)}_{\text{판정 조건 결합}}\\
-          &\quad\land compatible(status)
+          C_{shared}&=\underbrace{C_{local}\cap C_{peer}}_{\text{양쪽 공통 capability}}\\
+          ready&=\underbrace{secure}_{\text{RLPx 확정}}\land\underbrace{(C_{shared}^{eth}\ne\varnothing)}_{\text{ETH version 존재}}\\
+          &\quad\land \underbrace{compatible(status)}_{\text{같은 chain·fork}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`C_{local}\cap C_{peer}`, annotation: ["local capabilities이(가) 식의 결과에 기여하는","방식을 계산합니다.","이름·version이 같은 capability만 교집합에","남기고, 그중 필요한 ETH capability와 chain"] },
-          { expression: String.raw`secure\land(C_{shared}^{eth}\ne\varnothing)`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","이름·version이 같은 capability만 교집합에","남기고, 그중 필요한 ETH capability와 chain","Status가 모두 통과할 때만 data-path 권한을"] },
-        ]}
+  { expression: String.raw`C_{local}\cap C_{peer}`, annotation: ["Hello의 이름·version pair가 정확히","같은 것만 남깁니다","공통 ETH 후보 예: eth/68"] },
+  { expression: String.raw`secure\land(C_{shared}^{eth}\ne\varnothing)`, annotation: ["identity·암호화가 확정되고","공통 ETH version이 하나 이상 있어야","pending이 active slot으로 넘어갑니다"] },
+  { expression: String.raw`\land compatible(status)`, annotation: ["Status의 genesis·fork가 틀리면","eth/68이 있어도 ready=false입니다"] },
+]}
         terms={[
           {
             symbol: String.raw`C_{local}`,

@@ -22,9 +22,10 @@ export default function ZKConnection() {
         question="Low-degree polynomial과 RS codeword membership은 어떻게 연결될까요?"
         idea="Domain D의 모든 점에서 degree&lt;k polynomial을 평가한 vector들의 집합을 code로 정의합니다. Membership은 정확한 등가이고 proximity는 이 집합까지의 상대 Hamming 거리를 별도로 잽니다."
         formula={String.raw`\operatorname{RS}[\mathbb F,D,k]=\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}`}
-        annotatedFormula={String.raw`\operatorname{RS}[\mathbb F,D,k]=\underbrace{\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{RS}[\mathbb F,D,k]=\underbrace{\{(p(x))_{x\in D}:\deg p<k\}}_{\text{저차 다항식 평가값}},\qquad \Delta(f,\operatorname{RS})=\underbrace{\min_c}_{\text{가장 가까운 codeword}}\frac{\underbrace{|\{x:f(x)\ne c_x\}|}_{\text{다른 좌표 수}}}{\underbrace{|D|}_{\text{domain 크기}}}`}
         operations={[
-          { expression: String.raw`\{(p(x))_{x\in D}:\deg p<k\},\qquad \Delta(f,\operatorname{RS})=\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Domain D의 모든 점에서 degree k","polynomial을 평가한 vector들의 집합을 code로","정의합니다."] },
+          { expression: String.raw`\{(p(x))_{x\in D}:\deg p<k\}`, annotation: ["D의 모든 점에서 degree<k 다항식을","평가한 vector가 codeword입니다","|D|=16, k=4면 rate 1/4"] },
+          { expression: String.raw`\min_c\frac{|\{x:f(x)\ne c_x\}|}{|D|}`, annotation: ["가장 가까운 codeword와 다른 좌표 비율로","proximity를 잽니다: 한 좌표면 ≤1/16","membership 판정과는 별개입니다"] },
         ]}
         terms={[
           { symbol: "D", name: "evaluation domain", description: "중복 없는 field points의 ordered set입니다." },

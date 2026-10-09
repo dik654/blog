@@ -18,9 +18,11 @@ export default function Overview() {
         question="구간 유동성은 어떻게 constant-product 곡선의 한 조각을 만들까요?"
         idea="실제 token balances에 구간 끝에서 남을 virtual reserve를 더하면 V2와 같은 곱 L²을 얻습니다. 범위 밖에서는 한 token 양이 0이 됩니다."
         formula={String.raw`\left(x+\frac{L}{\sqrt{p_b}}\right)\left(y+L\sqrt{p_a}\right)=L^2`}
-        annotatedFormula={String.raw`\left(x+\frac{L}{\sqrt{p_b}}\right)\left(y+L\sqrt{p_a}\right)=\underbrace{L^2}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\left(\underbrace{x}_{\text{실제 token0}}+\underbrace{\frac{L}{\sqrt{p_b}}}_{\text{token0 virtual}}\right)\left(\underbrace{y}_{\text{실제 token1}}+\underbrace{L\sqrt{p_a}}_{\text{token1 virtual}}\right)=\underbrace{L^2}_{\text{V2와 같은 곱}}`}
         operations={[
-          { expression: String.raw`L^2`, annotation: ["position liquidity이(가) 식의 결과에 기여하는","방식을 계산합니다.","실제 token balances에 구간 끝에서 남을","virtual reserve를 더하면 V2와 같은 곱 L²을"] },
+          { expression: String.raw`x+\frac{L}{\sqrt{p_b}}`, annotation: ["실제 token0에 upper 끝 virtual을 더함","L=60, √pᵦ=3이면 10+20=30"] },
+          { expression: String.raw`y+L\sqrt{p_a}`, annotation: ["실제 token1에 lower 끝 virtual을 더함","L=60, √pₐ=1이면 60+60=120"] },
+          { expression: String.raw`L^2`, annotation: ["30×120=3600=60²","범위 밖에서는 한 token 양이 0"] },
         ]}
         terms={[
           { symbol: "p_a,p_b", name: "range prices", description: "token1/token0 기준 lower·upper price이며 pₐ<pᵦ입니다." },

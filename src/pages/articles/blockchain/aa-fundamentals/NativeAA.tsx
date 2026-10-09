@@ -28,9 +28,11 @@ export default function NativeAA() {
         question="EIP-7702 authorization이 다른 chain이나 다른 delegate로 재사용되지 않게 무엇을 서명할까요?"
         idea="Authorization의 용도 표식과 chain·delegate·nonce를 함께 RLP encode한 뒤 hash합니다. Chain ID 0은 여러 chain에서 유효하도록 의도한 예외이므로 더 강한 deployment 동일성 검사가 필요합니다."
         formula={String.raw`m=\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))`}
-        annotatedFormula={String.raw`m=\underbrace{\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))}_{\text{Magic 계산}}`}
+        annotatedFormula={String.raw`m=\operatorname{keccak256}(\underbrace{\mathtt{0x05}}_{\text{authorization 용도 표식}}\,\|\,\underbrace{\operatorname{rlp}([c,a,n])}_{\text{chain·delegate·nonce 고정}})`}
         operations={[
-          { expression: String.raw`\operatorname{keccak256}(\mathtt{0x05}\,\|\,\operatorname{rlp}([c,a,n]))`, annotation: ["Magic이(가) 식의 결과에 기여하는 방식을 계산합니다.","Authorization의 용도 표식과","chain·delegate·nonce를 함께 RLP","encode한 뒤 hash합니다."] },
+          { expression: String.raw`\mathtt{0x05}`, annotation: ["일반 transaction 서명과 섞이지 않게","authorization domain을 앞에 붙입니다"] },
+          { expression: String.raw`\operatorname{rlp}([c,a,n])`, annotation: ["어느 chain, 어느 delegate, 몇 번째","nonce인지를 한 덩어리로 encode","c나 a가 바뀌면 서명할 m도 바뀜"] },
+          { expression: String.raw`\operatorname{keccak256}`, annotation: ["둘을 이어 hash한 m에 EOA가 서명","c=0이면 여러 chain에서 유효하므로","chain마다 delegate code를 확인"] },
         ]}
         terms={[
           { symbol: "c", name: "Chain ID", description: "Authorization이 유효한 chain이며 0은 chain-independent 선택입니다." },

@@ -18,9 +18,10 @@ export default function Butterfly() {
         question="E[k]와 O[k] 한 쌍에서 NTT output 두 개를 어떻게 얻을까요?"
         idea="half-turn identity ω^(k+n/2)=−ω^k를 사용하면 odd contribution의 부호만 바뀌므로 새 sub-transform 없이 더하기와 빼기로 두 output을 만듭니다."
         formula={String.raw`y_k=E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`}
-        annotatedFormula={String.raw`y_k=\underbrace{E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`y_k=\underbrace{E_k+\omega^kO_k}_{\text{앞쪽 output}},\qquad y_{k+n/2}=\underbrace{E_k-\omega^kO_k}_{\text{반대편 output}}`}
         operations={[
-          { expression: String.raw`E_k+\omega^kO_k,\qquad y_{k+n/2}=E_k-\omega^kO_k`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","half-turn identity ω^(k+n/2)=−ω^k를","사용하면 odd contribution의 부호만 바뀌므로 새","sub-transform 없이 더하기와 빼기로 두"] },
+          { expression: String.raw`E_k+\omega^kO_k`, annotation: ["even 결과에 twiddle로 phase를 맞춘","odd 결과를 더해 k번째 값을 얻습니다"] },
+          { expression: String.raw`E_k-\omega^kO_k`, annotation: ["ω^(k+n/2)=−ω^k라 odd 항 부호만 바뀌어","같은 곱 ω^k·O_k를 빼기만 하면","k+n/2번째 값이 나옵니다"] },
         ]}
         terms={[
           {

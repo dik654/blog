@@ -9,7 +9,7 @@ export default function Expectation({ title }: { title?: string }) {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           <Link to="/cs/ai/math-random-variables-expectation#expectation">기댓값 정본</Link>에서
-          정의한 확률 가중 평균을 surprisal에 적용합니다. 자주 발생하는 사건의 비용에는
+          정의한, 확률로 가중한 평균을 surprisal에 적용합니다. 자주 발생하는 사건의 비용에는
           큰 비중을, 드문 사건의 비용에는 작은 비중을 주므로 한 번의 관측 비용을
           distribution 전체의 평균 비용으로 바꿀 수 있습니다.
         </p>
@@ -19,11 +19,11 @@ export default function Expectation({ title }: { title?: string }) {
         question="사건마다 다른 비용 f(x)를 실제 분포 P 전체에서 어떻게 평균낼까?"
         idea={<>각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률 P(x)를 곱해 더합니다. 학습에서는 P를 직접 모르므로 i.i.d. sample 평균인 empirical risk로 근사합니다.</>}
         formula={String.raw`\begin{aligned}\mathbb E_{x\sim P}[f(x)]&=\sum_xP(x)f(x)\\[3pt]R(\theta)&=\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]\\[3pt]\widehat R_n(\theta)&=\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\mathbb E_{x\sim P}[f(x)]&=\underbrace{\sum_xP(x)f(x)}_{\text{확률 가중 평균}}\\[3pt]R(\theta)&=\underbrace{\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]}_{\text{확률 가중 평균}}\\[3pt]\widehat R_n(\theta)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)}_{\text{empirical risk 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathbb E_{x\sim P}[f(x)]&=\sum_x\underbrace{P(x)}_{\text{실제 발생 비중}}\underbrace{f(x)}_{\text{사건별 비용}}\\[3pt]R(\theta)&=\underbrace{\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]}_{\text{새 데이터에서 기대 loss}}\\[3pt]\widehat R_n(\theta)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)}_{\text{관측한 n개 sample 평균}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_xP(x)f(x)`, annotation: ["사건별 측정값이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
-          { expression: String.raw`\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]`, annotation: ["population risk이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
-          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)`, annotation: ["empirical risk이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 사건의 비용 f(x)에 그 사건이 실제로 나타날 확률","P(x)를 곱해 더합니다."] },
+          { expression: String.raw`\sum_xP(x)f(x)`, annotation: ["자주 나는 사건의 비용엔 큰 비중을,", "드문 사건엔 작은 비중을 줘 더합니다", "f에 surprisal을 넣으면 평균 정보량"] },
+          { expression: String.raw`\mathbb E_{(x,y)\sim P_{\rm data}}[\ell_\theta(x,y)]`, annotation: ["실제 환경 분포 전체에서 본", "model loss의 평균으로, 직접 모릅니다"] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell_\theta(x_i,y_i)`, annotation: ["대신 관측 sample loss를 평균냅니다", "loss 0.2, 0.5, 0.8이면", "(0.2+0.5+0.8)/3=0.5"] },
         ]}
         terms={[
           { symbol: "P", name: "모집단 분포", description: "실제 환경에서 input과 label이 생성되는 알 수 없는 분포입니다." },

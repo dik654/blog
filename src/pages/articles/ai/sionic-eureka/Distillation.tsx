@@ -34,16 +34,15 @@ P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}\\
 \mathcal L(q)&=D_{\mathrm{KL}}(P^T\Vert P^S)
 \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-\mathcal D(q)&=\underbrace{\{p,n_1,\ldots,n_{15}\}}_{\text{query-local candidate 계산}}\\
-P_i^T&=\underbrace{\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}},\qquad
-P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}}_{\text{기준량당 비율}}\\
-\mathcal L(q)&=\underbrace{D_{\mathrm{KL}}(P^T\Vert P^S)}_{\text{KL divergence 계산}}
+\mathcal D(q)&=\{\underbrace{p}_{\text{positive}},\underbrace{n_1,\ldots,n_{15}}_{\text{저장된 negative 15개}}\}\\
+P_i^T&=\underbrace{\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}}}_{\text{teacher 후보 분포}},\qquad
+P_i^S=\underbrace{\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}}_{\text{student 후보 분포}}\\
+\mathcal L(q)&=\underbrace{D_{\mathrm{KL}}(P^T\Vert P^S)}_{\text{teacher 기준 분포 차이}}
 \end{aligned}`}
           operations={[
-            { expression: String.raw`\{p,n_1,\ldots,n_{15}\}`, annotation: ["query-local candidate set이(가) 식의","결과에 기여하는 방식을 계산합니다.","Query마다"] },
-            { expression: String.raw`\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}},\qquad
-P_i^S=\frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Query마다"] },
-            { expression: String.raw`D_{\mathrm{KL}}(P^T\Vert P^S)`, annotation: ["KL divergence이(가) 식의 결과에 기여하는 방식을","계산합니다.","Query마다"] },
+            { expression: String.raw`\{p,n_1,\ldots,n_{15}\}`, annotation: ["query마다 positive 1개 + negative 15개", "teacher score 16개 scalar만 저장"] },
+            { expression: String.raw`\frac{e^{t_i/\tau}}{\sum_j e^{t_j/\tau}}`, annotation: ["teacher score를 16개 후보 안의", "확률로 바꿉니다, τ가 낮을수록", "상위 후보 차이를 더 강조"] },
+            { expression: String.raw`D_{\mathrm{KL}}(P^T\Vert P^S)`, annotation: ["같은 후보 목록 위에서 student 분포를", "teacher 분포 쪽으로 당깁니다", "embedding 좌표가 아니라 상대 순위 전달"] },
           ]}
           terms={[
             { symbol: "\\mathcal D(q)", name: "query-local candidate set", description: "한 query의 positive와 저장된 negative 15개입니다." },

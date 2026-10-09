@@ -20,9 +20,12 @@ export default function Svd() {
         question="SVD의 U, Σ, Vᵀ는 input vector에 어떤 순서로 작용할까요?"
         idea={<>오른쪽에서 왼쪽으로 읽습니다. Vᵀ가 input을 orthonormal coordinate로 바꾸고, diagonal Σ가 방향별 scale만 적용하며, U가 그 성분을 output 공간의 orthonormal directions로 합칩니다.</>}
         formula={String.raw`A=U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0`}
-        annotatedFormula={String.raw`A=\underbrace{U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`A=U\Sigma V^\top,\qquad Ax=\underbrace{U}_{\text{3. output 방향 합성}}\bigl(\underbrace{\Sigma}_{\text{2. 방향별 scale}}(\underbrace{V^\top x}_{\text{1. input 좌표 변환}})\bigr),\qquad \underbrace{\sigma_1\ge\sigma_2\ge\cdots\ge0}_{\text{큰 scale부터 정렬}}`}
         operations={[
-          { expression: String.raw`U\Sigma V^\top,\qquad Ax=U\bigl(\Sigma(V^\top x)\bigr),\qquad \sigma_1\ge\sigma_2\ge\cdots\ge0`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","오른쪽에서 왼쪽으로 읽습니다."] },
+          { expression: String.raw`V^\top x`, annotation: ["먼저 input을 orthonormal한","right singular 방향 좌표로 바꿈"] },
+          { expression: String.raw`\Sigma(V^\top x)`, annotation: ["diagonal이라 좌표마다","singular value만큼 늘이거나 줄이기만 함"] },
+          { expression: String.raw`U\bigl(\Sigma(V^\top x)\bigr)`, annotation: ["scale된 성분을 output 공간의","left singular 방향으로 합쳐 Ax를 만듦"] },
+          { expression: String.raw`\sigma_1\ge\sigma_2\ge\cdots\ge0`, annotation: ["singular value는 0 이상이고","큰 것부터 정렬해 강한 방향이 앞에 옴"] },
         ]}
         terms={[
           { symbol: "V", name: "right singular vectors", description: "Input 공간에서 A가 구분하는 orthonormal directions를 column으로 가집니다." },

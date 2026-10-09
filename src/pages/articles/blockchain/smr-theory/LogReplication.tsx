@@ -17,9 +17,10 @@ export default function LogReplication() {
         question="n개 replica에서 crash f개 뒤에도 majority quorum을 만들고 두 quorum을 겹치게 하려면?"
         idea="Majority q=floor(n/2)+1은 두 집합이 반드시 겹치며, n=2f+1이면 f개 crash 뒤에도 q개가 남습니다."
         formula={String.raw`q=\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n`}
-        annotatedFormula={String.raw`q=\underbrace{\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`q=\underbrace{\left\lfloor\frac n2\right\rfloor+1}_{\text{절반 초과 최소 수}},\qquad \underbrace{|Q_1\cap Q_2|}_{\text{두 quorum 공통}}\ge \underbrace{2q-n}_{\text{겹침 하한}}`}
         operations={[
-          { expression: String.raw`\left\lfloor\frac n2\right\rfloor+1,\qquad |Q_1\cap Q_2|\ge 2q-n`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Majority q=floor(n/2)+1은 두 집합이 반드시","겹치며, n=2f+1이면 f개 crash 뒤에도 q개가","남습니다."] },
+          { expression: String.raw`\left\lfloor\frac n2\right\rfloor+1`, annotation: ["절반을 넘는 최소 replica 수가 quorum","n=5면 q=3, 2개가 멈춰도 3개 남습니다"] },
+          { expression: String.raw`|Q_1\cap Q_2|\ge 2q-n`, annotation: ["두 quorum 크기 합이 n을 넘는 만큼","반드시 겹칩니다: 2·3−5=1"] },
         ]}
         terms={[
           { symbol: "n", name: "replica count", description: "고정 membership의 전체 voting replica 수입니다." },

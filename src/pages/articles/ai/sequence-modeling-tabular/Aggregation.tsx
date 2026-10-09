@@ -24,11 +24,11 @@ export default function Aggregation() {
         question="Event a 다음에 b가 나타나는 경향을 고정 길이 feature로 어떻게 만들까?"
         idea={<>먼저 인접한 event pair의 횟수를 세고, 같은 시작 event에서 나가는 전체 횟수로 나눕니다. 관측되지 않은 전이에 확률 0을 단정하지 않도록 작은 smoothing 값 α를 더할 수 있습니다.</>}
         formula={String.raw`\begin{aligned}N_{ab}&=\sum_{j=1}^{L-1}\mathbf 1[a_j=a,\ a_{j+1}=b],\\N_{a\bullet}&=\sum_{b^{\prime}\in\mathcal V}N_{ab^{\prime}},\\\widehat P(b\mid a)&=\frac{N_{ab}+\alpha}{N_{a\bullet}+\alpha|\mathcal V|}.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}N_{ab}&=\underbrace{\sum_{j=1}^{L-1}\mathbf 1[a_j=a,\ a_{j+1}=b],}_{\text{오른쪽 항으로 결과 계산}}\\N_{a\bullet}&=\underbrace{\sum_{b^{\prime}\in\mathcal V}N_{ab^{\prime}},}_{\text{event vocabulary 계산}}\\\widehat P(b\mid a)&=\underbrace{\frac{N_{ab}+\alpha}{N_{a\bullet}+\alpha|\mathcal V|}.}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{N_{ab}}_{\text{a→b 전이 횟수}}&=\sum_{j=1}^{L-1}\underbrace{\mathbf 1[a_j=a,\ a_{j+1}=b]}_{\text{인접 pair가 a,b면 1}},\\\underbrace{N_{a\bullet}}_{\text{a에서 나간 전이}}&=\sum_{b^{\prime}\in\mathcal V}N_{ab^{\prime}},\\\widehat P(b\mid a)&=\frac{\overbrace{N_{ab}+\alpha}^{\text{a→b 횟수+보정}}}{\underbrace{N_{a\bullet}+\alpha|\mathcal V|}_{\text{a 출발 전체+보정}}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{j=1}^{L-1}\mathbf 1[a_j=a,\ a_{j+1}=b],`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","먼저 인접한 event pair의 횟수를 세고, 같은 시작","event에서 나가는 전체 횟수로 나눕니다."] },
-          { expression: String.raw`\sum_{b^{\prime}\in\mathcal V}N_{ab^{\prime}},`, annotation: ["event vocabulary이(가) 식의 결과에 기여하는","방식을 계산합니다.","먼저 인접한 event pair의 횟수를 세고, 같은 시작","event에서 나가는 전체 횟수로 나눕니다."] },
-          { expression: String.raw`\frac{N_{ab}+\alpha}{N_{a\bullet}+\alpha|\mathcal V|}.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","먼저 인접한 event pair의 횟수를 세고, 같은 시작","event에서 나가는 전체 횟수로 나눕니다."] },
+          { expression: String.raw`\sum_{j=1}^{L-1}\mathbf 1[a_j=a,\ a_{j+1}=b]`, annotation: ["바로 이웃한 event pair를 훑으며 셈", "ABACA에서 A→B는 1번"] },
+          { expression: String.raw`\sum_{b^{\prime}\in\mathcal V}N_{ab^{\prime}}`, annotation: ["a 다음에 온 모든 event를 합친 횟수", "ABACA에서 A 출발은 AB·AC로 2번"] },
+          { expression: String.raw`\frac{N_{ab}+\alpha}{N_{a\bullet}+\alpha|\mathcal V|}`, annotation: ["α=0이면 단순 빈도 1/2", "α>0이면 관측 안 된 전이도", "확률 0으로 단정하지 않습니다"] },
         ]}
         terms={[
           { symbol: "N_ab", name: "transition count", description: "Sequence에서 a 바로 다음에 b가 나온 횟수입니다." },

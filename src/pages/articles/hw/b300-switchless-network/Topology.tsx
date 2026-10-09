@@ -44,16 +44,11 @@ export default function Topology() {
               = \frac{cN(N-1)}{2} \\
             P_{\mathrm{node}} &= c(N-1) \le 8
           \end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}
-            E_{\mathrm{cable}} &= \underbrace{c\binom{N}{2}
-              = \frac{cN(N-1)}{2}}_{\text{기준량당 비율}} \\
-            P_{\mathrm{node}} &= \underbrace{c(N-1) \le 8}_{\text{허용 경계 판정}}
-          \end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned} E_{\mathrm{cable}} &= \underbrace{c}_{\text{pair당 cable}}\underbrace{\binom{N}{2}}_{\text{node pair 수}} = \frac{cN(N-1)}{2} \\ P_{\mathrm{node}} &= \underbrace{c(N-1)}_{\text{node당 사용 port}} \underbrace{\le 8}_{\text{OSFP port 8개}} \end{aligned}`}
           operations={[
-            { expression: String.raw`c\binom{N}{2}
-              = \frac{cN(N-1)}{2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Full mesh의 node pair 수는 조합 N","choose 2입니다."] },
-            { expression: String.raw`c(N-1) \le 8`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Full mesh의 node pair 수는 조합 N","choose 2입니다."] },
-          ]}
+          { expression: String.raw`c\binom{N}{2}`, annotation: ["full mesh의 node pair 수 N choose 2에", "pair마다 놓는 cable c개를 곱합니다", "node 수의 제곱에 가깝게 늘어납니다"] },
+          { expression: String.raw`c(N-1) \le 8`, annotation: ["한 node는 나머지 N−1개 node마다 c port", "node당 OSFP port 8개를 넘을 수 없어", "8 node면 c=1, peer당 800G 한 개가 상한"] },
+        ]}
           terms={[
             { symbol: "N", name: "node count", description: "Full mesh에 참여하는 DGX B300 node 수입니다." },
             { symbol: "c", name: "cables per pair", description: "모든 node pair에 동일하게 배정하는 physical 800G cable 수입니다." },

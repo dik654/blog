@@ -43,9 +43,10 @@ export default function Streams() {
           </>
         }
         formula={String.raw`T_{\mathrm{steady}}\ge\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`}
-        annotatedFormula={String.raw`T_{\mathrm{steady}}\ge\underbrace{\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`\underbrace{T_{\mathrm{steady}}}_{\text{chunk 간격}}\ge\underbrace{\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})}_{\text{가장 느린 stage}}`}
         operations={[
-          { expression: String.raw`\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","서로 완전히 겹칠 수 있다면 세 단계의 합이 아니라 가장 오래","걸리는 stage가 다음 chunk의 간격을 제한합니다."] },
+          { expression: String.raw`\max(T_{\mathrm{H2D}},T_{\mathrm{kernel}},T_{\mathrm{D2H}})`, annotation: ["세 단계가 완전히 겹쳐도", "가장 느린 stage가 chunk 간격을 정합니다", "2·5·2 ms면 합 9가 아니라 하한 5 ms"] },
+          { expression: String.raw`T_{\mathrm{steady}}`, annotation: ["실측이 7 ms면 하한과의 차이 2 ms를", "timeline에서 overlap gap으로 찾습니다"] },
         ]}
         terms={[
           {

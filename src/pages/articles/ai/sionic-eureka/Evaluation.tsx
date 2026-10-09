@@ -30,9 +30,11 @@ export default function Evaluation() {
             </p>
           }
           formula={String.raw`\mathrm{NDCG}@k=\frac{\sum_{i=1}^{k}\frac{2^{r_i}-1}{\log_2(i+1)}}{\mathrm{IDCG}@k}`}
-          annotatedFormula={String.raw`\mathrm{NDCG}@k=\underbrace{\frac{\sum_{i=1}^{k}\frac{2^{r_i}-1}{\log_2(i+1)}}{\mathrm{IDCG}@k}}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`\mathrm{NDCG}@k=\frac{\sum_{i=1}^{k}\frac{\underbrace{2^{r_i}-1}_{\text{relevance gain}}}{\underbrace{\log_2(i+1)}_{\text{순위 할인}}}}{\underbrace{\mathrm{IDCG}@k}_{\text{이상적 정렬의 DCG}}}`}
           operations={[
-            { expression: String.raw`\frac{\sum_{i=1}^{k}\frac{2^{r_i}-1}{\log_2(i+1)}}{\mathrm{IDCG}@k}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Rank가 뒤로 갈수록 relevance gain을 할인한","DCG를 계산하고, 같은 judged 문서를 이상적으로 정렬한","IDCG로 나눠 query별 난이도와 positive 수"] },
+            { expression: String.raw`2^{r_i}-1`, annotation: ["relevance 등급이 높을수록","gain이 지수적으로 커짐"] },
+            { expression: String.raw`\log_2(i+1)`, annotation: ["rank i가 뒤로 갈수록 gain을 할인","1위는 log₂2 = 1이라 그대로"] },
+            { expression: String.raw`\mathrm{IDCG}@k`, annotation: ["같은 judged 문서를 이상적으로 정렬한","DCG로 나눠 query마다 0~1로 맞춤","NDCG@10이면 상위 10개 기준"] },
           ]}
           terms={[
             { symbol: "r_i", name: "rank i의 relevance", description: "평가 label이 부여한 i번째 결과의 graded relevance입니다." },

@@ -76,6 +76,8 @@ export default function CommercialLeaseAndRentArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">계약 전에는 등기상 소유자와 계약 상대, 대리인 권한, 담보권과 체납 등 보증금 회수에 영향을 주는 자료를 확인합니다. 주소·호수·실제 사용 면적을 맞추고 업종, 공사와 간판 설치 범위를 서면으로 남깁니다.</p>
           <p className="leading-7">입주일에 보증금 3천만 원 지급과 열쇠·공간 인도를 확인합니다. 이후 36개월 동안 월세 200만 원과 관리비를 구분해 기록합니다. 이 사례와 달리 공사기간 무상 사용을 약정한다면 면제되는 것이 월세인지 관리비도 포함하는지와 시작일을 적어야 합니다.</p>
+          <p className="leading-7">관리비를 따로 기록하려면 무엇에 얼마가 붙었는지 알아야 합니다. 예를 들어 어느 달 관리비가 30만 원(가정)으로 청구됐는데 청소·전기·승강기 몫이 나뉘어 있지 않다면 점주는 그 30만 원이 맞는지 판단할 수 없습니다. 한국 상가건물 임대차보호법은 2026-05-12 시행 개정으로 제19조의2를 신설해, 계약에서 합의해 관리비를 내는 임차인이 임대인에게 부과된 관리비 내역을 요청할 수 있고 요청받은 임대인은 따라야 한다고 정했습니다.</p>
+          <p className="leading-7">부칙 제2조에 따라 이 조항은 시행 이후 체결하거나 갱신하는 계약부터 적용되므로, 그 전에 맺은 계약이라면 갱신 때부터 요청할 수 있습니다. 내역에 담을 구체 항목은 시행령에 맡겨져 있습니다(2026-10-09 확인).</p>
           <p className="leading-7">수선은 누수·구조체·설비·소모품별 담당을 정합니다. 고장 통지와 응답, 긴급 수리 비용을 어떤 자료로 확인할지도 남깁니다. 남은 계약기간과 갱신 통지 날짜를 달력으로 관리하고 중도 이전 시 손해와 새 임차인 조건을 확인합니다.</p>
           <p className="leading-7">3년 말에는 반환할 상태를 입주 사진과 대조하고 미납액과 합의된 복구액을 항목별로 정산합니다. 공제 사유가 없다면 3천만 원을 반환받지만, 단순히 36개월이 지났다는 사실만으로 인도·정산 절차가 끝나는 것은 아닙니다.</p>
         </div>
@@ -94,6 +96,9 @@ export default function CommercialLeaseAndRentArticle() {
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">건물을 인도받고 사업자등록을 신청하면 그다음 날부터 제3자에게 임대차의 효력을 주장할 수 있습니다. 이를 대항력이라고 합니다. 제3조 제2항은 건물을 넘겨받은 사람이 임대인의 지위를 승계한다고 규정합니다. 계약서에 서명했다는 사실만으로 이 요건이 모두 갖춰지는 것은 아닙니다.</p>
           <p className="leading-7">경매·공매에서 후순위 권리자나 다른 채권자보다 먼저 받을 권리인 우선변제권은 제5조의 별도 요건을 봅니다. 위 요건에 확정일자가 더 필요하며 법의 적용 범위도 확인해야 합니다. 제2조는 보증금 규모에 따른 일반 적용 범위를 정하면서 제3조 등 일부 조항은 그 범위를 넘는 임대차에도 적용합니다. 대항력이 있다는 사실만으로 제5조의 적용이나 3천만 원 전액 회수를 보장하지는 않습니다. 전액 회수 여부는 선순위 권리와 실제 배당 재원에 달려 있습니다.</p>
+          <p className="leading-7">적용 범위는 보증금만 보고 정하지 않습니다. 월세가 있으면 월세에 100을 곱해 보증금에 더한 금액으로 비교하며, 이 합계를 환산보증금이라고 부릅니다(시행령 제2조 제3항의 &ldquo;1분의 100&rdquo;). 이 글의 사례는 3천만 원 + 200만 원 × 100 = 2억3천만 원입니다.</p>
+          <p className="leading-7">2026-07-01 시행 시행령 제2조의 기준액은 서울특별시 9억 원, 과밀억제권역(서울 제외)과 부산광역시 6억9천만 원, 광역시 등 5억4천만 원, 그 밖의 지역 3억7천만 원이므로 2억3천만 원은 어느 지역에서도 기준 안에 듭니다(2026-10-09 확인).</p>
+          <p className="leading-7">기준을 넘는 경우를 하나 더 놓아 보겠습니다. 서울에서 보증금 1억 원, 월세 900만 원(가정)이면 1억 원 + 900만 원 × 100 = 10억 원으로 9억 원을 넘습니다. 이때도 제2조 제3항이 나열한 제3조 대항력, 제10조 제1항·제2항·제3항 본문의 갱신요구, 제10조의2부터 제10조의9까지(권리금 회수 기회 보호 포함), 제11조의2, 제19조는 그대로 적용됩니다. 반면 그 목록에 없는 제5조 우선변제권과 제11조 증액 제한은 적용되지 않습니다.</p>
         </div>
         <CitationBlock source="한국 상가건물 임대차보호법 제3조" citeKey={1} href="https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsJoLnkSeq=1013685403">2026-05-12 시행 조문을 2026-10-04 확인했습니다. 인도·사업자등록 신청, 다음 날 효력, 양수인의 지위 승계를 확인합니다.</CitationBlock>
         <CitationBlock source="한국 상가건물 임대차보호법 제2조·제5조" citeKey={6} href="https://www.law.go.kr/LSW/lsSideInfoP.do?lsiSeq=279651&amp;joNo=0005&amp;joBrNo=00&amp;docCls=jo&amp;urlMode=lsScJoRltInfoR">제2조의 일반 적용 범위와 예외, 제5조 제2항의 대항 요건·확정일자·우선변제 조문을 실제 대조했습니다. 개별 점포의 적용 여부나 배당액을 판정한 것은 아닙니다.</CitationBlock>
@@ -105,12 +110,14 @@ export default function CommercialLeaseAndRentArticle() {
         <h2 className="mb-6 text-2xl font-bold">9. 갱신과 양도는 국가별로 따로 확인해야 합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">한국에서는 임차인이 언제 갱신을 요구했는지와 거절 사유를 함께 봅니다. 제10조는 종료 6개월 전부터 1개월 전까지의 요구, 처음 기간을 포함한 총 10년 한도, 차임 연체 등 예외를 규정합니다. 모든 계약이 자동으로 10년 보장된다는 뜻은 아닙니다. 제10조의4가 보호하는 것도 일정 요건에서의 권리금 회수 기회입니다. 새 점주에게 받을 금액 자체를 건물주가 보장하는 제도가 아닙니다.</p>
+          <p className="leading-7">갱신되는 계약의 월세도 마음대로 올릴 수는 없습니다. 제10조 제3항은 갱신된 계약의 차임과 보증금이 제11조의 범위에서 증감할 수 있다고 하고, 시행령 제4조는 증액 청구가 청구 당시 차임이나 보증금의 100분의 5를 넘지 못하게 합니다.</p>
+          <p className="leading-7">사례의 월세 200만 원이면 210만 원까지, 보증금 3천만 원이면 3천150만 원까지가 한 번에 청구할 수 있는 상한입니다. 앞의 서울 10억 원 사례처럼 환산보증금이 기준을 넘으면 갱신요구권은 있어도 이 5% 상한은 적용되지 않으므로, 증액 폭은 계약과 협의로 정해집니다(2026-10-09 확인한 현행 법·시행령 기준).</p>
           <p className="leading-7">영국 잉글랜드·웨일스에서는 1954년 법의 사업 임차 갱신권이 적용되는지, 계약을 맺기 전에 정해진 절차로 갱신권을 배제했는지를 확인합니다. 한국의 10년 기준을 옮겨 쓸 수 없습니다. 2026-10-04 확인한 Law Commission 페이지에는 같은 해 9월 16일 끝난 2차 의견 수렴의 답변을 분석 중이라고 나옵니다. 그 페이지의 개정 제안은 현재 시행 규칙과 구별해서 읽어야 합니다.</p>
           <p className="leading-7">호주 NSW의 소매 임대차 안내는 종료 때 계약에서 정한 상태로 공간을 되돌리도록 설명합니다. 처음 상태의 기록과 계약 조항을 대조하고, 실제 공사 대신 돈으로 정산하는 합의가 있는지도 봅니다. NSW 안내를 한국 점포의 복구 범위를 확정하는 법으로 사용할 수는 없습니다.</p>
           <p className="leading-7">미국도 주·도시·계약별 차이가 커서 한국의 갱신 기간을 그대로 옮길 수 없습니다. 어느 나라든 먼저 임차권의 보호 대상, 강행규정, 갱신의 예외, 건물주 동의, 보증금 보관 규칙을 확인합니다.</p>
         </div>
         <SourceApplication source="NSW Small Business Commissioner · Make good" excerpt="restore the premises to the state agreed in the lease" application="같은 3년 계약의 마지막 날, 입주 사진·도면과 계약에서 약정한 반환 상태를 대조한다는 질문을 가져옵니다. 복구비를 보증금 3천만 원에서 임의로 정하는 것이 아니라 해당 관할의 법과 계약, 실제 공사 내역 및 합의에 따라 정산해야 합니다." />
-        <CitationBlock source="NSW · What to do at the end of the lease" citeKey={2} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease">2026-10-04 실제 Make good 항목의 계약 상태·최초 기록·금전 정산 합의를 읽었습니다. NSW 소매 임대차 안내입니다.</CitationBlock>
+        <CitationBlock source="NSW · What to do at the end of the lease" citeKey={2} href="https://www.smallbusiness.nsw.gov.au/help/common-questions/what-to-do-at-the-end-of-the-lease">2026-10-04 실제 Make good 항목의 계약 상태·최초 기록·금전 정산 합의를 읽었습니다. NSW 소매 임대차 안내입니다. 2026-10-09 재확인 때는 페이지가 응답하지 않아 검색 색인의 문장으로만 인용문을 대조했습니다.</CitationBlock>
         <CitationBlock source="대한민국 상가건물 임대차보호법 제10조·제10조의4" citeKey={3} href="https://www.law.go.kr/LSW/lsInfoP.do?ancNo=21083&ancYd=20251111&efYd=20260512&lsiSeq=279651">2026-05-12 시행 법령의 조문별 원문을 2026-10-04 확인했습니다. 갱신 요구 기간·총 10년 한도·예외와 권리금 회수 기회 보호를 구분합니다.</CitationBlock>
         <CitationBlock source="UK Law Commission · Business tenancies" citeKey={4} href="https://lawcom.gov.uk/project/business-tenancies-the-right-to-renew/">1954년 법의 배경과 2026년 2차 의견 수렴 후 상태를 확인했습니다. 개정 제안이 곧 시행법이라는 근거는 아닙니다.</CitationBlock>
         <CitationBlock source="GOV.UK · Renewing and ending business leases" citeKey={5} href="https://www.gov.uk/government/publications/renewing-and-ending-business-leases-a-guide-for-tenants-and-landlords">2026-07-30 갱신된 웹 안내의 잉글랜드·웨일스 범위와 계약 전 갱신권 배제 절차 설명을 읽었습니다. 첨부 PDF 전체를 읽었다는 뜻은 아닙니다.</CitationBlock>

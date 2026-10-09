@@ -91,6 +91,7 @@ export const monteCarloData: DerivativeDeepArticleData = {
     { id: "need", level: "2", title: "5. 평균·장벽·조기상환은 지나온 길을 기억해야 합니다", bridge: "만기값 한 개만 저장하는 계산이 부족한 이유를 봅니다.", paragraphs: [
       "평균가격 옵션은 매 시점의 합을, 장벽 옵션은 중간에 선을 넘었는지를 기억해야 합니다. 조기상환 상품은 관찰일마다 지급을 끝낼지 판단합니다. 시간 격자가 거칠면 실제로 넘은 장벽을 놓칠 수도 있습니다.",
       "그래서 경로 생성 오차, 시간 간격 오차와 지급 구현 오류를 따로 시험합니다. 계산값에 신뢰구간을 붙여도 잘못된 경로 모형이나 빠진 계약 조건까지 고쳐 주지는 않습니다.",
+      "조기상환은 발행자가 정한 관찰일 조건이라 경로를 따라가며 확인하면 됩니다. 보유자가 언제든 행사할 수 있는 미국형은 다릅니다. 각 시점에 지금 행사할지 계속 보유할지 비교해야 하는데, 계속 보유한 가치는 그 뒤의 여러 경로에 달려 있어 한 경로만으로 알 수 없습니다. 롱스태프·슈워츠(Longstaff-Schwartz, 2001)의 최소제곱 몬테카를로는 같은 시점의 여러 경로에서 다음 시점까지의 할인 가치를 현재 주가의 함수로 회귀해 계속 보유 가치를 추정하고, 그 값을 즉시 행사가치와 비교해 경로별 행사 시점을 정합니다.",
     ] },
     { id: "names", level: "3", title: "6. 몬테카를로 평가·대칭표본·통제변수에 이름을 붙입니다", bridge: "경로 평균, 반대 짝, 아는 값을 빌리는 방법을 구분합니다.", paragraphs: [
       "몬테카를로 평가는 확률모형에서 여러 경로를 만들어 지급의 할인 평균으로 가격을 근사하는 방법입니다. 대칭표본은 한 무작위 입력과 부호를 뒤집은 입력을 짝지어 방향 잡음을 줄입니다.",
@@ -141,6 +142,35 @@ export const monteCarloData: DerivativeDeepArticleData = {
 };
 
 export const finiteDifferenceData: DerivativeDeepArticleData = {
+  formulas: [
+    {
+      section: "names",
+      content: {
+        title: "명시적 격자의 안정 조건",
+        question: "주가 칸 10에서 시간 칸 0.01년은 명시적 계산이 흔들리지 않을 만큼 작은가요?",
+        idea: "명시적 계산의 새 값은 가운데 값에 1−2λ, 양옆에 λ를 곱해 더한 것입니다. 가운데 가중치가 음수가 되지 않으려면 λ가 1/2 이하여야 하고, 이를 시간 칸 상한으로 바꾼 것이 안정 조건입니다.",
+        formula: String.raw`\lambda=\frac{\tfrac12\sigma^2S^2\,\Delta t}{(\Delta S)^2}\le\frac12\iff\Delta t\le\frac{(\Delta S)^2}{\sigma^2S^2}`,
+        annotatedFormula: String.raw`\underbrace{\Delta t}_{\text{시간 칸}}\le\frac{\overbrace{(\Delta S)^2}^{\text{주가 칸의 제곱}}}{\underbrace{\sigma^2S^2}_{\text{그 주가의 분산 속도}}}`,
+        operations: [
+          { expression: String.raw`(\Delta S)^2=10^2=100`, annotation: "주가 칸 10을 제곱합니다." },
+          { expression: String.raw`\sigma^2S^2=0.2^2\times100^2=400`, annotation: "주가 100에서 1년 동안 쌓이는 가격 분산 속도입니다." },
+          { expression: String.raw`\Delta t_{\max}=\frac{100}{400}=0.25\text{년}`, annotation: "주가 100 칸에서 허용되는 시간 칸 상한입니다." },
+          { expression: String.raw`\lambda=\frac{0.5\times400\times0.01}{100}=0.02,\quad 1-2\lambda=0.96`, annotation: "Δt=0.01이면 가중치가 모두 양수이고, 0+0.02×(10−0+0)=0.2로 3절 값과 같습니다." },
+          { expression: String.raw`\frac{100}{0.2^2\times110^2}=0.207\text{년}`, annotation: "격자의 가장 높은 주가 칸에서 상한이 가장 빡빡하므로 그 칸으로 다시 확인합니다." },
+        ],
+        terms: [
+          { symbol: String.raw`\lambda`, name: "격자 비율", description: "한 시간 칸에 양옆 값이 섞이는 가중치입니다." },
+          { symbol: String.raw`\Delta t`, name: "시간 칸", description: "역진 한 번에 거슬러 가는 시간(년)입니다. 사례는 0.01년입니다." },
+          { symbol: String.raw`\Delta S`, name: "주가 칸", description: "이웃한 주가 격자점의 간격입니다. 사례는 10입니다." },
+        ],
+        assumptions: [
+          "(가정) 금리 0, 배당 없음, 세 점 중심차분을 쓰는 명시적(전진) 계산입니다.",
+          "금리 항이 있으면 조건이 조금 달라지며, 암시적 계산은 이 상한 없이도 안정적인 경우가 많습니다.",
+        ],
+        interpretation: "Δt=0.01년은 주가 100 칸의 상한 0.25년, 110 칸의 0.207년보다 훨씬 작아 안전합니다. 주가 칸을 5로 줄이면 상한이 네 배 빡빡해지므로 시간 칸도 함께 줄여야 합니다.",
+      },
+    },
+  ],
   sections: [
     { id: "overview", level: "S", title: "1. 만기 직전 주가 90·100·110의 지급부터 봅니다", bridge: "마지막 날의 지급을 한 칸 전 가격으로 옮기는 문제입니다.", paragraphs: [
       "행사가격 100인 콜의 만기 지급은 주가가 90·100·110일 때 0·0·10입니다(가정). 이제 만기보다 0.01년 앞선 시점에 주가가 100이라면 옵션값이 얼마인지 구하려 합니다.",
@@ -164,7 +194,7 @@ export const finiteDifferenceData: DerivativeDeepArticleData = {
     ] },
     { id: "names", level: "3", title: "6. 블랙숄즈 편미분방정식·유한차분·안정성에 이름을 붙입니다", bridge: "연속 관계, 격자 근사, 계산이 무너지지 않는 조건을 구분합니다.", paragraphs: [
       "블랙숄즈 편미분방정식은 시간 변화, 주가 기울기, 굽음과 금리의 합이 무차익 조건을 만족해야 한다는 연속 관계입니다. 유한차분은 미분을 가까운 격자 값의 차이로 바꾸는 수치 방법입니다.",
-      "안정성은 작은 반올림이나 입력 오차가 반복 계산에서 폭발하지 않는 성질입니다. 명시적 계산은 구현이 단순하지만 시간 칸이 너무 크면 불안정할 수 있고, 암시적 계산은 매 줄의 연립방정식을 풀어야 하지만 더 안정적인 경우가 많습니다.",
+      "안정성은 작은 반올림이나 입력 오차가 반복 계산에서 폭발하지 않는 성질입니다. 명시적 계산은 구현이 단순하지만 시간 칸이 주가 칸에 비해 너무 크면 불안정해지고, 암시적 계산은 매 줄의 연립방정식을 풀어야 하지만 더 안정적인 경우가 많습니다. 명시적 계산의 시간 칸 상한은 아래 식으로 정하며, 이 글의 Δt=0.01년은 그 상한 안에 있습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 값 0.2를 격자 수렴과 계약 검산까지 따라갑니다", bridge: "한 번 맞은 숫자를 믿기 전에 같은 사례를 여러 방식으로 흔듭니다.", paragraphs: [
       "먼저 0·0·10에서 가운데 값 0.2를 구합니다. 주가 간격 10을 5로, 시간 간격 0.01을 0.005로 줄여 오늘값을 다시 계산합니다. 두 결과의 차이가 줄고 음수나 톱니 모양이 생기지 않는지 봅니다.",
@@ -234,7 +264,8 @@ export const volatilityModelsData: DerivativeDeepArticleData = {
     ] },
     { id: "names", level: "3", title: "6. 지역변동성·확률변동성·점프확산에 이름을 붙입니다", bridge: "오늘의 지도, 움직이는 흔들림, 불연속 사건을 구분합니다.", paragraphs: [
       "지역변동성은 현재 주가와 시간의 함수로 흔들림을 정합니다. 확률변동성은 흔들림 자체가 별도 무작위 과정으로 움직이게 합니다. 점프확산은 작은 연속 움직임에 드문 큰 이동을 더합니다.",
-      "보정은 이 모형의 가격이 관측한 옵션가격에 가까워지도록 매개변수나 함수를 찾는 과정입니다. 맞춤 오차가 작다는 사실은 매개변수가 유일하거나 미래에도 안정적이라는 뜻이 아닙니다.",
+      "세 모형에는 대표 이름이 있습니다. 지역변동성은 듀파이어(Dupire, 1994)가 오늘의 옵션가격 표면 전체에서 행사가·만기별 흔들림 함수를 거꾸로 읽어 내는 식을 제시한 데서 출발합니다. 확률변동성의 표준 예는 헤스턴(Heston, 1993) 모형으로, 분산이 장기 평균 쪽으로 되돌아가며 흔들리고 주가와 상관을 가집니다. 점프확산은 머튼(Merton, 1976)이 연속 움직임에 드물게 일어나는 점프를 더한 모형입니다.",
+      "보정은 이 모형의 가격이 관측한 옵션가격에 가까워지도록 매개변수나 함수를 찾는 과정입니다. 위 세 모형에서 찾는 대상은 각각 지역변동성 함수, 분산의 되돌림 속도·장기 평균·흔들림·주가와의 상관, 점프 빈도와 점프 크기 분포입니다. 맞춤 오차가 작다는 사실은 매개변수가 유일하거나 미래에도 안정적이라는 뜻이 아닙니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 30%·20%·24%를 맞춘 뒤 −10% 충격까지 다시 계산합니다", bridge: "현재 표면 적합과 미래 위험 검사를 한 경로로 잇습니다.", paragraphs: [
       "유동적인 90·100·110 옵션의 호가와 할인·배당 입력을 고정합니다. 세 가격을 모형으로 다시 만들며 가중 오차를 줄이고, 다른 시작값에서도 비슷한 매개변수가 나오는지 확인합니다.",
@@ -271,7 +302,7 @@ export const volatilityModelsData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "MIT 18.642 · Volatility Modeling", excerpt: "volatility modeling", application: "고정 20%와 시간에 따라 달라지는 수익률 흔들림을 구분하고 옵션의 역산값과 관측값을 따로 둡니다.", citation: "MIT OpenCourseWare, 18.642 Lecture 17_1 (Fall 2024)", href: "https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/mit18_642_f24_lec17_1.pdf", note: "시간에 따라 바뀌는 수익률 변동성과 모형화를 다루는 공식 강의안입니다." },
-    { source: "Basel Framework · Market Risk", excerpt: "volatility surfaces", application: "행사가·만기 표면, 시간 변화, 점프와 상관을 가격 적합도 밖의 검증 항목으로 확장합니다.", citation: "Basel Committee, Market Risk Chapters MAR30 and MAR99", href: "https://www.bis.org/baselframework/BaselFramework.pdf", note: "은행 내부모형의 변동성 표면, 점프·상관 위험요인과 검증 원칙을 담은 현행 공식 기준입니다." },
+    { source: "Basel Framework · Market Risk", excerpt: "Calibration of pricing models to current market prices must also be sufficiently frequent, ideally no less frequent than the calibration of front office pricing models.", application: "행사가·만기 표면, 시간 변화, 점프와 상관을 가격 적합도 밖의 검증 항목으로 확장합니다.", citation: "Basel Committee, MAR31.4 and MAR31.26(5)", href: "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327", note: "내부모형이 옵션의 비선형성·상관 위험·기저 위험을 다뤄야 한다는 원칙(MAR31.4)과 가격 모형의 재보정 빈도(MAR31.26(5))를 정한 장입니다. 이전에 인용한 통합 PDF(BaselFramework.pdf)는 2026-10-09 404라 장 페이지로 바꿨습니다." },
   ],
   review: [
     "30%·20%·24%를 고정 20%와 비교해 절대 차이 14%포인트를 계산해 보세요. (답: 3절)",
@@ -281,6 +312,59 @@ export const volatilityModelsData: DerivativeDeepArticleData = {
 };
 
 export const interestRateModelsData: DerivativeDeepArticleData = {
+  formulas: [
+    {
+      section: "names",
+      content: {
+        title: "바시첵 단기금리 모형",
+        question: "1절의 되돌림 속도 0.5·중심 4%·흔들림 1%는 어떤 식의 입력인가요?",
+        idea: "바시첵(1977) 모형은 순간 금리 r의 하루 변화를 중심으로 끌려가는 몫과 무작위 몫의 합으로 둡니다. 1절의 0.2bp와 6.3bp가 이 두 몫입니다.",
+        formula: String.raw`dr=\kappa(\theta-r)\,dt+\sigma\,dW`,
+        annotatedFormula: String.raw`dr=\underbrace{\kappa}_{\text{되돌아가는 속도}}\,\underbrace{(\theta-r)}_{\text{중심과의 거리}}\,dt+\underbrace{\sigma\,dW}_{\text{무작위 흔들림}}`,
+        operations: [
+          { expression: String.raw`\kappa(\theta-r)=0.5\times(4\%-3\%)=0.5\%p\ /\text{년}`, annotation: "중심 4%와 현재 3%의 거리에 되돌림 속도를 곱해 연간 평균 이동을 얻습니다." },
+          { expression: String.raw`0.5\%p\times\frac{1}{252}=0.198\text{bp}\approx0.2\text{bp}`, annotation: "하루를 1/252년으로 두어 하루 평균 이동으로 바꿉니다." },
+          { expression: String.raw`\sigma\sqrt{dt}=1\%\times\frac{1}{\sqrt{252}}=6.30\text{bp}`, annotation: "무작위 몫의 하루 표준편차는 시간의 제곱근에 비례합니다." },
+        ],
+        terms: [
+          { symbol: String.raw`r`, name: "순간 금리", description: "아주 짧은 기간의 연율 금리입니다. 사례에서는 3%입니다." },
+          { symbol: String.raw`\kappa`, name: "되돌림 속도", description: "중심에서 벗어난 거리를 1년에 얼마나 줄이려 하는지 나타냅니다." },
+          { symbol: String.raw`\theta`, name: "장기 중심", description: "금리가 오래 머무는 수준입니다. 사례에서는 4%입니다." },
+          { symbol: String.raw`\sigma\,dW`, name: "무작위 몫", description: "연 흔들림 σ에 브라운 운동 증분 dW를 곱한 값입니다." },
+        ],
+        assumptions: [
+          "(가정) κ=0.5, θ=4%, σ=1%, r=3%, 1년=252영업일입니다.",
+          "정규분포라 음수 금리를 허용하고, 매개변수가 상수라 오늘 시장 곡선을 정확히 재현하지 못합니다.",
+        ],
+        interpretation: "하루 평균 이동 0.2bp보다 하루 표준 흔들림 6.3bp가 30배 넘게 커서 짧은 기간에는 무작위 몫이 변화를 지배합니다.",
+      },
+    },
+    {
+      section: "source",
+      content: {
+        title: "HJM 무차익 평균 조건",
+        question: "선도금리의 흔들림을 정하면 평균 이동은 왜 마음대로 둘 수 없을까요?",
+        idea: "MIT 18.S096 강의가 보이듯, 채권이 위험중립 아래 평균적으로 무위험금리를 벌려면 만기 T 선도금리의 평균 이동이 그 만기의 흔들림과 지금부터 T까지 쌓인 흔들림의 곱이 되어야 합니다.",
+        formula: String.raw`\mu(t,T)=\sigma(t,T)\int_t^T\sigma(t,s)\,ds`,
+        annotatedFormula: String.raw`\underbrace{\mu(t,T)}_{\text{선도금리 평균 이동}}=\underbrace{\sigma(t,T)}_{\text{만기 T의 흔들림}}\;\underbrace{\int_t^T\sigma(t,s)\,ds}_{\text{t부터 T까지 쌓인 흔들림}}`,
+        operations: [
+          { expression: String.raw`\int_0^2 1\%\,ds=1\%\times2=2\%`, annotation: "모든 만기의 흔들림이 1%로 같으므로 적분은 높이 1%·폭 2년인 직사각형 넓이입니다." },
+          { expression: String.raw`\mu(0,2)=1\%\times2\%=0.0002=2\text{bp}\ /\text{년}`, annotation: "2년 만기 선도금리의 흔들림 1%를 쌓인 흔들림 2%에 곱합니다." },
+          { expression: String.raw`2\text{bp}\times\frac{1}{252}=0.0079\text{bp}\ /\text{일}`, annotation: "하루 단위로 나누면 3절의 약 0.008bp입니다." },
+        ],
+        terms: [
+          { symbol: String.raw`\mu(t,T)`, name: "선도금리 평균 이동", description: "현재 시각 t에서 본 만기 T 순간 선도금리의 위험중립 평균 변화율입니다." },
+          { symbol: String.raw`\sigma(t,T)`, name: "만기별 흔들림", description: "만기 T 선도금리의 연 변동성입니다. 사례에서는 모든 만기 1%입니다." },
+          { symbol: String.raw`\int_t^T\sigma(t,s)\,ds`, name: "쌓인 흔들림", description: "지금부터 T까지 각 만기의 흔들림을 더한 값입니다." },
+        ],
+        assumptions: [
+          "(가정) 흔들림 요인 하나, 모든 만기 σ=1%, t=0, T=2년입니다.",
+          "실제 시장의 흔들림은 만기마다 다르고 여러 요인이 있으므로 이 대입은 원문 식을 읽기 위한 것입니다.",
+        ],
+        interpretation: "흔들림을 1%로 정하는 순간 2년 앞 선도금리의 평균 이동은 연 2bp로 묶입니다. 모형 사용자가 고를 수 있는 것은 흔들림 구조이고 평균은 무차익 조건이 정합니다.",
+      },
+    },
+  ],
   sections: [
     { id: "overview", level: "S", title: "1. 오늘 3%인 하루 금리가 내일 어떻게 움직일지 그립니다", bridge: "한 점의 움직임과 곡선 전체의 움직임을 나누기 전 작은 변화부터 봅니다.", paragraphs: [
       "아주 짧은 금리가 연 3%, 오래 머무는 중심을 4%, 되돌아가는 속도를 0.5, 연 흔들림을 1%로 두겠습니다(가정). 평균만 보면 1년 동안 중심 쪽으로 0.5×(4%−3%)=0.5%포인트 움직이려 합니다.",
@@ -303,7 +387,7 @@ export const interestRateModelsData: DerivativeDeepArticleData = {
       "한 만기의 옵션가격만 맞추고 다른 만기·행사가를 놓치면 장부 헤지가 어긋납니다. 음수 금리 가능성, 평균 복귀, 변동성 표면과 서로 다른 기준금리 곡선도 모형 선택에 영향을 줍니다.",
     ] },
     { id: "names", level: "3", title: "6. 단기금리 모형·HJM 틀·금리 모형위험에 이름을 붙입니다", bridge: "한 상태, 전체 곡선, 선택과 보정의 실패를 구분합니다.", paragraphs: [
-      "단기금리 모형은 순간 금리 한 개의 움직임을 정하고 그 상태에서 모든 할인채를 가격 냅니다. HJM 틀은 만기별 순간 선도금리 곡선 전체의 움직임을 정하고 차익이 없도록 평균 몫을 흔들림 구조에 묶습니다.",
+      "단기금리 모형은 순간 금리 한 개의 움직임을 정하고 그 상태에서 모든 할인채를 가격 냅니다. 1절의 되돌림 속도 0.5·중심 4%·흔들림 1% 사례는 바시첵(Vasicek, 1977) 모형 그대로입니다. 매개변수가 상수라 오늘 시장 곡선 전체를 정확히 재현하지는 못합니다. HJM 틀은 히스·재로·모턴(Heath-Jarrow-Morton, 1992)의 이름을 딴 방법으로, 만기별 순간 선도금리 곡선 전체의 움직임을 정하고 차익이 없도록 평균 몫을 흔들림 구조에 묶습니다. 그 묶는 식은 8절에서 숫자로 확인합니다.",
       "금리 모형위험은 상태·분포·상관·보정 상품의 선택 때문에 가격과 헤지가 달라지는 위험입니다. 모형이 복잡할수록 자동으로 줄지 않으며, 시장자료가 적으면 오히려 커질 수 있습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 3% 한 점과 2년 곡선의 2bp를 같은 거래에 넣어 봅니다", bridge: "곡선 보정에서 스왑션 위험과 재보정까지 따라갑니다.", paragraphs: [
@@ -378,7 +462,7 @@ export const creditIntensityData: DerivativeDeepArticleData = {
     ] },
     { id: "mechanism", level: "4", title: "7. 1.2%에서 1.98%를 풀고 두 회사의 꼬리까지 따라갑니다", bridge: "단일기업 가격과 포트폴리오 손실을 한 작업 흐름에 잇습니다.", paragraphs: [
       "먼저 할인곡선과 회수 40%를 고정하고 1년 보호료 1.2%가 되도록 첫 구간의 세기를 풉니다. 단순값은 2%, 1년 가격 장부 부도확률은 약 1.98%입니다. 이어 3년·5년 계약을 사용해 다음 구간을 차례로 풉니다.",
-      "각 회사 곡선으로 개별 기대손실을 만들고, 공통 충격이나 다른 결합 모형으로 동시부도를 생성합니다. 두 회사 예에서는 총 기대손실 12가 유지돼도 동시 120 손실 확률이 1%에서 10%로 달라지는지 확인합니다.",
+      "각 회사 곡선으로 개별 기대손실을 만들고, 공통 충격이나 다른 결합 모형으로 동시부도를 생성합니다. 시장에서 가장 흔한 결합 모형은 1요인 가우시안 코풀라(Li, 2000)로, 공통 요인 하나에 대한 민감도 ρ가 동시부도의 정도를 정합니다. 두 회사 예에서는 총 기대손실 12가 유지돼도 동시 120 손실 확률이 1%에서 10%로 달라지는지 확인합니다.",
     ] },
     { id: "source", level: "5", title: "8. MIT의 생존식에 연 2%를 그대로 넣습니다", bridge: "강의 원문의 지수 생존과 강도 기반 접근을 사례로 확인합니다.", paragraphs: [
       "MIT 15.433 강의는 부도시점을 세기로 다루는 방식과 일정한 세기 λ에서 생존확률 exp(−λt)를 제시합니다. 회수가 0인 단순 채권에서는 신용 스프레드가 λ가 되는 가격식도 보여 줍니다.",
@@ -411,7 +495,7 @@ export const creditIntensityData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "MIT 15.433 · Modeling Default Risk", excerpt: "Survival Probability", application: "λ=2%, t=1을 exp(−λt)에 넣어 생존 98.02%와 부도 1.98%를 계산합니다.", citation: "MIT OpenCourseWare, 15.433 Class 17 (Spring 2003)", href: "https://ocw.mit.edu/courses/15-433-investments-spring-2003/08ceba70b1a9e8969c47f667a7a3de11_1543317creditrisk1.pdf", note: "구조·강도 기반 부도모형, 지수 생존식, 회수와 공동부도 손실을 다루는 공식 강의안입니다." },
-    { source: "Basel Framework · CVA Risk", excerpt: "risk-neutral marginal default probabilities", application: "가격 장부 확률 1.98%를 실제 부도 추정과 분리하고 스프레드·회수·상관 위험요인으로 확장합니다.", citation: "Basel Committee, MAR50 CVA Framework", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2019-12-15/published/2019-12-15", note: "시장 내재 부도확률과 실제 확률의 구분, CVA 위험요인을 정한 공식 감독 기준입니다." },
+    { source: "Basel Framework · CVA Risk", excerpt: "Market implied default probability (also known as risk-neutral probability) represents the market price of buying protection against a default and is in general different from the real-world likelihood of a default.", application: "가격 장부 확률 1.98%를 실제 부도 추정과 분리하고 스프레드·회수·상관 위험요인으로 확장합니다.", citation: "Basel Committee, MAR50 CVA Framework", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2019-12-15/published/2019-12-15", note: "시장 내재 부도확률과 실제 확률의 구분, CVA 위험요인을 정한 공식 감독 기준입니다." },
   ],
   review: [
     "보호료 1.2%·회수 40%에서 연 세기 2%와 1년 부도확률 약 1.98%를 계산해 보세요. (답: 1·3절)",

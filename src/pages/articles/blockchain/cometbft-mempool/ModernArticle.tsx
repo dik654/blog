@@ -24,10 +24,11 @@ export default function ModernCometBFTMempoolArticle() {
         <CodeViewButton label="CListMempool 구조체" onClick={() => sidebar.open("clist-struct", codeRefs["clist-struct"])} />
       </div>
       <ExplainedFormula question="새 transaction을 local mempool에 넣기 전에 byte capacity를 어떻게 검사하는가?" idea={<>현재 저장한 transaction bytes에 새 bytes를 더한 값이 설정한 최대치를 넘지 않아야 합니다. 개수 제한과 단일 transaction 최대 크기는 이 식과 별도의 gate입니다.</>} formula={String.raw`B_{\mathrm{after}}=B_{\mathrm{pool}}+|tx|\le B_{\max}`}
-      annotatedFormula={String.raw`B_{\mathrm{after}}=\underbrace{B_{\mathrm{pool}}+|tx|\le B_{\max}}_{\text{경계 후보 선택}}`}
+      annotatedFormula={String.raw`B_{\mathrm{after}}=\underbrace{B_{\mathrm{pool}}+|tx|}_{\text{넣은 뒤 pool bytes}}\le\underbrace{B_{\max}}_{\text{MaxTxsBytes}}`}
       operations={[
-        { expression: String.raw`B_{\mathrm{pool}}+|tx|\le B_{\max}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","현재 저장한 transaction bytes에 새 bytes를","더한 값이 설정한 최대치를 넘지 않아야 합니다."] },
-      ]} terms={[{symbol:"B_{\\mathrm{pool}}",name:"현재 pool bytes",description:"CListMempool이 추적하는 accepted transaction raw byte 합입니다."},{symbol:"|tx|",name:"새 transaction 크기",description:"이번 CheckTx 요청에 넣기 전 받은 transaction bytes 길이입니다."},{symbol:"B_{\\max}",name:"MaxTxsBytes",description:"node-local mempool 전체 byte ceiling입니다."}]} assumptions={["개수 제한 Size와 단건 제한 MaxTxBytes도 별도로 통과해야 합니다.","동시 CheckTx 사이에 pool이 변할 수 있으므로 응답 뒤 추가 직전에 capacity를 다시 검사합니다.","proposal의 block MaxBytes 계산은 protobuf data size를 사용하므로 이 raw-byte 식과 같지 않습니다.","local capacity 통과는 application validity나 commit을 뜻하지 않습니다."]} interpretation="현재 900MiB이고 새 tx가 200MiB인데 MaxTxsBytes가 1GiB라면 admission 전에 거절합니다. 그러나 100B tx 하나라도 cache duplicate이거나 CheckTx Code가 실패하면 마찬가지로 들어가지 않습니다." />
+          { expression: String.raw`B_{\mathrm{pool}}+|tx|`, annotation: ["이미 받은 tx bytes에 새 tx 크기를 더함","900MiB + 200MiB = 1,100MiB"] },
+          { expression: String.raw`B_{\max}`, annotation: ["node-local 상한 1GiB를 넘으므로","admission 전에 거절합니다","개수·단일 tx 크기 gate는 별도입니다"] },
+        ]} terms={[{symbol:"B_{\\mathrm{pool}}",name:"현재 pool bytes",description:"CListMempool이 추적하는 accepted transaction raw byte 합입니다."},{symbol:"|tx|",name:"새 transaction 크기",description:"이번 CheckTx 요청에 넣기 전 받은 transaction bytes 길이입니다."},{symbol:"B_{\\max}",name:"MaxTxsBytes",description:"node-local mempool 전체 byte ceiling입니다."}]} assumptions={["개수 제한 Size와 단건 제한 MaxTxBytes도 별도로 통과해야 합니다.","동시 CheckTx 사이에 pool이 변할 수 있으므로 응답 뒤 추가 직전에 capacity를 다시 검사합니다.","proposal의 block MaxBytes 계산은 protobuf data size를 사용하므로 이 raw-byte 식과 같지 않습니다.","local capacity 통과는 application validity나 commit을 뜻하지 않습니다."]} interpretation="현재 900MiB이고 새 tx가 200MiB인데 MaxTxsBytes가 1GiB라면 admission 전에 거절합니다. 그러나 100B tx 하나라도 cache duplicate이거나 CheckTx Code가 실패하면 마찬가지로 들어가지 않습니다." />
     </section>
 
     <section id="checktx" className="space-y-6">

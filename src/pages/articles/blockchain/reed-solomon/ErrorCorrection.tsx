@@ -22,9 +22,10 @@ export default function ErrorCorrection() {
         question="Error e개와 erasure s개를 함께 unique-decode할 수 있는 경계는 무엇일까요?"
         idea="Known erasure는 그 좌표를 비교에서 제외하면 되지만 unknown error는 두 후보 codeword 중 어느 쪽이 틀렸는지 분리해야 합니다. 그래서 error 하나가 distance 두 칸을 사용합니다."
         formula={String.raw`d_{\min}=n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k`}
-        annotatedFormula={String.raw`d_{\min}=\underbrace{n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`d_{\min}=\underbrace{n-k+1}_{\text{codeword 간 최소 차이}},\qquad \underbrace{2e+s}_{\text{소모하는 distance}}<d_{\min}\iff2e+s\le \underbrace{n-k}_{\text{redundancy 수}}`}
         operations={[
-          { expression: String.raw`n-k+1,\qquad 2e+s<d_{\min}\iff2e+s\le n-k`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Known erasure는 그 좌표를 비교에서 제외하면 되지만","unknown error는 두 후보 codeword 중 어느","쪽이 틀렸는지 분리해야 합니다."] },
+          { expression: String.raw`n-k+1`, annotation: ["서로 다른 두 RS codeword는","적어도 n−k+1개 좌표에서 다릅니다"] },
+          { expression: String.raw`2e+s\le n-k`, annotation: ["erasure는 좌표를 빼면 되지만 error는","어느 쪽이 틀렸는지 가려야 해 2칸을 씁니다","(10,6): e=1,s=2는 4≤4, e=2,s=1은 5>4"] },
         ]}
         terms={[
           { symbol: "e", name: "unknown-position errors", description: "값과 위치를 모두 decoder가 찾아야 하는 corruption 수입니다." },
@@ -42,10 +43,11 @@ export default function ErrorCorrection() {
           question="Unknown error 위치를 모른 채 polynomial을 어떻게 복원할까요?"
           idea="Error 위치에서는 0이 되는 locator E를 곱해 잘못된 관측을 지웁니다. N=Ep를 별도 미지 polynomial로 두면 각 관측에 대한 식이 coefficient에 선형이 되어 연립방정식으로 풀 수 있습니다."
           formula={String.raw`N(\alpha_i)=r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E`}
-          annotatedFormula={String.raw`N(\alpha_i)=\underbrace{r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`\underbrace{N(\alpha_i)=r_iE(\alpha_i)}_{\text{계수에 선형인 관측식}},\quad \underbrace{\deg E\le t}_{\text{error 위치 최대 t개}},\quad \underbrace{\deg N<k+t}_{\text{N은 E와 p의 곱}},\quad \underbrace{p=N/E}_{\text{나눠서 p 복원}}`}
           operations={[
-            { expression: String.raw`r_iE(\alpha_i),\quad \deg E\le t,\quad \deg N<k+t,\quad p=N/E`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Error 위치에서는 0이 되는 locator E를 곱해","잘못된 관측을 지웁니다."] },
-          ]}
+          { expression: String.raw`N(\alpha_i)=r_iE(\alpha_i)`, annotation: ["error 위치에서는 E가 0이라 0=0이 되고","나머지 관측이 N=Ep를 정합니다"] },
+          { expression: String.raw`p=N/E`, annotation: ["N을 E로 나눠 원래 p를 얻습니다","예: index 2가 틀리면 E(x)=x−2","나누어떨어지지 않으면 typed failure"] },
+        ]}
           terms={[
             { symbol: "r_i", name: "received symbol", description: "평가점 α_i에서 받은 값으로 일부는 틀릴 수 있습니다." },
             { symbol: "E(x)", name: "error locator", description: "Error 좌표 α_i에서 0이 되는 monic polynomial입니다." },

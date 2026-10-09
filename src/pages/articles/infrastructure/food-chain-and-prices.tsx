@@ -63,16 +63,19 @@ export default function FoodChainAndPricesArticle() {
           <p className="leading-8">처음의 한 단위를 10개 묶음으로 늘려 봅니다(가정). 출하 1,000원, 선별·저장 300원, 운송 200원이 들면 가게에 들어오기까지 1,500원입니다. 모두 팔면 개당 150원이지만 2개를 버리면 판매 가능한 8개당 187.5원이 됩니다.</p>
           <p className="leading-8">소매 단계가 총 500원을 추가로 회수해야 한다면 전체 필요액은 2,000원입니다. 8개로 나눠 개당 250원을 받아야 같은 총액을 회수합니다. 200원에서 250원으로 올라도 이 가정에서는 총이익이 늘었다고 볼 수 없습니다.</p>
           <p className="leading-8">실제 폐기는 어느 단계에서 생기고 누가 비용을 부담하는지 다릅니다. 반품 손실을 농가에 넘기면 소매 장부만 봐서는 전체 손실이 드러나지 않습니다.</p>
+          <p className="leading-8">국제 통계도 이 단계를 나눠 셉니다. FAO는 수확 뒤 농장·운송·저장·도매·가공 단계에서 사라지는 식품 손실(loss)을 SDG 12.3.1a 지표로 재고, 소매·외식·가정 단계의 식품 폐기(waste)는 별도 지표인 12.3.1b로 잽니다.</p>
+          <p className="leading-8">세계 식품 손실 비율은 2023년 13.3%로 추정됐고 모니터링을 시작한 2015년의 13.0%보다 조금 올랐습니다(FAO SDG 데이터 포털, 2026-10-09 확인). 사례에서 버린 2개가 가게에 들어오기 전의 선별·운송 중에 생겼다면 손실 쪽, 진열 뒤 팔리지 않아 버렸다면 폐기 쪽에 들어갑니다.</p>
         </div>
         <p data-stage-bridge="mechanism" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">판매량 감소만으로 단가가 오르는 경로를 계산했습니다. 공식 분류로 어느 단계인지 확인합니다.</p>
       </section>
       <section id="source" data-teaching-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">5 · FAO의 네 기능에 추가 금액을 배치합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">FAO는 식품의 생산부터 집하, 가공, 유통까지 연결을 보게 합니다. 우리 사례의 100·30·20·50을 이 기능에 대응시키되 한 회사가 여러 기능을 맡을 수 있다는 점을 남깁니다.</p>
+          <p className="leading-8">FAO는 가치사슬의 행위자가 생산(농업·어업 등), 집하(aggregation), 가공(processing), 유통(도매·소매)의 네 기능을 맡는다고 설명합니다. 우리 사례에 대응시키면 농가 출하 100원은 생산, 선별·저장 30원은 집하, 소매 50원은 유통입니다.</p>
+          <p className="leading-8">운송 20원은 네 기능 가운데 하나가 아니라 FAO 그림 3의 지원 서비스 제공자(support providers)에 가깝고, 이 사례에는 가공 단계가 없습니다. 한 회사가 여러 기능을 맡을 수 있다는 점도 남깁니다.</p>
           <p className="leading-8">수입 항만이나 도로가 멈췄다면 어떤 기능의 시간과 손실이 늘었는지 확인합니다. 농장 생산량만으로 소비자가격의 변화율을 바로 정할 수는 없습니다.</p>
         </div>
-        <SourceApplication source="FAO · Sustainable Food Value Chains, Figure 3" excerpt="aggregation, processing, and distribution" application="농가 출하 100원 뒤 선별·저장 30원, 운송 20원, 소매 50원을 배치합니다. 기능별로 비용과 이익을 다시 분리해야 합니다." />
+        <SourceApplication source="FAO · Sustainable Food Value Chains, Figure 3" excerpt="aggregation, processing, and distribution" application="농가 출하 100원은 생산, 선별·저장 30원은 집하, 소매 50원은 유통에 배치하고 운송 20원은 지원 서비스로 따로 적습니다. 기능별로 비용과 이익을 다시 분리해야 합니다." />
         <CitationBlock source="FAO · Sustainable Food Value Chains, Figure 3" citeKey={1} href="https://www.fao.org/sustainable-food-value-chains/what-is-it/en/">식품 가치사슬의 기능과 거래 연결을 정의하는 FAO 원문.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">공식 분류에 거래 단계를 대응시켰습니다. 다음은 다른 나라 통계의 단위를 맞춥니다.</p>
       </section>

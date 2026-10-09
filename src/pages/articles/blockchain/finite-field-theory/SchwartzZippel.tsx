@@ -18,9 +18,10 @@ export default function SchwartzZippel() {
         question="거짓 다항식 항등식이 무작위 검사 한 번을 통과할 확률은 얼마일까요?"
         idea="변수를 하나 고정하면 남은 변수의 다항식이 되고, univariate root bound를 변수별로 귀납 적용합니다. total degree d가 허용하는 나쁜 점의 비율은 최대 d/|S|입니다."
         formula={String.raw`R\not\equiv0,\ \deg R\le d,\ r\xleftarrow{\$}S^m\quad\Longrightarrow\quad \Pr[R(r)=0]\le\frac d{|S|}`}
-        annotatedFormula={String.raw`R\not\equiv0,\ \deg R\le d,\ r\xleftarrow{\$}S^m\quad\Longrightarrow\quad \Pr[R(r)=\underbrace{0]\le\frac d{|S|}}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\underbrace{R\not\equiv0,\ \deg R\le d}_{\text{거짓 항등식의 차이}},\ \underbrace{r\xleftarrow{\$}S^m}_{\text{무작위 challenge}}\quad\Longrightarrow\quad \underbrace{\Pr[R(r)=0]}_{\text{검사 통과 확률}}\le\underbrace{\frac d{|S|}}_{\text{나쁜 점 비율 상한}}`}
         operations={[
-          { expression: String.raw`0]\le\frac d{|S|}`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","변수를 하나 고정하면 남은 변수의 다항식이 되고,","univariate root bound를 변수별로 귀납","적용합니다."] },
+          { expression: String.raw`\Pr[R(r)=0]`, annotation: ["P−Q가 0이 아닌데 무작위 점에서","우연히 0이 나와 통과할 확률입니다"] },
+          { expression: String.raw`\frac d{|S|}`, annotation: ["변수별로 root bound를 귀납 적용하면","나쁜 점 비율은 d/|S| 이하입니다","d=3, |S|=101이면 최대 3/101"] },
         ]}
         terms={[
           {

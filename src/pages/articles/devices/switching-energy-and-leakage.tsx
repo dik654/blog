@@ -67,8 +67,8 @@ return <div className="space-y-16">
           assumptions={["이상적으로 0 V와 VDD 사이를 완전히 충전·방전합니다.", "전환 중 두 소자가 동시에 켜져 흐르는 단락 전류와 내부 노드 손실은 뺍니다."]}
           interpretation="한 번의 상승에 공급원에서 108.9 pJ가 나오고 그 절반은 잠시 저장됩니다. 하강까지 끝나면 108.9 pJ가 모두 소자에서 열이 됩니다."
         />
-        <CitationBlock source="MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005), 22–24쪽" citeKey={1} href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf">
-          공식 강의안의 22쪽은 충전 때 공급 에너지 C<sub>L</sub>V<sub>DD</sub>²와 저장 에너지 ½C<sub>L</sub>V<sub>DD</sub>²를 구분합니다. 23쪽은 방전 때 저장 에너지가 아래쪽 소자에서 사라짐을, 24쪽은 완전한 주기당 C<sub>L</sub>V<sub>DD</sub>²와 평균 전력식을 적습니다. 10 pF·3.3 V는 강의안의 측정치가 아닌 본문 가정입니다.
+        <CitationBlock source="MIT OpenCourseWare 6.012, Lecture 14, ‘Digital Circuits (III): CMOS’ (2005), 22–25쪽" citeKey={1} href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/6bec6dd1b07b02a1a84098b78f068cc3_lec14.pdf">
+          공식 강의안의 22쪽은 충전 때 공급 에너지 C<sub>L</sub>V<sub>DD</sub>²와 저장 에너지 ½C<sub>L</sub>V<sub>DD</sub>²를 구분합니다. 23쪽은 방전 때 저장 에너지가 아래쪽 소자에서 사라짐을, 24쪽은 완전한 주기당 C<sub>L</sub>V<sub>DD</sub>²를, 25쪽은 평균 전력식 P<sub>D</sub>=f·E<sub>D</sub>=f·C<sub>L</sub>V<sub>DD</sub>²를 적습니다. 10 pF·3.3 V는 강의안의 측정치가 아닌 본문 가정입니다.
         </CitationBlock>
 </section>
 

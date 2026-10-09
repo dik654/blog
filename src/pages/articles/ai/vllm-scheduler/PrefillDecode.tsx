@@ -173,19 +173,10 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
           formula={String.raw`r_i \prec_{p,a} r_j
 \quad\Longleftrightarrow\quad
 (p_i,a_i)<_{\mathrm{lex}}(p_j,a_j)`}
-          annotatedFormula={String.raw`r_i \prec_{p,a} r_j
-\quad\Longleftrightarrow\quad
-(p_i,a_i)<\underbrace{_{\mathrm{lex}}(p_j,a_j)}_{\text{오른쪽 항으로 결과 계산}}`}
+          annotatedFormula={String.raw`\underbrace{r_i \prec_{p,a} r_j}_{\text{왼쪽 요청을 먼저 검토}}\quad\Longleftrightarrow\quad\underbrace{(p_i,a_i)<_{\mathrm{lex}}(p_j,a_j)}_{\text{priority 먼저, 같으면 도착 순}}`}
           operations={[
-            {
-              expression: String.raw`_{\mathrm{lex}}(p_j,a_j)`,
-              annotation: [
-                "왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.",
-                "현재 공식 설정은 작은 priority 값을 먼저 보고, 같은",
-                "값이면 arrival time이 이른 요청을 먼저 보는",
-                "lexicographic order를 사용합니다.",
-              ],
-            },
+            { expression: String.raw`r_i \prec_{p,a} r_j`, annotation: ["대기열에서 r_i를 r_j보다 먼저 꺼내","admission을 검토한다는 뜻입니다"] },
+            { expression: String.raw`(p_i,a_i)<_{\mathrm{lex}}(p_j,a_j)`, annotation: ["priority 값이 작은 쪽이 먼저","같으면 arrival이 이른 쪽이 먼저","예: 늦게 온 P(1)가 이른 Q(2)를 앞섬"] },
           ]}
           terms={PRIORITY_TERMS}
           assumptions={[

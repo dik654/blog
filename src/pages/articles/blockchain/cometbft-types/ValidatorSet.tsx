@@ -27,11 +27,11 @@ export default function ValidatorSet({
         question="Voting power가 큰 validator에게 비례적으로 proposal 기회를 주면서 연속 독점을 막으려면 어떻게 갱신할까요?"
         idea={<>각 round에 모든 priority에 자신의 power를 더하고 최고 priority를 선택한 뒤, 선택자에게 전체 power만큼 비용을 부과합니다. 여러 round를 보면 제안 횟수가 weight에 가까워집니다.</>}
         formula={String.raw`\begin{aligned}p_i&\gets p_i+w_i,\\ j&\gets\arg\max_i p_i,\\ p_j&\gets p_j-W\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}p_i&\ge\underbrace{ts p_i+w_i,}_{\text{Proposer priority 계산}}\\ j&\ge\underbrace{ts\arg\max_i p_i,}_{\text{경계 후보 선택}}\\ p_j&\ge\underbrace{ts p_j-W}_{\text{Total power 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_i&\gets\underbrace{p_i+w_i}_{\text{모두 power만큼 적립}},\\ j&\gets\underbrace{\arg\max_i p_i}_{\text{최고 priority가 제안}},\\ p_j&\gets\underbrace{p_j-W}_{\text{제안자는 전체 power 차감}}\end{aligned}`}
         operations={[
-          { expression: String.raw`ts p_i+w_i,`, annotation: ["Proposer priority이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 round에 모든 priority에 자신의 power를","더하고 최고 priority를 선택한 뒤, 선택자에게 전체"] },
-          { expression: String.raw`ts\arg\max_i p_i,`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 round에 모든 priority에 자신의 power를","더하고 최고 priority를 선택한 뒤, 선택자에게 전체","power만큼 비용을 부과합니다."] },
-          { expression: String.raw`ts p_j-W`, annotation: ["Total power이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 round에 모든 priority에 자신의 power를","더하고 최고 priority를 선택한 뒤, 선택자에게 전체"] },
+          { expression: String.raw`p_i+w_i`, annotation: ["매 round 모든 validator가","자기 voting power만큼 priority를 쌓음","예: power 3·1, 0·0 → 3·1"] },
+          { expression: String.raw`\arg\max_i p_i`, annotation: ["priority가 가장 높은 validator가","이번 proposer가 됩니다","동률이면 deterministic tie-break"] },
+          { expression: String.raw`p_j-W`, annotation: ["선택된 쪽에 total power를 빼 독점을 막음","예: W=4라 3·1 → −1·1","다음 round는 2·2로 동률"] },
         ]}
         terms={[
           { symbol: "p_i", name: "Proposer priority", description: "Validator i의 round 시작 proposer priority입니다." },

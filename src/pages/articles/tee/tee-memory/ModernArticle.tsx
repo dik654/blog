@@ -41,10 +41,11 @@ export default function ModernTeeMemoryArticle() {
           question="같은 plaintext block이 주소 a와 b에서 왜 다른 ciphertext가 되는가?"
           idea={<>주소에서 만든 tweak를 block encryption 전후에 섞으면 key와 plaintext가 같아도 주소가 달라진 경우 다른 결과를 얻습니다.</>}
           formula={String.raw`C_a=E_K\!\left(P\oplus T(a)\right)\oplus T(a)`}
-          annotatedFormula={String.raw`C_a=\underbrace{E_K\!\left(P\oplus T(a)\right)\oplus T(a)}_{\text{허용 경계 판정}}`}
+          annotatedFormula={String.raw`C_a=\underbrace{E_K}_{\text{key K 암호화}}\!\left(\underbrace{P\oplus T(a)}_{\text{입력 전 tweak}}\right)\underbrace{\oplus T(a)}_{\text{출력 후 tweak}}`}
           operations={[
-            { expression: String.raw`E_K\!\left(P\oplus T(a)\right)\oplus T(a)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","주소에서 만든 tweak를 block encryption","전후에 섞으면 key와 plaintext가 같아도 주소가","달라진 경우 다른 결과를 얻습니다."] },
-          ]}
+          { expression: String.raw`P\oplus T(a)`, annotation: ["plaintext에 주소 a로 만든 tweak를 섞음"] },
+          { expression: String.raw`E_K`, annotation: ["같은 key K로 block 암호화한 뒤 T(a)를", "다시 섞어 a≠b면 같은 P도 다른 C", "old ciphertext replay 방어는 별도 구조"] },
+        ]}
           terms={[
             { symbol: "P", name: "Plaintext block", description: "CPU가 memory controller로 write-back하는 보호 대상 block입니다." },
             { symbol: "a", name: "Physical location", description: "Tweak를 만드는 주소 또는 platform이 정의한 위치 식별자입니다." },

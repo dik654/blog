@@ -19,10 +19,13 @@ export default function Protocol() {
         question="서로 다른 secret을 가진 두 참여자가 왜 같은 shared group element를 얻을까요?"
         idea="Exponentiation이 같은 base에서 지수 곱셈으로 합성되므로 상대 공개값에 자기 exponent를 적용하는 두 순서가 같습니다. Elliptic-curve 표기에서는 B=[b]G와 [a]B=[ab]G로 바뀝니다."
         formula={String.raw`A=g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B`}
-        annotatedFormula={String.raw`A=\underbrace{g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B}_{\text{raw DH output 계산}}`}
+        annotatedFormula={String.raw`\underbrace{A=g^a,\quad B=g^b}_{\text{보내는 공개값}},\qquad \underbrace{K_A=B^a}_{\text{Alice 계산}}=\underbrace{g^{ba}=g^{ab}}_{\text{지수 곱 교환}}=\underbrace{A^b=K_B}_{\text{Bob 계산}}`}
         operations={[
-          { expression: String.raw`g^a,\quad B=g^b,\qquad K_A=B^a=g^{ba}=g^{ab}=A^b=K_B`, annotation: ["raw DH output이(가) 식의 결과에 기여하는 방식을","계산합니다.","Exponentiation이 같은 base에서 지수 곱셈으로","합성되므로 상대 공개값에 자기 exponent를 적용하는 두"] },
-        ]}
+  { expression: String.raw`A=g^a,\quad B=g^b`, annotation: ["각자 secret 지수로 공개값을 만들어 보냅니다","g=5, a=6, b=15 mod 23이면 A=8, B=19"] },
+  { expression: String.raw`K_A=B^a`, annotation: ["Alice는 받은 B에 자기 a를 적용합니다","19⁶ mod 23 = 2"] },
+  { expression: String.raw`g^{ba}=g^{ab}`, annotation: ["같은 base의 지수 곱은 순서와 무관해","두 계산이 같은 group element가 됩니다"] },
+  { expression: String.raw`A^b=K_B`, annotation: ["Bob은 받은 A에 자기 b를 적용합니다","8¹⁵ mod 23 = 2 → 같은 K","상대 신원은 이 등식이 보장하지 않습니다"] },
+]}
         terms={[
           { symbol: "G,g", name: "agreed group and generator", description: "Order와 encoding, membership rule까지 고정한 public domain입니다." },
           { symbol: "a,b", name: "secret exponents", description: "CSPRNG로 생성하고 지정한 exponent/scalar 범위에서 해석합니다." },

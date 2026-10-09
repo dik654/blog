@@ -19,9 +19,10 @@ export default function SlashingProtection({ onCodeRef }: { onCodeRef: (key: str
         question="두 attestation 가운데 하나가 다른 하나를 surround하는지 어떻게 판정할까요?"
         idea="각 vote를 source epoch에서 target epoch까지의 열린 방향 interval로 보고, 한 interval의 양 끝이 다른 interval 바깥에 엄격히 놓이는지 양방향으로 검사합니다."
         formula={String.raw`(s_1<s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)`}
-        annotatedFormula={String.raw`(s_1<\underbrace{s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)}_{\text{판정 조건 결합}}`}
+        annotatedFormula={String.raw`\underbrace{(s_1<s_2<t_2<t_1)}_{\text{기존이 새 vote를 감쌈}}\;\lor\;\underbrace{(s_2<s_1<t_1<t_2)}_{\text{새 vote가 기존을 감쌈}}`}
         operations={[
-          { expression: String.raw`s_2<t_2<t_1)\;\lor\;(s_2<s_1<t_1<t_2)`, annotation: ["대안 gate 중 하나라도 참이면 조건을 통과시킵니다.","각 vote를 source epoch에서 target","epoch까지의 열린 방향 interval로 보고, 한","interval의 양 끝이 다른 interval 바깥에 엄격히"] },
+          { expression: String.raw`(s_1<s_2<t_2<t_1)`, annotation: ["기존 vote 구간이 새 vote를 엄격히 포함","기존 3→10, 새 5→8: 3<5<8<10"] },
+          { expression: String.raw`(s_2<s_1<t_1<t_2)`, annotation: ["반대로 새 vote가 기존 vote를 포함","끝점이 같거나 교차만 하면 해당 없음","예: 3→7과 5→9는 surround 아님"] },
         ]}
         terms={[
           { symbol: "s_1,t_1", name: "첫 투표 구간", description: "기존 또는 첫 attestation의 source·target epoch" },

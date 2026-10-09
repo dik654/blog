@@ -36,12 +36,13 @@ I&=\frac{F}{Q}\\
 P_{\mathrm{attainable}}&\le\min\!\left(P_{\mathrm{peak}},\ I\,B_{\mathrm{mem}}\right)
 \end{aligned}`}
             annotatedFormula={String.raw`\begin{aligned}
-I&=\underbrace{\frac{F}{Q}}_{\text{기준량당 비율}}\\
-P_{\mathrm{attainable}}&\le\underbrace{\min\!\left(P_{\mathrm{peak}},\ I\,B_{\mathrm{mem}}\right)}_{\text{경계 후보 선택}}
+I&=\frac{\underbrace{F}_{\text{수행한 FLOP}}}{\underbrace{Q}_{\text{옮긴 byte}}}\\
+P_{\mathrm{attainable}}&\le\min\!\left(\underbrace{P_{\mathrm{peak}}}_{\text{연산 장치 상한}},\ \underbrace{I\,B_{\mathrm{mem}}}_{\text{HBM이 주는 상한}}\right)
 \end{aligned}`}
             operations={[
-              { expression: String.raw`\frac{F}{Q}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","계산 1회를 위해 옮겨야 하는 byte가 많으면","bandwidth가, 같은 byte를 여러 번 재사용해","계산량이 많아지면 peak compute가 먼저 한계를"] },
-              { expression: String.raw`\min\!\left(P_{\mathrm{peak}},\ I\,B_{\mathrm{mem}}\right)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","계산 1회를 위해 옮겨야 하는 byte가 많으면","bandwidth가, 같은 byte를 여러 번 재사용해","계산량이 많아지면 peak compute가 먼저 한계를"] },
+              { expression: String.raw`\frac{F}{Q}`, annotation: ["kernel이 옮긴 byte마다 수행한 연산량","단위 FLOP/byte, byte 재사용이 클수록 큼"] },
+              { expression: String.raw`P_{\mathrm{peak}}`, annotation: ["실제 dtype·shape에서 낼 수 있는","연산 장치의 FLOP/s 상한"] },
+              { expression: String.raw`I\,B_{\mathrm{mem}}`, annotation: ["FLOP/byte × byte/s = HBM 쪽 FLOP/s","min에서 이쪽이 작으면 memory-bound"] },
             ]}
             terms={[
               { symbol: "I", name: "arithmetic intensity", description: "이동한 byte마다 수행한 연산량입니다. 단위는 FLOP/byte입니다." },
@@ -73,9 +74,10 @@ P_{\mathrm{attainable}}&\le\underbrace{\min\!\left(P_{\mathrm{peak}},\ I\,B_{\ma
             </p>
           }
           formula={String.raw`t_{\mathrm{HBM}}\ge\frac{Q_{\mathrm{rank}}}{B_{\mathrm{eff}}}`}
-          annotatedFormula={String.raw`t_{\mathrm{HBM}}\ge\underbrace{\frac{Q_{\mathrm{rank}}}{B_{\mathrm{eff}}}}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`t_{\mathrm{HBM}}\ge\frac{\underbrace{Q_{\mathrm{rank}}}_{\text{rank당 weight byte}}}{\underbrace{B_{\mathrm{eff}}}_{\text{실효 HBM 대역폭}}}`}
           operations={[
-            { expression: String.raw`\frac{Q_{\mathrm{rank}}}{B_{\mathrm{eff}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","이동해야 할 데이터량을 초당 이동 가능한 데이터량으로 나누면","HBM 항에 필요한 시간이 됩니다."] },
+            { expression: String.raw`Q_{\mathrm{rank}}`, annotation: ["한 token step에 rank 하나가 읽는","weight traffic, 이 글의 가정 6.65GB"] },
+            { expression: String.raw`B_{\mathrm{eff}}`, annotation: ["peak 8TB/s면 6.65GB에 약 0.83ms","실효 4.8TB/s면 약 1.39ms","HBM 항의 하한일 뿐 전체 forward 아님"] },
           ]}
           terms={[
             { symbol: "t_{\\mathrm{HBM}}", name: "HBM 시간 하한", description: "한 rank가 weight를 streaming하는 데 필요한 조건부 시간이며 단위는 초입니다." },

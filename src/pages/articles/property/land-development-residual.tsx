@@ -101,13 +101,14 @@ export default function LandDevelopmentResidualArticle() {
       <section id="source" data-teach-level="5" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">8. RICS 원문의 빼기 순서에 같은 숫자를 넣는다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-7">잔여법은 예상한 완공 가치에서 비용과 요구이익을 빼 토지 취득에 쓸 수 있는 돈을 계산합니다. RICS 2019 지침의 6.1.1절, 인쇄 24쪽에 실린 원문을 그대로 읽습니다.</p>
+          <p className="leading-7">잔여법은 예상한 완공 가치에서 비용과 요구이익을 빼 토지 취득에 쓸 수 있는 돈을 계산합니다. RICS가 2019년 10월 펴내 2020년 2월 1일부터 발효한 『Valuation of development property』 6.1.1절, 인쇄 24쪽에 실린 원문을 그대로 읽습니다.</p>
+          <p className="leading-7">처음에는 guidance note(지침)로 나왔지만 2026-10-09 확인한 RICS 현행 페이지는 같은 문서를 Professional Standard(전문 표준)로 분류합니다. 식과 용어 정의는 바뀌지 않았습니다.</p>
         </div>
         <SourceApplication source="RICS Valuation of development property · 6.1.1, p.24" excerpt="gross development value (GDV) - total development costs (including profit) = residual land value" application="100−(70+15)=15억 원입니다. 인용한 식은 비용에 이익을 포함하므로 70억 원과 15억 원을 각각 한 번 뺍니다. 반면 이 지침의 용어집은 total development cost를 토지와 이익 제외로 정의합니다. 표 제목만 보지 말고 해당 식의 포함 범위를 확인합니다." />
         <div className="prose prose-neutral mt-5 max-w-none dark:prose-invert">
           <p className="leading-7">이 뺄셈만으로 시점 조정까지 끝난 것은 아닙니다. 지침 부록 B3은 기본 잔여모형의 완공 시점 잔여를 평가일로 환산하고 취득 부대비용을 빼는 과정을 설명합니다. 할인 현금흐름 방식은 시점별 현금의 현재가치에서 출발합니다. 위 15억 원과 매도자 예산 13억 원은 계산 순서를 보여 주는 단순 예산으로 읽어야 합니다.</p>
         </div>
-        <CitationBlock source="RICS Valuation of development property · 2019" citeKey={1} href="https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf">실제 PDF의 용어집, 6.1~6.3절, 7.1절, 부록 B1.2.8~9와 B3을 확인했습니다. 인쇄 24쪽의 식도 화면으로 대조했습니다.</CitationBlock>
+        <CitationBlock source="RICS Valuation of development property · 2019(2020-02-01 발효)" citeKey={1} href="https://www.rics.org/content/dam/ricsglobal/documents/to-be-sorted/valuation-of-development-property---first-edition.pdf">실제 PDF의 용어집, 6.1~6.3절, 7.1절, 부록 B1.2.8~9와 B3을 확인했습니다. 인쇄 24쪽의 식도 화면으로 대조했습니다. 이 PDF 표지는 guidance note 1판이고, 2026-10-09 RICS 현행 페이지는 같은 문서를 Professional Standard로 분류합니다.</CitationBlock>
         <p data-stage-bridge="source" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">개발비에 이익을 한 번 포함하는 원문 계산을 확인했습니다. 현지 허가가 입력을 바꾸는지 봅니다.</p>
       </section>
       <section id="comparison" data-teach-level="6" className="scroll-mt-20">
@@ -119,7 +120,7 @@ export default function LandDevelopmentResidualArticle() {
             한국의 인허가 의제 절차를 그대로 옮겨 읽지 않고 그 지역 담당기관에 같은 계획의 용도·규모와 공사 조건을 확인합니다.
           </p>
           <p className="leading-7">
-            RICS 2019 지침의 잔여법은 계산의 구조를 확인하는 근거로 사용합니다. 2026년 개별 감정평가에 필요한 최신 전문기준 전체를 대신하지 않으며 거래 비교와 현금 지급시점을
+            RICS 2019년판(2020-02-01 발효, 현재 Professional Standard로 분류)의 잔여법은 계산의 구조를 확인하는 근거로 사용합니다. 2026년 개별 감정평가에 필요한 최신 전문기준 전체를 대신하지 않으며 거래 비교와 현금 지급시점을
             함께 검토해야 합니다.
           </p>
         </div>

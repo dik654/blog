@@ -20,10 +20,10 @@ export default function AIUsage() {
         question="긴 signal에서 시간에 따라 변하는 local spectrum을 어떻게 만들까?"
         idea={<>Frame index m마다 signal을 H sample씩 이동하고 window w[n]를 곱한 뒤 N-point DFT를 계산합니다. Magnitude 또는 power를 남기면 time–frequency matrix가 됩니다.</>}
         formula={String.raw`\begin{aligned}s_m[n]&=x[n+mH]w[n]\\[3pt]\operatorname{STFT}_x[m,k]&=\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}s_m[n]&=\underbrace{x[n+mH]w[n]}_{\text{analysis window 계산}}\\[3pt]\operatorname{STFT}_x[m,k]&=\underbrace{\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}s_m[n]&=\underbrace{x[n+mH]}_{\text{m번째 frame 구간}}\underbrace{w[n]}_{\text{경계 taper}}\\[3pt]\operatorname{STFT}_x[m,k]&=\underbrace{\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}}_{\text{frame m의 bin k 성분}}\end{aligned}`}
         operations={[
-          { expression: String.raw`x[n+mH]w[n]`, annotation: ["analysis window이(가) 식의 결과에 기여하는","방식을 계산합니다.","Frame index m마다"] },
-          { expression: String.raw`\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Frame index m마다"] },
+          { expression: String.raw`x[n+mH]w[n]`, annotation: ["frame마다 H sample씩 밀어 N개를 잘라", "window를 곱해 leakage를 조절합니다", "16kHz, H=160이면 10ms마다 이동"] },
+          { expression: String.raw`\sum_{n=0}^{N-1}s_m[n]e^{-i2\pi kn/N}`, annotation: ["잘라낸 frame에 N-point DFT를 걸어", "local spectrum을 얻습니다", "N=400이면 25ms frame 하나"] },
         ]}
         terms={[
           { symbol: "m", name: "frame index", description: "시간축에서 몇 번째 local window인지 나타냅니다." },
@@ -57,9 +57,10 @@ export default function AIUsage() {
         question="큰 convolution을 왜 frequency별 multiplication으로 바꿀 수 있을까?"
         idea={<>Circular convolution은 Fourier basis에서 diagonal operator이므로 각 frequency bin을 독립적으로 곱할 수 있습니다. Linear convolution은 wrap-around를 막도록 충분히 padding한 뒤 inverse transform하고 필요한 구간을 자릅니다.</>}
         formula={String.raw`y=x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)`}
-        annotatedFormula={String.raw`y=\underbrace{x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\underbrace{y=x*h}_{\text{길이 5+3−1=7 출력}}=\underbrace{\mathcal F^{-1}}_{\text{원 좌표로 복귀}}\!\left(\underbrace{\mathcal F(x)\odot\mathcal F(h)}_{\text{bin마다 독립 곱셈}}\right)`}
         operations={[
-          { expression: String.raw`x*h=\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Circular convolution은 Fourier","basis에서 diagonal operator이므로 각","frequency bin을 독립적으로 곱할 수 있습니다."] },
+          { expression: String.raw`\mathcal F(x)\odot\mathcal F(h)`, annotation: ["Fourier basis에서 convolution은", "diagonal이라 bin별 곱셈으로 바뀝니다"] },
+          { expression: String.raw`\mathcal F^{-1}\!\left(\mathcal F(x)\odot\mathcal F(h)\right)`, annotation: ["7칸 이상으로 padding해야", "circular wrap-around 없이", "필요한 7개 구간을 잘라 씁니다"] },
         ]}
         terms={[
           { symbol: "x*h", name: "linear convolution", description: "Input x와 filter h를 shift하며 multiply-accumulate한 결과입니다." },

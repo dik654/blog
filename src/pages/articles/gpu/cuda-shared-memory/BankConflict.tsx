@@ -35,9 +35,10 @@ export default function BankConflict() {
           </>
         }
         formula={String.raw`\operatorname{bank}(a)=\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32`}
-        annotatedFormula={String.raw`\operatorname{bank}(a)=\underbrace{\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{bank}(a)=\underbrace{\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor}_{\text{32-bit word index}}\underbrace{\bmod 32}_{\text{32 bank 순환}}`}
         operations={[
-          { expression: String.raw`\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor\bmod 32`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Byte address를 bank width인 4 B로 나눠","word index를 만들고, 32 banks를 순환하므로","나머지를 취합니다."] },
+          { expression: String.raw`\left\lfloor\frac{a}{4\ \mathrm{B}}\right\rfloor`, annotation: ["byte address를 bank 폭 4 B로 나눠", "몇 번째 32-bit word인지 구합니다", "byte offset 128 → word 32"] },
+          { expression: String.raw`\bmod 32`, annotation: ["bank 32개를 순환하므로 나머지가 bank", "index 0·32·64는 모두 bank 0에 몰리고", "0·33·66은 bank 0·1·2로 분산됩니다"] },
         ]}
         terms={[
           {

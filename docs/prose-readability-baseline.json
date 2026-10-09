@@ -34,11 +34,11 @@
       "score": 41
     },
     "ai/claw-api-client": {
-      "fingerprint": "7da4f682d8b25236",
+      "fingerprint": "7313146083b73126",
       "score": 40
     },
     "gpu/ec-gpu-gen": {
-      "fingerprint": "c533921e8a2c673e",
+      "fingerprint": "c8f5e7428804c679",
       "score": 37
     },
     "blockchain/prysm": {
@@ -62,7 +62,7 @@
       "score": 34
     },
     "blockchain/prysm-finality": {
-      "fingerprint": "e4ab7abc5ca12d1f",
+      "fingerprint": "cdeb7cd5620b50b9",
       "score": 34
     },
     "blockchain/reth-cli": {
@@ -70,27 +70,27 @@
       "score": 34
     },
     "blockchain/reth-provider": {
-      "fingerprint": "f53777f2112f3d9d",
+      "fingerprint": "e5816ade08c1d24e",
       "score": 34
     },
     "crypto/risc0": {
-      "fingerprint": "3eb1b1e989cd4923",
+      "fingerprint": "01f6a6858a2f6161",
       "score": 34
     },
     "blockchain/initia-evm": {
-      "fingerprint": "6327890db53040a7",
+      "fingerprint": "da783bd9bfe6fa94",
       "score": 33
     },
     "blockchain/ipfs-filecoin-storage": {
-      "fingerprint": "2fffbcd070dda53d",
+      "fingerprint": "e737d25a599c4769",
       "score": 33
     },
     "ai/transformer-architecture": {
-      "fingerprint": "f55fb34afdffc84d",
+      "fingerprint": "5ae67c445288fa66",
       "score": 32
     },
     "blockchain/filecoin-fvm": {
-      "fingerprint": "d93abbb8226a8ef7",
+      "fingerprint": "fe863095b6e324ae",
       "score": 32
     },
     "blockchain/helios-execution": {
@@ -98,7 +98,7 @@
       "score": 32
     },
     "blockchain/cometbft-state": {
-      "fingerprint": "911eb6d79d3fa185",
+      "fingerprint": "32978da7b4d3457f",
       "score": 31
     },
     "blockchain/prysm-beacon-api": {
@@ -106,31 +106,31 @@
       "score": 31
     },
     "ai/lstm-timeseries": {
-      "fingerprint": "730d47093c784c70",
+      "fingerprint": "ef77cba9579030cc",
       "score": 30
     },
     "ai/multi-agent-implementation": {
-      "fingerprint": "dbabd060bba96099",
+      "fingerprint": "e4a4ff107ad400ca",
       "score": 30
     },
     "blockchain/proofs-post": {
-      "fingerprint": "769868c1ef85b885",
+      "fingerprint": "8bb3bc1f7ee2e210",
       "score": 30
     },
     "blockchain/reth-net": {
-      "fingerprint": "144cff77f121610d",
+      "fingerprint": "a0304c767b663689",
       "score": 30
     },
     "isms-aml/isms-practical-guide": {
-      "fingerprint": "cc89cf3c173a2abc",
+      "fingerprint": "69c94f866ca77e07",
       "score": 30
     },
     "blockchain/dydx": {
-      "fingerprint": "bf5e92bb37bb8385",
+      "fingerprint": "67ccdd3c4f2ab042",
       "score": 29
     },
     "blockchain/lotus-state": {
-      "fingerprint": "bdeebe88f477909c",
+      "fingerprint": "effd8ed905d45eec",
       "score": 29
     },
     "blockchain/reth-chainspec": {
@@ -138,15 +138,15 @@
       "score": 29
     },
     "gpu/filecoin-gpu-proofs": {
-      "fingerprint": "38cf51a6090ccc08",
+      "fingerprint": "0997fcd841b91bfd",
       "score": 29
     },
     "ai/claw-file-ops": {
-      "fingerprint": "48eba42dadc31d86",
+      "fingerprint": "a3791092a489c5e7",
       "score": 28
     },
     "ai/llm-serving-ops": {
-      "fingerprint": "8a99e0555fa80e6a",
+      "fingerprint": "649c793dd38d4229",
       "score": 28
     },
     "ai/resnet": {
@@ -154,15 +154,15 @@
       "score": 28
     },
     "blockchain/cometbft-consensus": {
-      "fingerprint": "97ce0d010f6b1cad",
+      "fingerprint": "5b7b48818d2d37ad",
       "score": 28
     },
     "blockchain/distributed-systems": {
-      "fingerprint": "f0ebb8817d940cc0",
+      "fingerprint": "88196e2715cf97f9",
       "score": 28
     },
     "blockchain/filecoin-ipc": {
-      "fingerprint": "bdf36e58ab974fac",
+      "fingerprint": "ee4f1c7e58a06a70",
       "score": 28
     },
     "blockchain/lotus-miner": {
@@ -174,35 +174,35 @@
       "score": 28
     },
     "blockchain/prysm-validator-client": {
-      "fingerprint": "b58441632caf77cb",
+      "fingerprint": "2b7e5348028712f8",
       "score": 28
     },
     "isms-aml/isms-auth-management": {
-      "fingerprint": "2f621396766bb208",
+      "fingerprint": "118d33d6fd1f1f4d",
       "score": 28
     },
     "blockchain/kohaku-provider": {
-      "fingerprint": "f8637c2889813413",
+      "fingerprint": "a175435a936dd1f9",
       "score": 27
     },
     "blockchain/reth-db": {
-      "fingerprint": "1db24dde228301e4",
+      "fingerprint": "3a445a27df1b7ae7",
       "score": 27
     },
     "ai/arima": {
-      "fingerprint": "270280d84f628049",
+      "fingerprint": "a4473837f5abf9f0",
       "score": 26
     },
     "ai/mixture-of-experts": {
-      "fingerprint": "c50cfb5b342e127c",
+      "fingerprint": "5f01eb48031c960b",
       "score": 26
     },
     "ai/rag-pipeline": {
-      "fingerprint": "b38e739b111ec10f",
+      "fingerprint": "6d30924bfc938fcd",
       "score": 26
     },
     "ai/transfer-learning-practice": {
-      "fingerprint": "485562950c1fb1fb",
+      "fingerprint": "5cc7f5081e3a92e5",
       "score": 26
     },
     "blockchain/autobahn-deep": {
@@ -210,7 +210,7 @@
       "score": 26
     },
     "blockchain/expected-consensus": {
-      "fingerprint": "7c549de9bfabc3e7",
+      "fingerprint": "3ae0a3fa2b4fa8f6",
       "score": 26
     },
     "blockchain/filecoin-proofs": {
@@ -222,7 +222,7 @@
       "score": 26
     },
     "blockchain/impl-groth16": {
-      "fingerprint": "2c901d86f074c102",
+      "fingerprint": "e82baabc7a67524f",
       "score": 26
     },
     "blockchain/impl-plonk": {
@@ -234,35 +234,35 @@
       "score": 26
     },
     "blockchain/filecoin-pdp": {
-      "fingerprint": "07d9fe00c30c0652",
+      "fingerprint": "4b08c9df290ff763",
       "score": 25
     },
     "blockchain/lotus-market": {
-      "fingerprint": "4c611bbc68e56a59",
+      "fingerprint": "5a78ba3ea9e8f88a",
       "score": 25
     },
     "blockchain/cometbft-abci": {
-      "fingerprint": "60a770738fb491a0",
+      "fingerprint": "0dbe2d21bc58fe6f",
       "score": 24
     },
     "blockchain/cometbft-types": {
-      "fingerprint": "c23127aa3aef7321",
+      "fingerprint": "5ee1853cb3d3ae54",
       "score": 24
     },
     "blockchain/filecoin-f3": {
-      "fingerprint": "27976627bf656e11",
+      "fingerprint": "b4b377cf837287c5",
       "score": 24
     },
     "blockchain/narwhal-deep": {
-      "fingerprint": "ce0691183b12a34b",
+      "fingerprint": "3222a5e33a65c6f3",
       "score": 24
     },
     "blockchain/prysm-beacon-db": {
-      "fingerprint": "6ae1df8b41eb5520",
+      "fingerprint": "ea9d9b39f1719dbb",
       "score": 24
     },
     "blockchain/prysm-beacon-state": {
-      "fingerprint": "5cf6f78b3bbfcba2",
+      "fingerprint": "b0a5be8be6f93bea",
       "score": 24
     },
     "blockchain/prysm-p2p-libp2p": {
@@ -270,19 +270,19 @@
       "score": 24
     },
     "blockchain/prysm-sync": {
-      "fingerprint": "439080701710d93c",
+      "fingerprint": "f50739f837b5303a",
       "score": 24
     },
     "blockchain/uniswap-v4": {
-      "fingerprint": "af093af1cfcac3aa",
+      "fingerprint": "9e533cda1f13084b",
       "score": 24
     },
     "gpu/ec-gpu-ops": {
-      "fingerprint": "66cb13bc87d67bf5",
+      "fingerprint": "9233184829fb7d24",
       "score": 24
     },
     "gpu/poseidon-gpu": {
-      "fingerprint": "e7a66d51f86bac29",
+      "fingerprint": "138b22cb820b1a7c",
       "score": 24
     },
     "p2p/quic-fundamentals": {
@@ -290,31 +290,31 @@
       "score": 24
     },
     "blockchain/filecoin-lotus": {
-      "fingerprint": "5189d9b0abf51e9e",
+      "fingerprint": "14e4e805ef48f73d",
       "score": 23
     },
     "ai/claw-plugin": {
-      "fingerprint": "4d640a04cf486a21",
+      "fingerprint": "8bd236a8a965dc57",
       "score": 22
     },
     "blockchain/bft-comparison": {
-      "fingerprint": "714b70e828ec9456",
+      "fingerprint": "95471fa33517a9b6",
       "score": 22
     },
     "blockchain/bullshark-deep": {
-      "fingerprint": "02dabc7b1b33c306",
+      "fingerprint": "1520355f6061e877",
       "score": 22
     },
     "blockchain/giwa-chain": {
-      "fingerprint": "2bd61d8686abfbb0",
+      "fingerprint": "2217697f774a90ce",
       "score": 22
     },
     "blockchain/helios-update": {
-      "fingerprint": "8c9b56c6c62c77d6",
+      "fingerprint": "c96c72a749414898",
       "score": 22
     },
     "blockchain/pbft-deep": {
-      "fingerprint": "b6bb4bd941692ead",
+      "fingerprint": "828d46fe294bf81c",
       "score": 22
     },
     "blockchain/prysm-bls": {
@@ -322,7 +322,7 @@
       "score": 22
     },
     "blockchain/impl-elliptic-curve": {
-      "fingerprint": "3f9b6dede3b446c8",
+      "fingerprint": "a19ac7b8ca8ccb28",
       "score": 21
     },
     "blockchain/proofs-porep": {
@@ -330,23 +330,23 @@
       "score": 21
     },
     "blockchain/proofs-snark": {
-      "fingerprint": "f99ad213398f1072",
+      "fingerprint": "188c156b84a7bc63",
       "score": 21
     },
     "gpu/rapidsnark-gpu": {
-      "fingerprint": "42340ac41915956c",
+      "fingerprint": "18b8c125d093d074",
       "score": 21
     },
     "ai/claw-config": {
-      "fingerprint": "65fa24c162ac2606",
+      "fingerprint": "4abce669950d7d3b",
       "score": 20
     },
     "ai/supervised-fine-tuning": {
-      "fingerprint": "496eb0dc42b12e60",
+      "fingerprint": "6f636500b4afd37f",
       "score": 20
     },
     "blockchain/commonware-crypto-p2p": {
-      "fingerprint": "2acfce770630e930",
+      "fingerprint": "292c8a73dfb39ee4",
       "score": 20
     },
     "blockchain/consensus-comparison": {
@@ -354,19 +354,19 @@
       "score": 20
     },
     "blockchain/impl-field-arithmetic": {
-      "fingerprint": "65a2983cd7c989be",
+      "fingerprint": "fd8c2819eb2d9229",
       "score": 20
     },
     "blockchain/lotus-mpool": {
-      "fingerprint": "633cf3cccc69d368",
+      "fingerprint": "251777cf4620ee86",
       "score": 20
     },
     "blockchain/prysm-epoch-processing": {
-      "fingerprint": "7e57c4d10e17e7a9",
+      "fingerprint": "dea0cd1cba962850",
       "score": 20
     },
     "blockchain/prysm-gossipsub": {
-      "fingerprint": "a92f9d2973f296fa",
+      "fingerprint": "c0c20fcf08f1da2c",
       "score": 20
     },
     "blockchain/reth-block-execution": {
@@ -374,39 +374,39 @@
       "score": 20
     },
     "blockchain/tendermint-bft": {
-      "fingerprint": "db70cedede51a134",
+      "fingerprint": "6303fe5f7e85731a",
       "score": 20
     },
     "gpu/hw-gpu-comparison": {
-      "fingerprint": "80aab51653a6df34",
+      "fingerprint": "98e428f287331f51",
       "score": 20
     },
     "isms-aml/isms-access-control": {
-      "fingerprint": "04a399e0ec4c9e62",
+      "fingerprint": "add6a67ff92997aa",
       "score": 20
     },
     "p2p/nat-traversal": {
-      "fingerprint": "39613c2c03e0fb29",
+      "fingerprint": "4597428218fdfa2b",
       "score": 20
     },
     "blockchain/reth-alloy-primitives": {
-      "fingerprint": "957db452ac8410f7",
+      "fingerprint": "7bb8e2258fa93652",
       "score": 19
     },
     "blockchain/reth-sync": {
-      "fingerprint": "2e3c5f22fac277df",
+      "fingerprint": "935fec9b2a7f0111",
       "score": 19
     },
     "ai/claw-cli": {
-      "fingerprint": "35d2e948193620aa",
+      "fingerprint": "9663bef3a6f6450d",
       "score": 18
     },
     "ai/claw-telemetry": {
-      "fingerprint": "10933236665a6d14",
+      "fingerprint": "f9dc64e8d1aaaeba",
       "score": 18
     },
     "ai/neural-network": {
-      "fingerprint": "8fede6dd1a3bbd92",
+      "fingerprint": "eafd10f6a7e9f497",
       "score": 18
     },
     "ai/seq2seq": {
@@ -418,7 +418,7 @@
       "score": 18
     },
     "blockchain/berachain": {
-      "fingerprint": "f4f9ed2b3a1dc180",
+      "fingerprint": "2bad5fdb5a414c20",
       "score": 18
     },
     "blockchain/cometbft": {
@@ -426,43 +426,43 @@
       "score": 18
     },
     "blockchain/cometbft-execution": {
-      "fingerprint": "fdd7bec912c61e62",
+      "fingerprint": "c899367e46766e52",
       "score": 18
     },
     "blockchain/cometbft-mempool": {
-      "fingerprint": "61017722f0fd7712",
+      "fingerprint": "deaf7ab605e4d96c",
       "score": 18
     },
     "blockchain/da-theory": {
-      "fingerprint": "d512d781b7539d43",
+      "fingerprint": "275dc9c33c2ea437",
       "score": 18
     },
     "blockchain/dag-consensus": {
-      "fingerprint": "035eca8b3cd9931c",
+      "fingerprint": "80196b50adc4fca1",
       "score": 18
     },
     "blockchain/evmos": {
-      "fingerprint": "90f13bb85033d163",
+      "fingerprint": "6d4f3530268e0915",
       "score": 18
     },
     "blockchain/gossipbft": {
-      "fingerprint": "f2fddf6d3c53c30b",
+      "fingerprint": "360afe4399bb8f17",
       "score": 18
     },
     "blockchain/helios-bootstrap": {
-      "fingerprint": "81585d69c1b04f53",
+      "fingerprint": "69fe404d5f27dc2c",
       "score": 18
     },
     "blockchain/helios-consensus": {
-      "fingerprint": "9926a204ecc41332",
+      "fingerprint": "17702400c22b4e5d",
       "score": 18
     },
     "blockchain/lotus-chain": {
-      "fingerprint": "c34c911ae51e18b7",
+      "fingerprint": "668f1aa4743d480c",
       "score": 18
     },
     "blockchain/omni-octane": {
-      "fingerprint": "96d36628621c570c",
+      "fingerprint": "40315c2a065a1f00",
       "score": 18
     },
     "blockchain/prysm-block-processing": {
@@ -470,11 +470,11 @@
       "score": 18
     },
     "gpu/gpu-proof-pipeline": {
-      "fingerprint": "40045274eec24b90",
+      "fingerprint": "9e0d95651107d1b8",
       "score": 18
     },
     "gpu/msm-ntt": {
-      "fingerprint": "4df8bdc0a27e2612",
+      "fingerprint": "b03d62fc8b7b93f9",
       "score": 18
     },
     "p2p/tls-fundamentals": {
@@ -482,7 +482,7 @@
       "score": 18
     },
     "ai/claw-hooks": {
-      "fingerprint": "a5fc102fee03f61e",
+      "fingerprint": "f64d577a6e86ce73",
       "score": 16
     },
     "ai/rlhf": {
@@ -494,7 +494,7 @@
       "score": 16
     },
     "blockchain/dai-maker": {
-      "fingerprint": "19b87f415d5ff71e",
+      "fingerprint": "c794367df889a808",
       "score": 16
     },
     "p2p/discv5": {
@@ -514,31 +514,31 @@
       "score": 14
     },
     "ai/distributional-semantics": {
-      "fingerprint": "e0a58e90ca117f12",
+      "fingerprint": "cadfea7d53f7df32",
       "score": 14
     },
     "ai/skills-anatomy": {
-      "fingerprint": "5b80fcab39b4d624",
+      "fingerprint": "8b3526bba6c90df6",
       "score": 14
     },
     "ai/tokenizer": {
-      "fingerprint": "440178e2abf2b56a",
+      "fingerprint": "1b0854db351a8719",
       "score": 14
     },
     "ai/vision-transformer": {
-      "fingerprint": "f5fbc3e338ecfad3",
+      "fingerprint": "362710fed9724062",
       "score": 14
     },
     "blockchain/avalanche-consensus": {
-      "fingerprint": "04d40f10f1e3f3ab",
+      "fingerprint": "776d73a67e7070f8",
       "score": 14
     },
     "blockchain/cometbft-p2p": {
-      "fingerprint": "ad95ab13ed3a60b7",
+      "fingerprint": "f36c27b997b65184",
       "score": 14
     },
     "blockchain/commonware-broadcast": {
-      "fingerprint": "ae94f83996eb6d68",
+      "fingerprint": "1bf3d074dd5c41b5",
       "score": 14
     },
     "blockchain/commonware-simplex": {
@@ -546,19 +546,19 @@
       "score": 14
     },
     "blockchain/curve-stable": {
-      "fingerprint": "f7dd4df7625517f4",
+      "fingerprint": "8fddeee2b0cd88bb",
       "score": 14
     },
     "blockchain/hotstuff2": {
-      "fingerprint": "148c1c16eeedbc48",
+      "fingerprint": "d3a340aa6d03be43",
       "score": 14
     },
     "blockchain/jolteon-ditto": {
-      "fingerprint": "72a497e2668ddbff",
+      "fingerprint": "c1433ff73a30ebcb",
       "score": 14
     },
     "blockchain/longest-chain": {
-      "fingerprint": "b76d94d33836bc83",
+      "fingerprint": "85ea671589bc8eb2",
       "score": 14
     },
     "blockchain/merkle-patricia-trie": {
@@ -570,43 +570,43 @@
       "score": 14
     },
     "blockchain/prysm-ssz": {
-      "fingerprint": "aa41b920441c1390",
+      "fingerprint": "f022c03523e6ce6b",
       "score": 14
     },
     "blockchain/usdc-circle": {
-      "fingerprint": "57b913e1b74ef906",
+      "fingerprint": "abc7de3bee1bfd44",
       "score": 14
     },
     "gpu/gpu-architecture": {
-      "fingerprint": "6469f24014453ba0",
+      "fingerprint": "df31451bc2480b6a",
       "score": 14
     },
     "gpu/hw-server-vs-desktop": {
-      "fingerprint": "e2f61272a6753112",
+      "fingerprint": "a6b9582c17e989a1",
       "score": 14
     },
     "gpu/hw-storage-comparison": {
-      "fingerprint": "0db5c40a500c4ea7",
+      "fingerprint": "9bcf3ce2df2df922",
       "score": 14
     },
     "gpu/kzg-gpu": {
-      "fingerprint": "96dca45d331c4c3a",
+      "fingerprint": "89246ba7ef1d23b1",
       "score": 14
     },
     "gpu/poly-ops-gpu": {
-      "fingerprint": "42926e1d45bc0e35",
+      "fingerprint": "fee7b40c11207c1c",
       "score": 14
     },
     "tee/tee-attestation": {
-      "fingerprint": "429d04406f30ce34",
+      "fingerprint": "8e265ba2402670e3",
       "score": 14
     },
     "ai/claw-policy-engine": {
-      "fingerprint": "69dc2b9767d0d95d",
+      "fingerprint": "48bb1ea9a91bf31b",
       "score": 12
     },
     "ai/claw-recovery": {
-      "fingerprint": "4faa09991707b4c6",
+      "fingerprint": "ba309741c1e4a4c6",
       "score": 12
     },
     "ai/image-training-stages": {
@@ -618,15 +618,15 @@
       "score": 12
     },
     "blockchain/bplus-tree": {
-      "fingerprint": "4340676e963614c9",
+      "fingerprint": "88d017fd158a13a0",
       "score": 12
     },
     "blockchain/cosmos-sdk": {
-      "fingerprint": "82ae2167793e1f97",
+      "fingerprint": "13c23b9322e64a5b",
       "score": 12
     },
     "blockchain/erasure-coding": {
-      "fingerprint": "ef0cd86dd27a635e",
+      "fingerprint": "5c2846ffe1ac0485",
       "score": 12
     },
     "blockchain/railgun": {
@@ -634,23 +634,23 @@
       "score": 12
     },
     "blockchain/smr-theory": {
-      "fingerprint": "e2e7e4ba45b3b75a",
+      "fingerprint": "14e51006858ed666",
       "score": 12
     },
     "blockchain/tusk": {
-      "fingerprint": "57b99d5b8ace9a1b",
+      "fingerprint": "a437d8c3cd6062d9",
       "score": 12
     },
     "crypto/scroll-zkevm": {
-      "fingerprint": "a180dd8eef99e661",
+      "fingerprint": "e30637e4efbb1db1",
       "score": 12
     },
     "gpu/gpu-witness-gen": {
-      "fingerprint": "5033622463d26178",
+      "fingerprint": "30eeaeafe1e92d69",
       "score": 12
     },
     "gpu/icicle-framework": {
-      "fingerprint": "77f4f8595c49d66a",
+      "fingerprint": "030d63f1a7b1d88b",
       "score": 12
     },
     "p2p/content-addressing": {
@@ -666,7 +666,7 @@
       "score": 12
     },
     "p2p/rqbit": {
-      "fingerprint": "9c1ad57e4be09005",
+      "fingerprint": "5e849a758db87836",
       "score": 12
     },
     "ai/bptt": {
@@ -674,7 +674,7 @@
       "score": 10
     },
     "ai/claw-mcp": {
-      "fingerprint": "d2c6788af55f9543",
+      "fingerprint": "fd655121c006580b",
       "score": 10
     },
     "ai/claw-task-team": {
@@ -694,19 +694,19 @@
       "score": 10
     },
     "blockchain/commonware-deep-dive": {
-      "fingerprint": "f16a24bd2315f29c",
+      "fingerprint": "a46cac6a70b3b382",
       "score": 10
     },
     "blockchain/compound-v3": {
-      "fingerprint": "cfc3f13e8b158d64",
+      "fingerprint": "c52f927e9a95a8ae",
       "score": 10
     },
     "blockchain/helios-config": {
-      "fingerprint": "2956ab2e34494ec0",
+      "fingerprint": "1dd9976b1ea91afd",
       "score": 10
     },
     "blockchain/helios-types": {
-      "fingerprint": "7f5013b9e91cf5dd",
+      "fingerprint": "fa28bc59ae3faa23",
       "score": 10
     },
     "blockchain/prysm-state-cache": {
@@ -714,19 +714,19 @@
       "score": 10
     },
     "blockchain/prysm-sync-committee": {
-      "fingerprint": "6be02c6bdf63dd82",
+      "fingerprint": "68ddf40ac519c425",
       "score": 10
     },
     "blockchain/reth-mev": {
-      "fingerprint": "d02260188517b1fb",
+      "fingerprint": "8a2ca9bf983c44de",
       "score": 10
     },
     "blockchain/uniswap-v3": {
-      "fingerprint": "f8669e011aca58d5",
+      "fingerprint": "ba70a1ae155af5a3",
       "score": 10
     },
     "gpu/cuda-matrix-multiply": {
-      "fingerprint": "dfcc32bd797fe585",
+      "fingerprint": "8202e70f5dabd0fd",
       "score": 10
     },
     "gpu/gpu-collective-network": {
@@ -734,11 +734,11 @@
       "score": 10
     },
     "gpu/hw-nvme-storage": {
-      "fingerprint": "b87c1300fd1fedf1",
+      "fingerprint": "175f567c28c1ed43",
       "score": 10
     },
     "p2p/bittorrent": {
-      "fingerprint": "140b458d609a2c1b",
+      "fingerprint": "3e23866c3aeb31e9",
       "score": 10
     },
     "p2p/gossip-fundamentals": {
@@ -750,7 +750,7 @@
       "score": 10
     },
     "blockchain/cometbft-crypto": {
-      "fingerprint": "b4d41c19f195cc4c",
+      "fingerprint": "e712b25ffbafb52e",
       "score": 9
     },
     "ai/cnn-translation-equivariance": {
@@ -798,15 +798,15 @@
       "score": 8
     },
     "ai/tabular-deep-learning": {
-      "fingerprint": "9b76c424d52a3e1d",
+      "fingerprint": "1434aa75efe4c649",
       "score": 8
     },
     "blockchain/commonware-storage": {
-      "fingerprint": "d4ca9c24e15eb957",
+      "fingerprint": "c817ff7dcf5f8202",
       "score": 8
     },
     "blockchain/lsm-tree": {
-      "fingerprint": "2c995c6b4751c009",
+      "fingerprint": "7a981201999f2c87",
       "score": 8
     },
     "crypto/libiop": {
@@ -814,15 +814,15 @@
       "score": 8
     },
     "crypto/proofofsql": {
-      "fingerprint": "1ac130429af31b96",
+      "fingerprint": "7671f0f86c8b4d2e",
       "score": 8
     },
     "firms/why-firms-exist": {
-      "fingerprint": "d2ff64bffe78e909",
+      "fingerprint": "3d8fd89906dfd4ee",
       "score": 8
     },
     "gpu/gpu-arch-hopper": {
-      "fingerprint": "1e43c6aa872986b7",
+      "fingerprint": "8ff641ad8d55b998",
       "score": 8
     },
     "gpu/gpu-interconnects": {
@@ -830,27 +830,27 @@
       "score": 8
     },
     "gpu/hw-power-cooling": {
-      "fingerprint": "fbfc2001452f3c30",
+      "fingerprint": "1dff9b6b556adc18",
       "score": 8
     },
     "gpu/msm-gpu-impl": {
-      "fingerprint": "c6271eeb98b72086",
+      "fingerprint": "6b20aa029bc5c197",
       "score": 8
     },
     "gpu/ntt-gpu-impl": {
-      "fingerprint": "b2a701d22ce82513",
+      "fingerprint": "f2db4cb19c5c0f8c",
       "score": 8
     },
     "isms-aml/isms-overview": {
-      "fingerprint": "9c8b8f0bcd7be8fb",
+      "fingerprint": "40a62ec7a2185892",
       "score": 8
     },
     "p2p/libp2p-gossipsub": {
-      "fingerprint": "f2fd2dc65a21e549",
+      "fingerprint": "359916faa48b94f9",
       "score": 8
     },
     "p2p/libp2p-quic": {
-      "fingerprint": "7065151389f286c0",
+      "fingerprint": "12e72e538bd0c054",
       "score": 8
     },
     "p2p/libp2p-yamux": {
@@ -858,51 +858,51 @@
       "score": 8
     },
     "tee/amd-sev": {
-      "fingerprint": "b80a7182f2f3f61c",
+      "fingerprint": "b0ad479c344302d4",
       "score": 8
     },
     "tee/arm-cca": {
-      "fingerprint": "936f3235e80c87fb",
+      "fingerprint": "eabd75c689a6d909",
       "score": 8
     },
     "tee/dstack": {
-      "fingerprint": "0e4652fccdbd23dc",
+      "fingerprint": "00227bac08228f4c",
       "score": 8
     },
     "tee/hw-security": {
-      "fingerprint": "2b63d64671099e16",
+      "fingerprint": "aaf20eb8f08f90d6",
       "score": 8
     },
     "tee/intel-sgx": {
-      "fingerprint": "8e7f62a4c78f4e9e",
+      "fingerprint": "bd726be940bd5631",
       "score": 8
     },
     "tee/intel-tdx": {
-      "fingerprint": "294bdf6a39b42a48",
+      "fingerprint": "577e9d8a1fe4d55a",
       "score": 8
     },
     "tee/oasis": {
-      "fingerprint": "e1b39c08c438870f",
+      "fingerprint": "f47cb1c3e97da77e",
       "score": 8
     },
     "tee/op-tee": {
-      "fingerprint": "c6567c01cee283de",
+      "fingerprint": "d859930879e26afa",
       "score": 8
     },
     "tee/phala": {
-      "fingerprint": "4167ae5a6f8be587",
+      "fingerprint": "89a23eff1cd35060",
       "score": 8
     },
     "tee/tee-memory": {
-      "fingerprint": "bb16f5a22dcdcdff",
+      "fingerprint": "bcfa9e763d296658",
       "score": 8
     },
     "blockchain/reth-pipeline": {
-      "fingerprint": "8813d802eca0c22f",
+      "fingerprint": "97ce7118150df6f7",
       "score": 7
     },
     "ai/attention-theory": {
-      "fingerprint": "9cb1db3296c429ae",
+      "fingerprint": "a98fd0f4b6643dd9",
       "score": 6
     },
     "ai/claw-subagent-orchestration": {
@@ -934,7 +934,7 @@
       "score": 6
     },
     "ai/sequence-modeling-tabular": {
-      "fingerprint": "5c6bc00d45a0ebba",
+      "fingerprint": "2498f125c55a2f52",
       "score": 6
     },
     "ai/tensor-and-pipeline-parallel-inference": {
@@ -950,19 +950,19 @@
       "score": 6
     },
     "blockchain/helios": {
-      "fingerprint": "847fad70fbd709cc",
+      "fingerprint": "c7527af5fb55f33d",
       "score": 6
     },
     "blockchain/impl-hash-commitment": {
-      "fingerprint": "99bd017de3d6cb1e",
+      "fingerprint": "499d6ff09fac2e5f",
       "score": 6
     },
     "blockchain/mdbx-internals": {
-      "fingerprint": "244536d221ef3c7d",
+      "fingerprint": "2740de12a81e2a78",
       "score": 6
     },
     "blockchain/prysm-slot-processing": {
-      "fingerprint": "f40865c264f36a29",
+      "fingerprint": "5fed50930b17e88b",
       "score": 6
     },
     "blockchain/reth-eip1559": {
@@ -970,19 +970,19 @@
       "score": 6
     },
     "blockchain/reth-exex": {
-      "fingerprint": "74976cd545de9cb9",
+      "fingerprint": "5fade46446a46200",
       "score": 6
     },
     "blockchain/reth-trie": {
-      "fingerprint": "9384812175ec4ddd",
+      "fingerprint": "fa21fb0a82dc1f64",
       "score": 6
     },
     "crypto/halo2": {
-      "fingerprint": "6062ed647b779a7b",
+      "fingerprint": "999db0fe4f7c3ad6",
       "score": 6
     },
     "crypto/plonky3": {
-      "fingerprint": "4b30a16c4822d27f",
+      "fingerprint": "675da41d23c3bc8c",
       "score": 6
     },
     "crypto/poseidon-hash": {
@@ -990,7 +990,7 @@
       "score": 6
     },
     "gpu/b300-switchless-network": {
-      "fingerprint": "965712808677889e",
+      "fingerprint": "879951dd0abca29e",
       "score": 6
     },
     "gpu/hw-network": {
@@ -1006,23 +1006,23 @@
       "score": 6
     },
     "isms-aml/aml-fds-deep": {
-      "fingerprint": "dc872bb120159689",
+      "fingerprint": "cf45639b372a9da7",
       "score": 6
     },
     "isms-aml/isms-audit-checklist": {
-      "fingerprint": "8f0b60e9012dde65",
+      "fingerprint": "9c4cbb20ff8cc15a",
       "score": 6
     },
     "isms-aml/isms-privacy-lifecycle": {
-      "fingerprint": "a4b2935f15554c17",
+      "fingerprint": "05a9e9396d79f4dc",
       "score": 6
     },
     "isms-aml/isms-privacy-policy": {
-      "fingerprint": "8f10ad5fc022ccca",
+      "fingerprint": "ce3434ef2473f1c5",
       "score": 6
     },
     "p2p/iroh": {
-      "fingerprint": "7138fb15dcf78525",
+      "fingerprint": "dbf712adacd64e9d",
       "score": 6
     }
   }

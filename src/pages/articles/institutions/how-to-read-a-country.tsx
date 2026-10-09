@@ -124,7 +124,7 @@ export default function Article() {
           <p className="leading-8">인구,1인당 생산액,65세 이상 비중,전력 접근 인구를 나란히 확인해 보세요. 각 값은 2020–2025년 중 가장 최근 관측값입니다.2025년 값과 2023년 값을 같은 해의 차이라고 읽지 않습니다. 전력 접근률이 같아도 정전 시간·산업 요금·접속 대기는 다를 수 있습니다.</p>
         </div>
 <CountryExplorer />
-        <SourceApplication source="UNSD · M49, Countries or Areas와 FAQ" excerpt="for statistical convenience" application="A국을 목록에 대응시킬 때 국가 이름 외에 통계 지역 코드를 기록합니다. 본문 탐색기는 248개 행에 코소보·대만 2개 행을 보태 250개를 보여주며, 주권 승인 목록이라고 부르지 않습니다." />
+        <SourceApplication source="UNSD · M49, Countries or Areas와 FAQ" excerpt="for strictly statistical purposes" application="A국을 목록에 대응시킬 때 국가 이름 외에 통계 지역 코드를 기록합니다. 본문 탐색기는 248개 행에 코소보·대만 2개 행을 보태 250개를 보여주며, 주권 승인 목록이라고 부르지 않습니다." />
         <CitationBlock source="UNSD · M49, Countries or Areas와 FAQ" citeKey={2} href="https://unstats.un.org/unsd/methodology/m49/">목록 248개, FAQ의 별도 통계 코드 412·158. 확인 2026-10-04.</CitationBlock>
         <CitationBlock source="World Bank · API Basic Call Structures" citeKey={3} href="https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures">네 지표의 2020–2025 자료를 조회하고 국가별 마지막 비결측 값을 표시합니다. 소득 구간·대륙 합계는 국가 값에서 제외합니다.</CitationBlock>
         <p data-stage-bridge="comparison" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">포함한 지역과 관측 시점을 화면에서 확인할 수 있습니다. 마지막으로 통계가 이야기의 근거가 되는 조건을 점검합니다.</p>

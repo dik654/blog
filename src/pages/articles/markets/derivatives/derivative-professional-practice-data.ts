@@ -61,7 +61,7 @@ export const bankIrrbbAlmData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "Basel Committee · IRRBB", excerpt: "economic value and earnings-based measures", application: "EVE와 NII를 함께 측정하고 갭·베이시스·옵션 위험을 ALCO 결정에 연결합니다.", citation: "Basel Framework, SRP31 Interest rate risk in the banking book", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/srp/31/inforce/2026-01-01/published/2024-07-16", note: "2026년 1월 시행본의 은행 장부 금리 위험 기준입니다." },
-    { source: "한국금융연수원 · 자산관리사(FP)", excerpt: "금융상품분석 및 투자설계", application: "고객 재무설계의 상품 선택과 은행 자체 장부의 ALM 판단을 구분합니다.", citation: "한국금융연수원, 자산관리사(FP) 자격정보", href: "https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&mobile_yn=Y&p_iQlfn=04&pageName=qualInfo", note: "고객정보·목표에서 금융상품과 파생상품 투자설계로 이어지는 공식 시험 범위입니다." },
+    { source: "한국금융연수원 · 자산관리사(FP)", excerpt: "파생금융상품투자(12)", application: "고객 재무설계의 상품 선택과 은행 자체 장부의 ALM 판단을 구분합니다.", citation: "한국금융연수원, 자산관리사(FP) 자격정보", href: "https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&mobile_yn=Y&p_iQlfn=04&pageName=qualInfo", note: "고객정보·목표에서 금융상품과 파생상품 투자설계로 이어지는 공식 시험 범위입니다. 인용문은 시험과목 '금융자산 투자설계'의 세부 항목(괄호 안은 문항 수)입니다." },
   ],
   review: [
     "예금금리 1%포인트 상승이 순이자 차이를 0.8 줄이는 계산을 설명해 보세요. (답: 1·3절)",
@@ -130,8 +130,8 @@ export const hedgeAccountingData: DerivativeDeepArticleData = {
     { term: "재조정", description: "위험관리 목적을 유지하면서 지정 수량의 비율을 다시 맞추는 절차입니다.", example: "차입이 50억으로 줄면 지정 스왑도 50억에 맞춥니다.", boundary: "목적이 끝난 관계를 억지로 이어 가지 않습니다." },
   ] },
   sources: [
-    { source: "IFRS Foundation · IFRS 9", excerpt: "formal designation and documentation", application: "헤지 시작일의 지정 항목과 효과 요건을 100억 차입 사례에 적용합니다.", citation: "IFRS 9 Financial Instruments, hedge accounting", href: "https://www.ifrs.org/issued-standards/list-of-standards/ifrs-9-financial-instruments/", note: "금융상품 분류·손상·헤지회계를 다루는 IFRS 재단의 표준 페이지입니다." },
-    { source: "IFRS 9 · Rebalancing guidance", excerpt: "adjusting the hedge ratio", application: "차입이 50억으로 줄어 비율이 160%가 된 경우 재조정과 중단을 구분합니다.", citation: "IFRS 9 B6.5.7–B6.5.11", href: "https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2022/issued/part-a/ifrs-9-financial-instruments.pdf?bypass=on", note: "헤지비율 재조정의 조건과 처리 방향을 담은 표준 본문입니다." },
+    { source: "IFRS 9 · 6.4.1(b) 헤지 지정 요건", excerpt: "at the inception of the hedging relationship there is formal designation and documentation of the hedging relationship and the entity’s risk management objective and strategy", application: "헤지 시작일의 지정 항목과 효과 요건을 100억 차입 사례에 적용합니다.", citation: "IFRS 9 paragraph 6.4.1(b) (AASB 9 compiled, December 2022)", href: "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=26", note: "IFRS 재단 표준 소개 페이지에는 이 문장이 없고 전문 PDF는 유료 구독 벽이어서, IFRS 9 문안을 그대로 담은 호주 회계기준위원회의 공개 편집본(AASB 9)으로 조문을 확인했습니다(2026-10-09)." },
+    { source: "IFRS 9 · B6.5.7 재조정", excerpt: "Rebalancing refers to the adjustments made to the designated quantities of the hedged item or the hedging instrument of an already existing hedging relationship for the purpose of maintaining a hedge ratio that complies with the hedge effectiveness requirements.", application: "차입이 50억으로 줄어 비율이 160%가 된 경우 재조정과 중단을 구분합니다.", citation: "IFRS 9 B6.5.7–B6.5.11 (AASB 9 compiled, December 2022)", href: "https://www.aasb.gov.au/admin/file/content105/c9/AASB9_12-14_COMPdec22_01-23.pdf#page=97", note: "헤지비율 재조정의 조건과 처리 방향을 담은 적용지침입니다. IFRS 재단 PDF는 유료 구독 벽이라 같은 문안의 AASB 9 공개 편집본으로 확인했습니다(2026-10-09). B6.5.8은 재조정을 헤지관계의 계속으로 회계처리한다고 정합니다." },
   ],
   review: [
     "금리 1%포인트 상승 때 차입과 스왑 손익을 계산해 보세요. (답: 1·3절)",
@@ -172,7 +172,7 @@ export const derivativesTaxData: DerivativeDeepArticleData = {
     ] },
     { id: "source", level: "5", title: "8. 한국은 과세대상 파생상품 손익을 별도 장부에서 계산합니다", bridge: "국세청 안내의 대상과 신고시점을 사례에 대입합니다.", paragraphs: [
       "국세청 안내는 거주 개인의 일정한 국내외 장내·장외 파생상품 양도소득을 다루고, 파생상품 손익을 다른 자산의 양도소득과 구분해 계산하도록 설명합니다. 신고·납부는 해당 귀속연도의 다음 해 5월이 기본 흐름입니다.",
-      "과세 상품 범위와 한시 세율, 공제는 개정될 수 있습니다. 본문의 12−5=7은 장부 원리를 보이는 계산이며 실제 신고에는 거래연도와 계약 종류에 맞는 최신 법령과 지방세를 확인해야 합니다.",
+      "2026-10-09 확인한 국세청 안내 기준으로 과세 대상은 주가지수 관련 국내 장내 파생상품·ELW·CFD, 해외 장내 파생상품, 주가지수 관련 국내 장외 파생상품 등입니다. 기본세율은 20%이지만 한시 탄력세율 10%가 적용되고, 국내외 파생상품 양도소득을 합쳐 연 250만 원을 공제하며, 신고는 다음 해 5월 1일~31일입니다. (가정) 순손익 7을 700만 원으로 읽으면 과세표준은 700만−250만=450만 원, 양도소득세는 450만×10%=45만 원, 지방소득세(양도소득세의 10%) 4.5만 원을 더해 49.5만 원입니다. 범위·한시 세율·공제는 개정될 수 있으므로 실제 신고에는 거래연도와 계약 종류에 맞는 최신 법령을 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 미국 Section 1256은 연말 평가와 60·40 분류를 함께 둡니다", bridge: "같은 순이익도 인식 방법과 성격이 달라지는 사례를 봅니다.", paragraphs: [
       "미국 국세청 Publication 550은 Section 1256 계약을 과세연도 말에 공정가치로 판 것으로 보아 손익을 인식하는 원칙을 설명합니다. 순손익은 일반적으로 60% 장기와 40% 단기 자본손익으로 나뉩니다.",
@@ -339,8 +339,8 @@ export const derivativesAmlData: DerivativeDeepArticleData = {
     { term: "거래·자금 연결", description: "고객과 실소유자, 은행 입출금, 주문·포지션·손익을 같은 사건으로 묶는 일입니다.", example: "세 시스템의 1,000·20·980 기록을 한 시간줄로 합칩니다.", boundary: "필요한 사람에게만 접근 권한을 줍니다." },
   ] },
   sources: [
-    { source: "FATF · Securities sector risk-based approach", excerpt: "options, futures, swaps", application: "파생상품과 국경 간 고속 거래의 취약성을 고객·자금·거래 연결에 반영합니다.", citation: "FATF, Risk-Based Approach Guidance for the Securities Sector", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Rba-securities-sector.html", note: "증권 부문의 상품 범위와 위험기반 AML 통제를 설명하는 국제 기준 지침입니다." },
-    { source: "금융정보분석원 · 의심거래보고", excerpt: "의심스러운 거래로 판단할 만한 합당한 근거", application: "경보와 담당자의 STR 판단을 나누고 의심 근거와 비밀유지 기록을 남깁니다.", citation: "KoFIU, 의심거래보고제도", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "한국의 STR 판단·보고 흐름을 설명하는 금융정보분석원 공식 자료입니다." },
+    { source: "FATF · Securities sector risk-based approach", excerpt: "Options, futures, swaps, forward rate agreements and any other derivative", application: "파생상품과 국경 간 고속 거래의 취약성을 고객·자금·거래 연결에 반영합니다.", citation: "FATF, Risk-Based Approach Guidance for the Securities Sector", href: "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Rba-securities-sector.html", note: "증권 부문의 상품 범위와 위험기반 AML 통제를 설명하는 국제 기준 지침(2018년 10월)입니다. FATF 사이트는 2026-10-09 자동 조회 403이라, 불가리아 금융감독위원회가 게시한 같은 지침 사본으로 상품 목록 d항 문구를 2차 확인했습니다." },
+    { source: "금융정보분석원 · 의심거래보고", excerpt: "금융거래의 상대방이 자금세탁행위나 공중협박자금조달행위를 하고 있다고 의심되는 합당한 근거가 있는 경우", application: "경보와 담당자의 STR 판단을 나누고 의심 근거와 비밀유지 기록을 남깁니다.", citation: "KoFIU, 의심거래보고제도", href: "https://www.kofiu.go.kr/kor/policy/amls03.do", note: "한국의 STR 판단·보고 흐름을 설명하는 금융정보분석원 공식 자료입니다." },
   ],
   review: [
     "예상 100과 입금 1,000의 차이가 왜 자동 STR이 아닌지 설명하세요. (답: 3·8절)",
@@ -384,7 +384,7 @@ export const disputesData: DerivativeDeepArticleData = {
       "이는 모든 분쟁에서 같은 서류가 반드시 필요하다는 목록이 아닙니다. 주장과 상품에 맞는 자료를 내되, 회사에 유리한 화면만 골라내지 않고 사건 전체를 재구성할 수 있어야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 국내 자격 과정은 분쟁 예방과 주요 사례를 별도 과목으로 둡니다", bridge: "상품 지식이 민원 처리를 대신하지 못하는 이유를 봅니다.", paragraphs: [
-      "금융투자교육원의 파생상품투자권유자문인력 과정은 직무윤리와 법규뿐 아니라 분쟁 예방, 제재와 주요 분쟁사례를 별도 시간으로 다룹니다. 판매자는 지급 구조를 설명할 지식과 고객의 이의를 증거로 다룰 절차를 함께 알아야 합니다.",
+      "금융투자교육원의 파생상품투자권유자문인력 과정은 직무윤리와 법규 과목 옆에 분쟁조정 과목을 2시간 따로 두고, 그 안에서 분쟁조정시스템과 분쟁조정사례를 다룹니다(2026-10-09 과정표 확인). 판매자는 지급 구조를 설명할 지식과 고객의 이의를 증거로 다룰 절차를 함께 알아야 합니다.",
       "국내 사건은 계약 금융회사와 상품에 맞는 내부 민원, 금융감독원 분쟁조정, 거래소·협회 절차와 소송 가능성을 확인합니다. 해외 옴부즈맨의 결과를 국내 관할에 그대로 적용하지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 손실이 컸다는 사실도 서명했다는 사실도 결론은 아닙니다", bridge: "성과와 절차를 함께 보되 어느 한쪽으로 단정하지 않습니다.", paragraphs: [
@@ -409,7 +409,7 @@ export const disputesData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "Financial Ombudsman Service · Business evidence", excerpt: "information from financial businesses", application: "CFD 가격·적정성·증거금 분쟁에서 약관, 경고, 가격 원천과 헤지 기록을 사건 시간줄에 놓습니다.", citation: "UK Financial Ombudsman Service, Information from financial businesses", href: "https://www.financial-ombudsman.org.uk/businesses/resolving-complaint/information-from-financial-businesses", note: "금융 민원 조사에서 회사에 요구할 수 있는 자료를 안내하는 공식 페이지입니다." },
-    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "분쟁예방 및 제재와 주요 분쟁사례", application: "상품 설명과 별도로 민원 예방·제재·사례 학습이 필요한 이유를 분쟁 흐름에 반영합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력 등록교육", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "윤리·법규·세제·AML·분쟁과 상품 지식을 함께 다루는 공식 과정표입니다." },
+    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "분쟁조정 · 분쟁조정시스템 · 분쟁조정사례", application: "상품 설명과 별도로 분쟁조정 절차와 사례 학습이 필요한 이유를 분쟁 흐름에 반영합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력 등록교육", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "윤리·법규·세제·AML·분쟁조정과 상품 지식을 함께 다루는 공식 과정표입니다. 인용문은 과정표 2번 과목(분쟁조정, 2시간)의 과목명과 세부 항목 두 칸을 · 로 이어 옮긴 것이며, 별도의 분쟁예방·제재 과목은 과정표에 없습니다(2026-10-09 확인)." },
   ],
   review: [
     "자금 100, 손실 30, 필요 증거금 80에서 부족액을 계산하세요. (답: 1·3절)",

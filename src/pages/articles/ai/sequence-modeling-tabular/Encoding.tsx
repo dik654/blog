@@ -18,9 +18,10 @@ export default function Encoding() {
         question="한 event의 종류·속성·순서·시간 간격을 하나의 d차원 token으로 어떻게 만들까?"
         idea={<>각 신호를 d차원으로 변환한 뒤 같은 좌표계에서 더하는 한 가지 설계입니다. Concatenation을 쓴다면 뒤에 projection이 필요하며, 어느 쪽이든 신호별 source와 단위가 명확해야 합니다.</>}
         formula={String.raw`\begin{aligned}z_j={}&E_{\mathrm{type}}[a_j]+W_{\mathrm{num}}u_j\\&+p_j+g_{\psi}(\Delta t_j),\\z_j\in{}&\mathbb R^d.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}z_j={}&E_{\mathrm{type}}[\underbrace{a_j}_{\text{event type 계산}}]+W_{\mathrm{num}}u_j\\&+p_j+g_{\psi}(\Delta t_j),\\z_j\in{}&\mathbb R^d.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}z_j={}&\underbrace{E_{\mathrm{type}}[a_j]}_{\text{event 종류}}+\underbrace{W_{\mathrm{num}}u_j}_{\text{amount 등 수치}}\\&+\underbrace{p_j}_{\text{몇 번째인가}}+\underbrace{g_{\psi}(\Delta t_j)}_{\text{얼마나 흘렀나}},\\z_j\in{}&\underbrace{\mathbb R^d}_{\text{같은 hidden width}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`a_j`, annotation: ["event type이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 신호를 d차원으로 변환한 뒤 같은 좌표계에서 더하는 한","가지 설계입니다."] },
+          { expression: String.raw`E_{\mathrm{type}}[a_j]+W_{\mathrm{num}}u_j`, annotation: ["view·cart·purchase는 embedding 조회,", "amount 같은 수치는 projection으로", "같은 d차원에 맞춥니다"] },
+          { expression: String.raw`p_j+g_{\psi}(\Delta t_j)`, annotation: ["position 3이라는 순번과 14일 경과는", "irregular log에서 서로를 대신 못 해", "두 신호를 따로 더합니다"] },
         ]}
         terms={[
           { symbol: "a_j", name: "event type", description: "View·cart·purchase처럼 j번째 event의 categorical action ID입니다." },

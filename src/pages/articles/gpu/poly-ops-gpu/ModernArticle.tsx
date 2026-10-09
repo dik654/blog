@@ -29,10 +29,12 @@ export default function ModernPolyOpsGpuArticle() {
             coefficient별 곱일 뿐입니다. Domain root와 coset generator가 다르면 evaluation form끼리도 호환되지 않습니다.
           </p>
       <ExplainedFormula question="Polynomial buffer artifact를 어떤 identity로 구분할까?" idea={<>값 digest뿐 아니라 field·form·domain·order·generation을 묶어 같은 길이의 다른 의미를 분리합니다.</>} formula={String.raw`A=H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))`}
-      annotatedFormula={String.raw`A=\underbrace{H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))}_{\text{Domain identity 계산}}`}
+      annotatedFormula={String.raw`A=H(\underbrace{\mathrm{field}\|\mathrm{form}}_{\text{어느 field·표현}}\|\underbrace{N\|\mathrm{domain}\|\mathrm{order}}_{\text{길이·domain·순서}}\|\underbrace{\mathrm{gen}}_{\text{proof attempt}}\|\underbrace{H(\mathrm{bytes})}_{\text{실제 값}})`}
       operations={[
-        { expression: String.raw`H(\mathrm{field}\|\mathrm{form}\|N\|\mathrm{domain}\|\mathrm{order}\|\mathrm{gen}\|H(\mathrm{bytes}))`, annotation: ["Domain identity이(가) 식의 결과에 기여하는","방식을 계산합니다.","값 digest뿐 아니라","field·form·domain·order·generation을"] },
-      ]} terms={[
+  { expression: String.raw`\mathrm{field}\|\mathrm{form}`, annotation: ["같은 bytes라도 coefficient·evaluation은","다른 artifact가 되도록 form을 넣습니다"] },
+  { expression: String.raw`N\|\mathrm{domain}\|\mathrm{order}`, annotation: ["root·coset과 natural/bit-reversed","순서가 다르면 evaluation끼리도 비호환"] },
+  { expression: String.raw`H(\mathrm{bytes})`, annotation: ["payload digest를 마지막에 묶어","zero-heavy fixture의 표현 버그를 드러냅니다"] },
+]} terms={[
         {symbol:"A",name:"Artifact identity",description:"Kernel input/output receipt에 저장하는 digest입니다."},
         {symbol:"H",name:"Collision-resistant hash",description:"Metadata와 bytes를 길이 구분 encoding으로 묶는 함수입니다."},
         {symbol:"field",name:"Field identity",description:"Modulus와 internal representation revision입니다."},
@@ -48,10 +50,11 @@ export default function ModernPolyOpsGpuArticle() {
     <section id="coset-plan" className="space-y-6">
       <header><p className="text-sm font-semibold text-primary">02 · Coset NTT</p><h2 className="mt-2 text-2xl font-bold">Coefficient를 g의 거듭제곱으로 twist한 뒤 NTT하면 coset에서 평가된다</h2></header>
       <ExplainedFormula question="왜 coefficient별 g^i scaling이 f(gω^j)를 만들까?" idea={<>f(gX)의 coefficient는 a_i g^i이므로, 이 새 polynomial을 ω-domain에서 NTT하면 원래 f의 coset evaluations가 됩니다.</>} formula={String.raw`\tilde a_i=a_i g^i,\qquad \operatorname{NTT}_{\omega}(\tilde a)_j=\sum_{i=0}^{N-1}a_i(g\omega^j)^i=f(g\omega^j)`}
-      annotatedFormula={String.raw`\tilde a_i=\underbrace{a_i g^i,\qquad \operatorname{NTT}_{\omega}(\tilde a)_j=\sum_{i=0}^{N-1}a_i(g\omega^j)^i=f(g\omega^j)}_{\text{Twisted coefficient 계산}}`}
+      annotatedFormula={String.raw`\underbrace{\tilde a_i=a_i g^i}_{\text{계수에 g 거듭제곱 곱}},\qquad \operatorname{NTT}_{\omega}(\tilde a)_j=\underbrace{\sum_{i=0}^{N-1}a_i(g\omega^j)^i}_{\text{coset 점에서 평가}}=f(g\omega^j)`}
       operations={[
-        { expression: String.raw`a_i g^i,\qquad \operatorname{NTT}_{\omega}(\tilde a)_j=\sum_{i=0}^{N-1}a_i(g\omega^j)^i=f(g\omega^j)`, annotation: ["Twisted coefficient이(가) 식의 결과에","기여하는 방식을 계산합니다.","f(gX)의 coefficient는 a_i g^i이므로, 이","새 polynomial을 ω-domain에서 NTT하면 원래"] },
-      ]} terms={[
+  { expression: String.raw`\tilde a_i=a_i g^i`, annotation: ["f(gX)의 계수가 a_i g^i이므로","평범한 NTT 입력으로 바꿉니다","f=1+2X, g=3 → (1, 6)"] },
+  { expression: String.raw`\sum_{i=0}^{N-1}a_i(g\omega^j)^i`, annotation: ["ω-domain NTT가 곧 coset gΩ 위의","원래 f 평가값이 됩니다: f(3ω^j)"] },
+]} terms={[
         {symbol:"a_i",name:"Coefficient",description:"f(X)=Σa_iX^i의 i번째 coefficient입니다."},
         {symbol:"i",name:"Coefficient index",description:"0부터 N−1까지 monomial degree입니다."},
         {symbol:"g",name:"Coset generator",description:"Base subgroup domain을 g배 이동하는 non-zero field element입니다."},
@@ -77,10 +80,12 @@ export default function ModernPolyOpsGpuArticle() {
             crossover를 측정한 값이 근거입니다.
           </p>
       <ExplainedFormula question="Horner evaluation의 순차 dependency는 어디에 있을까?" idea={<>가장 높은 coefficient에서 시작해 이전 accumulator에 z를 곱하고 다음 coefficient를 더합니다.</>} formula={String.raw`h_{d}=a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0`}
-      annotatedFormula={String.raw`h_{d}=\underbrace{a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0}_{\text{Evaluation 계산}}`}
+      annotatedFormula={String.raw`\underbrace{h_{d}=a_d}_{\text{최고차 계수에서 시작}},\qquad \underbrace{h_i=h_{i+1}z+a_i}_{\text{앞 결과를 소비}}\;(i=d-1,\ldots,0),\qquad \underbrace{f(z)=h_0}_{\text{마지막 누산값}}`}
       operations={[
-        { expression: String.raw`a_d,\qquad h_i=h_{i+1}z+a_i\;(i=d-1,\ldots,0),\qquad f(z)=h_0`, annotation: ["Evaluation이(가) 식의 결과에 기여하는 방식을","계산합니다.","가장 높은 coefficient에서 시작해 이전","accumulator에 z를 곱하고 다음"] },
-      ]} terms={[
+  { expression: String.raw`h_{d}=a_d`, annotation: ["가장 높은 coefficient로 누산을 시작","f=1+2X+3X²면 h₂=3"] },
+  { expression: String.raw`h_i=h_{i+1}z+a_i`, annotation: ["h_{i+1}이 끝나야 h_i를 계산하는","순차 dependency입니다","z=2: h₁=3·2+2=8"] },
+  { expression: String.raw`f(z)=h_0`, annotation: ["h₀=8·2+1=17이 f(2)","coefficient마다 thread를 주면 깨짐"] },
+]} terms={[
         {symbol:"d",name:"Polynomial degree",description:"가장 높은 non-zero coefficient index입니다."},
         {symbol:"a_i",name:"Coefficient",description:"Degree i 항의 field coefficient입니다."},
         {symbol:"z",name:"Evaluation point",description:"f(z)를 계산할 field element입니다."},
@@ -89,10 +94,12 @@ export default function ModernPolyOpsGpuArticle() {
         {symbol:"f(z)",name:"Evaluation",description:"마지막 accumulator h₀입니다."},
       ]} assumptions={["Coefficient는 같은 field·canonical degree order에 있고 overflow가 없는 field operations를 사용합니다.","한 recurrence의 h_i는 h_{i+1} 완료 뒤에만 계산하며 batch 간 독립성과 혼동하지 않습니다."]} interpretation="f=1+2X+3X²,z=2이면 h2=3,h1=8,h0=17입니다. h0를 h1과 동시에 원래 a만으로 계산할 수 없습니다." />
       <ExplainedFormula question="Synthetic division 결과와 remainder를 어떻게 동시에 검사할까?" idea={<>Horner와 같은 descending recurrence가 quotient coefficients를 만들고 마지막 값은 factor theorem의 remainder f(z)가 됩니다.</>} formula={String.raw`q_{d-1}=a_d,\quad q_{i-1}=a_i+zq_i,\quad r=a_0+zq_0,\quad f(X)=(X-z)q(X)+r`}
-      annotatedFormula={String.raw`q_{d-1}=\underbrace{a_d,\quad q_{i-1}=a_i+zq_i,\quad r=a_0+zq_0,\quad f(X)=(X-z)q(X)+r}_{\text{Dividend 계산}}`}
+      annotatedFormula={String.raw`\underbrace{q_{d-1}=a_d,\quad q_{i-1}=a_i+zq_i}_{\text{Horner식 quotient 생성}},\quad \underbrace{r=a_0+zq_0}_{\text{remainder = f(z)}},\quad \underbrace{f(X)=(X-z)q(X)+r}_{\text{검산 identity}}`}
       operations={[
-        { expression: String.raw`a_d,\quad q_{i-1}=a_i+zq_i,\quad r=a_0+zq_0,\quad f(X)=(X-z)q(X)+r`, annotation: ["Dividend이(가) 식의 결과에 기여하는 방식을","계산합니다.","Horner와 같은 descending recurrence가","quotient coefficients를 만들고 마지막 값은"] },
-      ]} terms={[
+  { expression: String.raw`q_{i-1}=a_i+zq_i`, annotation: ["최고차 a_d에서 내려오며 quotient 계수를","하나씩 만듭니다","z=2: q₁=3, q₀=2+2·3=8"] },
+  { expression: String.raw`r=a_0+zq_0`, annotation: ["마지막 값이 remainder f(z)","1+2·8=17, opening claim y와 비교"] },
+  { expression: String.raw`f(X)=(X-z)q(X)+r`, annotation: ["(X−2)(3X+8)+17이 f와 같아야 통과","r≠y면 exact quotient가 아니므로 error"] },
+]} terms={[
         {symbol:"q_i",name:"Quotient coefficient",description:"q(X)의 degree i coefficient입니다."},
         {symbol:"a_i",name:"Input coefficient",description:"f(X)의 degree i coefficient입니다."},
         {symbol:"z",name:"Divisor root",description:"Divisor X−z의 field element입니다."},
@@ -112,10 +119,11 @@ export default function ModernPolyOpsGpuArticle() {
             f=(X−z)q+r identity를 먼저 맞춥니다. 그다음 H2D·twist·NTT·pointwise·INTT·recurrence·D2H를 분리 측정합니다.
           </p>
       <ExplainedFormula question="Polynomial kernel 후보의 useful throughput을 어떻게 기록할까?" idea={<>검증된 logical elements만 세고 전체 pipeline 및 kernel-chain 시간을 별도로 둡니다.</>} formula={String.raw`R_{elem}=\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`}
-      annotatedFormula={String.raw`R_{elem}=\underbrace{\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}}_{\text{기준량당 비율}}`}
+      annotatedFormula={String.raw`R_{elem}=\frac{\underbrace{B\,N_{valid}}_{\text{검증된 element}}}{\underbrace{t_{kernel}}_{\text{kernel chain}}},\qquad S=\frac{\underbrace{T_{reference}^{e2e}}_{\text{reference 전체}}}{\underbrace{T_{candidate}^{e2e}}_{\text{전송 포함 GPU 전체}}}`}
       operations={[
-        { expression: String.raw`\frac{B\,N_{valid}}{t_{kernel}},\qquad S=\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","검증된 logical elements만 세고 전체","pipeline 및 kernel-chain 시간을 별도로","둡니다."] },
-      ]} terms={[
+  { expression: String.raw`\frac{B\,N_{valid}}{t_{kernel}}`, annotation: ["reference와 일치한 element만 batch만큼 세어","kernel chain 시간으로 나눕니다","4×1024 / 2ms = 2,048,000 /s"] },
+  { expression: String.raw`\frac{T_{reference}^{e2e}}{T_{candidate}^{e2e}}`, annotation: ["transfer·sync·fallback을 포함한 별도 비율","element/s로 proof 처리량 주장 금지"] },
+]} terms={[
         {symbol:"R_{elem}",name:"Useful element rate",description:"초당 검증된 polynomial elements입니다."},
         {symbol:"B",name:"Batch count",description:"독립 polynomials 또는 evaluation jobs 수입니다."},
         {symbol:"N_{valid}",name:"Valid elements per job",description:"Reference와 일치한 logical length입니다."},

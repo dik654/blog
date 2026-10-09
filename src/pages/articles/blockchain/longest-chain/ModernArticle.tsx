@@ -47,10 +47,11 @@ export default function ModernLongestChainArticle() {
           question="서로 다른 difficulty의 block을 block 개수가 아닌 하나의 누적 work 값으로 어떻게 비교하는가?"
           idea={<>Target 이하의 hash가 나올 확률의 역수를 block work로 사용하고, genesis부터 head까지 합합니다. 이해를 위한 8-bit toy hash에서 target 63은 floor(256/64)=4 work, target 15는 floor(256/16)=16 work입니다. 따라서 4-work block 두 개보다 16-work block 하나가 더 무겁습니다.</>}
           formula={String.raw`w(T)=\left\lfloor\frac{2^{256}}{T+1}\right\rfloor,\qquad W(B)=\sum_{b\preceq B}w(T_b)`}
-          annotatedFormula={String.raw`w(T)=\underbrace{\left\lfloor\frac{2^{256}}{T+1}\right\rfloor,\qquad W(B)=\sum_{b\preceq B}w(T_b)}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`w(T)=\underbrace{\left\lfloor\frac{2^{256}}{T+1}\right\rfloor}_{\text{성공 확률의 역수}},\qquad W(B)=\underbrace{\sum_{b\preceq B}w(T_b)}_{\text{누적 chainwork}}`}
           operations={[
-            { expression: String.raw`\left\lfloor\frac{2^{256}}{T+1}\right\rfloor,\qquad W(B)=\sum_{b\preceq B}w(T_b)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Target 이하의 hash가 나올 확률의 역수를 block","work로 사용하고, genesis부터 head까지 합합니다."] },
-          ]}
+          { expression: String.raw`\left\lfloor\frac{2^{256}}{T+1}\right\rfloor`, annotation: ["hash가 target 이하일 확률의 역수를","block work로 씁니다","8-bit toy: target 63 → 4, 15 → 16"] },
+          { expression: String.raw`\sum_{b\preceq B}w(T_b)`, annotation: ["head까지 조상 block work를 더해 비교합니다","4-work 둘(8)보다 16-work 하나가","무거우니 block 개수로 세면 안 됩니다"] },
+        ]}
           terms={[
             { symbol: "T", name: "PoW target", description: "해당 block header hash가 만족해야 하는 inclusive upper bound입니다." },
             { symbol: "w(T)", name: "Block work", description: "그 target에서 한 valid block이 나타내는 정수 expected work입니다." },
@@ -88,10 +89,11 @@ export default function ModernLongestChainArticle() {
           question="공격자가 이미 z block만큼 뒤처진 시점부터 언젠가 동률에 도달할 확률은 얼마인가?"
           idea={<>매 다음 block마다 공격자가 한 칸 따라붙을 확률 q, 정직한 chain이 한 칸 더 멀어질 확률 p인 biased random walk로 봅니다. q&lt;p이면 z칸 deficit에서 0에 닿을 확률은 (q/p)의 z제곱입니다. q=0.1, p=0.9, z=6이면 약 0.00000188, 즉 0.000188%입니다.</>}
           formula={String.raw`P_{catch}(z)=\left(\frac{q}{p}\right)^z\quad(q<p),\qquad \left(\frac{0.1}{0.9}\right)^6\approx1.88\times10^{-6}`}
-          annotatedFormula={String.raw`P_{catch}(z)=\underbrace{\left(\frac{q}{p}\right)^z\quad(q<p),\qquad \left(\frac{0.1}{0.9}\right)^6\approx1.88\times10^{-6}}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`P_{catch}(z)=\underbrace{\left(\frac{q}{p}\right)^z}_{\text{z칸 deficit을 따라잡음}}\quad\underbrace{(q<p)}_{\text{공격자가 열세}},\qquad \underbrace{\left(\frac{0.1}{0.9}\right)^6\approx1.88\times10^{-6}}_{\text{q=0.1, z=6 대입}}`}
           operations={[
-            { expression: String.raw`\left(\frac{q}{p}\right)^z\quad(q<p),\qquad \left(\frac{0.1}{0.9}\right)^6\approx1.88\times10^{-6}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","매 다음 block마다"] },
-          ]}
+          { expression: String.raw`\left(\frac{q}{p}\right)^z`, annotation: ["한 칸 따라붙을 확률 q와 멀어질 확률 p의","비를 deficit z만큼 거듭제곱합니다"] },
+          { expression: String.raw`\left(\frac{0.1}{0.9}\right)^6\approx1.88\times10^{-6}`, annotation: ["q=0.1, z=6이면 약 0.000188%입니다","6 confirmation의 double-spend 확률과는","입력·목적이 다른 값입니다"] },
+        ]}
           terms={[
             { symbol: "q", name: "Attacker share", description: "공격자가 다음 work event를 얻는다고 모델링한 hash share입니다." },
             { symbol: "p", name: "Honest share", description: "정직한 network share이며 단순 two-party model에서는 p=1-q입니다." },

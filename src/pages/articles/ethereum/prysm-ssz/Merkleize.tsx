@@ -31,10 +31,10 @@ export default function Merkleize({
           </>
         }
         formula={String.raw`\begin{aligned}h_i^{(k+1)}&=H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)\\d&=\lceil\log_2L\rceil\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}h_i^{(k+1)}&=\underbrace{H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)}_{\text{허용 경계 판정}}\\d&=\underbrace{\lceil\log_2L\rceil}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}h_i^{(k+1)}&=\underbrace{H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)}_{\text{두 child hash 결합}}\\d&=\underbrace{\lceil\log_2L\rceil}_{\text{root까지 층 수}}\end{aligned}`}
         operations={[
-          { expression: String.raw`H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 parent는 왼쪽과 오른쪽 child의 32-byte","hash를 순서대로 결합합니다."] },
-          { expression: String.raw`\lceil\log_2L\rceil`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 parent는 왼쪽과 오른쪽 child의 32-byte","hash를 순서대로 결합합니다."] },
+          { expression: String.raw`H\!\left(h_{2i}^{(k)}\|h_{2i+1}^{(k)}\right)`, annotation: ["level k의 왼쪽·오른쪽 32-byte child를","순서대로 붙여 hash → level k+1 parent","바뀐 leaf의 ancestor만 다시 계산"] },
+          { expression: String.raw`\lceil\log_2L\rceil`, annotation: ["leaf L개를 둘씩 묶어 root까지 가는 층 수","L=4면 depth 2","leaf 포함 최대 3개 값만 새로 계산"] },
         ]}
         terms={[
           {

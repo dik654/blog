@@ -89,9 +89,10 @@ export default function RLApproach() {
           </>
         }
         formula={String.raw`R(x,y)=\sum_{k=1}^{K}w_k r_k(x,y)`}
-        annotatedFormula={String.raw`R(x,y)=\underbrace{\sum_{k=1}^{K}w_k r_k(x,y)}_{\text{sub-reward 계산}}`}
+        annotatedFormula={String.raw`\underbrace{R(x,y)}_{\text{policy가 받는 총점}}=\sum_{k=1}^{K}\underbrace{w_k}_{\text{기준별 비중}}\underbrace{r_k(x,y)}_{\text{정확도·형식·언어·길이}}`}
         operations={[
-          { expression: String.raw`\sum_{k=1}^{K}w_k r_k(x,y)`, annotation: ["sub-reward이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 기준을 독립된 sub-reward로 계산하고 중요도","weight를 곱해 더합니다."] },
+          { expression: String.raw`r_k(x,y)`, annotation: ["accuracy·format·language·overlong을", "각자 독립된 sub-reward로 채점", "raw 값을 따로 남겨 원인 진단"] },
+          { expression: String.raw`\sum_{k=1}^{K}w_k r_k(x,y)`, annotation: ["논문 snapshot은 w_acc=1.0, 나머지 0.2", "계산이 틀리면 형식이 완벽해도", "accuracy 1.0을 얻지 못합니다"] },
         ]}
         terms={[
           { symbol: "x", name: "query", description: "한국어 질문과 번역 예외처럼 model이 지켜야 할 요청입니다." },
@@ -126,9 +127,10 @@ export default function RLApproach() {
           </>
         }
         formula={String.raw`\bar r=\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r`}
-        annotatedFormula={String.raw`\bar r=\underbrace{\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{\bar r=\frac{1}{G}\sum_{j=1}^{G}r_j}_{\text{같은 질문 G개 평균}},\qquad \underbrace{A_i=r_i-\bar r}_{\text{평균 대비 상대 점수}}`}
         operations={[
-          { expression: String.raw`\frac{1}{G}\sum_{j=1}^{G}r_j,\qquad A_i=r_i-\bar r`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Group의 mean reward를 기준선으로 두고","candidate reward에서 뺍니다."] },
+          { expression: String.raw`\frac{1}{G}\sum_{j=1}^{G}r_j`, annotation: ["같은 query에서 뽑은 candidate의", "평균 reward가 기준선 (논문 G=12)", "[1.0, 0.7, 0.4]면 평균 0.7"] },
+          { expression: String.raw`A_i=r_i-\bar r`, annotation: ["평균보다 좋으면 양수, 나쁘면 음수", "[0.3, 0, −0.3]: probability를 올리거나", "내리는 방향 (표준편차로 안 나눔)"] },
         ]}
         terms={[
           { symbol: "G", name: "group size", description: "같은 query에서 sampling한 candidate 수이며 논문 설정에서는 12입니다." },

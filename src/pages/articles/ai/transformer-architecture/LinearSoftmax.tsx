@@ -38,11 +38,11 @@ export default function LinearSoftmax() {
           </>
         }
         formula={String.raw`\begin{aligned}z_t&=h_tW_{\mathrm{vocab}}+b\\p_t&=\operatorname{softmax}(z_t)\\\mathcal L&=-\sum_t m_t\log p_t(y_t^*)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}z_t&=\underbrace{h_tW_{\mathrm{vocab}}+b}_{\text{final hidden state 계산}}\\p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{선택 비율 정규화}}\\\mathcal L&=\underbrace{-\sum_t m_t\log p_t(y_t^*)}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{z_t}_{\text{vocabulary별 score}}&=\underbrace{h_t}_{\text{위치 t 최종 표현}}W_{\mathrm{vocab}}+b\\p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{다음 token 분포}}\\\mathcal L&=-\sum_t \underbrace{m_t}_{\text{학습할 target만 1}}\log \underbrace{p_t(y_t^*)}_{\text{실제 다음 token 확률}}\end{aligned}`}
         operations={[
-          { expression: String.raw`h_tW_{\mathrm{vocab}}+b`, annotation: ["final hidden state이(가) 식의 결과에 기여하는","방식을 계산합니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y"] },
-          { expression: String.raw`\operatorname{softmax}(z_t)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y","t가 주어진 상태에서 실제 다음 token y*t의"] },
-          { expression: String.raw`-\sum_t m_t\log p_t(y_t^*)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Position t의 hidden state로","vocabulary logits를 만들고, 이전 token y","t가 주어진 상태에서 실제 다음 token y*t의"] },
+          { expression: String.raw`h_tW_{\mathrm{vocab}}+b`, annotation: ["position t의 d_model 표현을", "vocabulary 크기의 logit으로 투영"] },
+          { expression: String.raw`\operatorname{softmax}(z_t)`, annotation: ["y<t가 주어졌을 때 다음 token으로", "올 후보들의 합이 1인 분포"] },
+          { expression: String.raw`-\sum_t m_t\log p_t(y_t^*)`, annotation: ["label shift한 정답 y*_t의 NLL을 합산", "padding·prompt는 loss mask로 제외", "attention mask와는 다른 mask"] },
         ]}
         terms={[
           {

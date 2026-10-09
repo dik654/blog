@@ -340,7 +340,7 @@ export const otcLifecycleData: DerivativeDeepArticleData = {
     { term: "CVA", description: "상대방의 잠재 부도로 생길 기대손실을 파생상품의 무부도 가치에서 조정한 값입니다.", example: "노출 10×부도확률 2%×손실률 60%=0.12의 단순 근사입니다.", boundary: "규제·회계 목적과 모형 입력에 따라 계산 범위가 다를 수 있습니다." },
   ] },
   sources: [
-    { source: "ISDA · Master Agreement Close-out Netting Example", excerpt: "single net payment", application: "네 거래의 +9와 −7을 종료 때 한 금액 +2로 줄이는 법률·평가 절차에 적용합니다.", citation: "ISDA, Legal Guidelines for Smart Derivatives Contracts: Master Agreement", href: "https://www.isda.org/a/23iME/Legal-Guidelines-for-Smart-Derivatives-Contracts-ISDA-Master-Agreement.pdf", note: "기본계약의 종료사건, 거래별 종료가치와 일괄상계의 숫자 사례를 설명하는 ISDA 지침입니다." },
+    { source: "ISDA · Master Agreement Close-out Netting Example", excerpt: "payment of the single net amount discharges the payment obligations", application: "네 거래의 +9와 −7을 종료 때 한 금액 +2로 줄이는 법률·평가 절차에 적용합니다.", citation: "ISDA, Legal Guidelines for Smart Derivatives Contracts: Master Agreement", href: "https://www.isda.org/a/23iME/Legal-Guidelines-for-Smart-Derivatives-Contracts-ISDA-Master-Agreement.pdf", note: "기본계약의 종료사건, 거래별 종료가치와 일괄상계의 숫자 사례를 설명하는 ISDA 지침입니다." },
     { source: "Basel Committee · CVA Framework", excerpt: "potential default of the counterparty", application: "현재 순노출·담보 계산 뒤 미래 양의 노출과 상대 신용을 가격 조정으로 연결합니다.", citation: "Basel Framework, MAR50 Credit Valuation Adjustment", href: "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2023-01-01/published/2020-07-08", note: "CVA와 CVA 위험의 정의, 대상 거래와 주요 위험요인을 정한 현재 바젤 기준입니다." },
   ],
   review: [
@@ -410,7 +410,7 @@ export const marketRiskData: DerivativeDeepArticleData = {
     { term: "스트레스 시험과 모형 위험", description: "지정한 극단 충격을 재평가하고 가정·데이터·구현이 틀릴 가능성까지 관리하는 과정입니다.", example: "복합 충격 손실 18을 자본과 현금 한도에 비교합니다.", boundary: "큰 숫자 하나를 만들거나 미래 위기의 확률을 맞히는 절차는 아닙니다." },
   ] },
   sources: [
-    { source: "Basel Framework · Expected Shortfall", excerpt: "97.5th percentile, one-tailed", application: "설명용 80% ES와 실제 은행 시장위험 기준의 신뢰수준·유동성 기간을 구분합니다.", citation: "Basel Framework, MAR33 Internal Models Approach", href: "https://www.bis.org/baselframework/BaselFramework.pdf", note: "시장위험 내부모형의 예상손실 계산, 신뢰수준과 유동성 기간을 정한 현재 바젤 기준입니다." },
+    { source: "Basel Framework · Expected Shortfall", excerpt: "In calculating ES, a bank must use a 97.5th percentile, one-tailed confidence level.", application: "설명용 80% ES와 실제 은행 시장위험 기준의 신뢰수준·유동성 기간을 구분합니다.", citation: "Basel Framework, MAR33.3 Internal Models Approach", href: "https://www.bis.org/basel_framework/chapter/MAR/33.htm?inforce=20230101&published=20200327", note: "시장위험 내부모형의 예상손실 계산(MAR33.3), 유동성 기간(MAR33.4·33.12)을 정한 현재 바젤 기준입니다. 이전에 인용한 통합 PDF(BaselFramework.pdf)는 2026-10-09 404라 장 페이지로 바꿨습니다." },
     { source: "Basel Committee · Stress Testing Principles", excerpt: "objectives, governance, policies, processes", application: "스트레스 손실 18을 계산에서 끝내지 않고 검토·한도·행동·문서화로 연결합니다.", citation: "Basel Committee on Banking Supervision, Stress Testing Principles", href: "https://www.bis.org/publications/201810-guidelines-stress-testing-principles", note: "은행과 감독당국의 스트레스 시험 목표, 지배구조, 방법론, 자원과 사용 원칙을 정리한 현행 지침입니다." },
   ],
   review: [

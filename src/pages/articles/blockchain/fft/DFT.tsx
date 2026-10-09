@@ -16,9 +16,10 @@ export default function DFT() {
         question="계수 벡터를 roots-of-unity 평가값으로 어떻게 바꿀까요?"
         idea="k번째 행에는 평가점 ωᵏ의 0승부터 n−1승까지를 놓습니다. 각 행과 coefficient vector의 dot product가 f(ωᵏ)입니다."
         formula={String.raw`y_k=f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}`}
-        annotatedFormula={String.raw`y_k=\underbrace{f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}}_{\text{primitive n-th root 계산}}`}
+        annotatedFormula={String.raw`\underbrace{y_k}_{\text{k번째 평가값}}=f(\underbrace{\omega^k}_{\text{k번째 평가점}})=\sum_{j=0}^{n-1}\underbrace{a_j\omega^{jk}}_{\text{계수×행 entry}},\qquad \mathbf y=\underbrace{W}_{\text{NTT matrix}}\mathbf a,\ W_{k,j}=\omega^{kj}`}
         operations={[
-          { expression: String.raw`f(\omega^k)=\sum_{j=0}^{n-1}a_j\omega^{jk},\qquad \mathbf y=W\mathbf a,\ W_{k,j}=\omega^{kj}`, annotation: ["primitive n-th root이(가) 식의 결과에","기여하는 방식을 계산합니다.","k번째 행에는 평가점 ωᵏ의 0승부터 n−1승까지를 놓습니다."] },
+          { expression: String.raw`\sum_{j=0}^{n-1}a_j\omega^{jk}`, annotation: ["k행의 ωᵏ 거듭제곱과 계수를 곱해 더함","F₁₇, ω=4, f=1+2x+3x²+4x³이면","k=0 행은 1+2+3+4=10"] },
+          { expression: String.raw`\mathbf y=W\mathbf a`, annotation: ["n×n Vandermonde 행렬 곱 한 번","n=4면 entry 16개를 직접 계산","출력은 [10,7,15,6]"] },
         ]}
         terms={[
           {

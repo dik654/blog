@@ -29,7 +29,7 @@ export default function CellArchitecture() {
         question="마지막 LSTM state에서 H개 미래 값을 한 번에 어떻게 출력할까?"
         idea={<>Direct multi-output head는 마지막 hidden state를 H×Dᵧ개의 값으로 투영한 뒤 horizon 축으로 reshape합니다. Recursive decoder와 달리 앞선 예측을 다음 입력으로 되먹이지 않습니다.</>}
         formula={String.raw`\begin{aligned}\mathbf h_t&=\operatorname{LSTM}(X_t)\\\widehat Y_t&=\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\mathbf h_t&=\underbrace{\operatorname{LSTM}(X_t)}_{\text{window 마지막 hidden state}}\\\widehat Y_t&=\operatorname{reshape}(\underbrace{W_o\mathbf h_t+\mathbf b_o}_{\text{H×D_y개 값으로 투영}})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathbf h_t&=\underbrace{\operatorname{LSTM}(X_t)}_{\text{window 마지막 hidden state}}\\\widehat Y_t&=\operatorname{reshape}(\underbrace{W_o\mathbf h_t+\mathbf b_o}_{H\times D_y\text{개 값으로 투영}})\end{aligned}`}
         operations={[
           { expression: String.raw`\operatorname{LSTM}(X_t)`, annotation: ["L step input window를 끝까지 읽은 마지막","hidden state 하나를 forecast state로 씁니다."] },
           { expression: String.raw`\operatorname{reshape}(W_o\mathbf h_t+\mathbf b_o)`, annotation: ["head가 그 state를 H×D_y개 값으로 한 번에","투영한 뒤 horizon 축으로 reshape합니다.","앞 예측을 다음 입력으로 되먹이지 않습니다"] },

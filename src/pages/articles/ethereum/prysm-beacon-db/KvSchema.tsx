@@ -33,10 +33,11 @@ export default function KvSchema({
           </>
         }
         formula={String.raw`W_{\rm logical}=1+k`}
-        annotatedFormula={String.raw`W_{\rm logical}=\underbrace{1+k}_{\text{Logical writes 계산}}`}
+        annotatedFormula={String.raw`W_{\rm logical}=\underbrace{1}_{\text{primary record}}+\underbrace{k}_{\text{secondary index 수}}`}
         operations={[
-          { expression: String.raw`1+k`, annotation: ["Logical writes이(가) 식의 결과에 기여하는 방식을","계산합니다.","원본 primary record 하나와 그 object를 찾게","하는 k개 secondary mappings를 같은"] },
-        ]}
+  { expression: String.raw`1`, annotation: ["root→canonical SSZ bytes로 가는","원본 record 한 개를 씁니다"] },
+  { expression: String.raw`+k`, annotation: ["slot·parent 등 조회 경로 index를","같은 transaction에 k개 더 씁니다","index 3개면 1+3=4 logical writes"] },
+]}
         terms={[
           {
             symbol: "1",

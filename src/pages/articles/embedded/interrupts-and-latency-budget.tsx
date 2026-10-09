@@ -55,7 +55,7 @@ return <div className="space-y-16">
    <p className="leading-7">입력 이벤트를 받은 처리 함수, 곧 ISR 경로에서는 GPIO2 원인을 확인하고 에지 상태를 소거한 뒤 ‘읽을 일이 생겼다’는 표시나 짧은 큐 항목을 남깁니다. 기본 Pico SDK 콜백을 쓴다면 SDK가 콜백 호출 전에 에지 상태를 지웁니다. 원시 처리기를 직접 등록한 경우에만 자신이 그 소거를 맡습니다. 센서와의 I²C 거래는 이후 일반 작업 문맥에서 수행합니다. 예제에서 ISR 자체는 20 µs, 센서 거래는 300 µs로 가정했습니다. 300 µs를 ISR 안에 넣으면 그동안 낮은 우선순위의 다른 일을 오래 막을 수 있습니다.</p>
    <p className="leading-7">더 높은 우선순위 처리 함수가 돌거나 인터럽트가 잠시 가려져 있으면 NVIC 요청은 pending 상태에서 기다릴 수 있습니다. 우선순위를 높여도 모든 지연이 0이 되지는 않습니다. 오히려 한 ISR이 너무 길면 다른 사건의 최악 대기 시간이 늘어납니다.</p>
    <p className="leading-7"><em>ISR은 사건을 빠르게 접수하고, 시간이 드는 일은 일정이 잡힌 작업으로 넘깁니다.</em></p>
-  </div><CitationBlock source="Arm, Cortex-M0+ Devices Generic User Guide, NVIC pending·priority 설명, DUI 0662A, §4.2.6·§4.2.7 (인쇄 4-6·4-7쪽)" citeKey={2} href="https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957">Arm 공식 문서는 pending, enable, priority 및 주변 장치 요청이 계속 유지될 때 재진입하는 조건을 설명합니다. 본문의 마이크로초 값은 Arm의 보증 수치가 아닙니다.</CitationBlock>
+  </div><CitationBlock source="Arm, Cortex-M0+ Devices Generic User Guide, NVIC priority·pending 설명, DUI 0662A, §4.2.5–§4.2.7 (인쇄 4-5–4-7쪽)" citeKey={2} href="https://documentation-service.arm.com/static/5f04aadfdbdee951c1cdc957">Arm 공식 문서는 pending, enable, priority 및 주변 장치 요청이 계속 유지될 때 재진입하는 조건을 설명합니다. 본문의 마이크로초 값은 Arm의 보증 수치가 아닙니다.</CitationBlock>
 </section>
 
 <section id="source-enable" data-teach-level="5" className="scroll-mt-20">

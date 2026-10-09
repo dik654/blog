@@ -89,6 +89,10 @@ export default function MarketPowerAndMarkupArticle() {
           </p>
           <p className="leading-7">물건을 정수 개씩만 팔 때 한 개 추가의 매출 차이와, 연속적인 수량에서 구한 미분값은 같은 개념으로 바로 대입할 수 없습니다. 위의 3개에서 4개로 갈 때 매출 차이는 6입니다. 뒤에서 미분으로 얻는 값 7과 5가 왜 이 차이와 다른지 확인합니다.</p>
           <p className="leading-7">가격에서 한계비용을 뺀 차이를 가격으로 나눈 비율을 이 글의 마크업 지표로 씁니다. 10과 7의 차이 3을 가격 10으로 나누면 30%입니다. 비용 7을 분모로 삼는 3 ÷ 7, 약 42.9%의 원가 가산율과 구분합니다.</p>
+          <p className="leading-7">이 30%라는 비율에는 이름이 있습니다. Abba Lerner가 1934년 논문(The Review of Economic Studies 1권 3호, 157~175쪽)에서 독점력의 척도로 제시해 러너 지수(Lerner index)라고 부릅니다.</p>
+          <p className="leading-7">실증 연구는 같은 차이를 가격이 한계비용의 몇 배인지, 곧 μ = 가격 ÷ 한계비용으로 보고하는 경우가 많습니다. 사례에서는 μ = 10 ÷ 7 ≈ 1.43이고, 두 지표는 러너 지수 = 1 − 1/μ = 1 − 7/10 = 0.3으로 서로 바뀝니다.</p>
+          <p className="leading-7">이 환산을 알아야 실증 수치를 읽을 수 있습니다. De Loecker·Eeckhout·Unger의 2020년 QJE 논문은 집계 마크업이 1980년 한계비용보다 21% 높은 수준(μ = 1.21)에서 논문 시점의 61%(μ = 1.61)로 올랐다고 보고합니다. 러너 지수로 바꾸면 1 − 1/1.21 ≈ 0.17에서 1 − 1/1.61 ≈ 0.38입니다.</p>
+          <p className="leading-7">같은 연구의 NBER 작업논문판(w23687)은 18%에서 67%로 적어 판본마다 수치가 다르고, 저자들은 중앙값은 그대로였다고 덧붙였습니다. 평균이 오른 것이 모든 기업의 마크업이 오른 것은 아니라는 뜻입니다. Lerner 논문은 서지(Crossref)만 확인했습니다(2026-10-09).</p>
         </div>
         <p data-stage-bridge="names" className="mt-5 text-sm leading-7 text-muted-foreground">이름을 붙인 뒤 업체가 실제로 어떤 수요를 마주하는지 조건을 분명히 합니다.</p>
       </section>

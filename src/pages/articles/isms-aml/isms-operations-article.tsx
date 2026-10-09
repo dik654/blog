@@ -96,10 +96,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "복구 가능한 마지막 시점과 업무 승인을 받은 시점을 분리합니다. 목표치는 계획이고, 아래 값은 한 훈련이나 사고에서 관측한 결과입니다.",
     formula: String.raw`\begin{aligned}\mathrm{RPO}_{real}&=t_{failure}-t_{latest\ recoverable}\\\mathrm{RTO}_{real}&=t_{accepted\ service}-t_{failure}\end{aligned}`,
-    annotatedFormula: String.raw`\begin{aligned}\mathrm{RPO}_{real}&=\underbrace{t_{failure}-t_{latest\ recoverable}}_{\text{Latest recoverable point 계산}}\\\mathrm{RTO}_{real}&=\underbrace{t_{accepted\ service}-t_{failure}}_{\text{Accepted service time 계산}}\end{aligned}`,
+    annotatedFormula: String.raw`\begin{aligned}\mathrm{RPO}_{real}&=\underbrace{t_{failure}-t_{latest\ recoverable}}_{\text{잃은 데이터 구간}}\\\mathrm{RTO}_{real}&=\underbrace{t_{accepted\ service}-t_{failure}}_{\text{업무 승인까지 걸린 시간}}\end{aligned}`,
     operations: [
-      { expression: String.raw`t_{failure}-t_{latest\ recoverable}`, annotation: ["Latest recoverable point이(가) 식의","결과에 기여하는 방식을 계산합니다.","복구 가능한 마지막 시점과 업무 승인을 받은 시점을","분리합니다."] },
-      { expression: String.raw`t_{accepted\ service}-t_{failure}`, annotation: ["Accepted service time이(가) 식의 결과에","기여하는 방식을 계산합니다.","복구 가능한 마지막 시점과 업무 승인을 받은 시점을","분리합니다."] },
+      { expression: String.raw`t_{failure}-t_{latest\ recoverable}`, annotation: ["장애 시각에서 검증된 마지막 복구 지점까지","12:00 − 11:50 = 10분","목표 5분이면 미달"] },
+      { expression: String.raw`t_{accepted\ service}-t_{failure}`, annotation: ["기술 복구가 아니라 owner 승인 시각까지","13:20 − 12:00 = 80분","목표 60분이면 미달"] },
     ],
     terms: [
       { symbol: "t_{failure}", name: "Failure time", description: "서비스의 authoritative state가 손상되거나 사용할 수 없어진 시각입니다." },
@@ -183,10 +183,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "원인 제거, identity 정리, 서비스 검증, 재발 monitoring은 서로 대신할 수 없으므로 모두 참일 때만 정상화합니다.",
     formula: String.raw`A=E\land I\land V\land M`,
-    annotatedFormula: String.raw`A=\underbrace{E\land I\land V\land M}_{\text{판정 조건 결합}}`,
+    annotatedFormula: String.raw`\underbrace{A}_{\text{복구 승인}}=\underbrace{E}_{\text{원인 제거}}\land\underbrace{I}_{\text{identity 정리}}\land\underbrace{V}_{\text{서비스 검증}}\land\underbrace{M}_{\text{재발 monitoring}}`,
     operations: [
-      { expression: String.raw`E\land I\land V\land M`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","원인 제거, identity 정리, 서비스 검증, 재발","monitoring은 서로 대신할 수 없으므로 모두 참일 때만","정상화합니다."] },
-    ],
+          { expression: String.raw`E\land I\land V\land M`, annotation: ["원인 제거·identity·서비스·monitoring 중", "하나라도 0이면 정상화하지 않습니다", "binary 교체로 E=1이어도 token이 남으면 I=0"] },
+        ],
     terms: [
       { symbol: "E", name: "Eradication evidence", description: "취약 경로·persistence·malicious artifact 제거를 재현한 증거입니다." },
       { symbol: "I", name: "Identity recovery", description: "노출 계정·token·key를 폐기하고 최소 권한으로 재발급한 상태입니다." },
@@ -269,10 +269,10 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "기능 test, security verification, artifact provenance, canary가 서로 다른 실패를 막으므로 모두 통과해야 합니다.",
     formula: String.raw`A=T\land S\land P\land C`,
-    annotatedFormula: String.raw`A=\underbrace{T\land S\land P\land C}_{\text{판정 조건 결합}}`,
+    annotatedFormula: String.raw`\underbrace{A}_{\text{승격 판단}}=\underbrace{T}_{\text{기능 test}}\land\underbrace{S}_{\text{security 검증}}\land\underbrace{P}_{\text{provenance}}\land\underbrace{C}_{\text{canary}}`,
     operations: [
-      { expression: String.raw`T\land S\land P\land C`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","기능 test, security verification,","artifact provenance, canary가 서로 다른","실패를 막으므로 모두 통과해야 합니다."] },
-    ],
+          { expression: String.raw`T\land S\land P\land C`, annotation: ["test·scan·provenance·canary는", "서로 다른 실패를 막아 모두 통과해야 승격", "canary에서 남의 급여가 보이면 C=0 → A=0"] },
+        ],
     terms: [
       { symbol: "T", name: "Deterministic tests", description: "기능·회귀·authorization negative fixture가 기대 결과와 일치하는 조건입니다." },
       { symbol: "S", name: "Security verification", description: "위험에 맞는 review·SAST·SCA·DAST finding이 승인 정책을 통과한 조건입니다." },
@@ -365,10 +365,11 @@ const CONFIG: Record<ArticleKey, Config> = {
     idea:
       "Zone membership, 명시된 flow, 접속 identity, 현재 policy generation이 모두 맞아야 enforcement point가 허용합니다. 그 뒤 application authorization은 다시 검사합니다.",
     formula: String.raw`A_{net}=Z\land F\land I\land P`,
-    annotatedFormula: String.raw`A_{net}=\underbrace{Z\land F\land I\land P}_{\text{판정 조건 결합}}`,
+    annotatedFormula: String.raw`\underbrace{A_{net}}_{\text{network 허용}}=\underbrace{Z}_{\text{zone 배치}}\land\underbrace{F}_{\text{승인 flow}}\land\underbrace{I}_{\text{접속 identity}}\land\underbrace{P}_{\text{현재 policy}}`,
     operations: [
-      { expression: String.raw`Z\land F\land I\land P`, annotation: ["필요한 gate가 모두 참일 때만 전체 조건을 통과시킵니다.","Zone membership, 명시된 flow, 접속","identity, 현재 policy generation이 모두","맞아야 enforcement point가 허용합니다."] },
-    ],
+          { expression: String.raw`Z\land F\land I\land P`, annotation: ["zone·flow·identity·policy가 모두 맞아야", "enforcement point가 통과시킵니다", "stolen device면 I=0 → 허용 0"] },
+          { expression: String.raw`A_{net}`, annotation: ["네 조건이 1이어도 network 결정일 뿐", "급여 열람 권한은 application이 따로 판단"] },
+        ],
     terms: [
       { symbol: "Z", name: "Zone placement", description: "Source·destination asset이 inventory와 현재 zone에 정확히 매핑된 조건입니다." },
       { symbol: "F", name: "Flow match", description: "Protocol·port·direction·destination이 승인된 업무 flow와 일치하는 조건입니다." },

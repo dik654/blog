@@ -18,9 +18,10 @@ export default function Formula() {
         question="n개의 평가값을 통과하는 degree n−1 이하 다항식을 어떻게 직접 만들까요?"
         idea="각 표본점을 위한 selector를 만든 뒤 그 위치의 목표값만큼 가중합니다. Selector는 자기 점에서 1이고 다른 점에서 0입니다."
         formula={String.raw`\ell_i(x)=\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)`}
-        annotatedFormula={String.raw`\ell_i(x)=\underbrace{\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\ell_i(x)=\prod_{j\ne i}\frac{\underbrace{x-x_j}_{\text{다른 점에서 0}}}{\underbrace{x_i-x_j}_{\text{자기 점에서 1로}}},\qquad L(x)=\underbrace{\sum_{i=0}^{n-1}y_i\ell_i(x)}_{\text{목표값으로 가중합}}`}
         operations={[
-          { expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad L(x)=\sum_{i=0}^{n-1}y_i\ell_i(x)`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 표본점을 위한 selector를 만든 뒤 그 위치의","목표값만큼 가중합니다."] },
+          { expression: String.raw`\prod_{j\ne i}\frac{x-x_j}{x_i-x_j}`, annotation: ["분자는 다른 표본점 xⱼ에서 0이 되고","분모는 x=xᵢ에서 값을 1로 맞춥니다"] },
+          { expression: String.raw`\sum_{i=0}^{n-1}y_i\ell_i(x)`, annotation: ["점마다 selector에 목표값 yᵢ를 곱해 더합니다","(0,1),(1,4),(2,9) → x²+2x+1","x=1에서는 ℓ₁만 1이라 L(1)=4"] },
         ]}
         terms={[
           {

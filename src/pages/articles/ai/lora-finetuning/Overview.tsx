@@ -59,14 +59,11 @@ export default function Overview() {
 \Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\{A_m,B_m:m\in\mathcal T\}\\
 &\quad\cup\Theta_{\mathrm{save}}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-\Theta_{\mathrm{train}}^{\mathrm{full}}&=\underbrace{\Theta_{\mathrm{base}}}_{\text{오른쪽 항으로 결과 계산}}\\
-\Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\underbrace{\{A_m,B_m:m\in\mathcal T\}}_{\text{adapter matrices 계산}}\\
-&\quad\cup\Theta_{\mathrm{save}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\Theta_{\mathrm{train}}^{\mathrm{full}}&=\underbrace{\Theta_{\mathrm{base}}}_{\text{base 7B 전부}}\\\Theta_{\mathrm{train}}^{\mathrm{LoRA}}&=\underbrace{\{A_m,B_m:m\in\mathcal T\}}_{\text{target module의 adapter 20M}}\\&\quad\cup\underbrace{\Theta_{\mathrm{save}}}_{\text{의도적으로 함께 학습}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\Theta_{\mathrm{base}}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Loss는 같은 model output에서 계산할 수 있지만","gradient를 적용하는 집합이 다릅니다."] },
-          { expression: String.raw`\{A_m,B_m:m\in\mathcal T\}`, annotation: ["adapter matrices이(가) 식의 결과에 기여하는","방식을 계산합니다.","Loss는 같은 model output에서 계산할 수 있지만","gradient를 적용하는 집합이 다릅니다."] },
+          { expression: String.raw`\Theta_{\mathrm{base}}`, annotation: ["full fine-tuning은 70억 개 base 전부를", "optimizer에 넘겨 gradient·state를 둡니다"] },
+          { expression: String.raw`\{A_m,B_m:m\in\mathcal T\}`, annotation: ["LoRA는 고른 linear module의", "작은 두 행렬만 학습해 약 2천만 개", "base forward·activation은 그대로 남습니다"] },
+          { expression: String.raw`\cup\Theta_{\mathrm{save}}`, annotation: ["classifier·embedding 일부처럼", "adapter 밖에서 따로 저장할 module입니다"] },
         ]}
         terms={[
           { symbol: "Theta_base", name: "base parameters", description: "Pretrained checkpoint의 전체 weight와 bias입니다." },

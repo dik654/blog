@@ -23,12 +23,13 @@ export default function ModernGpuProofPipelineArticle() {
       <p>먼저 protocol, curve/field, circuit revision, SRS digest, domain size, public/private input seed, transcript hash와 backend SHA를 고정합니다. 각 stage에는 input buffers, output buffers, device, stream, completion event와 verifier-visible result를 적습니다. Edge는 단순한 실행 순서가 아니라 “이 output 또는 transcript challenge가 있어야 다음 stage가 유효하다”는 dependency입니다.</p>
       <p>Groth16에서는 witness와 QAP quotient가 proving-key MSM inputs를 만들고 A·B·C group elements로 이어집니다. PLONKish prover는 wire commitments를 transcript에 흡수한 뒤 challenges로 permutation·quotient·opening work를 만듭니다. 이름이 같은 NTT나 MSM이라도 round별 size, coset, curve group, input residency가 다르므로 고정 호출 횟수를 보편 법칙처럼 쓰지 않습니다.</p>
       <ExplainedFormula question="Pipeline stage들의 dependency를 어떤 실행 가능 조건으로 표현할까?" idea={<>Stage v는 모든 predecessor가 completion receipt를 냈고 필요한 buffers와 transcript state가 같은 generation일 때만 enqueue합니다.</>} formula={String.raw`\begin{aligned}D_v&=\bigwedge_{u\prec v}done(u)\\g_i&=gen(inputs_v)\\g_t&=gen(transcript_v)\\ready(v)&=D_v\land[g_i=g_t]\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}D_v&=\underbrace{\bigwedge_{u\prec v}done(u)}_{\text{Predecessor relation 계산}}\\g_i&=\underbrace{gen(inputs_v)}_{\text{Candidate stage 계산}}\\g_t&=\underbrace{gen(transcript_v)}_{\text{Candidate stage 계산}}\\ready(v)&=D_v\land[g_i=g_t]\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}D_v&=\underbrace{\bigwedge_{u\prec v}done(u)}_{\text{선행 stage 모두 완료}}\\g_i&=\underbrace{gen(inputs_v)}_{\text{입력의 proof attempt}}\\g_t&=\underbrace{gen(transcript_v)}_{\text{challenge의 attempt}}\\ready(v)&=D_v\land\underbrace{[g_i=g_t]}_{\text{같은 attempt}}\end{aligned}`}
       operations={[
-        { expression: String.raw`\bigwedge_{u\prec v}done(u)`, annotation: ["Predecessor relation이(가) 식의 결과에","기여하는 방식을 계산합니다.","Stage v는 모든 predecessor가","completion receipt를 냈고 필요한"] },
-        { expression: String.raw`gen(inputs_v)`, annotation: ["Candidate stage이(가) 식의 결과에 기여하는","방식을 계산합니다.","Stage v는 모든 predecessor가","completion receipt를 냈고 필요한"] },
-        { expression: String.raw`gen(transcript_v)`, annotation: ["Candidate stage이(가) 식의 결과에 기여하는","방식을 계산합니다.","Stage v는 모든 predecessor가","completion receipt를 냈고 필요한"] },
-      ]} terms={[
+  { expression: String.raw`\bigwedge_{u\prec v}done(u)`, annotation: ["v의 input·challenge를 만드는 모든","선행 stage가 성공 receipt를 내야 참"] },
+  { expression: String.raw`gen(inputs_v)`, annotation: ["v가 읽을 buffer가 어느 proof attempt의","circuit·SRS·input에서 나왔는지 표시합니다"] },
+  { expression: String.raw`gen(transcript_v)`, annotation: ["v가 쓸 transcript challenge가","어느 attempt에서 나왔는지 표시합니다"] },
+  { expression: String.raw`D_v\land[g_i=g_t]`, annotation: ["완료됐고 data·challenge가 같은 attempt면","enqueue합니다","NTT 완료여도 attempt가 다르면 false"] },
+]} terms={[
         {symbol:"v",name:"Candidate stage",description:"NTT, MSM, transfer, transcript update 또는 proof assembly 작업입니다."},
         {symbol:"pred(v)",name:"Predecessors",description:"v의 input이나 challenge를 생산하는 선행 stages 집합입니다."},
         {symbol:"done(u)",name:"Completion receipt",description:"선행 stage u의 device event와 success/failure 결과입니다."},
@@ -50,12 +51,12 @@ export default function ModernGpuProofPipelineArticle() {
             generation·event가 끝나기 전에는 ownership을 넘기지 않습니다.
           </p>
       <ExplainedFormula question="시간 τ에서 필요한 VRAM과 pipeline 전체 peak를 어떻게 계산할까?" idea={<>각 buffer b의 생존 구간에 τ가 들어갈 때만 size를 더하고, 모든 τ 중 가장 큰 합을 peak live bytes로 잡습니다.</>} formula={String.raw`\begin{aligned}I_b(\tau)&=[birth_b\le\tau<death_b]\\B(\tau)&=\sum_b size(b)I_b(\tau)\\B_{peak}&=\max_\tau B(\tau)\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}I_b(\tau)&=\underbrace{[birth_b\le\tau<death_b]}_{\text{허용 경계 판정}}\\B(\tau)&=\underbrace{\sum_b size(b)I_b(\tau)}_{\text{Indicator 계산}}\\B_{peak}&=\underbrace{\max_\tau B(\tau)}_{\text{경계 후보 선택}}\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}I_b(\tau)&=\underbrace{[birth_b\le\tau<death_b]}_{\text{그 시점에 b가 살아 있나}}\\B(\tau)&=\underbrace{\sum_b size(b)I_b(\tau)}_{\text{그 시점 live bytes}}\\B_{peak}&=\underbrace{\max_\tau B(\tau)}_{\text{필요 VRAM 정점}}\end{aligned}`}
       operations={[
-        { expression: String.raw`[birth_b\le\tau<death_b]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 buffer b의 생존 구간에 τ가 들어갈 때만 size를","더하고, 모든 τ 중 가장 큰 합을 peak live","bytes로 잡습니다."] },
-        { expression: String.raw`\sum_b size(b)I_b(\tau)`, annotation: ["Indicator이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 buffer b의 생존 구간에 τ가 들어갈 때만 size를","더하고, 모든 τ 중 가장 큰 합을 peak live"] },
-        { expression: String.raw`\max_\tau B(\tau)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 buffer b의 생존 구간에 τ가 들어갈 때만 size를","더하고, 모든 τ 중 가장 큰 합을 peak live","bytes로 잡습니다."] },
-      ]} terms={[
+  { expression: String.raw`[birth_b\le\tau<death_b]`, annotation: ["생성부터 마지막 consumer 완료 전까지","1, 그 밖이면 0입니다"] },
+  { expression: String.raw`\sum_b size(b)I_b(\tau)`, annotation: ["τ에 살아 있는 buffer 크기만 더합니다","τ=4: 8GB[0,5]+6GB[3,8] = 14GB"] },
+  { expression: String.raw`\max_\tau B(\tau)`, annotation: ["모든 시점 중 가장 큰 동시 합이 예산","peak 14GB, 전체 합 18GB도","최대 단일 8GB도 아님"] },
+]} terms={[
         {symbol:"b",name:"Buffer",description:"Witness, polynomial, twiddle, bases, scalars, buckets 또는 proof partial입니다."},
         {symbol:"size(b)",name:"Allocated bytes",description:"Alignment·padding·backend workspace를 포함한 실제 allocation 크기입니다."},
         {symbol:"birth_b",name:"생성 시점",description:"Producer가 storage를 점유하기 시작한 event입니다."},
@@ -70,11 +71,12 @@ export default function ModernGpuProofPipelineArticle() {
       <header><p className="text-sm font-semibold text-primary">03 · Overlap</p><h2 className="mt-2 text-2xl font-bold">서로 독립인 transfer·kernel만 stream으로 겹치고 critical path를 측정한다</h2></header>
       <p>Double buffering은 chunk k의 kernel 동안 chunk k+1을 전송할 수 있을 때 유효합니다. 같은 buffer를 쓰거나 transcript barrier 뒤에만 생성되는 data는 겹칠 수 없습니다. Device copy engines, pageable/pinned host memory, stream ordering과 kernel resource contention도 실제 overlap을 제한하므로 API enqueue 시각이 아니라 profiler timeline과 completion events를 확인합니다.</p>
       <ExplainedFormula question="겹침이 있는 pipeline 시간을 단순 stage 합과 어떻게 구분할까?" idea={<>DAG의 각 stage 완료 시각은 predecessor 중 가장 늦은 완료 뒤 자신의 measured duration을 더해 구합니다. 전체 시간은 sink 중 가장 늦은 완료입니다.</>} formula={String.raw`\begin{aligned}E(v)&=d(v)+\max_{u\in pred(v)}E(u)\\T_{critical}&=\max_{v\in sinks}E(v)\end{aligned}`}
-      annotatedFormula={String.raw`\begin{aligned}E(v)&=\underbrace{d(v)+\max_{u\in pred(v)}E(u)}_{\text{경계 후보 선택}}\\T_{critical}&=\underbrace{\max_{v\in sinks}E(v)}_{\text{경계 후보 선택}}\end{aligned}`}
+      annotatedFormula={String.raw`\begin{aligned}E(v)&=\underbrace{d(v)}_{\text{자기 측정 시간}}+\underbrace{\max_{u\in pred(v)}E(u)}_{\text{가장 늦은 선행 완료}}\\T_{critical}&=\underbrace{\max_{v\in sinks}E(v)}_{\text{가장 늦은 sink 완료}}\end{aligned}`}
       operations={[
-        { expression: String.raw`d(v)+\max_{u\in pred(v)}E(u)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","DAG의 각 stage 완료 시각은 predecessor 중","가장 늦은 완료 뒤 자신의 measured duration을","더해 구합니다."] },
-        { expression: String.raw`\max_{v\in sinks}E(v)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","DAG의 각 stage 완료 시각은 predecessor 중","가장 늦은 완료 뒤 자신의 measured duration을","더해 구합니다."] },
-      ]} terms={[
+          { expression: String.raw`\max_{u\in pred(v)}E(u)`, annotation: ["predecessor 중 가장 늦은 완료까지 기다림", "B=6ms, C=3ms 병렬이면 D는 6ms 쪽을 따름"] },
+          { expression: String.raw`d(v)`, annotation: ["그 뒤 stage 자신의 measured duration", "D는 4+6=10ms에 시작해 2ms를 더함"] },
+          { expression: String.raw`\max_{v\in sinks}E(v)`, annotation: ["전체 시간은 sink 중 가장 늦은 완료", "4+max(6,3)+2=12ms", "단순 합 15ms, 무조건 max 6ms와 다름"] },
+        ]} terms={[
         {symbol:"E(v)",name:"Earliest completion",description:"Dependency와 measured duration을 고려한 stage v의 완료 시각입니다."},
         {symbol:"d(v)",name:"Stage duration",description:"고정 workload에서 event/trace로 측정한 transfer·kernel·host work 시간입니다."},
         {symbol:"pred(v)",name:"Predecessors",description:"v가 기다려야 하는 stages입니다."},
@@ -89,10 +91,11 @@ export default function ModernGpuProofPipelineArticle() {
       <p>Correctness suite는 valid proof뿐 아니라 wrong witness/public input, SRS mismatch, transcript reorder, invalid field/point encoding, NTT round-trip failure, GPU OOM·kernel error·timeout과 restart를 포함합니다. Candidate proof는 pinned independent verifier가 같은 public input에서 승인해야 하고 negative fixtures는 baseline과 같은 failure class로 거절해야 합니다.</p>
       <p>Warm-up에는 context·module/JIT·allocator pool을 분리하고 cold start도 별도 표에 남깁니다. Stage별 CUDA events와 end-to-end wall time, H2D/D2H, peak live bytes, achieved bandwidth, useful MSM/NTT units, occupancy·stall, median/p95, proofs/hour와 energy를 기록합니다. 같은 circuit·batch·SRS·backend SHA·clock에서 CPU/hybrid/GPU 후보를 paired 비교합니다.</p>
       <ExplainedFormula question="Pipeline throughput과 speedup을 어떤 end-to-end 경계에서 계산해야 할까?" idea={<>검증을 통과한 proofs 수만 useful output으로 세고, baseline과 candidate 모두 같은 input 준비부터 verifier receipt까지 시간을 사용합니다.</>} formula={String.raw`R_{proof}=\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}`}
-      annotatedFormula={String.raw`R_{proof}=\underbrace{\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}}_{\text{기준량당 비율}}`}
+      annotatedFormula={String.raw`R_{proof}=\frac{\underbrace{N_{verified}}_{\text{검증 통과 proof}}}{\underbrace{T_{wall}}_{\text{입력→verifier receipt}}},\qquad S=\frac{\underbrace{T_{baseline}^{e2e}}_{\text{기존 전체 경로}}}{\underbrace{T_{candidate}^{e2e}}_{\text{새 전체 경로}}}`}
       operations={[
-        { expression: String.raw`\frac{N_{verified}}{T_{wall}},\qquad S=\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","검증을 통과한 proofs 수만 useful output으로","세고, baseline과 candidate 모두 같은","input 준비부터 verifier receipt까지 시간을"] },
-      ]} terms={[
+  { expression: String.raw`\frac{N_{verified}}{T_{wall}}`, annotation: ["pinned verifier가 승인한 proof만 세고","입력 준비부터 receipt까지 시간으로 나눕니다"] },
+  { expression: String.raw`\frac{T_{baseline}^{e2e}}{T_{candidate}^{e2e}}`, annotation: ["transfer·sync·fallback을 같은 경계로 포함","100ms 중 20ms를 10배 → 80+2=82ms","S = 100/82 ≈ 1.22배"] },
+]} terms={[
         {symbol:"N_{verified}",name:"Verified proofs",description:"같은 pinned verifier가 승인한 proof 개수입니다."},
         {symbol:"T_{wall}",name:"Wall-clock interval",description:"정한 arrival/input boundary부터 마지막 verification receipt까지의 시간입니다."},
         {symbol:"R_{proof}",name:"Useful throughput",description:"초당 또는 시간당 verified proofs입니다."},

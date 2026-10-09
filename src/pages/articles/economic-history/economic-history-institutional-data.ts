@@ -15,8 +15,8 @@ export const commercialLawInsolvencyData: WorldHistoryArticleData = {
       "재조정 가치 95에서 절차 중 새 자금 10, 담보 40, 우선청구 10을 지급한다고 놓으면 일반채권자에게 35가 남습니다. 회수율은 70%입니다. 영업가치 95가 실현되지 않으면 이 비교도 무너지므로 계획의 매출·비용 가정을 따로 검증해야 합니다.",
     ] },
     { id: "picture", level: "1", title: "4. 상인의 약속에서 회사법·유한책임·국가별 재조정 절차까지 이어 봅니다", bridge: "거래 확대가 왜 계약과 실패 처리 규칙을 함께 요구했는지 시간순으로 봅니다.", paragraphs: [
-      "장거리 교역은 어음·대리·보험·동업 규칙을 키웠습니다. 큰 철도와 공장은 여러 투자자의 자본을 모으면서 회사의 별도 법인격과 주식 양도, 회계 공시를 요구했습니다. 유한책임은 자본 모집을 넓혔지만 채권자와 노동자에게 손실이 넘어갈 가능성도 만들었습니다.",
-      "19세기 이후 여러 나라는 처벌과 채무자 감금 중심의 실패 처리에서 집단적 청산과 면책, 살아 있는 사업의 재조정으로 범위를 넓혔습니다. 20세기 후반에는 기업집단과 국경 간 도산, 21세기에는 소상공인이 감당할 수 있는 간단하고 싼 절차가 큰 쟁점이 됐습니다.",
+      "장거리 교역은 어음·대리·보험·동업 규칙을 키웠습니다. 큰 철도와 공장은 여러 투자자의 자본을 모으면서 회사의 별도 법인격과 주식 양도, 회계 공시를 요구했습니다. 유한책임은 자본 모집을 넓혔지만 채권자와 노동자에게 손실이 넘어갈 가능성도 만들었습니다. 영국에서는 1855년 유한책임법(Limited Liability Act 1855)이 나왔고, 이를 폐지하고 대체한 1856년 7월 14일의 주식회사법(Joint Stock Companies Act 1856)이 주식회사의 설립과 규율을 한 법으로 묶었습니다(1856년 법 원문, 확인일 2026-10-09).",
+      "19세기 이후 여러 나라는 처벌과 채무자 감금 중심의 실패 처리에서 집단적 청산과 면책, 살아 있는 사업의 재조정으로 범위를 넓혔습니다. 20세기 후반에는 기업집단과 국경 간 도산, 21세기에는 소상공인이 감당할 수 있는 간단하고 싼 절차가 큰 쟁점이 됐습니다. 국경 간 도산에 대해서는 UNCITRAL이 1997년 5월 30일 국경 간 도산 모델법을 채택했습니다. 미국 Chapter 11이 들어 있는 연방 도산법전의 제정 연도는 이 글에서 아직 1차 자료로 확인하지 않았습니다.",
     ] },
     { id: "need", level: "2", title: "5. 먼저 압류한 사람만 이기게 두면 살아 있는 공장의 가치가 사라질 수 있습니다", bridge: "도산 절차가 개별 계약에 잠시 개입하는 이유를 확인합니다.", paragraphs: [
       "채권자가 기계·재고·계좌를 따로 압류하면 각자는 빨리 회수할 수 있지만 공장은 조각나 주문을 끝내지 못합니다. 자동 중지와 공동 절차는 이 경쟁을 멈추고 청산가치와 계속기업가치를 비교할 시간을 만듭니다.",
@@ -85,7 +85,7 @@ export const cooperativeMemberEconomyData: WorldHistoryArticleData = {
       "조합원 A의 연간 이용액 12가 전체 조합원 이용액 120의 10%이면 배당 15의 10%인 1.5를 받습니다. A가 더 많은 출자금을 냈더라도 표가 자동으로 늘지 않습니다. 실제 배분은 정관과 국가 법률을 따라야 합니다.",
     ] },
     { id: "picture", level: "1", title: "4. 상호부조·로치데일 원칙·신용조합·농업·노동자 협동조합을 잇습니다", bridge: "한 나라와 업종의 모형을 협동조합 전체로 만들지 않습니다.", paragraphs: [
-      "산업화 전에도 공동 작업·저축·상호부조가 있었고, 19세기 소비자조합은 품질과 가격·배당 규칙을 표준화했습니다. 농업조합은 공동 구매와 판매, 신용조합은 작은 저축과 대출, 상호보험은 위험 공동부담을 조직했습니다.",
+      "산업화 전에도 공동 작업·저축·상호부조가 있었고, 19세기 소비자조합은 품질과 가격·배당 규칙을 표준화했습니다. 국제협동조합연맹(ICA)의 역사 안내는 1844년 잉글랜드 북부 로치데일의 면직 공장에서 일하던 장인 28명이 세운 조합을 최초의 근대 협동조합 사업체로 꼽습니다. 이 '로치데일 공정개척자조합'의 운영 규칙이 흔히 로치데일 원칙으로 불립니다. ICA는 1895년 8월 19일 런던의 제1차 협동조합 대회에서 창립됐고, 오늘의 기준인 협동조합 정체성 선언은 1995년에 나왔습니다. 농업조합은 공동 구매와 판매, 신용조합은 작은 저축과 대출, 상호보험은 위험 공동부담을 조직했습니다.",
       "20세기에는 주택·전기·보건·노동자 소유 기업까지 넓어졌습니다. 탈식민 국가에서는 농산물 유통과 농촌 신용의 통로가 되기도 했지만 국가가 위에서 통제하거나 가입을 사실상 강제하면 자율적 회원 조직이라는 성격이 약해졌습니다.",
     ] },
     { id: "need", level: "2", title: "5. 시장가격만으로는 작은 이용자의 공동 협상력과 통제권을 보기 어렵습니다", bridge: "협동조합이 생기는 문제와 새로 생기는 문제를 함께 봅니다.", paragraphs: [
@@ -131,7 +131,7 @@ export const cooperativeMemberEconomyData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "International Cooperative Alliance · Cooperative Identity", excerpt: "jointly-owned and democratically-controlled enterprise", application: "공동 소유·민주 통제와 1인 1표를 출자·이용·배당 장부의 기준으로 삼습니다.", citation: "International Cooperative Alliance, Cooperative identity, values & principles", href: "https://ica.coop/en/cooperatives/cooperative-identity", note: "1995년 정체성 선언의 현행 안내입니다. 실제 법인 설립과 잉여 배분은 관할 법률과 정관을 따릅니다." },
-    { source: "ILO · Recommendation No. 193 Guide", excerpt: "operate in all sectors of the economy", application: "협동조합을 자선단체나 농업 한 업종으로 좁히지 않고 자율적 회원 기업의 정책 범위로 읽습니다.", citation: "International Labour Organization, Promoting Co-operatives: A guide to Recommendation No. 193", href: "https://www.ilo.org/publications/promoting-cooperatives-information-guide-ilo-recommendation-no-193", note: "국제 노동기준의 정책 안내이며 개별 국가의 회사·세법이나 본문의 배분비율을 정하지 않습니다." },
+    { source: "ILO · Recommendation No. 193 Guide", excerpt: "operate in all sectors of the economy", application: "협동조합을 자선단체나 농업 한 업종으로 좁히지 않고 자율적 회원 기업의 정책 범위로 읽습니다.", citation: "International Labour Organization, Promoting Co-operatives: A guide to Recommendation No. 193 (2nd ed.); 인용 문장의 원문은 ILO Recommendation No. 193 (2002), para. 1", href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@ed_emp/@emp_ent/@coop/documents/publication/wcms_311447.pdf", note: "발췌문은 가이드 PDF가 권고 193호 1항('It is recognized that cooperatives operate in all sectors of the economy.')을 인용한 부분입니다. 출판 소개 페이지에는 이 문장이 없어 PDF로 연결했습니다(확인일 2026-10-09). 국제 노동기준의 정책 안내이며 개별 국가의 회사·세법이나 본문의 배분비율을 정하지 않습니다." },
   ],
   review: [
     "매출 140·비용 110과 적립 12·교육 3·배당 15를 각각 대사하세요. (답: 3절)",
@@ -155,7 +155,7 @@ export const developmentBankHistoryData: WorldHistoryArticleData = {
       "증가한 15가 모두 추가 자금인지는 별도 확인이 필요합니다. 같은 우량기업이 민간대출 대신 더 싼 개발은행 대출을 받았다면 총투자와 고용의 추가 효과는 작습니다. 대출 전후와 지원받지 않은 비교집단을 함께 봐야 합니다.",
     ] },
     { id: "picture", level: "1", title: "4. 농업·산업화·전후 복구·수출금융·금융위기·녹색전환을 잇습니다", bridge: "개발은행의 임무가 시기와 국가에 따라 어떻게 바뀌었는지 봅니다.", paragraphs: [
-      "19세기 토지·농업 금융기관과 우편저축, 20세기 산업화와 전쟁 뒤 복구은행은 긴 만기 자본을 모았습니다. 탈식민 국가는 수입대체·기반시설·수출산업을 지원했고, 국가마다 계획기관·상업은행·중앙은행과 역할을 다르게 나눴습니다.",
+      "19세기 토지·농업 금융기관과 우편저축, 20세기 산업화와 전쟁 뒤 복구은행은 긴 만기 자본을 모았습니다. 독일의 KfW는 연합국과 독일연방공화국의 주도로 1948년에 세워져 전쟁으로 파괴된 경제와 기반시설의 재건을 맡았습니다(KfW 역사 안내). 탈식민 국가는 수입대체·기반시설·수출산업을 지원했고, 국가마다 계획기관·상업은행·중앙은행과 역할을 다르게 나눴습니다.",
       "1980~1990년대 금융 자유화에서는 부실과 정치대출을 이유로 축소·민영화가 진행되기도 했습니다. 2008년 위기와 팬데믹 뒤에는 경기대응 대출·보증이 다시 커졌고, 최근에는 기후·디지털 전환의 긴 투자와 위험 분담이 새 임무가 됐습니다.",
     ] },
     { id: "need", level: "2", title: "5. 긴 만기와 큰 외부효과는 민간 수익만으로 자금이 모이지 않을 수 있습니다", bridge: "국가금융의 필요와 실패 가능성을 같은 질문에 둡니다.", paragraphs: [
@@ -171,8 +171,8 @@ export const developmentBankHistoryData: WorldHistoryArticleData = {
       "상환금은 새 대출의 재원이 되지만 연체는 충당금과 자본을 줄입니다. 정부가 손실을 메우면 납세자의 부담이 됩니다. 따라서 대출액뿐 아니라 민간자금 유입, 투자 완료, 고용·배출, 연체와 보조금 상당액을 함께 공개해야 합니다.",
     ] },
     { id: "source", level: "5", title: "8. 세계은행 조사는 금융위기 때 개발은행의 대출·보증 확대와 되돌림의 차이를 기록했습니다", bridge: "설명용 25·15 장부를 실제 기관 조사와 대조합니다.", paragraphs: [
-      "세계은행의 2017년 국가개발은행 조사는 응답 기관의 절반이 2007~2008년 위기 때 민간 신용 감소를 보완하려 대출이나 보증을 늘렸다고 보고합니다. 과거 조사에서는 2007~2009년 표본 개발은행 대출이 평균 36%, 조사국 민간신용은 10% 늘었습니다.",
-      "이 수치는 인과효과나 모든 개발은행의 성과가 아닙니다. 기관별 정의·통화·나라·위기 노출이 다르고, 늘린 조치를 되돌렸는지도 달랐습니다. 본문의 130→120은 구조를 보여 주는 별도 가정입니다.",
+      "세계은행의 2017년 국가개발은행 조사에는 64개 개발은행이 응답했고, 그 절반이 2007~2008년 위기 때 민간 신용 감소를 보완하려 대출이나 보증을 늘렸다고 보고합니다. 과거 조사에서는 2007~2009년 표본 개발은행 대출이 평균 36%, 조사국 민간신용은 10% 늘었습니다.",
+      "이 수치는 인과효과나 모든 개발은행의 성과가 아닙니다. 기관별 정의·통화·나라·위기 노출이 다르고, 민간 대출이 회복된 뒤 경기대응 조치를 되돌린 기관은 41%뿐이었습니다. 본문의 130→120은 구조를 보여 주는 별도 가정입니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 세계은행은 시장의 빈칸을 채우려면 분명한 임무와 건전한 지배구조가 필요하다고 봅니다", bridge: "대출 확대와 기관 운영의 조건을 연결합니다.", paragraphs: [
       "세계은행은 개발금융기관이 민간은행과 자본시장이 충분히 제공하지 않는 가계·중소기업·기업의 신용과 역량 지원을 맡을 수 있다고 설명합니다. 위기에는 경기대응 역할을 했지만, 잘 정한 임무와 건전한 지배구조가 전제라고 강조합니다.",
@@ -225,7 +225,7 @@ export const paygPensionDemographyData: WorldHistoryArticleData = {
       "둘째 장부에서 80명×100×12%=960이고 32명에게 나누면 30입니다. 급여 48을 유지하려면 32×48=1,536이 필요하고 이를 임금총액 8,000으로 나누면 보험료율은 19.2%입니다. 실제 제도는 세금·기금·급여공식으로 부담을 나눕니다.",
     ] },
     { id: "picture", level: "1", title: "4. 가족 부양·공무원 연금·사회보험·전후 보편 확대·자동조정까지 잇습니다", bridge: "노후소득이 가구의 의무에서 국가의 장기 계약으로 바뀐 경로를 봅니다.", paragraphs: [
-      "산업화 전에는 토지·가족·길드와 빈민구제가 노후 생활을 나눠 맡았습니다. 19세기 공무원·군인 제도와 노동자 사회보험은 고용 기록과 보험료를 국가 급여에 연결했고, 전후에는 적용 인구와 최저보장이 크게 넓어졌습니다.",
+      "산업화 전에는 토지·가족·길드와 빈민구제가 노후 생활을 나눠 맡았습니다. 19세기 공무원·군인 제도와 노동자 사회보험은 고용 기록과 보험료를 국가 급여에 연결했고, 전후에는 적용 인구와 최저보장이 크게 넓어졌습니다. 독일은 1889년 세계 첫 노령 사회보험을 도입하며 은퇴 연령을 70세로 정했다가 1916년 65세로 낮췄고, 미국은 1935년 사회보장법으로 노령 급여를 만들었습니다(미국 사회보장청 역사 페이지, 확인일 2026-10-09).",
       "인구 고령화와 불안정 고용이 커지자 여러 나라는 은퇴 연령, 보험료율, 급여 계산기간과 물가·임금 연동을 바꿨습니다. 일부는 기대수명이나 가입자 대비 수급자 수에 따라 자동으로 조정하는 규칙을 넣었습니다.",
     ] },
     { id: "need", level: "2", title: "5. 재정 균형만 맞추면 노후 빈곤과 세대별 약속을 놓칠 수 있습니다", bridge: "지속 가능성과 충분성·형평성을 같은 표에 놓습니다.", paragraphs: [
@@ -245,7 +245,8 @@ export const paygPensionDemographyData: WorldHistoryArticleData = {
       "이 값은 현재 수급자의 실제 평균이나 본문의 48%와 같은 통계가 아닙니다. 가입기간·임금수준·세금·성별 수명표와 제도 개정 가정을 맞춰야 국가 간 숫자를 비교할 수 있습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 자동조정은 가입자와 수급자 비율이 바뀔 때 급여 연동과 보험료 경계를 움직입니다", bridge: "수지 균형을 매번 임시 정치 협상에만 맡기지 않는 방법을 봅니다.", paragraphs: [
-      "OECD의 자동조정 비교는 기대수명, 재정수지와 수급자 대비 가입자 수를 급여나 보험료에 연결한 여러 제도를 보여 줍니다. 독일의 지속가능성 계수 사례에서는 수급자 대비 가입자 비율이 악화되면 연금점수 가치의 임금 상승 반영을 낮춥니다.",
+      "OECD의 자동조정 비교는 기대수명, 재정수지와 수급자 대비 가입자 수를 급여나 보험료에 연결한 여러 제도를 보여 줍니다. 독일의 지속가능성 계수 사례에서는 수급자 대비 가입자 비율이 악화되면 연금점수 가치의 임금 상승 반영을 낮춥니다. 같은 OECD 장은 순수 부과식 연금에서 가입자 대 수급자 비율에 보험료율을 곱하면 평균 대체율과 수학적으로 같다고 적습니다. 이를 보험료율에 대해 풀면 '보험료율 = 평균 대체율 × 수급자 수 ÷ 가입자 수'이고, 본문 사례를 넣으면 48% × 32 ÷ 80 = 19.2%로 앞의 계산과 같습니다.",
+      "수급자 대비 가입자 비율을 움직이는 인구 쪽 숫자도 큽니다. OECD 『한눈에 보는 연금 2025』는 20~64세 100명당 65세 이상 인구를 노년부양비로 정의하고, OECD 전체에서 이 비율이 2024년 32.6에서 2054년 55.2, 2084년 67.7로 오른다고 전망합니다. 한국은 2024년 29.3에서 2084년 122.0으로 오를 것으로 봅니다.",
       "자동식도 기준연도·하한·상한과 일시 중지 규칙을 정치가 정합니다. 급여의 충분성과 저소득층 보호를 함께 두지 않으면 재정 균형이 노후 빈곤 증가로 나타날 수 있습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 노인 수가 늘었다는 사실만으로 한 나라 연금의 파산 시점을 말하지 않습니다", bridge: "인구·고용·제도·예산이 함께 바뀌는 경계를 남깁니다.", paragraphs: [
@@ -271,7 +272,7 @@ export const paygPensionDemographyData: WorldHistoryArticleData = {
   ] },
   sources: [
     { source: "OECD · Pensions at a Glance 2025", excerpt: "future gross replacement rate ... averages 52.0%", application: "대체율의 경력·임금·은퇴연령 가정을 고정하고 국가별 충분성 차이를 읽습니다.", citation: "OECD, Pensions at a Glance 2025", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/gross-pension-replacement-rates_95e3eed6.html", note: "2025년 법제와 모형 가정을 사용한 국제 비교입니다. 본문의 48%와 19.2%를 제공한 자료가 아닙니다." },
-    { source: "OECD · Automatic Adjustment Mechanisms", excerpt: "ratio of pensioners to contributors", application: "수급자·가입자 비율이 급여 연동과 보험료 경계에 들어가는 실제 설계를 비교합니다.", citation: "OECD, Automatic adjustment mechanisms in pension systems", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html", note: "2021년 제도 비교입니다. 각 나라의 이후 개정과 현행 하한·상한은 다시 확인해야 합니다." },
+    { source: "OECD · Automatic Adjustment Mechanisms", excerpt: "ratio of pensioners to contributors", application: "수급자·가입자 비율이 급여 연동과 보험료 경계에 들어가는 실제 설계를 비교합니다.", citation: "OECD, Automatic adjustment mechanisms in pension systems", href: "https://www.oecd.org/en/publications/pensions-at-a-glance-2021_ca401ebd-en/full-report/component-6.html", note: "2021년 제도 비교입니다. 부과식 항등식(가입자/수급자 비율 × 보험료율 = 평균 대체율)도 이 장에서 확인했습니다. 노년부양비 전망은 『Pensions at a Glance 2025』의 'Demographic old-age to working-age ratio' 장으로 확인했고, 두 OECD 페이지 모두 자동 조회가 403이라 2025-09-05·2026-09-17 사본을 읽었습니다(확인일 2026-10-09). 각 나라의 이후 개정과 현행 하한·상한은 다시 확인해야 합니다." },
   ],
   review: [
     "노동자 100명·임금 100·보험료율 12%·수급자 25명의 1인 급여를 계산하세요. (답: 3절)",
@@ -361,7 +362,7 @@ export const valueAddedTradeRewiringData: WorldHistoryArticleData = {
       "국내 간접가치는 수출기업에 전력·금융·운송·부품을 공급한 국내 업종이 더한 가치입니다. 중간재가 여러 국경을 오가면 총무역에는 반복해 잡힐 수 있으므로 국가 간 생산 의존과 실제 국내 몫을 보려면 투입산출표로 단계를 풀어야 합니다.",
     ] },
     { id: "case", level: "0", title: "3. 외국 40·국내 조립 20·국내 공급 40을 더해 총수출 100을 맞춥니다", bridge: "한 제품의 통관 장부와 가치 장부를 같은 숫자로 대사합니다.", paragraphs: [
-      "첫 장부는 외국 부품 40+국내 조립 20+국내 부품·서비스 40=100입니다. 국내 부가가치는 20+40=60, 외국 부가가치 비중은 40%입니다. 수출액 100을 국내소득 100으로 읽으면 40을 두 번 국내 몫으로 셉니다.",
+      "첫 장부는 외국 부품 40+국내 조립 20+국내 부품·서비스 40=100입니다. 국내 부가가치는 20+40=60, 외국 부가가치 비중은 40%입니다. 수출액 100을 국내소득 100으로 읽으면 외국이 만든 40을 국내 몫으로 잘못 세게 되고, 세계 무역 총액에서는 그 40이 앞선 수출국의 수출과 이 나라의 수출에 두 번 잡힙니다.",
       "수입 부품 10을 국내 공급자가 대신하면 외국 30+국내 조립 20+국내 공급 50=100입니다. 국내 몫은 70%로 오릅니다. 다만 국내 공급 비용이 높아 판매가·수출량이 바뀌면 이 단순 비교를 그대로 쓸 수 없습니다.",
     ] },
     { id: "picture", level: "1", title: "4. 해외직접투자·컨테이너·1990년대 분업·2008년 둔화·최근 재편을 잇습니다", bridge: "가치사슬이 한 번 생겨 그대로 세계화됐다는 연표를 피합니다.", paragraphs: [
@@ -381,14 +382,14 @@ export const valueAddedTradeRewiringData: WorldHistoryArticleData = {
       "구매국이 완제품을 소비하면 가치가 최종수요에 닿습니다. 다시 가공해 제3국에 수출하면 국내 60도 다음 나라의 수출 안에 들어갑니다. 충격 분석에서는 어느 단계가 멈추고 대체 공급자가 얼마나 빨리 품질·규격을 맞출 수 있는지 봅니다.",
     ] },
     { id: "source", level: "5", title: "8. OECD TiVA는 국가 간 투입산출표로 총수출의 국내·외국 부가가치를 나눕니다", bridge: "설명용 60·40 장부를 실제 국제 통계의 작성 범위와 대조합니다.", paragraphs: [
-      "OECD의 TiVA 지표는 국가 간 투입산출표를 사용해 수출 업종별 국내·외국 부가가치, 서비스 기여와 최종수요 목적지를 계산합니다. 공개 페이지는 2025년 수정판과 2023년 판의 76개 경제·1995~2020년 범위를 구분해 안내합니다.",
+      "OECD의 TiVA 지표는 국가 간 투입산출표를 사용해 수출 업종별 국내·외국 부가가치, 서비스 기여와 최종수요 목적지를 계산합니다. 현행 2025년 판(2025년 8월 말 첫 공개, 10월 중순 수정)은 81개 경제·50개 업종·1995~2022년을 다룹니다. 76개 경제·1995~2020년은 보관된 이전 판인 2023년 판의 범위입니다.",
       "투입산출표는 업종 안의 기업이 비슷한 투입 구조를 가진다고 보는 등 모형 가정이 있습니다. 최신 충격과 개별 기업의 공급망을 실시간으로 보여 주지 않으며, 판이 수정되면 이전 결과와 함께 버전을 기록해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. WTO 2025 보고서는 효율 중심에서 회복력·녹색전환·지정학으로 재편 기준이 넓어졌다고 봅니다", bridge: "국내 몫 계산 뒤에 기술·환경·산업정책의 새 선택을 놓습니다.", paragraphs: [
       "WTO의 2025 가치사슬 보고서는 기술 변화, 녹색전환과 지정학 조건 속에서 생산·무역·투자가 새 지역 허브와 기업망으로 재편되는 과정을 다룹니다. 전기차·서비스·외국인투자·무역금융과 산업정책도 함께 봅니다.",
       "재편은 세계화의 단순한 후퇴로만 볼 수 없습니다. 어떤 단계는 지역화되고 다른 서비스와 데이터 흐름은 더 멀리 연결될 수 있습니다. 국내 부가가치 상승도 생산성·임금·배출과 공급 안정의 증거를 따로 요구합니다.",
     ] },
-    { id: "limits", level: "7", title: "10. 2020년까지의 업종 평균으로 2026년 개별 제품의 원산지와 위험을 단정하지 않습니다", bridge: "자료 시차·기업 차이·가격과 물량의 경계를 남깁니다.", paragraphs: [
+    { id: "limits", level: "7", title: "10. 2022년까지의 업종 평균으로 2026년 개별 제품의 원산지와 위험을 단정하지 않습니다", bridge: "자료 시차·기업 차이·가격과 물량의 경계를 남깁니다.", paragraphs: [
       "같은 전자 업종 안에서도 기업별 부품·계약·재고와 기술이 다릅니다. 환율과 원자재 가격이 오르면 물량이 그대로여도 명목 부가가치 비중이 바뀔 수 있고, 비공식 생산과 데이터·지식재산의 위치는 측정하기 어렵습니다.",
       "100·60·40과 국내화 10은 계산 구조를 위한 가정입니다. 실제 정책은 제품별 병목, 대체 기간, 재고일수, 국내외 비용·임금·배출과 보조금, 우회 수입을 함께 측정해야 합니다.",
     ] },
@@ -410,7 +411,7 @@ export const valueAddedTradeRewiringData: WorldHistoryArticleData = {
     { term: "공급망 재편", description: "공급자·장소·재고·기술을 바꿔 비용과 위험의 배치를 다시 정하는 과정입니다.", example: "외국 투입 10을 국내 공급으로 바꿔 국내 몫을 70으로 높입니다.", boundary: "국내화 하나만을 뜻하거나 비용 없이 안전해지는 과정이 아닙니다." },
   ] },
   sources: [
-    { source: "OECD · Trade in Value-Added", excerpt: "domestic and foreign value added content of gross exports", application: "총수출 100을 국내 직접·간접 가치와 외국 투입으로 나누는 통계 구조를 확인합니다.", citation: "OECD, Trade in value-added, 2025 edition", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "공개 페이지는 2025년 수정판과 2023년 판의 76개 경제·1995~2020년 범위를 나누어 표시합니다. 본문의 60·40과 재편 10은 설명용 가정입니다." },
+    { source: "OECD · Trade in Value-Added", excerpt: "domestic and foreign value added content of gross exports", application: "총수출 100을 국내 직접·간접 가치와 외국 투입으로 나누는 통계 구조를 확인합니다.", citation: "OECD, Trade in value-added, 2025 edition", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "현행 2025년 판은 81개 경제·50개 업종·1995~2022년 범위이고, 76개 경제·1995~2020년은 보관된 2023년 판의 범위입니다. 원 페이지는 자동 조회가 403이라 2025·2026년 사본과 OECD 국가별 노트 사본으로 확인했습니다(확인일 2026-10-09). 본문의 60·40과 재편 10은 설명용 가정입니다." },
     { source: "WTO · Global Value Chain Development Report 2025", excerpt: "technological change · green transition · geopolitical conditions", application: "비용 효율 뒤에 회복력·녹색전환·산업정책과 새 지역 허브의 재편 질문을 붙입니다.", citation: "WTO et al., Global Value Chain Development Report 2025", href: "https://www.wto.org/english/res_e/publications_e/gvcreport2025_e.htm", note: "여러 기관이 공동 발간한 세계 가치사슬 보고서입니다. 특정 기업·제품의 2026년 공급망을 실시간으로 보여 주지는 않습니다." },
   ],
   review: [

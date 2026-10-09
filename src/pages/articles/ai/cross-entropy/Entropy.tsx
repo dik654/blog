@@ -26,10 +26,10 @@ export default function Entropy({ title }: { title?: string }) {
         question="실제 분포 P에서 결과 하나를 관측할 때 평균적으로 얼마나 많은 정보가 생기는가?"
         idea={<>각 사건이 주는 self-information −log P(x)를 그 사건의 실제 발생 확률 P(x)로 평균냅니다.</>}
         formula={String.raw`\begin{aligned}H(P)&=\mathbb E_{x\sim P}[-\log P(x)]\\[3pt]&=-\sum_xP(x)\log P(x)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}H(P)&=\underbrace{\mathbb E_{x\sim P}[-\log P(x)]}_{\text{확률 가중 평균}}\\[3pt]&=\underbrace{-\sum_xP(x)\log P(x)}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}H(P)&=\underbrace{\mathbb E_{x\sim P}}_{\text{실제 빈도로 평균}}[\underbrace{-\log P(x)}_{\text{사건의 surprisal}}]\\[3pt]&=-\sum_x\underbrace{P(x)}_{\text{발생 확률 가중}}\log P(x)\end{aligned}`}
         operations={[
-          { expression: String.raw`\mathbb E_{x\sim P}[-\log P(x)]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 사건이 주는 self-information −log","P(x)를 그 사건의 실제 발생 확률 P(x)로 평균냅니다."] },
-          { expression: String.raw`-\sum_xP(x)\log P(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","각 사건이 주는 self-information −log","P(x)를 그 사건의 실제 발생 확률 P(x)로 평균냅니다."] },
+          { expression: String.raw`\mathbb E_{x\sim P}[-\log P(x)]`, annotation: ["드문 사건일수록 큰 surprisal을","그 사건의 실제 발생 확률로 평균냅니다"] },
+          { expression: String.raw`-\sum_xP(x)\log P(x)`, annotation: ["공정한 동전 P=(0.5,0.5)면","−2·0.5·ln 0.5 = ln 2 ≈ 0.693 nat","항상 앞면 P=(1,0)이면 0 nat"] },
         ]}
         terms={[
           { symbol: "H(P)", name: "entropy", description: "분포 P가 가진 평균 불확실성입니다." },

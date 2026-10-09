@@ -19,11 +19,11 @@ export default function CrossEntropy({ title }: { title?: string }) {
         question="실제 데이터는 P에서 나오지만 모델 Q가 만든 확률로 encode하면 평균 비용이 얼마인가?"
         idea={<>실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이 부여한 확률 Q(x)를 −log로 변환합니다. One-hot classification에서는 정답 class 하나의 항만 남습니다.</>}
         formula={String.raw`\begin{aligned}H(P,Q)&=\mathbb E_{x\sim P}[-\log Q(x)]\\&=-\sum_xP(x)\log Q(x)\\[3pt]\ell_{\rm CE}(z,y)&=-\log\operatorname{softmax}(z)_y\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}H(P,Q)&=\underbrace{\mathbb E_{x\sim P}[-\log Q(x)]}_{\text{확률 가중 평균}}\\&=\underbrace{-\sum_xP(x)\log Q(x)}_{\text{로그 비용 변환}}\\[3pt]\ell_{\rm CE}(z,y)&=\underbrace{-\log\operatorname{softmax}(z)_y}_{\text{선택 비율 정규화}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}H(P,Q)&=\underbrace{\mathbb E_{x\sim P}}_{\text{실제 데이터로 평균}}[\underbrace{-\log Q(x)}_{\text{모델 확률의 비용}}]\\&=-\sum_x\underbrace{P(x)}_{\text{실제 빈도}}\underbrace{\log Q(x)}_{\text{모델이 준 확률}}\\[3pt]\ell_{\rm CE}(z,y)&=-\log\underbrace{\operatorname{softmax}(z)_y}_{\text{정답 class 확률}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\mathbb E_{x\sim P}[-\log Q(x)]`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
-          { expression: String.raw`-\sum_xP(x)\log Q(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
-          { expression: String.raw`-\log\operatorname{softmax}(z)_y`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","실제 사건의 빈도 P(x)는 가중치로 두고, 각 사건에 모델이","부여한 확률 Q(x)를 −log로 변환합니다."] },
+          { expression: String.raw`\mathbb E_{x\sim P}[-\log Q(x)]`, annotation: ["평균은 실제 데이터가 나오는 P로 내고","log 안에는 모델 Q의 확률을 넣습니다"] },
+          { expression: String.raw`-\sum_xP(x)\log Q(x)`, annotation: ["P가 자주 내는 사건에 Q가 낮은 확률을","주면 그 항이 큰 penalty가 됩니다"] },
+          { expression: String.raw`-\log\operatorname{softmax}(z)_y`, annotation: ["one-hot이면 정답 class 항만 남습니다","정답 확률 0.9면 약 0.105 nat,","0.01이면 약 4.605 nat"] },
         ]}
         terms={[
           { symbol: "P", name: "target distribution", description: "실제 data distribution 또는 sample의 label distribution입니다." },

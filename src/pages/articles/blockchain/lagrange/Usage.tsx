@@ -17,9 +17,10 @@ export default function Usage() {
         question="고정된 표본에서 새 점 z의 보간값을 전개 없이 어떻게 구할까요?"
         idea="각 basis의 고정 denominator를 weight wᵢ로 미리 저장하고, 공통 factor를 약분한 barycentric ratio를 계산합니다."
         formula={String.raw`w_i=\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}`}
-        annotatedFormula={String.raw`w_i=\underbrace{\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`w_i=\underbrace{\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1}}_{\text{표본 x만으로 미리 계산}},\qquad L(z)=\frac{\underbrace{\sum_i\frac{w_i y_i}{z-x_i}}_{\text{값을 실은 가중합}}}{\underbrace{\sum_i\frac{w_i}{z-x_i}}_{\text{같은 가중치 합}}}`}
         operations={[
-          { expression: String.raw`\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1},\qquad L(z)=\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 basis의 고정 denominator를 weight","wᵢ로 미리 저장하고, 공통 factor를 약분한","barycentric ratio를 계산합니다."] },
+          { expression: String.raw`\left(\prod_{j\ne i}(x_i-x_j)\right)^{-1}`, annotation: ["basis의 고정 분모를 inverse로 저장해","x 좌표가 고정된 protocol에서 재사용합니다"] },
+          { expression: String.raw`\frac{\sum_i\frac{w_i y_i}{z-x_i}}{\sum_i\frac{w_i}{z-x_i}}`, annotation: ["공통 factor를 약분한 barycentric 비로","다항식 전개 없이 새 z의 값을 구합니다"] },
         ]}
         terms={[
           {

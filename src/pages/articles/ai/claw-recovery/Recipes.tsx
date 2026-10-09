@@ -91,9 +91,10 @@ export default function Recipes() {
           question="현재 attempt 뒤 자동 recovery를 몇 번 더 허용할 수 있을까?"
           idea={<>전체 한도에서 이미 시작한 attempt 수를 빼되 음수가 되지 않게 합니다. Scenario A가 한도를 다 썼다고 다른 dependency의 budget까지 소모한 것으로 계산하지 않습니다.</>}
           formula={String.raw`R=\max(0,\,L-A)`}
-          annotatedFormula={String.raw`R=\underbrace{\max(0,\,L-A)}_{\text{경계 후보 선택}}`}
+          annotatedFormula={String.raw`R=\underbrace{\max(0,\,\underbrace{L-A}_{\text{남은 시도 수}})}_{\text{음수면 0에서 멈춤}}`}
           operations={[
-            { expression: String.raw`\max(0,\,L-A)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","전체 한도에서 이미 시작한 attempt 수를 빼되 음수가","되지 않게 합니다."] },
+            { expression: String.raw`L-A`, annotation: ["scenario 한도 L에서 이미 시작한","attempt A를 빼 남은 횟수를 셈","L=2, A=1이면 1"] },
+            { expression: String.raw`\max(0,\,L-A)`, annotation: ["한도를 넘긴 attempt가 있어도","R이 음수로 내려가지 않게 0에서 멈춤"] },
           ]}
           terms={[
             { symbol: "R", name: "attempts remaining", description: "현재 scenario에서 새로 시작할 수 있는 자동 recovery 횟수입니다." },

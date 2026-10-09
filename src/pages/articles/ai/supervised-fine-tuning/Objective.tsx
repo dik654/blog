@@ -14,10 +14,11 @@ export default function Objective() {
         question="한 demonstration에서 어떤 next-token prediction만 SFT objective에 포함하는가?"
         idea={<>전체 token sequence의 conditional NLL을 계산하되 response target 위치에만 mask 1을 두고, 유효 target 수로 나누어 sample 길이에 따른 scale을 통제합니다.</>}
         formula={String.raw`\begin{aligned}M&=\sum_{t=1}^{T}m_t\\[2pt]\mathcal L_{\mathrm{SFT}}&=-\frac1M\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}M&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{response loss mask 계산}}\\[2pt]\mathcal L_{\mathrm{SFT}}&=\underbrace{-\frac1M\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}M&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{채점할 response token 수}}\\[2pt]\mathcal L_{\mathrm{SFT}}&=-\underbrace{\frac1M}_{\text{길이 scale 통제}}\sum_{t=1}^{T}\underbrace{m_t}_{\text{prompt면 0}}\underbrace{\log\pi_\theta(y_t\mid y_{<t})}_{\text{정답 다음 token 확률}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["response loss mask이(가) 식의 결과에 기여하는","방식을 계산합니다.","전체 token sequence의 conditional","NLL을 계산하되 response target 위치에만"] },
-          { expression: String.raw`-\frac1M\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","전체 token sequence의 conditional","NLL을 계산하되 response target 위치에만","mask 1을 두고, 유효 target 수로 나누어"] },
+          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["response target 위치만 1로 세고", "prompt·padding은 0으로 뺍니다"] },
+          { expression: String.raw`\log\pi_\theta(y_t\mid y_{<t})`, annotation: ["실제 prefix를 넣고 다음 실제 token에", "둔 확률의 log (teacher forcing)", "prompt도 context로는 남습니다"] },
+          { expression: String.raw`-\frac1M\sum_{t=1}^{T}m_t\log\pi_\theta(y_t\mid y_{<t})`, annotation: ["response token의 NLL만 더해", "유효 target 수 M으로 나눈 평균"] },
         ]}
         terms={[
           { symbol: "\\pi_\\theta", name: "language-model policy", description: "Prefix를 조건으로 다음 token probability를 냅니다." },
@@ -34,11 +35,10 @@ export default function Objective() {
         question="길이가 다른 response를 batch에서 평균낼 때 긴 답 하나가 objective를 지배하지 않게 하려면?"
         idea={<>Token mean은 모든 유효 target token을 같은 weight로 보므로 긴 response의 비중이 커집니다. Example mean은 각 response 안에서 먼저 평균낸 뒤 example끼리 같은 weight로 평균냅니다.</>}
         formula={String.raw`\begin{aligned}M_i&=\sum_t m_{it}\\S_i&=\sum_t m_{it}\ell_{it}\\[2pt]\mathcal L_{\rm token}&=\frac{\sum_i S_i}{\sum_i M_i}\\[2pt]\mathcal L_{\rm example}&=\frac1N\sum_i\frac{S_i}{M_i}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}M_i&=\underbrace{\sum_t m_{it}}_{\text{loss mask 계산}}\\S_i&=\underbrace{\sum_t m_{it}\ell_{it}}_{\text{token NLL 계산}}\\[2pt]\mathcal L_{\rm token}&=\underbrace{\frac{\sum_i S_i}{\sum_i M_i}}_{\text{기준량당 비율}}\\[2pt]\mathcal L_{\rm example}&=\frac1N\sum_i\frac{S_i}{M_i}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}M_i&=\underbrace{\sum_t m_{it}}_{\text{example i 유효 길이}}\\S_i&=\underbrace{\sum_t m_{it}\ell_{it}}_{\text{example i NLL 합}}\\[2pt]\mathcal L_{\rm token}&=\underbrace{\frac{\sum_i S_i}{\sum_i M_i}}_{\text{token마다 같은 weight}}\\[2pt]\mathcal L_{\rm example}&=\underbrace{\frac1N\sum_i\frac{S_i}{M_i}}_{\text{답마다 같은 weight}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_t m_{it}`, annotation: ["loss mask이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token mean은 모든 유효 target token을 같은","weight로 보므로 긴 response의 비중이 커집니다."] },
-          { expression: String.raw`\sum_t m_{it}\ell_{it}`, annotation: ["token NLL이(가) 식의 결과에 기여하는 방식을","계산합니다.","Token mean은 모든 유효 target token을 같은","weight로 보므로 긴 response의 비중이 커집니다."] },
-          { expression: String.raw`\frac{\sum_i S_i}{\sum_i M_i}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Token mean은 모든 유효 target token을 같은","weight로 보므로 긴 response의 비중이 커집니다."] },
+          { expression: String.raw`\frac{\sum_i S_i}{\sum_i M_i}`, annotation: ["batch 전체 token을 한 줄로 평균", "짧은 답(1 token, loss 2)+긴 답(9, 0)", "→ (2+0)/(1+9) = 0.2"] },
+          { expression: String.raw`\frac1N\sum_i\frac{S_i}{M_i}`, annotation: ["답 안에서 먼저 평균낸 뒤 답끼리 평균", "같은 두 답이면 (2/1 + 0/9)/2 = 1.0", "긴 답 하나가 지배하지 못합니다"] },
         ]}
         terms={[
           { symbol: "\\ell_{it}", name: "token NLL", description: "Example i의 target 위치 t에서 계산한 negative log-likelihood입니다." },

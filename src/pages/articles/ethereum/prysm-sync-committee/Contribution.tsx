@@ -137,17 +137,17 @@ h&=\operatorname{u64}(z_{0:8})\\
 h\bmod m&=0
 \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-q&=\underbrace{C/N}_{\text{기준량당 비율}}\\
-a&=\underbrace{\left\lfloor q/A\right\rfloor}_{\text{기준량당 비율}}\\
-m&=\underbrace{\max(1,a)}_{\text{경계 후보 선택}}\\
+q&=\underbrace{C/N}_{\text{subnet당 position}}\\
+a&=\underbrace{\left\lfloor q/A\right\rfloor}_{\text{목표 수로 나눈 몫}}\\
+m&=\underbrace{\max(1,a)}_{\text{modulo 최소 1}}\\
 z&=H(\sigma)\\
 h&=\operatorname{u64}(z_{0:8})\\
 h\bmod m&=0
 \end{aligned}`}
           operations={[
-            { expression: String.raw`C/N`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
-            { expression: String.raw`\left\lfloor q/A\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
-            { expression: String.raw`\max(1,a)`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Subcommittee 한 칸의 크기를 목표","aggregator 수로 나눠 modulo를 만들고,","domain-separated selection proof"] },
+            { expression: String.raw`C/N`, annotation: ["sync committee 512 positions를","4개 subnet으로 나눔 → subnet당 128"] },
+            { expression: String.raw`\left\lfloor q/A\right\rfloor`, annotation: ["subcommittee 크기를 목표 aggregator","수 A로 나눈 정수 몫","작을수록 더 많은 validator가 선택됨"] },
+            { expression: String.raw`\max(1,a)`, annotation: ["q<A라 몫이 0이면 m=1로 올림","0으로 나눈 나머지를 피하고","그 경우 member 전원이 aggregator"] },
           ]}
           terms={[
             { symbol: "C", name: "sync committee size", description: "Mainnet preset에서 512 positions입니다." },

@@ -32,7 +32,7 @@ export default function CapitalMovesViz() {
       eyebrow="전제가 풀리면"
       title="자본이 국경을 넘을 수 있으면 같은 장이 다른 결론으로 갑니다"
       description="이 반사실은 비판자가 지적한 것이 아니라 저자가 같은 장에서 직접 적어 둔 것입니다."
-      note="장면 3과 4의 내용은 Ricardo(1817) 7장의 서술이고, 장면 2의 물음은 그 서술로 넘어가기 위해 이 글이 둔 것입니다."
+      note="장면 3과 4의 내용은 Ricardo(1817) 초판 6장(3판 기준 7장)의 서술이고, 장면 2의 물음은 그 서술로 넘어가기 위해 이 글이 둔 것입니다."
     >
       <div
         data-viz-canvas

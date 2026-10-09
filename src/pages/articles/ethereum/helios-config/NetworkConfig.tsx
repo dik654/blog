@@ -36,9 +36,10 @@ export default function NetworkConfig({ title, onCodeRef }: Props) {
         question="Slot 8,192가 어느 epoch와 sync committee period에 속하는가?"
         idea="Network preset의 slots per epoch와 epochs per period를 차례로 나눕니다. 두 floor division은 시간 단위가 아니라 정수 index 변환입니다."
         formula={String.raw`e=\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1`}
-        annotatedFormula={String.raw`e=\underbrace{\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`e=\underbrace{\left\lfloor\frac{s}{32}\right\rfloor}_{\text{slot에서 epoch로}}=256,\qquad p=\underbrace{\left\lfloor\frac{e}{256}\right\rfloor}_{\text{epoch에서 period로}}=1`}
         operations={[
-          { expression: String.raw`\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Network preset의 slots per epoch와","epochs per period를 차례로 나눕니다."] },
+          { expression: String.raw`\left\lfloor\frac{s}{32}\right\rfloor=256`, annotation: ["slot을 epoch당 32 slots로 정수 나눔","8,192/32 = epoch 256"] },
+          { expression: String.raw`\left\lfloor\frac{e}{256}\right\rfloor=1`, annotation: ["epoch를 period당 256 epochs로 다시 나눔","256/256 = period 1","period 0 committee를 쓰면 안 됨"] },
         ]}
         terms={[
           { symbol: "s", name: "Slot", description: "검증할 update/header의 consensus slot입니다." },

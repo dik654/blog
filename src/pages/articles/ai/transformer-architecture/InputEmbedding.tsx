@@ -37,10 +37,11 @@ export default function InputEmbedding() {
           </>
         }
         formula={String.raw`\begin{aligned}PE(pos,2i)&=\sin(pos/10000^{2i/d})\\PE(pos,2i+1)&=\cos(pos/10000^{2i/d})\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}PE(pos,2i)&=\underbrace{\sin(pos/10000^{2i/d})}_{\text{기준량당 비율}}\\PE(pos,2i+1)&=\underbrace{\cos(pos/10000^{2i/d})}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}PE(pos,2i)&=\underbrace{\sin(pos/10000^{2i/d})}_{\text{짝수 차원: sin 좌표}}\\PE(pos,2i+1)&=\underbrace{\cos(pos/10000^{2i/d})}_{\text{홀수 차원: 같은 주파수 cos}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sin(pos/10000^{2i/d})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 차원을 두 개씩 묶어 같은 주파수의 sin과","cos를 배치합니다."] },
-          { expression: String.raw`\cos(pos/10000^{2i/d})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 차원을 두 개씩 묶어 같은 주파수의 sin과","cos를 배치합니다."] },
+          { expression: String.raw`\sin(pos/10000^{2i/d})`, annotation: ["2i번 차원은 position을 10000^(2i/d)로","나눈 각도의 sin을 씁니다"] },
+          { expression: String.raw`\cos(pos/10000^{2i/d})`, annotation: ["바로 옆 2i+1번 차원은 같은 각도의 cos","sin·cos 쌍이라 offset을 회전처럼 표현"] },
+          { expression: String.raw`10000^{2i/d}`, annotation: ["i=0이면 분모 1이라 가장 빨리 변하고","i가 d/2에 가까울수록 분모가 10000에","다가가 먼 순서를 느리게 표시합니다"] },
         ]}
         terms={[
           {

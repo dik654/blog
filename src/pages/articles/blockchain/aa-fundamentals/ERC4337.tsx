@@ -34,18 +34,19 @@ export default function ERC4337() {
         question="Bundler가 한 UserOperation에서 먼저 확보해야 할 최대 gas 비용은 얼마일까요?"
         idea="Validation·execution·calldata 보상 예산을 같은 gas 단위로 더한 뒤 fee-per-gas 상한을 곱합니다. 실제 settlement는 사용량과 effective gas price에 따라 더 작아질 수 있습니다."
         formula={String.raw`C_{\max}=(G_{verify}+G_{call}+G_{pre})\,F_{\max}`}
-        annotatedFormula={String.raw`C_{\max}=\underbrace{(G_{verify}+G_{call}+G_{pre})\,F_{\max}}_{\text{경계 후보 선택}}`}
+        annotatedFormula={String.raw`C_{\max}=\underbrace{(G_{verify}+G_{call}+G_{pre})}_{\text{세 gas 예산의 합}}\,\underbrace{F_{\max}}_{\text{gas당 fee 상한}}`}
         operations={[
-          { expression: String.raw`(G_{verify}+G_{call}+G_{pre})\,F_{\max}`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","Validation·execution·calldata 보상","예산을 같은 gas 단위로 더한 뒤 fee-per-gas","상한을 곱합니다."] },
+          { expression: String.raw`(G_{verify}+G_{call}+G_{pre})`, annotation: ["validation·execution·calldata 예산","50,000+80,000+20,000=150,000 gas"] },
+          { expression: String.raw`F_{\max}`, annotation: ["fee-per-gas 상한 20 gwei를 곱하면","worst-case reserve 0.003 ETH","실제 settlement는 gasUsed만큼 더 작음"] },
         ]}
         terms={[
-          { symbol: "G_{verify}", name: "Validation gas", description: "Account와 paymaster validation에 잡은 gas 상한입니다." },
+          { symbol: "G_{verify}", name: "Validation gas", description: "Account validation(필요하면 account 배포 포함)에 잡은 gas 상한입니다. Paymaster validation은 별도 한도입니다." },
           { symbol: "G_{call}", name: "Call gas", description: "Account main execution에 잡은 gas 상한입니다." },
           { symbol: "G_{pre}", name: "Pre-verification gas", description: "Calldata·bundle overhead 등 EntryPoint 밖 비용을 보상하는 gas입니다." },
           { symbol: "F_{max}", name: "Maximum fee", description: "사용자가 허용한 gas당 최대 fee입니다." },
         ]}
         assumptions={[
-          "예시는 paymaster 전용 gas fields와 postOp 추가 예산을 생략한 단순 장부입니다.",
+          "이 식은 paymaster가 없는 경우입니다. Paymaster를 쓰면 대납자 검증 한도와 postOp 한도가 더해져 C_max=(G_v+G_c+G_pv+G_po+G_pre)·F_max가 되며, 이 일반형은 같은 글의 prefund 절(/cs/blockchain/aa-fundamentals#prefund)에 있습니다.",
           "Gas 단위와 gwei를 곱한 뒤 ETH로 바꿀 때 1 gwei=10^-9 ETH를 사용합니다.",
           "충분한 prefund는 validation 성공·실행 성공·inclusion을 보장하지 않습니다.",
         ]}

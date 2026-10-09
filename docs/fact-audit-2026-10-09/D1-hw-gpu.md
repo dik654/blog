@@ -5,6 +5,40 @@
 
 본문 위치: hw 7편은 `src/pages/articles/hw/ai-infrastructure-study/{data.ts,depthData.ts,ncaAiioData.ts,ncaAiioDepth.ts}`, gpu 2편은 각 `.tsx` 본문 + `gpu-execution-sources/{codeRefs.ts,provenance.json,codebase/}`. 카탈로그 `src/content/gpu/articlesHw.ts`·`src/content/gpu/index.ts`, 근거 `src/content/article-evidence.ts`, 학습 계약 `src/content/article-learning.ts`, 개념 정의 `src/content/knowledge-graph.ts`를 함께 읽었다. NCA-AIIO의 50문항/60분/$125/2년/38-40-22%는 지시대로 재검증하지 않았다(참고로 공식 페이지에서 동일하게 보였다).
 
+## 적용 결과
+적용일 2026-10-09. 본문 파일은 `data.ts`·`depthData.ts`·`ncaAiioData.ts`·`ncaAiioDepth.ts`(hw/ai-infrastructure-study)와 `gpu/amd-gpu-execution-and-hip.tsx`를 고쳤다. 공용 파일은 손대지 않고 아래 `## 공용 파일 수정 목록`에 올렸다.
+
+| # | 처리 | 내용 |
+|---|---|---|
+| 1 | 적용 + 공용파일 목록으로 이관 | `data.ts` 커미셔닝 sources·`depthData.ts` 커미셔닝 sources의 href를 `https://www.kisa.or.kr/1050603`로, excerpt를 KISA 원문 정의 문장으로 교체하고 note/claim에 DNS 실패 사유 기록. `article-evidence.ts`·`article-learning.ts` 두 곳은 목록으로 이관 |
+| 2 | 적용 | rack 실물 3 명령을 `/redfish/v1/Chassis/DGX/Sensors`·`.../GPU_SXM_<id>/EnvironmentMetrics`로 교체, body에 DMTF Power v1_7_0 deprecated(PowerSubsystem 대체) 설명, source location 수정, depth sources에 DMTF Power.json 추가 |
+| 3 | 공용파일 목록으로 이관 | `article-evidence.ts` storage.html → nvidia-certified-storage.html, label 수정 |
+| 4 | 적용 | rack 3절에 14.5/19kW가 25°C 공급 공기 기준 추정치라는 조건, 5절에 passive RDHx 비권장 원문, 9절에 operating 10–35°C·A2 최대 공급 30°C·권장 18–27°C·고도 조건 문단 추가, sources note 갱신 |
+| 5 | 적용 | blueprint excerpt를 "This Enterprise RA is built on scalable units (SU) based on 4 compute nodes."로 교체 |
+| 6 | 적용 | storage excerpt를 VFS 원문 PG_Dirty/PG_Writeback 문장으로 교체 |
+| 7 | 적용 | SuperPOD claim을 실제 내용(64대 SU·power shelf)으로 축소, CDU·RDHx 표 출처를 DC Best Practices PDF claim으로 이동, 3절에 64-node SU 전력표(975/1450kVA, CDU+RDHx 51/117kVA) 문단 추가 |
+| 8 | 적용 | mstflint href를 `web.archive.org/web/20250519105147/...` 사본으로, claim에 "원 주소 404, 사본 텍스트 추출 실패" 기록 |
+| 9 | 적용 | cliolabs 출처 삭제(410 Gone, 사본 없음) |
+| 10 | 공용파일 목록으로 이관 | SNIA 항목 note에 "자동 조회 불가(403), 내용 미재확인" 추가(직접 PDF 링크는 확인 못해 교체 보류) |
+| 11 | 공용파일 목록으로 이관 | TAMU 항목 note에 접근 조건 기록 |
+| 12 | 적용 + 공용파일 목록으로 이관 | depth TSMC claim에 403·Wayback 2026-09-11 사본 확인 문장 기록. evidence note는 목록으로 |
+| 13 | 적용 + 공용파일 목록으로 이관 | depth 표 행에 "게시일 미재확인", source claim에 Cloudflare 403 기록. evidence note는 목록으로 |
+| 14 | 적용 | `CACHETHROUGH` → `CACHE_THROUGH` 2곳 |
+| 15 | 적용 | 호환성 표 행에 "DGX B300 2.3TB는 최소 DGX OS 7.3.1 필요" 기입(firmware 26.03.1은 원문 인용이 원장에 없어 넣지 않음) |
+| 16 | 적용 | NCA 실물 1 location을 "dcgmi discovery -l 예시(dcgmi diag -r은 dcgmi diag 참조)"로 한정 |
+| 17 | 적용 | NCA container 실물의 source를 install-guide로 바꾸고 location에 sample-workload 역할 병기 |
+| 18 | 적용 | Ceph 실물 location 보강, depth sources에 Monitoring a Cluster(`ceph health detail` 확인)·ceph(8) man page(`ceph osd df {plain|tree}` 확인) 추가 — 적용 중 두 페이지를 직접 열어 확인 |
+| 19 | 적용 | HIPIFY 문장을 원문 한계 문장 인용 + "inline PTX 명시 문장은 확인하지 못함"으로 바꾸고 문단 분리, citeKey 7 추가 |
+| 20 | 적용 | rocWMMA 문장을 원문 인용 + "세대별 지원표 미확인"으로 바꾸고 문단 분리, citeKey 8 추가 |
+| 21 | 적용 | blueprint 8절(data.ts)에 DGX B300 완제품은 BlueField-3 2장이라 16노드면 DPU 32개라는 문장 추가 |
+| 22 | 적용 | rack 3절 "예상 평균" → "예상 시스템 전력", '평균'은 rack 표에만 붙는다는 설명 추가 |
+| 23 | 적용 | NCA Study Guide note에 "Jan26 표기, 파일 2026-06-25 재저장" 기록 |
+| 24 | 해당 없음(OK) | — |
+
+집계: 적용 20건(#1·#12·#13은 공용 이관 병행), 공용 전용 이관 3건(#3·#10·#11), 보류 0건, OK 1건(#24). 공용 파일 수정 쌍 7개.
+
+검증: `npm run audit:hw-cloud-teach` 통과(구조화 21편 + 레거시 15편, overview 전부 "(가정)" 시작). `npx eslint` 수정 파일 5개 통과. `check-article.sh gpu/<slug>` 7개 route 모두 learning contract·knowledge graph·naturalness·term 검사 통과, prose-readability strict 실패는 다른 글(claw-api-client 등) 플래그 때문이며 수정한 route는 플래그 없음(amd 글은 처음에 긴 문단 2건으로 걸려 문단을 나눠 해소).
+
 ## 요약
 - 발견: WRONG 1 · OUTDATED 1 · MISLEADING 0 · CALC 0 · LINK 13 · MISSING 3 · UNVERIFIED 5
 - 가장 중요한 발견
@@ -199,3 +233,67 @@
 | https://medium.com/daangn/dynamodb-…-1733db06066 | 403 Cloudflare, Wayback 없음 | 없음(날짜 2021-12-27 미확인) |
 | https://github.com/ROCm/HIP-Examples/blob/cdf9d101…/vectoradd_hip.cpp | 429 rate-limit(일시) | raw.githubusercontent.com 동일 커밋 200, 로컬 스냅샷과 diff 동일 |
 | https://rocm.docs.amd.com/projects/HIPIFY/en/latest/supported-cuda-apis.html (보조 확인용) | 404 | HIPIFY index 200(inline PTX 문장은 미발견) |
+
+## 공용 파일 수정 목록
+
+### src/content/article-evidence.ts
+
+#1 KISA
+```
+old: { kind: "공식 문서", label: "KISA 클라우드서비스 보안인증 공지", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", note: "CSAP 관련 최신 공지와 인증 범위는 KISA 원문에서 별도로 확인합니다." },
+new: { kind: "공식 문서", label: "KISA 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", note: "CSAP를 “클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도”로 정의합니다. 이전 isms.kisa.or.kr 공지 경로는 2026-10-09 DNS가 해석되지 않아 교체했습니다." },
+```
+
+#3 storage.html
+```
+old: { kind: "공식 문서", label: "NVIDIA HGX AI Factory · Storage Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/storage.html", note: "GPU당 처리량 기준과 공유·로컬 저장 경로의 역할을 확인합니다." },
+new: { kind: "공식 문서", label: "NVIDIA HGX AI Factory · NVIDIA-Certified Storage", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/nvidia-certified-storage.html", note: "GPU당 약 12.5Gb/s storage bandwidth guideline과 certified storage 범위를 확인합니다. 이전 storage.html 주소는 2026-10-09 404였습니다." },
+```
+
+#10 SNIA (gpu/ai-cluster-storage-io 항목만. 7345행의 "Specification 2.0.2" 항목은 다른 글이라 건드리지 않음)
+```
+old: label: "SNIA SSS Performance Test Specification", href: "https://www.snia.org/solid-state-sss", note: "저장장치 성능 측정의 preconditioning·steady-state 경계를 확인합니다." },
+new: label: "SNIA SSS Performance Test Specification", href: "https://www.snia.org/solid-state-sss", note: "저장장치 성능 측정의 preconditioning·steady-state 경계를 다루는 규격 안내입니다. 2026-10-09 자동 조회가 403으로 막히고 보관 사본도 없어 내용은 다시 대조하지 못했습니다." },
+```
+
+#11 TAMU
+```
+old: note: "SBATCH·single/multi-node·GPU 작업·사용량 확인·실패 진단을 실습하며 Slurm의 batch job 생애를 익힙니다." },
+new: note: "SBATCH·single/multi-node·GPU 작업·사용량 확인·실패 진단을 실습하며 Slurm의 batch job 생애를 익힙니다. 2026-10-09 자동 조회 불가(403), 서지 2차 확인: web.archive.org 2026-02-07 사본에서 제목 “Slurm scheduler on Composable Resources”만 확인했고 본문은 JavaScript 전용이라 대조하지 못했습니다." },
+```
+
+#12 TSMC
+```
+old: note: "CoWoS가 logic과 HBM을 통합하는 packaging 단계임을 확인합니다." },
+new: note: "CoWoS가 logic과 HBM을 통합하는 packaging 단계임을 확인합니다. 원 PDF는 2026-10-09 자동 조회가 403으로 막혀 web.archive.org 2026-09-11 사본에서 “CoWoS® advanced packaging service integrates multiple system-on-chip (SoC) chips and the high-bandwidth memory (HBM) stacks” 문장을 확인했습니다." },
+```
+
+#13 당근
+```
+old: note: "Online source의 부하를 격리하고 access pattern에서 object layout을 정하는 질문을 가져옵니다." },
+new: note: "Online source의 부하를 격리하고 access pattern에서 object layout을 정하는 질문을 가져옵니다. 2026-10-09 Cloudflare 403으로 자동 조회가 막히고 보관 사본도 없어 게시일(2021-12-27)과 본문을 다시 대조하지 못했습니다." },
+```
+
+### src/content/article-learning.ts
+
+#1 KISA
+```
+old: { title: "KISA 클라우드서비스 보안인증제 안내", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", problem:
+new: { title: "KISA 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", problem:
+```
+같은 항목의 contribution도 바꾼다.
+```
+old: contribution: "현재 CSAP 안내서·공지와 인증 제도 자료의 공식 경로를 제공합니다.", assumptions: "제안 시점의 대상 service·등급·유효 증서와 최신 평가 기준을 다시 확인합니다."
+new: contribution: "CSAP를 “클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도”로 정의한 KISA 공식 안내를 제공합니다(이전 isms.kisa.or.kr 경로는 2026-10-09 DNS 해석 실패).", assumptions: "제안 시점의 대상 service·등급·유효 증서와 최신 평가 기준을 다시 확인합니다."
+```
+
+## 후속 작업
+글별 검증 기록의 "빠진 내용" 중 번호 없는 경미 항목은 이번에 넣지 않았다.
+- software-compatibility 6절: MLNX_OFED/DOCA-OFED가 OpenFabrics 배포판이 아니라 NVIDIA 배포판이라는 구분(원장에 1차 인용문 없음 — 확인 후 추가).
+- kubernetes-vs-slurm 실물 1: "configured 8, detected 7 → DRAIN" 사례의 근거를 gres.html 대신 slurm.conf/`sinfo -R` 설명으로 보강(원장 판정 보류).
+- storage-io: `직접 입출력` 경계에 open(2) O_DIRECT 절 인용 추가.
+- blueprint BOM 표: 로컬 NVMe 행(DGX 8×3.84TB E1.S / HGX 권고).
+- nca-aiio 9절: NCP-AIO 형식(120분, 30 객관식 + 3 hands-on lab, $500) 한 줄.
+- amd-gpu: CDNA4 LDS read bandwidth 256 bytes/clock(백서 p.9), HIP `__ballot` 64-bit 반환 근거.
+- hbm-stack: MI355X HBM3E 8 Gbps(백서 p.11) vs PHY 상한 9.6/12 Gbps, controller "per-bank/all-bank refresh" 문구.
+- SNIA PTS 직접 PDF 링크 확보 후 #10 재확인. 당근 Medium 글 브라우저 재확인(#13).

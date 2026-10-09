@@ -63,9 +63,9 @@ export default function Overview() {
         question="Quorum 두 개가 적어도 한 process를 공유하게 하려면 크기가 얼마나 커야 할까?"
         idea="전체 n개 중 각각 q개를 고르면 두 집합의 합이 n을 넘는 부분만큼은 반드시 겹칩니다. 이 단순한 집합 계산이 이후 crash quorum과 Byzantine quorum의 출발점입니다."
         formula={String.raw`|Q_1 \cap Q_2| \ge 2q-n`}
-        annotatedFormula={String.raw`|Q_1 \cap Q_2| \ge \underbrace{2q-n}_{\text{membership size 계산}}`}
+        annotatedFormula={String.raw`\underbrace{|Q_1 \cap Q_2|}_{\text{두 quorum 공통 voter}} \ge \underbrace{2q}_{\text{두 quorum 크기 합}}-\underbrace{n}_{\text{전체 voter 수}}`}
         operations={[
-          { expression: String.raw`2q-n`, annotation: ["membership size이(가) 식의 결과에 기여하는","방식을 계산합니다.","전체 n개 중 각각 q개를 고르면 두 집합의 합이 n을 넘는","부분만큼은 반드시 겹칩니다."] },
+          { expression: String.raw`2q-n`, annotation: ["두 quorum 크기 합이 전체 n을","넘는 만큼은 반드시 같은 voter","예: n=5, q=3이면 최소 1개 공유"] },
         ]}
         terms={[
           { symbol: "n", name: "membership size", description: "전체 replica 또는 voter 수" },

@@ -200,7 +200,7 @@ export const wtiDeliveryLedgerData: DerivativeDeepArticleData = {
     { term: "인도 통지", description: "만기 포지션을 실제 받을 사람과 넘길 사람의 의무로 바꾸는 문서입니다.", example: "청산소가 1계약의 매수자와 매도자를 배정합니다.", boundary: "통지 전에 창고·송유관 계약이 자동 확보되지는 않습니다." },
   ] },
   sources: [
-    { source: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", excerpt: "1,000 U.S. barrels ... delivery in Cushing", application: "70달러를 1천 배럴에 곱하고 쿠싱의 허용 시설·방법·통지·지급 순서에 대조합니다.", citation: "NYMEX Rulebook, Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "2026년 10월 확인한 현행 계약 규칙입니다. 실제 거래 전 최신 규칙과 청산회원 일정을 다시 확인합니다." },
+    { source: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", excerpt: "1,000 U.S. barrels ... delivery in Cushing", application: "70달러를 1천 배럴에 곱하고 쿠싱의 허용 시설·방법·통지·지급 순서에 대조합니다.", citation: "NYMEX Rulebook, Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "현행 계약 규칙입니다. cmegroup.com 원본은 2026-10-09 자동 조회 403·타임아웃이라 직접 대조하지 못했습니다. 인도 방식(펌프오버·배관 내 이전·장부상 상계·탱크 내 이전)은 NYMEX의 CFTC 제출본으로, 1,000배럴과 ±2% 허용 오차는 검색 요약으로만 확인했고, 인수 통지 시점과 인도 증거금 조항은 원문 대조를 하지 못했습니다. 실제 거래 전 최신 규칙과 청산회원 일정을 다시 확인합니다." },
     { source: "U.S. EIA · What are tank bottoms?", excerpt: "working storage capacity ... shell capacity", application: "탱크 총용량에서 펌프 운전에 필요한 최소 물량을 빼 실제 인도 여유를 판단합니다.", citation: "U.S. Energy Information Administration, Tank Bottoms", href: "https://www.eia.gov/todayinenergy/detail.php?id=67866", note: "2026년 쿠싱 저장 자료가 설명하는 물리적 운영 경계이며 특정 계약의 가용 탱크를 보장하지 않습니다." },
   ],
   review: [
@@ -270,7 +270,7 @@ export const lmeMetalWarrantData: DerivativeDeepArticleData = {
     { term: "출고 비용 장부", description: "보관료·트럭 적재·재워런트 비용을 금속값과 나눈 기록입니다.", example: "가정한 보관·출고비 합계는 1,500달러입니다.", boundary: "창고·지역·금속마다 실제 요금이 다릅니다." },
   ] },
   sources: [
-    { source: "LME · Zinc Contract Specifications", excerpt: "99.995% purity · 25 tonnes · approved warehouse", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, Zinc contract specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "2026년 10월 확인한 아연 상품 규격이며 실제 인도 전 현행 Rulebook을 다시 확인합니다." },
+    { source: "LME · Zinc Contract Specifications", excerpt: "99.995% purity · 25 tonnes · approved warehouse", application: "25.3톤이 ±2% 범위에 드는지와 순도·브랜드·창고 조건을 함께 확인합니다.", citation: "London Metal Exchange, Zinc contract specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "아연 상품 규격 페이지입니다. lme.com은 2026-10-09 자동 조회 403(봇 차단)이라 원문을 직접 열지 못했고, 순도·25톤 로트·승인 창고 문구는 검색 엔진 요약으로만 2차 확인했습니다. 실제 인도 전 현행 Rulebook을 다시 확인합니다." },
     { source: "LME · Warehouse Agreement 2026", excerpt: "rent must accrue on a daily basis", application: "워런트 취소 기록, 일별 보관료와 합의한 출고 일정을 1,500달러 비용 장부에 연결합니다.", citation: "LME Warehouse Agreement", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "2026년 개정 자료의 창고 운영 규칙이며 본문 요율은 설명용 가정입니다." },
   ],
   review: [
@@ -311,8 +311,8 @@ export const livestockSettlementData: DerivativeDeepArticleData = {
       "비육우 계약은 5만 파운드에 마지막 지수 2.25와 매수가 2.20의 차이를 곱합니다. 정산액은 2,500달러입니다(가정). 실제 사업장 판매가격이 2.23이었다면 지수와 현물의 0.02 차이는 별도 베이시스 손익으로 남깁니다.",
     ] },
     { id: "source", level: "5", title: "8. CME Chapter 101은 4만 파운드와 63% 수율 조정식을 적습니다", bridge: "실물 계산을 2026년 시행 규칙에 대조합니다.", paragraphs: [
-      "2026년 9월 시행 규칙은 생우 거래 단위를 4만 파운드로 둡니다. 70% Choice·30% Select와 Yield Grade 3을 기준으로 삼습니다. 도체 인도에서는 기준 뜨거운 도체 수율을 63%로 둡니다.",
-      "원문 조정식에 62%, 2.20달러와 4만 파운드를 넣으면 약 −1,396.83달러입니다. 실제 인도에는 개별 도체 무게, 등급, 연령과 시설 비용 등 더 많은 조정이 붙을 수 있습니다.",
+      "CME 생우 선물 규칙(Chapter 101)은 거래 단위를 4만 파운드로 두고 70% Choice·30% Select와 Yield Grade 3을 기준으로 삼습니다. 도체 인도에서는 기준(par) 단위의 추정 평균 뜨거운 도체 수율을 63%로 둡니다. 이 규격은 2026년에 새로 생긴 것이 아니라 이미 시행 중인 것이며, 2025년 5월 7일 발효한 개정(25-157)은 2026년 10월물부터 적용되고 2026년 9월 22일 개정은 낡은 문구를 지우는 정리입니다.",
+      "원문 조정식에 62%, 2.20달러와 4만 파운드를 넣으면 약 −1,396.83달러입니다. 이 식이 쓰이는 범위도 규칙에 있습니다. 추정 수율이 60% 미만인 단위는 인도할 수 없고, 수량은 4만 파운드의 5%(2,000파운드) 이내 편차만 허용합니다. 실제 인도에는 개별 도체 무게, 등급, 연령과 시설 비용 등 더 많은 조정이 붙을 수 있습니다.",
     ] },
     { id: "comparison", level: "6", title: "9. CME 교육자료는 생우의 실물인도와 비육우·돈육의 현금정산을 구분합니다", bridge: "같은 산업 안에서 정산 방식을 고르는 기준을 비교합니다.", paragraphs: [
       "CME는 생우를 실제 인도 계약으로 설명하고, 비육우와 돈육 선물은 각 현물지수로 현금정산한다고 설명합니다. 계약마다 기초 현물과 유통 과정이 달라 같은 만기 방식을 쓰지 않습니다.",
@@ -340,8 +340,8 @@ export const livestockSettlementData: DerivativeDeepArticleData = {
     { term: "지수 현금정산", description: "실물 대신 마지막 현물지수와 계약가격의 차이를 돈으로 정산합니다.", example: "5센트×5만 파운드는 2,500달러입니다.", boundary: "사업장 현물가격과 지수가 완전히 같다는 뜻은 아닙니다." },
   ] },
   sources: [
-    { source: "CME · Live Cattle Futures Chapter 101", excerpt: "40,000 pounds ... actual average hot yield of 63%", application: "62% 수율과 2.20달러를 현행 조정식에 넣어 −1,396.83달러를 계산합니다.", citation: "CME Rulebook filing 25-157, Chapter 101", href: "https://www.cmegroup.com/content/dam/cmegroup/market-regulation/rule-filings/2025/4/25-157.pdf", note: "2026년 9월 시행 조항까지 포함한 공식 규칙 자료입니다. 실제 계약월의 현행 장을 다시 확인합니다." },
-    { source: "CME · Livestock Overview", excerpt: "Feeder Cattle futures are settled in cash", application: "생우의 실물인도와 비육우 5만 파운드의 지수 현금정산을 같은 가격위험 아래 비교합니다.", citation: "CME Group, The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note: "상품별 거래 단위와 정산 방식을 설명하는 거래소 교육자료이며 최신 규칙이 우선합니다." },
+    { source: "CME · Live Cattle Futures Chapter 101", excerpt: "Par delivery units shall have an estimated average hot yield of 63%", application: "62% 수율과 2.20달러를 현행 조정식에 넣어 −1,396.83달러를 계산하고, 60% 하한과 5% 수량 편차를 함께 확인합니다.", citation: "CME Submission No. 25-157 (CFTC 제출본), Chapter 101", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", note: "CME가 CFTC에 낸 규칙 개정 제출본입니다(2025-05-07 발효, 2026년 10월물부터 적용). cmegroup.com 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 같은 문서의 CFTC 사본으로 확인했습니다. 실제 계약월의 현행 장을 다시 확인합니다." },
+    { source: "CME · Livestock Overview", excerpt: "Feeder Cattle futures are settled in cash", application: "생우의 실물인도와 비육우 5만 파운드의 지수 현금정산을 같은 가격위험 아래 비교합니다.", citation: "CME Group, The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note: "상품별 거래 단위와 정산 방식을 설명하는 거래소 교육자료이며 최신 규칙이 우선합니다. 이 페이지는 2026-10-09 자동 조회 타임아웃이라 인용문을 원문 대조하지 못했습니다. 비육우 선물이 5만 파운드×CME Feeder Cattle Index로 현금정산된다는 사실은 CFTC 제출본 검색 결과로 2차 확인했습니다." },
   ],
   review: [
     "62% 수율의 4만 파운드 생우 조정액과 5센트 차이의 5만 파운드 현금정산액을 계산하세요. (답: 3·7절)",

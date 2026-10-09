@@ -50,9 +50,11 @@ export default function SmoothieQwen() {
           </>
         }
         formula={String.raw`S(r)=1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`}
-        annotatedFormula={String.raw`S(r)=\underbrace{1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{S(r)}_{\text{lm\_head 행 배율}}=1-\underbrace{(1-m)}_{\text{최대로 깎을 폭}}\underbrace{\frac{\log\!\left(1+(s-1)r\right)}{\log s}}_{\text{risk 0→1을 0→1로 휜 곡선}}`}
         operations={[
-          { expression: String.raw`1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Risk가 0이면 원래 weight를 유지하고, risk가","1이면 최소 scale m만큼만 남깁니다."] },
+          { expression: String.raw`\frac{\log\!\left(1+(s-1)r\right)}{\log s}`, annotation: ["r=0이면 0, r=1이면 1인 log 곡선", "s가 클수록 중간 risk에서 빨리 커짐", "s=10, r=0.5면 log 5.5/log 10≈0.74"] },
+          { expression: String.raw`(1-m)`, annotation: ["risk 1인 token도 m만큼은 남기므로", "깎을 수 있는 최대 폭은 1−m", "m=0.5면 최대 절반까지"] },
+          { expression: String.raw`1-(1-m)\frac{\log\!\left(1+(s-1)r\right)}{\log s}`, annotation: ["1 − 0.5·0.74 ≈ 0.630", "가장 위험한 token도 weight가 0은 아님"] },
         ]}
         terms={[
           { symbol: "r", name: "risk score", description: "token이 목표 문자군을 직접 포함하거나 조합해 만들 가능성을 0에서 1 사이로 근사한 값입니다." },
@@ -102,14 +104,14 @@ z'_t&=(w'_t)^{\top}h\\
 p'(t\mid h)&=\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-w'_t&=\underbrace{S(r_t)w_t}_{\text{오른쪽 항으로 결과 계산}}\\
-z'_t&=\underbrace{(w'_t)^{\top}h}_{\text{scaled logit 계산}}\\
-p'(t\mid h)&=\underbrace{\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}}_{\text{기준량당 비율}}
+w'_t&=\underbrace{S(r_t)w_t}_{\text{token t 행만 축소}}\\
+z'_t&=\underbrace{(w'_t)^{\top}h}_{\text{문맥 h에서 새 logit}}\\
+p'(t\mid h)&=\frac{e^{z'_t}}{\underbrace{\sum_{j\in\mathcal V}e^{z'_j}}_{\text{vocabulary 전체가 공유}}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`S(r_t)w_t`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
-          { expression: String.raw`(w'_t)^{\top}h`, annotation: ["scaled logit이(가) 식의 결과에 기여하는 방식을","계산합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
-          { expression: String.raw`\frac{e^{z'_t}}{\sum_{j\in\mathcal V}e^{z'_j}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과","hidden state의 내적이 새 logit을 만듭니다."] },
+          { expression: String.raw`S(r_t)w_t`, annotation: ["편집은 lm_head의 token t 행 하나에", "배율을 곱할 뿐, 다른 행은 그대로"] },
+          { expression: String.raw`(w'_t)^{\top}h`, annotation: ["행이 0.5배면 양수 logit 4는 2로", "음수 logit은 0 쪽으로 올라가", "오히려 확률이 늘 수 있습니다"] },
+          { expression: String.raw`\sum_{j\in\mathcal V}e^{z'_j}`, annotation: ["분모가 달라져 모든 후보가 재정규화", "(4,2,0)→(2,2,0)이면 softmax ≈", "(0.468, 0.468, 0.063)"] },
         ]}
         terms={[
           { symbol: "w_t, w'_t", name: "original and scaled lm_head row", description: "token t를 hidden state에서 logit으로 투영하는 변환 전·후 weight 벡터입니다." },

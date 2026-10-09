@@ -20,9 +20,10 @@ export default function ExtensionField() {
         question="degree k 기약 다항식으로 만든 확장체의 원소는 어떻게 표현할까요?"
         idea="m(x)로 나눈 나머지만 남기면 degree k 이상 항을 제거할 수 있으므로, k개의 기저체 계수가 하나의 원소를 나타냅니다."
         formula={String.raw`\mathbb F_{p^k}\cong\mathbb F_p[u]/(m(u)),\qquad a=\sum_{i=0}^{k-1}a_i u^i`}
-        annotatedFormula={String.raw`\mathbb F_{p^k}\cong\mathbb F_p[u]/(m(u)),\qquad a=\underbrace{\sum_{i=0}^{k-1}a_i u^i}_{\text{irreducible modulus 계산}}`}
+        annotatedFormula={String.raw`\underbrace{\mathbb F_{p^k}}_{\text{확장체}}\cong\mathbb F_p[u]/\underbrace{(m(u))}_{\text{기약 modulus로 환원}},\qquad a=\underbrace{\sum_{i=0}^{k-1}a_i u^i}_{\text{Fp 좌표 k개}}`}
         operations={[
-          { expression: String.raw`\sum_{i=0}^{k-1}a_i u^i`, annotation: ["irreducible modulus이(가) 식의 결과에","기여하는 방식을 계산합니다.","m(x)로 나눈 나머지만 남기면 degree k 이상 항을","제거할 수 있으므로, k개의 기저체 계수가 하나의 원소를"] },
+          { expression: String.raw`\mathbb F_p[u]/(m(u))`, annotation: ["m(u)로 나눈 나머지만 남겨","degree k 이상 항을 제거","F₃[u]/(u²+1)에서는 u²=2"] },
+          { expression: String.raw`\sum_{i=0}^{k-1}a_i u^i`, annotation: ["원소 하나 = 기저체 계수 k개","F₃, k=2면 a+bu로 9가지"] },
         ]}
         terms={[
           {

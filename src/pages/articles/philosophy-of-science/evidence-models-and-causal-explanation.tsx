@@ -76,8 +76,8 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
           <p className="leading-8">20세기 과학 설명의 연역·법칙 모형은 초기 조건과 일반 법칙에서 현상을 논리적으로 이끌어 내려고 했습니다. 그러나 깃대 높이와 태양 각도로 그림자 길이를 구할 수 있다고 해서 그림자 길이가 깃대 높이의 원인인 것은 아닙니다. 논리적 도출만으로 설명 방향을 고르기 어렵습니다.</p>
           <p className="leading-8">우산 사례도 “판매가 많으면 사고가 많다”는 규칙에 오늘 판매량을 넣어 사고를 맞힐 수 있습니다. 그래도 왜 사고가 났는지에는 비와 노면 경로가 필요합니다. 참이고 예측력이 있는 문장도 질문에 관련된 원인을 빼면 설명이 얕을 수 있습니다.</p>
         </div>
-        <SourceApplication source="Stanford Encyclopedia · Scientific Explanation" excerpt="true, accurate, supported by evidence ... yet unexplanatory" application="우산 판매 규칙이 자료와 맞고 예측에 성공해도 사고를 줄일 원인 경로를 주지 않으면 인과 설명은 아닙니다." />
-        <CitationBlock source="Stanford Encyclopedia of Philosophy, Scientific Explanation" citeKey={1} href="https://plato.stanford.edu/entries/scientific-explanation/">법칙 모형, 통계적 관련성, 인과·통합·실용적 설명이 서로 어떤 문제를 해결하는지 정리한 전문 개관입니다.</CitationBlock>
+        <SourceApplication source="Stanford Encyclopedia · 20th Century Theories of Scientific Explanation" excerpt="true, accurate, supported by evidence, and so on and yet unexplanatory" application="우산 판매 규칙이 자료와 맞고 예측에 성공해도 사고를 줄일 원인 경로를 주지 않으면 인과 설명은 아닙니다." />
+        <CitationBlock source="Stanford Encyclopedia of Philosophy, 20th Century Theories of Scientific Explanation" citeKey={1} href="https://plato.stanford.edu/entries/scientific-explanation-20th/">법칙 모형, 통계적 관련성, 인과·통합·실용적 설명이 서로 어떤 문제를 해결하는지 정리한 전문 개관입니다. 옛 항목 “Scientific Explanation”은 은퇴(Document Retired)하고 이 제목으로 다시 발행됐습니다(2026-10-09 확인).</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 개입과 모형의 목적에 따라 좋은 설명이 달라집니다" bridge="원인 설명도 하나의 만능 형식이 아니라는 점을 확인했습니다. 실험하기 어려운 대상과 여러 설명 수준의 한계를 남깁니다.">

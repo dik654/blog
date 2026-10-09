@@ -56,16 +56,17 @@ export default function Nccl() {
             g^* &= \operatorname{first}(\mathcal C(r))
           \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-            \mathcal N_{30}(x) &= \underbrace{\mathrm{net}_{30}(ip(x))}_{\text{오른쪽 항으로 결과 계산}} \\
-            g\in\mathcal C(r)\quad &\Longleftrightarrow\quad v(g)=\underbrace{v(r)=2}_{\text{matching candidates 계산}} \\
-            &\land\ \mathcal N_{30}(g)=\underbrace{\mathcal N_{30}(r)}_{\text{판정 조건 결합}} \\
-            g^* &= \operatorname{first}(\mathcal C(r))
+            \mathcal N_{30}(x) &= \underbrace{\mathrm{net}_{30}(ip(x))}_{\text{GID의 IPv4에 /30 mask}} \\
+            g\in\mathcal C(r)\quad &\Longleftrightarrow\quad \underbrace{v(g)=v(r)=2}_{\text{둘 다 RoCE v2}} \\
+            &\land\ \underbrace{\mathcal N_{30}(g)=\mathcal N_{30}(r)}_{\text{같은 direct cable}} \\
+            g^* &= \underbrace{\operatorname{first}(\mathcal C(r))}_{\text{첫 후보의 index}}
           \end{aligned}`}
           operations={[
-            { expression: String.raw`\mathrm{net}_{30}(ip(x))`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network","prefix가 모두 같은 local entry만 후보로"] },
-            { expression: String.raw`v(r)=2`, annotation: ["matching candidates이(가) 식의 결과에","기여하는 방식을 계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network"] },
-            { expression: String.raw`\mathcal N_{30}(r)`, annotation: ["remote GID이(가) 식의 결과에 기여하는 방식을","계산합니다.","Remote GID와 local GID에서 IPv4 주소를","복원한 뒤 RoCE version과 /30 network"] },
-          ]}
+  { expression: String.raw`\mathrm{net}_{30}(ip(x))`, annotation: ["GID에서 IPv4를 복원해 /30 network로","cable 하나가 network 하나가 되도록"] },
+  { expression: String.raw`v(g)=v(r)=2`, annotation: ["local entry와 remote 모두","RoCE v2(UDP/IP) path여야 후보입니다"] },
+  { expression: String.raw`\mathcal N_{30}(g)=\mathcal N_{30}(r)`, annotation: ["remote와 같은 /30에 있는 local GID만 남김","기본 /16이면 여러 cable이 한 후보 집합에"] },
+  { expression: String.raw`\operatorname{first}(\mathcal C(r))`, annotation: ["patch는 GID table 순회 중 첫 후보를 씀","/30이면 후보가 정확히 cable 하나"] },
+]}
           terms={[
             { symbol: "r", name: "remote GID", description: "QP를 연결하려는 peer가 교환한 remote RoCE GID입니다." },
             { symbol: "g", name: "local GID entry", description: "현재 HCA port의 GID table에서 검사 중인 local entry입니다." },

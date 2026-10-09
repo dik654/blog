@@ -17,9 +17,11 @@ export default function Chunking() {
         question="Chunk 길이가 정답을 실제로 보존하는지 어떻게 계산할까요?"
         idea={<>평가 질문마다 사람이 표시한 정답 근거 span을 두고, 검색 또는 parent 복원 뒤 prompt에 남은 문자 구간과의 교집합을 잽니다. 여러 구간의 합집합을 사용해야 overlap을 두 번 세지 않습니다.</>}
         formula={String.raw`C_{\mathrm{span}}(q)=\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}`}
-        annotatedFormula={String.raw`C_{\mathrm{span}}(q)=\underbrace{\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`C_{\mathrm{span}}(q)=\frac{\left|\underbrace{A_q}_{\text{정답 근거 span}}\cap\underbrace{\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)}_{\text{prompt에 남은 구간}}\right|}{\underbrace{|A_q|}_{\text{정답 근거 길이}}}`}
         operations={[
-          { expression: String.raw`\frac{\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|}{|A_q|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","평가 질문마다"] },
+          { expression: String.raw`\bigcup_{c\in K_q}\operatorname{span}(c)`, annotation: ["검색·parent 복원 뒤 남은 chunk 구간을","합집합으로 묶어 overlap을 한 번만 셈"] },
+          { expression: String.raw`\left|A_q\cap\left(\bigcup_{c\in K_q}\operatorname{span}(c)\right)\right|`, annotation: ["정답 근거 중 prompt에 실제로 남은 문자 수","예: 100자 중 80자"] },
+          { expression: String.raw`|A_q|`, annotation: ["정답 근거 전체 길이로 나눠 0~1로 맞춤","80 / 100 = 0.8"] },
         ]}
         terms={[
           { symbol: "A_q", name: "answer-support span", description: "질문 q의 답을 뒷받침하는 원문 문자 또는 token 위치 집합입니다." },

@@ -189,6 +189,8 @@ b=3.5:\quad4-3.5=0.5
           <p className="leading-7">안쪽 추가 비용이 항상 5이고 밖은 항상 4인 경우도 봅니다. 내부 비용이 올라가지 않아도 전부 밖에 두는 것이 가장 쌉니다. 반대로 안이 항상 3이면 이 사례의 여섯 일은 모두 안에서 처리합니다. 비용이 증가하지 않는다는 사실만으로 세상의 모든 거래가 한 기업에 들어간다고 결론 낼 수는 없습니다.</p>
           <p className="leading-7">현실에서는 품질·자금·권한·법적 책임·작업 간 연결과 변경 비용도 다릅니다. 이 글의 비용 합계는 권한을 누가 갖는지, 이익을 누가 가져가는지까지 자동으로 결정하지 않습니다. 내부 이전가격의 존재와 수준을 이 수식 하나로 설명하는 것도 범위를 넘습니다.</p>
           <p className="leading-7">Coase는 1991년 노벨 강연에서 실제 기업과 계약에 관한 자료가 더 필요하다고 강조했습니다. 여섯 일의 산술은 어떤 항목을 비교할지 보여 줍니다. 특정 기업의 최적 크기나 모든 기업이 존재하는 이유를 실증한 결과로 읽어서는 안 됩니다.</p>
+          <p className="leading-7">같은 강연에서 Coase는 Oliver Williamson 등의 작업이 기업이 무엇을 어떻게 하는지 정하는 요인을 더 잘 이해하게 했다고 말했습니다. 그 흐름의 대표 논문이 Williamson의 1979년 「Transaction-Cost Economics: The Governance of Contractual Relations」(The Journal of Law and Economics 22권 2호, 233~261쪽)입니다.</p>
+          <p className="leading-7">제목이 말하는 계약 관계의 지배구조(governance)가 밖의 비용을 어떻게 바꾸는지는 이 글에서 다루지 않으며, 이 논문은 서지만 확인했습니다(2026-10-09).</p>
         </div>
         <CostTable scenarios={[{ label: "밖 4·설립비 5", outside: 4, setup: 5 }]} />
         <CitationBlock source="R. H. Coase · The Institutional Structure of Production, Nobel lecture (1991)" citeKey={2} href="https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/">공식 강연 본문 중 계약 활동의 비용과 실제 자료의 필요성을 설명하는 단락을 확인했습니다. 이 글의 숫자는 강연에서 측정한 결과가 아닙니다.</CitationBlock>

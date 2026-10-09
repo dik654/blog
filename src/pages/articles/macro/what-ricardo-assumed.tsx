@@ -14,7 +14,7 @@ import CapitalMovesViz from "./what-ricardo-assumed/viz/CapitalMovesViz";
  * 경제 2단계 9편, 거시 4편. 1단계가 비교우위의 메커니즘을 소유하므로 이
  * 글은 그것을 다시 설명하지 않는다. 이 글이 소유하는 것은 그 논증이 서
  * 있는 전제와, 전제가 풀렸을 때 저자 자신이 적어 둔 다른 결론이다.
- * 원자료는 Ricardo(1817) 초판 7장이며 Project Gutenberg 전사본으로 읽었다.
+ * 원자료는 Ricardo(1817) 초판 6장 「On Foreign Trade」(3판 1821년 기준 7장)이며 Project Gutenberg 전사본으로 읽었다.
  * facsimile이 아니라는 점을 인용 블록에 밝힌다.
  */
 export default function WhatRicardoAssumedArticle() {
@@ -90,7 +90,7 @@ export default function WhatRicardoAssumedArticle() {
         </div>
 
         <CitationBlock
-          source="David Ricardo, 『On the Principles of Political Economy, and Taxation』 (London: John Murray, 1817) 초판, 7장 「On Foreign Trade」"
+          source="David Ricardo, 『On the Principles of Political Economy, and Taxation』 (London: John Murray, 1817) 초판, 6장 「On Foreign Trade」(3판 기준 7장)"
           citeKey={1}
           href="https://www.gutenberg.org/ebooks/33310"
         >
@@ -102,7 +102,7 @@ export default function WhatRicardoAssumedArticle() {
           Englishmen cannot be given for that of 80 Englishmen, but the produce
           of the labour of 100 Englishmen may be given for the produce of the
           labour of 80 Portuguese.” Project Gutenberg의 1817년 초판 전사본(eBook
-          33310)을 내려받아 7장 전체를 읽었습니다. 이 글의 다른 원자료들과
+          33310)을 내려받아 이 장 전체를 읽었습니다. 초판은 「On Profits」를 두 번째 V장(V*)으로 매겨서 외국무역이 VI장이고, 흔히 인용되는 7장은 3판(1821)의 번호입니다. 이 글의 다른 원자료들과
           달리 <strong>facsimile이 아니라 전사본</strong>이어서 쪽 이미지로
           대조하지 못했고, 그래서 쪽수를 적지 않고 장 번호까지만 적습니다.
         </CitationBlock>
@@ -290,7 +290,7 @@ export default function WhatRicardoAssumedArticle() {
         </div>
 
         <CitationBlock
-          source="Ricardo (1817) 초판, 7장"
+          source="Ricardo (1817) 초판, 6장(3판 기준 7장)"
           citeKey={2}
           href="https://www.gutenberg.org/ebooks/33310"
         >
@@ -303,7 +303,7 @@ export default function WhatRicardoAssumedArticle() {
           and the cloth should both be made in Portugal”이고, 그 경우의 결론은
           “if capital freely flowed towards those countries where it could be
           most profitably employed, there could be no difference in the rate of
-          profit”입니다. 전제를 떠받친 근거는 “the fancied or real insecurity of
+          profit, and no other difference in the real or labour price of commodities, than the additional quantity of labour required to convey them to the various markets”입니다. 전제를 떠받친 근거는 “the fancied or real insecurity of
           capital, when not under the immediate control of its owner, together
           with the natural disinclination which every man has to quit the
           country of his birth”이며, 바로 뒤에 “These feelings, which I should

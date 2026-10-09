@@ -92,7 +92,7 @@ assumptions={["n−1의 불편성은 i.i.d. 표본과 유한한 모집단 분산
 <p>왜 정확히 n−1일까요? 각 Zᵢ−μ를 (Zᵢ−Z̄ₙ)+(Z̄ₙ−μ)로 나누어 제곱합니다. 합을 내면 가운데 섞인 항에는 Σ(Zᵢ−Z̄ₙ)=0이 곱해져 사라집니다. 표본의 가운데를 옮겨 맞춘 만큼, 원래 평균에서 잰 거리보다 n(Z̄ₙ−μ)²가 작아집니다.</p>
 <ExplainedFormula question="n−1이라는 교정값을 기댓값으로 유도할 수 있나요?" idea="모집단 평균에서의 거리 합과 표본평균에서의 거리 합을 먼저 비교합니다. i.i.d. 평균의 분산 σ²/n을 대입하면 덜 센 양의 기댓값이 σ² 하나입니다." formula={String.raw`\sum_i(Z_i-\bar Z_n)^2=\sum_i(Z_i-\mu)^2-n(\bar Z_n-\mu)^2`}
 annotatedFormula={String.raw`\begin{gathered}\sum_i(Z_i-\bar Z_n)^2=\sum_i(Z_i-\mu)^2-n(\bar Z_n-\mu)^2\\\mathbb E\!\left[\sum_i(Z_i-\bar Z_n)^2\right]=n\sigma^2-n\frac{\sigma^2}{n}=(n-1)\sigma^2\\n=3:\quad \mathbb E[\text{거리 합}]=2\cdot\frac12=1\end{gathered}`}
-operations={[{expression:String.raw`\mathbb E[s^2]=(n-1)\sigma^2/(n-1)=\sigma^2`,annotation:["반복해서 뽑은 추정값들의 확률 가중 평균이 목표 분산과 같습니다."]}]}
+operations={[{expression:String.raw`n(\bar Z_n-\mu)^2`,annotation:["μ 대신 표본평균에서 재서 덜 센 거리","기댓값은 n·σ²/n=σ², 딱 하나 분량","n=3, σ²=1/2면 거리 합 기댓값 2·1/2=1"]}]}
 terms={[{symbol:"Σ(Zᵢ−Z̄ₙ)",name:"편차의 합",description:"같은 값들의 평균을 빼므로 언제나 0입니다."}]}
 assumptions={["n>1, 독립이고 같은 분포, 유한한 σ²입니다.","E[Z̄ₙ]=μ이며 Var(Z̄ₙ)=σ²/n이라는 평균의 계산은 다음 절에서 유도합니다."]} interpretation="분모 n으로 나눈 추정량의 기댓값은 (n−1)σ²/n입니다. 이것이 작다는 말은 원래 σ²를 추정할 때의 편향을 뜻합니다." />
 <p>같은 네 기록에서 세 번 뽑는 모든 순서 4³=64개를 직접 평균해도 확인됩니다. 분모 3의 값들을 평균하면 1/3이고, 분모 2의 값들을 평균하면 1/2입니다. 앞에서 관측한 1·2·3 한 묶음의 추정값 1과 이 반복 평균 1/2를 구별해야 합니다.</p>

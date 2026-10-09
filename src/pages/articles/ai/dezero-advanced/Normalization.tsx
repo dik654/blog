@@ -27,16 +27,16 @@ export default function Normalization({ onCodeRef }: { onCodeRef: (key: string, 
 \approx[-1,1].
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\mu&=\underbrace{(1+3)/2=2,}_{\text{기준량당 비율}}\\
-\sigma^2&=\underbrace{((1-2)^2+(3-2)^2)/2=1,}_{\text{기준량당 비율}}\\
-\hat{x}&=\underbrace{(x-\mu)/\sqrt{\sigma^2+\varepsilon}
-\approx[-1,1].}_{\text{기준량당 비율}}
+\mu&=\underbrace{(1+3)/2=2}_{\text{feature 축 평균}},\\
+\sigma^2&=\underbrace{((1-2)^2+(3-2)^2)/2=1}_{\text{population variance}},\\
+\hat{x}&=\underbrace{(x-\mu)}_{\text{평균 빼기}}/\underbrace{\sqrt{\sigma^2+\varepsilon}}_{\text{표준편차로 scale}}
+\approx[-1,1].
 \end{aligned}`}
         operations={[
-          { expression: String.raw`(1+3)/2=2,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
-          { expression: String.raw`((1-2)^2+(3-2)^2)/2=1,`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
-          { expression: String.raw`(x-\mu)/\sqrt{\sigma^2+\varepsilon}
-\approx[-1,1].`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Feature 축 평균을 빼고 같은 축의 population","variance로 나눕니다."] },
+          { expression: String.raw`(1+3)/2=2`, annotation: ["한 sample의 feature 1과 3을","feature 축으로 평균내 μ=2"] },
+          { expression: String.raw`((1-2)^2+(3-2)^2)/2=1`, annotation: ["평균과의 제곱 편차를 n=2로 나눈","population variance(n−1 아님) = 1"] },
+          { expression: String.raw`(x-\mu)`, annotation: ["[1,3]에서 2를 빼 [-1,1]로 중심 이동"] },
+          { expression: String.raw`\sqrt{\sigma^2+\varepsilon}`, annotation: ["√(1+ε)≈1로 나눠 scale을 맞춤","상수 입력이면 ε가 0 나눗셈을 막음"] },
         ]}
         terms={[
           { symbol: "μ", name: "feature mean", description: "이 sample의 정규화 대상 feature 평균입니다." },

@@ -186,7 +186,7 @@ export default function ExecutionTrace() {
               </p>
               <M display>
                 {
-                  "\\underbrace{a(\\omega^i)}_{\\text{다항식 a를 ω^i에서 평가}} = \\underbrace{a_i}_{\\text{trace i행의 a값}},\\quad \\underbrace{b(\\omega^i)}_{\\text{다항식 b를 ω^i에서 평가}} = \\underbrace{b_i}_{\\text{trace i행의 b값}}"
+                  "\\underbrace{a(\\omega^i)}_{\\text{다항식 a를 }\\omega^i\\text{에서 평가}} = \\underbrace{a_i}_{\\text{trace i행의 a값}},\\quad \\underbrace{b(\\omega^i)}_{\\text{다항식 b를 }\\omega^i\\text{에서 평가}} = \\underbrace{b_i}_{\\text{trace i행의 b값}}"
                 }
               </M>
               <p className="text-sm text-muted-foreground mt-2">

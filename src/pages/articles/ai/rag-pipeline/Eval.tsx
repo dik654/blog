@@ -12,9 +12,10 @@ export default function Eval() {
         question="한 질문에 정답 문서가 여러 개일 때 top-k가 얼마나 회수했는지 어떻게 계산할까요?"
         idea={<>정답 문서 집합과 검색된 top-k의 교집합을 전체 정답 수로 나눕니다. 하나만 gold로 두면 다른 정답 문서를 false negative로 잘못 셀 수 있습니다.</>}
         formula={String.raw`\operatorname{Recall@k}(q)=\frac{|R_q\cap C_{q,k}|}{|R_q|}`}
-        annotatedFormula={String.raw`\operatorname{Recall@k}(q)=\underbrace{\frac{|R_q\cap C_{q,k}|}{|R_q|}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{Recall@k}(q)=\frac{\underbrace{|R_q\cap C_{q,k}|}_{\text{top-k가 회수한 정답}}}{\underbrace{|R_q|}_{\text{전체 정답 수}}}`}
         operations={[
-          { expression: String.raw`\frac{|R_q\cap C_{q,k}|}{|R_q|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정답 문서 집합과 검색된 top-k의 교집합을 전체 정답 수로","나눕니다."] },
+          { expression: String.raw`|R_q\cap C_{q,k}|`, annotation: ["정답 문서 집합과 top-k 결과가 겹친 수","예: top-10 안에 정답 3개"] },
+          { expression: String.raw`|R_q|`, annotation: ["gold 하나가 아니라 정답 전체 수로 나눔","정답 4개면 3/4 = 0.75, 순서는 무시"] },
         ]}
         terms={[
           { symbol: "R_q", name: "relevant set", description: "질문 q를 뒷받침하는 모든 label 문서입니다." },
@@ -48,12 +49,12 @@ P_{\mathrm{cite}}&=\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|}\\
 R_{\mathrm{cite}}&=\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-P_{\mathrm{cite}}&=\underbrace{\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|}}_{\text{기준량당 비율}}\\
-R_{\mathrm{cite}}&=\underbrace{\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}}_{\text{기준량당 비율}}
+P_{\mathrm{cite}}&=\frac{\underbrace{|E_{\mathrm{valid}}|}_{\text{주장을 지지한 인용}}}{\underbrace{|E_{\mathrm{all}}|}_{\text{붙인 인용 전체}}}\\
+R_{\mathrm{cite}}&=\frac{\underbrace{|U_{\mathrm{supported}}|}_{\text{인용이 맞게 붙은 주장}}}{\underbrace{|U_{\mathrm{verifiable}}|}_{\text{근거가 필요한 주장}}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","답변을 검증 가능한 atomic claim으로 나누고 각","citation의 support를 판정합니다."] },
-          { expression: String.raw`\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","답변을 검증 가능한 atomic claim으로 나누고 각","citation의 support를 판정합니다."] },
+          { expression: String.raw`\frac{|E_{\mathrm{valid}}|}{|E_{\mathrm{all}}|}`, annotation: ["붙인 인용 중 실제로 주장을 지지한 비율","인용 5개 중 4개가 지지하면 0.8"] },
+          { expression: String.raw`\frac{|U_{\mathrm{supported}}|}{|U_{\mathrm{verifiable}}|}`, annotation: ["근거가 필요한 주장 중 올바른 인용이","연결된 비율, 6개 중 3개면 0.5","precision이 높아도 빠진 근거를 드러냄"] },
         ]}
         terms={[
           { symbol: "E_all", name: "all citation links", description: "답변이 주장에 연결한 모든 citation입니다." },

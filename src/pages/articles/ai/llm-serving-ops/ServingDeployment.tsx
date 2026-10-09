@@ -51,12 +51,10 @@ export default function ServingDeployment() {
 T_{\mathrm{start}}&\approx T_{\mathrm{delay}}\\
 &\quad+N_{\mathrm{fail}}T_{\mathrm{period}}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-T_{\mathrm{start}}&\approx \underbrace{T_{\mathrm{delay}}}_{\text{initial delay 계산}}\\
-&\quad+N_{\mathrm{fail}}T_{\mathrm{period}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T_{\mathrm{start}}&\approx \underbrace{T_{\mathrm{delay}}}_{\text{첫 probe 전 대기}}\\&\quad+\underbrace{N_{\mathrm{fail}}T_{\mathrm{period}}}_{\text{재시작 전 허용 실패 시간}}\end{aligned}`}
         operations={[
-          { expression: String.raw`T_{\mathrm{delay}}`, annotation: ["initial delay이(가) 식의 결과에 기여하는 방식을","계산합니다.","첫 검사 전 지연 뒤 일정한 주기로 검사하고, 연속 실패가","임계치에 도달하면 container를 재시작합니다."] },
+          { expression: String.raw`T_{\mathrm{delay}}`, annotation: ["container 시작 뒤 첫 startup probe까지", "기다리는 initialDelaySeconds입니다"] },
+          { expression: String.raw`N_{\mathrm{fail}}T_{\mathrm{period}}`, annotation: ["failureThreshold번 연속 실패할 때까지", "periodSeconds 간격으로 기다립니다", "합이 weight loading이 쓸 수 있는 budget"] },
         ]}
         terms={[
           {
@@ -126,9 +124,10 @@ T_{\mathrm{start}}&\approx \underbrace{T_{\mathrm{delay}}}_{\text{initial delay 
           </>
         }
         formula={String.raw`R_{\mathrm{desired}}=\left\lceil R_{\mathrm{current}}\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}\right\rceil`}
-        annotatedFormula={String.raw`R_{\mathrm{desired}}=\underbrace{\left\lceil R_{\mathrm{current}}\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}\right\rceil}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`R_{\mathrm{desired}}=\left\lceil \underbrace{R_{\mathrm{current}}}_{\text{현재 Pod 수}}\underbrace{\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}}_{\text{목표 대비 부하 배율}}\right\rceil`}
         operations={[
-          { expression: String.raw`\left\lceil R_{\mathrm{current}}\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}\right\rceil`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","현재값이 목표의 두 배면 replica도 대략 두 배로,","절반이면 절반으로 제안합니다."] },
+          { expression: String.raw`\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}`, annotation: ["queue 같은 metric이 목표의 몇 배인지", "두 배면 2, 절반이면 0.5입니다"] },
+          { expression: String.raw`\left\lceil R_{\mathrm{current}}\frac{m_{\mathrm{current}}}{m_{\mathrm{target}}}\right\rceil`, annotation: ["현재 replica에 배율을 곱해 올림하면", "제안 replica가 되고, 이후 tolerance와", "min/max policy로 제한합니다"] },
         ]}
         terms={[
           {

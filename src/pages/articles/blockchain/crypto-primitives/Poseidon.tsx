@@ -15,9 +15,12 @@ export default function Poseidon() {
         question="한 Poseidon round는 state를 어떻게 비선형적으로 섞을까요?"
         idea="Round constant로 대칭을 깨고, S-box로 비선형성을 넣은 뒤, invertible MDS matrix로 한 좌표의 차이를 전체 state에 확산합니다. Partial round는 S-box를 일부 좌표에만 적용해 회로 비용을 줄이되 그만큼 분석된 round 수가 필요합니다."
         formula={String.raw`\mathbf x^{(r+1)}=M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha`}
-        annotatedFormula={String.raw`\mathbf x^{(r+1)}=\underbrace{M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\mathbf x^{(r+1)}=\underbrace{M}_{\text{MDS 확산}}\,\underbrace{S_r}_{\text{S-box 비선형}}\!\left(\underbrace{\mathbf x^{(r)}+\mathbf c^{(r)}}_{\text{round constant 더함}}\right),\qquad \underbrace{S(x)=x^\alpha}_{\text{거듭제곱 S-box}}`}
         operations={[
-          { expression: String.raw`M\,S_r\!\left(\mathbf x^{(r)}+\mathbf c^{(r)}\right),\qquad S(x)=x^\alpha`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Round constant로 대칭을 깨고, S-box로","비선형성을 넣은 뒤, invertible MDS matrix로","한 좌표의 차이를 전체 state에 확산합니다."] },
+          { expression: String.raw`\mathbf x^{(r)}+\mathbf c^{(r)}`, annotation: ["round마다 다른 상수를 state에 더해","round 사이의 대칭을 깹니다"] },
+          { expression: String.raw`S_r`, annotation: ["full round는 모든 좌표, partial round는","일부 좌표에만 S-box를 적용합니다"] },
+          { expression: String.raw`M`, annotation: ["invertible MDS matrix로 한 좌표의","차이를 state 전체에 퍼뜨립니다"] },
+          { expression: String.raw`S(x)=x^\alpha`, annotation: ["α=5면 x⁵를 square·square·multiply","세 번의 multiplication으로 계산","gcd(α,p−1)=1이어야 permutation"] },
         ]}
         terms={[
           { symbol: String.raw`\mathbf x^{(r)}`, name: "state", description: "r번째 round가 받는 t개 field element입니다." },
@@ -32,9 +35,10 @@ export default function Poseidon() {
         question="Sponge의 capacity가 이상적인 collision security 상한을 어떻게 제한할까요?"
         idea="Rate 좌표로 입출력을 주고받아도 capacity 좌표는 내부에 남아 permutation 호출 사이의 숨은 상태를 만듭니다. 이상적 permutation model에서는 capacity c field elements가 제공하는 bit 수와 digest 길이 중 작은 값이 collision search의 상한을 정합니다."
         formula={String.raw`b_{\mathrm{coll}}\lesssim \frac{\min(c\log_2 p,\,n)}{2}`}
-        annotatedFormula={String.raw`b_{\mathrm{coll}}\le\underbrace{sssim \frac{\min(c\log_2 p,\,n)}{2}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`b_{\mathrm{coll}}\lesssim \frac{\min(\underbrace{c\log_2 p}_{\text{capacity bit 수}},\,\underbrace{n}_{\text{digest 길이}})}{\underbrace{2}_{\text{birthday 절반}}}`}
         operations={[
-          { expression: String.raw`sssim \frac{\min(c\log_2 p,\,n)}{2}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Rate 좌표로 입출력을 주고받아도 capacity 좌표는","내부에 남아 permutation 호출 사이의 숨은 상태를","만듭니다."] },
+          { expression: String.raw`c\log_2 p`, annotation: ["capacity field element c개가 담는 bit","rate 입출력과 달리 내부에 숨은 상태"] },
+          { expression: String.raw`\frac{\min(c\log_2 p,\,n)}{2}`, annotation: ["capacity bit와 digest 길이 중 작은 쪽의","절반이 이상적 collision 보안 상한","BN254 하나여도 127-bit가 자동 증명은 아님"] },
         ]}
         terms={[
           { symbol: "c", name: "capacity width", description: "외부 rate와 분리한 field element 수입니다." },

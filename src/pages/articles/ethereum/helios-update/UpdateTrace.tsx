@@ -50,9 +50,10 @@ export default function UpdateTrace({
           formula={
             "P(s)=\\left\\lfloor\\frac{s}{S_{\\rm epoch}E_{\\rm period}}\\right\\rfloor"
           }
-          annotatedFormula={String.raw`P(s)=\underbrace{\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`P(s)=\biggl\lfloor\frac{\underbrace{s}_{\text{beacon slot}}}{\underbrace{S_{\rm epoch}E_{\rm period}}_{\text{period당 slot}}}\biggr\rfloor`}
           operations={[
-            { expression: String.raw`\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Slot을 epoch 크기로 먼저 묶고, 다시 period당","epoch 수로 묶습니다."] },
+            { expression: String.raw`S_{\rm epoch}E_{\rm period}`, annotation: ["epoch당 slot × period당 epoch로","period 하나의 slot 수를 만듦","mainnet 32×256 = 8,192"] },
+            { expression: String.raw`\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor`, annotation: ["slot을 그 크기로 나눠 내림하면 period","8,191 → 0, 8,192 → 1","경계에서 old committee 재사용 금지"] },
           ]}
           terms={[
             {

@@ -22,9 +22,10 @@ export default function FTTransformer() {
         question="Numerical scalar 하나를 column 정체성이 보존된 d차원 token으로 어떻게 바꿀까?"
         idea={<>j번째 numerical column만의 direction vector wⱼ를 scalar xᵢⱼ만큼 늘리고, feature bias bⱼ를 더합니다. 값의 크기와 column identity를 함께 학습 가능한 vector로 만드는 계산입니다.</>}
         formula={String.raw`T^{(\mathrm{num})}_{i,j}=b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d`}
-        annotatedFormula={String.raw`T^{(\mathrm{num})}_{i,j}=\underbrace{b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d}_{\text{feature direction 계산}}`}
+        annotatedFormula={String.raw`\underbrace{T^{(\mathrm{num})}_{i,j}}_{\text{column j의 token}}=\underbrace{b_j}_{\text{column 정체성}}+\underbrace{x^{(\mathrm{num})}_{i,j}}_{\text{값의 크기}}\underbrace{w_j}_{\text{column 전용 방향}}\in\mathbb R^d`}
         operations={[
-          { expression: String.raw`b_j+x^{(\mathrm{num})}_{i,j}w_j\in\mathbb R^d`, annotation: ["feature direction이(가) 식의 결과에 기여하는","방식을 계산합니다.","j번째 numerical column만의 direction","vector wⱼ를 scalar xᵢⱼ만큼 늘리고,"] },
+          { expression: String.raw`x^{(\mathrm{num})}_{i,j}w_j`, annotation: ["값 42만으론 나이인지 잔액인지 모름", "column마다 다른 방향 w_j를", "값만큼 늘려 크기와 정체성을 함께 담음"] },
+          { expression: String.raw`b_j`, annotation: ["값이 0이어도 어느 column인지", "남기는 d차원 기준 vector"] },
         ]}
         terms={[
           { symbol: "x_i,j", name: "numerical value", description: "i번째 row의 j번째 수치형 scalar이며 단위·missing 처리는 schema contract가 정합니다." },
@@ -45,13 +46,13 @@ T_i&=\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),\\
 T_i&\in\mathbb R^{(k+1)\times d}.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-T^{(\mathrm{cat})}_{i,j}&=\underbrace{b_j+E_j[c_{i,j}],}_{\text{column embedding table 계산}}\\
-T_i&=\underbrace{\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),}_{\text{허용 경계 판정}}\\
-T_i&\in\mathbb R^{(k+1)\times d}.
+T^{(\mathrm{cat})}_{i,j}&=b_j+\underbrace{E_j[c_{i,j}]}_{\text{category vector 조회}},\\
+T_i&=\operatorname{stack}\!\left(\underbrace{[\mathrm{CLS}]}_{\text{row 요약 자리}},\underbrace{T_{i,1},\ldots,T_{i,k}}_{\text{feature token k개}}\right),\\
+T_i&\in\underbrace{\mathbb R^{(k+1)\times d}}_{\text{Transformer 입력}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`b_j+E_j[c_{i,j}],`, annotation: ["column embedding table이(가) 식의 결과에","기여하는 방식을 계산합니다.","Categorical column은 one-hot을 직접 큰","vector로 유지하지 않고 column 전용"] },
-          { expression: String.raw`\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Categorical column은 one-hot을 직접 큰","vector로 유지하지 않고 column 전용","embedding table에서 해당 category"] },
+          { expression: String.raw`E_j[c_{i,j}]`, annotation: ["큰 one-hot 대신 column j 전용", "embedding table에서 해당 category의", "d차원 vector를 lookup"] },
+          { expression: String.raw`\operatorname{stack}\!\left([\mathrm{CLS}],T_{i,1},\ldots,T_{i,k}\right)`, annotation: ["모든 feature token을 같은 shape로 쌓고", "[CLS]를 더해 k+1개 위치", "attention pair 수는 (k+1)²로 증가"] },
         ]}
         terms={[
           { symbol: "c_i,j", name: "category index", description: "j번째 column vocabulary 안에서 현재 category를 가리키는 discrete ID입니다." },

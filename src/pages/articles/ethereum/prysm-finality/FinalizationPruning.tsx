@@ -12,9 +12,10 @@ export default function FinalizationPruning({ onCodeRef }: { onCodeRef: (key: st
         question="충돌하는 두 checkpoint가 각각 2/3 vote를 받았다면 최소 얼마의 stake가 양쪽에 겹칠까요?"
         idea="전체 stake W 안에 크기가 각각 최소 2W/3인 두 voter 집합을 넣으면, 포함-배제 원리에 따라 교집합은 최소 W/3입니다. 충돌 vote에 모두 들어간 validator는 slashing evidence를 남깁니다."
         formula={String.raw`|Q_1\cap Q_2|\;\ge\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}`}
-        annotatedFormula={String.raw`|Q_1\cap Q_2|\;\ge\underbrace{\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\underbrace{|Q_1\cap Q_2|}_{\text{양쪽에 서명한 stake}}\;\ge\;\underbrace{|Q_1|+|Q_2|-W}_{\text{포함-배제 하한}}\;\ge\;\underbrace{\frac{W}{3}}_{\text{slashable 최소량}}`}
         operations={[
-          { expression: String.raw`\;|Q_1|+|Q_2|-W\;\ge\;\frac{W}{3}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","전체 stake W 안에 크기가 각각 최소 2W/3인 두","voter 집합을 넣으면, 포함-배제 원리에 따라 교집합은","최소 W/3입니다."] },
+          { expression: String.raw`|Q_1|+|Q_2|-W`, annotation: ["두 quorum 합에서 전체 stake를 빼면","반드시 겹치는 양이 남음","64+64−96 = 32 ETH"] },
+          { expression: String.raw`\frac{W}{3}`, annotation: ["각 quorum ≥ 2W/3이면 겹침 ≥ W/3","96 ETH 중 최소 32 ETH가 evidence","Byzantine 1/3 초과를 막는다는 뜻 아님"] },
         ]}
         terms={[
           { symbol: "W", name: "전체 활성 잔액", description: "전체 active effective balance(Gwei)" },

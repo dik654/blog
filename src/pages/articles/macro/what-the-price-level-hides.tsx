@@ -313,7 +313,7 @@ export default function WhatThePriceLevelHidesArticle() {
         >
           세 경우가 모두 숫자와 함께 적혀 있습니다. 손 바뀜이 두 배가 되면
           빵·석탄·옷감의 값이 0.20·10.00·2.00달러가 되고, 오간 물량이 두 배가
-          되면 0.05·2.50·0.50달러가 됩니다(19~20쪽). 21쪽의 문장이 이 부품의
+          되면 0.05·2.50·0.50달러가 됩니다(20쪽). 21쪽의 문장이 이 부품의
           전부입니다 — “To double the quantity of money, therefore, is not
           always to double prices. We must distinctly recognize that the
           quantity of money is only one of three factors, all equally important

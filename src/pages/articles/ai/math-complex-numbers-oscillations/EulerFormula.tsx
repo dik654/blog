@@ -17,9 +17,11 @@ export default function EulerFormula() {
         question="eˣ·cos x·sin x를 같은 power-series 표현으로 놓으면 i의 반복이 어떻게 두 삼각함수를 만들까?"
         idea={<>eˣ의 각 항에 x=iθ를 넣습니다. i의 짝수 거듭제곱 1,−1,…은 cosine 항으로, 홀수 거듭제곱 i,−i,…은 i×sine 항으로 묶입니다.</>}
         formula={String.raw`e^x=\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}`}
-        annotatedFormula={String.raw`e^x=\underbrace{\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`e^x=\underbrace{\sum_{m=0}^{\infty}\frac{x^m}{m!}}_{\text{모든 차수 항}},\quad \cos x=\underbrace{\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!}}_{\text{짝수 차수, 부호 교대}},\quad \sin x=\underbrace{\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}}_{\text{홀수 차수, 부호 교대}}`}
         operations={[
-          { expression: String.raw`\sum_{m=0}^{\infty}\frac{x^m}{m!},\quad \cos x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!},\quad \sin x=\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","eˣ의 각 항에 x=iθ를 넣습니다."] },
+          { expression: String.raw`\sum_{m=0}^{\infty}\frac{x^m}{m!}`, annotation: ["x=iθ를 넣으면 i^m이 1, i, −1, −i로", "반복하며 항을 둘로 가릅니다"] },
+          { expression: String.raw`\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m}}{(2m)!}`, annotation: ["짝수 거듭제곱 항 1, −1, …이", "부호가 번갈아 cosine 급수가 됩니다"] },
+          { expression: String.raw`\sum_{m=0}^{\infty}(-1)^m\frac{x^{2m+1}}{(2m+1)!}`, annotation: ["홀수 항 i, −i, …에서 i를 빼내면", "i×sine 급수로 모입니다"] },
         ]}
         terms={[
           { symbol: "m!", name: "factorial", description: "m!=1·2·…·m이며 0!=1로 정의합니다." },
@@ -33,9 +35,10 @@ export default function EulerFormula() {
         question="크기는 1로 유지하면서 각도 θ만큼 회전하는 복소수를 어떻게 한 식으로 나타낼까?"
         idea={<>Exponential의 거듭제곱급수에 iθ를 넣으면 i의 거듭제곱이 1,i,−1,−i로 반복됩니다. 짝수 항은 cosine 급수, 홀수 항은 i×sine 급수로 모입니다.</>}
         formula={String.raw`e^{i\theta}=\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)`}
-        annotatedFormula={String.raw`e^{i\theta}=\underbrace{\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)}_{\text{unit complex rotation 계산}}`}
+        annotatedFormula={String.raw`\underbrace{e^{i\theta}}_{\text{크기 1, 회전각 }\theta}=\underbrace{\cos\theta}_{\text{가로 좌표}}+i\underbrace{\sin\theta}_{\text{세로 좌표}},\qquad re^{i\theta}=\underbrace{r}_{\text{반지름 배율}}(\cos\theta+i\sin\theta)`}
         operations={[
-          { expression: String.raw`\cos\theta+i\sin\theta,\qquad re^{i\theta}=r(\cos\theta+i\sin\theta)`, annotation: ["unit complex rotation이(가) 식의 결과에","기여하는 방식을 계산합니다.","Exponential의 거듭제곱급수에 iθ를 넣으면 i의","거듭제곱이 1,i,−1,−i로 반복됩니다."] },
+          { expression: String.raw`\cos\theta+i\sin\theta`, annotation: ["단위원 위 각 θ 지점의", "가로·세로 좌표를 한 복소수에 담습니다"] },
+          { expression: String.raw`r(\cos\theta+i\sin\theta)`, annotation: ["같은 방향을 반지름 r로 늘리면", "amplitude r과 phase θ를 함께 기록합니다"] },
         ]}
         terms={[
           { symbol: "e^{i\\theta}", name: "unit complex rotation", description: "Magnitude 1, phase θ인 복소수입니다." },
@@ -49,9 +52,9 @@ export default function EulerFormula() {
         question="복소수 곱셈이 회전을 합성하는 이유는 무엇일까?"
         idea={<>지수의 곱셈 법칙에 따라 같은 밑 e의 지수는 더해집니다. Polar form의 두 복소수를 곱하면 magnitude는 곱해지고 phase는 더해집니다.</>}
         formula={String.raw`r_1e^{i\theta_1}\,r_2e^{i\theta_2}=r_1r_2e^{i(\theta_1+\theta_2)}`}
-        annotatedFormula={String.raw`r_1e^{i\theta_1}\,r_2e^{i\theta_2}=\underbrace{r_1r_2e^{i(\theta_1+\theta_2)}}_{\text{combined phase 계산}}`}
+        annotatedFormula={String.raw`\underbrace{r_1e^{i\theta_1}}_{\text{첫 회전·배율}}\,\underbrace{r_2e^{i\theta_2}}_{\text{둘째 회전·배율}}=\underbrace{r_1r_2}_{\text{길이는 곱}}\underbrace{e^{i(\theta_1+\theta_2)}}_{\text{각도는 합}}`}
         operations={[
-          { expression: String.raw`r_1r_2e^{i(\theta_1+\theta_2)}`, annotation: ["combined phase이(가) 식의 결과에 기여하는 방식을","계산합니다.","지수의 곱셈 법칙에 따라 같은 밑 e의 지수는 더해집니다."] },
+          { expression: String.raw`r_1r_2e^{i(\theta_1+\theta_2)}`, annotation: ["같은 밑 e의 지수는 더해지므로", "곱하면 길이는 곱해지고 각도는 더해져", "두 회전이 순서대로 합성됩니다"] },
         ]}
         terms={[
           { symbol: "r_1r_2", name: "combined scale", description: "두 곱셈이 적용한 길이 배율의 곱입니다." },

@@ -26,7 +26,7 @@ export default function Overview() {
         question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"
         idea={<>Forecast origin t를 하나 고른 뒤 그 이전 L개 step을 input으로, 그 다음 H개 step을 target으로 묶습니다. Origin을 stride S만큼 이동하면 다음 sample이 생깁니다.</>}
         formula={String.raw`\begin{aligned}X_t&=[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}\\Y_t&=[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}X_t&=\underbrace{[\mathbf x_{t-L+1},\ldots,\mathbf x_t]}_{\text{origin t 이전 L step}}\in\underbrace{\mathbb R^{L\times F}}_{\text{step마다 F feature}}\\Y_t&=\underbrace{[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]}_{\text{origin 다음 H step}}\in\underbrace{\mathbb R^{H\times D_y}}_{\text{step마다 D_y target}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}X_t&=\underbrace{[\mathbf x_{t-L+1},\ldots,\mathbf x_t]}_{\text{origin t 이전 L step}}\in\underbrace{\mathbb R^{L\times F}}_{\text{step마다 F feature}}\\Y_t&=\underbrace{[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]}_{\text{origin 다음 H step}}\in\underbrace{\mathbb R^{H\times D_y}}_{\text{step마다 }D_y\text{ target}}\end{aligned}`}
         operations={[
           { expression: String.raw`[\mathbf x_{t-L+1},\ldots,\mathbf x_t]\in\mathbb R^{L\times F}`, annotation: ["forecast origin t에서 뒤로 L개 step의 feature를","input window로 묶습니다. 계절 주기보다 L이","짧으면 lag feature를 추가하거나 L을 늘립니다"] },
           { expression: String.raw`[\mathbf y_{t+1},\ldots,\mathbf y_{t+H}]\in\mathbb R^{H\times D_y}`, annotation: ["같은 origin에서 앞으로 H개 step의 target을","정답으로 묶습니다. origin을 stride S만큼 옮기면","다음 sample이 생기지만 독립 관측은 안 늡니다"] },

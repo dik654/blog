@@ -25,18 +25,12 @@ P_{\mathrm{old}}&=[p_{\mathrm{cls}};P_{\mathrm{grid}}],\\
 G_{\mathrm{old}}&=\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),\\
 P_{\mathrm{new}}&=[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}].
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-P_{\mathrm{old}}&=\underbrace{[p_{\mathrm{cls}};P_{\mathrm{grid}}],}_{\text{오른쪽 항으로 결과 계산}}\\
-\widetilde P_{\mathrm{grid}}&=\underbrace{\operatorname{Interp}_{2D}
-\!\left(G_{\mathrm{old}},h',w'\right),}_{\text{허용 경계 판정}}\\
-G_{\mathrm{old}}&=\underbrace{\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),}_{\text{오른쪽 항으로 결과 계산}}\\
-P_{\mathrm{new}}&=[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}].
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}P_{\mathrm{old}}&=[\underbrace{p_{\mathrm{cls}}}_{\text{격자 밖 token}};\underbrace{P_{\mathrm{grid}}}_{\text{h×w patch 위치}}],\\\widetilde P_{\mathrm{grid}}&=\underbrace{\operatorname{Interp}_{2D}\!\left(G_{\mathrm{old}},h',w'\right)}_{\text{새 격자로 2D 보간}},\\G_{\mathrm{old}}&=\underbrace{\operatorname{reshape}_{h,w}(P_{\mathrm{grid}})}_{\text{1D 열을 2D 격자로}},\\P_{\mathrm{new}}&=[p_{\mathrm{cls}};\underbrace{\widetilde P_{\mathrm{grid}}^{\flat}}_{\text{다시 1D로 펼침}}].\end{aligned}`}
         operations={[
-          { expression: String.raw`[p_{\mathrm{cls}};P_{\mathrm{grid}}],`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
-          { expression: String.raw`\operatorname{Interp}_{2D}
-\!\left(G_{\mathrm{old}},h',w'\right),`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
-          { expression: String.raw`\operatorname{reshape}_{h,w}(P_{\mathrm{grid}}),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Image-level special token의","position은 2D spatial grid가 아니므로 먼저","분리합니다."] },
+          { expression: String.raw`[p_{\mathrm{cls}};P_{\mathrm{grid}}]`, annotation: ["class token 위치는 2D 좌표가 없으니","patch 위치 열에서 먼저 떼어냅니다"] },
+          { expression: String.raw`\operatorname{reshape}_{h,w}(P_{\mathrm{grid}})`, annotation: ["patch 위치 vector N개를","pretraining 때의 h×w 격자로 되돌립니다","1D로 보간하면 row 경계가 섞임"] },
+          { expression: String.raw`\operatorname{Interp}_{2D}`, annotation: ["old 격자의 위치 vector field를","fine-tuning 해상도의 h′×w′ 좌표에","2D로 보간합니다"] },
+          { expression: String.raw`[p_{\mathrm{cls}};\widetilde P_{\mathrm{grid}}^{\flat}]`, annotation: ["보간한 격자를 펼치고","떼어 둔 class token 위치를 앞에 붙입니다"] },
         ]}
         terms={[
           { symbol: "p_cls", name: "special-token position", description: "Spatial patch grid에 속하지 않는 class 또는 distillation token의 learned position입니다." },
@@ -57,17 +51,13 @@ z_{\mathrm{exp}}&=f_{\mathrm{exp}}(x'),\\
 d&=\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty,\\
 d&\le\varepsilon.
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-x'&=\underbrace{T_{\mathrm{ckpt}}(x),}_{\text{오른쪽 항으로 결과 계산}}\\
-z_{\mathrm{ref}}&=\underbrace{f_{\mathrm{ref}}(x'),}_{\text{오른쪽 항으로 결과 계산}}\\
-z_{\mathrm{exp}}&=\underbrace{f_{\mathrm{exp}}(x'),}_{\text{오른쪽 항으로 결과 계산}}\\
-d&=\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty,\\
-d&\le\varepsilon.
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}x'&=\underbrace{T_{\mathrm{ckpt}}(x)}_{\text{registry 전처리 재현}},\\z_{\mathrm{ref}}&=\underbrace{f_{\mathrm{ref}}(x')}_{\text{원 구현 logit}},\\z_{\mathrm{exp}}&=\underbrace{f_{\mathrm{exp}}(x')}_{\text{export 구현 logit}},\\d&=\underbrace{\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty}_{\text{가장 크게 어긋난 logit}},\\d&\le\underbrace{\varepsilon}_{\text{precision별 허용 오차}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`T_{\mathrm{ckpt}}(x),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
-          { expression: String.raw`f_{\mathrm{ref}}(x'),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
-          { expression: String.raw`f_{\mathrm{exp}}(x'),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","같은 preprocessed tensor와 eval","state에서 두 구현의 logit 차이를 tolerance","안에서 비교합니다."] },
+          { expression: String.raw`T_{\mathrm{ckpt}}(x)`, annotation: ["resize·crop·channel·normalization을","checkpoint가 적어 둔 대로 한 번만 적용","두 구현에 같은 tensor x′를 넣습니다"] },
+          { expression: String.raw`f_{\mathrm{ref}}(x')`, annotation: ["원 runtime 구현을 eval mode로 돌린","기준 logit vector"] },
+          { expression: String.raw`f_{\mathrm{exp}}(x')`, annotation: ["배포용으로 변환한 구현의 logit","dropout 같은 무작위 경로는 끈 상태"] },
+          { expression: String.raw`\lVert z_{\mathrm{ref}}-z_{\mathrm{exp}}\rVert_\infty`, annotation: ["class마다 logit 차이를 재고","그중 가장 큰 절댓값 하나를 봅니다","top-1만 같은 경우보다 강한 검사"] },
+          { expression: String.raw`\varepsilon`, annotation: ["FP32·FP16·INT8 등 export precision에","맞춰 미리 정한 한계 안이면 통과"] },
         ]}
         terms={[
           { symbol: "T_ckpt", name: "checkpoint preprocessing", description: "Registry가 명시한 resize·crop·channel·normalization을 재현하는 deterministic inference transform입니다." },

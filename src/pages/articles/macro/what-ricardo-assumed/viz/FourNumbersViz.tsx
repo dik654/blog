@@ -2,7 +2,7 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: overview·both-better·inside-vs-outside 절. 네 숫자는 Ricardo(1817) 7장 */
+/** 본문 대응: overview·both-better·inside-vs-outside 절. 네 숫자는 Ricardo(1817) 초판 6장(3판 기준 7장) */
 const SCENES = [
   "네 숫자가 전부입니다",
   "포르투갈이 둘 다 적게 듭니다",
@@ -43,7 +43,7 @@ export default function FourNumbersViz() {
       eyebrow="네 숫자"
       title="한쪽이 둘 다 적게 드는데도 교역이 일어나고, 같은 나라 안에서는 일어나지 않습니다"
       description="같은 비율의 교환이 나라 사이에서는 성립하고 한 나라 안에서는 성립하지 않는다는 것이 이 장의 출발점입니다."
-      note="네 숫자는 Ricardo 『On the Principles of Political Economy, and Taxation』(1817) 7장의 예시 그대로입니다."
+      note="네 숫자는 Ricardo 『On the Principles of Political Economy, and Taxation』(1817) 초판 6장(3판 기준 7장) 「On Foreign Trade」의 예시 그대로입니다."
     >
       <div
         data-viz-canvas

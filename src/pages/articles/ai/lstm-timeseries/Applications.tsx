@@ -27,11 +27,12 @@ export default function Applications() {
       <ModelChoiceViz />
       <ExplainedFormula
         question="단위와 크기가 다른 여러 series의 MAE를 naive forecast와 어떻게 비교할까?"
-        idea={<>MASE는 test absolute error를 train 구간의 seasonal-naive one-step error로 나눕니다. 원 단위를 제거하면서 단순 기준선 대비 난도를 함께 반영합니다.</>}
+        idea={<>MASE는 test absolute error를 train 구간에서 m step 전 값을 그대로 쓴 seasonal-naive 예측의 평균 absolute error로 나눕니다(m=1이면 한 step 전 값을 쓰는 naive). 원 단위를 제거하면서 단순 기준선 대비 난도를 함께 반영합니다.</>}
         formula={String.raw`\operatorname{MASE}=\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}`}
-        annotatedFormula={String.raw`\operatorname{MASE}=\underbrace{\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\operatorname{MASE}=\frac{\underbrace{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}_{\text{test MAE}}}{\underbrace{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}_{\text{train seasonal-naive 오차}}}`}
         operations={[
-          { expression: String.raw`\frac{\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|}{\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","MASE는 test absolute error를 train","구간의 seasonal-naive one-step error로","나눕니다."] },
+          { expression: String.raw`\frac1N\sum_{i=1}^{N}|y_i-\hat y_i|`, annotation: ["test 구간 N개 예측의 평균 absolute error","원 단위가 남아 있는 MAE"] },
+          { expression: String.raw`\frac1{T-m}\sum_{t=m+1}^{T}|y_t-y_{t-m}|`, annotation: ["m step 전 값을 그대로 쓴 seasonal-naive의","train 구간 평균 오차로 나눠 단위를 지움","결과가 1 미만이면 naive보다 오차가 작음"] },
         ]}
         terms={[
           { symbol: "N", name: "test forecasts", description: "모든 평가 origin·horizon에서 집계한 예측 error 수입니다." },

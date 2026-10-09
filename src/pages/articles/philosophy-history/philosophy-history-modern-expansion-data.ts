@@ -35,7 +35,7 @@ export const germanIdealismData: PhilosophyHistoryArticleData = {
       "이 구분은 피히테·셸링·헤겔이 같은 체계를 가졌다는 뜻이 아닙니다. 각자의 자연관과 자기의식론, 종교·정치 철학을 따로 읽어야 하며, 이 글은 활동과 인정이라는 입구만 제공합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 피히테의 자유는 다른 주체의 부름과 응답을 요구합니다", bridge: "혼자 완성된 자아가 뒤늦게 사회에 들어간다는 그림을 뒤집어 봅니다.", paragraphs: [
-      "Stanford 철학백과의 인정 개관은 피히테에게 다른 주체의 말과 행동을 자유로운 의지의 표현으로 이해할 때 자신의 행동도 자유로운 자기의 표현으로 파악할 수 있다고 설명합니다. 이 관계는 상대에게도 자유의 영역을 허용하라는 요구를 낳습니다.",
+      "Stanford 철학백과의 인정 개관은 피히테에게 다른 주체의 말과 행동을 자유로운 의지의 표현으로 이해할 때 자신의 행동도 자유로운 자기의 표현으로 파악할 수 있다고 설명합니다. 이 관계는 상대에게도 나와 같은 자유의 영역을 허용하라는 요구를 낳습니다. 다만 피히테에게 이 요구는 상대도 같은 제한을 받아들여 응답할 때에만 성립하는 상호 조건입니다(Stanford 철학백과는 이 조건에 대한 다월의 비판도 함께 소개합니다).",
       "헤겔 이후의 인정 이론은 이 생각을 노동·권리·사랑·존중·사회적 지위의 문제로 넓혔습니다. 다만 모든 갈등을 인정 부족 하나로 설명할 수는 없습니다. 물질 자원과 법적 권리, 폭력과 식민 지배도 따로 분석해야 합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 유럽의 역사를 자유의 완성으로 읽는 목적론을 경계합니다", bridge: "체계의 힘과 함께 그 체계가 지운 지역과 사람도 기록합니다.", paragraphs: [
@@ -130,8 +130,8 @@ export const existentialismData: PhilosophyHistoryArticleData = {
     { term: "나쁜 믿음", description: "사실성과 가능성 중 하나만 내세워 자신의 상황과 선택을 왜곡하는 태도입니다.", example: "‘아무것도 못 바꾼다’와 ‘의지만 있으면 다 된다’가 양쪽 실패입니다.", boundary: "곤란한 선택이나 억압받는 상태 자체를 도덕적 결함이라 부르는 말이 아닙니다." },
   ] },
   sources: [
-    { source: "Stanford Encyclopedia of Philosophy · Existentialism", excerpt: "facticity and transcendence", application: "하루 24시간 사례에서 이미 묶인 조건과 아직 고를 수 있는 가능성을 같은 장부에 놓되 섞지 않습니다.", citation: "Stanford Encyclopedia of Philosophy, Existentialism", href: "https://plato.stanford.edu/archives/spr2023/entries/existentialism/", note: "실존주의의 역사와 사실성·초월·자유·진정성·나쁜 믿음의 논쟁을 다루는 학술 개관입니다." },
-    { source: "MIT OpenCourseWare · Beauvoir lecture notes", excerpt: "freedom and oppression", application: "자기 선택만이 아니라 타인의 자유와 물질적·사회적 억압 조건을 함께 묻습니다.", citation: "MIT OpenCourseWare, Classics of Western Philosophy, Beauvoir notes", href: "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/5acb66d0b3a5911956f7e1e4f0b7b1c1_MIT24_01S16_SES25.pdf", note: "보부아르의 자기와 타자, 사실성과 초월, 자유와 억압을 연결해 읽는 대학 강의 자료입니다." },
+    { source: "Stanford Encyclopedia of Philosophy · Existentialism", excerpt: "constrained by our facticity but simultaneously endowed with the freedom to exceed or transcend it", application: "하루 24시간 사례에서 이미 묶인 조건과 아직 고를 수 있는 가능성을 같은 장부에 놓되 섞지 않습니다.", citation: "Stanford Encyclopedia of Philosophy, Existentialism", href: "https://plato.stanford.edu/archives/spr2023/entries/existentialism/", note: "실존주의의 역사와 사실성·초월·자유·진정성·나쁜 믿음의 논쟁을 다루는 학술 개관입니다." },
+    { source: "MIT OpenCourseWare · Beauvoir lecture notes", excerpt: "frustration and oppression", application: "자기 선택만이 아니라 타인의 자유와 물질적·사회적 억압 조건을 함께 묻습니다.", citation: "MIT OpenCourseWare, Classics of Western Philosophy, Beauvoir notes", href: "https://ocw.mit.edu/courses/24-01-classics-of-western-philosophy-spring-2016/5acb66d0b3a5911956f7e1e4f0b7b1c1_MIT24_01S16_SES25.pdf", note: "보부아르의 자기와 타자, 사실성과 초월, 자유와 억압을 연결해 읽는 대학 강의 자료입니다. 노트 제목은 ‘Beauvoir on Gender, Oppression, and Freedom’입니다(2026-10-09 확인)." },
   ],
   review: [
     "24시간 장부에서 사실성과 가능성을 어떻게 구분하나요? (답: 1·3·7절)",
@@ -320,7 +320,7 @@ export const logicalEmpiricismData: PhilosophyHistoryArticleData = {
     ] },
     { id: "limits", level: "7", title: "10. 관찰도 장비·언어·공동체의 규칙을 거쳐 기록됩니다", bridge: "객관성을 아무 관점도 없는 순수한 눈과 같게 만들지 않습니다.", paragraphs: [
       "센서 표시와 보정표, 기록 문장에는 이미 이론과 측정 규칙이 들어 있습니다. 그렇다고 관찰이 모두 제멋대로라는 뜻은 아닙니다. 여러 사람이 같은 절차를 반복하고 장비를 교차 보정하며 공개된 오류 규칙으로 다툴 수 있습니다.",
-      "논리경험주의를 읽을 때는 나치 박해와 망명, 사회주의적 과학 통일 운동 같은 정치적 배경도 봐야 합니다. 논리만 중시한 비역사적 집단이라는 이미지로 만들면 일부 구성원이 품었던 과학·교육·사회 개혁의 목표가 사라집니다.",
+      "논리경험주의를 읽을 때는 나치 박해와 망명, 사회주의적 과학 통일 운동 같은 정치적 배경도 봐야 합니다. 예를 들어 Stanford 철학백과 Otto Neurath 항목에 따르면 노이라트는 1921~1934년 빈에서 주택·성인 교육 같은 사회주의 정치에 참여했고, 1934년 오스트리아 정부가 나치 독일과 손잡자 네덜란드로, 1940년 나치가 네덜란드를 침공하자 영국으로 피신하며 통일과학 운동을 국제적 기획으로 이어 갔습니다(2026-10-09 확인). 논리만 중시한 비역사적 집단이라는 이미지로 만들면 일부 구성원이 품었던 과학·교육·사회 개혁의 목표가 사라집니다.",
     ] },
   ],
   overviewFlow: { title: "센서 법칙을 시험하는 문장 흐름", steps: [
@@ -341,7 +341,7 @@ export const logicalEmpiricismData: PhilosophyHistoryArticleData = {
   ] },
   sources: [
     { source: "Stanford Encyclopedia of Philosophy · Logical Empiricism", excerpt: "a philosophic movement rather than a set of doctrines", application: "열 번의 시험을 엄격한 검증 한 번으로 처리하지 않고 관찰 문장·확인·이론 용어를 둘러싼 내부 논쟁으로 읽습니다.", citation: "Stanford Encyclopedia of Philosophy, Logical Empiricism", href: "https://plato.stanford.edu/entries/logical-empiricism/", note: "빈 학단과 베를린학파의 역사, 검증주의·확인·관찰 문장·과학 언어 논쟁을 개관합니다." },
-    { source: "University of Oxford · How did we get here from there?", excerpt: "logical positivism and ordinary language", application: "형식언어와 일상언어의 접근을 단순한 승패보다 서로 다른 철학적 진단 도구로 비교합니다.", citation: "University of Oxford, How did we get here from there?", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "20세기 분석 철학에서 논리실증주의와 일상언어철학의 변화와 후대 결합을 설명하는 대학 자료입니다." },
+    { source: "Timothy Williamson · How did we get here from there?", excerpt: "logical positivism and ordinary language", application: "형식언어와 일상언어의 접근을 단순한 승패보다 서로 다른 철학적 진단 도구로 비교합니다.", citation: "Timothy Williamson, ‘How did we get here from there? The transformation of analytic philosophy’, Belgrade Philosophical Annual (Oxford 철학과 호스팅 PDF)", href: "https://media.philosophy.ox.ac.uk/assets/pdf_file/0006/35835/How_did_we_get_here_from_there.pdf", note: "20세기 분석 철학에서 논리실증주의와 일상언어철학의 변화와 후대 결합을 설명하는 티머시 윌리엄슨의 논문입니다. 대학 교과 자료가 아니라 Belgrade Philosophical Annual 게재 예정본을 조금 고친 판으로, Oxford 철학과 서버가 PDF를 호스팅합니다(2026-10-09 확인)." },
   ],
   review: [
     "열 번 중 두 번의 실패가 곧 경보 법칙의 거짓이라고 단정하기 어려운 이유는 무엇인가요? (답: 2·3·7절)",

@@ -19,10 +19,12 @@ export default function KLDivergence() {
         question="Cross-entropy 중 실제 분포의 불확실성이 아니라 모델 mismatch 때문에 생긴 부분은 얼마인가?"
         idea={<>모델 Q의 평균 code length H(P,Q)에서 P 자체의 최저 비용 H(P)를 뺍니다. Log ratio로 정리하면 사건별로 Q가 P를 얼마나 과소·과대평가했는지 P로 평균낸 식이 됩니다.</>}
         formula={String.raw`\begin{aligned}D_{\mathrm{KL}}(P\Vert Q)&=\sum_xP(x)\log\frac{P(x)}{Q(x)}\\&=H(P,Q)-H(P)\ge 0\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}D_{\mathrm{KL}}(P\Vert Q)&=\underbrace{\sum_xP(x)\log\frac{P(x)}{Q(x)}}_{\text{기준량당 비율}}\\&=\underbrace{H(P,Q)-H(P)\ge 0}_{\text{허용 경계 판정}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}D_{\mathrm{KL}}(P\Vert Q)&=\underbrace{\sum_xP(x)}_{\text{P로 평균}}\underbrace{\log\frac{P(x)}{Q(x)}}_{\text{사건별 과소·과대평가}}\\&=\underbrace{H(P,Q)-H(P)}_{\text{mismatch로 늘어난 비용}}\underbrace{\ge 0}_{\text{Gibbs 부등식}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_xP(x)\log\frac{P(x)}{Q(x)}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","모델 Q의 평균 code length H(P,Q)에서 P","자체의 최저 비용 H(P)를 뺍니다."] },
-          { expression: String.raw`H(P,Q)-H(P)\ge 0`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","모델 Q의 평균 code length H(P,Q)에서 P","자체의 최저 비용 H(P)를 뺍니다."] },
+          { expression: String.raw`\log\frac{P(x)}{Q(x)}`, annotation: ["Q가 P보다 작게 준 사건은 양수,","크게 준 사건은 음수인 log ratio"] },
+          { expression: String.raw`\sum_xP(x)`, annotation: ["사건별 log ratio를","실제 분포 P의 확률로 가중 평균"] },
+          { expression: String.raw`H(P,Q)-H(P)`, annotation: ["Q로 부호화한 평균 code length에서","P 자체의 최저 비용을 빼","모델 mismatch로 늘어난 몫만 남김"] },
+          { expression: String.raw`\ge 0`, annotation: ["Gibbs 부등식으로 항상 0 이상,","P=Q일 때만 0"] },
         ]}
         terms={[
           { symbol: "P\\Vert Q", name: "방향", description: "P에서 sample을 뽑아 Q로 평가한다는 비대칭을 표시합니다." },

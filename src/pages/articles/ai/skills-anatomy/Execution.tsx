@@ -43,12 +43,12 @@ export default function Execution() {
           \mathrm{Recall}_{\mathrm{trigger}}&=\frac{TP}{TP+FN}
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \mathrm{Precision}_{\mathrm{trigger}}&=\underbrace{\frac{TP}{TP+FP}}_{\text{기준량당 비율}}\\
-          \mathrm{Recall}_{\mathrm{trigger}}&=\underbrace{\frac{TP}{TP+FN}}_{\text{기준량당 비율}}
+          \mathrm{Precision}_{\mathrm{trigger}}&=\frac{\underbrace{TP}_{\text{맞게 선택}}}{TP+\underbrace{FP}_{\text{잘못 끼어듦}}}\\
+          \mathrm{Recall}_{\mathrm{trigger}}&=\frac{TP}{TP+\underbrace{FN}_{\text{놓침}}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`\frac{TP}{TP+FP}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","적용해야 하는 positive request와 적용하면 안","되는 hard negative request를 먼저","label합니다."] },
-          { expression: String.raw`\frac{TP}{TP+FN}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","적용해야 하는 positive request와 적용하면 안","되는 hard negative request를 먼저","label합니다."] },
+          { expression: String.raw`\frac{TP}{TP+FP}`, annotation: ["Skill을 고른 요청 중 실제로 필요했던 비율","낮으면 description이 넓어 끼어듦"] },
+          { expression: String.raw`\frac{TP}{TP+FN}`, annotation: ["Skill이 필요한 요청 중 실제로 고른 비율","낮으면 trigger 문구가 좁거나 후보 누락"] },
         ]}
         terms={[
           { symbol: "TP", name: "true positive", description: "Skill을 적용해야 하는 요청에서 실제로 해당 Skill을 선택한 수입니다." },

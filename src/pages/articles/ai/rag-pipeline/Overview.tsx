@@ -23,11 +23,12 @@ S(q)&=I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)\\
 &\quad I_{\mathrm{context}}(q)I_{\mathrm{support}}(q)
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-S(q)&=\underbrace{I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)}_{\text{query 계산}}\\
-&\quad I_{\mathrm{context}}(q)I_{\mathrm{support}}(q)
+S(q)&=\underbrace{I_{\mathrm{source}}(q)}_{\text{corpus에 근거 있음}}\underbrace{I_{\mathrm{retrieve}}(q)}_{\text{검색에 걸림}}\\
+&\quad \underbrace{I_{\mathrm{context}}(q)}_{\text{prompt에 남음}}\underbrace{I_{\mathrm{support}}(q)}_{\text{답이 근거로 확인}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)`, annotation: ["query이(가) 식의 결과에 기여하는 방식을 계산합니다.","성공에 필요한 네 조건을 indicator로 둡니다."] },
+          { expression: String.raw`I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)`, annotation: ["최신 허가 문서가 corpus에 있고", "candidate set에 들어와야 1·1", "규정이 없으면 첫 항부터 0"] },
+          { expression: String.raw`I_{\mathrm{context}}(q)I_{\mathrm{support}}(q)`, annotation: ["검색됐어도 예산 때문에 빠지면 0", "→ generator 말고 context assembly 수정", "답이 근거·citation과 맞아야 마지막 1"] },
         ]}
         terms={[
           { symbol: "q", name: "query", description: "사용자의 질문과 요청 시점·권한을 포함한 평가 단위입니다." },

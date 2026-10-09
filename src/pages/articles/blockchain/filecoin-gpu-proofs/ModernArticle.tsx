@@ -30,12 +30,12 @@ export default function ModernFilecoinGpuProofsArticle() {
       <header><p className="text-sm font-semibold text-primary">01 · Phase artifact chain</p><h2 className="mt-2 text-2xl font-bold">각 phase가 읽는 cache·commitment와 쓰는 output을 같은 sector generation으로 연결한다</h2></header>
       <p>Pinned rust-fil-proofs API의 seal_pre_commit_phase1은 sector/cache paths와 prover·sector·ticket·piece inputs를 받고 replica/tree artifacts를 준비합니다. 후속 phases는 그 outputs와 commitments를 소비합니다. Stage 이름만 같은 다른 sector나 재시도 generation의 cache를 섞으면 안 됩니다.</p>
       <ExplainedFormula question="다음 Filecoin phase가 실행 가능하다는 조건은 무엇일까?" idea={<>필요한 predecessor artifacts가 모두 검증됐고 job generation·parameter identity가 현재 요청과 같아야 합니다.</>} formula={String.raw`ready(v)\iff\bigwedge_{u\in pred(v)}\left(done(u)\land g_u=g_v\land A_u\in inputs(v)\right)`}
-      annotatedFormula={String.raw`\underbrace{ready(v)}_{\text{Stage readiness 계산}}\iff\bigwedge_{u\in \underbrace{pred(v)}_{\text{Predecessors 계산}}}\left(done(u)\land g_u=g_v\land A_u\in \underbrace{inputs(v)}_{\text{Declared inputs 계산}}\right)`}
+      annotatedFormula={String.raw`\underbrace{ready(v)}_{\text{phase 제출 가능}}\iff\bigwedge_{u\in \underbrace{pred(v)}_{\text{필요한 선행 phase}}}\left(\underbrace{done(u)}_{\text{artifact 검증 완료}}\land \underbrace{g_u=g_v}_{\text{같은 retry 세대}}\land \underbrace{A_u\in inputs(v)}_{\text{선언된 input}}\right)`}
       operations={[
-        { expression: String.raw`inputs(v)`, annotation: ["Declared inputs이(가) 식의 결과에 기여하는","방식을 계산합니다.","필요한 predecessor artifacts가 모두 검증됐고","job generation·parameter identity가"] },
-        { expression: String.raw`ready(v)`, annotation: ["Stage readiness이(가) 식의 결과에 기여하는","방식을 계산합니다.","필요한 predecessor artifacts가 모두 검증됐고","job generation·parameter identity가"] },
-        { expression: String.raw`pred(v)`, annotation: ["Predecessors이(가) 식의 결과에 기여하는 방식을","계산합니다.","필요한 predecessor artifacts가 모두 검증됐고","job generation·parameter identity가"] },
-      ]} terms={[
+          { expression: String.raw`\bigwedge_{u\in pred(v)}`, annotation: ["PC2·C1·C2가 요구하는 선행 phase 전부가","아래 세 조건을 모두 만족해야 ready"] },
+          { expression: String.raw`done(u)`, annotation: ["process exit가 아니라 output size·","digest·schema 검사가 끝났다는 뜻","PC1이 끝나도 cache digest 다르면 false"] },
+          { expression: String.raw`g_u=g_v`, annotation: ["producer와 consumer가 같은 job 세대","이전 retry generation 산출물은 거부"] },
+        ]} terms={[
         {symbol:"ready(v)",name:"Stage readiness",description:"Phase v를 submit해도 되는지 나타내는 조건입니다."},
         {symbol:"v",name:"Consumer phase",description:"PC2, C1, C2 또는 verification 단계입니다."},
         {symbol:"u",name:"Producer phase",description:"v가 필요로 하는 artifact를 만든 선행 단계입니다."},
@@ -56,10 +56,11 @@ export default function ModernFilecoinGpuProofsArticle() {
             library snapshot은 별도 version fields로 둡니다.
           </p>
       <ExplainedFormula question="한 sealing job의 artifact identity를 어떻게 만들까?" idea={<>Statement를 정하는 inputs, proof profile과 단계별 cache digests를 하나의 length-delimited manifest hash에 결속합니다.</>} formula={String.raw`G=H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)`}
-      annotatedFormula={String.raw`G=\underbrace{H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)}_{\text{Job generation 계산}}`}
+      annotatedFormula={String.raw`\underbrace{G}_{\text{job identity}}=H(\underbrace{q\|s\|a}_{\text{proof·sector·API}}\|\underbrace{H(P)}_{\text{parameter}}\|\underbrace{H(I)}_{\text{exact inputs}}\|\underbrace{H(K)}_{\text{phase cache}}\|\underbrace{r}_{\text{구현 revision}})`}
       operations={[
-        { expression: String.raw`H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)`, annotation: ["Job generation이(가) 식의 결과에 기여하는 방식을","계산합니다.","Statement를 정하는 inputs, proof","profile과 단계별 cache digests를 하나의"] },
-      ]} terms={[
+          { expression: String.raw`H(q\|s\|a\|H(P)\|H(I)\|H(K)\|r)`, annotation: ["statement·profile·cache를","length-delimited manifest 하나로 결속","ticket·parameter만 바뀌어도 G가 바뀜"] },
+          { expression: String.raw`H(K)`, annotation: ["phase별 파일의 schema·size·digest 목록","directory 이름이 같아도 hit로 안 봄"] },
+        ]} terms={[
         {symbol:"G",name:"Job generation",description:"모든 phase outputs에 붙는 immutable job identity입니다."},
         {symbol:"H",name:"Digest",description:"Canonical typed encoding에 적용한 pinned hash입니다."},
         {symbol:"q",name:"Proof type",description:"PoRep/PoSt와 concrete variant identity입니다."},
@@ -88,10 +89,12 @@ export default function ModernFilecoinGpuProofsArticle() {
         <CodeViewButton label="create_proof_batch_priority_inner" onClick={() => sidebar.open("bp-groth16-prover", codeRefs["bp-groth16-prover"])} />
       </div>
       <ExplainedFormula question="일부만 가속한 Filecoin proof의 최대 speedup을 어떻게 제한할까?" idea={<>가속하지 못한 전체 시간 비율은 GPU kernel을 아무리 빠르게 해도 남습니다.</>} formula={String.raw`S\le\frac{1}{(1-f)+f/s}`}
-      annotatedFormula={String.raw`S\le\underbrace{\frac{1}{(1-f)+f/s}}_{\text{기준량당 비율}}`}
+      annotatedFormula={String.raw`\underbrace{S}_{\text{전체 speedup}}\le\frac{1}{\underbrace{(1-f)}_{\text{가속 못 한 비율}}+\underbrace{f/s}_{\text{가속 구간 남은 시간}}}`}
       operations={[
-        { expression: String.raw`\frac{1}{(1-f)+f/s}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","가속하지 못한 전체 시간 비율은 GPU kernel을 아무리","빠르게 해도 남습니다."] },
-      ]} terms={[
+          { expression: String.raw`(1-f)`, annotation: ["cache I/O·synthesis·검증처럼","GPU가 아무리 빨라도 그대로 남는 몫","f=0.4면 0.6"] },
+          { expression: String.raw`f/s`, annotation: ["가속한 40%가 4배 빨라져 0.1로 줄어듦"] },
+          { expression: String.raw`\frac{1}{(1-f)+f/s}`, annotation: ["남은 시간 비율의 역수가 상한","1/(0.6+0.1)=1.43배(설명용 수치)"] },
+        ]} terms={[
         {symbol:"S",name:"Overall speedup",description:"같은 verified Filecoin job의 reference/candidate end-to-end 시간 비율입니다."},
         {symbol:"f",name:"Accelerated fraction",description:"Reference 시간 중 실제로 GPU 후보가 대체하는 비율입니다."},
         {symbol:"s",name:"Stage speedup",description:"그 후보 stage의 같은-boundary CPU/GPU 시간 비율입니다."},
@@ -113,10 +116,12 @@ export default function ModernFilecoinGpuProofsArticle() {
         <CodeViewButton label="Proof<E> struct" onClick={() => sidebar.open("bp-proof", codeRefs["bp-proof"])} />
       </div>
       <ExplainedFormula question="한 job이 운영 deadline 안에 retry 여유까지 갖는지 어떻게 판단할까?" idea={<>Deadline에서 queue·p95 execution·검증과 최소 retry/운영 reserve를 모두 빼고 남은 slack을 봅니다.</>} formula={String.raw`\Delta=D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})`}
-      annotatedFormula={String.raw`\Delta=\underbrace{D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})}_{\text{변화량 계산}}`}
+      annotatedFormula={String.raw`\underbrace{\Delta}_{\text{남는 slack}}=\underbrace{D}_{\text{deadline}}-(\underbrace{T_{queue}+T_{p95}+T_{verify}}_{\text{대기·실행·검증}}+\underbrace{B_{retry}+B_{ops}}_{\text{retry·운영 reserve}})`}
       operations={[
-        { expression: String.raw`D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})`, annotation: ["Verification time이(가) 식의 결과에 기여하는","방식을 계산합니다.","Deadline에서 queue·p95 execution·검증과","최소 retry/운영 reserve를 모두 빼고 남은"] },
-      ]} terms={[
+          { expression: String.raw`T_{queue}+T_{p95}+T_{verify}`, annotation: ["queue p95, I/O 포함 실행 p95, 검증","10+60+5=75분"] },
+          { expression: String.raw`B_{retry}+B_{ops}`, annotation: ["한 번 이상 fallback할 시간과 jitter 여유","15+5=20분"] },
+          { expression: String.raw`D-(T_{queue}+T_{p95}+T_{verify}+B_{retry}+B_{ops})`, annotation: ["100−95=5분 slack, 양수라 통과","p95가 66분이면 −1분이라 release 안 함"] },
+        ]} terms={[
         {symbol:"\\Delta",name:"Deadline slack",description:"모든 예산을 뺀 뒤 남는 시간이며 양수여야 합니다."},
         {symbol:"D",name:"Deadline budget",description:"해당 operation/profile이 허용한 end-to-end 시간입니다."},
         {symbol:"T_{queue}",name:"Queue time",description:"Resource를 기다린 p95 또는 운영상 선택한 percentile입니다."},

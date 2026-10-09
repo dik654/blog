@@ -51,12 +51,11 @@ export default function Overview() {
 T_{\mathrm{TTFT}}={}&T_{\mathrm{ingress}}+T_{\mathrm{route}}\\
 &+T_{\mathrm{queue}}+T_{\mathrm{prefill}}+T_{\mathrm{first\ emit}}
 \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}
-T_{\mathrm{TTFT}}={}&\underbrace{T_{\mathrm{ingress}}}_{\text{입구 처리 계산}}+T_{\mathrm{route}}\\
-&+T_{\mathrm{queue}}+T_{\mathrm{prefill}}+T_{\mathrm{first\ emit}}
-\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T_{\mathrm{TTFT}}={}&\underbrace{T_{\mathrm{ingress}}+T_{\mathrm{route}}}_{\text{gateway: 인증·backend 선택}}\\&+\underbrace{T_{\mathrm{queue}}+T_{\mathrm{prefill}}}_{\text{runtime: 대기·prompt 처리}}+\underbrace{T_{\mathrm{first\ emit}}}_{\text{첫 token 전송}}\end{aligned}`}
         operations={[
-          { expression: String.raw`T_{\mathrm{ingress}}`, annotation: ["입구 처리이(가) 식의 결과에 기여하는 방식을 계산합니다.","요청이 들어온 시점부터 첫 token이 client에 전달될","때까지를 계층별 구간으로 나눕니다."] },
+          { expression: String.raw`T_{\mathrm{ingress}}+T_{\mathrm{route}}`, annotation: ["인증·rate limit·parsing과", "backend 선택에 쓴 gateway 쪽 시간"] },
+          { expression: String.raw`T_{\mathrm{queue}}+T_{\mathrm{prefill}}`, annotation: ["runtime에서 schedule을 기다린 시간과", "prompt를 처리해 첫 decode를 준비한 시간", "queue만 늘면 capacity 문제입니다"] },
+          { expression: String.raw`T_{\mathrm{first\ emit}}`, annotation: ["첫 decode 결과가 streaming을 거쳐", "관측 지점에 닿기까지의 시간"] },
         ]}
         terms={[
           {
@@ -107,9 +106,10 @@ T_{\mathrm{TTFT}}={}&\underbrace{T_{\mathrm{ingress}}}_{\text{입구 처리 계�
           </>
         }
         formula={String.raw`T_{\mathrm{complete}}=T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}`}
-        annotatedFormula={String.raw`T_{\mathrm{complete}}=\underbrace{T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}}_{\text{변화량 계산}}`}
+        annotatedFormula={String.raw`T_{\mathrm{complete}}=\underbrace{T_{\mathrm{TTFT}}}_{\text{첫 글자까지}}+\underbrace{\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i}_{\text{token 간격 누적}}+\underbrace{T_{\mathrm{tail}}}_{\text{usage·종료 전달}}`}
         operations={[
-          { expression: String.raw`T_{\mathrm{TTFT}}+\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i+T_{\mathrm{tail}}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","첫 token 뒤에는 각 output token 사이의 간격이","누적됩니다."] },
+          { expression: String.raw`\sum_{i=2}^{N_{\mathrm{out}}}\Delta t_i`, annotation: ["둘째 token부터 마지막까지 간격을 더합니다", "긴 답변일수록 이 TPOT 누적이 지배하고", "평균만 적으면 tail stall이 숨습니다"] },
+          { expression: String.raw`T_{\mathrm{tail}}`, annotation: ["마지막 token 뒤 finish reason,", "usage, connection close까지의 시간"] },
         ]}
         terms={[
           {

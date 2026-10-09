@@ -23,9 +23,10 @@ export default function Overview() {
         question="출력 일부를 본 공격자가 다음 bit를 얼마나 잘 맞힐 수 있어야 CSPRNG가 깨졌다고 할까요?"
         idea="예측기는 이전 output prefix와 공개 정보를 받고 다음 bit를 맞힙니다. 이상적인 random bit의 성공률 1/2보다 non-negligible하게 높은 advantage를 내면 generator의 계산적 예측 불가능성이 깨집니다."
         formula={String.raw`\operatorname{Adv}_{\mathrm{next}}(A)=\left|\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]-\frac12\right|`}
-        annotatedFormula={String.raw`\operatorname{Adv}_{\mathrm{next}}(A)=\underbrace{\left|\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]-\frac12\right|}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\operatorname{Adv}_{\mathrm{next}}(A)=\left|\underbrace{\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]}_{\text{다음 bit 적중률}}-\underbrace{\frac12}_{\text{무작위 추측}}\right|`}
         operations={[
-          { expression: String.raw`\left|\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]-\frac12\right|`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","예측기는 이전 output prefix와 공개 정보를 받고","다음 bit를 맞힙니다."] },
+          { expression: String.raw`\Pr[A(Y_1,\ldots,Y_k)=Y_{k+1}]`, annotation: ["앞선 k bit와 공개 정보를 본 예측기가","k+1번째 bit를 맞힐 확률"] },
+          { expression: String.raw`\frac12`, annotation: ["random bit 추측의 성공률 1/2를 빼서","그보다 non-negligible하게 높으면 깨짐","0·1 비율 검사로는 제한되지 않습니다"] },
         ]}
         terms={[
           { symbol: "A", name: "adversarial predictor", description: "정해진 시간·메모리 예산 안에서 실행되는 공격 알고리즘입니다." },

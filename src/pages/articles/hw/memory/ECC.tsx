@@ -42,10 +42,11 @@ export default function ECC() {
               </p>
             }
             formula={"2^r\\ge m+r+1"}
-            annotatedFormula={String.raw`2^r\ge \underbrace{m+r+1}_{\text{no-error state 계산}}`}
+            annotatedFormula={String.raw`\underbrace{2^r}_{\text{syndrome 가짓수}}\ge \underbrace{m+r}_{\text{오류 위치 후보}}+\underbrace{1}_{\text{오류 없음}}`}
             operations={[
-              { expression: String.raw`m+r+1`, annotation: ["no-error state이(가) 식의 결과에 기여하는 방식을","계산합니다.","r개의 check bit가 만드는 2ʳ개 syndrome","상태가 정상 상태 하나와 data·check bit 각각의"] },
-            ]}
+  { expression: String.raw`2^r`, annotation: ["check bit r개가 만들 수 있는","서로 다른 syndrome 상태 수입니다","r=7이면 128"] },
+  { expression: String.raw`m+r+1`, annotation: ["data·check bit 각각의 단일 오류 위치에","정상 상태 하나를 더한 경우의 수","m=64, r=7이면 72 → 128≥72"] },
+]}
             terms={[
               {
                 symbol: "m",

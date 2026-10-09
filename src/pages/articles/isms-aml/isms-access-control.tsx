@@ -44,10 +44,12 @@ export default function IsmsAccessControl() {
           question="한 요청에 실제로 허용할 권한 집합을 어떻게 읽어야 할까?"
           idea="직접 권한과 역할 권한을 합친 뒤, 현재 조건에서 사용할 수 있는 범위와 deny policy를 적용합니다. 집합 표기는 제품 문법이 아니라 allow가 여러 출처에서 생기고 조건·금지가 최종 결과를 줄인다는 사고 도구입니다."
           formula={String.raw`P_{\mathrm{eff}}=\bigl(P_{\mathrm{direct}}\cup P_{\mathrm{role}}\bigr)\cap P_{\mathrm{condition}}\setminus P_{\mathrm{deny}}`}
-          annotatedFormula={String.raw`P_{\mathrm{eff}}=\underbrace{\bigl(P_{\mathrm{direct}}\cup P_{\mathrm{role}}\bigr)\cap P_{\mathrm{condition}}\setminus P_{\mathrm{deny}}}_{\text{조건 허용 범위 계산}}`}
+          annotatedFormula={String.raw`P_{\mathrm{eff}}=\underbrace{\bigl(P_{\mathrm{direct}}\cup P_{\mathrm{role}}\bigr)}_{\text{모든 grant 출처 합집합}}\cap \underbrace{P_{\mathrm{condition}}}_{\text{지금 충족한 조건}}\setminus \underbrace{P_{\mathrm{deny}}}_{\text{명시적 금지}}`}
           operations={[
-            { expression: String.raw`\bigl(P_{\mathrm{direct}}\cup P_{\mathrm{role}}\bigr)\cap P_{\mathrm{condition}}\setminus P_{\mathrm{deny}}`, annotation: ["조건 허용 범위이(가) 식의 결과에 기여하는 방식을","계산합니다.","직접 권한과 역할 권한을 합친 뒤, 현재 조건에서 사용할 수","있는 범위와 deny policy를 적용합니다."] },
-          ]}
+  { expression: String.raw`\bigl(P_{\mathrm{direct}}\cup P_{\mathrm{role}}\bigr)`, annotation: ["개별 grant와 역할 상속 권한을 합칩니다","direct admin grant도 빠뜨리지 않음","CS 역할: customer:read·export"] },
+  { expression: String.raw`\cap P_{\mathrm{condition}}`, annotation: ["ticket·관리 단말·시간 조건을 충족한","범위만 남깁니다: read-only 조건"] },
+  { expression: String.raw`\setminus P_{\mathrm{deny}}`, annotation: ["allow보다 우선하는 금지를 제거","export deny → 실효 권한은 read만"] },
+]}
           terms={[
             { symbol: "P_{\\mathrm{direct}}", name: "직접 권한", description: "사용자나 workload에 개별 부여된 resource-action 쌍입니다." },
             { symbol: "P_{\\mathrm{role}}", name: "역할 권한", description: "CS-readonly, DB-operator 같은 업무 역할에서 상속된 권한입니다." },

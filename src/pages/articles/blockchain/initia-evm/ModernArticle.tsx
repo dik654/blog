@@ -29,11 +29,12 @@ export default function ModernInitiaEvmArticle() {
         question="Ethereum↔Cosmos 변환과 실행 revision을 언제 release해도 되는가?"
         idea={<>한 field만 비교하지 않고 transaction의 왕복 의미, sender, sequence 증가와 candidate state root를 함께 대조합니다. 이 식은 protocol theorem이 아니라 versioned release gate입니다.</>}
         formula={String.raw`\begin{aligned}R={}&[tx_{eth}=roundtrip(tx_{sdk})]\\&\land[sender'=sender]\\&\land[seq_{after}=seq_{before}+1]\\&\land[root_{candidate}=root_{oracle}]\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}R={}&[tx_{eth}=roundtrip(tx_{sdk})]\\&\land[sender'=\underbrace{sender]}_{\text{판정 조건 결합}}\\&\land[seq_{after}=\underbrace{seq_{before}+1]}_{\text{판정 조건 결합}}\\&\land[root_{candidate}=\underbrace{root_{oracle}]}_{\text{판정 조건 결합}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}R={}&\underbrace{[tx_{eth}=roundtrip(tx_{sdk})]}_{\text{왕복 의미 보존}}\\&\land\underbrace{[sender'=sender]}_{\text{서명자 동일}}\\&\land\underbrace{[seq_{after}=seq_{before}+1]}_{\text{sequence 정확히 +1}}\\&\land\underbrace{[root_{candidate}=root_{oracle}]}_{\text{oracle과 같은 state}}\end{aligned}`}
         operations={[
-          { expression: String.raw`sender]`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","한 field만 비교하지 않고 transaction의 왕복","의미, sender, sequence 증가와 candidate","state root를 함께 대조합니다."] },
-          { expression: String.raw`seq_{before}+1]`, annotation: ["account sequence이(가) 식의 결과에 기여하는","방식을 계산합니다.","한 field만 비교하지 않고 transaction의 왕복","의미, sender, sequence 증가와 candidate"] },
-          { expression: String.raw`root_{oracle}]`, annotation: ["candidate state root이(가) 식의 결과에","기여하는 방식을 계산합니다.","한 field만 비교하지 않고 transaction의 왕복","의미, sender, sequence 증가와 candidate"] },
+          { expression: String.raw`[tx_{eth}=roundtrip(tx_{sdk})]`, annotation: ["Ethereum→Cosmos→Ethereum 왕복 뒤","canonical field 의미가 같아야 함"] },
+          { expression: String.raw`[sender'=sender]`, annotation: ["복원한 sender가 원래 서명자와 같음"] },
+          { expression: String.raw`[seq_{after}=seq_{before}+1]`, annotation: ["Alice가 7에서 시작하면 8로 끝나야 함","9면 Ante·EVM이 둘 다 증가시킨 것"] },
+          { expression: String.raw`[root_{candidate}=root_{oracle}]`, annotation: ["같은 pre-state·block context에서","candidate root가 oracle과 일치","하나라도 거짓이면 release하지 않음"] },
         ]}
         terms={[
           { symbol: "tx_eth", name: "Ethereum transaction", description: "서명·chain ID·nonce·gas·to·value·data를 포함한 기준 입력입니다." },

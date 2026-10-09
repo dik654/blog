@@ -25,9 +25,10 @@ export default function Montgomery() {
         question="T를 p로 직접 나누지 않고 T·R⁻¹ mod p를 어떻게 구할까요?"
         idea="p′=-p⁻¹ mod R를 미리 계산하고, T+mp의 하위 log₂R bits가 모두 0이 되게 m을 고릅니다. 그러면 /R은 exact shift이고 p의 배수를 더했으므로 mod p 값은 보존됩니다."
         formula={String.raw`m=(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p`}
-        annotatedFormula={String.raw`m=\underbrace{(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`m=\underbrace{(T p')\bmod R}_{\text{하위 bit 소거 배수}},\qquad \operatorname{REDC}(T)=\frac{\underbrace{T+mp}_{\text{R의 배수가 됨}}}{\underbrace{R}_{\text{shift로 나눔}}}\pmod p`}
         operations={[
-          { expression: String.raw`(T p')\bmod R,\qquad \operatorname{REDC}(T)=\frac{T+mp}{R}\pmod p`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","p′=-p⁻¹ mod R를 미리 계산하고, T+mp의 하위","log₂R bits가 모두 0이 되게 m을 고릅니다."] },
+          { expression: String.raw`(T p')\bmod R`, annotation: ["p′=−p⁻¹ mod R를 곱해 T+mp의","하위 log₂R bit가 0이 될 m을 고릅니다","예: T=21, p′=15 → m=27"] },
+          { expression: String.raw`\frac{T+mp}{R}`, annotation: ["p의 배수를 더해 mod p 값은 같고","R로 나누기는 exact shift입니다","(21+27·17)/32=480/32=15"] },
         ]}
         terms={[
           { symbol: "T", name: "wide product", description: "보통 두 L-limb 내부 값의 최대 2L-limb 곱입니다." },

@@ -23,9 +23,11 @@ export default function ZKUsage() {
         question="두 다항식의 linear product를 NTT로 계산할 때 transform length를 어떻게 정할까요?"
         idea="곱의 최대 degree를 담을 수 있을 만큼 evaluation points를 확보하고, 두 input을 같은 길이로 padding한 뒤 transform·pointwise product·inverse를 수행합니다."
         formula={String.raw`n\ge L_a+L_b-1,\qquad c=\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)`}
-        annotatedFormula={String.raw`n\ge L_a+L_b-1,\qquad c=\underbrace{\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`n\ge \underbrace{L_a+L_b-1}_{\text{곱의 계수 개수}},\qquad c=\underbrace{\operatorname{INTT}_n}_{\text{계수로 되돌림}}\!\left(\underbrace{\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)}_{\text{평가점끼리 곱}}\right)`}
         operations={[
-          { expression: String.raw`\operatorname{INTT}_n\!\left(\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","곱의 최대 degree를 담을 수 있을 만큼","evaluation points를 확보하고, 두 input을","같은 길이로 padding한 뒤"] },
+          { expression: String.raw`n\ge L_a+L_b-1`, annotation: ["transform 길이가 곱의 계수 수 이상이어야","고차항이 상수항 쪽으로 감기지 않습니다","길이 3과 2의 곱이면 n≥4입니다"] },
+          { expression: String.raw`\operatorname{NTT}_n(a)\odot\operatorname{NTT}_n(b)`, annotation: ["두 input을 길이 n으로 padding해 평가한 뒤","같은 평가점끼리 O(n)으로 곱합니다"] },
+          { expression: String.raw`\operatorname{INTT}_n`, annotation: ["점별 곱을 inverse NTT로 되돌려","길이 Lₐ+Lᵦ−1인 계수 c를 얻습니다"] },
         ]}
         terms={[
           {

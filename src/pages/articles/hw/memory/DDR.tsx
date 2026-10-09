@@ -29,10 +29,11 @@ export default function DDR() {
             formula={
               "B_{\\mathrm{theory}}=r_{\\mathrm{MT/s}}\\times\\frac{w_{\\mathrm{bit}}}{8}\\times N_{\\mathrm{channel}}"
             }
-            annotatedFormula={String.raw`B_{\mathrm{theory}}=\underbrace{r_{\mathrm{MT/s}}\times\frac{w_{\mathrm{bit}}}{8}\times N_{\mathrm{channel}}}_{\text{기준량당 비율}}`}
+            annotatedFormula={String.raw`B_{\mathrm{theory}}=\underbrace{r_{\mathrm{MT/s}}}_{\text{초당 transfer 수}}\times\underbrace{\frac{w_{\mathrm{bit}}}{8}}_{\text{transfer당 byte}}\times\underbrace{N_{\mathrm{channel}}}_{\text{독립 channel 수}}`}
             operations={[
-              { expression: String.raw`r_{\mathrm{MT/s}}\times\frac{w_{\mathrm{bit}}}{8}\times N_{\mathrm{channel}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초당 transfer 수에 transfer마다"] },
-            ]}
+          { expression: String.raw`r_{\mathrm{MT/s}}\times\frac{w_{\mathrm{bit}}}{8}`, annotation: ["초당 transfer 수 × transfer당 byte", "DDR5-6400 64-bit channel 하나는", "6400 × 8 B = 51.2 GB/s"] },
+          { expression: String.raw`N_{\mathrm{channel}}`, annotation: ["독립 channel 수를 곱한 이론 상한", "8 channels면 409.6 GB/s", "애플리케이션이 늘 얻는 값은 아닙니다"] },
+        ]}
             terms={[
               {
                 symbol: "r_{\\mathrm{MT/s}}",
@@ -75,10 +76,11 @@ export default function DDR() {
               </p>
             }
             formula={"t_{\\mathrm{CAS}}=CL\\times\\frac{2}{r_{\\mathrm{MT/s}}}"}
-            annotatedFormula={String.raw`t_{\mathrm{CAS}}=\underbrace{CL\times\frac{2}{r_{\mathrm{MT/s}}}}_{\text{기준량당 비율}}`}
+            annotatedFormula={String.raw`t_{\mathrm{CAS}}=\underbrace{CL}_{\text{CAS cycle 수}}\times\underbrace{\frac{2}{r_{\mathrm{MT/s}}}}_{\text{clock 한 cycle 시간}}`}
             operations={[
-              { expression: String.raw`CL\times\frac{2}{r_{\mathrm{MT/s}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","CAS latency는 cycle 수이므로 실제 memory","clock의 한 cycle 시간과 곱해 nanosecond로","바꿔야 합니다."] },
-            ]}
+          { expression: String.raw`CL`, annotation: ["CAS latency는 시간이 아니라 cycle 수"] },
+          { expression: String.raw`\frac{2}{r_{\mathrm{MT/s}}}`, annotation: ["clock은 transfer rate의 절반이라 2/r", "CL32·6400 MT/s → 32×2/6400M=10ns", "DDR4-3200 CL16도 10ns로 같습니다"] },
+        ]}
             terms={[
               {
                 symbol: "CL",

@@ -1,4 +1,44 @@
 # E3-markets-macro-banking 감사 원장
+
+## 적용 결과
+적용일 2026-10-09. 본문 적용 15(#1~10·12~14·16·17) · OK 참고행 반영 2(#15·#18) · 후속 작업 2(#11·#19) · 보류 0. 이 가운데 11건(#1·2·3·4·8·9·10·12·14·16·17)은 공용 데이터 동기화가 필요해 끝의 `## 공용 파일 수정 목록`에 old→new로 올림.
+
+| # | 판정 | 조치 |
+|---|---|---|
+| 1 | LINK | 적용: `funds-etfs-and-etns.tsx` citeKey 3의 href를 `…/investor-alerts/sec`로 바꾸고 원문 발췌·확인일·교체 사유를 적음. evidence·registration 쪽은 공용파일 목록으로 이관 |
+| 2 | WRONG | 적용: 본문 머리 주석·인용 블록 2곳을 "초판 6장(3판 기준 7장)"으로 바꾸고 V* 중복 번호 설명을 추가함. `FourNumbersViz.tsx` 주석·note, 같은 오류가 있던 `CapitalMovesViz.tsx` note도 수정. evidence·learning·registration은 공용파일 목록 |
+| 3 | WRONG | 적용: 쪽수를 14·20~21·21~23·24·25·26쪽(“512 to 10”은 26쪽 첫 줄)으로 고치고 "26쪽 이미지 대조" 주장을 지움. 대신 "쪽수는 OCR 쪽 머리글 기준, 쪽 이미지로 따로 대조하지 않음"이라고 적음. `TwoRatiosViz.tsx` 주석 3곳과 note도 수정. 공용 데이터는 목록 |
+| 4 | LINK | 적용: href를 ETF 팩트시트 `etfs/FS-JEPI.PDF`로 바꿈. 2026-10-09에 직접 내려받아(200, 2쪽, "Fact Sheet August 31, 2026 / JPMorgan Equity Premium Income ETF / Ticker: JEPI") 같은 ELN Risk Summary 문장이 있는 것을 확인했고, 본문 귀속은 "JEPI의 2026년 8월 31일 팩트시트"로 고침 |
+| 5 | MISLEADING | 적용(근거를 고쳐서): 행사가격 서술을 "현재 지수와 같거나 그보다 높게(at or above)"로 바꿈. **원장의 "80% 커버 하한"은 원문과 다름**: SEC 497K 원문을 다시 열어 보니 "The Fund invests at least 80% of its total assets in the securities of the Cboe NASDAQ-100® BuyWrite V2 Index"였고, 이것은 콜 매도 비율이 아니라 투자 정책 하한(60일 전 통지로 변경 가능)임. 9절에 원문 그대로 이 하한을 넣고 "커버 비율 80%"라고는 쓰지 않음 |
+| 6 | CALC | 적용: AlgorithmBlock note를 "E −1, U +1, 분모 E+U는 그대로이고 분자만 늘어남. 9/69=13.0% → 10/69=14.5%. 나머지 두 조건을 통과하지 못하면 분모만 1 줄어 9/68=13.2%"로 고침 |
+| 7 | MISLEADING | 적용: who-counts의 예고문에서 "전제 하나가 오늘날에는 성립하지 않습니다"를 지우고 "그 전제가 무엇에 기댔는지를 읽습니다. 오늘날에도 성립하는지는 자료로 따질 문제여서 그 글도 판정하지 않습니다"로 바꿔 리카도 글과 맞춤 |
+| 8 | LINK | 적용: 라벨을 "pp.6–7, 17"로 고침. 공용 데이터는 목록 |
+| 9 | LINK | 적용: 라벨에서 "definition"을 지우고 "Global X · QYLD 펀드 페이지(미국 상장)"로 바꿈. 본문 각주에 "수치만 있고 정의 문구 없음, 팩트시트 403으로 미대조"를 적음 |
+| 10 | MISSING | 적용: FSC 2020-05-18 보도자료를 2026-10-09에 다시 열어 문구를 대조함. 7절에 한국 괴리율 의무 범위 3%/6%와 투자유의종목 기준 30%→6%/12%(단일가 매매, 거래 정지)를 넣고 1만 원 NAV 사례(1만300원, 1만600원, 1만100원의 괴리율 1%)를 붙임. 9절에는 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만 원, 신용거래 제외, 위탁증거금 100%, 사전 온라인 교육을 넣음. 둘 다 "한국 관할, 2020년 발표 시점의 방안, 현행 KRX 규정 원문으로는 미확인"을 밝힘. citeKey 6으로 인용 블록 추가 |
+| 11 | MISSING | 후속 작업: 금감원 1차 자료(fss.or.kr)를 열 수 없어 본문에 넣지 않음 |
+| 12 | UNVERIFIED | 적용: CME 인용 블록 2개에 "2026-10-09 재확인 시 자동 조회 차단, 검색 요약으로만 확인(미검증)"을 적음. 원문 재대조는 후속 작업 |
+| 13 | LINK | 적용: "20~21쪽"으로 고침(#3과 같은 인용 블록) |
+| 14 | MISLEADING | 적용: 라벨을 "2013 결의의 2023년 개정 통합본(ICLS/21/2023/RES. II)"로 고치고, 2013 원문 Wayback 링크와 "인용한 항은 두 판에서 같음"을 본문 인용 블록에 넣음. 공용 데이터는 목록 |
+| 15 | OK | 반영: "19~20쪽"을 "20쪽"으로 고침 |
+| 16 | LINK | 적용: "금융회사별 1인당"을 지우고 FSC 2025-07-22 보도자료 「’25.9.1일부터 예금을 1억원까지 보호합니다」(https://fsc.go.kr/edu/news/85077)를 2026-10-09에 열어 확인한 내용으로 바꿈. 같은 금융회사 안에서 합산하고, 여러 회사에 나누면 회사마다 따로 적용하며, 퇴직연금(DC·IRP 등 보호상품 운용분)·연금저축·사고보험금은 같은 회사 안에서도 별도 1억 원임. citeKey 12 추가. "1인당" 표현은 보도자료에 없어 쓰지 않음 |
+| 17 | LINK | 적용: SEC 보도자료 2023-129(2023-07-12)를 열어 게이트 폐지, 기관용 prime·tax-exempt MMF의 순환매 5% 초과 시 유동성 수수료 의무, 비정부 MMF의 재량 수수료를 확인하고 본문과 citeKey 13에 넣음. citeKey 10 각주에 "이 페이지엔 수수료 설명 없음"을 적음 |
+| 18 | OK | 반영: 신한 각주를 실제 문구(분류, "낙아웃형 ELB는 … 원금이 지급됩니다")와 "JS 렌더링 필요"로 바꿈 |
+| 19 | MISSING | 후속 작업: 인용할 통계(Maddison, UN WPP)를 이번에 1차 자료로 열지 않음. 본문에는 "이 두 판정은 일반적 서술이고 통계 자료를 직접 인용하지 않았다"는 범위 문장만 넣음 |
+
+부수 반영: Ricardo 인용 블록 2에 원문 "no other difference in the real or labour price of commodities, than the additional quantity of labour required to convey them to the various markets"를 이어 붙임(원장 글별 기록의 경미한 빠진 내용).
+
+변경한 글 파일(직접 수정):
+- `src/pages/articles/markets/funds-etfs-and-etns.tsx`
+- `src/pages/articles/markets/covered-calls-and-income-funds.tsx`
+- `src/pages/articles/markets/financial-products-and-claims.tsx`
+- `src/pages/articles/markets/forwards-and-futures.tsx`
+- `src/pages/articles/macro/what-ricardo-assumed.tsx`, `…/viz/FourNumbersViz.tsx`, `…/viz/CapitalMovesViz.tsx`
+- `src/pages/articles/macro/who-counts-as-unemployed.tsx`
+- `src/pages/articles/macro/why-per-head-stalls.tsx`, `…/viz/TwoRatiosViz.tsx`
+- `src/pages/articles/macro/what-the-price-level-hides.tsx`
+
+검증: 8개 route마다 check-article의 개별 검사(learning-contract, viz-style, korean-naturalness, term-density, term-pair-wrapping, knowledge-graph, reading-order)는 통과. prose-readability는 다른 글(gpu/ai/blockchain 등)의 기존 항목 때문에 rc=1이지만 이 원장의 글은 "재검토 필요" 목록에 없음. 이번에 늘어난 긴 문단은 260자 미만으로 나눔. `npx eslint`(11개 파일) 통과. check-article.sh 안의 `merge-registrations` 단계는 공용 파일에 쓰기 때문에 돌리지 않음. `tsc`는 통합자 몫.
+
 확인일: 2026-10-09. 글 15편. 열어 본 URL 87개(성공 70 / 실패 17; 실패는 봇 차단·404·web.archive.org 접근 불가, 아래 표).
 
 검증 방법: 15편의 본문(tsx 인라인)·차트 컴포넌트(`CoveredCallPayoffChart.tsx`·`OptionPayoffChart.tsx`·macro 4편의 `viz/*.tsx`)·`src/content/*/articles.ts` 카탈로그·`article-evidence.ts`·`article-learning.ts`·`knowledge-graph.ts` 정의를 전부 읽고, 수치 사례는 Python으로 전수 재계산했다(아래 CALC 기록). 링크는 WebFetch로 열고, 403·타임아웃 페이지는 curl(브라우저 UA)·로컬 PDF/DOCX 텍스트 추출로 2차 시도했다. 1차 자료(Ricardo·Fisher·Malthus·ILO)와 공식 문서 29건은 두 보조 검증 작업으로 분담해 원문 전문을 내려받아 대조했다.
@@ -210,3 +250,224 @@
 | https://www.ilo.org/international-conference-labour-statisticians/21st-… 외 ILO 경로 3건 | 404 | https://www.ilo.org/resource/conference-paper/resolution-ii-resolution-amend-19th-icls-resolution-concerning-statistics (200)로 개정 제목 확인 |
 | https://ilostat.ilo.org/about/standards/icls/ | 403(라이브) | Wayback 2024-12-31 사본으로 21차 ICLS 개정 목록 확인 |
 | https://www.sec.gov/investor/pubs/leveragedetfs-alert.htm | 403("Request Rate Threshold Exceeded") | investor.gov 정식 페이지(…/investor-alerts/sec)로 대체 |
+
+## 후속 작업
+- #11 covered-calls: 금감원 2024-07~08 커버드콜 ETF 소비자경보(종목명 분배율은 목표치, '프리미엄'은 옵션 프리미엄)와 상품명 변경 조치. fss.or.kr 점검(2026-10-08~10)이 끝난 뒤 1차 원문을 열어 10절에 한 단락과 인용을 넣을 것. 2차 보도만으로는 넣지 않음.
+- #19 why-per-head-stalls: 부품 4의 두 판정(20세기 농업 생산성의 곱셈적 증가, 소득 상승기의 출산율 하락)에 Maddison Project 또는 UN WPP 한 건을 1차 자료로 열어 인용 블록을 추가할 것. 지금은 "통계 자료를 직접 인용하지 않았다"는 범위 문장만 있음.
+- #12 forwards-and-futures: CME 두 페이지(understanding-margin-changes, ferrous contango)를 브라우저로 렌더링해 발췌를 다시 대조할 것. 막히면 CME Rulebook이나 Clearing 공시 PDF로 바꿀 것.
+- #10 funds-etfs-and-etns: 2020 FSC 방안 수치(3%/6%, 6%/12%, 1,000만 원, 사전교육)가 현행 KRX 유가증권시장 업무규정·시행세칙에서도 그대로인지 확인한 뒤 "2020년 발표 기준" 단서를 갱신할 것.
+- (선택) funds-etfs-and-etns registration의 "SEC Leveraged and Inverse ETF Alert"(`https://www.sec.gov/files/investor/pubs/leveragedetfs-alert.htm`, 감사 때 403)를 investor.gov 정식 페이지로 맞출지 통합자가 판단할 것.
+
+## 공용 파일 수정 목록
+통합자가 아래 순서대로 적용한다. old 문자열은 각 파일에서 한 번만 나오는 것을 2026-10-09에 `grep -cF`로 확인했다. `src/content/registrations/*.ts`도 check-article의 merge 단계가 공용 파일에 병합하므로 여기에 적는다.
+
+### 1. `src/content/article-evidence.ts`
+
+(1-a) #1 SEC 레버리지 ETF 링크
+```
+old:
+      "label": "SEC · Leveraged and Inverse ETFs",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-12",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+new:
+      "label": "SEC · Updated Investor Bulletin: Leveraged and Inverse ETFs",
+      "href": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/sec",
+      "note": "2026-10-09 원문 확인(“Most leveraged and inverse ETFs “reset” daily…”). 이전 주소 investor-bulletins-12는 다른 게시물(Professional Honors)로 연결되어 교체했습니다."
+```
+
+(1-b) #10 FSC 2020 보도자료 추가(funds-etfs-and-etns 배열, SQQQ 항목 뒤)
+```
+old:
+      "href": "https://prod.proshares.com/globalassets/proshares/prospectuses/sqqq_summary_prospectus.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+new:
+      "href": "https://prod.proshares.com/globalassets/proshares/prospectuses/sqqq_summary_prospectus.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
+      "href": "https://fsc.go.kr/po010101/74332",
+      "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+    },
+```
+주의: 이 old 조각은 article-evidence.ts에 SQQQ 항목이 하나뿐이라 유일하다. 그 뒤 원소가 바로 `{`로 시작하는지 적용 전에 확인할 것(배열 끝이면 `},` 대신 `}`).
+
+(1-c) #12 CME 두 항목 note
+```
+old:
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+new:
+      "href": "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation",
+      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). 정의 문구는 검색 요약으로만 확인해 미검증입니다."
+```
+```
+old:
+      "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+new:
+      "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
+      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). “marks positions to market twice a day”는 검색 요약으로만 확인해 미검증입니다."
+```
+
+(1-d) #16 예금보호
+```
+old:
+      "href": "https://www.fsc.go.kr/po010105/85200",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+new:
+      "href": "https://www.fsc.go.kr/po010105/85200",
+      "note": "2026-10-09 원문 확인. 한도 1억원(원금 및 이자 포함)과 2025-09-01 시행만 뒷받침합니다. 합산 단위와 별도 한도는 다음 항목이 근거입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · ’25.9.1일부터 예금을 1억원까지 보호합니다 (2025-07-22 보도자료)",
+      "href": "https://fsc.go.kr/edu/news/85077",
+      "note": "2026-10-09 원문 확인. 같은 금융회사 안에서도 퇴직연금(DC·IRP·중소기업퇴직연금기금 중 예금 등 보호상품 운용분)·연금저축·사고보험금은 일반 예금과 별도로 1억원까지 보호. 펀드 등 실적연동 상품은 비보호. 한국 관할."
+    },
+```
+
+(1-e) #17 MMF
+```
+old:
+      "href": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-5",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    }
+new:
+      "href": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/mutual-funds-and-exchange-traded-5",
+      "note": "2026-10-09 원문 확인. 고정 NAV(stable $1.00)와 기관용 prime·tax-exempt MMF의 변동 NAV만 뒷받침합니다. 유동성 수수료는 다음 항목이 근거입니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "SEC · Press Release 2023-129, Money Market Fund Reforms (2023-07-12)",
+      "href": "https://www.sec.gov/newsroom/press-releases/2023-129",
+      "note": "2026-10-09 원문 확인. 게이트 조항 폐지, 기관용 prime·tax-exempt MMF는 하루 순환매가 순자산 5%를 넘으면 유동성 수수료 의무(비용이 미미하면 제외), 비정부 MMF는 이사회 재량 수수료. 미국 관할."
+    }
+```
+
+(1-f) #8 Fidelity 쪽수
+```
+old:
+      "label": "Fidelity/OIC · Exercise and Assignment, transcript pp.6–7,18",
+new:
+      "label": "Fidelity/OIC · Exercise and Assignment, transcript pp.6–7, 17",
+```
+
+(1-g) #4 JEPI
+```
+old:
+      "label": "J.P. Morgan · JEPI Fact Sheet, ELN Risk Summary",
+      "href": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/specialty/fs-epi-c.pdf",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+new:
+      "label": "J.P. Morgan · JPMorgan Equity Premium Income ETF (JEPI) Fact Sheet, 2026-08-31, Risk Summary",
+      "href": "https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/etfs/FS-JEPI.PDF",
+      "note": "2026-10-09 원문 확인(ELN 유동성·신용·상대방 위험 문장). 이전 링크 fs-epi-c.pdf는 같은 전략의 뮤추얼펀드(JEPAX 등) 팩트시트라 ETF 팩트시트로 교체했습니다."
+```
+
+(1-h) #9 Global X
+```
+old:
+      "label": "Global X · QYLD distribution rate definition",
+      "href": "https://www.globalxetfs.com/funds/qyld",
+      "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+new:
+      "label": "Global X · QYLD 펀드 페이지(미국 상장)",
+      "href": "https://www.globalxetfs.com/funds/qyld",
+      "note": "2026-10-09 확인. 분배율·30일 SEC 수익률 수치만 있고 정의 문구는 없습니다. 팩트시트 PDF는 자동 조회 불가(403)."
+```
+
+(1-i) #3 Malthus
+```
+old:
+        "T. R. Malthus, 『An Essay on the Principle of Population』, London: J. Johnson, 1798 (초판), 14·21·25~28쪽",
+      href: "https://archive.org/details/essayonprincipl00malt",
+      note: "두 비율의 선언(14쪽), 25년마다 두 배의 근거(21쪽), 섬의 100년 셈과 7,700만 명(25~26쪽), 세계로 넓힌 512 대 10(28쪽)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 14·26쪽은 쪽 이미지로 대조, 나머지는 OCR 쪽 머리글로 확인했음",
+new:
+        "T. R. Malthus, 『An Essay on the Principle of Population』, London: J. Johnson, 1798 (초판), 14·20~26쪽",
+      href: "https://archive.org/details/essayonprincipl00malt",
+      note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+```
+
+(1-j) #14 ILO
+```
+old:
+        "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」, 19차 결의(2013) · 21차 회의(2023) 개정, 47·51·55·73항",
+new:
+        "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」, 19차 결의(2013)의 2023년 개정 통합본(ICLS/21/2023/RES. II), 47·51·55·73항",
+```
+그리고 같은 항목 note 끝에 덧붙임:
+```
+old:
+LU1~LU4의 식과 둘 이상을 쓰라는 요구(73항 c)의 출처. ILO 공개 PDF를 읽고 47항은 쪽 이미지로 대조했음. 본문의 100명 보기와 백분율은 이 글이 만든 설명용 수치",
+new:
+LU1~LU4의 식과 둘 이상을 쓰라는 요구(73항 c)의 출처. ILO 공개 PDF를 읽고 47항은 쪽 이미지로 대조했음. 링크의 PDF는 2023년 개정 통합본이고 2013 원문은 Wayback(https://web.archive.org/web/20140429080051id_/http://www.ilo.org/wcmsp5/groups/public/---dgreports/---stat/documents/normativeinstrument/wcms_230304.pdf)에 있으며, 인용한 16·21·27·47·51·55·73(c)항은 두 판의 문구가 같음(2026-10-09 확인). 본문의 100명 보기와 백분율은 이 글이 만든 설명용 수치",
+```
+
+(1-k) #2 Ricardo
+```
+old:
+        "David Ricardo, 『On the Principles of Political Economy, and Taxation』, London: John Murray, 1817 초판, 7장 「On Foreign Trade」",
+new:
+        "David Ricardo, 『On the Principles of Political Economy, and Taxation』, London: John Murray, 1817 초판, 6장 「On Foreign Trade」(3판 기준 7장)",
+```
+```
+old:
+Project Gutenberg 1817년 초판 전사본으로 7장 전체를 읽었음. facsimile이 아니어서
+new:
+Project Gutenberg 1817년 초판 전사본으로 6장 전체를 읽었음(초판은 「On Profits」를 V*로 중복 번호 매겨 외국무역이 VI장, 3판 1821년부터 7장). facsimile이 아니어서
+```
+
+### 2. `src/content/article-learning.ts`
+```
+old:
+          "Internet Archive의 1798년 초판 스캔(430쪽)을 내려받아 해당 장을 읽었습니다. 14쪽의 두 비율 선언과 26쪽의 100년 셈은 쪽 이미지를 직접 열어 대조했고, 21·25·28쪽은 같은 스캔 OCR 본문의 쪽 머리글로 확인했습니다. 이후 판본에서 저자가 논지를 상당히 수정했으나 이 글은 초판만 읽었습니다.",
+new:
+          "Internet Archive의 1798년 초판 스캔(430쪽)을 내려받아 해당 장을 읽었습니다. 두 비율 선언은 14쪽, 미국 25년 배가는 20~21쪽, 100년 셈은 24쪽, 세계 수열은 25쪽, 512 대 10은 26쪽 첫 줄이며, 쪽수는 같은 스캔 OCR 본문의 쪽 머리글로 확인했습니다(2026-10-09 재대조, 쪽 이미지로 따로 대조하지는 않음). 이후 판본에서 저자가 논지를 상당히 수정했으나 이 글은 초판만 읽었습니다.",
+```
+```
+old:
+          "David Ricardo, 『On the Principles of Political Economy, and Taxation』 (1817) 초판, 7장",
+new:
+          "David Ricardo, 『On the Principles of Political Economy, and Taxation』 (1817) 초판, 6장(3판 기준 7장)",
+```
+```
+old:
+          "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 7장 전체를 읽었습니다.
+new:
+          "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 6장 「On Foreign Trade」 전체를 읽었습니다(초판은 V*장 중복 번호 때문에 외국무역이 VI장이고, 3판부터 7장입니다).
+```
+```
+old:
+          "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」 (19차 2013 · 21차 2023 개정)",
+new:
+          "ICLS, 「Resolution concerning statistics of work, employment and labour underutilization」 (19차 2013, 2023년 개정 통합본 ICLS/21/2023/RES. II)",
+```
+
+### 3. `src/content/registrations/what-ricardo-assumed.ts` (article-learning·evidence와 같은 문자열; merge 원천)
+- 351행: (2)의 Ricardo title old→new와 같은 쌍.
+- 360행: (2)의 "Project Gutenberg의 1817년 초판 전사본(eBook 33310)으로 7장 전체를 읽었습니다." old→new와 같은 쌍.
+- 374행: (1-k) 첫 쌍과 같은 문자열.
+- 376행: (1-k) 둘째 쌍과 같은 문자열.
+
+### 4. `src/content/registrations/why-per-head-stalls.ts`
+- 391행: (2)의 Malthus evidenceScope old→new와 같은 쌍.
+- 405·407행: (1-i)와 같은 쌍(label·note).
+
+### 5. `src/content/registrations/who-counts-as-unemployed.ts`
+- 382행: (2)의 ICLS title 쌍과 같은 문자열.
+- 405행: (1-j) 첫 쌍과 같은 문자열.
+
+### 6. `src/content/registrations/finance-audit-current.ts` (article-evidence.ts와 같은 JSON 형식)
+(1-a) · (1-b) · (1-c) · (1-d) · (1-e) · (1-f) · (1-g) · (1-h)의 old→new 쌍을 그대로 적용한다. 각 old 조각이 이 파일에서도 한 번만 나오는 것을 확인했다(investor-bulletins-12, sqqq, ferrous contango, understanding-margin-changes, po010105/85200, mutual-funds-and-exchange-traded-5, "pp.6–7,18", fs-epi-c.pdf, "QYLD distribution rate definition" 각 1건).
+
+### 7. `src/content/registrations/forwards-and-futures.ts` (한 줄 JSON)
+```
+old:
+"label": "CME Understanding Margin Changes", "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes", "note": "선물 증거금과 일별 평가·유지 요건의 공식 설명입니다."
+new:
+"label": "CME Understanding Margin Changes", "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes", "note": "선물 증거금과 일별 평가·유지 요건의 공식 설명입니다. 2026-10-09 재확인 시 자동 조회 불가(시간 초과·403)라 발췌는 검색 요약으로만 확인해 미검증입니다."
+```

@@ -79,10 +79,11 @@ export default function IsmsAuthManagement() {
           question="Hash DB가 유출됐을 때 한 계정의 후보를 G개 시험하는 시간이 무엇에 좌우될까?"
           idea="후보 하나를 계산하는 실제 평균 시간에 후보 수를 곱하고 공격자의 유효 병렬 처리량으로 나눕니다. Salt는 여러 계정의 사전계산 재사용을 막지만 한 계정의 약한 password를 강하게 만들지는 않습니다."
           formula={String.raw`T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}`}
-          annotatedFormula={String.raw`\underbrace{T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}}_{\text{기준량당 비율}}`}
+          annotatedFormula={String.raw`T_{\mathrm{guess}}\approx\frac{\underbrace{G\,t_{\mathrm{hash}}}_{\text{후보 전체 계산 시간}}}{\underbrace{p_{\mathrm{eff}}}_{\text{유효 병렬도}}}`}
           operations={[
-            { expression: String.raw`T_{\mathrm{guess}}\approx\frac{G\,t_{\mathrm{hash}}}{p_{\mathrm{eff}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","후보 하나를 계산하는 실제 평균 시간에 후보 수를 곱하고","공격자의 유효 병렬 처리량으로 나눕니다."] },
-          ]}
+          { expression: String.raw`G\,t_{\mathrm{hash}}`, annotation: ["시험할 후보 G개 × 후보당 평균 hash 시간", "100만 × 0.2초 = 20만 초"] },
+          { expression: String.raw`p_{\mathrm{eff}}`, annotation: ["공격자의 유효 병렬 처리량으로 나눔", "병렬도 100이면 약 2,000초", "흔한 password는 훨씬 앞에서 나옵니다"] },
+        ]}
           terms={[
             { symbol: "G", name: "후보 수", description: "공격자가 해당 계정에 대해 시험하는 password guess 개수입니다." },
             { symbol: "t_{\\mathrm{hash}}", name: "후보당 비용", description: "저장된 algorithm·memory/time parameter로 후보 하나를 검증하는 평균 시간입니다." },

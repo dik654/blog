@@ -103,7 +103,7 @@ export default function WhoCountsAsUnemployedArticle() {
         </div>
 
         <CitationBlock
-          source="국제노동통계인회의(ICLS), 「Resolution concerning statistics of work, employment and labour underutilization」 19차 결의(2013) · 21차 회의(2023)에서 개정, 47항"
+          source="국제노동통계인회의(ICLS), 「Resolution concerning statistics of work, employment and labour underutilization」 19차 결의(2013)의 2023년 개정 통합본(21차 회의 Resolution II, ICLS/21/2023/RES. II), 47항"
           citeKey={1}
           href="https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@dgreports/@stat/documents/normativeinstrument/wcms_230304.pdf"
         >
@@ -117,7 +117,10 @@ export default function WhoCountsAsUnemployedArticle() {
           단서는 (d)입니다. 한 시간 기준은 27항 계열의 “work for at least one
           hour”입니다. ILO 공개 PDF를 내려받아 읽었고 47항은 쪽 이미지를 직접
           열어 대조했습니다. 한국어 조건 서술은 이 글이 옮긴 것이고 공식 번역이
-          아닙니다.
+          아닙니다. 링크의 PDF는 2023년 10월 21차 회의가 채택한 개정을 반영한 통합본이며, 2013년 원문은{" "}
+          <a href="https://web.archive.org/web/20140429080051id_/http://www.ilo.org/wcmsp5/groups/public/---dgreports/---stat/documents/normativeinstrument/wcms_230304.pdf">Wayback 사본(2014-04-29)</a>으로
+          남아 있습니다. 이 글이 인용하는 16·21·27·47·51·55·73(c)항은 두 판의
+          문구가 같습니다(2026-10-09 확인).
         </CitationBlock>
 
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
@@ -300,7 +303,7 @@ export default function WhoCountsAsUnemployedArticle() {
           steps={[
             {
               code: "최소 시간을 올린다 → 일하는 사람이 줄고 실업자가 는다",
-              note: "주말에만 몇 시간 일하던 사람이 일하는 쪽에서 빠져 나와, 나머지 두 조건을 통과하면 실업자가 됩니다. 분자와 분모가 모두 움직이지만 분자가 더 크게 늘어 실업률이 올라갑니다.",
+              note: "주말에만 몇 시간 일하던 사람이 일하는 쪽에서 빠져 나와, 나머지 두 조건을 통과하면 실업자가 됩니다. E가 1 줄고 U가 1 늘어 분모 E+U는 그대로이고 분자만 늘어납니다. 100명 보기(E=60, U=9)라면 9/69=13.0%가 10/69=14.5%로 오릅니다. 나머지 두 조건을 통과하지 못한 사람은 노동력 밖으로 빠져 분모만 1 줄어듭니다(9/68=13.2%).",
             },
             {
               code: "찾는 기간을 늘린다 → 실업자가 는다",
@@ -433,8 +436,9 @@ export default function WhoCountsAsUnemployedArticle() {
           <p className="leading-7">
             마지막 편은 나라 밖과의 거래입니다. 1단계에서 서로 다른 것을 잘하는
             두 쪽이 거래하면 양쪽이 이득이라는 것을 봤는데, 그 논증이 세워진
-            자리로 돌아가 거기서 무엇을 전제했는지를 읽습니다. 전제 하나가
-            오늘날에는 성립하지 않습니다.
+            자리로 돌아가 거기서 무엇을 전제했는지, 그 전제가 무엇에 기댔는지를
+            읽습니다. 그 전제가 오늘날에도 성립하는지는 자료로 따질 별개의
+            문제여서 그 글도 판정하지 않습니다.
           </p>
 
           <h3 className="mt-10 mb-4 text-lg font-bold">

@@ -46,9 +46,9 @@ export default function RopeFoundation() {
         question="한 token의 위치를 query와 key에 어떻게 넣되 vector의 크기는 보존할까?"
         idea={<>head dimension을 2차원 쌍으로 나눈 뒤 위치 m과 frequency θ가 정하는 각도만큼 회전합니다. 회전은 길이를 바꾸지 않고 방향만 바꾸므로 content vector의 norm을 그대로 유지합니다.</>}
         formula={String.raw`\begin{aligned}R(m\theta)&=\begin{pmatrix}\cos(m\theta)&-\sin(m\theta)\\\sin(m\theta)&\cos(m\theta)\end{pmatrix}\\[3pt]q_m&=R(m\theta)q\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}R(m\theta)&=\begin{pmatrix}\cos(m\theta)&-\sin(m\theta)\\\sin(m\theta)&\cos(m\theta)\end{pmatrix}\\[3pt]q_m&=\underbrace{R(m\theta)q}_{\text{2D rotation 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\underbrace{R(m\theta)}_{\text{위치 m만큼 돌리는 각}}&=\begin{pmatrix}\cos(m\theta)&-\sin(m\theta)\\\sin(m\theta)&\cos(m\theta)\end{pmatrix}\\[3pt]q_m&=\underbrace{R(m\theta)q}_{\text{길이 그대로, 방향만 회전}}\end{aligned}`}
         operations={[
-          { expression: String.raw`R(m\theta)q`, annotation: ["2D rotation이(가) 식의 결과에 기여하는 방식을","계산합니다.","head dimension을 2차원 쌍으로 나눈 뒤 위치 m과","frequency θ가 정하는 각도만큼 회전합니다."] },
+          { expression: String.raw`R(m\theta)q`, annotation: ["query의 두 좌표 쌍을 위치 m과","frequency θ가 정한 각 mθ만큼 돌립니다","회전이라 content의 norm은 보존"] },
         ]}
         terms={[
           { symbol: "m", name: "token position", description: "sequence 안에서 현재 query 또는 key가 놓인 index입니다." },
@@ -71,10 +71,10 @@ export default function RopeFoundation() {
         question="절대 위치 m과 n을 넣었는데 attention score에는 왜 상대 거리 n−m이 남을까?"
         idea={<>회전 행렬의 transpose는 반대 방향 회전이고, 두 회전을 연달아 적용하면 각도 차이만 남습니다.</>}
         formula={String.raw`\begin{aligned}(R_mq)^\top(R_nk)&=q^\top R_m^\top R_nk\\&=q^\top R_{n-m}k\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}(R_mq)^\top(R_nk)&=\underbrace{q^\top R_m^\top R_nk}_{\text{rotation composition 계산}}\\&=\underbrace{q^\top R_{n-m}k}_{\text{position-aware score 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}(R_mq)^\top(R_nk)&=q^\top\underbrace{R_m^\top R_n}_{\text{m만큼 되돌리고 n만큼 회전}}k\\&=q^\top\underbrace{R_{n-m}}_{\text{거리 차만 남은 회전}}k\end{aligned}`}
         operations={[
-          { expression: String.raw`q^\top R_m^\top R_nk`, annotation: ["rotation composition이(가) 식의 결과에","기여하는 방식을 계산합니다.","회전 행렬의 transpose는 반대 방향 회전이고, 두","회전을 연달아 적용하면 각도 차이만 남습니다."] },
-          { expression: String.raw`q^\top R_{n-m}k`, annotation: ["position-aware score이(가) 식의 결과에","기여하는 방식을 계산합니다.","회전 행렬의 transpose는 반대 방향 회전이고, 두","회전을 연달아 적용하면 각도 차이만 남습니다."] },
+          { expression: String.raw`q^\top R_m^\top R_nk`, annotation: ["transpose는 반대 방향 회전이므로","query 쪽 회전 −mθ와 key 쪽 nθ가","한 행렬로 합쳐집니다"] },
+          { expression: String.raw`q^\top R_{n-m}k`, annotation: ["절대 위치 m, n은 사라지고","상대 거리 (n−m)θ만 logit에 남습니다"] },
         ]}
         terms={[
           { symbol: "R_m^\\top R_n", name: "rotation composition", description: "−mθ 회전 뒤 nθ 회전을 적용하므로 (n−m)θ가 됩니다." },
@@ -105,9 +105,10 @@ export default function RopeFoundation() {
         question="왜 RoPE 차원마다 가까운 거리와 먼 거리를 보는 scale이 달라질까?"
         idea={<>차원 index i가 커질수록 inverse frequency를 기하급수적으로 낮춥니다. 따라서 한 head 안에 짧은 파장과 긴 파장이 함께 생깁니다.</>}
         formula={String.raw`\theta_i=b^{-2i/d},\qquad \lambda_i=\frac{2\pi}{\theta_i}=2\pi b^{2i/d}`}
-        annotatedFormula={String.raw`\theta_i=\underbrace{b^{-2i/d},\qquad \lambda_i=\frac{2\pi}{\theta_i}=2\pi b^{2i/d}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\theta_i=\underbrace{b^{-2i/d}}_{\text{i가 클수록 느린 회전}},\qquad \lambda_i=\frac{2\pi}{\theta_i}=\underbrace{2\pi b^{2i/d}}_{\text{한 바퀴 도는 token 거리}}`}
         operations={[
-          { expression: String.raw`b^{-2i/d},\qquad \lambda_i=\frac{2\pi}{\theta_i}=2\pi b^{2i/d}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","차원 index i가 커질수록 inverse","frequency를 기하급수적으로 낮춥니다."] },
+          { expression: String.raw`b^{-2i/d}`, annotation: ["pair index i가 커질수록 base b의","거듭제곱으로 회전 속도를 낮춥니다","예: 원래 RoPE의 b=10000"] },
+          { expression: String.raw`2\pi b^{2i/d}`, annotation: ["한 바퀴(2π)를 도는 데 필요한 거리","작은 i는 짧은 파장으로 근거리 구분,","큰 i는 긴 파장으로 먼 거리 scale"] },
         ]}
         terms={[
           { symbol: "d", name: "rotary dimension", description: "RoPE가 적용되는 query/key dimension 수입니다. partial RoPE라면 전체 head_dim과 다를 수 있습니다." },

@@ -28,9 +28,10 @@ export default function FieldTrie({
           </>
         }
         formula={String.raw`d=\lceil\log_2L\rceil,\qquad C\approx d+1`}
-        annotatedFormula={String.raw`d=\underbrace{\lceil\log_2L\rceil,\qquad C\approx d+1}_{\text{로그 비용 변환}}`}
+        annotatedFormula={String.raw`d=\underbrace{\lceil\log_2L\rceil}_{\text{leaf→root level 수}},\qquad C\approx \underbrace{d}_{\text{바뀌는 ancestor}}+\underbrace{1}_{\text{새 leaf chunk}}`}
         operations={[
-          { expression: String.raw`\lceil\log_2L\rceil,\qquad C\approx d+1`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Leaf chunk를 새로 만든 뒤 depth마다"] },
+          { expression: String.raw`\lceil\log_2L\rceil`, annotation: ["chunk L개를 이진 tree로 쌓은 높이","L=16이면 log₂16=4 level"] },
+          { expression: String.raw`C\approx d+1`, annotation: ["level마다 parent 하나만 다시 hash하고","sibling은 cache 재사용: 4+1≈5개"] },
         ]}
         terms={[
           {

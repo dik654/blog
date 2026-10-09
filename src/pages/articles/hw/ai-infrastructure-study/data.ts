@@ -62,7 +62,7 @@ export const b300BlueprintData: AiInfrastructureArticleData = {
       "다음으로 8-GPU 노드 한 대의 실측을 얻고 16노드에서 계산·통신·I/O가 어떻게 늘어나는지 검증합니다. 모든 BOM 행은 요구사항과 시험 항목에 연결합니다. Logic·HBM·package·NIC·전력 가운데 하나가 늦어질 때 막히는 시험도 같이 적어야 ‘보통 필요해서’ 넣은 장비 목록을 납품 계획으로 바꿀 수 있습니다.",
     ] },
     { id: "source", level: "5", title: "8. 공개 B300 기준 구성에 수량을 대입합니다", bridge: "변환 절차를 세웠습니다. NVIDIA 공개 기준 구성의 한 노드 사양을 16배로 펼쳐 봅니다.", paragraphs: [
-      "NVIDIA HGX AI Factory 문서는 B300 노드에 GPU 8개, 동서용 ConnectX-8 8개, 북남용 BlueField-3 한 개, 최소 2TB 시스템 메모리를 둡니다. 본문의 16노드 예에서는 GPU 128개, 동서 어댑터 128개, DPU 16개, 시스템 메모리 최소 32TB가 기준선입니다.",
+      "NVIDIA HGX AI Factory 문서는 B300 노드에 GPU 8개, 동서용 ConnectX-8 8개, 북남용 BlueField-3 한 개, 최소 2TB 시스템 메모리를 둡니다. 본문의 16노드 예에서는 GPU 128개, 동서 어댑터 128개, DPU 16개, 시스템 메모리 최소 32TB가 기준선입니다. DGX B300 완제품은 user guide 기준 dual-port BlueField-3 DPU를 2장(2×400Gb/s) 싣기 때문에, DGX로 사면 DPU는 32개가 되고 HGX 권장안과 수량이 달라집니다.",
       "이 대입은 수량 누락을 찾는 출발점입니다. 모델 이름도 같은 방식으로 검증합니다. 실제 GLM-5.3-Flash의 320B total·18B active와 교육 과정의 25.7M 축소 모델은 구조 학습에는 연결되지만 같은 memory·성능 실측이 아닙니다. 32·64·128노드용 공식 스위치 표도 16노드에 단순히 절반 내지 않고 포트와 이중화, 확장 단위로 다시 설계합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 128개와 256개 확장 경계를 비교합니다", bridge: "16노드 기준선을 얻었습니다. 처음부터 32노드까지 열어 둘 때 무엇을 선투자할지 가릅니다.", paragraphs: [
@@ -103,7 +103,7 @@ export const b300BlueprintData: AiInfrastructureArticleData = {
   ], output: "요구사항표 + 16노드 기준 구성 + BOM 초안 + 32노드 확장안", repeatUntil: "미확정 요구가 시험이나 고객 결정으로 닫힐 때마다 다시 산정합니다." },
   sources: [
     { source: "NVIDIA HGX AI Factory · Components", excerpt: "Eight NVIDIA B300 GPUs on an HGX B300 baseboard", application: "한 노드를 GPU 8개 단위로 잡고 128개를 16노드로 나누는 공개 근거로 씁니다.", citation: "NVIDIA, HGX AI Factory Components", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html", note: "GPU·메모리·ConnectX-8·BlueField-3·로컬 NVMe 등 HGX B300 한 노드의 공개 기준을 설명합니다." },
-    { source: "NVIDIA HGX AI Factory · Logical Architecture", excerpt: "4 nodes are the smallest NVIDIA HGX AI Factory building block", application: "확장을 임의의 한 노드가 아니라 검증 단위와 스위치 포트 예산으로 계획하는 기준으로 씁니다.", citation: "NVIDIA, HGX AI Factory Logical Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/network-logical-architecture.html", note: "확장 단위와 동서·북남·관리망의 분리를 설명하는 공식 reference architecture입니다." },
+    { source: "NVIDIA HGX AI Factory · Logical Architecture", excerpt: "This Enterprise RA is built on scalable units (SU) based on 4 compute nodes.", application: "확장을 임의의 한 노드가 아니라 검증 단위와 스위치 포트 예산으로 계획하는 기준으로 씁니다.", citation: "NVIDIA, HGX AI Factory Logical Architecture", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/network-logical-architecture.html", note: "확장 단위와 동서·북남·관리망의 분리를 설명하는 공식 reference architecture입니다." },
   ],
   review: [
     "GPU 128개가 16노드가 되는 계산과 그 숫자가 아직 말하지 않는 것은 무엇입니까? (답: 3절)",
@@ -432,7 +432,7 @@ export const storageIoData: AiInfrastructureArticleData = {
     { code: "restore(global_manifest)→checksum·optimizer_step", note: "다른 node 수에서도 읽힌 세대만 complete로 기록합니다." },
   ], output: "요청 반환·durable publish·restore가 각각 찍힌 한 세대의 timeline", repeatUntil: "Request size, client 수, cache 상태, software manifest 또는 failure domain이 바뀔 때마다 다시 실행합니다." },
   sources: [
-    { source: "Linux Kernel · VFS", excerpt: "Dirty and Writeback state are tracked in the address space", application: "Buffered write의 `write()` 반환과 backing storage writeback·error 보고를 다른 완료 시점으로 설명합니다.", citation: "Linux Kernel Documentation, Overview of the Linux Virtual File System", href: "https://docs.kernel.org/filesystems/vfs.html", note: "Page cache의 address_space, Dirty·Writeback과 fsync에서 writeback error를 회수하는 현재 kernel 문서입니다." },
+    { source: "Linux Kernel · VFS", excerpt: "This tree maintains information about the PG_Dirty and PG_Writeback status of each page, so that pages with either of these flags can be found quickly.", application: "Buffered write의 `write()` 반환과 backing storage writeback·error 보고를 다른 완료 시점으로 설명합니다.", citation: "Linux Kernel Documentation, Overview of the Linux Virtual File System", href: "https://docs.kernel.org/filesystems/vfs.html", note: "Page cache의 address_space, Dirty·Writeback과 fsync에서 writeback error를 회수하는 현재 kernel 문서입니다." },
     { source: "NVIDIA HGX AI Factory · Certified Storage", excerpt: "approximately 12.5 Gb/s per GPU", application: "GPU 128개에 곱해 1.6Tb/s, 200GB/s aggregate sizing 기준선을 만들되 workload 보장값과 분리합니다.", citation: "NVIDIA, HGX AI Factory Certified Storage", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/nvidia-certified-storage.html", note: "HGX B300 cluster용 공개 sizing guideline과 certified storage program의 범위를 확인합니다." },
   ],
   review: [
@@ -478,7 +478,8 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
       "어느 한 구간의 용량이 작아도 전체가 그 값에 묶입니다. PDU가 충분해도 한쪽 feed 장애에서 남은 경로가 피크를 받지 못하거나, 열교환기는 충분해도 facility water 온도·유량이 맞지 않으면 rack을 가동할 수 없습니다.",
     ] },
     { id: "case", level: "0", title: "3. 16대의 평균 232kW와 피크 304kW를 셉니다", bridge: "전체 경로를 정했습니다. NVIDIA 공개 planning 값에 16노드를 대입해 시설 기준선을 만듭니다.", paragraphs: [
-      "NVIDIA의 B300 data center guide는 DC busbar 시스템당 예상 평균 14.5kW와 피크 19kW를 제시합니다. 16대면 서버만 평균 232kW, 피크 304kW입니다. AC rack PDU 모델은 대당 15kW와 19.7kW라서 같은 16대도 평균 240kW, 피크 315.2kW입니다. 스위치·스토리지·관리 노드와 냉각 장치 자체 전력은 어느 합에도 아직 들어가지 않았습니다.",
+      "NVIDIA의 B300 data center guide는 DC busbar 시스템당 예상 시스템 전력 14.5kW와 예상 피크 19kW를 제시합니다. 둘 다 공급 공기 25°C를 전제로 한 추정치이고, ‘평균’이라는 말은 rack 표(58kW Average)에만 붙습니다. 이 글은 14.5kW를 평균으로 읽습니다. 16대면 서버만 평균 232kW, 피크 304kW입니다. AC rack PDU 모델은 대당 15kW와 19.7kW라서 같은 16대도 평균 240kW, 피크 315.2kW입니다. 스위치·스토리지·관리 노드와 냉각 장치 자체 전력은 어느 합에도 아직 들어가지 않았습니다.",
+      "그 빠진 몫이 얼마나 되는지는 같은 guide의 64-node SU 전력표가 보여 줍니다. B300 rack 16개가 평균 820kVA·피크 1228kVA일 때 network·management·storage rack 8개가 104/105kVA, CDU 2대가 24/70kVA, RDHx 24대가 27/47kVA를 더해 합계는 975/1450kVA입니다. 냉각 장치만 평균 51kVA, 피크 117kVA이므로 cooling auxiliary 전력은 서버 합과 별도 행으로 잡아야 합니다.",
       "DC 고밀도안으로 4대씩 넣으면 compute rack 4개이고 rack당 평균 58kW, 피크 76kW입니다. AC 저밀도안으로 2대씩 넣으면 8개 rack, rack당 평균 30kW, 피크 39.4kW입니다. 서버 수가 같아도 전원 방식과 rack·공조·케이블 경로가 달라집니다.",
     ] },
     { id: "picture", level: "1", title: "4. 저밀도와 고밀도 랙을 현장 제약으로 고릅니다", bridge: "같은 총전력이 다른 rack 수로 갈릴 수 있음을 봤습니다. 밀도 선택의 비용을 나눕니다.", paragraphs: [
@@ -487,7 +488,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     ] },
     { id: "need", level: "2", title: "5. RDHx와 DLC를 같은 수랭으로 부르지 않습니다", bridge: "밀도 선택이 냉각 방식과 연결됨을 봤습니다. 물이 어느 지점에서 열을 받는지 구분합니다.", paragraphs: [
       "후면 도어 열교환기(Rear Door Heat Exchanger, RDHx)는 서버가 공기로 내보낸 열을 rack 뒤에서 물로 옮깁니다. 서버 내부는 여전히 공랭입니다. 직접 액체 냉각(Direct Liquid Cooling, DLC)은 cold plate가 GPU·CPU 같은 부품의 열을 서버 안에서 냉각수로 직접 받습니다.",
-      "둘 다 facility water와 열교환이 필요할 수 있지만 누수 경계·공기 잔열·공급수 조건·서비스 절차가 다릅니다. B300 공랭 시스템에 active RDHx를 쓰는 공개 배치를 곧바로 DLC 사례라고 부르면 안 됩니다.",
+      "둘 다 facility water와 열교환이 필요할 수 있지만 누수 경계·공기 잔열·공급수 조건·서비스 절차가 다릅니다. B300 공랭 시스템에 active RDHx를 쓰는 공개 배치를 곧바로 DLC 사례라고 부르면 안 됩니다. 같은 guide는 “Passive Rear Door Heat Exchangers are not recommended for DGX B300 Systems”라고 적습니다. 자체 fan이 없는 passive door는 이 시스템의 권장 선택지가 아니므로 고밀도안의 door는 active 방식으로 검토합니다.",
     ] },
     { id: "names", level: "3", title: "6. PDU·UPS·RDHx·CDU의 경계를 붙입니다", bridge: "물의 접점을 구분했습니다. 전기와 액체 경로에서 자주 섞이는 네 장치의 역할을 붙입니다.", paragraphs: [
       "무정전 전원 장치(UPS)는 입력 정전·품질 문제에서 저장 에너지와 전력 변환으로 부하를 이어 줍니다. 전원 분배 장치(PDU)는 rack 또는 설비 구간에 전원을 나누고 계측·보호합니다. 둘 다 발전기와 branch circuit 전체를 뜻하지 않습니다.",
@@ -502,7 +503,8 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
       "공개 값은 planning estimate입니다. 실제 OEM configuration, workload power cap, ambient와 fan curve, AC·DC power option에 따라 달라지므로 발주 전 vendor submittal과 현장 measurement로 교체해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. 싱가포르의 고온 운영 기준을 별도로 확인합니다", bridge: "장비 쪽 deployment 기준을 적용했습니다. 이제 설치 지역의 facility 운영 기준을 별도 축으로 확인합니다.", paragraphs: [
-      "싱가포르 IMDA는 SS 697:2023을 tropical climate에서 data center 운영 온도를 안전하게 높이는 방법과 지침으로 설명합니다. 이 기준을 이유로 장비 inlet 한계를 임의로 올리면 안 됩니다. server vendor 환경 범위와 facility risk assessment를 함께 만족해야 합니다.",
+      "싱가포르 IMDA는 SS 697:2023을 tropical climate에서 data center 운영 온도를 26°C 이상으로 단계적으로 높이는 방법과 지침으로 설명합니다. 이 기준을 이유로 장비 inlet 한계를 임의로 올리면 안 됩니다. server vendor 환경 범위와 facility risk assessment를 함께 만족해야 합니다.",
+      "B300 쪽 숫자는 NVIDIA guide에 있습니다. 사양표의 operating temperature는 10–35°C이지만, 공급 공기는 ASHRAE Class A2를 따르되 최대 30°C로 제한하라고 적습니다. ASHRAE 표의 권장(recommended) 범위는 모든 A 등급 공통 18–27°C이고, 30°C까지는 허용(allowable) 구간입니다. 고도 조건도 붙어서 30°C 운전은 해발 1000ft 이하에서만 열립니다. 따라서 26°C 공급은 권장 상한 27°C 바로 아래, 28–30°C는 권장 밖 허용 구간이 됩니다. 3절의 14.5kW·19kW는 25°C 공급 공기 기준 추정치라 26°C 이상에서는 그대로 쓰지 말고 현장 측정값으로 바꿉니다(확인일 2026-10-09).",
       "높은 공급 온도는 냉각 에너지를 줄일 수 있지만 고밀도 rack의 실제 inlet 분포와 습도·hotspot을 측정해야 합니다. 평균 room temperature 하나로 모든 server inlet이 안전하다고 결론내리지 않습니다.",
     ] },
     { id: "limits", level: "7", title: "10. 유량 계산은 설비 승인 도면이 아닙니다", bridge: "지역 기준까지 대조했습니다. 마지막으로 빠른 sizing과 전문 설계의 경계를 남깁니다.", paragraphs: [
@@ -538,7 +540,7 @@ export const rackPowerCoolingData: AiInfrastructureArticleData = {
     { code: "실제_workload로_power·inlet·flow·throttle을_측정", note: "planning 값을 현장 acceptance 값으로 교체합니다." },
   ], output: "rack별 average·peak·N−1 전력과 air/water 열 제거 원장", repeatUntil: "rack population·power cap·facility 조건이 바뀔 때마다 다시 산정합니다." },
   sources: [
-    { source: "NVIDIA · Data Center Best Practices with DGX B300", excerpt: "Four air-cooled DGX B300s per 48U MGX rack", application: "16대 예를 4대×4 racks 또는 2대×8 racks로 나누고 rack 평균·피크를 계산합니다.", citation: "NVIDIA, Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", note: "B300의 고밀도·저밀도 배치, 평균·피크 전력, RDHx와 site 준비 조건을 다루는 공식 planning guide입니다." },
+    { source: "NVIDIA · Data Center Best Practices with DGX B300", excerpt: "Four air-cooled DGX B300s per 48U MGX rack", application: "16대 예를 4대×4 racks 또는 2대×8 racks로 나누고 rack 평균·피크를 계산합니다.", citation: "NVIDIA, Data Center Best Practices with DGX B300", href: "https://docs.nvidia.com/dgx-pdf/data-center-best-practices-with-dgx-b300-v1.pdf", note: "B300의 고밀도·저밀도 배치, 평균·피크 전력(25°C 공급 공기 기준 추정), 10–35°C operating temperature와 최대 30°C 공급 공기, passive RDHx 비권장, 64-node SU 보조 전력표를 다루는 공식 planning guide입니다(확인일 2026-10-09)." },
     { source: "Singapore IMDA · Tropical DC Standard", excerpt: "gradual increase in the DC operating temperatures to 26°C and above", application: "싱가포르 고온 운영은 임의 setpoint가 아니라 SS 697 방법과 vendor 환경 범위를 함께 검증하는 별도 조건으로 둡니다.", citation: "IMDA, Tropical Data Centre Standard SS 697:2023", href: "https://www.imda.gov.sg/how-we-can-help/green-dc-roadmap/tropical-dc-standard", note: "tropical climate에서 운영 온도를 안전하게 높이는 방법과 냉각 에너지 절감 범위를 설명하는 싱가포르 공식 안내입니다." },
   ],
   review: [
@@ -643,7 +645,7 @@ export const commissioningAcceptanceData: AiInfrastructureArticleData = {
   ], output: "FAT·SAT·성능·운영 evidence와 예외가 연결된 acceptance ledger", repeatUntil: "모든 필수 요구가 통과하거나 명시적으로 승인된 예외로 닫힐 때까지 반복합니다." },
   sources: [
     { source: "NVIDIA B300 Deployment Guide", excerpt: "run sinfo to verify that all the nodes are up and ready", application: "node health 뒤 Slurm·GPU·multi-node NCCL로 범위를 넓히는 현장 시험 순서에 적용합니다.", citation: "NVIDIA, B300 BasePOD and SuperPOD Deployment Guide", href: "https://docs.nvidia.com/dgx-basepod/deployment-guides/dgx-basepod-b200/latest/b300/b300-nmc.html", note: "B300 network·provisioning·service 상태와 Slurm·NCCL validation 명령을 담은 공식 deployment guide입니다." },
-    { source: "KISA · CSAP 안내", excerpt: "평가·인증하여 이용자들이 안심하고 클라우드서비스를 이용", application: "hardware 납품의 보안 기능과 cloud service certification claim을 분리하고 현재 인증 범위를 증서로 확인합니다.", citation: "KISA, 클라우드서비스 보안인증제 안내", href: "https://isms.kisa.or.kr/main/csap/notice/?boardId=bbs_0000000000000004&mode=list", note: "CSAP 공지·안내서·교육 자료의 현재 정본을 확인하는 KISA 공식 경로입니다." },
+    { source: "KISA · CSAP 안내", excerpt: "클라우드컴퓨팅서비스 사업자가 제공하는 서비스에 대해 정보보호 기준의 준수여부를 평가․인증하는 제도", application: "hardware 납품의 보안 기능과 cloud service certification claim을 분리하고 현재 인증 범위를 증서로 확인합니다.", citation: "KISA, 클라우드 보안인증제(CSAP) 소개", href: "https://www.kisa.or.kr/1050603", note: "KISA 공식 사이트의 CSAP 제도 소개입니다. 이전에 인용한 isms.kisa.or.kr 공지 경로는 2026-10-09 확인 시 DNS가 해석되지 않고 보관 사본도 없어 이 페이지로 바꿨습니다." },
   ],
   review: [
     "16노드×4개 시험이 64개 결과가 되어도 cluster 검수가 끝나지 않는 이유는 무엇입니까? (답: 3절)",

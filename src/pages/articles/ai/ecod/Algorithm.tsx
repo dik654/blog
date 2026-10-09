@@ -18,10 +18,10 @@ export default function Algorithm() {
         question="각 feature의 tail rarity를 왜 −log score로 바꿀까?"
         idea={<>Independence를 가정하면 feature별 tail probability를 곱합니다. Log를 취하면 곱이 합으로 바뀌고, 앞에 minus를 붙이면 작은 probability일수록 큰 anomaly contribution이 됩니다.</>}
         formula={String.raw`\begin{aligned}U_{L,ij}&=-\log \widehat F_{j,L}(X_{ij})\\U_{R,ij}&=-\log \widehat F_{j,R}(X_{ij})\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}U_{L,ij}&=\underbrace{-\log \widehat F_{j,L}(X_{ij})}_{\text{로그 비용 변환}}\\U_{R,ij}&=\underbrace{-\log \widehat F_{j,R}(X_{ij})}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}U_{L,ij}&=-\log \underbrace{\widehat F_{j,L}(X_{ij})}_{\text{이 값 이하일 비율}}\\U_{R,ij}&=-\log \underbrace{\widehat F_{j,R}(X_{ij})}_{\text{이 값 이상일 비율}}\end{aligned}`}
         operations={[
-          { expression: String.raw`-\log \widehat F_{j,L}(X_{ij})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Independence를 가정하면 feature별 tail","probability를 곱합니다."] },
-          { expression: String.raw`-\log \widehat F_{j,R}(X_{ij})`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Independence를 가정하면 feature별 tail","probability를 곱합니다."] },
+          { expression: String.raw`-\log \widehat F_{j,L}(X_{ij})`, annotation: ["feature j에서 작은 쪽 tail이 드물수록","작은 ECDF가 큰 점수로 뒤집힙니다","0.5→약 0.69, 0.01→약 4.61"] },
+          { expression: String.raw`-\log \widehat F_{j,R}(X_{ij})`, annotation: ["큰 쪽 tail은 right ECDF로 같은 변환","log라서 feature별 tail 확률의 곱이","row score에서는 합으로 더해집니다"] },
         ]}
         terms={[
           { symbol: "i,j", name: "row and feature", description: "평가 중인 row i와 그 안의 feature j를 가리킵니다." },

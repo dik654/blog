@@ -77,7 +77,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
           <p className="leading-8">100가구 사례에 대입하면 최초의 동의는 “60가구가 원하는 것은 무엇이든 한다”는 백지 위임이 아닙니다. 공동체를 만든 목적과 정해진 권한, 공개된 법, 재산과 자유의 보호가 표결 결과를 계속 묶습니다.</p>
         </div>
         <SourceApplication source="John Locke · Second Treatise §§95–96, 131" excerpt="no one can be ... subjected ... without his own consent" application="100가구의 공동 절차는 권력의 출처가 되지만, 입법 권한은 공공선과 알려진 규칙의 경계를 계속 받습니다." />
-        <CitationBlock source="John Locke, Second Treatise of Government" citeKey={1} href="https://www.gutenberg.org/files/7370/7370-h/7370-h">동의, 다수의 결정, 알려진 법, 재산 보호와 공공선의 관계를 확인하는 공개 원문입니다. 17세기 영국의 범위와 로크 자신의 역사적 한계까지 현대 권리의 완성본으로 일반화하지 않습니다.</CitationBlock>
+        <CitationBlock source="John Locke, Second Treatise of Government" citeKey={1} href="https://www.gutenberg.org/files/7370/7370-h/7370-h.htm">동의, 다수의 결정, 알려진 법, 재산 보호와 공공선의 관계를 확인하는 공개 원문입니다. 17세기 영국의 범위와 로크 자신의 역사적 한계까지 현대 권리의 완성본으로 일반화하지 않습니다.</CitationBlock>
       </LessonSection>
 
       <LessonSection id="comparison" level="6" title="9. 밀의 해악 원칙은 다수의 간섭 범위를 다시 좁힙니다" bridge="권한의 출처에 더해 간섭의 목적을 검사했습니다. 현실의 동의와 불평등이 남기는 문제를 정리합니다.">

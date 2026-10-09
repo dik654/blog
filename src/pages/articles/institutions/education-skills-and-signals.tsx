@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import NumericPath from "../world-systems/NumericPath";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
@@ -52,6 +53,7 @@ export default function EducationSkillsAndSignalsArticle() {
         <h2 className="mb-6 text-2xl font-bold">3 · 능력 축적·신호·기회비용을 구분합니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">학습으로 실제 생산과 판단 능력이 달라지는 효과를 교육의 인적자본 축적이라고 부릅니다. 자격이 능력 정보를 고용주에게 전해 선택을 바꾸는 효과는 신호 효과입니다.</p>
+          <p className="leading-8">이 개념은 Spence의 1973년 논문 「Job Market Signaling」(The Quarterly Journal of Economics 87권 3호, 355~374쪽)에서 나왔고, 이 글은 그 논문의 서지만 확인했습니다. 자격이 정보를 전하려면 자격을 얻는 비용이 능력에 따라 달라야 한다는 조건은 <Link className="text-sky-700 underline dark:text-sky-300" to="/economics/market-failure/information-asymmetry#signaling">정보 비대칭 글의 신호 절</Link>에서 숫자 사례로 설명합니다.</p>
           <p className="leading-8">교육 때문에 포기한 다른 선택의 가치를 기회비용이라고 합니다. 사례에서는 1년 동안 벌지 못한 2천만 원이 해당합니다. 학비로 학교에 지급된 돈과는 다른 비용입니다.</p>
           <p className="leading-8">세 효과는 함께 존재할 수 있습니다. 학위가 신호로 쓰인다고 수업이 무용하다는 결론도, 임금이 올랐다고 모든 상승이 학습 효과라는 결론도 바로 나오지 않습니다.</p>
         </div>

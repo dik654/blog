@@ -271,7 +271,7 @@ export const productGovernanceData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "FCA Handbook · PROD 3", excerpt: "process for the approval of each financial instrument", application: "출시 전 승인, 목표·반대시장과 중요한 사건 뒤의 재검토를 연결합니다.", citation: "FCA PROD 3 Product governance: MiFID", href: "https://handbook.fca.org.uk/handbook/prod3", note: "2026년 1월 갱신본의 영국 규칙이며 다른 관할에는 해당 규칙을 그대로 적용하지 않습니다." },
-    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "파생상품 영업실무·법규·윤리", application: "상품 구조 지식과 고객 권유·분쟁 예방이 함께 필요한 교육 범위를 확인합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "교육 범위표이며 상품 승인에 적용되는 개별 법규의 대체 자료가 아닙니다." },
+    { source: "금융투자교육원 · 파생상품투자권유자문인력", excerpt: "파생상품 중심 투자권유 절차와 유의사항", application: "상품 구조 지식과 고객 권유·분쟁조정이 함께 필요한 교육 범위를 확인합니다.", citation: "금융투자교육원, 파생상품투자권유자문인력", href: "https://www.kifin.or.kr/course/active/detail.do?courseActiveSeq=27178&courseMasterSeq=1853", note: "교육 범위표이며 상품 승인에 적용되는 개별 법규의 대체 자료가 아닙니다. 인용문은 과정표 8번 과목명입니다(2026-10-09 확인)." },
   ],
   review: [
     "원금 100에서 위쪽 이익 8과 아래쪽 손실 40을 계산해 보세요. (답: 1·3절)",
@@ -341,7 +341,7 @@ export const multiAssetRareEventData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "MIT OpenCourseWare · Simulation Methods", excerpt: "Generating Random Numbers · Variance Reduction · Quasi-Monte Carlo", application: "경로 생성, 가격 평균, 분산감소와 실제 오차 확인의 학습 순서를 사용합니다.", citation: "MIT 15.450 Analytics of Finance, Lecture 3", href: "https://www.ocw.mit.edu/courses/15-450-analytics-of-finance-fall-2010/4fa033082ff5ee58722a67fe81f0dce7_MIT15_450F10_lec03.pdf", note: "강의의 예를 이 글의 바스켓 숫자로 바꿨으며 실제 상품 가격을 인용하지 않습니다." },
-    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Blanchet, Zhang, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf", note: "논문은 점과정 사례입니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다." },
+    { source: "Stanford · 희귀사건 시뮬레이션", excerpt: "importance sampling algorithm", application: "희귀 경로를 자주 만들고 가능도 가중치로 기대값을 지키는 원리를 확인합니다.", citation: "Zhang, Blanchet, Glynn and Giesecke, Rare Event Simulation for a Generalized Hawkes Process, Proceedings of the 2009 Winter Simulation Conference", href: "https://web.stanford.edu/~glynn/papers/2009/ZhangBlanchetGieseckeG09.pdf", note: "논문은 점과정 사례입니다. 이 글은 중요도 표본추출의 일반 원리만 사용합니다." },
   ],
   review: [
     "두 자산의 변동성이 20%일 때 상관 0과 1의 바구니 변동성을 계산해 보세요. (답: 3절)",
@@ -411,7 +411,7 @@ export const canadaHongKongSwitzerlandData = {
   ] },
   sources: [
     { source: "Canadian Securities Administrators · NI 93-101", excerpt: "Derivatives: Business Conduct", application: "당사자 정보, 적합성, 확인서와 영업행위 보호의 적용 범위를 확인합니다.", citation: "National Instrument 93-101, consolidated 2024", href: "https://www.asc.ca/securities-law-and-policy/regulatory-instruments/93-101", note: "캐나다 참여 관할의 통합 자료이며 주별 적용과 면제를 다시 확인합니다." },
-    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "장내 선물·주식 파생상품과 복잡상품·파생상품 지식 요건의 관계를 확인합니다.", citation: "SFC Non-complex and complex products", href: "https://www.sbz.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "목록은 비포괄적이며 권유 여부와 거래 장소별 요건을 함께 확인합니다." },
+    { source: "Hong Kong SFC · 복잡상품", excerpt: "Complex products - Derivatives traded on an exchange", application: "장내 선물·주식 파생상품과 복잡상품·파생상품 지식 요건의 관계를 확인합니다.", citation: "SFC Non-complex and complex products", href: "https://www.sfc.hk/en/Rules-and-standards/Suitability-requirement/Non-complex-and-complex-products", note: "목록은 비포괄적이며 권유 여부와 거래 장소별 요건을 함께 확인합니다." },
     { source: "FINMA · 고객 자문가 의무", excerpt: "financial situation and investment goals ... knowledge and experience", application: "스위스에서 고객 정보·추천 전 검사·기록과 옴부즈맨 안내의 기본 흐름을 확인합니다.", citation: "FINMA, Questions about client advisers", href: "https://www.finma.ch/en/finma-public/fragen-und-probleme/zur-registrierung-von-kundenberaterinnen-oder-kundenberatern/", note: "FinSA 일반 안내이며 개별 파생상품과 국경 간 서비스의 법률 적용을 다시 확인합니다." },
   ],
   review: [

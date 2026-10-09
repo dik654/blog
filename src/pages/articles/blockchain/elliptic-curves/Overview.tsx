@@ -20,9 +20,10 @@ export default function Overview() {
         question="Short-Weierstrass 식이 실제로 nonsingular curve를 만들었는지 어떻게 확인할까요?"
         idea="Curve에 cusp나 self-intersection이 생기면 tangent 기반 group law가 깨집니다. Discriminant가 0이 아닌 parameter만 사용해 그런 singularity를 제외합니다."
         formula={String.raw`E/\mathbb F_p:\ y^2=x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p`}
-        annotatedFormula={String.raw`E/\mathbb F_p:\ y^2=\underbrace{x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p}_{\text{base-field modulus 계산}}`}
+        annotatedFormula={String.raw`E/\mathbb F_p:\ y^2=\underbrace{x^3+ax+b}_{\text{curve instance}},\qquad \underbrace{4a^3+27b^2\not\equiv0\pmod p}_{\text{cusp·교차점 없음}}`}
         operations={[
-          { expression: String.raw`x^3+ax+b,\qquad 4a^3+27b^2\not\equiv0\pmod p`, annotation: ["base-field modulus이(가) 식의 결과에 기여하는","방식을 계산합니다.","Curve에 cusp나 self-intersection이","생기면 tangent 기반 group law가 깨집니다."] },
+          { expression: String.raw`x^3+ax+b`, annotation: ["계수 a, b가 curve instance를 정하고","좌표 연산은 mod p로 환원합니다","예: BN254 G1은 a=0, b=3"] },
+          { expression: String.raw`4a^3+27b^2\not\equiv0\pmod p`, annotation: ["discriminant가 0이면 singular라","tangent 기반 group law가 깨집니다","예: a=0, b=3이면 27·9≢0"] },
         ]}
         terms={[
           { symbol: "p", name: "base-field modulus", description: "좌표 arithmetic을 환원하는 odd prime입니다." },

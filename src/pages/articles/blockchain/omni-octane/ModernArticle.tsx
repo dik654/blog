@@ -76,12 +76,12 @@ export default function ModernArticle() {
           question="PrepareProposal의 10초 context 안에서 어디에 시간이 쓰이는가?"
           idea={<>Build start, configured delay, payload retrieval과 encoding을 같은 monotonic trace에 더하고 timeout과 비교합니다.</>}
           formula={String.raw`\begin{aligned}T_{build}&=T_{FCU}+d_{build}\\T_{prepare}&=T_{build}+T_{get}+T_{encode}\\T_{prepare}&<10\ \mathrm{s}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}T_{build}&=\underbrace{T_{FCU}+d_{build}}_{\text{Configured build delay 계산}}\\T_{prepare}&=\underbrace{T_{build}+T_{get}+T_{encode}}_{\text{Proposal encoding time 계산}}\\T_{prepare}&<\underbrace{10\ \mathrm{s}}_{\text{오른쪽 항으로 결과 계산}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{T_{build}}_{\text{build 단계}}&=\underbrace{T_{FCU}}_{\text{build 시작 요청}}+\underbrace{d_{build}}_{\text{설정된 대기}}\\\underbrace{T_{prepare}}_{\text{proposal 준비 전체}}&=T_{build}+\underbrace{T_{get}}_{\text{payload 수신}}+\underbrace{T_{encode}}_{\text{tx로 encode}}\\T_{prepare}&<\underbrace{10\ \mathrm{s}}_{\text{context timeout}}\end{aligned}`}
           operations={[
-            { expression: String.raw`T_{FCU}+d_{build}`, annotation: ["Configured build delay이(가) 식의 결과에","기여하는 방식을 계산합니다.","Build start, configured delay,","payload retrieval과 encoding을 같은"] },
-            { expression: String.raw`T_{build}+T_{get}+T_{encode}`, annotation: ["Proposal encoding time이(가) 식의 결과에","기여하는 방식을 계산합니다.","Build start, configured delay,","payload retrieval과 encoding을 같은"] },
-            { expression: String.raw`10\ \mathrm{s}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Build start, configured delay,","payload retrieval과 encoding을 같은","monotonic trace에 더하고 timeout과"] },
-          ]}
+          { expression: String.raw`T_{FCU}+d_{build}`, annotation: ["forkchoiceUpdatedV3 응답 후","설정된 build delay만큼 기다림","FCU가 빨라도 delay가 budget을 씀"] },
+          { expression: String.raw`T_{build}+T_{get}+T_{encode}`, annotation: ["getPayloadV3 수신과 encode를 더함","retry도 같은 attempt 시간에 합산"] },
+          { expression: String.raw`10\ \mathrm{s}`, annotation: ["abci.go PrepareProposal context 한도","generic CometBFT SLA는 아님","넘으면 empty proposal 경로 가능"] },
+        ]}
           terms={[
             { symbol: "T_{FCU}", name: "Build-start latency", description: "forkchoiceUpdatedV3 request와 typed response 시간입니다." },
             { symbol: "d_{build}", name: "Configured build delay", description: "Payload를 가져오기 전 기다리는 node configuration 값입니다." },
@@ -125,12 +125,12 @@ export default function ModernArticle() {
           question="어떤 증거가 candidate P101을 committed execution head로 승격하는가?"
           idea={<>Payload status와 CometBFT commit을 분리하고, 둘이 맞는 height·hash에서 만날 때만 local canonical pointers를 전진시킵니다.</>}
           formula={String.raw`\begin{aligned}v&=NP_3(P_{101})\\c&=commit_{101}\\H&=hash(P_{101})\\c\land(v=VALID)&\Rightarrow FCU_3\\(h,s,f)&\leftarrow(H,H,H)\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}v&=\underbrace{NP_3(P_{101})}_{\text{Candidate payload 계산}}\\c&=\underbrace{commit_{101}}_{\text{Consensus commit 계산}}\\H&=\underbrace{hash(P_{101})}_{\text{Candidate payload 계산}}\\c\land(v=VALID)&\Rightarrow FCU_3\\(h,s,f)&\leftarrow(H,H,H)\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{v}_{\text{EL 실행 판정}}&=NP_3(P_{101})\\\underbrace{c}_{\text{CometBFT 확정}}&=commit_{101}\\\underbrace{H}_{\text{payload hash}}&=hash(P_{101})\\\underbrace{c\land(v=VALID)}_{\text{두 증거 모두 참}}&\Rightarrow FCU_3\\\underbrace{(h,s,f)}_{\text{head·safe·finalized}}&\leftarrow(H,H,H)\end{aligned}`}
           operations={[
-            { expression: String.raw`NP_3(P_{101})`, annotation: ["Candidate payload이(가) 식의 결과에 기여하는","방식을 계산합니다.","Payload status와 CometBFT commit을","분리하고, 둘이 맞는 height·hash에서 만날 때만"] },
-            { expression: String.raw`commit_{101}`, annotation: ["Consensus commit이(가) 식의 결과에 기여하는","방식을 계산합니다.","Payload status와 CometBFT commit을","분리하고, 둘이 맞는 height·hash에서 만날 때만"] },
-            { expression: String.raw`hash(P_{101})`, annotation: ["Candidate payload이(가) 식의 결과에 기여하는","방식을 계산합니다.","Payload status와 CometBFT commit을","분리하고, 둘이 맞는 height·hash에서 만날 때만"] },
-          ]}
+          { expression: String.raw`NP_3(P_{101})`, annotation: ["P_101을 newPayloadV3로 실행 검증","VALID·INVALID·SYNCING을 따로 기록"] },
+          { expression: String.raw`commit_{101}`, annotation: ["CometBFT가 height 101을 확정한 증거","commit만으론 EVM validity 대체 불가"] },
+          { expression: String.raw`c\land(v=VALID)`, annotation: ["같은 height·hash에서 둘 다 참일 때만","FCU_3로 세 pointer를 H로 전진"] },
+        ]}
           terms={[
             { symbol: "P_{101}", name: "Candidate payload", description: "Height 101 proposal transaction 안의 decoded execution payload입니다." },
             { symbol: "v", name: "Execution verdict", description: "VALID·INVALID·SYNCING·ACCEPTED 중 execution client가 돌려준 status입니다." },
@@ -182,11 +182,11 @@ export default function ModernArticle() {
           question="한 block의 event bridge가 완전 적용됐는지 어떻게 측정하는가?"
           idea={<>관찰한 registered events 수와 성공적으로 commit된 event branches 수를 비교하고 실패 identity를 별도 ledger에 남깁니다.</>}
           formula={String.raw`\begin{aligned}C_{event}&={N_{committed}\over N_{observed}}\\N_{failed}&=N_{observed}-N_{committed}\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}C_{event}&=\underbrace{{N_{committed}\over N_{observed}}}_{\text{Committed event branches 계산}}\\N_{failed}&=\underbrace{N_{observed}-N_{committed}}_{\text{Committed event branches 계산}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{C_{event}}_{\text{event 적용 비율}}&={\underbrace{N_{committed}}_{\text{write된 branch}}\over \underbrace{N_{observed}}_{\text{관찰한 event}}}\\\underbrace{N_{failed}}_{\text{재조정 대상}}&=N_{observed}-N_{committed}\end{aligned}`}
           operations={[
-            { expression: String.raw`{N_{committed}\over N_{observed}}`, annotation: ["Committed event branches이(가) 식의","결과에 기여하는 방식을 계산합니다.","관찰한 registered events 수와 성공적으로","commit된 event branches 수를 비교하고 실패"] },
-            { expression: String.raw`N_{observed}-N_{committed}`, annotation: ["Committed event branches이(가) 식의","결과에 기여하는 방식을 계산합니다.","관찰한 registered events 수와 성공적으로","commit된 event branches 수를 비교하고 실패"] },
-          ]}
+          { expression: String.raw`{N_{committed}\over N_{observed}}`, annotation: ["같은 block hash에서 관찰한 event 중","state에 write된 branch의 비율","5개 중 4개면 0.8, 분모 0은 별도 표시"] },
+          { expression: String.raw`N_{observed}-N_{committed}`, annotation: ["error·panic으로 write 안 된 event","5−4=1개를 block/log identity로 재조정"] },
+        ]}
           terms={[
             { symbol: "N_{observed}", name: "Observed events", description: "Registered address/topic filters로 얻고 index 순으로 검증한 event 수입니다." },
             { symbol: "N_{committed}", name: "Committed event branches", description: "Processor가 성공해 cached multistore branch가 write된 event 수입니다." },

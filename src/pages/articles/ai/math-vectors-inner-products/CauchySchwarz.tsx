@@ -16,9 +16,10 @@ export default function CauchySchwarz() {
         question="두 vector의 dot product는 얼마나 커질 수 있을까요?"
         idea={<>u를 v와 평행한 projection과 수직 성분으로 나눕니다. 평행 성분의 길이는 u 전체 길이를 넘을 수 없으므로, dot product의 절댓값도 두 전체 길이의 곱을 넘을 수 없습니다.</>}
         formula={String.raw`\underbrace{|u\cdot v|}_{\text{방향이 겹치는 양}}\le \underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{두 전체 길이의 곱}}`}
-        annotatedFormula={String.raw`\underbrace{|u\cdot v|}_{\text{방향이 겹치는 양}}\le \underbrace{\underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{두 전체 길이의 곱}}}_{\text{length budget 계산}}`}
+        annotatedFormula={String.raw`\underbrace{|u\cdot v|}_{\text{방향이 겹치는 양}}\le \underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{두 전체 길이의 곱}}`}
         operations={[
-          { expression: String.raw`\underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{두 전체 길이의 곱}}`, annotation: ["length budget이(가) 식의 결과에 기여하는 방식을","계산합니다.","u를 v와 평행한 projection과 수직 성분으로","나눕니다."] },
+          { expression: String.raw`|u\cdot v|`, annotation: ["u를 v 방향 그림자와 수직 성분으로 나눠", "그림자 쪽만 dot product에 남습니다"] },
+          { expression: String.raw`\lVert u\rVert_2\lVert v\rVert_2`, annotation: ["그림자는 빗변 u보다 길 수 없어 상한이고", "u=(3,4), v=(6,8)이면 50=5×10로 등호,", "v=(4,−3)이면 상한 25인데 실제 0"] },
         ]}
         terms={[
           { symbol: String.raw`|u\cdot v|`, name: "absolute dot product", description: "같은 방향과 반대 방향을 모두 alignment의 크기로 비교합니다." },

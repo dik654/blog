@@ -23,9 +23,10 @@ export default function PolynomialArithmetic() {
         question="degree d 이하 다항식이 서로 다른 점 몇 개에서 0이 될 수 있을까요?"
         idea="root r을 하나 찾으면 (x−r)이 다항식을 나눕니다. root마다 서로 다른 일차 factor가 하나씩 필요하므로 degree보다 많은 root를 가질 수 없습니다."
         formula={String.raw`P\ne0,\ \deg P=d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d`}
-        annotatedFormula={String.raw`P\ne0,\ \deg P=\underbrace{d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\underbrace{P\ne0,\ \deg P=d}_{\text{0 아닌 degree d}}\quad\Longrightarrow\quad \underbrace{|\{r\in F:P(r)=0\}|}_{\text{서로 다른 root 수}}\le \underbrace{d}_{\text{일차 factor 최대 수}}`}
         operations={[
-          { expression: String.raw`d\quad\Longrightarrow\quad |\{r\in F:P(r)=0\}|\le d`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","root r을 하나 찾으면 (x−r)이 다항식을 나눕니다."] },
+          { expression: String.raw`P\ne0,\ \deg P=d`, annotation: ["zero polynomial은 모든 점이 root라","이 bound에서 제외합니다"] },
+          { expression: String.raw`|\{r\in F:P(r)=0\}|\le d`, annotation: ["root r마다 (x−r)이 P를 나누는데","일차 factor는 d개를 넘을 수 없습니다","F₇의 x²−1은 root 1·6, 2개입니다"] },
         ]}
         terms={[
           {

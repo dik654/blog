@@ -13,9 +13,10 @@ export default function TickMath() {
         question="가격·tick·sqrtPriceX96은 어떻게 같은 상태를 표현할까요?"
         idea="로그 눈금이 곱셈 가격 변화를 정수 덧셈으로 바꾸고, 제곱근 fixed point가 amount 계산의 곱셈·나눗셈을 정수화합니다."
         formula={String.raw`P(i)=1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor`}
-        annotatedFormula={String.raw`P(i)=\underbrace{1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`P(i)=\underbrace{1.0001^i}_{\text{tick당 1bp씩 곱함}},\qquad \texttt{sqrtPriceX96}=\Bigl\lfloor\underbrace{\sqrt P}_{\text{가격 제곱근}}\,\underbrace{2^{96}}_{\text{Q64.96 배율}}\Bigr\rfloor`}
         operations={[
-          { expression: String.raw`1.0001^i,\qquad \texttt{sqrtPriceX96}=\left\lfloor\sqrt P\,2^{96}\right\rfloor`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","로그 눈금이 곱셈 가격 변화를 정수 덧셈으로 바꾸고, 제곱근","fixed point가 amount 계산의 곱셈·나눗셈을","정수화합니다."] },
+          { expression: String.raw`1.0001^i`, annotation: ["정수 tick 하나가 가격을 1.0001배 바꿔","곱셈 가격 변화를 tick 덧셈으로 바꿈","i=0이면 P=1, i≈6,932면 P≈2"] },
+          { expression: String.raw`\left\lfloor\sqrt P\,2^{96}\right\rfloor`, annotation: ["√P에 2⁹⁶을 곱하고 내림해 uint160에 저장","amount 식에서 제곱근을 반복 계산 안 함","P=1이면 sqrtPriceX96=2⁹⁶"] },
         ]}
         terms={[
           { symbol: "i", name: "tick", description: "허용 범위 안의 signed integer price index입니다." },
@@ -29,9 +30,10 @@ export default function TickMath() {
         question="현재 가격이 범위 안일 때 position의 두 token 양은 어떻게 계산할까요?"
         idea="Token0은 upper sqrt price까지 남은 역수 거리, token1은 lower에서 현재까지의 sqrt 거리와 비례합니다."
         formula={String.raw`x=L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})`}
-        annotatedFormula={String.raw`x=\underbrace{L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`x=\underbrace{L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}}}_{\text{upper까지 남은 token0}},\qquad y=\underbrace{L(\sqrt P-\sqrt{p_a})}_{\text{lower부터 쌓인 token1}}`}
         operations={[
-          { expression: String.raw`L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}},\qquad y=L(\sqrt P-\sqrt{p_a})`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","Token0은 upper sqrt price까지 남은 역수","거리, token1은 lower에서 현재까지의 sqrt 거리와","비례합니다."] },
+          { expression: String.raw`L\frac{\sqrt{p_b}-\sqrt P}{\sqrt P\sqrt{p_b}}`, annotation: ["1/√P에서 1/√pᵦ까지 남은 역수 거리 × L","가격이 upper에 닿으면 0이 됨","L=60, √P=2, √pᵦ=3 → 60·1/6 = 10"] },
+          { expression: String.raw`L(\sqrt P-\sqrt{p_a})`, annotation: ["lower에서 현재까지 sqrt 거리 × L","가격이 lower로 내려가면 0이 됨","60·(2−1) = 60"] },
         ]}
         terms={[
           { symbol: "x", name: "token0 amount", description: "가격이 upper로 갈수록 0에 접근합니다." },

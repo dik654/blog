@@ -13,9 +13,11 @@ export default function RootsOfUnity() {
         question="N sample 동안 정확히 k바퀴 도는 discrete rotation을 어떻게 만들까?"
         idea={<>한 sample마다 −2πk/N만큼 회전하는 복소수를 n번 곱합니다. N번째 sample 뒤에는 phase가 −2πk가 되어 정수 k바퀴를 마치고 다시 1로 돌아옵니다.</>}
         formula={String.raw`\omega_N=e^{-i2\pi/N},\qquad \omega_N^{kn}=e^{-i2\pi kn/N},\qquad \omega_N^N=1`}
-        annotatedFormula={String.raw`\omega_N=\underbrace{e^{-i2\pi/N},\qquad \omega_N^{kn}=e^{-i2\pi kn/N},\qquad \omega_N^N=1}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`\omega_N=\underbrace{e^{-i2\pi/N}}_{\text{한 sample당 회전}},\qquad \omega_N^{kn}=\underbrace{e^{-i2\pi kn/N}}_{\text{n번째 sample의 위치}},\qquad \underbrace{\omega_N^N=1}_{\text{N번 돌면 제자리}}`}
         operations={[
-          { expression: String.raw`e^{-i2\pi/N},\qquad \omega_N^{kn}=e^{-i2\pi kn/N},\qquad \omega_N^N=1`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","한 sample마다"] },
+          { expression: String.raw`e^{-i2\pi/N}`, annotation: ["단위원을 N등분해 sample마다","−2π/N만큼 회전하는 복소수"] },
+          { expression: String.raw`e^{-i2\pi kn/N}`, annotation: ["회전을 kn번 곱한 sample n의 phase","k는 N sample 동안 도는 바퀴 수"] },
+          { expression: String.raw`\omega_N^N=1`, annotation: ["N번 곱하면 phase −2π로 한 바퀴","정수 k바퀴 뒤 다시 1로 돌아옴"] },
         ]}
         terms={[
           { symbol: String.raw`\omega_N`, name: "primitive Nth root", description: "시계 방향으로 한 칸 회전하는 기본 step입니다." },

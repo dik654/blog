@@ -43,9 +43,10 @@ export default function RewardSystem({
           </>
         }
         formula={String.raw`r_i=\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)`}
-        annotatedFormula={String.raw`r_i=\underbrace{\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)}_{\text{prompt와 completion 계산}}`}
+        annotatedFormula={String.raw`\underbrace{r_i}_{\text{completion 하나의 reward}}=\underbrace{\sum_{k=1}^{K}}_{\text{reward 종류별 합}}\underbrace{w_k}_{\text{상대 비중}}\,\underbrace{R_k(q,o_i;v_k)}_{\text{verifier 점수}}`}
         operations={[
-          { expression: String.raw`\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)`, annotation: ["prompt와 completion이(가) 식의 결과에 기여하는","방식을 계산합니다.","Correctness, format와 code","execution처럼 서로 다른 reward"] },
+          { expression: String.raw`R_k(q,o_i;v_k)`, annotation: ["정답 동치·format·code test 같은", "채점기가 응답 o_i에 준 점수", "parser·test version v_k가 바뀌면 달라짐"] },
+          { expression: String.raw`\sum_{k=1}^{K}w_k\,R_k(q,o_i;v_k)`, annotation: ["component마다 weight를 붙여 scalar 하나로", "합친 뒤 normalize할지 순서도", "advantage를 바꾸므로 명시합니다"] },
         ]}
         terms={[
           {
