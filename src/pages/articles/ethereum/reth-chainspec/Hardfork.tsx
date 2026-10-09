@@ -36,15 +36,16 @@ export default function Hardfork({
           a_N&=0
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          a_B&=\underbrace{[n\ge N_f]}_{\text{허용 경계 판정}}\\
-          a_T&=\underbrace{[t\ge T_f]}_{\text{허용 경계 판정}}\\
-          a_D&=\underbrace{\operatorname{TTD}(c,D_f)}_{\text{TTD threshold 계산}}\\
-          a_N&=0
+          a_B&=\underbrace{[n\ge N_f]}_{\text{block number 경계}}\\
+          a_T&=\underbrace{[t\ge T_f]}_{\text{timestamp 경계}}\\
+          a_D&=\underbrace{\operatorname{TTD}(c,D_f)}_{\text{Merge TTD 전환}}\\
+          a_N&=\underbrace{0}_{\text{Never: 항상 비활성}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`[n\ge N_f]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
-          { expression: String.raw`[t\ge T_f]`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
-          { expression: String.raw`\operatorname{TTD}(c,D_f)`, annotation: ["TTD threshold이(가) 식의 결과에 기여하는 방식을","계산합니다.","ForkCondition variant가 요구하는 좌표만","비교하고, 서로 다른 좌표를 대신 쓰지 않습니다."] },
+          { expression: String.raw`[n\ge N_f]`, annotation: ["block-based fork는 block number만 비교","Block(100)이면 n=99 false, n=100 true"] },
+          { expression: String.raw`[t\ge T_f]`, annotation: ["timestamp fork는 header timestamp만 비교","Timestamp(1,000)이면 t=999 false","block 간격·평균 block time은 쓰지 않음"] },
+          { expression: String.raw`\operatorname{TTD}(c,D_f)`, annotation: ["Merge의 역사적 전환은 total difficulty","D_f 도달 여부를 release의 TTD 의미로 판정"] },
+          { expression: String.raw`0`, annotation: ["Never variant: custom chain에서","어떤 context에서도 false"] },
         ]}
         terms={[
           {

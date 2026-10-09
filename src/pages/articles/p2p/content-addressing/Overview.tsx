@@ -41,14 +41,14 @@ d &= H(b),\\
 \operatorname{accept}(b^{\prime}) &\iff H(b^{\prime})=d.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-b &= \underbrace{\operatorname{Encode}_{codec}(x),}_{\text{logical value 계산}}\\
-d &= \underbrace{H(b),}_{\text{canonical encoded bytes 계산}}\\
-\operatorname{accept}(b^{\prime}) &\iff H(b^{\prime})=\underbrace{d.}_{\text{received bytes 계산}}
+b &= \underbrace{\operatorname{Encode}_{codec}(x)}_{\text{canonical bytes}},\\
+d &= \underbrace{H(b)}_{\text{CID에 들어갈 digest}},\\
+\operatorname{accept}(b^{\prime}) &\iff \underbrace{H(b^{\prime})=d}_{\text{재해시해 digest 비교}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{Encode}_{codec}(x),`, annotation: ["logical value이(가) 식의 결과에 기여하는 방식을","계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
-          { expression: String.raw`H(b),`, annotation: ["canonical encoded bytes이(가) 식의 결과에","기여하는 방식을 계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
-          { expression: String.raw`d.`, annotation: ["received bytes이(가) 식의 결과에 기여하는 방식을","계산합니다.","주소를 만들 때 codec으로 canonical bytes를","정하고 cryptographic hash를 계산합니다."] },
+          { expression: String.raw`\operatorname{Encode}_{codec}(x)`, annotation: ["파일·IPLD node 같은 논리 값을", "codec 규칙으로 직렬화한 hash 입력", "codec·key order·chunking이 다르면 다른 b"] },
+          { expression: String.raw`H(b)`, annotation: ["canonical bytes의 SHA-256 같은 digest", "multihash로 CID 안에 들어감", "'hello' 끝에 newline 하나면 새 digest"] },
+          { expression: String.raw`H(b^{\prime})=d`, annotation: ["어느 peer에서 받았든 같은 hash를 다시", "계산해 주소의 d와 같을 때만 수락", "일치해도 publisher·가용성은 별도"] },
         ]}
         terms={[
           {

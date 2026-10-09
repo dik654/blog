@@ -1,6 +1,6 @@
 import LessonSection from "@/components/articles/lesson-section";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
+import ProgressiveDetail from "@/components/articles/progressive-detail";
 import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
@@ -11,12 +11,12 @@ const codeClass =
 
 function BoundaryMap() {
   const boundaries = [
-    { question: "어느 주소 공간인가?", job: "process가 볼 interface·route를 분리", proof: "ip addr · ip route" },
-    { question: "실제 목적지는 누구인가?", job: "가상 주소를 Ready backend로 변환", proof: "Service · EndpointSlice" },
-    { question: "목적지 노드는 어디인가?", job: "Pod IP가 있는 node로 route 선택", proof: "ip route get" },
-    { question: "물리망이 Pod IP를 아는가?", job: "direct route 또는 outer header 선택", proof: "route · tunnel link · capture" },
-    { question: "이 흐름은 허용되는가?", job: "endpoint policy를 실제 hook에서 집행", proof: "policy · ruleset · flow log" },
-    { question: "server가 무엇을 받았나?", job: "socket·HTTP 응답과 지연을 확인", proof: "ss · access log · curl" },
+    { question: "출발 프로그램은 어떤 주소와 길을 보는가?", job: "다른 Pod와 섞이지 않는 주소 공간을 만듭니다.", proof: "ip addr · ip route" },
+    { question: "가상 주소 뒤의 실제 Pod는 누구인가?", job: "준비된 Pod 가운데 요청을 받을 한 곳을 고릅니다.", proof: "Service · EndpointSlice" },
+    { question: "그 Pod는 어느 node에 있는가?", job: "목적지 Pod가 있는 node로 갈 길을 고릅니다.", proof: "ip route get" },
+    { question: "물리망이 Pod 주소를 아는가?", job: "그대로 보내거나 node 주소로 한 번 감싸서 보냅니다.", proof: "route · tunnel link · capture" },
+    { question: "이 통신은 허용되는가?", job: "통신 허용 규칙을 실제 패킷에 적용합니다.", proof: "policy · ruleset · flow log" },
+    { question: "서버는 무엇을 받았는가?", job: "서버가 받은 연결과 HTTP 응답 시간을 확인합니다.", proof: "ss · access log · curl" },
   ];
 
   return (
@@ -50,8 +50,20 @@ function ResponsibilityTable() {
   ];
 
   return (
-    <div className="not-prose my-8 overflow-x-auto">
-      <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+    <div className="not-prose my-8">
+      <div className="grid gap-3 lg:hidden">
+        {rows.map(([layer, owns, boundary]) => (
+          <article key={layer} className="min-w-0 rounded-xl border border-border bg-background p-4">
+            <h3 className="font-semibold text-primary">{layer}</h3>
+            <p className="mt-3 text-xs font-semibold text-foreground">반드시 하는 일</p>
+            <p className="mt-1 text-sm leading-6">{owns}</p>
+            <p className="mt-3 border-t border-border pt-3 text-xs font-semibold text-foreground">이 층만으로는 하지 않는 일</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{boundary}</p>
+          </article>
+        ))}
+      </div>
+      <div className="hidden overflow-x-auto lg:block">
+        <table className="w-full min-w-[760px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-border">
             <th className="p-3 font-semibold">층</th>
@@ -68,7 +80,8 @@ function ResponsibilityTable() {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   );
 }
@@ -77,7 +90,7 @@ function CurrentChangeLedger() {
   const rows = [
     {
       old: "kube-proxy IPVS를 대규모 Service의 목표 모드로 학습",
-      now: "Kubernetes v1.35부터 IPVS mode는 deprecated입니다. nftables 또는 개선된 iptables, CNI의 대체 구현을 검토합니다.",
+      now: "Kubernetes v1.35부터 IPVS mode는 deprecated이고 v1.40부터 기본 비활성, v1.43에 제거 예정입니다. v1.37의 기본값은 여전히 iptables이며 nftables 또는 CNI의 대체 구현을 검토합니다.",
       verify: "kube-proxy ConfigMap의 mode와 실제 kernel ruleset",
     },
     {
@@ -86,7 +99,7 @@ function CurrentChangeLedger() {
       verify: "설치한 Gateway API CRD release와 controller 지원표",
     },
     {
-      old: "Calico라면 기본적으로 BIRD와 IP-in-IP가 항상 필요",
+      old: "Calico에서는 BIRD와 IP-in-IP를 항상 써야 합니다.",
       now: "VXLAN-only 내부 경로에는 BGP가 필수가 아닙니다. Calico 3.33에서 BIRD의 IP-in-IP route programming은 deprecated이며 v3.35 제거 예정입니다. 설치 방식의 기본값과 직접 만든 IPPool 필드 기본값도 구분합니다.",
       verify: "Installation·IPPool·BGPConfiguration·calico/node version",
     },
@@ -161,22 +174,22 @@ function EvidenceRunbook() {
 function StudyMap() {
   const groups = [
     {
-      name: "Network 10편",
-      here: "namespace·veth·pause, Flannel/Calico, Service·NodePort, MetalLB, IPVS, Ingress·Gateway, eBPF·Cilium, VPC CNI를 이 글의 한 패킷 경로로 재배치했습니다.",
+      name: "먼저 · 기본 패킷 경로",
+      here: "namespace와 veth에서 시작해 CNI route, Service 주소 변환, NetworkPolicy, Gateway까지 한 연결을 따라갑니다.",
       next: "각 구현체를 설치하기 전에 route·encapsulation·Service·policy·edge 중 어느 층을 바꾸는지 먼저 표시합니다.",
     },
     {
-      name: "Security 2편",
+      name: "그다음 · 이름과 인증서",
       here: "CoreDNS 실패는 Service 전 경계, API server SAN 실패는 control-plane TLS 경계입니다. 패킷 손실과 이름·인증서 실패를 섞지 않습니다.",
       next: "dig의 answer·authority·server와 openssl의 SAN·issuer·expiry를 별도 증거로 남깁니다.",
     },
     {
-      name: "Database Operator 8편",
-      here: "상태 저장 Pod의 stable identity·volume과 사용자 정의 control loop는 데이터 경로가 아니라 API reconciliation의 후속 정본입니다.",
+      name: "이후 · 상태를 저장하는 서비스",
+      here: "상태 저장 Pod의 고정 이름과 volume, Operator의 반복 조정은 패킷이 도착한 뒤 애플리케이션 상태를 지키는 문제입니다.",
       next: "StatefulSet만으로 backup·failover·schema upgrade가 해결된다고 보지 않고 Operator가 소유한 절차를 확인합니다.",
     },
     {
-      name: "Istio 13편",
+      name: "마지막 · Service mesh",
       here: "L4/L7 proxy와 identity·mTLS·retry는 CNI 뒤에 추가되는 경로입니다. 현재는 sidecar뿐 아니라 ambient의 node proxy와 선택적 waypoint도 비교해야 합니다.",
       next: "plain CNI 경로를 먼저 캡처한 뒤 sidecar 또는 ambient를 켜서 새 hop과 failure domain만 비교합니다.",
     },
@@ -188,7 +201,7 @@ function StudyMap() {
         <article key={group.name} className="rounded-xl border border-border bg-background p-5">
           <h3 className="font-semibold text-primary">{group.name}</h3>
           <p className="mt-2 text-sm leading-7">{group.here}</p>
-          <p className="mt-3 border-t border-border pt-3 text-sm leading-7 text-muted-foreground">다음 산출물 · {group.next}</p>
+          <p className="mt-3 border-t border-border pt-3 text-sm leading-7 text-muted-foreground">다음에 확인할 것 · {group.next}</p>
         </article>
       ))}
     </div>
@@ -201,8 +214,8 @@ export default function KubernetesNetworkPacketPathArticle() {
       <LessonSection
         id="overview"
         level="S"
-        title="한 문장 답: 한 번에 한 경계를 증명합니다"
-        bridge="응답 코드가 보였다면 적어도 연결 뒤의 애플리케이션 층까지 도착했지만, timeout이라면 그보다 앞선 어느 경계에서 멈췄는지 아직 모릅니다. 그래서 먼저 숫자가 고정된 한 요청을 만듭니다."
+        title="한 번에 한 경계만 확인해야 첫 실패 지점을 찾을 수 있습니다"
+        bridge="응답 코드가 보였다면 애플리케이션까지 도착했지만, 시간 초과만으로는 앞의 어느 구간에서 멈췄는지 모릅니다. 먼저 전체 경로를 여섯 경계로 나눕니다."
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">Kubernetes 네트워크를 설명한다는 것은 제품 이름을 나열하는 일이 아닙니다. 한 연결의 출발 주소, 바뀐 목적지, 선택된 다음 홉, 덧붙은 헤더, 적용된 허용 규칙을 차례로 대조해 첫 실패 경계를 찾는 일입니다.</p>
@@ -211,10 +224,23 @@ export default function KubernetesNetworkPacketPathArticle() {
       </LessonSection>
 
       <LessonSection
+        id="map"
+        level="B"
+        title="전체 흐름: 주소 확인에서 서버 응답까지 여섯 경계를 지납니다"
+        bridge="여섯 경계를 잡았으니 같은 요청이 지나는 세 주소와 패킷 크기를 숫자로 고정합니다."
+      >
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">경계 확인표에는 요청이 지나는 곳마다 “입력 주소, 한 일, 출력 주소, 확인 명령”을 한 줄로 적습니다. 그러면 주소를 붙이는 단계, 가상 주소를 실제 Pod 주소로 바꾸는 단계, 다른 node로 운반하는 단계를 섞지 않게 됩니다.</p>
+          <p className="leading-8">구현이 바뀌어도 이 여섯 질문은 남습니다. 커널 규칙이 바뀌거나 프로그램이 연결을 여는 순간 목적지가 바뀌더라도, 들어온 주소가 어느 실제 Pod 주소로 바뀌었고 다음 길이 어디인지 확인하면 됩니다.</p>
+        </div>
+        <BoundaryMap />
+      </LessonSection>
+
+      <LessonSection
         id="case"
         level="0"
         title="사건: 세 주소를 지나는 GET 한 건"
-        bridge="애플리케이션은 가운데 주소로 연결하지만 실제 server는 다른 주소에 있습니다. 그 둘을 잇는 일을 한 상자로 뭉치면 장애 지점을 찾을 수 없어서, 다음 절에서 여섯 경계로 나눕니다."
+        bridge="가운데 주소와 실제 서버 주소가 다른 이유를 알았으니, 첫 경계에서 Pod가 자기 주소와 경로를 얻는 과정부터 따라갑니다."
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">가정한 client process는 node A의 <code>10.244.1.12</code>에서 <code>GET /items/42</code>를 보냅니다. 목적지는 <code>10.96.20.15:8080</code>이고, 준비된 server 가운데 node B의 <code>10.244.2.34:8080</code>가 선택됩니다. Node A와 B의 물리망 주소는 각각 문서용 대역인 <code>192.0.2.11</code>과 <code>192.0.2.12</code>입니다.</p>
@@ -225,19 +251,6 @@ export default function KubernetesNetworkPacketPathArticle() {
           Host: catalog.shop.svc.cluster.local<br />
           client 10.244.1.12:43120 → virtual 10.96.20.15:8080 → backend 10.244.2.34:8080
         </div>
-      </LessonSection>
-
-      <LessonSection
-        id="map"
-        level="1"
-        title="전체 그림: 주소 공간·선택·운반·허용을 분리합니다"
-        bridge="여섯 질문 가운데 첫째는 process가 자기 interface와 route를 가질 수 있는 이유입니다. 이제 첫 경계의 실제 Linux 이름을 붙입니다."
-      >
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">패킷 경계 원장은 요청 하나가 지날 때마다 “입력 주소, 한 일, 출력 주소, 관측 명령”을 한 줄로 남기는 방법입니다. 이 원장을 쓰면 주소를 붙이는 층과 가상 주소를 backend로 바꾸는 층, 다른 node로 운반하는 층을 섞지 않게 됩니다.</p>
-          <p className="leading-8">이 구분은 구현이 바뀌어도 남습니다. Kernel rule이 바뀌거나 socket 단계에서 목적지가 먼저 바뀌더라도, 어느 입력을 어떤 backend로 바꾸었고 다음 route가 무엇인지 확인하면 됩니다.</p>
-        </div>
-        <BoundaryMap />
       </LessonSection>
 
       <LessonSection
@@ -345,23 +358,32 @@ spec:
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">물리망이 한 번에 <code>1500 B</code>까지만 운반하는데 안쪽 packet도 <code>1500 B</code>라면 outer header를 붙일 자리가 없습니다. IPv4 VXLAN의 <code>50 B</code>와 IPv4 IP-in-IP의 <code>20 B</code>를 같은 회계 경계에서 빼야 fragmentation이나 drop 없이 운반할 수 있습니다.</p>
         </div>
-        <ExplainedFormula
-          question="1500 B underlay에서 workload MTU는 왜 VXLAN 1450 B, IP-in-IP 1480 B가 됩니까?"
-          idea="한 물리 frame 안에 inner packet과 outer header가 함께 들어가야 하므로, underlay 한도에서 실제로 켠 캡슐화 header만 뺍니다."
-          formula={String.raw`M_{workload}=M_{underlay}-H_{encapsulation}`}
-          annotatedFormula={String.raw`\begin{aligned}M_{plain}&=1500\;\mathrm{B}\\M_{IPIP}&=1500\;\mathrm{B}-20\;\mathrm{B}=1480\;\mathrm{B}\\M_{VXLAN}&=1500\;\mathrm{B}-50\;\mathrm{B}=1450\;\mathrm{B}\end{aligned}`}
-          operations={[
-            { expression: String.raw`1500\;\mathrm{B}-20\;\mathrm{B}`, annotation: ["IPv4 outer header 20 B를 비워", "IP-in-IP inner packet 한도 1480 B"] },
-            { expression: String.raw`1500\;\mathrm{B}-50\;\mathrm{B}`, annotation: ["IPv4·UDP·VXLAN overhead 50 B를 비워", "VXLAN inner packet 한도 1450 B"] },
-          ]}
-          terms={[
-            { symbol: String.raw`M_{underlay}`, name: "실제 경로 MTU", description: "Node NIC 표시값이 아니라 경로 가운데 가장 작은 packet 한도입니다." },
-            { symbol: String.raw`H_{encapsulation}`, name: "활성 outer header", description: "실제로 켠 IP-in-IP·VXLAN·WireGuard 등의 추가 bytes입니다." },
-            { symbol: String.raw`M_{workload}`, name: "Pod veth MTU", description: "Application packet이 fragmentation 없이 쓸 수 있는 한도입니다." },
-          ]}
-          assumptions={["IPv4 underlay MTU 1500 B인 설명용 사례입니다.", "VLAN·cloud overlay·WireGuard처럼 추가 overhead가 있으면 경로의 최솟값에서 함께 빼야 합니다.", "Calico의 MTU 변경은 새 workload부터 적용될 수 있으므로 기존 Pod도 확인합니다."]}
-          interpretation="작은 ping은 성공하지만 큰 응답만 timeout이면 route가 아니라 MTU·PMTUD·ICMP 차단을 의심할 근거가 생깁니다. 1450은 보편 상수가 아니라 이 경로의 회계 결과입니다."
-        />
+        <div className="not-prose my-6">
+          <div className="grid gap-3 sm:hidden">
+            <article className="rounded-xl border border-border p-4"><h3 className="font-semibold text-primary">직접 라우팅</h3><p className="mt-2 text-sm leading-6">바깥 header 없음</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Pod가 쓸 수 있는 크기 · 1500 B</p></article>
+            <article className="rounded-xl border border-border p-4"><h3 className="font-semibold text-primary">IP-in-IP</h3><p className="mt-2 text-sm leading-6">IPv4 header 20 B 추가</p><p className="mt-1 text-sm leading-6 text-muted-foreground">1500 B − 20 B = 1480 B</p></article>
+            <article className="rounded-xl border border-border p-4"><h3 className="font-semibold text-primary">VXLAN</h3><p className="mt-2 text-sm leading-6">IPv4 20 B + UDP 8 B + VXLAN 8 B + 안쪽 Ethernet 14 B = 50 B 추가</p><p className="mt-1 text-sm leading-6 text-muted-foreground">1500 B − 50 B = 1450 B</p></article>
+          </div>
+          <div className="hidden overflow-x-auto sm:block">
+          <table className="w-full min-w-[32rem] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="p-3 font-semibold">경로</th>
+                <th className="p-3 font-semibold">바깥에 더하는 header</th>
+                <th className="p-3 font-semibold">Pod가 쓸 수 있는 크기</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-border/70"><td className="p-3 font-semibold text-primary">직접 라우팅</td><td className="p-3">없음</td><td className="p-3">1500 B</td></tr>
+              <tr className="border-b border-border/70"><td className="p-3 font-semibold text-primary">IP-in-IP</td><td className="p-3">IPv4 header 20 B</td><td className="p-3">1500 − 20 = 1480 B</td></tr>
+              <tr className="border-b border-border/70"><td className="p-3 font-semibold text-primary">VXLAN</td><td className="p-3">IPv4 20 B + UDP 8 B + VXLAN 8 B + 안쪽 Ethernet 14 B = 50 B</td><td className="p-3">1500 − 50 = 1450 B</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">여기서 1500은 node NIC에 적힌 값이 아니라 경로 가운데 가장 작은 한도입니다. VLAN tag나 WireGuard처럼 header를 더 붙이는 층이 있으면 그 몫도 같은 자리에서 뺍니다. 작은 ping은 되는데 큰 응답만 timeout이면 route가 아니라 이 한도와 ICMP 차단을 먼저 의심합니다. 1450은 외울 상수가 아니라 이 경로의 뺄셈 결과입니다.</p>
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">외부 송신의 source 변환도 항상 일어나지는 않습니다. Calico pool의 <code>natOutgoing</code>이 켜져 있고 목적지가 모든 Calico pool 밖에 있을 때 Pod source를 node IP로 masquerade합니다. 내부 사내망을 별도 비활성 pool로 등록해 NAT 대상에서 뺄 수도 있으므로, “Pod에서 외부로 나가면 무조건 SNAT”라고 외우지 않습니다.</p>
           <p className="leading-8">응답은 conntrack에 기록된 변환 관계를 따라 원래 Pod socket으로 돌아옵니다. 정책을 바꾼 뒤 이미 허용된 연결이 계속 통신할 수 있는 이유도 이 상태 추적과 관련됩니다. 새 연결과 기존 연결을 따로 시험해야 하는 이유입니다.</p>
@@ -381,7 +403,7 @@ spec:
           <p className="leading-8"><strong>NetworkPolicy</strong>는 어떤 endpoint 사이의 ingress·egress를 허용할지 선언합니다. YAML 자체가 packet을 막지는 않으며, cluster의 network plugin이 이를 지원하고 실제 node 데이터 플레인에 프로그램해야 효력이 생깁니다.</p>
           <p className="leading-8">Calico의 표준 Linux 경로는 route와 iptables 또는 nftables 규칙을 쓸 수 있고, eBPF mode는 kernel hook에 program과 map을 붙입니다. 어느 쪽이든 구현 이름보다 목적지가 바뀌는 hook과 state를 읽을 도구를 먼저 확인합니다.</p>
           <p className="leading-8">Cilium의 eBPF 경로에서는 socket 단계의 Service load balancing과 veth의 packet 경로가 함께 있을 수 있습니다. 따라서 “eBPF라서 빠르다”에서 설명을 끝내지 않고, socket과 packet 가운데 어디에서 선택했는지 밝혀야 합니다.</p>
-          <p className="leading-8">Service 구현과 Pod policy 구현도 같은 선택으로 묶지 않습니다. kube-proxy가 iptables여도 Calico가 policy를 집행할 수 있고, kube-proxy를 Cilium eBPF가 대신할 수도 있습니다. 현재 Kubernetes v1.37 문서에서 IPVS mode는 v1.35부터 deprecated이며, nftables가 후속 경로로 제시됩니다.</p>
+          <p className="leading-8">Service 구현과 Pod policy 구현도 같은 선택으로 묶지 않습니다. kube-proxy가 iptables여도 Calico가 policy를 집행할 수 있고, kube-proxy를 Cilium eBPF가 대신할 수도 있습니다. 현재 Kubernetes v1.37 문서에서 IPVS mode는 v1.35부터 deprecated이고 v1.40부터 기본 비활성, v1.43에 제거 예정이며, v1.37의 기본값은 아직 iptables이고 nftables가 후속 경로로 제시됩니다.</p>
         </div>
         <pre className={codeClass}><code>{`apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -404,9 +426,9 @@ spec:
         <p className="not-prose text-xs leading-5 text-muted-foreground">출처: Kubernetes NetworkPolicy v1 schema. Label과 port는 이 글의 가정이며, 빈 selector·namespace 조합의 의미는 구현 전에 공식 semantics로 확인합니다.</p>
         <ResponsibilityTable />
         <CitationBlock source="Kubernetes v1.37 · Virtual IPs and Service Proxies" citeKey={6} href="https://kubernetes.io/docs/reference/networking/virtual-ips/">
-          현재 iptables·IPVS·nftables mode의 동작과 IPVS deprecation 일정을 확인하는 정본입니다.
+          현재 iptables·IPVS·nftables mode의 동작과 IPVS 지원 중단 일정을 확인하는 공식 문서입니다.
         </CitationBlock>
-        <CitationBlock source="Cilium 1.20.1 · Kubernetes Without kube-proxy" citeKey={7} href="https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/">
+        <CitationBlock source="Cilium 1.20 stable(확인일 1.20.2) · Kubernetes Without kube-proxy" citeKey={7} href="https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/">
           Socket LB가 Service backend를 packet 생성 전 선택할 수 있고 kernel·cgroup 조건과 관측 경계가 달라짐을 확인합니다.
         </CitationBlock>
       </LessonSection>
@@ -428,7 +450,7 @@ spec:
           excerpt="The Ingress API has been frozen."
           application="기존 Ingress를 당장 버리는 뜻은 아니지만 새 공통 기능을 annotation에 더 쌓는 대신 Gateway API와 구현체 conformance를 검토합니다."
         />
-        <CitationBlock source="Gateway API v1.6.1 · Getting started" citeKey={8} href="https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/">
+        <CitationBlock source="Gateway API v1.6 · Getting started(문서는 v1.6.1 manifest, 최신 release v1.6.3)" citeKey={8} href="https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/">
           Standard channel의 GatewayClass·Gateway·HTTPRoute·ReferenceGrant와 controller 설치 경계를 확인합니다.
         </CitationBlock>
         <CitationBlock source="Istio · Ambient data plane" citeKey={9} href="https://istio.io/latest/docs/ambient/architecture/data-plane/">
@@ -440,7 +462,7 @@ spec:
         id="evidence"
         level="6"
         title="실습: 선언과 packet을 같은 시각에 맞춥니다"
-        bridge="이 runbook은 특정 제품의 명령 암기가 아니라 어느 층이 마지막으로 정상이었는지 증명하는 틀입니다. 이제 참고한 33편을 이 틀의 어디에 배치했는지 정리합니다."
+        bridge="이 순서로 마지막 정상 지점을 찾았으면, 예전 실습의 기본값이 현재 cluster에서도 같은지 다시 확인해야 합니다."
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장애가 난 뒤 명령을 무작정 많이 실행하면 서로 다른 시각의 state가 섞입니다. 먼저 namespace·Pod·node·요청 시각을 고정하고, API 선언에서 kernel route와 packet capture로 내려갑니다. 각 단계는 정상 출력뿐 아니라 실패했을 때 다음에 볼 owner까지 기록합니다.</p>
@@ -461,15 +483,20 @@ kubectl -n shop exec client -- \
       <LessonSection
         id="source-map"
         level="7"
-        title="33편을 현재 기준의 네 학습 경로로 다시 배치합니다"
-        bridge="실습 글은 훌륭한 재현 재료지만 현재 권장안을 고정하는 정본은 아닙니다. 마지막 절에서 version·배포판·현장 값의 한계를 남깁니다."
+        title="오래된 실습에서 다시 확인할 다섯 가지"
+        bridge="오래된 실습 글은 재현 재료로는 좋지만 현재 권장안을 고정하지는 못합니다. 마지막 절에서 version·배포판·현장 값의 한계를 남깁니다."
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">장성필 기술블로그의 Kubernetes 카테고리는 33편이며 Network 10편, Security 2편, Database Operator 8편, Istio 13편으로 나뉩니다. 실습 명령과 화면을 그대로 복제하지 않고, 어떤 사건을 재현하는 데 좋은지 분류한 뒤 현재 공식 문서에서 수명 주기와 semantics를 다시 확인했습니다.</p>
-          <p className="leading-8">Network 10편은 이 글의 한 packet 경로로 통합했습니다. Security는 이름 해석과 control-plane TLS, Database Operator는 상태 저장 workload의 control loop, Istio는 CNI 뒤에 추가되는 L4/L7 경로로 분리합니다. 이렇게 해야 “Kubernetes 전부”라는 제목 아래 얕은 용어 사전이 생기지 않습니다.</p>
+          <p className="leading-8">지금 cluster에서는 예전 실습의 기본값을 그대로 가정하면 안 됩니다. Service 구현은 IPVS만 보지 않고, 외부 진입은 Ingress annotation과 Gateway API를 구분해야 합니다. Calico도 BIRD와 IP-in-IP만 쓰는 것이 아닙니다. 아래 다섯 항목에서 현재 cluster가 실제로 고른 모드를 확인합니다.</p>
         </div>
-        <StudyMap />
         <CurrentChangeLedger />
+        <ProgressiveDetail
+          title="이 패킷 경로 다음에는 무엇을 읽어야 합니까"
+          preview="기본 패킷 경로를 확인한 뒤 이름·인증서, 상태 저장 서비스, Service mesh 순서로 범위를 넓힙니다."
+        >
+          <p className="leading-7">먼저 CNI와 Service만 있는 연결을 캡처합니다. 그 경로가 설명된 뒤에 DNS와 인증서를 붙이고, 상태 저장 서비스의 복구 절차를 봅니다. Service mesh는 기존 경로 위에 proxy와 신원 확인이 더해지므로 마지막에 비교해야 새로 생긴 hop과 실패 지점을 구분할 수 있습니다.</p>
+          <StudyMap />
+        </ProgressiveDetail>
         <CitationBlock source="장성필 기술블로그 · Kubernetes category" citeKey={11} href="https://hackjsp.tistory.com/category/Kubernetes">
           실습 주제 발견과 재현 순서의 보조 자료입니다. 제품의 현재 기본값·지원 상태·권장안은 각 공식 문서로 다시 검증했습니다.
         </CitationBlock>
@@ -485,7 +512,7 @@ kubectl -n shop exec client -- \
         bridge="이 글의 도착점은 제품명을 외우는 것이 아니라, 실제 한 연결에서 주소·route·header·policy·socket 증거가 같은 설명을 가리키게 만드는 것입니다."
       >
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">확인 기준은 2026-10-08의 Kubernetes v1.37, Calico 3.33, Cilium 1.20.1 stable 문서와 Gateway API v1.6.1 Standard channel입니다. 이 버전을 한 cluster에서 조합 검증했다는 뜻은 아니며, 실제 배포판의 지원 matrix와 upgrade note가 우선합니다.</p>
+          <p className="leading-8">확인 기준은 2026-10-08의 Kubernetes v1.37, Calico 3.33, Cilium 1.20 stable 문서(확인일 1.20.2)와 Gateway API v1.6 Standard channel(getting-started 문서는 v1.6.1 manifest, 최신 release는 v1.6.3)입니다. 이 버전을 한 cluster에서 조합 검증했다는 뜻은 아니며, 실제 배포판의 지원 matrix와 upgrade note가 우선합니다.</p>
           <p className="leading-8">예시 IP·port·node 수·MTU 1500은 경로를 재현하기 위한 가정입니다. Cloud overlay, VLAN, WireGuard, NIC offload, managed CNI, dual stack을 쓰면 header와 관측 결과가 달라집니다. 특히 offload 때문에 host capture의 checksum이나 segment 크기가 wire와 다르게 보일 수 있습니다.</p>
           <p className="leading-8">“Calico를 안다”는 말은 manifest를 적용했다는 뜻보다, 같은 node와 다른 node, Service와 egress의 네 경로를 그릴 수 있다는 뜻에 가깝습니다. 각 전환은 route와 capture, policy와 conntrack으로 증명합니다. 면접에서는 직접 담당한 범위와 이 글처럼 사후 역설계한 범위를 나눠 말하면 됩니다.</p>
         </div>

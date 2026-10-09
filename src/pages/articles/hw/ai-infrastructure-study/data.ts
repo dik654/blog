@@ -220,27 +220,6 @@ export const softwareCompatibilityData: AiInfrastructureArticleData = {
 
 export const schedulerChoiceData: AiInfrastructureArticleData = {
   engineeringDepth: schedulerChoiceDepth,
-  formulas: [
-    {
-      section: "case",
-      content: {
-        question: "16노드에서 노드 8대가 필요한 작업 네 개를 몇 개씩, 몇 차례에 나눠 실행하나요?",
-        idea: "먼저 전체 노드를 작업 하나의 노드 수로 나눠 동시 실행 수를 구합니다. 전체 작업 수를 그 값으로 나눠 필요한 실행 차수를 구합니다.",
-        formula: String.raw`J_{\mathrm{parallel}}=\left\lfloor\frac{16}{8}\right\rfloor=2,\qquad W=\left\lceil\frac{4}{2}\right\rceil=2`,
-        annotatedFormula: String.raw`\underbrace{J_{\mathrm{parallel}}}_{\text{동시 실행 작업}}=\left\lfloor\frac{16}{8}\right\rfloor=2,\qquad\underbrace{W}_{\text{필요한 실행 차수}}=\left\lceil\frac{4}{2}\right\rceil=2`,
-        operations: [
-          { expression: String.raw`\left\lfloor\frac{16}{8}\right\rfloor=2`, annotation: "노드 16대를 작업당 8대씩 서로 겹치지 않게 배정합니다." },
-          { expression: String.raw`\left\lceil\frac{4}{2}\right\rceil=2`, annotation: "작업 네 개를 한 번에 두 개씩 처리하므로 두 차례가 필요합니다." },
-        ],
-        terms: [
-          { symbol: String.raw`J_{\mathrm{parallel}}`, name: "동시 실행 수", description: "현재 노드 수로 동시에 온전히 배치할 수 있는 작업 수입니다." },
-          { symbol: String.raw`W`, name: "실행 차수", description: "대기 중인 네 작업을 모두 시작하는 데 필요한 순번 수입니다." },
-        ],
-        assumptions: ["각 작업은 실행 내내 노드 8대를 독점합니다.", "노드 장애·우선순위·backfill·준비 시간은 제외합니다."],
-        interpretation: "작업은 두 개씩 두 차례에 나뉩니다. 이 계산만으로 공정성, GPU 사용률, 각 작업의 완료 시간을 보장하지는 않습니다.",
-      },
-    },
-  ],
   sections: [
     { id: "overview", level: "S", title: "1. GPU는 남아 있는데 네 학습 작업이 하나도 시작하지 못했습니다", bridge: "자원을 잘게 나눠 준 결과 모든 작업이 기다립니다. 작업이 태어나고 끝나는 순서부터 다시 봅니다.", paragraphs: [
       "(가정) 16노드 클러스터에 각각 8노드를 동시에 요구하는 학습 작업 네 개가 들어왔습니다. 관리 도구가 공평하게 보이도록 작업마다 노드 두 대씩 먼저 나눠 줬지만, 어느 작업도 필요한 여덟 대를 한꺼번에 얻지 못해 GPU 16대가 비어 있는 채로 기다렸습니다.",

@@ -33,11 +33,11 @@ export default function Overview() {
         question="가변 길이 target sequence 전체의 확률을 다음-token 확률로 어떻게 분해할까?"
         idea={<>Probability chain rule을 적용하면 각 target token은 source X와 이전 target prefix y&lt;t에 조건부인 항으로 분해됩니다. EOS도 하나의 token이므로 종료 시점까지 같은 분해에 포함됩니다.</>}
         formula={String.raw`\begin{aligned}p_t&=P_\theta(y_t\mid y_{<t},X)\\P_\theta(Y\mid X)&=\prod_{t=1}^{T}p_t\\\log P_\theta(Y\mid X)&=\sum_{t=1}^{T}\log p_t\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}p_t&=\underbrace{P_\theta(y_t\mid y_{<t},X)}_{\text{허용 경계 판정}}\\P_\theta(Y\mid X)&=\underbrace{\prod_{t=1}^{T}p_t}_{\text{model parameters 계산}}\\\log P_\theta(Y\mid X)&=\underbrace{\sum_{t=1}^{T}\log p_t}_{\text{로그 비용 변환}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_t&=\underbrace{P_\theta(y_t\mid y_{<t},X)}_{\text{다음 token 조건부 확률}}\\P_\theta(Y\mid X)&=\underbrace{\prod_{t=1}^{T}p_t}_{\text{chain rule 곱}}\\\log P_\theta(Y\mid X)&=\underbrace{\sum_{t=1}^{T}\log p_t}_{\text{log로 합 변환}}\end{aligned}`}
         operations={[
-          { expression: String.raw`P_\theta(y_t\mid y_{<t},X)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target","prefix y t에 조건부인 항으로 분해됩니다."] },
-          { expression: String.raw`\prod_{t=1}^{T}p_t`, annotation: ["model parameters이(가) 식의 결과에 기여하는","방식을 계산합니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target"] },
-          { expression: String.raw`\sum_{t=1}^{T}\log p_t`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","Probability chain rule을 적용하면 각","target token은 source X와 이전 target","prefix y t에 조건부인 항으로 분해됩니다."] },
+          { expression: String.raw`P_\theta(y_t\mid y_{<t},X)`, annotation: ["source X와 지금까지 쓴 prefix를 조건으로","t번째 target token에 주는 확률","EOS도 token이라 종료까지 같은 꼴"] },
+          { expression: String.raw`\prod_{t=1}^{T}p_t`, annotation: ["chain rule: T개 conditional을 곱하면","target sequence 전체의 P(Y|X)","길이 T는 source 길이 S와 달라도 됨"] },
+          { expression: String.raw`\sum_{t=1}^{T}\log p_t`, annotation: ["곱을 log로 바꾸면 합이 됨","작은 확률을 곱해도 underflow 없이 계산","training loss와 beam score가 쓰는 형태"] },
         ]}
         terms={[
           { symbol: "X=(x_1,\\ldots,x_S)", name: "source sequence", description: "길이 S의 encoder 입력입니다." },

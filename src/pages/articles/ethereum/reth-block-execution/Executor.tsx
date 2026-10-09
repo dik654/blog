@@ -23,9 +23,11 @@ export default function Executor({
           </>
         }
         formula={"\\sigma_{i+1}=\\Upsilon_f(\\sigma_i,T_i,E_B)"}
-        annotatedFormula={String.raw`\sigma_{i+1}=\underbrace{\Upsilon_f(\sigma_i,T_i,E_B)}_{\text{Fork transition 계산}}`}
+        annotatedFormula={String.raw`\underbrace{\sigma_{i+1}}_{\text{다음 tx의 입력}}=\underbrace{\Upsilon_f}_{\text{fork f의 EVM 규칙}}(\underbrace{\sigma_i}_{\text{직전 tx 결과}},\underbrace{T_i}_{\text{i번째 tx}},\underbrace{E_B}_{\text{block 환경}})`}
         operations={[
-          { expression: String.raw`\Upsilon_f(\sigma_i,T_i,E_B)`, annotation: ["Fork transition이(가) 식의 결과에 기여하는","방식을 계산합니다.","이전 transaction까지의 결과 state를 다음","transaction이 그대로 읽습니다."] },
+          { expression: String.raw`\Upsilon_f`, annotation: ["chain spec이 고른 fork f의","opcode·gas·validity rule을 적용"] },
+          { expression: String.raw`(\sigma_i,T_i,E_B)`, annotation: ["Tx0가 바꾼 σ1을 Tx1이 그대로 읽음","block number·timestamp·base fee 등","환경도 매 step의 입력"] },
+          { expression: String.raw`\sigma_{i+1}`, annotation: ["i번째 tx까지 적용된 overlay state","순서를 바꾸거나 병렬 독립 실행하면","receipt·gas·post-state가 달라짐"] },
         ]}
         terms={[
           {

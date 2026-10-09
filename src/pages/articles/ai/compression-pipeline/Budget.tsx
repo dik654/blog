@@ -38,16 +38,17 @@ M_{\mathrm{req}}&=M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}}),\\
 c_{\max}&=\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-M_{\mathrm{base}}&=\underbrace{M_{\mathrm{weights}}+M_{\mathrm{workspace}},}_{\text{오른쪽 항으로 결과 계산}}\\
-M_{\mathrm{fixed}}&=\underbrace{M_{\mathrm{base}}+M_{\mathrm{headroom}},}_{\text{오른쪽 항으로 결과 계산}}\\
-M_{\mathrm{free}}&=\underbrace{M_{\mathrm{device}}-M_{\mathrm{fixed}},}_{\text{오른쪽 항으로 결과 계산}}\\
+M_{\mathrm{base}}&=\underbrace{M_{\mathrm{weights}}+M_{\mathrm{workspace}},}_{\text{요청 수와 무관한 resident}}\\
+M_{\mathrm{fixed}}&=\underbrace{M_{\mathrm{base}}+M_{\mathrm{headroom}},}_{\text{여유분까지 더한 고정분}}\\
+M_{\mathrm{free}}&=\underbrace{M_{\mathrm{device}}-M_{\mathrm{fixed}},}_{\text{요청 state에 남는 memory}}\\
 M_{\mathrm{req}}&=M_{\mathrm{request}}(L_{\mathrm{in}},L_{\mathrm{out}}),\\
-c_{\max}&=\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.
+c_{\max}&=\underbrace{\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.}_{\text{동시 요청 상한}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`M_{\mathrm{weights}}+M_{\mathrm{workspace}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
-          { expression: String.raw`M_{\mathrm{base}}+M_{\mathrm{headroom}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
-          { expression: String.raw`M_{\mathrm{device}}-M_{\mathrm{fixed}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","전체 memory에서 model과 workspace처럼 요청","수와 무관한 고정 resident를 먼저 빼고, 남은","memory를 요청 하나의"] },
+          { expression: String.raw`M_{\mathrm{weights}}+M_{\mathrm{workspace}},`, annotation: ["packed weight 12GB와 kernel·graph capture용","workspace 2GB처럼 요청 수가 늘어도","변하지 않는 resident를 먼저 더합니다."] },
+          { expression: String.raw`M_{\mathrm{base}}+M_{\mathrm{headroom}},`, annotation: ["allocator fragmentation과 workload 변동을","견딜 headroom 2GB까지 더해 고정분 16GB입니다."] },
+          { expression: String.raw`M_{\mathrm{device}}-M_{\mathrm{fixed}},`, annotation: ["device 24GB에서 고정분 16GB를 빼면","KV·activation·scheduler state에 쓸 8GB가 남습니다."] },
+          { expression: String.raw`\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rfloor.`, annotation: ["남은 8GB를 요청당 1GB로 나눠 내림하면","OOM 상한 견적 8입니다. weight를 6GB로","줄이면 14이지만 p95 충족은 별도 load test"] },
         ]}
         terms={[
           {

@@ -20,9 +20,11 @@ export default function INTT() {
         question="평가값 y에서 원래 coefficient a를 어떻게 복원할까요?"
         idea="순방향 NTT에서 회전 방향을 반대로 바꾸면 각 coefficient만 n배 남고 나머지는 상쇄됩니다. 마지막에 field inverse n⁻¹을 곱해 정규화합니다."
         formula={String.raw`a_j=n^{-1}\sum_{k=0}^{n-1}y_k\omega^{-jk},\qquad \sum_{k=0}^{n-1}\omega^{k(i-j)}=\begin{cases}n&i=j\\0&i\ne j\end{cases}`}
-        annotatedFormula={String.raw`a_j=\underbrace{n^{-1}}_{\text{normalization 계산}}\sum_{k=0}^{n-1}y_k\omega^{-jk},\qquad \sum_{k=0}^{n-1}\omega^{k(i-j)}=\begin{cases}n&i=j\\0&i\ne j\end{cases}`}
+        annotatedFormula={String.raw`a_j=\underbrace{n^{-1}}_{\text{n배를 되돌림}}\underbrace{\sum_{k=0}^{n-1}y_k\omega^{-jk}}_{\text{역방향 회전 합}},\qquad \underbrace{\sum_{k=0}^{n-1}\omega^{k(i-j)}}_{\text{column 내적}}=\begin{cases}n&i=j\\0&i\ne j\end{cases}`}
         operations={[
-          { expression: String.raw`n^{-1}`, annotation: ["normalization이(가) 식의 결과에 기여하는 방식을","계산합니다.","순방향 NTT에서 회전 방향을 반대로 바꾸면 각","coefficient만 n배 남고 나머지는 상쇄됩니다."] },
+          { expression: String.raw`\sum_{k=0}^{n-1}y_k\omega^{-jk}`, annotation: ["forward NTT와 같은 kernel에 inverse","twiddle ω⁻¹을 넣어 평가값을 다시","회전. a_j만 n배 남고 나머지 상쇄"] },
+          { expression: String.raw`\sum_{k=0}^{n-1}\omega^{k(i-j)}`, annotation: ["roots-of-unity geometric sum.","i=j면 1을 n번 더해 n,","i≠j면 단위근이 한 바퀴 돌아 0"] },
+          { expression: String.raw`n^{-1}`, annotation: ["남은 n배를 field inverse로 정규화.","characteristic이 n을 나누면 존재 안 함"] },
         ]}
         terms={[
           {

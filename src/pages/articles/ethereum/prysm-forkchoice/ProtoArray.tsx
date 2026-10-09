@@ -24,9 +24,11 @@ export default function ProtoArray({ onCodeRef }: { onCodeRef: (key: string, ref
         question="Validator의 latest vote가 A branch에서 B branch로 옮겨갈 때 node weight를 어떻게 갱신할까요?"
         idea="각 validator가 차지하는 effective balance를 old latest root의 ancestor에서는 빼고 new latest root의 ancestor에는 더합니다. 공통 ancestor 위쪽에는 두 변화가 상쇄됩니다."
         formula={String.raw`\begin{aligned}\Delta W(n)&=\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]\\&\qquad-\mathbf{1}[n\preceq r_i^{old}]\bigr)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\Delta W(n)&=\underbrace{\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]}_{\text{변화량 계산}}\\&\qquad-\mathbf{1}[n\preceq r_i^{old}]\bigr)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\Delta W(n)&=\sum_i \underbrace{b_i}_{\text{validator 잔액}}\bigl(\underbrace{\mathbf{1}[n\preceq r_i^{new}]}_{\text{새 vote 경로면 +}}\\&\qquad-\underbrace{\mathbf{1}[n\preceq r_i^{old}]}_{\text{옛 vote 경로면 -}}\bigr)\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_i b_i\bigl(\mathbf{1}[n\preceq r_i^{new}]`, annotation: ["조상 관계이(가) 식의 결과에 기여하는 방식을 계산합니다.","각 validator가 차지하는 effective","balance를 old latest root의","ancestor에서는 빼고 new latest root의"] },
+          { expression: String.raw`b_i`, annotation: ["validator i의 effective balance","예시는 32 ETH validator 한 명"] },
+          { expression: String.raw`\mathbf{1}[n\preceq r_i^{new}]`, annotation: ["n이 새 latest root B1의 ancestor면 1","B1→B 경로의 node마다 +32"] },
+          { expression: String.raw`\mathbf{1}[n\preceq r_i^{old}]`, annotation: ["n이 옛 latest root A2의 ancestor면 1","A2→A 경로의 node마다 -32","공통 ancestor J에선 +32와 -32가 상쇄"] },
         ]}
         terms={[
           { symbol: "W(n)", name: "서브트리 가중치", description: "node n이 대표하는 subtree의 attestation weight(Gwei 또는 effective-balance 단위)" },

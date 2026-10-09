@@ -90,6 +90,16 @@ const CATEGORY_STARTS: Record<string, GuidanceLink> = {
 };
 
 export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
+  "cloud-kubernetes": {
+    label: "Kubernetes 요청 경로",
+    href: "/cs/cloud/kubernetes-request-path-and-cka",
+    reason: "Pod 하나가 Ready가 되는 전환 순서를 먼저 잡아야 패킷 경로의 출발점이 생깁니다.",
+  },
+  "hw-ai-cluster": {
+    label: "B300 128 GPU 설계",
+    href: "/cs/gpu/ai-infrastructure-b300-128-blueprint",
+    reason: "요구사항과 BOM을 먼저 고정해야 호환성·스케줄러·스토리지·전력·검수 글이 같은 수량을 씁니다.",
+  },
   "ai-foundations": {
     label: "딥러닝 전체 지도",
     href: "/cs/ai/deep-learning-overview",

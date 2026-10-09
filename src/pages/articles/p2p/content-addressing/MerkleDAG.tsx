@@ -35,14 +35,14 @@ b_P &= \operatorname{Encode}(data_P,[c_L,c_2,\ldots]),\\
 c_P &= \operatorname{CID}(b_P).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-c_L &= \underbrace{\operatorname{CID}(b_L),}_{\text{오른쪽 항으로 결과 계산}}\\
-b_P &= \underbrace{\operatorname{Encode}(data_P,[c_L,c_2,\ldots]),}_{\text{parent local data 계산}}\\
-c_P &= \underbrace{\operatorname{CID}(b_P).}_{\text{오른쪽 항으로 결과 계산}}
+c_L &= \underbrace{\operatorname{CID}(b_L)}_{\text{leaf chunk의 주소}},\\
+b_P &= \operatorname{Encode}(\underbrace{data_P}_{\text{이름·metadata}},\underbrace{[c_L,c_2,\ldots]}_{\text{child CID link 목록}}),\\
+c_P &= \underbrace{\operatorname{CID}(b_P)}_{\text{link 포함 parent 주소}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\operatorname{CID}(b_L),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도","달라집니다."] },
-          { expression: String.raw`\operatorname{Encode}(data_P,[c_L,c_2,\ldots]),`, annotation: ["parent local data이(가) 식의 결과에 기여하는","방식을 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도"] },
-          { expression: String.raw`\operatorname{CID}(b_P).`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Leaf bytes의 digest가 바뀌면 leaf CID가","바뀌고, 그 CID를 포함한 parent encoding도","달라집니다."] },
+          { expression: String.raw`\operatorname{CID}(b_L)`, annotation: ["file chunk bytes를 hash한 주소", "lib.rs 한 byte가 바뀌면 c_L부터 바뀜"] },
+          { expression: String.raw`\operatorname{Encode}(data_P,[c_L,c_2,\ldots])`, annotation: ["parent 자신의 data와 child CID들을", "codec 규칙대로 canonical bytes로 직렬화", "c_L이 바뀌면 b_P도 달라짐"] },
+          { expression: String.raw`\operatorname{CID}(b_P)`, annotation: ["달라진 b_P를 hash하니 c_P도 새 값", "같은 계산이 src directory, root까지 반복", "안 바뀐 readme block은 그대로 재사용"] },
         ]}
         terms={[
           {

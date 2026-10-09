@@ -128,8 +128,8 @@ export const agricultureSettlementData: WorldHistoryArticleData = {
     { term: "농경 전환의 손익", description: "생산·저장·인구의 이익과 노동·질병·격차의 비용이 함께 생기는 관계입니다.", example: "비축 20은 위험을 줄이지만 창고 통제권을 만듭니다.", boundary: "모든 지역에서 같은 이익과 비용이 같은 순서로 생기지 않습니다." },
   ] },
   sources: [
-    { source: "UNESCO · Neolithic Site of Çatalhöyük", excerpt: "adapted to a sedentary life and agriculture", application: "18개 거주 층과 붙어 있는 집 배치를 장기 정착의 증거로 읽되, 공간 배치를 모든 권력과 재산의 평등으로 넓히지 않습니다.", citation: "UNESCO World Heritage Centre, Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405", note: "중앙 아나톨리아의 장기 정착·주거 배치·사회 관행을 설명하는 공식 유산 기록입니다." },
-    { source: "MIT OpenCourseWare · Neolithic Revolution notes", excerpt: "agriculture is both: food production and shaping the world", application: "농경을 수확량 변화만으로 보지 않고 밭·물길·거주 공간·노동 일정이 함께 바뀐 기술로 읽습니다.", citation: "MIT OpenCourseWare, STS.007 Technology in History, Neolithic Revolution", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/ae9b46872b750c4e7274489b59090aa9_MITSTS_007F10_lec06_notes.pdf", note: "농경·도시·국가를 기술과 생활 방식의 변화로 묻는 대학 강의 자료입니다." },
+    { source: "UNESCO · Neolithic Site of Çatalhöyük", excerpt: "as humans adapted to a sedentary life", application: "18개 거주 층과 붙어 있는 집 배치를 장기 정착의 증거로 읽되, 공간 배치를 모든 권력과 재산의 평등으로 넓히지 않습니다.", citation: "UNESCO World Heritage Centre, Neolithic Site of Çatalhöyük", href: "https://whc.unesco.org/en/list/1405", note: "중앙 아나톨리아의 장기 정착·주거 배치·사회 관행을 설명하는 공식 유산 기록입니다." },
+    { source: "MIT OpenCourseWare · Neolithic Revolution notes", excerpt: "agriculture is both: food production and shaping the world", application: "농경을 수확량 변화만으로 보지 않고 밭·물길·거주 공간·노동 일정이 함께 바뀐 기술로 읽습니다.", citation: "MIT OpenCourseWare, STS.007 Technology in History (Fall 2010), Neolithic Revolution lecture notes (파일명 lec06_notes, 머리글은 Notes for class 7)", href: "https://ocw.mit.edu/courses/sts-007-technology-in-history-fall-2010/ae9b46872b750c4e7274489b59090aa9_MITSTS_007F10_lec06_notes.pdf", note: "농경·도시·국가를 기술과 생활 방식의 변화로 묻는 대학 강의 자료입니다." },
   ],
   review: [
     "수확 100에서 다음 해 현재 소비 가능량이 55가 되는 과정을 계산하세요. (답: 3·7절)",

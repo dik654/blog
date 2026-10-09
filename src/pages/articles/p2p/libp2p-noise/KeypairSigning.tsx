@@ -19,15 +19,16 @@ export default function KeypairSigning() {
 v &= \operatorname{Verify}_{pk_{id}}(m,\sigma)\\
 p &= \operatorname{PeerId}(pk_{id})\\
 \operatorname{accept} &\iff v\land(p=p_{expected})\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}m &= \underbrace{\texttt{prefix}\,\|\,s_{noise}}_{\text{Noise static public key 계산}}\\
-\sigma &= \underbrace{\operatorname{Sign}_{sk_{id}}(m)}_{\text{identity signature 계산}}\\
-v &= \underbrace{\operatorname{Verify}_{pk_{id}}(m,\sigma)}_{\text{identity signature 계산}}\\
-p &= \operatorname{PeerId}(pk_{id})\\
-\operatorname{accept} &\iff v\land(p=p_{expected})\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}m &= \underbrace{\texttt{prefix}}_{\text{domain 분리}}\,\|\,\underbrace{s_{noise}}_{\text{이번 채널의 static key}}\\
+\sigma &= \underbrace{\operatorname{Sign}_{sk_{id}}(m)}_{\text{장기 identity가 승인}}\\
+v &= \underbrace{\operatorname{Verify}_{pk_{id}}(m,\sigma)}_{\text{payload의 key로 검사}}\\
+p &= \underbrace{\operatorname{PeerId}(pk_{id})}_{\text{같은 key에서 유도}}\\
+\operatorname{accept} &\iff \underbrace{v\land(p=p_{expected})}_{\text{서명과 PeerId 둘 다}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\texttt{prefix}\,\|\,s_{noise}`, annotation: ["Noise static public key이(가) 식의 결과에","기여하는 방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
-          { expression: String.raw`\operatorname{Sign}_{sk_{id}}(m)`, annotation: ["identity signature이(가) 식의 결과에 기여하는","방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
-          { expression: String.raw`\operatorname{Verify}_{pk_{id}}(m,\sigma)`, annotation: ["identity signature이(가) 식의 결과에 기여하는","방식을 계산합니다.","Signature input에 domain-separation","prefix와 정확한 Noise static public"] },
+          { expression: String.raw`\texttt{prefix}\,\|\,s_{noise}`, annotation: ["spec이 정한 prefix 뒤에 Noise static", "public key bytes를 그대로 붙인 서명 입력", "다른 용도 서명과 혼동 방지"] },
+          { expression: String.raw`\operatorname{Sign}_{sk_{id}}(m)`, annotation: ["장기 libp2p identity 개인키로 서명", "'이 Noise key를 이 identity가 승인'"] },
+          { expression: String.raw`\operatorname{Verify}_{pk_{id}}(m,\sigma)`, annotation: ["payload에 실린 identity 공개키로 검증", "실패하면 connection 즉시 종료"] },
+          { expression: String.raw`v\land(p=p_{expected})`, annotation: ["서명이 맞아도 PeerId가 dial한 대상과", "다르면 유효한 다른 peer이므로 실패", "PeerId만 맞추고 서명 생략도 불가"] },
         ]}
         terms={[
           { symbol: "s_{noise}", name: "Noise static public key", description: "이번 secure channel의 장기 DH key입니다." },

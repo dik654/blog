@@ -17,9 +17,9 @@ export default function Training() {
         question="Validation의 크기와 평균을 보지 않고 feature scale을 어떻게 맞출까?"
         idea={<>각 rolling fold에서 train 구간의 평균과 표준편차만 추정하고, 그 고정된 parameter를 validation·test에 그대로 적용합니다.</>}
         formula={String.raw`z_t=\frac{x_t-\mu_{\mathrm{tr}}}{\sigma_{\mathrm{tr}}}`}
-        annotatedFormula={String.raw`z_t=\underbrace{\frac{x_t-\mu_{\mathrm{tr}}}{\sigma_{\mathrm{tr}}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`z_t=\frac{x_t-\overbrace{\mu_{\mathrm{tr}}}^{\text{train 구간 평균}}}{\underbrace{\sigma_{\mathrm{tr}}}_{\text{train 구간 표준편차}}}`}
         operations={[
-          { expression: String.raw`\frac{x_t-\mu_{\mathrm{tr}}}{\sigma_{\mathrm{tr}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 rolling fold에서 train 구간의 평균과","표준편차만 추정하고, 그 고정된 parameter를","validation·test에 그대로 적용합니다."] },
+          { expression: String.raw`\frac{x_t-\mu_{\mathrm{tr}}}{\sigma_{\mathrm{tr}}}`, annotation: ["관측값에서 forecast origin 이전 train 구간의","평균을 빼고 그 표준편차로 나눕니다.","validation·test에도 이 train 통계를 고정해 씁니다"] },
         ]}
         terms={[
           { symbol: "x_t", name: "raw feature", description: "시간 t에 실제로 관측된 feature 값입니다." },
@@ -37,10 +37,10 @@ export default function Training() {
         question="서로 다른 horizon과 비대칭 비용을 하나의 학습 objective로 어떻게 표현할까?"
         idea={<>Horizon h마다 업무 중요도 wₕ를 두고, quantile τ보다 실제값이 큰지 작은지에 따라 다른 기울기의 pinball loss를 적용합니다.</>}
         formula={String.raw`\begin{aligned}\mathcal L_\tau&=\frac1H\sum_{h=1}^{H}w_h\rho_\tau(y_{t+h}-\hat q_{\tau,t+h})\\\rho_\tau(u)&=u\bigl(\tau-\mathbb 1[u<0]\bigr)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\mathcal L_\tau&=\underbrace{\frac1H\sum_{h=1}^{H}w_h\rho_\tau(y_{t+h}-\hat q_{\tau,t+h})}_{\text{pinball loss 계산}}\\\rho_\tau(u)&=\underbrace{u\bigl(\tau-\mathbb 1[u<0]\bigr)}_{\text{허용 경계 판정}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\mathcal L_\tau&=\frac1H\sum_{h=1}^{H}\underbrace{w_h}_{\text{horizon 중요도}}\rho_\tau(\underbrace{y_{t+h}-\hat q_{\tau,t+h}}_{\text{실제−quantile 예측}})\\\rho_\tau(u)&=\underbrace{u\bigl(\tau-\mathbb 1[u<0]\bigr)}_{\text{과소·과대에 다른 기울기}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\frac1H\sum_{h=1}^{H}w_h\rho_\tau(y_{t+h}-\hat q_{\tau,t+h})`, annotation: ["pinball loss이(가) 식의 결과에 기여하는 방식을","계산합니다.","Horizon h마다"] },
-          { expression: String.raw`u\bigl(\tau-\mathbb 1[u<0]\bigr)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","Horizon h마다"] },
+          { expression: String.raw`\frac1H\sum_{h=1}^{H}w_h\rho_\tau(y_{t+h}-\hat q_{\tau,t+h})`, annotation: ["horizon h마다 실제값과 τ-quantile 예측의 차이에","pinball loss를 매기고 업무 중요도 w_h로 가중해","H개 horizon 평균을 냅니다."] },
+          { expression: String.raw`u\bigl(\tau-\mathbb 1[u<0]\bigr)`, annotation: ["실제가 예측보다 크면(u>0) 기울기 τ, 작으면","기울기 1−τ로 비용을 줍니다. τ=0.9면 과소 예측을","9배 비싸게 쳐 상위 90% quantile로 끌어올립니다"] },
         ]}
         terms={[
           { symbol: "\\tau", name: "quantile level", description: "0.5는 조건부 median, 0.9는 상위 90% quantile을 겨냥합니다." },

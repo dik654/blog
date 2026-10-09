@@ -2,8 +2,8 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: GroupReplica.tsx — 기본 배포 추상의 실패와 그룹 단위 복제, 갱신 중 용량 */
-const SCENES = ["기본 배포 추상", "하나가 죽으면", "그룹 단위 복제", "갱신 중 용량"] as const;
+/** 본문 대응: GroupReplica.tsx — 기본 Deployment의 실패와 그룹 단위 복제, 갱신 중 용량 */
+const SCENES = ["Pod를 따로 배포", "하나가 죽으면", "한 복제본으로 묶기", "갱신 중 용량"] as const;
 const NOTES = [
   "여러 노드에 걸친 모델을 독립 파드로 띄우면 관계가 어디에도 적히지 않습니다.",
   "죽은 파드 하나만 새로 만들지만 나머지는 이미 초기화를 마쳐 다시 손을 잡지 못합니다.",
@@ -25,7 +25,7 @@ export default function GroupViz() {
     <VizFrame
       eyebrow="복제 단위"
       title="복제본 하나가 파드 넷일 때 무엇이 달라지는가"
-      description="기본 추상이 깨지는 지점과 그룹 추상의 대응을 봅니다."
+      description="Pod를 따로 다룰 때 생기는 문제와 한 묶음으로 다루는 방법을 봅니다."
       note="파드 4개와 복제본 4개는 설명을 위한 축소 모형입니다."
     >
       <div
@@ -67,7 +67,7 @@ export default function GroupViz() {
                 {step === 0 && (
                   <g>
                     <text x={24} y={126} fontSize={8} fill={MUTED}>
-                      기본 배포 추상은 이 넷을 서로 독립적인 복제본으로 봅니다.
+                      기본 Deployment는 이 넷을 서로 독립적인 복제본으로 봅니다.
                     </text>
                     <text x={24} y={144} fontSize={8} fill={MUTED}>
                       "함께 떠야 한다"와 "하나가 죽으면 나머지도 의미 없다"가 어디에도 적혀 있지 않습니다.

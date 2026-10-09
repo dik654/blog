@@ -231,27 +231,9 @@ export const hwArticles: Article[] = [
     component: () => import("@/pages/articles/hw/b300-switchless-network"),
   },
   {
-    slug: "nvidia-nca-aiio-study-guide",
-    title: "NCA-AIIO 준비: 시험 범위를 AI 인프라 현장 증거로 바꾸기",
-    subcategory: "hw-infra",
-    sections: [
-      { id: "overview", title: "1 · GPU는 열여섯 개 모두 보이는데 작업은 시작하지 못합니다" },
-      { id: "black-box", title: "2 · 작업 하나가 준비되고 끝나는 네 구간을 엽니다" },
-      { id: "case", title: "3 · 공식 38·40·22%를 19·20·11개의 학습 장부로 바꿉니다" },
-      { id: "picture", title: "4 · 같은 장애도 첫 확인 문은 세 갈래입니다" },
-      { id: "need", title: "5 · 합격 점수와 현장 수행 증거를 분리해야 합니다" },
-      { id: "names", title: "6 · Blueprint·증거 지도·역할 경계에 이름을 붙입니다" },
-      { id: "mechanism", title: "7 · 한 목표를 설명·실행·증거·복습의 고리로 바꿉니다" },
-      { id: "source", title: "8 · 공식 Study Guide를 실제 첫 점검과 연결합니다" },
-      { id: "comparison", title: "9 · 현행 시험 범위와 다음 Professional 단계를 구분합니다" },
-      { id: "limits", title: "10 · 자격증은 BOM·RFP·시설 승인과 장애 복구를 대신하지 않습니다" },
-    ],
-    component: () => import("@/pages/articles/hw/nvidia-nca-aiio-study-guide"),
-  },
-  {
     slug: "ai-infrastructure-b300-128-blueprint",
     title: "B300 128 GPU 설계: 요구사항에서 BOM까지",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · 128개를 사기 전에 완료할 일을 정합니다" },
       { id: "black-box", title: "2 · 요구사항이 여섯 설계 원장으로 내려갑니다" },
@@ -269,7 +251,7 @@ export const hwArticles: Article[] = [
   {
     slug: "ai-cluster-software-compatibility",
     title: "GPU 클러스터 호환성: OS부터 NCCL·DOCA-OFED까지",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · 설치 성공보다 조합의 재현성을 확인합니다" },
       { id: "black-box", title: "2 · 계산 경로와 통신 경로를 나눠 봅니다" },
@@ -287,7 +269,7 @@ export const hwArticles: Article[] = [
   {
     slug: "kubernetes-vs-slurm-gpu-scheduling",
     title: "Kubernetes와 Slurm: GPU 작업을 어디에 맡길까",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · 도구 이름보다 작업의 생애를 먼저 봅니다" },
       { id: "black-box", title: "2 · 요청·대기·할당·실행·회수를 추적합니다" },
@@ -305,7 +287,7 @@ export const hwArticles: Article[] = [
   {
     slug: "ai-cluster-storage-io",
     title: "AI 클러스터 스토리지: 한 번의 I/O에서 복구까지",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · 저장 완료 표시가 있었지만 복구하지 못했습니다" },
       { id: "black-box", title: "2 · 요청은 네 책임 구간을 지나갑니다" },
@@ -323,7 +305,7 @@ export const hwArticles: Article[] = [
   {
     slug: "b300-rack-power-cooling",
     title: "B300 128 GPU 전력·냉각: 랙과 열 제거를 계산합니다",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · GPU 수를 전기와 열의 요구로 바꿉니다" },
       { id: "black-box", title: "2 · 콘센트에서 실외 열 방출까지 이어 봅니다" },
@@ -341,7 +323,7 @@ export const hwArticles: Article[] = [
   {
     slug: "ai-infrastructure-commissioning-acceptance",
     title: "AI 인프라 구축·검수: 납품을 재현 가능한 증거로 닫습니다",
-    subcategory: "hw-infra",
+    subcategory: "hw-ai-cluster",
     sections: [
       { id: "overview", title: "1 · 장비가 켜진 상태와 납품 완료를 구분합니다" },
       { id: "black-box", title: "2 · 설계 기준이 시험과 인수 증거로 이어집니다" },
@@ -355,5 +337,23 @@ export const hwArticles: Article[] = [
       { id: "limits", title: "10 · 벤치마크 한 번으로 운영 인수를 끝내지 않습니다" },
     ],
     component: () => import("@/pages/articles/hw/ai-infrastructure-commissioning-acceptance"),
+  },
+  {
+    slug: "nvidia-nca-aiio-study-guide",
+    title: "NCA-AIIO 준비: 시험 범위를 AI 인프라 현장 증거로 바꾸기",
+    subcategory: "hw-ai-cluster",
+    sections: [
+      { id: "overview", title: "1 · GPU는 열여섯 개 모두 보이는데 작업은 시작하지 못합니다" },
+      { id: "black-box", title: "2 · 작업 하나가 준비되고 끝나는 네 구간을 엽니다" },
+      { id: "case", title: "3 · 공식 38·40·22%를 19·20·11개의 학습 장부로 바꿉니다" },
+      { id: "picture", title: "4 · 같은 장애도 첫 확인 문은 세 갈래입니다" },
+      { id: "need", title: "5 · 합격 점수와 현장 수행 증거를 분리해야 합니다" },
+      { id: "names", title: "6 · Blueprint·증거 지도·역할 경계에 이름을 붙입니다" },
+      { id: "mechanism", title: "7 · 한 목표를 설명·실행·증거·복습의 고리로 바꿉니다" },
+      { id: "source", title: "8 · 공식 Study Guide를 실제 첫 점검과 연결합니다" },
+      { id: "comparison", title: "9 · 현행 시험 범위와 다음 Professional 단계를 구분합니다" },
+      { id: "limits", title: "10 · 자격증은 BOM·RFP·시설 승인과 장애 복구를 대신하지 않습니다" },
+    ],
+    component: () => import("@/pages/articles/hw/nvidia-nca-aiio-study-guide"),
   },
 ];

@@ -20,9 +20,11 @@ export default function Vanishing() {
         question="C가 H의 모든 점에서 0인지 왜 Z_H divisibility로 검사할 수 있을까요?"
         idea="C의 각 root h에 대응하는 factor x−h가 C를 나눕니다. h들이 서로 다르면 이 factor의 곱 Z_H 전체가 C를 나눕니다. 역방향은 대입하면 곧바로 확인됩니다."
         formula={String.raw`Z_H(x)=\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)`}
-        annotatedFormula={String.raw`Z_H(x)=\underbrace{\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)}_{\text{vanishing polynomial 계산}}`}
+        annotatedFormula={String.raw`Z_H(x)=\underbrace{\prod_{h\in H}(x-h)}_{\text{H의 각 점을 root로}},\qquad \underbrace{\bigl[\forall h\in H:C(h)=0\bigr]}_{\text{모든 row constraint 성립}}\iff \underbrace{Z_H(x)\mid C(x)}_{\text{나머지 0}}`}
         operations={[
-          { expression: String.raw`\prod_{h\in H}(x-h),\qquad \bigl[\forall h\in H:C(h)=0\bigr]\iff Z_H(x)\mid C(x)`, annotation: ["vanishing polynomial이(가) 식의 결과에","기여하는 방식을 계산합니다.","C의 각 root h에 대응하는 factor x−h가 C를","나눕니다."] },
+          { expression: String.raw`\prod_{h\in H}(x-h)`, annotation: ["H의 점마다 factor (x−h)를 곱해","H 전체에서 0인 degree |H| 다항식.","H={0,1,2}면 x(x−1)(x−2)"] },
+          { expression: String.raw`\forall h\in H:C(h)=0`, annotation: ["arithmetization의 row constraint가","도메인의 모든 row에서 성립한다는 조건"] },
+          { expression: String.raw`Z_H(x)\mid C(x)`, annotation: ["서로 다른 root의 factor가 모두 C를","나누므로 C=Q·Z_H로 쓸 수 있음.","C=Z_H(x)(x+4)면 Q=x+4"] },
         ]}
         terms={[
           {

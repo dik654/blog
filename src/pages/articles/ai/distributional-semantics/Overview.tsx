@@ -47,9 +47,9 @@ export default function Overview() {
           </>
         }
         formula={String.raw`e_i^\top e_j=\begin{cases}1,&i=j\\0,&i\ne j\end{cases}`}
-        annotatedFormula={String.raw`\underbrace{e_i^\top e_j}_{\text{dot product 계산}}=\begin{cases}1,&i=j\\0,&i\ne j\end{cases}`}
+        annotatedFormula={String.raw`\underbrace{e_i^\top e_j}_{\text{같은 ID인지만 검사}}=\begin{cases}1,&i=j\\0,&i\ne j\end{cases}`}
         operations={[
-          { expression: String.raw`e_i^\top e_j`, annotation: ["dot product이(가) 식의 결과에 기여하는 방식을","계산합니다.","Vocabulary의 각 단어를 서로 다른 basis","vector에 배정하면 같은 단어만 내적이 1이고 다른 단어는"] },
+          { expression: String.raw`e_i^\top e_j`, annotation: ["i, j 자리에만 1인 V차원 vector끼리 내적","같은 단어면 1, 다른 단어면 전부 0","고양이–강아지도 고양이–행성도 똑같이 0"] },
         ]}
         terms={[
           {

@@ -34,11 +34,11 @@ export default function Logging() {
         question="Batch 크기나 valid token 수가 달라도 전체 평균 metric을 정확히 어떻게 계산할까?"
         idea={<>각 batch metric 자체를 평균내지 않고 metric의 합계인 분자와 유효 관측 수인 분모를 따로 더합니다. Distributed run도 두 값부터 all-reduce한 뒤 나눕니다.</>}
         formula={String.raw`\begin{aligned}U&=\sum_{r=1}^{W}\sum_{b}U_{r,b},\\N&=\sum_{r=1}^{W}\sum_{b}N_{r,b},\\M&=U/N.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}U&=\underbrace{\sum_{r=1}^{W}\sum_{b}U_{r,b},}_{\text{world size 계산}}\\N&=\underbrace{\sum_{r=1}^{W}\sum_{b}N_{r,b},}_{\text{world size 계산}}\\M&=\underbrace{U/N.}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}U&=\underbrace{\sum_{r=1}^{W}\sum_{b}U_{r,b}}_{\text{분자 누적}},\\N&=\underbrace{\sum_{r=1}^{W}\sum_{b}N_{r,b}}_{\text{유효 관측 수 누적}},\\M&=\underbrace{U/N}_{\text{마지막에 한 번 나눔}}.\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{r=1}^{W}\sum_{b}U_{r,b},`, annotation: ["world size이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 batch metric 자체를 평균내지 않고 metric의","합계인 분자와 유효 관측 수인 분모를 따로 더합니다."] },
-          { expression: String.raw`\sum_{r=1}^{W}\sum_{b}N_{r,b},`, annotation: ["world size이(가) 식의 결과에 기여하는 방식을","계산합니다.","각 batch metric 자체를 평균내지 않고 metric의","합계인 분자와 유효 관측 수인 분모를 따로 더합니다."] },
-          { expression: String.raw`U/N.`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","각 batch metric 자체를 평균내지 않고 metric의","합계인 분자와 유효 관측 수인 분모를 따로 더합니다."] },
+          { expression: String.raw`\sum_{r=1}^{W}\sum_{b}U_{r,b}`, annotation: ["모든 rank·batch의 맞힌 수나 loss 합을 더함","64-batch에서 32개 + 5-batch에서 5개 = 37"] },
+          { expression: String.raw`\sum_{r=1}^{W}\sum_{b}N_{r,b}`, annotation: ["실제 sample 수(PAD 제외 token)를 더함","64+5=69","distributed면 U·N을 먼저 all-reduce"] },
+          { expression: String.raw`U/N`, annotation: ["누적을 끝낸 뒤 마지막에 한 번만 나눔","37/69≈.536","batch accuracy 단순 평균 .75와 다름"] },
         ]}
         terms={[
           { symbol: "U_r,b", name: "metric numerator", description: "Rank r의 batch b에서 맞힌 sample 수·loss 합·correct token 수 같은 합산값입니다." },

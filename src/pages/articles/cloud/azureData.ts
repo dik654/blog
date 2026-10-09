@@ -174,7 +174,7 @@ export const azureAz104Data: CloudCertificationArticleData = {
   ] },
   sources: [
     { source: "Microsoft Learn · AZ-104 Study Guide", excerpt: "implementing, managing, and monitoring", application: "서비스 설명보다 구성·해석·진단·복구를 실습 중심으로 준비하는 기준으로 씁니다.", citation: "Microsoft Learn, Study guide for Exam AZ-104", href: "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-104", note: "AZ-104의 대상 역할, 최신 영역 비중과 세부 과제를 밝힌 공식 가이드입니다." },
-    { source: "Microsoft Learn · Azure Administrator Associate", excerpt: "expire annually", application: "합격을 끝으로 보지 않고 무료 갱신 평가와 최신 기술 학습을 일정에 포함합니다.", citation: "Microsoft Learn, Azure Administrator Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/", note: "자격 취득 조건과 갱신 주기를 안내하는 Microsoft 공식 자격 페이지입니다." },
+    { source: "Microsoft Learn · Azure Administrator Associate", excerpt: "expire unless they are renewed", application: "합격을 끝으로 보지 않고 무료 갱신 평가와 최신 기술 학습을 일정에 포함합니다.", citation: "Microsoft Learn, Azure Administrator Associate", href: "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/", note: "자격 취득 조건과 갱신 주기를 안내하는 Microsoft 공식 자격 페이지입니다." },
   ],
   review: [
     "AZ-104를 포털 메뉴 암기만으로 준비하기 어려운 이유는 무엇인가요? (답: 1·8절)",
@@ -208,7 +208,7 @@ export const azureArchitectDevopsData: CloudCertificationArticleData = {
     ] },
     { id: "names", level: "3", title: "6. AZ-305·AZ-400과 폐지된 AZ-204의 경계를 정합니다", bridge: "역할과 교환을 먼저 봤습니다. 현행 시험과 폐지된 시험의 경계를 공식 이름으로 정리합니다.", paragraphs: [
       "AZ-305는 Designing Microsoft Azure Infrastructure Solutions 시험입니다. 신원·거버넌스·관측, 데이터 저장, 비즈니스 연속성, 인프라 솔루션 설계를 다룹니다. Azure Administrator Associate와 함께 Solutions Architect Expert 자격으로 이어집니다.",
-      "AZ-400은 Designing and Implementing Microsoft DevOps Solutions 시험으로 프로세스·소스 관리·빌드와 릴리스·보안·관측을 다룹니다. Developing Solutions for Microsoft Azure였던 AZ-204는 2026년 7월 31일 폐지됐고, AI-200은 별도의 AI 백엔드 개발 경로입니다.",
+      "AZ-400은 Designing and Implementing Microsoft DevOps Solutions 시험으로 프로세스·소스 관리·빌드와 릴리스·보안·관측을 다룹니다. DevOps Engineer Expert 자격은 AZ-400 합격만으로 나오지 않고 Azure Administrator Associate 또는 Azure Developer Associate 중 하나가 선행 자격입니다. Developing Solutions for Microsoft Azure였던 AZ-204는 2026년 7월 31일 폐지됐으므로 지금 새로 준비한다면 AZ-104가 현실적인 선행 경로이고, AI-200이 선행 자격으로 인정되는지는 공식 자격 페이지가 아직 갱신되지 않았으니 접수 전에 확인합니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. 목표 공고에서 상위 경로를 고릅니다", bridge: "시험의 현행 상태를 정리했습니다. 공고의 책임 문장을 선택 절차로 바꿉니다.", paragraphs: [
       "공고에서 recommend·design·business continuity·governance가 반복되면 AZ-305 경로 점수를 올립니다. pipeline·source control·release·security scanning·instrumentation이 반복되면 AZ-400 쪽 점수를 올립니다.",
@@ -240,7 +240,7 @@ export const azureArchitectDevopsData: CloudCertificationArticleData = {
   ] },
   decision: { title: "Azure 상위 시험 고르기", question: "지원 직무가 구조를 추천하나요, 변경 흐름을 설계하나요?", options: [
     { signal: "신원·데이터·복구·네트워크 구조를 추천하고 교환을 설명합니다.", choose: "AZ-104 → AZ-305", why: "관리 실무를 바탕으로 인프라 설계와 Expert 자격 조건을 맞춥니다." },
-    { signal: "소스·빌드·릴리스·보안 검사·관측 피드백을 설계합니다.", choose: "AZ-400", why: "Azure 관리 또는 개발의 강한 경험 위에서 전달 체계를 다룹니다." },
+    { signal: "소스·빌드·릴리스·보안 검사·관측 피드백을 설계합니다.", choose: "AZ-400", why: "Azure 관리 또는 개발의 강한 경험 위에서 전달 체계를 다룹니다. Expert 자격에는 AZ-104 등 선행 Associate 자격이 필요합니다." },
     { signal: "오래된 공고나 강의가 AZ-204를 요구합니다.", choose: "현행 여부부터 재확인", why: "AZ-204는 폐지됐으므로 기술 요구와 자격 요구를 분리합니다." },
   ] },
   terms: { title: "상위 경로의 세 핵심 이름", items: [

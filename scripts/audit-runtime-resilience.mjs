@@ -10,8 +10,8 @@ const boundary = read("src/components/articles/article-load-boundary.tsx");
 const main = read("src/main.tsx");
 const math = read("src/components/ui/math.tsx");
 const articleTemplate = read("src/pages/articles/cloud/CloudCertificationArticle.tsx");
-const p0Data = read("src/pages/articles/hw/ai-infrastructure-study/data.ts");
 const staticRoutes = read("scripts/generate-static-routes.mjs");
+const html = read("index.html");
 
 const checks = {
   basePathBridgeMounted:
@@ -28,6 +28,12 @@ const checks = {
     lazyLoader.includes("RELOAD_GUARD_MS") &&
     lazyLoader.includes("if (!recorded) return false") &&
     lazyLoader.includes("window.location.reload()"),
+  startupAssetReloadOnce:
+    html.includes('const guardKey = "blog:startup-asset-reload"') &&
+    html.includes('const retryParam = "__asset_retry"') &&
+    html.includes('assetUrl.includes("/assets/")') &&
+    html.includes('id = "startup-asset-error"') &&
+    html.includes("location.replace(url.href)"),
   articleErrorBoundary:
     articlePage.includes("<ArticleLoadBoundary") &&
     boundary.includes("getDerivedStateFromError"),
@@ -40,7 +46,9 @@ const checks = {
     articleTemplate.includes("formulas?: readonly CloudArticleFormula[]") &&
     articleTemplate.includes("<ExplainedFormula") &&
     articleTemplate.includes("annotatedFormula={formula.content.annotatedFormula}"),
-  p0FormulaCoverage: (p0Data.match(/\bformulas:\s*\[/g) ?? []).length >= 6,
+  formulaBlocksRemainOptional:
+    articleTemplate.includes("formulas?: readonly CloudArticleFormula[]") &&
+    articleTemplate.includes("data.formulas"),
 };
 
 const failed = Object.entries(checks)

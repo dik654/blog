@@ -27,9 +27,10 @@ export default function KademliaArticle() {
           question="두 ID x와 y 사이의 Kademlia 거리를 어떻게 한 값으로 만들까?"
           idea="같은 비트는 0, 다른 비트는 1로 만든 XOR 결과를 부호 없는 정수로 읽는다. 첫 차이 비트가 앞에 있을수록 값이 크므로 prefix가 덜 겹친 노드를 더 멀다고 정렬할 수 있다."
           formula={String.raw`d(x,y)=x\oplus y`}
-          annotatedFormula={String.raw`d(x,y)=\underbrace{x\oplus y}_{\text{XOR 계산}}`}
+          annotatedFormula={String.raw`\underbrace{d(x,y)}_{\text{ID 공간의 논리 거리}}=\underbrace{x\oplus y}_{\text{다른 비트만 1인 정수}}`}
           operations={[
-            { expression: String.raw`x\oplus y`, annotation: ["XOR이(가) 식의 결과에 기여하는 방식을 계산합니다.","같은 비트는 0, 다른 비트는 1로 만든 XOR 결과를 부호","없는 정수로 읽는다."] },
+            { expression: String.raw`x\oplus y`, annotation: ["같은 비트는 0, 다른 비트는 1로 두고", "부호 없는 정수로 읽음", "10110100⊕10111001 = 00001101 = 13"] },
+            { expression: String.raw`d(x,y)`, annotation: ["앞쪽 비트가 먼저 갈릴수록 값이 커져", "prefix가 덜 겹친 노드가 더 멀다", "RTT·지리 거리와는 무관"] },
           ]}
           terms={[
             { symbol: "x,y", name: "Node IDs", description: "길이가 같은 node ID 또는 key 비트열" },
@@ -69,9 +70,10 @@ export default function KademliaArticle() {
           question="XOR 값 전체 대신 두 ID가 처음 갈라지는 거리 구간은 어떻게 구할까?"
           idea="XOR 결과 앞의 0은 공통 prefix다. 가장 높은 1의 위치에 1을 더하면 필요한 distance bucket 번호가 된다."
           formula={String.raw`\operatorname{LogDist}(x,y)=\begin{cases}0,&x=y\\ \lfloor\log_2(x\oplus y)\rfloor+1,&x\ne y\end{cases}`}
-          annotatedFormula={String.raw`\underbrace{\operatorname{LogDist}}_{\text{Logarithmic distance 계산}}(x,y)=\begin{cases}0,&x=y\\ \lfloor\log_2(x\oplus y)\rfloor+1,&x\ne y\end{cases}`}
+          annotatedFormula={String.raw`\operatorname{LogDist}(x,y)=\begin{cases}\underbrace{0}_{\text{자기 자신}},&x=y\\ \underbrace{\lfloor\log_2(x\oplus y)\rfloor}_{\text{첫 1의 비트 위치}}+\underbrace{1}_{\text{bucket 번호화}},&x\ne y\end{cases}`}
           operations={[
-            { expression: String.raw`\operatorname{LogDist}`, annotation: ["Logarithmic distance이(가) 식의 결과에","기여하는 방식을 계산합니다.","XOR 결과 앞의 0은 공통 prefix다."] },
+            { expression: String.raw`\lfloor\log_2(x\oplus y)\rfloor`, annotation: ["XOR 결과에서 가장 높은 1의 위치", "앞의 0들은 공통 prefix", "00001101이면 3"] },
+            { expression: String.raw`\lfloor\log_2(x\oplus y)\rfloor+1`, annotation: ["1을 더해 거리 구간(bucket) 번호로", "00001101 → LogDist 4", "값이 작을수록 공통 prefix가 길다"] },
           ]}
           terms={[
             { symbol: "\\operatorname{LogDist}", name: "Logarithmic distance", description: "0부터 ID bit 수까지의 logarithmic distance" },

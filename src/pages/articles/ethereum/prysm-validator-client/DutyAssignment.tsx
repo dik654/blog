@@ -19,10 +19,11 @@ export default function DutyAssignment({ onCodeRef }: { onCodeRef: (key: string,
         question="Slot 안의 특정 protocol action을 언제 시작하고 언제 포기해야 할까요?"
         idea="Genesis time에서 slot 길이만큼 이동해 slot 시작을 계산하고, 규격이 정한 phase fraction을 더해 action deadline을 만듭니다. Network·clock 여유를 빼 실제 local cutoff를 둡니다."
         formula={String.raw`\begin{aligned}t_{action}&=t_{genesis}+sT_{slot}+\alpha T_{slot}\\t_{cutoff}&=t_{action}-\delta\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}t_{action}&=\underbrace{t_{genesis}+sT_{slot}+\alpha T_{slot}}_{\text{슬롯 길이 계산}}\\t_{cutoff}&=\underbrace{t_{action}-\delta}_{\text{안전 여유 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}t_{action}&=\underbrace{t_{genesis}+sT_{slot}}_{\text{slot s의 시작}}+\underbrace{\alpha T_{slot}}_{\text{phase 비율만큼 지연}}\\t_{cutoff}&=\underbrace{t_{action}-\delta}_{\text{local 마감}}\end{aligned}`}
         operations={[
-          { expression: String.raw`t_{genesis}+sT_{slot}+\alpha T_{slot}`, annotation: ["슬롯 길이이(가) 식의 결과에 기여하는 방식을 계산합니다.","Genesis time에서 slot 길이만큼 이동해 slot","시작을 계산하고, 규격이 정한 phase fraction을","더해 action deadline을 만듭니다."] },
-          { expression: String.raw`t_{action}-\delta`, annotation: ["안전 여유이(가) 식의 결과에 기여하는 방식을 계산합니다.","Genesis time에서 slot 길이만큼 이동해 slot","시작을 계산하고, 규격이 정한 phase fraction을","더해 action deadline을 만듭니다."] },
+          { expression: String.raw`t_{genesis}+sT_{slot}`, annotation: ["genesis 시각에 slot 번호 × 12초를 더한","slot s의 시작 시각"] },
+          { expression: String.raw`\alpha T_{slot}`, annotation: ["spec이 정한 phase 비율 α=1/3이면","slot 시작 4초 뒤가 action 시각","proposal·attestation·aggregation마다 다름"] },
+          { expression: String.raw`t_{action}-\delta`, annotation: ["서명·전송·clock skew 여유 δ=0.5초를 빼","3.5초까지 signing input을 확정","넘기면 재시도 말고 missed duty로 종료"] },
         ]}
         terms={[
           { symbol: "s", name: "슬롯 번호", description: "genesis부터 센 slot index(slot 단위)" },

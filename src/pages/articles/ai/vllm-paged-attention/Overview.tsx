@@ -70,12 +70,12 @@ export default function Overview() { return <div className="space-y-16"><section
 o(j) &= j \bmod B
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\phi_r(j) &= \underbrace{T_r\!\left[\left\lfloor j/B\right\rfloor\right]}_{\text{기준량당 비율}} \\
-o(j) &= \underbrace{j \bmod B}_{\text{오른쪽 항으로 결과 계산}}
+\phi_r(j) &= \underbrace{T_r}_{\text{block table}}\!\left[\underbrace{\left\lfloor j/B\right\rfloor}_{\text{logical block index}}\right] \\
+o(j) &= \underbrace{j \bmod B}_{\text{block 안 slot offset}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`T_r\!\left[\left\lfloor j/B\right\rfloor\right]`, annotation: ["관심 token 수를 한 block의 slot 수 또는 전체 조회량과 비교합니다.","j를 block size로 나눈 몫이 logical block","index이고 나머지가 block 내부 offset입니다."] },
-          { expression: String.raw`j \bmod B`, annotation: ["오른쪽에 사례의 값을 대입해 왼쪽 값을 계산합니다.","j를 block size로 나눈 몫이 logical block","index이고 나머지가 block 내부 offset입니다."] },
+          { expression: String.raw`T_r\!\left[\left\lfloor j/B\right\rfloor\right]`, annotation: ["token 위치 j를 block size B로 나눈 몫이 logical","index이고, block table이 그것을 physical ID로","번역합니다. B=16, j=37, T_r=[P7,P2,P9]면 P9"] },
+          { expression: String.raw`j \bmod B`, annotation: ["나머지가 그 physical block 안의 slot입니다.","37 mod 16=5이므로 P9의 5번 slot을 읽습니다.","P7·P2·P9 숫자 순서는 sequence 순서와 무관합니다"] },
         ]}
         terms={ADDRESS_TERMS}
         assumptions={[
@@ -101,12 +101,13 @@ m_r &= \left\lceil\frac{n_r}{B}\right\rceil \\
 w_r &= m_rB-n_r, \qquad 0\le w_r < B
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-m_r &= \underbrace{\left\lceil\frac{n_r}{B}\right\rceil}_{\text{기준량당 비율}} \\
-w_r &= \underbrace{m_rB-n_r, \qquad 0\le w_r < B}_{\text{허용 경계 판정}}
+m_r &= \underbrace{\left\lceil\frac{n_r}{B}\right\rceil}_{\text{필요한 block 수(올림)}} \\
+w_r &= \underbrace{m_rB-n_r}_{\text{마지막 block의 빈 slot}}, \qquad \underbrace{0\le w_r < B}_{\text{낭비는 한 block 미만}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\left\lceil\frac{n_r}{B}\right\rceil`, annotation: ["관심 token 수를 한 block의 slot 수 또는 전체 조회량과 비교합니다.","Token 수를 block size로 나누어 올림하면 필요한","block 수가 나옵니다."] },
-          { expression: String.raw`m_rB-n_r, \qquad 0\le w_r < B`, annotation: ["이 식에 적힌 경계와 전제가 맞는지 함께 확인합니다.","Token 수를 block size로 나누어 올림하면 필요한","block 수가 나옵니다."] },
+          { expression: String.raw`\left\lceil\frac{n_r}{B}\right\rceil`, annotation: ["token 수를 block size로 나눠 올림하면 request가","차지할 block 수입니다. B=16, n=35면 ⌈35/16⌉=3"] },
+          { expression: String.raw`m_rB-n_r`, annotation: ["할당한 slot 수에서 실제 token 수를 뺀","빈 slot입니다. 3×16−35=13 slot이 마지막","block에만 남고, B=16보다 작습니다"] },
+          { expression: String.raw`0\le w_r < B`, annotation: ["빈 slot은 항상 한 block 미만이라 최대 context","8,192 slot을 미리 잡는 방식보다 낭비가 작지만","0은 아닙니다"] },
         ]}
         terms={BLOCK_TERMS}
         assumptions={[

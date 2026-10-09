@@ -45,14 +45,14 @@ F(a)&=\prod_{k=1}^{K}I_k(a),\\
 a^*&=\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-I_k(a)&=\underbrace{\mathbf1[g_k(a)\le b_k],}_{\text{허용 경계 판정}}\\
-F(a)&=\underbrace{\prod_{k=1}^{K}I_k(a),}_{\text{artifact candidate 계산}}\\
-a^*&=\underbrace{\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).}_{\text{경계 후보 선택}}
+I_k(a)&=\underbrace{\mathbf1[g_k(a)\le b_k],}_{\text{guardrail k 통과면 1}}\\
+F(a)&=\underbrace{\prod_{k=1}^{K}I_k(a),}_{\text{전부 통과해야 1}}\\
+a^*&=\underbrace{\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).}_{\text{통과 후보 중 최소 운영비}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\mathbf1[g_k(a)\le b_k],`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
-          { expression: String.raw`\prod_{k=1}^{K}I_k(a),`, annotation: ["artifact candidate이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
-          { expression: String.raw`\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).`, annotation: ["허용 후보 중 목적에 맞는 경계값을 선택합니다.","각 guardrail을 만족하면 1, 아니면 0인","indicator를 곱합니다."] },
+          { expression: String.raw`\mathbf1[g_k(a)\le b_k],`, annotation: ["quality loss·peak memory·p95 같은 측정값","g_k가 budget b_k 이하면 1, 넘으면 0입니다."] },
+          { expression: String.raw`\prod_{k=1}^{K}I_k(a),`, annotation: ["K개 indicator를 곱한 feasibility입니다.","safety slice 하나만 기준을 넘어도 F=0이라","평균 quality가 좋아도 상쇄하지 못합니다"] },
+          { expression: String.raw`\arg\min_{a:F(a)=1}C_{\mathrm{ops}}(a).`, annotation: ["F=1인 통과 후보 사이에서만 비교합니다.","stage 수가 적고 runtime support가 안정적인","쪽이 운영 비용 C_ops가 낮아 먼저 뽑힙니다"] },
         ]}
         terms={[
           {

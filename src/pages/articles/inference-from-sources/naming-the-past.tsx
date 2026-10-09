@@ -119,7 +119,7 @@ export default function NamingThePastArticle() {
           <p className="leading-7">
             머리말의 <em>"이천 년도 더 지난 뒤"</em>라는 시간 간격은 여기서
             검증할 수 없습니다. 존스는 같은 머리말에서 함무라비를 기원전
-            3천년에 두었지만 현재 소장기관인 <a
+            3천년기에 두고 표제지에는 B.C. 2285-2242라고 적었지만 현재 소장기관인 <a
             href="https://www.louvre.fr/en/the-code-of-hammurabi">루브르
             박물관</a>은 돌에 글이 새겨진 때를 약 기원전 1750년으로
             설명합니다. 학교에서 쓴 판본의 연대는 따로 대조하지 않았습니다.

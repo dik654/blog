@@ -34,9 +34,12 @@ export default function Multiproof({
           </>
         }
         formula={String.raw`\begin{aligned}g_L&=2g,&g_R&=2g+1\\g_{\rm sib}&=g\oplus1,&|P|&=32d\ \mathrm B\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}g_L&=2g,&g_R&=2g+1\\g_{\rm sib}&=g\underbrace{\oplus1}_{\text{Last-bit flip 계산}},&|P|&=32d\ \mathrm B\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}g_L&=\underbrace{2g}_{\text{왼쪽 child}},&g_R&=\underbrace{2g+1}_{\text{오른쪽 child}}\\g_{\rm sib}&=\underbrace{g\oplus1}_{\text{마지막 bit 반전}},&|P|&=\underbrace{32d\ \mathrm B}_{\text{level마다 sibling 32 B}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\oplus1`, annotation: ["Last-bit flip이(가) 식의 결과에 기여하는 방식을","계산합니다.","Leaf에서 root까지 한 level을 올라갈 때마다"] },
+          { expression: String.raw`2g`, annotation: ["root를 1로 두면 왼쪽 child는 2g","binary로는 뒤에 0을 붙이는 것"] },
+          { expression: String.raw`2g+1`, annotation: ["오른쪽 child는 2g+1, 뒤에 1을 붙임","13=1101: root→오른쪽→왼쪽→오른쪽"] },
+          { expression: String.raw`g\oplus1`, annotation: ["마지막 bit를 뒤집으면 같은 parent의","sibling, 그 hash가 level마다 하나 필요"] },
+          { expression: String.raw`32d\ \mathrm B`, annotation: ["depth d만큼 32-byte sibling hash","d=20이면 640 bytes","multiproof는 겹치는 sibling을 생략"] },
         ]}
         terms={[
           {

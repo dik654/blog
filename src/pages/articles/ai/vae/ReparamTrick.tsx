@@ -40,15 +40,16 @@ export default function ReparamTrick() {
           z&=\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-          \ell_\phi(x)&=\underbrace{\log\sigma_\phi^2(x)}_{\text{로그 비용 변환}} \\
-          \sigma_\phi(x)&=\underbrace{\exp\!\left(\tfrac12\ell_\phi(x)\right)}_{\text{허용 경계 판정}} \\
-          \epsilon&\sim\mathcal N(0,I) \\
-          z&=\underbrace{\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon}_{\text{posterior mean 계산}}
+          \ell_\phi(x)&=\underbrace{\log\sigma_\phi^2(x)}_{\text{log-variance 출력}} \\
+          \sigma_\phi(x)&=\underbrace{\exp\!\left(\tfrac12\ell_\phi(x)\right)}_{\text{항상 양수인 표준편차}} \\
+          \epsilon&\sim\underbrace{\mathcal N(0,I)}_{\text{phi와 무관한 noise}} \\
+          z&=\underbrace{\mu_\phi(x)}_{\text{latent 중심}}+\underbrace{\sigma_\phi(x)\odot\epsilon}_{\text{축별로 늘린 noise}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`\log\sigma_\phi^2(x)`, annotation: ["확률이나 곱셈 규모를 더할 수 있는 log 비용으로 바꿉니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와","독립인 standard Gaussian input으로"] },
-          { expression: String.raw`\exp\!\left(\tfrac12\ell_\phi(x)\right)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와","독립인 standard Gaussian input으로"] },
-          { expression: String.raw`\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon`, annotation: ["posterior mean이(가) 식의 결과에 기여하는 방식을","계산합니다.","randomness를 parameterized","distribution 안에 숨기지 않고, parameter와"] },
+          { expression: String.raw`\log\sigma_\phi^2(x)`, annotation: ["encoder는 분산 대신 log-variance를 출력", "양수 제약 없이 넓은 범위를 다룸"] },
+          { expression: String.raw`\exp\!\left(\tfrac12\ell_\phi(x)\right)`, annotation: ["log-variance의 절반을 exp하면", "표준편차 sigma가 항상 양수로 복원"] },
+          { expression: String.raw`\mathcal N(0,I)`, annotation: ["phi와 독립으로 먼저 뽑는 standard noise", "forward 안에서는 입력 상수처럼 취급"] },
+          { expression: String.raw`\mu_\phi(x)+\sigma_\phi(x)\odot\epsilon`, annotation: ["중심 mu에 축별 sigma로 늘린 noise를 더해", "z를 mu·sigma의 결정론적 함수로 만듦", "그래서 z에서 phi로 gradient가 흐름"] },
         ]}
         terms={[
           { symbol: String.raw`\mu_\phi(x)`, name: "posterior mean", description: "encoder가 input별 latent 중심을 예측합니다." },

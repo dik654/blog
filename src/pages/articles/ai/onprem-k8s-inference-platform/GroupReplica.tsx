@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import GroupViz from "./viz/GroupViz";
 
 export default function GroupReplica() {
   return (
     <section id="group-replica" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">복제본이 파드 하나가 아닐 때 배포 추상이 먼저 깨집니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">큰 모델에서는 복제본 하나가 여러 Pod 묶음입니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           가속기 한 장에 들어가는 모델이면 복제본 하나가 파드 하나입니다. 이 경우 배포는 단순합니다. 파드를
@@ -19,13 +18,13 @@ export default function GroupReplica() {
         </p>
 
         <p className="leading-7">
-          기본 배포 추상은 이 관계를 표현하지 못합니다. 파드를 서로 독립적인 복제본으로 보기 때문에 하나가
+          기본 Deployment는 이 관계를 표현하지 못합니다. Pod를 서로 독립적인 복제본으로 보기 때문에 하나가
           죽으면 그 하나만 새로 만듭니다. 새로 만들어진 파드는 이미 초기화를 마친 나머지 파드들과 다시 손을
           잡아야 하는데, 대부분의 분산 실행은 그 재합류를 지원하지 않습니다.
         </p>
 
         <p className="leading-7">
-          그래서 파드 묶음 자체를 복제 단위로 다루는 추상이 따로 필요합니다. 대표 파드 하나와 나머지 파드들을 한 그룹으로 묶어 함께 배치하고 그룹 안에서 하나라도 실패하면 그룹 전체를
+          그래서 여러 Pod를 한 복제본으로 묶어 다루는 API가 따로 필요합니다. 대표 Pod 하나와 나머지 Pod를 한 그룹으로 묶어 함께 배치하고 그룹 안에서 하나라도 실패하면 그룹 전체를
           다시 만들고 갱신도 그룹 단위로 한 번에 하나씩 진행하는 방식입니다.
         </p>
       </div>
@@ -36,7 +35,7 @@ export default function GroupReplica() {
         <p className="leading-7">
           배치도 그냥 아무 노드가 아닙니다. 같은 그룹의 파드들은 서로 많은 양을 주고받으므로 같은 스위치
           아래처럼 가까운 곳에 함께 놓여야 합니다. 멀리 흩어지면 통신이 병목이 되어 가속기가 놀게 됩니다. 그룹
-          추상이 이 조건을 선언할 자리를 제공합니다.
+          API에 이 배치 조건을 적어 둘 수 있습니다.
         </p>
 
         <p className="leading-7">
@@ -78,48 +77,21 @@ export default function GroupReplica() {
         </p>
       </div>
 
-      <ExplainedFormula
-        question="갱신 중에 몇 개까지 내려도 됩니까"
-        idea="갱신 중 남는 복제본이 감당하는 처리량이 그 시간대의 도착률보다 커야 하고, 이 부등식이 한 번에 내릴 수 있는 복제본 수의 상한을 정합니다."
-        formula={String.raw`(N - k)\,\mu \;>\; \lambda`}
-        annotatedFormula={String.raw`(\underbrace{N - k}_{\text{갱신 중 살아 있는 복제본}})\,\underbrace{\mu}_{\text{복제본 하나의 처리율}} \;>\; \underbrace{\lambda}_{\text{그 시간대 도착률}}`}
-        operations={[
-          {
-            expression: "N - k",
-            annotation: [
-              "전체 복제본 N개 중 한 번에 k개를 내렸을 때 남는 수입니다",
-              "그룹 단위 갱신에서 k는 보통 1이고, 더 빨리 끝내려면 k를 키웁니다",
-            ],
-          },
-          {
-            expression: String.raw`\mu`,
-            annotation: "복제본 하나가 초당 처리할 수 있는 요청 수이며 입력·출력 길이 분포에 따라 달라집니다",
-          },
-          {
-            expression: String.raw`k < N - \frac{\lambda}{\mu}`,
-            annotation: "부등식을 k에 대해 풀면 한 번에 내릴 수 있는 복제본 수의 상한이 나옵니다",
-          },
-        ]}
-        terms={[
-          { symbol: "N", name: "복제본 수", description: "평소 서비스에 들어가 있는 복제본의 수입니다." },
-          { symbol: "k", name: "동시 갱신 수", description: "갱신 때문에 동시에 빠지는 복제본의 수입니다." },
-          { symbol: String.raw`\mu`, name: "복제본 처리율", description: "복제본 하나의 초당 처리 가능 요청 수입니다." },
-          { symbol: String.raw`\lambda`, name: "도착률", description: "그 시간대에 실제로 도착하는 초당 요청 수입니다." },
-        ]}
-        assumptions={[
-          "복제본의 처리율이 서로 같다고 가정합니다. 세대가 다른 가속기가 섞여 있으면 각각 다른 값으로 나눠 계산해야 합니다.",
-          "새 복제본이 뜨자마자 처리율 μ를 낸다고 가정합니다. 가중치 적재와 예열이 끝나기 전에는 그보다 낮습니다.",
-        ]}
-        interpretation="부등식이 아슬아슬하게 성립하는 구간에서는 대기열이 급격히 길어지므로, 실무에서는 여유를 두고 우변에 계수를 곱해 씁니다. 대기열과 지연의 관계는 별도 정본이 다루며 여기서는 상한을 정하는 데까지만 씁니다."
-      />
-
-      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
-          대기열 길이와 지연의 관계, 그리고 준비 상태의 파드가 실제 용량이 되기까지의 과정은{" "}
-          <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>이 소유합니다. 이 절은 갱신 방식이
-          용량에 주는 제약만 다뤘습니다.
+          (가정) 복제본이 네 개이고 하나가 초당 30건을 처리하며 저녁 피크에 초당 100건이 들어온다고 하겠습니다.
+          하나를 내리면 남은 셋이 초당 90건까지만 받으므로 10건이 밀립니다. 이 시간대에는 갱신을 시작할 수
+          없고, 새벽에 초당 50건이면 둘을 내려도 남은 둘이 60건을 받아 여유가 있습니다. 한 번에 내릴 수 있는
+          수는 이렇게 남는 복제본의 처리량이 그 시간대 도착량보다 큰지로 정해집니다.
+        </p>
+        <p className="leading-7">
+          두 가지를 더 빼 둡니다. 새로 뜬 복제본은 가중치 적재와 예열이 끝나기 전까지 30건을 못 내므로 그
+          시간만큼은 더 적게 셉니다. 그리고 남는 처리량이 도착량과 거의 같은 구간에서는 대기열이 급격히
+          길어지므로 실무에서는 도착량에 여유 계수를 곱해 비교합니다. 대기열 길이와 지연의 관계는{" "}
+          <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">서빙 운영</Link>에서 이어 봅니다.
         </p>
       </div>
+
     </section>
   );
 }

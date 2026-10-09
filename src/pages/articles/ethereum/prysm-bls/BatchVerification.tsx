@@ -30,10 +30,10 @@ export default function BatchVerification({
           </>
         }
         formula={String.raw`\begin{aligned}\sigma_r&=\sum_{i=1}^{N}r_i\sigma_i\\e(G_1,\sigma_r)&=\prod_{i=1}^{N}e(r_iPK_i,H(m_i))\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\sigma_r&=\underbrace{\sum_{i=1}^{N}r_i\sigma_i}_{\text{Random coefficient 계산}}\\e(G_1,\sigma_r)&=\underbrace{\prod_{i=1}^{N}e(r_iPK_i,H(m_i))}_{\text{Random coefficient 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\sigma_r&=\underbrace{\sum_{i=1}^{N}r_i\sigma_i}_{\text{무작위 가중 합산}}\\e(G_1,\sigma_r)&=\underbrace{\prod_{i=1}^{N}e(r_iPK_i,H(m_i))}_{\text{같은 계수로 공개키 쪽 곱}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\sum_{i=1}^{N}r_i\sigma_i`, annotation: ["Random coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 식에 verifier가 새로 뽑은 nonzero","scalar rᵢ를 곱해 합칩니다."] },
-          { expression: String.raw`\prod_{i=1}^{N}e(r_iPK_i,H(m_i))`, annotation: ["Random coefficient이(가) 식의 결과에 기여하는","방식을 계산합니다.","각 식에 verifier가 새로 뽑은 nonzero","scalar rᵢ를 곱해 합칩니다."] },
+          { expression: String.raw`\sum_{i=1}^{N}r_i\sigma_i`, annotation: ["N개 signature에 verifier가 방금 뽑은","nonzero r_i를 곱해 하나로 합칩니다","계수를 미리 알면 오류를 상쇄할 수 있음"] },
+          { expression: String.raw`\prod_{i=1}^{N}e(r_iPK_i,H(m_i))`, annotation: ["같은 r_i로 PK_i 쪽도 가중해 pairing 곱","N개 검증식이 한 등식으로 묶입니다","PASS는 전체 수락, FAIL은 범인 미상"] },
         ]}
         terms={[
           {

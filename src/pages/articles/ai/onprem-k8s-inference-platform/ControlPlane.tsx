@@ -5,7 +5,7 @@ import OwnershipViz from "./viz/OwnershipViz";
 export default function ControlPlane() {
   return (
     <section id="control-plane" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">게이트웨이를 걷어 내면 그 안에 있던 일들이 드러납니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">먼저 게이트웨이가 하던 일마다 새 담당자를 정합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           외부 제공자용 게이트웨이는 여러 일을 한 곳에 모아 둔 덩어리입니다. 자체 클러스터로 옮기면서 "이제 게이트웨이는 필요 없다"고 결론 내리기 쉬운데 실제로는 그 덩어리 안의
@@ -18,8 +18,9 @@ export default function ControlPlane() {
         </p>
 
         <p className="leading-7">
-          그래서 이전 작업은 기능 목록을 먼저 적고 각 항목에 새 주인을 지정하는 데서 시작합니다. 어떤 항목은 여전히 애플리케이션 앞단의 프록시가 맡고 어떤 항목은 클러스터의 확장점으로
-          내려가고 어떤 항목은 모델 서버 자체가 노출하는 값으로 대체됩니다.
+          그래서 이전 작업은 기능 목록을 먼저 적고 각 항목에 새 담당자를 지정하는 데서 시작합니다. 키와 한도는
+          애플리케이션 앞단의 프록시에 남길 수 있습니다. 어느 복제본으로 보낼지는 클러스터 안의 선택기가 맡고,
+          현재 부하와 캐시 상태는 모델 서버가 알려 줍니다.
         </p>
       </div>
 
@@ -37,9 +38,9 @@ export default function ControlPlane() {
         </p>
 
         <p className="leading-7">
-          한도와 재시도, 그리고 넘치는 요청을 다루는 패턴 일반론은{" "}
-          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>이 소유합니다.
-          이 절은 그 패턴을 누가 맡게 되는지의 배치 문제만 다뤘습니다.
+          한도·재시도·넘치는 요청을 다루는 방법 자체는{" "}
+          <Link to="/cs/ai/rate-limiting-and-reliability-patterns">레이트 리밋과 신뢰성 패턴</Link>에서 이어
+          봅니다.
         </p>
       </div>
 
@@ -54,7 +55,7 @@ export default function ControlPlane() {
           </p>
           <p className="leading-7">
             다만 그 게이트웨이가 아는 것은 "우리 클러스터"라는 하나의 주소뿐입니다. 그 주소 뒤에 복제본이 몇 개 있고 어느 것이 여유가 있는지는 모릅니다. 그 선택은 클러스터 안에서
-            이뤄져야 합니다. 그래서 앞 절들의 내용이 게이트웨이를 유지하는 구성에서도 그대로 필요합니다.
+            이뤄져야 합니다. 다음 절에서 이 선택 경로를 따라갑니다.
           </p>
           <p className="leading-7">
             두 층이 겹치는 항목도 생깁니다. 게이트웨이의 한도와 클러스터 쪽 대기열은 각각 요청을 거절할 수 있습니다. 어느 쪽이 먼저 거절하고 호출한 쪽이 그 둘을 어떻게 구분할지를

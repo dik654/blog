@@ -105,10 +105,12 @@ export default function Discv5Article() {
           question="같은 ECDH secret에서 Alice→Bob과 Bob→Alice key를 어떻게 분리하는가?"
           idea="WHOAREYOU transcript를 salt로, 두 node ID와 고정 label을 context로 넣어 handshake와 role을 key에 결속한다. 32-byte output을 16 byte씩 나누면 방향이 바뀐 message가 같은 key 용도로 겹치지 않는다."
           formula={String.raw`\begin{aligned}p&=\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))\\K_i\parallel K_r&=\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}p&=\underbrace{\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))}_{\text{Recipient static key 계산}}\\K_i\parallel K_r&=\underbrace{\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)}_{\text{Pseudorandom key 계산}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}p&=\operatorname{HKDFExtract}(\underbrace{c}_{\text{WHOAREYOU salt}},\underbrace{\operatorname{ECDH}(B_s,a_e)}_{\text{raw shared secret}})\\\underbrace{K_i\parallel K_r}_{\text{16B+16B 방향별 key}}&=\operatorname{HKDFExpand}(p,\underbrace{\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B}_{\text{label과 node ID 순서}},32)\end{aligned}`}
           operations={[
-            { expression: String.raw`\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))`, annotation: ["Recipient static key이(가) 식의 결과에","기여하는 방식을 계산합니다.","WHOAREYOU transcript를 salt로, 두","node ID와 고정 label을 context로 넣어"] },
-            { expression: String.raw`\operatorname{HKDFExpand}(p,\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B,32)`, annotation: ["Pseudorandom key이(가) 식의 결과에 기여하는","방식을 계산합니다.","WHOAREYOU transcript를 salt로, 두","node ID와 고정 label을 context로 넣어"] },
+            { expression: String.raw`\operatorname{ECDH}(B_s,a_e)`, annotation: ["Bob ENR의 static key와 Alice의", "ephemeral secret으로 만든 공유 비밀", "이 값을 AES key로 바로 쓰지 않음"] },
+            { expression: String.raw`\operatorname{HKDFExtract}(c,\operatorname{ECDH}(B_s,a_e))`, annotation: ["challenge data c를 salt로 섞어", "이 handshake 전용 pseudorandom key p", "다른 WHOAREYOU면 다른 p"] },
+            { expression: String.raw`\text{"discovery v5 key agreement"}\parallel id_A\parallel id_B`, annotation: ["고정 label과 Alice·Bob 순서를 info에", "넣어 role과 상대를 key에 결속"] },
+            { expression: String.raw`K_i\parallel K_r`, annotation: ["32 byte 출력을 16 byte씩 나눠", "앞은 initiator→, 뒤는 recipient→ 방향", "방향이 바뀐 message가 같은 key를 안 씀"] },
           ]}
           terms={[
             { symbol: "c", name: "Challenge data", description: "WHOAREYOU의 unmasked masking IV, static header, authdata byte sequence" },

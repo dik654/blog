@@ -27,12 +27,13 @@ S_{t+1}&=T_f(S_t,B_t)\\
 \operatorname{HTR}(S_{t+1})&=B_t.\mathrm{state\_root}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-S_{t+1}&=\underbrace{T_f(S_t,B_t)}_{\text{pre-state 계산}}\\
-\operatorname{HTR}(S_{t+1})&=\underbrace{B_t.\mathrm{state\_root}}_{\text{signed block message 계산}}
+S_{t+1}&=\underbrace{T_f(S_t,B_t)}_{\text{fork f의 block 적용}}\\
+\underbrace{\operatorname{HTR}(S_{t+1})}_{\text{post-state SSZ root}}&=\underbrace{B_t.\mathrm{state\_root}}_{\text{header가 약속한 root}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`T_f(S_t,B_t)`, annotation: ["pre-state이(가) 식의 결과에 기여하는 방식을","계산합니다.","Parent의 pre-state , fork가 정한 block","handler와 signed block을 하나의 결정적 함수로"] },
-          { expression: String.raw`B_t.\mathrm{state\_root}`, annotation: ["signed block message이(가) 식의 결과에","기여하는 방식을 계산합니다.","Parent의 pre-state , fork가 정한 block","handler와 signed block을 하나의 결정적 함수로"] },
+          { expression: String.raw`T_f(S_t,B_t)`, annotation: ["parent와 정렬된 pre-state S_t에","fork f의 handler 순서로 block B_t 적용","header→RANDAO→Eth1→operations 순"] },
+          { expression: String.raw`\operatorname{HTR}(S_{t+1})`, annotation: ["post-state 전체를 SSZ Merkle화한","32-byte hash-tree-root"] },
+          { expression: String.raw`B_t.\mathrm{state\_root}`, annotation: ["proposer가 block header에 적어 둔 root","둘이 다르면 transition 전체가 invalid","두 client가 같은 root를 재현해야 함"] },
         ]}
         terms={[
           { symbol: "S_t", name: "pre-state", description: "Block parent와 정렬된 fork-specific BeaconState입니다." },

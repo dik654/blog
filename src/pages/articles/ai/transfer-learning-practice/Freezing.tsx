@@ -18,9 +18,10 @@ export default function Freezing() {
         question="Layer별로 parameter update를 허용하거나 막는 규칙을 어떻게 표시할까?"
         idea={<>Layer ℓ의 trainable mask mℓ을 0 또는 1로 둡니다. 0이면 gradient가 있더라도 update는 0이고, 1이면 해당 param group의 learning rate로 움직입니다.</>}
         formula={String.raw`\begin{aligned}\theta_{\ell}^{(t+1)}&=\theta_{\ell}^{(t)}-m_{\ell}\eta_{\ell}g_{\ell}^{(t)},\\m_{\ell}&\in\{0,1\}.\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\theta_{\ell}^{(t+1)}&=\underbrace{\theta_{\ell}^{(t)}-m_{\ell}\eta_{\ell}g_{\ell}^{(t)},}_{\text{오른쪽 항으로 결과 계산}}\\m_{\ell}&\in\{0,1\}.\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\theta_{\ell}^{(t+1)}&=\theta_{\ell}^{(t)}-\underbrace{m_{\ell}}_{\text{frozen이면 0}}\underbrace{\eta_{\ell}g_{\ell}^{(t)}}_{\text{group lr × update 방향}},\\m_{\ell}&\in\{0,1\}.\end{aligned}`}
         operations={[
-          { expression: String.raw`\theta_{\ell}^{(t)}-m_{\ell}\eta_{\ell}g_{\ell}^{(t)},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Layer ℓ의 trainable mask mℓ을 0 또는","1로 둡니다."] },
+          { expression: String.raw`m_{\ell}\eta_{\ell}g_{\ell}^{(t)}`, annotation: ["layer ℓ의 param group lr η와 optimizer가","보정한 방향 g를 곱한 한 step 이동량에","mask를 곱합니다. frozen layer는 m=0이라 0"] },
+          { expression: String.raw`\theta_{\ell}^{(t)}-m_{\ell}\eta_{\ell}g_{\ell}^{(t)},`, annotation: ["m=1인 layer만 현재 weight에서 이동량을 빼","갱신됩니다. m=0이면 gradient가 흘러도","weight decay까지 포함해 θ가 그대로입니다"] },
         ]}
         terms={[
           { symbol: "θ_ℓ", name: "layer parameters", description: "Backbone block 또는 새 head가 소유한 학습 weight입니다." },
@@ -36,9 +37,10 @@ export default function Freezing() {
         question="Weight가 frozen이어도 BatchNorm의 output이 달라질 수 있는 이유는 무엇일까?"
         idea={<>Train mode의 BatchNorm은 현재 batch mean을 running mean에 섞습니다. Affine weight γ·β의 gradient를 꺼도 running buffer μrun은 parameter가 아니어서 계속 바뀔 수 있습니다.</>}
         formula={String.raw`\mu_{\mathrm{run}}^{(t+1)}=(1-\alpha)\mu_{\mathrm{run}}^{(t)}+\alpha\mu_{\mathrm{batch}}^{(t)}`}
-        annotatedFormula={String.raw`\mu_{\mathrm{run}}^{(t+1)}=\underbrace{(1-\alpha)\mu_{\mathrm{run}}^{(t)}+\alpha\mu_{\mathrm{batch}}^{(t)}}_{\text{오른쪽 항으로 결과 계산}}`}
+        annotatedFormula={String.raw`\mu_{\mathrm{run}}^{(t+1)}=\underbrace{(1-\alpha)\mu_{\mathrm{run}}^{(t)}}_{\text{이전 buffer 90\%}}+\underbrace{\alpha\mu_{\mathrm{batch}}^{(t)}}_{\text{이번 batch 평균 10\%}}`}
         operations={[
-          { expression: String.raw`(1-\alpha)\mu_{\mathrm{run}}^{(t)}+\alpha\mu_{\mathrm{batch}}^{(t)}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Train mode의 BatchNorm은 현재 batch","mean을 running mean에 섞습니다."] },
+          { expression: String.raw`(1-\alpha)\mu_{\mathrm{run}}^{(t)}`, annotation: ["train mode의 BatchNorm이 evaluation용","running mean buffer를 (1−α)만큼 남깁니다.","α=0.1이면 이전 값의 90%"] },
+          { expression: String.raw`\alpha\mu_{\mathrm{batch}}^{(t)}`, annotation: ["현재 micro-batch 평균을 α만큼 섞습니다.","buffer 0에서 batch mean 10, 20을 보면","0.9×0+0.1×10=1, 0.9×1+0.1×20=2.9로 움직입니다"] },
         ]}
         terms={[
           { symbol: "μ_run", name: "running mean buffer", description: "Evaluation 때 normalization에 쓰는 이동 평균이며 일반 parameter gradient와 별도입니다." },

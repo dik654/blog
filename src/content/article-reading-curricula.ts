@@ -7,6 +7,19 @@
 export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
   Record<string, readonly string[]>
 > = {
+  "cloud-kubernetes": [
+    "kubernetes-request-path-and-cka",
+    "kubernetes-network-packet-path",
+  ],
+  "hw-ai-cluster": [
+    "ai-infrastructure-b300-128-blueprint",
+    "ai-cluster-software-compatibility",
+    "kubernetes-vs-slurm-gpu-scheduling",
+    "ai-cluster-storage-io",
+    "b300-rack-power-cooling",
+    "ai-infrastructure-commissioning-acceptance",
+    "nvidia-nca-aiio-study-guide",
+  ],
   "ai-llm-theory": [
     "llm-training-stages",
     "llm-dataset-engineering-and-cleaning",

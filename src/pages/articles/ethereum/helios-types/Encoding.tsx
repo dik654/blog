@@ -23,10 +23,11 @@ export default function Encoding({ title, onCodeRef: _onCodeRef }: Props) {
         question="같은 header root의 서명을 다른 duty·fork·network에서 재사용하지 못하게 하려면 무엇을 hash하는가?"
         idea="먼저 fork와 network를 묶은 ForkData root를 만들고, 앞 28 bytes를 역할을 나타내는 domain type과 연결합니다. 마지막으로 message root와 domain을 SigningData로 묶습니다."
         formula={String.raw`\begin{aligned} D &= T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28} \\ R_{\text{sign}} &= \operatorname{root}(R_{\text{object}},D) \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned} D &= \underbrace{T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28}}_{\text{Domain type 계산}} \\ R_{\text{sign}} &= \underbrace{\operatorname{root}(R_{\text{object}},D)}_{\text{Object root 계산}} \end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned} D &= \underbrace{T_{\text{domain}}}_{\text{역할 4 bytes}}\;\|\;\underbrace{\operatorname{root}(V_{\text{fork}},G)_{0:28}}_{\text{fork·network 28 bytes}} \\ R_{\text{sign}} &= \underbrace{\operatorname{root}(R_{\text{object}},D)}_{\text{message와 domain 결합}} \end{aligned}`}
         operations={[
-          { expression: String.raw`T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28}`, annotation: ["Domain type이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 fork와 network를 묶은 ForkData","root를 만들고, 앞 28 bytes를 역할을 나타내는"] },
-          { expression: String.raw`\operatorname{root}(R_{\text{object}},D)`, annotation: ["Object root이(가) 식의 결과에 기여하는 방식을","계산합니다.","먼저 fork와 network를 묶은 ForkData","root를 만들고, 앞 28 bytes를 역할을 나타내는"] },
+          { expression: String.raw`T_{\text{domain}}`, annotation: ["sync committee·proposer 같은 역할을","구분하는 4-byte domain type","역할이 다르면 같은 root 서명도 무효"] },
+          { expression: String.raw`\operatorname{root}(V_{\text{fork}},G)_{0:28}`, annotation: ["fork version과 genesis validators root를","ForkData로 묶은 hash의 앞 28 bytes","다른 fork·network의 서명 재사용 차단"] },
+          { expression: String.raw`\operatorname{root}(R_{\text{object}},D)`, annotation: ["header의 SSZ root와 32-byte domain D를","SigningData로 묶은 최종 signing root","BLS verification에 들어가는 message"] },
         ]}
         terms={[
           { symbol: "T_{\\text{domain}}", name: "Domain type", description: "Sync committee·beacon proposer처럼 서명 역할을 구분하는 4-byte 값입니다." },

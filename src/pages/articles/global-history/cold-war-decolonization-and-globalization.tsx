@@ -61,8 +61,8 @@ const data: WorldHistoryArticleData = {
     { term: "탈식민 개발 질서", description: "독립국이 식민지기의 생산 구조와 국제 자금·무역 규칙 속에서 산업·복지와 자치를 넓히려 한 제도와 갈등입니다.", example: "차관 20으로 발전소를 짓고 외화 상환과 정책 조건을 함께 계산합니다.", boundary: "국가 주도나 시장 개방 중 하나가 모든 나라에 같은 결과를 낸다는 모형이 아닙니다." },
   ] },
   sources: [
-    { source: "United Nations Digital Library · Bandung Final Communiqué", excerpt: "economic co-operation", application: "비동맹을 소극적 중립으로 줄이지 않고 경제 협력·자결·반식민 요구가 묶인 문서로 읽습니다.", citation: "Final Communiqué of the Asian-African Conference, Bandung, 24 April 1955", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "29개 아시아·아프리카 국가가 합의한 경제·문화 협력, 인권, 자결과 평화 원칙의 1차 문서입니다." },
-    { source: "World Trade Organization · Marrakesh Declaration", excerpt: "more viable and durable", application: "무역 규칙의 확대가 시장 접근과 국내 정책 약속을 함께 가져온다는 점을 개발 조건별로 비교합니다.", citation: "WTO, Marrakesh Declaration of 15 April 1994", href: "https://www.wto.org/English/docs_e/legal_e/marrakesh_decl_e.htm", note: "우루과이라운드의 종료와 WTO 체제의 목표·범위를 밝힌 공식 선언입니다." },
+    { source: "United Nations · Yearbook on Human Rights for 1955 (Bandung 공동성명 발췌)", excerpt: "economic co-operation", application: "비동맹을 소극적 중립으로 줄이지 않고 경제 협력·자결·반식민 요구가 묶인 문서로 읽습니다.", citation: "Final Communiqué of the Asian-African Conference, Bandung, 18–24 April 1955 (Extracts), in Yearbook on Human Rights for 1955, United Nations, 1957, p. 339", href: "https://digitallibrary.un.org/record/860963/files/1955-E.pdf", note: "29개 아시아·아프리카 국가가 합의한 경제·문화 협력, 인권, 자결과 평화 원칙을 UN 인권연감이 발췌 수록한 판본입니다. 원문 전체가 아니라 발췌이고, 이 PDF는 34MB짜리 연감 전체라 339쪽을 찾아야 합니다." },
+    { source: "World Trade Organization · Marrakesh Agreement 전문", excerpt: "more viable and durable multilateral trading system", application: "무역 규칙의 확대가 시장 접근과 국내 정책 약속을 함께 가져온다는 점을 개발 조건별로 비교합니다.", citation: "Marrakesh Agreement Establishing the World Trade Organization, 15 April 1994, Preamble", href: "https://www.wto.org/english/docs_e/legal_e/04-wto_e.htm", note: "GATT를 잇는 통합된 다자 무역 체제를 세운다는 WTO 설립 협정의 전문입니다. 같은 날 채택된 마라케시 선언에는 이 구절이 없어 설립 협정으로 출처를 바꿨습니다." },
   ],
   review: [
     "예산 100에 원조나 차관이 더해져도 정책 선택권이 줄 수 있는 이유는 무엇인가요? (답: 3·7절)",

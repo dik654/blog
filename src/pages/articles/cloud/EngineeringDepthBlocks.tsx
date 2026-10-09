@@ -65,11 +65,23 @@ function LedgerTable({ ledger }: { ledger: EngineeringLedgerData }) {
       data-teach-level={ledger.section === "mechanism" ? "4" : undefined}
     >
       <figcaption>
-        <p className="text-xs font-bold text-primary">설계 원장</p>
+        <p className="text-xs font-bold text-primary">확인 순서</p>
         <p className="mt-1 font-semibold text-foreground">{ledger.title}</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">{ledger.question}</p>
       </figcaption>
-      <div className="mt-4 max-w-full overflow-x-auto">
+      <div className="mt-4 grid gap-3 lg:hidden">
+        {ledger.rows.map((row, rowIndex) => (
+          <div key={`${ledger.title}-mobile-${rowIndex}`} className="min-w-0 rounded-xl border border-border bg-background p-4">
+            {row.map((cell, cellIndex) => (
+              <div key={`${cellIndex}-${cell}`} className={cellIndex === 0 ? "" : "mt-3 border-t border-border pt-3"}>
+                <p className="text-xs font-semibold text-foreground">{ledger.columns[cellIndex]}</p>
+                <p className="mt-1 whitespace-pre-line break-words text-sm leading-6 text-muted-foreground">{cell}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 hidden max-w-full overflow-x-auto lg:block">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-y border-border bg-muted/30">
@@ -166,7 +178,7 @@ function EvidenceBlock({ evidence }: { evidence: EngineeringEvidenceData }) {
 function SourceLedger({ sources }: { sources: readonly EngineeringSourceData[] }) {
   return (
     <aside className="not-prose my-8 min-w-0 border-y border-border py-5">
-      <p className="text-xs font-bold text-primary">1차 근거 원장</p>
+      <p className="text-xs font-bold text-primary">확인에 쓴 1차 자료</p>
       <h3 className="mt-1 text-lg font-semibold text-foreground">어떤 판단을 어느 문서에서 확인했나</h3>
       <ul className="mt-4 space-y-3">
         {sources.map((source) => (

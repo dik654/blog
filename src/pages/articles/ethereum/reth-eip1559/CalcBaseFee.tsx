@@ -42,11 +42,12 @@ export default function CalcBaseFee({
         question="Parent block이 target보다 3,000,000 gas 더 썼다면 다음 base fee는 얼마일까?"
         idea="초과 비율만큼 parent base fee를 조정하되, mainnet denominator 8로 한 번 더 완화합니다. Consensus 구현은 실수 반올림이 아니라 정해진 순서의 정수 나눗셈을 사용합니다."
         formula={String.raw`\begin{aligned}T&=L_p/E\\&=15{,}000{,}000\ \mathrm{gas}\\[2pt]r&=\frac{U_p-T}{T\,D}=0.025\\[2pt]\Delta&=\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})\\&=0.5\ \mathrm{gwei}\\[2pt]B_n&=B_p+\Delta\\&=20.5\ \mathrm{gwei}\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}T&=\underbrace{L_p/E}_{\text{기준량당 비율}}\\&=\underbrace{15{,}000{,}000\ \mathrm{gas}}_{\text{오른쪽 항으로 결과 계산}}\\[2pt]r&=\underbrace{\frac{U_p-T}{T\,D}=0.025}_{\text{기준량당 비율}}\\[2pt]\Delta&=\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})\\&=0.5\ \mathrm{gwei}\\[2pt]B_n&=B_p+\Delta\\&=20.5\ \mathrm{gwei}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}T&=\underbrace{L_p/E}_{\text{gas limit ÷ elasticity}}\\&=15{,}000{,}000\ \mathrm{gas}\\[2pt]r&=\underbrace{\frac{U_p-T}{T\,D}}_{\text{초과 비율을 8로 완화}}=0.025\\[2pt]\Delta&=\underbrace{\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})}_{\text{정수 버림, 최소 1 wei}}\\&=0.5\ \mathrm{gwei}\\[2pt]B_n&=\underbrace{B_p+\Delta}_{\text{다음 base fee}}\\&=20.5\ \mathrm{gwei}\end{aligned}`}
         operations={[
-          { expression: String.raw`L_p/E`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
-          { expression: String.raw`15{,}000{,}000\ \mathrm{gas}`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
-          { expression: String.raw`\frac{U_p-T}{T\,D}=0.025`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","초과 비율만큼 parent base fee를 조정하되,","mainnet denominator 8로 한 번 더","완화합니다."] },
+          { expression: String.raw`L_p/E`, annotation: ["parent gas limit 30M을 elasticity 2로","나눈 target 15M gas","사용량이 T와 같으면 base fee 유지"] },
+          { expression: String.raw`\frac{U_p-T}{T\,D}`, annotation: ["18M-15M=3M 초과는 target의 20%","denominator D=8로 완화해 2.5%","구현은 정해진 순서의 정수 나눗셈"] },
+          { expression: String.raw`\max(\lfloor B_p r\rfloor,1\ \mathrm{wei})`, annotation: ["20 gwei × 0.025 = 0.5 gwei 상승분","버림으로 0이 돼도 최소 1 wei 보장","increase branch에만 적용"] },
+          { expression: String.raw`B_p+\Delta`, annotation: ["parent 20 gwei + 0.5 = 20.5 gwei","최대 사용량 30M이면 상승폭 약 12.5%"] },
         ]}
         terms={[
           { symbol: "L_p", name: "Parent gas limit", description: "Parent header가 허용한 최대 execution gas입니다. 예시는 30,000,000 gas입니다." },

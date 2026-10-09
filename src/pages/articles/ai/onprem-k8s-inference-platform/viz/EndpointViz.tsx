@@ -2,8 +2,8 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/** 본문 대응: ServiceGap.tsx — 기본 서비스의 맹점과 선택기 확장점 */
-const SCENES = ["요청 수로 나누면", "부하는 안 고르다", "선택 확장점", "지표의 신선도"] as const;
+/** 본문 대응: ServiceGap.tsx — 기본 Service의 맹점과 별도 선택기 */
+const SCENES = ["요청 수로 나누면", "부하는 안 고르다", "선택기 연결", "지표가 늦게 오는 구간"] as const;
 const NOTES = [
   "기본 서비스는 준비 상태인 파드 목록만 보고 연결을 나눕니다. 셋 다 두 개씩 받습니다.",
   "요청 하나의 비용이 수십 배씩 다르므로 요청 수가 같아도 실제 부하는 크게 벌어집니다.",
@@ -30,7 +30,7 @@ export default function EndpointViz() {
   const step = scenes.active;
   return (
     <VizFrame
-      eyebrow="확장점"
+      eyebrow="요청 전달"
       title="분배 규칙을 바꾸기 전에 지표가 들어갈 자리를 만듭니다"
       description="기본 서비스가 못 보는 것과 선택기가 보는 것을 비교합니다."
       note="부하 막대는 구조를 보여 주기 위한 예시이며 실제 측정값이 아닙니다."
@@ -39,7 +39,7 @@ export default function EndpointViz() {
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="엔드포인트 선택 확장점"
+        aria-label="엔드포인트 선택기 연결 과정"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
@@ -95,7 +95,7 @@ export default function EndpointViz() {
                   엔드포인트 선택기
                 </text>
                 <text x={195} y={102} textAnchor="middle" fontSize={8} fill={EPP}>
-                  확장 지점
+                  요청 경로에 연결
                 </text>
                 <rect x={296} y={36} width={160} height={116} fill={OK} fillOpacity={0.05} stroke={OK} strokeWidth={1} strokeDasharray="4 3" />
                 <text x={376} y={30} textAnchor="middle" fontSize={9} fontWeight={700} fill={OK}>

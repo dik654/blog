@@ -74,9 +74,10 @@ export default function Overview({
         question="같은 sender·nonce의 새 transaction이 기존 T7을 교체하려면 fee를 얼마나 올려야 할까?"
         idea="Replacement는 Ethereum consensus가 아니라 local anti-spam policy입니다. 비교 대상 fee field마다 configured bump를 적용하고 정수 단위로 올림합니다."
         formula={String.raw`F^{\mathrm{new}}_i\ge\left\lceil F^{\mathrm{old}}_i\frac{100+b}{100}\right\rceil`}
-        annotatedFormula={String.raw`F^{\mathrm{new}}_i\ge\left\lceil \underbrace{F^{\mathrm{old}}_i}_{\text{기존 fee cap 계산}}\frac{100+b}{100}\right\rceil`}
+        annotatedFormula={String.raw`F^{\mathrm{new}}_i\ge\left\lceil \underbrace{F^{\mathrm{old}}_i}_{\text{T7의 기존 fee}}\underbrace{\frac{100+b}{100}}_{\text{bump b 인상}}\right\rceil`}
         operations={[
-          { expression: String.raw`F^{\mathrm{old}}_i`, annotation: ["기존 fee cap이(가) 식의 결과에 기여하는 방식을","계산합니다.","Replacement는 Ethereum consensus가","아니라 local anti-spam policy입니다."] },
+          { expression: String.raw`F^{\mathrm{old}}_i`, annotation: ["pool에 있는 T7의 fee field i","max fee 40 gwei, tip 3 gwei"] },
+          { expression: String.raw`\frac{100+b}{100}`, annotation: ["노드 정책 bump b=10이면 1.1배","fee dimension마다 각각 적용해 올림","44 gwei와 3.3 gwei 둘 다 충족해야 교체"] },
         ]}
         terms={[
           { symbol: "i", name: "Fee dimension", description: "Transaction type에 따라 max fee, priority fee 또는 blob fee cap처럼 정책이 비교하는 축입니다." },

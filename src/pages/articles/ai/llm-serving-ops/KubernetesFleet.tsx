@@ -76,9 +76,10 @@ export default function KubernetesFleet() {
           </>
         }
         formula={String.raw`L=\lambda W`}
-        annotatedFormula={String.raw`L=\underbrace{\lambda W}_{\text{완료 가능한 arrival rate 계산}}`}
+        annotatedFormula={String.raw`\underbrace{L}_{\text{안에 머무는 평균 요청 수}}=\underbrace{\lambda}_{\text{초당 20건 도착}}\times\underbrace{W}_{\text{평균 3초 체류}}=60`}
         operations={[
-          { expression: String.raw`\lambda W`, annotation: ["완료 가능한 arrival rate이(가) 식의 결과에","기여하는 방식을 계산합니다.","안정된 관측 구간에서는 들어온 요청률과 요청 하나가","queue·실행에 머문 평균 시간을 곱하면 시스템 안의 평균"] },
+          { expression: String.raw`\lambda W`, annotation: ["초당 20건이 들어오고 한 건이 평균 3초 머물면", "어느 순간이든 평균 60건이 queue나 실행 중에 있습니다"] },
+          { expression: String.raw`W`, annotation: ["체류 시간이 6초로 두 배가 되면 도착률이 같아도", "안에 머무는 요청은 120건으로 두 배가 됩니다"] },
         ]}
         terms={[
           {
@@ -89,8 +90,8 @@ export default function KubernetesFleet() {
           },
           {
             symbol: "\\lambda",
-            name: "완료 가능한 arrival rate",
-            description: "같은 단위 시간에 경계로 들어오는 요청률입니다.",
+            name: "arrival rate",
+            description: "같은 단위 시간에 경계로 들어오는 요청률입니다. 예시에서는 초당 20건입니다.",
           },
           {
             symbol: "W",
@@ -103,7 +104,7 @@ export default function KubernetesFleet() {
           "관측 window에서 arrival와 departure가 장기적으로 균형인 stable system을 가정합니다.",
           "평균 관계이므로 p99 queue나 긴 prompt가 만드는 tail을 직접 보장하지 않습니다.",
         ]}
-        interpretation="Arrival가 같은데 체류 시간이 두 배가 되면 평균 in-flight도 두 배가 됩니다. Admission limit과 concurrency를 정할 때 평균뿐 아니라 length bucket별 tail을 함께 보는 출발점입니다."
+        interpretation="초당 20건·3초 체류면 평균 60건이 안에 있습니다. 체류 시간이 두 배가 되면 도착률이 같아도 in-flight는 120건이 됩니다. Admission limit과 concurrency를 정할 때 이 평균에서 출발하되 length bucket별 tail을 함께 봅니다."
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">

@@ -2960,3 +2960,36 @@
   formula·calculation, runtime·KaTeX·404 fallback, Viz와 ESLint를 검사했다. Node 8GB production build는
   7,347개 module과 정적 public route 2,024개를 생성했고 새 route HTML과 interactive lab bundle을
   확인했다. 실제 브라우저 검수는 local listen이 `EPERM`으로 차단되어 완료로 표시하지 않는다.
+
+### Cloud·온프레미스 읽기 순서와 배포 자산 복구 보강 (2026-10-09)
+
+- Cloud 입구를 목표 직무 → 공통 책임·권한·망·실행·저장·복구 → Kubernetes 요청·패킷 경로 → AWS →
+  Azure 순서로 고정했다. 추천 글이 실제 읽기 단계에 속하는지도 `audit:order`가 검사한다. 잘못 남아 있던
+  암호학·P2P 추천 주소 두 개도 현재 글 주소로 바로잡았다.
+- 온프레미스 Kubernetes 추론 글은 담당자 결정 → 요청을 받을 서버 선택 → 여러 Pod를 한 복제본으로 묶기
+  → 고정 GPU 용량 → 도입 판단 순서로 다시 배열했다. 시작 화면에는 Kubernetes 요청 경로와 Kubernetes·
+  Slurm 선택 글을 선수 경로로 보이게 했다. 독자가 아직 보지 않은 `추상`, `확장점`, `원장`, `제어면` 같은
+  말은 실제 동작을 보여 준 뒤에만 쓰도록 줄였다.
+- Kubernetes 요청 글은 저장 → 노드 선택 → 컨테이너 시작 → 준비 확인 → 요청 대상 등록을 먼저 보여 주고
+  API server·scheduler·kubelet 이름은 뒤에서 붙인다. 패킷 글은 전체 경로 → 고정 GET 요청 → 세부 부품
+  순서로 바꿨으며, 편집 과정이나 다른 글과의 중복 처리 방식을 설명하던 문장은 실제 다음 읽기 경로로
+  교체했다.
+- Cloud 공통 심화 블록의 `원장`, `artifact`, `fixture`, `release gate`를 독자가 수행할 확인·결과·시험·
+  배포 판단으로 풀었다. 넓은 네 칸 표는 모바일에서 한 열 카드로 바뀌고, 패킷 Viz와 CKA 실습 버튼은
+  390px 화면에서 두 열 또는 줄바꿈으로 배치된다.
+- 글쓰기 계약에는 편집 과정 문구 금지, 동작 뒤에 이름 붙이기, 다른 하위 분야의 선수 경로 표시, 수식이
+  실제 판단 규칙일 때만 쓰는 기준을 추가했다. 범위 상자도 `편집 명세·정본 재사용` 대신 `이 글에서
+  답하는 것·이어 읽을 내용·판단에 사용한 자료`로 표시한다.
+- 오래된 HTML이 새 배포에서 사라진 해시 파일을 가리킬 때 React가 시작되기 전에도 한 번만 최신 HTML을
+  다시 받도록 시작 단계 복구 코드를 넣었다. 재시도에도 자산을 받지 못하면 빈 화면 대신 최신 페이지
+  불러오기 버튼을 보여 준다. GitHub Pages 조건의 빌드에서 HTML의 `/blog/assets/…` 참조 5개가 모두
+  실제 파일과 일치했고, 문제로 보고된 `vendor-react`, `systemsData`, Cloud reliability 글도 새 해시 파일로
+  생성됐다.
+- 960편 learning·article·formula·calculation·reading·runtime·order·prose·Korean·terms·topology와
+  HW·Cloud teach-system 감사를 통과했다. 수식 1,473개는 모두 기호 옆 의미와 연산 설명을 갖고, 계산
+  설명의 고위험 미전환은 0곳이다. GitHub Pages production build는 7,350개 module과 정적 public route
+  2,026개 및 404 fallback을 만들었다.
+- 실제 390px·1,440px Chromium 검수는 재시도했으나 관리 환경이 `127.0.0.1:4173` listen을 `EPERM`으로
+  거부했고, 직접 실행한 Chromium도 MachPort rendezvous 등록을 `Permission denied (1100)`로 종료했다.
+  따라서 DOM 가로 넘침과 사이드바 클릭은 완료로 표시하지 않으며, 모바일 정적 계약과 production build
+  검증까지가 이 환경에서 확인한 범위다.

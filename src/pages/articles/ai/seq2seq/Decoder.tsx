@@ -25,11 +25,12 @@ export default function Decoder({
         question="Prefix 하나를 확장할 때 decoder state와 sequence score는 어떻게 갱신될까?"
         idea={<>Recurrent transition으로 다음 state를 만들고 output projection으로 vocabulary distribution을 얻습니다. Candidate sequence의 log probability는 선택한 token의 log probability를 이전 누적값에 더합니다.</>}
         formula={String.raw`\begin{aligned}u_t&=e(y_{t-1})\\s_t&=\operatorname{LSTM}_D(u_t,s_{t-1})\\p_t&=\operatorname{softmax}(W_os_t+b_o)\\q_t&=q_{t-1}+\log p_t[y_t]\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}u_t&=\underbrace{e(y_{t-1})}_{\text{오른쪽 항으로 결과 계산}}\\s_t&=\underbrace{\operatorname{LSTM}_D(u_t,s_{t-1})}_{\text{decoder state 계산}}\\p_t&=\underbrace{\operatorname{softmax}(W_os_t+b_o)}_{\text{선택 비율 정규화}}\\q_t&=q_{t-1}+\log p_t[y_t]\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}u_t&=\underbrace{e(y_{t-1})}_{\text{직전 token 임베딩}}\\s_t&=\underbrace{\operatorname{LSTM}_D(u_t,s_{t-1})}_{\text{prefix 요약 갱신}}\\p_t&=\underbrace{\operatorname{softmax}(W_os_t+b_o)}_{\text{다음 token 분포}}\\q_t&=q_{t-1}+\underbrace{\log p_t[y_t]}_{\text{선택 token 점수 누적}}\end{aligned}`}
         operations={[
-          { expression: String.raw`e(y_{t-1})`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary","distribution을 얻습니다."] },
-          { expression: String.raw`\operatorname{LSTM}_D(u_t,s_{t-1})`, annotation: ["decoder state이(가) 식의 결과에 기여하는 방식을","계산합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary"] },
-          { expression: String.raw`\operatorname{softmax}(W_os_t+b_o)`, annotation: ["score를 합이 1인 선택 비율로 정규화합니다.","Recurrent transition으로 다음 state를","만들고 output projection으로 vocabulary","distribution을 얻습니다."] },
+          { expression: String.raw`e(y_{t-1})`, annotation: ["이전 step이 고른 token을 embedding으로","t=1이면 y_0은 SOS token","고른 token이 다음 입력이라 inference는 순차적"] },
+          { expression: String.raw`\operatorname{LSTM}_D(u_t,s_{t-1})`, annotation: ["입력 u_t와 이전 state로 새 state s_t","s_0은 encoder가 넘긴 initial state","source 조건과 target prefix를 함께 요약"] },
+          { expression: String.raw`\operatorname{softmax}(W_os_t+b_o)`, annotation: ["s_t를 vocabulary logits로 projection","softmax로 합이 1인 다음-token 분포 p_t"] },
+          { expression: String.raw`\log p_t[y_t]`, annotation: ["실제로 확장한 token y_t의 log 확률을","prefix 누적 점수 q_{t-1}에 더함","beam search는 이 q_t로 candidate를 비교"] },
         ]}
         terms={[
           { symbol: "s_t", name: "decoder state", description: "Source condition과 target prefix를 recurrent하게 요약한 state입니다." },

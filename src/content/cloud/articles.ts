@@ -1,22 +1,22 @@
 import type { Article } from "../types";
 
 const sections: Article["sections"] = [
-  { id: "overview", title: "한 문장 답과 공부할 이유" },
-  { id: "black-box", title: "전체 흐름" },
-  { id: "case", title: "작은 수치 사례" },
-  { id: "picture", title: "이름 없는 선택 지도" },
-  { id: "need", title: "이 구성이 필요한 이유" },
-  { id: "names", title: "공식 용어와 서비스 이름" },
-  { id: "mechanism", title: "한 경로를 끝까지 추적" },
-  { id: "source", title: "공식 문서에 사례 적용" },
-  { id: "comparison", title: "시험 범위와 선택 기준" },
-  { id: "limits", title: "한계와 다음 학습" },
+  { id: "overview", title: "먼저 겪는 문제와 답" },
+  { id: "black-box", title: "결정이 끝나는 전체 경로" },
+  { id: "case", title: "같은 사건을 숫자로 확인" },
+  { id: "picture", title: "첫 번째 선택 지점" },
+  { id: "need", title: "역할을 나눈 이유" },
+  { id: "names", title: "이제 붙이는 공식 이름" },
+  { id: "mechanism", title: "한 요청을 끝까지 추적" },
+  { id: "source", title: "실제 명령과 공식 문서" },
+  { id: "comparison", title: "시험과 현장에서 달라지는 범위" },
+  { id: "limits", title: "어디까지 적용할 수 있는가" },
 ];
 
 const kubernetesNetworkSections: Article["sections"] = [
-  { id: "overview", title: "한 문장 답" },
-  { id: "case", title: "GET 한 건의 수치 사례" },
+  { id: "overview", title: "한 번에 한 경계를 확인하는 이유" },
   { id: "map", title: "여섯 패킷 경계" },
+  { id: "case", title: "GET 한 건의 수치 사례" },
   { id: "pod-boundary", title: "namespace·pause·veth" },
   { id: "service-path", title: "Service backend 선택" },
   { id: "calico-path", title: "Calico route·overlay" },
@@ -24,7 +24,7 @@ const kubernetesNetworkSections: Article["sections"] = [
   { id: "policy-dataplane", title: "policy와 데이터 플레인" },
   { id: "edge-mesh", title: "Gateway·service mesh" },
   { id: "evidence", title: "증거 수집 runbook" },
-  { id: "source-map", title: "33편 현재화 지도" },
+  { id: "source-map", title: "오래된 실습에서 다시 확인할 다섯 가지" },
   { id: "limits", title: "한계와 예측 질문" },
 ];
 
@@ -42,20 +42,6 @@ export const cloudArticles: Article[] = [
     subcategory: "cloud-foundations",
     sections,
     component: () => import("@/pages/articles/cloud/cloud-foundations-responsibility-regions"),
-  },
-  {
-    slug: "kubernetes-request-path-and-cka",
-    title: "Kubernetes 요청 경로와 CKA v1.35: Pending에서 복구까지",
-    subcategory: "cloud-roadmap",
-    sections,
-    component: () => import("@/pages/articles/cloud/kubernetes-request-path-and-cka"),
-  },
-  {
-    slug: "kubernetes-network-packet-path",
-    title: "Kubernetes 패킷 경로: namespace에서 Calico·Gateway·eBPF까지",
-    subcategory: "cloud-roadmap",
-    sections: kubernetesNetworkSections,
-    component: () => import("@/pages/articles/cloud/kubernetes-network-packet-path"),
   },
   {
     slug: "cloud-identity-access-hierarchy",
@@ -91,6 +77,20 @@ export const cloudArticles: Article[] = [
     subcategory: "cloud-foundations",
     sections,
     component: () => import("@/pages/articles/cloud/cloud-reliability-observability-iac"),
+  },
+  {
+    slug: "kubernetes-request-path-and-cka",
+    title: "Kubernetes 요청 경로와 CKA v1.35: Pending에서 복구까지",
+    subcategory: "cloud-kubernetes",
+    sections,
+    component: () => import("@/pages/articles/cloud/kubernetes-request-path-and-cka"),
+  },
+  {
+    slug: "kubernetes-network-packet-path",
+    title: "Kubernetes 패킷 경로: namespace에서 Calico·Gateway·eBPF까지",
+    subcategory: "cloud-kubernetes",
+    sections: kubernetesNetworkSections,
+    component: () => import("@/pages/articles/cloud/kubernetes-network-packet-path"),
   },
   {
     slug: "aws-clf-c02-fast-study",

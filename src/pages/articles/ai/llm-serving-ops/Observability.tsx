@@ -96,9 +96,9 @@ export default function Observability() {
           </>
         }
         formula={String.raw`r_{\mathrm{burn}}=\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}`}
-        annotatedFormula={String.raw`r_{\mathrm{burn}}=\underbrace{\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}}_{\text{기준량당 비율}}`}
+        annotatedFormula={String.raw`r_{\mathrm{burn}}=\frac{\underbrace{N_{\mathrm{bad}}/N_{\mathrm{total}}}_{\text{실제 실패 비율}}}{\underbrace{1-S_{\mathrm{SLO}}}_{\text{SLO가 허용한 실패 비율}}}`}
         operations={[
-          { expression: String.raw`\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","SLO가 허용하는 실패 비율은 1−SLO입니다."] },
+          { expression: String.raw`\frac{N_{\mathrm{bad}}/N_{\mathrm{total}}}{1-S_{\mathrm{SLO}}}`, annotation: ["같은 window의 실제 실패 비율을 SLO가","허용한 실패 비율 1−SLO로 나눕니다.","99.9% SLO에 실패율 1%면 1%/0.1%=10"] },
         ]}
         terms={[
           {
@@ -157,14 +157,14 @@ export default function Observability() {
 \Delta_{\mathrm{effect}}&=\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-\Delta_{\mathrm{after}}&=\underbrace{S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}}_{\text{변화량 계산}}\\
-\Delta_{\mathrm{before}}&=\underbrace{S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}}_{\text{변화량 계산}}\\
-\Delta_{\mathrm{effect}}&=\underbrace{\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}}_{\text{변화량 계산}}
+\Delta_{\mathrm{after}}&=\underbrace{S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}}_{\text{변경 후 두 집단 차이}}\\
+\Delta_{\mathrm{before}}&=\underbrace{S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}}_{\text{변경 전 두 집단 차이}}\\
+\Delta_{\mathrm{effect}}&=\underbrace{\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}}_{\text{차이의 차이}}
 \end{aligned}`}
         operations={[
-          { expression: String.raw`S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}`, annotation: ["비교할 SLI이(가) 식의 결과에 기여하는 방식을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
-          { expression: String.raw`S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}`, annotation: ["비교할 SLI이(가) 식의 결과에 기여하는 방식을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
-          { expression: String.raw`\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","변경 전후의 SLI 차이에서 자연 변동과 workload","mix 변화를 분리합니다."] },
+          { expression: String.raw`S_{\mathrm{canary,after}}-S_{\mathrm{control,after}}`, annotation: ["변경 후 같은 시간대에 canary SLI에서","control SLI를 빼 traffic이 가벼워진 효과처럼","두 집단이 같이 겪은 변동을 상쇄합니다."] },
+          { expression: String.raw`S_{\mathrm{canary,before}}-S_{\mathrm{control,before}}`, annotation: ["변경 전부터 두 집단 사이에 있던 차이입니다.","canary route가 원래 빨랐다면 여기 드러납니다."] },
+          { expression: String.raw`\Delta_{\mathrm{after}}-\Delta_{\mathrm{before}}`, annotation: ["변경 후 차이에서 변경 전 차이를 빼","변경 자체가 만든 TTFT·success rate 효과만","남깁니다. control도 같이 좋아졌으면 0 근처"] },
         ]}
         terms={[
           {

@@ -138,25 +138,33 @@ T_{E2E} &= TTFT+\sum_{j=1}^{N_{out}-1}ITL_j \\
 TPOT &= \frac{T_{E2E}-TTFT}{(N_{out}-1)}
 \end{aligned}`}
           annotatedFormula={String.raw`\begin{aligned}
-TTFT &\approx t_{queue}+t_{prefill}+t_{front} \\
-T_{E2E} &= \underbrace{TTFT+\sum_{j=1}^{N_{out}-1}ITL_j}_{\text{오른쪽 항으로 결과 계산}} \\
-TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{(N_{out}-1)}}_{\text{기준량당 비율}}
+TTFT &\approx \underbrace{t_{queue}+t_{prefill}+t_{front}}_{\text{첫 token 전에 쓴 세 구간}} \\
+T_{E2E} &= TTFT+\underbrace{\sum_{j=1}^{N_{out}-1}ITL_j}_{\text{decode 간격의 합}} \\
+TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{(N_{out}-1)}}_{\text{token당 평균 decode 간격}}
 \end{aligned}`}
           operations={[
             {
+              expression: String.raw`t_{queue}+t_{prefill}+t_{front}`,
+              annotation: [
+                "첫 token이 나오기 전 scheduler 대기, prompt",
+                "prefill, frontend 왕복을 더합니다.",
+                "사례 A: 10+30+5=45ms. 나빠지면 queue·prefill부터",
+              ],
+            },
+            {
               expression: String.raw`TTFT+\sum_{j=1}^{N_{out}-1}ITL_j`,
               annotation: [
-                "왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.",
-                "첫 token까지의 시간과 그 뒤 token 사이의 시간을",
-                "나눕니다.",
+                "첫 token 시각에 그 뒤 token 사이 간격 ITL을",
+                "N_out−1개 더하면 답 전체 시간입니다.",
+                "사례 A: 45+8+12=65ms",
               ],
             },
             {
               expression: String.raw`\frac{T_{E2E}-TTFT}{(N_{out}-1)}`,
               annotation: [
-                "분자에 둔 관심량을 분모의 기준량으로 정규화합니다.",
-                "첫 token까지의 시간과 그 뒤 token 사이의 시간을",
-                "나눕니다.",
+                "E2E에서 TTFT를 뺀 decode 구간을 간격 수로",
+                "나눈 평균 ITL입니다. (65−45)/(3−1)=10ms인데",
+                "실제 8ms와 12ms의 spike 차이는 가려집니다",
               ],
             },
           ]}
@@ -207,15 +215,22 @@ TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{(N_{out}-1)}}_{\text{기준량당 비율
               </>
             }
             formula={String.raw`G=D_P\times T_P\times P_P`}
-            annotatedFormula={String.raw`G=\underbrace{D_P\times T_P\times P_P}_{\text{오른쪽 항으로 결과 계산}}`}
+            annotatedFormula={String.raw`G=\underbrace{D_P}_{\text{독립 replica 수}}\times\underbrace{T_P\times P_P}_{\text{replica 하나가 차지한 GPU}}`}
             operations={[
+              {
+                expression: String.raw`T_P\times P_P`,
+                annotation: [
+                  "model 하나를 layer 안에서 TP개로 쪼개고",
+                  "layer 구간을 PP개로 나눠 놓은 replica 한 벌의",
+                  "GPU 수입니다. TP=4, PP=1이면 4 GPU",
+                ],
+              },
               {
                 expression: String.raw`D_P\times T_P\times P_P`,
                 annotation: [
-                  "왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.",
-                  "한 replica의 model을 TP×PP GPU에 놓고, 그",
-                  "replica를 DP개 복제한다고 보면 총 GPU 수는 세",
-                  "축의 곱입니다.",
+                  "그 replica를 DP개 복제하면 총 GPU 수입니다.",
+                  "DP=2, TP=4, PP=1이면 8 GPU. TP를 늘리면",
+                  "collective가, DP를 늘리면 queue·KV pool이 늡니다",
                 ],
               },
             ]}
@@ -250,15 +265,22 @@ TPOT &= \underbrace{\frac{T_{E2E}-TTFT}{(N_{out}-1)}}_{\text{기준량당 비율
             formula={String.raw`\mathrm{Goodput}_{SLO}
 =\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}`}
             annotatedFormula={String.raw`\mathrm{Goodput}_{SLO}
-=\underbrace{\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}}_{\text{기준량당 비율}}`}
+=\frac{\sum_r \underbrace{y_r}_{\text{요청 r의 token}}\,\underbrace{\mathbf{1}[SLO_r]}_{\text{SLO 통과면 1}}}{\underbrace{\Delta t}_{\text{측정 구간}}}`}
             operations={[
+              {
+                expression: String.raw`\sum_r y_r\,\mathbf{1}[SLO_r]`,
+                annotation: [
+                  "요청마다 output token 수에 SLO 통과 여부",
+                  "(TTFT·ITL·E2E·오류 조건) 0/1을 곱해 더합니다.",
+                  "A·B·C가 3·2·1 token이고 B가 어기면 3+0+1=4",
+                ],
+              },
               {
                 expression: String.raw`\frac{\sum_r y_r\,\mathbf{1}[SLO_r]}{\Delta t}`,
                 annotation: [
-                  "분자에 둔 관심량을 분모의 기준량으로 정규화합니다.",
-                  "측정 구간의 모든 output token을 더하는 대신,",
-                  "사전에 정한 SLO를 통과한 요청의 token에만 1을",
-                  "곱합니다.",
+                  "통과한 token만 측정 구간 길이로 나눕니다.",
+                  "1초 구간이면 goodput 4 token/s, raw",
+                  "throughput 6 token/s와 따로 봅니다",
                 ],
               },
             ]}

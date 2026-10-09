@@ -23,9 +23,11 @@ export default function MptTraversal({ title, onCodeRef: _onCodeRef }: Props) {
         formula={
           "k={\\rm Nibbles}({\\rm Keccak256}(x)),\\quad v={\\rm RLP}(y),\\quad {\\rm Verify}(R,k,v,\\pi)=\\mathrm{true}"
         }
-        annotatedFormula={String.raw`k=\underbrace{{\rm Nibbles}({\rm Keccak256}(x)),\quad v={\rm RLP}(y),\quad {\rm Verify}(R,k,v,\pi)=\mathrm{true}}_{\text{Proof nodes 계산}}`}
+        annotatedFormula={String.raw`k=\underbrace{{\rm Nibbles}({\rm Keccak256}(x))}_{\text{secure nibble path}},\quad v=\underbrace{{\rm RLP}(y)}_{\text{leaf와 비교할 bytes}},\quad \underbrace{{\rm Verify}(R,k,v,\pi)}_{\text{root부터 leaf까지 추적}}=\mathrm{true}`}
         operations={[
-          { expression: String.raw`{\rm Nibbles}({\rm Keccak256}(x)),\quad v={\rm RLP}(y),\quad {\rm Verify}(R,k,v,\pi)=\mathrm{true}`, annotation: ["Proof nodes이(가) 식의 결과에 기여하는 방식을","계산합니다.","Raw key는 secure hash의 nibble","path로, expected value는 canonical"] },
+          { expression: String.raw`{\rm Nibbles}({\rm Keccak256}(x))`, annotation: ["주소·storage slot key를 Keccak-256한 뒤","64개 4-bit nibble path로 쪼갭니다","trie는 raw key가 아니라 이 path로 내려감"] },
+          { expression: String.raw`{\rm RLP}(y)`, annotation: ["account 네 field 또는 storage 정수를","leaf value와 byte 단위로 비교할","canonical RLP로 인코딩합니다"] },
+          { expression: String.raw`{\rm Verify}(R,k,v,\pi)`, annotation: ["root R에서 proof node π를 차례로 열어","branch·extension·leaf가 k를 소진하고","마지막 value가 v와 같을 때만 true"] },
         ]}
         terms={[
           {

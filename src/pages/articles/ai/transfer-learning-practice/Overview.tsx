@@ -32,11 +32,12 @@ export default function Overview() {
         question="Pretrained backbone과 새 task head는 target data에서 어떤 함수로 학습될까?"
         idea={<>Source에서 얻은 θsrc로 representation f를 시작하고, 새 head φ는 target label에 맞게 초기화합니다. Fixed feature는 θ를 고정하고 φ만, full fine-tuning은 둘 다 target empirical risk로 조정합니다.</>}
         formula={String.raw`\begin{aligned}\hat y_i&=g_{\phi}(f_{\theta}(x_i)),\\\theta_0&=\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},\\\mathcal L_t(\theta,\phi)&=\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),\\(\theta^*,\phi^*)&=\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}\hat y_i&=\underbrace{g_{\phi}(f_{\theta}(x_i)),}_{\text{오른쪽 항으로 결과 계산}}\\\theta_0&=\underbrace{\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},}_{\text{오른쪽 항으로 결과 계산}}\\\mathcal L_t(\theta,\phi)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),}_{\text{오른쪽 항으로 결과 계산}}\\(\theta^*,\phi^*)&=\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}\hat y_i&=\underbrace{g_{\phi}}_{\text{새 task head}}(\underbrace{f_{\theta}(x_i)}_{\text{pretrained backbone 표현}}),\\\theta_0&=\underbrace{\theta_{\mathrm{src}},}_{\text{source checkpoint}}\quad \phi_0=\underbrace{\phi_{\mathrm{new}},}_{\text{target label에 맞춰 새로}}\\\mathcal L_t(\theta,\phi)&=\underbrace{\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),}_{\text{target train split 평균 loss}}\\(\theta^*,\phi^*)&=\underbrace{\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).}_{\text{어느 변수를 풀지가 scope}}\end{aligned}`}
         operations={[
-          { expression: String.raw`g_{\phi}(f_{\theta}(x_i)),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
-          { expression: String.raw`\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
-          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","Source에서 얻은 θsrc로 representation","f를 시작하고, 새 head φ는 target label에","맞게 초기화합니다."] },
+          { expression: String.raw`g_{\phi}(f_{\theta}(x_i)),`, annotation: ["backbone f가 input을 representation으로 바꾸고","새 head g가 그것을 target class·score로 바꿉니다."] },
+          { expression: String.raw`\theta_{\mathrm{src}},\quad \phi_0=\phi_{\mathrm{new}},`, annotation: ["backbone은 source pretraining 결과에서 시작하고","head는 target label 수에 맞춰 새로 초기화합니다."] },
+          { expression: String.raw`\frac1n\sum_{i=1}^{n}\ell(\hat y_i,y_i),`, annotation: ["target train split n개 sample의 loss 평균이","실제 최적화 목적인 empirical risk입니다."] },
+          { expression: String.raw`\arg\min_{\theta,\phi}\mathcal L_t(\theta,\phi).`, annotation: ["fixed feature는 θ를 빼고 φ만, partial은 고른","block만, full fine-tuning은 θ·φ 전부를","이 최소화의 변수로 둡니다"] },
         ]}
         terms={[
           { symbol: "f_θ", name: "backbone · encoder", description: "Source pretraining에서 시작해 input을 representation으로 바꾸는 함수입니다." },

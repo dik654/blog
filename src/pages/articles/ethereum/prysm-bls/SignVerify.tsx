@@ -32,11 +32,11 @@ export default function SignVerify({
           </>
         }
         formula={String.raw`\begin{aligned}PK&=skG_1\\\sigma&=skH(m)\\e(G_1,\sigma)&=e(PK,H(m))\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}PK&=\underbrace{skG_1}_{\text{G1 generator 계산}}\\\sigma&=\underbrace{skH(m)}_{\text{Hash-to-curve 계산}}\\e(G_1,\sigma)&=\underbrace{e(PK,H(m))}_{\text{Hash-to-curve 계산}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}PK&=\underbrace{skG_1}_{\text{비밀 scalar × G1 생성원}}\\\sigma&=\underbrace{skH(m)}_{\text{같은 scalar × message 점}}\\\underbrace{e(G_1,\sigma)}_{\text{생성원·서명 pairing}}&=\underbrace{e(PK,H(m))}_{\text{공개키·message pairing}}\end{aligned}`}
         operations={[
-          { expression: String.raw`skG_1`, annotation: ["G1 generator이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
-          { expression: String.raw`skH(m)`, annotation: ["Hash-to-curve이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
-          { expression: String.raw`e(PK,H(m))`, annotation: ["Hash-to-curve이(가) 식의 결과에 기여하는 방식을","계산합니다.","Pairing은 한쪽 point의 scalar","multiplication을 target group의"] },
+          { expression: String.raw`skG_1`, annotation: ["validator만 아는 scalar sk를","G1 생성원에 곱한 공개키 PK"] },
+          { expression: String.raw`skH(m)`, annotation: ["signing root m을 DST로 G2 점 H(m)에 옮겨","같은 sk를 곱한 96-byte signature"] },
+          { expression: String.raw`e(PK,H(m))`, annotation: ["sk를 공개키 쪽에 둔 pairing","bilinearity로 양변 모두 e(G1,H(m))^sk","verifier는 sk 없이 등식만 비교"] },
         ]}
         terms={[
           {

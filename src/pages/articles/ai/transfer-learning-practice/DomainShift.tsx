@@ -29,17 +29,19 @@ export default function DomainShift() {
         \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
           &\text{covariate shift}\\[-2pt]
-          &P_s(x)\ne P_t(x),\\[-2pt]
-          &P_s(y\mid x)=\underbrace{P_t(y\mid x),}_{\text{오른쪽 항으로 결과 계산}}\\[4pt]
+          &\underbrace{P_s(x)\ne P_t(x),}_{\text{input 빈도만 다름}}\\[-2pt]
+          &\underbrace{P_s(y\mid x)=P_t(y\mid x),}_{\text{label rule은 그대로}}\\[4pt]
           &\text{label shift}\\[-2pt]
-          &P_s(y)\ne P_t(y),\\[-2pt]
-          &P_s(x\mid y)=\underbrace{P_t(x\mid y),}_{\text{오른쪽 항으로 결과 계산}}\\[4pt]
+          &\underbrace{P_s(y)\ne P_t(y),}_{\text{class 비율만 다름}}\\[-2pt]
+          &\underbrace{P_s(x\mid y)=P_t(x\mid y),}_{\text{class별 input은 그대로}}\\[4pt]
           &\text{concept shift}\\[-2pt]
-          &P_s(y\mid x)\ne P_t(y\mid x).
+          &\underbrace{P_s(y\mid x)\ne P_t(y\mid x).}_{\text{같은 x에 다른 답}}
         \end{aligned}`}
         operations={[
-          { expression: String.raw`P_t(y\mid x),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","P(x,y)=P(y|x)P(x)로 읽으면 input 빈도와","label rule을 분리할 수 있고, Bayes rule을","함께 보면 label prior 변화도 별도 가정으로 다룰 수"] },
-          { expression: String.raw`P_t(x\mid y),`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","P(x,y)=P(y|x)P(x)로 읽으면 input 빈도와","label rule을 분리할 수 있고, Bayes rule을","함께 보면 label prior 변화도 별도 가정으로 다룰 수"] },
+          { expression: String.raw`P_s(x)\ne P_t(x),`, annotation: ["sensor·style·language 같은 input 빈도가","source와 target에서 다릅니다.","P(x,y)=P(y|x)P(x)의 P(x) 쪽 변화입니다"] },
+          { expression: String.raw`P_s(y\mid x)=P_t(y\mid x),`, annotation: ["같은 input이면 답이 같다는 가정입니다.","이게 성립해야 input 쪽 보정(reweighting·","representation alignment)이 안전합니다"] },
+          { expression: String.raw`P_s(x\mid y)=P_t(x\mid y),`, annotation: ["class 비율 P(y)는 바뀌어도 class 안에서","input이 생기는 방식은 같다는 강한 가정입니다.","label shift 보정(prior 재추정)은 여기에 기댑니다"] },
+          { expression: String.raw`P_s(y\mid x)\ne P_t(y\mid x).`, annotation: ["같은 x에 target이 다른 y를 붙입니다.","input만 가깝게 맞추는 alignment로는 못 고치고","오히려 다른 class를 섞을 수 있습니다"] },
         ]}
         terms={[
           { symbol: "P_s,P_t", name: "source·target distribution", description: "Pretraining/학습 환경과 실제 deployment 환경의 확률 분포입니다." },

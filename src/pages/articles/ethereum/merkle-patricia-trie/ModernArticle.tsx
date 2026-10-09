@@ -58,10 +58,11 @@ export default function ModernArticle() {
         question="한 node의 bytes가 어떻게 root-bound reference가 될까?"
         idea="Child의 canonical RLP 길이에 따라 reversible inline bytes 또는 fixed digest를 parent에 넣고, root node는 canonical bytes를 Keccak해 block header의 root identity로 만듭니다."
         formula={String.raw`\operatorname{ref}(n)=\begin{cases}\operatorname{RLP}(n),&|\operatorname{RLP}(n)|<32\\ \operatorname{Keccak256}(\operatorname{RLP}(n)),&|\operatorname{RLP}(n)|\ge 32\end{cases},\qquad R=\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))`}
-        annotatedFormula={String.raw`\operatorname{ref}(n)=\begin{cases}\operatorname{RLP}(n),&|\operatorname{RLP}(n)|<\underbrace{32}_{\text{Trie node 계산}}\\ \operatorname{Keccak256}(\operatorname{RLP}(n)),&|\operatorname{RLP}(n)|\ge 32\end{cases},\qquad R=\underbrace{\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))}_{\text{허용 경계 판정}}`}
+        annotatedFormula={String.raw`\operatorname{ref}(n)=\begin{cases}\underbrace{\operatorname{RLP}(n)}_{\text{짧으면 그대로 inline}},&|\operatorname{RLP}(n)|<32\\ \underbrace{\operatorname{Keccak256}(\operatorname{RLP}(n))}_{\text{32 B 이상이면 digest}},&|\operatorname{RLP}(n)|\ge 32\end{cases},\qquad R=\underbrace{\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))}_{\text{header에 넣을 root}}`}
         operations={[
-          { expression: String.raw`32`, annotation: ["Trie node이(가) 식의 결과에 기여하는 방식을","계산합니다.","Child의 canonical RLP 길이에 따라","reversible inline bytes 또는 fixed"] },
-          { expression: String.raw`\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))`, annotation: ["Trie node이(가) 식의 결과에 기여하는 방식을","계산합니다.","Child의 canonical RLP 길이에 따라","reversible inline bytes 또는 fixed"] },
+          { expression: String.raw`\operatorname{RLP}(n)`, annotation: ["child의 canonical RLP가 32 bytes 미만이면","parent 안에 bytes를 그대로 넣음(가역)","31-byte child는 inline"] },
+          { expression: String.raw`\operatorname{Keccak256}(\operatorname{RLP}(n))`, annotation: ["32 bytes 이상이면 Keccak digest로 참조","32-byte child는 hash, 이 1-byte 경계를","바꾸면 ancestor bytes와 root가 달라짐"] },
+          { expression: String.raw`\operatorname{Keccak256}(\operatorname{RLP}(n_{\mathrm{root}}))`, annotation: ["root node는 길이와 무관하게 항상 hash","block header의 stateRoot 또는","account 안의 storageRoot identity"] },
         ]}
         terms={[
           { symbol: "n", name: "Trie node", description: "Branch·extension·leaf 중 하나의 logical node입니다." },

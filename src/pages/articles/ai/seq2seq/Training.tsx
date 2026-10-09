@@ -25,11 +25,11 @@ export default function Training({
         question="Padding이 섞인 target batch에서 어떤 token만 training loss에 포함할까?"
         idea={<>정답 prefix로 각 position의 conditional probability를 계산하고, 실제 target token인 위치만 mask mₜ=1로 남긴 뒤 유효 token 수로 평균냅니다.</>}
         formula={String.raw`\begin{aligned}p_t^*&=P_\theta(y_t^*\mid y_{<t}^*,X)\\N&=\sum_{t=1}^{T}m_t\\\mathcal L_{\rm TF}&=-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}p_t^*&=\underbrace{P_\theta(y_t^*\mid y_{<t}^*,X)}_{\text{허용 경계 판정}}\\N&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{valid-token mask 계산}}\\\mathcal L_{\rm TF}&=\underbrace{-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*}_{\text{기준량당 비율}}\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}p_t^*&=\underbrace{P_\theta(y_t^*\mid y_{<t}^*,X)}_{\text{정답 prefix 조건 확률}}\\N&=\underbrace{\sum_{t=1}^{T}m_t}_{\text{유효 token 수}}\\\mathcal L_{\rm TF}&=\underbrace{-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*}_{\text{token 평균 NLL}}\end{aligned}`}
         operations={[
-          { expression: String.raw`P_\theta(y_t^*\mid y_{<t}^*,X)`, annotation: ["계산한 양을 허용 경계와 비교해 상태를 판정합니다.","정답 prefix로 각 position의 conditional","probability를 계산하고, 실제 target","token인 위치만 mask mₜ=1로 남긴 뒤 유효"] },
-          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["valid-token mask이(가) 식의 결과에 기여하는","방식을 계산합니다.","정답 prefix로 각 position의 conditional","probability를 계산하고, 실제 target"] },
-          { expression: String.raw`-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*`, annotation: ["분자에 둔 관심량을 분모의 기준량으로 정규화합니다.","정답 prefix로 각 position의 conditional","probability를 계산하고, 실제 target","token인 위치만 mask mₜ=1로 남긴 뒤 유효"] },
+          { expression: String.raw`P_\theta(y_t^*\mid y_{<t}^*,X)`, annotation: ["model prefix가 아니라 정답 prefix를 조건으로","t번째 정답 token에 준 확률","예: 두 token에 0.8, 0.5"] },
+          { expression: String.raw`\sum_{t=1}^{T}m_t`, annotation: ["padding은 m_t=0, 실제 token은 1","mask (1,1,0)이면 유효 token 수 N=2"] },
+          { expression: String.raw`-\frac{1}{N}\sum_{t=1}^{T}m_t\log p_t^*`, annotation: ["mask된 token의 −log p만 더해 N으로 나눔","−(log 0.8+log 0.5)/2≈0.458","padding 확률은 합·분모 어디에도 안 들어감"] },
         ]}
         terms={[
           { symbol: "y_t^*", name: "gold target", description: "Dataset이 제공한 timestep t의 정답 token입니다." },

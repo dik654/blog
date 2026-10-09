@@ -21,11 +21,11 @@ export default function Applications() {
         question="비계절 dynamics와 s주기 계절 dynamics를 한 ARIMA operator에 어떻게 결합할까?"
         idea={<>비계절 AR·MA polynomial과 B^s를 사용하는 seasonal polynomial을 곱합니다. 차분도 (1−B)^d와 (1−B^s)^D로 분리해 local trend와 반복되는 seasonal level을 따로 제거합니다.</>}
         formula={String.raw`\begin{aligned}W_t&=(1-B)^d(1-B^s)^D Y_t\\A(B)W_t&=c+M(B)\varepsilon_t\\A(B)&=\Phi(B^s)\phi(B)\\M(B)&=\Theta(B^s)\theta(B)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}W_t&=\underbrace{(1-B)^d(1-B^s)^D Y_t}_{\text{변화량 계산}}\\A(B)W_t&=\underbrace{c+M(B)\varepsilon_t}_{\text{오른쪽 항으로 결과 계산}}\\A(B)&=\underbrace{\Phi(B^s)\phi(B)}_{\text{season length 계산}}\\M(B)&=\Theta(B^s)\theta(B)\end{aligned}`}
+        annotatedFormula={String.raw`\begin{aligned}W_t&=\underbrace{(1-B)^d(1-B^s)^D Y_t}_{\text{추세·계절 level 제거}}\\A(B)W_t&=\underbrace{c+M(B)\varepsilon_t}_{\text{과거 충격의 MA 합}}\\A(B)&=\underbrace{\Phi(B^s)\phi(B)}_{\text{계절×비계절 AR}}\\M(B)&=\Theta(B^s)\theta(B)\end{aligned}`}
         operations={[
-          { expression: String.raw`(1-B)^d(1-B^s)^D Y_t`, annotation: ["인접한 level의 차이를 남겨 변화량을 계산합니다.","비계절 AR·MA polynomial과 B^s를 사용하는","seasonal polynomial을 곱합니다."] },
-          { expression: String.raw`c+M(B)\varepsilon_t`, annotation: ["왼쪽 결과를 오른쪽의 실제 항으로 계산합니다.","비계절 AR·MA polynomial과 B^s를 사용하는","seasonal polynomial을 곱합니다."] },
-          { expression: String.raw`\Phi(B^s)\phi(B)`, annotation: ["season length이(가) 식의 결과에 기여하는 방식을","계산합니다.","비계절 AR·MA polynomial과 B^s를 사용하는","seasonal polynomial을 곱합니다."] },
+          { expression: String.raw`(1-B)^d(1-B^s)^D Y_t`, annotation: ["(1−B)^d로 local trend를 지우고","(1−B^s)^D로 반복되는 seasonal level을","따로 지웁니다. 월별 자료면 s=12입니다"] },
+          { expression: String.raw`c+M(B)\varepsilon_t`, annotation: ["차분한 W_t 중 AR이 설명하지 못한 몫을","상수 c와 과거 충격의 MA 결합으로 둡니다."] },
+          { expression: String.raw`\Phi(B^s)\phi(B)`, annotation: ["인접 lag를 읽는 φ(B)와 s 간격 lag를 읽는","Φ(B^s)를 곱해 AR operator 하나로 만듭니다.","s=12면 Φ는 B^12, B^24 항을 가집니다"] },
         ]}
         terms={[
           { symbol: "(p,d,q)", name: "non-seasonal order", description: "인접 lag의 AR, difference와 MA 차수입니다." },
