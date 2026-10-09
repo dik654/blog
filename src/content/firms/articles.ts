@@ -55,8 +55,12 @@ export const firmsArticles: Article[] = [
     "title": "12. 설립비가 생기면 첫 작업만 보고 멈출 수 없다"
   },
   {
+    "id": "specific-assets",
+    "title": "13. 전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다"
+  },
+  {
     "id": "handoff",
-    "title": "13. 같은 일을 끝내는 전체 비용으로 예측한다"
+    "title": "14. 같은 일을 끝내는 전체 비용으로 예측한다"
   }
   ],
     component: () => import("@/pages/articles/firms/why-firms-exist"),

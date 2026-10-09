@@ -931,3 +931,175 @@ new:
 - `registrations/consent-liberty-and-legitimate-power.ts:52, :60` — #23 `7370-h/7370-h"` → `7370-h/7370-h.htm"`.
 - `registrations/philosophical-traditions.ts:1185, :1195, :1690, :1696` — #14 Gita `/dv/bhagavadgita/2.47` → `/read/srimad/2/47`, `/dv/bhagavadgita/3.19` → `/read/srimad/3/19`. `:1324, :1405` — #2 "아랍어 필사본" 문장 교체.
 - 이 밖에 identity-through-change·logical-empiricism 등록 파일에 evidence 항목이 따로 있으면 #45 Material Constitution, #53 Neurath 항목도 같이 추가한다.
+
+## 후속 작업 결과
+처리일: 2026-10-09. `## 후속 작업`의 4개 묶음(세부 12항목)을 처리했다. 본문 적용 11, 공용 파일 목록으로만 이관 1(Oxford 강의 복원), 보류 0. 고친 글 9편은 모두 `check-article.sh`에서 다른 글의 prose "재검토 필요" 외 실패 0, eslint 통과.
+
+| 항목 | 처리 | 근거(연 주소 · 인용 위치) |
+|---|---|---|
+| #40 『니야야 수트라』 1.1.3 | 적용 — classical-india 6절 첫 문단에 "1권 1장 3번째 수트라(1.1.3)"와 비댜부샤나 영역 문장 | archive.org `TheNyayaSutrasOfGotama` (Vidyabhusana, *The Nyāya Sūtras of Gotama*, Sacred Books of the Hindus VIII, Allahabad 1913) djvu 텍스트 p.2 "Book I.—Chapter 1. … 3. Perception, inference, comparison and word (verbal testimony)—these are the means of right knowledge." |
+| #40 디그나가 『프라마나사뭇차야』 1장 | 적용 — 6절 둘째 문단에 1장(지각 장) 1.2ab "pratyakṣam anumānaṃ ca pramāṇe", 540년 직전 저작, 산스크리트 원본 미발견(2005년 기준)·슈타인켈너 재구성 | https://www.oeaw.ac.at/fileadmin/Institute/IKGA/PDF/digitales/dignaga_PS_1.pdf (Steinkellner 2005) 서론 "composed shortly before 540 CE", "The text has not yet been found in its original Sanskrit form", 본문 "pratyakṣam anumānaṃ ca pramāṇe … te dve eva", 분석표 "The number of (the means of) valid cognitions is two: perception and inference (2ab’)", 'Chapter 1 ("On perception")' |
+| Searle 1980 (mind-and-language) | 적용 — 9절 문단 앞에 원 출전 문장, CitationBlock citeKey 3 추가(DOI) | Crossref `10.1017/S0140525X00005756`: "Minds, brains, and programs", Searle, Behavioral and Brain Sciences 3(3), 417–424, 1980-09. doi.org 출판사 페이지는 403이라 서지 Crossref 확인 |
+| 로크 §119 (political-philosophy) | 적용 — 10절에 §119 문단(명시/묵시 동의 구분, 일주일 숙소·큰길 통행, 원문 구절 인용, 100가구 사례 대입) | https://www.gutenberg.org/files/7370/7370-h/7370-h.htm "Sect. 119 … a lodging only for a week; or whether it be barely travelling freely on the highway; and in effect, it reaches as far as the very being of any one within the territories of that government." |
+| 깃대 반례 귀속 (philosophy-of-science) | 적용 — 8절 깃대 문장을 원문 구조(높이→그림자는 설명, 그림자→높이는 비설명)로 고치고, 새 문단에 Bromberger 이름·Salmon 1989 p.47 귀속. 브롬버거 원 논문은 열지 않았다고 명시 | Salmon, "Four Decades of Scientific Explanation" 2부(Minnesota Studies 13), https://conservancy.umn.edu/handle/11299/185699 PDF p.47 "(CE-2). Bromberger's flagpole example. … a flagpole of a certain height causes a shadow of a given length, and thereby explains the length of the shadow, whereas the shadow does not cause the flagpole". SEP scientific-explanation-20th "As Salmon (1989a: 47) puts it…"도 재확인 |
+| Block 1995 (consciousness 8절) | 적용 — 8절 첫 문단에 현상적 의식·접근 의식 이름과 Block 1995 서지 | SEP consciousness "what Ned Block (1995) calls access consciousness"; Crossref `10.1017/S0140525X00038188` "On a confusion about a function of consciousness", BBS 18(2) 227–247 |
+| Austin 1962·Searle (reference-context 9절) | 적용 — 9절에 새 문단: 오스틴 1962, 불발(misfire)·남용(abuse) 예, 설 1969·1975 분류 비판 | SEP speech-acts: "Austin, in How To Do Things With Words, details the conditions… Failures of felicity fall into two classes: misfires and abuses", QEII 선명 예, "I promise to meet you for lunch tomorrow, but haven’t the least intention… an abuse", "Searle (1975) criticizes Austin’s taxonomy… Searle offers a new categorization"; 참고문헌 Austin 1962, Searle 1969, 1975 |
+| 전국시대 연대 (warring-states) | 적용 — 1절 둘째 문단에 "기원전 453~221년(SEP Legalism 표기), 221년 진의 통일로 끝남, 시작 연도는 서술마다 다름" | SEP chinese-legalism "the age of the Warring States (Zhanguo 戰國, 453–221 BCE)", "the imperial unification of 221 BCE" |
+| Ak. 4:421 · NE 1106b36 (ethics) | 적용 — 두 SourceApplication source에 위치, 두 CitationBlock에 학술원판·베커 표기 설명과 원어 문장 | https://korpora.org/Kant/aa04/421.html 7–8행 "handle nur nach derjenigen Maxime, durch die du zugleich wollen kannst, daß sie ein allgemeines Gesetz werde"; Perseus canonical-greekLit `tlg0086.tlg010.perseus-grc2.xml`(Bywater) Bekker line 35 뒤 "ἔστιν ἄρα ἡ ἀρετὴ ἕξις προαιρετική, ἐν μεσότητι οὖσα τῇ πρὸς ἡμᾶς," → page 1107a line 1 "ὡρισμένῃ λόγῳ…" (Perseus hopper는 line 지정 URL이 503, 1106b 페이지 본문은 200으로 같은 문장 확인) |
+| ctext 번역본 (#16·#17·#34) | 적용(#16만) — confucian-ritual 『순자』 예론 출처 note에 Hutton 역 19장 「Discourse on Ritual」 201–217쪽, 서지만 확인·본문 미인용 명시. #17(도덕경 37장)·#34(논어 위정)는 ctext 페이지 자체가 Legge 영역을 싣고 있어 추가 번역본 불필요 | Crossref `10.1515/9781400852550`(Xunzi: The Complete Text, Hutton, Princeton UP 2014), `10.1515/9781400852550-022` "Chapter 19: Discourse on Ritual" pp.201–217. press.princeton.edu는 403(Cloudflare). Knoblock 역은 열지 않음 |
+| #31·#32 Oxford 대체 강의 | 공용파일 목록으로 이관 — 원 과정은 2025년 가을 개설분이 끝나 라이브 404이지만, 쿼리 문자열이 붙은 주소의 Wayback 사본(2025-10-01)이 있다. 지난 원장의 "아카이브 없음"은 쿼리 없는 주소만 조회한 결과였다. 사본 주소로 두 글의 evidence 항목을 복원한다 | https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW — "Course starts Thursday 2 October 2025 … Week 1: An introduction to German Idealism Week 2: Hegel Week 3: Romanticism and philosophy Week 4: Feuerbach Week 5: Marx Week 6: Schopenhauer Week 7: Nietzsche Week 8: Analytic philosophy Week 9: Brentano and Husserl Week 10: Heidegger", Tutor Dr Magnus Moar. 라이브 `lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger`·reading-list PDF는 2026-10-09 404. 현행 개설은 "Hegel: An Introduction"(https://lifelong-learning.ox.ac.uk/courses/hegel-an-introduction-o26p446phw/, 200)뿐이라 시대 배열 자료로는 쓰지 않음 |
+
+### 고친 글 파일
+- `src/pages/articles/philosophy-history/philosophy-history-data.ts` (classical-india 6절, warring-states 1절)
+- `src/pages/articles/mind-and-language/behavior-meaning-and-machine-understanding.tsx`
+- `src/pages/articles/political-philosophy/consent-liberty-and-legitimate-power.tsx`
+- `src/pages/articles/philosophy-of-science/evidence-models-and-causal-explanation.tsx`
+- `src/pages/articles/philosophy-topics/topic-data.ts` (consciousness 8절, reference-context 9절)
+- `src/pages/articles/ethics/consequence-duty-and-character.tsx`
+- `src/pages/articles/philosophical-traditions/confucian-ritual-role-and-humane-rule.tsx` (출처 note)
+
+## 후속 공용 파일 수정 목록
+
+통합자가 위에서부터 적용한다. old는 2026-10-09 기준 파일에서 한 번만 나오는 조각이다.
+
+### src/content/article-evidence.ts
+
+**Searle 1980 (mind-and-language)**
+```
+old:
+    { kind: "비판적 읽기", label: "SEP · Chinese Room Argument", href: "https://plato.stanford.edu/entries/chinese-room/", note: "구문·의미 논증과 주요 반론의 전문 개관" },
+new:
+    { kind: "비판적 읽기", label: "SEP · Chinese Room Argument", href: "https://plato.stanford.edu/entries/chinese-room/", note: "구문·의미 논증과 주요 반론의 전문 개관" },
+    { kind: "핵심 논문", label: "Searle · Minds, Brains, and Programs (Behavioral and Brain Sciences 3(3), 1980)", href: "https://doi.org/10.1017/S0140525X00005756", note: "중국어 방 논증의 원 논문(417–424쪽). 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)" },
+```
+
+**Salmon 1989 (philosophy-of-science, 깃대 반례 귀속)**
+```
+old:
+    { kind: "보충 읽기", label: "SEP · Causal Approaches", href: "https://plato.stanford.edu/entries/causal-explanation-science/", note: "기제와 개입주의 인과 설명의 범위" },
+new:
+    { kind: "보충 읽기", label: "SEP · Causal Approaches", href: "https://plato.stanford.edu/entries/causal-explanation-science/", note: "기제와 개입주의 인과 설명의 범위" },
+    { kind: "리뷰 논문", label: "Wesley C. Salmon · Four Decades of Scientific Explanation, Part 3 (Minnesota Studies 13, 1989)", href: "https://conservancy.umn.edu/handle/11299/185699", note: "47쪽에서 깃대 반례를 \"Bromberger's flagpole example\"로 소개하고 원인-설명 비대칭을 진단합니다(University of Minnesota Conservancy PDF, 2026-10-09 확인)." },
+```
+
+**Block 1995 (consciousness)**
+```
+old:
+      "href": "https://plato.stanford.edu/entries/other-minds/",
+      "note": "다른 사람의 경험을 아는 근거와 회의론의 답을 정리한 동료 검토 연구입니다."
+    }
+  ],
+new:
+      "href": "https://plato.stanford.edu/entries/other-minds/",
+      "note": "다른 사람의 경험을 아는 근거와 회의론의 답을 정리한 동료 검토 연구입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Ned Block · On a Confusion about a Function of Consciousness (Behavioral and Brain Sciences 18(2), 1995)",
+      "href": "https://doi.org/10.1017/S0140525X00038188",
+      "note": "현상적 의식과 접근 의식을 구분한 원 논문(227–247쪽)입니다. 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)."
+    }
+  ],
+```
+(old의 other-minds 조각이 파일에서 두 번 이상 나오면 앞 줄 `"label": "Stanford Encyclopedia of Philosophy · Other Minds",`까지 붙여 consciousness 항목으로 한정한다.)
+
+**Ak. 4:421 · NE 1106b36 (ethics)**
+```
+old:
+    { kind: "비교 사료", label: "Aristotle · Nicomachean Ethics II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", note: "덕·성품·습관을 읽는 고전 원문(D. P. Chase 역)" },
+new:
+    { kind: "비교 사료", label: "Aristotle · Nicomachean Ethics II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", note: "덕·성품·습관을 읽는 고전 원문(D. P. Chase 역)" },
+    { kind: "핵심 사료", label: "Kant · Grundlegung, Akademie-Ausgabe IV 421 (korpora.org)", href: "https://korpora.org/Kant/aa04/421.html", note: "보편 법칙 정식의 독일어 원문 위치(4권 421쪽 7–8행)를 확인합니다(2026-10-09)." },
+    { kind: "핵심 사료", label: "Aristotle · Ethica Nicomachea, Bekker 1106b (Perseus, Bywater 판)", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0053%3Abekker+page%3D1106b", note: "덕의 정의가 1106b36에서 1107a2까지 이어지는 그리스어 원문 위치를 확인합니다(2026-10-09)." },
+```
+
+**니야야 수트라 1.1.3 · 디그나가 PS 1.2ab (classical-india)**
+```
+old:
+      "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+      "note": "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다."
+    }
+  ],
+new:
+      "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
+      "note": "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "S. C. Vidyabhusana · The Nyāya Sūtras of Gotama (Sacred Books of the Hindus VIII, 1913)",
+      "href": "https://archive.org/details/TheNyayaSutrasOfGotama",
+      "note": "1권 1장 3번째 수트라가 지각·추론·비교·말(증언)을 네 인식 수단으로 열거함을 영역으로 확인합니다(2쪽, 2026-10-09)."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "Ernst Steinkellner · Dignāga's Pramāṇasamuccaya, Chapter 1 (hypothetical reconstruction, 2005)",
+      "href": "https://www.oeaw.ac.at/fileadmin/Institute/IKGA/PDF/digitales/dignaga_PS_1.pdf",
+      "note": "지각 장 1.2ab의 \"pratyakṣam anumānaṃ ca pramāṇe\"로 두 프라마나를 확인합니다. 산스크리트 원본 미발견 상태의 재구성 본문입니다(2026-10-09)."
+    }
+  ],
+```
+
+**Hutton 역 『순자』 (confucian-ritual, #16)**
+```
+old:
+      "href": "https://ctext.org/xunzi/li-lun/ens",
+      "note": "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다."
+    }
+  ],
+new:
+      "href": "https://ctext.org/xunzi/li-lun/ens",
+      "note": "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다."
+    },
+    {
+      "kind": "비교 사료",
+      "label": "Eric L. Hutton (trans.) · Xunzi: The Complete Text, ch. 19 Discourse on Ritual (Princeton UP, 2014)",
+      "href": "https://doi.org/10.1515/9781400852550-022",
+      "note": "ctext 예론 페이지에 없는 영어 번역 대조본입니다(201–217쪽). 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09), 본문 문장은 인용하지 않았습니다."
+    }
+  ],
+```
+
+**#31 Oxford 'Hegel to Heidegger' 복원 (german-idealism)**
+```
+old:
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+  ],
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": [
+new:
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "독일 관념론·헤겔·낭만주의·포이어바흐·마르크스·쇼펜하우어·니체·분석철학·브렌타노와 후설·하이데거로 이어지는 10주 배열을 대조합니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
+  ],
+  "philosophy-history/existentialism-facticity-freedom-and-bad-faith": [
+```
+
+**#32 같은 강의 복원 (hermeneutics)**
+```
+old:
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+  ],
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": [
+new:
+    { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "헤겔에서 브렌타노·후설을 거쳐 하이데거(10주차)로 끝나는 대학 과정 배열을 보조 지도로 씁니다. 가다머는 이 과정에 없습니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
+  ],
+  "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": [
+```
+
+### src/content/registrations/philosophy-history-modern-six.ts
+
+#31·#32 복원을 재생성 때 유지하려면 등록 파일의 evidence 배열에도 같은 항목을 넣는다.
+```
+old:
+  { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+new:
+  { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+  { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "독일 관념론·헤겔·낭만주의·포이어바흐·마르크스·쇼펜하우어·니체·분석철학·브렌타노와 후설·하이데거로 이어지는 10주 배열을 대조합니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
+```
+```
+old:
+  { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+new:
+  { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+  { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "헤겔에서 브렌타노·후설을 거쳐 하이데거(10주차)로 끝나는 대학 과정 배열을 보조 지도로 씁니다. 가다머는 이 과정에 없습니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
+```
+(article-evidence.ts의 다른 새 항목도 해당 글의 등록 파일 evidence 배열이 따로 있으면 같은 항목을 넣는다: `registrations/behavior-meaning-and-machine-understanding.ts`, `evidence-models-and-causal-explanation.ts`, `consequence-duty-and-character.ts`, `philosophy-topics.ts`(consciousness), `philosophy-history-current.ts` 또는 classical-india 등록 파일, `philosophical-traditions.ts`(confucian-ritual).)

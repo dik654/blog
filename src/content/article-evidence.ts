@@ -10232,6 +10232,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "R. H. Coase · Nobel lecture (1991)",
       "href": "https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/",
       "note": "거래 활동의 비용 및 실제 자료가 더 필요하다는 단락을 공식 검색 본문에서 확인했습니다. 전체 문서를 직접 내려받았거나 본문의 수치가 강연의 실증 결과라고 주장하지 않습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "O. E. Williamson · Transaction-Cost Economics: The Governance of Contractual Relations (1979)",
+      "href": "https://doi.org/10.1086/466942",
+      "note": "The Journal of Law and Economics 22(2), 233–261. 공개 JSTOR 사본의 239·240·242·246·250·254쪽을 이미지와 텍스트로 대조했습니다(2026-10-09). 13절의 전용 설비·재협상 확률 1/2·흥정 비용 2·b=5는 원문의 측정값이 아니라 본문 가정이며, '홀드업'이라는 단어는 이 논문에 없습니다."
     }
   ],
   "firms/scale-and-cost-structure": [
@@ -10580,6 +10586,20 @@ export const ARTICLE_EVIDENCE: Readonly<
         "T. R. Malthus, 『An Essay on the Principle of Population』, London: J. Johnson, 1798 (초판), 14·20~26쪽",
       href: "https://archive.org/details/essayonprincipl00malt",
       note: "두 비율의 선언(14쪽), 미국에서 25년마다 두 배라는 근거(20~21쪽), 섬 설정(21~23쪽), 100년 셈과 7,700만 명(24쪽), 세계로 넓힌 두 수열(25쪽)과 512 대 10(26쪽 첫 줄)의 출처. Internet Archive의 1798년 초판 스캔을 읽었고 쪽수는 OCR 쪽 머리글 기준(2026-10-09 재대조)이며 쪽 이미지로 따로 대조하지는 않았음",
+    },
+    {
+      kind: "공식 문서",
+      label:
+        "Jutta Bolt · Jan Luiten van Zanden, Maddison Project Database, version 2023 (Groningen Growth and Development Centre)",
+      href: "https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023",
+      note: "2026-10-09에 mpd2023_web.xlsx(dataverse.nl 배포 파일)를 내려받아 Regional data 시트의 World GDP pc·World Population을 읽음. 1820년 1,127.7달러·1,042,017천 명, 1950년 3,360.2달러, 2022년 16,676.7달러·7,802,034천 명(2011년 달러, 연중 인구). 7.5배·15배는 이 글이 나눈 비율. 방법은 Bolt · Van Zanden (2024), Journal of Economic Surveys, DOI 10.1111/joes.12618",
+    },
+    {
+      kind: "공식 문서",
+      label:
+        "United Nations, DESA Population Division, World Population Prospects 2024, Demographic Indicators (Medium variant)",
+      href: "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+      note: "2026-10-09에 배포 CSV를 내려받아 Location=World 행의 TFR(여성 1명당 출생아 수)을 읽음. 1950년 4.8519, 2023년 2.2505. 소득과 출산이 같은 기간에 함께 움직였다는 것만 뒷받침하고 인과는 뒷받침하지 않음",
     },
   ],
   "macro/what-the-price-level-hides": [
@@ -11136,15 +11156,27 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 문서",
-      "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
-      "href": "https://fsc.go.kr/po010101/74332",
-      "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+      "label": "한국거래소 · 유가증권시장 업무규정 (제61차 일부개정, 2026-09-14 시행, 규정 제2497호)",
+      "href": "https://rule.krx.co.kr/",
+      "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제20조의4제2항·제3항 LP 괴리율 2%(해외 기초자산 5%), 제87조의2제1항제2호 1배 초과 배율(음의 배율 포함) ETF·ETN 개인 매수 시 기본예탁금, 제106조의4 투자유의종목, 제38조의2 체결 방법 변경, 제26조제1항제2호의3 매매거래정지. 한국 관할. 조문별 고정 주소가 없어 포털 첫 화면으로 연결"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "한국거래소 · 유가증권시장 업무규정 시행세칙 (제177차 일부개정, 2026-09-14 시행, 세칙 제2499호)",
+      "href": "https://rule.krx.co.kr/",
+      "note": "2026-10-09 KRX 법무포털에서 현행 조문 확인. 제134조의5·제134조의6 장종료시 실시간 괴리율이 규정 비율의 2배 이상이면 지정예고, 10매매거래일 이내 재해당 시 투자유의종목 지정. 제111조의3 기본예탁금 1단계 1천만원 미만(면제 포함)·2단계 1천만원·3단계 1천만원 초과 3천만원 이하, 최초 계좌는 2·3단계, 단일종목 상품 3천만원 이상(현금). 한국 관할"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융위원회 · 국내-해외상장 ETF 간 비대칭 규제 해소를 위한 자본시장법 시행령 개정안 국무회의 의결 (2026-04-21 보도자료)",
+      "href": "https://www.fsc.go.kr/po010101/86751",
+      "note": "2026-10-09 원문 확인. 국내상장·해외상장 레버리지 ETF·ETN 사전교육 1시간, 단일종목 레버리지·인버스 ETF·ETN 심화 사전교육 1시간 추가(금융투자협회 규정 개정). 한국 관할"
     },
     {
       "kind": "공식 문서",
       "label": "금융위원회 · ETFㆍETN시장을 보다 건전하게 발전시키겠습니다 (2020-05-18 보도자료)",
       "href": "https://fsc.go.kr/po010101/74332",
-      "note": "2026-10-09 원문 확인. 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육. 한국 관할이며 2020년 발표 시점의 방안이라 현행 거래소 규정과는 대조하지 못했습니다."
+      "note": "2026-10-09 원문 확인. 2020년 발표 시점의 방안: 괴리율 의무 범위(국내 3%·해외 6%), 투자유의종목 적출요건 30%→6%·12%, 레버리지(±2배) ETF·ETN 개인 일반투자자 기본예탁금 1,000만원·사전 온라인 교육·신용거래 제외·위탁증거금 100%. 괴리율 수치는 현행 거래소 규정(2%·5%, 투자유의 2배)과 다름. 한국 관할"
     },
     {
       "kind": "공식 문서",
@@ -11158,13 +11190,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "CME · Contango, Backwardation and Convergence",
       "href": "https://www.cmegroup.com/education/courses/introduction-to-ferrous-metals/what-is-contango-and-backwardation",
-      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). 정의 문구는 검색 요약으로만 확인해 미검증입니다."
+      "note": "2026-10-09 브라우저 렌더링으로 원문 대조. “When a market is in contango, the forward price of a futures contract is higher than the spot price.”와 만기 수렴 문장(“as the futures contract approaches maturity, the futures price will converge with the spot price”) 확인."
     },
     {
       "kind": "공식 문서",
       "label": "CME · Understanding Margin Changes, margin philosophies",
       "href": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
-      "note": "2026-10-09 재확인 시 자동 조회 불가(시간 초과·403). “marks positions to market twice a day”는 검색 요약으로만 확인해 미검증입니다."
+      "note": "2026-10-09 브라우저 렌더링으로 원문 대조(Matthew Waldis, 2020-03-25). “We mark positions to market twice a day to prevent losses from accumulating over time.” 확인. 미국 CME Clearing 관행."
     },
     {
       "kind": "공식 문서",
@@ -11388,6 +11420,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Singapore Government · Do HDB flat buyers own their flat?",
       "href": "https://www.gov.sg/explainers/do-hdb-flat-buyers-own-their-flat/",
       "note": "싱가포르 HDB 권리의 기간에 대한 정부 설명. 2023년 설명을 2026-10-04 재확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "HDB · MyNiceHome, HDB Flat Types and Classifications",
+      "href": "https://www.mynicehome.gov.sg/hdb-how-to/buy-your-flat/what-are-standard-prime-and-plus-hdb-flats/",
+      "note": "2024년 10월 분양분부터 Standard(MOP 5년·MOP 뒤 전체 임대 가능·보조금 환수 없음)와 Plus·Prime(MOP 10년·전체 임대 불가·매각 시 보조금 환수) 구분. 그 이전 분양분은 적용 제외. 페이지 갱신 2026-06-24, 2026-10-09 확인. hdb.gov.sg 원 페이지는 자동 조회 불가(403)."
     }
   ],
   "infrastructure/climate-risk-and-exposure": [
@@ -11436,6 +11474,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "UK Government · Repaying your student loan, How to repay",
       "href": "https://www.gov.uk/repaying-your-student-loan/how-you-repay",
       "note": "영국 해당 학자금 상환 계획의 소득 조건. 2026-10-04 확인."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Michael Spence · Job Market Signaling (1973), A Critical Assumption, p.358",
+      "href": "https://doi.org/10.2307/1882010",
+      "note": "The Quarterly Journal of Economics 87(3), 355–374. 신호 비용이 생산 능력과 음의 상관을 가지지 않으면 신호가 지원자를 구별하지 못한다는 358쪽 소절을 공개 사본 이미지로 대조했습니다(2026-10-09). 3절의 1,200만·600만·1,800만 원은 본문 가정입니다."
     }
   ],
   "institutions/media-attention-and-public-belief": [
@@ -11450,6 +11494,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "US FTC · Endorsement Guides update, June 2023",
       "href": "https://www.ftc.gov/news-events/news/press-releases/2023/06/federal-trade-commission-announces-updated-advertising-guides-combat-deceptive-reviews-endorsements",
       "note": "미국 FTC 추천·후기 광고 가이드의 공개 판단. 2026-10-04 확인."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EU Regulation 2022/2065 · Article 38, Article 33(1)",
+      "href": "https://publications.europa.eu/resource/celex/32022R2065.ENG.xhtml",
+      "note": "초대형 온라인 플랫폼·검색엔진(EU 월평균 활성 이용자 4,500만 명 이상, 지정)은 추천 시스템마다 프로파일링에 기반하지 않은 선택지를 최소 1개 제공. 원문 XHTML로 2026-10-09 확인. 프로파일링 정의(GDPR 제4조 4호)는 전재본으로 문구만 대조."
     }
   ],
   "business/shop-daily-operations": [
@@ -11509,9 +11559,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "institutions/population-migration-and-care": [{"kind": "공식 문서", "label": "UN DESA · WPP2024 Methodology, p.1–2 및 II.G", "href": "https://population.un.org/wpp/assets/Files/WPP2024_Methodology.pdf", "note": "2024판은 연령·성별 출생·사망·국제이동으로 매년 인구를 전진시킵니다. 추정과 전망을 구분합니다."}, {"kind": "공식 문서", "label": "ILO · Care economy, What is the care economy?", "href": "https://www.ilo.org/topics-and-sectors/care-economy", "note": "유급·무급, 직접·간접 돌봄과 제공자·수혜자·고용주·서비스 기관의 범위. 확인 2026-10-04."}, {"kind": "공식 문서", "label": "ONS · National population projections methodology", "href": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/methodologies/methodologyusedtoproducethenationalpopulationprojections", "note": "출생·사망·이동의 가정에 따른 전망이라는 방법적 경계. 한국의 장기 전망이나 다른 나라의 실제 수치를 대신하지 않습니다."}],
-  "institutions/culture-norms-and-coordination": [{"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 1조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "2001-11-02 채택. 같은 선언의 두 짧은 인용은 8단어와 11단어로 합계 19단어입니다. 확인 2026-10-04, 단어 수 재확인 2026-10-09."}, {"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 4조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "문화의 차이를 인권침해의 근거로 사용할 수 없다는 원칙. 선언과 국내법 구제 절차는 구분합니다."}, {"kind": "공식 문서", "label": "Elinor Ostrom · Nobel 인터뷰 원문", "href": "https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/164465-ostrom-williamson-interview-transcript/", "note": "원문에서 장기간 유지된 제도의 공통 원리를 실제 적용할 방식은 체계마다 다르다고 설명합니다. 본문 10개 가게 계산은 연구 실측이 아닙니다."}],
+  "institutions/culture-norms-and-coordination": [{"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 1조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "2001-11-02 채택. 같은 선언의 두 짧은 인용은 8단어와 11단어로 합계 19단어입니다. 확인 2026-10-04, 단어 수 재확인 2026-10-09."}, {"kind": "공식 문서", "label": "UNESCO · 문화다양성 선언 제 4조", "href": "https://www.unesco.org/en/legal-affairs/unesco-universal-declaration-cultural-diversity", "note": "문화의 차이를 인권침해의 근거로 사용할 수 없다는 원칙. 선언과 국내법 구제 절차는 구분합니다."}, {"kind": "공식 문서", "label": "Elinor Ostrom · Nobel 인터뷰 원문", "href": "https://www.nobelprize.org/prizes/economic-sciences/2009/ostrom/164465-ostrom-williamson-interview-transcript/", "note": "원문에서 장기간 유지된 제도의 공통 원리를 실제 적용할 방식은 체계마다 다르다고 설명합니다. 본문 10개 가게 계산은 연구 실측이 아닙니다."}, {"kind": "핵심 사료", "label": "Elinor Ostrom · Governing the Commons (1990), Table 3.1, p.90", "href": "https://doi.org/10.1017/CBO9780511807763", "note": "오래 유지된 공유자원 제도의 설계 원리 여덟 개. 본문의 분담 규칙·규칙 변경·관찰·단계적 대응·이의 절차를 원리 2·3·4·5·6에 짝지었습니다. 같은 쪽에서 저자는 목록이 추측 단계이며 필요조건이라고 주장하지 않는다고 밝힙니다. 공개 스캔의 89~90쪽 이미지로 2026-10-09 대조."}],
   "institutions/evidence-measurement-and-causality": [{"kind": "공식 문서", "label": "NIST · TN1297 Appendix D1, §D.1.1.2", "href": "https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-appendix-d1-terminology", "note": "반복성의 측정 조건과 정확도·오차·불확실성을 구분합니다. 계기교체 사례는 설명용 가정입니다."}, {"kind": "공식 문서", "label": "ICH · E9 Statistical Principles, §2.3.2 Randomisation", "href": "https://database.ich.org/sites/default/files/E9_Guideline.pdf", "note": "임상시험 설계의 무작위 배정 원칙. 여기서는 비교 설계의 아이디어를 전력 실험에 적용하며 의학적 효과를 주장하지 않습니다."}, {"kind": "공식 문서", "label": "ICH · E8(R1), §5.5·§5.6", "href": "https://database.ich.org/sites/default/files/E8-R1_Guideline_Step4_2022_0204%20%281%29.pdf", "note": "§5.5 Methods to Reduce Bias(무작위 배정은 배정 시점의 차이만 다루고 연구 중 생기는 차이의 편향은 막지 못함)와 §5.6(가정의 영향을 보는 민감도 분석 계획). 배정 이후 탈락·측정·분석의 차이도 결과 해석에 영향을 준다는 설계 원칙. 절 번호는 2026-10-09 원문 PDF로 재확인했습니다(이전 표기 §5.3은 비교군 선택, §6은 시행·안전 모니터링 절)."}],
-  "infrastructure/materials-waste-and-circularity": [{"kind": "공식 문서", "label": "OECD · Global Plastics Outlook, Box6.4·Figure6.4", "href": "https://www.oecd.org/en/publications/global-plastics-outlook_de747aef-en/full-report/component-11.html", "note": "Figure6.4는 물리적 물질 이동과 돈의 흐름을 다른 화살표로 구분합니다.100kg 계산은 본문 가정입니다."}, {"kind": "공식 문서", "label": "OECD · Extended Producer Responsibility, Abstract (2024)", "href": "https://www.oecd.org/en/publications/extended-producer-responsibility_67587b0b-en.html", "note": "제품 사용 후 단계까지 생산자 책임을 확장하는 정책 원리. 품목·부담방식·법적의무는 관할마다 다릅니다."}, {"kind": "공식 문서", "label": "UNEP·IRP · Global Resources Outlook2024", "href": "https://www.unep.org/resources/Global-Resource-Outlook-2024", "note": "2020년 대비 2060년 추출량 증가를 조건부 전망으로 읽습니다. 보고서와 방법론의 범위를 확인하며 사례의 60%회수율과 섞지 않습니다."}],
+  "infrastructure/materials-waste-and-circularity": [{"kind": "공식 문서", "label": "OECD · Global Plastics Outlook, Box6.4·Figure6.4", "href": "https://www.oecd.org/en/publications/global-plastics-outlook_de747aef-en/full-report/component-11.html", "note": "Figure6.4는 물리적 물질 이동과 돈의 흐름을 다른 화살표로 구분합니다.100kg 계산은 본문 가정입니다."}, {"kind": "공식 문서", "label": "OECD · Extended Producer Responsibility, Abstract (2024)", "href": "https://www.oecd.org/en/publications/extended-producer-responsibility_67587b0b-en.html", "note": "제품 사용 후 단계까지 생산자 책임을 확장하는 정책 원리. 품목·부담방식·법적의무는 관할마다 다릅니다."}, {"kind": "공식 문서", "label": "UNEP·IRP · Global Resources Outlook2024", "href": "https://www.unep.org/resources/Global-Resource-Outlook-2024", "note": "2020년 대비 2060년 추출량 증가를 조건부 전망으로 읽습니다. 보고서와 방법론의 범위를 확인하며 사례의 60%회수율과 섞지 않습니다."}, {"kind": "공식 문서", "label": "자원의 절약과 재활용촉진에 관한 법률 제16조·제17조·제19조", "href": "https://www.law.go.kr/법령/자원의절약과재활용촉진에관한법률", "note": "법률 제21370호(2026-08-20 시행). 재활용의무생산자의 회수·재활용 의무, 공제조합 분담금, 재활용의무율 고시, 미이행 시 재활용 비용+30% 이하의 재활용부과금. 2026-10-09 원문 확인. 9절의 의무율 70%·kg당 2,000원은 본문 가정."}, {"kind": "공식 문서", "label": "자원의 절약과 재활용촉진에 관한 법률 시행령 제18조", "href": "https://www.law.go.kr/법령/자원의절약과재활용촉진에관한법률시행령", "note": "대통령령 제36269호(2026-05-12 시행). 재활용의무 대상 제품·포장재(종이팩·유리병·금속캔·합성수지 포장재, 1회용 봉투·쇼핑백, 전지류 등). 2026-10-09 원문 확인."}],
   "gpu/amd-gpu-execution-and-hip": [
     {
       "kind": "공식 문서",
@@ -11762,6 +11812,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "국세청 · 2026 펀드 외국납부세액공제 안내",
       "href": "https://s.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2201&nttSn=1350542",
       "note": "2026-10-04 원문 확인. 본문의 제도 적용 범위와 가정 계산을 구분했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "금융감독원 · 커버드콜 ETF 명칭 및 수익구조에 대한 소비자 경보(주의) 발령 (소비자경보 2024-26호, 2024-07-26 배포·07-29 조간)",
+      "href": "https://samsungfire.com/download/consumer/ca_d71.pdf",
+      "note": "2026-10-09 원문 확인(쪽 이미지 대조). 종목명 분배율은 운용사가 제시하는 목표 분배율일 뿐 확정분배율이 아니고, 분배율은 분배기준일 NAV 대비라 투자원금과 무관하며, 종목명의 “프리미엄”은 옵션 프리미엄을 뜻한다는 문구와 919원 표(3쪽, 매월 NAV 5% 하락·매월 NAV 1% 분배 가정)의 출처. 한국 관할. 금감원 누리집(fss.or.kr)이 2026-10-08~10 전기설비 점검으로 중단되어, 삼성화재가 소비자보호 자료로 게시한 같은 보도자료 PDF(문서 작성자 금융감독원)로 대조했습니다. fss.or.kr 재개 후 원 주소로 바꿀 것."
     }
   ],
   "blockchain/robinhood-chain-settlement": [
@@ -12065,6 +12121,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 사료", label: "Mill · Utilitarianism II", href: "https://www.gutenberg.org/files/11224/old/11224-h/11224-h.htm", note: "결과와 행복을 중심으로 행동을 판단하는 고전 원문" },
     { kind: "비교 사료", label: "Kant · Groundwork II", href: "https://www.gutenberg.org/files/5682/5682-h/5682-h.htm", note: "준칙의 보편화와 사람에 대한 의무를 읽는 고전 원문" },
     { kind: "비교 사료", label: "Aristotle · Nicomachean Ethics II", href: "https://www.gutenberg.org/files/8438/8438-h/8438-h.htm", note: "덕·성품·습관을 읽는 고전 원문(D. P. Chase 역)" },
+    { kind: "핵심 사료", label: "Kant · Grundlegung, Akademie-Ausgabe IV 421 (korpora.org)", href: "https://korpora.org/Kant/aa04/421.html", note: "보편 법칙 정식의 독일어 원문 위치(4권 421쪽 7–8행)를 확인합니다(2026-10-09)." },
+    { kind: "핵심 사료", label: "Aristotle · Ethica Nicomachea, Bekker 1106b (Perseus, Bywater 판)", href: "https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A1999.01.0053%3Abekker+page%3D1106b", note: "덕의 정의가 1106b36에서 1107a2까지 이어지는 그리스어 원문 위치를 확인합니다(2026-10-09)." },
   ],
   "economic-history/agrarian-surplus-and-state": [
     { kind: "핵심 사료", label: "The Met · Proto-cuneiform barley and emmer account", href: "https://www.metmuseum.org/art/collection/search/327384", note: "기원전 3100~2900년 무렵 곡물 행정 장부와 동사 부재의 해석 한계" },
@@ -12086,6 +12144,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Federal Reserve History · Roosevelt's Gold Program", href: "https://www.federalreservehistory.org/essays/roosevelts-gold-program", note: "1933년 4월 20일 금본위 공식 정지." },
     { kind: "공식 문서", label: "Federal Reserve History · Gold Convertibility Ends", href: "https://www.federalreservehistory.org/essays/gold-convertibility-ends", note: "1971년 8월 15일 금 창구 폐쇄." },
     { kind: "공식 문서", label: "Bank of England Quarterly Bulletin 1970 Q1 · Holdings of gold and foreign exchange 1924–31", href: "https://www.bankofengland.co.uk/quarterly-bulletin/1970/q1/bank-of-englands-holdings-of-gold-and-foreign-exchange-1924-31", note: "1925년 4월 말~1931년 9월 금본위 기간." },
+    { kind: "핵심 사료", label: "Articles of Agreement of the International Monetary Fund, 1944 (World Gold Council 발췌본)", href: "https://www.gold.org/sites/default/files/documents/after-the-gold-standard/1944jul22.pdf", note: "4조 5항: 근본적 불균형 교정 목적의 평가 변경만, 기금 협의, 누적 10%·추가 10%(72시간)·그 이상 단계." },
   ],
   "political-philosophy/consent-liberty-and-legitimate-power": [
     { kind: "핵심 사료", label: "Locke · Second Treatise", href: "https://www.gutenberg.org/files/7370/7370-h/7370-h.htm", note: "동의·다수·입법 권한과 공공선의 1차 원문" },
@@ -12094,10 +12153,12 @@ export const ARTICLE_EVIDENCE: Readonly<
   "philosophy-of-science/evidence-models-and-causal-explanation": [
     { kind: "보충 읽기", label: "SEP · 20th Century Theories of Scientific Explanation", href: "https://plato.stanford.edu/entries/scientific-explanation-20th/", note: "법칙·통계·인과·통합 설명과 반례의 전문 개관. 옛 'Scientific Explanation' 항목은 은퇴 후 이 제목으로 재발행(2026-10-09 확인)" },
     { kind: "보충 읽기", label: "SEP · Causal Approaches", href: "https://plato.stanford.edu/entries/causal-explanation-science/", note: "기제와 개입주의 인과 설명의 범위" },
+    { kind: "리뷰 논문", label: "Wesley C. Salmon · Four Decades of Scientific Explanation, Part 3 (Minnesota Studies 13, 1989)", href: "https://conservancy.umn.edu/handle/11299/185699", note: "47쪽에서 깃대 반례를 \"Bromberger's flagpole example\"로 소개하고 원인-설명 비대칭을 진단합니다(University of Minnesota Conservancy PDF, 2026-10-09 확인)." },
   ],
   "mind-and-language/behavior-meaning-and-machine-understanding": [
     { kind: "핵심 논문", label: "Turing · Computing Machinery and Intelligence", href: "https://doi.org/10.1093/mind/LIX.236.433", note: "모방 게임과 학습 기계의 원 논문. 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)" },
     { kind: "비판적 읽기", label: "SEP · Chinese Room Argument", href: "https://plato.stanford.edu/entries/chinese-room/", note: "구문·의미 논증과 주요 반론의 전문 개관" },
+    { kind: "핵심 논문", label: "Searle · Minds, Brains, and Programs (Behavioral and Brain Sciences 3(3), 1980)", href: "https://doi.org/10.1017/S0140525X00005756", note: "중국어 방 논증의 원 논문(417–424쪽). 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)" },
   ],
   "economic-history/trade-credit-and-long-distance-networks": [
     { kind: "핵심 사료", label: "The Met · Loan of silver tablet", href: "https://www.metmuseum.org/art/collection/search/325858", note: "은 6미나와 두 상환 시점을 기록한 점토판" },
@@ -12109,6 +12170,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "비판적 읽기", label: "Engerman · The Slave Trade and British Capital Formation: A Comment on the Williams Thesis (BHR 46(4), 1972)", href: "https://doi.org/10.2307/3113341", note: "윌리엄스 테제 규모 논쟁. 서지 확인 2026-10-09." },
     { kind: "비판적 읽기", label: "Inikori · Africans and the Industrial Revolution in England (CUP, 2002)", href: "https://doi.org/10.1017/CBO9780511583940", note: "윌리엄스 테제 재평가. 서지 확인 2026-10-09." },
     { kind: "보충 읽기", label: "LSU · France–Haiti indebtedness", href: "https://lsu.edu/cffs/france-haiti-indebtedness.php", note: "1825년 배상금과 차입·이자 1억1,200만 프랑 상환에 50년 더 걸림." },
+    { kind: "공식 문서", label: "The National Archives (UK) · British transatlantic slave trade records", href: "https://www.nationalarchives.gov.uk/help-with-your-research/research-guides/british-transatlantic-slave-trade-records/", note: "1807년 3월 25일 노예무역 폐지법 통과·5월 1일 시행, 1834년 폐지와 1838년까지의 도제, 농장주 보상 2천만 파운드. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Slavery Abolition Act 1833 (3 & 4 Will. 4 c. 73), legislation.gov.uk", href: "https://www.legislation.gov.uk/ukpga/Will4/3-4/73/contents", note: "s.12 1834년 8월 1일 해방. 1998년 폐지된 법의 남은 조문. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Décret du 27 avril 1848 relatif à l'abolition de l'esclavage (Légifrance)", href: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000295898", note: "제1조: 각 식민지 공포 두 달 뒤 완전 폐지. 자동 조회 403, 열람 도구로 제목·제1조 확인 2026-10-09." },
+    { kind: "공식 문서", label: "U.S. National Archives · 13th Amendment (1865)", href: "https://www.archives.gov/milestone-documents/13th-amendment", note: "1865년 1월 31일 의회 통과, 12월 6일 비준. 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "Brasil · Lei nº 3.353, de 13 de maio de 1888 (Planalto)", href: "https://www.planalto.gov.br/ccivil_03/leis/lim/lim3353.htm", note: "브라질 노예제 폐지 법률 원문. 확인 2026-10-09." },
     { kind: "핵심 연구", label: "Nunn & Wantchekon · Origins of Mistrust", href: "https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221", note: "노예 무역 노출과 신뢰의 장기 관계" },
     { kind: "선행·비교 논문", label: "Frankema et al. · African Scramble", href: "https://www.nber.org/papers/w21213", note: "상품 호황·식민 쟁탈·수출 특화의 계량사" },
   ],
@@ -12132,19 +12198,23 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 연구", label: "Donaldson · Railroads of the Raj (NBER WP 16487; AER 108(4-5), 2018)", href: "https://www.nber.org/papers/w16487", note: "식민 인도의 철도 접근성·교역비용·지역 가격·실질소득을 계량적으로 대조합니다." },
     { kind: "공식 문서", label: "Reserve Bank of India · Chronology of Indian Monetary History", href: "https://www.rbi.org.in/scripts/His_Choronological.aspx", note: "식민 통화에서 독립 뒤 계획금융과 1991년 외환 전환까지의 공식 연표를 확인합니다." },
     { kind: "공식 문서", label: "Reserve Bank of India · Foreign Exchange Market Overview", href: "https://rbi.org.in/scripts/FS_Overview.aspx?fn=5", note: "1992년 3월 LERMS(이중 환율), 1993년 3월 1일 시장 단일 환율로 대체. 확인 2026-10-09." },
+    { kind: "핵심 연구", label: "Roy · Rethinking the Origins of British India (LSE Economic History WP 142/10, 2010)", href: "https://www.lse.ac.uk/Economic-History/Assets/Documents/WorkingPapers/Economic-History/2010/WP142.pdf", note: "17세기 상인·은행가 세력, 1757 플라시, 1765 벵골 조세권(디와니) 이전. 확인 2026-10-09." },
   ],
   "economic-history/africa-slave-trades-colonial-tax-and-commodity-dependence": [
     { kind: "핵심 연구", label: "Nunn · The Long-Term Effects of Africa’s Slave Trades (NBER WP 13367; QJE 123(1), 2008)", href: "https://www.nber.org/papers/w13367", note: "노예무역 노출과 장기 발전 결과의 관계, 자료와 식별 한계를 함께 검토합니다." },
-    { kind: "보충 읽기", label: "African Economic History Network · Taxation in Africa since Colonial Times", href: "https://www.aehnetwork.org/textbook/taxation-in-africa-since-colonial-times/", note: "현금세·강제 집행·독립 뒤 세수 구조를 지역과 시기별로 비교합니다." },
+    { kind: "보충 읽기", label: "African Economic History Network · Taxation in Africa since Colonial Times", href: "https://www.aehnetwork.org/textbook/taxation-in-africa-since-colonial-times/", note: "현금세·강제 집행·독립 뒤 세수 구조를 지역과 시기별로 비교합니다. 대표 이미지 1902년 북동로디지아 오두막세 영수증의 세액은 3실링, 본문은 나탈 1849년 도입·세입 75%. 확인 2026-10-09." },
   ],
   "economic-history/mena-land-debt-oil-and-diversification": [
     { kind: "공개 강의", label: "LSE · Economic History of the Middle East and North Africa", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH222.htm", note: "토지·노동 권리와 주민 생활, 지역 문서·고고학을 포함하는 아래로부터의 질문 지도를 사용합니다. 2026/27 휴강(Suspended) 표시, 강의 설명은 2025/26 판과 동일. 2025/26 주소는 301 리다이렉트. 확인 2026-10-09." },
     { kind: "공식 연구", label: "Okogu · The Middle East and North Africa in a Changing Oil Market (IMF, 2003)", href: "https://www.imf.org/external/pubs/ft/med/2003/eng/okogu/okogu.htm", note: "게시가격 협상과 소유권 이전이 산유국의 몫과 예산에 들어온 순서를 확인합니다." },
+    { kind: "공식 문서", label: "SALT · Ottoman Bank Museum: Redressing the Situation (1881 Muharrem Decree)", href: "https://artsandculture.google.com/exhibit/QQl_9M51", note: "1881년 12월 20일 무하렘 칙령, 부채 절반 감축과 오스만 공공부채관리국 설립. 확인 2026-10-09." },
+    { kind: "공식 문서", label: "OPEC · Brief History", href: "https://web.archive.org/web/20221220215828/https://opec.org/opec_web/en/about_us/24.htm", note: "1960년 9월 10~14일 바그다드 회의, 창립 5개국. 원 주소(opec.org)는 자동 조회 403이라 2022-12-20 사본. 확인 2026-10-09." },
+    { kind: "공식 연구", label: "IMF · GCC—Enhancing Resilience to Global Shocks: Economic Prospects and Policy Challenges (Dec 2025)", href: "https://www.imf.org/en/publications/policy-papers/issues/2025/12/05/gulf-cooperation-council-gcc-enhancing-resilience-to-global-shocks-economic-prospects-and-572372", note: "재정 성과 차이는 대부분 탄화수소 수입 차이, 세입의 탄화수소 비중은 여전히 높음(특히 쿠웨이트·카타르), 비탄화수소 수출 GDP 대비 5~7·20~26·60%+. PDF는 자동 조회 403이라 web.archive.org 2026-09-05 사본으로 확인 2026-10-09." },
   ],
   "economic-history/latin-america-exports-import-substitution-and-debt": [
     { kind: "핵심 연구", label: "Bértola & Williamson · Globalization in Latin America Before 1940", href: "https://www.nber.org/papers/w9687", note: "19세기 말 수출 호황·운송비·관세와 불평등을 장기 비교합니다." },
     { kind: "공식 문서", label: "Humphreys · Historical Dictionary of the IMF (2000), Introduction: The debt crisis", href: "https://www.elibrary.imf.org/abstract/book/9781475507249/ch01.xml", note: "1970년대 대출 증가에서 1982년 가격·금리·자금 중단으로 이어진 제도적 순서를 확인합니다. Boughton의 Silent Revolution과는 다른 책." },
-    { kind: "핵심 사료", label: "Prebisch · The economic development of Latin America and its principal problems (ECLA, 1950)", href: "https://repositorio.cepal.org/handle/11362/29973", note: "E/CN.12/89/REV.1. 수입대체 전략의 출발점으로 인용." },
+    { kind: "핵심 사료", label: "Prebisch · The economic development of Latin America and its principal problems (ECLA, 1950)", href: "https://repositorio.cepal.org/handle/11362/29973", note: "E/CN.12/89/REV.1. 수입대체 전략의 출발점으로 인용. 표 1(1876~80=100 → 1936~38=64.1)과 '1860년대 대비 63%' 서술을 PDF 원문에서 확인 2026-10-09." },
   ],
   "economic-history/land-rights-enclosure-rent-and-urbanization": [
     { kind: "공식 문서", label: "UK Parliament · Enclosing the land", href: "https://www.parliament.uk/about/living-heritage/transformingsociety/towncountry/landscape/overview/enclosingland/", note: "1604~1914년 의회 인클로저의 규모와 생산성·농업 노동자 이주 논쟁을 함께 확인합니다." },
@@ -12153,6 +12223,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "economic-history/demography-family-economy-and-care": [
     { kind: "공식 연구", label: "UN DESA · Global Population Growth and Sustainable Development", href: "https://desapublications.un.org/publications/global-population-growth-and-sustainable-development", note: "사망과 출생이 다른 속도로 낮아지는 인구 전환과 개발·환경의 연결을 확인합니다." },
     { kind: "공개 강의", label: "LSE EH209 · The Family Economy in History", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH209.htm", note: "결혼·가구 형성·여성·아동 노동과 교육·보건을 가족경제의 장기 질문으로 사용합니다." },
+    { kind: "공식 연구", label: "UN DESA · World Population Prospects 2024, Demographic Indicators (Medium)", href: "https://population.un.org/wpp/", note: "한국 1960 CBR 42.1·CDR 13.0, 1990 15.5·5.7, 2023 4.6·6.7(1,000명당). 중위 지표 CSV(WPP2024_Demographic_Indicators_Medium.csv.gz)로 확인 2026-10-09." },
+    { kind: "핵심 연구", label: "Hajnal · European Marriage Patterns in Perspective (Glass & Eversley eds., Population in History, 1965)", href: "https://doi.org/10.4324/9781315127019-7", note: "유럽 결혼 유형 명칭의 원전. 2017 Routledge 재간본 101~144쪽, 서지만 확인." },
   ],
   "economic-history/firms-banks-insurance-and-institutional-investors": [
     { kind: "공식 연구", label: "Bank of England · Were banks special?", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2018/were-banks-special-contrasting-viewpoints-in-mid-nineteenth-century-britain.pdf", note: "19세기 영국 은행의 무한책임과 유한책임 논쟁을 확인합니다." },
@@ -12212,6 +12284,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Chinese Text Project · Xunzi, Treatise on Ritual Propriety",
       "href": "https://ctext.org/xunzi/li-lun/ens",
       "note": "한정된 물자와 욕망 사이에 배분 기준이 필요한 이유를 말하는 핵심 고전 사료입니다."
+    },
+    {
+      "kind": "비교 사료",
+      "label": "Eric L. Hutton (trans.) · Xunzi: The Complete Text, ch. 19 Discourse on Ritual (Princeton UP, 2014)",
+      "href": "https://doi.org/10.1515/9781400852550-022",
+      "note": "ctext 예론 페이지에 없는 영어 번역 대조본입니다(201–217쪽). 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09), 본문 문장은 인용하지 않았습니다."
     }
   ],
   "philosophical-traditions/daoist-names-noncoercive-action-and-change": [
@@ -12344,6 +12422,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Stanford Encyclopedia of Philosophy · Other Minds",
       "href": "https://plato.stanford.edu/entries/other-minds/",
       "note": "다른 사람의 경험을 아는 근거와 회의론의 답을 정리한 동료 검토 연구입니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Ned Block · On a Confusion about a Function of Consciousness (Behavioral and Brain Sciences 18(2), 1995)",
+      "href": "https://doi.org/10.1017/S0140525X00038188",
+      "note": "현상적 의식과 접근 의식을 구분한 원 논문(227–247쪽)입니다. 출판사 페이지 자동 조회 불가, 서지 Crossref 2차 확인(2026-10-09)."
     }
   ],
   "philosophy-topics/aesthetic-taste-judgment-and-context": [
@@ -12652,6 +12736,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Basel Framework · Internal Models",
       "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
       "note": "표본오차 밖의 가격 과정·자료·스트레스와 독립 검증을 연결합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Longstaff·Schwartz (2001) · Valuing American Options by Simulation",
+      "href": "https://doi.org/10.1093/rfs/14.1.113",
+      "note": "Review of Financial Studies 14(1):113–147. 보유자가 계속 들고 갈 때의 조건부 기대지급을 최소제곱 회귀로 추정해 미국형 옵션을 몬테카를로로 평가합니다."
     }
   ],
   "markets/black-scholes-pde-finite-difference-and-numerical-error": [
@@ -12680,6 +12770,30 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Basel Framework · Market Risk (MAR31)",
       "href": "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327",
       "note": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Dupire (1994) · Pricing with a Smile",
+      "href": "https://www.risk.net/derivatives/equity-derivatives/1500211/pricing-with-a-smile",
+      "note": "Risk 1994년 1월호. 옵션가격 표면에서 지역변동성 함수를 읽어 내는 출발점입니다. 유료 원문이라 서지와 요약만 확인했습니다."
+    },
+    {
+      "kind": "선행·비교 논문",
+      "label": "Itkin·Lipton (2016) · Filling the gaps smoothly",
+      "href": "https://arxiv.org/abs/1608.05145",
+      "note": "§1 식 (1)에 풋 가격에 대한 듀파이어 방정식을 적었습니다. 본문 수식의 금리·배당 0 형태가 여기서 나옵니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Heston (1993) · Closed-Form Solution for Options with Stochastic Volatility",
+      "href": "https://doi.org/10.1093/rfs/6.2.327",
+      "note": "Review of Financial Studies 6(2):327–343. 확률변동성 아래 유럽형 콜의 닫힌 해를 제시합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Merton (1976) · Option pricing when underlying stock returns are discontinuous",
+      "href": "https://doi.org/10.1016/0304-405X(76)90022-2",
+      "note": "Journal of Financial Economics 3(1–2):125–144. 연속 움직임에 점프를 더한 점프확산 모형의 원전입니다. 출판사 페이지 자동 조회 403이라 서지만 확인했습니다."
     }
   ],
   "markets/short-rate-hjm-and-interest-rate-model-risk": [
@@ -12694,6 +12808,24 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Basel Framework · Internal Models",
       "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/30/inforce/2019-12-15/published/2019-12-15",
       "note": "곡선·옵션 보정 뒤 장기 대용값, 극단 상황과 독립 가격을 검증합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Vasicek (1977) · An equilibrium characterization of the term structure",
+      "href": "https://doi.org/10.1016/0304-405X(77)90016-2",
+      "note": "Journal of Financial Economics 5(2):177–188. 1절 되돌림 단기금리 사례의 원전입니다. 출판사 페이지 자동 조회 403이라 서지만 확인했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Hull·White (1990) · Pricing Interest-Rate-Derivative Securities",
+      "href": "https://doi.org/10.1093/rfs/3.4.573",
+      "note": "Review of Financial Studies 3(4):573–592. 바시첵 같은 한 상태 모형을 현재 기간구조와 금리 변동성에 맞게 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Heath·Jarrow·Morton (1992) · Bond Pricing and the Term Structure of Interest Rates",
+      "href": "https://doi.org/10.2307/2951677",
+      "note": "Econometrica 60(1), 1992, 77쪽부터. 선도금리 곡선 전체를 움직이는 HJM 틀의 원전입니다. JSTOR 자동 조회가 막혀 서지만 확인했습니다."
     }
   ],
   "markets/hazard-rate-curve-recovery-and-credit-correlation": [
@@ -12708,6 +12840,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Basel Framework · CVA Risk",
       "href": "https://www.bis.org/committees/bcbs/basel-framework/standard/mar/50/inforce/2019-12-15/published/2019-12-15",
       "note": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Li (2000) · On Default Correlation: A Copula Function Approach",
+      "href": "https://doi.org/10.3905/jfi.2000.319253",
+      "note": "Journal of Fixed Income 9(4):43–54. 동시부도를 만드는 코풀라 접근의 원전입니다. 출판사 페이지는 로그인이 필요해 서지만 확인했습니다."
     }
   ],
   "markets/korea-singapore-retail-derivatives-entry-and-knowledge-tests": [
@@ -13020,6 +13158,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "Stanford Encyclopedia of Philosophy · Mind in Indian Buddhist Philosophy",
       "href": "https://plato.stanford.edu/entries/mind-indian-buddhism/",
       "note": "초기 경험 분석과 디그나가·다르마키르티의 후대 인식론을 구분합니다."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "S. C. Vidyabhusana · The Nyāya Sūtras of Gotama (Sacred Books of the Hindus VIII, 1913)",
+      "href": "https://archive.org/details/TheNyayaSutrasOfGotama",
+      "note": "1권 1장 3번째 수트라가 지각·추론·비교·말(증언)을 네 인식 수단으로 열거함을 영역으로 확인합니다(2쪽, 2026-10-09)."
+    },
+    {
+      "kind": "핵심 사료",
+      "label": "Ernst Steinkellner · Dignāga's Pramāṇasamuccaya, Chapter 1 (hypothetical reconstruction, 2005)",
+      "href": "https://www.oeaw.ac.at/fileadmin/Institute/IKGA/PDF/digitales/dignaga_PS_1.pdf",
+      "note": "지각 장 1.2ab의 \"pratyakṣam anumānaṃ ca pramāṇe\"로 두 프라마나를 확인합니다. 산스크리트 원본 미발견 상태의 재구성 본문입니다(2026-10-09)."
     }
   ],
   "philosophy-history/islamic-philosophy-translation-illumination-and-being": [
@@ -13157,9 +13307,15 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       "kind": "공식 문서",
-      "label": "KRX 주문과 결제",
+      "label": "KRX 주문유형",
       "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp",
-      "note": "주문조건과 체결 뒤 일일정산·반대거래·최종결제를 구분합니다."
+      "note": "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "KRX 선물 결제(Settlement of Futures Transactions)",
+      "href": "https://global.krx.co.kr/contents/GLB/06/0603/0603010802/GLB0603010802.jsp",
+      "note": "체결 뒤 결제를 일일정산·반대거래·최종결제로 나누고 최종결제를 현금결제와 실물인수도로 구분합니다."
     }
   ],
   "markets/portfolio-compression-risk-tolerances-and-records": [
@@ -13207,9 +13363,9 @@ export const ARTICLE_EVIDENCE: Readonly<
   "markets/swaption-annuity-volatility-quotes-and-cube": [
     {
       "kind": "공식 문서",
-      "label": "CME Group 스왑션 평가 방법",
+      "label": "CME Group · SOFR 할인 전환 설명서 §2.2(청산 스왑션 평가)",
       "href": "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf",
-      "note": "만기·tenor·moneyness 호가와 곡선·보정의 평가 순서를 확인합니다."
+      "note": "회원 제출 normal 변동성을 섞고 CME 수정 SABR(MSABR)로 전체 표면을 채우는 순서를 확인합니다. 원 주소는 자동 조회 403이라 web.archive.org 2022-01-19 완전본으로 대조했습니다."
     },
     {
       "kind": "공식 문서",
@@ -13222,7 +13378,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       "kind": "공식 문서",
       "label": "금융소비자보호법 제28조",
-      "href": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704",
+      "href": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357",
       "note": "기록·유지관리·변조 방지와 분쟁 목적 열람의 법률 구조를 확인합니다."
     },
     {
@@ -13258,6 +13414,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "ISDA · Big Bang Protocol",
       "href": "https://www.isda.org/traditional-protocol/big-bang-protocol/",
       "note": "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Li (2000) · On Default Correlation: A Copula Function Approach",
+      "href": "https://doi.org/10.3905/jfi.2000.319253",
+      "note": "Journal of Fixed Income 9(4):43–54. 베이스 상관이 정의되는 1요인 가우시안 코풀라 접근의 원전입니다. 출판사 페이지는 로그인이 필요해 서지만 확인했습니다."
     }
   ],
   "markets/commodity-grades-location-basis-and-physical-delivery": [
@@ -13265,7 +13427,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "CBOT · Corn Futures Chapter 10",
       "href": "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf",
-      "note": "등급 할인·지역 가산·인도 장소와 2027년·2028년 월물 경계를 확인합니다."
+      "note": "3등급 할인(한 조건 2센트·두 조건 4센트), 2027년 12월물까지와 2028년 3월물부터의 두 지역 가산표, 인도 장소를 확인합니다."
     },
     {
       "kind": "공식 문서",
@@ -13323,15 +13485,21 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 연구", label: "Olmstead & Rhode · Biological Innovation and Productivity Growth in the Antebellum Cotton Economy (JEH 68(4), 2008)", href: "https://doi.org/10.1017/S0022050708000831", note: "1801~1862년 일일 면화 채취량 약 4배, 새 품종이 주된 원인. 초록 확인 2026-10-09." },
     { kind: "공식 문서", label: "National Archives · Homestead Act (1862)", href: "https://www.archives.gov/milestone-documents/homestead-act", note: "1862년 5월 20일, 측량 공유지 160에이커·5년 거주." },
     { kind: "공식 문서", label: "National Archives · Pacific Railway Act (1862)", href: "https://www.archives.gov/milestone-documents/pacific-railway-act", note: "1862년 7월 1일, 대륙횡단 철도에 연방 토지·대출 지원." },
+    { kind: "공식 문서", label: "Nobel Prize · The Prize in Economic Sciences 1993 press release (Fogel·North)", href: "https://web.archive.org/web/2025/https://www.nobelprize.org/prizes/economic-sciences/1993/press-release/", note: "Fogel 1964 철도 연구의 반사실 추정, GNP 성장 효과 3% 미만. 원 주소는 자동 조회 403이라 Wayback 사본, 확인 2026-10-09." },
+    { kind: "공식 문서", label: "FHWA · Economic Returns from Transportation Investment, Appendix B (Fishlow 1965·Fogel 1964 해제)", href: "https://www.fhwa.dot.gov/policy/otps/060320a/appb.cfm", note: "Fishlow 1965 p.301 인용: 1860년 이전에도 투자액 연 15% 수익, 1859년 이전 직접 이득은 운하·증기선 때문에 작음. 원서는 대출본이라 본문 미확인." },
   ],
   "economic-history/europe-serfdom-states-industrialization-and-integration": [
     { kind: "공개 강의", label: "LSE EH314 · Political economy and economic policies", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH314.htm", note: "봉건제·국가 형성·전쟁·의회·화폐와 과세를 비교하는 정치경제 범위를 확인합니다." },
     { kind: "공개 강의", label: "LSE EH204 · Money and Finance", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH204.htm", note: "800년 이후 영국·스페인·이탈리아·프랑스·독일의 다른 화폐·금융 경로를 확인합니다." },
     { kind: "공식 문서", label: "European Union · History of the EU 1945–59", href: "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en", note: "1957년 3월 25일 로마조약 서명(EEC·Euratom), 1958년 1월 1일 발효." },
+    { kind: "핵심 사료", label: "GHDI · The Prussian October Edict of 1807 (October 9, 1807)", href: "https://germanhistorydocs.org/en/the-holy-roman-empire-1648-1815/the-prussian-october-edict-of-1807-october-9-1807.pdf", note: "토지 소유·저당의 신분 제한 폐지, 새 예속 금지, 1810년 마르틴 축일부터 예속 종료. 영역본 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Президентская библиотека · 160-летие подписания Манифеста об отмене крепостного права", href: "https://www.prlib.ru/sites/default/files/u535/160-letie_podpisaniya_manifest_ob_otmene_krepostnogo_prava_v_rossii.pdf", note: "1861년 2월 19일(신력 3월 3일) 선언 서명, 인신 자유·지주 토지 소유 유지·분여지 9년 거절 불가·부역 또는 지대." },
+    { kind: "핵심 연구", label: "Ploeckl · The Zollverein and the Formation of a Customs Union (Oxford Discussion Papers in Economic and Social History 84, 2010)", href: "https://www.nuff.ox.ac.uk/Economics/History/Paper84/ploeckl84.pdf", note: "1833년 3월 두 관세동맹 합병 합의, 1834년 1월 1일 발효와 이후 가입 순서를 협상 모형으로 분석." },
   ],
   "economic-history/southeast-asia-ports-plantations-and-export-industrialization": [
     { kind: "공개 강의", label: "LSE EH434 · Economic Development of East and Southeast Asia", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH434.htm", note: "식민지 이전 교역에서 식민화·독립·ASEAN과 현대 성장까지의 비교 범위를 확인합니다." },
-    { kind: "공식 연구", label: "Hayami · An ecological and historical perspective on agricultural development in Southeast Asia (Akiyama & Larson eds., World Bank 2004, ch. 2)", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note: "증기선과 수에즈 운하가 원자재 수출과 서구 공산품 수입 경쟁을 함께 키운 경로를 확인합니다." },
+    { kind: "공식 연구", label: "Hayami · An ecological and historical perspective on agricultural development in Southeast Asia (Akiyama & Larson eds., World Bank 2004, ch. 2)", href: "https://documents1.worldbank.org/curated/en/361941468140660327/pdf/431190WP0NO0PR10Box327349B01PUBLIC1.pdf", note: "증기선과 수에즈 운하가 원자재 수출과 서구 공산품 수입 경쟁을 함께 키운 경로를 확인합니다. 같은 책 pp.25–26 1855 보링 조약·관세 3% 고정, 6장(Kawagoe) 표 6.4 강제재배제도 1830~70. 확인 2026-10-09." },
+    { kind: "보충 읽기", label: "Drabble · Change in the Malaysian economy circa 1800–1990 (Economic History of Malaysia)", href: "https://www.ehm.my/publications/articles/change-in-the-malaysian-economy-circa-1800%E2%80%931990", note: "말라야 고무 재배 면적 1897년 345에이커→1922년 230만 에이커, 고무 가격 1910년 정점. 확인 2026-10-09." },
   ],
   "economic-history/central-asia-pastoralism-irrigation-planning-and-corridors": [
     { kind: "공식 연구", label: "World Bank · Water Energy Nexus in Central Asia: Improving Regional Cooperation in the Syr Darya Basin (2004)", href: "https://documents1.worldbank.org/curated/en/122241468232522184/pdf/338780ENGLISH0Water1Energy1Nexus.pdf", note: "시르다리야 유역 물·전력 협력 보고서. 소련기 관개·하천 전환과 아랄해 비용은 Box 1 요약에서 확인합니다." },
@@ -13348,20 +13516,27 @@ export const ARTICLE_EVIDENCE: Readonly<
   "economic-history/war-finance-public-debt-and-welfare-state-capacity": [
     { kind: "공개 강의", label: "LSE EH450 · Topics in the Economic History of War in Europe", href: "https://www.lse.ac.uk/resources/calendar2026-2027/courseGuides/EH/2026_EH450.htm", note: "전쟁의 재정·물자·인력 동원과 생산·소비·인명 결과를 함께 다루는 범위를 확인합니다." },
     { kind: "공식 문서", label: "House of Commons Library · The public finances: a historical overview (Brien & Keep, 2018)", href: "https://commonslibrary.parliament.uk/research-briefings/cbp-8265/", note: "1688년 이후 영국의 전쟁·장기부채·세입과 20세기 공공지출 변화, 제2차 세계대전 뒤 복지국가 창설을 확인합니다. 자동 조회 403이라 사본으로 확인 2026-10-09." },
+    { kind: "핵심 사료", label: "National Health Service Act 1946 (c. 81) as enacted", href: "https://www.legislation.gov.uk/ukpga/Geo6/9-10/81/enacted", note: "1946년 11월 6일 제정, 1조 포괄적 보건 서비스 설립 의무와 원칙적 무료." },
+    { kind: "공식 문서", label: "UK Parliament Living Heritage · 1946 NHS Act", href: "https://web.archive.org/web/20251010213338/https://www.parliament.uk/about/living-heritage/transformingsociety/livinglearning/coll-9-health1/health-01/nhs-act-page-2/", note: "1948년 7월 5일 시행, 스코틀랜드·북아일랜드 별도 입법. 원 주소는 자동 조회 403이라 2025-10-10 사본." },
   ],
   "economic-history/commercial-law-limited-liability-and-insolvency": [
     { kind: "공식 가이드", label: "UNCITRAL · Legislative Guide on Insolvency Law", href: "https://uncitral.un.org/en/texts/insolvency/legislativeguides/insolvency_law", note: "개시·중지·절차 중 새 자금·채권자 참여·재조정과 청산 전환을 한 제도 안에서 확인합니다." },
     { kind: "공식 문서", label: "United States Courts · Chapter 11 Bankruptcy Basics", href: "https://www.uscourts.gov/court-programs/bankruptcy/bankruptcy-basics/chapter-11-bankruptcy-basics", note: "채권 등급과 손상된 등급의 금액·인원 수락 문턱, 계획 확인 절차를 확인합니다." },
     { kind: "핵심 사료", label: "Joint Stock Companies Act 1856 (원문)", href: "https://www.irishstatutebook.ie/1856/en/act/pub/0047/print.html", note: "1856년 7월 14일, Limited Liability Act 1855 폐지·대체." },
     { kind: "공식 문서", label: "UNCITRAL · Model Law on Cross-Border Insolvency (1997)", href: "https://uncitral.un.org/en/texts/insolvency/modellaw/cross-border_insolvency", note: "1997년 5월 30일 채택." },
+    { kind: "핵심 사료", label: "Bankruptcy Reform Act of 1978 (Public Law 95-598, 92 Stat. 2549)", href: "https://www.govinfo.gov/content/pkg/STATUTE-92/pdf/STATUTE-92-Pg2549.pdf", note: "1978년 11월 6일, 미국법전 11편 제정. 7장 청산·11장 재조정, §362 자동 중지, §1104 관재인 임명 사유, §1107 점유 채무자." },
+    { kind: "핵심 사료", label: "Insolvency Act 1986, Schedule B1 paras 6·59 (legislation.gov.uk)", href: "https://www.legislation.gov.uk/ukpga/1986/45/schedule/B1/paragraph/59", note: "관리인은 도산실무가 자격자만(para 6), 회사 업무·사업·재산 관리에 필요한 모든 일(para 59). 2003-09-15 삽입." },
   ],
   "economic-history/cooperatives-member-governance-and-surplus": [
     { kind: "공식 문서", label: "International Cooperative Alliance · Cooperative identity", href: "https://ica.coop/en/cooperatives/cooperative-identity", note: "공동 소유·민주 통제와 조합원 경제 참여, 1차 협동조합의 1인 1표 원칙을 확인합니다." },
     { kind: "공식 문서", label: "ICA · History of the cooperative movement", href: "https://ica.coop/en/cooperatives/history-cooperative-movement", note: "1844년 로치데일 장인 28명의 첫 근대 협동조합, 1895년 8월 19일 ICA 창립." },
     { kind: "공식 가이드", label: "ILO · Guide to Recommendation No. 193 (R193 para. 1 인용)", href: "https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@ed_emp/@emp_ent/@coop/documents/publication/wcms_311447.pdf", note: "협동조합의 자율성과 모든 경제 부문에서의 법·정책·교육·금융 지원 범위를 확인합니다." },
+    { kind: "공식 문서", label: "ICA · Cooperative identity: 3원칙(조합원 경제 참여)·5원칙(교육·훈련·정보)", href: "https://ica.coop/en/cooperatives/cooperative-identity", note: "잉여의 세 용도(적립금 포함 발전·거래 비례 혜택·조합원 승인 기타 활동)와 교육 원칙의 대상. 확인 2026-10-09." },
   ],
   "economic-history/development-banks-mandates-credit-and-governance": [
     { kind: "공식 문서", label: "KfW · History of KfW", href: "https://www.kfw.de/About-KfW/Förderauftrag-und-Geschichte/Geschichte-der-KfW/", note: "1948년 전후 복구를 위해 설립." },
+    { kind: "공식 문서", label: "World Bank · IBRD", href: "https://www.worldbank.org/en/who-we-are/ibrd", note: "1944년 전후 유럽 재건을 위해 설립. 1944년 7월 브레턴우즈 44개국 회의는 세계은행 역사 페이지에서 확인." },
+    { kind: "핵심 사료", label: "Lei nº 1.628, de 20 de junho de 1952 (Planalto)", href: "https://www.planalto.gov.br/ccivil_03/leis/1950-1969/l1628.htm", note: "브라질 국가경제개발은행(BNDE, 현 BNDES) 설립 법률." },
     { kind: "공식 연구", label: "World Bank · 2017 Survey of National Development Banks (64개 기관 응답, 되돌림 41%)", href: "https://documents.worldbank.org/en/publication/documents-reports/documentdetail/977821525438071799", note: "금융위기 때 국가개발은행의 대출·보증 확대와 이후 되돌림, 기관별 운영 차이를 확인합니다." },
     { kind: "공식 가이드", label: "World Bank · Role of Development Financial Institutions", href: "https://blogs.worldbank.org/en/eastasiapacific/the-role-of-development-financial-institutions-in-the-new-millennium", note: "시장 신용 공백·경기대응 역할을 분명한 임무와 건전한 지배구조 조건에 연결합니다." },
   ],
@@ -13373,6 +13548,10 @@ export const ARTICLE_EVIDENCE: Readonly<
   "economic-history/regional-gdp-household-income-and-within-country-inequality": [
     { kind: "공식 문서", label: "Eurostat · Regional economic accounts metadata", href: "https://ec.europa.eu/eurostat/cache/metadata/EN/reg_eco10_esms.htm", note: "지역 GDP의 생산 장소 기준, 지역 간 흐름 자료와 국가 PPP 사용에서 생기는 비교 한계를 확인합니다." },
     { kind: "공식 문서", label: "Eurostat · Regions in Europe 2026: Economy", href: "https://ec.europa.eu/eurostat/web/interactive-publications/regions-2026", note: "다국적기업 자산과 국경 통근이 1인당 지역 GDP와 주민 생활의 차이를 키울 수 있음을 확인합니다." },
+    { kind: "공식 문서", label: "Eurostat · Income of households by NUTS 2 region (nama_10r_2hhinc)", href: "https://ec.europa.eu/eurostat/databrowser/view/nama_10r_2hhinc/default/table", note: "피용자 보수·재산소득·순1차소득·소득세·사회부담금·사회급여·순처분가능소득, ESA 2010. API 레이블로 확인 2026-10-09." },
+    { kind: "공식 문서", label: "Eurostat · NUTS overview", href: "https://ec.europa.eu/eurostat/web/nuts/overview", note: "NUTS 1·2·3 정의, 2024년판 92·244·1,165개 지역." },
+    { kind: "공식 연구", label: "Eurostat · Distributional national account estimates for household income and consumption (KS-TC-21-010, 2022)", href: "https://ec.europa.eu/eurostat/web/products-statistical-working-papers/-/ks-tc-21-010", note: "OECD–Eurostat EG DNA 최종 보고서. 2011년 출범은 OECD 발표 슬라이드(UNSD 게시)에서 확인." },
+    { kind: "공식 연구", label: "World Inequality Lab · Distributional National Accounts Guidelines (October 2025)", href: "https://wid.world/document/distributional-national-accounts-dina-guidelines-2025-methods-and-concepts-used-in-the-world-inequality-database", note: "거시 총량과 일치하는 소득·부 분포를 SNA의 분배적 확장으로 만드는 DINA 방법." },
   ],
   "economic-history/gross-exports-domestic-value-added-and-supply-chain-rewiring": [
     { kind: "공식 문서", label: "OECD · Trade in Value-Added (2025 edition)", href: "https://www.oecd.org/en/topics/sub-issues/trade-in-value-added.html", note: "총수출의 국내·외국 부가가치와 서비스 기여·최종수요를 국가 간 투입산출표로 나누는 지표를 확인합니다. 현행 2025년 판은 81개 경제·50개 업종·1995~2022년, 2023년 판(76개·1995~2020)은 보관판. 확인 2026-10-09." },
@@ -13388,17 +13567,17 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 연구", label: "Bank of England · Extracting information from structured credit markets", href: "https://www.bankofengland.co.uk/-/media/boe/files/working-paper/2010/extracting-information-from-structured-credit-markets.pdf", note: "2005~2008년 베이스 상관 곡선의 이동과 단일 가우시안 모형의 경계를 확인합니다." },
   ],
   "markets/wti-crude-oil-cushing-storage-pipeline-and-delivery": [
-    { kind: "공식 규격", label: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "1천 배럴 계약, 쿠싱 승인 시설, 허용 오차와 실물인도 방식을 확인합니다." },
+    { kind: "공식 규격", label: "NYMEX · Light Sweet Crude Oil Futures Chapter 200", href: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", note: "1천 배럴 계약, 쿠싱 승인 시설, 허용 오차와 실물인도 방식, T+1 인수 의사 통지·T+3 전액 인도증거금을 확인합니다." },
     { kind: "공식 문서", label: "U.S. EIA · Working and net available shell storage capacity", href: "https://www.eia.gov/todayinenergy/detail.php?id=67866", note: "탱크 바닥 물량 때문에 총 저장능력과 실제 가용 공간이 다른 이유를 확인합니다." },
   ],
   "markets/lme-metals-warrants-quality-storage-and-load-out": [
-    { kind: "공식 규격", label: "LME · Zinc Contract Specifications", href: "https://www.lme.com/Metals/Non-ferrous/LME-Zinc/Contract-specifications", note: "아연 순도·로트·워런트 중량 허용 범위와 승인 브랜드·창고를 확인합니다." },
+    { kind: "공식 규격", label: "LME · Zinc Contract Specifications", href: "https://www.lme.com/en/metals/non-ferrous/lme-zinc/contract-specifications", note: "아연 순도 99.995%·네 화학 조성 표준·25톤 로트·워런트 ±2%와 승인 브랜드·창고를 확인합니다(자동 조회 403이라 2026-09-08 웹 아카이브 사본으로 대조)." },
     { kind: "공식 가이드", label: "LME · Warrants", href: "https://www.lme.com/Sustainability-and-Physical-Markets/Warehousing/LME-warrants", note: "워런트가 승인 창고의 특정 금속을 나타내고 취소되는 절차를 확인합니다." },
     { kind: "공식 문서", label: "LME · Warehouse Agreement 2026", href: "https://www.lme.com/-/media/files/physical-services/warehousing/physical-markets-reform-2026/appendix-2-lme-warehouse-agreement--clean.pdf", note: "일별 임대료·FOT·재발행과 취소 워런트 출고 기록 의무를 확인합니다." },
   ],
   "markets/livestock-futures-live-delivery-and-cash-settlement": [
     { kind: "공식 규격", label: "CME · Live Cattle Futures Chapter 101 (25-157, CFTC 제출본)", href: "https://www.cftc.gov/filings/orgrules/rules04222519546.pdf", note: "생우 4만 파운드·기준 등급·추정 63% 뜨거운 도체 수율 조정식과 60% 하한·5% 수량 편차를 확인합니다." },
-    { kind: "공식 가이드", label: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview", note: "생우 실물인도와 비육우·돈육의 지수 현금정산을 비교합니다." },
+    { kind: "공식 가이드", label: "CME · The Livestock Overview", href: "https://www.cmegroup.com/education/courses/understanding-livestock-markets/the-livestock-overview.html", note: "생우 실물인도와 비육우·돈육의 지수 현금정산을 비교합니다." },
   ],
   "markets/singapore-derivatives-records-complaints-and-tax-ledger": [
     { kind: "공식 문서", label: "Singapore Statutes Online · Derivatives Trading Regulations", href: "https://sso.agc.gov.sg/SL/SFA2001-S134-2019", note: "적용 장부와 정보를 계약·거래 종료 뒤 적어도 5년 보존하는 규정을 확인합니다." },
@@ -13408,6 +13587,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "philosophy-history/german-idealism-self-consciousness-recognition-and-history": [
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Idealism", href: "https://plato.stanford.edu/entries/idealism/", note: "독일 관념론이 정신을 수동적 관념의 그릇보다 활동으로 본 점과 버클리식 비물질론의 차이를 확인합니다." },
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Recognition", href: "https://plato.stanford.edu/entries/recognition/", note: "피히테와 헤겔에서 다른 주체의 자유와 상호 인정이 맡는 역할을 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "독일 관념론·헤겔·낭만주의·포이어바흐·마르크스·쇼펜하우어·니체·분석철학·브렌타노와 후설·하이데거로 이어지는 10주 배열을 대조합니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
   ],
   "philosophy-history/existentialism-facticity-freedom-and-bad-faith": [
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Existentialism", href: "https://plato.stanford.edu/archives/spr2023/entries/existentialism/", note: "사실성·초월·자유·진정성·나쁜 믿음의 관계와 저자별 차이를 확인합니다." },
@@ -13416,6 +13596,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "philosophy-history/hermeneutics-part-whole-prejudice-and-understanding": [
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hermeneutics", href: "https://plato.stanford.edu/archives/spr2026/entries/hermeneutics/", note: "문헌 해석 원리에서 인간 존재와 자기 해석으로 넓어진 해석학의 역사를 확인합니다." },
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Hans-Georg Gadamer", href: "https://plato.stanford.edu/entries/gadamer/", note: "선판단의 적극적 역할과 대화, 지평 융합의 의미와 경계를 확인합니다." },
+    { kind: "공개 강의", label: "University of Oxford · Hegel to Heidegger (2025 가을 과정, Wayback 사본)", href: "https://web.archive.org/web/20251001143046/https://www.lifelong-learning.ox.ac.uk/courses/hegel-to-heidegger?code=O25P583PHW", note: "헤겔에서 브렌타노·후설을 거쳐 하이데거(10주차)로 끝나는 대학 과정 배열을 보조 지도로 씁니다. 가다머는 이 과정에 없습니다. 원 주소는 과정 종료 후 404라 2025-10-01 사본(2026-10-09 확인)." },
   ],
   "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": [
     { kind: "핵심 연구", label: "Stanford Encyclopedia of Philosophy · Critical Theory", href: "https://plato.stanford.edu/entries/critical-theory/", note: "내재적 비판·이데올로기·소외·해방과 현대의 방법 논쟁을 확인합니다." },
@@ -13738,7 +13919,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "gpu/ai-cluster-storage-io": [
     { kind: "공식 문서", label: "NVIDIA HGX AI Factory · NVIDIA-Certified Storage", href: "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/nvidia-certified-storage.html", note: "GPU당 약 12.5Gb/s storage bandwidth guideline과 certified storage 범위를 확인합니다. 이전 storage.html 주소는 2026-10-09 404였습니다." },
-    { kind: "공식 규격", label: "SNIA SSS Performance Test Specification", href: "https://www.snia.org/solid-state-sss", note: "저장장치 성능 측정의 preconditioning·steady-state 경계를 다루는 규격 안내입니다. 2026-10-09 자동 조회가 403으로 막히고 보관 사본도 없어 내용은 다시 대조하지 못했습니다." },
+    { kind: "공식 규격", label: "SNIA SSS Performance Test Specification", href: "https://www.snia.org/solid-state-sss", note: "저장장치 성능 측정의 preconditioning·steady-state 경계를 다루는 규격 안내입니다. 자동 조회는 403이라 2026-10-09 브라우저로 열어 v2.0.2(2020-10-01 발행)와 PDF 경로 /sites/default/files/2025-02/SNIA-SSS-PTS-2.0.2.pdf를 확인했습니다. PDF는 web.archive.org 2025-05-23 사본이 잘려 일부만 읽었고, “Write 2X User Capacity with 128KiB SEQ writes”(workload independent pre-conditioning)와 “If Steady State is not reached by Round x=25 … The Measurement Window is defined as Round x-4 to Round x.” 문장을 확인했습니다." },
     { kind: "공식 문서", label: "Linux VFS와 blk-mq", href: "https://docs.kernel.org/block/blk-mq.html", note: "Application I/O가 page cache·filesystem·bio/request·device queue를 통과하는 경계를 확인합니다." },
     { kind: "공식 문서", label: "Linux fsync(2)", href: "https://man7.org/linux/man-pages/man2/fsync.2.html", note: "write 반환, file fsync와 directory entry durability를 서로 다른 완료 조건으로 둡니다." },
     { kind: "공식 문서", label: "MLCommons Storage", href: "https://github.com/mlcommons/storage", note: "AI training과 checkpoint workload를 file·object backend에서 재현할 때 manifest와 실행 조건을 고정하는 기준을 확인합니다." },
@@ -13749,7 +13930,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "프로젝트 실측", label: "NAVER D2 · Alluxio 도입기", href: "https://d2.naver.com/helloworld/3863967", note: "HDFS 원본과 locality cache 사이 persistence·metadata sync 질문을 가져옵니다. 당시 version의 성능값은 재사용하지 않습니다." },
     { kind: "프로젝트 실측", label: "Kakao · Apache Iceberg 운영", href: "https://tech.kakao.com/posts/694", note: "Commit 간격·small file·compaction·snapshot/orphan 정리가 연결되는 운영 trade-off를 확인합니다." },
     { kind: "프로젝트 실측", label: "우아한형제들 · Aurora storage 비교", href: "https://techblog.woowahan.com/2621/", note: "Media 이름이 아니라 실제 query·engine·instance 조합을 시험하는 방법을 참고합니다." },
-    { kind: "프로젝트 실측", label: "당근 · DynamoDB change pipeline", href: "https://medium.com/daangn/dynamodb-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B3%80%EA%B2%BD-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0-feat-kinesis-1733db06066", note: "Online source의 부하를 격리하고 access pattern에서 object layout을 정하는 질문을 가져옵니다. 2026-10-09 Cloudflare 403으로 자동 조회가 막히고 보관 사본도 없어 게시일(2021-12-27)과 본문을 다시 대조하지 못했습니다." },
+    { kind: "프로젝트 실측", label: "당근 · DynamoDB change pipeline", href: "https://medium.com/daangn/dynamodb-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B3%80%EA%B2%BD-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0-feat-kinesis-1733db06066", note: "Online source의 부하를 격리하고 access pattern에서 object layout을 정하는 질문을 가져옵니다. 자동 조회는 Cloudflare 403이라 2026-10-09 브라우저로 열어 게시일 Dec 27, 2021과 LivestreamID·시간 단위 S3 partitioning 설명을 확인했습니다." },
     { kind: "공개 강의", label: "IT 엔지니어라면 알아야 할 RAID 핵심 완벽 정리 · 미눅스", href: "https://youtu.be/P2KaU04KbLE", note: "RAID 0·1·5·6의 용량·장애 허용 trade-off를 복습하되 분산 AI 스토리지 성능 근거로 확대하지 않습니다." },
     { kind: "공개 강의", label: "IT 인프라 입문. 서버 데이터 처리 핵심 지표 · 미눅스", href: "https://youtu.be/19nnY2aaAoI", note: "처리량·IOPS·지연시간을 구분하는 입문 자료로 활용합니다." },
     { kind: "공개 강의", label: "Interactive and Batch Jobs with Volatile Storage · Virginia Tech ARC", href: "https://docs.arc.vt.edu/videos/video_set_jobs.html", note: "공유 저장소의 파일을 node-local 임시 저장소로 옮겨 계산한 뒤 결과를 되돌리는 cache 경로를 실습 관점에서 확인합니다." },

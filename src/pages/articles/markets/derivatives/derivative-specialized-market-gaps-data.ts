@@ -171,7 +171,8 @@ export const commodityDeliveryData: DerivativeDeepArticleData = {
       "그다음 증서 번호, 인도 통지, 대금과 출고 요청을 맞춥니다. 적재 때 공식 무게와 등급이 정해지면 넘치거나 모자란 수량의 정산 기준도 당사자 합의와 규정에 맞춰 기록합니다.",
     ] },
     { id: "source", level: "5", title: "8. CBOT 옥수수 규칙은 등급·지역·인도 장소를 따로 적습니다", bridge: "4센트와 6.25센트가 적용되는 정확한 자리를 확인합니다.", paragraphs: [
-      "CBOT Chapter 10은 특정 3등급 옥수수의 손상 조건에 4센트 할인을 두고, 2027년 12월까지 Ottawa-Chillicothe 지역에 6.25센트 가산을 둡니다. 2028년 3월물부터 일부 다른 지역 가산은 바뀝니다.",
+      "CBOT Chapter 10은 3등급 황색 옥수수의 할인을 원인별로 나눕니다. 깨진 낟알·이물질 비율(3.1~4%)이나 총손상 비율(5.1~7%) 가운데 하나만 3등급 범위에 들면 부셸당 2센트, 둘 다 들면 4센트를 뺍니다. 그래서 4센트는 손상 하나만이 아니라 두 조건이 겹친 경우의 값입니다.",
+      "지역 가산표는 2027년 12월물까지 적용하는 표와 2028년 3월물부터 적용하는 표 두 벌로 나뉩니다. Ottawa-Chillicothe 지역의 6.25센트는 두 표에서 같습니다. 바뀌는 곳은 St. Louis-East St. Louis·Alton 지역으로, 가산이 16.25센트에서 24센트로 오릅니다.",
       "따라서 규정표의 날짜와 장소를 빼고 숫자만 재사용하면 안 됩니다. 본문은 2026년 10월에 확인한 현행 규정의 계산 순서를 보여 줍니다.",
     ] },
     { id: "comparison", level: "6", title: "9. CME는 선적증서를 승인 시설의 인도 약속으로 설명합니다", bridge: "가격표와 실제 물건을 이어 주는 권리 문서를 확인합니다.", paragraphs: [
@@ -200,7 +201,7 @@ export const commodityDeliveryData: DerivativeDeepArticleData = {
     { term: "선적증서", description: "승인 시설이 보유자 요청 때 계약 상품을 인도하겠다는 의무를 나타내는 양도 가능한 문서입니다.", example: "증서를 받은 뒤 발행 시설에 출고를 요청합니다.", boundary: "즉시 적재 완료나 특정 곡물 더미의 소유를 뜻하지 않습니다." },
   ] },
   sources: [
-    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 지역 6.25센트를 더하는 범위와 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "옥수수 선물 규정입니다. 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 직접 대조하지 못했습니다. Ottawa-Chillicothe 6.25센트 가산은 CME 공지 검색 결과로 확인했지만, 4센트 손상 할인 조건과 2027년 12월물·2028년 3월물 경계는 원문 대조를 하지 못했습니다. 거래 시점에 현행 규정을 다시 확인합니다." },
+    { source: "CBOT · Corn Futures Chapter 10", excerpt: "class and grade · location differentials", application: "5달러에서 품질 4센트를 빼고 지역 6.25센트를 더하는 범위와 월물을 확인합니다.", citation: "CBOT Rulebook, Chapter 10 Corn Futures", href: "https://www.cmegroup.com/rulebook/CBOT/I/10.pdf", note: "옥수수 선물 규정입니다. 원본 PDF는 2026-10-09 자동 조회 403·타임아웃이라 2026-01-07 웹 아카이브 사본(2025년 2월 판과 같은 파일)으로 10104 등급 차등(2센트·4센트 조건)과 10105 지역 가산 두 표(2027년 12월물까지·2028년 3월물부터)를 대조했습니다. 거래 시점에 현행 규정을 다시 확인합니다." },
     { source: "CME Group · Warehouse Receipts vs. Shipping Certificates", excerpt: "commitment ... to deliver", application: "선적증서를 승인 시설의 인도 약속으로 읽고 출고 장소와 후속 절차를 구분합니다.", citation: "CME Group, Warehouse Receipts vs. Shipping Certificates FAQ", href: "https://www.cmegroup.com/education/articles-and-reports/warehouse-receipts-vs-shipping-certificates-frequently-asked-questions", note: "증서의 일반 구조를 확인하며 옥수수의 세부 인도 조건은 현행 Rulebook이 우선합니다. 이 페이지는 2026-10-09 자동 조회 타임아웃이라 선적증서 정의 문구를 검색 요약으로만 2차 확인했습니다." },
   ],
   review: [

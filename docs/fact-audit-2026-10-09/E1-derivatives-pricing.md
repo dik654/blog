@@ -362,3 +362,135 @@ NEW:
         "title": "Basel Framework · Market Risk (MAR31)",
         "href": "https://www.bis.org/basel_framework/chapter/MAR/31.htm?inforce=20230101&published=20200327",
 ```
+
+## 후속 작업 결과
+처리일 2026-10-09. 서지는 출판사 페이지(OUP·Risk.net)를 직접 열거나, 출판사가 403일 때 DOI 리다이렉트(linkinghub.elsevier.com)와 Crossref 출판사 등록 메타데이터(api.crossref.org/works/<DOI>)로 확인했다. 식은 "독자가 글의 숫자로 무엇을 판정하는가"가 있을 때만 `formulas`에 넣었다. KaTeX 렌더(throwOnError) 44개 식 오류 0, eslint 통과, check-article은 다른 글의 prose "재검토 필요"만 남음.
+
+| 항목 | 처리 | 근거·내용 |
+|---|---|---|
+| (13) CME 스왑션 평가 원문 | 적용 | web.archive.org의 **2022-01-19 사본은 완전본**(1,269,877바이트, pdftotext 1,497행)이었다: http://web.archive.org/web/20220119134843/https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf (원 주소는 여전히 403, 2020-11-25·2024-06-18 사본은 1 MiB에서 잘림). §2.2 "Cash Adjustment Methodology for Cleared Swaptions"의 Current Process (i)a~c·(ii)·(iii)과 각주 2(moneyness = ATM forward − Strike)를 원문 대조. `C` 8절 첫 문단을 원문 3단계로 다시 쓰고 "2차 자료"·"대조 못 함" 단서 삭제, 'shifted SABR' → 원문 용어 'CME 수정 SABR(MSABR)'로 정정, moneyness 부호 관례(1절 +10bp 사례 = CME 표기 −10bp)와 EFFR→SOFR(2020-10-16) 할인 문단 추가. 2번 출처 excerpt를 원문 연속 문장 "CME Modified SABR (MSABR) parameters are calibrated to these blended prices to construct the whole volatility surface across all expiry/tenor points and all moneyness."로, citation에 §2.2, note에 아카이브 사본 주소 기재. href는 공식 원 주소 유지(봇 차단일 뿐 죽은 문서 아님). evidence label 갱신은 아래 목록 |
+| (15) Dupire 식 | 적용(식 1개) | `A` volatilityModelsData에 `formulas`(6절) 신설: σ_loc²=2∂_T P/(K²∂_KK P)(금리·배당 0). 원 논문(Risk 1994-01, 유료)은 본문을 못 열어 식 출처는 Itkin·Lipton(2016) arXiv:1608.05145 §1 식 (1) "The Dupire equation for the put P(K,T) reads … P_T = ½σ²(K,T)K²∂²P/∂K² − (r−q)K∂P/∂K − qP"(r=q=0으로 둠). 사례(가정): 흔들림 20% 하나로 만든 풋 3.589/7.966/14.292(1년, 90·100·110), 8.290(13개월 100) → ∂_T P≈3.889, ∂_KK P≈0.0195, σ_loc≈19.97%(Python 재계산). 판정 규칙: 나비 묶음 값·만기 기울기가 양수여야 값이 나오며 100 풋이 8.94보다 비싸면 보정 전에 호가 점검. 서지 확인: https://www.risk.net/derivatives/equity-derivatives/1500211/pricing-with-a-smile meta description "In the January 1994 issue of Risk, Bruno Dupire showed how the Black-Scholes model can be extended to make it compatible with observed market volatility smiles" |
+| (15) Heston 분산 과정 | 적용(문장) + 공용파일 목록 | 식은 넣지 않음: 원 논문 본문을 열지 못했고, 글의 사례(30/20/24%, −10% 충격)에 이 식으로 판정하는 계산이 없다. 6절에 저널명과 "유럽형 콜 가격을 닫힌 식으로 구했다"만 추가. 근거: https://academic.oup.com/rfs/article-lookup/doi/10.1093/rfs/6.2.327 초록 첫 문장 "I use a new technique to derive a closed-form solution for the price of a European call option on an asset with stochastic volatility." RFS 6(2):327–343, 1993-04 |
+| (15) Merton 점프 강도 | 적용(저널명) + 공용파일 목록 | 식은 넣지 않음(본문·초록 미열람, 글에 λ로 판정하는 사례 없음). 서지: ScienceDirect 403, DOI 10.1016/0304-405X(76)90022-2 → linkinghub pii 0304405X76900222 200, Crossref "Option pricing when underlying stock returns are discontinuous", JFE 3(1–2):125–144, 1976 |
+| (16) Hull-White 확장 | 적용(문장) + 공용파일 목록 | `A` interestRateModelsData 6절에 "헐·화이트(1990)는 바시첵 같은 한 상태 단기금리 모형을 확장해 오늘의 금리 기간구조와 현재 금리 변동성까지 맞추도록" 추가, 바시첵 식 assumptions에 연결 문장. 근거: OUP https://academic.oup.com/rfs/article/3/4/573/1577209 초록 "This article shows that the one-state-variable interest-rate models of Vasicek (1977) and Cox, Ingersoll, and Ross (1985b) can be extended so that they are consistent with both the current term structure of interest rates and either the current volatilities of all spot interest rates or the current volatilities of all forward interest rates." θ(t) 식은 초록에 없어 넣지 않음 |
+| (16) HJM·Vasicek 서지 | 공용파일 목록 | HJM: JSTOR 2951677은 Client Challenge로 자동 조회 불가, Crossref(등록 주체 JSTOR) "Bond Pricing and the Term Structure of Interest Rates: A New Methodology for Contingent Claims Valuation", Econometrica 60(1):77, 1992. Vasicek: ScienceDirect 403, linkinghub 200, Crossref "An equilibrium characterization of the term structure", JFE 5(2):177–188, 1977 |
+| (17) Li 2000 | 공용파일 목록 | pm-research.com은 로그인 리다이렉트, Crossref: "On Default Correlation" 부제 "A Copula Function Approach", David X. Li, Journal of Fixed Income 9(4):43–54, 2000, DOI 10.3905/jfi.2000.319253. 베이스 상관·해저드 두 글 evidence에 추가 |
+| (18) Longstaff-Schwartz 2001 | 공용파일 목록 | OUP https://academic.oup.com/rfs/article-lookup/doi/10.1093/rfs/14.1.113: Longstaff·Schwartz, RFS 14(1):113–147, 2001-01, 초록이 "the conditional expected payoff to the optionholder from continuation"을 최소제곱으로 추정한다고 설명. MC 글 evidence에 추가 |
+| 경미: F=S(1+rτ)−D | 적용(식 1개) | `D` noArbitrageData 8절 `formulas`: CME 식 F=Cash[1+r(x/360)]−Dividends(본 원장 6번이 web.archive 2026-04-12 사본에서 확인한 원문). 100·5%·360일·배당 2 → 103, 호가 108(+5)·99(−4) 판정. 8절 문단에 연결 문장 |
+| 경미: FRA 결제식 | 보류 | 할인 결제식 N(L−K)τ/(1+Lτ)는 1차 자료(ISDA 정의집 유료, 거래소·감독기관 공개 문서)를 찾지 못했고 검색 결과는 교육 사이트뿐. 글 295행이 이미 "지급 시점 할인, 정확한 일수와 할인식 확인"을 문장으로 적고 있어 그대로 둠 |
+| 경미: 배당 있는 풋콜 등식 | 적용(문장만) | 글이 인용한 OIC 페이지(https://www.optionseducation.org/advancedconcepts/put-call-parity)에 배당형 식은 없고 무배당식 "c = S + p – Xe–r(T– t)"와 "higher dividends tend to reduce call option prices and increase put option prices."만 있음 → `D` replicationData 9절에 그 경향 문장만 추가, 식은 넣지 않음 |
+
+## 후속 공용 파일 수정 목록
+통합자가 순서대로 적용. old 문자열은 2026-10-09에 `src/content/article-evidence.ts`에서 각각 1회만 나옴을 grep으로 확인했다.
+
+### src/content/article-evidence.ts
+```
+OLD:
+      "label": "CME Group 스왑션 평가 방법",
+      "href": "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf",
+      "note": "만기·tenor·moneyness 호가와 곡선·보정의 평가 순서를 확인합니다."
+NEW:
+      "label": "CME Group · SOFR 할인 전환 설명서 §2.2(청산 스왑션 평가)",
+      "href": "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf",
+      "note": "회원 제출 normal 변동성을 섞고 CME 수정 SABR(MSABR)로 전체 표면을 채우는 순서를 확인합니다. 원 주소는 자동 조회 403이라 web.archive.org 2022-01-19 완전본으로 대조했습니다."
+```
+```
+OLD:
+      "note": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다."
+    }
+NEW:
+      "note": "행사가·만기 표면, 시간 변화, 점프와 상관을 검증 항목으로 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Dupire (1994) · Pricing with a Smile",
+      "href": "https://www.risk.net/derivatives/equity-derivatives/1500211/pricing-with-a-smile",
+      "note": "Risk 1994년 1월호. 옵션가격 표면에서 지역변동성 함수를 읽어 내는 출발점입니다. 유료 원문이라 서지와 요약만 확인했습니다."
+    },
+    {
+      "kind": "선행·비교 논문",
+      "label": "Itkin·Lipton (2016) · Filling the gaps smoothly",
+      "href": "https://arxiv.org/abs/1608.05145",
+      "note": "§1 식 (1)에 풋 가격에 대한 듀파이어 방정식을 적었습니다. 본문 수식의 금리·배당 0 형태가 여기서 나옵니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Heston (1993) · Closed-Form Solution for Options with Stochastic Volatility",
+      "href": "https://doi.org/10.1093/rfs/6.2.327",
+      "note": "Review of Financial Studies 6(2):327–343. 확률변동성 아래 유럽형 콜의 닫힌 해를 제시합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Merton (1976) · Option pricing when underlying stock returns are discontinuous",
+      "href": "https://doi.org/10.1016/0304-405X(76)90022-2",
+      "note": "Journal of Financial Economics 3(1–2):125–144. 연속 움직임에 점프를 더한 점프확산 모형의 원전입니다. 출판사 페이지 자동 조회 403이라 서지만 확인했습니다."
+    }
+```
+```
+OLD:
+      "note": "곡선·옵션 보정 뒤 장기 대용값, 극단 상황과 독립 가격을 검증합니다."
+    }
+NEW:
+      "note": "곡선·옵션 보정 뒤 장기 대용값, 극단 상황과 독립 가격을 검증합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Vasicek (1977) · An equilibrium characterization of the term structure",
+      "href": "https://doi.org/10.1016/0304-405X(77)90016-2",
+      "note": "Journal of Financial Economics 5(2):177–188. 1절 되돌림 단기금리 사례의 원전입니다. 출판사 페이지 자동 조회 403이라 서지만 확인했습니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Hull·White (1990) · Pricing Interest-Rate-Derivative Securities",
+      "href": "https://doi.org/10.1093/rfs/3.4.573",
+      "note": "Review of Financial Studies 3(4):573–592. 바시첵 같은 한 상태 모형을 현재 기간구조와 금리 변동성에 맞게 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Heath·Jarrow·Morton (1992) · Bond Pricing and the Term Structure of Interest Rates",
+      "href": "https://doi.org/10.2307/2951677",
+      "note": "Econometrica 60(1), 1992, 77쪽부터. 선도금리 곡선 전체를 움직이는 HJM 틀의 원전입니다. JSTOR 자동 조회가 막혀 서지만 확인했습니다."
+    }
+```
+```
+OLD:
+      "note": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다."
+    }
+NEW:
+      "note": "가격 장부 확률을 실제 부도 추정과 분리하고 스프레드·회수·상관으로 확장합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Li (2000) · On Default Correlation: A Copula Function Approach",
+      "href": "https://doi.org/10.3905/jfi.2000.319253",
+      "note": "Journal of Fixed Income 9(4):43–54. 동시부도를 만드는 코풀라 접근의 원전입니다. 출판사 페이지는 로그인이 필요해 서지만 확인했습니다."
+    }
+```
+```
+OLD:
+      "note": "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다."
+    }
+NEW:
+      "note": "결정위원회 판단과 경매 결제를 표준 계약 흐름에 넣은 범위를 확인합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Li (2000) · On Default Correlation: A Copula Function Approach",
+      "href": "https://doi.org/10.3905/jfi.2000.319253",
+      "note": "Journal of Fixed Income 9(4):43–54. 베이스 상관이 정의되는 1요인 가우시안 코풀라 접근의 원전입니다. 출판사 페이지는 로그인이 필요해 서지만 확인했습니다."
+    }
+```
+```
+OLD:
+      "note": "표본오차 밖의 가격 과정·자료·스트레스와 독립 검증을 연결합니다."
+    }
+NEW:
+      "note": "표본오차 밖의 가격 과정·자료·스트레스와 독립 검증을 연결합니다."
+    },
+    {
+      "kind": "핵심 논문",
+      "label": "Longstaff·Schwartz (2001) · Valuing American Options by Simulation",
+      "href": "https://doi.org/10.1093/rfs/14.1.113",
+      "note": "Review of Financial Studies 14(1):113–147. 보유자가 계속 들고 갈 때의 조건부 기대지급을 최소제곱 회귀로 추정해 미국형 옵션을 몬테카를로로 평가합니다."
+    }
+```

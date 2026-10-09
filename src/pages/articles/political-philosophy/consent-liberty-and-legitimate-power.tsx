@@ -92,6 +92,7 @@ export default function ConsentLibertyAndLegitimatePowerArticle() {
       <LessonSection id="limits" level="7" title="10. 실제 동의·불평등·공공재가 단순 표결을 어렵게 만듭니다" bridge="표 수, 권한, 피해, 대안, 수정 통로를 함께 보는 기준을 세웠습니다. 아래 질문으로 같은 규칙을 다시 판단할 수 있습니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">현대 국가는 태어날 때 실제 계약서에 서명한 사람들만으로 만들어지지 않습니다. 이사할 수 있다는 말도 비용·국적·가족 때문에 충분한 동의가 아닐 수 있습니다. 묵시적 동의를 너무 넓게 잡으면 어떤 권력도 사후에 정당화됩니다.</p>
+          <p className="leading-8">이 비판이 겨냥하는 넓은 기준은 로크 자신의 것입니다. 『통치론』 둘째 논고 §119는 명시적 동의와 묵시적 동의를 나눈 뒤, 그 정부 영토의 어느 부분이든 소유하거나 누리는 사람은 묵시적 동의를 한 것이라고 답합니다. 일주일 묵는 숙소나 큰길을 자유롭게 지나가는 일까지 포함되고, 로크의 표현으로는 “the very being of any one within the territories of that government”까지 닿습니다. 100가구 사례로 옮기면 동네 길을 한 번 지나간 방문자도 영업시간 규칙에 동의한 사람으로 세어지는 셈이라, 동의가 권력을 제한하는 힘을 잃습니다.</p>
           <p className="leading-8">돈과 시간의 차이는 참여의 질도 바꿉니다. 표는 한 사람에 하나여도 변호사, 언론, 로비, 자료에 접근하는 능력은 다릅니다. 그래서 정당성은 선거뿐 아니라 기본권, 행정 이유, 독립 심사, 정보 공개, 실제로 쓸 수 있는 이의 절차에서 반복해 확인해야 합니다.</p>
         </div>
         <ReviewPrompts questions={[

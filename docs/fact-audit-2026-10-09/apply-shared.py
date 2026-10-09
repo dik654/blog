@@ -8,7 +8,9 @@ mirror = "--mirror" in sys.argv
 regs = sorted(pathlib.Path("src/content/registrations").glob("*.ts"))
 mirrored = 0
 ledger = pathlib.Path(sys.argv[1]).read_text()
-m = re.search(r'^## 공용 파일 수정 목록\s*\n(.*?)(?=^## |\Z)', ledger, re.S | re.M)
+# --section "후속 공용 파일 수정 목록 (A1)" 처럼 절 제목을 고를 수 있다(기본: 공용 파일 수정 목록).
+section = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--section=")), "공용 파일 수정 목록")
+m = re.search(r'^## ' + re.escape(section) + r'[^\n]*\n(.*?)(?=^## |\Z)', ledger, re.S | re.M)
 if not m: sys.exit("no shared section")
 sec = m.group(1); ok = skip = 0; cur = None
 tokens = re.split(r'(```[a-z]*\n.*?```)', sec, flags=re.S)
@@ -24,6 +26,8 @@ for t in tokens:
         if hp: cur = hp[-1]
         continue
     body = t.split("\n",1)[1].rsplit("```",1)[0]
+    info = t[3:t.index("\n")].strip().lower()
+    if info in ("old", "new"): label = info + ":"   # ```old / ```new 형식
     if label == "old:":
         pending = body.rstrip("\n"); continue
     if label == "new:" and pending is not None:

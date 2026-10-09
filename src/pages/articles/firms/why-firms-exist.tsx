@@ -18,7 +18,7 @@ function CostTable({ scenarios }: { scenarios: { label: string; outside: number;
   </table></div>;
 }
 
-/** Coase 1937 원문 390~397쪽을 확인했습니다. 숫자는 본문의 가정입니다. */
+/** Coase 1937 원문 390~397쪽과 Williamson 1979 원문 239~254쪽 일부를 확인했습니다. 숫자는 본문의 가정입니다. */
 export default function WhyFirmsExistArticle() {
   return (
     <div className="space-y-16">
@@ -189,8 +189,7 @@ b=3.5:\quad4-3.5=0.5
           <p className="leading-7">안쪽 추가 비용이 항상 5이고 밖은 항상 4인 경우도 봅니다. 내부 비용이 올라가지 않아도 전부 밖에 두는 것이 가장 쌉니다. 반대로 안이 항상 3이면 이 사례의 여섯 일은 모두 안에서 처리합니다. 비용이 증가하지 않는다는 사실만으로 세상의 모든 거래가 한 기업에 들어간다고 결론 낼 수는 없습니다.</p>
           <p className="leading-7">현실에서는 품질·자금·권한·법적 책임·작업 간 연결과 변경 비용도 다릅니다. 이 글의 비용 합계는 권한을 누가 갖는지, 이익을 누가 가져가는지까지 자동으로 결정하지 않습니다. 내부 이전가격의 존재와 수준을 이 수식 하나로 설명하는 것도 범위를 넘습니다.</p>
           <p className="leading-7">Coase는 1991년 노벨 강연에서 실제 기업과 계약에 관한 자료가 더 필요하다고 강조했습니다. 여섯 일의 산술은 어떤 항목을 비교할지 보여 줍니다. 특정 기업의 최적 크기나 모든 기업이 존재하는 이유를 실증한 결과로 읽어서는 안 됩니다.</p>
-          <p className="leading-7">같은 강연에서 Coase는 Oliver Williamson 등의 작업이 기업이 무엇을 어떻게 하는지 정하는 요인을 더 잘 이해하게 했다고 말했습니다. 그 흐름의 대표 논문이 Williamson의 1979년 「Transaction-Cost Economics: The Governance of Contractual Relations」(The Journal of Law and Economics 22권 2호, 233~261쪽)입니다.</p>
-          <p className="leading-7">제목이 말하는 계약 관계의 지배구조(governance)가 밖의 비용을 어떻게 바꾸는지는 이 글에서 다루지 않으며, 이 논문은 서지만 확인했습니다(2026-10-09).</p>
+          <p className="leading-7">같은 강연에서 Coase는 Oliver Williamson 등의 작업이 기업이 무엇을 어떻게 하는지 정하는 요인을 더 잘 이해하게 했다고 말했습니다. 밖의 비용 b가 왜 오르내리는지를 그 작업으로 다음 절에서 따라갑니다.</p>
         </div>
         <CostTable scenarios={[{ label: "밖 4·설립비 5", outside: 4, setup: 5 }]} />
         <CitationBlock source="R. H. Coase · The Institutional Structure of Production, Nobel lecture (1991)" citeKey={2} href="https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/">공식 강연 본문 중 계약 활동의 비용과 실제 자료의 필요성을 설명하는 단락을 확인했습니다. 이 글의 숫자는 강연에서 측정한 결과가 아닙니다.</CitationBlock>
@@ -198,8 +197,44 @@ b=3.5:\quad4-3.5=0.5
             조건을 바꿨을 때도 같은 작업의 전체 비용을 다시 계산하면 어디까지 결론을 낼 수 있는지 알 수 있습니다.
           </p>
       </section>
+      <section id="specific-assets" data-teach-level="7" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">13. 전용 설비가 필요하면 밖의 비용 b가 4에서 5로 오른다</h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-7">여섯 일을 이 조립업체의 부품에만 맞는 전용 설비로 처리해야 한다고 바꿔 봅니다(가정). 공급자가 그 설비를 들이면 다른 고객에게는 거의 쓸 데가 없습니다. 조립업체도 설비가 없는 다른 공급자로 옮기면 처음부터 다시 맞춰야 합니다. 설비 하나 때문에 양쪽이 서로에게 묶입니다.</p>
+          <p className="leading-7">묶인 상태에서 규격이 바뀌면 비용이 생깁니다. 주문 두 번에 한 번꼴로 규격이 바뀌고, 바뀔 때마다 늘어난 이득을 누가 얼마나 가져갈지 흥정하는 데 2가 든다고 놓습니다(가정). 작업 하나의 기대 재협상 비용은 2 × 1/2 = 1입니다. 밖의 비용은 탐색 1, 협상 1, 확인 2에 재협상 1이 더해져 b = 5가 됩니다. 안에서는 규격 변경을 지시로 맞추므로 이 1이 생기지 않는다고 둡니다(가정).</p>
+          <p className="leading-7">b = 5를 넣고 11절과 같은 방식으로 합계를 다시 계산합니다. 안에 들인 작업의 비용을 앞에서부터 더하고, 남은 작업 수에 5를 곱해 더합니다.</p>
+        </div>
+        <div className="my-6 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <caption className="mb-3 text-left text-sm leading-6">(가정) b = 5일 때 안에 들이는 작업 수별 합계</caption>
+            <thead><tr><th scope="col" className="p-2">안의 작업 수</th><th scope="col" className="p-2">안쪽 비용</th><th scope="col" className="p-2">밖의 비용</th><th scope="col" className="p-2">합계</th></tr></thead>
+            <tbody>{[["3개", "1 + 2 + 3 = 6", "5 × 3 = 15", "21"], ["4개", "6 + 4 = 10", "5 × 2 = 10", "20"], ["5개", "10 + 5 = 15", "5 × 1 = 5", "20"]].map(([n, inside, outside, total]) => <tr key={n} className="border-t border-border"><th scope="row" className="p-2 font-normal">{n}</th><td className="p-2">{inside}</td><td className="p-2">{outside}</td><td className="p-2">{total}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-7">최저 합계가 나오는 작업 수는 3개나 4개였는데 이제 4개나 5개로 옮겨 갔습니다. 안에서 드는 작업별 비용은 바뀌지 않았으므로, 회사가 더 많은 일을 맡게 된 이유는 안쪽의 개선이 아니라 밖의 재협상 위험입니다.</p>
+        </div>
+        <div className="my-6 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <caption className="mb-3 text-left text-sm leading-6">(가정) 같은 여섯 일에서 밖의 비용 b의 구성만 바꾼 비교입니다.</caption>
+            <thead><tr><th scope="col" className="p-2">상황</th><th scope="col" className="p-2">b의 구성</th><th scope="col" className="p-2">최저 합계</th><th scope="col" className="p-2">최저인 안의 작업 수</th></tr></thead>
+            <tbody>{[["범용 부품", "탐색 1 + 협상 1 + 확인 2 = 4", "18", "3개·4개"], ["전용 설비", "4 + 재협상 2 × 1/2 = 5", "20", "4개·5개"]].map(([label, parts, total, n]) => <tr key={label} className="border-t border-border"><th scope="row" className="p-2 font-normal">{label}</th><td className="p-2">{parts}</td><td className="p-2">{total}</td><td className="p-2">{n}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-7">특정 상대와의 거래에서만 제값을 하는 이런 투자를 Williamson은 1979년 논문에서 거래 특유 투자(transaction-specific investment)라고 불렀습니다. 흔히 자산 특수성이라고 부르는 성질입니다. 240쪽은 그런 설비를 들인 공급자가 거래에 사실상 &ldquo;묶인다&rdquo;고 쓰고, 다른 공급처에서 같은 조건으로 살 수 없는 구매자도 마찬가지라고 덧붙입니다.</p>
+          <p className="leading-7">묶인 상대가 조건을 바꿀 때마다 더 큰 몫을 요구할 위험을 경제학에서는 흔히 홀드업(hold-up)이라고 부릅니다. 1979년 논문은 이 단어를 쓰지 않습니다. 242쪽은 쌍방 독점에 놓인 두 당사자가 조정이 제안될 때마다 이득의 몫을 두고 흥정하고, 그래서 효율적인 조정이 값비싼 흥정으로 끝나거나 아예 제안되지 않는다고 설명합니다. 사례의 재협상 1이 이 비용입니다.</p>
+          <p className="leading-7">Williamson은 거래를 가르는 결정적 차원으로 불확실성, 거래가 반복되는 빈도, 거래 특유 투자의 정도를 꼽습니다(239쪽). 사례에서 불확실성은 규격이 바뀔 확률 1/2입니다. 확률이 커지면 기대 재협상 비용과 b가 함께 커지고, 254쪽도 특유 투자가 있을 때 불확실성이 커지면 계약의 빈틈과 조정할 일이 늘어난다고 씁니다.</p>
+          <p className="leading-7">빈도는 12절의 설립비와 이어집니다. 설립비 5처럼 한 번 내는 비용은 같은 거래가 여러 번 반복될수록 나눠 부담할 횟수가 늘어납니다. 246쪽은 전용 관리 구조가 가끔 하는 거래보다 반복되는 거래에서 훨씬 정당화하기 쉽다고 설명합니다.</p>
+          <p className="leading-7">판단 규칙은 10절의 식 그대로이고 바뀐 것은 b의 값뿐입니다. 재협상 비용을 b에 넣은 뒤 다음 작업의 안쪽 비용과 비교합니다.</p>
+          <p className="leading-7">다만 Williamson은 회사 안으로 들이는 것만 답으로 두지 않습니다. 250쪽은 양쪽의 독립성을 유지하는 쌍방 구조와 거래를 회사 안의 권한 관계로 옮기는 통합 구조를 구분합니다. 재협상 1을 줄이는 장기 계약이 있다면 그 계약의 비용도 같은 여섯 일의 합계에 넣어 비교하고, 안에서 재협상 비용이 0이라는 가정도 확인해야 합니다.</p>
+        </div>
+        <SourceApplication source="Williamson (1979) · 인쇄 240쪽" excerpt="the supplier is effectively “locked into” the transaction to a significant degree" application="부품에만 맞는 설비를 들인 공급자와 다른 공급처가 없는 조립업체가 서로 묶이고, 규격이 바뀔 때마다 흥정 비용이 생깁니다. 재협상 2와 확률 1/2, 그 결과인 b = 5는 원문의 측정값이 아니라 본문의 가정입니다." />
+        <CitationBlock source="O. E. Williamson · Transaction-Cost Economics: The Governance of Contractual Relations (1979), pp.233–261" citeKey={3} href="https://doi.org/10.1086/466942">The Journal of Law and Economics 22권 2호. 공개 스캔 사본의 239·240·242·246·250·254쪽을 이미지와 텍스트로 대조했습니다(2026-10-09). 숫자 사례는 원문에 없는 설명용 가정입니다.</CitationBlock>
+        <p data-stage-bridge="specific-assets" className="mt-5 text-sm leading-7 text-muted-foreground">밖의 비용 b가 왜 오르내리는지 이름을 붙였습니다. 이제 같은 비교로 예측하는 방법을 정리합니다.</p>
+      </section>
       <section id="handoff" data-teach-level="7" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">13. 같은 일을 끝내는 전체 비용으로 예측한다</h2>
+        <h2 className="mb-6 text-2xl font-bold">14. 같은 일을 끝내는 전체 비용으로 예측한다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-7">
             밖에서 새로 협상할 비용을 아끼려다 안쪽의 배정과 감독 비용을 더 쓸 수 있습니다. 비교할 작업과 품질을 맞춘 뒤 두 경로의 전체 비용을 계산합니다. 그다음 계약에서 정한 업무

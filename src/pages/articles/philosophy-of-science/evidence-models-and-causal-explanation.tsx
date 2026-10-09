@@ -73,7 +73,8 @@ export default function EvidenceModelsAndCausalExplanationArticle() {
 
       <LessonSection id="source" level="5" title="8. 법칙만으로 만든 설명의 비대칭 문제를 확인합니다" bridge="참인 규칙에 현상을 넣는 것만으로 설명이 완성되지 않는 이유를 봤습니다. 개입과 모형 목적을 현대 논의와 비교합니다.">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">20세기 과학 설명의 연역·법칙 모형은 초기 조건과 일반 법칙에서 현상을 논리적으로 이끌어 내려고 했습니다. 그러나 깃대 높이와 태양 각도로 그림자 길이를 구할 수 있다고 해서 그림자 길이가 깃대 높이의 원인인 것은 아닙니다. 논리적 도출만으로 설명 방향을 고르기 어렵습니다.</p>
+          <p className="leading-8">20세기 과학 설명의 연역·법칙 모형은 초기 조건과 일반 법칙에서 현상을 논리적으로 이끌어 내려고 했습니다. 그러나 깃대 높이와 태양 각도, 빛의 직진 법칙으로 그림자 길이를 이끌어 낼 수 있듯이, 같은 법칙과 그림자 길이로 깃대 높이도 이끌어 낼 수 있습니다. 앞의 도출은 설명처럼 보이지만 뒤의 도출은 깃대 높이를 설명하지 못합니다. 깃대가 그림자를 만들지 그림자가 깃대를 만들지는 않기 때문입니다. 논리적 도출만으로는 설명 방향을 고르기 어렵습니다.</p>
+          <p className="leading-8">이 반례는 보통 실뱅 브롬버거(Sylvain Bromberger)의 것으로 불립니다. 웨슬리 새먼은 「Four Decades of Scientific Explanation」(1989, Minnesota Studies in the Philosophy of Science 13권) 47쪽에서 이를 “Bromberger's flagpole example”이라는 이름으로 소개하고, 원인이 결과를 설명할 뿐 그 반대는 아니라는 진단을 붙였습니다. 브롬버거가 1960년대에 쓴 원 논문들(1962·1963·1966)은 이 글에서 직접 열어 보지 않았습니다.</p>
           <p className="leading-8">우산 사례도 “판매가 많으면 사고가 많다”는 규칙에 오늘 판매량을 넣어 사고를 맞힐 수 있습니다. 그래도 왜 사고가 났는지에는 비와 노면 경로가 필요합니다. 참이고 예측력이 있는 문장도 질문에 관련된 원인을 빼면 설명이 얕을 수 있습니다.</p>
         </div>
         <SourceApplication source="Stanford Encyclopedia · 20th Century Theories of Scientific Explanation" excerpt="true, accurate, supported by evidence, and so on and yet unexplanatory" application="우산 판매 규칙이 자료와 맞고 예측에 성공해도 사고를 줄일 원인 경로를 주지 않으면 인과 설명은 아닙니다." />

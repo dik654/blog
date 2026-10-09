@@ -31,12 +31,14 @@ export const krxDerivativesMechanicsData: DerivativeDeepArticleData = {
       "정산가격 328이 공표되면 −2×25만 원=−50만 원을 계좌에 반영합니다. 증거금 부족 여부, 추가 납부 시각, 반대매매나 만기 결제까지 같은 거래 식별자로 잇습니다.",
     ] },
     { id: "source", level: "5", title: "8. KRX 계약명세는 포인트를 현금으로 바꾸는 규칙을 정합니다", bridge: "교육용 숫자를 실제 시장 규격에 대조합니다.", paragraphs: [
-      "KRX의 코스피200 선물 명세에는 계약승수, 최소가격변동폭, 거래시간, 최종거래일, 현금결제와 가격 제한이 따로 적혀 있습니다. 이 항목들이 손익과 주문 가능 범위를 만듭니다.",
+      "KRX 코스피200 선물 명세(2026-10-09 확인)에서 가격이 움직이는 가장 작은 칸인 호가단위는 0.05포인트입니다. 여기에 계약승수 25만 원을 곱하면 한 칸이 1만2,500원입니다. 330에서 328까지의 2포인트는 40칸이므로 40×1만2,500원=50만 원으로, 3절에서 구한 손실과 같습니다.",
+      "같은 명세는 계약이 끝나는 날과 하루에 움직일 수 있는 폭도 정합니다. 최종거래일은 결제월의 둘째 목요일이고, 그다음 날 현금으로 최종결제합니다. 가격제한폭은 선물 기준가격의 ±8%·±15%·±20% 세 단계이며, 08:45~09:00와 야간 거래에는 첫 단계만 적용한다고 적혀 있습니다.",
       "종목 개편이나 월물에 따라 현재 명세가 달라질 수 있습니다. 주문 시점의 종목별 명세와 회원사의 증거금 기준을 다시 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. KRX는 시장가 외에도 남은 수량의 처리 조건을 구분합니다", bridge: "빨리 체결한다는 한 문장으로 주문을 합치지 않습니다.", paragraphs: [
       "KRX 안내는 지정가·시장가와 종가 때 시장가로 바뀌는 주문 등을 구분하고, 즉시 체결되지 않은 수량을 모두 취소하는 조건과 전량 체결이 아니면 모두 취소하는 조건을 설명합니다.",
-      "체결 뒤에는 일일 시가평가, 반대거래와 최종결제가 이어집니다. 일부 상품은 실물, 다른 상품은 현금으로 끝나므로 상품 이름만 보고 결제물을 단정하면 안 됩니다.",
+      "체결 뒤의 일은 KRX의 선물 결제 안내가 따로 설명합니다. 이 안내는 결제를 매일 장 마감 가격으로 다시 평가해 차액을 주고받는 일일정산, 최종거래일 장 마감 전까지 같은 종목을 반대로 사고팔아 포지션을 닫는 반대거래, 끝까지 남은 미결제약정을 정리하는 최종결제의 세 가지로 나눕니다.",
+      "최종결제는 현금결제와 실물인수도 두 방식이고 상품마다 어느 쪽인지 정해져 있습니다. 코스피200 선물은 현금결제이지만 다른 상품도 그렇다고 이름만 보고 단정하면 안 됩니다.",
     ] },
     { id: "limits", level: "7", title: "10. 거래소 규격을 알아도 유동성과 급변 손실은 남습니다", bridge: "정해진 절차와 좋은 체결 결과를 구분합니다.", paragraphs: [
       "시장가 주문은 체결 가능성을 높이지만 원하는 가격을 보장하지 않습니다. 가격이 빠르게 움직이거나 호가가 얇으면 예상보다 불리한 가격에 여러 번 나뉘어 체결될 수 있습니다.",
@@ -61,7 +63,7 @@ export const krxDerivativesMechanicsData: DerivativeDeepArticleData = {
   ] },
   sources: [
     { source: "한국거래소 · 코스피200 선물 명세", excerpt: "Contract Size · Tick Size · Cash Settlement", application: "330에서 328로 움직인 1계약의 손익에 승수와 결제방식을 적용합니다.", citation: "KRX, KOSPI 200 Futures", href: "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp", note: "현재 종목 규격은 거래 시점의 KRX 계약명세에서 다시 확인합니다." },
-    { source: "한국거래소 · 주문유형", excerpt: "Limit · Market · IOC · FOK", application: "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.", citation: "KRX, Order Types", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp", note: "주문유형만 설명하는 페이지입니다. 체결 뒤 일일정산·반대거래·최종결제는 이 페이지에 없고 상품명세(1번 출처)와 KRX 청산결제 규정에서 확인합니다. 회원사별 추가 기준은 별도입니다." },
+    { source: "한국거래소 · 주문유형", excerpt: "Limit · Market · IOC · FOK", application: "지정가·시장가와 남은 수량을 처리하는 IOC·FOK 조건을 구분합니다.", citation: "KRX, Order Types", href: "https://global.krx.co.kr/contents/GLB/06/0603/0603010200/GLB0603010200.jsp", note: "주문유형만 설명하는 페이지입니다. 체결 뒤 일일정산·반대거래·최종결제는 이 페이지에 없고, KRX 'Settlement of Futures Transactions' 안내(global.krx.co.kr GLB0603010802, 2026-10-09 확인)에서 확인합니다. 회원사별 추가 기준은 별도입니다." },
   ],
   review: [
     "330에 산 1계약이 328로 정산될 때 손익을 계산해 보세요. (답: 1·3절)",
@@ -341,7 +343,8 @@ export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
       "호가형에 맞는 Bachelier 또는 Black 계열 식에 명목·만기·금리·연금계수·변동성을 넣습니다. normal 호가라면 아래 Bachelier 식을 씁니다. 계산값을 시장가격과 비교하고 차이가 크면 호가 시각·관례·보간·보정 상태를 조사합니다.",
     ] },
     { id: "source", level: "5", title: "8. CME 자료는 만기·테너·moneyness 호가에서 전체 표면을 만듭니다", bridge: "실제 청산 평가 절차가 어떤 자료를 섞는지 확인합니다.", paragraphs: [
-      "2차 자료로 확인한 범위에서 CME의 청산 스왑션 평가는 옵션 만기, 기초 스왑 tenor와 ATM 대비 행사가별 normal 변동성을 회원 제출값으로 모으고, 보정 모형(shifted SABR)으로 전체 표면을 구성합니다. 아래 출처의 CME 원문은 이번 확인에서 본문 대조를 하지 못했습니다. 곡선과 표면을 함께 써 가격을 냅니다.",
+      "CME가 2020년 8월 SOFR 할인 전환 설명서에 적은 청산 스왑션 평가 절차는 세 단계입니다. 먼저 미리 정한 옵션 만기·기초 스왑 tenor·moneyness 지점마다 청산회원에게서 외가격 스왑션의 가격과 normal 내재변동성을 매일 받아 회원 사이에서 섞습니다. 이어 섞은 변동성과 CME 장 마감 곡선의 ATM 선도금리로 스왑션 가격을 만들고, 그 가격에 CME 수정 SABR(MSABR) 매개변수를 보정해 모든 만기·tenor·moneyness의 표면을 채웁니다. 마지막으로 그 매개변수와 할인곡선으로 청산된 스왑션을 평가합니다.",
+      "이 문서는 moneyness를 ATM 선도금리에서 행사가를 뺀 절대 차이로 정의합니다. 그래서 선도 4.00%·행사가 4.10%인 1절 사례는 이 문서 표기로 −10bp 지점입니다. 문서가 설명한 할인곡선은 전환 전 EFFR, 2020-10-16 전환 뒤 SOFR입니다.",
       "특정 시점의 청산 방법론은 할인 기준과 상품 범위가 바뀔 수 있습니다. 현재 거래를 평가할 때는 최신 방법론과 시장 관례를 다시 확인해야 합니다.",
     ] },
     { id: "comparison", level: "6", title: "9. LSEG 큐브는 만기·스왑기간·행사가와 두 호가형을 함께 제공합니다", bridge: "큐브라는 이름이 실제로 세 축을 뜻하는지 확인합니다.", paragraphs: [
@@ -370,7 +373,7 @@ export const swaptionVolatilityCubeData: DerivativeDeepArticleData = {
     { term: "스왑션 변동성 큐브", description: "옵션 만기·기초 스왑 만기·행사가별 내재변동성을 놓은 세 축 자료입니다.", example: "3개월×10년×+10bp 좌표를 찾습니다.", boundary: "빈 구간은 관측값이 아니라 보간·모형 결과일 수 있습니다." },
   ] },
   sources: [
-    { source: "CME Group · 스왑션 평가 방법", excerpt: "expiry · tenor · moneyness · normal volatility", application: "3개월×10년×+10bp 호가를 곡선·보정·전체 표면과 연결합니다.", citation: "CME Group, SOFR Discounting and Price Alignment Transition", href: "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf", note: "2020년 전환 설명의 평가 구조를 사용하며 현재 할인·청산 방법은 최신 문서를 확인합니다. 이 PDF는 2026-10-09 자동 조회 403이고 web.archive.org 사본(2024-06-18)도 중간에 잘려 본문을 대조하지 못했습니다. 회원 제출 변동성 큐브와 shifted SABR 보정이라는 방향은 2차 자료(Clarus FT, Swaptions Clearing at CME)로만 확인했습니다." },
+    { source: "CME Group · 스왑션 평가 방법", excerpt: "CME Modified SABR (MSABR) parameters are calibrated to these blended prices to construct the whole volatility surface across all expiry/tenor points and all moneyness.", application: "회원이 낸 만기·tenor·moneyness별 normal 변동성을 섞고 MSABR로 빈 좌표를 채우는 순서를 3개월×10년 호가에 적용합니다.", citation: "CME Group, SOFR PA & Discounting Transition for Cleared Swaps (Aug 2020), §2.2", href: "https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf", note: "2.2절 「Cash Adjustment Methodology for Cleared Swaptions」의 'Current Process' 단락을 인용했습니다. 원 주소는 2026-10-09 자동 조회 403(봇 차단)이라 web.archive.org 2022-01-19 사본(http://web.archive.org/web/20220119134843/https://www.cmegroup.com/trading/interest-rates/files/cme-sofr-discounting-and-pa-transition-whitepaper.pdf, 1,269,877바이트 완전본)으로 본문을 대조했습니다. 2020년 시점 절차이므로 현재 방법은 최신 문서를 확인합니다." },
     { source: "LSEG · 스왑션 변동성 큐브", excerpt: "option expiries · swap tenors · strike or delta", application: "큐브의 세 축과 normal Bachelier·Black 호가형을 구분합니다.", citation: "LSEG, IRD Swaption Volatility Cubes", href: "https://www.lseg.com/en/data-catalogue/fixed-income/derived/ird-swaps-swaption-volatility-cubes", note: "데이터 상품 설명이며 개별 호가의 정확성과 거래 가능성을 보장하는 자료는 아닙니다." },
   ],
   review: [
@@ -440,7 +443,7 @@ export const derivativesRecordsPrivacyData: DerivativeDeepArticleData = {
     { term: "보존과 파기 경계", description: "자료별 근거·기간·법적 보류·삭제 범위와 완료 증거를 정하는 기준입니다.", example: "원본과 색인·사본의 파기를 추적합니다.", boundary: "모든 자료에 같은 기간을 붙이지 않습니다." },
   ] },
   sources: [
-    { source: "국가법령정보센터 · 금융소비자보호법", excerpt: "제28조(자료의 기록 및 유지ㆍ관리 등)", application: "18분 녹취와 문서·주문 자료의 변조 방지, 소비자 열람과 종류별 보존을 연결합니다.", citation: "금융소비자 보호에 관한 법률 제28조", href: "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&lsId=013704", note: "2026년 1월 2일 시행 법률을 기준으로 하며 세부 종류·기간은 현재 시행령과 감독규정을 함께 확인합니다. 국가법령정보센터 페이지는 조문 본문을 스크립트로 불러와 자동 조회로는 본문이 보이지 않아, 제28조 문언은 위키문헌 법령 사본으로 2차 확인했습니다(2026-10-09)." },
+    { source: "국가법령정보센터 · 금융소비자보호법", excerpt: "제28조(자료의 기록 및 유지ㆍ관리 등)", application: "18분 녹취와 문서·주문 자료의 변조 방지, 소비자 열람과 종류별 보존을 연결합니다.", citation: "금융소비자 보호에 관한 법률 제28조", href: "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033002357", note: "2026년 1월 2일 시행 법률(법률 제21065호)을 기준으로 하며 세부 종류·기간은 현재 시행령과 감독규정을 함께 확인합니다. 국가법령정보센터 조문 링크에서 제28조 ①~⑧ 본문을 2026-10-09에 직접 대조했습니다." },
     { source: "금융위원회 · 고난도 금융상품 보호장치", excerpt: "2영업일 이상의 숙려기간이 보장됩니다", application: "녹취·요약설명서·숙려 뒤 청약 의사 확인을 판매 시간줄에 놓습니다.", citation: "금융위원회, 고난도 금융투자상품 투자자 보호 강화", href: "https://fsc.go.kr/no010101/75872", note: "제도 도입 안내이므로 현재 상품·고객·거래장소별 적용과 예외는 최신 규정을 다시 확인합니다." },
   ],
   review: [
