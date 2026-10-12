@@ -1710,3 +1710,11 @@ old는 2026-10-10 현재 `src/content/article-evidence.ts`에 1회만 나옴(gre
     { kind: "핵심 사료", label: "Slavery Abolition Act 1833 · 제정본 PDF (legislation.gov.uk)", href: "https://www.legislation.gov.uk/ukpga/Will4/3-4/73/pdfs/ukpga_18330073_en.pdf", note: "전문: '노예로 붙들린' 사람의 해방과 '그 노무를 받을 자격이 있던 사람들'의 손실 보상, s.24 2천만 파운드. 확인 2026-10-10." },
     { kind: "핵심 사료", label: "The Indian Emigration Act XXI of 1883, as modified up to 1897, with Rules (Calcutta, 1898)", href: "https://archive.org/details/india.history.resource.117817", note: "s.6 '고용되어 노동하기로 하는 계약 아래' 출국이 이민, s.36 계약서에 노무의 성격·기간·조건·보수 기재, 규칙 계약 서식의 복무 기간·귀환 여비 조건 칸. archive.org 전문 텍스트로 확인 2026-10-10." },
 ```
+
+## 후속 작업 결과 (4차)
+처리일 2026-10-12. 변경 없음(보류 유지).
+
+| 항목 | 판정 | 근거 URL·인용·보류 사유 |
+|---|---|---|
+| Englund 1998 "Texts from the Late Uruk Period" | **보류(사본 위치 확보)** | https://cdli.earth/files-up/publications/englund1998c.pdf 404(mpiwg 주소는 여기로 301). Wayback CDX "Internet Archive: Temporarily Offline", availability API는 빈 결과. 취리히대 ZORA에 OBO 160/1 전권(Bauer, Englund & Krebernik 1998, 627쪽)이 Green Open Access로 있음: https://doi.org/10.5167/uzh-151545 (레코드 https://www.zora.uzh.ch/entities/publication/2cf6dc15-a010-4fbb-a977-4e80f065ffa8, PDF 11.22MB). ZORA의 Anubis 봇 차단 때문에 curl과 페이지 내 fetch 모두 PDF 대신 확인 페이지 HTML(4.4KB)을 받음. 브라우저 다운로드는 사용자 승인 뒤 진행. |
+| 1947년 Gold Coast/Nigeria Cocoa Marketing Board Ordinance 원문 | **보류** | 웹 검색 결과는 2차 문헌(unilag 논문, IDE 보고서)과 Bodleian 목록뿐이고 조례 본문 사본은 없음. 본문의 "1947년 조례 원문은 확인하지 않았습니다"를 그대로 둔다. |
