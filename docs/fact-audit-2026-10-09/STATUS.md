@@ -25,6 +25,11 @@
 - Viz 기준 위반 238건(155 route)을 전부 정리했다. (1) 모바일 "화면보다 큰 프레임" 192건은 모두 공용 `ArticleLessonFlowViz` 한 컴포넌트였다 — `src/index.css` 136~154행이 모바일 figure·canvas를 자연 높이로 푸는 설계라 내부 스크롤이 아니라 레이아웃 압축으로 풀었다(개요 지도 → 한 줄 가로 스트립 + 선택 단계 캡션, 스토리보드 5컷 → 모바일 한 컷 보기, 형태 컷 한 줄 배치; 전부 `max-sm:` 변형이라 데스크톱 스크린샷 9장 바이트 동일). 390px에서 닫힘 412~555px·펼침 최대 840px. 모바일 조작부를 `sticky bottom-0`로 바꾸고 `ArticleLearningContract.tsx`의 wrapper를 `overflow-hidden`→`overflow-clip`으로 바꿔 sticky 스크롤포트 문제를 없앴다. (2) 장면 전환 흔들림 83건 중 수천 px짜리는 sweep의 측정 결함이었다: `html { scroll-behavior: smooth }` 때문에 `scrollIntoView` 직후 좌표를 읽었고, 모바일에서 `display:none`인 데스크톱 장면 버튼(aria-pressed)의 0 좌표를 쟀다. `scripts/sweep-routes.mjs`를 즉시 스크롤+정착 대기, 보이는 컨트롤만 측정, "다음" 버튼으로 장면 전환하도록 고쳤다(`--out`·`--base` 값이 route로 오인되던 결함도 수정). 남은 진짜 흔들림(31~268px, 20 route·37 Viz 파일)은 장면마다 길이가 다른 설명 문단·제목·수치 블록에 390·320px 실측 최댓값의 `min-h`를 주어 없앴다(`min-h-[320값] min-[390px]:min-h-[390값] sm:min-h-0` 관례; 공용 `AnimatedSceneControls`의 모바일 라벨 2줄 접힘은 canvas에서 `[&_[data-viz-mobile-controls]>p]:min-h-[3rem]`으로 고정).
 - 검증: 감사 13종·ESLint·tsc·production build(7,350 modules) 통과, 파생상품 데이터 파일 KaTeX 98식 오류 0, 변경 route 70개 sweep 데스크톱·모바일 실패 0(dev 서버 dep 캐시 504는 재시작으로 해소). topology 지문 42건은 HEAD worktree와 구조 필드(개념·단계·파일·절·식·Viz 수)가 동일함을 확인하고 갱신했다. prose baseline은 `firms/why-firms-exist` 점수 8 그대로(지문만 갱신).
 
+## 4차 (2026-10-12, 남은 보류분)
+- 금감원 커버드콜 소비자경보: fss.or.kr 점검 종료를 확인하고 보도자료 제목 검색으로 원 게시물(nttId=137396, 등록 2024-07-29)을 찾았다. 첨부 HWP 본문을 직접 풀어 읽어 본문 인용 두 문장·919원 표·배포일(2024-07-26)·보도일(07-29 조간)이 모두 일치함을 확인하고, citeKey 11과 evidence href를 원 게시물로 바꿨다(`E3` 원장 `(4차)` 절, 공용 파일 4쌍). 2024-07~2025-06 보도자료에서 2024-09 종목명 변경을 다룬 금감원 문서는 없었다.
+- Englund 1998(OBO 160/1): CDLI PDF는 여전히 404, Internet Archive CDX는 여전히 "Temporarily Offline". 대신 취리히대 ZORA에 OBO 160/1 전권이 Green Open Access로 있음을 확인했다(https://doi.org/10.5167/uzh-151545, PDF 11.22MB). ZORA가 봇 차단(Anubis)으로 curl·페이지 내 fetch를 막아 PDF를 받으려면 브라우저 다운로드가 필요해 사용자 승인 전까지 보류.
+- 1947년 Gold Coast/Nigeria 마케팅 보드 조례 원문: 온라인 사본 없음(검색 결과는 2차 문헌·도서관 목록뿐). 본문의 "확인하지 않았습니다"를 유지.
+
 ## 다음에 할 수 있는 일
-- 금감원 커버드콜 소비자경보 원 주소 교체(fss.or.kr 재개 뒤), ISO 668 치수 표(OBP 약관 동의 뒤), Englund 1998·Archaic Bookkeeping 원문, 1947년 마케팅 보드 조례 원문.
+- Englund 1998 원문 대조(ZORA PDF 다운로드 승인 뒤), ISO 668 치수 표(OBP 약관 동의 뒤), *Archaic Bookkeeping*(공개본 없음), 1947년 마케팅 보드 조례 원문(온라인 사본 없음).
 - 320px 폭에서 펼친 학습 흐름 Viz가 568px 뷰포트보다 큰 것(804~966px)은 텍스트 폭 한계로 남겼다. 조작부는 sticky라 닿는다.
