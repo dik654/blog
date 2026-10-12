@@ -1712,9 +1712,21 @@ old는 2026-10-10 현재 `src/content/article-evidence.ts`에 1회만 나옴(gre
 ```
 
 ## 후속 작업 결과 (4차)
-처리일 2026-10-12. 변경 없음(보류 유지).
+처리일 2026-10-12. ISO 668 OBP 확인(적용), Englund 1998·1947년 조례(아래).
 
 | 항목 | 판정 | 근거 URL·인용·보류 사유 |
 |---|---|---|
 | Englund 1998 "Texts from the Late Uruk Period" | **보류(사본 위치 확보)** | https://cdli.earth/files-up/publications/englund1998c.pdf 404(mpiwg 주소는 여기로 301). Wayback CDX "Internet Archive: Temporarily Offline", availability API는 빈 결과. 취리히대 ZORA에 OBO 160/1 전권(Bauer, Englund & Krebernik 1998, 627쪽)이 Green Open Access로 있음: https://doi.org/10.5167/uzh-151545 (레코드 https://www.zora.uzh.ch/entities/publication/2cf6dc15-a010-4fbb-a977-4e80f065ffa8, PDF 11.22MB). ZORA의 Anubis 봇 차단 때문에 curl과 페이지 내 fetch 모두 PDF 대신 확인 페이지 HTML(4.4KB)을 받음. 브라우저 다운로드는 사용자 승인 뒤 진행. |
 | 1947년 Gold Coast/Nigeria Cocoa Marketing Board Ordinance 원문 | **보류** | 웹 검색 결과는 2차 문헌(unilag 논문, IDE 보고서)과 Bodleian 목록뿐이고 조례 본문 사본은 없음. 본문의 "1947년 조례 원문은 확인하지 않았습니다"를 그대로 둔다. |
+| ISO 668:2020 치수 표 | **부분 적용(치수 표는 확인 불가)** | 사용자 승인 뒤 ISO OBP 이용약관에 동의하고 익명 사용자로 https://www.iso.org/obp/ui/#iso:std:iso:668:ed-7:v1:en 열람. 머리말 “This seventh edition cancels and replaces the sixth edition (ISO 668:2013), which has been technically revised. It also incorporates the Amendments ISO 668:2013/Amd1:2016 and ISO 668:2013/Amd2:2016.”, 1절 “This document establishes a classification of series 1 freight containers based on external dimensions, and specifies the associated ratings … These containers are intended for intercontinental traffic.” / “The dimensions of each type of container are defined in the appropriate part of ISO 1496, which is the authoritative document for internal container dimensions.” 미리보기는 3.6 정의까지이고 “Only informative sections of standards are publicly available.”라 5.2 외부 치수 표는 유료 본문. 본문 출처 표기를 Wayback 카탈로그 요약에서 OBP 본문으로 바꾸고 판 통합 사실 한 문장 추가(`economic-history-thematic-data.ts`), evidence note 갱신(아래 목록). |
+
+## 후속 공용 파일 수정 목록 (4차)
+old는 2026-10-12 현재 각 파일에서 한 번만 나온다.
+
+### `src/content/article-evidence.ts`
+```old
+note: "7판 2020-01. 외부 치수 기준 분류와 정격, 대륙 간 운송용이라는 범위 문장을 확인했습니다. 원 주소는 자동 조회 403이라 2026-09-20 Wayback 사본으로 확인 2026-10-10, 치수 표는 미확인." }
+```
+```new
+note: "7판 2020-01. ISO 온라인 열람 플랫폼(OBP, https://www.iso.org/obp/ui/#iso:std:iso:668:ed-7:v1:en)에서 2026-10-12 직접 확인: 1절 범위 “establishes a classification of series 1 freight containers based on external dimensions, and specifies the associated ratings”, “These containers are intended for intercontinental traffic.”, 내부 치수는 ISO 1496이 기준 문서라는 문장, 머리말의 “This seventh edition cancels and replaces the sixth edition (ISO 668:2013)”(2016년 수정 1·2 통합). OBP 무료 미리보기는 1~3절까지만 열려 5.2절 외부 치수 표는 확인하지 못했습니다." }
+```
