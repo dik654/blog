@@ -5667,6 +5667,36 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md",
       note: "Collective operation별 algbw·busbw 계산과 해석 경계",
     },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA Technical Blog — Upgrading Multi-GPU Interconnectivity with the Third-Generation NVIDIA NVSwitch (2022-08-23)",
+      href: "https://developer.nvidia.com/blog/upgrading-multi-gpu-interconnectivity-with-the-third-generation-nvidia-nvswitch/",
+      note: "3세대 NVSwitch의 SHARP controller·ALU·SRAM, 연산자(logical·min/max·add)와 data type, all-reduce read/write 4N→2N+2. 2026-10-12 원문 확인.",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA NCCL User Guide — Environment Variables (NCCL_NVLS_ENABLE, NCCL_ALGO)",
+      href: "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html",
+      note: "NVLS는 3세대 NVSwitch(NVLink4)와 Hopper 이후에서 사용, 기본값 2, 2.27·2.28 fallback hang 위험과 2.29 되돌림, 같은 GPU 다중 rank에서 비활성화, MNNVL의 IMEX 요구. 2026-10-12 원문 확인.",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA NCCL Release Notes 2.17.1 · 2.18.1",
+      href: "https://docs.nvidia.com/deeplearning/nccl/release-notes/rel_2-18-1.html",
+      note: "2.17.1 node 안 all-reduce용 NVLink SHARP 도입(https://docs.nvidia.com/deeplearning/nccl/release-notes/rel_2-17-1.html), 2.18.1 NVLS(+IB SHARP)·NVLSTree node 간 algorithm 추가. 2026-10-12 원문 확인.",
+    },
+    {
+      kind: "공식 문서",
+      label: "NVIDIA PTX ISA — multimem.ld_reduce, multimem.st, multimem.red",
+      href: "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html",
+      note: "multimem 주소의 모든 replica에서 읽어 줄이거나 모두에 쓰는 의미론, PTX ISA 8.1·sm_90 이상. CUDA Programming Guide 4.17.4의 multicast team replica 설명과 함께 2026-10-12 원문 확인.",
+    },
+    {
+      kind: "공식 코드",
+      label: "NVIDIA/nccl v2.32.3-1 — src/tuning/nvls.cc, src/device/reduce_kernel.h",
+      href: "https://github.com/NVIDIA/nccl/blob/v2.32.3-1/src/tuning/nvls.cc",
+      note: "NVLS는 AR·AG·RS, NVLSTree는 AR만, Simple protocol만 허용, all-reduce intraBw ×2. reduce_kernel.h의 multimem.ld_reduce 인라인 PTX. 2026-10-12 원문 확인.",
+    },
   ],
   "gpu/b300-switchless-network": [
     source(
@@ -13976,6 +14006,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Linux fsync(2)", href: "https://man7.org/linux/man-pages/man2/fsync.2.html", note: "write 반환, file fsync와 directory entry durability를 서로 다른 완료 조건으로 둡니다." },
     { kind: "공식 문서", label: "MLCommons Storage", href: "https://github.com/mlcommons/storage", note: "AI training과 checkpoint workload를 file·object backend에서 재현할 때 manifest와 실행 조건을 고정하는 기준을 확인합니다." },
     { kind: "공식 문서", label: "PyTorch Distributed Checkpoint", href: "https://docs.pytorch.org/tutorials/recipes/distributed_async_checkpoint_recipe.html", note: "Async checkpoint의 GPU 재개 시점, CPU staging과 실제 저장 완료 Future를 구분합니다." },
+    { kind: "공식 문서", label: "Seagate · Exos CORVAULT Storage Management Guide (204818500-00-A)", href: "https://www.seagate.com/content/dam/seagate/migrated-assets/www-content/support-content/raid-storage-systems/corvault/_shared/files/204818500-00-A_Seagate_Exos_CORVAULT_Storage_Management_Guide.pdf", note: "ADAPT 분산 예비 공간(가장 큰 disk 두 개의 합), 한 disk 고장 시 일부 stripe만 degraded·교체 없이 즉시 재구축, ADR 1·2단계와 한 번에 한 disk·FDE 잠금 제약. 2026-10-12 원문 확인." },
+    { kind: "공식 문서", label: "Seagate · Exos CORVAULT Data Sheet (DS2058.4.2309US)", href: "https://www.seagate.com/content/dam/seagate/en/content-fragments/products/datasheets/exos-pods/corvault-self-healing-storage-DS2058-4-2309US-en_US.pdf", note: "4U106 raw 2.0~2.5PB, active-active controller, controller당 mini-SAS-3 HD 4포트, 순차 12GB/s read·10GB/s write. 2026-10-12 원문 확인." },
+    { kind: "공식 문서", label: "Seagate · ADAPT Technology (SB505.1-1808US)", href: "https://www.seagate.com/content/dam/seagate/migrated-assets/www-content/solutions/backup/backup-and-recovery/adapt-technology.pdf", note: "Drive 1개 재구축 RAID 8+2 55.5시간 vs ADAPT 106 drive 5.3시간, 성능 저하 −41%→−6%. Seagate가 modeled numbers라고 밝힌 2018년 값. 2026-10-12 원문 확인." },
     { kind: "공식 문서", label: "Ceph recovery state", href: "https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/", note: "Degraded·recovering·backfilling·active+clean 상태와 rebuild 중 성능 시험 방법을 학습합니다. Elice가 Ceph를 쓴다는 뜻은 아닙니다." },
     { kind: "공식 문서", label: "Elice Cloud Overview", href: "https://help.elice.io/help/docs/cloud-overview", note: "ECI의 block·object·parallel filesystem과 DataHub object interface 공개 범위를 확인합니다." },
     { kind: "공식 문서", label: "Elice · B300 GPU 가상화", href: "https://elice.io/ko/resources/blog/eci-b300-gpu-virtualization", note: "GPU·NIC·NVMe inventory, topology와 host/guest 동일 version·benchmark 대조법을 익히되 NCCL 결과를 storage 성능으로 확대하지 않습니다." },

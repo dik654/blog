@@ -171,8 +171,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "gpu/gpu-collective-network": {
     action: "keep",
     status: "reviewed",
-    reviewedAt: "2026-10-08",
-    rationale: "Rank 계약, node 내부 경로, node 밖 fabric과 NCCL 측정은 collective 한 번이 가장 느린 rank 때문에 끝나지 않는 사건의 연속 단계입니다. 개별 transport의 상세는 interconnect·RDMA 글로 재사용합니다.",
+    reviewedAt: "2026-10-12",
+    rationale: "Rank 계약, node 내부 경로, node 밖 fabric과 NCCL 측정은 collective 한 번이 가장 느린 rank 때문에 끝나지 않는 사건의 연속 단계입니다. 2026-10-12에 더한 NVLS 절은 새 concept가 아니라 busbw 보정식의 point-to-point 전제가 깨지는 사례라 같은 측정 단계에 둡니다(section 9→10). 개별 transport의 상세는 interconnect·RDMA 글로 재사용합니다.",
     sharedGate: "같은 rank placement·message size·collective에서 2→4→전체 node로 늘리며 NCCL correctness·algbw·busbw와 NIC/switch counter를 대조하고 느린 rank와 재시도 경로를 분리합니다.",
   },
   "gpu/hw-memory": {
@@ -3149,7 +3149,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/modded-rtx4090-moe-serving": "6cf98cea148cc7ab",
   "gpu/hw-gpu-comparison": "6138d5bca815d0f4",
   "gpu/b300-switchless-network": "b474d74620e08a22",
-  "gpu/gpu-collective-network": "efb1cbd685897ce3",
+  "gpu/gpu-collective-network": "4751fd16da89e24d",
   "gpu/gpu-interconnects": "833f5430c9d5f719",
   "gpu/hw-memory": "f3cbe4cdcb455e60",
   "gpu/hw-network": "153f28db1910974f",

@@ -31,6 +31,11 @@
 - ISO 668:2020: 사용자 승인 뒤 ISO OBP 이용약관에 동의하고 익명으로 열람했다. 무료 미리보기는 머리말·1~3절뿐이라 5.2절 외부 치수 표는 여전히 확인할 수 없다. 범위 문장과 7판이 2013년 6판·2016년 수정 두 건을 통합했다는 머리말을 OBP 본문으로 직접 확인해 컨테이너 글 문장과 evidence note를 갱신했다(`A` 원장 `(4차)`).
 - 1947년 Gold Coast/Nigeria 마케팅 보드 조례 원문: 온라인 사본 없음(검색 결과는 2차 문헌·도서관 목록뿐). 본문의 "확인하지 않았습니다"를 유지.
 
+## NVLS·CORVAULT 리서치 반영 (2026-10-12, `H-nvls-corvault.md`)
+- NVLS(NVLink SHARP): `gpu/gpu-collective-network`의 busbw 보정식 뒤에 새 절 `#nvls-in-switch-reduction`. GPU 8개·1GB all-reduce에서 GPU 한 대의 송신 byte를 ring 1.75GB와 switch 합산 1.125GB로 직접 세는 원장, busbw가 link 속도를 넘는 이유, 3세대 NVSwitch의 SHARP controller·ALU·SRAM, CUDA multicast object와 PTX `multimem.ld_reduce`/`multimem.st`, NCCL 실제 kernel 줄, 2.17.1·2.18.1 도입 범위, 지원 collective·Simple protocol·비용 모델 ×2, memory·다중 rank·2.27~2.29 fallback·IMEX 경계, Ring/NVLS 선택 기준. NVIDIA 블로그의 4N→2N+2는 operation 수로만 인용하고 byte 원장과 분리. 학습 계약은 기초 6·심화 4 고정이라 겹치는 기존 두 문제를 새 NVLS 문제로 바꿈. topology keep 유지(section 9→10).
+- Seagate "covault"는 Exos CORVAULT로 판단(같은 이름 제품 없음, 부재 증명은 아님). `gpu/ai-cluster-storage-io` 10절의 2PB raw·8+2 EC 사례를 이어, 전통 RAID 재구축이 예비 drive 한 대 쓰기에 묶이는 숫자 → stripe·예비 공간 분산 → ADAPT(분산 예비 공간 = 가장 큰 drive 두 개, 일부 stripe만 degraded, 즉시 재구축) → 2018 모델값 55.5h vs 5.3h → ADR(head·면 제거 후 축소 용량 재편입) → PoC 세 숫자와 200GB/s ÷ 12GB/s ≈ 17대, 상위 file·object software 순서로 10문단을 추가. 원자료는 데이터시트·Storage Management Guide·CLI 가이드·ADAPT 기술 문서·QuantaStor 브리프.
+- 검증: 감사 13종·ESLint·build 통과, 두 route sweep 데스크톱·모바일 실패 0, NVLS 원장 390px 스크린샷 확인. 미반영 목록(H100 NVLS busbw 1차 수치 없음, CORVAULT 제품 투어 성능 불일치 등)은 원장에 있다.
+
 ## 다음에 할 수 있는 일
 - Englund 1998 원문 대조(ZORA PDF를 사용자가 직접 내려받은 뒤), ISO 668 치수 표(OBP 무료 범위 밖 — 표준 구매 필요), *Archaic Bookkeeping*(공개본 없음), 1947년 마케팅 보드 조례 원문(온라인 사본 없음).
 - 320px 폭에서 펼친 학습 흐름 Viz가 568px 뷰포트보다 큰 것(804~966px)은 텍스트 폭 한계로 남겼다. 조작부는 sticky라 닿는다.
