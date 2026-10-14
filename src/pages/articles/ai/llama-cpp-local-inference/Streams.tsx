@@ -14,8 +14,8 @@ export default function Streams({ code }: Props) {
       <h2 className="mb-6 text-2xl font-bold">10. 배열을 slot마다 나눌지 하나로 둘지가 상한과 낭비를 정합니다</h2>
       <div className={prose}>
         <p>
-          이제 실제 크기로 돌아옵니다. 서버를 -c 16384, -np 4로 띄우면 cell이 16,384개이고 slot이 4개입니다. 이 cell들을 slot마다 4,096개씩 따로 둘 수도 있고,
-          배열 하나에 두고 함께 쓸 수도 있습니다. 서버 문서는 slot 수를 auto로 두면 하나로 합친 unified 배열을 기본으로 켠다고 적습니다.
+          이제 실제 크기로 돌아옵니다. 서버를 -c 16384, -np 4로 띄우면 cell이 16,384개이고 slot이 4개입니다. 이 cell들을 slot마다 4,096개씩 따로 둘
+          수도 있고 배열 하나에 두고 함께 쓸 수도 있습니다. 서버 문서는 slot 수를 auto로 두면 하나로 합친 unified 배열을 기본으로 켠다고 적습니다.
         </p>
         <p>
           먼저 cell 하나의 무게를 셉니다. Llama 3.1 8B는 KV head 8개에 head 폭 128이라 한 층의 K 폭이 1,024입니다. 설정값은 Meta 공식 저장소가 접근 승인을
@@ -52,8 +52,9 @@ export default function Streams({ code }: Props) {
           매기면 30,720개 중 실제로 남는 점수는 7,500개, 약 24%입니다. 짧은 대화 하나는 7,680칸 중 자기 500칸만 남기니 93% 이상을 버립니다.
         </p>
         <p>
-          K와 V를 읽는 byte는 그만큼 늘지 않습니다. 네 query를 한 tile에서 계산하면 같은 7,680 cell을 한 번 읽어 넷이 함께 씁니다. (가정) 그래서 unified의
-          낭비는 주로 점수 계산과 mask 행 크기로 나타나고, slot 수가 늘수록 커집니다. slot별 stream은 반대로 각 stream이 자기 범위만 읽고 끝 tile 생략도 켜집니다.
+          K와 V를 읽는 byte는 그만큼 늘지 않습니다. 네 query를 한 tile에서 계산하면 같은 7,680 cell을 한 번 읽어 넷이 함께 씁니다. (가정) 그래서
+          unified의 낭비는 주로 점수 계산과 mask 행 크기로 나타나고 slot 수가 늘수록 커집니다. slot별 stream은 반대로 각 stream이 자기 범위만 읽고 끝
+          tile 생략도 켜집니다.
         </p>
         <p>
           서버 옵션 세 개가 이 선택입니다. -np로 slot 수를, -kvu와 -no-kvu로 배열을 합칠지를 정합니다. --kv-unified-per-slot N은 합친 배열에서도 slot 하나의

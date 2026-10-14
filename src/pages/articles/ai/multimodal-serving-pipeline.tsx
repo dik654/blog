@@ -57,12 +57,12 @@ export default function MultimodalServingPipelineArticle() {
               자릅니다. 둘째 상자는 GPU에서 그 조각을 vision encoder에 넣어 embedding을 만듭니다. 셋째 상자는 그 embedding이 끼어 있는 문장을 언어 모델로 처리합니다.
             </p>
             <p>
-              둘째와 셋째 상자를 잇는 약속이 중요합니다. 첫 상자는 문장 안에 사진 몫의 빈자리를 미리 만들어 둡니다. 빈자리마다 같은 특수 token을 채워 넣고, 셋째 상자가
-              실행될 때 그 자리의 입력을 사진 embedding으로 바꿔 끼웁니다. 언어 모델 입장에서는 길이가 늘어난 한 문장일 뿐입니다.
+              둘째와 셋째 상자를 잇는 약속이 중요합니다. 첫 상자는 문장 안에 사진 몫의 빈자리를 미리 만들어 둡니다. 빈자리마다 같은 특수 token을 채워 넣고 셋째 상자가 실행될
+              때 그 자리의 입력을 사진 embedding으로 바꿔 끼웁니다. 언어 모델 입장에서는 길이가 늘어난 한 문장일 뿐입니다.
             </p>
             <p>
-              Qwen2.5-VL 기술 보고서는 이 과정을 두 문장으로 요약합니다. 사진을 28의 배수로 맞춘 뒤 14 간격 patch로 나누고, 이웃한 patch 네 개를 묶어 MLP로 text
-              embedding 차원에 맞춥니다. 다음 절에서 이 규칙에 1,024×1,024 사진을 넣어 빈자리가 몇 개 생기는지 셉니다.
+              Qwen2.5-VL 기술 보고서는 이 과정을 두 문장으로 요약합니다. 사진을 28의 배수로 맞춘 뒤 14 간격 patch로 나누고 이웃한 patch 네 개를 묶어 MLP로
+              text embedding 차원에 맞춥니다. 다음 절에서 이 규칙에 1,024×1,024 사진을 넣어 빈자리가 몇 개 생기는지 셉니다.
             </p>
           </div>
           <div id="paper-qwen25vl" className="mt-8 scroll-mt-20">
@@ -81,8 +81,8 @@ export default function MultimodalServingPipelineArticle() {
               37×28=1,036 픽셀이 됩니다. 이 모델의 설정은 전체 픽셀을 3,136 이상 12,845,056 이하로 두라고 정하는데 1,036²=1,073,296이라 범위 안에 있습니다.
             </p>
             <p>
-              1,036 픽셀을 14 픽셀 patch로 자르면 한 변에 74칸이 나오고, 사진 전체는 74×74=5,476 patch입니다. 이웃한 2×2 patch를 하나로 합치므로 자리 수는
-              5,476÷4=1,369입니다. 한 변으로 보면 74÷2=37칸이라 37×37=1,369와 같은 수가 나옵니다.
+              1,036 픽셀을 14 픽셀 patch로 자르면 한 변에 74칸이 나오고 사진 전체는 74×74=5,476 patch입니다. 이웃한 2×2 patch를 하나로 합치므로 자리
+              수는 5,476÷4=1,369입니다. 한 변으로 보면 74÷2=37칸이라 37×37=1,369와 같은 수가 나옵니다.
             </p>
             <p>
               사진을 더 크게 보내면 자리도 늘어납니다. 2,048×2,048이면 한 변이 2,044 픽셀로 맞춰지고 73×73=5,329 자리가 됩니다. 픽셀 상한을 넘는 큰 사진은 비율을
@@ -185,16 +185,17 @@ export default function MultimodalServingPipelineArticle() {
           <h2 className="mb-6 text-2xl font-bold">6. 저장소와 이름과 예산에 표준 용어를 붙입니다</h2>
           <div className={prose}>
             <p>
-              사진 내용에서 계산한 짧은 지문을 mm hash라고 부릅니다. vLLM은 기본으로 blake3 알고리즘을 쓰며, 사용자가 사진마다 고유 문자열(UUID)을 붙여 이 지문을 대신할
-              수도 있습니다. 이후 이 글에서 사진의 이름은 mm hash입니다.
+              사진 내용에서 계산한 짧은 지문을 mm hash라고 부릅니다. vLLM은 기본으로 blake3 알고리즘을 쓰며 사용자가 사진마다 고유 문자열(UUID)을 붙여 이 지문을
+              대신할 수도 있습니다. 이후 이 글에서 사진의 이름은 mm hash입니다.
             </p>
             <p>
               encoder가 만든 embedding을 mm hash별로 남겨 두는 저장소가 encoder cache입니다. vLLM의 encoder cache는 GPU에 있고 크기를 byte가 아니라 embedding 개수로
               잽니다. 사진 한 장은 1,369칸을 씁니다.
             </p>
             <p>
-              한 step에 vision encoder로 계산할 embedding 개수의 상한을 encoder 계산 예산(encoder compute budget)이라고 부릅니다. vLLM에서는 이 값과 encoder cache
-              크기가 모두 max_num_batched_tokens를 따르며, 사진 한 장의 최대 embedding 수보다 작아지지 않습니다.
+              한 step에 vision encoder로 계산할 embedding 개수의 상한을 encoder 계산 예산(encoder compute budget)이라고 부릅니다.
+              vLLM에서는 이 값과 encoder cache 크기가 모두 max_num_batched_tokens를 따르며 사진 한 장의 최대 embedding 수보다 작아지지
+              않습니다.
             </p>
             <p>
               GPU 앞단에는 별도의 CPU 저장소도 있습니다. 크기 맞춤과 patch 자르기 결과를 남겨 두는 processor cache입니다. encoder cache와 이름이 비슷하지만 남기는 대상과
@@ -215,8 +216,8 @@ export default function MultimodalServingPipelineArticle() {
               문장에 1,369개의 빈자리를 만듭니다. 이 빈자리는 R1의 것과 위치도 같은 16부터 1,384까지입니다.
             </p>
             <p>
-              scheduler는 먼저 prefix cache를 찾습니다. 사진 block마다 P의 mm hash가 열쇠에 들어 있어 R1의 block과 맞고, 꽉 찬 block 86개인 1,376 token이 hit입니다.
-              R2는 위치 1,376부터 계산하면 되고, 그 범위에는 아직 KV가 없는 사진 마지막 9자리가 들어 있습니다.
+              scheduler는 먼저 prefix cache를 찾습니다. 사진 block마다 P의 mm hash가 열쇠에 들어 있어 R1의 block과 맞고 꽉 찬 block 86개인
+              1,376 token이 hit입니다. R2는 위치 1,376부터 계산하면 되고 그 범위에는 아직 KV가 없는 사진 마지막 9자리가 들어 있습니다.
             </p>
             <p>
               이제 그 9자리에 넣을 embedding이 필요합니다. scheduler는 encoder cache에 P가 있는지 묻고, R1이 남긴 결과가 있으면 R2를 참조자로 등록한 뒤 encoder를 건너뜁니다.
@@ -260,8 +261,9 @@ export default function MultimodalServingPipelineArticle() {
           <h2 className="mb-6 text-2xl font-bold">9. encoder 예산이 다 차면 그 사진 앞에서 멈춥니다</h2>
           <div className={prose}>
             <p>
-              encoder_cache_manager.py 273–321행 compute_mm_encoder_budget은 계산 예산과 cache 크기를 정합니다. config/scheduler.py 238–239행이 두 값 모두에
-              max_num_batched_tokens를 넣고, 함수는 그 값과 사진 하나의 최대 embedding 수 중 큰 쪽을 고릅니다. 이 글은 max_num_batched_tokens를 8,192로 둡니다. (가정)
+              encoder_cache_manager.py 273–321행 compute_mm_encoder_budget은 계산 예산과 cache 크기를 정합니다.
+              config/scheduler.py 238–239행이 두 값 모두에 max_num_batched_tokens를 넣고 함수는 그 값과 사진 하나의 최대 embedding 수
+              중 큰 쪽을 고릅니다. 이 글은 max_num_batched_tokens를 8,192로 둡니다. (가정)
             </p>
             <p>
               사진마다 1,369를 쓰면 한 step에 8,192÷1,369=5.98, 곧 사진 다섯 장까지 encode합니다. 다섯 장이 6,845를 쓰고 남은 1,347로는 여섯째 사진을 시작하지 못합니다.
@@ -332,15 +334,16 @@ export default function MultimodalServingPipelineArticle() {
               block에는 (P, 0), 32–47 block에는 (P, −16)이 붙습니다. 사진 Q를 보낸 요청은 token ID가 같아도 (Q, 0)이 붙어 첫 사진 block부터 열쇠가 갈립니다.
             </p>
             <p>
-              558–593행은 LoRA 이름, 사진 키, cache_salt, prompt embedding 키를 한 tuple로 합칩니다. cache_salt는 첫 block에만 넣지만, 뒤 block이 앞 block의 hash를 이어
-              받으므로 salt가 다르면 모든 block이 갈립니다. 사진 키도 같은 체인을 따라 이후 block 전체에 영향을 줍니다.
+              558–593행은 LoRA 이름, 사진 키, cache_salt, prompt embedding 키를 한 tuple로 합칩니다. cache_salt는 첫 block에만
+              넣지만 뒤 block이 앞 block의 hash를 이어 받으므로 salt가 다르면 모든 block이 갈립니다. 사진 키도 같은 체인을 따라 이후 block 전체에 영향을
+              줍니다.
             </p>
           </div>
           <PrefixKeyViz />
           <div className={prose}>
             <p>
-              사용자가 사진에 UUID를 붙이면 vLLM은 내용을 다시 hash하지 않고 그 이름으로 cache를 찾습니다. 공식 문서는 cache에 걸릴 것으로 예상되면 사진 데이터 없이 UUID만
-              보낼 수 있고, 걸리지 않으면 요청이 실패한다고 적습니다. 이름을 사용자가 정하는 만큼 같은 UUID에 다른 사진을 붙이지 않는 책임도 사용자에게 갑니다.
+              사용자가 사진에 UUID를 붙이면 vLLM은 내용을 다시 hash하지 않고 그 이름으로 cache를 찾습니다. 공식 문서는 cache에 걸릴 것으로 예상되면 사진 데이터
+              없이 UUID만 보낼 수 있고 걸리지 않으면 요청이 실패한다고 적습니다. 이름을 사용자가 정하는 만큼 같은 UUID에 다른 사진을 붙이지 않는 책임도 사용자에게 갑니다.
             </p>
           </div>
           <div id="doc-vllm-uuid" className="mt-6 scroll-mt-20">
@@ -359,13 +362,13 @@ export default function MultimodalServingPipelineArticle() {
           <h2 className="mb-6 text-2xl font-bold">11. hit이 사진 중간에서 끝나면 사진 전체를 다시 encode할 수 있습니다</h2>
           <div className={prose}>
             <p>
-              R2의 hit 1,376은 block 경계에서 끊겼고 사진은 1,384까지 이어집니다. 남은 9자리 때문에 encoder 결과가 필요합니다. 두 cache의 수명이 다르다는 점이 여기서
-              드러납니다. KV는 수십 GB의 pool에 남아 있는데, 이 글의 가정에서 encoder cache는 사진 다섯 장 남짓인 8,192칸뿐입니다.
+              R2의 hit 1,376은 block 경계에서 끊겼고 사진은 1,384까지 이어집니다. 남은 9자리 때문에 encoder 결과가 필요합니다. 두 cache의 수명이 다르다는
+              점이 여기서 드러납니다. KV는 수십 GB의 pool에 남아 있는데 이 글의 가정에서 encoder cache는 사진 다섯 장 남짓인 8,192칸뿐입니다.
             </p>
             <p>
-              KV block은 살아 있고 encoder cache의 P만 지워졌다면 R2는 9자리를 위해 1,369개를 다시 계산합니다. 9절의 일곱 요청이 바로 이 상황이었습니다. 원문
-              1586–1590행 주석은 prefix caching 때문에 계산 위치가 사진 시작보다 뒤에 있을 수 있고, 그때 encoder 입력이 준비되지 않으면 그 요청은 이번 step에 한 token도
-              진행하지 못한다고 적습니다.
+              KV block은 살아 있고 encoder cache의 P만 지워졌다면 R2는 9자리를 위해 1,369개를 다시 계산합니다. 9절의 일곱 요청이 바로 이 상황이었습니다.
+              원문 1586–1590행 주석은 prefix caching 때문에 계산 위치가 사진 시작보다 뒤에 있을 수 있고 그때 encoder 입력이 준비되지 않으면 그 요청은 이번
+              step에 한 token도 진행하지 못한다고 적습니다.
             </p>
             <p>
               block 경계가 사진 끝과 맞으면 이 비용이 사라집니다. 사진이 위치 16–1,391을 차지해 block 87개를 정확히 채웠다면 hit이 사진 끝까지 닿아 encoder를 부를 일이
@@ -435,12 +438,13 @@ export default function MultimodalServingPipelineArticle() {
           <h2 className="mb-6 text-2xl font-bold">14. 자리 수와 cache 크기는 모델과 설정마다 다시 셉니다</h2>
           <div className={prose}>
             <p>
-              1,369는 Qwen2.5-VL-7B의 전처리 규칙과 1,024 사진에서 나온 수입니다. 고정 해상도로 줄이는 모델은 사진 크기와 상관없이 같은 수를 쓰고, 영상은 시간 축 묶음까지
-              곱해집니다. 서버를 계획할 때는 사용하는 모델의 processor로 실제 자리 수를 세야 합니다. 사진 개수 상한은 limit_mm_per_prompt로 따로 정합니다.
+              1,369는 Qwen2.5-VL-7B의 전처리 규칙과 1,024 사진에서 나온 수입니다. 고정 해상도로 줄이는 모델은 사진 크기와 상관없이 같은 수를 쓰고 영상은 시간 축
+              묶음까지 곱해집니다. 서버를 계획할 때는 사용하는 모델의 processor로 실제 자리 수를 세야 합니다. 사진 개수 상한은 limit_mm_per_prompt로 따로
+              정합니다.
             </p>
             <p>
-              이 글의 KV 크기는 BF16 저장과 16 token block을 가정했습니다. KV를 8 bit로 저장하면 절반이 되고, tensor 병렬로 나누면 GPU 한 장의 몫이 줄어듭니다. encoder
-              cache 8,192와 일곱 요청의 순서는 원문 동작을 보여 주려고 고른 값이며 측정한 처리량이 아닙니다.
+              이 글의 KV 크기는 BF16 저장과 16 token block을 가정했습니다. KV를 8 bit로 저장하면 절반이 되고 tensor 병렬로 나누면 GPU 한 장의 몫이
+              줄어듭니다. encoder cache 8,192와 일곱 요청의 순서는 원문 동작을 보여 주려고 고른 값이며 측정한 처리량이 아닙니다.
             </p>
             <p>
               같은 사진을 알아보는 장치는 정확성의 문제이기도 합니다. hash를 열쇠에 넣지 않은 cache는 빠르지만 다른 사진의 답을 낼 수 있습니다. 성능을 비교할 때는 encoder

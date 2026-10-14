@@ -19,7 +19,10 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 창 밖 기록을 버릴 때 무엇은 남겨야 하나요?</h2>
           <div className={prose}>
-            <p>어떤 층은 최근 몇백 token만 보도록 학습됩니다. 그런 층에서는 창 밖으로 나간 token의 KV를 다시 읽을 일이 없으므로, 서버는 그 메모리를 다른 요청에 돌려줄 수 있습니다. 긴 대화일수록 이 차이가 커집니다.</p>
+            <p>
+            어떤 층은 최근 몇백 token만 보도록 학습됩니다. 그런 층에서는 창 밖으로 나간 token의 KV를 다시 읽을 일이 없으므로 서버는 그 메모리를 다른 요청에 돌려줄 수
+            있습니다. 긴 대화일수록 이 차이가 커집니다.
+          </p>
             <p>이 글의 답을 먼저 적겠습니다. 창 밖으로 완전히 나간 block은 돌려주거나(vLLM의 SlidingWindowManager, TensorRT-LLM의 창 밖 block 분리) 고리 버퍼로 덮어씁니다.</p><p>그런데 창 없이 학습한 모델에 이 방법을 그대로 쓰면 처음 몇 token까지 버리게 되고, 모델이 그 자리에 모아 두던 attention 무게(attention sink)를 잃어 품질이 무너집니다. StreamingLLM은 처음 4개 token과 최근 창만 남겨 이를 피합니다.</p>
             <p>창이라는 attention 모양 자체는 <a href="/cs/ai/sparse-windowed-attention-patterns#window">sparse·windowed attention</a>에서 다뤘습니다. 여기서는 그 모양을 쓰는 서버가 KV block을 언제, 얼마나 돌려주는지와 버리면 안 되는 token이 무엇인지를 봅니다.</p>
           </div>
@@ -114,7 +117,10 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <div className={prose}>
             <p>gpt-oss-20b 요청이 vLLM에서 32,767 token까지 계산했다고 합시다. 창 층의 관리자는 다음 step 전에 건너뛸 token 수를 32,767 − 128 + 1 = 32,640으로 셉니다. 16으로 나누면 정확히 2,040이라 앞쪽 block 2,040개가 이미 null block으로 바뀌어 있습니다.</p>
             <p>token 하나를 더 계산해 32,768이 되면 건너뛸 token은 32,641입니다. 2,040 block을 넘는 1 token은 다음 block의 첫 칸이라 아직 돌려줄 block이 없습니다. 16개를 더 계산해 건너뛸 token이 32,656이 되어야 2,041번째 block을 돌려줍니다. block을 하나씩 돌려주는 주기가 block 크기 16 token입니다.</p>
-            <p>같은 요청의 full 층은 이 계산을 하지 않습니다. 기본 구현이 건너뛸 token을 0으로 돌려주므로 요청이 끝날 때까지 2,048개 block을 모두 쥡니다. 이 요청이 비슷한 prompt를 쓰는 다른 요청과 앞부분을 공유하더라도, 창 층의 앞 block은 이미 null block이라 공유할 것이 남아 있지 않습니다.</p>
+            <p>
+            같은 요청의 full 층은 이 계산을 하지 않습니다. 기본 구현이 건너뛸 token을 0으로 돌려주므로 요청이 끝날 때까지 2,048개 block을 모두 쥡니다. 이 요청이
+            비슷한 prompt를 쓰는 다른 요청과 앞부분을 공유하더라도 창 층의 앞 block은 이미 null block이라 공유할 것이 남아 있지 않습니다.
+          </p>
           </div>
         </section>
 
@@ -122,7 +128,11 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <h2 className="mb-6 text-2xl font-bold">8. vLLM은 n − W + 1을 block 수로 내려 앞쪽을 null block으로 바꿉니다</h2>
           <div className={prose}>
             <p>vLLM v0.27.1(commit 6e448d0)의 single_type_kv_cache_manager.py 1057–1083행이 SlidingWindowManager의 get_num_skipped_tokens입니다. 원문 주석은 W = 4, 계산 7개에서 0~3을 건너뛴다는 예를 그림으로 그리고, 식은 max(0, n − W + 1) 한 줄입니다.</p>
-            <p>622–659행의 remove_skipped_blocks가 이 수를 block 크기로 나눠 앞쪽 block을 고릅니다. 595–620행의 _remove_blocks_in_range는 뒤에서부터 null block으로 바꾸고, 이미 null block을 만나면 멈춥니다. full attention 관리자는 기본 구현이 0을 돌려주므로 이 경로에서 아무것도 하지 않습니다.</p>
+            <p>
+            622–659행의 remove_skipped_blocks가 이 수를 block 크기로 나눠 앞쪽 block을 고릅니다. 595–620행의
+            _remove_blocks_in_range는 뒤에서부터 null block으로 바꾸고 이미 null block을 만나면 멈춥니다. full attention 관리자는 기본
+            구현이 0을 돌려주므로 이 경로에서 아무것도 하지 않습니다.
+          </p>
             <p>1085–1092행은 창 층의 공통 prefix block 수를 늘 0으로 돌려줍니다. 원문 주석은 앞쪽이 null block이라 full 층처럼 참조 수로 셀 수 없다고 적습니다. 같은 prefix를 여러 요청이 읽는 계산을 한 번으로 줄이는 cascade attention을 창 층에는 쓰지 않는다는 뜻입니다.</p>
           </div>
           {code("skipped-tokens", "창 밖 token 수 n − W + 1")}
@@ -134,7 +144,10 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <h2 className="mb-6 text-2xl font-bold">9. TensorRT-LLM은 창보다 block 하나 더 쌓일 때 맨 앞 block을 뗍니다</h2>
           <div className={prose}>
             <p>TensorRT-LLM(commit 681cff1)의 kvCacheManager.cpp 2274–2290행은 기준을 W + tokensPerBlock으로 둡니다. 쥔 token이 그 수 이상이면 맨 앞 block을 떼는 일을 반복합니다. W = 128, 기본 block 32 token이면 160이 되는 순간 떼므로 128~159 token 사이를 오갑니다. vLLM보다 block이 커서 한 번에 떼는 양도 큽니다.</p>
-            <p>3677–3737행의 detachFrontBlock은 뗀 자리에 placeholder를 넣고 참조 수를 줄입니다. 참조가 0이 된 block은 바로 지우지 않고 우선순위를 유지한 채 eviction queue로 보냅니다.</p><p>공식 문서도 창 밖으로 나간 block을 radix tree에 남겨 다른 요청이 재사용할 수 있게 한다고 설명합니다. vLLM도 요청의 목록에서는 null block으로 바꾸지만 block 자체는 free queue로 보내므로, 두 엔진 모두 반환과 덮어쓰기 사이에 시간이 있습니다.</p>
+            <p>3677–3737행의 detachFrontBlock은 뗀 자리에 placeholder를 넣고 참조 수를 줄입니다. 참조가 0이 된 block은 바로 지우지 않고 우선순위를 유지한 채 eviction queue로 보냅니다.</p><p>
+            공식 문서도 창 밖으로 나간 block을 radix tree에 남겨 다른 요청이 재사용할 수 있게 한다고 설명합니다. vLLM도 요청의 목록에서는 null block으로
+            바꾸지만 block 자체는 free queue로 보내므로 두 엔진 모두 반환과 덮어쓰기 사이에 시간이 있습니다.
+          </p>
             <p>같은 함수 첫머리 주석은 "streamLLM is not supported at the moment"이고 창 밖 block은 늘 0번째 block이라고 적습니다. sink를 남기는 경로가 없다는 뜻입니다. llm_args.py 4601–4607행도 예전 sink_token_length 설정이 PyTorch backend에서 무시되며 StreamingLLM을 attention kernel이 지원하지 않는다고 밝힙니다.</p>
           </div>
           {code("trt-adjust", "W + tokensPerBlock 기준의 분리")}
@@ -151,7 +164,11 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <h2 className="mb-6 text-2xl font-bold">10. StreamingLLM은 sink를 남기고 위치 번호를 cache 안에서 다시 매깁니다</h2>
           <div className={prose}>
             <p>StreamingLLM의 cache는 두 부분입니다. 처음 4 token의 sink와 최근 token을 담는 rolling cache입니다. 논문은 여기에 한 가지 조건을 더합니다. 위치를 원래 문장 위치가 아니라 cache 안 순서로 매긴다는 것입니다. 4절의 cache [0, 1, 2, 3, 6, 7, 8, 9]라면 위치 0~7을 붙입니다.</p>
-            <p>RoPE 모델에서 이렇게 하려면 key를 회전하기 전 값으로 저장하고, decode마다 cache 안 위치로 다시 회전해야 합니다. 일반 서빙 경로는 그렇지 않습니다. vLLM의 gpt_oss.py 176–177행처럼 원래 위치로 회전한 key를 attention 층에 넘기고, 그 값이 그대로 cache에 들어갑니다. 서버가 sink block만 남겨도 같은 결과가 되지는 않는다는 뜻입니다.</p>
+            <p>
+            RoPE 모델에서 이렇게 하려면 key를 회전하기 전 값으로 저장하고 decode마다 cache 안 위치로 다시 회전해야 합니다. 일반 서빙 경로는 그렇지 않습니다. vLLM의
+            gpt_oss.py 176–177행처럼 원래 위치로 회전한 key를 attention 층에 넘기고, 그 값이 그대로 cache에 들어갑니다. 서버가 sink block만 남겨도
+            같은 결과가 되지는 않는다는 뜻입니다.
+          </p>
             <p>논문은 이 방법으로 Llama-2, MPT, Falcon, Pythia가 4백만 token까지 안정적으로 언어 모델링을 했고, 창을 매번 다시 계산하는 방식보다 token당 최대 22.2배 빨랐다고 보고합니다. 처음부터 sink 전용 token 하나를 넣어 학습하면 그 token 하나로 충분하다는 실험도 함께 싣습니다. 모두 저자 측정입니다.</p>
           </div>
           {code("rope-before-cache", "회전한 key가 cache로 가는 경로")}
@@ -166,7 +183,11 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           <h2 className="mb-6 text-2xl font-bold">11. 엔진 안의 sink는 세 가지 다른 물건입니다</h2>
           <div className={prose}>
             <p>첫째는 StreamingLLM처럼 실제 처음 token의 KV를 남기는 sink입니다. 9절에서 본 대로 TensorRT-LLM의 PyTorch backend는 이 경로를 지원하지 않습니다.</p>
-            <p>둘째는 모델이 미리 준 고정 K·V를 모든 요청 앞에 붙이는 sink입니다. vLLM의 StaticSinkAttention은 sink K·V를 cache에 한 번 써 두고, 요청마다 block table 앞에 그 block을 끼워 넣으며 길이를 sink_len만큼 늘립니다. SinkFullAttentionManager는 이 block을 pool에서 미리 떼어 둡니다. 요청의 KV는 그대로 두고 주소 목록만 바꾸는 방식입니다.</p>
+            <p>
+            둘째는 모델이 미리 준 고정 K·V를 모든 요청 앞에 붙이는 sink입니다. vLLM의 StaticSinkAttention은 sink K·V를 cache에 한 번 써 두고
+            요청마다 block table 앞에 그 block을 끼워 넣으며 길이를 sink_len만큼 늘립니다. SinkFullAttentionManager는 이 block을 pool에서
+            미리 떼어 둡니다. 요청의 KV는 그대로 두고 주소 목록만 바꾸는 방식입니다.
+          </p>
             <p>셋째는 gpt-oss처럼 KV 없이 head마다 학습한 값을 softmax 분모에 더하는 sink입니다. 이 경우 서버가 남길 token이 없습니다. 창 층은 3절처럼 block을 돌려주면 됩니다. 같은 모델의 짝수 층에만 창이 걸리는 것도 같은 파일 157–168행에서 확인할 수 있습니다.</p>
             <p>vLLM에는 비슷한 모양의 관리자가 하나 더 있습니다. R-SWA용 RSWAManager는 prompt 앞부분을 남기고 prompt 끝과 현재 decode 창 사이의 가운데 block만 돌려줍니다. prompt 100, block 16, 창 64, 계산 500이면 7번부터 26번까지 block 20개입니다. 앞을 남기고 가운데를 비운다는 점에서 sink + 창과 닮았지만 남기는 앞부분이 prompt 전체라는 점이 다릅니다.</p>
           </div>

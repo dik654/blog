@@ -25,15 +25,15 @@ export default function SourceTrace({ code }: Props) {
         <CodeViewButton label="cell의 pos·bitset·used 선언" onClick={() => code("cells-fields")} />
         <div className={prose}>
           <p>
-            공유와 반환은 비트 연산 하나씩입니다. seq_add는 이미 채워진 cell에 비트를 하나 더 켜고, seq_rm은 비트를 끈 뒤 비트가 하나도 남지 않으면 pos를 −1로
-            돌리고 used에서 뺍니다. 3절 끝에서 A를 지우면 cell 4·5·6·9가 이 분기로 비고, cell 0~3은 B 비트가 남아 그대로입니다.
+            공유와 반환은 비트 연산 하나씩입니다. seq_add는 이미 채워진 cell에 비트를 하나 더 켜고 seq_rm은 비트를 끈 뒤 비트가 하나도 남지 않으면 pos를 −1로
+            돌리고 used에서 뺍니다. 3절 끝에서 A를 지우면 cell 4·5·6·9가 이 분기로 비고 cell 0~3은 B 비트가 남아 그대로입니다.
           </p>
         </div>
         <CodeViewButton label="비트를 켜고 끄는 seq_add·seq_rm·seq_has" onClick={() => code("cells-seq-ops")} />
         <div className={prose}>
           <p>
-            B에게 앞 4 token을 넘기는 호출은 llama-kv-cache.cpp의 seq_cp입니다. A와 B가 같은 stream에 있으면 위치 0~3의 cell을 돌며 B 비트를 켜고 끝납니다.
-            주석도 데이터 복사가 필요 없다고 적습니다. stream이 다르면 실제 buffer 복사를 예약하고, 그것도 buffer 전체 복사만 허용합니다.
+            B에게 앞 4 token을 넘기는 호출은 llama-kv-cache.cpp의 seq_cp입니다. A와 B가 같은 stream에 있으면 위치 0~3의 cell을 돌며 B 비트를
+            켜고 끝납니다. 주석도 데이터 복사가 필요 없다고 적습니다. stream이 다르면 실제 buffer 복사를 예약하고 그것도 buffer 전체 복사만 허용합니다.
           </p>
         </div>
         <CodeViewButton label="같은 stream이면 비트만 켜는 seq_cp" onClick={() => code("seq-cp")} />
@@ -50,27 +50,27 @@ export default function SourceTrace({ code }: Props) {
         <h2 className="mb-6 text-2xl font-bold">9. find_slot·get_n_kv·mask 세 함수가 7절의 단계입니다</h2>
         <div className={prose}>
           <p>
-            7절의 첫 단계는 find_slot입니다. head 자리부터 cell을 하나씩 보며 비어 있거나, 한 sequence만 쓰던 cell이 sliding window 밖으로 밀려난 경우에 씁니다.
-            head 앞에 빈 cell이 충분히 많으면 처음부터 다시 찾아 배열 앞쪽을 채웁니다. 이 규칙 때문에 A와 B의 cell이 번갈아 놓입니다.
+            7절의 첫 단계는 find_slot입니다. head 자리부터 cell을 하나씩 보며 비어 있거나 한 sequence만 쓰던 cell이 sliding window 밖으로 밀려난
+            경우에 씁니다. head 앞에 빈 cell이 충분히 많으면 처음부터 다시 찾아 배열 앞쪽을 채웁니다. 이 규칙 때문에 A와 B의 cell이 번갈아 놓입니다.
           </p>
           <p>
-            배열을 한 바퀴 다 보고도 자리가 없으면 find_slot은 빈 결과를 돌려줍니다. 호출한 decode는 배열을 한 번 정리해 다시 시도하고, 그래도 없으면 1을
-            돌려줍니다. 5절에서 말한 선점 없는 실패가 이 두 줄입니다.
+            배열을 한 바퀴 다 보고도 자리가 없으면 find_slot은 빈 결과를 돌려줍니다. 호출한 decode는 배열을 한 번 정리해 다시 시도하고 그래도 없으면 1을 돌려줍니다.
+            5절에서 말한 선점 없는 실패가 이 두 줄입니다.
           </p>
         </div>
         <CodeViewButton label="head부터 빈 cell을 찾는 find_slot" onClick={() => code("find-slot")} />
         <CodeViewButton label="자리가 없을 때 decode가 돌려주는 값" onClick={() => code("decode-no-slot")} />
         <div className={prose}>
           <p>
-            둘째 단계는 get_n_kv입니다. 사용 중 마지막 cell 번호 + 1을 256의 배수로 올리고, 최소 256을 둡니다. 주석은 batch마다 계산 그래프 모양이 바뀌지 않게
+            둘째 단계는 get_n_kv입니다. 사용 중 마지막 cell 번호 + 1을 256의 배수로 올리고 최소 256을 둡니다. 주석은 batch마다 계산 그래프 모양이 바뀌지 않게
             하려는 padding이라고 적습니다. 3절은 11 → 256, 가장 뒤 cell이 8,999번이면 9,000 → 9,216입니다.
           </p>
         </div>
         <CodeViewButton label="n_kv를 256 단위로 올리는 get_n_kv" onClick={() => code("get-n-kv")} />
         <div className={prose}>
           <p>
-            셋째 단계는 set_input_kq_mask_impl입니다. 남길 값 0과 지울 값 −∞를 정해 두고, cell마다 빈칸인지, 이 sequence의 비트가 없는지, 위치가 query보다
-            뒤인지를 차례로 물어 하나라도 맞으면 −∞를 씁니다. 7절의 B 행에서 남는 7칸이 이 검사를 모두 통과한 cell입니다.
+            셋째 단계는 set_input_kq_mask_impl입니다. 남길 값 0과 지울 값 −∞를 정해 두고 cell마다 빈칸인지, 이 sequence의 비트가 없는지, 위치가
+            query보다 뒤인지를 차례로 물어 하나라도 맞으면 −∞를 씁니다. 7절의 B 행에서 남는 7칸이 이 검사를 모두 통과한 cell입니다.
           </p>
         </div>
         <CodeViewButton label="cell마다 0 또는 −∞를 쓰는 mask" onClick={() => code("kq-mask")} />

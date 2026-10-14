@@ -22,8 +22,8 @@ export default function Offload({ code }: Props) {
             16,384에서 층 하나는 가중치 122.7MB와 KV 64MiB를 함께 차지합니다. 전부 올리면 넘칩니다.
           </p>
           <p>
-            -ngl N은 GPU에 둘 층의 수입니다. 원문은 i_gpu_start = 층 수 + 1 − N을 계산하고, 번호가 그보다 작은 층을 CPU에, 나머지를 GPU에 둡니다. 출력층도 번호 32인
-            층 하나로 세기 때문에 32층 모델의 최대값은 33입니다. 입력 embedding은 GPU로 옮겨도 이득이 작다는 주석과 함께 늘 CPU에 남습니다.
+            -ngl N은 GPU에 둘 층의 수입니다. 원문은 i_gpu_start = 층 수 + 1 − N을 계산하고 번호가 그보다 작은 층을 CPU에, 나머지를 GPU에 둡니다.
+            출력층도 번호 32인 층 하나로 세기 때문에 32층 모델의 최대값은 33입니다. 입력 embedding은 GPU로 옮겨도 이득이 작다는 주석과 함께 늘 CPU에 남습니다.
           </p>
         </div>
         <LayerOffloadViz />
@@ -49,8 +49,8 @@ export default function Offload({ code }: Props) {
             <Link to="/cs/ai/model-vram-budgeting#cpu-gpu-offloading">CPU/GPU offloading</Link>에서 본, 가중치를 필요할 때 옮기는 방식과 다릅니다.
           </p>
           <p>
-            예외는 큰 batch입니다. CUDA backend는 한 번에 처리하는 행이 32개 이상인 연산이면 CPU 버퍼의 가중치라도 GPU로 옮겨 계산합니다. prompt 2,000 token을
-            처리하는 prefill은 이 경로로 가고, slot 네 개의 decode는 4행이라 CPU에서 계산합니다. 기준 32는 환경 변수로 바꿀 수 있습니다.
+            예외는 큰 batch입니다. CUDA backend는 한 번에 처리하는 행이 32개 이상인 연산이면 CPU 버퍼의 가중치라도 GPU로 옮겨 계산합니다. prompt 2,000
+            token을 처리하는 prefill은 이 경로로 가고 slot 네 개의 decode는 4행이라 CPU에서 계산합니다. 기준 32는 환경 변수로 바꿀 수 있습니다.
           </p>
           <p>
             그래서 -ngl을 줄이면 prefill보다 decode가 먼저 느려집니다. decode의 각 step이 CPU 층 8개를 메모리 대역폭이 낮은 RAM에서 읽어야 하기 때문입니다. 얼마나

@@ -29,7 +29,10 @@ export default function KvCacheQuantizationArticle() {
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">2. 쓰는 kernel과 읽는 kernel 사이에 scale 하나가 끼어듭니다</h2>
           <div className={prose}>
-            <p>바깥에서 보면 입력과 출력은 그대로입니다. 모델은 BF16으로 K와 V를 계산하고, attention은 그 K·V를 읽어 BF16 결과를 냅니다. 바뀌는 것은 둘 사이의 보관 형식뿐입니다. 저장할 때는 8비트로 줄이고, 읽을 때는 다시 계산용 형식으로 늘립니다.</p>
+            <p>
+            바깥에서 보면 입력과 출력은 그대로입니다. 모델은 BF16으로 K와 V를 계산하고 attention은 그 K·V를 읽어 BF16 결과를 냅니다. 바뀌는 것은 둘 사이의 보관
+            형식뿐입니다. 저장할 때는 8비트로 줄이고 읽을 때는 다시 계산용 형식으로 늘립니다.
+          </p>
             <p>줄였다 늘린 값이 원래 값과 똑같지는 않습니다. 8비트로는 담을 수 있는 수의 개수가 256개뿐이라 그 사이의 값은 가까운 칸으로 옮겨집니다. 그래서 이 상자의 계약은 "같은 값"이 아니라 "가까운 값"입니다. 얼마나 가까운지는 어떤 칸 배치를 쓰고 값을 어느 비율로 줄여 넣는지에 달려 있습니다.</p>
             <p>KV를 처음 만드는 계산, 곧 prefill과 decode의 행렬곱은 이 상자 밖에 있습니다. 가중치를 8비트로 바꾸는 일과도 다릅니다. KV가 무엇이고 왜 token마다 쌓이는지는 <a href="/cs/ai/kv-cache-fundamentals#kv-shape">KV cache 기초</a>에서 다뤘으므로 여기서는 저장 형식만 봅니다.</p>
           </div>
@@ -62,7 +65,10 @@ export default function KvCacheQuantizationArticle() {
         <section id="round-trip" data-teach-level="1" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 네 값을 나눴다 곱하면 큰 값 하나만 크게 틀어집니다</h2>
           <div className={prose}>
-            <p>같은 head의 key 원소 네 개 0.47, −1.3, 3.1, 12.0을 저장한다고 합시다. 서버가 처음 몇 개의 요청에서 본 가장 큰 절댓값은 4.0이었고, 12.0은 그 뒤에 처음 나타났습니다. (가정) 저장할 때 쓸 비율은 4.0을 200에 맞추도록 0.02로 정했습니다.</p>
+            <p>
+            같은 head의 key 원소 네 개 0.47, −1.3, 3.1, 12.0을 저장한다고 합시다. 서버가 처음 몇 개의 요청에서 본 가장 큰 절댓값은 4.0이었고 12.0은 그
+            뒤에 처음 나타났습니다. (가정) 저장할 때 쓸 비율은 4.0을 200에 맞추도록 0.02로 정했습니다.
+          </p>
             <p>쓰는 쪽은 각 값을 0.02로 나눠 23.5, −65, 155, 600을 얻습니다. 8비트 부동소수점 형식은 이 수들을 그대로 담지 못하고 가까운 칸에 맞춥니다. 16과 32 사이는 2 간격이라 23.5는 24, 64와 128 사이는 8 간격이라 −65는 −64, 128과 256 사이는 16 간격이라 155는 160이 됩니다. 이 형식이 담을 수 있는 가장 큰 수는 448이라 600은 448에서 멈춥니다.</p>
             <p>읽는 쪽은 저장된 수에 0.02를 곱합니다. 0.48, −1.28, 3.2, 8.96입니다. 작은 세 값의 오차는 0.01, 0.02, 0.10으로 원래 크기의 2~3%입니다. 12.0은 8.96으로 돌아와 3.04, 25%가 사라집니다. 간격 때문에 생긴 작은 오차와 상한에 걸려 생긴 큰 오차는 원인이 다릅니다.</p>
             <p>큰 값이 늘 같은 채널에서 나온다면 그 채널에만 다른 비율을 줄 수 있습니다. 12.0을 200에 맞춰 0.06을 쓰면 200은 192로 저장되고 11.52로 돌아와 오차가 0.48로 줄어듭니다. 비율을 몇 개 두느냐가 7절의 질문입니다.</p>
@@ -75,7 +81,10 @@ export default function KvCacheQuantizationArticle() {
           <div className={prose}>
             <p>비율을 1로 두면 어떨까요? 8비트 부동소수점은 지수 자리가 있어 0.47은 0.46875, −1.3은 −1.25, 3.1은 3.0, 12.0은 12로 저장됩니다. 상대 오차가 몇 %에 머뭅니다. 값의 크기가 달라져도 칸 간격이 함께 커지고 작아지기 때문입니다. 그래서 FP8 KV는 보정 없이 켜도 바로 망가지지 않습니다.</p>
             <p>8비트 정수는 사정이 다릅니다. 정수 칸은 −127부터 127까지 간격 1로 고정이라 비율 1로 넣으면 0.47은 0, −1.3은 −1이 됩니다. 비율을 4.0÷127로 잡으면 작은 값은 잘 맞지만 12.0은 127에서 잘려 4.0으로 돌아옵니다. 정수 형식에서는 비율이 칸 간격 자체를 정하므로 보정이 필수입니다.</p>
-            <p>FP8에서도 비율이 하는 일은 남아 있습니다. 바로 담을 수 있는 범위를 값에 맞추는 일입니다. E4M3 형식은 지수 4비트와 가수 3비트로 448까지 담고, E5M2는 지수 5비트와 가수 2비트로 57,344까지 담는 대신 칸이 더 거칩니다.</p><p>FP8에서는 scale을 두 배로 키워도 0.47·−1.3·3.1의 상대 오차는 거의 그대로입니다. 칸 간격이 값과 함께 줄어들기 때문입니다. 대가가 생기는 곳은 아주 작은 값 쪽입니다. x ÷ s가 2⁻⁶보다 작아지면 E4M3의 정규 범위를 벗어나 간격 2⁻⁹의 고정 칸으로 떨어집니다. 형식별 칸 배치는 <a href="/cs/ai/quantization-formats-and-granularity#floating-point-formats">부동소수점 양자화 형식</a>에서 자세히 봅니다.</p>
+            <p>
+            FP8에서도 비율이 하는 일은 남아 있습니다. 바로 담을 수 있는 범위를 값에 맞추는 일입니다. E4M3 형식은 지수 4비트와 가수 3비트로 448까지 담고 E5M2는 지수
+            5비트와 가수 2비트로 57,344까지 담는 대신 칸이 더 거칩니다.
+          </p><p>FP8에서는 scale을 두 배로 키워도 0.47·−1.3·3.1의 상대 오차는 거의 그대로입니다. 칸 간격이 값과 함께 줄어들기 때문입니다. 대가가 생기는 곳은 아주 작은 값 쪽입니다. x ÷ s가 2⁻⁶보다 작아지면 E4M3의 정규 범위를 벗어나 간격 2⁻⁹의 고정 칸으로 떨어집니다. 형식별 칸 배치는 <a href="/cs/ai/quantization-formats-and-granularity#floating-point-formats">부동소수점 양자화 형식</a>에서 자세히 봅니다.</p>
           </div>
         </section>
 
@@ -83,7 +92,11 @@ export default function KvCacheQuantizationArticle() {
           <h2 className="mb-6 text-2xl font-bold">6. 쓰기 양자화와 읽기 역양자화 사이의 비율을 scale이라고 부릅니다</h2>
           <div className={prose}>
             <p>KV를 낮은 정밀도로 보관하는 방법 전체를 KV cache 양자화(KV cache quantization)라고 합니다. 값을 나눠 8비트에 넣는 쓰기 단계가 양자화(quantize), 저장값에 곱해 계산용 형식으로 되돌리는 읽기 단계가 역양자화(dequantize)입니다.</p>
-            <p>둘이 함께 쓰는 비율이 scale입니다. 앞 절의 0.02가 key의 scale이고, value에도 따로 scale이 있습니다. 쓰기와 읽기가 같은 scale을 써야 값이 제자리로 돌아옵니다. 처음 몇 batch에서 최댓값을 보고 scale을 정하는 일을 보정(calibration)이라고 부르고, 상한을 넘은 값을 최댓값에 멈추는 동작을 포화(saturation)라고 부릅니다.</p>
+            <p>
+            둘이 함께 쓰는 비율이 scale입니다. 앞 절의 0.02가 key의 scale이고 value에도 따로 scale이 있습니다. 쓰기와 읽기가 같은 scale을 써야 값이
+            제자리로 돌아옵니다. 처음 몇 batch에서 최댓값을 보고 scale을 정하는 일을 보정(calibration)이라고 부르고 상한을 넘은 값을 최댓값에 멈추는 동작을
+            포화(saturation)라고 부릅니다.
+          </p>
           </div>
           <ExplainedFormula
             question="key 원소 하나가 저장됐다가 읽힐 때 어떤 값이 됩니까?"
@@ -144,7 +157,11 @@ export default function KvCacheQuantizationArticle() {
           <div className={prose}>
             <p>vLLM v0.27.1(commit 6e448d0)의 attention.py 124–150행은 scale을 따로 정하지 않은 층에 k·v scale 1.0을 넣습니다. 같은 함수가 envs.py의 상수를 읽어 k_range 200, v_range 100을 붙입니다. 보정 없이 fp8만 켜면 5절의 비율 1 경로입니다.</p>
             <p>584–594행의 calc_kv_scales는 key 전체의 최댓값을 k_range로, value 전체의 최댓값을 v_range로 나눕니다. 4.0이면 0.02입니다. 마지막 줄이 calculate_kv_scales를 False로 바꾸므로 보정은 한 번뿐입니다. warmup batch가 실제 요청보다 작은 값만 담았다면 그 뒤의 큰 값은 4절처럼 상한에 걸립니다.</p>
-            <p>공식 문서는 세 방식을 구분합니다. 보정하지 않으면 scale이 1.0이고, calculate_kv_scales는 warmup 중 임의 token 한 batch로 한 번 정하며, 권장 방식은 llm-compressor로 데이터셋을 돌려 scale을 정해 checkpoint에 넣는 것입니다. head마다 scale을 두는 방식은 이 마지막 경로와 FlashAttention backend에서만 쓸 수 있다고 적습니다.</p>
+            <p>
+            공식 문서는 세 방식을 구분합니다. 보정하지 않으면 scale이 1.0이고 calculate_kv_scales는 warmup 중 임의 token 한 batch로 한 번 정하며
+            권장 방식은 llm-compressor로 데이터셋을 돌려 scale을 정해 checkpoint에 넣는 것입니다. head마다 scale을 두는 방식은 이 마지막 경로와
+            FlashAttention backend에서만 쓸 수 있다고 적습니다.
+          </p>
           </div>
           {code("scale-defaults", "보정 전 기본 scale 1.0과 range 상수")}
           {code("calc-scales", "첫 batch에서 scale을 한 번 정하는 원문")}
@@ -160,8 +177,16 @@ export default function KvCacheQuantizationArticle() {
           <h2 className="mb-6 text-2xl font-bold">10. 쓰기 kernel은 주소 계산을 그대로 두고 값만 바꿉니다</h2>
           <div className={prose}>
             <p>cache_kernels.cu의 reshape_and_cache_flash_kernel(314–399행)은 token 하나를 thread block 하나가 맡습니다. 327–344행이 slot_mapping으로 block과 위치를 구해 목적지 포인터를 만듭니다. 이 부분에는 양자화가 없습니다. KV 양자화를 켜도 PagedAttention의 주소 체계는 바뀌지 않는다는 뜻입니다.</p>
-            <p>351–363행은 scale이 하나일 때입니다. 모든 head가 같은 k_scale을 쓰고, 241–252행의 CopyWithScaleOp가 원소마다 scaled_convert를 부릅니다. 364–397행은 scale이 head마다 있을 때로, warp 하나가 head 하나를 맡아 그 head의 scale을 씁니다. 852–856행은 scale 모양이 [1] 또는 [num_heads]가 아니면 멈춥니다.</p>
-            <p>실제 변환은 quant_utils.cuh에 있습니다. 303–307행 주석이 "FP8 = Quantize(HP ÷ scale), HP = Dequant(FP8) × scale"이라는 약속을 적고, 480–488행이 half 값을 scale로 나눈 뒤 __NV_SATFINITE로 변환합니다. 이 플래그 때문에 600은 무한대가 되지 않고 448에서 멈춥니다. 읽기 쪽 317–324행은 FP8을 half로 바꾼 뒤 scale을 곱합니다.</p>
+            <p>
+            351–363행은 scale이 하나일 때입니다. 모든 head가 같은 k_scale을 쓰고 241–252행의 CopyWithScaleOp가 원소마다 scaled_convert를
+            부릅니다. 364–397행은 scale이 head마다 있을 때로, warp 하나가 head 하나를 맡아 그 head의 scale을 씁니다. 852–856행은 scale 모양이
+            [1] 또는 [num_heads]가 아니면 멈춥니다.
+          </p>
+            <p>
+            실제 변환은 quant_utils.cuh에 있습니다. 303–307행 주석이 "FP8 = Quantize(HP ÷ scale), HP = Dequant(FP8) ×
+            scale"이라는 약속을 적고 480–488행이 half 값을 scale로 나눈 뒤 __NV_SATFINITE로 변환합니다. 이 플래그 때문에 600은 무한대가 되지 않고
+            448에서 멈춥니다. 읽기 쪽 317–324행은 FP8을 half로 바꾼 뒤 scale을 곱합니다.
+          </p>
           </div>
           {code("write-kernel", "slot 주소와 FP8 쓰기")}
           {code("scale-op", "원소 하나의 복사·변환")}
@@ -173,10 +198,18 @@ export default function KvCacheQuantizationArticle() {
         <section id="engines" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">11. 엔진마다 scale을 두는 단위가 다릅니다</h2>
           <div className={prose}>
-            <p>TensorRT-LLM의 attention 문서는 INT8과 FP8 KV를 지원하며 scale은 kv_cache_scaling_factor 하나, 모양 [1]이라고 적습니다. 쓸 때는 fp_value × (1.0 ÷ kv_cache_scaling_factor)로 곱셈 하나로 나누기를 대신하고, 읽을 때는 quantized_value × kv_cache_scaling_factor입니다.</p><p>나머지 신경망이 8비트여도 attention 연산자의 입출력은 FP32·FP16·BF16이라는 점도 함께 밝힙니다.</p>
+            <p>
+            TensorRT-LLM의 attention 문서는 INT8과 FP8 KV를 지원하며 scale은 kv_cache_scaling_factor 하나, 모양 [1]이라고 적습니다.
+            쓸 때는 fp_value × (1.0 ÷ kv_cache_scaling_factor)로 곱셈 하나로 나누기를 대신하고 읽을 때는 quantized_value ×
+            kv_cache_scaling_factor입니다.
+          </p><p>나머지 신경망이 8비트여도 attention 연산자의 입출력은 FP32·FP16·BF16이라는 점도 함께 밝힙니다.</p>
             <p>같은 문서에서 generation 단계의 XQA kernel은 FP16·BF16·FP8·INT8 KV를 받습니다. TensorRT-LLM의 KV 관리와 kernel 선택 전체는 <a href="/cs/ai/tensorrt-llm-kv-cache-and-kernels">TensorRT-LLM의 KV cache와 kernel</a>에서 vLLM과 비교합니다.</p>
             <p>llama.cpp는 -ctk와 -ctv로 K와 V 형식을 따로 정하고, q8_0, q4_0, q4_1, iq4_nl, q5_0, q5_1을 허용합니다. 이 형식들은 가중치 양자화와 같은 block 구조라 원소 32개마다 FP16 scale이 붙습니다. 7절의 1.0625 byte와 0.5625 byte가 여기서 나옵니다.</p>
-            <p>llama-context.cpp 4063–4072행은 V를 양자화하려면 Flash Attention이 켜져 있어야 한다고 강제합니다. auto면 켜 주고, 꺼 두라고 했으면 context 생성을 거부합니다. 4074–4092행은 head 폭이 block 크기 32로 나누어떨어지는지 층마다 확인합니다. 같은 KV 양자화라도 엔진마다 scale 단위와 함께 쓰는 kernel 조건이 다릅니다.</p>
+            <p>
+            llama-context.cpp 4063–4072행은 V를 양자화하려면 Flash Attention이 켜져 있어야 한다고 강제합니다. auto면 켜 주고 꺼 두라고 했으면
+            context 생성을 거부합니다. 4074–4092행은 head 폭이 block 크기 32로 나누어떨어지는지 층마다 확인합니다. 같은 KV 양자화라도 엔진마다 scale 단위와
+            함께 쓰는 kernel 조건이 다릅니다.
+          </p>
           </div>
           {code("q8-block", "q8_0·q4_0 block 구조")}
           {code("v-needs-fa", "V 양자화에 필요한 Flash Attention 조건")}
@@ -192,7 +225,11 @@ export default function KvCacheQuantizationArticle() {
           <div className={prose}>
             <p>8비트에서는 scale 하나로도 버틸 만하지만 2비트까지 내리면 칸이 네 개뿐이라 묶는 방법이 결과를 가릅니다. KIVI(ICML 2024)는 Llama-2-13B와 Falcon-7B의 KV 크기를 그려 보고 key에는 몇몇 고정된 채널에 아주 큰 값이 있고 value에는 뚜렷한 패턴이 없다고 보고합니다.</p>
             <p>그래서 key는 채널 방향으로 묶습니다. 큰 채널이 자기 scale을 가지면 다른 채널의 칸을 넓히지 않습니다. 4절에서 12.0이 든 채널에만 0.06을 준 것과 같은 생각입니다.</p><p>value는 token 방향으로 묶습니다. attention 출력은 token별 점수로 value를 섞은 합인데, 점수가 몇몇 중요한 token에 몰려 있습니다. token 방향으로 묶으면 다른 token의 오차가 중요한 token의 value에 섞여 들어가지 않습니다. 논문의 Table 2는 이 배치에서 출력의 상대 오차가 채널 방향보다 15배 가까이 작다고 보고합니다.</p>
-            <p>채널 방향으로 묶으려면 token이 여러 개 모여야 합니다. KIVI는 묶음 크기 G = 32와 최근 R = 128 token을 원래 정밀도로 두는 residual 구간을 씁니다. token이 R개 쌓이면 묶어서 2비트로 바꿉니다. 논문은 이 방식으로 모델 가중치를 포함한 최대 메모리를 2.6배 줄이고, batch를 최대 4배 키워 처리량이 2.35~3.47배가 되었다고 보고합니다. 저자들의 측정이며 이 글이 재현한 값은 아닙니다.</p>
+            <p>
+            채널 방향으로 묶으려면 token이 여러 개 모여야 합니다. KIVI는 묶음 크기 G = 32와 최근 R = 128 token을 원래 정밀도로 두는 residual 구간을
+            씁니다. token이 R개 쌓이면 묶어서 2비트로 바꿉니다. 논문은 이 방식으로 모델 가중치를 포함한 최대 메모리를 2.6배 줄이고 batch를 최대 4배 키워 처리량이
+            2.35~3.47배가 되었다고 보고합니다. 저자들의 측정이며 이 글이 재현한 값은 아닙니다.
+          </p>
             <p>vLLM의 쓰기 kernel은 10절에서 본 대로 scale 모양을 [1] 또는 [num_heads]로만 받습니다. KIVI식 채널·token 묶음과 residual 구간은 그 경로에 그대로 들어가지 않는 별도 구현입니다.</p>
           </div>
           <div id="paper-kivi" className="not-prose my-8 scroll-mt-24">

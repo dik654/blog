@@ -25,9 +25,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">1. 같은 KV pool인데 한쪽은 4개, 다른 쪽은 10개를 받습니다</h2>
           <div className={prose}>
             <p>
-              GPU 한 장에 KV cache로 쓸 자리가 5,120 token만큼 있다고 해 봅시다. 요청은 모두 프롬프트 200 token에 출력 한도
-              1,000 token을 달고 오지만, 실제로는 300 token을 만들고 끝납니다. (가정) TensorRT-LLM을 기본 설정으로 띄우면 이
-              요청을 동시에 4개 받습니다. vLLM은 같은 자리에 끝난 시점 기준으로 10개를 담습니다.
+              GPU 한 장에 KV cache로 쓸 자리가 5,120 token만큼 있다고 해 봅시다. 요청은 모두 프롬프트 200 token에 출력 한도 1,000 token을 달고
+              오지만 실제로는 300 token을 만들고 끝납니다. (가정) TensorRT-LLM을 기본 설정으로 띄우면 이 요청을 동시에 4개 받습니다. vLLM은 같은 자리에 끝난
+              시점 기준으로 10개를 담습니다.
             </p>
             <p>
               두 엔진 모두 KV를 고정 크기 block으로 쪼개는 paged KV를 씁니다. 그런데도 수가 다른 이유는 block을 언제, 얼마나,
@@ -38,12 +38,12 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               다 쓴 block은 우선순위에 따라 GPU와 호스트 메모리 두 단에 남깁니다. attention은 RoPE와 KV 쓰기, 양자화까지 합친
               자체 kernel로 실행합니다.</p>
             <p>
-              vLLM은 층마다 따로 tensor를 두고, 필요한 만큼만 받았다가 모자라면 요청을 내보냅니다. 다 쓴 block은 한 줄 LRU로
-              남기고, attention은 외부 kernel에 맡긴 채 KV 쓰기를 따로 붙입니다.
+              vLLM은 층마다 따로 tensor를 두고 필요한 만큼만 받았다가 모자라면 요청을 내보냅니다. 다 쓴 block은 한 줄 LRU로 남기고 attention은 외부
+              kernel에 맡긴 채 KV 쓰기를 따로 붙입니다.
             </p>
             <p>
-              이 네 가지 차이가 각각 무엇을 얻고 무엇을 내주는지를 같은 요청 하나로 따라갑니다. 마지막에는 kernel이 엔진 사이에
-              점점 공유되고 있어서, 오래 남는 차이는 메모리와 스케줄링 정책 쪽이라는 점도 확인합니다.
+              이 네 가지 차이가 각각 무엇을 얻고 무엇을 내주는지를 같은 요청 하나로 따라갑니다. 마지막에는 kernel이 엔진 사이에 점점 공유되고 있어서 오래 남는 차이는 메모리와
+              스케줄링 정책 쪽이라는 점도 확인합니다.
             </p>
           </div>
         </section>
@@ -52,8 +52,8 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">2. 엔진은 매 step 같은 네 가지를 정합니다</h2>
           <div className={prose}>
             <p>
-              바깥에서 보면 두 엔진은 같은 상자입니다. 요청이 들어오면 한 step마다 GPU에서 모델을 한 번 돌리고, 요청마다 token을
-              하나씩 내보냅니다. 이 상자가 step마다 내리는 결정은 네 가지로 나눌 수 있습니다.
+              바깥에서 보면 두 엔진은 같은 상자입니다. 요청이 들어오면 한 step마다 GPU에서 모델을 한 번 돌리고 요청마다 token을 하나씩 내보냅니다. 이 상자가 step마다
+              내리는 결정은 네 가지로 나눌 수 있습니다.
             </p>
             <p>
               첫째는 이번 step에 누구를 태울지입니다. 이미 생성 중인 요청과 새로 들어온 요청이 같은 batch에 섞입니다. 둘째는
@@ -72,17 +72,16 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">3. 프롬프트 200, 한도 1,000, 실제 300인 요청을 셉니다</h2>
           <div className={prose}>
             <p>
-              pool은 5,120 token 자리입니다. TensorRT-LLM의 기본 block은 32 token이라 160 block이고, vLLM의 기본 block은
-              16 token이라 320 block입니다. 두 엔진이 가진 byte는 같고 칸을 자르는 크기만 다릅니다. (가정)
+              pool은 5,120 token 자리입니다. TensorRT-LLM의 기본 block은 32 token이라 160 block이고 vLLM의 기본 block은 16
+              token이라 320 block입니다. 두 엔진이 가진 byte는 같고 칸을 자르는 크기만 다릅니다. (가정)
             </p>
             <p>
               요청 하나가 출력 한도까지 간다면 200+1,000=1,200 token입니다. 32 token block으로 나누면 37.5라서 올림해
               38 block입니다. 실제로 300 token에서 멈추면 500 token이므로 ⌈500÷32⌉=16 block만 씁니다.
             </p>
             <p>
-              vLLM의 16 token block으로는 프롬프트 200 token에 ⌈200÷16⌉=13 block이 필요하고, 마지막 block에는 8칸이 빕니다. 끝난
-              시점의 500 token은 ⌈500÷16⌉=32 block입니다. 320 block pool이면 끝난 시점 기준으로 32 block짜리 요청 10개가 꼭 맞게
-              들어갑니다.
+              vLLM의 16 token block으로는 프롬프트 200 token에 ⌈200÷16⌉=13 block이 필요하고 마지막 block에는 8칸이 빕니다. 끝난 시점의 500
+              token은 ⌈500÷16⌉=32 block입니다. 320 block pool이면 끝난 시점 기준으로 32 block짜리 요청 10개가 꼭 맞게 들어갑니다.
             </p>
             <p>
               이제 두 질문이 남습니다. 요청을 받는 순간 38 block을 떼어 두면 몇 개를 받을 수 있을까요? 떼어 두지 않고 받으면 그
@@ -114,18 +113,16 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">5. 내보낸 요청은 지금까지의 KV를 다시 계산합니다</h2>
           <div className={prose}>
             <p>
-              내보낸 요청의 KV는 사라집니다. 150 token을 만든 뒤 내보낸 요청이 다시 들어오면 프롬프트 200과 생성분 150을 합친
-              350 token의 KV를 처음부터 다시 만들어야 합니다. 그동안 이 요청은 token을 내지 못하고, 다시 계산하는 GPU 시간은 다른
-              요청에게서 빌려 옵니다.
+              내보낸 요청의 KV는 사라집니다. 150 token을 만든 뒤 내보낸 요청이 다시 들어오면 프롬프트 200과 생성분 150을 합친 350 token의 KV를 처음부터 다시
+              만들어야 합니다. 그동안 이 요청은 token을 내지 못하고 다시 계산하는 GPU 시간은 다른 요청에게서 빌려 옵니다.
             </p>
             <p>
-              끝까지 예약하면 이 일이 아예 일어나지 않습니다. 받은 요청은 출력 한도까지 칸이 보장되므로 중간에 쫓겨나지 않고,
-              token 사이 간격도 예측하기 쉽습니다. 대가는 3절에서 센 88칸입니다. 실제 출력이 한도에 가까운 작업이라면 빈칸은
-              작아지고, 짧게 끝나는 대화라면 커집니다.
+              끝까지 예약하면 이 일이 아예 일어나지 않습니다. 받은 요청은 출력 한도까지 칸이 보장되므로 중간에 쫓겨나지 않고 token 사이 간격도 예측하기 쉽습니다. 대가는 3절에서
+              센 88칸입니다. 실제 출력이 한도에 가까운 작업이라면 빈칸은 작아지고 짧게 끝나는 대화라면 커집니다.
             </p>
             <p>
-              그래서 선택 기준은 출력 길이 분포입니다. 출력 한도와 실제 길이가 비슷하면 예약이 거의 손해가 없고 재계산도 없습니다.
-              한도가 실제보다 훨씬 크면 그때그때 받는 쪽이 동시 요청 수를 크게 늘리지만, pool이 차는 순간마다 재계산이 생깁니다.
+              그래서 선택 기준은 출력 길이 분포입니다. 출력 한도와 실제 길이가 비슷하면 예약이 거의 손해가 없고 재계산도 없습니다. 한도가 실제보다 훨씬 크면 그때그때 받는 쪽이 동시
+              요청 수를 크게 늘리지만 pool이 차는 순간마다 재계산이 생깁니다.
             </p>
             <p>
               내보낸 요청의 앞부분 KV가 다른 재사용 장치에 남아 있다면 350 token을 전부 다시 계산하지 않을 수도 있습니다. 이 경로는
@@ -139,9 +136,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">6. 끝까지 예약하는 정책을 GUARANTEED_NO_EVICT라고 부릅니다</h2>
           <div className={prose}>
             <p>
-              TensorRT-LLM의 scheduler 가운데 KV 자리를 보고 요청 수를 정하는 부품이 capacity scheduler입니다. 받을 때 끝까지
-              예약하는 정책 이름은 GUARANTEED_NO_EVICT이고, LLM API의 기본값입니다. 다음 step 몫만 예약하다가 모자라면 요청을
-              멈추는 정책은 MAX_UTILIZATION입니다. 이 정책이 요청을 멈추는 일을 pause라고 부릅니다.
+              TensorRT-LLM의 scheduler 가운데 KV 자리를 보고 요청 수를 정하는 부품이 capacity scheduler입니다. 받을 때 끝까지 예약하는 정책 이름은
+              GUARANTEED_NO_EVICT이고 LLM API의 기본값입니다. 다음 step 몫만 예약하다가 모자라면 요청을 멈추는 정책은 MAX_UTILIZATION입니다. 이
+              정책이 요청을 멈추는 일을 pause라고 부릅니다.
             </p>
             <p>
               vLLM에서 같은 일을 하는 동작은 선점(preemption)입니다. 현재 V1 scheduler는 내보낸 요청의 KV를 버리고 다시 계산하는
@@ -183,9 +180,8 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               요청들도 이번 step에는 보지 않습니다.
             </p>
             <p>
-              어느 요청 하나가 300 token에서 끝나면 그 요청의 block이 돌아옵니다. 다음 step에서는 남은 몫 계산이 다시 이뤄지고,
-              빈 block이 46개가 되므로 다섯째 요청이 들어옵니다. 실제 사용은 16 block이었지만 돌아오는 양은 그 요청에 걸려 있던
-              전체이므로 38 block이 풀립니다.
+              어느 요청 하나가 300 token에서 끝나면 그 요청의 block이 돌아옵니다. 다음 step에서는 남은 몫 계산이 다시 이뤄지고 빈 block이 46개가 되므로 다섯째
+              요청이 들어옵니다. 실제 사용은 16 block이었지만 돌아오는 양은 그 요청에 걸려 있던 전체이므로 38 block이 풀립니다.
             </p>
           </div>
           <AlgorithmBlock
@@ -207,9 +203,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">8. 실제 코드도 출력 한도까지 더해서 셉니다</h2>
           <div className={prose}>
             <p>
-              고정한 TensorRT-LLM commit 681cff1의 capacityScheduler.cpp 222–451행이 GUARANTEED_NO_EVICT의 구현입니다. 283–296행은
-              생성 중인 요청마다 enoughAvailableBlocks와 commitBlocks를 불러 남은 몫을 먼저 뺍니다. 407–447행은 새 요청에 같은 검사를
-              하고, 실패하면 445행의 break로 반복을 끝냅니다. 7절의 의사코드와 같은 순서입니다.
+              고정한 TensorRT-LLM commit 681cff1의 capacityScheduler.cpp 222–451행이 GUARANTEED_NO_EVICT의 구현입니다.
+              283–296행은 생성 중인 요청마다 enoughAvailableBlocks와 commitBlocks를 불러 남은 몫을 먼저 뺍니다. 407–447행은 새 요청에 같은
+              검사를 하고 실패하면 445행의 break로 반복을 끝냅니다. 7절의 의사코드와 같은 순서입니다.
             </p>
             <p>
               남은 몫은 kvCacheManager.cpp 3492행의 getRemainingBlocksToCompletion이 셉니다. 3530행은 프롬프트 block을
@@ -258,8 +254,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
             </p>
             <p>
               vLLM의 FlashAttention backend는 층 하나의 shape만 정합니다. flash_attn.py 134–144행의 shape는 (num_blocks,
-              num_kv_heads, block_size, 2×head_size)이고, 층마다 이런 tensor가 하나씩 있습니다. block 번호 5는 80개 tensor 각각에
-              따로 있습니다.</p>
+              num_kv_heads, block_size, 2×head_size)이고 층마다 이런 tensor가 하나씩 있습니다. block 번호 5는 80개 tensor 각각에 따로
+              있습니다.
+            </p>
             <p>
               모든 층을 block 단위로 붙이는 배치는 KV connector가 그 배치를 원하고 다른 두 조건도 맞을 때만 고릅니다.
             </p>
@@ -281,10 +278,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <PoolLayoutViz />
           <div className={prose}>
             <p>
-              이 차이는 GPU 안에서 attention을 계산할 때보다 block을 통째로 옮길 때 드러납니다. 11절의 호스트 offload, 분리 서빙의
-              KV 전송이 그런 경우입니다. 반대로 층마다 tensor가 따로 있으면 층별로 다른 head 수나 dtype을 다루기 쉽습니다.
-              TensorRT-LLM 문서도 window 크기나 head 수가 다른 층은 별도 pool로 나누고, pool 사이의 메모리 비율을 처음에 고정한다고
-              적습니다.
+              이 차이는 GPU 안에서 attention을 계산할 때보다 block을 통째로 옮길 때 드러납니다. 11절의 호스트 offload, 분리 서빙의 KV 전송이 그런
+              경우입니다. 반대로 층마다 tensor가 따로 있으면 층별로 다른 head 수나 dtype을 다루기 쉽습니다. TensorRT-LLM 문서도 window 크기나 head
+              수가 다른 층은 별도 pool로 나누고 pool 사이의 메모리 비율을 처음에 고정한다고 적습니다.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -306,19 +302,18 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               <a href="/cs/ai/prefix-caching-radix-attention#block-hash">프리픽스 캐시의 block hash 절</a>에 있습니다.
             </p>
             <p>
-              차이가 큰 곳은 block 안의 일부만 같을 때입니다. 새 요청의 앞 52 token이 이전 요청과 같다고 해 봅시다. 32 token
-              block으로 보면 첫 block 32 token은 그대로 같고, 둘째 block은 32칸 중 앞 20칸만 같습니다. (가정)
+              차이가 큰 곳은 block 안의 일부만 같을 때입니다. 새 요청의 앞 52 token이 이전 요청과 같다고 해 봅시다. 32 token block으로 보면 첫 block
+              32 token은 그대로 같고 둘째 block은 32칸 중 앞 20칸만 같습니다. (가정)
             </p>
             <p>
-              TensorRT-LLM의 findMatchingBlock은 정확히 같은 block을 먼저 찾고, 없으면 앞부분만 같은 block을 긴 순서로 찾습니다.
-              둘째 block이 부분 일치하면 그 block을 다른 요청이 쓰는 중이어도 20칸을 새 block에 복사해 이어 씁니다. 이 동작은
-              enable_partial_reuse와 copy_on_partial_reuse로 정하며, 고정 원문의 기본값은 둘 다 켜짐입니다. 결과적으로 52 token을
-              모두 재사용합니다.
+              TensorRT-LLM의 findMatchingBlock은 정확히 같은 block을 먼저 찾고 없으면 앞부분만 같은 block을 긴 순서로 찾습니다. 둘째 block이 부분
+              일치하면 그 block을 다른 요청이 쓰는 중이어도 20칸을 새 block에 복사해 이어 씁니다. 이 동작은 enable_partial_reuse와
+              copy_on_partial_reuse로 정하며 고정 원문의 기본값은 둘 다 켜짐입니다. 결과적으로 52 token을 모두 재사용합니다.
             </p>
             <p>
-              vLLM 기본 경로는 다 찬 16 token block만 hash로 찾습니다. 52 token이 같으면 16·32·48까지 세 block, 48 token을
-              재사용하고 나머지 4 token은 다시 계산합니다. 차이는 4 token이지만, 이 차이는 block이 클수록 커집니다. block이 32라면
-              부분 재사용이 없을 때 32까지만 재사용했을 것입니다.
+              vLLM 기본 경로는 다 찬 16 token block만 hash로 찾습니다. 52 token이 같으면 16·32·48까지 세 block, 48 token을 재사용하고
+              나머지 4 token은 다시 계산합니다. 차이는 4 token이지만 이 차이는 block이 클수록 커집니다. block이 32라면 부분 재사용이 없을 때 32까지만
+              재사용했을 것입니다.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -331,32 +326,31 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <h2 className="mb-6 text-2xl font-bold">11. 오래된 system prompt도 우선순위가 높으면 남습니다</h2>
           <div className={prose}>
             <p>
-              재사용할 block을 남겨 두다 보면 결국 빈칸이 필요해져 무언가를 지워야 합니다. vLLM은 free queue 한 줄에서 가장 오래전에
-              쓴 block부터 꺼냅니다. TensorRT-LLM은 block마다 0부터 100까지의 우선순위를 붙이고, 가장 낮은 우선순위의 block을 모두
-              지운 뒤에야 다음 우선순위로 넘어갑니다. 같은 우선순위 안에서는 오래된 순서입니다.
+              재사용할 block을 남겨 두다 보면 결국 빈칸이 필요해져 무언가를 지워야 합니다. vLLM은 free queue 한 줄에서 가장 오래전에 쓴 block부터 꺼냅니다.
+              TensorRT-LLM은 block마다 0부터 100까지의 우선순위를 붙이고 가장 낮은 우선순위의 block을 모두 지운 뒤에야 다음 우선순위로 넘어갑니다. 같은 우선순위
+              안에서는 오래된 순서입니다.
             </p>
             <p>
-              기본 우선순위는 35이고, 요청은 retention 설정으로 token 구간마다 다른 값을 줄 수 있습니다. system prompt 구간에 90을,
-              생성 구간에 10을 주었다고 해 봅시다. (가정) 그림에서 system prompt A는 가장 오래됐지만 마지막까지 남습니다. vLLM의
-              한 줄 LRU였다면 같은 두 칸 요청에서 A가 가장 먼저 지워집니다.
+              기본 우선순위는 35이고 요청은 retention 설정으로 token 구간마다 다른 값을 줄 수 있습니다. system prompt 구간에 90을, 생성 구간에 10을
+              주었다고 해 봅시다. (가정) 그림에서 system prompt A는 가장 오래됐지만 마지막까지 남습니다. vLLM의 한 줄 LRU였다면 같은 두 칸 요청에서 A가 가장
+              먼저 지워집니다.
             </p>
             <p>
-              GPU에서 꺼낸 block을 바로 버리지 않고 호스트 메모리로 내리는 단계도 있습니다. host_cache_size를 정하면 꺼낸 block의
-              KV가 호스트로 복사되고 tree에 그대로 남아, 다음 요청이 찾으면 GPU로 다시 올라옵니다. 9절의 block 우선 배치 덕분에
-              이 복사는 block마다 한 번입니다. 호스트 쪽 자리가 차면 같은 우선순위 규칙으로 호스트에서도 지웁니다.
+              GPU에서 꺼낸 block을 바로 버리지 않고 호스트 메모리로 내리는 단계도 있습니다. host_cache_size를 정하면 꺼낸 block의 KV가 호스트로 복사되고
+              tree에 그대로 남아 다음 요청이 찾으면 GPU로 다시 올라옵니다. 9절의 block 우선 배치 덕분에 이 복사는 block마다 한 번입니다. 호스트 쪽 자리가 차면 같은
+              우선순위 규칙으로 호스트에서도 지웁니다.
             </p>
             <p>
-              모든 block을 내리면 GPU와 호스트 사이 대역폭을 낭비하므로 우선순위 하한이 있습니다. 하한보다 낮은 block은 내리지 않고
-              바로 지웁니다. 그림의 생성 구간 D·E가 그렇게 지워집니다. 또 tree에서 자식이 없는 leaf block만 지울 수 있다는
-              제약이 있어, 공통 앞부분은 그 뒤의 가지가 먼저 지워져야 지울 수 있습니다.
+              모든 block을 내리면 GPU와 호스트 사이 대역폭을 낭비하므로 우선순위 하한이 있습니다. 하한보다 낮은 block은 내리지 않고 바로 지웁니다. 그림의 생성 구간
+              D·E가 그렇게 지워집니다. 또 tree에서 자식이 없는 leaf block만 지울 수 있다는 제약이 있어 공통 앞부분은 그 뒤의 가지가 먼저 지워져야 지울 수 있습니다.
             </p>
           </div>
           <RetentionQueueViz />
           <div className={prose}>
             <p>
-              하한의 기본값에는 문서와 코드의 차이가 있습니다. 공식 문서는 기본값이 35이고 35보다 낮으면 내리지 않는다고 적습니다.
-              고정 원문의 evictionPolicy.cpp 34행은 C++ 기본값을 30으로 두고, 155–156행은 우선순위가 하한 이상이면 내릴 수 있다고
-              판정합니다. Python 설정 설명은 하한보다 커야 한다고 적습니다.</p>
+              하한의 기본값에는 문서와 코드의 차이가 있습니다. 공식 문서는 기본값이 35이고 35보다 낮으면 내리지 않는다고 적습니다. 고정 원문의 evictionPolicy.cpp
+              34행은 C++ 기본값을 30으로 두고 155–156행은 우선순위가 하한 이상이면 내릴 수 있다고 판정합니다. Python 설정 설명은 하한보다 커야 한다고 적습니다.
+            </p>
             <p>
               기본 우선순위 35인 block은 세 표현 어디에서나 내려가므로
               기본 설정에서는 차이가 드러나지 않습니다. 우선순위를 30~34로 직접 준 block만 버전에 따라 결과가 달라질 수 있습니다.
@@ -389,8 +383,10 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               그 뒤 fused multi-head attention kernel이 attention을 계산합니다.
             </p>
             <p>
-              vLLM에서는 RoPE를 모델 층이 먼저 적용하고, FlashAttention backend의 do_kv_cache_update가 reshape_and_cache_flash로 K·V를
-              slot 위치에 따로 씁니다. attention은 외부 FlashAttention의 flash_attn_varlen_func에 block_table을 넘겨 계산합니다.</p>
+              vLLM에서는 RoPE를 모델 층이 먼저 적용하고 FlashAttention backend의 do_kv_cache_update가 reshape_and_cache_flash로
+              K·V를 slot 위치에 따로 씁니다. attention은 외부 FlashAttention의 flash_attn_varlen_func에 block_table을 넘겨
+              계산합니다.
+            </p>
             <p>
               backend를 바꿔 FlashInfer나 Triton을 쓸 수도 있습니다. backend 선택 방식은{" "}
               <a href="/cs/ai/attention-kernel-anatomy-and-backends#backend-source">attention kernel의 backend 선택</a>에서 봅니다.
@@ -425,9 +421,9 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               masked MHA는 batch와 head 수가 작아 GPU가 놀 때 sequence를 여러 CTA에 나누는 multi-block 모드를 씁니다.
             </p>
             <p>
-              XQA의 핵심은 KV head 하나를 맡은 CTA가 그 head를 공유하는 query 8개를 한 tile의 행으로 모으는 데 있습니다. mha.cu
-              74행의 유효 행 수는 묶음 크기 × beam 폭이라 8×1=8이고, 76행의 warpTile.y는 이를 16의 배수로 올려 16입니다. KV 조각을
-              shared memory로 한 번 가져와 8행에 함께 곱하므로 같은 KV를 query마다 다시 요청하지 않습니다.
+              XQA의 핵심은 KV head 하나를 맡은 CTA가 그 head를 공유하는 query 8개를 한 tile의 행으로 모으는 데 있습니다. mha.cu 74행의 유효 행 수는
+              묶음 크기 × beam 폭이라 8×1=8이고 76행의 warpTile.y는 이를 16의 배수로 올려 16입니다. KV 조각을 shared memory로 한 번 가져와 8행에
+              함께 곱하므로 같은 KV를 query마다 다시 요청하지 않습니다.
             </p>
           </div>
           <CalculationWalkthrough
@@ -447,13 +443,13 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           <XqaGroupViz />
           <div className={prose}>
             <p>
-              이 발상은 TensorRT-LLM만의 것은 아닙니다. FlashAttention 3 인터페이스에도 GQA query를 묶는 pack_gqa 인자가 있고,
-              FlashInfer도 GQA decode를 지원합니다. TensorRT-LLM의 특징은 XQA가 head 묶음 크기와 page 크기를 compile time 상수로
-              고정한 kernel이라는 점입니다.</p>
+              이 발상은 TensorRT-LLM만의 것은 아닙니다. FlashAttention 3 인터페이스에도 GQA query를 묶는 pack_gqa 인자가 있고 FlashInfer도
+              GQA decode를 지원합니다. TensorRT-LLM의 특징은 XQA가 head 묶음 크기와 page 크기를 compile time 상수로 고정한 kernel이라는
+              점입니다.
+            </p>
             <p>
-              defines.h는 HEAD_GRP_SIZE 기본 8, TOKENS_PER_PAGE 기본 32를 두고, 조합마다 미리 만든
-              kernel을 고릅니다. 지원 조합 밖의 모델은 masked MHA로 내려가므로 같은 엔진이라도 모델마다 생성 단계 kernel이 다를 수
-              있습니다.
+              defines.h는 HEAD_GRP_SIZE 기본 8, TOKENS_PER_PAGE 기본 32를 두고 조합마다 미리 만든 kernel을 고릅니다. 지원 조합 밖의 모델은
+              masked MHA로 내려가므로 같은 엔진이라도 모델마다 생성 단계 kernel이 다를 수 있습니다.
             </p>
           </div>
           <div id="paper-trtllm-attention" className="not-prose my-8 scroll-mt-24">
@@ -481,8 +477,8 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               kernel의 경계는 생각보다 열려 있습니다. XQA defines.h 105–110행은 PAGED_KV_CACHE_LAYOUT=1이면 vLLM·SGLang 식의
               분리된 K·V pool 배치를 읽는다고 적습니다.</p>
             <p>
-              SGLang은 attention backend 목록에 trtllm_mha를 두고, TensorRT-LLM의 PyTorch
-              backend는 attn_backend로 FlashInfer를 고를 수 있습니다. 같은 GPU kernel이 여러 엔진에서 돌 수 있다는 뜻입니다.
+              SGLang은 attention backend 목록에 trtllm_mha를 두고 TensorRT-LLM의 PyTorch backend는 attn_backend로
+              FlashInfer를 고를 수 있습니다. 같은 GPU kernel이 여러 엔진에서 돌 수 있다는 뜻입니다.
             </p>
             <p>
               그래서 오래 남는 차이는 kernel보다 그 앞의 정책입니다. 출력 한도까지 예약할지, block에 층을 묶을지, 재사용 block을

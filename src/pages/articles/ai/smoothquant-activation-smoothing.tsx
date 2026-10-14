@@ -50,9 +50,8 @@ export default function SmoothquantActivationSmoothingArticle() {
               값입니다.
             </p>
             <p>
-              상자에 기대하는 계약은 단순합니다. X와 W를 8비트 정수로 바꿔 곱한 뒤 실수로 되돌린 결과가 원래 Y와 가까워야 합니다. 정수로 바꿀 때는
-              절댓값 최대를 127로 나눈 간격 Δ로 값을 나누고 반올림합니다. 되돌릴 때는 정수 code에 Δ를 곱합니다. 이 간격 하나를 행렬 전체가 쓰는지,
-              행마다 따로 쓰는지가 뒤에서 중요한 차이가 됩니다.
+              상자에 기대하는 계약은 단순합니다. X와 W를 8비트 정수로 바꿔 곱한 뒤 실수로 되돌린 결과가 원래 Y와 가까워야 합니다. 정수로 바꿀 때는 절댓값 최대를 127로 나눈
+              간격 Δ로 값을 나누고 반올림합니다. 되돌릴 때는 정수 code에 Δ를 곱합니다. 이 간격 하나를 행렬 전체가 쓰는지 행마다 따로 쓰는지가 뒤에서 중요한 차이가 됩니다.
             </p>
             <p>
               양자화의 기본 식과 반올림 오차는 <Link to="/cs/ai/quantization">양자화 기초</Link>에서, scale을 어디까지 공유하는지는{" "}
@@ -85,7 +84,9 @@ export default function SmoothquantActivationSmoothingArticle() {
           </div>
           <ExplainedFormula
             question="한 채널이 8비트 눈금을 몇 개나 쓰나요?"
-            idea={<p>행렬 전체가 간격 하나를 쓰면 그 간격은 가장 큰 채널이 정하고, 작은 채널은 자기 최댓값까지만 눈금을 씁니다.</p>}
+            idea={<p>
+            행렬 전체가 간격 하나를 쓰면 그 간격은 가장 큰 채널이 정하고 작은 채널은 자기 최댓값까지만 눈금을 씁니다.
+          </p>}
             formula={String.raw`L_j \approx 2^{8}\cdot\frac{m_j}{m}`}
             annotatedFormula={String.raw`L_j \approx \underbrace{2^{8}}_{\text{8비트 전체 눈금}}\cdot\frac{\overbrace{m_j}^{\text{채널 }j\text{의 최댓값}}}{\underbrace{m}_{\text{행렬 전체 최댓값}}}`}
             operations={[
@@ -135,13 +136,13 @@ export default function SmoothquantActivationSmoothingArticle() {
               더하기 전에 각 항에 실수를 곱해야 합니다.
             </p>
             <p>
-              논문은 이 제약을 Y = diag(Δ_X)·(X̄·W̄)·diag(Δ_W)로 적습니다. Tensor Core의 정수 곱셈을 이어 가는 동안 느린 변환 명령을 끼워 넣을 수 없어서,
-              scale은 token 축과 출력 채널 축에만 둡니다. 그래서 그 전의 방법들도 activation을 token별로만 양자화했습니다. 3절의 채널 3은 모든 token에서
-              크므로 token별 간격으로는 풀리지 않습니다.
+              논문은 이 제약을 Y = diag(Δ_X)·(X̄·W̄)·diag(Δ_W)로 적습니다. Tensor Core의 정수 곱셈을 이어 가는 동안 느린 변환 명령을 끼워 넣을 수
+              없어서 scale은 token 축과 출력 채널 축에만 둡니다. 그래서 그 전의 방법들도 activation을 token별로만 양자화했습니다. 3절의 채널 3은 모든
+              token에서 크므로 token별 간격으로는 풀리지 않습니다.
             </p>
             <p>
-              SmoothQuant는 막힌 입력 채널 축의 크기 차이를 실행 전에 W 쪽으로 옮깁니다. 나누는 수 s_j는 X에서 빼고 W의 j행에 미리 곱해 두므로, 실행
-              중에는 바깥 축 간격만 남습니다. 그림의 셋째 장면이 막힌 축이고 넷째 장면이 옮긴 뒤입니다.
+              SmoothQuant는 막힌 입력 채널 축의 크기 차이를 실행 전에 W 쪽으로 옮깁니다. 나누는 수 s_j는 X에서 빼고 W의 j행에 미리 곱해 두므로 실행 중에는 바깥 축
+              간격만 남습니다. 그림의 셋째 장면이 막힌 축이고 넷째 장면이 옮긴 뒤입니다.
             </p>
           </div>
           <GemmScaleAxisViz />
@@ -195,9 +196,8 @@ export default function SmoothquantActivationSmoothingArticle() {
           <h2 className="mb-6 text-2xl font-bold">7. 입력 채널 3 하나를 보정부터 실행까지 따라갑니다</h2>
           <div className={prose}>
             <p>
-              이제 α = 0.5로 정하고 채널 3이 실제로 거치는 경로를 순서대로 셉니다. 보정 단계에서 표본 문장을 모델에 흘려 채널 3에 들어온 절댓값의 최대를
-              기록합니다. 3절 사례에서는 64입니다. W의 채널 3 행 최댓값은 0.25입니다. 여기서 s₃가 정해지고, 그 수는 앞의 LayerNorm과 뒤의 W에 미리
-              흡수됩니다.
+              이제 α = 0.5로 정하고 채널 3이 실제로 거치는 경로를 순서대로 셉니다. 보정 단계에서 표본 문장을 모델에 흘려 채널 3에 들어온 절댓값의 최대를 기록합니다. 3절
+              사례에서는 64입니다. W의 채널 3 행 최댓값은 0.25입니다. 여기서 s₃가 정해지고 그 수는 앞의 LayerNorm과 뒤의 W에 미리 흡수됩니다.
             </p>
           </div>
           <CalculationWalkthrough
@@ -254,8 +254,8 @@ export default function SmoothquantActivationSmoothingArticle() {
           <h2 className="mb-6 text-2xl font-bold">9. 보정 표본 512개로 채널별 최댓값을 모읍니다</h2>
           <div className={prose}>
             <p>
-              s의 분자인 max|X_j|는 calibration.py 13–51행 get_act_scales가 만듭니다. 모델의 모든 Linear에 forward hook을 걸고, 들어온 입력을 (token,
-              채널)로 펼쳐 token 축 최댓값을 구한 뒤 이전 표본까지의 값과 다시 max를 취합니다. 결과는 Linear마다 채널 수 길이의 벡터 하나입니다.
+              s의 분자인 max|X_j|는 calibration.py 13–51행 get_act_scales가 만듭니다. 모델의 모든 Linear에 forward hook을 걸고 들어온
+              입력을 (token, 채널)로 펼쳐 token 축 최댓값을 구한 뒤 이전 표본까지의 값과 다시 max를 취합니다. 결과는 Linear마다 채널 수 길이의 벡터 하나입니다.
             </p>
             <p>
               기본값은 표본 512개, 길이 512입니다. 논문도 Pile에서 무작위 문장 512개로 smoothing factor와 정적 간격을 한 번 보정한 뒤 모든 평가에
@@ -301,9 +301,9 @@ export default function SmoothquantActivationSmoothingArticle() {
               적습니다. 하드웨어 세대에 따라 W8A8의 숫자 형식 자체가 바뀌는 셈입니다.
             </p>
             <p>
-              TensorRT-LLM의 양자화 블로그는 배치가 16 이상인 서빙에서 FP8을 먼저 시도하고, 결과가 부족하면 INT8 SmoothQuant를 이어서 시험하라고 권합니다.
-              같은 표에서 정확도 영향은 FP8이 Very Low, INT8 SQ가 Medium입니다. 현재 기본 PyTorch backend 문서의 양자화 recipe 목록에는 FP8·FP4와
-              W4A16·W4A8 AWQ/GPTQ가 있고 INT8 SmoothQuant는 없습니다.
+              TensorRT-LLM의 양자화 블로그는 배치가 16 이상인 서빙에서 FP8을 먼저 시도하고 결과가 부족하면 INT8 SmoothQuant를 이어서 시험하라고 권합니다.
+              같은 표에서 정확도 영향은 FP8이 Very Low, INT8 SQ가 Medium입니다. 현재 기본 PyTorch backend 문서의 양자화 recipe 목록에는
+              FP8·FP4와 W4A16·W4A8 AWQ/GPTQ가 있고 INT8 SmoothQuant는 없습니다.
             </p>
             <p>
               FP8이 먼저 권해지는 이유를 이 글은 이렇게 해석합니다. (가정) FP8 E4M3는 지수 비트가 있어 작은 값도 상대 정밀도를 어느 정도 지키므로, 3절처럼
