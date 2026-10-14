@@ -1749,3 +1749,14 @@ old는 2026-10-14 현재 파일에서 한 번만 나온다. 같은 문자열이 
 노동자 집단 장부 약 50건. CDLI 공개 PDF로 확인 2026-10-10." },
     { kind: "핵심 연구", label: "Englund · Texts from the Late Uruk Period (OBO 160/1, 1998)", href: "https://doi.org/10.5167/uzh-151545", note: "126쪽 비스듬한 테두리 그릇=GAR=노동자 하루 곡물 배급, 181쪽 MSVO 4, 27로 GAR 곡물=하루·1N1 GAR 곡물=한 달, 176쪽 W 23999,1의 성별·나이별 8명 장부. 취리히대 ZORA 공개 PDF의 쪽 이미지로 확인 2026-10-14." },
 ```
+
+## 후속 공용 파일 수정 목록 (5차 topology)
+Englund 1998 세 문단으로 `economic-history/agrarian-surplus-and-state`의 topology 지문이 바뀌었다. 직전 커밋 worktree와 `--json`으로 비교해 concept 3·stage 2·file 5·section 0·식 0·Viz 0이 같고 lines만 200→204임을 확인했다. merge-review의 keep 결정은 그대로 둔다.
+
+### `src/content/article-topology-decisions.ts`
+```old
+"economic-history/agrarian-surplus-and-state":"fbb7e1ed4875eedf",
+```
+```new
+"economic-history/agrarian-surplus-and-state":"c9f54624d17cee0b",
+```
