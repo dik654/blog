@@ -39,6 +39,12 @@
 ## 5차 (2026-10-14, Englund 1998)
 - 사용자 승인으로 ZORA의 OBO 160/1 PDF를 브라우저로 받았다(이번에는 Anubis 확인 통과). OCR 오자가 많아 인용은 쪽 이미지로 대조했다. `economic-history/agrarian-surplus-and-state` 9절에 세 문단 추가: 비스듬한 테두리 그릇(약 0.8L) = GAR = 노동자 하루 곡물 배급(126쪽), MSVO 4, 27의 720일 계산으로 GAR 곡물 = 하루·1N1 GAR 곡물 = 한 달(181쪽), W 23999,1의 성별·나이별 8명 장부(176쪽). citeKey 3과 evidence 1건(`A` 원장 `(5차)`). "약 50건"은 이 장에 없어 2011 논문 출처를 유지.
 
+## LLM 추론 영상 대조 보강 (2026-10-14, `I-llm-inference-gaps.md`)
+- 사용자가 붙인 LLM 추론 시스템 설계 영상 대본의 주제 21개를 블로그와 대조했다. 대부분(연속 배칭·PagedAttention·KV·prefix cache·speculative·grammar·TP/PP/EP·chunked prefill·P/D 분리·GPU와 CPU 차이)은 이미 전용 절이 있어 손대지 않았다.
+- 공백 7개를 1차 자료로 채웠다: 모델 등급별 GPU 수와 405B가 92.4%를 먹는 이유·트래픽 10% 이동·FP8 서버 한 대 배치와 품질 관문(`ai/inference-cost-and-capacity-planning#tier-mix`, Llama 3 논문 §6·Together AI), clock 저하와 목표 utilization(NVML), 128K 요청의 KV pool 잠식·등급 상한·전용 묶음·priority 희생자(`ai/serving-memory-admission-and-preemption` 22절, llm-d context-length scorer·vLLM v0.27.1), 최대치 예약 뒤 정산과 sheddable 등급의 저하 순서(`ai/rate-limiting-and-reliability-patterns`, Azure OpenAI quota·llm-d), 선택기와 엔진의 2단 scheduling·prefix hash 사슬·tokenizer 불일치(`ai/onprem-k8s-inference-platform#two-level-scheduling`, llm-d hashing.go·OpenAI prompt caching), cache 가격 배수(`ai/prefix-caching-radix-attention` 21절, Anthropic·OpenAI).
+- 영상의 출처 없는 수치(44,000 GPU·$127M/월·85%·10,000 GPU 이상에서만 분리 이득)는 쓰지 않았다. DistServe 7.4배와 Mooncake 525%(시뮬레이션)는 이미 글에 있는 범위 그대로다.
+- 검증: 감사 13종·ESLint·tsc·build 통과, 5개 route sweep에서 새 Viz 두 개는 장면 흔들림 0. 남은 모바일 실패는 HEAD worktree에서도 같은 기존 Viz다.
+
 ## 다음에 할 수 있는 일
 - ISO 668 치수 표(OBP 무료 범위 밖 — 표준 구매 필요), *Archaic Bookkeeping*(공개본 없음), 1947년 마케팅 보드 조례 원문(온라인 사본 없음).
 - 320px 폭에서 펼친 학습 흐름 Viz가 568px 뷰포트보다 큰 것(804~966px)은 텍스트 폭 한계로 남겼다. 조작부는 sticky라 닿는다.

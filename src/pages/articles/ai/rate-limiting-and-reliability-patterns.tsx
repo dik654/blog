@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import RateLimitingAndReliabilityPatternsViz from "./rate-limiting-and-reliability-patterns/viz/RateLimitingAndReliabilityPatternsViz";
 
 /**
@@ -241,6 +242,81 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         />
       </section>
 
+      <section id="token-reservation" data-calculation-explained className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          Token 한도는 요청을 받을 때 최대치로 잡고, 끝난 뒤 실제 사용량으로 정산합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            Token rate limit이 어려운 이유는 요청이 도착할 때 output token 수를 모르기 때문입니다. 입력은 바로 셀 수 있지만 출력은
+            생성이 끝나야 확정됩니다. 그래서 한도 검사는 요청을 받는 순간의 추정치로 하고, 실제 사용량은 끝난 뒤에야 압니다.
+          </p>
+          <p>
+            Azure OpenAI 문서가 이 구조를 그대로 적습니다. TPM 한도는 요청을 받는 시점에 그 요청이 처리할 것으로 추정한 최대 token
+            수로 계산하며, 처리가 끝난 뒤 세는 과금 token과는 다른 값입니다. 추정에는 prompt, max_tokens, best_of가 들어가고, 이
+            추정치가 분마다 초기화되는 누적 counter에 더해집니다.
+          </p>
+          <p>
+            문서의 예처럼 분당 240,000 token 한도를 둡니다. Prompt 1,000 token에 max_tokens 4,000인 요청은 5,000으로 잡히므로
+            분당 48건이면 한도가 찹니다.
+          </p>
+          <p>
+            실제 출력이 200 token이면 과금 token은 요청마다 1,200이고 48건을 합쳐도 57,600입니다. 한도의
+            24%만 썼는데 다음 요청은 429를 받습니다. Max_tokens를 300으로 줄이면 요청마다 1,300이라 184건까지 받습니다. 문서가
+            max_tokens를 필요한 만큼만 두라고 권하는 이유입니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="최대치 예약과 실제 사용량"
+          question="분당 240,000 token 한도에서 요청을 몇 건 받을까요?"
+          scope="Prompt 1,000 token, 실제 출력 200 token인 요청만 들어온다고 둡니다. Azure 문서의 문자 수 기반 근사 오차는 넣지 않았습니다."
+          steps={[
+            { label: "받을 때 잡는 양", expression: "1,000 + max_tokens 4,000", result: "5,000 token", reason: "도착 시점에는 출력이 얼마나 나올지 모르므로 상한으로 셉니다." },
+            { label: "정산 없이 받는 건수", expression: "⌊240,000 ÷ 5,000⌋", result: "분당 48건", reason: "counter가 분마다 초기화될 때까지 예약이 그대로 남습니다." },
+            { label: "그 48건의 실제 사용량", expression: "48 × (1,000 + 200)", result: "57,600 token, 한도의 24%", reason: "과금은 처리가 끝난 뒤 실제 token으로 셉니다." },
+            { label: "끝날 때 돌려주는 경우", expression: "⌊(240,000 − 4 × 5,000) ÷ 1,200⌋ + 4", result: "분당 약 187건", reason: "늘 4건이 진행 중이라 그 몫만 최대치로 묶이고, 끝난 요청은 실제 1,200만 남습니다." },
+          ]}
+          conclusion="최대치 예약은 한도를 넘지 않게 지켜 주지만, 정산하지 않으면 실제 용량의 4분의 1만 씁니다."
+          caveats={["진행 중 4건은 설명용 가정입니다.", "마지막 줄의 정산은 이 글이 제안하는 설계이며 Azure 문서는 정산을 적지 않습니다."]}
+        />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            이 손해를 줄이는 설계가 예약 뒤 정산입니다. 요청을 받을 때 5,000을 bucket에서 빼 두고, 끝나면 실제 1,200과의 차이
+            3,800을 돌려줍니다. 요청이 몇 초 만에 끝나면 한 시점에 최대치로 묶인 양은 진행 중인 요청의 몫뿐입니다. 끝나지 않은 요청은
+            여전히 최대치로 잡혀 있으므로 이 방식도 한도를 넘지 않습니다.
+          </p>
+          <p>
+            정산이 어긋나는 길은 둘입니다. 돌려주지 않으면 위의 48건처럼 실제보다 일찍 막힙니다. 반대로 예약 없이 끝난 뒤에만 빼면
+            동시에 들어온 긴 요청들이 아직 아무것도 빼지 않은 상태로 한꺼번에 통과해 한도를 넘습니다. 연결이 끊긴 요청은 그때까지
+            만든 token으로 정산해야 예약이 새지 않습니다.
+          </p>
+          <p>
+            정산에 쓰는 token 수는 엔진이 실제로 센 값이어야 합니다. Azure 문서도 rate limit의 추정이 문자 수에 일부 기반한 근사라
+            정확한 token 수보다 먼저 막힐 수 있고, 과금 token 계산과 같지 않다고 적습니다.
+          </p>
+          <p>
+            Gateway의 tokenizer가 엔진과 다르면 두
+            숫자가 계속 어긋나며, 그 이유는{" "}
+            <Link to="/cs/ai/onprem-k8s-inference-platform#two-level-scheduling">선택기와 엔진의 tokenizer 불일치</Link>에서
+            봅니다. 그래서 rate limit counter를 과금 장부로 쓰지 않고, 과금은 끝난 뒤의 usage로 따로 셉니다.
+          </p>
+        </div>
+        <div id="paper-azure-openai-tpm" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Microsoft Learn · Manage Azure OpenAI in Microsoft Foundry Models quota · Understanding rate limits (2026-05-04)"
+            citeKey={4}
+            href="https://learn.microsoft.com/en-us/azure/foundry-classic/openai/how-to/quota"
+          >
+            <q>
+              TPM rate limits are based on the maximum number of tokens that are estimated to be processed by a request at the
+              time the request is received.
+            </q>{" "}
+            같은 절은 이 추정이 처리 완료 뒤 세는 과금 token과 다르고, prompt·max_tokens·best_of를 포함하며, 분마다
+            초기화되는 누적 counter에 더해진다고 설명합니다. 끝난 뒤 돌려주는 정산은 이 문서에 없습니다.
+          </CitationBlock>
+        </div>
+      </section>
+
       <section id="load-shedding-and-admission" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Load shedding은 넘친 뒤에, admission policy는 문 앞에서 거릅니다
@@ -261,6 +337,38 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             글의 admission policy는 그보다 앞선 문 앞, 즉 요청이 스케줄러에
             들어가기도 전에 통째로 받을지 거절할지를 정하는 자리입니다.
           </p>
+          <p>
+            LLM 서빙에서는 요청 등급을 미리 붙여 두면 이 순서를 기계적으로 정할 수 있습니다. llm-d의 InferenceObjective는 요청마다
+            정수 priority를 붙이며, 값이 클수록 중요하고 음수도 허용합니다. 자원이 모자라 요청이 대기할 때 높은 priority를 항상 먼저
+            내보내고, 공정성은 같은 priority 안에서만 맞춥니다.
+          </p>
+          <p>
+            음수 priority는 버려도 되는 요청입니다. 선택기의 admission 코드는 pool 포화도가 1.0 이상이면 음수 priority 요청을 바로
+            거절하고, 0 이상인 요청은 이 검사를 건너뜁니다. EnableEviction을 켜면 높은 priority 요청이 포화로 막혔을 때 이미 실행 중인
+            음수 priority 요청을 끊어 자리를 돌려받습니다. 이 설정의 기본값은 꺼져 있습니다.
+          </p>
+          <p>
+            이 장치로 저하 순서를 세 단계로 만들 수 있습니다. (가정) 몇 시간 늦어도 되는 일괄 요약 작업에 음수를 주어 포화 때 가장 먼저
+            버리거나 끊습니다. 그래도 넘치면 작은 모델로 낮춰도 된다고 미리 동의한 요청을 작은 모델 묶음으로 돌립니다. 0 이상의
+            대화형 요청은 마지막에 거절합니다. 둘째 단계는 사전 동의와 품질 기준이 있어야 하며, 동의 없이 몰래 낮추면 저하가 아니라
+            품질 위반입니다.
+          </p>
+          <p>
+            거절당한 클라이언트가 곧바로 다시 보내면 포화가 풀리지 않습니다. 거절 응답에 다시 시도할 시점을 알려 주고 클라이언트는{" "}
+            <Link to="/cs/ai/rate-limiting-and-reliability-patterns#retry-backoff">지수 backoff</Link>로 간격을 벌려야 버린 효과가
+            남습니다.
+          </p>
+        </div>
+        <div id="paper-llm-d-priority" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="llm-d-router 907c5fe8 · apix/v1/inferenceobjective_types.go · pkg/epp/requestcontrol/admission.go (2026-10-13)"
+            citeKey={5}
+            href="https://github.com/llm-d/llm-d-router/blob/907c5fe84769a8f8e80ece112fd419dc6313453e/apix/v1/inferenceobjective_types.go"
+          >
+            <q>The higher the value, the more critical the request is; negative values _are_ allowed.</q> Admission 코드는
+            priority &lt; 0을 sheddable로 보고 포화도 1.0 이상에서 거절하며, 음수가 아닌 요청은 포화 검사를 건너뜁니다.
+            EnableEviction(기본 false)은 포화로 막힌 높은 priority를 위해 실행 중인 음수 priority 요청을 끊을 수 있게 합니다.
+          </CitationBlock>
         </div>
         <TermBreakdown
           title="넘친 뒤 버리는 것과 문 앞에서 거르는 규칙"

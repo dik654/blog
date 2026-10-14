@@ -7,6 +7,8 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceCostAndCapacityPlanningViz from "./inference-cost-and-capacity-planning/viz/InferenceCostAndCapacityPlanningViz";
+import TierMixFleetViz from "./inference-cost-and-capacity-planning/viz/TierMixFleetViz";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 
 /**
  * 추론 비용은 cost/token 으로, capacity 는 peak 와 headroom 으로 계획합니다
@@ -251,6 +253,136 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             { term: "Underprovisioning", description: "용량이 peak 보다 적어 대기열이 쌓이는 상태입니다.", example: "peak 20 RPS 에 6 장 → ρ = 1.", boundary: "곡선의 발산 구간이라 위반이 아니라 timeout 으로 끝납니다." },
           ]}
         />
+        <ProgressiveDetail
+          title="목표 utilization 0.7 안에 GPU clock 저하도 들어 있나요?"
+          preview="아닙니다. 0.7은 대기열이 급격히 길어지기 전에 비워 두는 여유입니다. Clock이 떨어지면 분모의 r_gpu 자체가 줄어들므로 따로 재야 합니다."
+        >
+          <p>
+            GPU는 전력 한도나 온도 한도에 닿으면 스스로 clock을 낮춥니다. NVIDIA 관리 library(NVML)는 그 이유를 따로
+            기록합니다. 설정된 전력 한도를 넘지 않게 clock을 맞춘 경우, GPU나 memory 온도가 최대 동작 온도를 넘지 않게 맞춘
+            경우가 각각의 사유입니다. 온도가 너무 높거나 전원 장치가 제동 신호를 보내면 core clock을 절반 이하로 내리는
+            hardware slowdown도 있습니다.
+          </p>
+          <p>
+            짧은 benchmark는 식은 GPU에서 끝나므로 이런 저하를 보지 못할 수 있습니다. 같은 부하를 온도가 더 오르지 않을 때까지
+            오래 걸고, 그동안 <code>nvidia-smi -q -d PERFORMANCE</code>의 clock 사유를 함께 기록해 r_gpu를 다시 읽습니다.
+          </p>
+          <p>
+            예를 들어 지속 부하에서 r_gpu가 1,000에서 800 tokens/s로 내려가면 6,000 / (800 × 0.7) = 10.7이라 9장이 아니라
+            11장이 필요합니다. 800은 설명용 가정이며, 저하가 처리량에 얼마나 옮겨 가는지는 workload가 계산과 memory 중 어디에
+            묶였는지에 따라 다릅니다.
+          </p>
+        </ProgressiveDetail>
+      </section>
+
+      <section id="tier-mix" data-calculation-explained className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          모델 등급마다 GPU를 따로 세면 큰 모델 하나가 GPU 대부분을 가져갑니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            앞 절은 모델 하나에 필요한 GPU를 셌습니다. 실제 서비스는 작은 모델과 중간 모델, 큰 모델을 함께 두고 요청마다 하나를
+            고릅니다. 등급마다 replica 하나가 쓰는 GPU 수와 내는 token 수가 다르므로, 트래픽을 셋으로 똑같이 나눠도 GPU는 똑같이
+            나뉘지 않습니다.
+          </p>
+          <p>
+            계산을 위해 세 등급을 둡니다. 8B는 GPU 1장의 replica가 5,000 tokens/s를 내고, 70B는 앞 절처럼 TP 2로 2장에 올려
+            1,800 tokens/s를 낸다고 가정합니다.
+          </p>
+          <p>
+            405B는 BF16 weight가 H100 8장 서버 한 대에 들어가지 않아 Llama 3 논문이 두
+            서버의 16장에 나눠 올렸습니다. 이 replica가 1,000 tokens/s를 낸다고 둡니다. 세 처리량은 모두 가정이므로 실제로는{" "}
+            <Link to="/cs/ai/serving-benchmark-methodology#reproducibility">λ sweep</Link>으로 다시 재야 합니다.
+          </p>
+          <p>
+            등급마다 peak 100,000 tokens/s를 받고 목표 utilization은 0.7로 둡니다. 앞 절의 식으로 replica 수를 구한 뒤
+            replica당 GPU 수를 곱합니다.
+          </p>
+          <p>
+            8B는 100,000 / (5,000 × 0.7) = 28.6이라 29 replica, 29장입니다. 70B는
+            100,000 / (1,800 × 0.7) = 79.4라 80 replica × 2장 = 160장입니다. 405B는 100,000 / (1,000 × 0.7) = 142.9라
+            143 replica × 16장 = 2,288장입니다.
+          </p>
+          <p>
+            합은 2,477장이고 그중 92.4%가 405B입니다. 트래픽은 3분의 1을 맡았는데 GPU는 열에 아홉을 가져갑니다. 원인은 두 배수가
+            같은 방향으로 겹치기 때문입니다. 405B replica는 8B보다 GPU를 16배 쓰면서 token은 5분의 1만 냅니다. 그래서 token
+            하나에 드는 GPU-시간이 16 × 5 = 80배입니다.
+          </p>
+        </div>
+        <CalculationWalkthrough
+          title="등급별 GPU 수"
+          question="세 등급이 100,000 tokens/s씩 받으면 GPU는 몇 장씩 필요한가요?"
+          scope="Peak 수요와 replica 처리량만 셉니다. 장애 여유, 배포 여유, KV cache 용량 한계는 이 장부에 넣지 않았습니다."
+          steps={[
+            { label: "목표 구간 처리량", expression: "replica 처리량 × 0.7", result: "3,500 · 1,260 · 700 tokens/s", reason: "무릎 앞에서 replica 하나가 실제로 맡을 몫입니다. 앞 절과 같은 u를 씁니다." },
+            { label: "replica 수", expression: "⌈100,000 ÷ 목표 구간 처리량⌉", result: "29 · 80 · 143", reason: "replica는 쪼갤 수 없으므로 올림합니다." },
+            { label: "GPU 수", expression: "replica 수 × replica당 GPU", result: "29 · 160 · 2,288장", reason: "8B는 1장, 70B는 TP 2, 405B는 BF16 두 서버 16장입니다." },
+            { label: "전체와 비중", expression: "29 + 160 + 2,288", result: "2,477장, 405B 92.4%", reason: "같은 token 수요에서 token당 GPU-시간이 80배인 등급이 합을 지배합니다." },
+          ]}
+          conclusion="GPU를 줄이려면 405B replica 수를 줄이는 손잡이부터 찾아야 합니다."
+          caveats={["처리량 세 값은 설명용 가정입니다.", "실제 replica 수는 KV cache가 들어갈 동시 요청 수로도 제한될 수 있습니다."]}
+        />
+        <TierMixFleetViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            첫 번째 손잡이는 요청을 어느 등급에 보낼지 정하는 routing입니다. 전체 300,000 tokens/s의 10%인 30,000을 405B에서
+            70B로 옮겨 봅니다.
+          </p>
+          <p>
+            70B는 130,000 / 1,260 = 103.2라 104 replica, 208장이 되고 405B는 70,000 / 700 = 100
+            replica, 1,600장이 됩니다. 합은 1,837장이라 640장, 26%가 줄어듭니다. $2/GPU-h 가정이면 한 달 640 × 2 × 720 =
+            $921,600입니다.
+          </p>
+          <p>
+            같은 405B의 처리량을 kernel 개선으로 10% 올리면 100,000 / 770 = 129.9라 130 replica가 되어 208장이 줄어듭니다. 이
+            예에서는 트래픽 10%를 옮기는 쪽이 처리량 10%를 올리는 쪽보다 세 배 많이 줄입니다.
+          </p>
+          <p>
+            다만 옮긴 요청이 70B에서도 품질
+            기준을 넘어야 이 절감이 실제가 됩니다. 어떤 요청을 옮길지 고르는 규칙은{" "}
+            <Link to="/cs/ai/llm-gateway-and-model-routing#model-cascade">model cascade</Link>가 다룹니다. 옮긴 요청에서 늘어난
+            오답의 비용이 GPU 절감보다 크면 옮기지 않습니다.
+          </p>
+          <p>
+            두 번째 손잡이는 같은 모델의 숫자 형식입니다. Llama 3 논문은 FFN 매개변수와 activation 대부분을 FP8로 바꿔 추론하고,
+            self-attention 매개변수와 첫·마지막 layer는 BF16으로 남겼습니다. 이 방식은 두 서버 BF16과 비교해 prefill 처리량이 최대
+            50% 올랐다고 보고합니다.
+          </p>
+          <p>
+            이 혼합 정밀도 weight가 서버 한 대에 들어가는지는 논문 Table 3의 405B 숫자로 직접 셀 수 있습니다. Model dimension
+            16,384, attention head 128개, KV head 8개, FFN dimension 53,248이면 layer마다 attention 매개변수가 약 5.7억 개,
+            FFN이 약 26.2억 개라 FFN이 82%를 차지합니다.
+          </p>
+          <p>
+            126층 중 첫·마지막을 뺀 124층의 FFN만 1 byte로 두고 나머지를 2 byte로
+            두면 약 487GB입니다. BF16 전체의 약 812GB와 달리 H100 8장의 640GB 안에 들어갑니다. 이 GB는 논문이 적은 값이 아니라
+            이 글이 직접 센 값이며, 남는 공간이 KV cache 자리입니다.
+          </p>
+          <p>
+            Replica가 8장이 되고 처리량은 BF16과 같다는 보수적 가정만 둬도 405B 등급은 143 replica × 8장 = 1,144장으로
+            절반이 됩니다. 논문은 FP8 쪽 처리량이 더 높다고 보고했으므로 이 계산은 절감을 적게 잡은 쪽입니다.
+          </p>
+          <p>
+            대가는 품질 확인입니다. 같은 논문은 표준 benchmark에서는 FP8 추론이 BF16과 비슷해 보이지만 그 benchmark가 FP8의
+            영향을 제대로 드러내지 못한다고 적습니다.
+          </p>
+          <p>
+            Scaling factor에 상한을 두지 않았을 때 benchmark 점수는 좋은데 응답이 가끔
+            망가졌기 때문입니다. 그래서 응답 100,000개의 reward 점수 분포를 BF16과 비교했습니다. 정밀도를 낮춘 경로는 이런 분포
+            비교를 통과한 뒤에 내보냅니다. 배포 쪽 절차는{" "}
+            <Link to="/cs/ai/quantized-model-deployment#runtime-release">양자화 모델 배포</Link>에서 이어집니다.
+          </p>
+          <p>
+            정밀도를 가격 등급으로 나눠 판 사례도 있습니다. Together AI는 2024년 7월 FP16 Reference, FP8 Turbo, INT4 양자화를
+            포함한 Lite endpoint를 함께 내놓았습니다. Turbo가 H100 4장에서 Reference의 8장 대비 decode 처리량 8% 안을 낸다며
+            비용을 절반으로 줄였다고 밝혔습니다. 회사가 직접 잰 값이므로 자기 workload에서 다시 재야 합니다.
+          </p>
+          <p>
+            순서로 정리하면 먼저 등급별 GPU 비중을 봅니다. 그다음 품질 기준 안에서 낮은 등급으로 옮길 요청을 고르고, 마지막으로 큰
+            등급의 정밀도를 낮추는 길을 응답 분포 비교로 검증합니다. 셋 다 막히면 앞 절의 headroom과 다음 절의 확보 방식으로
+            돌아갑니다.
+          </p>
+        </div>
       </section>
 
       <section id="scaling" data-calculation-explained className="scroll-mt-20">
@@ -358,6 +490,11 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             계산을 보이기 위한 가정값입니다. 실제 시세와 처리량은 시점과 model 에 따라 달라지므로
             독자의 benchmark 와 견적으로 바꿔 넣어야 합니다.
           </p>
+          <p>
+            등급 계산의 405B 배치와 FP8 품질 관문은 Llama 3 논문에서, 정밀도 등급의 판매 사례는 Together AI 발표에서, clock
+            저하의 사유는 NVML header에서 확인했습니다. 등급별 처리량 5,000·1,800·1,000 tokens/s와 혼합 정밀도 weight
+            487GB는 이 글의 가정과 직접 계산입니다.
+          </p>
         </div>
         <div id="paper-hpa" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
@@ -401,6 +538,43 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             Server·Offline 은 system power 를, SingleStream·MultiStream 은 stream 당 energy 를
             보고하며, 전력은 benchmark 실행 동안 system 전체의 AC 전력을 벽에서 잰 값이라고
             정의합니다. TDP 명판값이 아니라 실측 전력으로 performance per watt 를 세는 근거입니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-llama3-inference" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Llama Team, AI @ Meta · The Llama 3 Herd of Models (arXiv 2407.21783) · Table 3, §6.1, §6.2"
+            citeKey={5}
+            href="https://arxiv.org/abs/2407.21783"
+          >
+            <q>
+              When using a BF16 number representation for the model parameters, Llama 3 405B does not fit in the GPU
+              memory of a single machine with 8 Nvidia H100 GPUs.
+            </q>{" "}
+            Table 3는 405B의 126층, model dimension 16,384, attention head 128개, KV head 8개를 적습니다. §6.2는 FFN 대부분만
+            FP8로 바꾸고, 표준 benchmark 대신 응답 100,000개의 reward 분포로 품질을 비교했다고 설명합니다. 487GB는 논문 값이
+            아니라 본문이 Table 3로 직접 센 값입니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-together-turbo" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Together AI · Announcing Together Inference Engine 2.0 with new Turbo and Lite endpoints (2024-07-18)"
+            citeKey={6}
+            href="https://www.together.ai/blog/together-inference-engine-2"
+          >
+            FP8 Turbo, INT4 양자화를 포함한 Lite, FP16 Reference endpoint를 함께 내놓으며, H100 4장의 Turbo가 8장의
+            Reference 대비 decode 처리량 8% 안이라 비용이 절반이라고 밝힙니다. 회사가 직접 잰 값이며 다른 workload의 결과를
+            보장하지 않습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-nvml-clock-reasons" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="NVIDIA · NVML nvml.h · Clocks event reasons (NVIDIA/nvidia-settings df684ed9, 2026-09-09)"
+            citeKey={7}
+            href="https://github.com/NVIDIA/nvidia-settings/blob/main/src/nvml.h"
+          >
+            Software power cap은 설정된 전력 한도를 넘지 않게 clock을 맞춘 상태이고, software thermal slowdown은 GPU와
+            memory 온도가 최대 동작 온도를 넘지 않게 맞춘 상태입니다. Hardware slowdown과 hardware thermal slowdown은 core
+            clock을 절반 이하로 내리며 원인으로 높은 온도와 외부 power brake를 듭니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">

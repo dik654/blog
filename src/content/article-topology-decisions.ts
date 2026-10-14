@@ -382,9 +382,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/onprem-k8s-inference-platform": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-10-14",
     rationale:
-      "본문은 6 section·concept 7개로 keep 범위다. 선택의 자리·복제 단위·고정 총량이 하나의 이전 결정을 함께 떠받치는 구조라 나누면 각 글이 같은 전제를 다시 세워야 한다.",
+      "본문은 7 section·concept 7개로 keep 범위다. 선택의 자리·복제 단위·고정 총량이 하나의 이전 결정을 함께 떠받치는 구조라 나누면 각 글이 같은 전제를 다시 세워야 한다. 2026-10-14에 더한 2단 scheduling 절은 같은 선택기가 요청마다 무엇을 보는지(prefix hash 사슬·tokenizer 일치)를 닫는 절이라 새 concept 없이 이 글에 둔다.",
     sharedGate:
       "공개 프로젝트 문서에 적힌 구조까지만 근거로 삼고 구현별 성능·성숙도 평가와 구체 설정값 권고를 하지 않는다.",
   },
@@ -1729,9 +1729,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/serving-memory-admission-and-preemption": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
-    "rationale": "C 한 요청의 수용·성장·중단·복원이 같은 공간 장부를 사용하므로 한 글에서 끝까지 추적합니다. allocator와 cache group의 세부 구현은 연결 글이 소유합니다.",
-    "sharedGate": "40block에서 A14·B12·C9→A15·B13·C10→A16·B14·C0→B14·C11과 free14·5·2·10·15를 본문·Viz·문제에서 일치시킵니다. V1 full input63 대 free50, V0 CPU 실패 RuntimeError, 복구161token·11block과 두 비용 식을 실제 원문·독립 산술로 검증합니다."
+    "reviewedAt": "2026-10-14",
+    "rationale": "C 한 요청의 수용·성장·중단·복원이 같은 공간 장부를 사용하므로 한 글에서 끝까지 추적합니다. allocator와 cache group의 세부 구현은 연결 글이 소유합니다. 22절의 긴 문맥 격리는 같은 27,648block pool과 94block 짧은 요청으로 잠식·상한·전용 묶음·priority 희생자를 세므로 이 장부의 연장으로 둡니다.",
+    "sharedGate": "128K 요청 8,192block, 셋이면 남는 3,072와 짧은 대화 294→32, 한 개 상한 206, 32K 상한 2,048block, 70B 320KiB/token·40GiB를 본문·계산 장부·Viz에서 일치시킵니다. 40block에서 A14·B12·C9→A15·B13·C10→A16·B14·C0→B14·C11과 free14·5·2·10·15를 본문·Viz·문제에서 일치시킵니다. V1 full input63 대 free50, V0 CPU 실패 RuntimeError, 복구161token·11block과 두 비용 식을 실제 원문·독립 산술로 검증합니다."
   },
   "ai/math-exponents-logarithms": {
     "action": "keep",
@@ -1862,8 +1862,8 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/prefix-caching-radix-attention": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
-    "rationale": "한 요청의 앞 기록이 어디서 일치하고 어떤 저장 위치를 공유하며 언제 반환되는지 하나의 경로로 설명합니다. 탐색·수명·순서·kernel 주소는 같은 재사용의 정확성을 결정하므로 R 사례를 이어가고 KV shape와 일반 block 배정의 정본은 연결해 재사용합니다.",
+    "reviewedAt": "2026-10-14",
+    "rationale": "한 요청의 앞 기록이 어디서 일치하고 어떤 저장 위치를 공유하며 언제 반환되는지 하나의 경로로 설명합니다. 21절의 cache 가격은 같은 재사용을 계산 위치 18%와 가격 29%로 다시 세는 마무리 절입니다. 탐색·수명·순서·kernel 주소는 같은 재사용의 정확성을 결정하므로 R 사례를 이어가고 KV shape와 일반 block 배정의 정본은 연결해 재사용합니다.",
     "sharedGate": "R의 8자리·공유 6·hit 0/6/6과 12자리 저장, B=4의 0/4/4와 16자리, 보호 8·요구 5·반환 4를 본문·Viz·6+4에 맞춥니다. 실제 원문 11개·15패널·4장면·2수식과 390/1440을 확인하고 마지막 입력·namespace·hybrid·offline 경계 및 수치를 독립 검산합니다."
   },
   "ai/math-probability-expectation-variance": {
@@ -2963,7 +2963,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "crypto/elliptic-curves": "536a045b49354879",
   "crypto/pairing": "4cfa530fa12276cb",
   "ai/math-numerical-precision-stability": "b02fce82fd66e156",
-  "ai/prefix-caching-radix-attention": "28ef371cafdc6aa0",
+  "ai/prefix-caching-radix-attention": "56ed4425cf24b592",
   "banking/bank-balance-sheet-and-deposit-creation": "05598a4b186734fa",
   "crypto/sparse-multiplication": "654e9f0cc5bb6ace",
   "ai/disaggregated-prefill-decode-serving": "b4965f72e312bd85",
@@ -2978,7 +2978,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/math-exponents-logarithms": "397e1980112d0e72",
   "ai/math-high-dimensional-geometry": "f3eb98b0469c83ea",
   "ai/math-matrices-svd": "d21e58dfecd7e065",
-  "ai/serving-memory-admission-and-preemption": "d2ac7be19ff58785",
+  "ai/serving-memory-admission-and-preemption": "fb6c9b9f82c62700",
   "crypto/fft": "6fb9c0f51c62c5ea",
   "crypto/field-arithmetic": "e06d15afa414d349",
   "crypto/karatsuba": "88bf647bd63498c0",
@@ -3200,7 +3200,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
-  "ai/onprem-k8s-inference-platform": "dd74f96021e2b718",
+  "ai/onprem-k8s-inference-platform": "1ad2dfcc5e827bfd",
   "firms/why-firms-exist": "f2562997d2593d24",
   "firms/scale-and-cost-structure": "94e938bc20ccbb61",
   "firms/market-power-and-markup": "f3bb6b3d65a76b8b",

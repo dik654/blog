@@ -7867,6 +7867,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       "href": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
       "note": "2026-10-04 확인. free100MiB×0.9 vs token80MiB chooses80MiB; host byte capacity"
     },
+    {
+      "kind": "핵심 논문",
+      "label": "Long-context isolation — The Llama 3 Herd of Models Table 3",
+      "href": "https://arxiv.org/abs/2407.21783",
+      "note": "2026-10-14 확인. 70B 80층·KV head 8·head 차원 128(8192/64)로 토큰당 KV 320KiB, 131,072토큰 40GiB는 본문 직접 계산"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Long-context isolation — llm-d-router context-length-aware scorer (907c5fe8)",
+      "href": "https://github.com/llm-d/llm-d-router/tree/907c5fe84769a8f8e80ece112fd419dc6313453e/pkg/epp/framework/plugins/scheduling/scorer/contextlengthaware",
+      "note": "2026-10-14 확인. pod label 길이 범위로 점수, 긴 문맥 요청을 고용량 pod로, enableFiltering 기본 false. vLLM v0.27.1 scheduler.py에는 tenant·등급별 block 상한이 없고 priority 정책은 (priority, arrival)이 가장 큰 요청을 선점"
+    },
   ],
   "ai/inference-runtime-anatomy": [
     { kind: "공식 문서", label: "vLLM Architecture Overview", href: "https://docs.vllm.ai/en/latest/design/arch_overview.html", note: "2026-10-06 확인. API server·engine core·GPU worker·DP coordinator의 현재 process 수와 ZMQ many-to-many 연결의 근거" },
@@ -8411,6 +8423,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       "label": "SGLang arXiv v2 — §3, Theorem 3.1 and Appendix A",
       "href": "https://arxiv.org/html/2312.07104v2",
       "note": "offline 상한과 의사코드를 현재 구현과 구별하고 자기보고 성능은 당시 workload로 한정합니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "Anthropic — Prompt caching · Pricing",
+      "href": "https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching",
+      "note": "2026-10-14 확인. 5분 cache 쓰기 1.25배, 1시간 쓰기 2배, 읽기 0.1배(모델별 예외는 표 각주). 배수의 이유는 문서에 없고 본문 해석은 가정으로 표시"
+    },
+    {
+      "kind": "공식 문서",
+      "label": "OpenAI API docs — Prompt caching",
+      "href": "https://developers.openai.com/api/docs/guides/prompt-caching",
+      "note": "2026-10-14 확인. 최대 95% 할인, GPT-5.6 이후 쓰기 1.25배·읽기 0.1배, 한 번 쓰고 한 번 읽으면 1.35배 대 2배, machine당 분당 15건 초과 시 overflow"
     }
   ],
   "ai/speculative-decoding-variants": [
@@ -8511,6 +8535,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "NVIDIA · MIG User Guide supported profiles", href: "https://docs.nvidia.com/datacenter/tesla/mig-user-guide/supported-mig-profiles.html", note: "80 GB A100·H100 의 MIG profile 과 가능한 instance 수의 근거" },
     { kind: "공식 문서", label: "AWS · Amazon EC2 pricing 구매 옵션", href: "https://aws.amazon.com/ec2/pricing/", note: "On-Demand·Savings Plans·Reserved·Spot·Capacity Reservations 구분의 근거. 단가는 인용하지 않음" },
     { kind: "공식 규격", label: "MLCommons · MLPerf Inference Datacenter power", href: "https://mlcommons.org/benchmarks/inference-datacenter/", note: "System 전체 AC 전력을 벽에서 재는 performance per watt 측정 기준의 근거" },
+    { kind: "핵심 논문", label: "The Llama 3 Herd of Models (arXiv 2407.21783) · Table 3, §6.1, §6.2", href: "https://arxiv.org/abs/2407.21783", note: "2026-10-14 원문 확인. 405B BF16은 H100 8장 서버 한 대에 들어가지 않아 두 서버 16장, FFN 대부분만 FP8, benchmark 대신 응답 100,000개 reward 분포 비교, prefill 처리량 최대 50% 향상. 혼합 정밀도 487GB는 본문이 Table 3로 직접 센 값" },
+    { kind: "공식 문서", label: "Together AI · Together Inference Engine 2.0 with Turbo and Lite endpoints (2024-07-18)", href: "https://www.together.ai/blog/together-inference-engine-2", note: "2026-10-14 원문 확인. FP16 Reference·FP8 Turbo·INT4 포함 Lite 등급, H100 4장 Turbo가 8장 Reference 대비 decode 처리량 8% 안. 회사 자체 측정" },
+    { kind: "공식 문서", label: "NVIDIA · NVML nvml.h clocks event reasons (NVIDIA/nvidia-settings df684ed9)", href: "https://github.com/NVIDIA/nvidia-settings/blob/main/src/nvml.h", note: "2026-10-14 원문 확인. SW power cap, SW thermal slowdown, core clock을 절반 이하로 내리는 HW slowdown·HW thermal slowdown의 정의" },
   ],
   "ai/parallelism-strategy-and-placement": [
     { kind: "공식 문서", label: "NVIDIA NVLink and NVLink Switch", href: "https://www.nvidia.com/en-us/data-center/nvlink/", note: "GPU 당 NVLink 900 GB/s (Hopper) 와 NVSwitch all-to-all 의 근거" },
@@ -9022,6 +9049,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Martin Fowler · CircuitBreaker", href: "https://martinfowler.com/bliki/CircuitBreaker.html", note: "circuit breaker 패턴과 상태 전이 정의의 근거" },
     { kind: "공식 규격", label: "RFC 2697 · A Single Rate Three Color Marker", href: "https://www.rfc-editor.org/rfc/rfc2697", note: "token bucket의 refill rate·burst capacity 정의의 근거" },
     { kind: "공식 문서", label: "nginx · ngx_http_limit_req_module", href: "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html", note: "leaky bucket rate limiting의 rate·burst 파라미터 근거" },
+    { kind: "공식 문서", label: "Microsoft Learn · Azure OpenAI quota · Understanding rate limits (2026-05-04)", href: "https://learn.microsoft.com/en-us/azure/foundry-classic/openai/how-to/quota", note: "2026-10-14 원문 확인. TPM 한도는 받는 시점의 추정 최대 token(prompt·max_tokens·best_of)으로, 과금 token과 다르며 분마다 reset되는 counter. 끝난 뒤 정산은 본문이 제안하는 설계" },
+    { kind: "공식 문서", label: "llm-d-router · InferenceObjective priority와 sheddable admission (907c5fe8)", href: "https://github.com/llm-d/llm-d-router/blob/907c5fe84769a8f8e80ece112fd419dc6313453e/apix/v1/inferenceobjective_types.go", note: "2026-10-14 원문 확인. 클수록 중요·음수 허용, 높은 priority 먼저·같은 priority 안에서만 공정성, priority<0은 포화도 1.0 이상에서 거절, EnableEviction 기본 false" },
   ],
   "ai/robot-action-representations": [
     { kind: "핵심 논문", label: "RT-2 · Vision-Language-Action Models Transfer Web Knowledge to Robotic Control", href: "https://arxiv.org/abs/2307.15818", note: "8차원 action의 256 bin discretization과 문자열 token 표현의 저자 자기보고 근거이며 임의 robot의 zero-shot control 보장은 아님" },
@@ -9430,6 +9459,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       label: "Kubernetes SIG — LeaderWorkerSet",
       href: "https://github.com/kubernetes-sigs/lws",
       note: "파드 묶음을 복제 단위로 다루는 API, 대표·작업자 이중 템플릿, 토폴로지 배치와 전체 재생성, 그룹 단위 갱신의 출처 (2026-09-11 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "llm-d-router — approximate prefix producer와 prefixhash/hashing.go (907c5fe8)",
+      href: "https://github.com/llm-d/llm-d-router/blob/907c5fe84769a8f8e80ece112fd419dc6313453e/pkg/epp/framework/plugins/requestcontrol/dataproducer/prefixhash/hashing.go",
+      note: "token ID를 기본·최소 64 token block으로 나눠 앞 block hash와 사슬로 묶는 hash, 모델 이름·cache salt seed, 선택 뒤 index 기록, token producer가 없으면 estimate backend 자동 생성 (2026-10-14 확인)",
+    },
+    {
+      kind: "공식 문서",
+      label: "OpenAI API docs — Prompt caching",
+      href: "https://developers.openai.com/api/docs/guides/prompt-caching",
+      note: "routing이 machine 부하·처음 token들의 hash·prompt_cache_key에 따르고, 분당 15건을 넘으면 다른 machine으로 넘칠 수 있다는 설명 (2026-10-14 확인)",
     },
   ],
   "ai/generative-measurement-controls": [

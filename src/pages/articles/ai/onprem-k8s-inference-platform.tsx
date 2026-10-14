@@ -1,6 +1,7 @@
 import Overview from "./onprem-k8s-inference-platform/Overview";
 import ControlPlane from "./onprem-k8s-inference-platform/ControlPlane";
 import ServiceGap from "./onprem-k8s-inference-platform/ServiceGap";
+import TwoLevelScheduling from "./onprem-k8s-inference-platform/TwoLevelScheduling";
 import GroupReplica from "./onprem-k8s-inference-platform/GroupReplica";
 import FixedPool from "./onprem-k8s-inference-platform/FixedPool";
 import PlatformGate from "./onprem-k8s-inference-platform/PlatformGate";
@@ -16,6 +17,7 @@ export default function OnpremK8sInferencePlatformArticle() {
       <Overview />
       <ControlPlane />
       <ServiceGap />
+      <TwoLevelScheduling />
       <GroupReplica />
       <FixedPool />
       <PlatformGate />
