@@ -3256,7 +3256,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "reasoning/argument-and-counterexample":"05bdb4f60de04946",
 "epistemology/knowledge-belief-and-luck":"2930c48b18617851",
 "ethics/consequence-duty-and-character":"653c67b9eade3a5f",
-"economic-history/agrarian-surplus-and-state":"fbb7e1ed4875eedf",
+"economic-history/agrarian-surplus-and-state":"c9f54624d17cee0b",
 "economic-history/industrial-revolution-wages-and-energy":"4d0cd136df1811b0",
 "economic-history/gold-standard-depression-bretton-woods":"f0c5898b4d64c123",
 "political-philosophy/consent-liberty-and-legitimate-power":"995ca50999220ed3",
