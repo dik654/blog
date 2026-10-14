@@ -1,0 +1,13 @@
+# Sliding-window KV and attention sink source snapshots
+
+Retrieved 2026-10-14. Full unmodified files (byte-for-byte). vLLM v0.27.1 commit 6e448d0ea9bf3d88d898b65449ca6dc2aec170ac; TensorRT-LLM commit 681cff123b96e0a8fd52d977366a62677de7ae08 (main snapshot, no release label claimed).
+
+`vllm/` and `tensorrt-llm/` are project roots; upstream paths remain underneath. `?raw` imports are read-only source panels; the website does not execute these files. Block counts in the article (W = 8 toy model, gpt-oss-20b 32K) were computed by hand from the pinned formulas; no engine was run and no perplexity was measured.
+
+- `tensorrt-llm/cpp/tensorrt_llm/batch_manager/kvCacheManager.cpp` — 209068 bytes; SHA256 `256cbfca1379c20cbe1cfd5cddefe26737ec4eaf29089413cd3dd453d9dab71a`; [pinned original](https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/681cff123b96e0a8fd52d977366a62677de7ae08/cpp/tensorrt_llm/batch_manager/kvCacheManager.cpp)
+- `tensorrt-llm/LICENSE` — 40678 bytes; SHA256 `a56e691155bb532ea212f701d3ecacb2db549fa64757f9bad3e06bc9177f46ea`; [pinned original](https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/681cff123b96e0a8fd52d977366a62677de7ae08/LICENSE)
+- `tensorrt-llm/tensorrt_llm/llmapi/llm_args.py` — 349956 bytes; SHA256 `13baf3ce82afa4393bef2c5c6437c9c2afedcc3839327d1e57a2424b4eb772f2`; [pinned original](https://raw.githubusercontent.com/NVIDIA/TensorRT-LLM/681cff123b96e0a8fd52d977366a62677de7ae08/tensorrt_llm/llmapi/llm_args.py)
+- `vllm/LICENSE` — 11357 bytes; SHA256 `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4`; [pinned original](https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/LICENSE)
+- `vllm/vllm/model_executor/layers/attention/static_sink_attention.py` — 8431 bytes; SHA256 `a36186520a2d037c82d5fe4884c936ed4a19c1ef801fc498807d4d026991852e`; [pinned original](https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/model_executor/layers/attention/static_sink_attention.py)
+- `vllm/vllm/model_executor/models/gpt_oss.py` — 50377 bytes; SHA256 `9da881235f5bb8fd598c041cd1001cdba79f9c6199af23b3fb27b1241cde75f1`; [pinned original](https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/model_executor/models/gpt_oss.py)
+- `vllm/vllm/v1/core/single_type_kv_cache_manager.py` — 85275 bytes; SHA256 `8c9030040cbc3b7176e228e10ff6491c3cf6c3e95bdfb573532fcf75f5385ebd`; [pinned original](https://raw.githubusercontent.com/vllm-project/vllm/6e448d0ea9bf3d88d898b65449ca6dc2aec170ac/vllm/v1/core/single_type_kv_cache_manager.py)

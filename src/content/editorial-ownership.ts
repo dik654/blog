@@ -18226,6 +18226,199 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "CSAP 획득 여부는 특정 cloud service의 공식 인증 범위를 확인해 표현하며 개별 서버·GPU 구매가 곧 인증을 뜻한다고 쓰지 않는다." },
     ],
   },
+  "smoothquant-activation-smoothing": {
+    title: "activation 이상치를 weight로 옮기는 W8A8 변환과 그 적용 위치",
+    owns: [
+      "공유 간격 아래 채널별 유효 INT8 눈금 수",
+      "정수 행렬곱이 받는 바깥 축 간격과 입력 채널 축의 제약",
+      "smoothing factor·migration strength 식과 작은 행렬의 계산",
+      "LayerNorm·RMSNorm 흡수 코드와 적용되지 않는 입력",
+      "현재 엔진 문서의 W8A8 형식 권고와 하드웨어 경계",
+    ],
+    reuses: [
+      { label: "양자화 기본 식과 반올림 오차", href: "/cs/ai/quantization" },
+      { label: "간격 공유 단위", href: "/cs/ai/quantization-formats-and-granularity#granularity" },
+      { label: "dynamic·static과 이상치 개요", href: "/cs/ai/ptq-calibration#dynamic-static-outliers" },
+      { label: "보정 coverage 측정", href: "/cs/ai/ptq-calibration#coverage" },
+      { label: "weight-only GPTQ·AWQ", href: "/cs/ai/weight-only-quantization" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "SmoothQuant arXiv v7 PDF와 mit-han-lab/smoothquant c61476d 원문을 직접 열어 식·행 번호·기본값을 인용한다." },
+      { kind: "primary-source", rule: "vLLM·TensorRT-LLM의 형식 권고는 2026-10-14에 확인한 문서 문장만 쓰고 성능 비교 수치를 만들지 않는다." },
+      { kind: "project-claim", rule: "2×4 X와 4×2 W, 눈금 4·45·256은 설명용 계산이다. 모델 품질 주장은 논문 자기보고로만 표시한다." },
+    ],
+  },
+  "kv-cache-quantization": {
+    title: "KV를 낮은 정밀도로 쓰고 읽는 경로와 scale 선택",
+    owns: [
+      "KV byte 장부에서 원소 byte를 바꿨을 때의 pool token 수",
+      "쓰기 양자화·읽기 역양자화의 왕복 오차와 FP8 포화",
+      "vLLM의 KV scale 보정 방식과 쓰기 kernel의 scale 모양",
+      "TensorRT-LLM·llama.cpp·KIVI의 KV scale 단위와 방향 비교",
+    ],
+    reuses: [
+      { label: "KV cache의 모양과 GQA 공유", href: "/cs/ai/kv-cache-fundamentals#kv-shape" },
+      { label: "FP8·FP4 부동소수점 형식", href: "/cs/ai/quantization-formats-and-granularity#floating-point-formats" },
+      { label: "scale 단위의 일반 규약", href: "/cs/ai/ptq-calibration#scale-granularity" },
+      { label: "slot mapping과 block table", href: "/cs/ai/prefix-caching-radix-attention#attention-metadata" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "vLLM v0.27.1 commit 6e448d0과 llama.cpp commit 091b6a7의 전체 원문을 고정해 scale 계산·쓰기 변환·형식 조건의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "TensorRT-LLM·vLLM 공식 문서는 2026-10-14 확인본으로 인용하고 지원 범위를 문서 문장까지로 한정한다." },
+      { kind: "project-claim", rule: "32층·KV head 8 모델, 네 key 값, max|k| 4.0은 가정이다. E4M3 반올림은 Python 재구현으로 계산했으며 GPU kernel이나 모델 품질을 측정하지 않았다." },
+      { kind: "standard", rule: "KIVI의 메모리·처리량 수치는 저자 보고로만 표기하고 FP8 per-tensor 경로의 이득으로 옮기지 않는다." },
+    ],
+  },
+  "tensorrt-llm-kv-cache-and-kernels": {
+    title: "TensorRT-LLM과 vLLM의 KV 관리·attention kernel 경계 비교",
+    owns: [
+      "출력 한도까지 예약하는 수용 정책과 그때그때 받고 내보내는 정책의 빈칸·재계산 비용",
+      "block 하나에 모든 층을 묶는 pool 배치와 층별 tensor 배치의 복사 조각 수",
+      "부분 block 재사용과 우선순위·호스트 2단 제거 정책 및 문서와 코드의 offload 하한 차이",
+      "attention 앞 RoPE·KV 쓰기·양자화의 fusion 경계와 XQA의 GQA 묶음 tile",
+    ],
+    reuses: [
+      { label: "Paged KV block 할당과 주소 변환", href: "/cs/ai/vllm-paged-attention#logical-physical-address" },
+      { label: "재계산 선점의 복구 비용", href: "/cs/ai/serving-memory-admission-and-preemption#recovery-cost" },
+      { label: "continuous batching의 step 단위", href: "/cs/ai/continuous-batching-step-anatomy#step-unit" },
+      { label: "radix tree와 block hash 재사용", href: "/cs/ai/prefix-caching-radix-attention#block-hash" },
+      { label: "GQA의 KV head 공유", href: "/cs/ai/kv-cache-fundamentals#kv-shape-sharing" },
+      { label: "attention backend 선택", href: "/cs/ai/attention-kernel-anatomy-and-backends#backend-source" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "TensorRT-LLM commit 681cff1과 vLLM v0.27.1 commit 6e448d0의 전체 원문을 고정해 정책·shape·kernel 선택 분기를 읽는다." },
+      { kind: "primary-source", rule: "TensorRT-LLM 공식 문서와 고정 원문이 다르게 적은 값(offload 하한)은 두 출처를 함께 밝히고 어느 쪽이 맞다고 단정하지 않는다." },
+      { kind: "project-claim", rule: "5,120 token pool, 200·1,000·300 요청, 80층 모델, 문맥 500은 설명용 가정이다. GPU 성능을 측정하지 않았고 XQA 블로그의 자체 측정만 인용한다." },
+    ],
+  },
+  "multimodal-serving-pipeline": {
+    title: "사진 입력이 서버 안에서 쓰는 자리·KV·encoder 계산과 재사용 열쇠",
+    owns: [
+      "사진 크기에서 placeholder 자리 수와 KV byte를 세는 계산",
+      "사진 hash를 encoder cache와 prefix cache 열쇠에 넣는 이유와 vLLM 원문 경로",
+      "encoder cache의 참조 집합·반환 순서와 step별 encoder 예산",
+      "prefix hit이 사진 중간에서 끝날 때 다시 encode하는 경계",
+      "processor cache·encoder 분할·encoder 분리 서버의 위치 구분",
+    ],
+    reuses: [
+      { label: "VLM projector와 사진 표현 결합 방식", href: "/cs/ai/vision-language-model-architecture#projector" },
+      { label: "자리당 KV byte 계산", href: "/cs/ai/kv-cache-fundamentals" },
+      { label: "block hash 체인과 prefix 재사용 길이", href: "/cs/ai/prefix-caching-radix-attention#block-hash" },
+      { label: "prefill과 decode를 나누는 서버 구성의 판단 기준", href: "/cs/ai/disaggregated-prefill-decode-serving" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "vLLM v0.27.1 commit 6e448d0, SGLang commit 4560da5, transformers commit 2803454의 전체 원문을 고정하고 함수·행 범위를 인용한다." },
+      { kind: "primary-source", rule: "자리 수와 KV는 Qwen2.5-VL-7B-Instruct 공개 설정 파일과 고정 전처리 원문으로 다시 계산한다." },
+      { kind: "project-claim", rule: "예산 8,192, 일곱 요청 순서, 질문 20 token, 16 token block은 설명용 가정이며 측정한 처리량이나 지연으로 표현하지 않는다." },
+    ],
+  },
+  "multi-adapter-serving": {
+    title: "한 base 위에 여러 adapter와 soft prompt를 섞어 서빙하는 비용",
+    owns: [
+      "adapter별 token 구간 표와 shrink·expand kernel의 FLOP·I/O 장부",
+      "고정 GPU 슬롯과 공용 page pool의 자리 비교",
+      "GPU 슬롯·CPU 보관 두 층 adapter cache와 적재 순서",
+      "KV와 adapter 자리를 함께 세는 batch 입장 규칙",
+      "soft prompt의 표·KV·문맥 비용과 prefix cache key 조건",
+    ],
+    reuses: [
+      { label: "LoRA의 A·B 구조와 adapter 합치기", href: "/cs/ai/lora-finetuning#practice" },
+      { label: "token당 KV byte 계산", href: "/cs/ai/kv-cache-fundamentals#kv-shape-formula" },
+      { label: "block hash와 prefix 재사용", href: "/cs/ai/prefix-caching-radix-attention#block-hash" },
+      { label: "step마다 batch를 다시 짜는 continuous batching", href: "/cs/ai/vllm-serving#engine-loop" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "vLLM v0.27.1 commit 6e448d0과 TensorRT-LLM commit 681cff1의 전체 원문을 고정해 행 범위를 확인한 뒤 인용한다." },
+      { kind: "primary-source", rule: "Punica·S-LoRA·prompt tuning·P-tuning v2 원문을 읽고 성능 수치는 저자 자기보고로 표시한다." },
+      { kind: "project-claim", rule: "26 MiB·1.23 FLOP/byte·208 token·2.5 MiB 등은 Llama 3 8B 모양과 rank 16을 가정한 계산 장부이며 GPU에서 잰 값이 아니다." },
+    ],
+  },
+  "llama-cpp-local-inference": {
+    title: "llama.cpp의 cell 배열·Q4_K 내적·층 배치",
+    owns: [
+      "cell마다 위치와 sequence bitset을 두는 KV 배열과 비트 연산으로 하는 공유·반환",
+      "n_kv 범위를 통째로 읽고 −∞ mask로 지우는 attention 입력과 CUDA 끝 tile 생략의 조건",
+      "unified와 slot별 KV stream의 한 대화 상한·독차지·지운 점수 비율",
+      "Q4_K super-block의 byte 배치와 q8_1 × Q4_K 정수 내적의 계산 순서",
+      "-ngl의 층 경계 계산과 CPU 층의 decode·큰 batch 계산 위치",
+    ],
+    reuses: [
+      { label: "K·V 기록의 모양과 GQA 공유", href: "/cs/ai/kv-cache-fundamentals#kv-shape-sharing" },
+      { label: "block 목록으로 자기 기록을 찾는 주소 변환", href: "/cs/ai/vllm-paged-attention#logical-physical-address" },
+      { label: "블록 배율과 비대칭 양자화의 일반 원리", href: "/cs/ai/quantization-formats-and-granularity#granularity" },
+      { label: "파일 형식과 양자화 방법의 구분", href: "/cs/ai/weight-only-quantization#artifact-boundary" },
+      { label: "CPU/GPU offloading의 일반 선택지", href: "/cs/ai/model-vram-budgeting#cpu-gpu-offloading" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "llama.cpp commit 091b6a7의 원문 파일을 byte 단위로 고정하고 함수·행 범위를 읽어 16칸 사례와 실제 크기 사례에 적용한다." },
+      { kind: "primary-source", rule: "서버 옵션의 의미와 기본값은 같은 commit의 server README와 n_ctx_seq 계산 원문을 대조해 쓴다." },
+      { kind: "project-claim", rule: "6GB GPU·실행 버퍼 1GB·slot 4개·문서 6,000 token·Q4_K 단일 형식은 설명용 가정이다. 속도·정확도 측정값을 내놓지 않는다." },
+    ],
+  },
+  "sglang-runtime-anatomy": {
+    title: "SGLang의 token 단위 KV pool·비율 수용·retract·겹치는 반복문",
+    owns: [
+      "req_to_token 표와 token_to_kv pool의 모양·크기와 page 1의 효과",
+      "새 요청과 실행 중 요청을 다르게 세는 수용 장부와 new_token_ratio의 감소·재추정",
+      "decode 칸 부족 시 retract 순서와 재계산 비용",
+      "한 batch 앞서 제출하고 한 step 늦게 읽는 반복문과 끝 판정의 경계",
+      "같은 요청에 대한 끝까지 예약·이번 칸만·비율 장부의 비교와 선택 기준",
+    ],
+    reuses: [
+      { label: "Radix tree와 prefix 재사용 길이", href: "/cs/ai/prefix-caching-radix-attention#radix-source" },
+      { label: "schedule-conservativeness의 운영 설정", href: "/cs/ai/serving-memory-admission-and-preemption#engine-settings" },
+      { label: "CPU–GPU 비동기 제출과 EOS 지연", href: "/cs/ai/launch-overhead-and-cpu-gpu-synchronization#async-trace" },
+      { label: "vLLM block table과 선점", href: "/cs/ai/vllm-scheduler#preemption" },
+      { label: "TensorRT-LLM의 끝까지 예약 정책", href: "/cs/ai/tensorrt-llm-kv-cache-and-kernels" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "SGLang commit 4560da5와 vLLM v0.27.1의 전체 원문을 고정해 줄 번호로 장부·retract·반복문을 읽는다." },
+      { kind: "primary-source", rule: "기본값은 고정 commit의 server_arguments.mdx와 environ.py에서 확인하고 자동 조정이 덮어쓸 수 있음을 적는다." },
+      { kind: "project-claim", rule: "4,096칸·입력 200·상한 1,000·실제 300과 CPU 1ms·GPU 10ms는 설명용 가정이며 장난감 모형 결과를 처리량 순위로 표현하지 않는다." },
+      { kind: "standard", rule: "SGLang v0.4의 1.1×·1.3×는 2024-12 자기보고로만 인용하고 현재 버전 측정값으로 쓰지 않는다." },
+    ],
+  },
+  "sliding-window-kv-and-attention-sinks": {
+    title: "창 층 KV의 반환·덮어쓰기와 attention sink 보존",
+    owns: [
+      "창 밖 token 수를 block 단위로 내리는 엔진별 반환 기준",
+      "고리 버퍼가 처음 token을 지우는 순서와 sink 고정 cache",
+      "attention sink의 이유와 StreamingLLM의 위치 재부여 조건",
+      "엔진 안 sink의 세 형태(실제 token·고정 K·V·학습 분모 값)",
+    ],
+    reuses: [
+      { label: "창 attention의 모양", href: "/cs/ai/sparse-windowed-attention-patterns#window" },
+      { label: "층별 보존 길이와 cache group", href: "/cs/ai/hybrid-kv-cache-allocation#overview" },
+      { label: "softmax 정규화", href: "/cs/ai/softmax#overview" },
+      { label: "창 층의 KV 양자화 민감도", href: "/cs/ai/kv-cache-quantization#boundary" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "vLLM v0.27.1 commit 6e448d0과 TensorRT-LLM commit 681cff1의 전체 원문을 고정해 반환 기준·sink 경로·지원 여부를 행 번호로 읽는다." },
+      { kind: "primary-source", rule: "StreamingLLM 논문과 gpt-oss 모델 카드의 문장만 근거로 sink와 위치 재부여를 설명하고 성능 수치는 저자 보고로 표기한다." },
+      { kind: "project-claim", rule: "창 8·block 4 모형과 gpt-oss-20b 32K KV 셈은 고정 식과 config 값으로 손으로 계산했으며 엔진을 실행하거나 perplexity를 측정하지 않았다." },
+    ],
+  },
+  "inference-engine-design-axes": {
+    title: "네 추론 엔진을 다섯 결정으로 비교하는 기준",
+    owns: [
+      "같은 요청의 저장 단위별 빈칸과 읽는 범위",
+      "출력 예약 정책을 같은 pool에서 받는 요청 수로 비교",
+      "공유 앞부분의 엔진별 재사용 길이 비교",
+      "CPU 겹치기와 kernel 소유의 엔진 간 차이와 선택 기준",
+    ],
+    reuses: [
+      { label: "vLLM block 할당", href: "/cs/ai/vllm-paged-attention" },
+      { label: "TensorRT-LLM KV·kernel", href: "/cs/ai/tensorrt-llm-kv-cache-and-kernels" },
+      { label: "SGLang 수용과 overlap", href: "/cs/ai/sglang-runtime-anatomy" },
+      { label: "llama.cpp cell과 slot", href: "/cs/ai/llama-cpp-local-inference" },
+      { label: "선점과 재계산 비용", href: "/cs/ai/serving-memory-admission-and-preemption#recovery-cost" },
+      { label: "attention backend 선택", href: "/cs/ai/attention-kernel-anatomy-and-backends#backend-source" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "각 엔진의 고정 commit 원문과 공식 문서의 기본값만 쓴다." },
+      { kind: "project-claim", rule: "4,096칸·500 token·1,000 token 공유는 손으로 센 설명용 장부이며 엔진 실행 결과가 아니다. 엔진 간 성능 순위를 주장하지 않는다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

@@ -2893,6 +2893,87 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "AI-200의 네 시험 영역을 분당 요청 100건의 한 AI 백엔드 경로와 진단 고리로 이어 가는 독립 학습 단위입니다.",
     sharedGate: "100건=캐시 60건+벡터 조회 40건이며 갱신 5건을 큐로 분리합니다. 같은 수가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻인지 확인합니다.",
   },
+  "ai/smoothquant-activation-smoothing": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "한 개의 2×4 사례가 눈금 부족 → 바깥 축 제약 → 나누고 곱하는 변환 → α → 흡수 코드 → 엔진 적용까지 이어지는 단일 사슬이다. 절을 나누면 같은 X·W를 다시 세워야 하므로 한 글로 둔다.",
+    sharedGate:
+      "논문과 고정 원문, 2026-10-14 엔진 문서 문장까지만 근거로 삼고 엔진 간 성능·품질 비교 수치를 만들지 않는다.",
+  },
+  "ai/kv-cache-quantization": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "KV 저장 형식 하나의 쓰기·읽기 왕복과 scale 단위를 한 사례(token 하나 128KiB, key 네 값)로 끝까지 따라가는 글이다. 보정·단위·방향이 같은 포화 문제의 세 답이라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "공식 원문과 문서에 적힌 동작까지만 근거로 삼고 KV 양자화의 처리량·품질 수치는 논문 저자 보고로만 표기한다.",
+  },
+  "ai/tensorrt-llm-kv-cache-and-kernels": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "같은 요청 하나(200·1,000·300)를 수용 정책·pool 배치·재사용과 제거·attention 실행 경계 네 축으로 끝까지 따라가는 비교 글이다. 네 축은 3절의 4개 대 10개라는 하나의 질문에 답하므로 나누면 각 글이 같은 pool 가정과 요청을 다시 세워야 한다. KV 양자화와 sliding window는 별도 정본에 링크로 맡긴다.",
+    sharedGate:
+      "고정한 두 commit의 원문과 공식 문서까지만 근거로 삼고, 엔진 간 처리량 우열이나 버전 일반화를 주장하지 않는다.",
+  },
+  "ai/multimodal-serving-pipeline": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "사진 한 장이라는 하나의 사례가 자리 수→KV→같은 사진 알아보기→encoder 예산으로 이어지는 한 인과 사슬이다. 열쇠와 예산은 같은 사진 hash를 공유하고 11절의 경계가 둘을 함께 써야 설명되므로 나누면 각 글이 같은 사례를 다시 세워야 한다. 모델 구조는 VLM 글, block hash는 prefix cache 글에 맡긴다.",
+    sharedGate:
+      "고정 원문과 공개 설정·문서에 적힌 동작까지만 근거로 삼고, 엔진별 처리량 비교나 구체 설정값 권고를 하지 않는다.",
+  },
+  "ai/multi-adapter-serving": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "kernel·메모리·적재·입장·soft prompt·cache key가 모두 같은 adapter 26 MiB와 decode token 네 개의 장부를 이어 쓰므로 나누면 각 글이 같은 모델 모양과 batch를 다시 세워야 한다. soft prompt는 같은 '고객별 차이를 어디에 담는가'라는 질문의 다른 답이라 비교가 이 글에 있어야 선택 기준이 닫힌다.",
+    sharedGate:
+      "byte·FLOP은 가정한 모델 모양에서 계산한 장부로만 제시하고 GPU 지연·처리량 측정이나 엔진 간 성능 순위를 주장하지 않는다.",
+  },
+  "ai/llama-cpp-local-inference": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "세 선택(cell 배열·Q4_K 내적·층 배치)이 모두 같은 기기 예산 하나를 나눠 쓰는 결정이라 한 글에 둔다. 6GB GPU·n_ctx 16,384의 같은 수치가 10절 KV byte, 11절 가중치 byte, 13절 -ngl 상한을 차례로 잇는다. 일반 양자화 원리와 block table 주소 변환은 기존 정본에 남기고 링크만 한다.",
+    sharedGate:
+      "고정 commit 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, 기기별 속도나 양자화 정확도는 측정하지 않았다고 명시한다.",
+  },
+  "ai/sglang-runtime-anatomy": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "본문은 concept 4개를 같은 4,096칸 사례 하나로 잇는다. 칸 단위·비율 장부·retract·겹치는 반복문은 서로의 원인이자 대가라서(비율이 낮아 retract가 생기고, 장부가 잦아 CPU 겹치기가 필요하다) 나누면 각 글이 같은 사례와 비교 장부를 다시 세워야 한다. radix 재사용과 TensorRT-LLM 예약은 링크로만 재사용한다.",
+    sharedGate:
+      "고정 commit 원문의 줄 번호와 공식 문서 기본값까지만 근거로 삼고, 장난감 모형과 자기보고 수치를 처리량 순위로 표현하지 않는다.",
+  },
+  "ai/sliding-window-kv-and-attention-sinks": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "창 밖 KV를 버리는 서버 동작과 버리면 안 되는 sink가 같은 질문(무엇을 남기나)의 두 반쪽이다. 반환 규칙만 떼면 sink가 왜 필요한지, sink만 떼면 엔진이 무엇을 버리는지 다시 세워야 한다.",
+    sharedGate:
+      "고정 원문과 공식 문서·논문 문장까지만 근거로 삼고 perplexity·속도는 저자 보고로만 표기한다.",
+  },
+  "ai/inference-engine-design-axes": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "네 엔진의 내부는 각자의 정본이 소유하고, 이 글은 같은 요청 하나를 다섯 결정의 같은 눈금에 올려 비교만 한다. 세부 메커니즘은 링크로 닫혀 있어 나눌 대상이 없다.",
+    sharedGate:
+      "고정 commit 원문과 공식 문서 기본값만 근거로 삼고, 엔진 사이의 성능 순위나 측정 수치를 만들지 않는다.",
+  },
 };
 
 /**
@@ -2900,6 +2981,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/inference-engine-design-axes": "fb0def49322418a5",
+  "ai/kv-cache-quantization": "1af7e88fc46f8731",
+  "ai/llama-cpp-local-inference": "7a82fa0d0aaab77d",
+  "ai/multi-adapter-serving": "2ed63c22abf8d07c",
+  "ai/multimodal-serving-pipeline": "83cc81529da9f09c",
+  "ai/sglang-runtime-anatomy": "94e166bf1f4c5c8b",
+  "ai/sliding-window-kv-and-attention-sinks": "1775e556e63cf2f7",
+  "ai/smoothquant-activation-smoothing": "0476326172a6c719",
+  "ai/tensorrt-llm-kv-cache-and-kernels": "fe822653d8ac7bc3",
   "gpu/nvidia-nca-aiio-study-guide": "6c5b3748dbe31198",
   "cloud/aws-clf-c02-fast-study": "748e9e75e585cb99",
   "cloud/aws-developer-cloudops-paths": "1b443941207dae83",

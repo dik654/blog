@@ -177,7 +177,9 @@ export default function PtqCalibrationArticle() {
             <strong>Outlier handling</strong>은 이 난이도를 다른 곳으로 옮기는
             방법들입니다. SmoothQuant는 activation과 weight 사이에 동등한
             channel scaling을 넣어 난이도를 activation에서 weight로 옮기고
-            (자세한 인용은 release 절 참고), AWQ는 channel마다 활성화 크기에
+            (식과 코드는{" "}
+            <Link to="/cs/ai/smoothquant-activation-smoothing">SmoothQuant</Link>
+            에서 다룹니다), AWQ는 channel마다 활성화 크기에
             비례한 scale을 따로 둬 salient weight를 보호합니다.
           </p>
         </div>
