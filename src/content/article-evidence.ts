@@ -12169,7 +12169,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "economic-history/agrarian-surplus-and-state": [
     { kind: "핵심 사료", label: "The Met · Proto-cuneiform barley and emmer account", href: "https://www.metmuseum.org/art/collection/search/327384", note: "기원전 3100~2900년 무렵 곡물 행정 장부와 동사 부재의 해석 한계" },
     { kind: "핵심 연구", label: "CDLI · Unusual Accounting Practices in Archaic Mesopotamian Tablets", href: "https://cdli.earth/articles/cdlj/2005-1", note: "거래 항목·수 체계·합계와 출처 불명 자료의 범위를 분석" },
-    { kind: "핵심 연구", label: "Englund · Accounting in Proto-Cuneiform (Oxford Handbook of Cuneiform Culture, 2011)", href: "https://cdli.earth/files-up/publications/englund2011a.pdf", note: "우루크 초기 문서고는 행정 문서 위주, 1차(영수증·이전)·2차(집계) 문서 구분, N1=노동자 1인 월 배급, 노동자 집단 장부 약 50건. CDLI 공개 PDF로 확인 2026-10-10. Englund 1998(OBO 160/1) PDF는 CDLI 링크 404라 미확인." },
+    { kind: "핵심 연구", label: "Englund · Accounting in Proto-Cuneiform (Oxford Handbook of Cuneiform Culture, 2011)", href: "https://cdli.earth/files-up/publications/englund2011a.pdf", note: "우루크 초기 문서고는 행정 문서 위주, 1차(영수증·이전)·2차(집계) 문서 구분, N1=노동자 1인 월 배급, 노동자 집단 장부 약 50건. CDLI 공개 PDF로 확인 2026-10-10." },
+    { kind: "핵심 연구", label: "Englund · Texts from the Late Uruk Period (OBO 160/1, 1998)", href: "https://doi.org/10.5167/uzh-151545", note: "126쪽 비스듬한 테두리 그릇=GAR=노동자 하루 곡물 배급, 181쪽 MSVO 4, 27로 GAR 곡물=하루·1N1 GAR 곡물=한 달, 176쪽 W 23999,1의 성별·나이별 8명 장부. 취리히대 ZORA 공개 PDF의 쪽 이미지로 확인 2026-10-14." },
   ],
   "economic-history/industrial-revolution-wages-and-energy": [
     { kind: "핵심 연구", label: "Allen · Why the Industrial Revolution was British", href: "https://doi.org/10.1111/j.1468-0289.2010.00532.x", note: "고임금·싼 에너지·교역과 노동 절약 발명의 관계를 제안하는 핵심 연구" },
