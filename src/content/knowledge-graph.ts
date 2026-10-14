@@ -3732,7 +3732,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Hybrid layer KV-retention length",
     definition:
       "Global attention layer는 전체 history T를, sliding-window layer는 allocator가 오래된 block을 회수할 때 최근 min(T,W) token만 보존하도록 layer별 cache 길이를 정하는 규칙입니다.",
-    canonicalHref: "/cs/ai/hybrid-kv-cache-allocation#kv-cache",
+    canonicalHref: "/cs/ai/hybrid-kv-cache-allocation#overview",
   },
   "hybrid-kv-cache-allocation": {
     id: "hybrid-kv-cache-allocation",

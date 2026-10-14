@@ -8337,7 +8337,7 @@ export const EDITORIAL_BOUNDARIES = {
     reuses: [
       { label: "Scaled dot-product attention", href: "/cs/ai/transformer-architecture#attention-boundary" },
       { label: "Lost in the middle 평가", href: "/cs/ai/context-window-optimization#position" },
-      { label: "Hybrid KV block 회수", href: "/cs/ai/hybrid-kv-cache-allocation#kv-cache" },
+      { label: "Hybrid KV block 회수", href: "/cs/ai/hybrid-kv-cache-allocation#overview" },
       { label: "Attention·KV cache 가 길이에 비례해 커지는 비용", href: "/cs/ai/kv-cache-fundamentals" },
       { label: "Prefill 의 quadratic 항이 지배하는 구간", href: "/cs/ai/prefill-decode-phase-dynamics#long-context" },
   ],
