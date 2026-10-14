@@ -86777,6 +86777,16 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "공식 문서의 설정 설명이며 요청 단위 preemption 정책은 다루지 않습니다.",
         "notClaim": "Block offload가 요청 preemption의 swap과 같은 단위·시점으로 동작한다는 주장은 아닙니다.",
         "sectionId": "paper-trtllm-kvcache"
+      },
+      {
+        "title": "llm-d-router — Context Length Aware Scorer",
+        "href": "https://github.com/llm-d/llm-d-router/tree/907c5fe84769a8f8e80ece112fd419dc6313453e/pkg/epp/framework/plugins/scheduling/scorer/contextlengthaware",
+        "problem": "긴 문맥 요청이 짧은 요청과 같은 KV pool을 쓰면 짧은 요청 자리가 줄어드는 문제",
+        "contribution": "pod label의 길이 범위로 요청 token 수에 맞는 pod에 점수를 주고, enableFiltering을 켜면 범위 밖 pod를 뺍니다.",
+        "assumptions": "llm-d endpoint picker와 pod label 운영을 전제로 하며 commit 907c5fe8 기준입니다.",
+        "evidenceScope": "README의 동작 설명이며 본문의 294→32→206 자리 수는 직접 계산입니다.",
+        "notClaim": "vLLM 엔진 안에 tenant나 등급별 block 상한이 있다는 주장은 아닙니다.",
+        "sectionId": "paper-llm-d-context-length"
       }
     ],
     "entryLevel": true
@@ -90208,6 +90218,16 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "R2 hit 4와 새 slot 36~39, full-hit 상한 7의 block 내림, 세 요청 cascade false와 hybrid 길이 2080을 설명합니다.",
         "notClaim": "B=4가 모든 backend의 지원 설정이라는 주장이나 hash hit 비율로 GPU 메모리 거래 수·응답 시간을 확정하는 주장은 아닙니다.",
         "sectionId": "block-hash"
+      },
+      {
+        "title": "Anthropic·OpenAI — Prompt caching pricing",
+        "href": "https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching",
+        "problem": "재사용한 앞부분 KV를 API 가격에 어떻게 반영하는가의 문제",
+        "contribution": "Anthropic은 5분 쓰기 1.25배·1시간 쓰기 2배·읽기 0.1배, OpenAI는 GPT-5.6 이후 쓰기 1.25배·읽기 0.1배와 한 번 쓰고 한 번 읽으면 1.35배 대 2배를 적습니다.",
+        "assumptions": "2026-10-14에 확인한 공식 가격 문서이며 모델별 예외가 있습니다.",
+        "evidenceScope": "가격 배수와 routing 설명이며 배수의 원가 근거는 문서에 없습니다.",
+        "notClaim": "읽기 할인이 정확히 건너뛴 prefill 비용과 같다는 주장은 아니며 본문의 원가 해석은 가정입니다.",
+        "sectionId": "paper-cache-pricing"
       }
     ]
   },
@@ -90620,14 +90640,14 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     exercises: [
       { level: "basic", question: "$2/GPU-h 가정에 GPU 1 장이 SLO 아래 1,000 tokens/s 를 낼 때 cost per million tokens 를 계산하세요.", answerChecklist: ["시간당 3,600,000 token", "2/3,600,000", "$0.56/M", "goodput 기준"], requiredConcepts: ["inference-cost-per-token"], sectionId: "cost" },
-      { level: "basic", question: "같은 model 을 2 장 TP 로 올려 1,800 tokens/s 가 나올 때 token per GPU-second 와 cost/token 의 변화를 쓰세요.", answerChecklist: ["900 tokens/GPU-s", "시간당 $4", "$0.62/M", "약 10 % 상승"], requiredConcepts: ["gpu-hour-throughput-unit", "inference-cost-per-token"], sectionId: "cost" },
+      { level: "basic", question: "8B(1장, 5,000 tokens/s)·70B(2장, 1,800)·405B(16장, 1,000) 등급이 각각 100,000 tokens/s를 받을 때 목표 utilization 0.7에서 등급별 GPU 수와 405B 비중을 계산하세요.", answerChecklist: ["29 replica 29장", "80 replica 160장", "143 replica 2,288장", "합 2,477장", "405B 92.4%", "token당 GPU-시간 80배"], requiredConcepts: ["capacity-planning-peak-headroom", "gpu-hour-throughput-unit"], sectionId: "tier-mix" },
       { level: "basic", question: "$2/h 1,000 tokens/s 서버와 $3/h 1,800 tokens/s 서버의 throughput per dollar 를 비교하세요.", answerChecklist: ["500", "600", "비싼 쪽이 20 % 효율적", "goodput 기준"], requiredConcepts: ["serving-resource-efficiency"], sectionId: "efficiency" },
       { level: "basic", question: "Peak 20 RPS, 요청당 300 token, GPU 당 1,000 tokens/s, 목표 utilization 0.7 일 때 GPU 수와 headroom 을 계산하세요.", answerChecklist: ["6,000 tokens/s", "6,000/700 = 8.57", "9 장", "headroom 50 %"], requiredConcepts: ["capacity-planning-peak-headroom"], sectionId: "capacity" },
       { level: "basic", question: "평균 8 RPS 에 9 장을 두었을 때 utilization 과 그 시간대 cost/token 이 만차 기준 대비 몇 배인지 쓰세요.", answerChecklist: ["2,400/9,000 = 27 %", "약 3.75 배", "$2.08/M", "overprovisioning"], requiredConcepts: ["capacity-planning-peak-headroom", "inference-cost-per-token"], sectionId: "capacity" },
       { level: "basic", question: "기본 6 장 약정($1.2/h 가정) 과 peak 6 시간의 추가 6 장 on-demand($2/h) 의 월 비용을 전부 on-demand 와 비교하세요.", answerChecklist: ["6 × 1.2 × 720 = 5,184", "6 × 2 × 180 = 2,160", "합 7,344", "전부 on-demand 17,280"], requiredConcepts: ["reserved-on-demand-capacity-mix"], sectionId: "scaling" },
       { level: "advanced", question: "GPU 8 장 서버를 $250,000 에 사서 4 년 쓸 때 TCO 기준 GPU-h 환산값을 구하고, 평균 utilization 40 % 에서 $2/GPU-h 임대와 비교하세요.", answerChecklist: ["250,000/(4×8,760×8) ≈ 0.89", "전력 약 0.11 추가", "약 $1/GPU-h", "40 % → 2.5 배", "임대와 비슷", "utilization 유지가 관건"], requiredConcepts: ["inference-total-cost-of-ownership", "gpu-hour-throughput-unit"], sectionId: "efficiency" },
       { level: "advanced", question: "Replica 준비 시간이 5 분이고 트래픽이 5 분에 최대 30 % 오를 수 있을 때 autoscaling 정책과 최소 headroom 을 설계하세요.", answerChecklist: ["headroom ≥ 30 %", "metric 은 queue 길이·KV utilization", "tolerance 10 %", "scale-down 안정화 창", "scheduled scaling 겹침", "lead time"], requiredConcepts: ["capacity-planning-peak-headroom", "reserved-on-demand-capacity-mix"], sectionId: "scaling" },
-      { level: "advanced", question: "70B fp16 model 의 수요가 3 배로 늘 때 scale-up 과 scale-out 을 어떻게 조합할지 memory·통신·routing 관점에서 설계하세요.", answerChecklist: ["140 GB → TP 2 필수", "TP 늘리면 all-reduce 손실", "replica 복제로 선형 증가", "weight 사본 중복", "prefix routing·load balancer", "token per GPU-second 비교"], requiredConcepts: ["scale-up-vs-scale-out", "gpu-hour-throughput-unit"], sectionId: "scaling" },
+      { level: "advanced", question: "앞 문제의 fleet에서 405B GPU를 줄이는 세 손잡이(트래픽 10%를 70B로 이동, 405B 처리량 10% 향상, FP8로 서버 한 대 8장)를 계산으로 비교하고 각각의 전제를 쓰세요.", answerChecklist: ["이동 시 1,837장 640장 감소", "처리량 10%면 130 replica 208장 감소", "FP8 8장이면 1,144장", "옮긴 요청의 품질 기준", "혼합 정밀도 약 487GB 640GB 안", "reward 분포 비교 관문"], requiredConcepts: ["capacity-planning-peak-headroom", "scale-up-vs-scale-out"], sectionId: "tier-mix" },
       { level: "advanced", question: "MIG 로 나눈 80 GB GPU 와 8 장 node cluster 에서 GPU fragmentation 이 생기는 경우를 각각 들고, KV cache fragmentation 과 다른 점과 완화 배치를 설명하세요.", answerChecklist: ["3g + 2g 뒤 4g 불가", "2 장 + 2 장은 TP 4 불가", "KV 는 block 층·paging 으로 해소", "GPU 층은 배치 문제", "TP group 은 한 node 연속 GPU", "time-slicing 은 격리 없음"], requiredConcepts: ["gpu-sharing-fragmentation", "scale-up-vs-scale-out"], sectionId: "scaling" },
     ],
     papers: [
@@ -90670,6 +90690,36 @@ export const ARTICLE_LEARNING: Readonly<
         evidenceScope: "MLCommons 공식 설명이며 2026-08 시점 기준입니다.",
         notClaim: "TDP 나 GPU 단독 전력으로 계산한 performance per watt 가 MLPerf Power 와 같은 값이라는 뜻은 아닙니다.",
         sectionId: "paper-mlperf-power",
+      },
+      {
+        title: "The Llama 3 Herd of Models — §6 Inference",
+        href: "https://arxiv.org/abs/2407.21783",
+        problem: "405B를 BF16으로 올리면 H100 8장 서버 한 대에 들어가지 않아 두 서버 16장이 필요한 문제",
+        contribution: "FFN 대부분을 FP8로 바꾸고 첫·마지막 layer와 attention은 BF16으로 남긴 추론을 두 서버 BF16과 비교해 prefill 처리량 최대 50% 향상을 보고하고, 표준 benchmark 대신 응답 100,000개의 reward 분포로 품질을 비교합니다.",
+        assumptions: "H100의 FP8 지원과 row-wise·상한 있는 dynamic scaling을 전제로 한 Meta의 구현입니다.",
+        evidenceScope: "4,096 입력·256 출력 조건의 처리량 비교와 reward 분포이며, 본문의 487GB는 Table 3로 직접 센 값입니다.",
+        notClaim: "어느 모델이든 FP8로 바꾸면 품질이 같다거나 replica 처리량이 특정 배수로 오른다는 뜻은 아닙니다.",
+        sectionId: "paper-llama3-inference",
+      },
+      {
+        title: "Together AI — Turbo·Lite endpoints (2024-07-18)",
+        href: "https://www.together.ai/blog/together-inference-engine-2",
+        problem: "같은 모델을 정밀도별로 다른 가격 등급으로 제공할 수 있는가의 문제",
+        contribution: "FP16 Reference, FP8 Turbo, INT4 양자화를 포함한 Lite를 나란히 내놓고 H100 4장 Turbo가 8장 Reference 대비 decode 처리량 8% 안이라고 밝힙니다.",
+        assumptions: "Together 자체 inference engine과 Llama 3 모델입니다.",
+        evidenceScope: "회사가 직접 잰 값이며 독립 검증이 아닙니다.",
+        notClaim: "다른 엔진이나 workload에서 같은 비용 절감이 난다는 뜻은 아닙니다.",
+        sectionId: "paper-together-turbo",
+      },
+      {
+        title: "NVIDIA NVML — clocks event reasons",
+        href: "https://github.com/NVIDIA/nvidia-settings/blob/main/src/nvml.h",
+        problem: "GPU가 전력·온도 한도에서 clock을 낮출 때 그 이유를 구별하는 문제",
+        contribution: "SW power cap, SW thermal slowdown, core clock을 절반 이하로 내리는 HW slowdown·HW thermal slowdown을 별도 사유 bit로 정의합니다.",
+        assumptions: "NVML을 지원하는 NVIDIA datacenter GPU와 driver입니다.",
+        evidenceScope: "header 주석의 정의이며 처리량 저하 폭은 다루지 않습니다.",
+        notClaim: "목표 utilization 0.7이 clock 저하를 흡수한다는 뜻은 아닙니다.",
+        sectionId: "paper-nvml-clock-reasons",
       },
     ],
   },
@@ -96803,7 +96853,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "basic", question: "Retry with backoff가 단순 재시도보다 나은 이유를 exponential backoff와 jitter로 설명하세요.", answerChecklist: ["대기 시간을 점점 늘려 몰림 완화", "jitter로 여러 client의 재시도 시점을 흩어 놓음"], requiredConcepts: ["retry-with-backoff"], sectionId: "retry-backoff" },
       { level: "basic", question: "Circuit breaker의 closed·open·half-open 세 상태가 각각 무엇을 뜻하는지 설명하세요.", answerChecklist: ["closed는 정상 통과", "open은 즉시 실패", "half-open은 시험 요청"], requiredConcepts: ["circuit-breaker-and-health-check"], sectionId: "circuit-breaker-health-check" },
       { level: "basic", question: "Health check와 circuit breaker의 실패율 관측이 서로 다른 이유를 설명하세요.", answerChecklist: ["health check는 실제 트래픽과 무관한 주기적 점검", "circuit breaker는 실제 요청 실패율을 관측"], requiredConcepts: ["circuit-breaker-and-health-check"], sectionId: "circuit-breaker-health-check" },
-      { level: "basic", question: "Request rate limit과 token rate limit 중 LLM 서비스에서 실제 부하를 더 정확히 반영하는 것이 무엇이고 왜인지 설명하세요.", answerChecklist: ["token rate limit", "요청마다 token 수가 크게 다르기 때문"], requiredConcepts: ["rate-limiting-algorithms"], sectionId: "rate-limiting-algorithms" },
+      { level: "basic", question: "분당 240,000 token 한도에서 prompt 1,000·max_tokens 4,000·실제 출력 200인 요청을 받을 때, 받는 시점 추정으로 막는 경우와 끝난 뒤 정산하는 경우의 분당 건수를 비교하세요.", answerChecklist: ["요청마다 5,000으로 잡음", "분당 48건", "실제 사용 57,600 한도의 24%", "정산하면 진행 중 몫만 최대치", "약 187건", "과금은 끝난 뒤 usage"], requiredConcepts: ["rate-limiting-algorithms"], sectionId: "token-reservation" },
       { level: "basic", question: "Token bucket과 leaky bucket이 순간적인 요청 몰림(burst)을 다루는 방식의 차이를 설명하세요.", answerChecklist: ["token bucket은 burst capacity까지 순간 허용", "leaky bucket은 고정 속도로만 흘려보냄"], requiredConcepts: ["rate-limiting-algorithms"], sectionId: "rate-limiting-algorithms" },
       { level: "basic", question: "Load shedding에서 admission policy가 필요한 이유를 설명하세요.", answerChecklist: ["무엇을 먼저 거절할지 정하지 않으면 무작위로 버리게 됨", "중요한 요청과 사소한 요청을 구분해야 함"], requiredConcepts: ["load-shedding-and-admission-policy"], sectionId: "load-shedding-and-admission" },
       { level: "advanced", question: "실패율 50% 임계값의 circuit breaker가 open으로 전환된 뒤 10초 cooldown, half-open 시험 요청 실패를 거쳐 다시 open으로 돌아가는 전체 상태 전이를 순서대로 설명하세요.", answerChecklist: ["closed→open 전환 조건", "open→half-open은 cooldown 경과", "half-open에서 시험 실패 시 다시 open"], requiredConcepts: ["circuit-breaker-and-health-check"], sectionId: "circuit-breaker-health-check" },
@@ -96841,6 +96891,26 @@ export const ARTICLE_LEARNING: Readonly<
         evidenceScope: "공식 모듈 문서이며 nginx 구현 기준의 설정 방법입니다.",
         notClaim: "이 글의 leaky bucket 설명은 이 모듈의 정확한 내부 구현이 아니라 rate·burst 개념을 일반화한 것입니다.",
         sectionId: "rate-limiting-algorithms",
+      },
+      {
+        title: "Azure OpenAI quota — Understanding rate limits",
+        href: "https://learn.microsoft.com/en-us/azure/foundry-classic/openai/how-to/quota",
+        problem: "출력 token 수를 모르는 도착 시점에 token 한도를 어떻게 검사하는가의 문제",
+        contribution: "받는 시점에 prompt·max_tokens·best_of로 추정한 최대 token을 분마다 reset되는 counter에 더해 TPM 한도를 검사하고, 이 값이 끝난 뒤의 과금 token과 다르다고 명시합니다.",
+        assumptions: "Azure OpenAI Standard 배포의 rate limit이며 PTU는 다르게 계산합니다.",
+        evidenceScope: "2026-05-04 기준 공식 문서입니다.",
+        notClaim: "끝난 뒤 남은 예약을 돌려준다는 설명은 이 문서에 없고 본문의 정산은 제안한 설계입니다.",
+        sectionId: "paper-azure-openai-tpm",
+      },
+      {
+        title: "llm-d-router — InferenceObjective priority와 sheddable admission",
+        href: "https://github.com/llm-d/llm-d-router/blob/907c5fe84769a8f8e80ece112fd419dc6313453e/apix/v1/inferenceobjective_types.go",
+        problem: "포화 때 어떤 요청부터 버리고 어떤 요청을 지킬지를 요청 등급으로 정하는 문제",
+        contribution: "클수록 중요한 정수 priority, 같은 priority 안에서만 맞추는 공정성, priority<0을 포화도 1.0 이상에서 거절하는 admission, 실행 중인 음수 priority를 끊는 EnableEviction을 정의합니다.",
+        assumptions: "Gateway API Inference Extension 위의 llm-d endpoint picker이며 commit 907c5fe8 기준입니다.",
+        evidenceScope: "API 주석과 admission 코드이며 저하 3단계 순서는 본문의 가정 설계입니다.",
+        notClaim: "작은 모델로 낮추는 단계가 llm-d에 자동 기능으로 있다는 뜻은 아닙니다.",
+        sectionId: "paper-llm-d-priority",
       },
     ],
   },
@@ -100924,10 +100994,10 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "프록시가 자체적으로 요청 수를 세는 방식과 모델 서버 지표를 쓰는 방식의 차이를 설명하고, 후자에도 남는 한계와 그 보정 방법을 쓰세요.",
-        answerChecklist: ["프록시는 보낸 수만 알고 남은 양은 모름", "출력 길이는 생성이 끝나야 확정", "모델 서버는 배치·대기열·캐시 여유를 앎", "지표는 긁는 주기만큼 지난 값", "그 구간의 요청이 한곳으로 몰림", "보낸 직후의 요청을 따로 세어 보정"],
+          "선택기가 요청마다 한 번, 엔진이 출력 token마다 고르는 이유를 쓰고, 선택기와 엔진의 tokenizer가 앞부분 10번째 token에서 갈릴 때 300 token 요청의 예상 cache 적중이 어떻게 되는지 설명하세요.",
+        answerChecklist: ["block table과 free 목록은 엔진 process 안", "30ms마다 network 왕복은 출력 속도를 늦춤", "64 token block 5개", "block hash는 앞 block hash와 사슬", "block 0부터 모두 달라져 예상 적중 0", "엔진 tokenization을 쓰는 producer나 버전 고정"],
         requiredConcepts: ["endpoint-selection-extension-point", "service-abstraction-metric-blindness", "paged-kv-block-allocation"],
-        sectionId: "service-abstraction-gap",
+        sectionId: "two-level-scheduling",
       },
       {
         level: "advanced",

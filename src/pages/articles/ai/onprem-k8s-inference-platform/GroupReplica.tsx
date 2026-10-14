@@ -46,7 +46,7 @@ export default function GroupReplica() {
 
       <CitationBlock
         source="Kubernetes SIG — LeaderWorkerSet 프로젝트 문서 (2026-09-11 확인)"
-        citeKey={2}
+        citeKey={4}
         href="https://github.com/kubernetes-sigs/lws"
       >
         파드 묶음을 복제 단위로 배포하는 API이며 여러 노드에 걸쳐 샤딩된 모델을 서빙하는 경우를 대상으로

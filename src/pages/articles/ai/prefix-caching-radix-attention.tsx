@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import PrefixCachingRadixAttentionViz from "./prefix-caching-radix-attention/viz/PrefixCachingRadixAttentionViz";
 import { codeRefs } from "./prefix-caching-radix-attention/codeRefs";
@@ -169,7 +170,9 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
             우선순위도 확인해야 합니다. 운영 판단에서는 hit 비율뿐 아니라 요청별 대기와 첫 출력 목표를 함께 측정합니다.
           </p></div></section>
 
-<section id="boundary" data-teach-level="7" className="scroll-mt-20"><span id="evidence" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">21. 입력의 같음과 기록의 유효함을 함께 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 token ID라도 모델·adapter·추가 입력·재사용 영역이 다르면 같은 KV라고 볼 수 없습니다. 찾아둔 위치도 실제 실행 때까지 남아 있어야 합니다. 다른 replica로 가는 요청의 예상 cache와 실제 local hit는 <a href="/cs/ai/disaggregated-prefill-decode-serving#routing-source">분리 서빙의 routing</a>에서 구분했습니다.</p><p>
+<section id="cache-pricing" data-teach-level="7" data-calculation-explained className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">21. 건너뛴 계산은 cache 읽기 단가로 돌아옵니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>지금까지는 재사용을 계산 위치와 공간으로만 셌습니다. API를 파는 쪽에서는 같은 재사용이 가격으로 나타납니다. 앞 2,000 token이 같은 system prompt이고 요청마다 다른 꼬리가 200 token인 요청 10개를 봅니다. 재사용이 없으면 입력 위치 22,000개를 모두 prefill합니다. 첫 요청이 앞 2,000을 남기고 나머지 아홉이 그것을 hit하면 새로 계산하는 위치는 2,000 + 10 × 200 = 4,000개, 18%입니다.</p><p>Anthropic 문서는 5분 동안 남기는 cache 쓰기 token을 기본 입력 단가의 1.25배, 1시간 쓰기를 2배, cache 읽기 token을 0.1배로 받는다고 적습니다. OpenAI 문서도 GPT-5.6 이후 대부분 모델에서 쓰기 1.25배와 읽기 0.1배를 적고, cache된 입력을 최대 95%까지 할인한다고 설명합니다.</p></div><CalculationWalkthrough title="재사용의 계산 비율과 가격 비율" question="같은 10개 요청에서 계산은 18%로 줄었는데 가격은 몇 %일까요?" scope="입력 token만 셉니다. 출력 token 단가와 cache가 TTL 안에 남는지 여부는 넣지 않았습니다. 단가 배수는 Anthropic 5분 cache 기준입니다." steps={[{label: "재사용 없는 입력", expression: "10 × (2,000 + 200)", result: "22,000 단가 단위", reason: "모든 요청이 앞부분부터 다시 계산하고 기본 단가를 냅니다."}, {label: "첫 요청", expression: "2,000 × 1.25 + 200", result: "2,700", reason: "앞부분을 cache에 쓰는 요청이 쓰기 할증을 냅니다."}, {label: "나머지 아홉", expression: "9 × (2,000 × 0.1 + 200)", result: "3,600", reason: "앞부분은 읽기 단가, 다른 꼬리 200은 기본 단가입니다."}, {label: "비율", expression: "(2,700 + 3,600) ÷ 22,000", result: "29%", reason: "계산 위치 비율 18%보다 높습니다. 읽기도 0이 아니고 쓰기가 할증되기 때문입니다."}]} conclusion="새로 계산하는 위치는 18%로 줄지만 가격은 29%로 줄어듭니다." caveats={["2,000·200·10개는 설명용 가정입니다.", "모델별 읽기 배수 예외는 각 문서의 표를 확인합니다."]} /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 문서는 왜 이 배수인지 설명하지 않습니다. 이 글은 이렇게 해석합니다. (가정) 읽기 할인은 건너뛴 prefill 계산을 돌려주는 몫입니다. 읽기에도 값이 남는 것은 새 꼬리 token이 저장된 앞부분 KV를 읽으며 attention을 계산하고, 그 KV를 보관할 공간도 여전히 들기 때문입니다. 쓰기 할증은 그 KV를 TTL 동안 붙잡아 두는 공간 비용으로 볼 수 있고, 1시간 쓰기가 5분 쓰기보다 비싼 것도 같은 방향입니다.</p><p>쓰기가 1.25배이므로 한 번도 다시 읽히지 않는 앞부분은 0.25배를 손해 봅니다. 한 번만 다시 읽혀도 1.25 + 0.1 = 1.35배라 cache 없이 두 번 낸 2배보다 쌉니다. OpenAI 문서도 같은 1.35배 대 2배를 적습니다. 그래서 다시 쓰일 앞부분에만 cache 표시를 붙입니다.</p><p>이 할인은 같은 앞부분 요청이 그 KV를 가진 machine에 닿아야 받을 수 있습니다. OpenAI 문서가 같은 앞부분 요청이 분당 15건을 넘으면 다른 machine으로 넘칠 수 있다고 적는 이유입니다. 앞부분을 보고 machine을 고르는 선택기는 <a href="/cs/ai/onprem-k8s-inference-platform#two-level-scheduling">2단 scheduling</a>에서 봅니다. 20절의 공정성 충돌도 가격과 상관없이 그대로 남습니다.</p></div><div id="paper-cache-pricing" className="not-prose my-8 scroll-mt-24"><CitationBlock source="Anthropic · Prompt caching · Pricing (platform.claude.com, 2026-10-14 확인)" citeKey={2} href="https://platform.claude.com/docs/en/docs/build-with-claude/prompt-caching"><q>Cache read tokens are 0.1 times the base input tokens price</q> 같은 절은 5분 cache 쓰기를 1.25배, 1시간 쓰기를 2배로 적고, 모델별 예외는 표의 각주로 둡니다.</CitationBlock><CitationBlock source="OpenAI API docs · Prompt caching (2026-10-14 확인)" citeKey={3} href="https://developers.openai.com/api/docs/guides/prompt-caching"><q>Cheaper input tokens: Pay the model’s reduced cached-input rate for reused tokens, discounted up to 95%.</q> GPT-5.6 이후 쓰기 1.25배·읽기 0.1배, 한 번 쓰고 한 번 읽으면 1.35배라는 비교, machine당 분당 15건을 넘으면 넘칠 수 있다는 설명이 같은 문서에 있습니다.</CitationBlock></div></section>
+
+<section id="boundary" data-teach-level="7" className="scroll-mt-20"><span id="evidence" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">22. 입력의 같음과 기록의 유효함을 함께 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 token ID라도 모델·adapter·추가 입력·재사용 영역이 다르면 같은 KV라고 볼 수 없습니다. 찾아둔 위치도 실제 실행 때까지 남아 있어야 합니다. 다른 replica로 가는 요청의 예상 cache와 실제 local hit는 <a href="/cs/ai/disaggregated-prefill-decode-serving#routing-source">분리 서빙의 routing</a>에서 구분했습니다.</p><p>
             이 글의 page 크기 1과 B=4는 작은 수치 모형입니다. 공간 단위와 hash 단위가 다른 hybrid 경로, sliding window, draft 검증, 원격 cache, 복사
             중 공유 tail은 별도 조건을 가집니다. 각 모델의 모든 cache가 이 세 요청의 단순 tree와 같다고 주장하지 않습니다.
           </p><p>
@@ -180,12 +183,12 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
             재사용률이 높아졌다는 사실만으로 응답 지연과 공정성까지 좋아졌다고 결론내리지 않습니다.
           </p></div><ContentBoundary article="prefix-caching-radix-attention" /></section>
 
-<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">22. 같은 입력에서 다음 경계를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+<section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">23. 같은 입력에서 다음 경계를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             R1과 R2의 앞 6이 같지만 page 크기를 4로 바꾸면 hit은 어디서 끊기나요? 전체 8이 똑같은 경우 마지막 점수를 다시 계산한다면 왜 같은 설명만으로 부족할까요?
             (답: 11절)
           </p><p>
             R3 경로 8이 보호되고 다른 두 끝 구간이 2씩 남았습니다. 5자리를 비워 달라는 요청에 실제 원문은 몇 자리를 돌려줄 수 있나요? (답: 13절)
           </p><p>
             큰 사례의 세 요청이 2496을 공유한다면 고정 FlashAttention backend의 cascade가 켜질까요? (답: 19절)
-          </p></div></section>
+          </p><p>같은 system prompt를 쓰는 요청이 하루에 한 번만 온다면 cache 쓰기 표시를 붙이는 쪽이 쌀까요? (답: 21절)</p></div></section>
 </div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={prefixTrees} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"},sglang:{id:"sglang",label:"SGLang 고정 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;}
