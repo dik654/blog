@@ -1166,6 +1166,18 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "핵심 논문",
+      label: "On Convergence Proofs for Perceptrons",
+      href: "https://web.engr.oregonstate.edu/~huanlian/teaching/ML/2020spring/extra/novikoff-1963.pdf",
+      note: "선형 분리 가능성과 양의 여유 아래에서 퍼셉트론 오답 횟수의 유한 상한을 다루는 원 보고서",
+    },
+    {
+      kind: "공식 코드",
+      label: "scikit-learn Perceptron 구현 (고정 커밋)",
+      href: "https://github.com/scikit-learn/scikit-learn/blob/0d4fe1463f83a341337628a2880d1d174a723bfa/sklearn/linear_model/_perceptron.py",
+      note: "Perceptron이 SGDClassifier에 perceptron 손실과 고정 학습률을 설정하고 반복·섞기·조기 종료 옵션을 전달하는 실제 구현",
+    },
+    {
+      kind: "핵심 논문",
       label: "Approximation by Superpositions of a Sigmoidal Function",
       href: "https://doi.org/10.1007/BF02551274",
       note: "단일 은닉층의 universal approximation 조건",

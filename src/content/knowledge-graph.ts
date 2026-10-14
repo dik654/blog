@@ -3210,59 +3210,59 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   },
   "linear-score": {
     id: "linear-score",
-    label: "Linear score",
+    label: "선형 점수 (linear score)",
     definition:
-      "입력 feature의 weighted sum과 bias로 만든 scalar z=wᵀx+b입니다.",
-    canonicalHref: "/cs/ai/perceptron#overview",
+      "각 입력 특성값에 가중치를 곱해 더하고 편향을 보탠 값 z=wᵀx+b입니다.",
+    canonicalHref: "/cs/ai/perceptron#trace",
   },
   "decision-boundary": {
     id: "decision-boundary",
-    label: "Decision boundary · half-space",
+    label: "결정 경계와 반평면 (decision boundary · half-space)",
     definition:
-      "예측 class가 바뀌는 z=0의 점 집합이며, 선형 모델에서는 hyperplane입니다.",
-    canonicalHref: "/cs/ai/perceptron#overview",
+      "예측값이 바뀌는 z=0의 점 집합이며, 선형 모델에서는 직선·평면·초평면입니다.",
+    canonicalHref: "/cs/ai/perceptron#trace",
   },
   "step-activation": {
     id: "step-activation",
-    label: "Step activation",
+    label: "계단 활성화 함수 (step activation)",
     definition:
-      "연속적인 score의 부호를 hard class label 0 또는 1로 바꾸는 threshold 함수입니다.",
+      "연속적인 점수의 부호를 0 또는 1의 판정값으로 바꾸는 함수입니다.",
     canonicalHref: "/cs/ai/activation-functions#step-function",
   },
   "perceptron-update": {
     id: "perceptron-update",
-    label: "Perceptron update",
+    label: "퍼셉트론 수정 (perceptron update)",
     definition:
-      "오분류한 example에 대해서만 target−prediction과 input 방향으로 weight·bias를 움직이는 mistake-driven 규칙입니다.",
-    canonicalHref: "/cs/ai/perceptron#overview",
+      "오분류한 자료에 대해서만 정답−예측의 차이와 입력 방향으로 가중치·편향을 움직이는 규칙입니다.",
+    canonicalHref: "/cs/ai/perceptron#trace",
   },
   "classification-margin": {
     id: "classification-margin",
-    label: "Classification margin",
+    label: "분류 여유 (classification margin)",
     definition:
-      "정답 부호를 반영한 score y(wᵀx+b)가 0에서 얼마나 떨어져 있는지 나타내며, 경계와 sample 사이의 여유를 측정합니다.",
+      "정답 부호를 반영한 점수 y(wᵀx+b)가 0에서 얼마나 떨어져 있는지 나타내며, 경계와 자료 사이의 여유를 측정합니다.",
     canonicalHref: "/cs/ai/perceptron#convergence",
   },
   "perceptron-convergence": {
     id: "perceptron-convergence",
     kind: "theorem",
-    label: "Perceptron convergence",
+    label: "퍼셉트론 수렴 (perceptron convergence)",
     definition:
-      "Bounded input이 positive margin으로 선형 분리될 때 mistake-driven update가 유한 번의 오분류 뒤 separator를 찾는다는 보장입니다.",
+      "입력 크기가 제한되고 양의 여유로 선형 분리될 때 오답 수정이 유한 번 뒤 끝난다는 보장입니다.",
     canonicalHref: "/cs/ai/perceptron#convergence",
   },
   "linear-separability": {
     id: "linear-separability",
-    label: "Linear separability",
+    label: "선형 분리 가능성 (linear separability)",
     definition:
-      "서로 다른 class의 모든 example을 하나의 hyperplane 양쪽으로 완전히 나눌 수 있는 성질입니다.",
+      "서로 다른 정답의 모든 자료를 초평면 하나의 양쪽으로 완전히 나눌 수 있는 성질입니다.",
     canonicalHref: "/cs/ai/perceptron#limitation",
   },
   "xor-problem": {
     id: "xor-problem",
-    label: "XOR limitation",
+    label: "XOR의 선형 한계",
     definition:
-      "원래 두 입력 좌표에서는 positive 두 점과 negative 두 점을 직선 하나로 나눌 수 없는 대표적인 비선형 분류 문제입니다.",
+      "원래 두 입력 좌표에서는 정답 1인 두 점과 정답 0인 두 점을 직선 하나로 나눌 수 없는 대표적인 문제입니다.",
     canonicalHref: "/cs/ai/perceptron#limitation",
   },
   "nonlinear-activation": {
@@ -3346,9 +3346,9 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   },
   "multilayer-perceptron": {
     id: "multilayer-perceptron",
-    label: "Multilayer perceptron (MLP)",
+    label: "다층 퍼셉트론 (multilayer perceptron, MLP)",
     definition:
-      "Affine transform과 nonlinear activation을 여러 층 합성해 새로운 중간 표현과 결정 경계를 만드는 feed-forward network입니다.",
+      "아핀 변환과 비선형 활성화 함수를 여러 층 합쳐 새로운 중간 표현과 결정 경계를 만드는 순방향 신경망입니다.",
     canonicalHref: "/cs/ai/perceptron#multilayer",
   },
   "affine-layer": {
