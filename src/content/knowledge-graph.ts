@@ -22327,11 +22327,11 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "training-memory-budget-and-checkpointing",
     kind: "concept",
     domain: "machine-learning",
-    label: "Training memory budget · activation checkpointing",
+    label: "학습 메모리 장부 · 활성값 체크포인팅",
     aliases: ["Training Memory Math", "Activation Checkpointing"],
     definition:
-      "학습 중 GPU 메모리를 weight·gradient·optimizer state·activation 네 항목으로 나눠 계산하는 training memory math(mixed-precision Adam 기준 parameter당 16byte)와, 그 중 activation 항을 layer 일부만 저장하고 backward에서 나머지를 다시 계산해(recompute) O(√n) 메모리로 줄이는 대신 forward를 한 번 더 실행하는 activation checkpointing을 함께 묶은 예산 계약입니다.",
-    canonicalHref: "/cs/ai/training-memory-budget#memory-math",
+      "학습 메모리를 매개변수마다 붙는 가중치·기울기·옵티마이저 상태와 입력 모양에 따라 생기는 활성값으로 나눠 세는 방법입니다. 활성값 체크포인팅은 구간 시작값만 남기고 중간값을 역방향 계산 직전에 다시 만들어 활성값 메모리를 계산으로 바꿉니다. 16B/parameter는 FP16·BF16 가중치와 기울기, FP32 master weight와 Adam 통계 두 벌을 둔 구성에서만 성립합니다.",
+    canonicalHref: "/cs/ai/training-memory-budget#tiny-ledger",
   },
   "adam-optimizer": {
     id: "adam-optimizer",

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 960,
-    "reviewed": 395,
-    "pending": 565,
+    "reviewed": 396,
+    "pending": 564,
     "untracked": 0,
-    "assignedPending": 542,
+    "assignedPending": 541,
     "postCheckpointPending": 23,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -313,9 +313,9 @@
       "publicPath": "cs/ai/training-memory-budget",
       "title": "학습 메모리는 weight·gradient·optimizer state 합으로 커진다",
       "catalogIndex": 28,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
