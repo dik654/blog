@@ -20,6 +20,42 @@ const KEEP = (rationale: string): ArticleTopologyDecision => ({
 });
 
 export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopologyDecision>> = {
+  "ai/perceptron": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "퍼셉트론 한 개의 가중치 갱신을 같은 사례로 끝까지 추적해 결정 경계·수렴 전제·논리 게이트·XOR 한계·다층 확장으로 이어 가는 단일 사슬이다. 한계 절이 다층 절의 질문을 만들어 나누면 같은 사례를 다시 세워야 한다.",
+    sharedGate:
+      "원 논문과 교재 수준의 정리까지만 근거로 삼고 수렴 정리의 전제(선형 분리 가능·margin)를 벗어난 일반화를 하지 않는다.",
+  },
+  "ai/neural-network": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "XOR 한 경로를 affine 합성·비선형성·shape·출력 확률 계약·MNIST 진단까지 따라가는 글이다. 각 절이 같은 forward 경로의 다음 층을 열어 쪼개면 앞 절의 수치를 다시 가져와야 한다.",
+    sharedGate:
+      "MNIST 결과는 이 글의 설정에서 나온 값으로만 쓰고 일반 정확도 주장으로 넓히지 않는다.",
+  },
+  "ai/training-memory-budget": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "weight·gradient·optimizer state 바이트 장부 하나를 checkpointing과 QLoRA·AMP 연결까지 같은 표로 이어 가며 새 concept은 1개다. 장부를 나누면 합계 검산이 끊긴다.",
+    sharedGate:
+      "16byte/param 회계는 혼합 정밀도 Adam 가정임을 밝히고 프레임워크별 실제 할당량을 대신하지 않는다.",
+  },
+  "ai/spiking-neural-networks": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "막전위 한 trace가 LIF 동역학·surrogate gradient·BPTT·하드웨어 경계까지 이어지는 단일 사례 글이다. stage 9개는 같은 trace의 시간 축 단계라 나누면 같은 전압 기록을 반복해야 한다.",
+    sharedGate:
+      "저전력 주장은 event 희소성·하드웨어 조건과 함께만 쓰고 뇌 비유를 메커니즘 증거로 쓰지 않는다.",
+  },
   "circuits/lumped-circuit-and-conservation": {
     "action": "keep",
     "status": "implemented",
@@ -2981,6 +3017,10 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/neural-network": "58462a73abf9d1af",
+  "ai/perceptron": "d81eb0d08e345535",
+  "ai/spiking-neural-networks": "93972722e17dbfdc",
+  "ai/training-memory-budget": "0e31e7b877a1f96f",
   "ai/inference-engine-design-axes": "fb0def49322418a5",
   "ai/kv-cache-quantization": "1af7e88fc46f8731",
   "ai/llama-cpp-local-inference": "7a82fa0d0aaab77d",
