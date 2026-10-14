@@ -14221,4 +14221,13 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "SGLang — Server Arguments", href: "https://docs.sglang.io/docs/advanced_features/server_arguments", note: "page-size 1, schedule-policy fcfs, attention-backend 선택지(trtllm_mha 포함)" },
     { kind: "공식 문서", label: "Hugging Face text-generation-inference README", href: "https://github.com/huggingface/text-generation-inference", note: "2026-10-14 확인. 유지보수 모드, vLLM·SGLang·llama.cpp 권장" },
   ],
+  "ai/laya-system1-decision-model": [
+    { kind: "공식 문서", label: "convaiinnovations/laya model card (rev 7b928d8)", href: "https://huggingface.co/convaiinnovations/laya", note: "2026-10-14 확인. 구조·학습·벤치마크·Honest Limits. 수치는 제작사 자기보고, Jev는 제3자 공개값" },
+    { kind: "공식 코드", label: "NandhaKishorM/laya 432312b — laya/common.py", href: "https://github.com/NandhaKishorM/laya/blob/432312b36714d8889eba405507b37eda25257d9c/laya/common.py", note: "build_sequence·build_head·DecisionModel·proper_reward·ece_score·temperature 칸과 clamp" },
+    { kind: "공식 코드", label: "NandhaKishorM/laya 432312b — laya/train.py", href: "https://github.com/NandhaKishorM/laya/blob/432312b36714d8889eba405507b37eda25257d9c/laya/train.py", note: "rlcd_loss 499–518행, 표본 4·σ 0.4→0.1·구면 0.75, #741 이득 없음 기록" },
+    { kind: "공식 코드", label: "NandhaKishorM/laya 432312b — laya/calibrate.py", href: "https://github.com/NandhaKishorM/laya/blob/432312b36714d8889eba405507b37eda25257d9c/laya/calibrate.py", note: "fit_one_temperature: NLL + LBFGS, [0.5, 5] clamp" },
+    { kind: "공식 코드", label: "NandhaKishorM/laya 432312b — laya/router.py", href: "https://github.com/NandhaKishorM/laya/blob/432312b36714d8889eba405507b37eda25257d9c/laya/router.py", note: "_route 우선순위와 문자 검출 분기" },
+    { kind: "공식 코드", label: "NandhaKishorM/laya 432312b — laya/agent.py", href: "https://github.com/NandhaKishorM/laya/blob/432312b36714d8889eba405507b37eda25257d9c/laya/agent.py", note: "_decode_answers 1327–1395행: 칸별 temperature, score 기대값, 두 confidence" },
+    { kind: "공식 문서", label: "convaiinnovations/laya rl_agent_config.json (rev 7b928d8)", href: "https://huggingface.co/convaiinnovations/laya/blob/7b928d828b7b0e022f929d9bd2e44165aa270148/rl_agent_config.json", note: "max_len 512, head_max_len 192, temperature_by_options(noul:2 1.983, choice:11+ 0.1006)" },
+  ],
 };

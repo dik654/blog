@@ -23662,6 +23662,16 @@
    "status": "done",
    "reason": "사용자 요청 — vLLM 외 추론 엔진을 같은 축으로 비교하는 허브",
    "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "laya",
+   "term": "Laya",
+   "action": "new",
+   "conceptId": "option-marker-decision-head",
+   "owner": "/ai/laya-system1-decision-model#sequence",
+   "status": "done",
+   "reason": "사용자 요청 — Laya 결정 모델 분석",
+   "updatedAt": "2026-10-14"
   }
  ]
 }

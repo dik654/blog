@@ -18419,6 +18419,28 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "4,096칸·500 token·1,000 token 공유는 손으로 센 설명용 장부이며 엔진 실행 결과가 아니다. 엔진 간 성능 순위를 주장하지 않는다." },
     ],
   },
+  "laya-system1-decision-model": {
+    title: "생성하지 않는 결정 모델의 입력 구성·학습 보상·보정·checkpoint 선택",
+    owns: [
+      "choice·score·noul 질문과 답의 모양",
+      "선택지 [MASK] 자리 점수와 token 예산",
+      "proper scoring rule 보상 학습 절차와 그 한계",
+      "질문 유형·선택지 수 칸별 temperature 보정과 위험한 출시값",
+      "문자·언어로 checkpoint를 고르는 이유와 순서",
+    ],
+    reuses: [
+      { label: "BERT task head", href: "/cs/ai/bert-task-heads#task-head" },
+      { label: "strictly proper score", href: "/cs/ai/classification-metrics#proper-score" },
+      { label: "temperature scaling", href: "/cs/ai/image-probability-decisions#temperature" },
+      { label: "구조화 생성", href: "/cs/ai/structured-generation-serving" },
+      { label: "LLM gateway routing", href: "/cs/ai/llm-gateway-and-model-routing" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "GitHub 432312b와 Hugging Face rev 7b928d8의 원문을 고정해 함수·기본값·행 번호를 인용한다." },
+      { kind: "project-claim", rule: "청구 문의의 확률, 두 표본 RLCD, ECE 열 개, head parameter 수는 이 글의 계산이다. checkpoint를 실행하지 않았다." },
+      { kind: "standard", rule: "정확도·ECE·지연은 제작사 자기보고, Jev는 제3자 공개값으로만 쓰고 독립 평가처럼 쓰지 않는다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;
