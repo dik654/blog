@@ -8161,29 +8161,57 @@
       "subcategory": "ai-foundations",
       "publicFiles": [
         "src/pages/articles/ai/training-memory-budget.tsx",
-        "src/pages/articles/ai/training-memory-budget/viz/TrainingMemoryBudgetViz.tsx"
+        "src/pages/articles/ai/training-memory-budget/viz/TrainingMemoryBudgetViz.tsx",
+        "src/pages/articles/ai/training-memory-budget/viz/ActivationCheckpointViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
-        "hasSourceSurface": false,
-        "characters": 9423
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 9,
+        "hasSourceSurface": true,
+        "characters": 32156
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "75억 매개변수와 120GB부터 시작해 각 바이트가 왜 필요한지 따라가기 어렵습니다.",
+        "모델 상태와 활성값이 서로 다른 변수로 커진다는 구분이 한 계산 경로로 연결되지 않았습니다.",
+        "체크포인팅 의사코드가 저장·폐기·재계산 상태와 같은 화면에서 연결되지 않았습니다.",
+        "O(√n), ZeRO 단계, 실제 PyTorch 구현의 가정과 빠진 비용이 선택 기준으로 이어지지 않았습니다."
+      ],
+      "fixture": {
+        "kind": "가정",
+        "values": "P=1,000; BF16/FP16 weight·gradient 2B; FP32 master·m·v 4B; B=2,S=4,H=8,layers=9; checkpoint interval=3; ZeRO workers=4",
+        "source": "ZeRO arXiv 1910.02054, Chen et al. arXiv 1604.06174, PyTorch commit 8ed12848"
+      },
+      "stageAnchors": {
+        "overview": "학습 메모리는 현재 값·수정 장부·중간 활성값을 함께 보관하는 공간입니다",
+        "tiny-ledger": "1. 2,000바이트짜리 모델을 학습하면 먼저 16,000바이트 장부가 생깁니다",
+        "why-five": "2. 다섯 벌은 같은 복사본이 아니라 서로 다른 시점의 일을 맡습니다",
+        "activation-shape": "3. 활성값은 매개변수 수보다 배치·토큰·폭·층 수를 따라 커집니다",
+        "checkpointing": "4. 활성값 체크포인팅은 중간값을 버리고 역방향 계산 직전에 다시 만듭니다",
+        "scale-out": "5. 1,000개에서 75억 개로 늘려도 같은 장부를 반복합니다",
+        "real-code": "6. PyTorch 구현도 구간 입력을 남기고 역방향 계산에서 구간을 다시 부릅니다",
+        "decision": "7. 무엇을 줄일지는 어느 장부가 커지는지 측정한 뒤 정합니다",
+        "prediction-questions": "8. 같은 장부의 숫자를 바꾸면 결과를 예측할 수 있습니까"
+      },
+      "primarySourceApplication": [
+        "ZeRO arXiv 1910.02054의 (2+2+K)Ψ와 75억 매개변수 120GB 장부",
+        "Chen et al. arXiv 1604.06174의 O(√n) 저장-재계산 절충과 1,000층 실험",
+        "PyTorch 8ed12848 checkpoint.py L715-L793의 구간 입력 저장·재실행 경로"
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "기존 16B/parameter·120GB·48GB→7GB 사실을 보존하고 1,000개 장부→활성값→체크포인팅→분할 순서로 재구성",
+        "humanize": "ko-natural easy/합니다체 2회 검사; 2차의 존댓말 2곳과 긴 문장 1곳을 직접 수정하고 수식 조각 오탐도 완결문으로 수정",
+        "numericTrace": "9 independent arithmetic cases PASS: /tmp/training-memory-budget-numeric-trace.json",
+        "mobile390": "PASS root width, 10 StepViz states, 18 AlgorithmBlock states, 13 formula surfaces, console, screenshots",
+        "desktop1440": "PASS root width, all StepViz and AlgorithmBlock states, console, screenshot",
+        "formula": "strict require-explicit PASS; all formula surfaces fit at 390px after vertical ledger split",
+        "pseudocode": "two step-through AlgorithmBlock processes PASS",
+        "typescript": "tsc pass",
+        "sourcePin": "PyTorch main 8ed12848bd2b7baba59d5dd8056d861173cd7702 verified 2026-10-14"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "전역 통합 및 게시 검증은 root에서 진행"
       ]
     },
     {

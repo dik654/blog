@@ -9147,8 +9147,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits", href: "https://arxiv.org/abs/2402.17764", note: "Ternary weight로 처음부터 학습하는 BitNet b1.58 근거" },
   ],
   "ai/training-memory-budget": [
-    { kind: "핵심 논문", label: "Rajbhandari et al. — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models", href: "https://arxiv.org/abs/1910.02054", note: "Model-state memory (2+2+K)Ψ·16byte/param 수치의 근거" },
-    { kind: "핵심 논문", label: "Chen et al. — Training Deep Nets with Sublinear Memory Cost", href: "https://arxiv.org/abs/1604.06174", note: "Activation checkpointing의 O(√n) 메모리·48GB→7GB·+30% 시간 수치의 근거" },
+    { kind: "핵심 논문", label: "Rajbhandari et al. — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models", href: "https://arxiv.org/abs/1910.02054", note: "혼합 정밀도 Adam의 (2+2+K)Ψ 모델 상태 장부와 ZeRO 단계별 분할 근거" },
+    { kind: "핵심 논문", label: "Chen et al. — Training Deep Nets with Sublinear Memory Cost", href: "https://arxiv.org/abs/1604.06174", note: "활성값 체크포인팅의 O(√n) 분석과 48GB→7GB·시간 약 30% 증가 실험 근거" },
+    { kind: "공식 코드", label: "PyTorch · torch.utils.checkpoint 고정 소스", href: "https://github.com/pytorch/pytorch/blob/8ed12848bd2b7baba59d5dd8056d861173cd7702/torch/utils/checkpoint.py#L715-L793", note: "checkpoint_sequential이 구간 입력을 보존하고 내부 함수를 재실행하는 실제 구현 근거" },
   ],
   "gpu/gemmini-pe-mac-dataflow": [
     { kind: "핵심 논문", label: "Gemmini: Enabling Systematic Deep-Learning Architecture Evaluation via Full-Stack Integration", href: "https://arxiv.org/abs/1911.09925", note: "Systolic array 가속기 generator를 제안한 DAC 2021 원 논문, 성능 배수는 저자 자기보고" },

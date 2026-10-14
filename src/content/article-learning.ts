@@ -97779,61 +97779,269 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/training-memory-budget": {
-    entryNote: "Adam 정본의 momentum·variance state와 reverse-mode autodiff 정본의 save–recompute 경계를 이미 아는 독자를 대상으로 합니다.",
+    recursiveTeaching: true,
+    entryNote:
+      "매개변수 1,000개와 작은 2×4×8 활성값을 직접 세는 데서 시작하므로 Adam이나 자동 미분을 미리 자세히 알 필요는 없습니다.",
     coreIdea:
-      "학습 메모리는 weight·gradient·optimizer state·activation 네 항목의 합입니다. Mixed-precision Adam 학습은 parameter 하나당 FP16 weight·gradient 각 2byte에 FP32 master weight·momentum·variance 각 4byte를 더해 16byte를 쓰고, 75억 parameter 모델이면 이것만으로 120GB가 필요합니다. Activation은 layer 수에 비례해 따로 쌓이는데, activation checkpointing은 일부 layer의 activation만 저장하고 나머지는 backward에서 다시 계산해 이 항목을 O(√n) 메모리로 줄이는 대신 forward를 한 번 더 실행하는 비용을 지불합니다.",
+      "학습 메모리는 모델 파일 한 벌이 아니라 매개변수마다 붙는 가중치·기울기·Adam 상태와 입력 크기에 따라 생기는 활성값의 합입니다. 이 글의 혼합 정밀도 Adam 구성은 매개변수 1,000개에 16,000바이트를 쓰며, 활성값 체크포인팅은 이 모델 상태를 그대로 둔 채 중간 활성값만 저장 대신 재계산으로 바꿉니다.",
     assumedKnowledge: [
-      { id: "raw-gradient-moments", role: "Adam이 parameter마다 유지하는 momentum·variance FP32 buffer를 byte로 세는 데 사용합니다." },
-      { id: "autodiff-save-recompute-boundary", role: "Activation을 저장할지 다시 계산할지 정하는 일반 경계로 checkpointing의 배경이 됩니다." },
+      {
+        id: "raw-gradient-moments",
+        role: "Adam의 m·v가 최근 기울기와 제곱 기울기를 기억하는 장부라는 설명으로 이어집니다.",
+      },
+      {
+        id: "autodiff-save-recompute-boundary",
+        role: "역방향 계산이 필요한 중간값을 저장할지 다시 계산할지 고르는 출발점입니다.",
+      },
     ],
     introducedHere: [
-      { id: "training-memory-budget-and-checkpointing", role: "Model-state memory를 16byte/param으로 계산하고, activation checkpointing이 activation 항을 O(√n)으로 줄이는 절충을 정의합니다." },
+      {
+        id: "training-memory-budget-and-checkpointing",
+        role: "모델 상태와 활성값을 서로 다른 축으로 계산하고, 분할·체크포인팅·내리기가 어느 장부를 줄이는지 판단합니다.",
+      },
     ],
     conceptExplanations: [
       {
         id: "training-memory-budget-and-checkpointing",
-        sectionId: "memory-math",
-        intuition: "Weight 하나마다 gradient·optimizer state라는 그림자가 따라붙고, activation은 layer 수만큼 따로 쌓입니다.",
-        workedExample: "Ψ=7.5×10⁹ parameter 모델은 (2+2+12)Ψ=16Ψ byte, 즉 120GB의 model-state memory가 필요하고, 1,000-layer network의 activation은 checkpointing으로 48GB에서 7GB로 줄어드는 대신 학습 시간이 약 30% 늘어납니다.",
-        boundary: "16byte/param은 SGD 등 다른 optimizer나 activation·temporary buffer·fragmentation을 포함하지 않은 model-state 하한이며, checkpoint 간격 선택은 메모리와 재계산 비용의 절충이지 공짜 축소가 아닙니다.",
+        sectionId: "tiny-ledger",
+        intuition:
+          "매개변수마다 현재 값과 수정 장부가 붙고, 순방향 계산이 지나간 자리에는 역방향 계산이 다시 쓸 중간 메모가 남습니다.",
+        workedExample:
+          "매개변수 1,000개에 2B 가중치·2B 기울기·4B master weight·4B m·4B v를 두면 16,000B입니다. B=2·S=4·H=8인 BF16 층 출력은 128B이고, 아홉 층을 모두 저장하면 1,152B입니다.",
+        boundary:
+          "16B/parameter는 이 글에서 고정한 혼합 정밀도 Adam 구성의 값입니다. 실제 구현의 자료형, 저장 텐서, 통신 버퍼, 임시 작업 공간, 메모리 조각에 따라 최고 사용량은 달라집니다.",
+        causalTrace: {
+          answer:
+            "학습 메모리는 매개변수 장부와 입력 크기에 따라 생기는 활성값 장부를 함께 보관하는 공간입니다.",
+          followUpQuestion:
+            "2,000B짜리 BF16 모델이 왜 학습에서는 16,000B 모델 상태가 되고, 그 위에 활성값이 더 필요할까요?",
+          bottleneck:
+            "역방향 계산과 Adam 갱신은 현재 가중치 외에도 기울기·정밀한 원본·두 이동평균이 필요하고, 각 층의 기울기는 순방향 중간값을 다시 사용합니다.",
+          mechanism:
+            "1,000개 자리의 다섯 장부를 한 줄씩 더하고, 2×4×8 활성값을 층별로 센 뒤, 세 층마다 기준점만 남겨 나머지를 역방향 직전에 다시 계산합니다.",
+          remainingCost:
+            "체크포인팅은 모델 상태를 줄이지 않고 계산을 늘립니다. ZeRO 분할은 통신을 늘리며, CPU·NVMe 내리기는 전송 시간을 늘립니다.",
+          decisionRule:
+            "배치·문장 길이에 따라 커지는지, 입력을 줄여도 큰지, GPU마다 같은 장부가 반복되는지 측정해 활성값·모델 상태·복제 중 어느 항을 줄일지 고릅니다.",
+        },
       },
     ],
     conceptStages: [
-      { label: "00 model states", relation: "Weight·gradient·optimizer state를 byte 단위로 더합니다.", concepts: ["training-memory-budget-and-checkpointing"] },
-      { label: "01 activation checkpointing", relation: "Activation 항을 O(√n) 메모리로 줄이는 대신 forward를 다시 실행합니다.", concepts: ["training-memory-budget-and-checkpointing"] },
+      {
+        label: "한 문장 답",
+        relation: "모델 파일과 학습 중 장부를 구분합니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "1,000개 장부",
+        relation: "다섯 줄을 더해 16,000B를 만듭니다.",
+        concepts: ["training-memory-budget-and-checkpointing", "raw-gradient-moments"],
+      },
+      {
+        label: "활성값 모양",
+        relation: "2×4×8×2B로 층 출력 128B를 계산합니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "저장과 재계산",
+        relation: "아홉 층을 세 기준점과 현재 재계산 구간으로 바꿉니다.",
+        concepts: ["training-memory-budget-and-checkpointing", "autodiff-save-recompute-boundary"],
+      },
+      {
+        label: "규모 확대",
+        relation: "같은 16B 묶음을 75억 매개변수로 확대합니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "분할",
+        relation: "ZeRO 1·2·3단계가 어느 상태를 나누는지 비교합니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "실제 코드",
+        relation: "PyTorch가 구간 입력을 남기고 함수를 다시 부르는 지점을 확인합니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
+      {
+        label: "선택 기준",
+        relation: "측정된 병목 장부에 맞는 절약 기법을 고릅니다.",
+        concepts: ["training-memory-budget-and-checkpointing"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "Mixed-precision Adam 학습에서 parameter 하나당 byte를 각 항목별로 나눠 설명하세요.", answerChecklist: ["FP16 weight 2byte", "FP16 gradient 2byte", "FP32 master·momentum·variance 12byte"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
-      { level: "basic", question: "Ψ=7.5×10⁹ parameter 모델의 model-state memory를 계산하세요.", answerChecklist: ["16×7.5e9", "120GB"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
-      { level: "basic", question: "K=12가 어디서 나오는 숫자인지 설명하세요.", answerChecklist: ["FP32 master weight 4byte", "momentum 4byte", "variance 4byte"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
-      { level: "basic", question: "Activation checkpointing이 저장하는 activation과 버리는 activation을 구분하세요.", answerChecklist: ["checkpoint layer만 저장", "나머지는 즉시 폐기"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
-      { level: "basic", question: "1,000-layer network에서 checkpointing 전후 activation 메모리와 시간 변화를 설명하세요.", answerChecklist: ["48GB→7GB", "시간 약 30% 증가"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
-      { level: "basic", question: "Checkpoint 간격을 √n으로 고르는 이유를 설명하세요.", answerChecklist: ["저장하는 activation 수", "구간당 재계산 비용의 균형"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
-      { level: "advanced", question: "SGD-momentum만 쓰는 optimizer로 바꾸면 K와 model-state memory가 어떻게 달라지는지 추정하세요.", answerChecklist: ["K가 12보다 작아짐", "model-state memory 감소"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
-      { level: "advanced", question: "Checkpoint 간격을 √n보다 훨씬 작게(예: 매 layer) 잡으면 무엇이 손해인지 설명하세요.", answerChecklist: ["저장량은 늘고", "재계산 이득은 줄어듦"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
-      { level: "advanced", question: "O(log n) 메모리 극단 방식이 O(√n)보다 항상 더 나은 선택이 아닌 이유를 설명하세요.", answerChecklist: ["메모리는 더 줄지만", "추가 계산 비용이 O(n log n)으로 더 커짐"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "checkpointing" },
-      { level: "advanced", question: "QLoRA training-memory ledger가 이 글의 memory math를 어떻게 세분화하는지 설명하세요.", answerChecklist: ["base low-bit payload 분리", "adapter·activation 별도 항목"], requiredConcepts: ["training-memory-budget-and-checkpointing"], sectionId: "memory-math" },
+      {
+        level: "basic",
+        question:
+          "매개변수 1,000개의 혼합 정밀도 Adam 장부 16,000B를 다섯 줄로 나누어 계산할 수 있을까요?",
+        answerChecklist: [
+          "가중치와 기울기가 각각 2,000B라고 계산한다.",
+          "master weight·m·v가 각각 4,000B라고 계산한다.",
+          "다섯 항을 더해 16,000B를 얻는다.",
+          "이 구성이 모든 구현의 상수는 아니라고 제한한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing", "raw-gradient-moments"],
+        sectionId: "tiny-ledger",
+      },
+      {
+        level: "basic",
+        question:
+          "자료 2개·토큰 4개·폭 8인 BF16 층 출력 하나가 128B인 이유를 단위와 함께 설명할 수 있을까요?",
+        answerChecklist: [
+          "2×4=8개 토큰을 센다.",
+          "8×8=64개 값을 센다.",
+          "64×2B=128B로 바꾼다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "activation-shape",
+      },
+      {
+        level: "basic",
+        question:
+          "배치를 2에서 4로 늘릴 때 모델 상태와 활성값 중 어느 항이 바뀌는지 설명할 수 있을까요?",
+        answerChecklist: [
+          "매개변수 수가 같아 모델 상태 16,000B는 그대로라고 말한다.",
+          "활성값의 B가 두 배라 층당 256B라고 계산한다.",
+          "아홉 층 저장량도 2,304B로 두 배라고 계산한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "activation-shape",
+      },
+      {
+        level: "basic",
+        question:
+          "아홉 층을 간격 3으로 체크포인팅할 때 무엇을 저장하고 언제 무엇을 다시 계산할까요?",
+        answerChecklist: [
+          "x0·x3·x6을 기준점으로 남긴다.",
+          "중간 활성값은 순방향 뒤에 버린다.",
+          "역방향 직전에 현재 세 층 구간을 다시 실행한다.",
+          "구간 기울기를 구한 뒤 복원값을 버린다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing", "autodiff-save-recompute-boundary"],
+        sectionId: "checkpointing",
+      },
+      {
+        level: "basic",
+        question:
+          "n/k+k가 k≈√n에서 균형을 이루는 이유를 아홉 층 사례로 설명할 수 있을까요?",
+        answerChecklist: [
+          "n/k는 계속 보관할 기준점 수라고 설명한다.",
+          "k는 현재 복원 구간의 값 수라고 설명한다.",
+          "9/3+3=6 슬롯을 계산한다.",
+          "같은 크기의 연쇄 층이라는 가정을 밝힌다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "checkpointing",
+      },
+      {
+        level: "basic",
+        question:
+          "활성값 체크포인팅을 적용해도 매개변수 장부 16,000B가 그대로인 이유를 설명할 수 있을까요?",
+        answerChecklist: [
+          "체크포인팅의 대상은 순방향 중간 활성값이라고 말한다.",
+          "가중치·기울기·master weight·m·v는 갱신에 계속 필요하다고 설명한다.",
+          "모델 상태를 줄이려면 분할이나 다른 자료형 같은 별도 방법이 필요하다고 말한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "checkpointing",
+      },
+      {
+        level: "advanced",
+        question:
+          "75억 매개변수의 120GB를 십진 단위로 계산하고 이 숫자에 빠진 항목을 말할 수 있을까요?",
+        answerChecklist: [
+          "16B×7.5×10^9를 계산한다.",
+          "120×10^9B=120GB라고 적는다.",
+          "약 111.76GiB와 단위를 구분한다.",
+          "활성값·작업 공간·통신 버퍼가 빠졌다고 말한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "scale-out",
+      },
+      {
+        level: "advanced",
+        question:
+          "GPU 네 장에서 ZeRO 1·2·3단계의 GPU당 모델 상태를 1,000개 사례로 비교할 수 있을까요?",
+        answerChecklist: [
+          "1단계는 Adam 상태만 나눠 7,000B라고 계산한다.",
+          "2단계는 기울기도 나눠 5,500B라고 계산한다.",
+          "3단계는 가중치까지 나눠 4,000B라고 계산한다.",
+          "통신 버퍼와 순간 모으기 공간이 빠졌다고 제한한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "scale-out",
+      },
+      {
+        level: "advanced",
+        question:
+          "실행 메모리가 계산식보다 클 때 어떤 빠진 항목을 어떤 순서로 확인할까요?",
+        answerChecklist: [
+          "실제 텐서 자료형과 옵티마이저 상태를 확인한다.",
+          "저장된 활성값과 체크포인트 경계를 확인한다.",
+          "임시 작업 공간과 통신 버퍼를 확인한다.",
+          "할당자 예약량과 메모리 조각을 실제 시점별로 측정한다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "decision",
+      },
+      {
+        level: "advanced",
+        question:
+          "PyTorch checkpoint_sequential의 세 구간이 교육용 3+3 슬롯 모형과 정확히 같지 않은 이유를 소스 동작으로 설명할 수 있을까요?",
+        answerChecklist: [
+          "마지막 구간은 checkpoint로 감싸지 않는다고 설명한다.",
+          "앞 구간은 구간 입력을 남기고 내부 활성값을 재계산한다고 설명한다.",
+          "실제 연산이 저장하는 텐서와 임시 공간이 층 출력 하나 모형보다 많다고 말한다.",
+          "최고 메모리는 실행 중에 따로 측정해야 한다고 결론 내린다.",
+        ],
+        requiredConcepts: ["training-memory-budget-and-checkpointing"],
+        sectionId: "real-code",
+      },
     ],
     papers: [
       {
-        title: "Rajbhandari, Rasley, Ruwase & He — ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+        title: "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
         href: "https://arxiv.org/abs/1910.02054",
-        problem: "대형 모델 학습에서 weight·gradient·optimizer state가 각 data-parallel rank에 중복 저장돼 메모리를 낭비하는 문제를 다룹니다.",
-        contribution: "Model-state memory를 (2+2+K)Ψ로 정식화하고(Adam K=12), 이 상태들을 rank 간에 분할하는 ZeRO-DP를 제시합니다.",
-        assumptions: "Mixed-precision(FP16 forward·backward, FP32 optimizer state) 학습과 Adam optimizer를 전제합니다.",
-        evidenceScope: "논문 Figure 1의 Ψ=7.5B·Nd=64 예시(저자 자기보고)이며 특정 실험 설정입니다.",
-        notClaim: "모든 optimizer·정밀도 조합에서 16byte/param이 그대로 성립한다는 뜻은 아닙니다.",
+        problem:
+          "자료 병렬 작업자마다 가중치·기울기·옵티마이저 상태가 중복되는 문제",
+        contribution:
+          "혼합 정밀도 모델 상태를 (2+2+K)Ψ로 정리하고 세 종류 상태를 단계별로 분할",
+        assumptions:
+          "논문의 FP16 가중치·기울기와 FP32 master weight·Adam 상태 구성",
+        evidenceScope:
+          "논문 Figure 1의 75억 매개변수·K=12 예시와 ZeRO-DP 분할 방식",
+        notClaim:
+          "모든 옵티마이저·정밀도·프레임워크가 16B/parameter를 쓴다는 뜻은 아님",
         sectionId: "paper-zero",
       },
       {
-        title: "Chen, Xu, Zhang & Guestrin — Training Deep Nets with Sublinear Memory Cost",
+        title: "Training Deep Nets with Sublinear Memory Cost",
         href: "https://arxiv.org/abs/1604.06174",
-        problem: "Layer 수에 비례해 커지는 activation 메모리가 깊은 network 학습의 병목이 되는 문제를 다룹니다.",
-        contribution: "O(√n) 메모리로 n-layer network를 학습하는 checkpointing 알고리즘을 제시하고, 1,000-layer network에서 48GB→7GB·시간 +30%를 실험으로 보였습니다.",
-        assumptions: "논문이 실험한 residual network·RNN 구조와 checkpoint 배치 전략입니다.",
-        evidenceScope: "저자 자기보고 실험(ImageNet 등)이며 독립 재현 평가는 별도입니다.",
-        notClaim: "모든 architecture에서 30%라는 시간 증가율이 그대로 유지된다는 뜻은 아닙니다.",
+        problem:
+          "깊이에 따라 늘어나는 활성값 저장량 때문에 더 깊은 신경망을 학습하기 어려운 문제",
+        contribution:
+          "중간 활성값을 다시 계산해 연쇄 신경망을 O(√n) 메모리로 학습하는 방법 제시",
+        assumptions:
+          "논문의 연쇄 계산 그래프, 체크포인트 배치, 잔차 신경망 실험 조건",
+        evidenceScope:
+          "O(√n) 분석과 1,000층 실험의 48GB→7GB·시간 약 30% 증가",
+        notClaim:
+          "모든 Transformer에서 같은 메모리와 시간 비율이 나온다는 뜻은 아님",
         sectionId: "paper-gradient-checkpointing",
+      },
+      {
+        title: "PyTorch torch.utils.checkpoint 구현 (고정 커밋)",
+        href: "https://github.com/pytorch/pytorch/blob/8ed12848bd2b7baba59d5dd8056d861173cd7702/torch/utils/checkpoint.py#L715-L793",
+        problem:
+          "순차 모델을 구간으로 나눌 때 실제 프레임워크가 무엇을 저장하고 무엇을 다시 실행하는지 확인하는 문제",
+        contribution:
+          "마지막 구간을 제외한 각 구간을 checkpoint로 감싸고 구간 입력을 보존해 역방향 계산에서 재실행",
+        assumptions:
+          "2026-10-14에 확인한 해당 PyTorch main 커밋의 Python 구현",
+        evidenceScope:
+          "checkpoint_sequential의 구간 분할과 checkpoint 호출 경로",
+        notClaim:
+          "모든 계산 그래프의 최적 구간 수나 실제 GPU 절약량을 보장하는 소스는 아님",
+        sectionId: "source-pytorch-checkpoint",
       },
     ],
   },
