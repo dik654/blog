@@ -4,50 +4,166 @@ import PredictionContractViz from "./viz/PredictionContractViz";
 
 export default function OutputLayer() {
   return (
-    <section id="output-layer" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">출력층은 target의 통계적 의미를 parameterize한다</h2>
+    <section
+      id="output-layer"
+      data-teach-level="6"
+      className="mb-16 scroll-mt-20"
+    >
+      <h2 className="mb-6 text-2xl font-bold">
+        6. 마지막 숫자는 예측하려는 사건에 맞춰 해석합니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          hidden layer는 표현을 만들지만 output layer는 모델이 무엇을 예측한다고 주장하는지 정한다. 값의 범위, class가 서로 배타적인지, label마다 독립적인
-          사건인지, noise를 어떤 분포로 가정할지를 먼저 정해야 output dimension과 activation, loss가 함께 결정된다. 모든 분류에 softmax를 붙이거나
-          모든 회귀에 MSE를 쓰는 규칙은 없다.
+          XOR에서는 답이 0 또는 1 하나이므로 출력 점수도 하나면 됩니다. 앞의
+          정확한 논리 구성은 계단 함수로 <code>[0,1,1,0]</code>을 냈습니다.
+          학습할 때는 제한 없는 점수인 <strong>로짓(logit)</strong>을 먼저
+          만들고, 시그모이드(sigmoid)로 0과 1 사이의 수로 바꿀 수 있습니다.
+        </p>
+        <p>
+          (가정) 은닉값 합에 4를 곱하고 6을 빼면 네 로짓은
+          <code>[−2,2,2,−2]</code>입니다. 시그모이드를 적용하면 약
+          <code>[0.119,0.881,0.881,0.119]</code>가 됩니다. 0.5를 기준으로
+          판정하면 XOR 답과 같습니다. 이 수를 확률로 해석하려면 0/1 사건과
+          베르누이 손실이라는 계약까지 맞아야 합니다.
+        </p>
+      </div>
+
+      <ExplainedFormula
+        question="XOR 로짓 하나를 0과 1 사이의 값으로 바꾸고 어떻게 채점할까요?"
+        idea={
+          <>
+            시그모이드는 로짓을 0과 1 사이로 압축합니다. 정답이 1이면
+            <code>p</code>가 클수록, 정답이 0이면 <code>1−p</code>가 클수록
+            손실이 작아집니다.
+          </>
+        }
+        formula={String.raw`p=\sigma(z)=\frac{1}{1+e^{-z}},\qquad \mathcal L=-\left[y\log p+(1-y)\log(1-p)\right]`}
+        annotatedFormula={String.raw`\underbrace{p}_{\text{정답 1의 비율}}=\underbrace{\frac{1}{1+e^{-z}}}_{\text{로짓을 0과 1 사이로 압축}},\qquad \underbrace{\mathcal L}_{\text{자료 한 건의 손실}}=-\left[\underbrace{y\log p}_{y=1\text{일 때}}+\underbrace{(1-y)\log(1-p)}_{y=0\text{일 때}}\right]`}
+        operations={[
+          {
+            expression: String.raw`\frac{1}{1+e^{-z}}`,
+            annotation: ["제한 없는 로짓 z를", "0과 1 사이의 값 p로 바꿉니다"],
+          },
+          {
+            expression: String.raw`y\log p`,
+            annotation: [
+              "정답 y가 1일 때만 남고",
+              "p가 1에 가까울수록 손실을 줄입니다",
+            ],
+          },
+          {
+            expression: String.raw`(1-y)\log(1-p)`,
+            annotation: [
+              "정답 y가 0일 때만 남고",
+              "p가 0에 가까울수록 손실을 줄입니다",
+            ],
+          },
+        ]}
+        terms={[
+          {
+            symbol: "z",
+            name: "로짓",
+            description: "확률 범위로 바꾸기 전의 제한 없는 점수입니다.",
+          },
+          {
+            symbol: "p",
+            name: "정답 1에 준 값",
+            description:
+              "베르누이(Bernoulli) 계약에서 정답이 1일 조건부 확률로 해석합니다.",
+          },
+          {
+            symbol: "y\\in\\{0,1\\}",
+            name: "정답",
+            description: "자료 한 건의 이진 정답입니다.",
+          },
+        ]}
+        assumptions={[
+          "자료마다 0 또는 1인 사건 하나를 예측합니다.",
+          "실제 코드에서는 시그모이드와 일반 로그를 따로 계산하지 않습니다.",
+          "로짓 결합 이진 교차 엔트로피 연산에 원시 로짓을 넘깁니다.",
+        ]}
+        interpretation="z=2이면 p≈0.881입니다. 정답 y=1일 때 손실은 −log(0.881)≈0.127입니다. 같은 점수에서 정답이 0이면 손실은 −log(0.119)≈2.127로 커집니다."
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>숫자 0~9처럼 서로 배타적인 답은 로짓 열 개를 함께 비교합니다</h3>
+        <p>
+          MNIST는 한 이미지의 정답이 열 숫자 중 하나입니다. 출력층은 로짓 열
+          개를 만들고 소프트맥스(softmax)가 합이 1인 분포로 바꿉니다. 정답이
+          여러 개 동시에 참일 수 있는 다중 레이블 문제는 각 레이블을 별도 0/1
+          사건으로 봅니다. 이때는 표지별 시그모이드와 로짓 결합 이진 교차
+          엔트로피를 사용합니다. 회귀는 값의 범위와 잡음 가정에 따라 다른 출력과
+          손실을 고릅니다.
         </p>
       </div>
 
       <PredictionContractViz />
 
       <ExplainedFormula
-        question="서로 배타적인 K개 class의 raw score를 하나의 확률 분포로 어떻게 바꿀까?"
-        idea={<>각 logit을 exponentiate해 양수로 만든 뒤 전체 합으로 나눕니다. 학습 loss는 이 계산을 log-sum-exp와 결합해 정답 class의 negative log-likelihood로 안정적으로 계산합니다.</>}
-        formula={String.raw`\begin{aligned}p_k&=p(y=k\mid x;\theta)\\&=\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}\\[3pt]\mathcal L(x,y)&=-\log p_y\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}p_k&=\underbrace{p(y=k\mid x;\theta)}_{\text{class k일 확률}}\\&=\frac{\overbrace{e^{z_k}}^{\text{class k 양수 score}}}{\underbrace{\sum_{j=1}^{K}e^{z_j}}_{\text{K개 score 총합}}}\\[3pt]\mathcal L(x,y)&=\underbrace{-\log p_y}_{\text{정답 확률이 작을수록 큼}}\end{aligned}`}
+        question="서로 배타적인 K개 답의 로짓을 합이 1인 분포로 어떻게 바꿀까요?"
+        idea={
+          <>
+            각 로짓의 지수값을 전체 지수값의 합으로 나눕니다. 정답 범주의 확률이
+            작을수록 음의 로그 손실이 커집니다.
+          </>
+        }
+        formula={String.raw`p_k=\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}},\qquad \mathcal L=-\log p_y`}
+        annotatedFormula={String.raw`\underbrace{p_k}_{k\text{번째 답의 확률}}=\frac{\overbrace{e^{z_k}}^{k\text{번째 양수 점수}}}{\underbrace{\sum_{j=1}^{K}e^{z_j}}_{\text{모든 점수의 합}}},\qquad \underbrace{\mathcal L}_{\text{손실}}=\underbrace{-\log p_y}_{\text{정답 y에 준 확률을 채점}}`}
         operations={[
-          { expression: String.raw`\frac{e^{z_k}}{\sum_{j=1}^{K}e^{z_j}}`, annotation: ["logit을 exponentiate해 양수로 만들고", "K개 합으로 나눠 합이 1인 분포로", "MNIST라면 K=10개 digit class"] },
-          { expression: String.raw`-\log p_y`, annotation: ["정답 class y에 준 확률만 봅니다", "p_y=1이면 0, 0에 가까울수록 커짐", "실제로는 fused cross-entropy로 계산"] },
+          {
+            expression: String.raw`e^{z_k}`,
+            annotation: [
+              "각 로짓을 양수로 바꾸고",
+              "큰 로짓의 비중을 키웁니다",
+            ],
+          },
+          {
+            expression: String.raw`\sum_{j=1}^{K}e^{z_j}`,
+            annotation: [
+              "K개 값을 같은 합으로 나눠",
+              "전체 확률의 합을 1로 만듭니다",
+            ],
+          },
+          {
+            expression: String.raw`-\log p_y`,
+            annotation: [
+              "정답 범주에 준 확률만 골라",
+              "작은 확률을 크게 벌점 줍니다",
+            ],
+          },
         ]}
         terms={[
-          { symbol: "z_k", name: "class logit", description: "확률로 정규화하기 전의 제한 없는 relative score입니다." },
-          { symbol: "K", name: "class count", description: "한 사건에서 서로 경쟁하는 class 수입니다." },
-          { symbol: "p(y=k\\mid x;\\theta)", name: "categorical probability", description: "한 sample에서 합이 1인 조건부 확률입니다." },
-          { symbol: "\\mathcal L", name: "negative log-likelihood", description: "정답 class에 준 확률이 작을수록 커지는 scalar objective입니다." },
+          {
+            symbol: "K",
+            name: "서로 배타적인 답의 수",
+            description: "MNIST에서는 숫자 0부터 9까지 10입니다.",
+          },
+          {
+            symbol: "z_k",
+            name: "k번째 로짓",
+            description: "정규화하기 전의 상대 점수입니다.",
+          },
+          {
+            symbol: "p_y",
+            name: "정답 범주의 확률",
+            description: "손실이 직접 채점하는 값입니다.",
+          },
         ]}
-        assumptions={["한 sample의 target이 K개 중 하나인 categorical task입니다.", "Multi-label task는 class별 Bernoulli logit을 사용하므로 softmax가 아니라 BCE-with-logits 경로가 맞습니다."]}
-        interpretation="Softmax 확률을 먼저 만들어 일반 log에 넣기보다 framework의 fused cross-entropy에 raw logits를 전달합니다. 그 이유와 gradient p−y의 유도는 cross-entropy 글에서 이어집니다."
+        assumptions={[
+          "자료 한 건의 정답이 K개 중 정확히 하나입니다.",
+          "수치 안정성을 위해 실제 구현은 소프트맥스와 로그를 결합한 교차 엔트로피 연산에 원시 로짓을 넘깁니다.",
+        ]}
+        interpretation="출력층을 고를 때는 숫자 범위만 보지 않습니다. 답들이 서로 경쟁하는지 먼저 확인합니다. 여러 개가 동시에 참일 수 있는지, 연속값의 잡음을 어떤 분포로 볼지도 정합니다."
       />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>정확도, ranking과 calibration은 같은 평가가 아니다</h3>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          argmax accuracy가 같아도 confidence가 실제 정답률과 맞지 않을 수 있다. 서비스가 threshold, rejection, expected cost를 사용한다면
-          calibration과 class별 error를 별도로 측정해야 한다. class imbalance는 sampling이나 weighted objective를 검토하되
-          evaluation distribution까지 바꾸지 않도록 split과 metric 정의를 고정한다.
-        </p>
-        <p>
-          Likelihood에서 MSE·BCE·categorical cross-entropy가 나오는 과정과 stable
-          implementation은 <Link to="/cs/ai/cross-entropy">cross-entropy 정본 글</Link>에서
-          확인할 수 있다. PyTorch의 <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html" target="_blank" rel="noreferrer">공식 CrossEntropyLoss 문서</a>도
-          입력이 확률이 아니라 unnormalized logits임을 명시한다.
+          정확도와 확률의 신뢰도도 다릅니다. 가장 큰 로짓이 같은 답을 가리키면
+          정확도는 같을 수 있습니다. 0.99라고 말한 예측이 실제로 99% 맞는지는
+          별도로 확인해야 합니다. 손실의 유도와 안정적인 구현은
+          <Link to="/cs/ai/cross-entropy">교차 엔트로피 글</Link>에서
+          이어집니다.
         </p>
       </div>
     </section>

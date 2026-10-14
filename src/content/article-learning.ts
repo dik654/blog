@@ -7756,346 +7756,354 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/neural-network": {
     recursiveTeaching: true,
     coreIdea:
-      "다층 신경망은 affine layer와 nonlinear activation을 번갈아 합성해 input을 task에 유용한 hidden representation으로 바꾸고, 마지막 layer에서 target의 통계적 의미에 맞는 prediction을 만듭니다.",
+      "신경망은 한 직선으로 나눌 수 없는 입력을 비선형 은닉층에서 새 좌표로 바꾸고, 출력층이 그 좌표를 다시 단순한 경계로 가르는 계산입니다.",
     assumedKnowledge: [
       {
-        id: "coordinate-vector",
-        role: "한 example의 feature와 한 layer의 activation을 coordinate vector로 읽습니다.",
+        id: "multilayer-perceptron",
+        role: "퍼셉트론 하나가 XOR을 풀지 못한 이유와 은닉층이 필요한 출발점을 이어받습니다.",
       },
       {
         id: "dot-product",
-        role: "Dense output unit 하나가 input과 weight direction의 dot product에서 나온다는 계산 기반입니다.",
+        role: "입력별 기여를 곱해 더하는 한 뉴런의 점수 계산을 읽습니다.",
+      },
+      {
+        id: "coordinate-vector",
+        role: "입력과 은닉값을 좌표 묶음으로 읽습니다.",
       },
       {
         id: "tensor-batch",
-        role: "여러 example을 row로 묶어 같은 parameter로 함께 계산합니다.",
-      },
-      {
-        id: "multilayer-perceptron",
-        role: "퍼셉트론의 선형 한계에서 nonlinear hidden layer가 필요한 이유를 이어받습니다.",
+        role: "자료 여러 건을 행으로 쌓아 같은 가중치로 처리합니다.",
       },
     ],
     introducedHere: [
       {
         id: "affine-layer",
-        role: "Weight matrix와 bias가 input coordinate를 새 coordinate로 옮기는 계산을 정의합니다.",
+        role: "이전 층의 값을 가중치로 섞고 편향으로 기준 위치를 옮깁니다.",
       },
       {
         id: "affine-collapse",
-        role: "Nonlinearity가 없는 depth가 표현력을 늘리지 못하는 이유를 전개합니다.",
+        role: "비선형 계산이 없는 여러 아핀 층이 한 층으로 합쳐지는 이유를 설명합니다.",
       },
       {
         id: "hidden-representation",
-        role: "Hidden activation이 직접 label되지 않아도 end-to-end objective로 학습되는 과정을 설명합니다.",
+        role: "입력을 최종 판정에 유리한 새 좌표로 바꾼 중간값을 설명합니다.",
       },
       {
         id: "batch-linear-layer",
-        role: "한 sample의 dot product를 B개 sample의 matrix multiplication으로 확장합니다.",
+        role: "한 자료의 점수 계산을 B개 자료의 행렬 곱으로 확장합니다.",
       },
       {
         id: "prediction-contract",
-        role: "Target의 의미에 맞춰 output activation과 loss를 함께 선택합니다.",
+        role: "정답 사건에 맞춰 출력 수, 변환 함수, 손실을 함께 정합니다.",
       },
       {
         id: "initialization-scale",
-        role: "Layer를 지나는 activation·gradient scale이 학습 시작점에서 무너지지 않게 합니다.",
+        role: "층을 지나는 값과 기울기가 출발부터 폭발하거나 사라지지 않게 합니다.",
       },
     ],
     conceptExplanations: [
       {
         id: "affine-layer",
-        sectionId: "overview",
+        sectionId: "names",
         intuition:
-          "여러 input 값을 output unit마다 다른 비율로 섞고, 마지막에 기준점인 bias를 더하는 계산입니다.",
+          "이전 층의 여러 값을 출력마다 다른 비율로 섞고, 편향으로 경계 위치를 옮기는 계산입니다.",
         workedExample:
-          "x=(2,3), 한 output의 weight가 (0.5,-1), bias가 1이면 z=2×0.5+3×(-1)+1=-1입니다.",
+          "XOR 은닉층의 OR 점수는 x₁+x₂−0.5이고 NAND 점수는 −x₁−x₂+1.5입니다. 입력 (1,0)의 두 점수는 모두 0.5입니다.",
         boundary:
-          "Affine layer 하나는 input을 섞고 이동시키지만 decision boundary를 휘게 만들지는 못합니다.",
-      causalTrace: {
-        answer: "여러 input 값을 output unit마다 다른 비율로 섞고, 마지막에 기준점인 bias를 더하는 계산입니다.",
-        followUpQuestion: "Affine layer이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Affine layer 하나는 input을 섞고 이동시키지만 decision boundary를 휘게 만들지는 못합니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. x=(2,3), 한 output의 weight가 (0.5,-1), bias가 1이면 z=2×0.5+3×(-1)+1=-1입니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Affine layer 하나는 input을 섞고 이동시키지만 decision boundary를 휘게 만들지는 못합니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Affine layer 하나는 input을 섞고 이동시키지만 decision boundary를 휘게 만들지는 못합니다."
-      }},
+          "아핀 층 하나는 좌표를 섞고 옮길 수 있지만 비선형 경계를 만들지는 못합니다.",
+        causalTrace: {
+          answer:
+            "아핀 층은 이전 값을 가중치로 섞고 편향을 더해 다음 점수를 만듭니다.",
+          followUpQuestion:
+            "이 계산을 여러 번 이어 붙이면 직선 하나의 한계를 넘을 수 있을까요?",
+          bottleneck:
+            "중간에 다른 규칙이 없으면 모든 곱과 합을 미리 묶을 수 있어 경계 종류가 그대로입니다.",
+          mechanism:
+            "입력 (1,0)에 OR·NAND 가중치와 편향을 적용해 점수 (0.5,0.5)를 만듭니다.",
+          remainingCost:
+            "행렬 모양이 맞아도 값의 크기와 입력 축의 의미가 맞는지는 별도로 확인해야 합니다.",
+          decisionRule:
+            "먼저 입력 수×출력 수로 가중치 모양을 정하고, 편향이 출력 수와 같은지 확인합니다.",
+        },
+      },
       {
         id: "affine-collapse",
         sectionId: "activation",
         intuition:
-          "중간에 방향을 꺾는 operation이 없다면 여러 번의 선형 섞기와 이동을 한 번의 섞기와 이동으로 미리 계산할 수 있습니다.",
+          "비선형 계산이 없으면 여러 번의 섞기와 이동을 가중치 하나와 편향 하나로 미리 합칠 수 있습니다.",
         workedExample:
-          "z₁=xW₁+b₁, z₂=z₁W₂+b₂를 대입하면 z₂=x(W₁W₂)+(b₁W₂+b₂)여서 effective layer 하나가 됩니다.",
+          "z₁=2x−1, z₂=3z₁+2를 대입하면 z₂=6x−1이 됩니다. ReLU를 넣으면 x≤0.5와 x>0.5에서 식이 달라집니다.",
         boundary:
-          "Activation·normalization·conditional branch처럼 단순 affine 합성으로 묶을 수 없는 operation이 중간에 있으면 같은 전개를 적용할 수 없습니다.",
-      causalTrace: {
-        answer: "중간에 방향을 꺾는 operation이 없다면 여러 번의 선형 섞기와 이동을 한 번의 섞기와 이동으로 미리 계산할 수 있습니다.",
-        followUpQuestion: "Affine collapse이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Activation·normalization·conditional branch처럼 단순 affine 합성으로 묶을 수 없는 operation이 중간에 있으면 같은 전개를 적용할 수 없습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. z₁=xW₁+b₁, z₂=z₁W₂+b₂를 대입하면 z₂=x(W₁W₂)+(b₁W₂+b₂)여서 effective layer 하나가 됩니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Activation·normalization·conditional branch처럼 단순 affine 합성으로 묶을 수 없는 operation이 중간에 있으면 같은 전개를 적용할 수 없습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Activation·normalization·conditional branch처럼 단순 affine 합성으로 묶을 수 없는 operation이 중간에 있으면 같은 전개를 적용할 수 없습니다."
-      }},
+          "활성화 함수, 정규화, 분기처럼 단순 아핀 합성으로 묶을 수 없는 계산이 사이에 있으면 같은 전개를 적용할 수 없습니다.",
+        causalTrace: {
+          answer:
+            "비선형 계산이 없는 아핀 층 여러 개는 아핀 층 하나와 같은 함수입니다.",
+          followUpQuestion:
+            "그러면 신경망은 어느 지점에서 입력에 따라 다른 계산 경로를 만들까요?",
+          bottleneck:
+            "층 수만 늘리고 활성화 함수를 빼면 XOR의 대각선 두 점을 고를 새 경계가 생기지 않습니다.",
+          mechanism:
+            "ReLU나 계단 함수가 점수 구간에 따라 다른 값을 내어 다음 층이 합칠 수 없는 중간 좌표를 만듭니다.",
+          remainingCost:
+            "비선형성은 표현력을 늘리지만, 기울기가 너무 작거나 0이면 표준 역전파 학습이 어려울 수 있습니다.",
+          decisionRule:
+            "표현하려는 경계와 역전파에 필요한 기울기를 함께 보고 활성화 함수를 고릅니다.",
+        },
+      },
       {
         id: "hidden-representation",
-        sectionId: "overview",
+        sectionId: "black-box",
         intuition:
-          "최종 답을 내기 전에 input을 다시 표현한 중간 좌표입니다. 어떤 unit이 어떤 의미를 가져야 한다는 직접 정답은 보통 없습니다.",
+          "최종 답을 내기 전에 입력을 판정하기 쉬운 새 좌표로 다시 적은 중간값입니다.",
         workedExample:
-          "XOR에서 hidden unit 두 개가 OR·NAND와 비슷한 값을 만들면 output layer는 그 새 좌표에서 두 class를 직선으로 나눌 수 있습니다.",
+          "XOR의 (1,0)과 (0,1)은 OR·NAND 은닉층을 지나 모두 (1,1)이 되고, 출력층은 이 점 하나만 고릅니다.",
         boundary:
-          "Hidden unit 하나가 사람이 이름 붙일 수 있는 concept 하나와 반드시 일대일 대응하는 것은 아닙니다.",
-      causalTrace: {
-        answer: "최종 답을 내기 전에 input을 다시 표현한 중간 좌표입니다. 어떤 unit이 어떤 의미를 가져야 한다는 직접 정답은 보통 없습니다.",
-        followUpQuestion: "Hidden representation이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Hidden unit 하나가 사람이 이름 붙일 수 있는 concept 하나와 반드시 일대일 대응하는 것은 아닙니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. XOR에서 hidden unit 두 개가 OR·NAND와 비슷한 값을 만들면 output layer는 그 새 좌표에서 두 class를 직선으로 나눌 수 있습니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Hidden unit 하나가 사람이 이름 붙일 수 있는 concept 하나와 반드시 일대일 대응하는 것은 아닙니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Hidden unit 하나가 사람이 이름 붙일 수 있는 concept 하나와 반드시 일대일 대응하는 것은 아닙니다."
-      }},
+          "은닉값은 관찰할 수 있지만, 뉴런 하나가 사람이 붙인 개념 하나와 반드시 일대일 대응하지는 않습니다.",
+        causalTrace: {
+          answer:
+            "은닉 표현은 입력을 다음 판정에 유리한 좌표로 바꾼 중간값입니다.",
+          followUpQuestion:
+            "중간 뉴런마다 별도 정답이 없는데 이 값은 어떻게 유용해질까요?",
+          bottleneck:
+            "최종 오답과 중간값을 연결하는 계산이 없으면 어느 은닉 가중치를 바꿔야 할지 알 수 없습니다.",
+          mechanism:
+            "역전파가 최종 손실의 변화량을 각 층으로 전달해 모든 가중치를 함께 조정합니다.",
+          remainingCost:
+            "유용한 표현이 존재해도 유한한 자료와 최적화가 그 값을 실제로 찾고 일반화한다는 보장은 없습니다.",
+          decisionRule:
+            "은닉 뉴런 이름을 먼저 추측하기보다 같은 입력의 중간값, 최종 오답, 기울기를 함께 기록합니다.",
+        },
+      },
       {
         id: "batch-linear-layer",
         sectionId: "forward",
         intuition:
-          "Sample을 하나씩 반복 계산하지 않고 row로 쌓아 같은 weight matrix를 한 번의 matrix multiplication에 재사용합니다.",
+          "자료를 행으로 쌓고 같은 가중치 행렬을 한 번 곱해 여러 점수 계산을 함께 수행합니다.",
         workedExample:
-          "B=2, Din=2, Dout=3이면 X shape은 2×2, W는 2×3이고 Z=XW+b의 shape은 2×3입니다.",
+          "XOR의 X는 4×2, W₁은 2×2라 Z₁은 4×2입니다. A₁에 W₂(2×1)를 곱하면 Z₂는 4×1입니다.",
         boundary:
-          "Shape가 맞아도 coordinate 순서나 batch·feature 축을 뒤바꾸면 의미가 틀릴 수 있으며, framework의 weight 저장 방향도 확인해야 합니다.",
-      causalTrace: {
-        answer: "Sample을 하나씩 반복 계산하지 않고 row로 쌓아 같은 weight matrix를 한 번의 matrix multiplication에 재사용합니다.",
-        followUpQuestion: "Batched dense layer이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Shape가 맞아도 coordinate 순서나 batch·feature 축을 뒤바꾸면 의미가 틀릴 수 있으며, framework의 weight 저장 방향도 확인해야 합니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. B=2, Din=2, Dout=3이면 X shape은 2×2, W는 2×3이고 Z=XW+b의 shape은 2×3입니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Shape가 맞아도 coordinate 순서나 batch·feature 축을 뒤바꾸면 의미가 틀릴 수 있으며, framework의 weight 저장 방향도 확인해야 합니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Shape가 맞아도 coordinate 순서나 batch·feature 축을 뒤바꾸면 의미가 틀릴 수 있으며, framework의 weight 저장 방향도 확인해야 합니다."
-      }},
+          "모양이 맞아도 행 순서, 특성 순서, 가중치 저장 방향이 다르면 의미가 틀릴 수 있습니다.",
+        causalTrace: {
+          answer:
+            "배치 완전 연결 층은 XW+b로 자료 B개를 같은 가중치로 처리합니다.",
+          followUpQuestion:
+            "행렬 곱에서 어떤 축을 합치고 어떤 축을 남겨야 할까요?",
+          bottleneck:
+            "입력 특성 수와 가중치 첫 축이 다르면 곱할 수 없고, 자료 축을 합치면 입력끼리 섞입니다.",
+          mechanism:
+            "D_in 축을 곱해 더하고 B 자료 축과 D_out 출력 축을 남깁니다.",
+          remainingCost:
+            "배치 크기는 매개변수 수를 바꾸지 않지만 중간값 메모리와 한 단계 계산량을 바꿉니다.",
+          decisionRule:
+            "각 연산마다 B×D_in, D_in×D_out, B×D_out을 적고 행 순서가 유지되는지 확인합니다.",
+        },
+      },
       {
         id: "prediction-contract",
         sectionId: "output-layer",
         intuition:
-          "모델이 최종적으로 무엇을 주장하는지에 따라 output의 숫자 개수와 범위, 그 숫자를 채점하는 loss를 함께 정하는 약속입니다.",
+          "모델이 어떤 사건을 예측한다고 말하는지에 맞춰 출력 수, 값의 범위, 손실을 한 묶음으로 정하는 약속입니다.",
         workedExample:
-          "서로 배타적인 숫자 0~9 분류는 logit 10개와 categorical cross-entropy를 사용하지만, 동시에 여러 label이 가능한 문제는 class별 sigmoid가 맞습니다.",
+          "XOR은 로짓 하나와 sigmoid·이진 교차 엔트로피를 쓰고, MNIST는 서로 배타적인 로짓 10개와 softmax 교차 엔트로피를 씁니다.",
         boundary:
-          "Softmax는 모든 분류 문제의 기본값이 아니며 regression noise 가정이나 multi-label independence가 다르면 다른 likelihood가 필요합니다.",
-      causalTrace: {
-        answer: "모델이 최종적으로 무엇을 주장하는지에 따라 output의 숫자 개수와 범위, 그 숫자를 채점하는 loss를 함께 정하는 약속입니다.",
-        followUpQuestion: "Prediction contract이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Softmax는 모든 분류 문제의 기본값이 아니며 regression noise 가정이나 multi-label independence가 다르면 다른 likelihood가 필요합니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. 서로 배타적인 숫자 0~9 분류는 logit 10개와 categorical cross-entropy를 사용하지만, 동시에 여러 label이 가능한 문제는 class별 sigmoid가 맞습니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Softmax는 모든 분류 문제의 기본값이 아니며 regression noise 가정이나 multi-label independence가 다르면 다른 likelihood가 필요합니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Softmax는 모든 분류 문제의 기본값이 아니며 regression noise 가정이나 multi-label independence가 다르면 다른 likelihood가 필요합니다."
-      }},
+          "softmax는 모든 분류의 기본값이 아닙니다. 여러 표지가 동시에 참이면 표지별 Bernoulli 계약이 필요합니다.",
+        causalTrace: {
+          answer:
+            "출력 약속은 정답 사건에 맞춰 로짓과 손실을 함께 고르는 규칙입니다.",
+          followUpQuestion:
+            "왜 출력 숫자의 개수만 맞추고 손실을 나중에 골라서는 안 될까요?",
+          bottleneck:
+            "서로 경쟁하는 답과 독립적인 답은 확률 합 조건이 달라 같은 정규화를 사용할 수 없습니다.",
+          mechanism:
+            "XOR은 0/1 사건 하나, MNIST는 열 답 중 하나라는 차이에서 sigmoid와 softmax 경로가 갈립니다.",
+          remainingCost:
+            "분류가 맞아도 확률값이 실제 정답률과 맞는지는 별도의 신뢰도 평가가 필요합니다.",
+          decisionRule:
+            "답이 하나인지, 여러 개가 동시에 참인지, 연속값인지부터 정한 뒤 출력층과 손실을 고릅니다.",
+        },
+      },
       {
         id: "initialization-scale",
         sectionId: "forward",
         intuition:
-          "Layer를 처음 통과할 때 signal이 매번 두 배로 커지거나 절반으로 줄지 않게 weight의 출발 범위를 정합니다.",
+          "많은 입력을 더해도 층을 지나는 값과 기울기가 출발부터 너무 커지거나 작아지지 않게 가중치 범위를 정합니다.",
         workedExample:
-          "Fan-in이 커질수록 같은 variance의 weight를 그대로 쓰면 더 많은 항이 합쳐져 output variance가 커지므로 Xavier·He 방식은 fan 값을 scale에 반영합니다.",
+          "분산 1인 입력 100개와 분산 1인 가중치를 더하면 분산이 약 100이지만, 가중치 분산을 1/100으로 두면 약 1에서 시작합니다.",
         boundary:
-          "Initialization만으로 학습 안정성이 보장되지는 않습니다. Activation·normalization·residual path·optimizer와 함께 봐야 합니다.",
-      causalTrace: {
-        answer: "Layer를 처음 통과할 때 signal이 매번 두 배로 커지거나 절반으로 줄지 않게 weight의 출발 범위를 정합니다.",
-        followUpQuestion: "Initialization scale이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Initialization만으로 학습 안정성이 보장되지는 않습니다. Activation·normalization·residual path·optimizer와 함께 봐야 합니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. Fan-in이 커질수록 같은 variance의 weight를 그대로 쓰면 더 많은 항이 합쳐져 output variance가 커지므로 Xavier·He 방식은 fan 값을 scale에 반영합니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Initialization만으로 학습 안정성이 보장되지는 않습니다. Activation·normalization·residual path·optimizer와 함께 봐야 합니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Initialization만으로 학습 안정성이 보장되지는 않습니다. Activation·normalization·residual path·optimizer와 함께 봐야 합니다."
-      }},
+          "초기화 하나로 학습 안정성이 보장되지는 않습니다. 활성화 함수, 정규화, 잔차 연결, 최적화와 함께 봐야 합니다.",
+        causalTrace: {
+          answer:
+            "초기화 크기는 층을 지나는 신호의 출발 분산을 맞춥니다.",
+          followUpQuestion:
+            "가중치 모양이 맞는데도 왜 깊은 층의 값이나 기울기가 사라질까요?",
+          bottleneck:
+            "많은 독립 항을 그대로 더하면 층마다 분산이 누적되어 포화나 폭발을 만들 수 있습니다.",
+          mechanism:
+            "입력 수와 출력 수, 활성화 함수에 맞춰 가중치 분산을 줄여 출발 신호 크기를 맞춥니다.",
+          remainingCost:
+            "학습이 진행되면 값의 분포가 바뀌므로 층별 활성값과 기울기를 실제로 계측해야 합니다.",
+          decisionRule:
+            "활성화 함수에 맞는 초기화를 출발점으로 쓰고 같은 단계의 층별 평균·분산·기울기 크기를 비교합니다.",
+        },
+      },
     ],
     conceptStages: [
       {
-        label: "출발점",
-        relation: "Vector와 dot product를 layer 계산으로 확장",
-        concepts: ["coordinate-vector", "dot-product", "affine-layer"],
+        label: "한 문장 답",
+        relation: "퍼셉트론의 XOR 한계를 새 좌표 문제로 바꿉니다.",
+        concepts: ["multilayer-perceptron", "hidden-representation"],
       },
       {
-        label: "표현",
-        relation: "Nonlinearity로 collapse를 막고 중간 좌표를 학습",
-        concepts: [
-          "affine-collapse",
-          "nonlinear-activation",
-          "multilayer-perceptron",
-          "hidden-representation",
-        ],
+        label: "한 입력 경로",
+        relation: "(1,0)이 OR·NAND를 지나 답 1이 되는 길을 봅니다.",
+        concepts: ["affine-layer", "hidden-representation"],
       },
       {
-        label: "계산",
-        relation: "Sample을 batch matrix로 묶어 shape와 scale을 유지",
+        label: "왜 비선형인가",
+        relation: "여러 아핀 층의 합침과 비선형 계산의 차이를 확인합니다.",
+        concepts: ["affine-collapse", "nonlinear-activation"],
+      },
+      {
+        label: "네 입력을 함께 계산",
+        relation: "XOR 네 상태의 모양과 실제 값을 행렬로 따라갑니다.",
+        concepts: ["tensor-batch", "batch-linear-layer"],
+      },
+      {
+        label: "출력과 확장",
+        relation: "XOR의 이진 출력에서 MNIST의 열 범주 출력으로 넓힙니다.",
         concepts: [
-          "tensor-batch",
-          "batch-linear-layer",
+          "prediction-contract",
           "initialization-scale",
+          "train-validation-test",
+          "generalization",
         ],
-      },
-      {
-        label: "출력",
-        relation: "Target의 통계적 의미에 맞는 prediction을 정의",
-        concepts: ["feature-target", "prediction-contract", "loss-objective"],
-      },
-      {
-        label: "검증",
-        relation: "작은 실험에서 학습과 일반화 실패를 분리",
-        concepts: ["training-step", "train-validation-test", "generalization"],
       },
     ],
     exercises: [
       {
         level: "basic",
         question:
-          "x=(2,3), weight=(0.5,-1), bias=1인 output unit의 affine score를 계산하고 각 항의 역할을 설명할 수 있을까요?",
+          "신경망이 퍼셉트론 하나로 풀지 못한 XOR을 어떻게 새 좌표에서 가르는지 한 문장으로 설명할 수 있을까요?",
         answerChecklist: [
-          "2×0.5+3×(-1)+1=-1을 계산한다.",
-          "Weight가 coordinate별 기여를 정한다고 설명한다.",
-          "Bias가 input과 무관한 offset으로 기준점을 옮긴다고 설명한다.",
+          "원래 입력에서 정답 1 두 점이 대각선에 있음을 말한다.",
+          "은닉층이 두 점을 같은 새 좌표로 옮긴다고 설명한다.",
+          "출력층이 새 좌표에서 단순한 경계로 가른다고 설명한다.",
         ],
-        requiredConcepts: ["coordinate-vector", "dot-product", "affine-layer"],
+        requiredConcepts: ["multilayer-perceptron", "hidden-representation"],
         sectionId: "overview",
       },
       {
         level: "basic",
         question:
-          "B=4, Din=3, Dout=2인 dense layer에서 X·W·b·Z의 shape를 모두 쓸 수 있을까요?",
+          "입력 (1,0)이 OR·NAND 은닉값 (1,1)을 거쳐 XOR 답 1이 되는 계산을 점수부터 따라갈 수 있을까요?",
         answerChecklist: [
-          "X는 4×3, W는 3×2라고 쓴다.",
-          "b는 길이 2이고 batch row에 broadcast된다고 설명한다.",
-          "Z는 4×2로 sample 축과 output feature 축이 남는다고 설명한다.",
+          "OR 점수 1+0−0.5=0.5를 계산한다.",
+          "NAND 점수 −1−0+1.5=0.5를 계산한다.",
+          "두 점수가 양수여서 은닉값 (1,1)이 된다고 설명한다.",
+          "출력 점수 1+1−1.5=0.5이므로 답 1이라고 계산한다.",
         ],
-        requiredConcepts: [
-          "tensor-batch",
-          "batch-linear-layer",
-          "affine-layer",
+        requiredConcepts: ["affine-layer", "hidden-representation"],
+        sectionId: "black-box",
+      },
+      {
+        level: "basic",
+        question:
+          "XOR 네 상태의 X, W₁, Z₁, A₁, W₂, Z₂ 모양을 순서대로 적을 수 있을까요?",
+        answerChecklist: [
+          "X는 4×2, W₁은 2×2라고 쓴다.",
+          "Z₁과 A₁은 4×2라고 쓴다.",
+          "W₂는 2×1, Z₂는 4×1이라고 쓴다.",
+          "자료 축 4는 유지되고 마지막 축만 바뀐다고 설명한다.",
         ],
+        requiredConcepts: ["tensor-batch", "batch-linear-layer"],
         sectionId: "forward",
       },
       {
         level: "basic",
         question:
-          "서로 배타적인 10개 class 분류와 10개 독립 label 분류의 output activation과 loss가 왜 다른지 설명할 수 있을까요?",
+          "z₁=2x−1, z₂=3z₁+2를 한 식으로 합치고 ReLU가 사이에 있을 때 무엇이 달라지는지 설명할 수 있을까요?",
         answerChecklist: [
-          "Exclusive class는 합이 1인 categorical distribution이 필요하다고 설명한다.",
-          "Independent label은 class마다 Bernoulli probability가 필요하다고 설명한다.",
-          "전자는 softmax cross-entropy, 후자는 BCE-with-logits 경로라고 구분한다.",
+          "z₁을 대입해 z₂=6x−1을 얻는다.",
+          "가중치 2×3과 편향 −1로 합쳐진다고 설명한다.",
+          "ReLU가 있으면 x≤0.5와 x>0.5에서 식이 달라진다고 설명한다.",
         ],
-        requiredConcepts: [
-          "feature-target",
-          "prediction-contract",
-          "loss-objective",
+        requiredConcepts: ["affine-collapse", "nonlinear-activation"],
+        sectionId: "activation",
+      },
+      {
+        level: "basic",
+        question:
+          "XOR 이진 분류와 MNIST 열 범주 분류의 로짓 수, 변환, 손실이 왜 다른지 설명할 수 있을까요?",
+        answerChecklist: [
+          "XOR은 0/1 사건 하나라 로짓 하나를 쓴다고 설명한다.",
+          "MNIST는 열 답 중 하나라 로짓 10개를 함께 비교한다고 설명한다.",
+          "sigmoid 이진 교차 엔트로피와 softmax 교차 엔트로피를 구분한다.",
         ],
+        requiredConcepts: ["prediction-contract"],
         sectionId: "output-layer",
       },
       {
         level: "basic",
         question:
-          "Hidden layer가 ‘hidden’이라는 말이 값을 관찰할 수 없다는 뜻인지, 그리고 hidden representation은 무엇으로 학습되는지 설명할 수 있을까요?",
+          "784→128→10 신경망의 매개변수 101,770개를 층별로 계산하고 배치 크기와 구별할 수 있을까요?",
         answerChecklist: [
-          "Hidden activation은 기록하고 시각화할 수 있다고 설명한다.",
-          "Hidden unit별 직접 target이 보통 없다는 의미로 hidden이라고 구분한다.",
-          "최종 objective의 gradient가 모든 layer를 함께 조정한다고 설명한다.",
-          "Unit 하나가 사람이 붙인 concept 하나와 일대일 대응한다고 단정하지 않는다.",
-        ],
-        requiredConcepts: ["hidden-representation", "training-step"],
-        sectionId: "overview",
-      },
-      {
-        level: "basic",
-        question:
-          "784→128→10 dense MLP의 weight와 bias를 layer별로 세어 전체 parameter 101,770개를 확인할 수 있을까요?",
-        answerChecklist: [
-          "첫 layer에서 784×128+128=100,480개를 계산한다.",
-          "출력 layer에서 128×10+10=1,290개를 계산한다.",
-          "두 값을 더해 101,770개를 얻는다.",
-          "Batch size는 parameter 수를 바꾸지 않는다고 설명한다.",
+          "784×128+128=100,480을 계산한다.",
+          "128×10+10=1,290을 계산한다.",
+          "합이 101,770이라고 확인한다.",
+          "배치 크기는 매개변수 수를 바꾸지 않는다고 설명한다.",
         ],
         requiredConcepts: ["affine-layer", "batch-linear-layer"],
         sectionId: "mnist",
       },
       {
-        level: "basic",
-        question:
-          "Dense layer의 weight를 모두 0으로 시작하면 왜 unit들이 서로 다른 feature를 배우기 어렵고, fan-in을 초기 scale에 반영하는 이유는 무엇일까요?",
-        answerChecklist: [
-          "같은 layer의 unit이 같은 output과 같은 gradient를 받아 대칭이 유지된다고 설명한다.",
-          "Fan-in이 커지면 더 많은 독립 항이 합쳐져 preactivation variance가 커질 수 있다고 설명한다.",
-          "Xavier·He가 fan 값과 activation을 반영한 출발점이라고 말한다.",
-          "Initialization만으로 안정성이 보장되지 않고 activation·normalization·residual path와 함께 본다고 제한한다.",
-        ],
-        requiredConcepts: [
-          "affine-layer",
-          "initialization-scale",
-          "nonlinear-activation",
-        ],
-        sectionId: "forward",
-      },
-      {
         level: "advanced",
         question:
-          "Activation 없는 affine layer 두 개가 하나로 collapse하는 과정을 전개하고 XOR 표현력과 연결할 수 있을까요?",
+          "XOR을 정확히 만드는 계단 함수가 표준 역전파 학습에는 어려운 이유와 부드러운 활성화 함수가 남기는 비용을 비교할 수 있을까요?",
         answerChecklist: [
-          "z₁=xW₁+b₁을 z₂ 식에 대입한다.",
-          "Effective weight W₁W₂와 bias b₁W₂+b₂를 묶는다.",
-          "결정 경계 종류가 여전히 affine이어서 XOR을 풀 수 없다고 설명한다.",
+          "계단 함수는 대부분 구간의 기울기가 0이라고 설명한다.",
+          "부드러운 활성화 함수는 기울기 경로를 제공한다고 설명한다.",
+          "sigmoid 포화나 ReLU의 음수 구간처럼 다른 실패 조건도 남는다고 제한한다.",
         ],
-        requiredConcepts: [
-          "affine-layer",
-          "affine-collapse",
-          "nonlinear-activation",
-          "multilayer-perceptron",
-        ],
+        requiredConcepts: ["nonlinear-activation", "hidden-representation"],
         sectionId: "activation",
       },
       {
         level: "advanced",
         question:
-          "Universal approximation theorem이 존재성을 보여도 실제 network의 width·optimization·generalization을 보장하지 않는 이유는 무엇일까요?",
+          "입력 100개의 분산이 1일 때 가중치 분산 1과 1/100이 활성화 전 분산을 어떻게 바꾸는지 설명할 수 있을까요?",
         answerChecklist: [
-          "Compact domain과 activation 등 theorem의 가정을 제한한다.",
-          "원하는 error를 위한 finite representation의 존재와 optimizer가 해를 찾는 문제를 구분한다.",
-          "Sample 밖 generalization과 필요한 hidden unit 수는 별도 문제라고 설명한다.",
+          "독립 항의 분산이 더해진다는 가정을 밝힌다.",
+          "가중치 분산 1이면 출력 분산이 약 100이라고 계산한다.",
+          "가중치 분산 1/100이면 약 1이라고 계산한다.",
+          "초기화만으로 안정성이 보장되지 않는다고 제한한다.",
         ],
-        requiredConcepts: [
-          "multilayer-perceptron",
-          "nonlinear-activation",
-          "hidden-representation",
-          "generalization",
-        ],
-        sectionId: "overview",
+        requiredConcepts: ["initialization-scale"],
+        sectionId: "forward",
       },
       {
         level: "advanced",
         question:
-          "Train accuracy는 높고 validation accuracy가 낮은 MNIST MLP에서 model capacity 외에 어떤 경계를 어떤 순서로 점검할까요?",
+          "보편 근사 정리가 신경망의 해 존재를 보여도 필요한 뉴런 수, 학습 성공, 자료 밖 일반화를 보장하지 않는 이유는 무엇일까요?",
         answerChecklist: [
-          "Train·validation split leakage와 distribution 차이를 먼저 확인한다.",
-          "Preprocessing과 train/eval mode가 동일한 contract인지 확인한다.",
-          "Confusion matrix와 오분류 이미지를 보고 shortcut·class별 실패를 진단한다.",
+          "활성화 함수와 닫히고 유계인 입력 구간 등의 전제를 말한다.",
+          "표현 가능한 매개변수의 존재와 최적화가 그 값을 찾는 문제를 구분한다.",
+          "유한 자료 밖의 일반화는 별도 문제라고 설명한다.",
         ],
-        requiredConcepts: [
-          "train-validation-test",
-          "generalization",
-          "prediction-contract",
-        ],
+        requiredConcepts: ["multilayer-perceptron", "hidden-representation", "generalization"],
         sectionId: "mnist",
       },
       {
         level: "advanced",
         question:
-          "깊은 MLP의 학습 초기에 위쪽 layer activation이 포화되고 gradient가 거의 0일 때 initialization 문제를 어떻게 계측하고, 어떤 비교 실험으로 원인을 분리할까요?",
+          "MNIST에서 학습 정확도만 높고 검증 정확도가 낮을 때 모델 크기 외에 무엇을 어떤 순서로 확인할까요?",
         answerChecklist: [
-          "Layer별 preactivation·activation의 mean과 variance, gradient norm을 같은 step에서 기록한다.",
-          "Fan-in 100에서 unit-variance weight를 쓰면 독립 입력 가정 아래 preactivation variance가 약 100까지 커질 수 있음을 설명한다.",
-          "Activation에 맞는 Xavier·He scale과 normalization·residual path를 각각 분리한 ablation으로 비교한다.",
-          "같은 initial seed·data order·optimizer·learning rate에서 train loss와 validation 결과까지 확인한다.",
+          "학습·검증 자료 누출과 분포 차이를 확인한다.",
+          "전처리와 학습·평가 모드의 차이를 확인한다.",
+          "혼동 행렬과 오분류 이미지를 확인한다.",
+          "같은 설정에서 한 조건씩 바꿔 원인을 분리한다.",
         ],
-        requiredConcepts: [
-          "initialization-scale",
-          "nonlinear-activation",
-          "hidden-representation",
-          "generalization",
-        ],
-        sectionId: "forward",
+        requiredConcepts: ["train-validation-test", "generalization", "prediction-contract"],
+        sectionId: "mnist",
       },
     ],
     papers: [
@@ -8103,30 +8111,30 @@ export const ARTICLE_LEARNING: Readonly<
         title: "Learning Representations by Back-propagating Errors",
         href: "https://www.nature.com/articles/323533a0",
         problem:
-          "Hidden unit에 직접 target을 주지 않고 multi-layer network의 내부 weight가 유용한 representation을 학습하게 하는 문제",
+          "은닉 뉴런에 별도 정답을 주지 않고 여러 층의 가중치를 함께 학습하는 문제",
         contribution:
-          "Output error의 derivative를 chain rule로 뒤로 전파해 hidden weight를 효율적으로 update하는 학습 절차와 사례를 제시",
+          "최종 오차의 변화량을 연쇄 법칙으로 뒤로 전달해 은닉층 가중치를 효율적으로 고치는 절차를 제시",
         assumptions:
-          "Differentiable units와 supervised target, 논문이 사용한 작은 network·dataset·training 조건을 전제로 함",
+          "미분 가능한 뉴런, 지도 정답, 논문이 사용한 작은 신경망과 자료 조건",
         evidenceScope:
-          "1986년 논문의 family-tree와 text-to-speech 사례 및 backpropagation 계산 설명 범위",
+          "1986년 논문의 역전파 계산과 당시 실험 범위",
         notClaim:
-          "현대 deep network의 scale·normalization·generalization이나 모든 architecture의 학습 안정성을 보장하는 논문은 아님",
+          "현대 대규모 신경망의 학습 안정성·일반화·최적 구조를 보장하는 논문은 아님",
         internalHref: "/cs/ai/backprop-optimization#paper-backprop",
       },
       {
         title: "Approximation by Superpositions of a Sigmoidal Function",
         href: "https://doi.org/10.1007/BF02551274",
         problem:
-          "단일 hidden layer와 sigmoidal nonlinearity가 어떤 연속 함수를 표현할 수 있는지 정하는 문제",
+          "단일 은닉층과 시그모이드 비선형성이 어떤 연속 함수를 표현할 수 있는지 정하는 문제",
         contribution:
-          "Unit hypercube의 compact support에서 연속 함수를 finite linear combination으로 uniform approximation하는 조건을 증명",
+          "닫히고 유계인 입력 구간에서 연속 함수를 유한한 선형 결합으로 균일 근사하는 조건을 증명",
         assumptions:
-          "Continuous sigmoidal activation, compact domain과 원하는 approximation error 안에서의 존재성",
+          "연속 시그모이드 활성화 함수, 닫히고 유계인 입력 구간, 원하는 근사 오차",
         evidenceScope:
-          "Single-hidden-layer feed-forward network의 representability에 대한 수학적 결과",
+          "단일 은닉층 순방향 신경망의 표현 가능성",
         notClaim:
-          "필요한 hidden unit 수, data 양, optimizer의 수렴이나 일반화 성능을 보장하는 정리는 아님",
+          "필요한 은닉 뉴런 수, 자료 수, 최적화 수렴이나 일반화 성능을 보장하지 않음",
         internalHref: "/cs/ai/perceptron#paper-universal-approximation",
       },
       {
@@ -8134,31 +8142,46 @@ export const ARTICLE_LEARNING: Readonly<
           "Understanding the Difficulty of Training Deep Feedforward Neural Networks",
         href: "https://proceedings.mlr.press/v9/glorot10a.html",
         problem:
-          "깊은 feed-forward network에서 activation과 gradient가 layer를 지날 때 saturation·scale 문제로 학습이 어려워지는 원인을 분석하는 문제",
+          "깊은 순방향 신경망에서 값과 기울기의 크기가 층을 지나며 무너지는 원인을 분석하는 문제",
         contribution:
-          "Jacobian singular value와 activation statistics를 분석하고 fan-in·fan-out을 반영한 initialization을 제안",
+          "활성값과 Jacobian 크기를 분석하고 입력·출력 수를 반영한 초기화를 제안",
         assumptions:
-          "논문의 sigmoid·tanh 계열 network와 당시 dataset·optimization 설정에서의 분석·실험 조건",
+          "논문의 sigmoid·tanh 계열 신경망과 당시 자료·최적화 조건",
         evidenceScope:
-          "깊은 MLP의 signal propagation과 제안 initialization에 대한 2010년 이론·실험 범위",
+          "2010년 깊은 MLP의 신호 전달 분석과 초기화 실험",
         notClaim:
-          "Xavier initialization 하나가 모든 activation·normalization·residual architecture에서 최적이라는 결론은 아님",
+          "Xavier 초기화가 모든 활성화 함수·정규화·잔차 구조에 최적이라는 뜻은 아님",
         sectionId: "paper-glorot-initialization",
       },
       {
         title: "Gradient-Based Learning Applied to Document Recognition",
         href: "https://doi.org/10.1109/5.726791",
         problem:
-          "문서 인식 파이프라인의 feature extraction과 classifier를 gradient 기반 end-to-end system으로 학습하는 문제",
+          "특징 추출과 분류를 나눈 문서 인식 과정을 기울기 기반으로 함께 학습하는 문제",
         contribution:
-          "Convolutional network·graph transformer·training recipe를 결합한 document recognition system과 MNIST 계열 결과를 정리",
+          "합성곱 신경망과 학습 방법을 문서 인식 체계에 연결하고 MNIST 계열 결과를 정리",
         assumptions:
-          "논문의 image preprocessing·architecture·dataset split과 당시 hardware·metric 조건",
+          "논문의 전처리, 구조, 자료 분할, 하드웨어와 평가 조건",
         evidenceScope:
-          "Handwritten digit·document recognition에 대한 1998년 시스템과 실험 결과",
+          "1998년 손글씨·문서 인식 체계와 실험 결과",
         notClaim:
-          "Flattened MLP가 modern vision workload에 최적이거나 MNIST 성능이 일반 image robustness를 보장한다는 뜻은 아님",
+          "이미지를 펼친 MLP가 합성곱 신경망과 같거나 MNIST 결과가 실제 이미지 견고성을 보장한다는 뜻은 아님",
         sectionId: "paper-document-recognition",
+      },
+      {
+        title: "PyTorch nn.Linear 구현 (고정 커밋)",
+        href: "https://github.com/pytorch/pytorch/blob/8ed12848bd2b7baba59d5dd8056d861173cd7702/torch/nn/modules/linear.py#L93-L126",
+        problem:
+          "완전 연결 층이 실제 프레임워크에서 가중치와 편향을 어떤 모양으로 저장하고 호출하는지 확인하는 문제",
+        contribution:
+          "출력×입력 모양의 가중치, 출력 길이 편향, fan-in 기반 기본 초기화, F.linear 호출을 공개",
+        assumptions:
+          "2026-10-14에 확인한 해당 커밋의 Python 모듈 구현",
+        evidenceScope:
+          "nn.Linear의 매개변수 모양, 초기화, forward 연결",
+        notClaim:
+          "장치별 행렬곱 커널 선택과 성능까지 이 Python 파일 하나가 설명한다는 뜻은 아님",
+        sectionId: "source-pytorch-linear",
       },
     ],
   },

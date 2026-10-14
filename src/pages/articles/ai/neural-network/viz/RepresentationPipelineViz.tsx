@@ -1,34 +1,105 @@
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-const stages = [
-  { label: "입력 좌표", shape: "x ∈ ℝᴰ", role: "관측한 feature" },
-  { label: "은닉 표현 1", shape: "a¹ ∈ ℝᴴ¹", role: "경계·방향 조합" },
-  { label: "은닉 표현 2", shape: "a² ∈ ℝᴴ²", role: "task에 필요한 재조합" },
-  { label: "출력 parameter", shape: "zᴸ ∈ ℝᴷ", role: "예측 분포의 좌표" },
-];
+const steps = [
+  {
+    label: "XOR 네 상태",
+    body: "서로 다른 두 입력만 1입니다. 원래 좌표에서는 정답 1 두 점이 대각선으로 떨어져 있습니다.",
+  },
+  {
+    label: "입력 하나를 따라가기",
+    body: "(1,0)은 OR 점수와 NAND 점수가 모두 양수여서 은닉값 (1,1)이 됩니다.",
+  },
+  {
+    label: "은닉 좌표로 이동",
+    body: "정답 1인 두 입력이 같은 은닉 좌표 (1,1)에 모입니다.",
+  },
+  {
+    label: "출력층에서 다시 가르기",
+    body: "은닉값 둘이 모두 1인 경우만 고르면 XOR 결과 [0,1,1,0]이 됩니다.",
+  },
+] as const;
+
+const rows = [
+  ["(0,0)", "0", "(0,1)"],
+  ["(1,0)", "1", "(1,1)"],
+  ["(0,1)", "1", "(1,1)"],
+  ["(1,1)", "0", "(1,0)"],
+] as const;
+
+function StateTable({ showHidden = false }: { showHidden?: boolean }) {
+  return (
+    <div className="grid w-full gap-3 sm:grid-cols-2">
+      {rows.map(([input, target, hidden]) => (
+        <div
+          key={input}
+          className={`min-w-0 rounded-xl border bg-background p-4 ${target === "1" ? "border-emerald-500/35" : "border-border/75"}`}
+        >
+          <p className="text-xs text-muted-foreground">입력 {input}</p>
+          <p className="mt-2 font-mono text-sm font-semibold">
+            {showHidden ? `은닉값 ${hidden}` : `XOR 정답 ${target}`}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function RepresentationPipelineViz() {
   return (
-    <VizFrame
-      eyebrow="Representation pipeline"
-      title="MLP의 각 층은 같은 data를 다음 판단에 유리한 좌표로 다시 표현합니다"
-      description="원과 선으로 뉴런을 전부 그리는 대신, 각 layer가 넘기는 tensor의 의미와 shape를 따라갑니다."
-    >
-      <div className="grid gap-4 lg:grid-cols-4">
-        {stages.map((stage, index) => (
-          <article key={stage.label} className="min-w-0 border-l border-border pl-4 first:border-primary">
-            <p className="text-[11px] font-bold tracking-[0.12em] text-muted-foreground">
-              STEP {String(index + 1).padStart(2, "0")}
-            </p>
-            <p className="mt-2 text-sm font-bold text-foreground">{stage.label}</p>
-            <p className="mt-3 break-words font-mono text-xs text-primary">{stage.shape}</p>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">{stage.role}</p>
-          </article>
-        ))}
-      </div>
-      <p className="mt-6 border-t border-border/60 pt-4 text-xs leading-5 text-muted-foreground">
-        은닉층에는 사람이 정답 feature를 직접 붙이지 않습니다. 최종 loss를 줄이는 방향으로 weight가 바뀌면서 중간 표현도 함께 학습됩니다.
-      </p>
-    </VizFrame>
+    <StepViz steps={steps}>
+      {(step) => (
+        <div className="w-full max-w-4xl">
+          {step === 0 ? (
+            <StateTable />
+          ) : step === 1 ? (
+            <div className="grid gap-3 sm:grid-cols-4">
+              {[
+                ["입력", "(1,0)"],
+                ["하나 이상 켜짐", "OR → 1"],
+                ["둘 다 켜진 것은 아님", "NAND → 1"],
+                ["두 은닉값이 모두 1", "AND → 1"],
+              ].map(([label, value], index) => (
+                <div
+                  key={label}
+                  className="relative min-w-0 rounded-xl border border-border/75 bg-background p-4"
+                >
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    {label}
+                  </p>
+                  <p className="mt-2 break-words font-mono text-sm font-semibold">
+                    {value}
+                  </p>
+                  {index < 3 && (
+                    <span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 bg-background px-1 text-muted-foreground sm:block">
+                      →
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : step === 2 ? (
+            <StateTable showHidden />
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+              <div className="rounded-xl border border-border/75 bg-background p-5">
+                <p className="text-xs font-semibold text-primary">은닉 좌표</p>
+                <p className="mt-2 break-words font-mono text-lg font-semibold">
+                  (0,1), (1,1), (1,1), (1,0)
+                </p>
+              </div>
+              <span className="hidden text-muted-foreground sm:block">→</span>
+              <div className="rounded-xl border border-emerald-500/35 bg-background p-5">
+                <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-300">
+                  최종 XOR
+                </p>
+                <p className="mt-2 font-mono text-lg font-semibold">
+                  [0,1,1,0]
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </StepViz>
   );
 }

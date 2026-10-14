@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 960,
-    "reviewed": 394,
-    "pending": 566,
+    "reviewed": 395,
+    "pending": 565,
     "untracked": 0,
-    "assignedPending": 543,
+    "assignedPending": 542,
     "postCheckpointPending": 23,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -243,9 +243,9 @@
       "publicPath": "cs/ai/neural-network",
       "title": "신경망: 퍼셉트론에서 다층 네트워크로",
       "catalogIndex": 21,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

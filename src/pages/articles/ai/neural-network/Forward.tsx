@@ -1,60 +1,136 @@
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorShapeTraceViz from "./viz/TensorShapeTraceViz";
 
 export default function Forward() {
   return (
-    <section id="forward" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">순전파는 tensor shape와 signal scale을 보존하는 계산 경로다</h2>
+    <section id="forward" data-teach-level="5" className="mb-16 scroll-mt-20">
+      <h2 className="mb-6 text-2xl font-bold">
+        5. XOR 네 상태를 행렬 하나로 묶어 같은 길을 통과시킵니다
+      </h2>
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          현재 parameter로 prediction을 만드는 과정이 forward pass다. 뉴런마다 반복문을 돌리는 대신 sample을 batch로, unit을 feature
-          axis로 묶어 matrix multiplication을 수행한다. 그래서 layer를 이해할 때는 값 하나보다 어느 축을 합산하고 어떤 축을 새로 만드는지부터 확인하는 편이 구현
-          오류를 빨리 찾는다.
+          지금까지는 <code>(1,0)</code> 하나를 따라갔습니다. 실제 계산에서는 네
+          상태를 네 번 따로 처리하지 않고 행으로 쌓습니다. 입력 행렬
+          <code>X</code>의 모양은 <code>4×2</code>입니다. 첫 축 4는 자료 수,
+          둘째 축 2는 입력값 수입니다.
+        </p>
+        <p>
+          은닉 뉴런이 OR과 NAND 두 개이므로 첫 가중치 행렬의 모양은
+          <code>2×2</code>입니다. 곱한 결과는 <code>4×2</code>가 됩니다. 출력
+          뉴런은 하나이므로 둘째 가중치의 모양은 <code>2×1</code>이고, 최종
+          점수는 <code>4×1</code>입니다. 자료 수 4는 그대로 남고, 마지막 축만
+          층의 뉴런 수에 맞춰 바뀝니다.
         </p>
       </div>
 
       <ExplainedFormula
-        question="B개 sample을 Dᵢₙ차원에서 Dₒᵤₜ차원으로 한 번에 어떻게 옮길까?"
-        idea={<>Input feature 축 Dᵢₙ을 weight의 첫 축과 contraction하고, output feature 축 Dₒᵤₜ을 남깁니다. Bias는 batch마다 복사하지 않고 마지막 축에 broadcast합니다.</>}
-        formula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=XW+b\in\mathbb R^{B\times D_{\rm out}}\\A&=\phi(Z)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}X&\in\mathbb R^{B\times D_{\rm in}}\\W&\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}}\\Z&=\underbrace{XW}_{\text{입력 feature 축 합산}}+\underbrace{b}_{\text{row마다 broadcast}}\in\underbrace{\mathbb R^{B\times D_{\rm out}}}_{\text{sample 축은 유지}}\\A&=\underbrace{\phi(Z)}_{\text{원소별 nonlinearity}}\end{aligned}`}
+        question="자료 B개를 한 층에 한꺼번에 넣으면 어떤 축이 사라지고 어떤 축이 남을까요?"
+        idea={
+          <>
+            입력 특성 축 <code>D_in</code>과 가중치의 첫 축을 곱해 더합니다.
+            자료 축 <code>B</code>는 유지되고, 새 특성 축 <code>D_out</code>이
+            남습니다.
+          </>
+        }
+        formula={String.raw`X\in\mathbb R^{B\times D_{\rm in}},\quad W\in\mathbb R^{D_{\rm in}\times D_{\rm out}},\quad b\in\mathbb R^{D_{\rm out}},\qquad A=\phi(XW+b)\in\mathbb R^{B\times D_{\rm out}}`}
+        annotatedFormula={String.raw`\underbrace{X}_{B\times D_{\rm in}}\underbrace{W}_{D_{\rm in}\times D_{\rm out}}=\underbrace{XW}_{B\times D_{\rm out}},\qquad \underbrace{A}_{B\times D_{\rm out}}=\underbrace{\phi\!\left(XW+\overbrace{b}^{\text{각 행에 더함}}\right)}_{\text{모양은 유지하고 값만 변환}}`}
         operations={[
-          { expression: String.raw`XW`, annotation: ["X의 D_in 축과 W의 첫 축을 contraction", "784→128 layer라면 pixel 784개를", "hidden unit 128개로 섞습니다"] },
-          { expression: String.raw`b`, annotation: ["output channel별 offset 하나를", "batch로 복사하지 않고 B개 row에 더함"] },
-          { expression: String.raw`\phi(Z)`, annotation: ["shape (B, D_out)은 그대로 두고", "각 원소에 activation을 적용합니다"] },
+          {
+            expression: String.raw`XW`,
+            annotation: [
+              "D_in개의 입력값을 곱하고 더해",
+              "자료마다 D_out개의 새 점수를 만듭니다",
+            ],
+          },
+          {
+            expression: "b",
+            annotation: [
+              "길이 D_out인 편향을",
+              "B개의 모든 행에 같은 방식으로 더합니다",
+            ],
+          },
+          {
+            expression: String.raw`\phi(XW+b)`,
+            annotation: [
+              "행렬 모양 B×D_out은 그대로 두고",
+              "각 점수를 다음 층의 값으로 바꿉니다",
+            ],
+          },
         ]}
         terms={[
-          { symbol: "B", name: "batch size", description: "같은 parameter로 함께 처리하는 sample 수입니다." },
-          { symbol: "D_{\\rm in}", name: "input width", description: "이 layer가 받는 representation dimension입니다." },
-          { symbol: "D_{\\rm out}", name: "output width", description: "이 layer가 새로 만드는 unit·feature 수입니다." },
-          { symbol: "b", name: "broadcast bias", description: "모든 batch row에 더해지는 output-channel별 offset입니다." },
+          {
+            symbol: "B",
+            name: "묶음 크기 (batch size)",
+            description: "같은 가중치로 함께 처리하는 자료 수입니다.",
+          },
+          {
+            symbol: "D_{\\rm in}",
+            name: "입력 너비",
+            description: "한 자료가 현재 층에 건네는 값의 개수입니다.",
+          },
+          {
+            symbol: "D_{\\rm out}",
+            name: "출력 너비",
+            description: "현재 층이 자료마다 새로 만드는 값의 개수입니다.",
+          },
         ]}
-        assumptions={["Dense layer의 2D batch 표기이며 image·sequence tensor는 앞쪽 축을 유지한 채 마지막 feature 축에 적용할 수 있습니다.", "Framework에 따라 weight를 (Dout,Din)으로 저장하고 내부에서 transpose합니다."]}
-        interpretation="Forward shape가 맞아도 scale은 깨질 수 있다. Weight variance와 activation이 layer마다 signal을 지나치게 키우거나 줄이면 gradient까지 불안정해집니다."
+        assumptions={[
+          "자료 한 건을 행으로 놓는 2차원 표기입니다.",
+          "이미지와 문장처럼 축이 더 많으면 앞쪽 축을 유지하고 마지막 특성 축에 같은 계산을 적용할 수 있습니다.",
+        ]}
+        interpretation="XOR에서는 B=4, D_in=2, D_out=2입니다. X는 4×2, W₁은 2×2, 은닉값 A₁은 4×2입니다. 다음 W₂가 2×1이므로 최종 예측은 4×1입니다."
       />
 
       <TensorShapeTraceViz />
 
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Initialization은 layer를 통과하는 분산을 설계한다</h3>
+      <AlgorithmBlock
+        title="XOR 네 상태를 은닉층과 출력층에 차례로 넣는 절차 (의사코드)"
+        input={[
+          "X=[(0,0),(1,0),(0,1),(1,1)] · 모양 4×2",
+          "W₁=[[1,−1],[1,−1]], b₁=(−0.5,1.5); W₂=(1,1)ᵀ, b₂=−1.5",
+        ]}
+        steps={[
+          {
+            code: "Z₁ ← XW₁+b₁ = [(-0.5,1.5),(0.5,0.5),(0.5,0.5),(1.5,-0.5)]",
+            note: "첫 열은 OR 점수, 둘째 열은 NAND 점수입니다.",
+          },
+          {
+            code: "A₁ ← H(Z₁) = [(0,1),(1,1),(1,1),(1,0)]",
+            note: "점수가 0보다 큰 곳만 1로 바꿔 은닉 좌표를 만듭니다.",
+          },
+          {
+            code: "Z₂ ← A₁W₂+b₂ = [−0.5,0.5,0.5,−0.5]",
+            note: "두 은닉값이 모두 1인 행만 양수입니다.",
+          },
+          {
+            code: "ŷ ← H(Z₂) = [0,1,1,0]",
+            note: "네 XOR 정답과 같은 순서의 예측이 나옵니다.",
+          },
+          {
+            code: "compare(ŷ,y) ← [맞음,맞음,맞음,맞음]",
+            note: "한 입력만 확인하지 않고 같은 행 순서의 정답 전체와 대조합니다.",
+          },
+        ]}
+        output="은닉 표현 모양 4×2 · 최종 예측 모양 4×1 · 오답 0개"
+      />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>모양이 맞아도 값의 크기는 무너질 수 있습니다</h3>
         <p>
-          weight를 모두 0으로 초기화하면 같은 layer의 unit들이 같은 gradient를 받아 대칭이 깨지지 않는다. 반대로 variance가 너무 크거나 작으면
-          activation과 gradient가 depth를 지날 때 폭발하거나 사라질 수 있다. Xavier/Glorot과 He initialization은 fan-in·fan-out과
-          activation을 고려해 초기 scale을 정하는 출발점이며 normalization과 residual path가 있는 architecture에서는 전체 signal 경로를
-          함께 봐야 한다.
+          순전파(forward pass)는 현재 가중치로 입력에서 예측까지 값을 계산하는
+          과정입니다. 행렬 모양이 모두 맞아도 층을 지날 때 값이 계속 커지거나
+          작아지면 학습이 불안정해집니다. 가중치를 모두 0으로 시작하면 같은 층의
+          뉴런들이 같은 값을 냅니다. 같은 기울기까지 받으므로 서로 다른 역할로
+          갈라지기 어렵습니다.
         </p>
         <p>
-          숫자로 보면 이유가 더 분명하다. 서로 독립이고 variance가 1인 input 100개를 variance 1인 weight와 합치면 preactivation variance는
-          단순화한 가정 아래 약 100까지 커질 수 있지만 weight variance를 fan-in의 역수인 1/100 수준으로 맞추면 약 1에서 시작한다. 실제 진단에서는 layer별
-          preactivation·activation의 mean과 variance, gradient norm을 같은 step에서 기록한다. 그다음 같은 seed·data
-          order·optimizer에서 activation에 맞는 초기화, normalization, residual path를 하나씩 바꿔 train loss와 validation
-          결과를 함께 비교해야 원인을 분리할 수 있다.
-        </p>
-        <p>
-          Sigmoid saturation과 Jacobian singular value를 함께 분석한 근거는
-          <a href="https://proceedings.mlr.press/v9/glorot10a.html" target="_blank" rel="noreferrer">Glorot와 Bengio의 연구</a>에서
-          실험 조건과 함께 확인할 수 있다.
+          (가정) 서로 독립이고 분산이 1인 입력이 100개 있습니다. 이를 분산 1인
+          가중치와 곱해 더하면 활성화 전 값의 분산은 약 100까지 커질 수
+          있습니다. 가중치 분산을 입력 수의 역수인 <code>1/100</code> 정도로
+          두면 출발 분산을 약 1로 맞출 수 있습니다. Xavier와 He 초기화는 이
+          생각을 활성화 함수와 입력·출력 수에 맞게 조정한 출발점입니다.
         </p>
       </div>
 
@@ -62,15 +138,18 @@ export default function Forward() {
         id="paper-glorot-initialization"
         className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
       >
-        <p className="text-xs font-bold text-primary">논문 해설 · Xavier initialization</p>
+        <p className="text-xs font-bold text-primary">
+          원 논문을 같은 질문에 적용합니다
+        </p>
         <h3 className="mt-2 text-base font-bold text-foreground">
-          Fan-in·fan-out scale은 깊이를 지나는 signal의 출발 조건을 맞춥니다
+          Glorot와 Bengio의 초기화는 깊이를 지나는 신호의 출발 크기를 맞춥니다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Glorot와 Bengio는 sigmoid가 positive mean과 saturation 때문에 깊은 network의 윗 layer에서 학습을 늦출 수 있음을 분석했고 layer
-          Jacobian의 singular value가 1 근처에 있도록 fan-in과 fan-out을 함께 반영한 초기 scale을 제안했습니다. 이 결론은 당시
-          activation·architecture·dataset의 범위 안에서 성립하므로 ReLU·residual·normalization이 있는 모든 model에서 같은 분포가
-          최적이라는 법칙으로 일반화하면 안 됩니다.
+          2010년 연구는 시그모이드(sigmoid) 계열 신경망에서 윗층의 포화와 느린
+          학습을 분석했습니다. 입력 수와 출력 수를 함께 반영한 초기 크기도
+          제안했습니다. 이는 해당 활성화 함수와 실험 조건에서 얻은 출발점입니다.
+          ReLU, 정규화, 잔차 연결이 있는 모든 구조에서 같은 분포가 최적이라는
+          뜻은 아닙니다.
         </p>
       </div>
     </section>

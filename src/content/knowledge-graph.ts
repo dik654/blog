@@ -3354,49 +3354,49 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "affine-layer": {
     id: "affine-layer",
     domain: "machine-learning",
-    label: "Affine layer",
+    label: "아핀 층 (affine layer)",
     definition:
-      "Input vector를 weight matrix로 섞고 bias를 더해 새 coordinate vector를 만드는 z=xW+b 계산입니다.",
-    canonicalHref: "/cs/ai/neural-network#overview",
+      "이전 층의 값을 가중치 행렬로 섞고 편향을 더해 다음 층의 점수를 만드는 z=xW+b 계산입니다.",
+    canonicalHref: "/cs/ai/neural-network#names",
   },
   "affine-collapse": {
     id: "affine-collapse",
     domain: "mathematics",
-    label: "Affine collapse",
+    label: "아핀 층의 합침 (affine collapse)",
     definition:
-      "중간에 nonlinear operation이 없는 affine transform 여러 개는 effective weight와 bias 하나로 정확히 합칠 수 있다는 성질입니다.",
+      "중간에 비선형 계산이 없으면 여러 아핀 변환을 효과가 같은 가중치와 편향 하나로 정확히 합칠 수 있다는 성질입니다.",
     canonicalHref: "/cs/ai/neural-network#activation",
   },
   "hidden-representation": {
     id: "hidden-representation",
     domain: "machine-learning",
-    label: "Hidden representation",
+    label: "은닉 표현 (hidden representation)",
     definition:
-      "최종 target으로 직접 label되지 않았지만 end-to-end objective의 gradient로 학습되는 layer 중간 activation입니다.",
-    canonicalHref: "/cs/ai/neural-network#overview",
+      "최종 정답표를 직접 붙이지 않아도 최종 손실의 기울기로 학습되는 층 중간의 활성값입니다.",
+    canonicalHref: "/cs/ai/neural-network#black-box",
   },
   "batch-linear-layer": {
     id: "batch-linear-layer",
     domain: "machine-learning",
-    label: "Batched dense layer",
+    label: "배치 완전 연결 층 (batched dense layer)",
     definition:
-      "B개 input vector를 matrix X로 묶고 같은 weight·bias를 공유해 Z=XW+b로 한 번에 계산하는 dense layer의 tensor contract입니다.",
+      "B개 입력 벡터를 행렬 X로 묶고 같은 가중치와 편향을 공유해 Z=XW+b로 함께 계산하는 완전 연결 층입니다.",
     canonicalHref: "/cs/ai/neural-network#forward",
   },
   "prediction-contract": {
     id: "prediction-contract",
     domain: "statistics",
-    label: "Prediction contract",
+    label: "출력 약속 (prediction contract)",
     definition:
-      "Target이 연속값·배타적 class·독립 label 중 무엇인지에 맞춰 output dimension, activation, likelihood와 loss를 함께 정하는 규칙입니다.",
+      "정답이 연속값·서로 배타적인 범주·독립 표지 중 무엇인지에 맞춰 출력 수, 활성화 함수, 가능도와 손실을 함께 정하는 규칙입니다.",
     canonicalHref: "/cs/ai/neural-network#output-layer",
   },
   "initialization-scale": {
     id: "initialization-scale",
     domain: "machine-learning",
-    label: "Initialization scale",
+    label: "초기화 크기 (initialization scale)",
     definition:
-      "학습 시작 시 layer를 지나는 activation과 gradient의 분산이 지나치게 커지거나 사라지지 않도록 weight의 초기 분포를 정하는 설계입니다.",
+      "학습 시작 시 층을 지나는 활성값과 기울기의 분산이 지나치게 커지거나 사라지지 않도록 가중치의 초기 분포를 정하는 설계입니다.",
     canonicalHref: "/cs/ai/neural-network#forward",
   },
   "rnn-state-transition": {
