@@ -1,33 +1,73 @@
-import VizFrame from "@/components/viz/VizFrame";
+import StepViz from "@/components/ui/step-viz";
 
-const operations = [
-  ["Batch input", "X", "B × 784", "B개 이미지를 행으로 묶음"],
-  ["Hidden affine", "XW¹ + b¹", "B × 128", "784→128 projection"],
-  ["Hidden activation", "ReLU(Z¹)", "B × 128", "shape는 유지"],
-  ["Output affine", "A¹W² + b²", "B × 10", "열 개 class logit"],
-];
+const steps = [
+  { label: "입력 묶기", body: "XOR 네 상태를 4×2 행렬 X로 쌓습니다." },
+  { label: "은닉 점수", body: "X(4×2)와 W₁(2×2)을 곱해 Z₁(4×2)을 만듭니다." },
+  { label: "은닉값", body: "계단 함수를 적용해 OR·NAND 두 값을 남깁니다." },
+  { label: "출력 점수", body: "A₁(4×2)과 W₂(2×1)을 곱해 Z₂(4×1)를 만듭니다." },
+  {
+    label: "XOR 예측",
+    body: "0보다 큰 두 행만 1이 되어 [0,1,1,0]을 얻습니다.",
+  },
+] as const;
+
+const states = [
+  {
+    name: "입력 X",
+    shape: "4×2",
+    value: "[(0,0),(1,0),(0,1),(1,1)]",
+  },
+  {
+    name: "은닉 점수 Z₁",
+    shape: "4×2",
+    value: "[(-.5,1.5),(.5,.5),(.5,.5),(1.5,-.5)]",
+  },
+  {
+    name: "은닉값 A₁",
+    shape: "4×2",
+    value: "[(0,1),(1,1),(1,1),(1,0)]",
+  },
+  {
+    name: "출력 점수 Z₂",
+    shape: "4×1",
+    value: "[-.5,.5,.5,-.5]",
+  },
+  {
+    name: "예측 ŷ",
+    shape: "4×1",
+    value: "[0,1,1,0]",
+  },
+] as const;
 
 export default function TensorShapeTraceViz() {
   return (
-    <VizFrame
-      eyebrow="Tensor contract"
-      title="Forward pass는 값보다 먼저 shape contract를 따라가면 안전합니다"
-      description="MNIST용 784→128→10 MLP를 예로 들었습니다. Bias는 마지막 축에 broadcast됩니다."
-    >
-      <div className="divide-y divide-border/60 rounded-lg border border-border/70 bg-background">
-        {operations.map(([name, expression, shape, note], index) => (
-          <div key={name} className="grid min-w-0 gap-2 p-4 sm:grid-cols-[2rem_8rem_minmax(0,1fr)_6rem] sm:items-center">
-            <span className="text-[11px] font-bold text-muted-foreground">{index + 1}</span>
-            <p className="text-sm font-semibold text-foreground">{name}</p>
-            <p className="min-w-0 break-words font-mono text-xs text-primary">{expression}</p>
-            <div className="sm:text-right">
-              <p className="font-mono text-xs font-bold text-foreground">{shape}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground sm:hidden">{note}</p>
+    <StepViz steps={steps}>
+      {(step) => {
+        const current = states[step];
+        return (
+          <div className="grid w-full max-w-4xl gap-4 sm:grid-cols-[0.8fr_1.2fr]">
+            <div className="rounded-xl border border-primary/30 bg-background p-5">
+              <p className="text-xs font-semibold text-primary">현재 값</p>
+              <h4 className="mt-2 text-lg font-semibold">{current.name}</h4>
+              <p className="mt-4 font-mono text-sm font-semibold">
+                모양 {current.shape}
+              </p>
+            </div>
+            <div className="min-w-0 rounded-xl border border-border/75 bg-background p-5">
+              <p className="text-xs font-semibold text-muted-foreground">
+                행 순서를 유지한 실제 숫자
+              </p>
+              <p className="mt-3 break-words font-mono text-sm leading-7">
+                {current.value}
+              </p>
+              <p className="mt-4 text-xs leading-5 text-muted-foreground">
+                첫 축의 네 행은 끝까지 같은 입력 순서를 가리킵니다. 마지막 축만
+                각 층이 만드는 값의 개수에 맞춰 바뀝니다.
+              </p>
             </div>
           </div>
-        ))}
-      </div>
-      <p className="mt-4 text-xs leading-5 text-muted-foreground">검사 순서: batch 축 보존 → contraction 축 일치 → output feature 축 확인 → bias broadcast 축 확인.</p>
-    </VizFrame>
+        );
+      }}
+    </StepViz>
   );
 }

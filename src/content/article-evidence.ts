@@ -1215,6 +1215,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html",
       note: "Categorical output에서 raw logits·target·reduction의 실제 tensor contract",
     },
+    {
+      kind: "공식 코드",
+      label: "PyTorch nn.Linear 구현 (고정 커밋)",
+      href: "https://github.com/pytorch/pytorch/blob/8ed12848bd2b7baba59d5dd8056d861173cd7702/torch/nn/modules/linear.py#L93-L126",
+      note: "2026-10-14 확인. (출력, 입력) 모양의 가중치·출력 길이 편향·기본 초기화·F.linear 호출을 확인하는 실제 소스",
+    },
   ],
   "ai/reverse-mode-autodiff": [
     {
