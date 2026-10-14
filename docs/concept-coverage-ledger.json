@@ -23284,6 +23284,384 @@
    "status": "done",
    "reason": "PE 재사용이 roofline intensity를 하드웨어로 구현한 것이라는 canonical",
    "updatedAt": "2026-09-04"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Smooth Quant",
+   "action": "new",
+   "conceptId": "activation-smoothing-migration",
+   "owner": "/ai/smoothquant-activation-smoothing#names",
+   "status": "done",
+   "reason": "기존에는 ptq-calibration 한 문장과 인용뿐이었음. 식·코드·엔진 적용을 갖춘 정본으로 신설",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Quantized KV Cache INT8/FP8",
+   "action": "new",
+   "conceptId": "kv-cache-quantization",
+   "owner": "/ai/kv-cache-quantization#names",
+   "status": "done",
+   "reason": "TensorRT-LLM 기능 지도의 항목. 저장소에는 FP8 KV byte만 스치듯 있었고 쓰기·읽기 경로 정본이 없었음",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "KV cache scaling factor",
+   "action": "new",
+   "conceptId": "kv-scale-calibration",
+   "owner": "/ai/kv-cache-quantization#scale-source",
+   "status": "done",
+   "reason": "vLLM calc_kv_scales·TensorRT-LLM kv_cache_scaling_factor의 보정과 포화",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "KIVI",
+   "action": "new",
+   "conceptId": "key-value-outlier-asymmetry",
+   "owner": "/ai/kv-cache-quantization#kivi",
+   "status": "done",
+   "reason": "key per-channel·value per-token 비대칭 양자화",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "GUARANTEED_NO_EVICT",
+   "action": "new",
+   "conceptId": "guaranteed-no-evict-reservation",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#names",
+   "status": "done",
+   "reason": "출력 한도까지 예약하는 수용 정책의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "MAX_UTILIZATION",
+   "action": "alias",
+   "conceptId": "guaranteed-no-evict-reservation",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#names",
+   "status": "done",
+   "reason": "같은 capacity scheduler의 대비 정책 — 같은 node의 alias로 흡수",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "In-flight Batching",
+   "action": "existing",
+   "conceptId": "iteration-level-continuous-batching",
+   "owner": "/ai/vllm-serving#engine-loop",
+   "status": "existing",
+   "reason": "TensorRT-LLM의 in-flight batching은 continuous batching과 같은 개념 — 기존 node 재사용, 본문 6절에서 같은 개념임과 packing 규칙만 설명",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "Layer-packed KV block pool",
+   "action": "new",
+   "conceptId": "layer-packed-kv-block-pool",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#pool-layout",
+   "status": "done",
+   "reason": "block 우선 pool 배치와 복사 조각 수의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "Partial Reuse",
+   "action": "new",
+   "conceptId": "partial-kv-block-reuse",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#reuse",
+   "status": "done",
+   "reason": "block 안 일부 일치 재사용의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "KV Cache Retention Policy",
+   "action": "new",
+   "conceptId": "priority-kv-retention-offload",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#retention",
+   "status": "done",
+   "reason": "우선순위 제거와 호스트 offload 계층의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "Fused attention op",
+   "action": "new",
+   "conceptId": "fused-attention-op-boundary",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#attention-op",
+   "status": "done",
+   "reason": "RoPE·KV 쓰기·양자화 fusion 경계의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-compare",
+   "term": "XQA",
+   "action": "new",
+   "conceptId": "xqa-gqa-grouped-decode-kernel",
+   "owner": "/ai/tensorrt-llm-kv-cache-and-kernels#xqa",
+   "status": "done",
+   "reason": "GQA 묶음 생성 kernel의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Multi-modal Support",
+   "action": "new",
+   "conceptId": "multimodal-encoder-cache",
+   "owner": "/ai/multimodal-serving-pipeline#encoder-cache",
+   "status": "done",
+   "reason": "TensorRT-LLM 기능 지도의 Multi-modal Support 항목을 서빙 쪽 canonical로 채움 — encoder cache·예산·사진 hash 열쇠·KV 크기",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Multiple LoRAs",
+   "action": "existing",
+   "conceptId": "multi-lora-serving-and-adapter-switching",
+   "owner": "/ai/lora-finetuning#practice",
+   "status": "existing",
+   "reason": "기존 node 재사용. 서빙 세부는 이 글의 SGMV·cache·입장 concept가 확장",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "SLoRA",
+   "action": "alias",
+   "conceptId": "unified-adapter-kv-paging",
+   "owner": "/ai/multi-adapter-serving#memory",
+   "status": "done",
+   "reason": "S-LoRA의 핵심 기법 Unified Paging의 alias로 흡수",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "LoRAX",
+   "action": "alias",
+   "conceptId": "two-tier-adapter-cache",
+   "owner": "/ai/multi-adapter-serving#loading",
+   "status": "done",
+   "reason": "LoRAX의 dynamic adapter loading·adapter exchange를 두 층 adapter cache의 alias로 흡수",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "SGMV",
+   "action": "new",
+   "conceptId": "segmented-gather-lora-kernel",
+   "owner": "/ai/multi-adapter-serving#kernel-source",
+   "status": "done",
+   "reason": "adapter별 구간 곱 kernel의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Prompt Tuned Models",
+   "action": "new",
+   "conceptId": "soft-prompt-serving-cost",
+   "owner": "/ai/multi-adapter-serving#prompt-tuning",
+   "status": "done",
+   "reason": "prompt tuning을 서빙할 때의 표·KV·문맥 비용 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "PEFT cache page reservation",
+   "action": "new",
+   "conceptId": "adapter-aware-admission",
+   "owner": "/ai/multi-adapter-serving#admission",
+   "status": "done",
+   "reason": "max_loras와 PEFT page를 세는 batch 입장 규칙",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "p-tuning extra id",
+   "action": "new",
+   "conceptId": "adapter-scoped-prefix-cache-key",
+   "owner": "/ai/multi-adapter-serving#cache-key",
+   "status": "done",
+   "reason": "adapter·표의 정체를 prefix cache key에 넣는 조건",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "KV cell · sequence bitset",
+   "action": "new",
+   "conceptId": "kv-cell-sequence-bitset",
+   "owner": "/ai/llama-cpp-local-inference#cells-source",
+   "status": "done",
+   "reason": "llama.cpp KV 배열의 cell 단위 상태와 비트 공유의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "KQ mask · n_kv",
+   "action": "new",
+   "conceptId": "kq-mask-cell-range-read",
+   "owner": "/ai/llama-cpp-local-inference#mask-source",
+   "status": "done",
+   "reason": "block table 없이 범위를 읽고 지우는 읽기 경로의 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "Unified KV · --kv-unified",
+   "action": "new",
+   "conceptId": "unified-vs-per-slot-kv-stream",
+   "owner": "/ai/llama-cpp-local-inference#streams",
+   "status": "done",
+   "reason": "slot이 KV 배열을 합칠지 나눌지의 상한·낭비 비교",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "GGUF K-quant · Q4_K",
+   "action": "new",
+   "conceptId": "gguf-k-quant-super-block",
+   "owner": "/ai/llama-cpp-local-inference#k-quant-block",
+   "status": "done",
+   "reason": "Q4_K super-block byte 배치의 canonical. 일반 양자화 원리는 기존 글 재사용",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "dp4a quantized dot product",
+   "action": "new",
+   "conceptId": "quantized-integer-dot-product",
+   "owner": "/ai/llama-cpp-local-inference#integer-dot",
+   "status": "done",
+   "reason": "q8_1 × K-quant 정수 내적의 계산 순서",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "-ngl · partial layer offload",
+   "action": "new",
+   "conceptId": "layer-count-offload-split",
+   "owner": "/ai/llama-cpp-local-inference#layer-offload",
+   "status": "done",
+   "reason": "multi-gpu-vram-strategies의 CPU/GPU offloading을 층 번호 경계로 구체화",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "GGUF",
+   "action": "existing",
+   "conceptId": "quantization-method-format-boundary",
+   "status": "existing",
+   "reason": "파일 형식과 수치 형식의 구분은 weight-only-quantization이 소유",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "ReqToTokenPool / TokenToKVPool",
+   "action": "new",
+   "conceptId": "token-granular-two-level-kv-pool",
+   "owner": "/ai/sglang-runtime-anatomy#kv-pool",
+   "status": "done",
+   "reason": "SGLang의 token 단위 2단 KV pool canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "new_token_ratio",
+   "action": "new",
+   "conceptId": "new-token-ratio-admission",
+   "owner": "/ai/sglang-runtime-anatomy#admission-source",
+   "status": "done",
+   "reason": "실행 중 요청의 미래 몫을 비율로 줄여 세는 수용 장부 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "Retract",
+   "action": "new",
+   "conceptId": "decode-retraction",
+   "owner": "/ai/sglang-runtime-anatomy#retract",
+   "status": "done",
+   "reason": "decode 칸 부족 시 retract 순서·비율 재추정 canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "Zero-Overhead Batch Scheduler",
+   "action": "new",
+   "conceptId": "overlap-batch-scheduler",
+   "owner": "/ai/sglang-runtime-anatomy#overlap-loop",
+   "status": "done",
+   "reason": "한 batch 앞서 제출하는 overlap scheduler canonical",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engines-2026-10-14",
+   "term": "RadixAttention",
+   "action": "existing",
+   "conceptId": "radix-tree-kv-cache",
+   "status": "existing",
+   "reason": "prefix-caching-radix-attention 정본을 재사용",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Sliding Window Attention (serving KV)",
+   "action": "new",
+   "conceptId": "sliding-window-block-release",
+   "owner": "/ai/sliding-window-kv-and-attention-sinks#vllm-source",
+   "status": "done",
+   "reason": "attention 모양은 sparse-windowed-attention-patterns가 소유. 서빙 쪽 block 반환 규칙은 저장소에 정본이 없었음",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Cyclic KV Cache",
+   "action": "new",
+   "conceptId": "cyclic-kv-cache",
+   "owner": "/ai/sliding-window-kv-and-attention-sinks#ring-buffer",
+   "status": "done",
+   "reason": "TensorRT-LLM attention 문서의 rolling buffer",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Streaming LLMs",
+   "action": "new",
+   "conceptId": "streaming-llm-sink-window-cache",
+   "owner": "/ai/sliding-window-kv-and-attention-sinks#streaming-llm",
+   "status": "done",
+   "reason": "저장소 전체에 StreamingLLM·attention sink 언급 0건이었음",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "Attention Sink",
+   "action": "new",
+   "conceptId": "attention-sink",
+   "owner": "/ai/sliding-window-kv-and-attention-sinks#why-sink",
+   "status": "done",
+   "reason": "StreamingLLM의 관찰과 perplexity 근거",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "trtllm-feature-map",
+   "term": "gpt-oss attention sinks",
+   "action": "new",
+   "conceptId": "learned-softmax-sink",
+   "owner": "/ai/sliding-window-kv-and-attention-sinks#names",
+   "status": "done",
+   "reason": "KV 없는 학습된 분모 항으로 token sink와 구분",
+   "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "engine-comparison",
+   "term": "Inference engine comparison",
+   "action": "new",
+   "conceptId": "inference-engine-design-axes",
+   "owner": "/ai/inference-engine-design-axes#overview",
+   "status": "done",
+   "reason": "사용자 요청 — vLLM 외 추론 엔진을 같은 축으로 비교하는 허브",
+   "updatedAt": "2026-10-14"
   }
  ]
 }

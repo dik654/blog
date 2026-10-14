@@ -859,7 +859,7 @@ export const embeddingArticles: Article[] = [
 ];
 
 // ── F. 모델 경량화 ──
-const compressionArticles: Article[] = [
+export const compressionArticles: Article[] = [
   {
     slug: "quantization",
     title: "양자화 기초: Scale · Code · Rounding · Clipping",
@@ -923,6 +923,27 @@ const compressionArticles: Article[] = [
       { id: "artifact-boundary", title: "Method·format·container" },
     ],
     component: () => import("@/pages/articles/ai/weight-only-quantization"),
+  },
+  {
+    slug: "smoothquant-activation-smoothing",
+    title: "SmoothQuant: activation 이상치를 weight로 옮겨 W8A8을 만든다",
+    subcategory: "ai-practical-compression",
+    sections: [
+      { id: "overview", title: "1. weight만 8비트로 줄이면 곱셈은 여전히 16비트로 합니다" },
+      { id: "black-box", title: "2. 입력과 weight를 8비트로 바꿔도 출력은 같아야 합니다" },
+      { id: "small-case", title: "3. 한 채널의 64가 나머지 채널의 눈금을 가져갑니다" },
+      { id: "picture", title: "4. 채널을 나눈 만큼 weight 행에 곱하면 결과는 그대로입니다" },
+      { id: "why-outer-axis", title: "5. 정수 행렬곱은 합 밖의 두 축에만 간격을 되돌릴 수 있습니다" },
+      { id: "names", title: "6. 옮기는 정도를 migration strength α로 정합니다" },
+      { id: "trace", title: "7. 입력 채널 3 하나를 보정부터 실행까지 따라갑니다" },
+      { id: "source-smooth", title: "8. 실제 코드는 LayerNorm을 나누고 Linear를 곱합니다" },
+      { id: "source-calibration", title: "9. 보정 표본 512개로 채널별 최댓값을 모읍니다" },
+      { id: "engines", title: "10. 지금의 서빙 엔진은 변환 도구 단계에서 SmoothQuant를 씁니다" },
+      { id: "paper-smoothquant", title: "11. 논문의 결과는 OPT·BLOOM·GLM 조건에서 읽습니다" },
+      { id: "boundary", title: "12. norm 뒤가 아닌 입력과 분포가 바뀐 입력은 따로 봅니다" },
+      { id: "review", title: "13. 같은 작은 행렬로 다음 경계를 예상해 보세요" },
+    ],
+    component: () => import("@/pages/articles/ai/smoothquant-activation-smoothing"),
   },
   {
     slug: "quantized-model-deployment",
