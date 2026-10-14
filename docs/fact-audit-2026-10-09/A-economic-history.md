@@ -1730,3 +1730,22 @@ note: "7판 2020-01. 외부 치수 기준 분류와 정격, 대륙 간 운송용
 ```new
 note: "7판 2020-01. ISO 온라인 열람 플랫폼(OBP, https://www.iso.org/obp/ui/#iso:std:iso:668:ed-7:v1:en)에서 2026-10-12 직접 확인: 1절 범위 “establishes a classification of series 1 freight containers based on external dimensions, and specifies the associated ratings”, “These containers are intended for intercontinental traffic.”, 내부 치수는 ISO 1496이 기준 문서라는 문장, 머리말의 “This seventh edition cancels and replaces the sixth edition (ISO 668:2013)”(2016년 수정 1·2 통합). OBP 무료 미리보기는 1~3절까지만 열려 5.2절 외부 치수 표는 확인하지 못했습니다." }
 ```
+
+## 후속 작업 결과 (5차)
+처리일 2026-10-14. Englund 1998 적용.
+
+| 항목 | 판정 | 근거 URL·인용·보류 사유 |
+|---|---|---|
+| Englund 1998 "Texts from the Late Uruk Period" | **적용 + 공용파일 목록으로 이관** | 사용자 승인으로 ZORA PDF(https://doi.org/10.5167/uzh-151545, Bauer_Englund_Krebernik_1998_Mesopotamien.pdf, 630쪽)를 브라우저로 받음(이번에는 Anubis 확인이 통과). 텍스트층은 OCR 오자가 많아("groin"=grain) 인용은 쪽 이미지(pdftoppm)로 대조. 인쇄 126쪽 6.2.3: "the Uruk period beveled-rim bowl with an average capacity of 0.8 liter served as the model for the pictogram GAR (later Sumerian ninda) and represented in general a worker's grain ration for one day." 인쇄 181쪽 6.3.3 뒤: MSVO 4, 27 "(24 months × 30 days =) 720 days gives us a measure of 1/30 × N1 … namely, that 'GAR grain' equals one day, and that '1N1 GAR grain' equals one month. The absolute size of the beveled-rim bowl shows a variance of between about 0.5 and 1 liter". 인쇄 176쪽 6.3.3 Labor organization: "The text W 23999,1 … contains an account of eight humans … booked separately according to sex and age: a group of five females consists of four women and one girl, a group of three males of one man and 2 boys." / "These accounts thus give a strong impression not of being an early census, but rather of being an account of a 'herded' family of name-cognizant humans." 본문(`agrarian-surplus-and-state.tsx` 9절)에 세 문단과 citeKey 3 추가. 0.8L×30일≈24L는 이 글의 계산으로 표시. "약 50건"은 이 장에 없어 2011 논문 출처를 유지. |
+
+## 후속 공용 파일 수정 목록 (5차)
+old는 2026-10-14 현재 파일에서 한 번만 나온다. 같은 문자열이 등록 모듈에도 있으면 `--mirror`로 함께 바꾼다.
+
+### `src/content/article-evidence.ts`
+```old
+노동자 집단 장부 약 50건. CDLI 공개 PDF로 확인 2026-10-10. Englund 1998(OBO 160/1) PDF는 CDLI 링크 404라 미확인." },
+```
+```new
+노동자 집단 장부 약 50건. CDLI 공개 PDF로 확인 2026-10-10." },
+    { kind: "핵심 연구", label: "Englund · Texts from the Late Uruk Period (OBO 160/1, 1998)", href: "https://doi.org/10.5167/uzh-151545", note: "126쪽 비스듬한 테두리 그릇=GAR=노동자 하루 곡물 배급, 181쪽 MSVO 4, 27로 GAR 곡물=하루·1N1 GAR 곡물=한 달, 176쪽 W 23999,1의 성별·나이별 8명 장부. 취리히대 ZORA 공개 PDF의 쪽 이미지로 확인 2026-10-14." },
+```

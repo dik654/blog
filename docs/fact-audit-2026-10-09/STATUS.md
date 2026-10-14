@@ -36,6 +36,9 @@
 - Seagate "covault"는 Exos CORVAULT로 판단(같은 이름 제품 없음, 부재 증명은 아님). `gpu/ai-cluster-storage-io` 10절의 2PB raw·8+2 EC 사례를 이어, 전통 RAID 재구축이 예비 drive 한 대 쓰기에 묶이는 숫자 → stripe·예비 공간 분산 → ADAPT(분산 예비 공간 = 가장 큰 drive 두 개, 일부 stripe만 degraded, 즉시 재구축) → 2018 모델값 55.5h vs 5.3h → ADR(head·면 제거 후 축소 용량 재편입) → PoC 세 숫자와 200GB/s ÷ 12GB/s ≈ 17대, 상위 file·object software 순서로 10문단을 추가. 원자료는 데이터시트·Storage Management Guide·CLI 가이드·ADAPT 기술 문서·QuantaStor 브리프.
 - 검증: 감사 13종·ESLint·build 통과, 두 route sweep 데스크톱·모바일 실패 0, NVLS 원장 390px 스크린샷 확인. 미반영 목록(H100 NVLS busbw 1차 수치 없음, CORVAULT 제품 투어 성능 불일치 등)은 원장에 있다.
 
+## 5차 (2026-10-14, Englund 1998)
+- 사용자 승인으로 ZORA의 OBO 160/1 PDF를 브라우저로 받았다(이번에는 Anubis 확인 통과). OCR 오자가 많아 인용은 쪽 이미지로 대조했다. `economic-history/agrarian-surplus-and-state` 9절에 세 문단 추가: 비스듬한 테두리 그릇(약 0.8L) = GAR = 노동자 하루 곡물 배급(126쪽), MSVO 4, 27의 720일 계산으로 GAR 곡물 = 하루·1N1 GAR 곡물 = 한 달(181쪽), W 23999,1의 성별·나이별 8명 장부(176쪽). citeKey 3과 evidence 1건(`A` 원장 `(5차)`). "약 50건"은 이 장에 없어 2011 논문 출처를 유지.
+
 ## 다음에 할 수 있는 일
-- Englund 1998 원문 대조(ZORA PDF를 사용자가 직접 내려받은 뒤), ISO 668 치수 표(OBP 무료 범위 밖 — 표준 구매 필요), *Archaic Bookkeeping*(공개본 없음), 1947년 마케팅 보드 조례 원문(온라인 사본 없음).
+- ISO 668 치수 표(OBP 무료 범위 밖 — 표준 구매 필요), *Archaic Bookkeeping*(공개본 없음), 1947년 마케팅 보드 조례 원문(온라인 사본 없음).
 - 320px 폭에서 펼친 학습 흐름 Viz가 568px 뷰포트보다 큰 것(804~966px)은 텍스트 폭 한계로 남겼다. 조작부는 sticky라 닿는다.
