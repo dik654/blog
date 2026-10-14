@@ -1,0 +1,123 @@
+{
+  "scope": "checkpoint-395 뒤 공개 catalog에 추가된 23편",
+  "statusMeaning": {
+    "pending-full-review": "구조화 본문과 정적 검사는 확인됐지만 현재 teach-system 계약의 실제 본문·390px·1440px 검수를 모두 닫지 않은 상태"
+  },
+  "articles": [
+    {
+      "route": "gpu/ai-infrastructure-b300-128-blueprint",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/ai-cluster-software-compatibility",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/kubernetes-vs-slurm-gpu-scheduling",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/ai-cluster-storage-io",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/b300-rack-power-cooling",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/ai-infrastructure-commissioning-acceptance",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#ai-인프라-p0-6편"
+    },
+    {
+      "route": "gpu/nvidia-nca-aiio-study-guide",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#자격-지도-1편"
+    },
+    {
+      "route": "cloud/cloud-certification-roadmap-2026",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-foundations-responsibility-regions",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-identity-access-hierarchy",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-networking-request-path",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-compute-selection",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-storage-database-selection",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/cloud-reliability-observability-iac",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/aws-clf-c02-fast-study",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/aws-saa-c03-fast-study",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/aws-developer-cloudops-paths",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/azure-az900-fast-study",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/azure-az104-fast-study",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/azure-ai200-fast-study",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/azure-architect-devops-paths",
+      "status": "pending-full-review",
+      "evidence": "docs/hw-infra-cloud-teach-system-ledger.md#cloud-14편"
+    },
+    {
+      "route": "cloud/kubernetes-request-path-and-cka",
+      "status": "pending-full-review",
+      "evidence": "docs/rewrite-status.md#fine-tuningmlflowkubernetes-과정과-cka-브라우저-실습-보강-2026-10-08"
+    },
+    {
+      "route": "cloud/kubernetes-network-packet-path",
+      "status": "pending-full-review",
+      "evidence": "docs/rewrite-status.md#cloud온프레미스-읽기-순서와-배포-자산-복구-보강-2026-10-09"
+    }
+  ]
+}

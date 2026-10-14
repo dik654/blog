@@ -8,8 +8,8 @@ export default function PerceptronArticle() {
   return (
     <>
       <Overview />
-      <Convergence />
       <LogicGates />
+      <Convergence />
       <Limitation />
       <Multilayer />
     </>

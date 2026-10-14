@@ -64,8 +64,9 @@ export async function loadPublicArticleCatalog({ root = process.cwd() } = {}) {
     const catalog = [];
     const routes = new Set();
 
-    for (const category of categories) {
-      for (const article of category.articles) {
+    let catalogIndex = 0;
+    for (const [categoryIndex, category] of categories.entries()) {
+      for (const [articleIndex, article] of category.articles.entries()) {
         const route = `${category.slug}/${article.slug}`;
         if (routes.has(route)) throw new Error(`중복 public article route: ${route}`);
         routes.add(route);
@@ -88,7 +89,13 @@ export async function loadPublicArticleCatalog({ root = process.cwd() } = {}) {
           subcategory: article.subcategory,
           sourceSpecifier,
           sourcePath,
+          // 감사 결과를 실제 sidebar/category 학습 순서로 다시 정렬할 수 있게
+          // 원래 catalog 위치를 보존합니다. 반환 배열은 기존 API처럼 route순입니다.
+          catalogIndex,
+          categoryIndex,
+          articleIndex,
         });
+        catalogIndex += 1;
       }
     }
 

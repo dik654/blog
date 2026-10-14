@@ -7,12 +7,12 @@ export const C = {
 
 export const STEPS = [
   {
-    label: "뉴런 비유와 계산의 대응",
-    body: "입력 수집·합산·발화라는 아이디어를 단순한 수학 모델로 옮깁니다. 실제 생물학적 뉴런을 재현한 것은 아닙니다.",
+    label: "네 입력과 원하는 결과",
+    body: "(가정) 두 센서가 모두 1인 마지막 상태에서만 문이 열려야 합니다. 먼저 네 상태를 한 화면에 놓습니다.",
   },
   {
-    label: "입력 → score → threshold",
-    body: "입력에 weight를 곱해 score를 만들고 bias로 경계 위치를 옮긴 뒤, step function으로 class를 정합니다.",
+    label: "입력 → 점수 → 판정",
+    body: "두 입력에 비중을 곱해 점수 하나로 합치고 기준점을 옮긴 뒤, 0보다 큰지만 확인합니다.",
   },
   {
     label: "x=(1,0) → 출력 0",

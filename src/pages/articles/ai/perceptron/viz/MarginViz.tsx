@@ -19,7 +19,7 @@ export default function MarginViz() {
   return (
     <VizFrame
       eyebrow="Margin intuition"
-      title="둘 다 정답을 맞혀도 경계와 가장 가까운 example의 거리는 다를 수 있습니다"
+      title="둘 다 정답을 맞혀도 경계와 가장 가까운 자료의 거리는 다를 수 있습니다"
       description="Margin은 평균 거리가 아니라 가장 불리한 training example이 확보한 최소 여유입니다."
     >
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">

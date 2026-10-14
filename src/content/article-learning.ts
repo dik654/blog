@@ -7300,213 +7300,268 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/perceptron": {
     recursiveTeaching: true,
     coreIdea:
-      "퍼셉트론은 입력을 linear score 하나로 줄여 hyperplane 양쪽을 분류하고, 오분류한 example이 생길 때만 경계를 움직입니다. XOR은 이 표현 계약의 한계를 드러내며, 다층 network는 nonlinear한 중간 좌표를 만들어 그 한계를 넘습니다.",
+      "퍼셉트론은 여러 입력을 점수 하나로 줄여 직선 한쪽을 1, 반대쪽을 0으로 판정하고, 오답이 난 입력 방향으로 경계를 고칩니다. XOR처럼 직선 하나로 나뉘지 않는 문제는 비선형 은닉층으로 새 좌표를 만들어야 풉니다.",
     assumedKnowledge: [
       {
         id: "coordinate-vector",
-        role: "Input과 weight를 같은 coordinate space의 vector로 읽습니다.",
+        role: "여러 입력값을 순서가 있는 벡터로 읽습니다.",
       },
       {
         id: "dot-product",
-        role: "wᵀx가 input의 weight 방향 성분을 scalar score로 줄이는 계산임을 읽습니다.",
+        role: "가중치와 입력의 내적이 점수 하나를 만드는 계산임을 읽습니다.",
       },
       {
         id: "euclidean-norm",
-        role: "Input 크기 R과 unit weight에서 margin을 거리로 해석합니다.",
+        role: "입력 크기 R과 경계까지의 거리를 비교합니다.",
       },
       {
         id: "cauchy-schwarz",
-        role: "Convergence proof에서 정답 방향의 전진량을 전체 weight 길이로 제한합니다.",
+        role: "수렴 증명에서 정답 방향의 전진량을 전체 가중치 길이로 제한합니다.",
       },
       {
         id: "feature-target",
-        role: "Input feature vector와 binary target을 한 example로 놓습니다.",
+        role: "특성값 벡터와 정답 0 또는 1을 자료 한 건으로 묶습니다.",
       },
       {
         id: "parameterized-model",
-        role: "Weight·bias가 prediction 함수를 정한다는 관점이 출발점입니다.",
+        role: "가중치와 편향이 판정 함수를 정한다는 관점에서 시작합니다.",
       },
     ],
     introducedHere: [
       {
         id: "linear-score",
-        role: "여러 feature를 class 판단에 쓸 scalar 하나로 투영합니다.",
+        role: "여러 특성값을 판정에 쓸 점수 하나로 합칩니다.",
       },
       {
         id: "decision-boundary",
-        role: "Weight 방향과 bias가 만드는 hyperplane을 기하학적으로 읽습니다.",
+        role: "점수가 0인 선이나 초평면을 판정 경계로 읽습니다.",
       },
       {
         id: "perceptron-update",
-        role: "오분류 example이 경계를 움직이는 방향을 계산합니다.",
+        role: "오답이 난 자료가 경계를 움직이는 방향을 계산합니다.",
       },
       {
         id: "classification-margin",
-        role: "결정 경계와 가장 가까운 example 사이의 여유를 수렴 조건으로 읽습니다.",
+        role: "경계와 가장 가까운 자료 사이의 여유를 수렴 조건으로 읽습니다.",
       },
       {
         id: "perceptron-convergence",
-        role: "유한 mistake 보장이 성립하는 범위와 적용할 수 없는 경우를 구분합니다.",
+        role: "오답 횟수의 유한 상한이 성립하는 조건을 구분합니다.",
       },
       {
         id: "linear-separability",
-        role: "단층 퍼셉트론이 풀 수 있는 문제의 정확한 경계를 정합니다.",
+        role: "단층 퍼셉트론이 풀 수 있는 문제의 경계를 정합니다.",
       },
       {
         id: "xor-problem",
-        role: "대각선으로 배치된 두 positive point를 hyperplane 하나로 나눌 수 없다는 대표 반례를 설명합니다.",
+        role: "대각선으로 놓인 정답 1 두 점을 직선 한쪽에 모을 수 없는 반례를 설명합니다.",
       },
       {
         id: "multilayer-perceptron",
-        role: "Nonlinear hidden feature를 만든 뒤 output layer에서 다시 분리하는 확장 구조를 설명합니다.",
+        role: "비선형 은닉층으로 새 좌표를 만든 뒤 다시 선형 분리하는 구조를 설명합니다.",
       },
     ],
     conceptExplanations: [
       {
         id: "linear-score",
-        sectionId: "overview",
+        sectionId: "trace",
         intuition:
-          "여러 feature를 한 줄의 점수표로 합치는 과정입니다. Weight는 각 feature가 점수에 얼마나 기여하는지 정하고 bias는 기준점을 옮깁니다.",
+          "각 입력에 가중치를 곱해 더하고 편향을 보태면 판정에 쓸 점수 하나가 됩니다.",
         workedExample:
-          "x=(2,1), w=(0.5,-1), b=0.2라면 score는 2×0.5+1×(-1)+0.2=0.2입니다. Step function은 이 양수 score를 class 1로 바꿉니다.",
+          "AND 문에서 w=(0.5,0.5), b=−0.7이면 네 점수는 −0.7, −0.2, −0.2, 0.3입니다.",
         boundary:
-          "Score는 probability가 아닙니다. 또한 서로 곱하거나 휘어지는 feature 관계를 추가하지 않으면 linear combination으로 표현할 수 없습니다.",
-      causalTrace: {
-        answer: "여러 feature를 한 줄의 점수표로 합치는 과정입니다. Weight는 각 feature가 점수에 얼마나 기여하는지 정하고 bias는 기준점을 옮깁니다.",
-        followUpQuestion: "Linear score이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Score는 probability가 아닙니다. 또한 서로 곱하거나 휘어지는 feature 관계를 추가하지 않으면 linear combination으로 표현할 수 없습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. x=(2,1), w=(0.5,-1), b=0.2라면 score는 2×0.5+1×(-1)+0.2=0.2입니다. Step function은 이 양수 score를 class 1로 바꿉니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Score는 probability가 아닙니다. 또한 서로 곱하거나 휘어지는 feature 관계를 추가하지 않으면 linear combination으로 표현할 수 없습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Score는 probability가 아닙니다. 또한 서로 곱하거나 휘어지는 feature 관계를 추가하지 않으면 linear combination으로 표현할 수 없습니다."
-      }},
+          "점수는 확률이 아닙니다. 입력끼리 곱하거나 휘는 관계를 따로 넣지 않으면 직선 경계만 만듭니다.",
+        causalTrace: {
+          answer:
+            "두 센서 값을 따로 외우는 대신 가중합 하나로 줄이면 0보다 큰지만 보고 문을 열 수 있습니다.",
+          followUpQuestion:
+            "왜 점수 0이 판정을 가르는 경계가 되고, 그 경계는 어디에 놓일까요?",
+          bottleneck:
+            "센서가 늘면 입력 조합을 낱개 규칙으로 모두 적는 방식은 빠르게 커집니다.",
+          mechanism:
+            "0.5x₁+0.5x₂−0.7을 네 입력에 넣으면 (1,1)에서만 0.3으로 양수가 됩니다.",
+          remainingCost:
+            "점수 하나로 줄인 순간 만들 수 있는 경계는 직선이나 초평면으로 제한됩니다.",
+          decisionRule:
+            "곱셈 같은 입력 사이의 관계 없이 한 직선으로 나뉘는 이진 판정에 이 설명을 적용합니다.",
+        },
+      },
       {
         id: "decision-boundary",
-        sectionId: "overview",
+        sectionId: "trace",
         intuition:
-          "Score가 정확히 0이 되는 선을 경계로 삼아 한쪽은 positive, 다른 쪽은 negative로 나눕니다.",
+          "점수가 정확히 0인 곳이 판정을 가르는 경계이며 한쪽은 1, 다른 쪽은 0입니다.",
         workedExample:
-          "2차원에서 w=(1,1), b=-1이면 x₁+x₂=1인 직선이 경계입니다. (1,1)은 score 1, (0,0)은 score -1이어서 서로 다른 쪽에 놓입니다.",
+          "AND 문에서는 0.5x₁+0.5x₂−0.7=0, 곧 x₁+x₂=1.4인 직선이 (1,1)만 1인 쪽에 둡니다.",
         boundary:
-          "2차원에서는 선, 3차원에서는 평면이지만 일반적인 고차원에서는 hyperplane입니다. 그림에서 휘어진 경계처럼 보이게 해석하면 안 됩니다.",
-      causalTrace: {
-        answer: "Score가 정확히 0이 되는 선을 경계로 삼아 한쪽은 positive, 다른 쪽은 negative로 나눕니다.",
-        followUpQuestion: "Decision boundary · half-space이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: 2차원에서는 선, 3차원에서는 평면이지만 일반적인 고차원에서는 hyperplane입니다. 그림에서 휘어진 경계처럼 보이게 해석하면 안 됩니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. 2차원에서 w=(1,1), b=-1이면 x₁+x₂=1인 직선이 경계입니다. (1,1)은 score 1, (0,0)은 score -1이어서 서로 다른 쪽에 놓입니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. 2차원에서는 선, 3차원에서는 평면이지만 일반적인 고차원에서는 hyperplane입니다. 그림에서 휘어진 경계처럼 보이게 해석하면 안 됩니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: 2차원에서는 선, 3차원에서는 평면이지만 일반적인 고차원에서는 hyperplane입니다. 그림에서 휘어진 경계처럼 보이게 해석하면 안 됩니다."
-      }},
+          "2차원에서는 직선, 3차원에서는 평면, 더 높은 차원에서는 초평면입니다. 휘어진 경계는 아닙니다.",
+        causalTrace: {
+          answer: "점수 0인 선이 문을 여는 쪽과 닫는 쪽을 가릅니다.",
+          followUpQuestion:
+            "판정이 틀렸다면 이 선을 어느 쪽으로 얼마나 옮겨야 할까요?",
+          bottleneck:
+            "가중치는 선의 방향을, 편향은 위치를 바꾸므로 두 역할을 섞으면 수정 방향을 설명하기 어렵습니다.",
+          mechanism:
+            "AND의 경계 x₁+x₂=1.4는 (1,1)을 위쪽에, 나머지 세 점을 아래쪽에 둡니다.",
+          remainingCost:
+            "같은 네 점을 나누는 가중치와 편향 조합은 하나가 아니며 점수 크기 자체도 고유하지 않습니다.",
+          decisionRule:
+            "판정 결과를 보려면 점수의 절댓값보다 부호와 경계 양쪽의 위치를 먼저 확인합니다.",
+        },
+      },
       {
         id: "perceptron-update",
-        sectionId: "overview",
+        sectionId: "trace",
         intuition:
-          "틀린 example이 발견됐을 때 그 점을 올바른 쪽으로 옮기도록 경계의 방향과 위치를 조금 고치는 규칙입니다.",
+          "오답이면 정답과 예측의 차이에 입력을 곱해 가중치와 편향을 고칩니다. 정답이면 바꾸지 않습니다.",
         workedExample:
-          "Positive example x=(1,2)를 0으로 잘못 예측하고 learning rate가 0.1이면 weight에는 0.1×(1,2)가 더해집니다. 맞혔다면 변화량은 0입니다.",
+          "w=(0.5,0.5), b=−1.1에서 (1,1)을 0으로 틀리고 η=0.1이면 w=(0.6,0.6), b=−1.0이 됩니다.",
         boundary:
-          "이 update는 한 번의 mistake를 바로잡는 방향만 알려 줍니다. Data가 선형 분리되지 않으면 모든 example을 동시에 만족하는 지점이 없을 수 있습니다.",
-      causalTrace: {
-        answer: "틀린 example이 발견됐을 때 그 점을 올바른 쪽으로 옮기도록 경계의 방향과 위치를 조금 고치는 규칙입니다.",
-        followUpQuestion: "Perceptron update이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: 이 update는 한 번의 mistake를 바로잡는 방향만 알려 줍니다. Data가 선형 분리되지 않으면 모든 example을 동시에 만족하는 지점이 없을 수 있습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. Positive example x=(1,2)를 0으로 잘못 예측하고 learning rate가 0.1이면 weight에는 0.1×(1,2)가 더해집니다. 맞혔다면 변화량은 0입니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. 이 update는 한 번의 mistake를 바로잡는 방향만 알려 줍니다. Data가 선형 분리되지 않으면 모든 example을 동시에 만족하는 지점이 없을 수 있습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: 이 update는 한 번의 mistake를 바로잡는 방향만 알려 줍니다. Data가 선형 분리되지 않으면 모든 example을 동시에 만족하는 지점이 없을 수 있습니다."
-      }},
+          "한 번의 수정 방향만 알려 줍니다. 모든 자료를 한 직선으로 나눌 수 없으면 오답 0개인 값은 존재하지 않습니다.",
+        causalTrace: {
+          answer:
+            "1을 0으로 틀리면 그 입력 방향으로 점수를 올리고, 0을 1로 틀리면 반대 방향으로 내립니다.",
+          followUpQuestion:
+            "한 자료를 고친 뒤 다른 자료가 다시 틀릴 수 있는데, 이 과정은 언젠가 끝날까요?",
+          bottleneck:
+            "틀린 자료 하나만 다시 확인하면 앞서 맞던 자료를 망가뜨렸는지 알 수 없습니다.",
+          mechanism:
+            "AND의 (1,1)을 한 번 고친 뒤 네 점수를 모두 다시 계산하면 −1.0, −0.4, −0.4, 0.2로 모두 맞습니다.",
+          remainingCost:
+            "자료 순서와 시작값에 따라 수정 횟수와 중간 경계가 달라집니다.",
+          decisionRule:
+            "매 수정 뒤 전체 자료의 오답 수를 다시 확인하고, 최대 반복 수도 함께 둡니다.",
+        },
+      },
       {
         id: "classification-margin",
         sectionId: "convergence",
         intuition:
-          "정답 경계와 가장 가까운 학습 example 사이에 남은 안전거리입니다. 모든 점이 경계에 바짝 붙어 있으면 작은 변화에도 분류가 뒤집힙니다.",
+          "정답 경계와 가장 가까운 학습 자료 사이에 남은 안전거리입니다.",
         workedExample:
-          "정규화된 separator에서 가장 가까운 example의 signed score가 0.5이면 margin γ는 0.5입니다. 같은 data에서 0.25로 줄면 mistake bound는 네 배 커집니다.",
+          "경계 방향의 길이를 1로 맞췄을 때 최소 거리가 γ=0.5이면 γ=0.25일 때보다 오답 횟수 상한이 네 배 작습니다.",
         boundary:
-          "Margin은 좌표와 weight의 scale을 함께 고정해야 비교할 수 있습니다. Weight를 임의로 두 배 하는 것만으로 문제의 실제 여유가 커지지는 않습니다.",
-      causalTrace: {
-        answer: "정답 경계와 가장 가까운 학습 example 사이에 남은 안전거리입니다. 모든 점이 경계에 바짝 붙어 있으면 작은 변화에도 분류가 뒤집힙니다.",
-        followUpQuestion: "Classification margin이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Margin은 좌표와 weight의 scale을 함께 고정해야 비교할 수 있습니다. Weight를 임의로 두 배 하는 것만으로 문제의 실제 여유가 커지지는 않습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. 정규화된 separator에서 가장 가까운 example의 signed score가 0.5이면 margin γ는 0.5입니다. 같은 data에서 0.25로 줄면 mistake bound는 네 배 커집니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Margin은 좌표와 weight의 scale을 함께 고정해야 비교할 수 있습니다. Weight를 임의로 두 배 하는 것만으로 문제의 실제 여유가 커지지는 않습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Margin은 좌표와 weight의 scale을 함께 고정해야 비교할 수 있습니다. Weight를 임의로 두 배 하는 것만으로 문제의 실제 여유가 커지지는 않습니다."
-      }},
+          "가중치 길이와 입력 단위를 고정해야 비교할 수 있습니다. 가중치만 두 배로 키워 실제 여유가 커진 것처럼 말할 수 없습니다.",
+        causalTrace: {
+          answer:
+            "직선으로 나뉜다는 사실만으로는 부족하고, 가장 가까운 점도 경계에서 양의 거리를 확보해야 합니다.",
+          followUpQuestion:
+            "이 여유와 입력의 최대 거리를 알면 수정 횟수를 어떻게 제한할까요?",
+          bottleneck:
+            "경계에 점이 붙어 있으면 아주 작은 흔들림에도 정답 쪽이 바뀌어 수렴 보장이 약해집니다.",
+          mechanism:
+            "입력 최대 거리 R=2, 최소 여유 γ=0.5라면 (R/γ)²=16이 오답 횟수의 상한입니다.",
+          remainingCost:
+            "이 값은 실제 오답 횟수의 예측값이 아니라 최악의 경우를 막는 보수적 상한입니다.",
+          decisionRule:
+            "서로 다른 자료나 단위를 비교하기 전에 입력 크기와 가중치의 정규화 조건부터 맞춥니다.",
+        },
+      },
       {
         id: "perceptron-convergence",
         sectionId: "convergence",
         intuition:
-          "퍼셉트론이 영원히 틀리기만 하는지 묻는 대신, 일정한 조건에서 실수하며 update할 수 있는 횟수에 상한이 있다는 정리입니다.",
+          "입력 크기가 제한되고 모든 자료를 양의 여유로 나누는 직선이 있으면 오답 수정 횟수는 유한합니다.",
         workedExample:
-          "모든 input 길이가 R=2 이하이고 margin γ=0.5인 separator가 있으면 mistake 수 M은 최대 (2/0.5)²=16입니다. γ가 0.25면 상한은 64로 늘어납니다.",
+          "R=2, γ=0.5이면 M≤16이고 γ만 0.25로 줄면 상한은 64가 됩니다.",
         boundary:
-          "Input norm이 bounded이고 모든 학습 example을 positive margin으로 나누는 하나의 linear separator가 존재할 때만 적용할 수 있습니다.",
+          "선형 분리 가능한 자료와 양의 여유가 있을 때만 적용합니다. XOR이나 같은 입력에 상반된 정답이 붙은 자료에는 적용할 수 없습니다.",
         proofIdea:
-          "각 mistake update는 weight를 정답 separator 방향으로 최소 γ만큼 전진시키지만 weight의 길이는 한 번에 최대 R만큼만 커집니다. M번 뒤의 전진량 Mγ와 길이 상한 R√M을 함께 놓으면 M≤(R/γ)²가 됩니다.",
+          "오답 한 번마다 정답 방향으로 최소 γ 전진하지만 가중치 길이는 최대 R만큼만 늘어납니다. Mγ≤R√M을 정리하면 M≤(R/γ)²입니다.",
         counterexample:
-          "XOR이나 서로 같은 input에 반대 label이 붙은 data에는 모든 점을 나누는 linear separator가 없습니다. 이 경우 전제가 깨지므로 update가 반복되어도 정리는 수렴을 보장하지 않습니다.",
-      causalTrace: {
-        answer: "퍼셉트론이 영원히 틀리기만 하는지 묻는 대신, 일정한 조건에서 실수하며 update할 수 있는 횟수에 상한이 있다는 정리입니다.",
-        followUpQuestion: "Perceptron convergence이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Input norm이 bounded이고 모든 학습 example을 positive margin으로 나누는 하나의 linear separator가 존재할 때만 적용할 수 있습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. 모든 input 길이가 R=2 이하이고 margin γ=0.5인 separator가 있으면 mistake 수 M은 최대 (2/0.5)²=16입니다. γ가 0.25면 상한은 64로 늘어납니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Input norm이 bounded이고 모든 학습 example을 positive margin으로 나누는 하나의 linear separator가 존재할 때만 적용할 수 있습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Input norm이 bounded이고 모든 학습 example을 positive margin으로 나누는 하나의 linear separator가 존재할 때만 적용할 수 있습니다."
-      }},
+          "XOR에는 네 점을 모두 맞히는 직선이 없어 w*와 양의 γ를 정할 수 없습니다.",
+        causalTrace: {
+          answer:
+            "양의 여유를 가진 직선 경계가 실제로 존재하면 퍼셉트론의 오답 수정은 유한 번 안에 끝납니다.",
+          followUpQuestion:
+            "끝난다는 말은 모든 이진 문제에 통할까요? XOR에서는 무엇이 깨질까요?",
+          bottleneck:
+            "수정 규칙만 보고 수렴을 기대하면 존재하지 않는 직선 경계를 계속 찾게 됩니다.",
+          mechanism:
+            "R=2와 γ=0.5를 상한식에 넣어 2÷0.5=4, 4²=16 순서로 계산합니다.",
+          remainingCost:
+            "상한은 자료 순서별 실제 소요 시간이나 가장 좋은 경계를 찾아준다는 보장이 아닙니다.",
+          decisionRule:
+            "수렴 정리를 쓰기 전에 선형 분리 가능성, 양의 여유, 입력 크기 상한을 차례로 확인합니다.",
+        },
+      },
       {
         id: "linear-separability",
         sectionId: "limitation",
         intuition:
-          "점들 사이에 직선 자 하나를 놓아 두 class를 완전히 양쪽으로 나눌 수 있는지를 묻는 조건입니다.",
+          "점들 사이에 직선 자 하나를 놓아 두 정답 집합을 완전히 양쪽으로 나눌 수 있는 조건입니다.",
         workedExample:
-          "AND의 positive 점 (1,1)은 나머지 세 점과 한 직선으로 분리할 수 있지만 XOR의 positive 두 점은 대각선으로 떨어져 있어 한 직선으로 나눌 수 없습니다.",
+          "AND에서는 (1,1)만 나머지 세 점과 분리되지만 XOR의 정답 1 두 점은 대각선으로 떨어져 있습니다.",
         boundary:
-          "현재 feature 공간에서의 조건입니다. Nonlinear feature map이나 hidden layer가 새로운 좌표를 만들면 원래는 분리되지 않던 data도 선형 분리될 수 있습니다.",
-      causalTrace: {
-        answer: "점들 사이에 직선 자 하나를 놓아 두 class를 완전히 양쪽으로 나눌 수 있는지를 묻는 조건입니다.",
-        followUpQuestion: "Linear separability이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: 현재 feature 공간에서의 조건입니다. Nonlinear feature map이나 hidden layer가 새로운 좌표를 만들면 원래는 분리되지 않던 data도 선형 분리될 수 있습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. AND의 positive 점 (1,1)은 나머지 세 점과 한 직선으로 분리할 수 있지만 XOR의 positive 두 점은 대각선으로 떨어져 있어 한 직선으로 나눌 수 없습니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. 현재 feature 공간에서의 조건입니다. Nonlinear feature map이나 hidden layer가 새로운 좌표를 만들면 원래는 분리되지 않던 data도 선형 분리될 수 있습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: 현재 feature 공간에서의 조건입니다. Nonlinear feature map이나 hidden layer가 새로운 좌표를 만들면 원래는 분리되지 않던 data도 선형 분리될 수 있습니다."
-      }},
+          "현재 입력 좌표에서의 조건입니다. 비선형 변환으로 새 좌표를 만들면 원래 나뉘지 않던 자료가 나뉠 수 있습니다.",
+        causalTrace: {
+          answer:
+            "AND는 직선 하나로 나뉘지만 XOR은 어떤 직선을 그어도 한쪽에 정답 0과 1이 함께 남습니다.",
+          followUpQuestion:
+            "직선의 위치를 계속 고치는 대신 입력을 다른 좌표로 바꾸면 어떨까요?",
+          bottleneck:
+            "학습률을 줄이거나 더 오래 반복해도 존재하지 않는 직선은 생기지 않습니다.",
+          mechanism:
+            "AND의 정답 1은 한 모서리에 하나뿐이고, XOR의 정답 1은 서로 마주 보는 두 모서리에 놓입니다.",
+          remainingCost:
+            "새 좌표를 만드는 모델은 더 많은 매개변수와 학습 과정이 필요합니다.",
+          decisionRule:
+            "오답이 계속되면 반복 횟수보다 먼저 현재 좌표에서 직선 분리가 가능한지 검사합니다.",
+        },
+      },
       {
         id: "xor-problem",
         sectionId: "limitation",
         intuition:
-          "두 입력이 서로 다를 때만 1인 네 점은 positive가 대각선으로 떨어져 있어 직선 한쪽 반평면만으로 골라낼 수 없습니다.",
+          "두 입력이 서로 다를 때만 1인 네 점은 정답 1이 대각선에 놓여 한 반평면으로 고를 수 없습니다.",
         workedExample:
-          "(0,1)과 (1,0)은 1, (0,0)과 (1,1)은 0입니다. Positive 조건 두 개를 더해 얻는 weight 합의 하한이 negative 조건의 상한과 모순됩니다.",
+          "정답 1인 두 부등식을 더하면 같은 값이 0보다 커야 하지만 정답 0인 두 조건에서는 그 값이 0 이하여야 합니다.",
         boundary:
-          "XOR은 perceptron update 자체의 오류가 아니라 단층 linear model class의 표현 한계입니다. Nonlinear hidden feature를 만들면 새 좌표에서는 분리할 수 있습니다.",
-      causalTrace: {
-        answer: "두 입력이 서로 다를 때만 1인 네 점은 positive가 대각선으로 떨어져 있어 직선 한쪽 반평면만으로 골라낼 수 없습니다.",
-        followUpQuestion: "XOR limitation이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: XOR은 perceptron update 자체의 오류가 아니라 단층 linear model class의 표현 한계입니다. Nonlinear hidden feature를 만들면 새 좌표에서는 분리할 수 있습니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. (0,1)과 (1,0)은 1, (0,0)과 (1,1)은 0입니다. Positive 조건 두 개를 더해 얻는 weight 합의 하한이 negative 조건의 상한과 모순됩니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. XOR은 perceptron update 자체의 오류가 아니라 단층 linear model class의 표현 한계입니다. Nonlinear hidden feature를 만들면 새 좌표에서는 분리할 수 있습니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: XOR은 perceptron update 자체의 오류가 아니라 단층 linear model class의 표현 한계입니다. Nonlinear hidden feature를 만들면 새 좌표에서는 분리할 수 있습니다."
-      }},
+          "수정 공식의 오류가 아니라 단층 선형 모델이 표현할 수 있는 경계의 한계입니다.",
+        causalTrace: {
+          answer:
+            "XOR은 같은 값이 동시에 0보다 크고 0 이하여야 한다는 모순을 만들어 단층 퍼셉트론으로 풀 수 없습니다.",
+          followUpQuestion:
+            "직선 두 개의 결과를 중간 입력으로 쓰면 대각선 두 점을 모을 수 있을까요?",
+          bottleneck:
+            "실패 원인을 수정 규칙에서만 찾으면 학습률과 순서만 바꾸며 같은 한계를 반복합니다.",
+          mechanism:
+            "네 판정 조건을 부등식으로 적고 정답 1 두 식과 정답 0 두 식을 각각 합치면 모순이 드러납니다.",
+          remainingCost:
+            "비선형 은닉층을 더하면 표현은 가능해지지만 어떤 가중치를 찾을지는 별도의 학습 문제입니다.",
+          decisionRule:
+            "직선 한 개로 불가능하다는 반례가 나오면 표현을 바꾸고, 단순 반복 조정은 중단합니다.",
+        },
+      },
       {
         id: "multilayer-perceptron",
         sectionId: "multilayer",
         intuition:
-          "직선 하나로 나뉘지 않는 input을 hidden layer가 새 좌표로 바꾸고, 다음 layer가 그 좌표에서 다시 선형 경계를 그리는 구조입니다.",
+          "은닉층이 비선형 중간 값을 만들고 출력층이 그 새 좌표에서 다시 직선 경계를 긋는 구조입니다.",
         workedExample:
-          "XOR에서 두 hidden unit이 OR과 NAND에 가까운 값을 만들면 output unit은 두 값의 AND에 해당하는 경계로 정답을 만들 수 있습니다.",
+          "XOR에서 두 은닉 뉴런이 OR과 NAND에 가까운 값을 만들면 출력 뉴런은 둘을 AND처럼 결합할 수 있습니다.",
         boundary:
-          "Layer 수만 늘린다고 해결되지 않습니다. 중간에 nonlinear activation이 없으면 여러 affine layer가 하나로 합쳐져 표현력은 그대로입니다.",
-      causalTrace: {
-        answer: "직선 하나로 나뉘지 않는 input을 hidden layer가 새 좌표로 바꾸고, 다음 layer가 그 좌표에서 다시 선형 경계를 그리는 구조입니다.",
-        followUpQuestion: "Multilayer perceptron (MLP)이라는 답을 들으면 다음 질문이 생깁니다. 이 개념은 어떤 막힘을 해결하며 어디까지 적용할 수 있을까요?",
-        bottleneck: "이 구분이 없으면 작은 사례의 결과와 적용 경계를 한데 섞게 됩니다. 특히 다음 조건을 놓치기 쉽습니다: Layer 수만 늘린다고 해결되지 않습니다. 중간에 nonlinear activation이 없으면 여러 affine layer가 하나로 합쳐져 표현력은 그대로입니다.",
-        mechanism: "같은 질문을 수치나 동작 순서로 따라가면 이렇습니다. XOR에서 두 hidden unit이 OR과 NAND에 가까운 값을 만들면 output unit은 두 값의 AND에 해당하는 경계로 정답을 만들 수 있습니다.",
-        remainingCost: "작동 원리를 적용한 뒤에도 이 비용과 경계는 남습니다. Layer 수만 늘린다고 해결되지 않습니다. 중간에 nonlinear activation이 없으면 여러 affine layer가 하나로 합쳐져 표현력은 그대로입니다.",
-        decisionRule: "예제와 실제 상황의 조건을 먼저 맞춥니다. 다음 경계를 넘지 않을 때 이 설명을 적용합니다: Layer 수만 늘린다고 해결되지 않습니다. 중간에 nonlinear activation이 없으면 여러 affine layer가 하나로 합쳐져 표현력은 그대로입니다."
-      }},
+          "층만 늘려서는 안 됩니다. 중간에 비선형 활성화 함수가 없으면 여러 아핀 층은 하나로 합쳐집니다.",
+        causalTrace: {
+          answer:
+            "OR과 NAND라는 두 중간 질문의 답을 새 입력으로 쓰면 XOR을 마지막 AND 하나로 만들 수 있습니다.",
+          followUpQuestion:
+            "층 사이의 활성화 함수를 빼도 깊이만으로 같은 효과가 날까요?",
+          bottleneck:
+            "선형 계산만 연달아 놓으면 행렬과 편향을 하나로 합칠 수 있어 새 경계가 생기지 않습니다.",
+          mechanism:
+            "W₂(W₁x+b₁)+b₂를 전개하면 (W₂W₁)x+(W₂b₁+b₂)가 되어 아핀 변환 하나와 같습니다.",
+          remainingCost:
+            "표현 가능성은 필요한 뉴런 수, 데이터 양, 역전파의 성공과 실행 비용을 보장하지 않습니다.",
+          decisionRule:
+            "비선형 관계를 표현해야 할 때만 은닉층과 활성화 함수를 추가하고 검증 자료에서 이득을 확인합니다.",
+        },
+      },
     ],
     conceptStages: [
       {
-        label: "Score와 예측",
-        relation: "feature를 projection한 뒤 hard label로 변환",
+        label: "점수와 판정",
+        relation: "특성값을 점수 하나로 모은 뒤 0 또는 1로 판정",
         concepts: [
           "feature-target",
           "coordinate-vector",
@@ -7520,12 +7575,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         label: "기하학",
-        relation: "score가 0인 곳과 두 half-space를 해석",
+        relation: "점수가 0인 경계와 양쪽 영역을 해석",
         concepts: ["decision-boundary", "linear-separability"],
       },
       {
         label: "학습 규칙",
-        relation: "mistake가 생길 때 올바른 쪽으로 경계를 이동",
+        relation: "오답이 생길 때 올바른 쪽으로 경계를 이동",
         concepts: [
           "perceptron-update",
           "classification-margin",
@@ -7534,7 +7589,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         label: "한계와 확장",
-        relation: "XOR 모순에서 nonlinear hidden representation으로 이동",
+        relation: "XOR의 모순에서 비선형 은닉 표현으로 이동",
         concepts: [
           "xor-problem",
           "nonlinear-activation",
@@ -7546,156 +7601,112 @@ export const ARTICLE_LEARNING: Readonly<
     exercises: [
       {
         level: "basic",
-        question:
-          "두 feature를 받는 퍼셉트론에서 weight, bias, step activation은 각각 prediction의 무엇을 정할까요?",
+        question: "가중치, 편향, 계단 함수는 퍼셉트론의 판정에서 각각 무엇을 정할까요?",
         answerChecklist: [
-          "Weight는 input을 투영할 방향과 feature별 기여를 정한다고 설명한다.",
-          "Bias는 hyperplane을 원점에서 평행 이동한다고 설명한다.",
-          "Step activation은 score 부호를 hard class label로 바꾼다고 설명한다.",
+          "가중치는 입력마다 점수에 보탤 방향과 크기를 정한다고 설명한다.",
+          "편향은 점수가 0인 결정 경계의 위치를 옮긴다고 설명한다.",
+          "계단 함수는 점수의 부호를 0 또는 1로 바꾼다고 설명한다.",
         ],
-        requiredConcepts: [
-          "linear-score",
-          "decision-boundary",
-          "step-activation",
-        ],
-        sectionId: "overview",
+        requiredConcepts: ["linear-score", "decision-boundary", "step-activation"],
+        sectionId: "trace",
       },
       {
         level: "basic",
-        question:
-          "AND gate의 네 입력 중 (1,1)만 1로 분류하도록 weight와 bias 한 조합을 제시하고 검산할 수 있을까요?",
+        question: "AND의 네 입력 중 (1,1)만 1이 되게 하는 가중치와 편향 한 조합을 제시하고 검산할 수 있나요?",
         answerChecklist: [
           "예를 들어 w₁=w₂=0.5, b=−0.7을 제시한다.",
-          "네 input의 score를 각각 계산해 (1,1)에서만 양수임을 확인한다.",
-          "같은 경계를 만드는 parameter 조합은 유일하지 않다고 설명한다.",
+          "네 입력의 점수를 계산해 (1,1)에서만 양수임을 확인한다.",
+          "같은 경계를 만드는 수치 조합은 하나가 아니라고 설명한다.",
         ],
-        requiredConcepts: [
-          "linear-score",
-          "step-activation",
-          "decision-boundary",
-        ],
+        requiredConcepts: ["linear-score", "step-activation", "decision-boundary"],
         sectionId: "logic-gates",
       },
       {
         level: "basic",
-        question:
-          "퍼셉트론이 한 example을 틀렸을 때와 맞혔을 때 update가 어떻게 달라지는지 설명할 수 있을까요?",
+        question: "퍼셉트론이 자료를 틀렸을 때와 맞혔을 때 수정이 어떻게 달라지나요?",
         answerChecklist: [
-          "맞히면 y−ŷ가 0이므로 weight와 bias가 바뀌지 않는다고 설명한다.",
-          "Positive를 0으로 틀리면 input 방향으로 weight가 이동한다고 설명한다.",
-          "Negative를 1로 틀리면 input 반대 방향으로 weight가 이동한다고 설명한다.",
+          "맞히면 y−ŷ가 0이므로 가중치와 편향이 바뀌지 않는다고 설명한다.",
+          "정답 1을 0으로 틀리면 입력 방향으로 가중치를 옮긴다고 설명한다.",
+          "정답 0을 1로 틀리면 입력 반대 방향으로 가중치를 옮긴다고 설명한다.",
         ],
         requiredConcepts: ["perceptron-update", "linear-score"],
-        sectionId: "overview",
+        sectionId: "trace",
       },
       {
         level: "basic",
-        question:
-          "x=(1,2), w=(−1,0.5), b=0.2인 퍼셉트론의 score와 class를 계산하고 경계 식을 적을 수 있을까요?",
+        question: "x=(1,1), w=(0.5,0.5), b=−0.7일 때 점수와 판정값을 계산하고 경계 식을 적을 수 있나요?",
         answerChecklist: [
-          "Score −1+1+0.2=0.2를 계산한다.",
-          "0보다 크므로 step activation의 class 1이라고 판정한다.",
-          "결정 경계가 −x₁+0.5x₂+0.2=0인 직선이라고 적는다.",
+          "점수 0.5+0.5−0.7=0.3을 계산한다.",
+          "0보다 크므로 판정값은 1이라고 설명한다.",
+          "결정 경계는 0.5x₁+0.5x₂−0.7=0이라고 적는다.",
         ],
-        requiredConcepts: [
-          "linear-score",
-          "step-activation",
-          "decision-boundary",
-        ],
-        sectionId: "overview",
+        requiredConcepts: ["linear-score", "step-activation", "decision-boundary"],
+        sectionId: "trace",
       },
       {
         level: "basic",
-        question:
-          "Positive example을 0으로 잘못 예측한 경우와 올바르게 예측한 경우의 perceptron update를 비교할 수 있을까요?",
+        question: "(1,1)을 0으로 틀렸을 때 η=0.1로 한 번 고친 결과를 계산할 수 있나요?",
         answerChecklist: [
-          "오분류에서는 target−prediction과 input 방향으로 weight·bias를 움직인다고 설명한다.",
-          "Learning rate가 update 크기를 정한다고 설명한다.",
-          "올바른 예측에서는 mistake-driven update가 0이라고 설명한다.",
+          "정답−예측이 1−0=1이라고 계산한다.",
+          "w=(0.5,0.5)는 (0.6,0.6)이 되고 b=−1.1은 −1.0이 된다고 계산한다.",
+          "네 점수를 다시 계산해 오답이 0개인지 확인한다.",
         ],
         requiredConcepts: ["perceptron-update", "linear-score"],
-        sectionId: "overview",
+        sectionId: "trace",
       },
       {
         level: "basic",
-        question:
-          "AND와 XOR을 현재 input 공간의 linear separability 관점에서 비교할 수 있을까요?",
+        question: "AND와 XOR을 현재 입력 공간의 선형 분리 가능성으로 비교할 수 있나요?",
         answerChecklist: [
-          "AND의 positive (1,1)은 나머지 점과 직선 하나로 분리할 수 있다고 설명한다.",
-          "XOR의 positive 두 점은 대각선에 있어 한 half-space로 선택할 수 없다고 설명한다.",
-          "이는 update rule이 아니라 model class의 표현 경계라고 결론낸다.",
+          "AND의 정답 1인 (1,1)은 나머지 세 점과 직선 하나로 나눌 수 있다고 설명한다.",
+          "XOR의 정답 1인 두 점은 대각선에 있어 직선 한쪽에 모을 수 없다고 설명한다.",
+          "이 차이는 수정 공식보다 모델의 표현 범위에서 생긴다고 결론낸다.",
         ],
-        requiredConcepts: [
-          "linear-separability",
-          "xor-problem",
-          "decision-boundary",
-        ],
+        requiredConcepts: ["linear-separability", "xor-problem", "decision-boundary"],
         sectionId: "limitation",
       },
       {
         level: "advanced",
-        question:
-          "퍼셉트론 convergence theorem이 수렴을 보장하려면 어떤 data 조건이 필요하고 margin이 작아지면 무엇이 달라질까요?",
+        question: "퍼셉트론 수렴 정리를 적용하려면 어떤 자료 조건이 필요하고 분류 여유가 작아지면 무엇이 달라지나요?",
         answerChecklist: [
-          "Input norm이 bounded이고 하나의 separator가 positive margin으로 모든 example을 나눈다는 전제를 말한다.",
-          "Mistake bound가 대략 (R/γ)²에 비례하므로 margin이 작을수록 보장이 느슨해진다고 설명한다.",
-          "XOR처럼 선형 분리 불가능하면 theorem을 적용할 수 없고 update가 계속 흔들릴 수 있다고 설명한다.",
+          "입력 크기에 상한이 있고 한 직선이 모든 자료를 양의 여유로 나눈다는 전제를 말한다.",
+          "오답 횟수 상한이 (R/γ)²이므로 γ가 절반이면 상한은 네 배가 된다고 계산한다.",
+          "XOR처럼 선형 분리할 수 없으면 정리를 적용할 수 없다고 설명한다.",
         ],
-        requiredConcepts: [
-          "classification-margin",
-          "perceptron-convergence",
-          "perceptron-update",
-          "linear-separability",
-        ],
+        requiredConcepts: ["classification-margin", "perceptron-convergence", "perceptron-update", "linear-separability"],
         sectionId: "convergence",
       },
       {
         level: "advanced",
-        question:
-          "XOR의 네 부등식이 왜 하나의 linear decision boundary와 모순되는지 식과 그림의 언어로 설명할 수 있을까요?",
+        question: "XOR의 네 부등식이 왜 선형 결정 경계 하나와 모순되는지 식과 그림으로 설명할 수 있나요?",
         answerChecklist: [
-          "Positive 두 점과 negative 두 점의 위치가 대각선으로 교차한다고 설명한다.",
-          "Positive 조건을 더한 하한과 negative 조건에서 얻은 상한이 모순된다고 유도한다.",
-          "학습 규칙의 실패가 아니라 단층 model class의 표현 한계라고 결론낸다.",
+          "정답 1인 두 점과 정답 0인 두 점이 대각선으로 마주 본다고 설명한다.",
+          "정답 1인 두 조건의 하한과 정답 0인 두 조건의 상한이 모순된다고 유도한다.",
+          "학습 규칙의 실패가 아니라 단층 모델의 표현 한계라고 결론낸다.",
         ],
-        requiredConcepts: [
-          "xor-problem",
-          "linear-separability",
-          "decision-boundary",
-        ],
+        requiredConcepts: ["xor-problem", "linear-separability", "decision-boundary"],
         sectionId: "limitation",
       },
       {
         level: "advanced",
-        question:
-          "Affine layer를 여러 개 쌓아도 activation이 없으면 XOR을 풀지 못하는 이유를 행렬식으로 보일 수 있을까요?",
+        question: "아핀 층을 여러 개 쌓아도 활성화 함수가 없으면 XOR을 풀지 못하는 이유를 행렬식으로 보일 수 있나요?",
         answerChecklist: [
-          "두 affine transform을 전개해 W′x+b′ 하나로 합친다.",
-          "결정 경계가 여전히 hyperplane 하나인 점을 연결한다.",
-          "Nonlinear activation이 중간 좌표를 다시 표현하게 한다고 설명한다.",
+          "두 아핀 변환을 전개해 W′x+b′ 하나로 합친다.",
+          "결정 경계가 여전히 초평면 하나라고 연결한다.",
+          "비선형 활성화 함수가 새 중간 좌표를 만든다고 설명한다.",
         ],
-        requiredConcepts: [
-          "linear-score",
-          "nonlinear-activation",
-          "multilayer-perceptron",
-          "xor-problem",
-        ],
+        requiredConcepts: ["linear-score", "nonlinear-activation", "multilayer-perceptron", "xor-problem"],
         sectionId: "multilayer",
       },
       {
         level: "advanced",
-        question:
-          "Universal approximation theorem을 근거로 은닉층 하나면 실무에서 항상 충분하다고 말할 수 없는 이유는 무엇일까요?",
+        question: "보편 근사 정리만으로 은닉층 하나면 실무에서 항상 충분하다고 말할 수 없는 이유는 무엇인가요?",
         answerChecklist: [
-          "정리는 정해진 compact domain에서의 representability를 다룬다고 제한한다.",
-          "필요 width·sample complexity·optimizer가 해를 찾는 과정은 보장하지 않는다고 설명한다.",
-          "깊이·activation·data·training budget을 같은 조건에서 비교해야 한다고 결론낸다.",
+          "정리는 정해진 입력 구간에서 함수를 표현할 수 있다는 존재성 결과라고 제한한다.",
+          "필요한 폭, 자료 수, 최적화 알고리즘이 해를 찾는 과정은 보장하지 않는다고 설명한다.",
+          "깊이, 활성화 함수, 자료, 학습 자원을 같은 조건에서 비교해야 한다고 결론낸다.",
         ],
-        requiredConcepts: [
-          "multilayer-perceptron",
-          "nonlinear-activation",
-          "representation-learning",
-        ],
+        requiredConcepts: ["multilayer-perceptron", "nonlinear-activation", "representation-learning"],
         sectionId: "multilayer",
       },
     ],
@@ -7703,32 +7714,42 @@ export const ARTICLE_LEARNING: Readonly<
       {
         title: "The Perceptron",
         href: "https://doi.org/10.1037/h0042519",
-        problem:
-          "감각 입력의 pattern을 저장하고 분류하는 학습 가능한 연결 시스템을 구성하는 문제",
-        contribution:
-          "고정된 규칙이 아니라 example의 error에 따라 connection strength를 바꾸는 perceptron model을 제안",
-        assumptions:
-          "원 논문의 probabilistic·neurobiological model과 당시의 pattern recognition 설정을 전제로 함",
-        evidenceScope:
-          "1958년 perceptron 이론과 simulation·hardware 구상에 대한 역사적 원문 범위",
-        notClaim:
-          "현대의 differentiable MLP나 backpropagation 전체를 이 논문 하나가 제안했다는 뜻은 아님",
+        problem: "감각 입력의 무늬를 저장하고 분류하는 학습 가능한 연결 체계를 구성하는 문제",
+        contribution: "고정 규칙 대신 자료의 오차에 따라 연결 강도를 바꾸는 퍼셉트론 모델을 제안",
+        assumptions: "원 논문의 확률적·신경생물학적 모델과 당시의 무늬 인식 설정을 전제로 함",
+        evidenceScope: "1958년 퍼셉트론 이론과 모의실험·하드웨어 구상에 관한 역사적 원문 범위",
+        notClaim: "현대의 미분 가능한 MLP나 역전파 전체를 이 논문 하나가 제안했다는 뜻은 아님",
         sectionId: "paper-perceptron",
       },
       {
         title: "Approximation by Superpositions of a Sigmoidal Function",
         href: "https://doi.org/10.1007/BF02551274",
-        problem:
-          "단일 hidden layer와 sigmoidal nonlinearity가 어떤 연속 함수를 표현할 수 있는지 정하는 문제",
-        contribution:
-          "Unit hypercube의 compact support에서 연속 함수를 finite linear combination으로 uniform approximation하는 조건을 증명",
-        assumptions:
-          "Continuous sigmoidal activation, compact domain과 원하는 approximation error 안에서의 존재성",
-        evidenceScope:
-          "Single-hidden-layer feed-forward network의 representability에 대한 수학적 결과",
-        notClaim:
-          "필요한 hidden unit 수, data 양, optimizer의 수렴이나 일반화 성능을 보장하는 정리는 아님",
+        problem: "시그모이드 비선형성을 가진 단일 은닉층이 어떤 연속 함수를 표현할 수 있는지 정하는 문제",
+        contribution: "닫히고 유계인 입력 구간에서 연속 함수를 유한한 선형 결합으로 균일 근사하는 조건을 증명",
+        assumptions: "연속 시그모이드 활성화 함수, 닫히고 유계인 입력 구간, 원하는 근사 오차를 전제로 함",
+        evidenceScope: "단일 은닉층 순방향 신경망의 표현 가능성에 관한 수학적 결과",
+        notClaim: "필요한 은닉 뉴런 수, 자료 양, 최적화 알고리즘의 수렴이나 일반화 성능을 보장하는 정리는 아님",
         sectionId: "paper-universal-approximation",
+      },
+      {
+        title: "On Convergence Proofs for Perceptrons",
+        href: "https://web.engr.oregonstate.edu/~huanlian/teaching/ML/2020spring/extra/novikoff-1963.pdf",
+        problem: "오답이 날 때마다 경계를 고치는 과정이 유한 번 안에 끝나는 조건과 상한을 정하는 문제",
+        contribution: "입력 크기 상한과 양의 분리 여유를 이용해 퍼셉트론 수렴과 오답 횟수 상한을 증명",
+        assumptions: "모든 자료를 나누는 선형 경계, 양의 여유, 제한된 입력 크기를 전제로 함",
+        evidenceScope: "선형 분리 가능한 자료에서의 오답 수정 횟수와 수렴 보장",
+        notClaim: "XOR, 정답 잡음, 일반화 성능, 실제 실행 시간이나 가장 좋은 경계를 보장하는 결과는 아님",
+        sectionId: "paper-convergence",
+      },
+      {
+        title: "scikit-learn Perceptron implementation",
+        href: "https://github.com/scikit-learn/scikit-learn/blob/0d4fe1463f83a341337628a2880d1d174a723bfa/sklearn/linear_model/_perceptron.py",
+        problem: "고전적 퍼셉트론 규칙을 실제 라이브러리의 공통 선형 분류기 안에서 구성하는 문제",
+        contribution: "공통 SGD 분류기에 퍼셉트론 손실과 고정 학습률을 설정하고 반복·섞기·조기 종료 옵션을 연결",
+        assumptions: "고정 커밋 0d4fe146의 scikit-learn Python 구현을 기준으로 함",
+        evidenceScope: "Perceptron 클래스의 생성자와 공통 SGDClassifier 구현 사이의 연결",
+        notClaim: "본문의 일곱 단계 의사코드와 실제 fit 내부 절차가 줄마다 같다는 뜻은 아님",
+        sectionId: "source-scikit-perceptron",
       },
     ],
   },
