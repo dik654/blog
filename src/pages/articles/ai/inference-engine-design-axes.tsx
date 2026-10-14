@@ -29,9 +29,8 @@ export default function InferenceEngineDesignAxesArticle() {
               요청을 넣어 보면 처음에 받아들이는 요청 수가 3개, 3개, 19개, 4개로 갈립니다. 계산 속도가 같아도 이 차이가 처리량과 대기 시간을 바꿉니다.
             </p>
             <p>
-              이 글의 답은 다음과 같습니다. 엔진 사이의 오래 가는 차이는 kernel의 이름보다 다섯 가지 결정에서 나옵니다. KV를 몇 token 단위로 자르는가,
-              아직 만들지 않은 출력을 얼마나 미리 떼어 두는가, 재사용할 기록을 무엇으로 찾는가, CPU의 준비 일을 GPU 계산과 겹치는가, attention kernel을
-              직접 갖는가 빌려 쓰는가입니다.
+              답부터 말하겠습니다. 엔진 사이의 오래 가는 차이는 kernel의 이름보다 다섯 가지 결정에서 나옵니다. KV를 몇 token 단위로 자르는가, 아직 만들지 않은 출력을
+              얼마나 미리 떼어 두는가, 재사용할 기록을 무엇으로 찾는가, CPU의 준비 일을 GPU 계산과 겹치는가, attention kernel을 직접 갖는가 빌려 쓰는가입니다.
             </p>
             <p>
               각 엔진의 내부는 따로 다룬 글이 있습니다. <Link to="/cs/ai/vllm-paged-attention">vLLM PagedAttention</Link>,{" "}
@@ -46,9 +45,9 @@ export default function InferenceEngineDesignAxesArticle() {
           <h2 className="mb-6 text-2xl font-bold">2. 네 엔진 모두 고르는 부품, 저장하는 부품, 계산하는 부품을 갖습니다</h2>
           <div className={prose}>
             <p>
-              엔진을 상자로 보면 입력은 요청의 token 열과 출력 상한이고, 출력은 한 step에 한 token씩 나오는 다음 token입니다. 바깥 계약은 네 엔진이 같습니다.
-              안에는 이번 step에 어느 요청을 계산할지 고르는 scheduler, 각 요청의 K·V를 어디에 두고 언제 버릴지 정하는 KV 관리자, 실제 행렬곱과 attention을
-              돌리는 실행기가 있습니다.
+              엔진을 상자로 보면 입력은 요청의 token 열과 출력 상한이고 출력은 한 step에 한 token씩 나오는 다음 token입니다. 바깥 계약은 네 엔진이 같습니다. 안에는
+              이번 step에 어느 요청을 계산할지 고르는 scheduler, 각 요청의 K·V를 어디에 두고 언제 버릴지 정하는 KV 관리자, 실제 행렬곱과 attention을 돌리는
+              실행기가 있습니다.
             </p>
             <p>
               다섯 결정은 이 세 부품에 나뉘어 있습니다. 저장 단위와 재사용 색인은 KV 관리자, 출력 예약과 CPU 겹치기는 scheduler, kernel 선택은 실행기의
@@ -69,7 +68,7 @@ export default function InferenceEngineDesignAxesArticle() {
               이 값을 곱셈으로 푸는 장부는 4절에 있고, 일반적인 계산 방법은 <Link to="/cs/ai/kv-cache-fundamentals">KV cache 기초</Link>에 있습니다.
             </p>
             <p>
-              KV 공간은 4,096 token, 512 MiB로 작게 잡습니다. 수가 작아야 엔진별 차이를 손으로 셀 수 있습니다. 같은 요청이 여러 개 줄 서 있고, 모두 같은 속도로
+              KV 공간은 4,096 token, 512 MiB로 작게 잡습니다. 수가 작아야 엔진별 차이를 손으로 셀 수 있습니다. 같은 요청이 여러 개 줄 서 있고 모두 같은 속도로
               한 token씩 자란다고 둡니다. 실제 엔진이 따로 두는 한 step의 token 예산과 동시 요청 상한은 이 장부에서 빼고 KV 공간만 셉니다. (가정)
             </p>
           </div>
@@ -79,8 +78,9 @@ export default function InferenceEngineDesignAxesArticle() {
           <h2 className="mb-6 text-2xl font-bold">4. 저장 단위의 빈칸은 요청당 많아야 한 단위입니다</h2>
           <div className={prose}>
             <p>
-              첫 결정은 KV를 몇 token씩 묶어 자리를 나누는가입니다. vLLM은 기본 16 token, TensorRT-LLM은 32 token을 한 묶음으로 잡습니다. SGLang은 기본
-              한 token이 한 칸이고, llama.cpp는 묶음 없이 cell 배열에 token 하나씩 적습니다. 500 token 요청을 넣으면 마지막 묶음에 빈칸이 생깁니다.
+              첫 결정은 KV를 몇 token씩 묶어 자리를 나누는가입니다. vLLM은 기본 16 token, TensorRT-LLM은 32 token을 한 묶음으로 잡습니다.
+              SGLang은 기본 한 token이 한 칸이고 llama.cpp는 묶음 없이 cell 배열에 token 하나씩 적습니다. 500 token 요청을 넣으면 마지막 묶음에
+              빈칸이 생깁니다.
             </p>
             <p>
               vLLM은 500 ÷ 16을 올려 32 block, 512칸을 잡아 12칸이 빕니다. TensorRT-LLM도 500 ÷ 32를 올리면 16 block, 512칸이라 같은 12칸이 빕니다. SGLang은
@@ -125,21 +125,21 @@ export default function InferenceEngineDesignAxesArticle() {
           <h2 className="mb-6 text-2xl font-bold">5. 아직 만들지 않은 출력을 얼마나 떼어 두는지가 받는 수를 정합니다</h2>
           <div className={prose}>
             <p>
-              두 번째 결정이 차이를 크게 만듭니다. 엔진은 요청이 300에서 멈출지 1,000까지 갈지 모른 채 받아야 합니다. 출력 상한만큼 미리 떼어 두면 나중에
-              자리가 모자랄 일은 없지만 쓰지 않을 칸까지 잡습니다. 조금만 떼어 두면 많이 받지만, 요청들이 자라면서 자리가 모자라 누군가를 내보내야 합니다.
+              두 번째 결정이 차이를 크게 만듭니다. 엔진은 요청이 300에서 멈출지 1,000까지 갈지 모른 채 받아야 합니다. 출력 상한만큼 미리 떼어 두면 나중에 자리가 모자랄 일은
+              없지만 쓰지 않을 칸까지 잡습니다. 조금만 떼어 두면 많이 받지만 요청들이 자라면서 자리가 모자라 누군가를 내보내야 합니다.
             </p>
             <p>
               TensorRT-LLM의 기본 정책은 입력과 출력 상한을 더한 1,200 token을 32칸 block 38개, 1,216칸으로 받을 때 떼어 둡니다. 4,096칸에는 3개가 들어가고
               넷째는 기다립니다. 세 요청이 끝까지 실제로 쓰는 것은 1,500칸이라 잡아 둔 3,648칸의 41%입니다.
             </p>
             <p>
-              vLLM은 이번 step에 쓸 칸만 받습니다. 입력 200은 16칸 block 13개, 208칸이라 19개가 들어갑니다. 요청들이 500 token까지 자라면 하나에 block 32개가
-              필요해 8개만 남고, 나머지 11개는 KV를 비우고 대기열로 돌아갑니다. 돌아간 요청은 나중에 지금까지의 입력과 출력을 다시 계산합니다.
+              vLLM은 이번 step에 쓸 칸만 받습니다. 입력 200은 16칸 block 13개, 208칸이라 19개가 들어갑니다. 요청들이 500 token까지 자라면 하나에
+              block 32개가 필요해 8개만 남고 나머지 11개는 KV를 비우고 대기열로 돌아갑니다. 돌아간 요청은 나중에 지금까지의 입력과 출력을 다시 계산합니다.
             </p>
             <p>
               SGLang은 그 사이에 있습니다. 새 요청은 입력 200과 상한 1,000에 page 한 칸을 더한 1,201칸으로 세어 첫 판정에서 3개를 받습니다. 이미 돌고 있는
-              요청은 남은 출력에 0.7에서 시작해 내려가는 비율을 곱해 세므로, 몇 step 뒤에는 넷째가 들어옵니다. 계산이 빗나가 자리가 모자라면 출력이 가장 적은
-              요청부터 되돌립니다.
+              요청은 남은 출력에 0.7에서 시작해 내려가는 비율을 곱해 세므로 몇 step 뒤에는 넷째가 들어옵니다. 계산이 빗나가 자리가 모자라면 출력이 가장 적은 요청부터
+              되돌립니다.
             </p>
             <p>
               llama.cpp 서버는 요청을 slot 단위로 받습니다. -np 4로 slot 4개를 두고 KV를 slot마다 나누면 slot 하나가 1,024칸을 고정으로 갖습니다. 요청은
@@ -183,8 +183,8 @@ export default function InferenceEngineDesignAxesArticle() {
               retract입니다.
             </p>
             <p>
-              남은 세 결정에도 이름이 있습니다. 같은 앞부분의 KV를 찾는 기능을 prefix caching이라 부르고, CPU가 다음 batch를 고르는 동안 GPU가 앞 batch를 계산하게
-              하는 방식을 overlap scheduling이라 부릅니다. attention을 실제로 계산하는 구현은 backend라고 부릅니다.
+              남은 세 결정에도 이름이 있습니다. 같은 앞부분의 KV를 찾는 기능을 prefix caching이라 부르고 CPU가 다음 batch를 고르는 동안 GPU가 앞 batch를
+              계산하게 하는 방식을 overlap scheduling이라 부릅니다. attention을 실제로 계산하는 구현은 backend라고 부릅니다.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -201,13 +201,14 @@ export default function InferenceEngineDesignAxesArticle() {
               가져올 수 있습니다. 엔진마다 몇 token을 가져오는지는 저장 단위와 찾는 구조가 정합니다. (가정)
             </p>
             <p>
-              vLLM은 꽉 찬 block마다 앞 block까지 포함한 hash를 만들어 찾습니다. 1,000 ÷ 16을 내리면 block 62개, 992 token을 가져오고 나머지 8 token은 다시
-              계산합니다. TensorRT-LLM은 32칸 block을 radix tree에 매달아 찾고, 마지막 block이 일부만 같아도 그 부분을 복사해 이어 씁니다. 31 block의 992 token에
-              8 token을 더해 1,000을 가져올 수 있습니다.
+              vLLM은 꽉 찬 block마다 앞 block까지 포함한 hash를 만들어 찾습니다. 1,000 ÷ 16을 내리면 block 62개, 992 token을 가져오고 나머지 8
+              token은 다시 계산합니다. TensorRT-LLM은 32칸 block을 radix tree에 매달아 찾고 마지막 block이 일부만 같아도 그 부분을 복사해 이어
+              씁니다. 31 block의 992 token에 8 token을 더해 1,000을 가져올 수 있습니다.
             </p>
             <p>
-              SGLang은 한 칸이 token 하나라 radix tree에서 1,000 token을 그대로 찾습니다. llama.cpp 서버는 기본으로 켜진 cache_prompt가 같은 slot의 직전
-              prompt와 새 prompt의 공통 앞부분을 비교합니다. 그래서 같은 slot으로 가면 1,000을 가져오지만, 다른 slot으로 가면 그 slot에 남은 기록과만 비교합니다.
+              SGLang은 한 칸이 token 하나라 radix tree에서 1,000 token을 그대로 찾습니다. llama.cpp 서버는 기본으로 켜진 cache_prompt가
+              같은 slot의 직전 prompt와 새 prompt의 공통 앞부분을 비교합니다. 그래서 같은 slot으로 가면 1,000을 가져오지만 다른 slot으로 가면 그 slot에
+              남은 기록과만 비교합니다.
             </p>
             <p>
               찾은 기록을 언제 버리는지도 다릅니다. vLLM은 참조가 끝난 block을 오래된 순으로 내보내고, TensorRT-LLM은 0~100 우선순위를 먼저 보고 같은 순위 안에서
@@ -232,8 +233,9 @@ export default function InferenceEngineDesignAxesArticle() {
               overlap loop는 scheduler.py 1975행 이후에서 이번 batch를 GPU에 넣은 뒤 앞 batch의 결과를 처리합니다. 결과는 한 step 늦게 읽힙니다.
             </p>
             <p>
-              vLLM도 config/vllm.py 1095–1143행에서 맞지 않는 옵션이 없으면 비동기 scheduling을 기본으로 켭니다. pooling 모델, 일부 speculative decoding, 지원하지
-              않는 분산 실행기일 때만 끕니다. TensorRT-LLM의 overlap scheduler도 문서상 기본으로 켜져 있고, 그 대가로 한 decoding step이 더 생긴다고 적습니다.
+              vLLM도 config/vllm.py 1095–1143행에서 맞지 않는 옵션이 없으면 비동기 scheduling을 기본으로 켭니다. pooling 모델, 일부
+              speculative decoding, 지원하지 않는 분산 실행기일 때만 끕니다. TensorRT-LLM의 overlap scheduler도 문서상 기본으로 켜져 있고 그
+              대가로 한 decoding step이 더 생긴다고 적습니다.
             </p>
             <p>
               그래서 이 결정은 세 엔진 사이에서는 차이를 만들지 않습니다. 남는 차이는 한 step 늦게 읽는 결과를 어떻게 처리하느냐입니다. 예를 들어 끝 token이 나온
@@ -267,9 +269,9 @@ export default function InferenceEngineDesignAxesArticle() {
               kernel을 빌려 쓰는 셈입니다.
             </p>
             <p>
-              SGLang도 fa3·flashinfer·triton·trtllm_mha 등을 고를 수 있고, TensorRT-LLM도 FlashInfer backend를 지원합니다. llama.cpp는 다른 길을 갑니다. ggml이
-              CPU·CUDA·Metal마다 자기 kernel을 갖고, 가중치를 GGUF 블록 양자화 그대로 두고 정수 내적으로 곱합니다. 데이터센터 kernel을 빌리기보다 작은 기기의
-              메모리에 맞추는 쪽을 택했습니다.
+              SGLang도 fa3·flashinfer·triton·trtllm_mha 등을 고를 수 있고 TensorRT-LLM도 FlashInfer backend를 지원합니다.
+              llama.cpp는 다른 길을 갑니다. ggml이 CPU·CUDA·Metal마다 자기 kernel을 갖고 가중치를 GGUF 블록 양자화 그대로 두고 정수 내적으로 곱합니다.
+              데이터센터 kernel을 빌리기보다 작은 기기의 메모리에 맞추는 쪽을 택했습니다.
             </p>
             <p>
               그래서 같은 GPU에서 kernel 성능을 비교할 때는 엔진 이름보다 실제로 고른 backend를 먼저 맞춰야 합니다. backend가 같아지면 남는 차이는 4~8절의 정책입니다.
@@ -289,8 +291,7 @@ export default function InferenceEngineDesignAxesArticle() {
           <h2 className="mb-6 text-2xl font-bold">10. 작업의 출력 길이와 공유 앞부분, 기기 수가 고를 결정을 정합니다</h2>
           <div className={prose}>
             <p>
-              다섯 결정을 작업 모양에 대 보면 고르는 기준이 생깁니다. 아래 판단은 각 정책의 동작에서 이끌어 낸 것이며, 이 글은 엔진 사이의 성능을 직접 측정하지
-              않았습니다. (가정)
+              다섯 결정을 작업 모양에 대 보면 고르는 기준이 생깁니다. 아래 판단은 각 정책의 동작에서 이끌어 낸 것이며 이 글은 엔진 사이의 성능을 직접 측정하지 않았습니다. (가정)
             </p>
             <p>
               출력 길이를 미리 알기 어렵고 상한보다 훨씬 일찍 끝나는 대화가 많다면 5절의 차이가 가장 큽니다. 끝까지 예약하는 정책은 빈칸이 많아지므로 필요한 만큼
@@ -299,7 +300,7 @@ export default function InferenceEngineDesignAxesArticle() {
             </p>
             <p>
               같은 system prompt나 긴 문서를 여러 요청이 공유한다면 7절의 재사용 단위와 버리는 순서가 중요합니다. 한 token 단위로 찾는 구조와 일부만 같은 block을
-              복사해 이어 쓰는 구조는 남는 몇 token의 재계산을 줄이고, 우선순위를 줄 수 있으면 자주 쓰는 앞부분을 오래 남깁니다.
+              복사해 이어 쓰는 구조는 남는 몇 token의 재계산을 줄이고 우선순위를 줄 수 있으면 자주 쓰는 앞부분을 오래 남깁니다.
             </p>
             <p>
               기기 한 대에서 대화 몇 개를 돌린다면 llama.cpp의 slot과 cell 방식이 맞습니다. 표를 유지할 필요가 없고 양자화한 가중치를 그대로 쓰는 대신, 대화가 늘어

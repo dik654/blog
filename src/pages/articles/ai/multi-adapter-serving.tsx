@@ -54,7 +54,7 @@ export default function MultiAdapterServingArticle() {
           <div className={prose}>
             <p>
               엔진 입구에서 보면 요청 하나는 입력 문장과 어떤 adapter를 쓸지 가리키는 이름 하나로 이루어집니다. 출구에서는 그 adapter가 반영된 출력 token이 나옵니다.
-              엔진 안에는 base 가중치가 한 벌만 있고, 요청마다 다른 부분만 덧붙여 계산합니다.
+              엔진 안에는 base 가중치가 한 벌만 있고 요청마다 다른 부분만 덧붙여 계산합니다.
             </p>
             <p>
               바깥에서 지켜야 할 약속은 하나입니다. adapter A를 요청한 사람의 출력은 A만 따로 띄운 모델의 출력과 같아야 합니다. 옆 자리에 adapter B 요청이 함께
@@ -123,8 +123,8 @@ export default function MultiAdapterServingArticle() {
               합니다. adapter가 같은 token이 붙어 있지 않으니 묶을 수도 없습니다.
             </p>
             <p>
-              그래서 token을 adapter 번호로 다시 줄 세웁니다. A를 쓰는 두 token이 이웃하게 되고, 번호별 개수와 시작 위치를 적은 작은 표가 생깁니다. kernel은 이 표를
-              보고 구간 하나에 adapter 하나를 맡깁니다. 그림은 이 표가 만들어지는 과정을 네 장면으로 보여 줍니다.
+              그래서 token을 adapter 번호로 다시 줄 세웁니다. A를 쓰는 두 token이 이웃하게 되고 번호별 개수와 시작 위치를 적은 작은 표가 생깁니다. kernel은 이
+              표를 보고 구간 하나에 adapter 하나를 맡깁니다. 그림은 이 표가 만들어지는 과정을 네 장면으로 보여 줍니다.
             </p>
           </div>
           <SegmentBatchViz />
@@ -305,8 +305,8 @@ export default function MultiAdapterServingArticle() {
           {code("set-lora", "작은 rank를 슬롯 앞부분에만 복사하는 원문")}
           <div className={prose}>
             <p>
-              S-LoRA는 다른 길을 택합니다. adapter 행렬의 한 줄과 KV cache의 한 줄이 모두 hidden 폭 H를 가진다는 점에 주목해, H개짜리 칸을 page 하나로 삼고 두 종류를
-              한 pool에 섞어 담습니다. rank R의 행렬은 R page, 길이 S의 KV는 S page를 씁니다.
+              S-LoRA는 다른 길을 택합니다. adapter 행렬의 한 줄과 KV cache의 한 줄이 모두 hidden 폭 H를 가진다는 점에 주목해 H개짜리 칸을 page 하나로
+              삼고 두 종류를 한 pool에 섞어 담습니다. rank R의 행렬은 R page, 길이 S의 KV는 S page를 씁니다.
             </p>
             <p>
               같은 104 MiB를 8 KiB page로 나누면 13,312 page입니다. rank 8 두 개와 rank 16 두 개는 9,984 page만 쓰고 나머지 3,328 page, 26 MiB를 KV에 줍니다. 한
@@ -330,7 +330,7 @@ export default function MultiAdapterServingArticle() {
           <AdapterMemoryViz />
           <div className={prose}>
             <p>
-              고정 슬롯이 손해만 보는 것은 아닙니다. adapter 위치가 슬롯 번호로 정해져 kernel은 행렬을 연속된 메모리에서 읽고, CUDA graph를 잡을 때 주소가 바뀌지
+              고정 슬롯이 손해만 보는 것은 아닙니다. adapter 위치가 슬롯 번호로 정해져 kernel은 행렬을 연속된 메모리에서 읽고 CUDA graph를 잡을 때 주소가 바뀌지
               않습니다. page에 흩어 둔 adapter를 읽으려면 S-LoRA처럼 흩어진 주소를 모아 읽는 별도 kernel이 필요합니다.
             </p>
             <p>
@@ -401,8 +401,8 @@ export default function MultiAdapterServingArticle() {
               A, B, C, A 순서라면 A와 B가 들어가고 C는 건너뛰며 마지막 A는 들어갑니다. 멈추지 않고 다음 요청을 계속 봅니다.
             </p>
             <p>
-              TensorRT-LLM capacityScheduler.cpp 135–146행은 adapter 무게를 PEFT cache page로 셉니다. 같은 task id가 이미 이번 batch에 있으면 0 page로 세어, 같은
-              adapter를 쓰는 요청이 여럿이어도 한 번만 더합니다.
+              TensorRT-LLM capacityScheduler.cpp 135–146행은 adapter 무게를 PEFT cache page로 셉니다. 같은 task id가 이미 이번
+              batch에 있으면 0 page로 세어 같은 adapter를 쓰는 요청이 여럿이어도 한 번만 더합니다.
             </p>
             <p>
               새 요청을 받는 417–446행은 KV block과 adapter page가 모두 남을 때만 받습니다. adapter page만 모자라면 그 요청을 건너뛰고, KV block이 모자랄 때는 반복을
@@ -431,8 +431,8 @@ export default function MultiAdapterServingArticle() {
           <h2 className="mb-6 text-2xl font-bold">12. prompt tuning은 가중치 대신 입력 앞에 학습된 token 20개를 붙입니다</h2>
           <div className={prose}>
             <p>
-              LoRA를 섞으려면 kernel, 슬롯, 적재가 모두 필요했습니다. 고객별 차이를 가중치가 아닌 입력에 담으면 이 셋이 거의 사라집니다. prompt tuning이 그 방법입니다.
-              모델은 그대로 두고, 입력 앞에 붙일 가상 token의 embedding만 학습합니다.
+              LoRA를 섞으려면 kernel, 슬롯, 적재가 모두 필요했습니다. 고객별 차이를 가중치가 아닌 입력에 담으면 이 셋이 거의 사라집니다. prompt tuning이 그
+              방법입니다. 모델은 그대로 두고 입력 앞에 붙일 가상 token의 embedding만 학습합니다.
             </p>
             <p>
               Lester 외 논문은 k개의 학습 가능한 token을 입력 앞에 붙인다고 정의합니다. 같은 논문의 길이 실험에서 20개를 넘기면 이득이 작았습니다. 그래서 고객마다 20행

@@ -11,8 +11,8 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">1. 작은 기기 한 대에 8B 모델과 네 대화를 맞춥니다</h2>
         <div className={prose}>
           <p className="text-lg leading-8">
-            GPU 메모리가 6GB인 노트북 한 대로 Llama 3.1 8B를 띄우고, 네 사람의 대화를 동시에 받는다고 해 봅시다. (가정) 가중치를 2 byte씩 그대로 두면
-            16GB가 넘어 아예 올라가지 않습니다. 대화 기록인 KV cache도 16,384 token분이면 2GiB가 더 듭니다.
+            GPU 메모리가 6GB인 노트북 한 대로 Llama 3.1 8B를 띄우고 네 사람의 대화를 동시에 받는다고 해 봅시다. (가정) 가중치를 2 byte씩 그대로 두면 16GB가
+            넘어 아예 올라가지 않습니다. 대화 기록인 KV cache도 16,384 token분이면 2GiB가 더 듭니다.
           </p>
           <p>
             llama.cpp는 이 상황을 세 가지 선택으로 풉니다. 첫째, KV를 요청마다 주소 표로 쪼개지 않고 cell 배열 하나에 적은 뒤 다른 대화의 칸은 계산에서
@@ -31,8 +31,8 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">2. 입력은 token과 대화 번호, 출력은 다음 token 점수입니다</h2>
         <div className={prose}>
           <p>
-            밖에서 보면 llama.cpp 서버는 단순합니다. 요청마다 token 목록과 그 요청이 속한 대화 번호를 받고, 대화마다 다음 token의 점수를 돌려줍니다. 대화
-            번호를 sequence id라고 부르며, 서버의 slot 하나가 대화 하나를 맡습니다.
+            밖에서 보면 llama.cpp 서버는 단순합니다. 요청마다 token 목록과 그 요청이 속한 대화 번호를 받고 대화마다 다음 token의 점수를 돌려줍니다. 대화 번호를
+            sequence id라고 부르며 서버의 slot 하나가 대화 하나를 맡습니다.
           </p>
           <p>
             안에는 세 부품이 있습니다. 대화의 기록을 적는 KV 배열, 양자화된 채 메모리에 놓인 가중치, 그리고 층마다 CPU와 GPU 중 어디서 계산할지 정한
@@ -49,20 +49,20 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">3. 16칸 배열에 두 대화를 적어 봅니다</h2>
         <div className={prose}>
           <p>
-            칸이 16개인 배열을 준비합니다. (가정) 대화 A는 system prompt 4 token 뒤에 질문 3 token을 붙여 모두 7 token입니다. 각 token의 기록을 칸 0부터
-            6까지 차례로 적고, 칸마다 그 token이 문장에서 몇 번째였는지를 0부터 6까지 함께 적습니다.
+            칸이 16개인 배열을 준비합니다. (가정) 대화 A는 system prompt 4 token 뒤에 질문 3 token을 붙여 모두 7 token입니다. 각 token의 기록을
+            칸 0부터 6까지 차례로 적고 칸마다 그 token이 문장에서 몇 번째였는지를 0부터 6까지 함께 적습니다.
           </p>
           <p>
-            대화 B도 같은 system prompt 4 token으로 시작하고 질문 2 token이 다릅니다. B의 앞 4 token 기록은 A가 이미 칸 0~3에 적어 두었습니다. 그래서 칸
-            0~3에 B도 이 칸을 쓴다는 표시만 더하고, B의 뒷부분 2 token은 다음 빈칸 7·8에 위치 4·5로 적습니다.
+            대화 B도 같은 system prompt 4 token으로 시작하고 질문 2 token이 다릅니다. B의 앞 4 token 기록은 A가 이미 칸 0~3에 적어 두었습니다.
+            그래서 칸 0~3에 B도 이 칸을 쓴다는 표시만 더하고 B의 뒷부분 2 token은 다음 빈칸 7·8에 위치 4·5로 적습니다.
           </p>
           <p>
-            이제 두 대화가 한 token씩 더 만듭니다. A의 위치 7은 칸 9에, B의 위치 6은 칸 10에 들어갑니다. 사용 중인 칸은 7 + 2 + 2 = 11개이고, B가 가진 칸은
+            이제 두 대화가 한 token씩 더 만듭니다. A의 위치 7은 칸 9에, B의 위치 6은 칸 10에 들어갑니다. 사용 중인 칸은 7 + 2 + 2 = 11개이고 B가 가진 칸은
             0~3, 7, 8, 10의 7개입니다. B의 칸은 배열 안에서 연속이 아닙니다.
           </p>
           <p>
-            B가 다음 token을 고르려면 자기 칸 7개의 기록만 읽어야 합니다. 칸 4·5·6·9는 A의 질문이라 B의 답에 섞이면 안 됩니다. A가 대화를 끝내면 A만 쓰던
-            칸 4개는 비고, 둘이 함께 쓰던 칸 0~3은 B를 위해 남아야 합니다.
+            B가 다음 token을 고르려면 자기 칸 7개의 기록만 읽어야 합니다. 칸 4·5·6·9는 A의 질문이라 B의 답에 섞이면 안 됩니다. A가 대화를 끝내면 A만 쓰던 칸 4개는
+            비고 둘이 함께 쓰던 칸 0~3은 B를 위해 남아야 합니다.
           </p>
         </div>
       </section>
@@ -71,8 +71,8 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">4. 칸마다 위치 하나와 대화 표시 묶음을 적습니다</h2>
         <div className={prose}>
           <p>
-            앞 절의 요구를 채우려면 칸 하나에 두 가지만 있으면 됩니다. 그 칸의 token 위치, 그리고 그 칸을 쓰는 대화들의 표시입니다. 표시는 대화마다 비트
-            하나를 두어 켜고 끕니다. 공유는 비트를 하나 더 켜는 일이고, 대화가 끝나면 그 대화의 비트만 끕니다.
+            앞 절의 요구를 채우려면 칸 하나에 두 가지만 있으면 됩니다. 그 칸의 token 위치, 그리고 그 칸을 쓰는 대화들의 표시입니다. 표시는 대화마다 비트 하나를 두어 켜고
+            끕니다. 공유는 비트를 하나 더 켜는 일이고 대화가 끝나면 그 대화의 비트만 끕니다.
           </p>
           <p>
             읽을 때는 거꾸로 묻습니다. B의 질문 token은 배열의 칸을 앞에서부터 보며 B 비트가 켜진 칸만 남기고 나머지 칸의 점수를 지웁니다. 지운 칸은 계산에
@@ -97,8 +97,8 @@ export default function Foundations() {
             <Link to="/cs/ai/vllm-paged-attention#logical-physical-address">logical→physical 주소</Link> 절에 있습니다.
           </p>
           <p>
-            llama.cpp에는 이 목록이 없습니다. 대신 배열의 앞쪽 칸을 한 범위로 통째로 넘기고, 다른 대화의 칸을 지우는 표를 함께 넘깁니다. 대화가 하나나 둘인
-            기기에서는 목록을 관리하고 따라가는 장치가 없어도 되니 구현과 kernel이 단순합니다.
+            llama.cpp에는 이 목록이 없습니다. 대신 배열의 앞쪽 칸을 한 범위로 통째로 넘기고 다른 대화의 칸을 지우는 표를 함께 넘깁니다. 대화가 하나나 둘인 기기에서는 목록을
+            관리하고 따라가는 장치가 없어도 되니 구현과 kernel이 단순합니다.
           </p>
           <p>
             대가는 읽을 범위입니다. B의 칸은 7개지만 B는 칸 0부터 사용 중인 마지막 칸까지를 범위로 받습니다. 대화가 많고 길수록 한 대화가 받은 범위에서 자기
@@ -115,8 +115,8 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">6. 칸·대화 표시·지우는 표에 이름을 붙입니다</h2>
         <div className={prose}>
           <p>
-            배열의 칸 하나를 KV cell이라고 부릅니다. cell에는 token 위치 pos와 대화 표시 묶음이 있습니다. 대화 하나를 llama.cpp는 sequence라고 부르고, 표시
-            묶음은 sequence마다 비트 하나를 둔 bitset입니다. 비트 수는 256개로 고정입니다.
+            배열의 칸 하나를 KV cell이라고 부릅니다. cell에는 token 위치 pos와 대화 표시 묶음이 있습니다. 대화 하나를 llama.cpp는 sequence라고 부르고
+            표시 묶음은 sequence마다 비트 하나를 둔 bitset입니다. 비트 수는 256개로 고정입니다.
           </p>
           <p>
             배열에서 이번 계산이 읽는 범위의 칸 수를 n_kv라고 부릅니다. 사용 중인 가장 뒤 cell 번호에 1을 더한 뒤 256의 배수로 올린 값입니다. 3절의 마지막
@@ -137,8 +137,8 @@ export default function Foundations() {
         <h2 className="mb-6 text-2xl font-bold">7. B의 decode 한 step을 cell 찾기부터 mask까지 따라갑니다</h2>
         <div className={prose}>
           <p>
-            3절의 넷째 장면, B가 위치 6을 만드는 step을 따라갑니다. 먼저 새 token을 쓸 cell을 찾습니다. 배열의 head는 직전에 쓴 칸 다음을 가리키고, 그
-            자리부터 빈 cell을 찾습니다. A가 방금 칸 9를 썼으므로 B는 칸 10을 받습니다.
+            3절의 넷째 장면, B가 위치 6을 만드는 step을 따라갑니다. 먼저 새 token을 쓸 cell을 찾습니다. 배열의 head는 직전에 쓴 칸 다음을 가리키고 그 자리부터 빈
+            cell을 찾습니다. A가 방금 칸 9를 썼으므로 B는 칸 10을 받습니다.
           </p>
           <p>
             칸 10의 pos를 6으로 적고 B 비트를 켭니다. 다음으로 n_kv를 정합니다. 사용 중인 마지막 cell은 10번이라 11을 256으로 올려 n_kv = 256입니다. 이번 계산의
