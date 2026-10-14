@@ -32680,6 +32680,56 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "아직 만들지 않은 출력의 KV를 받을 때 얼마나 떼어 두는가의 범위입니다. 필요할 때 받기, 비율로 추정하기, 출력 상한까지 예약하기, slot을 고정하기가 있습니다. 4,096칸에 입력 200·상한 1,000 요청을 넣으면 19개(이후 8개)·3개·3개·4개를 받습니다. 많이 받을수록 선점·재계산 위험이 커집니다.",
     canonicalHref: "/cs/ai/inference-engine-design-axes#reservation",
   },
+  "typed-decision-question": {
+    id: "typed-decision-question",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "Typed decision question · choice·score·noul",
+    aliases: ["Typed Decisions", "choice/score/noul", "System 1 decision model"],
+    definition:
+      "상태 하나에 답의 모양을 정한 질문을 붙여 확률로 답하게 하는 단위입니다. choice는 선택지 분포, score는 단계 분포와 그 기대값, noul은 예일 확률을 돌려줍니다. urgency 단계 확률 0.04·0.08·0.88이면 답은 1.84입니다. 자유로운 글이 필요한 판단은 담지 못합니다.",
+    canonicalHref: "/cs/ai/laya-system1-decision-model#black-box",
+  },
+  "option-marker-decision-head": {
+    id: "option-marker-decision-head",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Option-marker decision head",
+    aliases: ["option marker", "[MASK] option scoring", "Laya decision head"],
+    definition:
+      "선택지마다 [MASK] 하나를 붙여 입력에 넣고 그 자리의 hidden을 같은 scorer에 통과시켜 점수를 낸 뒤 그 질문의 선택지끼리 softmax하는 분류 head입니다. 출력 칸 수가 요청마다 정해져 재학습 없이 선택지를 바꿉니다. 선택지가 많으면 선택지당 token이 줄어 77개에서는 이름에 3 token만 남습니다.",
+    canonicalHref: "/cs/ai/laya-system1-decision-model#sequence",
+  },
+  "rlcd-proper-scoring-reward": {
+    id: "rlcd-proper-scoring-reward",
+    kind: "method",
+    domain: "machine-learning",
+    label: "RLCD · proper-scoring-rule reward",
+    aliases: ["Reinforcement Learning for Calibrated Decisions", "RLCD"],
+    definition:
+      "logit에 평균 0 Gaussian noise를 더한 표본을 log score와 구면 score(순서형은 RPS 차감)로 채점하고 표본 평균 대비 advantage로 logit을 옮기는 학습입니다. 참 확률 0.7에서 0.7 보고가 0.9 보고보다 기대 보상이 큽니다. soft cross-entropy 대비 이득은 typed-decisions에서 측정되지 않았고 결과 모델의 보정도 보장하지 않습니다.",
+    canonicalHref: "/cs/ai/laya-system1-decision-model#rlcd",
+  },
+  "bucketed-temperature-calibration": {
+    id: "bucketed-temperature-calibration",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Bucketed temperature calibration",
+    aliases: ["temperature_by_options", "per-bucket temperature"],
+    definition:
+      "질문 유형과 선택지 수(2, 3–5, 6–10, 11+)의 칸마다 NLL을 최소화하는 temperature를 따로 맞추는 보정입니다. noul:2의 T 1.983은 0.881을 0.733으로 낮춥니다. 표본이 적은 칸은 유형 값을 쓰고, 0.5 미만으로 날카롭게 만드는 값은 거부합니다.",
+    canonicalHref: "/cs/ai/laya-system1-decision-model#calibration",
+  },
+  "script-routed-checkpoint-selection": {
+    id: "script-routed-checkpoint-selection",
+    kind: "method",
+    domain: "machine-learning",
+    label: "Script-routed checkpoint selection",
+    aliases: ["Laya Router", "language-routed checkpoint"],
+    definition:
+      "forward 전에 상태 글의 문자와 언어를 검사해 English 또는 multilingual checkpoint로 보내는 선택입니다. English checkpoint가 크메르어에서 정답률 0.000에 확신 0.952를 냈다는 제작사 보고처럼 틀리면서도 확신하는 경우 확신도 문턱으로는 거를 수 없기 때문입니다.",
+    canonicalHref: "/cs/ai/laya-system1-decision-model#router",
+  },
 };
 
 export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
@@ -58646,6 +58696,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "prefix-cache-matching", to: "inference-engine-design-axes", relation: "prerequisite", reason: "재사용 길이를 정하는 규칙이 셋째 결정입니다." },
   { from: "overlap-batch-scheduler", to: "inference-engine-design-axes", relation: "prerequisite", reason: "CPU 준비를 GPU 계산 뒤로 숨기는지가 넷째 결정입니다." },
   { from: "attention-backend-selection", to: "inference-engine-design-axes", relation: "prerequisite", reason: "attention 구현을 고르거나 직접 갖는지가 다섯째 결정입니다." },
+  { from: "bert-task-head", to: "option-marker-decision-head", relation: "contrasts", reason: "고정된 class 칸 대신 입력에 넣은 선택지 [MASK] 자리에서 점수를 읽어 출력 칸을 요청마다 정합니다." },
+  { from: "typed-decision-question", to: "option-marker-decision-head", relation: "prerequisite", reason: "질문 유형과 선택지가 정해져야 시퀀스와 [MASK] 자리가 만들어집니다." },
+  { from: "strictly-proper-probability-score", to: "rlcd-proper-scoring-reward", relation: "prerequisite", reason: "정직한 보고에서만 기대 점수가 최대인 채점 규칙을 학습 보상으로 씁니다." },
+  { from: "grpo-within-prompt-relative-advantage", to: "rlcd-proper-scoring-reward", relation: "extends", reason: "같은 입력의 표본들 평균을 기준으로 advantage를 매기는 방식을 logit noise 표본에 적용합니다." },
+  { from: "rlcd-proper-scoring-reward", to: "bucketed-temperature-calibration", relation: "constrains", reason: "proper한 목표로 학습해도 출시 모델이 과신하므로 사후 temperature 보정이 필요합니다." },
+  { from: "temperature-scaling-calibration", to: "bucketed-temperature-calibration", relation: "extends", reason: "temperature 하나를 질문 유형과 선택지 수 칸마다 따로 맞춥니다." },
+  { from: "probability-calibration", to: "bucketed-temperature-calibration", relation: "prerequisite", reason: "확신과 정답률이 맞는지 재는 기준이 있어야 칸별 보정의 효과를 잽니다." },
+  { from: "script-routed-checkpoint-selection", to: "option-marker-decision-head", relation: "constrains", reason: "어느 encoder가 상태 글을 읽을지 정해야 head의 점수가 의미를 가집니다." },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

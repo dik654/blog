@@ -3010,6 +3010,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "고정 commit 원문과 공식 문서 기본값만 근거로 삼고, 엔진 사이의 성능 순위나 측정 수치를 만들지 않는다.",
   },
+  "ai/laya-system1-decision-model": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-14",
+    rationale:
+      "청구 문의 하나가 시퀀스 구성 → 점수 head → 학습 보상 → 보정 → checkpoint 선택을 차례로 지나는 단일 사례 글이다. 보정 절이 학습 절의 한계에서 나오고 benchmark 절이 token 예산 절의 숫자를 되쓰므로 나누면 같은 사례를 다시 세워야 한다.",
+    sharedGate:
+      "고정 원문과 모델 카드까지만 근거로 삼고, 제작사 수치는 자기보고·Jev는 제3자 공개값으로 표시하며 독립 성능 주장을 만들지 않는다.",
+  },
 };
 
 /**
@@ -3017,6 +3026,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/laya-system1-decision-model": "c299c073c3e24b17",
   "ai/neural-network": "58462a73abf9d1af",
   "ai/perceptron": "d81eb0d08e345535",
   "ai/spiking-neural-networks": "93972722e17dbfdc",
