@@ -1,38 +1,150 @@
-import { StoryShell } from "../../kimi-k3-shared";
-import { useStory } from "../../useKimiStory";
+import StepViz from "@/components/ui/step-viz";
 
-const steps = [
-  { label: "입력", voltage: 22, title: "Spike·current가 들어옵니다", detail: "Event가 없으면 synaptic 계산을 건너뛸 수 있지만 membrane state는 시간에 따라 leak할 수 있습니다." },
-  { label: "누적", voltage: 68, title: "Membrane potential을 누적합니다", detail: "이전 전압을 leak한 뒤 현재 input current를 더합니다." },
-  { label: "발화", voltage: 100, title: "Threshold를 넘으면 spike=1입니다", detail: "Hard step은 forward event를 명확히 하지만 threshold 주변의 exact derivative를 제공하지 않습니다." },
-  { label: "Reset", voltage: 14, title: "전압을 reset하고 다음 시점으로 갑니다", detail: "새 state가 다음 time step의 input이 되므로 학습 graph는 recurrent sequence가 됩니다." },
+const trace = [
+  {
+    t: 1,
+    previous: "0.600000",
+    leaked: "0.480000",
+    input: "0.700000",
+    beforeReset: "1.180000",
+    spike: 1,
+    afterReset: "0.180000",
+  },
+  {
+    t: 2,
+    previous: "0.180000",
+    leaked: "0.144000",
+    input: "0.100000",
+    beforeReset: "0.244000",
+    spike: 0,
+    afterReset: "0.244000",
+  },
+  {
+    t: 3,
+    previous: "0.244000",
+    leaked: "0.195200",
+    input: "0.900000",
+    beforeReset: "1.095200",
+    spike: 1,
+    afterReset: "0.095200",
+  },
+  {
+    t: 4,
+    previous: "0.095200",
+    leaked: "0.076160",
+    input: "0.300000",
+    beforeReset: "0.376160",
+    spike: 0,
+    afterReset: "0.376160",
+  },
+  {
+    t: 5,
+    previous: "0.376160",
+    leaked: "0.300928",
+    input: "0.700000",
+    beforeReset: "1.000928",
+    spike: 1,
+    afterReset: "0.000928",
+  },
 ] as const;
 
+const steps = trace.map((row) => ({
+  label: `${row.t}번째 시점`,
+  body:
+    row.spike === 1
+      ? `${row.beforeReset}이 문턱 1을 넘으므로 발화 1을 내고 1을 뺍니다.`
+      : `${row.beforeReset}이 문턱 1보다 작으므로 발화하지 않고 전압을 그대로 넘깁니다.`,
+}));
+
 export default function SpikeLifecycleViz() {
-  const story = useStory(steps.length, 2800);
-  const current = steps[story.step];
   return (
-    <StoryShell
-      title="LIF neuron의 한 spike 수명주기"
-      subtitle="입력→누적→threshold→reset을 단계별로 확인합니다."
-      labels={steps.map((step) => step.label)}
-      {...story}
-    >
-      <div data-viz="lif-spike-lifecycle" data-viz-canvas="lif-spike-lifecycle-canvas" className="grid min-w-0 gap-6 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
-        <div className="min-w-0 rounded-lg border border-border p-5">
-          <div className="flex items-center justify-between text-xs font-bold text-muted-foreground"><span>Vrest</span><span>Vthreshold</span></div>
-          <div className="relative mt-3 h-8 overflow-hidden rounded-lg border border-border bg-muted/20">
-            <div className="h-full bg-primary/20 transition-[width] duration-300" style={{ width: `${current.voltage}%` }} />
-            <div className="absolute inset-y-0 right-[8%] border-l border-dashed border-primary" />
+    <StepViz steps={steps}>
+      {(step) => {
+        const row = trace[step];
+        const voltageWidth = Math.min(100, Number(row.beforeReset) * 100);
+
+        return (
+          <div className="w-full max-w-4xl space-y-5">
+            <div className="grid min-w-0 gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+              <div className="rounded-lg border border-border/75 bg-background p-3 text-center">
+                <p className="text-[11px] font-semibold text-muted-foreground">
+                  이전 전압 × 0.8
+                </p>
+                <p className="mt-2 font-mono text-sm font-bold">
+                  {row.previous} × 0.8
+                </p>
+                <p className="mt-1 font-mono text-sm text-primary">
+                  = {row.leaked}
+                </p>
+              </div>
+              <span className="hidden text-lg text-muted-foreground sm:block">
+                +
+              </span>
+              <div className="rounded-lg border border-border/75 bg-background p-3 text-center">
+                <p className="text-[11px] font-semibold text-muted-foreground">
+                  지금 들어온 값
+                </p>
+                <p className="mt-2 font-mono text-sm font-bold">{row.input}</p>
+              </div>
+              <span className="hidden text-lg text-muted-foreground sm:block">
+                =
+              </span>
+              <div className="rounded-lg border border-primary/35 bg-primary/[0.05] p-3 text-center">
+                <p className="text-[11px] font-semibold text-primary">
+                  리셋 전 전압
+                </p>
+                <p className="mt-2 font-mono text-sm font-bold">
+                  {row.beforeReset}
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border/75 bg-background p-4">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground">
+                <span>0</span>
+                <span>문턱 1</span>
+              </div>
+              <div className="relative mt-2 h-7 overflow-hidden rounded-md border border-border bg-muted/30">
+                <div
+                  className={`h-full transition-[width] duration-300 ${
+                    row.spike ? "bg-amber-500/45" : "bg-primary/30"
+                  }`}
+                  style={{ width: `${voltageWidth}%` }}
+                />
+                <div className="absolute inset-y-0 right-0 border-l-2 border-dashed border-foreground/60" />
+              </div>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <p className="rounded-md bg-muted/35 px-3 py-2 text-center font-mono text-xs font-bold">
+                  spike = {row.spike}
+                </p>
+                <p className="rounded-md bg-muted/35 px-3 py-2 text-center font-mono text-xs font-bold">
+                  다음 전압 = {row.afterReset}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-5 gap-1.5">
+              {trace.map((item, index) => (
+                <div
+                  key={item.t}
+                  className={`min-w-0 rounded-md border px-1 py-2 text-center ${
+                    index === step
+                      ? "border-primary bg-primary/10"
+                      : index < step
+                        ? "border-primary/30 bg-primary/[0.03]"
+                        : "border-border/70 bg-background"
+                  }`}
+                >
+                  <p className="text-[10px] text-muted-foreground">t{item.t}</p>
+                  <p className="mt-1 font-mono text-sm font-black">
+                    {index <= step ? item.spike : "·"}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="mt-4 font-mono text-xs text-muted-foreground">stage={story.step + 1} · membrane={current.voltage}%</p>
-        </div>
-        <div className="min-w-0 border-l border-primary pl-5">
-          <p className="text-xs font-black text-primary">{current.label}</p>
-          <p className="mt-2 font-black">{current.title}</p>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">{current.detail}</p>
-        </div>
-      </div>
-    </StoryShell>
+        );
+      }}
+    </StepViz>
   );
 }

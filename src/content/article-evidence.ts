@@ -185,6 +185,18 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/spiking-neural-networks": [
     {
+      kind: "공식 코드",
+      label: "snnTorch · Leaky LIF 고정 소스",
+      href: "https://github.com/jeshraghian/snntorch/blob/37c56ccd0c8eac61b629819c2cc2a2b13261b8cf/snntorch/_neurons/leaky.py#L141-L244",
+      note: "subtract·zero·none 리셋과 reset_delay=False의 즉시 리셋 경로를 확인하는 실제 구현 근거",
+    },
+    {
+      kind: "공식 코드",
+      label: "snnTorch · FastSigmoid 고정 소스",
+      href: "https://github.com/jeshraghian/snntorch/blob/37c56ccd0c8eac61b629819c2cc2a2b13261b8cf/snntorch/surrogate.py#L116-L160",
+      note: "순방향 hard threshold와 역방향 1/(slope·|input|+1)² 대체 기울기의 분리 근거",
+    },
+    {
       kind: "핵심 논문",
       label: "SuperSpike: Supervised Learning in Multilayer Spiking Neural Networks",
       href: "https://arxiv.org/abs/1705.11146",

@@ -32435,54 +32435,477 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/spiking-neural-networks": {
+    recursiveTeaching: true,
     entryLevel: true,
-    entryNote: "SNN·backprop·hardware를 같은 층의 개념으로 섞지 않고 state transition부터 시작합니다.",
-    coreIdea: "SNN은 membrane state와 spike event를 쓰는 dynamical model이며, hard threshold의 backward에는 surrogate gradient를 넣어 BPTT로 학습할 수 있습니다. Energy advantage는 sparse event를 실제로 skip하는 hardware·workload 조건에서만 측정됩니다.",
+    entryNote:
+      "시작 전압 0.6에 다섯 입력을 넣어 누설·덧셈·문턱·리셋을 직접 계산하므로 신경과학이나 시간축 역전파를 미리 알 필요는 없습니다.",
+    coreIdea:
+      "스파이킹 신경망은 이전 전압을 시간에 따라 남기고 문턱을 넘는 순간만 발화로 보내는 상태 모델입니다. 같은 [1,0,1,0,1] 사례에서 hard forward와 surrogate backward, 시간축 오차 귀속, 국소 규칙의 한계, 상태·전달 비용까지 이어 보아야 저전력이나 생물학적 타당성을 섣불리 결론 내리지 않을 수 있습니다.",
     assumedKnowledge: [],
     introducedHere: [
-      { id: "spiking-neural-network", role: "Membrane state와 sparse event로 계산하는 model class를 정의합니다." },
-      { id: "lif-membrane-state-transition", role: "Leak·input integration·threshold·reset을 time step마다 계산합니다." },
-      { id: "hard-spike-threshold", role: "Forward의 불연속 0/1 event와 exact derivative 경계를 구분합니다." },
-      { id: "surrogate-gradient-spike-training", role: "Backward에만 smooth local slope를 사용합니다." },
-      { id: "spiking-bptt-unroll", role: "Membrane transition을 시간축으로 펼쳐 gradient를 누적합니다." },
-      { id: "hebbian-local-plasticity", role: "Pre·post activity만 쓰는 local rule의 범위를 설명합니다." },
-      { id: "neuromorphic-efficiency-boundary", role: "Event·state·routing·I/O energy를 같은 task에서 측정합니다." },
-      { id: "snn-hardware-substrate-boundary", role: "SNN algorithm과 digital·mixed-signal hardware를 분리합니다." },
+      {
+        id: "spiking-neural-network",
+        role: "시간 상태와 이산 발화를 함께 쓰는 모델 표현을 정의합니다.",
+      },
+      {
+        id: "lif-membrane-state-transition",
+        role: "누설·입력 누적·문턱 판정·리셋을 한 시점씩 계산합니다.",
+      },
+      {
+        id: "hard-spike-threshold",
+        role: "순방향 0/1 판정과 정확한 미분의 막힘을 구분합니다.",
+      },
+      {
+        id: "surrogate-gradient-spike-training",
+        role: "순방향 발화는 유지하고 역방향에만 부드러운 기울기를 빌립니다.",
+      },
+      {
+        id: "spiking-bptt-unroll",
+        role: "한 시점의 발화 오차를 이전 전압과 공유 가중치로 돌려보냅니다.",
+      },
+      {
+        id: "hebbian-local-plasticity",
+        role: "연결 양쪽의 국소 활동만 쓰는 갱신과 과제 오차 귀속의 차이를 설명합니다.",
+      },
+      {
+        id: "neuromorphic-efficiency-boundary",
+        role: "발화 계산·상태 갱신·전달·입출력을 같은 에너지 장부에 넣습니다.",
+      },
+      {
+        id: "snn-hardware-substrate-boundary",
+        role: "스파이킹 알고리즘과 디지털·혼합 신호 실행 회로를 구분합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "spiking-neural-network", sectionId: "overview", intuition: "숫자 하나를 즉시 넘기는 대신 전압을 시간에 걸쳐 쌓고 특정 순간에 event를 보냅니다.", workedExample: "Output [0,0,1,0,1]에서 두 spike의 timing과 count를 읽습니다.", boundary: "뇌 전체의 충실한 모델이나 자동 저전력 보장이 아닙니다." },
-      { id: "lif-membrane-state-transition", sectionId: "lif-dynamics", intuition: "새 input을 더하기 전에 지난 전압을 조금 잊고, 발화 뒤 threshold만큼 reset합니다.", workedExample: "β=.8,u=.6,I=.7,θ=1이면 1.18로 threshold를 넘습니다.", boundary: "Reset·refractory·time discretization은 구현마다 다릅니다." },
-      { id: "hard-spike-threshold", sectionId: "surrogate-gradient", intuition: "경계 아래는 0, 위는 1이라 작은 입력 변화의 exact slope가 대부분 0입니다.", workedExample: "u=θ 바로 양쪽에서 output이 0→1로 점프합니다.", boundary: "Forward 결정과 backward estimator는 별도 설계입니다." },
-      { id: "surrogate-gradient-spike-training", sectionId: "surrogate-gradient", intuition: "Forward spike는 hard하게 두고 threshold 근처 weight에만 backward 신호를 줍니다.", workedExample: "Fast-sigmoid slope는 |u−θ|가 커질수록 감소합니다.", boundary: "Exact derivative가 아닌 biased estimator입니다." },
-      { id: "spiking-bptt-unroll", sectionId: "bptt", intuition: "오늘 전압이 어제 전압에 의존하므로 마지막 loss가 이전 time step으로 거슬러 갑니다.", workedExample: "T=3 graph에서 세 time의 shared W gradient를 합칩니다.", boundary: "긴 T는 activation memory와 gradient instability를 늘립니다." },
-      { id: "hebbian-local-plasticity", sectionId: "brain-boundary", intuition: "Global loss 대신 현재 synapse 양쪽의 activity를 local signal로 씁니다.", workedExample: "xi=.5,xj=.8,η=.1이면 Δw=.04입니다.", boundary: "Task-level credit assignment와 안정성을 단순 rule 하나가 해결하지 않습니다." },
-      { id: "neuromorphic-efficiency-boundary", sectionId: "hardware", intuition: "Spike가 없는 계산을 실제로 건너뛴 수와 새 temporal·routing 비용을 같은 energy 장부에 넣습니다.", workedExample: "Event 10%라도 모든 membrane을 매 tick 갱신하면 절감폭이 작아집니다.", boundary: "Chip·task별 배수를 일반 SNN 우위로 옮기지 않습니다." },
-      { id: "snn-hardware-substrate-boundary", sectionId: "hardware", intuition: "같은 spike algorithm도 digital manycore와 analog neuron circuit에서 다르게 실행됩니다.", workedExample: "Loihi는 digital asynchronous, BrainScaleS-2는 analog core+digital routing입니다.", boundary: "PVT sensitivity를 SNN 전체의 필연적 속성으로 일반화하지 않습니다." },
+      {
+        id: "spiking-neural-network",
+        sectionId: "names",
+        intuition:
+          "현재 숫자 하나만 넘기지 않고 남은 전압과 발화 시점을 함께 다음 계산의 자료로 씁니다.",
+        workedExample:
+          "u0=0.6, β=0.8, θ=1에 [0.7,0.1,0.9,0.3,0.7]을 넣으면 발화열 [1,0,1,0,1]과 마지막 전압 0.000928을 얻습니다.",
+        boundary:
+          "발화 형식은 뇌 전체의 충실한 모형이나 저전력 보장이 아니며, rate·최초 발화·정확한 시점 중 어떤 읽기 규칙을 쓰는지 고정해야 합니다.",
+        causalTrace: {
+          answer:
+            "스파이킹 신경망은 전압을 시간에 따라 기억하고 문턱을 넘는 순간만 발화로 보내는 상태 모델입니다.",
+          followUpQuestion:
+            "현재 활성값 하나를 넘기는 신경망과 달리 시간 상태를 남기면 무엇을 얻고 무엇을 더 계산해야 합니까?",
+          bottleneck:
+            "정적인 값 하나는 입력 사건의 순서와 간격을 직접 보존하지 못하지만, 시간축을 늘리면 상태 갱신과 저장도 함께 늘어납니다.",
+          mechanism:
+            "다섯 입력마다 이전 전압을 0.8배로 줄이고 새 입력을 더해 [1,0,1,0,1] 발화열과 전압 궤적을 만듭니다.",
+          remainingCost:
+            "발화가 없는 시점에도 전압을 갱신할 수 있으며 출력 발화열을 읽는 규칙에 따라 과제의 뜻이 달라집니다.",
+          decisionRule:
+            "입력의 시점 정보가 과제에 필요한지 먼저 확인하고 발화 수·최초 시점·전체 무늬 중 출력 계약을 고정합니다.",
+        },
+      },
+      {
+        id: "lif-membrane-state-transition",
+        sectionId: "lif-dynamics",
+        intuition:
+          "전압 통장에서 지난 값 일부를 남기고 새 입력을 더한 뒤, 문턱을 넘으면 문턱만큼 뺍니다.",
+        workedExample:
+          "첫 시점은 0.6×0.8+0.7=1.18, 발화 1, 리셋 뒤 0.18입니다. 같은 계산을 다섯 번 이어 마지막 0.000928을 얻습니다.",
+        boundary:
+          "subtract·zero·delayed reset과 불응기·시간 간격 선택에 따라 같은 입력의 전압 궤적이 달라집니다.",
+        causalTrace: {
+          answer:
+            "LIF는 누설·입력 누적·문턱 판정·리셋을 반복하는 점 뉴런 상태식입니다.",
+          followUpQuestion:
+            "발화 뒤 전압을 언제 어떤 값으로 되돌리느냐가 왜 결과를 바꿉니까?",
+          bottleneck:
+            "리셋 시점과 방식이 숨겨지면 같은 β·θ·입력으로도 다음 시점의 시작 전압이 달라집니다.",
+          mechanism:
+            "이 글은 같은 시점에 문턱 1을 빼는 subtractive reset을 써서 첫 전압 1.18을 0.18로 넘깁니다.",
+          remainingCost:
+            "LIF는 수상돌기·신경전달물질·세포 유형·구조 가소성을 생략한 점 뉴런 근사입니다.",
+          decisionRule:
+            "β·θ·시간 간격·리셋 방식·리셋 시점을 식과 코드 양쪽에 기록한 뒤 전압 기록을 비교합니다.",
+        },
+      },
+      {
+        id: "hard-spike-threshold",
+        sectionId: "surrogate-gradient",
+        intuition:
+          "문턱 아래는 0, 위는 1이라 순방향 판정은 분명하지만 작은 변화의 정확한 기울기는 거의 모두 0입니다.",
+        workedExample:
+          "다섯째 리셋 전 전압 1.000928은 문턱보다 0.000928 커서 발화 1을 내지만 hard step의 정확한 미분은 학습 신호를 주지 못합니다.",
+        boundary:
+          "순방향 발화 결정과 역방향에서 사용할 기울기 추정은 서로 다른 설계입니다.",
+        causalTrace: {
+          answer:
+            "hard spike threshold는 전압을 결정적인 0 또는 1로 바꾸는 계단 함수입니다.",
+          followUpQuestion:
+            "거의 모든 곳의 미분이 0이면 가중치를 어느 방향으로 고칠 수 있습니까?",
+          bottleneck:
+            "정확한 미분만 연쇄 법칙에 넣으면 발화 경계를 움직일 신호가 앞 층으로 전달되지 않습니다.",
+          mechanism:
+            "순방향은 z=v−θ의 부호로 [1,0,1,0,1]을 그대로 만듭니다.",
+          remainingCost:
+            "문턱에서의 불연속성과 0인 주변 미분은 그대로 남아 별도 역방향 규칙이 필요합니다.",
+          decisionRule:
+            "순방향 출력 계약이 이산 발화여야 하는지 먼저 정하고, 학습 시에는 backward 규칙을 별도로 명시합니다.",
+        },
+      },
+      {
+        id: "surrogate-gradient-spike-training",
+        sectionId: "surrogate-gradient",
+        intuition:
+          "순방향 문턱은 그대로 두고 역방향에서만 문턱에 가까운 전압에 큰 대체 신호를 줍니다.",
+        workedExample:
+          "α=5에서 문턱 거리 0.000928인 다섯째 값의 기울기는 0.990784이고, 거리 0.756인 둘째 값은 0.043767입니다.",
+        boundary:
+          "대체 기울기는 hard step의 정확한 미분이 아니며 형태와 폭이 학습의 치우침을 만듭니다.",
+        causalTrace: {
+          answer:
+            "대체 기울기는 hard forward를 유지하고 backward에만 부드러운 기울기를 쓰는 학습 규칙입니다.",
+          followUpQuestion:
+            "대체 기울기가 크거나 작으면 어떤 뉴런이 얼마나 학습 신호를 받습니까?",
+          bottleneck:
+            "너무 좁은 기울기는 문턱에 거의 닿은 뉴런만 고치고, 너무 넓은 기울기는 먼 뉴런까지 강하게 고칩니다.",
+          mechanism:
+            "같은 다섯 전압에 1/(1+5|z|)^2을 적용해 문턱 거리별로 0.277008·0.043767·0.459015·0.058935·0.990784를 줍니다.",
+          remainingCost:
+            "학습은 가능해져도 exact gradient가 아니므로 수렴·정확도·안정성은 과제별 검증이 필요합니다.",
+          decisionRule:
+            "hard forward 결과를 고정한 뒤 surrogate 형태와 폭을 validation 성능·기울기 분포로 비교합니다.",
+        },
+      },
+      {
+        id: "spiking-bptt-unroll",
+        sectionId: "bptt",
+        intuition:
+          "셋째 전압이 둘째 전압을 사용했으므로 셋째 발화의 오차도 둘째 시점으로 되돌아갑니다.",
+        workedExample:
+          "목표 [1,0,0,0,1]과 예측 [1,0,1,0,1]의 셋째 오차가 surrogate slope와 β=0.8을 거쳐 이전 전압과 공유 W에 누적됩니다.",
+        boundary:
+          "T가 길수록 중간 상태 메모리와 기울기 소실·폭발 위험이 늘며 truncated BPTT는 먼 과거 연결을 끊습니다.",
+        causalTrace: {
+          answer:
+            "스파이킹 BPTT는 전압 상태를 시간축으로 펼쳐 발화 오차를 이전 상태와 공유 매개변수로 돌려보냅니다.",
+          followUpQuestion:
+            "셋째 발화 하나가 틀렸는데 왜 첫째·둘째 시점 계산까지 다시 봐야 합니까?",
+          bottleneck:
+            "셋째 전압은 이전 전압과 같은 가중치의 과거 사용 결과에 의존해 현재 시점만 고치면 원인을 빠뜨립니다.",
+          mechanism:
+            "셋째 발화 오차에 surrogate slope를 곱하고 전압 연결의 β를 따라 t3→t2→t1로 전달해 시간별 W 기여를 더합니다.",
+          remainingCost:
+            "긴 시간축은 저장 메모리와 계산을 늘리고 먼 오차의 기울기가 사라지거나 커질 수 있습니다.",
+          decisionRule:
+            "필요한 시간 의존 길이를 먼저 정하고 전체 BPTT·절단·체크포인팅을 메모리와 오차 범위로 선택합니다.",
+        },
+      },
+      {
+        id: "hebbian-local-plasticity",
+        sectionId: "brain-boundary",
+        intuition:
+          "연결 양쪽에서 바로 볼 수 있는 두 활동이 함께 크면 연결을 강화합니다.",
+        workedExample:
+          "xpre=0.5, xpost=0.8, η=0.1이면 Δw=0.04이지만 이 정보만으로 셋째 발화가 목표에 없는 오답인지는 알 수 없습니다.",
+        boundary:
+          "단순 국소 상관 규칙은 지연된 과제 오차, 경쟁, 안정성, 가중치 증가를 자체적으로 해결하지 않습니다.",
+        causalTrace: {
+          answer:
+            "Hebbian 국소 가소성은 연결 양쪽의 활동만으로 가중치를 바꾸는 규칙 계열입니다.",
+          followUpQuestion:
+            "두 뉴런이 함께 활동했어도 최종 답에는 해로운 발화였다면 국소 연결은 어떻게 압니까?",
+          bottleneck:
+            "국소 활동만으로는 멀리 있는 출력의 정답과 지연된 보상을 해당 연결에 귀속할 수 없습니다.",
+          mechanism:
+            "0.5×0.8×0.1=0.04를 계산해 함께 활동한 연결을 강화합니다.",
+          remainingCost:
+            "전역 오차·보상·억제·정규화가 없으면 틀린 공발화도 강화하고 가중치가 계속 커질 수 있습니다.",
+          decisionRule:
+            "국소 갱신이 필요한 하드웨어·온라인 조건을 확인하고 과제 오차 귀속과 안정화 장치를 별도 평가합니다.",
+        },
+      },
+      {
+        id: "neuromorphic-efficiency-boundary",
+        sectionId: "hardware",
+        intuition:
+          "발화 계산이 줄어든 양에서 멈추지 않고 전압 갱신·전달·입출력에 새로 든 비용까지 같은 장부에 더합니다.",
+        workedExample:
+          "밀집 기준은 5×4pJ=20pJ이고 SNN 가정은 발화 3pJ+상태 10pJ+전달·입출력 10pJ=23pJ입니다.",
+        boundary:
+          "pJ 숫자는 설명용 가정이며 칩·공정·전압·주파수·배치·배선·정확도·지연 조건마다 다시 측정해야 합니다.",
+        causalTrace: {
+          answer:
+            "뉴로모픽 효율은 발화 수가 아니라 정답 하나의 전체 실행 에너지로 판단합니다.",
+          followUpQuestion:
+            "발화가 다섯 번 중 세 번뿐인데도 왜 밀집 계산보다 더 많은 에너지를 쓸 수 있습니까?",
+          bottleneck:
+            "발화가 없는 시점의 상태 갱신, 사건 전달, 센서·호스트 변환은 발화 수 장부에서 빠집니다.",
+          mechanism:
+            "같은 실행 범위에서 3pJ 발화 계산에 10pJ 상태 갱신과 10pJ 전달·입출력을 더해 23pJ를 얻습니다.",
+          remainingCost:
+            "희소성이 높아도 런타임이 실제 일을 건너뛰지 못하거나 시간축이 길면 이득이 사라질 수 있습니다.",
+          decisionRule:
+            "같은 과제 정확도·지연·입력 범위에서 event·state·routing·I/O를 모두 포함한 joule/accepted-task를 잽니다.",
+        },
+      },
+      {
+        id: "snn-hardware-substrate-boundary",
+        sectionId: "hardware",
+        intuition:
+          "같은 발화 알고리즘도 전부 디지털인 칩과 아날로그 뉴런을 섞은 칩에서 다른 비용과 오차로 실행됩니다.",
+        workedExample:
+          "Loihi는 디지털 비동기 다중 코어이고 BrainScaleS-2는 아날로그 뉴런 코어에 디지털 전달·가소성 처리를 결합합니다.",
+        boundary:
+          "아날로그 회로의 공정·전압·온도 민감도를 모든 SNN의 필연적 특성으로 옮기면 안 됩니다.",
+        causalTrace: {
+          answer:
+            "스파이킹 신경망은 알고리즘이며 디지털·아날로그·혼합 신호는 이를 실행하는 하드웨어 선택입니다.",
+          followUpQuestion:
+            "같은 발화열을 실행해도 칩에 따라 에너지·속도·보정 조건이 왜 달라집니까?",
+          bottleneck:
+            "알고리즘 이름만으로는 사건을 실제로 건너뛰는지, 상태가 어디에 저장되는지, 아날로그 보정이 필요한지 알 수 없습니다.",
+          mechanism:
+            "Loihi의 디지털 비동기 경로와 BrainScaleS-2의 아날로그 코어+디지털 경로를 별도 실행 기판으로 비교합니다.",
+          remainingCost:
+            "매핑·컴파일러·라우팅·보정·입출력이 달라 논문의 단일 배수를 다른 칩으로 옮길 수 없습니다.",
+          decisionRule:
+            "칩·공정·매핑·입력 변환·정확도·지연을 고정하고 end-to-end 측정으로 하드웨어를 고릅니다.",
+        },
+      },
     ],
     conceptStages: [
-      { label: "00 category", relation: "Model·gradient·update·hardware 층위를 분리합니다.", concepts: ["spiking-neural-network"] },
-      { label: "01 state", relation: "Membrane을 갱신하고 hard spike를 만듭니다.", concepts: ["lif-membrane-state-transition", "hard-spike-threshold"] },
-      { label: "02 backward", relation: "Surrogate slope로 시간축 gradient를 연결합니다.", concepts: ["surrogate-gradient-spike-training", "spiking-bptt-unroll"] },
-      { label: "03 biology", relation: "Local plasticity 비유의 범위를 제한합니다.", concepts: ["hebbian-local-plasticity"] },
-      { label: "04 hardware", relation: "Event energy와 substrate 조건을 측정합니다.", concepts: ["neuromorphic-efficiency-boundary", "snn-hardware-substrate-boundary"] },
+      {
+        label: "한 문장 답",
+        relation: "시간 상태 모델과 저전력·생물학 주장을 분리합니다.",
+        concepts: ["spiking-neural-network"],
+      },
+      {
+        label: "다섯 시점 계산",
+        relation: "누설·입력·문턱·리셋으로 [1,0,1,0,1]을 만듭니다.",
+        concepts: ["lif-membrane-state-transition", "hard-spike-threshold"],
+      },
+      {
+        label: "이름과 비교 층위",
+        relation: "모델·기울기·갱신·하드웨어를 같은 층끼리 비교합니다.",
+        concepts: ["spiking-neural-network"],
+      },
+      {
+        label: "대체 기울기",
+        relation: "같은 다섯 전압에서 hard forward와 smooth backward를 구분합니다.",
+        concepts: ["hard-spike-threshold", "surrogate-gradient-spike-training"],
+      },
+      {
+        label: "시간 오차 귀속",
+        relation: "셋째 발화 오차를 이전 전압과 공유 가중치로 보냅니다.",
+        concepts: ["spiking-bptt-unroll"],
+      },
+      {
+        label: "국소 학습 경계",
+        relation: "0.04 국소 갱신이 전역 오답을 모르는 이유를 확인합니다.",
+        concepts: ["hebbian-local-plasticity"],
+      },
+      {
+        label: "에너지 장부",
+        relation: "발화 3pJ에 상태·전달 비용을 더해 23pJ를 만듭니다.",
+        concepts: ["neuromorphic-efficiency-boundary"],
+      },
+      {
+        label: "실행 기판",
+        relation: "디지털 Loihi와 혼합 신호 BrainScaleS-2를 구분합니다.",
+        concepts: ["snn-hardware-substrate-boundary"],
+      },
+      {
+        label: "실제 코드와 선택",
+        relation: "snnTorch의 리셋 시점·앞뒤 기울기 코드에서 선택 조건을 확인합니다.",
+        concepts: [
+          "lif-membrane-state-transition",
+          "surrogate-gradient-spike-training",
+          "neuromorphic-efficiency-boundary",
+        ],
+      },
     ],
     exercises: [
-      { level: "basic", question: "SNN 대 backprop이 category mismatch인 이유와 올바른 비교 두 개를 쓰세요.", answerChecklist: ["model class", "gradient algorithm", "ANN vs SNN", "backprop vs local rule", "SNN can use backprop", "same layer"], requiredConcepts: ["spiking-neural-network"], sectionId: "overview" },
-      { level: "basic", question: "β=.8,u=.6,I=.7,θ=1에서 reset 전 membrane과 spike를 계산하세요.", answerChecklist: [".8 times .6", ".48", "+.7", "1.18", "above threshold", "spike one"], requiredConcepts: ["lif-membrane-state-transition"], sectionId: "lif-dynamics" },
-      { level: "basic", question: "LIF의 leak·integration·threshold·reset 순서를 설명하세요.", answerChecklist: ["previous state", "beta leak", "input current", "compare theta", "spike", "reset"], requiredConcepts: ["lif-membrane-state-transition", "hard-spike-threshold"], sectionId: "lif-dynamics" },
-      { level: "basic", question: "Hard spike의 forward와 surrogate backward가 각각 사용하는 함수를 설명하세요.", answerChecklist: ["Heaviside", "zero or one", "non-differentiable", "smooth slope", "threshold neighborhood", "backward only"], requiredConcepts: ["hard-spike-threshold", "surrogate-gradient-spike-training"], sectionId: "surrogate-gradient" },
-      { level: "basic", question: "SNN에 BPTT가 필요한 state dependency를 설명하세요.", answerChecklist: ["u t depends on u t-1", "shared weight", "unroll", "reverse time", "sum gradients", "saved state"], requiredConcepts: ["spiking-bptt-unroll"], sectionId: "bptt" },
-      { level: "basic", question: "Digital SNN accelerator와 mixed-signal neuromorphic hardware를 구분하세요.", answerChecklist: ["same SNN abstraction", "digital Loihi", "analog core", "digital routing", "PVT", "not synonymous"], requiredConcepts: ["snn-hardware-substrate-boundary"], sectionId: "hardware" },
-      { level: "advanced", question: "Surrogate sharpness α가 너무 크거나 작을 때의 optimization trade-off를 분석하세요.", answerChecklist: ["narrow gradient", "few neurons", "vanishing", "wide gradient", "bias", "validation"], requiredConcepts: ["surrogate-gradient-spike-training"], sectionId: "surrogate-gradient" },
-      { level: "advanced", question: "T-step SNN training memory를 줄이는 두 방법과 잃는 정보를 설명하세요.", answerChecklist: ["truncated BPTT", "checkpoint recompute", "detach", "long credit", "compute tradeoff", "state boundary"], requiredConcepts: ["spiking-bptt-unroll"], sectionId: "bptt" },
-      { level: "advanced", question: "Hebbian update가 global task credit assignment를 해결하지 못하는 반례를 만드세요.", answerChecklist: ["local coactivity", "wrong output", "delayed reward", "no global error", "weight growth", "extra mechanism"], requiredConcepts: ["hebbian-local-plasticity"], sectionId: "brain-boundary" },
-      { level: "advanced", question: "SNN 1000× 효율 claim을 검증할 end-to-end 비교 protocol을 설계하세요.", answerChecklist: ["same task", "same accuracy", "same latency", "encoding", "event and state", "routing IO", "process node", "optimized baseline"], requiredConcepts: ["neuromorphic-efficiency-boundary", "snn-hardware-substrate-boundary"], sectionId: "hardware" },
+      {
+        level: "basic",
+        question:
+          "u0=0.6, β=0.8, θ=1, 첫 입력 0.7에서 누설·합계·발화·리셋 뒤 전압을 차례로 계산할 수 있을까요?",
+        answerChecklist: [
+          "0.6×0.8=0.48을 계산한다.",
+          "0.48+0.7=1.18을 계산한다.",
+          "문턱을 넘어 발화 1이라고 판정한다.",
+          "1을 빼 다음 전압 0.18을 얻는다.",
+        ],
+        requiredConcepts: ["lif-membrane-state-transition", "hard-spike-threshold"],
+        sectionId: "lif-dynamics",
+      },
+      {
+        level: "basic",
+        question:
+          "다섯 입력 [0.7,0.1,0.9,0.3,0.7]의 발화열과 마지막 전압을 계산할 수 있을까요?",
+        answerChecklist: [
+          "리셋 전 전압 1.18·0.244·1.0952·0.37616·1.000928을 구한다.",
+          "발화열 [1,0,1,0,1]을 구한다.",
+          "리셋 뒤 마지막 전압 0.000928을 구한다.",
+          "같은 시점 subtract reset 가정을 밝힌다.",
+        ],
+        requiredConcepts: ["spiking-neural-network", "lif-membrane-state-transition"],
+        sectionId: "lif-dynamics",
+      },
+      {
+        level: "basic",
+        question:
+          "SNN과 역전파를 직접 대안으로 놓으면 안 되는 이유와 같은 층의 비교 두 개를 설명할 수 있을까요?",
+        answerChecklist: [
+          "SNN은 모델 표현이라고 말한다.",
+          "역전파는 오차 전달 방법이라고 말한다.",
+          "일반 신경망 대 SNN을 비교한다.",
+          "역전파 대 국소 규칙을 비교한다.",
+        ],
+        requiredConcepts: ["spiking-neural-network", "hebbian-local-plasticity"],
+        sectionId: "names",
+      },
+      {
+        level: "basic",
+        question:
+          "다섯째 전압에서 hard forward와 fast-sigmoid backward 값을 각각 계산할 수 있을까요?",
+        answerChecklist: [
+          "z=1.000928−1=0.000928을 구한다.",
+          "H(z)=1을 구한다.",
+          "α=5 대체 기울기 약 0.990784를 구한다.",
+          "대체 기울기는 정확한 미분이 아니라고 제한한다.",
+        ],
+        requiredConcepts: ["hard-spike-threshold", "surrogate-gradient-spike-training"],
+        sectionId: "surrogate-gradient",
+      },
+      {
+        level: "basic",
+        question:
+          "목표 [1,0,0,0,1]에서 셋째 발화 오차가 둘째 전압까지 가는 경로를 설명할 수 있을까요?",
+        answerChecklist: [
+          "셋째 발화 오차를 찾는다.",
+          "surrogate slope로 grad_v3를 만든다.",
+          "v3가 βu2를 사용했다고 설명한다.",
+          "공유 가중치의 시간별 기여를 더한다고 설명한다.",
+        ],
+        requiredConcepts: ["surrogate-gradient-spike-training", "spiking-bptt-unroll"],
+        sectionId: "bptt",
+      },
+      {
+        level: "basic",
+        question:
+          "가정한 에너지 장부에서 밀집 20pJ와 SNN 23pJ를 같은 범위로 계산할 수 있을까요?",
+        answerChecklist: [
+          "밀집 5×4=20pJ를 계산한다.",
+          "발화 3×1=3pJ를 계산한다.",
+          "상태 5×2=10pJ와 전달·입출력 10pJ를 더한다.",
+          "3+10+10=23pJ라고 비교한다.",
+          "숫자는 설명용 가정이라고 제한한다.",
+        ],
+        requiredConcepts: ["neuromorphic-efficiency-boundary"],
+        sectionId: "hardware",
+      },
+      {
+        level: "advanced",
+        question:
+          "대체 기울기 α가 매우 크거나 작을 때 다섯 전압이 받는 학습 신호와 치우침을 비교할 수 있을까요?",
+        answerChecklist: [
+          "큰 α는 문턱 가까이에 신호를 좁게 모은다.",
+          "먼 전압의 기울기가 더 빨리 작아진다.",
+          "작은 α는 먼 전압에도 신호를 준다.",
+          "형태·폭은 validation으로 고른다고 결론 낸다.",
+        ],
+        requiredConcepts: ["surrogate-gradient-spike-training"],
+        sectionId: "surrogate-gradient",
+      },
+      {
+        level: "advanced",
+        question:
+          "긴 T의 SNN 학습에서 truncated BPTT와 활성값 체크포인팅이 각각 무엇을 줄이고 무엇을 잃거나 더하는지 비교할 수 있을까요?",
+        answerChecklist: [
+          "truncated BPTT는 먼 시간 오차 연결을 끊는다고 설명한다.",
+          "체크포인팅은 중간 상태 저장을 줄인다고 설명한다.",
+          "체크포인팅은 순방향 재계산을 늘린다고 설명한다.",
+          "필요한 시간 의존 길이와 메모리를 함께 본다.",
+        ],
+        requiredConcepts: ["spiking-bptt-unroll"],
+        sectionId: "bptt",
+      },
+      {
+        level: "advanced",
+        question:
+          "Hebbian Δw=0.04가 셋째 오답 발화를 강화할 수 있는 이유와 필요한 추가 신호를 설명할 수 있을까요?",
+        answerChecklist: [
+          "0.1×0.5×0.8=0.04를 계산한다.",
+          "국소 규칙은 앞·뒤 활동만 본다고 말한다.",
+          "최종 목표 [1,0,0,0,1]을 모른다고 설명한다.",
+          "오차·보상·억제·정규화 중 필요한 장치를 제시한다.",
+        ],
+        requiredConcepts: ["hebbian-local-plasticity"],
+        sectionId: "brain-boundary",
+      },
+      {
+        level: "advanced",
+        question:
+          "새 SNN 칩의 저전력 주장을 검증하는 end-to-end 비교 계약을 설계할 수 있을까요?",
+        answerChecklist: [
+          "같은 과제·정확도·지연·입력 범위를 고정한다.",
+          "발화 계산·상태 갱신·전달·입출력을 모두 잰다.",
+          "칩·공정·전압·주파수·배치·매핑을 기록한다.",
+          "최적화된 밀집 기준과 joule/accepted-task를 비교한다.",
+          "디지털과 혼합 신호 기판을 구분한다.",
+        ],
+        requiredConcepts: ["neuromorphic-efficiency-boundary", "snn-hardware-substrate-boundary"],
+        sectionId: "hardware",
+      },
     ],
     papers: [
-      { title: "SuperSpike: Supervised Learning in Multi-layer Spiking Neural Networks", href: "https://arxiv.org/abs/1705.11146", problem: "불연속 spike의 multilayer credit assignment", contribution: "Voltage-based surrogate-gradient learning rule", assumptions: "논문의 neuron·task·loss·trace 조건", evidenceScope: "Spatiotemporal pattern experiment와 derivation", notClaim: "모든 SNN의 최적 학습법 또는 생물학적 실재", sectionId: "paper-superspike" },
-      { title: "Dendritic Cortical Microcircuits Approximate Backpropagation", href: "https://arxiv.org/abs/1810.11393", problem: "Global backprop과 local biological plasticity의 간극", contribution: "Dendritic local prediction error가 backprop을 근사하는 circuit model", assumptions: "단순화한 cortical circuit·task", evidenceScope: "Analytical approximation과 simulation", notClaim: "실제 뇌가 표준 backprop을 수행한다는 증거", sectionId: "paper-brain-backprop" },
-      { title: "Loihi: A Neuromorphic Manycore Processor with On-Chip Learning", href: "https://ieeexplore.ieee.org/document/8259423", problem: "Sparse recurrent SNN과 local learning의 programmable execution", contribution: "Asynchronous digital manycore·learning engine", assumptions: "Loihi chip·mapped workload·measurement", evidenceScope: "Architecture와 해당 benchmark power/performance", notClaim: "모든 SNN의 일정 energy 배수", sectionId: "paper-loihi" },
-      { title: "The BrainScaleS-2 Accelerated Neuromorphic System with Hybrid Plasticity", href: "https://arxiv.org/abs/2201.11063", problem: "Analog neuron dynamics와 digital control·plasticity 결합", contribution: "Mixed-signal neuromorphic system", assumptions: "BrainScaleS-2 hardware·calibration", evidenceScope: "Architecture와 measured applications", notClaim: "SNN과 analog hardware의 동의어 관계", sectionId: "paper-brainscales" },
+      {
+        title: "SuperSpike: Supervised Learning in Multi-layer Spiking Neural Networks",
+        href: "https://arxiv.org/abs/1705.11146",
+        problem: "불연속 발화의 여러 층 오차 귀속 문제",
+        contribution: "전압에 따른 대체 기울기와 eligibility trace를 결합한 학습 규칙",
+        assumptions: "논문의 뉴런·과제·손실·trace 조건",
+        evidenceScope: "시간 발화 무늬 실험과 학습 규칙 유도",
+        notClaim: "모든 SNN의 최적 학습법이거나 생물학적 실재라는 뜻은 아님",
+        sectionId: "paper-superspike",
+      },
+      {
+        title: "Dendritic Cortical Microcircuits Approximate Backpropagation",
+        href: "https://arxiv.org/abs/1810.11393",
+        problem: "전역 역전파와 국소 생물학적 가소성의 간극",
+        contribution: "수상돌기 국소 예측 오차가 역전파를 근사하는 회로 모형",
+        assumptions: "논문이 정한 피라미드 뉴런의 수상돌기 구획, 중간 뉴런 회로, 피드백 가중치, 회귀·분류 과제 조건",
+        evidenceScope: "논문 안에서 유도한 역전파 근사 관계와 해당 회로 모의실험 결과 범위",
+        notClaim: "실제 뇌가 표준 역전파를 수행한다는 증거는 아님",
+        sectionId: "paper-brain-backprop",
+      },
+      {
+        title: "Loihi: A Neuromorphic Manycore Processor with On-Chip Learning",
+        href: "https://ieeexplore.ieee.org/document/8259423",
+        problem: "희소 순환 SNN과 국소 학습의 프로그래밍 가능한 실행",
+        contribution: "비동기 디지털 다중 코어와 칩 안 학습 엔진",
+        assumptions: "Loihi 칩·배치한 과제·측정 절차",
+        evidenceScope: "구조와 해당 과제의 전력·처리량 측정",
+        notClaim: "모든 SNN의 일정 에너지 배수를 보장하지 않음",
+        sectionId: "paper-loihi",
+      },
+      {
+        title: "The BrainScaleS-2 Accelerated Neuromorphic System with Hybrid Plasticity",
+        href: "https://arxiv.org/abs/2201.11063",
+        problem: "아날로그 뉴런 동역학과 디지털 제어·가소성의 결합",
+        contribution: "아날로그 뉴런 코어, 디지털 플라스틱 처리 장치, 사건 전달망을 결합한 가속 혼합 신호 시스템",
+        assumptions: "BrainScaleS-2 칩의 보정, 가속 시간 상수, 논문이 배치한 과제와 측정 조건",
+        evidenceScope: "논문이 공개한 하드웨어 구조, 보정 절차, 해당 칩에서 측정한 응용 결과 범위",
+        notClaim: "SNN과 아날로그 하드웨어가 같은 뜻이라는 주장이 아님",
+        sectionId: "paper-brainscales",
+      },
+      {
+        title: "snnTorch LIF·FastSigmoid 구현 (고정 커밋)",
+        href: "https://github.com/jeshraghian/snntorch/blob/37c56ccd0c8eac61b629819c2cc2a2b13261b8cf/snntorch/_neurons/leaky.py#L141-L244",
+        problem: "LIF 리셋 시점과 대체 기울기의 실제 구현을 확인하는 문제",
+        contribution: "subtract·zero·none 리셋, 즉시 리셋 선택, hard forward와 별도 surrogate backward 구현",
+        assumptions: "2026-10-14에 확인한 snnTorch master 커밋",
+        evidenceScope: "Leaky 상태 갱신과 FastSigmoid Python autograd 경로",
+        notClaim: "특정 칩의 에너지·속도 이득을 보장하는 구현은 아님",
+        sectionId: "source-snntorch-lif",
+      },
     ],
   },
   "ai/kimi-k3-architecture": {
