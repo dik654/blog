@@ -41,7 +41,7 @@ export default function PrefillDecodePhaseDynamicsViz() {
           <text x={76} y={113} className="fill-foreground text-[12px]">{memoryMs.toFixed(2)} ms</text>
         </svg>
         <p className="mt-2 border-y border-border py-2 font-mono text-base text-primary">실제 시간 ≥ {lowerMs.toFixed(2)} ms</p>
-        <p className="mt-2 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[scenes.active]}</p>
+        <p className="mt-2 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">{NOTES[scenes.active]}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
     </div>
