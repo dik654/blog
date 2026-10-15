@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceRuntimeAnatomyViz from "./inference-runtime-anatomy/viz/InferenceRuntimeAnatomyViz";
+import ShardLoadPathViz from "./inference-runtime-anatomy/viz/ShardLoadPathViz";
 
 /**
  * Inference runtime 은 첫 요청 전에 process 를 나누고 GPU memory 지도를 확정합니다
@@ -97,6 +98,9 @@ export default function InferenceRuntimeAnatomyArticle() {
             있고, vLLM 과 SGLang 의 <code>load-format</code> 기본값 auto 는 이 형식을 먼저
             찾습니다. pickle 기반 .pt 는 전체를 CPU 에 풀어야 해서 sharded load 에 불리합니다.
           </p>
+        </div>
+        <ShardLoadPathViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Sharding 축은 layer 종류마다 다릅니다. attention 의 Q·K·V projection 은 head 단위로
             열을 나누고, 그 뒤의 output projection 은 행을 나눠 all-reduce 한 번으로 합칩니다.

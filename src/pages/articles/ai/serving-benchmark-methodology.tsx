@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ServingBenchmarkMethodologyViz from "./serving-benchmark-methodology/viz/ServingBenchmarkMethodologyViz";
+import SteadyStateWindowViz from "./serving-benchmark-methodology/viz/SteadyStateWindowViz";
 
 /**
  * Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다
@@ -133,6 +134,7 @@ export default function ServingBenchmarkMethodologyArticle() {
             noise 원인(clock 고정, 전용 node) 을 먼저 줄인 뒤 다시 잽니다.
           </p>
         </div>
+        <SteadyStateWindowViz />
         <AlgorithmBlock
           title="Warm · steady-state · 반복 표본을 고르는 측정 절차"
           input={["서버 endpoint 와 고정된 설정(model, dtype, max batch, graph capture)", "입력 분포 D(길이 분포·dataset)", "offered load λ 와 측정 길이 T (예: 600 s)", "warmup 요청 수 n_w, 반복 횟수 R (예: 5)"]}

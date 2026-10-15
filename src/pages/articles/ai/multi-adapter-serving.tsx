@@ -11,6 +11,7 @@ import AdapterLedgerViz from "./multi-adapter-serving/viz/AdapterLedgerViz";
 import SegmentBatchViz from "./multi-adapter-serving/viz/SegmentBatchViz";
 import AdapterMemoryViz from "./multi-adapter-serving/viz/AdapterMemoryViz";
 import SoftPromptKvViz from "./multi-adapter-serving/viz/SoftPromptKvViz";
+import TwoTierAdapterCacheViz from "./multi-adapter-serving/viz/TwoTierAdapterCacheViz";
 import { codeRefs } from "./multi-adapter-serving/codeRefs";
 import { adapterTrees } from "./multi-adapter-serving/fileTree";
 
@@ -362,7 +363,9 @@ export default function MultiAdapterServingArticle() {
               GPU 쪽은 model_manager.py 1191–1209행이 맡습니다. 슬롯이 다 찼고 새 adapter가 아직 올라가 있지 않으면 마지막 사용이 가장 오래된 adapter를 슬롯에서
               내립니다. 슬롯에서 내려도 CPU 쪽 등록은 남아 있어 다시 쓸 때 파일을 읽지 않고 복사만 합니다.
             </p>
+            <p>7절의 C 요청을 두 cache 위에 다시 놓으면 두 번의 내리기가 어느 순서로 어디서 일어나는지 칸으로 보입니다.</p>
           </div>
+          <TwoTierAdapterCacheViz />
           {code("lora-config", "max_loras · max_lora_rank · max_cpu_loras 정의")}
           {code("slot-activate", "GPU 슬롯과 CPU 보관 한도를 나누는 원문")}
           {code("lru-evict", "슬롯이 차면 가장 오래된 adapter를 내리는 원문")}

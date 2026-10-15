@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import KVCache from "./hybrid-attention-serving/KVCache";
 import HybridKvCaseViz from "./hybrid-kv-cache-allocation/viz/HybridKvCaseViz";
+import WindowReclaimViz from "./hybrid-kv-cache-allocation/viz/WindowReclaimViz";
 
 export default function HybridKVCacheAllocationArticle() {
   return (
@@ -29,6 +30,13 @@ export default function HybridKVCacheAllocationArticle() {
           </p>
         </div>
         <HybridKvCaseViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            같은 숫자를 칸으로 바꾸면 두 규칙이 갈리는 순간이 보입니다. 요청이 길어질수록 local 층의 읽기 창은
+            최근 4칸에 머무르고 회수를 켠 장면에서만 창 밖 칸이 실제로 빠집니다.
+          </p>
+        </div>
+        <WindowReclaimViz />
         <ContentBoundary article="hybrid-kv-cache-allocation" />
       </section>
       <KVCache />

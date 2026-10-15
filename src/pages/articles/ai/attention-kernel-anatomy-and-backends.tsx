@@ -13,6 +13,7 @@ import AttentionScaleViz from "./attention-kernel-anatomy-and-backends/viz/Atten
 import AttentionArithmeticViz from "./attention-kernel-anatomy-and-backends/viz/AttentionArithmeticViz";
 import AttentionTrafficViz from "./attention-kernel-anatomy-and-backends/viz/AttentionTrafficViz";
 import AutotuneCandidateViz from "./attention-kernel-anatomy-and-backends/viz/AutotuneCandidateViz";
+import SplitKvCombineViz from "./attention-kernel-anatomy-and-backends/viz/SplitKvCombineViz";
 import {codeRefs,fileTrees,projectMetas} from "./attention-kernel-anatomy-and-backends/codeRefs";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function Article(){
@@ -123,6 +124,8 @@ export default function Article(){
 <p>일반 점수에서는 개수만으로 비중을 알 수 없습니다. 각 부분의 지수합을 로그로 저장한 LSE와 부분 평균 O를 사용합니다. 전체 LSE를 구한 뒤 exp(부분 LSE−전체 LSE)를 각 부분 평균에 곱합니다. 이번 점수 0 사례의 LSE는 ln3, ln3, ln2이고 전체는 ln8이라 비중이 3/8, 3/8, 2/8로 돌아옵니다.</p>
 </div>
 <ExplainedFormula question="점수가 서로 다른 부분도 어떻게 같은 평균으로 합치나요?" idea="서로 겹치지 않는 부분이 전체 지수합에서 차지하는 비율을 구해 부분 평균에 곱합니다." formula={String.raw`L=\log\sum_j e^{L_j},\quad O=\sum_j e^{L_j-L}O_j`} annotatedFormula={String.raw`\begin{aligned}L&=\log\underbrace{\sum_j e^{L_j}}_{\text{부분 지수합을 합침}}\\O&=\sum_j\underbrace{e^{L_j-L}}_{\text{부분의 비중}}O_j\\O&=\tfrac68+\tfrac{15}8+\tfrac{15}8\\&=\tfrac{36}8=4.5\end{aligned}`} operations={[{expression:String.raw`e^{L_j-L}`,annotation:["부분 지수합을 전체로 나눈","정규화 비중을 계산"]},{expression:String.raw`\sum_j e^{L_j-L}O_j`,annotation:["부분 평균마다 비중을 곱해","전체 평균을 복원"]}]} terms={[{symbol:"L_j",name:"부분 LSE",description:"부분 j에 속한 점수들의 지수합에 자연로그를 취한 값입니다."},{symbol:"L",name:"전체 LSE",description:"모든 부분의 지수합을 합친 뒤 자연로그를 취한 값입니다."},{symbol:"O_j",name:"부분 출력",description:"부분 안에서 이미 정규화한 가중평균입니다."}]} assumptions={["부분들은 서로 겹치지 않고 모든 허용 key를 덮습니다.","비어 있거나 전부 가린 행은 별도 처리해야 하며 실수 동치가 비트 동일성을 보장하지 않습니다."]} interpretation="부분 출력만 있으면 비중이 사라집니다. LSE와 출력이 함께 있어야 같은 한 행의 계산을 나눴다가 합칠 수 있습니다."/>
+<div className={prose}><p>같은 사례를 실제 실행 순서로 놓으면 lane 세 개가 부분 결과를 workspace에 쓰고, 다른 kernel이 그 값을 읽어 합칩니다. 아래 그림의 비중 띠에서 칸 수가 key 수와 같아지는지 확인해 보세요.</p></div>
+<SplitKvCombineViz/>
 </section>
 <section id="split-source" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">10 · 실제 구현은 부분 결과를 쓰고 다른 커널로 합친다</h2><div className={prose}>
 <p>FlashAttention의 고정 split-KV 경로는 num_splits가 1보다 크면 별도의 combine kernel을 실행합니다. 부분 출력을 담은 oaccum_ptr와 부분 LSE를 담은 softmax_lseaccum_ptr를 거쳐 최종 O와 LSE를 만듭니다. 따라서 attention 호출 하나를 언제나 GPU kernel 하나라고 정의할 수 없습니다.</p>

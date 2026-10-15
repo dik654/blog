@@ -6,7 +6,7 @@ import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import RequestLifecycleViz from "./viz/RequestLifecycleViz";
 import PrefillDecodeViz from "./viz/PrefillDecodeViz";
-import ContinuousBatchViz from "./viz/ContinuousBatchViz";
+import IterationSlotTraceViz from "./viz/IterationSlotTraceViz";
 import ResourceGateViz from "./viz/ResourceGateViz";
 const FEASIBILITY_TERMS = [
   {
@@ -174,7 +174,7 @@ export default function EngineLoop({
             통과했다는 사실만으로 사용자 지연이 짧다고 결론내릴 수는 없습니다.
           </p>
         </div>
-        <ContinuousBatchViz />
+        <IterationSlotTraceViz />
         <div id="resource-feasibility" className="scroll-mt-20">
           <ResourceGateViz />
           <ExplainedFormula

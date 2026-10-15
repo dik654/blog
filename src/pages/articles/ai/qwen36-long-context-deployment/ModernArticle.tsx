@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import WeightVramViz from "../model-vram-budgeting/viz/WeightVramViz";
 import ContextEnvelopeViz from "./viz/ContextEnvelopeViz";
+import PartialRopeHeadViz from "./viz/PartialRopeHeadViz";
 
 const ROPE_TERMS = [
   {
@@ -185,6 +186,14 @@ d_{rope}
             title="Head width에서 위치 subspace를 고르는 연산"
           />
         </div>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            64와 192를 head 한 장 위에 칸으로 펼치면 어느 차원이 위치를 받는지 바로 셀 수 있습니다. Visual
+            token에서 64칸이 temporal·height·width 세 축으로 어떻게 나뉘는지도 같은 칸 위에서 봅니다.
+          </p>
+        </div>
+        <PartialRopeHeadViz />
 
         <TermBreakdown
           title="Text·image·video는 같은 budget에 들어오되 위치 축이 다릅니다"

@@ -37,7 +37,7 @@ export default function DisaggregatedPrefillDecodeServingViz() {
           <text x="160" y="141" textAnchor="middle" className="fill-muted-foreground text-[12px]">한 칸 = 입력 한 자리의 32B</text>
           <text x="160" y="162" textAnchor="middle" className="fill-primary text-[13px]">{d.result}</text>
         </svg>
-        <p className="mt-2 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{d.note}</p>
+        <p className="mt-2 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[6.5rem] sm:min-h-[3.5rem]">{d.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
     </div>

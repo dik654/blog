@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
-import RequestStateViz from "./viz/RequestStateViz";
+import RequestStateLayerGridViz from "./viz/RequestStateLayerGridViz";
 
 export default function RequestState() {
   return (
@@ -42,7 +42,7 @@ export default function RequestState() {
         </p>
       </div>
 
-      <RequestStateViz />
+      <RequestStateLayerGridViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">

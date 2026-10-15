@@ -1,165 +1,235 @@
+import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /**
- * 한 Viz 에 한 mechanism: GPU 0 의 token 이 top-2 expert 가 있는 GPU 로 흩어졌다가(dispatch),
- * 각 GPU 가 local expert 를 계산하고, 결과가 GPU 0 으로 돌아오는(combine) 동안
- * 어느 복사본이 link 를 건너고 어느 GPU 가 straggler 가 되는지.
- * viewBox 는 고정, stage 높이는 모든 장면에서 같다. gradient·glow·shadow·굵은 선 없음.
+ * 한 mechanism: token 37의 입력 복사본이 expert 13·42가 있는 GPU 1·5로 갔다가 결과로 돌아와야
+ * GPU 0에서 결합이 끝난다. 같은 경로를 2048 token으로 늘리면 GPU마다 4096개를 받고,
+ * 한 GPU가 1.75배를 받으면 그 GPU의 계산이 layer 전체의 끝을 정한다.
+ * 숫자는 본문 사례(8 GPU · 64 expert · hidden 4096 FP16 · top-2)를 그대로 쓴다.
  */
-const SCENES = ["Router top-2", "Dispatch all-to-all", "Local expert GEMM", "Combine all-to-all", "Hot expert straggler"] as const;
+const GPUS = [0, 1, 2, 3, 4, 5, 6, 7] as const;
+const PICKED = { 13: 0.25, 42: 0.75 } as const;
+const HOT_GPU = 5;
 
-const NOTES = [
-  "GPU 0의 token 4개가 각각 expert 2개를 골랐습니다. Expert 0·1은 GPU 0, 2·3은 GPU 1, 4·5는 GPU 2, 6·7은 GPU 3에 있으므로 복사본 8개 가운데 2개만 자기 GPU에 남습니다.",
-  "복사본 6개가 link를 건넙니다. 4 GPU면 1 − 1/4 = 75%가 바깥으로 나가며, 복사본 하나는 hidden 4,096 × FP16 = 8 KiB입니다. 목적지별로 몇 개를 보낼지 먼저 교환한 뒤 payload가 흐릅니다.",
-  "각 GPU가 받은 복사본을 expert별 GEMM으로 계산합니다. 고르게 2개씩 받았으므로 네 GPU가 같은 시간에 끝납니다. 이 장면은 straggler가 없는 기준선입니다.",
-  "결과가 dispatch와 같은 byte로 GPU 0에 돌아오고, GPU 0이 gate 가중치로 두 결과를 합칩니다. Layer당 통신은 dispatch와 combine을 합쳐 복사본 12개 분량입니다.",
-  "Expert 5가 자주 뽑혀 GPU 2가 복사본 4개를 받으면 GPU 2의 GEMM만 두 배 길어지고, 다른 GPU는 combine에서 GPU 2를 기다립니다. Step 시간은 가장 바쁜 GPU가 정합니다.",
-] as const;
-
-interface Copy {
-  token: number;
-  expert: number;
-  gpu: number;
-}
-
-const BALANCED: readonly Copy[] = [
-  { token: 0, expert: 0, gpu: 0 },
-  { token: 0, expert: 3, gpu: 1 },
-  { token: 1, expert: 2, gpu: 1 },
-  { token: 1, expert: 5, gpu: 2 },
-  { token: 2, expert: 1, gpu: 0 },
-  { token: 2, expert: 6, gpu: 3 },
-  { token: 3, expert: 4, gpu: 2 },
-  { token: 3, expert: 7, gpu: 3 },
-];
-
-const HOT: readonly Copy[] = [
-  { token: 0, expert: 0, gpu: 0 },
-  { token: 0, expert: 5, gpu: 2 },
-  { token: 1, expert: 2, gpu: 1 },
-  { token: 1, expert: 5, gpu: 2 },
-  { token: 2, expert: 5, gpu: 2 },
-  { token: 2, expert: 6, gpu: 3 },
-  { token: 3, expert: 4, gpu: 2 },
-  { token: 3, expert: 7, gpu: 3 },
-];
+type Phase = "route" | "dispatch" | "compute" | "combine" | "scale" | "hot";
 
 interface Scene {
-  copies: readonly Copy[];
-  phase: "route" | "dispatch" | "compute" | "combine" | "straggler";
-  verdict: string;
+  label: string;
+  phase: Phase;
+  counter: string;
+  note: string;
 }
 
-const SCENE_DATA: readonly Scene[] = [
-  { copies: BALANCED, phase: "route", verdict: "top-2 · 8 copies · 2 local, 6 remote" },
-  { copies: BALANCED, phase: "dispatch", verdict: "dispatch 6 × 8 KiB cross-GPU · counts first" },
-  { copies: BALANCED, phase: "compute", verdict: "each GPU: 2 copies → GEMM 1.0× · balanced" },
-  { copies: BALANCED, phase: "combine", verdict: "combine 6 × 8 KiB back to GPU 0 · weighted sum" },
-  { copies: HOT, phase: "straggler", verdict: "GPU 2: 4 copies → GEMM 2.0× · step = slowest" },
+const SCENES: readonly Scene[] = [
+  {
+    label: "Router · e13, e42",
+    phase: "route",
+    counter: "이동 0 KiB",
+    note: "GPU g에는 expert 8g~8g+7이 있습니다. token 37이 고른 13과 42를 8로 나눈 몫이 목적 GPU라서 13은 GPU 1, 42는 GPU 5입니다.",
+  },
+  {
+    label: "Dispatch · 8 KiB × 2",
+    phase: "dispatch",
+    counter: "이동 16 KiB",
+    note: "같은 입력 x(4096개 × 2 B = 8 KiB)를 목적지마다 한 벌씩 보냅니다. 목적지가 둘이므로 한 번 보내는 것으로 끝나지 않습니다.",
+  },
+  {
+    label: "각 GPU에서 expert 계산",
+    phase: "compute",
+    counter: "이동 16 KiB",
+    note: "GPU 1은 expert 13, GPU 5는 expert 42의 가중치로만 계산합니다. 같은 GPU의 다른 expert 일곱 개는 이 token에 쓰이지 않습니다.",
+  },
+  {
+    label: "Combine · 결과 2개 회수",
+    phase: "combine",
+    counter: "이동 32 KiB",
+    note: "결과 y₁₃과 y₄₂가 8 KiB씩 GPU 0으로 돌아옵니다. 두 번째가 도착할 때까지 결합 칸은 기다리고, 둘이 모이면 0.25·y₁₃ + 0.75·y₄₂를 계산합니다.",
+  },
+  {
+    label: "2048 token · 균등 배정",
+    phase: "scale",
+    counter: "왕복 64 MiB · remote 56 MiB",
+    note: "GPU마다 2048 token × top-2 = 4096개 입력이 고르게 퍼지면 8개 GPU가 4096개씩 받고 같은 1.847 ms에 계산을 마칩니다. 1/8은 자기 GPU라 remote 왕복은 56 MiB입니다.",
+  },
+  {
+    label: "Hot expert · 1.75배",
+    phase: "hot",
+    counter: "왕복 바이트는 그대로",
+    note: "GPU 5가 1.75배인 7168개를 받으면 그 계산만 3.232 ms로 늘어납니다. 나머지 일곱 GPU는 1.847 ms에 끝나도 combine에서 GPU 5를 기다립니다.",
+  },
 ];
 
-const GPU_W = 140;
-const GPU_X = [20, 175, 330, 485] as const;
-const GPU_Y = 34;
-const GPU_H = 96;
-const TOKEN_R = 7;
-
-function tokenClass(token: number): string {
-  if (token === 0) return "fill-primary";
-  if (token === 1) return "fill-primary/55";
-  if (token === 2) return "fill-amber-500/80";
-  return "fill-amber-500/45";
-}
+const fmt = (n: number) => n.toLocaleString("en-US");
 
 export default function ExpertParallelismMoeSystemsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
-  const scene = SCENE_DATA[scenes.active];
-  const received = [0, 1, 2, 3].map((g) => scene.copies.filter((c) => c.gpu === g).length);
-  const maxReceived = Math.max(...received);
-  const atHome = scene.phase === "route" || scene.phase === "combine";
+  const scenes = useAnimatedScenes(SCENES.length, 4600);
+  const scene = SCENES[scenes.active];
+  const reduced = scenes.reducedMotion;
+  const d = (s: number) => (reduced ? 0 : s);
+  const tokenView = scenes.active <= 3;
+  const target = (g: number) => g === 1 || g === 5;
+
   return (
     <VizFrame
-      eyebrow="Expert parallelism · all-to-all"
-      title="Token은 expert가 있는 GPU로 흩어졌다가 돌아오고, step은 가장 바쁜 GPU가 정합니다"
-      description="한 장면은 MoE layer 하나의 단계입니다. 네 상자는 EP group의 GPU와 그 GPU가 가진 expert, 원은 GPU 0의 token 복사본이고, 아래 막대는 각 GPU가 받은 복사본 수에 비례한 expert GEMM 시간입니다."
-      note="GPU 4개·expert 8개·token 4개는 설명용으로 줄인 값입니다. 본문 예시는 8 GPU·64 expert·GPU당 token 2,048이며, link 종류에 따른 시간은 본문의 식으로 계산합니다."
+      eyebrow="Dispatch · compute · combine"
+      title="token 37의 입력은 두 GPU로 나갔다가 결과로 돌아와야 합쳐집니다"
+      description="상자 하나가 GPU 하나이고 안의 작은 칸 8개가 그 GPU의 expert입니다. 위 네 장면은 token 37 하나의 왕복, 아래 두 장면은 같은 경로를 2048 token으로 늘린 경우입니다."
+      note="hidden 4096 · FP16 · top-2 · GPU 8개에 expert 8개씩은 본문 가정입니다. 시간은 가정한 유효 600 TFLOP/s로 계산한 값이며 header·metadata는 뺐습니다."
     >
       <div
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="Expert parallelism의 dispatch, local expert 계산, combine 장면"
+        aria-label="token 37의 dispatch, expert 계산, combine과 2048 token 확장"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            MoE layer step · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
-          <div className="mt-4 w-full overflow-x-auto">
-            <svg viewBox="0 0 640 240" className="h-auto w-full min-w-[32rem]" role="img" aria-hidden="true">
-              <text x={20} y={14} className="fill-muted-foreground text-[9px]">EP group · 4 GPU · 2 expert each · link between boxes</text>
-              {GPU_X.map((x, g) => {
-                const hot = scene.phase === "straggler" && received[g] === maxReceived;
-                return (
-                  <g key={g}>
-                    <rect x={x} y={GPU_Y} width={GPU_W} height={GPU_H} className={`fill-transparent ${hot ? "stroke-amber-600" : "stroke-border"}`} strokeWidth={hot ? 1.25 : 1} />
-                    <text x={x + 8} y={GPU_Y + 14} className="fill-foreground text-[11px] font-bold">GPU {g}</text>
-                    <text x={x + 52} y={GPU_Y + 14} className="fill-muted-foreground text-[9px]">expert {2 * g}, {2 * g + 1}</text>
-                    {g < 3 && (
-                      <line x1={x + GPU_W} y1={GPU_Y + GPU_H / 2} x2={GPU_X[g + 1]} y2={GPU_Y + GPU_H / 2} className={scene.phase === "dispatch" || scene.phase === "combine" ? "stroke-primary/70" : "stroke-border"} strokeWidth={1} strokeDasharray="3 3" />
-                    )}
-                  </g>
-                );
-              })}
-
-              {scene.copies.map((copy, index) => {
-                const homeX = GPU_X[0] + 16 + copy.token * 30;
-                const homeY = GPU_Y + 40 + (copy.expert % 2) * 18;
-                const slot = scene.copies.filter((c, i) => c.gpu === copy.gpu && i < index).length;
-                const awayX = GPU_X[copy.gpu] + 16 + slot * 26;
-                const awayY = GPU_Y + 60;
-                const x = atHome ? homeX : awayX;
-                const y = atHome ? homeY : awayY;
-                const remote = copy.gpu !== 0;
-                return (
-                  <g key={index}>
-                    <circle cx={x} cy={y} r={TOKEN_R} className={`${tokenClass(copy.token)} ${remote && !atHome ? "stroke-primary" : "stroke-border"}`} strokeWidth={1} />
-                    <text x={x} y={y + 3} textAnchor="middle" className="fill-background text-[7px] font-bold">e{copy.expert}</text>
-                  </g>
-                );
-              })}
-              {atHome && (
-                <text x={GPU_X[0] + 8} y={GPU_Y + 88} className="fill-muted-foreground text-[8px]">t0 t1 t2 t3 · top-2 each</text>
-              )}
-
-              <text x={20} y={150} className="fill-muted-foreground text-[9px]">expert GEMM time per GPU (∝ copies received)</text>
-              {GPU_X.map((x, g) => {
-                const active = scene.phase === "compute" || scene.phase === "straggler";
-                const width = active ? (GPU_W - 16) * (received[g] / 4) : 0;
-                const hot = scene.phase === "straggler" && received[g] === maxReceived;
-                return (
-                  <g key={g}>
-                    <rect x={x + 8} y={158} width={GPU_W - 16} height={10} className="fill-muted stroke-border" strokeWidth={1} />
-                    <rect x={x + 8} y={158} width={width} height={10} className={hot ? "fill-amber-500/80" : "fill-primary/60"} />
-                    <text x={x + 8} y={182} className="fill-muted-foreground text-[8px]">{active ? `${received[g]} copies` : ""}</text>
-                  </g>
-                );
-              })}
-
-              <rect x={20} y={200} width={605} height={24} className="fill-transparent stroke-primary/60" strokeWidth={1} />
-              <text x={28} y={216} className="fill-foreground text-[10px] font-bold">{scene.verdict}</text>
-            </svg>
+        <div key={scenes.active} className="flex shrink-0 flex-col">
+          <div className="flex min-h-[3.4rem] flex-wrap items-baseline justify-between gap-x-2 sm:min-h-0">
+            <h4 className="text-base font-bold">{scene.label}</h4>
+            <span className="font-mono text-xs font-bold text-[#2563eb]">{scene.counter}</span>
           </div>
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
+
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {GPUS.map((g) => {
+              const isTarget = tokenView && target(g);
+              const hot = scene.phase === "hot" && g === HOT_GPU;
+              const received = scene.phase === "hot" && g === HOT_GPU ? 7168 : 4096;
+              const ms = received === 7168 ? 3.232 : 1.847;
+              return (
+                <div
+                  key={g}
+                  className={`min-w-0 rounded-md border p-2 ${hot ? "border-[#d97706]" : isTarget ? "border-[#2563eb]" : "border-border"}`}
+                >
+                  <div className="flex items-center justify-between text-[11px] font-bold">
+                    <span>GPU {g}</span>
+                    <span className="font-mono font-normal text-muted-foreground">
+                      e{8 * g}–{8 * g + 7}
+                    </span>
+                  </div>
+                  {/* expert 8칸 */}
+                  <div className="mt-1.5 grid grid-cols-8 gap-0.5">
+                    {Array.from({ length: 8 }, (_, k) => {
+                      const e = 8 * g + k;
+                      const picked = tokenView && e in PICKED;
+                      const computing = picked && (scene.phase === "compute" || scene.phase === "combine");
+                      return (
+                        <span
+                          key={e}
+                          title={`expert ${e}`}
+                          className={`h-3 rounded-[2px] border ${
+                            computing
+                              ? "border-[#2563eb] bg-[#2563eb]"
+                              : picked
+                                ? "border-[#d97706] bg-[#fde68a]"
+                                : "border-border bg-muted/40"
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
+                  {/* 상자 아래 상태 줄: 높이 고정 */}
+                  <div className="mt-1.5 flex h-6 items-center gap-1 font-mono text-[10px]">
+                    {tokenView ? (
+                      <TokenLine g={g} phase={scene.phase} d={d} />
+                    ) : (
+                      <div className="flex w-full items-center gap-1">
+                        <div className="relative h-2.5 flex-1 rounded-sm bg-muted/50">
+                          <motion.div
+                            className={`absolute inset-y-0 left-0 rounded-sm ${hot ? "bg-[#d97706]" : "bg-[#2563eb]"}`}
+                            initial={{ width: "0%" }}
+                            animate={{ width: `${(ms / 3.232) * 100}%` }}
+                            transition={{ duration: d(1.6), ease: "linear" }}
+                          />
+                          {scene.phase === "hot" && !hot ? (
+                            <motion.div
+                              className="absolute inset-y-0 rounded-sm border border-dashed border-[#d97706]"
+                              style={{ left: `${(1.847 / 3.232) * 100}%`, right: 0 }}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: d(1.6), duration: d(0.3) }}
+                            />
+                          ) : null}
+                        </div>
+                        <span className={`w-[4.2rem] shrink-0 text-right ${hot ? "font-bold text-[#b45309]" : "text-muted-foreground"}`}>
+                          {fmt(received)} · {ms}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
+            <div>
+              <dt className="text-muted-foreground">입력 한 벌</dt>
+              <dd className="font-bold text-foreground">4096 × 2 B = 8 KiB</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">token 37 왕복</dt>
+              <dd className="font-bold text-foreground">2 목적지 × 2 방향 = 32 KiB</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">GPU당 입력(균등)</dt>
+              <dd className="font-bold text-foreground">2048 × 2 = 4,096</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">layer 완료(가장 늦은 GPU)</dt>
+              <dd className="font-bold text-[#b45309]">{scene.phase === "hot" ? "3.232 ms" : scene.phase === "scale" ? "1.847 ms" : "결과 2개 도착 뒤"}</dd>
+            </div>
+          </dl>
+
+          <p className="mt-3 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">
+            {scene.note}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>
     </VizFrame>
   );
+}
+
+/** token 37 장면에서 GPU 상자 아래에 놓이는 칩: 원본 x, 도착한 복사본, 계산 결과, 결합 칸. */
+function TokenLine({ g, phase, d }: { g: number; phase: Phase; d: (s: number) => number }) {
+  const chip = "rounded-sm border px-1 leading-4";
+  if (g === 0) {
+    const sent = phase !== "route";
+    return (
+      <>
+        <span className={`${chip} ${sent ? "border-border text-muted-foreground" : "border-[#2563eb] text-[#2563eb]"}`}>x₃₇</span>
+        {phase === "combine" ? (
+          <>
+            <motion.span className={`${chip} border-[#2563eb] text-[#2563eb]`} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: d(0.4), duration: d(0.3) }}>
+              y₁₃
+            </motion.span>
+            <motion.span className={`${chip} border-[#2563eb] text-[#2563eb]`} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: d(1.4), duration: d(0.3) }}>
+              y₄₂
+            </motion.span>
+            <motion.span
+              className={`${chip} border-[#16a34a] text-[#166534] dark:text-[#bbf7d0]`}
+              initial={{ opacity: 0.25 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: d(1.9), duration: d(0.3) }}
+            >
+              합
+            </motion.span>
+          </>
+        ) : null}
+      </>
+    );
+  }
+  if (g !== 1 && g !== 5) return null;
+  if (phase === "route") return <span className="text-[#b45309]">{g === 1 ? "13 ÷ 8 → 1" : "42 ÷ 8 → 5"}</span>;
+  if (phase === "dispatch")
+    return (
+      <motion.span className={`${chip} border-[#d97706] text-[#b45309]`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: d(g === 1 ? 0.3 : 0.7), duration: d(0.4) }}>
+        x₃₇ 8 KiB 도착
+      </motion.span>
+    );
+  if (phase === "compute") return <span className={`${chip} border-[#2563eb] text-[#2563eb]`}>{g === 1 ? "y₁₃ 계산" : "y₄₂ 계산"}</span>;
+  return <span className="text-muted-foreground">{g === 1 ? "y₁₃ → GPU 0" : "y₄₂ → GPU 0"}</span>;
 }

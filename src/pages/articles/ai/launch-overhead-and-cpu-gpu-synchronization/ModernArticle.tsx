@@ -8,6 +8,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import {CodeSidebar,CodeViewButton,useCodeSidebar} from "@/components/code";
 import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import SubmissionTimelineViz from "./viz/SubmissionTimelineViz";
+import SyncScopeStreamsViz from "./viz/SyncScopeStreamsViz";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 계산이 빨라도 다음 일을 기다릴 수 있습니다</h2><div className={prose}>
@@ -102,7 +103,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 </div>{code("device-python","PyTorch · 선택한 장치의 모든 stream 완료 대기")}{code("device-native","PyTorch · device_synchronize의 CUDA 호출")}<div className={prose}>
 <p>반면 <code>A.wait_stream(B)</code>는 CPU가 B의 답을 읽는 호출이 아닙니다. B에 완료 표시인 event를 기록하고 A의 이후 작업이 그 표시를 기다리도록 연결합니다. CPU는 이후 코드를 계속 진행할 수 있습니다. 호출 이후 B에 새로 추가한 모든 미래 작업까지 자동으로 기다리는 뜻도 아닙니다.</p>
 <p>따라서 “동기화가 queue를 모두 비운다”는 설명은 너무 넓습니다. 어떤 CPU 대기는 A의 선행 작업만 대상으로 하고 어떤 의존성은 CPU를 세우지 않고 GPU 실행열끼리 연결합니다. 같은 wait라는 단어를 만나면 누가 무엇의 완료를 기다리는지부터 확인합니다.</p>
-</div>{code("stream-wait","PyTorch · wait_stream의 기록과 의존성 연결")}</section>
+</div><SyncScopeStreamsViz />{code("stream-wait","PyTorch · wait_stream의 기록과 의존성 연결")}</section>
 <section id="source-events" data-teach-level="6" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">14. wait와 synchronize는 다른 native 함수로 갑니다</h2><div className={prose}>
 <p>Event는 어느 실행 지점까지 끝났는지 표시하는 객체입니다. Python <code>event.wait(A)</code>는 native의 wait에 A를 전달합니다. 연결된 C++ 함수는 <code>CUDAEvent.block(A)</code>를 호출하고 그 안에서는 <code>cudaStreamWaitEvent</code>로 A의 작업 순서를 연결합니다. block이라는 메서드 이름만 보고 CPU를 세운다고 판단하면 이 경로를 잘못 읽게 됩니다.</p>
 </div>{code("event-python","PyTorch · Event의 record·wait·synchronize")}{code("event-native","PyTorch · Python 메서드와 C++ 연결")}{code("event-wait","PyTorch · block이 실행열에 넣는 의존성")}<div className={prose}>

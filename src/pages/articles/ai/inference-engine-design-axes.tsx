@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import InferenceEngineDesignAxesViz from "./inference-engine-design-axes/viz/InferenceEngineDesignAxesViz";
 import KvUnitTailViz from "./inference-engine-design-axes/viz/KvUnitTailViz";
+import PrefixReuseUnitViz from "./inference-engine-design-axes/viz/PrefixReuseUnitViz";
 import { codeRefs } from "./inference-engine-design-axes/codeRefs";
 import { engineTrees } from "./inference-engine-design-axes/fileTree";
 
@@ -217,6 +218,7 @@ export default function InferenceEngineDesignAxesArticle() {
               <Link to="/cs/ai/tensorrt-llm-kv-cache-and-kernels#retention">TensorRT-LLM 우선순위</Link>에서 봅니다.
             </p>
           </div>
+          <PrefixReuseUnitViz />
           <div id="paper-llama-server" className="not-prose my-8 scroll-mt-24">
             <CitationBlock source="llama.cpp · tools/server/README.md (commit 091b6a7)" citeKey={1} href="https://github.com/ggml-org/llama.cpp/blob/091b6a7fc561b78da90a0ed2d524ec995458c657/tools/server/README.md">
               <q>Re-use KV cache from a previous request if possible.</q> 같은 항목은 cache_prompt의 기본값을 true로 적고, 다른 항목은 요청 prompt가 slot의

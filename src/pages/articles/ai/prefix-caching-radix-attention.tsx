@@ -4,6 +4,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import PrefixCachingRadixAttentionViz from "./prefix-caching-radix-attention/viz/PrefixCachingRadixAttentionViz";
+import CacheAwareOrderViz from "./prefix-caching-radix-attention/viz/CacheAwareOrderViz";
 import { codeRefs } from "./prefix-caching-radix-attention/codeRefs";
 import { prefixTrees } from "./prefix-caching-radix-attention/fileTree";
 export default function PrefixCachingRadixAttentionArticle() {const sidebar=useCodeSidebar();return <><div className="space-y-16">
@@ -104,7 +105,7 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
           </p><p>
             X1,X2,X3,Y1,Y2,Y3로 실행하면 각 계열의 둘째·셋째가 6을 재사용합니다. 총 24/48=50%입니다. 한 계열에서는 오래된 끝 2만 지우고 공유 6을 유지할 수
             있습니다. 두 계열을 바꿀 때는 이전 기록을 비웁니다.
-          </p><p>
+          </p><p>아래 그림은 같은 여섯 요청을 두 순서로 흘려 보내며 48자리 중 어느 칸을 다시 읽는지 셉니다.</p></div><CacheAwareOrderViz /><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             처음에 모든 요청이 cold라면 현재 hit 길이는 전부 0입니다. 한 번 정렬했다고 자동으로 X끼리 모이지 않습니다. X1이 끝난 뒤 기록을 반영해 다시 찾으면 X2·X3의
             hit이 6으로 바뀝니다. 실행·등록·재조회의 시간 순서가 그룹화를 가능하게 합니다.
           </p><p>

@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { Link } from "react-router-dom";
 import SpeedupTable from "./SpeedupTable";
 import SpecTraceViz from "./viz/SpecTraceViz";
+import ResidualMassViz from "./viz/ResidualMassViz";
 import { codeRefs } from "./codeRefs";
 import { vllmSpecDecodeTree } from "./fileTree";
 
@@ -121,7 +122,7 @@ export default function ModernArticle() {
 
     <section id="distribution-proof" data-teach-level="5" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">8. 수락 경로와 교체 경로를 더하면 기준 모델 분포가 됩니다</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 위치만 떼어 보겠습니다. 후보 x를 제안할 확률 q(x)에 수락 확률을 곱하면 min(p(x),q(x))만 남습니다. 두 분포가 공통으로 가진 비중을 먼저 사용하는 것입니다. 전체 수락 비중은 이번 예에서 .4+.3=.7입니다.</p><p className="leading-8">거부된 경우 사용할 부족분은 각 후보에서 p−q가 양수인 부분입니다. 이번에는 (.3,0)이고 그 합은 .3입니다. 이 합을 수식에서는 Z라고 부릅니다. (.3,0)을 Z=.3으로 나누면 거부 뒤 선택 비중 (1,0)을 얻습니다.</p><p className="leading-8">수락 경로 (.4,.3)와 보충 경로 (.3,0)를 더해 (.7,.3)을 얻습니다. 이 한 위치의 보존을 실제로 확정된 앞 글마다 반복하면 연속 생성의 분포도 기준 모델과 맞습니다. 뒤 후보의 조건을 유지하지 못하면 이 반복 논리를 쓸 수 없습니다.</p><p className="leading-8">q(x)=0인 후보는 q에서 뽑힐 사건이 없으므로 그 비율을 계산할 필요가 없습니다. p=q이면 거부 비중이 0이며 부족분의 정규화에도 도달하지 않습니다. 0/0을 무조건 계산한 뒤 예외값으로 해결하는 공식이 아닙니다.</p></div><span id="draft-verify" className="scroll-mt-20" /><span id="paper-speculative-decoding" className="scroll-mt-20" /><ExplainedFormula question="후보를 받아들이거나 고친 두 경로가 같은 p를 만들까요?" idea="수락된 비중과 거부 때 채우는 부족분을 각각 센 뒤 더합니다." formula={String.raw`\begin{aligned}\rho(x)&=\frac{p(x)}{q(x)}\\ a(x)&=\min(1,\rho(x))\\ d(x)&=(p(x)-q(x))_+\\ Z&=\sum_z d(z)\\ r(x)&=d(x)/Z\quad(Z>0)\\ m(x)&=\min(p(x),q(x))\\ P(x)&=m(x)+d(x)=p(x)\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">한 위치만 떼어 보겠습니다. 후보 x를 제안할 확률 q(x)에 수락 확률을 곱하면 min(p(x),q(x))만 남습니다. 두 분포가 공통으로 가진 비중을 먼저 사용하는 것입니다. 전체 수락 비중은 이번 예에서 .4+.3=.7입니다.</p><p className="leading-8">거부된 경우 사용할 부족분은 각 후보에서 p−q가 양수인 부분입니다. 이번에는 (.3,0)이고 그 합은 .3입니다. 이 합을 수식에서는 Z라고 부릅니다. (.3,0)을 Z=.3으로 나누면 거부 뒤 선택 비중 (1,0)을 얻습니다.</p><p className="leading-8">수락 경로 (.4,.3)와 보충 경로 (.3,0)를 더해 (.7,.3)을 얻습니다. 이 한 위치의 보존을 실제로 확정된 앞 글마다 반복하면 연속 생성의 분포도 기준 모델과 맞습니다. 뒤 후보의 조건을 유지하지 못하면 이 반복 논리를 쓸 수 없습니다.</p><p className="leading-8">q(x)=0인 후보는 q에서 뽑힐 사건이 없으므로 그 비율을 계산할 필요가 없습니다. p=q이면 거부 비중이 0이며 부족분의 정규화에도 도달하지 않습니다. 0/0을 무조건 계산한 뒤 예외값으로 해결하는 공식이 아닙니다.</p><p className="leading-8">확률 1을 100칸으로 나눠 두 경로를 칸 수로 세 보면 거부된 30칸을 어디로 보내는지가 결과를 가릅니다.</p></div><ResidualMassViz /><span id="draft-verify" className="scroll-mt-20" /><span id="paper-speculative-decoding" className="scroll-mt-20" /><ExplainedFormula question="후보를 받아들이거나 고친 두 경로가 같은 p를 만들까요?" idea="수락된 비중과 거부 때 채우는 부족분을 각각 센 뒤 더합니다." formula={String.raw`\begin{aligned}\rho(x)&=\frac{p(x)}{q(x)}\\ a(x)&=\min(1,\rho(x))\\ d(x)&=(p(x)-q(x))_+\\ Z&=\sum_z d(z)\\ r(x)&=d(x)/Z\quad(Z>0)\\ m(x)&=\min(p(x),q(x))\\ P(x)&=m(x)+d(x)=p(x)\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}
 \underbrace{\rho(x)}_{\text{기준÷제안}}
 &=\frac{\overbrace{p(x)}^{\text{기준 비중}}}{\underbrace{q(x)}_{\text{제안 비중}}}\\
 \underbrace{a(x)}_{\text{유지 확률}}

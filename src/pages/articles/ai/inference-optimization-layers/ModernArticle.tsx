@@ -8,6 +8,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import {CodeSidebar,CodeViewButton,useCodeSidebar} from "@/components/code";
 import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import OptimizationBudgetViz from "./viz/OptimizationBudgetViz";
+import CriticalPathViz from "./viz/CriticalPathViz";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function OptimizationLayersArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 무엇을 줄였는지부터 확인합니다</h2><div className={prose}>
@@ -83,6 +84,8 @@ interpretation="100 ms 중 40 ms를 2배로 줄이면 80 ms·1.25배이고 10배
 <p>(다른 가정) 계산 80 ms와 준비 20 ms가 동시에 시작하고 둘 다 끝나야 결과를 보낸다고 합시다. 전체는 100 ms가 아니라 max(80,20)=80 ms입니다. 준비를 10 ms로 줄여도 max(80,10)=80 ms로 같습니다. 이 경우 준비 시간 20을 전체에서 줄일 수 있는 직렬 구간이라고 넣으면 잘못된 예측이 나옵니다.</p>
 <p>결과를 가장 늦게 준비시키는 의존 경로를 critical path, 임계 경로라고 부릅니다. 겹침이 있으면 각 일의 시작·끝과 의존 관계를 그려야 합니다. 어떤 가지를 줄이면 다른 가지가 새로 마지막이 될 수 있으므로 단순히 가장 긴 커널 하나만 찾는 문제도 아닙니다.</p>
 <p>메모리에서 값을 읽는 최소 시간 28 ms와 계산에 필요한 최소 시간 7 ms도 자동으로 35 ms가 되지 않습니다. 서로 겹칠 수 있는 자원의 하한을 비교하는 <Link to="/cs/gpu/gpu-memory-hierarchy-and-roofline#roofline-bound">roofline</Link> 관점에서는 더 큰 28 ms가 하한입니다. 읽을 양만 절반이 되고 처리 능력은 그대로라면 새 하한은 max(14,7)=14 ms입니다. 둘 다 실제 실행시간을 보장하는 값은 아닙니다.</p>
+<p>아래 그림은 같은 두 레인에서 한 레인만 줄이며 결과 시각이 어느 레인을 따라가는지 보여 줍니다.</p>
+</div><CriticalPathViz /><div className={prose}>
 <p>계산량·정밀도·변환 비용까지 바뀌는 양자화에는 위의 ‘읽기만 절반’ 가정을 다시 확인해야 합니다. 전송을 계산과 겹치는 분리 서빙도 같은 주의가 필요합니다. 하한 두 개, 커널 시간의 합, 사용자가 기다린 시간은 각각 무엇을 세는지 구분합니다.</p>
 </div></section>
 <section id="work-and-cost" data-teach-level="4" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">11. 요청 20개의 기다림과 한 번의 계산을 구별합니다</h2><div className={prose}>

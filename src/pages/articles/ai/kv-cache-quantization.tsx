@@ -4,7 +4,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import KvByteLedgerViz from "./kv-cache-quantization/viz/KvByteLedgerViz";
-import QuantRoundTripViz from "./kv-cache-quantization/viz/QuantRoundTripViz";
+import Fp8GridSnapViz from "./kv-cache-quantization/viz/Fp8GridSnapViz";
 import ScaleGranularityViz from "./kv-cache-quantization/viz/ScaleGranularityViz";
 import { codeRefs } from "./kv-cache-quantization/codeRefs";
 import { kvQuantTrees } from "./kv-cache-quantization/fileTree";
@@ -73,7 +73,7 @@ export default function KvCacheQuantizationArticle() {
             <p>읽는 쪽은 저장된 수에 0.02를 곱합니다. 0.48, −1.28, 3.2, 8.96입니다. 작은 세 값의 오차는 0.01, 0.02, 0.10으로 원래 크기의 2~3%입니다. 12.0은 8.96으로 돌아와 3.04, 25%가 사라집니다. 간격 때문에 생긴 작은 오차와 상한에 걸려 생긴 큰 오차는 원인이 다릅니다.</p>
             <p>큰 값이 늘 같은 채널에서 나온다면 그 채널에만 다른 비율을 줄 수 있습니다. 12.0을 200에 맞춰 0.06을 쓰면 200은 192로 저장되고 11.52로 돌아와 오차가 0.48로 줄어듭니다. 비율을 몇 개 두느냐가 7절의 질문입니다.</p>
           </div>
-          <QuantRoundTripViz />
+          <Fp8GridSnapViz />
         </section>
 
         <section id="why-scale" data-teach-level="2" className="scroll-mt-20">

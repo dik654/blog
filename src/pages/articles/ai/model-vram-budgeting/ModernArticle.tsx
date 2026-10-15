@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import BudgetPipelineViz from "./viz/BudgetPipelineViz";
 import MoEResidencyViz from "./viz/MoEResidencyViz";
+import HybridStateGrowthViz from "./viz/HybridStateGrowthViz";
 import WeightVramViz from "./viz/WeightVramViz";
 import QuantizationVramTradeoff from "./QuantizationVramTradeoff";
 import VramBudgetingComponents from "./VramBudgetingComponents";
@@ -135,6 +136,14 @@ M_{known}
             interpretation="한 request의 최대 context와 여러 짧은 request의 concurrency는 같은 문제가 아닙니다. Scheduler admission은 실제 T₁…Tᴿ 분포로 계산해야 합니다."
           />
         </div>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            Qwen3.6-27B에 이 식을 그대로 넣어 봅니다. 길이 T를 늘리면 attention 16층의 KV 띠만 자라고 request 수 R을 늘리면
+            DeltaNet 48층의 고정 state가 한 세트씩 더해집니다. 두 항이 48 GiB 칸을 채우는 순서를 같은 그림에서 셉니다.
+          </p>
+        </div>
+        <HybridStateGrowthViz />
 
         <div id="known-floor" className="scroll-mt-20">
           <ExplainedFormula

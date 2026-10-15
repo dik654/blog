@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CacheStateViz from "./viz/CacheStateViz";
+import DeltaUpdateViz from "./viz/DeltaUpdateViz";
 import HybridScheduleViz from "./viz/HybridScheduleViz";
 
 const KV_TERMS = [
@@ -419,6 +420,13 @@ y_t&=\underbrace{S_t^\top q_t}_{\substack{\text{현재 query로}\\\text{갱신 s
             interpretation="State shape은 context T와 함께 늘지 않습니다. 대신 과거 token 원본을 보존하지 않으므로 exact UUID·needle retrieval에서는 explicit attention과 다른 trade-off가 생깁니다."
             title="Delta update의 각 연산이 필요한 이유"
           />
+          <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+            <p>
+              네 줄의 식을 작은 행렬 하나에 차례로 적용하면 어느 칸이 언제 바뀌는지 보입니다. 마지막 장면은 오차 대신
+              value 전체를 더하는 단순 누적과 비교합니다.
+            </p>
+          </div>
+          <DeltaUpdateViz />
         </div>
 
         <div id="state-bytes" className="scroll-mt-20">

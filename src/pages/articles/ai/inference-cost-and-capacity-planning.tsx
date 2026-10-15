@@ -8,6 +8,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceCostAndCapacityPlanningViz from "./inference-cost-and-capacity-planning/viz/InferenceCostAndCapacityPlanningViz";
 import TierMixFleetViz from "./inference-cost-and-capacity-planning/viz/TierMixFleetViz";
+import GpuHeadroomStackViz from "./inference-cost-and-capacity-planning/viz/GpuHeadroomStackViz";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 
 /**
@@ -208,6 +209,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             하나를 고를 수밖에 없습니다. 그 간격은 다음 절의 reserved·on-demand 분배와 autoscaling 이 메웁니다.
           </p>
         </div>
+        <GpuHeadroomStackViz />
 <FactorStructureViz
   eyebrow="Headroom의 월 비용"
   title="9장에서 12장으로 늘릴 때 새로 빌리는 세 장만 비용에 더합니다"

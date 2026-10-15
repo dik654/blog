@@ -122,7 +122,7 @@ export default function BatchingGenerationsViz() {
             </svg>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+          <div className="mt-3 flex min-h-[3rem] flex-wrap items-center justify-between gap-2 font-mono text-[11px] sm:min-h-0">
             <span className="text-muted-foreground">{WAITING[scenes.active]}</span>
             <span className="text-primary">{IDLE[scenes.active]}</span>
           </div>
@@ -132,7 +132,7 @@ export default function BatchingGenerationsViz() {
             <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-dashed border-border" /> idle</span>
           </div>
 
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-0">
             {NOTES[scenes.active]}
           </p>
         </div>
