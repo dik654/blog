@@ -11,6 +11,7 @@ export const linuxLoadTrees: Record<string, FileNode> = {
       { name: "kernel/sched/sched.h", path: "linux/kernel/sched/sched.h", type: "file", codeKey: "uninterruptible-count" },
       { name: "include/linux/sched.h", path: "linux/include/linux/sched.h", type: "file", codeKey: "task-states" },
       { name: "fs/proc/loadavg.c", path: "linux/fs/proc/loadavg.c", type: "file", codeKey: "proc-loadavg" },
+      { name: "fs/proc/stat.c", path: "linux/fs/proc/stat.c", type: "file", codeKey: "proc-stat-blocked" },
     ],
   },
 };

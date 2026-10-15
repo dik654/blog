@@ -32737,7 +32737,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Linux load average · CPU 줄과 D 줄을 함께 센 수요",
     aliases: ["Load Average", "uptime load", "/proc/loadavg", "System load average"],
     definition:
-      "리눅스가 5초마다 nr_running과 nr_uninterruptible의 합을 1·5·15분 감쇠 상수로 섞은 세 값입니다. 1993년부터 끊김 없는 잠으로 디스크 등을 기다리는 task도 세므로 CPU 부하가 아니라 시스템 수요이며, vmstat의 r과 b로 갈라야 어느 자원인지 알 수 있습니다.",
+      "리눅스가 5초마다 nr_running과 nr_uninterruptible의 합을 1·5·15분 감쇠 상수로 섞은 세 값입니다. 1993년부터 끊김 없는 잠으로 디스크 등을 기다리는 task도 세므로 CPU 부하가 아니라 시스템 수요이며, vmstat의 r과 b, ps의 D 상태 수로 갈라야 어느 자원인지 알 수 있습니다.",
     canonicalHref: "/cs/cloud/linux-server-interview-incident-map#names",
   },
   "linux-uninterruptible-sleep-d-state": {
@@ -32745,9 +32745,9 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "computer-science",
     label: "Uninterruptible sleep · D state와 TASK_IDLE 예외",
-    aliases: ["D state", "TASK_UNINTERRUPTIBLE", "nr_uninterruptible", "vmstat b"],
+    aliases: ["D state", "TASK_UNINTERRUPTIBLE", "nr_uninterruptible"],
     definition:
-      "신호로 깨지 않고 디스크 응답 같은 사건만 기다리는 task 상태입니다. 커널은 잠드는 순간 UNINTERRUPTIBLE이면서 NOLOAD·FROZEN이 아닐 때만 nr_uninterruptible을 올려 load에 보태므로, TASK_IDLE로 자는 kernel thread는 load에 들어가지 않습니다.",
+      "신호로 깨지 않고 디스크 응답이나 일부 lock 같은 사건만 기다리는 task 상태입니다. 커널은 잠드는 순간 UNINTERRUPTIBLE이면서 NOLOAD·FROZEN이 아닐 때만 nr_uninterruptible을 올려 load에 보태므로, TASK_IDLE로 자는 kernel thread는 load에 들어가지 않습니다. vmstat b(procs_blocked)는 이 가운데 in_iowait인 task만 세므로 lock을 기다리는 D task는 load에만 들어갑니다.",
     canonicalHref: "/cs/cloud/linux-server-interview-incident-map#source",
   },
   "load-average-fixed-point-decay": {
@@ -32997,7 +32997,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "conntrack table capacity · nf_conntrack_max",
     aliases: ["nf_conntrack_max", "nf_conntrack: table full, dropping packet", "nf_conntrack_tcp_timeout_time_wait"],
     definition:
-      "netfilter NAT 호스트가 연결마다 남기는 conntrack 항목의 상한입니다. 4GiB 넘는 64비트 호스트의 기본 상한은 262,144이고 TCP TIME_WAIT 항목은 120초 남아, 초당 약 2,184개를 넘는 새 연결이 이어지면 새 packet이 버려집니다.",
+      "netfilter NAT 호스트가 연결마다 남기는 conntrack 항목의 상한입니다. 4GiB 넘는 64비트 호스트의 기본 상한은 262,144이고 TCP TIME_WAIT 항목은 120초 남아, 초당 약 2,184개를 넘는 새 연결이 이어지면 상한에 닿아 새 packet이 버려지기 시작합니다. gc가 끝나 가는 TCP 항목을 지워 자리를 만들므로 TIME_WAIT가 대부분이면 버려짐은 짧게 몰렸다 풀립니다.",
     canonicalHref: "/cs/cloud/linux-tcp-time-wait-ports-backlog#conntrack",
   },
   "process-zombie-wait-reaping": {
@@ -33027,7 +33027,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Container PID 1 signal drop · SIGNAL_UNKILLABLE",
     aliases: ["PID 1 Signal Handling", "SIGNAL_UNKILLABLE", "docker stop exit 137", "Container init"],
     definition:
-      "PID namespace의 첫 프로세스에 붙는 SIGNAL_UNKILLABLE 때문에, 처리기를 등록하지 않은 신호는 같은 namespace에서든 host에서든 버려지고 조상 namespace에서 온 SIGKILL·SIGSTOP만 전달되는 규칙입니다. trap 없는 셸이 PID 1이면 docker stop의 SIGTERM이 버려져 10초 뒤 SIGKILL과 종료 코드 137로 끝납니다.",
+      "PID namespace의 첫 프로세스에 붙는 SIGNAL_UNKILLABLE 때문에, 처리기를 등록하지 않은 신호는 같은 namespace에서든 host에서든 버려지고 조상 namespace에서 온 SIGKILL·SIGSTOP과 커널이 만든 신호만 전달되는 규칙입니다. trap 없는 셸이 PID 1이면 docker stop의 SIGTERM이 버려져 10초 뒤 SIGKILL과 종료 코드 137로 끝납니다.",
     canonicalHref: "/cs/cloud/linux-process-signals-pid1-fds#pid1-trace",
   },
   "init-reaper-signal-forwarding": {
@@ -33077,7 +33077,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "systemd-networkd foreign rule flush · 시작할 때 남의 규칙 지우기",
     aliases: ["ManageForeignRoutingPolicyRules", "ManageForeignRoutes", "rules_foreign", "systemd-networkd restart"],
     definition:
-      "systemd-networkd v248 이후는 시작할 때 커널 규칙을 모두 읽고, 커널 기본 표와 .network 파일에 없는 규칙을 남의 규칙으로 보고 지웁니다. v249의 ManageForeignRoutingPolicyRules= 기본값은 yes입니다. 코드는 같아도 부팅 직후에는 지울 것이 없고 실행 중 재시작 때는 CNI 규칙을 지웁니다.",
+      "systemd-networkd v248 이후는 시작할 때 커널 규칙을 모두 읽고, 커널이 만든 규칙(protocol kernel)도 .network 파일의 규칙도 아닌 줄을 남의 규칙으로 보고 지웁니다. 커널 규칙 표는 protocol을 보내지 않는 옛 커널에서만 쓰는 대체 수단입니다. v249의 ManageForeignRoutingPolicyRules= 기본값은 yes입니다. 코드는 같아도 부팅 직후에는 지울 것이 없고 실행 중 재시작 때는 CNI 규칙을 지웁니다.",
     canonicalHref: "/cs/cloud/linux-systemd-boot-change-incidents#networkd-source",
   },
   "systemd-ordering-requirement-split": {
@@ -33097,7 +33097,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "systemd start rate limit · Restart와 StartLimit의 고정 창 카운터",
     aliases: ["StartLimitBurst", "StartLimitIntervalSec", "RestartSec", "Restart=on-failure", "start-limit-hit"],
     definition:
-      "Restart=로 다시 시작하는 요청도 시작 요청이므로, 첫 시작부터 StartLimitIntervalSec(기본 10초) 창 안에서 StartLimitBurst(기본 5)번을 넘으면 거절하고 start-limit-hit로 멈춥니다. 한 바퀴 p에 대해 B·p ≤ T이면 B번 실패 뒤 영구히 멈추고, 그보다 늦으면 창이 새로 열려 계속 재시작합니다.",
+      "Restart=로 다시 시작하는 요청도 시작 요청이므로, 첫 시작부터 StartLimitIntervalSec(기본 10초) 창 안에서 StartLimitBurst(기본 5)번을 넘으면 거절하고 start-limit-hit로 멈춥니다. 한 바퀴 p에 대해 B·p ≤ T이면 B번 실패 뒤 failed로 멈춰 수동 시작이나 reset-failed 전까지 자동 재시작하지 않고, 그보다 늦으면 창이 새로 열려 계속 재시작합니다.",
     canonicalHref: "/cs/cloud/linux-systemd-boot-change-incidents#restart-limit",
   },
   "unattended-upgrade-restart-path": {

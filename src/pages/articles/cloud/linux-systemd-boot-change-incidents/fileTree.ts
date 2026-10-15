@@ -20,6 +20,9 @@ export const systemdIncidentTrees: Record<string, FileNode> = {
   linux: {
     name: "linux",
     type: "dir",
-    children: [{ name: "init/main.c", path: "linux/init/main.c", type: "file", codeKey: "kernel-init-order" }],
+    children: [
+      { name: "init/main.c", path: "linux/init/main.c", type: "file", codeKey: "kernel-init-order" },
+      { name: "net/core/fib_rules.c", path: "linux/net/core/fib_rules.c", type: "file", codeKey: "fib-rules-protocol" },
+    ],
   },
 };

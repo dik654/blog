@@ -71,18 +71,18 @@ export default function LinuxProcessSignalsPid1FdsArticle() {
               컨테이너의 기본 유예는 10초입니다. 10초를 꽉 채웠다는 것은 SIGTERM이 아무 효과도 내지 못했다는 뜻입니다.
             </p>
             <p>
-              137은 종료 코드입니다. bash 매뉴얼은 명령이 치명적인 신호 N으로 끝나면 128 + N을 종료 상태로 쓴다고 적고, runc도 같은 규칙으로 컨테이너의 종료
+              137은 종료 코드입니다. bash 매뉴얼은 명령이 치명적인 신호 N으로 끝나면 128 + N을 종료 상태로 쓴다고 적고, Docker에서 PID 1을 거두는 containerd-shim과 runc의 ExitStatus도 같은 규칙으로 컨테이너의 종료
               코드를 만듭니다. SIGKILL은 9번이니 137, SIGTERM으로 끝났다면 143이었을 것입니다.
             </p>
           </div>
           <ExplainedFormula
             question="신호로 끝난 프로세스의 종료 코드는 어떻게 정해집니까?"
-            idea="정상 종료 코드(0~255)와 겹치지 않게 128을 더해, 숫자만 보고도 몇 번 신호로 죽었는지 거꾸로 읽을 수 있게 합니다."
+            idea="관례적으로 128 이상을 신호 종료에 쓰므로, 숫자에서 128을 빼면 몇 번 신호로 죽었는지 거꾸로 읽을 수 있습니다. 프로그램이 exit(137)을 직접 불러도 같은 숫자가 되므로 완전히 구별되지는 않습니다."
             formula={"\\text{status}=128+N"}
             annotatedFormula={"\\text{status}=\\underbrace{128}_{\\text{신호로 죽었다는 표시}}+\\underbrace{N}_{\\text{죽인 신호 번호}}"}
             operations={[
               { expression: "128+N", annotation: ["SIGKILL N = 9이면 137입니다.", "SIGTERM N = 15이면 143입니다."] },
-              { expression: "N", annotation: ["커널의 wait 상태 하위 7비트에 들어 있는 값입니다.", "runc ExitStatus가 이 값을 꺼내 128에 더합니다."] },
+              { expression: "N", annotation: ["커널의 wait 상태 하위 7비트에 들어 있는 값입니다.", "containerd-shim과 runc ExitStatus가 이 값을 꺼내 128에 더합니다."] },
             ]}
             terms={[
               { symbol: "\\text{status}", name: "종료 코드", description: "셸의 $? 와 docker ps의 Exited (…)에 보이는 값입니다." },
@@ -155,7 +155,7 @@ $ ps -o pid,comm -p 7
             </p>
             <p>
               signal(7)에 따르면 SIGTERM의 기본 동작은 종료이지만 처리기를 등록할 수 있습니다. 그래서 서버는 SIGTERM을 받으면 새 요청을 멈추고 진행 중인 요청을
-              끝낸 뒤 스스로 나갈 수 있습니다. SIGKILL과 SIGSTOP은 처리기를 두거나 막거나 무시할 수 없습니다. 커널이 바로 끝내므로 정리 코드가 돌 틈이 없습니다.
+              끝낸 뒤 스스로 나갈 수 있습니다. SIGKILL과 SIGSTOP은 처리기를 두거나 막거나 무시할 수 없습니다. SIGKILL은 커널이 바로 끝내므로 정리 코드가 돌 틈이 없고, SIGSTOP은 끝내지 않고 멈춰 세웁니다.
             </p>
             <p>
               신호를 잠시 막아 두는 것을 신호 마스크(signal mask)라고 합니다. 막힌 신호는 사라지지 않고 대기(pending) 상태로 남았다가 막기를 풀면 전달됩니다. 중요한
@@ -163,7 +163,7 @@ $ ps -o pid,comm -p 7
             </p>
             <p>
               fork한 자식은 부모의 처리 방식을 물려받습니다. execve는 처리기로 등록된 신호를 기본 동작으로 되돌리고 무시하던 신호는 그대로 둡니다. 새 프로그램의 메모리에는 옛
-              처리기 함수가 없기 때문입니다. Python은 시작할 때 SIGINT를 KeyboardInterrupt로 바꾸는 처리기와 SIGPIPE 무시만 설치하므로, SIGTERM은
+              처리기 함수가 없기 때문입니다. Python은 시작할 때 SIGINT를 KeyboardInterrupt로 바꾸는 처리기와 SIGPIPE·SIGXFSZ 무시만 설치하므로, SIGTERM은
               따로 등록하지 않는 한 기본 동작입니다. 이 사실이 10절에서 exec 하나로는 부족한 이유가 됩니다.
             </p>
             <p>
@@ -182,7 +182,7 @@ $ ps -o pid,comm -p 7
             </p>
             <p>
               커널은 child_reaper가 될 프로세스에 SIGNAL_UNKILLABLE 표시를 붙입니다. 이 표시가 있는 프로세스는 처리기를 등록하지 않은 신호를 받지 않습니다. 예외는
-              조상 namespace에서 온 SIGKILL과 SIGSTOP뿐입니다.
+              조상 namespace에서 온 SIGKILL과 SIGSTOP, 그리고 OOM killer처럼 커널이 직접 만든 SIGKILL입니다. 막아 둔 신호는 이 검사를 거치지 않고 pending으로 남습니다.
             </p>
             <p>
               pid_namespaces(7)도 같은 규칙을 적습니다. 같은 namespace의 프로세스는 init이 처리기를 둔 신호만 보낼 수
@@ -222,7 +222,7 @@ $ ps -o pid,comm -p 7
               { code: "wait(10초)", note: "python은 신호를 받지 못했으므로 정리를 시작하지 않습니다." },
               { code: "kill(PID 1, SIGKILL)", note: "force ∧ kernel_only라 UNKILLABLE 검사를 통과합니다." },
               { code: "PID 1 종료 → namespace 전체 SIGKILL", note: "init이 죽으면 커널이 namespace의 나머지를 SIGKILL로 정리합니다. python도 여기서 끝납니다." },
-              { code: "exit status = 128 + 9", note: "runc가 137을 기록합니다." },
+              { code: "exit status = 128 + 9", note: "PID 1을 거둔 containerd-shim이 runc와 같은 규칙으로 137을 기록합니다." },
             ]}
             output="10.0초 뒤 Exited (137). python은 SIGTERM을 한 번도 받지 못했으므로 진행 중인 요청은 응답 없이 끊깁니다."
           />
@@ -240,8 +240,8 @@ $ ps -o pid,comm -p 7
           <h2 className="mb-6 text-2xl font-bold">8. 커널은 신호를 보내는 순간 init 보호 규칙을 적용합니다</h2>
           <div className={prose}>
             <p>
-              Linux v6.12의 kernel/fork.c 2558~2561행은 새 PID namespace의 첫 프로세스를 child_reaper로 정하고 SIGNAL_UNKILLABLE을 켭니다. start.sh가 컨테이너에서
-              첫 번째로 실행되는 순간 이 줄을 지납니다.
+              Linux v6.12의 kernel/fork.c 2558~2561행은 새 PID namespace의 첫 프로세스를 child_reaper로 정하고 SIGNAL_UNKILLABLE을 켭니다. 이 줄은 runc가 새 PID namespace에 첫 프로세스(runc init)를 clone할 때 지나고,
+              그 프로세스가 execve로 start.sh가 되어도 signal_struct의 표시는 그대로 남습니다.
             </p>
             <p>
               kernel/signal.c의 send_signal_locked(1214~1249행)가 force를 정합니다. 1241~1245행은 보낸 쪽이 대상 namespace에서 PID가 없으면, 곧 조상 namespace에서
@@ -321,13 +321,18 @@ $ ps -o pid,comm -p 7
               SIGTERM 처리기를 기본으로 두지 않습니다. 7절의 세 조건이 그대로 맞아 SIGTERM은 여전히 버려집니다.
             </p>
             <p>
-              둘째는 docker run --init이나 tini입니다. tini README는 tini가 자식 하나를 띄워 기다리면서 좀비를 거두고 신호를 전달한다고 적습니다. tini가 PID 1이 되고
-              python은 PID 2가 되므로, 전달받은 SIGTERM은 처리기가 없어도 기본 동작으로 python을 끝냅니다. tini는 python이 신호로 끝나면 128 + 신호 번호를 돌려주므로
-              종료 코드는 143입니다. 고아 좀비도 tini가 거둡니다.
+              둘째는 docker run --init이나 tini입니다. tini README는 tini가 자식 하나를 띄워 기다리면서 좀비를 거두고 신호를 전달한다고 적습니다. 그런데 start.sh를 그대로 두면
+              트리는 tini(PID 1) → sh start.sh(PID 2) → python입니다. tini.c 533행은 기본으로 직계 자식 하나에만 kill을 보내므로 SIGTERM은 sh가 받습니다. trap이 없는
+              sh는 PID 1이 아니라서 기본 동작으로 죽고, tini는 143을 기록하고 끝납니다. python은 SIGTERM을 받지 못한 채 tini에 입양됐다가 tini가 끝날 때 namespace
+              정리의 SIGKILL로 죽습니다. 종료는 빨라져 고친 것처럼 보이지만 python에게 정리할 기회는 여전히 없습니다.
+            </p>
+            <p>
+              그래서 tini는 start.sh에 exec를 함께 쓰거나(tini → python), tini -g로 자식의 프로세스 그룹 전체에 신호를 보내게 해야 python에 SIGTERM이 닿습니다. 그러면
+              python은 PID 2이므로 처리기가 없어도 기본 동작으로 끝나고 tini는 128 + 15 = 143을 돌려줍니다. 고아 좀비도 tini가 거둡니다.
             </p>
             <p>
               tini 자신도 PID 1인데 어떻게 SIGTERM을 받을까요? tini.c는 처리기를 등록하는 대신 거의 모든 신호를 막아 두고 sigtimedwait로 꺼내 읽습니다.
-              8절의 sig_ignored 111행은 막힌 신호를 버리지 않으므로 SIGTERM이 대기열에 남고 tini가 그것을 꺼내 python에게 kill로 다시 보냅니다.
+              kernel/signal.c의 sig_ignored는 111행에서 막힌 신호를 버리지 않고 돌아가므로 SIGTERM이 대기열에 남고 tini가 그것을 꺼내 python에게 kill로 다시 보냅니다.
             </p>
             <p>
               하지만 tini도 server.py가 직접 낳은 helper 좀비는 거두지 못합니다. 그 좀비들의 부모는 여전히 살아 있는 server.py이고, 4절의 칸은 server.py가 wait하거나
@@ -359,7 +364,14 @@ $ ps -o pid,comm -p 7
                   <td className="py-2">남음</td>
                 </tr>
                 <tr className="border-b border-border/60">
-                  <td className="py-2 pr-3">tini·--init</td>
+                  <td className="py-2 pr-3">tini·--init (start.sh 그대로)</td>
+                  <td className="py-2 pr-3">sh만 받고 python은 못 받음</td>
+                  <td className="py-2 pr-3">없음, tini 종료 때 SIGKILL (143)</td>
+                  <td className="py-2 pr-3">tini가 거둠</td>
+                  <td className="py-2">남음</td>
+                </tr>
+                <tr className="border-b border-border/60">
+                  <td className="py-2 pr-3">tini + exec (또는 tini -g)</td>
                   <td className="py-2 pr-3">전달됨</td>
                   <td className="py-2 pr-3">없음, 기본 동작 종료 (143)</td>
                   <td className="py-2 pr-3">tini가 거둠</td>
@@ -373,7 +385,7 @@ $ ps -o pid,comm -p 7
                   <td className="py-2">거둠</td>
                 </tr>
                 <tr>
-                  <td className="py-2 pr-3">tini + 앱 처리기·wait</td>
+                  <td className="py-2 pr-3">tini + exec + 앱 처리기·wait</td>
                   <td className="py-2 pr-3">전달됨</td>
                   <td className="py-2 pr-3">있음 (0)</td>
                   <td className="py-2 pr-3">tini가 거둠</td>
@@ -431,7 +443,7 @@ wait "$child"        # 자식이 정리를 마칠 때까지 다시 기다림`}</
               { label: "1,001번째 연결", expression: "다음 번호 1,024 ≥ soft 1,024", result: "EMFILE", reason: "file.c 506~508행이 fd ≥ end이면 -EMFILE을 돌려줍니다." },
             ]}
             conclusion="EMFILE은 서버 전체가 아니라 이 프로세스의 표가 찼다는 뜻입니다. soft limit을 올리거나 새는 fd를 찾아 닫아야 합니다."
-            caveats={["연결마다 백엔드 연결을 하나씩 더 연다면 500번째 손님에서 이미 막힙니다.", "fd가 새는 버그라면 한도를 올려도 시간만 늦출 뿐입니다."]}
+            caveats={["연결마다 백엔드 연결을 하나씩 더 연다면 501번째 손님에서 이미 막힙니다.", "fd가 새는 버그라면 한도를 올려도 시간만 늦출 뿐입니다."]}
           />
           <FdTableViz />
           <div className={prose}>
@@ -444,7 +456,8 @@ wait "$child"        # 자식이 정리를 마칠 때까지 다시 기다림`}</
               reached를 찍고 ENFILE을 돌려줍니다.
             </p>
             <p>
-              기본 file-max는 부팅 때 메모리의 약 10%를 파일 하나당 1KiB로 나눈 값이라 64GiB 서버라면 수백만 단위입니다. 그래서
+              커널 기본 file-max는 부팅 때 메모리의 약 10%를 파일 하나당 1KiB로 나눈 값이라 64GiB 서버라면 수백만 단위입니다. systemd를 PID 1로 쓰는
+              host는 부팅 때 file-max를 LONG_MAX(9223372036854775807)로, nr_open을 커널이 받아 주는 최댓값으로 올려 둡니다. 어느 쪽이든
               현장에서 보는 Too many open files는 대부분 EMFILE 쪽입니다.
             </p>
             <p>
@@ -464,7 +477,9 @@ $ ls /proc/<pid>/fd | wc -l                  # 지금 쓰는 칸 수
 $ cat /proc/sys/fs/file-nr                   # 시스템: 할당 · 여유 · file-max
 13856	0	6710886
 $ cat /proc/sys/fs/nr_open                   # RLIMIT_NOFILE 천장
-1048576                                      # (예시 출력)`}</pre>
+1048576
+# systemd가 없는 64GiB 커널 기본값의 예시 출력입니다. systemd host라면
+# file-max는 9223372036854775807, nr_open은 1073741816처럼 보입니다.`}</pre>
           <div className="flex flex-wrap gap-2">
             {code("alloc-fd", "alloc_fd의 EMFILE 검사")}
             {code("file-max", "file-max와 ENFILE")}
@@ -493,13 +508,14 @@ $ docker top shop-api -o pid,ppid,stat,comm   # PID 1이 sh인지, 좀비(Z)가 
             </p>
           </div>
           <pre className={pre}>{`$ sudo strace -f -e trace=%signal -p <python의 host PID>
---- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=0, ...} ---
-rt_sigreturn({mask=[]})                         = 0
-# tini를 붙인 뒤의 모습입니다. si_pid=0은 조상 namespace에서 왔다는 표시입니다. (예시 출력)`}</pre>
+--- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=1, ...} ---
++++ killed by SIGTERM +++
+# tini + exec 뒤의 모습입니다. si_pid=1은 같은 namespace의 tini가 보냈다는 표시입니다.
+# server.py에 처리기를 달았다면 killed 줄 대신 rt_sigreturn 줄이 보입니다. (예시 출력)`}</pre>
           <div className={prose}>
             <p>
-              si_pid가 0인 것은 8절에서 본 send_signal_locked 1243행이 조상 namespace에서 온 신호의 보낸 쪽 PID를 0으로 지우기 때문입니다. tini를 붙이기 전에는 python에
-              이 줄 자체가 나오지 않습니다. 면접에서는 이 세 출력(처리기 마스크, 프로세스 트리, 신호 추적)을 근거로 원인과 고침을 말하면 됩니다.
+              si_pid는 보낸 쪽 PID를 받는 쪽 namespace에서 본 번호입니다. tini는 같은 namespace의 PID 1이라 1이 찍힙니다. host에서 kill로 직접 보낸 신호라면 8절의
+              send_signal_locked 1243행이 보낸 쪽 PID를 0으로 지우므로 si_pid=0이 보입니다. tini를 붙이기 전에는 python에 이 줄 자체가 나오지 않습니다. 면접에서는 이 세 출력(처리기 마스크, 프로세스 트리, 신호 추적)을 근거로 원인과 고침을 말하면 됩니다.
             </p>
           </div>
         </section>
@@ -529,7 +545,7 @@ rt_sigreturn({mask=[]})                         = 0
           <div className={prose}>
             <p>start.sh에 trap 'exit 0' TERM만 추가하고 python server.py를 foreground로 그대로 두면 docker stop은 몇 초 뒤 어떤 종료 코드로 끝날까요? (답: 7절, 10절)</p>
             <p>tini를 붙인 뒤에도 ps에 convert &lt;defunct&gt; 줄이 계속 늘어난다면 누구의 코드를 고쳐야 하고, 그 줄들의 PPID는 무엇일까요? (답: 4절, 9절, 10절)</p>
-            <p>soft limit을 65,536으로 올린 뒤에도 같은 로그가 나오고 dmesg에 VFS: file-max limit가 찍혔다면 무엇이 다르고 어디를 봐야 할까요? (답: 11절)</p>
+            <p>soft limit을 65,536으로 올린 뒤에도 같은 로그가 나오고 dmesg에 VFS: file-max limit가 찍혔다면 무엇이 다르고 어디를 봐야 할까요? systemd host라면 이 줄이 찍히기 쉬운지도 생각해 보세요. (답: 11절)</p>
           </div>
         </section>
       </div>

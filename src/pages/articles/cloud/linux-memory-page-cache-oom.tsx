@@ -29,7 +29,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
             바닥나면 OOM killer가 전역 또는 cgroup 단위로 점수가 가장 높은 프로세스 하나에 SIGKILL을 보냅니다. 점수는 쓰는 page 수에 oom_score_adj를
             상한의 1/1000 단위로 더한 값이고 SIGKILL로 끝난 프로세스는 128 + 9 = 137을 남깁니다.
           </p>
-            <p>국내 리눅스 엔지니어 면접 질문지의 장애 대응 문항에는 "OOM Killer 동작 과정과 희생 프로세스 선정 기준"이 있고, 해외 SRE·Production Engineer 면접 후기에도 메모리 관리와 vmstat 해석이 반복해서 나옵니다. 이 글은 그 질문들을 한 서버의 장부와 Linux v6.12 원문으로 끝까지 따라갑니다. 시리즈 전체 지도는 <a href="/cs/cloud/linux-server-interview-incident-map#overview">리눅스 서버 면접·장애 지도</a>에 있습니다.</p>
+            <p>국내 리눅스 엔지니어 면접 질문지의 장애 대응 문항에는 "OOM Killer 동작 과정과 희생 프로세스 선정 기준"이 있고, 해외 SRE·Production Engineer 면접 정리와 지원자 후기에도 메모리 관리와 vmstat 해석이 나옵니다(출처는 <a href="/cs/cloud/linux-server-interview-incident-map#black-box">면접 자료 다섯 곳</a>에 정리했습니다). 이 글은 그 질문들을 한 서버의 장부와 Linux v6.12 원문으로 끝까지 따라갑니다. 시리즈 전체 지도는 <a href="/cs/cloud/linux-server-interview-incident-map#overview">리눅스 서버 면접·장애 지도</a>에 있습니다.</p>
           </div>
         </section>
 
@@ -70,7 +70,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
               { label: "used 두 정의", expression: "16,384 − 1,536 − 9,728 · 16,384 − 10,976", result: "5,120 · 5,408 MiB", reason: "procps-ng 3.3.17은 free와 buff/cache(Cached + SReclaimable)를 빼고, 4.0.1부터는 available을 뺍니다." },
             ]}
             conclusion="같은 서버를 (total − free)로 보면 90.6%가 차 있고 available로 보면 67%가 비어 있습니다. 경보는 available과 다음 절의 회수 압력으로 걸어야 합니다."
-            caveats={["available은 추정치입니다. 커널 문서도 page cache와 slab이 실제로 얼마나 회수될지는 시스템마다 다르다고 적습니다.", "tmpfs와 공유 메모리는 Cached에 들어가 buff/cache 열을 키우지만 비울 수 없습니다. available은 file LRU만 더하므로 이 몫을 빼고 셉니다."]}
+            caveats={["available은 추정치입니다. 커널 문서도 page cache와 slab이 실제로 얼마나 회수될지는 시스템마다 다르다고 적습니다.", "tmpfs와 공유 메모리는 Cached에 들어가 buff/cache 열을 키우지만 swap이 없으면 비울 수 없습니다. available은 file LRU만 더하므로 이 몫을 빼고 셉니다."]}
           />
           <div className={prose}>
             <p>available을 계산하는 실제 코드와, 이 값이 추정치임을 밝히는 커널 문서는 아래에서 볼 수 있습니다.</p>
@@ -90,8 +90,8 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <h2 className="mb-6 text-2xl font-bold">4. 앱이 커지면 cache가 줄고, 필요한 파일까지 비우면 느려집니다</h2>
           <div className={prose}>
             <p>
-            같은 서버에서 앱이 메모리를 6 GiB 더 쓴다고 합시다. 빈 page는 금방 watermark 근처까지 내려가고 커널의 백그라운드 회수 스레드가 page cache를 비워
-            자리를 만듭니다. 앱 메모리가 10,752 MiB가 되면 cache는 4,352 MiB, available은 4,832 MiB입니다. 앱이 가져간 6,144 MiB만큼
+            같은 서버에서 앱이 메모리를 6 GiB 더 쓴다고 합시다. 빈 page가 zone watermark에 닿을 때마다 커널의 백그라운드 회수 스레드가 page cache를 비워
+            자리를 만들고 장부의 빈 page는 256 MiB 안팎에 머뭅니다. 앱 메모리가 10,752 MiB가 되면 cache는 4,352 MiB, available은 4,832 MiB입니다. 앱이 가져간 6,144 MiB만큼
             available이 줄었을 뿐 아직 아무 문제도 없습니다.
           </p>
             <p>
@@ -101,8 +101,12 @@ export default function LinuxMemoryPageCacheOomArticle() {
           </p>
             <p>
             이 느려짐은 used로도 available로도 드러나지 않습니다. 두 숫자는 남은 양을 셀 뿐이고 남은 양을 맞추느라 작업이 얼마나 멈췄는지는 세지 않기 때문입니다. 그 시간을
-            세는 지표가 PSI이고 5절에서 이름을 붙입니다. 앱이 1 GiB를 더 원하면 남은 cache를 다 비워도 모자라고 회수가 진전 없이 끝나 OOM killer가 불립니다.
+            세는 지표가 PSI이고 5절에서 이름을 붙입니다.
           </p>
+            <p>
+            이 시점의 available은 1,248 MiB입니다. 앱이 1,536 MiB를 더 원하면 남은 cache 768 MiB, 회수 가능 slab 448 MiB, 예약선 위 빈 page 96 MiB를 모두 넘겨도 1,312 MiB라 224 MiB가 모자라고, 회수가 진전 없이 끝나 OOM killer가 불립니다.
+          </p>
+            <p>실제 서버에서는 이 마지막 장면이 이렇게 빨리 오지 않는 경우가 많습니다. 자주 읽는 파일 page를 비웠다가 곧 다시 읽어 들이는 동안에도 커널은 회수가 진전된 것으로 보고 재시도를 이어 가기 때문입니다. 그 사이 서버는 OOM 없이 오래 버벅이고 PSI memory의 full이 높게 유지됩니다. systemd-oomd처럼 PSI를 보고 커널 OOM 전에 cgroup을 정리하는 사용자 공간 도구가 있는 이유입니다.</p>
           </div>
           <MemoryLedgerViz />
         </section>
@@ -139,7 +143,8 @@ export default function LinuxMemoryPageCacheOomArticle() {
             요청만 거절합니다. 1이면 무조건 약속합니다. 두 모드에서는 약속한 프로세스들이 실제로 page를 쓰기 시작해 RAM이 모자랄 때 비로소 문제가 드러나고 그때 해결책이 OOM
             killer입니다.
           </p>
-            <p>2는 약속 자체를 제한합니다. 약속 총량의 상한 CommitLimit은 RAM × overcommit_ratio ÷ 100 + swap이고, 기본 비율 50이면 swap 없는 16 GiB 서버에서 8,192 MiB입니다. 그 뒤의 malloc은 NULL을 돌려받습니다. 프로세스가 나중에 SIGKILL로 죽는 대신 할당 순간에 오류를 받는 것이 장점이고, RAM 절반만 약속할 수 있다는 것이 비용입니다.</p>
+            <p>2는 약속 자체를 제한합니다. 약속 총량의 상한 CommitLimit은 (RAM − huge page 예약) × overcommit_ratio ÷ 100 + swap이고, 기본 비율 50이면 swap과 huge page가 없는 16 GiB 서버에서 8,192 MiB입니다. 그 뒤의 malloc은 NULL을 돌려받습니다.</p>
+            <p>root가 아닌 프로세스는 여기서 관리자 몫(admin_reserve_kbytes, 기본 8 MiB)을 더 뺀 만큼만 받습니다(mm/util.c 1051–1056행). 프로세스가 나중에 SIGKILL로 죽는 대신 할당 순간에 오류를 받는 것이 장점이고, RAM 절반만 약속할 수 있다는 것이 비용입니다.</p>
             <p>
             swap이 있으면 사정이 또 다릅니다. anonymous page도 swap 장치로 내보낼 수 있어 OOM이 늦게 오고 그 사이 느린 디스크 I/O가 끼어듭니다.
             vm.swappiness(기본 60)는 swap과 파일 page 회수의 상대 I/O 비용을 0~200으로 적는 값입니다. 0이어도 swap을 끄지는 않으며 빈 page와 파일
@@ -175,10 +180,10 @@ export default function LinuxMemoryPageCacheOomArticle() {
               { symbol: "\\text{rss}", name: "RAM에 올라온 page", description: "anonymous·파일 매핑·공유 메모리 page를 모두 셉니다(get_mm_rss)." },
               { symbol: "\\text{swapents}", name: "swap으로 나간 page", description: "swap이 없는 노드에서는 0입니다." },
               { symbol: "\\text{pgtables\\_bytes}", name: "page table 크기", description: "주소를 RAM page에 대응시키는 표가 차지한 byte입니다. page 크기 4 KiB로 나눠 page 수로 바꿉니다." },
-              { symbol: "\\text{adj}", name: "oom_score_adj", description: "/proc/<pid>/oom_score_adj에 쓰는 −1000~1000 값입니다. −1000이면 식을 계산하지 않고 후보에서 뺍니다." },
+              { symbol: "\\text{adj}", name: "oom_score_adj", description: "/proc/<pid>/oom_score_adj에 쓰는 −1000~1000 값입니다. −1000이면 식을 계산하지 않고 후보에서 뺍니다. init·커널 스레드, 이미 정리된(MMF_OOM_SKIP) 프로세스, vfork 중인 프로세스도 같은 식으로 빠집니다." },
               { symbol: "\\text{totalpages}", name: "OOM 범위의 상한", description: "cgroup OOM이면 memory.max(+쓸 수 있는 swap), 전역 OOM이면 RAM + swap 전체 page 수입니다." },
             ]}
-            assumptions={["page 크기는 4 KiB입니다.", "cgroup에 걸린 커널 메모리 몫과 page cache는 OOM 직전 회수로 0이 됐다고 봅니다."]}
+            assumptions={["page 크기는 4 KiB입니다.", "page table 4 MiB도 cgroup에 청구됩니다. (가정) A와 B는 공유 라이브러리 page 4 MiB를 함께 매핑해 두 RSS에 모두 잡히지만 cgroup에는 한 번만 청구됩니다. 그래서 RSS 합 2,048 MiB에 page table을 더해도 청구 총액은 memory.max 2,048 MiB입니다.", "매핑되지 않은 page cache와 회수할 수 있는 커널 메모리는 OOM 직전 회수로 0이 됐다고 봅니다."]}
             interpretation="같은 adj라도 범위가 바뀌면 옮기는 양이 달라집니다. 2 GiB cgroup의 adj −500은 −262,000 page이지만 16 GiB 노드 전역 OOM에서는 −2,097,000 page입니다. adj를 정할 때는 어느 범위의 OOM에서 효과를 낼지 먼저 정해야 합니다."
           />
           <CalculationWalkthrough
@@ -204,7 +209,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <div className={prose}>
             <p>cgroup 안에서 page를 새로 쓸 때마다 커널은 그 page를 cgroup에 청구(charge)합니다. 청구 뒤에도 memory.max 아래면 그대로 통과합니다. 넘으면 노드 전체가 아니라 그 cgroup의 page만 회수합니다. 노드에 빈 RAM이 10 GiB 있어도 이 cgroup의 OOM은 막지 못합니다.</p>
             <p>
-            (가정) 장애 직전 A가 1,236 MiB, B가 512 MiB, cgroup의 로그 파일 cache가 300 MiB로 정확히 2,048 MiB였다고 합시다. A가 300
+            (가정) 장애 직전 A가 1,236 MiB, B가 512 MiB, cgroup의 로그 파일 cache가 300 MiB로 정확히 2,048 MiB였다고 합시다(page table과 공유 page는 7절 가정대로 서로 상쇄됩니다). A가 300
             MiB를 더 쓰는 동안은 cache 300 MiB가 회수되어 자리를 내줍니다. cache가 0이 된 뒤의 청구는 회수할 것이 없어 실패하고 16번 다시 시도한 뒤 cgroup
             OOM으로 갑니다.
           </p>
@@ -225,11 +230,15 @@ export default function LinuxMemoryPageCacheOomArticle() {
               { code: "if margin(max - usage) >= need: goto 1", note: "여유가 생기지 않았습니다. cache 300 MiB가 남아 있던 앞선 청구들은 여기서 1번 줄로 돌아가 성공했습니다." },
               { code: "if retries-- > 0: goto 1   # MAX_RECLAIM_RETRIES = 16", note: "16번까지 1~4번 줄을 반복합니다. 그동안 다른 프로세스가 메모리를 놓으면 성공할 수 있습니다." },
               { code: "events.oom += 1; for t in tasks: points[t] = oom_badness(t, max)", note: "A 393,984, B 131,328입니다. totalpages는 노드 RAM이 아니라 524,288입니다." },
-              { code: "victim = argmax(points); send SIGKILL to victim; events.oom_kill += 1", note: "A가 SIGKILL(9)을 받습니다. 런타임은 128 + 9 = 137을 종료 코드로, OOMKilled를 이유로 기록합니다." },
+              { code: "victim = argmax(points); send SIGKILL to victim; events.oom_kill += 1", note: "A가 SIGKILL(9)을 받습니다. A가 컨테이너의 주 프로세스라면 런타임은 128 + 9 = 137을 종료 코드로, OOMKilled를 이유로 기록합니다. 자식 프로세스만 죽었다면 컨테이너는 계속 돕니다." },
             ]}
             repeatUntil="희생자가 죽어 page가 돌아오면 재시도 횟수를 16으로 되돌리고 1번 줄부터 다시 청구합니다."
-            output="A가 종료되고 B는 계속 돕니다. memory.events에 max·oom·oom_kill이 하나씩 늘어 있고, dmesg에는 'Memory cgroup out of memory: Killed process … (A)' 줄이 남습니다."
+            output="oom.group이 0이면 A만 종료되고 B는 계속 돕니다(Kubernetes cgroup v2 기본값에서는 아래처럼 둘 다 죽습니다). memory.events에 max·oom·oom_kill이 하나씩 늘어 있고, dmesg에는 'Memory cgroup out of memory: Killed process … (A)' 줄이 남습니다."
           />
+          <div className={prose}>
+            <p>Kubernetes에서는 결과가 하나 달라집니다. v1.35.0의 kubelet은 cgroup v2 노드에서 설정 singleProcessOOMKill이 비어 있으면 false로 둡니다(pkg/kubelet/kubelet.go 738–749행). 그러면 컨테이너마다 memory.oom.group에 1을 씁니다(kuberuntime/kuberuntime_container_linux.go 314–320행).</p>
+            <p>커널은 여전히 점수로 A를 고르지만 고른 희생자가 속한 cgroup의 프로세스를 모두 죽이므로 B도 함께 끝납니다. A만 죽고 B가 남는 위 순서는 oom.group을 쓰지 않는 Docker 기본 설정, cgroup v1 노드, singleProcessOOMKill: true를 준 kubelet에서 그대로입니다.</p>
+          </div>
           {code("memcg-charge", "try_charge_memcg 원문")}
           {code("reclaim-retries", "MAX_RECLAIM_RETRIES = 16")}
         </section>
@@ -237,7 +246,8 @@ export default function LinuxMemoryPageCacheOomArticle() {
         <section id="kernel-source" data-teach-level="5" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">9. 원문은 점수를 세고, 범위를 정하고, 최댓값에 SIGKILL을 보냅니다</h2>
           <div className={prose}>
-            <p>Linux v6.12 mm/oom_kill.c의 oom_badness(193–239행)가 7절의 식입니다. 219–225행은 adj가 −1000이면 LONG_MIN을 돌려 계산을 건너뜁니다. 231–232행이 RSS, swap 항목, page table을 page 단위로 더하고 235–237행이 adj에 totalpages ÷ 1000을 곱해 더합니다. A의 393,984점이 이 세 줄에서 나옵니다.</p>
+            <p>Linux v6.12 mm/oom_kill.c의 oom_badness(193–239행)가 7절의 식입니다. 207–212행은 init과 커널 스레드처럼 죽일 수 없거나 주소 공간이 없는 작업을, 219–225행은 adj가 −1000이거나 이미 정리된(MMF_OOM_SKIP) 또는 vfork 중인 작업을 LONG_MIN으로 돌려 계산을 건너뜁니다.</p>
+            <p>231–232행이 RSS, swap 항목, page table을 page 단위로 더하고 235–237행이 adj에 totalpages ÷ 1000을 곱해 더합니다. A의 393,984점이 이 세 줄에서 나옵니다.</p>
             <p>totalpages를 정하는 곳은 constrained_alloc입니다. 260–263행은 cgroup OOM이면 mem_cgroup_get_max의 값, 곧 memory.max에 쓸 수 있는 swap을 더한 값을 씁니다. 265–266행은 전역 OOM이면 RAM 전체와 swap의 합을 씁니다. 같은 프로세스가 어느 OOM이냐에 따라 다른 점수를 받는 이유가 여기 있습니다.</p>
             <p>oom_evaluate_task(309–358행)는 후보를 하나씩 평가합니다. 이미 SIGKILL을 받고 죽어 가는 희생자가 있으면 새로 고르지 않고 멈춥니다. 343행은 지금까지의 최대보다 작은 점수를 건너뛰므로 남는 것은 최댓값입니다. select_bad_process(361–380행)는 cgroup OOM이면 그 cgroup의 작업만, 전역 OOM이면 모든 프로세스를 훑습니다.</p>
             <p>__oom_kill_process의 947행이 희생자에게 SIGKILL을 보내고 949–955행이 dmesg에 "Killed process" 줄을 남깁니다. 전역 할당은 page_alloc.c의 느린 경로가 kswapd를 깨우고(4280행), 직접 회수하고(4380행), 진전이 있는 동안 재시도한 뒤(4403행) 4429행에서 OOM으로 넘어옵니다.</p>
@@ -255,8 +265,11 @@ export default function LinuxMemoryPageCacheOomArticle() {
           <div className={prose}>
             <p>bash 매뉴얼은 신호 N으로 끝난 명령의 종료 상태를 128 + N으로 적습니다. SIGKILL은 9번이므로 137입니다. Kubernetes 문서의 메모리 한도 예제도 한도를 넘은 컨테이너의 lastState에 exitCode 137과 reason OOMKilled를 보여 줍니다.</p>
             <p>
-            그러나 137은 누가 SIGKILL을 보냈는지 말하지 않습니다. 운영자가 kill -9를 했거나 종료 유예 시간이 지나 런타임이 강제로 끝냈어도 137입니다. OOM이었다는
-            증거는 세 곳에서 확인합니다. cgroup의 memory.events에서 oom_kill이 늘었는지, dmesg 또는 journalctl -k에 "Memory cgroup
+            그러나 137은 누가 SIGKILL을 보냈는지 말하지 않습니다. 운영자가 kill -9를 했거나 종료 유예 시간이 지나 런타임이 강제로 끝냈어도 137입니다.
+          </p>
+            <p>
+            OOM이었다는
+            증거는 세 곳에서 확인합니다. cgroup의 memory.events에서 oom_kill이 늘었는지(이 카운터는 전역 OOM으로 죽은 경우도 셉니다), dmesg 또는 journalctl -k에 "Memory cgroup
             out of memory: Killed process" 줄이 있는지, 컨테이너 상태의 reason이 OOMKilled인지 봅니다.
           </p>
             <p>/proc/&lt;pid&gt;/oom_score로 다음 희생자를 예측하는 습관에는 함정이 있습니다. fs/proc/base.c의 proc_oom_score(586–605행)는 totalpages를 항상 노드의 RAM + swap으로 둡니다. 16 GiB 노드에서 adj −500인 A는 396, B는 687로 보이지만, 2 GiB cgroup의 OOM에서는 7절처럼 A가 죽습니다. 컨테이너 안의 순서는 memory.max로 다시 계산해야 합니다.</p>
@@ -308,7 +321,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
             max·oom·oom_kill 증가를 경보로 둡니다.
           </p>
             <p>한도를 고칠 때는 두 단계를 구분합니다. memory.high를 넘으면 강한 회수와 감속을 받지만 OOM killer는 불리지 않습니다. memory.max를 넘고 회수가 실패하면 그 cgroup 안에서 OOM이 납니다. memory.high를 max보다 조금 낮게 두면 죽기 전에 느려지는 구간이 생겨 경보를 받을 시간이 납니다.</p>
-            <p>여러 프로세스가 함께 있어야 의미가 있는 컨테이너라면 memory.oom.group을 1로 둘 수 있습니다. 그러면 7절에서 A만 죽고 B가 남는 대신 둘이 함께 죽고 함께 재시작합니다. vm.panic_on_oom은 기본 0이고, 2로 두면 cgroup OOM이어도 노드 전체가 panic합니다. 클러스터 failover를 전제로 한 선택입니다.</p>
+            <p>여러 프로세스가 함께 있어야 의미가 있는 컨테이너라면 memory.oom.group을 1로 둘 수 있습니다. 그러면 7절에서 A만 죽고 B가 남는 대신 둘이 함께 죽고 함께 재시작합니다. Kubernetes v1.35는 cgroup v2 노드에서 이 값을 이미 기본으로 1로 씁니다(8절). vm.panic_on_oom은 기본 0이고, 2로 두면 cgroup OOM이어도 노드 전체가 panic합니다. 클러스터 failover를 전제로 한 선택입니다.</p>
             <p>이 글의 수치는 가정한 장부와 커널 식으로 손으로 계산한 값이며 실제 커널을 돌려 잰 것이 아닙니다. 실제 서버의 watermark·예약분·RSS는 /proc/zoneinfo, /proc/meminfo, /proc/&lt;pid&gt;/status에서 다시 읽어야 합니다. 프로세스가 SIGKILL과 SIGTERM을 어떻게 다르게 받는지는 <a href="/cs/cloud/linux-process-signals-pid1-fds#overview">프로세스·신호·PID 1</a>에서 이어집니다.</p>
           </div>
           {code("cgroup-memory-max", "memory.high와 memory.max")}

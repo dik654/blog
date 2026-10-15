@@ -54,7 +54,7 @@ const STATES: readonly Scene[] = [
     opens: 1,
     blocks: "held",
     symlink: false,
-    lsof: "lsof +L1 → java 812 FD 7w NLINK 0 /var/log/app.log",
+    lsof: "lsof +L1 → java 812 FD 7w NLINK 0 /var/log/app.log (deleted)",
     note: "마지막 이름이 사라져 링크 수는 0입니다. 그래도 fd 7이 inode를 붙잡고 있어 블록 30GiB는 그대로입니다. lsof +L1이 찾는 상태입니다.",
   },
   {
@@ -131,7 +131,7 @@ export default function LinkCountViz() {
                 <dt className="text-muted-foreground">열린 참조</dt>
                 <dd className="font-bold">{state.opens}</dd>
               </dl>
-              {state.symlink ? <p className="mt-1 font-mono text-muted-foreground">inode 2001: &quot;app.log&quot;</p> : null}
+              <p aria-hidden={!state.symlink} className={`mt-1 font-mono text-muted-foreground ${state.symlink ? "" : "invisible"}`}>inode 2001: &quot;app.log&quot;</p>
             </Box>
             <Box title="데이터 블록" tone={freed ? "#16a34a" : "#dc2626"}>
               <div className="flex items-center gap-2">
@@ -147,9 +147,9 @@ export default function LinkCountViz() {
             </Box>
           </div>
 
-          <p className="mt-3 break-all font-mono text-[11px] text-muted-foreground">{state.lsof}</p>
+          <p className="mt-3 min-h-[2.4rem] break-all font-mono text-[11px] text-muted-foreground sm:min-h-0">{state.lsof}</p>
 
-          <p className="mt-3 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7rem] sm:min-h-[3.5rem]">
+          <p className="mt-3 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[3.5rem]">
             {state.note}
           </p>
         </div>

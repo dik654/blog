@@ -8,7 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * available은 mm/show_mem.c의 si_mem_available 식으로 계산한 값이다(예약 160 MiB, low watermark 64 MiB 가정).
  */
 const TOTAL = 16384;
-const SCENES = ["평소", "앱이 10.5 GiB", "앱이 14 GiB", "앱이 15 GiB를 원함"] as const;
+const SCENES = ["평소", "앱이 10.5 GiB", "앱이 14 GiB", "앱이 15.5 GiB를 원함"] as const;
 
 type Kind = "anon" | "cache" | "slab" | "kernel" | "free";
 
@@ -50,7 +50,7 @@ const PHASES: readonly Phase[] = [
     available: "4,832 MiB",
     naiveUsed: "98.4%",
     signal: "kswapd가 cache를 회수",
-    note: "앱이 6 GiB를 더 쓰자 커널이 page cache 4,864 MiB를 비워 자리를 내줬습니다. free는 watermark 근처에 머물고 available이 줄어든 만큼이 실제로 쓴 몫입니다.",
+    note: "앱이 6 GiB를 더 쓰자 커널이 page cache 4,864 MiB를 비워 자리를 내줬습니다. free는 256 MiB 안팎에 머물고 available이 줄어든 만큼이 실제로 쓴 몫입니다.",
   },
   {
     segments: [
@@ -67,15 +67,15 @@ const PHASES: readonly Phase[] = [
   },
   {
     segments: [
-      { kind: "anon", mib: 15104 },
+      { kind: "anon", mib: 15648 },
       { kind: "kernel", mib: 512 },
-      { kind: "slab", mib: 512 },
-      { kind: "free", mib: 256 },
+      { kind: "slab", mib: 64 },
+      { kind: "free", mib: 160 },
     ],
     available: "0에 가까움",
-    naiveUsed: "98.4%",
+    naiveUsed: "99.0%",
     signal: "OOM killer 호출",
-    note: "앱이 1,024 MiB를 더 원합니다. 남은 cache 768 MiB를 비워 넘겨도 256 MiB가 모자라고, 남은 빈 page는 커널 예약선입니다. swap이 없어 anon page는 내보낼 곳이 없으니 회수가 진전 없이 끝나고 OOM killer가 불립니다.",
+    note: "앱이 available 1,248 MiB보다 많은 1,536 MiB를 더 원합니다. cache 768 MiB, slab 448 MiB, 예약선 위 빈 page 96 MiB를 다 넘겨 1,312 MiB를 받아도 224 MiB가 모자랍니다. swap이 없어 anon page는 내보낼 곳이 없으니 회수가 진전 없이 끝나고 OOM killer가 불립니다.",
   },
 ];
 
@@ -170,7 +170,7 @@ export default function MemoryLedgerViz() {
             </div>
           </dl>
 
-          <p className="mt-4 min-h-[13rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12rem] sm:min-h-[4.5rem]">
+          <p className="mt-4 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[13rem] sm:min-h-[4.5rem]">
             {phase.note}
           </p>
         </div>

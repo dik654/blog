@@ -6,6 +6,7 @@ License: the Linux kernel is provided under GPL-2.0-only with the Linux-syscall-
 
 - `linux/COPYING` — 496 bytes; SHA256 `fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/COPYING)
 - `linux/fs/proc/loadavg.c` — 963 bytes; SHA256 `553df5eaa1689474f30aad51de04744ae89b8eb29d4a65e6035b9af12d4c1f9f`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/fs/proc/loadavg.c)
+- `linux/fs/proc/stat.c` — 5897 bytes; SHA256 `d4692d68f90f318cc6d09d182baffffb36f7d0a3367da2c77b1e654d08cd0382`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/fs/proc/stat.c)
 - `linux/include/linux/sched.h` — 64069 bytes; SHA256 `a0b8b99bb7608ab3d0b4f86b2ac416ce233b7f03821d26d4cd2f191bd29e489c`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/include/linux/sched.h)
 - `linux/include/linux/sched/loadavg.h` — 1588 bytes; SHA256 `70bb912e5fca1e250c7f7ad7961be8f4bec28e338cfa7bed3140e03e8d0a97de`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/include/linux/sched/loadavg.h)
 - `linux/kernel/sched/core.c` — 278224 bytes; SHA256 `4b9bdb7831e1d2b747a9bcbf3e1c7bef187dd1c0555e6cc959fd2118046345bd`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/v6.12/kernel/sched/core.c)

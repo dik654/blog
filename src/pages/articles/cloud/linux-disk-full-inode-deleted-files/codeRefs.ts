@@ -147,7 +147,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [1826, 1878],
     desc: "마지막 참조가 사라진 inode를 cache에 남길지, 지울지 결정합니다.",
     annotations: [
-      { lines: [1846, 1849], color: "sky", note: "파일시스템의 drop_inode가 없으면 generic_drop_inode를 씁니다. 링크 수가 0이면 drop이 참입니다." },
+      { lines: [1846, 1849], color: "sky", note: "파일시스템의 drop_inode를 부르고 없으면 generic_drop_inode를 씁니다. ext4는 ext4_drop_inode가 generic_drop_inode를 불러 링크 수가 0이면 drop이 참입니다." },
       { lines: [1851, 1857], color: "emerald", note: "drop이 거짓이면 LRU cache에 남기고 끝납니다. 이름이 남은 파일을 닫을 때의 경로입니다." },
       { lines: [1877, 1877], color: "amber", note: "drop이 참이면 evict로 갑니다. 파일시스템의 evict_inode가 블록을 돌려줍니다." },
     ],

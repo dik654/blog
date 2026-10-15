@@ -34,7 +34,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [1674, 1684],
     desc: "FIN_WAIT_2에서 기다릴 시간을 고르는 함수입니다. 소켓별 TCP_LINGER2가 있으면 그것을, 없으면 tcp_fin_timeout sysctl을 씁니다.",
     annotations: [
-      { lines: [1676, 1677], color: "sky", note: "여기가 tcp_fin_timeout이 읽히는 자리입니다. 이 함수의 결과는 FIN_WAIT_2 타이머에만 들어갑니다." },
+      { lines: [1676, 1677], color: "sky", note: "타이머 계산에서 tcp_fin_timeout을 읽는 곳은 이 함수 하나입니다(getsockopt TCP_LINGER2가 기본값을 보고할 때도 읽습니다). 이 함수의 결과는 FIN_WAIT_2 타이머에만 들어갑니다." },
       { lines: [1680, 1681], color: "amber", note: "RTO의 3.5배보다 짧게 잡으면 그 값으로 올립니다. 너무 짧은 값으로 정상 종료를 끊지 않게 하는 하한입니다." },
     ],
     code: tcpH,
@@ -86,10 +86,10 @@ export const codeRefs: Record<string, CodeRef> = {
   },
   "fin-wait2-to-time-wait": {
     path: "linux/net/ipv4/tcp_minisocks.c",
-    highlight: [121, 166],
+    highlight: [122, 166],
     desc: "FIN_WAIT_2 미니 소켓에 상대의 FIN이 도착하면 진짜 TIME_WAIT로 바뀝니다.",
     annotations: [
-      { lines: [121, 132], color: "sky", note: "FIN_WAIT_2 단계에서는 tcp_rcv_state_process의 검사를 반복합니다." },
+      { lines: [122, 132], color: "sky", note: "FIN_WAIT_2 단계에서는 tcp_rcv_state_process의 검사를 반복합니다." },
       { lines: [154, 166], color: "amber", note: "FIN이 오면 substate를 TCP_TIME_WAIT로 바꾸고 TCP_TIMEWAIT_LEN으로 타이머를 다시 겁니다. FIN_WAIT_2를 짧게 해도 그 뒤 60초는 그대로입니다." },
     ],
     code: tcpMinisocks,
@@ -97,11 +97,12 @@ export const codeRefs: Record<string, CodeRef> = {
   },
   "time-wait-reack": {
     path: "linux/net/ipv4/tcp_minisocks.c",
-    highlight: [186, 243],
+    highlight: [186, 258],
     desc: "TIME_WAIT 소켓이 다시 온 FIN과 새 SYN을 처리하는 부분입니다. TIME_WAIT가 존재하는 두 이유가 코드로 나타납니다.",
     annotations: [
-      { lines: [187, 204], color: "sky", note: "창 안의 segment가 다시 오면 타이머를 60초로 다시 겁니다. 마지막 ACK를 잃은 상대가 FIN을 재전송하면 여기서 ACK를 다시 돌려줍니다." },
+      { lines: [187, 204], color: "sky", note: "창 안에 정확히 맞는 빈 ACK나 RST만 여기로 옵니다. 빈 ACK면 타이머를 60초로 다시 걸고, RST면 tcp_rfc1337이 꺼져 있을 때 TIME_WAIT를 지웁니다. ACK를 다시 보내지는 않습니다." },
       { lines: [234, 243], color: "amber", note: "이전 연결보다 큰 순서 번호나 새 timestamp를 가진 SYN은 받아서 새 연결로 넘깁니다. 서버 쪽 TIME_WAIT가 같은 클라이언트의 재접속을 대개 막지 않는 이유입니다." },
+      { lines: [247, 258], color: "rose", note: "마지막 ACK를 잃은 상대가 FIN을 재전송하면 그 FIN은 창 밖(seq = rcv_nxt − 1)이라 여기로 옵니다. 타이머를 60초로 다시 걸고 tcp_timewait_check_oow_rate_limit가 ACK를 다시 돌려줍니다." },
     ],
     code: tcpMinisocks,
     lang: "c",
@@ -118,13 +119,14 @@ export const codeRefs: Record<string, CodeRef> = {
   },
   "hash-connect": {
     path: "linux/net/ipv4/inet_hashtables.c",
-    highlight: [994, 1089],
+    highlight: [994, 1112],
     desc: "connect()가 출발 포트를 정하지 않았을 때 쓸 수 있는 포트를 찾는 함수입니다.",
     annotations: [
       { lines: [1022, 1028], color: "sky", note: "high++로 [32768, 60999]를 [32768, 61000)으로 바꿉니다. remaining = 28,232입니다. 소켓별 범위가 없으면 step이 2라 짝수 포트를 먼저 훑습니다." },
-      { lines: [1032, 1043], color: "amber", note: "출발 IP·목적 IP·목적 포트의 hash로 시작 위치를 정합니다. 같은 목적지로 가는 연결은 같은 순서로 포트를 훑습니다." },
+      { lines: [1032, 1043], color: "amber", note: "시작 위치는 목적지 hash로 고른 table_perturb 칸의 값에 hash를 더해 정합니다. 그 칸은 연결이 성공할 때마다 앞으로 밀리므로(1112행) 같은 목적지라도 매번 다른 자리에서 훑기 시작합니다. 소켓별 범위가 없으면 시작 위치를 짝수로 내립니다." },
       { lines: [1053, 1066], color: "violet", note: "포트에 bind()·listen()한 소켓이 있으면(fastreuse ≥ 0) 건너뜁니다. 아니면 4-tuple이 이미 쓰이는지 check_established에 묻습니다." },
       { lines: [1084, 1089], color: "rose", note: "짝수와 홀수를 다 훑고도 없으면 -EADDRNOTAVAIL. 애플리케이션이 보는 'Cannot assign requested address'입니다." },
+      { lines: [1106, 1112], color: "emerald", note: "포트를 찾으면 table_perturb 칸을 훑은 거리(또는 작은 난수)만큼 앞으로 밉니다. 다음 연결은 그 뒤부터 찾기 시작합니다." },
     ],
     code: inetHashtables,
     lang: "c",
@@ -302,7 +304,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [1341, 1390],
     desc: "출발 포트 범위, 예약 포트, 특권 포트 경계를 설명하는 문서입니다.",
     annotations: [
-      { lines: [1341, 1348], color: "sky", note: "기본 32768–60999. 짝수와 홀수 끝을 섞으라고 권합니다. connect와 bind가 서로 다른 짝·홀 포트를 먼저 쓰기 때문입니다." },
+      { lines: [1341, 1348], color: "sky", note: "기본 32768–60999. 문서는 두 끝의 짝·홀을 다르게 두라고만 권합니다. 이유는 inet_hashtables.c 1037–1038행 주석에 있습니다. connect는 low와 같은 짝·홀을 먼저, bind(inet_csk_get_port)는 반대쪽을 먼저 씁니다." },
       { lines: [1350, 1356], color: "amber", note: "ip_local_reserved_ports에 넣은 포트는 자동 배정에서 빠집니다. 범위를 넓힐 때 서비스 포트를 지키는 수단입니다." },
     ],
     code: ipSysctl,

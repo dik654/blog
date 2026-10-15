@@ -35,7 +35,7 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
             </p>
             <p>
               2023년 3월 8일 Datadog 장애가 정확히 이 경우였습니다. 자동 보안 업데이트가 실행 중인 노드의 systemd-networkd를 재시작했고, networkd는 부팅 때라면 지울 것이 없었을 남의
-              라우팅 규칙 5줄을 지웠습니다. 수만 대의 노드가 한 시간 안에 네트워크에서 떨어졌습니다.
+              라우팅 규칙을 지웠습니다. Datadog이 예로 든 pod 하나짜리 노드에서는 5줄입니다. 수만 대의 노드가 한 시간 안에 네트워크에서 떨어졌습니다.
             </p>
             <p>
               이 답을 부팅 사슬, 규칙 7줄의 계산, 부팅과 재시작의 차이, 재시작 한도의 산수, 사건 순서, systemd v249 원문, 진단 명령, 변경 경로 순서로 따라갑니다. 서버 한 대의 증상을 좁히는 첫
@@ -53,9 +53,12 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
               시스템을 mount한 뒤 디스크의 init에게 자리를 넘깁니다.
             </p>
             <p>
-              커널 쪽 순서는 init/main.c의 kernel_init에 그대로 적혀 있습니다. initramfs의 /init이 있으면 그것을 먼저 실행합니다. 커널 명령행에
-              init=이 있으면 그것만 시도하고 아무 지정이 없으면 /sbin/init, /etc/init, /bin/init, /bin/sh 순서로 찾습니다. 끝까지 못 찾으면
-              panic입니다.
+              커널 쪽 순서는 init/main.c의 kernel_init에 그대로 적혀 있습니다. initramfs의 /init이 있으면 그것을 먼저 실행하고, 찾을 이름은 커널 명령행의
+              rdinit=으로 바꿀 수 있습니다.
+            </p>
+            <p>
+              커널 명령행에 init=이 있으면 그것만 시도합니다. 없으면 빌드 설정 CONFIG_DEFAULT_INIT을 먼저 시도한 뒤 /sbin/init, /etc/init, /bin/init, /bin/sh
+              순서로 찾고, 끝까지 못 찾으면 panic입니다.
             </p>
           </div>
           {code("kernel-init-order", "커널이 PID 1을 고르는 순서")}
@@ -82,10 +85,10 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
         </section>
 
         <section id="rule-case" data-teach-level="0" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">3. 규칙 7줄 중 커널 표에 있는 2줄만 남았습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">3. 규칙 7줄 중 커널이 만든 2줄만 남았습니다</h2>
           <div className={prose}>
             <p>
-              먼저 사고가 난 노드에서 실제로 사라진 것을 셉니다. 리눅스는 패킷 하나의 길을 찾을 때 라우팅 표를 바로 보지 않고 번호가 붙은 규칙 목록을 번호가 작은 것부터 맞춰
+              먼저 Datadog이 사후 보고서에 예로 든 노드에서 사라진 것을 셉니다. pod가 하나뿐인 단순화한 예이고 실제 노드에는 pod마다 규칙이 더 있습니다. 리눅스는 패킷 하나의 길을 찾을 때 라우팅 표를 바로 보지 않고 번호가 붙은 규칙 목록을 번호가 작은 것부터 맞춰
               봅니다. 처음 맞는 규칙이 어느 라우팅 표를 쓸지 정합니다. 이 목록을 정책 라우팅 규칙(policy routing rule)이라 부르고 ip rule 명령으로 봅니다.
             </p>
             <p>
@@ -97,9 +100,12 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
               Cilium은 0번 local 규칙을 100번으로 옮겨 자기 규칙이 먼저 검사되게 했으므로 노드에는 9, 20, 100, 109, 111, 32766, 32767번 일곱 줄이 있었습니다.
             </p>
             <p>
-              재시작한 networkd는 자기가 아는 커널 규칙 표(0·32766·32767번)와 같은 줄만 남기고 나머지를 지웠습니다. 일곱 줄 가운데 표와 같은 줄은 32766과
-              32767 두 줄입니다. 100번 local은 번호가 달라 남의 규칙이 되었고 7 − 2 = 5줄이 사라졌습니다. 0번 local은 이미 Cilium이 옮겨 없었으므로
-              아무도 되살리지 않았습니다.
+              재시작한 networkd는 커널이 만든 줄만 남기고 나머지를 지웠습니다. 4.17 이후 커널은 규칙을 알려 줄 때 누가 만들었는지를 protocol 값으로 함께
+              보내고, 부팅 때 스스로 만든 기본 규칙에는 kernel을 붙입니다.
+            </p>
+            <p>
+              일곱 줄 가운데 kernel이 붙은 줄은 32766과 32767 두 줄입니다. 100번 local은 같은 local 표를 보지만 Cilium이 만든 줄이라 남의 규칙이 되었고 7 − 2 = 5줄이 사라졌습니다. 0번 local은 이미 Cilium이 옮겨
+              없었으므로 아무도 되살리지 않았습니다.
             </p>
           </div>
           <RuleFlushViz />
@@ -120,7 +126,7 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
             </p>
             <p>
               새 노드나 재부팅한 노드에서는 networkd가 부팅 초반에 뜹니다. Cilium은 Kubernetes가 올린 pod로 그보다 한참 뒤에 규칙을 깝니다. networkd가
-              규칙을 읽는 순간에는 커널 규칙 3줄만 있어서 지울 것이 0줄입니다. 실행 중 노드에서 networkd만 다시 시작하면 Cilium의 5줄이 이미 있고 같은 코드가 그
+              규칙을 읽는 순간에는 커널 기본 규칙(IPv4 3줄)만 있어서 지울 것이 0줄입니다. 실행 중 노드에서 networkd만 다시 시작하면 Cilium의 5줄이 이미 있고 같은 코드가 그
               5줄을 지웁니다.
             </p>
           </div>
@@ -129,18 +135,18 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
             input={["커널에 이미 있는 규칙 목록", "networkd.conf (ManageForeignRoutingPolicyRules 기본 yes)", "관리 대상 link의 .network 파일"]}
             steps={[
               { code: "conf ← networkd.conf와 .network 읽기", note: "설정 파일이 비어 있으면 남의 규칙도 관리합니다." },
-              { code: "rules ← RTM_GETRULE로 커널 규칙 전부 읽기", note: "부팅 직후 3줄, 실행 중 노드 7줄입니다." },
-              { code: "각 줄: 커널 표와 같으면 kernel, 아니면 rules_foreign에 기억", note: "부팅 노드 0줄, 실행 중 노드 5줄이 남의 규칙입니다." },
-              { code: "관리하는 link마다 link_configure", note: "loopback이 아니고 KeepConfiguration=yes가 아니면 남의 설정을 정리합니다." },
+              { code: "rules ← RTM_GETRULE로 커널 규칙 전부 읽기", note: "IPv4 기준 부팅 직후 3줄, 실행 중 노드 7줄입니다." },
+              { code: "각 줄: protocol이 kernel이면 kernel, 아니면 rules_foreign에 기억", note: "protocol이 오지 않는 옛 커널에서만 커널 규칙 표와 맞춰 봅니다. 부팅 노드 0줄, 실행 중 노드 5줄이 남의 규칙입니다." },
+              { code: "sd_notify(READY)", note: "두 노드 모두 이 시점에 준비 완료를 알립니다. 아래 두 줄은 그 뒤 이벤트 루프에서 일어납니다." },
+              { code: "link 정보가 도착하면 link마다 link_configure", note: "loopback이 아니고 KeepConfiguration=yes가 아니면 남의 설정을 정리합니다." },
               { code: "rules_foreign 각 줄: kernel 아님 ∧ .network에 없음 → RTM_DELRULE", note: "부팅 노드 0줄, 실행 중 노드 5줄을 지웁니다." },
-              { code: "sd_notify(READY)", note: "두 노드 모두 준비 완료를 알립니다." },
             ]}
-            output="부팅 노드: 지운 규칙 0줄, 이후 Cilium이 7줄을 만듭니다. 실행 중 재시작 노드: 5줄을 지우고 2줄만 남긴 채 준비 완료입니다."
+            output="부팅 노드: 지운 규칙 0줄, 이후 Cilium이 규칙을 더해 7줄이 됩니다. 실행 중 재시작 노드: 준비 완료를 알린 뒤 5줄을 지워 2줄만 남습니다."
           />
           <NetworkdStartViz />
           <div className={prose}>
             <p>
-              Datadog은 이 점을 가장 곤란한 요인으로 꼽았습니다. 새 노드도 재부팅한 노드도 이 동작을 보이지 않으므로, 실행 중 노드에서 networkd를 업데이트하는 경우를 빼면 이 순서를 재현하는 뚜렷한
+              Datadog은 이 점을 사고를 키운 악화 요인으로 꼽았습니다. 새 노드도 재부팅한 노드도 이 동작을 보이지 않으므로, 실행 중 노드에서 networkd를 업데이트하는 경우를 빼면 이 순서를 재현하는 뚜렷한
               시험이 없었다는 것입니다. 부팅 시험을 아무리 많이 해도 재시작 경로는 한 번도 지나가지 않습니다.
             </p>
           </div>
@@ -164,8 +170,8 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
             </p>
             <p>
               요구 관계(requirement dependency)는 Wants=와 Requires=로 적습니다. a가 Wants=b이면 a를 시작할 때 b도 시작합니다. b가 실패해도
-              a는 시작하고 Requires=는 b가 실패하면 a도 시작하지 않는 더 강한 요구입니다. 요구 관계는 순서를 정하지 않으므로, After=가 없으면 a와 b는 동시에
-              시작합니다.
+              a는 시작합니다. Requires=는 더 강한 요구지만 b가 실패했을 때 a를 시작하지 않는 것은 After=b도 함께 적었을 때입니다. 요구 관계는 순서를 정하지 않으므로
+              After=가 없으면 a와 b는 동시에 시작하고 b의 실패를 기다리지 않습니다.
             </p>
             <p>
               그래서 네트워크가 실제로 설정된 뒤에 떠야 하는 서비스는 두 줄을 함께 적습니다. network-online.target을 Wants=로 끌어오고 After=로 그 뒤에 섭니다. network.target은 네트워크
@@ -183,8 +189,8 @@ Restart=on-failure              # 실패로 끝나면 다시 시작
 RestartSec=2                    # 기본값은 100ms`}</code></pre>
           <div className={prose}>
             <p>
-              Datadog 노드에서 networkd와 Cilium 사이에는 이런 두 줄이 없었습니다. 부팅 때의 순서는 Cilium이 Kubernetes pod로 늦게 뜬다는 흐름이 만든 결과였고, networkd가 재시작하면 Cilium이
-              규칙을 다시 깔도록 묶어 둔 관계도 없었습니다. 노드가 끊긴 채 남았다는 결과가 그 사실을 보여 줍니다.
+              부팅 때의 순서는 보통 kubelet이 network-online.target 뒤에 뜨고 Cilium이 그 kubelet이 올린 pod로 뜬다는 간접적인 흐름이 만듭니다. Datadog
+              노드에 없었던 것은 재시작 쪽 연결입니다. networkd가 재시작하면 Cilium이 규칙을 다시 깔도록 묶어 둔 관계가 없었고, 노드가 끊긴 채 남았다는 결과가 그 사실을 보여 줍니다.
             </p>
           </div>
           <div id="paper-systemd-unit" className="not-prose my-8 scroll-mt-24">
@@ -218,7 +224,7 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
               { label: "2초 간격", expression: "0.5 + 2", result: "2.5초", reason: "같은 계산을 RestartSec 2초로 다시 합니다." },
               { label: "다섯째", expression: "4 × 2.5", result: "10초 → 주소 있음", reason: "다섯째 시작은 아직 허락 범위이고 9초에 생긴 주소로 bind가 성공합니다." },
             ]}
-            conclusion="재시작 간격이 짧은 쪽이 창 안에 시작을 더 빨리 채워 영구히 멈췄고, 간격이 긴 쪽은 주소가 생긴 뒤의 시도로 살아남았습니다."
+            conclusion="재시작 간격이 짧은 쪽이 창 안에 시작을 더 빨리 채워 failed로 멈췄고, 간격이 긴 쪽은 주소가 생긴 뒤의 시도로 살아남았습니다."
             caveats={["수동 systemctl start도 같은 한도를 셉니다.", "주소가 끝내 오지 않으면 2.5초 간격은 12.5초에 창이 새로 열려 한도에 걸리지 않고 계속 재시작합니다."]}
           />
           <StartLimitViz />
@@ -239,7 +245,7 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
               { symbol: "T", name: "StartLimitIntervalSec", description: "창의 길이입니다. 기본 10초입니다." },
             ]}
             assumptions={["실행 시간 r이 매번 같습니다.", "ratelimit.c는 창이 열린 지 T보다 오래 지났을 때만 창을 새로 엽니다. 정확히 T초는 같은 창입니다."]}
-            interpretation="B·p ≤ T이면 서비스는 B번 실패한 뒤 영구히 멈춥니다. 그보다 늦게 재시작하면 한도에 걸리지 않는 대신 원인이 사라지지 않는 한 끝없이 재시작합니다. 한도는 고장 난 서비스를 멈추는 장치이지 기다리는 장치가 아니므로, 기다림은 순서 관계로 적어야 합니다."
+            interpretation="B·p ≤ T이면 서비스는 B번 실패한 뒤 failed로 멈추고 자동 재시작은 더 일어나지 않습니다. 창이 지난 뒤의 수동 시작이나 systemctl reset-failed로만 다시 움직입니다. 그보다 늦게 재시작하면 한도에 걸리지 않는 대신 원인이 사라지지 않는 한 끝없이 재시작합니다. 한도는 고장 난 서비스를 멈추는 장치이지 기다리는 장치가 아니므로, 기다림은 순서 관계로 적어야 합니다."
           />
           <div className={prose}>
             <p>
@@ -270,10 +276,10 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
           <div className={prose}>
             <p>
               여러 지역이 같은 시각에 쓰러진 이유는 타이머 두 개의 기본값입니다. apt-daily.timer는 매일 6시와 18시에 최대 12시간 무작위 지연으로 패키지를 내려받고, apt-daily-upgrade.timer는 매일 6시에
-              최대 60분 무작위 지연으로 보안 업데이트를 설치합니다. 지역 사이에 직접 연결이 없어도 모든 노드가 같은 한 시간 안에 같은 패치를 설치했습니다.
+              최대 60분 무작위 지연으로 보안 업데이트를 설치합니다. 지역 사이에 직접 연결이 없어도 업데이트를 내려받은 22.04 노드가 같은 한 시간 안에 같은 패치를 설치했습니다.
             </p>
             <p>
-              클라우드마다 반응이 달라 복구 경로도 갈렸습니다. AWS는 상태 검사에 실패한 인스턴스를 곧바로 종료하고 새로 만들어 08시까지 지역 인스턴스의 약 60%를 교체했습니다.
+              클라우드마다 반응이 달라 복구 경로도 갈렸습니다. AWS는 상태 검사에 실패한 인스턴스를 곧바로 종료하고 새로 만들어 08시까지 US1 지역 인스턴스의 약 60%를 교체했습니다.
               로컬 디스크에 둔 데이터 저장소는 그 데이터를 잃었습니다. Google Cloud와 Azure는 망만 끊긴 인스턴스를 그대로 두었고 재부팅이 가장 빠른 복구였습니다.
             </p>
           </div>
@@ -301,9 +307,12 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
           {code("enumerate-rules", "시작할 때 규칙 전부 읽기")}
           <div className={prose}>
             <p>
-              받은 줄은 networkd-routing-policy-rule.c 1025–1043행에서 분류됩니다. 823–829행의 커널 규칙 표와 같으면 kernel이고
-              networkd가 만든 적 없는 나머지는 rules_foreign 집합에 들어갑니다. IPv4 표에는 0번 local, 32766번 main, 32767번 default 세
-              줄뿐이라 100번 local은 표와 맞지 않습니다.
+              받은 줄은 networkd-routing-policy-rule.c 982–987행과 1025–1043행에서 분류됩니다. 커널은 규칙마다 FRA_PROTOCOL을 붙여 보내고(fib_rules.c 1031행),
+              부팅 때 만든 기본 규칙은 protocol이 kernel입니다(69행).
+            </p>
+            <p>
+              사용자 공간이 protocol 없이 넣은 규칙은 unspec이 됩니다(559–560행). 그래서 Ubuntu 22.04의
+              5.15 커널에서는 32766·32767만 kernel이고 Cilium의 100번 local은 남의 규칙입니다. 823–829행의 커널 규칙 표는 FRA_PROTOCOL을 보내지 않는 옛 커널에서만 쓰는 대체 수단입니다.
             </p>
             <p>
               지우는 시점은 link를 설정할 때입니다. networkd-link.c 1155–1161행은 loopback이 아니고 KeepConfiguration=yes가 아닌 link에서 997–1022행의 정리 함수를 부릅니다. 이 함수의 1017행은
@@ -315,7 +324,10 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
             </p>
           </div>
           {code("remember-foreign", "규칙 한 줄을 kernel 또는 남의 규칙으로 분류")}
-          {code("kernel-rules-table", "커널 규칙으로 인정하는 세 줄")}
+          {code("kernel-rules-table", "protocol이 없을 때 쓰는 커널 규칙 표")}
+          {code("fib-rules-protocol", "커널이 만든 기본 규칙의 protocol")}
+          {code("fib-rules-user-proto", "사용자 공간 규칙의 protocol")}
+          {code("fib-rules-report", "규칙을 알릴 때 붙이는 FRA_PROTOCOL")}
           {code("link-configure-call", "link 설정 중 정리를 부르는 조건")}
           {code("link-drop-foreign", "노드 전체의 남의 규칙 정리")}
           {code("drop-foreign-wrapper", "foreign=true 포장 함수")}
@@ -404,7 +416,7 @@ RestartSec=2                    # 기본값은 100ms`}</code></pre>
             </p>
             <p>
               사고 뒤 Datadog은 세 가지를 바꿨다고 적었습니다. 그 업데이트 경로를 모든 지역에서 껐고, networkd가 재시작해도 라우팅 표를 건드리지 않게 설정을 바꿨고, 비슷한 경로가 더 있는지
-              점검했습니다. 두 번째 조치에 해당하는 v249의 손잡이는 아래 drop-in입니다.
+              점검했습니다. Datadog은 어떤 설정을 바꿨는지 적지 않았습니다. 같은 효과를 내는 v249 설정은 아래 drop-in이고, 이것은 글쓴이의 추론입니다.
             </p>
           </div>
           <pre className="my-6 overflow-x-auto rounded-md border border-border bg-muted/40 p-4 text-xs leading-6"><code>{`# /etc/systemd/networkd.conf.d/keep-foreign.conf  (예시)
