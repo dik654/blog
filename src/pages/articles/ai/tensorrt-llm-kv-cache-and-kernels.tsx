@@ -5,7 +5,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReservationPoolViz from "./tensorrt-llm-kv-cache-and-kernels/viz/ReservationPoolViz";
 import PoolLayoutViz from "./tensorrt-llm-kv-cache-and-kernels/viz/PoolLayoutViz";
-import RetentionQueueViz from "./tensorrt-llm-kv-cache-and-kernels/viz/RetentionQueueViz";
+import RetentionTierViz from "./tensorrt-llm-kv-cache-and-kernels/viz/RetentionTierViz";
 import XqaGroupViz from "./tensorrt-llm-kv-cache-and-kernels/viz/XqaGroupViz";
 import { codeRefs } from "./tensorrt-llm-kv-cache-and-kernels/codeRefs";
 import { engineTrees } from "./tensorrt-llm-kv-cache-and-kernels/fileTree";
@@ -345,7 +345,7 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               D·E가 그렇게 지워집니다. 또 tree에서 자식이 없는 leaf block만 지울 수 있다는 제약이 있어 공통 앞부분은 그 뒤의 가지가 먼저 지워져야 지울 수 있습니다.
             </p>
           </div>
-          <RetentionQueueViz />
+          <RetentionTierViz />
           <div className={prose}>
             <p>
               하한의 기본값에는 문서와 코드의 차이가 있습니다. 공식 문서는 기본값이 35이고 35보다 낮으면 내리지 않는다고 적습니다. 고정 원문의 evictionPolicy.cpp

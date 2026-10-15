@@ -3,7 +3,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import ChunkedPrefillViz from "./viz/ChunkedPrefillViz";
+import ChunkBudgetGridViz from "./viz/ChunkBudgetGridViz";
 const CHUNK_TERMS = [
   {
     symbol: "P",
@@ -111,7 +111,7 @@ T_{prefill,total} &\approx \sum_{j=1}^{C}T_{model}(c_j)
           interpretation="P=12, c=4이면 최소 3개 chunk가 필요합니다. 두 decode가 계속 예산을 2개씩 쓰면 P는 매번 3개만 처리해 실제 4개 chunk가 됩니다. 최소 횟수와 실제 횟수를 구분합니다. (가정)"
           title="Chunk 수와 반복 overhead의 맞바꿈"
         />
-        <ChunkedPrefillViz />
+        <ChunkBudgetGridViz />
         <div id="paper-sarathi" className="mt-8 scroll-mt-20">
           <CitationBlock
             source="Sarathi-Serve — chunked prefills and stall-free scheduling"

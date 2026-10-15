@@ -4,6 +4,7 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import Q4KBlockViz from "./viz/Q4KBlockViz";
+import Q4KIntegerDotViz from "./viz/Q4KIntegerDotViz";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -77,6 +78,7 @@ export default function Weights({ code }: Props) {
             같은 7.45입니다. 실수 곱셈은 값 4개에 한 번씩이 아니라 블록마다 몇 번으로 줄었습니다.
           </p>
         </div>
+        <Q4KIntegerDotViz />
         <ExplainedFormula
           question="4비트 가중치와 int8 활성값의 내적을 정수 합 두 개로 어떻게 쓸 수 있을까요?"
           idea="가중치를 배율·정수·빼는 값으로 펼치면 배율은 합 밖으로 나가고, 합 안에는 정수 곱과 정수 합만 남습니다."

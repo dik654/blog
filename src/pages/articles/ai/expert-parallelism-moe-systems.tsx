@@ -11,6 +11,7 @@ import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
 import ExpertRouteCaseViz from "./expert-parallelism-moe-systems/viz/ExpertRouteCaseViz";
+import ExpertParallelismMoeSystemsViz from "./expert-parallelism-moe-systems/viz/ExpertParallelismMoeSystemsViz";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
@@ -60,6 +61,7 @@ export default function Article(){
         <p className="leading-8">GPU g에 expert 8g부터 8g+7을 두면 expert 번호를 8로 나눈 몫이 목적 GPU입니다. 13은 1, 42는 5입니다. Dispatch는 목적지별로 입력을 모으고, 도착한 입력을 expert별 연속 구간으로 배치합니다.</p>
         <p className="leading-8">각 expert가 자기 구간을 계산한 뒤 combine이 원래 token 위치로 결과를 돌려보냅니다. 입력 순서를 섞었다면 원래 위치로 되돌릴 metadata가 필요합니다. 잘못된 handle을 재사용하면 바이트 수가 맞아도 다른 token의 결과를 합칠 수 있습니다.</p>
       </div>
+      <ExpertParallelismMoeSystemsViz />
 
       <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">값뿐 아니라 돌아갈 위치도 옮겨야 합니다. 이 비용이 생기는 이유를 봅니다.</p>
     </section>

@@ -9,6 +9,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 import CudaGraphTimelineViz from "./viz/CudaGraphTimelineViz";
 import CaptureSizePaddingViz from "./viz/CaptureSizePaddingViz";
+import StaticAddressReplayViz from "./viz/StaticAddressReplayViz";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar();const code=(id:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(id,codeRefs[id])}/></div>;return <><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 같은 계산을 시키는 준비도 반복됩니다</h2><div className={prose}>
@@ -63,7 +64,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <section id="mechanics" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">9. 새 값은 기록에 남은 자리에 넣습니다</h2><div className={prose}>
 <p>PyTorch의 일반적인 정적 재생에서는 캡처한 kernel의 포인터 인수가 같은 가상 주소를 가리킵니다. 입력 A에 3이 있는 상태에서 캡처하고 재생했다면 답은 22입니다. Python 변수를 새 tensor B에 연결해도 저장된 인수 A는 자동으로 바뀌지 않습니다.</p>
 <p>A에 <code>copy_</code>로 5를 복사하고 재생하면 같은 네 계산이 30을 만듭니다. 복사가 재생보다 먼저 끝나야 하며 입력의 크기와 배치도 캡처한 조건에 맞아야 합니다. 여기서 말하는 복사는 새 주소를 기록하는 일이 아니라 기존 주소의 내용을 갱신하는 일입니다.</p>
-<p>출력 Z도 반복해서 덮어쓸 수 있습니다. 첫 답 22를 가리키는 참조를 보관한 뒤 다음 재생이 Z에 30을 쓰면 그 참조가 보는 내용도 30이 됩니다. 두 답을 따로 보관하려면 덮어쓰기 전에 별도 공간에 복사하는 비용까지 고려합니다.</p></div>{code("torch-replay","PyTorch · 재생은 저장한 실행 객체를 호출합니다")}</section>
+<p>출력 Z도 반복해서 덮어쓸 수 있습니다. 첫 답 22를 가리키는 참조를 보관한 뒤 다음 재생이 Z에 30을 쓰면 그 참조가 보는 내용도 30이 됩니다. 두 답을 따로 보관하려면 덮어쓰기 전에 별도 공간에 복사하는 비용까지 고려합니다.</p></div><StaticAddressReplayViz />{code("torch-replay","PyTorch · 재생은 저장한 실행 객체를 호출합니다")}</section>
 <section id="graph-anatomy" data-teach-level="5" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">10. 작업 목록과 실행 가능한 기록을 구별합니다</h2><div className={prose}>
 <p>CUDA의 <code>cudaGraph_t</code>는 node와 edge로 작업을 정의한 객체입니다. kernel뿐 아니라 복사 등의 작업도 node가 될 수 있습니다. 네 계산의 경우 앞 결과를 뒤에서 읽으므로 순서 의존성을 유지합니다. CUDA는 의존성을 지키며 작업을 실행하지만 독립 node를 항상 동시에 실행한다는 보장은 없습니다.</p>
 <p><code>cudaGraphExec_t</code>는 그 정의를 반복 실행할 수 있도록 준비한 객체입니다. 정의와 실행 준비를 분리하면 네 작업의 공통 준비를 매번 반복할 필요가 줄어듭니다. 실제 계산 네 번과 매회 graph 제출은 여전히 필요합니다.</p>

@@ -1,6 +1,7 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PoolToRequestViz from "../llm-serving-capacity/viz/PoolToRequestViz";
 
 const CAPACITY_TERMS = [
   {
@@ -80,6 +81,13 @@ export default function Capacity() {
           Muse가 실제로 약 3.6배 많은 cache token을 확보한 결과는 KV head 2개와
           head_dim 128이라는 작은 shape가 서빙에 유리하다는 결론과 일치합니다.
         </p>
+        <p>
+          아래 그림은 이 나눗셈을 칸으로 바꿉니다. 한 줄이 max-length 요청 하나이므로 채운 줄 수와 남은 칸을 세면
+          배수가 보이고, 예약 크기를 줄이면 같은 pool에 줄이 더 들어가는 것도 확인할 수 있습니다.
+        </p>
+      </div>
+      <PoolToRequestViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           다만 “토큰당 attention KV가 Qwen의 81.25%”라는 이론값과 “총 cache token이 Qwen의
           3.63배”라는 실측값은 같은 비율일 필요가 없습니다. 총 capacity는{" "}

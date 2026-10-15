@@ -9,6 +9,7 @@ import ImageTokenViz from "./multimodal-serving-pipeline/viz/ImageTokenViz";
 import KvFootprintViz from "./multimodal-serving-pipeline/viz/KvFootprintViz";
 import EncoderScheduleViz from "./multimodal-serving-pipeline/viz/EncoderScheduleViz";
 import PrefixKeyViz from "./multimodal-serving-pipeline/viz/PrefixKeyViz";
+import EncoderCacheSlotViz from "./multimodal-serving-pipeline/viz/EncoderCacheSlotViz";
 import { codeRefs } from "./multimodal-serving-pipeline/codeRefs";
 import { multimodalTrees } from "./multimodal-serving-pipeline/fileTree";
 
@@ -301,6 +302,10 @@ export default function MultimodalServingPipelineArticle() {
             conclusion="text로는 210 token만 썼지만 encoder 예산 때문에 R7은 한 step 기다립니다."
             caveats={["다음 step에는 예산이 다시 8,192가 됩니다.", "cache 자리가 모자라면 참조가 0인 사진부터 지웁니다."]}
           />
+          <div className={prose}>
+            <p>아래 그림은 같은 일곱 요청을 사진 블록으로 쌓습니다. 띠 하나의 폭이 8,192이고 블록 하나가 사진 한 장입니다.</p>
+          </div>
+          <EncoderCacheSlotViz />
           <div className={prose}>
             <p>
               scheduler.py 1508–1553행은 위치 범위와 겹치는 사진을 고르고 cache에 있으면 넘어갑니다. 1572–1591행은 can_allocate가 거절할 때 위치를 줄이며, 1617–1620행은

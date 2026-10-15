@@ -166,7 +166,7 @@ export default function ContinuousBatchingStepAnatomyViz() {
             </div>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">
             {NOTES[scenes.active]}
           </p>
         </div>

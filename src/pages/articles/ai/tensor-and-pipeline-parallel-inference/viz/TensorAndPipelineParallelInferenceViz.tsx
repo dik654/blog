@@ -142,7 +142,7 @@ export default function TensorAndPipelineParallelInferenceViz() {
               {s === 4 && "layer 당 all-reduce 2 회 (attention 1 + MLP 1)"}
             </text>
           </svg>
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-6 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-0">
             {NOTES[s]}
           </p>
         </div>

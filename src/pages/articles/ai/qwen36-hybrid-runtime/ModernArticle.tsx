@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HybridRuntimeFlowViz from "./viz/HybridRuntimeFlowViz";
+import SpeculativeCommitViz from "./viz/SpeculativeCommitViz";
 
 const MEMORY_TERMS = [
   {
@@ -284,6 +285,13 @@ G_a&=\operatorname{commit}\!\left(
             interpretation="KV만 rollback하면 Delta state는 거절된 token을 본 미래에 남고, Delta만 rollback하면 Attention은 더 긴 과거를 봅니다. 다음 token의 과거를 일치시키려면 원자적 commit이 필요합니다."
             title="Accepted prefix를 원자적으로 commit하는 이유"
           />
+          <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+            <p>
+              세 state를 같은 token 축 위에 놓으면 승인 경계가 한 줄로 맞아야 하는 이유가 보입니다. 마지막 장면은 한 state만
+              되돌리지 않았을 때 G가 갈라지는 경우입니다.
+            </p>
+          </div>
+          <SpeculativeCommitViz />
         </div>
 
         <TermBreakdown

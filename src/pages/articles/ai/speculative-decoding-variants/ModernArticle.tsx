@@ -8,6 +8,7 @@ import { fileTrees } from "./fileTree";
 import TreeTraceViz from "./viz/TreeTraceViz";
 import MtpCostViz from "./viz/MtpCostViz";
 import MaskTable from "./MaskTable";
+import TreeMaskViz from "./viz/TreeMaskViz";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 
@@ -124,6 +125,7 @@ export default function ModernArticle() {
         <p className="leading-8">확인이 끝나면 [0,1,4]에 해당하는 기록만 꺼내 기존 문장 뒤의 연속된 세 칸에 놓습니다. 이 과정을 거쳐야 다음 회차가 RAY를 실제 앞 문장으로 읽습니다. 나머지 갈래는 계산했어도 문장과 기록에서 버립니다.</p>
         <p className="leading-8"><strong>중간 결론은 간단합니다.</strong> 여러 후보를 함께 계산하는 이유는 모두 출력하려는 것이 아니라, 큰 모델 실행 한 번에서 연속으로 승인할 경로 하나를 길게 찾기 위해서입니다.</p>
       </div>
+      <TreeMaskViz />
       <TreeTraceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">후보 트리를 넓히면 RAY처럼 살아남는 경로를 포함할 가능성은 커집니다. 동시에 큰 모델이 확인할 입력 수도 늘어납니다. 깊이 3에서 폭을 3·2·2로 잡으면 후보는 21개이고 시작점까지 22자리를 확인합니다. 따라서 확정 길이와 전체 검증 시간을 함께 재야 하며, 아래 원문 추적 뒤 12절에서 같은 시간 장부에 넣습니다. (가정)</p>

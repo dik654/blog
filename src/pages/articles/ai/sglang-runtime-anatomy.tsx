@@ -10,6 +10,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import SglangRuntimeAnatomyViz from "./sglang-runtime-anatomy/viz/SglangRuntimeAnatomyViz";
 import AdmissionPolicyViz from "./sglang-runtime-anatomy/viz/AdmissionPolicyViz";
 import RatioRetractViz from "./sglang-runtime-anatomy/viz/RatioRetractViz";
+import RetractOrderViz from "./sglang-runtime-anatomy/viz/RetractOrderViz";
 import OverlapTimelineViz from "./sglang-runtime-anatomy/viz/OverlapTimelineViz";
 import { codeRefs } from "./sglang-runtime-anatomy/codeRefs";
 import { sglangRuntimeTrees } from "./sglang-runtime-anatomy/fileTree";
@@ -311,6 +312,7 @@ export default function SglangRuntimeAnatomyArticle() {
               바닥 근처에 있던 비율이 0.2199로 올라가 다음 수용을 다시 조심스럽게 만듭니다.
             </p>
           </div>
+          <RetractOrderViz />
           {code("decode-mem", "다음 decode의 칸 검사")}
           {code("retract-order", "기본 retract 순서")}
           {code("retract-decode", "retract와 비율 재계산")}

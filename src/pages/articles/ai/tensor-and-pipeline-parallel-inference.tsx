@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorAndPipelineParallelInferenceViz from "./tensor-and-pipeline-parallel-inference/viz/TensorAndPipelineParallelInferenceViz";
+import PipelineBubbleGridViz from "./tensor-and-pipeline-parallel-inference/viz/PipelineBubbleGridViz";
 
 /**
  * Tensor·pipeline·data·context parallel 은 서로 다른 축을 나눠 서로 다른 통신을 만듭니다
@@ -212,6 +213,9 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             시간의 (p−1)/(m+p−1) 을 차지합니다. PP 4 에 microbatch 8 이면 3/11 로 27%, 32 로 늘리면 3/35 로 8.6% 입니다. GPipe 는 m
             ≥ 4p 면 무시할 만하다고 적습니다.
           </p>
+        </div>
+        <PipelineBubbleGridViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Decode 에서는 microbatch 로도 숨길 수 없는 비용이 있습니다. 한 sequence 의 다음 token 은 네 stage 를 차례로 다 지나야 나오므로 그
             token 의 latency 는 stage 시간의 합에 hop 세 번이 더해진 값입니다. 같은 8 GPU 를 TP 8 로 쓰면 각 GPU 가 weight 의 8 분의 1 만
@@ -219,7 +223,10 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           </p>
           <p>
             숫자로 보면 70B FP16 을 PP 8 로 두면 stage 마다 17.5 GB 를 읽어 3.35 TB/s 에서 5.2 ms 입니다. 한 token 은 여덟 stage 를 지나
-            약 42 ms 가 됩니다. TP 8 은 5.2 ms 에 all-reduce 약 1 ms 를 더한 6 ms 남짓입니다. 이것이 PP latency penalty 입니다. PP 가
+            약 42 ms 가 됩니다. TP 8 은 5.2 ms 에 all-reduce 약 1 ms 를 더한 6 ms 남짓입니다. 이것이 PP latency penalty 입니다.
+          </p>
+          <p>
+            PP 가
             지키는 것은 동시 요청이 많아 microbatch 가 채워질 때의 throughput 이고, 한 요청의 속도는 PP 로 빨라지지 않습니다.
           </p>
         </div>

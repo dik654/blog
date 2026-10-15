@@ -9,6 +9,7 @@ import { codeRefs } from "./serving-latency-metrics-and-slo/codeRefs";
 import { latencySourceTree } from "./serving-latency-metrics-and-slo/fileTree";
 import ServingLatencyMetricsAndSloViz from "./serving-latency-metrics-and-slo/viz/ServingLatencyMetricsAndSloViz";
 import LatencyPercentileHistogramViz from "./serving-latency-metrics-and-slo/viz/LatencyPercentileHistogramViz";
+import SloWindowBudgetViz from "./serving-latency-metrics-and-slo/viz/SloWindowBudgetViz";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
@@ -151,7 +152,7 @@ export default function Article() {
           </p><p>
             한 구간에 요청 1개가 있고 다른 구간에 10000개가 있어도 위 약속에서는 구간마다 한 표입니다. 전체 요청 중 95%가 빠르다는 약속과 하루 구간의 99%가 통과한다는
             약속은 서로 다른 집계입니다.
-          </p></div><div id="paper-sre-slo" className="mt-8 scroll-mt-20"><CitationBlock source="Google SRE Ch.4 · Defining Objectives" citeKey={1} href="https://sre.google/sre-book/service-level-objectives/"><q>SLOs should specify how they’re measured and the conditions under which they’re valid.</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
+          </p></div><SloWindowBudgetViz /><div id="paper-sre-slo" className="mt-8 scroll-mt-20"><CitationBlock source="Google SRE Ch.4 · Defining Objectives" citeKey={1} href="https://sre.google/sre-book/service-level-objectives/"><q>SLOs should specify how they’re measured and the conditions under which they’re valid.</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             이 사례는 client 시계로 측정한 값의 nearest-rank P95를 1.5초와 비교합니다. 5분씩 나눈 하루 288구간 중 99%가 이 비교를 통과해야 합니다. 원문이 요구하는 측정 방식과 유효 조건을 구체화한 것입니다.
           </p><p>원문은 이 LLM 수치를 권장한 것이 아니며 서비스의 약속을 정한 가정입니다. 100% 목표가 모든 배포를 논리적으로 불가능하게 만든다는 뜻도 아닙니다.
           </p></div></div></section>
