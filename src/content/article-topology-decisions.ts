@@ -3169,7 +3169,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/disaggregated-prefill-decode-serving": "b4965f72e312bd85",
   "ai/math-complex-numbers-oscillations": "cffaff02d99071fc",
   "ai/math-differential-equations-numerical-solvers": "5379880defe02d0c",
-  "ai/prefill-decode-phase-dynamics": "fe382c9e222d9238",
+  "ai/prefill-decode-phase-dynamics": "485800a47be67615",
   "crypto/extension-field-theory": "f9aa83b6e0fca423",
   "crypto/extension-fields": "5af7ff4c6c338153",
   "crypto/frobenius-optimization": "05f920aec7cb1ef0",
