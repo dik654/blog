@@ -45,7 +45,7 @@ const EVENTS: readonly { when: string; title: string; path: Path; note: string }
     when: "06:00–08:00",
     title: "AWS는 노드를 교체, GCP·Azure는 그대로 둠",
     path: "재시작 경로",
-    note: "AWS는 상태 검사에 실패한 인스턴스를 종료하고 교체해 06–07시에 10분마다 8% 넘게, 08:00까지 약 60%를 바꿨습니다. 로컬 디스크 데이터도 함께 사라졌습니다. GCP·Azure는 망만 끊긴 인스턴스를 그대로 둬 재부팅으로 복구했습니다.",
+    note: "AWS는 상태 검사에 실패한 인스턴스를 종료하고 교체해 06–07시에 10분마다 8% 넘게, 08:00까지 US1 지역 인스턴스의 약 60%를 바꿨습니다. 로컬 디스크 데이터도 함께 사라졌습니다. GCP·Azure는 망만 끊긴 인스턴스를 그대로 둬 재부팅으로 복구했습니다.",
   },
   {
     when: "03-08 09:13 → 03-10 06:25",
@@ -99,7 +99,7 @@ export default function IncidentTimelineViz() {
               </li>
             ))}
           </ol>
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[5.25rem]">
+          <p className="mt-4 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12.25rem] sm:min-h-[5.25rem]">
             {event.note}
           </p>
         </div>

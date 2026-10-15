@@ -83,7 +83,7 @@ const STATES: readonly State[] = [
     pid7: "종료",
     verdict: "신호 9로 죽음",
     exit: "137",
-    note: "runc는 신호로 끝난 프로세스의 종료 코드를 128 + 신호 번호로 바꿉니다. 그래서 docker ps에 Exited (137)이 남습니다.",
+    note: "PID 1을 거둔 containerd-shim이 runc와 같은 128 + 신호 번호 규칙으로 종료 코드를 남깁니다. 그래서 docker ps에 Exited (137)이 보입니다.",
   },
 ];
 

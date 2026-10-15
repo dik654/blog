@@ -22,7 +22,7 @@ export default function LinuxDiskFullArticle() {
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 로그를 지웠는데 왜 디스크는 여전히 꽉 찼다고 하나요?</h2>
           <div className={prose}>
-            <p>새벽에 애플리케이션이 &quot;No space left on device&quot;를 내며 멈췄습니다. 당직자는 30GiB짜리 로그를 rm으로 지웠지만 df는 그대로 100%를 보여 줍니다. 국내 현업자들이 만든 리눅스 엔지니어 면접 질문지에는 df로는 여유가 있는데 파일시스템이 찼다고 나오는 상황이 장애 대응 문항으로 올라 있습니다. Google SRE 면접 준비 가이드에도 inode와 링크를 설명하라는 질문이 나옵니다.</p>
+            <p>새벽에 애플리케이션이 &quot;No space left on device&quot;를 내며 멈췄습니다. 당직자는 30GiB짜리 로그를 rm으로 지웠지만 df는 그대로 100%를 보여 줍니다. 국내 현업자들이 만든 리눅스 엔지니어 면접 질문지에는 df로는 여유가 있는데 파일시스템이 찼다고 나오는 상황이 장애 대응 문항으로 올라 있습니다. 제3자가 정리한 Google SRE 면접 준비 가이드에도 inode와 링크를 설명하라는 질문이 나옵니다.</p>
             <p>이 글의 답을 먼저 적겠습니다. &quot;디스크가 찼다&quot;는 하나의 상태가 아닙니다. 블록, inode, root 몫으로 떼어 둔 예약 블록, 이름은 지워졌지만 아직 열려 있는 파일이라는 네 계정 중 하나가 바닥난 상태입니다. 그래서 df -h, df -i, du, lsof +L1을 차례로 맞대어 어느 계정인지부터 가릅니다.</p>
             <p>열린 채 지워진 파일이 남는 이유는 파일 이름이 inode를 가리키는 링크일 뿐이기 때문입니다. 커널은 링크 수와 열린 참조가 모두 0이 될 때만 블록을 돌려줍니다. 100GiB ext4 하나로 이 답을 숫자, 그림, Linux 6.12의 실제 코드 순서로 따라갑니다. 시리즈 전체 지도는 <Link to="/cs/cloud/linux-server-interview-incident-map#overview">Linux 서버 면접·장애 지도</Link>에 있습니다.</p>
           </div>
@@ -50,7 +50,7 @@ export default function LinuxDiskFullArticle() {
           </p>
             <p>
             블록은 100GiB를 4KiB로 나눈 26,214,400칸입니다. 그중 5%인 1,310,720칸, 곧 5GiB는 root용 예약입니다. inode는 공간 16,384
-            byte마다 하나를 만들기 때문에 6,553,600개입니다. 두 수는 포맷할 때 정해지고 이 비율은 나중에 바꿀 수 없다고 mke2fs 문서가 경고합니다.
+            byte마다 하나를 만들기 때문에 6,553,600개입니다. 두 수는 포맷할 때 정해지고(예약 비율은 tune2fs -m으로 나중에 바꿀 수 있습니다) inode 비율은 나중에 바꿀 수 없다고 mke2fs 문서가 경고합니다.
           </p>
             <p>
             이 숫자에서 바로 나오는 사실이 하나 있습니다. 공간을 inode 수로 나누면 16KiB이므로 파일의 평균 크기가 16KiB보다 작으면 블록보다 inode가 먼저 바닥납니다.
@@ -81,7 +81,7 @@ export default function LinuxDiskFullArticle() {
             사례 A로 돌아갑니다. 이름 있는 파일이 65GiB이고 java 프로세스가 쓰는 app.log가 30GiB까지 자라 모두 95GiB가 찼습니다. 남은 5GiB는 전부 예약
             블록이라 일반 사용자 몫은 0이고 그래서 애플리케이션이 ENOSPC를 받았습니다.
           </p>
-            <p>당직자가 rm app.log를 실행하면 du는 곧바로 65GiB로 줄어듭니다. 디렉터리에서 이름이 사라졌기 때문입니다. 그런데 df는 여전히 Used 95G, Avail 0입니다. java가 그 파일을 fd 7로 열어 둔 채 계속 쓰고 있어 블록 30GiB가 그대로 묶여 있습니다.</p>
+            <p>당직자가 rm app.log를 실행하면 du는 곧바로 65GiB로 줄어듭니다. 디렉터리에서 이름이 사라졌기 때문입니다. 그런데 df는 여전히 Used 95G, Avail 0입니다. java가 그 파일을 fd 7로 열어 둔 채 쥐고 있어 블록 30GiB가 그대로 묶여 있습니다.</p>
             <p>
             df와 du의 차이 30GiB가 단서입니다. du는 이름을 따라 세고 df는 빈칸을 세므로 두 값의 차이는 이름 없이 블록을 쥔 무언가의 크기입니다. 이 차이를 만드는 대표
             원인이 열린 채 지워진 파일이고 다른 mount 아래에 가려진 파일도 같은 차이를 만듭니다(10절).
@@ -113,7 +113,7 @@ export default function LinuxDiskFullArticle() {
             ln -s로 만드는 심볼릭 링크(symbolic link)는 다릅니다. 같은 문서에 따르면 심볼릭 링크는 다른 파일의 경로 문자열을 내용으로 담은 별도 파일입니다. 자기
             inode를 따로 가지므로 대상의 링크 수를 바꾸지 않고 대상이 지워지면 존재하지 않는 경로를 가리키는 끊긴 링크(dangling link)로 남습니다.
           </p>
-            <p>Google SRE 면접 준비 가이드가 예로 드는 inode 설명, hard link와 soft link 비교 질문은 결국 이 표를 그릴 수 있느냐를 묻습니다. 그림에서 이름 층, inode 층, 블록 층이 어떻게 따로 움직이는지 보십시오.</p>
+            <p>제3자가 정리한 Google SRE 면접 준비 가이드가 예로 드는 inode 설명, hard link와 soft link 비교 질문은 결국 이 표를 그릴 수 있느냐를 묻습니다. 그림에서 이름 층, inode 층, 블록 층이 어떻게 따로 움직이는지 보십시오.</p>
           </div>
           <LinkCountViz />
         </section>
@@ -168,7 +168,7 @@ export default function LinuxDiskFullArticle() {
           <div className={prose}>
             <p>java가 fd 7을 닫는 순간을 봅니다. 마지막 fd가 닫히면 file_table.c의 __fput이 파일시스템의 release를 부르고 dput으로 dentry를 놓습니다(439행). 해시에서 빠진 dentry는 이때 사라지면서 dentry_unlink_inode가 iput을 부릅니다(dcache.c 409–412행).</p>
             <p>
-            이번 iput은 참조 수를 0으로 만듭니다. iput_final은 generic_drop_inode에 버릴지 묻고 이 함수는 링크 수가 0이면 참을 돌려줍니다(fs.h
+            이번 iput은 참조 수를 0으로 만듭니다. iput_final은 ext4의 drop_inode인 ext4_drop_inode에 버릴지 묻고 이 함수가 부르는 generic_drop_inode는 링크 수가 0이면 참을 돌려줍니다(fs.h
             3097–3100행). 그러면 evict가 ext4의 evict_inode를 불러 블록 30GiB와 inode 번호 1311을 돌려주고 다음 df에서 Used가 65GiB로
             내려갑니다.
           </p>
@@ -213,7 +213,7 @@ export default function LinuxDiskFullArticle() {
           <div className={prose}>
             <p>
             블록을 실제로 잡을 때도 같은 구분이 있습니다. ext4_has_free_clusters는 예약분을 빼고도 남으면 허락하고 남지 않으면 호출자가 resuid·resgid이거나
-            CAP_SYS_RESOURCE를 가졌는지 봅니다(balloc.c 646–657행). 둘 다 아니면 -ENOSPC가 돌아갑니다(671–675행).
+            CAP_SYS_RESOURCE를 가졌는지 봅니다(balloc.c 646–657행). 둘 다 아니면 0을 돌려주고 호출한 ext4_claim_free_clusters가 -ENOSPC를 돌려줍니다(671–675행).
           </p>
             <p>
             예약 비율은 tune2fs -m으로 바꿀 수 있지만 예약을 0으로 줄여 급한 불을 끄면 root 데몬이 쓸 여유도 함께 사라집니다. 예약 블록은 원인이 아니라 일반 사용자가
@@ -277,7 +277,7 @@ export default function LinuxDiskFullArticle() {
             title="No space left on device 진단"
             input={["쓰기에 실패한 경로가 속한 mount 지점 $MNT"]}
             steps={[
-              { code: "df -h $MNT 의 Avail > 0 인데 쓰기가 실패하면 dmesg에서 EXT4-fs 오류를 찾는다", note: "공간이 아니라 읽기 전용 전환일 수 있습니다(11절)." },
+              { code: "df -h $MNT 의 Avail > 0 이고 df -i 도 여유인데 쓰기가 실패하면 dmesg에서 EXT4-fs 오류를 찾는다", note: "Avail만 남았다면 다음 줄의 inode를 먼저 봅니다. 둘 다 남았다면 읽기 전용 전환일 수 있습니다(11절)." },
               { code: "df -i $MNT 의 IUse% == 100 이면 inode 계정이다", note: "파일이 가장 많은 디렉터리를 찾습니다." },
               { code: "Used + Avail < Size 이면 차이는 예약 블록이다", note: "root 데몬은 아직 씁니다. 원인 찾기는 계속합니다." },
               { code: "gap = df Used − du -xs $MNT", note: "-x로 다른 파일시스템을 건너뜁니다." },
@@ -304,7 +304,8 @@ export default function LinuxDiskFullArticle() {
             사례 A가 생긴 근본 원인은 대개 로그 회전 설정입니다. logrotate의 create 방식은 로그 파일 이름을 바꾸고 같은 이름으로 새 파일을 만듭니다. 애플리케이션이
             postrotate의 신호를 받아 새 파일을 다시 열지 않으면 계속 옛 inode에 쓰고 보관 개수를 넘은 옛 파일이 지워지는 순간 열린 채 지워진 파일이 됩니다.
           </p>
-            <p>copytruncate 방식은 복사본을 만든 뒤 원래 파일을 제자리에서 0으로 자릅니다. 애플리케이션이 같은 inode를 계속 써도 되므로 이 문제는 생기지 않습니다. 대신 logrotate 문서는 복사와 자르기 사이의 아주 짧은 틈에 쓴 로그가 사라질 수 있다고 경고합니다. 다시 열기를 지원하는 애플리케이션은 create와 신호를, 지원하지 않는 애플리케이션은 copytruncate를 고릅니다.</p>
+            <p>copytruncate 방식은 복사본을 만든 뒤 원래 파일을 제자리에서 0으로 자릅니다. 애플리케이션이 같은 inode를 계속 써도 되므로 지운 파일이 블록을 붙잡는 문제는 생기지 않습니다. 다만 O_APPEND 없이 연 로그라면 앞 절과 같은 sparse 파일이 생깁니다.</p>
+            <p>대신 logrotate 문서는 복사와 자르기 사이의 아주 짧은 틈에 쓴 로그가 사라질 수 있다고 경고합니다. 다시 열기를 지원하는 애플리케이션은 create와 신호를, 지원하지 않는 애플리케이션은 copytruncate를 고릅니다.</p>
           </div>
           <div id="paper-lsof" className="not-prose my-8 scroll-mt-24">
             <CitationBlock source="lsof(8) · unlink(2) · logrotate(8), man7.org (2026-10-15 확인)" citeKey={2} href="https://man7.org/linux/man-pages/man8/lsof.8.html">
@@ -316,7 +317,7 @@ export default function LinuxDiskFullArticle() {
         <section id="read-only-latency" data-teach-level="6" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">11. 공간이 남아도 쓰기가 멈추는 경우는 읽기 전용 전환과 I/O 대기입니다</h2>
           <div className={prose}>
-            <p>df -h가 Avail을 넉넉히 보이는데 쓰기가 실패한다면 네 계정 밖의 문제입니다. 첫째 후보는 파일시스템 오류입니다. ext4는 메타데이터 오류를 발견하면 mount 옵션 errors=에 따라 계속 쓰거나, 읽기 전용으로 바꾸거나, 기계를 멈춥니다. 커널 ext4 문서는 errors=remount-ro를 &quot;오류가 나면 읽기 전용으로 다시 mount&quot;로 적습니다.</p>
+            <p>df -h와 df -i가 모두 여유를 보이는데 쓰기가 실패한다면 네 계정 밖의 문제입니다. quota도 같은 증상을 내지만 이 글에서는 다루지 않습니다. 첫째 후보는 파일시스템 오류입니다. ext4는 메타데이터 오류를 발견하면 mount 옵션 errors=에 따라 계속 쓰거나, 읽기 전용으로 바꾸거나, 기계를 멈춥니다. 커널 ext4 문서는 errors=remount-ro를 &quot;오류가 나면 읽기 전용으로 다시 mount&quot;로 적습니다.</p>
             <p>
             Linux 6.12의 ext4_handle_error는 errors=continue가 아니면 shutdown 플래그를 세우고 journal을 중단한 뒤, dmesg에
             &quot;Remounting filesystem read-only&quot;를 남깁니다(super.c 703–736행). 주석은 SB_RDONLY 대신 이 플래그로 모든

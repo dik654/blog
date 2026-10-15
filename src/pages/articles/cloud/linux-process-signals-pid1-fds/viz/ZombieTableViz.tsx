@@ -68,7 +68,7 @@ export default function ZombieTableViz() {
       eyebrow="PID table"
       title="wait되지 않은 helper가 PID 칸을 하나씩 붙잡습니다"
       description="네모 하나가 PID 512개입니다. 진한 부분은 이미 끝났지만 부모가 종료 상태를 읽지 않은 좀비가 잡고 있는 칸입니다."
-      note="16 CPU 서버의 pid_max 기본값 32,768과 초당 3개의 helper는 설명용 가정입니다. 다른 프로세스가 쓰는 PID는 빼고 셌습니다."
+      note="16 CPU 서버의 pid_max 기본값 32,768과 초당 3개의 helper는 설명용 가정입니다. 실제 번호는 1~32,767이고 한 바퀴 돈 뒤에는 300 미만을 다시 쓰지 않으므로 좀비가 채울 수 있는 칸은 이보다 조금 적습니다."
     >
       <div
         data-viz-canvas

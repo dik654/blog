@@ -46,8 +46,8 @@ const SCENE_DATA: readonly Scene[] = [
   {
     marks: RULES.map((r) => (KERNEL(r.pri) ? "kernel" : "foreign")),
     packet: "networkd 시작: 규칙 목록 읽기",
-    verdict: "커널 표와 같은 줄 2개, 남의 규칙 5개",
-    note: "재시작한 networkd가 7줄을 읽어 커널 규칙 표(0번 local, 32766번, 32767번)와 비교합니다. 100번 local은 번호가 달라 남의 규칙이 되고, 5줄이 rules_foreign에 들어갑니다.",
+    verdict: "커널이 만든 줄 2개, 남의 규칙 5개",
+    note: "재시작한 networkd가 7줄을 읽고 커널이 함께 보낸 protocol 값을 봅니다. kernel이 붙은 줄은 32766과 32767뿐이고, 100번 local은 같은 local 표를 보지만 Cilium이 만든 줄이라 나머지 넷과 함께 5줄이 rules_foreign에 들어갑니다.",
   },
   {
     marks: RULES.map((r) => (KERNEL(r.pri) ? "kernel" : "gone")),
@@ -95,8 +95,8 @@ export default function RuleFlushViz() {
   return (
     <VizFrame
       eyebrow="Policy routing rules"
-      title="규칙 7줄 중 커널 표에 있는 2줄만 남았습니다"
-      description="행 하나가 ip rule 한 줄입니다. 왼쪽 숫자가 우선순위이고, 패킷은 위에서부터 처음 맞는 줄에서 멈춥니다."
+      title="규칙 7줄 중 커널이 만든 2줄만 남았습니다"
+      description="Datadog이 예로 든 pod 하나짜리 노드의 IPv4 규칙입니다. 행 하나가 ip rule 한 줄입니다. 왼쪽 숫자가 우선순위이고, 패킷은 위에서부터 처음 맞는 줄에서 멈춥니다."
       note="규칙과 주소는 Datadog 2023-03-08 사후 보고서의 AWS 노드 예시입니다. 109번 규칙의 역할 설명은 이 글의 해석입니다."
     >
       <div

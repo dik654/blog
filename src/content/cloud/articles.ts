@@ -189,7 +189,7 @@ export const cloudArticles: Article[] = [
     sections: [
       { id: "overview", title: "1. 같은 networkd가 부팅 때는 무사했고 재시작 때는 노드를 끊었습니다" },
       { id: "boot-chain", title: "2. 전원에서 PID 1까지 네 번 넘기고, 그다음은 unit 그래프입니다" },
-      { id: "rule-case", title: "3. 규칙 7줄 중 커널 표에 있는 2줄만 남았습니다" },
+      { id: "rule-case", title: "3. 규칙 7줄 중 커널이 만든 2줄만 남았습니다" },
       { id: "boot-vs-restart", title: "4. 부팅 때는 지울 규칙이 없었고 재시작 때는 5줄이 있었습니다" },
       { id: "ordering", title: "5. 순서와 요구는 서로 다른 두 줄로 적습니다" },
       { id: "restart-limit", title: "6. 빨리 재시작할수록 먼저 멈춥니다" },

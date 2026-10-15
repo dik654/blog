@@ -3080,12 +3080,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
-  "cloud/linux-memory-page-cache-oom": "7aaa52bb5b62408f",
-  "cloud/linux-tcp-time-wait-ports-backlog": "9613f846d6927d05",
-  "cloud/linux-process-signals-pid1-fds": "0907fff0d8a3133c",
-  "cloud/linux-disk-full-inode-deleted-files": "a1622691cc9e5f58",
-  "cloud/linux-systemd-boot-change-incidents": "ca7c8e38ce4e60dc",
-  "cloud/linux-server-interview-incident-map": "6ef981c528b0f38b",
+  "cloud/linux-memory-page-cache-oom": "e68c5f01f2beecf2",
+  "cloud/linux-tcp-time-wait-ports-backlog": "6985b5da12ab138a",
+  "cloud/linux-process-signals-pid1-fds": "617ba65f03795bbf",
+  "cloud/linux-disk-full-inode-deleted-files": "ea87fa9015e572d7",
+  "cloud/linux-systemd-boot-change-incidents": "9535058a38f9199c",
+  "cloud/linux-server-interview-incident-map": "92feb58234634b96",
   "ai/laya-system1-decision-model": "c299c073c3e24b17",
   "ai/neural-network": "58462a73abf9d1af",
   "ai/perceptron": "d81eb0d08e345535",

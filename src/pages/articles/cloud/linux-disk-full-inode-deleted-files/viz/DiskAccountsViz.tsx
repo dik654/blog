@@ -164,29 +164,29 @@ export default function DiskAccountsViz() {
           <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">df -h Used · Avail</dt>
-              <dd className="font-bold text-foreground">
+              <dd className="min-h-[2rem] font-bold text-foreground sm:min-h-0">
                 {state.dfUsed}G · {state.dfAvail}G
               </dd>
             </div>
             <div>
               <dt className="text-muted-foreground">df Use% · du</dt>
-              <dd className="font-bold text-foreground">
+              <dd className="min-h-[2rem] font-bold text-foreground sm:min-h-0">
                 {state.usePct}% · {state.du}G
               </dd>
             </div>
             <div>
               <dt className="text-muted-foreground">df -i IUse%</dt>
-              <dd className="font-bold text-foreground">{state.iusePct}%</dd>
+              <dd className="min-h-[2rem] font-bold text-foreground sm:min-h-0">{state.iusePct}%</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">일반 · root 쓰기</dt>
-              <dd className="font-bold text-foreground">
+              <dd className="min-h-[2rem] font-bold text-foreground sm:min-h-0">
                 {state.userWrite} · {state.rootWrite}
               </dd>
             </div>
           </dl>
 
-          <p className="mt-4 min-h-[9.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[8rem] sm:min-h-[3.5rem]">
+          <p className="mt-4 min-h-[11.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-[3.5rem]">
             {state.note}
           </p>
         </div>

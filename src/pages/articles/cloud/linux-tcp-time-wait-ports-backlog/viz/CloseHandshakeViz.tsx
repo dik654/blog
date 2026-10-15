@@ -52,7 +52,7 @@ export default function CloseHandshakeViz() {
       eyebrow="Active close"
       title="FIN을 먼저 보낸 쪽만 TIME_WAIT를 지납니다"
       description="왼쪽이 먼저 끊는 클라이언트, 오른쪽이 서버입니다. 가운데 화살표가 이번 장면에 오가는 segment입니다."
-      note="상태 이름은 ss -tan의 State 열과 같습니다. TIME_WAIT 60초는 Linux 상수 TCP_TIMEWAIT_LEN입니다."
+      note="상태 이름은 커널 이름입니다. ss -tan의 State 열에는 ESTAB, FIN-WAIT-1, TIME-WAIT처럼 줄표로 찍힙니다. TIME_WAIT 60초는 Linux 상수 TCP_TIMEWAIT_LEN입니다."
     >
       <div
         data-viz-canvas

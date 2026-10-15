@@ -5,6 +5,7 @@ import coreC from "./codebase/linux/kernel/sched/core.c?raw";
 import schedInternalH from "./codebase/linux/kernel/sched/sched.h?raw";
 import schedH from "./codebase/linux/include/linux/sched.h?raw";
 import procLoadavgC from "./codebase/linux/fs/proc/loadavg.c?raw";
+import procStatC from "./codebase/linux/fs/proc/stat.c?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
   "load-constants": {
@@ -35,7 +36,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [78, 91],
     desc: "CPU 하나의 run queue가 지금 몇 개를 load에 보태는지 세고, 지난번과의 차이만 돌려줍니다.",
     annotations: [
-      { lines: [82, 83], color: "sky", note: "nr_running과 nr_uninterruptible을 더합니다. vmstat의 r과 b가 이 두 수의 사용자 쪽 모습입니다." },
+      { lines: [82, 83], color: "sky", note: "nr_running과 nr_uninterruptible을 더합니다. vmstat r이 nr_running 쪽이고, b는 이 수가 아니라 I/O 대기만 세는 nr_iowait에서 나옵니다." },
       { lines: [85, 88], color: "amber", note: "전체 합을 매번 다시 세지 않고 차이만 전역 calc_load_tasks에 더합니다. CPU가 많을수록 이 방식이 싸집니다." },
     ],
     code: loadavgC,
@@ -55,11 +56,11 @@ export const codeRefs: Record<string, CodeRef> = {
   },
   "contributes-to-load": {
     path: "linux/kernel/sched/core.c",
-    highlight: [6616, 6640],
+    highlight: [6616, 6641],
     desc: "task가 잠들며 CPU를 내놓을 때 그 잠이 load에 보탤 잠인지 여기서 정합니다.",
     annotations: [
       { lines: [6622, 6625], color: "sky", note: "UNINTERRUPTIBLE이면서 NOLOAD도 FROZEN도 아닐 때만 보탭니다. 그래서 TASK_IDLE(UNINTERRUPTIBLE|NOLOAD)로 자는 kernel thread는 load를 올리지 않습니다." },
-      { lines: [6640, 6640], color: "amber", note: "block_task가 run queue에서 빼면서 위에서 정한 표시에 따라 nr_uninterruptible을 올립니다." },
+      { lines: [6641, 6641], color: "amber", note: "block_task가 run queue에서 빼면서 위에서 정한 표시에 따라 nr_uninterruptible을 올립니다." },
     ],
     code: coreC,
     lang: "c",
@@ -69,8 +70,8 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [2771, 2780],
     desc: "잠드는 task를 run queue에서 뺄 때 nr_uninterruptible을 하나 올리는 곳입니다.",
     annotations: [
-      { lines: [2773, 2774], color: "sky", note: "core.c에서 정한 sched_contributes_to_load가 참이면 1을 더합니다. vmstat b 열과 load의 D 몫이 여기서 생깁니다." },
-      { lines: [2776, 2778], color: "amber", note: "I/O 대기라면 nr_iowait도 따로 셉니다. CPU 통계의 wa는 이 수가 있는 동안 노는 CPU 시간입니다." },
+      { lines: [2773, 2774], color: "sky", note: "core.c에서 정한 sched_contributes_to_load가 참이면 1을 더합니다. load의 D 몫이 여기서 생기고, lock을 기다리는 D task도 들어갑니다." },
+      { lines: [2776, 2778], color: "amber", note: "in_iowait가 켜진 task만 nr_iowait를 올립니다. vmstat b(procs_blocked)와 CPU 통계의 wa가 이 수에서 나옵니다." },
     ],
     code: schedInternalH,
     lang: "c",
@@ -106,6 +107,17 @@ export const codeRefs: Record<string, CodeRef> = {
       { lines: [24, 25], color: "amber", note: "넷째 칸은 지금 R인 수 / 전체 thread 수입니다. avenrun은 전역 값 하나라 이 파일을 그대로 보여 주는 container 안에서는 host 전체의 load가 나옵니다." },
     ],
     code: procLoadavgC,
+    lang: "c",
+  },
+  "proc-stat-blocked": {
+    path: "linux/fs/proc/stat.c",
+    highlight: [174, 183],
+    desc: "/proc/stat의 procs_running·procs_blocked를 찍는 곳입니다. vmstat의 r과 b가 이 두 줄을 읽습니다.",
+    annotations: [
+      { lines: [177, 178], color: "sky", note: "procs_blocked는 이름과 달리 D task 전체가 아닙니다." },
+      { lines: [182, 183], color: "amber", note: "nr_iowait()는 CPU마다 in_iowait task 수를 더한 값입니다. lock을 기다리는 D task는 빠집니다." },
+    ],
+    code: procStatC,
     lang: "c",
   },
 };

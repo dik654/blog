@@ -1,5 +1,6 @@
 import type { CodeRef } from "@/components/code/types";
 import kernelMain from "./codebase/linux/init/main.c?raw";
+import fibRules from "./codebase/linux/net/core/fib_rules.c?raw";
 import networkdMain from "./codebase/systemd/src/network/networkd.c?raw";
 import networkdManager from "./codebase/systemd/src/network/networkd-manager.c?raw";
 import ruleC from "./codebase/systemd/src/network/networkd-routing-policy-rule.c?raw";
@@ -19,6 +20,7 @@ export const codeRefs: Record<string, CodeRef> = {
     annotations: [
       { lines: [1494, 1500], color: "sky", note: "initramfs가 있으면 그 안의 /init(162행 기본값)을 먼저 실행합니다. 성공하면 이 함수는 돌아오지 않는 대신 0을 돌려주고, 그 프로그램이 PID 1이 됩니다." },
       { lines: [1508, 1514], color: "amber", note: "커널 명령행에 init=을 줬다면 그것만 시도하고, 실패하면 다른 후보로 넘어가지 않고 panic합니다." },
+      { lines: [1516, 1523], color: "emerald", note: "빌드 설정 CONFIG_DEFAULT_INIT이 있으면 아래 네 후보보다 먼저 시도합니다." },
       { lines: [1525, 1532], color: "violet", note: "아무 지정이 없으면 /sbin/init, /etc/init, /bin/init, /bin/sh 순서로 시도합니다. 대부분의 배포판에서 /sbin/init은 systemd를 가리킵니다." },
     ],
     code: kernelMain,
@@ -31,7 +33,7 @@ export const codeRefs: Record<string, CodeRef> = {
     annotations: [
       { lines: [84, 90], color: "sky", note: "networkd.conf와 .network 파일을 읽습니다. ManageForeignRoutingPolicyRules=도 이때 정해집니다." },
       { lines: [92, 94], color: "amber", note: "커널에 이미 있는 link·주소·route·규칙을 netlink로 모두 읽어 옵니다. 실행 중인 노드라면 Cilium이 깐 규칙도 이 목록에 들어옵니다." },
-      { lines: [96, 98], color: "rose", note: "관리하는 link마다 설정을 적용합니다. 이 단계 안에서 모르는 규칙을 지웁니다(networkd-link.c 1155–1161행)." },
+      { lines: [96, 98], color: "rose", note: "manager_start는 속도 측정기와 상태 파일만 준비합니다. link 설정과 남의 규칙 삭제는 102행의 READY 알림 뒤 이벤트 루프에서 link 정보가 도착할 때 일어납니다(networkd-link.c 1155–1161행)." },
     ],
     code: networkdMain,
     lang: "c",
@@ -60,12 +62,36 @@ export const codeRefs: Record<string, CodeRef> = {
   "kernel-rules-table": {
     path: "systemd/src/network/networkd-routing-policy-rule.c",
     highlight: [823, 844],
-    desc: "networkd가 커널이 만든 규칙으로 인정하는 목록입니다. IPv4는 우선순위 0·32766·32767 세 줄뿐입니다.",
+    desc: "커널이 FRA_PROTOCOL을 보내지 않을 때만 쓰는 대체 목록입니다. 4.17 이후 커널은 protocol을 늘 보내므로 Datadog 노드(5.15)에서는 이 표가 아니라 protocol 값이 판정합니다.",
     annotations: [
-      { lines: [824, 826], color: "sky", note: "0번 local, 32766번 main, 32767번 default입니다. Cilium이 0번을 100번으로 옮긴 뒤에는 100번 local이 이 표와 맞지 않습니다." },
-      { lines: [839, 843], color: "amber", note: "표의 한 줄과 우선순위·table·동작이 모두 같아야 커널 규칙으로 봅니다. 우선순위만 다른 같은 lookup local도 남의 규칙이 됩니다." },
+      { lines: [824, 826], color: "sky", note: "IPv4는 0번 local, 32766번 main, 32767번 default입니다. IPv6는 0번과 32766번 두 줄입니다." },
+      { lines: [839, 843], color: "amber", note: "protocol이 없는 옛 커널에서는 표의 한 줄과 우선순위·table·동작이 모두 같아야 커널 규칙으로 봅니다." },
     ],
     code: ruleC,
+    lang: "c",
+  },
+  "fib-rules-protocol": {
+    path: "linux/net/core/fib_rules.c",
+    highlight: [56, 72],
+    desc: "부팅 때 커널이 기본 규칙(0·32766·32767)을 직접 만드는 함수입니다. Ubuntu 22.04의 5.15 커널도 같은 코드를 갖고 있습니다.",
+    annotations: [{ lines: [69, 69], color: "sky", note: "커널이 만든 규칙에는 protocol RTPROT_KERNEL을 붙입니다. networkd는 653–655행에서 이 값을 보고 건너뜁니다." }],
+    code: fibRules,
+    lang: "c",
+  },
+  "fib-rules-user-proto": {
+    path: "linux/net/core/fib_rules.c",
+    highlight: [555, 560],
+    desc: "사용자 공간이 규칙을 넣을 때 protocol을 정하는 곳입니다.",
+    annotations: [{ lines: [559, 560], color: "amber", note: "FRA_PROTOCOL 없이 넣은 규칙은 RTPROT_UNSPEC이 됩니다. Cilium의 규칙은 kernel이 아니므로 networkd가 남의 규칙으로 지웁니다." }],
+    code: fibRules,
+    lang: "c",
+  },
+  "fib-rules-report": {
+    path: "linux/net/core/fib_rules.c",
+    highlight: [1008, 1032],
+    desc: "규칙 목록을 netlink로 알려 줄 때 한 줄을 채우는 함수입니다.",
+    annotations: [{ lines: [1031, 1032], color: "rose", note: "모든 규칙에 FRA_PROTOCOL을 붙입니다. 그래서 networkd는 커널 규칙 표 대신 이 값으로 판정합니다." }],
+    code: fibRules,
     lang: "c",
   },
   "remember-foreign": {
@@ -122,7 +148,7 @@ export const codeRefs: Record<string, CodeRef> = {
     path: "systemd/src/network/networkd.conf",
     highlight: [16, 20],
     desc: "패키지에 들어 있는 기본 설정 파일입니다. 주석은 컴파일된 기본값을 보여 줍니다.",
-    annotations: [{ lines: [18, 19], color: "emerald", note: "Datadog은 사고 뒤 networkd가 재시작해도 라우팅 표를 건드리지 않도록 설정을 바꿨다고 적었습니다. 이 두 줄을 no로 바꾸는 drop-in이 그 손잡이입니다." }],
+    annotations: [{ lines: [18, 19], color: "emerald", note: "Datadog은 사고 뒤 networkd가 재시작해도 라우팅 표를 건드리지 않도록 설정을 바꿨다고 적었지만 어느 설정인지는 밝히지 않았습니다. 이 두 줄을 no로 바꾸는 drop-in은 같은 효과를 내는 설정이라는 글쓴이의 추론입니다." }],
     code: networkdConf,
     lang: "c",
   },
@@ -142,7 +168,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [2414, 2448],
     desc: "시작 요청이 들어올 때마다 시작 횟수 한도를 먼저 확인합니다. 자동 재시작도 이 함수를 지납니다.",
     annotations: [
-      { lines: [2443, 2448], color: "rose", note: "한도를 넘으면 start-limit-hit 결과로 dead 상태가 되고 재시작도 허락하지 않습니다(false 인자)." },
+      { lines: [2443, 2448], color: "rose", note: "한도를 넘으면 start-limit-hit 결과로 failed 상태가 되고 자동 재시작도 허락하지 않습니다(false 인자)." },
     ],
     code: serviceC,
     lang: "c",

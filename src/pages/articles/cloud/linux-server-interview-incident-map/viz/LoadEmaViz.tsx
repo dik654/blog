@@ -23,12 +23,12 @@ interface Scene {
 }
 
 const STATES: readonly Scene[] = [
-  { shown: 1, series: ONE_MIN, label: "1분 값", display: "164 → 0.08", note: "0 × 1884 + 2048 × 164 = 335,872에 반올림용 2,047을 더해 2048로 나누면 164입니다. 실제로 1인 수요가 첫 5초에는 0.08로만 보입니다." },
+  { shown: 1, series: ONE_MIN, label: "1분 값", display: "164 → 0.08", note: "0 × 1884 + 2048 × 164 = 335,872에 올림용 2,047을 더해 2048로 나누면 164입니다. 실제로 1인 수요가 첫 5초에는 0.08로만 보입니다." },
   { shown: 4, series: ONE_MIN, label: "1분 값", display: "582 → 0.28", note: "표본마다 남은 거리(2048 − 이전 값)의 164/2048, 약 8%만 다가갑니다. 4번째 표본에서도 0.28입니다." },
   { shown: 12, series: ONE_MIN, label: "1분 값", display: "1,299 → 0.63", note: "60초 뒤 1분 값은 1,299/2048입니다. /proc/loadavg는 여기에 10을 더해 0.63으로 찍습니다. 1분 상수는 1분 만에 다 차는 창이 아닙니다." },
   { shown: 12, series: FIVE_MIN, label: "5분 값", display: "378 → 0.18", note: "같은 60초, 같은 입력에 EXP_5 2014를 쓰면 5분 값은 0.18입니다. 표본마다 남은 거리의 34/2048, 약 1.7%만 다가갑니다." },
   { shown: 12, series: FIFTEEN_MIN, label: "15분 값", display: "132 → 0.06", note: "EXP_15 2037이면 0.06입니다. 1분 0.63, 5분 0.18, 15분 0.06의 간격이 수요가 방금 생겼다는 사실을 알려 줍니다." },
-  { shown: 12, series: DECAY, label: "1분 값 감쇠", display: "474 → 0.23", note: "스레드가 끝나도 1분 값은 60초 뒤 0.23으로 남습니다. 늦게 접속하면 1분 값이 15분 값보다 낮아져 이미 지난 사건이 보입니다." },
+  { shown: 12, series: DECAY, label: "1분 값 감쇠", display: "474 → 0.23", note: "스레드가 끝나도 1분 값은 60초 뒤 0.23으로 남고 15분 값 0.06보다 아직 큽니다. 약 155초가 지나야 1분 값이 15분 값 아래로 내려가 이미 지난 사건으로 보입니다." },
 ];
 
 export default function LoadEmaViz() {
@@ -41,7 +41,7 @@ export default function LoadEmaViz() {
       eyebrow="Fixed-point decay"
       title="5초 표본 12개가 1분 값을 0.63까지만 올립니다"
       description="막대 하나가 5초마다 한 번 계산하는 load 값입니다. 높이 기준선은 2048, 곧 load 1.0입니다."
-      note="스레드가 표본 시각에 맞춰 시작하고 매 표본에 잡힌다고 가정했습니다. Gregg 글은 같은 실험을 약 0.62로 적습니다."
+      note="스레드가 표본 시각에 맞춰 시작하고 매 표본에 잡힌다고 가정했습니다. Gregg 글은 같은 실험을 측정 그래프에서 약 0.62로 읽습니다."
     >
       <div
         data-viz-canvas

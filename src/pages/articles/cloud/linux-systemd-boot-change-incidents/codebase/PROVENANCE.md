@@ -3,12 +3,13 @@
 Retrieved 2026-10-15. Full unmodified files (byte-for-byte).
 
 - systemd tag `v249` (commit f6278558da0304ec6b646bb172ce4688c7f162a5). Ubuntu 22.04 ships systemd 249.11 with distribution patches (package 249.11-0ubuntu3.7 was the 2023-03-07 security update); this article reads upstream v249, not the Ubuntu-patched tree. systemd source files carry `SPDX-License-Identifier: LGPL-2.1-or-later`; the license text is `systemd/LICENSE.LGPL2.1`.
-- Linux tag `v6.12` (commit adc218676eef25575469234709c2d87185ca223a). `init/main.c` is GPL-2.0 (see `linux/COPYING`, `linux/LICENSES/preferred/GPL-2.0`, `linux/LICENSES/exceptions/Linux-syscall-note`).
+- Linux tag `v6.12` (commit adc218676eef25575469234709c2d87185ca223a). `init/main.c` and `net/core/fib_rules.c` are GPL-2.0 (see `linux/COPYING`, `linux/LICENSES/preferred/GPL-2.0`, `linux/LICENSES/exceptions/Linux-syscall-note`).
 
 `systemd/` and `linux/` are project roots; upstream paths remain underneath. `?raw` imports are read-only source panels; the website does not execute or compile these files. The StartLimit timings in the article (0.5 s run, RestartSec 1 s/2 s, address at 9 s) are hand-computed from `ratelimit.c` semantics, not measured on a host. The seven `ip rule` lines are copied from Datadog's 2023-05-24 deep-dive post.
 
 - `linux/COPYING` — 496 bytes; SHA256 `fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/COPYING)
 - `linux/init/main.c` — 39518 bytes; SHA256 `dfa6cecef3ee0c4ef3e9768d161f7739d9fbfa5c0a821c11ee53afde8dca3ec6`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/init/main.c)
+- `linux/net/core/fib_rules.c` — 31873 bytes; SHA256 `5a2e2a4c7f7f7e34a79ced07619b3baee347fe815ea997748b00cc901d69fe33`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/net/core/fib_rules.c)
 - `linux/LICENSES/exceptions/Linux-syscall-note` — 1258 bytes; SHA256 `8e378ab93586eb55135d3bc119cce787f7324f48394777d00c34fa3d0be3303f`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/LICENSES/exceptions/Linux-syscall-note)
 - `linux/LICENSES/preferred/GPL-2.0` — 18729 bytes; SHA256 `f6b78c087c3ebdf0f3c13415070dd480a3f35d8fc76f3d02180a407c1c812f79`; [pinned original](https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/LICENSES/preferred/GPL-2.0)
 - `systemd/LICENSE.LGPL2.1` — 26530 bytes; SHA256 `dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551`; [pinned original](https://raw.githubusercontent.com/systemd/systemd/f6278558da0304ec6b646bb172ce4688c7f162a5/LICENSE.LGPL2.1)

@@ -159053,7 +159053,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "mechanism",
         intuition: "5초마다 이전 값을 92%쯤 남기고 지금 수를 8%쯤 섞으므로 수요가 바뀌어도 숫자는 천천히 따라갑니다.",
         workedExample: "수요 1을 넣으면 (0 × 1884 + 2,048 × 164 + 2,047) ÷ 2048 = 164, 12번째 표본에서 1,299가 되어 /proc/loadavg에는 0.63이 찍힙니다. 같은 60초에 5분 값은 0.18, 15분 값은 0.06입니다.",
-        boundary: "1·5·15분은 창의 길이가 아니라 감쇠 상수입니다. 스레드 시작 시각이 표본과 어긋나면 Gregg가 적은 0.62처럼 조금 낮게 보일 수 있습니다.",
+        boundary: "1·5·15분은 창의 길이가 아니라 감쇠 상수입니다. Gregg가 적은 약 0.62는 측정 그래프에서 읽은 값이고, 정수 계산은 표본 11개면 0.60, 12개면 0.63입니다.",
       },
       {
         id: "use-method-errors-saturation-first",
@@ -159085,7 +159085,7 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     exercises: [
       { level: "basic", question: "CPU 32개 서버에서 load가 30.02, 26.43, 19.02입니다. CPU 하나당 수요와 수요의 방향을 말하세요.", answerChecklist: ["30.02 ÷ 32 = 0.94", "1분 값이 15분 값보다 큼", "수요가 최근에 오르는 중", "어느 자원인지는 아직 모름"], requiredConcepts: ["linux-load-average-system-demand"], sectionId: "case" },
-      { level: "basic", question: "(가정) CPU 16개 서버에서 load 30, vmstat r 8, b 22입니다. CPU가 원인인가요? 다음 명령은 무엇인가요?", answerChecklist: ["r 8 < CPU 16이라 CPU 포화 아님", "b 22가 load를 채움", "I/O 대기 의심", "iostat -xz 1로 await·%util 확인"], requiredConcepts: ["linux-load-average-system-demand", "linux-uninterruptible-sleep-d-state"], sectionId: "case" },
+      { level: "basic", question: "(가정) CPU 16개 서버에서 load 30, vmstat r 8, b 22입니다. CPU가 원인인가요? 다음 명령은 무엇인가요?", answerChecklist: ["r 8 < CPU 16이라 CPU 포화 아님", "I/O를 기다리는 D task 22개(b 22)가 load를 채움", "I/O 대기 의심", "iostat -xz 1로 await·%util 확인"], requiredConcepts: ["linux-load-average-system-demand", "linux-uninterruptible-sleep-d-state"], sectionId: "case" },
       { level: "basic", question: "첫 60초 점검에서 사용률보다 오류와 포화를 먼저 보는 이유는 무엇인가요?", answerChecklist: ["오류·포화는 해석이 쉬움", "사용률 높아도 줄이 없으면 감당 중", "포화는 줄 길이나 대기 시간", "풀어 준 자원을 기록해 후보를 좁힘"], requiredConcepts: ["use-method-errors-saturation-first"], sectionId: "picture" },
       { level: "basic", question: "pidstat에서 java의 %CPU가 1591이면 CPU 몇 개 몫을 쓰는 것인가요? 왜 100을 넘나요?", answerChecklist: ["%CPU는 모든 CPU 합", "1591 ÷ 100 ≈ 16 CPU", "멀티스레드 프로세스", "mpstat로 고르게 분산됐는지 확인"], requiredConcepts: ["linux-60-second-triage"], sectionId: "picture" },
       { level: "basic", question: "유휴 서버에 CPU 스레드 하나를 띄웠을 때 첫 5초 표본 뒤 1분 load의 정수 값과 화면 값은 얼마인가요?", answerChecklist: ["active = 2048", "(0 × 1884 + 2048 × 164 + 2047) ÷ 2048", "164", "약 0.08"], requiredConcepts: ["load-average-fixed-point-decay"], sectionId: "mechanism" },
@@ -159288,7 +159288,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "small-case",
         intuition: "파일 사본은 디스크에 원본이 있어 언제든 비울 수 있으므로, 비어 있는 RAM만 남은 양으로 세면 서버를 실제보다 훨씬 꽉 찬 것으로 오해합니다.",
         workedExample: "빈 page 1,536, page cache 9,216, 회수 가능 slab 512 MiB인 16 GiB 서버는 (1,536−160) + (9,216−64) + (512−64) = 10,976 MiB가 available입니다. (total−free) 비율은 90.6%입니다.",
-        boundary: "available은 추정치입니다. tmpfs·공유 메모리는 Cached와 buff/cache 열에는 들어가지만 file LRU가 아니라 비울 수 없고 available에서도 빠집니다.",
+        boundary: "available은 추정치입니다. tmpfs·공유 메모리는 Cached와 buff/cache 열에는 들어가지만 file LRU가 아니라 swap이 없으면 비울 수 없고 available에서도 빠집니다.",
       },
       {
         id: "linux-memory-reclaim-pressure",
@@ -159316,13 +159316,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "reclaim-path",
         intuition: "컨테이너의 한도는 노드 RAM과 따로 세므로, 노드에 빈 메모리가 많아도 한도 안에서 회수할 것이 없으면 그 컨테이너 안에서 OOM이 납니다.",
         workedExample: "A 1,236 + B 512 + 로그 cache 300 = 2,048 MiB에서 A가 300 MiB를 더 쓰는 동안은 cache가 회수됩니다. cache가 0이 된 뒤의 청구는 16번 재시도 뒤 cgroup OOM으로 갑니다.",
-        boundary: "memory.high는 감속과 회수만 일으키고 OOM killer를 부르지 않습니다. oom.group을 켜면 희생자 하나 대신 cgroup 전체가 함께 죽습니다.",
+        boundary: "memory.high는 감속과 회수만 일으키고 OOM killer를 부르지 않습니다. oom.group을 켜면 희생자 하나 대신 cgroup 전체가 함께 죽고, Kubernetes v1.35는 cgroup v2 노드에서 이 값을 기본으로 1로 씁니다.",
       },
       {
         id: "oom-kill-exit-137-evidence",
         sectionId: "exit-137",
         intuition: "137은 SIGKILL로 끝났다는 사실만 말하므로, 누가 죽였는지는 커널과 cgroup이 남긴 기록에서 따로 확인해야 합니다.",
-        workedExample: "SIGKILL은 9번이라 128 + 9 = 137입니다. memory.events의 oom_kill 증가와 dmesg의 Memory cgroup out of memory: Killed process 줄이 함께 있어야 OOM입니다.",
+        workedExample: "SIGKILL은 9번이라 128 + 9 = 137입니다. memory.events의 oom_kill 증가(전역 OOM도 셈)와 dmesg의 Memory cgroup out of memory: Killed process 줄이 함께 있어야 cgroup OOM입니다.",
         boundary: "/proc/<pid>/oom_score는 노드 RAM 기준입니다. adj −500인 A가 396, B가 687로 보여도 2 GiB cgroup OOM에서는 A가 죽습니다.",
       },
       {
@@ -159385,13 +159385,13 @@ export const ARTICLE_LEARNING: Readonly<
         id: "ephemeral-port-exhaustion",
         sectionId: "names",
         intuition: "같은 목적지로 가는 연결은 출발 포트로만 서로 구분되므로, 60초 동안 반납되지 않는 번호표를 초당 600장씩 뽑으면 28,232장짜리 묶음이 금방 바닥납니다.",
-        workedExample: "28,232 ÷ 600 ≈ 47.05초 뒤 32개만 남고 48번째 초에는 568개가 EADDRNOTAVAIL입니다. 지속 상한은 28,232 ÷ 60 ≈ 470개/초라 매초 약 130개가 실패합니다.",
-        boundary: "목적 IP나 목적 포트가 다르면 4-tuple이 달라 같은 출발 포트를 다시 씁니다. 서버가 먼저 끊으면 TIME_WAIT는 서버에 생기고 클라이언트 포트는 바로 돌아옵니다.",
+        workedExample: "28,232 ÷ 600 ≈ 47.05초 뒤 32개만 남고 48번째 초에는 568개가 EADDRNOTAVAIL입니다. 그 뒤 49~60번째 초는 600개가 모두 실패하고 61번째 초부터 다시 열리는 60초 주기가 반복됩니다. 평균 상한은 28,232 ÷ 60 ≈ 470개/초입니다.",
+        boundary: "목적 IP나 목적 포트가 다르면 4-tuple이 달라 같은 출발 포트를 다시 씁니다. 서버가 먼저 끊으면 TIME_WAIT는 서버에 생기고 클라이언트 포트는 바로 돌아옵니다. TIME_WAIT 총수가 tcp_max_tw_buckets(established hash 칸의 절반, 4GiB 호스트는 16,384)에 닿으면 커널은 TIME_WAIT를 건너뛰므로 작은 호스트에서는 포트가 이 계산대로 바닥나지 않습니다.",
       },
       {
         id: "tcp-connect-source-port-selection",
         sectionId: "port-search",
-        intuition: "빈 번호를 찾을 때 목적지마다 정해진 자리에서 출발해 짝수 번호부터 차례로 보고, 이미 같은 상대와 쓰는 번호는 건너뜁니다.",
+        intuition: "빈 번호를 찾을 때 목적지마다 고른 자리(연결마다 조금씩 앞으로 밀림)에서 출발해 짝수 번호부터 차례로 보고, 이미 같은 상대와 쓰는 번호는 건너뜁니다.",
         workedExample: "28,232개를 [32768, 61000)으로 세고 hash로 정한 offset의 짝수부터 훑습니다. 48번째 초에는 모든 후보가 같은 4-tuple의 TIME_WAIT에 걸리고 tw_reuse 기본값 2가 loopback이 아니라 거절해 -EADDRNOTAVAIL입니다.",
         boundary: "bind()로 출발 IP를 먼저 정하면 이 순회가 bind 시점에 목적지 없이 포트를 통째로 잡습니다. Cloudflare는 IP_BIND_ADDRESS_NO_PORT로 선택을 connect까지 미루라고 권합니다.",
       },
@@ -159413,7 +159413,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "time-wait-reuse-tradeoff",
         sectionId: "fixes",
         intuition: "번호표가 모자랄 때는 덜 뽑거나, 묶음을 늘리거나, 묶음을 키우거나, 반납을 앞당기는 네 방법이 있고 각자 다른 값을 치릅니다.",
-        workedExample: "같은 600개/초에서 목적지 4개는 상한 약 1,882개/초, 범위 1024–65535는 약 1,075개/초, timestamp가 있는 tw_reuse=1은 약 28,000개/초 이상, keep-alive pool은 λ 자체를 한 자릿수로 줄입니다.",
+        workedExample: "같은 600개/초에서 목적지 4개는 상한 약 1,882개/초, 범위 1024–65535는 약 1,075개/초, timestamp가 있는 tw_reuse=1은 28,232개/초 이상, keep-alive pool은 λ 자체를 한 자릿수로 줄입니다.",
         boundary: "tcp_tw_recycle은 v4.12에서 삭제되었고 SO_LINGER 0은 RST로 끝내 TIME_WAIT의 보호를 없앱니다. tw_reuse는 커널 문서가 전문가 조언 없이 바꾸지 말라고 적습니다.",
       },
       {
@@ -159440,7 +159440,7 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "600개/초 사례에서 목적 IP 4개 분산, 포트 범위 1024–65535, keep-alive pool 32개를 상한 식으로 비교하고 각각의 비용을 적으세요.", answerChecklist: ["4 × 28,232 ÷ 60 ≈ 1,882", "64,512 ÷ 60 ≈ 1,075", "keep-alive는 λ를 줄임", "VIP 하나면 분산 무효, 범위는 예약 포트 필요, pool은 끊긴 연결 처리 필요"], requiredConcepts: ["time-wait-reuse-tradeoff", "ephemeral-port-exhaustion"], sectionId: "fixes" },
       { level: "advanced", question: "tcp_tw_reuse=1이 TIME_WAIT 포트를 넘겨받는 조건을 tcp_twsk_unique 코드로 설명하고, 이 값이 서버로 들어오는 연결에는 왜 영향이 없는지 말하세요.", answerChecklist: ["timestamp를 받은 적 있어야 함", "마지막 timestamp의 초가 지나야 함", "FIN_WAIT_2 미니 소켓은 제외", "connect()의 포트 순회 안에서만 호출됨"], requiredConcepts: ["time-wait-reuse-tradeoff", "tcp-connect-source-port-selection"], sectionId: "fixes" },
       { level: "advanced", question: "listen(fd, 511) 서버가 1초 동안 accept()를 멈춘 사이 초당 600개 연결이 왔습니다. 몇 개가 버려지고 클라이언트는 무엇을 보나요? 어떤 counter로 확인하나요?", answerChecklist: ["> 비교라 512개까지 줄", "약 88개 SYN 버림", "오류 없이 1초 뒤 SYN 재전송", "nstat ListenOverflows·ListenDrops 차이"], requiredConcepts: ["tcp-listen-backlog-queues"], sectionId: "listen-queues" },
-      { level: "advanced", question: "NAT 호스트를 지나는 새 연결이 초당 3,000개라면 conntrack table은 어떻게 되나요? 계산과 확인할 로그를 적으세요.", answerChecklist: ["TIME_WAIT 항목 120초", "3,000 × 120 = 360,000", "기본 상한 262,144 초과", "dmesg 'nf_conntrack: table full, dropping packet'"], requiredConcepts: ["conntrack-table-capacity"], sectionId: "conntrack" },
+      { level: "advanced", question: "NAT 호스트를 지나는 새 연결이 초당 3,000개라면 conntrack table은 어떻게 되나요? 계산과 확인할 로그를 적으세요.", answerChecklist: ["TIME_WAIT 항목 120초", "3,000 × 120 = 360,000", "기본 상한 262,144 초과", "gc가 TIME_WAIT 항목을 지워 버려짐이 몰렸다 풀림", "dmesg 'nf_conntrack: table full, dropping packet'"], requiredConcepts: ["conntrack-table-capacity"], sectionId: "conntrack" },
     ],
     papers: [
       {
@@ -159494,7 +159494,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "signal-disposition-sigterm-sigkill",
         sectionId: "signals",
         intuition: "SIGTERM은 퇴근 안내 방송이라 하던 일을 마무리할 수 있고, SIGKILL은 전원을 내리는 일이라 마무리할 틈이 없습니다.",
-        workedExample: "SIGTERM 15로 처리기 없이 끝나면 종료 코드 128 + 15 = 143, SIGKILL 9로 끝나면 137입니다. Python은 SIGINT와 SIGPIPE만 기본 처리하므로 SIGTERM은 등록하지 않으면 기본 동작입니다.",
+        workedExample: "SIGTERM 15로 처리기 없이 끝나면 종료 코드 128 + 15 = 143, SIGKILL 9로 끝나면 137입니다. Python은 SIGINT·SIGPIPE·SIGXFSZ만 기본 처리하므로 SIGTERM은 등록하지 않으면 기본 동작입니다.",
         boundary: "SIGKILL·SIGSTOP은 잡거나 막을 수 없습니다. 막아 둔 신호는 버려지지 않고 pending으로 남는다는 점에서 무시와 다릅니다.",
       },
       {
@@ -159502,13 +159502,13 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "pid1-trace",
         intuition: "PID 1은 쓰러지면 컨테이너 전체가 함께 끝나므로 커널이 함부로 죽지 않게 보호하는데, 그 보호가 처리기 없는 종료 요청까지 막아 버립니다.",
         workedExample: "trap 없는 start.sh가 PID 1이면 host의 SIGTERM은 UNKILLABLE ∧ SIG_DFL ∧ ¬(force ∧ kernel_only)로 버려지고, 10초 뒤 SIGKILL만 전달되어 Exited (137)이 남습니다.",
-        boundary: "컨테이너 안에서 보낸 kill -9 1도 force가 false라 버려집니다. 처리기를 등록하거나 신호를 막아 두면 SIG_DFL 조건이 깨져 신호가 남습니다.",
+        boundary: "컨테이너 안에서 보낸 kill -9 1도 force가 false라 버려집니다. 처리기를 등록하면 SIG_DFL 조건이 깨지고, 신호를 막아 두면 이 검사를 건너뛰어 신호가 pending으로 남습니다.",
       },
       {
         id: "init-reaper-signal-forwarding",
         sectionId: "fixes",
         intuition: "PID 1 자리에 신호를 받아 전달만 하는 작은 관리인을 두면 실제 앱은 보호 규칙에서 벗어나 평범한 프로세스처럼 신호를 받습니다.",
-        workedExample: "tini가 PID 1, python이 PID 2가 되면 SIGTERM이 전달되어 처리기 없이도 종료되고 tini는 143을 돌려줍니다. tini는 waitpid(-1, WNOHANG)로 입양된 고아를 거둡니다.",
+        workedExample: "tini가 직계 자식에게만 신호를 보내므로 start.sh를 그대로 두면 sh만 SIGTERM을 받고 python은 tini 종료 때 SIGKILL로 죽습니다. exec나 tini -g로 python이 신호를 받게 하면 처리기 없이도 종료되고 tini는 143을 돌려줍니다. tini는 waitpid(-1, WNOHANG)로 입양된 고아를 거둡니다.",
         boundary: "server.py가 살아 있는 채 자기 helper를 wait하지 않으면 그 좀비의 부모는 tini가 아니므로 남습니다. 요청 정리도 앱 처리기가 있어야 합니다.",
       },
       {
@@ -159542,7 +159542,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "리눅스 서버에서 서비스가 프로세스로 돈다는 것과 IP 주소·라우팅 표가 무엇인지 알고 들어옵니다. Datadog 2023-03-08 장애 노드의 ip rule 7줄과, 0.5초 만에 죽는 가정 서비스의 재시작 시각을 끝까지 셉니다.",
     coreIdea:
-      "systemd는 순서(After·Before)와 요구(Wants·Requires)를 따로 적은 그래프로 부팅과 재시작을 하므로, 같은 프로그램도 부팅 때와 실행 중 재시작 때 만나는 상태가 달라 다른 결과를 냅니다. networkd는 부팅 때 지울 것이 없던 남의 규칙 5줄을 재시작 때 지웠고, 기다림을 순서로 적지 않은 서비스는 재시작 한도에 걸려 재부팅 뒤 멈춥니다.",
+      "systemd는 순서(After·Before)와 요구(Wants·Requires)를 따로 적은 그래프로 부팅과 재시작을 하므로, 같은 프로그램도 부팅 때와 실행 중 재시작 때 만나는 상태가 달라 다른 결과를 냅니다. networkd는 부팅 때 지울 것이 없던 남의 규칙을 재시작 때 지웠고(Datadog의 pod 하나짜리 예에서 5줄), 기다림을 순서로 적지 않은 서비스는 재시작 한도에 걸려 재부팅 뒤 멈춥니다.",
     assumedKnowledge: [
       { id: "kubernetes-packet-boundary-ledger", role: "CNI가 노드에 pod용 route와 규칙을 까는 경계를 규칙 7줄의 출처로 씁니다." },
       { id: "secure-change-release-gate", role: "단계적 배포 게이트와 자동 업데이트 경로를 대비할 때 씁니다." },
@@ -159560,7 +159560,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "linux-boot-handoff-pid1",
         sectionId: "boot-chain",
         intuition: "부팅은 한 프로그램이 다음 프로그램을 메모리에 올려 실행권을 넘기는 이어달리기이고, 커널 다음 주자인 PID 1부터는 순서를 그래프가 정합니다.",
-        workedExample: "커널 v6.12 kernel_init은 initramfs의 /init을 먼저 실행하고, init=이 있으면 그것만, 없으면 /sbin/init·/etc/init·/bin/init·/bin/sh 순서로 찾고 모두 실패하면 panic합니다.",
+        workedExample: "커널 v6.12 kernel_init은 initramfs의 /init(rdinit=으로 변경 가능)을 먼저 실행하고, init=이 있으면 그것만, 없으면 CONFIG_DEFAULT_INIT 다음 /sbin/init·/etc/init·/bin/init·/bin/sh 순서로 찾고 모두 실패하면 panic합니다.",
         boundary: "UEFI가 커널을 직접 올리거나 initramfs 없이 부팅하는 경로도 있습니다. PID 1 이후 target 도달 순서는 결정적이지 않습니다.",
       },
       {
@@ -159574,7 +159574,7 @@ export const ARTICLE_LEARNING: Readonly<
         id: "networkd-foreign-rule-flush",
         sectionId: "networkd-source",
         intuition: "networkd는 시작할 때마다 지금 있는 규칙을 모두 세고 자기 목록에 없는 것을 치우므로, 시작 순간에 누가 먼저 규칙을 깔았느냐가 결과를 바꿉니다.",
-        workedExample: "부팅 직후 3줄을 읽어 남의 규칙 0줄을 지우고, 실행 중 재시작에서는 7줄을 읽어 커널 표와 같은 2줄을 남기고 5줄을 RTM_DELRULE로 지웁니다.",
+        workedExample: "부팅 직후 IPv4 3줄을 읽어 남의 규칙 0줄을 지우고, 실행 중 재시작에서는 7줄을 읽어 READY를 알린 뒤 protocol이 kernel인 2줄을 남기고 5줄을 RTM_DELRULE로 지웁니다.",
         boundary: "systemd v249 원문 기준입니다. ManageForeignRoutingPolicyRules=no나 KeepConfiguration=yes가 이 정리를 막고, 이후 버전은 동작이 다를 수 있습니다.",
       },
       {
@@ -159606,14 +159606,14 @@ export const ARTICLE_LEARNING: Readonly<
       { label: "04 변경 경로", relation: "자동 업데이트가 재시작 경로를 여는 방식과 대응을 정리합니다.", concepts: ["unattended-upgrade-restart-path"] },
     ],
     exercises: [
-      { level: "basic", question: "커널 명령행에 init=을 주지 않았고 initramfs도 없을 때 커널은 어떤 순서로 PID 1을 찾나요? 모두 실패하면요?", answerChecklist: ["/sbin/init", "/etc/init", "/bin/init", "/bin/sh", "모두 실패하면 panic"], requiredConcepts: ["linux-boot-handoff-pid1"], sectionId: "boot-chain" },
-      { level: "basic", question: "Cilium 노드의 규칙 9·20·100·109·111·32766·32767 가운데 networkd v249가 커널 규칙으로 인정하는 줄은 무엇이고, 몇 줄이 지워지나요?", answerChecklist: ["커널 표는 0·32766·32767", "남는 줄 32766·32767", "100번 local은 번호가 달라 남의 규칙", "7 − 2 = 5줄 삭제"], requiredConcepts: ["linux-policy-routing-rule-order", "networkd-foreign-rule-flush"], sectionId: "rule-case" },
+      { level: "basic", question: "커널 명령행에 init=을 주지 않았고 initramfs도 없을 때 커널은 어떤 순서로 PID 1을 찾나요? 모두 실패하면요?", answerChecklist: ["CONFIG_DEFAULT_INIT이 있으면 먼저", "/sbin/init", "/etc/init", "/bin/init", "/bin/sh", "모두 실패하면 panic"], requiredConcepts: ["linux-boot-handoff-pid1"], sectionId: "boot-chain" },
+      { level: "basic", question: "Cilium 노드의 규칙 9·20·100·109·111·32766·32767 가운데 networkd v249가 커널 규칙으로 인정하는 줄은 무엇이고, 몇 줄이 지워지나요?", answerChecklist: ["판정은 커널이 보낸 protocol 값", "커널이 만든 남는 줄 32766·32767", "100번 local은 Cilium이 만들어 남의 규칙", "7 − 2 = 5줄 삭제"], requiredConcepts: ["linux-policy-routing-rule-order", "networkd-foreign-rule-flush"], sectionId: "rule-case" },
       { level: "basic", question: "규칙이 지워진 뒤 8.8.8.8에서 노드 주소 10.128.123.85로 온 응답 패킷은 어느 규칙에서 길을 찾고 어디로 가나요?", answerChecklist: ["local 규칙이 없음", "32766번 main", "기본 경로 ens5 밖으로 다시 나감", "클라우드 망이 버려 노드 연결 끊김"], requiredConcepts: ["linux-policy-routing-rule-order"], sectionId: "rule-case" },
-      { level: "basic", question: "같은 networkd가 새로 부팅한 노드에서는 왜 규칙을 지우지 않았나요?", answerChecklist: ["시작 코드는 같음", "부팅 때 networkd가 Cilium보다 먼저 뜸", "읽은 규칙이 커널 3줄뿐", "남의 규칙 0줄이라 지울 것이 없음"], requiredConcepts: ["networkd-foreign-rule-flush"], sectionId: "boot-vs-restart" },
+      { level: "basic", question: "같은 networkd가 새로 부팅한 노드에서는 왜 규칙을 지우지 않았나요?", answerChecklist: ["시작 코드는 같음", "부팅 때 networkd가 Cilium보다 먼저 뜸", "읽은 규칙이 커널 기본 IPv4 3줄뿐", "남의 규칙 0줄이라 지울 것이 없음"], requiredConcepts: ["networkd-foreign-rule-flush"], sectionId: "boot-vs-restart" },
       { level: "basic", question: "주소 설정이 끝난 뒤 시작해야 하는 서비스에 Wants=network-online.target만 적으면 무엇이 빠지나요?", answerChecklist: ["Wants는 요구만 정함", "순서는 After로 따로 적어야 함", "없으면 동시에 시작", "After=network-online.target 추가"], requiredConcepts: ["systemd-ordering-requirement-split"], sectionId: "ordering" },
       { level: "basic", question: "0.5초 만에 실패하는 서비스에 Restart=on-failure, RestartSec=1s, 기본 시작 한도를 쓰면 몇 초에 무엇이 생기나요?", answerChecklist: ["한 바퀴 1.5초", "0·1.5·3·4.5·6초 다섯 번 허락", "7.5초 여섯째가 10초 창 안이라 거절", "start-limit-hit, Start request repeated too quickly"], requiredConcepts: ["systemd-start-rate-limit"], sectionId: "restart-limit" },
       { level: "advanced", question: "RestartSec=1.5s로 바꾸고 실행 시간이 0.5초라면 여섯째 시작은 몇 초이고 거절되나요? 9초의 주소를 볼 수 있나요? ratelimit.c의 비교 연산으로 설명하세요.", answerChecklist: ["한 바퀴 2초", "0·2·4·6·8초 다섯 번", "여섯째 10초", "10 > 10이 아니라 같은 창이라 거절", "8초 시도는 주소 전이라 실패, 9초 주소를 못 봄"], requiredConcepts: ["systemd-start-rate-limit"], sectionId: "unit-source" },
-      { level: "advanced", question: "Cilium이 0번 local 규칙을 그대로 두고 그 앞에 99번 규칙만 더했다면 networkd 재시작 뒤 노드 자체와 pod의 연결은 각각 어떻게 됐을까요?", answerChecklist: ["0번 local은 커널 표와 같아 남음", "노드 주소로 온 패킷은 local에서 배달", "99번과 pod용 111번 등은 지워짐", "AWS·Azure pod 송신은 여전히 끊김"], requiredConcepts: ["linux-policy-routing-rule-order", "networkd-foreign-rule-flush"], sectionId: "networkd-source" },
+      { level: "advanced", question: "Cilium이 0번 local 규칙을 그대로 두고 그 앞에 99번 규칙만 더했다면 networkd 재시작 뒤 노드 자체와 pod의 연결은 각각 어떻게 됐을까요?", answerChecklist: ["0번 local은 커널이 만든 protocol kernel 규칙이라 남음", "노드 주소로 온 패킷은 local에서 배달", "99번과 pod용 111번 등은 지워짐", "AWS·Azure pod 송신은 여전히 끊김"], requiredConcepts: ["linux-policy-routing-rule-order", "networkd-foreign-rule-flush"], sectionId: "networkd-source" },
       { level: "advanced", question: "networkd 재시작 사고를 막는 손잡이 세 가지를 코드 위치와 함께 비교하세요. 각각 무엇을 지키고 무엇을 남기나요?", answerChecklist: ["ManageForeignRoutingPolicyRules=no면 664–679행에서 규칙을 읽지 않음", "KeepConfiguration=yes면 link 정리 자체를 건너뜀", "업데이트 경로를 배포 도구로 옮겨 재시작 시점을 통제", "설정은 이 노드를, 경로 변경은 함대 동시성을 막음"], requiredConcepts: ["networkd-foreign-rule-flush", "unattended-upgrade-restart-path"], sectionId: "change-path" },
       { level: "advanced", question: "부팅 시험만 하는 팀이 데몬 업데이트 위험을 잡도록 시험 하나를 설계하세요. 시험이 만들어야 할 상태와 성공 조건을 Datadog 사례로 적으세요.", answerChecklist: ["일하는 노드(CNI 규칙이 깔린 상태)에서 시작", "패키지 설치 또는 데몬만 재시작", "ip rule·pod 송신·노드 응답 확인", "새 노드 부팅과 결과 비교"], requiredConcepts: ["networkd-foreign-rule-flush", "unattended-upgrade-restart-path"], sectionId: "boot-vs-restart" },
     ],

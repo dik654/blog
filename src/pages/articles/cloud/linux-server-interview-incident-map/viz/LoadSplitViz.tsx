@@ -5,7 +5,7 @@ import VizFrame from "@/components/viz/VizFrame";
 /**
  * load average가 세는 두 줄(CPU를 쓰거나 기다리는 task, 디스크 등을 끊김 없이 기다리는 task)을
  * 실제 칸으로 그린다. 같은 30이 서로 다른 원인에서 나오는 것을 칸 수로 세게 한다.
- * 한 mechanism: load에 더해지는 수 = CPU 줄(r) + D 줄(b, TASK_NOLOAD 제외).
+ * 한 mechanism: load에 더해지는 수 = CPU 줄(r) + D 줄(TASK_NOLOAD 제외). vmstat b는 이 중 I/O 대기만 센다.
  */
 const SCENES = ["32 CPU · Gregg 사례", "16 vCPU · CPU 포화", "16 vCPU · 디스크 대기", "16 vCPU · TASK_IDLE"] as const;
 
@@ -45,7 +45,7 @@ const STATES: readonly Scene[] = [
     dState: 22,
     idleWait: 0,
     verdict: "디스크 대기",
-    note: "(가정) r은 8, b는 22입니다. CPU 절반이 비어 있는데 load는 30입니다. 22개가 끊을 수 없는 잠(D)으로 I/O를 기다리므로 다음 명령은 iostat입니다.",
+    note: "(가정) r은 8이고 D 상태 22개가 모두 디스크 I/O를 기다려 b도 22입니다. CPU 절반이 비어 있는데 load는 30이므로 다음 명령은 iostat입니다.",
   },
   {
     cpus: 16,
@@ -54,7 +54,7 @@ const STATES: readonly Scene[] = [
     dState: 0,
     idleWait: 22,
     verdict: "세지 않음",
-    note: "(가정) 22개가 TASK_IDLE로 잔다면 load는 8입니다. TASK_IDLE은 UNINTERRUPTIBLE에 NOLOAD 표시를 더한 상태라 core.c가 load 계산에서 뺍니다.",
+    note: "(가정) 22개가 TASK_IDLE로 잔다면 load는 8입니다. TASK_IDLE은 UNINTERRUPTIBLE에 NOLOAD 표시를 더한 상태라 core.c가 load에서 뺍니다. 조건을 보이려는 반사실 장면이고 ps에는 I로 보입니다.",
   },
 ];
 
@@ -118,7 +118,7 @@ export default function LoadSplitViz() {
               <dd className="font-bold text-foreground">{state.onCpu + state.queued}</dd>
             </div>
             <div>
-              <dt className="text-muted-foreground">D 줄 (b)</dt>
+              <dt className="text-muted-foreground">D 줄</dt>
               <dd className="font-bold text-foreground">{state.dState}</dd>
             </div>
             <div>
@@ -131,7 +131,7 @@ export default function LoadSplitViz() {
             </div>
           </dl>
 
-          <p className="mt-4 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">
+          <p className="mt-4 min-h-[12.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[3.5rem]">
             {state.note}
           </p>
         </div>

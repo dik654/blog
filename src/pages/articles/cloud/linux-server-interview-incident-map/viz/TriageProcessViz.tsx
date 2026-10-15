@@ -36,7 +36,7 @@ const STATES: readonly Scene[] = [
   { line: 2, output: "r 32~34 · b 0 · si/so 0 · us 96~99 · wa 0", reading: "CPU 32개에 r이 32~34라 CPU가 막 포화되는 경계입니다. b와 wa가 0이라 디스크 대기는 아니고, swap 출입이 없어 메모리 압박도 지금은 없습니다.", marks: ["의심", "정상", "정상", "의심", "의심"] },
   { line: 3, output: "all %usr 98.47 · CPU 0~3 96~98%", reading: "모든 CPU가 고르게 바쁩니다. CPU 하나만 뜨거운 단일 스레드 병목은 아닙니다.", marks: ["의심", "정상", "정상", "의심", "의심"] },
   { line: 4, output: "java 6521 %CPU 1591 · java 6564 %CPU 1583", reading: "java 두 개가 각각 CPU 약 16개 몫을 씁니다. CPU 수요의 주인이 나왔습니다.", marks: ["원인", "정상", "정상", "의심", "의심"] },
-  { line: 5, output: "xvdb await 0.43 ms · w/s 8.94", reading: "주요 디스크의 대기 시간이 1 ms 아래이고 요청도 적습니다. 디스크를 용의선에서 뺍니다.", marks: ["원인", "정상", "정상", "의심", "의심"] },
+  { line: 5, output: "xvdb await 0.43 ms · w/s 8.94 · dm-1 await 345.84 ms · w/s 0.94", reading: "일을 받는 xvdb는 대기가 1 ms 아래입니다. dm‑1은 345 ms지만 초당 쓰기 0.94개, 평균 줄 0.33으로 작아 이 서버를 느리게 할 수 없다고 해석해 디스크를 뺍니다.", marks: ["원인", "정상", "정상", "의심", "의심"] },
   { line: 6, output: "buffers 59 MB · cached 541 MB · free 221,453 MB", reading: "cache가 0에 가깝지 않고 남은 메모리도 넉넉합니다. dmesg의 OOM은 과거 일로 둡니다.", marks: ["원인", "정상", "정상", "의심", "의심"] },
   { line: 7, output: "eth0 rxkB/s 21,999 ≈ 176 Mbit/s", reading: "1 Gbit/s 한도에 한참 못 미칩니다. NIC 처리량은 원인이 아닙니다.", marks: ["원인", "정상", "정상", "의심", "의심"] },
   { line: 8, output: "retrans/s 0.00 · active/s 1.00", reading: "재전송이 없습니다. SYN flooding 기록은 과거 일이고 지금 연결은 초당 하나입니다.", marks: ["원인", "정상", "정상", "정상", "정상"] },
@@ -61,7 +61,7 @@ export default function TriageProcessViz() {
       eyebrow="60-second triage"
       title="열 줄을 차례로 실행하며 다섯 자원을 하나씩 풀어 줍니다"
       description="왼쪽은 의사코드 전체입니다. 진한 줄이 지금 실행하는 줄이고 흐린 표시가 붙은 줄은 이미 실행했습니다. 오른쪽은 그 줄의 실제 출력과 자원별 판정입니다."
-      note="출력은 Gregg의 Netflix 글(2015-11-30)에 실린 같은 서버의 예시입니다. 명령마다 찍은 시각이 조금씩 다릅니다."
+      note="출력은 Gregg의 Netflix 글(2015-11-30)이 한 운영 서버에서 서로 다른 시각에 찍은 예시입니다. dmesg 줄은 다른 부팅 때의 기록입니다."
     >
       <div
         data-viz-canvas

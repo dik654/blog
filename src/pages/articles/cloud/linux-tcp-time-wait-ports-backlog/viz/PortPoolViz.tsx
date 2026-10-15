@@ -10,7 +10,7 @@ import VizFrame from "@/components/viz/VizFrame";
 const TOTAL = 28232;
 const PER_SECOND = 600;
 const CELLS = Math.ceil(TOTAL / PER_SECOND); // 48
-const SCENES = ["10초", "47초", "48초", "60초 이후", "목적지 4개"] as const;
+const SCENES = ["10초", "47초", "48초", "49~60초", "목적지 4개"] as const;
 
 interface Scene {
   filled: number;
@@ -40,9 +40,9 @@ const STATES: readonly Scene[] = [
   },
   {
     filled: 48,
-    failed: 130,
+    failed: 600,
     free: 0,
-    note: "60초부터는 60초 전에 들어간 포트만큼만 다시 열립니다. 길게 보면 초당 28,232 ÷ 60 ≈ 470개만 성공하고 약 130개는 계속 실패합니다.",
+    note: "49~60번째 초는 풀리는 포트가 없어 600개 모두 실패합니다. 61번째 초에 다시 열리고 60초마다 되풀이되므로 평균은 초당 약 470개입니다.",
   },
   {
     filled: 15,
