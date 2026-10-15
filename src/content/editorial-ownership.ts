@@ -18441,6 +18441,136 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "standard", rule: "정확도·ECE·지연은 제작사 자기보고, Jev는 제3자 공개값으로만 쓰고 독립 평가처럼 쓰지 않는다." },
     ],
   },
+  "linux-server-interview-incident-map": {
+    title: "리눅스 면접·장애 지도와 첫 60초 점검, load average",
+    owns: [
+      "공개 면접 자료 다섯 곳의 리눅스 주제 공통 분모",
+      "첫 60초 점검 열 명령의 순서와 판정",
+      "load average가 세는 두 줄과 고정소수점 감쇠 계산",
+      "장애 추적 면접 답변의 구조",
+    ],
+    reuses: [
+      { label: "지수 이동 평균", href: "/cs/ai/momentum-optimizer#ema" },
+      { label: "요청 경로를 관문별로 추적하기", href: "/cs/cloud/cloud-networking-request-path#overview" },
+      { label: "Kubernetes 패킷 경로", href: "/cs/cloud/kubernetes-network-packet-path#overview" },
+      { label: "관측·복구 운영 체계", href: "/cs/cloud/cloud-reliability-observability-iac#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linux v6.12 태그의 전체 원문을 고정해 load 상수·계산·D 상태 조건의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "Gregg의 2015년 Netflix 글과 2017년 블로그의 출력·인용만 사례 숫자로 쓴다." },
+      { kind: "project-claim", rule: "16 vCPU 장면의 r·b와 면접 답변 예시는 가정이다. load 수열은 calc_load를 Python으로 다시 구현해 계산했고 커널을 부팅해 측정하지 않았다." },
+      { kind: "standard", rule: "Google·Meta 면접 내용은 제3자 정리와 지원자 자기보고로만 표기하고, 질문 빈도 통계나 국내 회사 공식 목록이 있다고 쓰지 않는다." },
+    ],
+  },
+  "linux-disk-full-inode-deleted-files": {
+    title: "리눅스 파일시스템이 '찼다'고 말하는 네 계정과 진단 순서",
+    owns: [
+      "블록·inode·예약 블록·열린 채 지워진 파일의 네 계정과 df·du가 읽는 장부",
+      "링크 수와 참조 수가 모두 0일 때 블록이 풀리는 Linux unlink·iput 경로",
+      "ext4 예약 블록의 f_bavail 계산과 inode 고갈의 손익분기",
+      "df -h·df -i·du·lsof +L1 진단 순서와 /proc/PID/fd 자르기·로그 회전 선택",
+      "읽기 전용 전환과 iostat await·aqu-sz·%util·%iowait 해석",
+    ],
+    reuses: [
+      { label: "Linux 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+      { label: "D 상태와 load average", href: "/cs/cloud/linux-server-interview-incident-map#source" },
+      { label: "NVMe 장치와 PCIe 경로", href: "/cs/gpu/hw-nvme-storage" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linux v6.12와 coreutils v9.5의 전체 원문을 고정해 unlink·iput·statfs·예약 블록·inode 할당·df 계산의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "man7.org의 man page와 docs.kernel.org ext4 문서는 2026-10-15 확인본으로 인용하고 문서 문장까지만 근거로 쓴다." },
+      { kind: "project-claim", rule: "100GiB ext4, 30GiB 로그, PID 812·fd 7, 세션 파일 650만 개, iostat 숫자는 설명용 가정이며 실제 파일시스템을 만들어 측정하지 않았다." },
+      { kind: "standard", rule: "면접 질문 출처는 국내 현업자 질문지와 제3자 가이드로 표기하고 특정 회사의 공식 질문 목록이라고 쓰지 않는다." },
+    ],
+  },
+  "linux-memory-page-cache-oom": {
+    title: "리눅스 서버 메모리의 남은 양·회수 압력·OOM 희생자 선택",
+    owns: [
+      "page cache와 MemAvailable 계산, free used 열의 버전별 정의",
+      "kswapd·직접 회수·major fault·PSI로 보는 메모리 압력",
+      "overcommit 세 모드와 CommitLimit",
+      "oom_badness 점수 식과 cgroup·전역 OOM의 totalpages 차이",
+      "memory.max 청구 경로, memory.high·oom.group, exit code 137 증거",
+      "kubelet QoS별 oom_score_adj와 노드 전역 OOM 순서",
+    ],
+    reuses: [
+      { label: "cgroup 자원 예산", href: "/cs/ai/agent-sandbox-security#cgroup" },
+      { label: "Kubernetes 요청 경로와 requests·limits", href: "/cs/cloud/kubernetes-request-path-and-cka#overview" },
+      { label: "리눅스 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+      { label: "서버 메모리 하드웨어", href: "/cs/gpu/hw-memory#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linux v6.12와 Kubernetes v1.35.0 원문 파일을 바이트 그대로 고정하고 점수·청구·환산 식의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "procps-ng man page, Kubernetes 문서, bash 매뉴얼은 2026-10-15 확인본 문장까지만 인용한다." },
+      { kind: "project-claim", rule: "16 GiB 장부, 예약 160 MiB, low watermark 64 MiB, 두 프로세스의 RSS는 가정이며 점수는 커널 식으로 손 계산했다. 실제 커널을 돌려 재지 않았다." },
+      { kind: "standard", rule: "면접 출제 경향은 docs/linux-server-series-research.md에 적은 공개 질문지·후기 범위로만 말하고 회사별 빈도를 주장하지 않는다." },
+    ],
+  },
+  "linux-tcp-time-wait-ports-backlog": {
+    title: "리눅스 TCP 연결의 TIME_WAIT·출발 포트·listen 대기열 한계",
+    owns: [
+      "종료 handshake, TIME_WAIT의 이유, CLOSE_WAIT와 half-open 해석",
+      "같은 목적지 출발 포트 고갈의 계산과 connect() 포트 순회",
+      "tcp_fin_timeout과 TIME_WAIT 타이머의 구분",
+      "listen backlog·somaxconn·accept 대기열 넘침과 SYN cookie",
+      "포트 고갈 해법 비교와 conntrack table 상한 계산",
+    ],
+    reuses: [
+      { label: "클라우드 요청 경로와 방화벽 관문", href: "/cs/cloud/cloud-networking-request-path#mechanism" },
+      { label: "Little's law", href: "/cs/ai/llm-serving-ops#paper-little-law" },
+      { label: "Kubernetes MTU·SNAT·conntrack", href: "/cs/cloud/kubernetes-network-packet-path#mtu-egress" },
+      { label: "리눅스 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linux v6.12 태그의 원문 파일을 그대로 고정해 상수·판정·counter 이름의 행 번호를 읽는다." },
+      { kind: "standard", rule: "TIME-WAIT의 규범은 RFC 9293에서 인용하고 Linux의 60초는 커널 원문으로만 말한다." },
+      { kind: "project-claim", rule: "600개/초, listen 511, accept 1초 정지, 목적지 4개, pool 32개는 설명용 가정이며 커널을 실행해 측정하지 않았다." },
+      { kind: "secondary-source", rule: "Cloudflare 글은 회사 엔지니어링 블로그의 설명으로 표기하고 IP_BIND_ADDRESS_NO_PORT 권고까지만 옮긴다." },
+    ],
+  },
+  "linux-process-signals-pid1-fds": {
+    title: "프로세스 수명·신호·컨테이너 PID 1·fd 한도",
+    owns: [
+      "fork·execve·exit·wait 흐름과 좀비가 PID 칸을 붙잡는 계산",
+      "SIGTERM·SIGKILL·처리기·마스크와 종료 코드 128 + N",
+      "컨테이너 PID 1의 신호 버림 판정과 docker stop 10초·137",
+      "exec·tini·앱 처리기 세 고침의 비교",
+      "RLIMIT_NOFILE(EMFILE)과 file-max(ENFILE)의 검사 위치",
+    ],
+    reuses: [
+      { label: "Linux namespace가 가리는 자원", href: "/cs/ai/agent-sandbox-security#namespace" },
+      { label: "리눅스 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+      { label: "메모리 한도와 OOM의 137", href: "/cs/cloud/linux-memory-page-cache-oom#overview" },
+      { label: "systemd 서비스 정지와 한도 설정", href: "/cs/cloud/linux-systemd-boot-change-incidents#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Linux v6.12, tini 369448a, runc v1.2.0 원문 전체를 고정해 판정·입양·fd 할당의 행 번호를 읽는다." },
+      { kind: "primary-source", rule: "Docker·systemd·man7·bash·Python 문서는 2026-10-15 확인본으로 인용하고 기본값은 문서 문장까지로 한정한다." },
+      { kind: "project-claim", rule: "shop-api 구성, 초당 3개 helper, fd 24칸, 16 CPU는 가정이다. 출력 예시는 (예시 출력)으로 표시했고 컨테이너나 커널을 실제로 실행하지 않았다." },
+    ],
+  },
+  "linux-systemd-boot-change-incidents": {
+    title: "부팅·서비스 순서와 패치가 부른 재시작 장애",
+    owns: [
+      "펌웨어에서 PID 1·unit 그래프까지의 부팅 이어달리기",
+      "ip rule 우선순위와 규칙 삭제 뒤 패킷 경로",
+      "systemd-networkd v249의 남의 규칙 정리 코드와 부팅·재시작 차이",
+      "After·Before와 Wants·Requires의 분리, network-online.target",
+      "Restart·StartLimit의 시작 시각 산수와 진단 명령",
+      "자동 업데이트가 여는 재시작 경로와 대응",
+    ],
+    reuses: [
+      { label: "리눅스 면접·장애 첫 60초 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+      { label: "SIGTERM·SIGKILL과 PID 1", href: "/cs/cloud/linux-process-signals-pid1-fds#overview" },
+      { label: "CNI가 노드에 까는 route와 경계", href: "/cs/cloud/kubernetes-network-packet-path#overview" },
+      { label: "관측·변경·복구 공통 원리", href: "/cs/cloud/cloud-reliability-observability-iac#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "systemd v249(commit f627855)과 Linux v6.12(commit adc2186)의 전체 원문을 고정해 행 번호로 읽는다. Ubuntu 배포판 패치 트리는 읽지 않았다." },
+      { kind: "primary-source", rule: "Datadog 사후 보고서 두 편과 USN-5928-1의 날짜·시각·비율만 사건 사실로 쓰고, 109번 규칙의 역할 설명은 이 글의 해석으로 표시한다." },
+      { kind: "project-claim", rule: "0.5초 실행·9초 주소·api.service는 가정이다. 시작 시각은 ratelimit.c 의미로 손계산했으며 호스트에서 측정하지 않았다." },
+    ],
+  },
 } as const satisfies Record<string, EditorialBoundary>;
 
 export type EditorialBoundaryKey = keyof typeof EDITORIAL_BOUNDARIES;

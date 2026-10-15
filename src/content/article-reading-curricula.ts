@@ -7,6 +7,14 @@
 export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
   Record<string, readonly string[]>
 > = {
+  "cloud-linux": [
+    "linux-server-interview-incident-map",
+    "linux-memory-page-cache-oom",
+    "linux-disk-full-inode-deleted-files",
+    "linux-process-signals-pid1-fds",
+    "linux-tcp-time-wait-ports-backlog",
+    "linux-systemd-boot-change-incidents",
+  ],
   "cloud-kubernetes": [
     "kubernetes-request-path-and-cka",
     "kubernetes-network-packet-path",

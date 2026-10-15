@@ -20,6 +20,12 @@ const cloud: Category = {
       icon: "☁️",
     },
     {
+      slug: "cloud-linux",
+      name: "Linux 서버 운영",
+      description: "대기업 SRE·인프라 면접이 묻는 리눅스 지식을 실제 장애 한 건씩 따라가며 명령과 커널 코드로 확인합니다.",
+      icon: "🐧",
+    },
+    {
       slug: "cloud-kubernetes",
       name: "Kubernetes 운영",
       description: "Pod 하나가 Ready가 되는 요청 경로와 한 연결의 패킷 경로를 끝까지 추적합니다.",

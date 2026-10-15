@@ -90,6 +90,11 @@ const CATEGORY_STARTS: Record<string, GuidanceLink> = {
 };
 
 export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
+  "cloud-linux": {
+    label: "Linux 면접·장애 지도",
+    href: "/cs/cloud/linux-server-interview-incident-map",
+    reason: "첫 60초 점검 순서를 먼저 잡아야 메모리·디스크·프로세스·연결 글이 어느 증상에서 출발하는지 보입니다.",
+  },
   "cloud-kubernetes": {
     label: "Kubernetes 요청 경로",
     href: "/cs/cloud/kubernetes-request-path-and-cka",

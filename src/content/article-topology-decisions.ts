@@ -3019,6 +3019,60 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "고정 원문과 모델 카드까지만 근거로 삼고, 제작사 수치는 자기보고·Jev는 제3자 공개값으로 표시하며 독립 성능 주장을 만들지 않는다.",
   },
+  "cloud/linux-server-interview-incident-map": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "리눅스 서버 시리즈의 입구다. 면접 질문의 공통 분모, 첫 60초 점검, load average의 계산을 Gregg의 load 30 사례 하나로 끝까지 잇는다. 메모리·디스크·프로세스·TCP·systemd의 원인 추적은 다섯 글로 나눴으므로 이 글은 자원 하나를 고르는 데서 멈춘다.",
+    sharedGate:
+      "커널 v6.12 원문과 Gregg의 공개 출력까지만 사실로 쓰고, 면접 자료는 제3자 정리·자기보고로 표기한다.",
+  },
+  "cloud/linux-disk-full-inode-deleted-files": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "같은 ENOSPC 뒤의 네 계정을 100GiB ext4 하나와 두 사례(열린 채 지워진 30GiB 로그, inode 고갈)로 끝까지 따라가는 글이다. 링크 수 규칙·예약 블록·inode 비율·진단 순서가 모두 같은 df/du 숫자를 공유해 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "Linux v6.12와 coreutils v9.5 원문, man page와 커널 문서 문장까지만 근거로 삼고 사례 숫자는 가정으로 표기한다.",
+  },
+  "cloud/linux-memory-page-cache-oom": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "16 GiB 서버 장부 하나와 2 GiB 컨테이너 하나를 남은 양 → 회수 압력 → OOM 점수 → 137 증거까지 끝까지 따라가는 글이다. available과 OOM 점수는 같은 '돌려받을 수 있는 page' 질문의 두 끝이라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "커널·kubelet 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, 장부 수치는 가정으로 표기한다.",
+  },
+  "cloud/linux-tcp-time-wait-ports-backlog": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "연결이 열리지 않는 증상 하나를 보내는 쪽 포트, 받는 쪽 listen 대기열, 중간 conntrack이라는 세 장부로 나눠 같은 600개/초 사례로 따라가는 글이다. 세 장부가 모두 '도착률 × 체류 시간 > 상한'이라는 같은 계산이라 나누면 사례와 식을 다시 세워야 한다.",
+    sharedGate:
+      "Linux v6.12 원문과 커널 문서, RFC 9293에 적힌 동작까지만 근거로 삼고 사례의 수치는 손 계산한 가정으로 표기한다.",
+  },
+  "cloud/linux-process-signals-pid1-fds": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "docker stop 10초·137이라는 한 장애를 프로세스 수명, 신호 판정, PID 1 보호, 거두기, fd 한도 순으로 따라가는 글이다. 좀비와 신호와 PID 1은 같은 exit·signal 경로를 공유하고, fd 한도는 같은 server.py 사례의 다음 장애라 나누면 사례와 원문을 다시 세워야 한다.",
+    sharedGate:
+      "Linux v6.12·tini·runc 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, 사례의 수치와 출력은 가정·예시로 표시한다.",
+  },
+  "cloud/linux-systemd-boot-change-incidents": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-15",
+    rationale:
+      "부팅 순서·서비스 순서·재시작 한도·변경 경로가 모두 '같은 코드가 시작 순간의 상태에 따라 다르게 동작한다'는 한 답을 Datadog 사례와 가정 서비스 하나로 따라간다. 나누면 규칙 7줄과 시작 시각 사례를 글마다 다시 세워야 한다.",
+    sharedGate:
+      "systemd v249·Linux v6.12 원문과 man page, Datadog 사후 보고서에 적힌 동작과 시각까지만 근거로 삼고, 재시작 시각은 가정 위의 손계산으로 표시한다.",
+  },
 };
 
 /**
@@ -3026,6 +3080,12 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "cloud/linux-memory-page-cache-oom": "7aaa52bb5b62408f",
+  "cloud/linux-tcp-time-wait-ports-backlog": "9613f846d6927d05",
+  "cloud/linux-process-signals-pid1-fds": "0907fff0d8a3133c",
+  "cloud/linux-disk-full-inode-deleted-files": "a1622691cc9e5f58",
+  "cloud/linux-systemd-boot-change-incidents": "ca7c8e38ce4e60dc",
+  "cloud/linux-server-interview-incident-map": "6ef981c528b0f38b",
   "ai/laya-system1-decision-model": "c299c073c3e24b17",
   "ai/neural-network": "58462a73abf9d1af",
   "ai/perceptron": "d81eb0d08e345535",

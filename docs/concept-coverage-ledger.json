@@ -23672,6 +23672,326 @@
    "status": "done",
    "reason": "사용자 요청 — Laya 결정 모델 분석",
    "updatedAt": "2026-10-14"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Load Average",
+   "action": "new",
+   "conceptId": "linux-load-average-system-demand",
+   "owner": "/cloud/linux-server-interview-incident-map#names",
+   "status": "done",
+   "reason": "저장소에 load average 정본이 없었음. CPU 줄과 D 줄을 함께 세는 수요로 설명",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "D state / TASK_UNINTERRUPTIBLE",
+   "action": "new",
+   "conceptId": "linux-uninterruptible-sleep-d-state",
+   "owner": "/cloud/linux-server-interview-incident-map#source",
+   "status": "done",
+   "reason": "load 포함 조건과 TASK_IDLE 예외를 커널 v6.12로 확인",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "USE Method",
+   "action": "new",
+   "conceptId": "use-method-errors-saturation-first",
+   "owner": "/cloud/linux-server-interview-incident-map#names",
+   "status": "done",
+   "reason": "오류·포화 우선 점검 원칙",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Linux 60-second triage",
+   "action": "new",
+   "conceptId": "linux-60-second-triage",
+   "owner": "/cloud/linux-server-interview-incident-map#picture",
+   "status": "done",
+   "reason": "Gregg 2015 열 명령과 실제 출력",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "SRE troubleshooting interview",
+   "action": "new",
+   "conceptId": "linux-troubleshooting-interview-loop",
+   "owner": "/cloud/linux-server-interview-incident-map#interview",
+   "status": "done",
+   "reason": "공개 면접 자료의 장애 추적 답변 구조",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Disk full / ENOSPC four accounts",
+   "action": "new",
+   "conceptId": "linux-disk-space-four-accounts",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#black-box",
+   "status": "done",
+   "reason": "국내 질문지 Troubleshooting 'df 여유인데 full' 문항의 정본",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "inode / hard link / symbolic link",
+   "action": "new",
+   "conceptId": "inode-link-count",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#names",
+   "status": "done",
+   "reason": "Google SRE Linux 라운드 예시 질문(inode, hard vs soft link)",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Deleted but open file (lsof +L1)",
+   "action": "new",
+   "conceptId": "unlinked-open-file",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#free-rule",
+   "status": "done",
+   "reason": "rm 뒤 공간이 안 돌아오는 장애의 커널 경로",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "ext4 reserved blocks",
+   "action": "new",
+   "conceptId": "ext4-reserved-blocks",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#reserved",
+   "status": "done",
+   "reason": "df Used + Avail < Size와 root만 쓰는 예약분",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Inode exhaustion",
+   "action": "new",
+   "conceptId": "inode-exhaustion",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#inode-exhaustion",
+   "status": "done",
+   "reason": "블록이 남아도 새 파일 ENOSPC",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Disk full diagnosis procedure",
+   "action": "new",
+   "conceptId": "disk-full-diagnosis-procedure",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#diagnose",
+   "status": "done",
+   "reason": "df -h → df -i → du → lsof +L1 순서와 조치",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Read-only remount, D state, iostat await",
+   "action": "new",
+   "conceptId": "disk-write-stall-signals",
+   "owner": "/cloud/linux-disk-full-inode-deleted-files#read-only-latency",
+   "status": "done",
+   "reason": "공간 밖의 쓰기 정지 신호",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Page cache · MemAvailable",
+   "action": "new",
+   "conceptId": "linux-page-cache-available",
+   "owner": "/cloud/linux-memory-page-cache-oom#small-case",
+   "status": "done",
+   "reason": "면접 단골 '메모리 used가 높은데 문제인가'의 정본. 저장소에 page cache·available 설명이 없었음",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "OOM Killer 희생자 선정 기준",
+   "action": "new",
+   "conceptId": "linux-oom-badness-score",
+   "owner": "/cloud/linux-memory-page-cache-oom#oom-score",
+   "status": "done",
+   "reason": "국내 리눅스 엔지니어 질문지 Troubleshooting 문항. oom_badness 원문과 cgroup 사례로 계산",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Exit code 137 · OOMKilled",
+   "action": "new",
+   "conceptId": "oom-kill-exit-137-evidence",
+   "owner": "/cloud/linux-memory-page-cache-oom#exit-137",
+   "status": "done",
+   "reason": "컨테이너 운영에서 가장 흔한 메모리 장애 증상과 그 증거",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "TIME_WAIT",
+   "action": "new",
+   "conceptId": "tcp-active-close-time-wait",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#why-time-wait",
+   "status": "done",
+   "reason": "국내 리눅스 엔지니어 질문지 Network 항목 'TIME_WAIT 상태의 필요성'의 canonical",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Ephemeral port exhaustion",
+   "action": "new",
+   "conceptId": "ephemeral-port-exhaustion",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#names",
+   "status": "done",
+   "reason": "짧은 연결을 많이 여는 클라이언트의 대표 장애",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Half-open connection",
+   "action": "alias",
+   "conceptId": "tcp-active-close-time-wait",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#why-time-wait",
+   "status": "done",
+   "reason": "질문지의 'TCP Half-open 연결' 항목 — 종료 상태 설명에 흡수",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Listen backlog / somaxconn",
+   "action": "new",
+   "conceptId": "tcp-listen-backlog-queues",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#listen-queues",
+   "status": "done",
+   "reason": "accept 대기열 넘침과 1초 SYN 재전송",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "SYN cookies",
+   "action": "alias",
+   "conceptId": "tcp-listen-backlog-queues",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#listen-queues",
+   "status": "done",
+   "reason": "SYN 대기열 넘침 대비책 — listen 대기열 개념의 alias",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "conntrack table full",
+   "action": "new",
+   "conceptId": "conntrack-table-capacity",
+   "owner": "/cloud/linux-tcp-time-wait-ports-backlog#conntrack",
+   "status": "done",
+   "reason": "nf_conntrack_max와 table full 경고",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Zombie process",
+   "action": "new",
+   "conceptId": "process-zombie-wait-reaping",
+   "owner": "/cloud/linux-process-signals-pid1-fds#lifecycle",
+   "status": "done",
+   "reason": "Google SRE·국내 질문지의 좀비 찾기·정리 질문. 저장소에 정본이 없었음",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "SIGTERM vs SIGKILL",
+   "action": "new",
+   "conceptId": "signal-disposition-sigterm-sigkill",
+   "owner": "/cloud/linux-process-signals-pid1-fds#signals",
+   "status": "done",
+   "reason": "Google SRE Linux 라운드의 SIGTERM·SIGKILL·signal masking 질문",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Container PID 1 signal handling",
+   "action": "new",
+   "conceptId": "container-pid1-signal-drop",
+   "owner": "/cloud/linux-process-signals-pid1-fds#pid1-trace",
+   "status": "done",
+   "reason": "docker stop 10초·137 장애의 커널 원인",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "tini / docker --init",
+   "action": "new",
+   "conceptId": "init-reaper-signal-forwarding",
+   "owner": "/cloud/linux-process-signals-pid1-fds#fixes",
+   "status": "done",
+   "reason": "PID 1 신호 전달과 고아 거두기의 표준 해법과 그 한계",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Too many open files",
+   "action": "new",
+   "conceptId": "fd-limit-emfile-enfile",
+   "owner": "/cloud/linux-process-signals-pid1-fds#fd-limits",
+   "status": "done",
+   "reason": "EMFILE과 ENFILE을 구분하는 정본이 없었음",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Linux boot process",
+   "action": "new",
+   "conceptId": "linux-boot-handoff-pid1",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#boot-chain",
+   "status": "done",
+   "reason": "부팅 과정 면접 질문의 정본. 저장소에 펌웨어→PID 1 이어달리기 설명이 없었음",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "ip rule / policy routing",
+   "action": "new",
+   "conceptId": "linux-policy-routing-rule-order",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#rule-case",
+   "status": "done",
+   "reason": "규칙 우선순위와 삭제 뒤 패킷 경로",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "systemd-networkd ManageForeignRoutingPolicyRules",
+   "action": "new",
+   "conceptId": "networkd-foreign-rule-flush",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#networkd-source",
+   "status": "done",
+   "reason": "Datadog 2023-03-08 장애의 코드 원인",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "systemd After/Wants",
+   "action": "new",
+   "conceptId": "systemd-ordering-requirement-split",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#ordering",
+   "status": "done",
+   "reason": "LinkedIn School of SRE의 systemd 항목, 재부팅 후 서비스 미기동 질문",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "Restart= / StartLimitBurst",
+   "action": "new",
+   "conceptId": "systemd-start-rate-limit",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#restart-limit",
+   "status": "done",
+   "reason": "start-limit-hit 진단과 재시작 산수",
+   "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-server-series",
+   "term": "unattended-upgrades / needrestart",
+   "action": "new",
+   "conceptId": "unattended-upgrade-restart-path",
+   "owner": "/cloud/linux-systemd-boot-change-incidents#change-path",
+   "status": "done",
+   "reason": "패치 뒤 장애 질문의 변경 경로",
+   "updatedAt": "2026-10-15"
   }
  ]
 }
