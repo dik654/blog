@@ -426,3 +426,15 @@ ai-llm-serving 신규 8편과 ai-practical-compression 1편을 같은 6단계로
 **새 함정: 병렬 monolith 9개가 공유 scratchpad의 `body.md`를 서로 덮어썼다.** eng-3·eng-4가 마커 개수 불일치(66 대신 114)로 스스로 잡아 고유 파일명으로 다시 만들었다. 오케스트레이터는 9개 모두 `01_input.txt`와 쉼표·공백 제거 후 동일한지 따로 검사했다. **병렬로 돌릴 때는 프롬프트에 run별 고유 임시 파일명을 지시하거나, 결과를 입력과 쉼표 제거 비교로 반드시 대조할 것.**
 
 **사후 검증**: `audit-jsx-word-breaks` 0건, `audit:prose`·`audit:korean`(오류 0) 통과, 줄 수만 바뀐 6개 route의 topology 지문 갱신.
+
+## Linux 서버 운영 6편 회차 (2026-10-15)
+
+cloud-linux 신규 6편(허브·메모리·디스크·프로세스·TCP·systemd)을 같은 6단계로 처리했다. 아티클 1편 = 1서브배치(eng-11~16, 15~20KB, route_hint 전부 light).
+
+| 배치 | 파일 | 결과 | 비고 |
+|---|---|---|---|
+| eng-11~16 | 신규 6편(6개 파일) | 등급 A×6 · 자체검증 6/6 | 14+16+27+11+10+21 문단 반영 |
+
+**일곱 회차 연속 C-11 단독.** S1 트리거는 6편 모두 `ending_comma_rate` 하나(z +2.72~+5.84)였고 개입은 쉼표 삭제 14·19·31·12·10·22개뿐이다. 대조·열거·긴 절 경계 쉼표는 남겼다. 오케스트레이터가 6개 모두 `01_input.txt`와 `final.md`를 쉼표·공백 제거 후 비교해 동일함을 확인했다. 지난 회차 함정(공유 `body.md` 덮어쓰기)은 run별 `eng{n}_` 접두어 임시 파일 지시로 재발하지 않았다.
+
+**사후 검증**: 되붙이기 누락 블록 0개, `audit-jsx-word-breaks` 0건, `audit:prose`·`audit:korean`·`audit:reading`·`audit:articles` 통과, 6개 route topology 지문 갱신 후 `audit:topology --strict` 통과.

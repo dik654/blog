@@ -23,9 +23,9 @@ export const CATEGORY_READING_PATHS: Readonly<
 > = {
   cloud: {
     organizingPrinciple: "선수 개념순",
-    title: "공통 원리에서 Kubernetes, AWS·Azure 자격증과 취업 실습까지",
+    title: "공통 원리에서 Linux 서버, Kubernetes, AWS·Azure 자격증과 취업 실습까지",
     description:
-      "목표 직무를 먼저 고르고, 책임·권한·망·실행·저장·복구라는 공통 원리를 익힌 뒤 Kubernetes 요청·패킷 경로를 추적하고, 마지막에 공급자별 현행 시험 범위와 실습으로 올라갑니다.",
+      "목표 직무를 먼저 고르고, 책임·권한·망·실행·저장·복구라는 공통 원리를 익힌 뒤 Linux 서버 한 대의 장애를 커널 자원까지 좁히고, Kubernetes 요청·패킷 경로를 추적하고, 마지막에 공급자별 현행 시험 범위와 실습으로 올라갑니다.",
     stages: [
       {
         eyebrow: "01 · 목표",
@@ -40,19 +40,25 @@ export const CATEGORY_READING_PATHS: Readonly<
         subcategories: ["cloud-foundations"],
       },
       {
-        eyebrow: "03 · Kubernetes",
+        eyebrow: "03 · Linux",
+        title: "서버 한 대의 증상을 커널 자원까지 좁히기",
+        description: "부하·메모리·디스크·프로세스·연결·서비스 관리자 순서로, 면접 질문과 실제 장애를 같은 명령과 커널 코드로 추적합니다.",
+        subcategories: ["cloud-linux"],
+      },
+      {
+        eyebrow: "04 · Kubernetes",
         title: "Pod 하나와 연결 하나를 끝까지 추적하기",
         description: "원하는 개수가 Ready endpoint가 되는 경로와 Service 주소가 실제 Pod에 닿는 패킷 경로를 공식 문서·명령으로 확인합니다.",
         subcategories: ["cloud-kubernetes"],
       },
       {
-        eyebrow: "04 · AWS",
+        eyebrow: "05 · AWS",
         title: "기초에서 설계·개발·CloudOps로",
         description: "CLF-C02 뒤 SAA-C03 또는 DVA-C02·SOA-C03을 목표 직무에 맞춰 고릅니다.",
         subcategories: ["cloud-aws"],
       },
       {
-        eyebrow: "05 · Azure",
+        eyebrow: "06 · Azure",
         title: "기초에서 관리·AI 개발·설계·DevOps로",
         description: "AZ-900 뒤 AZ-104를 실습하고 AI-200, AZ-305 또는 AZ-400을 목표 직무에 맞춰 고릅니다.",
         subcategories: ["cloud-azure"],
@@ -66,6 +72,7 @@ export const CATEGORY_READING_PATHS: Readonly<
       "cloud-compute-selection",
       "cloud-storage-database-selection",
       "cloud-reliability-observability-iac",
+      "linux-server-interview-incident-map",
       "kubernetes-request-path-and-cka",
       "kubernetes-network-packet-path",
       "aws-clf-c02-fast-study",
