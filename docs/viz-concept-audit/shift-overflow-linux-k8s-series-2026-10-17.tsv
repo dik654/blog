@@ -1,0 +1,76 @@
+linux-kernel-process-syscall-scheduler	1440	0	CPU에 올라가는 것은 R 가운데 뽑힌 것이고,	5	0	0	0
+linux-kernel-process-syscall-scheduler	1440	1	평균보다 덜 받은 작업 가운데 가상 마감이 가장	6	0	0	0
+linux-kernel-process-syscall-scheduler	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	150
+linux-kernel-process-syscall-scheduler	390	0	CPU에 올라가는 것은 R 가운데 뽑힌 것이고,	5	0	0	0
+linux-kernel-process-syscall-scheduler	390	1	평균보다 덜 받은 작업 가운데 가상 마감이 가장	6	0	0	0
+linux-kernel-process-syscall-scheduler	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-containers-cgroup-namespace	1440	0	spec 한 줄은 커널의 세 축 가운데 한 칸으	4	0	0	0
+linux-containers-cgroup-namespace	1440	1	quota는 주기마다 채워지고, 여러 스레드가 	4	0	0	0
+linux-containers-cgroup-namespace	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	235
+linux-containers-cgroup-namespace	390	0	spec 한 줄은 커널의 세 축 가운데 한 칸으	4	0	0	0
+linux-containers-cgroup-namespace	390	1	quota는 주기마다 채워지고, 여러 스레드가 	4	0	0	0
+linux-containers-cgroup-namespace	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	0	10%에서 flusher가 쓰기 시작하고, 20	5	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	1	write()는 page cache에 적고 돌아	5	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	123
+linux-vfs-mount-page-cache-fsync	390	0	10%에서 flusher가 쓰기 시작하고, 20	5	0	0	0
+linux-vfs-mount-page-cache-fsync	390	1	write()는 page cache에 적고 돌아	5	0	0	0
+linux-vfs-mount-page-cache-fsync	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-network-interface-route-netfilter-dns	1440	0	점이 ndots보다 적은 이름은 search 목	4	0	0	0
+linux-network-interface-route-netfilter-dns	1440	1	패킷은 다섯 훅 가운데 세 개를 지나고, 어느 	4	0	0	0
+linux-network-interface-route-netfilter-dns	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	132
+linux-network-interface-route-netfilter-dns	390	0	점이 ndots보다 적은 이름은 search 목	4	0	0	0
+linux-network-interface-route-netfilter-dns	390	1	패킷은 다섯 훅 가운데 세 개를 지나고, 어느 	4	0	0	0
+linux-network-interface-route-netfilter-dns	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	0	자원마다 사용률·포화·오류 세 칸을 다 읽어야 	7	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	1	2초마다 넣는 표본이 10초 시정수의 지수 평균	4	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	186
+linux-observability-proc-psi-perf-ebpf	390	0	자원마다 사용률·포화·오류 세 칸을 다 읽어야 	7	0	0	0
+linux-observability-proc-psi-perf-ebpf	390	1	2초마다 넣는 표본이 10초 시정수의 지수 평균	4	0	0	0
+linux-observability-proc-psi-perf-ebpf	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-sre-metrics-slo-safe-change	1440	0	호출은 사용자가 겪는 증상에 걸고, 서버 지표는	5	0	0	0
+linux-sre-metrics-slo-safe-change	1440	1	한 시간에 전부 바꾸는 타이머와, 문을 통과해야	5	0	0	0
+linux-sre-metrics-slo-safe-change	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	204
+linux-sre-metrics-slo-safe-change	390	0	호출은 사용자가 겪는 증상에 걸고, 서버 지표는	5	0	0	0
+linux-sre-metrics-slo-safe-change	390	1	한 시간에 전부 바꾸는 타이머와, 문을 통과해야	5	0	0	0
+linux-sre-metrics-slo-safe-change	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-concept-map	1440	0	질문 하나마다 주 담당 글 하나와 바닥이 되는 	9	0	0	0
+kubernetes-concept-map	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	36
+kubernetes-concept-map	390	0	질문 하나마다 주 담당 글 하나와 바닥이 되는 	9	0	0	0
+kubernetes-concept-map	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-controllers-reconcile-deployment-job	1440	0	컨트롤러는 현재 수와 목표 수의 차이 하나만 보	8	0	0	0
+kubernetes-controllers-reconcile-deployment-job	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	105
+kubernetes-controllers-reconcile-deployment-job	390	0	컨트롤러는 현재 수와 목표 수의 차이 하나만 보	8	0	0	0
+kubernetes-controllers-reconcile-deployment-job	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	1440	0	노드가 죽어도 신호는 없고, 50초 + 300초	7	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	87
+kubernetes-pod-to-node-scheduler-kubelet-notready	390	0	노드가 죽어도 신호는 없고, 50초 + 300초	7	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	0	scheduler는 사용량이 아니라 reques	5	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	1	CPU limit은 죽이지 않고 멈춥니다. 멈추	4	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	159
+kubernetes-requests-limits-allocatable-qos	390	0	scheduler는 사용량이 아니라 reques	5	0	0	0
+kubernetes-requests-limits-allocatable-qos	390	1	CPU limit은 죽이지 않고 멈춥니다. 멈추	4	0	0	0
+kubernetes-requests-limits-allocatable-qos	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	0	CrashLoopBackOff의 대부분은 재시작	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	1	liveness가 공용 의존성을 보면 의존성 장	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	141
+kubernetes-pod-states-crashloop-probes-events	390	0	CrashLoopBackOff의 대부분은 재시작	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	390	1	liveness가 공용 의존성을 보면 의존성 장	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	0	PVC는 여섯 계단을 거쳐 Pod의 디렉터리가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	1	볼륨은 Pod를 바로 따라가지 못하고, 노드가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	163
+kubernetes-pvc-pv-storageclass-csi	390	0	PVC는 여섯 계단을 거쳐 Pod의 디렉터리가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	390	1	볼륨은 Pod를 바로 따라가지 못하고, 노드가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	0	SIGTERM과 endpoint 제거는 같은 순	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	1	HPA는 ready Pod의 평균 ÷ 목표를 구	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	195
+kubernetes-rollout-termination-pdb-drain-hpa	390	0	SIGTERM과 endpoint 제거는 같은 순	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	390	1	HPA는 ready Pod의 평균 ÷ 목표를 구	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	1440	0	긴 창은 소진이 충분히 큰지, 짧은 창은 아직 	5	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	204
+kubernetes-sre-slo-burn-rate-upgrades	390	0	긴 창은 소진이 충분히 큰지, 짧은 창은 아직 	5	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
