@@ -110,8 +110,8 @@ export default function PsiAverageViz() {
                 className="transition-all duration-300"
               />
             ))}
-            <path d={pathOf(AVG60)} fill="none" stroke="#93c5fd" strokeWidth={1.4} />
-            <path d={pathOf(AVG10)} fill="none" stroke="#2563eb" strokeWidth={2} />
+            <path d={pathOf(AVG60)} fill="none" stroke="#93c5fd" strokeWidth={1} />
+            <path d={pathOf(AVG10)} fill="none" stroke="#2563eb" strokeWidth={1.25} />
             {n > 0 && <circle cx={x(n - 1)} cy={y(last10)} r={3} fill="#2563eb" />}
             {SAMPLES.map((_, i) => (
               <text key={`t${i}`} x={x(i)} y={H - 1} fontSize={7} textAnchor="middle" className="fill-muted-foreground">

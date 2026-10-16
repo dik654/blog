@@ -120,8 +120,8 @@ export default function BurnRateWindowViz() {
             </text>
 
             {/* 두 창의 평균 */}
-            <path d={path("long")} fill="none" stroke="#2563eb" strokeWidth={1.75} />
-            <path d={path("short")} fill="none" stroke="#f59e0b" strokeWidth={1.75} />
+            <path d={path("long")} fill="none" stroke="#2563eb" strokeWidth={1.25} />
+            <path d={path("short")} fill="none" stroke="#f59e0b" strokeWidth={1.25} />
 
             {/* 경보 띠 */}
             <text x={X0 - 4} y={153} textAnchor="end" fontSize={8} fontWeight={700} className="fill-foreground">
