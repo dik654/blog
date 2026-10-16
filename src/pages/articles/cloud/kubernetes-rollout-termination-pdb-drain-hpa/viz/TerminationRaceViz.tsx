@@ -64,12 +64,16 @@ export default function TerminationRaceViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{s.label}</h4>
-            <span className="font-mono text-sm font-bold text-primary">{s.t}</span>
+          <div className="grid">
+            {SCENES.map((x, i) => (
+              <div key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{x.label}</h4>
+                <span className="font-mono text-sm font-bold text-primary">{x.t}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="relative mt-5 h-12">
+          <div className="relative mt-4 h-12">
             <div className="absolute left-0 right-0 top-3 h-1 rounded bg-[#cbd5e1]" />
             <motion.div className="absolute left-0 top-3 h-1 rounded bg-[#2563eb]" initial={false} animate={{ width: `${s.pos}%` }} transition={{ duration: reduced ? 0 : 0.4 }} />
             {MARKS.map((m) => (
@@ -84,11 +88,19 @@ export default function TerminationRaceViz() {
           <div className="mt-3 grid gap-2">
             <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-x-3 rounded-md border border-border px-3 py-2 sm:grid-cols-[8rem_minmax(0,1fr)]">
               <span className="text-[11px] font-bold leading-5 text-muted-foreground">노드 · kubelet</span>
-              <span className="min-h-[2.5rem] text-sm font-semibold leading-5 text-foreground">{s.kubelet}</span>
+              <span className="grid text-sm font-semibold leading-5 text-foreground">
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{x.kubelet}</span>
+                ))}
+              </span>
             </div>
             <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-x-3 rounded-md border border-border px-3 py-2 sm:grid-cols-[8rem_minmax(0,1fr)]">
               <span className="text-[11px] font-bold leading-5 text-muted-foreground">컨트롤 플레인</span>
-              <span className="min-h-[2.5rem] text-sm font-semibold leading-5 text-foreground">{s.plane}</span>
+              <span className="grid text-sm font-semibold leading-5 text-foreground">
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{x.plane}</span>
+                ))}
+              </span>
             </div>
             <motion.div
               className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-start gap-x-3 rounded-md border px-3 py-2 sm:grid-cols-[8rem_minmax(0,1fr)]"
@@ -97,13 +109,21 @@ export default function TerminationRaceViz() {
               transition={{ duration: reduced ? 0 : 0.3 }}
             >
               <span className="text-[11px] font-bold leading-5 text-muted-foreground">들어오는 연결</span>
-              <span className="min-h-[1.25rem] text-sm font-bold leading-5" style={{ color: traffic.color }}>
-                {traffic.text}
+              <span className="grid text-sm font-bold leading-5" style={{ color: traffic.color }}>
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{TRAFFIC[x.traffic].text}</span>
+                ))}
               </span>
             </motion.div>
           </div>
 
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[6rem]">{s.note}</p>
+<div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((item, i) => (
+              <p key={i} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-7 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {item.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((x) => x.label)} />
       </div>

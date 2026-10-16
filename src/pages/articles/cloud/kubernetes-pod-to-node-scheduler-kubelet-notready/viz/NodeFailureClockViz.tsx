@@ -9,6 +9,9 @@ import VizFrame from "@/components/viz/VizFrame";
  * 한 mechanism: 아무도 "노드가 죽었다"는 신호를 보내지 않는다. 10초마다 오던 Lease 갱신이 멈추고,
  * 컨트롤러가 마지막 갱신 + 50초를 넘긴 것을 보고 Unknown을 적고, Pod의 300초 toleration이 끝나야 삭제가 시작된다.
  * 숫자는 kubelet defaults.go(40s·0.25), nodelifecycle defaults.go(50s·5s), defaulttolerationseconds admission.go(300s)의 기본값이다.
+ *
+ * 장면마다 길이가 다른 라벨·칩·설명은 모두 같은 grid 셀에 겹쳐 그리고 비활성은 invisible로 둔다.
+ * 그래서 가장 긴 장면이 높이를 정하고, 장면을 넘겨도 figure 높이와 버튼 위치가 움직이지 않는다.
  */
 interface Scene {
   label: string;
@@ -39,6 +42,21 @@ const MARKS = [
 ] as const;
 
 const pct = (t: number) => `${((Math.max(t, -12) + 12) / (T_END + 12)) * 100}%`;
+const leaseAgeOf = (s: Scene) => Math.max(0, s.t);
+const tolerationLeftOf = (s: Scene) => (s.taint ? Math.max(0, 352 - s.t) : null);
+
+/** 모든 장면의 내용을 같은 셀에 겹쳐 두고 활성 장면만 보이게 한다. 높이는 가장 긴 장면이 정한다. */
+function Stack({ active, className, render }: { active: number; className?: string; render: (scene: Scene, index: number) => ReactNode }) {
+  return (
+    <div className={`grid ${className ?? ""}`}>
+      {SCENES.map((s, i) => (
+        <div key={s.label} aria-hidden={i !== active} className={`col-start-1 row-start-1 min-w-0 ${i === active ? "" : "invisible"}`}>
+          {render(s, i)}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -57,12 +75,42 @@ function Chip({ text, bg, fg, border }: { text: string; bg: string; fg: string; 
   );
 }
 
+function LeaseChip({ scene }: { scene: Scene }) {
+  if (scene.lease === "fresh") return <Chip text="renewTime 갱신됨 · 10 s마다" bg="#dcfce7" fg="#166534" border="#16a34a" />;
+  if (scene.lease === "stale") return <Chip text={`갱신 누락 ${Math.floor(leaseAgeOf(scene) / 10)}회 · 아직 유효`} bg="#fef3c7" fg="#92400e" border="#f59e0b" />;
+  return <Chip text="갱신 없음 · probe + 50 s 초과" bg="#fee2e2" fg="#991b1b" border="#dc2626" />;
+}
+
+function ReadyChips({ scene }: { scene: Scene }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {scene.ready === "True" ? (
+        <Chip text="Ready=True" bg="#dcfce7" fg="#166534" border="#16a34a" />
+      ) : (
+        <Chip text="Ready=Unknown · NodeStatusUnknown" bg="#fee2e2" fg="#991b1b" border="#dc2626" />
+      )}
+      {scene.taint ? <Chip text="taint unreachable:NoExecute" bg="#ede9fe" fg="#5b21b6" border="#7c3aed" /> : null}
+    </div>
+  );
+}
+
+function PodChips({ scene }: { scene: Scene }) {
+  if (scene.pod === "running") return <Chip text="Running on worker-2" bg="#dbeafe" fg="#1e3a8a" border="#2563eb" />;
+  if (scene.pod === "tolerating") return <Chip text="Running(표시) · toleration 300 s 소모 중" bg="#fef3c7" fg="#92400e" border="#f59e0b" />;
+  if (scene.pod === "deleting") return <Chip text="Terminating · deletionTimestamp 기록" bg="#fee2e2" fg="#991b1b" border="#dc2626" />;
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      <Chip text="web-x Terminating (남음)" bg="#f1f5f9" fg="#475569" border="#94a3b8" />
+      <Chip text="web-y Running on worker-1" bg="#dcfce7" fg="#166534" border="#16a34a" />
+    </div>
+  );
+}
+
 export default function NodeFailureClockViz() {
   const scenes = useAnimatedScenes(SCENES.length, 4800);
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
-  const leaseAge = Math.max(0, scene.t);
-  const tolerationLeft = scene.taint ? Math.max(0, 352 - scene.t) : null;
+  const active = scenes.active;
 
   return (
     <VizFrame
@@ -79,16 +127,21 @@ export default function NodeFailureClockViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div key={scenes.active} className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-xs font-bold text-primary sm:text-sm">
-              마지막 Lease 갱신 뒤 {leaseAge}s{tolerationLeft !== null ? ` · toleration 남은 ${tolerationLeft}s` : ""}
-            </span>
-          </div>
+        <div className="flex shrink-0 flex-col">
+          <Stack
+            active={active}
+            render={(s) => (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-xs font-bold text-primary sm:text-sm">
+                  마지막 Lease 갱신 뒤 {leaseAgeOf(s)}s{tolerationLeftOf(s) !== null ? ` · toleration 남은 ${tolerationLeftOf(s)}s` : ""}
+                </span>
+              </div>
+            )}
+          />
 
           {/* 시간축 */}
-          <div className="relative mt-4 h-9">
+          <div className="relative mt-3 h-9">
             <div className="absolute inset-x-0 top-3 h-1 rounded bg-border" />
             <div className="absolute top-3 h-1 rounded" style={{ left: pct(50), width: `calc(${pct(350)} - ${pct(50)})`, backgroundColor: "#fde68a" }} />
             {MARKS.map((m) => (
@@ -107,45 +160,23 @@ export default function NodeFailureClockViz() {
             />
           </div>
 
-          <div className="mt-2 space-y-2 border-y border-border py-3">
+          <div className="mt-2 space-y-2 border-y border-border py-2">
             <Row label="Lease (40 s)">
-              {scene.lease === "fresh" ? (
-                <Chip text="renewTime 갱신됨 · 10 s마다" bg="#dcfce7" fg="#166534" border="#16a34a" />
-              ) : scene.lease === "stale" ? (
-                <Chip text={`갱신 누락 ${Math.floor(leaseAge / 10)}회 · 아직 유효`} bg="#fef3c7" fg="#92400e" border="#f59e0b" />
-              ) : (
-                <Chip text="갱신 없음 · probe + 50 s 초과" bg="#fee2e2" fg="#991b1b" border="#dc2626" />
-              )}
+              <Stack active={active} render={(s) => <LeaseChip scene={s} />} />
             </Row>
             <Row label="Node Ready">
-              <div className="flex flex-wrap gap-1.5">
-                {scene.ready === "True" ? (
-                  <Chip text="Ready=True" bg="#dcfce7" fg="#166534" border="#16a34a" />
-                ) : (
-                  <Chip text="Ready=Unknown · NodeStatusUnknown" bg="#fee2e2" fg="#991b1b" border="#dc2626" />
-                )}
-                {scene.taint ? <Chip text="taint unreachable:NoExecute" bg="#ede9fe" fg="#5b21b6" border="#7c3aed" /> : null}
-              </div>
+              <Stack active={active} render={(s) => <ReadyChips scene={s} />} />
             </Row>
             <Row label="Pod web-x">
-              {scene.pod === "running" ? (
-                <Chip text="Running on worker-2" bg="#dbeafe" fg="#1e3a8a" border="#2563eb" />
-              ) : scene.pod === "tolerating" ? (
-                <Chip text="Running(표시) · toleration 300 s 소모 중" bg="#fef3c7" fg="#92400e" border="#f59e0b" />
-              ) : scene.pod === "deleting" ? (
-                <Chip text="Terminating · deletionTimestamp 기록" bg="#fee2e2" fg="#991b1b" border="#dc2626" />
-              ) : (
-                <div className="flex flex-wrap gap-1.5">
-                  <Chip text="web-x Terminating (남음)" bg="#f1f5f9" fg="#475569" border="#94a3b8" />
-                  <Chip text="web-y Running on worker-1" bg="#dcfce7" fg="#166534" border="#16a34a" />
-                </div>
-              )}
+              <Stack active={active} render={(s) => <PodChips scene={s} />} />
             </Row>
           </div>
 
-          <p className="mt-3 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[6.5rem]">
-            {scene.note}
-          </p>
+          <Stack
+            active={active}
+            className="mt-3"
+            render={(s) => <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>}
+          />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

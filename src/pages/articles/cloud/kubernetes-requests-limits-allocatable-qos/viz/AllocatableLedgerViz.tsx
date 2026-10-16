@@ -62,9 +62,13 @@ export default function AllocatableLedgerViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.7rem] flex-wrap content-start items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className={`font-mono text-sm font-bold ${scene.verdictOk === false ? "text-[#b91c1c]" : scene.verdictOk ? "text-[#15803d]" : "text-primary"}`}>{scene.verdict}</span>
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className={`font-mono text-sm font-bold ${s.verdictOk === false ? "text-[#b91c1c]" : s.verdictOk ? "text-[#15803d]" : "text-primary"}`}>{s.verdict}</span>
+              </div>
+            ))}
           </div>
 
           <svg viewBox={`0 0 ${W} 150`} className="mt-3 h-auto w-full" role="img" aria-label={`requests 합 ${scene.showPlaced ? PLACED : 0}m, 사용 ${scene.showUsed ? USED : 0}m`}>
@@ -111,7 +115,13 @@ export default function AllocatableLedgerViz() {
             <text x={BAR_X + BAR_W} y={142} fontSize={9} textAnchor="end" className="fill-muted-foreground">16,000m</text>
           </svg>
 
-          <p className="mt-3 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">{scene.note}</p>
+<div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((item, i) => (
+              <p key={i} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-7 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {item.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

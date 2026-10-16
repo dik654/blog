@@ -91,9 +91,14 @@ export default function CpuQuotaThrottleViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.7rem] flex-wrap content-start items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-sm font-bold text-primary">{scene.stat}</span>
+          {/* 장면마다 길이가 다른 제목·수치를 같은 칸에 겹쳐 가장 긴 장면이 높이를 정한다 */}
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-sm font-bold text-primary">{s.stat}</span>
+              </div>
+            ))}
           </div>
           <svg viewBox={`0 0 ${W} ${H}`} className="mt-3 h-auto w-full" role="img" aria-label={scene.label}>
             <defs>
@@ -200,7 +205,13 @@ export default function CpuQuotaThrottleViz() {
               2.5ms × 4 → 완료 102.5ms
             </text>
           </svg>
-          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5rem]">{scene.note}</p>
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

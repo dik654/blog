@@ -42,7 +42,7 @@ export default function VolumeStaircaseViz() {
     <VizFrame
       eyebrow="PVC → 컨테이너 디렉터리"
       title="PVC는 여섯 계단을 거쳐 Pod의 디렉터리가 되고, 계단마다 담당자가 다릅니다"
-      description="왼쪽 번호는 계단, 가운데는 그 계단이 끝났을 때의 상태, 오른쪽은 담당 컨트롤러와 API에 남는 신호입니다. 파란 계단이 지금 진행 중인 단계입니다."
+      description="왼쪽 번호는 계단, 가운데는 그 계단이 끝났을 때의 상태, 오른쪽은 담당 컨트롤러입니다. 파란 계단이 지금 진행 중인 단계이고, 그 아래 signal 줄이 이 계단이 API에 남기는 신호입니다."
       note="(가정) 존 세 개 클러스터, 20Gi RWO PVC, WaitForFirstConsumer StorageClass. 경로 문자열은 kubelet 기본 루트 /var/lib/kubelet 아래의 형태를 줄여 적었습니다."
     >
       <div
@@ -54,21 +54,25 @@ export default function VolumeStaircaseViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">
-              {active + 1}. {STEPS[active].short}
-            </h4>
-            <span className="font-mono text-xs font-bold text-primary sm:text-sm">{STEPS[active].state}</span>
+          <div className="grid">
+            {STEPS.map((step, i) => (
+              <div key={step.short} aria-hidden={i !== active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">
+                  {i + 1}. {step.short}
+                </h4>
+                <span className="font-mono text-xs font-bold text-primary sm:text-sm">{step.state}</span>
+              </div>
+            ))}
           </div>
 
-          <ol className="mt-3 space-y-1.5" aria-label="단계 목록">
+          <ol className="mt-2 space-y-1" aria-label="단계 목록">
             {STEPS.map((step, i) => {
               const done = i < active;
               const now = i === active;
               return (
                 <motion.li
                   key={step.short}
-                  className="grid grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border px-2 py-1.5 sm:grid-cols-[1.75rem_minmax(0,11rem)_minmax(0,1fr)] sm:gap-x-3"
+                  className="grid grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-x-2 rounded-md border px-2 py-1 sm:grid-cols-[1.75rem_minmax(0,13rem)_minmax(0,1fr)] sm:py-0.5 sm:gap-x-3"
                   initial={false}
                   animate={{
                     borderColor: now ? "#2563eb" : done ? "#16a34a" : "#cbd5e1",
@@ -86,20 +90,32 @@ export default function VolumeStaircaseViz() {
                   >
                     {done ? "✓" : i + 1}
                   </span>
-                  <div className="min-w-0">
-                    <p className={`text-sm font-bold leading-6 ${now ? "text-foreground" : done ? "text-foreground/80" : "text-muted-foreground"}`}>{step.state}</p>
-                    <p className="text-[11px] leading-5 text-muted-foreground sm:hidden">{step.actor}</p>
-                  </div>
-                  <div className="col-span-2 min-w-0 sm:col-span-1">
-                    <p className="hidden text-xs font-semibold leading-5 text-muted-foreground sm:block">{step.actor}</p>
-                    <p className={`break-all font-mono text-[11px] leading-5 ${now ? "text-primary" : "text-muted-foreground/80"}`}>{step.signal}</p>
-                  </div>
+                  <p className={`min-w-0 text-sm font-bold leading-6 ${now ? "text-foreground" : done ? "text-foreground/80" : "text-muted-foreground"}`}>{step.state}</p>
+                  <p className="col-start-2 min-w-0 text-[11px] leading-5 text-muted-foreground sm:col-start-3">{step.actor}</p>
                 </motion.li>
               );
             })}
           </ol>
 
-          <p className="mt-4 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5.25rem]">{NOTES[active]}</p>
+          {/* 지금 계단이 API에 남기는 신호. 여섯 문자열을 같은 칸에 겹쳐 가장 긴 것이 높이를 정한다. */}
+          <div className="mt-2 grid grid-cols-[3.25rem_minmax(0,1fr)] gap-x-2 rounded-md border border-[#2563eb]/40 bg-[#2563eb]/5 px-3 py-1.5 font-mono text-[11px] leading-5">
+            <span className="text-muted-foreground">signal</span>
+            <span className="grid">
+              {STEPS.map((step, i) => (
+                <span key={step.short} aria-hidden={i !== active} className={`col-start-1 row-start-1 break-all text-primary ${i === active ? "" : "invisible"}`}>
+                  {step.signal}
+                </span>
+              ))}
+            </span>
+          </div>
+
+          <div className="mt-2 grid border-l border-primary/50 pl-4">
+            {NOTES.map((note, i) => (
+              <p key={i} aria-hidden={i !== active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === active ? "" : "invisible"}`}>
+                {note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={STEPS.map((s) => s.short)} />
       </div>

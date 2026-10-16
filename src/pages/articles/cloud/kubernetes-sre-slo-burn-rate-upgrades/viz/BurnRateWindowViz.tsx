@@ -80,12 +80,16 @@ export default function BurnRateWindowViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.7rem] flex-wrap content-start items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className={`font-mono text-sm font-bold ${firing ? "text-[#dc2626]" : "text-muted-foreground"}`}>{firing ? "PAGE 울림" : "경보 없음"}</span>
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className={`font-mono text-sm font-bold ${bothAbove(s.cursor) ? "text-[#dc2626]" : "text-muted-foreground"}`}>{bothAbove(s.cursor) ? "PAGE 울림" : "경보 없음"}</span>
+              </div>
+            ))}
           </div>
 
-          <svg viewBox="0 0 480 190" className="mt-3 h-auto w-full" role="img" aria-label={`${scene.cursor}분: 5분 창 ${pct(point.short)}, 1시간 창 ${pct(point.long)}`}>
+          <svg viewBox="0 0 480 190" className="mt-2 h-auto w-full" role="img" aria-label={`${scene.cursor}분: 5분 창 ${pct(point.short)}, 1시간 창 ${pct(point.long)}`}>
             {/* 사건 구간 */}
             <rect x={x(INCIDENT_START)} y={Y_TOP - 14} width={x(INCIDENT_END) - x(INCIDENT_START)} height={Y_BASE - Y_TOP + 14} fill="#fee2e2" opacity={0.7} />
             <text x={(x(INCIDENT_START) + x(INCIDENT_END)) / 2} y={Y_TOP - 4} textAnchor="middle" fontSize={8} fontWeight={700} fill="#b91c1c">
@@ -144,7 +148,7 @@ export default function BurnRateWindowViz() {
             </motion.g>
           </svg>
 
-          <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
+          <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 font-mono text-xs sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">5분 창 평균</dt>
               <dd className={`font-bold ${point.short > THRESHOLD ? "text-[#b45309]" : "text-foreground"}`}>{pct(point.short)}</dd>
@@ -163,7 +167,13 @@ export default function BurnRateWindowViz() {
             </div>
           </dl>
 
-          <p className="mt-4 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5rem]">{scene.note}</p>
+<div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((item, i) => (
+              <p key={i} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-7 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {item.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

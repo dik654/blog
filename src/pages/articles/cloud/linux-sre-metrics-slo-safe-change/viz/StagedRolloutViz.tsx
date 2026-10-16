@@ -97,9 +97,16 @@ export default function StagedRolloutViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <h4 className="min-h-[3rem] text-base font-bold sm:min-h-0">{scene.label}</h4>
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <h4 key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-base font-bold ${i === scenes.active ? "" : "invisible"}`}>
+                {s.label}
+              </h4>
+            ))}
+          </div>
 
-          <div className="mt-3 grid grid-cols-[repeat(20,minmax(0,1fr))] gap-[2px]" role="img" aria-label={`변경 ${scene.changed}칸, drift ${scene.drift?.length ?? 0}칸`}>
+          {/* 100칸 격자는 넓은 화면에서 커지지 않도록 폭을 묶는다(1440에서 세로 공간을 먹지 않게) */}
+          <div className="mx-auto mt-3 grid w-full max-w-[26rem] grid-cols-[repeat(20,minmax(0,1fr))] gap-[2px]" role="img" aria-label={`변경 ${scene.changed}칸, drift ${scene.drift?.length ?? 0}칸`}>
             {Array.from({ length: CELLS }, (_, i) => (
               <div
                 key={i}
@@ -118,16 +125,28 @@ export default function StagedRolloutViz() {
             ))}
           </ul>
 
-          <div className="mt-3 flex items-center gap-2 rounded-sm border px-3 py-2 font-mono text-xs" style={{ borderColor: gateColor }}>
-            <span className="font-black" style={{ color: gateColor }}>
-              {scene.gateOk === null ? "—" : scene.gateOk ? "PASS" : "STOP"}
-            </span>
-            <span className="min-w-0 text-foreground">{scene.gate}</span>
+          {/* 문(gate) 문구는 장면마다 길이가 달라 같은 칸에 겹쳐 둔다 */}
+          <div className="mt-3 grid rounded-sm border px-3 py-2 font-mono text-xs transition-colors duration-300" style={{ borderColor: gateColor }}>
+            {SCENES.map((s, i) => {
+              const c = s.gateOk === null ? "#64748b" : s.gateOk ? "#16a34a" : "#dc2626";
+              return (
+                <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex items-center gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                  <span className="font-black" style={{ color: c }}>
+                    {s.gateOk === null ? "—" : s.gateOk ? "PASS" : "STOP"}
+                  </span>
+                  <span className="min-w-0 text-foreground">{s.gate}</span>
+                </div>
+              );
+            })}
           </div>
 
-          <p className="mt-4 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12rem] sm:min-h-[6rem]">
-            {scene.note}
-          </p>
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

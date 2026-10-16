@@ -122,13 +122,18 @@ export default function UseGridViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.5rem] flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-xs font-bold text-primary">{scene.verdict}</span>
+          {/* 장면마다 길이가 다른 제목·판정을 같은 칸에 겹쳐 가장 긴 장면이 높이를 정한다 */}
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-xs font-bold text-primary">{s.verdict}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-3 overflow-x-auto">
-            <div className="grid min-w-[18rem] grid-cols-[3.6rem_repeat(3,minmax(0,1fr))] gap-1 text-[10px] sm:text-[11px]">
+          <div className="mt-2 overflow-x-auto">
+            <div className="grid min-w-[18rem] grid-cols-[3.2rem_repeat(3,minmax(0,1fr))] gap-1 text-[10px]">
               <span />
               {AXES.map((a) => (
                 <span key={a.key} className="text-center font-bold text-muted-foreground">
@@ -148,13 +153,13 @@ export default function UseGridViz() {
                     return (
                       <div
                         key={a.key}
-                        className={`flex min-h-[4.6rem] flex-col justify-between rounded-sm border p-1.5 transition-colors duration-300 ${focused ? "border-transparent" : "border-border"}`}
+                        className={`flex flex-col rounded-sm border px-1 py-0.5 transition-colors duration-300 ${focused ? "border-transparent" : "border-border"}`}
                         style={{ backgroundColor: bg, color: fg }}
                         title={`${cell.cmd} ← ${cell.proc}`}
                       >
-                        <span className={`font-mono leading-tight ${focused ? "" : "text-foreground"}`}>{cell.cmd}</span>
-                        <span className={`mt-1 font-mono text-[9px] leading-tight sm:text-[10px] ${focused ? "opacity-80" : "text-muted-foreground"}`}>{cell.proc}</span>
-                        <span className={`mt-1 font-bold tabular-nums ${focused ? "" : hot ? "text-[#dc2626]" : "text-foreground"}`}>{cell.value}</span>
+                        <span className={`font-mono leading-[1.15] ${focused ? "" : "text-foreground"}`}>{cell.cmd}</span>
+                        <span className={`mt-0.5 font-mono text-[9px] leading-[1.15] ${focused ? "opacity-80" : "text-muted-foreground"}`}>{cell.proc}</span>
+                        <span className={`mt-0.5 font-bold leading-[1.15] tabular-nums ${focused ? "" : hot ? "text-[#dc2626]" : "text-foreground"}`}>{cell.value}</span>
                       </div>
                     );
                   })}
@@ -163,9 +168,13 @@ export default function UseGridViz() {
             </div>
           </div>
 
-          <p className="mt-4 min-h-[13rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[11rem] sm:min-h-[6rem]">
-            {scene.note}
-          </p>
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground sm:leading-5 ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>
