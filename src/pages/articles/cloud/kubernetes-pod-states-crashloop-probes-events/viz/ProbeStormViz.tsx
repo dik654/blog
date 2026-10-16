@@ -100,7 +100,7 @@ export default function ProbeStormViz() {
                   {STATE_LABEL[state]}
                 </text>
                 {/* endpoint 선 */}
-                <motion.line x1={320} y1={30 + i * 44} x2={380} y2={75} stroke="#2563eb" strokeWidth={1.5} initial={false} animate={{ opacity: state === "ready" ? 1 : 0.12 }} transition={{ duration: dur }} />
+                <motion.line x1={320} y1={30 + i * 44} x2={380} y2={75} stroke="#2563eb" strokeWidth={1.25} initial={false} animate={{ opacity: state === "ready" ? 1 : 0.12 }} transition={{ duration: dur }} />
               </g>
             ))}
             {/* endpoints */}
