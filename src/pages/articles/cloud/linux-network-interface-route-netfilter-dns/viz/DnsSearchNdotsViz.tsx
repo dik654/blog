@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
@@ -6,6 +7,7 @@ import VizFrame from "@/components/viz/VizFrame";
 /**
  * Pod의 resolv.conf(search 3개 · ndots:5)에서 이름 하나가 몇 개의 DNS 질의로 펼쳐지는지를 4행 × 2열 고정 격자로 센다.
  * 한 mechanism: 점 개수 < ndots 이고 끝에 점이 없으면 search 목록을 순서대로 붙여 먼저 묻고, 전부 실패해야 이름 그대로 묻는다. 행마다 A·AAAA 두 질의다.
+ * 장면마다 길이가 다른 제목·이름 줄·설명은 같은 grid 셀에 겹쳐 두고 비활성을 invisible로 둬 높이가 움직이지 않게 한다.
  */
 const SEARCH = ["test.svc.cluster.local", "svc.cluster.local", "cluster.local"] as const;
 
@@ -61,6 +63,19 @@ const SCENES: readonly Scene[] = [
 
 const ROW_LABELS = [...SEARCH.map((s) => `+ ${s}`), "그대로"] as const;
 
+/** 모든 장면의 내용을 같은 셀에 겹쳐 두고 활성 장면만 보이게 한다. 높이는 가장 긴 장면이 정한다. */
+function Stack({ active, className, render }: { active: number; className?: string; render: (scene: Scene) => ReactNode }) {
+  return (
+    <div className={`grid ${className ?? ""}`}>
+      {SCENES.map((s, i) => (
+        <div key={s.label} aria-hidden={i !== active} className={`col-start-1 row-start-1 min-w-0 ${i === active ? "" : "invisible"}`}>
+          {render(s)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function DnsSearchNdotsViz() {
   const scenes = useAnimatedScenes(SCENES.length, 4600);
   const scene = SCENES[scenes.active];
@@ -84,16 +99,27 @@ export default function DnsSearchNdotsViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.7rem] flex-wrap content-start items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-sm font-bold text-primary">{scene.count}</span>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs">
-            <span className="rounded border border-border px-2 py-0.5 font-bold text-foreground">{scene.name}</span>
-            <span className="text-muted-foreground">
-              dots={scene.dots} {scene.dots >= 5 || scene.trailing ? "≥ ndots 또는 끝점 → 그대로 먼저" : "< ndots 5 → search 먼저"}
-            </span>
-          </div>
+          <Stack
+            active={scenes.active}
+            render={(s) => (
+              <div className="flex flex-wrap content-start items-baseline justify-between gap-2">
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-sm font-bold text-primary">{s.count}</span>
+              </div>
+            )}
+          />
+          <Stack
+            active={scenes.active}
+            className="mt-3"
+            render={(s) => (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs">
+                <span className="rounded border border-border px-2 py-0.5 font-bold text-foreground">{s.name}</span>
+                <span className="text-muted-foreground">
+                  dots={s.dots} {s.dots >= 5 || s.trailing ? "≥ ndots 또는 끝점 → 그대로 먼저" : "< ndots 5 → search 먼저"}
+                </span>
+              </div>
+            )}
+          />
           <div className="mt-3 grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] gap-1 text-[11px] sm:text-xs">
             <span className="px-1 font-bold text-muted-foreground">붙이는 항목</span>
             <span className="px-1 text-center font-bold text-muted-foreground">A</span>
@@ -126,7 +152,11 @@ export default function DnsSearchNdotsViz() {
               );
             })}
           </div>
-          <p className="mt-3 min-h-[11.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-[5.5rem]">{scene.note}</p>
+          <Stack
+            active={scenes.active}
+            className="mt-3"
+            render={(s) => <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>}
+          />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

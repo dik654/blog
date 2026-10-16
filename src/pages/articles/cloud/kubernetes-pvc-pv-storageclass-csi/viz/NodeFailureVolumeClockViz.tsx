@@ -79,9 +79,13 @@ export default function NodeFailureVolumeClockViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{s.label}</h4>
-            <span className="font-mono text-sm font-bold text-primary">{s.t}</span>
+          <div className="grid">
+            {SCENES.map((x, i) => (
+              <div key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{x.label}</h4>
+                <span className="font-mono text-sm font-bold text-primary">{x.t}</span>
+              </div>
+            ))}
           </div>
 
           <div className="relative mt-5 h-12">
@@ -116,7 +120,13 @@ export default function NodeFailureVolumeClockViz() {
             <NodeBox name="worker-b (새 노드)" attached={onB} mounted={onB} healthy pod={s.podB} />
           </div>
 
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[6rem]">{s.note}</p>
+<div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((item, i) => (
+              <p key={i} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-7 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {item.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((x) => x.label)} />
       </div>

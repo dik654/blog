@@ -53,7 +53,13 @@ export default function DirtyThresholdViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <h4 className="text-base font-bold">{s.label}</h4>
+          <div className="grid">
+            {SCENES.map((sc, i) => (
+              <h4 key={sc.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-base font-bold ${i === scenes.active ? "" : "invisible"}`}>
+                {sc.label}
+              </h4>
+            ))}
+          </div>
           <div className="relative mt-8 h-10 w-full rounded-sm border border-border">
             <div className="absolute inset-y-0 left-0 rounded-l-sm transition-[width,background-color] duration-500" style={{ width: pct(s.dirty), backgroundColor: `${fill}55` }} />
             <div className="absolute inset-y-0 w-0.5 transition-[left] duration-500" style={{ left: pct(s.dirty), backgroundColor: fill }} />
@@ -79,16 +85,33 @@ export default function DirtyThresholdViz() {
           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs">
             <div>
               <dt className="text-muted-foreground">flusher (커널 writeback 스레드)</dt>
-              <dd className="font-bold text-foreground">{s.flusher}</dd>
+              <dd className="grid font-bold text-foreground">
+                {SCENES.map((sc, i) => (
+                  <span key={sc.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>
+                    {sc.flusher}
+                  </span>
+                ))}
+              </dd>
             </div>
             <div>
               <dt className="text-muted-foreground">write()를 부르는 앱</dt>
-              <dd className="font-bold" style={{ color: s.writerColor }}>
-                {s.writer}
+              <dd className="grid font-bold">
+                {SCENES.map((sc, i) => (
+                  <span key={sc.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`} style={{ color: sc.writerColor }}>
+                    {sc.writer}
+                  </span>
+                ))}
               </dd>
             </div>
           </dl>
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-[6rem]">{s.note}</p>
+          {/* 모든 장면의 설명을 같은 칸에 겹쳐 두어 가장 긴 장면이 높이를 정한다 */}
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((sc, i) => (
+              <p key={sc.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {sc.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((x) => x.label)} />
       </div>

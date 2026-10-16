@@ -53,7 +53,6 @@ export default function PsiAverageViz() {
   const n = scene.upto;
   const pathOf = (s: number[]) => s.slice(0, n).map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
   const last10 = AVG10[n - 1];
-  const last60 = AVG60[n - 1];
 
   return (
     <VizFrame
@@ -71,15 +70,20 @@ export default function PsiAverageViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.5rem] flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-xs font-bold tabular-nums">
-              <span className="text-[#2563eb]">avg10 {last10.toFixed(2)}%</span>
-              <span className="mx-2 text-muted-foreground">·</span>
-              <span className="text-[#93c5fd]">avg60 {last60.toFixed(2)}%</span>
-              <span className="mx-2 text-muted-foreground">·</span>
-              <span className="text-muted-foreground">사용률 {UTIL}%</span>
-            </span>
+          {/* 장면마다 길이가 다른 제목·수치를 같은 칸에 겹쳐 가장 긴 장면이 높이를 정한다 */}
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <div key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-xs font-bold tabular-nums">
+                  <span className="text-[#2563eb]">avg10 {AVG10[s.upto - 1].toFixed(2)}%</span>
+                  <span className="mx-2 text-muted-foreground">·</span>
+                  <span className="text-[#93c5fd]">avg60 {AVG60[s.upto - 1].toFixed(2)}%</span>
+                  <span className="mx-2 text-muted-foreground">·</span>
+                  <span className="text-muted-foreground">사용률 {UTIL}%</span>
+                </span>
+              </div>
+            ))}
           </div>
 
           <svg viewBox={`0 0 ${W} ${H}`} className="mt-3 h-auto w-full" role="img" aria-label={`${n}개 주기까지의 표본과 평균`}>
@@ -116,9 +120,13 @@ export default function PsiAverageViz() {
             ))}
           </svg>
 
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-[5rem]">
-            {scene.note}
-          </p>
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

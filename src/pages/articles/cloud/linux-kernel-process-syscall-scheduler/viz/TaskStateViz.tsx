@@ -88,8 +88,14 @@ export default function TaskStateViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <h4 className="text-base font-bold">{scene.label}</h4>
-          <div className="mt-3 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,11rem)]">
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <h4 key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-base font-bold ${i === scenes.active ? "" : "invisible"}`}>
+                {s.label}
+              </h4>
+            ))}
+          </div>
+          <div className="mt-2 grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,11rem)]">
             <ul className="space-y-1.5">
               {TASKS.map((task, i) => {
                 const state = scene.states[i];
@@ -143,7 +149,7 @@ export default function TaskStateViz() {
               </dl>
             </div>
           </div>
-          <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] sm:grid-cols-4">
+          <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] sm:grid-cols-4">
             {(Object.keys(LABEL) as State[]).map((s) => (
               <li key={s} className="flex items-center gap-2">
                 <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: COLOR[s] }} />
@@ -151,7 +157,14 @@ export default function TaskStateViz() {
               </li>
             ))}
           </ul>
-          <p className="mt-4 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5rem]">{scene.note}</p>
+          {/* 모든 장면의 설명을 같은 칸에 겹쳐 두어 가장 긴 장면이 높이를 정한다 */}
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

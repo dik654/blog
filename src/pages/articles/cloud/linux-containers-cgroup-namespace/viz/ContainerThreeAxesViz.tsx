@@ -66,12 +66,18 @@ export default function ContainerThreeAxesViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <h4 className="min-h-[1.75rem] text-base font-bold">{scene.label}</h4>
+          <div className="grid">
+            {SCENES.map((s, i) => (
+              <h4 key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-base font-bold ${i === scenes.active ? "" : "invisible"}`}>
+                {s.label}
+              </h4>
+            ))}
+          </div>
           <div className="mt-2 grid grid-cols-3 gap-1.5">
             {AXES.map((a, i) => (
               <motion.div
                 key={a.name}
-                className="rounded-md border px-2 py-1.5 text-center"
+                className="rounded-md border px-2 py-1 text-center"
                 initial={false}
                 animate={{ borderColor: lit(i) ? a.color : "#e2e8f0", backgroundColor: lit(i) ? `${a.color}14` : "rgba(0,0,0,0)" }}
                 transition={{ duration: reduced ? 0 : 0.25 }}
@@ -83,7 +89,7 @@ export default function ContainerThreeAxesViz() {
               </motion.div>
             ))}
           </div>
-          <div className="mt-3 overflow-x-auto">
+          <div className="mt-2 overflow-x-auto">
             <div className="grid min-w-[18rem] grid-cols-[minmax(0,1.15fr)_1.25rem_minmax(0,1fr)] gap-x-1 gap-y-1 text-[11px] sm:text-xs">
               {ROWS.map((r) => {
                 const on = lit(r.axis);
@@ -91,7 +97,7 @@ export default function ContainerThreeAxesViz() {
                 return (
                   <div key={r.spec} className="contents">
                     <motion.code
-                      className="truncate rounded border px-1.5 py-1 font-mono"
+                      className="self-center truncate rounded border px-1.5 py-0.5 font-mono"
                       initial={false}
                       animate={{ opacity: on ? 1 : 0.35, borderColor: on ? color : "#e2e8f0" }}
                       transition={{ duration: reduced ? 0 : 0.25 }}
@@ -103,15 +109,15 @@ export default function ContainerThreeAxesViz() {
                       →
                     </motion.span>
                     <motion.div
-                      className="min-w-0 rounded border px-1.5 py-1"
+                      className="flex min-w-0 flex-col rounded border px-1.5 py-0.5 sm:flex-row sm:items-baseline sm:gap-2"
                       initial={false}
                       animate={{ opacity: on ? 1 : 0.35, borderColor: on ? color : "#e2e8f0", backgroundColor: on ? `${color}14` : "rgba(0,0,0,0)" }}
                       transition={{ duration: reduced ? 0 : 0.25 }}
                     >
-                      <div className="truncate font-mono font-bold" style={{ color }} title={r.kernel}>
+                      <div className="truncate font-mono font-bold sm:shrink-0" style={{ color }} title={r.kernel}>
                         {r.kernel}
                       </div>
-                      <div className="truncate text-muted-foreground" title={r.value}>
+                      <div className="truncate text-muted-foreground sm:min-w-0" title={r.value}>
                         {r.value}
                       </div>
                     </motion.div>
@@ -120,7 +126,14 @@ export default function ContainerThreeAxesViz() {
               })}
             </div>
           </div>
-          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5rem]">{scene.note}</p>
+          {/* 모든 장면의 설명을 같은 칸에 겹쳐 두어 가장 긴 장면이 높이를 정한다 */}
+          <div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((s, i) => (
+              <p key={s.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-6 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {s.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
@@ -7,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * replicas 3인 Deployment `web` 하나를 따라간다. 한 mechanism: 컨트롤러는 "현재 Pod 수 − 목표 수"라는 차이 하나만 보고
  * 그 차이를 한 걸음 줄인다. Pod 삭제 복구와 v1 → v2 롤아웃이 같은 식(diff, maxSurge 1, maxUnavailable 0)으로 움직인다.
  * 숫자는 pkg/apis/apps/v1/defaults.go(25%)와 deployment_util.go ResolveFenceposts(올림·내림)에서 손으로 계산했다.
+ * 장면마다 길이가 다른 diff 줄과 설명은 같은 셀에 겹쳐 두고 비활성을 invisible로 둬 높이가 움직이지 않게 한다.
  */
 type Cell = "ready" | "creating" | "terminating" | "empty";
 
@@ -149,6 +151,19 @@ function RsRow({ name, version, row, tone, reduced }: { name: string; version: s
 
 const count = (row: Row | null, s: Cell) => (row ? row.cells.filter((c) => c === s).length : 0);
 
+/** 모든 장면의 내용을 같은 셀에 겹쳐 두고 활성 장면만 보이게 한다. 높이는 가장 긴 장면이 정한다. */
+function Stack({ active, className, render }: { active: number; className?: string; render: (scene: Scene) => ReactNode }) {
+  return (
+    <div className={`grid ${className ?? ""}`}>
+      {SCENES.map((s, i) => (
+        <div key={s.label} aria-hidden={i !== active} className={`col-start-1 row-start-1 min-w-0 ${i === active ? "" : "invisible"}`}>
+          {render(s)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function ReconcileRolloutViz() {
   const scenes = useAnimatedScenes(SCENES.length, 4600);
   const scene = SCENES[scenes.active];
@@ -171,13 +186,18 @@ export default function ReconcileRolloutViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div key={scenes.active} className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:min-h-0">
-            <h4 className="text-base font-bold">{scene.label}</h4>
-            <span className="font-mono text-xs font-bold text-primary sm:text-sm">{scene.diffLine}</span>
-          </div>
+        <div className="flex shrink-0 flex-col">
+          <Stack
+            active={scenes.active}
+            render={(s) => (
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <h4 className="text-base font-bold">{s.label}</h4>
+                <span className="font-mono text-xs font-bold text-primary sm:text-sm">{s.diffLine}</span>
+              </div>
+            )}
+          />
 
-          <div className="mt-3 space-y-2 border-y border-border py-3">
+          <div key={scenes.active} className="mt-3 space-y-2 border-y border-border py-2">
             <RsRow name="web-5c6d" version="v1 template" row={scene.old} tone={OLD} reduced={reduced} />
             <RsRow name="web-7d4f" version="v2 template" row={scene.neu} tone={NEW} reduced={reduced} />
           </div>
@@ -203,9 +223,11 @@ export default function ReconcileRolloutViz() {
             </div>
           </dl>
 
-          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5.5rem]">
-            {scene.note}
-          </p>
+          <Stack
+            active={scenes.active}
+            className="mt-3"
+            render={(s) => <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>}
+          />
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>

@@ -102,9 +102,13 @@ export default function HpaCalculatorViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col">
-          <div className="flex min-h-[3.2rem] flex-wrap items-baseline justify-between gap-2 sm:min-h-0">
-            <h4 className="text-base font-bold">{s.label}</h4>
-            <span className="font-mono text-xs font-bold text-muted-foreground">목표 50% · request 500m</span>
+          <div className="grid">
+            {SCENES.map((x, i) => (
+              <div key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 flex flex-wrap items-baseline justify-between gap-2 ${i === scenes.active ? "" : "invisible"}`}>
+                <h4 className="text-base font-bold">{x.label}</h4>
+                <span className="font-mono text-xs font-bold text-muted-foreground">목표 50% · request 500m</span>
+              </div>
+            ))}
           </div>
 
           <div className="mt-3 grid grid-cols-5 gap-1.5 sm:gap-2">
@@ -134,11 +138,19 @@ export default function HpaCalculatorViz() {
           <dl className="mt-3 grid gap-1.5 font-mono text-xs">
             <div className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-2 rounded-md border border-border px-3 py-1.5">
               <dt className="text-muted-foreground">평균·ratio</dt>
-              <dd className="min-h-[1.25rem] font-bold text-foreground">{s.line1}</dd>
+              <dd className="grid font-bold text-foreground">
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{x.line1}</span>
+                ))}
+              </dd>
             </div>
             <div className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-2 rounded-md border border-border px-3 py-1.5">
               <dt className="text-muted-foreground">판정</dt>
-              <dd className="min-h-[1.25rem] font-bold text-foreground">{s.line2}</dd>
+              <dd className="grid font-bold text-foreground">
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{x.line2}</span>
+                ))}
+              </dd>
             </div>
             <motion.div
               className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-2 rounded-md border px-3 py-1.5"
@@ -147,13 +159,21 @@ export default function HpaCalculatorViz() {
               transition={{ duration: reduced ? 0 : 0.3 }}
             >
               <dt className="text-muted-foreground">결과</dt>
-              <dd className="min-h-[1.25rem] font-black" style={{ color: s.resultColor }}>
-                {s.result}
+              <dd className="grid font-black" style={{ color: s.resultColor }}>
+                {SCENES.map((x, i) => (
+                  <span key={x.label} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 ${i === scenes.active ? "" : "invisible"}`}>{x.result}</span>
+                ))}
               </dd>
             </motion.div>
           </dl>
 
-          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[6rem]">{s.note}</p>
+<div className="mt-3 grid border-l border-primary/50 pl-4">
+            {SCENES.map((item, i) => (
+              <p key={i} aria-hidden={i !== scenes.active} className={`col-start-1 row-start-1 text-sm leading-7 text-muted-foreground ${i === scenes.active ? "" : "invisible"}`}>
+                {item.note}
+              </p>
+            ))}
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((x) => x.label)} />
       </div>
