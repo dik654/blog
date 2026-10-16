@@ -90,12 +90,9 @@ export default function InferenceCostAndCapacityPlanningViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scene + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scene]}</h4>
 
-          <div className="mt-4 h-52 min-w-0 w-full shrink-0">
+          <div className="mt-3 h-36 min-w-0 w-full shrink-0">
             <ResponsiveContainer
               width="100%"
               height="100%"
@@ -164,7 +161,7 @@ export default function InferenceCostAndCapacityPlanningViz() {
             <span style={{ color: "#d97706" }}>주황 점 = 초과</span>
           </div>
 
-          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
+          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">GPU-h / 일</dt>
               <dd className="font-bold text-foreground">{scene === 0 ? "—" : `${hours}`}</dd>
@@ -183,7 +180,7 @@ export default function InferenceCostAndCapacityPlanningViz() {
             </div>
           </dl>
 
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-3 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12rem] sm:min-h-[3.5rem]">
             {NOTES[scene]}
           </p>
         </div>

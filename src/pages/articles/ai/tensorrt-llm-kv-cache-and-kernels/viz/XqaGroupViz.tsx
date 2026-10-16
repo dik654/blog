@@ -40,10 +40,9 @@ export default function XqaGroupViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(scene + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scene]}</h4>
 
-          <svg viewBox="0 0 480 200" className="mt-4 w-full sm:max-h-[13rem]" role="img" aria-label={SCENES[scene]}>
+          <svg viewBox="0 0 480 200" className="mt-3 w-full sm:max-h-[12rem]" role="img" aria-label={SCENES[scene]}>
             {Array.from({ length: scene === 2 ? 16 : 8 }, (_, i) => {
               const valid = i < 8;
               const y = scene === 2 ? 8 + i * 11.5 : 14 + i * 22;

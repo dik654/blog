@@ -81,10 +81,9 @@ export default function ReservationPoolViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(scene + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scene]}</h4>
 
-          <svg viewBox="0 0 480 200" className="mt-4 w-full" role="img" aria-label={`${stat.admitted} 요청, 실제 사용 ${stat.used}`}>
+          <svg viewBox="0 0 480 200" className="mt-3 w-full sm:max-h-[14rem]" role="img" aria-label={`${stat.admitted} 요청, 실제 사용 ${stat.used}`}>
             {cells.map((cell, index) => {
               const col = index % COLS;
               const row = Math.floor(index / COLS);

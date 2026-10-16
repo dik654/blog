@@ -24,6 +24,6 @@ export default function CudaGraphTimelineViz(){
  {gpu[s].map(([a,b],i)=><g key={i}><rect x={x(a)} y="120" width={x(b)-x(a)} height="34" rx="3" className="fill-primary/20 stroke-primary"/><text x={(x(a)+x(b))/2} y="143" textAnchor="middle" className="fill-foreground text-[14px]">{values[i]}</text></g>)}
  <path d={"M"+x(cpu[s][0][1])+" 88V116"} className="stroke-foreground" markerEnd="url(#graph-time-arrow)"/>
  <text x="170" y="222" textAnchor="middle" className="fill-foreground text-[15px]">완료 {s===0?14:s===1?10:20} μs · 가로축 단위 μs</text>
- </svg><p className="mt-1 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{notes[s]}</p></div>
+ </svg><p className="mt-1 min-h-[7rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground min-[390px]:min-h-[5.25rem] sm:min-h-0">{notes[s]}</p></div>
  <AnimatedSceneControls {...scenes} labels={labels}/></div></VizFrame>;
 }

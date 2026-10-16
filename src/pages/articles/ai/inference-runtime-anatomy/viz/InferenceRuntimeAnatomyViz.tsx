@@ -154,11 +154,8 @@ export default function InferenceRuntimeAnatomyViz() {
         className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Startup stage · {String(s + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
-          <svg viewBox="0 0 640 300" className="mt-4 h-auto w-full" aria-hidden="true">
+          <h4 className="text-base font-bold">{SCENES[s]}</h4>
+          <svg viewBox="0 12 640 281" className="mt-2 h-auto w-full" aria-hidden="true">
             <ProcessBox x={16} y={16} w={220} h={40} title="Frontend · API server" sub={s === 4 ? "ready 수신 · 요청 접수" : "tokenize · stream"} active={s === 4} />
             <ProcessBox x={16} y={84} w={220} h={44} title="Driver · EngineCore" sub={`scheduler · executor · ${DRIVER_SUB[s]}`} active />
             <ProcessBox x={16} y={168} w={220} h={44} title="Worker 0 · ModelRunner" sub={WORKER_SUB[s]} active={s >= 1} />
@@ -192,7 +189,7 @@ export default function InferenceRuntimeAnatomyViz() {
             <Bar y={168} label="GPU 0" stage={s} />
             <Bar y={240} label="GPU 1" stage={s} />
           </svg>
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-2 min-h-[11rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9.5rem] sm:min-h-0 sm:leading-6">
             {NOTES[s]}
           </p>
         </div>

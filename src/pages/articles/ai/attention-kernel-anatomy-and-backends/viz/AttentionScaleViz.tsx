@@ -1,5 +1,6 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const labels = ["큰 prefill", "한 행 decode", "GQA 공유", "16 GiB 전송"] as const;
@@ -20,17 +21,19 @@ function TensorBlock({ name, shape, size, tall = false }: { name: string; shape:
 function PrefillScene() {
   return (
     <div>
+      <div className="sm:grid sm:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] sm:items-center sm:gap-5">
       <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:gap-4">
         <TensorBlock name="Q" shape="4,096 × 128" size="1 MiB" />
         <span className="text-lg text-muted-foreground" aria-hidden="true">×</span>
         <TensorBlock name="Kᵀ" shape="128 × 4,096" size="K는 1 MiB" />
       </div>
-      <div className="mx-auto mt-3 max-w-sm border-l-2 border-primary pl-4">
+      <div className="mx-auto mt-3 max-w-sm border-l-2 border-primary pl-4 sm:mt-0">
         <p className="text-xs font-bold text-muted-foreground">모든 query-key 짝의 점수</p>
         <div className="mt-2 grid grid-cols-8 gap-0.5" aria-label="4096 곱하기 4096 점수 행렬을 줄여 그린 격자">
           {Array.from({ length: 64 }, (_, index) => <span key={index} className="h-2 border border-border bg-muted/70" />)}
         </div>
         <p className="mt-2 font-mono text-xs text-foreground">4,096 × 4,096칸</p>
+      </div>
       </div>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         <p className="border-l-2 border-border pl-3 font-mono text-sm leading-6 text-foreground">QK 4,294,967,296<br />+ PV 4,294,967,296 FLOP</p>
@@ -137,7 +140,7 @@ export default function AttentionScaleViz() {
             <div key={item} className={`border-t-2 px-2 py-2 text-center text-xs font-bold leading-5 ${scene.active === index ? "border-primary bg-primary/5 text-foreground" : "border-border text-muted-foreground"}`}>{item}</div>
           ))}
         </div>
-        <div className="mt-5 min-w-0 border-t border-border pt-5 sm:min-h-[29rem]">{scenes[scene.active]}</div>
+        <StableSceneStack active={scene.active} scenes={scenes} className="mt-5 border-t border-border pt-5" />
         <AnimatedSceneControls {...scene} labels={labels} />
       </div>
     </VizFrame>

@@ -1,0 +1,84 @@
+serving-latency-metrics-and-slo	1440	0	같은 decode step 시간이 요청에는 IT	4	0	0	0
+serving-latency-metrics-and-slo	1440	1	Percentile 은 같은 표본을 정렬 순위로	4	0	0	0
+serving-latency-metrics-and-slo	1440	2	하루 288칸 중 실패는 2칸까지 담을 수 있습	5	0	0	0
+serving-latency-metrics-and-slo	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	419
+serving-latency-metrics-and-slo	390	0	같은 decode step 시간이 요청에는 IT	4	0	0	0
+serving-latency-metrics-and-slo	390	1	Percentile 은 같은 표본을 정렬 순위로	4	0	0	0
+serving-latency-metrics-and-slo	390	2	하루 288칸 중 실패는 2칸까지 담을 수 있습	5	0	0	0
+serving-latency-metrics-and-slo	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+disaggregated-prefill-decode-serving	1440	0	원본 준비와 복사 완료를 구분합니다	5	0	0	0
+disaggregated-prefill-decode-serving	1440	1	기록을 가진 서버라도 오래 기다리면 빈 서버가 	4	0	0	0
+disaggregated-prefill-decode-serving	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	869
+disaggregated-prefill-decode-serving	390	0	원본 준비와 복사 완료를 구분합니다	5	0	0	0
+disaggregated-prefill-decode-serving	390	1	기록을 가진 서버라도 오래 기다리면 빈 서버가 	4	0	0	0
+disaggregated-prefill-decode-serving	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+vllm-spec-decode	1440	0	첫 거부 뒤의 후보는 이어 쓰지 않습니다	5	0	0	0
+vllm-spec-decode	1440	1	거부된 30칸을 부족분으로 채워야 기준 분포 7	5	0	0	0
+vllm-spec-decode	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	1146
+vllm-spec-decode	390	0	첫 거부 뒤의 후보는 이어 쓰지 않습니다	5	0	0	0
+vllm-spec-decode	390	1	거부된 30칸을 부족분으로 채워야 기준 분포 7	5	0	0	0
+vllm-spec-decode	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kv-cache-fundamentals	1440	0	기록은 48 → 64byte, 현재 질문은 이번	5	0	0	0
+kv-cache-fundamentals	1440	1	Q head 4개는 그대로 두고 저장하는 KV 	4	0	0	0
+kv-cache-fundamentals	1440	2	층마다 K와 V의 8개 head를 남기므로 네 	static	0	0	0
+kv-cache-fundamentals	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	324
+kv-cache-fundamentals	390	0	기록은 48 → 64byte, 현재 질문은 이번	5	0	0	0
+kv-cache-fundamentals	390	1	Q head 4개는 그대로 두고 저장하는 KV 	4	0	0	0
+kv-cache-fundamentals	390	2	층마다 K와 V의 8개 head를 남기므로 네 	static	0	0	0
+kv-cache-fundamentals	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+attention-kernel-anatomy-and-backends	1440	0	허용한 칸과 계산할 조각을 구별합니다	3	0	0	0
+attention-kernel-anatomy-and-backends	1440	1	점수 네 칸을 만들고, 같은 네 칸으로 값을 다	static	0	0	0
+attention-kernel-anatomy-and-backends	1440	2	부분 출력과 LSE를 함께 써야 두 번째 ker	5	0	0	0
+attention-kernel-anatomy-and-backends	1440	3	같은 배열도 몇 번 읽느냐에 따라 128바이트가	3	0	0	0
+attention-kernel-anatomy-and-backends	1440	4	같은 네 배열에서 prefill은 큰 정사각형을	4	0	0	0
+attention-kernel-anatomy-and-backends	1440	5	한 실행 설정을 36개로 늘리고, 21개와 9개	5	0	0	0
+attention-kernel-anatomy-and-backends	1440	6	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	736
+attention-kernel-anatomy-and-backends	390	0	허용한 칸과 계산할 조각을 구별합니다	3	0	0	0
+attention-kernel-anatomy-and-backends	390	1	점수 네 칸을 만들고, 같은 네 칸으로 값을 다	static	0	0	0
+attention-kernel-anatomy-and-backends	390	2	부분 출력과 LSE를 함께 써야 두 번째 ker	5	2	2	0
+attention-kernel-anatomy-and-backends	390	3	같은 배열도 몇 번 읽느냐에 따라 128바이트가	3	0	0	0
+attention-kernel-anatomy-and-backends	390	4	같은 네 배열에서 prefill은 큰 정사각형을	4	0	0	0
+attention-kernel-anatomy-and-backends	390	5	한 실행 설정을 36개로 늘리고, 21개와 9개	5	0	0	0
+attention-kernel-anatomy-and-backends	390	6	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+sliding-window-kv-and-attention-sinks	1440	0	창 밖으로 완전히 나간 block부터 돌려주므로	4	0	0	0
+sliding-window-kv-and-attention-sinks	1440	1	고리 버퍼는 가장 오래된 처음 token부터 덮	4	0	0	0
+sliding-window-kv-and-attention-sinks	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	549
+sliding-window-kv-and-attention-sinks	390	0	창 밖으로 완전히 나간 block부터 돌려주므로	4	0	0	0
+sliding-window-kv-and-attention-sinks	390	1	고리 버퍼는 가장 오래된 처음 token부터 덮	4	0	0	0
+sliding-window-kv-and-attention-sinks	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+qwen36-hybrid-runtime	1440	0	두 종류의 state가 같은 accepted p	static	0	0	0
+qwen36-hybrid-runtime	1440	1	세 state가 같은 승인 경계에서 함께 com	5	0	0	0
+qwen36-hybrid-runtime	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	251
+qwen36-hybrid-runtime	390	0	두 종류의 state가 같은 accepted p	static	0	0	0
+qwen36-hybrid-runtime	390	1	세 state가 같은 승인 경계에서 함께 com	5	0	0	0
+qwen36-hybrid-runtime	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+qwen36-long-context-deployment	1440	0	같은 max length 숫자라도 입력·위치 표	static	0	0	0
+qwen36-long-context-deployment	1440	1	head 256칸 중 앞 64칸만 위치에 따라 	6	0	0	0
+qwen36-long-context-deployment	1440	2	가중치가 들어간 뒤 남은 칸에 KV와 reque	static	0	0	0
+qwen36-long-context-deployment	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	437
+qwen36-long-context-deployment	390	0	같은 max length 숫자라도 입력·위치 표	static	0	0	0
+qwen36-long-context-deployment	390	1	head 256칸 중 앞 64칸만 위치에 따라 	6	0	0	0
+qwen36-long-context-deployment	390	2	가중치가 들어간 뒤 남은 칸에 KV와 reque	static	0	0	0
+qwen36-long-context-deployment	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+qwen38-flash-next-architecture	1440	0	네 층 중 하나만 과거 토큰을 다시 읽습니다	4	0	0	0
+qwen38-flash-next-architecture	1440	1	색인은 압축 키로, 계산은 원본 키로	4	0	0	0
+qwen38-flash-next-architecture	1440	2	블록은 하나를 받고 넷에 되돌립니다	4	0	0	0
+qwen38-flash-next-architecture	1440	3	95 GiB 표에서 토큰당 16행만 가져옵니다	4	0	0	0
+qwen38-flash-next-architecture	1440	4	같은 모델의 세 숫자는 서로 다른 대상을 셉니다	4	0	0	0
+qwen38-flash-next-architecture	1440	5	요청이 길어질 때 자라는 칸은 희소 12층뿐입니	6	0	0	0
+qwen38-flash-next-architecture	1440	6	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	1034
+qwen38-flash-next-architecture	390	0	네 층 중 하나만 과거 토큰을 다시 읽습니다	4	0	0	0
+qwen38-flash-next-architecture	390	1	색인은 압축 키로, 계산은 원본 키로	4	0	0	0
+qwen38-flash-next-architecture	390	2	블록은 하나를 받고 넷에 되돌립니다	4	0	0	0
+qwen38-flash-next-architecture	390	3	95 GiB 표에서 토큰당 16행만 가져옵니다	4	0	0	0
+qwen38-flash-next-architecture	390	4	같은 모델의 세 숫자는 서로 다른 대상을 셉니다	4	0	0	0
+qwen38-flash-next-architecture	390	5	요청이 길어질 때 자라는 칸은 희소 12층뿐입니	6	0	0	0
+qwen38-flash-next-architecture	390	6	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+expert-parallelism-moe-systems	1440	0		static	0	0	0
+expert-parallelism-moe-systems	1440	1	token 37의 입력은 두 GPU로 나갔다가 	6	0	0	0
+expert-parallelism-moe-systems	1440	2	token 수·두 목적지·hidden 폭·원소 	static	0	0	0
+expert-parallelism-moe-systems	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	1227
+expert-parallelism-moe-systems	390	0		static	0	0	0
+expert-parallelism-moe-systems	390	1	token 37의 입력은 두 GPU로 나갔다가 	6	0	0	0
+expert-parallelism-moe-systems	390	2	token 수·두 목적지·hidden 폭·원소 	static	0	0	0
+expert-parallelism-moe-systems	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0

@@ -85,12 +85,9 @@ export default function LatencyPercentileHistogramViz() {
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[active]}</h4>
+          <h4 className="text-base font-bold">{SCENES[active]}</h4>
 
-          <div className="mt-6 min-w-0">
+          <div className="mt-4 min-w-0">
             <div className="relative h-40 w-full border-b border-l border-border">
               {BINS.map((bin) => (
                 <div

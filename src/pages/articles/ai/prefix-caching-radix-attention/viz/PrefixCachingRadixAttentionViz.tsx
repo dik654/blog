@@ -48,7 +48,7 @@ export default function PrefixCachingRadixAttentionViz() {
           </>}
         </svg>
         <p className="font-semibold text-sm">{d.hit}</p>
-        <p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{d.note}</p>
+        <p className="mt-2 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.25rem] sm:min-h-0">{d.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
     </div>

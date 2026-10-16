@@ -23,6 +23,6 @@ export default function BasisTraceViz(){
  <text x="85" y="171">{s.u}</text><text x="255" y="171">{s.l}</text>
  <text x="170" y="227">분자 ÷ 분모</text><text x="170" y="263">{s.o}</text>
  </g><path d="M85 183V202H255V183M170 202V208M170 235V246" fill="none" className="stroke-primary" strokeWidth="1" markerEnd="url(#flash20-arrow)"/>
- </svg><p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{s.note}</p></div>
+ </svg><p className="mt-3 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.25rem] sm:min-h-[3.5rem]">{s.note}</p></div>
  <AnimatedSceneControls {...scenes} labels={labels}/></div></VizFrame>;
 }

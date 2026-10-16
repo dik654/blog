@@ -134,7 +134,7 @@ export default function LayerScheduleViz() {
               <GridScene mark={scenes.active === 1 ? "sparse" : scenes.active === 2 ? "count" : "ple"} />
             )}
           </svg>
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 min-h-[9.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[8rem] sm:min-h-0">
             {NOTES[scenes.active]}
           </p>
         </div>

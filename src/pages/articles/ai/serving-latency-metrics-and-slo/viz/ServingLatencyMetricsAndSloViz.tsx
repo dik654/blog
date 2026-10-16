@@ -72,10 +72,7 @@ export default function ServingLatencyMetricsAndSloViz() {
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scenes.active]}</h4>
 
           <div className="mt-6 min-w-0">
             <div className="relative h-14 w-full border-b border-border">
@@ -138,7 +135,7 @@ export default function ServingLatencyMetricsAndSloViz() {
             </div>
           </dl>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-5 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12rem] sm:min-h-[6rem]">
             {NOTES[scenes.active]}
           </p>
         </div>

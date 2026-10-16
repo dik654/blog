@@ -84,12 +84,9 @@ export default function ForkCopyOnWriteViz() {
         className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid min-h-[12.75rem] content-start gap-3 sm:min-h-0 sm:grid-cols-2">
             {tables.map((table) => (
               <div key={table.name} className="min-w-0 border border-border bg-background px-3 py-3">
                 <p className="text-[11px] font-bold text-muted-foreground">Block table · {table.name}</p>
@@ -107,7 +104,7 @@ export default function ForkCopyOnWriteViz() {
             ))}
           </div>
 
-          <p className="mt-6 text-[11px] font-bold text-muted-foreground">Physical block · ref count</p>
+          <p className="mt-4 text-[11px] font-bold text-muted-foreground">Physical block · ref count</p>
           <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
             {physical.map((block) => {
               const free = block.ref === 0;
@@ -134,7 +131,7 @@ export default function ForkCopyOnWriteViz() {
             })}
           </div>
 
-          <p className="mt-6 min-h-[4.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-3 min-h-[11rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-[4.5rem]">
             {NOTES[scenes.active]}
           </p>
         </div>
