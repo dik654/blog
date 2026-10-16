@@ -91,14 +91,14 @@ const CATEGORY_STARTS: Record<string, GuidanceLink> = {
 
 export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
   "cloud-linux": {
-    label: "Linux 면접·장애 지도",
-    href: "/cs/cloud/linux-server-interview-incident-map",
-    reason: "첫 60초 점검 순서를 먼저 잡아야 메모리·디스크·프로세스·연결 글이 어느 증상에서 출발하는지 보입니다.",
+    label: "커널과 프로세스",
+    href: "/cs/cloud/linux-kernel-process-syscall-scheduler",
+    reason: "시스템 콜 경계와 프로세스 상태를 먼저 잡아야 cgroup·VFS·네트워크 기초와 뒤의 장애 사례가 같은 바닥 위에 섭니다.",
   },
   "cloud-kubernetes": {
-    label: "Kubernetes 요청 경로",
-    href: "/cs/cloud/kubernetes-request-path-and-cka",
-    reason: "Pod 하나가 Ready가 되는 전환 순서를 먼저 잡아야 패킷 경로의 출발점이 생깁니다.",
+    label: "Kubernetes 개념 지도",
+    href: "/cs/cloud/kubernetes-concept-map",
+    reason: "여덟 운영 질문이 어느 글에서 닫히는지 먼저 보아야 controller·Node·Linux 세 층의 읽기 순서가 잡힙니다.",
   },
   "hw-ai-cluster": {
     label: "B300 128 GPU 설계",

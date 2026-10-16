@@ -3073,6 +3073,132 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "systemd v249·Linux v6.12 원문과 man page, Datadog 사후 보고서에 적힌 동작과 시각까지만 근거로 삼고, 재시작 시각은 가정 위의 손계산으로 표시한다.",
   },
+  "cloud/linux-kernel-process-syscall-scheduler": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "CPU 2개 서버의 스레드 넷과 nice 5 작업 하나를 경계 → task → 상태 → 가중치 → EEVDF 선택까지 한 사례로 따라가는 글이다. 시스템 콜 경계와 스케줄러 선택은 '커널이 무엇을 언제 돌리는가'라는 같은 질문의 입구와 출구라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "커널 원문·문서·man page에 적힌 동작까지만 근거로 삼고, 서버 구성과 두 작업의 비율·V·마감 수치는 가정 위의 손 계산으로 표기한다.",
+  },
+  "cloud/linux-containers-cgroup-namespace": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "CPU limit 500m 컨테이너 하나와 Pod spec 한 장을 cgroup(얼마나) → namespace(무엇이 보이나) → capability(무엇을 할 수 있나) 세 축으로 끝까지 따라가는 글이다. 세 축은 같은 프로세스에 함께 씌워지는 것이라 나누면 '컨테이너는 커널 객체가 아니다'라는 한 문장 답이 흩어진다. 메모리 OOM 점수는 기존 메모리 글에 두고 링크한다.",
+    sharedGate:
+      "커널·kubelet 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, spec 수치와 스레드 모델은 가정으로 표기한다.",
+  },
+  "cloud/linux-vfs-mount-page-cache-fsync": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "100 MiB 로그 한 번 쓰기를 이름 → mount → overlay → dirty page → fsync → 장치까지 한 경로로 따라가는 글이다. VFS·mount·overlay와 writeback·fsync는 '내 바이트가 지금 어디 있나'라는 같은 질문의 앞길과 뒷길이라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "커널 원문·문서·man page에 적힌 동작까지만 근거로 삼고, 가용 메모리·장치 속도·쓰기 양은 가정 위의 손 계산으로 표기한다.",
+  },
+  "cloud/linux-network-interface-route-netfilter-dns": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "Pod 하나의 외부 이름 조회와 SYN 패킷 하나를 이름 평면(resolver)과 데이터 평면(veth → bridge → 라우팅 → 훅 → conntrack)으로 끝까지 따라가는 글이다. 두 평면은 같은 요청의 앞뒤 절반이라 나누면 1절의 세 증상이 한 사례로 묶이지 않는다. Service·CNI 선택과 TCP 소켓 상태는 기존 글에 두고 링크한다.",
+    sharedGate:
+      "커널·glibc·kubelet 원문과 공식 문서·사후 보고서에 적힌 동작까지만 근거로 삼고, 표·연결률 수치는 가정으로 표기한다.",
+  },
+  "cloud/linux-observability-proc-psi-perf-ebpf": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "4 vCPU 서버의 '사용률 40%·p99 열 배' 한 장면을 /proc/stat → PSI → USE 격자 → perf → bpftrace → node_exporter로 끝까지 따라가는 글이다. 카운터·격자·표본·이벤트는 같은 진단의 네 단계라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "커널·bpftrace·node_exporter 원문과 Gregg의 공개 페이지에 적힌 동작까지만 근거로 삼고, 서버 수치와 도구 출력은 가정으로 표기한다.",
+  },
+  "cloud/linux-sre-metrics-slo-safe-change": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "서버 100대 위 API의 예산 계산과 Datadog 2023-03-08 타임라인 하나로 관측(증상 vs 원인)·변경(단계적 롤아웃·drift)·노동(toil) 세 고리를 잇는 글이다. 세 고리는 '자동화도 변경이다'라는 한 결론에서 만나므로 나누면 그 연결이 끊긴다.",
+    sharedGate:
+      "SRE 책·workbook과 Datadog 사후 분석, apt·dnf 원문에 적힌 사실까지만 근거로 삼고 fleet·비율·bake는 가정으로 표기한다.",
+  },
+  "cloud/kubernetes-concept-map": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "cloud-kubernetes 하위분류의 허브다. 여덟 질문의 두 문장 답·담당 글·읽기 순서·장애 색인·CKA 매핑을 한 장에 두고 계산과 원문은 전부 담당 글에 맡긴다. 지도를 글마다 반복하면 담당이 흐려지므로 한 편으로 둔다.",
+    sharedGate:
+      "두 문장 답은 담당 글이 원문으로 고정한 기본값만 쓰고, 공개 질문지·장애 목록은 빈도를 주장하지 않는다.",
+  },
+  "cloud/kubernetes-controllers-reconcile-deployment-job": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "replicas 3인 Deployment 하나와 실패하는 Job 하나로 세 층 → 반올림 → 사다리 → reconcile 이름 → 오해 정정 → Job 지연 → 원문까지 한 사례를 끝까지 따라가는 글이다. ReplicaSet의 diff와 Deployment의 상한·하한은 같은 '차이를 한 걸음 줄인다'는 질문의 두 층이라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "v1.37.1 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, Pod 수·대기 시간은 가정 표기와 손 계산임을 밝힌다.",
+  },
+  "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "세 노드 클러스터 하나로 Pod가 노드를 배정받는 순간과 노드를 잃는 6분을 같은 '객체를 읽고 쓸 뿐 신호가 없다'는 질문으로 끝까지 따라가는 글이다. 배정(Bind → nodeName → kubelet watch)과 상실(Lease 중단 → 50초 → taint → 300초)은 같은 필드와 같은 참여자가 움직이므로 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "v1.37.1 원문 기본값과 공식 문서까지만 근거로 삼고, 시각은 기본값의 합이며 실측이 아님을 밝힌다.",
+  },
+  "cloud/kubernetes-requests-limits-allocatable-qos": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "노드 하나의 장부(Allocatable)와 컨테이너 하나의 limit(500m)을 scheduler 비교 → kubelet 변환 → 커널 집행 → eviction·admission까지 따라가는 글이다. requests와 limits는 같은 두 숫자의 서로 다른 독자이므로 나누면 '왜 Pending인데 노드는 놀고 있나'라는 질문이 두 글로 쪼개진다.",
+    sharedGate:
+      "Kubernetes v1.37.1 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, 사례 수치는 가정으로 표기하며 OOM 점수 계산은 리눅스 메모리 글로 넘긴다.",
+  },
+  "cloud/kubernetes-pod-states-crashloop-probes-events": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "컨테이너 하나의 시계(2초 실행·10→300초 대기)를 상태 단어 → backoff 원문 → 그 죽음을 만드는 probe → 이유를 적는 Event까지 따라가는 글이다. 상태 단어와 Event는 같은 '왜 이 단어가 붙었나'의 두 면이라 나누면 진단 순서가 끊긴다.",
+    sharedGate:
+      "kubelet·client-go 원문과 공식 문서에 적힌 동작까지만 근거로 삼고, 2초 실행·DB 30초 장애·RESTARTS 역산은 가정으로 표기한다.",
+  },
+  "cloud/kubernetes-pvc-pv-storageclass-csi": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "20Gi RWO PVC 하나를 생성 → 바인딩 모드 → CSI 계단 → 노드 장애 뒤 6분 → reclaimPolicy까지 한 사례로 따라가는 글이다. 바인딩과 attach·mount는 같은 '디스크가 어디에 있어야 하는가' 질문의 연속 계단이라 나누면 사례를 다시 세워야 한다.",
+    sharedGate:
+      "Kubernetes v1.37.1 원문·CSI 명세·공식 문서에 적힌 동작까지만 근거로 삼고, 클러스터 구성과 시각은 가정으로 표기한다.",
+  },
+  "cloud/kubernetes-rollout-termination-pdb-drain-hpa": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "replicas 4인 Deployment 하나로 롤아웃 반올림 → Pod 종료의 두 시계 → PDB·drain → HPA를 따라가는 글이다. 네 조절기가 모두 Ready 수를 센다는 하나의 답으로 묶이므로 나누면 그 연결이 사라진다.",
+    sharedGate:
+      "Kubernetes v1.37.1 원문과 공식 문서에 적힌 기본값·조건식까지만 근거로 삼고, 사례의 시간·사용률은 가정으로 표기한다.",
+  },
+  "cloud/kubernetes-sre-slo-burn-rate-upgrades": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-17",
+    rationale:
+      "30일 99.9% SLO 서비스 하나와 10분짜리 장애 하나를 budget → burn rate → 두 창 경보 → budget 정책 → 업그레이드 skew → toil → postmortem까지 같은 숫자로 따라가는 글이다. 경보와 postmortem이 같은 budget 단위를 쓰므로 나누면 사례를 두 번 세워야 한다.",
+    sharedGate:
+      "SRE 책·Workbook·Kubernetes 문서·v1.37.1 원문과 공개 postmortem에 적힌 사실까지만 근거로 삼고, 서비스 수치와 toil 예시는 가정으로 표기한다.",
+  },
 };
 
 /**
@@ -3085,6 +3211,20 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-process-signals-pid1-fds": "617ba65f03795bbf",
   "cloud/linux-disk-full-inode-deleted-files": "ea87fa9015e572d7",
   "cloud/linux-systemd-boot-change-incidents": "9535058a38f9199c",
+  "cloud/kubernetes-concept-map": "c1411209005ba428",
+  "cloud/kubernetes-controllers-reconcile-deployment-job": "bd4673e956cdb5ef",
+  "cloud/kubernetes-pod-states-crashloop-probes-events": "71915b319fb8e185",
+  "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": "4b2862ef40be22aa",
+  "cloud/kubernetes-pvc-pv-storageclass-csi": "6352dfc09d42853c",
+  "cloud/kubernetes-requests-limits-allocatable-qos": "5bc7e3a5690cbf48",
+  "cloud/kubernetes-rollout-termination-pdb-drain-hpa": "24e092165e51913b",
+  "cloud/kubernetes-sre-slo-burn-rate-upgrades": "3ad799ccbd56bd29",
+  "cloud/linux-containers-cgroup-namespace": "e78fec1de8af88dd",
+  "cloud/linux-kernel-process-syscall-scheduler": "2fd9a4fc5b086a30",
+  "cloud/linux-network-interface-route-netfilter-dns": "a9871ecdc9e28313",
+  "cloud/linux-observability-proc-psi-perf-ebpf": "095b9fa86665cb00",
+  "cloud/linux-sre-metrics-slo-safe-change": "0cd02aecc865da07",
+  "cloud/linux-vfs-mount-page-cache-fsync": "9212194749bbf2f9",
   "cloud/linux-server-interview-incident-map": "92feb58234634b96",
   "ai/laya-system1-decision-model": "c299c073c3e24b17",
   "ai/neural-network": "58462a73abf9d1af",

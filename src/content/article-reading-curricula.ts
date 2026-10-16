@@ -8,6 +8,12 @@ export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
   Record<string, readonly string[]>
 > = {
   "cloud-linux": [
+    "linux-kernel-process-syscall-scheduler",
+    "linux-containers-cgroup-namespace",
+    "linux-vfs-mount-page-cache-fsync",
+    "linux-network-interface-route-netfilter-dns",
+    "linux-observability-proc-psi-perf-ebpf",
+    "linux-sre-metrics-slo-safe-change",
     "linux-server-interview-incident-map",
     "linux-memory-page-cache-oom",
     "linux-disk-full-inode-deleted-files",
@@ -16,8 +22,16 @@ export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
     "linux-systemd-boot-change-incidents",
   ],
   "cloud-kubernetes": [
+    "kubernetes-concept-map",
+    "kubernetes-controllers-reconcile-deployment-job",
+    "kubernetes-pod-to-node-scheduler-kubelet-notready",
+    "kubernetes-requests-limits-allocatable-qos",
+    "kubernetes-pod-states-crashloop-probes-events",
     "kubernetes-request-path-and-cka",
+    "kubernetes-pvc-pv-storageclass-csi",
     "kubernetes-network-packet-path",
+    "kubernetes-rollout-termination-pdb-drain-hpa",
+    "kubernetes-sre-slo-burn-rate-upgrades",
   ],
   "hw-ai-cluster": [
     "ai-infrastructure-b300-128-blueprint",

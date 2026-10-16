@@ -41,14 +41,14 @@ export const CATEGORY_READING_PATHS: Readonly<
       },
       {
         eyebrow: "03 · Linux",
-        title: "서버 한 대의 증상을 커널 자원까지 좁히기",
-        description: "부하·메모리·디스크·프로세스·연결·서비스 관리자 순서로, 면접 질문과 실제 장애를 같은 명령과 커널 코드로 추적합니다.",
+        title: "커널 기초를 쌓고 서버 한 대의 증상을 커널 자원까지 좁히기",
+        description: "시스템 콜·cgroup·VFS·네트워크 스택·관측 도구·SRE 관점의 기초 여섯 편을 먼저 쌓고, 부하·메모리·디스크·프로세스·연결·서비스 관리자 장애를 같은 명령과 커널 코드로 추적합니다.",
         subcategories: ["cloud-linux"],
       },
       {
         eyebrow: "04 · Kubernetes",
-        title: "Pod 하나와 연결 하나를 끝까지 추적하기",
-        description: "원하는 개수가 Ready endpoint가 되는 경로와 Service 주소가 실제 Pod에 닿는 패킷 경로를 공식 문서·명령으로 확인합니다.",
+        title: "여덟 운영 질문을 controller·Node·Linux 세 층으로 쌓기",
+        description: "controller가 목표 상태를 복구하는 방식, Pod가 Node에 오르고 떨어지는 시계, requests와 실제 할당, Pending·CrashLoopBackOff·NotReady, PVC, 종료·롤아웃, SLO까지 v1.37.1 원문과 공개 장애로 확인합니다.",
         subcategories: ["cloud-kubernetes"],
       },
       {
@@ -72,7 +72,9 @@ export const CATEGORY_READING_PATHS: Readonly<
       "cloud-compute-selection",
       "cloud-storage-database-selection",
       "cloud-reliability-observability-iac",
+      "linux-containers-cgroup-namespace",
       "linux-server-interview-incident-map",
+      "kubernetes-concept-map",
       "kubernetes-request-path-and-cka",
       "kubernetes-network-packet-path",
       "aws-clf-c02-fast-study",
