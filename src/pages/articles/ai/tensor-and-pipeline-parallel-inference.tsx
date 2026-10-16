@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorAndPipelineParallelInferenceViz from "./tensor-and-pipeline-parallel-inference/viz/TensorAndPipelineParallelInferenceViz";
 import PipelineBubbleGridViz from "./tensor-and-pipeline-parallel-inference/viz/PipelineBubbleGridViz";
+import RingAttentionBlockViz from "./tensor-and-pipeline-parallel-inference/viz/RingAttentionBlockViz";
 
 /**
  * Tensor·pipeline·data·context parallel 은 서로 다른 축을 나눠 서로 다른 통신을 만듭니다
@@ -333,7 +334,12 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             sequence 길이의 제곱이라 token 축으로 나누면 계산도 같이 나뉩니다. decode 에서는 query 가 token 하나라 block 계산이 짧아 c ≥ F/B 를
             만족하지 못하므로 KV 를 나눠 둔 채 부분 attention 결과만 모으는 쪽이 보통입니다.
           </p>
+          <p>
+            GPU 4 장으로 줄여 그리면 query block 은 제자리에 있고 KV block 만 ring 을 한 칸씩 돕니다. 네 step 이 지나면 query block 과 KV block
+            의 쌍 16 개가 모두 한 번씩 계산됩니다.
+          </p>
         </div>
+        <RingAttentionBlockViz />
         <AlgorithmBlock
           title="Ring Attention 의 context-parallel prefill (host N_h 개)"
           input={["입력 sequence x 와 GPU 수 N_h", "GPU 마다 hidden d, 처리 능력 F FLOP/s, 이웃 link 대역폭 B byte/s", "block 크기 c = len(x) / N_h, 조건 c ≥ F/B 확인"]}

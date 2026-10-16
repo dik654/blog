@@ -74,7 +74,7 @@ function ConceptGlyph({
       viewBox="0 0 72 56"
       role="img"
       aria-label={`${concept.label} · ${kind}`}
-      className={large ? "h-14 w-[4.5rem] sm:h-20 sm:w-24" : "h-10 w-12 sm:h-14 sm:w-[4.5rem]"}
+      className={large ? "h-14 w-[4.5rem] sm:h-20 sm:w-24" : "h-10 w-12 shrink-0 sm:h-10 sm:w-[3.25rem]"}
     >
       <title>{concept.label}</title>
       {kind === "input" ? (
@@ -444,7 +444,7 @@ export default function ArticleLessonFlowViz({
               <section
                 key={`${stage.label}-${stageIndex}`}
                 data-lesson-stage
-                className="relative grid min-w-0 grid-cols-1 gap-3 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-2 sm:px-4 sm:py-4 md:grid-cols-[10rem_minmax(0,1fr)] max-sm:shrink-0 max-sm:content-start max-sm:gap-1.5 max-sm:border-b-0 max-sm:border-r max-sm:py-2 max-sm:last:border-r-0"
+                className="relative grid min-w-0 grid-cols-1 gap-3 border-b border-border/55 px-3 py-3 last:border-b-0 sm:grid-cols-[8rem_minmax(0,1fr)] sm:items-center sm:gap-2 sm:px-4 sm:py-1.5 md:grid-cols-[9rem_minmax(0,1fr)] max-sm:shrink-0 max-sm:content-start max-sm:gap-1.5 max-sm:border-b-0 max-sm:border-r max-sm:py-2 max-sm:last:border-r-0"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -480,7 +480,7 @@ export default function ArticleLessonFlowViz({
                           aria-selected={selected}
                           aria-label={`${index + 1}. ${candidate.concept.label}`}
                           onClick={() => selectConcept(index)}
-                          className={`relative flex w-[5.25rem] min-w-0 flex-col items-center rounded-lg px-1 py-1 text-center transition-colors sm:w-[7.25rem] sm:px-1.5 ${
+                          className={`relative flex w-[5.25rem] min-w-0 flex-col items-center rounded-lg px-1 py-1 text-center transition-colors sm:w-[10rem] sm:flex-row sm:gap-1.5 sm:px-1.5 sm:text-left ${
                             selected
                               ? "bg-primary/[0.065] text-primary"
                               : "text-foreground hover:bg-muted/35"
@@ -506,7 +506,7 @@ export default function ArticleLessonFlowViz({
                             index={index + 1}
                             selected={selected}
                           />
-                          <span className="-mt-1 block break-words text-[10px] font-bold leading-4">
+                          <span className="-mt-1 block min-w-0 break-words text-[10px] font-bold leading-4 sm:mt-0">
                             {candidate.concept.label}
                           </span>
                         </button>
@@ -518,7 +518,7 @@ export default function ArticleLessonFlowViz({
                 {groupIndex < stageGroups.length - 1 ? (
                   <div
                     data-stage-flow-arrow
-                    className="col-span-full hidden justify-center pt-1 md:flex"
+                    className="pointer-events-none absolute -bottom-2.5 left-3 z-10 hidden bg-card md:flex"
                     aria-hidden="true"
                   >
                     <span className="rotate-90">

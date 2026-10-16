@@ -1,6 +1,7 @@
 import TermBreakdown from "@/components/articles/term-breakdown";
 import BasisTraceViz from "./flash-attention-io-aware-kernel/viz/BasisTraceViz";
 import OnlineSoftmaxTileViz from "./flash-attention-io-aware-kernel/viz/OnlineSoftmaxTileViz";
+import HbmRoundTripViz from "./flash-attention-io-aware-kernel/viz/HbmRoundTripViz";
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
@@ -66,6 +67,10 @@ export default function Article(){
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">(가정) 크기 효과를 따로 봅니다. 위치 4,096개에 성분 64개를 두고 숫자 하나를 2바이트에 저장합니다. 위치를 가리거나 무작위로 연결을 끊지 않습니다. Q·K·V 배열은 각각 4,096위치 × 위치마다 64개 값 = 262,144개 값입니다. 값마다 2바이트이므로 배열 하나는 524,288바이트, 곧 512KiB이며 세 배열의 합은 1.5MiB입니다.</p>
         <p className="leading-8">위치마다 4,096개 위치와 비교하면 점수가 4,096²개 생깁니다. 점수 배열과 정규화한 가중치 배열은 각각 4,096²개 값 × 값마다 2바이트 = 32MiB입니다. 32MiB짜리 배열 2개를 각각 한 번 쓰고 한 번 읽으므로 이동량은 배열마다 32MiB × 2배열 × 쓰기·읽기 2회 = 128MiB입니다. 필요한 두 조각을 계산한 뒤 바로 소비하면 이 전체 배열의 저장을 피할 수 있습니다.</p>
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">아래 그림은 512KiB를 한 칸으로 두고 이 왕복을 셉니다. 입력 세 배열은 3칸인데 S와 P는 64칸씩이고 그 64칸이 네 번 오갑니다.</p></div>
+      <HbmRoundTripViz />
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">128MiB는 입력 세 배열 합의 약 85.33배입니다. 출력 배열까지 포함한 네 배열 합 2MiB를 분모로 삼아야 64배가 됩니다. 독립 계산 묶음 32개·입력 8건이면 32GiB이고 가정한 2TB/s로 나눈 17.18ms는 이 왕복만의 처리량 하한입니다. 실제 실행시간이나 모든 attention의 병목을 단정하는 숫자가 아닙니다.</p>
         <p className="leading-8">이 숫자는 점수와 가중치를 별도 배열에 남기는 설명용 구현의 장부입니다. 실제 라이브러리는 이미 여러 계산을 합쳐 중간 저장을 피할 수 있습니다. 함수 이름만 보고 모든 호출에 128MiB의 왕복을 붙이지 않습니다.</p>
       </div>

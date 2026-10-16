@@ -1,6 +1,6 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import PrefixHashViz from "./viz/PrefixHashViz";
+import PrefixHashChainViz from "./viz/PrefixHashChainViz";
 import PrefixScopeViz from "./viz/PrefixScopeViz";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
@@ -70,7 +70,7 @@ const SAVING_TERMS = [
 ] as const;
 
 
-export default function PrefixCaching({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) { return <div className="space-y-16"><section id="prefix-caching" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 같은 앞의 32 token을 다시 읽지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>다시 길이 35인 A와 B의 사례입니다. 이 절에서는 hash 단위와 physical block이 모두 16이고 앞의 32 token이 완전히 같다고 가정합니다. A가 만든 P7·P2를 B가 hit하고 touch하면 B는 남은 3 token을 새로 처리합니다. 두 요청이 동시에 살아 있다면 P7·P2의 참조 수는 2입니다. (가정)</p><p>현재 구간의 token만 같아서는 부족합니다. 앞 문맥이 달라지면 같은 token의 KV도 달라질 수 있어 이전 구간의 hash를 현재 키에 넣습니다. LoRA나 이미지 등의 추가 조건도 실제 KV 의미가 달라지면 구분되어야 합니다. 모델 자체의 다른 버전을 이 함수가 자동으로 전부 알아서 구분한다고 해석해서는 안 됩니다.</p><p>kv_cache_utils.py 596–624행의 hash_block_tokens는 parent hash, token tuple, extra keys를 묶습니다. 100–114행은 첫 parent에 쓸 NONE_HASH를 초기화하며 환경의 hash seed가 없으면 임의 byte를 사용합니다. 모든 프로세스에서 같은 고정 sentinel이라는 설명은 틀립니다.</p><p>v0.27.1 공식 문서에서는 sha256이 기본이며 sha256_cbor는 다른 언어에서도 재현할 직렬화 선택입니다. 첫 hash에 넣는 cache salt는 재사용 영역을 나누는 데 쓰입니다. 같은 문자열처럼 보여도 template·특수 token·공백이 token ID를 바꾸면 같은 키가 아닐 수 있습니다.</p></div><PrefixHashViz /><ExplainedFormula
+export default function PrefixCaching({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) { return <div className="space-y-16"><section id="prefix-caching" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">13. 같은 앞의 32 token을 다시 읽지 않습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>다시 길이 35인 A와 B의 사례입니다. 이 절에서는 hash 단위와 physical block이 모두 16이고 앞의 32 token이 완전히 같다고 가정합니다. A가 만든 P7·P2를 B가 hit하고 touch하면 B는 남은 3 token을 새로 처리합니다. 두 요청이 동시에 살아 있다면 P7·P2의 참조 수는 2입니다. (가정)</p><p>현재 구간의 token만 같아서는 부족합니다. 앞 문맥이 달라지면 같은 token의 KV도 달라질 수 있어 이전 구간의 hash를 현재 키에 넣습니다. LoRA나 이미지 등의 추가 조건도 실제 KV 의미가 달라지면 구분되어야 합니다. 모델 자체의 다른 버전을 이 함수가 자동으로 전부 알아서 구분한다고 해석해서는 안 됩니다.</p><p>kv_cache_utils.py 596–624행의 hash_block_tokens는 parent hash, token tuple, extra keys를 묶습니다. 100–114행은 첫 parent에 쓸 NONE_HASH를 초기화하며 환경의 hash seed가 없으면 임의 byte를 사용합니다. 모든 프로세스에서 같은 고정 sentinel이라는 설명은 틀립니다.</p><p>v0.27.1 공식 문서에서는 sha256이 기본이며 sha256_cbor는 다른 언어에서도 재현할 직렬화 선택입니다. 첫 hash에 넣는 cache salt는 재사용 영역을 나누는 데 쓰입니다. 같은 문자열처럼 보여도 template·특수 token·공백이 token ID를 바꾸면 같은 키가 아닐 수 있습니다.</p></div><PrefixHashChainViz /><ExplainedFormula
         question="같은 token block이 다른 위치나 다른 adapter의 KV와 잘못 섞이지 않게 cache key를 어떻게 만들까요?"
         idea={
           <>

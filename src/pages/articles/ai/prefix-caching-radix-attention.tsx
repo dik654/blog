@@ -5,6 +5,7 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import PrefixCachingRadixAttentionViz from "./prefix-caching-radix-attention/viz/PrefixCachingRadixAttentionViz";
 import CacheAwareOrderViz from "./prefix-caching-radix-attention/viz/CacheAwareOrderViz";
+import PageGranularityHitViz from "./prefix-caching-radix-attention/viz/PageGranularityHitViz";
 import { codeRefs } from "./prefix-caching-radix-attention/codeRefs";
 import { prefixTrees } from "./prefix-caching-radix-attention/fileTree";
 export default function PrefixCachingRadixAttentionArticle() {const sidebar=useCodeSidebar();return <><div className="space-y-16">
@@ -50,7 +51,7 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
 <section id="block-hash" data-teach-level="5" className="scroll-mt-20"><span id="source-vllm-prefix-caching" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">10. 네 자리 묶음이면 R2는 앞 네 자리만 재사용합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>vLLM의 기본 비교 모형으로 저장 block과 hash 단위를 모두 B=4로 둡니다. R1은 [1,2,3,4]와 [5,6,7,8], R2는 [1,2,3,4]와 [5,6,9,10]으로 나뉩니다. 첫 block의 키는 같고 둘째는 다릅니다. B=4는 설명용 가정이며 모든 GPU backend가 이 설정을 받는다는 뜻은 아닙니다.</p><p>v0.27.1 commit 6e448d0의 kv_cache_utils.py 596–624행은 앞 block의 hash, 현재 token tuple, extra_keys를 함께 hash합니다. 현재 네 자리만 같아도 앞 문맥의 hash가 다르면 같은 키가 아닙니다. LoRA·멀티모달·salt 등 실제 추가 키의 구성도 호출 경로에서 확인해야 합니다.</p><p>
             이 경로에서 R2는 4를 hit하고 남은 4를 다시 계산합니다. 그중 5·6은 R1과 번호가 같지만 같은 full block으로 재사용되지 않았습니다. R3도 4를 hit하므로
             총 재사용은 8, 저장은 공통 block 1과 전용 block 3인 16자리입니다.
-          </p><p>이 단순 모형의 범위도 고정합니다. 더 작은 hash 단위로 block 내부 경계를 찾는 partial-hit 경로는 별도로 있습니다. 고정 single_type_kv_cache_manager.py의 fine_grained 분기가 이를 처리하며 manager·group·정렬 조건과 공유 tail의 복사 수명을 함께 봅니다.</p></div><CodeViewButton label="parent·token·추가 조건을 묶는 hash 원문" onClick={() => sidebar.open("hash-key", codeRefs["hash-key"])} /><CodeViewButton label="full block과 내부 hash 경계 조회" onClick={() => sidebar.open("block-hit", codeRefs["block-hit"])} /></section>
+          </p><p>이 단순 모형의 범위도 고정합니다. 더 작은 hash 단위로 block 내부 경계를 찾는 partial-hit 경로는 별도로 있습니다. 고정 single_type_kv_cache_manager.py의 fine_grained 분기가 이를 처리하며 manager·group·정렬 조건과 공유 tail의 복사 수명을 함께 봅니다.</p></div><PageGranularityHitViz /><CodeViewButton label="parent·token·추가 조건을 묶는 hash 원문" onClick={() => sidebar.open("hash-key", codeRefs["hash-key"])} /><CodeViewButton label="full block과 내부 hash 경계 조회" onClick={() => sidebar.open("block-hit", codeRefs["block-hit"])} /></section>
 
 <section id="full-hit-boundary" data-teach-level="5" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">11. 입력 전체가 남아 있어도 마지막 계산은 남을 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
             같은 R1의 여덟 자리 전체가 저장된 뒤 똑같은 입력이 다시 온다고 합시다. 저장된 것은 KV이며 다음 출력의 점수를 새로 구해야 하는 경로라면 마지막 입력 위치를 남깁니다.

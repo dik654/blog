@@ -8,6 +8,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import InferenceEngineDesignAxesViz from "./inference-engine-design-axes/viz/InferenceEngineDesignAxesViz";
 import KvUnitTailViz from "./inference-engine-design-axes/viz/KvUnitTailViz";
 import PrefixReuseUnitViz from "./inference-engine-design-axes/viz/PrefixReuseUnitViz";
+import OverlapStepViz from "./inference-engine-design-axes/viz/OverlapStepViz";
 import { codeRefs } from "./inference-engine-design-axes/codeRefs";
 import { engineTrees } from "./inference-engine-design-axes/fileTree";
 
@@ -245,6 +246,7 @@ export default function InferenceEngineDesignAxesArticle() {
               <Link to="/cs/ai/sglang-runtime-anatomy#overlap-edges">SGLang 글의 13절</Link>에 있습니다. llama.cpp 서버의 loop는 이 글에서 따로 확인하지 않았습니다.
             </p>
           </div>
+          <OverlapStepViz />
           <div className="flex flex-wrap gap-2">
             {code("sglang-overlap", "SGLang overlap loop")}
             {code("vllm-async", "vLLM 비동기 scheduling 기본값")}

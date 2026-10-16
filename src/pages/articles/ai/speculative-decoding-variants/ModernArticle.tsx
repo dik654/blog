@@ -9,6 +9,7 @@ import TreeTraceViz from "./viz/TreeTraceViz";
 import MtpCostViz from "./viz/MtpCostViz";
 import MaskTable from "./MaskTable";
 import TreeMaskViz from "./viz/TreeMaskViz";
+import MtpChainViz from "./viz/MtpChainViz";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 
@@ -217,6 +218,7 @@ export default function ModernArticle() {
             안 됩니다. MTP라는 학습 목표를 추론의 후보 생성에 재사용할 때도 정확한 모델 구조를 확인해야 합니다.
           </p>
 </div>
+<MtpChainViz />
 <ExplainedFormula question="앞 상태와 다음 토큰은 어디서 만날까요?" idea="보고서의 순차 깊이 k에서 두 상태를 정규화하고 이어 붙여 새 모듈에 넣습니다." formula={String.raw`\begin{aligned}h_i^{\prime k}&=M_k[\operatorname{RMSNorm}(h_i^{k-1});\operatorname{RMSNorm}(\operatorname{Emb}(t_{i+k}))]\\h^k&=\operatorname{TRM}_k(h^{\prime k})\\P_{i+k+1}^k&=\operatorname{OutHead}(h_i^k)\end{aligned}`} annotatedFormula={String.raw`\begin{aligned}\underbrace{a_i^k}_{\text{앞 상태}}&=\operatorname{RMSNorm}(h_i^{k-1})\\\underbrace{u_i^k}_{\text{다음 토큰}}&=\operatorname{Emb}(t_{i+k})\\\underbrace{e_i^k}_{\text{정규화한 토큰}}&=\operatorname{RMSNorm}(u_i^k)\\\underbrace{h_i^{\prime k}}_{\text{합친 상태}}&=M_k[a_i^k;e_i^k]\\\underbrace{h_i^k}_{\text{후보 상태}}&=\operatorname{TRM}_k(h_i^{\prime k})\\\underbrace{P_{i+k+1}^k}_{\text{다음 분포}}&=\operatorname{OutHead}(h_i^k)\end{aligned}`} terms={[{"symbol": "h_i^{k-1}", "name": "이전 깊이의 상태", "description": "k=1이면 기존 네 자리의 main model 상태입니다."}, {"symbol": "t_{i+k}", "name": "이미 지정한 다음 토큰", "description": "작은 사례의 첫 깊이에서는 R입니다."}, {"symbol": "M_k", "name": "두 입력을 합치는 투영", "description": "d×2d 행렬이 2d차원 입력을 d차원으로 만듭니다."}]} operations={[{"expression": "[h;\\operatorname{Emb}(R)]", "annotation": ["각각 정규화한 두 d차원 입력을 이어 붙입니다."]}, {"expression": "\\operatorname{OutHead}(h_i^1)", "annotation": ["그다음 A를 포함한 후보의 점수를 만듭니다."]}]} assumptions={["DeepSeek-V3 report v2의 식 21–23 구조입니다.", "모듈을 반복 실행하는 모든 구현의 비용이나 수락률을 이 식만으로 알 수는 없습니다."]} interpretation="공유 embedding·공유 head와 별도 block·projection을 구분합니다."/><CitationBlock citeKey={18} source="DeepSeek-V3 Technical Report v2 — §2.2 equations 21–23" href="https://arxiv.org/html/2412.19437v2">네 자리의 마지막 상태와 R을 식에 넣어 A의 예측이 생기는 경로를 확인합니다.</CitationBlock>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">후보 하나의 수락 확률이 .85라도 검증이 단독 생성의 두 배라면 후보 비용을 .016으로 가정한 시간 비는 1.85/2.016≈.9177입니다. 잘 맞는 후보라는 사실만으로는 이득이 되지 않습니다. 모듈 실행 시간과 기준 모델의 여러 자리 검증 시간을 같은 부하에서 재야 합니다. (가정)</p>

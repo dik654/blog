@@ -3,7 +3,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import PreemptionTraceViz from "./viz/PreemptionTraceViz";
+import PreemptRecomputeViz from "./viz/PreemptRecomputeViz";
 import BatchingGenerationsViz from "./viz/BatchingGenerationsViz";
 import SchedulerKnobViz from "./viz/SchedulerKnobViz";
 const WASTE_TERMS = [
@@ -160,7 +160,7 @@ C_{preempt} &\approx T_{model}\!\left(W_r^{recompute}\right)
           interpretation="P가 8 token을 계산한 뒤 중단됐고 재개 시 3 token의 유효한 기록만 재사용하면 이전 계산 5 token을 다시 처리합니다. 새로 처리할 입력은 이 반복량과 별개이며 저장·대기·재시도 비용도 더 확인합니다. (가정)"
           title="Recomputation waste와 사용자 지연"
         />
-        <PreemptionTraceViz />
+        <PreemptRecomputeViz />
         <CodeViewButton
           label="실제 선점과 재삽입 원문"
           onClick={() =>

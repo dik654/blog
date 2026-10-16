@@ -7,6 +7,7 @@ import BudgetPipelineViz from "./viz/BudgetPipelineViz";
 import MoEResidencyViz from "./viz/MoEResidencyViz";
 import HybridStateGrowthViz from "./viz/HybridStateGrowthViz";
 import WeightVramViz from "./viz/WeightVramViz";
+import MixedDtypeTensorViz from "./viz/MixedDtypeTensorViz";
 import QuantizationVramTradeoff from "./QuantizationVramTradeoff";
 import VramBudgetingComponents from "./VramBudgetingComponents";
 import MultiGpuVramStrategies from "./MultiGpuVramStrategies";
@@ -91,6 +92,10 @@ M_W
             assumptions={["Tensor payload 기준이며 file header·alignment·runtime conversion은 별도입니다.", "Parameter count는 checkpoint metadata 또는 모든 tensor shape의 곱에서 구합니다."]}
             interpretation="Headline×단일 dtype은 빠른 상한·하한 감각에 유용하지만, 실제 admission에는 dtype histogram으로 계산한 payload를 사용합니다."
           />
+          <p className="mt-6 leading-8">
+            식을 공식 혼합 FP8 checkpoint에 대입하면 타일 개수는 dtype과 상관없이 같고 BF16 타일만 폭이 두 배가 됩니다. 아래 그림에서 그 차이가 48 GiB 한 장의 칸 수로 어떻게 바뀌는지 셀 수 있습니다.
+          </p>
+          <MixedDtypeTensorViz />
         </div>
 
         <div id="dtype-ledger" className="scroll-mt-20">

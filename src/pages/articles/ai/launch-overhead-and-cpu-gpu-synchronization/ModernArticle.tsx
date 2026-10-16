@@ -9,6 +9,7 @@ import {CodeSidebar,CodeViewButton,useCodeSidebar} from "@/components/code";
 import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import SubmissionTimelineViz from "./viz/SubmissionTimelineViz";
 import SyncScopeStreamsViz from "./viz/SyncScopeStreamsViz";
+import InflightDepthViz from "./viz/InflightDepthViz";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 계산이 빨라도 다음 일을 기다릴 수 있습니다</h2><div className={prose}>
@@ -134,6 +135,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>미리 제출하면 GPU가 기다리는 시간을 줄일 수 있지만 처리 중인 일의 수는 늘어납니다. (별도 가정) 프로그램이 다음 회를 준비하기 전에 미완료 회 수를 검사하고 최대 D개만 남긴다고 둡니다. 이 D는 실제 CUDA driver의 공통 queue 크기가 아니라 여기서 만든 프로그램의 제한입니다.</p>
 <p>Graph 사례에서 D=1이면 첫 회가 7 μs에 끝나야 다음 준비를 합니다. 완료는 7·14·21 μs로 매회 기다리던 경우와 같고 마지막 제출은 17 μs에 끝납니다. 마지막에도 CPU가 결과를 읽도록 강제한 것은 아니므로 CPU 제출 종료 17과 전체 완료 21은 여전히 다릅니다.</p>
 <p>D=2이면 두 회를 제출한 6 μs에 미완료 회가 둘입니다. 가장 이른 완료 7 μs까지 기다렸다가 세 번째를 준비합니다. 준비 7–9 μs와 제출 9–10 μs 뒤 GPU는 앞 회가 끝난 11 μs부터 실행하므로 최종 완료는 15 μs 그대로입니다. CPU 제출 종료는 제한 없는 9에서 10 μs로 늦지만 GPU 완료는 늦어지지 않는 사례입니다.</p>
+</div><InflightDepthViz /><div className={prose}>
 <p>대기를 구현할 때 시계를 과거로 되돌리면 안 됩니다. 현재 시각과 가장 이른 완료 중 큰 값으로 전진하고 그 시각까지 완료한 항목을 제거합니다. 실행 시작 시각을 가져와 무조건 CPU 시각에 대입하는 방식으로는 이 제한을 올바르게 계산할 수 없습니다.</p>
 </div></section>
 <section id="eos" data-teach-level="7" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">19. 종료 판정을 늦추면 의미도 바뀔 수 있습니다</h2><div className={prose}>

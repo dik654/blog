@@ -9,6 +9,7 @@ import { kvCacheFundamentalsTree } from "./kv-cache-fundamentals/fileTree";
 import { SHAPE_TERMS, BYTE_TERMS } from "./kv-cache-fundamentals/formulaTerms";
 import KVCacheLifecycleViz from "./kv-cache-fundamentals/viz/KVCacheLifecycleViz";
 import KvHeadSharingViz from "./kv-cache-fundamentals/viz/KvHeadSharingViz";
+import MlaAbsorbViz from "./kv-cache-fundamentals/viz/MlaAbsorbViz";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
@@ -139,7 +140,7 @@ B_{token} &= L_{KV}E_{KV}N_{tensor}b_{dtype}
 
 <section id="cache-representation-design" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">18. 같은 기록을 더 작은 공통 숫자로 나타낼 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>앞의 첫 head는 K=(0,c), V=(c,2c)로 쓸 수 있습니다. c가 1·2·3·4이면 8절의 네 K/V가 그대로 나옵니다. 이 사례는 위치마다 네 숫자를 따로 저장하는 대신 c 한 숫자를 남겨도 해당 K/V를 표현할 수 있게 정했습니다. (가정)</p><p>이렇게 큰 표현을 만드는 작은 공통 벡터가 latent입니다. MLA는 학습한 낮은 차원의 표현을 이용합니다. DeepSeek-V2 §2.1.2의 식 (9)는 입력을 작은 c로 만들고 식 (10)과 (11)은 c에서 K와 V를 만드는 선형 변환을 씁니다.</p><p>앞서 GQA는 같은 기록을 나눠 읽을 head 개수를 바꿨습니다. 여기서는 저장 표현 자체를 바꿉니다. 임의의 K/V 네 숫자를 항상 한 숫자로 손실 없이 줄일 수 있다는 주장은 아닙니다. 모델이 어떤 표현을 학습했는지가 전제입니다.</p></div><div id="mla-original" className="mt-8 scroll-mt-20"><CitationBlock source="DeepSeek-V2 v5 · §2.1.2, equations (9)–(11)" citeKey={1} href="https://arxiv.org/html/2405.04434v5#S2.SS1.SSS2"><q>cₜᴷⱽ = Wᴰᴷⱽhₜ</q></CitationBlock><div className="prose prose-neutral max-w-none dark:prose-invert"><p>사례의 cₜ=1·2·3·4와 K 쪽 열벡터 (0,1), V 쪽 열벡터 (1,2)를 넣으면 앞의 네 K/V를 만들 수 있습니다. 표기는 원문의 KV latent 경로를 읽기 쉽게 옮긴 것입니다.</p></div></div></section>
 
-<section id="mla-vs-gqa" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. MLA는 매번 전체 K/V를 펼치지 않아도 됩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 질문 q=(1,0)에 K=(0,c)를 내적하면 모든 점수가 0입니다. K를 먼저 만들지 않고 K 변환의 전치를 q에 곱하면 변환된 질문도 0이므로 c와 바로 비교해 같은 점수를 얻습니다. 어느 쪽도 아직 위치 회전을 넣지 않은 계산입니다.</p><p>V도 각각 펼친 뒤 더할 필요가 없습니다. 비율 1/4로 latent 1·2·3·4를 먼저 평균내면 2.5입니다. 여기에 V 변환 (1,2)를 적용하면 (2.5,5)입니다. 8절과 같은 출력이지만 계산 순서가 다릅니다.</p><p>DeepSeek-V2는 식 (11) 뒤에서 K의 상향 변환을 query 변환에, V의 상향 변환을 output 변환에 흡수할 수 있다고 설명합니다. 따라서 MLA가 모든 과거 K/V를 매번 복원해야 한다고 일반화할 수 없습니다. 실제 query·출력 계산과 사용하는 kernel의 비용은 남습니다.</p></div><ExplainedFormula title="행렬을 곱하는 순서를 바꿔 latent를 바로 읽습니다"
+<section id="mla-vs-gqa" data-teach-level="6" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">19. MLA는 매번 전체 K/V를 펼치지 않아도 됩니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 질문 q=(1,0)에 K=(0,c)를 내적하면 모든 점수가 0입니다. K를 먼저 만들지 않고 K 변환의 전치를 q에 곱하면 변환된 질문도 0이므로 c와 바로 비교해 같은 점수를 얻습니다. 어느 쪽도 아직 위치 회전을 넣지 않은 계산입니다.</p><p>V도 각각 펼친 뒤 더할 필요가 없습니다. 비율 1/4로 latent 1·2·3·4를 먼저 평균내면 2.5입니다. 여기에 V 변환 (1,2)를 적용하면 (2.5,5)입니다. 8절과 같은 출력이지만 계산 순서가 다릅니다.</p><p>DeepSeek-V2는 식 (11) 뒤에서 K의 상향 변환을 query 변환에, V의 상향 변환을 output 변환에 흡수할 수 있다고 설명합니다. 따라서 MLA가 모든 과거 K/V를 매번 복원해야 한다고 일반화할 수 없습니다. 실제 query·출력 계산과 사용하는 kernel의 비용은 남습니다.</p></div><MlaAbsorbViz /><ExplainedFormula title="행렬을 곱하는 순서를 바꿔 latent를 바로 읽습니다"
  question="과거의 K와 V를 모두 펼치지 않고 같은 출력을 계산할 수 있을까요?"
  idea="선형 곱에서는 괄호 위치를 바꿀 수 있습니다. K 쪽 행렬은 현재 질문으로 옮기고 V 쪽 행렬은 latent를 합친 뒤 한 번 적용합니다."
  formula={String.raw`q^\top(W_Kc_t)=(W_K^\top q)^\top c_t,\qquad \sum_t a_t(W_Vc_t)=W_V\left(\sum_t a_tc_t\right)`}

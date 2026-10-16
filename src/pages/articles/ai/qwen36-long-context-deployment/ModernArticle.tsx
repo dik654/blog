@@ -3,7 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import WeightVramViz from "../model-vram-budgeting/viz/WeightVramViz";
+import VramGridViz from "./viz/VramGridViz";
 import ContextEnvelopeViz from "./viz/ContextEnvelopeViz";
 import PartialRopeHeadViz from "./viz/PartialRopeHeadViz";
 
@@ -356,7 +356,7 @@ M_{free}
           />
         </div>
 
-        <WeightVramViz />
+        <VramGridViz />
 
         <div
           id="paper-qwen36-weights-context"
