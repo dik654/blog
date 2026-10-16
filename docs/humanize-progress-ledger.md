@@ -438,3 +438,10 @@ cloud-linux 신규 6편(허브·메모리·디스크·프로세스·TCP·systemd
 **일곱 회차 연속 C-11 단독.** S1 트리거는 6편 모두 `ending_comma_rate` 하나(z +2.72~+5.84)였고 개입은 쉼표 삭제 14·19·31·12·10·22개뿐이다. 대조·열거·긴 절 경계 쉼표는 남겼다. 오케스트레이터가 6개 모두 `01_input.txt`와 `final.md`를 쉼표·공백 제거 후 비교해 동일함을 확인했다. 지난 회차 함정(공유 `body.md` 덮어쓰기)은 run별 `eng{n}_` 접두어 임시 파일 지시로 재발하지 않았다.
 
 **사후 검증**: 되붙이기 누락 블록 0개, `audit-jsx-word-breaks` 0건, `audit:prose`·`audit:korean`·`audit:reading`·`audit:articles` 통과, 6개 route topology 지문 갱신 후 `audit:topology --strict` 통과.
+
+## 2026-10-17 · Linux 기초 6편 + Kubernetes 개념 8편 (포크 7개 병렬 집필)
+
+| 배치 | 파일 | 결과 | 비고 |
+|---|---|---|---|
+| linux-foundations L1~L6 | 신규 6편 | comma-only 수동 패스 · rhythm_check: L1 '-고' 4%·인접 2.1%, L3 5%·3.2%, L2 14.8%, L4 12.5%, L5·L6 16→13% | 연결어 분산, AI 티 표현 제거, 의미 불변 |
+| kubernetes-concepts K0~K7 | 신규 8편 | comma-only 수동 패스 · rhythm_check: K0 27→6%, K7 30→4%(인접 3.2%), K1 31문장·K2 36문장 '-고,' 재작성, K3·K4 '-는데' 2% | humanize-korean 스킬은 포크에서 서브에이전트 불가라 수동 대체 |

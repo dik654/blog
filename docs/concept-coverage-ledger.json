@@ -23992,6 +23992,576 @@
    "status": "done",
    "reason": "패치 뒤 장애 질문의 변경 경로",
    "updatedAt": "2026-10-15"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "시스템 콜 · 사용자/커널 모드 전환",
+   "action": "new",
+   "conceptId": "linux-user-kernel-boundary-syscall",
+   "owner": "/cloud/linux-kernel-process-syscall-scheduler#syscall-case",
+   "status": "done",
+   "reason": "cloud-linux 6편이 '시스템 콜'을 단어로만 썼고 경계·모드 전환·비용을 설명한 글이 없었음(05 감사 1절)",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "프로세스 vs 스레드 (clone 플래그)",
+   "action": "new",
+   "conceptId": "linux-thread-vs-process-clone-flags",
+   "owner": "/cloud/linux-kernel-process-syscall-scheduler#threads",
+   "status": "done",
+   "reason": "면접 단골이지만 저장소에 task_struct 공유 차이를 적은 글이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "프로세스 상태 R/S/D/Z 전이",
+   "action": "new",
+   "conceptId": "linux-task-states-rsdz",
+   "owner": "/cloud/linux-kernel-process-syscall-scheduler#states",
+   "status": "done",
+   "reason": "D·Z는 사례 글에 흩어져 있었고 네 상태 전체 그림이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "스케줄링 기초 (nice·가중치·EEVDF)",
+   "action": "new",
+   "conceptId": "linux-eevdf-scheduler-pick",
+   "owner": "/cloud/linux-kernel-process-syscall-scheduler#eevdf",
+   "status": "done",
+   "reason": "cloud-linux 전체에서 CFS·EEVDF·nice·run queue 0회. Kubernetes CPU requests → cpu.weight의 바닥",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "cgroup v2 CPU quota · throttling",
+   "action": "new",
+   "conceptId": "linux-cgroup-v2-cpu-quota-throttling",
+   "owner": "/cloud/linux-containers-cgroup-namespace#small-case",
+   "status": "done",
+   "reason": "Kubernetes CPU limit 스로틀링의 바닥. 블로그 전체에 cpu.max·CFS bandwidth 설명이 0회였음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "requests → cpu.weight · limits → cpu.max 변환",
+   "action": "new",
+   "conceptId": "linux-cgroup-v2-cpu-weight-kubelet-conversion",
+   "owner": "/cloud/linux-containers-cgroup-namespace#kubelet-translation",
+   "status": "done",
+   "reason": "requests와 limits가 서로 다른 커널 파일이 된다는 사실이 K8s 글들의 전제인데 어디에도 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "memory.high vs memory.max",
+   "action": "new",
+   "conceptId": "linux-cgroup-memory-high-vs-max",
+   "owner": "/cloud/linux-containers-cgroup-namespace#memory-high-max",
+   "status": "done",
+   "reason": "메모리 글이 memory.max 경로만 다루고 high의 '죽지 않는 감속'과 K8s 기본값은 비어 있었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "Linux namespaces 8종",
+   "action": "new",
+   "conceptId": "linux-namespaces-eight-kinds",
+   "owner": "/cloud/linux-containers-cgroup-namespace#namespaces",
+   "status": "done",
+   "reason": "PID namespace만 proc 글에 있었고 net·mnt·uts·user 등 일반 정의와 Pod 공유 범위가 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "capabilities · CapEff bitmap · securityContext",
+   "action": "new",
+   "conceptId": "linux-capabilities-bitmap-bounding",
+   "owner": "/cloud/linux-containers-cgroup-namespace#capabilities",
+   "status": "done",
+   "reason": "cloud-linux에 capability 0회. K8s securityContext와 함께 읽히도록 L2에 포함",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "VFS · dentry 캐시",
+   "action": "new",
+   "conceptId": "linux-vfs-dentry-inode-file",
+   "owner": "/cloud/linux-vfs-mount-page-cache-fsync#vfs-objects",
+   "status": "done",
+   "reason": "disk·proc 글이 VFS·dentry를 단어로만 썼고 '모든 파일시스템이 같은 open/read를 받는 이유'가 없었음(05 감사 3절)",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "mount · bind mount · overlayfs",
+   "action": "new",
+   "conceptId": "linux-overlayfs-copy-up",
+   "owner": "/cloud/linux-vfs-mount-page-cache-fsync#overlayfs",
+   "status": "done",
+   "reason": "mount table·bind mount·overlayfs(컨테이너 이미지)가 블로그 전체에 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "fsync · writeback · journaling",
+   "action": "new",
+   "conceptId": "linux-fsync-journal-flush",
+   "owner": "/cloud/linux-vfs-mount-page-cache-fsync#fsync",
+   "status": "done",
+   "reason": "fsync 0회, journal 2회 언급뿐. dirty page→writeback→fsync 비용 설명이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "block device · iostat 열",
+   "action": "new",
+   "conceptId": "linux-iostat-block-layer-columns",
+   "owner": "/cloud/linux-vfs-mount-page-cache-fsync#block-iostat",
+   "status": "done",
+   "reason": "disk 글이 %util·await를 썼지만 블록 장치 자체와 열 정의는 0회",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "resolv.conf search · ndots",
+   "action": "new",
+   "conceptId": "linux-resolv-search-ndots",
+   "owner": "/cloud/linux-network-interface-route-netfilter-dns#small-case",
+   "status": "done",
+   "reason": "블로그 전체에서 ndots가 무관 글 1회뿐이었음. Kubernetes DNS 비용과 Zalando 장애의 바닥",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "veth · bridge · hairpin",
+   "action": "new",
+   "conceptId": "linux-veth-bridge-fdb",
+   "owner": "/cloud/linux-network-interface-route-netfilter-dns#veth-bridge",
+   "status": "done",
+   "reason": "cloud-linux에 인터페이스·veth·bridge 0회. Pod 네트워크 경로의 첫 칸",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "라우팅 결정 · ip rule · longest prefix match",
+   "action": "new",
+   "conceptId": "linux-routing-rules-lpm-trie",
+   "owner": "/cloud/linux-network-interface-route-netfilter-dns#routing",
+   "status": "done",
+   "reason": "systemd 글의 ip rule 사례가 기대는 일반 route lookup 설명이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "netfilter 훅 · iptables/nftables",
+   "action": "new",
+   "conceptId": "linux-netfilter-five-hooks",
+   "owner": "/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks",
+   "status": "done",
+   "reason": "cloud-linux에 netfilter 0회. kube-proxy 규칙이 걸리는 자리의 정본",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "conntrack 상한 · table full",
+   "action": "new",
+   "conceptId": "linux-conntrack-table-full",
+   "owner": "/cloud/linux-network-interface-route-netfilter-dns#conntrack",
+   "status": "done",
+   "reason": "TCP 글이 NAT 장부로만 다루던 conntrack에 기본값·drop 경로·timeout 계산을 더함",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "/proc 구조 · 카운터 두 번 읽기",
+   "action": "new",
+   "conceptId": "linux-proc-stat-cpu-utilization",
+   "owner": "/cloud/linux-observability-proc-psi-perf-ebpf#small-case",
+   "status": "done",
+   "reason": "기초 감사(05)에서 '/proc 자체 구조 없음'으로 판정. 명령이 읽는 파일과 뺄셈을 정본으로 둠",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "PSI cpu·io (memory 외)",
+   "action": "new",
+   "conceptId": "linux-psi-cpu-saturation",
+   "owner": "/cloud/linux-observability-proc-psi-perf-ebpf#pressure-case",
+   "status": "done",
+   "reason": "기초 감사(05) 'PSI는 memory 쪽만' 공백. SOME 식과 사용률 40%/PSI 25% 사례로 채움",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "USE 체크리스트 → 자원별 명령 매핑",
+   "action": "new",
+   "conceptId": "use-method-resource-grid",
+   "owner": "/cloud/linux-observability-proc-psi-perf-ebpf#use-grid",
+   "status": "done",
+   "reason": "map 글의 USE 원칙을 네 자원 열두 칸 격자와 /proc 파일로 펼침",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "perf · eBPF(bpftrace)",
+   "action": "new",
+   "conceptId": "bpftrace-event-tracing",
+   "owner": "/cloud/linux-observability-proc-psi-perf-ebpf#tools-trace",
+   "status": "done",
+   "reason": "기초 감사(05) 'perf·eBPF cloud-linux 0회' 공백. 매뉴얼 원문 예제로 채움",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "node-exporter 지표의 원천",
+   "action": "new",
+   "conceptId": "node-exporter-proc-metrics",
+   "owner": "/cloud/linux-observability-proc-psi-perf-ebpf#node-exporter",
+   "status": "done",
+   "reason": "K8s 노드 지표가 /proc에서 오는 경로. 수집기 원문으로 대시보드와 명령을 연결",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "증상 지표 vs 원인 지표 · SLO 연결",
+   "action": "new",
+   "conceptId": "sre-symptom-vs-cause-alerting",
+   "owner": "/cloud/linux-sre-metrics-slo-safe-change#symptom-cause",
+   "status": "done",
+   "reason": "기초 감사(05) '서버 지표를 SLO·알림으로 잇는 글 없음' 공백. SRE 책 6장 원문으로 채움",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "안전한 변경 · 단계적 롤아웃 · canary · 구성 drift",
+   "action": "new",
+   "conceptId": "staged-rollout-canary-gate",
+   "owner": "/cloud/linux-sre-metrics-slo-safe-change#staged-rollout",
+   "status": "done",
+   "reason": "기초 감사(05) '단계적 롤아웃·canary·drift 일반론 없음' 공백. Datadog 사례를 workbook 16·14장으로 일반화",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "Toil · 50% 규칙",
+   "action": "new",
+   "conceptId": "sre-toil-50-percent",
+   "owner": "/cloud/linux-sre-metrics-slo-safe-change#toil",
+   "status": "done",
+   "reason": "기초 감사(05)·SRE 원장(04) 'toil 0회' 공백. SRE 책 5장 원문과 서버 운영 예로 채움",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "linux-foundations-series",
+   "term": "자동 업데이트 타이머 = 두 번째 변경 경로",
+   "action": "new",
+   "conceptId": "unattended-upgrade-change-path",
+   "owner": "/cloud/linux-sre-metrics-slo-safe-change#change-path",
+   "status": "done",
+   "reason": "systemd 글의 Datadog 사례를 apt·dnf 원문으로 변경 경로 관점에서 확장",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Kubernetes 운영 여덟 질문 지도",
+   "action": "new",
+   "conceptId": "kubernetes-operations-question-map",
+   "owner": "/cloud/kubernetes-concept-map#questions",
+   "status": "done",
+   "reason": "사용자가 준 여덟 개념 질문의 블로그 커버리지가 '좋음 2·일부 2·얕음 2·거의 없음 1·없음 1'이었음. 허브가 담당 글과 읽기 순서를 정함",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "공개 Kubernetes 장애 색인",
+   "action": "new",
+   "conceptId": "kubernetes-failure-story-index",
+   "owner": "/cloud/kubernetes-concept-map#failure-index",
+   "status": "done",
+   "reason": "조사 원장 04 §2의 여섯 사례를 개념·글에 매핑. 블로그에 Kubernetes 장애 사례 색인이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Deployment·ReplicaSet이 Pod를 만드는 방식",
+   "action": "new",
+   "conceptId": "kubernetes-deployment-replicaset-pod-layers",
+   "owner": "/cloud/kubernetes-controllers-reconcile-deployment-job#black-box",
+   "status": "done",
+   "reason": "사용자가 꼽은 8개 운영 개념 중 하나. 저장소에 ReplicaSet·ownerReferences 설명이 0회였음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Controller reconcile · level-triggered",
+   "action": "new",
+   "conceptId": "kubernetes-controller-reconcile-level-triggered",
+   "owner": "/cloud/kubernetes-controllers-reconcile-deployment-job#names",
+   "status": "done",
+   "reason": "요청 경로 글의 한 문단뿐이던 '목표 상태 복구' 개념을 expectations·rate limiter까지 펼침",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Job backoffLimit과 재생성 지연",
+   "action": "new",
+   "conceptId": "kubernetes-job-backoff-limit",
+   "owner": "/cloud/kubernetes-controllers-reconcile-deployment-job#job-backoff",
+   "status": "done",
+   "reason": "Job 기본값·지수 backoff·10분 상한이 저장소에 없었음. 옛 자료의 6분 표기와 다른 현재 코드 값을 정본으로",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Node와 Pod의 관계 · scheduler binding · kubelet watch",
+   "action": "new",
+   "conceptId": "kubelet-pod-watch-node-name",
+   "owner": "/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#kubelet-watch",
+   "status": "done",
+   "reason": "사용자가 꼽은 8개 운영 개념 중 하나. 요청 경로 글에는 책임 경계 한 문단만 있었고 Binding·field selector 설명이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "NotReady의 의미 · NodeMonitorGracePeriod 50초",
+   "action": "new",
+   "conceptId": "kubernetes-node-monitor-grace-unknown",
+   "owner": "/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#notready-clock",
+   "status": "done",
+   "reason": "NotReady 진단 명령만 있던 저장소에 Lease·probe·50초·Unknown 판정 체계를 추가. 40s → 50s 변경을 태그 대조로 확정",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Taint 기반 축출 · 기본 toleration 300초",
+   "action": "new",
+   "conceptId": "kubernetes-taint-based-eviction-toleration-seconds",
+   "owner": "/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#taints-eviction",
+   "status": "done",
+   "reason": "'노드가 죽으면 Pod가 바로 옮겨간다'·'pod-eviction-timeout으로 조정한다' 두 오해의 정본",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Node Allocatable · 요청한 자원과 실제 할당된 자원의 차이",
+   "action": "new",
+   "conceptId": "kubernetes-node-allocatable",
+   "owner": "/cloud/kubernetes-requests-limits-allocatable-qos#allocatable",
+   "status": "done",
+   "reason": "사용자 체크리스트 '요청한 자원과 실제 할당된 자원의 차이'. 기존 글에 Allocatable·eviction 하한이 0회",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "scheduler requests 합 비교 · Insufficient cpu",
+   "action": "new",
+   "conceptId": "scheduler-requests-sum-fit",
+   "owner": "/cloud/kubernetes-requests-limits-allocatable-qos#scheduling-sum",
+   "status": "done",
+   "reason": "'노드 사용률이 낮은데 왜 Pending' 오해를 fit.go 원문으로 정정",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "CPU limit CFS throttling · cpu.max",
+   "action": "new",
+   "conceptId": "cpu-limit-cfs-quota-throttling",
+   "owner": "/cloud/kubernetes-requests-limits-allocatable-qos#cpu-throttle",
+   "status": "done",
+   "reason": "블로그 전체에 CFS quota·throttling 0회. k8s #67577 사례와 probe timeout의 바닥",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Node-pressure eviction 순서 (QoS 비기준)",
+   "action": "new",
+   "conceptId": "node-pressure-eviction-order",
+   "owner": "/cloud/kubernetes-requests-limits-allocatable-qos#eviction-order",
+   "status": "done",
+   "reason": "'eviction 순서 = QoS 순서' 오해를 공식 문서 note로 정정",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Pending·CrashLoopBackOff·NotReady의 의미 (Pod 상태 단어)",
+   "action": "new",
+   "conceptId": "pod-status-reason-vs-phase",
+   "owner": "/cloud/kubernetes-pod-states-crashloop-probes-events#names",
+   "status": "done",
+   "reason": "사용자 체크리스트 항목. 기존 글에 CrashLoopBackOff 0회, Pending은 진단 예시만",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "CrashLoopBackOff 10→300초 시계와 600초 만료",
+   "action": "new",
+   "conceptId": "crashloopbackoff-exponential-clock",
+   "owner": "/cloud/kubernetes-pod-states-crashloop-probes-events#backoff-clock",
+   "status": "done",
+   "reason": "'계속 재시작 중' 오해를 kubelet.go 상수와 doBackOff 원문으로 정정. KEP-5593 1.35 beta 반영",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "probe 기본값과 재시작 폭풍",
+   "action": "new",
+   "conceptId": "kubelet-probe-defaults-restart-window",
+   "owner": "/cloud/kubernetes-pod-states-crashloop-probes-events#probes",
+   "status": "done",
+   "reason": "liveness/startup probe가 기존 글에 0회. NRE Labs etcd 183회 재시작 사례의 바닥",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Event에서 실패 이유를 찾는 방법 (TTL·집계·소유자 사슬)",
+   "action": "new",
+   "conceptId": "kubernetes-event-ttl-aggregation",
+   "owner": "/cloud/kubernetes-pod-states-crashloop-probes-events#events",
+   "status": "done",
+   "reason": "사용자 체크리스트 항목. 기존 글은 '보존 기간이 짧을 수 있다' 1문장뿐",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "PVC ↔ PV 바인딩 · StorageClass",
+   "action": "new",
+   "conceptId": "kubernetes-pvc-pv-binding",
+   "owner": "/cloud/kubernetes-pvc-pv-storageclass-csi#names",
+   "status": "done",
+   "reason": "사용자 질문 'PVC가 스토리지를 연결하는 방식'. 블로그에 PVC·PV·StorageClass 설명이 없었음(2026-10-16 감사)",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "WaitForFirstConsumer · selected-node",
+   "action": "new",
+   "conceptId": "kubernetes-wait-for-first-consumer",
+   "owner": "/cloud/kubernetes-pvc-pv-storageclass-csi#wffc",
+   "status": "done",
+   "reason": "존 불일치 Pending과 nodeName 함정의 정본",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "CSI attach · NodeStage · NodePublish",
+   "action": "new",
+   "conceptId": "kubernetes-csi-attach-stage-publish",
+   "owner": "/cloud/kubernetes-pvc-pv-storageclass-csi#csi-path",
+   "status": "done",
+   "reason": "RWO가 노드 단위인 이유와 FailedMount·FailedAttachVolume의 출처",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Multi-Attach · 6분 forceDetach",
+   "action": "new",
+   "conceptId": "kubernetes-rwo-multi-attach-force-detach",
+   "owner": "/cloud/kubernetes-pvc-pv-storageclass-csi#node-failure",
+   "status": "done",
+   "reason": "흔한 오해 '6분 지나면 자동 해결'의 정정. 노드 unhealthy 조건을 원문으로 확인",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "reclaimPolicy · Released · pvc-protection",
+   "action": "new",
+   "conceptId": "kubernetes-pv-reclaim-policy-released",
+   "owner": "/cloud/kubernetes-pvc-pv-storageclass-csi#reclaim-protection",
+   "status": "done",
+   "reason": "PVC 삭제 뒤 데이터 운명이 PV 생성 주체에 따라 갈린다는 사실의 정본",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Deployment rollout · maxSurge/maxUnavailable 반올림",
+   "action": "new",
+   "conceptId": "kubernetes-deployment-rollout-fenceposts",
+   "owner": "/cloud/kubernetes-rollout-termination-pdb-drain-hpa#small-case",
+   "status": "done",
+   "reason": "블로그에 maxSurge·maxUnavailable·ProgressDeadlineExceeded 설명이 0회였음(2026-10-16 감사)",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Pod graceful termination · preStop · SIGTERM 경쟁",
+   "action": "new",
+   "conceptId": "kubernetes-pod-graceful-termination-race",
+   "owner": "/cloud/kubernetes-rollout-termination-pdb-drain-hpa#termination-flow",
+   "status": "done",
+   "reason": "배포 중 5xx의 정본. 기존 packet-path 글에 preStop·SIGTERM·terminationGracePeriodSeconds가 0회였음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "PodDisruptionBudget · Eviction 429 · drain",
+   "action": "new",
+   "conceptId": "kubernetes-pdb-eviction-429",
+   "owner": "/cloud/kubernetes-rollout-termination-pdb-drain-hpa#pdb-drain",
+   "status": "done",
+   "reason": "멈춘 drain의 원인과 PDB가 막지 못하는 것의 정본",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "HPA replica 계산 · tolerance · 축소 안정화",
+   "action": "new",
+   "conceptId": "kubernetes-hpa-replica-calculator",
+   "owner": "/cloud/kubernetes-rollout-termination-pdb-drain-hpa#hpa",
+   "status": "done",
+   "reason": "기존 hpa-intermittent-control-loop는 제어 루프 틀만 있고 계산식·보정·안정화가 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "SLI · SLO · error budget (Kubernetes 운영)",
+   "action": "new",
+   "conceptId": "slo-sli-error-budget",
+   "owner": "/cloud/kubernetes-sre-slo-burn-rate-upgrades#small-case",
+   "status": "done",
+   "reason": "SLO 정의는 ai 글에 있었지만 Kubernetes Service 수준에서 budget을 분·요청 수로 계산하는 글이 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Multiwindow multi-burn-rate alert · Table 5-8",
+   "action": "new",
+   "conceptId": "burn-rate-multiwindow-alert",
+   "owner": "/cloud/kubernetes-sre-slo-burn-rate-upgrades#multiwindow",
+   "status": "done",
+   "reason": "Workbook의 14.4/6/1 세 줄과 1/12 짧은 창 규칙이 블로그에 없었음(조사 원장 04 §4)",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Golden signals · 증상 vs 원인 경보",
+   "action": "new",
+   "conceptId": "golden-signals-symptom-cause",
+   "owner": "/cloud/kubernetes-sre-slo-burn-rate-upgrades#symptom-cause",
+   "status": "done",
+   "reason": "golden signal 네 개와 증상 기반 경보 원칙이 블로그에 0회였음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Version skew policy · 업그레이드 순서",
+   "action": "new",
+   "conceptId": "kubernetes-version-skew-upgrade",
+   "owner": "/cloud/kubernetes-sre-slo-burn-rate-upgrades#upgrade-skew",
+   "status": "done",
+   "reason": "CKA Cluster Architecture 25%의 cluster lifecycle 항목. 블로그에 skew 규칙·kubeadm 집행 코드가 없었음",
+   "updatedAt": "2026-10-16"
+  },
+  {
+   "batch": "kubernetes-concepts-series",
+   "term": "Toil · Blameless postmortem",
+   "action": "new",
+   "conceptId": "blameless-postmortem",
+   "owner": "/cloud/kubernetes-sre-slo-burn-rate-upgrades#postmortem",
+   "status": "done",
+   "reason": "toil·postmortem 단어가 cloud 글에 0회였음. 공개 장애 6건의 개념 매핑과 함께 채움",
+   "updatedAt": "2026-10-16"
   }
  ]
 }

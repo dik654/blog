@@ -22,13 +22,13 @@ const cloud: Category = {
     {
       slug: "cloud-linux",
       name: "Linux 서버 운영",
-      description: "대기업 SRE·인프라 면접이 묻는 리눅스 지식을 실제 장애 한 건씩 따라가며 명령과 커널 코드로 확인합니다.",
+      description: "시스템 콜·cgroup·VFS·네트워크·관측·SRE 기초 여섯 편을 쌓은 뒤, 대기업 SRE·인프라 면접이 묻는 장애 한 건씩을 명령과 커널 코드로 확인합니다.",
       icon: "🐧",
     },
     {
       slug: "cloud-kubernetes",
       name: "Kubernetes 운영",
-      description: "Pod 하나가 Ready가 되는 요청 경로와 한 연결의 패킷 경로를 끝까지 추적합니다.",
+      description: "여덟 운영 질문을 controller·Node·Linux 세 층으로 쌓고, Pod 하나의 요청 경로와 한 연결의 패킷 경로를 v1.37.1 원문으로 추적합니다.",
       icon: "☸️",
     },
     {
