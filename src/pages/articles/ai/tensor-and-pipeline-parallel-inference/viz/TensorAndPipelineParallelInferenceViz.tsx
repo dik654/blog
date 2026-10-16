@@ -1,103 +1,108 @@
+import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 /**
- * 한 Viz 에 한 mechanism: TP 로 자른 MLP layer 하나가 column GEMM → GeLU → row GEMM → all-reduce 를
- * 지나며 GPU 두 장이 무엇을 들고 무엇을 주고받는지. stage 높이는 고정이고 SVG 내부만 바뀐다.
+ * 한 Viz 에 한 mechanism: TP 2 로 자른 MLP layer 하나에서 각 GPU 가 행렬의 어느 조각을 들고
+ * 어떤 모양의 결과를 만드는지 그린다. A(8192 × F)는 열 반쪽, B(F × 8192)는 행 반쪽을 갖고,
+ * 열 조각 Y_i 는 그대로 B_i 의 입력이 되며 마지막 Z_i 두 장만 all-reduce 로 더한다.
+ * 사각형의 가로·세로는 행렬의 열·행 수에 비례한다(F 는 FFN 폭, 그림에서는 h 의 1.2배로 둠).
  */
-const SCENES = ["입력 복제", "Column GEMM · GeLU", "Row GEMM 부분합", "All-reduce", "출력 동일"] as const;
+const SCENES = ["입력 복제 · weight 조각", "Column GEMM · GeLU", "Row GEMM 부분합", "All-reduce", "출력 동일"] as const;
 
 const NOTES = [
-  "같은 입력 X (2048 token × 8192, FP16 = 33.6 MB) 가 두 GPU 에 똑같이 놓입니다. weight A 는 열로, B 는 행으로 반씩 나뉘어 있습니다.",
-  "각 GPU 가 자기 열 조각으로 X·A_i 를 계산하고 GeLU 를 그 자리에서 적용합니다. 열 조각끼리는 독립이라 통신이 없습니다.",
-  "GeLU 결과 Y_i 가 행 조각 B_i 와 곱해져 부분합 Z_i 가 됩니다. 두 부분합은 각각 33.6 MB 이고 아직 서로 다릅니다.",
-  "All-reduce 가 Z_1 + Z_2 를 만들어 두 GPU 에 똑같이 놓습니다. ring 이면 GPU 당 2(p−1)/p × 33.6 MB 를 내보내고, 이 단계만이 이 layer 의 통신입니다.",
-  "두 GPU 가 같은 Z 를 들고 다음 layer 로 갑니다. attention 블록도 같은 꼴이라 layer 하나에 all-reduce 는 정확히 두 번입니다.",
+  "같은 입력 X(2048 token × 8192)가 두 GPU 에 똑같이 놓입니다. A 는 세로로 잘라 왼쪽 열 반을 GPU 0, 오른쪽 열 반을 GPU 1 이 갖고, B 는 가로로 잘라 위 행 반과 아래 행 반을 나눠 갖습니다. 점선은 다른 GPU 의 조각입니다.",
+  "X · A_i 는 2048 × F/2 의 열 조각 Y_i 입니다. GeLU 는 원소마다 적용되므로 열 조각마다 따로 적용해도 결과가 같고 통신이 없습니다.",
+  "Y_i 의 열 수 F/2 가 B_i 의 행 수와 같아 그대로 곱합니다. 결과 Z_i 는 2048 × 8192 로 모양은 최종 출력과 같지만 F 의 반쪽만 더한 부분합입니다.",
+  "All-reduce 가 Z0 + Z1 을 만들어 두 GPU 에 똑같이 놓습니다. 합치는 양은 2048 × 8192 × 2 byte = 33.6 MB 이고 이 MLP 에서 통신은 여기 한 번입니다.",
+  "두 GPU 가 같은 Z 를 들고 다음 layer 로 갑니다. attention 도 head 를 열로, output projection 을 행으로 나눠 같은 꼴이라 layer 하나에 all-reduce 는 두 번입니다.",
 ] as const;
 
-const GPU_Y = [30, 140] as const;
+const GPU = ["#2563eb", "#0d9488"] as const;
+const FILL = ["#dbeafe", "#ccfbf1"] as const;
+const GHOST = "#cbd5e1";
+/** 픽셀 단위: h(8192) = 40, T(2048) = 20, F = 48. */
+const H = 40;
+const TT = 20;
+const F = 48;
+const LANE_Y = [16, 116] as const;
 
-function Block({
-  x,
-  y,
-  w,
-  h,
-  label,
-  sub,
-  state,
-}: {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  label: string;
-  sub?: string;
-  state: "idle" | "active" | "done";
+function Mat({ x, y, w, h, label, sub, own, ghost, gpu, show = true, half }: {
+  x: number; y: number; w: number; h: number; label: string; sub?: string; own?: boolean; ghost?: boolean; gpu: number; show?: boolean;
+  /** 전체 행렬 중 자기 몫만 칠한다. col: 열 반쪽, row: 행 반쪽 */
+  half?: "col" | "row";
 }) {
-  const stroke = state === "idle" ? "var(--border)" : "var(--primary)";
-  const fillOpacity = state === "active" ? 0.18 : state === "done" ? 0.08 : 0;
+  const color = GPU[gpu];
   return (
-    <g>
-      <rect x={x} y={y} width={w} height={h} fill="var(--primary)" fillOpacity={fillOpacity} stroke={stroke} strokeWidth="1" strokeDasharray={state === "idle" ? "3 2" : undefined} />
-      <text x={x + w / 2} y={y + (sub ? 16 : 22)} fontSize="10" fontWeight="700" textAnchor="middle" fill="currentColor" className="text-foreground">
+    <motion.g initial={false} animate={{ opacity: show ? 1 : 0 }} transition={{ duration: 0.3 }}>
+      {half ? (
+        <>
+          <rect x={x} y={y} width={w} height={h} fill="none" stroke={GHOST} strokeDasharray="3 2" strokeWidth={1} />
+          {half === "col" ? (
+            <rect x={x + (gpu === 0 ? 0 : w / 2)} y={y} width={w / 2} height={h} fill={FILL[gpu]} stroke={color} strokeWidth={1} />
+          ) : (
+            <rect x={x} y={y + (gpu === 0 ? 0 : h / 2)} width={w} height={h / 2} fill={FILL[gpu]} stroke={color} strokeWidth={1} />
+          )}
+        </>
+      ) : (
+        <rect x={x} y={y} width={w} height={h} fill={ghost ? "none" : own ? FILL[gpu] : "#f1f5f9"} stroke={ghost ? GHOST : own ? color : "#64748b"} strokeDasharray={ghost ? "3 2" : undefined} strokeWidth={1} />
+      )}
+      <text x={x + w / 2} y={y - 4} textAnchor="middle" fontSize={9} fontWeight={700} fill={own || half ? color : "#475569"}>
         {label}
       </text>
-      {sub && (
-        <text x={x + w / 2} y={y + 30} fontSize="9" textAnchor="middle" fill="currentColor" className="text-muted-foreground">
+      {sub ? (
+        <text x={x + w / 2} y={y + h + 10} textAnchor="middle" fontSize={8} fill="#64748b">
           {sub}
         </text>
-      )}
-    </g>
+      ) : null}
+    </motion.g>
   );
 }
 
-function Arrow({ x1, y1, x2, y2, active }: { x1: number; y1: number; x2: number; y2: number; active: boolean }) {
-  return (
-    <path
-      d={`M${x1} ${y1}L${x2} ${y2}`}
-      stroke={active ? "var(--primary)" : "var(--border)"}
-      strokeWidth="1"
-      fill="none"
-      markerEnd={active ? "url(#tp-arrow-head)" : undefined}
-    />
+function Lane({ gpu, s }: { gpu: number; s: number }) {
+  const y0 = LANE_Y[gpu];
+  const mid = y0 + 40;
+  const op = (x: number, t: string, show = true) => (
+    <motion.text x={x} y={mid + 3} textAnchor="middle" fontSize={11} fill="#64748b" initial={false} animate={{ opacity: show ? 1 : 0 }}>
+      {t}
+    </motion.text>
   );
-}
-
-function GpuRow({ index, s }: { index: number; s: number }) {
-  const y = GPU_Y[index];
-  const i = index + 1;
-  const st = (scene: number): "idle" | "active" | "done" => (s < scene ? "idle" : s === scene ? "active" : "done");
+  const top = (h: number) => mid - h / 2;
   return (
     <g>
-      <text x={16} y={y - 8} fontSize="10" fontWeight="700" fill="currentColor" className="text-muted-foreground">
-        GPU {index}
+      <rect x={4} y={y0 - 12} width={280} height={92} rx={3} fill="none" stroke="#e2e8f0" strokeWidth={1} />
+      <text x={10} y={y0} fontSize={9} fontWeight={700} fill={GPU[gpu]}>
+        GPU {gpu}
       </text>
-      <rect x={16} y={y} width={608} height={92} fill="none" stroke="var(--border)" strokeWidth="1" />
-      <Block x={28} y={y + 26} w={72} h={40} label="X" sub="33.6 MB" state={st(0)} />
-      <Arrow x1={100} y1={y + 46} x2={128} y2={y + 46} active={s >= 1} />
-      <Block x={128} y={y + 26} w={96} h={40} label={`X·A${i}`} sub="column 조각" state={st(1)} />
-      <Arrow x1={224} y1={y + 46} x2={252} y2={y + 46} active={s >= 1} />
-      <Block x={252} y={y + 26} w={64} h={40} label="GeLU" sub="local" state={st(1)} />
-      <Arrow x1={316} y1={y + 46} x2={344} y2={y + 46} active={s >= 2} />
-      <Block x={344} y={y + 26} w={96} h={40} label={`Y${i}·B${i}`} sub="row 부분합" state={st(2)} />
-      <Arrow x1={440} y1={y + 46} x2={468} y2={y + 46} active={s >= 3} />
-      <Block x={468} y={y + 26} w={64} h={40} label={`Z${i}`} sub="33.6 MB" state={st(2)} />
-      <Arrow x1={532} y1={y + 46} x2={560} y2={y + 46} active={s >= 4} />
-      <Block x={560} y={y + 26} w={56} h={40} label="Z" sub={s >= 4 ? "동일" : "?"} state={st(4)} />
+      <Mat x={14} y={top(TT)} w={H} h={TT} label="X" sub="2048×8192" gpu={gpu} />
+      {op(62, "·")}
+      <Mat x={70} y={top(H)} w={F} h={H} label={`A → A${gpu}`} sub="8192×F" gpu={gpu} half="col" />
+      {op(126, "=", s >= 1)}
+      <Mat x={134} y={top(TT)} w={F / 2} h={TT} label={`Y${gpu}`} sub="2048×F/2" gpu={gpu} own show={s >= 1} />
+      <motion.text x={146} y={top(TT) + TT + 20} textAnchor="middle" fontSize={8} fontWeight={700} fill={GPU[gpu]} initial={false} animate={{ opacity: s === 1 ? 1 : 0 }}>
+        GeLU 로컬
+      </motion.text>
+      {op(168, "·", s >= 2)}
+      <Mat x={176} y={top(F)} w={H} h={F} label={`B → B${gpu}`} sub="F×8192" gpu={gpu} half="row" />
+      {op(226, "=", s >= 2)}
+      {/* 마지막 장면에서는 같은 자리가 all-reduce 결과 Z 로 바뀐다. */}
+      <Mat x={234} y={top(TT)} w={H} h={TT} label={s >= 4 ? "Z = Z0+Z1" : `Z${gpu} 부분합`} sub="2048×8192" gpu={gpu} own={s < 4} show={s >= 2} />
     </g>
   );
 }
 
 export default function TensorAndPipelineParallelInferenceViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 4200);
   const s = scenes.active;
+  const reduced = scenes.reducedMotion;
+  const ar = s === 3;
   return (
     <VizFrame
       eyebrow="Tensor parallel MLP layer"
-      title="TP 는 열로 자른 GEMM 과 행으로 자른 GEMM 사이에 통신이 없고 마지막 all-reduce 한 번만 보냅니다"
-      description="GPU 두 장이 hidden 8192 의 MLP 한 층을 나눠 계산하는 다섯 단계입니다. 실선은 로컬 흐름, 두 GPU 를 잇는 선은 all-reduce 입니다."
-      note="TP 2 로 단순화했으며 TP 8 이면 조각이 8 개이고 all-reduce 의 ring 배수는 2·7/8 입니다. byte 는 token 2048 · hidden 8192 · FP16 의 계산 예시입니다."
+      title="A 는 열로, B 는 행으로 잘라 두 GEMM 사이에는 통신이 없고 끝에서 한 번만 더합니다"
+      description="GPU 두 장이 hidden 8192 의 MLP 한 층을 나눠 계산합니다. 사각형의 가로·세로가 행렬의 열·행 수이고, 칠한 부분이 그 GPU 가 가진 조각입니다."
+      note="TP 2 로 단순화했습니다. TP 8 이면 A 는 열 8 조각, B 는 행 8 조각이고 ring 배수는 2·7/8 입니다. FFN 폭 F 는 model 마다 달라 비율만 그렸습니다."
     >
       <div
         data-viz-canvas
@@ -105,41 +110,23 @@ export default function TensorAndPipelineParallelInferenceViz() {
         role="group"
         aria-label="Tensor parallel MLP layer 의 column·row 분할과 all-reduce"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(33rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex shrink-0 flex-col">
           <h4 className="text-base font-bold">{SCENES[s]}</h4>
-          <svg viewBox="0 14 640 246" className="mt-3 h-auto w-full" aria-hidden="true">
-            <defs>
-              <marker id="tp-arrow-head" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
-                <path d="M0 0L8 4L0 8Z" fill="var(--primary)" />
-              </marker>
-            </defs>
-            <GpuRow index={0} s={s} />
-            <GpuRow index={1} s={s} />
-            <path
-              d="M500 96V140"
-              stroke={s === 3 ? "var(--primary)" : "var(--border)"}
-              strokeWidth="1"
-              strokeDasharray={s === 3 ? undefined : "3 2"}
-              fill="none"
-            />
-            <path
-              d="M500 96 l-4 8 h8 z M500 140 l-4 -8 h8 z"
-              fill={s === 3 ? "var(--primary)" : "var(--border)"}
-            />
-            <text x={508} y={121} fontSize="9" fill="currentColor" className={s === 3 ? "text-foreground" : "text-muted-foreground"}>
-              {s === 3 ? "all-reduce Z1+Z2" : "all-reduce"}
-            </text>
-            <text x={16} y={252} fontSize="10" fill="currentColor" className="text-foreground">
-              {s === 0 && "weight: A = [A1, A2] (열), B = [B1; B2] (행)"}
-              {s === 1 && "통신 0 byte · GeLU(X·A1), GeLU(X·A2) 는 독립"}
-              {s === 2 && "통신 0 byte · Z1 = Y1·B1, Z2 = Y2·B2 는 아직 부분합"}
-              {s === 3 && "GPU 당 송신 2(p−1)/p × 33.6 MB → p=2: 33.6 MB, p=8: 58.7 MB"}
-              {s === 4 && "layer 당 all-reduce 2 회 (attention 1 + MLP 1)"}
-            </text>
+          <svg viewBox="0 0 290 202" className="mt-3 h-auto w-full max-w-[18.5rem]" role="img" aria-label="두 GPU 가 가진 행렬 조각">
+            <Lane gpu={0} s={s} />
+            <Lane gpu={1} s={s} />
+            {/* all-reduce: 두 Z_i 를 잇는 양방향 선 */}
+            <motion.g initial={false} animate={{ opacity: s === 3 ? 1 : s > 3 ? 0.4 : 0.15 }} transition={{ duration: reduced ? 0 : 0.3 }}>
+              <line x1={279} y1={LANE_Y[0] + 52} x2={279} y2={LANE_Y[1] + 28} stroke={ar ? "#dc2626" : "#94a3b8"} strokeWidth={ar ? 1.25 : 1} strokeDasharray={ar ? undefined : "3 2"} />
+              <path d={`M279 ${LANE_Y[0] + 52} l-3 6 h6 z M279 ${LANE_Y[1] + 28} l-3 -6 h6 z`} fill={ar ? "#dc2626" : "#94a3b8"} />
+            </motion.g>
           </svg>
-          <p className="mt-3 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-0">
+          <p className="mt-2 font-mono text-xs font-bold">
+            통신 <span className={s >= 3 ? "text-[#dc2626]" : "text-[#16a34a]"}>{s < 3 ? "0 byte" : "all-reduce 1회 · 33.6 MB"}</span>
+          </p>
+          <p className="mt-3 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[5.25rem]">
             {NOTES[s]}
           </p>
         </div>

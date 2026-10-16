@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
 import { StableSceneStack } from "@/components/viz/StableSceneStack";
@@ -67,26 +68,58 @@ function OnceScene() {
   );
 }
 
-function RereadScene() {
+const PASSES = ["Q 0·1", "Q 2·3", "Q 4·5", "Q 6·7"] as const;
+
+function KvCells({ color }: { color: string }) {
+  // K 또는 V 전체 = 8행 × 2값 = 16칸, 칸 하나가 2바이트
+  return (
+    <span className="grid grid-cols-8 gap-px">
+      {Array.from({ length: 16 }, (_, i) => (
+        <span key={i} className="size-2 border" style={{ borderColor: color, backgroundColor: `${color}55` }} />
+      ))}
+    </span>
+  );
+}
+
+function RereadScene({ playing, reduced }: { playing: boolean; reduced: boolean }) {
   return (
     <div>
-      <p className="text-sm leading-6 text-muted-foreground">Query 여덟 행을 두 행씩 네 묶음으로 나눕니다. 각 묶음이 K와 V 전체를 다시 읽습니다.</p>
-      <div className="mt-4 space-y-2">
-        {["Q 0·1", "Q 2·3", "Q 4·5", "Q 6·7"].map((query, index) => (
-          <div key={query} className="grid grid-cols-[3.8rem_minmax(0,1fr)_auto] items-center gap-2 border-b border-border pb-2">
-            <div className="grid grid-cols-2 gap-1" aria-label={`${query} 두 행`}>
-              <span className="h-5 border border-primary/50 bg-primary/20" />
-              <span className="h-5 border border-primary/50 bg-primary/20" />
-            </div>
-            <div className="grid grid-cols-2 gap-1">
-              <div className="h-5 border border-border bg-muted/60"><span className="sr-only">K 전체</span></div>
-              <div className="h-5 border border-border bg-muted/60"><span className="sr-only">V 전체</span></div>
-            </div>
-            <p className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">{index + 1}회 · 64 B</p>
-          </div>
-        ))}
+      <p className="text-sm leading-6 text-muted-foreground">Query 여덟 행을 두 행씩 네 묶음으로 나눕니다. 묶음마다 HBM의 K 16칸과 V 16칸을 칩으로 다시 가져옵니다.</p>
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border border-border px-2 py-2">
+        <span className="text-xs font-bold text-muted-foreground">HBM</span>
+        <span className="flex items-center gap-1 font-mono text-[11px] font-bold">K <KvCells color="#2563eb" /></span>
+        <span className="flex items-center gap-1 font-mono text-[11px] font-bold">V <KvCells color="#d97706" /></span>
       </div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      {/* 장면에 들어올 때마다 네 번의 복사를 차례로 다시 보여 준다 */}
+      <div key={playing ? "play" : "rest"} className="mt-2 space-y-1">
+        {PASSES.map((query, index) => {
+          const delay = reduced ? 0 : 0.3 + index * 0.9;
+          return (
+            <div key={query} className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border pb-1">
+              <span className="w-12 shrink-0 font-mono text-[11px] font-bold text-primary">{query}</span>
+              <motion.span
+                className="flex items-center gap-1.5"
+                initial={reduced ? false : { opacity: 0.12, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay, duration: reduced ? 0 : 0.45 }}
+              >
+                <span aria-hidden className="text-xs text-muted-foreground">↓</span>
+                <KvCells color="#2563eb" />
+                <KvCells color="#d97706" />
+              </motion.span>
+              <motion.span
+                className="whitespace-nowrap font-mono text-xs tabular-nums text-foreground"
+                initial={reduced ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: delay + 0.35, duration: reduced ? 0 : 0.3 }}
+              >
+                {index + 1}회 · 32칸 = 64 B · 누적 {(index + 1) * 64} B
+              </motion.span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-3 grid gap-2 sm:grid-cols-3">
         <p className="border-l-2 border-border pl-3 text-sm leading-6 text-foreground">K·V 네 번<br /><strong>4 × 64 = 256 B</strong></p>
         <p className="border-l-2 border-border pl-3 text-sm leading-6 text-foreground">Q·O 한 번<br /><strong>32 + 32 = 64 B</strong></p>
         <p className="border-l-2 border-primary pl-3 text-sm leading-6 text-foreground">전체 이동<br /><strong>320 B → 1.6 FLOP/B</strong></p>
@@ -122,10 +155,13 @@ function DecodeScene() {
   );
 }
 
-const scenes = [<OnceScene key="once" />, <RereadScene key="reread" />, <DecodeScene key="decode" />] as const;
-
 export default function AttentionTrafficViz() {
-  const scene = useAnimatedScenes(scenes.length, 6500);
+  const scene = useAnimatedScenes(labels.length, 6500);
+  const scenes = [
+    <OnceScene key="once" />,
+    <RereadScene key="reread" playing={scene.active === 1} reduced={scene.reducedMotion} />,
+    <DecodeScene key="decode" />,
+  ];
   const overview = [
     ["A", "128 B", "한 번씩 이동"],
     ["B", "320 B", "K·V 네 번"],

@@ -10,6 +10,7 @@ import { latencySourceTree } from "./serving-latency-metrics-and-slo/fileTree";
 import ServingLatencyMetricsAndSloViz from "./serving-latency-metrics-and-slo/viz/ServingLatencyMetricsAndSloViz";
 import LatencyPercentileHistogramViz from "./serving-latency-metrics-and-slo/viz/LatencyPercentileHistogramViz";
 import SloWindowBudgetViz from "./serving-latency-metrics-and-slo/viz/SloWindowBudgetViz";
+import TokenArrivalGapsViz from "./serving-latency-metrics-and-slo/viz/TokenArrivalGapsViz";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
@@ -22,7 +23,7 @@ export default function Article() {
 
 <section id="inside-measurement" data-teach-level="1" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">4. 시계와 응답 개수와 집계 범위가 모두 필요합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>시각 기록은 어느 요청의 어느 수신 이벤트인지 구분해야 합니다. 같은 이벤트에 토큰이 몇 개 묶였는지도 남깁니다. 위 사례에서는 각 이벤트에 하나씩이므로 네 간격을 직접 관측했습니다.</p><p>집계 기록에는 성공·실패, 입력과 출력 길이, 도구 버전, 측정 기간을 붙입니다. 실패한 요청을 빼고 성공 응답의 속도만 보여 주면 장애가 늘어난 서비스가 더 빨라 보일 수 있습니다.</p><p>여러 요청을 묶을 때도 단위를 보존합니다. 요청당 평균 하나를 모은 분포와 모든 수신 간격을 모은 분포는 표본 개수와 긴 응답의 가중치가 다릅니다.</p></div></section>
 
-<section id="why-observations" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 평균이라도 멈춘 순간은 다를 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>40·45·200·42ms를 평균내면 81.75ms입니다. 네 간격이 모두 81.75ms인 기록도 평균은 같습니다. 앞의 기록에서 독자가 겪은 200ms 멈춤을 보려면 개별 간격을 남겨야 합니다. (가정)</p><p>마지막 세 토큰이 한 묶음으로 왔다면 측정 가능한 간격 수도 바뀝니다. 평균을 계산하기 전에 토큰 수와 수신 이벤트 수가 같은지 확인하는 이유입니다. 서버 내부의 생성 시각과 화면에서 받은 시각도 같은 측정이 아닙니다.</p></div></section>
+<section id="why-observations" data-teach-level="2" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">5. 같은 평균이라도 멈춘 순간은 다를 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>40·45·200·42ms를 평균내면 81.75ms입니다. 네 간격이 모두 81.75ms인 기록도 평균은 같습니다. 앞의 기록에서 독자가 겪은 200ms 멈춤을 보려면 개별 간격을 남겨야 합니다. (가정)</p><p>마지막 세 토큰이 한 묶음으로 왔다면 측정 가능한 간격 수도 바뀝니다. 평균을 계산하기 전에 토큰 수와 수신 이벤트 수가 같은지 확인하는 이유입니다. 서버 내부의 생성 시각과 화면에서 받은 시각도 같은 측정이 아닙니다.</p><p>아래 그림은 같은 327ms를 세 가지로 기록합니다. 실제 네 칸과 평균으로 편 네 칸, 묶음으로 받아 두 칸만 남은 기록을 장면마다 비교해 보세요.</p></div><TokenArrivalGapsViz /></section>
 
 <section id="latency-terms" data-teach-level="3" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">6. 첫 도착과 각 간격과 마지막 도착에 이름을 붙입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>처음까지의 시간을 TTFT(Time to First Token)라고 합니다. 연속한 토큰 도착 사이의 간격이 ITL(Inter-Token Latency)이고 마지막 토큰까지의 전체 시간이 E2E(End-to-End latency)입니다.</p><p>여기서는 모두 client가 요청을 보낸 시각을 기준으로 같은 시계에서 잽니다. 서버 접수 시각을 출발점으로 쓰면 요청 전송 구간이 빠집니다. 한꺼번에 응답을 받는 방식에서는 첫 토큰이 언제 생성됐는지 따로 알 수 없습니다.</p></div><TermBreakdown title="역할을 이해한 뒤 이름을 붙입니다" items={[{"term": "TTFT", "description": "client 전송부터 첫 토큰 수신까지의 시간입니다. 사례에서는 1초입니다.", "boundary": "도구가 빈 응답 이벤트도 첫 이벤트로 세는지 확인해야 합니다."}, {"term": "ITL", "description": "두 토큰의 관측된 도착 간격입니다. 사례에서는 40·45·200·42ms입니다.", "boundary": "여러 토큰이 묶인 이벤트에서는 실제 토큰별 시각을 복원할 수 없습니다."}, {"term": "E2E", "description": "정한 종료 사건까지의 전체 경과 시간입니다. 토큰 기준 사례에서는 1.327초입니다.", "boundary": "도구의 종료 사건이 마지막 usage 이벤트라면 마지막 토큰 시각과 다릅니다."}]} /></section>
 

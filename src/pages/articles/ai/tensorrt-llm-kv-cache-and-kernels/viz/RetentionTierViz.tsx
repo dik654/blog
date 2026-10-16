@@ -88,8 +88,13 @@ function Chip({ block, place, highlight }: { block: Block; place: Place; highlig
         place === "trash" ? "border-dashed border-[#dc2626] bg-transparent text-[#dc2626] line-through" : priorityStyle(block.priority)
       } ${highlight ? "outline outline-1 outline-offset-2 outline-[#2563eb]" : ""}`}
     >
-      <span className="truncate">{block.name}</span>
-      <span className="font-normal">
+      {/* 모바일 다섯 칸은 56px 남짓이라 이름 대신 문자, "우선" 대신 범례로 읽는다. */}
+      <span className="truncate sm:hidden">{block.id}</span>
+      <span className="hidden truncate sm:inline">{block.name}</span>
+      <span className="font-normal sm:hidden">
+        {block.priority}·{block.age}
+      </span>
+      <span className="hidden font-normal sm:inline">
         우선 {block.priority} · {block.age}
       </span>
     </motion.div>
@@ -122,6 +127,7 @@ export default function RetentionTierViz() {
           <h4 className="text-base font-bold">{scene.label}</h4>
           <LayoutGroup id="retention-tier">
             <p className="mt-3 text-[11px] font-bold text-muted-foreground">GPU · 재사용 block 자리 5칸</p>
+            <p className="text-[10px] text-muted-foreground sm:hidden">칸 숫자 = 우선순위·사용 순서 · A system · B·C 대화 · D·E 생성</p>
             <div className="mt-1 grid grid-cols-5 gap-1.5">
               {gpu.map((b) => (
                 <Chip key={b.id} block={b} place="gpu" />
@@ -131,7 +137,8 @@ export default function RetentionTierViz() {
                   key={`fresh-${i}`}
                   className="flex h-12 items-center justify-center rounded-sm border border-[#475569] bg-[#475569] font-mono text-[11px] font-bold text-white"
                 >
-                  {scene.lru ? "새 요청" : "새 block"}
+                  <span className="sm:hidden">새</span>
+                  <span className="hidden sm:inline">{scene.lru ? "새 요청" : "새 block"}</span>
                 </div>
               ))}
             </div>

@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReservationPoolViz from "./tensorrt-llm-kv-cache-and-kernels/viz/ReservationPoolViz";
 import PoolLayoutViz from "./tensorrt-llm-kv-cache-and-kernels/viz/PoolLayoutViz";
+import PartialReuseCopyViz from "./tensorrt-llm-kv-cache-and-kernels/viz/PartialReuseCopyViz";
 import RetentionTierViz from "./tensorrt-llm-kv-cache-and-kernels/viz/RetentionTierViz";
 import XqaGroupViz from "./tensorrt-llm-kv-cache-and-kernels/viz/XqaGroupViz";
 import { codeRefs } from "./tensorrt-llm-kv-cache-and-kernels/codeRefs";
@@ -316,6 +317,7 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               재사용했을 것입니다.
             </p>
           </div>
+          <PartialReuseCopyViz />
           <div className="flex flex-wrap gap-2">
             {code("trt-partial-match", "정확·부분 일치 block 찾기")}
             {code("trt-partial-defaults", "부분 재사용 기본값")}

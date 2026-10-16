@@ -5,9 +5,10 @@ import VizFrame from "@/components/viz/VizFrame";
 /**
  * 작은 모형(window W = 8, block 4 token)으로 SWA 층과 full 층의 block 수를 나란히 센다.
  * 한 mechanism: 건너뛸 token = n − W + 1, 돌려줄 block = ⌊건너뛸 token ÷ 4⌋ (vLLM get_num_skipped_tokens).
- * 마지막 장면은 gpt-oss-20b의 실제 설정(W = 128, 층 24개 중 절반이 SWA)으로 같은 셈을 한다.
+ * 넷째 장면은 gpt-oss-20b의 실제 설정(W = 128, 층 24개 중 절반이 SWA)으로 같은 셈을 한다.
+ * 마지막 장면은 TensorRT-LLM 기준(쥔 token ≥ W + block이면 맨 앞 block을 뗌)을 같은 작은 모형에 건다.
  */
-const SCENES = ["창 안쪽 n = 7", "첫 block 반환 n = 12", "계속 반환 n = 20", "gpt-oss-20b 32K"] as const;
+const SCENES = ["창 안쪽 n = 7", "첫 block 반환 n = 12", "계속 반환 n = 20", "gpt-oss-20b 32K", "TensorRT-LLM 기준 n = 11"] as const;
 
 const W = 8;
 const BLOCK = 4;
@@ -18,10 +19,24 @@ const NOTES = [
   "12개를 계산하면 다음 token의 창은 5~12입니다. 건너뛸 token 12 − 8 + 1 = 5 가운데 block 하나(0~3)가 통째로 창 밖이라 SWA 층은 그 block을 돌려줍니다.",
   "20개에서는 건너뛸 token이 13이라 block 3개를 돌려줍니다. SWA 층은 block 2개만 쥐고, full 층은 5개를 모두 쥡니다. 차이는 대화가 길수록 커집니다.",
   "gpt-oss-20b는 24층 가운데 12층이 창 128 token입니다. 32,768 token 대화에서 SWA 12층은 3MiB, full 12층은 768MiB를 씁니다. 전체는 1,536MiB에서 771MiB로 절반쯤이 됩니다.",
+  "TensorRT-LLM은 쥔 token이 W + block = 12 이상일 때만 맨 앞 block을 뗍니다. n = 11에서 vLLM은 창 밖 block 0을 돌려줬지만 TRT는 11 < 12라 block 3개를 그대로 쥡니다. 그래서 쥔 token이 8~11을 오가고 W = 128·block 32에서는 128~159를 오갑니다.",
 ] as const;
 
-function blocksFor(n: number) {
+type Rule = "vllm" | "trt" | "full";
+
+function blocksFor(n: number, rule: Rule) {
   const total = Math.ceil(n / BLOCK);
+  if (rule === "full") return { total, freed: 0 };
+  if (rule === "trt") {
+    // kvCacheManager.cpp: 쥔 token이 W + tokensPerBlock 이상이면 맨 앞 block을 떼기를 반복한다.
+    let held = n;
+    let freed = 0;
+    while (held >= W + BLOCK) {
+      held -= BLOCK;
+      freed += 1;
+    }
+    return { total, freed };
+  }
   const skippedTokens = Math.max(0, n - W + 1);
   const freed = Math.min(Math.floor(skippedTokens / BLOCK), total);
   return { total, freed };
@@ -33,8 +48,9 @@ export default function WindowBlockReleaseViz() {
   const cell = 13;
   const left = 62;
 
-  const row = (label: string, y: number, n: number, release: boolean) => {
-    const { total, freed } = blocksFor(n);
+  const row = (label: string, y: number, n: number, rule: Rule) => {
+    const { total, freed } = blocksFor(n, rule);
+    const release = rule !== "full";
     return (
       <g>
         <text x={0} y={y + 18} fontSize={13} fill="currentColor" fontWeight={700}>{label}</text>
@@ -59,7 +75,8 @@ export default function WindowBlockReleaseViz() {
           );
         })}
         <text x={left} y={y + 40} fontSize={12} fill="#6b7280">
-          block {total - (release ? freed : 0)}개 보유{release && freed > 0 ? ` · ${freed}개 반환` : ""}
+          block {total - freed}개 보유{freed > 0 ? ` · ${freed}개 반환` : ""}
+          {rule === "trt" ? ` · ${W + BLOCK} token에서 뗌` : ""}
         </text>
       </g>
     );
@@ -70,7 +87,7 @@ export default function WindowBlockReleaseViz() {
       eyebrow="Sliding-window block release"
       title="창 밖으로 완전히 나간 block부터 돌려주므로 SWA 층은 창 크기만큼만 쥡니다"
       description="한 칸이 token 하나, 네 칸 묶음이 block 하나입니다. 진한 파랑은 다음 token의 창 안, 연한 파랑은 아직 쥔 창 밖 token, 회색은 돌려준 block입니다."
-      note="W = 8, block 4 token은 셈을 보이려는 작은 모형입니다. 마지막 장면만 gpt-oss-20b 설정과 vLLM 기본 block 16을 씁니다."
+      note="W = 8, block 4 token은 셈을 보이려는 작은 모형입니다. 넷째 장면만 gpt-oss-20b 설정과 vLLM 기본 block 16을 쓰고, 마지막 장면은 같은 작은 모형에 TensorRT-LLM 기준(9절)을 겁니다."
     >
       <div
         data-viz-canvas
@@ -89,8 +106,13 @@ export default function WindowBlockReleaseViz() {
           <div className="mt-4">
             {scene < 3 ? (
               <svg viewBox="0 0 360 130" className="w-full max-w-[32rem]" role="img" aria-label={`n = ${COUNTS[scene]}에서 두 층의 block`}>
-                {row("SWA 층", 6, COUNTS[scene], true)}
-                {row("full 층", 70, COUNTS[scene], false)}
+                {row("SWA 층", 6, COUNTS[scene], "vllm")}
+                {row("full 층", 70, COUNTS[scene], "full")}
+              </svg>
+            ) : scene === 4 ? (
+              <svg viewBox="0 0 360 130" className="w-full max-w-[32rem]" role="img" aria-label="n = 11에서 vLLM과 TensorRT-LLM의 SWA block">
+                {row("vLLM", 6, 11, "vllm")}
+                {row("TRT", 70, 11, "trt")}
               </svg>
             ) : (
               <svg viewBox="0 0 360 130" className="w-full max-w-[32rem]" role="img" aria-label="gpt-oss-20b 32K 대화의 층별 KV">
@@ -106,7 +128,7 @@ export default function WindowBlockReleaseViz() {
             )}
           </div>
 
-          <p className="mt-3 min-h-[9.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-[4.5rem]">
+          <p className="mt-3 min-h-[14rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[12rem] sm:min-h-[4.5rem]">
             {NOTES[scene]}
           </p>
         </div>

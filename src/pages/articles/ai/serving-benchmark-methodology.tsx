@@ -7,6 +7,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ServingBenchmarkMethodologyViz from "./serving-benchmark-methodology/viz/ServingBenchmarkMethodologyViz";
 import SteadyStateWindowViz from "./serving-benchmark-methodology/viz/SteadyStateWindowViz";
+import QueueFillViz from "./serving-benchmark-methodology/viz/QueueFillViz";
 
 /**
  * Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다
@@ -208,7 +209,12 @@ export default function ServingBenchmarkMethodologyArticle() {
             곡선은 식으로 구하지 않고 λ 를 sweep 하며 잽니다. MLPerf Server scenario 가 Poisson 도착으로 latency 조건을 만족하는 최대 λ 를 이진
             탐색하는 것이 바로 이 측정입니다.
           </p>
+          <p>
+            아래 그림은 같은 세 λ 에서 서버 앞에 평균 몇 개의 요청이 서 있는지를 L = λW 로 세어 상자로 쌓습니다. 서버 칸은 하나로 그대로인데 기다리는
+            상자만 늘어나는 모습이 latency 가 먼저 꺾이는 이유입니다.
+          </p>
         </div>
+        <QueueFillViz />
         <ServingBenchmarkMethodologyViz />
         <ExplainedFormula
           question="Offered load λ 가 처리율 μ 에 가까워질 때 평균 latency 는 얼마나 커지나요?"

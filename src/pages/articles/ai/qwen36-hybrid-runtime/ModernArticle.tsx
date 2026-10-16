@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HybridRuntimeFlowViz from "./viz/HybridRuntimeFlowViz";
+import RequestMemoryMixViz from "./viz/RequestMemoryMixViz";
 import SpeculativeCommitViz from "./viz/SpeculativeCommitViz";
 
 const MEMORY_TERMS = [
@@ -206,6 +207,14 @@ M_{runtime}&=\underbrace{M_W}_{\text{모든 request가 공유}}
           interpretation="128K 하나와 32K 네 개는 logical KV 총량이 같을 수 있지만 고정 recurrent state는 후자가 네 배입니다. Scheduler는 실제 T₁…Tᴺ 분포로 admission해야 합니다."
           title="Hybrid request memory의 세 성장축"
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">
+            같은 8 GiB의 KV를 request 1개·4개·32개로 나눠 담아 보면 Σ 안의 두
+            항이 다르게 움직입니다. KV 칸 수는 그대로이고 Delta state 조각만
+            request 수만큼 늘어납니다.
+          </p>
+        </div>
+        <RequestMemoryMixViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             M_work를 이루는 kernel temporary·allocator padding·activation과
