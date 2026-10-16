@@ -95,10 +95,7 @@ export default function RatioRetractViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scenes.active]}</h4>
 
           <div className="mt-4 w-full min-w-0 overflow-x-auto">
           <svg viewBox="0 0 480 196" className="h-auto w-full min-w-[30rem]" role="img" aria-label={`step ${state.step}에서 비율 ${state.ratio.toFixed(4)}`}>

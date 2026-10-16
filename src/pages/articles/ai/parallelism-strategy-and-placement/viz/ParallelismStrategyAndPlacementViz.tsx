@@ -137,17 +137,14 @@ export default function ParallelismStrategyAndPlacementViz() {
         className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Placement · {String(s + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
-          <svg viewBox="0 0 640 290" className="mt-4 h-auto w-full" aria-hidden="true">
+          <h4 className="text-base font-bold">{SCENES[s]}</h4>
+          <svg viewBox="0 0 640 290" className="mt-3 h-auto w-full" aria-hidden="true">
             <NodeBox node={0} scene={s} />
             <NodeBox node={1} scene={s} />
             <CrossLink scene={s} />
             <CompareBars scene={s} />
           </svg>
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-4 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10rem] sm:min-h-0">
             {NOTES[s]}
           </p>
         </div>

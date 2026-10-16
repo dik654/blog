@@ -18,6 +18,6 @@ export default function CaptureSizePaddingViz(){
  <text x="170" y="25" textAnchor="middle" className="fill-foreground text-[14px]">{padded?"실제 "+n+" · 추가 "+(padded-n):"최대 32보다 1토큰 많음"}</text>
  {Array.from({length:total},(_,i)=><g key={i}><rect x={24+(i%8)*37} y={43+Math.floor(i/8)*32} width="33" height="28" rx="3" className={i<n?"fill-primary/20 stroke-primary":"fill-background stroke-border"} strokeDasharray={i>=n?"3 2":undefined}/><text x={40.5+(i%8)*37} y={63+Math.floor(i/8)*32} textAnchor="middle" className="fill-foreground text-[14px]">{i<n?i+1:"+"}</text></g>)}
  <text x="170" y="230" textAnchor="middle" className="fill-foreground text-[14px]">{padded?"선택 "+padded+" ≥ 실제 "+n:"선택 가능한 크기 없음 → NONE"}</text>
- </svg><p className="mt-1 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{notes[s]}</p></div>
+ </svg><p className="mt-1 min-h-[8.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground min-[390px]:min-h-[7rem] sm:min-h-0">{notes[s]}</p></div>
  <AnimatedSceneControls {...scenes} labels={labels}/></div></VizFrame>;
 }

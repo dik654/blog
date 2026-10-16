@@ -132,7 +132,7 @@ export default function ShardLoadPathViz() {
             </div>
           </div>
 
-          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-3">
+          <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-3">
             <div>
               <dt className="text-muted-foreground">조각</dt>
               <dd className="font-bold text-foreground">
@@ -149,7 +149,7 @@ export default function ShardLoadPathViz() {
             </div>
           </dl>
 
-          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5.25rem]">
+          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[3.5rem]">
             {scene.note}
           </p>
         </div>

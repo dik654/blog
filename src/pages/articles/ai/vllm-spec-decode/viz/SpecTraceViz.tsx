@@ -32,7 +32,8 @@ export default function SpecTraceViz() {
     <div ref={canvas} data-viz-canvas role="group" tabIndex={0} aria-label="후보 네 개의 확인과 교체" onKeyDown={scenes.onKeyDown} className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex flex-none flex-col py-2">
         <h4 className="font-bold">{TITLES[active]}</h4>
-        <svg viewBox="0 0 320 235" role="img" aria-label={state.result} className="mt-3 h-auto max-h-64 w-full">
+        <div className="mt-3 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] sm:items-start sm:gap-6">
+        <svg viewBox="0 0 320 235" role="img" aria-label={state.result} className="h-auto max-h-60 w-full">
           <text x="16" y="19" className="fill-muted-foreground text-[12px]">미리 만든 후보</text>
           {["A", "B", "B", "A"].map((token, index) => {
             const x = 16 + index * 76;
@@ -53,12 +54,12 @@ export default function SpecTraceViz() {
             <text x={46+index*76} y="196" textAnchor="middle" className="fill-foreground text-[17px]">{active >= (index===2 ? 3 : 1) ? token : "·"}</text>
           </g>)}
         </svg>
-        <ol aria-label="현재 장면과 함께 실행되는 의사코드" className="mb-4 space-y-1.5">
+        <ol aria-label="현재 장면과 함께 실행되는 의사코드" className="mb-4 space-y-1.5 sm:mb-0">
           {PSEUDOCODE.map((line, index) => (
             <li
               key={line}
               aria-current={active === index ? "step" : undefined}
-              className={`flex min-w-0 gap-2 rounded-md border-l-2 px-3 py-2 ${
+              className={`flex min-w-0 gap-2 rounded-md border-l-2 px-3 py-1.5 ${
                 active === index
                   ? "border-primary bg-primary/[0.07]"
                   : index < active
@@ -66,15 +67,16 @@ export default function SpecTraceViz() {
                     : "border-border/60 text-muted-foreground"
               }`}
             >
-              <span className="shrink-0 font-mono text-[10px] font-bold text-primary">
+              <span className="w-4 shrink-0 text-center font-mono text-[10px] font-bold text-primary">
                 {index < active ? "✓" : String(index + 1).padStart(2, "0")}
               </span>
               <code className="min-w-0 break-words font-mono text-[11px] leading-5">{line}</code>
             </li>
           ))}
         </ol>
-        <p className="font-semibold text-sm">{state.result}</p>
-        <p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{state.note}</p>
+        </div>
+        <p className="mt-3 font-semibold text-sm">{state.result}</p>
+        <p className="mt-3 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.25rem] sm:min-h-[3.5rem]">{state.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS}/>
     </div>

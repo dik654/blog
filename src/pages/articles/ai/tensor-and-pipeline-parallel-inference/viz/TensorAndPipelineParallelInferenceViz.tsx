@@ -16,7 +16,7 @@ const NOTES = [
   "두 GPU 가 같은 Z 를 들고 다음 layer 로 갑니다. attention 블록도 같은 꼴이라 layer 하나에 all-reduce 는 정확히 두 번입니다.",
 ] as const;
 
-const GPU_Y = [40, 170] as const;
+const GPU_Y = [30, 140] as const;
 
 function Block({
   x,
@@ -108,11 +108,8 @@ export default function TensorAndPipelineParallelInferenceViz() {
         className="flex h-[min(33rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Layer step · {String(s + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
-          <svg viewBox="0 0 640 290" className="mt-4 h-auto w-full" aria-hidden="true">
+          <h4 className="text-base font-bold">{SCENES[s]}</h4>
+          <svg viewBox="0 14 640 246" className="mt-3 h-auto w-full" aria-hidden="true">
             <defs>
               <marker id="tp-arrow-head" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
                 <path d="M0 0L8 4L0 8Z" fill="var(--primary)" />
@@ -121,20 +118,20 @@ export default function TensorAndPipelineParallelInferenceViz() {
             <GpuRow index={0} s={s} />
             <GpuRow index={1} s={s} />
             <path
-              d="M500 106V170"
+              d="M500 96V140"
               stroke={s === 3 ? "var(--primary)" : "var(--border)"}
               strokeWidth="1"
               strokeDasharray={s === 3 ? undefined : "3 2"}
               fill="none"
             />
             <path
-              d="M500 106 l-4 8 h8 z M500 170 l-4 -8 h8 z"
+              d="M500 96 l-4 8 h8 z M500 140 l-4 -8 h8 z"
               fill={s === 3 ? "var(--primary)" : "var(--border)"}
             />
-            <text x={508} y={142} fontSize="9" fill="currentColor" className={s === 3 ? "text-foreground" : "text-muted-foreground"}>
+            <text x={508} y={121} fontSize="9" fill="currentColor" className={s === 3 ? "text-foreground" : "text-muted-foreground"}>
               {s === 3 ? "all-reduce Z1+Z2" : "all-reduce"}
             </text>
-            <text x={16} y={282} fontSize="10" fill="currentColor" className="text-foreground">
+            <text x={16} y={252} fontSize="10" fill="currentColor" className="text-foreground">
               {s === 0 && "weight: A = [A1, A2] (열), B = [B1; B2] (행)"}
               {s === 1 && "통신 0 byte · GeLU(X·A1), GeLU(X·A2) 는 독립"}
               {s === 2 && "통신 0 byte · Z1 = Y1·B1, Z2 = Y2·B2 는 아직 부분합"}
@@ -142,7 +139,7 @@ export default function TensorAndPipelineParallelInferenceViz() {
               {s === 4 && "layer 당 all-reduce 2 회 (attention 1 + MLP 1)"}
             </text>
           </svg>
-          <p className="mt-6 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-0">
+          <p className="mt-3 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-0">
             {NOTES[s]}
           </p>
         </div>

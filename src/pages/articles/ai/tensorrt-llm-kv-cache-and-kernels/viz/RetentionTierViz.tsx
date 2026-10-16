@@ -142,9 +142,9 @@ export default function RetentionTierViz() {
               </span>
             </div>
 
-            <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
               <div className="min-w-0">
-                <p className="text-[11px] font-bold text-muted-foreground">
+                <p className="min-h-[2.1rem] text-[11px] font-bold text-muted-foreground min-[390px]:min-h-0">
                   호스트 메모리 · tree에 남음
                   {scene.reload ? <span className="ml-1 text-[#2563eb]">· B ↑ GPU로 1회 복사</span> : null}
                 </p>

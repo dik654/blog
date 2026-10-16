@@ -67,12 +67,9 @@ export default function ScaleGranularityViz() {
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex shrink-0 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scene + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scene]}</h4>
 
-          <svg viewBox="0 0 360 250" className="mt-4 w-full max-w-[24rem]" role="img" aria-label={`scale ${COUNTS[scene]}개`}>
+          <svg viewBox="0 0 360 250" className="mt-3 w-full max-w-[21rem]" role="img" aria-label={`scale ${COUNTS[scene]}개`}>
             {Array.from({ length: CHANNELS }, (_, c) => (
               <text key={`ch-${c}`} x={left + c * cell + cell / 2} y={14} fontSize={12} textAnchor="middle" fill={c === OUTLIER ? "#dc2626" : "#6b7280"} fontWeight={c === OUTLIER ? 700 : 400}>
                 {c}

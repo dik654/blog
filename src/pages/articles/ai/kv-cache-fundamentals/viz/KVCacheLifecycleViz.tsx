@@ -33,7 +33,7 @@ export default function KVCacheLifecycleViz() {
         </svg>
         <p className="mt-3 text-sm">{state.query}</p>
         <p className="mt-2 border-y border-border py-3 font-mono text-base text-primary">{state.result}</p>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{state.note}</p>
+        <p className="mt-4 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.25rem] sm:min-h-[3.5rem]">{state.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
     </div>

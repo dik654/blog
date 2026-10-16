@@ -76,10 +76,7 @@ export default function BatchingGenerationsViz() {
         className="flex h-[min(29rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+          <h4 className="text-base font-bold">{SCENES[scenes.active]}</h4>
 
           <div className="mt-4 min-w-0 overflow-x-auto border border-border">
             <svg viewBox={`0 0 ${width} ${height}`} className="h-[11rem] w-full min-w-[24rem]" role="img" aria-label="slot × iteration grid">

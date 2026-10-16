@@ -50,7 +50,7 @@ export default function ServingMemoryAdmissionAndPreemptionViz() {
           <p className="text-sm font-medium">C · {state.c}</p>
           <p className="mt-2 font-mono text-base text-primary">{state.check}</p>
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{state.note}</p>
+        <p className="mt-4 min-h-[7.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[6rem] sm:min-h-0">{state.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
     </div>

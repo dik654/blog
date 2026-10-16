@@ -1,5 +1,6 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const labels = ["한 번씩 이동", "K·V 네 번 읽기", "한 행 decode"] as const;
@@ -26,7 +27,7 @@ function Matrix({
         <p className="text-xs text-muted-foreground">{action}</p>
       </div>
       <div
-        className="mx-auto mt-3 grid w-fit gap-0.5"
+        className="mx-auto mt-2 grid w-fit gap-0.5"
         style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
         aria-label={`${name} ${rows}행 ${cols}열`}
       >
@@ -37,7 +38,7 @@ function Matrix({
           />
         ))}
       </div>
-      <p className="mt-3 text-center text-xs tabular-nums text-foreground">{rows}행 × {cols}값</p>
+      <p className="mt-2 text-center text-xs tabular-nums text-foreground">{rows}행 × {cols}값</p>
       <p className="mt-1 text-center text-sm font-bold tabular-nums text-primary">{bytes}</p>
     </div>
   );
@@ -147,7 +148,7 @@ export default function AttentionTrafficViz() {
             </div>
           ))}
         </div>
-        <div className="mt-5 min-w-0 border-t border-border pt-5 sm:min-h-[24rem]">{scenes[scene.active]}</div>
+        <StableSceneStack active={scene.active} scenes={scenes} className="mt-4 border-t border-border pt-4" />
         <AnimatedSceneControls {...scene} labels={labels} />
       </div>
     </VizFrame>

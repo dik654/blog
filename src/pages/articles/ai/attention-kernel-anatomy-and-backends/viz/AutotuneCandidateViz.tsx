@@ -1,5 +1,6 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import VizFrame from "@/components/viz/VizFrame";
+import { StableSceneStack } from "@/components/viz/StableSceneStack";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const labels = [
@@ -34,7 +35,7 @@ function CandidateCard() {
       </div>
       <dl className="divide-y divide-border border-y border-border">
         {rows.map(([meaning, value, name]) => (
-          <div key={name} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2.5">
+          <div key={name} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 py-2">
             <div>
               <dt className="text-sm leading-5 text-foreground">{meaning}</dt>
               <dd className="mt-0.5 break-words font-mono text-xs text-muted-foreground">{name}</dd>
@@ -59,7 +60,7 @@ function CombinationCard() {
       <p className="text-sm leading-6 text-muted-foreground">
         각 줄에서 하나씩 고릅니다. 어느 줄의 선택도 아직 다른 줄의 선택을 제한하지 않으므로 경우의 수를 곱합니다.
       </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 grid gap-3 sm:grid-cols-4">
         {axes.map(([meaning, name, values, count]) => (
           <div key={name} className="min-w-0 border border-border bg-background p-3">
             <p className="text-sm font-bold text-foreground">{meaning} · {count}</p>
@@ -132,7 +133,7 @@ function MeasurementCard() {
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
         필터는 시도하지 않을 후보만 지웁니다. 그 뒤 autotune이 남은 설정을 실행해 시간을 비교하고, 해당 입력 조건에서 가장 빠른 설정을 고릅니다.
       </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div className="border border-border bg-background p-3">
           <p className="text-xs font-bold text-muted-foreground">다시 시간을 잴지 구분하는 값</p>
           <ul className="mt-2 space-y-1 font-mono text-sm text-foreground">
@@ -178,19 +179,21 @@ export default function AutotuneCandidateViz() {
             const stageIndex = Math.min(index + 1, labels.length - 1);
             const active = scene.active === stageIndex || (index === 0 && scene.active === 0);
             return (
-              <li key={item.label} className={`min-w-0 border-l-2 px-3 py-2 ${active ? "border-primary bg-primary/5" : "border-border"}`}>
-                <p className="text-xl font-bold tabular-nums text-foreground">{item.count}</p>
-                <p className="mt-0.5 text-xs font-bold text-foreground">{item.label}</p>
+              <li key={item.label} className={`min-w-0 border-l-2 px-2 py-2 ${active ? "border-primary bg-primary/5" : "border-border"}`}>
+                <p className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="text-xl font-bold tabular-nums text-foreground">{item.count}</span>
+                  <span className="text-xs font-bold text-foreground">{item.label}</span>
+                </p>
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.detail}</p>
               </li>
             );
           })}
         </ol>
-        <div className="mt-5 min-w-0 border-t border-border pt-5 sm:min-h-[21rem]">
-          <p className="mb-4 text-sm font-bold text-primary">
+        <div className="mt-4 min-w-0 border-t border-border pt-4">
+          <p className="mb-3 text-sm font-bold text-primary">
             {String(scene.active + 1).padStart(2, "0")} · {labels[scene.active]}
           </p>
-          {scenes[scene.active]}
+          <StableSceneStack active={scene.active} scenes={scenes} />
         </div>
         <AnimatedSceneControls {...scene} labels={labels} />
       </div>
