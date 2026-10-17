@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -68,6 +69,18 @@ function slotColor(i: number, s: Scene): string | undefined {
   return undefined;
 }
 
+function Stack({ items, active, className = "" }: { items: readonly ReactNode[]; active: number; className?: string }) {
+  return (
+    <div className={`grid ${className}`}>
+      {items.map((item, index) => (
+        <div key={index} aria-hidden={index !== active} className={`col-start-1 row-start-1 ${index === active ? "" : "invisible"}`}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function FdTableViz() {
   const scenes = useAnimatedScenes(SCENES.length, 3800);
   const scene = scenes.active;
@@ -93,19 +106,23 @@ export default function FdTableViz() {
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
+          <Stack active={scene} className="mt-2" items={SCENES.map((label) => <h4 key={label} className="text-base font-bold">{label}</h4>)} />
 
-          <div className="mt-4 grid w-full max-w-[26rem] grid-cols-32 gap-px self-center rounded-sm border border-border p-px">
+          <div className="mt-3 grid gap-4 sm:grid-cols-[15rem_minmax(0,1fr)] sm:items-start">
+          <div>
+          <div className="mx-auto grid w-full max-w-[26rem] grid-cols-32 gap-px rounded-sm border border-border p-px sm:max-w-none">
             {Array.from({ length: SLOTS }, (_, i) => (
               <div key={i} className="aspect-square bg-muted/40" style={slotColor(i, state) ? { backgroundColor: slotColor(i, state) } : undefined} />
             ))}
           </div>
-          <div className="mx-auto mt-1 flex w-full max-w-[26rem] justify-between font-mono text-[10px] text-muted-foreground">
+          <div className="mx-auto mt-1 flex w-full max-w-[26rem] justify-between font-mono text-[10px] text-muted-foreground sm:max-w-none">
             <span>fd 0</span>
             <span>fd 1023</span>
           </div>
+          </div>
 
-          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs sm:grid-cols-4">
+          <div className="min-w-0">
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-xs">
             <div>
               <dt className="text-muted-foreground">쓴 칸</dt>
               <dd className="font-bold text-foreground">{used.toLocaleString()}</dd>
@@ -116,17 +133,17 @@ export default function FdTableViz() {
             </div>
             <div>
               <dt className="text-muted-foreground">다음 번호</dt>
-              <dd className="font-bold text-foreground">{state.next}</dd>
+              <dd className="font-bold text-foreground"><Stack active={scene} items={STATES.map((s) => s.next)} /></dd>
             </div>
             <div>
               <dt className="text-muted-foreground">결과</dt>
-              <dd className="font-bold text-foreground">{state.result}</dd>
+              <dd className="font-bold text-foreground"><Stack active={scene} items={STATES.map((s) => s.result)} /></dd>
             </div>
           </dl>
 
-          <p className="mt-4 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[3.5rem]">
-            {state.note}
-          </p>
+          <Stack active={scene} className="mt-3" items={STATES.map((s) => <p key={s.note} className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>)} />
+          </div>
+          </div>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>

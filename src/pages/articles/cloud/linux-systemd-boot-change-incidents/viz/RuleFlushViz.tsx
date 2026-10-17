@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -86,6 +87,18 @@ const MARK_LABEL: Record<Mark, string> = {
   gone: "삭제됨",
 };
 
+function Stack({ items, active, className = "" }: { items: readonly ReactNode[]; active: number; className?: string }) {
+  return (
+    <div className={`grid ${className}`}>
+      {items.map((item, index) => (
+        <div key={index} aria-hidden={index !== active} className={`col-start-1 row-start-1 ${index === active ? "" : "invisible"}`}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function RuleFlushViz() {
   const scenes = useAnimatedScenes(SCENE_DATA.length, 4300);
   const active = scenes.active;
@@ -109,14 +122,22 @@ export default function RuleFlushViz() {
       >
         <div className="flex shrink-0 flex-col">
           <p className="text-[11px] font-black text-primary">Scene · {String(active + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{LABELS[active]}</h4>
-          <p className="mt-1 min-h-[2.5rem] break-words font-mono text-xs text-foreground sm:min-h-0">{scene.packet}</p>
+          <Stack
+            active={active}
+            className="mt-2"
+            items={SCENE_DATA.map((s, i) => (
+              <div key={i}>
+                <h4 className="text-base font-bold">{LABELS[i]}</h4>
+                <p className="mt-1 break-words font-mono text-xs text-foreground">{s.packet}</p>
+              </div>
+            ))}
+          />
 
-          <ol className="mt-3 space-y-1" aria-label="ip rule 목록">
+          <ol className="mt-2 space-y-1" aria-label="ip rule 목록">
             {RULES.map((rule, index) => {
               const mark = scene.marks[index];
               return (
-                <li key={rule.pri} className={`grid grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-x-2 rounded-md border px-2 py-1 sm:grid-cols-[3.5rem_minmax(0,1fr)_11rem_5.5rem] ${MARK_STYLE[mark]}`}>
+                <li key={rule.pri} className={`grid grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-x-2 rounded-md border px-2 py-0.5 sm:grid-cols-[3.5rem_minmax(0,1fr)_11rem_5.5rem] ${MARK_STYLE[mark]}`}>
                   <span className="font-mono text-xs font-bold">{rule.pri}</span>
                   <code className="min-w-0 break-all font-mono text-[11px] leading-4">{rule.text}</code>
                   <span className="col-start-2 text-[11px] text-muted-foreground sm:col-start-auto">{rule.role}</span>
@@ -126,20 +147,18 @@ export default function RuleFlushViz() {
             })}
           </ol>
 
-          <dl className="mt-2 grid grid-cols-2 gap-x-4 font-mono text-xs">
+          <dl className="mt-1.5 grid grid-cols-2 gap-x-4 font-mono text-xs">
             <div>
               <dt className="text-muted-foreground">남은 규칙</dt>
               <dd className="font-bold">{remaining}줄</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">판정</dt>
-              <dd className="min-h-[4.5rem] break-words font-bold sm:min-h-[2rem]">{scene.verdict}</dd>
+              <dd className="break-words font-bold"><Stack active={active} items={SCENE_DATA.map((s) => s.verdict)} /></dd>
             </div>
           </dl>
 
-          <p className="mt-2 min-h-[12rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.5rem] sm:min-h-[5.25rem]">
-            {scene.note}
-          </p>
+          <Stack active={active} className="mt-1.5" items={SCENE_DATA.map((s) => <p key={s.note} className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>)} />
         </div>
         <AnimatedSceneControls {...scenes} labels={LABELS} />
       </div>

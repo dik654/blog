@@ -153,6 +153,7 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
     { id: "overview", level: "S", title: "1. 세 개를 요청했는데 두 개만 준비되어 지연이 두 배로 뛰었습니다", bridge: "먼저 Pod 하나가 어떤 전환을 거쳐 요청을 받게 되는지 여섯 단계로 나눕니다.", paragraphs: [
       "(가정) checkout 서버를 세 개 띄우도록 Deployment를 바꾼 뒤 화면에는 3 desired, 2 ready가 보였습니다. 요청은 초당 90건 들어오고 Pod 하나는 초당 35건을 안정적으로 처리하므로 두 개로는 초당 70건까지만 받습니다. 남는 초당 20건이 큐에 쌓이면서 p95 지연이 900ms에서 2.1초로 늘었습니다.",
       "답부터 적으면 이렇습니다. Kubernetes 장애는 화면의 상태 이름을 외워서 푸는 문제가 아닙니다. 요청 저장, 실행할 node 선택, container 시작, 준비 확인, 요청 대상 등록이 차례로 성공했는지 보고 마지막 초록불 바로 다음을 조사합니다. 이 글은 준비되지 않은 세 번째 Pod 하나를 그 순서대로 따라갑니다.",
+      "운영에서 반복해 묻는 여덟 질문이 각각 어느 글에서 닫히는지는 [Kubernetes 개념 지도](/cs/cloud/kubernetes-concept-map#map)에 한 장으로 그려 두었습니다. 이 글은 그 지도에서 Pending 진단의 전체 순서를 맡습니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 원하는 개수는 여섯 전환을 거쳐 요청을 받는 Pod가 됩니다", bridge: "여섯 전환 가운데 하나가 멈추면 용량이 얼마나 비는지 숫자로 먼저 잡습니다.", paragraphs: [
       "replicas: 3이라는 요청을 보내면 첫 담당자가 형식과 권한을 검사해 저장합니다. 다음 담당자는 부족한 Pod를 만들고, 배치 담당자는 실행할 node를 고릅니다. 선택된 node의 담당자는 image를 받아 container를 만들며, 네트워크와 저장장치 담당자가 주소와 volume을 붙입니다.",
@@ -168,22 +169,22 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
     ] },
     { id: "need", level: "2", title: "5. 생성 명령 하나로 끝나지 않기 때문에 역할이 나뉩니다", bridge: "세 부품의 공식 정의와 서로 공유하지 않는 것을 확인해 둡니다.", paragraphs: [
       "원하는 상태는 계속 바뀌고 node도 사라집니다. 요청 저장, 빈자리 선택, 각 node의 container 유지를 서로 나누면 한 담당자가 잠시 멈춰도 이미 실행 중인 container가 곧바로 사라지지 않습니다.",
-      "대신 상태가 한 번에 맞춰지지도 않습니다. 각 담당자는 저장된 현재 상태를 보며 원하는 상태와의 차이를 반복해서 줄입니다. 따라서 변경 직후 잠깐 어긋난 상태와 더 이상 진행되지 않는 실패를 상태 조건, event, 지난 시간으로 구분해야 합니다.",
+      "대신 상태가 한 번에 맞춰지지도 않습니다. 각 담당자는 저장된 현재 상태를 보며 원하는 상태와의 차이를 반복해서 줄입니다. 따라서 변경 직후 잠깐 어긋난 상태와 더 이상 진행되지 않는 실패를 상태 조건, event, 지난 시간으로 구분해야 합니다. ReplicaSet이 그 차이를 실제로 어떻게 세고 몇 개씩 만드는지는 [controller 복구 루프](/cs/cloud/kubernetes-controllers-reconcile-deployment-job#small-case)에서 숫자로 따라갑니다.",
     ] },
     { id: "names", level: "3", title: "6. API server·scheduler·kubelet이 각각 맡는 경계", bridge: "이제 세 번째 checkout Pod를 실제 명령으로 전환 하나씩 좁혀 갑니다.", paragraphs: [
       "API server는 사용자와 모든 component가 쓰는 HTTP API의 중심이고 object의 직렬화된 상태는 etcd에 저장됩니다. scheduler는 아직 node가 없는 Pod를 보고 조건에 맞는 node를 골라 binding을 기록합니다. kubelet은 각 node에서 PodSpec에 맞는 container가 실행되고 건강한지 유지하는 agent입니다.",
       "이 셋은 서로 메모리를 공유하지 않고 API object와 watch로만 조정합니다. 그래서 진단할 때도 내가 보낸 manifest보다 server가 저장해 돌려주는 object, condition과 event를 먼저 읽습니다.",
     ] },
     { id: "mechanism", level: "4", title: "7. Pending Pod 한 개를 client 성공까지 추적합니다", bridge: "공식 문서가 각 component의 책임을 어디까지 보장하는지 같은 사건에 대입해 봅니다.", paragraphs: [
-      "먼저 context와 namespace를 확인하고 Deployment·Pod condition·event를 읽습니다. PodScheduled=False와 Insufficient cpu가 보이면 image나 network 문제가 아니라 scheduler가 node를 고르기 전에 막힌 것입니다. request나 node capacity를 고친 뒤 새 Pod에 node 이름이 생기는지 확인합니다.",
-      "node가 정해진 뒤에는 kubelet이 container runtime interface(CRI), network plugin(CNI), storage driver(CSI)를 통해 sandbox·주소·volume을 준비합니다. 마지막으로 readiness가 통과해 EndpointSlice에 주소가 실리고, 실제 client 요청이 목표 지연 안에 성공해야 사건이 닫힙니다.",
+      "먼저 context와 namespace를 확인하고 Deployment·Pod condition·event를 읽습니다. PodScheduled=False와 Insufficient cpu가 보이면 image나 network 문제가 아니라 scheduler가 node를 고르기 전에 막힌 것입니다. request나 node capacity를 고친 뒤 새 Pod에 node 이름이 생기는지 확인합니다. 이때 scheduler가 비교하는 것은 사용량이 아니라 requests 합과 Allocatable이며, 그 계산은 [requests와 limits 글](/cs/cloud/kubernetes-requests-limits-allocatable-qos#allocatable)에 있습니다. nodeName이 없는 Pending과 ContainerCreating에서 멈춘 Pending을 가르는 기준은 [Pod 상태와 Event 글](/cs/cloud/kubernetes-pod-states-crashloop-probes-events#pending-two-kinds)이 맡습니다.",
+      "node가 정해진 뒤에는 kubelet이 container runtime interface(CRI), network plugin(CNI), storage driver(CSI)를 통해 sandbox·주소·volume을 준비합니다. 마지막으로 readiness가 통과해 EndpointSlice에 주소가 실리고, 실제 client 요청이 목표 지연 안에 성공해야 사건이 닫힙니다. 반대로 Pod가 종료될 때 EndpointSlice에서 빠지는 시각과 SIGTERM이 닿는 시각이 어긋나는 경주는 [종료와 롤아웃 글](/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#race-and-budget)에서 잽니다.",
     ] },
     { id: "source", level: "5", title: "8. 공식 architecture를 같은 사건의 증거 위치에 대입합니다", bridge: "같은 경로를 반복해서 고장 내고 고치는 연습이 CKA 범위와 어떻게 맞물리는지 봅니다.", paragraphs: [
       "공식 Components 문서는 API server를 HTTP API의 중심, scheduler를 미배치 Pod의 node 선택자, kubelet을 node에서 Pod와 container를 유지하는 agent로 설명합니다. 이 설명으로 전환마다 owner를 정하되 특정 배포판의 process 위치와 log 경로까지 같다고 가정하지 않습니다.",
-      "API server readiness가 통과해도 worker runtime과 application은 실패할 수 있습니다. 반대로 control plane이 잠시 중단돼도 이미 실행 중인 container가 곧바로 모두 종료되는 것은 아닙니다. component health와 workload health를 분리해 기록합니다.",
+      "API server readiness가 통과해도 worker runtime과 application은 실패할 수 있습니다. 반대로 control plane이 잠시 중단돼도 이미 실행 중인 container가 곧바로 모두 종료되는 것은 아닙니다. component health와 workload health를 분리해 기록합니다. 노드가 NotReady로 바뀐 뒤 그 위의 Pod가 다른 노드로 옮겨가기까지 50초와 300초가 어떻게 쌓이는지는 [Pod가 Node에 오르고 떨어지는 시계](/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#notready-clock)에서 봅니다.",
     ] },
     { id: "comparison", level: "6", title: "9. CKA v1.35 범위를 장애 lab 순서로 바꿉니다", bridge: "마지막으로 시험에서 고친 한 cluster와 현장 책임의 경계를 정합니다.", paragraphs: [
-      "2026-10-08 Linux Foundation 공식 페이지 기준 CKA는 Kubernetes v1.35를 쓰는 2시간 performance-based 시험입니다. 영역은 Troubleshooting 30%, Cluster Architecture·Installation·Configuration 25%, Services·Networking 20%, Workloads·Scheduling 15%, Storage 10%입니다.",
+      "2026-10-08 Linux Foundation 공식 페이지 기준 CKA는 Kubernetes v1.35를 쓰는 2시간 performance-based 시험입니다. 영역은 Troubleshooting 30%, Cluster Architecture·Installation·Configuration 25%, Services·Networking 20%, Workloads·Scheduling 15%, Storage 10%입니다. 같은 다섯 영역을 운영 질문과 공개 장애 사례로 다시 묶은 색인은 [개념 지도의 면접 색인](/cs/cloud/kubernetes-concept-map#interview-index)에 있습니다.",
       "입문 강의가 object와 application 전체 지도를 준다면 CKA 학습은 제한 시간 안에 상태를 확인하고 실제로 고치는 반복을 더합니다. Service·CoreDNS·Gateway API는 client 경로, kubeadm·HA·etcd는 control-plane lifecycle, volume은 Pod 실행 경로의 storage 전환에 놓고 연습합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 시험에서 고친 한 cluster는 production 운영 경력이 아닙니다", bridge: "이 글의 도착점은 상태 이름을 외우는 것이 아니라 마지막 성공 전환 다음을 증거로 찾는 습관입니다.", paragraphs: [

@@ -38,7 +38,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
             <p>바깥에서 보면 프로그램은 connect()로 연결을 열고 close()로 닫을 뿐입니다. 그 사이 커널은 연결마다 출발 IP, 출발 포트, 목적 IP, 목적 포트 네 값을 묶어 table에 넣습니다. 들어온 packet이 어느 연결의 것인지 이 네 값으로 찾습니다.</p>
             <p>클라이언트가 고르는 값은 출발 포트 하나뿐입니다. 출발 IP는 나가는 인터페이스가, 목적지는 호출 대상이 정합니다. 그래서 같은 upstream으로 가는 연결끼리는 출발 포트만으로 서로를 구분해야 합니다.</p>
             <p>서버 쪽은 모양이 다릅니다. listen() 중인 소켓 하나가 포트 8080을 지키고, handshake 중인 연결과 handshake를 마치고 accept()를 기다리는 연결을 두 줄에 세웁니다. 연결이 끝나도 서버의 8080은 그대로라서 서버는 포트가 바닥나지 않습니다.</p>
-            <p>이 글은 연결을 열고 닫는 자리만 봅니다. 혼잡 제어, 재전송 알고리즘, 버퍼 크기 조정은 다루지 않습니다. 클라우드 방화벽과 경로 문제는 <a href="/cs/cloud/cloud-networking-request-path#mechanism">요청 경로 추적</a>에서 먼저 봅니다.</p>
+            <p>이 글은 연결을 열고 닫는 자리만 봅니다. 혼잡 제어, 재전송 알고리즘, 버퍼 크기 조정은 다루지 않습니다. 클라우드 방화벽과 경로 문제는 <a href="/cs/cloud/cloud-networking-request-path#mechanism">요청 경로 추적</a>에서 먼저 봅니다. 소켓이 왜 fd 하나로 보이고 packet이 인터페이스에서 라우팅 표와 netfilter 훅을 지나 그 소켓에 닿는 길은 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks">네트워크 기초 글</a>이 맡습니다.</p>
           </div>
         </section>
 
@@ -277,7 +277,7 @@ export default function LinuxTcpTimeWaitPortsBacklogArticle() {
         <section id="conntrack" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">11. 중간에 NAT가 있으면 conntrack table이 세 번째 장부가 됩니다</h2>
           <div className={prose}>
-            <p>클라이언트와 서버 사이에 netfilter NAT를 쓰는 호스트가 있으면, 그 호스트는 연결마다 conntrack 항목을 하나 만들어 주소 변환과 응답 경로를 기억합니다. Kubernetes Service와 SNAT가 이 장부를 쓰는 경로는 <a href="/cs/cloud/kubernetes-network-packet-path#mtu-egress">Kubernetes 패킷 경로의 MTU·SNAT·conntrack</a>에서 다뤘습니다.</p>
+            <p>클라이언트와 서버 사이에 netfilter NAT를 쓰는 호스트가 있으면, 그 호스트는 연결마다 conntrack 항목을 하나 만들어 주소 변환과 응답 경로를 기억합니다. Kubernetes Service와 SNAT가 이 장부를 쓰는 경로는 <a href="/cs/cloud/kubernetes-network-packet-path#mtu-egress">Kubernetes 패킷 경로의 MTU·SNAT·conntrack</a>에서 다뤘습니다. 장부의 크기가 RAM으로 정해지고 항목이 어느 netfilter 훅에서 만들어지는지는 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#conntrack">네트워크 기초 글의 conntrack 절</a>에 있습니다.</p>
             <p>이 장부에도 TIME_WAIT가 있지만 시간이 다릅니다. 커널 문서의 nf_conntrack_tcp_timeout_time_wait 기본값은 120초입니다. 600개/초면 항목 72,000개가 남습니다. 64비트에서 메모리가 4GiB를 넘으면 nf_conntrack_max 기본값은 262,144라서 아직 여유가 있습니다.</p>
             <p>같은 계산으로 초당 약 2,184개를 넘으면 120초 동안 쌓인 항목이 상한에 닿습니다. 커널은 먼저 같은 hash 칸의 확인되지 않은 항목을 지워 자리를 만들고, 못 만들면 새 연결의 packet을 버리며 dmesg에 'nf_conntrack: table full, dropping packet'을 찍습니다.</p>
             <p>이때 gc가 깨어나 개수가 상한의 95% 아래로 내려갈 때까지 TIME_WAIT·FIN_WAIT·CLOSE 같은 끝나 가는 TCP 항목을 지웁니다. 그래서 항목 대부분이 TIME_WAIT라면 버려짐은 짧게 몰렸다 풀리고, 상한이 단단한 벽이 되는 것은 ESTABLISHED처럼 지울 수 없는 항목이 table을 채웠을 때입니다. 어느 쪽이든 애플리케이션은 오류 대신 SYN 재전송으로 늦어진 응답을 봅니다.</p>

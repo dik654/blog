@@ -183,6 +183,21 @@ function RelatedArticles({ data }: { data: NonNullable<CloudCertificationArticle
   );
 }
 
+/** 데이터 문자열 안의 `[텍스트](/cs/...)`를 내부 링크로 바꿉니다. 사이트 안 경로만 허용합니다. */
+function renderInlineLinks(paragraph: string) {
+  const parts = paragraph.split(/(\[[^\]]+\]\(\/[^)\s]+\))/g);
+  if (parts.length === 1) return paragraph;
+  return parts.map((part, index) => {
+    const match = part.match(/^\[([^\]]+)\]\((\/[^)\s]+)\)$/);
+    if (!match) return part;
+    return (
+      <a key={`${match[2]}-${index}`} href={match[2]}>
+        {match[1]}
+      </a>
+    );
+  });
+}
+
 export default function CloudCertificationArticle({ data }: { data: CloudCertificationArticleData }) {
   return (
     <div className="space-y-16">
@@ -197,7 +212,7 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             {section.paragraphs.map((paragraph) => (
               <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>
-                {paragraph}
+                {renderInlineLinks(paragraph)}
               </p>
             ))}
           </div>

@@ -263,6 +263,7 @@ export default function KubernetesNetworkPacketPathArticle() {
           <p className="leading-8">같은 host에서 두 process가 모두 <code>eth0</code>이라는 이름을 써도 충돌하지 않게 하려면 각 process 묶음에 별도 network view가 필요합니다. Linux의 <strong>network namespace</strong>가 interface·route·neighbor table을 분리합니다. Pod 안 여러 container는 이 view를 함께 써서 같은 IP와 loopback을 공유합니다.</p>
           <p className="leading-8">Pod container가 재시작할 때마다 이 view가 사라지면 나머지 container의 주소도 흔들립니다. 그래서 sandbox 역할의 작은 container가 network namespace를 잡고 있고, runtime이 업무 container를 그 namespace에 넣습니다. 흔히 <strong>pause container</strong>라고 부르는 역할입니다.</p>
           <p className="leading-8">격리된 view를 host와 잇는 양끝짜리 가상 선이 <strong>veth pair</strong>입니다. 한쪽은 Pod 안에서 <code>eth0</code>로 보이고, 반대쪽은 host에서 <code>cali…</code> 같은 이름으로 보입니다. CNI plugin은 Pod 생성 때 이 interface·IP·route를 설정하지만, Service의 backend 선택이나 HTTP routing까지 한 구성요소가 모두 맡는다는 뜻은 아닙니다.</p>
+          <p className="leading-8">veth 한 쌍이 host 쪽에서 bridge나 route에 어떻게 걸리고 packet이 어느 표를 거쳐 다음 hop을 고르는지는 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#veth-bridge">인터페이스와 라우팅</a>에서 커널 원문으로 봅니다.</p>
         </div>
         <pre className={codeClass}><code>{`# 격리된 network view 안과 host 쪽 peer를 함께 확인
 kubectl -n shop exec client -- ip -d addr show eth0
@@ -288,6 +289,7 @@ sudo crictl inspectp <pod-sandbox-id>`}</code></pre>
           <p className="leading-8">Client가 <code>10.96.20.15:8080</code>으로 연결해도 그 주소를 가진 별도 process가 요청을 받아 다시 보내는 것은 아닙니다. <strong>Service</strong>는 selector와 Ready <strong>EndpointSlice</strong>를 연결하고, node의 데이터 플레인은 새 연결을 backend <code>10.244.2.34:8080</code>로 바꿉니다.</p>
           <p className="leading-8">기본 kube-proxy iptables·nftables 경로에서는 packet의 목적지를 바꾸는 DNAT와 conntrack이 핵심입니다. 반면 eBPF 구현은 <code>connect()</code> 단계에서 socket 목적지를 먼저 바꿀 수도 있습니다. 결과 주소는 같아도 <code>tcpdump</code>에서 Service VIP가 보이는 위치가 달라질 수 있으므로 구현 mode부터 확인해야 합니다.</p>
           <p className="leading-8">기존 연결은 첫 packet에서 선택한 backend와 conntrack state를 이어 씁니다. Endpoint나 정책을 바꾼 직후 같은 keep-alive 연결만 시험하면 새 규칙이 적용되지 않은 것처럼 보일 수 있으므로, 새 연결과 기존 연결을 나눠 확인합니다.</p>
+          <p className="leading-8">DNAT 규칙이 커널의 어느 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks">netfilter hook</a>에 걸리는지, 그리고 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#conntrack">conntrack 장부</a>가 어떤 크기로 차고 언제 비는지는 Linux 쪽 글이 맡습니다. Pod가 종료될 때 EndpointSlice에서 빠지는 시각과 SIGTERM이 닿는 시각이 따로 움직이는 이유는 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#termination-flow">종료 흐름</a>에서 봅니다.</p>
         </div>
         <pre className={codeClass}><code>{`kubectl -n shop get svc catalog -o yaml
 kubectl -n shop get endpointslice \
@@ -495,6 +497,7 @@ kubectl -n shop exec client -- \
           preview="기본 패킷 경로를 확인한 뒤 이름·인증서, 상태 저장 서비스, Service mesh 순서로 범위를 넓힙니다."
         >
           <p className="leading-7">먼저 CNI와 Service만 있는 연결을 캡처합니다. 그 경로가 설명된 뒤에 DNS와 인증서를 붙이고, 상태 저장 서비스의 복구 절차를 봅니다. Service mesh는 기존 경로 위에 proxy와 신원 확인이 더해지므로 마지막에 비교해야 새로 생긴 hop과 실패 지점을 구분할 수 있습니다.</p>
+          <p className="leading-7">DNS부터 붙일 때는 Pod의 resolv.conf가 ndots:5로 한 이름을 여덟 번 묻게 되는 과정을 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#resolver-trace">DNS 해석 추적</a>에서 먼저 봅니다. CoreDNS 과부하 사례의 바닥이 그 질의 수입니다.</p>
           <StudyMap />
         </ProgressiveDetail>
         <CitationBlock source="장성필 기술블로그 · Kubernetes category" citeKey={11} href="https://hackjsp.tistory.com/category/Kubernetes">

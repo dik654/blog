@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -50,7 +51,7 @@ const NOTES = [
 
 function ColumnCard({ title, data }: { title: string; data: Column }) {
   return (
-    <div className="min-h-[6.5rem] min-w-0 rounded-md border border-border px-3 py-1.5 sm:min-h-[5.5rem]">
+    <div className="h-full min-w-0 rounded-md border border-border px-3 py-1.5">
       <p className="text-xs font-bold">{title}</p>
       <dl className="mt-1 grid grid-cols-1 gap-x-3 gap-y-0.5 font-mono text-[11px]">
         <div className="flex flex-wrap gap-x-2">
@@ -66,6 +67,18 @@ function ColumnCard({ title, data }: { title: string; data: Column }) {
           <dd className="font-bold">{data.removed}</dd>
         </div>
       </dl>
+    </div>
+  );
+}
+
+function Stack({ items, active, className = "" }: { items: readonly ReactNode[]; active: number; className?: string }) {
+  return (
+    <div className={`grid ${className}`}>
+      {items.map((item, index) => (
+        <div key={index} aria-hidden={index !== active} className={`col-start-1 row-start-1 ${index === active ? "" : "invisible"}`}>
+          {item}
+        </div>
+      ))}
     </div>
   );
 }
@@ -112,14 +125,12 @@ export default function NetworkdStartViz() {
             ))}
           </ol>
 
-          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <ColumnCard title="부팅 직후 노드" data={BOOT[active]} />
-            <ColumnCard title="실행 중 재시작한 노드" data={RUNTIME[active]} />
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Stack active={active} items={BOOT.map((d, i) => <ColumnCard key={i} title="부팅 직후 노드" data={d} />)} />
+            <Stack active={active} items={RUNTIME.map((d, i) => <ColumnCard key={i} title="실행 중 재시작한 노드" data={d} />)} />
           </div>
 
-          <p className="mt-3 min-h-[12.25rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[10.75rem] sm:min-h-[5.25rem]">
-            {NOTES[active]}
-          </p>
+          <Stack active={active} className="mt-2" items={NOTES.map((n) => <p key={n} className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{n}</p>)} />
         </div>
         <AnimatedSceneControls {...scenes} labels={LABELS} />
       </div>

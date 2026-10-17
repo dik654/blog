@@ -18454,6 +18454,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "요청 경로를 관문별로 추적하기", href: "/cs/cloud/cloud-networking-request-path#overview" },
       { label: "Kubernetes 패킷 경로", href: "/cs/cloud/kubernetes-network-packet-path#overview" },
       { label: "관측·복구 운영 체계", href: "/cs/cloud/cloud-reliability-observability-iac#overview" },
+      { label: "커널과 프로세스: 시스템 콜·상태·스케줄러", href: "/cs/cloud/linux-kernel-process-syscall-scheduler#overview" },
+      { label: "USE 격자와 /proc·PSI·perf", href: "/cs/cloud/linux-observability-proc-psi-perf-ebpf#use-grid" },
+      { label: "서버 SRE: 지표→SLO·안전한 변경", href: "/cs/cloud/linux-sre-metrics-slo-safe-change#overview" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Linux v6.12 태그의 전체 원문을 고정해 load 상수·계산·D 상태 조건의 행 번호를 읽는다." },
@@ -18475,6 +18478,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Linux 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
       { label: "D 상태와 load average", href: "/cs/cloud/linux-server-interview-incident-map#source" },
       { label: "NVMe 장치와 PCIe 경로", href: "/cs/gpu/hw-nvme-storage" },
+      { label: "VFS 객체: dentry·inode·file", href: "/cs/cloud/linux-vfs-mount-page-cache-fsync#vfs-objects" },
+      { label: "mount table·bind mount·overlayfs", href: "/cs/cloud/linux-vfs-mount-page-cache-fsync#mount" },
+      { label: "블록 계층과 iostat 열", href: "/cs/cloud/linux-vfs-mount-page-cache-fsync#block-iostat" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Linux v6.12와 coreutils v9.5의 전체 원문을 고정해 unlink·iput·statfs·예약 블록·inode 할당·df 계산의 행 번호를 읽는다." },
@@ -18498,6 +18504,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Kubernetes 요청 경로와 requests·limits", href: "/cs/cloud/kubernetes-request-path-and-cka#overview" },
       { label: "리눅스 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
       { label: "서버 메모리 하드웨어", href: "/cs/gpu/hw-memory#overview" },
+      { label: "memory.high vs memory.max", href: "/cs/cloud/linux-containers-cgroup-namespace#memory-high-max" },
+      { label: "PSI 지수 평균의 계산", href: "/cs/cloud/linux-observability-proc-psi-perf-ebpf#psi-mechanism" },
+      { label: "node-pressure eviction 순서", href: "/cs/cloud/kubernetes-requests-limits-allocatable-qos#eviction-order" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Linux v6.12와 Kubernetes v1.35.0 원문 파일을 바이트 그대로 고정하고 점수·청구·환산 식의 행 번호를 읽는다." },
@@ -18520,6 +18529,8 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Little's law", href: "/cs/ai/llm-serving-ops#paper-little-law" },
       { label: "Kubernetes MTU·SNAT·conntrack", href: "/cs/cloud/kubernetes-network-packet-path#mtu-egress" },
       { label: "리눅스 서버 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
+      { label: "netfilter 훅과 packet 경로", href: "/cs/cloud/linux-network-interface-route-netfilter-dns#netfilter-hooks" },
+      { label: "conntrack 장부의 크기와 생성 지점", href: "/cs/cloud/linux-network-interface-route-netfilter-dns#conntrack" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Linux v6.12 태그의 원문 파일을 그대로 고정해 상수·판정·counter 이름의 행 번호를 읽는다." },
@@ -18542,6 +18553,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "리눅스 면접·장애 지도", href: "/cs/cloud/linux-server-interview-incident-map#overview" },
       { label: "메모리 한도와 OOM의 137", href: "/cs/cloud/linux-memory-page-cache-oom#overview" },
       { label: "systemd 서비스 정지와 한도 설정", href: "/cs/cloud/linux-systemd-boot-change-incidents#overview" },
+      { label: "프로세스 vs 스레드와 R·S·D·Z 상태", href: "/cs/cloud/linux-kernel-process-syscall-scheduler#threads" },
+      { label: "namespace 여덟 종류", href: "/cs/cloud/linux-containers-cgroup-namespace#namespaces" },
+      { label: "Kubernetes 종료 순서와 SIGTERM 경주", href: "/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#termination-flow" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Linux v6.12, tini 369448a, runc v1.2.0 원문 전체를 고정해 판정·입양·fd 할당의 행 번호를 읽는다." },
@@ -18564,6 +18578,8 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "SIGTERM·SIGKILL과 PID 1", href: "/cs/cloud/linux-process-signals-pid1-fds#overview" },
       { label: "CNI가 노드에 까는 route와 경계", href: "/cs/cloud/kubernetes-network-packet-path#overview" },
       { label: "관측·변경·복구 공통 원리", href: "/cs/cloud/cloud-reliability-observability-iac#overview" },
+      { label: "route lookup과 policy routing", href: "/cs/cloud/linux-network-interface-route-netfilter-dns#routing" },
+      { label: "단계적 롤아웃·canary·configuration drift", href: "/cs/cloud/linux-sre-metrics-slo-safe-change#staged-rollout" },
     ],
     evidence: [
       { kind: "primary-source", rule: "systemd v249(commit f627855)과 Linux v6.12(commit adc2186)의 전체 원문을 고정해 행 번호로 읽는다. Ubuntu 배포판 패치 트리는 읽지 않았다." },
