@@ -5333,49 +5333,49 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "Hyperliquid · Fees",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · HyperEVM",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · USDC",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/usdc",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · Liquidations",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/liquidations",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · HIP-3",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-3-builder-deployed-perpetuals",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · Interacting with HyperCore",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · HIP-4",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     },
     {
       "kind": "공식 문서",
       "label": "Hyperliquid · HIP-4 deployer actions",
       "href": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/hip-4-deployer-actions",
-      "note": "2026-10-04 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
+      "note": "2026-10-18 확인. HIP-4 기능·네트워크·수수료 문구 충돌은 본문에서 한계를 명시합니다."
     }
   ],
   "blockchain/robinhood-chain-blob-demand": [
@@ -5383,7 +5383,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "Robinhood Chain · Connecting",
       "href": "https://docs.robinhood.com/chain/connecting/",
-      "note": "2026-10-04 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다. 확인일2026-10-04."
+      "note": "2026-10-18 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다."
     },
     {
       "kind": "공식 문서",
@@ -5401,13 +5401,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "EIP-8070 · Sparse Blobpool",
       "href": "https://eips.ethereum.org/EIPS/eip-8070",
-      "note": "Review 상태·전체 제공 확률·custody 표본·공격 가정의 원문입니다. 확인일2026-10-04."
+      "note": "Last Call 상태와 2026-11-01 마감을 2026-10-18 확인했습니다. 전체 제공 확률·custody 표본·공격 가정도 원문과 대조했습니다."
     },
     {
       "kind": "공식 문서",
       "label": "EIP-7773 · Glamsterdam meta",
       "href": "https://eips.ethereum.org/EIPS/eip-7773",
-      "note": "2026-10-04 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다. 확인일2026-10-04."
+      "note": "2026-10-18 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다."
     },
     {
       "kind": "공식 규격",
@@ -11939,25 +11939,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "Robinhood Chain · Connecting",
       "href": "https://docs.robinhood.com/chain/connecting/",
-      "note": "현재 네트워크 식별자·RPC·ETH gas·Ethereum blobs 사용을 확인했습니다. 확인일2026-10-04."
+      "note": "현재 네트워크 식별자·RPC·ETH gas·Ethereum blobs 사용을 확인했습니다. 확인일2026-10-18."
     },
     {
       "kind": "공식 문서",
       "label": "Robinhood Chain · Transaction finality",
       "href": "https://docs.robinhood.com/chain/transaction-finality/",
-      "note": "단계별 확인과 canonical 인출의7일 대기를 구분합니다. 통상 지연은 장애·혼잡에 따라 달라집니다. 확인일2026-10-04."
+      "note": "단계별 확인과 canonical 인출의 7일 대기를 구분합니다. 통상 지연은 장애·혼잡에 따라 달라집니다. 확인일2026-10-18."
     },
     {
       "kind": "공식 문서",
       "label": "Robinhood Chain · Bridging",
       "href": "https://docs.robinhood.com/chain/bridging/",
-      "note": "입금 재실행과 인출 시작→대기→L1 claim, 서로 다른 체인의 토큰 주소를 확인합니다. 확인일2026-10-04."
+      "note": "입금 재실행과 인출 시작→대기→L1 claim, 서로 다른 체인의 토큰 주소를 확인합니다. 확인일2026-10-18."
     },
     {
       "kind": "공식 문서",
       "label": "Robinhood Chain · Protocol contracts",
       "href": "https://docs.robinhood.com/chain/protocol-contracts/",
-      "note": "Mainnet·Testnet, L1·L2의 inbox·outbox·gateway 목록을 구분합니다. 확인일2026-10-04."
+      "note": "Mainnet·Testnet, L1·L2의 inbox·outbox·gateway 목록을 구분합니다. 확인일2026-10-18."
     },
     {
       "kind": "공식 문서",
@@ -11969,13 +11969,13 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "Robinhood Chain · Stock Tokens",
       "href": "https://docs.robinhood.com/chain/stock-tokens/",
-      "note": "권리·발행자·raw balance와 multiplier·청약 자격·시간 창을 확인했습니다. 확인일2026-10-04."
+      "note": "권리·발행자·raw balance와 multiplier·청약 자격·시간 창을 확인했습니다. 확인일2026-10-18."
     },
     {
       "kind": "공식 문서",
       "label": "Robinhood Assets Jersey · Product documents",
       "href": "https://docs.robinhood.com/rhj",
-      "note": "상품별 권리와 국가별 제한은 투자설명서·추가 문서·최종 조건의 적용 대상입니다. 확인일2026-10-04."
+      "note": "상품별 권리와 국가별 제한은 투자설명서·추가 문서·최종 조건의 적용 대상입니다. 확인일2026-10-18."
     }
   ],
   "blockchain/glamsterdam-block-execution": [

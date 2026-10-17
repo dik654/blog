@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-18 · ETH 블롭·Robinhood Chain·Hyperliquid 최신 사실 대조 (완료)
+
+- 오래된 작업공간을 정본으로 삼지 않고 `origin/main`의 최신 커밋 `6efd2e51`에서 별도 복구 작업공간을 만들었다. 기존 Heru·NFS 작업공간의 미커밋 파일은 덮어쓰거나 삭제하지 않았다.
+- Robinhood Chain의 chain ID 4663·46630, Ethereum blob 사용, 결제 단계와 Stock Token 권리는 현재 공식 문서와 일치했다. EIP-8070은 `Review`에서 `Last Call`로 바뀌었고 검토 마감은 2026-11-01이다. Glamsterdam 메타 EIP에서 Networking 항목으로 분리돼 있으며 메인넷 활성화 시각은 아직 비어 있다.
+- Hyperliquid의 기본 무기한 계약 수수료, 청산의 유지 요구액 2/3 backstop, CCTP 권장과 legacy bridge deprecated, HIP-4의 완전 담보·초기 메인넷 범위는 현재 공식 문서와 일치했다. HIP-3은 DEX별 기본 담보 계산·주문장·설정을 유지하지만, 자격을 갖춘 자산에 cross margin을 켤 수 있고 한번 켜면 되돌릴 수 없다는 현재 조건을 본문에 보강했다.
+- 공식 자료로 현재 사실을 대조했으며 처음 요청에 첨부됐다는 `message.txt` 원문은 복구되지 않았다. 따라서 원문의 문장별 대조를 했다고 주장하지 않고, 공개한 사실 주장은 공식 1차 자료만으로 검증한다.
+- 선택 글 learning·article·graph·formula·calculation·한국어·용어·Viz 감사와 전역 reading 감사가 모두 통과했다. `NODE_OPTIONS=--max-old-space-size=8192 npm run build`도 통과해 7,861개 모듈을 빌드하고 정적 public route 2,086개와 404 fallback을 만들었다. 기본 4GB Node heap에서는 TypeScript가 OOM으로 끝나지만, 저장소의 GitHub Pages workflow와 기존 검증 기록도 같은 8GB 기준을 사용한다.
+- Chromium으로 세 글을 390×844와 1440×1000에서 열었다. 6개 조합 모두 수평 overflow·깨진 이미지·console/page 오류가 0이었고, 2026-10-18 근거 문구와 EIP-8070 Last Call·HIP-3 cross margin 보강이 실제 DOM에 나타났다. 모바일의 상세 설명 펼치기 상호작용도 닫힘→열림으로 바뀌었다.
+- 남은 운영 단계: 최신 커밋을 원격에 올리고 GitHub Pages의 공개 URL에서 같은 문구와 응답을 확인한다. Heru Core의 blog 작업공간은 기존 dirty 작업공간을 건드리지 않고 이번 복구 작업공간으로 연결한 뒤 Workstream 완료 증거를 기록한다.
+
 ## 2026-10-04 · 기존 공개 글 전체 teach-system 개선 (진행 중)
 
 - 사용자 요청: AI 글 등을 포함해 기존 공개 글에서 teach-system으로 개선되지 않은 글을 모두 찾아 개선한다. 별도 활성 goal로 진행한다.

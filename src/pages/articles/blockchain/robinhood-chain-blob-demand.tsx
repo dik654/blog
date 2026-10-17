@@ -10,7 +10,7 @@ export default function RobinhoodChainBlobDemandArticle(){
  return <><article className="space-y-14">
 <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 블롭 수요에서 가격 압력과 특정 체인의 기여를 구분한다</h2>
 <p>롤업이 거래 자료를 Ethereum에 올리면 다른 롤업과 같은 저장 공간을 나누어 씁니다. 어느 체인의 사용자가 늘어도 처리 요청 수와 게시 데이터의 크기는 압축·묶음 주기에 따라 다르게 변합니다. 수요를 읽으려면 실제 게시한 자료와 그때의 공급 설정을 함께 봐야 합니다.</p>
-<p>Robinhood Chain 공식 문서는 2026-10-04 현재 메인넷과 Ethereum blobs 사용을 명시합니다. 이 사실만으로 최근 Ethereum 전체 사용량 증가의 원인을 Robinhood로 정할 수는 없습니다. 이 글은 네 블록의 작은 가정 사례로 필요한 회계를 설명합니다.</p>
+<p>Robinhood Chain 공식 문서는 2026-10-18 현재 메인넷과 Ethereum blobs 사용을 명시합니다. 이 사실만으로 최근 Ethereum 전체 사용량 증가의 원인을 Robinhood로 정할 수는 없습니다. 이 글은 네 블록의 작은 가정 사례로 필요한 회계를 설명합니다.</p>
 <p data-stage-bridge="overview" className="text-sm text-muted-foreground">전체 사용량과 원인을 따로 확인한다는 목표를 세웠습니다. 먼저 누가 어떤 수를 만드는지 나눕니다.</p></section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">2. 게시하는 곳, 담는 곳, 합계를 읽는 곳</h2>
 <p>롤업은 거래 여러 개를 묶어 데이터를 게시합니다. 블록을 만드는 참여자는 허용량과 비용 조건 안에서 게시 요청을 담습니다. 분석자는 블록별 양을 합하고 게시자를 분류합니다. 마지막 분석이 앞 두 단계의 실제 거래를 재현할 수 있어야 원인까지 말할 수 있습니다.</p>
@@ -44,7 +44,7 @@ export default function RobinhoodChainBlobDemandArticle(){
             계산합니다.
           </p>
 <p>Robinhood 공식 연결 문서는 mainnet 4663, testnet 46630을 구분하고 Ethereum blobs를 데이터 가용성 수단으로 명시합니다. 하지만 그 문서는 이 사례의 20개나 과거 3일 평균을 증명하지 않습니다. 예전 본문의 6.4 및 특정 체인이 증가를 만들었다는 서술은 재현 가능한 쿼리·블록 범위를 확보하지 못했으므로 관측값으로 유지하지 않습니다.</p>
-<CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">2026-10-04 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다.</CitationBlock>
+<CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">2026-10-18 공식 네트워크와 DA 설명. 사용량 기여 비율의 관측 근거와 구분합니다.</CitationBlock>
 <p data-stage-bridge="robinhood-chain-concentration" className="text-sm text-muted-foreground">네 블록의 계산과 실제 자료에 필요한 항목을 연결했습니다. 다음은 목표 14를 어떤 원문에서 읽는지 확인합니다.</p></section>
 <section id="source" data-teach-level="5" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">8. 기본값이 아니라 메인넷 일정에 연결된 값을 읽는다</h2>
 <p>go-ethereum commit c9a2bc73c847319a8faa57de59e42c0efc420682의 메인넷 설정은 BPO2 활성화 timestamp 1767747671과 BPO2 설정을 연결합니다. BPO2의 target 14·max 21·update fraction 11684671을 함께 읽습니다. 이 값의 유효 시점은 2026-01-07 01:01:11 UTC 이후이며 후속 활성화 여부도 계속 확인해야 합니다.</p>
@@ -55,12 +55,12 @@ export default function RobinhoodChainBlobDemandArticle(){
 <CitationBlock source="EIP-7892 · BPO" citeKey={3} href="https://eips.ethereum.org/EIPS/eip-7892">BPO 메커니즘. EIP의 예시 timestamp는 실제 메인넷 일정으로 쓰지 않습니다.</CitationBlock>
 <p data-stage-bridge="source" className="text-sm text-muted-foreground">실제 설정과 활성화 조건을 확인했습니다. 같은 18개를 노드가 받는 비용은 어떻게 줄이려는지 비교합니다.</p></section>
 <section id="bpo-sparse-blobpool" data-teach-level="6" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">9. 목표 상향과 전송 절감은 서로 다른 계산이다</h2>
-<p>EIP-8070은 2026-10-04 Review 상태입니다. Glamsterdam의 meta EIP에서는 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
+<p>EIP-8070은 2026-10-18 현재 Last Call 상태이며 검토 마감은 2026-11-01입니다. Glamsterdam의 meta EIP에서는 여전히 별도 Networking 목록에 있고 메인넷 적용 시각은 확정돼 있지 않습니다. 따라서 최종 표준이나 메인넷 배포로 읽으면 안 됩니다. 이 제안은 블록에 들어가기 전 자료를 모두 복제하던 부담을 일부 전체 제공자와 샘플을 받는 노드로 나눕니다.</p>
 <p>제안의 단순 모델에서 15% 확률로 전체를 받고 나머지 85%에서는 1/8을 받으면 평균은 0.15+0.85/8=0.25625입니다. 같은 18개 분량을 전체 수신 18 단위로 놓으면 평균 4.6125 단위입니다. 이는 확률적 payload 모델의 약 74.4% 감소이며, 개별 노드가 매번 그 양만 받거나 실제 전체 대역폭이 정확히 그만큼 감소한다는 측정 결과가 아닙니다.</p>
 <p>전체 제공자가 부족하거나 이웃 선택이 편향되면 자료를 얻는 가정이 깨집니다. 추가 표본·재요청·메시지·증명과 공격 방어 비용도 있습니다. BPO로max를 높여도 이 전송 최적화가 저절로 생기지 않고, 전송이 줄어도 target 상향 일정이 자동으로 결정되지는 않습니다.</p>
 <SourceApplication source="EIP-8070 · Abstract" excerpt="0.15 + 0.85/8 ~ 0.25" application="가정한 18개 분량에 0.25625를 곱해 4.6125를 얻습니다. 제안 모델의 평균 전송량이며 네 블록의 사용 개수 18·10·6·6 자체나 target14를 줄이는 식은 아닙니다." />
-<CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">Review 상태·전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
-<CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-10-04 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
+<CitationBlock source="EIP-8070 · Sparse Blobpool" citeKey={4} href="https://eips.ethereum.org/EIPS/eip-8070">Last Call 상태와 2026-11-01 마감, 전체 제공 확률·custody 표본·공격 가정의 원문입니다.</CitationBlock>
+<CitationBlock source="EIP-7773 · Glamsterdam meta" citeKey={5} href="https://eips.ethereum.org/EIPS/eip-7773">2026-10-18 Networking 목록과 메인넷 activation 미정 상태를 확인했습니다.</CitationBlock>
 <p data-stage-bridge="bpo-sparse-blobpool" className="text-sm text-muted-foreground">18개 게시와 18개 분량의 전송 비용을 나눴습니다. 마지막으로 성장률과 시장 해석의 한계를 확인합니다.</p></section>
 <section id="reading-checklist" data-teach-level="7" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">10. 측정한 범위보다 큰 결론을 내리지 않는다</h2>
 <p>평균을 올린 체인이 확인돼도 그 수요가 유료 사용자·경제적 거래·지속 가능한 수익에서 나왔는지는 추가 자료가 필요합니다. 작은blob을 자주 올리는 방식과 충분히 채운blob을 드물게 올리는 방식도 개수만으로 같다고 평가할 수 없습니다.</p>
