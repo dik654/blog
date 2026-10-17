@@ -7,7 +7,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 export default function RobinhoodChainSettlementArticle() { const sidebar=useCodeSidebar(); return <><article className="space-y-14">
 <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">1. 체인에서 보낸 자산이 언제 도착했고 무엇을 소유하게 됐는가</h2>
-<p>Robinhood Chain에서 자산을 보내면 지갑에는 빠르게 성공이 표시됩니다. 뒤에서는 거래 순서를 정하고 Ethereum에 자료를 게시합니다. 필요하면 브리지에서 자금을 꺼내는 과정도 이어집니다. 각 단계가 보장하는 결과가 다르므로 성공 표시가 어느 단계의 결과인지 확인해야 합니다.</p><p>2026-10-04 공식 문서는 메인넷 chain ID 4663과 테스트넷 46630을 구분합니다. 예전 testnet이라는 URL에 메인넷 설명이 남아 있으므로 URL 이름 대신 현재 네트워크 자료를 확인합니다. 이 글은 일반 토큰 전달을 따라간 뒤 Stock Token의 법적 권리와 비교합니다.</p><CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">현재 네트워크 식별자·RPC·ETH gas·Ethereum blobs 사용을 확인했습니다.</CitationBlock>
+<p>Robinhood Chain에서 자산을 보내면 지갑에는 빠르게 성공이 표시됩니다. 뒤에서는 거래 순서를 정하고 Ethereum에 자료를 게시합니다. 필요하면 브리지에서 자금을 꺼내는 과정도 이어집니다. 각 단계가 보장하는 결과가 다르므로 성공 표시가 어느 단계의 결과인지 확인해야 합니다.</p><p>2026-10-18 공식 문서는 메인넷 chain ID 4663과 테스트넷 46630을 구분합니다. 예전 testnet이라는 URL에 메인넷 설명이 남아 있으므로 URL 이름 대신 현재 네트워크 자료를 확인합니다. 이 글은 일반 토큰 전달을 따라간 뒤 Stock Token의 법적 권리와 비교합니다.</p><CitationBlock source="Robinhood Chain · Connecting" citeKey={1} href="https://docs.robinhood.com/chain/connecting/">현재 네트워크 식별자·RPC·ETH gas·Ethereum blobs 사용을 확인했습니다.</CitationBlock>
 <p data-stage-bridge="overview" className="text-sm text-muted-foreground">성공의 단계를 나누기 위해 누가 주문을 받고 누가 자산을 내주는지 봅니다.</p>
 </section>
 <section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5"><h2 className="text-2xl font-bold">2. 전송을 승인한 뒤 누가 기록하고 지급하는가</h2>

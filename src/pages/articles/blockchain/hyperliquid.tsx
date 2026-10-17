@@ -14,7 +14,7 @@ export default function HyperliquidArticle() {
   <section id="overview" data-teach-level="S" className="scroll-mt-20 space-y-5">
    <h2 className="text-2xl font-bold">1. 매매 버튼 뒤에서 돈과 책임이 어떻게 바뀌는가</h2>
    <p>Hyperliquid은 사용자가 서명한 매매 요청을 받아 주문장과 담보 잔액을 바꾸는 블록체인입니다. 화면에서 주문이 보이는 순간, 일부가 팔리는 순간, 손실 때문에 강제 정리되는 순간에는 각각 다른 기록이 남습니다.</p>
-   <p>이 글은 1,000 USDC를 가진 계정이 BTC 0.1개에 해당하는 무기한 계약을 사는 사례로 그 기록을 따라갑니다. 공식 자료는 2026-10-04 확인했습니다. 가격·체결량·손익은 가정이고, 요율은 확인일의 적용 조건을 따로 적습니다.</p>
+   <p>이 글은 1,000 USDC를 가진 계정이 BTC 0.1개에 해당하는 무기한 계약을 사는 사례로 그 기록을 따라갑니다. 공식 자료는 2026-10-18 확인했습니다. 가격·체결량·손익은 가정이고, 요율은 확인일의 적용 조건을 따로 적습니다.</p>
    <p data-stage-bridge="overview" className="text-sm text-muted-foreground">주문 하나의 상태가 어떻게 달라지는지 보려면 먼저 요청을 받고 처리하는 역할을 나눠야 합니다.</p>
   </section>
   <section id="black-box" data-teach-level="B" className="scroll-mt-20 space-y-5">
@@ -27,7 +27,7 @@ export default function HyperliquidArticle() {
    <h2 className="text-2xl font-bold">3. 0.1개를 주문해도 처음에는 0.04개만 체결된다</h2>
    <p>계정에 1,000 USDC가 있고 BTC 가격 50,000달러 이하에서 0.1개를 사겠다고 요청합니다. 먼저 팔려는 물량이 0.04개뿐이면 2,000달러어치가 체결되고 0.06개는 기다립니다. 나중에 남은 0.06개도 같은 가격에 체결된다고 합시다. 최종 계약 금액은 5,000달러입니다. 모두 (가정)입니다.</p>
    <p>확인일의 기본 0등급 무기한 계약 요율은 상대 주문을 즉시 가져가면 0.045%, 대기 주문이 나중 체결되면 0.015%입니다. 할인·소개·builder 추가비가 없는 일반 시장을 가정하면 처음 비용은 2,000×0.045%=0.90 USDC, 나중 비용은 3,000×0.015%=0.45 USDC입니다. 합계 1.35 USDC를 빼면 가격 손익과 펀딩 전 잔액은 998.65 USDC입니다.</p>
-   <CitationBlock source="Hyperliquid · Fees, perps fee tiers" citeKey={1} href={`${DOCS}/trading/fees`}>2026-10-04 기본 0등급 요율. 계정 할인·시장 종류·실제 userFees와 builder 조건에 따라 달라집니다.</CitationBlock>
+   <CitationBlock source="Hyperliquid · Fees, perps fee tiers" citeKey={1} href={`${DOCS}/trading/fees`}>2026-10-18 기본 0등급 요율. 계정 할인·시장 종류·실제 userFees와 builder 조건에 따라 달라집니다.</CitationBlock>
    <p data-stage-bridge="case" className="text-sm text-muted-foreground">0.04와 0.06의 두 체결이 하나의 0.1 주문으로 연결돼야 합니다. 화면에서 찾을 기록을 그립니다.</p>
   </section>
   <section id="picture" data-teach-level="1" className="scroll-mt-20 space-y-5">
@@ -58,8 +58,8 @@ export default function HyperliquidArticle() {
    <div id="consensus" className="scroll-mt-20"><p>HyperBFT의 공통 순서 안에서 체결과 취소 중 무엇이 먼저 적용됐는지가 정해집니다. 합의가 전 세계 사용자의 실제 클릭 시각을 알아내거나 모든 주문에 동일한 네트워크 지연을 보장하는 것은 아닙니다. 핵심 거래 엔진 전체의 소스가 공개됐다고 가정하지 않습니다.</p></div>
    <div id="margin-liquidation" className="scroll-mt-20"><p>이후 미실현 손실 700 USDC, 펀딩 순지급 20 USDC, 유지 요구액 300 USDC라고 가정하면 계정 가치는 1,000−1.35−700−20=278.65입니다. 요구액보다 21.35 부족합니다. 300은 설명용 값이며 실제 요구액은 자산·규모 구간·mark price로 다시 계산합니다.</p></div>
    <p>공식 청산 규칙은 먼저 주문장에서 포지션을 닫으려 시도합니다. 정리에 실패하고 계정 가치가 유지 요구액의 2/3 아래로 내려가면 backstop 인수 경로가 열립니다. 이 사례의 단순 기준은 200이므로 278.65는 아직 그 아래가 아닙니다. 실제 주문장 가격과 평가가격은 달라질 수 있고 큰 포지션에는 부분 청산 규칙도 있습니다.</p>
-   <p>HIP-3 시장은 외부 운영자가 가격 자료·계약조건·레버리지 한도와 종료를 정합니다. 운영자 DEX마다 담보와 주문장을 구분하며, 확인일 문서는 500k HYPE 예치와 최소 183일 조건을 명시합니다. 운영자가 haltTrading을 보내면 주문 취소와 현재 mark price 정산이 일어나므로 시장 이름만 보고 일반 BTC 시장과 책임이 같다고 읽지 않습니다. 잘못된 운영의 예치금 삭감은 사용자 손실 보상과 같은 약속이 아닙니다.</p>
-   <CitationBlock source="Hyperliquid · USDC" citeKey={3} href={`${DOCS}/for-developers/api/usdc`}>CCTP 권장과 legacy bridge의 상태를 2026-10-04 확인했습니다.</CitationBlock>
+   <p>HIP-3 시장은 외부 운영자가 가격 자료·계약조건·레버리지 한도와 종료를 정합니다. 운영자 DEX마다 기본 담보 계산과 주문장, 설정을 나눕니다. 다만 자격을 갖춘 자산은 운영자가 cross margin을 한 번 켜면 되돌릴 수 없습니다. 이 경우 서로 다른 운영자의 DEX 사이에도 위험이 이어질 수 있으므로 독립 담보라는 단순 가정을 그대로 적용하면 안 됩니다. 확인일 문서는 500k HYPE 예치와 최소 183일 조건을 명시합니다. 운영자가 haltTrading을 보내면 주문 취소와 현재 mark price 정산이 일어납니다. 따라서 시장 이름만 보고 일반 BTC 시장과 책임이 같다고 읽지 않습니다. 잘못된 운영의 예치금 삭감은 사용자 손실 보상과 같은 약속이 아닙니다.</p>
+   <CitationBlock source="Hyperliquid · USDC" citeKey={3} href={`${DOCS}/for-developers/api/usdc`}>CCTP 권장과 legacy bridge의 상태를 2026-10-18 확인했습니다.</CitationBlock>
    <CitationBlock source="Hyperliquid · Liquidations" citeKey={4} href={`${DOCS}/trading/liquidations`}>주문장 청산, 유지 요구액 2/3의 backstop, cross·isolated 범위를 확인합니다.</CitationBlock>
    <CitationBlock source="Hyperliquid · HIP-3" citeKey={5} href={`${DOCS}/hyperliquid-improvement-proposals-hips/hip-3-builder-deployed-perpetuals`}>운영자 책임·시장별 담보·예치·종료·삭감 조건의 확인일 문서입니다.</CitationBlock>
    <p data-stage-bridge="mechanism" className="text-sm text-muted-foreground">1,000의 담보가 주문과 비용·손실로 변했습니다. 이제 공개 코드가 실제로 담당하는 범위를 확인합니다.</p>
@@ -81,7 +81,7 @@ export default function HyperliquidArticle() {
    <SourceApplication source="Hyperliquid · HIP-4, Overview" excerpt="does not involve leverage or liquidations" application="Yes 100개를 60에 산 사례는 정한 범위의 결과 지급을 미리 담보합니다. 앞의 BTC 계약처럼 가격 손실이 유지 요구액을 넘겨 포지션을 청산하는 경로와 구별합니다. 담보가 충분하다는 사실은 Yes가 나올 가능성이나 60 회수를 보장하지 않습니다." />
    <p>HIP-4 문서는 Yes가 settleFraction, No가 1−settleFraction을 받는 구조와 둘을 합친 주문장을 설명합니다. 따라서 Yes 0.60 매수는 No 0.40 매도와 대응합니다. 이진 결과의 0·1 정산 외에 일반 범위 정산도 있으므로 상품의 실제 조건을 읽습니다.</p>
    <p>확인일 공식 개요에는 초기 메인넷 출시와 단계적 확대가 있고, 별도 deployer API에는 Testnet-only가 남아 있습니다. 수수료 개요의 초기 0 문구와 후속 수수료 문서도 구별해야 합니다. 이 글은 거래 원리를 설명하며 모든 배포 기능이 메인넷에서 활성화됐거나 계속 무료라고 단정하지 않습니다.</p>
-   <CitationBlock source="Hyperliquid · HIP-4 Outcome markets" citeKey={8} href={`${DOCS}/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets`}>2026-10-04 원문. 완전 담보·고정 범위 정산과 초기 출시 범위를 확인합니다.</CitationBlock>
+   <CitationBlock source="Hyperliquid · HIP-4 Outcome markets" citeKey={8} href={`${DOCS}/hyperliquid-improvement-proposals-hips/hip-4-outcome-markets`}>2026-10-18 원문. 완전 담보·고정 범위 정산과 초기 출시 범위를 확인합니다.</CitationBlock>
    <CitationBlock source="Hyperliquid · HIP-4 deployer actions" citeKey={9} href={`${DOCS}/for-developers/api/hip-4-deployer-actions`}>확인일 Testnet-only 표기를 유지합니다. 문서에 있는 기능을 메인넷 활성화로 확대하지 않습니다.</CitationBlock>
    <p data-stage-bridge="comparison" className="text-sm text-muted-foreground">같은 1,000도 계약의 지급 구조에 따라 위험이 달라집니다. 마지막으로 남는 책임과 검증 한계를 확인합니다.</p>
   </section>
