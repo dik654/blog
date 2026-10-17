@@ -1,0 +1,160 @@
+cloud-certification-roadmap-2026	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-certification-roadmap-2026	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-foundations-responsibility-regions	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-foundations-responsibility-regions	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-identity-access-hierarchy	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-identity-access-hierarchy	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-networking-request-path	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-networking-request-path	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-compute-selection	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-compute-selection	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-storage-database-selection	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-storage-database-selection	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-reliability-observability-iac	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+cloud-reliability-observability-iac	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-kernel-process-syscall-scheduler	1440	0	CPU에 올라가는 것은 R 가운데 뽑힌 것이고,	5	0	0	0
+linux-kernel-process-syscall-scheduler	1440	1	평균보다 덜 받은 작업 가운데 가상 마감이 가장	6	0	0	0
+linux-kernel-process-syscall-scheduler	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	150
+linux-kernel-process-syscall-scheduler	390	0	CPU에 올라가는 것은 R 가운데 뽑힌 것이고,	5	0	0	0
+linux-kernel-process-syscall-scheduler	390	1	평균보다 덜 받은 작업 가운데 가상 마감이 가장	6	0	0	0
+linux-kernel-process-syscall-scheduler	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-containers-cgroup-namespace	1440	0	spec 한 줄은 커널의 세 축 가운데 한 칸으	4	0	0	0
+linux-containers-cgroup-namespace	1440	1	quota는 주기마다 채워지고, 여러 스레드가 	4	0	0	0
+linux-containers-cgroup-namespace	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	235
+linux-containers-cgroup-namespace	390	0	spec 한 줄은 커널의 세 축 가운데 한 칸으	4	0	0	0
+linux-containers-cgroup-namespace	390	1	quota는 주기마다 채워지고, 여러 스레드가 	4	0	0	0
+linux-containers-cgroup-namespace	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	0	10%에서 flusher가 쓰기 시작하고, 20	5	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	1	write()는 page cache에 적고 돌아	5	0	0	0
+linux-vfs-mount-page-cache-fsync	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	123
+linux-vfs-mount-page-cache-fsync	390	0	10%에서 flusher가 쓰기 시작하고, 20	5	0	0	0
+linux-vfs-mount-page-cache-fsync	390	1	write()는 page cache에 적고 돌아	5	0	0	0
+linux-vfs-mount-page-cache-fsync	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-network-interface-route-netfilter-dns	1440	0	점이 ndots보다 적은 이름은 search 목	4	0	0	0
+linux-network-interface-route-netfilter-dns	1440	1	패킷은 다섯 훅 가운데 세 개를 지나고, 어느 	4	0	0	0
+linux-network-interface-route-netfilter-dns	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	132
+linux-network-interface-route-netfilter-dns	390	0	점이 ndots보다 적은 이름은 search 목	4	0	0	0
+linux-network-interface-route-netfilter-dns	390	1	패킷은 다섯 훅 가운데 세 개를 지나고, 어느 	4	0	0	0
+linux-network-interface-route-netfilter-dns	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	0	자원마다 사용률·포화·오류 세 칸을 다 읽어야 	7	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	1	2초마다 넣는 표본이 10초 시정수의 지수 평균	4	0	0	0
+linux-observability-proc-psi-perf-ebpf	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	186
+linux-observability-proc-psi-perf-ebpf	390	0	자원마다 사용률·포화·오류 세 칸을 다 읽어야 	7	0	0	0
+linux-observability-proc-psi-perf-ebpf	390	1	2초마다 넣는 표본이 10초 시정수의 지수 평균	4	0	0	0
+linux-observability-proc-psi-perf-ebpf	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-sre-metrics-slo-safe-change	1440	0	호출은 사용자가 겪는 증상에 걸고, 서버 지표는	5	0	0	0
+linux-sre-metrics-slo-safe-change	1440	1	한 시간에 전부 바꾸는 타이머와, 문을 통과해야	5	0	0	0
+linux-sre-metrics-slo-safe-change	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	204
+linux-sre-metrics-slo-safe-change	390	0	호출은 사용자가 겪는 증상에 걸고, 서버 지표는	5	0	0	0
+linux-sre-metrics-slo-safe-change	390	1	한 시간에 전부 바꾸는 타이머와, 문을 통과해야	5	0	0	0
+linux-sre-metrics-slo-safe-change	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-server-interview-incident-map	1440	0	같은 30이 CPU 줄에서 오는지 D 줄에서 오	4	0	0	0
+linux-server-interview-incident-map	1440	1	열 줄을 차례로 실행하며 다섯 자원을 하나씩 풀	10	0	0	0
+linux-server-interview-incident-map	1440	2	5초 표본 12개가 1분 값을 0.63까지만 올	6	0	0	0
+linux-server-interview-incident-map	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	105
+linux-server-interview-incident-map	390	0	같은 30이 CPU 줄에서 오는지 D 줄에서 오	4	0	0	0
+linux-server-interview-incident-map	390	1	열 줄을 차례로 실행하며 다섯 자원을 하나씩 풀	10	0	0	0
+linux-server-interview-incident-map	390	2	5초 표본 12개가 1분 값을 0.63까지만 올	6	0	0	0
+linux-server-interview-incident-map	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-memory-page-cache-oom	1440	0	앱이 커지면 page cache가 비켜 주고, 	4	0	0	0
+linux-memory-page-cache-oom	1440	1	adj 한 칸은 cgroup 상한의 0.1%만큼	5	0	0	0
+linux-memory-page-cache-oom	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	150
+linux-memory-page-cache-oom	390	0	앱이 커지면 page cache가 비켜 주고, 	4	0	0	0
+linux-memory-page-cache-oom	390	1	adj 한 칸은 cgroup 상한의 0.1%만큼	5	0	0	0
+linux-memory-page-cache-oom	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-disk-full-inode-deleted-files	1440	0	같은 100GiB에서 블록과 inode는 따로 	4	0	0	0
+linux-disk-full-inode-deleted-files	1440	1	이름과 열린 fd가 모두 사라져야 블록이 풀립니	6	0	0	0
+linux-disk-full-inode-deleted-files	1440	2	후보를 한 줄에 하나씩 배제합니다	6	0	0	0
+linux-disk-full-inode-deleted-files	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	60
+linux-disk-full-inode-deleted-files	390	0	같은 100GiB에서 블록과 inode는 따로 	4	0	0	0
+linux-disk-full-inode-deleted-files	390	1	이름과 열린 fd가 모두 사라져야 블록이 풀립니	6	0	0	0
+linux-disk-full-inode-deleted-files	390	2	후보를 한 줄에 하나씩 배제합니다	6	0	0	0
+linux-disk-full-inode-deleted-files	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-process-signals-pid1-fds	1440	0	wait되지 않은 helper가 PID 칸을 하	5	0	0	0
+linux-process-signals-pid1-fds	1440	1	처리기 없는 PID 1은 SIGTERM을 버리고	7	0	0	0
+linux-process-signals-pid1-fds	1440	2	같은 kill이라도 대상·신호·보낸 쪽에 따라 	5	0	0	0
+linux-process-signals-pid1-fds	1440	3	fd 칸이 soft limit에 닿으면 1,00	5	0	0	0
+linux-process-signals-pid1-fds	1440	4	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	123
+linux-process-signals-pid1-fds	390	0	wait되지 않은 helper가 PID 칸을 하	5	0	0	0
+linux-process-signals-pid1-fds	390	1	처리기 없는 PID 1은 SIGTERM을 버리고	7	0	0	0
+linux-process-signals-pid1-fds	390	2	같은 kill이라도 대상·신호·보낸 쪽에 따라 	5	0	0	0
+linux-process-signals-pid1-fds	390	3	fd 칸이 soft limit에 닿으면 1,00	5	0	0	0
+linux-process-signals-pid1-fds	390	4	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-tcp-time-wait-ports-backlog	1440	0	초당 600개를 여는 클라이언트는 48초째 포트	5	0	0	0
+linux-tcp-time-wait-ports-backlog	1440	1	FIN을 먼저 보낸 쪽만 TIME_WAIT를 지	7	0	0	0
+linux-tcp-time-wait-ports-backlog	1440	2	accept()가 멈춘 1초 동안 512개만 줄	6	0	0	0
+linux-tcp-time-wait-ports-backlog	1440	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	177
+linux-tcp-time-wait-ports-backlog	390	0	초당 600개를 여는 클라이언트는 48초째 포트	5	0	0	0
+linux-tcp-time-wait-ports-backlog	390	1	FIN을 먼저 보낸 쪽만 TIME_WAIT를 지	7	0	0	0
+linux-tcp-time-wait-ports-backlog	390	2	accept()가 멈춘 1초 동안 512개만 줄	6	0	0	0
+linux-tcp-time-wait-ports-backlog	390	3	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+linux-systemd-boot-change-incidents	1440	0	전원에서 PID 1까지 네 번 넘기고, 그다음은	6	0	0	0
+linux-systemd-boot-change-incidents	1440	1	규칙 7줄 중 커널이 만든 2줄만 남았습니다	6	0	0	0
+linux-systemd-boot-change-incidents	1440	2	같은 시작 코드가 부팅 때는 0줄, 재시작 때는	6	0	0	0
+linux-systemd-boot-change-incidents	1440	3	빨리 재시작할수록 창 안에 시작이 몰려 먼저 멈	6	0	0	0
+linux-systemd-boot-change-incidents	1440	4	부팅 경로로는 넉 달 무사했고 재시작 경로는 한	7	0	0	0
+linux-systemd-boot-change-incidents	1440	5	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	78
+linux-systemd-boot-change-incidents	390	0	전원에서 PID 1까지 네 번 넘기고, 그다음은	6	0	0	0
+linux-systemd-boot-change-incidents	390	1	규칙 7줄 중 커널이 만든 2줄만 남았습니다	6	0	0	0
+linux-systemd-boot-change-incidents	390	2	같은 시작 코드가 부팅 때는 0줄, 재시작 때는	6	0	0	0
+linux-systemd-boot-change-incidents	390	3	빨리 재시작할수록 창 안에 시작이 몰려 먼저 멈	6	0	0	0
+linux-systemd-boot-change-incidents	390	4	부팅 경로로는 넉 달 무사했고 재시작 경로는 한	7	0	0	0
+linux-systemd-boot-change-incidents	390	5	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-request-path-and-cka	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-request-path-and-cka	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-network-packet-path	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-network-packet-path	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-concept-map	1440	0	질문 하나마다 주 담당 글 하나와 바닥이 되는 	9	0	0	0
+kubernetes-concept-map	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	36
+kubernetes-concept-map	390	0	질문 하나마다 주 담당 글 하나와 바닥이 되는 	9	0	0	0
+kubernetes-concept-map	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-controllers-reconcile-deployment-job	1440	0	컨트롤러는 현재 수와 목표 수의 차이 하나만 보	8	0	0	0
+kubernetes-controllers-reconcile-deployment-job	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	105
+kubernetes-controllers-reconcile-deployment-job	390	0	컨트롤러는 현재 수와 목표 수의 차이 하나만 보	8	0	0	0
+kubernetes-controllers-reconcile-deployment-job	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	1440	0	노드가 죽어도 신호는 없고, 50초 + 300초	7	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	87
+kubernetes-pod-to-node-scheduler-kubelet-notready	390	0	노드가 죽어도 신호는 없고, 50초 + 300초	7	0	0	0
+kubernetes-pod-to-node-scheduler-kubelet-notready	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	0	scheduler는 사용량이 아니라 reques	5	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	1	CPU limit은 죽이지 않고 멈춥니다. 멈추	4	0	0	0
+kubernetes-requests-limits-allocatable-qos	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	159
+kubernetes-requests-limits-allocatable-qos	390	0	scheduler는 사용량이 아니라 reques	5	0	0	0
+kubernetes-requests-limits-allocatable-qos	390	1	CPU limit은 죽이지 않고 멈춥니다. 멈추	4	0	0	0
+kubernetes-requests-limits-allocatable-qos	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	0	CrashLoopBackOff의 대부분은 재시작	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	1	liveness가 공용 의존성을 보면 의존성 장	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	141
+kubernetes-pod-states-crashloop-probes-events	390	0	CrashLoopBackOff의 대부분은 재시작	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	390	1	liveness가 공용 의존성을 보면 의존성 장	5	0	0	0
+kubernetes-pod-states-crashloop-probes-events	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	0	PVC는 여섯 계단을 거쳐 Pod의 디렉터리가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	1	볼륨은 Pod를 바로 따라가지 못하고, 노드가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	163
+kubernetes-pvc-pv-storageclass-csi	390	0	PVC는 여섯 계단을 거쳐 Pod의 디렉터리가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	390	1	볼륨은 Pod를 바로 따라가지 못하고, 노드가 	6	0	0	0
+kubernetes-pvc-pv-storageclass-csi	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	0	SIGTERM과 endpoint 제거는 같은 순	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	1	HPA는 ready Pod의 평균 ÷ 목표를 구	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	1440	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	195
+kubernetes-rollout-termination-pdb-drain-hpa	390	0	SIGTERM과 endpoint 제거는 같은 순	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	390	1	HPA는 ready Pod의 평균 ÷ 목표를 구	6	0	0	0
+kubernetes-rollout-termination-pdb-drain-hpa	390	2	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	1440	0	긴 창은 소진이 충분히 큰지, 짧은 창은 아직 	5	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	1440	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	204
+kubernetes-sre-slo-burn-rate-upgrades	390	0	긴 창은 소진이 충분히 큰지, 짧은 창은 아직 	5	0	0	0
+kubernetes-sre-slo-burn-rate-upgrades	390	1	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-clf-c02-fast-study	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-clf-c02-fast-study	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-saa-c03-fast-study	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-saa-c03-fast-study	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-developer-cloudops-paths	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+aws-developer-cloudops-paths	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-az900-fast-study	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-az900-fast-study	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-az104-fast-study	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-az104-fast-study	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-ai200-fast-study	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-ai200-fast-study	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-architect-devops-paths	1440	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
+azure-architect-devops-paths	390	0	전체 흐름을 먼저 보고, 한 노드씩 확대합니다	static	0	0	0
