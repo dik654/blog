@@ -54,7 +54,7 @@ export default function LinuxProcessSignalsPid1FdsArticle() {
             </p>
             <p>
               마지막으로 프로세스마다 열린 파일을 가리키는 번호표가 있습니다. 번호표는 0번부터 차례로 나가고 프로세스가 쓸 수 있는 최대 번호에 상한이 있습니다.
-              이 세 흐름이 각각 좀비, 신호, fd 한도라는 면접 질문으로 이어집니다.
+              이 세 흐름이 각각 좀비, 신호, fd 한도라는 면접 질문으로 이어집니다. 복제된 자식이 부모와 무엇을 공유하는지(스레드와의 차이)와 프로세스가 R·S·D·Z 사이를 어떻게 옮겨 다니는지는 <a href="/cs/cloud/linux-kernel-process-syscall-scheduler#threads">커널과 프로세스 글</a>에서 먼저 봅니다.
             </p>
           </div>
         </section>
@@ -68,7 +68,7 @@ export default function LinuxProcessSignalsPid1FdsArticle() {
             </p>
             <p>
               Docker 문서에 따르면 docker stop은 컨테이너의 주 프로세스에 SIGTERM을 보내고, 유예 시간 뒤에도 끝나지 않으면 SIGKILL로 강제 종료합니다. Linux
-              컨테이너의 기본 유예는 10초입니다. 10초를 꽉 채웠다는 것은 SIGTERM이 아무 효과도 내지 못했다는 뜻입니다.
+              컨테이너의 기본 유예는 10초입니다. 10초를 꽉 채웠다는 것은 SIGTERM이 아무 효과도 내지 못했다는 뜻입니다. Kubernetes에서는 같은 SIGTERM이 기본 30초 유예와 함께 가고 endpoint 제거와 경주하는데, 그 순서는 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#termination-flow">종료·롤아웃 글</a>에 있습니다.
             </p>
             <p>
               137은 종료 코드입니다. bash 매뉴얼은 명령이 치명적인 신호 N으로 끝나면 128 + N을 종료 상태로 쓴다고 적고, Docker에서 PID 1을 거두는 containerd-shim과 runc의 ExitStatus도 같은 규칙으로 컨테이너의 종료
@@ -177,7 +177,7 @@ $ ps -o pid,comm -p 7
           <h2 className="mb-6 text-2xl font-bold">6. 좀비를 거두는 쪽과 신호를 버리는 규칙에 이름을 붙입니다</h2>
           <div className={prose}>
             <p>
-              고아가 된 자식을 넘겨받아 wait해 주는 프로세스를 reaper라고 부릅니다. 커널 안에서는 PID namespace마다 child_reaper 하나가 정해져 있고 그것이
+              고아가 된 자식을 넘겨받아 wait해 주는 프로세스를 reaper라고 부릅니다. 커널 안에서는 PID namespace마다 child_reaper 하나가 정해져 있고(PID namespace가 다른 일곱 namespace와 함께 무엇을 가리는지는 <a href="/cs/cloud/linux-containers-cgroup-namespace#namespaces">cgroup과 namespace 글</a>) 그것이
               그 namespace의 PID 1입니다. PID 1이 아니어도 prctl로 표시하면 자기 자손의 고아를 대신 받는 subreaper가 될 수 있습니다.
             </p>
             <p>

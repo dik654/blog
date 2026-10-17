@@ -44,7 +44,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
             면접에서 "가상 메모리를 설명하라"는 질문이 묻는 것이 첫 두 칸입니다. 프로세스마다 자기만의 주소 공간을 갖고 커널이 그 주소를 실제 RAM page에 대응시킵니다. 그래서
             프로세스가 잡은 주소 공간의 크기(VSZ)와 실제로 RAM에 올라와 있는 크기(RSS)는 다릅니다. 이 차이가 6절의 overcommit을 만듭니다.
           </p>
-            <p>이 글이 다루는 것은 나머지 세 칸, 곧 파일 page 보관과 회수와 OOM입니다. 컨테이너의 메모리 한도가 cgroup이라는 커널 기능으로 구현된다는 점은 <a href="/cs/ai/agent-sandbox-security#cgroup">cgroup 자원 예산</a>에서 다뤘고, DIMM·ECC 같은 물리 메모리 자체는 <a href="/cs/gpu/hw-memory#overview">서버 메모리</a>에 있습니다.</p>
+            <p>이 글이 다루는 것은 나머지 세 칸, 곧 파일 page 보관과 회수와 OOM입니다. 컨테이너의 메모리 한도가 cgroup이라는 커널 기능으로 구현된다는 점은 <a href="/cs/ai/agent-sandbox-security#cgroup">cgroup 자원 예산</a>에서 다뤘고, DIMM·ECC 같은 물리 메모리 자체는 <a href="/cs/gpu/hw-memory#overview">서버 메모리</a>에 있습니다. 한도 파일 두 개, 곧 넘어도 죽이지 않는 memory.high와 넘으면 OOM이 나는 memory.max의 차이는 <a href="/cs/cloud/linux-containers-cgroup-namespace#memory-high-max">cgroup과 namespace</a>에서 먼저 봅니다.</p>
           </div>
         </section>
 
@@ -119,7 +119,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
             등으로 직접 쓰는 page는 파일 원본이 없어 anonymous memory라고 부르며 swap이 없으면 내보낼 곳이 없습니다.
           </p>
             <p>page를 비워 빈 page를 만드는 일은 회수(reclaim)입니다. 빈 page가 low watermark 아래로 내려가면 커널 스레드 kswapd가 백그라운드에서 회수합니다. 그래도 부족하면 메모리를 요청한 프로세스가 직접 회수(direct reclaim)를 하며 기다립니다. 이 기다림이 4절의 지연입니다.</p>
-            <p>작업이 메모리 때문에 멈춘 시간의 비율은 PSI(Pressure Stall Information)라는 지표로 /proc/pressure/memory에 나옵니다. some 줄은 적어도 한 작업이 멈춰 있던 시간의 비율이고, full 줄은 일하던 작업 전부가 동시에 멈춘 시간의 비율입니다. full이 오래 높으면 커널 문서는 thrashing으로 봅니다.</p>
+            <p>작업이 메모리 때문에 멈춘 시간의 비율은 PSI(Pressure Stall Information)라는 지표로 /proc/pressure/memory에 나옵니다. some 줄은 적어도 한 작업이 멈춰 있던 시간의 비율이고, full 줄은 일하던 작업 전부가 동시에 멈춘 시간의 비율입니다. full이 오래 높으면 커널 문서는 thrashing으로 봅니다. 이 비율이 2초마다 넣는 표본의 지수 평균으로 avg10·avg60·avg300에 쌓이는 과정은 <a href="/cs/cloud/linux-observability-proc-psi-perf-ebpf#psi-mechanism">관측 도구 글</a>에서 다룹니다.</p>
             <p>회수로도 요청을 채우지 못할 때 프로세스 하나를 골라 죽이는 커널 루틴이 OOM(out of memory) killer입니다. 서버 전체 RAM이 모자라면 전역 OOM, cgroup의 memory.max에 닿으면 그 cgroup 안의 OOM입니다. 4절의 서버가 마지막 장면에서 부른 것은 전역 OOM이고, 1절의 137은 cgroup OOM이었습니다.</p>
           </div>
           {code("psi-doc", "PSI some·full 정의")}
@@ -286,7 +286,7 @@ export default function LinuxMemoryPageCacheOomArticle() {
         <section id="kubernetes-qos" data-teach-level="6" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">11. 노드 전체 OOM에서는 kubelet이 정한 adj가 크기보다 먼저 순서를 정합니다</h2>
           <div className={prose}>
-            <p>cgroup 하나의 OOM에서는 같은 컨테이너 안 프로세스들이 같은 adj를 받아 크기가 순서를 정했습니다. 노드 전체가 모자란 전역 OOM에서는 이야기가 달라집니다. kubelet은 컨테이너 프로세스마다 QoS class에 따라 oom_score_adj를 다르게 씁니다. requests와 limits로 QoS class가 정해지는 과정은 <a href="/cs/cloud/kubernetes-request-path-and-cka#overview">Kubernetes 요청 경로</a>에서 봅니다.</p>
+            <p>cgroup 하나의 OOM에서는 같은 컨테이너 안 프로세스들이 같은 adj를 받아 크기가 순서를 정했습니다. 노드 전체가 모자란 전역 OOM에서는 이야기가 달라집니다. kubelet은 컨테이너 프로세스마다 QoS class에 따라 oom_score_adj를 다르게 씁니다. requests와 limits로 QoS class가 정해지는 과정은 <a href="/cs/cloud/kubernetes-request-path-and-cka#overview">Kubernetes 요청 경로</a>에서 봅니다. 커널 OOM보다 먼저 움직이는 kubelet의 node-pressure eviction은 QoS가 아니라 requests 초과 여부와 Priority로 순서를 정하는데, 그 규칙은 <a href="/cs/cloud/kubernetes-requests-limits-allocatable-qos#eviction-order">requests와 limits 글</a>에 있습니다.</p>
             <p>Kubernetes v1.35.0의 pkg/kubelet/qos/policy.go는 Guaranteed에 −997, BestEffort에 1000을 줍니다. Burstable은 1000 − 1000 × memory request ÷ 노드 메모리이고, 결과를 3~999로 묶습니다. 16 GiB 노드에서 request 1 GiB인 Burstable 컨테이너는 1000 − 62 = 938입니다.</p>
             <p>전역 OOM의 adj 한 칸은 4,194,304 ÷ 1000 = 4,194 page입니다. 이 단위가 크기 차이를 압도합니다. 아래 계산에서 3 GiB를 쓰는 Burstable X가 6 GiB를 쓰는 Guaranteed Y보다, 그리고 0.5 GiB를 쓰는 BestEffort Z보다 먼저 죽습니다. request를 실제 사용량보다 훨씬 낮게 적은 컨테이너가 가장 먼저 희생된다는 뜻입니다.</p>
           </div>

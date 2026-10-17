@@ -89,7 +89,7 @@ export default function LinuxSystemdBootChangeIncidentsArticle() {
           <div className={prose}>
             <p>
               먼저 Datadog이 사후 보고서에 예로 든 노드에서 사라진 것을 셉니다. pod가 하나뿐인 단순화한 예이고 실제 노드에는 pod마다 규칙이 더 있습니다. 리눅스는 패킷 하나의 길을 찾을 때 라우팅 표를 바로 보지 않고 번호가 붙은 규칙 목록을 번호가 작은 것부터 맞춰
-              봅니다. 처음 맞는 규칙이 어느 라우팅 표를 쓸지 정합니다. 이 목록을 정책 라우팅 규칙(policy routing rule)이라 부르고 ip rule 명령으로 봅니다.
+              봅니다. 처음 맞는 규칙이 어느 라우팅 표를 쓸지 정합니다. 이 목록을 정책 라우팅 규칙(policy routing rule)이라 부르고 ip rule 명령으로 봅니다. 규칙이 고른 표 안에서 목적지를 가장 긴 접두로 맞추는 route lookup 자체는 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#routing">네트워크 기초 글</a>에서 봅니다.
             </p>
             <p>
               새로 설치한 Ubuntu 노드에는 규칙이 3줄뿐입니다. 0번이 local 표, 32766번이 main 표, 32767번이 default 표를 봅니다. 노드 자신의 주소로 온 패킷은 0번 local 표에서 걸려 노드 안으로
@@ -431,7 +431,7 @@ ManageForeignRoutes=no               # 남이 만든 route를 지우지 않음`}
             </p>
             <p>
               판단 규칙은 이렇습니다. 패키지 업데이트를 배포로 세고 같은 단계적 배포 도구에 태웁니다. 시험에는 새로 부팅한 노드뿐 아니라 일하고 있는 노드에서 데몬만 재시작하는 경우를 넣습니다.
-              노드 상태 검사가 실패했을 때 클라우드가 노드를 바로 지우는지도 미리 알아 둡니다. 로컬 디스크 데이터의 운명이 거기서 갈립니다.
+              노드 상태 검사가 실패했을 때 클라우드가 노드를 바로 지우는지도 미리 알아 둡니다. 로컬 디스크 데이터의 운명이 거기서 갈립니다. 이 규칙을 canary 비율과 문(gate), 그리고 파이프라인 밖 변경이 만드는 configuration drift로 일반화한 글이 <a href="/cs/cloud/linux-sre-metrics-slo-safe-change#staged-rollout">서버 SRE</a>입니다.
             </p>
             <p>
               변경을 관측하고 되돌리는 공통 원리는 <Link to="/cs/cloud/cloud-reliability-observability-iac#overview">클라우드 신뢰성·관측·IaC 글</Link>에, CNI가 노드에 까는 route와 경계는{" "}

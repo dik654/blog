@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -88,6 +89,18 @@ const SCENE_DATA: readonly Scene[] = [
   },
 ];
 
+function Stack({ items, active, className = "" }: { items: readonly ReactNode[]; active: number; className?: string }) {
+  return (
+    <div className={`grid ${className}`}>
+      {items.map((item, index) => (
+        <div key={index} aria-hidden={index !== active} className={`col-start-1 row-start-1 ${index === active ? "" : "invisible"}`}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function StartLimitViz() {
   const scenes = useAnimatedScenes(SCENE_DATA.length, 4300);
   const active = scenes.active;
@@ -110,7 +123,7 @@ export default function StartLimitViz() {
       >
         <div className="flex shrink-0 flex-col">
           <p className="text-[11px] font-black text-primary">Scene · {String(active + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 min-h-[3rem] text-base font-bold sm:min-h-0">{scene.verdict}</h4>
+          <Stack active={active} className="mt-2" items={SCENE_DATA.map((s) => <h4 key={s.verdict} className="text-base font-bold">{s.verdict}</h4>)} />
 
           <svg viewBox="0 0 340 170" role="img" aria-label={scene.verdict} className="mt-3 h-auto w-full max-w-sm">
             {scene.rows.map((row) => (
@@ -154,9 +167,7 @@ export default function StartLimitViz() {
             ))}
           </svg>
 
-          <p className="mt-3 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5.25rem]">
-            {scene.note}
-          </p>
+          <Stack active={active} className="mt-3" items={SCENE_DATA.map((s) => <p key={s.note} className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>)} />
         </div>
         <AnimatedSceneControls {...scenes} labels={LABELS} />
       </div>

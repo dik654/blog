@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
@@ -25,10 +26,21 @@ const STATES = [
   { result: "multi-user.target 도달", note: "systemd는 default.target에서 Wants·Requires를 따라 시작할 unit을 모으고, After·Before가 막지 않는 unit은 동시에 시작합니다. 시작 순서는 이 그래프가 정합니다." },
 ] as const;
 
+function Stack({ items, active, className = "" }: { items: readonly ReactNode[]; active: number; className?: string }) {
+  return (
+    <div className={`grid ${className}`}>
+      {items.map((item, index) => (
+        <div key={index} aria-hidden={index !== active} className={`col-start-1 row-start-1 ${index === active ? "" : "invisible"}`}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function BootHandoffViz() {
   const scenes = useAnimatedScenes(STATES.length, 4200);
   const active = scenes.active;
-  const state = STATES[active];
 
   return (
     <VizFrame
@@ -47,13 +59,13 @@ export default function BootHandoffViz() {
       >
         <div className="flex shrink-0 flex-col">
           <p className="text-[11px] font-black text-primary">Scene · {String(active + 1).padStart(2, "0")}</p>
-          <h4 className="mt-2 text-base font-bold">{state.result}</h4>
+          <Stack active={active} className="mt-2" items={STATES.map((s) => <h4 key={s.result} className="text-base font-bold">{s.result}</h4>)} />
 
-          <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-6" aria-label="제어권을 가진 프로그램">
+          <ol className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-6" aria-label="제어권을 가진 프로그램">
             {OWNERS.map((owner, index) => (
               <li
                 key={owner}
-                className={`rounded-md border px-2 py-2 text-center text-xs ${
+                className={`rounded-md border px-2 py-1.5 text-center text-xs ${
                   index === active
                     ? "border-primary bg-primary/10 font-bold text-foreground"
                     : index < active
@@ -67,7 +79,7 @@ export default function BootHandoffViz() {
             ))}
           </ol>
 
-          <ol aria-label="현재 장면과 함께 실행되는 의사코드" className="mt-4 space-y-1.5">
+          <ol aria-label="현재 장면과 함께 실행되는 의사코드" className="mt-3 space-y-1">
             {PSEUDOCODE.map((line, index) => (
               <li
                 key={line}
@@ -88,9 +100,7 @@ export default function BootHandoffViz() {
             ))}
           </ol>
 
-          <p className="mt-4 min-h-[10.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[9rem] sm:min-h-[5.25rem]">
-            {state.note}
-          </p>
+          <Stack active={active} className="mt-3" items={STATES.map((s) => <p key={s.note} className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{s.note}</p>)} />
         </div>
         <AnimatedSceneControls {...scenes} labels={LABELS} />
       </div>

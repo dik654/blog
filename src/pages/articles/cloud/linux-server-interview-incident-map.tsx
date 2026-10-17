@@ -64,6 +64,8 @@ export default function LinuxServerInterviewIncidentMapArticle() {
             <p>School of SRE는 level101과 level102 두 단계 전체를 한 곳으로 셉니다. 리눅스 기초 단원만 보면 네트워크와 스크립트가 빠지지만 같은 과정의 다른 단원이 그 주제를 맡기 때문입니다.</p>
             <p>Google 가이드에 따르면 SRE 면접에는 45분짜리 장애 추적 시간이 있습니다. 공유 문서에 명령과 가설을 적어 가며 가상의 장애를 푸는 형식이고, CPU·메모리·네트워크에 걸쳐 원인을 차례로 지우는지를 본다고 적습니다. Linux·systems 시간에는 좀비 정리, inode, SIGTERM과 SIGKILL의 차이 같은 질문이 예시로 나옵니다. Meta 지원자 후기 하나는 첫 장애 추적 문제의 원인이 디스크 가득 참이었다고 적습니다.</p>
             <p>세어 보면 프로세스, 파일, 네트워크, 메모리, 장애 추적 순서가 다섯 곳 모두에 나오고 스크립트·코딩이 네 곳에 나옵니다. 질문의 겉모양은 달라도 결국 CPU, 메모리, 디스크, 프로세스, 네트워크 가운데 어디가 막혔는지를 고르는 문제입니다. 다음 절부터는 이 상자 다섯 개를 하나의 서버에서 실제 숫자로 가릅니다.</p>
+            <p>다섯 상자가 서 있는 바닥은 기초 글 여섯 편이 맡습니다. <a href="/cs/cloud/linux-kernel-process-syscall-scheduler#overview">커널과 프로세스</a>가 시스템 콜 경계와 R·S·D 상태를, <a href="/cs/cloud/linux-containers-cgroup-namespace#overview">cgroup과 namespace</a>가 컨테이너 한도를, <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#overview">VFS와 fsync</a>가 파일이 디스크에 닿는 길을 설명합니다.</p>
+            <p>이어서 <a href="/cs/cloud/linux-network-interface-route-netfilter-dns#overview">인터페이스·라우팅·netfilter·DNS</a>가 패킷이 프로세스에 닿는 길을, <a href="/cs/cloud/linux-observability-proc-psi-perf-ebpf#overview">/proc·PSI·perf·eBPF</a>가 그것을 재는 도구를, <a href="/cs/cloud/linux-sre-metrics-slo-safe-change#overview">서버 SRE</a>가 지표를 SLO와 안전한 변경으로 잇는 법을 맡습니다. 사례 글에서 막히면 그 바닥으로 내려갔다 옵니다.</p>
           </div>
           <div className="not-prose my-8 min-w-0 overflow-x-auto">
             <table className="w-full min-w-[520px] border-collapse text-sm">
@@ -134,7 +136,7 @@ export default function LinuxServerInterviewIncidentMapArticle() {
             감당하는 것보다 일이 많아 줄이 생기거나 기다리는 시간이 생긴 상태입니다.
           </p>
             <p>사용률을 나중에 보는 이유가 있습니다. CPU 사용률 98%는 혼자서는 문제가 아닐 수 있습니다. 일이 많아도 줄이 없으면 아직 감당하는 중입니다. 반대로 커널 로그의 오류 한 줄이나 0보다 큰 swap 출입은 그 자체로 원인 후보가 됩니다.</p>
-            <p>또 하나의 원칙은 의심을 지우는 일도 기록하는 것입니다. 일을 받는 디스크의 대기가 1 ms 아래라면 디스크를 용의선에서 빼고 남은 후보에 집중합니다. 아래 의사코드는 열 줄을 차례로 실행하며 다섯 자원에 표시를 남기고, Viz는 Gregg의 실제 출력으로 그 표시가 바뀌는 과정을 보여 줍니다.</p>
+            <p>또 하나의 원칙은 의심을 지우는 일도 기록하는 것입니다. 일을 받는 디스크의 대기가 1 ms 아래라면 디스크를 용의선에서 빼고 남은 후보에 집중합니다. 아래 의사코드는 열 줄을 차례로 실행하며 다섯 자원에 표시를 남기고, Viz는 Gregg의 실제 출력으로 그 표시가 바뀌는 과정을 보여 줍니다. 열 명령이 자원별 사용률·포화·오류 칸에 어떻게 대응하고 각 칸이 어느 /proc 파일에서 오는지는 <a href="/cs/cloud/linux-observability-proc-psi-perf-ebpf#use-grid">USE 격자</a>에서 한 칸씩 봅니다.</p>
           </div>
           <AlgorithmBlock
             title="첫 60초 점검: 오류 → 포화 → 사용률"

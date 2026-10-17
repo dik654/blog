@@ -109,6 +109,7 @@ export default function LinuxDiskFullArticle() {
             가리키는 블록에 있습니다. 이름과 inode를 잇는 이 한 줄을 링크(hard link)라고 부릅니다.
           </p>
             <p>ln app.log app.log.1을 실행하면 같은 번호 1311을 가리키는 줄이 하나 더 생깁니다. 블록은 복사되지 않고 inode의 링크 수(i_nlink)만 1에서 2가 됩니다. 이 상태에서 이름 하나를 지우면 링크 수는 1로 내려갈 뿐 블록은 움직이지 않습니다. symlink(7)는 hard link가 디렉터리를 가리킬 수 없고 다른 파일시스템을 넘을 수 없다고 적습니다.</p>
+            <p>디렉터리 항목, inode, 열린 파일이 커널 안에서 dentry·inode·file이라는 세 객체로 나뉘는 그림은 <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#vfs-objects">VFS 글</a>에서 봅니다.</p>
             <p>
             ln -s로 만드는 심볼릭 링크(symbolic link)는 다릅니다. 같은 문서에 따르면 심볼릭 링크는 다른 파일의 경로 문자열을 내용으로 담은 별도 파일입니다. 자기
             inode를 따로 가지므로 대상의 링크 수를 바꾸지 않고 대상이 지워지면 존재하지 않는 경로를 가리키는 끊긴 링크(dangling link)로 남습니다.
@@ -329,7 +330,7 @@ export default function LinuxDiskFullArticle() {
             <p>둘째 후보는 공간이 아니라 속도입니다. 디스크가 느려지면 쓰기는 실패하지 않고 오래 기다립니다. ps(1)는 이런 프로세스의 상태를 D, &quot;uninterruptible sleep (usually I/O)&quot;로 표시합니다. Linux의 load average는 실행 대기 프로세스와 함께 이 D 상태도 세므로, CPU가 한가한데 load가 높다면 디스크를 먼저 봅니다. load average가 D 상태를 세게 된 내력과 커널 계산은 <Link to="/cs/cloud/linux-server-interview-incident-map#source">Linux 서버 면접·장애 지도</Link>에서 다룹니다.</p>
             <p>
             iostat -xz 1이 디스크 쪽 숫자를 줍니다. w_await는 쓰기 요청 하나가 대기열과 처리에 쓴 평균 ms이고 aqu-sz는 장치에 걸려 있던 요청의 평균 개수입니다.
-            두 값은 초당 요청 수를 사이에 두고 이어집니다. (가정) 쓰기 2,000 w/s가 각각 15ms를 기다리면 평균 30개가 대기열에 있는 셈입니다.
+            두 값은 초당 요청 수를 사이에 두고 이어집니다. (가정) 쓰기 2,000 w/s가 각각 15ms를 기다리면 평균 30개가 대기열에 있는 셈입니다. 이 열들이 블록 계층의 어느 지점에서 재어지는지는 <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#block-iostat">VFS 글의 iostat 절</a>에 있습니다.
           </p>
           </div>
           <CalculationWalkthrough
@@ -363,6 +364,9 @@ export default function LinuxDiskFullArticle() {
             <p>
             이 글의 코드는 ext4입니다. 링크 수와 참조 수로 블록을 돌려주는 6절의 규칙은 VFS 공통이라 다른 파일시스템에도 적용되지만 예약 블록과 고정 inode 비율은 ext4
             포맷 옵션입니다. 다른 파일시스템은 inode를 만드는 방식이 달라 df -i의 의미도 다르므로 그 파일시스템의 문서로 다시 확인합니다.
+          </p>
+            <p>
+            mount 하나가 어떻게 한 회계 단위가 되고 bind mount와 컨테이너의 overlayfs가 그 경계를 어떻게 겹치는지는 <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#mount">VFS 글의 mount 절</a>에서 이어집니다.
           </p>
             <p>quota도 같은 ENOSPC 계열 증상을 냅니다. 사용자나 프로젝트 quota가 걸려 있으면 파일시스템 전체에는 여유가 있어도 그 주체만 막힙니다. ext4_statfs도 프로젝트 quota가 켜진 디렉터리에서는 quota 한도를 전체 크기로 바꿔 돌려줍니다(super.c 6825–6827행, 6772–6779행). 컨테이너의 쓰기 계층이나 Kubernetes의 임시 저장소 한도는 그 위에 또 다른 회계를 얹습니다.</p>
             <p>
