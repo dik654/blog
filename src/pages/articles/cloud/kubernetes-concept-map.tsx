@@ -139,7 +139,10 @@ export default function KubernetesConceptMapArticle() {
             PVC가 아직 연결되지 않아 Node를 고를 수 없거나 WaitForFirstConsumer 때문에 Node 선택 뒤에 볼륨을 만들어야 한다면 <a href={ROUTES.k5}>PVC·PV·StorageClass·CSI</a>를 함께 봅니다. requests는 이 단계의 배치 기준이고, limits는 다음 단계에서 Node가 집행하는 실행 상한입니다.
           </p>
           <p>
-            <strong>4 · 실행 준비.</strong> spec.nodeName은 있지만 Ready가 아니라면 kubelet, container runtime, CNI, CSI, image, application probe 순서로 좁힙니다. Pending은 아직 Node를 못 고른 상태와 Node는 골랐지만 컨테이너를 준비 중인 상태를 모두 포함하고, CrashLoopBackOff는 반복 종료 뒤 재시작을 기다리는 표시입니다. Condition·Event·이전 로그를 읽는 법은 <a href={ROUTES.k4}>Pod 상태·probe·Event</a>가 맡습니다.
+            <strong>4 · 실행 준비.</strong> spec.nodeName은 있지만 Ready가 아니라면 kubelet, container runtime, CNI, CSI, image, application probe 순서로 좁힙니다. Pending은 아직 Node를 못 고른 상태와 Node는 골랐지만 컨테이너를 준비 중인 상태를 모두 포함합니다.
+          </p>
+          <p>
+            CrashLoopBackOff는 컨테이너가 반복해서 종료되어 다음 재시작을 기다리는 표시입니다. Condition, Event, 이전 로그를 함께 읽는 법은 <a href={ROUTES.k4}>Pod 상태와 진단 신호</a>가 맡습니다.
           </p>
           <p>
             Node의 Ready=False는 kubelet이 runtime이나 네트워크 준비 실패를 보고할 때 바로 나타날 수 있습니다. 하트비트 자체가 끊긴 경우에는 기본 50초 뒤 Ready=Unknown으로 판단하고, Pod의 기본 toleration 300초가 지난 뒤 축출을 시작합니다. 이 시간축은 <a href={ROUTES.k2}>Node 장애</a>에서 계산합니다.
@@ -148,7 +151,10 @@ export default function KubernetesConceptMapArticle() {
             <strong>5 · 사용자 요청 전달.</strong> EndpointSlice controller가 Service의 selector와 Pod의 준비 상태를 보고 endpoint 목록을 갱신합니다. Node의 kube-proxy 또는 대체 데이터 경로는 그 정보를 실제 전달 규칙으로 바꿉니다. Pod가 Ready인데 endpoint가 없거나 실제 요청만 실패한다면 <a href={ROUTES.net}>Service에서 Pod까지의 패킷 경로</a>를 봅니다.
           </p>
           <p>
-            <strong>전체 경로의 증거.</strong> Event는 보존 기간이 짧고 같은 대상과 이유가 count로 합쳐질 수 있으므로 장애 직후 수집합니다. <code>kubectl events</code>나 <code>kubectl get events --sort-by=.metadata.creationTimestamp</code>로 시간순으로 보고, <code>--field-selector</code>는 특정 객체나 이유만 거를 때 사용합니다. FailedCreate는 ReplicaSet, FailedScheduling·BackOff·FailedMount는 Pod, NodeNotReady는 Node처럼 단계마다 증거가 붙는 객체가 다릅니다.
+            <strong>전체 경로의 증거.</strong> Event는 보존 기간이 짧고 같은 대상과 이유가 count로 합쳐질 수 있으므로 장애 직후 수집합니다. <code>kubectl events</code>나 <code>kubectl get events --sort-by=.metadata.creationTimestamp</code>로 시간순으로 봅니다. <code>--field-selector</code>는 특정 객체나 이유만 거를 때 사용합니다.
+          </p>
+          <p>
+            증거가 붙는 객체도 단계마다 다릅니다. FailedCreate는 ReplicaSet, FailedScheduling·BackOff·FailedMount는 Pod, NodeNotReady는 Node에서 찾습니다.
           </p>
           <p>
             <strong>실행 중 변화와 운영.</strong> rollout·종료·drain·HPA는 이미 준비된 Pod의 수를 시간에 따라 바꾸므로 <a href={ROUTES.k6}>교체와 확장</a>에서 따로 봅니다. error budget, 경보, 업그레이드, 복구 판단처럼 여러 단계를 한꺼번에 다뤄야 하면 <a href={ROUTES.k7}>Kubernetes 운영</a>으로 넘어갑니다.
@@ -163,7 +169,7 @@ export default function KubernetesConceptMapArticle() {
             처음에는 <a href={ROUTES.req}>checkout Pod 한 개의 요청 경로</a>를 끝까지 따라갑니다. 그 다음 이 페이지로 돌아와 실패 지점에 맞는 글만 엽니다. Pod 객체가 생기지 않으면 <a href={ROUTES.k1}>Controller</a>, nodeName이 없으면 <a href={ROUTES.k2}>배치</a>와 <a href={ROUTES.k3}>requests</a>, Node는 정해졌지만 준비되지 않으면 <a href={ROUTES.k4}>Pod 상태</a>와 <a href={ROUTES.k5}>스토리지</a>를 봅니다.
           </p>
           <p>
-            Pod가 Ready인데도 사용자가 실패하면 <a href={ROUTES.net}>Service에서 Pod까지의 패킷 경로</a>로 갑니다. 배포 중 용량이 줄거나 노드를 비울 때 문제가 생기면 <a href={ROUTES.k6}>종료·rollout·PDB·drain·HPA</a>를, 반복되는 장애와 업그레이드 결정을 묶어야 하면 <a href={ROUTES.k7}>SLO·알림·변경·복구</a>를 봅니다.
+            Pod가 Ready인데도 사용자가 실패하면 <a href={ROUTES.net}>Service에서 Pod까지의 패킷 경로</a>로 갑니다. 배포 중 용량이 줄거나 노드를 비울 때 문제가 생기면 <a href={ROUTES.k6}>배포와 용량 관리</a>를 봅니다. 반복되는 장애와 업그레이드 결정을 묶어야 하면 <a href={ROUTES.k7}>SLO와 변경 관리</a>로 이어갑니다.
           </p>
           <p>
             Linux는 선수 과목이 아니라 한 단계 더 내려갈 때 사용합니다. CPU throttle과 OOMKill은 <a href={ROUTES.l2}>cgroup</a>과 <a href={ROUTES.mem}>메모리·OOM</a>, mount와 fsync는 <a href={ROUTES.l3}>VFS</a>, DNAT·conntrack·DNS는 <a href={ROUTES.l4}>Linux 네트워크</a>, 종료 신호는 <a href={ROUTES.proc}>프로세스·PID 1</a>에서 이어집니다.
@@ -305,8 +311,10 @@ export default function KubernetesConceptMapArticle() {
             main(2026-10-16 취득) 문서를 기준으로 하며, 기본값이 바뀐 항목은 어느 버전에서 바뀌었는지 글 안에 적습니다(예: NodeMonitorGracePeriod 40초 → 50초는 v1.32부터).
           </p>
           <p>
-            다루지 않는 것은 RBAC·인증, Helm·Kustomize, NetworkPolicy의 세부, Gateway API, 그리고 managed Kubernetes(EKS, GKE, AKS)별 차이입니다. Pod IP 범위처럼 공급자 설정이 개념을 바꾸는 사례는 운영 글의 loveholidays
-            사례로만 다룹니다. 국내 대기업의 공식 Kubernetes·SRE 면접 문항은 이번 조사에서 공개된 것을 찾지 못했으므로 7절은 공개 질문지와 공식 커리큘럼까지만 말합니다.
+            이 글은 RBAC와 인증, Helm과 Kustomize, NetworkPolicy의 세부, Gateway API, managed Kubernetes별 차이는 다루지 않습니다. Pod IP 범위처럼 공급자 설정이 개념을 바꾸는 경우는 운영 글의 loveholidays 사례에서만 설명합니다.
+          </p>
+          <p>
+            국내 대기업이 공개한 Kubernetes·SRE 면접 문항은 이번 조사에서 찾지 못했습니다. 따라서 7절은 공개 질문지와 공식 커리큘럼에서 확인할 수 있는 범위까지만 설명합니다.
           </p>
         </div>
         <ContentBoundary article="kubernetes-concept-map" />
