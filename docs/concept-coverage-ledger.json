@@ -24265,13 +24265,13 @@
   },
   {
    "batch": "kubernetes-concepts-series",
-   "term": "Kubernetes 운영 여덟 질문 지도",
+   "term": "Kubernetes Pod 여정과 단계별 확대 지도",
    "action": "new",
    "conceptId": "kubernetes-operations-question-map",
    "owner": "/cloud/kubernetes-concept-map#questions",
    "status": "done",
-   "reason": "사용자가 준 여덟 개념 질문의 블로그 커버리지가 '좋음 2·일부 2·얕음 2·거의 없음 1·없음 1'이었음. 허브가 담당 글과 읽기 순서를 정함",
-   "updatedAt": "2026-10-16"
+   "reason": "기존 여덟 질문·K1~K7 분류는 실제 실행 경로보다 글 번호를 먼저 외우게 했다. checkout Pod의 다섯 단계와 필요한 상세 글을 직접 연결하도록 재구성함",
+   "updatedAt": "2026-10-23"
   },
   {
    "batch": "kubernetes-concepts-series",

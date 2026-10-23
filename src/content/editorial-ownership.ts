@@ -17810,7 +17810,7 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Desired state가 API server·scheduler·kubelet·runtime·network·storage·readiness를 지나 Ready endpoint로 수렴하는 요청 경로",
       "3개 Pod×초당 35건=계획 용량 105건, Ready 2개=현재 용량 70건, 유입 90건에서 초당 20건이 밀리는 장애 장부",
-      "CKA v1.35 영역을 context 확인·증거 수집·최소 변경·검증·rollback 기록으로 바꾸는 40시간 실습 계획",
+      "CKA v1.37 영역을 context 확인·증거 수집·최소 변경·검증·rollback 기록으로 바꾸는 40시간 실습 계획",
       "Pending scheduling·Service selector·NotReady runtime 세 사건을 제한형 CLI에서 풀고 결과 상태로 채점하는 브라우저 실습",
     ],
     reuses: [
@@ -18728,11 +18728,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "kubernetes-concept-map": {
-    title: "Kubernetes 운영 개념 지도(허브)",
+    title: "Kubernetes Pod 여정과 단계별 확대 지도",
     owns: [
-      "여덟 운영 질문의 두 문장 답과 각 질문의 담당 글 지정",
-      "적는 객체·맞추는 controller·Node의 Linux 세 층 분류",
-      "시리즈 읽기 순서(L2 → L4 → K1~K7)와 기존 두 글의 위치",
+      "checkout Pod가 API 저장부터 사용자 요청까지 가는 다섯 단계",
+      "API 리소스·제어 프로그램·Node의 Linux 책임 경계",
+      "마지막 성공 증거 다음의 첫 실패를 찾는 진단 순서와 단계별 상세 글",
       "공개 장애 여섯 건·공개 질문지·CKA v1.37 비중의 글 매핑",
     ],
     reuses: [
@@ -18750,7 +18750,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "파일이 디스크에 닿기까지", href: "/cs/cloud/linux-vfs-mount-page-cache-fsync#overview" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "두 문장 답의 기본값은 담당 글이 Kubernetes v1.37.1 원문·website main으로 고정한 값만 쓰고 이 글에서 새 숫자를 만들지 않는다." },
+      { kind: "primary-source", rule: "실행 경로의 기본값은 담당 글이 Kubernetes v1.37.1 원문·website main으로 고정한 값만 쓰고 이 글에서 새 숫자를 만들지 않는다." },
       { kind: "secondary-source", rule: "공개 질문지와 k8s.af 목록은 '이런 질문·사례가 공개되어 있다'까지만 말하고 빈도·일반성을 주장하지 않는다." },
       { kind: "standard", rule: "CKA 비중은 cncf/curriculum의 v1.37 PDF 숫자를 그대로 쓰고 시험 버전이 바뀌면 함께 갱신한다." },
     ],

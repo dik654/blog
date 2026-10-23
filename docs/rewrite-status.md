@@ -3111,3 +3111,41 @@
   ESLint와 아키텍처 흐름·teach-system 장부·읽기 흐름·Viz·topology·prose·한국어 검사를 통과했다.
   이 검증은 공통 UI와 렌더링 안정성을 뜻한다. 글별 의미 검토 완료는 여전히 397편이며 593편은 다음
   시스템 계열별 개편 대상으로 남는다.
+- 다음 의미 검토 묶음은 Kubernetes family다. 기존 공통 위치 지도, 개념 지도의 질문→글 그래프,
+  요청 경로 글의 여섯 전환이 서로 다른 지도를 보여 주므로 먼저 `checkout replicas 3 · Ready 2 ·
+  Pod당 35 req/s` 사례 하나로 통일한다. 공통 위치 지도는 `API 저장 → Controller → Scheduler →
+  kubelet 실행 → Ready·요청 전달`을 부모 경로로 삼고, 자원·상태·스토리지는 해당 단계의 확대,
+  변경·운영은 시간축으로 분리한다. 글 번호와 질문 번호는 독자가 외워야 할 개념이 아니므로 탐색의
+  중심에서 제거하고, Linux 글은 선수 과목이 아니라 필요한 단계에서 내려가는 하위 설명으로 둔다.
+  첫 패치는 공통 위치 지도·개념 글·개념 시각화 세 파일에만 적용한 뒤 데스크톱·모바일에서 장면과
+  읽기 순서를 검증한다. 이 검증을 통과하기 전에는 Kubernetes 10편을 의미 검토 완료로 올리지 않는다.
+
+### Kubernetes 전체 경로 의미 검토 (2026-10-23)
+
+- Kubernetes 개념 글의 기준 경로를 `replicas 변경 저장 → Pod 객체 생성 → Node 선택 → 실행 준비 →
+  Ready endpoint로 요청 전달`로 통일했다. 사례는 checkout Deployment의 replicas를 2에서 3으로
+  늘리는 순간부터 시작한다. ReplicaSet controller는 Ready 수가 아니라 존재하는 Pod 수를 맞춘다는 점을
+  본문·시각화·연습문제에 명시했다.
+- 처음 보는 독자를 위해 Deployment·Pod·Node·Service를 경로보다 먼저 짧게 정의했다. Service가 직접
+  endpoint를 모으는 것처럼 보이던 문장은 EndpointSlice controller와 Node 데이터 경로의 책임으로
+  나눴다. Node NotReady는 kubelet이 Ready=False를 보고하는 경우와 하트비트 단절 뒤 Ready=Unknown이
+  되는 경우를 구분했고, Event 필터와 시간순 정렬 명령도 분리했다.
+- 공통 위치 지도는 하위 글이 부모의 checkout 사례를 그대로 반복한다고 주장하지 않는다. 각 하위 글이
+  부모 경로의 어느 단계를 자체 사례로 확대하는지 별도 문장으로 잇는다. 자원·상태·스토리지처럼 여러
+  단계에 걸친 글은 확대 영역만 현재 위치로 표시해 `aria-current`가 중복되지 않게 했다. 모바일에서는
+  다섯 단계 레일과 현재 위치를 먼저 보여 주고 나머지 확대 지도는 접어서 본문을 밀어내지 않는다.
+- 동작 그림은 화면에 55% 이상 들어온 뒤 8초 간격으로 시작하며 여섯 장면을 반복한다. 단계 상자는
+  고정하고 현재 담당자·성공 증거·대표 실패만 바뀐다. 모바일에서는 번호와 연결선을 가진 한 줄 경로로
+  전체 순서를 유지한다. 공개 장애와 CKA 표는 기본 흐름 뒤에서 필요할 때 펼치도록 바꿨다.
+- Opus 반대 검토에서 ReplicaSet의 Ready 수 오해, 정의되지 않은 첫 용어, 하위 사례의 거짓 연속성,
+  현재 위치 중복, 모바일 위치 지도의 과도한 높이를 찾아 모두 수정했다. 재검토에서 EndpointSlice의
+  `ready=false`와 endpoint 삭제를 혼동한 문장, Service 리소스를 실행 주체처럼 적은 마지막 단계,
+  장면에 따라 생겼다 사라지는 담당자 줄을 추가로 찾아 고쳤다. 사용자가 재생을 멈춘 뒤 화면 밖으로
+  나갔다 돌아와도 자동 재생이 다시 켜지지 않는 것도 실제 브라우저에서 확인했다. CKA v1.37과 2시간
+  시험은 Linux Foundation과 CNCF curriculum을 2026-10-23 다시 확인해 날짜를 맞췄다.
+- GitHub Pages 조건 production build는 7,867개 module과 정적 public route 2,086개 및 404 fallback을
+  생성했다. Kubernetes 10편을 1,440×1,000과 390×844에서 다시 검사한 20개 화면은 가로 넘침,
+  장면·조작부 흔들림, 끝 내용 도달 실패, 콘솔 오류가 모두 0건이었다. 결과는
+  `output/playwright/kubernetes-production-final/2026-10-23T06-44-38/summary.json`에 남겼다. 이번에 본문 의미까지
+  검토한 `cloud/kubernetes-concept-map`만 완료로 올리고, 공통 지도 렌더만 확인한 나머지 9편은 계속
+  `pending-full-review`로 둔다.

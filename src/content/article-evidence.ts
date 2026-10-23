@@ -4319,7 +4319,7 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Kubernetes — Liveness, Readiness, Startup Probes",
       href: "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
-      note: "startup gating·readiness EndpointSlice 제외·liveness restart의 서로 다른 의미",
+      note: "startup gating·readiness의 EndpointSlice ready=false·liveness restart의 서로 다른 의미",
     },
     {
       kind: "공식 문서",
@@ -13839,7 +13839,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Kubernetes Components", href: "https://kubernetes.io/docs/concepts/overview/components/", note: "Control plane과 node component의 공식 책임" },
     { kind: "공식 문서", label: "Kubernetes Scheduler", href: "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/", note: "Pending Pod의 filtering·scoring·binding 경로" },
     { kind: "공식 문서", label: "Kubernetes Troubleshooting Clusters", href: "https://kubernetes.io/docs/tasks/debug/debug-cluster/", note: "Cluster·node·component 장애 조사 경로" },
-    { kind: "공식 가이드", label: "Linux Foundation · CKA", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "확인일 현재 Kubernetes v1.35, 2시간 performance-based exam과 영역 비중" },
+    { kind: "공식 가이드", label: "Linux Foundation · CKA", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "2026-10-23 현재 Kubernetes v1.37, 2시간 performance-based exam과 영역 비중" },
     { kind: "공식 가이드", label: "CNCF Certification Curriculum", href: "https://github.com/cncf/curriculum", note: "CKA 공개 curriculum과 revision history" },
     { kind: "공개 강의", label: "freeCodeCamp · Learn Kubernetes in 6 Hours", href: "https://www.youtube.com/watch?v=_4uQI4ihGVU", note: "Application·CRI/CNI/CSI·workload·Gateway 전체 흐름을 찾는 discovery map" },
     { kind: "공개 강의", label: "freeCodeCamp · CKA Exam Preparation 2026", href: "https://www.youtube.com/watch?v=l57xKN6OBhY", note: "kubeadm·HA·network·storage·troubleshooting lab 지도이며 시험 사실은 공식 페이지로 재검증" },
@@ -14398,8 +14398,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   "cloud/kubernetes-concept-map": [
     { kind: "공식 문서", label: "CNCF · CKA Exam Curriculum v1.37 (github.com/cncf/curriculum)", href: "https://github.com/cncf/curriculum", note: "2026-10-17 확인. Storage 10%, Workloads and Scheduling 15%, Servicing and Networking 20%, Cluster Architecture·Installation·Configuration 25%, Troubleshooting 30%와 각 영역의 항목." },
     { kind: "보충 읽기", label: "bregman-arie/devops-exercises · topics/kubernetes/README.md", href: "https://github.com/bregman-arie/devops-exercises/blob/master/topics/kubernetes/README.md", note: "2026-10-16 확인. 커뮤니티 공개 질문지. 7절 표의 질문은 원문 그대로이며 출제 빈도 통계는 없음." },
-    { kind: "보충 읽기", label: "Henning Jacobs · Kubernetes Failure Stories (k8s.af)", href: "https://k8s.af/", note: "6절 여섯 사례의 출발 목록. 개별 원문은 K7 글의 근거 목록에 따로 적음." },
-    { kind: "공식 코드", label: "Kubernetes v1.37.1 (2026-09-23 릴리스) · kubernetes/website main (2026-10-16 취득)", href: "https://github.com/kubernetes/kubernetes/tree/v1.37.1", note: "시리즈 전체가 기준으로 삼는 소스·문서 판. 두 문장 답의 기본값(Lease 40초·grace 50초·toleration 300초·backoff 10→300초·Event TTL 1시간)은 각 담당 글이 원문으로 고정함." },
+    { kind: "보충 읽기", label: "Henning Jacobs · Kubernetes Failure Stories (k8s.af)", href: "https://k8s.af/", note: "6절 여섯 사례의 출발 목록. 개별 원문은 Kubernetes 운영 글의 근거 목록에 따로 적음." },
+    { kind: "공식 코드", label: "Kubernetes v1.37.1 (2026-09-23 릴리스) · kubernetes/website main (2026-10-16 취득)", href: "https://github.com/kubernetes/kubernetes/tree/v1.37.1", note: "시리즈 전체가 기준으로 삼는 소스·문서 판. 실행 경로의 기본값(Lease 40초·grace 50초·toleration 300초·backoff 10→300초·Event TTL 1시간)은 각 담당 글이 원문으로 고정함." },
   ],
   "cloud/kubernetes-controllers-reconcile-deployment-job": [
     { kind: "공식 코드", label: "Kubernetes v1.37.1 pkg/controller/replicaset/replica_set.go · manageReplicas, slowStartBatch, claimPods", href: "https://raw.githubusercontent.com/kubernetes/kubernetes/v1.37.1/pkg/controller/replicaset/replica_set.go", note: "diff 계산(650행), BurstReplicas 500(74행), expectations와 생성·삭제(657–725행), 1·2·4·8 배치(887–911행), claimPods(859–873행)." },

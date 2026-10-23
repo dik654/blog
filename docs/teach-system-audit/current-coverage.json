@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 397,
-    "pending": 593,
+    "reviewed": 398,
+    "pending": 592,
     "untracked": 0,
     "assignedPending": 540,
-    "postCheckpointPending": 53,
+    "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -7241,7 +7241,7 @@
     {
       "route": "cloud/kubernetes-request-path-and-cka",
       "publicPath": "cs/cloud/kubernetes-request-path-and-cka",
-      "title": "Kubernetes 요청 경로와 CKA v1.35: Pending에서 복구까지",
+      "title": "Kubernetes 요청 경로와 CKA v1.37: Pending에서 복구까지",
       "catalogIndex": 721,
       "status": "pending",
       "provenance": "post-checkpoint-registry",
@@ -7261,12 +7261,12 @@
     {
       "route": "cloud/kubernetes-concept-map",
       "publicPath": "cs/cloud/kubernetes-concept-map",
-      "title": "Kubernetes 개념 지도: 여덟 운영 질문이 모이는 한 문장과 담당 글",
+      "title": "Kubernetes 개념 지도: Pod 하나가 요청을 받기까지",
       "catalogIndex": 723,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#kubernetes-전체-경로-의미-검토-2026-10-23"
     },
     {
       "route": "cloud/kubernetes-controllers-reconcile-deployment-job",
