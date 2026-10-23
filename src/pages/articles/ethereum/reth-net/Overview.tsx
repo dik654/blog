@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
 import NetworkStackViz from "./viz/NetworkStackViz";
+import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -11,10 +12,12 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">
-        Reth networking은 주소 수집이 아니라 후보를 compatible active
-        session으로 승격하는 검증 pipeline이다
-      </h2>
+      <h2 className="mb-5 text-2xl font-bold">발견한 주소는 언제 블록을 주고받는 피어가 될까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 송금</Link>이 지갑에서 한 실행 클라이언트로 들어오면, 다른 실행 클라이언트는 실행 P2P를 통해 이 거래를 전파받을 수 있습니다. 그 전에 상대 주소를 찾고 실제 통신 상대가 될 수 있는지 확인해야 합니다. 주소 하나를 안다는 사실만으로 블록과 거래를 믿고 받을 수는 없습니다.
+      </p>
+      <ExecutionClientLocator current="p2p" path={["p2p"]} question="발견한 상대는 어떤 연결·호환성 검사를 통과해야 실행 자료를 주고받는 피어가 될까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 transaction은 이 송금이고, block은 이 송금을 담은 후보입니다. 후보 주소를 active peer로 바꾸는 연결 절차만 확대합니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           실행 클라이언트는 bootnode·DNS·discovery에서 endpoint를 얻고 transport를 열어 RLPx identity와 encrypted frame을 설정한 뒤

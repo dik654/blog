@@ -4,11 +4,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
 import PrysmNetworkViz from "../prysm-network-viz";
+import ConsensusClientLocator from "../shared/ConsensusClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">GossipSub는 받은 메시지를 복제하기 전에 topic·bytes·consensus validity를 단계별로 판정한다</h2>
+      <h2 className="mb-5 text-2xl font-bold">새 블록 후보는 언제 다른 피어에게 전달될까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 후보</Link>가 한 피어에서 도착했다고 하겠습니다. 받은 바이트를 곧바로 다시 퍼뜨리면 잘못된 메시지까지 증폭되므로, 형식과 서명과 현재 상태에 맞는지를 차례로 확인해야 합니다.
+      </p>
+      <ConsensusClientLocator current="gossip" path={["gossip"]} question="네트워크에서 받은 메시지는 어떤 검사를 통과해야 상태 전이와 fork choice의 입력이 될까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 beacon block은 이 송금을 실행 payload에 담은 같은 후보입니다. 여기서는 거래 계산이 아니라 후보를 안전하게 전달하는 과정만 확대합니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Pub/sub mesh는 한 peer가 보낸 block·attestation을 여러 peer로 빠르게 전달합니다. 잘못된 bytes까지 증폭하면 CPU와 bandwidth가

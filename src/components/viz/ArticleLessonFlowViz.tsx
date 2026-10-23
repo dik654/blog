@@ -236,6 +236,7 @@ export default function ArticleLessonFlowViz({
   // 한눈에 보는 지도를 우선한다. 재생을 시작할 때만 5컷을 다시 펼친다.
   const [reveal, setReveal] = useState(4);
   const [playing, setPlaying] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const mapStripRef = useRef<HTMLDivElement>(null);
   const safeActive = Math.min(active, Math.max(conceptSteps.length - 1, 0));
@@ -403,7 +404,8 @@ export default function ArticleLessonFlowViz({
        * 전부 펼치는 대신 컷 버튼을 탭으로 써서 한 컷씩 보여 준다. 모든 모바일
        * 전용 규칙은 `max-sm:` 변형이라 sm 이상의 데스크톱 렌더는 그대로다.
        */}
-      <div data-viz-canvas className="min-w-0 px-4 py-4 sm:px-6 sm:py-6">
+      <div data-viz-canvas className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <div data-lesson-scroll-region className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6">
         <div
           data-lesson-overview-map
           className="overflow-hidden rounded-xl border border-border/65 bg-card"
@@ -546,6 +548,8 @@ export default function ArticleLessonFlowViz({
 
         <details
           data-concept-detail
+          open={detailOpen}
+          onToggle={(event) => setDetailOpen(event.currentTarget.open)}
           className="group mt-4 rounded-xl border border-border/65 bg-muted/[0.1] max-sm:mt-3"
         >
           <summary className="cursor-pointer list-none px-4 py-4 marker:hidden sm:px-5 max-sm:py-3">
@@ -610,7 +614,7 @@ export default function ArticleLessonFlowViz({
                     setPlaying(false);
                     setReveal(index);
                   }}
-                  className={`rounded-md border px-2 py-1.5 text-[10px] font-bold transition-colors max-sm:px-1 max-sm:whitespace-nowrap ${
+                  className={`min-h-11 rounded-md border px-2 py-1.5 text-[10px] font-bold transition-colors max-sm:px-1 max-sm:whitespace-nowrap ${
                     index === reveal
                       ? "border-primary/40 bg-primary/[0.055] text-primary"
                       : index < reveal
@@ -796,9 +800,18 @@ export default function ArticleLessonFlowViz({
             </div>
           </div>
 
-          <div
+        </motion.div>
+        </details>
+        </div>
+
+        <div
             data-viz-controls
-            className="sticky bottom-0 z-20 shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:min-h-[8.25rem] sm:px-5 max-sm:py-3"
+            className="relative z-20 min-h-[8.25rem] shrink-0 border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-sm sm:px-5 max-sm:py-3"
+          >
+          <div
+            aria-hidden={!detailOpen}
+            inert={!detailOpen ? true : undefined}
+            className={detailOpen ? "visible" : "invisible"}
           >
             <div className="h-1 overflow-hidden rounded-full bg-muted">
               <motion.div
@@ -858,7 +871,7 @@ export default function ArticleLessonFlowViz({
                   type="button"
                   onClick={moveBackward}
                   disabled={safeActive === 0 && reveal === 0}
-                  className="min-h-8 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                  className="min-h-11 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   ← 이전 컷
                 </button>
@@ -867,7 +880,7 @@ export default function ArticleLessonFlowViz({
                   type="button"
                   disabled={Boolean(reduceMotion)}
                   onClick={togglePlayback}
-                  className="min-h-8 w-[8.5rem] rounded-md border border-primary/35 bg-primary/[0.045] px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="min-h-11 w-[8.5rem] rounded-md border border-primary/35 bg-primary/[0.045] px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {reduceMotion
                     ? "모션 줄이기 적용됨"
@@ -881,7 +894,7 @@ export default function ArticleLessonFlowViz({
                   disabled={
                     safeActive === conceptSteps.length - 1 && reveal === 4
                   }
-                  className="min-h-8 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
+                  className="min-h-11 w-[6.5rem] rounded-md border border-border/70 bg-background px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
                 >
                   다음 컷 →
                 </button>
@@ -896,8 +909,16 @@ export default function ArticleLessonFlowViz({
               <kbd className="font-mono font-bold">Space</kbd> 재생/일시정지
             </p>
           </div>
-        </motion.div>
-        </details>
+          {!detailOpen ? (
+            <button
+              type="button"
+              onClick={() => setDetailOpen(true)}
+              className="absolute inset-3 flex min-h-11 items-center justify-center border border-primary/35 bg-primary/[0.035] px-4 text-sm font-bold text-primary hover:bg-primary/[0.07]"
+            >
+              개념별 설명 열기
+            </button>
+          ) : null}
+          </div>
       </div>
 
       <p

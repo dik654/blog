@@ -12,6 +12,8 @@ import { EDITORIAL_BOUNDARIES } from "@/content/editorial-ownership";
 import { ARTICLE_LEARNING } from "@/content/article-learning";
 import { getKnowledgeConcept } from "@/content/knowledge-graph";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import ArticleScopeMap from "@/components/articles/article-scope-map";
+import ArticleConceptViz from "@/components/viz/ArticleConceptViz";
 import { hrefForRoute } from "@/lib/routes";
 
 function findSubcategory(
@@ -81,58 +83,53 @@ export default function ArticleOnboarding({
   const firstScope = learningScope?.[0];
   const lastScope = learningScope?.at(-1);
   const scopePreview =
-    learning
-      ? "작은 사례와 전체 흐름부터 보고, 필요한 용어와 적용 경계는 뒤에서 정리합니다."
-      : firstScope && lastScope
+    firstScope && lastScope
       ? firstScope === lastScope
         ? `${firstScope.label}의 핵심 원리와 적용 경계를 설명합니다.`
         : `${firstScope.label}에서 출발해 ${lastScope.label}까지 순서대로 연결합니다.`
       : `${fallbackScope}의 핵심 흐름과 경계를 설명합니다.`;
-  const firstStage = flow?.nodes[0]?.label;
-  const lastStage = flow?.nodes.at(-1)?.label;
+  const firstSectionId = article.sections[0]?.id;
 
   return (
     <section
       className="not-prose mb-8 space-y-4 border-b border-border/70 pb-7"
       aria-label="이 글을 읽는 방법"
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
-          {intent}
-        </span>
-        <span className="text-xs text-muted-foreground">
-          {category.name} · {subcategory?.name ?? article.subcategory}
-        </span>
-      </div>
+      <ArticleScopeMap category={category} article={article} />
 
-      <div className="max-w-3xl">
-        <p className="text-lg font-black leading-7 text-foreground sm:text-xl">
-          {learning
-            ? "작은 사례를 따라 전체 흐름부터 잡습니다"
-            : flow?.question ?? `${article.title}에서 무엇을 먼저 봐야 할까요?`}
-        </p>
-        <p className="mt-2 text-sm leading-7 text-foreground/75">
-          {learning ? (
-            <>
-              먼저 본문에서 문제와 결론을 한 흐름으로 따라갑니다. 수식·구현
-              조건이 필요할 때만 상세 설명을 펼치고, 마지막 연습문제에서 실제로
-              설명할 수 있는지 확인하면 됩니다.
-            </>
-          ) : firstStage && lastStage ? (
-            <>
-              이 질문에 답하려면 먼저 <strong>{firstStage}</strong>부터 살펴본
-              뒤, 핵심 동작을 따라 <strong>{lastStage}</strong>까지 범위를
-              넓혀야 합니다. 아래 지도에서 전체 순서를 먼저 확인한 다음, 필요한
-              섹션부터 자세히 읽어도 흐름을 놓치지 않습니다.
-            </>
-          ) : (
-            <>
-              먼저 배경과 용어를 잡고, 핵심 동작을 따라 구현·운영상의 판단으로
-              범위를 넓혀 갑니다.
-            </>
-          )}
-        </p>
-      </div>
+      {flow ? (
+        <>
+          <ArticleConceptViz flow={flow} />
+          <p className="max-w-3xl text-sm leading-7 text-foreground/75">
+            {learning?.entryNote ??
+              "본문을 읽기 전에 이 글이 답하는 질문과 단계 사이의 관계를 먼저 확인합니다."}
+          </p>
+        </>
+      ) : (
+        <div
+          data-article-quick-start
+          className="border-l-2 border-primary/60 bg-muted/15 px-3.5 py-3 sm:px-4"
+        >
+          <p className="text-[10px] font-bold text-primary">이 글의 출발점</p>
+          <p className="mt-1 text-sm font-bold leading-6 text-foreground">
+            {learning?.coreIdea ??
+              `${fallbackScope}에서 답할 핵심 질문을 먼저 확인합니다.`}
+          </p>
+          {learning?.entryNote ? (
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              {learning.entryNote}
+            </p>
+          ) : null}
+          {firstSectionId ? (
+            <a
+              href={`#${firstSectionId}`}
+              className="mt-2 inline-flex min-h-11 items-center border-b border-primary/35 text-xs font-bold text-primary hover:border-primary"
+            >
+              첫 설명부터 보기 <span className="ml-1" aria-hidden="true">↓</span>
+            </a>
+          ) : null}
+        </div>
+      )}
 
       {!learning &&
         effectiveBeginnerStart &&

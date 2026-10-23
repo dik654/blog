@@ -82683,82 +82683,82 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/node-architecture": {
     "entryLevel": true,
-    "entryNote": "100 ETH에서 송금 10 ETH와 처리 비용을 뺀 후보를 두 담당자가 검증하고 선택하는 과정부터 시작합니다.",
-    "coreIdea": "잔액 계산이 맞는지 확인하는 실행 클라이언트와 네트워크가 따를 기록을 선택하는 합의 클라이언트가 Engine API로 서로 다른 판단을 교환합니다.",
+    "entryNote": "이더리움 노드 한 대의 전체 지도를 먼저 보고, 같은 지도 위에서 송금과 새 블록 후보가 처리되는 과정을 장면별로 따라갑니다.",
+    "coreIdea": "이더리움 노드는 거래 결과를 계산하는 프로그램과 네트워크가 따를 기록을 고르는 프로그램을 나눕니다. 두 프로그램은 Engine API로 후보와 판정을 주고받고 서로 다른 저장소에 결과를 남깁니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
         "id": "ethereum-el-cl-engine-authority-boundary",
-        "role": "계산 유효성과 가지 선택의 책임을 구분합니다."
+        "role": "거래 계산과 기록 선택이 서로 다른 판단임을 구분합니다."
       },
       {
         "id": "ethereum-engine-payload-status-lifecycle",
-        "role": "후보 검증·가지 선택·후보 제작 요청과 응답 상태를 연결합니다."
+        "role": "후보를 계산하고 선택하는 요청 순서를 연결합니다."
       },
       {
         "id": "ethereum-execution-node-canonical-state-boundary",
-        "role": "유효한 후보와 현재·안전·확정 지점, 저장 상태를 구분합니다."
+        "role": "계산 완료, 현재 선택, 최종 확정과 저장 상태를 구분합니다."
       },
       {
         "id": "ethereum-node-engine-reorg-release-gate",
-        "role": "버전 불일치와 재시작·가지 교체 뒤 상태를 검수합니다."
+        "role": "같은 후보의 재수신에서 확인할 저장 상태와 실제 복구 시험의 경계를 정합니다."
       }
     ],
     "conceptExplanations": [
       {
         "id": "ethereum-el-cl-engine-authority-boundary",
-        "sectionId": "el-cl-boundary",
+        "sectionId": "overview",
         "intuition": "계산을 확인하는 담당자와 어느 기록을 따를지 정하는 담당자의 판단을 나눕니다.",
-        "workedExample": "H101에서 A=89.999958을 재현해도 CL이 다른 유효한 H101b를 현재 기록으로 선택할 수 있습니다.",
+        "workedExample": "새 후보에서 A=89.999958을 재현해도 CL이 경쟁하는 다른 유효한 후보를 현재 기록으로 선택할 수 있습니다.",
         "boundary": "VALID는 최종 확정이 아니며 CL의 선택도 틀린 계산을 유효하게 만들지 못합니다."
       },
       {
         "id": "ethereum-engine-payload-status-lifecycle",
         "sectionId": "payload-state",
         "intuition": "자료 부족, 계산 성공과 계산 실패를 서로 다른 응답으로 돌려줍니다.",
-        "workedExample": "H100이 없으면 SYNCING, H100에서 H101을 검증하면 VALID와 latestValidHash=H101입니다.",
+        "workedExample": "부모 블록 상태가 없으면 SYNCING, 부모 상태에서 새 후보를 검증하면 VALID와 후보의 블록 해시를 반환합니다.",
         "boundary": "허용 상태는 메서드와 버전별로 다르며 인증 성공은 계산의 정확성을 증명하지 않습니다."
       },
       {
         "id": "ethereum-execution-node-canonical-state-boundary",
         "sectionId": "payload-state",
         "intuition": "유효성 확인, 현재 선택, 최종 확정과 저장 완료를 나눠 기록합니다.",
-        "workedExample": "H101이 VALID여도 head=H101, safe=H99, finalized=H96은 별도의 선택 상태입니다.",
+        "workedExample": "새 후보가 VALID여도 head, safe, finalized에는 각각 별도의 블록 해시가 들어갑니다.",
         "boundary": "성공 응답과 모든 데이터의 영구 저장이 같은 시점인지는 실제 저장 계약에서 확인합니다."
       },
       {
         "id": "ethereum-node-engine-reorg-release-gate",
         "sectionId": "release",
-        "intuition": "같은 입력과 버전을 기록하고 중단·재시작 뒤 결과가 유지되는지 확인합니다.",
-        "workedExample": "검증 직후와 가지 선택 전후, 저장 전후에 중단해 같은 H101의 송금을 두 번 적용하지 않는지 검사합니다.",
-        "boundary": "본문은 고정된 Reth 분기를 읽은 결과이며 실제 노드 장애 시험을 실행한 기록은 아닙니다."
+        "intuition": "같은 후보가 다시 들어오면 두 클라이언트가 후보 식별자와 현재 저장 상태를 먼저 확인합니다.",
+        "workedExample": "후보 해시, 실행 판정, head·safe·finalized와 상태 루트를 비교해 같은 후보의 현재 위치를 확인합니다.",
+        "boundary": "재실행 여부와 결과 재사용 방식, 정확한 영구 저장 시점은 구현 소스와 실제 장애 시험에서 따로 확인해야 합니다."
       }
     ],
     "conceptStages": [
       {
-        "label": "00 transaction",
-        "relation": "EL이 transaction과 payload execution을 소유합니다.",
+        "label": "전체 지도",
+        "relation": "CL·Engine API·EL과 외부 통신 경계, 두 저장소의 위치를 먼저 잡습니다.",
         "concepts": [
           "ethereum-el-cl-engine-authority-boundary"
         ]
       },
       {
-        "label": "01 engine",
-        "relation": "Versioned Engine calls가 payload verdict와 forkchoice를 교환합니다.",
+        "label": "계산 요청",
+        "relation": "실행 클라이언트가 직전 상태에서 거래 결과를 계산합니다.",
         "concepts": [
           "ethereum-engine-payload-status-lifecycle"
         ]
       },
       {
-        "label": "02 canonical",
-        "relation": "Validated payload와 head·safe·finalized state를 분리합니다.",
+        "label": "기록 선택",
+        "relation": "합의 클라이언트가 유효한 후보 가운데 현재 기록을 고릅니다.",
         "concepts": [
           "ethereum-execution-node-canonical-state-boundary"
         ]
       },
       {
-        "label": "03 release",
-        "relation": "Crash·reorg·version mismatch 뒤 node bundle을 채택합니다.",
+        "label": "전체로 돌아오기",
+        "relation": "실행 판정과 기록 선택 상태가 각 저장소에서 어떤 사실로 남는지 확인합니다.",
         "concepts": [
           "ethereum-node-engine-reorg-release-gate"
         ]
@@ -82767,7 +82767,7 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "EL과 CL의 책임을 H101의 잔액 계산과 가지 선택으로 구분하세요.",
+        "question": "EL과 CL의 책임을 새 후보의 잔액 계산과 가지 선택으로 구분하세요.",
         "answerChecklist": [
           "EL EVM/state",
           "CL PoS",
@@ -82777,35 +82777,21 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "ethereum-el-cl-engine-authority-boundary"
         ],
-        "sectionId": "names"
+        "sectionId": "overview"
       },
       {
         "level": "basic",
-        "question": "후보 검증·가지 선택·후보 가져오기 요청의 방향과 목적을 설명하세요.",
+        "question": "송금과 새 블록 후보가 서로 다른 경계로 들어온 뒤 어디에서 만나는지 설명하세요.",
         "answerChecklist": [
-          "validate",
-          "head/safe/finalized",
-          "build attributes",
-          "retrieve candidate"
-        ],
-        "requiredConcepts": [
-          "ethereum-engine-payload-status-lifecycle"
-        ],
-        "sectionId": "el-cl-boundary"
-      },
-      {
-        "level": "basic",
-        "question": "JWT 인증이 보장하는 것과 계산 유효성의 차이를 설명하세요.",
-        "answerChecklist": [
-          "endpoint access",
-          "not payload validity",
-          "not peer honesty",
-          "not finality"
+          "송금은 JSON-RPC와 EL",
+          "후보는 합의 P2P와 CL",
+          "Engine API",
+          "EL 실행 판정"
         ],
         "requiredConcepts": [
           "ethereum-el-cl-engine-authority-boundary"
         ],
-        "sectionId": "wire-source"
+        "sectionId": "black-box"
       },
       {
         "level": "basic",
@@ -82824,7 +82810,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "유효한 H101과 head·safe·finalized의 차이를 설명하세요.",
+        "question": "유효한 블록 후보와 head·safe·finalized의 차이를 설명하세요.",
         "answerChecklist": [
           "candidate valid",
           "current choice",
@@ -82834,25 +82820,39 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "ethereum-execution-node-canonical-state-boundary"
         ],
-        "sectionId": "el-cl-boundary"
+        "sectionId": "payload-state"
       },
       {
         "level": "basic",
-        "question": "시작 블록·fork 일정·Engine 메서드 버전을 맞춰야 하는 이유를 설명하세요.",
+        "question": "합의 저장소와 실행 저장소가 각각 기억하는 상태를 구분하세요.",
         "answerChecklist": [
-          "same genesis",
-          "fork schedule",
-          "method/schema version",
-          "trace validity"
+          "합의 저장소",
+          "head/safe/finalized",
+          "실행 저장소",
+          "잔액·코드·실행 결과"
         ],
         "requiredConcepts": [
-          "ethereum-node-engine-reorg-release-gate"
+          "ethereum-execution-node-canonical-state-boundary"
         ],
-        "sectionId": "wire-source"
+        "sectionId": "parts"
+      },
+      {
+        "level": "basic",
+        "question": "Engine API의 버전과 구현 분기를 더 확인하려면 어느 상세 경로로 이동해야 하나요?",
+        "answerChecklist": [
+          "Prysm Engine API",
+          "Reth RPC 경계",
+          "Reth 동기화",
+          "가지 선택·최종성"
+        ],
+        "requiredConcepts": [
+          "ethereum-engine-payload-status-lifecycle"
+        ],
+        "sectionId": "deeper"
       },
       {
         "level": "advanced",
-        "question": "H100이 없는 H101을 보관하고 재시도하는 절차와 자원 한도를 설계하세요.",
+        "question": "부모 블록 상태가 없는 후보를 보관하고 재시도하는 절차와 자원 한도를 설계하세요.",
         "answerChecklist": [
           "do not mark invalid",
           "fetch ancestor/state",
@@ -82863,11 +82863,11 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "ethereum-engine-payload-status-lifecycle"
         ],
-        "sectionId": "release"
+        "sectionId": "why-parts"
       },
       {
         "level": "advanced",
-        "question": "H101과 H101b가 둘 다 VALID일 때 EL·CL의 판단을 구분하는 검수 사례를 설계하세요.",
+        "question": "경쟁하는 두 후보가 모두 VALID일 때 EL과 CL의 판단을 구분하는 검수 사례를 설계하세요.",
         "answerChecklist": [
           "both executable",
           "CL fork choice",
@@ -82883,35 +82883,32 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "검증 응답·가지 선택·영구 저장 전후에 중단했을 때의 복구 검사를 설계하세요.",
+        "question": "같은 후보가 다시 들어왔을 때 현재 처리 상태를 판단하려면 어떤 증거를 비교해야 하나요?",
         "answerChecklist": [
-          "three crash windows",
-          "durable cursor",
-          "restart replay",
-          "same root",
-          "single effect"
-        ],
-        "requiredConcepts": [
-          "ethereum-node-engine-reorg-release-gate",
-          "ethereum-execution-node-canonical-state-boundary"
-        ],
-        "sectionId": "release"
-      },
-      {
-        "level": "advanced",
-        "question": "두 클라이언트의 새 버전을 일부 노드에 적용한 뒤 채택하거나 이전 조합으로 되돌리는 기준을 정하세요.",
-        "answerChecklist": [
-          "exact versions",
-          "genesis/forks",
-          "JWT/schema",
-          "Engine trace",
-          "reorg parity",
-          "previous bundle"
+          "후보 식별자",
+          "실행 판정과 상태 루트",
+          "현재 기록 선택",
+          "구현별 재수신 경로",
+          "실제 재시작 시험"
         ],
         "requiredConcepts": [
           "ethereum-node-engine-reorg-release-gate"
         ],
         "sectionId": "release"
+      },
+      {
+        "level": "advanced",
+        "question": "규격이 증명하는 사실과 Reth 고정 소스가 증명하는 사실을 구분하세요.",
+        "answerChecklist": [
+          "Engine API 호출 계약",
+          "버전별 상태·스키마",
+          "Reth 구현 모듈·분기",
+          "실제 장애 시험은 별도"
+        ],
+        "requiredConcepts": [
+          "ethereum-node-engine-reorg-release-gate"
+        ],
+        "sectionId": "deeper"
       }
     ],
     "papers": [

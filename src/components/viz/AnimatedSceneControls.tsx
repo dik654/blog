@@ -5,6 +5,7 @@ export function AnimatedSceneControls({
   reducedMotion,
   setActive,
   setPlaying,
+  playLabel = "자동 재생",
 }: {
   labels: readonly string[];
   active: number;
@@ -12,6 +13,7 @@ export function AnimatedSceneControls({
   reducedMotion: boolean;
   setActive: (value: number) => void;
   setPlaying: (value: boolean) => void;
+  playLabel?: string;
 }) {
   const previous = () => setActive(Math.max(0, active - 1));
   const next = () => setActive(Math.min(labels.length - 1, active + 1));
@@ -19,13 +21,10 @@ export function AnimatedSceneControls({
   return (
     <div
       data-viz-controls
-      className="z-20 mt-auto w-full shrink-0 border-t border-border bg-background/95 pt-4 backdrop-blur-sm sm:sticky sm:bottom-0 sm:min-h-[6.75rem]"
+      className="z-20 mt-auto w-full shrink-0 border-t border-border bg-background/95 pt-3 backdrop-blur-sm sm:sticky sm:bottom-0 sm:min-h-[6.75rem] sm:pt-4"
     >
       <div data-viz-mobile-controls className="sm:hidden">
-        <p className="min-w-0 break-words text-center text-sm font-bold leading-6 text-foreground">
-          {String(active + 1).padStart(2, "0")} · {labels[active]}
-        </p>
-        <div className="mt-3 grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
+        <div className="grid w-full grid-cols-3 items-center gap-2">
           <button
             type="button"
             onClick={previous}
@@ -34,9 +33,15 @@ export function AnimatedSceneControls({
           >
             ← 이전
           </button>
-          <span className="whitespace-nowrap px-1 text-xs tabular-nums text-muted-foreground">
-            {active + 1} / {labels.length}
-          </span>
+          <p
+            className="min-w-0 text-center text-xs font-bold leading-5 text-foreground"
+            aria-live="polite"
+          >
+            <span className="block tabular-nums">{active + 1} / {labels.length}</span>
+            <span className="block truncate text-[10px] text-muted-foreground">
+              {labels[active]}
+            </span>
+          </p>
           <button
             type="button"
             onClick={next}
@@ -52,7 +57,7 @@ export function AnimatedSceneControls({
           onClick={() => setPlaying(!playing)}
           className="mt-2 min-h-11 w-full rounded-md border border-primary/35 bg-primary/[0.045] px-3 text-xs font-bold text-primary disabled:cursor-not-allowed disabled:text-muted-foreground"
         >
-          {reducedMotion ? "자동 재생 꺼짐" : playing ? "일시정지" : "자동 재생"}
+          {reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
         </button>
       </div>
 
@@ -63,7 +68,7 @@ export function AnimatedSceneControls({
             type="button"
             aria-pressed={active === index}
             onClick={() => setActive(index)}
-            className={`min-h-9 shrink-0 whitespace-nowrap border px-3 py-2 text-xs font-bold transition-colors ${
+            className={`min-h-11 shrink-0 whitespace-nowrap border px-3 py-2 text-xs font-bold transition-colors ${
               active === index
                 ? "border-primary bg-primary/10 text-foreground"
                 : "border-border bg-background text-muted-foreground"
@@ -76,9 +81,9 @@ export function AnimatedSceneControls({
           type="button"
           disabled={reducedMotion}
           onClick={() => setPlaying(!playing)}
-          className="min-h-9 w-[7.75rem] shrink-0 border border-border bg-background px-3 py-2 text-xs font-bold disabled:cursor-not-allowed disabled:text-muted-foreground sm:ml-auto"
+          className="min-h-11 w-[7.75rem] shrink-0 border border-border bg-background px-3 py-2 text-xs font-bold disabled:cursor-not-allowed disabled:text-muted-foreground sm:ml-auto"
         >
-          {reducedMotion ? "자동 재생 꺼짐" : playing ? "일시정지" : "자동 재생"}
+          {reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
         </button>
       </div>
       <p className="mt-3 hidden text-xs text-muted-foreground sm:block">

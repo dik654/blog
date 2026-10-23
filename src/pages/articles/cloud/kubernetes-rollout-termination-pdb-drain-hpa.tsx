@@ -8,6 +8,7 @@ import TerminationRaceViz from "./kubernetes-rollout-termination-pdb-drain-hpa/v
 import HpaCalculatorViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/HpaCalculatorViz";
 import { codeRefs } from "./kubernetes-rollout-termination-pdb-drain-hpa/codeRefs";
 import { kubernetesRolloutTrees } from "./kubernetes-rollout-termination-pdb-drain-hpa/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -19,6 +20,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 배포할 때마다 몇 초씩 5xx가 튀고, 노드 교체는 왜 멈추나요?</h2>
+          <KubernetesSeriesLocator current="lifecycle" path={["lifecycle", "health", "network"]} question="Pod가 교체될 때 가용 개수와 요청 경로는 어떤 제어 장치가 함께 지킬까요?" />
           <div className={prose}>
             <p>
               (가정) checkout Deployment는 replicas 4로 Service 뒤에 있습니다. 이미지를 올릴 때마다 대시보드에 5xx가 몇 초 튀고, 어느 날 노드를 교체하려고 kubectl drain을 걸었더니 "Cannot evict pod as it would violate the pod's disruption budget"을 5초마다 찍으며 20분째 멈춰 있었습니다.</p>

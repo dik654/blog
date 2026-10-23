@@ -7,6 +7,7 @@ import VolumeStaircaseViz from "./kubernetes-pvc-pv-storageclass-csi/viz/VolumeS
 import NodeFailureVolumeClockViz from "./kubernetes-pvc-pv-storageclass-csi/viz/NodeFailureVolumeClockViz";
 import { codeRefs } from "./kubernetes-pvc-pv-storageclass-csi/codeRefs";
 import { kubernetesStorageTrees } from "./kubernetes-pvc-pv-storageclass-csi/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -18,6 +19,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. PVC는 Bound인데 Pod는 왜 디스크를 기다리나요?</h2>
+          <KubernetesSeriesLocator current="storage" path={["storage", "placement"]} question="PVC의 저장 요구는 어느 단계에서 실제 디스크와 Node의 mount로 바뀔까요?" />
           <div className={prose}>
             <p>
               (가정) 존 세 개짜리 클러스터에 PostgreSQL Pod 하나를 올립니다. 20Gi PVC를 만들자 몇 초 만에 Bound가 됐는데 Pod는 Pending에 멈췄고, 이벤트에는 "node(s) didn't match PersistentVolume's node affinity"가 남았습니다.</p>

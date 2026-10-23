@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
@@ -6,6 +7,7 @@ import RPCFlowViz from "./viz/RPCFlowViz";
 import { RPC_LAYERS } from "./OverviewData";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
+import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -15,9 +17,12 @@ export default function Overview({
   const [active, setActive] = useState(RPC_LAYERS[0].id);
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        RPC: transport와 protocol contract 분리하기
-      </h2>
+      <h2 className="mb-6 text-2xl font-bold">사용자 조회와 합의 요청은 어디에서 갈라질까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 송금</Link>을 보낸 사용자가 잔액을 조회하는 동안, 합의 클라이언트는 같은 후보의 실행 결과를 묻습니다. 두 요청은 실행 클라이언트로 들어오지만 인증 대상과 허용할 메서드가 다릅니다.
+      </p>
+      <ExecutionClientLocator current="json-rpc" path={["json-rpc", "engine-api", "provider"]} question="같은 실행 클라이언트로 들어와도 사용자 조회와 합의 요청은 어디에서 서로 다른 계약을 적용할까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래 고정 예시의 Alice는 송금자 A입니다. <code>eth_getBalance</code>는 A의 잔액을 읽고, Engine 요청은 그 송금을 담은 후보의 실행 결과를 확인합니다.</p>
       <div className="not-prose mb-8">
         <ContextViz />
       </div>

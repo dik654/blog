@@ -3,11 +3,17 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import RethStorageBoundaryViz from "../reth-storage-boundary-viz";
+import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Provider는 여러 저장소를 숨기는 wrapper가 아니라 한 시점의 state를 고정하는 read boundary다</h2>
+      <h2 className="mb-5 text-2xl font-bold">읽는 동안 head가 바뀌면 무엇을 고정해야 할까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 후보</Link>가 현재 기록으로 선택된 뒤, 지갑이 A의 잔액을 조회한다고 하겠습니다. 조회 도중 새 후보가 선택되더라도 블록 헤더와 잔액은 같은 시점의 상태에서 읽혀야 합니다.
+      </p>
+      <ExecutionClientLocator current="provider" path={["json-rpc", "provider", "execution-store"]} question="조회가 들어오면 여러 저장 계층을 어떻게 한 시점의 일관된 결과로 묶을까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 address A는 같은 송금자입니다. block 1,000은 잔액을 읽기 시작한 시점, block 1,001은 조회 도중 새로 선택될 수 있는 다음 head를 뜻합니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           RPC가 block 1,000의 account를 읽는 동안 head가 1,001로 바뀌면 header는 옛 branch, balance는 새 branch에서 가져오는 mixed

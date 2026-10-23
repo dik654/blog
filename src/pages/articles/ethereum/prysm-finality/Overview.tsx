@@ -4,11 +4,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
 import PrysmConsensusViz from "../prysm-consensus-viz";
+import ConsensusClientLocator from "../shared/ConsensusClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Finality는 현재 head가 아니라 되돌리려면 slashable evidence가 필요한 checkpoint를 만든다</h2>
+      <h2 className="mb-5 text-2xl font-bold">현재 기록이 바뀌어도 되돌리기 어려운 지점은 어떻게 남을까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 후보</Link>가 현재 기록으로 선택됐다고 하겠습니다. 뒤에서 더 무거운 가지가 나타나면 현재 기록은 바뀔 수 있으므로, 선택과 되돌리기 어려운 확정 지점을 따로 관리해야 합니다.
+      </p>
+      <ConsensusClientLocator current="finality" path={["finality", "consensus-store"]} question="투표가 어느 경계를 넘을 때 justified와 finalized 체크포인트가 바뀔까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 checkpoint는 이 후보가 놓인 가지의 epoch 경계입니다. 현재 head가 되는 순간과 그 조상 checkpoint가 finalized가 되는 순간을 분리해 봅니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Fork choice의 head는 새 attestation에 따라 바뀔 수 있습니다. Casper FFG는 validator가 epoch 경계의 checkpoint 사이에 남긴

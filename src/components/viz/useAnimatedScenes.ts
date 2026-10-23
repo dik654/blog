@@ -1,24 +1,50 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
 
-function isEditableTarget(target: EventTarget | null) {
+function isTextEditingTarget(target: EventTarget | null) {
   return (
     target instanceof HTMLInputElement ||
     target instanceof HTMLTextAreaElement ||
     target instanceof HTMLSelectElement ||
-    (target instanceof HTMLElement && target.isContentEditable)
+    (target instanceof HTMLElement &&
+      target.isContentEditable)
   );
 }
 
-export function useAnimatedScenes(length: number, intervalMs = 2400) {
+function isInteractiveTarget(target: EventTarget | null) {
+  return (
+    target instanceof HTMLElement &&
+    Boolean(target.closest('button, a, [role="button"], [role="link"]'))
+  );
+}
+
+export function useAnimatedScenes(
+  length: number,
+  intervalMs = 2400,
+  options: {
+    loop?: boolean;
+    autoPlay?: boolean;
+    keyboardPlayback?: boolean;
+  } = {},
+) {
+  const {
+    loop = true,
+    autoPlay = false,
+    keyboardPlayback = true,
+  } = options;
   const [active, setActiveState] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlayingState] = useState(autoPlay);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  const setPlaying = useCallback((value: boolean) => {
+    if (value && !loop && active >= length - 1) setActiveState(0);
+    setPlayingState(value);
+  }, [active, length, loop]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
       setReducedMotion(media.matches);
-      if (media.matches) setPlaying(false);
+      if (media.matches) setPlayingState(false);
     };
     update();
     media.addEventListener("change", update);
@@ -27,22 +53,34 @@ export function useAnimatedScenes(length: number, intervalMs = 2400) {
 
   useEffect(() => {
     if (!playing || reducedMotion) return;
-    const timer = window.setInterval(
-      () => setActiveState((value) => (value + 1) % length),
+    if (!loop && active >= length - 1) return;
+    const timer = window.setTimeout(
+      () => {
+        if (!loop && active >= length - 2) {
+          setActiveState(length - 1);
+          setPlayingState(false);
+          return;
+        }
+        setActiveState((value) => (value + 1) % length);
+      },
       intervalMs,
     );
-    return () => window.clearInterval(timer);
-  }, [intervalMs, length, playing, reducedMotion]);
+    return () => window.clearTimeout(timer);
+  }, [active, intervalMs, length, loop, playing, reducedMotion]);
 
   const setActive = (value: number) => {
-    setActiveState((value + length) % length);
-    setPlaying(false);
+    setActiveState(
+      loop
+        ? (value + length) % length
+        : Math.max(0, Math.min(length - 1, value)),
+    );
+    setPlayingState(false);
   };
 
   const move = (offset: number) => setActive(active + offset);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (isEditableTarget(event.target)) return;
+    if (isTextEditingTarget(event.target)) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
       move(1);
@@ -50,8 +88,9 @@ export function useAnimatedScenes(length: number, intervalMs = 2400) {
       event.preventDefault();
       move(-1);
     } else if (event.key === " ") {
+      if (!keyboardPlayback || isInteractiveTarget(event.target)) return;
       event.preventDefault();
-      if (!reducedMotion) setPlaying((value) => !value);
+      if (!reducedMotion) setPlaying(!playing);
     }
   };
 

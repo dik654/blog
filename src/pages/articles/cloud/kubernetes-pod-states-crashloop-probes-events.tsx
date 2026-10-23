@@ -7,6 +7,7 @@ import BackoffClockViz from "./kubernetes-pod-states-crashloop-probes-events/viz
 import ProbeStormViz from "./kubernetes-pod-states-crashloop-probes-events/viz/ProbeStormViz";
 import { codeRefs } from "./kubernetes-pod-states-crashloop-probes-events/codeRefs";
 import { k8sPodStatesTrees } from "./kubernetes-pod-states-crashloop-probes-events/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -18,6 +19,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. RESTARTS 200인 CrashLoopBackOff Pod는 지금 무엇을 하고 있나요?</h2>
+          <KubernetesSeriesLocator current="health" path={["resource", "controllers", "placement", "health"]} question="Pod가 목표 상태에 닿지 못했을 때 현재 단계와 실패 원인은 어디에 남을까요?" />
           <div className={prose}>
             <p>
               공식 문서의 예시 출력에 이런 줄이 있습니다. <code>alessandras-pod 0/1 CrashLoopBackOff 200 2d9h</code>. 이틀 반 동안 200번 재시작한 Pod입니다. 면접에서 이 줄을 보여 주며 "지금 이 Pod는 무엇을 하는 중이고 어디부터 볼 것인가"를 물으면 "계속 재시작 중"이라는 답은 절반만 맞습니다. 이 Pod는 대부분의 시간을 다음 재시작을 기다리며 보내는 중이며, 그 기다림의 길이는 kubelet 소스에 상수로 적혀 있습니다.

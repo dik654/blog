@@ -24,6 +24,7 @@ export default function VizFrame({
   return (
     <figure
       data-viz="modern"
+      data-viz-name={title}
       className={cn("not-prose my-12 min-w-0", className)}
     >
       <figcaption className="mb-5 px-1">

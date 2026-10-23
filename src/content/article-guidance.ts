@@ -1737,19 +1737,19 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     "UDP만으로 상대 생존과 이웃 목록을 어떻게 확인할까?",
     [
       {
-        label: "Ping",
-        detail: "서명된 endpoint 정보를 보내고 bond를 시작합니다.",
+        label: "PING",
+        detail: "양쪽이 각자 PING을 보내 상대가 응답할 endpoint를 확인합니다.",
       },
       {
-        label: "Pong",
-        detail: "packet hash를 되돌려 요청과 응답을 연결합니다.",
+        label: "PONG",
+        detail: "각 PONG이 해당 PING hash를 돌려줘 양방향 endpoint proof를 만듭니다.",
       },
       {
-        label: "FindNode",
-        detail: "목표 public key와 가까운 노드를 요청합니다.",
+        label: "FINDNODE",
+        detail: "수신자가 요청자의 최근 PONG을 기억할 때 가까운 노드를 요청합니다.",
       },
       {
-        label: "Neighbours",
+        label: "NEIGHBORS",
         detail: "MTU에 맞춰 여러 packet으로 후보를 반환합니다.",
       },
     ],
@@ -2223,85 +2223,15 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
   ),
 };
 
-const INTENT_QUESTIONS: Record<ArticleIntent, (title: string) => string> = {
-  "개념 지도": (title) =>
-    `${title}에서 먼저 구분해야 할 대상과 동작은 무엇일까?`,
-  "구현 추적": (title) => `${title}의 입력은 어떤 경로를 거쳐 결과가 될까?`,
-  "비교·선택": (title) =>
-    `${title}의 대안은 어떤 기준에서 갈리고 언제 선택해야 할까?`,
-  "운영 가이드": (title) =>
-    `운영 관점에서 ${title}의 경계와 실패 조건은 무엇일까?`,
-  "사례·실측": (title) =>
-    `${title}의 수치는 어떤 조건에서 나왔고 어디까지 일반화할 수 있을까?`,
-  "논문·프로젝트 해설": (title) =>
-    `${title}의 공개 사실과 해석을 어떤 기준으로 나눠 읽어야 할까?`,
-};
-
-const SECTION_STAGE_DETAILS = [
-  "배경과 용어를 잡아 뒤의 세부 설명이 놓일 좌표를 만듭니다.",
-  "핵심 문제와 구성 요소가 만나는 지점을 좁혀 봅니다.",
-  "동작 원리와 구현 선택을 입력에서 출력 순서로 따라갑니다.",
-  "한계·비교·운영 판단으로 확장해 어디에 적용할지 정리합니다.",
-] as const;
-
-function selectOutlineSections(article: Article): Article["sections"] {
-  if (article.sections.length <= 4) return article.sections;
-  const last = article.sections.length - 1;
-  const indices = [0, Math.round(last / 3), Math.round((last * 2) / 3), last];
-  return indices.map((index) => article.sections[index]);
-}
-
 /**
- * 모든 레거시 글이 최소한 하나의 inspectable top-down 입구를 갖게 합니다.
- * 개별 글의 명시적 flow가 있으면 그것을 우선하고, 없을 때만 등록된 section
- * metadata에서 생성합니다. 따라서 목차와 입구의 순서가 서로 어긋나지 않습니다.
+ * 사람이 설계한 흐름만 반환합니다. 절 제목을 일정 간격으로 뽑아 만든 흐름은
+ * 목차를 다시 포장할 뿐 실제 원인·상태 변화·결과를 설명하지 못하므로 만들지
+ * 않습니다. 명시적 흐름이 없는 글은 ArticleOnboarding의 짧은 시작 안내를 씁니다.
  */
 export function getArticleConceptFlow(
   category: Category,
   article: Article,
 ): ConceptFlow | undefined {
   const routeKey = `${category.slug}/${article.slug}`;
-
-  const explicit = ARTICLE_CONCEPT_FLOWS[routeKey];
-  if (explicit) return explicit;
-
-  const intent = inferArticleIntent(article);
-  const selected = selectOutlineSections(article);
-  const nodes = selected.map((section, index) => ({
-    label: section.title,
-    detail:
-      section.subsections && section.subsections.length > 0
-        ? section.subsections
-            .slice(0, 3)
-            .map((subsection) => subsection.title)
-            .join(" · ")
-        : SECTION_STAGE_DETAILS[
-            Math.min(index, SECTION_STAGE_DETAILS.length - 1)
-          ],
-  }));
-
-  if (nodes.length === 1) {
-    nodes.push(
-      {
-        label: "핵심 경계",
-        detail: "구성 요소의 역할과 서로 넘겨주는 입력·출력을 구분합니다.",
-      },
-      {
-        label: "실행 흐름",
-        detail: "정적 목록이 아니라 실제 동작 순서로 연결해 봅니다.",
-      },
-      {
-        label: "적용 범위",
-        detail:
-          "현재 구현과 일반 원리를 나누고 다음 글로 이어질 지점을 정리합니다.",
-      },
-    );
-  }
-
-  return flow(
-    `${article.title}: 먼저 잡을 흐름`,
-    INTENT_QUESTIONS[intent](article.title),
-    nodes,
-    `${selected[0]?.title ?? article.title}에서 출발해 ${selected.at(-1)?.title ?? "적용 범위"}까지 내려가며 읽는 ${ARTICLE_INTENT_DESCRIPTIONS[intent]}입니다.`,
-  );
+  return ARTICLE_CONCEPT_FLOWS[routeKey];
 }
