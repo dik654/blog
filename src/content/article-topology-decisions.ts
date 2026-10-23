@@ -3211,7 +3211,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-process-signals-pid1-fds": "cdd4b768e1b89852",
   "cloud/linux-disk-full-inode-deleted-files": "fac99653b93bbedd",
   "cloud/linux-systemd-boot-change-incidents": "088ff9320317ffa7",
-  "cloud/kubernetes-concept-map": "3b98c375ce5ad92e",
+  "cloud/kubernetes-concept-map": "418c5e364e132a14",
   "cloud/kubernetes-controllers-reconcile-deployment-job": "7878c9685a4d20d7",
   "cloud/kubernetes-pod-states-crashloop-probes-events": "bb48266ea1011521",
   "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": "0998d81418a47a6f",
