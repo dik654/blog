@@ -3130,11 +3130,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-concept-map": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-23",
     rationale:
-      "cloud-kubernetes 하위분류의 허브다. 여덟 질문의 두 문장 답·담당 글·읽기 순서·장애 색인·CKA 매핑을 한 장에 두고 계산과 원문은 전부 담당 글에 맡긴다. 지도를 글마다 반복하면 담당이 흐려지므로 한 편으로 둔다.",
+      "cloud-kubernetes 하위분류의 허브다. checkout Pod 하나가 API 저장부터 사용자 요청까지 가는 경로와 단계별 확대 글, 장애 색인·CKA 매핑을 한 장에 둔다. 하위 글은 이 좌표를 재사용하고 각 메커니즘의 계산과 원문만 확장한다.",
     sharedGate:
-      "두 문장 답은 담당 글이 원문으로 고정한 기본값만 쓰고, 공개 질문지·장애 목록은 빈도를 주장하지 않는다.",
+      "전체 지도는 API 리소스와 실행 프로그램을 구분하고, 수치·기본값은 담당 글의 원문 범위만 쓰며 공개 질문지·장애 목록은 빈도를 주장하지 않는다.",
   },
   "cloud/kubernetes-controllers-reconcile-deployment-job": {
     action: "keep" as const,

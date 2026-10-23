@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 export type KubernetesSeriesRegion =
-  | "resource"
   | "request"
   | "controllers"
   | "placement"
@@ -13,178 +12,193 @@ export type KubernetesSeriesRegion =
   | "operations";
 
 type KubernetesSeriesCurrent = KubernetesSeriesRegion | "map";
+type JourneyStageId = "api" | "controllers" | "scheduler" | "kubelet" | "traffic";
 
-type Region = {
-  id: KubernetesSeriesRegion;
+type JourneyStage = {
+  id: JourneyStageId;
   label: string;
-  role: string;
+  compact: string;
+  component: string;
+  change: string;
   href: string;
 };
 
-const mainPath: readonly Region[] = [
-  {
-    id: "request",
-    label: "API 요청",
-    role: "YAML을 검증해 API 리소스로 저장하고 변경 사건을 알립니다.",
-    href: "/cs/cloud/kubernetes-request-path-and-cka#overview",
-  },
-  {
-    id: "resource",
-    label: "저장된 리소스",
-    role: "Deployment·Service·PVC가 원하는 상태를 API에 남깁니다.",
-    href: "/cs/cloud/kubernetes-concept-map#black-box",
-  },
-  {
-    id: "controllers",
-    label: "Controller",
-    role: "원하는 상태와 현재 상태의 차이를 계속 줄입니다.",
-    href: "/cs/cloud/kubernetes-controllers-reconcile-deployment-job#overview",
-  },
-  {
-    id: "placement",
-    label: "Scheduler · kubelet",
-    role: "Pod를 Node에 배치하고 컨테이너 실행을 맞춥니다.",
-    href: "/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview",
-  },
-  {
-    id: "health",
-    label: "상태 · Event",
-    role: "맞추지 못한 위치와 재시도 결과를 운영자에게 남깁니다.",
-    href: "/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview",
-  },
+type DetailPath = {
+  id: Extract<KubernetesSeriesRegion, "resources" | "health" | "storage" | "lifecycle" | "operations">;
+  label: string;
+  role: string;
+  href: string;
+  under: string;
+};
+
+const journey: readonly JourneyStage[] = [
+  { id: "api", label: "요청 저장", compact: "API server", component: "API server · etcd", change: "원하는 상태 기록", href: "/cs/cloud/kubernetes-request-path-and-cka#overview" },
+  { id: "controllers", label: "Pod 객체 생성", compact: "Controller", component: "Deployment · ReplicaSet controller", change: "Pod 객체 추가", href: "/cs/cloud/kubernetes-controllers-reconcile-deployment-job#overview" },
+  { id: "scheduler", label: "Node 선택", compact: "Scheduler", component: "Scheduler", change: "spec.nodeName 기록", href: "/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview" },
+  { id: "kubelet", label: "실행 준비", compact: "kubelet", component: "kubelet · CRI · CNI · CSI", change: "컨테이너 · 주소 · 볼륨 준비", href: "/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview" },
+  { id: "traffic", label: "요청 전달", compact: "데이터 경로", component: "EndpointSlice controller · kube-proxy 또는 대체 구현", change: "ready=true 주소로 요청 전달", href: "/cs/cloud/kubernetes-network-packet-path#overview" },
 ];
 
-const supportingPaths: readonly Region[] = [
-  {
-    id: "resources",
-    label: "자원",
-    role: "requests로 배치하고 limits로 실행 상한을 집행합니다.",
-    href: "/cs/cloud/kubernetes-requests-limits-allocatable-qos#overview",
-  },
-  {
-    id: "network",
-    label: "네트워크",
-    role: "Service·EndpointSlice가 준비된 Pod까지 요청을 잇습니다.",
-    href: "/cs/cloud/kubernetes-network-packet-path#overview",
-  },
-  {
-    id: "storage",
-    label: "스토리지",
-    role: "PVC 요구를 PV와 실제 장치 연결로 바꿉니다.",
-    href: "/cs/cloud/kubernetes-pvc-pv-storageclass-csi#overview",
-  },
-  {
-    id: "lifecycle",
-    label: "변경 · 확장",
-    role: "Rollout·PDB·drain·HPA로 가용 용량을 지킵니다.",
-    href: "/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#overview",
-  },
-  {
-    id: "operations",
-    label: "운영",
-    role: "SLO·알림·업그레이드·복구 판단을 연결합니다.",
-    href: "/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview",
-  },
+const detailPaths: readonly DetailPath[] = [
+  { id: "resources", label: "자원", role: "requests는 배치 판단에, limits는 Node의 실행 상한에 쓰입니다.", href: "/cs/cloud/kubernetes-requests-limits-allocatable-qos#overview", under: "3·4단계 확대" },
+  { id: "health", label: "상태", role: "Condition과 Event가 전체 경로의 마지막 성공과 첫 실패를 남깁니다.", href: "/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview", under: "1~5단계의 증거" },
+  { id: "storage", label: "스토리지", role: "PVC 요구를 PV와 실제 Node의 attach·mount로 바꿉니다.", href: "/cs/cloud/kubernetes-pvc-pv-storageclass-csi#overview", under: "3·4단계 확대" },
 ];
 
-function RegionNode({
-  region,
-  path,
-  current,
-}: {
-  region: Region;
-  path: readonly KubernetesSeriesRegion[];
-  current: KubernetesSeriesCurrent;
-}) {
-  const selected = path.includes(region.id);
-  const isCurrent = current === region.id;
-  const body = (
-    <>
-      <strong className="block text-xs leading-5 text-foreground">
-        {region.label}{isCurrent ? <span className="ml-1 text-[9px] text-primary">현재</span> : null}
-      </strong>
-      <span className="mt-1 block text-[10px] leading-4 text-muted-foreground sm:text-[11px] sm:leading-5">
-        {region.role}
-      </span>
-    </>
-  );
+const timePaths: readonly DetailPath[] = [
+  { id: "lifecycle", label: "교체 · 확장", role: "종료, rollout, PDB, drain, HPA가 시간에 따라 Ready 개수를 바꿉니다.", href: "/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#overview", under: "실행 중 변화" },
+  { id: "operations", label: "운영", role: "SLO와 관측값으로 알림, 변경, 업그레이드, 복구를 결정합니다.", href: "/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview", under: "사용자 영향 판단" },
+];
 
-  return isCurrent ? (
-    <div
-      data-kubernetes-region={region.id}
-      data-active="true"
-      aria-current="location"
-      className="min-w-0 border-l-4 border-primary bg-primary/[0.08] px-3 py-2.5"
-    >
-      {body}
-    </div>
-  ) : (
+const directStage: Partial<Record<KubernetesSeriesCurrent, JourneyStageId>> = {
+  request: "api",
+  controllers: "controllers",
+  placement: "scheduler",
+  network: "traffic",
+};
+
+const relatedStages: Partial<Record<KubernetesSeriesCurrent, readonly JourneyStageId[]>> = {
+  resources: ["scheduler", "kubelet"],
+  health: ["api", "controllers", "scheduler", "kubelet", "traffic"],
+  storage: ["scheduler", "kubelet"],
+  lifecycle: ["controllers", "kubelet", "traffic"],
+  operations: ["api", "controllers", "scheduler", "kubelet", "traffic"],
+};
+
+function DetailCard({ item, current }: { item: DetailPath; current: KubernetesSeriesCurrent }) {
+  const isCurrent = current === item.id;
+  return (
     <Link
-      data-kubernetes-region={region.id}
-      data-active="false"
-      to={region.href}
-      className={`min-w-0 border-l-2 px-3 py-2.5 transition-colors hover:border-primary hover:bg-primary/[0.025] ${selected ? "border-primary bg-primary/[0.045]" : "border-border bg-background"}`}
+      to={item.href}
+      data-kubernetes-region={item.id}
+      data-active={isCurrent ? "true" : "false"}
+      aria-current={isCurrent ? "location" : undefined}
+      className={`min-w-0 border-l-2 px-3 py-2.5 transition-colors hover:border-primary hover:bg-primary/[0.025] ${
+        isCurrent ? "border-primary bg-primary/[0.09]" : "border-border bg-background"
+      }`}
     >
-      {body}
+      <span className="block break-keep text-[10px] font-semibold leading-4 text-muted-foreground">{item.under}</span>
+      <strong className="mt-0.5 block break-keep text-xs leading-5 text-foreground">{item.label}</strong>
+      <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{item.role}</span>
     </Link>
   );
 }
 
-export default function KubernetesSeriesLocator({
-  path,
-  current,
-  question,
-}: {
-  path: readonly KubernetesSeriesRegion[];
-  current: KubernetesSeriesCurrent;
-  question: string;
-}) {
+function JourneyRail({ current }: { current: KubernetesSeriesCurrent }) {
+  const currentStage = directStage[current];
+  const related = new Set(relatedStages[current] ?? []);
   return (
-    <aside
-      className="not-prose mb-8 border border-border bg-muted/[0.09] p-3 sm:p-4"
-      aria-label="Kubernetes 전체 구조에서 현재 글의 위치"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <p className="text-[10px] font-bold text-primary">
-            {current === "map" ? "Kubernetes 전체 지도" : "Kubernetes 전체 → 현재 운영 질문"}
-          </p>
+    <div className="grid grid-cols-[repeat(5,minmax(0,1fr))] items-start gap-1" aria-label="Pod 준비 경로 다섯 단계">
+      {journey.map((stage, index) => {
+        const isCurrent = currentStage === stage.id;
+        const isRelated = related.has(stage.id);
+        return (
+          <Link
+            key={stage.id}
+            to={stage.href}
+            data-kubernetes-stage={stage.id}
+            data-active={isCurrent ? "true" : "false"}
+            aria-current={isCurrent ? "location" : undefined}
+            className={`relative min-w-0 border-t-2 px-1 pt-2 text-center transition-colors hover:border-primary ${
+              isCurrent ? "border-primary text-foreground" : isRelated ? "border-primary/50 text-foreground" : "border-border text-muted-foreground"
+            }`}
+          >
+            <span className={`mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ${isCurrent ? "bg-primary text-primary-foreground" : isRelated ? "bg-primary/10 text-primary" : "bg-muted"}`}>
+              {index + 1}
+            </span>
+            <span className={`mt-1 block break-keep text-[9px] font-semibold leading-4 ${isCurrent ? "" : "hidden sm:block"}`}>{stage.label}</span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+function DesktopJourney({ current }: { current: KubernetesSeriesCurrent }) {
+  const currentStage = directStage[current];
+  const related = new Set(relatedStages[current] ?? []);
+  return (
+    <div className="mt-4 hidden grid-cols-[minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)] items-stretch gap-1 md:grid">
+      {journey.map((stage, index) => {
+        const isCurrent = currentStage === stage.id;
+        const isRelated = related.has(stage.id);
+        return (
+          <div key={stage.id} className="contents">
+            <Link
+              data-kubernetes-stage={stage.id}
+              data-active={isCurrent ? "true" : "false"}
+              aria-current={isCurrent ? "location" : undefined}
+              to={stage.href}
+              className={`min-w-0 border-l-2 px-3 py-2.5 transition-colors hover:border-primary hover:bg-primary/[0.025] ${
+                isCurrent ? "border-primary bg-primary/[0.09]" : isRelated ? "border-primary/50 bg-primary/[0.035]" : "border-border bg-background"
+              }`}
+            >
+              <span className="block break-keep text-[10px] font-semibold leading-4 text-muted-foreground">{index + 1} · {stage.label}</span>
+              <strong className="mt-0.5 block break-keep text-[11px] leading-5 text-foreground sm:text-xs">{stage.compact}</strong>
+              <span className="mt-1 block break-keep text-[10px] leading-4 text-muted-foreground">{stage.change}</span>
+            </Link>
+            {index < journey.length - 1 ? <div className="hidden items-center justify-center text-muted-foreground md:flex" aria-hidden="true">→</div> : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function KubernetesSeriesLocator({ current, question, bridge }: { current: KubernetesSeriesCurrent; question: string; bridge?: string }) {
+  const currentStage = directStage[current] ? journey.find((stage) => stage.id === directStage[current]) : undefined;
+  const currentDetail = [...detailPaths, ...timePaths].find((item) => item.id === current);
+
+  return (
+    <aside className="not-prose mb-8 border border-border bg-muted/[0.09] p-3 sm:p-4" aria-label="Kubernetes 전체 구조에서 현재 글의 위치">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 max-w-3xl">
+          <p className="text-[10px] font-bold text-primary">Kubernetes 전체 지도</p>
           <p className="mt-1 text-sm font-bold leading-6">{question}</p>
+          <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
+            {bridge ?? "replicas를 2에서 3으로 늘린 checkout 사례로 전체 경로를 먼저 보고, 막힌 단계만 확대합니다."}
+          </p>
         </div>
         {current !== "map" ? (
-          <Link
-            to="/cs/cloud/kubernetes-concept-map#black-box"
-            className="inline-flex min-h-11 items-center border-b border-border px-2 text-[11px] font-semibold hover:border-primary hover:text-primary"
-          >
+          <Link to="/cs/cloud/kubernetes-concept-map#overview" className="inline-flex min-h-11 shrink-0 items-center border-b border-border px-2 text-[11px] font-semibold hover:border-primary hover:text-primary">
             전체 지도 보기 <span className="ml-1" aria-hidden="true">↗</span>
           </Link>
         ) : null}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 xl:grid-cols-[minmax(0,1fr)_1rem_minmax(0,1fr)_1rem_minmax(0,1fr)_1rem_minmax(0,1fr)_1rem_minmax(0,1fr)] xl:items-stretch">
-        {mainPath.map((region, index) => (
-          <div key={region.id} className="contents">
-            <RegionNode region={region} path={path} current={current} />
-            {index < mainPath.length - 1 ? (
-              <div className="hidden items-center justify-center text-muted-foreground xl:flex" aria-hidden="true">→</div>
-            ) : null}
+      {current !== "map" ? (
+        <>
+          <div className="mt-4 md:hidden">
+            <JourneyRail current={current} />
+            <p className="mt-3 border-l-2 border-primary pl-3 text-[11px] leading-5 text-muted-foreground">
+              현재 위치 · <strong className="text-foreground">{currentStage?.label ?? currentDetail?.label}</strong>
+              {currentStage ? ` · ${currentStage.component}` : currentDetail ? ` · ${currentDetail.under}` : ""}
+            </p>
           </div>
-        ))}
-      </div>
+          <DesktopJourney current={current} />
+          {currentDetail ? (
+            <p className="mt-3 hidden border-l-2 border-primary pl-3 text-[11px] leading-5 text-muted-foreground md:block">
+              현재 위치 · <strong className="text-foreground">{currentDetail.label}</strong> · {currentDetail.under}
+            </p>
+          ) : null}
+        </>
+      ) : null}
 
-      <div className="mt-3 border-t border-border pt-3">
-        <p className="mb-2 text-[10px] font-bold text-muted-foreground">
-          같은 Pod를 지탱하는 다섯 가지 운영 경로
-        </p>
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
-          {supportingPaths.map((region) => (
-            <RegionNode key={region.id} region={region} path={path} current={current} />
-          ))}
+      <details className={`${current === "map" ? "mt-4" : "mt-3 md:mt-4"} group`} open={current === "map"}>
+        <summary className="min-h-11 cursor-pointer list-none border-t border-border py-3 text-[11px] font-bold text-muted-foreground group-open:text-foreground">
+          {current === "map" ? "필요한 단계만 더 확대하기" : "자원·상태·스토리지·교체·운영 지도 펼치기"}
+        </summary>
+        <div className="grid gap-4 pt-1 lg:grid-cols-[3fr_2fr]">
+          <div>
+            <p className="mb-2 text-[10px] font-bold text-muted-foreground">주 경로 안을 더 확대할 때</p>
+            <div className="grid gap-2 sm:grid-cols-3">{detailPaths.map((item) => <DetailCard key={item.id} item={item} current={current} />)}</div>
+          </div>
+          <div>
+            <p className="mb-2 text-[10px] font-bold text-muted-foreground">실행 중 상태가 바뀔 때</p>
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">{timePaths.map((item) => <DetailCard key={item.id} item={item} current={current} />)}</div>
+          </div>
         </div>
-      </div>
-      <p className="mt-3 text-[10px] leading-4 text-muted-foreground sm:text-[11px] sm:leading-5">
-        굵은 선은 지금 읽는 영역, 옅은 배경은 같은 문제를 푸는 경로입니다.
-      </p>
+      </details>
     </aside>
   );
 }

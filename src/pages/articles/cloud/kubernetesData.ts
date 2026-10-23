@@ -2,6 +2,7 @@ import type { CloudCertificationArticleData } from "./CloudCertificationArticle"
 import type { EngineeringDepthData } from "./EngineeringDepthBlocks";
 
 const checkedAt = "2026-10-08";
+const ckaCheckedAt = "2026-10-23";
 
 const kubernetesCkaDepth: EngineeringDepthData = {
   ledgers: [
@@ -133,8 +134,8 @@ const kubernetesCkaDepth: EngineeringDepthData = {
     },
   ],
   sources: [
-    { label: "Linux Foundation · CKA", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", claim: "v1.35, 2시간 performance-based exam과 다섯 영역 비중을 확인했습니다.", checkedAt },
-    { label: "CNCF · Certification curriculum", href: "https://github.com/cncf/curriculum", claim: "공개 curriculum의 현재 CKA 범위와 revision 경로를 확인했습니다.", checkedAt },
+    { label: "Linux Foundation · CKA", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", claim: "v1.37, 2시간 performance-based exam과 다섯 영역 비중을 확인했습니다.", checkedAt: ckaCheckedAt },
+    { label: "CNCF · Certification curriculum", href: "https://github.com/cncf/curriculum", claim: "공개 curriculum의 CKA v1.37 범위와 revision 경로를 확인했습니다.", checkedAt: ckaCheckedAt },
     { label: "Kubernetes · Components", href: "https://kubernetes.io/docs/concepts/overview/components/", claim: "control plane과 node component의 공식 책임을 확인했습니다.", checkedAt },
     { label: "Kubernetes · API concepts", href: "https://kubernetes.io/docs/reference/using-api/api-concepts/", claim: "resource·object·watch와 resourceVersion의 API 경계를 확인했습니다.", checkedAt },
     { label: "Kubernetes · Scheduler", href: "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/", claim: "미배치 Pod의 filtering·scoring·binding 경로를 확인했습니다.", checkedAt },
@@ -153,7 +154,7 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
     { id: "overview", level: "S", title: "1. 세 개를 요청했는데 두 개만 준비되어 지연이 두 배로 뛰었습니다", bridge: "먼저 Pod 하나가 어떤 전환을 거쳐 요청을 받게 되는지 여섯 단계로 나눕니다.", paragraphs: [
       "(가정) checkout 서버를 세 개 띄우도록 Deployment를 바꾼 뒤 화면에는 3 desired, 2 ready가 보였습니다. 요청은 초당 90건 들어오고 Pod 하나는 초당 35건을 안정적으로 처리하므로 두 개로는 초당 70건까지만 받습니다. 남는 초당 20건이 큐에 쌓이면서 p95 지연이 900ms에서 2.1초로 늘었습니다.",
       "답부터 적으면 이렇습니다. Kubernetes 장애는 화면의 상태 이름을 외워서 푸는 문제가 아닙니다. 요청 저장, 실행할 node 선택, container 시작, 준비 확인, 요청 대상 등록이 차례로 성공했는지 보고 마지막 초록불 바로 다음을 조사합니다. 이 글은 준비되지 않은 세 번째 Pod 하나를 그 순서대로 따라갑니다.",
-      "운영에서 반복해 묻는 여덟 질문이 각각 어느 글에서 닫히는지는 [Kubernetes 개념 지도](/cs/cloud/kubernetes-concept-map#map)에 한 장으로 그려 두었습니다. 이 글은 그 지도에서 Pending 진단의 전체 순서를 맡습니다.",
+      "Pod 하나가 API에 저장되어 사용자 요청을 받기까지의 전체 경로는 [Kubernetes 개념 지도](/cs/cloud/kubernetes-concept-map#map)에 한 장으로 그려 두었습니다. 이 글은 그 지도에서 Pending 진단의 전체 순서를 맡습니다.",
     ] },
     { id: "black-box", level: "B", title: "2. 원하는 개수는 여섯 전환을 거쳐 요청을 받는 Pod가 됩니다", bridge: "여섯 전환 가운데 하나가 멈추면 용량이 얼마나 비는지 숫자로 먼저 잡습니다.", paragraphs: [
       "replicas: 3이라는 요청을 보내면 첫 담당자가 형식과 권한을 검사해 저장합니다. 다음 담당자는 부족한 Pod를 만들고, 배치 담당자는 실행할 node를 고릅니다. 선택된 node의 담당자는 image를 받아 container를 만들며, 네트워크와 저장장치 담당자가 주소와 volume을 붙입니다.",
@@ -183,8 +184,8 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
       "공식 Components 문서는 API server를 HTTP API의 중심, scheduler를 미배치 Pod의 node 선택자, kubelet을 node에서 Pod와 container를 유지하는 agent로 설명합니다. 이 설명으로 전환마다 owner를 정하되 특정 배포판의 process 위치와 log 경로까지 같다고 가정하지 않습니다.",
       "API server readiness가 통과해도 worker runtime과 application은 실패할 수 있습니다. 반대로 control plane이 잠시 중단돼도 이미 실행 중인 container가 곧바로 모두 종료되는 것은 아닙니다. component health와 workload health를 분리해 기록합니다. 노드가 NotReady로 바뀐 뒤 그 위의 Pod가 다른 노드로 옮겨가기까지 50초와 300초가 어떻게 쌓이는지는 [Pod가 Node에 오르고 떨어지는 시계](/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#notready-clock)에서 봅니다.",
     ] },
-    { id: "comparison", level: "6", title: "9. CKA v1.35 범위를 장애 lab 순서로 바꿉니다", bridge: "마지막으로 시험에서 고친 한 cluster와 현장 책임의 경계를 정합니다.", paragraphs: [
-      "2026-10-08 Linux Foundation 공식 페이지 기준 CKA는 Kubernetes v1.35를 쓰는 2시간 performance-based 시험입니다. 영역은 Troubleshooting 30%, Cluster Architecture·Installation·Configuration 25%, Services·Networking 20%, Workloads·Scheduling 15%, Storage 10%입니다. 같은 다섯 영역을 운영 질문과 공개 장애 사례로 다시 묶은 색인은 [개념 지도의 면접 색인](/cs/cloud/kubernetes-concept-map#interview-index)에 있습니다.",
+    { id: "comparison", level: "6", title: "9. CKA v1.37 범위를 장애 lab 순서로 바꿉니다", bridge: "마지막으로 시험에서 고친 한 cluster와 현장 책임의 경계를 정합니다.", paragraphs: [
+      "2026-10-23 Linux Foundation 공식 페이지 기준 CKA는 Kubernetes v1.37을 쓰는 2시간 performance-based 시험입니다. 영역은 Troubleshooting 30%, Cluster Architecture·Installation·Configuration 25%, Services·Networking 20%, Workloads·Scheduling 15%, Storage 10%입니다. 같은 다섯 영역을 운영 질문과 공개 장애 사례로 다시 묶은 색인은 [개념 지도의 면접 색인](/cs/cloud/kubernetes-concept-map#interview-index)에 있습니다.",
       "입문 강의가 object와 application 전체 지도를 준다면 CKA 학습은 제한 시간 안에 상태를 확인하고 실제로 고치는 반복을 더합니다. Service·CoreDNS·Gateway API는 client 경로, kubeadm·HA·etcd는 control-plane lifecycle, volume은 Pod 실행 경로의 storage 전환에 놓고 연습합니다.",
     ] },
     { id: "limits", level: "7", title: "10. 시험에서 고친 한 cluster는 production 운영 경력이 아닙니다", bridge: "이 글의 도착점은 상태 이름을 외우는 것이 아니라 마지막 성공 전환 다음을 증거로 찾는 습관입니다.", paragraphs: [
@@ -220,21 +221,21 @@ export const kubernetesRequestPathAndCkaData: CloudCertificationArticleData = {
     { code: "Ready 뒤 EndpointSlice·DNS·route를 확인한다", note: "준비된 주소가 실제 client 경로에 실렸는지 봅니다." },
     { code: "실제 요청과 p95·error rate를 다시 측정한다", note: "object가 초록색인 것보다 사용자 성공으로 닫습니다." },
   ], output: "첫 실패 전환 + 원인 evidence + 수정 전후 acceptance", repeatUntil: "같은 manifest를 새 cluster에서도 재현하고 장애 주입 뒤 시간 안에 복구할 때까지 반복합니다." },
-  examScope: { title: "CKA 공식 영역을 40시간 설명용 장부에 배치", asOf: "Linux Foundation · 2026년 10월 8일 · Kubernetes v1.35", domains: [
+  examScope: { title: "CKA 공식 영역을 40시간 설명용 장부에 배치", asOf: "Linux Foundation · 2026년 10월 23일 · Kubernetes v1.37", domains: [
     { name: "Troubleshooting", weight: "30% · 12h", focus: "cluster·node·component·resource·service 장애를 before/after evidence로 복구합니다." },
     { name: "Cluster Architecture", weight: "25% · 10h", focus: "kubeadm lifecycle, RBAC, HA control plane, Helm·Kustomize와 extension interface를 다룹니다." },
     { name: "Services & Networking", weight: "20% · 8h", focus: "Pod 연결, Service·EndpointSlice, NetworkPolicy, Gateway·Ingress와 CoreDNS를 추적합니다." },
     { name: "Workloads & Scheduling", weight: "15% · 6h", focus: "rollout·rollback, ConfigMap·Secret, autoscaling, admission·placement를 고칩니다." },
     { name: "Storage", weight: "10% · 4h", focus: "StorageClass, dynamic provisioning, access mode·reclaim, PV·PVC lifecycle을 연습합니다." },
   ] },
-  currentNotice: { label: "응시 전 재확인", body: "공식 페이지는 시험 환경이 Kubernetes 새 minor release 뒤 약 4~8주 안에 맞춰질 수 있다고 밝히지만, 2026년 10월 9일 현재 Kubernetes 1.36·1.37이 나온 뒤에도 시험은 v1.35로 표기돼 있습니다. 이 글의 v1.35와 영역 비중은 확인일의 snapshot이므로 응시 직전 실제 표기 버전을 다시 봅니다.", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", linkLabel: "현재 CKA version과 curriculum 확인" },
+  currentNotice: { label: "응시 전 재확인", body: "2026년 10월 23일 공식 시험 페이지에는 Kubernetes v1.37로 표시되어 있습니다. 시험 환경은 바뀔 수 있으므로 이 버전과 영역 비중은 확인일의 snapshot으로 보고 응시 직전 다시 확인합니다.", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", linkLabel: "현재 CKA version과 curriculum 확인" },
   relatedArticles: { title: "GPU cluster에서는 이 두 경로를 이어서 봅니다", description: "일반 Kubernetes control loop를 이해한 뒤 node software 수렴과 batch scheduling의 다른 책임을 연결합니다.", items: [
     { label: "Kubernetes와 Slurm의 GPU scheduling", href: "/cs/gpu/kubernetes-vs-slurm-gpu-scheduling", task: "service·batch·gang scheduling의 완료 조건을 비교합니다.", evidence: "queue·allocation·PodGroup 또는 Job 상태" },
     { label: "AI cluster software compatibility", href: "/cs/gpu/ai-cluster-software-compatibility", task: "OS·driver·CUDA·NCCL·OFED·container 조합을 검증합니다.", evidence: "버전 호환표·node 기초 시험·collective 결과" },
   ] },
   sources: [
     { source: "Kubernetes Components", excerpt: "control plane and one or more worker nodes", application: "세 component를 제품 목록이 아니라 저장·배치·node 실행의 owner로 배치합니다.", citation: "Kubernetes Documentation · Components", href: "https://kubernetes.io/docs/concepts/overview/components/", note: "API server·etcd·scheduler·controller와 kubelet·runtime·kube-proxy의 공식 책임을 설명합니다." },
-    { source: "Linux Foundation CKA", excerpt: "performance-based test", application: "공식 비중을 장애 lab 시간과 산출물로 바꾸되 합격 문제 수로 해석하지 않습니다.", citation: "Linux Foundation · Certified Kubernetes Administrator", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "확인일 현재 v1.35, 2시간과 다섯 영역 비중을 밝히는 공식 시험 안내입니다." },
+    { source: "Linux Foundation CKA", excerpt: "performance-based test", application: "공식 비중을 장애 lab 시간과 산출물로 바꾸되 합격 문제 수로 해석하지 않습니다.", citation: "Linux Foundation · Certified Kubernetes Administrator", href: "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/", note: "확인일 현재 v1.37, 2시간과 다섯 영역 비중을 밝히는 공식 시험 안내입니다." },
   ],
   review: [
     "Pod가 Pending이고 nodeName이 없을 때 container log보다 condition과 event를 먼저 확인해야 하는 이유는 무엇입니까? (답: 4·7절)",

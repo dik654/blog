@@ -1,190 +1,271 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 운영자가 묻는 여덟 질문(왼쪽)과 그 질문을 끝까지 설명하는 글(오른쪽)을 선으로 잇는다.
- * 한 mechanism: 질문 하나 → 주 담당 글 하나(굵은 선) + 바닥이 되는 글(가는 선). 장면마다 질문 하나만 켜고 나머지는 흐리게 둔다.
- * 레이아웃은 모든 장면에서 같아 높이와 버튼 위치가 움직이지 않는다. 장면마다 바뀌는 제목·설명은 같은 셀에 겹쳐 두고 비활성을 invisible로 둔다.
- */
-interface Question {
-  id: string;
-  label: string;
-  /** 장면 조작부용 짧은 이름. 390px에서 한 줄에 들어가야 조작부 높이가 움직이지 않는다. */
+type JourneyStage = {
   short: string;
-  primary: readonly string[];
-  support: readonly string[];
-  note: string;
-}
+  title: string;
+  compact: string;
+  component: string;
+  change: string;
+  evidence: string;
+  failure: string;
+  href: string;
+  linkLabel: string;
+};
 
-interface ArticleNode {
-  id: string;
-  label: string;
-  tone: "k8s" | "existing" | "linux";
-}
-
-const ARTICLES: readonly ArticleNode[] = [
-  { id: "K1", label: "K1 controller·reconcile", tone: "k8s" },
-  { id: "K2", label: "K2 Pod→Node·NotReady", tone: "k8s" },
-  { id: "K3", label: "K3 requests·limits·QoS", tone: "k8s" },
-  { id: "K4", label: "K4 Pod 상태·probe·Event", tone: "k8s" },
-  { id: "K5", label: "K5 PVC·PV·CSI", tone: "k8s" },
-  { id: "K6", label: "K6 rollout·종료·PDB·HPA", tone: "k8s" },
-  { id: "K7", label: "K7 SRE·SLO·업그레이드", tone: "k8s" },
-  { id: "REQ", label: "요청 경로와 CKA", tone: "existing" },
-  { id: "NET", label: "패킷 경로", tone: "existing" },
-  { id: "LNX", label: "Linux 기초(L2·L3·L4)", tone: "linux" },
+const STAGES: readonly JourneyStage[] = [
+  {
+    short: "저장",
+    title: "요청 저장",
+    compact: "API server",
+    component: "API server · etcd",
+    change: "replicas: 3을 검증한 뒤 Deployment의 원하는 상태로 저장합니다.",
+    evidence: "저장된 spec · generation · resourceVersion",
+    failure: "Forbidden · Invalid · admission 거부",
+    href: "/cs/cloud/kubernetes-request-path-and-cka#overview",
+    linkLabel: "요청이 저장되는 경로",
+  },
+  {
+    short: "생성",
+    title: "Pod 객체 생성",
+    compact: "Controller",
+    component: "Deployment · ReplicaSet controller",
+    change: "replicas를 2에서 3으로 늘린 뒤, 존재하는 Pod 두 개와 목표 세 개의 차이를 보고 새 Pod 객체를 만듭니다.",
+    evidence: "ownerReferences · observedGeneration · replicas",
+    failure: "FailedCreate · quota · 잘못된 Pod template",
+    href: "/cs/cloud/kubernetes-controllers-reconcile-deployment-job#overview",
+    linkLabel: "Controller의 복구 루프",
+  },
+  {
+    short: "배치",
+    title: "Node 선택",
+    compact: "Scheduler",
+    component: "Scheduler",
+    change: "requests, taint, affinity, volume 조건을 통과한 Node에 Pod를 binding합니다.",
+    evidence: "PodScheduled=True · spec.nodeName",
+    failure: "FailedScheduling · Insufficient cpu",
+    href: "/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview",
+    linkLabel: "Pod 배치와 Node 장애",
+  },
+  {
+    short: "실행",
+    title: "실행 준비",
+    compact: "kubelet",
+    component: "kubelet · CRI · CNI · CSI",
+    change: "컨테이너를 시작하고 Pod IP와 볼륨을 붙인 뒤 readiness를 반복합니다.",
+    evidence: "Pod IP · mount · containerStatuses · Ready",
+    failure: "ImagePullBackOff · FailedMount · CrashLoopBackOff",
+    href: "/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview",
+    linkLabel: "Pod 상태와 Event 읽기",
+  },
+  {
+    short: "요청",
+    title: "사용자 요청 전달",
+    compact: "데이터 경로",
+    component: "EndpointSlice controller · kube-proxy 또는 대체 데이터 경로",
+    change: "Ready가 된 Pod 주소를 요청 대상에 넣고 checkout 요청을 전달합니다.",
+    evidence: "ready endpoint · 실제 성공률 · p95 지연",
+    failure: "endpoint 누락 · DNS · route · policy 오류",
+    href: "/cs/cloud/kubernetes-network-packet-path#overview",
+    linkLabel: "Service에서 Pod까지의 패킷 경로",
+  },
 ];
 
-const QUESTIONS: readonly Question[] = [
-  { id: "q1", label: "Node와 Pod의 관계", short: "Node↔Pod", primary: ["K2"], support: ["K1"], note: "Pod는 scheduler가 고른 Node에 binding되어 spec.nodeName이 채워지고, 그 Node의 kubelet만 그 Pod를 실행합니다. Node가 사라져도 Pod 객체는 바로 옮겨지지 않고 약 6분의 시계가 돕니다." },
-  { id: "q2", label: "Deployment·Job이 Pod를 만드는 방식", short: "Deployment·Job", primary: ["K1"], support: [], note: "Deployment는 ReplicaSet을, ReplicaSet은 Pod를 만듭니다. Job은 Pod를 직접 만들고 backoffLimit까지 다시 시도합니다. 사용자가 만든 객체와 실제 Pod 사이에 controller가 한 층씩 있습니다." },
-  { id: "q3", label: "요청한 자원과 실제 할당의 차이", short: "requests vs 할당", primary: ["K3"], support: ["LNX"], note: "scheduler는 실제 사용량이 아니라 requests 합을 Allocatable과 비교합니다. limits는 CPU면 cgroup throttling, 메모리면 OOMKill로 집행됩니다. 두 숫자가 다른 이유는 Linux cgroup에 있습니다." },
-  { id: "q4", label: "Pending·CrashLoopBackOff·NotReady", short: "Pending·Crash·NotReady", primary: ["K4", "K2"], support: ["REQ"], note: "Pending은 배치 전(FailedScheduling)과 배치 후(ContainerCreating)로 갈립니다. CrashLoopBackOff는 10초에서 300초까지 늘어나는 재시작 대기이고, NotReady는 Node의 하트비트가 50초 끊긴 상태입니다." },
-  { id: "q5", label: "Service가 Pod로 요청을 전달하는 방식", short: "Service→Pod", primary: ["NET"], support: ["K6", "LNX"], note: "Service의 ClusterIP는 EndpointSlice의 Ready Pod 목록으로 바뀌고 kube-proxy 규칙이 노드에서 DNAT합니다. Pod 종료 때 endpoint 제거와 SIGTERM이 동시에 시작되는 경쟁은 K6에, netfilter는 Linux 기초에 있습니다." },
-  { id: "q6", label: "PVC가 스토리지를 연결하는 방식", short: "PVC 연결", primary: ["K5"], support: ["LNX"], note: "PVC는 조건에 맞는 PV에 binding되거나 StorageClass가 동적으로 만듭니다. 그 뒤 CSI가 볼륨을 노드에 attach하고 mount합니다. RWO는 Pod가 아니라 노드 단위 제한입니다." },
-  { id: "q7", label: "Event에서 실패 이유를 찾는 방법", short: "Event 읽기", primary: ["K4"], support: ["REQ"], note: "Event는 1시간만 보존되고 같은 종류는 count로 합쳐집니다. FailedCreate는 ReplicaSet에, FailedScheduling·BackOff는 Pod에, NodeNotReady는 Node에 붙으므로 owner 사슬마다 따로 읽습니다." },
-  { id: "q8", label: "Controller가 목표 상태를 계속 복구한다는 개념", short: "Controller 루프", primary: ["K1"], support: ["K6", "K7"], note: "controller는 '원하는 상태'와 '현재 상태'의 차이를 보고 그 차이만큼 행동하는 루프입니다. rollout·HPA·PDB도 같은 루프이고, SRE의 error budget은 그 루프가 못 막은 실패를 세는 바깥 고리입니다." },
-];
-
-const LEFT_X = 8;
-const LEFT_W = 206;
-const RIGHT_X = 300;
-const RIGHT_W = 172;
-const TOP = 14;
-const Q_STEP = 33;
-const A_STEP = 26;
-const BOX_H = 22;
-const qY = (i: number) => TOP + i * Q_STEP;
-const aY = (i: number) => TOP + 4 + i * A_STEP;
-const aIndex = (id: string) => ARTICLES.findIndex((a) => a.id === id);
-
-const TONE = {
-  k8s: { fill: "#dbeafe", stroke: "#2563eb", text: "#1e3a8a" },
-  existing: { fill: "#dcfce7", stroke: "#16a34a", text: "#14532d" },
-  linux: { fill: "#fef3c7", stroke: "#d97706", text: "#78350f" },
-} as const;
-
-const OVERVIEW_LABEL = "여덟 질문과 담당 글 전체";
-const OVERVIEW_NOTE = "왼쪽이 운영자가 묻는 여덟 질문, 오른쪽이 그 질문을 끝까지 설명하는 글입니다. 굵은 선이 주 담당, 가는 선이 바닥이 되는 글입니다. 장면을 넘기면 질문 하나씩 켜집니다.";
-/** 장면 0은 전체, 1~8은 질문 하나씩. */
 const SCENE_TEXT = [
-  { label: OVERVIEW_LABEL, owner: "9편 + Linux 기초", note: OVERVIEW_NOTE },
-  ...QUESTIONS.map((q) => ({ label: q.label, owner: `${q.primary.join("·")} 주 담당`, note: q.note })),
-];
+  {
+    title: "checkout Pod 세 개가 사용자 요청을 받을 때까지",
+    component: "API server부터 Node 데이터 경로까지",
+    body: "원하는 상태를 저장하는 일, Pod 객체를 만드는 일, Node를 고르는 일, 실제로 실행하는 일, 사용자 요청을 전달하는 일이 서로 다른 프로그램에 나뉘어 있습니다. 모두 API 리소스를 읽고 자신의 결과를 다시 기록합니다.",
+    evidence: "목표 3개 · Ready 2개 · Pod당 35 req/s",
+    failure: "계획 105 req/s → 실제 70 req/s → 20 req/s 부족",
+    href: "/cs/cloud/kubernetes-request-path-and-cka#overview",
+    linkLabel: "한 Pod를 처음부터 끝까지 추적하기",
+  },
+  ...STAGES.map((stage) => ({
+    title: stage.title,
+    component: stage.component,
+    body: stage.change,
+    evidence: `성공 증거 · ${stage.evidence}`,
+    failure: `멈췄을 때 · ${stage.failure}`,
+    href: stage.href,
+    linkLabel: stage.linkLabel,
+  })),
+] as const;
 
-/** 모든 장면의 내용을 같은 셀에 겹쳐 두고 활성 장면만 보이게 한다. 높이는 가장 긴 장면이 정한다. */
-function Stack({ active, className, render }: { active: number; className?: string; render: (text: (typeof SCENE_TEXT)[number]) => ReactNode }) {
+function Stack({ active, className, render }: { active: number; className?: string; render: (scene: (typeof SCENE_TEXT)[number]) => ReactNode }) {
   return (
     <div className={`grid ${className ?? ""}`}>
-      {SCENE_TEXT.map((t, i) => (
-        <div key={t.label} aria-hidden={i !== active} className={`col-start-1 row-start-1 min-w-0 ${i === active ? "" : "invisible"}`}>
-          {render(t)}
+      {SCENE_TEXT.map((scene, index) => (
+        <div key={scene.title} aria-hidden={index !== active} className={`col-start-1 row-start-1 min-w-0 ${index === active ? "" : "invisible"}`}>
+          {render(scene)}
         </div>
       ))}
     </div>
   );
 }
 
+function StageCard({ stage, index, active, reduced }: { stage: JourneyStage; index: number; active: number; reduced: boolean }) {
+  const selected = active === index + 1;
+  const passed = active === 0 || active > index + 1;
+  return (
+    <motion.div
+      initial={false}
+      animate={{ opacity: active === 0 || selected || passed ? 1 : 0.42 }}
+      transition={{ duration: reduced ? 0 : 0.18 }}
+      className={`relative min-w-0 border-l-4 px-2.5 py-3 sm:px-3 ${selected ? "border-primary bg-primary/[0.08]" : "border-border bg-background"}`}
+    >
+      <span className="block break-keep text-[10px] font-bold leading-4 text-muted-foreground">{index + 1} · {stage.title}</span>
+      <strong className="mt-1 block break-keep text-[11px] leading-5 text-foreground sm:text-xs">{stage.compact}</strong>
+      {selected ? <motion.span aria-hidden="true" className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" initial={false} animate={{ scale: reduced ? 1 : [0.7, 1, 0.7] }} transition={{ duration: reduced ? 0 : 1.8, repeat: reduced ? 0 : Infinity, ease: "easeInOut" }} /> : null}
+    </motion.div>
+  );
+}
+
+function Connector({ active, index, reduced, vertical = false }: { active: number; index: number; reduced: boolean; vertical?: boolean }) {
+  const moving = active === index + 2;
+  return (
+    <div className={`relative flex items-center justify-center text-muted-foreground ${vertical ? "h-7" : "min-h-28"}`} aria-hidden="true">
+      <span>{vertical ? "↓" : "→"}</span>
+      {moving && !reduced ? (
+        <motion.span
+          className="absolute h-2 w-2 rounded-full bg-primary"
+          initial={vertical ? { top: 0, opacity: 0 } : { left: 0, opacity: 0 }}
+          animate={vertical ? { top: [0, 20], opacity: [0, 1, 0] } : { left: [0, 12], opacity: [0, 1, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function MobileJourneyRail({ active, reduced }: { active: number; reduced: boolean }) {
+  return (
+    <div className="relative grid grid-cols-5 gap-1 pb-1" aria-label="Pod 준비 경로 다섯 단계">
+      <span aria-hidden="true" className="absolute left-[10%] right-[10%] top-3 h-px bg-border" />
+      {STAGES.map((stage, index) => {
+        const selected = active === index + 1;
+        const passed = active === 0 || active > index + 1;
+        return (
+          <motion.div
+            key={stage.title}
+            initial={false}
+            animate={{ opacity: active === 0 || selected || passed ? 1 : 0.42 }}
+            transition={{ duration: reduced ? 0 : 0.18 }}
+            className="relative min-w-0 text-center"
+          >
+            <span className={`relative z-10 mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold ${selected ? "bg-primary text-primary-foreground" : "border border-border bg-background text-muted-foreground"}`}>
+              {index + 1}
+            </span>
+            <span className="mt-1 block break-keep text-[9px] font-semibold leading-4 text-muted-foreground">{stage.short}</span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ConceptOwnerMapViz() {
-  const scenes = useAnimatedScenes(QUESTIONS.length + 1, 4200);
-  const reduced = scenes.reducedMotion;
-  const activeQ = scenes.active === 0 ? null : QUESTIONS[scenes.active - 1];
-  const lit = new Set<string>(activeQ ? [...activeQ.primary, ...activeQ.support] : ARTICLES.map((a) => a.id));
-  const label = activeQ ? activeQ.label : OVERVIEW_LABEL;
+  const scenes = useAnimatedScenes(STAGES.length + 1, 8000, { autoPlay: false, loop: true });
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const setPlayingRef = useRef(scenes.setPlaying);
+  const userControlledRef = useRef(false);
+  const desiredPlayingRef = useRef(false);
+
+  useEffect(() => {
+    setPlayingRef.current = scenes.setPlaying;
+  }, [scenes.setPlaying]);
+
+  useEffect(() => {
+    const element = canvasRef.current;
+    if (!element || scenes.reducedMotion) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setPlayingRef.current(false);
+          return;
+        }
+        setPlayingRef.current(userControlledRef.current ? desiredPlayingRef.current : true);
+      },
+      { threshold: 0.55 },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [scenes.reducedMotion]);
+
+  const selectScene = (value: number) => {
+    userControlledRef.current = true;
+    desiredPlayingRef.current = false;
+    scenes.setActive(value);
+  };
+
+  const changePlayback = (value: boolean) => {
+    userControlledRef.current = true;
+    desiredPlayingRef.current = value;
+    scenes.setPlaying(value);
+  };
 
   return (
     <VizFrame
-      eyebrow="Concept → article map"
-      title="질문 하나마다 주 담당 글 하나와 바닥이 되는 글이 정해져 있습니다"
-      description="파란 상자는 이번 Kubernetes 시리즈, 초록은 기존 두 글, 주황은 Linux 기초입니다. 선은 '이 질문의 설명이 이 글에서 끝난다'는 뜻입니다."
-      note="글 번호 K1~K7은 이 지도의 읽기 순서이고 각 글의 1절로 이어집니다."
+      eyebrow="Pod journey"
+      title="세 번째 checkout Pod가 사용자 요청을 받을 때까지"
+      description="장면마다 바뀌는 것은 담당 프로그램, API에 남는 성공 증거, 그 자리에서 보이는 대표 실패입니다. 박스 위치는 움직이지 않습니다."
+      note="수치는 동작을 설명하기 위한 가정입니다. 각 단계의 기본값과 소스 근거는 연결된 글에서 확인합니다."
     >
       <div
+        ref={canvasRef}
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="여덟 질문과 담당 글의 연결"
-        onKeyDown={scenes.onKeyDown}
+        aria-label="checkout Pod가 API 저장부터 사용자 요청 전달까지 이동하는 경로"
+        onKeyDown={(event) => {
+          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+            userControlledRef.current = true;
+            desiredPlayingRef.current = false;
+          } else if (event.key === " ") {
+            userControlledRef.current = true;
+            desiredPlayingRef.current = !scenes.playing;
+          }
+          scenes.onKeyDown(event);
+        }}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col">
-          <Stack
-            active={scenes.active}
-            render={(t) => (
-              <div className="flex flex-wrap content-start items-baseline justify-between gap-2">
-                <h4 className="text-base font-bold">{t.label}</h4>
-                <span className="font-mono text-sm font-bold text-primary">{t.owner}</span>
-              </div>
-            )}
-          />
-
-          <svg viewBox="0 0 480 282" className="mx-auto mt-3 h-auto w-full max-w-[28rem]" role="img" aria-label={label}>
-            {/* 연결선 */}
-            {QUESTIONS.map((q, qi) =>
-              [...q.primary.map((a) => ({ a, strong: true })), ...q.support.map((a) => ({ a, strong: false }))].map(({ a, strong }) => {
-                const on = activeQ ? activeQ.id === q.id : true;
-                const ai = aIndex(a);
-                const x1 = LEFT_X + LEFT_W;
-                const y1 = qY(qi) + BOX_H / 2;
-                const x2 = RIGHT_X;
-                const y2 = aY(ai) + BOX_H / 2;
-                const cx = (x1 + x2) / 2;
-                return (
-                  <motion.path
-                    key={`${q.id}-${a}`}
-                    d={`M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`}
-                    fill="none"
-                    stroke={strong ? "#2563eb" : "#94a3b8"}
-                    strokeWidth={strong ? 1.8 : 1}
-                    strokeDasharray={strong ? undefined : "3 3"}
-                    initial={false}
-                    animate={{ opacity: on ? (activeQ ? 1 : 0.35) : 0.08 }}
-                    transition={{ duration: reduced ? 0 : 0.3 }}
-                  />
-                );
-              }),
-            )}
-
-            {/* 질문 */}
-            {QUESTIONS.map((q, qi) => {
-              const on = !activeQ || activeQ.id === q.id;
-              const focus = activeQ?.id === q.id;
-              return (
-                <motion.g key={q.id} initial={false} animate={{ opacity: on ? 1 : 0.3 }} transition={{ duration: reduced ? 0 : 0.3 }}>
-                  <rect x={LEFT_X} y={qY(qi)} width={LEFT_W} height={BOX_H} rx={4} fill={focus ? "#0f172a" : "#ffffff"} className={focus ? undefined : "fill-background"} stroke={focus ? "#0f172a" : "#94a3b8"} strokeWidth={1} />
-                  <text x={LEFT_X + 7} y={qY(qi) + 14.5} fontSize={8.5} fontWeight={700} fill={focus ? "#ffffff" : undefined} className={focus ? undefined : "fill-foreground"}>
-                    {qi + 1}. {q.label}
-                  </text>
-                </motion.g>
-              );
-            })}
-
-            {/* 글 */}
-            {ARTICLES.map((a, ai) => {
-              const on = lit.has(a.id);
-              const tone = TONE[a.tone];
-              const strong = activeQ?.primary.includes(a.id);
-              return (
-                <motion.g key={a.id} initial={false} animate={{ opacity: on ? 1 : 0.25 }} transition={{ duration: reduced ? 0 : 0.3 }}>
-                  <rect x={RIGHT_X} y={aY(ai)} width={RIGHT_W} height={BOX_H} rx={4} fill={tone.fill} stroke={tone.stroke} strokeWidth={strong ? 2 : 1} />
-                  <text x={RIGHT_X + 7} y={aY(ai) + 14.5} fontSize={8.5} fontWeight={700} fill={tone.text}>
-                    {a.label}
-                  </text>
-                </motion.g>
-              );
-            })}
-          </svg>
-
-          <Stack
-            active={scenes.active}
-            className="mt-3"
-            render={(t) => <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">{t.note}</p>}
-          />
+        <div className="hidden grid-cols-[minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)_0.75rem_minmax(0,1fr)] items-stretch gap-1 md:grid">
+          {STAGES.map((stage, index) => (
+            <div key={stage.title} className="contents">
+              <StageCard stage={stage} index={index} active={scenes.active} reduced={scenes.reducedMotion} />
+              {index < STAGES.length - 1 ? <Connector active={scenes.active} index={index} reduced={scenes.reducedMotion} /> : null}
+            </div>
+          ))}
         </div>
-        <AnimatedSceneControls {...scenes} labels={["전체", ...QUESTIONS.map((q, i) => `${i + 1}. ${q.short}`)]} />
+
+        <div className="md:hidden"><MobileJourneyRail active={scenes.active} reduced={scenes.reducedMotion} /></div>
+
+        <Stack
+          active={scenes.active}
+          className="mt-4 border-t border-border pt-4"
+          render={(scene) => (
+            <div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h4 className="text-base font-bold">{scene.title}</h4>
+                <Link to={scene.href} className="inline-flex min-h-11 items-center text-xs font-bold text-primary hover:underline">
+                  {scene.linkLabel} <span className="ml-1" aria-hidden="true">↗</span>
+                </Link>
+              </div>
+              <p className="mt-1 text-xs font-bold text-primary">담당 · {scene.component}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">{scene.body}</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <p className="border-l-2 border-emerald-500/70 pl-3 text-xs leading-5 text-muted-foreground">{scene.evidence}</p>
+                <p className="border-l-2 border-rose-500/70 pl-3 text-xs leading-5 text-muted-foreground">{scene.failure}</p>
+              </div>
+            </div>
+          )}
+        />
+
+        <AnimatedSceneControls {...scenes} setActive={selectScene} setPlaying={changePlayback} labels={["전체", ...STAGES.map((stage) => stage.short)]} />
       </div>
     </VizFrame>
   );

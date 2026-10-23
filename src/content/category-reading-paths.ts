@@ -47,8 +47,8 @@ export const CATEGORY_READING_PATHS: Readonly<
       },
       {
         eyebrow: "04 · Kubernetes",
-        title: "여덟 운영 질문을 controller·Node·Linux 세 층으로 쌓기",
-        description: "controller가 목표 상태를 복구하는 방식, Pod가 Node에 오르고 떨어지는 시계, requests와 실제 할당, Pending·CrashLoopBackOff·NotReady, PVC, 종료·롤아웃, SLO까지 v1.37.1 원문과 공개 장애로 확인합니다.",
+        title: "Pod 하나의 전체 경로를 본 뒤 필요한 단계만 확대하기",
+        description: "API 저장부터 사용자 요청까지를 먼저 따라가고, controller·배치·자원·상태·스토리지·패킷·변경·운영을 v1.37.1 원문과 공개 장애로 확인합니다.",
         subcategories: ["cloud-kubernetes"],
       },
       {

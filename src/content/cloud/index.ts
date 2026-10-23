@@ -28,7 +28,7 @@ const cloud: Category = {
     {
       slug: "cloud-kubernetes",
       name: "Kubernetes 운영",
-      description: "여덟 운영 질문을 controller·Node·Linux 세 층으로 쌓고, Pod 하나의 요청 경로와 한 연결의 패킷 경로를 v1.37.1 원문으로 추적합니다.",
+      description: "Pod 하나가 API에 저장되어 사용자 요청을 받는 전체 경로를 먼저 보고, 배치·자원·상태·스토리지·패킷·변경·운영을 v1.37.1 원문으로 확대합니다.",
       icon: "☸️",
     },
     {

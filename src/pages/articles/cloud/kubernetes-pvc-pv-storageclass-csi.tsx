@@ -19,7 +19,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. PVC는 Bound인데 Pod는 왜 디스크를 기다리나요?</h2>
-          <KubernetesSeriesLocator current="storage" path={["storage", "placement"]} question="PVC의 저장 요구는 어느 단계에서 실제 디스크와 Node의 mount로 바뀔까요?" />
+          <KubernetesSeriesLocator current="storage" question="PVC의 저장 요구는 어느 단계에서 실제 디스크와 Node의 mount로 바뀔까요?" bridge="checkout Pod가 볼륨을 요구할 때 PVC가 실제 mount로 바뀌는 과정을 확대합니다." />
           <div className={prose}>
             <p>
               (가정) 존 세 개짜리 클러스터에 PostgreSQL Pod 하나를 올립니다. 20Gi PVC를 만들자 몇 초 만에 Bound가 됐는데 Pod는 Pending에 멈췄고, 이벤트에는 "node(s) didn't match PersistentVolume's node affinity"가 남았습니다.</p>

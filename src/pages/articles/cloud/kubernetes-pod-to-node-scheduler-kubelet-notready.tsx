@@ -18,7 +18,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 노드 전원이 나갔는데 Pod는 왜 6분 가까이 Running으로 보였나요?</h2>
-          <KubernetesSeriesLocator current="placement" path={["request", "resource", "controllers", "placement", "health"]} question="Pod를 어느 Node에 배치하고, 그 Node가 응답하지 않을 때 언제 다시 배치할까요?" />
+          <KubernetesSeriesLocator current="placement" question="Pod를 어느 Node에 배치하고, 그 Node가 응답하지 않을 때 언제 다시 배치할까요?" bridge="checkout의 세 번째 Pod에 아직 nodeName이 없다면 Node 선택 단계부터 확인합니다." />
           <div className={prose}>
             <p>
               세 노드 클러스터에서 worker-2의 전원이 나갔습니다. <code>kubectl get nodes</code>는 한동안 Ready를 보이다가 1분쯤 뒤 NotReady로 바뀌었으며, 그 노드의 Pod는 그 뒤로도 5분 동안 Running으로 보였습니다. 6분이 지나서야 Terminating이 되었고 새 Pod가 worker-1에 떴습니다. 아무도 "노드가 죽었다"고 알린 적이 없는데 누가 이 시각들을 정했을까요?

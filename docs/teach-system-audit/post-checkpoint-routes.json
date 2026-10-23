@@ -1,7 +1,8 @@
 {
   "scope": "checkpoint-395 뒤 공개 catalog에 추가된 53편",
   "statusMeaning": {
-    "pending-full-review": "구조화 본문과 정적 검사는 확인됐지만 현재 teach-system 계약의 실제 본문·390px·1440px 검수를 모두 닫지 않은 상태"
+    "pending-full-review": "구조화 본문과 정적 검사는 확인됐지만 현재 teach-system 계약의 실제 본문·390px·1440px 검수를 모두 마치지 않은 상태",
+    "reviewed-local": "본문 의미·학습 계약·근거와 390px·1440px production 렌더를 검토했지만 배포 후 공개 URL 확인 전인 상태"
   },
   "articles": [
     {
@@ -231,8 +232,8 @@
     },
     {
       "route": "cloud/kubernetes-concept-map",
-      "status": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#kubernetes-전체-경로-의미-검토-2026-10-23"
     },
     {
       "route": "cloud/kubernetes-controllers-reconcile-deployment-job",
