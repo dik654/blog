@@ -21,7 +21,7 @@ function BreakableStageLabel({ label }: { label: string }) {
 function FlowConnector() {
   return (
     <div
-      className="relative flex h-auto w-6 shrink-0 items-center justify-center sm:w-5"
+      className="relative flex h-auto w-6 shrink-0 items-center justify-center sm:w-3"
       aria-hidden="true"
     >
       <span className="h-px w-full bg-border" />
