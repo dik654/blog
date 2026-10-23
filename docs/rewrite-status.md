@@ -3149,3 +3149,8 @@
   `output/playwright/kubernetes-production-final/2026-10-23T06-44-38/summary.json`에 남겼다. 이번에 본문 의미까지
   검토한 `cloud/kubernetes-concept-map`만 완료로 올리고, 공통 지도 렌더만 확인한 나머지 9편은 계속
   `pending-full-review`로 둔다.
+- GitHub Actions run `39915182643`은 전체 엄격 감사, production build, 공개 글 990편 브라우저 검사와
+  Pages 배포를 모두 통과했다. 배포 뒤 개념 글과 Controller 글을 공개 주소에서 데스크톱·모바일로
+  다시 열어 4개 화면 모두 통과했으며, 결과는
+  `output/playwright/kubernetes-live-final/2026-10-23T07-38-19/summary.json`에 남겼다. 이에 개념 글의
+  상태를 `reviewed-production`으로 올렸다.
