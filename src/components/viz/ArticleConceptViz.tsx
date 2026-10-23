@@ -109,7 +109,7 @@ export default function ArticleConceptViz({ flow }: { flow: ConceptFlow }) {
                   type="button"
                   aria-current={isActive ? "step" : undefined}
                   onClick={() => setActive(index)}
-                  className={`group min-h-[6.75rem] w-[12.5rem] min-w-0 shrink-0 snap-start border p-2.5 text-left transition-colors sm:min-h-[7.5rem] sm:w-auto sm:flex-1 sm:shrink sm:p-2 ${
+                  className={`group min-h-[6.75rem] w-[12.5rem] min-w-0 shrink-0 snap-start border p-2.5 text-left transition-colors sm:min-h-[7.5rem] sm:w-auto sm:flex-1 sm:shrink sm:p-1.5 ${
                     isActive
                       ? "border-primary bg-primary/[0.055]"
                       : isPast
