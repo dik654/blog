@@ -7265,7 +7265,7 @@
       "catalogIndex": 723,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/rewrite-status.md#kubernetes-전체-경로-의미-검토-2026-10-23"
     },
     {
