@@ -6,6 +6,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReconcileRolloutViz from "./kubernetes-controllers-reconcile-deployment-job/viz/ReconcileRolloutViz";
 import { codeRefs } from "./kubernetes-controllers-reconcile-deployment-job/codeRefs";
 import { k8sControllerTrees } from "./kubernetes-controllers-reconcile-deployment-job/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -17,6 +18,7 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. Pod를 지웠는데 왜 다른 이름으로 돌아오고, 롤아웃은 왜 네 개까지만 늘어나나요?</h2>
+          <KubernetesSeriesLocator current="controllers" path={["request", "resource", "controllers"]} question="API에 적은 replicas와 실제 Pod 수의 차이는 어느 실행 로직이 줄일까요?" />
           <div className={prose}>
             <p>
               replicas 3인 Deployment <code>web</code>에서 Pod 하나를 <code>kubectl delete</code>로 지웠습니다. 몇 초 뒤 Pod는 셋으로 돌아왔는데 이름 끝 다섯 글자가 달라져 있었습니다. 같은 날 image를 v2로 바꾸자 Pod가 잠깐 넷이 되었다가 다시 셋이 되었으며, <code>kubectl get rs</code>에는 ReplicaSet이 두 개 보였습니다. 두 장면은 같은 질문 하나에서 갈립니다. Deployment는 Pod를 직접 만들까요?

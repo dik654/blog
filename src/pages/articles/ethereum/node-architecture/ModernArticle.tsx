@@ -1,18 +1,123 @@
 import { Link } from "react-router-dom";
-import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { teachCodeRefs } from "./teachCodeRefs";
-import { EngineBoundaryViz, PayloadStateViz } from "./viz/ModernNodeArchitectureViz";
-export default function ModernNodeArchitectureArticle(){const sidebar=useCodeSidebar();return <><article className="space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
-<section id="overview" data-teach-level="S"><h2>1. 계산이 맞는 기록과 모두가 따를 기록을 구분합니다</h2><p>송금을 처리한 두 기록이 같은 이전 장부에서 갈라질 수 있습니다. 각각의 잔액 계산은 맞아도 둘을 동시에 정식 기록으로 삼을 수는 없습니다. 새 장부를 직접 계산하는 일과 네트워크가 어느 기록을 따를지 판단하는 일을 연결해야 합니다.</p><p>Ethereum 노드는 이 두 책임을 서로 다른 프로그램에 나눕니다. 각각 전문화하고 따로 발전시킬 수 있지만 둘이 같은 시작점과 규칙을 사용하며 결과를 정확히 주고받아야 합니다. 프로그램 두 개가 살아 있다는 확인만으로 정상 동작을 알 수 없는 이유입니다.</p><p>이 글에서는 송금 하나가 들어간 후보를 검증한 뒤 현재 기록으로 선택하는 과정을 봅니다. 내부 모듈 이름보다 먼저 두 담당자의 입구와 출구를 나누겠습니다.</p></section>
-<section id="black-box" data-teach-level="B"><h2>2. 하나는 계산하고 다른 하나는 선택합니다</h2><ol className="list-decimal space-y-3 pl-6"><li>요청 수신 → 서명한 송금과 후보 기록을 받습니다.</li><li>내용 계산 → 앞선 장부에서 거래를 실행해 후보의 결과를 검증합니다.</li><li>기록 선택 → 네트워크의 제안과 투표를 보고 현재 따를 가지를 고릅니다.</li><li>서로 알림 → 선택한 기록과 검증 결과를 교환합니다.</li></ol><p>검증 담당자가 ‘계산이 맞다’고 답해도 선택 담당자가 다른 유효한 후보를 고를 수 있습니다. 선택 담당자가 특정 후보를 원해도 계산이 틀린 후보를 받아들일 수는 없습니다. 한 송금의 숫자로 이 왕복을 보겠습니다.</p></section>
-<section id="case" data-teach-level="0"><h2>3. 100에서 10과 처리 비용을 빼는 후보를 받습니다</h2><p>이전 기록 H100에서 A의 잔액은 100 ETH, B의 잔액은 0 ETH입니다. 후보 H101에는 A가 B에게 10 ETH를 보내고 처리 비용 0.000042 ETH를 내는 송금 하나가 있습니다(가정). A는 89.999958 ETH, B는 10 ETH가 되어야 합니다. H100·H101은 실제 해시 바이트 대신 읽기 쉽게 붙인 이름입니다.</p><p>처음에는 H101만 받고 그 부모 H100의 상태가 없을 수 있습니다. 계산 담당자는 아직 결과를 확인하지 못합니다. 이후 H100을 얻어 위 결과를 재현하면 계산이 유효하다고 답합니다. 이 응답 뒤에도 H101이 현재 선택된 기록인지, 더는 되돌리지 않을 기록인지는 별도로 남습니다.</p><p>이 사례는 호출 관계를 설명하기 위한 가정이며 메인넷에서 실제로 제출한 거래가 아닙니다. 입력 부족, 계산 통과, 현재 선택이라는 세 상태를 끝까지 같은 후보로 추적합니다.</p></section>
-<section id="parts" data-teach-level="1"><h2>4. 양쪽은 서로 다른 장부 상태를 기억합니다</h2><p>계산 담당자는 계정 잔액과 프로그램 상태, 실행할 거래와 이미 검증한 블록을 관리합니다. 선택 담당자는 제안과 투표, 지금 따를 가지와 더 안정적인 과거 지점을 관리합니다. 각자 필요한 주변 통신과 저장 장치도 있습니다.</p><p>둘 사이의 요청에는 후보의 본문 또는 선택하려는 기록의 식별자가 들어갑니다. 응답에는 검증 성공·실패·자료 부족을 구분한 결과가 들어갑니다. 양쪽이 판단할 수 없는 일을 상대방의 응답 한 단어에 덧붙이지 않는 것이 중요합니다.</p><p>누가 어느 결정을 소유하는지 알면 두 프로그램을 연결한 이유도 설명할 수 있습니다. 한 응답으로 책임을 합쳐 버릴 때 생기는 오류를 확인하겠습니다.</p></section>
-<section id="why-parts" data-teach-level="2"><h2>5. 자료가 없는 후보를 잘못된 후보로 저장하면 안 됩니다</h2><p>H100이 없어서 H101을 계산하지 못한 상태를 ‘잘못된 기록’으로 저장하면 나중에 H100이 도착해도 올바른 후보를 버릴 수 있습니다. 반대로 아직 계산하지 못한 후보를 성공으로 표시하면 틀린 잔액을 받아들일 수 있습니다. 자료를 기다리는 상태를 별도로 두어야 합니다.</p><p>계산 성공을 최종 확정으로 표시하는 것도 위험합니다. H101과 경쟁 후보 H101b가 모두 유효해도 현재 선택은 하나입니다. 새로운 투표가 보이면 선택이 달라질 수 있습니다. 어느 상태까지 확인했는지 사용자와 다른 프로그램에 정확히 전달해야 합니다.</p><p>이 구분을 통신의 필드와 상태 값으로 표현합니다. 이름을 붙인 뒤에는 같은 H101을 실제 요청 순서에 대응시키겠습니다.</p></section>
-<section id="names" data-teach-level="3"><h2>6. 실행 클라이언트와 합의 클라이언트가 Engine API로 연결됩니다</h2><dl className="space-y-4"><div><dt className="font-semibold">내용 계산 담당 → 실행 클라이언트, EL</dt><dd>Execution Layer입니다. EVM 실행, 계정 상태, 거래 대기열과 실행 블록 검증을 맡습니다.</dd></div><div><dt className="font-semibold">기록 선택 담당 → 합의 클라이언트, CL</dt><dd>Consensus Layer입니다. 검증자 투표, 가지 선택, 체크포인트 확정을 맡습니다.</dd></div><div><dt className="font-semibold">둘 사이의 호출 계약 → Engine API</dt><dd>후보 검증·가지 선택 알림·후보 제작을 주고받는 버전별 메서드 규격입니다.</dd></div><div><dt className="font-semibold">실행할 블록 내용 → execution payload</dt><dd>거래 목록과 실행 결과를 나타내는 필드 등이 들어갑니다. H101이라는 식별자만으로 모든 내용을 대신하지는 못합니다.</dd></div><div><dt className="font-semibold">현재·더 안정적·최종 확정 지점 → head, safe, finalized</dt><dd>서로 다른 상태를 가리킵니다. safe의 의미에는 명세의 정직성·통신 가정이 들어갑니다.</dd></div></dl><EngineBoundaryViz/><p>3절의 처리 비용은 단순 송금에 계산 단위 21,000과 단위당 2 Gwei를 적용한 42,000 Gwei=0.000042 ETH입니다. 실제 거래의 종류와 적용 규칙이 다르면 비용도 달라집니다. 이 예에서 선택한 값으로 요청의 왕복을 따라갑니다.</p></section>
-<section id="el-cl-boundary" data-teach-level="4"><h2>7. 새 후보를 검증하고 선택 상태를 따로 전달합니다</h2><p>CL은 H101의 실행 내용을 <code>engine_newPayload</code> 계열 호출로 EL에 보냅니다. EL에 H100이 없으면 <code>SYNCING</code>으로 답할 수 있습니다. 상태를 확보해 거래와 결과를 검증하면 <code>VALID</code>와 latestValidHash=H101을 반환합니다. 이름 H101은 실제 요청에서 32바이트 해시로 표현됩니다.</p><p>CL이 H101을 현재 가지로 선택했다면 <code>engine_forkchoiceUpdated</code> 계열 호출로 head=H101을 전달합니다. 예를 들어 safe=H99, finalized=H96이라고 함께 보낼 수 있습니다(가정). H99와 H96은 H101의 올바른 조상이어야 합니다. H101의 유효성 응답을 받았다는 이유만으로 finalized를 H101로 올리지 않습니다.</p><p>새 블록을 제작할 차례에는 이 호출에 제작 조건을 덧붙입니다. EL이 제작 작업을 시작하면 payloadId를 돌려줍니다. CL은 그 ID를 <code>engine_getPayload</code> 계열 호출에 넣어 후보를 가져옵니다. 받은 후보에도 제안과 선택의 나머지 절차가 필요합니다.</p><p>실제 호출의 V1·V2 같은 접미사와 추가 필드는 해당 fork에 맞춥니다. 여기서는 역할을 먼저 설명했고 다음 원문 절에서는 고정한 Paris의 기본 계약을 읽습니다. 최신 fork에 그 V1 형식을 그대로 보내라는 뜻은 아닙니다.</p></section>
-<section id="wire-source" data-teach-level="5"><h2>8. 명세의 필드는 서로 다른 확인 결과를 담습니다</h2><div id="paper-engine-api"><CitationBlock source="execution-apis 5aebdfd · paris.md, PayloadStatusV1 / ForkchoiceStateV1" citeKey={1} href="https://github.com/ethereum/execution-apis/blob/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85/src/engine/paris.md"><p>원문은 성공 응답을 <code>{'{status: VALID, latestValidHash: payload.blockHash}'}</code>로 적습니다. 이는 payload의 실행 유효성 응답입니다. 가지 선택 구조에는 별도 필드 headBlockHash·safeBlockHash·finalizedBlockHash가 있습니다.</p></CitationBlock></div><p>사례에서 payload.blockHash가 H101이면 검증 성공 응답의 latestValidHash도 H101입니다. 이 필드가 finalizedBlockHash를 대신하지 않습니다. 같은 명세의 forkchoiceUpdated 규칙은 safe나 finalized가 요청 head의 가지에 속하지 않으면 잘못된 가지 선택 상태로 거절하도록 정합니다.</p><p>실행 프로그램과 합의 프로그램은 같은 시작 블록과 fork 활성화 일정, 서로 지원하는 Engine 메서드를 사용해야 합니다. 접속 인증에 쓰는 JWT는 이 통신 창구에 누가 접근할 수 있는지 제한합니다. 거래 계산이 맞거나 원격 피어가 정직하다는 증명은 아닙니다. 그 다음 실제 구현이 자료 부족과 유효함을 어떻게 나누는지 보겠습니다.</p></section>
-<section id="implementation" data-teach-level="6"><h2>9. Reth는 연결되지 않은 후보를 SYNCING으로 구분합니다</h2><p>Reth의 <code>try_insert_payload</code>는 삽입 결과가 유효한 블록이면 latest_valid_hash에 해당 블록 해시를 넣고 VALID 상태를 만듭니다. 부모에 아직 연결되지 않은 결과에는 SYNCING을 사용합니다. H100이 없는 H101과 H100에서 실행해 맞는 결과를 낸 H101이 이 분기로 나뉩니다.</p><CodeViewButton label="VALID·SYNCING 실제 분기" onClick={()=>sidebar.open("validation",teachCodeRefs.validation)}/><p>이미 본 유효한 H101에는 VALID를 다시 반환하면서 already_seen을 true로 둡니다. 같은 요청이 도착했다고 A의 잔액에서 10 ETH를 한 번 더 빼는 경로로 해석해서는 안 됩니다. 실제 재적용 여부는 블록 식별자와 앞선 상태 문맥을 함께 관리합니다.</p><p><code>on_forkchoice_updated</code>는 요청 상태를 먼저 검사하고 이미 맞는 head인지, 다른 가지로 갱신해야 하는지, 필요한 블록이 빠졌는지를 나눕니다. H101의 계산 결과를 아는 것과 정식 가지를 바꾸는 일을 별도 함수 경로로 확인할 수 있습니다.</p><CodeViewButton label="현재 head 유지·갱신 실제 분기" onClick={()=>sidebar.open("choice",teachCodeRefs.choice)}/><div id="paper-reth-node"><CitationBlock source="Reth v2.2.0 · 88505c7, crates/engine/tree/src/tree/mod.rs" citeKey={2} type="code" href="https://github.com/paradigmxyz/reth/blob/88505c7fcbfdebfd3b56d88c86b62e950043c6c4/crates/engine/tree/src/tree/mod.rs"><p>원본 파일을 이 commit에서 다시 받아 코드 패널에 연결했고 라이선스를 함께 보존했습니다. 설명은 이 구현의 분기에 한정합니다. 이 글에서 실제 Reth 노드로 H101 요청을 실행하거나 재시작 시험을 했다는 주장은 아닙니다.</p></CitationBlock></div><p>응답이 어떻게 만들어지는지 확인했습니다. 마지막에는 같은 응답을 장애 복구나 사용자 화면에서 과하게 해석하지 않도록 경계를 정리합니다.</p></section>
-<section id="payload-state" data-teach-level="7"><h2>10. VALID·현재 head·최종 확정은 서로 다른 상태입니다</h2><PayloadStateViz/><p>SYNCING은 필요한 자료가 없어 판정을 기다린다는 뜻입니다. ACCEPTED는 일부 허용 경로에서 수신했지만 전체 검증을 끝냈다는 뜻은 아닙니다. INVALID는 잘못된 실행이나 조상 등 원인을 갖는 판정이므로 명세가 허용하는 latestValidHash와 오류 정보를 함께 처리합니다. 모든 메서드에서 같은 상태 집합을 반환할 수 있는 것도 아닙니다.</p><p>CL의 새 선택으로 H101 대신 H101b를 따라가면 EL은 그 가지의 앞선 상태에서 결과를 적용합니다. 이를 reorg라고 합니다. 이전 변경을 새 가지 위에 한 번 더 더하면 안 됩니다. 저장 구조와 상태 조회 구현은 <Link to="/cs/blockchain/reth">Reth 구조</Link>, 명령 한 단계의 계산은 <Link to="/cs/blockchain/evm-fundamentals">EVM 기초</Link>가 이어서 설명합니다.</p></section>
-<section id="release" data-teach-level="7"><h2>11. 재시작 뒤에도 같은 후보를 두 번 적용하지 않습니다</h2><p>검증 응답 직후, 가지 선택 갱신 전후, 저장 확정 전후에 프로그램이 중단되는 상황을 나눠 검사합니다. 재시작한 EL은 남아 있는 블록과 상태를 재구성하고 CL은 현재 선택 정보를 다시 전달합니다. 성공 응답 하나가 데이터베이스의 모든 변경이 영구 저장됐다는 뜻인지는 실제 구현의 저장 계약에서 확인해야 합니다.</p><p>검수 입력에는 인증 키 불일치, 지원하지 않는 메서드 버전, H100 누락, 틀린 상태 루트, 경쟁하는 유효한 H101b, 이미 확정한 가지와 충돌하는 선택을 넣습니다. H100을 기다릴 때는 후보 식별자로 요청을 묶고 재시도 횟수와 보관 시간을 제한합니다. 자료 부족은 INVALID로 바꾸지 않으며 자료를 얻은 뒤 다시 검증합니다. 복구한 잔액과 상태 루트, 응답 상태를 이전 구현과 비교합니다. 같은 시작점이어도 활성화 규칙이 다르면 결과가 달라질 수 있습니다. 배포 전에는 양쪽의 정확한 버전과 시작 블록, fork 일정, 인증과 메서드 호환성을 기록합니다. 일부 노드에 먼저 적용해 요청·응답과 reorg 뒤 상태가 같은지 확인하고 문제가 생기면 호환되는 이전 버전 묶음으로 되돌립니다.</p><ul className="list-disc space-y-3 pl-6"><li>H100이 없어 H101을 실행하지 못했다면 INVALID로 영구 저장해도 될까요? (답: 9절)</li><li>H101에 VALID 응답이 왔다면 finalized도 H101로 표시해도 될까요? (답: 7절)</li><li>이미 검증한 H101이 다시 도착하면 A에게 10 ETH를 또 차감할까요? (답: 9절)</li></ul></section>
-</article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={teachCodeRefs} fileTrees={{}} projectMetas={{reth:{id:"reth",label:"Reth · 88505c7",badgeClass:"border-sky-500 text-sky-700"}}}/></>}
+import {
+  ArchitectureLearningPathsViz,
+  BalanceTransitionViz,
+  DecisionSeparationViz,
+  NodeRequestTraceViz,
+  PayloadStateViz,
+  StateOwnershipViz,
+  SystemBlackBoxViz,
+  SystemSettledViz,
+} from "./viz/ModernNodeArchitectureViz";
+
+export default function ModernNodeArchitectureArticle() {
+  const sidebar = useCodeSidebar();
+
+  return (
+    <>
+    <article className="space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+      <section id="overview" data-teach-level="S">
+        <h2>1. 전체 구조</h2>
+        <p><strong>A가 B에게 10 ETH를 보내는 송금이 새 블록 후보에 담겼다고 하겠습니다.</strong> 노드 안에서는 한 프로그램이 부모 잔액에서 새 잔액을 계산하고, 다른 프로그램이 여러 후보 가운데 지금 따를 기록을 고릅니다.</p>
+        <p>먼저 제품 이름 없이 두 책임과 두 저장소를 봅니다. 네트워크 경계에서는 다른 노드와 후보·거래를 주고받고, 서비스 경계에서는 지갑과 검증자 도구가 결과를 읽습니다.</p>
+        <SystemBlackBoxViz />
+        <p>기록을 고르는 프로그램은 <strong>합의 클라이언트(CL)</strong>, 거래를 계산하는 프로그램은 <strong>실행 클라이언트(EL)</strong>라고 부릅니다. 가운데 <strong>Engine API</strong>는 후보와 판정을 전달하지만 두 프로그램의 책임이나 저장소를 하나로 합치지는 않습니다.</p>
+        <p>이제 지도의 위치를 그대로 둔 채 송금 하나가 새 블록 후보에 담겨 처리되는 과정을 따라갑니다.</p>
+      </section>
+
+      <section id="black-box" data-teach-level="B">
+        <h2>2. 요청 흐름</h2>
+        <p>사용자가 A의 계정에서 B의 계정으로 10 ETH를 보냅니다. 송금은 실행 클라이언트로 들어오고, 이 송금을 담은 새 블록 후보는 합의 클라이언트로 들어옵니다.</p>
+        <p>아래 장면을 직접 넘겨 보세요. 지도는 움직이지 않고 송금, 블록 후보, 실행 판정과 기록 선택만 실제 순서에 따라 이동합니다.</p>
+        <NodeRequestTraceViz />
+        <p>합의 클라이언트는 실행 클라이언트에 “부모 블록 상태에서 이 송금을 실행한 결과가 맞는가?”라고 묻습니다. VALID가 돌아와도 현재 기록이 바로 바뀌지는 않습니다. 합의 클라이언트가 투표와 fork choice 규칙을 반영해 후보를 head로 선택하고 그 결과를 알려야 두 프로그램의 현재 기록이 맞춰집니다. 동기화 중에는 실행 판정이 끝나지 않은 낙관적 head가 보일 수 있고, 제안자 가중치도 짧은 시간의 선택에 영향을 줄 수 있습니다. 이 예시는 실행 검증을 마친 정상 경로만 따라갑니다.</p>
+      </section>
+
+      <section id="case" data-teach-level="0">
+        <h2>3. 잔액 계산</h2>
+        <p>부모 블록에서 A의 잔액은 100 ETH, B의 잔액은 0 ETH입니다. 새 후보에는 A가 B에게 10 ETH를 보내고 처리 비용 0.000042 ETH를 내는 송금 하나가 있다고 가정합니다.</p>
+        <BalanceTransitionViz />
+        <p>실행 클라이언트가 부모 상태를 갖고 있다면 A 89.999958 ETH, B 10 ETH를 재현할 수 있습니다. 이 계산이 맞다는 사실과 이 후보가 현재 선택된 기록이라는 사실, 더는 되돌리지 않을 기록이라는 사실은 서로 다른 판단입니다.</p>
+        <p>금액은 흐름을 설명하기 위한 예시입니다. 실제 송금 종류와 적용 규칙이 달라지면 처리 비용도 달라집니다.</p>
+      </section>
+
+      <section id="parts" data-teach-level="1">
+        <h2>4. 두 저장소</h2>
+        <p>실행 저장소는 블록별 계정 잔액과 프로그램 상태, 실행 결과를 기억합니다. 합의 저장소는 후보와 투표, 현재 따르는 가지, 더 안정적인 지점과 최종 확정 지점을 기억합니다.</p>
+        <StateOwnershipViz />
+        <p>둘은 같은 블록을 보더라도 답하는 질문이 다릅니다. 실행 저장소의 VALID를 finalized로 읽으면 안 되고, 합의 클라이언트가 후보를 선택했다고 틀린 거래 계산이 맞아지는 것도 아닙니다. head·safe·finalized는 합의 클라이언트가 정하지만, 실행 클라이언트도 <code>forkchoiceUpdated</code>로 전달받은 포인터를 적용하고 저장해 JSON-RPC 조회에 사용합니다.</p>
+      </section>
+
+      <section id="why-parts" data-teach-level="2">
+        <h2>5. 자료 부족</h2>
+        <p>새 후보의 부모 상태가 없으면 실행 클라이언트는 잔액을 다시 계산할 수 없습니다. 이때 후보를 잘못된 기록으로 저장하면 나중에 부모를 받은 뒤에도 올바른 후보를 버릴 수 있습니다. 반대로 아직 계산하지 못한 후보를 성공으로 표시하면 틀린 상태를 받아들일 수 있습니다.</p>
+        <DecisionSeparationViz />
+        <p>그래서 자료 부족은 SYNCING, 계산 실패는 INVALID, 계산 성공은 VALID로 나눕니다. 부모 상태를 확보한 뒤 같은 후보를 다시 검증하는 실제 복구 경로는 <Link to="/cs/blockchain/reth-sync">Reth 동기화</Link>에서, 메서드별 응답 계약은 <Link to="/cs/blockchain/reth-rpc">Reth RPC 경계</Link>에서 이어서 볼 수 있습니다.</p>
+      </section>
+
+      <section id="payload-state" data-teach-level="3">
+        <h2>6. 상태 구분</h2>
+        <p>실행 판정과 기록 선택을 같은 축에 놓으면 가장 자주 헷갈리는 차이가 보입니다. VALID는 계산 결과이고, head·safe·finalized는 합의 클라이언트가 결정해 실행 클라이언트에도 전달하는 기록 선택 결과입니다.</p>
+        <PayloadStateViz />
+        <div className="not-prose flex flex-wrap gap-3">
+          <CodeViewButton
+            label="VALID와 SYNCING을 가르는 실제 분기"
+            onClick={() => sidebar.open("validation", teachCodeRefs.validation)}
+          />
+          <CodeViewButton
+            label="head 변경을 적용하는 실제 분기"
+            onClick={() => sidebar.open("choice", teachCodeRefs.choice)}
+          />
+        </div>
+        <p>두 버튼은 Reth v2.2.0 고정 소스에서 이 구분이 실제 코드의 어느 분기에 놓이는지 보여 줍니다. 구현 이름과 줄 번호는 바뀔 수 있지만, 실행 판정과 기록 선택을 분리하는 책임은 같은 요청 추적 안에서 확인할 수 있습니다.</p>
+        <p>ACCEPTED와 latestValidHash처럼 메서드와 버전에 따라 달라지는 세부 필드는 이 전체 지도에서 멈춥니다. 실제 호출 순서와 버전은 <Link to="/cs/blockchain/prysm-engine-api">Prysm Engine API</Link>, 현재 가지를 고르는 과정은 <Link to="/cs/blockchain/prysm-forkchoice">Prysm 가지 선택</Link>, 최종 확정 조건은 <Link to="/cs/blockchain/prysm-finality">Prysm 최종성</Link>에서 각각 확대합니다.</p>
+      </section>
+
+      <section id="release" data-teach-level="4">
+        <h2>7. 다시 전체로</h2>
+        <p>지금까지 확인한 내용을 처음 지도에 다시 놓아 봅니다. 실행 저장소에는 검증한 계정 상태와 합의 클라이언트에서 전달받아 적용한 head·safe·finalized 포인터가 남습니다. 합의 저장소에는 그 포인터를 결정한 후보·투표·체크포인트가 남습니다. 같은 요청이 다시 들어왔을 때의 중복 처리 방식은 구현과 호출 상태에 따라 달라지므로, 여기서는 두 저장소가 보존하는 근거가 다르다는 점까지만 확정합니다.</p>
+        <SystemSettledViz />
+        <ul className="list-disc space-y-3 pl-6">
+          <li>부모 상태가 없어서 계산하지 못한 후보를 INVALID로 저장해도 될까요? (답: 5절)</li>
+          <li>새 후보가 VALID라면 그 후보를 곧바로 finalized로 표시해도 될까요? (답: 6절)</li>
+          <li>현재 기록을 누가 결정하고, 실행 클라이언트는 그 결과를 어떻게 조회에 사용할까요? (답: 4절)</li>
+        </ul>
+        <p>세 질문에 답할 수 있다면 이 글의 목표를 달성한 것입니다. 호출 규격이나 구현 코드가 필요한 경우에만 다음 절에서 필요한 영역을 골라 이어서 보면 됩니다.</p>
+      </section>
+
+      <section id="deeper" data-teach-level="5">
+        <h2>8. 다음 글</h2>
+        <p>여기부터는 선택 사항입니다. 전체 구조만 필요하다면 7절에서 읽기를 마쳐도 됩니다. 구현과 장애 복구까지 확인하려면 아래 지도에서 궁금한 영역을 고르세요.</p>
+        <ArchitectureLearningPathsViz />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div id="paper-engine-api" className="border-l-2 border-border pl-4">
+            <h3 className="font-bold">호출 계약의 근거</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground"><a href="https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85" target="_blank" rel="noreferrer" className="underline underline-offset-4">Ethereum execution-apis 고정본</a>에서 Engine 메서드, 상태값과 버전별 스키마를 확인합니다.</p>
+          </div>
+          <div id="paper-reth-node" className="border-l-2 border-border pl-4">
+            <h3 className="font-bold">실행 구현의 근거</h3>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground"><a href="https://github.com/paradigmxyz/reth/tree/88505c7fcbfdebfd3b56d88c86b62e950043c6c4" target="_blank" rel="noreferrer" className="underline underline-offset-4">Reth v2.2.0 고정 소스</a>에서 실제 모듈과 분기를 확인합니다. 이 글은 실제 노드 장애 시험을 수행했다는 기록이 아닙니다.</p>
+          </div>
+        </div>
+      </section>
+    </article>
+    <CodeSidebar
+      codeRefKey={sidebar.codeRefKey}
+      codeRef={sidebar.codeRef}
+      onClose={sidebar.close}
+      onNavigate={sidebar.navigate}
+      codeRefs={teachCodeRefs}
+      fileTrees={{}}
+      projectMetas={{
+        reth: {
+          id: "reth",
+          label: "Reth v2.2.0 · Rust",
+          badgeClass: "border-orange-500 bg-orange-500/10 text-orange-700",
+        },
+      }}
+    />
+    </>
+  );
+}

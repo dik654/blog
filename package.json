@@ -24,6 +24,7 @@
     "audit:topology": "node scripts/audit-article-topology.mjs",
     "audit:runtime": "node scripts/audit-runtime-resilience.mjs",
     "audit:teach-coverage": "node scripts/audit-teach-system-coverage.mjs",
+    "audit:architecture-flow": "node scripts/audit-architecture-learning-flow.mjs",
     "test:audit-learning-routes": "node --test scripts/audit-learning-routes.test.mjs",
     "preview": "vite preview"
   },

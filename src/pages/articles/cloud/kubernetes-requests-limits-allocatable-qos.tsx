@@ -7,6 +7,7 @@ import AllocatableLedgerViz from "./kubernetes-requests-limits-allocatable-qos/v
 import ThrottlePeriodViz from "./kubernetes-requests-limits-allocatable-qos/viz/ThrottlePeriodViz";
 import { codeRefs } from "./kubernetes-requests-limits-allocatable-qos/codeRefs";
 import { k8sResourcesTrees } from "./kubernetes-requests-limits-allocatable-qos/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -18,6 +19,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. CPU가 82% 놀고 있는 노드에 Pod가 왜 Pending으로 남나요?</h2>
+          <KubernetesSeriesLocator current="resources" path={["resources", "placement"]} question="같은 YAML의 requests와 limits는 배치 단계와 실행 단계에서 각각 누가 사용할까요?" />
           <div className={prose}>
             <p>
               (가정) 노드 3대짜리 클러스터에서 새 Deployment를 올렸는데 Pod 하나가 Pending에서 움직이지 않습니다. kubectl describe에는 <code>0/3 nodes are available: 3 Insufficient cpu.</code>가 적혀 있는데 모니터링 대시보드의 노드 CPU 사용률은 18%입니다.

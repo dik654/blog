@@ -17,6 +17,159 @@
 }
 
 /*
+ * 아키텍처 요청 추적은 박스 전체를 깜빡이지 않고 실제 처리 순서만 표시한다.
+ * 노드는 차례로 짧게 테두리가 선명해지고, Engine API의 요청과 응답은 서로
+ * 반대 방향으로 흐른다. 한 장면의 4.2초 재생 주기와 맞춰 반복한다.
+ */
+@keyframes architecture-process-node {
+  0%, 8%, 28%, 100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  13%, 22% {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 62%, transparent);
+  }
+}
+
+@keyframes architecture-process-step {
+  0%, 8%, 38%, 100% {
+    border-color: var(--border);
+    box-shadow: inset 0 -2px 0 transparent;
+  }
+  14%, 31% {
+    border-color: color-mix(in srgb, var(--primary) 58%, var(--border));
+    box-shadow: inset 0 -2px 0 var(--primary);
+  }
+}
+
+@keyframes engine-request-flow {
+  0%, 8% {
+    left: 0;
+    opacity: 0;
+  }
+  12% {
+    left: 0;
+    opacity: 1;
+  }
+  39% {
+    left: calc(100% - 5px);
+    opacity: 1;
+  }
+  44%, 100% {
+    left: calc(100% - 5px);
+    opacity: 0;
+  }
+}
+
+@keyframes engine-response-flow {
+  0%, 50% {
+    right: 0;
+    opacity: 0;
+  }
+  55% {
+    right: 0;
+    opacity: 1;
+  }
+  82% {
+    right: calc(100% - 5px);
+    opacity: 1;
+  }
+  87%, 100% {
+    right: calc(100% - 5px);
+    opacity: 0;
+  }
+}
+
+@keyframes overview-request-flow {
+  0%, 12% {
+    left: 0;
+    opacity: 0;
+  }
+  18% {
+    left: 0;
+    opacity: 1;
+  }
+  58% {
+    left: calc(100% - 7px);
+    opacity: 1;
+  }
+  66%, 100% {
+    left: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+@keyframes overview-response-flow {
+  0%, 12% {
+    right: 0;
+    opacity: 0;
+  }
+  18% {
+    right: 0;
+    opacity: 1;
+  }
+  58% {
+    right: calc(100% - 7px);
+    opacity: 1;
+  }
+  66%, 100% {
+    right: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+[data-viz="node-overview"] [data-overview-flow="none"] :is(.overview-request-dot, .overview-response-dot),
+[data-viz="node-overview"] [data-overview-flow="request"] .overview-response-dot,
+[data-viz="node-overview"] [data-overview-flow="response"] .overview-request-dot {
+  opacity: 0;
+}
+
+[data-viz="node-overview"] [data-overview-flow="request"] .overview-request-dot {
+  animation: overview-request-flow 4.8s ease-in-out infinite;
+}
+
+[data-viz="node-overview"] [data-overview-flow="response"] .overview-response-dot {
+  animation: overview-response-flow 4.8s ease-in-out infinite;
+}
+
+[data-viz="engine-boundary"] [data-process-node="true"] {
+  animation: architecture-process-node 4.2s ease-in-out infinite;
+  animation-delay: calc(var(--process-order, 0) * 0.42s);
+}
+
+[data-viz="engine-boundary"] [data-sequence-step="true"] {
+  animation: architecture-process-step 4.2s ease-in-out infinite;
+  animation-delay: calc(var(--sequence-order, 0) * 0.72s);
+}
+
+[data-viz="engine-boundary"] [data-engine-motion="idle"] :is(.engine-request-dot, .engine-response-dot) {
+  opacity: 0;
+}
+
+[data-viz="engine-boundary"] [data-engine-motion="active"] .engine-request-dot {
+  animation: engine-request-flow 4.2s ease-in-out infinite;
+}
+
+[data-viz="engine-boundary"] [data-engine-motion="active"] .engine-response-dot {
+  animation: engine-response-flow 4.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-viz="engine-boundary"] [data-process-node="true"],
+  [data-viz="engine-boundary"] [data-sequence-step="true"],
+  [data-viz="engine-boundary"] [data-engine-motion="active"] :is(.engine-request-dot, .engine-response-dot),
+  [data-viz="node-overview"] [data-overview-flow="request"] .overview-request-dot,
+  [data-viz="node-overview"] [data-overview-flow="response"] .overview-response-dot {
+    animation: none;
+  }
+
+  [data-viz="engine-boundary"] [data-engine-motion="active"] :is(.engine-request-dot, .engine-response-dot),
+  [data-viz="node-overview"] [data-overview-flow="request"] .overview-request-dot,
+  [data-viz="node-overview"] [data-overview-flow="response"] .overview-response-dot {
+    opacity: 0;
+  }
+}
+
+/*
  * 여러 장면을 넘기는 Viz는 현재 장면의 높이에 wrapper를 맞추지 않는다.
  * Figure 전체를 작은 viewport 높이(svh)에 맞춰 안정된 크기로 예약하고, 큰 장면만
  * canvas 안에서 스크롤한다. 모바일 주소 표시줄이 나타나도 figure 높이가 다시
@@ -119,8 +272,13 @@ figure[data-viz="lesson-flow-v4"] > [data-concept-composition] {
 figure[data-viz="lesson-flow-v4"] > [data-viz-canvas] {
   min-height: 0;
   flex: 1 1 auto;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
+}
+
+figure[data-viz="lesson-flow-v4"] [data-lesson-scroll-region] {
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
 }
 
 /* 펼친 개념의 컷이 길어져도 조작부는 위 canvas를 기준으로 고정한다. */
@@ -129,9 +287,9 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
 }
 
 /*
- * 모바일 Viz는 데스크톱 stage를 잘라 보여 주지 않는다. Figure와 모든 scene
- * canvas를 자연 높이로 풀고, 넓은 SVG와 임의 최소 폭은 article 폭에 맞춰
- * 축소한다. 조작은 컴포넌트의 모바일 전용 이전/다음 UI가 맡는다.
+ * 모바일에서도 여러 장면 Viz의 바깥 크기는 바뀌지 않는다. 제목을 포함한
+ * figure를 한 화면보다 작게 예약하고, 긴 장면만 직계 canvas 안에서 스크롤한다.
+ * 장면마다 문장 수가 달라도 본문과 조작부가 위아래로 튀지 않게 하기 위해서다.
  */
 @media (max-width: 39.999rem) {
   [data-viz] {
@@ -141,17 +299,49 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     box-sizing: border-box;
   }
 
-  :is([data-viz], figure):has([data-viz-controls]) {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
+  figure[data-viz="modern"]:has([data-viz-controls]),
+  figure[data-viz="lesson-flow-v4"]:has([data-viz-controls]) {
+    display: flex !important;
+    height: calc(100svh - 5rem) !important;
+    max-height: calc(100svh - 5rem) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
   }
 
-  :is([data-viz], figure):has([data-viz-controls]) [data-viz-canvas] {
+  figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas],
+  figure[data-viz="lesson-flow-v4"]:has([data-viz-controls]) > [data-viz-canvas] {
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
+    flex: 1 1 auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    touch-action: pan-y;
+  }
+
+  figure[data-viz="lesson-flow-v4"]:has([data-viz-controls]) > [data-viz-canvas] {
+    overflow: hidden !important;
+  }
+
+  figure[data-viz="lesson-flow-v4"] [data-lesson-scroll-region] {
+    scrollbar-width: thin;
+  }
+
+  figure[data-viz="modern"]:has([data-viz-controls])
+    > [data-viz-canvas]
+    :is([data-viz], [data-viz-canvas]):has(> [data-viz-controls]) {
+    display: flex !important;
+    min-height: 100% !important;
+    flex-direction: column !important;
     overflow: visible !important;
+  }
+
+  figure[data-viz="modern"]:has([data-viz-controls]) [data-viz-controls] {
+    position: sticky;
+    bottom: 0;
   }
 
   /*
@@ -373,38 +563,6 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
   }
   article .not-prose {
     min-width: 0;
-  }
-
-  /*
-   * 세 개 이상의 새 용어를 한 문단에서 소개할 때는 굵은 용어가 각자 한 줄을
-   * 소유한다. 설명 문장은 바로 뒤에 이어지고 다음 용어에서 다시 줄이 바뀐다.
-   * 개별 글은 더 상세한 예·경계가 필요하면 TermBreakdown을 사용한다.
-   */
-  [data-article-body] p:has(> strong:nth-of-type(3)),
-  [data-article-body] p:has(> b:nth-of-type(3)),
-  [data-article-body] p:has(> code:nth-of-type(3)) {
-    padding-block: 0.25rem;
-  }
-  [data-article-body] p:has(> strong:nth-of-type(3)) > strong,
-  [data-article-body] p:has(> b:nth-of-type(3)) > b,
-  [data-article-body] p:has(> code:nth-of-type(3)) > code {
-    display: inline;
-    color: var(--foreground);
-    line-height: 1.55;
-  }
-  [data-article-body] p:has(> strong:nth-of-type(3)) > strong::before,
-  [data-article-body] p:has(> b:nth-of-type(3)) > b::before {
-    content: "\A — ";
-    color: var(--muted-foreground);
-    white-space: pre;
-  }
-  [data-article-body] p:has(> code:nth-of-type(3)) > code::before {
-    content: "\A — " !important;
-    color: var(--muted-foreground);
-    white-space: pre;
-  }
-  [data-article-body] p:has(> code:nth-of-type(3)) > code::after {
-    content: "" !important;
   }
 
   /*

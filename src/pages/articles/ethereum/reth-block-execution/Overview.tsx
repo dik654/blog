@@ -3,6 +3,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import type { CodeRef } from "@/components/code/types";
 import RethStateFlowViz from "../reth-state-flow-viz";
+import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 
 export default function Overview({
   onCodeRef: _,
@@ -11,10 +12,12 @@ export default function Overview({
 }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">
-        Block execution은 transaction 목록을 parent state에서 하나의
-        post-state로 접는 결정적 전이다
-      </h2>
+      <h2 className="mb-5 text-2xl font-bold">송금은 부모 상태에서 어떤 순서로 계산될까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 송금</Link>이 새 후보에 담겼다고 하겠습니다. 실행 클라이언트는 부모 블록의 A·B 잔액에서 시작해 앞선 거래의 결과를 다음 거래에 넘기며 후보 전체를 순서대로 계산합니다.
+      </p>
+      <ExecutionClientLocator current="execution" path={["execution", "execution-store"]} question="부모 상태와 거래 목록은 어느 실행 경로를 거쳐 새 상태와 영수증이 될까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 block 101은 이 송금을 담은 후보입니다. transaction 0을 A→B 송금으로 두고, transaction 1은 바뀐 잔액을 이어받는 다음 거래로 둡니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Block 101을 실행한다는 말은 transaction을 각각 독립적으로 돌린다는

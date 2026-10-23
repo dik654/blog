@@ -5,6 +5,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import KubernetesPacketPathViz from "./KubernetesPacketPathViz";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const codeClass =
   "not-prose my-5 min-w-0 overflow-x-auto rounded-xl border border-border bg-neutral-950 p-4 text-sm leading-6 text-neutral-100";
@@ -217,6 +218,7 @@ export default function KubernetesNetworkPacketPathArticle() {
         title="한 번에 한 경계만 확인해야 첫 실패 지점을 찾을 수 있습니다"
         bridge="응답 코드가 보였다면 애플리케이션까지 도착했지만, 시간 초과만으로는 앞의 어느 구간에서 멈췄는지 모릅니다. 먼저 전체 경로를 여섯 경계로 나눕니다."
       >
+        <KubernetesSeriesLocator current="network" path={["network", "health"]} question="Service 주소로 보낸 한 요청은 어느 준비된 Pod까지 어떤 경계를 지나갈까요?" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">Kubernetes 네트워크를 설명한다는 것은 제품 이름을 나열하는 일이 아닙니다. 한 연결의 출발 주소, 바뀐 목적지, 선택된 다음 홉, 덧붙은 헤더, 적용된 허용 규칙을 차례로 대조해 첫 실패 경계를 찾는 일입니다.</p>
           <p className="leading-8">예를 들어 HTTP 404는 server 또는 앞단 proxy가 응답을 만들었다는 증거지만, 연결 timeout은 주소 선택·route·정책·listener 가운데 어디서 멈췄는지 더 확인해야 합니다. 같은 “접속 실패”라도 확인할 증거가 다릅니다.</p>

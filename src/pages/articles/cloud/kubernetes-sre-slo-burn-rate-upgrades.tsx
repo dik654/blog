@@ -7,6 +7,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import BurnRateWindowViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BurnRateWindowViz";
 import { codeRefs } from "./kubernetes-sre-slo-burn-rate-upgrades/codeRefs";
 import { kubernetesSreTrees } from "./kubernetes-sre-slo-burn-rate-upgrades/fileTree";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -18,6 +19,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. DNS가 한 시간 넘게 죽었는데 왜 아무도 깨지 않았나요?</h2>
+          <KubernetesSeriesLocator current="operations" path={["operations", "health", "lifecycle"]} question="사용자 영향과 원인 지표를 어떤 기준으로 연결해 알림·변경·복구를 결정할까요?" />
           <div className={prose}>
             <p>
               2019년 1월 7일 Zalando의 한 Kubernetes cluster에서 CoreDNS Pod들이 동시에 OOMKill되고, 다시 뜨자마자 같은 부하에 다시 죽기를 반복했습니다. cluster 안의 모든 이름 해석이 멎은 채 고객은 한 시간 넘게 오류 페이지를 봤습니다. 사후 보고서가 적은 기여 요인 가운데 하나는 memory limit 100Mi가 아니라 이것입니다.

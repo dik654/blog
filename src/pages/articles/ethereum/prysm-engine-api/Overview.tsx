@@ -3,11 +3,17 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
 import EngineAPIFlowViz from "./viz/EngineAPIFlowViz";
+import ConsensusClientLocator from "../shared/ConsensusClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Engine API는 합의 결과와 EVM 실행 결과를 맞추는 상태 있는 경계다</h2>
+      <h2 className="mb-6 text-2xl font-bold">기록 선택과 거래 계산 결과는 어디에서 만날까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 후보</Link>를 두 프로그램이 함께 처리한다고 하겠습니다. 한쪽은 어느 기록을 따를지 정하고, 다른 쪽은 송금을 실행해 잔액과 영수증을 계산하므로 두 판단을 순서대로 맞출 통로가 필요합니다.
+      </p>
+      <ConsensusClientLocator current="engine-api" path={["engine-api"]} question="합의 클라이언트 안에서는 어떤 판단이 Engine API 호출로 이어질까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래에서 끝까지 추적하는 block hash는 이 후보의 해시입니다. payload 검증, fork-choice 적용과 새 payload 생성 요청은 모두 이 식별자로 이어집니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
             어떤 beacon block을 head·safe·finalized로 볼지는 Prysm이 결정합니다. 다만 transaction을 EVM으로 실행하는 일은 Prysm의 몫이

@@ -4,11 +4,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
 import PrysmConsensusViz from "../prysm-consensus-viz";
+import ConsensusClientLocator from "../shared/ConsensusClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Fork choice는 가장 긴 체인이 아니라 최신 attestation이 지지하는 head를 고른다</h2>
+      <h2 className="mb-5 text-2xl font-bold">유효한 후보가 여러 개면 어느 기록을 따라갈까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 송금</Link>을 담은 후보가 실행 검증을 통과해도, 같은 부모에서 갈라진 다른 유효한 후보가 있을 수 있습니다. 이제 계산의 옳고 그름이 아니라 어느 후보를 현재 기록으로 삼을지 정해야 합니다.
+      </p>
+      <ConsensusClientLocator current="fork-choice" path={["fork-choice", "engine-api", "consensus-store"]} question="실행 판정과 검증된 투표를 받은 뒤 어느 후보를 현재 head로 선택할까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래 숫자 예시에서 A2는 이 송금을 담은 후보이고 B1은 같은 부모에서 갈라진 경쟁 후보입니다. 이름은 가지별 투표 무게를 비교하기 위한 표시입니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Beacon node는 동시에 여러 valid block branch를 볼 수 있습니다. State transition은 각 branch가 규칙에 맞는지만

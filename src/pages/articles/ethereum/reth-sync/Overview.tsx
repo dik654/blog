@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import RethRuntimeViz from "../reth-runtime-viz";
 import type { CodeRef } from "@/components/code/types";
 import { SYNC_MODES, SYNC_COMPARISONS } from "./OverviewData";
+import ExecutionClientLocator from "../shared/ExecutionClientLocator";
 
 export default function Overview({
   onCodeRef: _onCodeRef,
@@ -16,7 +18,12 @@ export default function Overview({
 
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="text-2xl font-bold mb-6">Reth sync는 catch-up pipeline을 live import로 handoff한다</h2>
+      <h2 className="text-2xl font-bold mb-6">부모 자료가 없으면 같은 후보를 언제 다시 계산할까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 송금</Link>이 담긴 새 후보를 따라갑니다. 여기서는 실행 클라이언트가 그 후보의 부모 상태를 갖고 있지 않아 계산을 시작하지 못한 경우부터 봅니다.
+      </p>
+      <ExecutionClientLocator current="sync" path={["p2p", "sync", "engine-api", "execution", "execution-store"]} question="빠진 실행 자료를 받은 뒤 어느 경로가 저장 상태를 채우고 같은 후보를 다시 계산할까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 missing head와 gap은 새 사례가 아닙니다. 같은 후보와 그 부모 구간을 아직 로컬에서 찾지 못한 상태를 가리킵니다.</p>
       <ContentBoundary article="reth-sync" />
       <RethRuntimeViz mode="sync-paths" />
 

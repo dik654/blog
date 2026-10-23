@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import Discv4LookupViz from "./discv4/Discv4LookupViz";
 
 export default function Discv4Article() {
   return (
@@ -11,16 +12,27 @@ export default function Discv4Article() {
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Alice의 새 실행 클라이언트가 bootnode 주소 하나만 알고 시작한다고 하자. Node Discovery Protocol v4, 즉 discv4는 UDP로
-            PING/PONG을 주고받고 Kademlia-like table에서 목표 ID에 가까운 후보를 찾는다. 여기서 얻는 것은 node identity와 endpoint가 담긴 발견
-            결과다. RLPx 연결, ETH capability 협상, block 동기화는 그다음 transport와 application protocol의 책임이다.
+            Alice의 새 노드는 연락처 하나만 알고 시작합니다. 그 주소가 실제로
+            응답하는지, 목표에 더 가까운 후보를 누구에게 물을지, 발견한 상대와
+            언제 실제 연결을 시작할지를 차례로 확인해야 합니다.
+          </p>
+        </div>
+
+        <Discv4LookupViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            이 발견 절차의 이름이 Node Discovery Protocol v4, 즉 discv4입니다.
+            UDP PING/PONG으로 양쪽 endpoint를 확인하고, Kademlia 방식의 표에서
+            목표 ID에 가까운 후보를 찾습니다. 여기서 얻는 것은 node identity와
+            endpoint입니다. RLPx 연결, ETH capability 협상, block 동기화는 그다음
+            계층의 책임입니다.
           </p>
           <p>
-            고정 흐름은 bootnode packet 검증 → endpoint proof → FINDNODE와
-            NEIGHBORS → ENR 갱신 → 별도 transport dial이다. 각 UDP packet은
-            identity key로 서명되지만 payload는 암호화되지 않는다. 서명된
-            endpoint를 받았다는 사실도 그 node가 정직하거나 원하는 chain을
-            제공한다는 보장은 아니다.
+            고정 흐름은 양방향 endpoint proof → FINDNODE와 NEIGHBORS → ENR 갱신
+            → 별도 transport 연결입니다. 각 UDP packet은 identity key로 서명되지만
+            payload는 암호화되지 않습니다. 서명된 endpoint를 받았다고 그 node가
+            정직하거나 원하는 chain을 제공하는 것도 아닙니다.
           </p>
         </div>
 
@@ -107,7 +119,7 @@ export default function Discv4Article() {
           <p>
             한 응답이 1280 byte를 넘을 수 있어 NEIGHBORS가 여러 datagram으로
             올 수 있으며, UDP에서는 loss와 순서 변경을 예상해야 한다. Lookup의
-            shortlist 상태와 종료 receipt는{" "}
+            shortlist 상태와 종료 판단 근거는{" "}
             <Link to="/cs/p2p/kad-lookup">Kademlia 반복 탐색</Link>이 정본으로
             다룬다. Discv4는 후보를 찾는 protocol이지 transport 연결 성공을
             반환하는 API가 아니다.

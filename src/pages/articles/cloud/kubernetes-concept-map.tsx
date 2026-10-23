@@ -1,6 +1,7 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ConceptOwnerMapViz from "./kubernetes-concept-map/viz/ConceptOwnerMapViz";
+import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -57,6 +58,7 @@ export default function KubernetesConceptMapArticle() {
     <div className="space-y-16">
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">1. 여덟 질문은 모두 "원하는 상태를 적으면 누가 어떻게 맞추는가" 하나로 모입니다</h2>
+        <KubernetesSeriesLocator current="map" path={["request", "resource", "controllers", "placement", "health", "resources", "network", "storage", "lifecycle", "operations"]} question="Kubernetes의 여러 기능은 원하는 상태를 실제 상태로 맞추는 한 흐름에서 어디를 맡을까요?" />
         <div className={prose}>
           <p>
             Kubernetes를 운영하다 보면 질문이 여덟 개쯤으로 모입니다. 앞의 넷은 Node와 Pod는 무슨 관계인지, Deployment와 Job은 Pod를 어떻게 만드는지, 요청한 자원과 실제로 받은 자원은 왜 다른지,

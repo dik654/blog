@@ -4,11 +4,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import { OFFICIAL_SOURCES } from "@/content/official-sources";
 import type { CodeRef } from "@/components/code/types";
 import PrysmNetworkViz from "../prysm-network-viz";
+import ConsensusClientLocator from "../shared/ConsensusClientLocator";
 
 export default function Overview({ onCodeRef: _onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Prysm sync는 block을 많이 받는 작업이 아니라 검증된 연속 state cursor를 head까지 옮기는 작업이다</h2>
+      <h2 className="mb-5 text-2xl font-bold">빠진 블록을 받아도 왜 바로 현재 기록으로 삼지 않을까요?</h2>
+      <p className="mb-5 text-lg leading-8">
+        <Link to="/cs/blockchain/node-architecture#case">전체 지도의 A→B 10 ETH 후보</Link>보다 로컬 기록이 뒤처졌다고 하겠습니다. 후보 하나만 먼저 받아도 부모 상태가 이어지지 않으면 검증할 수 없으므로, 빠진 구간을 순서대로 채워야 합니다.
+      </p>
+      <ConsensusClientLocator current="sync" path={["sync", "transition", "consensus-store"]} question="빠진 자료를 받은 뒤 어떤 순서로 검증하고 저장해야 live head를 안전하게 따라잡을까요?" />
+      <p className="mb-5 text-sm leading-7 text-muted-foreground">아래의 slot 112 head가 같은 후보이고, slot 101~111은 그 후보까지 이어지는 빠진 구간입니다. 숫자는 동기화 순서를 드러내기 위한 예시입니다.</p>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           새 beacon node는 local state가 network head보다 멀리 뒤에 있어 gossip block을 곧바로 처리할 수 없습니다. Genesis부터 검증하거나

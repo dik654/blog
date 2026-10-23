@@ -27,6 +27,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run lint
+
       - run: npm run audit:learning -- --strict --require-registration --all-articles
 
       - run: npm run audit:graph -- --strict
@@ -46,6 +48,14 @@ jobs:
       - run: npm run audit:prose -- --strict
       - run: npm run audit:korean -- --strict
 
+      - run: npm run audit:terms -- --strict
+
+      - run: npm run audit:term-pairs -- --strict
+
+      - run: npm run audit:architecture-flow -- --strict
+
+      - run: npm run audit:teach-coverage -- --strict
+
       - run: npm run audit:runtime
 
       - run: npm run build
@@ -53,6 +63,44 @@ jobs:
           GITHUB_PAGES: "true"
           # tsc -b over the large content modules needs more than the default ~4GB heap.
           NODE_OPTIONS: --max-old-space-size=8192
+
+      - name: Install browser for public catalog check
+        run: npx playwright install --with-deps chromium
+
+      - name: Check all public articles in a real browser
+        shell: bash
+        run: |
+          pages_root="$(mktemp -d)"
+          ln -s "$GITHUB_WORKSPACE/dist" "$pages_root/blog"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$pages_root" >/tmp/blog-pages.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for _ in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/blog/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/blog/ >/dev/null
+
+          pids=()
+          for shard in 0 1 2 3; do
+            node scripts/sweep-routes.mjs \
+              --catalog \
+              --shard "$shard/4" \
+              --entry-only \
+              --no-screenshot \
+              --base http://127.0.0.1:4173/blog \
+              --out "output/playwright/ci-public-catalog/shard-$shard" &
+            pids+=("$!")
+          done
+
+          status=0
+          for pid in "${pids[@]}"; do
+            wait "$pid" || status=1
+          done
+          exit "$status"
 
       - uses: actions/upload-pages-artifact@v3
         with:

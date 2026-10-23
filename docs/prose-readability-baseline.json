@@ -58,19 +58,11 @@
       "score": 35
     },
     "blockchain/prysm-engine-api": {
-      "fingerprint": "08e39079224b3982",
-      "score": 34
-    },
-    "blockchain/prysm-finality": {
-      "fingerprint": "cdeb7cd5620b50b9",
+      "fingerprint": "058eca773304d7b2",
       "score": 34
     },
     "blockchain/reth-cli": {
       "fingerprint": "e937b572d8e86037",
-      "score": 34
-    },
-    "blockchain/reth-provider": {
-      "fingerprint": "e5816ade08c1d24e",
       "score": 34
     },
     "crypto/risc0": {
@@ -97,6 +89,14 @@
       "fingerprint": "292d8cbafd9624dd",
       "score": 32
     },
+    "blockchain/prysm-finality": {
+      "fingerprint": "01fefdb64aafc147",
+      "score": 32
+    },
+    "blockchain/reth-provider": {
+      "fingerprint": "f3ddb95be248b01e",
+      "score": 32
+    },
     "blockchain/cometbft-state": {
       "fingerprint": "32978da7b4d3457f",
       "score": 31
@@ -115,10 +115,6 @@
     },
     "blockchain/proofs-post": {
       "fingerprint": "8bb3bc1f7ee2e210",
-      "score": 30
-    },
-    "blockchain/reth-net": {
-      "fingerprint": "a0304c767b663689",
       "score": 30
     },
     "isms-aml/isms-practical-guide": {
@@ -175,6 +171,10 @@
     },
     "blockchain/prysm-validator-client": {
       "fingerprint": "2b7e5348028712f8",
+      "score": 28
+    },
+    "blockchain/reth-net": {
+      "fingerprint": "15386576cdb8362a",
       "score": 28
     },
     "isms-aml/isms-auth-management": {
@@ -269,10 +269,6 @@
       "fingerprint": "bb7db2dc9ec0039e",
       "score": 24
     },
-    "blockchain/prysm-sync": {
-      "fingerprint": "f50739f837b5303a",
-      "score": 24
-    },
     "blockchain/uniswap-v4": {
       "fingerprint": "9e533cda1f13084b",
       "score": 24
@@ -321,6 +317,10 @@
       "fingerprint": "cf0888d0ca37f148",
       "score": 22
     },
+    "blockchain/prysm-sync": {
+      "fingerprint": "830e0ccde8941092",
+      "score": 22
+    },
     "blockchain/impl-elliptic-curve": {
       "fingerprint": "a19ac7b8ca8ccb28",
       "score": 21
@@ -365,14 +365,6 @@
       "fingerprint": "dea0cd1cba962850",
       "score": 20
     },
-    "blockchain/prysm-gossipsub": {
-      "fingerprint": "c0c20fcf08f1da2c",
-      "score": 20
-    },
-    "blockchain/reth-block-execution": {
-      "fingerprint": "e20ff4ab16a1e72d",
-      "score": 20
-    },
     "blockchain/tendermint-bft": {
       "fingerprint": "6303fe5f7e85731a",
       "score": 20
@@ -394,7 +386,7 @@
       "score": 19
     },
     "blockchain/reth-sync": {
-      "fingerprint": "935fec9b2a7f0111",
+      "fingerprint": "bbf50af2c594530e",
       "score": 19
     },
     "ai/claw-cli": {
@@ -403,10 +395,6 @@
     },
     "ai/claw-telemetry": {
       "fingerprint": "f9dc64e8d1aaaeba",
-      "score": 18
-    },
-    "ai/neural-network": {
-      "fingerprint": "eafd10f6a7e9f497",
       "score": 18
     },
     "ai/seq2seq": {
@@ -467,6 +455,14 @@
     },
     "blockchain/prysm-block-processing": {
       "fingerprint": "df8e1b42c6b1e0b7",
+      "score": 18
+    },
+    "blockchain/prysm-gossipsub": {
+      "fingerprint": "aa89dd1d3921a157",
+      "score": 18
+    },
+    "blockchain/reth-block-execution": {
+      "fingerprint": "f762c688becfdcb0",
       "score": 18
     },
     "gpu/gpu-proof-pipeline": {
@@ -566,7 +562,7 @@
       "score": 14
     },
     "blockchain/prysm-forkchoice": {
-      "fingerprint": "dd5234c5b581460e",
+      "fingerprint": "1650fd5e3386d4ea",
       "score": 14
     },
     "blockchain/prysm-ssz": {
@@ -657,10 +653,6 @@
       "fingerprint": "63d6a78b36a13aa3",
       "score": 12
     },
-    "p2p/discv4": {
-      "fingerprint": "660251effa740701",
-      "score": 12
-    },
     "p2p/libp2p-noise": {
       "fingerprint": "23ad424465517be2",
       "score": 12
@@ -739,6 +731,10 @@
     },
     "p2p/bittorrent": {
       "fingerprint": "3e23866c3aeb31e9",
+      "score": 10
+    },
+    "p2p/discv4": {
+      "fingerprint": "c9310bd2406d8b2f",
       "score": 10
     },
     "p2p/gossip-fundamentals": {
@@ -935,10 +931,6 @@
     },
     "ai/sequence-modeling-tabular": {
       "fingerprint": "2498f125c55a2f52",
-      "score": 6
-    },
-    "ai/tensor-and-pipeline-parallel-inference": {
-      "fingerprint": "0c14bd159e7b6804",
       "score": 6
     },
     "ai/visual-representation-tokenizers": {

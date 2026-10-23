@@ -94,10 +94,10 @@ export default function ArticlePage({ domain }: { domain: string }) {
         <ArticleLoadBoundary key={`${category}/${articleSlug}`}>
           <Suspense
             fallback={
-              <p className="text-muted-foreground animate-pulse">로딩 중...</p>
+              <p data-article-loading className="text-muted-foreground animate-pulse">로딩 중...</p>
             }
           >
-            {createElement(ArticleComponent)}
+            <div data-article-content>{createElement(ArticleComponent)}</div>
           </Suspense>
         </ArticleLoadBoundary>
       </div>

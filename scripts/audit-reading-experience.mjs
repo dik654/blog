@@ -37,6 +37,10 @@ const articleOnboarding = fs.readFileSync(
   "src/components/ArticleOnboarding.tsx",
   "utf8",
 );
+const articleEntryFlow = fs.readFileSync(
+  "src/components/viz/ArticleConceptViz.tsx",
+  "utf8",
+);
 const contentBoundary = fs.readFileSync(
   "src/components/articles/content-boundary.tsx",
   "utf8",
@@ -94,9 +98,18 @@ const contract = {
   primerBeforeReview:
     primerIndex !== -1 && reviewIndex !== -1 && primerIndex < reviewIndex,
   namelessEntryGuide:
-    articleOnboarding.includes("작은 사례를 따라 전체 흐름부터 잡습니다") &&
-    articleOnboarding.includes("!learning &&") &&
-    articleOnboarding.includes("필요한 용어와 적용 경계는 뒤에서 정리합니다"),
+    articleOnboarding.includes("<ArticleConceptViz flow={flow}") &&
+    articleOnboarding.includes("learning?.entryNote") &&
+    articleOnboarding.includes("본문을 읽기 전에 이 글이 답하는 질문") &&
+    articleOnboarding.includes("data-article-quick-start"),
+  globalEntryFlowMap:
+    articleEntryFlow.includes('data-viz="article-entry-flow"') &&
+    articleEntryFlow.includes("useAnimatedScenes") &&
+    articleEntryFlow.includes("flow.nodes.map") &&
+    articleEntryFlow.includes("reducedMotion") &&
+    articleEntryFlow.includes("autoPlay: false") &&
+    articleEntryFlow.includes("keyboardPlayback: false") &&
+    articleEntryFlow.includes('aria-keyshortcuts="ArrowLeft ArrowRight"'),
   reviewAfterBody:
     bodyIndex !== -1 && reviewIndex !== -1 && bodyIndex < reviewIndex,
   newLessonVizMounted: contractView.includes("<ArticleLessonFlowViz"),
@@ -153,11 +166,13 @@ const contract = {
     animatedControls.includes("min-h-[6.75rem]") &&
     animatedControls.includes("w-[7.75rem]") &&
     lessonViz.includes("w-[8.5rem]"),
-  mobileVizNaturalFlow:
+  mobileVizViewportFrame:
     globalStyles.includes("@media (max-width: 39.999rem)") &&
-    globalStyles.includes(":is([data-viz], figure):has([data-viz-controls])") &&
-    globalStyles.includes("height: auto !important") &&
-    globalStyles.includes('[class*="min-w-["]'),
+    globalStyles.includes('figure[data-viz="modern"]:has([data-viz-controls])') &&
+    globalStyles.includes("height: calc(100svh - 5rem) !important") &&
+    globalStyles.includes("overflow-y: auto !important") &&
+    globalStyles.includes("overscroll-behavior-y: auto") &&
+    globalStyles.includes("touch-action: pan-y"),
   mobileVizIntrinsicSvgSizing:
     globalStyles.includes(
       '[data-viz] [data-viz-canvas] svg[class~="w-full"]',
@@ -171,7 +186,8 @@ const contract = {
   mobileSceneControls:
     animatedControls.includes("data-viz-mobile-controls") &&
     animatedControls.includes("data-viz-desktop-controls") &&
-    animatedControls.includes("grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]") &&
+    animatedControls.includes("grid-cols-3") &&
+    animatedControls.includes("min-h-11") &&
     animatedControls.includes("← 이전") &&
     animatedControls.includes("다음 →") &&
     globalStyles.includes("[data-viz-controls] button") &&
@@ -192,8 +208,11 @@ const contract = {
   allWideVizTablesHaveMobileCards: wideVizTableFiles.length === 0,
   mobileLessonControls:
     lessonViz.includes("data-lesson-mobile-controls") &&
-    lessonViz.includes("sticky bottom-0") &&
-    lessonViz.includes("grid-cols-1") &&
+    lessonViz.includes("data-lesson-scroll-region") &&
+    lessonViz.includes("data-viz-controls") &&
+    lessonViz.includes("relative z-20 min-h-[8.25rem] shrink-0 border-t") &&
+    lessonViz.includes("개념별 설명 열기") &&
+    lessonViz.includes("min-h-11") &&
     lessonViz.includes(
       "grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,1fr)]",
     ),
@@ -202,7 +221,7 @@ const contract = {
     globalStyles.includes('figure[data-viz="lesson-flow-v4"]') &&
     globalStyles.includes("calc(100svh - 5rem)") &&
     globalStyles.includes("scroll-margin-top: 4rem") &&
-    globalStyles.includes("overscroll-behavior: contain"),
+    globalStyles.includes("overscroll-behavior-y: auto"),
   stableMobileViewportUnits: viewportSensitiveFiles.length === 0,
   stableMobileDocumentShell:
     layoutShell.includes('className="min-h-svh bg-background overscroll-none"') &&
@@ -238,9 +257,9 @@ const contract = {
     termBreakdown.includes("작은 예 ·") &&
     termBreakdown.includes("구분할 것 ·"),
   denseEmphasizedTermsBreakLines:
-    globalStyles.includes("p:has(> strong:nth-of-type(3))") &&
-    globalStyles.includes("p:has(> code:nth-of-type(3))") &&
-    globalStyles.includes('content: "\\A — ";'),
+    termBreakdown.includes("data-term-breakdown-item") &&
+    !globalStyles.includes("p:has(> strong:nth-of-type(3))") &&
+    !globalStyles.includes('content: "\\A — ";'),
   densePlainTextListsBreakLines:
     articlePage.includes("useDenseTermFlow") &&
     articlePage.includes("articleBodyRef") &&
