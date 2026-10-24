@@ -6,16 +6,22 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { normalizingFlowsTree } from "./fileTree";
 import { FlowChangeViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function NormalizingFlowsArticle() {
   const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="flow" />
       <section id="overview" className="scroll-mt-20">
         <span id="bijection" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Normalizing flow는 쉬운 분포를 가역적으로 휘어 data 분포를 만듭니다
         </h2>
+        <FlowChangeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Normalizing flow</strong>는 density와 sampling이 쉬운 base
@@ -59,7 +65,6 @@ export default function NormalizingFlowsArticle() {
             },
           ]}
         />
-        <FlowChangeViz />
         <ContentBoundary article="normalizing-flows" />
       </section>
 
@@ -173,6 +178,7 @@ export default function NormalizingFlowsArticle() {
           동일 순위를 뜻하지 않습니다.
         </CitationBlock>
       </section>
+      <GenerativeFamilyMapReturn current="flow" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

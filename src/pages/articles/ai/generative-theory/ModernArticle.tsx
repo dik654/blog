@@ -2,14 +2,20 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { GenerativeMapViz } from "./viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function GenerativeTheoryArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="map" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           생성 모델은 먼저 “무엇이 나올 수 있는가”를 정의합니다
         </h2>
+        <GenerativeMapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Generative model</strong>은 관측한 한 sample을 복사하는
@@ -50,7 +56,6 @@ export default function GenerativeTheoryArticle() {
             },
           ]}
         />
-        <GenerativeMapViz />
         <ContentBoundary article="generative-theory" />
       </section>
 
@@ -165,6 +170,7 @@ export default function GenerativeTheoryArticle() {
           </p>
         </div>
       </section>
+      <GenerativeFamilyMapReturn current="map" />
     </div>
   );
 }

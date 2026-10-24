@@ -2,15 +2,21 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AutoregressiveFactorViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function AutoregressiveGenerativeModelsArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="autoregressive" />
       <section id="overview" className="scroll-mt-20">
         <span id="sequence" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           자기회귀 모델은 sequence를 왼쪽부터 한 칸씩 만듭니다
         </h2>
+        <AutoregressiveFactorViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Autoregressive generative model</strong>은 다음 위치의
@@ -44,7 +50,6 @@ export default function AutoregressiveGenerativeModelsArticle() {
             },
           ]}
         />
-        <AutoregressiveFactorViz />
         <ContentBoundary article="autoregressive-generative-models" />
       </section>
 
@@ -148,6 +153,7 @@ export default function AutoregressiveGenerativeModelsArticle() {
           </ul>
         </div>
       </section>
+      <GenerativeFamilyMapReturn current="autoregressive" />
     </div>
   );
 }

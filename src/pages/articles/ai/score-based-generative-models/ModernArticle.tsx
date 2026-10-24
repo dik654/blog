@@ -3,15 +3,21 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ScoreDiffusionViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function ScoreBasedGenerativeModelsArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="score" />
       <section id="overview" className="scroll-mt-20">
         <span id="score-field" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Score는 density 값이 아니라 더 높은 density로 가는 화살표입니다
         </h2>
+        <ScoreDiffusionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Score function</strong>은 각 위치 x에서 log density가 가장
@@ -27,7 +33,6 @@ export default function ScoreBasedGenerativeModelsArticle() {
           <li>Score vector 하나만 알면 normalized density 값과 global mode label도 직접 알 수 있을까요?</li>
         </ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. Score는 현재 위치에서 log density가 증가하는 국소 방향이며 noise level별 field를 배워 역과정을 구성합니다.</p>
-        <ScoreDiffusionViz />
         <ContentBoundary article="score-based-generative-models" />
         <TermBreakdown
           title="Score field를 읽는 세 단계"
@@ -283,6 +288,7 @@ q_\sigma(x\mid x_0)&=\underbrace{N(x_0,\sigma^2 I)}_{\text{x0 주변에 Gaussian
           갖는다는 뜻은 아닙니다.
         </CitationBlock>
       </section>
+      <GenerativeFamilyMapReturn current="score" />
     </div>
   );
 }

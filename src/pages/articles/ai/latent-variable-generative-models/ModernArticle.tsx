@@ -3,15 +3,21 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { LatentInferenceViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function LatentVariableGenerativeModelsArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="latent" />
       <section id="overview" className="scroll-mt-20">
         <span id="latent-cause" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Latent variable은 관측하지 못한 생성 원인입니다
         </h2>
+        <LatentInferenceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Latent variable z</strong>는 data x를 만들었다고 가정하지만
@@ -54,7 +60,6 @@ export default function LatentVariableGenerativeModelsArticle() {
             },
           ]}
         />
-        <LatentInferenceViz />
         <ContentBoundary article="latent-variable-generative-models" />
       </section>
 
@@ -251,6 +256,7 @@ p_\theta(x)&=\underbrace{\int p_\theta(x,z)\,dz}_{\text{직접 계산 불가능�
           보장은 아닙니다.
         </CitationBlock>
       </section>
+      <GenerativeFamilyMapReturn current="latent" />
     </div>
   );
 }
