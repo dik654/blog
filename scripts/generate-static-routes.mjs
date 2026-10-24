@@ -108,6 +108,12 @@ const noScriptArticleRoutes = new Set([
   "ai/hyper-connections-residual-streams",
   "ai/mixture-of-experts",
   "ai/moe-routing-and-load-balancing",
+  "ai/sparse-autoencoder",
+  "ai/grammar-constrained-generation",
+  "ai/cfg-pushdown-automata",
+  "ai/grammar-tokenizer-decoding",
+  "ai/incremental-parsing-tree-sitter",
+  "ai/structured-generation-serving",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

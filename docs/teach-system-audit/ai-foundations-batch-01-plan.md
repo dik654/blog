@@ -431,3 +431,34 @@ mask의 55·27·34칸을 추적합니다. Hyper-connection은 두 2×2 mixing �
 재생하면 5.2초마다 다음 실제 상태로 이동하고 마지막에서 멈춥니다. 모바일에서는 현재 mask·행렬·expert
 상태만 펼쳐 가로 스크롤을 없애고, 데스크톱에서는 비교 대상을 함께 보여 줍니다. reduced-motion에서는
 재생을 비활성화하며 JavaScript가 없을 때는 동일한 순서와 결론을 정적 목록으로 제공합니다.
+
+## 14. Sparse autoencoder와 구조화 생성
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/sparse-autoencoder` | concept · explanation | `ai/autoencoder#bottleneck` | LLM activation을 넓은 사전의 소수 방향으로 다시 표현하면 무엇을 설명할 수 있고 무엇은 아직 증명하지 못하는가? |
+| `ai/grammar-constrained-generation` | concept · explanation | `ai/llm-sampling-strategies#logits-to-probability` | 출력 형식을 강제하기 전에 허용된 문자열을 어떤 물체와 규칙으로 정의하는가? |
+| `ai/cfg-pushdown-automata` | concept · explanation | `ai/grammar-constrained-generation#derivation` | 유한 상태만으로 기억할 수 없는 중첩을 CFG와 PDA stack은 어떻게 표현하는가? |
+| `ai/grammar-tokenizer-decoding` | concept · explanation | `ai/cfg-pushdown-automata#pda-stack` | 문자 단위 grammar를 model vocabulary의 다음-token mask로 어떻게 바꾸는가? |
+| `ai/incremental-parsing-tree-sitter` | concept · explanation | `ai/cfg-pushdown-automata#implementation-boundary` | Source 한 부분이 바뀌었을 때 기존 tree를 어디까지 재사용하고 어디만 다시 parse하는가? |
+| `ai/structured-generation-serving` | concept · explanation | `ai/grammar-tokenizer-decoding#matcher-boundary` | 요청마다 schema와 prefix가 다를 때 어떤 상태를 공유하고 어떤 상태를 sequence별로 분리하는가? |
+
+Sparse autoencoder는 구조화 생성의 선행 단계가 아닙니다. 전체 AI 이론 커리큘럼에서는 앞 묶음 다음에 읽지만,
+직속 부모는 일반 autoencoder의 표현 제한입니다. 그래서 기존 autoencoder 학습 지도에 `Sparse AE와 해석`을
+추가하고, reconstruction·sparsity·feature stability·steering evidence를 서로 다른 평가 층으로 유지했습니다.
+
+구조화 생성도 다섯 글을 한 줄로 잇지 않았습니다. `형식 언어 → CFG/PDA`까지는 공통 뿌리이지만 그 뒤에는
+두 경로가 있습니다. 생성 중 후보를 제한하는 경로는 `token mask → serving`으로 이어지고, 이미 작성된 source를
+분석하는 경로는 `incremental parser`로 갈라집니다. 공통 locator는 이 분기를 먼저 보여 주며, 각 글은 직속 부모의
+정확한 anchor에서 시작합니다.
+
+같은 작은 사례는 `[0]`입니다. Symbol 네 개로 string을 만들고 production으로 전개한 뒤, 열린 구조를 PDA stack에
+기억합니다. 생성 경로에서는 현재 prefix가 허용하는 문자를 tokenizer vocabulary의 bitmask로 바꾸고, serving에서는
+compiled grammar는 identity별로 공유하되 matcher state와 mask는 sequence별로 둡니다. Source 분석 경로에서는 old
+tree에 edit 범위를 반영하고 바뀌지 않은 subtree를 재사용합니다. 문법 통과는 값의 사실성이나 실행 권한을 보장하지
+않으므로 semantic validator는 별도 경계로 남겼습니다.
+
+첫 시각화는 첫 설명 제목 바로 다음에 두었습니다. 구조화 생성 장면은 자동으로 시작하거나 반복하지 않으며, 사용자가
+재생하면 5.2초마다 다음 상태로 이동하고 마지막에서 멈춥니다. 390×844에서 여섯 경로의 가로 넘침은 0이었고,
+공통 분기 locator는 570px, sparse autoencoder locator는 461px였습니다. 1440×900에서도 가로 넘침은 0이었습니다.
+키보드 좌우 이동, reduced-motion의 재생 비활성화, JavaScript 비활성 정적 본문·부모 지도·지도 반환을 확인했습니다.

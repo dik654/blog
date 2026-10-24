@@ -4215,7 +4215,20 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/grammar-constrained-generation": [
     { kind: "핵심 논문", label: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models", href: "https://arxiv.org/abs/2411.15100", note: "Context-independent token 사전 분류와 CFG stack 재사용으로 constrained decoding overhead를 줄이는 엔진" },
   ],
-  "ai/cfg-pushdown-automata": [],
+  "ai/cfg-pushdown-automata": [
+    {
+      kind: "핵심 논문",
+      label: "Three Models for the Description of Language",
+      href: "https://doi.org/10.1109/TIT.1956.1056813",
+      note: "Finite-state model과 phrase-structure grammar의 표현 범위를 구분한 고전적 출발점",
+    },
+    {
+      kind: "핵심 논문",
+      label: "On Context-Free Languages and Push-Down Automata",
+      href: "https://doi.org/10.1016/S0019-9958(63)90306-1",
+      note: "Push-down store automaton과 context-free language의 관계를 다룬 원 논문",
+    },
+  ],
   "ai/incremental-parsing-tree-sitter": [
     {
       kind: "공식 문서",
@@ -4228,7 +4241,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 문서",
       label: "XGrammar — Constrained Decoding",
-      href: "https://xgrammar.mlc.ai/docs/start/constrained_decoding.html",
+      href: "https://github.com/mlc-ai/xgrammar/blob/main/docs/start/constrained_decoding.md",
       note: "grammar compile·matcher state·token mask의 공식 API",
     },
   ],

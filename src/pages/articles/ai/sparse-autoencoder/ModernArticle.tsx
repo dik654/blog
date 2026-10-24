@@ -6,6 +6,9 @@ import Overview from "./Overview";
 import Polysemanticity from "./Polysemanticity";
 import ResidualStream from "./ResidualStream";
 import SAEArchitecture from "./SAEArchitecture";
+import AutoencoderSeriesLocator, {
+  AutoencoderMapReturn,
+} from "../autoencoder/shared/AutoencoderSeriesLocator";
 
 function PaperReadingNotes() {
   return (
@@ -66,6 +69,7 @@ function PaperReadingNotes() {
 export default function ModernSparseAutoencoderArticle() {
   return (
     <article>
+      <AutoencoderSeriesLocator current="sparse-autoencoder" />
       <Overview />
       <ContentBoundary article="sparse-autoencoder" />
       <ResidualStream />
@@ -74,6 +78,7 @@ export default function ModernSparseAutoencoderArticle() {
       <FeatureSteering />
       <Limitations />
       <PaperReadingNotes />
+      <AutoencoderMapReturn current="sparse-autoencoder" />
     </article>
   );
 }

@@ -9,9 +9,9 @@
     "customVisuals": 858,
     "animatedMechanisms": 421,
     "architectureWithoutAnimation": 109,
-    "recursiveLocators": 34,
+    "recursiveLocators": 35,
     "codeEvidenceLinked": 216,
-    "sourceCitationLinked": 979,
+    "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
   },
   "articles": [
@@ -572,7 +572,7 @@
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
-      "hasSourceCitation": false,
+      "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
     },
     {
@@ -5306,7 +5306,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-static-visual"

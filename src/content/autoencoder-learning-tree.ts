@@ -4,6 +4,7 @@ export type AutoencoderLearningNodeId =
   | "autoencoder"
   | "linear-pca"
   | "denoising-masked"
+  | "sparse-autoencoder"
   | "anomaly-decision";
 
 export interface AutoencoderLearningNode {
@@ -54,6 +55,18 @@ export const AUTOENCODER_LEARNING_NODES: readonly AutoencoderLearningNode[] = [
       "Input 일부를 손상하거나 숨기면 encoder가 보는 값과 loss가 비교하는 값은 어떻게 달라질까요?",
     closure:
       "Encoder에는 손상되거나 보이는 부분만 주고 loss는 깨끗한 원본 또는 숨긴 부분과 계산해 그대로 복사하는 경로를 막습니다.",
+  },
+  {
+    id: "sparse-autoencoder",
+    href: "/cs/ai/sparse-autoencoder#overview",
+    shortTitle: "Sparse AE와 해석",
+    track: "concept",
+    parentHref: "/cs/ai/autoencoder#bottleneck",
+    parentLabel: "Autoencoder · 표현을 제한하는 방법",
+    question:
+      "LLM의 한 activation을 더 넓은 사전의 소수 방향으로 다시 표현하면, 무엇을 설명할 수 있고 무엇은 아직 증명하지 못할까요?",
+    closure:
+      "SAE는 model·layer·hook에서 수집한 activation을 sparse dictionary로 복원해 검증할 좌표를 만들지만, feature의 이름·안정성·인과 역할은 별도 증거가 필요합니다.",
   },
   {
     id: "anomaly-decision",
