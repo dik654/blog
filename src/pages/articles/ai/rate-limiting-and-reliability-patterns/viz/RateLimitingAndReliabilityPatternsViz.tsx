@@ -82,7 +82,7 @@ function RequestLine({ text, branched }: { text: string; branched: boolean }) {
 }
 
 export default function RateLimitingAndReliabilityPatternsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   const active = activeStateForScene(scenes.active);
 
   return (
@@ -93,14 +93,17 @@ export default function RateLimitingAndReliabilityPatternsViz() {
       note="실패율 50%·cooldown 같은 값은 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="llm-reliability-breaker-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="Circuit breaker가 closed에서 open으로, 다시 half-open을 거쳐 closed 또는 open으로 돌아가는 상태 전이와 각 상태에서의 요청 처리 방식"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(28rem,calc(100svh-15rem))] min-h-[22rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[22rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex flex-col justify-center sm:min-h-0 sm:flex-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -114,6 +117,18 @@ export default function RateLimitingAndReliabilityPatternsViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {label}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {NOTES[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

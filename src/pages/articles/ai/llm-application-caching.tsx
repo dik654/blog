@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmApplicationCachingViz from "./llm-application-caching/viz/LlmApplicationCachingViz";
+import {
+  LlmOperationsPathLocator,
+  LlmOperationsPathMapReturn,
+} from "./shared/LlmOperationsPathLocator";
 
 /**
  * LLM 애플리케이션 캐시: exact-match·semantic·retrieval·tool result·staleness
@@ -15,10 +19,12 @@ import LlmApplicationCachingViz from "./llm-application-caching/viz/LlmApplicati
 export default function LlmApplicationCachingArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <LlmOperationsPathLocator current="caching" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           문장이 달라도 유사도 0.97이면 검색과 LLM 호출을 건너뜁니다
         </h2>
+        <LlmApplicationCachingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Cache에는 이미 “환불 기간은 며칠인가요?”라는 요청과 그 답이 저장돼 있습니다.
@@ -42,7 +48,6 @@ export default function LlmApplicationCachingArticle() {
             뒤의 비싼 단계를 실행하지 않습니다.
           </p>
         </div>
-        <LlmApplicationCachingViz />
         <ContentBoundary article="llm-application-caching" />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
@@ -54,7 +59,7 @@ export default function LlmApplicationCachingArticle() {
         </div>
       </section>
 
-      <section id="cache-taxonomy" className="scroll-mt-20">
+      <section id="cache-taxonomy" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Application cache는 재사용 판정 대상 다섯 가지로 나뉩니다
         </h2>
@@ -126,7 +131,7 @@ export default function LlmApplicationCachingArticle() {
         />
       </section>
 
-      <section id="semantic-threshold" className="scroll-mt-20">
+      <section id="semantic-threshold" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Threshold를 낮추면 hit은 늘고 오답도 함께 늘어납니다
         </h2>
@@ -184,7 +189,7 @@ export default function LlmApplicationCachingArticle() {
         </div>
       </section>
 
-      <section id="cache-key-ttl-staleness" className="scroll-mt-20">
+      <section id="cache-key-ttl-staleness" data-teach-level="boundary" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Cache key가 넓으면 staleness가, 좁으면 hit rate가 줄어듭니다
         </h2>
@@ -236,7 +241,7 @@ export default function LlmApplicationCachingArticle() {
         />
       </section>
 
-      <section id="hit-miss-rate" className="scroll-mt-20">
+      <section id="hit-miss-rate" data-teach-level="evidence" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Hit rate는 hit과 miss를 더한 전체에서 hit이 차지하는 비율입니다
         </h2>
@@ -291,7 +296,7 @@ export default function LlmApplicationCachingArticle() {
         </ProgressiveDetail>
       </section>
 
-      <section id="warming-eviction" className="scroll-mt-20">
+      <section id="warming-eviction" data-teach-level="failure" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Warming은 채우는 시점을, LRU는 비우는 순서를 정합니다
         </h2>
@@ -332,6 +337,7 @@ export default function LlmApplicationCachingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmOperationsPathMapReturn current="caching" />
     </div>
   );
 }

@@ -17,10 +17,10 @@ const SCENES = [
 ] as const;
 
 const NOTES = [
-  "요청이 도착하면 prompt·model·옵션을 묶어 cache key를 만듭니다. 아직 어떤 계층도 조회하지 않았습니다.",
-  "Exact-match 계층은 문자열이 완전히 같은 저장 항목을 찾지만 이번 요청과 정확히 같은 문자열이 없어 miss입니다.",
-  "Semantic 계층은 이번 요청의 embedding과 저장된 요청들의 유사도를 비교합니다. 가장 가까운 후보가 0.97로 threshold 0.95를 넘어 hit입니다.",
-  "Semantic 계층에서 이미 hit했으므로 retrieval 계층은 조회하지 않고 그대로 결과를 반환합니다. 세 계층을 항상 다 거치는 것이 아니라 hit한 자리에서 멈춥니다.",
+  "prompt·model·옵션을 묶어 cache key를 만듭니다. 아직 어느 계층도 조회하지 않았습니다.",
+  "Exact-match는 문자열이 완전히 같은 항목을 찾습니다. 이번 요청과 같은 문자열이 없어 miss입니다.",
+  "Semantic은 요청 embedding의 유사도를 비교합니다. 가장 가까운 후보 0.97이 threshold 0.95를 넘어 hit입니다.",
+  "Semantic에서 hit했으므로 retrieval은 조회하지 않고 결과를 반환합니다. 처음 hit한 계층에서 탐색이 끝납니다.",
 ] as const;
 
 type LayerState = "pending" | "checking" | "miss" | "hit" | "skipped";
@@ -104,7 +104,7 @@ function ResultArrow({ show }: { show: boolean }) {
 }
 
 export default function LlmApplicationCachingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   const states = layerStatesForScene(scenes.active);
 
   return (
@@ -115,14 +115,17 @@ export default function LlmApplicationCachingViz() {
       note="0.97·0.95 같은 유사도 값은 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="llm-application-cache-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="요청이 cache key를 만들고 exact-match, semantic, retrieval 계층을 순서대로 조회하다가 hit한 계층에서 멈추고 나머지는 건너뛰는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[24rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex flex-col justify-center sm:min-h-0 sm:flex-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -132,11 +135,23 @@ export default function LlmApplicationCachingViz() {
           <LayerRow states={states} />
           <ResultArrow show={scenes.active === 3} />
 
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:mt-6 sm:leading-7">
             {NOTES[scenes.active]}
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {label}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {NOTES[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

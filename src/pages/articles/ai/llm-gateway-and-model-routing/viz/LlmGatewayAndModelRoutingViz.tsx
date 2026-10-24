@@ -97,7 +97,7 @@ function ResultArrow({ show }: { show: boolean }) {
 }
 
 export default function LlmGatewayAndModelRoutingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   const states = statesForScene(scenes.active);
 
   return (
@@ -108,14 +108,17 @@ export default function LlmGatewayAndModelRoutingViz() {
       note="Threshold·timeout 같은 조건은 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="llm-gateway-routing-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="요청이 저비용 model부터 시도해 확신도가 낮으면 상위 model로 escalate하고, 상위 model이 실행에 실패하면 provider fallback으로 전환해 최종 응답을 받는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[24rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex flex-col justify-center sm:min-h-0 sm:flex-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -129,6 +132,18 @@ export default function LlmGatewayAndModelRoutingViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {label}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {NOTES[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

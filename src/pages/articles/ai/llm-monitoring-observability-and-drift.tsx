@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmMonitoringObservabilityAndDriftViz from "./llm-monitoring-observability-and-drift/viz/LlmMonitoringObservabilityAndDriftViz";
+import {
+  LlmOperationsPathLocator,
+  LlmOperationsPathMapReturn,
+} from "./shared/LlmOperationsPathLocator";
 
 /**
  * LLM 운영 관측: trace·token/latency 분해·drift monitoring
@@ -15,10 +19,12 @@ import LlmMonitoringObservabilityAndDriftViz from "./llm-monitoring-observabilit
 export default function LlmMonitoringObservabilityAndDriftArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <LlmOperationsPathLocator current="observability" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           1,680ms 요청에서 마지막 generation 900ms가 가장 오래 걸렸습니다
         </h2>
+        <LlmMonitoringObservabilityAndDriftViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             요청 하나가 retrieval 80ms, 첫 generation 220ms, tool 480ms, 마지막
@@ -37,7 +43,6 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
             마지막 generation이 전체 시간의 절반보다 길어 우선 조사할 구간입니다.
           </p>
         </div>
-        <LlmMonitoringObservabilityAndDriftViz />
         <ContentBoundary article="llm-monitoring-observability-and-drift" />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
@@ -50,7 +55,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </div>
       </section>
 
-      <section id="monitoring-layers" className="scroll-mt-20">
+      <section id="monitoring-layers" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           관측 대상은 production 아래 네 개의 좁은 층으로 나뉩니다
         </h2>
@@ -87,7 +92,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         />
       </section>
 
-      <section id="drift-taxonomy" className="scroll-mt-20">
+      <section id="drift-taxonomy" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           세 drift는 입력, 관계, 결과 중 무엇이 변했는지로 갈립니다
         </h2>
@@ -150,7 +155,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </div>
       </section>
 
-      <section id="trace-tree" className="scroll-mt-20">
+      <section id="trace-tree" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Request는 중첩된 trace span tree로 남고, 이것이 LLM observability입니다
         </h2>
@@ -236,7 +241,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </div>
       </section>
 
-      <section id="token-latency-breakdown" className="scroll-mt-20">
+      <section id="token-latency-breakdown" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Token throughput과 latency breakdown은 수와 시간을 나눠서 봅니다
         </h2>
@@ -295,7 +300,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         </ProgressiveDetail>
       </section>
 
-      <section id="gpu-queue-monitoring" className="scroll-mt-20">
+      <section id="gpu-queue-monitoring" data-teach-level="boundary" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           GPU 자원 신호와 queue 신호는 system monitoring 층의 두 축입니다
         </h2>
@@ -326,7 +331,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
         />
       </section>
 
-      <section id="error-sampling-debugging" className="scroll-mt-20">
+      <section id="error-sampling-debugging" data-teach-level="failure" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Trace sampling은 비용을, error classification은 원인을 나눕니다
         </h2>
@@ -389,6 +394,7 @@ export default function LlmMonitoringObservabilityAndDriftArticle() {
           ]}
         />
       </section>
+      <LlmOperationsPathMapReturn current="observability" />
     </div>
   );
 }
