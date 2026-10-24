@@ -8191,8 +8191,8 @@ export const ARTICLE_EVIDENCE: Readonly<
     }
   ],
   "ai/serving-benchmark-methodology": [
-    { kind: "공식 문서", label: "vLLM · Benchmark CLI (docs/benchmarking/cli.md)", href: "https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md", note: "request-rate·burstiness·max-concurrency·dataset·ramp-up flag 와 보고 지표의 근거" },
-    { kind: "공식 문서", label: "NVIDIA · GenAI-Perf load generation 옵션", href: "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html", note: "warmup-request-count·stability-percentage·synthetic 입력 분포 flag 의 근거" },
+    { kind: "공식 문서", label: "vLLM v0.27.0 · Benchmark Serve CLI", href: "https://docs.vllm.ai/en/v0.27.0/cli/bench/serve/", note: "request-rate·burstiness·max-concurrency·dataset·ramp-up 옵션과 보고 지표의 근거" },
+    { kind: "공식 문서", label: "NVIDIA AIPerf v0.13.0 · 명령행 옵션", href: "https://docs.nvidia.com/aiperf/v0.13.0/reference/command-line-options", note: "request-rate·concurrency·도착 패턴·준비 구간·측정 길이 옵션의 근거" },
     { kind: "공식 규격", label: "MLCommons · MLPerf Inference Rules", href: "https://github.com/mlcommons/inference_policies/blob/master/inference_rules.adoc", note: "Scenario 정의, Server 의 Poisson 도착과 latency 조건 아래 최대 throughput 탐색, 최소 실행 시간·query 수의 근거" },
     { kind: "보충 읽기", label: "Harchol-Balter · Performance Modeling and Design of Computer Systems", href: "https://doi.org/10.1017/CBO9781139226424", note: "Little's law 와 M/M/1 의 W = 1/(μ−λ) 유도, open·closed system 차이의 근거" },
   ],

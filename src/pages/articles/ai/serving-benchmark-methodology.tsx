@@ -8,48 +8,50 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ServingBenchmarkMethodologyViz from "./serving-benchmark-methodology/viz/ServingBenchmarkMethodologyViz";
 import SteadyStateWindowViz from "./serving-benchmark-methodology/viz/SteadyStateWindowViz";
 import QueueFillViz from "./serving-benchmark-methodology/viz/QueueFillViz";
+import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "./shared/ServingDecisionSeriesLocator";
 
 /**
- * Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
+ * 서빙 성능은 입력 분포와 도착률, 준비 상태, 측정 구간을 함께 고정해 비교합니다.
  */
 export default function ServingBenchmarkMethodologyArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <ServingDecisionSeriesLocator current="measure" />
+      <ServingBenchmarkMethodologyViz />
+      <section id="problem" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          같은 서버도 benchmark 를 어떻게 돌리느냐에 따라 숫자가 두 배 달라집니다
+          같은 서버라도 측정 조건이 다르면 결과를 비교할 수 없습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Serving benchmark 의 결과는 model 과 GPU 만으로 정해지지 않습니다. 어떤 입력을
-            어떤 속도로 넣었는지, 첫 요청의 cold start 를 표본에 넣었는지, 서버가 포화하기
-            전이었는지에 따라 같은 서버의 tokens/s 와 P99 TTFT 가 몇 배씩 달라집니다.
+            서빙 성능은 모델과 GPU 이름만으로 정해지지 않습니다. 어떤 길이의 요청을 얼마나
+            빠르게 보냈는지, 첫 요청의 준비 시간을 표본에 넣었는지, 대기열이 계속 늘어나는
+            구간까지 포함했는지에 따라 처리량과 꼬리 지연이 달라집니다.
           </p>
           <p>
-            이 글은 그 조건을 하나씩 고정하는 방법론을 다룹니다. 먼저 benchmark 를 재는 범위와 입력 분포로 분류합니다. 그 뒤 warm·cold 와 steady state 로
-            표본을 고르고 반복 측정의 분산으로 차이를 판정합니다. 이어서 offered load 를 올리며 saturation point 를 찾는 utilization–latency
-            곡선을 M/M/1 직관으로 읽습니다.
+            한 가지 구성을 낮은 도착률부터 차례로 측정하겠습니다. 측정 범위와 입력 분포를 먼저
+            고정하고, 준비 구간과 정상 구간을 나눈 뒤, 같은 순서의 요청으로 반복합니다. 마지막에는
+            클라이언트가 보내려는 도착률을 높이며 지연 목표를 처음 어기는 지점을 찾습니다.
           </p>
           <p>
             지표 자체의 정의(TTFT·ITL·TPOT·percentile)는{" "}
             <Link to="/cs/ai/serving-latency-metrics-and-slo#metrics">앞 글</Link>을 전제로 하고,
-            여기서 얻은 GPU 당 capacity 를 비용과 headroom 으로 바꾸는 일은 다음 글인
-            capacity planning 이 맡습니다.
+            여기서 얻은 GPU당 처리 능력을 복사본 수와 여유 용량으로 바꾸는 일은 다음 글에서
+            다룹니다.
           </p>
         </div>
         <ContentBoundary article="serving-benchmark-methodology" />
       </section>
 
-      <section id="taxonomy" className="scroll-mt-20">
+      <section id="taxonomy" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Benchmark 는 재는 범위와 입력 분포로 먼저 분류합니다
+          측정 범위와 입력 분포를 먼저 고정합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Performance benchmark 는 정해진 workload 를 system 에 넣고 latency 와 throughput 을 재는 실험입니다. 같은 이름으로 불려도
-            무엇을 감싸고 재느냐가 다릅니다. 범위가 좁을수록 원인이 잘 보이고 넓을수록 사용자가 겪는 값에 가까워집니다.
+            성능 측정은 정해진 작업을 시스템에 넣고 지연과 처리량을 재는 실험입니다. 같은
+            ‘벤치마크’라도 어느 경계부터 어느 경계까지 시간을 쟀는지가 다릅니다. 범위가 좁으면
+            원인을 찾기 쉽고, 범위가 넓으면 사용자가 겪는 결과에 가까워집니다.
           </p>
           <p>
             Attention kernel 의 실행 시간을 batch 32, sequence 2k 에서 1.8 ms 로 재는 식입니다. 이렇게 kernel 하나나 decode step
@@ -61,9 +63,10 @@ export default function ServingBenchmarkMethodologyArticle() {
             완료까지의 tokens/s 를 잽니다. Network 와 도착 간격이 없으므로 scheduler 와 KV cache 가 만드는 상한에 가깝습니다.
           </p>
           <p>
-            Client 가 HTTP 로 요청을 보내고 streaming 응답을 받는 경로 전체를 재면 end-to-end benchmark 입니다. vLLM 의 serving
-            benchmark 와 GenAI-Perf 가 이 층이고 앞 글의 TTFT·ITL 은 모두 이 층의 client timestamp 에서 나옵니다. 사용자에게 약속할 SLO 는 이
-            층에서만 검증됩니다.
+            클라이언트가 HTTP로 요청을 보내고 스트리밍 응답을 받는 경로 전체를 재면 종단 간
+            측정입니다. vLLM의 서빙 벤치마크와 AIPerf가 이 층에 해당합니다. 앞 글의
+            TTFT·ITL도 클라이언트가 기록한 시각에서 나옵니다. 사용자에게 약속할 SLO는 이
+            층에서 검증합니다.
           </p>
           <p>
             두 번째 축은 입력 분포입니다. Synthetic benchmark 는 무작위 token 을 정해진 길이로 만들어 넣습니다. Representative benchmark 는
@@ -74,30 +77,32 @@ export default function ServingBenchmarkMethodologyArticle() {
             혼합 비율이 전혀 달라 그 tokens/s 는 운영을 대표하지 못합니다.
           </p>
           <p>
-            Benchmark distribution, 곧 입력 길이·출력 길이·도착 간격의 분포를 결과와 함께 적습니다. GenAI-Perf 는 입력 token 의 평균과 표준편차를
-            flag 로 받고 vLLM 은 dataset 이름과 random 길이 옵션을 받습니다. 분포가 다른 두 결과는 같은 서버라도 비교하지 않습니다.
+            입력 길이·출력 길이·도착 간격의 분포를 결과와 함께 적습니다. AIPerf와 vLLM은
+            입력 자료·길이·도착 패턴을 정하는 옵션을 제공합니다. 분포가 다른 두 결과는 같은
+            서버에서 나왔더라도 직접 비교하지 않습니다.
           </p>
         </div>
         <TermBreakdown
-          title="Benchmark 를 분류하는 두 축"
-          description="범위 축과 입력 축은 독립이라 end-to-end synthetic 도, micro representative 도 있습니다."
+          title="성능 측정을 나누는 두 축"
+          description="어디까지 재는지와 어떤 입력을 넣는지는 서로 다른 조건입니다."
           items={[
             { term: "Microbenchmark", description: "Kernel·step 하나만 떼어 잽니다.", example: "Attention kernel 1.8 ms at batch 32.", boundary: "Scheduler·network 가 빠져 있어 사용자 latency 를 말하지 못합니다." },
             { term: "Macrobenchmark", description: "Engine 전체를 한 process 에서 잽니다.", example: "요청 1,000 개 일괄 투입 tokens/s.", boundary: "도착 간격이 없어 queueing 이 보이지 않습니다." },
-            { term: "End-to-end benchmark", description: "Client 에서 HTTP·streaming 경로 전체를 잽니다.", example: "vLLM serving benchmark, GenAI-Perf.", boundary: "원인 분해는 되지 않아 micro 층과 함께 봐야 합니다." },
+            { term: "End-to-end benchmark", description: "클라이언트에서 HTTP·스트리밍 경로 전체를 잽니다.", example: "vLLM serving benchmark, AIPerf.", boundary: "원인을 나누어 보려면 micro 층도 함께 측정해야 합니다." },
             { term: "Synthetic vs representative", description: "무작위 고정 길이 입력과 실제 trace 분포 입력입니다.", example: "입력 1,024·출력 128 고정 vs ShareGPT 분포.", boundary: "Synthetic 은 재현이 쉽고 representative 는 운영에 가깝지만 자료가 바뀌면 결과도 바뀝니다." },
           ]}
         />
       </section>
 
-      <section id="protocol" className="scroll-mt-20">
+      <section id="protocol" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Cold 첫 요청을 버리고 steady state 표본만 세어야 비교가 됩니다
+          준비 구간과 정상 구간을 따로 잽니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Cold benchmark 는 process 가 막 뜬 뒤의 첫 요청들을 표본에 넣습니다. Warm benchmark 는 warmup 요청을 먼저 보내 준비를 끝낸 뒤 잽니다.
-            두 값은 같은 서버에서 수십 배 차이 나므로 어느 쪽인지 적지 않은 TTFT 는 비교할 수 없습니다.
+            프로세스가 막 뜬 뒤의 첫 요청에는 커널 준비, 메모리 확장, 캐시가 비어 있는 상태가
+            함께 들어갈 수 있습니다. 준비 요청을 먼저 보내고 난 뒤의 값과 섞으면 어느 비용이
+            달라졌는지 알 수 없습니다. 첫 요청과 준비 뒤 요청을 따로 기록합니다.
           </p>
           <p>
             차이가 나는 이유는{" "}
@@ -107,9 +112,10 @@ export default function ServingBenchmarkMethodologyArticle() {
             두면 첫 요청의 TTFT 가 6.8 s 이고 그 다음부터는 0.35 s 인 식입니다.
           </p>
           <p>
-            Benchmark warmup 은 그 준비를 표본 밖에서 끝내는 요청들입니다. GenAI-Perf 는 warmup 요청 수를 flag 로 받고 MLPerf 는 측정 전
-            warm-up run 을 규칙으로 둡니다. 운영에서는 cold 값도 중요합니다. Autoscaling 으로 새 replica 가 뜰 때 사용자가 겪는 값이 cold TTFT
-            이기 때문입니다. Warm 과 cold 를 둘 다 재되 따로 보고합니다.
+            준비 요청은 커널 준비와 메모리 확장을 측정 표본 밖에서 끝냅니다. AIPerf는 준비
+            요청 수와 준비 시간을 옵션으로 받고, MLPerf는 측정 전 준비 실행을 규칙으로 둡니다.
+            운영에서는 준비 전 값도 중요합니다. 자동 확장으로 새 복사본이 뜰 때 사용자가
+            겪는 값이기 때문입니다. 준비 전후 값은 모두 재되 서로 나누어 보고합니다.
           </p>
           <p>
             Warmup 이 끝나도 표본을 바로 세지는 않습니다. 대기열 길이와 batch 크기가 더 이상 한 방향으로 움직이지 않는 구간이 있는데, 그 구간의 값이 steady-state
@@ -125,25 +131,27 @@ export default function ServingBenchmarkMethodologyArticle() {
             그 흔들림을 만드는데, 이것이 measurement noise 입니다. Benchmark variance 는 그 흔들림이 반복 실행의 표준편차로 나타난 크기입니다.
           </p>
           <p>
-            설정 A 를 5 회 돌려 P50 TTFT 가 0.80, 0.83, 0.79, 0.84, 0.81 s 가 나왔다면 평균 0.814 s, 표준편차 0.021 s 입니다. 설정 B
-            가 0.78, 0.80, 0.76, 0.82, 0.79 s 로 평균 0.790 s 라면 차이 0.024 s 는 표준편차 한 개 정도입니다. A 보다 B 가 빠르다고 판정하지
-            않습니다. 차이가 표준편차의 두 배를 넘고 반복이 5 회 이상일 때만 결론을 냅니다.
+            설정 A를 5회 실행한 P50 TTFT가 0.80, 0.83, 0.79, 0.84, 0.81초라면 평균은
+            0.814초이고 표본 표준편차는 약 0.021초입니다. 설정 B의 평균이 0.790초라고 해서
+            평균 차이 0.024초만으로 우위를 확정하지 않습니다. 같은 요청 묶음과 실행 순서를
+            짝지어 차이의 구간을 계산하고, 미리 정한 허용 악화와 필요한 개선 폭에 맞춰 판정합니다.
+            반복 횟수와 ‘표준편차 몇 배’만으로 모든 실험에 적용할 문턱을 만들지 않습니다.
           </p>
           <p>
-            GenAI-Perf 가 stability percentage 로 연속 측정 구간의 latency 변동이 정해진 비율 안에
-            들 때까지 측정을 이어 가는 것도 같은 이유입니다. 분산이 큰 조건에서는 반복을 늘리거나
-            noise 원인(clock 고정, 전용 node) 을 먼저 줄인 뒤 다시 잽니다.
+            연속된 측정 구간의 지연과 처리량이 한 방향으로 변하지 않는지 확인하는 이유도
+            같습니다. 흔들림이 큰 조건에서는 반복을 늘리거나, GPU 클록과 노드 공유처럼 통제할
+            수 있는 원인을 먼저 줄인 뒤 다시 잽니다.
           </p>
         </div>
         <SteadyStateWindowViz />
         <AlgorithmBlock
-          title="Warm · steady-state · 반복 표본을 고르는 측정 절차"
+          title="준비 구간·정상 구간·반복 표본을 나누는 측정 절차"
           input={["서버 endpoint 와 고정된 설정(model, dtype, max batch, graph capture)", "입력 분포 D(길이 분포·dataset)", "offered load λ 와 측정 길이 T (예: 600 s)", "warmup 요청 수 n_w, 반복 횟수 R (예: 5)"]}
           steps={[
             { code: "cold ← TTFT of first request after process start", note: "Cold 값은 따로 기록합니다. Autoscaling 시 사용자가 겪는 값이며 warm 표본에 섞지 않습니다." },
             { code: "send n_w warmup requests drawn from D; discard", note: "Kernel JIT·graph capture·allocator 확장·prefix cache 채움을 표본 밖에서 끝냅니다." },
-            { code: "for r in 1..R:", note: "반복마다 같은 seed 로 같은 요청 순서를 쓰면 입력 sampling noise 가 빠지고 system noise 만 남습니다." },
-            { code: "  start load at rate λ; wait until queue length stops trending", note: "Ramp-up 구간입니다. 대기열·batch 크기가 한 방향으로 움직이는 동안의 표본은 버립니다." },
+            { code: "for r in 1..R:", note: "반복마다 같은 seed와 요청 순서를 쓰면 입력 차이를 통제할 수 있습니다. 시간에 따른 시스템 변화는 실행 순서를 교차해 확인합니다." },
+            { code: "  start load at rate λ; observe the declared ramp window", note: "대기열·batch 크기·처리량의 시간축을 저장합니다. 계속 증가한다면 정상 상태가 아니라 불안정한 부하로 표시합니다." },
             { code: "  collect samples for T; stop before drain", note: "마지막 도착 뒤 batch 가 작아지는 drain 구간의 ITL 은 정상 상태보다 빠르므로 제외합니다." },
             { code: "  m_r ← metrics(samples)  // P50/P99 TTFT, tokens/s", note: "반복 하나의 값입니다. Percentile 은 앞 글의 정의를 그대로 씁니다." },
             { code: "report mean(m_r), std(m_r), cold, D, λ, T, R", note: "표준편차 없이 평균만 적은 결과는 다른 설정과 비교할 수 없습니다." },
@@ -168,15 +176,15 @@ export default function ServingBenchmarkMethodologyArticle() {
         </ProgressiveDetail>
       </section>
 
-      <section id="load" className="scroll-mt-20">
+      <section id="load" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Offered load 를 올리면 throughput 은 포화하고 latency 는 꺾여 오릅니다
+          도착률을 높이면 처리량은 멈추고 대기 시간은 가파르게 늘어납니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Offered load 는 client 가 서버에 보내려는 요청의 도착률 λ 입니다. 서버가 실제로 처리한 throughput 과는 다른 양입니다. vLLM serving
-            benchmark 의 request rate 와 GenAI-Perf 의 request rate 가 이 값을 정합니다. Concurrency 로 부하를 거는 closed loop
-            방식은 요청이 끝나야 다음을 보내므로 offered load 가 서버 속도에 묶입니다.
+            vLLM과 AIPerf의 request-rate 옵션이 이 값을 정합니다. 동시성으로 부하를 거는 닫힌
+            방식은 요청이 끝나야 다음 요청을 보내므로 실제 도착률이 서버 속도에 묶입니다.
           </p>
           <p>
             λ 를 낮은 값부터 올리면 처리한 throughput 은 λ 를 그대로 따라 오릅니다. 서버가 단위 시간에 처리할 수 있는 상한 μ 에 가까워지면 throughput 은 μ
@@ -196,10 +204,10 @@ export default function ServingBenchmarkMethodologyArticle() {
             Utilization 이 80 % 에서 95 % 로 15 %p 오르는 동안 latency 는 네 배가 됩니다.
           </p>
           <p>
-            이 곡선을 utilization–latency curve 라고 부릅니다. Throughput 을 ρ 로 놓고 latency
-            를 그리면 hockey stick 모양이 되고, 꺾이는 무릎이 운영 가능한 utilization 의 상한을
-            정합니다. Serving 에서는 그 무릎 앞의 어떤 점을 고를지가 SLO 로 정해지며, 그 점의
-            throughput 이 <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link> 입니다.
+            이 관계를 이용률–지연 곡선으로 그리면 어느 지점부터 지연이 가파르게 늘어나는지 볼 수
+            있습니다. 운영 상한은 ‘보통 몇 퍼센트’라는 값으로 정하지 않습니다. 실제 요청 분포를
+            넣었을 때 정한 SLO를 마지막으로 만족하는 지점에서 정합니다. 그 조건을 만족하며 처리한
+            양이 <Link to="/cs/ai/vllm-serving#serving-goodput">goodput</Link>입니다.
           </p>
           <p>
             LLM serving 은 M/M/1 보다 복잡합니다. Batch 가 커지면 μ 자체가 오르고 service time 은 출력 길이에 비례해 지수 분포가 아닙니다. KV
@@ -215,7 +223,6 @@ export default function ServingBenchmarkMethodologyArticle() {
           </p>
         </div>
         <QueueFillViz />
-        <ServingBenchmarkMethodologyViz />
         <ExplainedFormula
           question="Offered load λ 가 처리율 μ 에 가까워질 때 평균 latency 는 얼마나 커지나요?"
           idea="서버 1 개가 평균 1/μ 로 처리하고 요청이 평균 λ 로 무작위 도착하면, 도착 시 서버가 바쁠 확률이 ρ = λ/μ 이고 그만큼 기다림이 누적되어 체류 시간이 1/(μ − λ) 로 자랍니다."
@@ -234,7 +241,7 @@ export default function ServingBenchmarkMethodologyArticle() {
             { symbol: "W", name: "평균 체류 시간", description: "도착부터 완료까지의 평균이며 serving 에서는 E2E 평균에 대응합니다." },
           ]}
           assumptions={["M/M/1: Poisson 도착, 지수 분포 service time, 서버 1 개, 무한 대기열, λ < μ 입니다. λ ≥ μ 에서는 정상 상태가 없어 식이 성립하지 않습니다.", "LLM serving 은 batch 가 μ 를 바꾸고 service time 이 출력 길이를 따르므로 이 식은 곡선의 모양(무릎) 을 설명하는 직관이지 예측식이 아닙니다."]}
-          interpretation="Utilization 을 100 % 로 채우려는 계획은 latency 를 무한대로 보내는 계획입니다. 곡선의 무릎(보통 ρ 0.7–0.85) 앞에서 SLO 를 만족하는 최대 λ 를 실측으로 찾고, 그 값이 다음 글에서 GPU 당 capacity 가 됩니다."
+          interpretation="이 단순 모형에서는 이용률이 1에 가까워질수록 평균 지연이 발산합니다. 실제 서빙은 부하를 단계적으로 높여 SLO를 만족하는 최대 도착률을 측정하고, 그 값을 다음 글의 GPU당 처리 능력으로 사용합니다."
         />
         <TermBreakdown
           title="Load 곡선을 읽을 때 구분해야 하는 네 양"
@@ -247,9 +254,9 @@ export default function ServingBenchmarkMethodologyArticle() {
         />
       </section>
 
-      <section id="reproducibility" className="scroll-mt-20">
+      <section id="reproducibility" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Baseline 과 실행 조건을 기록해야 다음 측정이 비교 가능합니다
+          기준 결과에는 실행 조건을 함께 저장합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -269,48 +276,51 @@ export default function ServingBenchmarkMethodologyArticle() {
             대상이 없는 숫자입니다.
           </p>
           <p>
-            Baseline 은 조건이 바뀔 때마다 새로 잡습니다. GPU driver 나 engine major 버전이 바뀌면 이전 baseline 과는 비교하지 않습니다. 두 버전을
-            같은 날 같은 node 에서 나란히 재어 새 baseline 으로 삼습니다. 시간이 떨어진 두 측정의 차이는 개선과 환경 변화가 섞여 있어 판정에 쓰지 않습니다.
+            드라이버나 엔진의 주요 버전이 바뀌면 새 조건으로 다시 측정합니다. 이전 결과를 버리는
+            것이 아니라 두 조건의 차이를 명시하고, 가능하면 같은 노드에서 기준과 후보를 교차
+            실행합니다. 서로 다른 시점의 숫자만 비교하면 코드 변화와 환경 변화가 섞일 수 있습니다.
           </p>
         </div>
         <AlgorithmBlock
           title="Offered load sweep 으로 SLO 아래 capacity 를 찾고 baseline 으로 기록하기"
-          input={["고정 조건 C(engine 설정·입력 분포·warmup·측정 길이·반복 횟수)", "SLO 조건 S (예: P95 TTFT ≤ 1.5 s, P99 ITL ≤ 80 ms)", "offered load 후보 Λ = {λ_1 < λ_2 < …} (예: 1, 2, 4, 6, 8, 9, 9.5 req/s)"]}
+          input={["고정 조건 C(엔진 설정·입력 분포·준비 요청·측정 길이·반복 횟수)", "SLO 조건 S (예: P95 TTFT ≤ 1.5 s, P99 ITL ≤ 80 ms)", "도착률 후보 Λ = {λ_1 < λ_2 < …} (예: 1, 2, 4, 6, 8, 9, 9.5 req/s)"]}
           steps={[
             { code: "for λ in Λ ascending:", note: "낮은 부하부터 올립니다. 각 점은 앞 절 절차대로 warm·steady-state·R 회 반복으로 잽니다." },
             { code: "  m(λ) ← mean ± std over R runs of {throughput, P95 TTFT, P99 ITL}", note: "점 하나에 값 하나가 아니라 분산이 붙어야 다음 점과의 차이를 판정할 수 있습니다." },
-            { code: "  if throughput(λ) − throughput(λ_prev) < std: saturation ← λ_prev", note: "Throughput 증가가 분산 안에 묻히면 그 앞 점이 saturation point 입니다." },
-            { code: "  if not S(m(λ)): break", note: "SLO 를 처음 어긴 λ 에서 멈춥니다. 보통 saturation 보다 앞에서 먼저 어깁니다." },
-            { code: "λ_max ← largest λ with S(m(λ))", note: "SLO 를 만족한 마지막 점이 이 설정의 capacity 이며 그 throughput 이 goodput 입니다." },
+            { code: "  stable(λ) ← queue and completion rate do not diverge during the window", note: "도착률보다 완료율이 낮고 대기열이 계속 늘면 그 점은 정상 상태 용량으로 쓰지 않습니다." },
+            { code: "  pass(λ) ← stable(λ) and predeclared SLO test passes", note: "평균만 보지 않고 미리 정한 꼬리 지연·오류율과 불확실성 기준을 함께 적용합니다." },
+            { code: "λ_max ← largest measured λ with pass(λ)", note: "측정한 후보 사이의 정확한 경계가 필요하면 그 구간을 더 촘촘하게 다시 잽니다." },
             { code: "baseline ← {C, S, Λ, m(·), λ_max, saturation, tool versions, date}", note: "조건 전체를 결과와 한 묶음으로 저장합니다. 결과만 남은 baseline 은 재현되지 않습니다." },
           ]}
           output="λ–throughput–latency 곡선, saturation point, SLO 아래 최대 offered load λ_max, 그리고 조건이 붙은 baseline"
         />
         <ProgressiveDetail
           title="Open loop 와 closed loop 부하 중 어느 쪽으로 sweep 해야 하나요?"
-          preview="Capacity 를 찾을 때는 open loop(request rate) 가 맞습니다. Closed loop(concurrency) 는 서버가 느려지면 부하도 줄어 saturation 이 가려집니다."
+          preview="도착률 한계를 찾을 때는 요청률을 고정하는 열린 부하가 유리합니다. 동시 사용자 경험을 재현하려면 닫힌 부하도 별도로 필요합니다."
         >
           <p>
             Closed loop 는 동시 요청 수 N 을 고정하고 하나가 끝나면 다음을 보냅니다. 서버가 포화하면 응답이 늦어져 도착률이 스스로 낮아지므로 대기열이 무한히 자라지
             않습니다. Latency 는 N 에 비례해 완만하게 늘어납니다. 사용자 N 명이 붙어 있는 상황의 모사에는 맞지만 saturation 의 무릎은 보이지 않습니다.
           </p>
           <p>
-            Open loop 는 서버 상태와 무관하게 λ 로 보냅니다. vLLM 의 request rate 와 burstiness (Gamma 분포의 shape, 1 이면 Poisson)
-            가 이 방식입니다. λ &gt; μ 이면 대기열이 자라 timeout 이 납니다. 곡선의 무릎과 saturation point 는 이 방식에서만 정확히 잡힙니다.
+            열린 부하는 서버 상태와 무관하게 λ로 보냅니다. vLLM의 request rate와 burstiness가
+            이 방식입니다. λ가 처리 능력을 넘으면 대기열과 시간 초과가 늘어 용량 경계를 보기
+            쉽습니다. 다만 실제 서비스가 사용자별 다음 요청 대기나 동시성 제한을 가진다면 닫힌
+            부하의 결과도 함께 측정해야 합니다. 한 방식만 ‘정확하다’고 부르지 않습니다.
           </p>
         </ProgressiveDetail>
       </section>
 
       <section id="sources" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          절차는 benchmark 도구와 MLPerf 규칙에서, 곡선은 queueing 교과서에서 왔습니다
+          측정 절차와 대기열 곡선의 근거
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Offered load 와 burstiness, dataset 과 ramp-up 옵션은 vLLM benchmarking CLI 문서의
-            flag 를, warmup 요청 수와 stability percentage, synthetic 입력 분포는 GenAI-Perf
-            문서의 flag 를 그대로 옮겼습니다. 두 도구 모두 flag 이름과 기본값이 버전마다
-            바뀝니다.
+            도착률과 burstiness, 입력 자료와 ramp-up 옵션은 vLLM v0.27.0의 CLI 문서를
+            확인했습니다. NVIDIA 쪽 도구는 AIPerf v0.13.0으로 고정해 요청률·도착 패턴·준비
+            구간 옵션을 확인했습니다. 도구 이름만 남기지 않고 사용한 버전과 실제 명령을 결과에
+            저장해야 합니다.
           </p>
           <p>
             Steady state 를 위한 최소 실행 시간과 query 수, Server scenario 의 Poisson 도착과
@@ -323,7 +333,7 @@ export default function ServingBenchmarkMethodologyArticle() {
           <CitationBlock
             source="vLLM project · Benchmark CLI 문서 (docs/benchmarking/cli.md)"
             citeKey={1}
-            href="https://github.com/vllm-project/vllm/blob/main/docs/benchmarking/cli.md"
+            href="https://docs.vllm.ai/en/v0.27.0/cli/bench/serve/"
             type="code"
           >
             Serving benchmark 의 request-rate(inf 면 일괄 투입), burstiness(Gamma shape, 1 이
@@ -332,15 +342,15 @@ export default function ServingBenchmarkMethodologyArticle() {
             throughput 을 보고합니다.
           </CitationBlock>
         </div>
-        <div id="paper-genai-perf-load" className="not-prose my-8 scroll-mt-24">
+        <div id="paper-aiperf-load" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA · GenAI-Perf 문서 (load generation 옵션)"
+            source="NVIDIA AIPerf v0.13.0 · 명령행 옵션"
             citeKey={2}
-            href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html"
+            href="https://docs.nvidia.com/aiperf/v0.13.0/reference/command-line-options"
           >
-            concurrency 와 request-rate 두 부하 방식, measurement-interval, warmup-request-count,
-            stability-percentage(연속 측정 구간의 latency 변동 허용 비율), request-count, 그리고
-            synthetic-input-tokens 의 mean·stddev 를 flag 로 정의합니다.
+            request-rate와 concurrency, constant·poisson·gamma 도착 패턴, warmup-request-count와
+            warmup-duration, benchmark-duration과 request-count를 각각 지정합니다. GenAI-Perf에서
+            옮겨가는 기능과 차이는 별도 이전 문서에 정리되어 있습니다.
           </CitationBlock>
         </div>
         <div id="paper-mlperf-rules" className="not-prose my-8 scroll-mt-24">
@@ -374,6 +384,7 @@ export default function ServingBenchmarkMethodologyArticle() {
           <Link to="/cs/ai/serving-latency-metrics-and-slo#slo">앞 글</Link>을 참고하세요.
         </p>
       </section>
+      <ServingDecisionMapReturn current="measure" />
     </div>
   );
 }

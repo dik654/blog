@@ -67,6 +67,7 @@ export default function TierMixFleetViz() {
       note="Replica당 처리량 5,000·1,800·1,000 tokens/s와 목표 utilization 0.7은 계산용 가정값입니다. 405B의 16장은 Llama 3 논문의 두 서버 BF16 배치이고, FP8 8장은 이 글이 Table 3로 직접 센 weight 크기에 근거한 배치입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -74,7 +75,7 @@ export default function TierMixFleetViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
@@ -94,7 +95,7 @@ export default function TierMixFleetViz() {
                 <div className="mt-1 flex items-center gap-2">
                   <div className="flex h-5 min-w-0 flex-1 items-center rounded-sm bg-muted/60">
                     <div
-                      className="h-full rounded-sm transition-[width] duration-500"
+                      className={`h-full rounded-sm ${scenes.reducedMotion ? "" : "transition-[width] duration-500"}`}
                       style={{
                         width: `${Math.max((gpus / BASE_TOTAL) * 100, 0.8)}%`,
                         backgroundColor: tier.color,
@@ -131,6 +132,9 @@ export default function TierMixFleetViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{index + 1}. {label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

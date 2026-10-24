@@ -3350,3 +3350,24 @@
   앱 root 안에서만 감추는 `static-reading-only` 목록으로 바꿔 해결했습니다.
 - 변경 파일 ESLint, TypeScript와 production build, 엄격 topology·architecture-flow·reading-order·
   coverage 감사를 통과했습니다. 공개 배포 경로 검증은 남아 있습니다.
+
+### AI 서빙 판단 묶음 로컬 완료 (2026-10-25)
+
+- `disaggregated-prefill-decode-serving`과 `inference-optimization-layers`를 concept,
+  `serving-benchmark-methodology`와 `inference-cost-and-capacity-planning`을 practice로 분류했습니다.
+  네 글은 `상태 인계 → 개선 위치 → 동일 조건 측정 → 용량 결정`이라는 직속 부모 지도를 공유합니다.
+- 분산 추론 글은 요청 R의 128B 기록을 준비·복사·완료 확인 뒤 넘기는 과정을 맡고, 최적화 글은 같은
+  100ms 요청에서 한 구간을 줄여도 남은 구간이 상한을 만드는 이유를 맡습니다. 두 실무 글은 이 원리를
+  고정 조건의 부하 실험과 GPU 수·여유·비용 계산으로 이어 갑니다.
+- 벤치마크 글은 열린 부하와 닫힌 부하, 준비·증가·정상·종료 구간을 분리했습니다. 보편적 2σ 판정
+  규칙을 제거하고 vLLM v0.27.0·AIPerf v0.13.0 공식 문서로 도구 경계를 고정했습니다. 용량 글은
+  20 RPS×300 token, 1,000 tokens/s/GPU, 목표 이용률 0.7이라는 설명용 가정에서 9장을 계산하고,
+  평균·peak, raw·계획 여유, 고정·reserved+autoscale을 구분했습니다.
+- JavaScript 비활성 정적 문서에서는 현재 장면용 차트와 SVG를 숨기고 모든 장면의 순서와 결론을
+  표시합니다. 이 변경으로 Recharts의 서버 렌더링 기본 폭 600px가 390px 모바일 문서를 642px로
+  늘리던 문제를 없앴습니다. 네 글의 움직이는 그림 10개는 정적 장면 목록을 갖습니다.
+- 변경 파일 ESLint, TypeScript, production build와 엄격 topology·architecture-flow·reading-order·
+  coverage 감사를 통과했습니다. 빌드는 7,896개 module, 정적 public route 2,086개와 no-script 본문
+  111편을 생성했습니다. 390×844·1,440×1,000의 네 경로×두 viewport 검사에서 실패 0, 문서와 바깥
+  시각화 가로 넘침 0, console 오류 0이었습니다. 키보드·명시적 재생·화면 이탈 정지·reduced-motion과
+  JavaScript 비활성 전체 장면도 확인했습니다. 공개 배포 경로 검증은 남아 있습니다.

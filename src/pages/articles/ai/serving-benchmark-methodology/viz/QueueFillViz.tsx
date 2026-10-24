@@ -63,6 +63,7 @@ export default function QueueFillViz() {
       note="M/M/1(서버 1개, Poisson 도착, 지수 service time) 평균값입니다. 실제 순간의 대기열은 이 평균 주위로 출렁입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -70,7 +71,7 @@ export default function QueueFillViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col">
+        <div data-viz-live-only className="flex shrink-0 flex-col">
           <div className="flex min-h-[3.7rem] flex-wrap content-start items-baseline justify-between gap-x-2 gap-y-1 sm:min-h-0">
             <h4 className="text-base font-bold">{scene.label}</h4>
             <span className="font-mono text-sm font-bold text-primary">
@@ -157,6 +158,9 @@ export default function QueueFillViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => <li key={item.label}><strong>{index + 1}. {item.label}</strong><span className="mt-1 block text-muted-foreground">{item.note}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

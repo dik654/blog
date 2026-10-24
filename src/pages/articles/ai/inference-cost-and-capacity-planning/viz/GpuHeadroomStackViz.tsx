@@ -89,6 +89,7 @@ export default function GpuHeadroomStackViz() {
       note="peak 20 RPS × 300 token = 6,000 tokens/s, 장당 1,000 tokens/s, 목표 0.7, $2/GPU-h는 본문의 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -96,7 +97,7 @@ export default function GpuHeadroomStackViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div key={scenes.active} className="flex shrink-0 flex-col">
+        <div data-viz-live-only key={scenes.active} className="flex shrink-0 flex-col">
           <h4 className="text-base font-bold">{scene.label}</h4>
 
           <div className="mt-3 flex items-end gap-1" style={{ height: 10 * CELL_PX + 4 }}>
@@ -154,6 +155,9 @@ export default function GpuHeadroomStackViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => <li key={item.label}><strong>{index + 1}. {item.label}</strong><span className="mt-1 block text-muted-foreground">{item.note}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

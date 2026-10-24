@@ -10,24 +10,26 @@ import InferenceCostAndCapacityPlanningViz from "./inference-cost-and-capacity-p
 import TierMixFleetViz from "./inference-cost-and-capacity-planning/viz/TierMixFleetViz";
 import GpuHeadroomStackViz from "./inference-cost-and-capacity-planning/viz/GpuHeadroomStackViz";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
+import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "./shared/ServingDecisionSeriesLocator";
 
 /**
- * 추론 비용은 cost/token 으로, capacity 는 peak 와 headroom 으로 계획합니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
+ * 측정한 처리 능력을 GPU 수·여유 용량·비용으로 바꾸는 과정을 설명합니다.
  */
 export default function InferenceCostAndCapacityPlanningArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <ServingDecisionSeriesLocator current="capacity" />
+      <InferenceCostAndCapacityPlanningViz />
+      <section id="problem" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Peak 6,000 tokens/s를 받으려면 GPU 9장이 필요합니다
+          측정한 처리량에서 필요한 GPU 수를 계산합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Peak는 20 RPS이고 요청 하나는 평균 300 token입니다. GPU 한 장의 SLO
-            처리량은 1,000 tokens/s지만 목표 utilization을 .7로 제한하므로 계획에
-            쓸 수 있는 값은 700 tokens/s입니다. 6,000/700=8.57을 올림해 9장이 됩니다.
+            먼저 설명용 요청을 하나 정합니다. 가장 바쁜 시간의 요청률은 초당 20건이고 요청 한
+            건은 평균 300개 토큰을 처리합니다. 앞 글의 동일 조건 측정에서 GPU 한 장이 SLO를
+            지키며 초당 1,000개 토큰을 처리했고, 계획상 그 값의 70%까지만 사용한다고
+            가정하겠습니다. 실제 장비에서 측정한 값이나 보편적인 권장 이용률이 아닙니다.
           </p>
           <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
           <ol>
@@ -36,18 +38,17 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             <li>그래프의 planning margin 5%와 raw headroom 50%는 같은 분모일까요?</li>
           </ol>
           <p>
-            답은 <strong>아니요, 예, 아니요</strong>입니다. 9장의 목표 구간 용량은
+            이 가정에서 답은 <strong>아니요, 예, 아니요</strong>입니다. 9장의 목표 구간 용량은
             6,300 tokens/s라 peak보다 5% 남습니다. Raw 상한 9,000을 분모로 보면
             50%가 남지만, 그 50%에는 latency가 급등하기 전에 비워 둔 30%가 포함됩니다.
           </p>
         </div>
-        <InferenceCostAndCapacityPlanningViz />
         <ContentBoundary article="inference-cost-and-capacity-planning" />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
-            LLM 추론 비용은 GPU를 빌린 시간을 그 시간에 낸 token 수로 나눈
-            cost/token에서 시작합니다. 필요한 GPU 수는 peak를 SLO 아래의 GPU당
-            처리량으로 나누고, 장애·예측 오차·배포를 흡수할 여유를 더해 정합니다.
+            추론 비용은 GPU를 확보한 시간의 비용을 그 시간에 성공적으로 처리한 업무량으로
+            나누어 봅니다. 필요한 GPU 수는 가장 바쁜 시간의 수요를 SLO 아래 GPU당 처리량으로
+            나누고, 장애·예측 오차·배포를 흡수할 여유를 더해 정합니다.
           </p>
           <p>
             GPU당 처리량은 앞 글의{" "}
@@ -57,9 +58,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </div>
       </section>
 
-      <section id="cost" className="scroll-mt-20">
+      <section id="cost" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Cost/token 은 GPU-hour 단가를 시간당 token 수로 나눈 값입니다
+          토큰당 비용은 GPU 시간 비용을 완료한 토큰 수로 나눕니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -124,9 +125,9 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         />
       </section>
 
-      <section id="efficiency" data-calculation-explained className="scroll-mt-20">
+      <section id="efficiency" data-calculation-explained data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          서버를 고를 때는 throughput per dollar 와 per watt 로 비교합니다
+          서버 후보는 비용과 전력당 유효 처리량으로 비교합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -144,11 +145,16 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             그래서입니다.
           </p>
           <p>
-            Total cost of ownership(TCO) 은 장비를 소유할 때 드는 비용을 수명 전체에 걸쳐 더한 값입니다. 구매가에 전력·냉각·공간·운영 인력이 모두 들어갑니다.
-            GPU 8장 서버를 $250,000에 사서 4년 내내 쓴다고 가정하겠습니다. 총 사용 가능 시간은 4년 × 해마다 8,760시간 × 서버마다 GPU 8장 =
-            280,320 GPU-h이므로 장비비는 $250,000 ÷ 280,320 GPU-h ≈ $0.89/GPU-h입니다. 전력은 GPU마다 700W × 8장 =
-            5.6kW이고, PUE 1.3을 곱하면 시설 전체가 7.28kW를 씁니다. 시간당 $0.12/kWh라면 서버 전력비는 약 $0.87/h이며,
-            GPU 8장으로 나누면 약 $0.11/GPU-h가 더해집니다.
+            총소유비용(TCO)은 장비를 소유하는 동안 드는 비용을 모두 더한 값입니다. 구매가뿐
+            아니라 전력·냉각·공간·운영 인력도 포함합니다. GPU 8장 서버를 $250,000에 사서
+            4년 내내 쓴다고 가정하겠습니다.
+          </p>
+          <p>
+            총 사용 가능 시간은 4년 × 해마다 8,760시간 × 서버마다 GPU 8장 = 280,320
+            GPU-h입니다. 장비비는 $250,000 ÷ 280,320 GPU-h ≈ $0.89/GPU-h입니다.
+            GPU마다 700W를 쓰면 서버 전력은 5.6kW이고, PUE 1.3을 곱한 시설 전체 전력은
+            7.28kW입니다. 전기 요금이 $0.12/kWh라면 서버 전력비는 약 $0.87/h, GPU 한
+            장당 약 $0.11/GPU-h입니다.
           </p>
           <p>
             이 $1/GPU-h 는 GPU 가 4 년 내내 차 있을 때의 값입니다. 평균 utilization 이 40 % 면 token 당 실제 비용은 2.5 배가 되어 $2/GPU-h
@@ -165,19 +171,20 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         />
         <ProgressiveDetail
           title="입력 token 과 출력 token 의 비용을 따로 매겨야 하나요?"
-          preview="Prefill 은 compute-bound, decode 는 memory-bound 라 token 당 GPU 시간이 다릅니다. 같은 단가로 세면 긴 입력 workload 의 비용이 가려집니다."
+          preview="입력 처리와 생성은 연산·메모리 접근의 비중이 다를 수 있습니다. 한 단가로만 합치면 요청 분포에 따른 비용 차이가 가려질 수 있습니다."
         >
           <p>
-            입력 1,000 token 의 prefill 은 한 step 에 끝나지만 batch 안 다른 요청의 decode 를 그만큼 늦춥니다. 출력 300 token 은 300 step
-            에 걸쳐 weight 를 300 번 읽습니다. API 가격표가 입력과 출력을 다르게 매기는 것은 이 때문입니다. 내부 비용도 두 분포를 붙인 benchmark 에서 나온
-            tokens/s 로 계산해야 합니다.
+            긴 입력을 처리하는 단계와 토큰을 하나씩 생성하는 단계는 실행 모양이 다릅니다.
+            어느 쪽이 연산이나 메모리에 막히는지는 모델·GPU·묶음 크기에서 측정해야 합니다. API
+            가격표의 입력·출력 단가가 다르다는 사실만으로 내부 원가 비율을 역산하지 않습니다.
+            내부 비용은 실제 입력·출력 길이 분포를 넣은 측정 결과에서 계산합니다.
           </p>
         </ProgressiveDetail>
       </section>
 
-      <section id="capacity" className="scroll-mt-20">
+      <section id="capacity" data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          필요 GPU 수는 peak 를 목표 utilization 의 GPU 당 처리량으로 나눈 값입니다
+          가장 바쁜 시간의 수요를 계획상 GPU당 처리량으로 나눕니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -190,9 +197,11 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             utilization 100 % 에 해당하므로 latency 가 발산하는 점입니다.
           </p>
           <p>
-            목표 utilization 을 무릎 앞인 0.7 정도로 두고 6,000 / (1,000 × 0.7) = 8.57, 올림해서 9 장으로 계획합니다. Raw 용량은
-            9,000 tokens/s라 peak보다 50% 큽니다. 목표 utilization을 적용한 planning 용량은
-            6,300 tokens/s라 실제 계획 여유는 5%입니다.
+            이 설명에서는 목표 이용률을 0.7로 가정해 6,000 / (1,000 × 0.7) = 8.57을
+            얻고, 정수로 올림해 9장으로 계획합니다. 0.7은 관례나 권장값이 아닙니다. 실제
+            계획에서는 앞 글의 부하 곡선에서 지연·오류 SLO를 마지막으로 안정적으로 만족한
+            구간과 장애 시나리오를 기준으로 정합니다. 원시 처리 상한은 초당 9,000개 토큰이라
+            수요보다 50% 크고, 가정한 계획 구간의 용량은 초당 6,300개 토큰이라 5%가 남습니다.
           </p>
           <p>
             Headroom 을 peak 의 2 배로 잡으면 12 장입니다. $2/GPU-h 가정에서 추가 3 장은 한 달에 3 × 2 × 720 = $4,320 입니다. 평균 트래픽이 8
@@ -240,7 +249,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             { symbol: String.raw`\mathrm{RPS}_{\text{peak}}`, name: "Peak 요청률", description: "예측 트래픽 곡선의 최댓값(예: 20 req/s) 입니다." },
             { symbol: String.raw`n_{\text{req}}`, name: "요청당 token 수", description: "입력·출력을 benchmark 와 같은 분포로 센 요청당 token(예: 300) 입니다." },
             { symbol: String.raw`r_{\text{gpu}}`, name: "GPU 당 SLO 처리량", description: "앞 글의 λ sweep 에서 SLO 를 만족한 마지막 점의 tokens/s(예: 1,000) 입니다." },
-            { symbol: "u", name: "목표 utilization", description: "Utilization–latency 곡선의 무릎 앞 값(예: 0.7) 입니다." },
+            { symbol: "u", name: "계획 이용률", description: "실제 부하 곡선에서 SLO를 안정적으로 만족한 구간을 기준으로 정합니다. 0.7은 이 글의 가정입니다." },
             { symbol: "d", name: "Peak token 수요", description: "Peak RPS × 요청당 token 수입니다. 이 예에서는 6,000 tokens/s입니다." },
           ]}
           assumptions={["r_gpu 가 planning 의 트래픽 분포에서 잰 값이라는 전제입니다. 분포가 다르면 다시 재야 합니다.", "u 는 M/M/1 직관의 무릎이며 실제 무릎은 실측 곡선에서 읽습니다. 요청 간 상관(burst) 이 크면 u 를 더 낮춥니다."]}
@@ -256,8 +265,8 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           ]}
         />
         <ProgressiveDetail
-          title="목표 utilization 0.7 안에 GPU clock 저하도 들어 있나요?"
-          preview="아닙니다. 0.7은 대기열이 급격히 길어지기 전에 비워 두는 여유입니다. Clock이 떨어지면 분모의 r_gpu 자체가 줄어들므로 따로 재야 합니다."
+          title="계획 이용률 0.7 안에 GPU 클럭 저하도 들어 있나요?"
+          preview="아닙니다. 0.7은 이 사례에서 대기 증가에 대비해 둔 가정입니다. 클럭이 떨어지면 GPU당 처리량 자체가 줄어드므로 다시 재야 합니다."
         >
           <p>
             GPU는 전력 한도나 온도 한도에 닿으면 스스로 clock을 낮춥니다. NVIDIA 관리 library(NVML)는 그 이유를 따로
@@ -277,7 +286,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </ProgressiveDetail>
       </section>
 
-      <section id="tier-mix" data-calculation-explained className="scroll-mt-20">
+      <section id="tier-mix" data-calculation-explained data-teach-level="4" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           모델 등급마다 GPU를 따로 세면 큰 모델 하나가 GPU 대부분을 가져갑니다
         </h2>
@@ -387,20 +396,27 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </div>
       </section>
 
-      <section id="scaling" data-calculation-explained className="scroll-mt-20">
+      <section id="scaling" data-calculation-explained data-teach-level="6" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          기본 부하는 reserved 로, peak 는 autoscaling 으로 채웁니다
+          기본 용량과 시간대별 추가 용량을 나누어 확보합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Reserved capacity 는 일정 기간 쓰겠다고 약정하고 할인받는 용량이고 on-demand 는 약정 없이 시간 단위로 빌리는 용량입니다. Cloud 는
-            약정형(Savings Plans·Reserved) 과 무약정 on-demand, 남는 자원을 싸게 파는 spot 을 나란히 둡니다. 약정은 쓰지 않아도 비용이 나갑니다.
+            약정 용량은 일정 기간 사용을 약속하고 할인받는 방식이고, 온디맨드 용량은 장기 약정
+            없이 시간 단위로 빌리는 방식입니다. 클라우드의 구체적인 할인 상품과 온프레미스 구매
+            비용은 계약이 다르지만, 계속 필요한 기본 용량과 일부 시간에만 필요한 추가 용량을
+            나누어 계산한다는 원리는 같습니다.
           </p>
           <p>
-            그래서 하루 종일 있는 기본 부하는 reserved 로, 낮에만 있는 peak 는 on-demand 로
-            채웁니다. 기본 부하는 GPU 6장 × 장마다 $1.2/GPU-h × 한 달 720시간 = $5,184입니다.
-            Peak는 하루 6시간씩 30일이므로 180시간이며, 추가 GPU 6장 × 장마다 $2/GPU-h × 180시간 = $2,160입니다.
-            두 비용을 더하면 $7,344입니다. GPU 12장을 모두 on-demand로 한 달 내내 두면 12장 × $2/GPU-h × 720시간 = $17,280입니다.
+            그래서 하루 종일 필요한 기본 부하는 약정 용량으로, 낮에만 필요한 최대 부하는
+            온디맨드 용량으로 채웁니다. 기본 부하는 GPU 6장 × $1.2/GPU-h × 720시간 =
+            $5,184입니다. 최대 부하용 GPU 6장은 하루 6시간씩 30일, 모두 180시간을 쓰므로
+            6장 × $2/GPU-h × 180시간 = $2,160입니다.
+          </p>
+          <p>
+            두 비용을 더하면 한 달에 $7,344입니다. 반면 GPU 12장을 모두 온디맨드로 한 달
+            내내 두면 12장 × $2/GPU-h × 720시간 = $17,280입니다. 이는 설명용 가격
+            가정이며 실제 계약 가격을 뜻하지 않습니다.
           </p>
           <p>
             늘리는 방향은 둘입니다. Scale-up 은 replica 하나를 더 큰 GPU 나 더 많은 GPU(tensor parallel) 로 키웁니다. scale-out 은 같은
@@ -408,20 +424,29 @@ export default function InferenceCostAndCapacityPlanningArticle() {
             먼저이고 그 다음 수요는 scale-out 으로 받습니다.
           </p>
           <p>
-            둘의 비용 구조가 다릅니다. Scale-up 은 GPU 들이 layer 마다 all-reduce 로 통신해 장당 처리량이 떨어지지만(1,000 → 900) memory 를 합쳐
-            쓰므로 KV cache 가 커집니다. Scale-out 은 replica 사이 통신이 없어 처리량이 선형으로 늡니다. 대신 replica 마다 weight 사본을 들고 있어
-            memory 가 중복되고 앞단에 load balancer 와 prefix 기반 routing 이 필요합니다.
+            두 방식의 비용 구조는 다릅니다. 규모 확대는 복사본 하나에 더 많은 GPU를 붙입니다.
+            TP를 쓰면 GPU 사이 통신이 생기므로, 장당 처리량이 1,000에서 900으로 줄었다는
+            가정도 별도로 측정해야 합니다.
           </p>
           <p>
-            Autoscaling 은 replica 수를 측정치에 따라 자동으로 바꾸는 제어입니다. Kubernetes
-            HPA 는 15 초마다 desired = ceil(current × metric/target) 을 계산하고, 비율이 1 에서
-            10 % 안이면 움직이지 않으며, 줄일 때는 5 분 안정화 창을 둡니다. 그 mechanism 은{" "}
+            수평 확대는 같은 복사본을 늘립니다. 복사본 사이 모델 통신은 줄지만
+            게이트웨이·CPU·네트워크·스토리지를 공유합니다. 따라서 전체 처리량이 언제나
+            복사본 수에 비례한다고 가정하지 않습니다. 각 복사본은 가중치 사본과 KV 공간을
+            따로 가지며 앞단의 요청 분배가 필요합니다.
+          </p>
+          <p>
+            자동 확장은 복사본 수를 측정값에 따라 바꾸는 제어입니다. Kubernetes HPA의 기본
+            동기화 주기는 15초이고, 기본 허용 오차는 10%, 축소 안정화 창은 5분입니다. 모두
+            클러스터 설정이나 동작 정책으로 바뀔 수 있습니다. 원하는 복사본 수는
+            ceil(current × metric/target) 관계로 계산합니다. 이 제어 과정은{" "}
             <Link to="/cs/ai/llm-serving-ops#serving-deployment">HPA control loop</Link> 이 맡습니다.
           </p>
           <p>
-            LLM 에서 정책의 핵심은 metric 과 지연입니다. metric 은 CPU 가 아니라 대기열 길이나 KV cache utilization 으로 둡니다. 새 replica 가
-            weight 를 내려받아 warmup 을 마치기 까지 몇 분이 걸리므로 트래픽이 오른 뒤 반응하면 늦습니다. 시간대 예측으로 미리 늘리는 scheduled scaling 을
-            반응형 위에 겹칩니다.
+            확장 정책에는 서비스 대기와 준비 시간이 드러나는 지표가 필요합니다. CPU 사용률만으로
+            충분한지, 대기열 길이·KV 사용량·TTFT 가운데 무엇이 실제 SLO 위반을 먼저 알리는지는
+            부하 시험으로 확인합니다. 새 복사본이 가중치를 읽고 준비를 마치는 데 걸린 실측 시간이
+            길다면, 반응형 확장만으로는 늦을 수 있으므로 예상 수요보다 먼저 늘리는 정책을 함께
+            검토합니다.
           </p>
           <p>
             마지막 항목은 GPU fragmentation 입니다. 여러 model 이나 job 이 GPU 를 쪼개 쓸 때
@@ -454,17 +479,17 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           title="용량을 늘리는 방식의 비용 구조"
           items={[
             { term: "Reserved vs on-demand", description: "약정 할인과 무약정 시간제입니다.", example: "기본 6 장 약정 + peak 6 장 on-demand → $7,344/월 (가정).", boundary: "약정은 트래픽이 줄어도 비용이 나갑니다." },
-            { term: "Scale-up", description: "Replica 하나를 더 큰 GPU·더 많은 TP 로 키웁니다.", example: "70B fp16 → TP 2 필수.", boundary: "Layer 마다 all-reduce 로 장당 처리량이 줄어듭니다." },
-            { term: "Scale-out", description: "같은 replica 를 복제합니다.", example: "1 → 3 replica, 처리량 3 배.", boundary: "Weight 사본이 중복되고 routing 이 필요합니다." },
+            { term: "Scale-up", description: "복사본 하나를 더 큰 GPU나 더 많은 GPU로 구성합니다.", example: "70B FP16 가중치만 약 140GB이므로 80GB GPU 한 장에는 들어가지 않습니다.", boundary: "TP 통신과 KV·작업 공간까지 넣은 실제 메모리와 처리량을 다시 측정합니다." },
+            { term: "Scale-out", description: "같은 복사본을 여러 개 둡니다.", example: "복사본 1개와 3개의 처리량을 같은 부하에서 비교합니다.", boundary: "공유 게이트웨이·CPU·네트워크가 막히면 세 배로 늘지 않으며 가중치 사본과 요청 분배가 필요합니다." },
             { term: "GPU fragmentation", description: "쪼개 쓴 GPU 의 남는 조각이 어느 요청에도 맞지 않는 상태입니다.", example: "3g + 2g 배치 뒤 4g 요청 불가.", boundary: "KV cache 의 block fragmentation 과는 다른 층입니다." },
           ]}
         />
         <ProgressiveDetail
           title="Autoscaling 이 있으면 headroom 을 0 으로 둬도 되나요?"
-          preview="아닙니다. 새 replica 가 ready 가 되기까지의 준비 시간 동안 트래픽 증가분을 받아 낼 headroom 이 있어야 하고, 그 시간은 수 분입니다."
+          preview="아닙니다. 새 복사본이 요청을 받을 수 있을 때까지 걸린 실측 준비 시간 동안 수요 증가분을 받아 낼 여유가 필요합니다."
         >
           <p>
-            HPA 가 15 초마다 계산해도 GPU replica 는 scheduling, weight 다운로드, warmup 을
+            HPA가 기본 주기로 계산해도 GPU 복사본은 배치, 가중치 읽기, 준비 실행을
             지나야 traffic-ready 가 되며 그 경로는{" "}
             <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">ready-capacity path</Link> 가 다룹니다.
             준비 시간 d 가 5 분이고 트래픽이 5 분에 30 % 오를 수 있다면 headroom 은 최소 30 %
@@ -477,7 +502,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
         </ProgressiveDetail>
       </section>
 
-      <section id="sources" className="scroll-mt-20">
+      <section id="sources" data-teach-level="7" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           가격 구조와 autoscaling 규칙은 공식 문서에서, 단가는 가정값입니다
         </h2>
@@ -586,6 +611,7 @@ export default function InferenceCostAndCapacityPlanningArticle() {
           <Link to="/cs/ai/llm-serving-ops#k8s-gpu-fleet">LLM serving 운영</Link>을 참고하세요.
         </p>
       </section>
+      <ServingDecisionMapReturn current="capacity" />
     </div>
   );
 }

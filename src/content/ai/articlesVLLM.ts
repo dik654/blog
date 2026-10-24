@@ -127,20 +127,20 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "serving-benchmark-methodology",
-    title: "Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다",
+    title: "서빙 성능은 부하를 단계적으로 높여 정상 구간에서 비교합니다",
     subcategory: "ai-llm-serving",
     sections: [
       { id: "problem", title: "같은 서버도 실행 조건에 따라 숫자가 달라지는 이유" },
-      { id: "taxonomy", title: "Micro·macro·end-to-end 와 입력 분포" },
-      { id: "protocol", title: "Cold·warm, steady state, noise 와 variance" },
-      { id: "load", title: "Offered load, saturation, utilization–latency 곡선" },
-      { id: "reproducibility", title: "Baseline 과 λ sweep 절차" },
+      { id: "taxonomy", title: "측정 범위와 입력 분포" },
+      { id: "protocol", title: "준비 구간·정상 구간·측정 흔들림" },
+      { id: "load", title: "도착률·포화점·이용률–지연 곡선" },
+      { id: "reproducibility", title: "기준 구성과 도착률 측정 절차" },
       {
         id: "sources",
         title: "근거 문서",
         subsections: [
           { id: "paper-vllm-cli", title: "vLLM Benchmark CLI" },
-          { id: "paper-genai-perf-load", title: "GenAI-Perf 부하 옵션" },
+          { id: "paper-aiperf-load", title: "AIPerf v0.13.0 부하 옵션" },
           { id: "paper-mlperf-rules", title: "MLPerf Inference Rules" },
           { id: "paper-queueing-text", title: "Queueing 교과서(M/M/1)" },
         ],
@@ -150,14 +150,14 @@ export const vllmServingArticles: Article[] = [
   },
   {
     slug: "inference-cost-and-capacity-planning",
-    title: "추론 비용은 cost/token 으로, capacity 는 peak 와 headroom 으로 계획합니다",
+    title: "추론 비용과 용량은 측정한 처리량에서 함께 계산합니다",
     subcategory: "ai-llm-serving",
     sections: [
       { id: "problem", title: "GPU 수를 정하는 두 계산" },
-      { id: "cost", title: "GPU-hour 와 cost/token·cost/request" },
-      { id: "efficiency", title: "Throughput per dollar·per watt 와 TCO" },
-      { id: "capacity", title: "Peak·headroom 과 over/underprovisioning" },
-      { id: "scaling", title: "Reserved·on-demand, scale-up/out, autoscaling, fragmentation" },
+      { id: "cost", title: "GPU 시간과 토큰·요청당 비용" },
+      { id: "efficiency", title: "비용·전력 효율과 총소유비용" },
+      { id: "capacity", title: "최대 수요·여유 용량·과소 및 과잉 배치" },
+      { id: "scaling", title: "확보 방식·확장·자동 조절·자원 조각화" },
       {
         id: "sources",
         title: "근거 문서",

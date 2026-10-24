@@ -49,14 +49,14 @@ const SCENES: readonly Scene[] = [
   { label: "ramp-up", decided: ["cold", "warmup", "ramp"], focus: "ramp", note: "부하를 켠 직후 대기열이 0에서 6까지 차오릅니다. 이 동안의 TTFT는 정상보다 낮아 버립니다." },
   { label: "steady 창", decided: ["cold", "warmup", "ramp", "steady"], focus: "steady", note: "대기열이 6~7에서 더 이상 한쪽으로 움직이지 않는 20칸만 측정 창에 넣습니다. 이 칸들의 P50·P95가 보고할 값입니다." },
   { label: "drain", decided: ["cold", "warmup", "ramp", "steady", "drain"], focus: "drain", note: "새 도착이 끊기면 대기열이 줄고 값이 다시 빨라집니다. 마지막 5칸도 버립니다." },
-  { label: "반복 5회", decided: ["cold", "warmup", "ramp", "steady", "drain"], focus: null, note: "같은 창을 5번 다시 재면 A 평균 0.814초, B 0.790초입니다. 차이 0.024초가 표준편차 0.021초 하나 정도라 판정을 보류합니다." },
+  { label: "반복 5회", decided: ["cold", "warmup", "ramp", "steady", "drain"], focus: null, note: "같은 창을 5번 다시 재면 A 평균 0.814초, B 0.790초입니다. 평균 차이만으로 우위를 확정하지 않고, 짝지은 차이의 구간과 미리 정한 판정 기준을 함께 확인합니다." },
 ];
 
 const KEEP_COLOR = "#2563eb";
 const DROP_COLOR = "#cbd5e1";
 const FOCUS_COLOR = "#f97316";
 
-function RunPlot() {
+function RunPlot({ reduced }: { reduced: boolean }) {
   const lo = 0.74;
   const hi = 0.86;
   const x = (v: number) => `${((v - lo) / (hi - lo)) * 100}%`;
@@ -79,7 +79,7 @@ function RunPlot() {
                 style={{ left: x(m - s), width: `calc(${x(m + s)} - ${x(m - s)})`, backgroundColor: color, opacity: 0.18 }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: reduced ? 0 : 0.4 }}
               />
               {runs.map((v, i) => (
                 <motion.span
@@ -88,7 +88,7 @@ function RunPlot() {
                   style={{ left: x(v), backgroundColor: color }}
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + i * 0.12 }}
+                  transition={{ delay: reduced ? 0 : 0.15 + i * 0.12, duration: reduced ? 0 : undefined }}
                 />
               ))}
               <span className="absolute top-0 h-8 w-px" style={{ left: x(m), backgroundColor: color }} />
@@ -123,6 +123,7 @@ export default function SteadyStateWindowViz() {
       note="막대 값은 본문의 6.8초·0.35초와 반복 5회 값을 잇도록 만든 설명용 실행입니다. warmup 4개와 각 구간 길이는 예시입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -130,12 +131,12 @@ export default function SteadyStateWindowViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div key={scenes.active} className="flex shrink-0 flex-col">
+        <div data-viz-live-only key={scenes.active} className="flex shrink-0 flex-col">
           <h4 className="text-base font-bold">{scene.label}</h4>
 
           <div className="mt-3 min-h-[10rem]">
             {runs ? (
-              <RunPlot />
+              <RunPlot reduced={reduced} />
             ) : (
               <div className="overflow-x-auto">
                 <div className="min-w-[18rem]">
@@ -213,6 +214,9 @@ export default function SteadyStateWindowViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => <li key={item.label}><strong>{index + 1}. {item.label}</strong><span className="mt-1 block text-muted-foreground">{item.note}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

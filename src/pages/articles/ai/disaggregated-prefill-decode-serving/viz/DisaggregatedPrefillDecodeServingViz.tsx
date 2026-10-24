@@ -17,9 +17,9 @@ export default function DisaggregatedPrefillDecodeServingViz() {
   return <VizFrame eyebrow="가정한 요청 R의 기록 이동" title="원본 준비와 복사 완료를 구분합니다"
     description="두 장치 사이에서 같은 128B가 어디에 있고 언제 읽을 수 있는지 따라갑니다."
     note="네 입력 자리 × 32B. 복사 64B/ms·뒤 계산 2ms, 그 밖의 대기·연결·전달 지연 0인 설명용 사례입니다.">
-    <div data-viz-canvas role="group" tabIndex={0} aria-label="요청 R의 기록 복사와 첫 출력 시간표" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} aria-label="요청 R의 기록 복사와 첫 출력 시간표" onKeyDown={scenes.onKeyDown}
       className="flex min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
-      <div className="flex flex-none flex-col py-2">
+      <div data-viz-live-only className="flex flex-none flex-col py-2">
         <div className="flex items-center justify-between gap-3"><h4 className="font-bold">{LABELS[scenes.active]}</h4><span className="font-mono text-primary">{d.time}</span></div>
         <svg viewBox="0 0 320 170" role="img" aria-label={`앞 장치 ${d.left}, 뒤 장치 ${d.right}`} className="mt-3 h-auto max-h-44 w-full">
           <defs><marker id="disagg-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" className="fill-primary" /></marker></defs>
@@ -40,6 +40,9 @@ export default function DisaggregatedPrefillDecodeServingViz() {
         <p className="mt-2 min-h-[8rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[6.5rem] sm:min-h-[3.5rem]">{d.note}</p>
       </div>
       <AnimatedSceneControls {...scenes} labels={LABELS} />
+      <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+        {DATA.map((scene, index) => <li key={scene.time}><strong>{index + 1}. {LABELS[index]} · {scene.time}</strong><span className="mt-1 block text-muted-foreground">{scene.note}</span></li>)}
+      </ol>
     </div>
   </VizFrame>;
 }

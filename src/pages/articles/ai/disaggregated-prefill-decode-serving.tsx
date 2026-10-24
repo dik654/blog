@@ -7,7 +7,9 @@ import { codeRefs } from "./disaggregated-prefill-decode-serving/codeRefs";
 import { disaggregationTree } from "./disaggregated-prefill-decode-serving/fileTree";
 import DisaggregatedPrefillDecodeServingViz from "./disaggregated-prefill-decode-serving/viz/DisaggregatedPrefillDecodeServingViz";
 import CacheVsQueueRouteViz from "./disaggregated-prefill-decode-serving/viz/CacheVsQueueRouteViz";
+import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "./shared/ServingDecisionSeriesLocator";
 export default function Article() {const sidebar=useCodeSidebar();return <><div className="space-y-16">
+<ServingDecisionSeriesLocator current="handoff" />
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 읽는 일과 이어 쓰는 일을 다른 장치에 맡깁니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>답변이 조금씩 나오던 화면에 긴 새 문서가 들어왔다고 합시다. 같은 장치가 그 문서를 읽는 동안 기존 답변의 다음 조각이 늦어질 수 있습니다. 입력을 읽는 장치와 답을 이어 쓰는 장치를 나누면 같은 실행에 일을 끼워 넣는 간섭을 줄일 수 있습니다.</p><p>대신 다음 장치는 앞 장치가 읽어 둔 기록을 받아야 합니다. 계산이 끝난 순간과 기록의 복사가 끝난 순간이 다릅니다. 누구에게 요청을 보낼지, 언제 다음 계산을 시작할지, 언제 원래 자리를 돌려줄지를 한 요청으로 따라가겠습니다.</p><p>나누었다는 사실만으로 더 빠르거나 싸지는 것은 아닙니다. 전달을 기다리는 시간과 한쪽에 남는 빈자리도 비용입니다. 이 글의 판단 기준은 같은 요청을 약속한 시간 안에 끝내는 데 필요한 전체 자원입니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 목적지를 고르고 기록을 넘긴 뒤 출력을 보냅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입구에서는 같은 모델을 실행할 수 있는 장치 가운데 요청을 받을 곳을 고릅니다. 앞부분은 입력을 읽고 이후 계산에 필요한 기록을 만듭니다. 연결 담당자는 그 기록을 다음 장치로 옮기고 읽어도 되는 상태인지 알립니다. 뒷부분은 그 상태에서 답을 이어 만듭니다.</p><p>사용자에게 출력을 보내는 길과 계산 기록을 옮기는 길은 서로 다릅니다. 앞 장치가 첫 답을 이미 계산했어도 입구의 프로그램이 그 답을 보내지 않으면 사용자는 아직 아무것도 받지 못합니다. 이후의 시간 계산에서는 이 전달 규칙을 먼저 고정합니다.</p><p>같은 입력 번호만 다음 장치에 보내는 방법도 생각할 수 있습니다. 그러나 입력 번호에는 이전 계산의 중간 결과가 없습니다. 다음 장치가 입력을 다시 계산하거나, 이미 만든 기록을 전달받아야 이어 쓸 수 있습니다.</p><p>두 장치는 기록의 뜻에도 동의해야 합니다. 네 자리의 기록을 받았는데 받는 쪽이 두 층의 순서를 반대로 해석하면 크기는 그대로여도 계산은 틀립니다. 같은 모델이라는 이름 외에도 숫자의 표현과 어느 입력 위치의 기록인지가 맞아야 합니다. 이 조건을 만족한 뒤에야 복사 속도를 비교할 수 있습니다.</p><p>앞 장치와 뒤 장치가 모두 모델을 가지고 있다는 가정도 이유가 있습니다. 이번에 넘기는 128바이트는 요청 하나를 읽으며 생긴 기록입니다. 모델 전체를 매 요청마다 복사하는 사례가 아닙니다. 새 장치를 처음 띄우며 모델을 준비하는 시간은 별도의 준비 비용입니다.</p></div></section>
@@ -115,4 +117,5 @@ export default function Article() {const sidebar=useCodeSidebar();return <><div 
           </p><p>
             P 한 곳을 읽어야 할 D 수신자가 둘인데 완료 통지는 하나만 왔습니다. P 계산은 이미 끝났으므로 원본을 돌려줘도 될까요? (답: 11절)
           </p></div></section>
+<ServingDecisionMapReturn current="handoff" />
 </div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:disaggregationTree}} projectMetas={{vllm:{id:"vllm",label:"고정 vLLM·SGLang 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;}
