@@ -3,7 +3,7 @@ import { PromptRegressionViz } from "./viz/PromptContractViz";
 
 export default function AntiPatterns() {
   return (
-    <section id="anti-patterns" className="mb-16 scroll-mt-20">
+    <section id="anti-patterns" data-teach-level="failure" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         안티패턴은 문장 취향이 아니라 재현 가능한 실패 유형으로 분류한다
       </h2>

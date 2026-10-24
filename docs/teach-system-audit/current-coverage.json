@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 543,
-    "pending": 447,
+    "reviewed": 547,
+    "pending": 443,
     "untracked": 0,
-    "assignedPending": 403,
+    "assignedPending": 399,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -945,7 +945,7 @@
       "catalogIndex": 91,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1893,9 +1893,9 @@
       "publicPath": "cs/ai/prompt-engineering",
       "title": "프롬프트 요청 계약: 목표·근거·검증·회귀 평가",
       "catalogIndex": 186,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1903,9 +1903,9 @@
       "publicPath": "cs/ai/prompt-reasoning",
       "title": "Reasoning prompting: CoT·Self-consistency·Verifier",
       "catalogIndex": 187,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1913,9 +1913,9 @@
       "publicPath": "cs/ai/prompt-few-shot",
       "title": "Few-shot prompting: Demonstration·순서·Context 비용",
       "catalogIndex": 188,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1923,9 +1923,9 @@
       "publicPath": "cs/ai/prompt-structured-output",
       "title": "Structured output: Parse·Schema·Domain·Fallback",
       "catalogIndex": 189,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2915,7 +2915,7 @@
       "catalogIndex": 288,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2925,7 +2925,7 @@
       "catalogIndex": 289,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2935,7 +2935,7 @@
       "catalogIndex": 290,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2945,7 +2945,7 @@
       "catalogIndex": 291,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2955,7 +2955,7 @@
       "catalogIndex": 292,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

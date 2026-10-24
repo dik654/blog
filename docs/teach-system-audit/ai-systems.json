@@ -5257,7 +5257,7 @@
       "route": "ai/dropout-regularization",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/dropout-regularization.tsx",
       "publicPath": "cs/ai/dropout-regularization",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -5308,7 +5308,7 @@
     "browser1440Current": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-regularization-family-batch-29/summary.json",
     "buildCurrent": "Vite 7.3.1·7,914 modules·정적 public route 2,086개+404·no-script 본문 179편 exit0"
       },
-  "remaining": ["Batch 29 공개 배포 경로 확인"],
+  "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -5329,7 +5329,7 @@
       "route": "ai/early-stopping",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/early-stopping.tsx",
       "publicPath": "cs/ai/early-stopping",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -5380,7 +5380,7 @@
     "browser1440Current": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-regularization-family-batch-29/summary.json",
     "buildCurrent": "Vite 7.3.1·7,914 modules·정적 public route 2,086개+404·no-script 본문 179편 exit0"
       },
-  "remaining": ["Batch 29 공개 배포 경로 확인"],
+  "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -7694,7 +7694,7 @@
       "route": "ai/label-smoothing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/label-smoothing.tsx",
       "publicPath": "cs/ai/label-smoothing",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7736,7 +7736,7 @@
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,914 modules·정적 public route 2,086개+404·no-script 본문 179편 exit0"
       },
-      "remaining": ["Batch 29 공개 배포 경로 확인"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "concept-track-map-and-target-mass-review",
       "bodyFiles": [
@@ -9484,7 +9484,7 @@
       "route": "ai/open-r1",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/open-r1.tsx",
       "publicPath": "cs/ai/open-r1",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -9538,9 +9538,7 @@
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,915 modules·정적 public route 2,086개+404·no-script 본문 180편 exit0"
       },
-      "remaining": [
-        "Batch 30 공개 배포 경로 확인"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "reproduction-map-and-online-update-state-transition-review",
       "bodyFiles": [
@@ -10197,50 +10195,135 @@
       "route": "ai/prompt-engineering",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-engineering.tsx",
       "publicPath": "cs/ai/prompt-engineering",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 2
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Prompt engineering 기법과 용어가 요청 하나의 입력·계약·검증 순서보다 먼저 나왔음",
+        "목표·근거·제약과 출력 형식·거절 조건이 하나의 요청 계약에서 어떻게 만나는지 첫 화면에 없었음",
+        "실패 사례를 고정하고 한 축만 바꿔 canary와 rollback으로 넘기는 회귀 시험 경로가 분리되어 보였음"
+      ],
+      "fixture": {
+        "rawInputs": ["목표", "근거", "제약"],
+        "contractFields": ["objective", "evidence", "output", "abstention"],
+        "validationGates": ["schema", "domain"],
+        "regressionAxes": ["prompt", "model", "decoder", "validator"]
+      },
+      "stageAnchors": {
+        "0": "prompt-request-path-parent-map",
+        "1": "overview",
+        "2": "instruction-following",
+        "3": "anti-patterns",
+        "4": "prompt-sensitivity",
+        "return": "prompt-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+          "application": "Prompt engineering의 적용 범위와 명확한 성공 기준을 먼저 세우는 경계"
+        },
+        {
+          "href": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+          "application": "역할·지시·문맥·예시를 구분하는 공식 권고와 회귀 시험의 입력"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "목표·근거·제약을 objective·evidence·output·abstention이 있는 요청 명세로 묶고 schema와 업무 규칙 검증으로 넘긴 뒤, 실패를 고정해 한 축만 바꾸는 회귀 시험까지 추적했습니다.",
+        "humanize": "Prompt를 좋은 문구 모음으로 소개하지 않고 요청 계약과 검증 순서로 읽히게 했으며 상단의 번역투 표현을 자연스러운 한국어로 바꿨습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·중간 장면 글자 잘림 없음: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 32 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "prompt-request-contract-map-and-regression-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/prompt-engineering.tsx",
+        "src/pages/articles/ai/prompt-engineering/Overview.tsx",
+        "src/pages/articles/ai/prompt-engineering/AntiPatterns.tsx",
+        "src/pages/articles/ai/prompt-engineering/viz/PromptContractViz.tsx",
+        "src/pages/articles/ai/shared/PromptRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prompt-engineering.tsx",
+      "preserved": [
+        "Instruction·context·format·example의 역할 구분",
+        "실패 유형과 prompt sensitivity·회귀 시험 경계",
+        "공식 Prompt engineering 근거와 기존 연습문제"
       ]
     },
     {
       "route": "ai/prompt-few-shot",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-few-shot.tsx",
       "publicPath": "cs/ai/prompt-few-shot",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 2
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Few-shot 용어와 논문이 예시 한 개가 현재 요청의 문맥에 들어가는 구조보다 먼저 나왔음",
+        "같은 예시의 순서를 바꿀 때 예측이 흔들리는지 보는 조건이 첫 그림에 없었음",
+        "가중치는 그대로여도 예시 토큰이 매 요청마다 다시 처리되는 비용 경계가 한눈에 보이지 않았음"
+      ],
+      "fixture": {
+        "examples": ["broken→negative", "thanks→positive", "refund→negative"],
+        "query": "배송이 늦지만 상담은 친절했다",
+        "prediction": "mixed",
+        "weightUpdate": false,
+        "costRule": "example tokens × requests"
+      },
+      "stageAnchors": {
+        "0": "prompt-request-path-parent-map",
+        "1": "overview",
+        "2": "few-shot",
+        "3": "prompt-roles",
+        "4": "prompt-template",
+        "5": "example-selection",
+        "return": "prompt-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2005.14165",
+          "application": "Few-shot demonstration을 현재 문맥에 넣는 in-context learning 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2102.09690",
+          "application": "예시와 레이블 선택·순서가 예측에 미치는 편향과 보정 필요성"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "세 sentiment 예시와 한 query를 현재 문맥에 넣고, 순서 교란과 repeated token cost를 분리해 weight update가 없다는 경계를 추적했습니다.",
+        "humanize": "Demonstration·context·weight update를 그대로 나열하지 않고 예시·문맥·가중치라는 한국어 문장으로 먼저 설명했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·중간 장면 글자 잘림 없음: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 32 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "prompt-request-map-and-few-shot-context-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/prompt-few-shot.tsx",
+        "src/pages/articles/ai/prompt-engineering/FewShot.tsx",
+        "src/pages/articles/ai/prompt-engineering/viz/FewShotContextViz.tsx",
+        "src/pages/articles/ai/shared/PromptRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prompt-few-shot.tsx",
+      "preserved": [
+        "Prompt role·template·few-shot 예시 구성",
+        "예시 선택·순서 민감도와 calibration 경계",
+        "GPT-3·Calibrate Before Use 근거와 기존 연습문제"
       ]
     },
     {
@@ -10272,50 +10355,141 @@
       "route": "ai/prompt-reasoning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-reasoning.tsx",
       "publicPath": "cs/ai/prompt-reasoning",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 2
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Chain-of-Thought·Self-Consistency 이름이 풀이 경로와 최종 답을 분리하는 구조보다 먼저 나왔음",
+        "여러 경로의 문장을 섞지 않고 최종 답만 집계한다는 절차가 첫 화면에 없었음",
+        "다수결 결과와 외부 검증기의 정확성 판정을 구분하기 어려웠음"
+      ],
+      "fixture": {
+        "question": "same input",
+        "paths": ["A", "B", "C"],
+        "answers": [42, 40, 42],
+        "selectedAnswer": 42,
+        "externalChecks": ["식", "단위", "근거 구간"]
+      },
+      "stageAnchors": {
+        "0": "prompt-request-path-parent-map",
+        "1": "overview",
+        "2": "chain-of-thought",
+        "3": "paper-chain-of-thought",
+        "4": "paper-self-consistency",
+        "5": "paper-cot-faithfulness",
+        "return": "prompt-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2201.11903",
+          "application": "Chain-of-Thought prompting과 중간 풀이 경로의 범위"
+        },
+        {
+          "href": "https://arxiv.org/abs/2203.11171",
+          "application": "여러 풀이 경로에서 최종 답을 집계하는 self-consistency 절차"
+        },
+        {
+          "href": "https://arxiv.org/abs/2305.04388",
+          "application": "자연어 풀이가 모델 결정의 충실한 설명이 아닐 수 있다는 한계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 질문에서 답 42·40·42를 내는 세 풀이 경로를 만든 뒤 최종 답만 집계하고, 선택된 42를 식·단위·근거 구간으로 외부 검증하는 순서를 추적했습니다.",
+        "humanize": "Reasoning path·answer·verifier를 각각 풀이 경로·답·검증기로 풀어 쓰고, 기법 이름보다 판정 경계를 먼저 읽게 했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·중간 장면 글자 잘림 없음: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 32 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "prompt-request-map-and-reasoning-answer-verifier-boundary-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/prompt-reasoning.tsx",
+        "src/pages/articles/ai/prompt-engineering/ChainOfThought.tsx",
+        "src/pages/articles/ai/prompt-engineering/viz/ReasoningPathsViz.tsx",
+        "src/pages/articles/ai/shared/PromptRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prompt-reasoning.tsx",
+      "preserved": [
+        "Chain-of-Thought와 Self-Consistency의 메커니즘",
+        "풀이 충실성의 한계와 외부 검증 경계",
+        "세 원 논문 근거와 기존 연습문제"
       ]
     },
     {
       "route": "ai/prompt-structured-output",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-structured-output.tsx",
       "publicPath": "cs/ai/prompt-structured-output",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 2
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "JSON mode와 Structured output 용어가 문자열을 신뢰 가능한 레코드로 바꾸는 검증 순서보다 먼저 나왔음",
+        "문법 해석·schema·업무 규칙이 서로 다른 실패 경계라는 점이 첫 화면에 없었음",
+        "보정 횟수와 최종 typed unknown 상태를 정하지 않으면 무한 재시도될 수 있다는 운영 경계가 분리되어 보였음"
+      ],
+      "fixture": {
+        "gates": ["Parse", "Schema", "Domain", "Fallback"],
+        "invalidOriginalPreserved": true,
+        "boundedResult": ["valid record", "typed unknown"],
+        "repairBounded": true
+      },
+      "stageAnchors": {
+        "0": "prompt-request-path-parent-map",
+        "1": "overview",
+        "2": "structured-output",
+        "3": "prompt-design-layer",
+        "4": "output-paths",
+        "5": "json-mode-boundary",
+        "6": "output-measurement",
+        "7": "output-release",
+        "return": "prompt-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://json-schema.org/draft/2020-12",
+          "application": "JSON Schema의 형식·타입·required·enum 검증 경계"
+        },
+        {
+          "href": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+          "application": "Constrained structured output이 보장하는 형식과 보장하지 않는 업무 의미의 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "JSON처럼 보이는 원본을 Parse→Schema→Domain→Fallback 네 문에 통과시키고, 실패 원본을 보존한 채 valid record 또는 typed unknown으로 끝내는 절차를 추적했습니다.",
+        "humanize": "Consumer contract·bounded repair·typed fallback을 사용하는 쪽과의 계약·횟수가 정해진 보정·타입이 분명한 대체값으로 풀어 썼습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·중간 장면 글자 잘림 없음: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-prompt-request-path-batch-32/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 32 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "prompt-request-map-and-structured-output-validation-ladder-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/prompt-structured-output.tsx",
+        "src/pages/articles/ai/prompt-engineering/StructuredOutput.tsx",
+        "src/pages/articles/ai/prompt-engineering/viz/OutputValidationViz.tsx",
+        "src/pages/articles/ai/shared/PromptRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/prompt-structured-output.tsx",
+      "preserved": [
+        "Prompt layer와 validator layer의 책임 분리",
+        "JSON mode·schema·domain validation·bounded repair의 경계",
+        "JSON Schema·공식 Structured Outputs 근거와 기존 연습문제"
       ]
     },
     {
@@ -10813,7 +10987,7 @@
       "route": "ai/regularization-practice",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/regularization-practice.tsx",
       "publicPath": "cs/ai/regularization-practice",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10853,7 +11027,7 @@
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,914 modules·정적 public route 2,086개+404·no-script 본문 179편 exit0"
       },
-      "remaining": ["Batch 29 공개 배포 경로 확인"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "practice-track-map-and-generalization-diagnosis-review",
       "bodyFiles": [
@@ -13216,7 +13390,7 @@
       "route": "ai/weight-decay",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/weight-decay.tsx",
       "publicPath": "cs/ai/weight-decay",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -13258,7 +13432,7 @@
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,914 modules·정적 public route 2,086개+404·no-script 본문 179편 exit0"
       },
-      "remaining": ["Batch 29 공개 배포 경로 확인"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "concept-track-map-and-parameter-update-review",
       "bodyFiles": [

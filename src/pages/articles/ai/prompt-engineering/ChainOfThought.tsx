@@ -2,11 +2,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import { ReasoningPathsViz } from "./viz/ReasoningPathsViz";
 
 export default function ChainOfThought() {
   return (
-    <section id="chain-of-thought" className="mb-16 scroll-mt-20">
+    <section id="chain-of-thought" data-teach-level="mechanism" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Chain-of-Thought는 중간 reasoning을 유도하지만 정답 증명서는 아니다
       </h2>
@@ -46,7 +45,6 @@ export default function ChainOfThought() {
         ]}
       />
 
-      <div className="not-prose my-8"><ReasoningPathsViz /></div>
       <ContentBoundary article="prompt-reasoning" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

@@ -6,10 +6,11 @@ import { PromptContractViz } from "./viz/PromptContractViz";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-teach-level="big-picture" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         프롬프트 엔지니어링은 자연어 요청을 검증 가능한 입력 계약으로 바꾸는 일이다
       </h2>
+      <div className="not-prose my-8"><PromptContractViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           “이 문서를 잘 요약해 줘”는 사람이 뜻을 짐작할 수는 있지만 model과
@@ -56,8 +57,6 @@ export default function Overview() {
           },
         ]}
       />
-
-      <div className="not-prose my-8"><PromptContractViz /></div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3 id="instruction-following" className="scroll-mt-20">
