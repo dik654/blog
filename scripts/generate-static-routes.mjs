@@ -106,6 +106,7 @@ const noScriptArticleRoutes = new Set([
   "ai/weight-decay",
   "ai/early-stopping",
   "ai/label-smoothing",
+  "ai/open-r1",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

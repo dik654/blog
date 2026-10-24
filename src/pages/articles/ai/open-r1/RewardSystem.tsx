@@ -10,11 +10,13 @@ export default function RewardSystem({
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
   return (
-    <section id="reward-system" className="mb-16 scroll-mt-20">
+    <section id="reward-system" data-teach-level="failure" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Verifiable reward는 정답을 자동 채점하지만 reasoning 전체를 증명하지
         않는다
       </h2>
+
+      <RewardBoundaryViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -29,8 +31,6 @@ export default function RewardSystem({
           onClick={() => onCodeRef("open-r1-rewards", codeRefs["open-r1-rewards"])}
         />
       </div>
-
-      <RewardBoundaryViz />
 
       <ExplainedFormula
         question="여러 verifier를 쓸 때 completion 하나의 reward는 어떻게 만들어지는가?"

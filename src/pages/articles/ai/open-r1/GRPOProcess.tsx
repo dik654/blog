@@ -10,10 +10,12 @@ export default function GRPOProcess({
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
   return (
-    <section id="grpo-process" className="mb-16 scroll-mt-20">
+    <section id="grpo-process" data-teach-level="mechanism" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         GRPO는 현재 policy의 completion을 같은 prompt 안에서 상대 비교한다
       </h2>
+
+      <OnlineLoopViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -26,8 +28,6 @@ export default function GRPOProcess({
           계산 비용은 그대로 남습니다.
         </p>
       </div>
-
-      <OnlineLoopViz />
 
       <div
         id="paper-deepseekmath-grpo"

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 537,
-    "pending": 453,
+    "reviewed": 539,
+    "pending": 451,
     "untracked": 0,
-    "assignedPending": 409,
+    "assignedPending": 407,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -943,9 +943,9 @@
       "publicPath": "cs/ai/open-r1",
       "title": "Open-R1: reasoning data·SFT·GRPO를 재현하는 법",
       "catalogIndex": 91,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2893,9 +2893,9 @@
       "publicPath": "cs/ai/one-cycle-scheduling",
       "title": "OneCycle: LR Range Test에서 Phase Policy까지",
       "catalogIndex": 286,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2905,7 +2905,7 @@
       "catalogIndex": 287,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

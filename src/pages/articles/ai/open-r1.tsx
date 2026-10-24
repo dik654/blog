@@ -7,18 +7,24 @@ import Evaluation from "./open-r1/Evaluation";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./open-r1/codeRefs";
 import { openR1Tree, trlTree } from "./open-r1/fileTree";
+import {
+  OpenR1ReproductionLocator,
+  OpenR1ReproductionMapReturn,
+} from "./open-r1/OpenR1ReproductionLocator";
 
 export default function OpenR1Article() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <OpenR1ReproductionLocator />
       <Overview />
       <SFTProcess />
       <GRPOProcess onCodeRef={sidebar.open} />
       <RewardSystem onCodeRef={sidebar.open} />
       <DataPipeline />
       <Evaluation />
+      <OpenR1ReproductionMapReturn />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

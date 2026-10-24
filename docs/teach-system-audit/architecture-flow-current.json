@@ -7,9 +7,9 @@
     "dedicatedVisuals": 677,
     "inlineVisuals": 550,
     "customVisuals": 860,
-    "animatedMechanisms": 449,
+    "animatedMechanisms": 450,
     "architectureWithoutAnimation": 99,
-    "recursiveLocators": 189,
+    "recursiveLocators": 190,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -4073,11 +4073,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/openclaw-assistant",
