@@ -4,29 +4,31 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
+import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <McpRequestPathLocator current="protocol" />
       <section id="overview" className="scroll-mt-20 space-y-7">
+        <McpLearningFlowViz mode="core" />
         <header className="space-y-3">
-          <p className="text-sm font-semibold text-primary">먼저 MCP가 해결하는 한 문제만 봅니다</p>
-          <h2 className="text-3xl font-bold tracking-tight">MCP는 model에 권한을 주는 장치가 아니라, AI host와 외부 기능이 대화하는 공통 규약입니다</h2>
+          <p className="text-sm font-semibold text-primary">연결 규칙</p>
+          <h2 className="text-3xl font-bold tracking-tight">MCP가 맞추는 것은 연결 규칙입니다</h2>
         </header>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">AI 애플리케이션이 파일·issue tracker·database를 쓰려면 기능을 찾고, 인자를 보내고, 결과를 되돌려 받아야 합니다. 서비스마다 서로 다른 adapter를 만들면 host와 service 조합이 늘 때 연결 코드도 빠르게 늘어납니다.</p>
           <p className="leading-8"><strong>Model Context Protocol(MCP)</strong>은 이 연결에서 반복되는 message 형태를 맞춥니다. 기능의 업무 의미, 실제 권한, 사용자 승인과 sandbox까지 대신 결정하지는 않습니다. 먼저 “통신 규약”과 “보안 정책”을 분리해 두어야 뒤의 개념이 섞이지 않습니다.</p>
         </div>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <p className="font-semibold">방금 본 흐름으로 세 가지를 확인해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>Host 3개와 service 4개를 전용 연결하면 최대 12종의 adapter가 필요할까요?</li><li>공통 protocol 경계에 각각 한 번씩 맞추면 단순 모델에서 7종으로 줄어들까요?</li><li>MCP message를 해석할 수 있다는 사실만으로 파일 변경 권한도 생길까요?</li></ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. MCP는 반복되는 연결 형식을 맞추며, 실제 실행 권한과 승인·격리는 host와 server가 별도로 판정합니다.</p>
-        <McpLearningFlowViz mode="core" />
         <ContentBoundary article="mcp-protocol" />
       </section>
 
       <section id="roles" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>Host·client·server를 한 문장에 넣지 않고 하나씩 봅니다</h2>
+          <h2>역할은 셋입니다</h2>
           <p className="leading-8">이 셋은 process 이름이 아니라 책임 이름입니다. Local/remote 여부는 그 다음에 붙는 배포 선택입니다.</p>
         </div>
         <TermBreakdown
@@ -58,7 +60,7 @@ export default function ModernArticle() {
 
       <section id="request-envelope" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>Stateless는 “기억이 없다”가 아니라 “숨은 session에 기대지 않는다”는 뜻입니다</h2>
+          <h2>요청이 자신을 설명합니다</h2>
           <p className="leading-8">
             2026-07-28 core에서는 이전의 initialize session 대신 요청이 자신을 설명합니다. 요청마다 protocol version·client
             information·capability를 함께 보내므로 다른 worker가 받아도 이전 connection memory 없이 해석할 수 있습니다.
@@ -77,7 +79,7 @@ export default function ModernArticle() {
 
       <section id="next-map" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>이제 protocol 위에 무엇을 싣는지 순서대로 확장합니다</h2>
+          <h2>다음은 기능과 운반입니다</h2>
           <p className="leading-8"><Link to="/cs/ai/mcp-primitives">MCP primitives</Link>에서는 Tool·Resource·Prompt를 하나씩 정의합니다. <Link to="/cs/ai/mcp-transports">MCP transports</Link>에서는 그 message가 local pipe와 remote HTTP를 지나는 모습을 봅니다. <Link to="/cs/ai/mcp-server-operations">MCP server 운영</Link>에서는 authorization·retry·receipt를 조합합니다.</p>
         </div>
         <div id="paper-mcp-2026-spec" className="scroll-mt-20"><CitationBlock source="Model Context Protocol · 2026-07-28 specification" citeKey={1} href="https://modelcontextprotocol.io/specification/2026-07-28">
@@ -87,6 +89,7 @@ export default function ModernArticle() {
           <p><strong>문제:</strong> Session 중심의 이전 설명에서 stateless core로 바뀐 이유와 migration 범위를 알려야 합니다.</p><p><strong>핵심 기여:</strong> Handshake 제거, self-describing request, discovery와 extension 변화를 요약합니다.</p><p><strong>전제:</strong> Release note와 최종 specification revision을 함께 확인합니다.</p><p><strong>근거 범위:</strong> 해당 release의 변경 의도와 공개된 생태계 지원 범위입니다.</p><p><strong>비주장:</strong> 모든 SDK·server가 같은 날 자동으로 새 revision을 사용한다는 뜻은 아닙니다.</p>
         </CitationBlock></div>
       </section>
+      <McpRequestPathMapReturn current="protocol" />
     </article>
   );
 }

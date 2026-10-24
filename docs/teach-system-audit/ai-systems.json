@@ -8857,100 +8857,268 @@
       "route": "ai/mcp-primitives",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-primitives.tsx",
       "publicPath": "cs/ai/mcp-primitives",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Tool·Resource·Prompt의 정의가 같은 요청에서 갈라지지 않아 기능별 시작 주체와 결과가 한눈에 보이지 않았음",
+        "search_issues·예약 등 서로 다른 예시가 섞여 앞 글의 티켓 요청을 끝까지 추적하기 어려웠음",
+        "기능 목록 cache와 실제 실행 권한을 구분하는 설명이 첫 시각화에 없었음"
+      ],
+      "fixture": {
+        "request": "결제 오류를 장애 티켓으로 등록",
+        "tool": "tickets.create",
+        "resource": "ticket://policy/severity",
+        "prompt": "incident-review",
+        "operationId": "tenant7:ticket:42"
+      },
+      "stageAnchors": {
+        "parent": "MCP 요청 지도상의 기능",
+        "overview": "기능 목록→Tool 선택→Schema 검사→결과 상태",
+        "types": "three-primitives",
+        "contract": "tool-contract",
+        "cache": "list-cache",
+        "return": "mcp-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools",
+          "application": "tools/list·tools/call·resultType·inputSchema·cache hint의 2026-07-28 계약"
+        },
+        {
+          "href": "https://json-schema.org/draft/2020-12/json-schema-core",
+          "application": "JSON 구조 검증과 업무 권한·사실성 판정의 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 tickets.create 요청에서 Tool·Resource·Prompt를 시작 주체로 분리하고 Schema-valid·authorized·complete를 서로 다른 판정으로 검토했습니다.",
+        "humanize": "긴 제목을 줄이고 기능 이름마다 바로 이해할 수 있는 티켓 예시를 붙였습니다.",
+        "browser390": "부모 지도·첫 시각화·4장면·키보드·reduced-motion·JavaScript 비활성·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "browser1440": "네 단계 전체 경로·4장면·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 201편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 36 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "mcp-request-path-map-and-primitive-contract-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/mcp-primitives/ModernArticle.tsx",
+        "src/pages/articles/ai/mcp-learning/viz/McpLearningFlowViz.tsx",
+        "src/pages/articles/ai/shared/McpRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/mcp-primitives/ModernArticle.tsx",
+      "contentHash": "11065f750cf667632de7b1c1d4af30073f2e7c2e105811e8285b60ebcc4f69ea",
+      "preserved": [
+        "Tool·Resource·Prompt의 protocol 경계와 기존 연습문제",
+        "list TTL 수식과 call-time authorization 분리",
+        "JSON Schema·MCP 공식 근거"
       ]
     },
     {
       "route": "ai/mcp-protocol",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-protocol.tsx",
       "publicPath": "cs/ai/mcp-protocol",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Host·client·server가 정의 카드로만 보이고 한 요청에서 맡는 책임이 연결되지 않았음",
+        "현재 2026-07-28 stateless core와 이전 initialize 기반 revision의 차이가 첫 그림에 없었음",
+        "MCP가 연결 규칙을 맞추는 것과 권한을 부여하는 것이 시각적으로 분리되지 않았음"
+      ],
+      "fixture": {
+        "request": "결제 오류를 장애 티켓으로 등록",
+        "method": "tools/call",
+        "tool": "tickets.create",
+        "protocolVersion": "2026-07-28",
+        "result": "ticketId 91"
+      },
+      "stageAnchors": {
+        "parent": "Agent & Tools 전체 학습 지도",
+        "overview": "사용자 요청→역할 분리→요청 자체 설명→응답",
+        "roles": "roles",
+        "request": "request-envelope",
+        "next": "next-map",
+        "return": "mcp-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28",
+          "application": "Host·client·server, JSON-RPC, 요청별 version·capability의 규범적 경계"
+        },
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning",
+          "application": "현행 요청별 metadata와 이전 initialize 기반 revision의 호환 경계"
+        },
+        {
+          "href": "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+          "application": "Handshake·protocol session 제거와 explicit handle 변경 의도"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "MCP가 표준화하는 wire contract와 Host 승인·Server 권한·외부 effect를 같은 티켓 요청에서 분리했습니다. 2026-07-28 core와 legacy 경계도 공식 규격으로 확인했습니다.",
+        "humanize": "긴 정의형 제목을 줄이고 사용자 요청에서 역할 이름이 나오도록 순서를 바꿨습니다.",
+        "browser390": "부모 지도·첫 시각화·4장면·키보드·reduced-motion·JavaScript 비활성·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "browser1440": "네 역할의 전체 경로·4장면·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 201편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 36 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "mcp-request-path-map-and-protocol-role-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/mcp-protocol/ModernArticle.tsx",
+        "src/pages/articles/ai/mcp-learning/viz/McpLearningFlowViz.tsx",
+        "src/pages/articles/ai/shared/McpRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/mcp-protocol/ModernArticle.tsx",
+      "contentHash": "9e1fb9d2843e9ada5e51f39213c66b2e1dc95b134c3c07d21083f26ebe68473e",
+      "preserved": [
+        "Host·client·server 책임과 adapter 수 비교 수식",
+        "Stateless core·explicit handle·version mismatch 경계",
+        "MCP 2026-07-28 공식 근거와 기존 연습문제"
       ]
     },
     {
       "route": "ai/mcp-server-operations",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-server-operations.tsx",
       "publicPath": "cs/ai/mcp-server-operations",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "권한 검사·재시도·실행 영수증이 같은 외부 효과로 연결되지 않았음",
+        "응답 timeout 뒤 실제 실행 여부가 모호한 상태와 영수증 조회가 장면으로 보이지 않았음",
+        "운영 규칙이 보완하는 보장과 MCP protocol 자체가 제공하는 보장이 시각적으로 분리되지 않았음"
+      ],
+      "fixture": {
+        "request": "결제 오류를 장애 티켓으로 등록",
+        "operationId": "tenant7:ticket:42",
+        "ticketId": 91,
+        "attempts": 2,
+        "effects": 1
+      },
+      "stageAnchors": {
+        "parent": "MCP 요청 지도상의 실행",
+        "overview": "실행 제안→권한 검사→한 번 실행→영수증 확인",
+        "authorization": "authorization",
+        "idempotency": "idempotency",
+        "receipt": "operation-receipt",
+        "return": "mcp-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization",
+          "application": "HTTP authorization profile과 실제 도메인 ACL·사용자 동의의 책임 경계"
+        },
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/changelog",
+          "application": "프로토콜 세션 제거 뒤 외부 효과 식별자와 영수증을 애플리케이션이 소유해야 하는 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 tickets.create 요청에서 권한 검사, 안정된 operationId, 한 번의 외부 효과, timeout 뒤 영수증 조회를 끝까지 추적했습니다.",
+        "humanize": "외부 효과·멱등성 같은 용어보다 티켓이 한 번만 만들어지는 장면을 먼저 보여 주고 이름은 뒤에 붙였습니다.",
+        "browser390": "부모 지도·첫 시각화·4장면·키보드·reduced-motion·JavaScript 비활성·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "browser1440": "권한부터 실행 영수증까지 4장면·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 201편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 36 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "mcp-request-path-map-and-effect-receipt-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/mcp-server-operations/ModernArticle.tsx",
+        "src/pages/articles/ai/mcp-learning/viz/McpLearningFlowViz.tsx",
+        "src/pages/articles/ai/shared/McpRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/mcp-server-operations/ModernArticle.tsx",
+      "contentHash": "dc7cbc9f94fdfc637433dbcf9df825ebda4a93c64df78b2739cbaee6f9f539d0",
+      "preserved": [
+        "HTTP authorization profile과 서비스 권한 정책의 경계",
+        "멱등성 키·작업 상태·실행 영수증의 복구 계약",
+        "MCP 2026-07-28 공식 근거와 기존 연습문제"
       ]
     },
     {
       "route": "ai/mcp-transports",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mcp-transports.tsx",
       "publicPath": "cs/ai/mcp-transports",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "stdio와 HTTP가 서로 다른 설명으로 나뉘어 같은 JSON-RPC body를 운반한다는 사실이 첫 그림에서 보이지 않았음",
+        "응답·취소·구독·외부 효과의 서로 다른 수명이 첫 시각화에 없었음",
+        "HTTP routing header와 body의 일치 조건이 한 요청의 추적 사례에 연결되지 않았음"
+      ],
+      "fixture": {
+        "method": "tools/call",
+        "tool": "tickets.create",
+        "stdio": "한 줄 JSON-RPC",
+        "http": "POST + JSON 또는 요청 전용 SSE",
+        "effect": "ticketId 91"
+      },
+      "stageAnchors": {
+        "parent": "MCP 요청 지도상의 운반",
+        "overview": "같은 메시지→stdio→HTTP POST→수명 분리",
+        "stdio": "stdio",
+        "http": "streamable-http",
+        "lifetime": "lifetime",
+        "return": "mcp-request-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports",
+          "application": "stdio와 Streamable HTTP의 공통 JSON-RPC message 경계"
+        },
+        {
+          "href": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http",
+          "application": "POST·JSON·요청 전용 SSE·routing header 일치·취소와 구독 수명"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "동일한 tools/call body가 stdio와 Streamable HTTP에서 어떻게 framing되는지, 응답·취소·구독·외부 효과가 왜 다른 수명을 갖는지 검토했습니다.",
+        "humanize": "운반 형식이라는 이름보다 같은 티켓 요청이 두 길을 통과하는 그림을 먼저 배치했습니다.",
+        "browser390": "부모 지도·첫 시각화·4장면·키보드·reduced-motion·JavaScript 비활성·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "browser1440": "동일 메시지의 stdio·HTTP 경로와 수명 분리·overflow0·console0 통과: output/playwright/ai-mcp-request-path-batch-36/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 201편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 36 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "mcp-request-path-map-and-transport-lifetime-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/mcp-transports/ModernArticle.tsx",
+        "src/pages/articles/ai/mcp-learning/viz/McpLearningFlowViz.tsx",
+        "src/pages/articles/ai/shared/McpRequestPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/mcp-transports/ModernArticle.tsx",
+      "contentHash": "1e18b33575a4d5ed56f9dae468293d7831fcd1bce7038459d3499338703e7f25",
+      "preserved": [
+        "stdio framing·Streamable HTTP request/response 계약",
+        "routing header/body 일치와 연결 수명 계산",
+        "MCP 2026-07-28 공식 근거와 기존 연습문제"
       ]
     },
     {
@@ -13704,9 +13872,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 67,
+    "rewritten-local-verified": 71,
     "rewritten-production-verified": 91,
-    "unreviewed": 28
+    "unreviewed": 24
   },
   "localValidationSummary": {
     "rewritten": 117,
@@ -13753,6 +13921,7 @@
     "checkpoint395Production": "docs/teach-system-audit/checkpoint-395.json",
     "batch31Production": "GitHub Pages run 40140695979 success; output/playwright/ai-llm-operations-path-batch-31-public/summary.json",
     "batch32Production": "GitHub Pages run 40140695979 success; output/playwright/ai-prompt-request-path-batch-32-public/summary.json",
-    "batch35Browser": "output/playwright/ai-context-state-path-batch-35/summary.json"
+    "batch35Browser": "output/playwright/ai-context-state-path-batch-35/summary.json",
+    "batch36Browser": "output/playwright/ai-mcp-request-path-batch-36/summary.json"
   }
 }
