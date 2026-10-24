@@ -14,6 +14,10 @@ import SoftPromptKvViz from "./multi-adapter-serving/viz/SoftPromptKvViz";
 import TwoTierAdapterCacheViz from "./multi-adapter-serving/viz/TwoTierAdapterCacheViz";
 import { codeRefs } from "./multi-adapter-serving/codeRefs";
 import { adapterTrees } from "./multi-adapter-serving/fileTree";
+import {
+  ServingStateMapReturn,
+  ServingStateSeriesLocator,
+} from "./shared/ServingStateSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -26,6 +30,7 @@ export default function MultiAdapterServingArticle() {
   return (
     <>
       <div className="space-y-16">
+        <ServingStateSeriesLocator current="adapter" />
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 고객 천 명의 미세조정 모델을 GPU 한 벌로 서빙할 수 있을까요?</h2>
           <div className={prose}>
@@ -70,6 +75,7 @@ export default function MultiAdapterServingArticle() {
 
         <section id="small-case" data-teach-level="0" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. adapter 하나는 26 MiB, 천 개면 base보다 큽니다</h2>
+          <AdapterLedgerViz />
           <div className={prose}>
             <p>
               모델 모양은 <Link to="/cs/ai/kv-cache-fundamentals#kv-shape-formula">KV cache 기초</Link>에서 쓴 Llama 3 8B를 따릅니다. 폭 4,096, 32층, query head 32개,
@@ -99,7 +105,6 @@ export default function MultiAdapterServingArticle() {
             conclusion="adapter 하나는 base의 0.17%이지만 천 개를 모으면 26,000 MiB, 약 25.4 GiB로 base 16.0 GB보다 커집니다."
             caveats={["base 원소 수 8.0×10⁹는 반올림한 가정값입니다.", "MLP까지 붙이면 adapter가 몇 배 커집니다. 비율보다 계산 순서를 따라가 주세요."]}
           />
-          <AdapterLedgerViz />
           <div className={prose}>
             <p>
               계산량도 같은 방식으로 셉니다. token 하나가 q 행렬을 지날 때 base는 곱셈·덧셈 쌍 16,777,216회를 하고 LoRA는 A와 B를 거치며 131,072회를 더합니다.
@@ -558,6 +563,8 @@ export default function MultiAdapterServingArticle() {
             </p>
           </ProgressiveDetail>
         </section>
+
+        <ServingStateMapReturn current="adapter" />
 
         <section id="review-questions" data-teach-level="7" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">15. 같은 사례로 다음 경계를 예상해 보세요</h2>

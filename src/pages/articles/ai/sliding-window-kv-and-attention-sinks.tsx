@@ -7,6 +7,10 @@ import WindowBlockReleaseViz from "./sliding-window-kv-and-attention-sinks/viz/W
 import SinkRingViz from "./sliding-window-kv-and-attention-sinks/viz/SinkRingViz";
 import { codeRefs } from "./sliding-window-kv-and-attention-sinks/codeRefs";
 import { swaTrees } from "./sliding-window-kv-and-attention-sinks/fileTree";
+import {
+  ServingStateMapReturn,
+  ServingStateSeriesLocator,
+} from "./shared/ServingStateSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -16,6 +20,7 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
   return (
     <>
       <div className="space-y-16">
+        <ServingStateSeriesLocator current="window" />
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 창 밖 기록을 버릴 때 무엇은 남겨야 하나요?</h2>
           <div className={prose}>
@@ -39,6 +44,7 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 창 8, block 4라면 token 20개에서 block 2개만 쥡니다</h2>
+          <WindowBlockReleaseViz />
           <div className={prose}>
             <p>창 W = 8, block 하나에 token 4개를 담는 작은 모형을 봅시다. (가정) token 7개를 계산했다면 다음 token은 1~7번과 자기 자신을 봅니다. 7 − 8 + 1 = 0이라 건너뛸 token이 없고 block 2개를 그대로 둡니다.</p>
             <p>12개를 계산하면 다음 token의 창은 5~12번입니다. 건너뛸 token은 12 − 8 + 1 = 5개, 곧 0~4번입니다. 그중 0~3번이 든 block 하나만 통째로 창 밖이라 그 block을 돌려줍니다. 4번 token은 5~7번과 같은 block에 있어 남습니다. 20개에서는 건너뛸 token 13개 가운데 block 3개를 돌려주고 2개를 쥡니다. 같은 20개를 full attention 층은 block 5개로 쥡니다.</p>
@@ -58,7 +64,6 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
             conclusion="창 층의 KV는 256분의 1로 줄지만 full 층이 그대로라 전체는 절반쯤입니다."
             caveats={["gpt-oss-20b 설정은 Hugging Face config.json(sliding_window 128, KV head 8, head_dim 64)으로 확인했습니다.", "TensorRT-LLM은 block 32 token과 다른 분리 기준을 써서 보유량이 128~159 token 사이를 오갑니다(9절)."]}
           />
-          <WindowBlockReleaseViz />
         </section>
 
         <section id="ring-buffer" data-teach-level="1" className="scroll-mt-20">
@@ -217,6 +222,8 @@ export default function SlidingWindowKvAndAttentionSinksArticle() {
           </div>
           <ContentBoundary article="sliding-window-kv-and-attention-sinks" />
         </section>
+
+        <ServingStateMapReturn current="window" />
 
         <section id="review-questions" data-teach-level="review" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">13. 같은 사례로 다음 경계를 예상해 보세요</h2>

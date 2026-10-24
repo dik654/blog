@@ -3269,7 +3269,9 @@
 - 390×844와 1,440×900에서 여섯 글 모두 HTTP 200, 부모 지도·현재 위치·반환 지도, 문서 가로 넘침 0,
   console 오류 0을 확인했다. 모든 `data-viz-canvas`의 모바일 내부 넘침도 검사했고, 엔진 비교 시간축의
   끝 숫자가 6px 벗어나던 문제를 경계 안 정렬로 수정했다. 키보드 장면 이동·Space 재생/정지,
-  reduced-motion, JavaScript 비활성 정적 본문도 통과했으며 공개 배포 확인만 남아 있다.
+  reduced-motion, JavaScript 비활성 정적 본문도 통과했다. commit `752af9c5`, GitHub Pages run
+  `40095994311`에서 전체 감사·build·990개 공개 글 검사가 성공했고, 여섯 공개 URL도 모바일에서
+  HTTP 200, 부모 지도·반환 지도, 가로 넘침 0, console 오류 0을 확인했다.
 
 ### AI 추측 디코딩 묶음 로컬 완료 (2026-10-24)
 
@@ -3284,4 +3286,23 @@
   통과했다. 빌드는 7,892개 module, 정적 public route 2,086개와 no-script 본문 98편을 생성했다.
 - 390×844와 1,440×900에서 두 글의 부모 지도·현재 위치·지도 반환, 문서와 모든 data canvas의 가로
   넘침 0, console 오류 0을 확인했다. 키보드 ArrowRight로 1번 제안에서 2번 수락으로 이동했고,
-  reduced-motion과 JavaScript 비활성 정적 본문도 통과했다. 현재 구조의 공개 배포 검증만 남아 있다.
+  reduced-motion과 JavaScript 비활성 정적 본문도 통과했다. commit `752af9c5`, GitHub Pages run
+  `40095994311`에서 전체 감사·build·990개 공개 글 검사가 성공했고, 두 공개 URL도 모바일에서
+  HTTP 200, 부모 지도·반환 지도, 가로 넘침 0, console 오류 0을 확인했다.
+
+### AI 요청별 GPU 상태 묶음 로컬 완료 (2026-10-24)
+
+- `multi-adapter-serving`, `hybrid-kv-cache-allocation`, `sliding-window-kv-and-attention-sinks`를 한
+  replica가 요청마다 달라지는 GPU 상태라는 직속 부모에 연결했다. Adapter는 요청이 선택해 적재하는
+  상태이고 KV는 token 생성과 함께 늘어 allocator가 회수하는 상태이므로, 같은 선형 단계로 합치지 않고
+  부모 지도에서 두 갈래로 분리했다.
+- 세 글 모두 긴 설명과 계산보다 부모 지도와 핵심 시각 자료가 먼저 나온다. 글 끝에서는 adapter 격리,
+  local attention과 physical allocation의 차이, 창 밖 block과 attention sink의 경계를 부모 지도에
+  되돌려 놓는다. 기존 수치 사례·고정 소스·설명용 가정·저자 측정의 경계는 유지했다.
+- 대상 파일 ESLint, TypeScript, 엄격 topology·architecture-flow·reading-order·coverage 감사와 Node
+  heap 8GB production build를 통과했다. 빌드는 7,893개 module, 정적 public route 2,086개와 no-script
+  본문 101편을 생성했다.
+- 390×844와 1,440×900에서 세 글 모두 부모 지도·현재 위치·반환 지도, 문서와 data canvas의 가로 넘침
+  0, console 오류 0을 확인했다. Sliding-window 장면은 키보드 ArrowRight·ArrowLeft로 왕복했고,
+  reduced-motion에서 2.5초 뒤에도 첫 장면과 `재생 꺼짐` 상태를 유지했다. JavaScript 비활성 정적
+  문서에서도 세 글의 제목·부모 지도·반환 지도와 모든 장면 순서를 확인했다. 공개 배포 검증은 남아 있다.
