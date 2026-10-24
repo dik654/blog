@@ -4,6 +4,10 @@ import StyleCoverage from "./generative-measurement-controls/StyleCoverage";
 import RoundtripFloor from "./generative-measurement-controls/RoundtripFloor";
 import InstrumentControls from "./generative-measurement-controls/InstrumentControls";
 import MeasurementGate from "./generative-measurement-controls/MeasurementGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * 계측기도 답을 아는 입력으로 먼저 검증해야 합니다
@@ -13,12 +17,14 @@ import MeasurementGate from "./generative-measurement-controls/MeasurementGate";
 export default function GenerativeMeasurementControlsArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="measurement" />
       <Overview />
       <IdentityMetric />
       <StyleCoverage />
       <RoundtripFloor />
       <InstrumentControls />
       <MeasurementGate />
+      <GenerativeControlMapReturn current="measurement" />
     </div>
   );
 }

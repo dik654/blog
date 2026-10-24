@@ -5,19 +5,25 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import AdapterScopeMap from "./image-video-lora-architecture/viz/AdapterScopeMap";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 export default function ImageVideoLoraArchitectureArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="scope" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          LoRA 수식이 같아도 학습되는 능력은 host architecture가 정합니다
+          LoRA 수식이 같아도 학습 능력은 원래 모델 구조가 정합니다
         </h2>
+        <AdapterScopeMap />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             언어 모델과 이미지·영상 생성 모델의 LoRA는 모두 frozen weight에
             저랭크 변화량을 더합니다. 하지만 “LoRA를 붙였다”만으로는 무엇을
-            학습했는지 알 수 없습니다. Adapter가 들어간 원래 모델의 어느 경로가
+            학습했는지 알 수 없습니다. 어댑터가 들어간 원래 모델의 어느 경로가
             공간 모양, 시간 변화, text 조건을 처리하는지가 실제 능력의 범위를
             정하기 때문입니다.
           </p>
@@ -28,8 +34,8 @@ export default function ImageVideoLoraArchitectureArticle() {
           </p>
           <p>
             따라서 이 글은 <Link to="/cs/ai/lora-finetuning#lora">LoRA의 행렬식</Link>을
-            다시 유도하지 않습니다. 대신 <strong>host inventory → target scope →
-            clip 학습 → 독립 평가</strong> 순서로, image 설정을 video 설정에 복사할
+            다시 유도하지 않습니다. 대신 <strong>원래 모델 조사 → 학습 경로 선택 →
+            영상 묶음 학습 → 독립 평가</strong> 순서로, 이미지 설정을 영상 설정에 복사할
             때 빠지는 경계를 설명합니다.
           </p>
         </div>
@@ -51,7 +57,6 @@ export default function ImageVideoLoraArchitectureArticle() {
           </p>
         </ProgressiveDetail>
         <ContentBoundary article="image-video-lora-architecture" />
-        <AdapterScopeMap />
       </section>
 
       <section id="image-scope" className="scroll-mt-20">
@@ -283,6 +288,7 @@ export default function ImageVideoLoraArchitectureArticle() {
           </p>
         </div>
       </section>
+      <GenerativeControlMapReturn current="scope" />
     </div>
   );
 }

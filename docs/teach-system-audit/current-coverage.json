@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 505,
-    "pending": 485,
+    "reviewed": 513,
+    "pending": 477,
     "untracked": 0,
-    "assignedPending": 441,
+    "assignedPending": 433,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1783,9 +1783,9 @@
       "publicPath": "cs/ai/image-video-lora-architecture",
       "title": "Image·Video LoRA: host architecture와 adapter 범위",
       "catalogIndex": 175,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1793,9 +1793,9 @@
       "publicPath": "cs/ai/multi-component-finetuning-vram",
       "title": "학습 때는 배우지 않는 부품까지 VRAM에 올라갑니다",
       "catalogIndex": 176,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1803,9 +1803,9 @@
       "publicPath": "cs/ai/generative-measurement-controls",
       "title": "계측기도 답을 아는 입력으로 먼저 검증해야 합니다",
       "catalogIndex": 177,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1813,9 +1813,9 @@
       "publicPath": "cs/ai/masked-edit-verb-routing",
       "title": "\"편집\"은 한 동작이 아니라 요구가 서로 다른 여섯 동작입니다",
       "catalogIndex": 178,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1823,9 +1823,9 @@
       "publicPath": "cs/ai/removal-is-not-inpainting",
       "title": "지우기는 인페인팅의 한 종류가 아닙니다",
       "catalogIndex": 179,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1833,9 +1833,9 @@
       "publicPath": "cs/ai/roi-resolution-identity-budget",
       "title": "같은 편집이 얼굴 크기에 따라 성공하고 실패합니다",
       "catalogIndex": 180,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1843,9 +1843,9 @@
       "publicPath": "cs/ai/reference-identity-pose-separation",
       "title": "정체성과 포즈를 한 장치에 맡기면 둘 다 반만 됩니다",
       "catalogIndex": 181,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1853,9 +1853,9 @@
       "publicPath": "cs/ai/generative-identity-diversity",
       "title": "같은 질문에 세 번 다르게 답했고 세 번 다 틀렸습니다",
       "catalogIndex": 182,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

@@ -34,17 +34,23 @@ export default function DiversityViz() {
       note="수치는 한 장비·특정 모델 조합의 실측입니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="identity-diversity-diagnosis-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="다양성 질문에 대한 세 번의 정정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {ANSWERS.map((answer, index) => <div key={answer.n} className={`border-l py-2 pl-3 ${step >= index ? "border-primary" : "border-border text-muted-foreground"}`}><strong className="block text-sm">{answer.n}</strong><span className="text-xs leading-5 text-muted-foreground">{answer.why}</span></div>)}
+            {step === 3 && <p className="border-t border-border pt-3 text-xs font-bold leading-5">문구의 영향이 가장 크고, 모델이 그 도달 범위를 정하며, 시드의 영향은 거의 없었습니다.</p>}
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <text x={24} y={22} fontSize={9} fill={MUTED}>
               서로 다른 인물을 원하는 만큼 만들려면 무엇을 흔들어야 하는가
             </text>
@@ -90,6 +96,9 @@ export default function DiversityViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

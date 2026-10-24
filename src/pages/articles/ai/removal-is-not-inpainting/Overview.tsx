@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">지우기는 인페인팅의 한 종류가 아닙니다</h2>
+      <RemoveViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           편집 동작을 나눠 전부 돌렸을 때 칸 하나가 통째로 비었습니다. 지우기입니다. 설치된 확산 모델 일곱 개가
@@ -38,7 +39,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <RemoveViz />
     </section>
   );
 }

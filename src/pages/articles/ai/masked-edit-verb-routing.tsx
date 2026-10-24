@@ -4,6 +4,10 @@ import HandHint from "./masked-edit-verb-routing/HandHint";
 import MaskPolarity from "./masked-edit-verb-routing/MaskPolarity";
 import StyleScale from "./masked-edit-verb-routing/StyleScale";
 import RoutingGate from "./masked-edit-verb-routing/RoutingGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * "편집"은 한 동작이 아니라 요구가 서로 다른 여섯 동작입니다
@@ -13,12 +17,14 @@ import RoutingGate from "./masked-edit-verb-routing/RoutingGate";
 export default function MaskedEditVerbRoutingArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="verbs" />
       <Overview />
       <ModelDisposition />
       <HandHint />
       <MaskPolarity />
       <StyleScale />
       <RoutingGate />
+      <GenerativeControlMapReturn current="verbs" />
     </div>
   );
 }

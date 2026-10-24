@@ -4,6 +4,10 @@ import DenoiseWindow from "./roi-resolution-identity-budget/DenoiseWindow";
 import RoiCrop from "./roi-resolution-identity-budget/RoiCrop";
 import UpscaleKnownAnswer from "./roi-resolution-identity-budget/UpscaleKnownAnswer";
 import ResolutionGate from "./roi-resolution-identity-budget/ResolutionGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * 같은 편집이 얼굴 크기에 따라 성공하고 실패합니다
@@ -13,12 +17,14 @@ import ResolutionGate from "./roi-resolution-identity-budget/ResolutionGate";
 export default function RoiResolutionIdentityBudgetArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="resolution" />
       <Overview />
       <TokenBudget />
       <DenoiseWindow />
       <RoiCrop />
       <UpscaleKnownAnswer />
       <ResolutionGate />
+      <GenerativeControlMapReturn current="resolution" />
     </div>
   );
 }

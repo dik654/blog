@@ -1,21 +1,21 @@
 const columns = [
   {
-    title: "Image host",
-    input: "image + caption",
-    path: "spatial denoiser",
-    result: "subject · style",
+    title: "이미지 모델",
+    input: "이미지 + 설명문",
+    path: "공간 잡음 복원기",
+    result: "대상 · 화풍",
   },
   {
-    title: "Video host",
-    input: "clip + caption",
-    path: "spatial · temporal",
-    result: "appearance · motion",
+    title: "영상 모델",
+    input: "영상 묶음 + 설명문",
+    path: "공간 경로 · 시간 경로",
+    result: "겉모습 · 움직임",
   },
   {
-    title: "Audio-video host",
-    input: "clip + audio",
-    path: "cross-modal path",
-    result: "sync · joint condition",
+    title: "음성·영상 모델",
+    input: "영상 묶음 + 음성",
+    path: "매체 연결 경로",
+    result: "동기화 · 결합 조건",
   },
 ];
 
@@ -27,34 +27,34 @@ export default function AdapterScopeMap() {
     >
       <figcaption className="mb-5">
         <p className="text-sm font-semibold text-foreground">
-          같은 저랭크 update가 host의 서로 다른 정보 경로에 들어갑니다
+          같은 저랭크 변화량이 원래 모델의 서로 다른 정보 경로에 들어갑니다
         </p>
         <p className="mt-1 text-xs leading-5 text-muted-foreground sm:text-sm">
-          Adapter 수식은 같지만 input 단위와 target path가 바뀌면 학습 결과도 달라집니다.
+          어댑터 수식은 같지만 입력 단위와 학습 경로가 바뀌면 결과도 달라집니다.
         </p>
       </figcaption>
       <div className="mx-auto max-w-sm rounded-lg border border-primary/40 bg-primary/[0.04] px-4 py-3 text-center">
-        <p className="text-xs font-bold text-primary">Frozen base + LoRA ΔW</p>
-        <p className="mt-1 text-sm text-foreground">먼저 host module의 역할을 확인</p>
+        <p className="text-xs font-bold text-primary">동결한 원래 모델 + LoRA 변화량 ΔW</p>
+        <p className="mt-1 text-sm text-foreground">먼저 원래 모듈의 역할을 확인합니다</p>
       </div>
       <div aria-hidden="true" className="mx-auto h-6 w-px bg-border" />
-      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6">
         {columns.map((column) => (
           <div
             key={column.title}
-            className="w-[min(78vw,270px)] shrink-0 snap-start rounded-lg border border-border/70 p-4 md:w-auto md:min-w-0"
+            className="min-w-0 rounded-lg border border-border/70 p-3 sm:p-4"
           >
             <p className="text-sm font-semibold text-foreground">{column.title}</p>
-            <div className="mt-4 space-y-2 text-xs leading-5">
-              <p className="border-l border-border pl-3 text-muted-foreground">
+            <div className="mt-3 grid grid-cols-3 gap-2 border-t border-border/60 pt-3 text-[10px] leading-4 sm:mt-4 sm:block sm:space-y-2 sm:border-0 sm:pt-0 sm:text-xs sm:leading-5">
+              <p className="min-w-0 text-muted-foreground sm:border-l sm:border-border sm:pl-3">
                 입력 <span className="block font-medium text-foreground">{column.input}</span>
               </p>
-              <p aria-hidden="true" className="text-center text-muted-foreground">↓</p>
-              <p className="border-l border-primary/45 pl-3 text-muted-foreground">
-                Target <span className="block font-medium text-foreground">{column.path}</span>
+              <p aria-hidden="true" className="hidden text-center text-muted-foreground sm:block">↓</p>
+              <p className="min-w-0 text-muted-foreground sm:border-l sm:border-primary/45 sm:pl-3">
+                학습 경로 <span className="block font-medium text-foreground">{column.path}</span>
               </p>
-              <p aria-hidden="true" className="text-center text-muted-foreground">↓</p>
-              <p className="border-l border-emerald-600/45 pl-3 text-muted-foreground">
+              <p aria-hidden="true" className="hidden text-center text-muted-foreground sm:block">↓</p>
+              <p className="min-w-0 text-muted-foreground sm:border-l sm:border-emerald-600/45 sm:pl-3">
                 평가 <span className="block font-medium text-foreground">{column.result}</span>
               </p>
             </div>

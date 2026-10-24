@@ -7,6 +7,10 @@ import PrecomputeOffload from "./multi-component-finetuning-vram/PrecomputeOfflo
 import BudgetGate from "./multi-component-finetuning-vram/BudgetGate";
 import { codeRefs } from "./multi-component-finetuning-vram/codeRefs";
 import { diffusersTree } from "./multi-component-finetuning-vram/fileTree";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 const PROJECT_META = {
   diffusers: {
@@ -25,12 +29,14 @@ export default function MultiComponentFinetuningVramArticle() {
   const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="memory" />
       <Overview />
       <ResidencySet onCodeRef={sidebar.open} />
       <ComponentBudget />
       <AdapterScope />
       <PrecomputeOffload />
       <BudgetGate />
+      <GenerativeControlMapReturn current="memory" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
