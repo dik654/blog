@@ -4,12 +4,17 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { LatentMoeViz } from "../kimi-k3-viz";
+import {
+  ModelArchitectureCaseLocator,
+  ModelArchitectureCaseMapReturn,
+} from "../shared/ModelArchitectureCaseLocator";
 
 export default function KimiK3LatentMoeArticle() {
   return <article id="overview" className="space-y-16">
+    <ModelArchitectureCaseLocator current="width" />
     <section className="space-y-6"><LessonHeader number="00" eyebrow="MoE를 expert 목록부터 외우지 않기" title="LatentMoE는 routed expert가 계산하는 feature 폭을 먼저 줄인다">일반 MoE는 token마다 일부 expert만 실행합니다. K3는 한 단계 더 나아가 routed expert만 작은 latent width에서 계산하고 shared expert는 full width에 둡니다.</LessonHeader>
-      <TermLesson name="LatentMoE width factorization" oneLine="Full-width shared path는 유지하고 routed expert input만 down projection한 뒤 aggregate를 다시 up projection해 합치는 width 분해입니다." shape="x₇₁₆₈ → Wdown → z₃₅₈₄ → Top-16/896 experts → RMSNorm → Wup → y₇₁₆₈" example="전문 분야 expert 16개는 3,584 폭에서 계산하고 공통 지식 expert 2개는 7,168 폭에서 모든 token을 처리합니다." boundary="Down/up projection·shared expert·dispatch가 남으므로 end-to-end compute와 latency가 정확히 절반이 되지 않습니다." />
       <LatentMoeViz />
+      <TermLesson name="LatentMoE width factorization" oneLine="Full-width shared path는 유지하고 routed expert input만 down projection한 뒤 aggregate를 다시 up projection해 합치는 width 분해입니다." shape="x₇₁₆₈ → Wdown → z₃₅₈₄ → Top-16/896 experts → RMSNorm → Wup → y₇₁₆₈" example="전문 분야 expert 16개는 3,584 폭에서 계산하고 공통 지식 expert 2개는 7,168 폭에서 모든 token을 처리합니다." boundary="Down/up projection·shared expert·dispatch가 남으므로 end-to-end compute와 latency가 정확히 절반이 되지 않습니다." />
       <ExplainedFormula question="왜 routed path를 줄인 뒤 다시 full width로 올릴까요?" idea="전문가 내부 계산은 작은 latent feature에서 절약하되, residual stream과 shared expert 결과를 더하려면 마지막 shape를 7,168로 맞춰야 합니다." formula={String.raw`z=W_{\downarrow}x,\quad r=\sum_{e\in\operatorname{TopK}}p_eE_e(z),\quad y=W_{\uparrow}\operatorname{RMSNorm}(r)+E_{\rm shared}(x)`} annotatedFormula={String.raw`\begin{aligned}z&=\underbrace{W_{\downarrow}x}_{\substack{\text{routed 계산 전에}\text{7,168→3,584 축소}}}\\r&=\underbrace{\sum_{e\in\operatorname{TopK}}p_eE_e(z)}_{\substack{\text{선택한 16 expert output을}\text{router weight로 합성}}}\\\widetilde r&=\underbrace{\operatorname{RMSNorm}(r)}_{\text{aggregate scale 정리}}\\y&=\underbrace{W_{\uparrow}\widetilde r+E_{\rm shared}(x)}_{\substack{\text{full width로 복원해}\text{공통 경로와 결합}}}\end{aligned}`} operations={[{expression:String.raw`W_{\downarrow}x`,annotation:["full-width input을 projection해","routed expert용 latent 생성"]},{expression:String.raw`\sum_{e\in\operatorname{TopK}}p_eE_e(z)`,annotation:["선택 expert output을 weight로 더해","전문 경로 aggregate 생성"]},{expression:String.raw`\operatorname{RMSNorm}(r)`,annotation:["aggregate의 RMS scale을 정리해","up projection 입력 안정화"]},{expression:String.raw`W_{\uparrow}\widetilde r+E_{\rm shared}(x)`,annotation:["latent를 full width로 복원하고 shared 결과를 더해","residual-compatible output 생성"]}]} terms={[{symbol:String.raw`W_{\downarrow},W_{\uparrow}`,name:"Width projections",description:"Full width와 routed latent width 사이를 오가는 projection입니다."},{symbol:String.raw`p_e`,name:"Mixture weight",description:"선택된 expert e의 output을 합칠 비율입니다."},{symbol:String.raw`E_{\rm shared}`,name:"Shared expert path",description:"모든 token이 full width에서 사용하는 공통 expert입니다."}]} assumptions={["TopK는 896개 routed expert 중 16개를 선택합니다.","Shared expert 두 개의 합산 세부 표기는 간소화했습니다."]} interpretation="Width factorization은 parameter와 FLOP 장부를 바꾸지만 router 통신·memory movement까지 없애지는 않습니다." />
     </section>
     <section id="activation" className="space-y-6"><LessonHeader number="01" eyebrow="곱셈 activation의 큰 값 다루기" title="SiTU-GLU는 gate와 value branch를 각각 부드럽게 cap한다">SwiGLU는 두 branch를 곱으므로 둘 다 큰 coordinate가 나오면 product가 더 커집니다. SiTU는 작은 값의 모양은 유지하면서 큰 값에서 tanh 천장에 접근시킵니다.</LessonHeader>
@@ -25,5 +30,6 @@ export default function KimiK3LatentMoeArticle() {
       <ConceptLadderViz title="Stable LatentMoE 조립 순서" description="Width·activation·load 실패를 서로 다른 장치로 닫습니다." steps={[{label:"Width",detail:"Routed path만 latent로 내립니다."},{label:"Select",detail:"16/896 expert를 배정합니다."},{label:"Bound",detail:"SiTU와 RMSNorm으로 큰 값을 다룹니다."},{label:"Balance",detail:"다음-step bias로 hot expert를 줄입니다."}]} />
       <ContentBoundary article="kimi-k3-latent-moe" />
     </section>
+    <ModelArchitectureCaseMapReturn current="width" />
   </article>;
 }

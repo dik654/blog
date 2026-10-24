@@ -4,6 +4,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import {
+  ModelArchitectureCaseLocator,
+  ModelArchitectureCaseMapReturn,
+} from "../shared/ModelArchitectureCaseLocator";
 import MotifGdlaViz from "./viz/MotifGdlaViz";
 
 const configRows = [
@@ -19,14 +23,15 @@ const configRows = [
 export default function Motif3ArchitectureArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <ModelArchitectureCaseLocator current="motif" />
       <section className="space-y-6">
-        <LessonHeader number="00" eyebrow="2026-08-24 release receipt" title="정식 명칭은 MDLA가 아니라 GDLA이며, Motif 3는 architecture와 post-training을 함께 설계한 314B MoE다">
-          Motif 3 technical report v1은 2026년 8월 10일 공개됐고, 현재 정식 checkpoint는 MIT license로 배포됩니다. 핵심 attention 이름은 <strong>Grouped Differential Latent Attention(GDLA)</strong>입니다. 모델 하나의 성과를 GDLA 단독 효과로 환원하지 않고 architecture·training system·data·post-training을 각각 읽겠습니다.
+        <LessonHeader number="00" eyebrow="공개 자료의 범위" title="정식 명칭은 MDLA가 아니라 GDLA이며, Motif 3는 구조와 후처리 학습을 함께 설계한 314B MoE다">
+          Motif 3 기술 보고서 v1은 2026년 8월 10일 공개됐고, 정식 모델 가중치는 MIT 라이선스로 배포됩니다. 핵심 attention 이름은 <strong>Grouped Differential Latent Attention(GDLA)</strong>입니다. 모델 하나의 성과를 GDLA 단독 효과로 환원하지 않고 구조·학습 시스템·데이터·후처리 학습을 나눠 읽겠습니다.
         </LessonHeader>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <MotifGdlaViz />
+        <p className="font-semibold">그림의 결합 구조를 기준으로 세 숫자를 분리해 확인해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>전체 314B 가운데 한 token이 활성화하는 parameter는 약 13.2B일까요?</li><li>희소층마다 routed expert 384개를 모두 계산할까요?</li><li>16개 noise head를 네 번 대응시키면 64개 signal head와 같은 묶음 수가 될까요?</li></ol>
         <p>답은 <strong>예, 아니요, 예</strong>입니다. 전체 가중치 상주량, token당 활성 계산량, GDLA의 head 대응 관계를 서로 다른 장부로 읽어야 합니다.</p>
-        <MotifGdlaViz />
         <ContentBoundary article="motif-3-architecture" />
         <TermLesson
           name="Motif 3 system configuration"
@@ -195,6 +200,7 @@ export default function Motif3ArchitectureArticle() {
           <p><strong className="text-foreground">Artifact 경계:</strong> 정식 <a className="text-primary hover:underline" href="https://huggingface.co/Motif-Technologies/Motif-3" target="_blank" rel="noreferrer">Motif-3 model card</a>는 현재 MIT checkpoint·MTP deployment를, <a className="text-primary hover:underline" href="https://github.com/MotifTechnologies/motif3-training-example" target="_blank" rel="noreferrer">training example</a>은 B200 4×8 GPU용 train-only framework를 공개합니다. Base checkpoint에서 MTP head가 빠졌다는 설명과 instruction checkpoint의 built-in MTP를 섞지 않습니다.</p>
         </div>
       </section>
+      <ModelArchitectureCaseMapReturn current="motif" />
     </article>
   );
 }

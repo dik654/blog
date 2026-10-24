@@ -4,16 +4,21 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { KimiAxisViz } from "../kimi-k3-viz";
+import {
+  ModelArchitectureCaseLocator,
+  ModelArchitectureCaseMapReturn,
+} from "../shared/ModelArchitectureCaseLocator";
 
 export default function KimiK3ArchitectureArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <ModelArchitectureCaseLocator current="kimi" />
       <section className="space-y-6">
         <LessonHeader number="00" eyebrow="모델 이름보다 먼저 볼 것" title="K3는 크기 하나가 아니라 세 개의 정보 이동 축을 다시 설계한 모델이다">
           2.8T라는 숫자부터 외우면 architecture가 보이지 않습니다. 먼저 한 token이 <strong>과거 token</strong>, <strong>이전 layer</strong>, <strong>expert</strong> 사이에서 어떻게 이동하는지만 분리합니다.
         </LessonHeader>
-        <TermLesson name="K3 axis factorization" oneLine="Sequence·depth·width를 서로 다른 병목으로 보고 각 축에 별도의 memory·routing mechanism을 배치하는 시스템 설계입니다." shape="sequence: KDA↔MLA · depth: Block AttnRes · width: Stable LatentMoE" example="긴 문맥 비용은 KDA가, 93층의 source 선택은 AttnRes가, 896 expert의 계산 폭은 LatentMoE가 담당합니다." boundary="세 component의 효과를 더해 2.5×라고 계산하거나, 어느 하나가 K3 전체 성능을 단독 설명한다고 보지 않습니다." />
         <KimiAxisViz />
+        <TermLesson name="K3 axis factorization" oneLine="Sequence·depth·width를 서로 다른 병목으로 보고 각 축에 별도의 memory·routing mechanism을 배치하는 시스템 설계입니다." shape="sequence: KDA↔MLA · depth: Block AttnRes · width: Stable LatentMoE" example="긴 문맥 비용은 KDA가, 93층의 source 선택은 AttnRes가, 896 expert의 계산 폭은 LatentMoE가 담당합니다." boundary="세 component의 효과를 더해 2.5×라고 계산하거나, 어느 하나가 K3 전체 성능을 단독 설명한다고 보지 않습니다." />
       </section>
 
       <section id="axes" className="space-y-6">
@@ -54,6 +59,7 @@ export default function KimiK3ArchitectureArticle() {
         <ConceptLadderViz title="K3 전체 구조를 읽는 순서" description="한 축씩 배운 뒤 마지막에만 전체 system claim을 조합합니다." steps={[{label:"축 분리",detail:"sequence·depth·width 질문을 나눕니다."},{label:"독립 학습",detail:"각 mechanism의 state·shape·boundary를 배웁니다."},{label:"구성 장부",detail:"93층·896 expert·context를 version과 고정합니다."},{label:"근거 결합",detail:"마지막에만 통합 scaling claim을 읽습니다."}]} />
         <ContentBoundary article="kimi-k3-architecture" />
       </section>
+      <ModelArchitectureCaseMapReturn current="kimi" />
     </article>
   );
 }

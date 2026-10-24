@@ -3655,9 +3655,10 @@
         "src/pages/articles/ai/kimi-k3-architecture/ModernArticle.tsx",
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/kimi-k3-viz.tsx",
-        "src/pages/articles/ai/useKimiStory.ts"
+        "src/pages/articles/ai/useKimiStory.ts",
+        "src/pages/articles/ai/shared/ModelArchitectureCaseLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3665,19 +3666,32 @@
         "hasSourceSurface": true,
         "characters": 19595
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Kimi K3의 세 축은 본문 안에서 설명됐지만 Motif 3와의 관계가 선후인지 병렬 사례인지, Transformer의 어느 뼈대에서 갈라지는지가 상단에 보이지 않았습니다.",
+        "첫 시각화보다 용어 카드가 먼저 나오고 2.6초 무한 반복 재생이 가능해 한 축의 실제 상태 변화를 따라가기 어려웠습니다."
+      ],
+      "fixture": "한 token이 과거 token을 읽는 sequence, 이전 layer를 읽는 depth, expert를 고르는 width 세 축을 지나며 각각 KDA·AttnRes·LatentMoE 상태를 바꾸는 과정을 추적합니다.",
+      "stageAnchors": {
+        "parent": "overview",
+        "axes": "axes",
+        "configuration": "configuration",
+        "evidence": "evidence"
+      },
+      "primarySourceApplication": [
+        "Kimi K3 공식 저장소와 기술 보고서의 2.8T·104B active·93 layers·69 KDA+24 Gated MLA·896/16 expert 구성을 확인했으며, 약 2.5× 주장은 전체 통합 scaling 결과로만 다룹니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Transformer 공통 뼈대→병렬 모델 사례→Kimi의 세 축→공개 구성→근거 범위를 전체 본문과 대조했습니다.",
+        "humanize": "크기와 제품 이름보다 token 정보가 이동하는 세 방향을 먼저 보여 줍니다.",
+        "numericTrace": "23×3=69 KDA, 23×1+1=24 MLA, 합계 93층을 공식 구성과 대조했습니다.",
+        "mobile390": "390x844에서 가로 넘침 0, 공통 사례 지도와 첫 시각화 우선 배치를 확인했습니다.",
+        "desktop1440": "1440x900에서 가로 넘침 0, Motif와 Kimi의 병렬 분기 및 세 축을 확인했습니다.",
+        "accessibility": "자동 시작·무한 반복 없음, 5.2초 간격 마지막 정지, 키보드 이동, reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환·장면 순서를 확인했습니다.",
+        "build": "Production build 7,888 modules·2,086 public routes·74편 no-script 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3689,9 +3703,10 @@
         "src/pages/articles/ai/kimi-k3-depth-routing/ModernArticle.tsx",
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/kimi-k3-viz.tsx",
-        "src/pages/articles/ai/useKimiStory.ts"
+        "src/pages/articles/ai/useKimiStory.ts",
+        "src/pages/articles/ai/shared/ModelArchitectureCaseLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3699,19 +3714,32 @@
         "hasSourceSurface": true,
         "characters": 20359
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Residual·depth attention·block bound가 자세히 설명됐지만 Kimi 전체 지도에서 depth 축의 위치와 직속 부모가 보이지 않았습니다.",
+        "표준 residual 용어 카드가 실제 source 선택 시각화보다 먼저 나오고 재생이 끝없이 첫 장면으로 돌아갔습니다."
+      ],
+      "fixture": "93개 main layer를 최대 12층씩 묶어 8개 block source와 embedding 하나를 남기고, 현재 layer의 pseudo-query가 source value를 가중합하는 사례를 추적합니다.",
+      "stageAnchors": {
+        "parent": "overview",
+        "selection": "depth-attention",
+        "bound": "block-bound",
+        "evidence": "evidence"
+      },
+      "primarySourceApplication": [
+        "Attention Residuals 논문의 pseudo-query와 Full·Block AttnRes 경계를 Kimi K3 공식 93-layer·8-block 구성에 한정해 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직전 residual→depth source key/value→가중합→block source 제한 순서를 대조했습니다.",
+        "humanize": "Token attention과 혼동하지 않도록 이전 layer 표현을 고르는 문제로 먼저 보여 줍니다.",
+        "numericTrace": "ceil(93/12)=8과 embedding을 더한 9개 장기 source의 범위를 확인했습니다.",
+        "mobile390": "390x844에서 가로 넘침 0과 첫 H2 다음 depth 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 가로 넘침 0과 block 분기 지도를 확인했습니다.",
+        "accessibility": "자동 시작·무한 반복 없음, 키보드 이동, reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환·네 장면 제목을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3723,9 +3751,10 @@
         "src/pages/articles/ai/kimi-k3-latent-moe/ModernArticle.tsx",
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/kimi-k3-viz.tsx",
-        "src/pages/articles/ai/useKimiStory.ts"
+        "src/pages/articles/ai/useKimiStory.ts",
+        "src/pages/articles/ai/shared/ModelArchitectureCaseLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3733,19 +3762,32 @@
         "hasSourceSurface": true,
         "characters": 22263
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Latent width·activation cap·load balancing 설명이 Kimi 전체의 width 축과 직접 연결되지 않았습니다.",
+        "용어 카드가 down projection부터 폭 복원까지의 시각적 흐름보다 먼저 나오고 빠른 반복 재생이 가능했습니다."
+      ],
+      "fixture": "7,168 폭 입력을 3,584 routed latent로 내리고 896개 중 16개 expert를 고른 뒤 RMSNorm·상향 projection과 두 shared expert 결과를 합치는 한 token 경로를 추적합니다.",
+      "stageAnchors": {
+        "parent": "overview",
+        "activation": "activation",
+        "balancing": "balancing",
+        "evidence": "release"
+      },
+      "primarySourceApplication": [
+        "Kimi K3 공식 보고서의 Stable LatentMoE·SiTU-GLU·RMSNorm·Quantile Balancing과 896/16 routed·2 shared expert 구성을 해당 모델 범위에만 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "폭 축소→expert 선택→activation 안정화→부하 조정→폭 복원 순서를 대조했습니다.",
+        "humanize": "Stable이라는 이름을 한 장치의 속성이 아니라 폭·값·부하의 세 실패를 따로 다루는 계약으로 설명합니다.",
+        "numericTrace": "7,168→3,584, Top-16/896, SiTU cap 4×25=100, 목표 load mk/n 계산을 대조했습니다.",
+        "mobile390": "390x844에서 가로 넘침 0과 첫 H2 다음 LatentMoE 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 가로 넘침 0과 width 분기 지도를 확인했습니다.",
+        "accessibility": "자동 시작·무한 반복 없음, 키보드 이동, reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환·네 장면 제목을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3757,9 +3799,10 @@
         "src/pages/articles/ai/kimi-k3-sequence-mixer/ModernArticle.tsx",
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/kimi-k3-viz.tsx",
-        "src/pages/articles/ai/useKimiStory.ts"
+        "src/pages/articles/ai/useKimiStory.ts",
+        "src/pages/articles/ai/shared/ModelArchitectureCaseLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3767,19 +3810,32 @@
         "hasSourceSurface": true,
         "characters": 20867
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "KDA·decay·MLA schedule이 자세히 설명됐지만 Kimi 전체 지도에서 sequence 축의 직속 위치가 보이지 않았습니다.",
+        "KDA 용어 카드가 retain→correct→read→MLA 보강 시각화보다 먼저 나오고 장면이 2.6초마다 반복됐습니다."
+      ],
+      "fixture": "고정 state S에서 기존 key 예측과 새 value의 차이만 고쳐 쓰고, KDA 세 층마다 Gated MLA가 token memory를 직접 읽는 한 sequence 경로를 추적합니다.",
+      "stageAnchors": {
+        "parent": "overview",
+        "decay": "decay",
+        "hybrid": "hybrid",
+        "position": "position"
+      },
+      "primarySourceApplication": [
+        "Kimi Linear 논문의 KDA recurrence·bounded decay·chunk algorithm과 Kimi K3 공식 69 KDA·24 Gated MLA 구성을 구분해 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "고정 state→delta correction→decay→3:1 MLA 보강→NoPE 경계를 대조했습니다.",
+        "humanize": "과거 token 목록과 고쳐 쓰는 association state의 차이를 한 요청 흐름으로 먼저 보여 줍니다.",
+        "numericTrace": "단순 2×2 state update, 누적 retention, 69+24=93 layer 장부를 대조했습니다.",
+        "mobile390": "390x844에서 가로 넘침 0과 첫 H2 다음 sequence 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 가로 넘침 0과 sequence 분기 지도를 확인했습니다.",
+        "accessibility": "자동 시작·무한 반복 없음, 키보드 이동, reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환·네 장면 제목을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -6196,9 +6252,10 @@
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/motif-3-architecture.tsx",
         "src/pages/articles/ai/motif-3-architecture/ModernArticle.tsx",
-        "src/pages/articles/ai/motif-3-architecture/viz/MotifGdlaViz.tsx"
+        "src/pages/articles/ai/motif-3-architecture/viz/MotifGdlaViz.tsx",
+        "src/pages/articles/ai/shared/ModelArchitectureCaseLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -6206,19 +6263,34 @@
         "hasSourceSurface": true,
         "characters": 26415
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Motif 3의 여러 장치는 자세히 설명됐지만 Kimi K3와의 관계가 선후가 아닌 병렬 모델 사례라는 점과 Transformer 직속 부모가 상단에 보이지 않았습니다.",
+        "독자는 첫 그림보다 314B·13.2B·head 수 예측 문단을 먼저 읽어야 해 전체 결합 구조를 잡기 어려웠습니다."
+      ],
+      "fixture": "한 token이 압축 KV를 공유하는 signal/noise query에서 차분 attention을 만들고, 네 residual stream과 Top-8/384 expert를 지나며 각 장치의 책임을 분리해 추적합니다.",
+      "stageAnchors": {
+        "parent": "overview",
+        "attention": "gdla",
+        "depth": "mhc",
+        "experts": "polynorm",
+        "postTraining": "post-training",
+        "evidence": "evidence"
+      },
+      "primarySourceApplication": [
+        "Motif 3 기술 보고서의 314B total·13.2B active 구성과 GDLA·modified mHC·PolyNorm·MOPD를 정본으로 삼고, GDA·mHC 원 논문과 공식 B200 4×8 training example의 범위를 분리했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "공통 Transformer 부모→GDLA→depth mixing→expert activation→teacher 통합→근거 범위를 전체 본문과 대조했습니다.",
+        "humanize": "영문 공개 확인 문구를 자연스러운 한국어로 고치고 모델 크기보다 GDLA 결합 그림을 먼저 보여 줍니다.",
+        "numericTrace": "314B/13.2B, 384 top-8, 64 signal/16 noise(g=4), 53 layer 장부를 공식 보고서와 대조했습니다.",
+        "mobile390": "390x844에서 가로 넘침 0과 첫 H2 다음 GDLA 결합 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 가로 넘침 0과 Motif·Kimi 병렬 분기를 확인했습니다.",
+        "accessibility": "정적 결합 그림만으로 두 연구 축과 결합 지점의 순서와 경계를 설명할 수 있습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -10768,14 +10840,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 49,
+    "rewritten": 54,
     "existingTeachTargetedRepairs": 4,
-    "reviewedAndImproved": 53,
-    "localVerified": 53,
+    "reviewedAndImproved": 58,
+    "localVerified": 58,
     "awaitingIntegration": 0,
-    "pending": 136,
+    "pending": 131,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 54
+    "bodyReviewedTotal": 59
   }
 }

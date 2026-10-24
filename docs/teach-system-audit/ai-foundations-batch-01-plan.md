@@ -462,3 +462,28 @@ tree에 edit 범위를 반영하고 바뀌지 않은 subtree를 재사용합니�
 재생하면 5.2초마다 다음 상태로 이동하고 마지막에서 멈춥니다. 390×844에서 여섯 경로의 가로 넘침은 0이었고,
 공통 분기 locator는 570px, sparse autoencoder locator는 461px였습니다. 1440×900에서도 가로 넘침은 0이었습니다.
 키보드 좌우 이동, reduced-motion의 재생 비활성화, JavaScript 비활성 정적 본문·부모 지도·지도 반환을 확인했습니다.
+
+## 15. 모델별 구조 조립 사례
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/motif-3-architecture` | concept · paper explanation | `ai/transformer-architecture` | 여러 구조 변경이 한 모델에 함께 들어갔을 때 각 장치의 역할과 근거를 어떻게 분리해 읽는가? |
+| `ai/kimi-k3-architecture` | concept · paper explanation | `ai/transformer-architecture` | 모델 크기보다 먼저 sequence·depth·width의 세 정보 이동 축을 어떻게 나누는가? |
+| `ai/kimi-k3-sequence-mixer` | concept · paper explanation | `ai/kimi-k3-architecture#axes` | 고정 크기 state를 고쳐 쓰면서 token memory 조회를 어떻게 보강하는가? |
+| `ai/kimi-k3-depth-routing` | concept · paper explanation | `ai/kimi-k3-architecture#axes` | 이전 layer 표현을 고르면서 오래 보관할 source 수를 어떻게 제한하는가? |
+| `ai/kimi-k3-latent-moe` | concept · paper explanation | `ai/kimi-k3-architecture#axes` | Expert 계산 폭·activation 크기·배정 불균형을 어떻게 따로 관리하는가? |
+
+Motif 3와 Kimi K3는 선후 관계가 아닙니다. 둘 다 Transformer의 attention·residual·MLP 뼈대에서 갈라진
+모델별 조립 사례입니다. 공통 locator는 이 둘을 형제 분기로 보여 주고, Kimi 아래에서만 sequence·depth·width
+세 글이 다시 갈라집니다. 각 글은 필요한 MLA·fast weight·residual·MoE 글로도 곧바로 돌아갈 수 있습니다.
+
+Motif 3는 압축 KV와 signal/noise 차분을 결합한 GDLA를 첫 그림으로 두고, modified mHC·PolyNorm·MOPD를
+각각 depth 전달·expert activation·capability 통합 문제로 나눴습니다. Kimi K3는 token 하나가 과거 token,
+이전 layer, expert 사이에서 이동하는 세 방향을 먼저 보여 줍니다. 세부 글은 KDA retain→correct→read→MLA,
+depth source→weight→block bound, 7,168→3,584→Top-16/896→RMSNorm→7,168 경로를 각각 추적합니다.
+
+Kimi 장면은 자동으로 시작하거나 반복하지 않습니다. 사용자가 재생하면 5.2초마다 다음 상태로 이동하고 마지막
+장면에서 멈춥니다. 화면 이탈이나 문서 숨김에도 정지하며 reduced-motion에서는 재생을 비활성화합니다. 모바일과
+데스크톱에서 가로 넘침이 없고, JavaScript 비활성 정적 경로에는 공통 지도·본문·지도 반환과 장면 순서가 남습니다.
+공개 구성 수치는 Kimi K3 공식 저장소와 기술 보고서, Motif 3 기술 보고서와 공식 training example에 한정해
+확인했으며 component 비교와 통합 모델 benchmark를 같은 인과 근거로 취급하지 않습니다.

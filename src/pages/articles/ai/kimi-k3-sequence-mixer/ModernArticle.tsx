@@ -4,12 +4,17 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { SequenceMixerViz } from "../kimi-k3-viz";
+import {
+  ModelArchitectureCaseLocator,
+  ModelArchitectureCaseMapReturn,
+} from "../shared/ModelArchitectureCaseLocator";
 
 export default function KimiK3SequenceMixerArticle() {
   return <article id="overview" className="space-y-16">
+    <ModelArchitectureCaseLocator current="sequence" />
     <section className="space-y-6"><LessonHeader number="00" eyebrow="과거를 보관하는 두 방식" title="KDA state는 token 목록이 아니라 계속 수정되는 key–value 기억이다">Attention은 과거 K/V를 token별로 쌓습니다. KDA는 과거 association을 고정 크기 matrix <code>Sₜ</code>에 압축하고 새 token마다 갱신합니다.</LessonHeader>
-      <TermLesson name="KDA channelwise delta state" oneLine="과거 key–value association을 고정 state에 요약하고, 현재 key에서 발생한 예측 오차만 고쳐 쓰는 recurrent memory입니다." shape="retain old state → erase old association → write new value → query read" example="S=2가 key 1에서 value 2를 예측하지만 새 value가 4라면, 차이 2의 일부만 write합니다." boundary="State가 sequence 길이와 함께 늘지 않는 대신 서로 다른 과거가 같은 coordinate에서 충돌할 수 있습니다." />
       <SequenceMixerViz />
+      <TermLesson name="KDA channelwise delta state" oneLine="과거 key–value association을 고정 state에 요약하고, 현재 key에서 발생한 예측 오차만 고쳐 쓰는 recurrent memory입니다." shape="retain old state → erase old association → write new value → query read" example="S=2가 key 1에서 value 2를 예측하지만 새 value가 4라면, 차이 2의 일부만 write합니다." boundary="State가 sequence 길이와 함께 늘지 않는 대신 서로 다른 과거가 같은 coordinate에서 충돌할 수 있습니다." />
       <ExplainedFormula question="왜 새 value vₜ를 그대로 더하지 않고 Sₜ₋₁kₜ와의 차이를 곱할까요?" idea="같은 key에 이미 저장된 예측을 먼저 확인하고 틀린 만큼만 수정해야 반복 write가 무한 누적되지 않습니다." formula={String.raw`S_t=\alpha_tS_{t-1}+\beta_t(v_t-S_{t-1}k_t)k_t^\top,\quad y_t=S_tq_t`} annotatedFormula={String.raw`\begin{aligned}\widetilde S&=\underbrace{\alpha_tS_{t-1}}_{\text{과거 기억을 일부 유지}}\\e_t&=\underbrace{v_t-S_{t-1}k_t}_{\substack{\text{현재 key에서의}\text{예측 오차 계산}}}\\S_t&=\underbrace{\widetilde S+\beta_te_tk_t^\top}_{\substack{\text{오차 방향만 골라}\text{state를 수정}}}\\y_t&=\underbrace{S_tq_t}_{\text{현재 query로 기억 읽기}}\end{aligned}`} operations={[{expression:String.raw`\alpha_tS_{t-1}`,annotation:["이전 state에 retention을 곱해","이번 step까지 남길 기억 계산"]},{expression:String.raw`v_t-S_{t-1}k_t`,annotation:["새 value에서 기존 예측을 빼","같은 key의 correction만 계산"]},{expression:String.raw`\beta_te_tk_t^\top`,annotation:["오차를 key 방향 outer product로 써","관련 state coordinate만 수정"]},{expression:String.raw`S_tq_t`,annotation:["현재 query 방향으로 state를 투영해","이번 token output 생성"]}]} terms={[{symbol:String.raw`S_t`,name:"Fast-weight state",description:"Sequence를 처리하는 동안 갱신되는 고정 크기 association memory입니다."},{symbol:String.raw`\alpha_t`,name:"Retention gate",description:"과거 state를 남기는 channel별 비율입니다."},{symbol:String.raw`\beta_t`,name:"Write gate",description:"예측 오차를 얼마나 반영할지 정합니다."},{symbol:String.raw`k_t,q_t,v_t`,name:"Address·read·content",description:"쓸 주소, 읽을 방향, 새로 저장할 내용입니다."}]} assumptions={["설명을 위해 head·channel index를 생략했습니다.","실제 KDA는 vector·matrix와 kernel용 chunk formulation을 사용합니다."]} interpretation="S_prev=2, α=.5, β=.25, k=1, v=4면 retained 1과 correction .5를 합쳐 1.5입니다. 사용한 단순식의 위치에 따라 논문 구현의 erase parameterization과 수치는 달라질 수 있으므로 식 version을 함께 고정합니다." />
     </section>
     <section id="decay" className="space-y-6"><LessonHeader number="01" eyebrow="기억을 남기는 비율" title="Decay 하한은 장기 기억 보장이 아니라 한 step 수치 범위다">Logit을 제한한 뒤 exponentiate해 retention을 0과 1 사이에 둡니다. 한 번의 급격한 삭제를 막아도 반복 곱은 작아질 수 있습니다.</LessonHeader>
@@ -26,5 +31,6 @@ export default function KimiK3SequenceMixerArticle() {
       <ConceptLadderViz title="K3 sequence mixer 조립 순서" description="고정 state를 이해한 뒤 global token read를 붙입니다." steps={[{label:"State",detail:"고정 association memory를 정의합니다."},{label:"Delta",detail:"기존 예측 오차만 수정합니다."},{label:"Decay",detail:"한 step retention 범위를 제한합니다."},{label:"MLA",detail:"주기적으로 token memory를 직접 조회합니다."}]} />
       <ContentBoundary article="kimi-k3-sequence-mixer" />
     </section>
+    <ModelArchitectureCaseMapReturn current="sequence" />
   </article>;
 }
