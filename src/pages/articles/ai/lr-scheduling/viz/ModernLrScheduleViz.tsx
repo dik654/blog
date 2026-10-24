@@ -23,29 +23,50 @@ function Scene({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3000);
+  const controls = useAnimatedScenes(labels.length, 6200);
   return (
     <VizFrame title={title} description={description} className="my-8">
       <div
-        id={id}
+        id={controls.playbackId}
         data-viz
+        data-viz-scene={id}
+        data-story-index={controls.active}
+        role="group"
+        aria-label={`${title} 애니메이션`}
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
         className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black tracking-[.12em] text-primary">
+            장면 · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 text-lg font-bold leading-7">
+            {labels[controls.active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
+            {children(controls.active)}
+          </div>
+          <p
+            data-scene-note
+            className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground"
+          >
+            {notes[controls.active]}
+          </p>
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          {notes[controls.active]}
-        </p>
         <AnimatedSceneControls labels={labels} {...controls} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {labels.map((label, index) => (
+            <li key={label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {label}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {notes[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
@@ -210,8 +231,8 @@ export function ScheduleClockViz() {
             x={228}
             y={15}
             width={150}
-            label="optimizer update"
-            detail="parameter changes once"
+            label="optimizer 갱신"
+            detail="parameter가 한 번 바뀜"
             active={active <= 1}
           />
           <line
@@ -280,7 +301,7 @@ export function ScheduleClockViz() {
               textAnchor="middle"
               className="fill-foreground text-[10px] font-bold"
             >
-              schedule receipt
+              schedule 기록
             </text>
             <text
               x="308"
@@ -288,7 +309,7 @@ export function ScheduleClockViz() {
               textAnchor="middle"
               className="fill-muted-foreground text-[9px]"
             >
-              t · T · state · call event
+              t · T · 상태 · 호출 순서
             </text>
             <text
               x="308"
@@ -296,7 +317,7 @@ export function ScheduleClockViz() {
               textAnchor="middle"
               className="fill-muted-foreground text-[9px]"
             >
-              param-group LR
+              parameter 묶음별 LR
             </text>
           </motion.g>
         </svg>
@@ -307,10 +328,10 @@ export function ScheduleClockViz() {
 
 export function DecayPolicyViz() {
   const labels = [
-    "Open-loop은 clock만 읽음",
-    "Step과 exponential의 모양 비교",
-    "Metric-trigger는 validation을 읽음",
-    "두 정책의 state를 구분",
+    "고정 정책은 update만 읽음",
+    "계단과 비율 감소 비교",
+    "검증 기반 정책은 결과를 읽음",
+    "두 정책의 저장 상태 구분",
   ] as const;
   const notes = [
     "Open-loop decay는 validation 결과와 무관하게 milestone 또는 매-step factor로 learning rate를 낮춥니다.",
@@ -321,8 +342,8 @@ export function DecayPolicyViz() {
   return (
     <Scene
       id="decay-policy-viz"
-      title="Clock-driven decay와 metric-driven decay"
-      description="같은 ‘LR 감소’라는 결과 뒤에 있는 입력과 state machine을 분리합니다."
+      title="고정 시계 감소와 검증 결과 기반 감소"
+      description="같은 ‘LR 감소’라는 결과 뒤에서 서로 다른 입력과 상태가 움직이는 과정을 분리합니다."
       labels={labels}
       notes={notes}
     >
@@ -338,7 +359,7 @@ export function DecayPolicyViz() {
             y={18}
             width={96}
             label="update t"
-            detail="deterministic clock"
+            detail="미리 정한 시계"
             active={active <= 1 || active === 3}
           />
           <Arrow
@@ -353,8 +374,8 @@ export function DecayPolicyViz() {
             x={156}
             y={18}
             width={104}
-            label="open-loop"
-            detail="milestone · gamma"
+            label="고정 시계 정책"
+            detail="경계 · 감소 비율"
             active={active <= 1 || active === 3}
           />
           <motion.path
@@ -379,14 +400,14 @@ export function DecayPolicyViz() {
             textAnchor="middle"
             className="fill-muted-foreground text-[9px]"
           >
-            step / exponential
+            계단식 / 매 update 비율 감소
           </text>
           <Box
             x={18}
             y={156}
             width={96}
-            label="val metric"
-            detail="evaluation event"
+            label="검증 지표"
+            detail="평가 시점의 관측값"
             active={active >= 2}
           />
           <Arrow
@@ -401,8 +422,8 @@ export function DecayPolicyViz() {
             x={156}
             y={156}
             width={104}
-            label="plateau state"
-            detail="best · bad-count"
+            label="정체 판정 상태"
+            detail="최선값 · 미개선 횟수"
             active={active >= 2}
           />
           <Arrow
@@ -417,8 +438,8 @@ export function DecayPolicyViz() {
             x={302}
             y={156}
             width={78}
-            label="decay?"
-            detail="patience gate"
+            label="감소할까?"
+            detail="대기 횟수 판정"
             active={active >= 2}
           />
           <motion.g
@@ -440,12 +461,88 @@ export function DecayPolicyViz() {
               textAnchor="middle"
               className="fill-primary text-[9px] font-bold"
             >
-              입력과 저장 state가 다름
+              입력과 저장 상태가 다름
             </text>
           </motion.g>
         </svg>
       )}
     </Scene>
+  );
+}
+
+export function ResumeBoundaryViz() {
+  return (
+    <VizFrame
+      title="연속 실행과 재개 실행이 같은 다음 update를 만드는지 비교합니다"
+      description="LR 하나가 아니라 update cursor·scheduler·optimizer·호출 순서를 함께 복원합니다."
+      className="my-8"
+    >
+      <div
+        data-viz
+        className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-[1fr_auto_1fr] sm:items-stretch"
+      >
+        <div className="min-w-0 bg-background p-4">
+          <p className="text-[10px] font-black text-primary">연속 실행</p>
+          <strong className="mt-2 block break-keep text-sm">
+            update 600 → 601
+          </strong>
+          <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">
+            같은 data cursor와 optimizer state에서 η₆₀₀을 적용합니다.
+          </p>
+        </div>
+        <div className="hidden min-w-28 items-center justify-center bg-background px-3 text-center text-xs font-bold text-muted-foreground sm:flex">
+          LR trace와 parameter 차이 비교
+        </div>
+        <div className="min-w-0 bg-background p-4">
+          <p className="text-[10px] font-black text-primary">중단 뒤 재개</p>
+          <strong className="mt-2 block break-keep text-sm">
+            checkpoint 600 → 601
+          </strong>
+          <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">
+            t·T·scheduler state·parameter-group LR·호출 순서를 되살립니다.
+          </p>
+        </div>
+      </div>
+      <p className="mt-4 border-l-2 border-primary/45 pl-3 text-sm leading-7 text-muted-foreground">
+        첫 불일치 update를 찾으면 off-by-one과 누락된 state를 좁힐 수 있습니다.
+      </p>
+    </VizFrame>
+  );
+}
+
+export function DecayStoppingOrderViz() {
+  return (
+    <VizFrame
+      title="같은 validation 지표를 읽는 두 판단의 순서를 고정합니다"
+      description="학습률 감소가 효과를 낼 기회를 준 뒤 조기 종료를 판단하는 한 예입니다."
+      className="my-8"
+    >
+      <div
+        data-viz
+        className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-4"
+      >
+        {[
+          ["01", "검증", "metric·평가 번호 기록"],
+          ["02", "감소 판정", "best·미개선 횟수 갱신"],
+          ["03", "추가 실행", "낮춘 LR로 정한 update 수행"],
+          ["04", "종료 판정", "best artifact 복원 여부 결정"],
+        ].map(([number, title, detail]) => (
+          <div key={number} className="min-w-0 bg-background p-4">
+            <p className="font-mono text-[10px] font-black text-primary">
+              {number}
+            </p>
+            <strong className="mt-2 block break-keep text-sm">{title}</strong>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">
+              {detail}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 border-l-2 border-primary/45 pl-3 text-sm leading-7 text-muted-foreground">
+        두 state machine이 같은 counter를 공유하지 않도록 owner와 checkpoint
+        field를 따로 둡니다.
+      </p>
+    </VizFrame>
   );
 }
 

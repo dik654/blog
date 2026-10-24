@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 530,
-    "pending": 460,
+    "reviewed": 532,
+    "pending": 458,
     "untracked": 0,
-    "assignedPending": 416,
+    "assignedPending": 414,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2863,9 +2863,9 @@
       "publicPath": "cs/ai/lr-scheduling",
       "title": "Learning-rate Schedule 기초: Update Clock과 Resume",
       "catalogIndex": 283,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2873,9 +2873,9 @@
       "publicPath": "cs/ai/lr-decay-policies",
       "title": "Learning-rate Decay: Clock Policy와 Metric Trigger",
       "catalogIndex": 284,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
