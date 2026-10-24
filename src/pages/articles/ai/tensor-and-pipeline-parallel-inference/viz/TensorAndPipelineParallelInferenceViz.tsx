@@ -105,6 +105,7 @@ export default function TensorAndPipelineParallelInferenceViz() {
       note="TP 2 로 단순화했습니다. TP 8 이면 A 는 열 8 조각, B 는 행 8 조각이고 ring 배수는 2·7/8 입니다. FFN 폭 F 는 model 마다 달라 비율만 그렸습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -130,6 +131,13 @@ export default function TensorAndPipelineParallelInferenceViz() {
             {NOTES[s]}
           </p>
         </div>
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>: {NOTES[index]}
+            </li>
+          ))}
+        </ol>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

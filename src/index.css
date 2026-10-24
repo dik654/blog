@@ -588,6 +588,31 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
   }
 
   /*
+   * JavaScript가 켜진 앱에서는 조작 가능한 장면을 사용하고, 정적 route의
+   * noscript 본문에서는 모든 장면의 순서와 결론을 한꺼번에 보여준다.
+   * 컴포넌트 안에 noscript를 중첩하면 정적 fallback HTML이 깨지므로,
+   * root 안에서만 정적 목록을 감춘다.
+   */
+  #root .static-reading-only {
+    display: none !important;
+  }
+
+  /* 정적 읽기 문서에서는 작동하지 않는 재생 조작부와 고정 viewport를 제거한다. */
+  #noscript-article [data-viz-controls] {
+    display: none !important;
+  }
+
+  #noscript-article figure[data-viz="modern"]:has([data-viz-controls]) {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  #noscript-article figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas] {
+    overflow: visible !important;
+  }
+
+  /*
    * 강조 markup이 없는 legacy fixture/receipt 목록도 가운데점마다 실제 줄을
    * 나눈다. 이는 읽기용 fallback이며, 처음 소개하는 개념은 TermBreakdown에서
    * 정의·예·경계를 갖춰 설명해야 한다.

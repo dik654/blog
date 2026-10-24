@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 474,
-    "pending": 516,
+    "reviewed": 476,
+    "pending": 514,
     "untracked": 0,
-    "assignedPending": 472,
+    "assignedPending": 470,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1363,9 +1363,9 @@
       "publicPath": "cs/ai/tensor-and-pipeline-parallel-inference",
       "title": "Tensor, pipeline, data, context parallel 은 나누는 축이 달라 통신도 다릅니다",
       "catalogIndex": 133,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1373,9 +1373,9 @@
       "publicPath": "cs/ai/parallelism-strategy-and-placement",
       "title": "Parallelism 전략은 통신 대 계산 비율을 topology 안에서 최소화하는 배치입니다",
       "catalogIndex": 134,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2715,7 +2715,7 @@
       "catalogIndex": 268,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

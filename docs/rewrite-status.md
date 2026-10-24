@@ -3329,3 +3329,22 @@
   production build는 7,894개 module, 정적 public route 2,086개와 no-script 본문 104편을 생성했다.
   JavaScript를 끈 390×844 정적 문서에서도 세 글의 제목·직속 부모 지도·반환 지도와 모든 장면 순서를
   확인했다. 공개 배포 경로 검증은 남아 있다.
+
+### AI 여러 GPU 실행 묶음 로컬 완료 (2026-10-24)
+
+- `expert-parallelism-moe-systems`와 `tensor-and-pipeline-parallel-inference`를 concept,
+  `parallelism-strategy-and-placement`를 practice로 분류했습니다. 세 글은
+  `선택 계산 → 분할 축 → 물리 배치`라는 직속 부모 지도를 공유합니다. Prefill·decode 분리는
+  모델 내부 분할 축이 아니라 요청 단계 사이의 상태 인계 문제이므로 다음 묶음으로 분리했습니다.
+- 세 글 모두 부모 지도와 핵심 동작 그림을 긴 설명보다 먼저 보여 줍니다. Expert 글은 token 입력과
+  결과의 왕복 및 hot expert 완료 지연을, TP·PP 글은 나눈 행렬·층·context가 만드는 통신을,
+  배치 글은 같은 GPU 수에서도 빠른 링크 안에 둘 축이 달라지는 이유를 부모 지도에 되돌려 놓습니다.
+- 390×844와 1,440×900에서 세 글 모두 현재 위치·반환 지도, 문서와 모든 data canvas의 가로 넘침 0,
+  console 오류 0을 확인했습니다. 첫 동작 그림에서 `ArrowRight`가 두 번째 장면으로 이동하며,
+  Space 재생 뒤 화면 밖으로 나가면 선택 장면을 유지한 채 정지합니다. reduced-motion에서는 첫 장면과
+  `재생 꺼짐`을 유지합니다.
+- JavaScript 비활성 정적 문서에는 각 그림의 모든 장면과 결론이 순서대로 남습니다. 시각화 안의
+  `<noscript>`와 페이지 전체 정적 fallback이 중첩되어 본문이 두 번 보일 수 있던 문제는,
+  앱 root 안에서만 감추는 `static-reading-only` 목록으로 바꿔 해결했습니다.
+- 변경 파일 ESLint, TypeScript와 production build, 엄격 topology·architecture-flow·reading-order·
+  coverage 감사를 통과했습니다. 공개 배포 경로 검증은 남아 있습니다.

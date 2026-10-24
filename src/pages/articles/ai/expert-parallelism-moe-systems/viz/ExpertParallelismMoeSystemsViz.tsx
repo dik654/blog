@@ -79,6 +79,7 @@ export default function ExpertParallelismMoeSystemsViz() {
       note="hidden 4096 · FP16 · top-2 · GPU 8개에 expert 8개씩은 본문 가정입니다. 시간은 가정한 유효 600 TFLOP/s로 계산한 값이며 header·metadata는 뺐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -187,6 +188,13 @@ export default function ExpertParallelismMoeSystemsViz() {
             {scene.note}
           </p>
         </div>
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((item) => (
+            <li key={item.label}>
+              <strong>{item.label}</strong>: {item.note}
+            </li>
+          ))}
+        </ol>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>
     </VizFrame>

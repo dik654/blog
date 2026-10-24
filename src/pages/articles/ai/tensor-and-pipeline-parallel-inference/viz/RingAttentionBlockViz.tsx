@@ -167,6 +167,7 @@ export default function RingAttentionBlockViz() {
       note="block 4개는 설명용입니다. 숨기기 조건의 F/B 는 본문이 인용한 Ring Attention 논문의 A100 예시이고 막대는 전송 시간을 1로 둔 비율입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -187,6 +188,13 @@ export default function RingAttentionBlockViz() {
             {scene.note}
           </p>
         </div>
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((item) => (
+            <li key={item.label}>
+              <strong>{item.label}</strong>: {item.note}
+            </li>
+          ))}
+        </ol>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>
     </VizFrame>
