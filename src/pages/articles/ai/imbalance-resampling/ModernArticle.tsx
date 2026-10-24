@@ -3,36 +3,51 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ResamplingGeometryViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import {
+  ImbalancedClassificationLocator,
+  ImbalancedClassificationMapReturn,
+} from "../shared/ImbalancedClassificationLocator";
 
 export default function ImbalanceResamplingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <ImbalancedClassificationLocator current="resampling" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           두 minority 점 (2,4)와 (6,8) 사이에 (3,5)를 만듭니다
         </h2>
+        <ResamplingGeometryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Training fold의 minority 두 점을 <strong>xᵢ=(2,4)</strong>,
             <strong>xⱼ=(6,8)</strong>로 고정합니다. λ=0.25이면 두 점의 차이
-            (4,4)를 1/4만큼 이동해 synthetic point <strong>(3,5)</strong>를 만듭니다.
+            (4,4)를 1/4만큼 이동해 synthetic point <strong>(3,5)</strong>를
+            만듭니다.
           </p>
           <p>
             이 계산에 쓸 두 점과 neighbor index는 split 뒤 training subset에서만
-            골라야 합니다. Validation·test는 원래 prevalence와 좌표를 유지합니다.
+            골라야 합니다. Validation·test는 원래 prevalence와 좌표를
+            유지합니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 넘기기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
-            <li>Minority row 하나를 세 번 노출하면 서로 다른 관측 세 개가 생길까요?</li>
-            <li>전체 dataset에서 SMOTE한 뒤 train·validation으로 나눠도 될까요?</li>
+            <li>
+              Minority row 하나를 세 번 노출하면 서로 다른 관측 세 개가
+              생길까요?
+            </li>
+            <li>
+              전체 dataset에서 SMOTE한 뒤 train·validation으로 나눠도 될까요?
+            </li>
             <li>λ=0.25로 만든 점은 (3,5)일까요?</li>
           </ol>
           <p>
             답은 차례로 <strong>아니요, 아니요, 예</strong>입니다. 노출 횟수는
-            정보량과 다르고, validation point가 neighbor 계산에 들어가면 leakage입니다.
+            정보량과 다르고, validation point가 neighbor 계산에 들어가면
+            leakage입니다.
           </p>
         </div>
-        <ResamplingGeometryViz />
         <ContentBoundary article="imbalance-resampling" />
         <TermBreakdown
           title="Sampling을 바꾸기 전 구분할 네 대상"
@@ -71,7 +86,7 @@ export default function ImbalanceResamplingArticle() {
           ]}
         />
       </section>
-      <section id="fold-local" className="scroll-mt-20">
+      <section id="fold-local" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           Split을 먼저 만들고 각 fold의 train subset에서 sampler를 fit합니다
         </h2>
@@ -135,7 +150,11 @@ export default function ImbalanceResamplingArticle() {
           interpretation="Dataset 전체에서 SMOTE한 뒤 split하면 synthetic row가 validation point의 geometry를 이미 사용합니다. 교집합을 0으로 요구하는 이유가 이 정보 경로를 끊기 위해서입니다."
         />
       </section>
-      <section id="smote-geometry" className="scroll-mt-20">
+      <section
+        id="smote-geometry"
+        data-teach-level="1"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           SMOTE는 같은 class 두 점을 잇는 방향에서 새 point를 만듭니다
         </h2>
@@ -218,18 +237,25 @@ export default function ImbalanceResamplingArticle() {
           </CitationBlock>
         </div>
       </section>
-      <section id="release-boundary" className="scroll-mt-20">
+      <section
+        id="release-boundary"
+        data-teach-level="2"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Sampler를 release하려면 geometry와 lineage를 함께 검사합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Receipt에는 split digest, source IDs, sampling ratio, neighbor metric·k, feature encoder, seed와
-            synthetic constraint failures를 남깁니다. Validation의 original prevalence에서
-            ranking·calibration·threshold cost를 비교하고 단순 duplication·class weight baseline보다 낫지 않으면 되돌립니다.
+            Receipt에는 split digest, source IDs, sampling ratio, neighbor
+            metric·k, feature encoder, seed와 synthetic constraint failures를
+            남깁니다. Validation의 original prevalence에서
+            ranking·calibration·threshold cost를 비교하고 단순 duplication·class
+            weight baseline보다 낫지 않으면 되돌립니다.
           </p>
         </div>
       </section>
+      <ImbalancedClassificationMapReturn current="resampling" />
     </div>
   );
 }

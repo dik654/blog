@@ -3,14 +3,20 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { LossSignalViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import {
+  ImbalancedClassificationLocator,
+  ImbalancedClassificationMapReturn,
+} from "../shared/ImbalancedClassificationLocator";
 
 export default function ImbalanceLossWeightingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <ImbalancedClassificationLocator current="loss" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Loss weighting은 어떤 example이 gradient를 얼마나 움직이는지 바꿉니다
         </h2>
+        <LossSignalViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             같은 batch에 positive loss 1과 여러 negative가 있습니다. Positive
@@ -23,18 +29,24 @@ export default function ImbalanceLossWeightingArticle() {
             probability가 0.9인 easy example은 (1−0.9)²=<strong>0.01</strong>,
             0.2인 hard example은 (1−0.2)²=<strong>0.64</strong>를 받습니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 넘기기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
-            <li>Positive weight 9를 주면 training row 수 자체가 아홉 배가 될까요?</li>
+            <li>
+              Positive weight 9를 주면 training row 수 자체가 아홉 배가 될까요?
+            </li>
             <li>Raw loss 1인 positive의 weighted contribution은 9가 될까요?</li>
-            <li>Focal factor 0.64는 그 hard example의 label이 깨끗하다는 뜻일까요?</li>
+            <li>
+              Focal factor 0.64는 그 hard example의 label이 깨끗하다는 뜻일까요?
+            </li>
           </ol>
           <p>
             답은 차례로 <strong>아니요, 예, 아니요</strong>입니다. Weight는
-            contribution을 바꾸고, focal은 hard label과 label noise를 구별하지 못합니다.
+            contribution을 바꾸고, focal은 hard label과 label noise를 구별하지
+            못합니다.
           </p>
         </div>
-        <LossSignalViz />
         <ContentBoundary article="imbalance-loss-weighting" />
         <TermBreakdown
           title="Loss signal을 이루는 네 항"
@@ -72,7 +84,7 @@ export default function ImbalanceLossWeightingArticle() {
           ]}
         />
       </section>
-      <section id="class-weight" className="scroll-mt-20">
+      <section id="class-weight" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           Class weight는 class별 sample loss 합을 다시 배분합니다
         </h2>
@@ -80,7 +92,8 @@ export default function ImbalanceLossWeightingArticle() {
           question="Positive example에 weight 9를 주면 batch risk는 어떻게 바뀌나요?"
           idea={
             <p>
-              각 sample loss에 target class의 weight를 곱하고 weight 합으로 나누어 scale을 안정화합니다.
+              각 sample loss에 target class의 weight를 곱하고 weight 합으로
+              나누어 scale을 안정화합니다.
             </p>
           }
           formula={String.raw`\hat R_w=\frac{\sum_i w_{y_i}\ell_i}{\sum_i w_{y_i}}`}
@@ -133,7 +146,11 @@ export default function ImbalanceLossWeightingArticle() {
           interpretation="Positive loss 1에 weight 9를 곱하면 contribution은 9가 됩니다. 마지막 나눗셈은 중요도를 없애는 것이 아니라 전체 objective scale을 비교 가능하게 유지합니다."
         />
       </section>
-      <section id="focal-modulation" className="scroll-mt-20">
+      <section
+        id="focal-modulation"
+        data-teach-level="1"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Focal loss는 target probability로 easy example의 배점을 줄입니다
         </h2>
@@ -216,7 +233,11 @@ export default function ImbalanceLossWeightingArticle() {
           </CitationBlock>
         </div>
       </section>
-      <section id="noise-boundary" className="scroll-mt-20">
+      <section
+        id="noise-boundary"
+        data-teach-level="2"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Hard label noise까지 키우지 않는지 별도 slice로 확인합니다
         </h2>
@@ -230,6 +251,7 @@ export default function ImbalanceLossWeightingArticle() {
           </p>
         </div>
       </section>
+      <ImbalancedClassificationMapReturn current="loss" />
     </div>
   );
 }

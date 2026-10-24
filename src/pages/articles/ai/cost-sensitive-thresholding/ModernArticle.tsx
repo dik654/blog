@@ -3,42 +3,55 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ThresholdPolicyViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import {
+  ImbalancedClassificationLocator,
+  ImbalancedClassificationMapReturn,
+} from "../shared/ImbalancedClassificationLocator";
 
 export default function CostSensitiveThresholdingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <ImbalancedClassificationLocator current="threshold" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Threshold는 score를 실제 행동으로 바꾸는 versioned policy입니다
         </h2>
+        <ThresholdPolicyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Calibrated probability를 내는 1,000건의 fraud 후보가 있다고
-            합시다. False positive 비용은 1, false negative 비용은 9이므로
-            두 action의 기대비용은 p=.1에서 같습니다. 다만 analyst가 하루
-            200건까지만 처리하고 recall .90 이상을 지켜야 한다면, .1은
-            운영 가능한 최종 threshold가 아닐 수 있습니다.
+            Calibrated probability를 내는 1,000건의 fraud 후보가 있다고 합시다.
+            False positive 비용은 1, false negative 비용은 9이므로 두 action의
+            기대비용은 p=.1에서 같습니다. 다만 analyst가 하루 200건까지만
+            처리하고 recall .90 이상을 지켜야 한다면, .1은 운영 가능한 최종
+            threshold가 아닐 수 있습니다.
           </p>
           <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
           <ol>
-            <li>Probability model이므로 관습대로 .5를 threshold로 쓰면 될까요?</li>
-            <li>Threshold를 계속 낮추면 전체 expected cost도 언제나 줄어들까요?</li>
-            <li>Model이 같으면 prevalence나 calibration이 바뀐 뒤에도 승인한 threshold를 그대로 써도 될까요?</li>
+            <li>
+              Probability model이므로 관습대로 .5를 threshold로 쓰면 될까요?
+            </li>
+            <li>
+              Threshold를 계속 낮추면 전체 expected cost도 언제나 줄어들까요?
+            </li>
+            <li>
+              Model이 같으면 prevalence나 calibration이 바뀐 뒤에도 승인한
+              threshold를 그대로 써도 될까요?
+            </li>
           </ol>
           <p>
-            세 답은 모두 <strong>아니요</strong>입니다. .5는 기본값이 아니고,
-            .1 아래에서는 false positive 쪽 기대비용이 더 커집니다. Cost
-            교차점도 capacity·minimum recall을 통과해야 하며, 분포나 calibration이
-            바뀌면 validation sweep을 다시 해야 합니다.
+            세 답은 모두 <strong>아니요</strong>입니다. .5는 기본값이 아니고, .1
+            아래에서는 false positive 쪽 기대비용이 더 커집니다. Cost 교차점도
+            capacity·minimum recall을 통과해야 하며, 분포나 calibration이 바뀌면
+            validation sweep을 다시 해야 합니다.
           </p>
         </div>
-        <ThresholdPolicyViz />
         <ContentBoundary article="cost-sensitive-thresholding" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             <strong>Cost-sensitive threshold</strong>는 false positive와 false
             negative의 비용, 필요한 recall, 하루 처리 capacity를 보고 어느
-            probability부터 positive action을 할지 정하는 versioned policy입니다.
+            probability부터 positive action을 할지 정하는 versioned
+            policy입니다.
           </p>
         </div>
         <TermBreakdown
@@ -70,14 +83,15 @@ export default function CostSensitiveThresholdingArticle() {
             {
               term: "Capacity",
               description: "시간당 처리 가능한 positive action의 상한입니다.",
-              example: "이 사례에서는 analyst가 하루 200 alerts를 검토할 수 있습니다.",
+              example:
+                "이 사례에서는 analyst가 하루 200 alerts를 검토할 수 있습니다.",
               boundary:
                 "비용 최적 threshold가 capacity를 넘으면 feasible policy가 아닙니다.",
             },
           ]}
         />
       </section>
-      <section id="expected-cost" className="scroll-mt-20">
+      <section id="expected-cost" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           두 action의 expected cost가 같은 지점이 Bayes threshold입니다
         </h2>
@@ -85,7 +99,8 @@ export default function CostSensitiveThresholdingArticle() {
           question="CFP=1, CFN=9이면 왜 threshold가 .1인가요?"
           idea={
             <p>
-              Positive action은 실제 negative일 확률 1−p에 FP 비용을 곱하고 negative action은 positive일 확률 p에 FN 비용을 곱합니다. 첫
+              Positive action은 실제 negative일 확률 1−p에 FP 비용을 곱하고
+              negative action은 positive일 확률 p에 FN 비용을 곱합니다. 첫
               비용이 더 작을 때 alert합니다.
             </p>
           }
@@ -146,7 +161,11 @@ export default function CostSensitiveThresholdingArticle() {
           interpretation="1/(1+9)=.1입니다. FN 비용이 커지면 분모가 커져 threshold가 낮아지고 더 많은 sample을 positive로 처리합니다."
         />
       </section>
-      <section id="capacity-policy" className="scroll-mt-20">
+      <section
+        id="capacity-policy"
+        data-teach-level="1"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Capacity 안에서 비용이 가장 낮은 threshold를 고릅니다
         </h2>
@@ -154,7 +173,8 @@ export default function CostSensitiveThresholdingArticle() {
           question="하루 alert K개와 minimum recall rmin을 동시에 지키는 threshold는 어떻게 고르나요?"
           idea={
             <p>
-              각 candidate threshold의 alert count와 recall을 indicator로 검사하고 둘 다 통과한 집합에서 expected cost가 가장 작은 값을
+              각 candidate threshold의 alert count와 recall을 indicator로
+              검사하고 둘 다 통과한 집합에서 expected cost가 가장 작은 값을
               선택합니다.
             </p>
           }
@@ -214,7 +234,11 @@ export default function CostSensitiveThresholdingArticle() {
           interpretation="제약을 penalty 평균에 섞지 않고 먼저 AND하는 이유는 recall을 크게 어긴 싼 policy나 capacity를 넘긴 좋은 policy가 선택되는 것을 막기 위해서입니다."
         />
       </section>
-      <section id="release-receipt" className="scroll-mt-20">
+      <section
+        id="release-receipt"
+        data-teach-level="2"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Threshold 변경은 model 변경과 별도의 release event입니다
         </h2>
@@ -225,8 +249,8 @@ export default function CostSensitiveThresholdingArticle() {
           </p>
           <p>
             의사결정 기록에는 cost matrix, capacity, 선택한 threshold가
-            들어갑니다. 관측한 confusion counts와 slice intervals, 문제가
-            생겼을 때 돌아갈 threshold도 보존합니다.
+            들어갑니다. 관측한 confusion counts와 slice intervals, 문제가 생겼을
+            때 돌아갈 threshold도 보존합니다.
           </p>
           <p>
             Production의 prevalence, calibration, alert volume 가운데 하나라도
@@ -249,6 +273,7 @@ export default function CostSensitiveThresholdingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <ImbalancedClassificationMapReturn current="threshold" />
     </div>
   );
 }

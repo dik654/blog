@@ -29,23 +29,40 @@ function Scene({
       <div
         id={id}
         data-viz
-        tabIndex={0}
-        onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        data-viz-scene={id}
+        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div
+          id={controls.playbackId}
+          data-viz-live-only
+          tabIndex={0}
+          onKeyDown={controls.onKeyDown}
+          className="outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <p className="text-[11px] font-black tracking-[.14em] text-primary">
+            상태 추적 · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 aria-live="polite" className="mt-2 text-lg font-bold leading-7">
+            {labels[controls.active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
+            {children(controls.active)}
+          </div>
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+            {notes[controls.active]}
+          </p>
+          <AnimatedSceneControls labels={[...labels]} {...controls} />
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={labels} {...controls} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {labels.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">
+                {notes[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
@@ -86,7 +103,7 @@ function Box({
         x={x + width / 2}
         y={y + 20}
         textAnchor="middle"
-        className="fill-foreground text-[9px] font-bold"
+        className="fill-foreground text-[11px] sm:text-[9px] font-bold"
       >
         {label}
       </text>
@@ -94,7 +111,7 @@ function Box({
         x={x + width / 2}
         y={y + 35}
         textAnchor="middle"
-        className="fill-muted-foreground text-[7px]"
+        className="fill-muted-foreground text-[12px] sm:text-[10px] sm:text-[7px]"
       >
         {detail}
       </text>
@@ -148,22 +165,22 @@ function Arrow({
 
 export function ImbalanceDecisionViz() {
   const labels = [
-    "Population의 base rate 확인",
-    "Score는 순서만 만듦",
-    "Probability 의미를 검증",
-    "Threshold가 action을 만듦",
+    "모집단의 기준 비율 확인",
+    "점수로 순서를 정함",
+    "확률의 의미를 검증",
+    "임계값으로 행동을 정함",
   ] as const;
   const notes = [
-    "1,000명 중 positive가 50명이면 prevalence는 5%이고 all-negative accuracy는 이미 95%입니다.",
-    "Score 0.8이 확률이라는 보장 없이도 positive가 위로 정렬될 수 있습니다.",
-    "0.8이라고 말한 집단에서 실제 positive frequency도 약 80%인지 따로 검사합니다.",
-    "비용·recall·alert capacity를 정책에 넣어 threshold 위만 실제 alert로 전환합니다.",
+    "1,000명 중 양성이 50명이면 기준 비율은 5%이고, 모두 음성이라고 답한 정확도도 이미 95%입니다.",
+    "점수 0.8이 확률이라는 보장은 없어도 양성 표본을 더 위에 정렬할 수는 있습니다.",
+    "0.8이라고 예측한 집단의 실제 양성 빈도도 약 80%인지 따로 확인합니다.",
+    "오류 비용·재현율·알림 처리 용량을 정책에 넣어 임계값을 넘은 예측만 실제 알림으로 바꿉니다.",
   ] as const;
   return (
     <Scene
       id="imbalance-decision-viz"
-      title="Population에서 action까지 네 층"
-      description="같은 model output을 base rate·ranking·probability·decision으로 분리합니다."
+      title="모집단에서 실제 행동까지 이어지는 네 층"
+      description="같은 모델 출력을 기준 비율·순위·확률·의사결정으로 나눠 봅니다."
       labels={labels}
       notes={notes}
     >
@@ -198,8 +215,8 @@ export function ImbalanceDecisionViz() {
             x={250}
             y={24}
             width={82}
-            label="score"
-            detail="ordering"
+            label="점수"
+            detail="순서"
             active={active === 1}
           />
           <Arrow
@@ -215,7 +232,7 @@ export function ImbalanceDecisionViz() {
             y={82}
             width={76}
             label="p"
-            detail="frequency"
+            detail="실제 빈도"
             active={active === 2}
           />
           <motion.line
@@ -241,25 +258,25 @@ export function ImbalanceDecisionViz() {
               x="155"
               y="184"
               textAnchor="middle"
-              className="fill-muted-foreground text-[8px]"
+              className="fill-muted-foreground text-[11px] sm:text-[8px]"
             >
-              no action
+              조치 안 함
             </text>
             <text
               x="352"
               y="184"
               textAnchor="middle"
-              className="fill-foreground text-[8px] font-bold"
+              className="fill-foreground text-[11px] sm:text-[8px] font-bold"
             >
-              alert
+              알림
             </text>
             <text
               x="292"
               y="126"
               textAnchor="middle"
-              className="fill-primary text-[8px] font-bold"
+              className="fill-primary text-[11px] sm:text-[8px] font-bold"
             >
-              threshold
+              임계값
             </text>
           </motion.g>
         </svg>
@@ -270,22 +287,22 @@ export function ImbalanceDecisionViz() {
 
 export function ResamplingGeometryViz() {
   const labels = [
-    "먼저 group·time split",
-    "Train의 노출만 변경",
-    "Minority 두 점 사이 보간",
-    "유효하지 않은 geometry 거부",
+    "집단과 시간을 기준으로 먼저 분리",
+    "학습 자료의 노출만 변경",
+    "소수 클래스의 두 점 사이를 보간",
+    "불가능한 합성점을 제외",
   ] as const;
   const notes = [
-    "Validation·test의 row와 prevalence를 먼저 봉인해 neighbor search에서 제외합니다.",
-    "Oversampling은 train minority의 노출을 늘리고 undersampling은 train majority 일부를 버립니다.",
+    "검증·시험 자료의 행과 기준 비율을 먼저 봉인해 이웃 탐색에서 제외합니다.",
+    "과대표집은 학습 자료의 소수 클래스를 더 자주 보여주고, 과소표집은 다수 클래스 일부를 덜 보여줍니다.",
     "xᵢ=(2,4), xⱼ=(6,8)에서 λ=.25를 쓰면 (2,4)+.25×(4,4)=(3,5)가 됩니다.",
-    "Category·sparse·time feature에서는 선분 중간이 실제 가능한 record인지 constraint로 확인해야 합니다.",
+    "범주형·희소·시계열 특성에서는 선분의 중간점이 실제 가능한 기록인지 제약 조건으로 확인해야 합니다.",
   ] as const;
   return (
     <Scene
       id="imbalance-resampling-viz"
-      title="Split 뒤에만 바꾸는 training geometry"
-      description="원본 population과 model이 보는 training exposure를 구분합니다."
+      title="자료를 나눈 뒤 학습 좌표만 바꿉니다"
+      description="실제 모집단과 모델이 반복해서 보는 학습 표본을 구분합니다."
       labels={labels}
       notes={notes}
     >
@@ -306,8 +323,12 @@ export function ResamplingGeometryViz() {
             stroke={active === 0 ? accent : border}
             strokeWidth="1.25"
           />
-          <text x="32" y="43" className="fill-foreground text-[8px] font-bold">
-            TRAIN FOLD
+          <text
+            x="32"
+            y="43"
+            className="fill-foreground text-[11px] sm:text-[8px] font-bold"
+          >
+            학습 폴드
           </text>
           <rect
             x="286"
@@ -319,8 +340,12 @@ export function ResamplingGeometryViz() {
             stroke={active === 0 ? accent : border}
             strokeWidth="1.25"
           />
-          <text x="300" y="43" className="fill-foreground text-[8px] font-bold">
-            VALIDATION
+          <text
+            x="300"
+            y="43"
+            className="fill-foreground text-[11px] sm:text-[8px] font-bold"
+          >
+            검증 세트
           </text>
           {[
             [62, 78],
@@ -378,7 +403,7 @@ export function ResamplingGeometryViz() {
               x="72"
               y="116"
               textAnchor="middle"
-              className="fill-primary text-[8px] font-bold"
+              className="fill-primary text-[11px] sm:text-[8px] font-bold"
             >
               λ=.25 · (3,5)
             </text>
@@ -390,9 +415,9 @@ export function ResamplingGeometryViz() {
               x="352"
               y="122"
               textAnchor="middle"
-              className="fill-foreground text-[8px] font-bold"
+              className="fill-foreground text-[11px] sm:text-[8px] font-bold"
             >
-              invalid midpoint
+              불가능한 중간점
             </text>
           </motion.g>
         </svg>
@@ -403,22 +428,22 @@ export function ResamplingGeometryViz() {
 
 export function LossSignalViz() {
   const labels = [
-    "기본 sample loss 합",
-    "Class weight로 고정 배점",
-    "Focal factor로 현재 난이도 반영",
-    "Hard noise를 별도 audit",
+    "표본별 기본 손실을 합산",
+    "클래스 가중치로 고정 배점",
+    "초점 계수로 현재 난이도를 반영",
+    "어려운 오표기를 별도로 점검",
   ] as const;
   const notes = [
-    "네 example의 raw contribution을 먼저 1로 놓고 어떤 규칙이 배점을 바꾸는지 비교합니다.",
-    "Positive와 noisy-positive는 target class만 보고 weight 9를 받습니다. Row 수는 그대로입니다.",
-    "γ=2이면 pₜ=.9는 .01, pₜ=.2는 .64를 받아 easy example의 contribution이 더 크게 줄어듭니다.",
-    "pₜ=.08인 틀린 label도 hard example로 보이므로 audited error slice와 calibration을 함께 봅니다.",
+    "네 표본의 기본 기여도를 먼저 1로 놓고 어떤 규칙이 배점을 바꾸는지 비교합니다.",
+    "양성과 오표기 양성은 정답 클래스만 보고 가중치 9를 받습니다. 행 수는 그대로입니다.",
+    "γ=2이면 pₜ=.9는 .01, pₜ=.2는 .64를 받아 쉬운 표본의 기여도가 더 크게 줄어듭니다.",
+    "pₜ=.08인 오표기도 어려운 표본으로 보이므로 오류 구간과 확률 보정을 함께 점검합니다.",
   ] as const;
   return (
     <Scene
       id="imbalance-loss-viz"
-      title="어떤 example이 gradient를 얼마나 움직이는가"
-      description="Class frequency와 현재 난이도라는 서로 다른 가중 축을 비교합니다."
+      title="어떤 표본이 경사를 얼마나 움직이는가"
+      description="클래스 빈도와 현재 난이도라는 서로 다른 가중 기준을 비교합니다."
       labels={labels}
       notes={notes}
     >
@@ -430,10 +455,10 @@ export function LossSignalViz() {
           className="block h-auto w-full"
         >
           {[
-            ["easy −", 0.9, 52],
-            ["hard −", 0.2, 130],
-            ["positive", 0.35, 208],
-            ["noisy +", 0.08, 286],
+            ["쉬운 음성", 0.9, 52],
+            ["어려운 음성", 0.2, 130],
+            ["양성", 0.35, 208],
+            ["오표기 양성", 0.08, 286],
           ].map(([label, p, x], i) => {
             const weight =
               active === 0
@@ -451,7 +476,7 @@ export function LossSignalViz() {
                   x={Number(x) + 24}
                   y="35"
                   textAnchor="middle"
-                  className="fill-muted-foreground text-[8px]"
+                  className="fill-muted-foreground text-[11px] sm:text-[8px]"
                 >
                   {label}
                 </text>
@@ -478,7 +503,7 @@ export function LossSignalViz() {
                   x={Number(x) + 24}
                   y="210"
                   textAnchor="middle"
-                  className="fill-foreground text-[8px] font-bold"
+                  className="fill-foreground text-[11px] sm:text-[8px] font-bold"
                 >
                   w={weight.toFixed(2)}
                 </text>
@@ -496,9 +521,9 @@ export function LossSignalViz() {
             x="386"
             y="123"
             textAnchor="middle"
-            className="fill-primary text-[8px] font-bold"
+            className="fill-primary text-[11px] sm:text-[8px] font-bold"
           >
-            audit
+            점검
           </text>
         </svg>
       )}
@@ -511,19 +536,19 @@ export function ThresholdPolicyViz() {
     "C_FP=1 · C_FN=9",
     "R₊=(1−p) · R₋=9p",
     "두 비용은 p=.1에서 교차",
-    "하루 200건·recall .90 gate",
+    "하루 200건·재현율 .90 기준",
   ] as const;
   const notes = [
-    "1,000건의 calibrated 후보에서 false positive 비용은 1, false negative 비용은 9로 둡니다.",
-    "Positive action의 기대비용은 1−p, negative action의 기대비용은 9p입니다.",
-    "1−p=9p인 p=.1이 Bayes threshold입니다. p가 .1보다 높으면 positive action이 더 쌉니다.",
-    "τ=.1도 alerts/day≤200과 recall≥.90을 함께 통과해야 배포할 수 있습니다. 분포가 바뀌면 다시 검증합니다.",
+    "보정된 예측 후보 1,000건에서 거짓 양성 비용은 1, 거짓 음성 비용은 9로 둡니다.",
+    "양성 조치의 기대비용은 1−p이고, 음성 조치의 기대비용은 9p입니다.",
+    "1−p=9p인 p=.1이 베이즈 임계값입니다. p가 .1보다 높으면 양성 조치의 기대비용이 더 작습니다.",
+    "τ=.1도 하루 알림 200건 이하와 재현율 .90 이상을 함께 만족해야 배포할 수 있습니다. 분포가 바뀌면 다시 검증합니다.",
   ] as const;
   return (
     <Scene
       id="threshold-policy-viz"
       title="C_FP=1·C_FN=9이면 비용은 p=.1에서 교차합니다"
-      description="1,000건의 calibrated 후보에서 Bayes threshold와 하루 200건·recall .90 gate를 차례로 봅니다."
+      description="보정된 후보 1,000건에서 베이즈 임계값과 하루 200건·재현율 .90 기준을 차례로 봅니다."
       labels={labels}
       notes={notes}
     >
@@ -554,9 +579,9 @@ export function ThresholdPolicyViz() {
             x="228"
             y="208"
             textAnchor="middle"
-            className="fill-muted-foreground text-[10px]"
+            className="fill-muted-foreground text-[12px] sm:text-[10px]"
           >
-            calibrated probability p
+            보정된 확률 p
           </text>
           <motion.path
             d="M50 106L404 120"
@@ -595,7 +620,7 @@ export function ThresholdPolicyViz() {
             x="227"
             y="194"
             textAnchor="middle"
-            className="fill-primary text-[10px] font-bold"
+            className="fill-primary text-[12px] sm:text-[10px] font-bold"
           >
             τ*=.1
           </text>
@@ -614,23 +639,49 @@ export function ThresholdPolicyViz() {
               x="315"
               y="61"
               textAnchor="middle"
-              className="fill-foreground text-[10px] font-bold"
+              className="fill-foreground text-[12px] sm:text-[10px] font-bold"
             >
-              capacity gate
+              처리 용량 기준
             </text>
             <text
               x="315"
               y="75"
               textAnchor="middle"
-              className="fill-muted-foreground text-[9px]"
+              className="fill-muted-foreground text-[11px] sm:text-[9px]"
             >
-              alerts/day≤200 · recall≥.90
-          </text>
+              하루 알림≤200 · 재현율≥.90
+            </text>
           </motion.g>
-          <text x="50" y="194" textAnchor="middle" className="fill-muted-foreground text-[9px]">0</text>
-          <text x="404" y="194" textAnchor="middle" className="fill-muted-foreground text-[9px]">.2</text>
-          <text x="55" y="101" className="fill-primary text-[9px] font-bold">R₊=1−p</text>
-          <text x="55" y="171" className="fill-muted-foreground text-[9px] font-bold">R₋=9p</text>
+          <text
+            x="50"
+            y="194"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[11px] sm:text-[9px]"
+          >
+            0
+          </text>
+          <text
+            x="404"
+            y="194"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[11px] sm:text-[9px]"
+          >
+            .2
+          </text>
+          <text
+            x="55"
+            y="101"
+            className="fill-primary text-[11px] sm:text-[9px] font-bold"
+          >
+            R₊=1−p
+          </text>
+          <text
+            x="55"
+            y="171"
+            className="fill-muted-foreground text-[11px] sm:text-[9px] font-bold"
+          >
+            R₋=9p
+          </text>
         </svg>
       )}
     </Scene>
@@ -639,22 +690,22 @@ export function ThresholdPolicyViz() {
 
 export function ImbalanceEvaluationViz() {
   const labels = [
-    "Threshold에서 네 count 생성",
-    "서로 다른 분모의 precision·recall",
-    "Prevalence 이동으로 precision 변화",
-    "Probability bin의 frequency 확인",
+    "임계값에서 네 가지 수를 계산",
+    "서로 다른 분모로 정밀도·재현율 계산",
+    "기준 비율 변화에 따른 정밀도 확인",
+    "확률 구간의 실제 빈도 확인",
   ] as const;
   const notes = [
-    "1,000건을 같은 unit·window로 세어 TP=40, FP=10, FN=10, TN=940을 만듭니다.",
-    "Precision=40/(40+10)=.8이고 recall=40/(40+10)=.8입니다. 값은 같아도 분모의 뜻은 다릅니다.",
-    "TPR·FPR이 같아도 negative population이 커지면 FP count가 늘어 precision이 내려갑니다.",
-    "Score bin별 평균 confidence와 positive frequency를 나란히 그려 calibration을 평가합니다.",
+    "1,000건을 같은 단위와 기간으로 세어 TP=40, FP=10, FN=10, TN=940을 만듭니다.",
+    "정밀도는 40/(40+10)=.8이고 재현율도 40/(40+10)=.8입니다. 값은 같아도 분모의 뜻은 다릅니다.",
+    "TPR·FPR이 같아도 음성 모집단이 커지면 거짓 양성 수가 늘어 정밀도가 내려갑니다.",
+    "점수 구간별 평균 예측 확률과 실제 양성 빈도를 나란히 그려 확률 보정을 평가합니다.",
   ] as const;
   return (
     <Scene
       id="imbalance-evaluation-viz"
-      title="한 report 안의 세 평가 층"
-      description="Decision counts, prevalence-sensitive PR, probability calibration을 섞지 않습니다."
+      title="한 보고서 안에서 세 평가 층을 분리합니다"
+      description="행동 결과 수, 기준 비율에 민감한 정밀도·재현율, 확률 보정을 섞지 않습니다."
       labels={labels}
       notes={notes}
     >
@@ -691,7 +742,7 @@ export function ImbalanceEvaluationViz() {
                   x={Number(x) + 36}
                   y={Number(y) + 28}
                   textAnchor="middle"
-                  className="fill-foreground text-[10px] font-bold"
+                  className="fill-foreground text-[12px] sm:text-[10px] font-bold"
                 >
                   {label}
                 </text>
@@ -702,16 +753,16 @@ export function ImbalanceEvaluationViz() {
             <text
               x="266"
               y="60"
-              className="fill-foreground text-[9px] font-bold"
+              className="fill-foreground text-[11px] sm:text-[9px] font-bold"
             >
-              precision = TP / alerts
+              정밀도 = TP / 알림 수
             </text>
             <text
               x="266"
               y="96"
-              className="fill-foreground text-[9px] font-bold"
+              className="fill-foreground text-[11px] sm:text-[9px] font-bold"
             >
-              recall = TP / positives
+              재현율 = TP / 실제 양성 수
             </text>
           </motion.g>
           <motion.g animate={{ opacity: active === 2 ? 1 : 0.08 }}>
@@ -739,7 +790,7 @@ export function ImbalanceEvaluationViz() {
               x="289"
               y="193"
               textAnchor="middle"
-              className="fill-muted-foreground text-[7px]"
+              className="fill-muted-foreground text-[12px] sm:text-[10px] sm:text-[7px]"
             >
               π=.5
             </text>
@@ -747,7 +798,7 @@ export function ImbalanceEvaluationViz() {
               x="359"
               y="193"
               textAnchor="middle"
-              className="fill-muted-foreground text-[7px]"
+              className="fill-muted-foreground text-[12px] sm:text-[10px] sm:text-[7px]"
             >
               π=.01
             </text>
@@ -775,7 +826,7 @@ export function ImbalanceEvaluationViz() {
                   x={78 + i * 86}
                   y="195"
                   textAnchor="middle"
-                  className="fill-muted-foreground text-[7px]"
+                  className="fill-muted-foreground text-[12px] sm:text-[10px] sm:text-[7px]"
                 >
                   {p}
                 </text>
