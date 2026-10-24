@@ -2,7 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function AEvsVAE() {
   return (
-    <section id="ae-vs-vae" className="mb-16 scroll-mt-20">
+    <section id="ae-vs-vae" data-teach-level="B" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Autoencoder와 VAE는 latent code에 묻는 질문이 다르다
       </h2>

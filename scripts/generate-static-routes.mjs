@@ -73,6 +73,7 @@ const noScriptArticleRoutes = new Set([
   "ai/negative-result-3d-face-control",
   "ai/in-context-lora",
   "ai/world-model-latent-planning",
+  "ai/vae",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

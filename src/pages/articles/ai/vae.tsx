@@ -7,18 +7,21 @@ import Applications from "./vae/Applications";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./vae/codeRefs";
 import { vaeTree } from "./vae/fileTree";
+import { VaeMechanismLocator, VaeMechanismMapReturn } from "./shared/VaeMechanismLocator";
 
 export default function VAEArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <div className="space-y-12">
+      <VaeMechanismLocator />
       <Overview />
       <AEvsVAE />
       <ReparamTrick />
       <VAELoss />
       <Training onCodeRef={sidebar.open} />
       <Applications />
+      <VaeMechanismMapReturn />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

@@ -3517,7 +3517,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/transfer-learning-practice": "9be29c45d123dc1c",
   "ai/transformer-architecture": "3f1308d0fd705669",
   "ai/tokenizer": "976eedd79bd13071",
-  "ai/vae": "55eacf95733f2c54",
+  "ai/vae": "e44626c0d0b1f2a9",
   "ai/vllm-paged-attention": "e72a1d9e1bc20d0d",
   "ai/vllm-spec-decode": "6cfc2af8b27a924b",
   "ai/vllm-scheduler": "ef3d2228d799444a",

@@ -9803,10 +9803,12 @@
         "src/pages/articles/ai/vae/ReparamTrick.tsx",
         "src/pages/articles/ai/vae/Training.tsx",
         "src/pages/articles/ai/vae/VAELoss.tsx",
+        "src/pages/articles/ai/vae/VaeTrainingPathViz.tsx",
         "src/pages/articles/ai/vae/codeRefs.ts",
-        "src/pages/articles/ai/vae/fileTree.ts"
+        "src/pages/articles/ai/vae/fileTree.ts",
+        "src/pages/articles/ai/shared/VaeMechanismLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9814,19 +9816,52 @@
         "hasSourceSurface": true,
         "characters": 37291
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "잠재변수 생성 모형에서 VAE 구현으로 내려오는 직속 부모와 현재 위치가 보이지 않았습니다.",
+        "첫 화면이 용어와 설명문으로 시작해 분포 추정·난수 분리·복원·두 비용의 상태 변화를 한 번에 보기 어려웠습니다.",
+        "기존 정적 네 칸은 실제 값이 변하지 않아 reparameterization과 ELBO의 연결을 빠르게 파악하기 어려웠습니다."
+      ],
+      "fixture": "이진 관측 x=[1,0], μ=[1,−0.5], logσ²=[0,−1.386], σ=[1,0.5], ε=[0.5,−1], z=[1.5,−1], decoder π=[0.8,0.3], 복원 NLL≈0.58, KL≈0.94, 합계≈1.52를 같은 경로로 추적합니다.",
+      "stageAnchors": {
+        "S": ["overview"],
+        "B": ["ae-vs-vae"],
+        "0": ["reparam-trick"],
+        "1": ["vae-loss"],
+        "2": ["training"],
+        "3": ["applications"]
+      },
+      "primarySourceApplication": [
+        {
+          "label": "Auto-Encoding Variational Bayes",
+          "href": "https://arxiv.org/abs/1312.6114",
+          "anchor": "paper-aevb"
+        },
+        {
+          "label": "Lagging Inference Networks and Posterior Collapse in Variational Autoencoders",
+          "href": "https://arxiv.org/abs/1901.05534",
+          "anchor": "paper-posterior-collapse"
+        },
+        {
+          "label": "Importance Weighted Autoencoders",
+          "href": "https://arxiv.org/abs/1509.00519",
+          "anchor": "paper-iwae"
+        },
+        {
+          "label": "Neural Discrete Representation Learning",
+          "href": "https://arxiv.org/abs/1711.00937",
+          "anchor": "paper-vq-vae"
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Overview부터 Applications까지 전문과 PyTorch codeRef를 읽고, 기존 ELBO·likelihood·collapse·IWAE·VQ-VAE 경계를 보존했습니다.",
+        "humanize": "첫 제목과 도입 문장을 한국어 합니다체로 다듬고, 수식 기호와 원문 용어는 정확한 역할을 위해 유지했습니다.",
+        "numericTrace": "x=[1,0], π=[0.8,0.3]의 Bernoulli NLL 약 0.58과 μ·σ²의 KL 약 0.94를 합쳐 약 1.52가 되는 설명용 경로를 시각화했습니다.",
+        "mobile390": "output/playwright/ai-vae-batch-20/summary.json: locator·첫 visual·문서와 canvas overflow·키보드 순서·reduced-motion을 검사했습니다.",
+        "desktop1440": "output/playwright/ai-vae-batch-20/summary.json: locator·첫 visual·네 장면·문서와 canvas overflow·console 오류를 검사했습니다.",
+        "visualFirstRewrite": "잠재변수 모형→분포 추정→표본 만들기→두 비용→사용 여부의 지도를 추가하고 첫 설명문 앞에 4장면 학습 경로를 배치했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {

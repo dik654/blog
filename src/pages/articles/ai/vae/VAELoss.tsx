@@ -2,7 +2,7 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 
 export default function VAELoss() {
   return (
-    <section id="vae-loss" className="mb-16 scroll-mt-20">
+    <section id="vae-loss" data-teach-level="1" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         ELBO는 data fit과 posterior regularization을 한 식에 묶는다
       </h2>
@@ -19,9 +19,12 @@ export default function VAELoss() {
           Reconstruction “loss”는 독립된 임의의 거리 함수가 아니라
           <code>−log pθ(x|z)</code>다. Gaussian likelihood의 variance를 고정하면
           scaled MSE 형태가 되고, Bernoulli likelihood에서는 binary cross-entropy
-          형태가 된다. Sum과 mean reduction, image dimension, variance 설정에 따라
-          KL과의 상대 scale도 달라지므로 서로 다른 구현의 숫자를 그대로 비교하면
-          안 된다.
+          형태가 된다.
+        </p>
+        <p>
+          Sum과 mean reduction, image dimension, variance 설정에 따라 KL과의
+          상대 scale도 달라집니다. 따라서 서로 다른 구현에서 나온 숫자를 그대로
+          비교하면 안 됩니다.
         </p>
       </div>
 
@@ -63,7 +66,10 @@ export default function VAELoss() {
         <p>
           Prior가 <code>N(0,I)</code>이고 encoder posterior가 diagonal Gaussian이면
           KL term은 sampling 없이 직접 계산할 수 있다. Reconstruction expectation만
-          reparameterized sample로 근사한다. 유도할 때는
+          reparameterized sample로 근사한다.
+        </p>
+        <p>
+          유도할 때는
           <code>Eq[log q(z|x)−log p(z)]</code>를 dimension별로 전개한 뒤
           <code>Eq[(z−μ)²]=σ²</code>와 <code>Eq[z²]=μ²+σ²</code>를 대입하면
           아래 식을 얻습니다. Posterior가 mixture이거나 full covariance라면 이

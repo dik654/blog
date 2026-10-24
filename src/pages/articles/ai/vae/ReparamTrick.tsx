@@ -8,7 +8,7 @@ const contracts = [
 
 export default function ReparamTrick() {
   return (
-    <section id="reparam-trick" className="mb-16 scroll-mt-20">
+    <section id="reparam-trick" data-teach-level="0" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Reparameterization은 sampling의 randomness를 입력 noise로 옮긴다
       </h2>
