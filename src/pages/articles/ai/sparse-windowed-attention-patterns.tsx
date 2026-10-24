@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SparseWindowedAttentionPatternsViz from "./sparse-windowed-attention-patterns/viz/SparseWindowedAttentionPatternsViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Sliding-window·sparse·hybrid attention 은 mask 가 어느 (query, key) 쌍을
@@ -16,10 +17,18 @@ import SparseWindowedAttentionPatternsViz from "./sparse-windowed-attention-patt
 export default function SparseWindowedAttentionPatternsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="sparse"
+        question="n×n attention 연결 가운데 어떤 (query, key) 쌍을 계산하지 않아도 될까요?"
+        fixture="10×10 causal mask에서 dense 55칸, window 27칸, window+global 34칸을 같은 좌표로 비교합니다."
+        parentHref="/cs/ai/attention-theory#self-attention"
+        parentLabel="모든 과거 key를 보는 self-attention mask"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Attention 은 어디를 볼지 window·sparse·hybrid 로 정해 비용을 줄입니다
         </h2>
+        <SparseWindowedAttentionPatternsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Full attention 은 query 하나가 과거 n 개 key 전부를 보므로 layer 하나의 attention FLOP 이 n 의 제곱에 비례합니다. n 이 수만
@@ -45,7 +54,6 @@ export default function SparseWindowedAttentionPatternsArticle() {
             sparsity 를 쓰는 Native Sparse Attention 을 대조합니다.
           </p>
         </div>
-        <SparseWindowedAttentionPatternsViz />
         <ContentBoundary article="sparse-windowed-attention-patterns" />
       </section>
 
@@ -326,6 +334,12 @@ export default function SparseWindowedAttentionPatternsArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="Sparse attention은 점수가 작은 칸을 사후에 지우는 방식이 아니라, 계산 전에 허용된 연결만 mask로 정합니다."
+        detail="다음 글은 token 사이 연결이 아니라 층 사이의 전달 통로를 하나에서 여러 residual stream으로 확장합니다."
+        nextHref="/cs/ai/hyper-connections-residual-streams"
+        nextLabel="다음: Residual stream"
+      />
     </div>
   );
 }

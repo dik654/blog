@@ -6,6 +6,7 @@ import VizFrame from "@/components/viz/VizFrame";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./mixture-of-experts/codeRefs";
 import { mixtureOfExpertsTree } from "./mixture-of-experts/fileTree";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 const experts = [
   { label: "E₁", topic: "공통 표현", load: 7, selected: true },
@@ -22,51 +23,51 @@ function DenseVsMoeViz() {
       description="MoE에서 expert는 대개 독립된 FFN branch입니다. Router는 token마다 점수를 계산하고, Top-k expert의 출력만 합칩니다."
       note="그림의 token 단위 routing은 Transformer MoE의 일반적인 형태입니다. Request 하나가 처음부터 끝까지 한 expert에 고정되는 구조로 읽으면 안 됩니다."
     >
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-2 items-start gap-3 sm:gap-6">
         <section className="min-w-0">
           <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
-            <p className="text-sm font-bold text-foreground">Dense FFN</p>
-            <span className="text-xs text-muted-foreground">항상 같은 경로</span>
+            <p className="text-xs font-bold text-foreground sm:text-sm">Dense FFN</p>
+            <span className="hidden text-xs text-muted-foreground sm:inline">항상 같은 경로</span>
           </div>
-          <div className="mt-5 grid grid-cols-[minmax(0,1fr)_2rem_minmax(0,1.2fr)] items-center gap-3">
-            <div className="rounded-lg border border-border bg-background p-4 text-center">
-              <p className="text-xs text-muted-foreground">token state</p>
-              <p className="mt-1 font-mono text-sm font-bold text-foreground">x</p>
+          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_1rem_minmax(0,1.2fr)] items-center gap-1 sm:mt-5 sm:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1.2fr)] sm:gap-3">
+            <div className="rounded-lg border border-border bg-background p-2 text-center sm:p-4">
+              <p className="text-[9px] text-muted-foreground sm:text-xs">token</p>
+              <p className="mt-1 font-mono text-xs font-bold text-foreground sm:text-sm">x</p>
             </div>
             <span aria-hidden className="text-center text-muted-foreground">→</span>
-            <div className="rounded-lg border border-primary/40 bg-primary/5 p-4 text-center">
-              <p className="text-xs text-muted-foreground">하나의 큰 FFN</p>
-              <p className="mt-1 text-sm font-bold text-foreground">항상 계산</p>
+            <div className="rounded-lg border border-primary/40 bg-primary/5 p-2 text-center sm:p-4">
+              <p className="text-[9px] text-muted-foreground sm:text-xs">큰 FFN</p>
+              <p className="mt-1 text-[10px] font-bold text-foreground sm:text-sm">항상 계산</p>
             </div>
           </div>
         </section>
 
         <section className="min-w-0">
           <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
-            <p className="text-sm font-bold text-foreground">Sparse MoE FFN</p>
-            <span className="text-xs text-muted-foreground">token마다 경로 선택</span>
+            <p className="text-xs font-bold text-foreground sm:text-sm">Sparse MoE</p>
+            <span className="hidden text-xs text-muted-foreground sm:inline">token마다 경로 선택</span>
           </div>
-          <div className="mt-5 grid gap-4 sm:grid-cols-[0.8fr_1.1fr] sm:items-center">
+          <div className="mt-3 grid grid-cols-[0.75fr_1.25fr] items-center gap-2 sm:mt-5 sm:grid-cols-[0.8fr_1.1fr] sm:gap-4">
             <div className="space-y-3">
-              <div className="rounded-lg border border-border bg-background p-3 text-center">
-                <p className="font-mono text-sm font-bold text-foreground">x</p>
+              <div className="rounded-lg border border-border bg-background p-2 text-center sm:p-3">
+                <p className="font-mono text-xs font-bold text-foreground sm:text-sm">x</p>
               </div>
-              <div className="rounded-lg border border-primary/40 bg-primary/5 p-3 text-center">
-                <p className="text-xs font-bold text-primary">router · Top-2</p>
+              <div className="rounded-lg border border-primary/40 bg-primary/5 p-2 text-center sm:p-3">
+                <p className="text-[9px] font-bold text-primary sm:text-xs">router<br className="sm:hidden" /> Top-2</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-1 sm:gap-3">
               {experts.map((expert) => (
                 <div
                   key={expert.label}
                   className={
                     expert.selected
-                      ? "rounded-lg border border-primary/50 bg-primary/5 p-3"
-                      : "rounded-lg border border-border/70 bg-background/70 p-3 text-foreground/45"
+                      ? "rounded-lg border border-primary/50 bg-primary/5 p-1.5 sm:p-3"
+                      : "rounded-lg border border-border/70 bg-background/70 p-1.5 text-foreground/45 sm:p-3"
                   }
                 >
-                  <p className="font-mono text-xs font-bold">{expert.label}</p>
-                  <p className="mt-1 text-[11px] leading-4">{expert.topic}</p>
+                  <p className="font-mono text-[9px] font-bold sm:text-xs">{expert.label}</p>
+                  <p className="mt-1 hidden text-[11px] leading-4 sm:block">{expert.topic}</p>
                 </div>
               ))}
             </div>
@@ -262,23 +263,34 @@ export default function MixtureOfExpertsArticle() {
   const sidebar = useCodeSidebar();
   return (
     <>
+      <LlmArchitectureLocator
+        current="moe"
+        question="전체 parameter를 모두 계산하지 않고 token마다 필요한 FFN expert만 어떻게 활성화할까요?"
+        fixture="expert 4개 중 Top-2를 고르는 한 token을 따라 router score·dispatch·weighted combine을 구분합니다."
+        parentHref="/cs/ai/transformer-architecture#ffn"
+        parentLabel="모든 token이 같은 경로를 지나는 dense FFN"
+      />
       <section id="overview" className="mb-16 scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">MoE는 모든 token에 더 큰 계산을 쓰지 않고 model capacity를 늘리는 방법이다</h2>
+        <DenseVsMoeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Dense Transformer에서는 token마다 같은 feed-forward network(FFN)를 통과합니다. Model을 더 크게 만들려고 FFN 폭을 두 배로 늘리면 모든 token의 계산량도 함께 늘어납니다. Mixture-of-Experts(MoE)는 이 결합을 느슨하게 만듭니다. 여러 FFN branch를 <strong>expert</strong>로 두고, 작은 <strong>router</strong>가 token마다 일부 expert만 선택하기 때문에 저장할 parameter는 늘리면서 token별 계산 증가는 제한할 수 있습니다.
+            Dense Transformer에서는 token마다 같은 feed-forward network(FFN)를 통과합니다. Model을 더 크게 만들려고 FFN 폭을 두 배로 늘리면 모든 token의 계산량도 함께 늘어납니다.
+          </p>
+          <p className="text-lg leading-8">
+            Mixture-of-Experts(MoE)는 이 결합을 느슨하게 만듭니다. 여러 FFN branch를 <strong>expert</strong>로 두고, 작은 <strong>router</strong>가 token마다 일부 expert만 선택합니다. 저장할 parameter는 늘리면서 token별 계산 증가는 제한할 수 있습니다.
           </p>
           <p className="leading-8">
             여기서 “expert”라는 이름이 특정 분야를 사람처럼 이해한다는 뜻은 아닙니다. 학습 과정에서 서로 다른 token 분포를 더 자주 처리하게 된 parameter branch이며, specialization은 관측과 분석의 대상이지 이름만으로 보장되는 성질이 아닙니다. 또한 routing은 보통 request 단위가 아니라 layer에 들어온 <strong>token state</strong> 단위로 다시 일어납니다.
           </p>
           <p className="leading-8">
             이 글은 MoE를 parameter 절약 기법으로만 소개하지 않습니다. 출발점은 Dense FFN과의 차이이고, 거기서 router 계산, Top-k weighted
-            mixture, load balancing, capacity와 overflow, expert parallel communication을 차례로 계산합니다. total
-            parameter와 active parameter를 memory·FLOPs·latency의 동의어로 쓸 수 없는 이유는 그 계산을 마친 뒤에 구분합니다.
+            mixture, load balancing, capacity와 overflow, expert parallel communication을 차례로 계산합니다.
+          </p>
+          <p className="leading-8">
+            그 계산을 마친 뒤 total parameter와 active parameter를 구분합니다. 두 값을 memory·FLOPs·latency의 동의어로 쓸 수 없는 이유도 함께 확인합니다.
           </p>
         </div>
-
-        <DenseVsMoeViz />
 
         <ExplainedFormula
           question="한 token의 MoE 출력은 선택된 expert 결과를 어떻게 합치는가?"
@@ -324,7 +336,10 @@ export default function MixtureOfExpertsArticle() {
           </p>
           <p className="leading-8">
             Top-k index 선택은 경계에서 불연속이라 gradient는 보통 선택된 경로를 통해 흐릅니다. 여기에 별도의 auxiliary loss나 bias update가 붙어
-            router의 장기적인 균형을 돕습니다. 그렇다고 “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. 같은 k라도 expert
+            router의 장기적인 균형을 돕습니다.
+          </p>
+          <p className="leading-8">
+            그렇다고 “Top-1이 언제나 더 빠르다”거나 “Top-2가 언제나 더 정확하다”고 단정할 수는 없습니다. 같은 k라도 expert
             GEMM 크기, all-to-all 구현, token batch, capacity policy가 달라지면 system cost가 달라지기 때문입니다.
           </p>
           <p className="leading-8">
@@ -376,7 +391,10 @@ export default function MixtureOfExpertsArticle() {
           <p className="leading-8">
             실제 accelerator에서는 token 하나마다 작은 FFN을 따로 호출하지 않습니다. Top-k assignment를 expert별로 정렬해 연속 buffer를
             만들고(dispatch) expert FFN을 큰 batched GEMM으로 실행한 뒤 결과를 원 token position으로 되돌려 합치는(gather 또는 combine)
-            방식입니다. 여러 장치에 expert가 나뉘면 이 재배치가 all-to-all network communication이 됩니다.
+            방식입니다.
+          </p>
+          <p className="leading-8">
+            여러 장치에 expert가 나뉘면 이 재배치가 all-to-all network communication이 됩니다.
           </p>
           <h3>Token routing과 sequence routing은 다른 문제다</h3>
           <p className="leading-8">
@@ -501,12 +519,18 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           <p className="leading-8">
             균형 항을 language-model loss에 더해 router gradient를 바꾸는 쪽이 auxiliary load-balancing loss입니다. 반면
             auxiliary-loss-free 방식의 routing bias는 선택 score에 별도 bias를 더하고 실제 mixture weight에서는 제외하는 식으로 분배만 조정할
-            수 있습니다. 여기에 capacity factor가 expert buffer에 받을 수 있는 token 수를 미리 정합니다. 넘친 assignment를 drop하거나 다른
+            수 있습니다.
+          </p>
+          <p className="leading-8">
+            Capacity factor는 expert buffer에 받을 수 있는 token 수를 미리 정합니다. 넘친 assignment를 drop하거나 다른
             expert로 보내는 overflow policy가 그 뒤를 잇습니다.
           </p>
           <p className="leading-8">
             균형 항을 지나치게 키우면 token 내용보다 균등 분배를 우선해 specialization을 해칠 수 있습니다. 반대쪽으로 capacity를 너무 작게 잡으면 중요한
-            token 경로가 drop되고 넉넉히 잡으면 memory와 padding waste가 늘어납니다. 이런 움직임은 router entropy 하나만 봐서는 드러나지 않습니다.
+            token 경로가 drop되고 넉넉히 잡으면 memory와 padding waste가 늘어납니다.
+          </p>
+          <p className="leading-8">
+            이런 움직임은 router entropy 하나만 봐서는 드러나지 않습니다.
             실무에서는 expert별 token count, dropped-token rate, per-expert GEMM size, all-to-all time을 task
             quality와 함께 측정합니다.
           </p>
@@ -524,18 +548,23 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
       </section>
 
       <section id="system-cost" className="mb-16 scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">Total parameter, active parameter, FLOPs, 통신량은 네 개의 다른 장부다</h2>
+        <h2 className="mb-6 text-2xl font-bold">Parameter와 비용은 네 장부로 나눠 본다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             Model card의 “전체 600B, 활성 40B” 같은 표기는 capacity와 token별 경로를 빠르게 비교하는 데 유용합니다. 다만 GPU memory와
-            latency를 직접 알려 주지는 않습니다. 모든 expert weight를 동시에 올려야 한다면 weight memory는 total parameter에 가깝고 token별
-            expert FFN multiply-add는 active expert에 가깝습니다. 여기에 shared
+            latency를 직접 알려 주지는 않습니다.
+          </p>
+          <p className="leading-8">
+            모든 expert weight를 동시에 올려야 한다면 weight memory는 total parameter에 가깝고 token별 expert FFN multiply-add는 active expert에 가깝습니다. 여기에 shared
             attention·embedding·router·normalization과 communication이 더해집니다.
           </p>
           <p className="leading-8">
             특히 expert parallelism에서는 token state를 expert가 있는 장치로 보내고 다시 가져옵니다. Dense model에서 주로 tensor-
             parallel collective를 고민했다면 MoE에서 새로 등장하는 병목은 dispatch·all-to-all·combine의 message size와 장치별
-            imbalance입니다. 그래서 active parameter가 작아도 작은 batch에서 expert GEMM이 조각나거나 network overlap이 실패하면
+            imbalance입니다.
+          </p>
+          <p className="leading-8">
+            그래서 active parameter가 작아도 작은 batch에서 expert GEMM이 조각나거나 network overlap이 실패하면
             latency는 낮아지지 않을 수 있습니다.
           </p>
         </div>
@@ -626,8 +655,10 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           <h3>Serving에서는 average보다 tail과 locality를 본다</h3>
           <p className="leading-8">
             Batch가 작으면 선택된 expert마다 token이 몇 개 없어 GEMM 효율이 떨어집니다. 반대로 batch가 커지면 all-to-all payload와 hot
-            expert queue가 커질 수 있습니다. 이 trade-off를 다루는 system policy가 expert placement, replica, node-limited
-            routing, communication–compute overlap입니다. 그래서 model architecture 비교에서는 active parameter만으로 부족합니다.
+            expert queue가 커질 수 있습니다.
+          </p>
+          <p className="leading-8">
+            이 trade-off를 다루는 system policy가 expert placement, replica, node-limited routing, communication–compute overlap입니다. 그래서 model architecture 비교에서는 active parameter만으로 부족합니다.
             실제 batch·parallel layout에서 나온 expert load histogram과 collective time을 함께 공개하지 않으면 비교가 성립하지 않습니다.
           </p>
         </div>
@@ -642,12 +673,17 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">
             초기 sparse MoE가 conditional computation을 실제 cluster에서 작동시키는 데 집중했다면 GShard와 Switch는
-            Transformer·distributed routing의 복잡도를 다뤘습니다. DeepSeekMoE는 routed expert를 더 작은 단위로 나눠 조합 수를 늘렸고 모든
+            Transformer·distributed routing의 복잡도를 다뤘습니다.
+          </p>
+          <p className="leading-8">
+            DeepSeekMoE는 routed expert를 더 작은 단위로 나눠 조합 수를 늘렸고 모든
             token이 쓰는 shared expert를 따로 두었습니다. 공통 지식이 여러 routed expert에 반복되는 문제를 줄이려는 설계였습니다.
           </p>
           <p className="leading-8">
             이 계보는 “새 모델이 이전 모델보다 무조건 낫다”는 순위표로 읽히기 쉽습니다. 그런데 Top-1·Top-2·shared expert·fine-grained expert가 하는
             일은 quality, specialization, router stability, GEMM shape, network topology 사이에서 예산을 다르게 배분하는 것입니다.
+          </p>
+          <p className="leading-8">
             동일한 total parameter만 맞추거나 active parameter만 맞춘 비교로는 어느 구성 요소가 이득을 만들었는지 분리하기 어렵습니다.
           </p>
         </div>
@@ -665,10 +701,19 @@ L_{\rm aux}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{두 값이 모두 
           </p>
           <h3>모델을 비교할 때 남겨야 할 최소 ledger</h3>
           <p className="leading-8">
-            전체·활성 parameter, routed/shared expert 수, Top-k, expert FFN shape, router normalization과 bias, capacity·overflow policy, auxiliary loss, expert-parallel topology, per-expert token histogram을 함께 기록합니다. 이 항목이 빠지면 “MoE라서 빠르다”는 말이 training compute인지 serving latency인지, weight memory인지 network cost인지 확인할 수 없습니다.
+            전체·활성 parameter, routed/shared expert 수, Top-k, expert FFN shape, router normalization과 bias를 함께 기록합니다. Capacity·overflow policy, auxiliary loss, expert-parallel topology, per-expert token histogram도 같은 장부에 남깁니다.
+          </p>
+          <p className="leading-8">
+            이 항목이 빠지면 “MoE라서 빠르다”는 말이 training compute인지 serving latency인지, weight memory인지 network cost인지 확인할 수 없습니다.
           </p>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="MoE는 token마다 Top-k expert만 계산하지만 모든 expert weight의 저장량과 dispatch·all-to-all 비용까지 같은 비율로 줄이지는 않습니다."
+        detail="다음 글은 router가 만든 선택이 특정 expert에 쏠릴 때 load-balancing loss·bias·capacity가 각각 어디에 개입하는지 계산합니다."
+        nextHref="/cs/ai/moe-routing-and-load-balancing"
+        nextLabel="다음: MoE routing"
+      />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

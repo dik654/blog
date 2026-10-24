@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import HyperConnectionsResidualStreamsViz from "./hyper-connections-residual-streams/viz/HyperConnectionsResidualStreamsViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Hyper-connection 은 residual stream 하나를 n 개로 늘려 신호를 나눠 옮깁니다
@@ -15,10 +16,18 @@ import HyperConnectionsResidualStreamsViz from "./hyper-connections-residual-str
 export default function HyperConnectionsResidualStreamsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="residual"
+        question="층 사이 신호 통로를 여러 갈래로 늘릴 때 깊이가 커져도 크기를 어떻게 안정적으로 유지할까요?"
+        fixture="두 stream의 mixing 행렬을 1·8·16·32회 곱해 doubly-stochastic 제약 유무에 따른 norm을 비교합니다."
+        parentHref="/cs/ai/resnet#skip-connection"
+        parentLabel="입력을 그대로 보존하는 residual connection"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           단일 residual stream 은 층마다 신호가 지나는 유일한 통로입니다
         </h2>
+        <HyperConnectionsResidualStreamsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             표준 residual connection 은 층의 update 를 하나의 stream 에 더하는 통로 하나뿐입니다. Hyper-connection(HC)은 이 통로를 n 개의
@@ -186,7 +195,6 @@ export default function HyperConnectionsResidualStreamsArticle() {
           assumptions={["Sinkhorn 반복은 t_max=20에서 실용적으로 수렴한다고 저자들이 보고합니다.", "n=1이면 이 제약이 스칼라 1로 퇴화해 원래 identity mapping과 같아집니다."]}
           interpretation="행·열 합이 모두 1인 행렬은 여러 번 곱해도 그 성질이 유지되므로, L 층을 지나도 신호가 항등에서 크게 벗어나지 않습니다."
         />
-        <HyperConnectionsResidualStreamsViz />
         <div id="paper-mhc" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Xie, Wei, Cao 외(DeepSeek-AI) · mHC: Manifold-Constrained Hyper-Connections"
@@ -217,7 +225,10 @@ export default function HyperConnectionsResidualStreamsArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Deep network signal propagation 은 forward 의 activation 크기와 backward 의
-            gradient 크기가 층을 지나며 어떻게 변하는지를 함께 가리키는 말입니다. He 등은
+            gradient 크기가 층을 지나며 어떻게 변하는지를 함께 가리키는 말입니다.
+          </p>
+          <p className="leading-8">
+            He 등은
             <Link to="/cs/ai/resnet#skip-connection">shortcut 을 순수 identity 로 유지</Link>할 때만
             1001-layer 규모에서도 신호가 깨끗이 전달된다는 것을 보였고, hyper-connection 의
             activation explosion 문제는 이 원칙이 여러 stream 으로 확장되며 다시 나타난 것입니다.
@@ -246,13 +257,22 @@ export default function HyperConnectionsResidualStreamsArticle() {
           <p>
             <Link to="/cs/ai/motif-3-architecture#mhc">Motif 3 의 modified mHC</Link>는 이 mechanism
             위에 post multiplier 를 학습 중 2 에서 1 로 낮추는 annealing 을 더한 것으로, 원 mHC
-            가 제안한 것은 doubly-stochastic 제약까지입니다. Attention 내부의 signal·noise 분리를
+            가 제안한 것은 doubly-stochastic 제약까지입니다.
+          </p>
+          <p>
+            Attention 내부의 signal·noise 분리를
             다룬 <Link to="/cs/ai/differential-attention">differential attention</Link>과 이 residual
             stream 확장은 서로 다른 층위의 문제이며, GDLA·modified mHC 는 그 둘을 각각 가져와
             한 model 안에서 조합한 결과입니다.
           </p>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="Hyper-connection은 층 계산을 여러 번 복제하지 않고, 여러 residual stream을 읽고 섞고 다시 쓰는 행렬을 추가합니다."
+        detail="다음 글은 층 사이 전달이 아니라 FFN 내부를 여러 expert로 나누고 token마다 일부 경로만 활성화합니다."
+        nextHref="/cs/ai/mixture-of-experts"
+        nextLabel="다음: Mixture of Experts"
+      />
     </div>
   );
 }

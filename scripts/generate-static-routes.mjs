@@ -103,6 +103,11 @@ const noScriptArticleRoutes = new Set([
   "ai/multi-head-latent-attention-mechanics",
   "ai/linear-attention-and-state-space-models",
   "ai/fast-weight-memory-and-chunkwise-recurrence",
+  "ai/differential-attention",
+  "ai/sparse-windowed-attention-patterns",
+  "ai/hyper-connections-residual-streams",
+  "ai/mixture-of-experts",
+  "ai/moe-routing-and-load-balancing",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

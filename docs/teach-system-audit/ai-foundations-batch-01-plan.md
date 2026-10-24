@@ -403,3 +403,31 @@ fast weight 글은 같은 2×2 state를 순차 갱신한 결과와 chunkwise 계
 장면당 5.2초 뒤 다음 상태로 이동하고 마지막에서 멈춥니다. 모바일에서는 현재 계산만 펼쳐 한 화면에서
 입력·변화·출력을 함께 보게 하고, 데스크톱에서는 전체 상태를 비교합니다. reduced-motion에서는 재생을
 비활성화하고, JavaScript가 없을 때는 같은 장면 순서와 결론을 정적 목록으로 제공합니다.
+
+## 13. Attention pattern에서 MoE routing까지
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/differential-attention` | concept · explanation | `ai/attention-theory#multiplicative` | 같은 query를 두 번 읽은 뒤 attention map의 차를 내면 어떤 신호가 남는가? |
+| `ai/sparse-windowed-attention-patterns` | concept · explanation | `ai/attention-theory#self-attention` | dense mask에서 window·global token·hybrid layer가 각각 어느 연결을 없애거나 되살리는가? |
+| `ai/hyper-connections-residual-streams` | concept · explanation | `ai/resnet#skip-connection` | residual stream을 여러 개로 늘렸을 때 깊이에 따른 signal 증폭을 어떻게 제어하는가? |
+| `ai/mixture-of-experts` | concept · explanation | `ai/transformer-architecture#ffn` | dense FFN을 여러 expert와 router로 바꾸면 token 하나가 실제로 어떤 경로를 실행하는가? |
+| `ai/moe-routing-and-load-balancing` | concept · explanation | `ai/mixture-of-experts#routing` | router 쏠림이 capacity drop으로 이어지고 bias가 배정을 되돌리는 과정을 어떻게 추적하는가? |
+
+공통 구조 지도는 앞 묶음에 이어 `두 map의 차 → sparse pattern → residual mixing → expert 선택 →
+load balancing`을 보여 줍니다. 이 역시 한 요청이 반드시 순서대로 지나는 실행 pipeline이 아니라,
+attention·depth·width 축에서 모델 구조를 바꿀 때 확인해야 할 서로 다른 상태와 비용의 학습 순서입니다.
+각 글은 직속 부모의 정확한 anchor에서 질문 하나를 이어받고, 확인한 메커니즘을 마지막에 같은 지도에
+반영합니다.
+
+Differential attention은 같은 query의 A1·A2와 λ=0.8을, sparse attention은 같은 10×10 causal
+mask의 55·27·34칸을 추적합니다. Hyper-connection은 두 2×2 mixing 행렬을 1·8·16·32번
+곱한 norm을 비교합니다. MoE 개요는 네 token의 dense FFN 경로와 four-expert Top-2 경로를
+나란히 보여 줍니다. Routing 글은 expert 8개·token 1,024개·Top-2의 2,048개 slot이 256개씩
+나뉘다가 expert 0에 614개가 몰리고, capacity 320을 넘은 294개가 버려진 뒤 bias로 회복되는 과정을
+같은 장부로 유지합니다.
+
+첫 시각화는 첫 설명 문단보다 앞에 두었습니다. 장면은 자동으로 시작하거나 반복하지 않습니다. 사용자가
+재생하면 5.2초마다 다음 실제 상태로 이동하고 마지막에서 멈춥니다. 모바일에서는 현재 mask·행렬·expert
+상태만 펼쳐 가로 스크롤을 없애고, 데스크톱에서는 비교 대상을 함께 보여 줍니다. reduced-motion에서는
+재생을 비활성화하며 JavaScript가 없을 때는 동일한 순서와 결론을 정적 목록으로 제공합니다.

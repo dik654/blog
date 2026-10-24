@@ -1836,9 +1836,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/differential-attention.tsx",
-        "src/pages/articles/ai/differential-attention/viz/DifferentialAttentionViz.tsx"
+        "src/pages/articles/ai/differential-attention/viz/DifferentialAttentionViz.tsx",
+        "src/pages/articles/ai/shared/LlmArchitectureLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -1846,20 +1847,33 @@
         "hasSourceSurface": true,
         "characters": 14433
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "두 attention map의 차라는 핵심 메커니즘은 있었지만 전체 LLM 구조 변경 지도에서 어떤 문제를 다루는지 먼저 보이지 않았습니다.",
+        "첫 시각화가 설명 뒤에 있어 독자가 두 softmax map과 lambda 차감 결과를 머릿속에서 먼저 계산해야 했습니다.",
+        "짧은 자동 장면 전환과 반복 재생은 실제 수치 변화를 읽기 전에 다음 상태로 넘어갔습니다."
+      ],
+      "fixture": "같은 query에서 A1=[0.62,0.23,0.10,0.05], A2=[0.18,0.42,0.25,0.15], lambda=0.8을 두고 A1-lambda A2의 신호·잡음 변화를 추적합니다.",
+      "stageAnchors": {
+        "parent": "attention-theory#multiplicative",
+        "map": "problem",
+        "mechanism": "mechanism",
+        "lambda": "lambda",
+        "evidence": "evidence",
+        "return": "summary"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        "Differential Transformer 원문의 두 softmax attention map 차감 구조와 lambda parameterization을 적용하고, long-context·retrieval·hallucination 결과는 저자 실험 범위로 한정했습니다."
+      ],
+      "verification": {
+        "contentReview": "pass · 직속 attention 부모→같은 query의 두 map→lambda 차감→근거 경계→구조 지도 반환 순서를 대조했습니다.",
+        "humanize": "pass · map 이름보다 두 번 읽고 공통 잡음을 빼는 구체적 동작을 먼저 보여 줍니다.",
+        "numericTrace": "pass · A1·A2·lambda=0.8의 각 차감값을 시각화와 본문에서 같은 fixture로 유지했습니다.",
+        "mobile390": "pass · 390x844에서 문서 overflow 0, 마지막 장면까지 내부 세로 overflow 0입니다.",
+        "desktop1440": "pass · 1440x1000에서 두 map과 차감 결과가 겹치지 않고 문서 overflow 0입니다.",
+        "accessibility": "pass · 자동 시작·반복 없음, ArrowRight 장면 이동, reduced-motion 재생 비활성화와 no-script 정적 장면 목록을 제공합니다.",
+        "build": "pass · 7,886개 module·정적 public route 2,086개·검토 완료 no-script 본문 63편을 생성했고 JavaScript 비활성 390x844 경로에서 overflow 0을 확인했습니다."
+      },
+      "remaining": []
     },
     {
       "route": "ai/diffusion-continuous-time",
@@ -3145,9 +3159,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/hyper-connections-residual-streams.tsx",
-        "src/pages/articles/ai/hyper-connections-residual-streams/viz/HyperConnectionsResidualStreamsViz.tsx"
+        "src/pages/articles/ai/hyper-connections-residual-streams/viz/HyperConnectionsResidualStreamsViz.tsx",
+        "src/pages/articles/ai/shared/LlmArchitectureLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3155,20 +3170,33 @@
         "hasSourceSurface": true,
         "characters": 14106
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Residual stream 확장의 논문 결과는 자세했지만 ResNet의 skip connection에서 어떤 질문을 이어받는지 보이지 않았습니다.",
+        "행렬을 여러 층 반복할 때 안정성 차이가 텍스트 뒤에 있어 hyper-connection과 mHC의 필요성을 먼저 파악하기 어려웠습니다.",
+        "장면 전환 속도와 반복 재생 때문에 깊이별 norm 증가를 비교하기 어려웠습니다."
+      ],
+      "fixture": "2-stream에서 doubly-stochastic M=[[0.9,0.1],[0.1,0.9]]와 제약 없는 M=[[1.2,0.1],[0.1,0.9]]를 1·8·16·32층 반복해 Frobenius norm을 비교합니다.",
+      "stageAnchors": {
+        "parent": "resnet#skip-connection",
+        "map": "problem",
+        "streams": "hyper-connection",
+        "constraint": "mhc",
+        "evidence": "evidence",
+        "return": "summary"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        "Hyper-Connections와 mHC 원문의 residual stream 확장·동적 mixing·manifold constraint를 구분하고, 논문 점수와 3000배 증폭은 해당 모델 설정의 저자 보고로 한정했습니다."
+      ],
+      "verification": {
+        "contentReview": "pass · 단일 residual→다중 stream→mixing 안정성→mHC 제약→근거 경계→구조 지도 반환 순서를 확인했습니다.",
+        "humanize": "pass · residual stream을 신호가 이동하는 통로로 먼저 보여 준 뒤 논문 용어를 붙였습니다.",
+        "numericTrace": "pass · 두 2x2 행렬의 거듭제곱을 독립 계산해 norm 1.2806·1.0140·1.0004·1.0000과 1.5067·5.2586·27.5456·758.7511을 대조했습니다.",
+        "mobile390": "pass · 390x844의 네 장면에서 문서·시각화 overflow가 0입니다.",
+        "desktop1440": "pass · 1440x1000에서 깊이별 두 log-scale 막대와 설명이 겹치지 않습니다.",
+        "accessibility": "pass · 자동 시작·반복 없음, 키보드 장면 이동, reduced-motion 재생 비활성화와 no-script 정적 장면 목록을 제공합니다.",
+        "build": "pass · 7,886개 module·정적 public route 2,086개·검토 완료 no-script 본문 63편을 생성했고 JavaScript 비활성 390x844 경로에서 overflow 0을 확인했습니다."
+      },
+      "remaining": []
     },
     {
       "route": "ai/image-backbone-scaling",
@@ -5866,9 +5894,10 @@
       "publicFiles": [
         "src/pages/articles/ai/mixture-of-experts.tsx",
         "src/pages/articles/ai/mixture-of-experts/codeRefs.ts",
-        "src/pages/articles/ai/mixture-of-experts/fileTree.ts"
+        "src/pages/articles/ai/mixture-of-experts/fileTree.ts",
+        "src/pages/articles/ai/shared/LlmArchitectureLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -5876,20 +5905,33 @@
         "hasSourceSurface": true,
         "characters": 39333
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Router·expert·Top-k·load balancing·분산 비용이 풍부했지만 Transformer FFN에서 무엇을 교체하는지 첫 화면에서 보이지 않았습니다.",
+        "Dense FFN과 MoE의 token 경로를 설명 문단 뒤에서 만나 내부 실행 흐름을 먼저 그리기 어려웠습니다.",
+        "다음 글의 routing·capacity 문제와 현재 글의 기본 구조 경계가 명시되지 않았습니다."
+      ],
+      "fixture": "같은 네 token을 dense FFN 하나에 모두 보내는 경우와 router가 네 expert 가운데 Top-2를 골라 가중 합하는 경우를 비교합니다.",
+      "stageAnchors": {
+        "parent": "transformer-architecture#ffn",
+        "map": "overview",
+        "routing": "router",
+        "experts": "experts",
+        "systems": "system-cost",
+        "return": "summary"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        "Sparsely-Gated MoE·Switch Transformer·Mixtral·DeepSeek-V3 자료를 구조·Top-k·load balancing·활성 parameter 사례로 나눠 적용하고 서로 다른 실험의 성능 수치를 직접 비교하지 않았습니다."
+      ],
+      "verification": {
+        "contentReview": "pass · FFN 부모→dense/MoE token 경로→router·expert 계산→분산 비용→routing 세부 글 연결을 확인했습니다.",
+        "humanize": "pass · expert를 단순 상자 목록으로 두지 않고 token이 선택·계산·합산되는 경로를 먼저 보여 줍니다.",
+        "numericTrace": "pass · four-expert Top-2 예시와 total/active parameter를 서로 다른 종류의 수치로 구분했습니다.",
+        "mobile390": "pass · 첫 dense/MoE 비교를 모바일 두 열로 압축해 figure 높이를 483px로 줄이고 문서 overflow를 없앴습니다.",
+        "desktop1440": "pass · dense와 sparse 실행 경로 및 공유 runtime 관계가 한 화면에서 읽힙니다.",
+        "accessibility": "pass · 정적 시각화가 JavaScript·모션 없이 동일한 구조와 결론을 제공합니다.",
+        "build": "pass · 7,886개 module·정적 public route 2,086개·검토 완료 no-script 본문 63편을 생성했고 JavaScript 비활성 390x844 경로에서 overflow 0을 확인했습니다."
+      },
+      "remaining": []
     },
     {
       "route": "ai/modern-image-model-stack",
@@ -5928,9 +5970,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/moe-routing-and-load-balancing.tsx",
-        "src/pages/articles/ai/moe-routing-and-load-balancing/viz/MoeRoutingAndLoadBalancingViz.tsx"
+        "src/pages/articles/ai/moe-routing-and-load-balancing/viz/MoeRoutingAndLoadBalancingViz.tsx",
+        "src/pages/articles/ai/shared/LlmArchitectureLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -5938,20 +5981,33 @@
         "hasSourceSurface": true,
         "characters": 18054
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Loss·capacity·bias·collapse가 각각 설명됐지만 하나의 token slot 장부가 어떻게 무너지고 회복되는지 첫 화면에서 이어지지 않았습니다.",
+        "MoE 기본 구조의 직속 세부 단계라는 위치와 다음 구조 주제로 돌아가는 경로가 없었습니다.",
+        "장식처럼 빠르게 움직이는 막대는 요청 배정·drop·bias 보정이라는 실제 상태 변화를 읽기 어려웠습니다."
+      ],
+      "fixture": "expert 8개·token 1,024개·Top-2의 2,048개 slot에서 균등 256, expert 0 과부하 614, capacity 320, overflow 294를 같은 장부로 추적합니다.",
+      "stageAnchors": {
+        "parent": "mixture-of-experts#routing",
+        "map": "problem",
+        "loss": "loss",
+        "bias": "bias",
+        "collapse": "collapse",
+        "return": "summary"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        "GShard·Switch Transformer·ST-MoE·Mixtral·DeepSeek-V3의 balance loss, capacity, z-loss, slot 정의, auxiliary-loss-free bias를 각각 해당 논문 범위에서 적용했습니다."
+      ],
+      "verification": {
+        "contentReview": "pass · 균등→쏠림→capacity drop→bias 보정→회복을 한 slot 장부로 추적하고 수식 절과 대조했습니다.",
+        "humanize": "pass · 추상적인 load balancing 이름보다 어느 expert가 몇 slot을 받고 무엇이 버려지는지 먼저 보여 줍니다.",
+        "numericTrace": "pass · 모든 장면의 count 합이 2,048이고 614-320=294, drop 비율 47.88%임을 독립 계산했습니다.",
+        "mobile390": "pass · 모바일은 8개 expert를 4열 tile로 보여 가로 overflow 없이 drop 장면까지 읽힙니다.",
+        "desktop1440": "pass · 1440x1000에서 capacity 선·kept/drop 막대·bias·조작부가 겹치지 않고 내부 overflow 0입니다.",
+        "accessibility": "pass · 자동 시작·반복 없음, 장면 버튼·ArrowRight 이동, reduced-motion 재생 비활성화와 no-script 정적 장면 목록을 제공합니다.",
+        "build": "pass · 7,886개 module·정적 public route 2,086개·검토 완료 no-script 본문 63편을 생성했고 JavaScript 비활성 390x844 경로에서 overflow 0을 확인했습니다."
+      },
+      "remaining": []
     },
     {
       "route": "ai/momentum-optimizer",
@@ -8198,9 +8254,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/sparse-windowed-attention-patterns.tsx",
-        "src/pages/articles/ai/sparse-windowed-attention-patterns/viz/SparseWindowedAttentionPatternsViz.tsx"
+        "src/pages/articles/ai/sparse-windowed-attention-patterns/viz/SparseWindowedAttentionPatternsViz.tsx",
+        "src/pages/articles/ai/shared/LlmArchitectureLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8208,20 +8265,33 @@
         "hasSourceSurface": true,
         "characters": 18118
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
-      "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+      "originalProblems": [
+        "Mistral·Longformer·BigBird·Gemma 사례가 풍부했지만 dense mask에서 무엇이 실제로 사라지는지 먼저 비교하기 어려웠습니다.",
+        "첫 mask 시각화가 설명 뒤에 있어 window·global token·layer hybrid의 서로 다른 축이 뒤섞일 수 있었습니다.",
+        "Hybrid 장면의 모바일·데스크톱 레이아웃과 빠른 반복 재생 때문에 두 layer의 차이를 읽기 어려웠습니다."
+      ],
+      "fixture": "10x10 causal mask에서 dense 55칸, window w=3의 27칸, window+global token의 34칸을 같은 좌표로 비교합니다.",
+      "stageAnchors": {
+        "parent": "attention-theory#self-attention",
+        "map": "problem",
+        "window": "sliding-window",
+        "global": "global-token",
+        "hybrid": "hybrid",
+        "return": "summary"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "primarySourceApplication": [
+        "Mistral 7B의 W=4096·32 layer·rolling buffer, Longformer·BigBird의 local/global sparse pattern, Gemma 3의 local:global 5:1·window 1024를 공식 논문에서 대조했습니다."
+      ],
+      "verification": {
+        "contentReview": "pass · dense→window→global token→layer hybrid를 token mask와 layer 배치라는 서로 다른 축으로 구분했습니다.",
+        "humanize": "pass · 제품 이름보다 같은 10x10 mask에서 열리는 칸을 먼저 비교합니다.",
+        "numericTrace": "pass · causal 55, window 27, global 추가 34칸을 독립 계산하고 Mistral·Gemma 설정은 각 기술 보고서와 대조했습니다.",
+        "mobile390": "pass · hybrid의 local/global 두 mask와 요약이 390x844에서 문서·내부 overflow 없이 표시됩니다.",
+        "desktop1440": "pass · 두 mask를 나란히 배치하고 수식 요약 열을 넓혀 글자 겹침을 제거했습니다.",
+        "accessibility": "pass · 자동 시작·반복 없음, 장면 버튼·키보드 이동, reduced-motion 재생 비활성화와 no-script 정적 장면 목록을 제공합니다.",
+        "build": "pass · 7,886개 module·정적 public route 2,086개·검토 완료 no-script 본문 63편을 생성했고 JavaScript 비활성 390x844 경로에서 overflow 0을 확인했습니다."
+      },
+      "remaining": []
     },
     {
       "route": "ai/spiking-neural-networks",
@@ -10562,14 +10632,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 38,
+    "rewritten": 43,
     "existingTeachTargetedRepairs": 4,
-    "reviewedAndImproved": 42,
-    "localVerified": 42,
+    "reviewedAndImproved": 47,
+    "localVerified": 47,
     "awaitingIntegration": 0,
-    "pending": 147,
+    "pending": 142,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 43
+    "bodyReviewedTotal": 48
   }
 }

@@ -8,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * 두 행렬의 거듭제곱을 미리 계산해 둔 값이라 layer 32 까지도 클라이언트 계산이 없다.
  */
 const SCENES = ["1 layer", "8 layer", "16 layer", "32 layer"] as const;
+const CONTROL_LABELS = ["L=1", "L=8", "L=16", "L=32"] as const;
 const DEPTHS = [1, 8, 16, 32] as const;
 
 // Frobenius norm of Mᴸ, M = [[0.9,0.1],[0.1,0.9]] (doubly-stochastic) vs [[1.2,0.1],[0.1,0.9]] (제약 없음)
@@ -20,6 +21,12 @@ const NOTES = [
   "16 layer 에서 doubly-stochastic 행렬은 1.0004 로 사실상 고정됩니다. 제약 없는 행렬은 27.55 로 한 자리 더 커집니다.",
   "32 layer 뒤 doubly-stochastic 행렬의 norm 은 1.0000 이지만, 제약 없는 행렬은 758.75 배로 커집니다. 실제 mHC 논문은 27B 모델에서 이와 같은 종류의 증폭이 최대 3000 배까지 관측된다고 보고합니다.",
 ] as const;
+const MOBILE_NOTES = [
+  "한 층에서는 두 행렬의 차이가 작습니다.",
+  "8층 뒤 norm은 1.01과 5.26으로 벌어집니다.",
+  "16층 뒤 norm은 1.0004와 27.55입니다.",
+  "32층 뒤 norm은 1.0000과 758.75입니다.",
+] as const;
 
 function barWidth(value: number, max: number) {
   const pct = Math.min(100, (Math.log10(value + 1) / Math.log10(max + 1)) * 100);
@@ -27,7 +34,7 @@ function barWidth(value: number, max: number) {
 }
 
 export default function HyperConnectionsResidualStreamsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const idx = scenes.active;
   const depth = DEPTHS[idx];
   const dsValue = DS_NORM[idx];
@@ -41,14 +48,16 @@ export default function HyperConnectionsResidualStreamsViz() {
       note="M^L 의 Frobenius norm 을 직접 계산한 toy 값입니다. 실제 model 은 n>2 stream, 학습된 행렬, RMSNorm 을 함께 씁니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="hyper-connections-residual-streams"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Doubly-stochastic mixing 과 제약 없는 mixing 의 깊이별 norm 비교"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(idx + 1).padStart(2, "0")}
           </p>
@@ -76,11 +85,17 @@ export default function HyperConnectionsResidualStreamsViz() {
               depth L = {depth} · 막대 길이는 log 축입니다
             </p>
           </div>
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[idx]}
+          <p className="mt-3 border-l border-primary/50 pl-3 text-sm leading-6 text-muted-foreground sm:mt-5 sm:pl-4 sm:leading-7">
+            <span className="sm:hidden">{MOBILE_NOTES[idx]}</span>
+            <span className="hidden sm:inline">{NOTES[idx]}</span>
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );
