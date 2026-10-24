@@ -3306,3 +3306,23 @@
   0, console 오류 0을 확인했다. Sliding-window 장면은 키보드 ArrowRight·ArrowLeft로 왕복했고,
   reduced-motion에서 2.5초 뒤에도 첫 장면과 `재생 꺼짐` 상태를 유지했다. JavaScript 비활성 정적
   문서에서도 세 글의 제목·부모 지도·반환 지도와 모든 장면 순서를 확인했다. 공개 배포 검증은 남아 있다.
+
+### AI 하이브리드 기억 묶음 로컬 완료 (2026-10-24)
+
+- `qwen36-hybrid-architecture`와 `qwen36-hybrid-runtime`을 concept,
+  `qwen38-flash-next-architecture`를 reference로 분류했다. 세 글은
+  `기억의 모양 → 요청 상태의 수명 → 희소 변형`이라는 직속 부모 지도를 공유한다.
+- Qwen3.6 구조 글은 3 DeltaNet + 1 Attention 반복과 48·16 집계를 긴 설명보다 먼저 보여 준다.
+  런타임 글은 KV·recurrent matrix·convolution history가 prefill·decode·MTP를 지나 같은 accepted
+  prefix에 맞춰 확정되거나 폐기되는 과정을 먼저 보여 준다. Qwen3.8 글은 같은 3:1 리듬에서
+  full attention이 희소 조회로 바뀌고 indexer key가 추가되는 차이를 부모 원리에 연결했다.
+- 모바일 figure를 단순히 고정 높이에 넣지 않고 실제 정보와 조작부가 겹치지 않는지 확인했다.
+  Qwen3.6 구조 그림은 recurrent matrix와 제어부 사이 겹침 0, 런타임 그림은 두 상태 카드와 제어부
+  사이 겹침 0이다. 세 경로는 390×844와 1,440×900에서 문서·data canvas 가로 넘침 0을 유지한다.
+- 장면은 명시적인 Space·화살표 키·버튼 입력 전까지 시작하지 않는다. 화면 밖으로 나가면 선택한
+  장면을 유지한 채 정지하고, 다시 들어와도 자동 재개하지 않는다. reduced-motion에서는 첫 장면과
+  `재생 꺼짐` 상태를 유지한다.
+- 대상 파일 ESLint와 TypeScript, 엄격 topology·architecture-flow·reading-order 감사를 통과했다.
+  production build는 7,894개 module, 정적 public route 2,086개와 no-script 본문 104편을 생성했다.
+  JavaScript를 끈 390×844 정적 문서에서도 세 글의 제목·직속 부모 지도·반환 지도와 모든 장면 순서를
+  확인했다. 공개 배포 경로 검증은 남아 있다.

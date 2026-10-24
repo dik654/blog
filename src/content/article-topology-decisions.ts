@@ -3485,7 +3485,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vision-backbone-selection": "cdd9671993dee419",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "598f46b464605121",
-  "ai/qwen38-flash-next-architecture": "f2be3a1322d5e765",
+  "ai/qwen38-flash-next-architecture": "818a11c6feadce72",
   "gpu/modded-rtx4090-moe-serving": "6cf98cea148cc7ab",
   "gpu/hw-gpu-comparison": "6138d5bca815d0f4",
   "gpu/b300-switchless-network": "b474d74620e08a22",

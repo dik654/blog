@@ -7,6 +7,10 @@ import ParamClasses from "./qwen38-flash-next-architecture/ParamClasses";
 import RequestState from "./qwen38-flash-next-architecture/RequestState";
 import { codeRefs } from "./qwen38-flash-next-architecture/codeRefs";
 import { transformersTree } from "./qwen38-flash-next-architecture/fileTree";
+import {
+  HybridSequenceMapReturn,
+  HybridSequenceSeriesLocator,
+} from "./shared/HybridSequenceSeriesLocator";
 
 const PROJECT_META = {
   transformers: {
@@ -25,13 +29,17 @@ const PROJECT_META = {
 export default function Qwen38FlashNextArchitectureArticle() {
   const sidebar = useCodeSidebar();
   return (
-    <div className="space-y-16">
-      <Overview onCodeRef={sidebar.open} />
-      <QsaIndex onCodeRef={sidebar.open} />
-      <GatedResidual onCodeRef={sidebar.open} />
-      <PleNgram onCodeRef={sidebar.open} />
-      <ParamClasses />
-      <RequestState />
+    <>
+      <div className="space-y-16">
+        <HybridSequenceSeriesLocator current="sparse" />
+        <Overview onCodeRef={sidebar.open} />
+        <QsaIndex onCodeRef={sidebar.open} />
+        <GatedResidual onCodeRef={sidebar.open} />
+        <PleNgram onCodeRef={sidebar.open} />
+        <ParamClasses />
+        <RequestState />
+        <HybridSequenceMapReturn current="sparse" />
+      </div>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -41,6 +49,6 @@ export default function Qwen38FlashNextArchitectureArticle() {
         fileTrees={{ transformers: transformersTree }}
         projectMetas={PROJECT_META}
       />
-    </div>
+    </>
   );
 }

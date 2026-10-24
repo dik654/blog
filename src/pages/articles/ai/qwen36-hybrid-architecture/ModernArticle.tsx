@@ -6,6 +6,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import CacheStateViz from "./viz/CacheStateViz";
 import DeltaUpdateViz from "./viz/DeltaUpdateViz";
 import HybridScheduleViz from "./viz/HybridScheduleViz";
+import {
+  HybridSequenceMapReturn,
+  HybridSequenceSeriesLocator,
+} from "../shared/HybridSequenceSeriesLocator";
 
 const KV_TERMS = [
   {
@@ -102,9 +106,11 @@ const STATE_TERMS = [
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <HybridSequenceSeriesLocator current="structure" />
       <section id="overview" className="scroll-mt-20 space-y-7">
+        <h2 className="text-2xl font-bold">64층 모두가 같은 방식으로 과거를 기억하지 않습니다</h2>
+        <HybridScheduleViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>64층 모두가 같은 방식으로 과거를 기억하지 않습니다</h2>
           <p className="text-lg leading-8">
             공식 공개 모델 <strong>Qwen3.6-27B</strong>는 네 개의 mixer를 한
             묶음으로 삼습니다. 앞의 세 칸은 과거를 고정 크기 state에 눌러 담는{" "}
@@ -123,14 +129,13 @@ export default function ModernArticle() {
           </p>
         </div>
 
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <p className="font-semibold">그림에서 먼저 확인할 세 가지입니다.</p>
         <ol className="list-decimal space-y-2 pl-6">
           <li>DeltaNet 세 층과 Attention 한 층을 16번 반복하면 각각 48층과 16층일까요?</li>
           <li>총 64층이라는 숫자를 그대로 KV cache layer 수로 써도 될까요?</li>
           <li>DeltaNet의 state 크기가 고정이면 과거 token 원본을 손실 없이 모두 보존할까요?</li>
         </ol>
         <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Attention 16층은 token별 KV를 남기고 DeltaNet 48층은 같은 shape의 recurrent state를 계속 갱신합니다.</p>
-        <HybridScheduleViz />
         <ContentBoundary article="qwen36-hybrid-architecture" />
 
         <TermBreakdown
@@ -577,6 +582,7 @@ M_\Delta
           </p>
         </div>
       </section>
+      <HybridSequenceMapReturn current="structure" />
     </article>
   );
 }

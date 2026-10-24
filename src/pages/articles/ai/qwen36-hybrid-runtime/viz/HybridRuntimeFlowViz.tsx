@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const STAGES = [
@@ -51,20 +52,20 @@ const STAGES = [
 function StateShape({ active }: { active: number }) {
   const kvColumns = Math.min(11, 3 + active * 2);
   return (
-    <div className="grid gap-5 md:grid-cols-2">
-      <section className="min-w-0 border border-amber-500/35 bg-background p-4">
+    <div className="grid grid-cols-2 gap-2 sm:gap-5">
+      <section className="min-w-0 border border-amber-500/35 bg-background p-2.5 sm:p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold text-amber-800 dark:text-amber-200">
               Attention KV
             </p>
-            <p className="mt-1 text-[11px] text-muted-foreground">
+            <p className="mt-1 hidden text-[11px] text-muted-foreground sm:block">
               accepted token마다 한 열
             </p>
           </div>
           <span className="font-mono text-xs font-bold">O(T)</span>
         </div>
-        <div className="mt-5 flex h-20 items-end gap-1 border-b border-border pb-1">
+        <div className="mt-2 flex h-10 items-end gap-1 border-b border-border pb-1 sm:mt-5 sm:h-20">
           {Array.from({ length: kvColumns }).map((_, index) => (
             <span
               key={index}
@@ -75,23 +76,23 @@ function StateShape({ active }: { active: number }) {
         </div>
       </section>
 
-      <section className="min-w-0 border border-sky-500/35 bg-background p-4">
+      <section className="min-w-0 border border-sky-500/35 bg-background p-2.5 sm:p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-bold text-sky-800 dark:text-sky-200">
               Delta state
             </p>
-            <p className="mt-1 text-[11px] text-muted-foreground">
+            <p className="mt-1 hidden text-[11px] text-muted-foreground sm:block">
               request마다 같은 matrix
             </p>
           </div>
           <span className="font-mono text-xs font-bold">O(1) in T</span>
         </div>
         <div
-          className="mt-5 grid h-20 grid-cols-8 gap-1"
+          className="mt-2 grid h-10 grid-cols-4 gap-1 sm:mt-5 sm:h-20 sm:grid-cols-8"
           aria-label="fixed recurrent matrix"
         >
-          {Array.from({ length: 32 }).map((_, index) => (
+          {Array.from({ length: 16 }).map((_, index) => (
             <span
               key={index}
               className={`border border-sky-500/25 transition-colors duration-500 ${
@@ -106,60 +107,26 @@ function StateShape({ active }: { active: number }) {
 }
 
 export default function HybridRuntimeFlowViz() {
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const reducedMotion = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    [],
-  );
-
-  useEffect(() => {
-    if (!playing || reducedMotion) return;
-    const timer = window.setInterval(
-      () => setActive((value) => (value + 1) % STAGES.length),
-      2400,
-    );
-    return () => window.clearInterval(timer);
-  }, [playing, reducedMotion]);
-
-  const move = (next: number) => {
-    setPlaying(false);
-    setActive((next + STAGES.length) % STAGES.length);
-  };
+  const scenes = useAnimatedScenes(STAGES.length, 2800);
+  const active = scenes.active;
 
   return (
     <VizFrame
-      eyebrow="Animated request lifecycle"
-      title="두 종류의 state가 같은 accepted prefix를 따라 움직인다"
-      description="전체 흐름은 항상 보이고, 현재 단계만 확대됩니다. 그림에 focus한 뒤 ← →로 이동하고 Space로 자동 재생을 켜거나 끌 수 있습니다."
+      eyebrow="요청 상태 흐름"
+      title="두 상태가 같은 승인 경계를 따라 움직입니다"
+      description="전체 흐름은 항상 보이고, 현재 단계만 확대됩니다. 그림에 초점을 둔 뒤 ← →로 이동하고 Space로 자동 재생을 켜거나 끌 수 있습니다."
       note="MTP 후보는 임시 분기입니다. Attention KV만 되돌리거나 Delta state만 앞서가면 다음 token이 서로 다른 과거에서 계산됩니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Qwen hybrid runtime flow"
-        onKeyDown={(event) => {
-          const target = event.target as HTMLElement;
-          if (
-            target.matches("input, textarea, select, [contenteditable='true']")
-          )
-            return;
-          if (event.key === "ArrowRight") {
-            event.preventDefault();
-            move(active + 1);
-          } else if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            move(active - 1);
-          } else if (event.key === " ") {
-            event.preventDefault();
-            setPlaying((value) => !value);
-          }
-        }}
-        className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+        onKeyDown={scenes.onKeyDown}
+        className="min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
-        <div className="grid gap-3 sm:grid-cols-5 sm:items-center">
+        <div className="grid grid-cols-5 items-stretch gap-1 sm:gap-3">
           {STAGES.map((stage, index) => {
             const selected = index === active;
             return (
@@ -167,8 +134,8 @@ export default function HybridRuntimeFlowViz() {
                 type="button"
                 key={stage.id}
                 aria-pressed={selected}
-                onClick={() => move(index)}
-                className={`relative min-w-0 border px-3 py-4 text-left transition-colors ${
+                onClick={() => scenes.setActive(index)}
+                className={`relative min-w-0 border px-1 py-2 text-center transition-colors sm:px-3 sm:py-4 sm:text-left ${
                   selected
                     ? stage.tone
                     : "border-border bg-background text-muted-foreground"
@@ -177,8 +144,9 @@ export default function HybridRuntimeFlowViz() {
                 <span className="font-mono text-[10px] font-black">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="mt-2 block text-xs font-bold leading-5">
-                  {stage.label}
+                <span className="mt-1 block break-keep text-[9px] font-bold leading-4 sm:mt-2 sm:text-xs sm:leading-5">
+                  <span className="sm:hidden">{stage.short}</span>
+                  <span className="hidden sm:inline">{stage.label}</span>
                 </span>
                 {index < STAGES.length - 1 ? (
                   <span
@@ -193,16 +161,18 @@ export default function HybridRuntimeFlowViz() {
           })}
         </div>
 
-        <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)]">
-          <section className={`border p-5 ${STAGES[active].tone}`}>
-            <p className="text-xs font-black">{STAGES[active].short}</p>
-            <h4 className="mt-2 text-lg font-black">{STAGES[active].label}</h4>
-            <p className="mt-4 text-sm leading-7">{STAGES[active].detail}</p>
-            <div className="mt-5 border-t border-current/20 pt-4">
+        <div className="mt-3 grid gap-2 sm:mt-6 sm:gap-5 lg:grid-cols-[minmax(0,.72fr)_minmax(0,1.28fr)]">
+          <section className={`grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-3 border p-3 sm:block sm:p-5 ${STAGES[active].tone}`}>
+            <div>
+              <p className="text-xs font-black">{STAGES[active].short}</p>
+              <h4 className="mt-1 text-sm font-black sm:mt-2 sm:text-lg">{STAGES[active].label}</h4>
+            </div>
+            <p className="text-xs leading-5 sm:mt-4 sm:text-sm sm:leading-7">{STAGES[active].detail}</p>
+            <div className="col-span-2 mt-2 flex items-baseline justify-between gap-3 border-t border-current/20 pt-2 sm:mt-5 sm:block sm:pt-4">
               <p className="text-[11px] font-bold uppercase tracking-wide">
                 현재 state
               </p>
-              <p className="mt-2 font-mono text-xs leading-5">
+              <p className="text-right font-mono text-[11px] leading-5 sm:mt-2 sm:text-left sm:text-xs">
                 {STAGES[active].state}
               </p>
             </div>
@@ -210,18 +180,11 @@ export default function HybridRuntimeFlowViz() {
           <StateShape active={active} />
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-          <p className="text-xs leading-5 text-muted-foreground">
-            ← 이전 · → 다음 · Space 재생/일시정지
-          </p>
-          <button
-            type="button"
-            onClick={() => setPlaying((value) => !value)}
-            className="border border-border bg-background px-3 py-2 text-xs font-bold"
-          >
-            {playing && !reducedMotion ? "일시정지" : "자동 재생"}
-          </button>
-        </div>
+        <AnimatedSceneControls
+          {...scenes}
+          labels={STAGES.map((stage) => stage.label)}
+          playLabel="재생"
+        />
       </div>
     </VizFrame>
   );
