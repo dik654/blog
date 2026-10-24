@@ -133,7 +133,7 @@
     },
     {
       "route": "ai/multi-adapter-serving",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-07-plan.md"
     },
     {
@@ -153,7 +153,7 @@
     },
     {
       "route": "ai/sliding-window-kv-and-attention-sinks",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-07-plan.md"
     },
     {
