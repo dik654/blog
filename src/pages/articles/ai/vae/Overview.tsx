@@ -1,29 +1,26 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-
-const pipeline = [
-  ["Encode", "x에서 qφ(z|x)의 μ와 log σ²를 예측한다."],
-  ["Sample", "ε∼N(0,I)를 z=μ+σ⊙ε로 변환한다."],
-  ["Decode", "pθ(x|z)의 parameter를 출력한다."],
-  ["Optimize", "ELBO로 data fit과 posterior regularization을 함께 학습한다."],
-];
+import VaeTrainingPathViz from "./VaeTrainingPathViz";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        VAE는 latent-variable model을 neural network로 학습한다
+        VAE는 숨은 원인의 분포를 신경망으로 학습합니다
       </h2>
+
+      <VaeTrainingPathViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           Variational autoencoder(VAE)는 관측값 <code>x</code>가 보이지 않는
           latent variable <code>z</code>에서 생성됐다고 가정합니다. Decoder는
           <code>pθ(x|z)</code>를 정의하고, encoder는 계산하기 어려운 true
-          posterior
-          <code>pθ(z|x)</code>를 <code>qφ(z|x)</code>로 근사한다. 이름에
-          autoencoder가 들어가지만 목적은 단순 복원이 아니라 probabilistic
-          generative model의 likelihood lower bound를 학습하는 것입니다.
+          posterior <code>pθ(z|x)</code>를 <code>qφ(z|x)</code>로 근사합니다.
+        </p>
+        <p>
+          이름에 autoencoder가 들어가지만 목적은 단순 복원에 머물지 않습니다.
+          관측값의 생성 확률에 대한 계산 가능한 하한을 학습합니다.
         </p>
         <p>
           생성 모델 전체 지도에서 likelihood·latent variable·GAN·diffusion의
@@ -61,34 +58,6 @@ export default function Overview() {
           원 논문의 estimator·lower bound·실험 보기
         </a>
       </div>
-
-      <figure
-        data-viz="vae-training-path"
-        className="not-prose my-8 rounded-xl border border-border/75 bg-card p-4 sm:p-6"
-      >
-        <figcaption className="mb-4 text-sm font-semibold">
-          VAE의 한 번의 학습 경로
-        </figcaption>
-        <div className="grid gap-3 md:grid-cols-4">
-          {pipeline.map(([title, body], index) => (
-            <div
-              key={title}
-              className="relative rounded-xl border bg-background/90 p-4"
-            >
-              <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
-              <p className="mt-2 font-semibold">{title}</p>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                {body}
-              </p>
-              {index < pipeline.length - 1 && (
-                <span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 rounded-full border bg-card px-1.5 py-0.5 text-xs md:block">
-                  →
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </figure>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>VAE가 풀어야 하는 두 문제</h3>

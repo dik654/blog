@@ -20,7 +20,7 @@ export default function Training({
   onCodeRef: (key: string, ref: CodeRef) => void;
 }) {
   return (
-    <section id="training" className="mb-16 scroll-mt-20">
+    <section id="training" data-teach-level="2" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         학습이 수렴해도 latent variable을 실제로 쓰는지 확인한다
       </h2>
@@ -105,7 +105,10 @@ export default function Training({
           checkpoint A와 <code>(0.001, 0.002)</code>인 checkpoint B를 비교해
           봅시다. B에서 encoder의 <code>z</code>를 prior sample로 바꿔도 validation
           reconstruction이 거의 변하지 않는다면 collapse를 먼저 의심할 근거가
-          됩니다. 다만 작은 rate만으로 충분한 task나 일부 dimension만 사용하는
+          됩니다.
+        </p>
+        <p>
+          다만 작은 rate만으로 충분한 task나 일부 dimension만 사용하는
           경우도 있으므로, 평균 KL 하나가 아니라 dimension별 값과 latent 교체
           전후의 성능 변화를 함께 봐야 합니다.
         </p>
@@ -137,10 +140,15 @@ export default function Training({
 
         <h3>평가 질문을 분리한다</h3>
         <p>
-          density model로서는 held-out ELBO나 importance-weighted likelihood estimate를 보고 reconstruction model로서는
-          데이터에 맞는 distortion을, generator로서는 sample quality와 coverage를 봅니다. latent traversal은 representation을
-          이해하는 보조 도구이지 disentanglement의 정량적 증거는 아닙니다. anomaly detection에 reconstruction error를 쓸 때도 정상 데이터의 복원
-          편향과 threshold drift는 별도로 검증합니다.
+          Density model은 held-out ELBO나 importance-weighted likelihood
+          estimate를 봅니다. Reconstruction model은 데이터에 맞는 distortion을,
+          generator는 sample quality와 coverage를 봅니다.
+        </p>
+        <p>
+          Latent traversal은 representation을 이해하는 보조 도구이지
+          disentanglement의 정량적 증거는 아닙니다. Anomaly detection에
+          reconstruction error를 쓸 때도 정상 데이터의 복원 편향과 threshold
+          drift는 별도로 검증합니다.
         </p>
 
         <h3>
@@ -155,7 +163,10 @@ export default function Training({
           각 weight를 <code>w=pθ(x,z)/qφ(z|x)</code>로 두면 q 아래의 기대값은
           <code>Eq[w]=pθ(x)</code>입니다. K개 weight 평균도 evidence의 unbiased
           estimator이고, concave한 log에 Jensen inequality를 적용하면 그 평균의
-          log 기대값이 <code>log pθ(x)</code>보다 작거나 같아집니다. K=1에서는
+          log 기대값이 <code>log pθ(x)</code>보다 작거나 같아집니다.
+        </p>
+        <p>
+          K=1에서는
           바로 ELBO가 되지만, q가 posterior의 어떤 영역에 probability 0을 두면
           sample 수를 늘려도 그 support gap을 복구할 수 없습니다.
         </p>

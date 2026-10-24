@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 990,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 676,
+    "dedicatedVisuals": 677,
     "inlineVisuals": 550,
-    "customVisuals": 859,
-    "animatedMechanisms": 441,
+    "customVisuals": 860,
+    "animatedMechanisms": 442,
     "architectureWithoutAnimation": 100,
-    "recursiveLocators": 159,
+    "recursiveLocators": 160,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -5718,14 +5718,14 @@
       "sourcePath": "src/pages/articles/ai/vae.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/validation-feedback-audit",
