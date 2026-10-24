@@ -70,6 +70,8 @@ const noScriptArticleRoutes = new Set([
   "ai/roi-resolution-identity-budget",
   "ai/reference-identity-pose-separation",
   "ai/generative-identity-diversity",
+  "ai/negative-result-3d-face-control",
+  "ai/in-context-lora",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

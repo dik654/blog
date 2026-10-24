@@ -4,6 +4,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
+import InContextLoraViz from "./viz/InContextLoraViz";
 
 const compare = [
   [
@@ -24,15 +25,17 @@ export default function Overview({
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        새 architecture 대신 self-attention의 in-context 능력을 재사용한다
+        새 조건 모듈 대신 기존 self-attention을 다시 씁니다
       </h2>
+
+      <InContextLoraViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          In-Context LoRA(IC-LoRA)는 diffusion transformer(DiT)를 특정 task에
-          맞출 때, 조건(<code>reference</code>)과 목표(<code>target</code>)를
-          별도 module로 분리하지 않습니다. 대신 둘을 하나의{" "}
-          <code>attention sequence</code>로 이어붙이고, base model이 이미 갖고
+          In-Context LoRA(IC-LoRA)는 diffusion transformer(DiT)를 특정 작업에
+          맞출 때, 조건(<code>reference</code>)과 생성 대상(<code>target</code>)을
+          별도 모듈로 나누지 않습니다. 대신 둘을 하나의{" "}
+          <code>attention sequence</code>로 이어붙이고, 기반 모델이 이미 갖고
           있는 <code>self-attention</code>이 그 안에서 대응 관계를 스스로
           찾게 합니다. 새로 학습하는 것은{" "}
           <Link to="/cs/ai/lora-finetuning">LoRA</Link>의 저랭크 <code>A·B</code>{" "}
@@ -43,7 +46,7 @@ export default function Overview({
           <Link to="/cs/ai/attention-theory#self-attention">self-attention</Link>
           이 애초에 sequence 안의 모든 token 쌍을 서로 비교하도록 설계됐기
           때문입니다. Reference와 target을 한 sequence에 넣으면, attention이
-          두 구간 사이의 correspondence를 별도 module 없이도 학습할 수 있다.
+          두 구간 사이의 대응 관계를 별도 모듈 없이도 학습할 수 있습니다.
           이 글은 IC-LoRA의 이 재사용 원리와, 이를 audio-driven talking video
           identity 보존에 적용한 구체 사례인 ID-LoRA(2026)를 함께 다룹니다.
         </p>
