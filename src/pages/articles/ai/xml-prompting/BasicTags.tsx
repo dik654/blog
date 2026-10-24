@@ -9,6 +9,10 @@ export default function BasicTags() {
         최소 문법을 알면 태그가 자료를 망가뜨리는 이유까지 보인다
       </h2>
 
+      <div className="not-prose my-8">
+        <BasicTagsViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           XML을 처음 본다면 element를 이름이 붙은 상자라고 생각하면 됩니다.
@@ -33,10 +37,6 @@ export default function BasicTags() {
           <code> id=&quot;doc-1&quot;</code>처럼 quote로 감쌉니다. 이 최소 조건을 만족하면
           <strong> well-formed</strong> XML이라고 부릅니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <BasicTagsViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

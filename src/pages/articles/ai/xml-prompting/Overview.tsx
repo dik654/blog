@@ -11,6 +11,10 @@ export default function Overview() {
         XML 태그는 입력의 경계를 표시하지만 권한이나 안전성을 보장하지 않는다
       </h2>
 
+      <div className="not-prose my-8">
+        <OverviewViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           긴 prompt에는 model이 따라야 할 instruction, 분석할 문서, few-shot
@@ -46,10 +50,6 @@ export default function Overview() {
         <p>
           이 글은 “XML이 항상 최고”라고 주장하지 않습니다. XML-like delimiter가 도움이 되는 조건과 실제 XML parser를 붙일 때 지켜야 할 계약을 구분합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <OverviewViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

@@ -13612,32 +13612,92 @@
       "route": "ai/xml-prompting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/xml-prompting.tsx",
       "publicPath": "cs/ai/xml-prompting",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "XML prompting의 문법·태그·parser 설명이 고객 요청 하나의 전체 흐름보다 먼저 나왔음",
+        "각 절의 핵심 그림이 첫 설명 뒤에 있어 먼저 읽어야 할 구조를 빠르게 파악하기 어려웠음",
+        "태그 경계와 serializer·validator·runtime 권한의 책임을 한 지도에서 구분하기 어려웠음"
+      ],
+      "fixture": {
+        "request": "고객 이메일에서 주문번호와 요청 유형 추출",
+        "trustedInstruction": "필드 추출 규칙",
+        "untrustedInput": "도구 실행 문구가 포함된 고객 이메일",
+        "stableIds": [
+          "policy-v7-s3",
+          "faq-42",
+          "case-A-104"
+        ],
+        "validationGates": [
+          "parse",
+          "schema",
+          "domain",
+          "policy"
+        ]
+      },
+      "stageAnchors": {
+        "0": "xml-request-path-parent-map",
+        "1": "overview",
+        "2": "basic-tags",
+        "3": "advanced-tags",
+        "4": "parsing",
+        "5": "best-practices",
+        "return": "xml-prompt-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.w3.org/TR/xml/",
+          "application": "XML 문법·well-formedness·DTD validity의 규범적 경계"
+        },
+        {
+          "href": "https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html",
+          "application": "Untrusted XML parser의 DTD·external entity 방어 경계"
+        },
+        {
+          "href": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+          "application": "Claude prompt에서 역할이 드러나는 XML 태그를 사용하는 현재 공식 권고"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "고객 이메일 한 건을 지시와 외부 자료로 나누고, 특수문자 직렬화·안정된 ID·모델 출력의 네 검증 문·형식 비교까지 같은 요청으로 추적했습니다.",
+        "humanize": "태그 기능을 보안 보장처럼 말하지 않고, XML이 맡는 경계 표시와 parser·runtime이 맡는 실행 통제를 자연스러운 한국어로 구분했습니다.",
+        "browser390": "첫 그림 우선·XML 요청 지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·모바일 장면 글자 잘림 없음: output/playwright/ai-xml-prompting-batch-34/summary.json",
+        "browser1440": "첫 그림 우선·XML 요청 지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-xml-prompting-batch-34/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 192편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 34 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "xml-request-lifecycle-map-and-validation-boundary-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/xml-prompting.tsx",
+        "src/pages/articles/ai/xml-prompting/XmlPromptPath.tsx",
+        "src/pages/articles/ai/xml-prompting/viz/XmlPromptLifecycleViz.tsx",
+        "src/pages/articles/ai/xml-prompting/Overview.tsx",
+        "src/pages/articles/ai/xml-prompting/BasicTags.tsx",
+        "src/pages/articles/ai/xml-prompting/AdvancedTags.tsx",
+        "src/pages/articles/ai/xml-prompting/Parsing.tsx",
+        "src/pages/articles/ai/xml-prompting/BestPractices.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/xml-prompting.tsx",
+      "preserved": [
+        "W3C XML 문법과 well-formed·schema·domain 판정 경계",
+        "XXE·entity expansion·parser hardening 근거",
+        "XML·JSON·Markdown·native output 비교 기준과 기존 연습문제"
       ]
     }
   ],
   "counts": {
-    "rewritten-local-verified": 66,
+    "rewritten-local-verified": 67,
     "rewritten-production-verified": 81,
-    "unreviewed": 39
+    "unreviewed": 38
   },
   "localValidationSummary": {
     "rewritten": 117,

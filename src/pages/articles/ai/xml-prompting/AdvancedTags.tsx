@@ -9,6 +9,10 @@ export default function AdvancedTags() {
         반복되는 문서와 example에는 순서가 아니라 identity가 필요하다
       </h2>
 
+      <div className="not-prose my-8">
+        <AdvancedTagsViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           문서 하나는 <code>&lt;document&gt;</code>로 감싸면 되지만 문서가 스무
@@ -42,10 +46,6 @@ export default function AdvancedTags() {
         <p>
           ID에는 민감한 내부 경로나 임시 access token을 넣지 않습니다. 재시도와 log에 남아도 안전한 opaque identifier를 사용합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <AdvancedTagsViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

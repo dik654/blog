@@ -118,6 +118,7 @@ const noScriptArticleRoutes = new Set([
   "ai/evaluation-datasets-and-pipelines",
   "ai/llm-evaluation-criteria-and-methods",
   "ai/llm-as-a-judge",
+  "ai/xml-prompting",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",
