@@ -141,6 +141,8 @@ const noScriptArticleRoutes = new Set([
   "ai/attention-kernel-anatomy-and-backends",
   "ai/tensorrt-llm-kv-cache-and-kernels",
   "ai/inference-engine-design-axes",
+  "ai/vllm-spec-decode",
+  "ai/speculative-decoding-variants",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

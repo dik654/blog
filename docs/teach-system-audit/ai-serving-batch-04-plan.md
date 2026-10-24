@@ -48,4 +48,4 @@ SGLang과 llama.cpp는 다섯째·여섯째 처리 단계가 아닙니다. 위 �
 - [x] 키보드와 중간 장면
 - [x] reduced-motion
 - [x] JavaScript 비활성 정적 본문과 부모 지도
-- [ ] 공개 경로
+- [x] 공개 경로

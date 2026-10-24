@@ -12,13 +12,19 @@ import TreeMaskViz from "./viz/TreeMaskViz";
 import MtpChainViz from "./viz/MtpChainViz";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import {
+  SpeculativeDecodingMapReturn,
+  SpeculativeDecodingSeriesLocator,
+} from "../shared/SpeculativeDecodingSeriesLocator";
 
 export default function ModernArticle() {
   const sidebar = useCodeSidebar();
 
   return <>
+    <SpeculativeDecodingSeriesLocator current="variants" />
     <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1. 결론부터: 큰 모델의 한 번 검증으로 여러 토큰을 확정합니다</h2>
+      <TreeTraceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8"><strong>이 글의 범위:</strong> 공통 검증 원리를 짧게 복습한 뒤, 후보를 만드는 방법과 후보 모양이 달라질 때 비용이 어떻게 바뀌는지 비교합니다. 첫 거부 뒤 후보를 버리는 이유, 원래 분포를 지키는 계산, vLLM의 KV 갱신부터 보려면 <Link to="/cs/ai/vllm-spec-decode">추측 디코딩 기본 원리와 vLLM 구현</Link>부터 읽으면 됩니다.</p>
         <p className="leading-8"><strong>이 기술은 작은 모델이 답을 대신 쓰는 기술이 아닙니다. 작은 부품이 미리 쓴 후보를 큰 모델이 한 번에 검사하고, 맞은 토큰 여러 개를 확정해 큰 모델의 순차 생성 횟수를 줄이는 기술입니다.</strong></p>
@@ -127,7 +133,6 @@ export default function ModernArticle() {
         <p className="leading-8"><strong>중간 결론은 간단합니다.</strong> 여러 후보를 함께 계산하는 이유는 모두 출력하려는 것이 아니라, 큰 모델 실행 한 번에서 연속으로 승인할 경로 하나를 길게 찾기 위해서입니다.</p>
       </div>
       <TreeMaskViz />
-      <TreeTraceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">후보 트리를 넓히면 RAY처럼 살아남는 경로를 포함할 가능성은 커집니다. 동시에 큰 모델이 확인할 입력 수도 늘어납니다. 깊이 3에서 폭을 3·2·2로 잡으면 후보는 21개이고 시작점까지 22자리를 확인합니다. 따라서 확정 길이와 전체 검증 시간을 함께 재야 하며, 아래 원문 추적 뒤 12절에서 같은 시간 장부에 넣습니다. (가정)</p>
       </div>
@@ -450,6 +455,8 @@ export default function ModernArticle() {
 </div>
 </ProgressiveDetail>
     </section>
+
+    <SpeculativeDecodingMapReturn current="variants" />
 
     <section id="prediction-questions" data-teach-level="review" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">15. 결론에서 생긴 꼬리 질문에 답해 보세요</h2>
