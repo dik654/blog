@@ -621,25 +621,28 @@ export function CosineRestartViz() {
             x="34"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[10px]"
+            className="fill-muted-foreground text-[15px] sm:text-[10px]"
           >
-            t=0 · η=.1
+            <tspan x="34" dy="0">t=0</tspan>
+            <tspan x="34" dy="14">η=.1</tspan>
           </text>
           <text
             x="112"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[10px]"
+            className="fill-muted-foreground text-[15px] sm:text-[10px]"
           >
-            t=450 · η=.0505
+            <tspan x="112" dy="0">t=450</tspan>
+            <tspan x="112" dy="14">η=.0505</tspan>
           </text>
           <text
             x="190"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[10px]"
+            className="fill-muted-foreground text-[15px] sm:text-[10px]"
           >
-            t=900 · η=.001
+            <tspan x="190" dy="0">t=900</tspan>
+            <tspan x="190" dy="14">η=.001</tspan>
           </text>
           <motion.line
             x1="200"
@@ -664,9 +667,10 @@ export function CosineRestartViz() {
             x="288"
             y="168"
             textAnchor="middle"
-            className="fill-muted-foreground text-[10px]"
+            className="fill-muted-foreground text-[14px] sm:text-[10px]"
           >
-            다음 cycle · T₁=1800
+            <tspan x="288" dy="0">다음 cycle</tspan>
+            <tspan x="288" dy="14">T₁=1800</tspan>
           </text>
           <motion.g
             initial={false}
@@ -686,7 +690,7 @@ export function CosineRestartViz() {
               x="200"
               y="209"
               textAnchor="middle"
-              className="fill-foreground text-[10px] font-bold"
+              className="fill-foreground text-[13px] font-bold sm:text-[10px]"
             >
               보존: θ · momentum/moments · data progress
             </text>
@@ -694,7 +698,7 @@ export function CosineRestartViz() {
               x="200"
               y="226"
               textAnchor="middle"
-              className="fill-muted-foreground text-[9px]"
+              className="fill-muted-foreground text-[12px] sm:text-[9px]"
             >
               reset: cycle cursor · LR phase
             </text>
@@ -772,7 +776,7 @@ export function OneCyclePolicyViz() {
             x="151"
             y="128"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[14px] sm:text-[9px]"
           >
             instability
           </text>
@@ -788,7 +792,7 @@ export function OneCyclePolicyViz() {
             x="116"
             y="46"
             textAnchor="middle"
-            className="fill-primary text-[9px] font-bold"
+            className="fill-primary text-[14px] font-bold sm:text-[9px]"
           >
             max 후보
           </text>
@@ -833,7 +837,7 @@ export function OneCyclePolicyViz() {
             x="294"
             y="128"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[14px] sm:text-[9px]"
           >
             pT
           </text>
@@ -945,7 +949,7 @@ export function WarmupCompositionViz() {
             x="80"
             y="162"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[14px] sm:text-[9px]"
           >
             warmup W
           </text>
@@ -953,7 +957,7 @@ export function WarmupCompositionViz() {
             x="246"
             y="162"
             textAnchor="middle"
-            className="fill-muted-foreground text-[9px]"
+            className="fill-muted-foreground text-[14px] sm:text-[9px]"
           >
             main length T−W
           </text>
@@ -961,7 +965,7 @@ export function WarmupCompositionViz() {
             x="126"
             y="26"
             textAnchor="middle"
-            className="fill-primary text-[9px] font-bold"
+            className="fill-primary text-[14px] font-bold sm:text-[9px]"
           >
             peak · k=0
           </text>
@@ -989,19 +993,147 @@ export function WarmupCompositionViz() {
             <text
               x="308"
               y="196"
-              className="fill-foreground text-[10px] font-bold"
+              className="fill-foreground text-[14px] font-bold sm:text-[10px]"
             >
               relative update
             </text>
-            <text x="308" y="214" className="fill-muted-foreground text-[9px]">
+            <text x="308" y="214" className="fill-muted-foreground text-[13px] sm:text-[9px]">
               ‖Δθ‖ / ‖θ‖
             </text>
-            <text x="308" y="230" className="fill-muted-foreground text-[9px]">
+            <text x="308" y="230" className="fill-muted-foreground text-[13px] sm:text-[9px]">
               loss · overflow
             </text>
           </motion.g>
         </svg>
       )}
     </Scene>
+  );
+}
+
+export function CosineComparisonReceiptViz() {
+  return (
+    <VizFrame
+      title="두 곡선은 같은 실행 조건과 같은 선택 규칙에서 비교합니다"
+      description="곡선만 바꾸고 initialization·data order·optimizer·update budget·평가 시점을 고정합니다."
+      className="my-8"
+    >
+      <div
+        data-viz
+        className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-[1fr_1fr]"
+      >
+        {[
+          ["단일 cosine", "0→900", "마지막 checkpoint와 중간 평가를 기록"],
+          ["warm restart", "900→1,800", "cycle 경계와 보존 state를 기록"],
+        ].map(([title, clock, detail]) => (
+          <div key={title} className="min-w-0 bg-background p-4 sm:p-5">
+            <p className="text-[10px] font-black text-primary">
+              같은 총 update 예산
+            </p>
+            <strong className="mt-2 block break-keep text-base">{title}</strong>
+            <p className="mt-2 font-mono text-xs text-foreground">{clock}</p>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">
+              {detail}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-px grid gap-px bg-border p-px sm:grid-cols-3">
+        {[
+          ["고정", "초기값·optimizer·data order"],
+          ["관측", "같은 evaluation cadence"],
+          ["판정", "final과 anytime을 따로 비교"],
+        ].map(([title, detail]) => (
+          <div key={title} className="min-w-0 bg-background p-3 text-center">
+            <strong className="block text-xs">{title}</strong>
+            <span className="mt-1 block break-keep text-[11px] leading-5 text-muted-foreground">
+              {detail}
+            </span>
+          </div>
+        ))}
+      </div>
+    </VizFrame>
+  );
+}
+
+export function OneCycleReleaseGateViz() {
+  return (
+    <VizFrame
+      title="진단 run의 state를 버리고 깨끗한 checkpoint에서 실제 run을 시작합니다"
+      description="Range test는 후보를 만들 뿐입니다. 실행 중 건강 신호가 경계를 넘으면 마지막 정상 상태로 돌아갑니다."
+      className="my-8"
+    >
+      <div
+        data-viz
+        className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-5"
+      >
+        {[
+          ["01", "진단", "LR를 올려 불안정 구간 확인"],
+          ["02", "후보", "경계보다 낮은 maximum 선택"],
+          ["03", "초기화", "진단 전 checkpoint 복원"],
+          ["04", "실행", "rise·decay와 momentum 적용"],
+          ["05", "판정", "계속하거나 rollback"],
+        ].map(([number, title, detail]) => (
+          <div key={number} className="min-w-0 bg-background p-3 sm:p-4">
+            <p className="font-mono text-[10px] font-black text-primary">
+              {number}
+            </p>
+            <strong className="mt-2 block break-keep text-sm">{title}</strong>
+            <p className="mt-2 break-keep text-[11px] leading-5 text-muted-foreground">
+              {detail}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 border-l-2 border-primary/45 pl-3 text-sm leading-7 text-muted-foreground">
+        판정 신호는 nonfinite loss·gradient overflow·loss ratio·relative
+        update이며, 실패한 진단 weight를 실제 run에 이어 쓰지 않습니다.
+      </p>
+    </VizFrame>
+  );
+}
+
+export function WarmupFailureBoundaryViz() {
+  return (
+    <VizFrame
+      title="Warmup 경계 문제와 입력·계산 문제는 서로 다른 조치를 요구합니다"
+      description="처음 몇 update가 불안정하다는 같은 증상도 LR 이음새와 data·normalization 오류로 나눠 확인합니다."
+      className="my-8"
+    >
+      <div
+        data-viz
+        className="grid min-w-0 gap-px bg-border p-px sm:grid-cols-2"
+      >
+        <div className="min-w-0 bg-background p-4 sm:p-5">
+          <p className="text-[10px] font-black text-primary">SCHEDULE 경계</p>
+          <strong className="mt-2 block break-keep text-sm">
+            t=W에서 LR가 뛰거나 local cursor가 어긋남
+          </strong>
+          <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">
+            W·T−W·S(0)과 scheduler 호출 순서를 고칩니다.
+          </p>
+        </div>
+        <div className="min-w-0 bg-background p-4 sm:p-5">
+          <p className="text-[10px] font-black text-primary">입력·계산 경계</p>
+          <strong className="mt-2 block break-keep text-sm">
+            손상 data·normalization·loss scale에서 nonfinite 발생
+          </strong>
+          <p className="mt-2 break-keep text-xs leading-6 text-muted-foreground">
+            W를 늘리지 않고 data·parameter group·overflow 원인을 격리합니다.
+          </p>
+        </div>
+      </div>
+      <div className="mt-px grid gap-px bg-border p-px sm:grid-cols-4">
+        {["LR trace", "relative update", "gradient norm", "overflow·loss"].map(
+          (signal) => (
+            <div
+              key={signal}
+              className="min-w-0 bg-background p-3 text-center text-xs font-semibold"
+            >
+              {signal}
+            </div>
+          ),
+        )}
+      </div>
+    </VizFrame>
   );
 }

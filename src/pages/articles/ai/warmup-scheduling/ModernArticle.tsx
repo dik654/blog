@@ -2,15 +2,28 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { WarmupCompositionViz } from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  WarmupCompositionViz,
+  WarmupFailureBoundaryViz,
+} from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  LearningRateFamilyLocator,
+  LearningRateFamilyMapReturn,
+} from "../shared/LearningRateFamilyLocator";
 
 export default function WarmupSchedulingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <LearningRateFamilyLocator current="warmup" />
+      <section
+        id="overview"
+        data-teach-level="big-picture"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-6 text-2xl font-bold">
           Warmup은 시작 구간과 본 schedule을 이어 붙이는 계약입니다
         </h2>
+        <WarmupCompositionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Warmup</strong>은 처음 W updates 동안 learning rate를
@@ -19,10 +32,24 @@ export default function WarmupSchedulingArticle() {
             local clock 0부터 다시 세어 경계값과 종료점을 맞춥니다.
           </p>
         </div>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
-        <ol className="list-decimal space-y-2 pl-6"><li>전체 1,000 updates 중 warmup이 100이면 main schedule 길이는 900일까요?</li><li>Global update 100에서 main local cursor는 0일까요?</li><li>Warmup 뒤 길이 1,000짜리 cosine을 새로 붙이면 전체가 1,100 updates로 밀릴까요?</li></ol>
-        <p>답은 <strong>예, 예, 예</strong>입니다. 전체 budget과 구간별 local clock, 두 schedule이 만나는 값을 함께 고정합니다.</p>
-        <WarmupCompositionViz />
+        <p className="font-semibold">
+          그림을 보기 전에 세 가지를 예측해 보세요.
+        </p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>
+            전체 1,000 updates 중 warmup이 100이면 main schedule 길이는
+            900일까요?
+          </li>
+          <li>Global update 100에서 main local cursor는 0일까요?</li>
+          <li>
+            Warmup 뒤 길이 1,000짜리 cosine을 새로 붙이면 전체가 1,100 updates로
+            밀릴까요?
+          </li>
+        </ol>
+        <p>
+          답은 <strong>예, 예, 예</strong>입니다. 전체 budget과 구간별 local
+          clock, 두 schedule이 만나는 값을 함께 고정합니다.
+        </p>
         <ContentBoundary article="warmup-scheduling" />
         <TermBreakdown
           title="Warmup 경계의 네 용어"
@@ -59,7 +86,11 @@ export default function WarmupSchedulingArticle() {
         />
       </section>
 
-      <section id="composition" className="scroll-mt-20">
+      <section
+        id="composition"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Global clock을 warmup과 main local clock으로 나눕니다
         </h2>
@@ -134,7 +165,11 @@ export default function WarmupSchedulingArticle() {
         />
       </section>
 
-      <section id="update-magnitude" className="scroll-mt-20">
+      <section
+        id="update-magnitude"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Warmup 효과는 LR가 아니라 실제 displacement로 확인합니다
         </h2>
@@ -202,10 +237,15 @@ export default function WarmupSchedulingArticle() {
         />
       </section>
 
-      <section id="failure-boundary" className="scroll-mt-20">
+      <section
+        id="failure-boundary"
+        data-teach-level="failure"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Warmup은 잘못된 gradient를 고치지 않습니다
         </h2>
+        <WarmupFailureBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             NaN 원인이 data corruption·normalization·loss scale·잘못된 parameter
@@ -230,6 +270,7 @@ export default function WarmupSchedulingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LearningRateFamilyMapReturn current="warmup" />
     </div>
   );
 }

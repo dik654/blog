@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 532,
-    "pending": 458,
+    "reviewed": 534,
+    "pending": 456,
     "untracked": 0,
-    "assignedPending": 414,
+    "assignedPending": 412,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2805,7 +2805,7 @@
       "catalogIndex": 277,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2953,9 +2953,9 @@
       "publicPath": "cs/ai/label-smoothing",
       "title": "Label Smoothing: One-hot에서 Soft Target 조합까지",
       "catalogIndex": 292,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -3813,9 +3813,9 @@
       "publicPath": "cs/ai/knowledge-graph-construction",
       "title": "Knowledge Graph 구축: Property Graph · Schema · Extraction · Dedup",
       "catalogIndex": 378,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
