@@ -11,12 +11,18 @@ import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./world-model-latent-planning/codeRefs";
 
 import WorldPlanningViz from "./research-audit-sources/WorldPlanningViz";
+import {
+  WorldModelPlanningLocator,
+  WorldModelPlanningMapReturn,
+} from "./shared/WorldModelPlanningLocator";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
   return <div className="space-y-16">
+    <WorldModelPlanningLocator />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 실행하기 전에 후보를 비교하고 실행 뒤 다시 관측한다</h2>
+      <WorldPlanningViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">물체가 위치 0에 있고 목표는 2라고 합시다 (가정). 왼쪽 −1 또는 오른쪽 +1의 두 번 이동을 미리 비교하면 [+1,+1]이 목표에 닿습니다. 그러나 실제로는 한 번에 0.8만 움직였다면 계획을 새 관측에서 다시 계산해야 합니다.</p>
         <p className="leading-8">행동에 따른 다음 상태를 먼저 예상하면 실제로 움직이기 전에 후보를 비교할 수 있습니다. 예측을 만드는 모델, 후보를 고르는 계획기, 실제 행동을 실행하는 환경을 나누어 보면 이미지 생성과 로봇 행동 사이에 필요한 조건이 드러납니다. 이 숫자는 물리 단위를 생략한 설명용 1차원 가정입니다.</p>
@@ -49,7 +55,6 @@ export default function Article(){
         <p className="leading-8">첫 행동 +1 뒤 모델은 위치 1.0을 예상하지만 가정한 실제 환경은 0.8을 돌려줍니다. 두 번째 행동까지 눈을 감고 실행하면 실제 위치는 1.6입니다. 처음 예측한 2와 0.4만큼 차이가 납니다.</p>
         <p className="leading-8">새 관측 0.8을 다시 관측을 숫자로 바꾸는 부품에 넣으면 다음 계획은 그곳에서 시작합니다. 아래 표는 같은 네 후보를 새 출발점에서 다시 비교합니다. 피드백이 오차를 드러내지만 모델의 편향이나 부족한 후보를 저절로 없애지는 않습니다.</p>
       </div>
-<WorldPlanningViz />
       <p className="leading-8">출발점이 0.8로 바뀌면 같은 네 후보의 마지막 예측은 −1.2, 0.8, 0.8, 2.8입니다. 목표 2와의 제곱거리는 10.24, 1.44, 1.44, 0.64입니다. 네 후보 안에서는 두 번 오른쪽이 여전히 가장 작지만 비용은 더 이상 0이 아닙니다. 다시 보는 것만으로 편향된 예측 규칙이나 제한된 후보가 완벽해지지 않습니다.</p><p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">관측으로 끊어야 할 위치를 찾았습니다. 미래 표현이 왜 필요한지 봅니다.</p>
     </section>
     <section id="need" data-teach-level="2" className="scroll-mt-20">
@@ -112,6 +117,7 @@ export default function Article(){
 <PaperReading id="paper-planning-limits" title={"The Planning Limits of Latent World Models · arXiv 2609.39235"} href={"https://arxiv.org/abs/2609.39235"} problem={"예측이 계획의 행동 순위에 유용한 거리와 실패 범위"} idea={"목표 거리·rollout 길이·표현과 피드백을 나눠 비교"} assumption={"해당 frozen backbone·predictor·목표 분포에 한정"} experiment={"Meta-World·BridgeData V2 기반의 저자 실험; 2026-09-30 공개 preprint"} boundary={"다른 제약·subgoal·value를 쓴 계획기까지 같은 수치 한계라고 단정하지 않는다."} />
       <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">모델의 예측 능력과 계획·실행 성공의 조건을 따로 확인하면 추적이 끝납니다.</p>
     </section>
+    <WorldModelPlanningMapReturn />
     <ContentBoundary article="world-model-latent-planning" />
     <ReviewPrompts questions={["예측상 목표에 도착한 계획을 실행해도 실제 위치가 달라지는 이유는 무엇일까요? (답: 4절)", "모든 이미지를 0으로 바꾸면 예측 loss가 작아도 왜 쓸모없는 모델일까요? (답: 9절)", "완벽한 2단계 예측이 있어도 20단계 뒤 목표의 최선 경로를 알 수 있을까요? (답: 10절)"]} />
     <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />

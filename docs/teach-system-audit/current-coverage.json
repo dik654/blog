@@ -1885,7 +1885,7 @@
       "catalogIndex": 185,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "local-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
