@@ -32,7 +32,7 @@ export default function BPTT() {
 
       <div id="paper-bptt" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Backpropagation Through Time</p>
-        <h3 className="mt-2 text-base font-bold">순환 계산을 시간축의 finite graph로 펼치면 일반 backpropagation으로 미분할 수 있다</h3>
+        <h3 className="mt-2 text-base font-bold">순환 계산도 펼치면 일반 미분 graph입니다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Werbos는 differentiable dynamic system을 시간축으로 펼쳐 ordered derivative를 계산하는 BPTT 식과 구현 관점을 정리했습니다. 여기
           나오는 것은 recurrent network만의 새로운 미분 법칙이 아니라 알려진 transition을 유한 horizon에서 합성한 exact reverse
@@ -92,8 +92,12 @@ J_j&=\underbrace{D_j}_{\text{channel별 축소}}\\[-1pt]
         <h3 className="mt-2 text-base font-bold">문제는 weight 하나가 아니라 trajectory를 따라 반복되는 Jacobian product다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Pascanu·Mikolov·Bengio는 vanishing·exploding gradient를 분석·기하·동역학 관점에서 설명하고 exploding gradient에 global
-          norm clipping을 제안했습니다. 이 분석이 뒷받침하는 것은 반복 Jacobian의 방향별 scale을 이해하는 데까지입니다. recurrent matrix의
-          spectral radius 하나만 보고 nonlinear trajectory 전체의 학습 가능성을 판정할 수 있다는 데까지 가지는 않습니다.
+          norm clipping을 제안했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 분석이 뒷받침하는 범위는 반복 Jacobian의 방향별 scale까지입니다.
+          Recurrent matrix의 spectral radius 하나만 보고 nonlinear trajectory 전체의
+          학습 가능성을 판정할 수 있다는 뜻은 아닙니다.
         </p>
       </div>
 
@@ -131,9 +135,13 @@ g_{\rm clip}&=\underbrace{g}_{\text{원래 방향}}\cdot\underbrace{s}_{\text{�
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Truncated BPTT는 state를 전달하되 gradient history를 끊는다</h3>
         <p>
-          긴 stream 전체의 graph를 보관하면 activation memory와 backward latency가 sequence 길이에 비례해 커집니다. Truncated BPTT는
-          예를 들어 128 token씩 forward/backward한 뒤 마지막 state 값을 다음 chunk의 초기 state로 넘깁니다. 다만 그 state는 이전 graph에서
-          detach합니다. 따라서 forward context는 이어져도 gradient는 truncation boundary를 건너지 못합니다.
+          긴 stream 전체의 graph를 보관하면 activation memory와 backward latency가
+          sequence 길이에 비례해 커집니다. Truncated BPTT는 예를 들어 128 token씩
+          forward/backward한 뒤 마지막 state 값을 다음 chunk의 초기 state로 넘깁니다.
+        </p>
+        <p>
+          다만 그 state는 이전 graph에서 detach합니다. 따라서 forward context는
+          이어져도 gradient는 truncation boundary를 건너지 못합니다.
         </p>
         <p>
           이 차이는 중요합니다. RNN이 1만 token을 읽었다는 말과 1만 token 떨어진 원인에 gradient credit을 배정했다는 말은 같지 않습니다. truncation
@@ -153,8 +161,12 @@ g_{\rm clip}&=\underbrace{g}_{\text{원래 방향}}\cdot\underbrace{s}_{\text{�
         <h3>그래서 LSTM은 곱셈 경로 자체를 다시 설계했다</h3>
         <p>
           initialization, orthogonal recurrent matrix, normalization은 vanilla RNN을 안정화할 수 있지만 모든 trajectory에서
-          장기 정보가 보존되지는 않습니다. LSTM은 cell state에 additive update 경로와 gate를 두어 중요한 정보가 매 시점 새로운 nonlinear
-          transform을 반드시 통과하지 않게 합니다. 다음 글에서는 이 경로의 derivative가 왜 더 직접적인지 식으로 이어갑니다.
+          장기 정보가 보존되지는 않습니다.
+        </p>
+        <p>
+          LSTM은 cell state에 additive update 경로와 gate를 둡니다. 중요한 정보가
+          매 시점 새로운 nonlinear transform을 반드시 통과하지 않게 하는 구조입니다.
+          다음 글에서는 이 경로의 derivative를 식으로 이어갑니다.
         </p>
       </div>
 

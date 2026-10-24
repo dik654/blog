@@ -43,8 +43,12 @@ export default function LanguageModel() {
         <h3 className="mt-2 text-base font-bold">고정 n-gram 대신 recurrent state로 가변 길이 문맥을 조건화했다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Mikolov 등의 모델은 이전 word와 hidden state로 다음 word distribution을 만들고 당시 speech-recognition language-model
-          평가에서 n-gram과 feed-forward baseline을 비교했습니다. 이 결과가 받쳐 주는 범위는 해당 vocabulary·corpus·model scale입니다.
-          hidden state가 긴 문맥을 완전하게 복원한다거나 현대 Transformer보다 일반적으로 우수하다는 결론은 그 밖의 이야기입니다.
+          평가에서 n-gram과 feed-forward baseline을 비교했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          이 결과가 받쳐 주는 범위는 해당 vocabulary·corpus·model scale입니다.
+          Hidden state가 긴 문맥을 완전하게 복원하거나 현대 Transformer보다 일반적으로
+          우수하다는 결론은 그 밖의 이야기입니다.
         </p>
       </div>
 
@@ -98,19 +102,23 @@ p_t&=\underbrace{\operatorname{softmax}(z_t)}_{\text{score를 합 1의 probabili
         <h3>training과 generation의 입력 분포가 달라진다</h3>
         <p>
           training에서는 직전 model prediction이 틀렸더라도 다음 입력으로 정답 token을
-          넣습니다. 반면 generation에서는 방금 sample한 token을 다시 입력하므로, 한 번의
-          실수가 이후 state와 입력 분포를 바꿉니다. 이를 exposure bias라고 부르며,
-          teacher forcing을 사용했다는 사실과 inference 품질은 별도로 평가해야 합니다.
-          이 train–inference 경계의 정본 설명과 문제는{" "}
+          넣습니다. 반면 generation에서는 방금 sample한 token을 다시 입력하므로 한 번의
+          실수가 이후 state와 입력 분포를 바꿉니다.
+        </p>
+        <p>
+          이를 exposure bias라고 부릅니다. Teacher forcing을 사용했다는 사실과
+          inference 품질은 별도로 평가해야 합니다. 이 train–inference 경계의 정본 설명은{" "}
           <Link to="/cs/ai/supervised-fine-tuning#teacher-forcing">teacher forcing·exposure bias 글</Link>에 모았습니다.
         </p>
         <h3>Perplexity는 tokenization까지 같을 때 비교한다</h3>
         <p>
           perplexity는 평균 negative log-likelihood의 exponential입니다. 균등 분포라는
-          단순한 경우에는 “동등하게 헷갈리는 후보 수”로 직관화할 수 있지만, 일반 분포에서
-          실제 후보 개수를 뜻하지는 않습니다. token 하나가 담는 문자열 길이가 tokenizer마다
-          다르기 때문에 서로 다른 vocabulary와 tokenization의 PPL을 숫자만으로 비교하면
-          공정하지 않습니다.
+          단순한 경우에는 “동등하게 헷갈리는 후보 수”로 직관화할 수 있습니다. 하지만 일반
+          분포에서 실제 후보 개수를 뜻하지는 않습니다.
+        </p>
+        <p>
+          Token 하나가 담는 문자열 길이는 tokenizer마다 다릅니다. 따라서 서로 다른
+          vocabulary와 tokenization의 PPL을 숫자만으로 비교하면 공정하지 않습니다.
           평균 negative log-likelihood가 무엇을 측정하는지는{" "}
           <Link to="/cs/ai/cross-entropy#cross-entropy">cross-entropy 정본 글</Link>에서 probability·log부터 이어집니다.
         </p>

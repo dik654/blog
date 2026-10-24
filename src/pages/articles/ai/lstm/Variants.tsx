@@ -20,8 +20,12 @@ export default function Variants({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           GRU(Gated Recurrent Unit)는 별도의 cell state 없이 hidden state 하나에서 retention과 candidate update를 섞는다.
-          LSTM의 네 affine block보다 적은 세 block을 사용하므로 같은 input·hidden size에서 parameter와 recurrent state가 줄어든다. 어느
-          unit이 더 정확한지는 dependency와 data scale, kernel implementation에 따라 달라진다.
+          LSTM의 네 affine block보다 적은 세 block을 사용하므로 같은 input·hidden
+          size에서 parameter와 recurrent state가 줄어든다.
+        </p>
+        <p>
+          어느 unit이 더 정확한지는 dependency·data scale·kernel implementation에
+          따라 달라진다.
         </p>
       </div>
 
@@ -121,7 +125,7 @@ M_{\rm state}^{\rm LSTM}&=\underbrace{2H\,B}_{\text{cell·hidden 2H개 × B byte
 
       <div id="paper-gru" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Learning Phrase Representations using RNN Encoder–Decoder</p>
-        <h3 className="mt-2 text-base font-bold">GRU는 LSTM을 줄인 이름이 아니라 state와 gate를 다시 parameterize한 recurrent unit이다</h3>
+        <h3 className="mt-2 text-base font-bold">GRU는 state와 gate를 다시 설계한 unit입니다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Cho 등은 phrase representation을 학습하는 encoder–decoder와 reset·update gate를 가진 hidden unit을 제안했습니다. 논문의
           machine-translation phrase scoring 결과가 뒷받침하는 것은 그 pipeline까지입니다. 모든 sequence task에서 GRU가 LSTM보다 작고
@@ -131,7 +135,7 @@ M_{\rm state}^{\rm LSTM}&=\underbrace{2H\,B}_{\text{cell·hidden 2H개 × B byte
 
       <div id="paper-recurrent-comparison" className="not-prose mt-6 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · An Empirical Exploration of Recurrent Network Architectures</p>
-        <h3 className="mt-2 text-base font-bold">Architecture 비교는 hidden size가 아니라 task·parameter·optimizer 조건까지 함께 읽는다</h3>
+        <h3 className="mt-2 text-base font-bold">같은 예산과 task에서 architecture를 비교합니다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           대규모 empirical comparison은 LSTM·GRU와 여러 gated architecture를 다양한 task에서 비교해 어떤 unit도 모든 조건에서 일관되게 우세하지
           않음을 보여 줍니다. 이 결론이 서 있는 자리도 논문이 탐색한 configuration과 task distribution 안입니다. 현재 hardware kernel과 현대
@@ -143,11 +147,13 @@ M_{\rm state}^{\rm LSTM}&=\underbrace{2H\,B}_{\text{cell·hidden 2H개 × B byte
         <h3>Architecture 이름보다 deployment contract를 비교한다</h3>
         <p>
           LSTM과 GRU는 timestep dependency 때문에 training parallelism이 제한되지만
-          streaming inference에서는 고정 크기 state만 넘길 수 있다. Transformer,
-          state-space model, RWKV·RetNet 계열은 long-context access와 parallel scan,
-          recurrent inference를 서로 다른 방식으로 조합한다. 현대 recurrent model을
-          LSTM의 단순 후속 버전으로 묶지 말고 state update, training kernel, causal
-          semantics와 memory scaling을 각각 비교한다.
+          streaming inference에서는 고정 크기 state만 넘길 수 있다.
+        </p>
+        <p>
+          Transformer, state-space model, RWKV·RetNet 계열은 long-context access,
+          parallel scan, recurrent inference를 서로 다른 방식으로 조합한다. 현대
+          recurrent model을 LSTM의 단순 후속 버전으로 묶지 말고 state update,
+          training kernel, causal semantics와 memory scaling을 각각 비교한다.
         </p>
         <p>따라서 unit 이름만으로 선택하지 말고 같은 input·output 계약에서 parameter 수, state memory, timestep latency, validation metric을 함께 비교한다.</p>
       </div>

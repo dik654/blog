@@ -11,7 +11,7 @@ export default function Training({
 }) {
   return (
     <section id="training" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Teacher forcing은 objective 계산을 단순화하지만 inference prefix와 다르다</h2>
+      <h2 className="mb-6 text-2xl font-bold">Teacher forcing은 정답 prefix로 학습합니다</h2>
       <TrainInferenceGapViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -54,9 +54,13 @@ export default function Training({
         <h3>Exposure bias는 진단할 현상이지 단일 원인으로 단정할 수 없다</h3>
         <p>
           Inference에서는 정답 prefix를 알 수 없으므로 model이 선택한 token을 다음 input으로 사용한다. Scheduled sampling은 training
-          input을 점차 model sample로 바꾸는 curriculum을 제안했다. 다만 그 효과는 task와 estimator에 따라 갈린다. 더 최근의 분석은 model의
-          self-recovery 덕분에 오류가 늘 누적되지는 않는다는 결과도 보고한다. Prefix perturbation과 sequence metric으로 실제 failure를 측정한
-          뒤 intervention을 고른다.
+          input을 점차 model sample로 바꾸는 curriculum을 제안했다. 다만 그 효과는
+          task와 estimator에 따라 갈린다.
+        </p>
+        <p>
+          더 최근의 분석은 model의 self-recovery 덕분에 오류가 늘 누적되지는 않는다는
+          결과도 보고한다. Prefix perturbation과 sequence metric으로 실제 failure를
+          측정한 뒤 intervention을 고른다.
         </p>
       </div>
 

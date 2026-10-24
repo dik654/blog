@@ -105,7 +105,10 @@ export default function Overview() {
           <a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noreferrer">Bahdanau et al.</a>은
           fixed-length encoder bottleneck을 soft alignment로 바꿨고,
           <a href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noreferrer"> Luong et al.</a>은
-          dot·general score와 global·local attention을 비교했다. 이후
+          dot·general score와 global·local attention을 비교했다.
+        </p>
+        <p>
+          이후
           <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noreferrer"> Transformer 논문</a>은
           scaled dot-product와 multi-head self-attention을 recurrent encoder 밖의
           주된 계산으로 확장했다. 다음 절은 이 세 변화에서 score 함수와 tensor

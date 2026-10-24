@@ -15,8 +15,12 @@ export default function Gates({
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           세 gate는 같은 현재 input xₜ와 이전 hidden state hₜ₋₁을 보지만 서로 다른 parameter로 0과 1 사이의 vector를 만든다. 한 scalar로
-          cell 전체를 켜는 것이 아니라 hidden dimension마다 다른 retention·write·exposure 비율을 학습한다. Sigmoid가 포화되면 gate
-          policy가 0 또는 1에 가까운 장기 결정으로 바뀌지만 그만큼 gate network 자체의 gradient는 작아진다.
+          cell 전체를 켜는 것이 아니라 hidden dimension마다 다른
+          retention·write·exposure 비율을 학습한다.
+        </p>
+        <p>
+          Sigmoid가 포화되면 gate policy가 0 또는 1에 가까운 장기 결정으로 바뀐다.
+          그만큼 gate network 자체의 gradient는 작아진다.
         </p>
       </div>
 

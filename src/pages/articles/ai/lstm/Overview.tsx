@@ -38,7 +38,7 @@ export default function Overview() {
 
       <div id="paper-lstm-original" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
         <p className="text-xs font-bold text-primary">논문 해설 · Long Short-Term Memory</p>
-        <h3 className="mt-2 text-base font-bold">원형 LSTM의 핵심은 현재의 forget 식이 아니라 constant error flow를 위한 memory cell이었다</h3>
+        <h3 className="mt-2 text-base font-bold">원형 LSTM은 error flow를 보존하는 cell에서 시작했습니다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           1997년 논문은 recurrent error가 급격히 사라지는 문제를 다루기 위해 self-connected memory cell과 input·output gate를
           제안했습니다. 현재 framework의 forget gate 포함 식은 이후 확장까지 합친 구조입니다. 원 논문에 현대 LSTM의 모든 gate와 구현 convention이 한

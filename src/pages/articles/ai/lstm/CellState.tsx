@@ -8,8 +8,12 @@ export default function CellState() {
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Cₜ update에서 Cₜ₋₁로 직접 이어지는 edge만 미분하면 local derivative는 fₜ다. 여러 step을 지나면 이 direct contribution이
-          forget gate의 곱이 된다. 각 gate가 1에 가까운 구간에서는 vanilla nonlinear transition보다 gradient를 오래 전달한다. 다만 이것이 전체
-          derivative와 같지는 않다. Gate 자체도 h와 C의 함수이므로 computational graph에는 다른 경로가 추가된다.
+          forget gate의 곱이 된다. 각 gate가 1에 가까운 구간에서는 vanilla
+          nonlinear transition보다 gradient를 오래 전달한다.
+        </p>
+        <p>
+          다만 이것이 전체 derivative와 같지는 않다. Gate 자체도 h와 C의
+          함수이므로 computational graph에는 다른 경로가 추가된다.
         </p>
       </div>
 
@@ -51,8 +55,12 @@ R_{k\to t}
         <h3>LSTM에서도 exploding과 학습 horizon 문제는 남는다</h3>
         <p>
           Gate network와 recurrent projection을 지나는 다른 Jacobian 경로에서는 exploding gradient가 생길 수 있어 gradient
-          clipping을 함께 사용한다. Truncated BPTT를 적용하면 state는 더 오래 전달하더라도 gradient는 detach boundary를 넘어 학습되지 않는다.
-          inference memory horizon과 training credit-assignment horizon을 나눠서 봐야 하는 이유다.
+          clipping을 함께 사용한다.
+        </p>
+        <p>
+          Truncated BPTT를 적용하면 state는 더 오래 전달하더라도 gradient는 detach
+          boundary를 넘어 학습되지 않는다. 따라서 inference memory horizon과
+          training credit-assignment horizon을 나눠서 봐야 한다.
         </p>
       </div>
     </section>
