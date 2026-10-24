@@ -1,121 +1,15 @@
-import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-type Shape = "grid" | "window" | "map" | "gate" | "target";
-type Item = { label: string; note: string; shape: Shape; accent?: boolean };
-type Scene = { label: string; title: string; note: string; items: Item[] };
-
-function Glyph({ item, x }: { item: Item; x: number }) {
-  const stroke = item.accent ? "var(--primary)" : "var(--border)";
-  const fill = item.accent ? "var(--primary)" : "var(--muted)";
-  return (
-    <motion.g
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.32 }}
-    >
-      {item.shape === "grid" && (
-        <g>
-          <rect
-            x={x - 34}
-            y="67"
-            width="68"
-            height="68"
-            rx="5"
-            fill="var(--background)"
-            stroke={stroke}
-            strokeWidth="1.25"
-          />
-          {[1, 2].map((i) => (
-            <path
-              key={`v-${i}`}
-              d={`M${x - 34 + i * 22.7} 67 V135`}
-              stroke="var(--border)"
-              strokeWidth="1"
-            />
-          ))}
-          {[1, 2].map((i) => (
-            <path
-              key={`h-${i}`}
-              d={`M${x - 34} ${67 + i * 22.7} H${x + 34}`}
-              stroke="var(--border)"
-              strokeWidth="1"
-            />
-          ))}
-        </g>
-      )}
-      {item.shape === "window" && (
-        <rect
-          x={x - 29}
-          y="72"
-          width="58"
-          height="58"
-          rx="4"
-          fill={fill}
-          fillOpacity=".1"
-          stroke={stroke}
-          strokeWidth="1.25"
-        />
-      )}
-      {item.shape === "map" && (
-        <path
-          d={`M${x - 34} 78 L${x - 24} 68 H${x + 34} V126 L${x + 24} 136 H${x - 34} Z`}
-          fill={fill}
-          fillOpacity=".08"
-          stroke={stroke}
-          strokeWidth="1.25"
-        />
-      )}
-      {item.shape === "gate" && (
-        <path
-          d={`M${x} 65 L${x + 36} 101 L${x} 137 L${x - 36} 101 Z`}
-          fill="var(--background)"
-          stroke={stroke}
-          strokeWidth="1.25"
-        />
-      )}
-      {item.shape === "target" && (
-        <g>
-          <circle
-            cx={x}
-            cy="101"
-            r="34"
-            fill={fill}
-            fillOpacity=".08"
-            stroke={stroke}
-            strokeWidth="1.25"
-          />
-          <circle
-            cx={x}
-            cy="101"
-            r="16"
-            fill="none"
-            stroke={stroke}
-            strokeWidth="1"
-          />
-        </g>
-      )}
-      <text
-        x={x}
-        y="99"
-        textAnchor="middle"
-        className="fill-foreground text-[9px] font-bold"
-      >
-        {item.label}
-      </text>
-      <text
-        x={x}
-        y="113"
-        textAnchor="middle"
-        className="fill-muted-foreground text-[7px]"
-      >
-        {item.note}
-      </text>
-    </motion.g>
-  );
-}
+type Scene = {
+  label: string;
+  title: string;
+  input: string;
+  operation: string;
+  output: string;
+  note: string;
+};
 
 function CnnSceneViz({
   id,
@@ -128,91 +22,94 @@ function CnnSceneViz({
   eyebrow: string;
   title: string;
   description: string;
-  scenes: Scene[];
+  scenes: readonly Scene[];
 }) {
-  const controls = useAnimatedScenes(scenes.length, 2600);
+  const controls = useAnimatedScenes(scenes.length, 5200, { loop: false });
   const scene = scenes[controls.active];
-  const gap = 270 / Math.max(scene.items.length - 1, 1);
+
   return (
-    <VizFrame title={title} description={description} className="my-8">
+    <VizFrame eyebrow={eyebrow} title={title} description={description} className="my-8">
       <div
-        id={id}
+        id={controls.playbackId}
+        data-viz-id={id}
         data-viz
+        data-viz-canvas
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        className="min-w-0 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
-          {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">{scene.title}</h3>
-        <div data-viz-canvas className="min-w-0">
-          <svg
-            viewBox="0 0 360 210"
-            role="img"
-            aria-label={`${scene.label}: ${scene.title}`}
-            className="mx-auto mt-5 block h-auto w-full max-w-[560px] overflow-visible"
-          >
-            <defs>
-              <marker
-                id={`${id}-arrow`}
-                markerWidth="8"
-                markerHeight="8"
-                refX="7"
-                refY="4"
-                orient="auto"
-              >
-                <path d="M0 0 L8 4 L0 8 Z" fill="var(--muted-foreground)" />
-              </marker>
-            </defs>
-            {scene.items.slice(0, -1).map((_, index) => {
-              const x1 = 45 + index * gap;
-              const x2 = 45 + (index + 1) * gap;
-              return (
-                <motion.line
-                  key={index}
-                  x1={x1 + 36}
-                  y1="101"
-                  x2={x2 - 36}
-                  y2="101"
-                  stroke="var(--muted-foreground)"
-                  strokeWidth="1.25"
-                  markerEnd={`url(#${id}-arrow)`}
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.12 }}
-                />
-              );
-            })}
-            {scene.items.map((item, index) => (
-              <Glyph
-                key={`${scene.label}-${item.label}-${index}`}
-                item={item}
-                x={45 + index * gap}
-              />
-            ))}
-            <path d="M45 172 H315" stroke="var(--border)" strokeWidth="1" />
-            {scenes.map((_, index) => (
-              <circle
-                key={index}
-                cx={45 + index * (270 / Math.max(scenes.length - 1, 1))}
-                cy="172"
-                r="4"
-                fill={
-                  index === controls.active
-                    ? "var(--primary)"
-                    : "var(--muted-foreground)"
-                }
-              />
-            ))}
-          </svg>
+        <div className="grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-4">
+          {scenes.map((item, index) => (
+            <button
+              type="button"
+              key={item.label}
+              onClick={() => controls.setActive(index)}
+              aria-pressed={index === controls.active}
+              className={`min-w-0 bg-background px-3 py-3 text-left ${
+                index === controls.active ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <span className="font-mono text-[9px]">0{index + 1}</span>
+              <strong className="mt-1 block break-keep text-xs text-foreground">
+                {item.label}
+              </strong>
+              <span className="mt-1 hidden break-keep text-[10px] leading-4 lg:block">
+                {item.title}
+              </span>
+            </button>
+          ))}
         </div>
-        <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          {scene.note}
-        </p>
+
+        <div aria-live="polite" className="border-y border-border/70 py-5">
+          <p className="text-[10px] font-bold text-primary">
+            장면 {String(controls.active + 1).padStart(2, "0")} · {scene.label}
+          </p>
+          <h3 className="mt-2 break-keep text-lg font-bold leading-7">{scene.title}</h3>
+          <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_1.5rem_minmax(0,1.15fr)_1.5rem_minmax(0,1fr)] sm:items-stretch">
+            <div className="min-w-0 border border-border bg-background p-4">
+              <p className="text-[10px] font-bold text-muted-foreground">입력 상태</p>
+              <p className="mt-2 break-keep font-mono text-xs font-bold leading-6">
+                {scene.input}
+              </p>
+            </div>
+            <span className="hidden items-center justify-center text-muted-foreground sm:flex" aria-hidden>
+              →
+            </span>
+            <div className="min-w-0 border-l-2 border-primary bg-primary/[0.04] p-4">
+              <p className="text-[10px] font-bold text-primary">이번 계산</p>
+              <p className="mt-2 break-keep text-xs font-semibold leading-6">
+                {scene.operation}
+              </p>
+            </div>
+            <span className="hidden items-center justify-center text-muted-foreground sm:flex" aria-hidden>
+              →
+            </span>
+            <div className="min-w-0 border border-border bg-background p-4">
+              <p className="text-[10px] font-bold text-muted-foreground">출력 상태</p>
+              <p className="mt-2 break-keep font-mono text-xs font-bold leading-6">
+                {scene.output}
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+            {scene.note}
+          </p>
+        </div>
+
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {scenes.map((item) => (
+              <li key={item.label}>
+                <strong>{item.label}</strong>: {item.input} → {item.operation} → {item.output}. {item.note}
+              </li>
+            ))}
+          </ol>
+        </noscript>
+
         <AnimatedSceneControls
           labels={scenes.map((item) => item.label)}
           {...controls}
+          playLabel="과정 재생"
         />
       </div>
     </VizFrame>
@@ -222,48 +119,41 @@ function CnnSceneViz({
 export const CnnOperatorViz = () => (
   <CnnSceneViz
     id="cnn-operator-modern"
-    eyebrow="Local operator"
-    title="Image grid 위 작은 kernel이 한 output cell을 만듭니다"
-    description="축을 고정한 뒤 window·곱셈·공유·output grid를 한 단계씩 봅니다."
+    eyebrow="지역 계산"
+    title="한 칸의 계산을 확인한 뒤 같은 규칙을 전체 격자에 옮깁니다"
+    description="2×2 숫자 예제에서 입력 좌표, 곱셈, kernel 공유, 출력 크기를 차례로 추적합니다."
     scenes={[
       {
-        label: "Tensor",
-        title: "Image를 channel·row·column 좌표의 grid로 고정합니다",
-        note: "NCHW와 NHWC는 같은 숫자를 다른 좌표로 해석하므로 layout은 model input 계약입니다.",
-        items: [
-          { label: "image", note: "C×H×W", shape: "grid", accent: true },
-          { label: "layout", note: "axis order", shape: "gate" },
-        ],
+        label: "좌표",
+        title: "이미지를 채널·행·열 좌표가 있는 tensor로 읽습니다",
+        input: "X[1, 1, 3, 3]",
+        operation: "layout을 NCHW로 고정하고 왼쪽 위 2×2 창을 선택합니다.",
+        output: "patch = [[1,2],[3,4]]",
+        note: "같은 숫자 배열도 축 순서가 다르면 다른 위치와 채널을 뜻합니다.",
       },
       {
-        label: "Window",
-        title: "Kernel 크기만큼 가까운 pixel window를 엽니다",
-        note: "Local connectivity는 output 하나가 input 전체가 아니라 인접 좌표만 읽게 합니다.",
-        items: [
-          { label: "image", note: "grid", shape: "grid" },
-          { label: "3×3", note: "window", shape: "window", accent: true },
-          { label: "patch", note: "9 values", shape: "map" },
-        ],
+        label: "한 칸",
+        title: "같은 위치끼리 곱한 네 값을 더합니다",
+        input: "patch [[1,2],[3,4]] · W [[1,0],[0,−1]]",
+        operation: "1×1 + 2×0 + 3×0 + 4×(−1)",
+        output: "Y[0,0] = −3",
+        note: "일반적인 딥러닝 라이브러리는 kernel을 뒤집지 않는 cross-correlation을 계산합니다.",
       },
       {
-        label: "Score",
-        title: "같은 offset끼리 곱해 더해 scalar 하나를 만듭니다",
-        note: "Library가 보통 계산하는 것은 kernel을 뒤집지 않는 cross-correlation입니다.",
-        items: [
-          { label: "patch", note: "x", shape: "grid" },
-          { label: "kernel", note: "w", shape: "window" },
-          { label: "Σ x·w", note: "one cell", shape: "target", accent: true },
-        ],
+        label: "공유",
+        title: "같은 kernel을 오른쪽과 아래로 옮겨 모든 시작점을 계산합니다",
+        input: "같은 W · 네 개의 2×2 patch",
+        operation: "위치마다 새 weight를 만들지 않고 W를 그대로 재사용합니다.",
+        output: "feature map Y[1, 1, 2, 2]",
+        note: "입력 해상도는 계산 횟수를 바꾸지만 이 kernel의 parameter 수는 바꾸지 않습니다.",
       },
       {
-        label: "Share",
-        title: "같은 kernel을 옮겨 전체 feature map을 채웁니다",
-        note: "Resolution은 activation과 FLOPs를 바꾸지만 shared kernel parameter 수에는 들어가지 않습니다.",
-        items: [
-          { label: "kernel", note: "shared", shape: "window", accent: true },
-          { label: "stride", note: "move", shape: "gate" },
-          { label: "feature", note: "Hout×Wout", shape: "map", accent: true },
-        ],
+        label: "크기",
+        title: "Padding 뒤 kernel을 놓을 수 있는 시작점 수를 셉니다",
+        input: "H=7 · K=3 · P=1 · S=2 · D=1",
+        operation: "span=3, room=7+2−3=6, floor(6/2)+1",
+        output: "Hout = 4",
+        note: "Output shape는 이름이 아니라 padding·stride·dilation 수치로 결정됩니다.",
       },
     ]}
   />
@@ -272,49 +162,41 @@ export const CnnOperatorViz = () => (
 export const EquivarianceViz = () => (
   <CnnSceneViz
     id="cnn-equivariance-modern"
-    eyebrow="Shift relation"
-    title="Input 이동과 feature 이동을 같은 좌표계에서 비교합니다"
-    description="Equivariance와 invariance, stride·boundary 반례를 분리합니다."
+    eyebrow="이동 관계"
+    title="입력의 위치 변화가 출력 좌표에 어떻게 전달되는지 비교합니다"
+    description="Stride 1의 성립 조건부터 stride·경계 반례와 최종 불변성까지 같은 물체를 추적합니다."
     scenes={[
       {
-        label: "Original",
-        title: "Pattern과 detector response의 기준 위치를 고정합니다",
-        note: "Equivariance는 값 하나가 아니라 input과 output 좌표 변환의 관계입니다.",
-        items: [
-          { label: "pattern", note: "x=1", shape: "grid" },
-          { label: "shared k", note: "detect", shape: "window" },
-          { label: "peak", note: "y=1", shape: "target", accent: true },
-        ],
+        label: "기준",
+        title: "원래 pattern과 detector peak의 좌표를 기록합니다",
+        input: "pattern 위치 x=1",
+        operation: "모든 위치에 같은 stride-1 kernel을 적용합니다.",
+        output: "peak 위치 y=1",
+        note: "Equivariance는 값 하나가 아니라 입력과 출력 좌표 사이의 관계입니다.",
       },
       {
-        label: "Shift",
-        title: "Input을 한 칸 옮기면 response도 한 칸 옮겨야 합니다",
-        note: "Shared stride-1 operator와 일관된 boundary에서 기대하는 translation equivariance입니다.",
-        items: [
-          { label: "pattern", note: "x=2", shape: "grid", accent: true },
-          { label: "same k", note: "shared", shape: "window" },
-          { label: "peak", note: "y=2", shape: "target", accent: true },
-        ],
+        label: "이동",
+        title: "입력을 한 칸 옮기면 peak도 한 칸 옮겨집니다",
+        input: "T₁x · pattern 위치 x=2",
+        operation: "위치별 weight를 바꾸지 않고 같은 kernel을 다시 적용합니다.",
+        output: "T₁f(x) · peak 위치 y=2",
+        note: "경계 밖을 제외한 stride-1 grid에서는 f(T₁x)=T₁f(x)를 기대할 수 있습니다.",
       },
       {
-        label: "Stride",
-        title: "Stride 2는 한 pixel shift의 sampling phase를 바꿉니다",
-        note: "Output을 정수 한 칸 옮긴 것과 같지 않아 exact equivariance가 깨질 수 있습니다.",
-        items: [
-          { label: "shift 1", note: "input", shape: "grid" },
-          { label: "sample /2", note: "phase", shape: "gate", accent: true },
-          { label: "different", note: "output", shape: "map" },
-        ],
+        label: "반례",
+        title: "Stride 2에서는 한 pixel 이동이 sampling 위상을 바꿉니다",
+        input: "shift=1 pixel · sample indices 0,2,4",
+        operation: "이동 뒤 indices 1,3,5를 읽어 서로 다른 값을 선택합니다.",
+        output: "단순한 output 1칸 이동과 다름",
+        note: "Zero padding·crop·pooling도 경계와 sampling 규칙 때문에 같은 등식을 깰 수 있습니다.",
       },
       {
-        label: "Invariant",
-        title: "Global aggregation 뒤 class score가 같으면 invariance입니다",
-        note: "Feature map의 이동 대응과 최종 prediction 불변을 같은 말로 부르지 않습니다.",
-        items: [
-          { label: "feature", note: "shifted", shape: "map" },
-          { label: "pool", note: "aggregate", shape: "gate" },
-          { label: "class", note: "same", shape: "target", accent: true },
-        ],
+        label: "불변",
+        title: "위치별 feature를 모은 뒤 최종 class 값이 같을 수 있습니다",
+        input: "서로 다른 위치의 shifted feature maps",
+        operation: "global pooling으로 공간축을 집계합니다.",
+        output: "같은 class score 가능",
+        note: "Feature가 함께 이동하는 equivariance와 최종 값이 변하지 않는 invariance는 다른 성질입니다.",
       },
     ]}
   />
@@ -323,53 +205,41 @@ export const EquivarianceViz = () => (
 export const ReceptiveFieldViz = () => (
   <CnnSceneViz
     id="cnn-receptive-modern"
-    eyebrow="Context range"
-    title="연결된 범위와 실제로 영향 준 범위를 따로 봅니다"
-    description="Layer 누적·effective gradient·dilation의 빈 좌표를 비교합니다."
+    eyebrow="연결 범위"
+    title="위 unit 하나에서 원본 입력까지 계산선을 거꾸로 따라갑니다"
+    description="3×3 layer 세 개의 3→5→7 누적과 실제 영향, dilation의 빈 좌표를 구분합니다."
     scenes={[
       {
-        label: "One layer",
-        title: "3×3 layer 하나는 input의 3×3 주소에 연결됩니다",
-        note: "Theoretical receptive field는 계산 graph에서 닿을 수 있는 좌표 집합입니다.",
-        items: [
-          { label: "input", note: "3×3", shape: "grid" },
-          { label: "unit", note: "layer 1", shape: "target", accent: true },
-        ],
+        label: "한 층",
+        title: "3×3 layer 하나는 원본의 3×3 범위와 연결됩니다",
+        input: "j₀=1 · r₀=1 · k₁=3",
+        operation: "r₁ = 1 + (3−1)×1",
+        output: "j₁=1 · r₁=3",
+        note: "이 값은 계산 graph에서 닿을 수 있는 이론상 범위입니다.",
       },
       {
-        label: "Stack",
-        title: "Stride 1의 3×3 두 층은 5×5 범위에 닿습니다",
-        note: "두 번째 layer가 첫 layer 주변 unit을 읽으므로 한 축에서 3 뒤에 2가 늘어납니다.",
-        items: [
-          { label: "3×3", note: "layer 1", shape: "window" },
-          { label: "5×5", note: "layer 2", shape: "window", accent: true },
-          { label: "unit", note: "top", shape: "target" },
-        ],
+        label: "누적",
+        title: "Stride 1의 3×3 layer를 쌓으면 한 축이 3→5→7로 넓어집니다",
+        input: "r₁=3 · 같은 k=3 layer 두 개 추가",
+        operation: "매 layer마다 (3−1)×j = 2를 더합니다.",
+        output: "r₂=5 · r₃=7",
+        note: "2차원에서는 마지막 unit 하나가 원본의 7×7 주소 범위와 연결됩니다.",
       },
       {
-        label: "Effective",
-        title: "큰 연결 범위 안에서도 영향은 일부에 집중될 수 있습니다",
-        note: "Input gradient나 perturbation heatmap은 checkpoint·sample·output에 의존하는 측정입니다.",
-        items: [
-          { label: "theory", note: "all linked", shape: "grid" },
-          { label: "gradient", note: "measure", shape: "gate" },
-          {
-            label: "effective",
-            note: "weighted",
-            shape: "target",
-            accent: true,
-          },
-        ],
+        label: "실제 영향",
+        title: "연결된 7×7 전체가 같은 세기로 쓰이는지는 따로 측정합니다",
+        input: "고정 checkpoint · sample · output scalar y",
+        operation: "pixel별 |∂y/∂xᵢⱼ| 또는 perturbation을 계산합니다.",
+        output: "sample별 influence heatmap",
+        note: "Effective receptive field는 모델과 입력에 따라 달라지는 측정값입니다.",
       },
       {
         label: "Dilation",
-        title: "Tap 사이를 벌려 parameter 수 없이 span을 넓힙니다",
-        note: "k=3,d=2는 span 5지만 연속 5개를 모두 읽지 않아 gridding 반례가 생길 수 있습니다.",
-        items: [
-          { label: "3 taps", note: "spaced", shape: "grid" },
-          { label: "dilation 2", note: "span 5", shape: "gate", accent: true },
-          { label: "gaps", note: "not dense", shape: "map" },
-        ],
+        title: "세 tap의 간격을 벌리면 0·2·4를 읽어 span 5를 만듭니다",
+        input: "k=3 · d=2 · taps=3",
+        operation: "span = d(k−1)+1 = 5",
+        output: "읽음 {0,2,4} · 건너뜀 {1,3}",
+        note: "Parameter 수 없이 범위는 넓지만 연속 다섯 좌표를 모두 읽는 dense kernel은 아닙니다.",
       },
     ]}
   />
@@ -378,50 +248,41 @@ export const ReceptiveFieldViz = () => (
 export const DepthwiseViz = () => (
   <CnnSceneViz
     id="cnn-depthwise-modern"
-    eyebrow="Factorized convolution"
-    title="Spatial filtering과 channel mixing을 두 operator로 나눕니다"
-    description="Dense convolution과 depthwise·pointwise의 cost 및 runtime 경계를 봅니다."
+    eyebrow="연산 분리"
+    title="공간을 읽는 계산과 채널을 섞는 계산을 따로 셉니다"
+    description="k=3, Cin=32, Cout=64인 한 출력 위치의 MAC를 같은 조건에서 비교합니다."
     scenes={[
       {
         label: "Dense",
-        title:
-          "Dense kernel은 spatial tap과 모든 input·output channel을 함께 연결합니다",
-        note: "위치당 MAC은 k²·Cin·Cout입니다.",
-        items: [
-          { label: "Cin", note: "all", shape: "map" },
-          { label: "k×k×Cin", note: "per Cout", shape: "window" },
-          { label: "Cout", note: "mixed", shape: "map", accent: true },
-        ],
+        title: "모든 spatial tap과 input·output channel 쌍을 한 번에 연결합니다",
+        input: "k=3 · Cin=32 · Cout=64",
+        operation: "3² × 32 × 64",
+        output: "18,432 MAC / 위치",
+        note: "이 값이 비교 기준이며 H·W·batch는 두 방식에 공통이라 여기서는 생략합니다.",
       },
       {
         label: "Depthwise",
-        title: "각 input channel 안에서만 spatial pattern을 찾습니다",
-        note: "Channel 간 정보는 아직 섞이지 않고 위치당 MAC은 k²·Cin입니다.",
-        items: [
-          { label: "ch 1", note: "k×k", shape: "grid" },
-          { label: "ch 2", note: "k×k", shape: "grid" },
-          { label: "ch C", note: "k×k", shape: "grid" },
-        ],
+        title: "각 input channel 안에서만 3×3 공간 필터를 적용합니다",
+        input: "32 channels · channel마다 3×3",
+        operation: "3² × 32",
+        output: "288 MAC · 32-channel 중간값",
+        note: "이 단계에서는 서로 다른 채널의 정보가 아직 섞이지 않습니다.",
       },
       {
         label: "Pointwise",
-        title: "1×1 projection이 같은 위치의 channel을 섞습니다",
-        note: "Position마다 Cin vector를 Cout vector로 바꾸며 MAC은 Cin·Cout입니다.",
-        items: [
-          { label: "Cin", note: "one pixel", shape: "map" },
-          { label: "1×1", note: "mix", shape: "gate", accent: true },
-          { label: "Cout", note: "features", shape: "map" },
-        ],
+        title: "같은 위치의 32개 값을 1×1 projection으로 64개로 섞습니다",
+        input: "32-dimensional vector / 위치",
+        operation: "1² × 32 × 64",
+        output: "2,048 MAC · Cout=64",
+        note: "합계는 2,336 MAC이며 dense 18,432의 약 12.7%입니다.",
       },
       {
-        label: "Measure",
-        title: "MAC 절감 뒤 실제 latency·traffic·quality를 측정합니다",
-        note: "작은 kernel launch와 memory traffic 때문에 계산량 비율이 device latency 비율과 같지 않을 수 있습니다.",
-        items: [
-          { label: "MAC", note: "theory", shape: "target" },
-          { label: "runtime", note: "device", shape: "gate" },
-          { label: "quality", note: "task", shape: "target", accent: true },
-        ],
+        label: "실측",
+        title: "계산량이 줄어도 실제 장치 시간은 같은 비율로 줄지 않을 수 있습니다",
+        input: "같은 shape·dtype·layout·batch",
+        operation: "warmup 뒤 median·p95·traffic·energy·quality를 함께 측정합니다.",
+        output: "장치별 채택 또는 dense 유지",
+        note: "두 kernel 실행과 중간 tensor write/read가 이론상 MAC 이득을 줄일 수 있습니다.",
       },
     ]}
   />
@@ -430,55 +291,41 @@ export const DepthwiseViz = () => (
 export const VisionTaskViz = () => (
   <CnnSceneViz
     id="cnn-task-modern"
-    eyebrow="Spatial output"
-    title="Task의 답 단위가 보존할 image 좌표를 정합니다"
-    description="분류·탐지·분할·복원의 output geometry를 비교합니다."
+    eyebrow="출력 좌표"
+    title="무엇 하나를 답할지 정하면 남겨야 할 공간 정보가 달라집니다"
+    description="같은 image feature에서 image·object·pixel·output image 단위의 결과를 비교합니다."
     scenes={[
       {
-        label: "Classify",
-        title: "Image 하나의 class면 spatial grid를 하나로 모을 수 있습니다",
-        note: "Global pooling은 위치별 detail을 버리는 대신 fixed-size vector를 만듭니다.",
-        items: [
-          { label: "feature", note: "H×W", shape: "map" },
-          { label: "pool", note: "aggregate", shape: "gate" },
-          { label: "class", note: "one/image", shape: "target", accent: true },
-        ],
+        label: "분류",
+        title: "사진 한 장에 이름 하나를 붙이면 공간축을 모을 수 있습니다",
+        input: "F [B,C,H,W]",
+        operation: "H·W를 global pooling하고 class head를 적용합니다.",
+        output: "Ycls [B,Ccls]",
+        note: "위치 세부 정보를 버리는 대신 입력 크기와 무관한 image-level vector를 만듭니다.",
       },
       {
-        label: "Detect",
-        title: "Object마다 class와 box 좌표를 함께 냅니다",
-        note: "Small object는 높은-resolution feature와 여러 scale의 evidence가 필요합니다.",
-        items: [
-          { label: "feature", note: "multi-scale", shape: "map" },
-          { label: "head", note: "object", shape: "gate" },
-          { label: "boxes", note: "x,y,w,h", shape: "target", accent: true },
-        ],
+        label: "탐지",
+        title: "물체마다 class와 원본 좌표계의 상자를 함께 냅니다",
+        input: "multi-scale features",
+        operation: "K개 후보마다 class와 x·y·w·h를 예측합니다.",
+        output: "Ydet [B,K,Ccls+4]",
+        note: "작은 물체는 낮은 output stride의 높은 해상도 feature를 필요로 할 수 있습니다.",
       },
       {
-        label: "Segment",
-        title: "각 output pixel을 input coordinate에 다시 대응시킵니다",
-        note: "Downsampling으로 지운 boundary를 upsampling·skip path 없이 자동 복원할 수 없습니다.",
-        items: [
-          { label: "encoder", note: "down", shape: "map" },
-          { label: "decoder", note: "up+skip", shape: "gate" },
-          { label: "mask", note: "H×W", shape: "grid", accent: true },
-        ],
+        label: "분할",
+        title: "출력 pixel마다 class score를 남겨 입력 좌표에 대응시킵니다",
+        input: "encoder feature + 높은 해상도 skip",
+        operation: "upsampling과 skip path로 공간 grid를 복원합니다.",
+        output: "Yseg [B,Ccls,Ho,Wo]",
+        note: "Backbone에서 지운 경계는 head의 이름만 바꾼다고 자동으로 돌아오지 않습니다.",
       },
       {
-        label: "Release",
-        title:
-          "같은 backbone도 task별 metric·resolution·latency로 다시 승인합니다",
-        note: "Classification accuracy 하나가 detection·segmentation·restoration spatial quality를 보장하지 않습니다.",
-        items: [
-          { label: "task", note: "output unit", shape: "target" },
-          { label: "slices", note: "small/boundary", shape: "gate" },
-          {
-            label: "release",
-            note: "quality+cost",
-            shape: "target",
-            accent: true,
-          },
-        ],
+        label: "검증",
+        title: "같은 backbone도 과제별 품질과 비용으로 다시 승인합니다",
+        input: "고정 backbone 후보 · task별 dataset",
+        operation: "AP·IoU·boundary·distortion과 latency·memory를 각각 측정합니다.",
+        output: "과제별 채택 또는 보류",
+        note: "분류 정확도 하나는 탐지·분할·복원의 공간 품질을 대신 증명하지 못합니다.",
       },
     ]}
   />

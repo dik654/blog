@@ -76,6 +76,11 @@ const noScriptArticleRoutes = new Set([
   "ai/bert-mlm-corruption",
   "ai/bert-pretraining-objectives",
   "ai/bert-task-heads",
+  "ai/cnn",
+  "ai/cnn-translation-equivariance",
+  "ai/cnn-receptive-fields",
+  "ai/depthwise-separable-convolution",
+  "ai/vision-task-spatial-contracts",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

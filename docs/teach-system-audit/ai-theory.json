@@ -878,9 +878,10 @@
         "src/pages/articles/ai/cnn/FoundationArticle.tsx",
         "src/pages/articles/ai/cnn/codeRefs.ts",
         "src/pages/articles/ai/cnn/fileTree.ts",
-        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx"
+        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx",
+        "src/pages/articles/ai/shared/VisionFoundationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -888,19 +889,37 @@
         "hasSourceSurface": true,
         "characters": 9726
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "본문의 용어 목록이 시각화보다 먼저 나와 작은 숫자 하나가 output cell이 되는 과정을 보기 전에 이름을 외워야 했습니다.",
+        "기존 시각화는 grid·window·map 도형만 바뀌어 실제 입력값, 곱셈, 출력값과 output shape 계산을 화면 안에서 검산할 수 없었습니다.",
+        "같은 컴퓨터 비전 묶음에서 현재 글의 위치와 다음 질문으로 넘어가는 반환 경로가 없었습니다."
+      ],
+      "fixture": "3×3 입력에서 patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]로 첫 출력값 −3을 만들고, H=7·K=3·P=1·S=2·D=1에서 output 높이 4를 계산하는 교육용 가정입니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "0": "overview",
+        "1": "local-operator",
+        "2": "shared-kernel",
+        "3": "output-geometry"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "LeCun et al. — Gradient-Based Learning Applied to Document Recognition",
+          "anchor": "paper-lenet",
+          "application": "Convolution·subsampling·classifier를 문서 인식에 연결한 원 논문의 범위만 근거로 삼고 현대 vision task 전체의 최적 recipe로 확대하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모→현재 질문→한 patch 계산→공유→output geometry→다음 이동 질문의 순서를 본문과 학습 계약에서 대조했습니다.",
+        "humanize": "도형 이름 중심 문구를 입력 상태·이번 계산·출력 상태의 한국어 설명으로 바꾸고 긴 제목을 쓰지 않았습니다.",
+        "numericTrace": "1×1+2×0+3×0+4×(−1)=−3과 floor((7+2−3)/2)+1=4가 본문·시각화에서 일치함을 확인했습니다.",
+        "mobile390": "390×844에서 document overflow 0, 첫 장면 1→키보드 2 이동, locator와 지도 반환 각 1개를 확인했습니다.",
+        "desktop1440": "1440×1000에서 646px 폭, 문서·시각화 overflow 0, 입력·계산·출력 세 칸의 겹침이 없음을 확인했습니다.",
+        "build": "Production build가 2,086개 public route와 검토 완료 36편의 no-script 본문을 생성했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 4개 장면의 정적 순서, 7개 section, locator·지도 반환, overflow 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -910,9 +929,10 @@
       "publicFiles": [
         "src/pages/articles/ai/cnn-receptive-fields.tsx",
         "src/pages/articles/ai/cnn-receptive-fields/ModernArticle.tsx",
-        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx"
+        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx",
+        "src/pages/articles/ai/shared/VisionFoundationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -920,19 +940,42 @@
         "hasSourceSurface": true,
         "characters": 6487
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Theoretical receptive field와 effective influence가 정의 카드 뒤에 놓여 한 output에서 원본까지 이어지는 계산을 먼저 볼 수 없었습니다.",
+        "기존 도형은 3→5→7 누적값과 dilation이 실제로 읽고 건너뛰는 좌표를 보여 주지 않았습니다.",
+        "긴 절 제목이 계산 결과보다 먼저 눈에 들어와 문장 호흡 검사를 통과하지 못했습니다."
+      ],
+      "fixture": "Stride 1·dilation 1인 3×3 layer 세 개에서 한 축 receptive field를 3→5→7로 누적하고, k=3·d=2에서는 좌표 0·2·4만 읽어 span 5가 되는 교육용 가정입니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "0": "overview",
+        "1": "theoretical",
+        "2": "effective",
+        "3": "dilation"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Luo et al. — Understanding the Effective Receptive Field",
+          "anchor": "paper-effective-receptive-field",
+          "application": "Graph상 연결 범위와 특정 output의 실제 영향 분포를 분리하며 논문의 관찰을 모든 CNN의 고정 법칙으로 확대하지 않습니다."
+        },
+        {
+          "source": "Yu & Koltun — Multi-Scale Context Aggregation by Dilated Convolutions",
+          "anchor": "paper-dilated-convolution",
+          "application": "해상도를 바로 낮추지 않고 span을 넓히는 용도로 인용하고 gridding·boundary까지 자동 해결한다는 주장으로 확대하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "CNN output geometry→jump/span 누적→실제 영향 측정→dilation 경계→연산 분리 질문의 흐름을 대조했습니다.",
+        "humanize": "세 개의 긴 절 제목을 결과가 바로 보이는 짧은 한국어 문장으로 바꿨고 문장 호흡 strict 재검토 0을 확인했습니다.",
+        "numericTrace": "r₁=3, r₂=5, r₃=7과 d(k−1)+1=5, 읽는 좌표 {0,2,4}가 본문·시각화에서 일치합니다.",
+        "mobile390": "390×844에서 document overflow 0, 첫 장면 1→키보드 2 이동, reduced-motion 재생 비활성화를 확인했습니다.",
+        "desktop1440": "1440×1000에서 646×682px 시각화, 문서·시각화 overflow 0과 세 상태의 겹침 없음이 확인됐습니다.",
+        "build": "Production build와 no-script 정적 본문 생성이 통과했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 네 장면의 정적 목록, 7개 section, locator·지도 반환, overflow 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -942,9 +985,10 @@
       "publicFiles": [
         "src/pages/articles/ai/cnn-translation-equivariance.tsx",
         "src/pages/articles/ai/cnn-translation-equivariance/ModernArticle.tsx",
-        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx"
+        "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx",
+        "src/pages/articles/ai/shared/VisionFoundationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -952,19 +996,37 @@
         "hasSourceSurface": true,
         "characters": 5933
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Equivariance·invariance 용어가 실제 pattern 좌표와 peak 좌표 비교보다 먼저 나왔습니다.",
+        "기존 시각화는 shift 전후의 좌표와 stride 2의 sampling index를 표시하지 않아 반례가 장식 도형처럼 보였습니다.",
+        "네 개의 긴 제목이 관계와 반례를 한 번에 압축해 문장 호흡 감사를 통과하지 못했습니다."
+      ],
+      "fixture": "Pattern 위치와 peak 위치를 각각 1에서 2로 옮겨 stride-1 공유 kernel의 이동 관계를 보고, stride 2가 indices 0·2·4에서 1·3·5로 sampling 위상을 바꾸는 반례를 비교합니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "0": "overview",
+        "1": "equivariance",
+        "2": "counterexamples",
+        "3": "release"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Zhang — Making Convolutional Networks Shift-Invariant Again",
+          "anchor": "paper-shift-invariance",
+          "application": "Downsampling aliasing과 작은 input shift의 instability를 설명하는 범위에서 사용하고 exact group equivariance의 일반 보장으로 확대하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Shared kernel→input/output 좌표 이동→stride·boundary 반례→shift test→receptive field 질문의 순서를 대조했습니다.",
+        "humanize": "긴 제목 네 개를 짧은 결과 문장으로 바꾸고 exact equality 같은 표현은 본문 조건 안에서만 남겼습니다.",
+        "numericTrace": "x=1·y=1에서 x=2·y=2로 이동하는 기준과 stride-2 indices 0·2·4→1·3·5가 시각화에서 일치합니다.",
+        "mobile390": "390×844에서 document overflow 0, 첫 장면 1→키보드 2 이동과 locator·지도 반환을 확인했습니다.",
+        "desktop1440": "1440×1000에서 646×682px 시각화, overflow 0과 입력·연산·출력 상태의 겹침 없음이 확인됐습니다.",
+        "build": "Production build와 no-script 정적 본문 생성이 통과했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 네 장면의 정적 목록, 7개 section, locator·지도 반환, overflow 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -1567,9 +1629,10 @@
       "publicFiles": [
         "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx",
         "src/pages/articles/ai/depthwise-separable-convolution.tsx",
-        "src/pages/articles/ai/depthwise-separable-convolution/ModernArticle.tsx"
+        "src/pages/articles/ai/depthwise-separable-convolution/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/VisionFoundationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -1577,19 +1640,37 @@
         "hasSourceSurface": true,
         "characters": 5575
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Dense·depthwise·pointwise의 이름은 있었지만 한 조건에서 세 MAC 값을 이어 계산하는 장면이 없었습니다.",
+        "기존 도형은 연산 분리를 나타낼 뿐 중간 32-channel 상태와 최종 64-channel 상태를 검산할 수 없었습니다.",
+        "본문의 해석 예제와 학습 계약의 예제 채널 수가 달라 한 글 안에서 같은 fixture를 끝까지 추적하기 어려웠습니다."
+      ],
+      "fixture": "k=3·Cin=32·Cout=64인 한 출력 위치에서 dense 18,432 MAC와 depthwise 288, pointwise 2,048, 합계 2,336 MAC와 비율 약 0.127을 비교하는 교육용 가정입니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "0": "overview",
+        "1": "cost",
+        "2": "runtime",
+        "3": "paper-mobilenet"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Howard et al. — MobileNets",
+          "anchor": "paper-mobilenet",
+          "application": "Depthwise separable convolution과 width·resolution multiplier의 정확도–자원 trade-off 근거로 사용하고 모든 장치의 동일한 latency 절감으로 확대하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "CNN 지역 연산→dense 기준→depthwise 중간값→pointwise 출력→장치 실측→공간 출력 계약의 흐름을 대조했습니다.",
+        "humanize": "연산명만 나열하지 않고 각 장면에 입력 상태·이번 계산·출력 상태를 한국어 한 문장으로 붙였습니다.",
+        "numericTrace": "3²×32×64=18,432, 3²×32=288, 32×64=2,048, 합계 2,336과 약 0.127배가 locator·시각화·수식 해석에서 일치합니다.",
+        "mobile390": "390×844에서 307×756px 시각화, document overflow 0, 키보드 1→2 이동을 확인했습니다.",
+        "desktop1440": "1440×1000에서 646×682px 시각화, 문서·시각화 overflow 0과 세 상태의 겹침 없음이 확인됐습니다.",
+        "build": "Production build와 no-script 정적 본문 생성이 통과했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 네 계산 장면, 7개 section, locator·지도 반환, overflow 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -9149,9 +9230,10 @@
       "publicFiles": [
         "src/pages/articles/ai/cnn/viz/ModernCnnViz.tsx",
         "src/pages/articles/ai/vision-task-spatial-contracts.tsx",
-        "src/pages/articles/ai/vision-task-spatial-contracts/ModernArticle.tsx"
+        "src/pages/articles/ai/vision-task-spatial-contracts/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/VisionFoundationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9159,19 +9241,37 @@
         "hasSourceSurface": true,
         "characters": 6453
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "분류·탐지·분할·복원을 용어 목록으로 먼저 읽어야 해 prediction unit과 output tensor의 대응이 한눈에 보이지 않았습니다.",
+        "기존 도형은 과제별 실제 output shape와 보존해야 할 spatial evidence를 한 장면에서 연결하지 못했습니다.",
+        "컴퓨터 비전 기초 묶음의 마지막 글인데도 VLM·grounding·SAM3로 넘어가는 부모 지도 반환이 없었습니다."
+      ],
+      "fixture": "같은 F[B,C,H,W]에서 분류 Y[B,Ccls], 탐지 Y[B,K,Ccls+4], 분할 Y[B,Ccls,Ho,Wo]를 만들고 각 과제가 보존해야 할 좌표를 비교하는 교육용 shape입니다.",
+      "stageAnchors": {
+        "S": "overview",
+        "0": "overview",
+        "1": "output-shapes",
+        "2": "preservation",
+        "3": "release"
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Long et al. — Fully Convolutional Networks for Semantic Segmentation",
+          "anchor": "paper-fcn",
+          "application": "Coarse semantic feature를 dense prediction으로 바꾸고 skip architecture로 detail을 결합한 근거로 사용하며 모든 현대 head의 설계나 metric을 대신하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Receptive field와 output geometry→prediction unit→output axes→보존할 좌표→task별 검증→SAM3의 개념 mask로 이어지는 흐름을 대조했습니다.",
+        "humanize": "과제 이름을 나열하는 대신 사진 하나·물체 하나·pixel 하나가 무엇을 답하는지 장면 제목으로 풀었습니다.",
+        "numericTrace": "B×C×H×W 입력이 B×Ccls, B×K×(Ccls+4), B×Ccls×Ho×Wo로 바뀌는 축이 본문 수식과 시각화에서 일치합니다.",
+        "mobile390": "390×844에서 307×756px 시각화, document overflow 0, 키보드 1→2 이동을 확인했습니다.",
+        "desktop1440": "1440×1000에서 646×682px 시각화, 문서·시각화 overflow 0과 세 상태의 겹침 없음이 확인됐습니다.",
+        "build": "Production build와 no-script 정적 본문 생성이 통과했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 네 장면 순서, 7개 section, locator·지도 반환, overflow 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

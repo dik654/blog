@@ -3,15 +3,26 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { ReceptiveFieldViz } from "../cnn/viz/ModernCnnViz";
+import {
+  VisionFoundationLocator,
+  VisionMapReturn,
+} from "../shared/VisionFoundationLocator";
 
 export default function CnnReceptiveArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <VisionFoundationLocator
+          current="receptive"
+          question="위쪽 feature 한 칸은 원본 이미지의 몇 칸을 읽을 수 있나요?"
+          fixture="Stride 1인 3×3 layer 세 개를 쌓아 이론상 범위가 3→5→7로 커지는 과정을 계산하고, 실제 영향과 구분합니다."
+          parentHref="/cs/ai/cnn#output-geometry"
+          parentLabel="CNN의 output 좌표와 크기"
+        />
         <h2 className="mb-6 text-2xl font-bold">
-          Receptive field는 hidden unit 하나에서 input까지 거꾸로 따라간 좌표
-          범위입니다
+          Receptive field는 출력 하나에 연결된 입력 범위입니다
         </h2>
+        <ReceptiveFieldViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 계산 graph에서 연결된 theoretical 범위를 셉니다. 그 다음 실제
@@ -44,13 +55,11 @@ export default function CnnReceptiveArticle() {
             },
           ]}
         />
-        <ReceptiveFieldViz />
         <ContentBoundary article="cnn-receptive-fields" />
       </section>
       <section id="theoretical" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Layer의 stride는 jump를 늘리고 kernel span은 이전 jump만큼 receptive
-          field를 넓힙니다
+          Stride와 kernel span을 층마다 누적합니다
         </h2>
         <ExplainedFormula
           question="여러 convolution을 쌓았을 때 input span을 어떻게 누적하나요?"
@@ -107,8 +116,7 @@ export default function CnnReceptiveArticle() {
       </section>
       <section id="effective" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Effective field는 graph가 아니라 특정 output의 실제 sensitivity로
-          측정합니다
+          실제 영향은 gradient나 perturbation으로 측정합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -168,6 +176,12 @@ export default function CnnReceptiveArticle() {
             aliasing·gridding·boundary 문제를 해결한다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
+        <VisionMapReturn
+          title="Receptive field는 연결 가능한 범위이며 실제 영향의 크기는 별도 측정값입니다."
+          detail="지역 연산이 읽는 범위를 알았으므로, 다음에는 같은 출력 형태를 더 적은 계산으로 만드는 연산 분리를 살펴봅니다."
+          nextHref="/cs/ai/depthwise-separable-convolution"
+          nextLabel="공간 필터와 채널 혼합 분리"
+        />
       </section>
     </div>
   );

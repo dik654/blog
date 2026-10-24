@@ -3,15 +3,27 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { DepthwiseViz } from "../cnn/viz/ModernCnnViz";
+import {
+  VisionFoundationLocator,
+  VisionMapReturn,
+} from "../shared/VisionFoundationLocator";
 
 export default function DepthwiseArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <VisionFoundationLocator
+          current="depthwise"
+          question="공간 무늬를 찾는 계산과 채널을 섞는 계산을 나누면 얼마나 줄어드나요?"
+          fixture="k=3, Cin=32, Cout=64인 한 출력 위치에서 dense 18,432 MAC와 분리 연산 2,336 MAC를 같은 조건으로 비교합니다."
+          parentHref="/cs/ai/cnn#local-operator"
+          parentLabel="CNN의 지역 cross-correlation"
+        />
         <h2 className="mb-6 text-2xl font-bold">
           Depthwise separable convolution은 공간을 찾는 일과 channel을 섞는 일을
           나눕니다
         </h2>
+        <DepthwiseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Dense convolution은 kernel 하나가 spatial tap과 모든 input channel을 동시에 읽어 output channel을 만듭니다.
@@ -43,7 +55,6 @@ export default function DepthwiseArticle() {
             },
           ]}
         />
-        <DepthwiseViz />
         <ContentBoundary article="depthwise-separable-convolution" />
       </section>
       <section id="cost" className="scroll-mt-20">
@@ -104,7 +115,7 @@ export default function DepthwiseArticle() {
             "Bias·batch·H·W 공통 factor를 생략한 위치당 MAC 비교입니다.",
             "같은 output geometry를 만든다고 가정합니다.",
           ]}
-          interpretation="k=3,Cin=64,Cout=128이면 비율은 (576+8192)/73728≈0.119입니다."
+          interpretation="k=3,Cin=32,Cout=64이면 dense는 18,432 MAC, 분리 연산은 288+2,048=2,336 MAC로 약 0.127배입니다."
         />
       </section>
       <section id="runtime" className="scroll-mt-20">
@@ -135,6 +146,12 @@ export default function DepthwiseArticle() {
             latency·energy 감소를 만든다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
+        <VisionMapReturn
+          title="Depthwise separable convolution은 같은 일을 싸게 만드는 마법이 아니라 연산 책임을 둘로 나눈 구조입니다."
+          detail="이론상 MAC를 줄인 뒤 실제 장치에서 시간과 품질을 확인해야 합니다. 다음에는 모델이 최종적으로 답해야 할 좌표 단위를 정합니다."
+          nextHref="/cs/ai/vision-task-spatial-contracts"
+          nextLabel="분류·상자·마스크 출력 비교"
+        />
       </section>
     </div>
   );

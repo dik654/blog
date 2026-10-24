@@ -3,15 +3,27 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { VisionTaskViz } from "../cnn/viz/ModernCnnViz";
+import {
+  VisionFoundationLocator,
+  VisionMapReturn,
+} from "../shared/VisionFoundationLocator";
 
 export default function VisionTaskArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <VisionFoundationLocator
+          current="tasks"
+          question="분류·탐지·분할은 같은 이미지에서 무엇을 하나의 답으로 보나요?"
+          fixture="하나의 feature tensor가 image별 class, object별 box, pixel별 mask로 바뀌는 출력 축을 비교합니다."
+          parentHref="/cs/ai/cnn-receptive-fields"
+          parentLabel="CNN의 연결 범위와 공간 해상도"
+        />
         <h2 className="mb-6 text-2xl font-bold">
           Vision task는 image에서 무엇을 답해야 하는지에 따라 보존할 공간 축이
           달라집니다
         </h2>
+        <VisionTaskViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             사진 전체에 이름 하나를 붙이는 classification과 모든 pixel에 label을 붙이는 segmentation은 같은 feature를 요구하지 않습니다. 먼저
@@ -22,7 +34,6 @@ export default function VisionTaskArticle() {
         <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>Image classification은 공간축을 모으고 image마다 class score 하나를 남길까요?</li><li>Segmentation은 output grid의 각 위치에 class score를 유지해야 할까요?</li><li>Backbone이 작은 경계를 지웠어도 head 이름만 segmentation이면 원래 경계를 자동 복원할까요?</li></ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. Task 이름보다 prediction 단위와 보존해야 할 좌표축을 먼저 고정합니다.</p>
-        <VisionTaskViz />
         <ContentBoundary article="vision-task-spatial-contracts" />
         <TermBreakdown
           title="Task별 답의 단위"
@@ -165,6 +176,12 @@ export default function VisionTaskArticle() {
             않습니다.
           </CitationBlock>
         </div>
+        <VisionMapReturn
+          title="과제의 이름보다 먼저 예측 단위와 출력 좌표를 정해야 합니다."
+          detail="분류는 공간축을 모을 수 있지만 탐지와 분할은 위치를 보존해야 합니다. 이 계약은 다음 글에서 이름이나 예시로 지정한 개념을 실제 mask로 찾는 출발점이 됩니다."
+          nextHref="/cs/ai/sam3-promptable-concept-segmentation"
+          nextLabel="이름으로 지정한 개념을 mask로 찾기"
+        />
       </section>
     </div>
   );

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 419,
-    "pending": 571,
+    "reviewed": 424,
+    "pending": 566,
     "untracked": 0,
-    "assignedPending": 519,
+    "assignedPending": 514,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -633,9 +633,9 @@
       "publicPath": "cs/ai/cnn",
       "title": "CNN 기초: Image Grid에서 Shared Kernel까지",
       "catalogIndex": 60,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -643,9 +643,9 @@
       "publicPath": "cs/ai/cnn-translation-equivariance",
       "title": "CNN Translation Equivariance: 이동 관계와 반례",
       "catalogIndex": 61,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -653,9 +653,9 @@
       "publicPath": "cs/ai/cnn-receptive-fields",
       "title": "CNN Receptive Field: 연결 범위·실제 영향·Dilation",
       "catalogIndex": 62,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -663,9 +663,9 @@
       "publicPath": "cs/ai/depthwise-separable-convolution",
       "title": "Depthwise Separable Convolution: 공간 필터와 채널 혼합",
       "catalogIndex": 63,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -673,9 +673,9 @@
       "publicPath": "cs/ai/vision-task-spatial-contracts",
       "title": "Vision Task Spatial Contracts: Class·Box·Mask·Image",
       "catalogIndex": 64,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

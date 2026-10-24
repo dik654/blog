@@ -3,15 +3,26 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { EquivarianceViz } from "../cnn/viz/ModernCnnViz";
+import {
+  VisionFoundationLocator,
+  VisionMapReturn,
+} from "../shared/VisionFoundationLocator";
 
 export default function CnnEquivarianceArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <VisionFoundationLocator
+          current="equivariance"
+          question="이미지 속 무늬를 한 칸 옮기면 CNN의 반응도 정확히 한 칸 옮겨지나요?"
+          fixture="같은 stride-1 kernel에서 pattern 위치 x=1과 x=2를 비교하고, stride 2에서 등식이 깨지는 반례까지 추적합니다."
+          parentHref="/cs/ai/cnn#shared-kernel"
+          parentLabel="CNN의 shared kernel"
+        />
         <h2 className="mb-6 text-2xl font-bold">
-          Translation equivariance는 input을 옮겼을 때 feature map도 같은 만큼
-          옮겨지는 관계입니다
+          입력을 옮기면 feature도 같은 만큼 옮겨집니다
         </h2>
+        <EquivarianceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 pattern의 input 좌표와 detector peak의 output 좌표를
@@ -41,13 +52,11 @@ export default function CnnEquivarianceArticle() {
             },
           ]}
         />
-        <EquivarianceViz />
         <ContentBoundary article="cnn-translation-equivariance" />
       </section>
       <section id="equivariance" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Shared stride-1 operator에서는 input index 치환이 output shift가
-          됩니다
+          공유한 stride-1 kernel은 이동을 output에 전달합니다
         </h2>
         <ExplainedFormula
           question="왜 같은 kernel을 공유하면 translation이 output으로 전달되나요?"
@@ -99,8 +108,7 @@ export default function CnnEquivarianceArticle() {
       </section>
       <section id="counterexamples" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Stride·zero padding·crop은 한 pixel 이동의 exact equality를 깰 수
-          있습니다
+          Stride와 경계는 한 pixel 이동 관계를 깰 수 있습니다
         </h2>
         <TermBreakdown
           title="반례를 먼저 확인"
@@ -130,8 +138,7 @@ export default function CnnEquivarianceArticle() {
       </section>
       <section id="release" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Release test는 center·boundary·one-pixel·stride-multiple shift를
-          나눕니다
+          Shift test는 위치와 이동량을 나눠 측정합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -154,6 +161,12 @@ export default function CnnEquivarianceArticle() {
             보장된다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
+        <VisionMapReturn
+          title="같은 kernel은 이동 관계를 만들지만 stride와 경계가 그 관계를 바꿀 수 있습니다."
+          detail="좌표가 어떻게 옮겨지는지 확인했으므로, 다음에는 출력 하나가 원본 이미지의 어느 범위까지 연결되는지 계산합니다."
+          nextHref="/cs/ai/cnn-receptive-fields"
+          nextLabel="출력 하나의 입력 범위 계산"
+        />
       </section>
     </div>
   );
