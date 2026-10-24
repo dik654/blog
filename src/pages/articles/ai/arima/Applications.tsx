@@ -9,6 +9,8 @@ export default function Applications() {
         계절성과 외생 변수를 더하되 forecast 시점의 정보 경계를 지킨다
       </h2>
 
+      <ExtensionChoiceViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           비계절 차분 뒤에도 lag s마다 dependence가 반복되면 seasonal difference와 seasonal AR·MA polynomial을 추가한 SARIMA를
@@ -36,8 +38,6 @@ export default function Applications() {
         assumptions={["하나의 안정된 season length가 있고 계절 구조가 forecasting 기간에도 유지됩니다.", "여러 계절성이나 이동하는 calendar effect는 이 단일 seasonal polynomial로 충분하지 않을 수 있습니다."]}
         interpretation="SARIMA는 계절 label을 붙이는 기능이 아니라 seasonal lag에 별도 difference와 dynamics를 두는 모델입니다. s를 calendar 이름만 보고 정하지 않습니다."
       />
-
-      <ExtensionChoiceViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Exogenous variable은 예측 시점에 실제로 이용할 수 있어야 한다</h3>
@@ -74,12 +74,6 @@ export default function Applications() {
           <Link to="/cs/ai/lstm-timeseries"> LSTM 시계열 글</Link>에서 이어진다.
           그 글에서도 ARIMA를 지우지 않고, 복잡한 model이 rolling-origin error와
           operational cost에서 실제 추가 가치를 주는지 확인할 기준선으로 남긴다.
-        </p>
-        <p>
-          실제 교체 판단은 같은 forecast origins·horizons·available features에서 point error와 interval coverage,
-          event·structural-break slice, p95 latency와 memory를 함께 비교한다. Automatic search 결과도 이 gate를 통과해야 한다.
-          Canary에서 중요한 horizon의 error나 coverage가 hard limit를 넘으면 이전 ARIMA order·transform artifact로
-          rollback한다.
         </p>
       </div>
     </section>

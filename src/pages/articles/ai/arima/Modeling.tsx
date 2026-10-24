@@ -8,6 +8,8 @@ export default function Modeling() {
         ACF와 AIC는 후보를 만들고 미래 구간과 residual이 결론을 낸다
       </h2>
 
+      <TemporalValidationViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           시계열을 무작위로 섞으면 미래의 level과 event가 학습 구간으로 들어간다. Parameter 탐색 전에 cutoff를 고정해야 하는 이유다. 한 번의 holdout은 특정
@@ -27,8 +29,6 @@ export default function Modeling() {
         </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://doi.org/10.1093/biomet/65.2.297" target="_blank" rel="noreferrer">원 논문의 statistic과 finite-sample 보정 보기</a>
       </div>
-
-      <TemporalValidationViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ACF와 PACF는 식별 규칙이 아니라 diagnostic이다</h3>

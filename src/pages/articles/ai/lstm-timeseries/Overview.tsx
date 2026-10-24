@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">과거 6개 step은 입력이고 다음 3개 step은 target입니다</h2>
+      <ForecastWindowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
             Forecast origin t를 기준으로 t−5부터 t까지 여섯 관측을 input으로 묶고,
@@ -20,7 +21,6 @@ export default function Overview() {
         </ol>
         <p>답은 <strong>예, 아니요, 예</strong>입니다. Forecast origin에서 실제로 알 수 없는 미래 target이나 사후 집계값을 넣으면 leakage가 됩니다.</p>
       </div>
-      <ForecastWindowViz />
       <ContentBoundary article="lstm-timeseries" />
       <ExplainedFormula
         question="연속된 시계열 하나를 LSTM이 학습할 input–target sample로 어떻게 바꿀까?"

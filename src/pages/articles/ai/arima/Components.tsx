@@ -8,6 +8,8 @@ export default function Components() {
         p, d, q는 관측값과 innovation이 담당할 기억 범위를 정한다
       </h2>
 
+      <ArmaMemoryViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           차분된 series Zt가 준비되면 ARMA(p,q)는 현재 값을 과거 p개 관측값과 현재·과거 q개 innovation으로 설명한다. Innovation εt는 rolling
@@ -15,8 +17,6 @@ export default function Components() {
           흔적을 모델링한다.
         </p>
       </div>
-
-      <ArmaMemoryViz />
 
       <ExplainedFormula
         question="차분된 현재 값을 과거 관측의 관성과 과거 forecast error로 어떻게 분해할까?"

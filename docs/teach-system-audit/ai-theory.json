@@ -227,9 +227,10 @@
         "src/pages/articles/ai/arima/viz/DifferencingViz.tsx",
         "src/pages/articles/ai/arima/viz/ExtensionChoiceViz.tsx",
         "src/pages/articles/ai/arima/viz/ForecastContractViz.tsx",
-        "src/pages/articles/ai/arima/viz/TemporalValidationViz.tsx"
+        "src/pages/articles/ai/arima/viz/TemporalValidationViz.tsx",
+        "src/pages/articles/ai/shared/TimeSeriesLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -237,19 +238,46 @@
         "hasSourceSurface": false,
         "characters": 22692
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "예측 계약·차분·ARMA·검증·확장이 각각 정확했지만, 시계열 영역의 직속 부모와 LSTM 적용으로 이어지는 위치가 상단에서 보이지 않았습니다.",
+        "각 절의 핵심 그림이 긴 설명 뒤에 있어 forecast cutoff와 차분·시간 순서 경계를 읽기 전에 용어를 먼저 처리해야 했습니다.",
+        "개념 글 끝에 canary와 rollback 같은 운영 판단이 들어와 기준선의 원리와 배포 절차가 섞여 있었습니다."
+      ],
+      "fixture": "다음 달 수요를 예측하는 하나의 시계열에서 관측 간격·예측 범위·cutoff를 고정하고, 차분 뒤 AR·MA 기억과 rolling-origin 평가를 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "contract": ["overview"],
+        "difference": ["overview"],
+        "memory": ["components"],
+        "validation": ["modeling"],
+        "extension": ["applications"],
+        "return": ["applications"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Distribution of the Estimators for Autoregressive Time Series with a Unit Root",
+          "href": "https://doi.org/10.1080/01621459.1979.10482531",
+          "note": "Unit-root 경계의 비표준 검정 분포 범위에 적용하며 ADF 하나가 모든 정상성을 보장한다는 주장으로 넓히지 않습니다."
+        },
+        {
+          "kind": "논문",
+          "label": "On a Measure of Lack of Fit in Time Series Models",
+          "href": "https://doi.org/10.1093/biomet/65.2.297",
+          "note": "선택한 lag까지 남은 선형 잔차 상관을 공동 진단하는 범위에 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "예측 계약→차분→AR·MA 기억→시간 순서 검증→확장 조건을 끝까지 대조하고 concept 범위에서 배포 절차를 분리했습니다.",
+        "humanize": "각 절에서 그림을 설명과 수식보다 먼저 놓고, 시계열 기준선에서 LSTM 적용으로 이어지는 질문을 상단에 명시했습니다.",
+        "numericTrace": "차분 연산, AIC·BIC 벌점, Ljung–Box 누적 항과 계절 차분의 기호·가정을 수식 설명과 대조했습니다.",
+        "mobile390": "390x844에서 locator·반환 지도와 모든 figure의 가로 넘침 0, console 오류 0을 확인했습니다.",
+        "desktop1440": "1440x1000에서 같은 읽기 순서와 현재 글 링크, 모든 figure의 가로 넘침 0을 확인했습니다.",
+        "accessibility": "키보드 초점 이동, reduced-motion, JavaScript 비활성 정적 지도·본문·결론을 확인했습니다.",
+        "build": "Production build에서 정적 public route 2,086개와 no-script 본문 121편 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -4323,9 +4351,10 @@
         "src/pages/articles/ai/lstm-timeseries/viz/HorizonStrategyViz.tsx",
         "src/pages/articles/ai/lstm-timeseries/viz/LeakageBoundaryViz.tsx",
         "src/pages/articles/ai/lstm-timeseries/viz/ModelChoiceViz.tsx",
-        "src/pages/articles/ai/lstm-timeseries/viz/TensorContractViz.tsx"
+        "src/pages/articles/ai/lstm-timeseries/viz/TensorContractViz.tsx",
+        "src/pages/articles/ai/shared/TimeSeriesLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4333,19 +4362,46 @@
         "hasSourceSurface": false,
         "characters": 20975
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "윈도우·텐서·누출·평가 설명은 있었지만 ARIMA 기준선에서 출발하는 직속 부모와 실무 트랙의 현재 위치가 보이지 않았습니다.",
+        "시간 경계와 tensor shape를 보여 주는 그림이 설명 뒤에 있어 독자가 먼저 긴 용어 설명을 읽어야 했습니다.",
+        "복잡한 모델을 채택하는 기준이 글 끝에만 있어 같은 forecast origin에서 기준선과 비교한다는 중심 질문이 상단에서 드러나지 않았습니다."
+      ],
+      "fixture": "forecast origin t에서 과거 6개 step을 입력으로, 다음 3개 step을 target으로 만드는 하나의 sample을 tensor·학습·평가까지 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "window": ["overview"],
+        "tensor": ["cell-architecture"],
+        "state": ["cell-architecture"],
+        "leakage": ["training"],
+        "comparison": ["applications"],
+        "return": ["applications"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "torch.nn.LSTM API contract",
+          "href": "https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html",
+          "note": "입력·출력·hidden·cell tensor 축과 batch_first 계약에 적용하고 서비스의 상태 수명까지 보장하는 것으로 확대하지 않습니다."
+        },
+        {
+          "kind": "논문",
+          "label": "Another Look at Measures of Forecast Accuracy",
+          "href": "https://doi.org/10.1016/j.ijforecast.2006.03.001",
+          "note": "같은 training fold의 naive error로 정규화하는 MASE 정의와 적용 한계에 사용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "ARIMA의 같은 예측 계약에서 시작해 윈도우→tensor·state→누출 방지→동일 origin 비교로 이어지는 practice 흐름을 대조했습니다.",
+        "humanize": "각 절의 시간 경계와 tensor 그림을 설명보다 먼저 놓고, 상단 질문에서 기준선 대비 추가 가치를 확인하도록 정리했습니다.",
+        "numericTrace": "L=6·H=3 window, [B,L,F] 입력, [B,H,Dy] 출력, train-only scaling과 MASE 분모를 수식·그림과 대조했습니다.",
+        "mobile390": "390x844에서 locator·반환 지도와 모든 figure의 가로 넘침 0, console 오류 0을 확인했습니다.",
+        "desktop1440": "1440x1000에서 같은 읽기 순서와 현재 글 링크, 모든 figure의 가로 넘침 0을 확인했습니다.",
+        "accessibility": "키보드 초점 이동, reduced-motion, JavaScript 비활성 정적 지도·본문·결론을 확인했습니다.",
+        "build": "Production build에서 정적 public route 2,086개와 no-script 본문 121편 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -10840,14 +10896,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 54,
+    "rewritten": 56,
     "existingTeachTargetedRepairs": 4,
-    "reviewedAndImproved": 58,
-    "localVerified": 58,
+    "reviewedAndImproved": 60,
+    "localVerified": 60,
     "awaitingIntegration": 0,
-    "pending": 131,
+    "pending": 129,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 59
+    "bodyReviewedTotal": 61
   }
 }

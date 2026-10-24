@@ -9,7 +9,7 @@
     "customVisuals": 858,
     "animatedMechanisms": 439,
     "architectureWithoutAnimation": 100,
-    "recursiveLocators": 129,
+    "recursiveLocators": 131,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -330,7 +330,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-static-visual"
@@ -3290,7 +3290,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-static-visual"

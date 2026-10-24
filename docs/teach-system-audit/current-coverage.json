@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 486,
-    "pending": 504,
+    "reviewed": 488,
+    "pending": 502,
     "untracked": 0,
-    "assignedPending": 460,
+    "assignedPending": 458,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1573,9 +1573,9 @@
       "publicPath": "cs/ai/arima",
       "title": "ARIMA: 시계열 예측의 해석 가능한 기준선",
       "catalogIndex": 154,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1583,9 +1583,9 @@
       "publicPath": "cs/ai/lstm-timeseries",
       "title": "LSTM 시계열 예측: window 설계부터 검증까지",
       "catalogIndex": 155,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

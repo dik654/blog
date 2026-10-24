@@ -77,10 +77,6 @@
       "fingerprint": "e737d25a599c4769",
       "score": 33
     },
-    "ai/transformer-architecture": {
-      "fingerprint": "5ae67c445288fa66",
-      "score": 32
-    },
     "blockchain/filecoin-fvm": {
       "fingerprint": "fe863095b6e324ae",
       "score": 32
@@ -106,7 +102,7 @@
       "score": 31
     },
     "ai/lstm-timeseries": {
-      "fingerprint": "ef77cba9579030cc",
+      "fingerprint": "bf4b95944c9fc753",
       "score": 30
     },
     "ai/multi-agent-implementation": {
@@ -142,11 +138,7 @@
       "score": 28
     },
     "ai/llm-serving-ops": {
-      "fingerprint": "649c793dd38d4229",
-      "score": 28
-    },
-    "ai/resnet": {
-      "fingerprint": "946eb3b30c5d6a32",
+      "fingerprint": "1a8ad52963bd33f8",
       "score": 28
     },
     "blockchain/cometbft-consensus": {
@@ -188,14 +180,6 @@
     "blockchain/reth-db": {
       "fingerprint": "3a445a27df1b7ae7",
       "score": 27
-    },
-    "ai/arima": {
-      "fingerprint": "a4473837f5abf9f0",
-      "score": 26
-    },
-    "ai/mixture-of-experts": {
-      "fingerprint": "5f01eb48031c960b",
-      "score": 26
     },
     "ai/rag-pipeline": {
       "fingerprint": "6d30924bfc938fcd",
@@ -240,6 +224,10 @@
     "blockchain/lotus-market": {
       "fingerprint": "5a78ba3ea9e8f88a",
       "score": 25
+    },
+    "ai/arima": {
+      "fingerprint": "96ae0f88622ee131",
+      "score": 24
     },
     "blockchain/cometbft-abci": {
       "fingerprint": "0dbe2d21bc58fe6f",
@@ -397,10 +385,6 @@
       "fingerprint": "f9dc64e8d1aaaeba",
       "score": 18
     },
-    "ai/seq2seq": {
-      "fingerprint": "010d338383b09bd3",
-      "score": 18
-    },
     "ai/training-pipeline": {
       "fingerprint": "0b9c7c9363010760",
       "score": 18
@@ -509,16 +493,8 @@
       "fingerprint": "21778800a11f754a",
       "score": 14
     },
-    "ai/distributional-semantics": {
-      "fingerprint": "cadfea7d53f7df32",
-      "score": 14
-    },
     "ai/skills-anatomy": {
       "fingerprint": "8b3526bba6c90df6",
-      "score": 14
-    },
-    "ai/tokenizer": {
-      "fingerprint": "1b0854db351a8719",
       "score": 14
     },
     "ai/vision-transformer": {
@@ -661,10 +637,6 @@
       "fingerprint": "5e849a758db87836",
       "score": 12
     },
-    "ai/bptt": {
-      "fingerprint": "4c37a4dc21350e83",
-      "score": 10
-    },
     "ai/claw-mcp": {
       "fingerprint": "fd655121c006580b",
       "score": 10
@@ -749,40 +721,16 @@
       "fingerprint": "e712b25ffbafb52e",
       "score": 9
     },
-    "ai/cnn-translation-equivariance": {
-      "fingerprint": "cf4c64a226cfacf3",
-      "score": 8
-    },
     "ai/dezero-nn": {
       "fingerprint": "596384ece4e77907",
-      "score": 8
-    },
-    "ai/dpo": {
-      "fingerprint": "f76fbcfaf0f25056",
       "score": 8
     },
     "ai/embedding-serving-contract": {
       "fingerprint": "e9fd544efac9911e",
       "score": 8
     },
-    "ai/gru": {
-      "fingerprint": "2770072f6cd63811",
-      "score": 8
-    },
     "ai/image-backbone-scaling": {
       "fingerprint": "3bbaad0621d3ac13",
-      "score": 8
-    },
-    "ai/kto": {
-      "fingerprint": "81dc28e0ed0ff689",
-      "score": 8
-    },
-    "ai/lstm": {
-      "fingerprint": "8f2a38b84076a297",
-      "score": 8
-    },
-    "ai/rnn-language-model": {
-      "fingerprint": "12d2b9f3dc9b80b4",
       "score": 8
     },
     "ai/self-distillation": {
@@ -897,16 +845,8 @@
       "fingerprint": "97ce7118150df6f7",
       "score": 7
     },
-    "ai/attention-theory": {
-      "fingerprint": "a98fd0f4b6643dd9",
-      "score": 6
-    },
     "ai/claw-subagent-orchestration": {
       "fingerprint": "0e28a17e101c0b2c",
-      "score": 6
-    },
-    "ai/cnn-receptive-fields": {
-      "fingerprint": "20ebf89866b7db88",
       "score": 6
     },
     "ai/continued-pretraining": {
@@ -919,14 +859,6 @@
     },
     "ai/deepfake-preprocessing-lineage": {
       "fingerprint": "ff3ca8f8d333fa50",
-      "score": 6
-    },
-    "ai/denoising-masked-autoencoders": {
-      "fingerprint": "8d8261e585f5ce9f",
-      "score": 6
-    },
-    "ai/hyper-connections-residual-streams": {
-      "fingerprint": "3f44bb12e037c32d",
       "score": 6
     },
     "ai/sequence-modeling-tabular": {

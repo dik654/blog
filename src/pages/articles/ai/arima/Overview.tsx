@@ -9,6 +9,8 @@ export default function Overview() {
         ARIMA는 복잡한 모델이 이겨야 할 해석 가능한 기준선이다
       </h2>
 
+      <ForecastContractViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           다음 달 수요를 예측하려는데 최근 몇 달의 상승세가 계속될지, 직전의 일시적 충격이 얼마나 남을지부터 설명하지 못한다면 더 큰 neural model을 넣어도 개선 이유를 알기
@@ -21,8 +23,6 @@ export default function Overview() {
           residual diagnostic으로 가정을 다시 확인한다. 이 순서를 지켜야 in-sample fit이 아니라 forecasting system으로 읽을 수 있다.
         </p>
       </div>
-
-      <ForecastContractViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>ARMA가 다루는 대상은 weakly stationary series다</h3>

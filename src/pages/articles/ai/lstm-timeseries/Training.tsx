@@ -5,6 +5,7 @@ export default function Training() {
   return (
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">누출은 window 모양이 아니라 정보의 시점으로 판정한다</h2>
+      <LeakageBoundaryViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
             전체 시계열로 scaler를 fit하거나 window를 먼저 만든 뒤 무작위로 나누면 미래 구간의 level과 target이 train에 섞인다. 먼저 raw timeline에
@@ -12,7 +13,6 @@ export default function Training() {
             origin이 train 마지막 L step을 history로 사용하는 것은 정상이다. 과거를 가져오는 것과 미래의 통계를 미리 아는 것은 다른 문제다.
           </p>
       </div>
-      <LeakageBoundaryViz />
       <ExplainedFormula
         question="Validation의 크기와 평균을 보지 않고 feature scale을 어떻게 맞출까?"
         idea={<>각 rolling fold에서 train 구간의 평균과 표준편차만 추정하고, 그 고정된 parameter를 validation·test에 그대로 적용합니다.</>}
