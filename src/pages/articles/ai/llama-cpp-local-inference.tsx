@@ -6,6 +6,10 @@ import Weights from "./llama-cpp-local-inference/Weights";
 import Offload from "./llama-cpp-local-inference/Offload";
 import { codeRefs } from "./llama-cpp-local-inference/codeRefs";
 import { llamaCppTrees } from "./llama-cpp-local-inference/fileTree";
+import {
+  InferenceRuntimeMapReturn,
+  InferenceRuntimeSeriesLocator,
+} from "./shared/InferenceRuntimeSeriesLocator";
 
 export default function LlamaCppLocalInferenceArticle() {
   const sidebar = useCodeSidebar();
@@ -13,6 +17,7 @@ export default function LlamaCppLocalInferenceArticle() {
 
   return (
     <>
+      <InferenceRuntimeSeriesLocator current="local" />
       <div className="space-y-16">
         <Foundations />
         <SourceTrace code={code} />
@@ -20,6 +25,7 @@ export default function LlamaCppLocalInferenceArticle() {
         <Weights code={code} />
         <Offload code={code} />
       </div>
+      <InferenceRuntimeMapReturn current="local" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

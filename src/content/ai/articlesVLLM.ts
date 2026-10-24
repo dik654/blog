@@ -1391,7 +1391,6 @@ export const vllmServingArticles: Article[] = [
           { id: "capacity-admission", title: "요청 분포 기반 수용량" },
         ],
       },
-      { id: "deployment", title: "망분리 환경의 모델 선택과 반입 체크리스트" },
     ],
     component: () => import("@/pages/articles/ai/llm-serving-capacity"),
   },

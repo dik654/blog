@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 461,
-    "pending": 529,
+    "reviewed": 467,
+    "pending": 523,
     "untracked": 0,
-    "assignedPending": 478,
-    "postCheckpointPending": 51,
+    "assignedPending": 475,
+    "postCheckpointPending": 48,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -1063,9 +1063,9 @@
       "publicPath": "cs/ai/inference-runtime-anatomy",
       "title": "Inference runtime 은 첫 요청 전에 process 를 나누고 GPU memory 지도를 확정합니다",
       "catalogIndex": 103,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1073,10 +1073,10 @@
       "publicPath": "cs/ai/multimodal-serving-pipeline",
       "title": "멀티모달 서빙: 사진 한 장이 서버 안에서 쓰는 계산과 메모리",
       "catalogIndex": 104,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/vllm-scheduler",
@@ -1095,7 +1095,7 @@
       "catalogIndex": 106,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1105,7 +1105,7 @@
       "catalogIndex": 107,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1135,7 +1135,7 @@
       "catalogIndex": 110,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1145,7 +1145,7 @@
       "catalogIndex": 111,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1155,7 +1155,7 @@
       "catalogIndex": 112,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1163,10 +1163,10 @@
       "publicPath": "cs/ai/sglang-runtime-anatomy",
       "title": "SGLang 런타임: 한 토큰 칸 KV와 미리 세는 출력, 겹치는 스케줄러",
       "catalogIndex": 113,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/vllm-spec-decode",
@@ -1283,9 +1283,9 @@
       "publicPath": "cs/ai/llm-serving-capacity",
       "title": "LLM Serving Capacity: KV pool · 로그 검산 · Admission",
       "catalogIndex": 125,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1333,9 +1333,9 @@
       "publicPath": "cs/ai/model-vram-budgeting",
       "title": "모델 VRAM 계산: 가중치 · KV Cache · Runtime Headroom",
       "catalogIndex": 130,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1343,10 +1343,10 @@
       "publicPath": "cs/ai/llama-cpp-local-inference",
       "title": "llama.cpp: 한 대의 기기에 맞추는 KV cell 배열과 블록 양자화",
       "catalogIndex": 131,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/expert-parallelism-moe-systems",
