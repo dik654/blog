@@ -9,6 +9,8 @@ export default function Overview() {
         빠른 inference engine을 안정적인 서비스로 바꾸는 제어면
       </h2>
 
+      <ServingContractViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           LLM 서빙에서 GPU 한 장의 token/s를 높이는 일과, 여러 사용자의 요청을 예측 가능한 지연으로 처리하는 일은 서로 다른 문제입니다. 뒤쪽 문제는 prompt와
@@ -26,8 +28,6 @@ export default function Overview() {
           소유하므로 이 글에서는 반복하지 않습니다.
         </p>
       </div>
-
-      <ServingContractViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Latency는 하나의 숫자가 아니라 서로 다른 사용자 경험이다</h3>

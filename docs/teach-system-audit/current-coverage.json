@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 482,
-    "pending": 508,
+    "reviewed": 486,
+    "pending": 504,
     "untracked": 0,
-    "assignedPending": 464,
+    "assignedPending": 460,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -963,9 +963,9 @@
       "publicPath": "cs/ai/llm-serving-ops",
       "title": "LLM 서빙 운영: Gateway · GPU Fleet · 관측과 자동화",
       "catalogIndex": 93,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -973,9 +973,9 @@
       "publicPath": "cs/ai/onprem-k8s-inference-platform",
       "title": "온프레미스 Kubernetes에서 모델 서버를 배치하고 요청을 나누는 순서",
       "catalogIndex": 94,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -993,9 +993,9 @@
       "publicPath": "cs/ai/inference-failure-absorption",
       "title": "같은 장애라도 요청이 어디까지 갔느냐에 따라 결과가 갈립니다",
       "catalogIndex": 96,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1003,9 +1003,9 @@
       "publicPath": "cs/ai/own-vs-rent-inference-capacity",
       "title": "무엇이 싼지 묻기 전에 분모를 맞춰야 합니다",
       "catalogIndex": 97,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1365,7 +1365,7 @@
       "catalogIndex": 133,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1375,7 +1375,7 @@
       "catalogIndex": 134,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

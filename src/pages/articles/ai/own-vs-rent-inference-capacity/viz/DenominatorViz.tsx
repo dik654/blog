@@ -57,6 +57,7 @@ export default function DenominatorViz() {
       note="소유 기준이고 가동률은 60퍼센트로 고정했습니다. 노드마다 같은 모델이 떠 있어 빠진 몫이 고르게 나뉜다고 둔 계산입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -64,7 +65,7 @@ export default function DenominatorViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
@@ -174,6 +175,14 @@ export default function DenominatorViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

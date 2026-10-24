@@ -36,6 +36,9 @@ export default function Overview() {
           </li>
         </ol>
       </nav>
+
+      <PlatformViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           외부 제공자를 쓸 때 게이트웨이 하나가 맡던 일은 생각보다 많습니다. 모델 이름을 실제 엔드포인트로
@@ -64,8 +67,6 @@ export default function Overview() {
         </p>
 
       </div>
-
-      <PlatformViz />
     </section>
   );
 }

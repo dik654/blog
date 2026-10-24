@@ -21,6 +21,7 @@ export function AnimatedSceneControls({
   return (
     <div
       data-viz-controls
+      data-viz-live-only
       className="z-20 w-full shrink-0 sm:sticky sm:bottom-0 sm:mt-auto sm:min-h-[6.75rem] sm:border-t sm:border-border sm:bg-background/95 sm:pt-4 sm:backdrop-blur-sm"
     >
       <div

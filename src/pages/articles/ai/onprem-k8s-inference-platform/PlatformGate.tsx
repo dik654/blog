@@ -37,7 +37,7 @@ export default function PlatformGate() {
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
-          정리하면 직접 운영할 때는 네 가지를 순서대로 닫아야 합니다. 게이트웨이가 하던 일의 새 담당자를 정하고,
+          정리하면 직접 운영할 때는 네 가지를 순서대로 확정해야 합니다. 게이트웨이가 하던 일의 새 담당자를 정하고,
           모델 서버 상태를 읽는 선택기를 요청 경로에 둡니다. 여러 Pod는 한 복제본으로 함께 배치하고, 고정된
           가속기 수는 어떤 서비스가 먼저 쓸지 정책으로 나눕니다.
         </p>

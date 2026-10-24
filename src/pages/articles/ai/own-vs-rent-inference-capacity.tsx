@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CostCurveViz from "./own-vs-rent-inference-capacity/viz/CostCurveViz";
 import DenominatorViz from "./own-vs-rent-inference-capacity/viz/DenominatorViz";
+import {
+  InferenceOperationsMapReturn,
+  InferenceOperationsSeriesLocator,
+} from "./shared/InferenceOperationsSeriesLocator";
 
 /**
  * 무엇이 싼지 묻기 전에 분모를 맞춰야 합니다
@@ -18,10 +22,13 @@ import DenominatorViz from "./own-vs-rent-inference-capacity/viz/DenominatorViz"
 export default function OwnVsRentInferenceCapacityArticle() {
   return (
     <div className="space-y-16">
+      <InferenceOperationsSeriesLocator current="capacity" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           같은 표를 다른 자로 읽으면 결론이 뒤집힙니다
         </h2>
+        <CostCurveViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             추론 용량을 사야 할지 빌려야 할지는 표 하나로 정리되는 것처럼
@@ -39,8 +46,6 @@ export default function OwnVsRentInferenceCapacityArticle() {
             정해야 합니다. 아래 그림이 그 자를 맞추기 전과 후입니다.
           </p>
         </div>
-
-        <CostCurveViz />
 
         <ContentBoundary article="own-vs-rent-inference-capacity" />
 
@@ -460,6 +465,7 @@ export default function OwnVsRentInferenceCapacityArticle() {
           </p>
         </div>
       </section>
+      <InferenceOperationsMapReturn current="capacity" />
     </div>
   );
 }

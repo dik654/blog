@@ -75,6 +75,7 @@ export default function FailureLadderViz() {
       note="네 가지만 추린 것입니다. 실제로는 스위치·랙·전원처럼 여러 노드를 한꺼번에 묶는 공통 장애점이 더 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -82,7 +83,7 @@ export default function FailureLadderViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
@@ -183,6 +184,14 @@ export default function FailureLadderViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
