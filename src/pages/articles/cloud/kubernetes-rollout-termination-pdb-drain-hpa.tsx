@@ -6,11 +6,69 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import TerminationRaceViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/TerminationRaceViz";
 import HpaCalculatorViz from "./kubernetes-rollout-termination-pdb-drain-hpa/viz/HpaCalculatorViz";
+import { RolloutBoundsViz } from "./kubernetes-controllers-reconcile-deployment-job/viz/ControllerFormulaViz";
 import { codeRefs } from "./kubernetes-rollout-termination-pdb-drain-hpa/codeRefs";
 import { kubernetesRolloutTrees } from "./kubernetes-rollout-termination-pdb-drain-hpa/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
+
+function LifecycleIncidentViz() {
+  return (
+    <figure className="not-prose my-6 border-y border-border py-5" aria-label="배포, 노드 교체, 자동 축소가 Ready Pod 수를 공유하는 구조">
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+        {[
+          ["배포", "종료 순간 5xx"],
+          ["노드 교체", "PDB 429로 대기"],
+          ["자동 축소", "5분 안정화 창"],
+        ].map(([label, symptom], index) => (
+          <div key={label} className="contents">
+            {index > 0 && <span className="hidden text-center text-muted-foreground sm:block" aria-hidden="true">←</span>}
+            <div className="rounded-xl border border-border p-4">
+              <strong className="text-sm text-foreground">{label}</strong>
+              <p className="mt-2 text-sm text-muted-foreground">{symptom}</p>
+              <div className="mt-3 flex gap-1" aria-label="Ready Pod 4개">
+                {[0, 1, 2, 3].map((pod) => <span key={pod} className="h-3 flex-1 rounded-sm bg-primary/70" />)}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <figcaption className="mt-3 text-xs text-muted-foreground">세 장치는 서로 다르지만 모두 Ready Pod 수를 입력으로 읽습니다.</figcaption>
+    </figure>
+  );
+}
+
+function GraceBudgetViz() {
+  return (
+    <figure className="not-prose my-6" aria-label="30초 종료 예산을 preStop과 애플리케이션 종료 시간이 나누어 쓰는 계산">
+      <div className="flex min-h-16 overflow-hidden rounded-xl border border-border text-sm font-bold">
+        <div className="grid w-1/6 place-items-center bg-amber-500/20 px-2 text-center text-amber-800 dark:text-amber-200">preStop<br />5초</div>
+        <div className="grid w-5/12 place-items-center bg-primary/15 px-2 text-center text-primary">진행 중 요청<br />최대 12초</div>
+        <div className="grid flex-1 place-items-center bg-muted px-2 text-center text-muted-foreground">남은 여유<br />13초</div>
+      </div>
+      <figcaption className="mt-2 text-xs text-muted-foreground">terminationGracePeriodSeconds 30초 = 전파 대기 5초 + 요청 종료 12초 + 여유 13초입니다.</figcaption>
+    </figure>
+  );
+}
+
+function PdbAllowanceViz() {
+  return (
+    <figure className="not-prose my-6 grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center" aria-label="PDB의 허용 축출 수가 1에서 0으로 바뀌는 과정">
+      <div className="rounded-xl border border-border p-4">
+        <span className="text-xs text-muted-foreground">축출 전</span>
+        <div className="mt-3 flex gap-1">{[0, 1, 2, 3].map((pod) => <span key={pod} className="h-5 flex-1 rounded-sm bg-emerald-500/70" />)}</div>
+        <p className="mt-3 font-mono text-sm">4 Ready − min 3 = 1 허용</p>
+      </div>
+      <span className="text-center text-xl text-muted-foreground" aria-hidden="true">→</span>
+      <div className="rounded-xl border border-border p-4">
+        <span className="text-xs text-muted-foreground">한 Pod 축출 뒤</span>
+        <div className="mt-3 flex gap-1">{[0, 1, 2].map((pod) => <span key={pod} className="h-5 flex-1 rounded-sm bg-emerald-500/70" />)}<span className="h-5 flex-1 rounded-sm border border-dashed border-rose-500/70" /></div>
+        <p className="mt-3 font-mono text-sm text-rose-600">3 Ready − min 3 = 0 · 다음 요청은 429</p>
+      </div>
+    </figure>
+  );
+}
 
 export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
   const sidebar = useCodeSidebar();
@@ -21,6 +79,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 배포할 때마다 몇 초씩 5xx가 튀고, 노드 교체는 왜 멈추나요?</h2>
           <KubernetesSeriesLocator current="lifecycle" question="Pod가 교체될 때 가용 개수와 요청 경로는 어떤 제어 장치가 함께 지킬까요?" bridge="준비된 Pod가 배포·종료·확장으로 바뀔 때 가용 수가 어떻게 유지되는지 봅니다." />
+          <LifecycleIncidentViz />
           <div className={prose}>
             <p>
               (가정) checkout Deployment는 replicas 4로 Service 뒤에 있습니다. 이미지를 올릴 때마다 대시보드에 5xx가 몇 초 튀고, 어느 날 노드를 교체하려고 kubectl drain을 걸었더니 "Cannot evict pod as it would violate the pod's disruption budget"을 5초마다 찍으며 20분째 멈춰 있었습니다.</p>
@@ -51,6 +110,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. replicas 4에 25%면 롤아웃 중 최소 3개는 Ready, 최대 5개가 뜹니다</h2>
+          <RolloutBoundsViz replicas={4} />
           <div className={prose}>
             <p>
               (가정) checkout은 replicas 4이고 strategy를 적지 않아 RollingUpdate에 maxSurge 25%, maxUnavailable 25%가 기본으로 들어갑니다. 퍼센트는 정수로 바뀌어야 하는데 두 값의 반올림 방향이 다릅니다. surge는 올림, unavailable은 내림입니다. 4 × 0.25 = 1이라 둘 다 1이고, 롤아웃 중 Pod는 최대 4 + 1 = 5개, Ready는 최소 4 − 1 = 3개입니다.
@@ -81,6 +141,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
 
         <section id="termination-flow" data-teach-level="1" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. Pod 삭제는 kubelet의 종료 시계와 컨트롤 플레인의 배수 시계를 동시에 출발시킵니다</h2>
+          <TerminationRaceViz />
           <div className={prose}>
             <p>
               옛 Pod 하나가 삭제될 때 일어나는 일을 시간순으로 적습니다. API 서버는 Pod에 deletionTimestamp와 예산(기본 30초)을 기록합니다. 노드의 kubelet은 그것을 보자마자 종료를 시작합니다.</p>
@@ -92,7 +153,6 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
               이름을 붙이면 이렇습니다. 30초 예산이 terminationGracePeriodSeconds, 종료 직전 컨테이너 안에서 도는 명령이 preStop 훅, 런타임이 보내는 두 신호가 SIGTERM과 SIGKILL, 컨트롤 플레인이 바꾸는 세 조건이 EndpointSlice의 ready·serving·terminating입니다. 예산은 SIGTERM 뒤의 시간이 아니라 preStop부터 SIGKILL까지의 총액이라는 점이 다음 절의 계산을 정합니다.
             </p>
           </div>
-          <TerminationRaceViz />
           {code("pod-grace-default", "terminationGracePeriodSeconds 기본 30")}
           {code("eps-conditions", "ready = serving && !terminating")}
           <div id="paper-termination" className="not-prose my-8 scroll-mt-24">
@@ -104,6 +164,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
 
         <section id="race-and-budget" data-teach-level="2" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">5. preStop은 전파 시간을 벌고, 그만큼 SIGTERM 뒤 예산이 줄어듭니다</h2>
+          <GraceBudgetViz />
           <div className={prose}>
             <p>
               1절의 5xx는 두 시계의 틈입니다. SIGTERM을 받자마자 리스너를 닫는 앱은 규칙이 아직 바뀌지 않은 노드에서 온 새 연결을 거절합니다. 흔한 완화는 둘입니다. preStop에 짧은 sleep을 두어 규칙 전파가 끝날 때까지 SIGTERM을 늦추고, 앱은 SIGTERM을 받은 뒤 새 연결을 받지 않되 진행 중인 요청은 끝내고 종료합니다. sleep 길이는 클러스터의 전파 지연을 재서 정해야 하며 이 글에서는 (가정) 5초로 둡니다.
@@ -173,6 +234,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
 
         <section id="pdb-drain" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. PDB는 Eviction API만 막고, drain은 429를 받으면 5초마다 다시 묻습니다</h2>
+          <PdbAllowanceViz />
           <div className={prose}>
             <p>
               1절의 멈춘 drain으로 갑니다. (가정) checkout에 minAvailable: 3인 PDB가 있습니다. PDB 컨트롤러는 Ready이고 삭제 중이 아닌 Pod를 세어 currentHealthy를 구하고, desiredHealthy 3을 빼 DisruptionsAllowed를 status에 적습니다. 4개가 Ready면 1입니다.</p>
@@ -216,6 +278,7 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
 
         <section id="hpa" data-teach-level="6" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">9. HPA는 ready Pod의 평균 ÷ 목표를 올림하고, 축소는 5분 창의 최댓값으로 늦춥니다</h2>
+          <HpaCalculatorViz />
           <div className={prose}>
             <p>
               마지막 조절기입니다. (가정) checkout의 HPA는 CPU 평균 사용률 50%를 목표로 하고 컨테이너의 CPU request는 500m입니다. 15초마다 컨트롤러가 metrics-server에서 Pod별 CPU를 읽어 request 대비 비율을 내고, 그 평균을 목표로 나눈 값이 usageRatio입니다.</p>
@@ -247,7 +310,6 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
             assumptions={["request 500m, 목표 50%, 사용률 값은 가정입니다.", "축소 결과에는 5분 안정화 창의 최댓값이 한 번 더 적용됩니다."]}
             interpretation="같은 80%라도 Ready가 아닌 Pod가 둘 있으면 그 둘을 0%로 넣어 비율이 tolerance 안으로 들어올 수 있습니다. HPA는 '모르는 Pod'를 늘 스케일을 줄이는 쪽으로 가정합니다."
           />
-          <HpaCalculatorViz />
           {code("hpa-tolerance", "tolerance 0.9~1.1")}
           {code("hpa-replicas", "GetResourceReplicas 원문")}
           {code("hpa-defaults", "컨트롤러 기본값 다섯 가지")}
@@ -256,19 +318,20 @@ export default function KubernetesRolloutTerminationPdbDrainHpaArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">10. 종료 예산은 세 몫의 합, PDB는 Eviction만, HPA는 request부터입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">10. 네 조절기는 같은 Ready를 읽지만 서로의 안전을 보장하지 않습니다</h2>
           <div className={prose}>
             <p>
-              종료부터 고칩니다. terminationGracePeriodSeconds는 preStop 길이 + 가장 긴 요청 + 여유로 정하고, preStop sleep은 클러스터의 EndpointSlice 전파 지연을 재서 정합니다. 앱은 SIGTERM을 받으면 리스너를 닫되 진행 중인 요청은 끝내고, PID 1이 앱 자체이거나 신호를 넘기는 init이어야 합니다. 배포 중 5xx가 사라졌는지는 롤아웃 동안의 5xx 비율로 확인합니다.
+              Deployment의 maxUnavailable은 동시에 줄어드는 Pod 수만 제한합니다. EndpointSlice 전파가 끝나기 전에 애플리케이션이 연결을 닫는 경쟁과 진행 중 요청의 종료는 보장하지 않습니다.
             </p>
             <p>
-              PDB는 Eviction 경로만 지킨다는 전제로 씁니다. replicas 1인 워크로드에 minAvailable 1을 주면 drain이 영원히 멈추므로 주지 않거나 maxUnavailable 1로 둡니다. drain이 멈추면 PDB를 풀 것이 아니라 새 Pod가 Ready가 못 되는 이유를 고칩니다. 노드 장애·직접 삭제·롤링 업데이트는 PDB와 무관하므로 그쪽 가용성은 maxUnavailable과 replicas 수가 지킵니다.
+              PDB는 Eviction API가 만든 자발적 중단만 제한합니다. 노드 장애, 직접 삭제, Deployment 롤링 업데이트는 막지 않으므로 PDB가 있다는 사실만으로 최소 replica가 유지된다고 결론 내릴 수 없습니다.
             </p>
             <p>
-              HPA는 request가 있어야 움직입니다. 목표 사용률은 request 대비이므로 request를 실제보다 낮게 적으면 HPA는 늘 "과부하"로 보고 Pod를 늘립니다. 급격한 트래픽에는 확대 behavior를, 비용에는 축소 창을 조정하되 창을 0으로 두면 flapping이 돌아옵니다.</p>
-            <p>rollout·PDB·HPA가 모두 Ready를 센다는 사실을 기억하면, readiness probe가 "요청을 받을 수 있다"를 정직하게 말하는지가 세 조절기의 공통 전제가 됩니다.</p>
+              HPA는 CPU request가 없으면 utilization을 계산하지 못하고, request가 실제 부하와 어긋나면 잘못된 비율을 만듭니다. rollout·PDB·HPA가 모두 Ready를 읽어도 각 controller가 다른 상태와 시간 창을 소유한다는 사실이 이 글의 경계입니다.</p>
+            <p>종료 예산, PDB, HPA behavior를 실제 값으로 선택하고 실패 시 되돌리는 과정은 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes 운영</a>의 실무 판단으로 넘깁니다.</p>
             <p>이 글의 수치는 v1.37.1 기본값과 가정한 사례로 손으로 계산한 것이며 실제 클러스터에서 잰 것이 아닙니다. 전파 지연, 이미지 pull 시간, metrics-server의 수집 주기는 환경마다 다릅니다. 이 조절기들을 SLO·에러 예산·업그레이드 순서와 잇는 운영 관점은 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">SRE 관점의 Kubernetes</a>에서 이어집니다.</p>
           </div>
+          <KubernetesMapReturn current="lifecycle" />
           <ContentBoundary article="kubernetes-rollout-termination-pdb-drain-hpa" />
         </section>
 

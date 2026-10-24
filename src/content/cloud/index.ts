@@ -1,4 +1,5 @@
 import type { Category } from "../types";
+import { KUBERNETES_LEARNING_GROUPS } from "../kubernetes-learning-tree";
 import { cloudArticles } from "./articles";
 
 const cloud: Category = {
@@ -30,6 +31,11 @@ const cloud: Category = {
       name: "Kubernetes 운영",
       description: "Pod 하나가 API에 저장되어 사용자 요청을 받는 전체 경로를 먼저 보고, 배치·자원·상태·스토리지·패킷·변경·운영을 v1.37.1 원문으로 확대합니다.",
       icon: "☸️",
+      children: KUBERNETES_LEARNING_GROUPS.map(({ slug, name, description }) => ({
+        slug,
+        name,
+        description,
+      })),
     },
     {
       slug: "cloud-aws",

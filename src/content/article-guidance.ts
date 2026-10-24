@@ -1,5 +1,9 @@
 import type { Article, Category } from "./types";
 import { articleHref } from "@/lib/routes";
+import {
+  KUBERNETES_LEARNING_GROUPS,
+  KUBERNETES_LEARNING_NODES,
+} from "./kubernetes-learning-tree";
 
 export type ArticleIntent =
   | "개념 지도"
@@ -100,6 +104,13 @@ export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     href: "/cs/cloud/kubernetes-concept-map",
     reason: "여덟 운영 질문이 어느 글에서 닫히는지 먼저 보아야 controller·Node·Linux 세 층의 읽기 순서가 잡힙니다.",
   },
+  ...Object.fromEntries(
+    KUBERNETES_LEARNING_GROUPS.map((group) => {
+      const start = KUBERNETES_LEARNING_NODES.find((node) => node.group === group.id);
+      if (!start) throw new Error(`Kubernetes 학습 영역에 시작 글이 없습니다: ${group.id}`);
+      return [group.slug, { label: start.title, href: start.href.split("#")[0], reason: group.description }];
+    }),
+  ),
   "hw-ai-cluster": {
     label: "B300 128 GPU 설계",
     href: "/cs/gpu/ai-infrastructure-b300-128-blueprint",

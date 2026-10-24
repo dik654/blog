@@ -38,8 +38,41 @@ const BAR_X = 16;
 const BAR_W = W - 32;
 const px = (milli: number) => (milli / CAPACITY) * BAR_W;
 
+export function AllocatableFormulaViz() {
+  const rows = [
+    { resource: "메모리", capacity: "32Gi", kube: "2Gi", system: "1Gi", eviction: "0.5Gi", result: "28.5Gi" },
+    { resource: "CPU", capacity: "16", kube: "1", system: "0.5", eviction: "0", result: "14.5" },
+    { resource: "디스크", capacity: "100Gi", kube: "1Gi", system: "1Gi", eviction: "10Gi", result: "88Gi" },
+  ] as const;
+
+  return (
+    <VizFrame
+      eyebrow="Allocatable equation"
+      title="Capacity에서 시스템 몫과 축출 하한을 빼면 Pod 몫이 남습니다"
+      description="먼저 뺄셈의 구조를 보고, 아래 글에서 각 항의 소유자와 기본값을 확인합니다."
+      note="[O] 공식 문서의 예시 설정입니다. 측정값이 아니며 실제 노드에서는 kubectl describe node의 Capacity·Allocatable을 확인해야 합니다."
+    >
+      <div data-viz-canvas className="grid gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border bg-muted/20 px-3 py-4 text-center font-mono text-sm font-semibold sm:text-base">
+          <span>Allocatable</span><span>=</span><span>Capacity</span><span>−</span><span>kubeReserved</span><span>−</span><span>systemReserved</span><span>−</span><span>evictionHard</span>
+        </div>
+        <div className="grid gap-2">
+          {rows.map((row) => (
+            <div key={row.resource} className="grid grid-cols-[4.3rem_minmax(0,1fr)] gap-3 rounded-xl border border-border px-3 py-3 sm:grid-cols-[6rem_minmax(0,1fr)] sm:items-center">
+              <strong>{row.resource}</strong>
+              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-sm">
+                <span>{row.capacity}</span><span>−</span><span>{row.kube}</span><span>−</span><span>{row.system}</span><span>−</span><span>{row.eviction}</span><strong className="basis-full text-primary sm:basis-auto">= {row.result}</strong>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </VizFrame>
+  );
+}
+
 export default function AllocatableLedgerViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4200);
+  const scenes = useAnimatedScenes(SCENES.length, 4200, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const dur = reduced ? 0 : 0.4;
@@ -54,6 +87,7 @@ export default function AllocatableLedgerViz() {
       note="Allocatable 수치는 공식 문서의 예(16 CPU, kubeReserved 1000m, systemReserved 500m)이고, Pod 7개의 requests와 2.9 CPU 사용량은 가정입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

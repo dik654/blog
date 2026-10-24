@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useId, useState, type KeyboardEvent } from "react";
 
 function isTextEditingTarget(target: EventTarget | null) {
   return (
@@ -34,6 +34,7 @@ export function useAnimatedScenes(
   const [active, setActiveState] = useState(0);
   const [playing, setPlayingState] = useState(autoPlay);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const playbackId = useId();
 
   const setPlaying = useCallback((value: boolean) => {
     if (value && !loop && active >= length - 1) setActiveState(0);
@@ -49,6 +50,27 @@ export function useAnimatedScenes(
     update();
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const containerElement = document.getElementById(playbackId);
+    if (!containerElement || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) setPlayingState(false);
+      },
+      { threshold: 0.05 },
+    );
+    observer.observe(containerElement);
+    return () => observer.disconnect();
+  }, [playbackId]);
+
+  useEffect(() => {
+    const stopWhenHidden = () => {
+      if (document.hidden) setPlayingState(false);
+    };
+    document.addEventListener("visibilitychange", stopWhenHidden);
+    return () => document.removeEventListener("visibilitychange", stopWhenHidden);
   }, []);
 
   useEffect(() => {
@@ -95,6 +117,7 @@ export function useAnimatedScenes(
   };
 
   return {
+    playbackId,
     active,
     playing,
     reducedMotion,

@@ -82,7 +82,7 @@ const SCENES: readonly Scene[] = [
 const SLOTS = 5;
 
 export default function HpaCalculatorViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4800);
+  const scenes = useAnimatedScenes(SCENES.length, 4800, { loop: false });
   const s = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
 
@@ -94,6 +94,7 @@ export default function HpaCalculatorViz() {
       note="목표 50%, request 500m, 사용률 값은 가정입니다. 계산 규칙은 Kubernetes v1.37.1 pkg/controller/podautoscaler/replica_calculator.go와 horizontal.go의 기본값을 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 import type { Article, Subcategory } from "@/content";
 import { ARTICLE_EVIDENCE } from "@/content/article-evidence";
 import {
-  articleBelongsToSubcategory,
+  getArticlesInSubcategory,
+  getDirectArticlesInSubcategory,
   getSubcategoryHref,
 } from "@/content/subcategory-navigation";
 import { articleHref } from "@/lib/routes";
@@ -36,12 +37,9 @@ export default function SubcategoryItem({
   compact = false,
 }: Props) {
   const hasChildren = Boolean(sub.children?.length);
-  const groupedArticles = allArticles.filter((article) =>
-    articleBelongsToSubcategory(article, sub),
-  );
-  const directArticles = allArticles.filter(
-    (article) => article.subcategory === sub.slug,
-  );
+  const category = { slug: categorySlug, articles: allArticles };
+  const groupedArticles = getArticlesInSubcategory(category, sub);
+  const directArticles = getDirectArticlesInSubcategory(category, sub);
   const articlesHere = hasChildren ? directArticles : groupedArticles;
   const onlyArticle =
     groupedArticles.length === 1 ? groupedArticles[0] : undefined;
@@ -95,10 +93,7 @@ export default function SubcategoryItem({
         )}
       >
         <Link
-          to={getSubcategoryHref(
-            { slug: categorySlug, articles: allArticles },
-            sub,
-          )}
+          to={getSubcategoryHref(category, sub)}
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2 text-xs font-semibold",
             rowClass,

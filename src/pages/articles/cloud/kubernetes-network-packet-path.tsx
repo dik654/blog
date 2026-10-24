@@ -5,7 +5,7 @@ import { CitationBlock } from "@/components/ui/citation";
 import ReviewPrompts from "../world-systems/ReviewPrompts";
 import SourceApplication from "../world-systems/SourceApplication";
 import KubernetesPacketPathViz from "./KubernetesPacketPathViz";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const codeClass =
   "not-prose my-5 min-w-0 overflow-x-auto rounded-xl border border-border bg-neutral-950 p-4 text-sm leading-6 text-neutral-100";
@@ -231,11 +231,11 @@ export default function KubernetesNetworkPacketPathArticle() {
         title="전체 흐름: 주소 확인에서 서버 응답까지 여섯 경계를 지납니다"
         bridge="여섯 경계를 잡았으니 같은 요청이 지나는 세 주소와 패킷 크기를 숫자로 고정합니다."
       >
+        <BoundaryMap />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">경계 확인표에는 요청이 지나는 곳마다 “입력 주소, 한 일, 출력 주소, 확인 명령”을 한 줄로 적습니다. 그러면 주소를 붙이는 단계, 가상 주소를 실제 Pod 주소로 바꾸는 단계, 다른 node로 운반하는 단계를 섞지 않게 됩니다.</p>
           <p className="leading-8">구현이 바뀌어도 이 여섯 질문은 남습니다. 커널 규칙이 바뀌거나 프로그램이 연결을 여는 순간 목적지가 바뀌더라도, 들어온 주소가 어느 실제 Pod 주소로 바뀌었고 다음 길이 어디인지 확인하면 됩니다.</p>
         </div>
-        <BoundaryMap />
       </LessonSection>
 
       <LessonSection
@@ -244,14 +244,15 @@ export default function KubernetesNetworkPacketPathArticle() {
         title="사건: 세 주소를 지나는 GET 한 건"
         bridge="가운데 주소와 실제 서버 주소가 다른 이유를 알았으니, 첫 경계에서 Pod가 자기 주소와 경로를 얻는 과정부터 따라갑니다."
       >
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">가정한 client process는 node A의 <code>10.244.1.12</code>에서 <code>GET /items/42</code>를 보냅니다. 목적지는 <code>10.96.20.15:8080</code>이고, 준비된 server 가운데 node B의 <code>10.244.2.34:8080</code>가 선택됩니다. Node A와 B의 물리망 주소는 각각 문서용 대역인 <code>192.0.2.11</code>과 <code>192.0.2.12</code>입니다.</p>
-          <p className="leading-8">물리망의 최대 패킷 크기는 <code>1500 B</code>로 가정합니다. 원래 패킷을 바깥 헤더로 감싸는 경로를 쓴다면 그 헤더 몫을 미리 비워야 합니다. 이 때문에 이 사례의 workload interface는 <code>1450 B</code>를 쓰며, 계산은 7절에서 직접 재현합니다.</p>
-        </div>
+        <KubernetesPacketPathViz />
         <div className="not-prose my-7 overflow-x-auto rounded-xl border border-border bg-muted/10 p-4 font-mono text-sm leading-7">
           GET /items/42 HTTP/1.1<br />
           Host: catalog.shop.svc.cluster.local<br />
           client 10.244.1.12:43120 → virtual 10.96.20.15:8080 → backend 10.244.2.34:8080
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">가정한 client process는 node A의 <code>10.244.1.12</code>에서 <code>GET /items/42</code>를 보냅니다. 목적지는 <code>10.96.20.15:8080</code>이고, 준비된 server 가운데 node B의 <code>10.244.2.34:8080</code>가 선택됩니다. Node A와 B의 물리망 주소는 각각 문서용 대역인 <code>192.0.2.11</code>과 <code>192.0.2.12</code>입니다.</p>
+          <p className="leading-8">물리망의 최대 패킷 크기는 <code>1500 B</code>로 가정합니다. 원래 패킷을 바깥 헤더로 감싸는 경로를 쓴다면 그 헤더 몫을 미리 비워야 합니다. 이 때문에 이 사례의 workload interface는 <code>1450 B</code>를 쓰며, 계산은 7절에서 직접 재현합니다.</p>
         </div>
       </LessonSection>
 
@@ -305,7 +306,6 @@ kubectl -n kube-system get configmap kube-proxy \
 sudo nft list ruleset
 sudo iptables-save -t nat
 cilium service list`}</code></pre>
-        <KubernetesPacketPathViz />
         <CitationBlock source="Kubernetes · Virtual IPs and Service Proxies" citeKey={2} href="https://kubernetes.io/docs/reference/networking/virtual-ips/">
           Service와 EndpointSlice를 본 kube-proxy가 mode별 kernel API로 virtual IP에서 backend endpoint로 가는 규칙을 만드는 공식 경로입니다.
         </CitationBlock>
@@ -359,9 +359,6 @@ spec:
         title="MTU와 외부 송신: 더한 header만큼 안쪽 payload를 줄입니다"
         bridge="주소와 크기가 맞아도 허용 규칙에서 packet이 멈출 수 있습니다. 다음 절에서는 정책 YAML과 실제 kernel 집행 위치를 분리합니다."
       >
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="leading-8">물리망이 한 번에 <code>1500 B</code>까지만 운반하는데 안쪽 packet도 <code>1500 B</code>라면 outer header를 붙일 자리가 없습니다. IPv4 VXLAN의 <code>50 B</code>와 IPv4 IP-in-IP의 <code>20 B</code>를 같은 회계 경계에서 빼야 fragmentation이나 drop 없이 운반할 수 있습니다.</p>
-        </div>
         <div className="not-prose my-6">
           <div className="grid gap-3 sm:hidden">
             <article className="rounded-xl border border-border p-4"><h3 className="font-semibold text-primary">직접 라우팅</h3><p className="mt-2 text-sm leading-6">바깥 header 없음</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Pod가 쓸 수 있는 크기 · 1500 B</p></article>
@@ -384,6 +381,9 @@ spec:
             </tbody>
           </table>
           </div>
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="leading-8">물리망이 한 번에 <code>1500 B</code>까지만 운반하는데 안쪽 packet도 <code>1500 B</code>라면 outer header를 붙일 자리가 없습니다. IPv4 VXLAN의 <code>50 B</code>와 IPv4 IP-in-IP의 <code>20 B</code>를 같은 회계 경계에서 빼야 fragmentation이나 drop 없이 운반할 수 있습니다.</p>
         </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">여기서 1500은 node NIC에 적힌 값이 아니라 경로 가운데 가장 작은 한도입니다. VLAN tag나 WireGuard처럼 header를 더 붙이는 층이 있으면 그 몫도 같은 자리에서 뺍니다. 작은 ping은 되는데 큰 응답만 timeout이면 route가 아니라 이 한도와 ICMP 차단을 먼저 의심합니다. 1450은 외울 상수가 아니라 이 경로의 뺄셈 결과입니다.</p>
@@ -465,14 +465,14 @@ spec:
       <LessonSection
         id="evidence"
         level="6"
-        title="실습: 선언과 packet을 같은 시각에 맞춥니다"
+        title="검증: 선언과 packet을 같은 시각에 맞춥니다"
         bridge="이 순서로 마지막 정상 지점을 찾았으면, 예전 실습의 기본값이 현재 cluster에서도 같은지 다시 확인해야 합니다."
       >
+        <EvidenceRunbook />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="leading-8">장애가 난 뒤 명령을 무작정 많이 실행하면 서로 다른 시각의 state가 섞입니다. 먼저 namespace·Pod·node·요청 시각을 고정하고, API 선언에서 kernel route와 packet capture로 내려갑니다. 각 단계는 정상 출력뿐 아니라 실패했을 때 다음에 볼 owner까지 기록합니다.</p>
           <p className="leading-8">이 사례에서는 <code>curl --no-keepalive</code>처럼 새 연결을 만들어 Service 선택과 conntrack을 다시 통과시킵니다. 캡처에는 민감한 payload가 담길 수 있으므로 production에서는 header와 보존 범위를 제한하고 승인 절차를 따릅니다.</p>
         </div>
-        <EvidenceRunbook />
         <pre className={codeClass}><code>{`# MTU 경계도 작은 packet과 큰 packet으로 나눠 확인
 kubectl -n shop exec client -- \
   ping -M do -s 1422 -c 3 10.244.2.34
@@ -528,6 +528,7 @@ kubectl -n shop exec client -- \
             "NetworkPolicy를 바꿨는데 기존 연결이 계속되는 이유와 새 연결을 분리해 시험하는 방법을 설명해 보세요. (답: 7·8·10절)",
           ]}
         />
+        <KubernetesMapReturn current="network" />
       </LessonSection>
     </div>
   );

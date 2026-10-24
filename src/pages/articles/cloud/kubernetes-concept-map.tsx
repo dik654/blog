@@ -1,6 +1,8 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ConceptOwnerMapViz from "./kubernetes-concept-map/viz/ConceptOwnerMapViz";
+import CapacityGapViz from "./kubernetes-concept-map/viz/CapacityGapViz";
+import KubernetesBranchMapViz from "./kubernetes-concept-map/viz/KubernetesBranchMapViz";
 import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
@@ -86,24 +88,8 @@ export default function KubernetesConceptMapArticle() {
 
       <section id="black-box" data-teach-level="B" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">2. replicas를 2에서 3으로 늘렸지만 용량은 아직 그대로입니다</h2>
-        <div className="not-prose mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["변경", "2 → 3", "Deployment의 replicas"],
-            ["현재 상태", "Ready 2개", "새 Pod가 생성·배치·실행 중 멈춤"],
-            ["처리 가능량", "70 req/s", "2개 × Pod당 35 req/s"],
-            ["부족한 용량", "20 req/s", "입력 90 - 처리 70"],
-          ].map(([label, value, detail]) => (
-            <div key={label} className="border-l-4 border-primary/60 bg-muted/20 px-4 py-3">
-              <span className="text-[10px] font-bold text-muted-foreground">{label}</span>
-              <strong className="mt-1 block text-lg text-foreground">{value}</strong>
-              <span className="mt-1 block text-[11px] leading-5 text-muted-foreground">{detail}</span>
-            </div>
-          ))}
-        </div>
+        <CapacityGapViz />
         <div className={prose}>
-          <p>
-            checkout Deployment의 replicas를 2에서 3으로 늘렸다고 가정합니다. Pod 하나가 초당 35건을 처리하므로 세 개가 모두 준비되면 용량은 초당 105건입니다. 그러나 새 Pod가 아직 준비되지 않았다면 초당 70건만 처리할 수 있고, 들어오는 90건 가운데 20건이 대기하거나 거절될 수 있습니다.
-          </p>
           <p>
             ReplicaSet controller는 Ready 개수가 아니라 <strong>존재하는 Pod 개수</strong>를 목표와 맞춥니다. 따라서 먼저 replicas 변경이 저장됐는지, 세 번째 Pod 객체가 생겼는지, Node 이름이 붙었는지, 컨테이너와 네트워크·볼륨이 준비됐는지, Ready 주소가 EndpointSlice에 들어갔는지를 순서대로 봅니다. <strong>마지막 초록불 다음의 첫 실패</strong>가 조사할 경계입니다.
           </p>
@@ -125,39 +111,16 @@ export default function KubernetesConceptMapArticle() {
 
       <section id="questions" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">4. 막힌 단계에서 필요한 정보만 더 확대합니다</h2>
+        <KubernetesBranchMapViz />
         <div className={prose}>
           <p>
-            <strong>1 · 요청 저장.</strong> API server가 replicas 변경을 거부하면 Deployment의 generation이 바뀌지 않습니다. 인증·권한·admission·schema 오류를 먼저 확인하고, 저장에 성공했다면 다음 단계로 넘어갑니다. 실제 명령과 Condition을 따라가려면 <a href={ROUTES.req}>요청 경로와 CKA</a>를 봅니다.
-          </p>
-          <p>
-            <strong>2 · Pod 객체 생성.</strong> Deployment controller는 ReplicaSet을 관리하고, ReplicaSet controller는 원하는 Pod 수와 존재하는 Pod 수의 차이를 줄입니다. 세 번째 Pod 객체가 없다면 ReplicaSet의 FailedCreate Event와 quota를 확인합니다. 자세한 reconcile과 rollout은 <a href={ROUTES.k1}>Controller와 reconcile</a>에서 이어집니다.
-          </p>
-          <p>
-            <strong>3 · Node 선택.</strong> scheduler는 실제 사용률이 아니라 이미 배치된 Pod의 requests와 Node의 Allocatable, taint, affinity, volume 조건을 봅니다. PodScheduled=False와 FailedScheduling Event가 보이면 <a href={ROUTES.k2}>Pod 배치</a>를, CPU·메모리 숫자를 계산해야 하면 <a href={ROUTES.k3}>requests·limits·Allocatable</a>을 확대합니다.
-          </p>
-          <p>
-            PVC가 아직 연결되지 않아 Node를 고를 수 없거나 WaitForFirstConsumer 때문에 Node 선택 뒤에 볼륨을 만들어야 한다면 <a href={ROUTES.k5}>PVC·PV·StorageClass·CSI</a>를 함께 봅니다. requests는 이 단계의 배치 기준이고, limits는 다음 단계에서 Node가 집행하는 실행 상한입니다.
-          </p>
-          <p>
-            <strong>4 · 실행 준비.</strong> spec.nodeName은 있지만 Ready가 아니라면 kubelet, container runtime, CNI, CSI, image, application probe 순서로 좁힙니다. Pending은 아직 Node를 못 고른 상태와 Node는 골랐지만 컨테이너를 준비 중인 상태를 모두 포함합니다.
-          </p>
-          <p>
-            CrashLoopBackOff는 컨테이너가 반복해서 종료되어 다음 재시작을 기다리는 표시입니다. Condition, Event, 이전 로그를 함께 읽는 법은 <a href={ROUTES.k4}>Pod 상태와 진단 신호</a>가 맡습니다.
-          </p>
-          <p>
-            Node의 Ready=False는 kubelet이 runtime이나 네트워크 준비 실패를 보고할 때 바로 나타날 수 있습니다. 하트비트 자체가 끊긴 경우에는 기본 50초 뒤 Ready=Unknown으로 판단하고, Pod의 기본 toleration 300초가 지난 뒤 축출을 시작합니다. 이 시간축은 <a href={ROUTES.k2}>Node 장애</a>에서 계산합니다.
-          </p>
-          <p>
-            <strong>5 · 사용자 요청 전달.</strong> EndpointSlice controller가 Service의 selector와 Pod의 준비 상태를 보고 endpoint 목록을 갱신합니다. Node의 kube-proxy 또는 대체 데이터 경로는 그 정보를 실제 전달 규칙으로 바꿉니다. Pod가 Ready인데 endpoint가 없거나 실제 요청만 실패한다면 <a href={ROUTES.net}>Service에서 Pod까지의 패킷 경로</a>를 봅니다.
+            전체 지도와 한 요청 추적까지는 공통으로 읽습니다. 그다음부터는 모든 글을 순서대로 읽는 것이 아니라, 마지막으로 성공한 증거 다음의 갈래로 내려갑니다. 예를 들어 Pod 객체가 없으면 Controller를 보고, nodeName이 있으면 Scheduler를 다시 읽지 않고 Pod 실행 준비를 확인합니다.
           </p>
           <p>
             <strong>전체 경로의 증거.</strong> Event는 보존 기간이 짧고 같은 대상과 이유가 count로 합쳐질 수 있으므로 장애 직후 수집합니다. <code>kubectl events</code>나 <code>kubectl get events --sort-by=.metadata.creationTimestamp</code>로 시간순으로 봅니다. <code>--field-selector</code>는 특정 객체나 이유만 거를 때 사용합니다.
           </p>
           <p>
             증거가 붙는 객체도 단계마다 다릅니다. FailedCreate는 ReplicaSet, FailedScheduling·BackOff·FailedMount는 Pod, NodeNotReady는 Node에서 찾습니다.
-          </p>
-          <p>
-            <strong>실행 중 변화와 운영.</strong> rollout·종료·drain·HPA는 이미 준비된 Pod의 수를 시간에 따라 바꾸므로 <a href={ROUTES.k6}>교체와 확장</a>에서 따로 봅니다. error budget, 경보, 업그레이드, 복구 판단처럼 여러 단계를 한꺼번에 다뤄야 하면 <a href={ROUTES.k7}>Kubernetes 운영</a>으로 넘어갑니다.
           </p>
         </div>
       </section>

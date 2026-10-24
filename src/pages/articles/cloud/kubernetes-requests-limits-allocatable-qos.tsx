@@ -3,13 +3,51 @@ import CalculationWalkthrough from "@/components/articles/calculation-walkthroug
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
-import AllocatableLedgerViz from "./kubernetes-requests-limits-allocatable-qos/viz/AllocatableLedgerViz";
+import AllocatableLedgerViz, { AllocatableFormulaViz } from "./kubernetes-requests-limits-allocatable-qos/viz/AllocatableLedgerViz";
 import ThrottlePeriodViz from "./kubernetes-requests-limits-allocatable-qos/viz/ThrottlePeriodViz";
 import { codeRefs } from "./kubernetes-requests-limits-allocatable-qos/codeRefs";
 import { k8sResourcesTrees } from "./kubernetes-requests-limits-allocatable-qos/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
+
+function ResourceIncidentViz() {
+  return (
+    <figure className="not-prose my-6 grid gap-3 sm:grid-cols-3" aria-label="requests와 limits를 혼동할 때 나타나는 세 증상">
+      {[
+        ["배치", "실사용 18%", "requests 합계는 가득 참", "Pending"],
+        ["CPU", "평균 사용률 50%", "100ms 주기 quota 소진", "p99 증가"],
+        ["메모리", "limit 초과", "커널이 프로세스 종료", "OOMKilled"],
+      ].map(([stage, seen, cause, result]) => (
+        <div key={stage} className="rounded-xl border border-border p-4">
+          <span className="text-xs font-bold text-primary">{stage}</span>
+          <strong className="mt-2 block text-sm">{seen}</strong>
+          <div className="my-3 h-px bg-border" />
+          <p className="text-xs leading-5 text-muted-foreground">{cause}</p>
+          <p className="mt-2 text-sm font-bold text-foreground">→ {result}</p>
+        </div>
+      ))}
+    </figure>
+  );
+}
+
+function EvictionOrderViz() {
+  const rows = [
+    { name: "A · Burstable", request: "2Gi", usage: "3Gi", excess: "+1Gi", rank: "1번째" },
+    { name: "B · BestEffort", request: "0", usage: "0.5Gi", excess: "+0.5Gi", rank: "2번째" },
+    { name: "C · Guaranteed", request: "4Gi", usage: "3.9Gi", excess: "request 이하", rank: "마지막" },
+  ];
+  return (
+    <figure className="not-prose my-6 overflow-hidden rounded-xl border border-border" aria-label="요청량 초과분에 따른 Pod 축출 순서">
+      {rows.map((row) => (
+        <div key={row.name} className="grid grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,0.75fr))] gap-2 border-b border-border px-3 py-3 text-xs last:border-b-0 sm:text-sm">
+          <strong>{row.name}</strong><span>{row.request}</span><span>{row.usage}</span><span className="text-right font-bold text-primary">{row.excess} · {row.rank}</span>
+        </div>
+      ))}
+      <figcaption className="border-t border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">왼쪽부터 Pod, request, 실제 사용량, 초과량과 축출 순서입니다. QoS 이름만으로 순서를 정하지 않습니다.</figcaption>
+    </figure>
+  );
+}
 
 export default function KubernetesRequestsLimitsAllocatableQosArticle() {
   const sidebar = useCodeSidebar();
@@ -20,6 +58,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. CPU가 82% 놀고 있는 노드에 Pod가 왜 Pending으로 남나요?</h2>
           <KubernetesSeriesLocator current="resources" question="같은 YAML의 requests와 limits는 배치 단계와 실행 단계에서 각각 누가 사용할까요?" bridge="checkout Pod가 Node를 고를 때와 Node에서 실행될 때 쓰는 자원 기준을 확대합니다." />
+          <ResourceIncidentViz />
           <div className={prose}>
             <p>
               (가정) 노드 3대짜리 클러스터에서 새 Deployment를 올렸는데 Pod 하나가 Pending에서 움직이지 않습니다. kubectl describe에는 <code>0/3 nodes are available: 3 Insufficient cpu.</code>가 적혀 있는데 모니터링 대시보드의 노드 CPU 사용률은 18%입니다.
@@ -55,6 +94,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="allocatable" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 32Gi·16 CPU 노드가 Pod에 내주는 몫은 28.5Gi·14.5 CPU입니다</h2>
+          <AllocatableFormulaViz />
           <div className={prose}>
             <p>공식 문서의 예를 그대로 가져옵니다. 메모리 32Gi, CPU 16, 디스크 100Gi인 노드에서 kubelet 자신과 컨테이너 런타임 몫으로 kubeReserved를 {"{"}cpu 1000m, memory 2Gi, ephemeral-storage 1Gi{"}"}로 두었습니다.</p>
             <p>sshd·systemd 같은 OS 데몬 몫인 systemReserved는 {"{"}cpu 500m, memory 1Gi, ephemeral-storage 1Gi{"}"}이고, 메모리가 500Mi 아래로 내려가면 Pod를 쫓아내기 시작하는 evictionHard는 {"{"}memory.available: &lt;500Mi, nodefs.available: &lt;10%{"}"}입니다.</p>
@@ -81,6 +121,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="scheduling-sum" data-teach-level="1" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 노드가 18%만 써도 requests 합이 차면 Pending입니다</h2>
+          <AllocatableLedgerViz />
           <div className={prose}>
             <p>
               (가정) 3절의 노드에 2 CPU를 요청한 Pod 7개가 이미 배치되어 있습니다. requests 합은 14,000m이고 Allocatable 14,500m에서 남은 몫은 500m입니다. 그런데 일곱 Pod는 대기 상태의 웹 서버라 실제로는 합쳐서 2.9 CPU, 사용률로 18%만 씁니다.
@@ -96,7 +137,6 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
             </p>
             <p>event 메시지의 3은 "시도한 노드 3대"이고 뒤 문장은 Filter 단계의 탈락 이유를 노드 수로 묶은 것입니다. 메시지에 <code>preemption: 0/3 nodes are available: 3 No preemption victims found</code>가 더 붙으면 PostFilter 단계에서 우선순위가 낮은 Pod를 밀어내려 했지만 밀어낼 대상이 없었다는 뜻입니다.</p>
           </div>
-          <AllocatableLedgerViz />
           {code("fits-request", "fit.go의 Insufficient 판정")}
           {code("no-node-available-msg", "0/N nodes are available 조립")}
         </section>
@@ -117,6 +157,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="cpu-throttle" data-teach-level="3" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. CPU limit 500m은 100ms마다 50ms이고, 스레드 4개면 12.5ms 만에 끝납니다</h2>
+          <ThrottlePeriodViz />
           <div className={prose}>
             <p>
               Pod가 노드에 도착하면 kubelet은 CPU limit을 CFS quota로 바꿉니다. 식은 quota = milliCPU × period ÷ 1000이고 period는 kubelet 설정 cpuCFSQuotaPeriod의 기본값 100ms = 100,000μs입니다. limit 500m이면 50,000μs, 곧 100ms 주기마다 CPU 시간 50ms입니다. cgroup v2에서는 <code>cpu.max</code>에 <code>50000 100000</code>으로 쓰입니다.
@@ -142,7 +183,6 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
             conclusion="limit은 '100ms마다 50ms'라는 시간 상한이 되어 스레드 수만큼 빨리 닳고, request는 비율 20이 되어 바쁠 때의 나눔만 정합니다. 둘 다 500m이지만 커널에서는 전혀 다른 두 파일입니다."
             caveats={["커널은 quota를 CPU별 slice(기본 5ms)로 나눠 주므로 실제 소진 시각은 조금 다릅니다. 멈춤이 있다는 사실과 길이의 크기만 이 계산으로 봅니다.", "cpuCFSQuota를 false로 두면 limit이 cgroup에 쓰이지 않아 throttling은 사라지지만 Pod 하나가 노드 CPU를 다 쓸 수 있습니다."]}
           />
-          <ThrottlePeriodViz />
           {code("cfs-quota", "MilliCPUToQuota · MilliCPUToShares")}
           {code("cpu-weight", "shares → cpu.weight 변환")}
           {code("kubelet-cfs-defaults", "cpuCFSQuota · 100ms 기본값")}
@@ -177,6 +217,7 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
 
         <section id="eviction-order" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. 노드가 모자라면 requests를 넘긴 Pod부터 쫓아냅니다. QoS 순서가 아닙니다</h2>
+          <EvictionOrderViz />
           <div className={prose}>
             <p>
               7절의 OOM은 컨테이너 하나가 자기 limit에 닿는 이야기였습니다. 노드 전체의 memory.available이 3절의 eviction 하한(기본 100Mi, 예시 500Mi) 아래로 내려가면 다른 경로가 열립니다. kubelet의 eviction manager가 Pod를 골라 Failed(reason Evicted)로 만들고 컨테이너를 정리합니다.
@@ -265,24 +306,26 @@ export default function KubernetesRequestsLimitsAllocatableQosArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">11. requests는 현실에 맞추고, CPU limit은 멈춤을 재고 나서 정합니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">11. requests와 limits는 사용량을 예측하거나 성능을 보장하지 않습니다</h2>
           <div className={prose}>
             <p>
-              Pending부터 봅니다. "Insufficient cpu/memory"는 노드 사용률이 아니라 requests 합의 문제이므로 kubectl describe node의 Allocated resources 표에서 requests 합계와 Allocatable을 비교합니다. 사용량보다 훨씬 큰 requests가 쌓여 있으면 requests를 실제 사용에 맞게 내리는 것이 해법이고, 노드를 늘리는 것은 그 다음입니다.
+              <code>Insufficient cpu/memory</code>는 실제 사용률이 높다는 뜻이 아닙니다. scheduler의 장부에서 requests 합이 Allocatable을 넘었다는 뜻이므로, 노드가 비어 보여도 Pod는 Pending일 수 있습니다.
             </p>
             <p>
-              반대로 requests 합은 작은데 노드가 터진다면 requests를 올려 scheduler의 장부가 현실을 반영하게 합니다.
-            </p>
-            <p>CPU limit은 걸기 전에 cgroup의 cpu.stat에서 nr_throttled와 throttled_usec을 봅니다. 사용률이 limit의 절반이어도 throttled_usec이 쌓이면 6절의 멀티스레드 소진이 일어나고 있다는 뜻입니다.
+              반대로 requests 합이 작다고 실제 노드가 안전한 것도 아닙니다. 컨테이너의 실제 사용량이 requests를 넘어도 limit에 닿기 전까지 실행되므로, 장부가 비어 있는 동안 메모리 압력이나 CPU 경합이 생길 수 있습니다.
             </p>
             <p>
-              선택지는 limit을 올리거나, 스레드 수를 limit에 맞추거나(GOMAXPROCS·JVM ActiveProcessorCount), limit을 없애고 requests와 Guaranteed 대신 Burstable로 두는 것입니다. 어느 쪽이든 "limit을 넘으면 죽는다"는 전제로 정하면 틀립니다.</p>
-            <p>memory는 request = limit으로 두는 것이 가장 예측 가능합니다. request보다 많이 쓰면 8절의 eviction 1순위이자 전역 OOM의 1순위가 되고, limit에 닿으면 7절의 137입니다. 둘을 같게 두면 두 순위에서 모두 뒤로 가고 Guaranteed 조건의 절반이 채워집니다. 나머지 절반인 CPU request = limit은 위의 throttling을 감수한다는 결정이 선행해야 합니다.</p>
+              CPU limit은 평균 사용률이 아니라 CFS 주기 안의 실행 시간을 제한합니다. 그래서 평균이 50%여도 <code>cpu.stat</code>의 <code>nr_throttled</code>와 <code>throttled_usec</code>이 늘고 tail latency가 악화될 수 있습니다. memory limit은 같은 방식으로 멈추지 않고 회수 뒤 OOM kill로 끝날 수 있습니다.
+            </p>
+            <p>
+              따라서 이 API 필드만으로 적정 requests·limits 값을 계산할 수는 없습니다. 워크로드 프로파일, 실제 분포, 허용 지연과 실패 기준이 필요하며 그 선택과 변경 절차는 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes 운영</a>의 실무 판단으로 넘깁니다.
+            </p>
             <p>이 글의 수치는 공식 문서의 Allocatable 예와 kubelet 변환식으로 손으로 계산한 값이며 실제 클러스터를 돌려 잰 것이 아닙니다. 실제 노드의 Allocatable·requests 합·throttling은 kubectl describe node, cpu.stat, memory.events에서 다시 읽어야 합니다.
             </p>
             <p>
               노드에 도착한 Pod가 CrashLoopBackOff·Pending·OOMKilled 같은 상태 단어로 어떻게 보이는지는 <a href="/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview">Pod 상태와 Event 글</a>에서, Pod가 노드에 묶이고 노드가 죽을 때의 시계는 <a href="/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview">Pod가 노드에 닿기까지</a>에서 이어집니다.</p>
           </div>
+          <KubernetesMapReturn current="resources" />
           <ContentBoundary article="kubernetes-requests-limits-allocatable-qos" />
         </section>
 

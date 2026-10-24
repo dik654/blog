@@ -34,7 +34,7 @@ const NOTES: readonly string[] = [
 ];
 
 export default function VolumeStaircaseViz() {
-  const scenes = useAnimatedScenes(STEPS.length, 4200);
+  const scenes = useAnimatedScenes(STEPS.length, 4200, { loop: false });
   const active = scenes.active;
   const reduced = scenes.reducedMotion;
 
@@ -46,6 +46,7 @@ export default function VolumeStaircaseViz() {
       note="(가정) 존 세 개 클러스터, 20Gi RWO PVC, WaitForFirstConsumer StorageClass. 경로 문자열은 kubelet 기본 루트 /var/lib/kubelet 아래의 형태를 줄여 적었습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

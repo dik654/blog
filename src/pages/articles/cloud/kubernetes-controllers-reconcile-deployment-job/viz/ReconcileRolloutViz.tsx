@@ -97,9 +97,9 @@ function PodCell({ state, tone, reduced, delay }: { state: Cell; tone: string; r
       <motion.div
         className={`${base} border-dashed`}
         style={{ borderColor: "#f59e0b", color: "#b45309" }}
-        initial={{ opacity: 0.2 }}
-        animate={{ opacity: reduced ? 1 : [0.4, 1, 0.4] }}
-        transition={{ delay, duration: 1.4, repeat: reduced ? 0 : Infinity }}
+        initial={{ opacity: reduced ? 1 : 0.45 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay, duration: reduced ? 0 : 0.25 }}
       >
         생성 중
       </motion.div>
@@ -165,7 +165,7 @@ function Stack({ active, className, render }: { active: number; className?: stri
 }
 
 export default function ReconcileRolloutViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4600);
+  const scenes = useAnimatedScenes(SCENES.length, 4600, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const total = count(scene.old, "ready") + count(scene.old, "creating") + count(scene.neu, "ready") + count(scene.neu, "creating");
@@ -179,6 +179,7 @@ export default function ReconcileRolloutViz() {
       note="maxSurge·maxUnavailable 기본 25%를 replicas 3에 적용해 올림 1·내림 0으로 계산했습니다. 한 장면이 reconcile 한 번과 그 뒤 Pod 상태 변화 한 번입니다. 실제 클러스터를 돌려 잰 것이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

@@ -38,6 +38,10 @@ const checks = {
     articlePage.includes("<ArticleLoadBoundary") &&
     boundary.includes("getDerivedStateFromError"),
   static404Fallback: staticRoutes.includes('"404.html"'),
+  kubernetesNoScriptFallback:
+    staticRoutes.includes("renderToStaticMarkup") &&
+    staticRoutes.includes('startsWith("cloud-kubernetes")') &&
+    staticRoutes.includes('id="noscript-article"'),
   katexCssLoaded: main.includes('katex/dist/katex.min.css'),
   katexRenderStatus:
     math.includes('html.includes("katex-error")') &&

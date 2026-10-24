@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-24 · Kubernetes 재귀 학습 묶음 (완료)
+
+- 공개 Kubernetes 글 10편을 공통 정본 `kubernetes-learning-tree.ts`에 등록했습니다. 전체 지도와 Controller·Scheduler/Node·자원·Pod 상태·스토리지·패킷 경로·교체/확장은 `concept`, 요청 경로 실습과 SRE/변경 판단은 `practice`입니다. 별도 `reference` 글은 현재 공개 경로에 없습니다.
+- 각 글의 locator가 직속 부모 영역, 현재 질문, 같은 트랙의 앞뒤 글을 같은 데이터에서 읽습니다. 실무 글은 실제 본문에 존재하는 절 anchor만 출발점으로 사용하며 strict 읽기 순서 감사가 공개 경로 누락, 미검토 상태, 사라진 anchor를 실패로 처리합니다.
+- 중요한 가정과 계산은 설명 문단보다 먼저 보이도록 바꿨습니다. Controller 반올림·Job backoff, Allocatable·CPU quota·eviction, PVC binding·노드 장애, 종료 예산·PDB·HPA, error budget·burn rate·toil·postmortem을 정적 도식 또는 의미 있는 장면 변화로 먼저 보여 줍니다.
+- 장면 애니메이션은 자동 재생과 반복을 끄고 키보드 좌우 이동과 Space 재생을 지원합니다. 화면을 벗어나거나 탭이 숨으면 정지하며, 다시 보인다는 이유만으로 재개하지 않습니다. reduced-motion에서는 재생을 막되 장면 선택은 유지합니다.
+- Vite SPA의 구조적 한계로 JavaScript를 끄면 모든 글이 사라지던 문제를 확인했습니다. Kubernetes 10편만 빌드 시 React 본문을 정적 markup으로 다시 렌더링해 각 공개 경로의 `noscript`에 넣었습니다. JavaScript가 없을 때도 같은 절 순서·가정·수식·결론이 보이며 인터랙션만 제외됩니다.
+- Chromium으로 10편을 390×844와 1440×1000에서 열어 문서·article·시각화 overflow가 없음을 확인했습니다. 키보드 이동, 화면 이탈 정지, 재진입 상태 유지, reduced-motion을 별도로 검증했고, production preview의 JavaScript 비활성 390×844에서도 10편 모두 H1·전체 절·본문과 폭 390을 확인했습니다.
+- strict 읽기 순서, article·learning·formula·calculation·reading·prose·한국어·용어쌍·architecture-flow·pseudocode 감사, ESLint, 12GB heap TypeScript, production build, `git diff --check`를 통과했습니다. JavaScript 비활성 정적 본문은 `audit:runtime` 계약에 고정했습니다.
+
 ## 2026-10-18 · ETH 블롭·Robinhood Chain·Hyperliquid 최신 사실 대조 (완료)
 
 - 오래된 작업공간을 정본으로 삼지 않고 `origin/main`의 최신 커밋 `6efd2e51`에서 별도 복구 작업공간을 만들었다. 기존 Heru·NFS 작업공간의 미커밋 파일은 덮어쓰거나 삭제하지 않았다.
