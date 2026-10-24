@@ -7,20 +7,23 @@ export default function NeuralApproach() {
   return (
     <section id="neural-approach" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Count-based와 prediction-based embedding은 같은 co-occurrence signal을
-        다른 objective로 압축한다
+        SGNS는 같은 관측쌍을 예측 과제로 압축합니다
       </h2>
+
+      <MethodBridgeViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Word2Vec은 global matrix를 먼저 materialize하지 않고 sampled local context를 분류하면서 embedding을 학습합니다. Skip-
-          gram with negative sampling (SGNS)의 최적 dot product가 shifted PMI와 연결된다는 분석은 두 계열이 완전히 분리되지 않았음을
-          보여줍니다. GloVe는 nonzero global co-occurrence count에 weighted log-bilinear regression을 적용해 두 관점을 더
-          직접적으로 연결합니다.
+          Word2Vec은 global matrix를 먼저 만들지 않습니다. 표본으로 뽑은 local
+          context를 분류하면서 embedding을 학습합니다. Skip-gram with negative
+          sampling(SGNS)의 최적 dot product는 shifted PMI와 연결됩니다.
+        </p>
+        <p className="leading-8">
+          이 분석은 count-based와 prediction-based 계열이 완전히 분리되지
+          않았음을 보여 줍니다. GloVe는 0이 아닌 global co-occurrence count의
+          log를 bilinear score로 맞춰 두 관점을 더 직접적으로 연결합니다.
         </p>
       </div>
-
-      <MethodBridgeViz />
 
       <ExplainedFormula
         question="SGNS의 word–context dot product는 어떤 count statistic에 가까워지는가?"
@@ -37,7 +40,7 @@ export default function NeuralApproach() {
         operations={[
           { expression: String.raw`u_w^\top v_c`, annotation: ["target row와 context row의 내적이","SGNS optimum에서 가까워지는 값"] },
           { expression: String.raw`\operatorname{PMI}(w,c)`, annotation: ["pair가 독립 baseline보다","얼마나 자주 함께 나오는지"] },
-          { expression: String.raw`-\log k`, annotation: ["negative를 k개 뽑을수록 아래로 이동","PMI=4, k=5면 4−log 5≈2.39"] },
+          { expression: String.raw`-\log k`, annotation: ["negative를 k개 뽑을수록 아래로 이동","고양이–반려 PMI=.439, k=5이면 .439−log 5≈−1.170"] },
         ]}
         terms={[
           {
@@ -74,15 +77,30 @@ export default function NeuralApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          한 word–context pair의 logistic objective를 score에 대해 미분해 0으로 놓으면 연결이 드러납니다. Positive data 확률과 k배 noise
-          확률의 log-odds가 나오고 noise가 context marginal일 때 PMI−log k로 정리됩니다. 예를 들어 PMI=4, k=5라면 4−log 5≈2.39입니다.
-          다만 실제 embedding은 모든 pair가 낮은 차원의 같은 parameter를 공유하므로 한 cell을 맞추는 update가 다른 cell과 충돌합니다. Smoothed
-          noise, subsampling과 유한한 SGD까지 있으니 이 등식은 해석의 기준일 뿐, 각 cell을 보증해 주지는 않습니다.
+          한 word–context pair의 logistic objective를 score에 대해 미분한 뒤
+          0으로 놓으면 positive data 확률과 k배 noise 확률의 log-odds가 나옵니다.
+          Noise가 context marginal일 때 이 값은 PMI−log k로 정리됩니다.
         </p>
         <p className="leading-8">
-          방법 선택도 이름보다 측정 계약에서 시작합니다. 해석 가능한 전역 count와 작은 corpus가 중요하면 PPMI+SVD를 먼저 비교합니다. Streaming pair와 큰
-          corpus에서 sparse update가 중요하면 SGNS가 실용적입니다. 문장마다 같은 표면형의 뜻을 나눠야 한다면 static table만으로는 부족하므로 contextual
-          model을 선택하되 tokenization·layer·pooling·평가 split을 함께 기록해야 공정한 비교가 됩니다.
+          고양이–반려 PMI≈0.439에 k=5를 대입하면 0.439−log 5≈−1.170입니다.
+          양의 PMI pair도 negative class prior를 반영한 최적 score에서는 음수가
+          될 수 있습니다.
+        </p>
+        <p className="leading-8">
+          실제 embedding은 모든 pair가 낮은 차원의 parameter를 공유합니다. 한
+          cell을 맞추는 update가 다른 cell과 충돌할 수 있습니다. Smoothed noise,
+          subsampling과 유한한 SGD도 결과를 바꾸므로 이 등식은 해석의 기준이지
+          각 cell의 보증이 아닙니다.
+        </p>
+        <p className="leading-8">
+          방법 선택은 이름보다 측정 계약에서 시작합니다. 해석 가능한 전역 count와
+          작은 corpus가 중요하면 PPMI+SVD를 먼저 비교합니다. Streaming pair와 큰
+          corpus의 sparse update가 중요하면 SGNS를 비교합니다.
+        </p>
+        <p className="leading-8">
+          문장마다 같은 표면형의 뜻을 나눠야 한다면 static table만으로는
+          부족합니다. Contextual model을 쓸 때는 tokenization, layer, pooling과
+          평가 split을 함께 기록해야 공정하게 비교할 수 있습니다.
         </p>
       </div>
 
@@ -93,10 +111,14 @@ export default function NeuralApproach() {
           Static embedding에서 contextual representation으로 무엇이 달라졌나
         </h3>
         <p className="leading-8">
-          Static embedding은 “bank”에 하나의 vector를 배정하므로 금융기관과 강둑 의미가 섞입니다. 예를 들어 “bank approved the loan”과 “sat
-          on the river bank”는 static table에서 같은 bank vector를 조회하지만 contextual model은 문장 안의 다른 token을 읽어 두
-          token instance의 hidden state를 각각 다시 계산합니다. 그렇다고 distributional assumption이 사라지지는 않습니다. 더 넓은 context와
-          더 복잡한 objective에서 사용 패턴을 학습할 뿐입니다.
+          Static embedding은 “bank”에 vector 하나를 배정하므로 금융기관과 강둑
+          의미가 섞입니다. “bank approved the loan”과 “sat on the river bank”도
+          static table에서는 같은 vector를 조회합니다.
+        </p>
+        <p className="leading-8">
+          Contextual model은 문장 안의 다른 token을 읽고 두 bank instance의 hidden
+          state를 각각 다시 계산합니다. 그렇다고 분포 가정이 사라지는 것은
+          아닙니다. 더 넓은 context와 더 복잡한 objective에서 사용 패턴을 학습합니다.
         </p>
       </div>
 

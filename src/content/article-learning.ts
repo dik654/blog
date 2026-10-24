@@ -2409,7 +2409,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/distributional-semantics": {
     coreIdea:
-      "분산 의미론은 단어의 뜻을 사전처럼 직접 저장하지 않습니다. 먼저 corpus와 tokenizer를 고정하고, 어떤 주변 항목을 context로 볼지 정해 word–context 관측을 만든 뒤, 빈도 편향을 PMI·PPMI로 조정하고 SVD나 prediction objective로 압축합니다. 따라서 cosine은 이 측정 파이프라인 안의 근접도이며 의미 동일성·사실성·공정성을 보장하지 않습니다.",
+      "분포 의미론은 단어의 뜻을 사전처럼 직접 저장하지 않습니다. 먼저 corpus와 tokenizer를 고정하고, 어떤 주변 항목을 context로 볼지 정해 word–context 관측을 만든 뒤, 빈도 편향을 PMI·PPMI로 조정하고 SVD나 prediction objective로 압축합니다. 따라서 cosine은 이 측정 파이프라인 안의 근접도이며 의미 동일성·사실성·공정성을 보장하지 않습니다.",
     assumedKnowledge: [
       {
         id: "tokenizer-pipeline-contract",
@@ -2485,7 +2485,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "사람을 직접 설명하기보다 누구와 어떤 상황에서 자주 만나는지 기록해 역할의 일부를 추정하는 것처럼, 단어 주변의 반복적인 사용 패턴을 의미 evidence로 삼습니다.",
         workedExample:
-          "‘고양이’와 ‘강아지’가 ‘키우다·먹이·동물병원’ 주변에 반복해서 나타나면 두 target의 context profile이 비슷해집니다.",
+          "공통 사례에서 고양이의 context count는 [반려 4, 먹이 3, 공전 0], 강아지는 [3, 4, 0], 행성은 [0, 0, 5]입니다. 고양이와 강아지는 관측 분포가 비슷하고 행성은 다른 방향에 놓입니다.",
         boundary:
           "비슷한 분포는 의미 동일성의 충분조건이 아닙니다. 반의어도 context를 공유하며 corpus 밖의 지시 대상·진위·화자 의도는 직접 관측하지 못합니다.",
       },
@@ -2505,7 +2505,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "Target을 행, 관측할 주변 특징을 열로 둔 집계표입니다. 어떤 열을 만들었는지가 모델이 볼 수 있는 관계를 먼저 결정합니다.",
         workedExample:
-          "문장 ‘고양이가 우유를 마신다’에서 window 1을 쓰면 ‘우유’ row와 ‘마신다’ column의 count를 1 늘릴 수 있습니다.",
+          "행을 [고양이, 강아지, 행성], 열을 [반려, 먹이, 공전]으로 두면 count matrix는 [[4,3,0],[3,4,0],[0,0,5]]이고 전체 관측 수는 19입니다. X[고양이,반려]=4는 두 항목이 정한 context 규칙 안에서 네 번 함께 관측됐다는 뜻입니다.",
         boundary:
           "Window·방향·거리 weight·문장 경계·dependency parser·subsampling이 달라지면 같은 corpus도 다른 matrix가 됩니다. Count는 인과관계가 아닙니다.",
       },
@@ -2515,7 +2515,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "둘이 많이 만났다는 사실만 보지 않고, 각자 워낙 자주 등장해서 우연히 만날 독립 기대량과 비교합니다.",
         workedExample:
-          "P(w,c)=0.02, P(w)=0.1, P(c)=0.1이면 자연로그 PMI=log 2≈0.693이고 PPMI도 0.693입니다.",
+          "고양이–반려 pair는 P(w,c)=4/19이고 두 marginal은 모두 7/19입니다. 비율은 (4/19)÷((7/19)²)=76/49이고 자연로그 PMI와 PPMI는 약 0.439입니다.",
         boundary:
           "Unseen pair는 log 0 때문에 정의 문제가 생기며 작은 corpus의 rare pair는 매우 큰 score를 낼 수 있습니다. PPMI는 negative evidence를 0으로 버립니다.",
       },
@@ -2525,7 +2525,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "수많은 context 열에서 함께 움직이는 패턴을 몇 개의 공유 방향으로 묶어 각 단어를 짧은 좌표로 다시 표현합니다.",
         workedExample:
-          "10만 context column을 가진 PPMI matrix에서 상위 singular direction 300개를 남기면 각 word row를 300차원 dense vector로 사용할 수 있습니다.",
+          "공통 사례의 PPMI matrix singular value는 약 1.335, 0.590, 0.288입니다. Rank 2에서는 앞의 두 방향을 남기고 0.288 방향을 버리므로 squared Frobenius error는 약 0.083입니다.",
         boundary:
           "Eckart–Young은 정해진 norm의 reconstruction에는 최적이지만 synonym 판단·분류 label·희귀 관계 보존까지 최적이라는 뜻은 아닙니다.",
       },
@@ -2535,7 +2535,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "두 화살표의 길이는 무시하고 어느 방향을 향하는지 비교합니다. Corpus frequency가 magnitude에 섞였을 때 방향 pattern에 집중할 수 있습니다.",
         workedExample:
-          "u=(3,4), v=(6,8)은 dot product 50, norm 5와 10이므로 cosine은 1입니다. v가 두 배여도 방향은 같습니다.",
+          "공통 사례에서 고양이와 강아지의 PPMI row cosine은 약 0.616입니다. Rank 2 근사에서는 둘이 같은 latent 방향에 놓여 cosine이 1이 되므로, 압축이 근접도까지 바꿀 수 있음을 보여 줍니다.",
         boundary:
           "Zero vector에는 정의되지 않으며 가까운 vector가 synonym·사실적으로 동등·downstream에서 유용하다고 자동 결론낼 수 없습니다.",
       },
@@ -2545,7 +2545,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "실제 context pair와 noise pair를 구분하도록 학습하면, 최적 분류 score가 ‘독립 기대보다 얼마나 자주 만났는가’에 negative 표본 비율을 반영한 값으로 정리됩니다.",
         workedExample:
-          "PMI(w,c)=4이고 positive 하나당 negative k=5개를 뽑는 단순 분석에서는 optimum dot product가 4−log 5≈2.39에 대응합니다.",
+          "공통 사례의 고양이–반려 PMI가 약 0.439이고 positive 하나당 negative sample을 5개 뽑는 단순 분석에서는 optimum dot product가 0.439−ln 5≈−1.170에 대응합니다.",
         boundary:
           "Cell을 독립적으로 최적화한 이론적 분석입니다. 제한된 dimension·공유 parameter·SGD·smoothed noise distribution에서는 각 pair가 등식을 정확히 만족하지 않습니다.",
         proofIdea:
@@ -2631,11 +2631,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "‘고양이가 우유를 마신다’ 같은 token sequence와 window가 주어졌을 때 word–context count를 누적하고 window를 넓히면 무엇이 달라지는지 설명할 수 있을까요?",
+          "공통 사례의 count matrix [[4,3,0],[3,4,0],[0,0,5]]에서 행·열·cell·전체 관측 수가 각각 무엇을 뜻하는지 설명할 수 있을까요?",
         answerChecklist: [
-          "Target position마다 허용 offset을 순회한다.",
-          "해당 target–context cell에 count 또는 distance weight를 더한다.",
-          "넓은 window가 더 먼 topical relation과 noise를 함께 포함할 수 있다고 설명한다.",
+          "행은 target [고양이, 강아지, 행성], 열은 context [반려, 먹이, 공전]이라고 말한다.",
+          "X[고양이,반려]=4는 정한 context 규칙에서 네 번 함께 관측됐다는 뜻이라고 설명한다.",
+          "아홉 cell의 합이 전체 관측 수 19라고 계산한다.",
         ],
         requiredConcepts: [
           "tokenizer-pipeline-contract",
@@ -2647,10 +2647,10 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "P(w,c)=0.02, P(w)=P(c)=0.1일 때 자연로그 PMI와 PPMI를 계산하고 P(w,c)=0일 때 필요한 정책을 설명할 수 있을까요?",
+          "고양이–반려 count가 4, 두 marginal이 각각 7, 전체 관측 수가 19일 때 자연로그 PMI와 PPMI를 계산하고 count가 0일 때 필요한 정책을 설명할 수 있을까요?",
         answerChecklist: [
-          "독립 baseline 0.01과 ratio 2를 계산한다.",
-          "PMI=PPMI=log 2≈0.693을 얻는다.",
+          "P(w,c)=4/19와 두 marginal 7/19를 적는다.",
+          "비율 76/49와 PMI=PPMI≈0.439를 얻는다.",
           "Zero count에서는 smoothing·minimum count·undefined 처리 가운데 명시적 정책이 필요하다고 말한다.",
         ],
         requiredConcepts: [
@@ -2675,11 +2675,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "M=diag(3,1)을 k=1 truncated SVD로 근사하고 남는 matrix와 버리는 squared Frobenius error를 계산할 수 있을까요?",
+          "공통 사례 PPMI matrix의 singular value가 1.335, 0.590, 0.288일 때 rank 2에서 남기는 방향과 버리는 squared Frobenius error를 계산할 수 있을까요?",
         answerChecklist: [
-          "Singular value가 3과 1임을 확인한다.",
-          "Rank-1 근사가 diag(3,0)임을 적는다.",
-          "버린 squared Frobenius error가 1²=1이며 이는 downstream 의미 보존 보장이 아니라고 설명한다.",
+          "1.335와 0.590 방향을 남긴다고 말한다.",
+          "0.288 방향을 버린다고 말한다.",
+          "버린 squared Frobenius error가 0.288²≈0.083이며 이는 downstream 의미 보존 보장이 아니라고 설명한다.",
         ],
         requiredConcepts: [
           "singular-value-decomposition",
@@ -2706,11 +2706,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Weighted matrix의 singular value가 9,4,1이고 k=2일 때 버리는 squared Frobenius error를 계산하고 이 선택이 synonym 평가에도 최적이라고 단정할 수 없는 이유를 설명할 수 있을까요?",
+          "공통 사례의 PPMI cosine 0.616이 rank-2 근사 뒤 1이 되는 이유와 이것을 synonym 판정으로 바로 쓰면 안 되는 이유를 설명할 수 있을까요?",
         answerChecklist: [
-          "버린 singular value 제곱 1을 계산한다.",
-          "Rank-2 reconstruction이라는 objective와 norm 조건을 말한다.",
-          "작은 direction에 lexical relation이나 downstream label이 있을 수 있다고 제한한다.",
+          "0.288 singular direction을 버리며 두 row의 차이를 일부 제거한다고 설명한다.",
+          "Rank-2 reconstruction objective와 cosine evaluation은 서로 다른 목적이라고 말한다.",
+          "압축 뒤 cosine 1은 동의어·사실적 동등성·downstream 유용성을 보장하지 않는다고 제한한다.",
         ],
         requiredConcepts: [
           "singular-value-decomposition",
@@ -2722,10 +2722,10 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "u=(3,4), v=(6,8), z=(4,−3)의 cosine을 비교하고 높은 cosine을 synonym 판정으로 바로 쓰면 안 되는 이유를 설명할 수 있을까요?",
+          "고양이와 강아지의 PPMI row [0.439,0.151,0]과 [0.151,0.439,0]의 cosine이 약 0.616인지 확인하고 높은 cosine을 synonym 판정으로 바로 쓰면 안 되는 이유를 설명할 수 있을까요?",
         answerChecklist: [
-          "cos(u,v)=1을 계산한다.",
-          "cos(u,z)=0을 계산한다.",
+          "dot product와 두 norm을 식에 대입해 약 0.616을 얻는다.",
+          "행성과의 cosine은 0이라고 확인한다.",
           "같은 context를 공유하는 반의어·bias·domain shift 때문에 labeled evaluation이 필요하다고 설명한다.",
         ],
         requiredConcepts: [
@@ -2739,9 +2739,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "PMI=4, negative sample k=5인 pair의 shifted-PMI score를 계산하고 실제 SGNS embedding이 정확히 그 값이 아닐 수 있는 조건을 세 가지 설명할 수 있을까요?",
+          "공통 사례의 PMI≈0.439, negative sample k=5인 pair의 shifted-PMI score를 계산하고 실제 SGNS embedding이 정확히 그 값이 아닐 수 있는 조건을 세 가지 설명할 수 있을까요?",
         answerChecklist: [
-          "4−log 5≈2.39를 계산한다.",
+          "0.439−ln 5≈−1.170을 계산한다.",
           "Finite dimension과 shared parameter 간섭을 든다.",
           "Noise distribution smoothing·subsampling·SGD optimization 차이를 든다.",
         ],

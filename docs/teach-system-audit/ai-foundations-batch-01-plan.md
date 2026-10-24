@@ -160,3 +160,39 @@ grounding 출력을 소유한다. 두 출력이 이름만 비슷한 하나의 sh
 - 기존의 “생성형 VLM 뒤에서 retrieval과 grounding이 같은 표현을 이어 쓴다”는 배치는 교체한다.
 - 모든 동작 시각화는 자동 시작하지 않고, 한 번 재생한 뒤 멈추며, 키보드와 reduced-motion에서도
   같은 순서와 결론을 제공한다.
+
+## 5. Distributional semantics family
+
+### 분류와 부모 관계
+
+| route | track · form | 직속 부모 | 이 글이 닫을 질문 |
+|---|---|---|---|
+| `ai/distributional-semantics` | concept · explanation | `ai/tokenizer`에서 만들어진 token sequence | 주변에서 함께 관측된 횟수를 어떻게 비교 가능한 단어 벡터로 바꾸며, 압축 뒤의 cosine은 무엇까지 말할 수 있는가? |
+
+이 글은 제품·vector database·운영 SLO를 고르지 않는다. 문자열에서 count, PPMI, 저차원
+vector, 평가 경계까지 하나의 관측 계약을 추적하고 다음 `Word2Vec` 계열 글로 반환한다.
+
+### 같은 수치 사례
+
+행은 `[고양이, 강아지, 행성]`, 열은 `[반려, 먹이, 공전]`이며 count matrix는
+`[[4,3,0],[3,4,0],[0,0,5]]`이다. 전체 관측 수는 19이고 행·열 합은 모두
+`[7,7,5]`이다. 고양이–반려 pair의 자연로그 PMI는
+`ln((4/19)/((7/19)²))=ln(76/49)≈0.439`이다.
+
+PPMI matrix의 singular value는 약 `1.335, 0.590, 0.288`이다. Rank 2에서는 마지막
+방향을 버려 squared Frobenius error가 약 `0.083`이 된다. 고양이와 강아지 row의
+cosine은 PPMI에서 약 `0.616`, rank-2 근사에서 `1`이 된다. SGNS의 독립 cell 분석에
+negative sample `k=5`를 적용한 shifted score는 `0.439−ln5≈−1.170`이다. 모두 계산
+흐름을 연결하기 위한 교육용 가정이며 실제 학습 결과가 아니다.
+
+### 본문과 시각화 순서
+
+1. Token sequence에서 관측쌍 19개, count matrix, PPMI, rank 2, cosine 변화까지 전체 흐름을 먼저 본다.
+2. 같은 matrix의 한 cell을 골라 행·열·관측 규칙의 뜻을 확인한다.
+3. `4/19`, `7/19`, `76/49`, `ln`을 한 단계씩 계산해 빈도에서 PPMI로 넘어간다.
+4. 세 singular value 중 무엇을 남기고 무엇을 버리는지 본 뒤 수식 이름을 붙인다.
+5. Explicit PPMI+SVD와 sampled SGNS가 같은 계산이라는 오해를 경계한다.
+6. 높은 cosine을 의미 동일성으로 해석하기 전에 압축·반의어·bias·task 평가 경계를 확인한다.
+
+모션은 사용자가 재생한 뒤 단계마다 실제 수치와 상태가 바뀌고 마지막 장면에서 멈춘다. 장식용
+페이드나 자동 재생은 사용하지 않는다. JavaScript가 없어도 같은 수치와 결론은 본문 순서로 남긴다.

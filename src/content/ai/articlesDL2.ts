@@ -4,7 +4,7 @@ import type { Article } from "../types";
 export const dlNlpArticles: Article[] = [
   {
     slug: "distributional-semantics",
-    title: "분산 의미론: 동시발생 행렬에서 단어 벡터까지",
+    title: "분포 의미론: 동시 발생 행렬에서 단어 벡터까지",
     subcategory: "ai-nlp",
     sections: [
       { id: "overview", title: "가정·측정·의미 경계" },

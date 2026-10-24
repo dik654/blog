@@ -7,9 +7,11 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        분산 의미론은 단어의 의미 전체가 아니라 corpus에서 관측한 사용 패턴을
+        분포 의미론은 단어의 의미 전체가 아니라 corpus에서 관측한 사용 패턴을
         vector로 만든다
       </h2>
+
+      <RepresentationContractViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
@@ -21,11 +23,11 @@ export default function Overview() {
         </p>
         <p className="leading-8">
           여기서 <strong>corpus</strong>는 분석 대상으로 모은 문장 집합이고,
-          <strong> context</strong>는 target 주변에서 실제로 셀 특징입니다. 예를
-          들어 “고양이가 우유를 마신다”에서 target을 “우유”로 잡고 좌우 한 token을
-          context로 정의하면 “고양이”와 “마신다”가 관측됩니다. Context는 단어의
-          뜻 그 자체가 아니라, 연구자가 정한 관측 규칙의 출력이라는 점이
-          출발점입니다.
+          <strong> context</strong>는 target 주변에서 실제로 셀 특징입니다. 이
+          글에서는 고양이, 강아지, 행성을 target으로, 반려, 먹이, 공전을 context로
+          정한 19개의 관측쌍을 사용합니다. 고양이 row가 [4,3,0]이라는 말은 세
+          context가 각각 4회·3회·0회 관측됐다는 뜻입니다. Context는 단어의 뜻 그
+          자체가 아니라 연구자가 정한 관측 규칙의 출력입니다.
         </p>
         <p className="leading-8">
           Embedding은 단어의 사전적 의미를 그대로 담은 좌표가 아닙니다. Corpus, tokenization, window, weighting과 compression을 통과한 측정
@@ -35,7 +37,6 @@ export default function Overview() {
       </div>
 
       <ContentBoundary article="distributional-semantics" />
-      <RepresentationContractViz />
 
       <ExplainedFormula
         question="서로 다른 두 one-hot 단어가 의미적으로 가까운지 dot product로 알 수 없는 이유는 무엇인가?"

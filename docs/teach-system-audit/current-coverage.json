@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 404,
-    "pending": 586,
+    "reviewed": 405,
+    "pending": 585,
     "untracked": 0,
-    "assignedPending": 534,
+    "assignedPending": 533,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -481,11 +481,11 @@
     {
       "route": "ai/distributional-semantics",
       "publicPath": "cs/ai/distributional-semantics",
-      "title": "분산 의미론: 동시발생 행렬에서 단어 벡터까지",
+      "title": "분포 의미론: 동시 발생 행렬에서 단어 벡터까지",
       "catalogIndex": 45,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
