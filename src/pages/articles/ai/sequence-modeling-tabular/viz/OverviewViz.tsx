@@ -1,42 +1,89 @@
+import { StoryShell } from "../../kimi-k3-shared";
+import { useStory } from "../../useKimiStory";
+
+const labels = [
+  "cutoff 고정",
+  "도착 여부 확인",
+  "순서 만들기",
+  "미래 label 분리",
+] as const;
+
+const notes = [
+  "user_42의 09:00 예측을 고정합니다. 이 시각 뒤의 사건은 입력이 아니라 label 구간에 속합니다.",
+  "08:40 payment는 발생 시각이 cutoff 전이지만 09:07에 도착했으므로 입력에서 제외합니다.",
+  "남은 view와 cart를 event time과 tie-break key로 정렬해 Sᵢ,𝚌 = view → cart를 만듭니다.",
+  "09:18 purchase는 다음 24시간 horizon 안의 정답입니다. 입력 token으로 다시 들어가면 누출입니다.",
+] as const;
+
 const events = [
-  { time: "08:10", event: "view", available: "08:10", state: "입력" },
-  { time: "08:26", event: "cart", available: "08:26", state: "입력" },
-  { time: "08:40", event: "payment", available: "09:07", state: "제외" },
-  { time: "09:18", event: "purchase", available: "09:18", state: "target" },
-];
+  { time: "08:10", event: "view", available: "08:10", role: "입력" },
+  { time: "08:26", event: "cart", available: "08:26", role: "입력" },
+  { time: "08:40", event: "payment", available: "09:07", role: "제외" },
+  { time: "09:18", event: "purchase", available: "09:18", role: "정답" },
+] as const;
 
 export default function OverviewViz() {
-  return (
-    <figure data-viz className="overflow-hidden rounded-xl border border-border bg-background">
-      <figcaption className="border-b border-border px-4 py-4 sm:px-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-700 dark:text-violet-300">Forecast-origin ledger</p>
-        <h3 className="mt-1 text-base font-semibold sm:text-lg">Event time이 과거여도 cutoff에 도착하지 않았다면 입력이 아닙니다</h3>
-        <p className="mt-1 text-sm text-muted-foreground">entity=user_42 · cutoff=09:00 · target horizon=(09:00, 다음 날 09:00]</p>
-      </figcaption>
+  const story = useStory(labels.length, 6200);
 
-      <div className="px-4 py-5 sm:px-6">
-        <div className="hidden grid-cols-[5rem_1fr_7rem_5rem] border-y border-border text-sm sm:grid">
-          <div className="px-3 py-2 font-medium text-muted-foreground">발생 시각</div>
-          <div className="px-3 py-2 font-medium text-muted-foreground">event</div>
-          <div className="px-3 py-2 font-medium text-muted-foreground">available</div>
-          <div className="px-3 py-2 font-medium text-muted-foreground">역할</div>
-        </div>
-        <div className="divide-y divide-border border-b border-border">
-          {events.map((item) => (
-            <div key={`${item.time}-${item.event}`} className="grid gap-1 py-3 text-sm sm:grid-cols-[5rem_1fr_7rem_5rem] sm:gap-0 sm:py-0">
+  return (
+    <StoryShell
+      title="09:00 예측 한 건에서 입력 사건과 미래 정답을 분리합니다"
+      subtitle="발생 시각·도착 시각·cutoff·horizon을 한 원장에서 차례로 판정합니다."
+      labels={labels}
+      sceneId="event-sequence-cutoff-trace"
+      staticNotes={notes}
+      {...story}
+    >
+      <div className="hidden grid-cols-[5rem_1fr_7rem_5rem] border-y border-border text-sm sm:grid">
+        <div className="px-3 py-2 font-medium text-muted-foreground">발생</div>
+        <div className="px-3 py-2 font-medium text-muted-foreground">사건</div>
+        <div className="px-3 py-2 font-medium text-muted-foreground">도착</div>
+        <div className="px-3 py-2 font-medium text-muted-foreground">판정</div>
+      </div>
+      <div className="divide-y divide-border border-b border-border">
+        {events.map((item, index) => {
+          const active =
+            story.step === 0 ||
+            (story.step === 1 && index === 2) ||
+            (story.step === 2 && index < 2) ||
+            (story.step === 3 && index === 3);
+          return (
+            <div
+              key={`${item.time}-${item.event}`}
+              className={`grid gap-1 py-3 text-sm transition-colors sm:grid-cols-[5rem_1fr_7rem_5rem] sm:gap-0 sm:py-0 ${
+                active ? "bg-primary/10" : ""
+              }`}
+            >
               <div className="font-mono sm:px-3 sm:py-3">{item.time}</div>
               <div className="font-medium sm:px-3 sm:py-3">{item.event}</div>
-              <div className="text-muted-foreground sm:px-3 sm:py-3"><span className="sm:hidden">available · </span>{item.available}</div>
-              <div className={`sm:px-3 sm:py-3 ${item.state === "입력" ? "text-emerald-700 dark:text-emerald-300" : item.state === "target" ? "text-violet-700 dark:text-violet-300" : "text-amber-700 dark:text-amber-300"}`}>{item.state}</div>
+              <div className="text-muted-foreground sm:px-3 sm:py-3">
+                <span className="sm:hidden">도착 · </span>
+                {item.available}
+              </div>
+              <div className="font-semibold sm:px-3 sm:py-3">{item.role}</div>
             </div>
-          ))}
-        </div>
-        <div className="mt-4 grid gap-2 text-sm sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <p className="border-l border-emerald-500 pl-3"><span className="font-semibold">Sᵢ,𝚌</span> = view → cart</p>
-          <span className="hidden text-muted-foreground sm:block">cutoff 09:00</span>
-          <p className="border-l border-violet-500 pl-3"><span className="font-semibold">label</span> = horizon 안 purchase 여부</p>
-        </div>
+          );
+        })}
       </div>
-    </figure>
+
+      <div className="mt-5 grid gap-3 text-sm sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+        <p className={story.step >= 2 ? "font-black" : "text-muted-foreground"}>
+          Sᵢ,𝚌 = view → cart
+        </p>
+        <span className="hidden text-muted-foreground sm:block">
+          cutoff 09:00
+        </span>
+        <p className={story.step >= 3 ? "font-black" : "text-muted-foreground"}>
+          label = 다음 24시간 purchase 여부
+        </p>
+      </div>
+
+      <p
+        data-scene-note
+        className="mt-5 break-keep border-t border-border pt-4 text-sm leading-7 text-muted-foreground"
+      >
+        {notes[story.step]}
+      </p>
+    </StoryShell>
   );
 }

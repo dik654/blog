@@ -92,6 +92,8 @@ const noScriptArticleRoutes = new Set([
   "ai/lightgbm-efficient-trees",
   "ai/catboost-ordered-learning",
   "ai/tabular-deep-learning",
+  "ai/time-features",
+  "ai/sequence-modeling-tabular",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",
