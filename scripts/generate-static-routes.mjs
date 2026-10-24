@@ -87,6 +87,11 @@ const noScriptArticleRoutes = new Set([
   "ai/robot-action-representations",
   "ai/imitation-learning-and-policy-generalization",
   "ai/vision-language-navigation",
+  "ai/llm-training-stages",
+  "ai/llm-dataset-engineering-and-cleaning",
+  "ai/supervised-fine-tuning",
+  "ai/rlhf",
+  "ai/rl-foundations-for-llm-post-training",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 import LlmDatasetEngineeringAndCleaningViz from "./llm-dataset-engineering-and-cleaning/viz/LlmDatasetEngineeringAndCleaningViz";
 
 /**
@@ -15,10 +16,18 @@ import LlmDatasetEngineeringAndCleaningViz from "./llm-dataset-engineering-and-c
 export default function LlmDatasetEngineeringAndCleaningArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmTrainingLocator
+        current="data"
+        question="웹 문서 하나가 어떤 검사와 혼합을 거쳐 실제 pretraining batch가 될까요?"
+        fixture="중복되고 평가 문항이 섞인 저품질 문서 하나를 source 선택·filtering·dedup·contamination 검사·mixture 순서로 추적합니다."
+        parentHref="/cs/ai/llm-training-stages#pretraining"
+        parentLabel="Pretraining이 소비하는 데이터 분포"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           LLM 데이터셋은 원본을 그대로 쓰지 않고 여러 단계를 거쳐 다시 만들어집니다
         </h2>
+        <LlmDatasetEngineeringAndCleaningViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             웹 크롤 원본을 그대로 모델에 넣으면 저품질 텍스트와 중복 문서, 평가 benchmark와
@@ -64,7 +73,6 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
             콘텐츠 필터링을 순서대로 적용해 3조 token 규모 공개 코퍼스를 만들었습니다.
           </p>
         </div>
-        <LlmDatasetEngineeringAndCleaningViz />
         <AlgorithmBlock
           title="Raw corpus를 pretraining용 dataset으로 만드는 절차"
           input={[
@@ -380,6 +388,12 @@ export default function LlmDatasetEngineeringAndCleaningArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmTrainingMapReturn
+        title="Pretraining batch는 원본의 복사본이 아니라 선택·제거·혼합 규칙이 만든 분포입니다."
+        detail="이 규칙은 model이 보게 될 사례와 반복 빈도를 바꾸므로 loss가 같아도 학습 결과를 바꿉니다. 다음 글에서는 정제된 demonstration에서 response token만 정답으로 채점하는 SFT를 봅니다."
+        nextHref="/cs/ai/supervised-fine-tuning"
+        nextLabel="Demonstration을 response-token loss로 바꾸기"
+      />
     </div>
   );
 }

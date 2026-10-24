@@ -4,6 +4,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 import TrainingStageFlowViz from "./viz/TrainingStageFlowViz";
 
 const postTrainingSignals = [
@@ -16,10 +17,18 @@ const postTrainingSignals = [
 export default function LlmTrainingStagesArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <LlmTrainingLocator
+        current="stages"
+        question="Pretraining·SFT·RL·harness는 각각 어떤 입력을 받고 어느 상태를 바꿀까요?"
+        fixture="코딩 요청 하나가 corpus에서 학습되고, feedback으로 행동이 조정된 뒤, shell과 verifier가 있는 실행 환경에서 동작하는 과정을 따라갑니다."
+        parentHref="/cs/ai/transformer-architecture"
+        parentLabel="다음 token 확률을 만드는 모델"
+      />
       <section id="problem" className="space-y-6 scroll-mt-20">
         <h2 className="text-2xl font-bold">
           같은 coding 능력도 corpus·feedback·실행 환경이 바꾸는 자리가 다릅니다
         </h2>
+        <TrainingStageFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             한 coding model을 네 단계로 따라갑니다. Pretraining은 대규모 corpus의 다음
@@ -44,7 +53,6 @@ export default function LlmTrainingStagesArticle() {
             별도 training run입니다.
           </p>
         </div>
-        <TrainingStageFlowViz />
         <ContentBoundary article="llm-training-stages" />
         <TermLesson
           name="LLM training stage boundary"
@@ -183,6 +191,12 @@ export default function LlmTrainingStagesArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmTrainingMapReturn
+        title="학습 단계는 이름보다 누가 data·weight·runtime state를 바꾸는지로 구분합니다."
+        detail="Pretraining과 post-training은 학습 데이터와 feedback으로 weight를 바꾸지만, agent harness는 이미 만든 model artifact의 실행 조건을 바꿉니다. 다음 글에서는 첫 단계가 소비할 corpus가 만들어지는 과정을 추적합니다."
+        nextHref="/cs/ai/llm-dataset-engineering-and-cleaning"
+        nextLabel="원본 문서가 학습 corpus가 되는 과정"
+      />
     </article>
   );
 }

@@ -342,7 +342,7 @@
       "score": 20
     },
     "ai/supervised-fine-tuning": {
-      "fingerprint": "6f636500b4afd37f",
+      "fingerprint": "472e12ce245a3af5",
       "score": 20
     },
     "blockchain/commonware-crypto-p2p": {
@@ -482,7 +482,7 @@
       "score": 16
     },
     "ai/rlhf": {
-      "fingerprint": "0ce6c3ce57591c35",
+      "fingerprint": "f13d2760900246c3",
       "score": 16
     },
     "ai/vae": {

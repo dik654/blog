@@ -326,3 +326,29 @@ Stage가 바뀌면 `[1,64,56,56]`을 `[1,128,28,28]`로 맞추는 projection sho
 세 상태가 나란히 보이는 계산 흐름으로 교체했다. 자동 재생과 무한 반복은 사용하지 않고,
 사용자가 재생하거나 장면을 고른 경우에만 5.2초 간격으로 다음 상태로 이동한 뒤 마지막에서
 멈춘다. JavaScript가 없을 때는 같은 장면 순서를 정적 목록으로 남긴다.
+
+## 10. LLM 학습 단계에서 강화학습의 credit까지
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/llm-training-stages` | concept · explanation | `ai/transformer-architecture` | Pretraining·SFT·RL·harness는 각각 어떤 입력을 받고 어느 상태를 바꾸는가? |
+| `ai/llm-dataset-engineering-and-cleaning` | concept · explanation | `ai/llm-training-stages#pretraining` | 원본 문서가 어떤 제거·검사·혼합을 거쳐 pretraining batch가 되는가? |
+| `ai/supervised-fine-tuning` | concept · explanation | `ai/llm-training-stages#post-training` | 대화 sequence에서 어떤 response token만 정답으로 채점하는가? |
+| `ai/rlhf` | concept · explanation | `ai/supervised-fine-tuning#evaluation` | Response 선호가 reward model과 online policy update로 어떻게 전달되는가? |
+| `ai/rl-foundations-for-llm-post-training` | concept · explanation | `ai/rlhf#ppo` | 마지막 reward를 앞선 token 선택들의 gradient로 어떻게 돌려주는가? |
+
+공통 locator는 `단계 → 데이터 → 시연 → 선호 → 강화학습`에서 현재 위치를 먼저 보여 주고,
+뒤이어 reward 설계·DPO·Constitutional AI·ORPO·KTO·synthetic data까지 같은 post-training 지도에서
+이어 갈 수 있게 한다. 각 글은 직속 부모의 정확한 anchor에서 시작하고, 마지막에는 새로 확인한
+state owner와 feedback 경계를 지도에 되돌린다.
+
+같은 사례는 한 코딩 요청을 사용한다. 먼저 corpus와 feedback과 runtime 중 어느 상태가 바뀌는지
+나누고, 중복·오염된 원문을 filtering과 dedup으로 좁힌다. SFT에서는 chat template의 prompt와
+response를 이어 붙이되 response mask만 loss target으로 삼는다. RLHF에서는 같은 prompt의 두
+response 비교가 reward model의 scalar score가 되고, PPO가 현재 policy의 새 response를 갱신하는
+경로를 본다. 마지막으로 reward `[0, 0, 0, 0, 1]`, `γ=0.9`인 5-step trajectory에서
+return을 거꾸로 계산해 long-horizon credit이 작아지는 이유를 확인한다.
+
+시각화는 제목 다음에 먼저 배치해 독자가 긴 설명을 읽기 전에 전체 변환 경로를 볼 수 있게 한다.
+자동 시작과 무한 반복은 사용하지 않는다. 사용자가 재생을 선택한 경우 장면당 5.2초를 유지하고
+마지막 상태에서 멈춘다. JavaScript가 없을 때에도 같은 장면 순서와 결론을 정적 목록으로 남긴다.

@@ -30,7 +30,7 @@ function FunnelScene({ upTo }: { upTo: number }) {
       {STAGES.map((stage, index) => {
         const shown = index <= upTo;
         return (
-          <div key={stage.label} className={shown ? "opacity-100" : "opacity-35"}>
+          <div key={stage.label} className={shown ? "opacity-100" : "opacity-60"}>
             <div className="flex items-baseline justify-between gap-2 text-[11px]">
               <span className="font-bold text-foreground">{stage.label}</span>
               <span className="font-mono font-bold text-primary">{shown ? `${stage.pct}%` : "—"}</span>
@@ -50,7 +50,7 @@ function FunnelScene({ upTo }: { upTo: number }) {
 }
 
 export default function LlmDatasetEngineeringAndCleaningViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   return (
     <VizFrame
       eyebrow="Filtering → dedup 깔때기"
@@ -59,6 +59,8 @@ export default function LlmDatasetEngineeringAndCleaningViz() {
       note="수치는 RefinedWeb 논문 Figure 2에서 읽은 근사치이며, 이 글이 새로 측정한 값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="llm-dataset-engineering-pipeline"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -78,6 +80,15 @@ export default function LlmDatasetEngineeringAndCleaningViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}>
+                <strong>{index + 1}. {label}</strong> — {NOTES[index]}
+              </li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
