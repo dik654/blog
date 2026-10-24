@@ -37,17 +37,25 @@ export default function VerbViz() {
       note="분류는 이 기록이 정리한 것이며 제품마다 동사 이름이 다릅니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="masked-edit-verb-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="편집 동작의 분류"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 216" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 grid grid-cols-2 gap-x-3 sm:hidden">
+            {VERBS.map((verb) => {
+              const active = step === 3 || verb.g === step;
+              return <div key={verb.n} className={`border-b py-2 ${active ? "border-primary" : "border-border text-muted-foreground"}`}><strong className="block text-sm">{verb.n}</strong><span className="text-xs">{verb.ask}</span></div>;
+            })}
+          </div>
+          <svg viewBox="0 0 480 216" className="mt-4 hidden w-full max-w-2xl sm:block">
             <text x={24} y={22} fontSize={9} fill={MUTED}>
               같은 마스크, 같은 호출 — 그런데 요구가 다릅니다
             </text>
@@ -95,6 +103,9 @@ export default function VerbViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

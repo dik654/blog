@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">"편집"은 한 동작이 아니라 요구가 서로 다른 여섯 동작입니다</h2>
+      <VerbViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           마스크를 주고 그 안을 바꾸는 기능을 흔히 하나로 묶어 부릅니다. 그런데 "벨트를 빨갛게"와 "벨트를
@@ -36,7 +37,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <VerbViz />
       <ContentBoundary article="masked-edit-verb-routing" />
     </section>
   );

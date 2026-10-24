@@ -3121,9 +3121,10 @@
         "src/pages/articles/ai/generative-identity-diversity/viz/DistillViz.tsx",
         "src/pages/articles/ai/generative-identity-diversity/viz/DiversityViz.tsx",
         "src/pages/articles/ai/generative-identity-diversity/viz/GateViz.tsx",
-        "src/pages/articles/ai/generative-identity-diversity/viz/SeedViz.tsx"
+        "src/pages/articles/ai/generative-identity-diversity/viz/SeedViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3131,19 +3132,31 @@
         "hasSourceSurface": true,
         "characters": 18529
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "정체성 다양성 실패를 여러 실험으로 진단했지만, 신호 분리 다음에 모델 용량과 조합을 점검하는 참고 갈래의 위치가 없었습니다.",
+        "seed·bank·blend·distillation 상태가 첫 화면에서 한꺼번에 작게 보였고 JavaScript 비활성 상태에는 진단 순서가 남지 않았습니다."
+      ],
+      "fixture": "같은 인물 조건에서 seed만 바꾸는 실험부터 identity bank·blend·distillation까지 차례로 적용해 어느 단계가 다양성을 잃는지 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "seed": ["seed-null"],
+        "bank": ["bank-capacity"],
+        "blend": ["blend-regression"],
+        "distillation": ["distillation-bottleneck"],
+        "gate": ["diversity-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 논문·실험 자료는 각 실패 가설을 구분하는 근거로만 사용하고, 세 실험의 실패를 모든 생성 모델의 보편적 한계로 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · seed 대조→identity bank 용량→blend 회귀→distillation 병목→다양성 허용 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · bank·blend·distillation을 후보 저장소·혼합·증류 병목으로 먼저 풀어 쓰고 실험별 실패 신호를 장면에 표시했습니다.",
+        "numericTrace": "pass · 기존 실험 수치와 비교값은 해당 모델·데이터·seed 조건으로 한정하고 새 결과를 만들지 않았습니다.",
+        "mobile390": "pass · 390x844에서 네 진단 장면, overflow 0, 키보드·reduced-motion·no-JS 상태를 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·부모 지도·첫 시각화·지도 반환을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -3163,9 +3176,10 @@
         "src/pages/articles/ai/generative-measurement-controls/viz/FloorViz.tsx",
         "src/pages/articles/ai/generative-measurement-controls/viz/GateViz.tsx",
         "src/pages/articles/ai/generative-measurement-controls/viz/MeasurementViz.tsx",
-        "src/pages/articles/ai/generative-measurement-controls/viz/ThresholdViz.tsx"
+        "src/pages/articles/ai/generative-measurement-controls/viz/ThresholdViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3173,19 +3187,31 @@
         "hasSourceSurface": true,
         "characters": 19944
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "정체성·스타일 계측 절은 충실했지만 먼저 어댑터와 메모리 예산을 확정한 뒤 계측기를 검증한다는 공통 준비의 현재 위치가 없었습니다.",
+        "첫 계측 과정이 설명 뒤에 있었고 모바일 SVG가 작아 known-answer 입력과 측정 실패를 구분하기 어려웠습니다."
+      ],
+      "fixture": "정답을 아는 동일 이미지·변형 이미지·무관 이미지를 계측기에 넣어 기대 순서가 재현되는지 확인한 뒤 생성 결과 평가에 사용합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "controls": ["instrument-controls"],
+        "floor": ["roundtrip-floor"],
+        "identity": ["identity-metric", "threshold-choice"],
+        "style": ["style-coverage"],
+        "gate": ["measurement-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 계측기·모델 문서는 점수의 의미와 입력 전처리를 확인하는 데 사용하고, 임계값은 보편 상수가 아니라 이 글의 검증 표본에서 정할 값으로 유지했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · known-answer 대조군→왕복 손실 하한→정체성·스타일 측정→사용 허용 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · control과 gate를 대조군과 사용 조건으로 먼저 설명하고, 장면 문구를 입력·측정·판정 동작 중심으로 정리했습니다.",
+        "numericTrace": "pass · 기존 점수·임계값은 해당 계측기와 표본의 측정으로 한정하고 다른 모델의 품질 기준으로 확대하지 않았습니다.",
+        "mobile390": "pass · 390x844에서 세로형 측정 장면, overflow 0, 키보드·reduced-motion·no-JS 상태를 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 부모 지도·첫 시각화·지도 반환과 명시적 재생 순서를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -3653,9 +3679,10 @@
       "subcategory": "ai-generative",
       "publicFiles": [
         "src/pages/articles/ai/image-video-lora-architecture.tsx",
-        "src/pages/articles/ai/image-video-lora-architecture/viz/AdapterScopeMap.tsx"
+        "src/pages/articles/ai/image-video-lora-architecture/viz/AdapterScopeMap.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3663,19 +3690,29 @@
         "hasSourceSurface": true,
         "characters": 13078
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "이미지·영상 LoRA의 공통 구조와 모델별 주입 위치가 자세히 설명됐지만, 이후 메모리·계측·편집·정체성 제어 글로 이어지는 직속 부모 지도가 없었습니다.",
+        "첫 구조 그림이 설명문 뒤에 있었고 모바일에서는 가로로 압축되어 모델별 입력·경로·평가 차이를 한눈에 비교하기 어려웠습니다."
+      ],
+      "fixture": "같은 어댑터 학습 요청을 이미지 모델과 영상 모델에 넣고, 입력 신호가 어느 모듈을 지나 어느 주입 지점에 도달하며 무엇으로 평가되는지 비교합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "image": ["image-scope"],
+        "video": ["video-scope"],
+        "evaluation": ["training-evaluation"]
+      },
+      "primarySourceApplication": [
+        "기존 논문·공식 구현 출처는 각 모델의 어댑터 주입 범위와 학습 계약을 확인하는 데만 사용하고, 서로 다른 모델의 성능 우위를 뜻하는 근거로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 공통 기반 모델 구조→이미지 범위→영상 범위→학습·평가 경계와 형제 글 연결을 대조했습니다.",
+        "humanize": "pass · adapter scope와 host architecture를 어댑터 범위와 기반 모델 구조로 먼저 풀어 쓰고 모델별 비교 표기를 한국어 중심으로 정리했습니다.",
+        "numericTrace": "새 벤치마크 수치를 만들지 않았고 기존 수치와 논문 결과는 해당 모델·실험 조건에만 한정했습니다.",
+        "mobile390": "pass · 390x844에서 부모 지도와 세로형 모델 비교 지도, 문서·그림 가로 넘침 0을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 부모 지도·첫 구조 그림·지도 반환과 글자 잘림 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -4581,9 +4618,10 @@
         "src/pages/articles/ai/masked-edit-verb-routing/viz/MaskViz.tsx",
         "src/pages/articles/ai/masked-edit-verb-routing/viz/MatrixViz.tsx",
         "src/pages/articles/ai/masked-edit-verb-routing/viz/ScaleViz.tsx",
-        "src/pages/articles/ai/masked-edit-verb-routing/viz/VerbViz.tsx"
+        "src/pages/articles/ai/masked-edit-verb-routing/viz/VerbViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4591,19 +4629,31 @@
         "hasSourceSurface": true,
         "characters": 18592
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "여섯 편집 동사의 차이는 설명됐지만 공통 준비와 삭제·해상도 후속 글을 잇는 편집 도구 갈래의 현재 위치가 없었습니다.",
+        "요청을 동사별 실행 계약으로 분기하는 첫 그림이 모바일에서 너무 작고, 실제 상태 변화보다 장식처럼 보였습니다."
+      ],
+      "fixture": "같은 마스크 입력이라도 replace·remove·recolor·restyle·pose·detail 요청을 서로 다른 조건·모델·평가 계약으로 분기합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "mask": ["mask-polarity"],
+        "routing": ["model-disposition"],
+        "style": ["style-scale"],
+        "hint": ["hand-hint"],
+        "gate": ["routing-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 모델·도구 근거는 지원하는 편집 계약을 구분하는 데 적용하고, 하나의 모델이 모든 동사를 같은 품질로 처리한다는 주장으로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 편집 동사→마스크 극성→모델 성향→스타일 강도→보조 신호→라우팅 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · verb routing을 편집 의도 분기로 먼저 풀어 쓰고 각 장면에 사용자 요청과 실행 계약을 함께 표시했습니다.",
+        "numericTrace": "새 성능 수치를 만들지 않았고 기존 강도·범위 값은 해당 도구와 실험 조건으로 한정했습니다.",
+        "mobile390": "pass · 390x844에서 여섯 동사 분기와 상태 변화를 세로로 읽을 수 있으며 overflow 0을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·키보드 장면 이동·부모 지도·지도 반환을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -6542,9 +6592,10 @@
         "src/pages/articles/ai/multi-component-finetuning-vram/viz/GateViz.tsx",
         "src/pages/articles/ai/multi-component-finetuning-vram/viz/PrecomputeViz.tsx",
         "src/pages/articles/ai/multi-component-finetuning-vram/viz/ResidencyViz.tsx",
-        "src/pages/articles/ai/multi-component-finetuning-vram/viz/ScopeViz.tsx"
+        "src/pages/articles/ai/multi-component-finetuning-vram/viz/ScopeViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -6552,19 +6603,31 @@
         "hasSourceSurface": true,
         "characters": 21508
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "학습 대상과 VRAM 상주 대상을 구분하는 상세 계산은 있었지만, 어댑터 범위에서 계측기 검증으로 이어지는 공통 준비 순서가 보이지 않았습니다.",
+        "첫 VRAM 시각화가 모바일에서 작은 SVG로 축소되어 frozen·trainable·optimizer 상태가 구분되지 않았고, JavaScript 비활성 상태의 장면 순서가 없었습니다."
+      ],
+      "fixture": "학습하는 어댑터와 학습하지 않는 기반 모듈을 하나의 GPU 메모리 표에 올려 가중치·gradient·optimizer state·activation이 언제 상주하는지 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "scope": ["adapter-scope"],
+        "residency": ["residency-set", "frozen-forward"],
+        "budget": ["component-budget", "worked-budget"],
+        "offload": ["precompute-offload"],
+        "gate": ["budget-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 구현·문서 근거는 구성요소별 학습 상태와 메모리 항목을 확인하는 데 적용하고, 실제 최대 batch와 처리량은 대상 장비에서 다시 측정해야 하는 값으로 남겼습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 학습 범위→상주 집합→항목별 예산→사전 계산·offload→실행 허용 조건 순서를 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · frozen·trainable 같은 상태를 고정·학습 대상으로 병기하고, 각 장면에서 무엇이 GPU에 남는지 동작으로 표현했습니다.",
+        "numericTrace": "pass · 기존 메모리 산식과 구성요소별 합계를 보존하고 해당 dtype·optimizer·장비 조건 밖으로 일반화하지 않았습니다.",
+        "mobile390": "pass · 390x844에서 세로형 상태 장면, 문서·캔버스 가로 넘침 0, 키보드 이동·no-JS 장면 목록을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·장면 순서·부모 지도·지도 반환과 글자 잘림 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -7576,9 +7639,10 @@
         "src/pages/articles/ai/reference-identity-pose-separation/viz/MirrorViz.tsx",
         "src/pages/articles/ai/reference-identity-pose-separation/viz/ScheduleViz.tsx",
         "src/pages/articles/ai/reference-identity-pose-separation/viz/SeparationViz.tsx",
-        "src/pages/articles/ai/reference-identity-pose-separation/viz/SignalViz.tsx"
+        "src/pages/articles/ai/reference-identity-pose-separation/viz/SignalViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7586,19 +7650,31 @@
         "hasSourceSurface": true,
         "characters": 15882
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "참조 이미지 하나가 정체성·포즈·구도를 함께 전달하는 결합 문제는 설명됐지만, 정체성 제어 갈래의 첫 단계라는 위치가 없었습니다.",
+        "세 신호를 분리하는 첫 과정이 모바일에서 작은 SVG로 축소되어 입력과 주입 위치의 차이를 읽기 어려웠습니다."
+      ],
+      "fixture": "한 참조 이미지에서 정체성·포즈·구도 신호를 분리해 서로 다른 경로와 시간 구간에 주입하고 결합 실패를 비교합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "coupling": ["reference-coupling"],
+        "signals": ["three-signals"],
+        "ambiguity": ["skeleton-ambiguity"],
+        "injection": ["attention-injection", "schedule-start"],
+        "gate": ["separation-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 reference conditioning 논문·구현은 신호 주입 위치와 범위를 확인하는 데 적용하고, 특정 조합의 성공을 일반적인 정체성 보존 보장으로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 참조 결합→세 신호 분리→skeleton 모호성→attention 주입·schedule→분리 허용 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · identity·pose·composition을 정체성·포즈·구도로 먼저 설명하고 장면마다 입력과 담당 경로를 연결했습니다.",
+        "numericTrace": "기존 주입 강도·시점은 해당 모델과 실험 조건으로 한정하고 새 성능 수치를 추가하지 않았습니다.",
+        "mobile390": "pass · 390x844에서 세 신호와 각 경로를 세로로 읽을 수 있고 overflow 0을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·키보드 장면 이동·부모 지도·지도 반환을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -7618,9 +7694,10 @@
         "src/pages/articles/ai/removal-is-not-inpainting/viz/GateViz.tsx",
         "src/pages/articles/ai/removal-is-not-inpainting/viz/LamaViz.tsx",
         "src/pages/articles/ai/removal-is-not-inpainting/viz/RemoveViz.tsx",
-        "src/pages/articles/ai/removal-is-not-inpainting/viz/TwoStageViz.tsx"
+        "src/pages/articles/ai/removal-is-not-inpainting/viz/TwoStageViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7628,19 +7705,31 @@
         "hasSourceSurface": true,
         "characters": 18869
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "삭제가 채우기와 다른 계약이라는 상세 근거는 있었지만, 편집 의도 분기 뒤에 왜 별도 단계가 필요한지 부모 지도에서 보이지 않았습니다.",
+        "대상 제거와 배경 복원의 두 상태가 모바일에서 작은 SVG로 축소됐고 JavaScript 비활성 상태에는 전체 순서가 남지 않았습니다."
+      ],
+      "fixture": "마스크 안의 물체를 없앤 뒤 빈 영역을 그리는 것이 아니라 주변 배경 구조가 이어지도록 복원하는 두 단계의 계약을 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "absence": ["absence-not-drawable"],
+        "contract": ["tool-contract"],
+        "propagation": ["propagation", "strength-cliff"],
+        "rejection": ["two-stage-rejected"],
+        "gate": ["remove-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 제거·inpainting 구현 근거는 도구가 보장하는 출력 계약을 구분하는 데 사용하고, 특정 이미지 한 장의 성공을 일반적인 제거 품질로 해석하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 부재의 의미→도구 계약→배경 전파→기각한 두 단계→삭제 허용 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · removal과 inpainting을 지우기와 주변 배경 복원으로 먼저 설명하고 장면마다 남아야 할 상태를 표시했습니다.",
+        "numericTrace": "기존 strength 구간과 실패 경계는 해당 이미지·도구의 실험으로 한정하고 새 측정값을 추가하지 않았습니다.",
+        "mobile390": "pass · 390x844에서 제거 전·후와 복원 상태를 세로로 읽을 수 있고 overflow 0을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·장면 순서·부모 지도·지도 반환을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -8194,9 +8283,10 @@
         "src/pages/articles/ai/roi-resolution-identity-budget/viz/RoiViz.tsx",
         "src/pages/articles/ai/roi-resolution-identity-budget/viz/TokenViz.tsx",
         "src/pages/articles/ai/roi-resolution-identity-budget/viz/UpscaleViz.tsx",
-        "src/pages/articles/ai/roi-resolution-identity-budget/viz/WindowViz.tsx"
+        "src/pages/articles/ai/roi-resolution-identity-budget/viz/WindowViz.tsx",
+        "src/pages/articles/ai/shared/GenerativeControlLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8204,19 +8294,31 @@
         "hasSourceSurface": true,
         "characters": 16574
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "얼굴 ROI와 잠재 토큰 예산 계산은 있었지만, 삭제 계약 다음에 대상 해상도를 점검하는 편집 도구 갈래의 순서가 보이지 않았습니다.",
+        "전체 프레임과 얼굴 영역의 정보량 차이가 모바일의 작은 SVG에서 읽히지 않아 실패 원인을 직관적으로 파악하기 어려웠습니다."
+      ],
+      "fixture": "같은 얼굴 편집 요청을 전체 프레임과 얼굴 ROI crop에 각각 적용해 대상 픽셀·잠재 토큰·denoise 범위가 어떻게 달라지는지 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "tokens": ["token-budget"],
+        "roi": ["roi-crop"],
+        "window": ["denoise-window"],
+        "knownAnswer": ["upscale-known-answer"],
+        "gate": ["resolution-gate"]
+      },
+      "primarySourceApplication": [
+        "기존 모델 해상도·잠재 공간 근거는 계산 단위를 정하는 데 사용하고, 성공 임계값은 모든 모델에 통용되는 상수로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 정보 예산→ROI crop→denoise 범위→known-answer 확대→해상도 허용 조건을 기존 상세 절과 대조했습니다.",
+        "humanize": "pass · ROI와 token budget을 대상 영역과 정보 예산으로 먼저 풀어 쓰고 비교 장면의 원인·결과를 함께 표시했습니다.",
+        "numericTrace": "pass · 기존 픽셀·잠재 토큰 계산을 보존하고 입력 해상도와 downsample 조건을 명시한 범위에서만 해석했습니다.",
+        "mobile390": "pass · 390x844에서 전체 프레임·ROI 비교와 계산 흐름, overflow 0을 확인했습니다.",
+        "desktop1440": "pass · 1440x1000에서 명시적 재생·키보드 이동·부모 지도·지도 반환을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {

@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">같은 질문에 세 번 다르게 답했고 세 번 다 틀렸습니다</h2>
+      <DiversityViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           서로 다른 인물을 원하는 만큼 만들어 내려면 무엇을 흔들어야 하는가. 이 질문에 회차마다 다른 답을 냈고 매번 다음 측정이 앞의 답을 뒤집었습니다. 결론보다 뒤집힌 과정이 더 쓸모
@@ -42,7 +43,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <DiversityViz />
     </section>
   );
 }

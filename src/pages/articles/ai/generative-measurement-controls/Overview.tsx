@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">계측기도 답을 아는 입력으로 먼저 검증해야 합니다</h2>
+      <MeasurementViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           생성 결과를 눈으로만 판정하면 다툼이 끝나지 않습니다. "A와 B는 다른 사람으로 보인다"는 문장은
@@ -41,7 +42,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <MeasurementViz />
     </section>
   );
 }

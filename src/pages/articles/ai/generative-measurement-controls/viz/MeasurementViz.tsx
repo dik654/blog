@@ -28,17 +28,30 @@ export default function MeasurementViz() {
       note="이 절은 구조만 보여 주며 구체 수치는 이어지는 절에서 다룹니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="measurement-controls-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="생성 결과 판정 방법의 층"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {(step === 3 ? [
+              ["원본 자신", "편집하지 않은 입력도 찾는가"],
+              ["무동작", "변화량 0 또는 바닥값을 내는가"],
+              ["자기 대 자기", "같은 그림을 변화 없음으로 판정하는가"],
+            ] : [
+              ["눈으로 판정", "느낌을 재현하거나 반박할 수 없음"],
+              ["계측기가 판정", "숫자로 비교할 수 있음"],
+              ["계측기 대조군", "도구 자체의 고장을 먼저 발견"],
+            ]).map(([title, detail], index) => <div key={title} className={`border-l pl-3 py-2 ${index <= step || step === 3 ? "border-primary" : "border-border text-muted-foreground"}`}><strong className="block text-sm">{title}</strong><span className="text-xs leading-5 text-muted-foreground">{detail}</span></div>)}
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {step <= 2 && (
               <g>
                 <text x={24} y={26} fontSize={9} fill={MUTED}>
@@ -118,6 +131,9 @@ export default function MeasurementViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

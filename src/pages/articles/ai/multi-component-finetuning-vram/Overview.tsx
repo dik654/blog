@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">추론과 학습은 올려 두는 집합이 다릅니다</h2>
+      <ResidencyViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           "어댑터만 학습하니까 메모리는 얼마 안 들겠지"라고 생각했다가 시작하자마자 메모리 부족을 만나는 일이
@@ -42,7 +43,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <ResidencyViz />
     </section>
   );
 }

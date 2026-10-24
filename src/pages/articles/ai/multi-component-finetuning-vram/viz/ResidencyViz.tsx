@@ -18,9 +18,9 @@ const OFF = "#94a3b8";
 const WARN = "#ef4444";
 
 const PARTS = [
-  { name: "text encoder", color: ENC },
-  { name: "autoencoder", color: VAE },
-  { name: "denoiser", color: DEN },
+  { name: "문장 인코더", color: ENC },
+  { name: "이미지 압축·복원기", color: VAE },
+  { name: "잡음 복원기", color: DEN },
 ];
 
 export default function ResidencyViz() {
@@ -34,17 +34,26 @@ export default function ResidencyViz() {
       note="전송 시간과 스텝 수는 구성에 따라 달라지며 그림은 구조만 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="finetuning-residency-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="추론과 학습의 상주 집합 비교"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {PARTS.map((part, index) => {
+              const resident = step < 2 ? (step === 0 ? true : index === 1) : true;
+              return <div key={part.name} className="flex items-center justify-between border-b border-border py-2 text-sm"><strong>{part.name}</strong><span className={resident ? "text-primary" : "text-muted-foreground"}>{resident ? "장치에 상주" : "필요할 때 올림"}</span></div>;
+            })}
+            <p className="pt-2 text-xs leading-5 text-muted-foreground">{step >= 2 ? "같은 순서를 매 학습 단계마다 반복하므로 세 부품을 함께 둡니다." : "추론은 부품을 차례로 한 번씩 사용합니다."}</p>
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <text x={20} y={30} fontSize={9} fontWeight={700} fill={step < 2 ? OFF : WARN}>
               {step < 2 ? "추론" : "학습 (매 스텝)"}
             </text>
@@ -99,6 +108,9 @@ export default function ResidencyViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

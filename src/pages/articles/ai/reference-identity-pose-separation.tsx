@@ -4,6 +4,10 @@ import AttentionInjection from "./reference-identity-pose-separation/AttentionIn
 import SkeletonAmbiguity from "./reference-identity-pose-separation/SkeletonAmbiguity";
 import ThreeSignals from "./reference-identity-pose-separation/ThreeSignals";
 import SeparationGate from "./reference-identity-pose-separation/SeparationGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * 정체성과 포즈를 한 장치에 맡기면 둘 다 반만 됩니다
@@ -13,12 +17,14 @@ import SeparationGate from "./reference-identity-pose-separation/SeparationGate"
 export default function ReferenceIdentityPoseSeparationArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="signals" />
       <Overview />
       <ReferenceCoupling />
       <AttentionInjection />
       <SkeletonAmbiguity />
       <ThreeSignals />
       <SeparationGate />
+      <GenerativeControlMapReturn current="signals" />
     </div>
   );
 }

@@ -27,17 +27,22 @@ export default function RemoveViz() {
       note="일곱 모델은 이 장비에 설치된 목록이며 다른 모델이 같은 결과를 낸다는 뜻은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="removal-tool-contract-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="채우기와 비우기 요구의 차이"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-3 sm:hidden">
+            {step < 2 ? <><div className="border-l border-primary pl-3"><strong className="block text-sm">같은 마스크</strong><span className="text-xs text-muted-foreground">{step === 0 ? "가죽 벨트를 그려 달라는 채우기" : "초록 띠를 없애 달라는 비우기"}</span></div><div className="border-l border-border pl-3"><strong className="block text-sm">잡음 복원기의 반응</strong><span className="text-xs text-muted-foreground">{step === 0 ? "그릴 대상이 있어 잘 채웁니다." : "없음을 그릴 수 없어 다른 물체를 채웁니다."}</span></div></> : <><div className="grid grid-cols-4 gap-2">{["qwen", "klein", "krea2", "zimage", "kontext", "flux1", "illus"].map((name) => <span key={name} className="border border-red-500/40 px-2 py-2 text-center text-[10px] text-red-600">{name}<br />벨트 생성</span>)}</div><p className="text-xs leading-5 text-muted-foreground">{step === 2 ? "일곱 모델이 같은 방식으로 실패했습니다." : "같은 범주 안에서 모델을 더 찾기보다 삭제 전용 도구로 바꿉니다."}</p></>}
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {step <= 1 && (
               <g>
                 <text x={24} y={26} fontSize={9} fill={MUTED}>
@@ -121,6 +126,9 @@ export default function RemoveViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

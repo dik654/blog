@@ -4,6 +4,10 @@ import Propagation from "./removal-is-not-inpainting/Propagation";
 import ToolContract from "./removal-is-not-inpainting/ToolContract";
 import TwoStageRejected from "./removal-is-not-inpainting/TwoStageRejected";
 import RemoveGate from "./removal-is-not-inpainting/RemoveGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * 지우기는 인페인팅의 한 종류가 아닙니다
@@ -13,12 +17,14 @@ import RemoveGate from "./removal-is-not-inpainting/RemoveGate";
 export default function RemovalIsNotInpaintingArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="removal" />
       <Overview />
       <AbsenceNotDrawable />
       <Propagation />
       <ToolContract />
       <TwoStageRejected />
       <RemoveGate />
+      <GenerativeControlMapReturn current="removal" />
     </div>
   );
 }

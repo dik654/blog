@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">같은 편집이 얼굴 크기에 따라 성공하고 실패합니다</h2>
+      <BudgetViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           전신 그림을 사진처럼 다듬어 달라고 했더니 인물이 다른 사람이 됐습니다. 노이즈 비율을 0.25까지
@@ -38,7 +39,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <BudgetViz />
     </section>
   );
 }

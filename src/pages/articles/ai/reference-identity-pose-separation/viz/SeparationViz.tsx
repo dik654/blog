@@ -29,17 +29,29 @@ export default function SeparationViz() {
       note="세기와 구간의 구체 값은 이 모델 조합의 실측이며 다른 조합으로 일반화하지 않습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="identity-pose-separation-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="정체성과 자세 신호의 분리"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {(step < 2 ? [
+              ["정체성", step === 0 ? "네 장이 같은 사람이어야 함" : "참조 조건이 잘 보존함"],
+              ["자세", step === 0 ? "네 장이 다른 각도여야 함" : "참조 자세까지 함께 고정됨"],
+            ] : [
+              ["관절 좌표", "사지 배치 · 공간 조건"],
+              ["시점 문구", "향하는 방향 · 텍스트 조건"],
+              ["어텐션 주입", "정체성 · 어텐션 경로"],
+            ]).map(([title, detail]) => <div key={title} className="border-l border-primary py-2 pl-3"><strong className="block text-sm">{title}</strong><span className="text-xs text-muted-foreground">{detail}</span></div>)}
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {step === 0 && (
               <g>
                 <text x={24} y={30} fontSize={9} fill={MUTED}>
@@ -141,6 +153,9 @@ export default function SeparationViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

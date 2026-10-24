@@ -33,17 +33,23 @@ export default function BudgetViz() {
       note="정체성은 얼굴 임베딩 코사인이며 판정 임계값 0.40은 별도 글이 정합니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="roi-resolution-budget-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="대상 해상도와 정체성 보존"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {CASES.map((item, index) => <div key={item.n} className={`grid grid-cols-[1fr_auto] items-center border-b py-2 ${step === 3 || step === index ? "border-primary" : "border-border text-muted-foreground"}`}><span><strong className="block text-sm">{item.n}</strong><span className="text-xs">얼굴 {item.face}px</span></span><span className={`text-sm font-bold ${item.id >= 0.4 ? "text-emerald-600" : "text-red-600"}`}>{item.id.toFixed(3)}</span></div>)}
+            <p className="pt-2 text-xs text-muted-foreground">정체성 판정 기준 0.40 · 대상 크기만 달라졌습니다.</p>
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <text x={24} y={22} fontSize={9} fill={MUTED}>
               같은 리파인 설정 · 노이즈 비율 0.25
             </text>
@@ -81,6 +87,9 @@ export default function BudgetViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

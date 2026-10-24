@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">정체성과 포즈를 한 장치에 맡기면 둘 다 반만 됩니다</h2>
+      <SeparationViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           같은 인물을 여러 각도에서 그리려면 두 가지를 동시에 통제해야 합니다. 누구인지와 어떤 자세인지입니다.
@@ -41,7 +42,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <SeparationViz />
     </section>
   );
 }

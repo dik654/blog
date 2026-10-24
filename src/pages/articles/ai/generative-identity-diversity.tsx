@@ -4,6 +4,10 @@ import BlendRegression from "./generative-identity-diversity/BlendRegression";
 import DistillationBottleneck from "./generative-identity-diversity/DistillationBottleneck";
 import BankCapacity from "./generative-identity-diversity/BankCapacity";
 import DiversityGate from "./generative-identity-diversity/DiversityGate";
+import {
+  GenerativeControlLocator,
+  GenerativeControlMapReturn,
+} from "./shared/GenerativeControlLocator";
 
 /**
  * 같은 질문에 세 번 다르게 답했고 세 번 다 틀렸습니다
@@ -13,12 +17,14 @@ import DiversityGate from "./generative-identity-diversity/DiversityGate";
 export default function GenerativeIdentityDiversityArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="diversity" />
       <Overview />
       <SeedNull />
       <BlendRegression />
       <DistillationBottleneck />
       <BankCapacity />
       <DiversityGate />
+      <GenerativeControlMapReturn current="diversity" />
     </div>
   );
 }
