@@ -55,6 +55,8 @@ for (const route of [...routes].sort()) {
 // 새 글은 모바일·키보드·reduced-motion·정적 읽기 검증을 모두 마친 뒤에만
 // 이 목록에 넣습니다. Kubernetes 묶음은 subcategory가 완성 단위입니다.
 const noScriptArticleRoutes = new Set([
+  "ai/arima",
+  "ai/lstm-timeseries",
   "ai/autoencoder",
   "ai/linear-autoencoder-pca",
   "ai/denoising-masked-autoencoders",

@@ -3412,3 +3412,18 @@
   HTTP 200, 부모 지도·현재 위치·반환 지도, 문서와 모든 data canvas의 가로 넘침 0, console 오류 0을
   확인했습니다. 키보드·명시적 재생·reduced-motion·JavaScript 비활성 전체 장면도 통과했습니다.
   공개 배포 경로 검증은 남아 있습니다.
+
+### AI 시계열 예측 묶음 로컬 완료 (2026-10-25)
+
+- `arima`를 concept, `lstm-timeseries`를 practice로 분류했습니다. 두 글은
+  `예측 계약 → 해석 가능한 기준선 → 신경망 적용`이라는 직속 부모 지도를 공유합니다.
+- ARIMA 글은 관측 간격·예측 범위·cutoff를 먼저 정한 뒤 차분, AR·MA 기억, 시간 순서 검증과
+  확장 조건으로 내려갑니다. LSTM 글은 같은 계약을 과거 6개 step과 미래 3개 step의 window,
+  tensor와 state, 누출 없는 학습, 동일 origin의 모델 비교로 옮깁니다.
+- 각 절의 핵심 그림을 설명과 수식보다 먼저 배치했습니다. ARIMA concept 글에 있던 canary·rollback
+  문장은 제거하고, 실제 채택과 배포 판단은 LSTM practice 글의 release gate에 남겼습니다.
+- 390×844와 1,440×1,000에서 두 경로 모두 HTTP 200, 부모 지도·현재 위치·반환 지도, 문서와 모든
+  figure의 가로 넘침 0, console 오류 0을 확인했습니다. 키보드 초점 이동과 reduced-motion,
+  JavaScript 비활성 정적 지도·본문·결론도 확인했습니다.
+- Production build는 7,899개 module, 정적 public route 2,086개와 no-script 본문 121편을
+  생성했습니다. 전체 strict audit을 통과했고 공개 배포 경로 검증만 남아 있습니다.
