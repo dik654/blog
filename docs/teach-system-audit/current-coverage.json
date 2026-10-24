@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 471,
-    "pending": 519,
+    "reviewed": 474,
+    "pending": 516,
     "untracked": 0,
-    "assignedPending": 475,
+    "assignedPending": 472,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1293,9 +1293,9 @@
       "publicPath": "cs/ai/qwen36-hybrid-architecture",
       "title": "Qwen3.6-27B 아키텍처: Attention과 DeltaNet의 두 기억",
       "catalogIndex": 126,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1303,9 +1303,9 @@
       "publicPath": "cs/ai/qwen36-hybrid-runtime",
       "title": "Qwen3.6 하이브리드 런타임: Prefill · Decode · State Commit",
       "catalogIndex": 127,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1323,9 +1323,9 @@
       "publicPath": "cs/ai/qwen38-flash-next-architecture",
       "title": "Qwen3.8-Flash-Next는 선형과 희소 attention을 층마다 나눠 씁니다",
       "catalogIndex": 129,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

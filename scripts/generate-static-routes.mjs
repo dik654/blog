@@ -146,6 +146,9 @@ const noScriptArticleRoutes = new Set([
   "ai/multi-adapter-serving",
   "ai/hybrid-kv-cache-allocation",
   "ai/sliding-window-kv-and-attention-sinks",
+  "ai/qwen36-hybrid-architecture",
+  "ai/qwen36-hybrid-runtime",
+  "ai/qwen38-flash-next-architecture",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

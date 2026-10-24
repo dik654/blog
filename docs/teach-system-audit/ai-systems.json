@@ -10567,50 +10567,70 @@
       "route": "ai/qwen36-hybrid-architecture",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-hybrid-architecture.tsx",
       "publicPath": "cs/ai/qwen36-hybrid-architecture",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 3
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "전체 64층을 한 종류의 기억으로 읽기 쉬웠고 구조와 런타임의 상태 수명이 같은 글 흐름 안에서 분리되지 않음",
+        "긴 설명보다 앞에서 3 DeltaNet + 1 Attention 반복과 48·16 집계를 한눈에 확인하기 어려움",
+        "기존 장면이 자동으로 시작하고 모바일 제어부가 recurrent matrix를 가리는 경우가 있었음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "공개 config의 3:1 반복, 48 DeltaNet·16 Attention, token별 KV와 고정 recurrent state의 경계를 보존하고 구조가 소유하는 질문만 부모 지도에 반환했습니다.",
+        "humanize": "영어식 focus 표현을 자연스러운 한국어로 바꾸고 기술 식별자와 수식은 유지했습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "keyboard": "그림에 초점을 둔 뒤 ArrowRight·ArrowLeft로 DeltaNet 장면을 왕복했고 Space로만 재생이 시작됨을 확인했습니다.",
+        "reducedMotion": "3초 뒤에도 첫 장면을 유지하고 재생 꺼짐 버튼이 비활성화됨을 확인했습니다.",
+        "noScript": "390×844 정적 문서에서 제목·직속 부모 지도·반환 지도와 DeltaNet 1·2·3·Gated Attention 장면 순서를 확인했습니다.",
+        "currentStructure": "직속 부모 지도 → 3:1 핵심 그림 → 구조 설명·수식·코드 근거 → 부모 지도 반환 순서입니다.",
+        "build": "production build 7,894 modules·정적 public route 2,086개·no-script 본문 104편 생성"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "공개 배포 경로 확인"
       ]
     },
     {
       "route": "ai/qwen36-hybrid-runtime",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-hybrid-runtime.tsx",
       "publicPath": "cs/ai/qwen36-hybrid-runtime",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 3
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "KV·Delta matrix·convolution history가 같은 요청의 과거라는 큰 그림보다 각 수명 설명이 먼저 나옴",
+        "prefill·decode·MTP 뒤 세 상태를 같은 승인 경계에 맞추는 이유가 첫 시각 자료에서 드러나지 않음",
+        "모바일 첫 장면에서 상태 카드가 제어부 아래로 잘려 한 화면에서 요청 흐름을 비교하기 어려움"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "모양이 다른 세 상태의 생성·임시 분기·commit·rollback을 accepted prefix 하나로 묶어 기존 수명 계산과 실제 엔진 경계를 보존했습니다.",
+        "humanize": "직역투 문장을 줄이고 단계 이름과 상태 식별자는 원문 의미가 필요한 범위에서 유지했습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "keyboard": "명시적 입력 전에는 첫 장면에 머물며 화살표 키와 Space 입력 뒤에만 장면이 바뀜을 확인했습니다.",
+        "reducedMotion": "자동 진행이 비활성화되고 첫 장면과 전체 순서를 정적으로 읽을 수 있음을 확인했습니다.",
+        "noScript": "390×844 정적 문서에서 제목·직속 부모 지도·반환 지도와 Prompt·Prefill·Decode·MTP·판정 순서를 확인했습니다.",
+        "currentStructure": "직속 부모 지도 → 요청 상태 수명 그림 → 메모리 합산·prefix transaction·코드 근거 → 부모 지도 반환 순서입니다.",
+        "build": "production build 7,894 modules·정적 public route 2,086개·no-script 본문 104편 생성"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -10642,25 +10662,35 @@
       "route": "ai/qwen38-flash-next-architecture",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen38-flash-next-architecture.tsx",
       "publicPath": "cs/ai/qwen38-flash-next-architecture",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
+      "beforeDefects": [
+        "Qwen3.6의 두 기억에서 무엇이 유지되고 무엇이 희소 조회로 바뀌는지 직속 부모 관계가 보이지 않음",
+        "36 linear·12 sparse·indexer key cache가 긴 설명 뒤에 나와 변형의 핵심을 먼저 비교하기 어려움",
+        "주 시각화가 본문 설명 뒤에 배치되고 재생 그룹에 viewport 정지 식별자가 연결되지 않음"
+      ],
       "fixture": null,
       "stageAnchors": {},
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "공개 config와 reference code의 3:1 층 배치, 36 linear·12 sparse 집계, indexer key와 PLE 경계를 Qwen3.6 부모 원리의 변형으로 배치했습니다.",
+        "humanize": "장면·레이어 순서 같은 안내 문구는 한국어로 바꾸고 QSA·PLE·MoE 같은 기술 식별자는 유지했습니다.",
+        "browser390": true,
+        "browser1440": true,
+        "allScenes3901440": true,
+        "keyboard": "ArrowRight로 4층 한 묶음에서 12번 반복 장면으로 이동하고 가로 넘침이 생기지 않음을 확인했습니다.",
+        "reducedMotion": "공통 장면 제어 정책에 따라 자동 시작하지 않고 감소 모션에서 재생을 비활성화합니다.",
+        "noScript": "390×844 정적 문서에서 제목·직속 부모 지도·반환 지도와 4층·12회·층 집계·PLE 장면 순서를 확인했습니다.",
+        "currentStructure": "직속 부모 지도 → 3:1 희소 변형 그림 → sparse attention·indexer·MoE·n-gram 근거 → 부모 지도 반환 순서입니다.",
+        "build": "production build 7,894 modules·정적 public route 2,086개·no-script 본문 104편 생성"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "공개 배포 경로 확인"
       ]
     },
     {

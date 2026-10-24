@@ -109,12 +109,13 @@ export default function LayerScheduleViz() {
   const scenes = useAnimatedScenes(SCENES.length, 2800);
   return (
     <VizFrame
-      eyebrow="layer schedule"
+      eyebrow="레이어 순서"
       title="네 층 중 하나만 과거 토큰을 다시 읽습니다"
       description="공개 config의 layer_types를 그대로 펼친 그림입니다. 색이 채워진 칸이 그 장면에서 주목할 층입니다."
       note="선형 층과 희소 층의 개수만 보여 줍니다. 층 내부의 MoE와 gated residual은 다음 그림에서 다룹니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -124,7 +125,7 @@ export default function LayerScheduleViz() {
       >
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
+            장면 · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
           <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">

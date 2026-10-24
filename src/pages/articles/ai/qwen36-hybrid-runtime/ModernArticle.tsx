@@ -6,6 +6,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import HybridRuntimeFlowViz from "./viz/HybridRuntimeFlowViz";
 import RequestMemoryMixViz from "./viz/RequestMemoryMixViz";
 import SpeculativeCommitViz from "./viz/SpeculativeCommitViz";
+import {
+  HybridSequenceMapReturn,
+  HybridSequenceSeriesLocator,
+} from "../shared/HybridSequenceSeriesLocator";
 
 const MEMORY_TERMS = [
   {
@@ -72,9 +76,11 @@ const PREFIX_TERMS = [
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <HybridSequenceSeriesLocator current="runtime" />
       <section id="overview" className="scroll-mt-20 space-y-7">
+        <h2 className="text-2xl font-bold">두 기억을 같은 request lifecycle로 움직입니다</h2>
+        <HybridRuntimeFlowViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>두 기억을 같은 request lifecycle로 움직입니다</h2>
           <p className="text-lg leading-8">
             <Link to="/cs/ai/qwen36-hybrid-architecture">앞 글</Link>에서
             Qwen3.6-27B의 Attention은 token마다 K/V를 남기고 DeltaNet은 고정
@@ -90,14 +96,13 @@ export default function ModernArticle() {
           </p>
         </div>
 
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <p className="font-semibold">그림에서 먼저 확인할 세 가지입니다.</p>
         <ol className="list-decimal space-y-2 pl-6">
           <li>MTP가 네 token을 제안하고 두 개만 승인하면 KV와 recurrent state도 두 token까지만 commit해야 할까요?</li>
           <li>Model weights와 달리 request state는 동시 요청마다 따로 필요할까요?</li>
           <li>Delta state의 shape가 context 길이와 무관하면 request당 state 비용도 0일까요?</li>
         </ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. KV·Delta matrix·convolution history가 모두 같은 accepted prefix와 generation을 가리켜야 다음 token의 과거가 일치합니다.</p>
-        <HybridRuntimeFlowViz />
         <ContentBoundary article="qwen36-hybrid-runtime" />
 
         <TermBreakdown
@@ -404,6 +409,7 @@ G_a&=\operatorname{commit}\!\left(
           </p>
         </div>
       </section>
+      <HybridSequenceMapReturn current="runtime" />
     </article>
   );
 }

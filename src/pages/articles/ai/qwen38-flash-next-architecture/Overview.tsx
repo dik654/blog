@@ -9,6 +9,7 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">48층을 선형 36개와 희소 12개로 나눕니다</h2>
+      <LayerScheduleViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Qwen3.8-Flash-Next는 한 모델 안에서 두 종류의 sequence mixer를 층 단위로 번갈아 씁니다. 공개된
@@ -49,8 +50,6 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
           회계와 요청 하나가 남기는 상태로 마무리합니다.
         </p>
       </div>
-
-      <LayerScheduleViz />
 
       <div className="not-prose mt-6 flex flex-wrap items-center gap-2">
         <CodeViewButton onClick={() => onCodeRef("layer-schedule", codeRefs["layer-schedule"])} />
