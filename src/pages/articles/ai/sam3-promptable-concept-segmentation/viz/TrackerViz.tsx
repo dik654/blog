@@ -19,7 +19,7 @@ const NEW = "#f59e0b";
 const MUTED = "#94a3b8";
 
 export default function TrackerViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -29,6 +29,8 @@ export default function TrackerViz() {
       note="매칭 임계값과 메모리 길이는 구현 설정이며 그림에 반영하지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -104,6 +106,7 @@ export default function TrackerViz() {
             {NOTES[step]}
           </p>
         </div>
+        <noscript><ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">{SCENES.map((label, index) => <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>)}</ol></noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

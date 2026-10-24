@@ -68,7 +68,7 @@ const ENSEMBLE_MAX_WEIGHT = Math.max(
 );
 
 export default function RobotActionRepresentationsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const timelineConfig = TIMELINE_SCENES[scenes.active];
 
   return (
@@ -79,6 +79,8 @@ export default function RobotActionRepresentationsViz() {
       note="Chunk 길이·disturbance 시점·ensembling 가중치(m)는 mechanism을 보여 주기 위한 예시 값입니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -168,6 +170,13 @@ export default function RobotActionRepresentationsViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

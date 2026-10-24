@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 425,
-    "pending": 565,
+    "reviewed": 430,
+    "pending": 560,
     "untracked": 0,
-    "assignedPending": 513,
+    "assignedPending": 508,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -683,9 +683,9 @@
       "publicPath": "cs/ai/sam3-promptable-concept-segmentation",
       "title": "SAM 3는 이름으로 개념을 받아 모든 인스턴스를 분할합니다",
       "catalogIndex": 65,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -693,9 +693,9 @@
       "publicPath": "cs/ai/vla-embodiment-gap",
       "title": "VLA Embodiment Gap: 의미에서 물리 행동까지",
       "catalogIndex": 66,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -703,9 +703,9 @@
       "publicPath": "cs/ai/robot-action-representations",
       "title": "로봇 action representation: 이산·연속 표현과 chunk 비교",
       "catalogIndex": 67,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -713,9 +713,9 @@
       "publicPath": "cs/ai/imitation-learning-and-policy-generalization",
       "title": "Imitation learning: demonstration data·behavior cloning·generalization·sim-to-real",
       "catalogIndex": 68,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -723,9 +723,9 @@
       "publicPath": "cs/ai/vision-language-navigation",
       "title": "Vision-Language Navigation: waypoint·SLAM·trajectory memory·two-level alignment",
       "catalogIndex": 69,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

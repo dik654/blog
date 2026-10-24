@@ -82,6 +82,11 @@ const noScriptArticleRoutes = new Set([
   "ai/depthwise-separable-convolution",
   "ai/resnet",
   "ai/vision-task-spatial-contracts",
+  "ai/sam3-promptable-concept-segmentation",
+  "ai/vla-embodiment-gap",
+  "ai/robot-action-representations",
+  "ai/imitation-learning-and-policy-generalization",
+  "ai/vision-language-navigation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

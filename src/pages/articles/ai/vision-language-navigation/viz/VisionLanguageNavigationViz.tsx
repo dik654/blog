@@ -62,7 +62,7 @@ const TONE_LABEL: Record<Tone, string> = {
 };
 
 export default function VisionLanguageNavigationViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
 
   return (
     <VizFrame
@@ -72,6 +72,8 @@ export default function VisionLanguageNavigationViz() {
       note="Anchor 위치와 revisit 지점은 mechanism을 보여 주기 위한 예시이며 실제 경로 길이나 anchor 선정 규칙이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -115,6 +117,13 @@ export default function VisionLanguageNavigationViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

@@ -6,14 +6,24 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VisionLanguageNavigationViz from "./vision-language-navigation/viz/VisionLanguageNavigationViz";
+import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
+import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
 
 export default function VisionLanguageNavigationArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <EmbodiedVisionLocator
+        current="navigation"
+        question="‘복도 끝에서 왼쪽 방’이라는 지시를 실제 이동으로 바꾸려면 언제 추론하고 무엇을 기억해야 할까요?"
+        fixture="한 지시를 landmark grounding·3D waypoint·SLAM 제어·분기점 재판단으로 실행합니다."
+        parentHref="/cs/ai/imitation-learning-and-policy-generalization"
+        parentLabel="정책 학습과 일반화"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          VLN은 waypoint·memory·reward를 navigation이라는 구체 task에 배치합니다
+          VLN은 경유점·기억·보상을 하나의 이동 고리로 연결합니다
         </h2>
+        <EmbodiedProcessOverviewViz variant="navigation" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Vision-Language Navigation(VLN)은 언어 instruction("복도 끝까지 가서 왼쪽 방으로
@@ -291,6 +301,12 @@ L(\theta)&=\underbrace{-\lambda_o R_{\text{outcome}}-\lambda_p\sum_t R_{\text{pr
           </p>
         </ProgressiveDetail>
       </section>
+      <EmbodiedVisionMapReturn
+        title="언어 지시는 경유점 선택과 저수준 제어를 번갈아 실행하고, 새 관측과 기억으로 계획을 갱신해야 이동이 됩니다."
+        detail="시각 의미에서 시작한 경로가 행동·정책 학습·이동까지 이어졌습니다. 이제 각 계층의 출력 계약과 실패가 하나의 재귀적 지도에 놓였습니다."
+        nextHref="/cs/ai/vision-task-spatial-contracts"
+        nextLabel="시각 출력 계약으로 돌아가기"
+      />
     </div>
   );
 }

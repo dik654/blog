@@ -6,14 +6,24 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RobotActionRepresentationsViz from "./robot-action-representations/viz/RobotActionRepresentationsViz";
+import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
+import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
 
 export default function RobotActionRepresentationsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <EmbodiedVisionLocator
+        current="action"
+        question="같은 로봇 움직임을 연속값·토큰·행동 묶음 중 무엇으로 표현해야 할까요?"
+        fixture="20cm 범위에서 +2cm를 움직이는 한 축을 256개 bin과 6-step chunk로 바꾸며 손실되는 정보와 호출 수를 계산합니다."
+        parentHref="/cs/ai/vla-embodiment-gap#action-interface"
+        parentLabel="로봇이 소비할 action interface"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Action 표현은 하나의 정답이 아니라 continuous·discrete 사이의 선택입니다
+          행동 표현은 연속값과 토큰 사이의 선택입니다
         </h2>
+        <EmbodiedProcessOverviewViz variant="action" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             VLA(Vision-Language-Action model)가 다음 action을 낼 때는 먼저 그 값을 실수 벡터로 그대로
@@ -339,6 +349,12 @@ L^{\tau}(\theta)&=\underbrace{\mathbb{E}\left\|v_\theta(A_t^{\tau},o_t)-u\right\
           </p>
         </div>
       </section>
+      <EmbodiedVisionMapReturn
+        title="행동 표현은 정밀도·모델 재사용·호출 수·새 관측 반영 주기를 함께 결정합니다."
+        detail="연속값과 토큰은 출력 형식의 축이고, chunking은 여러 미래 step을 묶는 별도 축입니다. 다음 글은 이 표현을 사람의 시연으로 어떻게 학습하는지 추적합니다."
+        nextHref="/cs/ai/imitation-learning-and-policy-generalization"
+        nextLabel="시연에서 정책 학습"
+      />
     </div>
   );
 }
