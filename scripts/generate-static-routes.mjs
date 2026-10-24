@@ -69,6 +69,13 @@ const noScriptArticleRoutes = new Set([
   "ai/gru",
   "ai/seq2seq",
   "ai/attention-theory",
+  "ai/tokenizer",
+  "ai/transformer-architecture",
+  "ai/bert",
+  "ai/bert-input-packing",
+  "ai/bert-mlm-corruption",
+  "ai/bert-pretraining-objectives",
+  "ai/bert-task-heads",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -17,19 +17,21 @@ export default function QKVComputation({
         결정한다
       </h2>
 
+      <AttentionContractViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Q·K·V라는 이름보다 먼저 source와 visibility를 확인해야 합니다. Encoder
           self-attention은 보통 같은 입력의 모든 유효 위치를 읽고, decoder
-          causal self-attention은 미래 key를 가립니다. Cross-attention에서는 Q가
-          decoder에서 오지만 K·V는 encoder output에서 옵니다. Attention
-          score·multi-head의 상세 유도는
+          causal self-attention은 미래 key를 가립니다.
+        </p>
+        <p className="leading-8">
+          Cross-attention에서는 Q가 decoder에서 오지만 K·V는 encoder output에서
+          옵니다. Attention score·multi-head의 상세 유도는
           <Link to="/cs/ai/attention-theory"> Attention 이론 정본 글</Link>이
           소유합니다.
         </p>
       </div>
-
-      <AttentionContractViz />
 
       <ExplainedFormula
         question="Attention mask는 허용하지 않은 key가 softmax 확률을 받지 못하게 어떻게 막는가?"

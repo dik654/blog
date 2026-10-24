@@ -9,6 +9,8 @@ export default function DataPrep() {
         입력 계약: token ID·position·padding mask를 서로 다른 tensor로 보존한다
       </h2>
 
+      <InputContractViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Transformer가 직접 받는 것은 문자열이나 one-hot vector가 아니라
@@ -19,8 +21,6 @@ export default function DataPrep() {
           그 결과가 model tensor가 되는 경계부터 다룹니다.
         </p>
       </div>
-
-      <InputContractViz />
 
       <ExplainedFormula
         question="Token ID 하나가 첫 Transformer block의 hidden state가 되려면 무엇을 합하는가?"

@@ -6,15 +6,21 @@ export default function InputEmbedding() {
   return (
     <section id="position-information" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        위치 신호는 embedding·Q/K rotation·attention bias 중 어디에 개입할지
-        고르는 설계다
+        위치 신호는 계산 경로에 좌표를 더합니다
       </h2>
+
+      <PositionSignalViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Position 정보가 없는 self-attention은 permutation-equivariant 연산입니다. 입력 token을 함께 순열하면 같은 규칙 아래 출력 순서만 따라
-          바뀝니다. 문장에서 순서와 거리를 구분하려면 별도 신호가 필요합니다. 원 논문의 sinusoidal encoding은 embedding에 더했고 learned absolute
-          embedding도 같은 위치에 들어갑니다. RoPE는 Q·K를 회전시키고 ALiBi 계열은 score에 거리 bias를 더합니다.
+          Position 정보가 없는 self-attention은 permutation-equivariant 연산입니다.
+          입력 token을 함께 순열하면 같은 규칙 아래 출력 순서만 따라 바뀝니다.
+          문장에서 순서와 거리를 구분하려면 별도 신호가 필요합니다.
+        </p>
+        <p className="leading-8">
+          원 논문의 sinusoidal encoding과 learned absolute embedding은 입력 embedding에
+          좌표를 더합니다. RoPE는 Q·K를 회전시키고 ALiBi 계열은 attention score에
+          거리 bias를 더합니다.
         </p>
         <p>
           예를 들어 <code>개가 사람을 문다</code>와 <code>사람이 개를 문다</code>는
@@ -24,8 +30,6 @@ export default function InputEmbedding() {
           의미를 대신하는 것이 아니라 이 순서 구분에 필요한 좌표를 추가한다.
         </p>
       </div>
-
-      <PositionSignalViz />
 
       <ExplainedFormula
         question="Sinusoidal encoding은 하나의 position을 여러 시간 척도로 어떻게 표현하는가?"

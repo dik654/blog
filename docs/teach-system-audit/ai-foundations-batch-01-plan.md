@@ -236,3 +236,41 @@ GRU는 `hprev=(2,−1)`, `r=(0,.5)`에서 filtered history `(0,−.5)`를 만들
 첫 모바일 계측에서 내부 캔버스 높이는 언어 모델 `1,575→588px`, BPTT `1,044→474px`,
 LSTM `1,458→573px`, GRU `1,308→627px`로 줄었다. 이 값은 390×844 브라우저에서 DOM
 bounding box로 확인한 레이아웃 수치이며 모델 성능 지표가 아니다.
+
+## 7. Tokenizer에서 BERT까지
+
+### 분류와 학습 경로
+
+| route | track · form | 직속 부모 | 이 글이 닫을 질문 |
+|---|---|---|---|
+| `ai/tokenizer` | concept · explanation | `ai/text-unicode-encoding` | 문자열이 어떤 규칙을 거쳐 model input ID가 되며, 그 규칙은 왜 checkpoint와 함께 움직여야 하는가? |
+| `ai/transformer-architecture` | concept · explanation | `ai/attention-theory#self-attention` | token 위치의 정보 조회와 각 위치의 feature 변환을 어떤 반복 block으로 구성하는가? |
+| `ai/bert` | concept · explanation | `ai/transformer-architecture` | 양방향 encoder visibility가 각 token의 contextual state를 어떻게 만드는가? |
+| `ai/bert-input-packing` | concept · explanation | `ai/bert#input-contract` | special token·position·segment·padding을 같은 길이의 네 입력으로 어떻게 맞추는가? |
+| `ai/bert-mlm-corruption` | concept · explanation | `ai/bert-input-packing#padding-mask` | 15% target 선택과 80·10·10 입력 오염을 왜 별도 sampling으로 보아야 하는가? |
+| `ai/bert-pretraining-objectives` | concept · explanation | `ai/bert-mlm-corruption#objective` | NSP·SOP·RTD가 어느 단위에 어떤 정답을 붙이는가? |
+| `ai/bert-task-heads` | concept · explanation | `ai/bert#contextual-state` | 같은 contextual state를 문장·token·span·검색 출력으로 어떻게 바꾸는가? |
+
+공통 locator는 `문자 → 순서 → 조회 → 변환 → 이해`에서 현재 위치를 먼저 보여 주고, BERT 묶음에서는
+`가시성 → 입력 → 복원 → 비교 → 전이`를 한 단계 더 펼친다. 제품 선택·서빙 SLO·운영 Runbook은 이
+개념 묶음에 섞지 않는다.
+
+### 같은 사례와 시각화 순서
+
+Tokenizer는 `Ａ각!`을 NFKC로 `A각!`로 바꾸고 구두점을 분리한 뒤 `A:10 · 각:20 · !:30`을 조회해
+`[1,10,20,30,2]`를 만든다. Transformer는 `[BOS, 나는, 밥을]`을 `B=1, N=3, D=4`의 교육용
+tensor로 놓고 두 attention head와 `d_ff=8`인 FFN을 지나 마지막 위치의 vocabulary logits까지
+추적한다. 이 값들은 메커니즘을 고정해 읽기 위한 가정이며 실제 모델 규격이나 성능 측정값이 아니다.
+
+BERT 시각화는 정의 카드보다 먼저 배치하고, 각 글에서 같은 입력의 상태가 실제로 바뀌는 네 장면만
+보여 준다. MLM의 `10,000×15%=1,500` target과 그 안의 `1,200/150/150` 분기는 전체 token과
+선택된 target을 섞지 않도록 분리한다. 자동 시작과 무한 반복은 사용하지 않으며 마지막 장면에서
+멈춘다. 키보드·reduced-motion·JavaScript 비활성 상태에서도 같은 순서와 결론이 남는다.
+
+### 검증 결과
+
+- 390×844에서 7개 공개 경로의 document overflow는 모두 0이었다.
+- 대표 시각화는 4.7~5.1초 동안 첫 장면을 유지했고, 키보드 오른쪽 화살표를 눌렀을 때만 다음 상태로 이동했다.
+- reduced-motion에서는 재생 버튼이 비활성화되고 선택한 장면이 유지됐다.
+- 정적 빌드는 2,086개 public route와 검토 완료 31편의 no-script 본문을 생성했다.
+- JavaScript를 끈 390×844 브라우저에서도 7개 글의 제목·본문·절·부모 지도·지도 반환이 남았고 가로 넘침은 0이었다.

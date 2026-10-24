@@ -6,9 +6,10 @@ export default function FeedForward() {
   return (
     <section id="transformer-block" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Block 계약: attention은 token을 섞고 FFN은 feature를 바꾸며 residual
-        stream에 update를 더한다
+        Block은 token과 feature를 차례로 섞습니다
       </h2>
+
+      <BlockContractViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3 id="ffn-block" className="scroll-mt-20">
@@ -18,15 +19,15 @@ export default function FeedForward() {
         <p className="leading-8">
           Attention 뒤의 FFN은 각 token 위치에 같은 parameter를 적용합니다.
           위치끼리 직접 섞지는 않지만 d_model feature를 더 넓은 intermediate
-          space로 보내 nonlinear transformation을 수행합니다. Residual은 입력과
-          update를 더하므로 sublayer output shape가 d_model로 돌아와야 합니다.
-          ReLU·GELU·SwiGLU의 함수와 gate 차이는
+          space로 보내 nonlinear transformation을 수행합니다.
+        </p>
+        <p className="leading-8">
+          Residual은 입력과 update를 더하므로 sublayer output shape가 d_model로
+          돌아와야 합니다. ReLU·GELU·SwiGLU의 함수와 gate 차이는
           <Link to="/cs/ai/activation-functions"> Activation 정본 글</Link>에서
           이어집니다.
         </p>
       </div>
-
-      <BlockContractViz />
 
       <ExplainedFormula
         question="Original Transformer의 position-wise FFN은 한 token의 feature를 어떻게 확장하고 되돌리는가?"

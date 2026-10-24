@@ -9,11 +9,18 @@ export default function Overview() {
         것이다
       </h2>
 
+      <TransformerBlockViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          RNN은 앞 time step의 state가 준비되어야 다음 token을 처리할 수 있습니다. Transformer는 학습할 때 sequence의 모든 위치를 행렬로 놓고
-          attention으로 필요한 위치의 정보를 직접 모읍니다. 덕분에 token 사이 path length가 짧아지고 sequence 축 병렬화도 가능해졌습니다. 다만 standard
-          full attention은 길이 n에 대해 score matrix가 n×n이므로 긴 context 비용은 커집니다.
+          RNN은 앞 time step의 state가 준비되어야 다음 token을 처리할 수 있습니다.
+          Transformer는 학습할 때 sequence의 모든 위치를 행렬로 놓고 attention으로
+          필요한 위치의 정보를 직접 모읍니다.
+        </p>
+        <p className="leading-8">
+          이 구조는 token 사이 path length를 줄이고 sequence 축 병렬화를 가능하게
+          합니다. 다만 standard full attention은 길이 n에 대해 score matrix가
+          n×n이므로 긴 context 비용은 커집니다.
         </p>
         <p className="leading-8">
           한 block을 attention 하나로 이해하면 절반만 본 셈입니다. Attention은
@@ -45,19 +52,20 @@ export default function Overview() {
       </div>
 
       <ContentBoundary article="transformer-architecture" />
-      <TransformerBlockViz />
 
       <div
         id="paper-transformer"
         className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4"
       >
         <p className="text-xs font-bold text-primary">논문 해설 · Attention Is All You Need</p>
-        <h3 className="mt-2 text-base font-bold">기여는 attention 하나가 아니라 recurrence 없이 sequence transduction 경로를 구성한 것이다</h3>
+        <h3 className="mt-2 text-base font-bold">Recurrence 없는 sequence 경로를 만들었습니다</h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           원 논문은 encoder–decoder machine translation에서 self-attention과 cross-attention, position-wise
-          FFN·residual·normalization을 결합해 recurrence와 convolution 없이 sequence를 처리했습니다. WMT 2014 번역과
-          constituency parsing 결과가 뒷받침하는 것은 그 architecture와 training recipe까지입니다. 모든 sequence task와 decoder-
-          only LLM에서 원 구성이 그대로 최선일지는 여기서 정해지지 않습니다.
+          FFN·residual·normalization을 결합해 recurrence와 convolution 없이 sequence를 처리했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          WMT 2014 번역과 constituency parsing 결과가 뒷받침하는 범위는 그 architecture와 training recipe까지입니다.
+          모든 sequence task와 decoder-only LLM에서 원 구성이 그대로 최선일지는 여기서 정해지지 않습니다.
         </p>
       </div>
 
@@ -65,9 +73,11 @@ export default function Overview() {
         <h3>이 글은 block을 외우는 대신 실행 계약을 따라간다</h3>
         <p className="leading-8">
           먼저 문자열이 아니라 token ID와 mask에서 시작해 위치 신호를 넣습니다. 그다음 Q·K·V의 source와 visibility를 고정한 뒤
-          attention·FFN·residual·norm을 지나 logits와 loss로 나갑니다. 마지막에는 같은 architecture라도 결과를 바꾸는 training recipe와
-          scaling law의 적용 범위를 분리합니다. Attention score의 상세 유도와 tokenizer algorithm은 정본 글에 맡겨 설명이 여러 곳으로 흩어지지 않게
-          했습니다.
+          attention·FFN·residual·norm을 지나 logits와 loss로 나갑니다.
+        </p>
+        <p className="leading-8">
+          마지막에는 같은 architecture라도 결과를 바꾸는 training recipe와 scaling law의 적용 범위를 분리합니다.
+          Attention score의 상세 유도와 tokenizer algorithm은 각 정본 글에서 이어집니다.
         </p>
       </div>
     </section>

@@ -3,15 +3,26 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertObjectiveViz } from "../bert/viz/ModernBertViz";
+import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertObjectivesArticle() {
   return (
     <div className="space-y-16">
+      <NlpFoundationLocator
+        current="objective"
+        question="NSP·SOP·RTD가 모두 encoder pretraining이라면, 실제로 달라지는 정답 단위와 negative example은 무엇일까요?"
+        fixture="A→B, B→A, generator가 바꾼 token 세 사례를 sequence label과 token label로 나누어 추적합니다."
+        parentHref="/cs/ai/bert-mlm-corruption#objective"
+        parentLabel="선택된 token 위치에서 계산하는 MLM objective"
+        secondaryHref="/cs/ai/bert#visibility"
+        secondaryLabel="공통으로 재사용하는 양방향 encoder"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           BERT 후속 objective는 label을 붙이는 위치와 negative를 만드는 방법이
           다릅니다
         </h2>
+        <BertObjectiveViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             NSP, SOP, RTD를 모델 이름 목록으로 외우지 않습니다. 각 방법의{" "}
@@ -21,7 +32,6 @@ export default function BertObjectivesArticle() {
             비교합니다.
           </p>
         </div>
-        <BertObjectiveViz />
         <ContentBoundary article="bert-pretraining-objectives" />
       </section>
       <section id="nsp-sop" className="scroll-mt-20">
@@ -255,6 +265,12 @@ export default function BertObjectivesArticle() {
           </div>
         </div>
       </section>
+      <NlpMapReturn
+        title="같은 loss 식을 써도 training example을 만드는 방법과 label을 붙이는 위치가 다르면 다른 pretraining objective입니다."
+        detail="Pretraining이 끝나면 downstream task가 요구하는 답의 축에 맞춰 sequence·token·span·retrieval head를 붙입니다."
+        nextHref="/cs/ai/bert-task-heads"
+        nextLabel="BERT task head로 이어가기"
+      />
     </div>
   );
 }

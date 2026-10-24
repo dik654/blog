@@ -3,14 +3,25 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertPackingViz } from "../bert/viz/ModernBertViz";
+import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertInputPackingArticle() {
   return (
     <div className="space-y-16">
+      <NlpFoundationLocator
+        current="packing"
+        question="한 문장 쌍을 BERT가 읽을 때, token ID 외에 왜 position·segment·padding tensor가 같은 길이로 필요할까요?"
+        fixture="[CLS] A [SEP] B [SEP] [PAD] 한 줄에 input_ids·position_ids·token_type_ids·attention_mask 네 줄을 맞춥니다."
+        parentHref="/cs/ai/bert#visibility"
+        parentLabel="BERT encoder가 실제 token key를 읽는 범위"
+        secondaryHref="/cs/ai/tokenizer#overview"
+        secondaryLabel="Tokenizer와 checkpoint의 ID 계약"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           BERT input은 token 한 줄이 아니라 같은 길이의 네 tensor입니다
         </h2>
+        <BertPackingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 <code>[CLS] A [SEP] B [SEP]</code>라는 token sequence를
@@ -50,7 +61,6 @@ export default function BertInputPackingArticle() {
             },
           ]}
         />
-        <BertPackingViz />
         <ContentBoundary article="bert-input-packing" />
       </section>
       <section id="special-tokens" className="scroll-mt-20">
@@ -172,6 +182,12 @@ export default function BertInputPackingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <NlpMapReturn
+        title="BERT input은 token ID 한 줄이 아니라, 같은 slot을 서로 다른 의미로 설명하는 네 tensor입니다."
+        detail="이제 원래 token target은 보존한 채 model이 보는 input만 오염시키면 masked-language-model 학습 문제가 됩니다."
+        nextHref="/cs/ai/bert-mlm-corruption"
+        nextLabel="MLM corruption으로 이어가기"
+      />
     </div>
   );
 }

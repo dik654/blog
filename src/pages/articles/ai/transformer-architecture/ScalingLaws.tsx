@@ -9,11 +9,18 @@ export default function ScalingLaws() {
         배분하는 경험 모델이다
       </h2>
 
+      <ScalingDecisionViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Language-model validation loss는 일정 범위 안에서 parameter 수와 training token 수에 대해 매끄러운 power-law 경향을
-          보였습니다. 이 곡선은 작은 pilot run으로 큰 run의 loss를 추정하고 고정 compute를 model과 data에 나누는 데 쓸모가 있습니다. 다만
-          architecture나 data mixture, optimizer, evaluation domain이 바뀌면 coefficient도 다시 추정해야 합니다.
+          Language-model validation loss는 일정 범위 안에서 parameter 수와 training
+          token 수에 대해 매끄러운 power-law 경향을 보였습니다. 이 곡선은 작은 pilot
+          run으로 큰 run의 loss를 추정하고 고정 compute를 model과 data에 나누는 데
+          쓸모가 있습니다.
+        </p>
+        <p className="leading-8">
+          다만 architecture·data mixture·optimizer·evaluation domain이 바뀌면
+          coefficient도 다시 추정해야 합니다.
         </p>
       </div>
 
@@ -29,12 +36,13 @@ export default function ScalingLaws() {
         <p className="text-xs font-bold text-primary">논문 해설 · Training Compute-Optimal Large Language Models</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Chinchilla 연구는 고정 training compute에서 model parameter와 training token을 함께 늘려야 한다는 배분을 재추정하고 70B
-            model을 1.4T token으로 학습해 비교했습니다. 이 비율이 최적이라고 말할 수 있는 범위는 당시 model family·data·FLOP 회계의 training-
-            optimal까지입니다. Inference traffic과 latency까지 계산에 넣은 product optimum과는 다릅니다.
+            model을 1.4T token으로 학습해 비교했습니다.
+          </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            이 비율이 최적이라고 말할 수 있는 범위는 당시 model family·data·FLOP 회계의 training-optimal까지입니다.
+            Inference traffic과 latency까지 계산에 넣은 product optimum과는 다릅니다.
           </p>
       </div>
-
-      <ScalingDecisionViz />
 
       <ExplainedFormula
         question="Parameter N과 training token D가 늘어날 때 reducible loss를 어떻게 근사하는가?"

@@ -6,15 +6,21 @@ export default function LinearSoftmax() {
   return (
     <section id="output-head" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        출력 계약: hidden state를 logits로 바꾸고 training objective와 decoding
-        policy를 분리한다
+        Hidden state를 logits와 다음 token으로 바꿉니다
       </h2>
+
+      <OutputContractViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Decoder language model의 LM head는 각 position의 d_model hidden state를 vocabulary 크기의 logits로 투영합니다.
-          Training 때는 정답 next token의 likelihood를 높이지만 inference에서는 정답이 주어지지 않습니다. 이때 개입하는
-          temperature·top-k·top-p는 학습된 model weight가 아니라 logits를 token으로 바꾸는 decoding policy입니다.
+          Decoder language model의 LM head는 각 position의 d_model hidden state를
+          vocabulary 크기의 logits로 투영합니다. Training에서는 정답 next token의
+          likelihood를 높입니다.
+        </p>
+        <p className="leading-8">
+          Inference에서는 정답이 주어지지 않습니다. 이때 개입하는
+          temperature·top-k·top-p는 학습된 model weight가 아니라 logits를 token으로
+          바꾸는 decoding policy입니다.
         </p>
         <p>
           Input IDs가 <code>[BOS, 나는, 간다]</code>라면 next-token target은 한 칸
@@ -24,8 +30,6 @@ export default function LinearSoftmax() {
           답한다.
         </p>
       </div>
-
-      <OutputContractViz />
 
       <ExplainedFormula
         question="Causal language model은 어떤 token을 target으로 삼아 sequence loss를 계산하는가?"

@@ -7,6 +7,8 @@ export default function WordPiece() {
         WordPiece는 학습법보다 encoding 계약을 먼저 확인한다
       </h2>
 
+      <WordPieceViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           WordPiece는 speech recognition에서 출발했고 BERT tokenizer로 널리 알려졌습니다. BERT-style encoding은 먼저 공백·구두점 규칙으로
@@ -22,8 +24,6 @@ export default function WordPiece() {
         </p>
       </div>
 
-      <WordPieceViz />
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Greedy match가 실패했을 때의 정책도 model 입력의 일부다</h3>
         <p>
@@ -38,11 +38,13 @@ export default function WordPiece() {
           WordPiece vocabulary의 원 학습 절차는 현대 BPE의 merge file처럼 하나의
           공개 규격으로 완전히 고정되어 있지 않습니다. 자주 소개되는
           <code>count(ab)/(count(a)·count(b))</code> score는 pair의 결합 정도를
-          설명하는 직관에는 유용하지만 모든 trainer가 따라야 하는 공식은
-          아닙니다. 반면 이미 만들어진 vocabulary를 longest-match-first로 읽는
-          절차는 trie와 failure link를 사용해 입력 길이에 선형인 탐색으로 구현할
-          수 있습니다. 재현할 때에는 알고리즘 이름만 적지 말고 trainer와 library
-          version, normalizer, pre-tokenizer, vocabulary artifact를 함께 남겨야 합니다.
+          설명하는 직관에는 유용하지만 모든 trainer가 따라야 하는 공식은 아닙니다.
+        </p>
+        <p>
+          반면 이미 만들어진 vocabulary를 longest-match-first로 읽는 절차는 trie와
+          failure link를 사용해 입력 길이에 선형인 탐색으로 구현할 수 있습니다.
+          재현할 때에는 알고리즘 이름만 적지 말고 trainer와 library version,
+          normalizer, pre-tokenizer, vocabulary artifact를 함께 남겨야 합니다.
         </p>
       </div>
 

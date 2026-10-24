@@ -3,14 +3,25 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertTaskHeadViz } from "../bert/viz/ModernBertViz";
+import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertTaskHeadsArticle() {
   return (
     <div className="space-y-16">
+      <NlpFoundationLocator
+        current="heads"
+        question="같은 BERT output [B,L,H]에서 문장 분류·NER·정답 span·검색 점수는 각각 어느 state와 축을 읽어야 할까요?"
+        fixture="Sequence [B,C], token [B,L,C], span start·end [B,L], retrieval vector·pair score로 output shape를 나눕니다."
+        parentHref="/cs/ai/bert#encoder-boundary"
+        parentLabel="BERT가 만드는 contextual token state"
+        secondaryHref="/cs/ai/bert-input-packing#boundary"
+        secondaryLabel="Truncation과 label alignment의 입력 경계"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Fine-tuning은 task의 답 단위와 읽을 BERT state를 맞추는 일입니다
         </h2>
+        <BertTaskHeadViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Encoder output <code>[B,L,H]</code>를 먼저 고정합니다. 그 다음 답이
@@ -48,7 +59,6 @@ export default function BertTaskHeadsArticle() {
             },
           ]}
         />
-        <BertTaskHeadViz />
         <ContentBoundary article="bert-task-heads" />
       </section>
       <section id="task-head" className="scroll-mt-20">
@@ -215,6 +225,12 @@ export default function BertTaskHeadsArticle() {
           </CitationBlock>
         </div>
       </section>
+      <NlpMapReturn
+        title="Fine-tuning은 head 이름을 고르는 일이 아니라, 답의 단위와 읽을 hidden state·output axis·loss mask를 맞추는 일입니다."
+        detail="이 경로로 tokenizer부터 encoder transfer까지 연결되었습니다. 후속 글에서는 decoder-only LLM과 학습·서빙 경로를 별도 축으로 확장합니다."
+        nextHref="/cs/ai/llm-training-stages"
+        nextLabel="LLM 학습 단계로 이어가기"
+      />
     </div>
   );
 }
