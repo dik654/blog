@@ -8,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * 2×2 로 줄여 표현한다. Chunk 사이에서만 상태가 순차로 전달된다.
  */
 const SCENES = ["순차 recurrence", "Chunk 안 준비", "Chunk 안 병렬 처리", "다음 chunk 로 전달"] as const;
+const CONTROL_LABELS = ["순차", "준비", "병렬", "상태 전달"] as const;
 
 type StepState = {
   label: string;
@@ -75,7 +76,7 @@ const STATES: readonly SceneState[] = [
 ];
 
 export default function FastWeightMemoryAndChunkwiseRecurrenceViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const state = STATES[scenes.active];
   return (
     <VizFrame
@@ -85,14 +86,16 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceViz() {
       note="실제 상태는 d×d(수십~수백 차원) 행렬이고 chunk 는 보통 C=64~128 입니다. 그림은 상태를 라벨 하나로, chunk 를 4 step 으로 줄였습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="fast-weight-chunkwise"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Delta rule 기억 쓰기가 순차·병렬 두 형태로 계산되는 장면"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(36rem,calc(100svh-15rem))] min-h-[28rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -126,15 +129,20 @@ export default function FastWeightMemoryAndChunkwiseRecurrenceViz() {
               }`}
             >
               <span className="shrink-0">상태(다음 chunk 로 전달)</span>
-              <span className="truncate pl-3 font-mono text-right">{state.stateLabel}</span>
+              <span className="min-w-0 break-words pl-3 font-mono text-right">{state.stateLabel}</span>
             </div>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
             {state.note}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {STATES[index].note}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

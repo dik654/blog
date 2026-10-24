@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 440,
-    "pending": 550,
+    "reviewed": 444,
+    "pending": 546,
     "untracked": 0,
-    "assignedPending": 498,
+    "assignedPending": 494,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -813,9 +813,9 @@
       "publicPath": "cs/ai/yarn-rope-extension",
       "title": "RoPE에서 YaRN까지: 긴 문맥 확장의 원리와 검증",
       "catalogIndex": 78,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1403,9 +1403,9 @@
       "publicPath": "cs/ai/llm-sampling-strategies",
       "title": "Sampling 전략은 temperature 로 분포를 바꾸고 top-k·top-p 로 자릅니다",
       "catalogIndex": 137,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1413,9 +1413,9 @@
       "publicPath": "cs/ai/multi-head-latent-attention-mechanics",
       "title": "MLA 는 latent 로 압축한 KV 를 흡수한 weight 로 곧장 소비합니다",
       "catalogIndex": 138,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1433,9 +1433,9 @@
       "publicPath": "cs/ai/linear-attention-and-state-space-models",
       "title": "Linear attention과 SSM은 고정 크기 state로 attention의 KV 성장을 없앱니다",
       "catalogIndex": 140,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 990,
     "architectureCandidates": 175,
-    "dedicatedVisuals": 674,
+    "dedicatedVisuals": 675,
     "inlineVisuals": 550,
     "customVisuals": 858,
-    "animatedMechanisms": 420,
+    "animatedMechanisms": 421,
     "architectureWithoutAnimation": 109,
     "recursiveLocators": 34,
     "codeEvidenceLinked": 216,
@@ -1990,14 +1990,14 @@
       "sourcePath": "src/pages/articles/ai/fast-weight-memory-and-chunkwise-recurrence.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/feature-engineering",

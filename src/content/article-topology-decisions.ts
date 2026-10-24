@@ -3557,7 +3557,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 
 "ai/agent-memory-lifecycle":"53d52e9edc21bccf",
 "ai/expert-parallelism-moe-systems":"b4eb861661066ca6",
-"ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
+"ai/fast-weight-memory-and-chunkwise-recurrence":"fabeb7b731f3d123",
 "ai/flash-attention-io-aware-kernel":"a2c2eac722069c9b",
 "ai/reward-design-for-verifiable-rl":"0f1307d7f3825ece",
 "ai/world-model-latent-planning":"ad27657439f3c92a",

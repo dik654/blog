@@ -24,6 +24,27 @@ export default function Overview() {
         Context window를 늘리는 것과 긴 문맥을 잘 쓰는 것은 다르다
       </h2>
 
+      <figure data-viz="context-extension-checklist" className="not-prose my-9 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
+        <figcaption className="mb-4 text-sm font-semibold">
+          긴 문맥 지원을 판단하는 네 단계
+        </figcaption>
+        <div className="grid gap-3 md:grid-cols-4">
+          {stages.map((stage, index) => (
+            <div
+              key={stage.title}
+              className="relative min-w-0 rounded-lg border border-border/70 bg-background p-4"
+            >
+              <p className="text-xs font-bold text-primary/70">0{index + 1}</p>
+              <p className="mt-2 font-semibold">{stage.title}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">{stage.body}</p>
+              {index < stages.length - 1 && (
+                <span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 rounded-md border border-border/70 bg-card px-1.5 py-0.5 text-xs md:block">→</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </figure>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           LLM 설정에서 최대 길이만 크게 바꾸면 더 많은 token을 메모리에 올릴 수는 있지만 모델이 그 위치를 올바르게 해석한다는 보장은 없다. pretraining에서 보지 못한
@@ -43,33 +64,6 @@ export default function Overview() {
         <li>RoPE scaling을 적용하면 full attention 계산량과 KV cache 크기도 자동으로 줄까요?</li>
       </ol>
       <p>답은 <strong>아니요, 예, 아니요</strong>입니다. 입력 수용, 위치 일반화, 실제 task 성능과 serving 비용을 따로 검증합니다.</p>
-
-      <figure data-viz="context-extension-checklist" className="not-prose my-9 rounded-xl border border-border/75 bg-card p-4 sm:p-6">
-        <figcaption className="mb-4 text-sm font-semibold">
-          긴 문맥 지원을 판단하는 네 단계
-        </figcaption>
-        <div className="grid gap-3 md:grid-cols-4">
-          {stages.map((stage, index) => (
-            <div
-              key={stage.title}
-              className="relative min-w-0 rounded-lg border border-border/70 bg-background p-4"
-            >
-              <p className="text-xs font-bold text-primary/70">
-                0{index + 1}
-              </p>
-              <p className="mt-2 font-semibold">{stage.title}</p>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                {stage.body}
-              </p>
-              {index < stages.length - 1 && (
-                <span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 rounded-md border border-border/70 bg-card px-1.5 py-0.5 text-xs md:block">
-                  →
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </figure>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>지원 길이는 capability claim이지 품질 보증서가 아니다</h3>

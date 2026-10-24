@@ -5,6 +5,7 @@ import LongContextScope from "./LongContextScope";
 import Overview from "./Overview";
 import RopeFoundation from "./RopeFoundation";
 import YarnMethod from "./YarnMethod";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "../shared/LlmArchitectureLocator";
 
 const releaseChecks = [
   ["위치", "초반·중간·후반에 같은 evidence를 배치해 retrieval 위치 편향을 비교"],
@@ -99,6 +100,13 @@ function DeploymentAndPapers() {
 export default function ModernYarnRopeArticle() {
   return (
     <article>
+      <LlmArchitectureLocator
+        current="yarn"
+        question="학습 때 보지 못한 위치를 기존 RoPE checkpoint가 어떻게 해석하게 만들까요?"
+        fixture="32K에서 학습한 checkpoint를 128K까지 늘리는 factor 4 사례를 따라갑니다."
+        parentHref="/cs/ai/transformer-architecture#position-information"
+        parentLabel="Transformer 입력에 위치 정보를 넣는 자리"
+      />
       <Overview />
       <ContentBoundary article="yarn-rope-extension" />
       <RopeFoundation />
@@ -106,6 +114,12 @@ export default function ModernYarnRopeArticle() {
       <ExtensionAttempts />
       <YarnMethod />
       <DeploymentAndPapers />
+      <LlmArchitectureMapReturn
+        title="YaRN은 입력 길이 제한을 푸는 설정이 아니라, 학습 범위 밖 RoPE 회전을 조정하고 다시 적응시키는 방법입니다."
+        detail="다음 글은 긴 문맥에서 token마다 커지는 KV 기록을 저차원 latent 하나로 줄이는 MLA를 추적합니다."
+        nextHref="/cs/ai/multi-head-latent-attention-mechanics"
+        nextLabel="다음: MLA와 KV 압축"
+      />
     </article>
   );
 }

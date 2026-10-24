@@ -8,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * 값을 비교할 수 있게 한다. stage 높이는 다섯 장면의 최대 필요 크기로 고정한다.
  */
 const SCENES = ["원본 분포", "T=0.5 로 날카롭게", "T=2 로 평평하게", "Top-k=2 절단·재정규화", "Top-p=0.8 절단·재정규화"] as const;
+const CONTROL_LABELS = ["원본", "T=0.5", "T=2", "top-k", "top-p"] as const;
 
 const NOTES = [
   "5개 token 분포 [0.50, 0.20, 0.15, 0.10, 0.05] 입니다. 이 값 위에서 temperature 와 truncation 이 차례로 적용됩니다.",
@@ -15,6 +16,14 @@ const NOTES = [
   "T=2 는 p^(1/2)=√p 로 올린 것과 같아 [0.340, 0.215, 0.186, 0.152, 0.107] 로 다섯 token 이 서로 가까워집니다.",
   "원본 분포에 top-k=2 를 적용하면 A, B 만 남고(점선은 폐기) 합 0.7 로 나눠 0.714, 0.286 이 됩니다. C 는 B 와 큰 차이가 없어도 버려집니다.",
   "같은 분포에 top-p=0.8 을 적용하면 누적 0.85 에서 넘어 A, B, C 가 남고 0.588, 0.235, 0.176 으로 재정규화됩니다. Top-k=2 보다 하나 더 남습니다.",
+] as const;
+
+const MOBILE_NOTES = [
+  "다섯 token의 원본 확률입니다.",
+  "T=0.5이면 1등 A가 0.769까지 커집니다.",
+  "T=2이면 다섯 확률의 차이가 줄어듭니다.",
+  "Top-k=2는 A·B만 남겨 0.714·0.286으로 다시 나눕니다.",
+  "Top-p=0.8은 누적 0.85가 되는 A·B·C까지 남깁니다.",
 ] as const;
 
 const LABELS = ["A", "B", "C", "D", "E"] as const;
@@ -41,7 +50,7 @@ const ORIGIN_X = 20;
 const ORIGIN_Y = 112;
 
 export default function LlmSamplingStrategiesViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   const values = BY_SCENE[scene];
   const isTruncation = scene >= 3;
@@ -54,14 +63,16 @@ export default function LlmSamplingStrategiesViz() {
       note="분포는 5개 token 으로 단순화했습니다. 실제 vocabulary 는 수만 개 token 에 걸쳐 같은 규칙이 적용됩니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="llm-sampling-strategies"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Temperature·top-k·top-p 가 분포를 바꾸고 자르는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
@@ -69,7 +80,7 @@ export default function LlmSamplingStrategiesViz() {
           <div className="mt-4 border border-border p-3">
             <svg
               viewBox={`0 0 ${ORIGIN_X + 5 * (BAR_W + GAP)} 130`}
-              className="mx-auto h-auto w-full max-w-[22rem]"
+              className="mx-auto h-auto w-full max-w-[16rem] sm:max-w-[22rem]"
               role="img"
               aria-label={`${SCENES[scene]} 막대 그래프`}
             >
@@ -119,11 +130,17 @@ export default function LlmSamplingStrategiesViz() {
             </svg>
             <p className="mt-1 text-center font-mono text-[10px] text-muted-foreground">{SUBTITLE[scene]}</p>
           </div>
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scene]}
+          <p className="mt-3 border-l border-primary/50 pl-3 text-sm leading-6 text-muted-foreground sm:mt-4 sm:pl-4 sm:leading-7">
+            <span className="sm:hidden">{MOBILE_NOTES[scene]}</span>
+            <span className="hidden sm:inline">{NOTES[scene]}</span>
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );
