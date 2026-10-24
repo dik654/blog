@@ -2,30 +2,49 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { ScheduleClockViz } from "./viz/ModernLrScheduleViz";
+import {
+  LearningRateFamilyLocator,
+  LearningRateFamilyMapReturn,
+} from "../shared/LearningRateFamilyLocator";
+import { ResumeBoundaryViz, ScheduleClockViz } from "./viz/ModernLrScheduleViz";
 
 export default function LrSchedulingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" data-calculation-explained className="scroll-mt-20">
+      <LearningRateFamilyLocator current="clock" />
+      <section
+        id="overview"
+        data-teach-level="big-picture"
+        data-calculation-explained
+        className="scroll-mt-20"
+      >
         <h2 className="mb-6 text-2xl font-bold">
           Sample 51,200개를 열 epoch 돌리면 optimizer update는 1,000회입니다
         </h2>
+        <ScheduleClockViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Rank 하나가 micro-batch마다 16 sample을 읽고 이를 4회 누적하며 rank가 8개라면, 한 update는
-            16 sample/회 × 4회/rank × 8 rank = 512 sample을 소비합니다. 따라서 한 epoch은 51,200÷512=100 updates,
-            열 epoch의 total budget은 1,000 updates입니다.
+            Rank 하나가 micro-batch마다 16 sample을 읽고 이를 4회 누적하며
+            rank가 8개라면, 한 update는 16 sample/회 × 4회/rank × 8 rank = 512
+            sample을 소비합니다. 따라서 한 epoch은 51,200÷512=100 updates, 열
+            epoch의 total budget은 1,000 updates입니다.
           </p>
-          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 보기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
             <li>Backward 네 번이 곧 optimizer update 네 번일까요?</li>
             <li>한 optimizer update가 512 sample을 소비할까요?</li>
-            <li>Resume할 때 LR 숫자만 저장하면 같은 update clock이 복원될까요?</li>
+            <li>
+              Resume할 때 LR 숫자만 저장하면 같은 update clock이 복원될까요?
+            </li>
           </ol>
-          <p>답은 <strong>아니요, 예, 아니요</strong>입니다. Scheduler는 micro-batch가 아니라 parameter가 실제로 바뀐 update를 세며 cursor·budget·state·호출 순서를 함께 저장해야 합니다.</p>
+          <p>
+            답은 <strong>아니요, 예, 아니요</strong>입니다. Scheduler는
+            micro-batch가 아니라 parameter가 실제로 바뀐 update를 세며
+            cursor·budget·state·호출 순서를 함께 저장해야 합니다.
+          </p>
         </div>
-        <ScheduleClockViz />
         <ContentBoundary article="lr-scheduling" />
         <TermBreakdown
           title="Schedule contract의 네 물체"
@@ -65,7 +84,11 @@ export default function LrSchedulingArticle() {
         />
       </section>
 
-      <section id="update-clock" className="scroll-mt-20">
+      <section
+        id="update-clock"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Effective batch를 update budget으로 바꿉니다
         </h2>
@@ -135,7 +158,11 @@ export default function LrSchedulingArticle() {
         />
       </section>
 
-      <section id="schedule-function" className="scroll-mt-20">
+      <section
+        id="schedule-function"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Scheduler는 direction이 아니라 scale을 바꿉니다
         </h2>
@@ -205,15 +232,22 @@ export default function LrSchedulingArticle() {
         />
       </section>
 
-      <section id="resume-boundary" className="scroll-mt-20">
+      <section
+        id="resume-boundary"
+        data-teach-level="failure"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Resume는 LR 숫자 하나가 아니라 trajectory를 복원합니다
         </h2>
+        <ResumeBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Checkpoint에는 global update와 total budget, scheduler class와 version을 저장합니다. 여기에 state
-            dict·optimizer state·현재 param-group LR·step 호출 순서까지 함께 넣습니다. 연속 1000 updates와 600+resume+400
-            updates의 LR trace와 parameter를 비교해야 off-by-one이 드러납니다.
+            Checkpoint에는 global update와 total budget, scheduler class와
+            version을 저장합니다. 여기에 state dict·optimizer state·현재
+            param-group LR·step 호출 순서까지 함께 넣습니다. 연속 1000 updates와
+            600+resume+400 updates의 LR trace와 parameter를 비교해야
+            off-by-one이 드러납니다.
           </p>
         </div>
         <div id="docs-pytorch-scheduler" className="scroll-mt-24">
@@ -232,6 +266,7 @@ export default function LrSchedulingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LearningRateFamilyMapReturn current="clock" />
     </div>
   );
 }

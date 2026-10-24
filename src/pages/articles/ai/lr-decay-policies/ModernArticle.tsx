@@ -2,29 +2,52 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { DecayPolicyViz } from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  DecayPolicyViz,
+  DecayStoppingOrderViz,
+} from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  LearningRateFamilyLocator,
+  LearningRateFamilyMapReturn,
+} from "../shared/LearningRateFamilyLocator";
 
 export default function LrDecayPoliciesArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <LearningRateFamilyLocator current="decay" />
+      <section
+        id="overview"
+        data-teach-level="big-picture"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-6 text-2xl font-bold">
           0.1을 100 update마다 절반으로 줄이면 update 250의 LR는 0.025입니다
         </h2>
+        <DecayPolicyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Base LR η₀=0.1, decay factor γ=0.5, interval K=100인 step policy를
-            봅니다. Update 250은 milestone 두 개를 지났으므로 0.1×0.5²=0.025입니다.
+            봅니다. Update 250은 milestone 두 개를 지났으므로
+            0.1×0.5²=0.025입니다.
           </p>
-          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 보기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
             <li>Update 250의 step-decay LR는 0.025일까요?</li>
-            <li>같은 γ=0.5를 매 update 곱하는 exponential policy도 0.025일까요?</li>
-            <li>Validation metric 없이 plateau policy의 decay 시점을 정할 수 있을까요?</li>
+            <li>
+              같은 γ=0.5를 매 update 곱하는 exponential policy도 0.025일까요?
+            </li>
+            <li>
+              Validation metric 없이 plateau policy의 decay 시점을 정할 수
+              있을까요?
+            </li>
           </ol>
-          <p>답은 <strong>예, 아니요, 아니요</strong>입니다. Step·exponential은 clock을 읽고, plateau는 validation event와 누적 state를 읽습니다.</p>
+          <p>
+            답은 <strong>예, 아니요, 아니요</strong>입니다. Step·exponential은
+            clock을 읽고, plateau는 validation event와 누적 state를 읽습니다.
+          </p>
         </div>
-        <DecayPolicyViz />
         <ContentBoundary article="lr-decay-policies" />
         <TermBreakdown
           title="Decay를 결정하는 입력을 한 줄씩 구분"
@@ -60,7 +83,11 @@ export default function LrDecayPoliciesArticle() {
         />
       </section>
 
-      <section id="open-loop" className="scroll-mt-20">
+      <section
+        id="open-loop"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Step과 exponential은 validation 없이 clock으로 결정됩니다
         </h2>
@@ -68,7 +95,8 @@ export default function LrDecayPoliciesArticle() {
           question="η₀=.1, γ=.5, K=100이면 t=250의 Step LR가 왜 .025인가요?"
           idea={
             <p>
-              현재 update가 milestone 구간을 몇 번 지났는지 floor로 센 다음 그 횟수만큼 γ를 곱합니다.
+              현재 update가 milestone 구간을 몇 번 지났는지 floor로 센 다음 그
+              횟수만큼 γ를 곱합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}j_t&=\lfloor t/K\rfloor\\\eta_t^{\rm step}&=\eta_0\gamma^{j_t}\\\eta_t^{\rm exp}&=\eta_0\gamma^t\end{aligned}`}
@@ -121,7 +149,11 @@ export default function LrDecayPoliciesArticle() {
         />
       </section>
 
-      <section id="metric-trigger" className="scroll-mt-20">
+      <section
+        id="metric-trigger"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Plateau policy는 improvement를 event 단위로 판정합니다
         </h2>
@@ -129,7 +161,9 @@ export default function LrDecayPoliciesArticle() {
           question="Min-mode에서 현재 metric이 best보다 얼마나 좋아야 bad-count를 reset하나요?"
           idea={
             <p>
-              현재 metric이 best에서 threshold를 뺀 경계보다 작을 때만 meaningful improvement로 인정합니다. 아니면 bad-count를 하나 늘립니다.
+              현재 metric이 best에서 threshold를 뺀 경계보다 작을 때만
+              meaningful improvement로 인정합니다. 아니면 bad-count를 하나
+              늘립니다.
             </p>
           }
           formula={String.raw`\begin{aligned}q_e&=[m_e<b_e-\delta]\\c_e&=(1-q_e)(c_{e-1}+1)\\d_e&=[c_e>p]\end{aligned}`}
@@ -189,15 +223,22 @@ export default function LrDecayPoliciesArticle() {
         />
       </section>
 
-      <section id="selection-boundary" className="scroll-mt-20">
+      <section
+        id="selection-boundary"
+        data-teach-level="failure"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Decay와 early stopping의 순서를 먼저 정합니다
         </h2>
+        <DecayStoppingOrderViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            같은 validation metric을 두 state machine이 읽으면 decay 뒤 몇 번의 update를 더 허용할지 명시합니다. 그렇지 않으면 early
-            stopping이 먼저 firing해 decay가 효과를 낼 기회가 없습니다. global update와 evaluation index를 먼저 적고 metric·old/new
-            LR·trigger reason까지 한 trace에 함께 남깁니다.
+            같은 validation metric을 두 state machine이 읽으면 decay 뒤 몇 번의
+            update를 더 허용할지 명시합니다. 그렇지 않으면 early stopping이 먼저
+            firing해 decay가 효과를 낼 기회가 없습니다. global update와
+            evaluation index를 먼저 적고 metric·old/new LR·trigger reason까지 한
+            trace에 함께 남깁니다.
           </p>
         </div>
         <div id="docs-pytorch-decay" className="scroll-mt-24">
@@ -216,6 +257,7 @@ export default function LrDecayPoliciesArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LearningRateFamilyMapReturn current="decay" />
     </div>
   );
 }
