@@ -114,6 +114,11 @@ const noScriptArticleRoutes = new Set([
   "ai/grammar-tokenizer-decoding",
   "ai/incremental-parsing-tree-sitter",
   "ai/structured-generation-serving",
+  "ai/motif-3-architecture",
+  "ai/kimi-k3-architecture",
+  "ai/kimi-k3-sequence-mixer",
+  "ai/kimi-k3-depth-routing",
+  "ai/kimi-k3-latent-moe",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

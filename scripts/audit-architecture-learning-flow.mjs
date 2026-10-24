@@ -24,7 +24,7 @@ const animatedMechanismPattern =
 const codeEvidencePattern = /CodeSidebar|CodeViewButton|data-code-ref/;
 const sourceCitationPattern = /CitationBlock|id=["']paper-|href=["']https?:/;
 const recursiveLocatorPattern =
-  /(?:Consensus|Execution)ClientLocator|EthereumNodeLocator|[A-Za-z0-9]+SeriesLocator|Recursive[A-Za-z0-9]*(?:Map|Locator)/;
+  /(?:Consensus|Execution)ClientLocator|EthereumNodeLocator|[A-Za-z0-9]+Locator|Recursive[A-Za-z0-9]*(?:Map|Locator)/;
 
 function readClosure(files) {
   return files

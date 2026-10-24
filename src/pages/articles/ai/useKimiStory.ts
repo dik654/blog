@@ -1,32 +1,18 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import type { KeyboardEvent } from "react";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
-export function useStory(length: number, interval = 2600) {
-  const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(false);
+export function useStory(length: number, interval = 5200) {
+  const controls = useAnimatedScenes(length, interval, { loop: false });
+  const onKeyDown = (event: KeyboardEvent<HTMLElement>) =>
+    controls.onKeyDown(event as KeyboardEvent<HTMLDivElement>);
 
-  useEffect(() => {
-    if (!playing) return;
-    const timer = window.setInterval(
-      () => setStep((value) => (value + 1) % length),
-      interval,
-    );
-    return () => window.clearInterval(timer);
-  }, [interval, length, playing]);
-
-  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      setStep((value) => (value + 1) % length);
-    }
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      setStep((value) => (value - 1 + length) % length);
-    }
-    if (event.key === " ") {
-      event.preventDefault();
-      setPlaying((value) => !value);
-    }
+  return {
+    step: controls.active,
+    setStep: controls.setActive,
+    playing: controls.playing,
+    setPlaying: controls.setPlaying,
+    reducedMotion: controls.reducedMotion,
+    playbackId: controls.playbackId,
+    onKeyDown,
   };
-
-  return { step, setStep, playing, setPlaying, onKeyDown };
 }

@@ -4,13 +4,18 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { DepthRoutingViz } from "../kimi-k3-viz";
+import {
+  ModelArchitectureCaseLocator,
+  ModelArchitectureCaseMapReturn,
+} from "../shared/ModelArchitectureCaseLocator";
 
 export default function KimiK3DepthRoutingArticle() {
   return <article id="overview" className="space-y-16">
+    <ModelArchitectureCaseLocator current="depth" />
     <section className="space-y-6">
       <LessonHeader number="00" eyebrow="표준 residual부터" title="Residual은 이전 층을 보존하는 통로이고, depth attention은 그 통로의 source를 고른다">먼저 일반 residual을 봅니다. Layer는 직전 state에 update를 더합니다. Attention Residuals는 이 입력을 embedding과 앞선 depth state의 weighted read로 바꿉니다.</LessonHeader>
-      <TermLesson name="Standard residual stream" oneLine="직전 representation을 identity path로 보존하고 현재 sublayer가 만든 update를 더하는 depth 전달 경로입니다." shape="hₗ₊₁ = hₗ + Fₗ(norm(hₗ))" example="Fₗ가 0에 가까우면 다음 층은 hₗ을 거의 그대로 받습니다." boundary="Residual은 과거 모든 layer를 명시적으로 다시 고르는 mechanism이 아니라 직전 state에 누적된 결과를 전달합니다." />
       <DepthRoutingViz />
+      <TermLesson name="Standard residual stream" oneLine="직전 representation을 identity path로 보존하고 현재 sublayer가 만든 update를 더하는 depth 전달 경로입니다." shape="hₗ₊₁ = hₗ + Fₗ(norm(hₗ))" example="Fₗ가 0에 가까우면 다음 층은 hₗ을 거의 그대로 받습니다." boundary="Residual은 과거 모든 layer를 명시적으로 다시 고르는 mechanism이 아니라 직전 state에 누적된 결과를 전달합니다." />
     </section>
     <section id="depth-attention" className="space-y-6">
       <LessonHeader number="01" eyebrow="Token이 아니라 layer source 선택" title="현재 layer의 pseudo-query가 이전 depth representation의 key를 비교한다">각 source에는 key와 value가 있습니다. 현재 layer가 가진 learned pseudo-query가 key score를 만들고, softmax weight로 value를 섞습니다.</LessonHeader>
@@ -28,5 +33,6 @@ export default function KimiK3DepthRoutingArticle() {
       <ConceptLadderViz title="Depth routing 학습 순서" description="표준 residual에서 출발해 source selection과 block bound를 조립합니다." steps={[{label:"Residual",detail:"직전 state를 보존하는 통로를 확인합니다."},{label:"Source",detail:"이전 depth representation에 key/value를 붙입니다."},{label:"Select",detail:"Pseudo-query로 source를 가중합합니다."},{label:"Bound",detail:"Block으로 long-lived source 수를 제한합니다."}]} />
       <ContentBoundary article="kimi-k3-depth-routing" />
     </section>
+    <ModelArchitectureCaseMapReturn current="depth" />
   </article>;
 }

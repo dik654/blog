@@ -109,6 +109,8 @@ export function StoryShell({
   playing,
   setStep,
   setPlaying,
+  reducedMotion,
+  playbackId,
   onKeyDown,
   children,
 }: {
@@ -119,11 +121,14 @@ export function StoryShell({
   playing: boolean;
   setStep: (step: number) => void;
   setPlaying: (playing: boolean) => void;
+  reducedMotion: boolean;
+  playbackId: string;
   onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
   children: ReactNode;
 }) {
   return (
     <figure
+      id={playbackId}
       data-viz="animated-story"
       data-viz-canvas="story-canvas"
       data-story-index={step}
@@ -143,10 +148,11 @@ export function StoryShell({
           </div>
           <button
             type="button"
+            disabled={reducedMotion}
             onClick={() => setPlaying(!playing)}
-            className="border border-border px-3 py-2 text-xs font-black hover:border-primary"
+            className="border border-border px-3 py-2 text-xs font-black hover:border-primary disabled:cursor-not-allowed disabled:text-muted-foreground"
           >
-            {playing ? "일시정지" : "자동 재생"}
+            {reducedMotion ? "재생 꺼짐" : playing ? "일시정지" : "순서대로 재생"}
           </button>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -167,8 +173,17 @@ export function StoryShell({
         </div>
       </figcaption>
       <div className="min-w-0 p-4 sm:p-6">{children}</div>
+      <noscript>
+        <ol className="space-y-2 border-t border-border px-5 py-4 text-sm leading-6">
+          {labels.map((label, index) => (
+            <li key={label}>
+              <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
+            </li>
+          ))}
+        </ol>
+      </noscript>
       <p className="border-t border-border px-5 py-3 text-xs text-muted-foreground">
-        키보드: ← 이전 · → 다음 · Space 자동 재생/정지
+        키보드: ← 이전 · → 다음 · Space 재생/정지
       </p>
     </figure>
   );
