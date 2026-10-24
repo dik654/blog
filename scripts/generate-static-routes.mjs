@@ -143,6 +143,9 @@ const noScriptArticleRoutes = new Set([
   "ai/inference-engine-design-axes",
   "ai/vllm-spec-decode",
   "ai/speculative-decoding-variants",
+  "ai/multi-adapter-serving",
+  "ai/hybrid-kv-cache-allocation",
+  "ai/sliding-window-kv-and-attention-sinks",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

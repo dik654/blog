@@ -2,15 +2,21 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import KVCache from "./hybrid-attention-serving/KVCache";
 import HybridKvCaseViz from "./hybrid-kv-cache-allocation/viz/HybridKvCaseViz";
 import WindowReclaimViz from "./hybrid-kv-cache-allocation/viz/WindowReclaimViz";
+import {
+  ServingStateMapReturn,
+  ServingStateSeriesLocator,
+} from "./shared/ServingStateSeriesLocator";
 
 export default function HybridKVCacheAllocationArticle() {
   return (
     <>
+      <ServingStateSeriesLocator current="layers" />
       <section id="overview" className="mb-16 scroll-mt-20 space-y-5">
         <p className="text-sm font-semibold text-primary">Visibility ≠ allocation</p>
         <h2 className="text-3xl font-bold tracking-tight">
           8개 layer가 32,768칸을 잡을지 14,336칸만 잡을지 계산합니다
         </h2>
+        <HybridKvCaseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             길이 <strong>T=4,096</strong>인 요청에 global layer 2개와 local layer
@@ -29,7 +35,6 @@ export default function HybridKVCacheAllocationArticle() {
             읽기 규칙이고 allocation은 runtime의 소유·회수 규칙입니다.
           </p>
         </div>
-        <HybridKvCaseViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             같은 숫자를 칸으로 바꾸면 두 규칙이 갈리는 순간이 보입니다. 요청이 길어질수록 local 층의 읽기 창은
@@ -40,6 +45,7 @@ export default function HybridKVCacheAllocationArticle() {
         <ContentBoundary article="hybrid-kv-cache-allocation" />
       </section>
       <KVCache />
+      <ServingStateMapReturn current="layers" />
     </>
   );
 }

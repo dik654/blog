@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 469,
-    "pending": 521,
+    "reviewed": 471,
+    "pending": 519,
     "untracked": 0,
     "assignedPending": 475,
-    "postCheckpointPending": 46,
+    "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -1175,7 +1175,7 @@
       "catalogIndex": 114,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1185,7 +1185,7 @@
       "catalogIndex": 115,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1193,10 +1193,10 @@
       "publicPath": "cs/ai/multi-adapter-serving",
       "title": "여러 adapter 서빙: 한 base 위에 고객별 LoRA와 soft prompt를 얹는 비용",
       "catalogIndex": 116,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-07-plan.md"
     },
     {
       "route": "ai/kv-cache-fundamentals",
@@ -1225,7 +1225,7 @@
       "catalogIndex": 119,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1245,7 +1245,7 @@
       "catalogIndex": 121,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-05-plan.md"
     },
     {
@@ -1255,7 +1255,7 @@
       "catalogIndex": 122,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-05-plan.md"
     },
     {
@@ -1273,10 +1273,10 @@
       "publicPath": "cs/ai/sliding-window-kv-and-attention-sinks",
       "title": "Sliding window KV와 attention sink: 창 밖 기록을 버릴 때 남겨야 할 것",
       "catalogIndex": 124,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-07-plan.md"
     },
     {
       "route": "ai/llm-serving-capacity",
@@ -1385,7 +1385,7 @@
       "catalogIndex": 135,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1395,7 +1395,7 @@
       "catalogIndex": 136,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
