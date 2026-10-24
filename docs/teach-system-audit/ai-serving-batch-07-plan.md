@@ -40,4 +40,6 @@ Adapter와 KV는 같은 GPU 메모리를 쓰지만 수명과 소유자가 다릅
 - [x] 키보드와 중간 장면
 - [x] reduced-motion
 - [x] JavaScript 비활성 정적 본문과 부모 지도
-- [ ] 공개 경로
+- [x] 공개 경로
+
+GitHub Pages run `40098731732`가 commit `114887d8`의 전체 감사·build·990개 공개 글 브라우저 검사를 통과했습니다. 배포 뒤 세 공개 경로를 390×844 Chromium으로 다시 열어 HTTP 200, 현재 위치와 공개 주소의 일치, 부모·반환 지도 각 1개, 문서·모든 Viz 가로 넘침 0, console warning/error 0을 확인했습니다.

@@ -3290,7 +3290,7 @@
   `40095994311`에서 전체 감사·build·990개 공개 글 검사가 성공했고, 두 공개 URL도 모바일에서
   HTTP 200, 부모 지도·반환 지도, 가로 넘침 0, console 오류 0을 확인했다.
 
-### AI 요청별 GPU 상태 묶음 로컬 완료 (2026-10-24)
+### AI 요청별 GPU 상태 묶음 공개 완료 (2026-10-24)
 
 - `multi-adapter-serving`, `hybrid-kv-cache-allocation`, `sliding-window-kv-and-attention-sinks`를 한
   replica가 요청마다 달라지는 GPU 상태라는 직속 부모에 연결했다. Adapter는 요청이 선택해 적재하는
@@ -3305,7 +3305,10 @@
 - 390×844와 1,440×900에서 세 글 모두 부모 지도·현재 위치·반환 지도, 문서와 data canvas의 가로 넘침
   0, console 오류 0을 확인했다. Sliding-window 장면은 키보드 ArrowRight·ArrowLeft로 왕복했고,
   reduced-motion에서 2.5초 뒤에도 첫 장면과 `재생 꺼짐` 상태를 유지했다. JavaScript 비활성 정적
-  문서에서도 세 글의 제목·부모 지도·반환 지도와 모든 장면 순서를 확인했다. 공개 배포 검증은 남아 있다.
+  문서에서도 세 글의 제목·부모 지도·반환 지도와 모든 장면 순서를 확인했다. commit `114887d8`,
+  GitHub Pages run `40098731732`에서 전체 감사·build·990개 공개 글 검사가 성공했다. 배포 뒤 세 공개
+  경로를 390×844 Chromium으로 다시 열어 HTTP 200, 현재 위치 href 일치, 부모·반환 지도 각 1개,
+  문서와 모든 data canvas 가로 넘침 0, console warning/error 0을 확인했다.
 
 ### AI 하이브리드 기억 묶음 로컬 완료 (2026-10-24)
 
