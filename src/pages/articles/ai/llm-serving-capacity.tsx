@@ -1,16 +1,21 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import Capacity from "./hybrid-attention-serving/Capacity";
-import Deployment from "./hybrid-attention-serving/Deployment";
 import VllmCapacityLogViz from "./hybrid-attention-serving/viz/VllmCapacityLogViz";
+import {
+  InferenceRuntimeMapReturn,
+  InferenceRuntimeSeriesLocator,
+} from "./shared/InferenceRuntimeSeriesLocator";
 
 export default function LLMServingCapacityArticle() {
   return (
     <>
+      <InferenceRuntimeSeriesLocator current="capacity" />
       <section id="overview" className="mb-16 scroll-mt-20 space-y-5">
         <p className="text-sm font-semibold text-primary">Memory → admission</p>
         <h2 className="text-3xl font-bold tracking-tight">
           같은 65,536-token 요청인데 두 로그는 맞고 하나는 단위가 다릅니다
         </h2>
+        <VllmCapacityLogViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             세 runtime 모두 <code>max_model_len=65,536</code>입니다. Gemma의 cache
@@ -18,7 +23,7 @@ export default function LLMServingCapacityArticle() {
             352,736 token은 5.38×이고 보고값도 5.38×입니다. Qwen의 97,216 token은
             단순 계산으로 1.48×인데 runtime은 5.17×라고 적었습니다.
           </p>
-          <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">그림의 세 로그를 같은 단위로 검산해 보세요.</p>
           <ol>
             <li>Gemma의 88,824÷65,536은 약 1.36이라 runtime 값과 맞을까요?</li>
             <li>Muse의 352,736 token은 max-length request 약 5.38개분일까요?</li>
@@ -30,7 +35,6 @@ export default function LLMServingCapacityArticle() {
             신호입니다. 단위가 확인되기 전에는 세 model의 숫자를 같은 열에서 비교하지 않습니다.
           </p>
         </div>
-        <VllmCapacityLogViz />
         <ContentBoundary article="llm-serving-capacity" />
         <p className="text-lg leading-8 text-foreground/90">
           KV pool은 저장 공간이고 admission은 실제 요청을 받을지 정하는 운영 결정입니다.
@@ -40,7 +44,7 @@ export default function LLMServingCapacityArticle() {
         </p>
       </section>
       <Capacity />
-      <Deployment />
+      <InferenceRuntimeMapReturn current="capacity" />
     </>
   );
 }

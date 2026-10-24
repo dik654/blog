@@ -123,13 +123,13 @@
     },
     {
       "route": "ai/multimodal-serving-pipeline",
-      "status": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/sglang-runtime-anatomy",
-      "status": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/multi-adapter-serving",
@@ -158,8 +158,8 @@
     },
     {
       "route": "ai/llama-cpp-local-inference",
-      "status": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/laya-system1-decision-model",

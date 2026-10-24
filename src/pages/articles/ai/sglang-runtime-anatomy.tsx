@@ -14,6 +14,10 @@ import RetractOrderViz from "./sglang-runtime-anatomy/viz/RetractOrderViz";
 import OverlapTimelineViz from "./sglang-runtime-anatomy/viz/OverlapTimelineViz";
 import { codeRefs } from "./sglang-runtime-anatomy/codeRefs";
 import { sglangRuntimeTrees } from "./sglang-runtime-anatomy/fileTree";
+import {
+  InferenceRuntimeMapReturn,
+  InferenceRuntimeSeriesLocator,
+} from "./shared/InferenceRuntimeSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -25,9 +29,11 @@ export default function SglangRuntimeAnatomyArticle() {
 
   return (
     <>
+      <InferenceRuntimeSeriesLocator current="sglang" />
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 같은 4,096칸에 3개를 받을지 20개를 받을지는 장부가 정합니다</h2>
+          <SglangRuntimeAnatomyViz />
           <div className={prose}>
             <p className="text-lg leading-8">
               GPU 한 장에 KV를 담을 칸이 4,096개 있고 입력 200 token에 출력 상한 1,000 token인 요청이 줄지어 기다린다고 해 봅시다. 실제 출력은 300
@@ -42,7 +48,6 @@ export default function SglangRuntimeAnatomyArticle() {
               다음 batch를 고르도록 순서를 바꿉니다. 이 글은 이 네 가지를 같은 요청 하나로 따라가고, 마지막에 고정 원문의 줄 번호로 확인합니다.
             </p>
           </div>
-          <SglangRuntimeAnatomyViz />
           <ContentBoundary article="sglang-runtime-anatomy" />
         </section>
 
@@ -548,6 +553,7 @@ export default function SglangRuntimeAnatomyArticle() {
           </div>
         </section>
       </div>
+      <InferenceRuntimeMapReturn current="sglang" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

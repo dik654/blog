@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import InferenceRuntimeAnatomyViz from "./inference-runtime-anatomy/viz/InferenceRuntimeAnatomyViz";
 import ShardLoadPathViz from "./inference-runtime-anatomy/viz/ShardLoadPathViz";
+import {
+  InferenceRuntimeMapReturn,
+  InferenceRuntimeSeriesLocator,
+} from "./shared/InferenceRuntimeSeriesLocator";
 
 /**
  * Inference runtime 은 첫 요청 전에 process 를 나누고 GPU memory 지도를 확정합니다
@@ -17,18 +21,21 @@ import ShardLoadPathViz from "./inference-runtime-anatomy/viz/ShardLoadPathViz";
  */
 export default function InferenceRuntimeAnatomyArticle() {
   return (
-    <div id="overview" className="space-y-16">
+    <>
+      <InferenceRuntimeSeriesLocator current="startup" />
+      <div id="overview" className="space-y-16">
       <section id="process-anatomy" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           80 GB GPU의 72 GB 예산에서 KV pool 49 GB를 남깁니다
         </h2>
+        <InferenceRuntimeAnatomyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             70B FP16 checkpoint 140 GB를 TP 8로 나누면 worker 한 개가 weight
             17.5 GB를 맡습니다. 80 GB GPU에 utilization .9를 적용한 예산은 72 GB입니다.
             Profile peak 4.5 GB와 CUDA graph 1 GB까지 빼면 KV pool은 49 GB입니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">그림의 준비 순서를 기준으로 세 가지를 확인해 보세요.</p>
           <ol>
             <li>TP 8의 worker 하나가 checkpoint 140 GB를 전부 읽을까요?</li>
             <li>72−17.5−4.5−1의 결과는 49 GB일까요?</li>
@@ -40,7 +47,6 @@ export default function InferenceRuntimeAnatomyArticle() {
             별도 EngineCore process가 scheduler와 KV state를 소유합니다.
           </p>
         </div>
-        <InferenceRuntimeAnatomyViz />
         <ContentBoundary article="inference-runtime-anatomy" />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
@@ -356,13 +362,16 @@ export default function InferenceRuntimeAnatomyArticle() {
             backend 로 옮겨 적으면 안 됩니다.
           </p>
           <p>
-            다음 읽기는 확정된 KV pool 이 요청마다 어떻게 잘려 나가는지 다루는{" "}
-            <Link to="/cs/ai/vllm-paged-attention">PagedAttention</Link> 글과, 그 pool 이 몇 개의
-            동시 요청을 감당하는지 계산하는{" "}
-            <Link to="/cs/ai/model-vram-budgeting#known-floor">VRAM budgeting</Link> 글입니다.
+            이 글 앞의 <Link to="/cs/ai/model-vram-budgeting#known-floor">VRAM budgeting</Link>은
+            가중치와 실행 공간을 같은 byte 장부에 올렸습니다. 이제 실제로 확정된 KV pool이 몇 개의
+            요청을 감당하는지는 <Link to="/cs/ai/llm-serving-capacity#overview">서빙 수용량</Link>에서
+            계산합니다. 요청별 block 배정은 <Link to="/cs/ai/vllm-paged-attention">PagedAttention</Link>이
+            별도로 맡습니다.
           </p>
         </div>
       </section>
-    </div>
+      </div>
+      <InferenceRuntimeMapReturn current="startup" />
+    </>
   );
 }

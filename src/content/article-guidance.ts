@@ -45,7 +45,7 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "kimi-k3-architecture": "논문·프로젝트 해설",
   "kv-cache-fundamentals": "개념 지도",
   "hybrid-kv-cache-allocation": "구현 추적",
-  "llm-serving-capacity": "비교·선택",
+  "llm-serving-capacity": "개념 지도",
   "agent-loop-foundations": "개념 지도",
   "agent-plan-replanning": "구현 추적",
   "agent-delegation-contracts": "비교·선택",

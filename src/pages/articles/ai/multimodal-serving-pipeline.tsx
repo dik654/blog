@@ -12,6 +12,10 @@ import PrefixKeyViz from "./multimodal-serving-pipeline/viz/PrefixKeyViz";
 import EncoderCacheSlotViz from "./multimodal-serving-pipeline/viz/EncoderCacheSlotViz";
 import { codeRefs } from "./multimodal-serving-pipeline/codeRefs";
 import { multimodalTrees } from "./multimodal-serving-pipeline/fileTree";
+import {
+  InferenceRuntimeMapReturn,
+  InferenceRuntimeSeriesLocator,
+} from "./shared/InferenceRuntimeSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -28,6 +32,7 @@ export default function MultimodalServingPipelineArticle() {
 
   return (
     <>
+      <InferenceRuntimeSeriesLocator current="multimodal" />
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 같은 사진에 질문 네 개가 붙으면 서버는 무엇을 몇 번 계산할까요?</h2>
@@ -468,6 +473,7 @@ export default function MultimodalServingPipelineArticle() {
           </div>
         </section>
       </div>
+      <InferenceRuntimeMapReturn current="multimodal" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

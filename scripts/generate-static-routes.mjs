@@ -129,6 +129,12 @@ const noScriptArticleRoutes = new Set([
   "ai/vllm-paged-attention",
   "ai/serving-memory-admission-and-preemption",
   "ai/prefix-caching-radix-attention",
+  "ai/model-vram-budgeting",
+  "ai/inference-runtime-anatomy",
+  "ai/llm-serving-capacity",
+  "ai/multimodal-serving-pipeline",
+  "ai/sglang-runtime-anatomy",
+  "ai/llama-cpp-local-inference",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
