@@ -27,7 +27,7 @@ export function AnimatedSceneControls({
         data-viz-mobile-controls
         className="relative mt-2 flex min-h-11 items-center justify-end gap-0.5 border-t border-border/45 bg-background/95 pt-1 backdrop-blur-sm sm:hidden"
       >
-        <span className="sr-only left-0 top-0" aria-live="polite">
+        <span className="sr-only" style={{ left: 0, top: 0 }} aria-live="polite">
           {labels.length}개 장면 중 {active + 1}번, {labels[active]}
         </span>
         <button
