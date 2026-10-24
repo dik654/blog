@@ -3545,7 +3545,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vllm-scheduler": "ef3d2228d799444a",
   "ai/retrieval-ranking-funnel": "50578b053322609e",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
-  "ai/xml-prompting": "10c4804cd901a1a7",
+  "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
   "blockchain/da-theory": "4bb9b90b2f691896",

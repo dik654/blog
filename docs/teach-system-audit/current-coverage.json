@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 549,
-    "pending": 441,
+    "reviewed": 550,
+    "pending": 440,
     "untracked": 0,
-    "assignedPending": 397,
+    "assignedPending": 396,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1963,9 +1963,9 @@
       "publicPath": "cs/ai/xml-prompting",
       "title": "XML 프롬프팅: 역할 경계·파싱·보안",
       "catalogIndex": 193,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

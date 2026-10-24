@@ -9,6 +9,10 @@ export default function BestPractices() {
         XML을 채택하기 전에 같은 task에서 대안 형식과 비교한다
       </h2>
 
+      <div className="not-prose my-8">
+        <BestPracticesViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           형식은 취향이 아니라 입력의 모양과 결과를 소비하는 주체에 맞춰
@@ -32,10 +36,6 @@ export default function BestPractices() {
           정합니다. 이 글에서는 그 contract를 XML로 표현하고 안전하게 소비하는 부분만
           맡습니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <BestPracticesViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

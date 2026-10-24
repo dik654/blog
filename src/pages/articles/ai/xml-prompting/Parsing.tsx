@@ -10,6 +10,10 @@ export default function Parsing() {
         Model의 XML 출력은 parse 성공 뒤에도 세 번 더 검사해야 한다
       </h2>
 
+      <div className="not-prose my-8">
+        <ParsingViz />
+      </div>
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           model completion은 신뢰할 수 없는 text입니다. XML을 요청했더라도 앞뒤에 설명을 붙이거나 tag를 빠뜨리고 예상하지 않은 element와 attribute를
@@ -30,10 +34,6 @@ export default function Parsing() {
           parse error를 “관대한 parser→regex” 순서로 조용히 복구하면 잘못된 구조가 다른 의미로 실행되는 일이 생깁니다. 실패 원인을 typed error로 보존하는
           편이 안전합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <ParsingViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

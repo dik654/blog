@@ -7,9 +7,9 @@
     "dedicatedVisuals": 677,
     "inlineVisuals": 550,
     "customVisuals": 860,
-    "animatedMechanisms": 450,
+    "animatedMechanisms": 451,
     "architectureWithoutAnimation": 99,
-    "recursiveLocators": 201,
+    "recursiveLocators": 202,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -6153,11 +6153,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/yarn-rope-extension",
