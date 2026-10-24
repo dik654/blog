@@ -10,10 +10,12 @@ const decisions = [
 
 export default function SFTProcess() {
   return (
-    <section id="sft-process" className="mb-16 scroll-mt-20">
+    <section id="sft-process" data-teach-level="mechanism" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         SFT는 정답 규칙보다 teacher trace의 token distribution을 학습한다
       </h2>
+
+      <SFTBoundaryViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -35,8 +37,6 @@ export default function SFTProcess() {
           집중합니다.
         </p>
       </div>
-
-      <SFTBoundaryViz />
 
       <ExplainedFormula
         question="Reasoning SFT는 한 completion의 어느 token에서 무엇을 최소화하는가?"

@@ -3,10 +3,12 @@ import EvaluationContractViz from "./viz/EvaluationContractViz";
 
 export default function Evaluation() {
   return (
-    <section id="evaluation" className="mb-16 scroll-mt-20">
+    <section id="evaluation" data-teach-level="evidence" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Reasoning score는 model만의 숫자가 아닙니다
       </h2>
+
+      <EvaluationContractViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -28,8 +30,6 @@ export default function Evaluation() {
           결과입니다.
         </p>
       </div>
-
-      <EvaluationContractViz />
 
       <ExplainedFormula
         question="Prompt마다 여러 completion을 sampling한 pass@1 추정값은 어떻게 계산하는가?"

@@ -2,10 +2,12 @@ import DataLineageViz from "./viz/DataLineageViz";
 
 export default function DataPipeline() {
   return (
-    <section id="data-pipeline" className="mb-16 scroll-mt-20">
+    <section id="data-pipeline" data-teach-level="artifact" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Reasoning data는 생성된 답보다 다시 검증할 수 있는 lineage가 중요하다
       </h2>
+
+      <DataLineageViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -17,8 +19,6 @@ export default function DataPipeline() {
           개선된 뒤에도 전체 trace를 다시 생성하지 않고 재처리합니다.
         </p>
       </div>
-
-      <DataLineageViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Dataset 숫자는 generation 수와 unique problem 수를 구분한다</h3>

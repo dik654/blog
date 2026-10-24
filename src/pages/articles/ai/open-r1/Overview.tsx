@@ -4,10 +4,12 @@ import ReproductionScopeViz from "./viz/ReproductionScopeViz";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-teach-level="big-picture" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Open-R1은 weight보다 공개된 학습 과정을 재구성합니다
       </h2>
+
+      <ReproductionScopeViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
@@ -36,8 +38,6 @@ export default function Overview() {
           나누는 이유입니다.
         </p>
       </div>
-
-      <ReproductionScopeViz />
 
       <div
         id="paper-deepseek-r1"
