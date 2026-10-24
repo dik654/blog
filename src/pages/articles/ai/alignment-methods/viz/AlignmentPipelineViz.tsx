@@ -61,10 +61,13 @@ function Shape({ stage, active }: { stage: Stage; active: boolean }) {
     return <div className={`${common} rounded-lg after:absolute after:right-2 after:top-2 after:h-3 after:w-3 after:border-b after:border-l after:border-current`}><span className="font-mono text-[11px] font-black">{stage.short}</span></div>;
   }
   if (stage.shape === "pair") {
+    const circle = `absolute grid h-14 w-14 place-items-center rounded-full border text-center transition-colors motion-reduce:transition-none ${
+      active ? "border-primary bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground"
+    }`;
     return (
       <div className="relative h-20 w-20" aria-hidden="true">
-        <div className={`${common} absolute left-0 top-1 h-14 w-14 rounded-full`}><span className="font-mono text-[9px] font-black">A</span></div>
-        <div className={`${common} absolute bottom-1 right-0 h-14 w-14 rounded-full`}><span className="font-mono text-[9px] font-black">B</span></div>
+        <div className={`${circle} left-0 top-1`}><span className="font-mono text-[9px] font-black">A</span></div>
+        <div className={`${circle} bottom-1 right-0`}><span className="font-mono text-[9px] font-black">B</span></div>
       </div>
     );
   }
@@ -113,7 +116,32 @@ function AlignmentPipeline({ mode }: { mode: Mode }) {
       </figcaption>
 
       <div data-viz-canvas className="relative p-5 sm:p-7">
-        <div className="grid gap-5 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-start md:gap-3">
+        <div className="md:hidden">
+          <div className="grid grid-cols-4 gap-1" aria-label="단계 선택">
+            {flow.stages.map((stage, index) => (
+              <button
+                key={stage.title}
+                type="button"
+                onClick={() => setActive(index)}
+                aria-current={index === active ? "step" : undefined}
+                className={`min-h-11 border px-1 py-2 text-center ${index === active ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground"}`}
+              >
+                <span className="block font-mono text-[9px]">0{index + 1}</span>
+                <span className="mt-0.5 block break-keep text-[10px] font-bold">{stage.short}</span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-4 flex min-h-36 items-center gap-4 border border-primary/50 bg-primary/5 p-4">
+            <Shape stage={activeStage} active />
+            <div className="min-w-0">
+              <span className="font-mono text-[10px] font-black text-primary">0{active + 1}</span>
+              <strong className="mt-1 block break-keep text-base">{activeStage.title}</strong>
+              <span className="mt-2 block text-sm leading-6 text-muted-foreground">{activeStage.detail}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden gap-5 md:grid md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-start md:gap-3">
           {flow.stages.map((stage, index) => (
             <div className="contents" key={stage.title}>
               <button
@@ -158,6 +186,13 @@ function AlignmentPipeline({ mode }: { mode: Mode }) {
             <strong>{active + 1}. {activeStage.title}</strong> — {activeStage.detail}
           </p>
         </div>
+        <noscript>
+          <ol className="mt-5 space-y-2 border-t border-border pt-4 text-sm leading-6">
+            {flow.stages.map((stage, index) => (
+              <li key={stage.title}><strong>{index + 1}. {stage.title}</strong> — {stage.detail}</li>
+            ))}
+          </ol>
+        </noscript>
       </div>
     </figure>
   );

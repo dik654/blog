@@ -3,12 +3,21 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ORPOObjective from "../alignment-methods/ORPO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <LlmTrainingLocator
+        current="orpo"
+        question="Chosen을 모방하는 loss와 rejected에서 멀어지는 loss를 한 단계에서 어떻게 합칠까요?"
+        fixture="같은 prompt의 chosen·rejected pair 하나에서 chosen NLL과 두 응답의 odds-ratio 항이 각각 어디에 작용하는지 추적합니다."
+        parentHref="/cs/ai/supervised-fine-tuning#objective"
+        parentLabel="Chosen response의 token likelihood를 높이는 SFT"
+      />
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">Chosen을 따라가는 힘과 rejected에서 멀어지는 힘</p><h2 className="text-3xl font-bold tracking-tight">ORPO는 SFT와 preference를 없애지 않고 같은 training stage 안에서 조합합니다</h2></header>
+        <AlignmentPipelineViz mode="orpo" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8"><strong>SFT term</strong>은 chosen response의 token likelihood를 높입니다. 그러나 chosen만 모방하면 같은 prompt의 rejected response를 명시적으로 낮추지는 않습니다. ORPO는 여기에 <strong>odds-ratio preference term</strong>을 더해 두 response의 상대 간격을 벌립니다.</p>
           <p className="leading-8">“Monolithic”은 data 수집·검증까지 한 덩어리가 된다는 뜻이 아닙니다. 별도의 reference model을 사용하지 않고 chosen imitation과 pair separation을 한 optimization stage에 둔다는 뜻입니다.</p>
@@ -16,7 +25,6 @@ export default function ModernArticle() {
         <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>Chosen response의 likelihood만 높이면 rejected와의 상대 간격도 반드시 벌어질까요?</li><li>ORPO는 같은 prompt의 chosen·rejected 쌍이 필요할까요?</li><li>Reference-free라는 말이 preference pair도 필요 없다는 뜻일까요?</li></ol>
         <p>답은 <strong>아니요, 예, 아니요</strong>입니다. ORPO는 chosen 모방 항과 두 응답의 odds 비율 항을 한 단계에서 조합하지만 pair의 품질 경계는 그대로 남습니다.</p>
-        <AlignmentPipelineViz mode="orpo" />
         <ContentBoundary article="orpo" />
       </section>
 
@@ -37,6 +45,12 @@ export default function ModernArticle() {
         <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Reference forward 절약과 전체 training 비용을 구분합니다</h2><p className="leading-8">Reference model forward가 없어져도 trainable policy의 optimizer state·activation·checkpointing 비용은 남습니다. 같은 base·pair·token budget에서 peak memory, step time, chosen quality, rejected margin과 safety regression을 함께 측정합니다.</p></div>
         <div id="paper-orpo-implementation" className="scroll-mt-20"><CitationBlock source="Hong et al. · ORPO" citeKey={2} type="paper" href="https://arxiv.org/abs/2403.07691"><p><strong>문제:</strong> SFT 이후 별도 reference-based preference stage를 운영하는 복잡성을 줄입니다.</p><p><strong>핵심 기여:</strong> Chosen NLL과 odds-ratio preference term을 한 objective에 둡니다.</p><p><strong>전제:</strong> 같은 prompt의 chosen·rejected pair와 안정적인 sequence likelihood 계산이 있습니다.</p><p><strong>근거 범위:</strong> 논문의 model 규모·dataset·benchmark 범위입니다.</p><p><strong>비주장:</strong> 모든 큰 model에서 항상 더 싸거나 우월하다는 결론은 아닙니다.</p></CitationBlock></div>
       </section>
+      <LlmTrainingMapReturn
+        title="ORPO의 reference-free는 reference model forward가 없다는 뜻이며 preference pair가 없다는 뜻은 아닙니다."
+        detail="Chosen NLL은 모방을, odds-ratio 항은 pair separation을 담당합니다. 다음 글에서는 같은 prompt의 pair가 없어도 response 하나의 좋아요·싫어요를 기준점과 비교하는 KTO를 봅니다."
+        nextHref="/cs/ai/kto"
+        nextLabel="독립적인 좋아요·싫어요를 utility로 바꾸기"
+      />
     </article>
   );
 }

@@ -9,12 +9,15 @@ export default function DPO() {
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          Direct Preference Optimization(DPO)은 PPO-RLHF의 “reward model을
-          학습하고 그 score를 online으로 최대화한다”는 두 단계를 하나의 pairwise
-          classification loss로 바꾼다. 출발점은 KL-regularized reward objective의
-          optimal policy를 reward에 대해 다시 쓰는 것이다. 이 관계를
-          Bradley–Terry preference model에 대입하면 prompt마다 생기는 partition
-          function이 chosen과 rejected의 차이에서 상쇄된다.
+          Direct Preference Optimization(DPO)은 PPO-RLHF의 두 단계를 하나의
+          pairwise classification loss로 바꿉니다. 별도 reward model을 학습하고 그
+          점수를 online으로 최대화하는 단계를 합친 것입니다.
+        </p>
+        <p className="leading-7">
+          출발점은 KL-regularized reward objective의 optimal policy를 reward에 대해
+          다시 쓰는 것입니다. 이 관계를 Bradley–Terry preference model에 대입하면
+          prompt마다 생기는 partition function이 chosen과 rejected의 차이에서
+          상쇄됩니다.
         </p>
       </div>
 
@@ -74,12 +77,14 @@ r_-(x)
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>단순한 pipeline이 해결하지 않는 문제</h3>
         <p>
-          DPO는 offline preference pair의 support 안에서 학습하므로 현재 policy가
-          새롭게 생성하는 response를 그 자리에서 평가하지 않는다. Pair가 noisy하거나
-          chosen과 rejected의 실질적 품질 차이가 작고 length·style shortcut이 있으면
-          그 편향도 margin에 들어간다. Reference checkpoint와 chat template,
-          sequence log-prob의 length normalization을 바꾸면 같은 β라도 유효 update
-          scale이 달라질 수 있어 implementation contract를 함께 기록해야 한다.
+          DPO는 offline preference pair의 support 안에서 학습합니다. 따라서 현재
+          policy가 새롭게 생성하는 response를 그 자리에서 평가하지 않습니다. Pair가
+          noisy하거나 두 답의 품질 차이가 작으면 그 편향도 margin에 들어갑니다.
+        </p>
+        <p>
+          Length·style shortcut도 같은 문제를 만듭니다. Reference checkpoint와 chat
+          template, sequence log-prob의 length normalization을 바꾸면 같은 β에서도
+          update scale이 달라질 수 있습니다. 이 설정은 학습 기록에 함께 남겨야 합니다.
         </p>
         <p>
           <a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noreferrer">DPO 원 논문</a>의
@@ -98,10 +103,12 @@ r_-(x)
           핵심 아이디어는 reward를 없앤 것이 아니라 optimal policy 안으로 흡수한 것이다
         </h3>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          KL-regularized reward maximization의 closed-form optimal policy를 reward에 대해 다시 쓰고 Bradley–Terry
-          preference likelihood에 대입하면 prompt별 partition function이 chosen–rejected 차이에서 상쇄됩니다. 그래서 별도 reward
-          network와 online rollout 없이 policy log-ratio를 직접 학습하지만 preference model의 가정과 reference policy는 그대로
-          남습니다.
+          KL-regularized reward maximization의 optimal policy를 reward에 대해 다시 씁니다. 이를 Bradley–Terry preference
+          likelihood에 대입하면 prompt별 partition function이 chosen–rejected 차이에서 상쇄됩니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          그래서 별도 reward network와 online rollout 없이 policy log-ratio를 직접 학습합니다. 다만 preference model의 가정과
+          reference policy는 그대로 남습니다.
         </p>
       </div>
     </section>

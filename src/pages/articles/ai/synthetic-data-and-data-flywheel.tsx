@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import SyntheticDataAndDataFlywheelViz from "./synthetic-data-and-data-flywheel/viz/SyntheticDataAndDataFlywheelViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 
 /**
  * 합성 데이터와 data flywheel: self-instruct·verifier filtering·trajectory mining
@@ -15,10 +16,18 @@ import SyntheticDataAndDataFlywheelViz from "./synthetic-data-and-data-flywheel/
 export default function SyntheticDataAndDataFlywheelArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmTrainingLocator
+        current="synthetic"
+        question="모델이 만든 후보가 어떤 검수와 학습을 거쳐 다음 라운드의 seed가 될까요?"
+        fixture="사람이 쓴 seed 175개에서 후보를 생성·필터링·학습하고, 실패와 성공 trajectory를 다음 seed pool로 되돌리는 한 바퀴를 따라갑니다."
+        parentHref="/cs/ai/llm-dataset-engineering-and-cleaning#mixture"
+        parentLabel="학습 분포를 만드는 데이터 선택과 혼합"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           합성 데이터는 사람이 못 채우는 학습 데이터 공백을 모델 스스로 채웁니다
         </h2>
+        <SyntheticDataAndDataFlywheelViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             사람이 직접 쓴 예시 대신 LLM 자신이나 더 강한 teacher model이 만들어 낸 instruction·response·reasoning trace를 학습 데이터로 쓰는
@@ -263,7 +272,6 @@ export default function SyntheticDataAndDataFlywheelArticle() {
             student-only 검증과 같은 독립적인 정지 기준이 필요합니다.
           </p>
         </div>
-        <SyntheticDataAndDataFlywheelViz />
         <AlgorithmBlock
           title="Data flywheel 한 바퀴: seed pool에서 다음 seed pool까지"
           input={[
@@ -369,6 +377,12 @@ export default function SyntheticDataAndDataFlywheelArticle() {
           <Link to="/cs/ai/knowledge-distillation#overview">지식 증류</Link> 글을 참고하세요.
         </p>
       </section>
+      <LlmTrainingMapReturn
+        title="Data flywheel은 생성 자체가 아니라 후보를 검수하고 실패를 다음 seed로 되돌리는 순환에서 완성됩니다."
+        detail="같은 모델의 출력을 그대로 재학습하면 오류와 편향도 증폭될 수 있으므로 verifier·독립 평가·정지 조건이 필요합니다. 이 글로 학습 데이터에서 post-training 방법까지 이어진 한 경로를 마칩니다."
+        nextHref="/cs/ai/llm-training-stages"
+        nextLabel="전체 학습 단계 지도에서 다시 보기"
+      />
     </div>
   );
 }

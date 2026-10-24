@@ -3,20 +3,28 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ConstitutionalMethod from "../alignment-methods/ConstitutionalAI";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <LlmTrainingLocator
+        current="cai"
+        question="자연어 원칙 하나가 초안의 critique·revision·preference label로 어떻게 이어질까요?"
+        fixture="확실하지 않은 사실을 꾸미지 말라는 원칙을 근거 없는 의학 답변 초안 하나에 적용해 위반 탐지와 수정 경로를 따라갑니다."
+        parentHref="/cs/ai/dpo#pair-contract"
+        parentLabel="Chosen·rejected pair가 가져야 할 의미"
+      />
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3">
           <p className="text-sm font-semibold text-primary">원칙 하나를 초안 하나에 적용하는 장면부터</p>
           <h2 className="text-3xl font-bold tracking-tight">Constitutional AI는 “AI가 판단한다”보다 판단 기준이 어디서 왔는지를 먼저 드러냅니다</h2>
         </header>
+        <AlignmentPipelineViz mode="cai" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8"><strong>Constitution</strong>은 모델 응답을 critique·revise·judge할 때 적용하는 자연어 원칙 목록입니다. 예를 들어 “확실하지 않은 사실을 꾸미지 말 것”은 초안의 위반을 찾는 질문과 수정 방향을 동시에 제공합니다.</p>
           <p className="leading-8">그 다음에야 여러 원칙을 조합합니다. 원칙 A와 B가 충돌할 때 어느 것을 먼저 적용할지, 예외는 무엇인지, AI evaluator의 판단을 사람이 어떤 표본에서 재검사할지를 명시해야 합니다. 원칙 목록만 만들었다고 일관된 안전 정책이 자동으로 생기지는 않습니다.</p>
         </div>
-        <AlignmentPipelineViz mode="cai" />
         <ContentBoundary article="constitutional-ai" />
       </section>
 
@@ -50,6 +58,12 @@ export default function ModernArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmTrainingMapReturn
+        title="Constitution은 답을 직접 만드는 규칙이 아니라 critique·revision·judge가 함께 참조하는 판단 기준입니다."
+        detail="원칙의 출처와 충돌 우선순위, evaluator의 오차는 사람이 별도로 관리해야 합니다. 다음 글에서는 chosen 모방과 rejected 분리를 한 optimization stage에 두는 ORPO를 봅니다."
+        nextHref="/cs/ai/orpo"
+        nextLabel="SFT와 preference separation을 한 단계에서 계산하기"
+      />
     </article>
   );
 }
