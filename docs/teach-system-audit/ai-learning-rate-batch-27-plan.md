@@ -32,4 +32,4 @@
 - [x] reduced-motion
 - [x] JavaScript 비활성 전체 장면
 - [x] 전체 build 및 strict audit
-- [ ] 공개 경로 배포 확인
+- [x] 공개 경로 배포 확인 — GitHub Pages run `40132519023` 성공, 공개 390×844·1440×1000·키보드·reduced-motion·JavaScript 비활성 검증 통과
