@@ -1784,7 +1784,7 @@
         "src/pages/articles/ai/dezero-advanced/viz/OverviewViz.tsx",
         "src/pages/articles/ai/dezero-advanced/viz/RnnLstmViz.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
@@ -1815,11 +1815,10 @@
         "humanize": "개념 앵커와 실행 상태를 먼저 보여 주고 구현 용어는 뒤에서 설명하도록 정리했습니다.",
         "numericTrace": "c=.8×1+.25×.4=.9, h=.5×tanh(.9)≈.358을 네 장면과 LSTM 식에서 같은 값으로 확인했습니다.",
         "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
-        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다.",
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-dezero-batch-21/summary.json"
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/dezero-autodiff",
@@ -1848,7 +1847,7 @@
         "src/pages/articles/ai/dezero-autodiff/viz/MemoryViz.tsx",
         "src/pages/articles/ai/dezero-autodiff/viz/VariableViz.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
@@ -1879,11 +1878,10 @@
         "humanize": "역전파 개념 앵커에서 시작해 값과 계산 이력이 실제 코드 상태가 되는 순서로 정리했습니다.",
         "numericTrace": "x=3에서 9+9=18, branch gradient 6+6=12가 첫 장면·수식·본문에서 일치함을 확인했습니다.",
         "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
-        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다.",
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-dezero-batch-21/summary.json"
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/dezero-nn",
@@ -1912,7 +1910,7 @@
         "src/pages/articles/ai/dezero-nn/viz/OverviewViz.tsx",
         "src/pages/articles/ai/dezero-nn/viz/TrainingViz.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
@@ -1943,11 +1941,10 @@
         "humanize": "학습 루프 개념 앵커와 숫자 한 건을 먼저 보여 주고 구현 상태를 뒤에서 확장하도록 정리했습니다.",
         "numericTrace": "4×2·2×3·길이 3에서 Y 4×3과 9개 parameter, SGD 2−.1×.5=1.95를 확인했습니다.",
         "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
-        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다.",
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-dezero-batch-21/summary.json"
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/differential-attention",

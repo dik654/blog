@@ -94,6 +94,8 @@ const noScriptArticleRoutes = new Set([
   "ai/tabular-deep-learning",
   "ai/time-features",
   "ai/sequence-modeling-tabular",
+  "ai/training-pipeline",
+  "ai/transfer-learning-practice",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

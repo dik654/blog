@@ -21,31 +21,14 @@
       ],
       "fixture": {
         "assumed": true,
-        "completedLosses": [
-          0.4,
-          0.25,
-          0.2,
-          0.35
-        ],
+        "completedLosses": [0.4, 0.25, 0.2, 0.35],
         "threshold": 0.3,
         "goodCount": 2,
         "gamma": 0.5,
-        "densityP": [
-          0.3,
-          0.05
-        ],
-        "densityQ": [
-          0.2,
-          0.1
-        ],
-        "ratios": [
-          6,
-          2
-        ],
-        "proportionalEI": [
-          1.7142857142857142,
-          1.3333333333333333
-        ],
+        "densityP": [0.3, 0.05],
+        "densityQ": [0.2, 0.1],
+        "ratios": [6, 2],
+        "proportionalEI": [1.7142857142857142, 1.3333333333333333],
         "optunaVersion": "4.5.0",
         "defaultStartupTrials": 10
       },
@@ -99,9 +82,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--adaptive-hyperparameter-search.json",
         "actualBody": "src/pages/articles/ai/adaptive-hyperparameter-search/ModernArticle.tsx",
@@ -140,18 +121,8 @@
       "fixture": {
         "assumed": true,
         "existing": 12,
-        "cases": [
-          0,
-          5,
-          12,
-          0
-        ],
-        "caseKinds": [
-          "empty",
-          "partial",
-          "full",
-          "explicit-delete"
-        ],
+        "cases": [0, 5, 12, 0],
+        "caseKinds": ["empty", "partial", "full", "explicit-delete"],
         "tests": 4,
         "run": "run-1842",
         "release": "v1.4.0",
@@ -195,9 +166,7 @@
         "learning": "strict require-registration 통과",
         "typescript": "root 통합 실제 app 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-changelog-evidence.json",
       "bodyFiles": [
         "src/pages/articles/ai/agent-changelog-evidence/ModernArticle.tsx"
@@ -280,14 +249,10 @@
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": ["checkpoint 207 배포·production 검증"],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-rewrite-after-full-body-review",
-      "bodyFiles": [
-        "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx"
-      ],
+      "bodyFiles": ["src/pages/articles/ai/agent-code-mode/ModernArticle.tsx"],
       "actualBodyFile": "src/pages/articles/ai/agent-code-mode/ModernArticle.tsx",
       "contentHash": "acd9b9622db301bce6c2944efc7c98e18848d33aa660eec912d4dd2891de2da3",
       "preserved": [
@@ -356,9 +321,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agent-control-boundaries/ModernArticle.tsx",
       "contentHash": "a3b4ca2803e2c1ae4c982bfd30c89289190a69db4878332e78d87a7512d398c1",
       "preserved": [
@@ -385,20 +348,10 @@
       "fixture": {
         "assumed": true,
         "workers": 2,
-        "issuesA": [
-          "x",
-          "y",
-          "z"
-        ],
-        "issuesB": [
-          "z",
-          "w"
-        ],
+        "issuesA": ["x", "y", "z"],
+        "issuesB": ["z", "w"],
         "unique": 4,
-        "receipts": [
-          "A1",
-          "B1"
-        ]
+        "receipts": ["A1", "B1"]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -436,9 +389,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agentic-patterns/DelegationContractsArticle.tsx",
       "contentHash": "5a2d742a3c04d7b6151e7f5cf9c5798379538f9afa75ecaa75c1ac3e30077205",
       "preserved": [
@@ -525,11 +476,7 @@
         "acceptedObservedRows": 1200,
         "rejectedObservedRows": 1199,
         "effectReceipt": "fx-9001",
-        "outcomes": [
-          "accepted",
-          "denied",
-          "rejected"
-        ]
+        "outcomes": ["accepted", "denied", "rejected"]
       },
       "stageAnchors": {
         "0": "map",
@@ -574,9 +521,7 @@
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": ["checkpoint 207 배포·production 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--agent-extension-boundaries.json",
       "reviewDate": "2026-10-05",
       "reviewMode": "rewritten-after-full-body-review",
@@ -630,10 +575,7 @@
         "2": "why-recovery",
         "3": "failure-taxonomy",
         "4": "retry-idempotent",
-        "7": [
-          "side-effect-control",
-          "human-in-the-loop-escalation"
-        ],
+        "7": ["side-effect-control", "human-in-the-loop-escalation"],
         "S": "overview",
         "B": "black-box",
         "5-6": "recovery-checkpointing",
@@ -668,9 +610,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agent-failure-modes-and-recovery.tsx",
       "contentHash": "cfed5bbc2529e714222a050000c96f8e10b5f1a457d51f8dfee40853b35c7748",
       "preserved": [
@@ -816,9 +756,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agentic-patterns/AgentLoopArticle.tsx",
       "contentHash": "633398aebc3e9a98340097adde104bb7c063381daa0eb23eaa787c241fa618c4",
       "preserved": [
@@ -888,9 +826,7 @@
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
       },
-      "remaining": [
-        "checkpoint 207 배포·production 검증"
-      ],
+      "remaining": ["checkpoint 207 배포·production 검증"],
       "reviewDate": "2026-10-05",
       "reviewMode": "targeted-entry-and-toc-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -923,27 +859,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "tasks": [
-          "A",
-          "B",
-          "C",
-          "D"
-        ],
-        "dependencies": [
-          "A→B",
-          "B→C"
-        ],
-        "versions": [
-          3,
-          4
-        ],
-        "reopened": [
-          "B",
-          "C"
-        ],
-        "preserved": [
-          "D"
-        ]
+        "tasks": ["A", "B", "C", "D"],
+        "dependencies": ["A→B", "B→C"],
+        "versions": [3, 4],
+        "reopened": ["B", "C"],
+        "preserved": ["D"]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -981,9 +901,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agentic-patterns/PlanReplanningArticle.tsx",
       "contentHash": "fcabdc4481feb6a3a7cd18564a8146637b77174621f6a891e6549398bb519dc8",
       "preserved": [
@@ -1009,10 +927,7 @@
       ],
       "fixture": {
         "assumed": true,
-        "widths": [
-          390,
-          1440
-        ],
+        "widths": [390, 1440],
         "beforeWidth": 430,
         "failureWidth": 410,
         "retryLimit": 2,
@@ -1054,9 +969,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agent-run-contract/ModernArticle.tsx",
       "contentHash": "4e46e4d65a9d0b321fea350aa90de3df28ed0b1c37287211e2e170157738a89f",
       "preserved": [
@@ -1152,11 +1065,7 @@
         "assumed": true,
         "tests": 27,
         "passedBefore": 26,
-        "scores": [
-          0.6,
-          0.7,
-          0.8
-        ],
+        "scores": [0.6, 0.7, 0.8],
         "mean": 0.7
       },
       "stageAnchors": {
@@ -1195,9 +1104,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/agent-verification/ModernArticle.tsx",
       "contentHash": "ed8744ae752c8032e1eee2a66a3a73c15be0295753df575686e3c31a52e12444",
       "preserved": [
@@ -1269,9 +1176,7 @@
         "learning": "strict require-registration 통과",
         "typescript": "root 통합 실제 app 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--architecture-decision-records.json",
       "bodyFiles": [
         "src/pages/articles/ai/architecture-decision-records/ModernArticle.tsx"
@@ -1323,118 +1228,37 @@
         "blockRows": 2,
         "blockCols": 2,
         "Q": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ]
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0],
+          [0, 0]
         ],
         "K": [
-          [
-            1,
-            0
-          ],
-          [
-            2,
-            0
-          ],
-          [
-            3,
-            0
-          ],
-          [
-            4,
-            0
-          ],
-          [
-            5,
-            0
-          ],
-          [
-            6,
-            0
-          ],
-          [
-            7,
-            0
-          ],
-          [
-            8,
-            0
-          ]
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [4, 0],
+          [5, 0],
+          [6, 0],
+          [7, 0],
+          [8, 0]
         ],
         "V": [
-          [
-            1,
-            0
-          ],
-          [
-            2,
-            0
-          ],
-          [
-            3,
-            0
-          ],
-          [
-            4,
-            0
-          ],
-          [
-            5,
-            0
-          ],
-          [
-            6,
-            0
-          ],
-          [
-            7,
-            0
-          ],
-          [
-            8,
-            0
-          ]
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [4, 0],
+          [5, 0],
+          [6, 0],
+          [7, 0],
+          [8, 0]
         ],
         "allScores": 0,
-        "causalOutputsFirstComponent": [
-          1,
-          1.5,
-          2,
-          2.5,
-          3,
-          3.5,
-          4,
-          4.5
-        ],
+        "causalOutputsFirstComponent": [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
         "nonCausalOutput": 4.5,
         "decodeFinalPosition": 7,
         "logicalActiveEntries": 36,
@@ -1446,30 +1270,11 @@
         "causalUsefulMatmulFlops": 288,
         "minimumDenseByteLedger": 128,
         "rereadEveryQueryBlockBytes": 320,
-        "denseReferenceIntensities": [
-          4,
-          1.6
-        ],
-        "splitLengths": [
-          3,
-          3,
-          2
-        ],
-        "splitNumerators": [
-          6,
-          15,
-          15
-        ],
-        "splitDenominators": [
-          3,
-          3,
-          2
-        ],
-        "splitMeans": [
-          2,
-          5,
-          7.5
-        ],
+        "denseReferenceIntensities": [4, 1.6],
+        "splitLengths": [3, 3, 2],
+        "splitNumerators": [6, 15, 15],
+        "splitDenominators": [3, 3, 2],
+        "splitMeans": [2, 5, 7.5],
         "naiveMean": "29/6",
         "weightedMean": "9/2"
       },
@@ -1659,7 +1464,7 @@
       "route": "ai/catboost-ordered-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
       "publicPath": "cs/ai/catboost-ordered-learning",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -1672,21 +1477,10 @@
         "기존 ordering Viz가 용어 정의 뒤에 위치"
       ],
       "fixture": {
-        "permutation": [
-          "A",
-          "C",
-          "B",
-          "D"
-        ],
+        "permutation": ["A", "C", "B", "D"],
         "current": "B",
-        "prefix": [
-          "A",
-          "C"
-        ],
-        "excludedFromFit": [
-          "B",
-          "D"
-        ],
+        "prefix": ["A", "C"],
+        "excludedFromFit": ["B", "D"],
         "labelUse": "B label enters loss derivative after prefix prediction"
       },
       "stageAnchors": {
@@ -1718,12 +1512,10 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
-        "production": "Batch24 공개 배포 후 재검증 필요",
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-tabular-models-batch-24/summary.json",
         "batch24Browser": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json"
       },
-      "remaining": [
-        "Batch24 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -1760,10 +1552,7 @@
         "negatives": 900,
         "positiveScore": 0.51,
         "negativeScore": 0.49,
-        "thresholds": [
-          0.5,
-          0.52
-        ],
+        "thresholds": [0.5, 0.52],
         "falseNegativeCostRatio": 20
       },
       "stageAnchors": {
@@ -2165,16 +1954,10 @@
       ],
       "fixture": {
         "incident": "INC-81 결제 login 실패",
-        "mainInputs": [
-          "terminal log",
-          "src/auth/session.ts"
-        ],
+        "mainInputs": ["terminal log", "src/auth/session.ts"],
         "agent": "read-only auth-reviewer",
         "artifact": "원인 후보와 file:line receipt",
-        "modes": [
-          "fresh subagent",
-          "fork"
-        ]
+        "modes": ["fresh subagent", "fork"]
       },
       "stageAnchors": {
         "1": "handoff-contract",
@@ -2398,20 +2181,13 @@
         "ReplLoopViz가 source citation 뒤에 위치"
       ],
       "fixture": {
-        "inputs": [
-          "/status",
-          "테스트를 고쳐줘",
-          "EOF"
-        ],
+        "inputs": ["/status", "테스트를 고쳐줘", "EOF"],
         "routes": [
           "local handler",
           "model turn과 permission UI",
           "session end"
         ],
-        "outputs": [
-          "TTY",
-          "JSONL"
-        ]
+        "outputs": ["TTY", "JSONL"]
       },
       "stageAnchors": {
         "1": "slash-commands",
@@ -2490,12 +2266,7 @@
       ],
       "fixture": {
         "request": "로그인 401 원인 조사→최소 auth.ts 수정→동일 test",
-        "history": [
-          "search",
-          "permission",
-          "edit",
-          "test"
-        ],
+        "history": ["search", "permission", "edit", "test"],
         "state": [
           "goal",
           "evidence digest",
@@ -2580,17 +2351,9 @@
         "BootstrapViz는 전체 설정 cascade보다 startup hardening에 한정됨"
       ],
       "fixture": {
-        "USER": [
-          "model=slow",
-          "sandbox.network=false"
-        ],
-        "PROJECT": [
-          "model=fast",
-          "sandbox.fs=workspace"
-        ],
-        "LOCAL": [
-          "sandbox.network=true"
-        ],
+        "USER": ["model=slow", "sandbox.network=false"],
+        "PROJECT": ["model=fast", "sandbox.fs=workspace"],
+        "LOCAL": ["sandbox.network=true"],
         "final": [
           "model=fast@PROJECT",
           "sandbox.fs=workspace@PROJECT",
@@ -3003,18 +2766,8 @@
         "request": "로그인 401 원인 조사·최소 수정·deterministic test",
         "proposal": "edit_file(src/auth.ts, patch)",
         "canonicalAction": "actor+path+write effect+policy generation",
-        "order": [
-          "authority ceiling",
-          "mode",
-          "rules",
-          "decision"
-        ],
-        "outcomes": [
-          "deny",
-          "prompt",
-          "allow",
-          "unknown"
-        ]
+        "order": ["authority ceiling", "mode", "rules", "decision"],
+        "outcomes": ["deny", "prompt", "allow", "unknown"]
       },
       "stageAnchors": {
         "1": "policy",
@@ -3098,17 +2851,9 @@
         "kind": "External",
         "tool": "auth_lint",
         "permission": "workspace-write",
-        "lifecycle": [
-          "init",
-          "shutdown"
-        ],
+        "lifecycle": ["init", "shutdown"],
         "hook": "PreToolUse",
-        "stages": [
-          "discover",
-          "validate",
-          "enable",
-          "ready"
-        ]
+        "stages": ["discover", "validate", "enable", "ready"]
       },
       "stageAnchors": {
         "1": "manifest-registry",
@@ -3180,16 +2925,8 @@
         "reviewApproved": true,
         "baseFresh": true,
         "retryCount": 0,
-        "rules": [
-          "P10 Retry",
-          "P20 MergeToDev",
-          "P20 Notify"
-        ],
-        "result": [
-          "Retry",
-          "MergeToDev",
-          "Notify"
-        ]
+        "rules": ["P10 Retry", "P20 MergeToDev", "P20 Notify"],
+        "result": ["Retry", "MergeToDev", "Notify"]
       },
       "stageAnchors": {
         "1": "rules",
@@ -3258,10 +2995,7 @@
       "fixture": {
         "lane": "lane-17",
         "failure": "auth test runner-timeout",
-        "known": [
-          "auth diff",
-          "first process/job identity"
-        ],
+        "known": ["auth diff", "first process/job identity"],
         "retryLimit": 2,
         "attemptsUsed": 1,
         "remaining": 1,
@@ -3344,11 +3078,7 @@
           "effect/test ledger",
           "authority/recovery refs"
         ],
-        "transient": [
-          "partial text",
-          "JSON delta",
-          "in-flight process"
-        ],
+        "transient": ["partial text", "JSON delta", "in-flight process"],
         "ambiguousCut": "edit effect 뒤 ToolResult append 전"
       },
       "stageAnchors": {
@@ -3508,14 +3238,8 @@
       "fixture": {
         "task": "auth-401-17",
         "goal": "로그인 401 최소 수정",
-        "scope": [
-          "src/auth.ts",
-          "deterministic login fixture"
-        ],
-        "forbidden": [
-          "credential",
-          "network"
-        ],
+        "scope": ["src/auth.ts", "deterministic login fixture"],
+        "forbidden": ["credential", "network"],
         "worker": "w-3",
         "attempt": 2,
         "leaseVersion": 7,
@@ -3599,11 +3323,7 @@
       "fixture": {
         "session": "session-7",
         "turn": "turn-12",
-        "calls": [
-          "model-1",
-          "tool-edit-1",
-          "test-1 timeout"
-        ],
+        "calls": ["model-1", "tool-edit-1", "test-1 timeout"],
         "pipeline": [
           "capture",
           "redact/aggregate",
@@ -3688,11 +3408,7 @@
         "call": "call-17",
         "tool": "edit_file",
         "target": "src/auth.ts",
-        "arguments": [
-          "path",
-          "old_text",
-          "new_text"
-        ],
+        "arguments": ["path", "old_text", "new_text"],
         "boundaries": [
           "registry generation",
           "schema+domain",
@@ -3780,12 +3496,7 @@
         "worker": "w-17",
         "task": "auth-401-17",
         "initialScreen": "workspace trust prompt",
-        "sendGate": [
-          "alive",
-          "ready",
-          "trust",
-          "tool"
-        ],
+        "sendGate": ["alive", "ready", "trust", "tool"],
         "receipt": "task receipt bound to worker generation"
       },
       "stageAnchors": {
@@ -3855,14 +3566,8 @@
       ],
       "fixture": {
         "program": "label issues #101–#105",
-        "capabilities": [
-          "repo.read",
-          "issue.write"
-        ],
-        "denied": [
-          "shell",
-          "ambient network"
-        ],
+        "capabilities": ["repo.read", "issue.write"],
+        "denied": ["shell", "ambient network"],
         "effects": [
           "#101 success",
           "#102 success",
@@ -3938,69 +3643,22 @@
       ],
       "fixture": {
         "assumed": true,
-        "rows": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
+        "rows": [1, 2, 3, 4, 5],
         "badValidation": [
-          [
-            1,
-            2,
-            4
-          ],
-          [
-            4,
-            5
-          ]
+          [1, 2, 4],
+          [4, 5]
         ],
-        "badCoverage": [
-          1,
-          1,
-          0,
-          2,
-          1
-        ],
+        "badCoverage": [1, 1, 0, 2, 1],
         "goodValidation": [
-          [
-            1,
-            2,
-            3
-          ],
-          [
-            4,
-            5
-          ]
+          [1, 2, 3],
+          [4, 5]
         ],
-        "goodCoverage": [
-          1,
-          1,
-          1,
-          1,
-          1
-        ],
-        "y": [
-          0,
-          1,
-          0,
-          1,
-          0
-        ],
-        "prediction": [
-          0.1,
-          0.8,
-          0.4,
-          0.7,
-          0.2
-        ],
+        "goodCoverage": [1, 1, 1, 1, 1],
+        "y": [0, 1, 0, 1, 0],
+        "prediction": [0.1, 0.8, 0.4, 0.7, 0.2],
         "brier": 0.068,
         "foldMean": 0.0675,
-        "submissionOrder": [
-          "t2",
-          "t1"
-        ]
+        "submissionOrder": ["t2", "t1"]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -4045,9 +3703,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--competition-baseline.json",
       "bodyFiles": [
         "src/pages/articles/ai/competition-baseline/ModernArticle.tsx"
@@ -4083,26 +3739,12 @@
         "uploads": 4,
         "scoreA": 0.74,
         "scoreB": 0.76,
-        "changes": [
-          0,
-          1,
-          1,
-          0
-        ],
+        "changes": [0, 1, 1, 0],
         "used": 2,
         "budget": 2,
         "ladderEta": 0.01,
-        "ladderLosses": [
-          0.26,
-          0.24,
-          0.24
-        ],
-        "largerExample": [
-          4,
-          2,
-          6,
-          8
-        ]
+        "ladderLosses": [0.26, 0.24, 0.24],
+        "largerExample": [4, 2, 6, 8]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -4143,9 +3785,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--competition-submission-control.json",
         "actualBody": "src/pages/articles/ai/competition-submission-control/ModernArticle.tsx",
@@ -4231,9 +3871,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--competition-workflow.json",
         "actualBody": "src/pages/articles/ai/competition-workflow/FoundationArticle.tsx",
@@ -4276,12 +3914,7 @@
           "unrelated benefits docs"
         ],
         "selected": "policy://leave/section-4@v7",
-        "gates": [
-          "task relevance",
-          "HR ACL",
-          "freshness",
-          "serialization"
-        ]
+        "gates": ["task relevance", "HR ACL", "freshness", "serialization"]
       },
       "stageAnchors": {
         "1": "context-state",
@@ -4387,9 +4020,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/context-instruction-boundaries/ModernArticle.tsx",
       "contentHash": "0f64da9af96cae8bf19ba5b833e126f2c821e65c60e573f2deac531c5397d2d7",
       "preserved": [
@@ -4653,14 +4284,8 @@
       "fixture": {
         "assumed": true,
         "tokenBudget": 8,
-        "running": [
-          "A",
-          "B"
-        ],
-        "initialNeeds": [
-          1,
-          1
-        ],
+        "running": ["A", "B"],
+        "initialNeeds": [1, 1],
         "promptC": 10,
         "promptD": 2,
         "maxRunning": 4,
@@ -4684,14 +4309,8 @@
           }
         ],
         "counterexample": {
-          "running": [
-            "P",
-            "A"
-          ],
-          "needs": [
-            6,
-            1
-          ],
+          "running": ["P", "A"],
+          "needs": [6, 1],
           "budget": 4,
           "scheduled": {
             "P": 4
@@ -4812,10 +4431,7 @@
         "midpoint": "t=450 → .0505",
         "multiplier": 2,
         "cycle1": 1800,
-        "preserved": [
-          "θ",
-          "optimizer moments"
-        ]
+        "preserved": ["θ", "optimizer moments"]
       },
       "stageAnchors": {
         "1": "cosine-progress",
@@ -4865,7 +4481,7 @@
       "route": "ai/cost-sensitive-thresholding",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/cost-sensitive-thresholding.tsx",
       "publicPath": "cs/ai/cost-sensitive-thresholding",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4914,7 +4530,8 @@
         "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
         "semanticReview": "1,000건의 calibrated 후보에서 CFP=1·CFN=9이면 R+=(1−p), R−=9p가 p=.1에서 교차함을 축과 곡선까지 다시 계산했습니다. Bayes threshold와 하루 200건·recall .90 운영 gate, drift 뒤 재승인을 분리했습니다."
       },
-      "remaining": ["Batch 23 공개 배포 경로 확인"],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-imbalanced-classification-batch-23/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -4948,11 +4565,7 @@
       ],
       "fixture": {
         "artifactCount": 1,
-        "rounds": [
-          25,
-          16,
-          8
-        ],
+        "rounds": [25, 16, 8],
         "thirdRoundPopulation": "개정 과정에서 새로 생긴 오류만",
         "direction": "one-way external review"
       },
@@ -5016,26 +4629,10 @@
       ],
       "fixture": {
         "assumed": true,
-        "rowsPerPatient": [
-          2,
-          2,
-          3,
-          1
-        ],
-        "train": [
-          "A",
-          "B"
-        ],
-        "valid": [
-          "C",
-          "D"
-        ],
-        "validLoss": [
-          0,
-          0,
-          0,
-          1
-        ],
+        "rowsPerPatient": [2, 2, 3, 1],
+        "train": ["A", "B"],
+        "valid": ["C", "D"],
+        "validLoss": [0, 0, 0, 1],
         "rowRisk": 0.25,
         "patientRisk": 0.5
       },
@@ -5078,9 +4675,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--cross-validation.json",
         "actualBody": "src/pages/articles/ai/cross-validation/FoundationArticle.tsx",
@@ -5121,70 +4716,23 @@
       "fixture": {
         "assumed": true,
         "input": 3,
-        "operations": [
-          "+1",
-          "*2",
-          "+3",
-          "*2"
-        ],
-        "values": [
-          3,
-          4,
-          8,
-          11,
-          22
-        ],
+        "operations": ["+1", "*2", "+3", "*2"],
+        "values": [3, 4, 8, 11, 22],
         "newInput": 5,
-        "newValues": [
-          5,
-          6,
-          12,
-          15,
-          30
-        ],
+        "newValues": [5, 6, 12, 15, 30],
         "distinctKernels": 4,
         "hostSubmissionUs": 3,
         "deviceExecutionUs": 2,
-        "queueReadyUs": [
-          3,
-          6,
-          9,
-          12
-        ],
-        "deviceDoneUs": [
-          5,
-          8,
-          11,
-          14
-        ],
-        "synchronizedDoneUs": [
-          5,
-          10,
-          15,
-          20
-        ],
+        "queueReadyUs": [3, 6, 9, 12],
+        "deviceDoneUs": [5, 8, 11, 14],
+        "synchronizedDoneUs": [5, 10, 15, 20],
         "graphSubmissionUs": 2,
-        "graphDoneUs": [
-          4,
-          6,
-          8,
-          10
-        ],
+        "graphDoneUs": [4, 6, 8, 10],
         "gpuBoundCounterexample": {
           "hostUs": 2,
           "deviceUs": 3,
-          "eagerDone": [
-            5,
-            8,
-            11,
-            14
-          ],
-          "graphDone": [
-            5,
-            8,
-            11,
-            14
-          ]
+          "eagerDone": [5, 8, 11, 14],
+          "graphDone": [5, 8, 11, 14]
         },
         "setupUs": 40,
         "savingUs": 4,
@@ -5268,12 +4816,7 @@
         "papers": "공식 CUDA/PyTorch2.14 문서와NVIDIA2019/2024원문 측정 경계,PyGraph2503.19779v1 §5.3–6,Foundry2604.06664v1 §4–6을 실제 읽었습니다. Foundry650→3.9초의H200·EP8·BF16·초기화/가중치적재제외를 유지했고 연구 구현을 재실행하지 않았습니다.",
         "humanize": {
           "paragraphs": 66,
-          "chunks": [
-            3951,
-            3958,
-            3983,
-            722
-          ],
+          "chunks": [3951, 3958, 3983, 722],
           "roundTrip": true,
           "gateExit": 0,
           "manualReview": "실제 추출/바이트 동일 왕복 뒤 전문을 읽었습니다. 최종문체변경0·마커/숫자보존·apply66유지/누락0이며4묶음모두gate0입니다. 초기원고의 띄어쓰기와 section 기호 오타는 최종 입력 고정 전에 교정했습니다."
@@ -5282,11 +4825,7 @@
           "strings": 168,
           "chars": 11261,
           "nestedParagraphs": 11,
-          "chunks": [
-            3992,
-            3937,
-            3328
-          ],
+          "chunks": [3992, 3937, 3328],
           "roundTrip": true,
           "gateExit": 0,
           "manualReview": "실제AST추출·원시slice재삽입 동일성 후 역할설명·수식해설·중첩코드/링크문단·출처·Viz·코드해설 전문을 읽었습니다. 최종표시 문자열은3묶음모두gate0이며 숫자만인값/KaTeX/원문코드는별도대조했습니다."
@@ -5318,34 +4857,14 @@
       ],
       "sourceFixture": {
         "revision": "vLLM v0.27.1 / 6e448d0",
-        "captureSizes": [
-          1,
-          2,
-          4,
-          8,
-          16,
-          24,
-          32
-        ],
+        "captureSizes": [1, 2, 4, 8, 16, 24, 32],
         "mode": "FULL_AND_PIECEWISE",
         "uniformQueryTokens": 1,
         "maxNumSeqs": 32,
         "noLoRA": true,
         "mixedInputTokens": 5,
-        "fullDescriptor": [
-          8,
-          8,
-          true,
-          false,
-          0
-        ],
-        "piecewiseDescriptor": [
-          8,
-          null,
-          false,
-          false,
-          0
-        ],
+        "fullDescriptor": [8, 8, true, false, 0],
+        "piecewiseDescriptor": [8, null, false, false, 0],
         "overMax33": "NONE with num_tokens33, not graph32",
         "mixed5": "PIECEWISE (8,None,false,false,0)",
         "uniformDecode5": "FULL (8,8,true,false,0)"
@@ -5641,9 +5160,7 @@
         "typescript": "등록 전 app tsc exit0. 등록TOC label/title 오류24개를 root가 교정한뒤 실제 app tsc checkpoint145-working-tsc.log exit0을 확인했습니다.",
         "batch10Integration": "분산 추론→최적화 위치→동일 조건 측정→용량 결정의 부모 지도에 연결했습니다. 두 움직이는 그림은 명시적 재생·화면 이탈 정지·키보드를 확인했고, JavaScript 비활성 문서에는 9개 장면의 순서와 결론이 모두 남습니다. 390×844·1440×1000 문서와 바깥 시각화 가로 넘침은 0입니다."
       },
-      "remaining": [
-        "Batch 10 공개 배포 경로 확인"
-      ],
+      "remaining": ["Batch 10 공개 배포 경로 확인"],
       "reviewEvidence": "/tmp/teach-all/disagg16-research-notes.json",
       "bodyFiles": [
         "src/pages/articles/ai/disaggregated-prefill-decode-serving.tsx"
@@ -5685,19 +5202,9 @@
       ],
       "fixture": {
         "table": "3 columns",
-        "headerRow1": [
-          "지표",
-          "2024 colspan=2"
-        ],
-        "headerRow2": [
-          "Q1",
-          "Q2"
-        ],
-        "dataRow": [
-          "매출",
-          "120",
-          "150"
-        ]
+        "headerRow1": ["지표", "2024 colspan=2"],
+        "headerRow2": ["Q1", "Q2"],
+        "dataRow": ["매출", "120", "150"]
       },
       "stageAnchors": {
         "1": "layout-and-order",
@@ -5774,10 +5281,7 @@
         "activation": 2,
         "dropProbability": ".25",
         "keepProbability": ".75",
-        "trainOutputs": [
-          "0",
-          "8/3"
-        ],
+        "trainOutputs": ["0", "8/3"],
         "expectedOutput": "2",
         "variance": "4/3"
       },
@@ -5842,13 +5346,7 @@
         "c>P의 strict 조건을 독자가 먼저 계산할 사례가 없었음"
       ],
       "fixture": {
-        "validationLoss": [
-          ".42",
-          ".38",
-          ".39",
-          ".40",
-          ".41"
-        ],
+        "validationLoss": [".42", ".38", ".39", ".40", ".41"],
         "minDelta": 0,
         "patience": 2,
         "bestEvaluation": 2,
@@ -5916,26 +5414,10 @@
         "Evaluation·drift·rollback 판단이 긴 문단에 섞여 있었음"
       ],
       "fixture": {
-        "amounts": [
-          "₩12K",
-          "₩18K",
-          "₩24K",
-          "₩910K"
-        ],
-        "connectionSeconds": [
-          2,
-          4,
-          5,
-          39
-        ],
-        "row4LeftRanks": [
-          "1",
-          "1"
-        ],
-        "row4RightTail": [
-          "1/4",
-          "1/4"
-        ],
+        "amounts": ["₩12K", "₩18K", "₩24K", "₩910K"],
+        "connectionSeconds": [2, 4, 5, 39],
+        "row4LeftRanks": ["1", "1"],
+        "row4RightTail": ["1/4", "1/4"],
         "meaning": "rare evidence, not fraud label"
       },
       "stageAnchors": {
@@ -6089,12 +5571,7 @@
       "fixture": {
         "assumed": true,
         "existing": 12,
-        "caseCounts": [
-          0,
-          5,
-          12,
-          0
-        ],
+        "caseCounts": [0, 5, 12, 0],
         "tests": 4,
         "incident": "postmortem-021",
         "run": "run-1842"
@@ -6139,9 +5616,7 @@
         "learning": "strict require-registration 통과",
         "typescript": "root 통합 실제 app 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--engineering-lessons-ledger.json",
       "bodyFiles": [
         "src/pages/articles/ai/engineering-lessons-ledger/ModernArticle.tsx"
@@ -6181,15 +5656,9 @@
         "stacking·blending 수식 주석 일부가 실제 행 분리와 연산을 말하지 않았음"
       ],
       "fixture": {
-        "row42Errors": [
-          0.6,
-          -0.5
-        ],
+        "row42Errors": [0.6, -0.5],
         "row42Average": 0.05,
-        "row17Errors": [
-          0.8,
-          0.7
-        ],
+        "row17Errors": [0.8, 0.7],
         "row17Average": 0.75
       },
       "stageAnchors": {
@@ -6414,14 +5883,8 @@
         "input": "D1",
         "failedAttempt": "A1",
         "successfulAttempt": "A2",
-        "predictions": [
-          0.2,
-          0.8
-        ],
-        "changedPredictions": [
-          0.1,
-          0.9
-        ],
+        "predictions": [0.2, 0.8],
+        "changedPredictions": [0.1, 0.9],
         "bothMeans": 0.5,
         "utf8Bytes": 9,
         "digests": [
@@ -6474,9 +5937,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--experiment-tracking.json",
         "actualBody": "src/pages/articles/ai/experiment-tracking/ModernArticle.tsx",
@@ -6694,23 +6155,11 @@
         "기존 task arithmetic Viz가 merging 절에 있어 첫 예측과 떨어져 있었음"
       ],
       "fixture": {
-        "base": [
-          0,
-          0
-        ],
-        "domainDelta": [
-          0.6,
-          -0.2
-        ],
-        "styleDelta": [
-          -0.1,
-          0.5
-        ],
+        "base": [0, 0],
+        "domainDelta": [0.6, -0.2],
+        "styleDelta": [-0.1, 0.5],
         "lambda": 1,
-        "combined": [
-          0.5,
-          0.3
-        ]
+        "combined": [0.5, 0.3]
       },
       "stageAnchors": {
         "1": "data-tradeoff",
@@ -6786,18 +6235,8 @@
         "IO asymptotic range d<=M<=Nd omitted"
       ],
       "fixture": {
-        "scores": [
-          1,
-          3,
-          2,
-          5
-        ],
-        "values": [
-          2,
-          4,
-          6,
-          8
-        ],
+        "scores": [1, 3, 2, 5],
+        "values": [2, 4, 6, 8],
         "tileSize": 2,
         "assumptions": "scaled scores; no mask or dropout; nonempty row; real arithmetic first"
       },
@@ -6907,20 +6346,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "train": [
-          2,
-          4
-        ],
-        "valid": [
-          8,
-          10
-        ],
+        "train": [2, 4],
+        "valid": [8, 10],
         "mean": 3,
         "scale": 1,
-        "transformed": [
-          5,
-          7
-        ],
+        "transformed": [5, 7],
         "leakyMean": 6,
         "leakyVariance": 10,
         "ddof": 0
@@ -6970,9 +6400,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--fold-local-validation.json",
         "actualBody": "src/pages/articles/ai/fold-local-validation/ModernArticle.tsx",
@@ -6995,7 +6423,7 @@
       "route": "ai/gradient-boosting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/gradient-boosting.tsx",
       "publicPath": "cs/ai/gradient-boosting",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7042,13 +6470,11 @@
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
-        "production": "Batch24 공개 배포 후 재검증 필요",
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-tabular-models-batch-24/summary.json",
         "batch24Browser": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
         "semanticReview": "목표 7·현재 예측 4에서 residual 3을 얻고, 새 tree leaf 2.4에 η=0.2를 곱한 0.48만 더해 4.48이 되는 한 번의 update를 고정했습니다. 모든 leaf를 더하거나 2.4를 그대로 더하는 오해를 예측 문제로 분리했습니다."
       },
-      "remaining": [
-        "Batch24 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -7156,20 +6582,9 @@
       ],
       "fixture": {
         "assumed": true,
-        "rowsPerPatient": [
-          2,
-          2,
-          3,
-          1
-        ],
-        "train": [
-          "A",
-          "B"
-        ],
-        "valid": [
-          "C",
-          "D"
-        ],
+        "rowsPerPatient": [2, 2, 3, 1],
+        "train": ["A", "B"],
+        "valid": ["C", "D"],
         "leakedGroup": "C",
         "validRows": 4,
         "validGroups": 2
@@ -7213,9 +6628,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--grouped-validation.json",
         "actualBody": "src/pages/articles/ai/grouped-validation/ModernArticle.tsx",
@@ -7300,9 +6713,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--harness-failure-ablation.json",
       "bodyFiles": [
         "src/pages/articles/ai/harness-failure-ablation/ModernArticle.tsx"
@@ -7412,23 +6823,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "candidates": [
-          "A",
-          "B",
-          "C"
-        ],
+        "candidates": ["A", "B", "C"],
         "updates": 2000,
-        "costGpuMinutes": [
-          10,
-          10,
-          10
-        ],
+        "costGpuMinutes": [10, 10, 10],
         "totalBudgetGpuMinutes": 30,
-        "validationLoss": [
-          0.24,
-          0.2,
-          0.22
-        ],
+        "validationLoss": [0.24, 0.2, 0.22],
         "selected": "B",
         "outerLoss": 0.23,
         "randomMass": 0.05,
@@ -7474,9 +6873,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--hyperparameter-tuning.json",
       "bodyFiles": [
         "src/pages/articles/ai/hyperparameter-tuning/ModernArticle.tsx"
@@ -7510,23 +6907,10 @@
         "기존 핵심 Viz가 예측 질문 뒤에 바로 오지 않았음"
       ],
       "fixture": {
-        "image": [
-          100,
-          80
-        ],
-        "originalBox": [
-          60,
-          20,
-          100,
-          60
-        ],
+        "image": [100, 80],
+        "originalBox": [60, 20, 100, 60],
         "translateX": 20,
-        "translatedBox": [
-          80,
-          20,
-          120,
-          60
-        ],
+        "translatedBox": [80, 20, 120, 60],
         "visibleArea": 800,
         "originalArea": 1600,
         "visibleRatio": 0.5,
@@ -7581,7 +6965,7 @@
       "route": "ai/imbalance-loss-weighting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-loss-weighting.tsx",
       "publicPath": "cs/ai/imbalance-loss-weighting",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7632,7 +7016,8 @@
         "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
         "semanticReview": "positive raw loss 1에 class weight 9를 곱해 기여 9가 되지만 row 수는 바뀌지 않는 사례를 고정했습니다. γ=2에서 p_t=.9의 factor .01과 p_t=.2의 .64를 비교하고, hard example이 곧 clean label이라는 뜻은 아님을 분리했습니다."
       },
-      "remaining": ["Batch 23 공개 배포 경로 확인"],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-imbalanced-classification-batch-23/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -7652,7 +7037,7 @@
       "route": "ai/imbalance-resampling",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalance-resampling.tsx",
       "publicPath": "cs/ai/imbalance-resampling",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7665,19 +7050,10 @@
         "split 전 resampling의 leakage가 첫 흐름에서 분리되지 않았음"
       ],
       "fixture": {
-        "xi": [
-          2,
-          4
-        ],
-        "xj": [
-          6,
-          8
-        ],
+        "xi": [2, 4],
+        "xj": [6, 8],
         "lambda": 0.25,
-        "synthetic": [
-          3,
-          5
-        ]
+        "synthetic": [3, 5]
       },
       "stageAnchors": {
         "1": "fold-local",
@@ -7708,7 +7084,8 @@
         "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
         "semanticReview": "x_i=(2,4), x_j=(6,8), λ=.25에서 합성점 (3,5)가 되는 좌표를 고정했습니다. 복제는 새 관측을 만들지 않고, SMOTE도 split 뒤 train fold 안에서만 fit해야 한다는 leakage 경계를 예측 문제와 시각화에 연결했습니다."
       },
-      "remaining": ["Batch 23 공개 배포 경로 확인"],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-imbalanced-classification-batch-23/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-06",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
@@ -7728,7 +7105,7 @@
       "route": "ai/imbalanced-classification-evaluation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalanced-classification-evaluation.tsx",
       "publicPath": "cs/ai/imbalanced-classification-evaluation",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7768,9 +7145,8 @@
         "noScript": "390×844에서 재생 조작부와 동적 장면은 숨고 네 장면 제목과 결론은 모두 정적 순서로 남았습니다.",
         "build": "Vite 7.3.1 production build, 7,908 modules, 정적 공개 경로 2,086개, no-script 본문 160편을 생성했습니다."
       },
-      "remaining": [
-        "Batch 23 공개 배포 경로 확인"
-      ],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-imbalanced-classification-batch-23/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "visual-first-recursive-map-after-full-body-review",
       "bodyFiles": [
@@ -7784,7 +7160,7 @@
       "route": "ai/imbalanced-data",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/imbalanced-data.tsx",
       "publicPath": "cs/ai/imbalanced-data",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7818,9 +7194,8 @@
         "noScript": "390×844에서 재생 조작부와 동적 장면은 숨고 네 장면 제목과 결론은 모두 정적 순서로 남았습니다.",
         "build": "Vite 7.3.1 production build, 7,908 modules, 정적 공개 경로 2,086개, no-script 본문 160편을 생성했습니다."
       },
-      "remaining": [
-        "Batch 23 공개 배포 경로 확인"
-      ],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-imbalanced-classification-batch-23/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "visual-first-recursive-map-after-full-body-review",
       "bodyFiles": [
@@ -7883,9 +7258,7 @@
         "build": "production build 7,896 modules·정적 public route 2,086개·no-script 본문 111편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-10-final/2026-10-24T15-15-21/summary.json"
       },
-      "remaining": [
-        "Batch 10 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 10 공개 배포 경로 확인"]
     },
     {
       "route": "ai/inference-failure-absorption",
@@ -7934,9 +7307,7 @@
         "build": "production build 7,898 modules·정적 public route 2,086개·no-script 본문 119편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-12-final/summary.json"
       },
-      "remaining": [
-        "Batch 12 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 12 공개 배포 경로 확인"]
     },
     {
       "route": "ai/inference-optimization-layers",
@@ -7952,24 +7323,9 @@
       "beforeDefects": [],
       "fixture": {
         "kind": "가정 사례이며 GPU 실측값이 아님",
-        "serialMs": [
-          15,
-          40,
-          35,
-          10
-        ],
-        "firstChangeMs": [
-          15,
-          20,
-          35,
-          10
-        ],
-        "strongerChangeMs": [
-          15,
-          4,
-          35,
-          10
-        ],
+        "serialMs": [15, 40, 35, 10],
+        "firstChangeMs": [15, 20, 35, 10],
+        "strongerChangeMs": [15, 4, 35, 10],
         "sharedBatch": "20개 요청의 지연 합 400 request-ms와 한 GPU batch의 20 GPU-ms를 분리",
         "regression": "짝차이 2,3,2,3,2 ms; 평균2.4, 표본분산0.3, 양측95%구간1.72–3.08 ms"
       },
@@ -8004,9 +7360,7 @@
         "bodySha256": "5c99f328069e51327f70d66cb24206aac0b6ea7236b7210075e164d1e15a2703",
         "batch10Integration": "분산 추론→최적화 위치→동일 조건 측정→용량 결정의 부모 지도에 연결했습니다. 현재 글은 변경할 구간과 남는 구간의 구분을 맡습니다. 움직이는 두 그림의 전체 10개 장면은 JavaScript 비활성 문서에도 순서대로 남고, 390×844·1440×1000에서 문서와 바깥 시각화 가로 넘침 0을 확인했습니다."
       },
-      "remaining": [
-        "Batch 10 공개 배포 경로 확인"
-      ],
+      "remaining": ["Batch 10 공개 배포 경로 확인"],
       "reviewDate": "2026-10-05",
       "originalDefects": [
         "실제 본문345행과 Viz·정의5·학습·ownership 검토: 첫 문단에 네 층과 약어를 먼저 도입하며 같은 작은 사례의 unnamed 구조·원문 적용·예측 답 절이 없음.",
@@ -8048,54 +7402,52 @@
       "route": "ai/inference-stack-standard-levels",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-stack-standard-levels.tsx",
       "publicPath": "cs/ai/inference-stack-standard-levels",
-  "status": "rewritten-local-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-  "beforeDefects": [
-    "표준·구현체·운영 선언의 세 경계를 설명했지만 상위 배포 흐름에서 현재 위치가 보이지 않음",
-    "핵심 세 수준 그림보다 결론과 예측 질문이 먼저 나와 전체 구조를 글로 먼저 해석해야 했음",
-    "장면형 시각화의 JavaScript 비활성 상태에서 전체 장면 순서와 결론을 확인하기 어려웠음"
-  ],
-  "fixture": {
-    "assumed": true,
-    "replicas": 8,
-    "samePrefixRequests": 5,
-    "roundRobinHitRate": "약 1/8",
-    "cacheAwareHitRate": "약 4/5",
-    "boundary": "적중률은 정책 차이를 설명하는 계산값이며 인용한 35초→120밀리초는 별도 공개 실험 조건에 귀속합니다."
-  },
-  "stageAnchors": {
-    "0": "inference-deployment-parent-map",
-    "1": "three-standard-levels-picture",
-    "2": "portable-api-and-picker",
-    "3": "engine-vs-stack-choice",
-    "4": "routing-policy-and-hit-rate",
-    "5": "verified-version-combination",
-    "return": "inference-deployment-map-return"
-  },
-  "sourceEvidence": [
-    "Gateway API Inference Extension 공식 문서에서 InferencePool v1과 endpoint picker 경계를 확인한 기존 근거를 유지했습니다.",
-    "Red Hat의 2026-06-11 llm-d 공개 실험 수치는 해당 H100·복제본·합성 부하 조건에만 귀속했습니다.",
-    "표준 API, 요청 경로 구현, 운영 매니페스트를 서로 다른 이식성 층으로 분리했습니다."
-  ],
-      "validation": {
-    "semanticReview": "API 객체·요청 경로 구현체·운영 선언의 세 수준을 공급자 변경 시 실제로 옮겨지는지로 추적하고, 스택 선택과 엔진 선택을 분리했습니다.",
-    "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 기존 기술 식별자와 수식은 유지했습니다.",
-    "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "keyboard": "첫 그림에서 ArrowRight로 두 번째 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
-    "reducedMotion": "4.5초 뒤에도 첫 장면과 재생 꺼짐 상태를 유지했습니다.",
-    "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 정적 목록의 표준·적중률 장면과 결론을 확인했습니다.",
-    "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
-    "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      "beforeDefects": [
+        "표준·구현체·운영 선언의 세 경계를 설명했지만 상위 배포 흐름에서 현재 위치가 보이지 않음",
+        "핵심 세 수준 그림보다 결론과 예측 질문이 먼저 나와 전체 구조를 글로 먼저 해석해야 했음",
+        "장면형 시각화의 JavaScript 비활성 상태에서 전체 장면 순서와 결론을 확인하기 어려웠음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "replicas": 8,
+        "samePrefixRequests": 5,
+        "roundRobinHitRate": "약 1/8",
+        "cacheAwareHitRate": "약 4/5",
+        "boundary": "적중률은 정책 차이를 설명하는 계산값이며 인용한 35초→120밀리초는 별도 공개 실험 조건에 귀속합니다."
       },
-      "remaining": [
-    "Batch 11 공개 배포 경로 확인"
-      ]
+      "stageAnchors": {
+        "0": "inference-deployment-parent-map",
+        "1": "three-standard-levels-picture",
+        "2": "portable-api-and-picker",
+        "3": "engine-vs-stack-choice",
+        "4": "routing-policy-and-hit-rate",
+        "5": "verified-version-combination",
+        "return": "inference-deployment-map-return"
+      },
+      "sourceEvidence": [
+        "Gateway API Inference Extension 공식 문서에서 InferencePool v1과 endpoint picker 경계를 확인한 기존 근거를 유지했습니다.",
+        "Red Hat의 2026-06-11 llm-d 공개 실험 수치는 해당 H100·복제본·합성 부하 조건에만 귀속했습니다.",
+        "표준 API, 요청 경로 구현, 운영 매니페스트를 서로 다른 이식성 층으로 분리했습니다."
+      ],
+      "validation": {
+        "semanticReview": "API 객체·요청 경로 구현체·운영 선언의 세 수준을 공급자 변경 시 실제로 옮겨지는지로 추적하고, 스택 선택과 엔진 선택을 분리했습니다.",
+        "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 기존 기술 식별자와 수식은 유지했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "keyboard": "첫 그림에서 ArrowRight로 두 번째 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
+        "reducedMotion": "4.5초 뒤에도 첫 장면과 재생 꺼짐 상태를 유지했습니다.",
+        "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 정적 목록의 표준·적중률 장면과 결론을 확인했습니다.",
+        "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
+        "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      },
+      "remaining": ["Batch 11 공개 배포 경로 확인"]
     },
     {
       "route": "ai/knowledge-graph-construction",
@@ -8155,68 +7507,23 @@
         "cacheBytesBefore": 48,
         "cacheBytesAfter": 64,
         "queryEphemeralBytes": 16,
-        "headMapping": [
-          0,
-          0,
-          1,
-          1
-        ],
-        "qHead0": [
-          1,
-          0
-        ],
+        "headMapping": [0, 0, 1, 1],
+        "qHead0": [1, 0],
         "kHead0": [
-          [
-            0,
-            1
-          ],
-          [
-            0,
-            2
-          ],
-          [
-            0,
-            3
-          ],
-          [
-            0,
-            4
-          ]
+          [0, 1],
+          [0, 2],
+          [0, 3],
+          [0, 4]
         ],
         "vHead0": [
-          [
-            1,
-            2
-          ],
-          [
-            2,
-            4
-          ],
-          [
-            3,
-            6
-          ],
-          [
-            4,
-            8
-          ]
+          [1, 2],
+          [2, 4],
+          [3, 6],
+          [4, 8]
         ],
-        "scores": [
-          0,
-          0,
-          0,
-          0
-        ],
-        "weights": [
-          0.25,
-          0.25,
-          0.25,
-          0.25
-        ],
-        "output": [
-          2.5,
-          5
-        ]
+        "scores": [0, 0, 0, 0],
+        "weights": [0.25, 0.25, 0.25, 0.25],
+        "output": [2.5, 5]
       },
       "stageAnchors": {
         "1-S": "overview",
@@ -8330,13 +7637,9 @@
         "prose": "전역 재검토0",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "readEvidence": "/tmp/teach-all/read-kv-cache-fundamentals.txt",
-      "bodyFiles": [
-        "src/pages/articles/ai/kv-cache-fundamentals.tsx"
-      ],
+      "bodyFiles": ["src/pages/articles/ai/kv-cache-fundamentals.tsx"],
       "actualBodyFile": "src/pages/articles/ai/kv-cache-fundamentals.tsx",
       "contentHash": "64fd103a92fb4536680e6b894a97b066f7dca2d8b09e78d92f3a93360bc9451a",
       "evidenceFiles": [
@@ -8401,10 +7704,7 @@
       ],
       "fixture": {
         "initial": 3,
-        "operations": [
-          "+1",
-          "*2"
-        ],
+        "operations": ["+1", "*2"],
         "rounds": 3,
         "S_us": 2,
         "L_us": 3,
@@ -8526,12 +7826,7 @@
         "papers": "NVIDIA2019 V100/CUDA10.1의대기위치별평균과초기비용,PyTorch2.14문서·원문,CUDA13.4event/복사반환조건,PyTorch공식pinned/non_blocking튜토리얼의동작범위를실제로읽어대조했습니다.",
         "humanize": {
           "paragraphs": 62,
-          "chunks": [
-            3950,
-            3798,
-            3786,
-            230
-          ],
+          "chunks": [3950, 3798, 3786, 230],
           "roundTrip": true,
           "manualReview": "실제추출→바이트동일왕복→전문문체검토에서연결쉼표3개를제거했습니다.실제apply2문단변경·60유지·누락0이며숫자/마커보존입니다.전문/두번째묶음의max(1.06,2)·max(2.5,2)각주오탐은theory가전문읽고독립finalize승인했습니다."
         },
@@ -8619,41 +7914,17 @@
       ],
       "fixture": {
         "assumed": true,
-        "tokensPerUpdate": [
-          1000,
-          4000
-        ],
+        "tokensPerUpdate": [1000, 4000],
         "targetTokens": 1000000,
-        "updatesAtTarget": [
-          1000,
-          250
-        ],
-        "observedTokens": [
-          1020000,
-          980000
-        ],
-        "observedUpdates": [
-          1020,
-          245
-        ],
-        "observedSeconds": [
-          120,
-          150
-        ],
-        "observedLoss": [
-          0.42,
-          0.39
-        ],
+        "updatesAtTarget": [1000, 250],
+        "observedTokens": [1020000, 980000],
+        "observedUpdates": [1020, 245],
+        "observedSeconds": [120, 150],
+        "observedLoss": [0.42, 0.39],
         "totalTokenBudget": 2000000,
-        "progress": [
-          0.51,
-          0.49
-        ],
+        "progress": [0.51, 0.49],
         "toleranceTokens": 30000,
-        "distanceTokens": [
-          20000,
-          20000
-        ],
+        "distanceTokens": [20000, 20000],
         "observedDifference": 0.03
       },
       "stageAnchors": {
@@ -8698,9 +7969,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--learning-curve-tracking.json",
       "bodyFiles": [
         "src/pages/articles/ai/learning-curve-tracking/ModernArticle.tsx"
@@ -8721,7 +7990,7 @@
       "route": "ai/lightgbm-efficient-trees",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lightgbm-efficient-trees.tsx",
       "publicPath": "cs/ai/lightgbm-efficient-trees",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8762,11 +8031,9 @@
         "browser1440": "부모 지도·첫 시각화·키보드·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
         "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
-        "production": "Batch24 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-tabular-models-batch-24/summary.json"
       },
-      "remaining": [
-        "Batch24 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "recursive-family-map-and-visual-first-review",
       "bodyFiles": [
@@ -8929,22 +8196,10 @@
         "count": 32,
         "spaces": 31,
         "characters": 159,
-        "rawModel27B": [
-          27,
-          27
-        ],
-        "rawModel9B": [
-          0,
-          27
-        ],
-        "deterministicAgent": [
-          27,
-          27
-        ],
-        "variationChecks": [
-          135,
-          135
-        ]
+        "rawModel27B": [27, 27],
+        "rawModel9B": [0, 27],
+        "deterministicAgent": [27, 27],
+        "variationChecks": [135, 135]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -8988,9 +8243,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/llm-harness/ModernArticle.tsx",
       "contentHash": "181d01cefcf8c47b3283be625f33e7d73d4146e83c2f10395053dd4ac8038e20",
       "preserved": [
@@ -9103,9 +8356,7 @@
         "build": "production build 7,898 modules·정적 public route 2,086개·no-script 본문 119편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-12-final/summary.json"
       },
-      "remaining": [
-        "Batch 12 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 12 공개 배포 경로 확인"]
     },
     {
       "route": "ai/lora-finetuning",
@@ -9311,7 +8562,7 @@
       "route": "ai/mixup-cutmix",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mixup-cutmix.tsx",
       "publicPath": "cs/ai/mixup-cutmix",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": true,
         "answerPointers": 3,
@@ -9353,9 +8604,8 @@
         "noJavaScript": "production 산출물에서 조작부와 동적 장면은 숨고 네 장면의 순서와 결론이 모두 보이는 것을 확인했습니다.",
         "build": "8GB Node heap 조건에서 production build와 정적 public route 2,086개 생성을 통과했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-data-augmentation-batch-22/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "visual-first-recursive-practice-map",
       "bodyFiles": [
@@ -9411,22 +8661,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "true": [
-          0.7,
-          0.7,
-          0.7
-        ],
-        "observed": [
-          0.69,
-          0.74,
-          0.71
-        ],
+        "true": [0.7, 0.7, 0.7],
+        "observed": [0.69, 0.74, 0.71],
         "winner": "B",
         "oneTrialOptimism": 0.04,
-        "twoIndependentNoise": [
-          -0.04,
-          0.04
-        ],
+        "twoIndependentNoise": [-0.04, 0.04],
         "expectedMaximum": 0.72
       },
       "stageAnchors": {
@@ -9467,9 +8706,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--model-selection-bias.json",
       "bodyFiles": [
         "src/pages/articles/ai/model-selection-bias/ModernArticle.tsx"
@@ -9555,22 +8792,10 @@
       ],
       "fixture": {
         "assumed": true,
-        "candidateCounts": [
-          9,
-          3,
-          1
-        ],
-        "resourceUnits": [
-          1,
-          3,
-          9
-        ],
+        "candidateCounts": [9, 3, 1],
+        "resourceUnits": [1, 3, 9],
         "updatesPerUnit": 1000,
-        "incrementalCost": [
-          9,
-          6,
-          6
-        ],
+        "incrementalCost": [9, 6, 6],
         "resumeTotal": 21,
         "restartTotal": 27,
         "noPruneTotal": 81,
@@ -9578,22 +8803,8 @@
         "prunedPopulation": 100,
         "missedInSample": 4,
         "observedMissRate": 0.2,
-        "initialScores": [
-          0.6,
-          0.59,
-          0.58,
-          0.57,
-          0.56,
-          0.55,
-          0.54,
-          0.53,
-          0.52
-        ],
-        "secondScores": [
-          0.65,
-          0.63,
-          0.61
-        ],
+        "initialScores": [0.6, 0.59, 0.58, 0.57, 0.56, 0.55, 0.54, 0.53, 0.52],
+        "secondScores": [0.65, 0.63, 0.61],
         "finalA": 0.7,
         "shadowFinalB": 0.85
       },
@@ -9637,9 +8848,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-fidelity-pruning.json",
       "bodyFiles": [
         "src/pages/articles/ai/multi-fidelity-pruning/ModernArticle.tsx"
@@ -9675,58 +8884,23 @@
       "fixture": {
         "assumed": true,
         "values": {
-          "A": [
-            0.2,
-            10,
-            4
-          ],
-          "B": [
-            0.22,
-            12,
-            5
-          ],
-          "C": [
-            0.18,
-            15,
-            3
-          ],
-          "D": [
-            0.16,
-            9,
-            18
-          ]
+          "A": [0.2, 10, 4],
+          "B": [0.22, 12, 5],
+          "C": [0.18, 15, 3],
+          "D": [0.16, 9, 18]
         },
         "memoryLimitGB": 16,
         "latencyLimitMs": 100,
-        "feasible": [
-          "A",
-          "B",
-          "C"
-        ],
-        "frontier": [
-          "A",
-          "C"
-        ],
+        "feasible": ["A", "B", "C"],
+        "frontier": ["A", "C"],
         "selected": "C",
         "selectionLatencyCapMs": 80,
         "repeatedDominance": 6,
         "repeats": 10,
         "relaxedCycle": {
-          "X": [
-            0,
-            1,
-            2
-          ],
-          "Y": [
-            2,
-            0,
-            1
-          ],
-          "Z": [
-            1,
-            2,
-            0
-          ],
+          "X": [0, 1, 2],
+          "Y": [2, 0, 1],
+          "Z": [1, 2, 0],
           "tolerance": 1
         }
       },
@@ -9775,9 +8949,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--multi-objective-hpo.json",
       "bodyFiles": [
         "src/pages/articles/ai/multi-objective-hpo/ModernArticle.tsx"
@@ -9869,9 +9041,7 @@
         "build": "production build 7,898 modules·정적 public route 2,086개·no-script 본문 119편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-12-final/summary.json"
       },
-      "remaining": [
-        "Batch 12 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 12 공개 배포 경로 확인"]
     },
     {
       "route": "ai/oof-risk-estimation",
@@ -9891,33 +9061,15 @@
       ],
       "fixture": {
         "assumed": true,
-        "foldSizes": [
-          20,
-          80
-        ],
-        "foldMeanLoss": [
-          0.2,
-          0.4
-        ],
-        "foldLossSum": [
-          4,
-          32
-        ],
+        "foldSizes": [20, 80],
+        "foldMeanLoss": [0.2, 0.4],
+        "foldLossSum": [4, 32],
         "pooledRisk": 0.36,
         "equalFoldRisk": 0.3,
         "aucBoundary": {
-          "negative": [
-            0.1,
-            0.8
-          ],
-          "positive": [
-            0.2,
-            0.9
-          ],
-          "foldAuc": [
-            1,
-            1
-          ],
+          "negative": [0.1, 0.8],
+          "positive": [0.2, 0.9],
+          "foldAuc": [1, 1],
           "pooledAuc": 0.75
         }
       },
@@ -9965,9 +9117,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--oof-risk-estimation.json",
         "actualBody": "src/pages/articles/ai/oof-risk-estimation/ModernArticle.tsx",
@@ -10088,9 +9238,7 @@
         "build": "production build 7,898 modules·정적 public route 2,086개·no-script 본문 119편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-12-final/summary.json"
       },
-      "remaining": [
-        "Batch 12 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 12 공개 배포 경로 확인"]
     },
     {
       "route": "ai/paired-experiment-design",
@@ -10110,32 +9258,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "baseline": [
-          0.7,
-          0.72,
-          0.68,
-          0.71,
-          0.69
-        ],
-        "candidate": [
-          0.706,
-          0.724,
-          0.679,
-          0.715,
-          0.693
-        ],
-        "deltas": [
-          0.006,
-          0.004,
-          -0.001,
-          0.005,
-          0.003
-        ],
+        "baseline": [0.7, 0.72, 0.68, 0.71, 0.69],
+        "candidate": [0.706, 0.724, 0.679, 0.715, 0.693],
+        "deltas": [0.006, 0.004, -0.001, 0.005, 0.003],
         "meanDelta": 0.0034,
-        "latencyMs": [
-          100,
-          118
-        ],
+        "latencyMs": [100, 118],
         "latencyGrowthCap": 0.1
       },
       "stageAnchors": {
@@ -10176,9 +9303,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--paired-experiment-design.json",
       "bodyFiles": [
         "src/pages/articles/ai/paired-experiment-design/ModernArticle.tsx"
@@ -10214,11 +9339,7 @@
         "gpusPerNode": 8,
         "intraNodeLinkGBps": 900,
         "interNodeLinkGBps": 50,
-        "comparison": [
-          "TP16",
-          "TP8·PP2",
-          "TP4·PP2·DP2"
-        ]
+        "comparison": ["TP16", "TP8·PP2", "TP4·PP2·DP2"]
       },
       "stageAnchors": {
         "parent": "한 모델의 계산을 여러 GPU에 나누는 지도",
@@ -10308,11 +9429,7 @@
           "C": 20
         },
         "budget": 6,
-        "assignment": [
-          1,
-          1,
-          4
-        ],
+        "assignment": [1, 1, 4],
         "remainingC": 16,
         "smallLedger": {
           "F_MFLOP": "100*(2+c)",
@@ -10420,9 +9537,7 @@
       },
       "remaining": [],
       "readEvidence": "/tmp/teach-all/read-prefill-decode-phase-dynamics.txt",
-      "bodyFiles": [
-        "src/pages/articles/ai/prefill-decode-phase-dynamics.tsx"
-      ],
+      "bodyFiles": ["src/pages/articles/ai/prefill-decode-phase-dynamics.tsx"],
       "actualBodyFile": "src/pages/articles/ai/prefill-decode-phase-dynamics.tsx",
       "contentHash": "f0cd611d1dd56501750853253da25096b717b968d76de52f2b379586fed2e824",
       "evidenceFiles": [
@@ -10471,42 +9586,11 @@
       ],
       "fixture": {
         "assumed": true,
-        "R1": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "R2": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          9,
-          10
-        ],
-        "R3": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          11,
-          12
-        ],
+        "R1": [1, 2, 3, 4, 5, 6, 7, 8],
+        "R2": [1, 2, 3, 4, 5, 6, 9, 10],
+        "R3": [1, 2, 3, 4, 5, 6, 11, 12],
         "scope": "same full-attention model and namespace; sequential; generated records excluded; no eviction until stated; radix page1 vs block B4; CPU numeric positions, not measured GPU timing",
-        "largePreserved": [
-          2000,
-          500,
-          100
-        ],
+        "largePreserved": [2000, 500, 100],
         "preservedBoundary": "logical storage does not include metadata, padding, output reservations or allocator overhead"
       },
       "stageAnchors": {
@@ -10533,10 +9617,7 @@
           "attention-metadata",
           "kernel-and-hybrid"
         ],
-        "limits": [
-          "fairness",
-          "boundary"
-        ],
+        "limits": ["fairness", "boundary"],
         "prediction": "prediction-questions"
       },
       "sourceEvidence": [
@@ -10691,9 +9772,7 @@
       },
       "remaining": [],
       "readEvidence": "src/pages/articles/ai/prefix-caching-radix-attention.tsx 전체 459행과 전용 Viz 전체; pinned radix_cache/schedule_policy 확인",
-      "bodyFiles": [
-        "src/pages/articles/ai/prefix-caching-radix-attention.tsx"
-      ],
+      "bodyFiles": ["src/pages/articles/ai/prefix-caching-radix-attention.tsx"],
       "actualBodyFile": "src/pages/articles/ai/prefix-caching-radix-attention.tsx",
       "contentHash": "1338f894fdc7edecae7425a35fac4cb95d230ea100feb1530b99293dc5fde3e5",
       "evidenceFiles": [
@@ -10987,55 +10066,53 @@
       "route": "ai/qwen36-long-context-deployment",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen36-long-context-deployment.tsx",
       "publicPath": "cs/ai/qwen36-long-context-deployment",
-  "status": "rewritten-local-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-  "beforeDefects": [
-    "긴 입력의 세 조건을 설명했지만 앞선 장비 측정과 뒤의 배포 구조 사이에서 현재 위치가 보이지 않음",
-    "가정과 예측 질문을 먼저 읽은 뒤에야 전체 컨텍스트 범위 그림을 볼 수 있었음",
-    "첫 그림이 사용자의 명시적 의도 없이 자동으로 장면을 넘겼음",
-    "JavaScript 비활성 상태에서 위치·메모리 시각화의 전체 장면을 읽기 어려웠음"
-  ],
-  "fixture": {
-    "assumed": false,
-    "nativeTokens": 262144,
-    "extendedTokens": 1010000,
-    "headWidth": 256,
-    "partialRotaryFactor": 0.25,
-    "memoryFloorGiB": "28.75 weight + 16 KV + 0.14 Delta = 44.89",
-    "boundary": "공식 구성과 논리 메모리 하한이며 특정 런타임의 실제 최고점이나 품질 승인값은 아닙니다."
-  },
-  "stageAnchors": {
-    "0": "inference-deployment-parent-map",
-    "1": "context-support-envelope",
-    "2": "partial-multimodal-rope",
-    "3": "known-memory-floor",
-    "4": "release-evidence-contract",
-    "return": "inference-deployment-map-return"
-  },
-  "sourceEvidence": [
-    "Qwen3.6-27B 공식 모델 카드에서 native 262,144와 별도 extended 1,010,000 범위를 구분한 기존 근거를 유지했습니다.",
-    "공식 config와 Transformers 참조 구현에서 partial multimodal RoPE와 위치 축의 경계를 확인한 근거를 유지했습니다.",
-    "공식 BF16 index와 mixed-FP8 checkpoint의 가중치 하한을 KV·workspace·runtime peak와 구분했습니다."
-  ],
-      "validation": {
-    "semanticReview": "긴 입력 지원을 위치 표현·메모리 수용·실제 정보 회수로 나누고 architecture·memory·kernel·quality receipt를 하나의 승인 단위로 연결했습니다.",
-    "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 모델명·필드명·메모리 단위는 유지했습니다.",
-    "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "keyboard": "첫 그림에서 ArrowRight로 Native multimodal 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
-    "reducedMotion": "4.5초 뒤에도 Native text와 재생 꺼짐 상태를 유지했습니다.",
-    "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 컨텍스트·RoPE·VRAM 정적 장면을 모두 확인했습니다.",
-    "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
-    "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      "beforeDefects": [
+        "긴 입력의 세 조건을 설명했지만 앞선 장비 측정과 뒤의 배포 구조 사이에서 현재 위치가 보이지 않음",
+        "가정과 예측 질문을 먼저 읽은 뒤에야 전체 컨텍스트 범위 그림을 볼 수 있었음",
+        "첫 그림이 사용자의 명시적 의도 없이 자동으로 장면을 넘겼음",
+        "JavaScript 비활성 상태에서 위치·메모리 시각화의 전체 장면을 읽기 어려웠음"
+      ],
+      "fixture": {
+        "assumed": false,
+        "nativeTokens": 262144,
+        "extendedTokens": 1010000,
+        "headWidth": 256,
+        "partialRotaryFactor": 0.25,
+        "memoryFloorGiB": "28.75 weight + 16 KV + 0.14 Delta = 44.89",
+        "boundary": "공식 구성과 논리 메모리 하한이며 특정 런타임의 실제 최고점이나 품질 승인값은 아닙니다."
       },
-      "remaining": [
-    "Batch 11 공개 배포 경로 확인"
-      ]
+      "stageAnchors": {
+        "0": "inference-deployment-parent-map",
+        "1": "context-support-envelope",
+        "2": "partial-multimodal-rope",
+        "3": "known-memory-floor",
+        "4": "release-evidence-contract",
+        "return": "inference-deployment-map-return"
+      },
+      "sourceEvidence": [
+        "Qwen3.6-27B 공식 모델 카드에서 native 262,144와 별도 extended 1,010,000 범위를 구분한 기존 근거를 유지했습니다.",
+        "공식 config와 Transformers 참조 구현에서 partial multimodal RoPE와 위치 축의 경계를 확인한 근거를 유지했습니다.",
+        "공식 BF16 index와 mixed-FP8 checkpoint의 가중치 하한을 KV·workspace·runtime peak와 구분했습니다."
+      ],
+      "validation": {
+        "semanticReview": "긴 입력 지원을 위치 표현·메모리 수용·실제 정보 회수로 나누고 architecture·memory·kernel·quality receipt를 하나의 승인 단위로 연결했습니다.",
+        "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 모델명·필드명·메모리 단위는 유지했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "keyboard": "첫 그림에서 ArrowRight로 Native multimodal 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
+        "reducedMotion": "4.5초 뒤에도 Native text와 재생 꺼짐 상태를 유지했습니다.",
+        "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 컨텍스트·RoPE·VRAM 정적 장면을 모두 확인했습니다.",
+        "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
+        "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      },
+      "remaining": ["Batch 11 공개 배포 경로 확인"]
     },
     {
       "route": "ai/qwen38-flash-next-architecture",
@@ -11200,54 +10277,52 @@
       "route": "ai/region-agnostic-inference-routing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/region-agnostic-inference-routing.tsx",
       "publicPath": "cs/ai/region-agnostic-inference-routing",
-  "status": "rewritten-local-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-  "beforeDefects": [
-    "여섯 선택을 설명했지만 앞선 배포 범위와 다음 이식 경계 사이의 부모 흐름이 보이지 않음",
-    "첫 요청 경로 그림보다 두 문단의 추상 설명이 먼저 나와 선택 순서를 머릿속으로 구성해야 했음",
-    "JavaScript 비활성 상태에서 요청·재시도 장면의 전체 순서와 결론을 확인하기 어려웠음"
-  ],
-  "fixture": {
-    "assumed": true,
-    "routingMs": 16,
-    "queueMs": 40,
-    "prefillMs": 180,
-    "ttftMs": 236,
-    "boundary": "여섯 선택의 시간 비중을 설명하는 가정이며 실제 서비스 측정값이 아닙니다."
-  },
-  "stageAnchors": {
-    "0": "inference-deployment-parent-map",
-    "1": "six-choice-request-picture",
-    "2": "request-path-vs-decision-path",
-    "3": "model-region-cluster-replica-order",
-    "4": "constraint-before-cost",
-    "5": "first-output-commit-boundary",
-    "return": "inference-deployment-map-return"
-  },
-  "sourceEvidence": [
-    "Gateway API Inference Extension 공식 문서에서 InferencePool과 EPP가 보는 지표의 경계를 확인한 기존 근거를 유지했습니다.",
-    "OpenRouter의 provider routing 문서는 다중 공급자 정책 사례로만 사용하고 내부 GPU 배치 근거로 확대하지 않았습니다.",
-    "요청 경로와 느리게 갱신되는 결정 경로를 분리하고 첫 출력 청크를 재시도 경계로 표시했습니다."
-  ],
-      "validation": {
-    "semanticReview": "한 요청이 엣지·모델·리전·클러스터·복제본·엔진을 지나는 순서와 각 단계의 소유 책임, 제약 우선순위와 재시도 경계를 추적했습니다.",
-    "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 리전·게이트웨이·EPP 같은 식별자는 문맥 안에서 설명했습니다.",
-    "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "keyboard": "첫 그림에서 ArrowRight로 모델 선택 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
-    "reducedMotion": "4.5초 뒤에도 첫 장면과 재생 꺼짐 상태를 유지했습니다.",
-    "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 요청 선택과 재시도 정적 장면을 모두 확인했습니다.",
-    "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
-    "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      "beforeDefects": [
+        "여섯 선택을 설명했지만 앞선 배포 범위와 다음 이식 경계 사이의 부모 흐름이 보이지 않음",
+        "첫 요청 경로 그림보다 두 문단의 추상 설명이 먼저 나와 선택 순서를 머릿속으로 구성해야 했음",
+        "JavaScript 비활성 상태에서 요청·재시도 장면의 전체 순서와 결론을 확인하기 어려웠음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "routingMs": 16,
+        "queueMs": 40,
+        "prefillMs": 180,
+        "ttftMs": 236,
+        "boundary": "여섯 선택의 시간 비중을 설명하는 가정이며 실제 서비스 측정값이 아닙니다."
       },
-      "remaining": [
-    "Batch 11 공개 배포 경로 확인"
-      ]
+      "stageAnchors": {
+        "0": "inference-deployment-parent-map",
+        "1": "six-choice-request-picture",
+        "2": "request-path-vs-decision-path",
+        "3": "model-region-cluster-replica-order",
+        "4": "constraint-before-cost",
+        "5": "first-output-commit-boundary",
+        "return": "inference-deployment-map-return"
+      },
+      "sourceEvidence": [
+        "Gateway API Inference Extension 공식 문서에서 InferencePool과 EPP가 보는 지표의 경계를 확인한 기존 근거를 유지했습니다.",
+        "OpenRouter의 provider routing 문서는 다중 공급자 정책 사례로만 사용하고 내부 GPU 배치 근거로 확대하지 않았습니다.",
+        "요청 경로와 느리게 갱신되는 결정 경로를 분리하고 첫 출력 청크를 재시도 경계로 표시했습니다."
+      ],
+      "validation": {
+        "semanticReview": "한 요청이 엣지·모델·리전·클러스터·복제본·엔진을 지나는 순서와 각 단계의 소유 책임, 제약 우선순위와 재시도 경계를 추적했습니다.",
+        "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 리전·게이트웨이·EPP 같은 식별자는 문맥 안에서 설명했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "keyboard": "첫 그림에서 ArrowRight로 모델 선택 장면으로 이동하며 재생 전에는 4.5초 뒤에도 첫 장면을 유지했습니다.",
+        "reducedMotion": "4.5초 뒤에도 첫 장면과 재생 꺼짐 상태를 유지했습니다.",
+        "noScript": "390×844에서 보이는 재생 조작부와 live 장면 0, 요청 선택과 재시도 정적 장면을 모두 확인했습니다.",
+        "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
+        "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      },
+      "remaining": ["Batch 11 공개 배포 경로 확인"]
     },
     {
       "route": "ai/regression-metrics",
@@ -11467,18 +10542,12 @@
       ],
       "fixture": {
         "assumed": true,
-        "bounds": [
-          0.00001,
-          0.1
-        ],
+        "bounds": [0.00001, 0.1],
         "u": 0.5,
         "logMiddle": 0.001,
         "linearMiddle": 0.050005,
         "decadeMass": 0.25,
-        "memoryEstimateGB": [
-          18,
-          22
-        ],
+        "memoryEstimateGB": [18, 22],
         "limitGB": 20,
         "unexpectedActualGB": 21
       },
@@ -11532,9 +10601,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": "/tmp/teach-all/baseline/ai--search-space-design.json",
       "bodyFiles": [
         "src/pages/articles/ai/search-space-design/ModernArticle.tsx"
@@ -11555,7 +10622,7 @@
       "route": "ai/sequence-modeling-tabular",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sequence-modeling-tabular.tsx",
       "publicPath": "cs/ai/sequence-modeling-tabular",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -11570,10 +10637,7 @@
       "fixture": {
         "entity": "user_42",
         "cutoff": "09:00",
-        "inputEvents": [
-          "08:10 view",
-          "08:26 cart"
-        ],
+        "inputEvents": ["08:10 view", "08:26 cart"],
         "lateEvent": "08:40 payment · available 09:07",
         "label": "09:18 purchase · 다음 24시간"
       },
@@ -11598,11 +10662,9 @@
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,911 modules·정적 public route 2,086개+404·no-script 본문 167편 exit0",
-        "production": "Batch25 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-temporal-data-batch-25/summary.json"
       },
-      "remaining": [
-        "Batch25 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "practice-track-map-and-cutoff-trace-review",
       "bodyFiles": [
@@ -11675,9 +10737,7 @@
         "build": "production build 7,896 modules·정적 public route 2,086개·no-script 본문 111편 생성",
         "browserEvidence": "output/playwright/ai-serving-batch-10-final/2026-10-24T15-15-21/summary.json"
       },
-      "remaining": [
-        "Batch 10 공개 배포 경로 확인"
-      ]
+      "remaining": ["Batch 10 공개 배포 경로 확인"]
     },
     {
       "route": "ai/serving-latency-metrics-and-slo",
@@ -11701,35 +10761,14 @@
       "fixture": {
         "assumed": true,
         "sentSeconds": 0,
-        "tokenReceivedSeconds": [
-          1,
-          1.04,
-          1.085,
-          1.285,
-          1.327
-        ],
+        "tokenReceivedSeconds": [1, 1.04, 1.085, 1.285, 1.327],
         "ttftSeconds": 1,
-        "itlMs": [
-          40,
-          45,
-          200,
-          42
-        ],
+        "itlMs": [40, 45, 200, 42],
         "tpotMs": 81.75,
         "e2eSeconds": 1.327,
-        "groupedChunks": [
-          1,
-          1,
-          3
-        ],
-        "groupedItlMs": [
-          40,
-          287
-        ],
-        "genaiNormalizedMs": [
-          40,
-          95.66666666666667
-        ],
+        "groupedChunks": [1, 1, 3],
+        "groupedItlMs": [40, 287],
+        "genaiNormalizedMs": [40, 95.66666666666667],
         "usageEventSeconds": 1.35,
         "usageTpotMs": 87.5,
         "windowCount": 288,
@@ -11805,9 +10844,7 @@
         "table3901440": "354/711px 폭; 넘침 없음; 숫자 행 동일; 실제 두 화면 확인",
         "vizInternalScroll": "모든 통계는 내부 스크롤 뒤 controls 위에서 온전히 노출됨; scroll-stats.json fullyVisible 4/4"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "readEvidence": "/tmp/teach-all/read-serving-latency-metrics-and-slo.txt",
       "bodyFiles": [
         "src/pages/articles/ai/serving-latency-metrics-and-slo.tsx"
@@ -11858,36 +10895,12 @@
         "MiBPerBlock": 2,
         "Cprompt": 144,
         "states": [
-          [
-            14,
-            12,
-            0
-          ],
-          [
-            14,
-            12,
-            9
-          ],
-          [
-            15,
-            13,
-            10
-          ],
-          [
-            16,
-            14,
-            0
-          ],
-          [
-            16,
-            14,
-            0
-          ],
-          [
-            0,
-            14,
-            11
-          ]
+          [14, 12, 0],
+          [14, 12, 9],
+          [15, 13, 10],
+          [16, 14, 0],
+          [16, 14, 0],
+          [0, 14, 11]
         ],
         "CresumeTokens": 161,
         "CresumeBlocks": 11
@@ -12016,53 +11029,51 @@
       "route": "ai/sionic-glm-b300",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sionic-glm-b300.tsx",
       "publicPath": "cs/ai/sionic-glm-b300",
-  "status": "rewritten-local-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 9
       },
-  "beforeDefects": [
-    "실측 사례의 내부 단계는 있었지만 전체 추론 배포 학습 경로에서 이 글의 역할과 다음 질문이 보이지 않음",
-    "클릭형 단계 그림이 키보드로 이동되지 않아 장면 흐름을 같은 방식으로 탐색할 수 없었음",
-    "JavaScript 비활성 상태에서 단계 그림의 첫 장면 외 전체 순서를 확인하기 어려웠음"
-  ],
-  "fixture": {
-    "assumed": false,
-    "environment": "SionicAI B300 TP8 · batch 1",
-    "reportedTarget": "약 600 tok/s",
-    "boundary": "kernel µs·bandwidth·acceptance length·tok/s는 해당 환경과 커밋에 귀속하며 공식 GLM 또는 B300 보장값이 아닙니다."
-  },
-  "stageAnchors": {
-    "0": "inference-deployment-parent-map",
-    "1": "roofline-to-implementation-picture",
-    "2": "decode-roofline",
-    "3": "kernel-and-runtime",
-    "4": "mtp-acceptance",
-    "5": "measurement-ledger",
-    "6": "production-boundary",
-    "return": "inference-deployment-map-return"
-  },
-  "sourceEvidence": [
-    "GLM-5.2 공식 모델 구성과 NVIDIA B300 공식 사양을 프로젝트 실측값과 구분한 기존 근거를 유지했습니다.",
-    "Roofline 논문과 MTP 논문은 각각 병목 해석과 일반 원리의 근거로만 사용했습니다.",
-    "PTX ISA 9.0·CUDA 13.0.2의 tcgen05 명령 근거와 SionicAI TP8 측정값의 귀속 범위를 분리했습니다."
-  ],
-      "validation": {
-    "semanticReview": "처리 속도를 활성 가중치 전송·커널·런타임 겹침·MTP acceptance로 나누고 각 수치의 장비·정밀도·배치·커밋 경계를 유지했습니다.",
-    "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 모델·커널·명령 식별자는 유지했습니다.",
-    "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
-    "keyboard": "첫 단계 그림에서 ArrowRight로 문제 장면으로 이동하며 자동 전환 없이 사용자가 고른 장면을 유지했습니다.",
-    "reducedMotion": "4.5초 뒤에도 첫 단계와 정지 상태를 유지하고 장면 전환 시간은 0으로 처리했습니다.",
-    "noScript": "390×844에서 live 장면 0, 첫 단계 그림의 배경→문제→아이디어→구현 순서와 결론을 확인했습니다.",
-    "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
-    "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      "beforeDefects": [
+        "실측 사례의 내부 단계는 있었지만 전체 추론 배포 학습 경로에서 이 글의 역할과 다음 질문이 보이지 않음",
+        "클릭형 단계 그림이 키보드로 이동되지 않아 장면 흐름을 같은 방식으로 탐색할 수 없었음",
+        "JavaScript 비활성 상태에서 단계 그림의 첫 장면 외 전체 순서를 확인하기 어려웠음"
+      ],
+      "fixture": {
+        "assumed": false,
+        "environment": "SionicAI B300 TP8 · batch 1",
+        "reportedTarget": "약 600 tok/s",
+        "boundary": "kernel µs·bandwidth·acceptance length·tok/s는 해당 환경과 커밋에 귀속하며 공식 GLM 또는 B300 보장값이 아닙니다."
       },
-      "remaining": [
-    "Batch 11 공개 배포 경로 확인"
-      ]
+      "stageAnchors": {
+        "0": "inference-deployment-parent-map",
+        "1": "roofline-to-implementation-picture",
+        "2": "decode-roofline",
+        "3": "kernel-and-runtime",
+        "4": "mtp-acceptance",
+        "5": "measurement-ledger",
+        "6": "production-boundary",
+        "return": "inference-deployment-map-return"
+      },
+      "sourceEvidence": [
+        "GLM-5.2 공식 모델 구성과 NVIDIA B300 공식 사양을 프로젝트 실측값과 구분한 기존 근거를 유지했습니다.",
+        "Roofline 논문과 MTP 논문은 각각 병목 해석과 일반 원리의 근거로만 사용했습니다.",
+        "PTX ISA 9.0·CUDA 13.0.2의 tcgen05 명령 근거와 SionicAI TP8 측정값의 귀속 범위를 분리했습니다."
+      ],
+      "validation": {
+        "semanticReview": "처리 속도를 활성 가중치 전송·커널·런타임 겹침·MTP acceptance로 나누고 각 수치의 장비·정밀도·배치·커밋 경계를 유지했습니다.",
+        "humanize": "부모 지도와 반환 문장을 자연스러운 한국어로 작성하고 모델·커널·명령 식별자는 유지했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서와 시각화 가로 넘침 0, console 오류 0",
+        "keyboard": "첫 단계 그림에서 ArrowRight로 문제 장면으로 이동하며 자동 전환 없이 사용자가 고른 장면을 유지했습니다.",
+        "reducedMotion": "4.5초 뒤에도 첫 단계와 정지 상태를 유지하고 장면 전환 시간은 0으로 처리했습니다.",
+        "noScript": "390×844에서 live 장면 0, 첫 단계 그림의 배경→문제→아이디어→구현 순서와 결론을 확인했습니다.",
+        "build": "production build 7,897 modules·정적 public route 2,086개·no-script 본문 115편 생성",
+        "browserEvidence": "output/playwright/ai-serving-batch-11-final/summary.json"
+      },
+      "remaining": ["Batch 11 공개 배포 경로 확인"]
     },
     {
       "route": "ai/skills-anatomy",
@@ -12144,73 +11155,18 @@
         "confirmedPrefixLength": 4,
         "computedPrefixLength": 4,
         "root": "R is the next target argmax, not the last already-confirmed input. It is selected from saved target logits but not yet appended to input_ids.",
-        "choices": [
-          [
-            0
-          ],
-          [
-            1
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ],
-          [
-            1,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "flat": [
-          "R",
-          "A",
-          "B",
-          "X",
-          "Y",
-          "X",
-          "Y"
-        ],
-        "positionIds": [
-          4,
-          5,
-          5,
-          6,
-          6,
-          6,
-          6
-        ],
+        "choices": [[0], [1], [0, 0], [0, 1], [1, 0], [1, 1]],
+        "flat": ["R", "A", "B", "X", "Y", "X", "Y"],
+        "positionIds": [4, 5, 5, 6, 6, 6, 6],
         "targetGreedy": {
           "afterR": "A",
           "afterRA": "Y",
           "afterRAY": "C"
         },
-        "selectedTreeIndices": [
-          0,
-          1,
-          4
-        ],
-        "selectedCacheSource": [
-          4,
-          5,
-          8
-        ],
-        "cacheDestination": [
-          4,
-          5,
-          6
-        ],
-        "committedOutput": [
-          "R",
-          "A",
-          "Y"
-        ],
+        "selectedTreeIndices": [0, 1, 4],
+        "selectedCacheSource": [4, 5, 8],
+        "cacheDestination": [4, 5, 6],
+        "committedOutput": ["R", "A", "Y"],
         "finalHistoryLength": 7,
         "finalComputedLength": 7,
         "nextRoot": "C is available through retained logits; this Medusa update has not appended it.",
@@ -12218,49 +11174,15 @@
         "maskOnesExcludingRoot": 10,
         "causal7MaskOnes": 28,
         "suffixCorpus": {
-          "fiveSequences": [
-            9,
-            0,
-            1,
-            4
-          ],
-          "oneSequence": [
-            9,
-            0,
-            1,
-            3
-          ],
-          "twoSequences": [
-            9,
-            0,
-            2,
-            4
-          ],
-          "context": [
-            99,
-            9,
-            0
-          ],
+          "fiveSequences": [9, 0, 1, 4],
+          "oneSequence": [9, 0, 1, 3],
+          "twoSequences": [9, 0, 2, 4],
+          "context": [99, 9, 0],
           "factor": 2,
           "budget": 4,
-          "expectedTokens": [
-            1,
-            4,
-            2,
-            4
-          ],
-          "expectedParents": [
-            -1,
-            0,
-            -1,
-            2
-          ],
-          "probabilities": [
-            0.75,
-            0.625,
-            0.25,
-            0.25
-          ],
+          "expectedTokens": [1, 4, 2, 4],
+          "expectedParents": [-1, 0, -1, 2],
+          "probabilities": [0.75, 0.625, 0.25, 0.25],
           "score": 1.875
         }
       },
@@ -12505,7 +11427,7 @@
       "route": "ai/tabular-data-synthesis",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-data-synthesis.tsx",
       "publicPath": "cs/ai/tabular-data-synthesis",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": true,
         "answerPointers": 3,
@@ -12546,9 +11468,8 @@
         "noJavaScript": "production 산출물에서 조작부와 동적 장면은 숨고 네 장면의 순서와 결론이 모두 보이는 것을 확인했습니다.",
         "build": "8GB Node heap 조건에서 production build와 정적 public route 2,086개 생성을 통과했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ],
+      "productionEvidence": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-data-augmentation-batch-22/summary.json",
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "visual-first-recursive-practice-map",
       "bodyFiles": [
@@ -12565,7 +11486,7 @@
       "route": "ai/tabular-deep-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-deep-learning.tsx",
       "publicPath": "cs/ai/tabular-deep-learning",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -12598,11 +11519,9 @@
         "browser1440": "부모 지도·첫 시각화·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
         "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
-        "production": "Batch24 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-tabular-models-batch-24/summary.json"
       },
-      "remaining": [
-        "Batch24 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "practice-track-map-and-visual-first-review",
       "bodyFiles": [
@@ -12686,7 +11605,7 @@
       "route": "ai/time-features",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/time-features.tsx",
       "publicPath": "cs/ai/time-features",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -12733,11 +11652,9 @@
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,911 modules·정적 public route 2,086개+404·no-script 본문 167편 exit0",
-        "production": "Batch25 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-temporal-data-batch-25/summary.json"
       },
-      "remaining": [
-        "Batch25 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "concept-track-map-and-forecast-row-trace-review",
       "bodyFiles": [
@@ -12782,11 +11699,7 @@
       ],
       "fixture": {
         "assumed": true,
-        "cities": [
-          "Seoul",
-          "Busan",
-          "Jeju"
-        ],
+        "cities": ["Seoul", "Busan", "Jeju"],
         "callMs": 400,
         "sequentialMs": 1200,
         "parallelExecutionMs": 400,
@@ -12797,12 +11710,7 @@
         "resultCount": 2,
         "resultTokens": 150,
         "partialInputTokens": 2654,
-        "backoffSeconds": [
-          0.5,
-          1,
-          2,
-          2
-        ]
+        "backoffSeconds": [0.5, 1, 2, 2]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -12849,9 +11757,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "actualBodyFile": "src/pages/articles/ai/tool-calling-lifecycle-and-costs.tsx",
       "contentHash": "efd44c700b9c16e938ff9407e3459eb23b74e9ba0319aff367643bdd8d7292c8",
       "preserved": [
@@ -12869,50 +11775,167 @@
       "route": "ai/training-pipeline",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/training-pipeline.tsx",
       "publicPath": "cs/ai/training-pipeline",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 6,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "학습 loop의 구성요소를 절별로 설명했지만 sample 하나가 optimizer update와 checkpoint를 거쳐 복원되는 전체 경로가 첫 화면에 없었음",
+        "batch iteration과 optimizer update, best artifact와 resume checkpoint의 차이가 긴 설명 뒤에 나타났음",
+        "시간 자료 글에서 이어지는 직속 부모와 전이 학습으로 넘어가는 같은 트랙의 위치가 보이지 않았음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "dataSnapshot": "train-v7",
+        "microBatch1": [41, 8],
+        "microBatch2": [17, 63],
+        "updateBefore": 120,
+        "updateAfter": 121,
+        "nextSampleAfterResume": 55
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      "stageAnchors": {
+        "0": "overview",
+        "1": "dataset",
+        "2": "loop",
+        "3": "checkpoint",
+        "4": "logging",
+        "parent": "학습 실행 지도",
+        "current": "학습 파이프라인"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.pytorch.org/docs/stable/data.html",
+          "application": "Dataset·sampler·collate·multi-process loading의 역할과 재현성 경계"
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/stable/amp.html",
+          "application": "autocast·GradScaler·unscale 뒤 gradient clipping 순서"
+        },
+        {
+          "href": "https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html",
+          "application": "배포용 weight와 학습 재개용 checkpoint의 저장 상태 구분"
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/stable/notes/randomness",
+          "application": "release·platform·RNG·DataLoader worker에 따른 재현성 보장 범위"
+        }
+      ],
+      "validation": {
+        "semanticReview": "train-v7의 sample 41·08과 17·63이 두 micro-batch로 들어와 gradient를 누적하고 update 120→121을 만든 뒤, RNG·sampler cursor를 복원해 다음 sample 55로 이어지는 실행을 한 사례로 추적했습니다.",
+        "humanize": "입력 상태·실행 상태·복구 상태·관측 근거를 먼저 그림으로 보여주고, 긴 문단과 목록형 문장을 나눠 읽는 순서를 정리했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,912 modules·정적 public route 2,086개+404·no-script 본문 169편 exit0",
+        "production": "Batch26 공개 배포 후 재검증 필요"
+      },
+      "remaining": ["Batch26 공개 경로 재검증"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "concept-track-map-and-training-state-trace-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/training-pipeline.tsx",
+        "src/pages/articles/ai/training-pipeline/Overview.tsx",
+        "src/pages/articles/ai/training-pipeline/Dataset.tsx",
+        "src/pages/articles/ai/training-pipeline/Loop.tsx",
+        "src/pages/articles/ai/training-pipeline/Checkpoint.tsx",
+        "src/pages/articles/ai/training-pipeline/Logging.tsx",
+        "src/pages/articles/ai/training-pipeline/viz/OverviewViz.tsx",
+        "src/pages/articles/ai/shared/TrainingRunFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/training-pipeline.tsx",
+      "preserved": [
+        "Dataset·sampler·collate와 loader wait 계산",
+        "gradient accumulation·AMP loss scaling 수식",
+        "연속 실행과 resume 실행의 parameter 차이 검증",
+        "분자·분모를 합산하는 distributed metric과 기존 공식 근거·연습문제"
       ]
     },
     {
       "route": "ai/transfer-learning-practice",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/transfer-learning-practice.tsx",
       "publicPath": "cs/ai/transfer-learning-practice",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 6,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "전이 학습의 정의와 수식이 fixed·partial·full 선택 흐름보다 먼저 나와 실제 의사결정을 늦게 확인했음",
+        "freezing·layer별 LR·domain shift가 같은 pretrained state에서 범위를 넓히는 한 비교 실험으로 연결되지 않았음",
+        "학습 파이프라인에서 넘겨받는 checkpoint와 다음 LR 묶음으로 이어지는 직속 경로가 보이지 않았음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "sharedConditions": [
+          "checkpoint",
+          "preprocessing",
+          "split",
+          "seed",
+          "search budget"
+        ],
+        "candidates": ["fixed", "partial", "full"],
+        "acceptance": "target gain과 source regression guardrail 동시 통과"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+      "stageAnchors": {
+        "0": "overview",
+        "1": "freezing",
+        "2": "lr-strategy",
+        "3": "feature-vs-finetune",
+        "4": "domain-shift",
+        "parent": "학습 실행 지도",
+        "current": "전이 학습"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html",
+          "application": "fixed feature extractor와 전체 fine-tuning의 두 출발점"
+        },
+        {
+          "href": "https://aclanthology.org/P18-1031/",
+          "application": "discriminative fine-tuning과 gradual unfreezing의 제안 범위"
+        },
+        {
+          "href": "https://aclanthology.org/2020.acl-main.740/",
+          "application": "DAPT·TAPT가 검증된 corpus와 task 범위"
+        },
+        {
+          "href": "https://www.jmlr.org/papers/v17/15-239.html",
+          "application": "gradient reversal 기반 domain-adversarial 학습의 목적과 검증 범위"
+        }
+      ],
+      "validation": {
+        "semanticReview": "같은 pretrained checkpoint에서 head-only 기준선을 만들고 upper block, 전체 model 순으로 범위를 넓힌 뒤 target 이득과 source regression을 함께 통과한 가장 작은 범위를 남기는 선택 경로로 정리했습니다.",
+        "humanize": "용어 정의보다 범위 선택 그림을 먼저 배치하고, 고정 상태·상대 update·paired gain·분포 변화의 가정을 각 계산 그림에서 먼저 확인하게 했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,912 modules·정적 public route 2,086개+404·no-script 본문 169편 exit0",
+        "production": "Batch26 공개 배포 후 재검증 필요"
+      },
+      "remaining": ["Batch26 공개 경로 재검증"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "practice-track-map-and-transfer-scope-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/transfer-learning-practice.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/Overview.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/Freezing.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/LRStrategy.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/FeatureVsFinetune.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/DomainShift.tsx",
+        "src/pages/articles/ai/transfer-learning-practice/viz/OverviewViz.tsx",
+        "src/pages/articles/ai/shared/TrainingRunFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/transfer-learning-practice.tsx",
+      "preserved": [
+        "fixed·partial·full 범위와 BatchNorm buffer 경계",
+        "layer별 relative update ratio와 paired seed gain 수식",
+        "covariate·label·concept shift의 확률 가정",
+        "ULMFiT·DAPT/TAPT·DANN 근거와 기존 연습문제"
       ]
     },
     {
@@ -12933,42 +11956,16 @@
       ],
       "fixture": {
         "assumed": true,
-        "candidates": [
-          "A",
-          "B",
-          "C",
-          "D",
-          "E"
-        ],
-        "local": [
-          0.8,
-          0.79,
-          0.78,
-          0.77,
-          0.76
-        ],
-        "public": [
-          0.76,
-          0.74,
-          0.75,
-          0.72,
-          0.73
-        ],
+        "candidates": ["A", "B", "C", "D", "E"],
+        "local": [0.8, 0.79, 0.78, 0.77, 0.76],
+        "public": [0.76, 0.74, 0.75, 0.72, 0.73],
         "tieTolerance": 0.001,
         "pairs": 10,
         "agreements": 8,
         "agreement": 0.8,
         "ladderEta": 0.01,
-        "ladderLossSequence": [
-          0.26,
-          0.24,
-          0.25
-        ],
-        "ladderReleased": [
-          0.26,
-          0.24,
-          0.24
-        ]
+        "ladderLossSequence": [0.26, 0.24, 0.25],
+        "ladderReleased": [0.26, 0.24, 0.24]
       },
       "stageAnchors": {
         "0": "small-case",
@@ -13009,9 +12006,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--validation-feedback-audit.json",
         "actualBody": "src/pages/articles/ai/validation-feedback-audit/ModernArticle.tsx",
@@ -13055,39 +12050,15 @@
       "fixture": {
         "assumed": true,
         "blockSize": 16,
-        "A_lengths": [
-          35,
-          38,
-          49
-        ],
+        "A_lengths": [35, 38, 49],
         "tables": [
-          [
-            7,
-            2,
-            9
-          ],
-          [
-            7,
-            2,
-            9
-          ],
-          [
-            7,
-            2,
-            9,
-            5
-          ]
+          [7, 2, 9],
+          [7, 2, 9],
+          [7, 2, 9, 5]
         ],
         "validPositionAfterGrowth": 37,
-        "physicalRead": [
-          9,
-          5
-        ],
-        "B_table": [
-          7,
-          2,
-          11
-        ],
+        "physicalRead": [9, 5],
+        "B_table": [7, 2, 11],
         "sharedPrefix": 32,
         "uniqueBlocksTwoRequests": 4,
         "queryCount": 10,
@@ -13214,10 +12185,7 @@
       "fixture": {
         "assumed": true,
         "budget": 5,
-        "runningDecode": [
-          1,
-          1
-        ],
+        "runningDecode": [1, 1],
         "prompt": 12,
         "chunkCap": 4,
         "actualChunk": 3,
@@ -13295,9 +12263,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "app 실제 검사에서 공유 evidence enum 오류만 6개 확인. root 수정 후 통합 tsc -b 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "bodyFiles": [
         "src/pages/articles/ai/vllm-scheduler/Overview.tsx",
         "src/pages/articles/ai/vllm-scheduler/QueueBatching.tsx",
@@ -13355,10 +12321,7 @@
           "queue": 10,
           "prefill": 30,
           "front": 5,
-          "ITL": [
-            8,
-            12
-          ],
+          "ITL": [8, 12],
           "TTFT": 45,
           "E2E": 65,
           "TPOT": 10
@@ -13421,9 +12384,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "bodyFiles": [
         "src/pages/articles/ai/vllm-serving/Overview.tsx",
         "src/pages/articles/ai/vllm-serving/EngineLoop.tsx",
@@ -13464,32 +12425,12 @@
         "예측 질문·절 번호·실제 코드 단계 anchor가 없음"
       ],
       "fixture": {
-        "targetProbabilities": [
-          "7/10",
-          "3/10"
-        ],
-        "draftProbabilities": [
-          "4/10",
-          "6/10"
-        ],
-        "proposal": [
-          "A",
-          "B",
-          "B",
-          "A"
-        ],
-        "uniform": [
-          ".6",
-          ".4",
-          ".8",
-          ".2"
-        ],
+        "targetProbabilities": ["7/10", "3/10"],
+        "draftProbabilities": ["4/10", "6/10"],
+        "proposal": ["A", "B", "B", "A"],
+        "uniform": [".6", ".4", ".8", ".2"],
         "K": 4,
-        "output": [
-          "A",
-          "B",
-          "A"
-        ],
+        "output": ["A", "B", "A"],
         "acceptedDraft": 2,
         "committedBeforeStop": 3,
         "historyBefore": 4,
@@ -13611,9 +12552,7 @@
         "productionCurrent": "GitHub Pages run 40095994311 success; commit 752af9c5. 390×844 공개 경로에서 HTTP 200, 현재 위치·반환 지도, overflow 0, console 오류 0을 확인했습니다."
       },
       "remaining": [],
-      "bodyFiles": [
-        "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx"
-      ],
+      "bodyFiles": ["src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx"],
       "actualBodyFile": "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx",
       "contentHash": "dba13c1c8a0b8341f669ed621fd31114881b9a84428d80e9326285b0555790ff",
       "evidenceFiles": [
@@ -13704,9 +12643,7 @@
         "formula": "strict require-explicit 통과",
         "typescript": "npx tsc -p tsconfig.app.json --noEmit exit0"
       },
-      "remaining": [
-        "root 통합 검토·전역 build·배포 검증"
-      ],
+      "remaining": ["root 통합 검토·전역 build·배포 검증"],
       "reviewEvidence": {
         "baseline": "/tmp/teach-all/baseline/ai--walk-forward-validation.json",
         "actualBody": "src/pages/articles/ai/walk-forward-validation/ModernArticle.tsx",
@@ -13779,7 +12716,7 @@
       "route": "ai/xgboost-tree-objective",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/xgboost-tree-objective.tsx",
       "publicPath": "cs/ai/xgboost-tree-objective",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -13817,11 +12754,9 @@
         "browser1440": "부모 지도·첫 시각화·키보드·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
         "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
-        "production": "Batch24 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40126559898 success @ ead61f61; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-tabular-models-batch-24/summary.json"
       },
-      "remaining": [
-        "Batch24 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "recursive-family-map-and-visual-first-review",
       "bodyFiles": [

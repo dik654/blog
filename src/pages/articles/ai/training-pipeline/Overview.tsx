@@ -4,8 +4,13 @@ import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">학습 파이프라인은 batch 계산을 재현 가능한 run으로 만드는 시스템입니다</h2>
+    <section id="overview" className="mb-16 scroll-mt-20" data-teach-level="1">
+      <h2 className="mb-6 text-2xl font-bold">
+        학습 파이프라인은 batch 계산을 재현 가능한 run으로 만드는 시스템입니다
+      </h2>
+      <div className="not-prose my-8">
+        <OverviewViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           PyTorch 학습의 중심 계산은 짧습니다. Batch를 model에 넣고 loss를 구한
@@ -16,28 +21,33 @@ export default function Overview() {
           집계했는지가 run의 결과를 바꿉니다.
         </p>
         <p>
-          따라서 한 run은 <strong>data snapshot·split·transform</strong>,
-          <strong> model·optimizer·update clock</strong>, <strong>RNG·sampler·checkpoint</strong>,
-          <strong> metric·environment·artifact lineage</strong>를 함께 묶은 실행입니다.
-          이 중 하나를 잃으면 같은 설정을 다시 실행하거나 장애 직전에서 이어
-          학습했다는 주장을 검증할 수 없습니다.
+          따라서 한 run은 data snapshot과 split, transform을 입력 상태로
+          묶습니다. 여기에 model과 optimizer, update clock을 실행 상태로
+          기록합니다.
         </p>
         <p>
-          Forward·backpropagation과 optimizer의 수학은 <Link to="/cs/ai/backprop-optimization">역전파 글</Link>과
-          <Link to="/cs/ai/optimizers"> optimizer 글</Link>이 소유합니다. 이 글에서는
-          그 계산을 둘러싼 data·phase·resume·observation contract에 집중합니다.
+          RNG와 sampler 위치, checkpoint, metric, 실행 환경과 산출물 계보도 같은
+          실행에 속합니다. 이 중 하나를 잃으면 같은 설정을 다시 실행하거나 장애
+          직전에서 이어 학습했다는 주장을 검증할 수 없습니다.
+        </p>
+        <p>
+          Forward·backpropagation과 optimizer의 수학은{" "}
+          <Link to="/cs/ai/backprop-optimization">역전파 글</Link>과
+          <Link to="/cs/ai/optimizers"> optimizer 글</Link>이 소유합니다. 이
+          글에서는 그 계산을 둘러싼 data·phase·resume·observation contract에
+          집중합니다.
         </p>
       </div>
 
       <ContentBoundary article="training-pipeline" />
 
-      <div className="not-prose my-8"><OverviewViz /></div>
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          뒤에서는 sample이 batch가 되는 경로를 먼저 고정한 다음 optimizer update가 일어나는 clock과 validation의 read-only 경계를 분리합니다.
-          이어서 best artifact와 resume checkpoint를 구분하고 마지막에는 중단 없는 실행과 저장 후 재개한 실행을 실제로 비교합니다. 저장 파일이 존재한다는 사실은
-          아직 복구가 된다는 증거가 아닙니다.
+          뒤에서는 sample이 batch가 되는 경로를 먼저 고정한 다음 optimizer
+          update가 일어나는 clock과 validation의 read-only 경계를 분리합니다.
+          이어서 best artifact와 resume checkpoint를 구분하고 마지막에는 중단
+          없는 실행과 저장 후 재개한 실행을 실제로 비교합니다. 저장 파일이
+          존재한다는 사실은 아직 복구가 된다는 증거가 아닙니다.
         </p>
       </div>
     </section>
