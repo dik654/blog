@@ -86,12 +86,20 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   );
 }
 
-function FlowArrow({ active, label }: { active: boolean; label: string }) {
+function FlowArrow({
+  reached,
+  moving,
+  label,
+}: {
+  reached: boolean;
+  moving: boolean;
+  label: string;
+}) {
   return (
     <div className="grid min-w-0 shrink-0 place-items-center gap-1 py-1 lg:w-8">
       <svg viewBox="0 0 54 22" aria-hidden className="h-7 w-11 max-w-full rotate-90 lg:rotate-0">
-        <motion.path d="M3 11h41" fill="none" stroke="currentColor" strokeWidth="1.25" strokeDasharray="5 4" className={active ? "text-primary" : "text-border"} animate={active ? { strokeDashoffset: [9, 0] } : undefined} transition={{ duration: .75, repeat: Infinity, ease: "linear" }} />
-        <path d="m39 5 10 6-10 6" fill="none" stroke="currentColor" strokeWidth="1.25" className={active ? "text-primary" : "text-border"} />
+        <motion.path d="M3 11h41" fill="none" stroke="currentColor" strokeWidth="1.25" strokeDasharray="5 4" className={reached ? "text-primary" : "text-border"} animate={moving ? { strokeDashoffset: [9, 0] } : undefined} transition={{ duration: .75, repeat: Infinity, ease: "linear" }} />
+        <path d="m39 5 10 6-10 6" fill="none" stroke="currentColor" strokeWidth="1.25" className={reached ? "text-primary" : "text-border"} />
       </svg>
       <span className="max-w-full break-words text-center font-mono text-[9px] font-bold text-muted-foreground">{label}</span>
     </div>
@@ -99,28 +107,65 @@ function FlowArrow({ active, label }: { active: boolean; label: string }) {
 }
 
 function LearningViz({ id, eyebrow, title, description, scenes, edgeLabels, notes, note }: LearningVizProps) {
-  const controls = useAnimatedScenes(scenes.length, 2100);
+  const controls = useAnimatedScenes(scenes.length, 3200, { loop: false });
   return (
     <VizFrame eyebrow={eyebrow} title={title} description={description} note={note}>
       <div data-viz={id} tabIndex={0} role="group" aria-label={`${title} animation`} onKeyDown={controls.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
-        <div data-viz-canvas className="grid min-w-0 gap-2 lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-center">
-          {scenes.map((scene, index) => {
-            const selected = index === controls.active;
-            const reached = index <= controls.active;
-            return <div key={scene.label} className="contents">
-              <motion.div className={`grid min-w-0 place-items-center border px-2 py-4 ${selected ? "border-primary bg-primary/[.07]" : reached ? "border-primary/40 bg-primary/[.025]" : "border-border bg-background"}`} animate={selected && controls.playing ? { y: [0,-3,0] } : undefined} transition={{ duration: .9, repeat: Infinity }}>
-                <Glyph shape={scene.shape} active={selected} />
-                <strong className="mt-2 text-center text-sm leading-5">{scene.label}</strong>
-                <p className="mt-1 max-w-44 text-center text-[11px] leading-5 text-muted-foreground">{scene.caption}</p>
-              </motion.div>
-              {index < scenes.length - 1 ? <FlowArrow active={controls.active > index} label={edgeLabels[index]} /> : null}
-            </div>;
-          })}
-        </div>
-        <div className="mt-5 border-l border-primary/60 pl-4">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[.14em] text-primary">CUT {String(controls.active + 1).padStart(2,"0")}</p>
-          <p className="mt-1 text-sm font-bold">{scenes[controls.active].label}</p>
-          <p className="mt-1 text-xs leading-6 text-muted-foreground">{notes[controls.active]}</p>
+        <div className="flex min-h-0 flex-1 flex-col justify-center py-1">
+          <div data-viz-canvas className="hidden min-w-0 gap-2 lg:grid lg:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)_2rem_minmax(0,1fr)] lg:items-center">
+            {scenes.map((scene, index) => {
+              const selected = index === controls.active;
+              const reached = index <= controls.active;
+              return <div key={scene.label} className="contents">
+                <motion.div className={`grid min-w-0 place-items-center border px-2 py-4 ${selected ? "border-primary bg-primary/[.07]" : reached ? "border-primary/40 bg-primary/[.025]" : "border-border bg-background"}`} animate={selected && controls.playing ? { y: [0,-3,0] } : undefined} transition={{ duration: .9, repeat: Infinity }}>
+                  <Glyph shape={scene.shape} active={selected && controls.playing && !controls.reducedMotion} />
+                  <strong className="mt-2 text-center text-sm leading-5">{scene.label}</strong>
+                  <p className="mt-1 max-w-44 text-center text-[11px] leading-5 text-muted-foreground">{scene.caption}</p>
+                </motion.div>
+                {index < scenes.length - 1 ? (
+                  <FlowArrow
+                    reached={controls.active > index}
+                    moving={controls.playing && controls.active === index + 1}
+                    label={edgeLabels[index]}
+                  />
+                ) : null}
+              </div>;
+            })}
+          </div>
+          <div data-viz-canvas className="grid min-w-0 place-items-center lg:hidden">
+            <motion.div
+              key={`${id}-${controls.active}`}
+              className="grid w-full min-w-0 place-items-center border border-primary bg-primary/[.07] px-4 py-4"
+              animate={controls.playing ? { y: [0, -3, 0] } : undefined}
+              transition={{ duration: .9, repeat: Infinity }}
+            >
+              <Glyph
+                shape={scenes[controls.active].shape}
+                active={controls.playing && !controls.reducedMotion}
+              />
+              <p className="mt-1 text-[10px] font-bold text-primary">
+                {controls.active + 1} / {scenes.length}
+              </p>
+              <strong className="mt-1 text-center text-base leading-6">
+                {scenes[controls.active].label}
+              </strong>
+              <p className="mt-1 max-w-64 text-center text-xs leading-5 text-muted-foreground">
+                {scenes[controls.active].caption}
+              </p>
+            </motion.div>
+          </div>
+          <ol className="sr-only">
+            {scenes.map((scene, index) => (
+              <li key={`${scene.label}-text`}>
+                {index + 1}. {scene.label}: {scene.caption}. {notes[index]}
+              </li>
+            ))}
+          </ol>
+          <div className="mt-5 border-l border-primary/60 pl-4">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[.14em] text-primary">단계 {String(controls.active + 1).padStart(2,"0")}</p>
+            <p className="mt-1 text-sm font-bold">{scenes[controls.active].label}</p>
+            <p className="mt-1 text-xs leading-6 text-muted-foreground">{notes[controls.active]}</p>
+          </div>
         </div>
         <AnimatedSceneControls labels={scenes.map((scene) => scene.label)} active={controls.active} playing={controls.playing} reducedMotion={controls.reducedMotion} setActive={controls.setActive} setPlaying={controls.setPlaying} />
       </div>
@@ -129,57 +174,57 @@ function LearningViz({ id, eyebrow, title, description, scenes, edgeLabels, note
 }
 
 export function AutoencoderFoundationViz() {
-  return <LearningViz id="autoencoder-foundation-flow" eyebrow="Reconstruction path" title="입력은 좁은 통로를 지나 다시 같은 형태로 돌아옵니다" description="각 장면은 값을 하나씩 추가합니다. 마지막에야 loss와 failure를 조합합니다." scenes={[
-    { label: "Input x", caption: "복원할 관측값의 shape", shape: "sample" },
-    { label: "Latent z", caption: "decoder가 볼 수 있는 유일한 중간값", shape: "bottleneck" },
-    { label: "Reconstruction x̂", caption: "input과 같은 shape의 예측", shape: "sample" },
-    { label: "Validation", caption: "복원과 representation을 따로 평가", shape: "gauge" },
-  ]} edgeLabels={["encode", "decode", "compare"]} notes={[
-    "먼저 sample·feature axis와 값 범위를 고정합니다. Input이 target이라는 사실은 아직 학습된 representation을 뜻하지 않습니다.",
-    "Latent는 decoder에 전달되는 interface입니다. Undercomplete는 coordinate 수를 줄이지만 bit 수와 semantic 의미까지 자동으로 정하지 않습니다.",
-    "Decoder는 encoder의 역함수가 아니라 z에서 x̂를 만들도록 함께 학습된 별도 함수입니다.",
-    "Training loss와 held-out reconstruction, downstream probe를 나눠 identity 복사와 유용한 표현을 구분합니다.",
-  ]} note="공간 제약·corruption·sparsity는 서로 다른 방법입니다. 이 Viz는 가장 작은 deterministic 계약만 보여 줍니다." />;
+  return <LearningViz id="autoencoder-foundation-flow" eyebrow="네 숫자의 복원 경로" title="네 자리를 두 자리로 줄였다가 다시 네 자리로 복원합니다" description="재생하거나 단계를 눌러 같은 숫자가 어디에서 줄고, 복원되고, 오차가 되는지 따라가세요. 모든 수치는 계산 경로를 위한 가정입니다." scenes={[
+    { label: "입력 x", caption: "[1.0, 0.0, 0.8, 0.2]", shape: "sample" },
+    { label: "중간값 z", caption: "[0.9, 0.1] 두 자리만 전달", shape: "bottleneck" },
+    { label: "복원 x̂", caption: "[0.9, 0.1, 0.9, 0.1]", shape: "sample" },
+    { label: "오차 MSE", caption: "네 제곱 오차의 평균 0.01", shape: "gauge" },
+  ]} edgeLabels={["두 값으로", "네 값으로", "원본과 비교"]} notes={[
+    "복원할 자료는 네 자리 x=[1.0, 0.0, 0.8, 0.2]입니다. 이 단계에서는 부품 이름보다 입력의 자리 수와 값을 먼저 고정합니다.",
+    "첫째·셋째 자리의 평균은 0.9, 둘째·넷째 자리의 평균은 0.1입니다. 다음 계산에는 이 두 값만 넘어갑니다.",
+    "두 값을 원래 묶음의 자리에 되돌리면 x̂=[0.9, 0.1, 0.9, 0.1]이 됩니다. 실제 학습에서는 두 함수의 parameter를 loss로 함께 고칩니다.",
+    "원본과 복원의 차이는 [0.1, −0.1, −0.1, 0.1]입니다. 각각 제곱하면 0.01이고, 네 값을 평균내도 MSE는 0.01입니다.",
+  ]} note="이 그림의 평균내기와 되돌리기는 학습 결과가 아니라 경로를 셀 수 있게 만든 교육용 가정입니다. 실제 autoencoder는 encoder와 decoder의 parameter를 데이터에서 학습합니다." />;
 }
 
 export function LinearPcaViz() {
-  return <LearningViz id="linear-autoencoder-pca-flow" eyebrow="Rank-k geometry" title="흩어진 점을 가장 잘 보존하는 k차원 평면을 고릅니다" description="Centering과 linear rank 제한이 있을 때만 autoencoder 문제가 PCA 부분공간으로 접힙니다." scenes={[
-    { label: "Centered data", caption: "feature mean을 원점으로 이동", shape: "sample" },
-    { label: "Rank-k map", caption: "k개 방향만 통과", shape: "bottleneck" },
-    { label: "Principal plane", caption: "squared error가 최소인 부분공간", shape: "plane" },
-    { label: "Boundary check", caption: "nonlinearity·loss·bias 확인", shape: "gauge" },
-  ]} edgeLabels={["center", "optimize", "qualify"]} notes={[
-    "Mean을 빼지 않으면 원점을 지나는 projection 문제와 affine reconstruction 문제가 섞입니다.",
-    "Linear encoder와 decoder의 합성은 rank k 이하입니다. 여기서 bottleneck이 정리의 admissible map을 제한합니다.",
-    "Eckart–Young 정리가 top-k singular subspace의 최소 Frobenius error를 줍니다. Basis 자체는 회전·scale로 유일하지 않습니다.",
-    "ReLU·BCE·uncentered data·다른 regularizer가 들어오면 같은 정리를 그대로 인용하지 않습니다.",
-  ]} note="같아지는 것은 최적 reconstruction subspace입니다. 특정 latent coordinate 이름이나 nonlinear representation 전체가 PCA와 같다는 뜻이 아닙니다." />;
+  return <LearningViz id="linear-autoencoder-pca-flow" eyebrow="같은 네 숫자 · 다른 묶음" title="두 점을 중심으로 옮기면 한 직선만 남습니다" description="앞 글의 네 숫자를 두 개의 2차원 점으로 묶어 평균, 중심화, rank-1 복원을 차례로 계산합니다." scenes={[
+    { label: "두 점", caption: "A=(1.0,0.0) · B=(0.8,0.2)", shape: "sample" },
+    { label: "평균 빼기", caption: "μ=(0.9,0.1)", shape: "sample" },
+    { label: "한 직선", caption: "x₂=−x₁ 방향만 보존", shape: "plane" },
+    { label: "rank-1 복원", caption: "두 점 모두 오차 0", shape: "gauge" },
+  ]} edgeLabels={["중심으로", "방향 선택", "다시 복원"]} notes={[
+    "앞 글의 x=[1.0,0.0,0.8,0.2]를 A=(1.0,0.0), B=(0.8,0.2) 두 sample로 읽습니다.",
+    "두 점의 평균은 μ=(0.9,0.1)입니다. 평균을 빼면 A′=(0.1,−0.1), B′=(−0.1,0.1)이 됩니다.",
+    "중심화한 두 점은 x₂=−x₁인 한 직선 위에 있습니다. rank-1 통로가 이 방향을 남기면 버리는 방향의 크기는 0입니다.",
+    "주성분 직선에 투영한 두 점은 그대로이므로 이 예의 rank-1 제곱 복원 오차는 0입니다. 일반 자료에서는 버린 방향만큼 오차가 남습니다.",
+  ]} note="이 결론에는 중심화·선형 encoder와 decoder·rank 제한·제곱 오차가 모두 필요합니다. 같아지는 것은 최적 부분공간이며 중간 좌표의 이름과 값까지 유일해지는 것은 아닙니다." />;
 }
 
 export function DenoisingMaskedViz() {
-  return <LearningViz id="denoising-masked-autoencoder-flow" eyebrow="Corruption curriculum" title="먼저 무엇을 숨길지 정하고, 그 다음 clean target을 복원합니다" description="Noise와 mask를 input transformation으로 먼저 그린 뒤 encoder·decoder objective를 조합합니다." scenes={[
-    { label: "Clean x", caption: "복원해야 할 원본 target", shape: "sample" },
-    { label: "Corrupt x̃", caption: "noise·dropout·mask 규칙", shape: "mask" },
-    { label: "Visible evidence", caption: "encoder가 실제로 보는 부분", shape: "bottleneck" },
-    { label: "Missing content", caption: "decoder가 원본과 비교", shape: "sample" },
-  ]} edgeLabels={["sample q", "encode", "reconstruct"]} notes={[
-    "Clean sample x는 supervision target입니다. 별도 class label 없이도 원본 좌표가 정답을 제공합니다.",
-    "q(x̃|x)가 어떤 정보를 지우는지 먼저 명시합니다. Corruption이 task signal까지 없애면 좋은 objective가 아닙니다.",
-    "Denoising AE는 손상된 전체 입력을, MAE는 visible patch만 encoder에 보내는 asymmetric 계산을 쓸 수 있습니다.",
-    "Loss는 clean 또는 missing region과 비교합니다. 75% image masking은 특정 MAE recipe이지 모든 modality의 상수가 아닙니다.",
-  ]} note="Denoising과 masking은 단순 data augmentation 이름이 아니라 encoder input과 target을 다르게 만드는 학습 계약입니다." />;
+  return <LearningViz id="denoising-masked-autoencoder-flow" eyebrow="같은 원본 · 다른 입력" title="셋째 값을 숨겨도 정답에는 0.8이 남아 있습니다" description="손상 규칙, encoder가 보는 값, loss가 비교하는 값을 한 줄에서 분리합니다." scenes={[
+    { label: "원본 x", caption: "[1.0, 0.0, 0.8, 0.2]", shape: "sample" },
+    { label: "손상본 x̃", caption: "[1.0, 0.0, □, 0.2]", shape: "mask" },
+    { label: "보이는 세 자리", caption: "1.0 · 0.0 · 0.2", shape: "bottleneck" },
+    { label: "원본과 비교", caption: "숨긴 정답은 0.8", shape: "sample" },
+  ]} edgeLabels={["셋째 값 가림", "encoder 입력", "loss 계산"]} notes={[
+    "원본 x=[1.0,0.0,0.8,0.2]는 복원 결과와 비교할 깨끗한 정답으로 남겨 둡니다.",
+    "설명용 mask 규칙은 셋째 값 0.8을 숨겨 x̃=[1.0,0.0,□,0.2]를 만듭니다. 어느 값을 얼마나 자주 숨길지까지 규칙에 포함해야 합니다.",
+    "Denoising AE는 표시가 들어간 손상본 전체를 볼 수 있고, MAE는 보이는 위치만 무거운 encoder에 보낼 수 있습니다. 두 방식의 계산 범위는 같지 않습니다.",
+    "Denoising loss는 깨끗한 원본 전체와 비교할 수 있고, MAE loss는 숨긴 셋째 위치에 집중할 수 있습니다. 어느 쪽이든 입력의 빈칸을 정답으로 삼지는 않습니다.",
+  ]} note="이 그림은 셋째 값을 가리는 교육용 가정입니다. 실제 손상 규칙은 자료의 구조와 이후 과제에 맞게 검증해야 하며, 이미지에서 쓰인 75% 비율을 다른 자료에 그대로 적용하지 않습니다." />;
 }
 
 export function ReconstructionAnomalyViz() {
-  return <LearningViz id="reconstruction-anomaly-flow" eyebrow="Operational decision" title="복원 오차는 점수이고, anomaly 판정은 별도 calibration입니다" description="Sample distance에서 바로 alarm으로 점프하지 않고 validation distribution과 threshold를 거칩니다." scenes={[
-    { label: "Reconstruct", caption: "x와 x̂를 같은 좌표로 비교", shape: "sample" },
-    { label: "Score s(x)", caption: "sample별 거리 하나로 reduction", shape: "gauge" },
-    { label: "Threshold τ", caption: "false alarm·recall로 선택", shape: "plane" },
-    { label: "Monitor drift", caption: "배포 score 분포를 재검증", shape: "gauge" },
-  ]} edgeLabels={["reduce", "calibrate", "operate"]} notes={[
-    "Feature scale과 missing-value policy를 고정한 뒤 sample별 unreduced reconstruction을 계산합니다.",
-    "큰 score는 낯섦의 후보일 뿐 anomaly label이 아닙니다. 정상과 이상 score가 실제로 분리되는지 봅니다.",
-    "τ는 training loss가 자동으로 주지 않습니다. Labeled validation에서 false-positive cost와 recall을 함께 선택합니다.",
-    "정상 분포가 바뀌거나 decoder가 anomaly도 잘 복원하면 calibration이 무너집니다. score drift와 delayed label을 추적합니다.",
-  ]} note="운영 계약은 model checkpoint·preprocessing·score reduction·threshold provenance·drift alarm을 하나의 receipt로 묶습니다." />;
+  return <LearningViz id="reconstruction-anomaly-flow" eyebrow="실무 흐름 · 아직 미측정" title="점수를 만든 뒤 검증하고, 별도 판정 버전으로 배포합니다" description="정상 100건과 원인이 확인된 이상 20건은 실험 설계를 설명하는 예시입니다. 실제 성능 수치가 아닙니다." scenes={[
+    { label: "점수 계산", caption: "model v12 · scaler v4 · s(x)", shape: "sample" },
+    { label: "검증 자료", caption: "정상 100 · 이상 20 (가정)", shape: "gauge" },
+    { label: "판정 버전", caption: "threshold v7 · τ 후보", shape: "plane" },
+    { label: "그림자 배포", caption: "경보만 기록 · 실패 시 v6", shape: "gauge" },
+  ]} edgeLabels={["같은 계약으로", "비용과 비교", "단계적 적용"]} notes={[
+    "Model 담당자는 checkpoint·feature schema·scaler·missing policy를 묶어 sample별 score를 재현할 수 있게 합니다. 이 단계는 anomaly 여부를 결정하지 않습니다.",
+    "검증 자료 담당자는 정상 100건과 원인이 확인된 이상 20건 같은 독립 fixture를 잠급니다. 숫자는 절차를 위한 가정이며 관측 결과가 아닙니다.",
+    "서비스 정책 담당자는 false alarm 비용과 놓친 이상 비용을 비교해 threshold 후보를 버전으로 남깁니다. Model weight가 같아도 threshold가 바뀌면 다른 판정 버전입니다.",
+    "운영 담당자는 먼저 실제 조치 없이 경보만 기록합니다. 합의한 한계를 넘으면 threshold v6 또는 기존 규칙 기반 경보로 되돌립니다.",
+  ]} note="[A] 제안 흐름입니다. [M] precision·recall·false alarms/day·drift는 실제 fixture와 그림자 배포에서 측정하기 전까지 비워 둡니다." />;
 }

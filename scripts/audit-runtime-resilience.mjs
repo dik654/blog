@@ -42,6 +42,15 @@ const checks = {
     staticRoutes.includes("renderToStaticMarkup") &&
     staticRoutes.includes('startsWith("cloud-kubernetes")') &&
     staticRoutes.includes('id="noscript-article"'),
+  reviewedArticleNoScriptRegistry:
+    staticRoutes.includes("noScriptArticleRoutes") &&
+    [
+      "ai/autoencoder",
+      "ai/linear-autoencoder-pca",
+      "ai/denoising-masked-autoencoders",
+      "ai/reconstruction-anomaly-detection",
+    ].every((route) => staticRoutes.includes(`"${route}"`)) &&
+    staticRoutes.includes("noScriptArticleRoutes.has(article.route)"),
   katexCssLoaded: main.includes('katex/dist/katex.min.css'),
   katexRenderStatus:
     math.includes('html.includes("katex-error")') &&
