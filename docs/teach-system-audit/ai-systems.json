@@ -11775,7 +11775,7 @@
       "route": "ai/training-pipeline",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/training-pipeline.tsx",
       "publicPath": "cs/ai/training-pipeline",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -11830,9 +11830,9 @@
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,912 modules·정적 public route 2,086개+404·no-script 본문 169편 exit0",
-        "production": "Batch26 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40129035881 success @ 753f54be; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-training-run-batch-26/summary.json"
       },
-      "remaining": ["Batch26 공개 경로 재검증"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "concept-track-map-and-training-state-trace-review",
       "bodyFiles": [
@@ -11857,7 +11857,7 @@
       "route": "ai/transfer-learning-practice",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/transfer-learning-practice.tsx",
       "publicPath": "cs/ai/transfer-learning-practice",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -11915,9 +11915,9 @@
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-training-run-batch-26/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
         "build": "Vite 7.3.1·7,912 modules·정적 public route 2,086개+404·no-script 본문 169편 exit0",
-        "production": "Batch26 공개 배포 후 재검증 필요"
+        "production": "GitHub Pages run 40129035881 success @ 753f54be; 공개 390/1440·키보드·reduced-motion·JavaScript 비활성 재검증: output/playwright/ai-training-run-batch-26/summary.json"
       },
-      "remaining": ["Batch26 공개 경로 재검증"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "practice-track-map-and-transfer-scope-review",
       "bodyFiles": [
@@ -12798,9 +12798,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 59,
-    "rewritten-production-verified": 58,
-    "unreviewed": 69
+    "rewritten-local-verified": 58,
+    "rewritten-production-verified": 80,
+    "unreviewed": 48
   },
   "localValidationSummary": {
     "rewritten": 117,
