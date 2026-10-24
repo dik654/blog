@@ -3407,7 +3407,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/stablecoin-overview": "c2364153df3233b8",
   "semiconductors/bands-and-doping": "f75aa1683e9970ef",
   "ai/agent-failure-modes-and-recovery": "9e9140ad3ac52646",
-  "ai/context-instruction-boundaries": "77fed74fd97f4a8d",
+  "ai/context-instruction-boundaries": "ea32ca6a62899538",
   "ai/llm-harness": "66b6a35cf8234076",
   "ai/tool-calling-lifecycle-and-costs": "a07de9803a7bd5eb",
   "blockchain/bft-theory": "d16a5a5ade30b630",
@@ -3585,7 +3585,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "inference-from-sources/the-gap-was-made": "6224616aee8d25d8",
   "inference-from-sources/naming-the-past": "58060787a5f1d221",
 
-"ai/agent-memory-lifecycle":"53d52e9edc21bccf",
+"ai/agent-memory-lifecycle":"04074d70c07ae9de",
 "ai/expert-parallelism-moe-systems":"8ec999e3890d800b",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"715409b280659501",
 "ai/flash-attention-io-aware-kernel":"6358bc6072ecfe8f",

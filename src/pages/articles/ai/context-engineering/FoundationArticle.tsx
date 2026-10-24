@@ -3,12 +3,15 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { ContextStateViz } from "./viz/ModernContextEngineeringViz";
+import { ContextStatePathLocator, ContextStatePathMapReturn } from "../shared/ContextStatePathLocator";
 
 export default function ContextEngineeringFoundationArticle() {
   return (
     <div className="space-y-16">
+      <ContextStatePathLocator current="state" />
       <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">Context는 저장된 정보 전체가 아니라 이번 generation이 실제로 읽는 token state입니다</h2>
+        <h2 className="mb-6 text-2xl font-bold">Context는 이번 생성의 입력 상태입니다</h2>
+        <ContextStateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             직원 A가 “올해 연차 승인 규칙은 무엇인가요?”라고 물었습니다. 저장소에는
@@ -28,7 +31,6 @@ export default function ContextEngineeringFoundationArticle() {
             단계이고, 권한과 freshness는 model 추측 전에 selector가 해결해야 합니다.
           </p>
         </div>
-        <ContextStateViz />
         <ContentBoundary article="context-engineering" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>Model weight에는 학습된 일반 패턴이 들어 있고, document store에는 필요할지 모르는 자료가 있습니다. 그러나 현재 답을 만들 때 model이 직접 읽는 것은 request에 직렬화된 system instruction·user task·retrieved fragment·message history·tool result뿐입니다. 이 유한한 token 집합을 <strong>inference context state</strong>라고 부릅니다.</p>
@@ -47,7 +49,7 @@ export default function ContextEngineeringFoundationArticle() {
       </section>
 
       <section id="context-state" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Context state는 source를 고른 뒤 순서를 가진 message로 직렬화합니다</h2>
+        <h2 className="mb-5 text-2xl font-bold">후보는 순서 있는 메시지가 됩니다</h2>
         <ExplainedFormula
           question="여러 저장소의 정보가 어떻게 이번 generation의 context가 되나요?"
           idea={<p>
@@ -73,7 +75,7 @@ export default function ContextEngineeringFoundationArticle() {
       </section>
 
       <section id="curation" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">Curation lifecycle은 select→inject→compact→isolate 순서로 반복됩니다</h2>
+        <h2 className="mb-5 text-2xl font-bold">Context는 네 단계로 다듬습니다</h2>
         <TermBreakdown
           title="Context curation의 네 동사"
           items={[
@@ -86,7 +88,7 @@ export default function ContextEngineeringFoundationArticle() {
       </section>
 
       <section id="boundary" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">다음 네 글은 context 후보가 실제 판단 근거가 되는 각 경계를 분리합니다</h2>
+        <h2 className="mb-5 text-2xl font-bold">다음 글은 네 경계를 나눠 봅니다</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p>Instruction과 data의 권한 분리, retrieval fragment의 provenance, memory의 수명과 compaction, token budget·position·cache는 서로 다른 실패 owner입니다. 이 기초 글은 네 문제를 한꺼번에 최적화하지 않고 context state와 lifecycle까지만 소유합니다.</p></div>
         <div id="paper-anthropic-context-engineering" className="not-prose mt-8 scroll-mt-24">
           <CitationBlock type="paper" citeKey={1} source="Anthropic — Effective context engineering for AI agents" href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">
@@ -94,6 +96,7 @@ export default function ContextEngineeringFoundationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <ContextStatePathMapReturn current="state" />
     </div>
   );
 }

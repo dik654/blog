@@ -6,11 +6,14 @@ import { CitationBlock } from "@/components/ui/citation";
 import MemoryTraceViz from "./MemoryTraceViz";
 import { Link } from "react-router-dom";
 import PaperReading from "../research-audit-sources/PaperReading";
+import { ContextStatePathLocator, ContextStatePathMapReturn } from "../shared/ContextStatePathLocator";
 
 export default function AgentMemoryLifecycleArticle() {
   return <article className="space-y-16">
+    <ContextStatePathLocator current="memory" />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">배포를 이어받은 새 session이 같은 결정을 복원할 수 있을까요?</h2>
+      <MemoryTraceViz/>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">첫 session에서 결제 migration을 중단했습니다. 실패한 test는 <code>payment-17</code>입니다. 이미 만든 backup은 <code>artifact://bk-42</code>입니다. 다음 안전한 행동은 schema 수정입니다. 새 session에는 긴 대화 대신 여섯 줄짜리 요약만 전달됩니다.</p>
         <p>설명을 읽기 전에 세 결과를 예측해 보세요.</p>
@@ -21,7 +24,6 @@ export default function AgentMemoryLifecycleArticle() {
         </ol>
         <p>첫째는 보장할 수 없고, 둘째는 수명이 다르며, 셋째는 삭제와 압축이 서로 다른 연산입니다. 이 차이를 다루기 위해 현재 run의 goal과 failed test, 여러 session에 재사용할 사용자 선호, 긴 tool log, versioned procedure를 서로 다른 application state로 둡니다. 모두 ‘memory’라는 한 배열에 넣으면 stale fact·privacy·resume failure가 생깁니다.</p>
       </div>
-      <MemoryTraceViz/>
       <TermBreakdown title="수명에 따라 네 저장소로 나누기" items={[{term:"Working state",description:"현재 objective·decision·unresolved issue·next action입니다.",example:"지금 수정 중인 route와 실패한 mobile formula"},{term:"Long-term memory",description:"여러 session에 재사용할 가치가 있고 사용자가 보존에 동의한 사실·preference입니다.",boundary:"Source·expiry·update·delete가 없으면 영구 사실로 취급하지 않습니다."},{term:"Artifact",description:"긴 log·dataset·patch·screenshot처럼 원문을 보존해야 하는 외부 object입니다.",example:"artifact URI와 digest만 context summary에 남깁니다."},{term:"Versioned procedure",description:"여러 사람이 검토·수정해야 하는 반복 절차입니다.",boundary:"대화 summary보다 문서·skill·code가 정본입니다."}]}/>
       <ContentBoundary article="agent-memory-lifecycle"/>
     </section>
@@ -73,5 +75,6 @@ export default function AgentMemoryLifecycleArticle() {
       </div>
       <PaperReading id="paper-memoryarena" title="MemoryArena · arXiv 2602.16313" href="https://arxiv.org/abs/2602.16313" problem="기억 회상과 실제 행동을 따로 평가하면 서로 의존하는 장기 과제의 실패를 놓친다." idea="여러 session의 행동·피드백·기억을 후속 과제와 연결한다." assumption="과제 사이의 의존성, 기억 접근 범위와 실행 예산이 정의되어야 한다." experiment="웹 탐색·선호 제약 계획·정보 검색·형식 추론 과제에서 저자가 비교했다." boundary="대화 회상 점수를 일반적인 업무 성공률로 해석하지 않는다. 특정 모델 순위도 다른 예산이나 환경에 그대로 옮기지 않는다." />
     </section>
+    <ContextStatePathMapReturn current="memory" />
   </article>;
 }

@@ -75,14 +75,14 @@ export function AnimatedSceneControls({
         </button>
       </div>
 
-      <div data-viz-desktop-controls className="hidden items-center gap-2 overflow-x-auto pb-1 sm:flex">
+      <div data-viz-desktop-controls className="hidden flex-wrap items-stretch gap-2 pb-1 sm:flex">
         {labels.map((label, index) => (
           <button
             key={label}
             type="button"
             aria-pressed={active === index}
             onClick={() => setActive(index)}
-            className={`min-h-11 shrink-0 whitespace-nowrap border px-3 py-2 text-xs font-bold transition-colors ${
+            className={`min-h-11 min-w-[6.5rem] flex-1 break-keep border px-3 py-2 text-xs font-bold leading-5 transition-colors ${
               active === index
                 ? "border-primary bg-primary/10 text-foreground"
                 : "border-border bg-background text-muted-foreground"

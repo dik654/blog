@@ -4,14 +4,17 @@ import { CitationBlock } from "@/components/ui/citation";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { InstructionBoundaryViz } from "../context-engineering/viz/ModernContextEngineeringViz";
+import { ContextStatePathLocator, ContextStatePathMapReturn } from "../shared/ContextStatePathLocator";
 
 export default function Article() {
   return (
     <div className="space-y-16">
+      <ContextStatePathLocator current="authority" />
       <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           1. 읽은 문장이 실행 권한으로 바뀌면 안 됩니다
         </h2>
+        <InstructionBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             받은 이메일을 요약해 달라고 했는데 그 이메일 안에 고객 정보를 다른
@@ -171,7 +174,6 @@ export default function Article() {
             },
           ]}
         />
-        <InstructionBoundaryViz />
       </section>
 
       <section id="request-trace" data-teach-level="4" className="scroll-mt-20">
@@ -374,6 +376,7 @@ export default function Article() {
           </p>
         </div>
       </section>
+      <ContextStatePathMapReturn current="authority" />
     </div>
   );
 }
