@@ -6,6 +6,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import VramGridViz from "./viz/VramGridViz";
 import ContextEnvelopeViz from "./viz/ContextEnvelopeViz";
 import PartialRopeHeadViz from "./viz/PartialRopeHeadViz";
+import {
+  InferenceDeploymentMapReturn,
+  InferenceDeploymentSeriesLocator,
+} from "../shared/InferenceDeploymentSeriesLocator";
 
 const ROPE_TERMS = [
   {
@@ -54,11 +58,17 @@ const FLOOR_TERMS = [
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <InferenceDeploymentSeriesLocator current="long-context" />
       <section id="overview" className="scroll-mt-20 space-y-7">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h2>
             Long context는 길이 숫자 하나가 아니라 세 개의 별도 문제입니다
           </h2>
+        </div>
+
+        <ContextEnvelopeViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Qwen3.6-27B가 긴 sequence를 처리하려면 <strong>위치를 표현</strong>
             할 수 있어야 하고,{" "}
@@ -84,7 +94,6 @@ export default function ModernArticle() {
           <li>최대 위치 설정을 1,010,000으로 키우면 끝 위치의 retrieval 품질도 자동으로 보장될까요?</li>
         </ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. 위치 표현, 메모리 수용, 실제 정보 회수는 별도 조건이므로 길이·modality·runtime별 release profile을 각각 검증합니다.</p>
-        <ContextEnvelopeViz />
         <ContentBoundary article="qwen36-long-context-deployment" />
 
         <TermBreakdown
@@ -474,6 +483,7 @@ M_{free}
           </p>
         </div>
       </section>
+      <InferenceDeploymentMapReturn current="long-context" />
     </article>
   );
 }

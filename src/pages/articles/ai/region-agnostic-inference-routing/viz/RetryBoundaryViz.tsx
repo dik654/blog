@@ -59,6 +59,7 @@ export default function RetryBoundaryViz() {
       note="SSE 스트리밍 응답을 기준으로 한 구분입니다. 어떤 이벤트를 의미 있는 출력으로 볼지는 서비스마다 명시적으로 정해야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -66,7 +67,7 @@ export default function RetryBoundaryViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
@@ -180,6 +181,14 @@ export default function RetryBoundaryViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

@@ -56,6 +56,7 @@ export default function PartialRopeHeadViz() {
       note="Qwen3.6-27B config(head_dim 256 · partial_rotary_factor 0.25 · mrope_section [11, 11, 10] · interleaved)와 Transformers qwen3_5의 주파수 배치 코드를 따랐습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -63,7 +64,7 @@ export default function PartialRopeHeadViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col">
+        <div data-viz-live-only className="flex shrink-0 flex-col">
           <h4 className="text-base font-bold">{scene.label}</h4>
           <div className="mt-3 grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-start">
             <div className="mx-auto w-full max-w-[18rem] sm:mx-0 sm:w-[15rem]">
@@ -136,6 +137,14 @@ export default function PartialRopeHeadViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => (
+            <li key={item.label}>
+              <strong>{index + 1}. {item.label} · {item.value}</strong>
+              <span className="mt-1 block text-muted-foreground">{item.note}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

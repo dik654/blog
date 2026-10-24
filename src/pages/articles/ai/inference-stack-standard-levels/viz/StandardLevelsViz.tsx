@@ -63,6 +63,7 @@ export default function StandardLevelsViz() {
       note="쿠버네티스 위의 추론 서빙 스택을 기준으로 한 구분입니다. 층의 이름은 이 글이 붙인 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -70,7 +71,7 @@ export default function StandardLevelsViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(s + 1).padStart(2, "0")}
           </p>
@@ -146,6 +147,14 @@ export default function StandardLevelsViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

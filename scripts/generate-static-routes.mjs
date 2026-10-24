@@ -156,6 +156,10 @@ const noScriptArticleRoutes = new Set([
   "ai/inference-optimization-layers",
   "ai/serving-benchmark-methodology",
   "ai/inference-cost-and-capacity-planning",
+  "ai/sionic-glm-b300",
+  "ai/qwen36-long-context-deployment",
+  "ai/region-agnostic-inference-routing",
+  "ai/inference-stack-standard-levels",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

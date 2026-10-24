@@ -3510,7 +3510,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/smoothie-qwen-weight-editing": "fd27aea9367e22f8",
   "ai/sequence-modeling-tabular": "82c8ca4c6b53d076",
   "ai/sionic-eureka": "5d6547a42fa142ca",
-  "ai/sionic-glm-b300": "6d556c5201551c27",
+  "ai/sionic-glm-b300": "138eb8be2aac9d29",
   "ai/skills-anatomy": "61679abd14267eab",
   "ai/time-features": "b36c5db272d8dd15",
   "ai/training-pipeline": "b5b3f8ce59ac29e9",
