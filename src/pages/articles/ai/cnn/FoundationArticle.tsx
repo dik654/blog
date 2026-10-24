@@ -6,16 +6,28 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { cnnTree } from "./fileTree";
 import { CnnOperatorViz } from "./viz/ModernCnnViz";
+import {
+  VisionFoundationLocator,
+  VisionMapReturn,
+} from "../shared/VisionFoundationLocator";
 
 export default function CnnFoundationArticle() {
   const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <VisionFoundationLocator
+          current="cnn"
+          question="작은 숫자 창 하나가 어떻게 이미지 전체의 특징 지도가 되나요?"
+          fixture="3×3 입력에서 2×2 patch [[1,2],[3,4]]와 kernel [[1,0],[0,−1]]의 첫 출력값 −3을 끝까지 추적합니다."
+          parentHref="/cs/ai/neural-network"
+          parentLabel="신경망의 입력·가중치·출력"
+        />
         <h2 className="mb-6 text-2xl font-bold">
           CNN은 image를 긴 숫자 줄이 아니라 channel과 위치가 있는 측정 grid로
           읽습니다
         </h2>
+        <CnnOperatorViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 한 pixel의 값, 그 pixel의 row·column, red·green·blue channel을
@@ -52,7 +64,6 @@ export default function CnnFoundationArticle() {
             },
           ]}
         />
-        <CnnOperatorViz />
         <ContentBoundary article="cnn" />
       </section>
       <section id="local-operator" className="scroll-mt-20">
@@ -236,6 +247,12 @@ export default function CnnFoundationArticle() {
             최적 recipe를 이 논문 하나에 귀속하지 않습니다.
           </CitationBlock>
         </div>
+        <VisionMapReturn
+          title="CNN은 같은 지역 계산을 여러 좌표에서 재사용하는 연산입니다."
+          detail="한 칸의 score와 output 크기를 계산했으므로, 다음에는 입력을 옮겼을 때 feature의 좌표도 함께 옮겨지는지 확인합니다."
+          nextHref="/cs/ai/cnn-translation-equivariance"
+          nextLabel="입력 이동과 출력 이동의 관계 확인"
+        />
       </section>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

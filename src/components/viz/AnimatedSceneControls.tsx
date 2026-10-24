@@ -25,7 +25,7 @@ export function AnimatedSceneControls({
     >
       <div
         data-viz-mobile-controls
-        className="mt-2 flex min-h-11 items-center justify-end gap-0.5 border-t border-border/45 pt-1 sm:hidden"
+        className="mt-2 flex min-h-11 items-center justify-end gap-0.5 border-t border-border/45 bg-background/95 pt-1 backdrop-blur-sm sm:hidden"
       >
         <span className="sr-only" aria-live="polite">
           {labels.length}개 장면 중 {active + 1}번, {labels[active]}

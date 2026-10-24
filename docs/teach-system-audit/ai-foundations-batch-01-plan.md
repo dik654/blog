@@ -274,3 +274,37 @@ BERT 시각화는 정의 카드보다 먼저 배치하고, 각 글에서 같은 
 - reduced-motion에서는 재생 버튼이 비활성화되고 선택한 장면이 유지됐다.
 - 정적 빌드는 2,086개 public route와 검토 완료 31편의 no-script 본문을 생성했다.
 - JavaScript를 끈 390×844 브라우저에서도 7개 글의 제목·본문·절·부모 지도·지도 반환이 남았고 가로 넘침은 0이었다.
+
+## 8. CNN에서 공간 출력 계약까지
+
+### 분류와 학습 경로
+
+| route | track · form | 직속 부모 | 이 글이 닫을 질문 |
+|---|---|---|---|
+| `ai/cnn` | concept · explanation | `ai/neural-network` | 작은 patch와 kernel의 한 칸 계산을 어떻게 전체 feature map으로 확장하는가? |
+| `ai/cnn-translation-equivariance` | concept · explanation | `ai/cnn#shared-kernel` | 입력을 옮겼을 때 출력 좌표도 같이 옮겨지는 조건과 반례는 무엇인가? |
+| `ai/cnn-receptive-fields` | concept · explanation | `ai/cnn#output-geometry` | 위쪽 unit 하나가 원본 입력의 어느 범위와 연결되고 실제로 어느 부분의 영향을 받는가? |
+| `ai/depthwise-separable-convolution` | concept · explanation | `ai/cnn#local-operator` | 공간 필터와 채널 혼합을 분리하면 계산량이 어떻게 달라지는가? |
+| `ai/vision-task-spatial-contracts` | concept · explanation | `ai/cnn-receptive-fields` | 분류·탐지·분할·복원이 각각 무엇을 하나의 답으로 보고 어떤 좌표를 보존해야 하는가? |
+
+공통 locator는 `지역 계산 → 이동 → 범위 → 분리 → 출력`을 보여 준다. 각 글은 바로 앞의
+계산 결과를 직속 부모 anchor에서 이어받고 마지막에 새로 확인한 사실을 같은 지도에 되돌린다.
+VLM·grounding·SAM3·VLA는 이 다섯 기초 글 뒤에서 공간 출력 계약을 재사용한다.
+
+### 같은 사례와 시각화 순서
+
+CNN은 3×3 입력에서 `[[1,2],[3,4]]` patch와 `[[1,0],[0,−1]]` kernel을 곱해 첫
+출력값 `−3`을 만든다. 이후 같은 kernel을 네 위치에 재사용하고
+`H=7,K=3,P=1,S=2,D=1`에서 output 높이 4를 계산한다.
+
+이동 관계는 pattern과 peak의 좌표를 `1→2`로 함께 옮긴 뒤 stride 2가 sampling 위상을
+바꾸는 반례를 보여 준다. 수용 영역은 stride-1 3×3 layer 세 개의 한 축 범위를
+`3→5→7`로 누적한다. Depthwise 글은 `k=3,Cin=32,Cout=64`에서 dense
+`18,432` MAC와 depthwise `288` + pointwise `2,048` = `2,336` MAC를
+같은 출력 위치로 비교한다. 마지막 글은 같은 feature를 `B×Ccls`,
+`B×K×(Ccls+4)`, `B×Ccls×Ho×Wo`로 바꾸며 답의 단위와 보존할 좌표를 연결한다.
+
+기존 시각화의 추상 도형은 실제 입력·계산·출력값을 설명하지 못했다. 이를 각 장면에서
+세 상태가 나란히 보이는 계산 흐름으로 교체했다. 자동 재생과 무한 반복은 사용하지 않고,
+사용자가 재생하거나 장면을 고른 경우에만 5.2초 간격으로 다음 상태로 이동한 뒤 마지막에서
+멈춘다. JavaScript가 없을 때는 같은 장면 순서를 정적 목록으로 남긴다.
