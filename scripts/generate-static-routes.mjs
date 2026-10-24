@@ -92,6 +92,12 @@ const noScriptArticleRoutes = new Set([
   "ai/supervised-fine-tuning",
   "ai/rlhf",
   "ai/rl-foundations-for-llm-post-training",
+  "ai/reward-design-for-verifiable-rl",
+  "ai/dpo",
+  "ai/constitutional-ai",
+  "ai/orpo",
+  "ai/kto",
+  "ai/synthetic-data-and-data-flywheel",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

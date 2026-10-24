@@ -352,3 +352,27 @@ return을 거꾸로 계산해 long-horizon credit이 작아지는 이유를 확�
 시각화는 제목 다음에 먼저 배치해 독자가 긴 설명을 읽기 전에 전체 변환 경로를 볼 수 있게 한다.
 자동 시작과 무한 반복은 사용하지 않는다. 사용자가 재생을 선택한 경우 장면당 5.2초를 유지하고
 마지막 상태에서 멈춘다. JavaScript가 없을 때에도 같은 장면 순서와 결론을 정적 목록으로 남긴다.
+
+## 11. Reward 설계에서 데이터 flywheel까지
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/reward-design-for-verifiable-rl` | concept · explanation | `ai/rl-foundations-for-llm-post-training#credit-assignment` | 마지막 결과와 중간 행동을 채점할 때 학습 신호와 검증 오류는 어떻게 달라지는가? |
+| `ai/dpo` | concept · explanation | `ai/reward-design-for-verifiable-rl#names` | Chosen·rejected pair를 별도 reward model 없이 어떻게 policy loss로 바꾸는가? |
+| `ai/constitutional-ai` | concept · explanation | `ai/dpo#pair-contract` | 자연어 원칙이 critique·revision·preference label로 어떻게 이어지는가? |
+| `ai/orpo` | concept · explanation | `ai/supervised-fine-tuning#objective` | Chosen 모방과 rejected 분리를 한 optimization stage에서 어떻게 합치는가? |
+| `ai/kto` | concept · explanation | `ai/dpo#pair-contract` | 서로 짝지어지지 않은 response별 좋아요·싫어요를 어떻게 학습하는가? |
+| `ai/synthetic-data-and-data-flywheel` | concept · explanation | `ai/llm-dataset-engineering-and-cleaning#mixture` | 생성·검수·학습 결과를 어떻게 다음 라운드의 seed로 되돌리는가? |
+
+공통 지도는 앞 묶음에서 만든 11단계 경로를 그대로 사용한다. 한 글에서 모든 정렬 방법을 비교하지
+않고, 각 글은 입력 feedback의 모양과 실제로 바뀌는 policy·data state 하나를 끝까지 추적한다.
+Reward 글은 정답 40개·오답 60개인 응답 100개의 검증 결과를, DPO·ORPO는 같은 prompt의
+chosen·rejected pair를, KTO는 response별 binary feedback을 사용한다. Constitutional AI는 원칙
+하나가 초안에 적용되는 순서를, synthetic data 글은 seed 175개에서 다음 seed pool까지 한 바퀴를
+고정한다.
+
+공통 정렬 파이프라인은 데스크톱에서 네 단계를 한 번에 보여 주고, 모바일에서는 네 단계 위치표와
+현재 단계 한 장만 보여 준다. 이 변경으로 390×844 화면에서 그림과 조작부가 561px 안에 들어온다.
+Reward와 flywheel 장면은 자동으로 시작하거나 반복하지 않으며, 사용자가 재생한 경우 5.2초마다
+다음 장면으로 이동한 뒤 마지막에서 멈춘다. JavaScript가 없을 때는 모든 단계의 제목과 상태 변화를
+정적 순서로 남긴다.

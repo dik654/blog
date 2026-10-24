@@ -9,12 +9,22 @@ import SourceApplication from "@/pages/articles/world-systems/SourceApplication"
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./reward-design-for-verifiable-rl/codeRefs";
+import RewardDesignForVerifiableRlViz from "./reward-design-for-verifiable-rl/viz/RewardDesignForVerifiableRlViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
   return <div className="space-y-16">
+    <LlmTrainingLocator
+      current="reward"
+      question="마지막 정답만 채점할 때와 중간 행동까지 채점할 때 학습 신호는 어떻게 달라질까요?"
+      fixture="정답 40개·오답 60개인 응답 100개에서 검증기가 정답 38개와 오답 12개를 통과시킨 사례를 끝까지 추적합니다."
+      parentHref="/cs/ai/rl-foundations-for-llm-post-training#credit-assignment"
+      parentLabel="마지막 reward를 앞선 행동에 돌려주는 문제"
+    />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 채점기가 통과시킨 답과 실제 정답을 나눠 센다</h2>
+      <RewardDesignForVerifiableRlViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">정답 여부를 별도로 확인한 답 100개가 있습니다 (가정). 실제 정답 40개 중 채점기는 38개를 통과시켰고 오답 60개 중에서도 12개를 통과시켰습니다. 점수 1인 답은 50개이지만 모두 정답은 아닙니다.</p>
         <p className="leading-8">이 글은 이 채점 결과가 학습 신호로 바뀌는 길을 추적합니다. 최종 답과 중간 과정을 어디서 확인하는지, 보상을 자주 주는 선택이 왜 도움이 되거나 실패하는지, 2026년 과정 검증 논문이 어떤 범위에서 성립하는지 살펴봅니다.</p>
@@ -123,6 +133,12 @@ export default function Article(){
 
       <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">보상의 계산, 검사 범위와 독립 성공률을 함께 확인하면 추적이 끝납니다.</p>
     </section>
+    <LlmTrainingMapReturn
+      title="보상은 정답 그 자체가 아니라 검증기가 관측한 신호이므로, 통과율과 실제 성공률을 따로 기록해야 합니다."
+      detail="Sparse·dense는 점수를 주는 빈도이고 outcome·process는 채점 대상입니다. 다음 글에서는 사람이나 판정자가 고른 응답 쌍을 별도 reward model 없이 policy loss로 바꾸는 DPO를 추적합니다."
+      nextHref="/cs/ai/dpo"
+      nextLabel="Chosen·rejected 쌍이 DPO loss가 되는 과정"
+    />
     <ContentBoundary article="reward-design-for-verifiable-rl" />
     <ReviewPrompts questions={["통과 답이 50개에서 70개로 늘면 정답률도 20%p 올랐을까요? (답: 3절)", "reward가 모두 1이면 group-relative 학습 신호는 어떻게 될까요? (답: 7절)", "과정 oracle과 learned judge가 제공하는 증거는 어떻게 다를까요? (답: 9절)"]} />
     <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />

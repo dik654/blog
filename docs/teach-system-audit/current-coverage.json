@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 435,
-    "pending": 555,
+    "reviewed": 440,
+    "pending": 550,
     "untracked": 0,
-    "assignedPending": 503,
+    "assignedPending": 498,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -773,9 +773,9 @@
       "publicPath": "cs/ai/dpo",
       "title": "DPO: chosen·rejected pair를 direct policy loss로",
       "catalogIndex": 74,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -783,9 +783,9 @@
       "publicPath": "cs/ai/constitutional-ai",
       "title": "Constitutional AI: 원칙→critique→revision→RLAIF",
       "catalogIndex": 75,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -793,9 +793,9 @@
       "publicPath": "cs/ai/orpo",
       "title": "ORPO: chosen SFT와 odds separation을 한 stage에",
       "catalogIndex": 76,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -803,9 +803,9 @@
       "publicPath": "cs/ai/kto",
       "title": "KTO: 짝 없는 binary feedback으로 preference 학습",
       "catalogIndex": 77,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1483,9 +1483,9 @@
       "publicPath": "cs/ai/synthetic-data-and-data-flywheel",
       "title": "합성 데이터와 data flywheel: self-instruct·verifier filtering·trajectory mining",
       "catalogIndex": 145,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1565,7 +1565,7 @@
       "catalogIndex": 153,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "local-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

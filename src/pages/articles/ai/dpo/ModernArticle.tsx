@@ -4,15 +4,24 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import DPOObjective from "../alignment-methods/DPO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <LlmTrainingLocator
+        current="dpo"
+        question="같은 질문의 chosen·rejected 두 응답이 어떻게 policy의 직접 학습 신호가 될까요?"
+        fixture="같은 prompt에 답한 A·B 중 A가 chosen인 한 pair에서 policy와 reference의 네 log-probability를 비교합니다."
+        parentHref="/cs/ai/reward-design-for-verifiable-rl#names"
+        parentLabel="선호·정답·검증 점수를 구분하는 자리"
+      />
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3">
           <p className="text-sm font-semibold text-primary">Direct Preference Optimization(DPO)은 하나의 prompt와 두 response에서 시작합니다</p>
-          <h2 className="text-3xl font-bold tracking-tight">DPO는 reward를 없애는 기법이 아니라 pair의 선호를 policy log-ratio 안에 넣는 방법입니다</h2>
+          <h2 className="text-3xl font-bold tracking-tight">DPO는 pair의 선호를 policy log-ratio로 옮깁니다</h2>
         </header>
+        <AlignmentPipelineViz mode="dpo" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 <strong>pairwise preference</strong>부터 고정합니다. 같은 prompt에 답 A와 답 B를 보여 줍니다. 평가자가 더 낫다고 고른 답은 <strong className="whitespace-nowrap">선택 답(chosen)</strong>입니다. 다른 답은 <strong className="whitespace-nowrap">비선택 답(rejected)</strong>입니다. 이 label은 chosen이 절대적으로 옳다는 증명보다 “이 비교에서는 A를 더 선호했다”는 관측입니다.
@@ -21,7 +30,6 @@ export default function ModernArticle() {
             DPO는 이 pair를 별도 scalar reward model에 먼저 압축하지 않습니다. Trainable policy가 chosen과 rejected에 주는 확률을 고정된 <strong>reference policy</strong>와 각각 비교하고, chosen 쪽의 상대 상승분이 rejected보다 커지게 학습합니다. <Link to="/cs/ai/rlhf">RLHF 글</Link>의 online rollout·reward model·PPO와 다른 지점은 여기에 있습니다.
           </p>
         </div>
-        <AlignmentPipelineViz mode="dpo" />
         <ContentBoundary article="dpo" />
       </section>
 
@@ -68,6 +76,12 @@ export default function ModernArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmTrainingMapReturn
+        title="DPO는 chosen·rejected의 절대 점수보다 reference 대비 상대 log-ratio 차이를 직접 키웁니다."
+        detail="별도 reward model과 online rollout은 빠지지만 pair label의 오류와 support 밖 행동은 그대로 남습니다. 다음 글에서는 사람이 모든 pair를 만들지 않고 자연어 원칙으로 critique·revision·preference를 만드는 경로를 봅니다."
+        nextHref="/cs/ai/constitutional-ai"
+        nextLabel="자연어 원칙이 critique와 선호 신호가 되는 과정"
+      />
     </article>
   );
 }

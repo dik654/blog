@@ -132,7 +132,7 @@ function MiningDetail() {
 }
 
 export default function SyntheticDataAndDataFlywheelViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   return (
     <VizFrame
       eyebrow="Data flywheel · 한 바퀴"
@@ -141,6 +141,8 @@ export default function SyntheticDataAndDataFlywheelViz() {
       note="c1…c12, 상위 5개 유지 같은 숫자는 절차를 보여 주기 위한 예시이며 특정 데이터셋의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="synthetic-data-flywheel"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -165,6 +167,13 @@ export default function SyntheticDataAndDataFlywheelViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{index + 1}. {label}</strong> — {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

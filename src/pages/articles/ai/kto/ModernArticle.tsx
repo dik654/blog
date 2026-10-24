@@ -3,17 +3,25 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import KTOObjective from "../alignment-methods/KTO";
 import AlignmentPipelineViz from "../alignment-methods/viz/AlignmentPipelineViz";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "../shared/LlmTrainingLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <LlmTrainingLocator
+        current="kto"
+        question="서로 짝지어지지 않은 response별 좋아요·싫어요를 어떻게 policy update로 바꿀까요?"
+        fixture="노출된 응답 하나에 thumbs-up 또는 thumbs-down이 붙은 기록을 policy/reference log-ratio와 KL 기준점 양쪽에 놓습니다."
+        parentHref="/cs/ai/dpo#pair-contract"
+        parentLabel="같은 prompt의 두 응답을 비교하는 DPO"
+      />
       <section id="overview" className="scroll-mt-20 space-y-7">
         <header className="space-y-3"><p className="text-sm font-semibold text-primary">한 response에 붙은 좋아요 하나부터</p><h2 className="text-3xl font-bold tracking-tight">KTO는 pair를 억지로 만들지 않고 binary feedback을 기준점 양쪽에서 학습합니다</h2></header>
+        <AlignmentPipelineViz mode="kto" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8"><strong>Binary feedback</strong>은 response 하나에 desirable 또는 undesirable label을 붙인 기록입니다. 같은 prompt의 두 답이 동시에 있어야 하는 pairwise preference와 형태가 다릅니다.</p>
           <p className="leading-8">KTO는 현재 policy가 reference보다 그 response를 얼마나 더 선호하는지 log-ratio로 계산합니다. Batch에서 추정한 KL을 <strong>reference point</strong>로 두고, desirable은 그 기준보다 위로, undesirable은 아래로 이동하도록 utility 방향을 나눕니다.</p>
         </div>
-        <AlignmentPipelineViz mode="kto" />
         <ContentBoundary article="kto" />
       </section>
 
@@ -38,6 +46,12 @@ export default function ModernArticle() {
           </p></div>
         <div id="paper-kto-implementation" className="scroll-mt-20"><CitationBlock source="Ethayarajh et al. · KTO" citeKey={2} type="paper" href="https://arxiv.org/abs/2402.01306"><p><strong>문제:</strong> 같은 prompt의 pair보다 독립 like/dislike가 많은 현실의 feedback을 사용합니다.</p><p><strong>핵심 기여:</strong> Policy/reference log-ratio를 KL reference point 양쪽의 비대칭 utility로 학습합니다.</p><p><strong>전제:</strong> Binary label 품질, reference policy와 안정적인 KL 추정이 필요합니다.</p><p><strong>근거 범위:</strong> 논문의 1B–30B model·dataset·class imbalance 조건입니다.</p><p><strong>비주장:</strong> Binary feedback이 pairwise preference보다 항상 더 깨끗하거나 우월하다는 뜻은 아닙니다.</p></CitationBlock></div>
       </section>
+      <LlmTrainingMapReturn
+        title="KTO는 pair 대신 response별 binary label을 쓰지만 노출·무응답·장애를 품질 label과 분리해야 합니다."
+        detail="Desirable과 undesirable은 policy/reference log-ratio를 KL 기준점의 서로 다른 방향으로 움직입니다. 다음 글에서는 생성·검수·학습 결과를 다시 데이터로 되돌리는 순환을 봅니다."
+        nextHref="/cs/ai/synthetic-data-and-data-flywheel"
+        nextLabel="생성한 데이터를 검수해 다음 학습으로 되돌리기"
+      />
     </article>
   );
 }

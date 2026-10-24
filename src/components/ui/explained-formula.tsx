@@ -189,7 +189,7 @@ export default function ExplainedFormula({
         data-formula-annotation-mode={
           annotatedFormula && operations?.length ? "explicit" : "inferred"
         }
-        className="-mx-4 min-w-0 overflow-x-auto rounded-lg border border-border/70 bg-background px-0 py-5 sm:mx-0 sm:px-6"
+        className="mx-0 min-w-0 max-w-full overflow-x-auto rounded-lg border border-border/70 bg-background px-0 py-5 sm:px-6"
       >
         <Math display>{annotatedFormula ?? formula}</Math>
         <div

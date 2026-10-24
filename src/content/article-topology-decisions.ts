@@ -3559,7 +3559,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "ai/expert-parallelism-moe-systems":"b4eb861661066ca6",
 "ai/fast-weight-memory-and-chunkwise-recurrence":"7a7c39371c676228",
 "ai/flash-attention-io-aware-kernel":"a2c2eac722069c9b",
-"ai/reward-design-for-verifiable-rl":"9945c9823b138b96",
+"ai/reward-design-for-verifiable-rl":"0f1307d7f3825ece",
 "ai/world-model-latent-planning":"ad27657439f3c92a",
 "banking/repo-and-collateral-funding":"8b5c5b3336427561",
 "blockchain/ethereum-future-roadmap":"5a7d76a6c5c062c7",

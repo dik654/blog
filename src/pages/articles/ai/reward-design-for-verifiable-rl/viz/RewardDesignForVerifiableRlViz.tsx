@@ -7,20 +7,21 @@ import VizFrame from "@/components/viz/VizFrame";
  * 목표 전에 멈춰 reward 가 전부 0 으로 남고, 같은 경로에 process reward(단계마다
  * 목표에 가까워진 만큼)를 주면 매 step 에 신호가 생겨 policy 가 goal 로 수렴한다는 것.
  * stage 높이는 네 장면 모두 같은 station 행 + reward 막대 행 + rollout 표시 행을
- * 그리고 값·강조만 바꿔 고정한다.
+ * 그리고 값·강조만 바꿔 고정합니다. 촘촘한 신호가 비교 근거를 늘릴 뿐 올바른
+ * 정책으로의 수렴을 보장하지 않는다는 경계도 마지막 장면에 남깁니다.
  */
 const SCENES = [
   "Sparse reward: 목표(S6)에 도달해야만 +1",
   "세 rollout 모두 목표 전에 멈춰 reward가 0",
   "Process reward: 매 step마다 진척만큼 신호",
-  "신호 덕에 policy가 goal 방향으로 수렴",
+  "어느 방향이 goal에 가까웠는지 비교할 신호가 생김",
 ] as const;
 
 const NOTES = [
   "S1에서 시작해 S6(goal)에 도달해야만 reward +1을 받는 sparse reward 환경입니다. 그 전까지는 어떤 step도 0입니다.",
   "세 번의 독립 rollout이 각각 S3·S2·S4에서 멈췄습니다. 셋 다 목표에 못 미쳐 reward는 여전히 0이라 policy가 어느 방향이 나은지 배울 신호가 없습니다.",
   "같은 경로에 process reward를 주면 S1→S6 진척 비율만큼 매 step마다 값을 받습니다. S3까지 갔다면 이미 0.5라는 부분 신호가 남습니다.",
-  "매 step 신호가 있으니 policy gradient가 매 rollout마다 0이 아닌 방향을 얻어, 몇 번 반복하지 않고도 S1→S6로 곧장 수렴합니다.",
+  "중간 상태에서도 0이 아닌 신호를 얻으므로 어느 방향이 더 나았는지 비교할 근거가 생깁니다. 신호가 촘촘하다고 올바른 정책으로 수렴한다고 보장되지는 않습니다.",
 ] as const;
 
 const STATIONS = ["S1", "S2", "S3", "S4", "S5", "S6"] as const;
@@ -31,7 +32,7 @@ const BAR_MAX = 56;
 const BAR_BASE = 168;
 
 export default function RewardDesignForVerifiableRlViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   const showBars = scene >= 2;
   return (
@@ -42,6 +43,8 @@ export default function RewardDesignForVerifiableRlViz() {
       note="실제로는 수십~수백 rollout을 병렬로 굴리고 reward 함수 하나를 여러 trajectory에 반복 적용합니다. 그림은 3개 rollout·6-station 경로로 단순화했습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="reward-signal-density"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -106,6 +109,13 @@ export default function RewardDesignForVerifiableRlViz() {
             {NOTES[scene]}
           </p>
         </div>
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{index + 1}. {label}</strong> — {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
