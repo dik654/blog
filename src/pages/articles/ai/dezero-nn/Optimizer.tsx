@@ -6,8 +6,9 @@ import OptimizerViz from "./viz/OptimizerViz";
 export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="optimizer" className="mb-16 scroll-mt-20">
+    <section id="optimizer" data-teach-level="2" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Optimizer는 gradient와 파라미터별 상태를 update 규칙으로 묶습니다</h2>
+      <div className="not-prose my-8"><OptimizerViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           가장 단순한 기준점은 SGD입니다. 현재 gradient에 학습률을 곱해 파라미터에서 뺍니다. 모델 참조를 받아 파라미터를 순회하게 만들면 새 레이어를 추가해도 optimizer
@@ -19,7 +20,6 @@ export default function Optimizer({ onCodeRef }: { onCodeRef: (key: string, ref:
           Adam에 L2 penalty를 단순히 더하는 방식과는 다릅니다.
         </p>
       </div>
-      <div className="not-prose my-8"><OptimizerViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="SGD 한 step은 parameter를 어느 방향으로 얼마나 움직일까요?"
         idea={<>Gradient가 loss가 가장 빠르게 커지는 방향을 가리키므로 그 반대 방향으로 learning rate만큼 이동합니다. 이 단순 update를 기준으로 삼으면 Adam의 state와 bias correction이 무엇을 추가하는지 분리해 볼 수 있습니다.</>}

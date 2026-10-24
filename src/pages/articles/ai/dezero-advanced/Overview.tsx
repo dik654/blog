@@ -1,15 +1,12 @@
-import type { CodeRef } from "@/components/code/types";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
-import { codeRefs } from "./codeRefs";
-import OverviewViz from "./viz/OverviewViz";
+import DezeroExecutionPathViz from "../shared/DezeroExecutionPathViz";
 
-export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
-  const open = (key: string) => onCodeRef(key, codeRefs[key]);
-
+export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">상태가 있는 레이어는 시간과 실행 모드까지 계약에 포함합니다</h2>
+      <DezeroExecutionPathViz current="advanced" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           일반적인 feed-forward layer는 현재 입력만으로 출력을 만들지만 RNN과 LSTM은 이전 시점의 상태도 함께 사용합니다. 그래서 forward 식만 구현해서는
@@ -26,7 +23,6 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
       </div>
       <ContentBoundary article="dezero-advanced" />
-      <div className="not-prose my-8"><OverviewViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           시퀀스 모델의 gradient 경로를 먼저 이해하고 LSTM cell을 구현한 다음 feature 축 정규화와 train/eval 분기를 추가합니다. 각 기능은 앞 글에서 만든

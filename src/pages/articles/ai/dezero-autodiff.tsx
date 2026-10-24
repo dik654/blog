@@ -6,17 +6,23 @@ import Memory from "./dezero-autodiff/Memory";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./dezero-autodiff/codeRefs";
 import { dezeroTree } from "./dezero-autodiff/fileTrees";
+import {
+  DezeroImplementationLocator,
+  DezeroImplementationMapReturn,
+} from "./shared/DezeroImplementationLocator";
 
 export default function DezeroAutodiff() {
   const sidebar = useCodeSidebar();
 
   return (
-    <>
-      <Overview onCodeRef={sidebar.open} />
+    <div className="space-y-12">
+      <DezeroImplementationLocator current="autodiff" />
+      <Overview />
       <Forward onCodeRef={sidebar.open} />
       <Backward onCodeRef={sidebar.open} />
       <HigherOrder onCodeRef={sidebar.open} />
       <Memory onCodeRef={sidebar.open} />
+      <DezeroImplementationMapReturn current="autodiff" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -32,6 +38,6 @@ export default function DezeroAutodiff() {
           },
         }}
       />
-    </>
+    </div>
   );
 }

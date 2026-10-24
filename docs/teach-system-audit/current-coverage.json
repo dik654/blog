@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 516,
-    "pending": 474,
+    "reviewed": 519,
+    "pending": 471,
     "untracked": 0,
-    "assignedPending": 430,
+    "assignedPending": 427,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2623,9 +2623,9 @@
       "publicPath": "cs/ai/dezero-autodiff",
       "title": "Rust로 자동 미분 엔진 만들기",
       "catalogIndex": 259,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -2633,9 +2633,9 @@
       "publicPath": "cs/ai/dezero-nn",
       "title": "Rust로 신경망 학습 루프 만들기",
       "catalogIndex": 260,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -2643,9 +2643,9 @@
       "publicPath": "cs/ai/dezero-advanced",
       "title": "Rust로 상태가 있는 신경망 레이어 만들기",
       "catalogIndex": 261,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

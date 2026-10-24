@@ -6,17 +6,23 @@ import Training from "./dezero-nn/Training";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./dezero-nn/codeRefs";
 import { dezeroTree } from "./dezero-nn/fileTrees";
+import {
+  DezeroImplementationLocator,
+  DezeroImplementationMapReturn,
+} from "./shared/DezeroImplementationLocator";
 
 export default function DezeroNn() {
   const sidebar = useCodeSidebar();
 
   return (
-    <>
-      <Overview onCodeRef={sidebar.open} />
+    <div className="space-y-12">
+      <DezeroImplementationLocator current="nn" />
+      <Overview />
       <LinearLayer onCodeRef={sidebar.open} />
       <Activation onCodeRef={sidebar.open} />
       <Optimizer onCodeRef={sidebar.open} />
       <Training onCodeRef={sidebar.open} />
+      <DezeroImplementationMapReturn current="nn" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -32,6 +38,6 @@ export default function DezeroNn() {
           },
         }}
       />
-    </>
+    </div>
   );
 }

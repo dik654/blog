@@ -6,17 +6,23 @@ import DropoutEmbedding from "./dezero-advanced/DropoutEmbedding";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./dezero-advanced/codeRefs";
 import { dezeroAdvTree } from "./dezero-advanced/fileTrees";
+import {
+  DezeroImplementationLocator,
+  DezeroImplementationMapReturn,
+} from "./shared/DezeroImplementationLocator";
 
 export default function DezeroAdvanced() {
   const sidebar = useCodeSidebar();
 
   return (
-    <>
-      <Overview onCodeRef={sidebar.open} />
+    <div className="space-y-12">
+      <DezeroImplementationLocator current="advanced" />
+      <Overview />
       <RnnVsLstm onCodeRef={sidebar.open} />
       <LstmCell onCodeRef={sidebar.open} />
       <Normalization onCodeRef={sidebar.open} />
       <DropoutEmbedding onCodeRef={sidebar.open} />
+      <DezeroImplementationMapReturn current="advanced" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -32,6 +38,6 @@ export default function DezeroAdvanced() {
           },
         }}
       />
-    </>
+    </div>
   );
 }

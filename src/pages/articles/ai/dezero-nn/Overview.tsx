@@ -1,15 +1,12 @@
-import type { CodeRef } from "@/components/code/types";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
-import { codeRefs } from "./codeRefs";
-import OverviewViz from "./viz/OverviewViz";
+import DezeroExecutionPathViz from "../shared/DezeroExecutionPathViz";
 
-export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
-  const open = (key: string) => onCodeRef(key, codeRefs[key]);
-
+export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">자동 미분 다음에는 파라미터와 학습 상태를 관리해야 합니다</h2>
+      <DezeroExecutionPathViz current="nn" />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           앞 글의 자동 미분 엔진만으로도 개별 함수의 gradient는 구할 수 있습니다. 그러나 신경망을 학습하려면 모델에 속한 파라미터를 빠짐없이 찾고 예측과 loss를 계산한 뒤
@@ -23,7 +20,6 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         </p>
       </div>
       <ContentBoundary article="dezero-nn" />
-      <div className="not-prose my-8"><OverviewViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           구현을 따라갈 때는 매 단계마다 shape test와 수치 gradient check를 유지합니다. forward 값이 맞아도 broadcasting이나 gradient 누적이
@@ -32,7 +28,10 @@ export default function Overview({ onCodeRef }: { onCodeRef: (key: string, ref: 
         <p>
           Model의 parameter 탐색은 하위 Layer를 등록 순서대로 재귀 순회하되 같은 parameter identity를 두 번 update하지 않아야 합니다. 이름만 같은
           다른 tensor와 두 경로가 공유하는 같은 tensor를 구분하고 checkpoint에는 stable parameter ID와 shape, dtype, 순서를 manifest로
-          남깁니다. 새 Layer를 추가한 뒤 전체 trainable parameter 수와 optimizer coverage가 함께 늘어나는지를 test하면 누락과 중복 등록이 일찍
+          남깁니다.
+        </p>
+        <p>
+          새 Layer를 추가한 뒤 전체 trainable parameter 수와 optimizer coverage가 함께 늘어나는지를 test하면 누락과 중복 등록이 일찍
           드러납니다.
         </p>
       </div>

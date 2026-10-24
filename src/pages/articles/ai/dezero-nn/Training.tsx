@@ -5,8 +5,9 @@ import TrainingViz from "./viz/TrainingViz";
 export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="training" className="mb-16 scroll-mt-20">
+    <section id="training" data-teach-level="3" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">학습 루프는 loss를 계산하고 상태를 한 번만 갱신합니다</h2>
+      <div className="not-prose my-8"><TrainingViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           한 스텝은 batch forward, loss 계산, gradient 초기화, backward, optimizer update로 이어집니다. gradient를 누적해 큰
@@ -19,7 +20,6 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
           안정성과 메모리 사용을 함께 관리하기 쉽습니다.
         </p>
       </div>
-      <div className="not-prose my-8"><TrainingViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>loss 값만 보지 말고 단계별 검증을 둡니다</h3>
         <p>
@@ -28,11 +28,27 @@ export default function Training({ onCodeRef }: { onCodeRef: (key: string, ref: 
           분리됩니다.
         </p>
         <p>
-          Resume test에서는 연속 20 step과 12 step 뒤 checkpoint를 저장하고 새 process에서 8 step을 이어간 결과를 나란히 비교합니다. Parameter뿐 아니라 안정적인 parameter ID, optimizer <code>m</code>·<code>v</code>, step, RNG state와 data cursor를 복원하고, sample 순서·loss·최종 weight가 허용 오차 안에서 같은지 확인합니다. Weight만 같은 파일은 inference artifact일 수 있지만 학습 재개 checkpoint라고 볼 수는 없습니다.
+          Resume test에서는 연속 20 step과 12 step 뒤 checkpoint를 저장하고 새
+          process에서 8 step을 이어간 결과를 나란히 비교합니다. Parameter뿐 아니라
+          안정적인 parameter ID, optimizer <code>m</code>·<code>v</code>, step,
+          RNG state와 data cursor를 복원합니다.
+        </p>
+        <p>
+          두 실행의 sample 순서·loss·최종 weight가 허용 오차 안에서 같은지
+          확인합니다. Weight만 같은 파일은 inference artifact일 수 있지만 학습
+          재개 checkpoint라고 볼 수는 없습니다.
+        </p>
+        <p>
+          즉 학습을 다시 시작하려면 weight만으로는 부족합니다. Optimizer와 난수,
+          데이터 위치까지 되돌려야 중단하지 않은 실행과 같은 조건으로 비교할 수
+          있습니다.
         </p>
         <p>
           Release fixture에는 정상 고정 batch뿐 아니라 gradient가 없는 parameter, parameter registry 순서 변경, NaN loss, 중간
-          checkpoint truncate, train/eval mode 누락을 넣습니다. Baseline과 candidate는 같은 data와 seed, precision에서
+          checkpoint truncate, train/eval mode 누락을 넣습니다.
+        </p>
+        <p>
+          Baseline과 candidate는 같은 data와 seed, precision에서
           forward, analytic/finite-difference gradient, update receipt, resume 결과를 비교합니다. 하나라도 contract가 깨지면
           이전 artifact와 manifest로 되돌립니다. 작은 toy loss 감소만으로 framework 전체의 수치 안정성과 실제 model 품질을 보장하지는 않습니다.
         </p>
