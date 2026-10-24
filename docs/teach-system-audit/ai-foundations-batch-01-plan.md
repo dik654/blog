@@ -126,3 +126,37 @@ Linear PCA 글에서는 같은 네 자리를 2차원 sample 두 개 `[(1.0,0.0),
 
 `src/pages/articles/ai/autoencoder/viz/AutoencoderRoundTripViz.tsx`는 다른 작업이 만든 미추적 파일이므로
 이 묶음에서 수정·삭제·커밋하지 않는다. 공개 글은 현재 추적 중인 파일만으로 독립적으로 빌드되어야 한다.
+
+## 4. Multimodal generation·retrieval family
+
+### 분류와 부모 관계
+
+| route | track · form | 직속 부모 | 이 글이 닫을 질문 |
+|---|---|---|---|
+| `ai/vision-language-model-architecture` | concept · explanation | `ai/multimodal-learning-overview`의 model 영역 | image patch가 어떤 배열과 연결 부품을 거쳐 LLM 입력 token이 되는가? |
+| `ai/multimodal-retrieval-and-visual-grounding` | concept · explanation | 앞 글의 generation·retrieval 경계 | text query가 후보 이미지를 고르는 일과 선택한 이미지 안의 위치를 찾는 일은 어디서 갈리는가? |
+
+두 글은 모두 concept 글이다. API 선택, 검색 서비스 SLO, vector DB 운영, 모델 배포와 같은 환경별
+판단은 넣지 않는다. 첫 글은 생성 경로의 visual token을, 둘째 글은 dual encoder의 similarity와
+grounding 출력을 소유한다. 두 출력이 이름만 비슷한 하나의 shared-representation pipeline인 것처럼
+이어 붙이지 않는다.
+
+### 같은 사례와 경계
+
+첫 글은 224×224의 빨간 컵 이미지를 patch 14로 나눠 `16×16=256`개 patch를 만든다. LLaVA의
+공개 예를 따라 CLIP ViT-L/14의 `256×1024` 표현을 linear projector로 Vicuna-13B 입력 차원인
+`256×5120`으로 옮긴다. 이 수치는 모델 전체의 공통 규격이 아니라 특정 논문 설정이다.
+
+둘째 글은 query `빨간 컵`을 `q=(1,0)`, 후보를 `A=(0.8,0.6)`, `B=(0,1)`,
+`C=(−0.6,0.8)`로 둔다. 길이가 1인 교육용 벡터이므로 cosine similarity는 내적과 같아
+`0.8, 0, −0.6`이 된다. Retrieval은 A를 선택한 순간 끝나며, bounding box·point·mask는
+선택한 A를 다시 입력받는 별도의 grounding 단계에서 얻는다.
+
+### 보존·교체 기준
+
+- LLaVA·Flamingo·BLIP-2의 연결 위치와 frozen/trained 범위는 각 원 논문으로 다시 확인해 보존한다.
+- CLIP·ColPali·Kosmos-2는 각각 dual-encoder similarity, document screenshot retrieval,
+  grounding의 근거로만 사용한다.
+- 기존의 “생성형 VLM 뒤에서 retrieval과 grounding이 같은 표현을 이어 쓴다”는 배치는 교체한다.
+- 모든 동작 시각화는 자동 시작하지 않고, 한 번 재생한 뒤 멈추며, 키보드와 reduced-motion에서도
+  같은 순서와 결론을 제공한다.

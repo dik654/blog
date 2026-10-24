@@ -20495,7 +20495,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Multimodal Model", "Vision-Language Model", "VLM"],
     definition:
       "여러 modality를 함께 입력받아 하나의 모델로 처리하는 multimodal model 중 image와 text 두 modality만 다루는 것이 vision-language model(VLM)이며, VLM은 각자 사전학습된 vision encoder와 LLM을 하나의 forward pass로 묶어 조립합니다.",
-    canonicalHref: "/cs/ai/vision-language-model-architecture#architecture",
+    canonicalHref: "/cs/ai/vision-language-model-architecture#trace",
   },
   "multimodal-projector": {
     id: "multimodal-projector",
@@ -20515,7 +20515,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: [],
     definition:
       "Image 표현과 text 표현을 같은 모델이 함께 추론할 수 있는 상태로 맞추는 것으로, projector 결과를 이어붙이는 concat-projection, 고정 LLM 층 사이에 끼우는 cross-attention, learnable query로 압축하는 query bottleneck처럼 결합 지점과 비용이 다른 여러 방법이 있습니다.",
-    canonicalHref: "/cs/ai/vision-language-model-architecture#alignment",
+    canonicalHref: "/cs/ai/vision-language-model-architecture#connectors",
   },
   "code-as-action-program-synthesis": {
     id: "code-as-action-program-synthesis",
@@ -20682,7 +20682,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Multimodal Embedding", "Image Retrieval", "Cross-Modal Retrieval", "Multimodal RAG"],
     definition:
       "서로 다른 modality(image·text)를 같은 차원의 벡터 공간에 투영한 multimodal embedding 위에서, query와 대상의 modality가 다른 검색(cross-modal retrieval)을 수행하고, 그 검색 결과를 LLM generation 입력에 넣는 확장이 multimodal RAG입니다.",
-    canonicalHref: "/cs/ai/multimodal-retrieval-and-visual-grounding#embedding-and-retrieval",
+    canonicalHref: "/cs/ai/multimodal-retrieval-and-visual-grounding#similarity",
   },
   "visual-document-and-screenshot-retrieval": {
     id: "visual-document-and-screenshot-retrieval",
@@ -20712,7 +20712,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: [],
     definition:
       "한 번의 visual grounding으로 끝내지 않고, grounding 결과(잘라낸 영역·짚은 좌표)를 다시 모델에 넣어 다음 판단의 근거로 쓰는 반복 절차로, 작은 글자나 겹친 물체처럼 한 번에 답하기 어려운 질문의 정확도를 끌어올립니다.",
-    canonicalHref: "/cs/ai/multimodal-retrieval-and-visual-grounding#vision-in-the-loop",
+    canonicalHref: "/cs/ai/multimodal-retrieval-and-visual-grounding#vision-loop",
   },
   "constrained-decoding-mask-computation-overhead": {
     id: "constrained-decoding-mask-computation-overhead",

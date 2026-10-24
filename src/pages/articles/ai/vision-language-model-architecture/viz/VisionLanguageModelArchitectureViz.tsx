@@ -1,130 +1,271 @@
+import { motion } from "framer-motion";
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 한 mechanism: image가 patch로 나뉘고(0) → vision encoder가 각 patch를 embedding으로
- * 바꾸고(1) → projector가 그 차원을 LLM hidden dimension에 맞추고(2) → 결과 visual
- * token이 text token과 나란히 LLM sequence에 놓인다(3). Stage 높이는 4 장면 중 가장
- * 큰 scene(scene 3, sequence 나열) 기준으로 고정한다.
- */
-const SCENES = ["Image → patch 분할", "Vision encoder → patch embedding", "Projector → 차원 투영", "LLM 입력 sequence"] as const;
+type StageKind = "image" | "patches" | "features" | "projector" | "sequence";
 
-const NOTES = [
-  "224px 이미지를 patch 14로 나누면 16×16=256개의 patch가 됩니다. 각 patch는 아직 벡터가 아니라 픽셀 묶음입니다.",
-  "Vision encoder(CLIP ViT-L/14)가 256개 patch 각각을 1024차원 embedding Z_v로 바꿉니다. 이 차원은 LLM의 hidden dimension과 다릅니다.",
-  "Projector(linear 또는 MLP)가 1024차원 Z_v를 LLM hidden dimension(예: 5120)의 H_v로 투영합니다. 개수는 그대로 두고 차원만 바뀝니다.",
-  "H_v(visual token)와 text token embedding이 순서대로 이어붙어 하나의 sequence가 되고, LLM이 이 sequence 전체를 한 번에 처리합니다.",
+const STAGES = [
+  {
+    label: "이미지",
+    caption: "224×224 · 빨간 컵",
+    kind: "image" as const,
+    note: "질문은 ‘빨간 컵은 어디에 있나?’입니다. 아직 LLM에는 픽셀을 직접 넣지 않습니다.",
+  },
+  {
+    label: "Patch sequence",
+    caption: "14×14씩 나눠 256개",
+    kind: "patches" as const,
+    note: "224÷14=16이므로 가로 16개와 세로 16개, 모두 256개의 patch가 생깁니다.",
+  },
+  {
+    label: "Vision encoder",
+    caption: "256×1024 · Zᵥ",
+    kind: "features" as const,
+    note: "CLIP ViT-L/14 예에서는 각 patch가 1024차원 표현이 됩니다. 이 수치는 특정 공개 모델의 설정입니다.",
+  },
+  {
+    label: "Projector",
+    caption: "1024 → 5120 · W",
+    kind: "projector" as const,
+    note: "Vicuna-13B를 예로 들면 W가 각 1024차원 patch 표현을 5120차원 visual token으로 옮깁니다. 의미 정렬은 학습으로 따로 배워야 합니다.",
+  },
+  {
+    label: "LLM sequence",
+    caption: "visual 256개 + text token",
+    kind: "sequence" as const,
+    note: "변환된 visual token과 질문의 text token이 같은 입력 sequence에 놓입니다. LLM은 앞선 이미지 표현을 보며 다음 답 token을 생성합니다.",
+  },
 ] as const;
 
-const patchCls = "flex h-8 items-center justify-center border border-border bg-muted/40 text-[10px] text-muted-foreground";
-const vecCls = "flex h-10 items-center justify-center border border-primary/55 bg-primary/10 px-1 text-center text-[10px] font-bold text-foreground";
-const tokenCls = "flex h-10 min-w-14 items-center justify-center border px-2 text-center text-[10px] font-bold";
+const EDGE_LABELS = ["16×16", "encode", "W·Zᵥ", "이어 붙이기"] as const;
 
-function PatchScene() {
+function Cup({ active }: { active: boolean }) {
   return (
-    <div className="mt-6">
-      <p className="text-[11px] text-muted-foreground">원본 image (224×224)</p>
-      <div className="mt-2 grid grid-cols-8 gap-[2px]">
-        {Array.from({ length: 32 }).map((_, index) => (
-          <div key={index} className={patchCls} />
-        ))}
-      </div>
-      <p className="mt-2 text-[10px] text-muted-foreground">P×P patch N개 (실제는 16×16=256개, 화면 표시는 축약)</p>
-    </div>
+    <svg viewBox="0 0 120 82" aria-hidden className="h-20 w-28 max-w-full text-foreground">
+      <rect x="7" y="6" width="106" height="70" fill="none" stroke="currentColor" strokeOpacity=".24" />
+      <motion.path
+        d="M43 25h35l-4 35a7 7 0 0 1-7 6H54a7 7 0 0 1-7-6z"
+        fill="hsl(var(--primary) / .18)"
+        stroke="hsl(var(--primary))"
+        strokeWidth="1.25"
+        animate={active ? { y: [0, -3, 0] } : undefined}
+        transition={{ duration: 1.35, repeat: Infinity }}
+      />
+      <path d="M78 32q17 2 3 19" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.25" />
+    </svg>
   );
 }
 
-function EncoderScene() {
-  return (
-    <div className="mt-6">
-      <p className="text-[11px] text-muted-foreground">Vision encoder 출력 Z_v (patch당 1024차원)</p>
-      <div className="mt-2 grid grid-cols-6 gap-2 sm:grid-cols-8">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className={vecCls}>
-            Z_v
-          </div>
+function Glyph({ kind, active }: { kind: StageKind; active: boolean }) {
+  if (kind === "image") return <Cup active={active} />;
+
+  if (kind === "patches") {
+    return (
+      <svg viewBox="0 0 120 82" aria-hidden className="h-20 w-28 max-w-full">
+        {[0, 1, 2, 3].map((row) =>
+          [0, 1, 2, 3].map((column) => (
+            <motion.rect
+              key={`${row}-${column}`}
+              x={20 + column * 20}
+              y={6 + row * 18}
+              width="16"
+              height="14"
+              fill={(row === 1 || row === 2) && (column === 1 || column === 2) ? "hsl(var(--primary) / .23)" : "hsl(var(--muted) / .65)"}
+              stroke={(row === 1 || row === 2) && (column === 1 || column === 2) ? "hsl(var(--primary))" : "hsl(var(--border))"}
+              animate={active ? { opacity: [.48, 1, .48] } : undefined}
+              transition={{ duration: 1.4, repeat: Infinity, delay: (row + column) * .06 }}
+            />
+          )),
+        )}
+      </svg>
+    );
+  }
+
+  if (kind === "features") {
+    return (
+      <svg viewBox="0 0 120 82" aria-hidden className="h-20 w-28 max-w-full">
+        {[0, 1, 2, 3].map((row) => (
+          <motion.g key={row} animate={active ? { x: [0, 4, 0] } : undefined} transition={{ duration: 1.3, repeat: Infinity, delay: row * .08 }}>
+            <rect x="18" y={9 + row * 17} width="84" height="10" fill="hsl(var(--primary) / .08)" stroke="hsl(var(--primary) / .55)" />
+            <rect x="18" y={9 + row * 17} width={24 + row * 13} height="10" fill="hsl(var(--primary) / .25)" />
+          </motion.g>
         ))}
-      </div>
-      <p className="mt-2 text-[10px] text-muted-foreground">각 patch가 픽셀 묶음에서 1024차원 embedding 벡터로 바뀌었습니다.</p>
-    </div>
+      </svg>
+    );
+  }
+
+  if (kind === "projector") {
+    return (
+      <svg viewBox="0 0 120 82" aria-hidden className="h-20 w-28 max-w-full text-foreground">
+        <rect x="8" y="26" width="28" height="30" fill="hsl(var(--muted) / .55)" stroke="currentColor" strokeOpacity=".5" />
+        <motion.path d="M39 41h39" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.25" strokeDasharray="5 4" animate={active ? { strokeDashoffset: [9, 0] } : undefined} transition={{ duration: .85, repeat: Infinity, ease: "linear" }} />
+        <path d="m72 35 9 6-9 6" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.25" />
+        <rect x="84" y="15" width="28" height="52" fill="hsl(var(--primary) / .13)" stroke="hsl(var(--primary))" />
+        <text x="16" y="44" fontSize="8" fill="currentColor">1024</text>
+        <text x="90" y="44" fontSize="8" fill="currentColor">5120</text>
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 120 82" aria-hidden className="h-20 w-28 max-w-full text-foreground">
+      {[0, 1, 2, 3, 4].map((index) => (
+        <motion.rect
+          key={index}
+          x={8 + index * 22}
+          y="28"
+          width="17"
+          height="27"
+          fill={index < 3 ? "hsl(var(--primary) / .22)" : "hsl(var(--muted) / .65)"}
+          stroke={index < 3 ? "hsl(var(--primary))" : "hsl(var(--border))"}
+          animate={active ? { y: [0, index % 2 === 0 ? -3 : 3, 0] } : undefined}
+          transition={{ duration: 1.35, repeat: Infinity, delay: index * .07 }}
+        />
+      ))}
+      <text x="15" y="70" fontSize="7" fill="currentColor" opacity=".65">visual</text>
+      <text x="82" y="70" fontSize="7" fill="currentColor" opacity=".65">text</text>
+    </svg>
   );
 }
 
-function ProjectorScene() {
+function FlowEdge({ label, reached, moving }: { label: string; reached: boolean; moving: boolean }) {
   return (
-    <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-      <div className="flex flex-col items-center gap-2">
-        <p className="text-[10px] text-muted-foreground">Z_v (1024차원)</p>
-        <div className={`${vecCls} w-20`}>Z_v</div>
-      </div>
-      <div className="flex flex-col items-center gap-1 px-2">
-        <p className="text-[10px] font-bold text-primary">W</p>
-        <p className="text-lg leading-none text-primary">→</p>
-        <p className="text-[9px] text-muted-foreground">projector</p>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <p className="text-[10px] text-muted-foreground">H_v (LLM hidden, 예: 5120차원)</p>
-        <div className={`${vecCls} w-28`}>H_v</div>
-      </div>
-    </div>
-  );
-}
-
-function SequenceScene() {
-  return (
-    <div className="mt-6">
-      <p className="text-[11px] text-muted-foreground">LLM 입력 sequence</p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {["H_v¹", "H_v²", "H_v³", "…"].map((label) => (
-          <div key={label} className={`${tokenCls} border-primary/55 bg-primary/10 text-foreground`}>
-            {label}
-          </div>
-        ))}
-        {["text₁", "text₂", "text₃"].map((label) => (
-          <div key={label} className={`${tokenCls} border-border bg-muted/40 text-muted-foreground`}>
-            {label}
-          </div>
-        ))}
-      </div>
-      <p className="mt-2 text-[10px] text-muted-foreground">Visual token(색칠)과 text token(회색)이 같은 sequence 안에서 순서대로 처리됩니다.</p>
+    <div className="grid min-w-0 place-items-center gap-1 py-1 lg:w-7">
+      <svg viewBox="0 0 52 22" aria-hidden className="h-7 w-10 rotate-90 lg:rotate-0">
+        <motion.path d="M3 11h39" fill="none" stroke="currentColor" strokeWidth="1.25" strokeDasharray="5 4" className={reached ? "text-primary" : "text-border"} animate={moving ? { strokeDashoffset: [9, 0] } : undefined} transition={{ duration: .85, repeat: Infinity, ease: "linear" }} />
+        <path d="m38 5 10 6-10 6" fill="none" stroke="currentColor" strokeWidth="1.25" className={reached ? "text-primary" : "text-border"} />
+      </svg>
+      <span className="break-keep text-center font-mono text-[8px] font-bold text-muted-foreground">{label}</span>
     </div>
   );
 }
 
 export default function VisionLanguageModelArchitectureViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const controls = useAnimatedScenes(STAGES.length, 3600, { loop: false });
+
   return (
     <VizFrame
-      eyebrow="Image patch → projector → LLM token"
-      title="Vision encoder의 patch embedding은 projector를 거쳐야 LLM token과 나란히 놓입니다"
-      description="Image가 patch로 나뉘고, vision encoder가 embedding을 만들고, projector가 차원을 맞춘 뒤, LLM sequence에 합류하는 네 단계입니다."
-      note="Patch 개수·차원 수치는 CLIP ViT-L/14·LLaVA 계열의 공개 설정값을 예로 든 것이며 화면의 격자 개수는 실제 256개를 축약해 보여 줍니다."
+      eyebrow="한 이미지가 답 token이 되기까지"
+      title="픽셀은 patch 표현과 projector를 거쳐 LLM 입력에 합류합니다"
+      description="‘빨간 컵은 어디에 있나?’라는 한 요청에서 배열의 개수와 차원이 어떻게 바뀌는지 먼저 따라갑니다."
+      note="224px·patch 14·1024→5120은 CLIP ViT-L/14와 Vicuna-13B를 잇는 LLaVA 계열을 설명하기 위한 공개 설정 예입니다. 모든 VLM이 같은 수치를 쓰지는 않습니다."
     >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="Image patch가 vision encoder와 projector를 거쳐 LLM token sequence로 합류하는 과정"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(28rem,calc(100svh-15rem))] min-h-[22rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
+      <div id={controls.playbackId} data-viz="vlm-assembly-flow" tabIndex={0} role="group" aria-label="이미지가 patch 표현과 projector를 거쳐 LLM 입력 sequence가 되는 과정" onKeyDown={controls.onKeyDown} className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60">
+        <div className="flex min-h-0 flex-1 flex-col justify-center py-1">
+          <div data-viz-canvas className="hidden min-w-0 gap-1 lg:grid lg:grid-cols-[minmax(0,1fr)_1.75rem_minmax(0,1fr)_1.75rem_minmax(0,1fr)_1.75rem_minmax(0,1fr)_1.75rem_minmax(0,1fr)] lg:items-center">
+            {STAGES.map((stage, index) => {
+              const selected = index === controls.active;
+              const reached = index <= controls.active;
+              return (
+                <div key={stage.label} className="contents">
+                  <div className={`grid min-w-0 place-items-center border px-2 py-4 ${selected ? "border-primary bg-primary/[.07]" : reached ? "border-primary/35 bg-primary/[.025]" : "border-border bg-background"}`}>
+                    <Glyph kind={stage.kind} active={selected && controls.playing && !controls.reducedMotion} />
+                    <strong className="mt-2 break-keep text-center text-xs leading-5">{stage.label}</strong>
+                    <p className="mt-1 text-center text-[10px] leading-5 text-muted-foreground">{stage.caption}</p>
+                  </div>
+                  {index < STAGES.length - 1 ? <FlowEdge label={EDGE_LABELS[index]} reached={controls.active > index} moving={controls.playing && controls.active === index + 1} /> : null}
+                </div>
+              );
+            })}
+          </div>
 
-          {scenes.active === 0 && <PatchScene />}
-          {scenes.active === 1 && <EncoderScene />}
-          {scenes.active === 2 && <ProjectorScene />}
-          {scenes.active === 3 && <SequenceScene />}
+          <div data-viz-canvas className="grid min-w-0 place-items-center lg:hidden">
+            <div className="grid w-full min-w-0 place-items-center border border-primary bg-primary/[.07] px-4 py-4">
+              <Glyph kind={STAGES[controls.active].kind} active={controls.playing && !controls.reducedMotion} />
+              <p className="mt-1 text-[10px] font-bold text-primary">{controls.active + 1} / {STAGES.length}</p>
+              <strong className="mt-1 break-keep text-center text-base leading-6">{STAGES[controls.active].label}</strong>
+              <p className="mt-1 text-center text-xs leading-5 text-muted-foreground">{STAGES[controls.active].caption}</p>
+            </div>
+          </div>
 
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
-          </p>
+          <ol className="sr-only">
+            {STAGES.map((stage, index) => <li key={`${stage.label}-text`}>{index + 1}. {stage.label}: {stage.caption}. {stage.note}</li>)}
+          </ol>
+
+          <div className="mt-5 border-l border-primary/60 pl-4">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[.14em] text-primary">단계 {String(controls.active + 1).padStart(2, "0")}</p>
+            <p className="mt-1 text-sm font-bold">{STAGES[controls.active].label}</p>
+            <p className="mt-1 text-xs leading-6 text-muted-foreground">{STAGES[controls.active].note}</p>
+          </div>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls labels={STAGES.map((stage) => stage.label)} active={controls.active} playing={controls.playing} reducedMotion={controls.reducedMotion} setActive={controls.setActive} setPlaying={controls.setPlaying} />
+      </div>
+    </VizFrame>
+  );
+}
+
+const CONNECTORS = [
+  {
+    name: "LLaVA",
+    visual: "patch 256개",
+    connector: "linear projector",
+    language: "LLM 입력 앞에 concat",
+    learn: "정렬 단계: projector만 · instruction 단계: projector+LLM",
+  },
+  {
+    name: "Flamingo",
+    visual: "Perceiver로 64개",
+    connector: "gated cross-attention",
+    language: "frozen LLM 층 사이에서 참조",
+    learn: "vision encoder·LLM 고정 · 새 connector 학습",
+  },
+  {
+    name: "BLIP-2",
+    visual: "Q-Former query 32개",
+    connector: "query bottleneck",
+    language: "projection 뒤 frozen LLM 연결",
+    learn: "image encoder·LLM 고정 · Q-Former 중심 학습",
+  },
+] as const;
+
+export function VlmConnectorComparison() {
+  return (
+    <VizFrame
+      eyebrow="같은 목적 · 다른 연결 지점"
+      title="세 구조는 visual 정보를 줄이고 LLM에 넣는 위치가 다릅니다"
+      description="왼쪽의 image 표현에서 오른쪽의 언어 모델까지 어떤 부품이 상태를 바꾸는지 행별로 읽습니다."
+      note="세 논문의 구조를 비교하기 위한 개념도입니다. 모델 규모와 학습 데이터가 달라 이 표만으로 성능 우위를 정할 수는 없습니다."
+    >
+      <div data-viz-canvas className="grid gap-3">
+        {CONNECTORS.map((row) => (
+          <div key={row.name} className="grid min-w-0 grid-cols-[4.25rem_minmax(0,1fr)] gap-x-3 gap-y-2 border border-border p-3 md:grid-cols-[5rem_minmax(0,1fr)_1.5rem_minmax(0,1fr)_1.5rem_minmax(0,1fr)] md:items-center">
+            <strong className="row-span-3 self-center text-sm md:row-span-1">{row.name}</strong>
+            <div className="min-w-0 border-b border-border pb-2 text-xs leading-5 md:border md:bg-muted/30 md:px-3 md:py-2"><span className="mr-2 text-[9px] font-bold text-muted-foreground md:block">VISUAL</span>{row.visual}</div>
+            <span aria-hidden className="hidden text-center text-primary md:block">→</span>
+            <div className="min-w-0 border-b border-primary/35 pb-2 text-xs leading-5 md:border md:border-primary/45 md:bg-primary/[.05] md:px-3 md:py-2"><span className="mr-2 text-[9px] font-bold text-primary md:block">CONNECTOR</span>{row.connector}</div>
+            <span aria-hidden className="hidden text-center text-primary md:block">→</span>
+            <div className="min-w-0 text-xs leading-5 md:px-1 md:py-2"><strong className="block break-keep">{row.language}</strong><span className="mt-1 block text-[10px] leading-5 text-muted-foreground">{row.learn}</span></div>
+          </div>
+        ))}
+      </div>
+    </VizFrame>
+  );
+}
+
+export function MultimodalPathBoundary() {
+  return (
+    <VizFrame
+      eyebrow="여기서 두 경로가 갈립니다"
+      title="생성형 VLM과 검색용 dual encoder는 입력과 출력이 다릅니다"
+      description="둘 다 이미지와 언어를 다루지만, 같은 요청 경로의 앞뒤 단계는 아닙니다."
+      note="제품에 따라 두 경로를 함께 조합할 수는 있습니다. 그때도 각 경로가 소유하는 출력은 visual token과 검색 점수로 구분해야 합니다."
+    >
+      <div data-viz-canvas className="grid gap-4 lg:grid-cols-2">
+        <div className="border border-border p-4">
+          <p className="text-[10px] font-bold text-primary">답을 생성하는 경로</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold">
+            <span className="border border-border px-3 py-2">이미지</span><span aria-hidden>→</span><span className="border border-primary/45 px-3 py-2">projector</span><span aria-hidden>→</span><span className="border border-border px-3 py-2">LLM</span><span aria-hidden>→</span><span className="border border-border px-3 py-2">답 token</span>
+          </div>
+          <p className="mt-3 text-xs leading-6 text-muted-foreground">한 sequence 안에서 이미지 표현을 참조해 다음 token을 생성합니다.</p>
+        </div>
+        <div className="border border-border p-4">
+          <p className="text-[10px] font-bold text-primary">후보를 검색하는 경로</p>
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold">
+            <span className="border border-border px-3 py-2">text encoder</span><span aria-hidden>+</span><span className="border border-border px-3 py-2">image encoder</span><span aria-hidden>→</span><span className="border border-primary/45 px-3 py-2">similarity</span><span aria-hidden>→</span><span className="border border-border px-3 py-2">후보 순위</span>
+          </div>
+          <p className="mt-3 text-xs leading-6 text-muted-foreground">두 encoder의 출력을 같은 공간에서 비교해 어느 후보가 가까운지 계산합니다.</p>
+        </div>
       </div>
     </VizFrame>
   );

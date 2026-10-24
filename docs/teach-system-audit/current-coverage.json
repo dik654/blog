@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 402,
-    "pending": 588,
+    "reviewed": 404,
+    "pending": 586,
     "untracked": 0,
-    "assignedPending": 536,
+    "assignedPending": 534,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -461,21 +461,21 @@
     {
       "route": "ai/vision-language-model-architecture",
       "publicPath": "cs/ai/vision-language-model-architecture",
-      "title": "VLM은 image patch를 projector로 LLM token에 맞춥니다",
+      "title": "VLM 구조: Image Patch에서 LLM Token까지",
       "catalogIndex": 43,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
       "route": "ai/multimodal-retrieval-and-visual-grounding",
       "publicPath": "cs/ai/multimodal-retrieval-and-visual-grounding",
-      "title": "같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다",
+      "title": "Multimodal Retrieval과 Visual Grounding",
       "catalogIndex": 44,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

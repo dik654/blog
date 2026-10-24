@@ -94944,7 +94944,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "CNN·ViT가 image를 patch embedding으로 바꾸는 절차(vit-patch-sequence-contract)와 visual token이 reconstruction·semantic 중 어떤 정보를 보존하는지(visual-representation-objective-boundary)를 안다고 가정합니다.",
     coreIdea:
-      "VLM은 vision encoder가 만든 patch embedding을 projector로 LLM의 hidden dimension에 맞춘 뒤 그 결과를 text token과 나란히 배열해 LLM에 넣는 조립이며, projector가 만든 결합 지점의 형태에 따라 LLM을 고정한 채 새 module만 학습하는 방식과 LLM까지 함께 학습하는 방식으로 갈립니다.",
+      "생성형 VLM은 vision encoder가 만든 patch representation을 connector로 LLM 입력에 맞추고 visual token과 text token을 한 추론에 넣습니다. 이 경로의 출력은 답 token이며, dual encoder의 similarity로 후보 순위를 만드는 retrieval 경로와는 구분합니다.",
     assumedKnowledge: [
       { id: "vit-patch-sequence-contract", role: "Image를 patch로 나누고 D차원 embedding으로 투영하는 절차이며, 이 글의 vision encoder 출력이 정확히 이 결과입니다." },
       { id: "visual-representation-objective-boundary", role: "Visual token이 reconstruction 성향인지 semantic 성향인지 구분하며, VLM이 재사용하는 visual token은 semantic 계열입니다." },
@@ -94957,7 +94957,7 @@ export const ARTICLE_LEARNING: Readonly<
     conceptExplanations: [
       {
         id: "multimodal-model-family",
-        sectionId: "architecture",
+        sectionId: "trace",
         intuition: "번역가와 통역사를 한 사람이 겸하는 게 아니라, 그림을 설명해 주는 통역사를 번역가 옆에 붙여 두는 조립과 같습니다.",
         workedExample: "CLIP ViT-L/14(vision encoder)와 Vicuna(LLM) 둘 다 각자 사전학습된 채로 LLaVA라는 하나의 VLM으로 묶입니다.",
         boundary: "두 encoder를 이어붙였다고 전부 VLM은 아니며, image와 text를 같은 forward pass에서 함께 추론해야 VLM이라고 부릅니다.",
@@ -94971,7 +94971,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "cross-modal-alignment",
-        sectionId: "alignment",
+        sectionId: "connectors",
         intuition: "회의 자료를 참석자 손에 나눠 주는 방식과, 필요할 때마다 화면을 가리키며 설명하는 방식의 차이와 같습니다.",
         workedExample: "LLaVA는 projector가 만든 visual token을 text token과 이어붙여 LLM에 한 번에 넣고, Flamingo는 고정된 LLM 층 사이 cross-attention layer가 필요할 때마다 64개 visual token을 참조합니다.",
         boundary: "결합 지점을 늘릴수록 표현력은 커지지만 학습·추론 비용도 함께 늘어, 항상 더 정교한 방식이 우월하지는 않습니다.",
@@ -94983,16 +94983,16 @@ export const ARTICLE_LEARNING: Readonly<
       { label: "02 결합 방식", relation: "Concat-projection·cross-attention·query bottleneck의 트레이드오프를 비교합니다.", concepts: ["cross-modal-alignment"] },
     ],
     exercises: [
-      { level: "basic", question: "Multimodal model과 vision-language model(VLM)의 관계를 한 문장으로 설명하세요.", answerChecklist: ["VLM은 multimodal model의 부분집합", "image+text 두 modality만 다룸", "vision encoder+LLM 조립"], requiredConcepts: ["multimodal-model-family"], sectionId: "architecture" },
-      { level: "basic", question: "VLM 파이프라인에서 vision encoder가 만드는 출력이 무엇인지 쓰세요.", answerChecklist: ["patch embedding", "고정 차원 벡터 sequence", "LLM 입력 이전 단계"], requiredConcepts: ["multimodal-model-family"], sectionId: "architecture" },
+      { level: "basic", question: "Multimodal model과 vision-language model(VLM)의 관계를 한 문장으로 설명하세요.", answerChecklist: ["VLM은 multimodal model의 부분집합", "image+text 두 modality만 다룸", "vision encoder+LLM 조립"], requiredConcepts: ["multimodal-model-family"], sectionId: "trace" },
+      { level: "basic", question: "VLM 파이프라인에서 vision encoder가 만드는 출력이 무엇인지 쓰세요.", answerChecklist: ["patch embedding", "고정 차원 벡터 sequence", "LLM 입력 이전 단계"], requiredConcepts: ["multimodal-model-family"], sectionId: "trace" },
       { level: "basic", question: "CLIP ViT-L/14의 patch embedding 차원(1024)과 LLM hidden 차원(예: 5120)이 다를 때 projector가 하는 역할을 쓰세요.", answerChecklist: ["차원을 맞추는 linear/MLP", "1024→LLM hidden 투영", "내용 정합까지 보장하진 않음"], requiredConcepts: ["multimodal-projector"], sectionId: "projector" },
-      { level: "basic", question: "LLaVA의 linear projector와 LLaVA-1.5의 MLP projector 차이를 설명하세요.", answerChecklist: ["단일 linear vs 2-layer MLP", "비선형성 추가", "표현력 차이"], requiredConcepts: ["multimodal-projector"], sectionId: "projector" },
-      { level: "basic", question: "Concat-projection 방식과 cross-attention 방식의 결합 지점 차이를 쓰세요.", answerChecklist: ["concat은 LLM 입력에 이어붙임", "cross-attention은 LLM 내부 층에서 참조", "결합 위치가 다름"], requiredConcepts: ["cross-modal-alignment"], sectionId: "alignment" },
-      { level: "basic", question: "BLIP-2의 Q-Former가 만드는 query 개수와 그 역할을 쓰세요.", answerChecklist: ["32개 learnable query", "정보 병목 역할", "고정 개수로 image feature 압축"], requiredConcepts: ["cross-modal-alignment"], sectionId: "alignment" },
-      { level: "advanced", question: "두 encoder를 단순히 이어 붙인 시스템과 VLM의 차이를 forward pass 관점에서 설명하세요.", answerChecklist: ["같은 forward pass에서 함께 추론", "분리 실행이면 VLM 아님", "공동 추론 여부가 기준"], requiredConcepts: ["multimodal-model-family"], sectionId: "architecture" },
+      { level: "basic", question: "256×1024 patch representation에 1024×5120 projection matrix를 곱했을 때 결과 shape를 쓰고, 유지되는 축과 바뀌는 축을 설명하세요.", answerChecklist: ["결과 256×5120", "patch 수 256 유지", "마지막 차원 1024→5120"], requiredConcepts: ["multimodal-projector"], sectionId: "projector" },
+      { level: "basic", question: "Concat-projection 방식과 cross-attention 방식의 결합 지점 차이를 쓰세요.", answerChecklist: ["concat은 LLM 입력에 이어붙임", "cross-attention은 LLM 내부 층에서 참조", "결합 위치가 다름"], requiredConcepts: ["cross-modal-alignment"], sectionId: "connectors" },
+      { level: "basic", question: "BLIP-2의 Q-Former가 만드는 query 개수와 그 역할을 쓰세요.", answerChecklist: ["32개 learnable query", "정보 병목 역할", "고정 개수로 image feature 압축"], requiredConcepts: ["cross-modal-alignment"], sectionId: "connectors" },
+      { level: "advanced", question: "생성형 VLM과 dual-encoder retrieval의 차이를 출력 관점에서 설명하세요.", answerChecklist: ["생성형 VLM은 답 token 출력", "dual encoder는 similarity·후보 순위 출력", "두 경로는 조합할 수 있지만 같은 단계가 아님"], requiredConcepts: ["multimodal-model-family"], sectionId: "boundary" },
       { level: "advanced", question: "Projector가 차원만 맞추고 의미 정합은 보장하지 않는다는 한계가 실제로 문제되는 상황을 예로 설명하세요.", answerChecklist: ["차원 일치해도 의미 대응 실패 가능", "feature alignment pretraining 필요 이유", "frozen encoder+trainable projector 단계"], requiredConcepts: ["multimodal-projector"], sectionId: "projector" },
-      { level: "advanced", question: "Flamingo가 LLM을 freeze한 채 학습하는 이유와 gated cross-attention의 tanh gating이 하는 역할을 설명하세요.", answerChecklist: ["frozen LLM 언어 능력 보존", "학습 안정성", "tanh(α) 초기값 0으로 시작"], requiredConcepts: ["cross-modal-alignment"], sectionId: "alignment" },
-      { level: "advanced", question: "고정 LLM 유지(Flamingo) vs 통합 학습(LLaVA) 트레이드오프를 배포·학습 비용 관점에서 비교하세요.", answerChecklist: ["Flamingo는 새 module만 학습, 비용 적음", "LLaVA는 LLM까지 학습, 비용 크지만 통합도 높음", "선택은 자원과 목표에 따라 다름"], requiredConcepts: ["cross-modal-alignment", "multimodal-projector"], sectionId: "alignment" },
+      { level: "advanced", question: "Flamingo가 LLM을 freeze한 채 학습하는 이유와 gated cross-attention의 tanh gating이 하는 역할을 설명하세요.", answerChecklist: ["frozen LLM 언어 능력 보존", "학습 안정성", "tanh(α) 초기값 0으로 시작"], requiredConcepts: ["cross-modal-alignment"], sectionId: "connectors" },
+      { level: "advanced", question: "고정 LLM 유지(Flamingo)와 LLM까지 함께 조정하는 LLaVA의 차이를 학습 대상 parameter 관점에서 비교하세요.", answerChecklist: ["Flamingo는 frozen LLM과 새 connector", "LLaVA는 첫 단계 projector만·두 번째 단계 projector와 LLM", "구조만으로 성능 우위 단정 불가"], requiredConcepts: ["cross-modal-alignment", "multimodal-projector"], sectionId: "connectors" },
     ],
     papers: [
       {
@@ -95361,11 +95361,11 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/multimodal-retrieval-and-visual-grounding": {
     entryNote:
-      "VLM이 vision encoder·projector·LLM을 조립해 image·text를 함께 추론한다는 사실(multimodal-model-family)과, image가 patch embedding으로 바뀌는 절차(vit-patch-sequence-contract)를 안다고 가정합니다.",
+      "생성형 VLM이 visual token으로 답을 만드는 경로와 dual encoder가 similarity로 후보 순위를 만드는 경로가 다르다는 경계(multimodal-model-family), image가 patch embedding으로 바뀌는 절차(vit-patch-sequence-contract), dense retrieval의 embedding space를 안다고 가정합니다.",
     coreIdea:
-      "Multimodal embedding은 image와 text를 같은 벡터 공간에 놓아 cross-modal retrieval과 그 확장인 multimodal RAG를 가능하게 하고, 그중 screenshot retrieval은 OCR·layout parsing을 건너뛰어 문서 이미지를 그대로 검색 대상으로 씁니다. Visual grounding은 이 공동 표현 위에서 대상의 위치를 bounding box·point·segmentation mask 중 하나로 표현하며, vision-in-the-loop reasoning은 이 grounding 결과를 반복 참조해 답을 좁힙니다.",
+      "Dual encoder retrieval은 text와 image를 같은 embedding 공간에 놓고 similarity로 어느 후보를 고를지 결정합니다. 그 선택이 끝난 뒤 grounding은 고른 image 안의 위치를 box·point·mask로 나타내며, screenshot retrieval은 OCR 중간 산출물 대신 page image의 patch 표현을 직접 검색합니다.",
     assumedKnowledge: [
-      { id: "multimodal-model-family", role: "Image·text를 함께 추론하는 VLM 조립을 안다고 가정하며, 이 글의 retrieval·grounding은 모두 그 VLM 위에서 동작합니다." },
+      { id: "multimodal-model-family", role: "생성형 VLM의 답 token 경로와 dual encoder의 similarity 경로를 구분하는 직접적인 부모 경계로 재사용합니다." },
       { id: "vit-patch-sequence-contract", role: "Image가 patch embedding sequence로 바뀌는 절차이며, screenshot retrieval의 patch 단위 multi-vector embedding이 이를 그대로 재사용합니다." },
       { id: "dense-retrieval-embedding-space", role: "Query·document를 같은 공간의 벡터로 바꿔 거리로 검색하는 일반 dense retrieval 원리이며, 이 글은 그 공간을 image·text로 확장합니다." },
       { id: "cnn-task-spatial-contract", role: "Class·box·mask마다 예측 단위·shape이 다르다는 원리이며, 이 글의 grounding primitive 비교가 이를 구체화합니다." },
@@ -95379,7 +95379,7 @@ export const ARTICLE_LEARNING: Readonly<
     conceptExplanations: [
       {
         id: "multimodal-embedding-and-cross-modal-retrieval",
-        sectionId: "embedding-and-retrieval",
+        sectionId: "similarity",
         intuition: "서로 다른 나라 말을 한 사전에 나란히 실어, 사전 안 거리만 재도 뜻이 가까운 단어를 찾을 수 있게 하는 것과 같습니다.",
         workedExample: "CLIP은 배치 32,768개의 image-text 쌍 중 대각선 쌍의 유사도를 키우고 나머지는 낮추는 대조학습으로 같은 공간을 만듭니다.",
         boundary: "같은 공간에 있다고 모든 개념이 균일하게 가깝게 놓이는 것은 아니며, 학습에 쓴 caption 분포에 따라 편향이 남습니다.",
@@ -95400,29 +95400,29 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "vision-in-the-loop-reasoning",
-        sectionId: "vision-in-the-loop",
+        sectionId: "vision-loop",
         intuition: "멀리서 표지판을 보고 잘 안 보이면 가까이 다가가 다시 읽는 것과 같습니다.",
         workedExample: "표 영역을 bounding box로 먼저 grounding한 뒤 그 영역만 잘라 확대해 다시 읽으면 작은 글자를 더 정확히 답할 수 있습니다.",
         boundary: "반복에 종료 조건(확신도 등)이 없으면 필요 이상으로 되풀이해 비용만 늘어날 수 있습니다.",
       },
     ],
     conceptStages: [
-      { label: "00 공유 embedding", relation: "Image·text를 같은 공간에 놓아 cross-modal retrieval·multimodal RAG를 가능하게 합니다.", concepts: ["multimodal-embedding-and-cross-modal-retrieval"] },
-      { label: "01 문서 검색", relation: "OCR·layout parsing 없이 문서 이미지를 직접 embedding하는 screenshot retrieval입니다.", concepts: ["visual-document-and-screenshot-retrieval"] },
-      { label: "02 grounding 표현", relation: "위치를 bounding box·point·segmentation mask 중 하나로 표현합니다.", concepts: ["visual-grounding-primitives"] },
-      { label: "03 반복 추론", relation: "Grounding 결과를 되먹여 답을 좁히는 절차입니다.", concepts: ["vision-in-the-loop-reasoning"] },
+      { label: "00 후보 검색", relation: "Text·image embedding의 similarity로 어느 image를 고를지 결정합니다.", concepts: ["multimodal-embedding-and-cross-modal-retrieval"] },
+      { label: "01 문서 표현", relation: "OCR 경로와 page image를 직접 embedding하는 screenshot retrieval을 구분합니다.", concepts: ["visual-document-and-screenshot-retrieval"] },
+      { label: "02 위치 찾기", relation: "선택된 image 안의 위치를 box·point·mask 중 하나로 표현합니다.", concepts: ["visual-grounding-primitives"] },
+      { label: "03 반복해서 읽기", relation: "Grounding한 영역을 잘라 확대하고 다시 판단합니다.", concepts: ["vision-in-the-loop-reasoning"] },
     ],
     exercises: [
-      { level: "basic", question: "Multimodal embedding과 cross-modal retrieval의 관계를 한 문장으로 설명하세요.", answerChecklist: ["같은 벡터 공간에 image·text를 투영", "modality가 다른 query·target 매칭", "거리 비교로 검색 성립"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval"], sectionId: "embedding-and-retrieval" },
-      { level: "basic", question: "CLIP의 대조학습 loss에서 분자와 분모가 각각 무엇을 계산하는지 쓰세요.", answerChecklist: ["분자는 진짜 쌍 similarity", "분모는 배치 내 전체 후보로 정규화", "softmax cross-entropy 형태"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval"], sectionId: "embedding-and-retrieval" },
+      { level: "basic", question: "Multimodal embedding과 cross-modal retrieval의 관계를 한 문장으로 설명하세요.", answerChecklist: ["같은 벡터 공간에 image·text를 투영", "modality가 다른 query·target 매칭", "거리 비교로 검색 성립"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval"], sectionId: "similarity" },
+      { level: "basic", question: "q=(1,0), A=(0.8,0.6), B=(0,1), C=(−0.6,0.8)일 때 cosine similarity 세 개를 계산하고 top-1 후보를 고르세요.", answerChecklist: ["q·A=0.8", "q·B=0", "q·C=−0.6", "A가 top-1"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval"], sectionId: "similarity" },
       { level: "basic", question: "Screenshot retrieval이 OCR 기반 파이프라인과 다른 점을 문서 표현 방식 관점에서 설명하세요.", answerChecklist: ["OCR·layout parsing 없이 이미지 그대로 embedding", "patch 단위 multi-vector 표현", "late interaction으로 매칭"], requiredConcepts: ["visual-document-and-screenshot-retrieval"], sectionId: "document-retrieval" },
       { level: "basic", question: "Bounding box·point·segmentation mask 세 가지 visual primitive의 정보량 차이를 좌표 개수·픽셀 단위로 비교하세요.", answerChecklist: ["bbox는 좌표 4개", "point는 좌표 2개", "mask는 픽셀 수만큼"], requiredConcepts: ["visual-grounding-primitives"], sectionId: "grounding" },
       { level: "basic", question: "Kosmos-2가 bounding box 좌표를 location token으로 바꾸는 방법을 설명하세요.", answerChecklist: ["이미지를 32×32 bin으로 나눔", "좌표를 bin index로 양자화", "1,024개 location token을 vocabulary에 추가"], requiredConcepts: ["visual-grounding-primitives"], sectionId: "grounding" },
-      { level: "basic", question: "Vision-in-the-loop reasoning 루프의 세 단계(region 찾기·잘라 확대·재판단)를 순서대로 쓰세요.", answerChecklist: ["grounding으로 영역 찾기", "잘라서 확대", "확대된 영역으로 재판단"], requiredConcepts: ["vision-in-the-loop-reasoning"], sectionId: "vision-in-the-loop" },
-      { level: "advanced", question: "Multimodal RAG가 일반 RAG와 다른 점과 같은 점을 generation 단계 관점에서 설명하세요.", answerChecklist: ["evidence가 image·표 등 다른 modality일 수 있음", "context budget·citation 규칙은 RAG 파이프라인과 공유", "검색 대상만 확장된 것"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval"], sectionId: "embedding-and-retrieval" },
+      { level: "basic", question: "Vision-in-the-loop reasoning 루프의 세 단계(region 찾기·잘라 확대·재판단)를 순서대로 쓰세요.", answerChecklist: ["grounding으로 영역 찾기", "잘라서 확대", "확대된 영역으로 재판단"], requiredConcepts: ["vision-in-the-loop-reasoning"], sectionId: "vision-loop" },
+      { level: "advanced", question: "Retrieval과 grounding의 출력을 각각 쓰고, 왜 둘을 같은 결정으로 볼 수 없는지 설명하세요.", answerChecklist: ["retrieval은 image ID와 similarity", "grounding은 box·point·mask", "후보 선택 뒤에만 선택 image 내부 위치를 찾음"], requiredConcepts: ["multimodal-embedding-and-cross-modal-retrieval", "visual-grounding-primitives"], sectionId: "overview" },
       { level: "advanced", question: "ViDoRe 벤치마크에서 ColPali(81.3)가 OCR+캡션 파이프라인(67.0)을 앞서는 이유와 이 수치를 일반화하면 안 되는 이유를 함께 설명하세요.", answerChecklist: ["레이아웃·표·그림 정보 보존 우위", "저자 구성 특정 파이프라인과의 비교", "모든 OCR 구현에 자동 일반화되지 않음"], requiredConcepts: ["visual-document-and-screenshot-retrieval"], sectionId: "document-retrieval" },
       { level: "advanced", question: "Bounding box grounding만으로 답이 실패할 수 있는 상황을 point·segmentation과 비교해 설명하세요.", answerChecklist: ["겹친 대상 구분 어려움(bbox가 배경 포함)", "point는 크기·범위 정보 없음", "정밀한 윤곽이 필요하면 segmentation 필요"], requiredConcepts: ["visual-grounding-primitives"], sectionId: "grounding" },
-      { level: "advanced", question: "Vision-in-the-loop reasoning 루프가 한 번의 grounding보다 정확도를 높이는 이유와 반복을 멈추는 조건을 설명하세요.", answerChecklist: ["영역을 잘라 확대해 세부 정보 확보", "확신도 등 종료 조건 필요", "무한 반복 방지"], requiredConcepts: ["vision-in-the-loop-reasoning"], sectionId: "vision-in-the-loop" },
+      { level: "advanced", question: "Vision-in-the-loop reasoning 루프가 한 번의 grounding보다 정확도를 높이는 이유와 반복을 멈추는 조건을 설명하세요.", answerChecklist: ["영역을 잘라 확대해 세부 정보 확보", "확신도 등 종료 조건 필요", "무한 반복 방지"], requiredConcepts: ["vision-in-the-loop-reasoning"], sectionId: "vision-loop" },
     ],
     papers: [
       {
