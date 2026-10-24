@@ -1,16 +1,22 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
+import {
+  StructuredGenerationLocator,
+  StructuredGenerationMapReturn,
+} from "../shared/StructuredGenerationLocator";
 import { IncrementalParserViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
 
 export default function IncrementalParsingTreeSitterArticle() {
   return (
     <div className="space-y-16">
+      <StructuredGenerationLocator current="parser" />
       <section id="overview" className="scroll-mt-20">
         <span id="source-tree" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Tree-sitter는 이미 존재하는 source를 tree로 바꿉니다
         </h2>
+        <IncrementalParserViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Incremental parser</strong>의 입력은 language-model logits가
@@ -44,7 +50,6 @@ export default function IncrementalParsingTreeSitterArticle() {
             },
           ]}
         />
-        <IncrementalParserViz />
         <ContentBoundary article="incremental-parsing-tree-sitter" />
       </section>
 
@@ -166,6 +171,7 @@ export default function IncrementalParsingTreeSitterArticle() {
           </CitationBlock>
         </div>
       </section>
+      <StructuredGenerationMapReturn current="parser" />
     </div>
   );
 }

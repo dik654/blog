@@ -3,16 +3,22 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import {
+  StructuredGenerationLocator,
+  StructuredGenerationMapReturn,
+} from "../shared/StructuredGenerationLocator";
 import { TokenMaskViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
 
 export default function GrammarTokenizerDecodingArticle() {
   return (
     <div className="space-y-16">
+      <StructuredGenerationLocator current="token-mask" />
       <section id="overview" className="scroll-mt-20">
         <span id="token-boundary" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Grammar의 다음 문자는 model의 다음 token과 다를 수 있습니다
         </h2>
+        <TokenMaskViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Grammar가 문자 단위로 <code>4</code> 다음 <code>2</code>를 허용해도,
@@ -46,7 +52,6 @@ export default function GrammarTokenizerDecodingArticle() {
             },
           ]}
         />
-        <TokenMaskViz />
         <ContentBoundary article="grammar-tokenizer-decoding" />
       </section>
 
@@ -202,7 +207,7 @@ export default function GrammarTokenizerDecodingArticle() {
           <CitationBlock
             source="XGrammar — Constrained Decoding"
             citeKey={1}
-            href="https://xgrammar.mlc.ai/docs/start/constrained_decoding.html"
+            href="https://github.com/mlc-ai/xgrammar/blob/main/docs/start/constrained_decoding.md"
           >
             Grammar compile, stateful matcher, token bitmask와 accept 흐름을
             설명하는 공식 문서입니다. Mask가 schema 밖의 사실성·권한·안전까지
@@ -210,6 +215,7 @@ export default function GrammarTokenizerDecodingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <StructuredGenerationMapReturn current="token-mask" />
     </div>
   );
 }

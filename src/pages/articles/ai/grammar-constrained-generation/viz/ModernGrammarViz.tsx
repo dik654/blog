@@ -23,29 +23,41 @@ function Lesson({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3200);
+  const controls = useAnimatedScenes(labels.length, 5200, { loop: false });
   return (
     <VizFrame title={title} description={description} className="my-9">
-      <div
-        id={id}
-        data-viz
-        tabIndex={0}
-        onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
-      >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 min-h-[6.5rem] text-lg font-bold leading-7 sm:min-h-[1.75rem]">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+      <div id={id} className="scroll-mt-24">
+        <div
+          id={controls.playbackId}
+          data-viz
+          tabIndex={0}
+          onKeyDown={controls.onKeyDown}
+          className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        >
+          <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
+            동작 순서 · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 min-h-[6.5rem] text-lg font-bold leading-7 sm:min-h-[1.75rem]">
+            {labels[controls.active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
+            {children(controls.active)}
+          </div>
+          <p className="mt-4 min-h-[6.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[4.5rem]">
+            {notes[controls.active]}
+          </p>
+          <AnimatedSceneControls labels={labels} {...controls} />
+          <noscript>
+            <ol className="mt-5 space-y-3 border-t border-border pt-4 text-sm leading-6">
+              {labels.map((label, index) => (
+                <li key={label}>
+                  <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
+                  <span className="mt-1 block text-muted-foreground">{notes[index]}</span>
+                </li>
+              ))}
+            </ol>
+          </noscript>
         </div>
-        <p className="mt-4 min-h-[6.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[4.5rem]">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={labels} {...controls} />
       </div>
     </VizFrame>
   );

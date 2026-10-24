@@ -844,29 +844,56 @@
       "publicFiles": [
         "src/pages/articles/ai/cfg-pushdown-automata.tsx",
         "src/pages/articles/ai/cfg-pushdown-automata/ModernArticle.tsx",
-        "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx"
+        "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx",
+        "src/pages/articles/ai/shared/StructuredGenerationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
-        "hasSourceSurface": false,
+        "hasSourceSurface": true,
         "characters": 9196
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Finite state·CFG·PDA·LR·GLR가 한 글에 있었지만 formal language 글과의 부모 관계와 생성 제약·source 분석으로 갈리는 후속 경로가 보이지 않았습니다.",
+        "첫 stack 시각화가 설명 뒤에 있어 열린 괄호를 push하고 닫힌 괄호에서 pop하는 상태 변화를 먼저 볼 수 없었습니다.",
+        "표현 계층과 CFG·PDA 관계를 뒷받침할 1차 근거 표면이 비어 있었습니다."
+      ],
+      "fixture": "입력 (()())의 열린 깊이를 0→1→2→1→2→1→0으로 추적하고, 일반 CFG에서는 grammar symbol을 stack에 쌓는 표준 construction으로 확장합니다.",
+      "stageAnchors": {
+        "parent": ["finite-memory"],
+        "hierarchy": ["regular-cfg-hierarchy"],
+        "recursion": ["cfg-recursion"],
+        "stack": ["pda-stack"],
+        "implementation": ["implementation-boundary"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "원 논문",
+          "label": "Three Models for the Description of Language",
+          "href": "https://doi.org/10.1109/TIT.1956.1056813",
+          "note": "Finite-state model과 phrase-structure grammar의 표현 범위를 구분한 고전적 출발점으로만 적용합니다."
+        },
+        {
+          "kind": "원 논문",
+          "label": "On Context-Free Languages and Push-Down Automata",
+          "href": "https://doi.org/10.1016/S0019-9958(63)90306-1",
+          "note": "Push-down store automaton과 context-free language의 관계를 설명하는 근거로 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "formal language→표현 계층→CFG recursion→PDA stack→parser 구현 경계 순서를 대조했습니다.",
+        "humanize": "이론 이름보다 괄호 push·pop 사례를 먼저 보여 주고, 일반 construction의 범위를 따로 밝혔습니다.",
+        "numericTrace": "(()())의 깊이 0→1→2→1→2→1→0과 accept 조건을 대조했습니다.",
+        "mobile390": "390x844에서 문서 overflow 0, locator 570px, 첫 H2 바로 다음 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 문서 overflow 0과 부모·분기 지도, 시각화 순서를 확인했습니다.",
+        "reducedMotion": "자동 재생을 끄고 reduced-motion에서 재생 버튼이 비활성화되는 것을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390x844 정적 경로에서 locator·본문·지도 반환과 장면 목록을 확인했습니다.",
+        "build": "Node heap 8GB로 production build와 2,086개 정적 경로, 69편 no-script 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3042,9 +3069,10 @@
       "publicFiles": [
         "src/pages/articles/ai/grammar-constrained-generation.tsx",
         "src/pages/articles/ai/grammar-constrained-generation/ModernArticle.tsx",
-        "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx"
+        "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx",
+        "src/pages/articles/ai/shared/StructuredGenerationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3052,19 +3080,40 @@
         "hasSourceSurface": true,
         "characters": 10378
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Formal language 정의와 XGrammar 구현이 한 글 안에 있었지만 직속 부모인 다음-token 선택과 CFG·token mask·serving으로 이어지는 지도가 없었습니다.",
+        "첫 시각화가 설명 뒤에 있었고 자동으로 빠르게 지나가 독자가 symbol→string→language→derivation을 고정해 볼 수 없었습니다."
+      ],
+      "fixture": "Σ={ [, ], 0, 1 }에서 [0]을 string으로 만들고, 허용 language에 넣은 뒤 S⇒array⇒[value]⇒[0]으로 전개합니다.",
+      "stageAnchors": {
+        "parent": ["alphabet"],
+        "objects": ["alphabet", "string-language"],
+        "derivation": ["derivation"],
+        "constraint": ["grammar-constrained-decoding"],
+        "engine": ["xgrammar"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models",
+          "href": "https://arxiv.org/abs/2411.15100",
+          "note": "Context-independent token 사전 분류와 CFG stack 재사용의 엔진 범위에 적용하고 formal-language 전체 이론의 근거로 확대하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "다음-token 선택→symbol·alphabet·string·language→production→제약 decoding→XGrammar 순서를 확인했습니다.",
+        "humanize": "표준 이름을 먼저 나열하지 않고 [0] 한 문자열을 조립하는 과정부터 시작합니다.",
+        "numericTrace": "네 symbol과 [0]의 길이 3, 네 장면의 상태 변화를 대조했습니다.",
+        "mobile390": "390x844에서 overflow 0, locator 570px, 첫 시각화가 H2 바로 뒤에 있음을 확인했습니다.",
+        "desktop1440": "1440x900에서 overflow 0과 공통 뿌리·두 분기 지도를 확인했습니다.",
+        "keyboard": "Focus한 시각화에서 ArrowRight·ArrowLeft로 장면 1↔2 이동을 확인했습니다.",
+        "motion": "5.4초 동안 첫 장면을 유지하고, 재생 뒤 5.2초 간격으로 진행한 다음 마지막 장면에서 멈추는 것을 확인했습니다.",
+        "reducedMotion": "prefers-reduced-motion에서 재생이 비활성화되고 수동 장면 이동은 유지됩니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환과 네 장면 목록을 확인했습니다.",
+        "build": "Node heap 8GB로 production build와 2,086개 정적 경로, 69편 no-script 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3074,9 +3123,10 @@
       "publicFiles": [
         "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx",
         "src/pages/articles/ai/grammar-tokenizer-decoding.tsx",
-        "src/pages/articles/ai/grammar-tokenizer-decoding/ModernArticle.tsx"
+        "src/pages/articles/ai/grammar-tokenizer-decoding/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/StructuredGenerationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3084,19 +3134,37 @@
         "hasSourceSurface": true,
         "characters": 8913
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "문자 grammar와 model token의 경계가 본문에는 있었지만, CFG/PDA state에서 serving으로 이어지는 현재 위치가 보이지 않았습니다.",
+        "공식 XGrammar 문서 링크가 더 이상 열리지 않는 이전 문서 경로를 가리켰습니다."
+      ],
+      "fixture": "Prefix [0 뒤에서 grammar가 허용하는 문자 후보를 tokenizer vocabulary의 token bitmask로 바꾸고 disallowed logit을 제거합니다.",
+      "stageAnchors": {
+        "parent": ["token-boundary"],
+        "compile": ["tokenizer-compilation"],
+        "mask": ["token-mask"],
+        "state": ["matcher-boundary"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "XGrammar — Constrained Decoding",
+          "href": "https://github.com/mlc-ai/xgrammar/blob/main/docs/start/constrained_decoding.md",
+          "note": "GrammarCompiler·CompiledGrammar·GrammarMatcher·token bitmask API 경계를 확인하는 데 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "문자 grammar→tokenizer compile→sequence별 matcher state→bitmask→logit mask 순서를 대조했습니다.",
+        "humanize": "tokenizer와 grammar의 단위 차이를 prefix 한 개가 token 후보로 바뀌는 과정으로 설명합니다.",
+        "numericTrace": "허용 token과 제거 token이 mask 적용 전후 실제 후보 집합을 바꾸는지 확인했습니다.",
+        "mobile390": "390x844에서 overflow 0, locator 570px, 첫 H2 다음 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 overflow 0과 분기 지도·전체 경로를 확인했습니다.",
+        "reducedMotion": "자동 재생 없음과 reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환과 장면 목록을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3532,9 +3600,10 @@
       "publicFiles": [
         "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx",
         "src/pages/articles/ai/incremental-parsing-tree-sitter.tsx",
-        "src/pages/articles/ai/incremental-parsing-tree-sitter/ModernArticle.tsx"
+        "src/pages/articles/ai/incremental-parsing-tree-sitter/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/StructuredGenerationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3542,19 +3611,39 @@
         "hasSourceSurface": true,
         "characters": 6939
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Tree-sitter가 구조화 생성의 직렬 다음 단계처럼 보일 수 있었고, CFG/PDA 뒤에서 source 분석으로 갈라지는 별도 분기임이 드러나지 않았습니다.",
+        "전체 parse와 incremental update의 차이를 보여 주는 시각화가 설명 뒤에 있었습니다."
+      ],
+      "fixture": "기존 source와 old tree에 edit 범위를 반영한 뒤 바뀌지 않은 subtree는 공유하고 영향 범위만 다시 parse해 새 concrete syntax tree를 만듭니다.",
+      "stageAnchors": {
+        "parent": ["source-tree"],
+        "lexer": ["lexer-fsm-foundation"],
+        "tree": ["parse-tree-cst-ast"],
+        "incremental": ["incremental-update"],
+        "recovery": ["error-recovery"],
+        "boundary": ["decoder-boundary"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "공식 문서",
+          "label": "Tree-sitter documentation",
+          "href": "https://tree-sitter.github.io/tree-sitter/",
+          "note": "Old tree edit, incremental parse, concrete syntax tree와 error recovery의 공식 동작 범위에 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "source→lexer→CST/AST 경계→old tree edit→subtree reuse→error recovery 순서를 대조했습니다.",
+        "humanize": "제품 이름보다 source 한 부분이 바뀌었을 때 무엇을 다시 읽는지 먼저 보여 줍니다.",
+        "numericTrace": "편집 전후 source range와 재사용·재parse 영역의 상태 변화를 확인했습니다.",
+        "mobile390": "390x844에서 overflow 0, locator 570px, 첫 H2 다음 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 overflow 0과 source 분석 분기를 확인했습니다.",
+        "reducedMotion": "자동 재생 없음과 reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환과 장면 목록을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8223,9 +8312,11 @@
         "src/pages/articles/ai/sparse-autoencoder/viz/HookPointViz.tsx",
         "src/pages/articles/ai/sparse-autoencoder/viz/InterpretationContractViz.tsx",
         "src/pages/articles/ai/sparse-autoencoder/viz/QualityFrontierViz.tsx",
-        "src/pages/articles/ai/sparse-autoencoder/viz/SuperpositionViz.tsx"
+        "src/pages/articles/ai/sparse-autoencoder/viz/SuperpositionViz.tsx",
+        "src/pages/articles/ai/autoencoder/shared/AutoencoderSeriesLocator.tsx",
+        "src/content/autoencoder-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8233,19 +8324,45 @@
         "hasSourceSurface": true,
         "characters": 23434
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "LLM activation 분석 글이 일반 autoencoder의 bottleneck·reconstruction 지도와 연결되지 않아 sparse constraint가 어디에서 추가되는지 보이지 않았습니다.",
+        "핵심 해석 계약 그림이 첫 설명 문단 뒤에 있어 activation hook·SAE coordinate·증거 경계를 먼저 파악하기 어려웠습니다."
+      ],
+      "fixture": "고정한 model·layer·hook의 activation x를 overcomplete dictionary의 소수 latent z로 복원하고 reconstruction·sparsity·feature stability·steering evidence를 서로 다른 평가로 봅니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "hook": ["residual-stream"],
+        "hypothesis": ["polysemanticity"],
+        "dictionary": ["sae-architecture"],
+        "intervention": ["feature-steering"],
+        "boundary": ["limitations"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Scaling and evaluating sparse autoencoders",
+          "href": "https://arxiv.org/abs/2406.04093",
+          "note": "Top-K SAE의 scaling·dead latent·평가 범위에 적용하며 해석 가능성의 자동 보장으로 확대하지 않습니다."
+        },
+        {
+          "kind": "논문",
+          "label": "Gemma Scope",
+          "href": "https://arxiv.org/abs/2408.05147",
+          "note": "공개 SAE가 model·layer·hook·training recipe에 묶인다는 경계를 확인하는 데 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "autoencoder 부모→activation hook→superposition 가설→sparse dictionary→steering→한계 순서를 대조했습니다.",
+        "humanize": "feature를 발견했다는 선언보다 분석 좌표와 필요한 증거 층을 먼저 보여 줍니다.",
+        "numericTrace": "Overcomplete latent의 sparsity와 reconstruction·dead latent·steering 평가가 같은 수치가 아님을 대조했습니다.",
+        "mobile390": "390x844에서 overflow 0, locator 461px, 첫 H2 다음 SAE contract 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 overflow 0과 autoencoder 직속 부모·같은 트랙 이웃을 확인했습니다.",
+        "reducedMotion": "정적 시각화와 본문만으로 같은 결론이 유지됩니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8365,9 +8482,10 @@
       "publicFiles": [
         "src/pages/articles/ai/grammar-constrained-generation/viz/ModernGrammarViz.tsx",
         "src/pages/articles/ai/structured-generation-serving.tsx",
-        "src/pages/articles/ai/structured-generation-serving/ModernArticle.tsx"
+        "src/pages/articles/ai/structured-generation-serving/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/StructuredGenerationLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8375,19 +8493,37 @@
         "hasSourceSurface": true,
         "characters": 8372
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Cache·sequence state·semantic gate가 나열됐지만 token mask 글에서 이어지는 serving 경계와 source 분석 분기와의 차이가 상단에 보이지 않았습니다.",
+        "요청별 schema가 compile cache와 matcher state로 갈라지는 과정이 설명 뒤에 배치돼 있었습니다."
+      ],
+      "fixture": "요청별 schema identity로 compiled grammar를 공유하되 sequence별 matcher state와 token mask는 분리하고, syntax 통과 뒤 권한·사실성은 별도 validator가 검사합니다.",
+      "stageAnchors": {
+        "parent": ["request-schema"],
+        "cache": ["dynamic-schema-cache"],
+        "sequence": ["sequence-state"],
+        "policy": ["semantic-policy"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "XGrammar 2 — Agentic Structured Generation",
+          "href": "https://arxiv.org/abs/2601.04426",
+          "note": "Dynamic grammar dispatch·JIT compilation·cross-grammar cache의 논문 범위에 적용하고 benchmark를 현재 서비스 성능으로 취급하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "request schema→compile/cache→sequence state→runtime mask→semantic policy 순서를 대조했습니다.",
+        "humanize": "서비스 용어를 나열하지 않고 한 요청의 공유 상태와 분리 상태가 갈리는 흐름부터 보여 줍니다.",
+        "numericTrace": "Compiled grammar와 sequence별 matcher/mask의 개수·identity 경계를 확인했습니다.",
+        "mobile390": "390x844에서 overflow 0, locator 570px, 첫 H2 다음 시각화를 확인했습니다.",
+        "desktop1440": "1440x900에서 overflow 0, locator 571px와 생성 제약 분기를 확인했습니다.",
+        "reducedMotion": "자동 재생 없음과 reduced-motion 재생 비활성화를 확인했습니다.",
+        "noScript": "JavaScript 비활성 정적 경로에서 locator·본문·지도 반환과 장면 목록을 확인했습니다.",
+        "build": "Production build와 no-script 정적 본문 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -10632,14 +10768,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 43,
+    "rewritten": 49,
     "existingTeachTargetedRepairs": 4,
-    "reviewedAndImproved": 47,
-    "localVerified": 47,
+    "reviewedAndImproved": 53,
+    "localVerified": 53,
     "awaitingIntegration": 0,
-    "pending": 142,
+    "pending": 136,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 48
+    "bodyReviewedTotal": 54
   }
 }

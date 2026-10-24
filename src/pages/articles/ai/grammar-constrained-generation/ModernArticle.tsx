@@ -1,16 +1,22 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
+import {
+  StructuredGenerationLocator,
+  StructuredGenerationMapReturn,
+} from "../shared/StructuredGenerationLocator";
 import { FormalLanguageViz } from "./viz/ModernGrammarViz";
 
 export default function GrammarConstrainedGenerationArticle() {
   return (
     <div className="space-y-16">
+      <StructuredGenerationLocator current="formal" />
       <section id="overview" className="scroll-mt-20">
         <span id="alphabet" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           문법을 배우기 전에, 문법이 다루는 물체부터 만듭니다
         </h2>
+        <FormalLanguageViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Formal language</strong>는 어려운 규칙 이름부터 시작하지
@@ -53,7 +59,6 @@ export default function GrammarConstrainedGenerationArticle() {
             },
           ]}
         />
-        <FormalLanguageViz />
         <ContentBoundary article="grammar-constrained-generation" />
       </section>
 
@@ -265,6 +270,7 @@ export default function GrammarConstrainedGenerationArticle() {
           </p>
         </div>
       </section>
+      <StructuredGenerationMapReturn current="formal" />
     </div>
   );
 }

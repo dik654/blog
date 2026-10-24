@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 449,
-    "pending": 541,
+    "reviewed": 455,
+    "pending": 535,
     "untracked": 0,
-    "assignedPending": 489,
+    "assignedPending": 483,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -823,9 +823,9 @@
       "publicPath": "cs/ai/grammar-constrained-generation",
       "title": "Formal language: symbol에서 derivation까지",
       "catalogIndex": 79,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -833,9 +833,9 @@
       "publicPath": "cs/ai/cfg-pushdown-automata",
       "title": "CFG와 PDA: recursive nesting을 stack으로 기억하기",
       "catalogIndex": 80,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -843,9 +843,9 @@
       "publicPath": "cs/ai/incremental-parsing-tree-sitter",
       "title": "Tree-sitter: source edit와 incremental syntax tree",
       "catalogIndex": 81,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -853,9 +853,9 @@
       "publicPath": "cs/ai/grammar-tokenizer-decoding",
       "title": "Grammar decoding: tokenizer compilation과 token mask",
       "catalogIndex": 82,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -863,9 +863,9 @@
       "publicPath": "cs/ai/structured-generation-serving",
       "title": "Structured generation serving: cache·state·semantic gate",
       "catalogIndex": 83,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -933,9 +933,9 @@
       "publicPath": "cs/ai/sparse-autoencoder",
       "title": "Sparse autoencoder: activation을 feature dictionary로 읽기",
       "catalogIndex": 90,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

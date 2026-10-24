@@ -1,17 +1,24 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
+import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  StructuredGenerationLocator,
+  StructuredGenerationMapReturn,
+} from "../shared/StructuredGenerationLocator";
 import { PushdownStackViz } from "../grammar-constrained-generation/viz/ModernGrammarViz";
 
 export default function CfgPushdownAutomataArticle() {
   return (
     <div className="space-y-16">
+      <StructuredGenerationLocator current="stack" />
       <section id="overview" className="scroll-mt-20">
         <span id="finite-memory" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           Finite state는 패턴을 기억하지만 무한한 깊이는 세지 못합니다
         </h2>
+        <PushdownStackViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Finite automaton</strong>은 현재 상태를 유한한 후보 중
@@ -19,6 +26,19 @@ export default function CfgPushdownAutomataArticle() {
             괄호가 몇 겹인지 상한이 없는 입력을 정확히 구분하려면 별도 memory가
             필요합니다.
           </p>
+        </div>
+        <div className="not-prose mt-8" id="paper-chomsky-hierarchy">
+          <CitationBlock
+            citeKey={1}
+            source="Three Models for the Description of Language · Chomsky (1956)"
+            href="https://doi.org/10.1109/TIT.1956.1056813"
+          >
+            <p>
+              이 글은 finite-state model과 phrase-structure grammar의 표현 범위를
+              구분한 원 논문의 계층을 출발점으로 삼습니다. 자연어 전체가 곧 한
+              CFG라는 주장으로 넓히지는 않습니다.
+            </p>
+          </CitationBlock>
         </div>
         <TermBreakdown
           title="중첩을 이해하는 데 필요한 세 물체"
@@ -47,7 +67,6 @@ export default function CfgPushdownAutomataArticle() {
             },
           ]}
         />
-        <PushdownStackViz />
         <ContentBoundary article="cfg-pushdown-automata" />
       </section>
 
@@ -168,6 +187,19 @@ export default function CfgPushdownAutomataArticle() {
           down parser는 다음 몇 토큰을 미리 보는 lookahead로 이 선택을 결정적으로 좁히거나 여러 선택지를 동시에 추적합니다 — 다음 section의 grammar-
           constrained decoding이 이 확장에 해당합니다.
         </p>
+        <div className="not-prose mt-8" id="paper-cfg-pda">
+          <CitationBlock
+            citeKey={2}
+            source="On Context-Free Languages and Push-Down Automata · Schützenberger (1963)"
+            href="https://doi.org/10.1016/S0019-9958(63)90306-1"
+          >
+            <p>
+              Push-down store를 가진 automaton과 context-free language의 관계를
+              다룬 원 논문입니다. 본문의 단일 괄호 depth 예시는 이 관계를 읽기
+              위한 축소 사례이며, 일반 CFG 변환의 전부가 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </section>
 
       <section id="lr-glr-parsing" className="scroll-mt-20">
@@ -221,6 +253,7 @@ export default function CfgPushdownAutomataArticle() {
           </p>
         </div>
       </section>
+      <StructuredGenerationMapReturn current="stack" />
     </div>
   );
 }
