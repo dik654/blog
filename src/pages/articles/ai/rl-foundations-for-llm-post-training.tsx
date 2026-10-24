@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { LlmTrainingLocator, LlmTrainingMapReturn } from "./shared/LlmTrainingLocator";
 import RlFoundationsForLlmPostTrainingViz from "./rl-foundations-for-llm-post-training/viz/RlFoundationsForLlmPostTrainingViz";
 
 /**
@@ -15,10 +16,18 @@ import RlFoundationsForLlmPostTrainingViz from "./rl-foundations-for-llm-post-tr
 export default function RlFoundationsForLlmPostTrainingArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmTrainingLocator
+        current="rl"
+        question="마지막 reward +1을 앞의 token 선택들에 어떤 값으로 돌려줄까요?"
+        fixture="Reward가 [0, 0, 0, 0, 1]인 5-step trajectory와 γ=0.9를 고정하고 return Gₜ를 끝에서부터 계산합니다."
+        parentHref="/cs/ai/rlhf#ppo"
+        parentLabel="PPO가 policy를 갱신하는 자리"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Policy Gradient는 Return의 Credit을 Action 확률 변화로 바꿉니다
         </h2>
+        <RlFoundationsForLlmPostTrainingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             LLM 을 강화학습(reinforcement learning, RL)으로 post-training 한다는 것은 결국 policy 가 만든 trajectory 에 붙은
@@ -41,7 +50,6 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
             trajectory 의 어느 action 에 돌아가야 하는지(credit assignment)의 한계를 봅니다.
           </p>
         </div>
-        <RlFoundationsForLlmPostTrainingViz />
         <ContentBoundary article="rl-foundations-for-llm-post-training" />
       </section>
 
@@ -247,6 +255,12 @@ export default function RlFoundationsForLlmPostTrainingArticle() {
           </p>
         </div>
       </section>
+      <LlmTrainingMapReturn
+        title="Return은 마지막 reward를 시간 거리로 나누지만 어떤 token이 실제 원인이었는지는 구분하지 못합니다."
+        detail="Policy gradient는 각 action의 log-probability를 Gₜ로 가중합니다. Horizon이 길수록 이른 action의 신호가 작아지므로, 다음 글에서는 sparse·dense·process reward가 이 credit 경로를 어떻게 바꾸는지 봅니다."
+        nextHref="/cs/ai/reward-design-for-verifiable-rl"
+        nextLabel="검증 가능한 reward와 과정 보상 설계"
+      />
     </div>
   );
 }

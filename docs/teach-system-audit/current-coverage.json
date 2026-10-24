@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 430,
-    "pending": 560,
+    "reviewed": 435,
+    "pending": 555,
     "untracked": 0,
-    "assignedPending": 508,
+    "assignedPending": 503,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -743,9 +743,9 @@
       "publicPath": "cs/ai/llm-training-stages",
       "title": "LLM 학습 단계: Pretraining에서 Agentic Training까지",
       "catalogIndex": 71,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -753,9 +753,9 @@
       "publicPath": "cs/ai/supervised-fine-tuning",
       "title": "SFT: demonstration을 response-token 학습으로 바꾸기",
       "catalogIndex": 72,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -763,9 +763,9 @@
       "publicPath": "cs/ai/rlhf",
       "title": "RLHF: feedback에서 reward model·PPO까지",
       "catalogIndex": 73,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1543,9 +1543,9 @@
       "publicPath": "cs/ai/llm-dataset-engineering-and-cleaning",
       "title": "데이터셋 엔지니어링은 필터링·dedup·mixture로 학습 데이터 품질을 만듭니다",
       "catalogIndex": 151,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1553,9 +1553,9 @@
       "publicPath": "cs/ai/rl-foundations-for-llm-post-training",
       "title": "Policy Gradient는 Return의 Credit을 Action 확률 변화로 바꿉니다",
       "catalogIndex": 152,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

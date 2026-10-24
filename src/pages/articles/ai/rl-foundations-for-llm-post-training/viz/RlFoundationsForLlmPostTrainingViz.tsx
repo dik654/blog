@@ -37,12 +37,8 @@ const GAMMA = 0.9;
 const G = [Math.pow(GAMMA, 4), Math.pow(GAMMA, 3), Math.pow(GAMMA, 2), Math.pow(GAMMA, 1), 1];
 const G20_FIRST = Math.pow(GAMMA, 19);
 
-const COL_X = [58, 148, 238, 328, 418];
-const BAR_MAX = 62;
-const BAR_BASE = 150;
-
 export default function RlFoundationsForLlmPostTrainingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   return (
     <VizFrame
@@ -52,6 +48,8 @@ export default function RlFoundationsForLlmPostTrainingViz() {
       note="실제 학습은 이런 trajectory를 수백~수천 개 뽑아 평균하며, reward 를 중간에도 줄 수 있습니다(다음 글의 dense reward). 그림은 sparse·단일 trajectory 로 단순화했습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="rl-return-credit-assignment"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -64,63 +62,49 @@ export default function RlFoundationsForLlmPostTrainingViz() {
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
-          <div className="mt-4 border border-border p-3">
-            <svg viewBox="0 0 480 190" className="mx-auto h-auto w-full max-w-[28rem]" role="img" aria-label="5-step trajectory의 return 역방향 누적과 20-step 비교">
-              <text x={8} y={12} className="fill-muted-foreground font-mono text-[8px]">Trajectory</text>
-              <text x={8} y={50} className="fill-muted-foreground font-mono text-[8px]">Return G_t</text>
-
-              {STEPS.map((s, i) => {
-                const x = COL_X[i];
-                const isLast = i === STEPS.length - 1;
-                const isFirst = i === 0;
-                const highlight = scene >= 2 && isFirst;
-                const barH = scene >= 1 ? G[i] * BAR_MAX : 0;
+          <div className="mt-4 border border-border p-3" role="img" aria-label="5-step trajectory의 return 역방향 누적과 20-step 비교">
+            <div className="grid grid-cols-5 gap-1.5">
+              {STEPS.map((step, index) => {
+                const isLast = index === STEPS.length - 1;
+                const highlight = scene >= 2 && index === 0;
                 return (
-                  <g key={s.id}>
-                    {i > 0 && (
-                      <line x1={COL_X[i - 1] + 20} y1={22} x2={x - 20} y2={22} strokeWidth={1} className="stroke-border" />
-                    )}
-                    <rect
-                      x={x - 18}
-                      y={12}
-                      width={36}
-                      height={20}
-                      strokeWidth={highlight ? 1.25 : 1}
-                      className={highlight ? "fill-primary/10 stroke-primary" : "fill-transparent stroke-border"}
-                    />
-                    <text x={x} y={26} textAnchor="middle" className="fill-foreground font-mono text-[9px]">
-                      {s.label}
-                    </text>
-                    <text x={x} y={44} textAnchor="middle" className="fill-muted-foreground font-mono text-[8px]">
-                      {isLast ? "r=+1" : "r=0"}
-                    </text>
-
-                    <rect
-                      x={x - 14}
-                      y={BAR_BASE - barH}
-                      width={28}
-                      height={barH}
-                      className={highlight ? "fill-primary/70" : "fill-muted-foreground/50"}
-                    />
-                    <line x1={x - 20} y1={BAR_BASE} x2={x + 20} y2={BAR_BASE} strokeWidth={1} className="stroke-border" />
-                    <text x={x} y={166} textAnchor="middle" className="fill-muted-foreground font-mono text-[8px]">
-                      {scene >= 1 ? `G${i + 1}=${G[i].toFixed(3)}` : "G? =–"}
-                    </text>
-                  </g>
+                  <div key={step.id} className="min-w-0 text-center">
+                    <div className={`border py-1 font-mono text-[10px] font-bold ${highlight ? "border-primary bg-primary/10 text-primary" : "border-border"}`}>
+                      {step.label}
+                    </div>
+                    <p className="mt-1 font-mono text-[9px] text-muted-foreground">{isLast ? "r=+1" : "r=0"}</p>
+                    <div className="mt-2 flex h-16 items-end justify-center border-b border-border">
+                      <span
+                        className={`block w-5 transition-[height] ${highlight ? "bg-primary/70" : "bg-muted-foreground/45"}`}
+                        style={{ height: scene >= 1 ? `${G[index] * 100}%` : "0%" }}
+                      />
+                    </div>
+                    <p className="mt-1 whitespace-nowrap font-mono text-[9px] text-muted-foreground">
+                      {scene >= 1 ? `G${index + 1}=${G[index].toFixed(3)}` : "G?=–"}
+                    </p>
+                  </div>
                 );
               })}
-
-              <text x={8} y={184} className="fill-muted-foreground font-mono text-[8px]">
-                {scene === 3
-                  ? `T=5: G1=${G[0].toFixed(3)}  vs  T=20: G1≈${G20_FIRST.toFixed(3)}`
-                  : "T=5 trajectory 기준(비교는 마지막 장면)"}
-              </text>
-            </svg>
+            </div>
+            <p className="mt-3 border-t border-border pt-2 font-mono text-[10px] leading-5 text-muted-foreground">
+              {scene === 3
+                ? `T=5: G1=${G[0].toFixed(3)} · T=20: G1≈${G20_FIRST.toFixed(3)}`
+                : "T=5 trajectory · 마지막 장면에서 T=20과 비교"}
+            </p>
           </div>
           <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
             {NOTES[scene]}
           </p>
         </div>
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}>
+                <strong>{index + 1}. {label}</strong> — {NOTES[index]}
+              </li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

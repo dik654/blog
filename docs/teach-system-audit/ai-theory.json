@@ -3888,9 +3888,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/llm-dataset-engineering-and-cleaning.tsx",
-        "src/pages/articles/ai/llm-dataset-engineering-and-cleaning/viz/LlmDatasetEngineeringAndCleaningViz.tsx"
+        "src/pages/articles/ai/llm-dataset-engineering-and-cleaning/viz/LlmDatasetEngineeringAndCleaningViz.tsx",
+        "src/pages/articles/ai/shared/LlmTrainingLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3898,19 +3899,33 @@
         "hasSourceSurface": true,
         "characters": 22149
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Filtering·dedup·contamination·mixture가 각 절에 있었지만 원본 문서 하나가 전체 파이프라인을 지나는 그림이 첫 설명 뒤에 없었습니다.",
+        "핵심 시각화가 두 번째 절에 있어 긴 서론을 읽기 전에는 제거 순서와 남는 비율을 파악하기 어려웠습니다.",
+        "기존 장면은 2.6초 간격으로 반복되어 각 필터의 입력과 결과를 읽기 전에 다음 상태로 넘어갔습니다."
+      ],
+      "fixture": "CommonCrawl 원본 100%가 언어 식별 48%, 품질 필터 23%, dedup 9%로 좁아지는 RefinedWeb의 근사 비율을 한 문서 집합의 흐름으로 추적합니다.",
+      "stageAnchors": {
+        "source": "웹·책·코드 등 원본 source와 목표 분포를 고릅니다.",
+        "filter": "언어 판별과 품질 휴리스틱으로 학습에 부적합한 문서를 제거합니다.",
+        "dedup": "Exact·near-duplicate와 benchmark contamination을 서로 다른 검사로 제거합니다.",
+        "mixture": "남은 문서를 도메인 가중치와 curriculum에 따라 실제 batch 분포로 바꿉니다."
+      },
+      "primarySourceApplication": [
+        "RefinedWeb Figure 2의 비율은 저자 파이프라인의 근사치로만 표시하고 이 글의 실측값으로 쓰지 않았습니다.",
+        "The Pile·Dolma·DoReMi는 source 구성과 mixture 최적화의 서로 다른 사례로 구분했습니다.",
+        "MinHash 분산과 contamination 임계값은 해당 수식·원 보고의 조건 안에서 설명했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · source에서 curriculum까지 절 순서와 시각화의 제거 단계를 대조했습니다.",
+        "humanize": "pass · 어색한 직역 표현 없이 원문·검사·남는 비율을 먼저 설명합니다.",
+        "numericTrace": "pass · 100→48→23→9의 근사 비율과 MinHash 계산 경계를 다시 확인했습니다.",
+        "mobile390": "pass · document overflow 0 · 첫 장면 6초 유지 · 키보드 장면 이동",
+        "desktop1440": "pass · document overflow 0 · locator와 첫 시각화가 설명보다 먼저 표시",
+        "build": "pass · production build와 JavaScript 비활성 정적 본문의 절 순서를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -3952,9 +3967,10 @@
         "src/pages/articles/ai/kimi-k3-shared.tsx",
         "src/pages/articles/ai/llm-training-stages.tsx",
         "src/pages/articles/ai/llm-training-stages/ModernArticle.tsx",
-        "src/pages/articles/ai/llm-training-stages/viz/TrainingStageFlowViz.tsx"
+        "src/pages/articles/ai/llm-training-stages/viz/TrainingStageFlowViz.tsx",
+        "src/pages/articles/ai/shared/LlmTrainingLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3962,19 +3978,33 @@
         "hasSourceSurface": true,
         "characters": 17919
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Pretraining·continued training·post-training·harness가 나열됐지만 단계마다 어느 상태가 바뀌는지 한 요청으로 비교하기 어려웠습니다.",
+        "네 단계 카드가 모바일에서 세로로 길게 쌓여 첫 그림만 1,200px를 넘었습니다.",
+        "정적 카드라 data·weight·runtime의 상태 전이가 장면으로 드러나지 않았습니다."
+      ],
+      "fixture": "코딩 요청 하나가 웹·책·코드 corpus의 다음 token 학습, 코드 corpus의 continued training, feedback 기반 post-training, shell·memory·verifier가 있는 harness를 지나는 과정을 추적합니다.",
+      "stageAnchors": {
+        "pretraining": "Corpus의 다음 token loss가 model weight를 바꿉니다.",
+        "continued": "같은 objective를 코드 비중이 높은 분포에서 이어 갑니다.",
+        "postTraining": "Demonstration·선호·reward가 policy의 행동 분포를 조정합니다.",
+        "harness": "도구와 환경이 runtime state를 바꾸지만 별도 학습 없이는 weight를 바꾸지 않습니다."
+      },
+      "primarySourceApplication": [
+        "Autoregressive loss는 pretraining objective의 범위로 한정했습니다.",
+        "SFT·preference·RLVR·distillation은 feedback interface가 다른 post-training으로 분리했습니다.",
+        "Motif 3은 architecture와 post-training·system co-design이 함께 쓰이는 사례로만 인용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 각 단계의 입력·연산·출력과 state owner를 전체 본문과 대조했습니다.",
+        "humanize": "pass · 단계 이름을 먼저 외우게 하지 않고 무엇을 바꾸는지 한국어로 설명합니다.",
+        "numericTrace": "pass · next-token loss의 target 평균과 단계별 update 경계를 다시 확인했습니다.",
+        "mobile390": "pass · 첫 캔버스 약 489px · document overflow 0 · 6초 자동 이동 없음",
+        "desktop1440": "pass · document overflow 0 · 네 단계와 현재 상태가 한 화면에 표시",
+        "build": "pass · production build와 JavaScript 비활성 정적 본문의 모든 절을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -7348,9 +7378,10 @@
       "subcategory": "ai-llm-theory",
       "publicFiles": [
         "src/pages/articles/ai/rl-foundations-for-llm-post-training.tsx",
-        "src/pages/articles/ai/rl-foundations-for-llm-post-training/viz/RlFoundationsForLlmPostTrainingViz.tsx"
+        "src/pages/articles/ai/rl-foundations-for-llm-post-training/viz/RlFoundationsForLlmPostTrainingViz.tsx",
+        "src/pages/articles/ai/shared/LlmTrainingLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7358,19 +7389,33 @@
         "hasSourceSurface": true,
         "characters": 13879
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Return·on/off-policy·policy gradient·credit assignment가 설명됐지만 마지막 reward가 앞선 action으로 돌아가는 계산이 첫 화면에 없었습니다.",
+        "기존 SVG는 모바일에서 축소되며 action과 return 숫자가 읽기 어려웠습니다.",
+        "3.2초 반복 재생 때문에 5-step과 20-step의 credit 차이를 비교하기 어려웠습니다."
+      ],
+      "fixture": "Reward가 [0,0,0,0,1]인 5-step trajectory에서 γ=0.9로 G5=1부터 G1=0.656까지 계산하고, 20-step의 G1≈0.135와 비교합니다.",
+      "stageAnchors": {
+        "trajectory": "다섯 token action과 마지막 reward +1을 고정합니다.",
+        "return": "끝에서부터 Gₜ=rₜ+γGₜ₊₁을 계산합니다.",
+        "gradient": "각 action의 log-probability gradient를 그 시점의 return으로 가중합니다.",
+        "horizon": "같은 γ에서도 horizon이 길어지면 이른 action의 credit이 작아집니다."
+      },
+      "primarySourceApplication": [
+        "Policy gradient theorem은 현재 policy가 만든 trajectory라는 on-policy 가정과 함께 설명했습니다.",
+        "REINFORCE는 Monte Carlo return으로 gradient를 추정하는 최소 사례로 사용했습니다.",
+        "Credit 감소는 인과 기여도를 알아낸 결과가 아니라 시간 거리로 할인한 값이라는 경계를 유지했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · trajectory→return→gradient→credit의 내부 동작과 절 순서를 대조했습니다.",
+        "humanize": "pass · return과 credit을 마지막 보상을 앞선 선택에 돌려주는 과정으로 먼저 설명합니다.",
+        "numericTrace": "pass · γ=0.9에서 5-step G1=0.6561, 20-step G1≈0.1351을 재계산했습니다.",
+        "mobile390": "pass · SVG를 읽을 수 있는 HTML 막대로 교체 · overflow 0 · 키보드 이동",
+        "desktop1440": "pass · document overflow 0 · 첫 시각화와 수식의 같은 값을 확인",
+        "build": "pass · production build와 JavaScript 비활성 정적 본문을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -7384,9 +7429,10 @@
         "src/pages/articles/ai/rlhf/RewardModel.tsx",
         "src/pages/articles/ai/rlhf/viz/FeedbackContractViz.tsx",
         "src/pages/articles/ai/rlhf/viz/OnlineOfflineViz.tsx",
-        "src/pages/articles/ai/rlhf/viz/RewardCompressionViz.tsx"
+        "src/pages/articles/ai/rlhf/viz/RewardCompressionViz.tsx",
+        "src/pages/articles/ai/shared/LlmTrainingLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7394,19 +7440,33 @@
         "hasSourceSurface": false,
         "characters": 17644
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Feedback contract 그림이 여러 설명 문단 뒤에 있어 demonstration·pairwise·binary·principle의 차이를 늦게 보여 줬습니다.",
+        "SFT에서 넘어온 직속 부모와 다음 RL 수학 글의 관계가 글 안에서 보이지 않았습니다.",
+        "Reward model과 PPO가 같은 feedback을 처리하는 하나의 단계처럼 읽힐 수 있었습니다."
+      ],
+      "fixture": "같은 prompt의 response A·B 비교 label이 reward model의 scalar score가 되고, 현재 policy가 새로 만든 response를 PPO가 갱신하는 경로를 추적합니다.",
+      "stageAnchors": {
+        "feedback": "Demonstration·pairwise·binary·principle의 학습 example 모양을 먼저 구분합니다.",
+        "rewardModel": "Pairwise 선호를 scalar proxy score로 압축합니다.",
+        "rollout": "현재 policy가 학습 중 새 response를 생성합니다.",
+        "ppo": "Reward와 KL 제약으로 policy probability를 갱신합니다."
+      },
+      "primarySourceApplication": [
+        "InstructGPT는 demonstration→reward model→PPO의 세 데이터 단계를 확인하는 근거로 사용했습니다.",
+        "RLAIF는 objective 전체가 아니라 preference label 출처가 바뀌는 변형으로 구분했습니다.",
+        "Preference win rate를 인간 가치 전체나 보편적 alignment의 증거로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · feedback contract, reward model, online PPO의 세 책임을 본문과 대조했습니다.",
+        "humanize": "pass · 방법 약어보다 수집한 feedback의 모양을 먼저 설명합니다.",
+        "numericTrace": "pass · reward pair loss와 PPO ratio 예시의 계산 경계를 재확인했습니다.",
+        "mobile390": "pass · feedback 네 종류가 한 화면에 표시 · document overflow 0",
+        "desktop1440": "pass · document overflow 0 · locator와 세 시각화 확인",
+        "build": "pass · production build와 JavaScript 비활성 정적 본문의 세 절을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -8397,9 +8457,10 @@
         "src/pages/articles/ai/supervised-fine-tuning/viz/ResponseMaskViz.tsx",
         "src/pages/articles/ai/supervised-fine-tuning/viz/SftBoundaryViz.tsx",
         "src/pages/articles/ai/supervised-fine-tuning/viz/SftDataViz.tsx",
-        "src/pages/articles/ai/supervised-fine-tuning/viz/TeacherForcingGapViz.tsx"
+        "src/pages/articles/ai/supervised-fine-tuning/viz/TeacherForcingGapViz.tsx",
+        "src/pages/articles/ai/shared/LlmTrainingLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8407,19 +8468,33 @@
         "hasSourceSurface": false,
         "characters": 12648
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "SFT의 전체 경계 그림이 서론과 범위 설명 뒤에 있어 data와 loss의 역할을 먼저 볼 수 없었습니다.",
+        "Chat template·response mask·teacher forcing·packing이 각 절에 흩어져 같은 demonstration의 변환으로 연결되기 어려웠습니다.",
+        "다음 RLHF 글과의 직속 학습 경로가 글 안에 표시되지 않았습니다."
+      ],
+      "fixture": "한 prompt-response 메시지를 chat template로 직렬화하고 response token만 mask로 채점한 뒤 teacher forcing과 packed batch로 만드는 과정을 추적합니다.",
+      "stageAnchors": {
+        "contract": "Role·template·provenance가 있는 demonstration을 고정합니다.",
+        "mask": "Prompt는 입력으로 보되 response target만 NLL에 포함합니다.",
+        "teacherForcing": "학습은 정답 prefix, inference는 model prefix를 조건으로 사용합니다.",
+        "packing": "여러 sample을 붙여도 attention과 loss 경계를 보존합니다."
+      },
+      "primarySourceApplication": [
+        "Response-only loss는 선택한 target token의 likelihood를 높이는 범위로 한정했습니다.",
+        "Teacher forcing과 exposure bias는 학습·추론 prefix가 달라지는 메커니즘으로 설명했습니다.",
+        "Packing 효율과 sample 경계 보존을 서로 다른 검사로 분리했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · data contract→mask→teacher forcing→packing→evaluation 순서를 대조했습니다.",
+        "humanize": "pass · 새 지식을 넣는다는 표현 대신 어떤 token을 정답으로 삼는지부터 설명합니다.",
+        "numericTrace": "pass · response token mean과 example mean, packing boundary 예시를 다시 확인했습니다.",
+        "mobile390": "pass · 첫 시각화 약 507px · document overflow 0",
+        "desktop1440": "pass · document overflow 0 · locator와 다섯 시각화 확인",
+        "build": "pass · production build와 JavaScript 비활성 정적 본문의 모든 절을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {

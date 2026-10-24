@@ -7,6 +7,7 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         핵심 아이디어: feedback의 모양이 학습 경로를 결정한다
       </h2>
+      <FeedbackContractViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
@@ -40,8 +41,6 @@ export default function Overview() {
           judge model과 constitution 자체의 신뢰도에 종속되는 이유다.
         </p>
       </div>
-
-      <FeedbackContractViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Feedback은 목표 그 자체가 아니라 관측 가능한 proxy다</h3>
