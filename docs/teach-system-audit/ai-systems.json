@@ -9207,25 +9207,61 @@
       "route": "ai/mixup-cutmix",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/mixup-cutmix.tsx",
       "publicPath": "cs/ai/mixup-cutmix",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 3,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "첫 동작 그림이 정의·예측 질문 뒤에 있어 입력과 정답이 함께 바뀌는 전체 흐름을 먼저 볼 수 없었습니다.",
+        "자료 증강의 부모 계약, 현재 글의 위치, 영상 변환·표 합성·정책 평가와의 관계가 보이지 않았습니다.",
+        "화면 밖으로 나갈 때 재생을 멈추는 관찰 대상 식별자가 DOM에 없어 정지 규칙이 실제로 적용되지 않았습니다.",
+        "JavaScript 비활성 정적 본문에서는 네 장면의 첫 장면만 남았습니다."
+      ],
+      "fixture": "두 원본 표본을 고정하고 Mixup은 λ=.7, CutMix는 잘린 뒤 실제 면적, Mosaic은 조각별 크기·이동·잘림 기록으로 정답을 다시 만드는 과정을 추적합니다. 수치는 설명용 가정입니다.",
+      "stageAnchors": {
+        "S": "overview의 두 원본→Mixup→CutMix→Mosaic 정답",
+        "0": "mixup",
+        "1": "cutmix",
+        "2": "mosaic",
+        "parent": "/cs/ai/data-augmentation#target-map",
+        "return": "data-augmentation-practice-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1710.09412",
+          "application": "Mixup의 입력·정답 convex combination 경계"
+        },
+        {
+          "href": "https://openaccess.thecvf.com/content_ICCV_2019/html/Yun_CutMix_Regularization_Strategy_to_Train_Strong_Classifiers_With_Localizable_Features_ICCV_2019_paper.html",
+          "application": "CutMix의 영역 교체와 보이는 면적 기반 분류 정답"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "Mixup·CutMix·Mosaic이 같은 입력 조합이 아니라 서로 다른 정답 갱신 규칙이라는 경계를 기존 수식과 논문 근거에 맞춰 확인했습니다.",
+        "humanize": "첫 동작 그림의 주요 장면·노트·도형 표기를 자연스러운 한국어로 바꾸고 기술 이름은 Mixup·CutMix·Mosaic으로 유지했습니다.",
+        "browser390": "390×844에서 locator·첫 그림·네 장면·지도 반환, 문서 및 세 canvas overflow 0을 확인했습니다.",
+        "browser1440": "1440×1000에서 locator·첫 그림·네 장면·지도 반환, 문서 및 세 canvas overflow 0을 확인했습니다.",
+        "keyboard": "첫 장면 대기와 ArrowRight 네 장면 순서를 확인했습니다.",
+        "reducedMotion": "재생 입력 뒤에도 첫 장면에 머무는 것을 확인했습니다.",
+        "noJavaScript": "production 산출물에서 조작부와 동적 장면은 숨고 네 장면의 순서와 결론이 모두 보이는 것을 확인했습니다.",
+        "build": "8GB Node heap 조건에서 production build와 정적 public route 2,086개 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-recursive-practice-map",
+      "bodyFiles": [
+        "src/pages/articles/ai/mixup-cutmix/ModernArticle.tsx",
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx",
+        "src/pages/articles/ai/shared/DataAugmentationPracticeLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/mixup-cutmix/ModernArticle.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx"
       ]
     },
     {
@@ -12316,25 +12352,60 @@
       "route": "ai/tabular-data-synthesis",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-data-synthesis.tsx",
       "publicPath": "cs/ai/tabular-data-synthesis",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 3,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "첫 동작 그림이 설명과 예측 질문 뒤에 있어 열 자료형에서 관계 제약과 정보 노출 검사로 이어지는 전체 흐름을 먼저 볼 수 없었습니다.",
+        "자료 증강의 부모 계약과 영상 자료 증강·정책 평가 사이에서 현재 글이 맡는 위치가 보이지 않았습니다.",
+        "장면 정지 관찰 대상과 JavaScript 비활성 네 장면 대체 내용이 없었습니다."
+      ],
+      "fixture": "시작일≤종료일과 부분합=총액 제약이 있는 표를 가정하고, 열 자료형→관계 제약→학습 자료 안의 합성→유용성·정보 노출 검사로 한 후보 행의 승인 경계를 추적합니다. 결과 수치는 미측정입니다.",
+      "stageAnchors": {
+        "S": "overview의 자료형→관계 제약→학습 자료 안의 합성→유용성·정보 노출 검사",
+        "0": "constraints",
+        "1": "split-local",
+        "2": "audit",
+        "parent": "/cs/ai/data-augmentation#target-map",
+        "return": "data-augmentation-practice-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.jair.org/index.php/jair/article/view/10302",
+          "application": "학습 자료 안에서 이웃을 고르고 보간하는 SMOTE의 적용 범위"
+        },
+        {
+          "href": "https://arxiv.org/abs/1907.00503",
+          "application": "연속·범주형 표 분포를 조건부 생성으로 다루는 CTGAN의 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "열별 정상 범위와 행 전체의 가능성, 자료 분리 전 이웃 탐색과 정보 누출, 유용성과 개인정보 노출 검사를 서로 다른 경계로 확인했습니다.",
+        "humanize": "첫 동작 그림의 장면·노트·도형 표기를 자료형·관계 제약·학습 자료·정보 노출 중심의 자연스러운 한국어로 바꿨습니다.",
+        "browser390": "390×844에서 locator·첫 그림·네 장면·지도 반환, 문서 및 세 canvas overflow 0을 확인했습니다.",
+        "browser1440": "1440×1000에서 locator·첫 그림·네 장면·지도 반환, 문서 및 세 canvas overflow 0을 확인했습니다.",
+        "keyboard": "첫 장면 대기와 ArrowRight 네 장면 순서를 확인했습니다.",
+        "reducedMotion": "재생 입력 뒤에도 첫 장면에 머무는 것을 확인했습니다.",
+        "noJavaScript": "production 산출물에서 조작부와 동적 장면은 숨고 네 장면의 순서와 결론이 모두 보이는 것을 확인했습니다.",
+        "build": "8GB Node heap 조건에서 production build와 정적 public route 2,086개 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-recursive-practice-map",
+      "bodyFiles": [
+        "src/pages/articles/ai/tabular-data-synthesis/ModernArticle.tsx",
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx",
+        "src/pages/articles/ai/shared/DataAugmentationPracticeLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/tabular-data-synthesis/ModernArticle.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/data-augmentation/viz/ModernAugmentationViz.tsx"
       ]
     },
     {

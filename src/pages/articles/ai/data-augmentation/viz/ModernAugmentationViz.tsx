@@ -26,7 +26,14 @@ function Arrow({
   return (
     <g>
       <defs>
-        <marker id={id} markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+        <marker
+          id={id}
+          markerWidth="7"
+          markerHeight="7"
+          refX="6"
+          refY="3.5"
+          orient="auto"
+        >
           <path d="M0 0L7 3.5L0 7Z" fill={active ? accent : muted} />
         </marker>
       </defs>
@@ -76,16 +83,30 @@ function Box({
         width={w}
         height={h}
         rx="7"
-        fill={active ? "color-mix(in srgb, var(--primary) 10%, transparent)" : "var(--background)"}
+        fill={
+          active
+            ? "color-mix(in srgb, var(--primary) 10%, transparent)"
+            : "var(--background)"
+        }
         stroke={active ? accent : border}
         strokeWidth="1.25"
         strokeDasharray={dashed ? "5 4" : undefined}
       />
-      <text x={x + w / 2} y={y + h / 2 - (detail ? 4 : -3)} textAnchor="middle" className="fill-foreground text-[12px] font-bold sm:text-[10px]">
+      <text
+        x={x + w / 2}
+        y={y + h / 2 - (detail ? 4 : -3)}
+        textAnchor="middle"
+        className="fill-foreground text-[12px] font-bold sm:text-[10px]"
+      >
         {label}
       </text>
       {detail ? (
-        <text x={x + w / 2} y={y + h / 2 + 13} textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">
+        <text
+          x={x + w / 2}
+          y={y + h / 2 + 13}
+          textAnchor="middle"
+          className="fill-muted-foreground text-[10px] sm:text-[8px]"
+        >
           {detail}
         </text>
       ) : null}
@@ -116,77 +137,607 @@ function Scene({
       <div
         id={id}
         data-viz
-        tabIndex={0}
-        onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        data-viz-scene={id}
+        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
-          {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">{labels[controls.active]}</h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div
+          id={controls.playbackId}
+          data-viz-live-only
+          tabIndex={0}
+          onKeyDown={controls.onKeyDown}
+          className="outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
+            {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 aria-live="polite" className="mt-2 text-lg font-bold leading-7">
+            {labels[controls.active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
+            {children(controls.active)}
+          </div>
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+            {notes[controls.active]}
+          </p>
+          <AnimatedSceneControls labels={[...labels]} {...controls} />
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={[...labels]} {...controls} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {labels.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">
+                {notes[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
 }
 
 export function AugmentationContractViz() {
-  const labels = ["640×480 사진·원래 box", "좌우 flip parameter", "같은 parameter로 box 이동", "유효한 pair의 평균 loss"] as const;
+  const labels = [
+    "640×480 사진·원래 box",
+    "좌우 flip parameter",
+    "같은 parameter로 box 이동",
+    "유효한 pair의 평균 loss",
+  ] as const;
   const notes = [
     "640×480 상품 사진의 원래 box는 (80,120)–(240,360)입니다.",
     "좌우 flip은 같은 상품을 유지하므로 허용하지만 x 좌표는 width 640을 기준으로 뒤집힙니다.",
     "x₁′=640−240=400, x₂′=640−80=560이므로 새 box는 (400,120)–(560,360)입니다.",
     "Image와 target이 같은 sampled parameter를 공유한 pair만 loss에 넣어 augmentation distribution의 평균 risk를 줄입니다.",
   ] as const;
-  return <Scene id="augmentation-contract-viz" eyebrow="640×480 DETECTION CASE" title="Flip한 image와 box (400,120)–(560,360)를 한 pair로 만듭니다" description="원래 box→좌우 flip→target map→training loss를 같은 sampled parameter로 연결합니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 210" role="img" aria-label={labels[active]} className="block h-auto w-full"><Box x={8} y={70} w={76} h={66} label="source" detail="box 80–240" active={active === 0}/><Arrow x1={85} y1={103} x2={108} y2={103} id="aug-found-a" active={active >= 1}/><Box x={112} y={64} w={70} h={78} label="flip" detail="x→640−x" active={active === 1}/><Arrow x1={183} y1={103} x2={206} y2={103} id="aug-found-b" active={active >= 2}/><Box x={210} y={43} w={72} h={48} label="image′" detail="flipped" active={active === 2}/><Box x={210} y={116} w={72} h={48} label="box′" detail="400–560" active={active === 2}/><Arrow x1={283} y1={103} x2={306} y2={103} id="aug-found-c" active={active === 3}/><Box x={310} y={72} w={42} h={62} label="E loss" detail="valid pair" active={active === 3}/></svg>}</Scene>;
+  return (
+    <Scene
+      id="augmentation-contract-viz"
+      eyebrow="640×480 DETECTION CASE"
+      title="Flip한 image와 box (400,120)–(560,360)를 한 pair로 만듭니다"
+      description="원래 box→좌우 flip→target map→training loss를 같은 sampled parameter로 연결합니다."
+      labels={labels}
+      notes={notes}
+    >
+      {(active) => (
+        <svg
+          viewBox="0 0 360 210"
+          role="img"
+          aria-label={labels[active]}
+          className="block h-auto w-full"
+        >
+          <Box
+            x={8}
+            y={70}
+            w={76}
+            h={66}
+            label="source"
+            detail="box 80–240"
+            active={active === 0}
+          />
+          <Arrow
+            x1={85}
+            y1={103}
+            x2={108}
+            y2={103}
+            id="aug-found-a"
+            active={active >= 1}
+          />
+          <Box
+            x={112}
+            y={64}
+            w={70}
+            h={78}
+            label="flip"
+            detail="x→640−x"
+            active={active === 1}
+          />
+          <Arrow
+            x1={183}
+            y1={103}
+            x2={206}
+            y2={103}
+            id="aug-found-b"
+            active={active >= 2}
+          />
+          <Box
+            x={210}
+            y={43}
+            w={72}
+            h={48}
+            label="image′"
+            detail="flipped"
+            active={active === 2}
+          />
+          <Box
+            x={210}
+            y={116}
+            w={72}
+            h={48}
+            label="box′"
+            detail="400–560"
+            active={active === 2}
+          />
+          <Arrow
+            x1={283}
+            y1={103}
+            x2={306}
+            y2={103}
+            id="aug-found-c"
+            active={active === 3}
+          />
+          <Box
+            x={310}
+            y={72}
+            w={42}
+            h={62}
+            label="E loss"
+            detail="valid pair"
+            active={active === 3}
+          />
+        </svg>
+      )}
+    </Scene>
+  );
 }
 
 export function ImageTransformViz() {
-  const labels = ["원래 box (60,20)–(100,60)", "+20px 이동·clip → visibility 0.5", "Photometric 변화", "Normalization 좌표"] as const;
+  const labels = [
+    "원래 box (60,20)–(100,60)",
+    "+20px 이동·clip → visibility 0.5",
+    "Photometric 변화",
+    "Normalization 좌표",
+  ] as const;
   const notes = [
     "100×80 image와 box·mask·keypoint는 같은 affine parameter를 공유합니다.",
     "오른쪽으로 20px 옮긴 box (80,20)–(120,60)를 canvas에 clip하면 20×40만 남아 visible ratio는 0.5입니다.",
     "Brightness·contrast·hue는 좌표를 옮기지 않지만 target signal을 지울 수 있어 범위를 제한합니다.",
     "Random color transform 뒤에 고정 center·scale을 적용해 model input 좌표를 맞춥니다.",
   ] as const;
-  return <Scene id="image-transform-viz" eyebrow="100×80 image case" title="20px 이동 뒤 box의 절반만 canvas 안에 남습니다" description="같은 좌표 변환→clip→visibility→pixel-value 경계를 한 사례에서 봅니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 220" role="img" aria-label={labels[active]} className="block h-auto w-full"><rect x="14" y="38" width="88" height="116" rx="6" fill="var(--background)" stroke={active <= 1 ? accent : border} strokeWidth="1.25"/><rect x="58" y="67" width="44" height="58" fill="none" stroke={accent} strokeWidth="1.25"/><text x="58" y="177" textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">100×80 · x=60–100</text><Arrow x1={103} y1={96} x2={132} y2={96} id="image-aug-a" active={active <= 1}/><rect x="136" y="38" width="82" height="116" rx="6" fill="var(--background)" stroke={active <= 1 ? accent : border} strokeWidth="1.25"/><rect x="192" y="67" width="44" height="58" fill="none" stroke={accent} strokeWidth="1.25"/><motion.line x1="218" y1="30" x2="218" y2="164" stroke={active === 1 ? accent : border} strokeWidth="1.25" strokeDasharray="4 4" animate={{ opacity: active === 1 ? 1 : 0 }}/><text x="177" y="177" textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">clip x=80–100 · 50%</text><Arrow x1={220} y1={96} x2={247} y2={96} id="image-aug-b" active={active >= 2}/><Box x={251} y={42} w={96} h={50} label="jitter" detail="same coordinates" active={active === 2}/><Box x={251} y={120} w={96} h={50} label="(x−μ)/σ" detail="fixed input" active={active === 3}/></svg>}</Scene>;
+  return (
+    <Scene
+      id="image-transform-viz"
+      eyebrow="100×80 image case"
+      title="20px 이동 뒤 box의 절반만 canvas 안에 남습니다"
+      description="같은 좌표 변환→clip→visibility→pixel-value 경계를 한 사례에서 봅니다."
+      labels={labels}
+      notes={notes}
+    >
+      {(active) => (
+        <svg
+          viewBox="0 0 360 220"
+          role="img"
+          aria-label={labels[active]}
+          className="block h-auto w-full"
+        >
+          <rect
+            x="14"
+            y="38"
+            width="88"
+            height="116"
+            rx="6"
+            fill="var(--background)"
+            stroke={active <= 1 ? accent : border}
+            strokeWidth="1.25"
+          />
+          <rect
+            x="58"
+            y="67"
+            width="44"
+            height="58"
+            fill="none"
+            stroke={accent}
+            strokeWidth="1.25"
+          />
+          <text
+            x="58"
+            y="177"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[10px] sm:text-[8px]"
+          >
+            100×80 · x=60–100
+          </text>
+          <Arrow
+            x1={103}
+            y1={96}
+            x2={132}
+            y2={96}
+            id="image-aug-a"
+            active={active <= 1}
+          />
+          <rect
+            x="136"
+            y="38"
+            width="82"
+            height="116"
+            rx="6"
+            fill="var(--background)"
+            stroke={active <= 1 ? accent : border}
+            strokeWidth="1.25"
+          />
+          <rect
+            x="192"
+            y="67"
+            width="44"
+            height="58"
+            fill="none"
+            stroke={accent}
+            strokeWidth="1.25"
+          />
+          <motion.line
+            x1="218"
+            y1="30"
+            x2="218"
+            y2="164"
+            stroke={active === 1 ? accent : border}
+            strokeWidth="1.25"
+            strokeDasharray="4 4"
+            animate={{ opacity: active === 1 ? 1 : 0 }}
+          />
+          <text
+            x="177"
+            y="177"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[10px] sm:text-[8px]"
+          >
+            clip x=80–100 · 50%
+          </text>
+          <Arrow
+            x1={220}
+            y1={96}
+            x2={247}
+            y2={96}
+            id="image-aug-b"
+            active={active >= 2}
+          />
+          <Box
+            x={251}
+            y={42}
+            w={96}
+            h={50}
+            label="jitter"
+            detail="same coordinates"
+            active={active === 2}
+          />
+          <Box
+            x={251}
+            y={120}
+            w={96}
+            h={50}
+            label="(x−μ)/σ"
+            detail="fixed input"
+            active={active === 3}
+          />
+        </svg>
+      )}
+    </Scene>
+  );
 }
 
 export function SampleMixingViz() {
-  const labels = ["두 source sample", "Mixup", "CutMix", "Mosaic annotation"] as const;
-  const notes = [
-    "두 input뿐 아니라 두 target도 같은 composition receipt에 넣습니다.",
-    "Mixup은 전체 tensor를 λ와 1−λ로 보간하고 target probability도 같은 비율로 섞습니다.",
-    "CutMix는 pixel mask의 실제 visible area로 class target 비율을 다시 계산합니다.",
-    "Mosaic은 각 tile의 resize·offset·clip을 annotation마다 적용하고 너무 작은 object를 걸러냅니다.",
+  const labels = [
+    "두 원본 표본",
+    "Mixup 혼합",
+    "CutMix 교체",
+    "Mosaic 정답",
   ] as const;
-  return <Scene id="sample-mixing-viz" eyebrow="Input and target together" title="Mixing 방식마다 target을 만드는 규칙이 다릅니다" description="Source→Mixup→CutMix→Mosaic을 같은 canvas에서 비교합니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 220" role="img" aria-label={labels[active]} className="block h-auto w-full"><Box x={12} y={48} w={70} h={50} label="sample i" detail="xᵢ,yᵢ" active={active === 0}/><Box x={12} y={126} w={70} h={50} label="sample j" detail="xⱼ,yⱼ" active={active === 0}/><Arrow x1={83} y1={112} x2={117} y2={112} id="mix-a" active={active >= 1}/><rect x="122" y="45" width="92" height="132" rx="6" fill="var(--background)" stroke={active >= 1 ? accent : border} strokeWidth="1.25"/><motion.rect x="122" y="45" width="92" height="132" fill={accent} animate={{ opacity: active === 1 ? 0.13 : 0 }}/><motion.rect x="164" y="45" width="50" height="70" fill={accent} animate={{ opacity: active === 2 ? 0.18 : 0 }}/><motion.g animate={{ opacity: active === 3 ? 1 : 0 }}><line x1="168" y1="45" x2="168" y2="177" stroke={accent} strokeWidth="1.25"/><line x1="122" y1="111" x2="214" y2="111" stroke={accent} strokeWidth="1.25"/></motion.g><text x="168" y="199" textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">composed input</text><Arrow x1={215} y1={112} x2={245} y2={112} id="mix-b" active={active >= 1}/><Box x={249} y={75} w={99} h={74} label={active === 1 ? "λyᵢ+(1−λ)yⱼ" : active === 2 ? "area target" : active === 3 ? "box union" : "target receipt"} detail="same composition" active={active >= 1}/></svg>}</Scene>;
+  const notes = [
+    "두 입력뿐 아니라 두 정답도 같은 조합 기록에 넣습니다.",
+    "Mixup은 전체 배열을 λ와 1−λ로 보간하고 정답 확률도 같은 비율로 섞습니다.",
+    "CutMix는 화소 마스크에서 실제로 보이는 면적을 세어 분류 정답의 비율을 다시 계산합니다.",
+    "Mosaic은 각 조각의 크기·위치·잘림을 정답마다 적용하고 너무 작은 물체를 걸러냅니다.",
+  ] as const;
+  return (
+    <Scene
+      id="sample-mixing-viz"
+      eyebrow="입력과 정답을 함께"
+      title="입력을 섞는 방식마다 정답을 만드는 규칙이 다릅니다"
+      description="두 원본→Mixup→CutMix→Mosaic을 같은 화면에서 비교합니다."
+      labels={labels}
+      notes={notes}
+    >
+      {(active) => (
+        <svg
+          viewBox="0 0 360 220"
+          role="img"
+          aria-label={labels[active]}
+          className="block h-auto w-full"
+        >
+          <Box
+            x={12}
+            y={48}
+            w={70}
+            h={50}
+            label="표본 i"
+            detail="xᵢ,yᵢ"
+            active={active === 0}
+          />
+          <Box
+            x={12}
+            y={126}
+            w={70}
+            h={50}
+            label="표본 j"
+            detail="xⱼ,yⱼ"
+            active={active === 0}
+          />
+          <Arrow
+            x1={83}
+            y1={112}
+            x2={117}
+            y2={112}
+            id="mix-a"
+            active={active >= 1}
+          />
+          <rect
+            x="122"
+            y="45"
+            width="92"
+            height="132"
+            rx="6"
+            fill="var(--background)"
+            stroke={active >= 1 ? accent : border}
+            strokeWidth="1.25"
+          />
+          <motion.rect
+            x="122"
+            y="45"
+            width="92"
+            height="132"
+            fill={accent}
+            animate={{ opacity: active === 1 ? 0.13 : 0 }}
+          />
+          <motion.rect
+            x="164"
+            y="45"
+            width="50"
+            height="70"
+            fill={accent}
+            animate={{ opacity: active === 2 ? 0.18 : 0 }}
+          />
+          <motion.g animate={{ opacity: active === 3 ? 1 : 0 }}>
+            <line
+              x1="168"
+              y1="45"
+              x2="168"
+              y2="177"
+              stroke={accent}
+              strokeWidth="1.25"
+            />
+            <line
+              x1="122"
+              y1="111"
+              x2="214"
+              y2="111"
+              stroke={accent}
+              strokeWidth="1.25"
+            />
+          </motion.g>
+          <text
+            x="168"
+            y="199"
+            textAnchor="middle"
+            className="fill-muted-foreground text-[10px] sm:text-[8px]"
+          >
+            조합한 입력
+          </text>
+          <Arrow
+            x1={215}
+            y1={112}
+            x2={245}
+            y2={112}
+            id="mix-b"
+            active={active >= 1}
+          />
+          <Box
+            x={249}
+            y={75}
+            w={99}
+            h={74}
+            label={
+              active === 1
+                ? "λyᵢ+(1−λ)yⱼ"
+                : active === 2
+                  ? "면적 정답"
+                  : active === 3
+                    ? "상자 합집합"
+                    : "정답 기록"
+            }
+            detail="같은 조합 규칙"
+            active={active >= 1}
+          />
+        </svg>
+      )}
+    </Scene>
+  );
 }
 
 export function TabularSynthesisViz() {
-  const labels = ["Row schema", "Constraint ledger", "Train-fold synthesis", "Utility·privacy audit"] as const;
-  const notes = [
-    "Column type·unit·category만 맞아도 row 전체가 현실적이라는 뜻은 아닙니다.",
-    "날짜 순서·부분합·entity 상태처럼 여러 column을 묶는 제약을 별도 ledger로 둡니다.",
-    "Neighbor·generator는 split 뒤 training fold만 fit해 validation 정보를 보지 않게 합니다.",
-    "유용성뿐 아니라 duplicate·membership leakage와 subgroup distortion을 함께 검사합니다.",
+  const labels = [
+    "행 자료형",
+    "관계 제약",
+    "학습 자료 안의 합성",
+    "유용성·정보 노출 검사",
   ] as const;
-  return <Scene id="tabular-synthesis-viz" eyebrow="A row is a system" title="Synthetic row는 column보다 넓은 계약을 통과해야 합니다" description="Schema→constraint→split→audit의 네 gate입니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 220" role="img" aria-label={labels[active]} className="block h-auto w-full">{[[12,"schema","type·unit"],[102,"ledger","start≤end"],[192,"train only","fit·sample"],[282,"audit","utility·privacy"]].map(([x,label,detail],index) => <g key={String(label)}><Box x={Number(x)} y={72} w={66} h={76} label={String(label)} detail={String(detail)} active={active === index}/>{index < 3 ? <Arrow x1={Number(x)+67} y1={110} x2={Number(x)+88} y2={110} id={`tab-syn-${index}`} active={active >= index+1}/> : null}</g>)}<motion.path d="M315 160C268 201 99 201 44 160" fill="none" stroke={accent} strokeWidth="1.25" strokeDasharray="5 4" initial={false} animate={{ opacity: active === 3 ? 1 : 0, pathLength: active === 3 ? 1 : 0 }}/></svg>}</Scene>;
+  const notes = [
+    "각 열의 자료형·단위·범주가 맞아도 행 전체가 현실적이라는 뜻은 아닙니다.",
+    "날짜 순서·부분합·대상 상태처럼 여러 열을 묶는 제약을 별도 목록으로 둡니다.",
+    "이웃 탐색과 생성 규칙은 자료를 나눈 뒤 학습 부분에만 맞춰 검증 자료를 보지 않게 합니다.",
+    "유용성뿐 아니라 실제 행 중복·개별 자료 포함 여부 노출·하위 집단 왜곡을 함께 검사합니다.",
+  ] as const;
+  return (
+    <Scene
+      id="tabular-synthesis-viz"
+      eyebrow="행 하나도 관계로 이루어집니다"
+      title="합성 행은 열 하나보다 넓은 계약을 통과해야 합니다"
+      description="자료형→관계 제약→자료 분리→유용성·정보 노출 검사의 네 단계입니다."
+      labels={labels}
+      notes={notes}
+    >
+      {(active) => (
+        <svg
+          viewBox="0 0 360 220"
+          role="img"
+          aria-label={labels[active]}
+          className="block h-auto w-full"
+        >
+          {[
+            [12, "자료형", "형식·단위"],
+            [102, "관계", "시작≤종료"],
+            [192, "학습만", "맞춤·생성"],
+            [282, "검사", "유용성·노출"],
+          ].map(([x, label, detail], index) => (
+            <g key={String(label)}>
+              <Box
+                x={Number(x)}
+                y={72}
+                w={66}
+                h={76}
+                label={String(label)}
+                detail={String(detail)}
+                active={active === index}
+              />
+              {index < 3 ? (
+                <Arrow
+                  x1={Number(x) + 67}
+                  y1={110}
+                  x2={Number(x) + 88}
+                  y2={110}
+                  id={`tab-syn-${index}`}
+                  active={active >= index + 1}
+                />
+              ) : null}
+            </g>
+          ))}
+          <motion.path
+            d="M315 160C268 201 99 201 44 160"
+            fill="none"
+            stroke={accent}
+            strokeWidth="1.25"
+            strokeDasharray="5 4"
+            initial={false}
+            animate={{
+              opacity: active === 3 ? 1 : 0,
+              pathLength: active === 3 ? 1 : 0,
+            }}
+          />
+        </svg>
+      )}
+    </Scene>
+  );
 }
 
 export function AugmentationEvaluationViz() {
-  const labels = ["Versioned policy", "Clean·robust 분리", "TTA inverse map", "Release or rollback"] as const;
+  const labels = [
+    "Versioned policy",
+    "Clean·robust 분리",
+    "TTA inverse map",
+    "Release or rollback",
+  ] as const;
   const notes = [
     "Transform 이름뿐 아니라 범위·확률·순서·seed·target map revision을 하나의 artifact로 고정합니다.",
     "원본 validation과 고정 shift slice를 별도 column으로 두어 난이도와 품질을 섞지 않습니다.",
     "Spatial prediction은 각 augmented view의 출력을 원래 좌표로 되돌린 뒤 결합합니다.",
     "Paired seed gain·calibration·slice·latency gate가 모두 통과할 때만 policy를 release합니다.",
   ] as const;
-  return <Scene id="augmentation-evaluation-viz" eyebrow="Evidence before rollout" title="Policy artifact에서 release receipt까지" description="Config→evaluation→inverse mapping→decision을 연결합니다." labels={labels} notes={notes}>{(active) => <svg viewBox="0 0 360 220" role="img" aria-label={labels[active]} className="block h-auto w-full"><Box x={8} y={72} w={72} h={72} label="policy" detail="range·p·order" active={active === 0}/><Arrow x1={81} y1={108} x2={106} y2={108} id="aug-eval-a" active={active >= 1}/><Box x={110} y={39} w={72} h={52} label="clean" detail="original" active={active === 1}/><Box x={110} y={124} w={72} h={52} label="robust" detail="fixed shift" active={active === 1}/><Arrow x1={183} y1={108} x2={208} y2={108} id="aug-eval-b" active={active >= 2}/><Box x={212} y={70} w={70} h={76} label="Tₖ⁻¹" detail="align output" active={active === 2}/><Arrow x1={283} y1={108} x2={307} y2={108} id="aug-eval-c" active={active === 3}/><Box x={311} y={76} w={42} h={64} label="gate" detail="ship" active={active === 3}/><motion.path d="M332 153C285 202 83 202 44 155" fill="none" stroke={accent} strokeWidth="1.25" strokeDasharray="5 4" animate={{ opacity: active === 3 ? 1 : 0, pathLength: active === 3 ? 1 : 0 }} initial={false}/></svg>}</Scene>;
+  return (
+    <Scene
+      id="augmentation-evaluation-viz"
+      eyebrow="Evidence before rollout"
+      title="Policy artifact에서 release receipt까지"
+      description="Config→evaluation→inverse mapping→decision을 연결합니다."
+      labels={labels}
+      notes={notes}
+    >
+      {(active) => (
+        <svg
+          viewBox="0 0 360 220"
+          role="img"
+          aria-label={labels[active]}
+          className="block h-auto w-full"
+        >
+          <Box
+            x={8}
+            y={72}
+            w={72}
+            h={72}
+            label="policy"
+            detail="range·p·order"
+            active={active === 0}
+          />
+          <Arrow
+            x1={81}
+            y1={108}
+            x2={106}
+            y2={108}
+            id="aug-eval-a"
+            active={active >= 1}
+          />
+          <Box
+            x={110}
+            y={39}
+            w={72}
+            h={52}
+            label="clean"
+            detail="original"
+            active={active === 1}
+          />
+          <Box
+            x={110}
+            y={124}
+            w={72}
+            h={52}
+            label="robust"
+            detail="fixed shift"
+            active={active === 1}
+          />
+          <Arrow
+            x1={183}
+            y1={108}
+            x2={208}
+            y2={108}
+            id="aug-eval-b"
+            active={active >= 2}
+          />
+          <Box
+            x={212}
+            y={70}
+            w={70}
+            h={76}
+            label="Tₖ⁻¹"
+            detail="align output"
+            active={active === 2}
+          />
+          <Arrow
+            x1={283}
+            y1={108}
+            x2={307}
+            y2={108}
+            id="aug-eval-c"
+            active={active === 3}
+          />
+          <Box
+            x={311}
+            y={76}
+            w={42}
+            h={64}
+            label="gate"
+            detail="ship"
+            active={active === 3}
+          />
+          <motion.path
+            d="M332 153C285 202 83 202 44 155"
+            fill="none"
+            stroke={accent}
+            strokeWidth="1.25"
+            strokeDasharray="5 4"
+            animate={{
+              opacity: active === 3 ? 1 : 0,
+              pathLength: active === 3 ? 1 : 0,
+            }}
+            initial={false}
+          />
+        </svg>
+      )}
+    </Scene>
+  );
 }

@@ -77,6 +77,8 @@ const noScriptArticleRoutes = new Set([
   "ai/dezero-autodiff",
   "ai/dezero-nn",
   "ai/dezero-advanced",
+  "ai/mixup-cutmix",
+  "ai/tabular-data-synthesis",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",
