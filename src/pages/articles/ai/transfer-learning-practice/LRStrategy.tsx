@@ -4,51 +4,128 @@ import LRStrategyViz from "./viz/LRStrategyViz";
 
 export default function LRStrategy() {
   return (
-    <section id="lr-strategy" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Discriminative LR은 같은 gradient라도 layer별 이동량을 다르게 정합니다</h2>
+    <section
+      id="lr-strategy"
+      className="mb-16 scroll-mt-20"
+      data-teach-level="2"
+    >
+      <h2 className="mb-6 text-2xl font-bold">
+        Discriminative LR은 같은 gradient라도 layer별 이동량을 다르게 정합니다
+      </h2>
+      <div className="not-prose my-8">
+        <LRStrategyViz />
+      </div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Head는 random initialization 상태이고 lower backbone은 이미 쓸 만한 representation을 갖췄습니다. 둘이 같은 learning rate를
-          써야 할 이유는 없습니다. Param group을 lower·upper·head로 나누고 head에는 큰 후보 LR, lower block에는 작은 후보 LR을 둘 수 있습니다.
-          다만 “층마다 10배”는 법칙이 아니므로 실제 update가 parameter 크기에 비해 얼마나 큰지를 측정합니다.
+          Head는 random initialization 상태이고 lower backbone은 이미 쓸 만한
+          representation을 갖췄습니다. 둘이 같은 learning rate를 써야 할 이유는
+          없습니다.
+        </p>
+        <p>
+          Param group을 lower·upper·head로 나누고 head에는 큰 후보 LR, lower
+          block에는 작은 후보 LR을 둘 수 있습니다. 다만 “층마다 10배”는 법칙이
+          아니므로 실제 update가 parameter 크기에 비해 얼마나 큰지를 측정합니다.
         </p>
       </div>
       <ExplainedFormula
         question="서로 scale이 다른 layer의 update 충격을 어떤 무차원 비율로 비교할까?"
-        idea={<>Learning rate와 update direction norm의 곱을 현재 parameter norm으로 나눕니다. 같은 η라도 gradient와 weight scale이 다르면 상대 이동량은 달라집니다.</>}
+        idea={
+          <>
+            Learning rate와 update direction norm의 곱을 현재 parameter norm으로
+            나눕니다. 같은 η라도 gradient와 weight scale이 다르면 상대 이동량은
+            달라집니다.
+          </>
+        }
         formula={String.raw`\rho_{\ell}=\frac{\|\Delta\theta_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}=\frac{\eta_{\ell}\|g_{\ell}\|_2}{\|\theta_{\ell}\|_2+\varepsilon}`}
         annotatedFormula={String.raw`\rho_{\ell}=\frac{\underbrace{\|\Delta\theta_{\ell}\|_2}_{\text{한 번 update 이동량}}}{\underbrace{\|\theta_{\ell}\|_2+\varepsilon}_{\text{현재 weight 크기}}}=\frac{\underbrace{\eta_{\ell}\|g_{\ell}\|_2}_{\text{LR과 방향 norm의 곱}}}{\|\theta_{\ell}\|_2+\varepsilon}`}
         operations={[
-          { expression: String.raw`\|\Delta\theta_{\ell}\|_2`, annotation: ["optimizer update 한 번에 layer ℓ의","parameter가 움직인 거리"] },
-          { expression: String.raw`\|\theta_{\ell}\|_2+\varepsilon`, annotation: ["그 layer weight의 현재 크기로 나눠","layer마다 다른 scale을 지웁니다","ε은 norm이 0에 가까울 때의 바닥값"] },
-          { expression: String.raw`\eta_{\ell}\|g_{\ell}\|_2`, annotation: ["같은 이동량을 LR과 update 방향 norm의","곱으로 다시 쓴 것","같은 η라도 gradient가 크면 ρ가 큼"] },
+          {
+            expression: String.raw`\|\Delta\theta_{\ell}\|_2`,
+            annotation: [
+              "optimizer update 한 번에 layer ℓ의",
+              "parameter가 움직인 거리",
+            ],
+          },
+          {
+            expression: String.raw`\|\theta_{\ell}\|_2+\varepsilon`,
+            annotation: [
+              "그 layer weight의 현재 크기로 나눠",
+              "layer마다 다른 scale을 지웁니다",
+              "ε은 norm이 0에 가까울 때의 바닥값",
+            ],
+          },
+          {
+            expression: String.raw`\eta_{\ell}\|g_{\ell}\|_2`,
+            annotation: [
+              "같은 이동량을 LR과 update 방향 norm의",
+              "곱으로 다시 쓴 것",
+              "같은 η라도 gradient가 크면 ρ가 큼",
+            ],
+          },
         ]}
         terms={[
-          { symbol: "Δθ_ℓ", name: "one-update displacement", description: "Optimizer update 한 번으로 layer parameter가 움직인 vector입니다." },
-          { symbol: "ρ_ℓ", name: "relative update ratio", description: "현재 parameter scale 대비 update 크기인 dimensionless 진단값입니다." },
-          { symbol: "ε", name: "numerical floor", description: "Norm이 매우 작은 새 parameter에서 분모가 0이 되는 것을 막습니다." },
-          { symbol: "g_ℓ", name: "update direction", description: "Plain SGD에서는 layer ℓ의 gradient이고, Adam류에서는 optimizer가 정규화한 update 방향입니다." },
+          {
+            symbol: "Δθ_ℓ",
+            name: "one-update displacement",
+            description:
+              "Optimizer update 한 번으로 layer parameter가 움직인 vector입니다.",
+          },
+          {
+            symbol: "ρ_ℓ",
+            name: "relative update ratio",
+            description:
+              "현재 parameter scale 대비 update 크기인 dimensionless 진단값입니다.",
+          },
+          {
+            symbol: "ε",
+            name: "numerical floor",
+            description:
+              "Norm이 매우 작은 새 parameter에서 분모가 0이 되는 것을 막습니다.",
+          },
+          {
+            symbol: "g_ℓ",
+            name: "update direction",
+            description:
+              "Plain SGD에서는 layer ℓ의 gradient이고, Adam류에서는 optimizer가 정규화한 update 방향입니다.",
+          },
         ]}
-        assumptions={["두 번째 등호 ‖Δθ‖=η‖g‖는 momentum·weight decay 없는 plain SGD에서만 정확합니다. Adam류 optimizer에서는 g를 raw gradient가 아니라 m̂/(√v̂+ε)처럼 정규화된 update 방향으로 읽어야 합니다.", "Optimizer의 momentum·adaptive scaling·weight decay를 반영한 실제 Δθ를 쓰는 편이 정확합니다.", "ρ가 작다고 validation gain이나 representation 보존이 자동으로 보장되지는 않습니다.", "Layer별 histogram과 loss spike를 같은 optimizer-update clock에 맞춥니다."]}
+        assumptions={[
+          "두 번째 등호 ‖Δθ‖=η‖g‖는 momentum·weight decay 없는 plain SGD에서만 정확합니다. Adam류 optimizer에서는 g를 raw gradient가 아니라 m̂/(√v̂+ε)처럼 정규화된 update 방향으로 읽어야 합니다.",
+          "Optimizer의 momentum·adaptive scaling·weight decay를 반영한 실제 Δθ를 쓰는 편이 정확합니다.",
+          "ρ가 작다고 validation gain이나 representation 보존이 자동으로 보장되지는 않습니다.",
+          "Layer별 histogram과 loss spike를 같은 optimizer-update clock에 맞춥니다.",
+        ]}
         interpretation="Unfreeze 직후 lower block의 ρ가 head보다 훨씬 크다면 작은 LR·warmup 또는 optimizer state 재설계를 검토할 근거가 됩니다."
       />
-      <div className="not-prose my-8"><LRStrategyViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Warmup은 새 head·optimizer state·큰 effective batch가 만나는 초기 update의
-          충격을 완화하는 후보입니다. Peak 뒤 linear·cosine decay를 쓰더라도 scheduler는
-          micro-batch가 아니라 optimizer update clock과 맞춰야 합니다. Schedule 수식과
-          warm restart의 가정은 <Link to="/cs/ai/lr-scheduling">learning-rate scheduling 글</Link>에서
+          Warmup은 새 head·optimizer state·큰 effective batch가 만나는 초기
+          update의 충격을 완화하는 후보입니다. Peak 뒤 linear·cosine decay를
+          쓰더라도 scheduler는 micro-batch가 아니라 optimizer update clock과
+          맞춰야 합니다. Schedule 수식과 warm restart의 가정은{" "}
+          <Link to="/cs/ai/lr-scheduling">learning-rate scheduling 글</Link>에서
           이어서 설명합니다.
         </p>
-        <div id="paper-ulmfit-transfer" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <div
+          id="paper-ulmfit-transfer"
+          className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
+        >
           <p className="text-xs font-bold text-primary">논문 읽기 · ULMFiT</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            ULMFiT은 AWD-LSTM language model transfer에서 discriminative fine-tuning, slanted triangular learning
-            rate와 gradual unfreezing을 함께 제안했습니다. 이 recipe는 중요한 역사적 근거입니다. 다만 그 실험이 쓴 layer ratio와 순서를 현재의 모든
-            Transformer·vision backbone에 그대로 옮겨도 최적이라는 보장은 없습니다.
+            ULMFiT은 AWD-LSTM language model transfer에서 discriminative
+            fine-tuning, slanted triangular learning rate와 gradual unfreezing을
+            함께 제안했습니다. 이 recipe는 중요한 역사적 근거입니다. 다만 그
+            실험이 쓴 layer ratio와 순서를 현재의 모든 Transformer·vision
+            backbone에 그대로 옮겨도 최적이라는 보장은 없습니다.
           </p>
-          <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://aclanthology.org/P18-1031/" target="_blank" rel="noreferrer">논문의 세 fine-tuning 기법과 실험 범위 보기</a>
+          <a
+            className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+            href="https://aclanthology.org/P18-1031/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            논문의 세 fine-tuning 기법과 실험 범위 보기
+          </a>
         </div>
       </div>
     </section>

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 528,
-    "pending": 462,
+    "reviewed": 530,
+    "pending": 460,
     "untracked": 0,
-    "assignedPending": 418,
+    "assignedPending": 416,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2625,7 +2625,7 @@
       "catalogIndex": 259,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -2635,7 +2635,7 @@
       "catalogIndex": 260,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -2645,7 +2645,7 @@
       "catalogIndex": 261,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -2695,7 +2695,7 @@
       "catalogIndex": 266,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2705,7 +2705,7 @@
       "catalogIndex": 267,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2725,7 +2725,7 @@
       "catalogIndex": 269,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2735,7 +2735,7 @@
       "catalogIndex": 270,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2745,7 +2745,7 @@
       "catalogIndex": 271,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2755,7 +2755,7 @@
       "catalogIndex": 272,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2765,7 +2765,7 @@
       "catalogIndex": 273,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2775,7 +2775,7 @@
       "catalogIndex": 274,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2785,7 +2785,7 @@
       "catalogIndex": 275,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2795,7 +2795,7 @@
       "catalogIndex": 276,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2805,7 +2805,7 @@
       "catalogIndex": 277,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2815,7 +2815,7 @@
       "catalogIndex": 278,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2825,7 +2825,7 @@
       "catalogIndex": 279,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2835,7 +2835,7 @@
       "catalogIndex": 280,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2843,9 +2843,9 @@
       "publicPath": "cs/ai/training-pipeline",
       "title": "PyTorch 학습 파이프라인: Data Contract에서 Resume까지",
       "catalogIndex": 281,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2853,9 +2853,9 @@
       "publicPath": "cs/ai/transfer-learning-practice",
       "title": "Transfer Learning: Fixed Feature에서 Domain Adaptation까지",
       "catalogIndex": 282,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
