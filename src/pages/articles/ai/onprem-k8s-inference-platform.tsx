@@ -5,6 +5,10 @@ import TwoLevelScheduling from "./onprem-k8s-inference-platform/TwoLevelScheduli
 import GroupReplica from "./onprem-k8s-inference-platform/GroupReplica";
 import FixedPool from "./onprem-k8s-inference-platform/FixedPool";
 import PlatformGate from "./onprem-k8s-inference-platform/PlatformGate";
+import {
+  InferenceOperationsMapReturn,
+  InferenceOperationsSeriesLocator,
+} from "./shared/InferenceOperationsSeriesLocator";
 
 /**
  * 온프레미스 Kubernetes에서 모델 서버를 배치하고 요청을 나누는 순서
@@ -14,6 +18,7 @@ import PlatformGate from "./onprem-k8s-inference-platform/PlatformGate";
 export default function OnpremK8sInferencePlatformArticle() {
   return (
     <div className="space-y-16">
+      <InferenceOperationsSeriesLocator current="platform" />
       <Overview />
       <ControlPlane />
       <ServiceGap />
@@ -21,6 +26,7 @@ export default function OnpremK8sInferencePlatformArticle() {
       <GroupReplica />
       <FixedPool />
       <PlatformGate />
+      <InferenceOperationsMapReturn current="platform" />
     </div>
   );
 }

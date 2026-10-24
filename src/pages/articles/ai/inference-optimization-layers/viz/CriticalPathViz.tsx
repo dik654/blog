@@ -129,12 +129,18 @@ export default function CriticalPathViz() {
               <motion.div
                 className="pointer-events-none absolute -bottom-2 -top-2 w-0 border-l-[1.25px] border-dashed border-[#16a34a]"
                 initial={false}
-                animate={{ left: pct(finish) }}
+                animate={{ left: finish === AXIS ? "calc(100% - 1px)" : pct(finish) }}
                 transition={ease}
               />
               <div className="relative mt-3 h-12">
                 {[0, 25, 50, 75, 100].map((t) => (
-                  <span key={t} className="absolute top-0 -translate-x-1/2 font-mono text-[10px] text-muted-foreground" style={{ left: pct(t) }}>
+                  <span
+                    key={t}
+                    className={`absolute top-0 font-mono text-[10px] text-muted-foreground ${
+                      t === 0 ? "translate-x-0" : t === 100 ? "-translate-x-full" : "-translate-x-1/2"
+                    }`}
+                    style={{ left: pct(t) }}
+                  >
                     {t}
                   </span>
                 ))}

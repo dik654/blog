@@ -160,6 +160,10 @@ const noScriptArticleRoutes = new Set([
   "ai/qwen36-long-context-deployment",
   "ai/region-agnostic-inference-routing",
   "ai/inference-stack-standard-levels",
+  "ai/llm-serving-ops",
+  "ai/onprem-k8s-inference-platform",
+  "ai/inference-failure-absorption",
+  "ai/own-vs-rent-inference-capacity",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

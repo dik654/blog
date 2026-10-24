@@ -3332,7 +3332,7 @@
   부모 지도·현재 위치·반환 지도 각 1개, 문서·바깥 시각화 가로 넘침 0, console warning/error 0을
   다시 확인했다.
 
-### AI 여러 GPU 실행 묶음 로컬 완료 (2026-10-24)
+### AI 여러 GPU 실행 묶음 공개 완료 (2026-10-24)
 
 - `expert-parallelism-moe-systems`와 `tensor-and-pipeline-parallel-inference`를 concept,
   `parallelism-strategy-and-placement`를 practice로 분류했습니다. 세 글은
@@ -3349,7 +3349,9 @@
   `<noscript>`와 페이지 전체 정적 fallback이 중첩되어 본문이 두 번 보일 수 있던 문제는,
   앱 root 안에서만 감추는 `static-reading-only` 목록으로 바꿔 해결했습니다.
 - 변경 파일 ESLint, TypeScript와 production build, 엄격 topology·architecture-flow·reading-order·
-  coverage 감사를 통과했습니다. 공개 배포 경로 검증은 남아 있습니다.
+  coverage 감사를 통과했습니다. GitHub Pages run `40106525022`가 전체 감사·build·990개 공개 글
+  브라우저 검사를 통과한 뒤 세 공개 URL을 390×844에서 다시 열었습니다. HTTP 200, 부모 지도·현재
+  위치·반환 지도, 문서와 모든 시각화 가로 넘침 0, console warning/error 0을 확인했습니다.
 
 ### AI 서빙 판단 묶음 로컬 완료 (2026-10-25)
 
@@ -3391,3 +3393,22 @@
   부모 지도·현재 위치·반환 지도, 문서와 모든 data canvas의 가로 넘침 0, console 오류 0이었습니다.
   키보드 이동, reduced-motion, JavaScript 비활성 전체 장면도 통과했습니다. 공개 배포 경로 검증은
   남아 있습니다.
+
+### AI 추론 운영·용량 묶음 로컬 완료 (2026-10-25)
+
+- `llm-serving-ops`와 `inference-failure-absorption`을 concept,
+  `onprem-k8s-inference-platform`과 `own-vs-rent-inference-capacity`를 practice로 분류했습니다.
+  네 글은 `운영 계약 → 클러스터 실행 → 장애 흡수 → 용량 조달`이라는 직속 부모 지도를 공유합니다.
+- 운영 글은 GPU 처리량이 아니라 요청 종류별 TTFT·ITL·완료율·비용 계약에서 시작합니다. 자체 클러스터
+  글은 gateway·request selector·workload API·scheduler가 쓰는 상태를 분리하고, 장애 글은 고장 난
+  계층과 요청 진행 상태를 함께 봅니다. 용량 글은 소유·상시 임대·탄력 임대의 분모를 맞추고 예비
+  용량을 판매 가능한 처리량에서 뺍니다.
+- 핵심 지도와 장애·비용 그림을 긴 설명과 가정보다 먼저 배치했습니다. 움직이는 그림 10개는 명시적
+  입력 전에는 시작하지 않고, JavaScript 비활성 문서에서는 현재 장면과 조작부 대신 전체 장면의
+  순서와 결론을 보여 줍니다. `닫는다`를 운영 결정을 뜻하는 표현으로 쓰던 문장도 `확정한다`와
+  `보수적으로 제한한다`로 고쳤습니다.
+- 변경 파일 ESLint, TypeScript, production build를 통과했습니다. 빌드는 7,898개 module, 정적 public
+  route 2,086개와 no-script 본문 119편을 생성했습니다. 390×844·1,440×1,000의 네 경로×두 viewport에서
+  HTTP 200, 부모 지도·현재 위치·반환 지도, 문서와 모든 data canvas의 가로 넘침 0, console 오류 0을
+  확인했습니다. 키보드·명시적 재생·reduced-motion·JavaScript 비활성 전체 장면도 통과했습니다.
+  공개 배포 경로 검증은 남아 있습니다.

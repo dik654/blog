@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FailureLadderViz from "./inference-failure-absorption/viz/FailureLadderViz";
 import FleetSizeViz from "./inference-failure-absorption/viz/FleetSizeViz";
+import {
+  InferenceOperationsMapReturn,
+  InferenceOperationsSeriesLocator,
+} from "./shared/InferenceOperationsSeriesLocator";
 
 /**
  * 같은 장애라도 요청이 어디까지 갔느냐에 따라 결과가 갈립니다
@@ -18,10 +22,13 @@ import FleetSizeViz from "./inference-failure-absorption/viz/FleetSizeViz";
 export default function InferenceFailureAbsorptionArticle() {
   return (
     <div className="space-y-16">
+      <InferenceOperationsSeriesLocator current="failure" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           GPU 한 장이 죽을 때 세 요청의 운명이 갈립니다
         </h2>
+        <FailureLadderViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             같은 GPU에 신규 요청, 아직 첫 token을 내보내지 않은 요청, 이미
@@ -40,8 +47,6 @@ export default function InferenceFailureAbsorptionArticle() {
             새 replica에 없으므로 출력 중 stream은 끊깁니다.
           </p>
         </div>
-
-        <FailureLadderViz />
 
         <ContentBoundary article="inference-failure-absorption" />
 
@@ -463,7 +468,7 @@ export default function InferenceFailureAbsorptionArticle() {
               example:
                 "단절 중에는 자기 리전 배정액 안에서만 차감하고, 소진되면 차단합니다.",
               boundary:
-                "닫는 쪽입니다. 배정 합계가 잔액을 넘지 않으므로 단절 중에도 초과 지출이 생기지 않는 대신, 다른 리전의 배정액을 당장 쓰지 못합니다.",
+                "보수적으로 제한하는 쪽입니다. 배정 합계가 잔액을 넘지 않으므로 단절 중에도 초과 지출이 생기지 않는 대신, 다른 리전의 배정액을 당장 쓰지 못합니다.",
             },
           ]}
         />
@@ -544,6 +549,7 @@ export default function InferenceFailureAbsorptionArticle() {
           </p>
         </div>
       </section>
+      <InferenceOperationsMapReturn current="failure" />
     </div>
   );
 }

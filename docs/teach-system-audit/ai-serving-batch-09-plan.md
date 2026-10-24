@@ -30,7 +30,7 @@
 - [x] 키보드 이전·다음·재생 및 뷰포트 이탈 정지
 - [x] reduced-motion
 - [x] JavaScript 비활성 상태
-- [ ] 공개 경로와 GitHub Pages 배포
+- [x] 공개 경로와 GitHub Pages 배포
 
 ## 로컬 검증 결과
 
@@ -43,3 +43,7 @@
 - 시각화 안의 중첩 `<noscript>`가 페이지 전체 정적 fallback을 조기에 끝내던 문제를 발견했습니다.
   정적 장면 목록은 `static-reading-only`로 렌더하고 앱의 `#root` 안에서만 감추도록 바꿨습니다.
   그 결과 JavaScript가 켜진 화면의 본문 중복과 정적 읽기 모드의 장면 누락을 함께 제거했습니다.
+- GitHub Pages run `40106525022`가 전체 감사·build·990개 공개 글 브라우저 검사를 통과했습니다.
+  세 공개 URL을 390×844에서 다시 열어 HTTP 200, 부모 지도·현재 위치·반환 지도, 문서와 모든
+  시각화의 가로 넘침 0, console warning/error 0을 확인했습니다. 결과는
+  `output/playwright/ai-serving-public-batch-09-10/summary.json`에 남겼습니다.

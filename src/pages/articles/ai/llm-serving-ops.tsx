@@ -6,17 +6,23 @@ import Observability from "./llm-serving-ops/Observability";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./llm-serving-ops/codeRefs";
 import { litellmTree } from "./llm-serving-ops/fileTree";
+import {
+  InferenceOperationsMapReturn,
+  InferenceOperationsSeriesLocator,
+} from "./shared/InferenceOperationsSeriesLocator";
 
 export default function LLMServingOpsArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <InferenceOperationsSeriesLocator current="contract" />
       <Overview />
       <LiteLLMGateway onCodeRef={sidebar.open} />
       <KubernetesFleet />
       <ServingDeployment />
       <Observability />
+      <InferenceOperationsMapReturn current="contract" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
