@@ -89,9 +89,13 @@ export default function Multiplicative() {
         <p className="text-xs font-bold text-primary">논문 읽기 · Score와 attention 범위 비교</p>
         <p className="mt-2 text-sm font-semibold">Effective Approaches to Attention-based Neural Machine Translation</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Global·local attention과 dot·general·concat score를 같은 neural machine translation 맥락에서 비교했습니다. 해당
-            architecture와 translation setting에서 얻은 경험적 비교입니다. Dot product가 모든 hardware·dimension·task에서
-            additive scorer보다 우월하다는 보편 순위로 읽으면 안 됩니다.
+            Global·local attention과 dot·general·concat score를 같은 neural machine
+            translation 맥락에서 비교했습니다. 해당 architecture와 translation
+            setting에서 얻은 경험적 비교입니다.
+          </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Dot product가 모든 hardware·dimension·task에서 additive scorer보다
+            우월하다는 보편 순위로 읽으면 안 됩니다.
           </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline" href="https://arxiv.org/abs/1508.04025" target="_blank" rel="noreferrer">원 논문과 score 함수 표 보기</a>
       </div>

@@ -100,9 +100,12 @@ export default function SelfAttention({
         <p>
           Training compute만 보면 score matrix 계산은 대략
           <code>O(n²d)</code>이고 attention probability의 materialization은
-          <code>O(n²)</code> memory를 요구할 수 있다. Autoregressive decode에서는
-          새 query가 과거 key/value만 읽으므로 한 step score는 sequence length에
-          선형이지만, 과거 KV cache가 layer·KV head·head dimension과 함께 누적된다.
+          <code>O(n²)</code> memory를 요구할 수 있다.
+        </p>
+        <p>
+          Autoregressive decode에서는 새 query가 과거 key/value만 읽으므로 한 step
+          score는 sequence length에 선형이다. 대신 과거 KV cache가 layer·KV
+          head·head dimension과 함께 누적된다.
           따라서 “self-attention은 병렬화된다”와 “long-context serving이 싸다”는
           같은 말이 아니다.
         </p>
