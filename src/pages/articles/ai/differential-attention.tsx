@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DifferentialAttentionViz from "./differential-attention/viz/DifferentialAttentionViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Differential attention 은 두 독립 softmax attention map 의 차로 공통 성분을 지웁니다
@@ -15,10 +16,18 @@ import DifferentialAttentionViz from "./differential-attention/viz/DifferentialA
 export default function DifferentialAttentionArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="differential"
+        question="두 attention 분포에 공통으로 퍼진 점수를 빼면 필요한 위치가 어떻게 남을까요?"
+        fixture="같은 4개 key에 A1=[0.10, 0.10, 0.70, 0.10], A2=[0.25, 0.25, 0.25, 0.25], λ=0.8을 적용합니다."
+        parentHref="/cs/ai/attention-theory#multiplicative"
+        parentLabel="한 분포를 만드는 scaled dot-product attention"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           표준 attention 은 무관한 context 에도 상당한 점수를 나눠 줍니다
         </h2>
+        <DifferentialAttentionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <Link to="/cs/ai/attention-theory#multiplicative">Scaled dot-product attention</Link>은
@@ -176,7 +185,6 @@ export default function DifferentialAttentionArticle() {
           repeatUntil="같은 층의 h = d_model/2d 개 head 가 같은 λ 를 공유하며 이 절차를 병렬로 반복합니다."
           output="headOut ∈ R^{N×2d}, h개를 이어붙인 뒤 W^O 로 최종 projection"
         />
-        <DifferentialAttentionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             Head 하나가 값 두 벌을 계산하므로 같은 파라미터·연산 예산을 맞추려면 head 수를 줄여야 합니다. 저자의 3B model 은 hidden 3072, head dim
@@ -267,6 +275,12 @@ export default function DifferentialAttentionArticle() {
           </p>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="Differential attention은 두 확률 분포의 공통 성분을 빼므로 최종 점수는 음수가 될 수 있고 합도 1이 아닙니다."
+        detail="다음 글은 점수의 값을 바꾸는 대신, query가 볼 수 있는 key 연결 자체를 window·global·block 단위로 줄입니다."
+        nextHref="/cs/ai/sparse-windowed-attention-patterns"
+        nextLabel="다음: Sparse attention"
+      />
     </div>
   );
 }

@@ -8,12 +8,19 @@ import VizFrame from "@/components/viz/VizFrame";
  * stage 높이는 네 장면의 최대 필요 크기로 고정한다.
  */
 const SCENES = ["Dense · 전체 과거", "Sliding-window · 최근 w 만", "Sparse · window + global token", "Hybrid · layer 마다 local/global"] as const;
+const CONTROL_LABELS = ["Dense", "Window", "+ global", "Hybrid"] as const;
 
 const NOTES = [
   "Dense attention 은 query i 가 자기보다 앞선 key 전부를 봅니다. Mask 는 대각선 아래 전체이고 FLOP 은 n 의 제곱에 비례합니다.",
   "Window w=3 인 sliding-window attention 은 대각선을 따라가는 좁은 띠만 봅니다. 띠 밖의 칸은 아예 읽지 않습니다.",
   "같은 window 에 global token(0번)을 더하면 0번 행·열 전체가 열립니다. Global token 은 window 밖 정보를 한 layer 만에 주고받는 지름길입니다.",
-  "Hybrid 는 attention 하나가 아니라 layer 를 나눕니다. Local layer(위)는 window 만, global layer(아래)는 대각선 아래 전체를 봅니다.",
+  "Hybrid 는 attention 하나가 아니라 layer 를 나눕니다. Local layer 는 가까운 window 만, global layer 는 대각선 아래 전체를 봅니다.",
+] as const;
+const MOBILE_NOTES = [
+  "Dense는 causal 영역 55칸을 모두 계산합니다.",
+  "Window 3은 최근 27칸만 계산합니다.",
+  "Global token 하나를 더해 34칸을 계산합니다.",
+  "Hybrid는 local layer와 global layer를 번갈아 둡니다.",
 ] as const;
 
 const N = 10;
@@ -65,7 +72,7 @@ function Grid({
   return (
     <div className="min-w-0">
       <p className="mb-1 text-center text-[10px] font-bold text-muted-foreground">{label}</p>
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="mx-auto h-auto w-full max-w-[13rem]" role="img" aria-label={`${label} attention mask`}>
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="mx-auto h-auto w-full max-w-[10rem] sm:max-w-[13rem]" role="img" aria-label={`${label} attention mask`}>
         <text x={ORIGIN + (N * (CELL + GAP)) / 2 - GAP} y={12} textAnchor="middle" className="fill-muted-foreground text-[8px] font-bold">
           key j
         </text>
@@ -99,7 +106,7 @@ const SUMMARY = [
 ] as const;
 
 export default function SparseWindowedAttentionPatternsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const summary = SUMMARY[scenes.active];
   return (
     <VizFrame
@@ -109,46 +116,68 @@ export default function SparseWindowedAttentionPatternsViz() {
       note="실제 n 은 32,768 이고 window 는 4,096 입니다. 그림은 10×10, window 3 으로 줄였습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="sparse-windowed-attention"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Attention mask 패턴이 dense, window, sparse, hybrid 마다 달라지는 모습"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(36rem,calc(100svh-15rem))] min-h-[29rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">Scene · {String(scenes.active + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-[auto_1fr] md:items-center">
+          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-2 md:mt-4 md:grid-cols-[minmax(0,1fr)_16rem] md:gap-4">
             {scenes.active < 3 ? (
               <Grid
                 label={scenes.active === 0 ? "Dense" : scenes.active === 1 ? "Sliding-window" : "Window + global"}
                 kindOf={scenes.active === 0 ? denseKind : scenes.active === 1 ? windowKind : sparseKind}
               />
             ) : (
-              <div className="flex flex-col items-center" style={{ gap: GRID_GAP_Y }}>
-                <Grid label="Local layer" kindOf={(i, j) => hybridKind(i, j, false)} />
-                <Grid label="Global layer" kindOf={(i, j) => hybridKind(i, j, true)} />
-              </div>
+              <>
+                <div className="grid grid-cols-2 gap-1 sm:hidden">
+                  <div className="border border-primary/40 p-2 text-center">
+                    <p className="text-[9px] font-bold">Local layer</p>
+                    <p className="mt-1 text-[9px] text-muted-foreground">최근 key 3개</p>
+                  </div>
+                  <div className="border border-primary/40 p-2 text-center">
+                    <p className="text-[9px] font-bold">Global layer</p>
+                    <p className="mt-1 text-[9px] text-muted-foreground">과거 key 전체</p>
+                  </div>
+                </div>
+                <div className="hidden grid-cols-2 items-start sm:grid" style={{ gap: GRID_GAP_Y }}>
+                  <Grid label="Local layer" kindOf={(i, j) => hybridKind(i, j, false)} />
+                  <Grid label="Global layer" kindOf={(i, j) => hybridKind(i, j, true)} />
+                </div>
+              </>
             )}
-            <div className="min-w-0 space-y-1.5">
+            <div className="min-w-0 space-y-1">
               {[
                 { label: "실제로 계산하는 칸", value: summary.visible },
                 { label: "Attention FLOP", value: summary.flop },
                 { label: "비고", value: summary.note },
               ].map((row) => (
-                <div key={row.label} className="flex min-h-8 items-center justify-between gap-3 border border-border px-2 text-xs">
-                  <span className="shrink-0 text-muted-foreground">{row.label}</span>
-                  <span className="truncate text-right font-mono">{row.value}</span>
+                <div key={row.label} className="min-h-0 border border-border px-2 py-1 text-[9px] sm:grid sm:min-h-8 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-center sm:gap-3 sm:py-0 sm:text-xs">
+                  <span className="block text-muted-foreground sm:shrink-0">{row.label}</span>
+                  <span className="mt-0.5 block min-w-0 break-words font-mono sm:mt-0 sm:text-right">{row.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[scenes.active]}</p>
+          <p className="mt-3 border-l border-primary/50 pl-3 text-sm leading-6 text-muted-foreground sm:mt-4 sm:pl-4 sm:leading-7">
+            <span className="sm:hidden">{MOBILE_NOTES[scenes.active]}</span>
+            <span className="hidden sm:inline">{NOTES[scenes.active]}</span>
+          </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

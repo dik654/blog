@@ -9,6 +9,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * stage 높이는 모든 장면에서 같다. gradient·glow·shadow·굵은 선 없음.
  */
 const SCENES = ["Uniform routing", "Expert 0 drift", "Capacity drops overflow", "Bias correction (3 step)", "Rebalanced"] as const;
+const CONTROL_LABELS = ["균등", "쏠림", "버림", "보정", "회복"] as const;
 
 const NOTES = [
   "8 expert가 slot 2,048개(token 1,024 × top-2)를 고르게 나눠 받아 expert당 256개입니다. Bias는 아직 0입니다.",
@@ -16,6 +17,13 @@ const NOTES = [
   "φ=1.25의 capacity 320을 넘은 294 slot(짙은 표시)은 계산되지 않고 버려집니다. Expert 0 수요의 약 48%가 token dropping입니다.",
   "Auxiliary-loss-free bias가 3 step 갱신됩니다. 과부하 expert 0은 bias가 −0.002로 내려가고 가장 부족한 expert 5는 +0.003으로 올라 다음 선택 점수를 바꿉니다.",
   "Bias가 선택 점수를 눌러 부하가 다시 평균 256 근처로 모입니다. Drop은 사라지고 bias는 이 수준에서 갱신을 멈춥니다.",
+] as const;
+const MOBILE_NOTES = [
+  "2,048개 slot을 expert당 256개씩 받습니다.",
+  "Expert 0이 614개를 받아 평균의 2.4배가 됩니다.",
+  "Capacity 320을 넘은 294개 slot을 버립니다.",
+  "과부하 expert의 bias를 낮추고 부족한 expert는 높입니다.",
+  "부하가 다시 평균 256 근처로 모이고 drop이 사라집니다.",
 ] as const;
 
 const N = 8;
@@ -60,7 +68,7 @@ function barHeight(count: number): number {
 }
 
 export default function MoeRoutingAndLoadBalancingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = SCENE_DATA[scenes.active];
   const capacityY = BASELINE_Y - barHeight(CAPACITY);
 
@@ -72,19 +80,21 @@ export default function MoeRoutingAndLoadBalancingViz() {
       note="8 expert·top-2·token 1,024는 본문 worked example과 같은 값입니다. 실제 학습에서는 수백~수천 expert와 수백만 token 단위로 같은 되먹임이 훨씬 느리게, 훨씬 큰 규모로 나타납니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="moe-routing-load-balancing"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Router drift, capacity overflow, bias correction 장면"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             MoE routing step · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
-          <div className="mt-4 w-full overflow-x-auto">
+          <div className="mt-4 hidden w-full overflow-x-auto sm:block">
             <svg viewBox="0 0 640 240" className="h-auto w-full min-w-[32rem]" role="img" aria-hidden="true">
               <text x={CHART_X} y={14} className="fill-muted-foreground text-[9px]">8 experts · top-2 · 1,024 tokens · ideal 256 / expert</text>
 
@@ -131,11 +141,30 @@ export default function MoeRoutingAndLoadBalancingViz() {
               <text x={CHART_X + 8} y={233} className="fill-foreground text-[9px] font-bold">{scene.verdict}</text>
             </svg>
           </div>
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
+          <div className="mt-3 grid grid-cols-4 gap-1 sm:hidden" aria-label={scene.verdict}>
+            {scene.counts.map((count, index) => {
+              const bias = scene.bias[index];
+              const dropped = scene.showDrop ? Math.max(0, count - CAPACITY) : 0;
+              return (
+                <div key={index} className={`min-w-0 border p-1 text-center ${count > IDEAL * 1.2 ? "border-amber-600/70" : "border-border"}`}>
+                  <p className="font-mono text-[9px] font-bold text-muted-foreground">e{index}</p>
+                  <p className="mt-0.5 font-mono text-xs font-bold">{count}{dropped > 0 ? <span className="ml-1 text-[8px] text-amber-700 dark:text-amber-300">↓{dropped}</span> : null}</p>
+                  <p className="mt-0.5 font-mono text-[8px] text-muted-foreground">{bias > 0 ? "+" : ""}{bias.toFixed(3)}</p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-2 border-l border-primary/50 pl-3 text-xs leading-5 text-muted-foreground sm:pl-4 sm:text-sm sm:leading-6">
+            <span className="sm:hidden">{MOBILE_NOTES[scenes.active]}</span>
+            <span className="hidden sm:inline">{NOTES[scenes.active]}</span>
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

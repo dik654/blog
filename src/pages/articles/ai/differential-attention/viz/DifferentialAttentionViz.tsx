@@ -8,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * D = A1 − λA2를 얻는 4-token toy. stage 높이는 네 장면의 최대 크기로 고정한다.
  */
 const SCENES = ["신호 map A1", "노이즈 map A2", "λ 로 스케일", "차 D = A1 − λA2"] as const;
+const CONTROL_LABELS = ["A1", "A2", "λA2", "차 D"] as const;
 
 const TOKENS = ["τ₁", "τ₂", "τ₃", "τ₄"] as const;
 const A1 = [0.1, 0.1, 0.7, 0.1];
@@ -21,6 +22,12 @@ const NOTES = [
   "Q₂, K₂ 로 독립적으로 만든 두 번째 softmax map 입니다. 네 token 에 0.25 씩 고르게 퍼져 정보량이 적은, 공통 성분에 가까운 분포입니다.",
   "λ=0.8 을 곱해 두 map 의 크기를 맞춥니다. 0.25 였던 각 값이 0.20 으로 줄어듭니다.",
   "A1 에서 λA2 를 빼면 token 3 만 0.50 으로 남고 나머지 세 자리는 음수(−0.10)가 됩니다. 합은 1−λ=0.20 으로 줄었습니다.",
+] as const;
+const MOBILE_NOTES = [
+  "A1은 token 3에 0.70을 둡니다.",
+  "A2는 네 token에 0.25씩 둡니다.",
+  "λ=0.8을 곱해 각 값을 0.20으로 줄입니다.",
+  "빼고 나면 token 3은 0.50, 나머지는 −0.10입니다.",
 ] as const;
 
 type RowKey = "a1" | "a2" | "d";
@@ -49,7 +56,7 @@ function cellClass(value: number | null) {
 }
 
 export default function DifferentialAttentionViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const state = STATES[scenes.active];
   return (
     <VizFrame
@@ -59,19 +66,21 @@ export default function DifferentialAttentionViz() {
       note="실제 model 은 N×N 전체 행렬과 여러 head 를 동시에 계산합니다. 그림은 한 query 행과 4개 key 로 줄였습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="differential-attention"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Differential attention 의 signal map·noise map·차 계산"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[24rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
-          <div className="mt-5 border border-border p-3">
+          <div className="mt-3 border border-border p-2 sm:mt-5 sm:p-3">
             <div className="grid grid-cols-[5rem_repeat(4,1fr)] gap-1.5 text-xs">
               <div />
               {TOKENS.map((t) => (
@@ -94,7 +103,7 @@ export default function DifferentialAttentionViz() {
                       return (
                         <div
                           key={`${row.key}-${t}`}
-                          className={`flex min-h-10 items-center justify-center border font-mono text-[11px] ${cellClass(v)}`}
+                          className={`flex min-h-7 items-center justify-center border font-mono text-[10px] sm:min-h-10 sm:text-[11px] ${cellClass(v)}`}
                         >
                           {v === null ? "—" : v.toFixed(2)}
                         </div>
@@ -108,11 +117,17 @@ export default function DifferentialAttentionViz() {
               λ = {LAMBDA.toFixed(1)} · Σ A1 = 1.00 · Σ D = {D.reduce((s, v) => s + v, 0).toFixed(2)}
             </p>
           </div>
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
+          <p className="mt-3 border-l border-primary/50 pl-3 text-sm leading-6 text-muted-foreground sm:mt-5 sm:pl-4 sm:leading-7">
+            <span className="sm:hidden">{MOBILE_NOTES[scenes.active]}</span>
+            <span className="hidden sm:inline">{NOTES[scenes.active]}</span>
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

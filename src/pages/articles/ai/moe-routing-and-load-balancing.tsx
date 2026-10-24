@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MoeRoutingAndLoadBalancingViz from "./moe-routing-and-load-balancing/viz/MoeRoutingAndLoadBalancingViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Load balancing loss는 router의 하드 배정을 미분 가능한 확률과 곱해 쏠림을 벌점으로 바꿉니다
@@ -20,10 +21,18 @@ import MoeRoutingAndLoadBalancingViz from "./moe-routing-and-load-balancing/viz/
 export default function MoeRoutingAndLoadBalancingArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="routing"
+        question="Top-k 선택이 일부 expert에 쏠릴 때 token을 버리지 않으면서 어떻게 부하를 되돌릴까요?"
+        fixture="expert 8개·token 1,024개·Top-2의 2,048개 slot에서 균등 256, 과부하 614, capacity 320을 추적합니다."
+        parentHref="/cs/ai/mixture-of-experts#routing"
+        parentLabel="router logit과 Top-k expert 선택"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           아무 개입 없이 두면 top-k router는 몇 개 expert만 계속 고릅니다
         </h2>
+        <MoeRoutingAndLoadBalancingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Router가 처음 학습을 시작할 때는 어느 expert도 똑같이 유망합니다. 그런데 초기 weight의 작은 편차만으로 특정 expert가 조금 더 자주 뽑히면 그
@@ -47,7 +56,6 @@ export default function MoeRoutingAndLoadBalancingArticle() {
             봅니다.
           </p>
         </div>
-        <MoeRoutingAndLoadBalancingViz />
         <ContentBoundary article="moe-routing-and-load-balancing" />
       </section>
 
@@ -306,6 +314,12 @@ L_{\mathrm{aux}}&=\underbrace{\alpha N\sum_{i=1}^{N}f_iP_i}_{\text{완전히 균
           </p>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="MoE routing은 expert 선택, 균형 신호, capacity와 overflow를 서로 다른 상태로 관리해야 합니다."
+        detail="이 글까지 출력 선택·위치·기억·attention 연결·residual 전달·expert 계산의 구조 지도를 완성했습니다. 실제 서빙은 이 구조 위에서 배치와 통신 비용을 따로 검증합니다."
+        nextHref="/cs/ai/transformer-architecture"
+        nextLabel="전체 Transformer 구조로 돌아가기"
+      />
     </div>
   );
 }
