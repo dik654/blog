@@ -3568,7 +3568,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
 "ai/fast-weight-memory-and-chunkwise-recurrence":"715409b280659501",
 "ai/flash-attention-io-aware-kernel":"6358bc6072ecfe8f",
 "ai/reward-design-for-verifiable-rl":"0f1307d7f3825ece",
-"ai/world-model-latent-planning":"ad27657439f3c92a",
+"ai/world-model-latent-planning":"347bf691b2210b88",
 "banking/repo-and-collateral-funding":"8b5c5b3336427561",
 "blockchain/ethereum-future-roadmap":"5a7d76a6c5c062c7",
 "blockchain/glamsterdam-block-execution":"31ca197e74a5e91a",
