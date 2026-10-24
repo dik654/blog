@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import FunctionalVsSemanticViz from "./llm-evaluation-criteria-and-methods/viz/LlmEvaluationCriteriaAndMethodsViz";
+import {
+  EvaluationTrustPathLocator,
+  EvaluationTrustPathMapReturn,
+} from "./shared/EvaluationTrustPathLocator";
 
 /**
  * LLM 평가는 criteria·metric·비교 방식 세 층으로 나뉩니다
@@ -15,10 +19,12 @@ import FunctionalVsSemanticViz from "./llm-evaluation-criteria-and-methods/viz/L
 export default function LlmEvaluationCriteriaAndMethodsArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <EvaluationTrustPathLocator current="measurement" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           다섯 출력은 실행 점수 0.60과 의미 점수 0.63으로 서로 다르게 보입니다
         </h2>
+        <FunctionalVsSemanticViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             같은 문제에 LLM이 출력 O1부터 O5까지 다섯 개를 냈습니다. Unit test를 통과한
@@ -42,7 +48,6 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
             metric인지 확인해야 합니다.
           </p>
         </div>
-        <FunctionalVsSemanticViz />
         <ContentBoundary article="llm-evaluation-criteria-and-methods" />
         <TermBreakdown
           title="세 층의 질문"
@@ -293,6 +298,7 @@ export default function LlmEvaluationCriteriaAndMethodsArticle() {
           </p>
         </div>
       </section>
+      <EvaluationTrustPathMapReturn current="measurement" />
     </div>
   );
 }

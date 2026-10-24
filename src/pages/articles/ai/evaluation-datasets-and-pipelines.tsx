@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EvaluationDatasetsAndPipelinesViz from "./evaluation-datasets-and-pipelines/viz/EvaluationDatasetsAndPipelinesViz";
+import {
+  EvaluationTrustPathLocator,
+  EvaluationTrustPathMapReturn,
+} from "./shared/EvaluationTrustPathLocator";
 
 /**
  * 평가는 golden set을 채우고 offline·shadow·A/B를 통과해야 신뢰됩니다
@@ -15,10 +19,12 @@ import EvaluationDatasetsAndPipelinesViz from "./evaluation-datasets-and-pipelin
 export default function EvaluationDatasetsAndPipelinesArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <EvaluationTrustPathLocator current="dataset" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           같은 model 도 어떤 golden set 으로 재느냐에 따라 통과 여부가 달라집니다
         </h2>
+        <EvaluationDatasetsAndPipelinesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Golden set 200개를 fact QA 60개, 요약 40개, code 50개,
@@ -39,7 +45,6 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           </p>
         </div>
 
-        <EvaluationDatasetsAndPipelinesViz />
         <ContentBoundary article="evaluation-datasets-and-pipelines" />
 
         <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -382,6 +387,7 @@ export default function EvaluationDatasetsAndPipelinesArticle() {
           그대로 씁니다.
         </p>
       </section>
+      <EvaluationTrustPathMapReturn current="dataset" />
     </div>
   );
 }
