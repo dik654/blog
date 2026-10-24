@@ -10,9 +10,10 @@ import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import SubmissionTimelineViz from "./viz/SubmissionTimelineViz";
 import SyncScopeStreamsViz from "./viz/SyncScopeStreamsViz";
 import InflightDepthViz from "./viz/InflightDepthViz";
+import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "../shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
-export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
-<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 계산이 빨라도 다음 일을 기다릴 수 있습니다</h2><div className={prose}>
+export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><ExecutionKernelSeriesLocator current="submission"/><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 계산이 빨라도 다음 일을 기다릴 수 있습니다</h2><SubmissionTimelineViz/><div className={prose}>
 <p>빠른 계산 장치를 붙였는데도 결과가 기대만큼 빨리 나오지 않을 때가 있습니다. 일을 정하고 전달하는 쪽이 다음 지시를 준비하는 동안 계산하는 쪽이 비어 있기 때문일 수 있습니다. 반대로 계산이 길면 전달을 빨리 해도 마지막 결과가 나오는 시각은 거의 달라지지 않습니다. 어느 쪽이 기다리는지를 먼저 보아야 바꿀 곳을 찾을 수 있습니다.</p>
 <p>이 글은 준비하는 쪽과 계산하는 쪽의 시계를 나란히 놓습니다. 일을 전달한 시각, 계산이 끝난 시각, 다음 결과가 나올 때까지의 간격을 따로 읽겠습니다. 같은 연산을 세 번 반복하면서 기다리는 위치만 바꾸면 세 시간의 차이가 드러납니다.</p>
 <p>목표는 기다림을 무조건 없애는 것이 아닙니다. 이미 정해진 다음 일을 미리 전달해도 되는지, 앞의 답을 실제로 읽어야 다음 일을 고를 수 있는지 구분해야 합니다. 마지막에는 이 구분이 라이브러리의 어떤 호출로 표현되는지 확인합니다.</p>
@@ -40,7 +41,7 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 <p>매회 답을 확인한 뒤 다음 준비를 시작하면 완료 시각은 10·20·30 μs가 됩니다. 첫 회의 8 μs부터 다음 준비를 하던 구간이 사라지고 10 μs부터 준비합니다. 두 번째 회가 끝난 20 μs에도 같은 일이 반복됩니다. 연산과 답은 같지만 마지막 완료는 4 μs 늦습니다.</p>
 <p>이미 정해진 두 연산의 목록을 한 번에 전달할 수도 있다고 가정해 보겠습니다. 목록 전달 비용만 1 μs로 바꾸면 첫 회 준비 0–2 μs 뒤 목록을 2–3 μs에 전달합니다. 계산은 3–5·5–7 μs에 이어집니다. 계산 두 개가 하나로 합쳐진 것은 아닙니다.</p>
 <p>그 목록을 미리 보내는 세 회는 7·11·15 μs에 끝납니다. 매회 끝날 때까지 기다리면 7·14·21 μs입니다. 기다림이 남아 있어도 하나씩 전달하며 기다리던 30 μs보다는 빠릅니다. 어떤 비용을 줄였는지 보려면 기다림의 유무와 전달 방식 두 조건을 따로 바꾸어야 합니다.</p>
-</div><SubmissionTimelineViz /></section>
+</div></section>
 <section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 두 시계를 맞추는 규칙이 필요합니다</h2><div className={prose}>
 <p>계산을 시작하는 조건은 두 가지입니다. 지시가 도착해야 하고 앞 계산도 끝나야 합니다. 첫 회 두 번째 계산에서는 앞 결과가 7 μs에 준비되지만 지시는 8 μs에 도착합니다. 늦은 쪽인 8 μs까지 기다리는 규칙이 결과를 올바르게 만듭니다.</p>
 <p>목록을 함께 전달한 경우에는 두 지시가 모두 3 μs에 도착해 있습니다. 그래도 두 번째 계산은 첫 결과가 나오는 5 μs부터 시작합니다. 빨리 전달한다는 것이 앞뒤 계산 순서를 없앤다는 뜻은 아닙니다. 전달이 충분히 빠르면 기다림의 원인이 계산 쪽으로 이동합니다.</p>
@@ -163,4 +164,4 @@ export default function LaunchOverheadArticle(){const sidebar=useCodeSidebar();c
 "A의 답이 26 μs에 준비되고 독립 B는 50 μs까지 일합니다. A의 stream을 기다리는 것과 장치를 기다리는 것은 언제 다른가요? (답: 13절)",
 "GPU가 계산을 더 오래 하는 반례에서 CPU 제출을 줄여도 마지막 완료 21 μs가 같은 이유는 무엇인가요? 이 결과로 graph fallback을 확정할 수 있나요? (답: 20절)"
 ]}/></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>;}
+</div><ExecutionKernelMapReturn current="submission"/><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>;}

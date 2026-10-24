@@ -13,12 +13,15 @@ import SourceApplication from "@/pages/articles/world-systems/SourceApplication"
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./flash-attention-io-aware-kernel/codeRefs";
+import { ExecutionKernelMapReturn, ExecutionKernelSeriesLocator } from "./shared/ExecutionKernelSeriesLocator";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
   return <div className="space-y-16">
+    <ExecutionKernelSeriesLocator current="traffic" />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 같은 답을 더 적은 왕복으로 구한다</h2>
+      <OnlineSoftmaxTileViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">(가정) 문장 속 한 위치가 앞의 네 위치를 얼마나 참고할지 정한다고 해 봅시다. 이미 계산한 점수는 [1, 3, 2, 5]이고 가져올 값은 [2, 4, 6, 8]입니다. 이 글은 가중평균 7.376113을 구하는 과정을 끝까지 따라갑니다.</p>
         <p className="leading-8">핵심은 점수 전체를 메모리에 적어 두지 않아도, 지금까지의 기준값과 두 합만 고쳐 가면 답을 구할 수 있다는 것입니다. 이후 같은 계산이 GPU에서 어디를 기다리는지 살펴봅니다.</p>
@@ -57,7 +60,6 @@ export default function Article(){
       </div>
 <NumericPath title="두 조각이 하나의 기준을 공유하는 과정" steps={[{"label": "첫 조각", "value": "기준 3 · 합 1.135335", "detail": "가중합 4.270671"}, {"label": "기준 이동", "value": "이전 합 × e⁻²", "detail": "분자와 분모에 같은 배율"}, {"label": "둘째 조각", "value": "e⁻³와 1 추가", "detail": "값 6과 8도 함께 반영"}, {"label": "최종 상태", "value": "기준 5 · 출력 7.376113", "detail": "점수 전체를 보관하지 않음"}]} />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">아래 그림에서 막대 높이는 e^(점수−기준)입니다. 기준이 5로 올라가는 순간 이미 버린 조각 1의 막대도 함께 줄어드는 것을 보면 두 합에 같은 배율을 곱하는 이유가 보입니다.</p></div>
-      <OnlineSoftmaxTileViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">각 조각에서 평균을 먼저 내고 두 평균을 반씩 섞으면 어떨까요? 첫 평균은 약 3.761594, 둘째는 7.905148이므로 약 5.833371이 됩니다. 정답 7.376113과 다릅니다. 두 조각이 전체에서 차지하는 가중치가 같지 않기 때문입니다.</p><p className="leading-8">기준값도 버릴 수 없습니다. 첫 합은 점수에서 3을 뺀 결과이고 둘째 합은 5를 뺀 결과입니다. 3에서 5로 기준을 옮기는 e⁻²를 곱해야 두 합의 크기를 직접 비교할 수 있습니다. 따라서 남길 것은 평균 하나가 아니라 기준값과 정규화 전의 두 합입니다.</p></div>
       <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">조각을 합칠 자리를 찾았습니다. 왜 이 구조가 필요한지 바이트로 확인합니다.</p>
     </section>
@@ -170,6 +172,7 @@ export default function Article(){
     </section>
     <ReviewPrompts questions={["모든 점수에 같은 100을 더하면 출력이 바뀔까요? (답: 7절)", "128MiB가 입력 세 배열의 64배라는 주장은 왜 틀릴까요? (답: 5절)", "행렬곱만 두 배 빨라져도 전체 시간이 두 배 줄지 않는 이유는 무엇일까요? (답: 9절)"]} />
     <ContentBoundary article="flash-attention-io-aware-kernel" />
+    <ExecutionKernelMapReturn current="traffic" />
     <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />
   </div>;
 }

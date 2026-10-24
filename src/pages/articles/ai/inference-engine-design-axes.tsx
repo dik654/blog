@@ -11,6 +11,7 @@ import PrefixReuseUnitViz from "./inference-engine-design-axes/viz/PrefixReuseUn
 import OverlapStepViz from "./inference-engine-design-axes/viz/OverlapStepViz";
 import { codeRefs } from "./inference-engine-design-axes/codeRefs";
 import { engineTrees } from "./inference-engine-design-axes/fileTree";
+import { ExecutionKernelMapReturn, ExecutionKernelSeriesLocator } from "./shared/ExecutionKernelSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -22,9 +23,11 @@ export default function InferenceEngineDesignAxesArticle() {
 
   return (
     <>
+      <ExecutionKernelSeriesLocator current="comparison" />
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 같은 요청을 넣어도 엔진마다 받는 수가 3개에서 19개까지 다릅니다</h2>
+          <InferenceEngineDesignAxesViz />
           <div className={prose}>
             <p>
               vLLM, TensorRT-LLM, SGLang, llama.cpp는 모두 같은 모델을 읽고 같은 attention 식을 계산합니다. 그런데 4,096 token짜리 KV 공간에 같은
@@ -38,7 +41,7 @@ export default function InferenceEngineDesignAxesArticle() {
               각 엔진의 내부는 따로 다룬 글이 있습니다. <Link to="/cs/ai/vllm-paged-attention">vLLM PagedAttention</Link>,{" "}
               <Link to="/cs/ai/tensorrt-llm-kv-cache-and-kernels">TensorRT-LLM</Link>, <Link to="/cs/ai/sglang-runtime-anatomy">SGLang</Link>,{" "}
               <Link to="/cs/ai/llama-cpp-local-inference">llama.cpp</Link>입니다. 이 글은 한 요청을 네 엔진에 똑같이 넣어 다섯 결정을 같은 눈금으로
-              비교하고, 언제 어느 결정이 중요한지까지 닫습니다.
+              비교하고, 언제 어느 결정이 중요한지까지 정리합니다.
             </p>
           </div>
         </section>
@@ -148,7 +151,6 @@ export default function InferenceEngineDesignAxesArticle() {
               자기 slot 안에서만 자라므로 4개가 돌고 다섯째는 빈 slot을 기다립니다. 자리가 모자라도 다른 대화의 cell을 빼앗지 않습니다.
             </p>
           </div>
-          <InferenceEngineDesignAxesViz />
           <CalculationWalkthrough
             title="4,096칸 pool에서 받는 요청 수"
             question="입력 200, 상한 1,000 요청을 엔진마다 몇 개 받나요?"
@@ -344,6 +346,7 @@ export default function InferenceEngineDesignAxesArticle() {
           </div>
         </section>
       </div>
+      <ExecutionKernelMapReturn current="comparison" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

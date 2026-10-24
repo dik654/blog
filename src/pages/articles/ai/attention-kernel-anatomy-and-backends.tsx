@@ -15,12 +15,13 @@ import AttentionTrafficViz from "./attention-kernel-anatomy-and-backends/viz/Att
 import AutotuneCandidateViz from "./attention-kernel-anatomy-and-backends/viz/AutotuneCandidateViz";
 import SplitKvCombineViz from "./attention-kernel-anatomy-and-backends/viz/SplitKvCombineViz";
 import {codeRefs,fileTrees,projectMetas} from "./attention-kernel-anatomy-and-backends/codeRefs";
+import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "./shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function Article(){
  const sidebar=useCodeSidebar();
  const code=(key:string,label:string)=><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/>;
- return <div className="space-y-16">
-<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">1 · 여덟 위치의 값을 섞되 미래는 보지 않는다</h2><div className={prose}>
+ return <div className="space-y-16"><ExecutionKernelSeriesLocator current="kernel"/>
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">1 · 여덟 위치의 값을 섞되 미래는 보지 않는다</h2><AttentionKernelAnatomyAndBackendsViz/><div className={prose}>
 <p>
             (가정) 문장 속 위치가 여덟 개이고 각 위치에서 가져올 값의 첫 성분은 차례로 1, 2, 3, 4, 5, 6, 7, 8이라고 해 봅시다. 어느 위치를 더 중요하게 볼지 정하는
             점수는 모두 0으로 맞춥니다. 허용한 위치의 중요도가 같으므로 출력은 그 값들의 단순한 평균입니다.
@@ -69,7 +70,6 @@ export default function Article(){
             확인합니다.
           </p>
 </div>
-<AttentionKernelAnatomyAndBackendsViz/>
 </section>
 <section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-6 text-2xl font-bold">5 · 나누는 목적과 나눈 뒤의 비용을 함께 본다</h2><div className={prose}>
 <p>여러 관심 위치를 동시에 계산할 때는 서로 다른 출력 행을 나누면 됩니다. 서로 다른 행의 정규화 상태는 독립적이어서 작업끼리 최종 평균을 합칠 필요가 없습니다. 하지만 마지막 위치 하나만 계산한다면 출력 행으로 나눌 일감이 부족할 수 있습니다.</p>
@@ -330,4 +330,4 @@ export default function Article(){
 </div>
 <ReviewPrompts questions={["새 query가 한 행뿐일 때 왜 첫 key만 남기면 안 되나요? 10조각의 40칸과 허용 연결 36개는 왜 다른가요? (답: 8절)","세 부분 평균 2, 5, 7.5를 똑같이 더해 나누면 얼마이며, 원래 출력 4.5를 복구하려면 무엇이 더 필요한가요? (답: 9절)","A가 미지원이고 B가 지원일 때 자동 선택과 A 명시 선택은 어떻게 달라지나요? 후보 선택이 매 요청의 속도 측정이라는 뜻인가요? (답: 17절)"]}/>
 </section>
-<CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></div>;}
+<ExecutionKernelMapReturn current="kernel"/><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></div>;}

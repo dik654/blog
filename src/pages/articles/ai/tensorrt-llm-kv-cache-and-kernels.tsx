@@ -10,6 +10,7 @@ import RetentionTierViz from "./tensorrt-llm-kv-cache-and-kernels/viz/RetentionT
 import XqaGroupViz from "./tensorrt-llm-kv-cache-and-kernels/viz/XqaGroupViz";
 import { codeRefs } from "./tensorrt-llm-kv-cache-and-kernels/codeRefs";
 import { engineTrees } from "./tensorrt-llm-kv-cache-and-kernels/fileTree";
+import { ExecutionKernelMapReturn, ExecutionKernelSeriesLocator } from "./shared/ExecutionKernelSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -21,9 +22,11 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
 
   return (
     <>
+      <ExecutionKernelSeriesLocator current="trtllm" />
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. 같은 KV pool인데 한쪽은 4개, 다른 쪽은 10개를 받습니다</h2>
+          <ReservationPoolViz />
           <div className={prose}>
             <p>
               GPU 한 장에 KV cache로 쓸 자리가 5,120 token만큼 있다고 해 봅시다. 요청은 모두 프롬프트 200 token에 출력 한도 1,000 token을 달고
@@ -107,7 +110,6 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
               모두 찼는데 누군가 다음 칸을 원하면, 가장 늦게 들어온 요청을 내보내 그 칸을 돌려받아야 합니다.
             </p>
           </div>
-          <ReservationPoolViz />
         </section>
 
         <section id="why" data-teach-level="2" className="scroll-mt-20">
@@ -521,6 +523,7 @@ export default function TensorrtLlmKvCacheAndKernelsArticle() {
           </div>
         </section>
       </div>
+      <ExecutionKernelMapReturn current="trtllm" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

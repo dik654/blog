@@ -10,9 +10,10 @@ import { codeRefs, fileTrees, projectMetas } from "./codeRefs";
 import CudaGraphTimelineViz from "./viz/CudaGraphTimelineViz";
 import CaptureSizePaddingViz from "./viz/CaptureSizePaddingViz";
 import StaticAddressReplayViz from "./viz/StaticAddressReplayViz";
+import {ExecutionKernelMapReturn,ExecutionKernelSeriesLocator} from "../shared/ExecutionKernelSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
-export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar();const code=(id:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(id,codeRefs[id])}/></div>;return <><div className="space-y-16">
-<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 같은 계산을 시키는 준비도 반복됩니다</h2><div className={prose}>
+export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar();const code=(id:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(id,codeRefs[id])}/></div>;return <><ExecutionKernelSeriesLocator current="replay"/><div className="space-y-16">
+<section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 같은 계산을 시키는 준비도 반복됩니다</h2><CudaGraphTimelineViz/><div className={prose}>
 <p>계산이 짧을 때는 계산을 시작시키는 일이 눈에 띄게 됩니다. 매번 같은 순서로 네 가지 일을 시킨다고 해 보겠습니다. 결과를 얻으려면 네 일을 모두 마쳐야 하지만 다음 일을 설명하고 전달하는 동안 계산 장치가 비어 있을 수 있습니다. 이 글은 이미 정해진 일을 다시 설명하는 비용을 줄이는 방법을 다룹니다.</p>
 <p>목표는 답을 만드는 계산을 그대로 두면서 매회 필요한 준비를 줄이는 것입니다. 순서와 사용할 자리를 한 번 기록해 두면 다음에는 그 기록을 가리키는 짧은 요청으로 일을 시작할 수 있습니다. 대신 기록에 남은 자리와 실제 데이터가 어긋나지 않도록 관리하는 일이 생깁니다.</p>
 <p>계산할 내용이 달라지는 문제와 같은 계산에 넣을 값이 달라지는 문제도 나누어 봅니다. 입력 3을 5로 바꾸는 일은 네 연산의 순서를 바꿀 필요가 없습니다. 계산 도중 결과를 보고 다섯 번째 연산을 추가하려는 일은 다른 조건을 요구합니다. 먼저 작은 반복을 끝까지 따라간 뒤 실제 라이브러리가 이 차이를 어떻게 처리하는지 읽겠습니다.</p>
@@ -35,7 +36,7 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 <p>준비가 줄었다고 계산 네 개가 하나의 계산으로 합쳐진 것은 아닙니다. 4를 얻어야 8을 만들고 8을 얻어야 11을 만들 수 있다는 관계도 그대로입니다. 그림에서는 전달하는 횟수와 실제 계산하는 횟수를 따로 세어야 합니다.</p>
 <p>그림의 빈 구간을 세면 첫 계산 전에 3 μs, 계산 사이에 1 μs씩 세 번입니다. 계산 8 μs에 이 6 μs를 더하면 끝 시각 14 μs가 됩니다. 목록을 함께 전달한 쪽에는 처음 2 μs만 남아 전체가 10 μs입니다. 준비 시간 전체를 뺀 것이 아니라 계산 장치가 기다리던 일부 시간을 줄인 셈입니다.</p>
 <p>작업 하나를 전달한 뒤 그 작업이 끝날 때까지 준비하는 쪽도 기다리면 어떻게 될까요? 준비 3 μs와 계산 2 μs가 네 번 직렬로 이어져 20 μs가 됩니다. 이 세 번째 시간표를 함께 두면 같은 네 연산이라도 기다리는 위치에 따라 전체 시간이 달라진다는 점을 확인할 수 있습니다.</p>
-</div><CudaGraphTimelineViz /></section>
+</div></section>
 <section id="why" data-teach-level="2" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">5. 순서와 주소를 함께 남기는 이유</h2><div className={prose}>
 <p>목록에 연산 이름만 적으면 충분하지 않습니다. 첫 작업은 입력을 어디서 읽을지, 다음 작업은 앞의 어느 결과를 읽을지 알아야 합니다. 예를 들어 입력 자리 A에 3을 두고 마지막 결과 자리 Z에 22를 쓰기로 했다면 반복할 때도 A와 Z가 유효한 자리여야 같은 기록을 사용할 수 있습니다.</p>
 <p>작업 순서를 생략하면 답도 달라집니다. 같은 입력 3에서 먼저 2를 곱하고 나서 1을 더한 뒤 나머지 두 일을 하면 3 → 6 → 7 → 10 → 20이 됩니다. 원래 답 22를 보존하려면 계산 네 번이라는 개수뿐 아니라 앞뒤 관계를 함께 남겨야 합니다.</p>
@@ -141,4 +142,4 @@ export default function CudaGraphCaptureArticle(){const sidebar=useCodeSidebar()
 "작업 전달 2 μs·계산 3 μs·graph 제출 2 μs라면 CPU 제출 횟수가 줄어도 완료가 14 μs인 까닭은 무엇인가요? (답: 8절)",
 "준비한 최대 크기가 32일 때 33토큰을 보내면 32짜리 graph를 재생할까요? (답: 14절)"
 ]}/></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>;}
+</div><ExecutionKernelMapReturn current="replay"/><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>;}

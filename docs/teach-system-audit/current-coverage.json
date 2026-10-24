@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 467,
-    "pending": 523,
+    "reviewed": 469,
+    "pending": 521,
     "untracked": 0,
     "assignedPending": 475,
-    "postCheckpointPending": 48,
+    "postCheckpointPending": 46,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -1243,20 +1243,20 @@
       "publicPath": "cs/ai/tensorrt-llm-kv-cache-and-kernels",
       "title": "TensorRT-LLM과 vLLM: 같은 paged KV, 다른 예약·배치·kernel",
       "catalogIndex": 121,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-05-plan.md"
     },
     {
       "route": "ai/inference-engine-design-axes",
       "publicPath": "cs/ai/inference-engine-design-axes",
       "title": "추론 엔진 비교: 같은 요청을 다섯 결정이 다르게 처리합니다",
       "catalogIndex": 122,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-05-plan.md"
     },
     {
       "route": "ai/hybrid-kv-cache-allocation",
