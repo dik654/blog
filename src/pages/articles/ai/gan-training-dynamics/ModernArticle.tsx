@@ -3,15 +3,18 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import AdversarialDynamicsViz from "./AdversarialDynamicsViz";
+import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function GanTrainingDynamicsArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <GanLearningLocator current="dynamics" />
       <section id="alternating" className="space-y-6">
         <Header
           n="00"
           title="먼저 D만 update하고, 다음에는 D를 통과해 G만 update한다"
         />
+        <AdversarialDynamicsViz />
         <p className="text-lg leading-8">
           GAN에는 optimizer가 두 개 있습니다. 한 mini-batch 안에서도 무엇을
           고정하고 어느 parameter만 바꾸는지가 step의 의미를 결정합니다.
@@ -23,7 +26,6 @@ export default function GanTrainingDynamicsArticle() {
           example="Batch 64라면 z는 64×128, G(z)는 64×3×64×64, D logit은 64×1처럼 흐릅니다."
           boundary="두 loss를 더해 하나의 고정 scalar objective를 내리는 과정으로 취급하지 않습니다."
         />
-        <AdversarialDynamicsViz />
       </section>
       <section id="gradient-path" className="space-y-6">
         <Header
@@ -207,6 +209,7 @@ export default function GanTrainingDynamicsArticle() {
         </div>
         <ContentBoundary article="gan-training-dynamics" />
       </section>
+      <GanLearningMapReturn current="dynamics" />
     </article>
   );
 }

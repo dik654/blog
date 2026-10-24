@@ -1,7 +1,13 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
-const SCENES = ["Condition", "품질", "Coverage", "평가 계약"] as const;
+const SCENES = ["조건 검사", "표본 품질", "분포 포괄", "평가 계약"] as const;
+const NOTES = [
+  "같은 조건 c를 생성기와 판별기에 주어 표본과 주문의 짝까지 검사합니다.",
+  "생성 표본이 실제 특징 영역 안에 있는지 확인합니다.",
+  "생성 표본이 목표 특징 영역의 여러 부분을 얼마나 덮는지 따로 확인합니다.",
+  "특징 추출기·표본 수·분할·시드·실행 비용을 고정해야 결과를 비교할 수 있습니다.",
+] as const;
 export default function GanEvaluationViz() {
   const scenes = useAnimatedScenes(SCENES.length);
   const a = scenes.active;
@@ -20,12 +26,14 @@ export default function GanEvaluationViz() {
   ];
   return (
     <VizFrame
-      eyebrow="Animated evaluation map"
-      title="한 점수로 줄이기 전에 condition·quality·coverage를 따로 본다"
-      description="Condition은 생성 경로를 고르고, feature map은 만든 sample이 target 영역 안에 있는지와 target 영역을 얼마나 덮는지를 보여줍니다."
-      note="좋아 보이는 몇 장은 precision의 증거일 수 있지만 recall과 condition correctness의 증거는 아닙니다."
+      eyebrow="조건부 생성 평가"
+      title="한 점수로 줄이기 전에 조건·품질·포괄 범위를 따로 봅니다"
+      description="조건은 생성 경로를 고르고, 특징 지도는 만든 표본이 목표 영역 안에 있는지와 목표 영역을 얼마나 덮는지를 보여 줍니다."
+      note="좋아 보이는 몇 장은 표본 품질의 증거일 수 있지만 포괄 범위와 조건 정확도의 증거는 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="gan-evaluation-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -33,6 +41,7 @@ export default function GanEvaluationViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
+        <div data-viz-live-only>
         <div
           className="space-y-4 md:hidden"
           aria-label="모바일 conditional GAN 평가 흐름"
@@ -41,7 +50,7 @@ export default function GanEvaluationViz() {
             <div
               className={`border p-3 text-center ${a === 0 ? "border-cyan-600 bg-cyan-50 dark:bg-cyan-950/20" : "border-border"}`}
             >
-              <p className="text-sm font-bold">condition c</p>
+              <p className="text-sm font-bold">조건 c</p>
             </div>
             <span className="text-primary">→</span>
             <div
@@ -51,11 +60,11 @@ export default function GanEvaluationViz() {
             </div>
           </div>
           <div className="text-center text-xs font-semibold text-primary">
-            ↓ sample과 condition을 D(x,c)가 함께 검사
+            ↓ D(x,c)가 표본과 조건을 함께 검사
           </div>
           <div className="border border-border p-4">
             <p className="text-xs font-black text-muted-foreground">
-              FIXED FEATURE SPACE
+              고정한 특징 공간
             </p>
             <div className="mt-4 flex items-center justify-center gap-2">
               <span className="h-8 w-8 rounded-full border border-blue-600 bg-blue-100" />
@@ -64,31 +73,31 @@ export default function GanEvaluationViz() {
               <span className="h-5 w-5 bg-orange-400" />
             </div>
             <p className="mt-4 text-center text-xs text-muted-foreground">
-              ○ real region · ■ generated sample
+              ○ 실제 영역 · ■ 생성 표본
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div
               className={`border p-3 ${a === 1 ? "border-primary bg-primary/5" : "border-border"}`}
             >
-              <p className="text-sm font-bold">Quality</p>
+              <p className="text-sm font-bold">표본 품질</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                fake가 real 영역 안인가
+                생성 표본이 실제 영역 안인가
               </p>
             </div>
             <div
               className={`border p-3 ${a === 2 ? "border-primary bg-primary/5" : "border-border"}`}
             >
-              <p className="text-sm font-bold">Coverage</p>
+              <p className="text-sm font-bold">분포 포괄</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                real 영역을 얼마나 덮었나
+                실제 영역을 얼마나 덮었나
               </p>
             </div>
           </div>
           <div
             className={`border p-3 text-center text-xs font-semibold ${a === 3 ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/20" : "border-border"}`}
           >
-            encoder · sample count · split · seed · latency 고정
+            특징 추출기 · 표본 수 · 분할 · 시드 · 지연 시간 고정
           </div>
         </div>
         <svg
@@ -148,7 +157,7 @@ export default function GanEvaluationViz() {
             fontWeight="800"
             fill="currentColor"
           >
-            fixed feature space
+            고정한 특징 공간
           </text>
           {real.map(([x, y], i) => (
             <circle
@@ -183,10 +192,10 @@ export default function GanEvaluationViz() {
             opacity={a >= 1 ? 1 : 0.2}
           >
             {a === 1
-              ? "precision: fake가 real 영역 안인가"
+              ? "품질: 생성 표본이 실제 영역 안인가"
               : a === 2
-                ? "recall: real 영역을 얼마나 덮었나"
-                : "mean·covariance·coverage를 분리"}
+                ? "포괄: 실제 영역을 얼마나 덮었나"
+                : "평균·공분산·포괄 범위를 분리"}
           </text>
           <g opacity={a === 3 ? 1 : 0.12}>
             <line
@@ -204,11 +213,20 @@ export default function GanEvaluationViz() {
               fontSize="11"
               fill="#059669"
             >
-              encoder · sample count · split · seed · latency 고정
+              특징 추출기 · 표본 수 · 분할 · 시드 · 지연 시간 고정
             </text>
           </g>
         </svg>
+        </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

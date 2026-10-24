@@ -3,10 +3,16 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = [
-  "Latent 표본",
-  "Generator 변환",
+  "잠재 표본",
+  "생성기로 변환",
   "두 분포 비교",
-  "학습 신호",
+  "생성기에 신호 반환",
+] as const;
+const NOTES = [
+  "계산하기 쉬운 잠재 분포에서 입력 z를 뽑습니다.",
+  "생성기 G가 z를 데이터와 같은 모양의 표본으로 바꿉니다.",
+  "판별기는 실제 표본과 생성 표본을 같은 입력 공간에서 비교합니다.",
+  "판별기가 만든 입력 기울기가 생성기 매개변수까지 돌아갑니다.",
 ] as const;
 
 export default function GanGameViz() {
@@ -14,12 +20,14 @@ export default function GanGameViz() {
   const a = scenes.active;
   return (
     <VizFrame
-      eyebrow="Animated distribution game"
-      title="Generator가 만든 점들이 real cloud 쪽으로 이동한다"
-      description="과거 sample을 복사하는 대신 latent point를 data space로 보내고, discriminator의 경계가 이동 방향을 제공합니다."
-      note="화살표 키로 한 단계씩 보면 sample 생성과 분포 비교가 서로 다른 연산임을 확인할 수 있습니다."
+      eyebrow="분포 게임"
+      title="생성한 점을 실제 표본 구름과 비교합니다"
+      description="과거 표본을 복사하는 대신 잠재점에서 새 표본을 만들고, 판별기의 경계가 이동 방향을 제공합니다."
+      note="화살표 키로 한 단계씩 보면 표본 생성과 분포 비교가 서로 다른 연산임을 확인할 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="gan-game-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -27,33 +35,34 @@ export default function GanGameViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
+        <div data-viz-live-only>
         <div
           className="space-y-3 md:hidden"
           aria-label="모바일 GAN 분포 게임 흐름"
         >
           <MobileNode
-            label="latent z"
-            detail="simple prior의 점"
+            label="잠재값 z"
+            detail="간단한 기준 분포의 점"
             active={a === 0}
           />
-          <MobileArrow label="Gθ가 data shape로 변환" />
+          <MobileArrow label="Gθ가 데이터 모양으로 변환" />
           <MobileNode
-            label="generated x̃"
-            detail="pushforward p_g의 sample"
+            label="생성 표본 x̃"
+            detail="이동한 분포 p_g의 표본"
             active={a === 1}
           />
           <div className="grid grid-cols-2 gap-3">
-            <MobileNode label="real x" detail="data batch" active={a === 2} />
+            <MobileNode label="실제 표본 x" detail="데이터 묶음" active={a === 2} />
             <MobileNode
-              label="generated x̃"
-              detail="model batch"
+              label="생성 표본 x̃"
+              detail="모델이 만든 묶음"
               active={a === 2}
             />
           </div>
-          <MobileArrow label="같은 Dφ에 넣어 source score 비교" />
+          <MobileArrow label="같은 Dφ에 넣어 출처 점수 비교" />
           <MobileNode
             label="학습 신호"
-            detail="score gradient가 G parameter로 돌아감"
+            detail="점수 기울기가 G 매개변수로 돌아감"
             active={a === 3}
           />
         </div>
@@ -67,8 +76,8 @@ export default function GanGameViz() {
             y={105}
             w={130}
             h={110}
-            title="latent z"
-            subtitle="simple prior"
+            title="잠재값 z"
+            subtitle="기준 분포"
             active={a === 0}
           />
           <Box
@@ -77,7 +86,7 @@ export default function GanGameViz() {
             w={140}
             h={110}
             title="Gθ"
-            subtitle="learned map"
+            subtitle="학습한 변환"
             active={a === 1}
           />
           <Box
@@ -85,8 +94,8 @@ export default function GanGameViz() {
             y={48}
             w={150}
             h={105}
-            title="real x"
-            subtitle="data cloud"
+            title="실제 표본 x"
+            subtitle="데이터 구름"
             active={a === 2}
           />
           <Box
@@ -94,8 +103,8 @@ export default function GanGameViz() {
             y={190}
             w={150}
             h={105}
-            title="generated x̃"
-            subtitle="pushforward pg"
+            title="생성 표본 x̃"
+            subtitle="이동한 분포 pg"
             active={a >= 1}
           />
           <Box
@@ -104,7 +113,7 @@ export default function GanGameViz() {
             w={120}
             h={110}
             title="Dφ"
-            subtitle="comparison score"
+            subtitle="비교 점수"
             active={a === 3}
           />
           <Arrow
@@ -113,7 +122,7 @@ export default function GanGameViz() {
             x2={220}
             y2={160}
             active={a >= 1}
-            label="map"
+            label="변환"
           />
           <Arrow
             x1={360}
@@ -121,7 +130,7 @@ export default function GanGameViz() {
             x2={430}
             y2={235}
             active={a >= 1}
-            label="sample"
+            label="표본"
           />
           <Arrow
             x1={580}
@@ -129,7 +138,7 @@ export default function GanGameViz() {
             x2={650}
             y2={145}
             active={a >= 2}
-            label="real"
+            label="실제"
           />
           <Arrow
             x1={580}
@@ -137,7 +146,7 @@ export default function GanGameViz() {
             x2={650}
             y2={175}
             active={a >= 2}
-            label="fake"
+            label="생성"
           />
           <path
             d="M710 215 C650 300 390 315 290 218"
@@ -155,10 +164,19 @@ export default function GanGameViz() {
             fill="#f97316"
             opacity={a === 3 ? 1 : 0.12}
           >
-            score gradient가 G parameter로 돌아감
+            점수 기울기가 G 매개변수로 돌아감
           </text>
         </svg>
+        </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

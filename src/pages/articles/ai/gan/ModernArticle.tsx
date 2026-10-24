@@ -7,6 +7,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { ganTree } from "./fileTree";
 import GanGameViz from "./GanGameViz";
+import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 const ORIGINAL = "https://arxiv.org/abs/1406.2661";
 
@@ -15,12 +16,14 @@ export default function GanFoundationsArticle() {
   return (
     <>
     <article id="overview" className="space-y-16">
+      <GanLearningLocator current="game" />
       <section id="distribution" className="space-y-6">
         <Header
           n="00"
           kicker="먼저 만드는 것"
           title="GAN generator는 probability 값을 출력하지 않고 sample distribution을 만든다"
         />
+        <GanGameViz />
         <p className="text-lg leading-8">
           먼저 <strong>generator</strong> 하나만 봅니다. 쉽게 뽑는 latent vector{" "}
           <code>z</code>를 image·audio 같은 data sample <code>x̃</code>로 바꾸는
@@ -33,7 +36,6 @@ export default function GanFoundationsArticle() {
           example="Batch 32의 z∈ℝ²를 넣어 32×3×64×64 image tensor를 만듭니다."
           boundary="Sample은 만들지만 normalized density p_g(x), inverse encoder, likelihood를 자동으로 제공하지 않습니다."
         />
-        <GanGameViz />
         <ExplainedFormula
           question="왜 generator output의 분포를 pushforward라고 부를까요?"
           idea={
@@ -310,6 +312,7 @@ export default function GanFoundationsArticle() {
         </div>
         <ContentBoundary article="gan" />
       </section>
+      <GanLearningMapReturn current="game" />
     </article>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

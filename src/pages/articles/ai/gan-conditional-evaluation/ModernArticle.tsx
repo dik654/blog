@@ -3,15 +3,18 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import GanEvaluationViz from "./GanEvaluationViz";
+import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function GanConditionalEvaluationArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <GanLearningLocator current="evaluation" />
       <section id="conditioning" className="space-y-6">
         <Header
           n="00"
           title="Condition c는 generator의 주문이면서 discriminator가 검사할 pairing이다"
         />
+        <GanEvaluationViz />
         <p className="text-lg leading-8">
           먼저 <strong>conditional generation</strong> 하나만 봅니다. “고양이를
           만들어라”라는 condition을 G에만 주면 D는 결과가 고양이인지 검사하지
@@ -24,7 +27,6 @@ export default function GanConditionalEvaluationArticle() {
           example="Class-balanced batch에서 c=cat인 real과 generated image를 같은 condition score로 비교합니다."
           boundary="Condition injection만으로 adherence·unseen composition·condition별 diversity를 보장하지 않습니다."
         />
-        <GanEvaluationViz />
         <ExplainedFormula
           question="왜 objective의 real과 generated 항 모두에 c가 들어갈까요?"
           idea={
@@ -291,6 +293,7 @@ R_{\rm gen}&=\underbrace{\frac{|R\cap \operatorname{cover}(G)|}{|R|}}_{\text{tar
         </div>
         <ContentBoundary article="gan-conditional-evaluation" />
       </section>
+      <GanLearningMapReturn current="evaluation" />
     </article>
   );
 }

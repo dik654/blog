@@ -3,15 +3,18 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import WassersteinConstraintViz from "./WassersteinConstraintViz";
+import { GanLearningLocator, GanLearningMapReturn } from "../shared/GanLearningLocator";
 
 export default function WassersteinCriticsArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <GanLearningLocator current="constraint" />
       <section id="lipschitz" className="space-y-6">
         <Header
           n="00"
           title="Lipschitz 제약은 critic score가 입력 거리보다 너무 빨리 변하지 못하게 한다"
         />
+        <WassersteinConstraintViz />
         <p className="text-lg leading-8">
           Wasserstein critic을 이해하려면 먼저{" "}
           <strong>1-Lipschitz function</strong> 하나만 정의해야 합니다. Distance
@@ -24,7 +27,6 @@ export default function WassersteinCriticsArticle() {
           example="거리 0.2인데 score 차이가 0.3이면 constraint 위반입니다."
           boundary="몇 개 sampled point에서 gradient를 재는 것과 전체 domain의 부등식이 성립하는 것은 다릅니다."
         />
-        <WassersteinConstraintViz />
         <ExplainedFormula
           question="왜 output difference를 input distance와 비교할까요?"
           idea={
@@ -318,6 +320,7 @@ e(\widehat x)&=\underbrace{(s(\widehat x)-1)^2}_{\text{target 1과의 square dev
         </div>
         <ContentBoundary article="gan-wasserstein-critics" />
       </section>
+      <GanLearningMapReturn current="constraint" />
     </article>
   );
 }
