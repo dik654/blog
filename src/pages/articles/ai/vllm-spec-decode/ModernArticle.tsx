@@ -11,13 +11,19 @@ import ResidualMassViz from "./viz/ResidualMassViz";
 import KvCommitViz from "./viz/KvCommitViz";
 import { codeRefs } from "./codeRefs";
 import { vllmSpecDecodeTree } from "./fileTree";
+import {
+  SpeculativeDecodingMapReturn,
+  SpeculativeDecodingSeriesLocator,
+} from "../shared/SpeculativeDecodingSeriesLocator";
 
 export default function ModernArticle() {
   const sidebar = useCodeSidebar();
 
   return <>
+    <SpeculativeDecodingSeriesLocator current="principle" />
     <section id="overview" data-teach-level="S" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1. 결론부터: 후보를 한 번에 채점해 여러 토큰을 확정합니다</h2>
+      <SpecTraceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8"><strong>이 글의 범위:</strong> 추측 디코딩의 공통 원리부터 첫 거부, 원래 분포 복원, KV 기록 갱신, vLLM의 손익 계산까지 다룹니다. 원리를 이미 알고 Medusa·LayerSkip·MTP·SuffixDecoding의 차이를 비교하려면 <Link to="/cs/ai/speculative-decoding-variants">추측 디코딩 변형 비교</Link>로 이어가면 됩니다.</p>
         <p className="leading-8"><strong>vLLM 추측 디코딩은 후보 여러 개를 큰 모델이 한 번에 검사해 순차 실행 횟수를 줄이는 기술입니다.</strong></p>
@@ -68,7 +74,6 @@ export default function ModernArticle() {
         <p className="leading-8">이제 후보 A → B → B → A와 비교값 0.6, 0.4, 0.8, 0.2를 놓습니다. 첫 A는 통과하고, 둘째 B는 0.4가 수락 경계 0.5보다 작아 통과합니다. 셋째 B는 0.8이 0.5보다 커서 거부되며 그 자리에 A를 넣습니다. 결과는 A → B → A입니다.</p>
         <p className="leading-8">넷째 A의 비교값은 0.2라서 작아 보입니다. 그래도 셋째가 바뀐 순간 넷째가 가정한 앞 문장도 달라집니다. 다음 절에서는 이 후보를 왜 이어 쓸 수 없는지 살펴봅니다.</p>
       </div>
-      <SpecTraceViz />
     </section>
 
     <section id="causal-stop" data-teach-level="1" className="mb-16 scroll-mt-20">
@@ -246,6 +251,8 @@ export default function ModernArticle() {
         <div id="dynamic-policy" className="scroll-mt-20"><h3>vLLM의 동적 깊이는 무엇을 보고 후보 수를 바꿀까요?</h3><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="leading-8">K를 상황에 따라 바꾸는 정책도 실제 입력을 확인해야 합니다. 고정한 scheduler.py 1192–1198행은 이번에 배정한 요청 수를 봅니다. 이 수로 dynamic_sd_lookup을 조회합니다. 최근 수락률을 배워 최적 K를 계산하는 분기는 아닙니다.</p><p className="leading-8">공식 예제에는 [1,64,3], [65,128,1], [129,512,0]이 있습니다. 배치 크기 64에서는 K=3, 65에서는 K=1, 129에서는 K=0을 고릅니다. 사용자가 넣는 정책의 예일 뿐, 모든 배포에서 통하는 최적 경계는 아닙니다.</p><p className="leading-8">고정한 dynamic/utils.py는 구간을 조회표로 펼칩니다. 비어 있는 구간과 마지막 이후는 직전 K로 채웁니다. 전체 허용 깊이와 비교해 더 작은 값을 고르는 조건도 있습니다. [1,2,4], [4,6,1]에서 허용 깊이가 3이면 배치 3은 3을, 배치 7은 1을 받습니다. (가정)</p><p className="leading-8">후보를 껐을 때의 시간과 실제 확정 길이를 같은 부하에서 비교해야 합니다. 대기 시간과 KV 사용량도 함께 봐야 정책을 고를 수 있습니다. 변수 이름이 optimal_K라는 사실만으로 최적성이 증명되지는 않습니다. 모델 실행기(runner)와 병렬 구성의 지원 조건도 고정 버전에서 확인합니다.</p><p className="leading-8">검증 방식도 따로 정합니다. 합성(synthetic) 방식은 수락 비율을 인위적으로 넣습니다. 블록(block) 방식은 후보 묶음을 함께 검증합니다. 둘 다 위 확률 비율의 순차 판정과 다릅니다. 깊이가 같다고 해서 같은 검증 알고리즘을 쓰는 것은 아닙니다.</p></div><CodeViewButton label="현재 배치 크기의 실제 K 조회" onClick={() => sidebar.open("dynamic-policy", codeRefs["dynamic-policy"])}/><CodeViewButton label="비어 있는 범위와 최대 깊이의 처리" onClick={() => sidebar.open("dynamic-table", codeRefs["dynamic-table"])}/></div>
       </ProgressiveDetail>
     </section>
+
+    <SpeculativeDecodingMapReturn current="principle" />
 
     <section id="prediction-questions" data-teach-level="review" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">13. 결론에서 생긴 세 질문에 답해 보세요</h2>

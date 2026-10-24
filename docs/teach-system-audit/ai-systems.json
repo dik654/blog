@@ -7890,7 +7890,7 @@
       "route": "ai/inference-runtime-anatomy",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/inference-runtime-anatomy.tsx",
       "publicPath": "cs/ai/inference-runtime-anatomy",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -7909,11 +7909,10 @@
         "keyboard": true,
         "reducedMotion": true,
         "noJavaScript": true,
-        "buildAndStrictAudit": true
+        "buildAndStrictAudit": true,
+        "production": "GitHub Pages run 40093925099 success; commit d241ab29. 390×844 공개 경로에서 HTTP 200, 현재 위치·반환 지도, overflow 0, console 오류 0을 확인했습니다."
       },
-      "remaining": [
-        "배포 후 공개 경로를 다시 확인"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/inference-stack-standard-levels",
@@ -8838,7 +8837,7 @@
       "route": "ai/llm-serving-capacity",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-serving-capacity.tsx",
       "publicPath": "cs/ai/llm-serving-capacity",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8857,11 +8856,10 @@
         "keyboard": true,
         "reducedMotion": true,
         "noJavaScript": true,
-        "buildAndStrictAudit": true
+        "buildAndStrictAudit": true,
+        "production": "GitHub Pages run 40093925099 success; commit d241ab29. 390×844 공개 경로에서 HTTP 200, 현재 위치·반환 지도, overflow 0, console 오류 0을 확인했습니다."
       },
-      "remaining": [
-        "배포 후 공개 경로를 다시 확인"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/llm-serving-ops",
@@ -9233,7 +9231,7 @@
       "route": "ai/model-vram-budgeting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-vram-budgeting.tsx",
       "publicPath": "cs/ai/model-vram-budgeting",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -9252,11 +9250,10 @@
         "keyboard": true,
         "reducedMotion": true,
         "noJavaScript": true,
-        "buildAndStrictAudit": true
+        "buildAndStrictAudit": true,
+        "production": "GitHub Pages run 40093925099 success; commit d241ab29. 390×844 공개 경로에서 HTTP 200, 현재 위치·반환 지도, overflow 0, console 오류 0을 확인했습니다."
       },
-      "remaining": [
-        "배포 후 공개 경로를 다시 확인"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/multi-agent-implementation",
@@ -11920,10 +11917,11 @@
         "formula": "네 ExplainedFormula의 일반식도 실제 annotatedFormula에 표시됩니다. 두 폭에서 각 일반식·연산 주석·기호·가정과 KaTeX 오류0을 확인했고 전역1441개 formula strict를 통과했습니다.",
         "prose": "전역 strict 재검토0 및 JSX word-break strict exit0입니다. 새 Viz 정적 검사는 error0이며 SVG text10건은 실제 두 폭 bbox와 PNG로 확인했습니다.",
         "numeric": "theory가 작성 전 6+4와 작은 mask·KV·비용을 독립 검산했습니다. 조건부 tail3.2517과 비용.7742/1.49, MTP v<1.834·toy x<.917, suffix1.875 및 혼합80/14를 계산했고 원문 AST/실제 native 실행과 각 가정을 구분했습니다.",
-        "typescript": "통합 actual app tsc -p tsconfig.app.json --noEmit 실제 세션85087 exit0. source 범위 숫자 교정은 Vite 모듈 로드로 재검증했으며 소유 경로 git diff --check PASS. root 고정 snapshot 전체 build는 별도 pending."
+        "typescript": "통합 actual app tsc -p tsconfig.app.json --noEmit 실제 세션85087 exit0. source 범위 숫자 교정은 Vite 모듈 로드로 재검증했으며 소유 경로 git diff --check PASS. 현재 부모 지도 구조도 Node heap 8GB production build를 통과했습니다.",
+        "currentStructure": "추측 디코딩 부모 지도에서 reference 가지로 분리하고 tree trace를 긴 설명보다 먼저 배치했습니다. 390×844·1440×900 overflow 0, JavaScript 비활성 정적 본문과 지도 반환을 확인했습니다."
       },
       "remaining": [
-        "root 고정 snapshot 전역 build·배포 검증"
+        "현재 부모 지도 구조의 공개 배포 검증"
       ],
       "reviewEvidence": {
         "read": "전체 본문 1~384행과 Viz 전체를 실제 읽고 기존 정확한 tree node 합·계산 사례·논문·링크를 보존할 항목으로 분류했습니다.",
@@ -11934,7 +11932,7 @@
         "src/pages/articles/ai/speculative-decoding-variants/ModernArticle.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/speculative-decoding-variants/ModernArticle.tsx",
-      "contentHash": "a4bb75257c5bbf0256aaf1add882ba9961781f6287e977d62e499f1d6314f851",
+      "contentHash": "ad492ccbec73933987136f48e136080c8fa70b801a6b84de61086cca1628986d",
       "evidenceFiles": [
         "/tmp/teach-all/ai-systems-registration-19.json",
         "/tmp/teach-all/spec19/plan-before-body.json",
@@ -12748,7 +12746,7 @@
       "route": "ai/vllm-spec-decode",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/vllm-spec-decode.tsx",
       "publicPath": "cs/ai/vllm-spec-decode",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -12907,15 +12905,18 @@
         "keyboard": "두 폭에서 실제 focus 가능한 Viz 내부 group에 포커스해 ArrowRight로 수락, ArrowLeft로 제안 복귀를 확인했습니다. 처음 figure에 포커스한 검사 실패는 검사 대상 오류였으며 실제 group 재검사는 통과했습니다.",
         "browserProduction": "운영 주소에서 vLLM 기본 원리 글 320px, 변형 비교 글 390px의 document/body overflow, 화면보다 넓은 버튼, KaTeX 오류, console 오류가 모두 0이었습니다. 양방향 범위 링크와 장면별 pseudocode 줄이 실제 배포 번들에 포함됐습니다.",
         "pseudocodeProcess": "SpecTraceViz의 다섯 장면을 propose → accept → firstReject/discard → residual sample → commit 의사코드와 일대일로 연결했습니다. 공통 AlgorithmBlock도 입력·각 실행 줄·출력 장면과 이전/다음 조작을 제공하며 320px에서 넘침이 없습니다.",
-        "production": "GitHub Pages run 37616159164 success; build 6m35s, deploy 19s. commit 342bd568e9bc1c78d07049605e6fc5fb08828bb5.",
+        "production": "GitHub Pages run 37616159164 success; build 6m35s, deploy 19s. commit 342bd568e9bc1c78d07049605e6fc5fb08828bb5. 이 기록은 부모 지도 재구성 전 본문의 공개 검증 이력입니다.",
+        "currentStructure": "추측 디코딩 부모 지도, 대표 장면 선배치, 지도 반환을 적용했습니다. 390×844·1440×900 overflow 0, 키보드 1→2 장면 이동, reduced-motion, JavaScript 비활성 정적 본문을 확인했고 현재 구조의 공개 검증만 남았습니다.",
         "recursiveTeaching": "teach-system v0.16의 재귀 설명 closure와 pseudocode step-through 규칙을 적용했습니다. 14개 도입 개념의 causalTrace와 모든 non-entry prerequisite canonical article의 recursiveTeaching 계약을 전역 감사가 확인합니다."
       },
-      "remaining": [],
+      "remaining": [
+        "현재 부모 지도 구조의 공개 배포 검증"
+      ],
       "bodyFiles": [
         "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/vllm-spec-decode/ModernArticle.tsx",
-      "contentHash": "4bcb676725fbcdee273a2fb042c227c30e1dc5a19636440baf3f758f95b206b4",
+      "contentHash": "dba13c1c8a0b8341f669ed621fd31114881b9a84428d80e9326285b0555790ff",
       "evidenceFiles": [
         "/tmp/teach-all/ai-systems-registration-18.json",
         "/tmp/teach-all/spec18/plan-before-body.json",

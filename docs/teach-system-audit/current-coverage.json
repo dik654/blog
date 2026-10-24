@@ -1065,7 +1065,7 @@
       "catalogIndex": 103,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1075,7 +1075,7 @@
       "catalogIndex": 104,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
@@ -1165,7 +1165,7 @@
       "catalogIndex": 113,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
@@ -1175,7 +1175,7 @@
       "catalogIndex": 114,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1285,7 +1285,7 @@
       "catalogIndex": 125,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1335,7 +1335,7 @@
       "catalogIndex": 130,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1345,7 +1345,7 @@
       "catalogIndex": 131,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {

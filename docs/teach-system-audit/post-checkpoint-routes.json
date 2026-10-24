@@ -123,12 +123,12 @@
     },
     {
       "route": "ai/multimodal-serving-pipeline",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
       "route": "ai/sglang-runtime-anatomy",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
@@ -158,7 +158,7 @@
     },
     {
       "route": "ai/llama-cpp-local-inference",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-04-plan.md"
     },
     {
