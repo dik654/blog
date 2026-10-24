@@ -2,15 +2,28 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { OneCyclePolicyViz } from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  OneCyclePolicyViz,
+  OneCycleReleaseGateViz,
+} from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  LearningRateFamilyLocator,
+  LearningRateFamilyMapReturn,
+} from "../shared/LearningRateFamilyLocator";
 
 export default function OneCycleSchedulingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <LearningRateFamilyLocator current="one-cycle" />
+      <section
+        id="overview"
+        data-teach-level="big-picture"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-6 text-2xl font-bold">
           OneCycle 전에 maximum LR 후보를 진단합니다
         </h2>
+        <OneCyclePolicyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Learning-rate range test</strong>는 짧은 별도 run에서 LR를
@@ -19,9 +32,28 @@ export default function OneCycleSchedulingArticle() {
             budget의 상승·하강 phase에 배치합니다.
           </p>
         </div>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
-        <ol className="list-decimal space-y-2 pl-6"><li>Range test에서 손실이 급증한 학습률을 그대로 maximum으로 써야 할까요?</li><li>T=1,000, 상승 비율 p=0.3이면 300번째 갱신 부근에서 maximum LR에 도달할까요?</li><li>Micro-batch 횟수가 바뀌어도 optimizer 갱신 수가 같으면 같은 phase 위치일까요?</li></ol>
-        <p>답은 <strong>아니요, 예, 예</strong>입니다. 짧은 진단에서 불안정 경계보다 여유 있는 maximum을 고르고 실제 일정은 epoch보다 optimizer 갱신 시계에 맞춥니다.</p>
+        <p className="font-semibold">
+          그림을 보기 전에 세 가지를 예측해 보세요.
+        </p>
+        <ol className="list-decimal space-y-2 pl-6">
+          <li>
+            Range test에서 손실이 급증한 학습률을 그대로 maximum으로 써야
+            할까요?
+          </li>
+          <li>
+            T=1,000, 상승 비율 p=0.3이면 300번째 갱신 부근에서 maximum LR에
+            도달할까요?
+          </li>
+          <li>
+            Micro-batch 횟수가 바뀌어도 optimizer 갱신 수가 같으면 같은 phase
+            위치일까요?
+          </li>
+        </ol>
+        <p>
+          답은 <strong>아니요, 예, 예</strong>입니다. 짧은 진단에서 불안정
+          경계보다 여유 있는 maximum을 고르고 실제 일정은 epoch보다 optimizer
+          갱신 시계에 맞춥니다.
+        </p>
         <TermBreakdown
           title="진단과 실행을 이루는 네 용어"
           items={[
@@ -55,11 +87,14 @@ export default function OneCycleSchedulingArticle() {
             },
           ]}
         />
-        <OneCyclePolicyViz />
         <ContentBoundary article="one-cycle-scheduling" />
       </section>
 
-      <section id="range-test" className="scroll-mt-20">
+      <section
+        id="range-test"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Range test는 LR를 log scale로 올리는 진단 run입니다
         </h2>
@@ -122,7 +157,11 @@ export default function OneCycleSchedulingArticle() {
         />
       </section>
 
-      <section id="one-cycle" className="scroll-mt-20">
+      <section
+        id="one-cycle"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Total budget 안에 rise와 decay local clock을 만듭니다
         </h2>
@@ -130,7 +169,8 @@ export default function OneCycleSchedulingArticle() {
           question="T=1000, p=.3인 OneCycle에서 두 phase의 길이와 local progress는 무엇인가요?"
           idea={
             <p>
-              먼저 rise 길이를 floor(pT)로 고정하고 현재 update를 해당 phase 시작점과 길이로 정규화합니다.
+              먼저 rise 길이를 floor(pT)로 고정하고 현재 update를 해당 phase
+              시작점과 길이로 정규화합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}T_\uparrow&=\lfloor pT\rfloor\\r_\uparrow&=t/T_\uparrow\\r_\downarrow&=(t-T_\uparrow)/(T-T_\uparrow)\end{aligned}`}
@@ -189,15 +229,22 @@ export default function OneCycleSchedulingArticle() {
         />
       </section>
 
-      <section id="release-boundary" className="scroll-mt-20">
+      <section
+        id="release-boundary"
+        data-teach-level="failure"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           큰 LR는 regularization 보장이 아니라 failure budget입니다
         </h2>
+        <OneCycleReleaseGateViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            nonfinite loss와 gradient overflow, loss ratio, update norm의 상한을 정하고 마지막 healthy checkpoint로
-            rollback합니다. Range-test model state는 실제 run에 이어 쓰지 않으며 max LR·batch·optimizer·regularization 중 하나가
-            바뀌면 진단도 다시 수행합니다.
+            nonfinite loss와 gradient overflow, loss ratio, update norm의 상한을
+            정하고 마지막 healthy checkpoint로 rollback합니다. Range-test model
+            state는 실제 run에 이어 쓰지 않으며 max
+            LR·batch·optimizer·regularization 중 하나가 바뀌면 진단도 다시
+            수행합니다.
           </p>
         </div>
         <div id="paper-super-convergence" className="scroll-mt-24">
@@ -217,6 +264,7 @@ export default function OneCycleSchedulingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LearningRateFamilyMapReturn current="one-cycle" />
     </div>
   );
 }

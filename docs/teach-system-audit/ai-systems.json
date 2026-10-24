@@ -1464,7 +1464,7 @@
       "route": "ai/catboost-ordered-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
       "publicPath": "cs/ai/catboost-ordered-learning",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4447,35 +4447,27 @@
         }
       ],
       "validation": {
-        "humanize": "공개 본문 전체와 기존 수식·연습문제를 수동으로 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어는 그 뒤에 이름 붙였습니다.",
-        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인하고 세 그림의 대비·배치를 보정했습니다: /tmp/teach-all/browser-ai-six-237/summary.json",
-        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-237/summary.json",
-        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
-        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
-        "typescript": "actual npx tsc -b exit0",
-        "prose": "전역 799편 strict, 압축 신호265, 재검토0 actual exit0",
-        "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
-        "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
-        "semanticReview": "ηmax=.1·ηmin=.001·T0=900에서 t=450의 LR .0505를 계산하고, m=2 restart가 T1=1800으로 넘어가되 θ와 optimizer moments를 보존함을 추적했습니다. Epoch 수와 optimizer update 수 비교도 분리했습니다."
+        "semanticReview": "ηmax=.1·ηmin=.001·T0=900에서 t=450의 LR .0505를 계산하고, m=2 restart가 T1=1800으로 넘어가되 θ와 optimizer moments를 보존함을 추적했습니다. LR 시계 묶음의 직속 부모·현재 위치·다음 글도 함께 표시했습니다.",
+        "humanize": "900-update 한 사례와 네 장면을 용어 설명보다 먼저 두고, warm restart를 parameter 초기화로 오해하지 않도록 보존 상태와 reset 상태를 한글로 분리했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, 명시적 시작·키보드 이동·reduced-motion·JavaScript 비활성 대체 내용 통과: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, console·page 오류 0: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 174편 생성",
+        "production": "Batch 28 공개 배포 뒤 확인 예정"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "remaining": ["Batch 28 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "learning-rate-family-map-and-state-transition-rewrite",
       "bodyFiles": [
         "src/pages/articles/ai/cosine-restart-scheduling/ModernArticle.tsx",
         "src/pages/articles/ai/lr-scheduling/viz/ModernLrScheduleViz.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/cosine-restart-scheduling/ModernArticle.tsx",
-      "contentHash": "2cfb687124d02182e4257894e452fde436a6ad219552e5e3b32d211b0846c6b8",
       "preserved": [
         "Cosine progress·LR 보간 수식",
         "Restart state 보존과 비교 receipt",
         "정확히 기초6+심화4 연습문제"
       ],
-      "contentHashScope": "2개 본문·Viz 파일 연결"
+      "contentHashScope": "본문·공유 부모 지도·공유 LR 시각화 연결"
     },
     {
       "route": "ai/cost-sensitive-thresholding",
@@ -7453,26 +7445,57 @@
       "route": "ai/knowledge-graph-construction",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/knowledge-graph-construction.tsx",
       "publicPath": "cs/ai/knowledge-graph-construction",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "OneCycle 곡선 이름이 max LR를 어떻게 고르는지보다 먼저 나왔음",
+        "Range test의 불안정 지점과 실제 run의 max 후보가 구분되지 않았음",
+        "momentum·overflow·rollback이 곡선 바깥의 실행 정책이라는 경계가 시각적으로 없었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "rangeStart": "1e-6",
+        "rangeEnd": "1",
+        "totalUpdates": 1000,
+        "riseFraction": 0.3,
+        "riseUpdates": 300,
+        "decayUpdates": 700,
+        "diagnosticStateDiscarded": true
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "0": "learning-rate-family-parent-map",
+        "1": "overview",
+        "2": "range-test",
+        "3": "one-cycle",
+        "4": "release-boundary",
+        "return": "learning-rate-family-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1708.07120",
+          "application": "LR range test와 one-cycle policy를 구분하는 원문 근거"
+        }
+      ],
+      "validation": {
+        "semanticReview": "진단 run의 instability 탐색→더 낮은 max 후보→1,000 updates의 300/700 phase→momentum·rollback gate를 한 사례로 추적했습니다.",
+        "humanize": "진단에서 찾은 급증값을 정답으로 쓰지 않는다는 결론과 실제 run의 정책을 짧은 한국어 장면으로 분리했습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, 명시적 시작·키보드 이동·reduced-motion·JavaScript 비활성 대체 내용 통과: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, console·page 오류 0: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 174편 생성",
+        "production": "Batch 28 공개 배포 뒤 확인 예정"
+      },
+      "remaining": ["Batch 28 공개 배포 경로 확인"],
+      "bodyFiles": [
+        "src/pages/articles/ai/one-cycle-scheduling/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/LearningRateFamilyLocator.tsx",
+        "src/pages/articles/ai/lr-scheduling/viz/ModernLrScheduleViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/one-cycle-scheduling/ModernArticle.tsx"
     },
     {
       "route": "ai/kv-cache-fundamentals",
@@ -12751,26 +12774,55 @@
       "route": "ai/warmup-scheduling",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/warmup-scheduling.tsx",
       "publicPath": "cs/ai/warmup-scheduling",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "Warmup 비율과 본 schedule 길이를 따로 적어 전체 update budget이 밀리는 오류를 찾기 어려웠음",
+        "global clock과 main local cursor의 경계가 시각화되지 않았음",
+        "LR 곡선만 보고 실제 parameter update와 overflow를 놓치는 실패 경계가 약했음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "totalUpdates": 1000,
+        "warmupUpdates": 100,
+        "mainLength": 900,
+        "mainCursorAtBoundary": 0,
+        "observed": "relative update = ||Δθ|| / ||θ||"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "0": "learning-rate-family-parent-map",
+        "1": "overview",
+        "2": "composition",
+        "3": "update-magnitude",
+        "4": "failure-boundary",
+        "return": "learning-rate-family-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1910.04209",
+          "application": "Adaptive optimization의 warmup 안정성 가설과 한계 근거"
+        }
+      ],
+      "validation": {
+        "semanticReview": "전체 1,000 updates를 warmup 100과 main 900으로 나누고 global t=100에서 main k=0이 되는 경계, relative update와 overflow 검사를 한 흐름으로 추적했습니다.",
+        "humanize": "Warmup을 만능 안정화 기법으로 쓰지 않고 schedule 이음새와 실제 update 크기를 따로 확인하도록 한국어 설명을 다듬었습니다.",
+        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, 명시적 시작·키보드 이동·reduced-motion·JavaScript 비활성 대체 내용 통과: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, console·page 오류 0: output/playwright/ai-schedule-shapes-batch-28/summary.json",
+        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 174편 생성",
+        "production": "Batch 28 공개 배포 뒤 확인 예정"
+      },
+      "remaining": ["Batch 28 공개 배포 경로 확인"],
+      "bodyFiles": [
+        "src/pages/articles/ai/warmup-scheduling/ModernArticle.tsx",
+        "src/pages/articles/ai/shared/LearningRateFamilyLocator.tsx",
+        "src/pages/articles/ai/lr-scheduling/viz/ModernLrScheduleViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/warmup-scheduling/ModernArticle.tsx"
     },
     {
       "route": "ai/weight-decay",
@@ -12883,9 +12935,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 60,
-    "rewritten-production-verified": 80,
-    "unreviewed": 46
+    "rewritten-local-verified": 63,
+    "rewritten-production-verified": 79,
+    "unreviewed": 44
   },
   "localValidationSummary": {
     "rewritten": 117,

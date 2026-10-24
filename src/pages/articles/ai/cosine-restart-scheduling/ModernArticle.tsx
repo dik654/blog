@@ -2,36 +2,54 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { CosineRestartViz } from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  CosineComparisonReceiptViz,
+  CosineRestartViz,
+} from "../lr-scheduling/viz/ModernLrScheduleViz";
+import {
+  LearningRateFamilyLocator,
+  LearningRateFamilyMapReturn,
+} from "../shared/LearningRateFamilyLocator";
 
 export default function CosineRestartSchedulingArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <LearningRateFamilyLocator current="cosine" />
+      <section
+        id="overview"
+        data-teach-level="big-picture"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-6 text-2xl font-bold">
           Cosine은 progress를 LR scale로 바꾸는 보간입니다
         </h2>
+        <CosineRestartViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Peak LR가 .1, minimum LR가 .001이고 첫 cycle이 900 update라고
             합시다. 중간인 t=450에서는 LR가 .0505입니다. Cycle이 끝나고
             multiplier m=2로 warm restart하면 다음 cycle 길이는 1,800이 되며,
-            cursor와 LR phase만 되돌리고 model parameter와 optimizer moments는 이어갑니다.
+            cursor와 LR phase만 되돌리고 model parameter와 optimizer moments는
+            이어갑니다.
           </p>
           <h3>그림을 보기 전에 결과를 예상해 보세요</h3>
           <ol>
             <li>t=450, T=900이면 현재 LR는 .0505일까요?</li>
-            <li>Warm restart에서 model weight와 Adam moments도 초기화할까요?</li>
-            <li>Epoch 수만 같고 optimizer update 수가 다른 두 schedule을 그대로 비교해도 될까요?</li>
+            <li>
+              Warm restart에서 model weight와 Adam moments도 초기화할까요?
+            </li>
+            <li>
+              Epoch 수만 같고 optimizer update 수가 다른 두 schedule을 그대로
+              비교해도 될까요?
+            </li>
           </ol>
           <p>
-            첫 답은 <strong>예</strong>, 나머지 둘은 <strong>아니요</strong>입니다.
-            Cosine은 cycle 안의 update 진행률을 LR로 바꾸고, warm restart는
-            그 LR phase의 경계만 다시 엽니다. 비교할 때는 update budget과
-            보존되는 state까지 같아야 합니다.
+            첫 답은 <strong>예</strong>, 나머지 둘은 <strong>아니요</strong>
+            입니다. Cosine은 cycle 안의 update 진행률을 LR로 바꾸고, warm
+            restart는 그 LR phase의 경계만 다시 엽니다. 비교할 때는 update
+            budget과 보존되는 state까지 같아야 합니다.
           </p>
         </div>
-        <CosineRestartViz />
         <ContentBoundary article="cosine-restart-scheduling" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -77,7 +95,11 @@ export default function CosineRestartSchedulingArticle() {
         />
       </section>
 
-      <section id="cosine-progress" className="scroll-mt-20">
+      <section
+        id="cosine-progress"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           반 주기의 시작·중간·끝을 계산합니다
         </h2>
@@ -85,7 +107,8 @@ export default function CosineRestartSchedulingArticle() {
           question="ηmax=.1, ηmin=.001에서 cycle 중간 LR가 왜 .0505인가요?"
           idea={
             <p>
-              Local progress를 π배해 cosine에 넣고 1+cos를 2로 나눠 1→0 scale로 바꾼 뒤 LR range에 적용합니다.
+              Local progress를 π배해 cosine에 넣고 1+cos를 2로 나눠 1→0 scale로
+              바꾼 뒤 LR range에 적용합니다.
             </p>
           }
           formula={String.raw`\begin{aligned}r_t&=t/T\\a_t&=\tfrac12[1+\cos(\pi r_t)]\\\eta_t&=\eta_{\min}+(\eta_{\max}-\eta_{\min})a_t\end{aligned}`}
@@ -144,7 +167,11 @@ export default function CosineRestartSchedulingArticle() {
         />
       </section>
 
-      <section id="restart-state" className="scroll-mt-20">
+      <section
+        id="restart-state"
+        data-teach-level="mechanism"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Restart되는 state와 보존되는 state를 나눕니다
         </h2>
@@ -211,10 +238,15 @@ export default function CosineRestartSchedulingArticle() {
         />
       </section>
 
-      <section id="comparison-boundary" className="scroll-mt-20">
+      <section
+        id="comparison-boundary"
+        data-teach-level="failure"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-4 text-2xl font-bold">
           Single cosine과 restart를 같은 compute로 비교합니다
         </h2>
+        <CosineComparisonReceiptViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
             동일 initialization·optimizer·data order·total updates에서 single
@@ -239,6 +271,7 @@ export default function CosineRestartSchedulingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LearningRateFamilyMapReturn current="cosine" />
     </div>
   );
 }
