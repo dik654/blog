@@ -602,6 +602,16 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     display: none !important;
   }
 
+  /*
+   * 정적 문서에는 현재 장면용 SVG·차트와 전체 장면 목록을 함께 복제하지 않는다.
+   * 특히 Recharts의 서버 렌더링 기본 폭은 좁은 모바일 문서의 폭을 늘릴 수 있다.
+   * JavaScript가 필요한 현재 장면만 숨기고, 바로 뒤의 static-reading-only 목록으로
+   * 같은 순서와 결론을 제공한다.
+   */
+  #noscript-article [data-viz-live-only] {
+    display: none !important;
+  }
+
   #noscript-article figure[data-viz="modern"]:has([data-viz-controls]) {
     height: auto !important;
     max-height: none !important;

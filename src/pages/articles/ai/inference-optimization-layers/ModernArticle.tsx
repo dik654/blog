@@ -9,8 +9,10 @@ import {CodeSidebar,CodeViewButton,useCodeSidebar} from "@/components/code";
 import {codeRefs,fileTrees,projectMetas} from "./codeRefs";
 import OptimizationBudgetViz from "./viz/OptimizationBudgetViz";
 import CriticalPathViz from "./viz/CriticalPathViz";
+import { ServingDecisionMapReturn, ServingDecisionSeriesLocator } from "../shared/ServingDecisionSeriesLocator";
 const prose="prose prose-neutral max-w-none dark:prose-invert";
 export default function OptimizationLayersArticle(){const sidebar=useCodeSidebar();const code=(key:string,label:string)=><div className="my-6"><CodeViewButton label={label} onClick={()=>sidebar.open(key,codeRefs[key])}/></div>;return <><div className="space-y-16">
+<ServingDecisionSeriesLocator current="scope" />
 <section id="overview" data-teach-level="S" className="scroll-mt-24"><h2 className="mb-5 text-2xl font-bold">1. 무엇을 줄였는지부터 확인합니다</h2><div className={prose}>
 <p>계산 하나를 두 배 빠르게 만들었다는 소식을 들으면 서비스의 답도 두 배 빨리 나올 것 같습니다. 그러나 그 계산 앞뒤에서 하는 일이 그대로 남아 있다면 전체 시간은 조금만 줄 수 있습니다. 빨라진 요청을 더 많이 처리해도 빌린 장치 수와 시간이 같다면 이번 달 청구액은 그대로일 수도 있습니다.</p>
 <p>최적화를 선택하려면 세 질문을 나누어야 합니다. 사용자가 기다리는 시간은 얼마나 줄었는가, 장치가 같은 기간에 처리할 수 있는 일은 얼마나 늘었는가, 실제로 지불하는 비용은 얼마나 달라졌는가입니다. 세 숫자를 하나로 대신하면 작은 개선을 과장하거나 가치 있는 개선을 놓치게 됩니다.</p>
@@ -174,4 +176,5 @@ interpretation="허용 악화가 3 ms라면 상한 3.08 ms가 3을 넘으므로 
 "20개 요청이 함께 100→80 ms에 끝났습니다. 요청의 기다림 감소를 합한 400 ms를 GPU 작업 절감으로 써도 되나요? (답: 11절)",
 "허용 악화 3 ms에 대해 평균 2.4 ms, 양측 95% 구간 1.72–3.08 ms를 얻었습니다. 평균만 보고 통과시키면 안 되는 이유는 무엇인가요? (답: 19절)"
 ]}/></section>
+<ServingDecisionMapReturn current="scope" />
 </div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas}/></>;}

@@ -78,6 +78,7 @@ export default function InferenceOptimizationLayersViz() {
       note="100 ms 의 구간 분해와 각 층의 절감 폭은 설명용 수치입니다. 실제 분해는 profiler 로 재야 하고 절감 폭은 model·batch·hardware 에 따라 다릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -85,7 +86,7 @@ export default function InferenceOptimizationLayersViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(26rem,calc(100svh-15rem))] min-h-[22rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(s + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[s]}</h4>
           <div className="mt-4 w-full overflow-x-auto">
@@ -106,6 +107,9 @@ export default function InferenceOptimizationLayersViz() {
           <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[s]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => <li key={label}><strong>{index + 1}. {label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

@@ -9,7 +9,7 @@
     "customVisuals": 858,
     "animatedMechanisms": 439,
     "architectureWithoutAnimation": 100,
-    "recursiveLocators": 117,
+    "recursiveLocators": 121,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -1674,7 +1674,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -2610,7 +2610,7 @@
     {
       "route": "ai/inference-cost-and-capacity-planning",
       "publicPath": "cs/ai/inference-cost-and-capacity-planning",
-      "title": "추론 비용은 cost/token 으로, capacity 는 peak 와 headroom 으로 계획합니다",
+      "title": "추론 비용과 용량은 측정한 처리량에서 함께 계산합니다",
       "sourcePath": "src/pages/articles/ai/inference-cost-and-capacity-planning.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -2618,7 +2618,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -2666,7 +2666,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -5106,7 +5106,7 @@
     {
       "route": "ai/serving-benchmark-methodology",
       "publicPath": "cs/ai/serving-benchmark-methodology",
-      "title": "Serving benchmark 는 offered load 를 올리며 steady state 에서 재야 재현됩니다",
+      "title": "서빙 성능은 부하를 단계적으로 높여 정상 구간에서 비교합니다",
       "sourcePath": "src/pages/articles/ai/serving-benchmark-methodology.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -5114,7 +5114,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

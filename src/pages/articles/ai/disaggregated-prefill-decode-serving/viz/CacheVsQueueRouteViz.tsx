@@ -64,6 +64,7 @@ export default function CacheVsQueueRouteViz() {
       note="자리당 1 ms, 대기 3 ms·0.5 ms, 가져오기 1 ms·3 ms는 본문의 비교용 가정이며 TTFT 측정값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -71,7 +72,7 @@ export default function CacheVsQueueRouteViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div key={scenes.active} className="flex shrink-0 flex-col gap-3">
+        <div data-viz-live-only key={scenes.active} className="flex shrink-0 flex-col gap-3">
           <h4 className="text-base font-bold">{scene.label}</h4>
 
           <div className="min-h-[13rem] space-y-3">
@@ -130,6 +131,9 @@ export default function CacheVsQueueRouteViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => <li key={item.label}><strong>{index + 1}. {item.label}</strong><span className="mt-1 block text-muted-foreground">{item.note}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

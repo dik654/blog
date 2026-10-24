@@ -2091,6 +2091,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     "rationale": "100 ms 요청의 같은 시간표를 따라 분류·직렬 상한·상호작용을 이해한 뒤 요청 기다림과 실제 작업·비용의 차이를 확인합니다. vLLM의 설정과 측정 함수는 이 구별을 실제 코드로 검증하므로 한 글로 유지합니다. 개별 최적화의 내부 알고리즘은 각 정본을 재사용합니다.",
     "sharedGate": "100→80→64와 극한60 ms, 추가5/8 ms, 겹침80/20, 400 request-ms 대20 GPU-ms, 3→2/2→2 복사본, ROI−79.72%·1800일, 차이2.4와95%구간1.72–3.08을 22절·4장면·9원문패널·6기초/4심화에 동일 조건으로 대조한다."
   },
+  "ai/inference-cost-and-capacity-planning": {
+    "action": "keep",
+    "status": "implemented",
+    "reviewedAt": "2026-10-24",
+    "rationale": "앞 글에서 측정한 SLO 충족 처리량 하나를 GPU 수·여유 용량·시간당 비용·확장 시점으로 바꾸는 단일 계획 질문입니다. 비용과 용량을 분리하면 같은 측정값과 요청 분포를 다시 세워야 하며, 자동 확장은 계산한 여유가 실제 준비 시간과 장애 범위를 견디는지 확인하는 마지막 단계입니다.",
+    "sharedGate": "설명용 수요20 RPS·요청당300 token·GPU당1,000 token/s·계획 이용률0.7에서6,000 token/s와9장을 얻습니다. 0.7과 가격·전력·확장 배수는 보편값이 아니라 가정이며, 실제 결정은 같은 요청 분포의 SLO 충족 곡선·준비 시간·장애 실험으로 다시 정합니다."
+  },
   "reasoning/argument-and-counterexample": {
     action: "keep", status: "reviewed", reviewedAt: "2026-10-06",
     rationale: "카드 결제 가게 100곳의 한 사례로 전제·결론 분리, 반례, 타당성, 건전성, 고전 원문과 현실의 확률 경계까지 같은 논증 검사 절차를 추적합니다. 다른 철학 글과 합치면 논증 검사가 지식·윤리 판단의 하위 요약으로 축소됩니다.",
@@ -3277,7 +3284,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "markets/us-derivatives-regulatory-map-and-customer-segregation": "89ec2a31d97827e3",
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "f1d055fa0a9dcc1c",
-  "ai/inference-optimization-layers": "071006569dc25cfb",
+  "ai/inference-optimization-layers": "4ef77676a5653e5c",
   "ai/text-unicode-encoding": "a10f387d00572a65",
   "ai/subword-static-embeddings": "18c2834ee26d4253",
   "ai/word2vec-negative-sampling": "cbc9a8c89b7f9329",
@@ -3306,7 +3313,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/prefix-caching-radix-attention": "a79d56c3b598b5a2",
   "banking/bank-balance-sheet-and-deposit-creation": "05598a4b186734fa",
   "crypto/sparse-multiplication": "654e9f0cc5bb6ace",
-  "ai/disaggregated-prefill-decode-serving": "60eade98e34b7eb0",
+  "ai/disaggregated-prefill-decode-serving": "6dc1c1dacf4c55a9",
+  "ai/inference-cost-and-capacity-planning": "cb99a362a8308cc4",
   "ai/math-complex-numbers-oscillations": "cffaff02d99071fc",
   "ai/math-differential-equations-numerical-solvers": "5379880defe02d0c",
   "ai/prefill-decode-phase-dynamics": "a0e7311550495cce",

@@ -82,6 +82,7 @@ export default function InferenceCostAndCapacityPlanningViz() {
       note="트래픽 곡선·GPU 당 처리량·$2/GPU-h 는 설명용 가정값입니다. Autoscaling 장면은 한 시간 지연의 반응형 정책을 단순화한 것이며 실제 준비 시간은 replica 의 ready-capacity 경로가 정합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -89,7 +90,7 @@ export default function InferenceCostAndCapacityPlanningViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <h4 className="text-base font-bold">{SCENES[scene]}</h4>
 
           <div className="mt-3 h-36 min-w-0 w-full shrink-0">
@@ -185,6 +186,14 @@ export default function InferenceCostAndCapacityPlanningViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

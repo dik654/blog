@@ -89,6 +89,7 @@ export default function CriticalPathViz() {
       note="모든 시간은 10절의 설명용 가정이며 측정값이 아닙니다. 마지막 두 장면은 실행 시간이 아니라 두 자원의 최소 시간(하한)입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -96,7 +97,7 @@ export default function CriticalPathViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col">
+        <div data-viz-live-only className="flex shrink-0 flex-col">
           <h4 className="text-base font-bold">{scene.label}</h4>
 
           <div className="mt-4 grid grid-cols-[4.75rem_minmax(0,1fr)] gap-x-2 sm:grid-cols-[6rem_minmax(0,1fr)]">
@@ -171,6 +172,9 @@ export default function CriticalPathViz() {
           <p className="mt-4 min-h-[9rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground min-[390px]:min-h-[7.5rem] sm:min-h-[3.5rem]">{scene.note}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => <li key={item.label}><strong>{index + 1}. {item.label}</strong><span className="mt-1 block text-muted-foreground">{item.note}</span></li>)}
+        </ol>
       </div>
     </VizFrame>
   );

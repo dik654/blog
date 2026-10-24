@@ -152,6 +152,10 @@ const noScriptArticleRoutes = new Set([
   "ai/expert-parallelism-moe-systems",
   "ai/tensor-and-pipeline-parallel-inference",
   "ai/parallelism-strategy-and-placement",
+  "ai/disaggregated-prefill-decode-serving",
+  "ai/inference-optimization-layers",
+  "ai/serving-benchmark-methodology",
+  "ai/inference-cost-and-capacity-planning",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
