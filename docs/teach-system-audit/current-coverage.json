@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 526,
-    "pending": 464,
+    "reviewed": 528,
+    "pending": 462,
     "untracked": 0,
-    "assignedPending": 420,
+    "assignedPending": 418,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2823,9 +2823,9 @@
       "publicPath": "cs/ai/time-features",
       "title": "시계열 피처: Forecast Origin에서 Lag·Window·주기까지",
       "catalogIndex": 279,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2833,9 +2833,9 @@
       "publicPath": "cs/ai/sequence-modeling-tabular",
       "title": "이벤트 시퀀스 모델링: Cutoff에서 Token·Summary·Attention까지",
       "catalogIndex": 280,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

@@ -11555,25 +11555,74 @@
       "route": "ai/sequence-modeling-tabular",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sequence-modeling-tabular.tsx",
       "publicPath": "cs/ai/sequence-modeling-tabular",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 5,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "cutoff-safe event 집합의 수식과 설명이 첫 원장 그림보다 먼저 나와 입력·제외·정답의 차이를 늦게 확인했음",
+        "시간 특성 글에서 이어지는 직속 부모와 flat 기준선에서 sequence model로 넘어가는 판단 경로가 보이지 않았음",
+        "정적 그림만 있어 발생 시각과 도착 시각을 차례로 판정하는 상태 변화를 직접 따라가기 어려웠음"
+      ],
+      "fixture": {
+        "entity": "user_42",
+        "cutoff": "09:00",
+        "inputEvents": [
+          "08:10 view",
+          "08:26 cart"
+        ],
+        "lateEvent": "08:40 payment · available 09:07",
+        "label": "09:18 purchase · 다음 24시간"
+      },
+      "stageAnchors": {
+        "0": "overview",
+        "1": "encoding",
+        "2": "aggregation",
+        "3": "transformer",
+        "parent": "시간 자료 지도",
+        "current": "사건 시퀀스"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1907.05321",
+          "application": "사건 사이 경과 시간을 선형·주기 좌표로 표현하는 Time2Vec의 제안 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "user_42의 09:00 예측에서 발생 시각은 과거지만 09:07에 도착한 payment를 제외하고, view→cart만 입력으로 만든 뒤 09:18 purchase를 정답으로 분리했습니다. flat count·bigram의 정보 손실과 attention mask 선택은 그 다음 단계로 유지했습니다.",
+        "humanize": "사건 원장의 열 이름과 판정 문구를 발생·도착·입력·제외·정답으로 통일하고, 모델 이름보다 예측 질문을 먼저 보이게 했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,911 modules·정적 public route 2,086개+404·no-script 본문 167편 exit0",
+        "production": "Batch25 공개 배포 후 재검증 필요"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch25 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "practice-track-map-and-cutoff-trace-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/sequence-modeling-tabular.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/Overview.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/Encoding.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/Aggregation.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/Transformer.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/viz/OverviewViz.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/viz/EncodingViz.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/viz/AggregationViz.tsx",
+        "src/pages/articles/ai/sequence-modeling-tabular/viz/TransformerViz.tsx",
+        "src/pages/articles/ai/shared/TemporalDataFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/sequence-modeling-tabular.tsx",
+      "preserved": [
+        "cutoff-safe event sequence 수식",
+        "event token·padding·truncation 설명",
+        "bigram summary collision과 attention visibility 비교",
+        "기존 논문 근거와 연습문제"
       ]
     },
     {
@@ -12637,25 +12686,80 @@
       "route": "ai/time-features",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/time-features.tsx",
       "publicPath": "cs/ai/time-features",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 6,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "entity·cutoff·horizon 수식과 긴 설명 뒤에 전체 흐름 그림이 나와 예측 한 행의 경계를 먼저 보기 어려웠음",
+        "lag·window·주기·rolling-origin을 같은 예측 질문의 연속 단계로 연결하는 부모 지도가 없었음",
+        "시간 경계가 순서와 상태 변화 문제인데 첫 그림이 정적 목록이라 late arrival의 제외 이유를 따라가기 어려웠음"
+      ],
+      "fixture": {
+        "entity": "매장 A",
+        "cutoff": "08-01 00:00",
+        "horizon": "다음 7일",
+        "availableRecords": 3,
+        "lag1": 15,
+        "windowCount": 3,
+        "windowMean": 10
+      },
+      "stageAnchors": {
+        "0": "overview",
+        "1": "lag",
+        "2": "rolling",
+        "3": "cyclic",
+        "4": "leakage",
+        "parent": "시간 자료 지도",
+        "current": "시간 특성"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1907.05321",
+          "application": "고정 sin·cos 주기 좌표에서 학습 가능한 시간 표현으로 확장하는 근거"
+        },
+        {
+          "href": "https://doi.org/10.1016/S0169-2070(00)00065-0",
+          "application": "forecast origin·lead time·estimation window를 이동시키는 out-of-sample 평가 설계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "매장 A의 8월 1일 자정 예측을 고정하고 cutoff까지 도착한 세 기록으로 lag 15·window count 3·mean 10을 만든 뒤 rolling-origin 평가로 이어지는 한 사례를 먼저 보이게 했습니다. 각 수식의 양끝·결측·late-arrival 전제는 유지했습니다.",
+        "humanize": "예측 행·과거 원장·입력 행·평가를 질문·기록 선택·특성 계산·과거 재생으로 풀어 쓰고, 처음 등장하는 available time은 도착 시각과 함께 설명했습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-temporal-data-batch-25/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·7,911 modules·정적 public route 2,086개+404·no-script 본문 167편 exit0",
+        "production": "Batch25 공개 배포 후 재검증 필요"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch25 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "concept-track-map-and-forecast-row-trace-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/time-features.tsx",
+        "src/pages/articles/ai/time-features/Overview.tsx",
+        "src/pages/articles/ai/time-features/Lag.tsx",
+        "src/pages/articles/ai/time-features/Rolling.tsx",
+        "src/pages/articles/ai/time-features/Cyclic.tsx",
+        "src/pages/articles/ai/time-features/Leakage.tsx",
+        "src/pages/articles/ai/time-features/viz/OverviewViz.tsx",
+        "src/pages/articles/ai/time-features/viz/LagViz.tsx",
+        "src/pages/articles/ai/time-features/viz/RollingViz.tsx",
+        "src/pages/articles/ai/time-features/viz/CyclicViz.tsx",
+        "src/pages/articles/ai/time-features/viz/LeakageViz.tsx",
+        "src/pages/articles/ai/shared/TemporalDataFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/time-features.tsx",
+      "preserved": [
+        "entity·cutoff·horizon의 예측 행 계약",
+        "observation lag와 duration lag 구분",
+        "half-open rolling window·EMA·주기 좌표 수식",
+        "rolling-origin·point-in-time replay와 기존 논문 근거·연습문제"
       ]
     },
     {
@@ -13759,24 +13863,24 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 57,
+    "rewritten-local-verified": 59,
     "rewritten-production-verified": 58,
-    "unreviewed": 71
+    "unreviewed": 69
   },
   "localValidationSummary": {
-    "rewritten": 115,
-    "remainingUnreviewed": 71,
+    "rewritten": 117,
+    "remainingUnreviewed": 69,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
     "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
     "typescript": "checkpoint255 actual npx tsc -b exit0",
-    "note": "현재 115편은 actual-body semantic review를 마쳤고 그중 58편은 운영 검증까지 완료했습니다. 미검토 71편은 완료에 포함하지 않습니다.",
+    "note": "현재 117편은 actual-body semantic review를 마쳤고 그중 58편은 운영 검증까지 완료했습니다. 미검토 69편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 115,
-    "rewrittenLocalVerified": 57,
-    "unreviewed": 71,
+    "verifiedRewrites": 117,
+    "rewrittenLocalVerified": 59,
+    "unreviewed": 69,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
