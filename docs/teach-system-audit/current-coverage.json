@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 478,
-    "pending": 512,
+    "reviewed": 482,
+    "pending": 508,
     "untracked": 0,
-    "assignedPending": 468,
+    "assignedPending": 464,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -953,9 +953,9 @@
       "publicPath": "cs/ai/sionic-glm-b300",
       "title": "GLM-5.2를 B300에서 600 tok/s로: kernel·runtime·MTP 최적화",
       "catalogIndex": 92,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -983,9 +983,9 @@
       "publicPath": "cs/ai/region-agnostic-inference-routing",
       "title": "리전과 모델 버전을 숨기려면 여섯 번 고르게 됩니다",
       "catalogIndex": 95,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1013,9 +1013,9 @@
       "publicPath": "cs/ai/inference-stack-standard-levels",
       "title": "표준이라는 말에 세 수준이 섞여 있습니다",
       "catalogIndex": 98,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1313,9 +1313,9 @@
       "publicPath": "cs/ai/qwen36-long-context-deployment",
       "title": "Qwen3.6 Long Context: mRoPE · Multimodal · 48 GiB 배포",
       "catalogIndex": 128,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

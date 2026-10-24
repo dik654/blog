@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const PROFILES = [
@@ -26,28 +27,8 @@ const PROFILES = [
 ] as const;
 
 export default function ContextEnvelopeViz() {
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const reducedMotion = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    [],
-  );
-
-  useEffect(() => {
-    if (!playing || reducedMotion) return;
-    const timer = window.setInterval(
-      () => setActive((value) => (value + 1) % PROFILES.length),
-      2600,
-    );
-    return () => window.clearInterval(timer);
-  }, [playing, reducedMotion]);
-
-  const move = (next: number) => {
-    setPlaying(false);
-    setActive((next + PROFILES.length) % PROFILES.length);
-  };
+  const scenes = useAnimatedScenes(PROFILES.length, 4200);
+  const active = scenes.active;
 
   return (
     <VizFrame
@@ -57,83 +38,77 @@ export default function ContextEnvelopeViz() {
       note="Extended profile은 native profile의 자동 확대판이 아닙니다. 위치별 품질·latency·memory를 별도 evidence로 남깁니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Qwen context profile comparison"
-        onKeyDown={(event) => {
-          if (event.key === "ArrowRight") {
-            event.preventDefault();
-            move(active + 1);
-          } else if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            move(active - 1);
-          } else if (event.key === " ") {
-            event.preventDefault();
-            setPlaying((value) => !value);
-          }
-        }}
+        onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div data-viz-live-only className="flex flex-1 flex-col justify-center">
+          <div className="grid grid-cols-3 gap-2">
+            {PROFILES.map((profile, index) => (
+              <button
+                key={profile.label}
+                type="button"
+                aria-pressed={active === index}
+                onClick={() => scenes.setActive(index)}
+                className={`min-w-0 border px-2 py-3 text-left sm:px-4 sm:py-4 ${active === index ? "border-primary bg-primary/10" : "border-border bg-background"}`}
+              >
+                <span className="block break-keep text-[10px] font-bold leading-4 sm:text-xs">{profile.label}</span>
+                <strong className="mt-2 block font-mono text-sm sm:text-lg">
+                  {profile.limit}
+                </strong>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-1 sm:mt-6 sm:gap-3">
+            <div className="min-w-0 border border-sky-500/40 bg-sky-500/10 p-2 text-center sm:p-4">
+              <p className="text-[10px] font-black uppercase tracking-wide text-sky-800 dark:text-sky-200">
+                Input
+              </p>
+              <p className="mt-2 break-words text-[10px] font-bold leading-4 sm:text-sm">{PROFILES[active].input}</p>
+            </div>
+            <span
+              aria-hidden
+              className="my-auto h-px w-2 bg-border sm:w-5"
+            />
+            <div className="min-w-0 border border-violet-500/40 bg-violet-500/10 p-2 text-center sm:p-4">
+              <p className="text-[10px] font-black uppercase tracking-wide text-violet-800 dark:text-violet-200">
+                Position
+              </p>
+              <p className="mt-2 break-words text-[10px] font-bold leading-4 sm:text-sm">
+                {PROFILES[active].position}
+              </p>
+            </div>
+            <span
+              aria-hidden
+              className="my-auto h-px w-2 bg-border sm:w-5"
+            />
+            <div className="min-w-0 border border-emerald-500/40 bg-emerald-500/10 p-2 text-center sm:p-4">
+              <p className="text-[10px] font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">
+                Release evidence
+              </p>
+              <p className="mt-2 break-words text-[10px] font-bold leading-4 sm:text-sm">{PROFILES[active].test}</p>
+            </div>
+          </div>
+        </div>
+        <AnimatedSceneControls
+          {...scenes}
+          labels={PROFILES.map((profile) => profile.label)}
+        />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
           {PROFILES.map((profile, index) => (
-            <button
-              key={profile.label}
-              type="button"
-              aria-pressed={active === index}
-              onClick={() => move(index)}
-              className={`border px-4 py-4 text-left ${active === index ? "border-primary bg-primary/10" : "border-border bg-background"}`}
-            >
-              <span className="text-xs font-bold">{profile.label}</span>
-              <strong className="mt-2 block font-mono text-lg">
-                {profile.limit}
-              </strong>
-            </button>
+            <li key={profile.label}>
+              <strong>{index + 1}. {profile.label} · {profile.limit}</strong>
+              <span className="mt-1 block text-muted-foreground">
+                입력은 {profile.input}, 위치 표현은 {profile.position}, 배포 전 확인할 증거는 {profile.test}입니다.
+              </span>
+            </li>
           ))}
-        </div>
-
-        <div className="mt-6 grid items-center gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
-          <div className="border border-sky-500/40 bg-sky-500/10 p-5 text-center">
-            <p className="text-[10px] font-black uppercase tracking-wide text-sky-800 dark:text-sky-200">
-              Input
-            </p>
-            <p className="mt-2 text-sm font-bold">{PROFILES[active].input}</p>
-          </div>
-          <span
-            aria-hidden
-            className="mx-auto h-5 w-px bg-border md:h-px md:w-8"
-          />
-          <div className="border border-violet-500/40 bg-violet-500/10 p-5 text-center">
-            <p className="text-[10px] font-black uppercase tracking-wide text-violet-800 dark:text-violet-200">
-              Position
-            </p>
-            <p className="mt-2 text-sm font-bold">
-              {PROFILES[active].position}
-            </p>
-          </div>
-          <span
-            aria-hidden
-            className="mx-auto h-5 w-px bg-border md:h-px md:w-8"
-          />
-          <div className="border border-emerald-500/40 bg-emerald-500/10 p-5 text-center">
-            <p className="text-[10px] font-black uppercase tracking-wide text-emerald-800 dark:text-emerald-200">
-              Release evidence
-            </p>
-            <p className="mt-2 text-sm font-bold">{PROFILES[active].test}</p>
-          </div>
-        </div>
-
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-          <p className="text-xs text-muted-foreground">
-            ← 이전 · → 다음 · Space 재생/일시정지
-          </p>
-          <button
-            type="button"
-            onClick={() => setPlaying((value) => !value)}
-            className="border border-border bg-background px-3 py-2 text-xs font-bold"
-          >
-            {playing && !reducedMotion ? "일시정지" : "자동 재생"}
-          </button>
-        </div>
+        </ol>
       </div>
     </VizFrame>
   );

@@ -5,10 +5,15 @@ import Overview from "./sionic-glm-b300/Overview";
 import Production from "./sionic-glm-b300/Production";
 import Roofline from "./sionic-glm-b300/Roofline";
 import Runtime from "./sionic-glm-b300/Runtime";
+import {
+  InferenceDeploymentMapReturn,
+  InferenceDeploymentSeriesLocator,
+} from "./shared/InferenceDeploymentSeriesLocator";
 
 export default function SionicGlmB300Article() {
   return (
     <div className="space-y-12">
+      <InferenceDeploymentSeriesLocator current="measurement" />
       <Overview />
       <Roofline />
       <Kernel />
@@ -16,6 +21,7 @@ export default function SionicGlmB300Article() {
       <Mtp />
       <Measurement />
       <Production />
+      <InferenceDeploymentMapReturn current="measurement" />
     </div>
   );
 }

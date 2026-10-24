@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 export type StepDef = string | { label: string; body?: ReactNode };
 
@@ -10,6 +10,7 @@ interface Props {
 
 export default function StepViz({ steps, children }: Props) {
   const [step, setStep] = useState(0);
+  const reducedMotion = useReducedMotion();
   const cur = steps[step];
   const label = typeof cur === "string" ? cur : cur.label;
   const body = typeof cur === "string" ? undefined : cur.body;
@@ -17,9 +18,21 @@ export default function StepViz({ steps, children }: Props) {
   return (
     <div
       data-viz="step-flow"
+      tabIndex={0}
+      role="group"
+      aria-label={`${steps.length}단계 흐름`}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          setStep((value) => Math.min(steps.length - 1, value + 1));
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          setStep((value) => Math.max(0, value - 1));
+        }
+      }}
       className="not-prose group/viz relative mb-14 min-w-0 overflow-hidden rounded-xl border border-border/70 bg-card"
     >
-      <div className="border-b border-border/60 bg-muted/20 p-4 sm:p-5">
+      <div data-viz-live-only className="border-b border-border/60 bg-muted/20 p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-4 px-1">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md border border-primary/25 bg-background text-primary">
@@ -92,12 +105,13 @@ export default function StepViz({ steps, children }: Props) {
       </div>
       <AnimatePresence mode="wait">
         <motion.div
+          data-viz-live-only
           data-viz-canvas
           key={step}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: reducedMotion ? 0 : 0.2 }}
           className="relative flex min-h-[220px] min-w-0 items-center justify-center overflow-hidden bg-background p-4 sm:min-h-[290px] sm:overflow-x-auto sm:p-8 [&_svg]:relative [&_svg]:z-[1] [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:min-w-0 [&_svg]:max-w-full sm:[&_svg]:w-auto [&_svg_line]:[stroke-linecap:round] [&_svg_path]:[stroke-linecap:round] [&_svg_path]:[stroke-linejoin:round]"
         >
           <div className="relative z-[1] flex w-full min-w-0 max-w-full items-center justify-center p-1 sm:min-w-full sm:p-2">
@@ -107,11 +121,12 @@ export default function StepViz({ steps, children }: Props) {
       </AnimatePresence>
       <AnimatePresence mode="wait">
         <motion.div
+          data-viz-live-only
           key={`text-${step}`}
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: reducedMotion ? 0 : 0.2 }}
           className="border-t border-border/60 bg-muted/15 px-4 py-4 sm:px-6"
         >
           <div className="flex items-start gap-3">
@@ -132,6 +147,7 @@ export default function StepViz({ steps, children }: Props) {
         </motion.div>
       </AnimatePresence>
       <div
+        data-viz-live-only
         data-step-viz-mobile-controls
         className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-t border-border/50 bg-muted/10 px-4 py-3 sm:hidden"
       >
@@ -155,7 +171,7 @@ export default function StepViz({ steps, children }: Props) {
           다음 →
         </button>
       </div>
-      <div className="hidden items-center justify-between gap-3 border-t border-border/50 bg-muted/10 px-6 py-3 sm:flex">
+      <div data-viz-live-only className="hidden items-center justify-between gap-3 border-t border-border/50 bg-muted/10 px-6 py-3 sm:flex">
         <button
           type="button"
           onClick={() => setStep((s) => Math.max(0, s - 1))}
@@ -176,6 +192,20 @@ export default function StepViz({ steps, children }: Props) {
           다음 →
         </button>
       </div>
+      <ol className="static-reading-only space-y-3 p-4 text-sm leading-6 sm:p-6">
+        {steps.map((item, index) => {
+          const itemLabel = typeof item === "string" ? item : item.label;
+          const itemBody = typeof item === "string" ? undefined : item.body;
+          return (
+            <li key={`${index}-${itemLabel}`}>
+              <strong>{index + 1}. {itemLabel}</strong>
+              {itemBody ? (
+                <span className="mt-1 block text-muted-foreground">{itemBody}</span>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

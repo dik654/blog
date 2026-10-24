@@ -62,6 +62,7 @@ export default function VramGridViz() {
       note="Batch 1, unsharded logical 값입니다. 실제 peak에는 convolution state, block padding, CUDA graph와 kernel workspace가 더해집니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -69,7 +70,7 @@ export default function VramGridViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col">
+        <div data-viz-live-only className="flex shrink-0 flex-col">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h4 className="text-base font-bold">{scene.label}</h4>
             <span className={`font-mono text-sm font-bold ${overflow > 0 ? "text-[#dc2626]" : "text-foreground"}`}>
@@ -143,6 +144,14 @@ export default function VramGridViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((item, index) => (
+            <li key={item.label}>
+              <strong>{index + 1}. {item.label}</strong>
+              <span className="mt-1 block text-muted-foreground">{item.note}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

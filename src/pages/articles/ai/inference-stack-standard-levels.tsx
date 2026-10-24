@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import StandardLevelsViz from "./inference-stack-standard-levels/viz/StandardLevelsViz";
 import HitRateViz from "./inference-stack-standard-levels/viz/HitRateViz";
+import {
+  InferenceDeploymentMapReturn,
+  InferenceDeploymentSeriesLocator,
+} from "./shared/InferenceDeploymentSeriesLocator";
 
 /**
  * 표준이라는 말에 세 수준이 섞여 있습니다
@@ -18,10 +22,12 @@ import HitRateViz from "./inference-stack-standard-levels/viz/HitRateViz";
 export default function InferenceStackStandardLevelsArticle() {
   return (
     <div className="space-y-16">
+      <InferenceDeploymentSeriesLocator current="portability" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           세 층 가운데 두 층만 그대로 옮길 수 있습니다
         </h2>
+        <StandardLevelsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             클러스터 A의 추론 서비스를 클러스터 B로 옮깁니다. InferencePool v1
@@ -40,8 +46,6 @@ export default function InferenceStackStandardLevelsArticle() {
             stack과 token을 만드는 engine도 별개의 선택입니다.
           </p>
         </div>
-
-        <StandardLevelsViz />
 
         <ContentBoundary article="inference-stack-standard-levels" />
 
@@ -491,6 +495,7 @@ export default function InferenceStackStandardLevelsArticle() {
           </p>
         </div>
       </section>
+      <InferenceDeploymentMapReturn current="portability" />
     </div>
   );
 }

@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import RequestJourneyViz from "./region-agnostic-inference-routing/viz/RequestJourneyViz";
 import RetryBoundaryViz from "./region-agnostic-inference-routing/viz/RetryBoundaryViz";
+import {
+  InferenceDeploymentMapReturn,
+  InferenceDeploymentSeriesLocator,
+} from "./shared/InferenceDeploymentSeriesLocator";
 
 /**
  * 리전과 모델 버전을 숨기려면 여섯 번 고르게 됩니다
@@ -19,10 +23,12 @@ import RetryBoundaryViz from "./region-agnostic-inference-routing/viz/RetryBound
 export default function RegionAgnosticInferenceRoutingArticle() {
   return (
     <div className="space-y-16">
+      <InferenceDeploymentSeriesLocator current="regions" />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           사용자가 고르지 않은 것은 사라진 것이 아니라 옮겨 간 것입니다
         </h2>
+        <RequestJourneyViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             추론 API를 쓰는 쪽에서 보면 요청 하나는 단순합니다. 모델 계열과
@@ -42,8 +48,6 @@ export default function RegionAgnosticInferenceRoutingArticle() {
             함께 펼친 것입니다.
           </p>
         </div>
-
-        <RequestJourneyViz />
 
         <ContentBoundary article="region-agnostic-inference-routing" />
 
@@ -510,6 +514,7 @@ export default function RegionAgnosticInferenceRoutingArticle() {
           </p>
         </div>
       </section>
+      <InferenceDeploymentMapReturn current="regions" />
     </div>
   );
 }
