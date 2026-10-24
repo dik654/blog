@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 498,
-    "pending": 492,
+    "reviewed": 505,
+    "pending": 485,
     "untracked": 0,
-    "assignedPending": 448,
+    "assignedPending": 441,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1713,9 +1713,9 @@
       "publicPath": "cs/ai/diffusion-models",
       "title": "Diffusion 기초: noise pair·prediction target·score",
       "catalogIndex": 168,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1723,9 +1723,9 @@
       "publicPath": "cs/ai/diffusion-continuous-time",
       "title": "Continuous diffusion: reverse SDE·flow ODE·solver",
       "catalogIndex": 169,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1733,9 +1733,9 @@
       "publicPath": "cs/ai/latent-diffusion-guidance",
       "title": "Latent diffusion: component pipeline·CFG·release gate",
       "catalogIndex": 170,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1743,9 +1743,9 @@
       "publicPath": "cs/ai/visual-representation-tokenizers",
       "title": "Visual representation: reconstruction latent와 semantic feature",
       "catalogIndex": 171,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1753,9 +1753,9 @@
       "publicPath": "cs/ai/diffusion-transformer-architecture",
       "title": "Diffusion Transformer: latent patch·conditioning·stream 구조",
       "catalogIndex": 172,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1763,9 +1763,9 @@
       "publicPath": "cs/ai/modern-image-model-stack",
       "title": "현대 이미지 생성 모델: component stack에서 world model 경계까지",
       "catalogIndex": 173,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1773,9 +1773,9 @@
       "publicPath": "cs/ai/diffusion-language-models",
       "title": "Diffusion LLM: MASK corruption·반복 복원·block diffusion",
       "catalogIndex": 174,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

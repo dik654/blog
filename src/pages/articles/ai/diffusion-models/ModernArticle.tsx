@@ -12,18 +12,24 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import DiffusionTrainingViz from "./DiffusionTrainingViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "../shared/DiffusionLearningLocator";
 
 export default function DiffusionFoundationsArticle() {
   const sidebar = useCodeSidebar();
   return (
     <>
     <article id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="foundation" />
       <section id="corruption" className="space-y-6">
         <LearningHeader
           n="00"
           kicker="먼저 두 과정을 분리하기"
           title="Diffusion training은 원본을 끝까지 망가뜨리는 loop가 아니다"
         />
+        <DiffusionTrainingViz />
         <p className="text-lg leading-8">
           먼저 <strong>training pair</strong> 하나만 봅니다. 원본{" "}
           <code>x₀</code>, noise level <code>t</code>, Gaussian noise{" "}
@@ -38,7 +44,6 @@ export default function DiffusionFoundationsArticle() {
           example="Training batch에서는 t=700인 xₜ를 한 번에 만들지만, sampling에서는 30개의 solver step을 순서대로 실행할 수 있습니다."
           boundary="논문의 forward step 수 T, sampler step 수, 실제 network 호출 수 NFE는 서로 같은 숫자라고 가정하지 않습니다."
         />
-        <DiffusionTrainingViz />
         <LearningTerm
           name="Gaussian forward diffusion"
           shape="이전 signal을 조금 줄이고 independent Gaussian noise를 더함"
@@ -569,6 +574,7 @@ s_t&=\underbrace{-\frac{d_t}{\sigma_t^2}}_{\substack{\text{방향을 뒤집고}\
         </p>
         <ContentBoundary article="diffusion-models" />
       </section>
+      <DiffusionLearningMapReturn current="foundation" />
     </article>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

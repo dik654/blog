@@ -6,14 +6,20 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ModernImageStackViz from "./modern-image-model-stack/viz/ModernImageStackViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "./shared/DiffusionLearningLocator";
 
 export default function ModernImageModelStackArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="stack" />
       <section id="system-map" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           현대 이미지 생성 모델은 하나가 아니라 시스템입니다
         </h2>
+        <ModernImageStackViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             사용자는 prompt 하나를 넣고 image 하나를 받습니다. 그래서 model 하나가
@@ -36,7 +42,6 @@ export default function ModernImageModelStackArticle() {
             text-to-image system으로 조립합니다.
           </p>
         </div>
-        <ModernImageStackViz />
         <ContentBoundary article="modern-image-model-stack" />
       </section>
 
@@ -211,6 +216,7 @@ z_0&=\underbrace{\operatorname{Solve}(z_1,v_\theta,c)}_{\text{noise에서 data l
           </p>
         </ProgressiveDetail>
       </section>
+      <DiffusionLearningMapReturn current="stack" />
     </div>
   );
 }

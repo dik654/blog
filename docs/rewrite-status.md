@@ -3464,3 +3464,23 @@
   시각화 overflow 0, SVG 글자 잘림 0, console 오류 0을 확인했습니다. 명시적 재생 전 첫 장면 유지,
   키보드 장면 순서, 화면 이탈 정지와 재진입 자동 재생 없음, reduced-motion, JavaScript 비활성 전체
   장면도 통과했습니다. 공개 배포 경로 검증은 남아 있습니다.
+
+### AI 확산 모델 학습 묶음 로컬 완료 (2026-10-25)
+
+- `diffusion-models`, `diffusion-continuous-time`, `visual-representation-tokenizers`,
+  `diffusion-transformer-architecture`, `diffusion-language-models`를 concept,
+  `latent-diffusion-guidance`를 practice, `modern-image-model-stack`을 reference로 분류했습니다.
+- 확산을 제품 이름의 단선적 계보로 두지 않고 `손상과 복원 → 연속시간 전송`이라는 공통 원리 뒤에서
+  `이미지: 잠재공간 → 표현 → DiT → 전체 조립`과 `언어: MASK 복원`으로 갈라지는 지도를 만들었습니다.
+  이미지와 언어가 공유하는 생성 원리와 서로 다른 상태 공간·실행 비용을 동시에 볼 수 있습니다.
+- 일곱 글 모두 직속 부모와 현재 위치를 먼저 보여 주고, 핵심 동작·구조 그림을 용어·수식·가정보다
+  앞에 배치했습니다. 네 개의 움직이는 그림은 명시적인 입력 전까지 시작하지 않고, 정적 세 글은
+  JavaScript나 모션 없이 같은 텐서 계약과 책임 경계를 제공합니다.
+- 모바일 확산 지도는 비현재 설명을 접은 2열 구조로 882px에서 675px로 줄였습니다. DiT의 가로 카드
+  847px 넘침은 `입력→패치 / 복원기 / 출력→격자`의 3행 구조로 바꿔 0으로 만들었고, 첫 그림 전체
+  높이도 1,072px에서 832px로 줄였습니다. 영문 이름이 카드 안에서 단어 중간에 갈라지던 이미지
+  스택은 한국어 역할 이름으로 바꿨습니다.
+- Production build는 7,902개 module, 정적 public route 2,086개와 no-script 본문 138편을
+  생성했습니다. 390×844·1,440×1,000의 일곱 경로×두 viewport에서 HTTP 200, 부모·반환 지도,
+  현재 링크, 문서와 모든 시각화 overflow 0, SVG 글자 잘림 0, console 오류 0을 확인했습니다.
+  reduced-motion과 JavaScript 비활성 전체 장면도 통과했습니다. 공개 배포 경로 검증은 남아 있습니다.
