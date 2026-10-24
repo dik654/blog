@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 398,
-    "pending": 592,
+    "reviewed": 402,
+    "pending": 588,
     "untracked": 0,
-    "assignedPending": 540,
+    "assignedPending": 536,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -423,9 +423,9 @@
       "publicPath": "cs/ai/autoencoder",
       "title": "Autoencoder 기초: Input · Latent · Reconstruction",
       "catalogIndex": 39,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -433,9 +433,9 @@
       "publicPath": "cs/ai/linear-autoencoder-pca",
       "title": "Linear Autoencoder와 PCA: 같아지는 정확한 조건",
       "catalogIndex": 40,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -443,9 +443,9 @@
       "publicPath": "cs/ai/denoising-masked-autoencoders",
       "title": "Denoising과 Masked Autoencoder: 무엇을 숨기고 복원할까",
       "catalogIndex": 41,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -453,9 +453,9 @@
       "publicPath": "cs/ai/reconstruction-anomaly-detection",
       "title": "Reconstruction Anomaly Detection: Score · Threshold · Drift",
       "catalogIndex": 42,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

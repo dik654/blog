@@ -50,10 +50,20 @@ for (const route of [...routes].sort()) {
 }
 
 // 이 저장소는 client-side SPA라 JavaScript가 꺼지면 #root가 비어 있습니다.
-// Kubernetes 시범 묶음은 같은 절 순서와 결론을 읽을 수 있도록 각 글의
+// 검토를 마친 학습 묶음은 같은 절 순서와 결론을 읽을 수 있도록 각 글의
 // 실제 React 본문을 build 시점에 정적 markup으로 한 번 더 넣습니다.
-const kubernetesArticles = catalog.filter((article) =>
-  article.subcategory.startsWith("cloud-kubernetes"),
+// 새 글은 모바일·키보드·reduced-motion·정적 읽기 검증을 모두 마친 뒤에만
+// 이 목록에 넣습니다. Kubernetes 묶음은 subcategory가 완성 단위입니다.
+const noScriptArticleRoutes = new Set([
+  "ai/autoencoder",
+  "ai/linear-autoencoder-pca",
+  "ai/denoising-masked-autoencoders",
+  "ai/reconstruction-anomaly-detection",
+]);
+const noScriptArticles = catalog.filter(
+  (article) =>
+    article.subcategory.startsWith("cloud-kubernetes") ||
+    noScriptArticleRoutes.has(article.route),
 );
 const vite = await createServer({
   appType: "custom",
@@ -62,7 +72,7 @@ const vite = await createServer({
 });
 
 try {
-  for (const article of kubernetesArticles) {
+  for (const article of noScriptArticles) {
     const module = await vite.ssrLoadModule(article.sourceSpecifier);
     const body = renderToStaticMarkup(
       createElement(
@@ -88,5 +98,5 @@ try {
 await fs.copyFile(sourceIndex, path.join(distRoot, "404.html"));
 
 console.log(
-  `정적 public route ${routes.size.toLocaleString("en-US")}개와 404 fallback을 생성하고 Kubernetes ${kubernetesArticles.length}편의 no-script 본문을 넣었습니다.`,
+  `정적 public route ${routes.size.toLocaleString("en-US")}개와 404 fallback을 생성하고 검토 완료 ${noScriptArticles.length}편의 no-script 본문을 넣었습니다.`,
 );

@@ -88,3 +88,41 @@
 
 각 글은 앞 글의 답에서 생긴 질문으로 시작하며, 실제 수정 전에 같은 형식의 수치 원장과
 보존 배치표를 이 문서에 덧붙인다.
+
+## 3. Autoencoder family
+
+### 분류와 부모 관계
+
+| route | track · form | 직속 부모 | 이 글이 닫을 질문 |
+|---|---|---|---|
+| `ai/autoencoder` | concept · explanation | `ai/deep-learning-overview`의 representation 영역 | 정답 label 없이 input 자체를 target으로 쓸 때 무엇을 제한해야 단순 복사와 다른 중간 표현을 배울 수 있는가? |
+| `ai/linear-autoencoder-pca` | concept · explanation | `ai/autoencoder`의 bottleneck 영역 | 어떤 전제를 모두 만족할 때 linear autoencoder의 최적 복원 부분공간이 PCA와 같아지는가? |
+| `ai/denoising-masked-autoencoders` | concept · explanation | `ai/autoencoder`의 input·target 영역 | input 일부를 손상하거나 숨기면 encoder가 보는 값과 loss가 비교하는 값은 어떻게 달라지는가? |
+| `ai/reconstruction-anomaly-detection` | practice · decision | `ai/autoencoder`의 reconstruction score | 한 sample의 복원 오차를 실제 경보로 바꾸려면 threshold·검증 자료·drift·rollback을 누가 소유해야 하는가? |
+
+Concept 세 글은 제품 선택이나 운영 체크리스트를 본문에 섞지 않는다. Anomaly detection 글은
+autoencoder 전체를 다시 설명하지 않고 `reconstruction objective`와 `identity failure` anchor에서
+출발한다.
+
+### 같은 수치 사례
+
+첫 세 글은 네 자리 자료 `x=[1.0, 0.0, 0.8, 0.2]`를 공통 출발점으로 삼는다. 교육용 encoder는
+첫째·셋째 자리와 둘째·넷째 자리를 각각 평균내어 `z=[0.9, 0.1]`을 만든다고 가정한다. Decoder가
+두 값을 원래 묶음에 되돌리면 `x̂=[0.9, 0.1, 0.9, 0.1]`이고, 네 자리의 제곱 오차는 모두 `0.01`,
+MSE는 `0.01`이다. 이 숫자는 실제 학습 결과가 아니라 계산 경로를 보여 주는 `(가정)`이다.
+
+Linear PCA 글에서는 같은 네 자리를 2차원 sample 두 개 `[(1.0,0.0),(0.8,0.2)]`로 다시 묶어
+평균을 빼고 rank-1 복원을 비교한다. Denoising 글에서는 값의 변화가 보이도록 셋째 자리 0.8을 숨긴 input과 clean target을
+구분한다. Anomaly practice 글은 별도의 운영 fixture `정상 score 100개 + labeled anomaly 20개`를
+사용하며, 측정하지 않은 threshold나 성능은 결과처럼 쓰지 않는다.
+
+### 시각화 순서
+
+1. 글의 질문과 숫자를 한두 문장으로 제시한다.
+2. 독자가 값을 직접 셀 수 있는 정적 또는 단계 선택형 그림을 긴 설명보다 먼저 둔다.
+3. 그림 아래에서 표준 이름을 붙이고 같은 숫자를 수식에 대입한다.
+4. 개념 글은 실패 경계와 부모 지도 반환으로 끝낸다.
+5. 실무 글은 state owner, baseline, validation, recovery, rollback, 결정을 뒤집는 조건까지 이어간다.
+
+`src/pages/articles/ai/autoencoder/viz/AutoencoderRoundTripViz.tsx`는 다른 작업이 만든 미추적 파일이므로
+이 묶음에서 수정·삭제·커밋하지 않는다. 공개 글은 현재 추적 중인 파일만으로 독립적으로 빌드되어야 한다.

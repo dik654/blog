@@ -3164,3 +3164,47 @@
   다시 열어 4개 화면 모두 통과했으며, 결과는
   `output/playwright/kubernetes-live-final/2026-10-23T07-38-19/summary.json`에 남겼다. 이에 개념 글의
   상태를 `reviewed-production`으로 올렸다.
+
+### AI부터 철학사까지 전수 의미 검토 (2026-10-24 시작)
+
+- Kubernetes 시범 묶음에서 검증한 `전체 지도 → 같은 사례 추적 → 필요한 영역만 확대 → 근거 → 부모
+  지도 반환` 구조를 AI부터 철학사까지 실제 catalog 순서로 확장한다. 기존 완료 글은 다시 작성하지 않고,
+  `current-coverage.json`에서 첫 `pending` route부터 family 단위로 처리한다.
+- 시작 기준선은 공개 990편, 검토 완료 398편, 남은 592편, 미등록 0편이다. 공통 locator나 기존 Viz가
+  있다는 사실만으로 완료 처리하지 않는다.
+- 첫 묶음은 `autoencoder → linear autoencoder와 PCA → denoising·masked autoencoder → reconstruction
+  anomaly detection`이다. 앞의 세 글은 concept, 마지막 글은 practice로 분리한다. 네 글의 부모·질문·
+  공통 수치 사례와 시각화 순서는 `docs/teach-system-audit/ai-foundations-batch-01-plan.md`에 기록했다.
+- 가정·수식·계산·상태 변화는 `blog-rewrite-contract.md` 1.4와 `viz-design-standard.md`의 기존 규칙대로
+  시각 자료를 긴 설명보다 먼저 둔다. 그림은 값을 셀 수 있어야 하며, 장식용 카드·반복 페이드는 완료
+  근거로 세지 않는다.
+- 다른 작업이 만든 미추적 `AutoencoderRoundTripViz.tsx`는 수정·삭제·커밋하지 않는다. 해당 파일 없이
+  공개 import closure가 빌드되어야 한다.
+- `ai/autoencoder` 부모 글은 네 자리 입력 `x=[1.0,0.0,0.8,0.2]` 하나를 중간값·복원·MSE 0.01까지
+  같은 그림과 학습 카드에서 추적하도록 다시 구성했다. 데스크톱은 전체 경로, 모바일은 현재 장면 하나를
+  보여 주며 두 화면 모두 가로 overflow 0을 확인했다. 재생은 3.2초 간격으로 한 번만 진행하고 마지막
+  장면에서 멈추며, 키보드 이동과 reduced-motion도 통과했다.
+- Production build는 Node heap 8GB에서 통과했다. `ai/autoencoder`를 검토 완료 no-script 등록부에 넣고
+  JavaScript를 끈 390×844 브라우저에서 `overview → bottleneck → reconstruction → evaluation` 네 절,
+  본문 7,695자, body width 390을 확인했다. 묶음 전체 배포 전이므로 전수 장부 상태는 아직 올리지 않는다.
+
+### Autoencoder 묶음 로컬 완료 (2026-10-24)
+
+- `ai/autoencoder`, `ai/linear-autoencoder-pca`, `ai/denoising-masked-autoencoders`를 concept,
+  `ai/reconstruction-anomaly-detection`을 practice로 분류했다. 네 글은 같은 위치 지도를 사용하며 세부
+  concept 글은 확인한 사실을 직속 부모 지도에 되돌려 놓고, practice 글은 복원 목적과 identity failure의
+  정확한 anchor에서 출발한다.
+- 앞의 세 글은 `x=[1.0,0.0,0.8,0.2]`를 공통 사례로 쓴다. 부모 글은 `z=[0.9,0.1]`,
+  `xhat=[0.9,0.1,0.9,0.1]`, MSE 0.01을 계산한다. Linear PCA 글은 같은 네 수를 두 점으로 다시 묶어
+  평균·중심화·rank-1 직선과 covariance 고유값 0.02·0을 추적한다. Denoising 글은 보이지 않던 0을
+  가리는 대신 셋째 값 0.8을 가려 입력과 clean target의 차이가 실제로 보이게 했다.
+- Anomaly practice 글은 model score, 검증 fixture, 판정 버전, 배포 상태의 writer를 분리했다. 정상 100건과
+  확인된 이상 20건은 실험 설계용 가정이며 precision·recall·false alarms/day는 `[M] 미측정`으로 남겼다.
+  그림자 배포, 직전 threshold 또는 규칙 기반 경보로의 rollback, 결정을 뒤집는 조건과 ADR까지 연결했다.
+- 1,440×1,000과 390×844에서 네 글의 핵심 동작 그림을 확인했다. Denoising과 anomaly 모바일 figure는
+  354×754이며 가로 overflow가 0이다. Anomaly의 소유권·검증·배포 도식은 각각 681px·590px·686px로
+  모바일 viewport 높이 안에 들어온다. 키보드 이동, 한 번만 재생하고 정지, reduced-motion의 자동 진행
+  중단도 확인했다.
+- Node heap 8GB production build는 7,873개 module, 정적 public route 2,086개, 검토 완료 no-script 본문
+  14편을 생성했다. JavaScript를 끈 390×844 브라우저에서 네 글 모두 제목과 네 절, 전체 정적 본문,
+  가로 overflow 0을 확인했다. 공개 배포 검증 전 상태는 `rewritten-local-verified`로 기록한다.
