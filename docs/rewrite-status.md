@@ -3310,7 +3310,7 @@
   경로를 390×844 Chromium으로 다시 열어 HTTP 200, 현재 위치 href 일치, 부모·반환 지도 각 1개,
   문서와 모든 data canvas 가로 넘침 0, console warning/error 0을 확인했다.
 
-### AI 하이브리드 기억 묶음 로컬 완료 (2026-10-24)
+### AI 하이브리드 기억 묶음 공개 완료 (2026-10-24)
 
 - `qwen36-hybrid-architecture`와 `qwen36-hybrid-runtime`을 concept,
   `qwen38-flash-next-architecture`를 reference로 분류했다. 세 글은
@@ -3328,7 +3328,9 @@
 - 대상 파일 ESLint와 TypeScript, 엄격 topology·architecture-flow·reading-order 감사를 통과했다.
   production build는 7,894개 module, 정적 public route 2,086개와 no-script 본문 104편을 생성했다.
   JavaScript를 끈 390×844 정적 문서에서도 세 글의 제목·직속 부모 지도·반환 지도와 모든 장면 순서를
-  확인했다. 공개 배포 경로 검증은 남아 있다.
+  확인했다. GitHub Pages run `40102878051`이 전체 검증과 배포를 통과한 뒤, 세 공개 경로에서 HTTP 200,
+  부모 지도·현재 위치·반환 지도 각 1개, 문서·바깥 시각화 가로 넘침 0, console warning/error 0을
+  다시 확인했다.
 
 ### AI 여러 GPU 실행 묶음 로컬 완료 (2026-10-24)
 
