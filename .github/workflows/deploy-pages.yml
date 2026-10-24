@@ -16,7 +16,10 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Playwright 1.57 does not provide Chromium for the ubuntu-26.04 image
+    # currently selected by ubuntu-latest. Keep the browser audit on a
+    # supported runner until the project upgrades Playwright.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
