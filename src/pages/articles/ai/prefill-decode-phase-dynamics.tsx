@@ -10,10 +10,14 @@ import LayerPassViz from "./prefill-decode-phase-dynamics/viz/LayerPassViz";
 import LayerLoopProcessViz from "./prefill-decode-phase-dynamics/viz/LayerLoopProcessViz";
 import ChunkFiveRunsViz from "./prefill-decode-phase-dynamics/viz/ChunkFiveRunsViz";
 import { Link } from "react-router-dom";
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
-  return <><div className="space-y-16">
+  return <><ServingEngineSeriesLocator current="phases" /><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 긴 새 입력이 기존 답변을 얼마나 늦출지 따져 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 사람이 답변을 한 조각씩 받고 있는데 긴 문서를 넣은 새 요청이 들어왔다고 합시다. 새 문서를 전부 읽고 나서 기존 답변을 이어 쓰면 두 사람은 그동안 기다립니다. 반대로 새 요청을 계속 미루면 새 사용자가 첫 답을 받지 못합니다.</p><p>이 글에서는 새 입력을 조금씩 나누어 기존 작업과 함께 처리합니다. 한 번에 얼마나 넣을지는 계산할 일과 옮길 데이터를 함께 세어 정합니다. 마지막 결정에는 실제로 잰 시간도 필요합니다. 같은 세 요청을 작은 장부에서 시작해 고정한 서빙 코드와 논문까지 따라갑니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 이번에 할 양을 고르고 함께 실행한 뒤 진행을 기록합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입력은 요청별로 이미 처리한 위치와 아직 남은 위치, 이번 실행의 한도입니다. 배정 담당자가 각 요청에서 처리할 양을 고릅니다. 실행 담당자는 그 묶음을 계산하고 결과와 새 진행 위치를 돌려줍니다.</p><p>배정량은 시간과 다른 값입니다. 여섯 위치를 고르는 데 성공했어도 그 계산이 약속한 시간 안에 끝난다는 뜻은 아닙니다. 어떤 일을 넣었는지와 실제로 얼마나 걸렸는지를 두 장부에 남깁니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>남은 위치를 확인한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>이번 묶음의 양을 정한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>연산과 전송을 수행한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>진행과 시간을 따로 기록한다</span></li></ol></section>
@@ -61,5 +65,5 @@ export default function Article() {
 <section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">23. 이 모형의 숫자로 말할 수 있는 범위를 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>작은 A1·B1·C4는 공간이 충분하고 비동기·추측·다중 장치 조건을 뺀 배정입니다. 실제 코드는 다른 조건을 통과한 뒤 실행을 예약합니다. 진행 위치를 예약한 시점과 GPU가 실제로 끝낸 시점도 구분해야 합니다.</p><p>두 시간 항은 같은 범위로 센 작업의 하한입니다. 일부만 센 proxy나 별도 배포의 14.2 ms를 같은 조건의 확정 시간으로 합치지 않습니다. 특정 장치 최대 속도와 현재 달성 속도, 저장 용량과 누적 전송량을 끝까지 구분합니다.</p></div><ContentBoundary article="prefill-decode-phase-dynamics" /></section>
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">24. 조건을 바꿔 다음 결과를 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C16의 계산 하한은 1.8 ms이고 목표는 2 ms입니다. 실제 2.3 ms가 나왔다면 계산이 틀렸을까요? C20의 하한 2.2 ms에서는 어떤 결정을 할 수 있나요? (답: 10절)</p><p>입력을 아직 읽는 P가 running 목록에서 A·B보다 먼저 6위치를 모두 배정받았습니다. A·B가 decode라는 이유로 이번에 꼭 들어갈까요? (답: 13절)</p><p>C20을 4씩 나눌 때 앞 기록을 누적 40위치 읽었다면 저장 공간에도 40위치의 서로 다른 KV가 생겼을까요? 더 작은 조각을 택할 때 무엇을 함께 재야 할까요? (답: 20절)</p></div></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:prefillDecodeTree}} projectMetas={{vllm:{id:"vllm",label:"고정 vLLM V1 · Transformers attention",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
+</div><ServingEngineMapReturn current="phases" /><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:prefillDecodeTree}} projectMetas={{vllm:{id:"vllm",label:"고정 vLLM V1 · Transformers attention",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

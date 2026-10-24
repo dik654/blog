@@ -9,10 +9,14 @@ import { codeRefs } from "./continuous-batching-step-anatomy/codeRefs";
 import { schedulerSourceTree } from "./continuous-batching-step-anatomy/fileTree";
 import ContinuousBatchingStepAnatomyViz from "./continuous-batching-step-anatomy/viz/ContinuousBatchingStepAnatomyViz";
 import StepGateTripleViz from "./continuous-batching-step-anatomy/viz/StepGateTripleViz";
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
-  return <><div className="space-y-16">
+  return <><ServingEngineSeriesLocator current="batching" /><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 답변을 이어 쓰면서 새 질문도 받아야 합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>두 사람이 답변을 받고 있을 때 긴 질문 하나가 새로 왔다고 합시다. 기존 답변이 모두 끝날 때까지 새 질문을 기다리게 하면 계산 장치의 여유를 쓰기 어렵습니다. 반대로 새 질문을 한 번에 전부 읽으면 이미 답을 받던 사람의 다음 글자가 늦어질 수 있습니다.</p><p>그래서 계산을 한 번 실행할 때마다 누구의 어느 부분을 넣을지 다시 고릅니다. 이 글은 그 선택 한 번을 열어 토큰 수와 요청 자리, 저장 공간이 어떻게 함께 제한하는지 살펴봅니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 남은 일을 보고 나눠 넣은 뒤 결과를 받습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>선택 담당자는 진행 중인 요청과 새로 기다리는 요청을 읽습니다. 한 번에 계산할 수 있는 양 안에서 각 요청의 몫을 정하고 저장할 공간도 확인합니다. 실행 담당자는 이 배정대로 계산한 뒤 새 결과를 돌려줍니다.</p><p>다음 선택에서는 바뀐 진행 기록과 새로 도착한 요청을 함께 봅니다. 같은 사람들이 처음부터 끝까지 한 묶음에 머물 필요가 없습니다. 이제 작은 숫자로 한 번의 배정을 만들어 보겠습니다.</p></div></section>
@@ -73,5 +77,5 @@ n_w &= \underbrace{\min\!\left(P_w - c_w,\; B_{\mathrm{rem}}\right)}_{\text{남�
 <section id="boundary" data-teach-level="7" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">16. 토큰 수가 같아도 단계와 시간은 다릅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C의 입력이 마지막 1토큰 남은 경우와 A가 답변을 이어 쓰는 경우는 모두 배정량이 1일 수 있습니다. 따라서 num_scheduled_tokens 하나만으로 prefill과 decode를 구별할 수 없습니다. 입력 길이와 진행 위치, 출력 상태를 함께 읽어야 합니다.</p><p>고정 소스에도 is_prefill_chunk와 cached request의 context 판별 정보가 있습니다. 필요량을 같은 식으로 계산할 수 있다는 사실이 단계 관련 상태가 전혀 없다는 뜻은 아닙니다.</p><p>큰 사례의 입력 3000토큰에 조각 상한 512를 두고 매번 잔액이 충분하면 512토큰씩 다섯 번과 마지막 440토큰으로 여섯 번에 걸쳐 읽습니다. 원래 두 번에 나눠 읽던 입력의 실행 횟수가 늘어납니다. (가정)</p><p>작은 조각은 한 실행에 추가하는 입력 계산량을 줄이지만 입력 완료까지 실행 횟수가 늘어납니다. 실제 지연은 저장 데이터 읽기와 계산, 실행 준비 비용에 함께 달려 있어 조각 크기에 항상 비례하지는 않습니다.</p><p>실행마다 모양이 바뀌면 <Link to="/cs/ai/cuda-graph-capture#implementation">CUDA graph의 모양별 선택</Link>도 맞춰야 합니다. 요청 수와 토큰 수가 달라지는 결과를 처리하는 별도 문제입니다. 계산량과 메모리 비용은 <Link to="/cs/ai/prefill-decode-phase-dynamics">입력 읽기와 출력 생성의 비용</Link>에서 이어 봅니다.</p><p>배정의 정확성은 합이 한도 안인지, 새 요청이 실제 공간을 받았는지, 예약과 완료 기록이 일치하는지로 확인합니다. 그 다음에야 같은 workload에서 첫 답변 시간과 이어지는 간격을 재어 설정을 고를 수 있습니다.</p></div><ContentBoundary article="continuous-batching-step-anatomy" /></section>
 
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">17. 다음 배정을 먼저 예상해 보세요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>토큰 잔액은 6이지만 A와 B가 진행 요청 상한 2를 모두 채웠습니다. C를 받아들일 수 있을까요? (답: 5절)</p><p>Running 목록 앞의 P가 입력 6토큰을 더 읽어야 하고 뒤의 A는 decode 1토큰이 필요합니다. 잔액 4에서 A는 반드시 실행될까요? (답: 9절)</p><p>C에 6토큰을 배정하고 num_computed_tokens가 6이 됐습니다. 이 필드만으로 GPU 완료를 확인할 수 있을까요? (답: 12절)</p></div></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:schedulerSourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 / legacy v0.6.6",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
+</div><ServingEngineMapReturn current="batching" /><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:schedulerSourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 / legacy v0.6.6",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

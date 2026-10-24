@@ -53,4 +53,4 @@ Transformer가 요청별 KV 상태를 만든다는 사실에서 출발합니다.
 - [x] 키보드와 링크 순서
 - [x] reduced-motion
 - [x] JavaScript 비활성 정적 본문과 부모 지도
-- [ ] 공개 경로
+- [x] 공개 경로

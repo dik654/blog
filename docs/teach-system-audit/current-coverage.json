@@ -1215,7 +1215,7 @@
       "catalogIndex": 118,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
+      "recordedStatus": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-01-plan.md"
     },
     {

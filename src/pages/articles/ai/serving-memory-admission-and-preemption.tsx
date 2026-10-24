@@ -13,10 +13,14 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./serving-memory-admission-and-preemption/codeRefs";
 import { memorySourceTree } from "./serving-memory-admission-and-preemption/fileTree";
 import ServingMemoryAdmissionAndPreemptionViz from "./serving-memory-admission-and-preemption/viz/ServingMemoryAdmissionAndPreemptionViz";
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
-  return <><div className="space-y-16">
+  return <><ServingEngineSeriesLocator current="admission" /><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 처음 들어갔던 요청도 나중에는 자리를 잃을 수 있습니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>답변을 이어 쓰는 동안 서버는 앞에서 계산한 결과를 계속 보관합니다. 처음에는 들어갈 자리가 있어도 답변이 길어지면 저장 공간이 모자랄 수 있습니다. 그러면 새 요청을 기다리게 하거나 진행 중인 요청을 잠시 멈춰야 합니다.</p><p>이 글은 요청 하나를 받았다가 공간이 부족해 멈추고 다시 이어 쓰는 과정을 따라갑니다. 언제 들어갈 수 있는지와 멈춘 결과를 어떻게 되살리는지를 구분하면 메모리 설정을 바꿀 때 무엇이 달라지는지 보입니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 들어갈 공간을 확인하고 성장한 만큼 다시 확인합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>바깥에서 보면 네 단계입니다. 새 요청이 요구하는 공간을 셉니다. 현재 빈 공간과 비교합니다. 답변이 자라면 추가 공간을 배정합니다. 부족해 멈춘 요청은 결과를 다시 마련한 뒤 진행 목록으로 돌아옵니다.</p><p>계산할 시간이 남아 있어도 결과를 저장할 주소가 없으면 실행할 수 없습니다. 반대로 빈 공간이 있어도 이번 실행의 계산량이나 요청 개수 한도에 걸릴 수 있습니다. 아래에서는 그 다른 한도는 충분하다고 놓고 저장 공간의 변화만 봅니다.</p></div></section>
@@ -159,5 +163,5 @@ export default function Article() {
 <section id="prediction-questions" data-teach-level="review" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">24. 조건을 바꾸면 다음 판정은 어떻게 될까요</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>C가 10block을 돌려줬고 빈 공간도 10개가 됐습니다. 토큰 이력이 161개일 때 바로 재개할 수 있을까요? (답: 9절)</p><p>
             첫 조각 256토큰에 필요한 16block은 있지만 전체 입력 1000토큰은 들어가지 않습니다. 현재 V1의 기본 검사에서 수용될까요? (답: 13절)
           </p><p>고정 V0의 교환 경로에서 CPU 공간이 부족합니다. 자동으로 재계산으로 바뀐다고 예상해도 될까요? (답: 16절)</p><p>128K 요청 셋이 도는 중에 짧은 대화가 계속 대기합니다. pool을 늘리지 않고 짧은 대화 자리를 되찾을 방법은 무엇일까요? (답: 22절)</p></div></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:memorySourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 / legacy v0.6.6",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
+</div><ServingEngineMapReturn current="admission" /><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:memorySourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 / legacy v0.6.6",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }
