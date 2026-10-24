@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 494,
-    "pending": 496,
+    "reviewed": 498,
+    "pending": 492,
     "untracked": 0,
-    "assignedPending": 452,
+    "assignedPending": 448,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1673,9 +1673,9 @@
       "publicPath": "cs/ai/gan",
       "title": "GAN의 출발점: generator와 discriminator의 분포 게임",
       "catalogIndex": 164,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1683,9 +1683,9 @@
       "publicPath": "cs/ai/gan-training-dynamics",
       "title": "GAN training dynamics: 두 optimizer가 만드는 움직이는 game",
       "catalogIndex": 165,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1693,9 +1693,9 @@
       "publicPath": "cs/ai/gan-wasserstein-critics",
       "title": "Wasserstein GAN: Lipschitz critic과 안정화 제약",
       "catalogIndex": 166,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1703,9 +1703,9 @@
       "publicPath": "cs/ai/gan-conditional-evaluation",
       "title": "Conditional GAN 평가: 조건·품질·coverage를 분리하기",
       "catalogIndex": 167,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

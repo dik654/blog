@@ -2,19 +2,27 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-const SCENES = ["D step", "G step", "회전하는 game", "coverage 진단"] as const;
+const SCENES = ["판별기 갱신", "생성기 갱신", "평형 주위 회전", "포괄 범위 진단"] as const;
+const NOTES = [
+  "생성 표본의 값만 쓰고 생성기 계산 그래프를 끊은 채 판별기만 바꿉니다.",
+  "판별기 가중치는 고정하지만 입력 기울기는 통과시켜 생성기만 바꿉니다.",
+  "각 단계가 자기 목적에 맞게 움직여도 함께 본 상태는 평형 주위를 돌 수 있습니다.",
+  "선명한 표본과 목표 분포의 여러 모드를 덮는지는 서로 다른 질문입니다.",
+] as const;
 
 export default function AdversarialDynamicsViz() {
   const scenes = useAnimatedScenes(SCENES.length);
   const a = scenes.active;
   return (
     <VizFrame
-      eyebrow="Animated two-player dynamics"
+      eyebrow="두 최적화기의 동역학"
       title="두 optimizer는 같은 언덕을 내려가지 않는다"
-      description="한 player가 움직이면 다른 player가 보는 objective surface도 바뀝니다. Detach 경계와 coverage 진단을 같은 timeline에서 확인합니다."
-      note="Loss 하나의 하강 곡선만으로 수렴을 선언할 수 없는 이유를 도형으로 읽습니다."
+      description="한쪽이 움직이면 다른 쪽이 보는 목적 함수의 표면도 바뀝니다. 기울기 차단 경계와 포괄 범위 진단을 같은 시간축에서 확인합니다."
+      note="손실 하나의 하강 곡선만으로 수렴을 선언할 수 없는 이유를 도형으로 읽습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="gan-training-dynamics-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -22,6 +30,7 @@ export default function AdversarialDynamicsViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
+        <div data-viz-live-only>
         <div
           className="space-y-4 md:hidden"
           aria-label="모바일 GAN alternating update 흐름"
@@ -29,21 +38,21 @@ export default function AdversarialDynamicsViz() {
           <div
             className={`border p-4 ${a === 0 ? "border-primary bg-primary/5" : "border-border"}`}
           >
-            <p className="text-xs font-black text-primary">D step</p>
-            <p className="mt-2 text-sm font-bold">G(z) → detach → update D</p>
+            <p className="text-xs font-black text-primary">판별기 단계</p>
+            <p className="mt-2 text-sm font-bold">G(z) → 연결 끊기 → D 갱신</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              생성된 값만 사용하고 G graph는 끊습니다.
+              생성된 값만 사용하고 G 계산 그래프는 끊습니다.
             </p>
           </div>
           <div
             className={`border p-4 ${a === 1 ? "border-primary bg-primary/5" : "border-border"}`}
           >
-            <p className="text-xs font-black text-primary">G step</p>
+            <p className="text-xs font-black text-primary">생성기 단계</p>
             <p className="mt-2 text-sm font-bold">
-              G(z) → through D → update G
+              G(z) → D 통과 → G 갱신
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              D weight는 고정해도 input gradient는 통과합니다.
+              D 가중치는 고정해도 입력 기울기는 통과합니다.
             </p>
           </div>
           <div
@@ -51,7 +60,7 @@ export default function AdversarialDynamicsViz() {
           >
             <p className="text-sm font-bold">↻ 움직이는 상대</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              두 올바른 update가 equilibrium 주위를 회전할 수 있습니다.
+              두 올바른 갱신이 평형점 주위를 회전할 수 있습니다.
             </p>
           </div>
           <div
@@ -59,7 +68,7 @@ export default function AdversarialDynamicsViz() {
           >
             <p className="text-sm font-bold">● ● ○ ○ ○ ○ ○ ○</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              8개 mode 중 2개만 덮으면 quality와 별개로 coverage failure입니다.
+              8개 모드 중 2개만 덮으면 품질과 별개로 포괄 범위 실패입니다.
             </p>
           </div>
         </div>
@@ -85,14 +94,14 @@ export default function AdversarialDynamicsViz() {
             fontWeight="800"
             fill="currentColor"
           >
-            parameter update timeline
+            매개변수 갱신 시간표
           </text>
           <Step x={62} y={105} label="G(z)" active={a === 0} />
-          <Step x={150} y={105} label="detach" active={a === 0} />
-          <Step x={250} y={105} label="update D" active={a === 0} />
+          <Step x={150} y={105} label="연결 끊기" active={a === 0} />
+          <Step x={250} y={105} label="D 갱신" active={a === 0} />
           <Step x={62} y={145} label="G(z)" active={a === 1} />
-          <Step x={150} y={145} label="through D" active={a === 1} />
-          <Step x={250} y={145} label="update G" active={a === 1} />
+          <Step x={150} y={145} label="D 통과" active={a === 1} />
+          <Step x={250} y={145} label="G 갱신" active={a === 1} />
           <rect
             x="430"
             y="42"
@@ -169,7 +178,7 @@ export default function AdversarialDynamicsViz() {
                 fontSize="10"
                 fill="currentColor"
               >
-                mode {i + 1}
+                모드 {i + 1}
               </text>
             </g>
           ))}
@@ -181,10 +190,19 @@ export default function AdversarialDynamicsViz() {
             fill={a === 3 ? "#7c3aed" : "currentColor"}
             opacity={a === 3 ? 1 : 0.25}
           >
-            선명함과 여덟 mode coverage는 별도 질문
+            선명함과 여덟 모드 포괄 범위는 별도 질문
           </text>
         </svg>
+        </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
