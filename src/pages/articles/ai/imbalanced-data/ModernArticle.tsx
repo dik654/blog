@@ -4,14 +4,20 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ImbalanceDecisionViz } from "./viz/ModernImbalanceViz";
+import {
+  ImbalancedClassificationLocator,
+  ImbalancedClassificationMapReturn,
+} from "../shared/ImbalancedClassificationLocator";
 
 export default function ImbalancedDataArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <ImbalancedClassificationLocator current="prevalence" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           1,000명 가운데 50명만 positive입니다
         </h2>
+        <ImbalanceDecisionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Class prevalence</strong>는 평가 population 전체에서
@@ -25,15 +31,18 @@ export default function ImbalancedDataArticle() {
           <ol>
             <li>모두 negative라고 답한 model의 accuracy는 95%일까요?</li>
             <li>그 model의 positive recall도 95%일까요?</li>
-            <li>학습 batch를 50:50으로 만들면 운영 population의 prevalence도 50%로 바뀔까요?</li>
+            <li>
+              학습 batch를 50:50으로 만들면 운영 population의 prevalence도 50%로
+              바뀔까요?
+            </li>
           </ol>
           <p>
             답은 <strong>예, 아니요, 아니요</strong>입니다. Accuracy는 negative
-            950명을 맞혀 95%지만 positive 50명은 하나도 못 찾아 recall이 0입니다.
-            Sampling은 model이 보는 비율만 바꾸며 운영 population은 바꾸지 않습니다.
+            950명을 맞혀 95%지만 positive 50명은 하나도 못 찾아 recall이
+            0입니다. Sampling은 model이 보는 비율만 바꾸며 운영 population은
+            바꾸지 않습니다.
           </p>
         </div>
-        <ImbalanceDecisionViz />
         <ContentBoundary article="imbalanced-data" />
         <TermBreakdown
           title="불균형 문제를 읽는 네 대상"
@@ -74,7 +83,11 @@ export default function ImbalancedDataArticle() {
           ]}
         />
       </section>
-      <section id="prevalence-baseline" className="scroll-mt-20">
+      <section
+        id="prevalence-baseline"
+        data-teach-level="0"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Accuracy는 prevalence가 만든 쉬운 baseline과 먼저 비교합니다
         </h2>
@@ -136,7 +149,7 @@ export default function ImbalancedDataArticle() {
           interpretation="π=.05이면 all-negative accuracy는 .95입니다. 1−π를 계산하는 이유는 model 성능이 아니라 class 비율만으로 얻는 baseline을 먼저 빼내기 위해서입니다."
         />
       </section>
-      <section id="three-layers" className="scroll-mt-20">
+      <section id="three-layers" data-teach-level="1" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           Ranking·probability·decision은 각각 다른 질문입니다
         </h2>
@@ -223,6 +236,7 @@ export default function ImbalancedDataArticle() {
           </CitationBlock>
         </div>
       </section>
+      <ImbalancedClassificationMapReturn current="prevalence" />
     </div>
   );
 }

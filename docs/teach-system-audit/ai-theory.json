@@ -9856,7 +9856,7 @@
         "src/pages/articles/ai/vae/fileTree.ts",
         "src/pages/articles/ai/shared/VaeMechanismLocator.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9906,11 +9906,10 @@
         "numericTrace": "x=[1,0], π=[0.8,0.3]의 Bernoulli NLL 약 0.58과 μ·σ²의 KL 약 0.94를 합쳐 약 1.52가 되는 설명용 경로를 시각화했습니다.",
         "mobile390": "output/playwright/ai-vae-batch-20/summary.json: locator·첫 visual·문서와 canvas overflow·키보드 순서·reduced-motion을 검사했습니다.",
         "desktop1440": "output/playwright/ai-vae-batch-20/summary.json: locator·첫 visual·네 장면·문서와 canvas overflow·console 오류를 검사했습니다.",
-        "visualFirstRewrite": "잠재변수 모형→분포 추정→표본 만들기→두 비용→사용 여부의 지도를 추가하고 첫 설명문 앞에 4장면 학습 경로를 배치했습니다."
+        "visualFirstRewrite": "잠재변수 모형→분포 추정→표본 만들기→두 비용→사용 여부의 지도를 추가하고 첫 설명문 앞에 4장면 학습 경로를 배치했습니다.",
+        "production": "GitHub Pages run 40119392433 성공. 공개 경로에서 390×844·1440×1000, 시각화 우선 순서, 키보드 이동, reduced-motion, JavaScript 비활성 네 장면, 문서·캔버스 overflow 0을 다시 확인했습니다."
       },
-      "remaining": [
-        "공개 배포 경로 확인"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/vector-search-and-ann-indexes",

@@ -3,25 +3,36 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { ImbalanceEvaluationViz } from "../imbalanced-data/viz/ModernImbalanceViz";
+import {
+  ImbalancedClassificationLocator,
+  ImbalancedClassificationMapReturn,
+} from "../shared/ImbalancedClassificationLocator";
 
 export default function ImbalancedClassificationEvaluationArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <ImbalancedClassificationLocator current="evaluation" />
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           1,000건에서 같은 40건을 두 분모로 나눕니다
         </h2>
+        <ImbalanceEvaluationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             고정한 threshold에서 TP=40, FP=10, FN=10, TN=940이 나왔습니다.
             Alert는 50건이고 실제 positive도 50건이므로 precision과 recall은
             우연히 모두 40/50=.8입니다. 전체 positive prevalence는 5%입니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 넘기기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
             <li>이 threshold가 만든 alert는 50건일까요?</li>
             <li>실제 positive 가운데 찾은 비율도 .8일까요?</li>
-            <li>예측 평균이 .75인 bin 100건에서 55건만 positive여도 잘 보정된 확률일까요?</li>
+            <li>
+              예측 평균이 .75인 bin 100건에서 55건만 positive여도 잘 보정된
+              확률일까요?
+            </li>
           </ol>
           <p>
             답은 <strong>예, 예, 아니요</strong>입니다. 앞의 두 답은 같은 40을
@@ -29,7 +40,6 @@ export default function ImbalancedClassificationEvaluationArticle() {
             예측 .75보다 0.20 낮습니다.
           </p>
         </div>
-        <ImbalanceEvaluationViz />
         <ContentBoundary article="imbalanced-classification-evaluation" />
         <TermBreakdown
           title="평가 report의 네 대상"
@@ -68,7 +78,11 @@ export default function ImbalancedClassificationEvaluationArticle() {
           ]}
         />
       </section>
-      <section id="confusion-matrix" className="scroll-mt-20">
+      <section
+        id="confusion-matrix"
+        data-teach-level="0"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           Precision과 recall은 같은 네 count에서 다른 분모를 만듭니다
         </h2>
@@ -135,7 +149,11 @@ export default function ImbalancedClassificationEvaluationArticle() {
           interpretation="40/(40+10)=.8이 두 번 나오지만 우연히 분모가 같습니다. Threshold를 낮추면 보통 alert 분모와 찾은 positive가 함께 변해 두 지표가 다른 방향으로 움직입니다."
         />
       </section>
-      <section id="prevalence-shift" className="scroll-mt-20">
+      <section
+        id="prevalence-shift"
+        data-teach-level="1"
+        className="scroll-mt-20"
+      >
         <h2 className="mb-5 text-2xl font-bold">
           TPR·FPR이 같아도 prevalence가 낮아지면 precision은 내려갑니다
         </h2>
@@ -217,7 +235,7 @@ export default function ImbalancedClassificationEvaluationArticle() {
           </CitationBlock>
         </div>
       </section>
-      <section id="calibration" className="scroll-mt-20">
+      <section id="calibration" data-teach-level="2" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
           Calibration은 probability bin의 예측과 실제 빈도를 맞춥니다
         </h2>
@@ -300,7 +318,7 @@ export default function ImbalancedClassificationEvaluationArticle() {
           </CitationBlock>
         </div>
       </section>
-      <section id="report" className="scroll-mt-20">
+      <section id="report" data-teach-level="3" className="scroll-mt-20">
         <h2 className="mb-4 text-2xl font-bold">
           최종 report는 ranking·decision·calibration을 나란히 둡니다
         </h2>
@@ -313,6 +331,7 @@ export default function ImbalancedClassificationEvaluationArticle() {
           </p>
         </div>
       </section>
+      <ImbalancedClassificationMapReturn current="evaluation" />
     </div>
   );
 }
