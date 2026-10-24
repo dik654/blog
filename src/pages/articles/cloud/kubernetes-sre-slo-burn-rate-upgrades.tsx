@@ -7,9 +7,53 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import BurnRateWindowViz from "./kubernetes-sre-slo-burn-rate-upgrades/viz/BurnRateWindowViz";
 import { codeRefs } from "./kubernetes-sre-slo-burn-rate-upgrades/codeRefs";
 import { kubernetesSreTrees } from "./kubernetes-sre-slo-burn-rate-upgrades/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
+
+function ToilLoopViz() {
+  return (
+    <figure className="not-prose my-6 grid gap-3 sm:grid-cols-3" aria-label="반복 수동 작업을 제어 루프로 옮기는 세 사례">
+      {[
+        ["매일 재시작", "메모리 누수 Pod", "limit·수정 배포"],
+        ["노드마다 명령", "drain·uncordon", "PDB를 지키는 자동화"],
+        ["부하마다 수정", "CoreDNS limit", "autoscaler"],
+      ].map(([manual, target, automation]) => (
+        <div key={manual} className="rounded-xl border border-border p-4">
+          <span className="text-xs font-bold text-rose-600">사람이 반복</span>
+          <strong className="mt-2 block text-sm">{manual}</strong>
+          <p className="mt-2 text-xs text-muted-foreground">{target}</p>
+          <div className="my-3 h-px bg-border" />
+          <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300">상태 수렴으로 이동</span>
+          <p className="mt-2 text-sm">{automation}</p>
+        </div>
+      ))}
+      <figcaption className="sm:col-span-3 text-xs text-muted-foreground">같은 조치를 사람이 다시 실행하는 대신, 관측값과 목표 상태의 차이를 제어 루프가 줄입니다.</figcaption>
+    </figure>
+  );
+}
+
+function PostmortemRecordViz() {
+  const items = [
+    ["영향", "실패 90,000건 · budget 3.47%"],
+    ["탐지", "장애 6분 뒤 경보가 발견"],
+    ["원인", "근인과 기여 조건을 분리"],
+    ["후속", "담당자·기한·검증 방법"],
+  ];
+  return (
+    <figure className="not-prose my-6" aria-label="한 장애가 postmortem 기록으로 바뀌는 구조">
+      <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
+        {items.map(([label, value]) => (
+          <div key={label} className="bg-background p-4">
+            <strong className="text-xs text-primary">{label}</strong>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">{value}</p>
+          </div>
+        ))}
+      </div>
+      <figcaption className="mt-2 text-xs text-muted-foreground">경보와 postmortem이 같은 SLI·error budget 단위를 쓰면 사고의 영향과 개선 효과를 이어서 검증할 수 있습니다.</figcaption>
+    </figure>
+  );
+}
 
 export default function KubernetesSreSloBurnRateUpgradesArticle() {
   const sidebar = useCodeSidebar();
@@ -62,18 +106,6 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 30일 99.9%는 43.2분, 곧 259만 번의 실패를 허락합니다</h2>
-          <div className={prose}>
-            <p>
-              (가정) 초당 1,000개 요청을 받는 checkout Service가 있습니다. 운영팀은 30일 동안 요청의 99.9%가 성공해야 한다고 약속했습니다. 이 약속이 허락하는 실패의 총량이 얼마인지부터 셉니다. 30일은 43,200분이므로 그 0.1%는 43.2분입니다. 서비스가 완전히 멈춰 모든 요청이 실패한다면 한 달에 43.2분까지 멈출 수 있다는 뜻입니다.
-            </p>
-            <p>
-              같은 양을 요청 수로 세면 초당 1,000개 × 2,592,000초 = 25억 9,200만 개 요청 가운데 0.1%인 259만 2,000개입니다. 완전히 멈추지 않고 일부만 실패하는 보통의 장애는 이 쪽 단위가 더 쓸모 있습니다. 어느 쪽으로 세든 이 총량이 error budget입니다. 운영의 모든 결정은 이 budget을 얼마나 썼는지, 얼마나 빨리 쓰는 중인지로 내립니다.
-            </p>
-            <p>
-              이제 장애 하나를 넣습니다. (가정) 10분 동안 요청의 15%가 5xx로 끝났습니다. 실패한 요청은 0.15 × 1,000 × 600 = 90,000개로, budget 259만 2,000개의 3.47%입니다. 한 달 budget의 3.5%를 10분에 쓴 셈이라 이 속도가
-              계속되면 약 4.8시간 뒤 budget이 바닥납니다.
-            </p>
-          </div>
           <figure className="not-prose my-6">
             <svg viewBox="0 0 480 96" className="h-auto w-full" role="img" aria-label="30일 error budget 2,592,000개 가운데 10분 장애가 쓴 90,000개">
               <text x="0" y="12" fontSize="10" fontWeight="700" className="fill-foreground">30일 budget = 0.1% × 25억 9,200만 요청 = 2,592,000개</text>
@@ -87,6 +119,17 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             </svg>
             <figcaption className="mt-2 text-xs text-muted-foreground">회색 막대가 한 달 budget 전체, 빨간 조각이 10분 장애가 쓴 몫입니다. 빨간 조각 하나가 한 칸이라 같은 장애가 29번 더 나면 막대가 끝납니다.</figcaption>
           </figure>
+          <div className={prose}>
+            <p>
+              (가정) 초당 1,000개 요청을 받는 checkout Service가 있습니다. 운영팀은 30일 동안 요청의 99.9%가 성공해야 한다고 약속했습니다. 이 약속이 허락하는 실패의 총량이 얼마인지부터 셉니다. 30일은 43,200분이므로 그 0.1%는 43.2분입니다. 서비스가 완전히 멈춰 모든 요청이 실패한다면 한 달에 43.2분까지 멈출 수 있다는 뜻입니다.
+            </p>
+            <p>
+              같은 양을 요청 수로 세면 초당 1,000개 × 2,592,000초 = 25억 9,200만 개 요청 가운데 0.1%인 259만 2,000개입니다. 완전히 멈추지 않고 일부만 실패하는 보통의 장애는 이 쪽 단위가 더 쓸모 있습니다. 어느 쪽으로 세든 이 총량이 error budget입니다. 운영의 모든 결정은 이 budget을 얼마나 썼는지, 얼마나 빨리 쓰는 중인지로 내립니다.
+            </p>
+            <p>
+              이제 장애 하나를 넣습니다. (가정) 10분 동안 요청의 15%가 5xx로 끝났습니다. 실패한 요청은 0.15 × 1,000 × 600 = 90,000개로, budget 259만 2,000개의 3.47%입니다. 한 달 budget의 3.5%를 10분에 쓴 셈이라 이 속도가 계속되면 약 4.8시간 뒤 budget이 바닥납니다.
+            </p>
+          </div>
           <CalculationWalkthrough
             title="30일 99.9% SLO의 error budget과 장애 한 건의 소비"
             question="초당 1,000개 요청을 받는 서비스가 10분 동안 15% 오류를 내면 한 달 budget의 몇 %를 쓸까요?"
@@ -105,6 +148,17 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
 
         <section id="burn-rate" data-teach-level="1" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 한 시간 창에서 2.5% 오류는 허용 속도의 25배이고, 14.4배가 Page의 문턱입니다</h2>
+          <div className="not-prose my-6 grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center" aria-label="burn rate와 Page 임계값 계산">
+            <div className="rounded-xl border border-border p-4 text-center">
+              <span className="text-xs text-muted-foreground">관측한 burn rate</span>
+              <strong className="mt-2 block font-mono text-lg text-primary">2.5% ÷ 0.1% = 25배</strong>
+            </div>
+            <span className="hidden text-muted-foreground sm:block" aria-hidden="true">&gt;</span>
+            <div className="rounded-xl border border-border p-4 text-center">
+              <span className="text-xs text-muted-foreground">1시간 Page 문턱</span>
+              <strong className="mt-2 block font-mono text-lg text-foreground">2% × 720h ÷ 1h = 14.4배</strong>
+            </div>
+          </div>
           <div className={prose}>
             <p>
               budget을 정확히 30일에 다 쓰는 속도가 있습니다. 실패율이 꾸준히 0.1%면 30일째에 budget이 0이 됩니다. Workbook은 이 속도를 burn rate 1이라 부릅니다. 어떤 창에서 잰 실패율을 0.1%로 나눈 값이 그 창의 burn rate입니다. 앞 절의 장애가 끝난 직후 지난 1시간 창을 보면 실패 90,000개 ÷ 요청 3,600,000개 = 2.5%, 곧 burn rate 25입니다.
@@ -183,6 +237,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
 
         <section id="multiwindow" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. 긴 창은 충분히 많이 썼는지, 짧은 창은 아직 쓰고 있는지를 따로 묻습니다</h2>
+          <BurnRateWindowViz />
           <div className={prose}>
             <p>
               1시간 창 하나로만 경보를 걸면 두 가지가 어긋납니다. 첫째, 15% 오류가 시작된 뒤 1시간 평균이 1.44%를 넘기까지 15% × t ÷ 60 ≥ 1.44%, 곧 약 5.8분이 걸립니다. 이건 받아들일 만합니다. 둘째, 오류가 멎은 뒤에도 사건이
@@ -193,7 +248,6 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
               해제는 짧은 창이 내려오는 순간이 됩니다. 아래 그림이 그 두 순간을 분 단위로 보여 줍니다.
             </p>
           </div>
-          <BurnRateWindowViz />
           <div className={prose}>
             <p>아래 의사코드는 경보 규칙 하나가 1분마다 평가되는 순서입니다. 각 줄의 설명에 장애 시작 6분 뒤(16분 시점)의 값을 적었습니다.</p>
           </div>
@@ -338,6 +392,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
 
         <section id="toil" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">10. 손으로 반복하는 복구는 toil이고, controller가 그 일을 대신해야 합니다</h2>
+          <ToilLoopViz />
           <div className={prose}>
             <p>
               SRE 책은 운영 작업 가운데 toil을 여섯 특성으로 가려냅니다. 손으로 하는 일(manual), 반복되는 일(repetitive), 자동화할 수 있는 일(automatable), 사건에 끌려 다니는 일(tactical), 끝나도 서비스가 나아지지 않는 일(no enduring value), 서비스가 커지는 만큼 늘어나는 일(O(n) with service growth)입니다.
@@ -376,6 +431,7 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
 
         <section id="postmortem" data-teach-level="6" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">11. postmortem은 사람이 아니라 시스템을 고치고, 쓸 기준을 사고 전에 정합니다</h2>
+          <PostmortemRecordViz />
           <div className={prose}>
             <p>
               이 글이 인용한 여섯 사고에는 공통점이 하나 있습니다. 모두 공개된 postmortem이 있으며, 그 문서가 "누가 잘못했나" 대신 "어떤 조건이 겹쳤나"를 적습니다. SRE 책은 postmortem을 blameless로 쓰는 것을 SRE 문화의 신조로 둡니다. 사고 당시 모두가 자기가 가진 정보로 옳은 일을 했다고 가정한 채 기여 원인을 찾으라고 적습니다. 잘못을 지목하는 문화에서는 사람들이 문제를 드러내지 않기 때문입니다.
@@ -404,7 +460,22 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">12. 사용자 쪽 SLI와 burn rate를 보고, 변경은 budget과 skew 안에서 합니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">12. ADR 초안: 사용자 영향으로 경보를 열고 원인 지표로 복구를 판단합니다</h2>
+          <div className="not-prose grid gap-3 md:grid-cols-2">
+            {[
+              ["상태", "proposed · 대상 환경에서 아직 미측정 [?]"],
+              ["소유권", "Gateway가 SLI를 기록하고 Alertmanager가 알림 상태를 소유합니다 [A]"],
+              ["최소 구성", "외부 synthetic check + Gateway 오류율·지연 + Pod·Node 원인 지표 [A]"],
+              ["가설", "multiwindow 경보가 단일 1시간 창보다 탐지 지연과 해제 지연을 함께 줄입니다 [A]"],
+              ["검증", "고정 요청률에서 3·10·60분 장애를 주고 MTTD·오탐·해제 시간을 비교합니다 [?]"],
+              ["되돌리기", "새 규칙을 mute하고 기존 경보를 다시 활성화하되 시계열과 incident ID는 보존합니다 [A]"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl border border-border p-4">
+                <strong className="text-sm text-primary">{label}</strong>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{value}</p>
+              </div>
+            ))}
+          </div>
           <div className={prose}>
             <p>
               경보부터 정리합니다. Page는 Service·Ingress 앞에서 잰 오류율·지연 SLI의 burn rate에 겁니다. 30일 99.9%라면 1시간/5분 창에 14.4배, 6시간/30분 창에 6배를 Page로, 3일/6시간 창에 1배를 Ticket으로 둡니다. Pod 재시작 수, 노드 CPU throttling, CoreDNS 메모리 같은 원인 지표는 대시보드와 Ticket에 두되 Page에서는 뺍니다.
@@ -424,7 +495,11 @@ export default function KubernetesSreSloBurnRateUpgradesArticle() {
             <p>
               CKA 범위에서 이 글이 닿는 영역은 Troubleshooting(30%)과 Cluster Architecture·Installation(25%)의 cluster lifecycle 항목이며, 전체 비중은{" "} <a href="/cs/cloud/kubernetes-concept-map#overview">Kubernetes 개념 지도</a>에 있습니다.
             </p>
+            <p>
+              이 결정은 대상 환경에서 burn-rate 규칙의 오탐이 단일 창보다 많거나, 외부 관측 지점이 실제 사용자 경로를 대표하지 못하거나, 운영자가 두 창의 증거로 원인을 추적할 수 없을 때 뒤집습니다. 그때는 임계값·창·SLI 측정 위치를 각각 분리해 다시 실험합니다.
+            </p>
           </div>
+          <KubernetesMapReturn current="operations" />
           <ContentBoundary article="kubernetes-sre-slo-burn-rate-upgrades" />
         </section>
 

@@ -5,7 +5,7 @@ export function AnimatedSceneControls({
   reducedMotion,
   setActive,
   setPlaying,
-  playLabel = "자동 재생",
+  playLabel = "재생",
 }: {
   labels: readonly string[];
   active: number;
@@ -21,43 +21,56 @@ export function AnimatedSceneControls({
   return (
     <div
       data-viz-controls
-      className="z-20 mt-auto w-full shrink-0 border-t border-border bg-background/95 pt-3 backdrop-blur-sm sm:sticky sm:bottom-0 sm:min-h-[6.75rem] sm:pt-4"
+      className="z-20 w-full shrink-0 sm:sticky sm:bottom-0 sm:mt-auto sm:min-h-[6.75rem] sm:border-t sm:border-border sm:bg-background/95 sm:pt-4 sm:backdrop-blur-sm"
     >
-      <div data-viz-mobile-controls className="sm:hidden">
-        <div className="grid w-full grid-cols-3 items-center gap-2">
-          <button
-            type="button"
-            onClick={previous}
-            disabled={active === 0}
-            className="min-h-11 min-w-0 rounded-md border border-border bg-background px-2 text-xs font-bold disabled:opacity-35"
-          >
-            ← 이전
-          </button>
-          <p
-            className="min-w-0 text-center text-xs font-bold leading-5 text-foreground"
-            aria-live="polite"
-          >
-            <span className="block tabular-nums">{active + 1} / {labels.length}</span>
-            <span className="block truncate text-[10px] text-muted-foreground">
-              {labels[active]}
-            </span>
-          </p>
-          <button
-            type="button"
-            onClick={next}
-            disabled={active === labels.length - 1}
-            className="min-h-11 min-w-0 rounded-md border border-border bg-background px-2 text-xs font-bold disabled:opacity-35"
-          >
-            다음 →
-          </button>
-        </div>
+      <div
+        data-viz-mobile-controls
+        className="mt-2 flex min-h-11 items-center justify-end gap-0.5 border-t border-border/45 pt-1 sm:hidden"
+      >
+        <span className="sr-only" aria-live="polite">
+          {labels.length}개 장면 중 {active + 1}번, {labels[active]}
+        </span>
+        <button
+          type="button"
+          onClick={previous}
+          disabled={active === 0}
+          aria-label="이전 장면"
+          title="이전 장면"
+          className="group flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground/55 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:bg-muted/60 focus-visible:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-20"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
         <button
           type="button"
           disabled={reducedMotion}
           onClick={() => setPlaying(!playing)}
-          className="mt-2 min-h-11 w-full rounded-md border border-primary/35 bg-primary/[0.045] px-3 text-xs font-bold text-primary disabled:cursor-not-allowed disabled:text-muted-foreground"
+          aria-label={reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
+          title={reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
+          className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground/55 transition-colors hover:bg-muted/60 hover:text-primary focus-visible:bg-muted/60 focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-20"
         >
-          {reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
+          {playing ? (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+            </svg>
+          ) : (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="m8 5 11 7-11 7z" />
+            </svg>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={next}
+          disabled={active === labels.length - 1}
+          aria-label="다음 장면"
+          title="다음 장면"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground/55 transition-colors hover:bg-muted/60 hover:text-foreground focus-visible:bg-muted/60 focus-visible:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-20"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
         </button>
       </div>
 

@@ -57,7 +57,7 @@ function NodeBox({ name, attached, mounted, healthy, pod }: { name: string; atta
 }
 
 export default function NodeFailureVolumeClockViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4600);
+  const scenes = useAnimatedScenes(SCENES.length, 4600, { loop: false });
   const s = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const onA = s.volumeOn === "a" || s.volumeOn === "a→b";
@@ -71,6 +71,7 @@ export default function NodeFailureVolumeClockViz() {
       note="50 s·300 s·6 min은 kube-controller-manager·kube-apiserver admission·attach-detach 컨트롤러의 기본값입니다. 합산 시각은 가정이고 실측이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -97,7 +98,7 @@ export default function NodeFailureVolumeClockViz() {
               transition={{ duration: reduced ? 0 : 0.4 }}
             />
             {MARKS.map((m) => (
-              <div key={m.label} className="absolute top-0 -translate-x-1/2" style={{ left: `${m.pos}%` }}>
+              <div key={m.label} className={`absolute top-0 ${m.pos === 0 ? "" : m.pos === 100 ? "-translate-x-full" : "-translate-x-1/2"}`} style={{ left: `${m.pos}%` }}>
                 <div className="mx-auto h-7 w-px bg-[#94a3b8]" />
                 <span className="block whitespace-nowrap text-[10px] font-bold text-muted-foreground">{m.label}</span>
               </div>
@@ -105,7 +106,7 @@ export default function NodeFailureVolumeClockViz() {
             <motion.div
               className="absolute top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2563eb] bg-background"
               initial={false}
-              animate={{ left: `${s.pos}%` }}
+              animate={{ left: `${3 + s.pos * 0.94}%` }}
               transition={{ duration: reduced ? 0 : 0.4 }}
             />
           </div>

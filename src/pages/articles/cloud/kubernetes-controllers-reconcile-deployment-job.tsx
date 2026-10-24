@@ -4,9 +4,13 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import ReconcileRolloutViz from "./kubernetes-controllers-reconcile-deployment-job/viz/ReconcileRolloutViz";
+import {
+  JobBackoffTimelineViz,
+  RolloutBoundsViz,
+} from "./kubernetes-controllers-reconcile-deployment-job/viz/ControllerFormulaViz";
 import { codeRefs } from "./kubernetes-controllers-reconcile-deployment-job/codeRefs";
 import { k8sControllerTrees } from "./kubernetes-controllers-reconcile-deployment-job/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -58,6 +62,7 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. replicas 3이면 롤아웃 중 Pod는 최대 4개, 가용 Pod는 최소 3개입니다</h2>
+          <RolloutBoundsViz />
           <div className={prose}>
             <p>
               (가정) Deployment <code>web</code>은 replicas 3, strategy는 기본 RollingUpdate이고 maxSurge·maxUnavailable을 적지 않았습니다. API server는 비워 둔 두 값을 25%로 채웁니다. 3의 25%는 0.75개입니다. Pod는 0.75개가 될 수 없으니 컨트롤러는 두 값을 서로 반대 방향으로 반올림합니다. surge는 올려 1, unavailable은 내려 0입니다.
@@ -89,6 +94,8 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
 
         <section id="rollout-steps" data-teach-level="1" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 롤아웃은 옛 3과 새 0에서 한 칸씩 옮겨 옛 0과 새 3에 닿는 사다리입니다</h2>
+          <p className="mb-3 text-sm leading-6 text-muted-foreground">재생하면 새 ReplicaSet을 먼저 늘리고, 새 Pod가 Ready가 된 뒤에만 옛 ReplicaSet을 줄이는 순서를 볼 수 있습니다.</p>
+          <ReconcileRolloutViz />
           <div className={prose}>
             <p>
               image를 v2로 바꾸면 Deployment 컨트롤러는 새 template의 해시를 계산한 뒤, 그 해시를 가진 ReplicaSet이 없으면 replicas 0으로 하나 만듭니다.
@@ -103,10 +110,9 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
               줄일 수 있는 수는 전체 Pod 수 − 가용 하한 − 새 ReplicaSet의 미가용 Pod 수입니다. 새 Pod가 아직 Ready가 아니었을 때는 4 − 3 − 1 = 0이라 옛 Pod를 하나도 못 줄였지만, Ready가 된 뒤에는 4 − 3 − 0 = 1이라 하나를 줄입니다.
             </p>
             <p>
-              이 두 걸음이 반복되어 (옛/새) 3/0 → 3/1 → 2/1 → 2/2 → 1/2 → 1/3 → 0/3으로 내려갑니다. 아래 그림이 그 일곱 걸음과 앞 절의 Pod 삭제 복구를 같은 식으로 그립니다.
+              이 두 걸음이 반복되어 (옛/새) 3/0 → 3/1 → 2/1 → 2/2 → 1/2 → 1/3 → 0/3으로 내려갑니다. 위 그림은 그 일곱 걸음과 앞 절의 Pod 삭제 복구를 같은 식으로 그립니다.
             </p>
           </div>
-          <ReconcileRolloutViz />
           {code("rollout-rolling", "rolloutRolling 세 분기")}
           {code("old-rs-scaledown", "maxScaledDown 계산")}
           {code("new-rs-hash", "새 ReplicaSet과 pod-template-hash")}
@@ -176,6 +182,7 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
 
         <section id="job-backoff" data-teach-level="4" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. Job은 실패마다 10초부터 두 배씩 320초까지 기다리고, 7번째 실패에 끝납니다</h2>
+          <JobBackoffTimelineViz />
           <div className={prose}>
             <p>
               (가정) 야간 백업 Job <code>backup</code>이 DB 연결 오류로 계속 실패합니다. completions·parallelism을 적지 않아 1·1이고 backoffLimit도 기본 6입니다. Job 컨트롤러는 Pod가 Failed가 될 때마다 "마지막 성공 이후 연속 실패 수"를 하나 올린 뒤, 다음 Pod를 만들기 전에 10초 × 2^(실패 수 − 1)만큼 기다립니다.
@@ -316,29 +323,26 @@ export default function KubernetesControllersReconcileDeploymentJobArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">11. 두 ReplicaSet 숫자와 Progressing 조건을 보고 template을 고칩니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">11. 실패해도 자동 롤백하지 않고 Condition과 Event를 남깁니다</h2>
           <div className={prose}>
             <p>
-              장애 때 보는 순서가 정해집니다. <code>kubectl get rs -l app=web</code>로 두 ReplicaSet의 DESIRED·CURRENT·READY를 읽으면 롤아웃이 어느 사다리 칸에 멈춰 있는지 보입니다. 새 ReplicaSet의 READY가 0에 머물면 새 Pod 쪽 문제이고(image·probe·quota), 옛 ReplicaSet이 줄지 않으면 가용 하한에 걸린 것입니다.
+              Deployment 컨트롤러는 새 ReplicaSet의 Pod가 Ready가 되지 않아도 이전 revision으로 되돌리지 않습니다. 새 ReplicaSet을 늘릴 수 없고 옛 ReplicaSet도 가용 하한 때문에 줄일 수 없으면 같은 상태에서 다음 변화를 기다립니다.
             </p>
             <p>
-              <code>kubectl describe deploy web</code>의 Conditions에서 Progressing의 reason이 ProgressDeadlineExceeded면 10분 동안 진전이 없었다는 뜻이며, 되돌리는 것은 운영자 몫입니다.
+              progressDeadlineSeconds 600을 넘기면 <code>Progressing=False</code>, <code>reason=ProgressDeadlineExceeded</code>라는 Condition을 기록합니다. 이 기록은 실패를 설명할 뿐, 롤백을 실행하는 명령이 아닙니다.
             </p>
             <p>
-              ReplicaSet이 Pod를 못 만드는 경우는 Deployment가 아니라 ReplicaSet의 Event에 남습니다. ResourceQuota 초과면 <code>FailedCreate</code>와 403 메시지가 ReplicaSet에 붙고 Deployment는 멀쩡해 보입니다. slow start 때문에 첫 Pod 하나가 실패하면 나머지는 시도조차 하지 않으므로 Event 수가 적다고 안심하면 안 됩니다. Event를 읽는 순서는 <a href="/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview">Pod 상태와 Event</a>에서 다룹니다.
+              ReplicaSet이 Pod를 만들지 못하면 실패는 Deployment가 아니라 요청을 보낸 ReplicaSet의 Event에 남습니다. ResourceQuota를 넘긴 요청은 <code>FailedCreate</code>와 403 메시지를 남기고, slow start는 같은 실패가 예상되는 나머지 생성 요청을 보내지 않습니다.
             </p>
             <p>
-              고칠 때는 층을 맞춥니다. replicas만 바꾸는 것은 새 revision을 만들지 않고 기존 ReplicaSet의 숫자만 바꿉니다. template을 바꿔야 새 ReplicaSet과 롤아웃이 생깁니다. 롤아웃 속도를 바꾸려면 maxSurge·maxUnavailable을 절대 수로 적는 편이 반올림 혼동을 줄입니다.
+              Job도 backoffLimit을 넘기면 <code>Failed=True</code> Condition을 기록하고 새 Pod 생성을 멈춥니다. ttlSecondsAfterFinished가 없다면 끝난 Job과 Pod는 자동으로 지워지지 않습니다. 컨트롤러가 보장하는 것은 목표 상태를 향한 반복과 실패 상태의 기록이지, 애플리케이션을 고치거나 운영 결정을 대신하는 일이 아닙니다.
             </p>
             <p>
-              삭제는 기본이 background cascading이라 Deployment를 지우면 ReplicaSet과 Pod는 garbage collector가 뒤따라 지우며, <code>--cascade=orphan</code>이면 Pod가 남습니다.
-            </p>
-            <p>
-              Job은 backoffLimit과 activeDeadlineSeconds와 ttlSecondsAfterFinished 세 값을 함께 적습니다. 첫째가 실패 횟수, 둘째가 전체 시간, 셋째가 정리 시점을 정합니다. 이 글의 수치는 v1.37.1 기본값과 식으로 손으로 계산한 것이며 실제 클러스터를 돌려 잰 것이 아닙니다. 이 Pod들이 어느 노드에 가고, 노드가 죽으면 언제 다시 만들어지는지는 <a href="/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview">Pod가 Node에 가는 길</a>로 이어집니다.
+              실제 장애에서 Condition과 Event를 어떤 순서로 확인하고 수정·복구를 검증하는지는 <a href="/cs/cloud/kubernetes-request-path-and-cka#overview">요청 경로 실습</a>에서 이어집니다. 이 글의 수치는 v1.37.1 기본값과 소스 식으로 계산한 값이며 실제 클러스터에서 측정한 결과가 아닙니다.
             </p>
           </div>
-          {code("cleanup-rs", "revisionHistoryLimit 정리")}
           {code("progress-timeout", "조건만 적는 progress")}
+          <KubernetesMapReturn current="controllers" />
           <ContentBoundary article="kubernetes-controllers-reconcile-deployment-job" />
         </section>
 

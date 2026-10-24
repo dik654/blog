@@ -107,7 +107,7 @@ function PodChips({ scene }: { scene: Scene }) {
 }
 
 export default function NodeFailureClockViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4800);
+  const scenes = useAnimatedScenes(SCENES.length, 4800, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const active = scenes.active;
@@ -120,6 +120,7 @@ export default function NodeFailureClockViz() {
       note="Lease 40초·갱신 10초, NodeMonitorGracePeriod 50초·검사 5초, 기본 toleration 300초는 v1.37.1 기본값입니다. 검사 주기 때문에 실제 전환은 50~55초, 350~355초 사이 어딘가입니다. 실측이 아니라 기본값의 합입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

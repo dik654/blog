@@ -45,7 +45,7 @@ const STATE_FILL: Record<PodState, string> = {
 };
 
 export default function ProbeStormViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4200);
+  const scenes = useAnimatedScenes(SCENES.length, 4200, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const dur = reduced ? 0 : 0.35;
@@ -58,6 +58,7 @@ export default function ProbeStormViz() {
       note="replica 3개·DB 30초 장애는 가정이고, 10초 주기·실패 3회·timeout 1초는 probe 기본값, 10·20초는 CrashLoopBackOff 시작 대기입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

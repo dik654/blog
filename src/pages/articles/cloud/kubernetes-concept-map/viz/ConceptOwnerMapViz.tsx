@@ -169,11 +169,9 @@ function MobileJourneyRail({ active, reduced }: { active: number; reduced: boole
 }
 
 export default function ConceptOwnerMapViz() {
-  const scenes = useAnimatedScenes(STAGES.length + 1, 8000, { autoPlay: false, loop: true });
+  const scenes = useAnimatedScenes(STAGES.length + 1, 8000, { autoPlay: false, loop: false });
   const canvasRef = useRef<HTMLDivElement>(null);
   const setPlayingRef = useRef(scenes.setPlaying);
-  const userControlledRef = useRef(false);
-  const desiredPlayingRef = useRef(false);
 
   useEffect(() => {
     setPlayingRef.current = scenes.setPlaying;
@@ -186,27 +184,13 @@ export default function ConceptOwnerMapViz() {
       ([entry]) => {
         if (!entry.isIntersecting) {
           setPlayingRef.current(false);
-          return;
         }
-        setPlayingRef.current(userControlledRef.current ? desiredPlayingRef.current : true);
       },
       { threshold: 0.55 },
     );
     observer.observe(element);
     return () => observer.disconnect();
   }, [scenes.reducedMotion]);
-
-  const selectScene = (value: number) => {
-    userControlledRef.current = true;
-    desiredPlayingRef.current = false;
-    scenes.setActive(value);
-  };
-
-  const changePlayback = (value: boolean) => {
-    userControlledRef.current = true;
-    desiredPlayingRef.current = value;
-    scenes.setPlaying(value);
-  };
 
   return (
     <VizFrame
@@ -222,13 +206,6 @@ export default function ConceptOwnerMapViz() {
         role="group"
         aria-label="checkout Pod가 API 저장부터 사용자 요청 전달까지 이동하는 경로"
         onKeyDown={(event) => {
-          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-            userControlledRef.current = true;
-            desiredPlayingRef.current = false;
-          } else if (event.key === " ") {
-            userControlledRef.current = true;
-            desiredPlayingRef.current = !scenes.playing;
-          }
           scenes.onKeyDown(event);
         }}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
@@ -265,7 +242,7 @@ export default function ConceptOwnerMapViz() {
           )}
         />
 
-        <AnimatedSceneControls {...scenes} setActive={selectScene} setPlaying={changePlayback} labels={["전체", ...STAGES.map((stage) => stage.short)]} />
+        <AnimatedSceneControls {...scenes} labels={["전체", ...STAGES.map((stage) => stage.short)]} />
       </div>
     </VizFrame>
   );

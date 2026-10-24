@@ -198,7 +198,64 @@ function renderInlineLinks(paragraph: string) {
   });
 }
 
-export default function CloudCertificationArticle({ data }: { data: CloudCertificationArticleData }) {
+function SectionVisuals({
+  data,
+  section,
+  overviewFlowFirst,
+}: {
+  data: CloudCertificationArticleData;
+  section: CloudArticleSection;
+  overviewFlowFirst: boolean;
+}) {
+  return (
+    <>
+      {data.formulas
+        ?.filter((formula) => formula.section === section.id)
+        .map((formula, index) => (
+          <ExplainedFormula
+            key={`${section.id}-${formula.content.question}-${index}`}
+            title={formula.content.title}
+            question={formula.content.question}
+            idea={formula.content.idea}
+            formula={formula.content.formula}
+            annotatedFormula={formula.content.annotatedFormula}
+            operations={formula.content.operations}
+            terms={formula.content.terms}
+            assumptions={formula.content.assumptions}
+            interpretation={formula.content.interpretation}
+          />
+        ))}
+      {(overviewFlowFirst && section.id === "overview") || (!overviewFlowFirst && section.id === "black-box") ? (
+        <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} />
+      ) : null}
+      {section.id === "case" ? (
+        <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} />
+      ) : null}
+      {section.id === "picture" ? <DecisionMatrix data={data.decision} /> : null}
+      {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
+      {section.id === "mechanism" ? (
+        <>
+          <AlgorithmBlock
+            title={data.algorithm.title}
+            input={data.algorithm.input}
+            steps={data.algorithm.steps}
+            output={data.algorithm.output}
+            repeatUntil={data.algorithm.repeatUntil}
+          />
+          {data.relatedArticles ? <RelatedArticles data={data.relatedArticles} /> : null}
+        </>
+      ) : null}
+    </>
+  );
+}
+
+export default function CloudCertificationArticle({
+  data,
+  visualFirst = false,
+}: {
+  data: CloudCertificationArticleData;
+  visualFirst?: boolean;
+}) {
   return (
     <div className="space-y-16">
       {data.sections.map((section) => (
@@ -209,6 +266,7 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
           title={section.title}
           bridge={section.bridge}
         >
+          {visualFirst ? <SectionVisuals data={data} section={section} overviewFlowFirst /> : null}
           <div className="prose prose-neutral max-w-none dark:prose-invert">
             {section.paragraphs.map((paragraph) => (
               <p key={paragraph} className={section.id === "overview" ? "text-lg leading-8" : "leading-8"}>
@@ -216,42 +274,7 @@ export default function CloudCertificationArticle({ data }: { data: CloudCertifi
               </p>
             ))}
           </div>
-          {data.formulas
-            ?.filter((formula) => formula.section === section.id)
-            .map((formula, index) => (
-              <ExplainedFormula
-                key={`${section.id}-${formula.content.question}-${index}`}
-                title={formula.content.title}
-                question={formula.content.question}
-                idea={formula.content.idea}
-                formula={formula.content.formula}
-                annotatedFormula={formula.content.annotatedFormula}
-                operations={formula.content.operations}
-                terms={formula.content.terms}
-                assumptions={formula.content.assumptions}
-                interpretation={formula.content.interpretation}
-              />
-            ))}
-          {section.id === "black-box" ? (
-            <FlowRail title={data.overviewFlow.title} steps={[...data.overviewFlow.steps]} />
-          ) : null}
-          {section.id === "case" ? (
-            <NumericPath title={data.numericCase.title} steps={[...data.numericCase.steps]} />
-          ) : null}
-          {section.id === "picture" ? <DecisionMatrix data={data.decision} /> : null}
-          {section.id === "names" ? <TermBreakdown title={data.terms.title} items={[...data.terms.items]} /> : null}
-          {section.id === "mechanism" ? (
-            <>
-              <AlgorithmBlock
-                title={data.algorithm.title}
-                input={data.algorithm.input}
-                steps={data.algorithm.steps}
-                output={data.algorithm.output}
-                repeatUntil={data.algorithm.repeatUntil}
-              />
-              {data.relatedArticles ? <RelatedArticles data={data.relatedArticles} /> : null}
-            </>
-          ) : null}
+          {!visualFirst ? <SectionVisuals data={data} section={section} overviewFlowFirst={false} /> : null}
           {section.id === "source" ? (
             <>
               <SourceApplication

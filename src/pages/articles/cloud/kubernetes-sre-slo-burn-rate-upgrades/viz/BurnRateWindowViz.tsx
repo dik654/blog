@@ -57,7 +57,7 @@ const path = (key: "short" | "long") => SERIES.map((p, i) => `${i === 0 ? "M" : 
 const pct = (ratio: number) => `${(ratio * 100).toFixed(2)}%`;
 
 export default function BurnRateWindowViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4600);
+  const scenes = useAnimatedScenes(SCENES.length, 4600, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const point = SERIES[scene.cursor];
@@ -72,6 +72,7 @@ export default function BurnRateWindowViz() {
       note="오류율 15%·10분과 1,000 req/s는 가정입니다. 평균은 이 그림이 분 단위로 직접 계산한 값이고 실제 monitoring 출력이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

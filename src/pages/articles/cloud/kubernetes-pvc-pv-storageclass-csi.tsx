@@ -7,9 +7,48 @@ import VolumeStaircaseViz from "./kubernetes-pvc-pv-storageclass-csi/viz/VolumeS
 import NodeFailureVolumeClockViz from "./kubernetes-pvc-pv-storageclass-csi/viz/NodeFailureVolumeClockViz";
 import { codeRefs } from "./kubernetes-pvc-pv-storageclass-csi/codeRefs";
 import { kubernetesStorageTrees } from "./kubernetes-pvc-pv-storageclass-csi/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
+
+function StorageIncidentViz() {
+  return (
+    <figure className="not-prose my-6 space-y-3" aria-label="PVC가 Bound여도 Pod가 기다리는 두 경로">
+      {[
+        ["처음 배치", "PVC Bound", "디스크 · 존 a", "Pod · 존 c", "node affinity 불일치"],
+        ["노드 장애", "기존 Pod 불명", "디스크 · worker-a", "새 Pod · worker-b", "Multi-Attach 대기"],
+      ].map(([caseName, pvc, volume, pod, result]) => (
+        <div key={caseName} className="grid gap-2 rounded-xl border border-border p-3 text-sm sm:grid-cols-[5.5rem_repeat(3,1fr)_minmax(8rem,1.2fr)] sm:items-center">
+          <strong className="text-primary">{caseName}</strong>
+          {[pvc, volume, pod].map((item) => <span key={item} className="rounded-lg bg-muted px-3 py-2 text-center">{item}</span>)}
+          <span className="font-bold text-rose-600 sm:text-right">→ {result}</span>
+        </div>
+      ))}
+      <figcaption className="text-xs text-muted-foreground">Bound는 PVC와 PV의 연결만 끝났다는 뜻입니다. 배치·attach·mount는 뒤에서 따로 진행됩니다.</figcaption>
+    </figure>
+  );
+}
+
+function ImmediateBindingViz() {
+  return (
+    <figure className="not-prose my-6 grid gap-4 md:grid-cols-2" aria-label="Immediate와 WaitForFirstConsumer의 순서 차이">
+      <div className="rounded-xl border border-rose-500/40 p-4">
+        <strong className="text-sm text-rose-600">Immediate</strong>
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="rounded-lg bg-muted px-3 py-2">PVC</span><span>→</span><span className="rounded-lg bg-muted px-3 py-2">존 a 디스크</span><span>→</span><span className="rounded-lg border border-rose-500/50 px-3 py-2">Pod 배치 불가</span>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">Pod의 메모리 조건을 알기 전에 디스크 위치가 먼저 고정됩니다.</p>
+      </div>
+      <div className="rounded-xl border border-emerald-500/40 p-4">
+        <strong className="text-sm text-emerald-700 dark:text-emerald-300">WaitForFirstConsumer</strong>
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="rounded-lg bg-muted px-3 py-2">Pod 조건</span><span>→</span><span className="rounded-lg bg-muted px-3 py-2">존 c 선택</span><span>→</span><span className="rounded-lg border border-emerald-500/50 px-3 py-2">존 c 디스크</span>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">스케줄러가 실행 위치를 고른 뒤 같은 존에 디스크를 만듭니다.</p>
+      </div>
+    </figure>
+  );
+}
 
 export default function KubernetesPvcPvStorageClassCsiArticle() {
   const sidebar = useCodeSidebar();
@@ -20,6 +59,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. PVC는 Bound인데 Pod는 왜 디스크를 기다리나요?</h2>
           <KubernetesSeriesLocator current="storage" question="PVC의 저장 요구는 어느 단계에서 실제 디스크와 Node의 mount로 바뀔까요?" bridge="checkout Pod가 볼륨을 요구할 때 PVC가 실제 mount로 바뀌는 과정을 확대합니다." />
+          <StorageIncidentViz />
           <div className={prose}>
             <p>
               (가정) 존 세 개짜리 클러스터에 PostgreSQL Pod 하나를 올립니다. 20Gi PVC를 만들자 몇 초 만에 Bound가 됐는데 Pod는 Pending에 멈췄고, 이벤트에는 "node(s) didn't match PersistentVolume's node affinity"가 남았습니다.</p>
@@ -50,6 +90,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
 
         <section id="small-case" data-teach-level="0" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 존 a에 만든 디스크는 존 c 노드의 Pod를 기다리게 합니다</h2>
+          <ImmediateBindingViz />
           <div className={prose}>
             <p>
               (가정) 클러스터는 존 a·b·c에 노드가 두 대씩이고, StorageClass fast는 volumeBindingMode를 적지 않아 기본값 Immediate입니다. 20Gi RWO PVC를 만들자 PV 컨트롤러는 맞는 PV가 없음을 보고 바로 프로비저닝을 시작했고, external-provisioner는 Pod 정보가 없으니 임의의 존 a에 디스크를 만들었습니다. 몇 초 뒤 PV가 생기고 PVC는 Bound입니다.
@@ -113,6 +154,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
 
         <section id="csi-path" data-teach-level="3" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. 디스크는 만들고, 붙이고, 노드에 한 번 마운트하고, Pod마다 다시 묶습니다</h2>
+          <VolumeStaircaseViz />
           <div className={prose}>
             <p>
               PVC가 Bound가 된 뒤의 세 계단은 CSI(Container Storage Interface) 명세가 정한 네 상태로 설명됩니다. CreateVolume으로 CREATED, ControllerPublishVolume으로 NODE_READY, NodeStageVolume으로 VOL_READY, NodePublishVolume으로 PUBLISHED입니다. 앞의 두 호출은 컨트롤러 플러그인이 받고 뒤의 두 호출은 각 노드에서 도는 노드 플러그인이 받습니다.
@@ -125,7 +167,6 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
             <p>같은 노드에서 Pod 두 개가 같은 PV를 쓰면 stage는 한 번, publish는 두 번입니다. RWO가 Pod 단위가 아니라 노드 단위인 이유가 이 두 겹 구조에 있습니다. bind mount 자체가 커널에서 무엇인지는 <a href="/cs/cloud/linux-vfs-mount-page-cache-fsync#overview">VFS·mount 글</a>이 설명합니다.</p>
             <p>해제는 역순입니다. Pod가 사라지면 NodeUnpublish, 그 노드의 마지막 Pod가 사라지면 NodeUnstage, 그다음 ControllerUnpublish로 노드에서 떼고, PVC가 지워지고 reclaimPolicy가 Delete면 DeleteVolume입니다. 8절의 "6분"은 이 역순의 ControllerUnpublish 앞에서 기다리는 시간입니다.</p>
           </div>
-          <VolumeStaircaseViz />
           {code("csi-spec-lifecycle", "CSI 명세 Figure 6")}
           {code("csi-attach-va", "VolumeAttachment를 만드는 Attach")}
           {code("csi-node-stage", "NodeStageVolume 호출 (MountDevice)")}
@@ -155,6 +196,7 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
 
         <section id="node-failure" data-teach-level="5" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. 노드가 죽으면 디스크는 unhealthy 판정 뒤 6분을 더 기다려야 떨어집니다</h2>
+          <NodeFailureVolumeClockViz />
           <div className={prose}>
             <p>
               1절의 두 번째 사건으로 갑니다. (가정) worker-a에서 PostgreSQL Pod가 돌던 중 kubelet이 멈췄습니다.</p>
@@ -200,7 +242,6 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
             conclusion="디스크를 쓰는 Pod는 노드 장애 뒤 기본값으로 약 12분을 기다립니다. 앞의 350초는 노드 생명주기 설정으로, 뒤의 6분은 out-of-service taint로만 줄일 수 있습니다."
             caveats={["StatefulSet Pod는 이름이 같은 Pod가 둘일 수 없어 노드가 Unknown인 동안 옛 Pod가 Terminating에 머물면 새 Pod 생성 자체가 더 늦어질 수 있습니다.", "건강한 노드에서 unmount가 끝나지 않는 경우(RWO를 Pod 둘이 쓰는 경우)는 이 계산에 들어가지 않고 영원히 기다립니다."]}
           />
-          <NodeFailureVolumeClockViz />
           {code("adc-six-minutes", "6분 기본값과 주석")}
           {code("adc-force-detach", "forceDetach 조건식")}
           {code("adc-multi-attach", "Multi-Attach 이벤트 두 문구")}
@@ -230,19 +271,19 @@ export default function KubernetesPvcPvStorageClassCsiArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">10. 증상마다 볼 객체가 다르고, 고를 것은 바인딩 모드·접근 모드·reclaimPolicy입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">10. PVC가 Bound여도 데이터 복구와 중복 쓰기는 보장되지 않습니다</h2>
           <div className={prose}>
             <p>
-              진단은 계단 순서대로 합니다. PVC가 Pending이면 kubectl describe pvc의 이벤트가 WaitForFirstConsumer인지 FailedBinding인지 봅니다. 전자는 쓰는 Pod가 아직 스케줄되지 않은 것이고 후자는 기본 클래스가 없거나 이름이 틀린 것입니다.</p>
-            <p>Pod가 Pending이고 이유가 "didn't match PersistentVolume's node affinity"면 PV의 nodeAffinity와 Pod의 배치 조건이 어긋난 것이라 Immediate로 만든 디스크의 존을 의심합니다.</p>
+              PVC의 <code>Bound</code>는 PVC와 PV 객체가 서로를 가리킨다는 뜻입니다. 백엔드 디스크가 건강한지, 파일시스템이 손상되지 않았는지, 백업에서 복원할 수 있는지는 이 상태에 포함되지 않습니다.</p>
             <p>
-              Pod가 ContainerCreating이면 두 갈래입니다. FailedAttachVolume에 Multi-Attach가 있으면 kubectl get volumeattachment로 옛 노드의 attach를 확인하고 그 노드가 Ready인지 봅니다.</p>
-            <p>노드가 살아 있으면 RWO PVC를 Pod 둘이 쓰는 설계 문제이고, 죽었으면 6분을 기다리거나 out-of-service taint를 답니다. FailedMount에 MountVolume.MountDevice 또는 SetUp failed가 있으면 노드 플러그인 쪽이라 CSI 노드 Pod 로그와 kubelet 로그를 봅니다.</p>
+              RWO 역시 한 Pod만 쓸 수 있다는 뜻이 아니라 한 노드에만 붙을 수 있다는 뜻입니다. 같은 노드의 여러 Pod가 같은 볼륨을 publish할 수 있고, 분단된 옛 노드의 실제 쓰기가 멈췄는지는 Kubernetes 객체만으로 확인할 수 없습니다.</p>
             <p>
-              설계에서 고를 것은 셋입니다. 존이 있는 클라우드 디스크라면 StorageClass를 WaitForFirstConsumer로 두어 디스크가 Pod를 따라가게 합니다. RWO 디스크를 쓰는 워크로드는 replicas 1의 StatefulSet로 두고, 여러 Pod가 같은 데이터를 써야 하면 RWX 파일 스토리지나 RWOP가 맞는지 다시 묻습니다.</p>
-            <p>reclaimPolicy는 "PVC를 실수로 지웠을 때 데이터를 잃어도 되는가"로 정하고, Retain을 골랐다면 Released PV를 정리하는 절차를 함께 둡니다.</p>
+              <code>reclaimPolicy: Retain</code>도 백업이 아닙니다. PVC 삭제 뒤 외부 디스크를 남길 뿐이며, 잘못된 쓰기와 파일 손상은 그대로 남습니다. <code>Delete</code>는 객체 삭제를 백엔드 삭제로 전파하므로 복원 경로가 따로 없으면 손실이 확정됩니다.</p>
+            <p>
+              바인딩 모드·접근 모드·reclaimPolicy는 이 메커니즘의 동작을 고르는 API입니다. 실제 스토리지 제품, 복제 수, 스냅샷·백업·복구 목표를 선택하는 일은 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes 운영</a>의 실무 판단으로 넘깁니다.</p>
             <p>이 글의 시간 수치는 v1.37.1 기본값의 합이며 실제 클러스터를 돌려 잰 것이 아닙니다. 드라이버의 attach·stage 시간, StatefulSet의 Pod 교체 시점, 클라우드 쪽 API 지연은 환경마다 다릅니다. Pod가 Running이 된 뒤 종료될 때 디스크와 연결이 어떤 순서로 정리되는지는 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#overview">Pod 종료와 rollout</a>에서 이어집니다.</p>
           </div>
+          <KubernetesMapReturn current="storage" />
           <ContentBoundary article="kubernetes-pvc-pv-storageclass-csi" />
         </section>
 

@@ -4,6 +4,8 @@
  * 목록에 없는 새 글은 audit에서 누락으로 잡습니다. 개념 owner를 자동 연결한
  * edge가 이 순서를 거꾸로 만들면 목록 제약이 아닌 관련 글 링크로만 남깁니다.
  */
+import { KUBERNETES_SUBCATEGORY_CURRICULA } from "./kubernetes-learning-tree";
+
 export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
   Record<string, readonly string[]>
 > = {
@@ -21,18 +23,7 @@ export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
     "linux-tcp-time-wait-ports-backlog",
     "linux-systemd-boot-change-incidents",
   ],
-  "cloud-kubernetes": [
-    "kubernetes-concept-map",
-    "kubernetes-controllers-reconcile-deployment-job",
-    "kubernetes-pod-to-node-scheduler-kubelet-notready",
-    "kubernetes-requests-limits-allocatable-qos",
-    "kubernetes-pod-states-crashloop-probes-events",
-    "kubernetes-request-path-and-cka",
-    "kubernetes-pvc-pv-storageclass-csi",
-    "kubernetes-network-packet-path",
-    "kubernetes-rollout-termination-pdb-drain-hpa",
-    "kubernetes-sre-slo-burn-rate-upgrades",
-  ],
+  ...KUBERNETES_SUBCATEGORY_CURRICULA,
   "hw-ai-cluster": [
     "ai-infrastructure-b300-128-blueprint",
     "ai-cluster-software-compatibility",

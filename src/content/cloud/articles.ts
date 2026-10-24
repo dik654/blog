@@ -324,21 +324,21 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-request-path-and-cka",
     title: "Kubernetes 요청 경로와 CKA v1.37: Pending에서 복구까지",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-map",
     sections,
     component: () => import("@/pages/articles/cloud/kubernetes-request-path-and-cka"),
   },
   {
     slug: "kubernetes-network-packet-path",
     title: "Kubernetes 패킷 경로: namespace에서 Calico·Gateway·eBPF까지",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-traffic",
     sections: kubernetesNetworkSections,
     component: () => import("@/pages/articles/cloud/kubernetes-network-packet-path"),
   },
   {
     slug: "kubernetes-concept-map",
     title: "Kubernetes 개념 지도: Pod 하나가 요청을 받기까지",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-map",
     sections: [
       { id: "overview", title: "1. 먼저 Pod 하나가 만들어져 요청을 받는 전체 길을 봅니다" },
       { id: "black-box", title: "2. replicas를 2에서 3으로 늘렸지만 용량은 아직 그대로입니다" },
@@ -355,7 +355,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-controllers-reconcile-deployment-job",
     title: "Kubernetes 컨트롤러: Deployment는 Pod를 만들지 않고, ReplicaSet은 차이만 메웁니다",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-control",
     sections: [
       { id: "overview", title: "1. Pod를 지웠는데 왜 다른 이름으로 돌아오고, 롤아웃은 왜 네 개까지만 늘어나나요?" },
       { id: "black-box", title: "2. 세 층이 각자 한 가지 숫자만 맞춥니다" },
@@ -375,7 +375,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-pod-to-node-scheduler-kubelet-notready",
     title: "Pod가 Node에 가는 길: scheduler가 이름을 적고, kubelet이 읽고, 50초 + 300초 뒤에 떠납니다",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-control",
     sections: [
       { id: "overview", title: "1. 노드 전원이 나갔는데 Pod는 왜 6분 가까이 Running으로 보였나요?" },
       { id: "black-box", title: "2. 네 참여자가 Pod 객체 하나를 읽고 쓸 뿐, 서로 말을 걸지 않습니다" },
@@ -395,7 +395,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-requests-limits-allocatable-qos",
     title: "requests는 scheduler의 숫자, limits는 커널의 숫자: Allocatable·throttling·OOM·eviction",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-control",
     sections: [
       { id: "overview", title: "1. CPU가 82% 놀고 있는 노드에 Pod가 왜 Pending으로 남나요?" },
       { id: "black-box", title: "2. 같은 YAML의 두 숫자를 scheduler와 kubelet이 따로 읽습니다" },
@@ -415,7 +415,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-pod-states-crashloop-probes-events",
     title: "Pending·CrashLoopBackOff·OOMKilled의 뜻: 10→300초 시계, probe 기본값, Event 읽기",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-runtime",
     sections: [
       { id: "overview", title: "1. RESTARTS 200인 CrashLoopBackOff Pod는 지금 무엇을 하고 있나요?" },
       { id: "black-box", title: "2. STATUS 열은 phase가 아니라 \"어느 단계에서 멈췄나\"의 표시입니다" },
@@ -435,7 +435,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-pvc-pv-storageclass-csi",
     title: "Kubernetes 스토리지: PVC가 디렉터리가 되기까지, 그리고 노드가 죽은 뒤의 6분",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-runtime",
     sections: [
       { id: "overview", title: "1. PVC는 Bound인데 Pod는 왜 디스크를 기다리나요?" },
       { id: "black-box", title: "2. 청구서 하나가 디렉터리 하나가 되기까지 다섯 담당자가 바뀝니다" },
@@ -454,7 +454,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-rollout-termination-pdb-drain-hpa",
     title: "Kubernetes 운영: Pod 종료의 두 시계와 rollout·PDB·drain·HPA",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-operations",
     sections: [
       { id: "overview", title: "1. 배포할 때마다 몇 초씩 5xx가 튀고, 노드 교체는 왜 멈추나요?" },
       { id: "black-box", title: "2. 네 조절기는 모두 \"지금 Ready인 Pod가 몇 개인가\"를 셉니다" },
@@ -473,7 +473,7 @@ export const cloudArticles: Article[] = [
   {
     slug: "kubernetes-sre-slo-burn-rate-upgrades",
     title: "Kubernetes SRE: error budget 43분, 소진 속도 14.4배, 업그레이드는 한 단계씩",
-    subcategory: "cloud-kubernetes",
+    subcategory: "cloud-kubernetes-operations",
     sections: [
       { id: "overview", title: "1. DNS가 한 시간 넘게 죽었는데 왜 아무도 깨지 않았나요?" },
       { id: "black-box", title: "2. 운영은 재고, 약속하고, 깨우고, 바꾸고, 배우는 다섯 칸의 고리입니다" },

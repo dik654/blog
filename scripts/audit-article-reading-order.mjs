@@ -1,4 +1,5 @@
 import { createServer } from "vite";
+import fs from "node:fs";
 
 const strict = process.argv.includes("--strict");
 const server = await createServer({
@@ -34,6 +35,30 @@ function indexSubcategoryDescendants(subcategories, index = new Map()) {
   return index;
 }
 
+function sourceContainsAnchor(href) {
+  const [pathname, fragment] = href.split("#");
+  if (!fragment) return false;
+  const [, domain, slug] = pathname.split("/").filter(Boolean);
+  if (!domain || !slug) return false;
+  const candidates = [
+    `src/pages/articles/${domain}/${slug}.tsx`,
+    `src/pages/articles/${domain}/${slug}/index.tsx`,
+  ];
+  const articleDirectory = `src/pages/articles/${domain}/${slug}`;
+  if (fs.existsSync(articleDirectory)) {
+    for (const entry of fs.readdirSync(articleDirectory, { withFileTypes: true })) {
+      if (entry.isFile() && entry.name.endsWith(".tsx")) {
+        candidates.push(`${articleDirectory}/${entry.name}`);
+      }
+    }
+  }
+  return candidates.some((candidate) => {
+    if (!fs.existsSync(candidate)) return false;
+    const source = fs.readFileSync(candidate, "utf8");
+    return source.includes(`id="${fragment}"`) || source.includes(`id={'${fragment}'}`);
+  });
+}
+
 try {
   const { categories } = await server.ssrLoadModule("/src/content/index.ts");
   const {
@@ -50,6 +75,80 @@ try {
   const { isDeclaredSubcategoryStart } = await server.ssrLoadModule(
     "/src/content/article-guidance.ts",
   );
+  const {
+    KUBERNETES_LEARNING_GROUPS,
+    KUBERNETES_LEARNING_NODES,
+  } = await server.ssrLoadModule("/src/content/kubernetes-learning-tree.ts");
+
+  const cloud = categories.find((category) => category.slug === "cloud");
+  if (!cloud) {
+    failures.push("cloud category가 없어 Kubernetes 학습 지도를 검사할 수 없습니다.");
+  } else {
+    const kubernetesSubcategories = new Set([
+      "cloud-kubernetes",
+      ...KUBERNETES_LEARNING_GROUPS.map((group) => group.slug),
+    ]);
+    const publicKubernetesArticles = cloud.articles.filter((article) =>
+      kubernetesSubcategories.has(article.subcategory),
+    );
+    const nodeBySlug = new Map(
+      KUBERNETES_LEARNING_NODES.map((node) => [node.slug, node]),
+    );
+    const groupById = new Map(
+      KUBERNETES_LEARNING_GROUPS.map((group) => [group.id, group]),
+    );
+    const missingNodes = publicKubernetesArticles
+      .map((article) => article.slug)
+      .filter((slug) => !nodeBySlug.has(slug));
+    const staleNodes = KUBERNETES_LEARNING_NODES
+      .map((node) => node.slug)
+      .filter((slug) => !publicKubernetesArticles.some((article) => article.slug === slug));
+
+    if (missingNodes.length > 0 || staleNodes.length > 0) {
+      failures.push(
+        `Kubernetes concept/practice/reference 분류 불일치 (미분류=${missingNodes.join(",") || "없음"}; 공개 경로 없음=${staleNodes.join(",") || "없음"})`,
+      );
+    }
+
+    for (const article of publicKubernetesArticles) {
+      const node = nodeBySlug.get(article.slug);
+      if (!node) continue;
+      const group = groupById.get(node.group);
+      if (!group) {
+        failures.push(`Kubernetes ${article.slug}: 존재하지 않는 부모 영역 (${node.group})`);
+        continue;
+      }
+      if (article.subcategory !== group.slug) {
+        failures.push(
+          `Kubernetes ${article.slug}: catalog 영역(${article.subcategory})과 학습 지도 영역(${group.slug})이 다릅니다.`,
+        );
+      }
+      if (strict && node.reviewStatus !== "reviewed") {
+        failures.push(`Kubernetes ${article.slug}: 공개 경로 검토 상태가 ${node.reviewStatus}입니다.`);
+      }
+      if (node.track === "concept" && node.id !== "map" && node.parent !== "map") {
+        failures.push(`Kubernetes ${article.slug}: 개념 글의 직속 부모 지도가 없습니다.`);
+      }
+      if (node.track === "practice") {
+        if (!node.conceptAnchors || node.conceptAnchors.length === 0) {
+          failures.push(`Kubernetes ${article.slug}: 실무 글의 개념 anchor가 없습니다.`);
+        }
+        for (const conceptAnchor of node.conceptAnchors ?? []) {
+          if (!conceptAnchor.href.includes("#")) {
+            failures.push(`Kubernetes ${article.slug}: 절 anchor가 아닌 링크 (${conceptAnchor.href})`);
+          }
+          if (!sourceContainsAnchor(conceptAnchor.href)) {
+            failures.push(`Kubernetes ${article.slug}: 실제 본문에 없는 개념 anchor (${conceptAnchor.href})`);
+          }
+          if (!conceptAnchor.node) continue;
+          const anchor = KUBERNETES_LEARNING_NODES.find((candidate) => candidate.id === conceptAnchor.node);
+          if (!anchor || anchor.track !== "concept") {
+            failures.push(`Kubernetes ${article.slug}: 잘못된 개념 anchor (${conceptAnchor.node})`);
+          }
+        }
+      }
+    }
+  }
 
   for (const category of categories) {
     const listedSubcategories = sortSubcategoriesForReading(

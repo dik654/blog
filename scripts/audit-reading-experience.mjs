@@ -186,10 +186,11 @@ const contract = {
   mobileSceneControls:
     animatedControls.includes("data-viz-mobile-controls") &&
     animatedControls.includes("data-viz-desktop-controls") &&
-    animatedControls.includes("grid-cols-3") &&
+    animatedControls.includes("justify-end") &&
     animatedControls.includes("min-h-11") &&
-    animatedControls.includes("← 이전") &&
-    animatedControls.includes("다음 →") &&
+    animatedControls.includes('aria-label="이전 장면"') &&
+    animatedControls.includes('aria-label="다음 장면"') &&
+    animatedControls.includes('className="sr-only"') &&
     globalStyles.includes("[data-viz-controls] button") &&
     globalStyles.includes("overflow-wrap: anywhere"),
   mobileStepControls:

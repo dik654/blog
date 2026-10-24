@@ -43,7 +43,7 @@ const TRAFFIC: Record<Scene["traffic"], { text: string; color: string }> = {
 };
 
 export default function TerminationRaceViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4600);
+  const scenes = useAnimatedScenes(SCENES.length, 4600, { loop: false });
   const s = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const traffic = TRAFFIC[s.traffic];
@@ -56,6 +56,7 @@ export default function TerminationRaceViz() {
       note="30초 예산과 최소 2초는 v1.37.1 기본값입니다. preStop 5초와 규칙 전파 3초는 설명용 가정이며 실측이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -77,12 +78,12 @@ export default function TerminationRaceViz() {
             <div className="absolute left-0 right-0 top-3 h-1 rounded bg-[#cbd5e1]" />
             <motion.div className="absolute left-0 top-3 h-1 rounded bg-[#2563eb]" initial={false} animate={{ width: `${s.pos}%` }} transition={{ duration: reduced ? 0 : 0.4 }} />
             {MARKS.map((m) => (
-              <div key={m.label} className="absolute top-0 -translate-x-1/2" style={{ left: `${m.pos}%` }}>
+              <div key={m.label} className={`absolute top-0 ${m.pos === 0 ? "" : m.pos === 100 ? "-translate-x-full" : "-translate-x-1/2"}`} style={{ left: `${m.pos}%` }}>
                 <div className="mx-auto h-7 w-px bg-[#94a3b8]" />
                 <span className="block whitespace-nowrap text-[10px] font-bold text-muted-foreground">{m.label}</span>
               </div>
             ))}
-            <motion.div className="absolute top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2563eb] bg-background" initial={false} animate={{ left: `${s.pos}%` }} transition={{ duration: reduced ? 0 : 0.4 }} />
+            <motion.div className="absolute top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2563eb] bg-background" initial={false} animate={{ left: `${3 + s.pos * 0.94}%` }} transition={{ duration: reduced ? 0 : 0.4 }} />
           </div>
 
           <div className="mt-3 grid gap-2">

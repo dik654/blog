@@ -6,7 +6,7 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import NodeFailureClockViz from "./kubernetes-pod-to-node-scheduler-kubelet-notready/viz/NodeFailureClockViz";
 import { codeRefs } from "./kubernetes-pod-to-node-scheduler-kubelet-notready/codeRefs";
 import { k8sPodNodeTrees } from "./kubernetes-pod-to-node-scheduler-kubelet-notready/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -58,6 +58,20 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
 
         <section id="small-case" data-teach-level="0" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 세 노드 중 둘이 걸러지면 점수를 매기지 않고 남은 하나에 이름을 적습니다</h2>
+          <AlgorithmBlock
+            title="가정부터 결과까지: web-x는 worker-2에 배치됩니다"
+            input={["pod: web-x, requests cpu 500m, tolerations 없음, nodeName 비어 있음", "nodes: worker-1(taint maintenance:NoSchedule), worker-2(여유 1.5 CPU), worker-3(여유 0.2 CPU)"]}
+            steps={[
+              { code: "if snapshot.nodes == 0: return ErrNoNodesAvailable", note: "노드가 셋이니 통과합니다. 0이면 'no nodes available to schedule pods'입니다." },
+              { code: "feasible = [n for n in nodes if all(filter(pod, n) for filter in Filters)]", note: "worker-1은 TaintToleration에서, worker-3은 NodeResourcesFit에서 떨어집니다. feasible = [worker-2]." },
+              { code: "if len(feasible) == 0: return FitError(diagnosis)", note: "비었다면 노드별 탈락 이유를 Diagnosis에 담아 Pending 상태의 Event 메시지가 됩니다." },
+              { code: "if len(feasible) == 1: host = feasible[0]  # 점수 생략", note: "worker-2가 바로 뽑힙니다. 여럿이었다면 Score 플러그인 합산 뒤 최댓값입니다." },
+              { code: "assume(pod, host); reserve; permit", note: "scheduler 캐시에 미리 '이 노드에 간 것'으로 적어 다음 Pod 계산에 반영합니다. Bind는 별도 고루틴에서 합니다." },
+              { code: "POST pods/web-x/binding {target: Node worker-2}", note: "API server가 spec.nodeName = worker-2를 씁니다. 이 순간부터 worker-2 kubelet의 watch에 web-x가 나타납니다." },
+            ]}
+            repeatUntil="scheduler는 큐에서 다음 Pod를 꺼내 같은 과정을 반복합니다. Bind가 실패하면 assume을 되돌리고 Pod를 큐에 되돌립니다."
+            output="Pod web-x: spec.nodeName worker-2, status.phase Pending(아직 kubelet이 받기 전), condition PodScheduled=True."
+          />
           <div className={prose}>
             <p>
               (가정) 노드가 셋입니다. worker-1에는 운영자가 <code>maintenance=true:NoSchedule</code> taint를 걸어 두었으며, worker-3은 Allocatable CPU 2 가운데 이미 1.8이 다른 Pod의 requests로 잡혀 있습니다. 새 Pod <code>web-x</code>는 CPU 500m를 요청하며 toleration이 없습니다.
@@ -75,20 +89,6 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
               통과한 노드가 0이었다면 Pod는 Pending으로 남으며 <code>0/3 nodes are available: 1 node(s) had untolerated taint, 1 Insufficient cpu, …</code> 같은 FailedScheduling Event가 붙습니다. requests 합과 Allocatable로 노드가 차는 계산은 <a href="/cs/cloud/kubernetes-requests-limits-allocatable-qos#overview">requests와 limits</a>에서 다룹니다.
             </p>
           </div>
-          <AlgorithmBlock
-            title="scheduler가 Pod 하나에 노드를 정하는 순서"
-            input={["pod: web-x, requests cpu 500m, tolerations 없음, nodeName 비어 있음", "nodes: worker-1(taint maintenance:NoSchedule), worker-2(여유 1.5 CPU), worker-3(여유 0.2 CPU)"]}
-            steps={[
-              { code: "if snapshot.nodes == 0: return ErrNoNodesAvailable", note: "노드가 셋이니 통과합니다. 0이면 'no nodes available to schedule pods'입니다." },
-              { code: "feasible = [n for n in nodes if all(filter(pod, n) for filter in Filters)]", note: "worker-1은 TaintToleration에서, worker-3은 NodeResourcesFit에서 떨어집니다. feasible = [worker-2]." },
-              { code: "if len(feasible) == 0: return FitError(diagnosis)", note: "비었다면 노드별 탈락 이유를 Diagnosis에 담아 Pending 상태의 Event 메시지가 됩니다." },
-              { code: "if len(feasible) == 1: host = feasible[0]  # 점수 생략", note: "worker-2가 바로 뽑힙니다. 여럿이었다면 Score 플러그인 합산 뒤 최댓값입니다." },
-              { code: "assume(pod, host); reserve; permit", note: "scheduler 캐시에 미리 '이 노드에 간 것'으로 적어 다음 Pod 계산에 반영합니다. Bind는 별도 고루틴에서 합니다." },
-              { code: "POST pods/web-x/binding {target: Node worker-2}", note: "API server가 spec.nodeName = worker-2를 씁니다. 이 순간부터 worker-2 kubelet의 watch에 web-x가 나타납니다." },
-            ]}
-            repeatUntil="scheduler는 큐에서 다음 Pod를 꺼내 같은 과정을 반복합니다. Bind가 실패하면 assume을 되돌리고 Pod를 큐에 되돌립니다."
-            output="Pod web-x: spec.nodeName worker-2, status.phase Pending(아직 kubelet이 받기 전), condition PodScheduled=True."
-          />
           {code("schedule-pod", "schedulePod 네 분기")}
           {code("default-binder", "Binding POST 한 줄")}
         </section>
@@ -159,6 +159,7 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
 
         <section id="notready-clock" data-teach-level="3" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">6. 마지막 갱신 + 50초에 Unknown, 거기서 300초 뒤에 삭제가 시작됩니다</h2>
+          <NodeFailureClockViz />
           <div className={prose}>
             <p>
               worker-2의 kubelet이 t = 0에 멈췄다고 합시다. 마지막 Lease 갱신은 t = 0 직전입니다. 컨트롤러는 5초마다 보지만 갱신이 없으니 probe 시각은 0에 머뭅니다.
@@ -190,7 +191,6 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
             conclusion="삭제 시작까지 약 50 + 300 = 350초, 거기에 새 Pod가 Ready가 되는 시간이 더해져 서비스 관점의 복구는 6분이 넘습니다. 이 가운데 운영자가 바꿀 수 있는 가장 큰 항은 Pod별 tolerationSeconds입니다."
             caveats={["여러 노드가 함께 죽으면 축출 속도 제한이 걸립니다. 건강한 zone에서는 10초에 노드 하나(0.1/s)입니다. NotReady 노드가 3개 이상이고 zone의 55% 이상이면 비정상 zone으로 보아 100초에 하나(0.01/s)로 낮추고, 노드 50개 이하 클러스터에서는 축출을 멈춥니다. zone의 모든 노드가 NotReady면 control plane 쪽 문제로 보고 taint를 떼고 축출을 전부 멈춥니다. 세 노드 중 둘이 죽은 경우는 NotReady가 3개 미만이라 정상 zone으로 10초에 하나씩 지워집니다.", "StatefulSet Pod는 같은 이름을 다시 써야 하므로 옛 Pod가 Terminating으로 남아 있는 동안 대체 Pod가 생기지 않습니다. 노드가 확실히 죽었음을 운영자가 확인하고 강제 삭제해야 합니다.", "Lease만 갱신되고 status가 멈춘 노드는 건강한 것으로 봅니다. 반대로 status는 오는데 Lease가 멈추는 경우도 probe 시각이 갱신되어 건강합니다."]}
           />
-          <NodeFailureClockViz />
           {code("nlc-grace", "probe + 50초 판정과 Unknown 기록")}
           {code("eviction-rates", "축출 속도 0.1 · 0.01 · 50노드")}
         </section>
@@ -309,28 +309,25 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">11. renewTime과 reason을 보고, tolerationSeconds를 고칩니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">11. 이 메커니즘은 노드 전원과 데이터 중복을 확인하지 못합니다</h2>
           <div className={prose}>
             <p>
-              노드 생사를 가장 빨리 보는 곳은 <code>kubectl get lease -n kube-node-lease worker-2 -o yaml</code>의 renewTime입니다. 10초 이상 오래됐으면 kubelet이 멈춘 것이며, 50초가 넘기 전까지는 Node 객체에 아무 표시도 없습니다.
+              Kubernetes가 직접 관찰하는 것은 노드 전원이 아니라 Lease의 <code>renewTime</code>입니다. 갱신이 끊겨도 50초가 지나기 전에는 Node 객체에 장애 표시가 없으며, 그 뒤에도 API server가 아는 것은 kubelet과 통신할 수 없다는 사실뿐입니다.
             </p>
             <p>
-              <code>kubectl describe node worker-2</code>의 Conditions에서 Ready의 reason이 NodeStatusUnknown이면 보고 두절, 그 밖의 값이면 kubelet이 살아서 문제를 보고한 것입니다. Pod가 Running으로 보여도 nodeName의 노드가 Unknown이면 그 표시는 마지막 보고일 뿐입니다.
+              그래서 Ready의 reason이 <code>NodeStatusUnknown</code>이면 보고 두절을 뜻하지만, 전원이 꺼졌는지 네트워크만 갈라졌는지는 알려 주지 않습니다. Pod가 Running으로 보여도 nodeName의 노드가 Unknown이면 그 표시는 kubelet이 마지막으로 남긴 보고일 뿐입니다.
             </p>
             <p>
-              복구 시간을 줄이는 손잡이는 Pod 쪽에 있습니다. 빨리 옮겨도 되는 stateless Pod에는 <code>tolerations</code>에 unreachable·not-ready NoExecute를 tolerationSeconds 30 정도로 적으면 Unknown 뒤 30초에 삭제가 시작됩니다.
+              <code>tolerationSeconds</code>를 줄이면 대체 Pod를 더 일찍 만들 수 있지만, 분단된 노드의 기존 컨테이너가 실제로 멈췄다는 보장은 생기지 않습니다. 값 하나가 복구 시간과 중복 실행 위험을 동시에 바꾸는 이유입니다.
             </p>
             <p>
-              반대로 노드가 잠깐 분단되어도 Pod를 지우고 싶지 않다면 값을 늘립니다. 클러스터 전체 기본값은 API server의 <code>--default-unreachable-toleration-seconds</code>이며, kube-controller-manager의 <code>--node-monitor-grace-period</code>를 줄이는 것은 느린 연결을 오판할 위험과 맞바꾸는 일입니다.
+              특히 하나만 실행되어야 하는 작업에서는 API 객체를 지우는 일과 실제 프로세스가 멈추는 일이 다릅니다. StatefulSet이 옛 Pod가 Terminating인 동안 같은 이름의 대체 Pod를 만들지 않는 것은 이 불확실성을 보존하는 동작입니다.
             </p>
             <p>
-              소스 주석은 HTTP/2 ping timeout 30초와 read idle 15초의 합보다 커야 한다고 적습니다.
+              노드가 확실히 꺼졌다는 외부 증거 없이 강제 삭제하면 같은 identity의 프로세스가 두 곳에서 동작할 수 있습니다. 이 글의 control loop만으로는 fencing이나 데이터 일관성을 완성할 수 없습니다.
             </p>
             <p>
-              하나만 돌아야 하는 작업은 이 시계에 맡기지 않습니다. 분단된 노드의 컨테이너는 API server가 삭제를 요청한 뒤에도 돌고 있으므로, StatefulSet은 옛 Pod가 Terminating인 동안 대체 Pod를 만들지 않습니다. 운영자가 노드 전원이 꺼졌음을 확인한 뒤 Node 객체를 지우거나 Pod를 강제 삭제해야 합니다.
-            </p>
-            <p>
-              노드를 계획적으로 비울 때는 <code>kubectl drain</code>이 cordon(NoSchedule)과 PodDisruptionBudget을 지키는 축출을 대신하며, 그 과정은 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#overview">종료·롤아웃·PDB·drain</a>에서 다룹니다.
+              계획된 노드 비우기의 상태 전이는 <a href="/cs/cloud/kubernetes-rollout-termination-pdb-drain-hpa#overview">종료·롤아웃·PDB·drain</a>에서, 실제 환경에서 어떤 값을 선택하고 장애를 복구할지는 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes 운영</a>에서 이어집니다.
             </p>
             <p>
               이 글의 시각은 v1.37.1 기본값을 더한 값이며 실제 클러스터를 돌려 잰 것이 아닙니다. 검사 주기 5초와 taint 패스의 rate limiter 때문에 실제 전환은 몇 초씩 늦을 수 있으며, 클라우드 관리형 클러스터는 기본값을 바꿔 두기도 합니다.
@@ -339,8 +336,9 @@ export default function KubernetesPodToNodeSchedulerKubeletNotReadyArticle() {
               노드에 도착한 Pod가 왜 Pending에 머물거나 CrashLoopBackOff에 빠지는지는 <a href="/cs/cloud/kubernetes-pod-states-crashloop-probes-events#overview">Pod 상태와 Event</a>로 이어지며, 노드가 Pod에 줄 수 있는 자원의 계산은 <a href="/cs/cloud/kubernetes-requests-limits-allocatable-qos#overview">requests와 limits</a>에 있습니다.
             </p>
           </div>
-          {code("toleration-defaults", "tolerationSeconds 바꾸는 자리")}
-          {code("nlc-defaults", "grace를 줄일 때의 경고")}
+          {code("toleration-defaults", "기본 300초가 들어가는 자리")}
+          {code("nlc-defaults", "판정 시간과 오판 경계")}
+          <KubernetesMapReturn current="placement" />
           <ContentBoundary article="kubernetes-pod-to-node-scheduler-kubelet-notready" />
         </section>
 

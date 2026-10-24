@@ -33,7 +33,7 @@ const TRACK_W = W - X0 - 16;
 const ms = (v: number) => X0 + (v / PERIOD) * TRACK_W;
 
 export default function ThrottlePeriodViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4200);
+  const scenes = useAnimatedScenes(SCENES.length, 4200, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const dur = reduced ? 0 : 0.4;
@@ -48,6 +48,7 @@ export default function ThrottlePeriodViz() {
       note="스레드가 쉬지 않고 돈다는 가정의 의사 예시입니다. 실제 커널은 quota를 CPU별 slice로 나눠 주므로 소진 시각이 조금 다를 수 있습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

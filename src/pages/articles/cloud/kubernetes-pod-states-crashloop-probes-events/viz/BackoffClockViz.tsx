@@ -35,7 +35,7 @@ const TOTAL = WAITS.reduce((a, b) => a + b, 0) + RUN * WAITS.length; // 622초
 const sx = (sec: number) => X0 + (sec / TOTAL) * TRACK_W;
 
 export default function BackoffClockViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4200);
+  const scenes = useAnimatedScenes(SCENES.length, 4200, { loop: false });
   const scene = SCENES[scenes.active];
   const reduced = scenes.reducedMotion;
   const dur = reduced ? 0 : 0.35;
@@ -60,6 +60,7 @@ export default function BackoffClockViz() {
       note="실행 2초는 가정이고 대기 10·20·40·80·160·300초와 만료 600초는 kubelet.go 원문의 값입니다. jitter가 없어 정확히 두 배씩 늘어납니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

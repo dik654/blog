@@ -7,7 +7,7 @@ import BackoffClockViz from "./kubernetes-pod-states-crashloop-probes-events/viz
 import ProbeStormViz from "./kubernetes-pod-states-crashloop-probes-events/viz/ProbeStormViz";
 import { codeRefs } from "./kubernetes-pod-states-crashloop-probes-events/codeRefs";
 import { k8sPodStatesTrees } from "./kubernetes-pod-states-crashloop-probes-events/fileTree";
-import KubernetesSeriesLocator from "./kubernetes-shared/KubernetesSeriesLocator";
+import KubernetesSeriesLocator, { KubernetesMapReturn } from "./kubernetes-shared/KubernetesSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -62,6 +62,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
 
         <section id="backoff-clock" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. 여섯 번 죽은 컨테이너는 12초를 돌고 610초를 기다렸습니다</h2>
+          <BackoffClockViz />
           <div className={prose}>
             <p>(가정) 설정 파일이 없어서 뜨자마자 2초 만에 exit 1로 죽는 컨테이너가 있습니다. 첫 크래시 뒤 kubelet은 10초를 기다렸다가 다시 띄웁니다. 또 2초 만에 죽으면 이번에는 20초, 그다음 40초, 80초, 160초를 기다립니다. 여섯 번째 크래시 뒤에는 320초가 아니라 상한 300초를 기다리고 그 뒤로는 죽을 때마다 300초입니다.</p>
             <p>여섯 번 죽기까지 컨테이너가 실제로 돈 시간은 6 × 2 = 12초이고 기다린 시간은 10 + 20 + 40 + 80 + 160 + 300 = 610초입니다. 전체 622초 가운데 98%가 대기입니다. 그래서 1절의 "지금 무엇을 하는 중인가"의 답은 "다음 재시작을 기다리는 중"이며, kubectl describe의 State는 Waiting, Reason은 CrashLoopBackOff, Last State는 Terminated·Exit Code 1입니다.</p>
@@ -85,7 +86,6 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
             conclusion="CrashLoopBackOff는 상태라기보다 대기 중이라는 표시이고, RESTARTS와 AGE의 비율은 '항상 죽는가, 가끔 죽는가'를 가르는 첫 숫자입니다."
             caveats={["대기 시각의 기준은 kubelet이 확인한 시각이 아니라 컨테이너의 FinishedAt입니다. kubelet이 늦게 확인해도 대기가 그만큼 길어지지 않습니다.", "ReduceDefaultCrashLoopBackOffDecay(alpha)를 켜면 1·2·4·8·16·32·60초가 되고, 1.35부터 beta인 KubeletCrashLoopBackOffMax로 노드별 상한을 1~300초에서 바꿀 수 있습니다(11절)."]}
           />
-          <BackoffClockViz />
           {code("crashloop-constants", "10초·300초 상수")}
           {code("restart-backoff-doc", "문서의 10s, 20s, 40s… 설명")}
         </section>
@@ -204,6 +204,7 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
 
         <section id="restart-storm" data-teach-level="4" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. liveness가 DB를 확인하면 DB 30초 장애가 서비스 전체 재시작이 됩니다</h2>
+          <ProbeStormViz />
           <div className={prose}>
             <p>
               (가정) replica 세 개짜리 Deployment가 /healthz에서 DB 연결까지 확인하고 그 경로를 livenessProbe에 걸어 두었습니다. DB가 30초 동안 응답하지 않습니다. 세 Pod의 /healthz는 모두 1초 timeout을 넘기고 10초 간격으로 세 번 실패해 failureThreshold 3에 닿습니다. kubelet 세 대가 거의 동시에 세 컨테이너를 죽이고 다시 띄웁니다.
@@ -220,7 +221,6 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
               liveness는 "이 프로세스가 스스로 회복할 수 없는 상태(교착·무한 루프)인가"만 묻게 두고, 의존성은 readiness로 보내는 것이 공식 문서가 두 probe를 분리해 둔 이유입니다.</p>
             <p>이 사례의 숫자는 가정이지만 구조는 소스 사실의 조합입니다. 기본값 1·10·3(7절), 재시작 중 Ready=false, 두 probe의 독립(문서 caution), 재시작마다 적용되는 backoff(6절)가 그것입니다. 실제 사고 사례와 SRE 관점의 대책(의존성 격리·점진적 롤아웃·PDB)은 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes SRE 글</a>에서 이어집니다.</p>
           </div>
-          <ProbeStormViz />
           <div id="paper-k8s-probes" className="not-prose my-8 scroll-mt-24">
             <CitationBlock source="Kubernetes docs · Configure Liveness, Readiness and Startup Probes (website main 2f85f280, 2026-10-17 확인)" citeKey={1} href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">
               <q>The readiness and liveness probes do not depend on each other to succeed.</q> 같은 문서의 startupProbe 절은 failureThreshold 30 · periodSeconds 10으로 "a maximum of 5 minutes (30 * 10 = 300s)"를 주고, 한 번도 성공하지 못하면 컨테이너가 죽어 restartPolicy를 따른다고 적습니다.
@@ -274,30 +274,27 @@ export default function KubernetesPodStatesCrashloopProbesEventsArticle() {
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">11. NODE 열과 Last State, Event 시간순을 보고 probe 배치를 고칩니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">11. STATUS 한 단어만으로는 실패 원인과 복구 시점을 알 수 없습니다</h2>
           <div className={prose}>
             <p>
-              진단 순서를 단어별로 정리합니다. Pending이면 NODE 열이 비었는지부터 봅니다(4절). 비었으면 scheduler event, 채워졌으면 노드 kubelet의 event입니다. ImagePullBackOff면 레지스트리 인증과 이미지 이름을, InvalidImageName·ErrImageNeverPull이면 기다리지 말고 spec을 고칩니다.
+              Pending이라는 phase 하나에는 scheduler가 노드를 고르지 못한 경우와 kubelet이 이미지·네트워크·볼륨을 준비하지 못한 경우가 함께 들어갑니다. NODE가 비었는지, Event의 reporting controller가 누구인지 확인하기 전에는 어느 제어 루프가 멈췄는지 알 수 없습니다.
             </p>
             <p>
-              CrashLoopBackOff면 <code>kubectl logs --previous</code>로 직전 컨테이너의 마지막 로그를, describe의 Last State에서 Exit Code를 봅니다.
+              CrashLoopBackOff도 원인이 아니라 다음 재시작을 미루고 있다는 표시입니다. 직전 컨테이너의 종료 이유는 Last State·Exit Code와 이전 로그에 있고, backoff가 언제 풀릴지는 FinishedAt과 현재 지연 장부에 있습니다.
             </p>
             <p>
-              137이면 메모리(limit·OOMKilled), 1이나 2면 앱 오류나 설정, 143이면 SIGTERM으로 끝난 것이며, Exit Code 0인데 재시작이면 "할 일을 끝낸 뒤 정상 종료하는 프로세스를 Always로 돌린" 경우입니다.
-            </p>
-            <p>RESTARTS와 AGE의 비율은 3절처럼 읽습니다. 비율이 300초에 가까우면 항상 죽는 것이고 훨씬 길면 간헐적으로 죽는 것입니다. 후자는 로그보다 probe 설정(7절)과 의존성(8절), 메모리 추세를 먼저 의심합니다. Event는 1시간 안에 거두고(9절) 소유자 사슬마다 따로 봅니다.</p>
-            <p>고칠 때는 probe부터 배치를 바꿉니다. liveness에서 의존성 확인을 빼고 프로세스 자체의 응답만 보게 하며, 의존성은 readiness로, 느린 시작은 startupProbe로 보냅니다.
+              Event도 완전한 이력은 아닙니다. 같은 사건을 합치고 보내는 속도를 제한하며 기본 1시간 뒤 삭제하므로, Event가 없다는 사실만으로 실패가 없었다고 결론 내릴 수 없습니다.
             </p>
             <p>
-              timeoutSeconds 1초를 넘기는 원인이 CPU throttling이면 probe가 아니라 limit을 고칩니다. backoff 자체를 바꾸고 싶다면 1.35부터 beta·기본 on인 KubeletCrashLoopBackOffMax로 kubelet 설정 <code>crashLoopBackOff.maxContainerRestartPeriod</code>를 1~300초 사이로 두어 노드별 상한을 낮출 수 있습니다.
+              probe 값이나 backoff 상한을 바꾸면 감지 시간·재시작 빈도·의존성 장애의 전파 범위가 함께 바뀝니다. 어떤 값을 선택할지는 이 메커니즘만으로 정할 수 없으며 서비스의 허용 지연과 실패 기준이 필요합니다.
             </p>
             <p>
-              상한을 낮추면 복구는 빨라지지만 진짜로 깨진 컨테이너가 노드와 레지스트리를 더 자주 두드립니다. 클러스터 전체를 1초·60초로 바꾸는 ReduceDefaultCrashLoopBackOffDecay는 1.37.1에서도 alpha입니다.</p>
-            <p>이 글의 시계는 kubelet 상수로 손으로 계산한 값이며 실제 클러스터를 돌려 잰 것이 아닙니다. 실제 Pod의 대기는 describe의 Events에 <code>back-off 5m0s restarting failed container</code>처럼 kubelet이 직접 적어 주므로 거기서 다시 읽습니다.
+              이 글의 시계는 kubelet 상수로 손으로 계산한 값이며 실제 클러스터의 측정 결과가 아닙니다. 운영 환경에서 증거를 보존하고 probe·limit·배포 정책을 선택하는 과정은 <a href="/cs/cloud/kubernetes-sre-slo-burn-rate-upgrades#overview">Kubernetes 운영</a>에서 이어집니다.
             </p>
             <p>
               컨테이너 대신 노드가 죽었을 때 Pod가 다른 노드로 옮겨 가는 데 걸리는 약 6분의 시계는 <a href="/cs/cloud/kubernetes-pod-to-node-scheduler-kubelet-notready#overview">Pod가 노드에 닿기까지</a>에서, Deployment가 새 ReplicaSet으로 Pod를 갈아 끼우는 쪽은 <a href="/cs/cloud/kubernetes-controllers-reconcile-deployment-job#overview">컨트롤러와 reconcile</a>에서 이어집니다.</p>
           </div>
+          <KubernetesMapReturn current="health" />
           <ContentBoundary article="kubernetes-pod-states-crashloop-probes-events" />
         </section>
 
