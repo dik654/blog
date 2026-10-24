@@ -29,4 +29,4 @@
 - [x] reduced-motion
 - [x] JavaScript 비활성 전체 장면
 - [x] 전체 build 및 strict audit
-- [ ] 공개 경로 배포 확인
+- [x] 공개 경로 배포 확인

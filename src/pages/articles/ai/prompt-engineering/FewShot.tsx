@@ -1,11 +1,10 @@
 import { CitationBlock } from "@/components/ui/citation";
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import { FewShotContextViz } from "./viz/FewShotContextViz";
 
 export default function FewShot() {
   return (
-    <section id="few-shot" className="mb-16 scroll-mt-20">
+    <section id="few-shot" data-teach-level="mechanism" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         Few-shot은 예시 개수보다 경계 coverage와 순서 민감도가 중요하다
       </h2>
@@ -80,7 +79,6 @@ export default function FewShot() {
         ]}
       />
 
-      <div className="not-prose my-8"><FewShotContextViz /></div>
       <ContentBoundary article="prompt-few-shot" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">

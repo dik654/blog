@@ -3,7 +3,6 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { OutputValidationViz } from "./viz/OutputValidationViz";
 
 const OUTPUT_PATHS = [
   [
@@ -25,7 +24,7 @@ const OUTPUT_PATHS = [
 
 export default function StructuredOutput() {
   return (
-    <section id="structured-output" className="mb-16 scroll-mt-20">
+    <section id="structured-output" data-teach-level="mechanism" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
         구조화된 출력은 형식 요청이 아니라 downstream consumer와의 계약이다
       </h2>
@@ -95,7 +94,6 @@ export default function StructuredOutput() {
         ]}
       />
 
-      <div className="not-prose my-8"><OutputValidationViz /></div>
       <ContentBoundary article="prompt-structured-output" />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
