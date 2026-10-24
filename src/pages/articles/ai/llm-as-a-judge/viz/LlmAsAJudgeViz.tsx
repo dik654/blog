@@ -7,13 +7,13 @@ import VizFrame from "@/components/viz/VizFrame";
  * 승자가 뒤집힐 수 있다는 것. 두 행(순서 1 · 순서 2)을 항상 그리고 값만 채워
  * stage 높이를 고정한다.
  */
-const SCENES = ["같은 답변 쌍 A, B", "순서 1: A 를 먼저 제시", "순서 2: 슬롯만 바꿔 제시", "두 판정 비교: 불일치"] as const;
+const SCENES = ["답변 쌍", "A 먼저", "B 먼저", "판정 불일치"] as const;
 
 const NOTES = [
-  "내용이 완전히 같은 두 답변 A, B 입니다. 아직 어느 슬롯에 넣을지 정하지 않았습니다.",
-  "A 를 슬롯 1(먼저 보이는 자리)에 넣고 judge 에게 물으면, 순서에 끌리는 judge 는 슬롯 1 을 승자로 고릅니다. 승자는 A 입니다.",
-  "내용은 그대로 두고 슬롯만 바꿔 B 를 슬롯 1 에 넣었습니다. 같은 judge 가 다시 슬롯 1 을 고르면 이번 승자는 B 입니다.",
-  "두 번의 판정이 A 와 B 로 서로 다릅니다. 내용은 바뀌지 않았으므로 이 불일치는 position bias 이고, 두 판정이 같을 때만 승자를 확정해야 합니다.",
+  "내용이 같은 답변 A와 B가 있습니다. 아직 제시 순서는 정하지 않았습니다.",
+  "A를 먼저 보여 주자 판정 모델이 첫 자리의 A를 골랐습니다.",
+  "내용은 그대로 두고 B를 먼저 보여 주자 이번에는 B를 골랐습니다.",
+  "내용은 같고 순서만 바뀌었으므로 위치 편향입니다. 두 판정이 같을 때만 승자를 확정합니다.",
 ] as const;
 
 const SLOT1_X = 90;
@@ -27,7 +27,7 @@ function slotContent(run: 1 | 2, scene: number): string | null {
 }
 
 export default function LlmAsAJudgeViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   const scene = scenes.active;
   const rows = [1, 2] as const;
   return (
@@ -38,20 +38,42 @@ export default function LlmAsAJudgeViz() {
       note="실제 판정은 승/패/무 세 값이고 judge 마다 편향의 방향과 크기가 다릅니다. 그림은 A 를 승자로 고르는 단순한 첫-자리 편향만 보입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="evaluation-judge-calibration-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="Position bias 로 같은 답변 쌍의 판정이 순서에 따라 갈리는 과정"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
           <div className="mt-4 border border-border p-3">
-            <svg viewBox="0 0 460 190" className="mx-auto h-auto w-full max-w-[28rem]" role="img" aria-label="순서를 바꾼 두 번의 pairwise judge 판정 비교">
+            <div className="space-y-3 sm:hidden" aria-label="순서를 바꾼 두 번의 판정 비교">
+              {rows.map((run) => {
+                const active = run === 1 ? scene >= 1 : scene >= 2;
+                const first = active ? (run === 1 ? "A" : "B") : "?";
+                const second = active ? (run === 1 ? "B" : "A") : "?";
+                return (
+                  <div key={run} className="grid grid-cols-[3rem_1fr_auto_1fr_auto] items-center gap-1 text-center">
+                    <span className="text-left font-mono text-[9px] text-muted-foreground">순서 {run}</span>
+                    <span className={`border py-2 font-mono text-[10px] ${active ? "border-primary bg-primary/10" : "border-border"}`}>{first}</span>
+                    <span className="text-muted-foreground">↔</span>
+                    <span className="border border-border py-2 font-mono text-[10px]">{second}</span>
+                    <strong className="w-8 text-[10px]">→ {active ? first : "?"}</strong>
+                  </div>
+                );
+              })}
+              <p className={`border-t border-border pt-3 text-center text-[10px] font-bold ${scene >= 3 ? "text-primary" : "text-muted-foreground"}`}>
+                {scene < 2 ? "판정이 하나라 아직 비교할 수 없습니다" : scene < 3 ? "순서 1은 A · 순서 2는 B" : "A ≠ B · 무승부 또는 재판정"}
+              </p>
+            </div>
+            <svg viewBox="0 0 460 190" className="mx-auto hidden h-auto w-full max-w-[28rem] sm:block" role="img" aria-label="순서를 바꾼 두 번의 pairwise judge 판정 비교">
               {rows.map((run) => {
                 const active = run === 1 ? scene >= 1 : scene >= 2;
                 const y0 = run === 1 ? 14 : 84;
@@ -95,6 +117,14 @@ export default function LlmAsAJudgeViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

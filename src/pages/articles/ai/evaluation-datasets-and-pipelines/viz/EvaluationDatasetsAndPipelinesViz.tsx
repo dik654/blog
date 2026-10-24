@@ -8,13 +8,13 @@ import VizFrame from "@/components/viz/VizFrame";
  * offline→shadow→A/B 게이트로 밀어 넣고(2) → shadow 와 A/B 가 서로 다른 방식으로
  * 배포 여부를 판정한다(3). Stage 높이는 4 장면 중 가장 큰 scene 2 기준으로 고정한다.
  */
-const SCENES = ["Golden set 채우기", "Slice 별 정확도", "Pipeline gate", "Shadow vs A/B"] as const;
+const SCENES = ["표본 구성", "슬라이스 분석", "배포 관문", "관찰과 실험"] as const;
 
 const NOTES = [
-  "200 개 golden set 을 카테고리별로 채웁니다. 그중 20 개(10 %)는 edge case·adversarial 로 일부러 넣은 example 입니다.",
-  "전체 평균은 90 % 근처지만 언어별로 나누면 기타 언어 slice 만 72 % 로 무너져 있습니다. 평균만 봤다면 이 실패는 보이지 않습니다.",
-  "Harness 가 자동으로 채점한 뒤 offline 게이트를 통과한 candidate 만 shadow 로 넘어갑니다. Shadow 에서 이상이 없어야 A/B 로, A/B 를 통과해야 배포로 이어집니다.",
-  "Shadow 는 트래픽 10 % 의 응답은 버리고 지표만 관찰합니다. A/B 는 트래픽을 반으로 갈라 사용자가 실제로 candidate 응답을 받고, 그 차이를 유의성 검정으로 판정합니다.",
+  "평가 표본 200개를 범주별로 채우고, 그중 20개는 경계·공격 사례로 둡니다.",
+  "전체 평균은 90%지만 기타 언어만 72%입니다. 평균 하나로는 이 실패를 볼 수 없습니다.",
+  "자동 채점 뒤 오프라인·그림자·A/B 관문을 차례로 통과한 후보만 배포합니다.",
+  "그림자는 후보 응답을 버리고 지표만 봅니다. A/B는 사용자에게 후보 응답을 보여 준 뒤 차이를 판정합니다.",
 ] as const;
 
 const CATEGORIES = [
@@ -118,29 +118,31 @@ function PipelineScene() {
 
 function ShadowAbScene() {
   return (
-    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+    <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-3">
       <div className="border border-border p-3 text-xs">
         <p className="text-[11px] font-black text-primary">Shadow evaluation</p>
-        <p className="mt-2 leading-6 text-muted-foreground">
+        <p className="mt-2 hidden leading-6 text-muted-foreground sm:block">
           트래픽 10 % 에 candidate 를 붙입니다. 사용자에게는 기존 model 응답을 보내고, candidate 응답은
           버리며 지표만 기록합니다.
         </p>
-        <p className="mt-2 font-mono text-[11px] text-foreground">split 없음 · 관찰만</p>
+        <p className="mt-2 text-[10px] leading-5 text-muted-foreground sm:hidden">기존 응답 전달<br />후보 응답 폐기<br />지표만 기록</p>
+        <p className="mt-2 font-mono text-[9px] text-foreground sm:text-[11px]">split 없음 · 관찰만</p>
       </div>
       <div className="border border-border p-3 text-xs">
         <p className="text-[11px] font-black text-primary">A/B testing</p>
-        <p className="mt-2 leading-6 text-muted-foreground">
+        <p className="mt-2 hidden leading-6 text-muted-foreground sm:block">
           트래픽을 50/50 으로 나눠 사용자가 실제 candidate 응답을 받습니다. 지표 차이가 우연보다 큰지
           유의성 검정으로 판정합니다.
         </p>
-        <p className="mt-2 font-mono text-[11px] text-foreground">split 50/50 · p &lt; 0.001</p>
+        <p className="mt-2 text-[10px] leading-5 text-muted-foreground sm:hidden">트래픽 50/50<br />후보 응답 노출<br />차이 검정</p>
+        <p className="mt-2 font-mono text-[9px] text-foreground sm:text-[11px]">split 50/50 · p &lt; 0.001</p>
       </div>
     </div>
   );
 }
 
 export default function EvaluationDatasetsAndPipelinesViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   return (
     <VizFrame
       eyebrow="평가 데이터셋 → 파이프라인"
@@ -149,14 +151,17 @@ export default function EvaluationDatasetsAndPipelinesViz() {
       note="수치는 파이프라인 구조를 보여 주기 위한 예시이며 특정 시스템의 실측값이 아닙니다. Slice 예의 −18%p 격차 패턴은 ML Test Score 논문이 보고한 실제 사례를 본뜬 것입니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="evaluation-dataset-pipeline-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="Golden set 구축부터 A/B 배포까지의 평가 파이프라인"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -172,6 +177,14 @@ export default function EvaluationDatasetsAndPipelinesViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

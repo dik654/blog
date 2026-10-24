@@ -5,6 +5,10 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import PositionBiasViz from "./llm-as-a-judge/viz/LlmAsAJudgeViz";
+import {
+  EvaluationTrustPathLocator,
+  EvaluationTrustPathMapReturn,
+} from "./shared/EvaluationTrustPathLocator";
 
 /**
  * LLM-as-a-judge 는 rubric 과 순서로 판정이 갈립니다
@@ -14,10 +18,12 @@ import PositionBiasViz from "./llm-as-a-judge/viz/LlmAsAJudgeViz";
 export default function LlmAsAJudgeArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <EvaluationTrustPathLocator current="judge" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           답은 그대로인데 앞자리를 바꾸자 승자가 A에서 B로 바뀝니다
         </h2>
+        <PositionBiasViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             같은 질문에 대한 답변 A와 B를 judge model에 넣습니다. 첫 판정에서는 A를 먼저
@@ -36,7 +42,6 @@ export default function LlmAsAJudgeArticle() {
             때만 승자를 확정하고, 엇갈리면 tie 또는 재판정으로 보냅니다.
           </p>
         </div>
-        <PositionBiasViz />
         <ContentBoundary article="llm-as-a-judge" />
         <TermBreakdown
           title="판정자의 두 자리"
@@ -234,6 +239,7 @@ export default function LlmAsAJudgeArticle() {
           </p>
         </div>
       </section>
+      <EvaluationTrustPathMapReturn current="judge" />
     </div>
   );
 }

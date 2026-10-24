@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 547,
-    "pending": 443,
+    "reviewed": 549,
+    "pending": 441,
     "untracked": 0,
-    "assignedPending": 399,
+    "assignedPending": 397,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1935,7 +1935,7 @@
       "catalogIndex": 190,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1943,9 +1943,9 @@
       "publicPath": "cs/ai/llm-evaluation-criteria-and-methods",
       "title": "LLM 평가는 criteria·metric·비교 방식 세 층으로 나뉩니다",
       "catalogIndex": 191,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1953,9 +1953,9 @@
       "publicPath": "cs/ai/llm-as-a-judge",
       "title": "LLM-as-a-judge 는 rubric 과 순서로 판정이 갈립니다",
       "catalogIndex": 192,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

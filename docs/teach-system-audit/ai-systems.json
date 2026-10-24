@@ -5718,7 +5718,7 @@
       "route": "ai/evaluation-datasets-and-pipelines",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
       "publicPath": "cs/ai/evaluation-datasets-and-pipelines",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -5728,7 +5728,9 @@
       "beforeDefects": [
         "Golden set·coverage 정의가 200개 고정 사례보다 먼저 나왔음",
         "전체 90%와 다른 언어 72%의 충돌이 첫 화면에서 보이지 않았음",
-        "기존 핵심 Viz가 예측 질문에서 떨어져 있었음"
+        "기존 핵심 Viz가 예측 질문에서 떨어져 있었음",
+        "평가 표본·측정 계약·LLM 판정기 보정이 같은 학습 경로라는 직속 부모 지도가 없었음",
+        "동작 그림이 첫 설명 뒤에 있고 장면 전환이 빨라 배포 관문을 따라가기 어려웠음"
       ],
       "fixture": {
         "goldenSet": 200,
@@ -5745,13 +5747,15 @@
         "otherLanguagePass": 0.72
       },
       "stageAnchors": {
+        "0": "evaluation-trust-parent-map",
         "1": "golden-set",
         "2": "edge-case",
         "3": "slice-analysis",
         "4": "pipeline",
         "5": "deployment",
         "S": "problem의 200개 golden set",
-        "B": "세 예측 뒤 category·slice Viz"
+        "B": "세 예측 뒤 category·slice Viz",
+        "return": "evaluation-trust-map-return"
       },
       "sourceEvidence": [
         {
@@ -5776,14 +5780,18 @@
         "build": "PASS Vite 9.33s·7,107 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
         "production": "GitHub Pages run 37358922315 success @ f297c5057e6ad65d635aab7920f3a35e59be4395; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-249-production/summary.json",
-        "semanticReview": "200개 golden set의 범주 수, 운영 code 비중 35% 대 set 25%, 전체 90% 대 다른 언어 72%를 고정했습니다. Coverage·slice·offline·shadow·A/B가 서로 대신할 수 없는 검증 단계임을 연결했습니다."
+    "semanticReview": "200개 golden set의 범주 수, 운영 code 비중 35% 대 set 25%, 전체 90% 대 다른 언어 72%를 고정했습니다. Coverage·slice·offline·shadow·A/B가 서로 대신할 수 없는 검증 단계임을 연결했습니다.",
+    "browser390Current": "첫 그림 우선·평가 지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·마지막 설명 잘림 없음: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+    "browser1440Current": "첫 그림 우선·평가 지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+    "buildCurrent": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 191편 exit0"
       },
-      "remaining": [],
+  "remaining": ["Batch 33 공개 배포 경로 확인"],
       "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+  "reviewMode": "evaluation-trust-map-and-dataset-deployment-gate-review",
       "bodyFiles": [
         "src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
-        "src/pages/articles/ai/evaluation-datasets-and-pipelines/viz/EvaluationDatasetsAndPipelinesViz.tsx"
+    "src/pages/articles/ai/evaluation-datasets-and-pipelines/viz/EvaluationDatasetsAndPipelinesViz.tsx",
+    "src/pages/articles/ai/shared/EvaluationTrustPathLocator.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/evaluation-datasets-and-pipelines.tsx",
       "contentHash": "8403e2ed231ca546b1e607d959c665ccede3043c13994b625eb152efbf23b9eb",
@@ -8193,50 +8201,144 @@
       "route": "ai/llm-as-a-judge",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-as-a-judge.tsx",
       "publicPath": "cs/ai/llm-as-a-judge",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "LLM-as-a-judge·rubric·bias 용어가 같은 답변 쌍을 두 순서로 판정하는 사례보다 먼저 나왔음",
+        "순서 1과 순서 2의 승자가 실제로 뒤집히는 상태 변화가 첫 화면보다 늦게 등장했음",
+        "평가 표본과 지표를 정한 뒤 판정 모델을 보정한다는 직속 학습 경로가 없었음"
+      ],
+      "fixture": {
+        "answers": ["A", "B"],
+        "run1Order": ["A", "B"],
+        "run1Winner": "A",
+        "run2Order": ["B", "A"],
+        "run2Winner": "B",
+        "finalState": "tie or re-judge"
+      },
+      "stageAnchors": {
+        "0": "evaluation-trust-parent-map",
+        "1": "problem",
+        "2": "rubric",
+        "3": "position-bias",
+        "4": "verbosity-self-preference",
+        "5": "calibration",
+        "return": "evaluation-trust-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2303.16634",
+          "application": "G-Eval의 단계별 rubric과 사람 판정 상관의 보고 범위"
+        },
+        {
+          "href": "https://arxiv.org/abs/2306.05685",
+          "application": "MT-Bench의 위치·장황성·자기 선호 편향과 사람 판정 일치도"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "내용이 같은 A·B를 A→B와 B→A 순서로 두 번 판정했을 때 승자가 각각 A와 B로 뒤집히는 사례를 추적하고, 불일치는 무승부나 재판정으로 보내는 경계를 확인했습니다.",
+        "humanize": "판정 모델의 이름보다 제시 순서가 결과를 바꾸는 장면을 먼저 보여 주고, 마지막 설명은 모바일에서 읽히는 두 문장으로 줄였습니다.",
+        "browser390": "첫 그림 우선·평가 지도·키보드·reduced-motion·JavaScript 비활성·모바일 전용 판정 행·시각화 overflow0: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+        "browser1440": "첫 그림 우선·평가 지도·키보드·데스크톱 SVG·시각화 overflow0·console과 page 오류 0: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 191편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 33 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "evaluation-trust-map-and-judge-order-calibration-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-as-a-judge.tsx",
+        "src/pages/articles/ai/llm-as-a-judge/viz/LlmAsAJudgeViz.tsx",
+        "src/pages/articles/ai/shared/EvaluationTrustPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-as-a-judge.tsx",
+      "preserved": [
+        "G-Eval rubric과 MT-Bench 편향 측정",
+        "Position·verbosity·self-preference bias와 calibration 경계",
+        "원 논문 수치의 적용 범위와 기존 연습문제"
       ]
     },
     {
       "route": "ai/llm-evaluation-criteria-and-methods",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-evaluation-criteria-and-methods.tsx",
       "publicPath": "cs/ai/llm-evaluation-criteria-and-methods",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Criteria·metric·comparison 이름이 같은 다섯 출력의 서로 다른 판정 결과보다 먼저 나왔음",
+        "O2는 실행 성공·의미 0.55, O3는 실행 실패·의미 0.85라는 충돌이 모바일 SVG에서 너무 작았음",
+        "평가 데이터와 LLM 판정기 사이에서 이 글이 측정 계약을 맡는다는 현재 위치가 보이지 않았음"
+      ],
+      "fixture": {
+        "outputs": ["O1", "O2", "O3", "O4", "O5"],
+        "functionalPass": [true, true, false, false, true],
+        "semanticScores": [0.95, 0.55, 0.85, 0.2, 0.6],
+        "functionalRate": 0.6,
+        "semanticAverage": 0.63,
+        "disagreement": ["O2", "O3"]
+      },
+      "stageAnchors": {
+        "0": "evaluation-trust-parent-map",
+        "1": "problem",
+        "2": "criteria-metric",
+        "3": "functional-vs-semantic",
+        "4": "reference-based-vs-free",
+        "5": "pointwise-pairwise-ranking",
+        "return": "evaluation-trust-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2211.09110",
+          "application": "HELM의 시나리오·평가 기준·지표 조합"
+        },
+        {
+          "href": "https://arxiv.org/abs/1904.09675",
+          "application": "BERTScore의 문맥 임베딩 기반 의미 유사도"
+        },
+        {
+          "href": "https://arxiv.org/abs/2107.03374",
+          "application": "코드 생성의 실행 기반 pass@k 평가"
+        },
+        {
+          "href": "https://arxiv.org/abs/2206.04615",
+          "application": "BIG-bench의 과제별 평가와 reference 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "출력 다섯 개의 실행 통과율 3/5=.60과 의미 유사도 평균 .63을 같은 행에 놓고, O2와 O3의 순위가 엇갈리는 이유를 평가 기준·지표·비교 단위로 분리했습니다.",
+        "humanize": "추상 용어보다 실행 성공과 의미 거리의 충돌을 먼저 읽도록 했고, 모바일에서는 축소 SVG 대신 다섯 개의 직접 판정 열을 제공합니다.",
+        "browser390": "첫 그림 우선·평가 지도·키보드·reduced-motion·JavaScript 비활성·모바일 전용 다섯 출력 열·시각화 overflow0: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+        "browser1440": "첫 그림 우선·평가 지도·키보드·데스크톱 SVG·시각화 overflow0·console과 page 오류 0: output/playwright/ai-evaluation-trust-path-batch-33/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 191편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 33 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "evaluation-trust-map-and-measurement-contract-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-evaluation-criteria-and-methods.tsx",
+        "src/pages/articles/ai/llm-evaluation-criteria-and-methods/viz/LlmEvaluationCriteriaAndMethodsViz.tsx",
+        "src/pages/articles/ai/shared/EvaluationTrustPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-evaluation-criteria-and-methods.tsx",
+      "preserved": [
+        "Criteria·metric·comparison method의 세 층",
+        "Functional correctness·semantic similarity·reference 경계",
+        "HELM·BERTScore·Codex·BIG-bench 근거와 기존 연습문제"
       ]
     },
     {

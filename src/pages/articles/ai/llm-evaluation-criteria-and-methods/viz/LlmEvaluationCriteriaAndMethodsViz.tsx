@@ -8,13 +8,13 @@ import VizFrame from "@/components/viz/VizFrame";
  * stage 높이는 네 장면 모두 같은 행(output·functional·semantic)을 그리고
  * 값만 채워 넣어 고정한다.
  */
-const SCENES = ["같은 질문, 5개 output", "Functional correctness: pass/fail", "Semantic similarity: 임베딩 거리", "같은 output, 다른 신호"] as const;
+const SCENES = ["출력 5개", "실행 판정", "의미 거리", "신호 충돌"] as const;
 
 const NOTES = [
-  "코드 생성 문제 하나에 대해 model 이 낸 output 5개입니다. 아직 채점 전이라 다섯 개 모두 같은 상자로 보입니다.",
-  "각 output 을 실행해 unit test 를 통과하는지만 봅니다. O1·O2·O5 가 통과해 pass@1 근사치는 3/5=0.60 이고 부분 점수는 없습니다.",
-  "같은 output 을 reference 와의 embedding 코사인 유사도로 다시 잽니다. 점수는 0~1 사이 연속값이고 표현이 비슷할수록 높습니다.",
-  "O2 는 통과했지만 표현이 달라 유사도가 낮고(0.55), O3 는 실패했지만 표현이 비슷해 유사도가 높습니다(0.85). 두 metric 이 같은 output 에 다른 순위를 매기는 지점입니다.",
+  "코드 생성 문제 하나에서 나온 출력 다섯 개를 아직 채점하지 않은 상태입니다.",
+  "직접 실행하면 O1·O2·O5가 통과합니다. 실행 통과율은 3/5=0.60입니다.",
+  "같은 출력을 참조 답과의 임베딩 유사도로 재면 0부터 1 사이의 연속값이 나옵니다.",
+  "O2는 실행에 성공했지만 0.55이고, O3는 실패했지만 0.85입니다. 두 지표가 다른 질문에 답합니다.",
 ] as const;
 
 type Candidate = { id: string; pass: boolean; sem: number };
@@ -34,7 +34,7 @@ const BAR_MAX = 76;
 const BAR_BASE = 176;
 
 export default function LlmEvaluationCriteriaAndMethodsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   const scene = scenes.active;
   return (
     <VizFrame
@@ -44,20 +44,40 @@ export default function LlmEvaluationCriteriaAndMethodsViz() {
       note="실제로는 model 이 수십~수백 개 sample 을 내고 pass@k 는 k 개 중 하나라도 통과하면 성공으로 셉니다. 그림은 5개로 단순화했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="evaluation-measurement-contract-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="Functional correctness 와 semantic similarity evaluation 의 순위 불일치"
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
           <div className="mt-4 border border-border p-3">
-            <svg viewBox="0 0 480 196" className="mx-auto h-auto w-full max-w-[28rem]" role="img" aria-label="5개 output 의 functional correctness 와 semantic similarity 비교">
+            <div className="grid grid-cols-5 gap-1 sm:hidden" aria-label="출력 다섯 개의 실행 판정과 의미 유사도 비교">
+              {CANDIDATES.map((candidate) => {
+                const highlight = scene === 3 && DISAGREEMENT.has(candidate.id);
+                return (
+                  <div key={candidate.id} className={`min-w-0 border px-1 py-2 text-center ${highlight ? "border-primary bg-primary/10" : "border-border"}`}>
+                    <p className="font-mono text-[10px] font-black">{candidate.id}</p>
+                    <p className={`mt-2 text-[9px] font-bold ${scene >= 1 ? (candidate.pass ? "text-primary" : "text-red-600") : "text-muted-foreground"}`}>
+                      {scene >= 1 ? (candidate.pass ? "PASS" : "FAIL") : "대기"}
+                    </p>
+                    <div className="mx-auto mt-2 flex h-14 w-5 items-end border-b border-border">
+                      <div className={`w-full ${highlight ? "bg-primary/70" : "bg-muted-foreground/50"}`} style={{ height: scene >= 2 ? `${candidate.sem * 100}%` : 0 }} />
+                    </div>
+                    <p className="mt-1 font-mono text-[9px] text-muted-foreground">{scene >= 2 ? candidate.sem.toFixed(2) : "–"}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <svg viewBox="0 0 480 196" className="mx-auto hidden h-auto w-full max-w-[28rem] sm:block" role="img" aria-label="5개 output 의 functional correctness 와 semantic similarity 비교">
               <text x={8} y={12} className="fill-muted-foreground font-mono text-[8px]">Output</text>
               <text x={8} y={54} className="fill-muted-foreground font-mono text-[8px]">Functional (실행)</text>
               <text x={8} y={96} className="fill-muted-foreground font-mono text-[8px]">Semantic (임베딩)</text>
@@ -134,6 +154,14 @@ export default function LlmEvaluationCriteriaAndMethodsViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
