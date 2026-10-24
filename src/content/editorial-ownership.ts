@@ -11638,11 +11638,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "vision-language-model-architecture": {
-    title: "VLM은 image patch를 projector로 LLM token에 맞춥니다 글이 소유하는 범위",
+    title: "VLM 구조 글이 소유하는 범위",
     owns: [
-      "Multimodal model과 vision-language model(VLM)의 정의, vision encoder·projector·LLM 조립 구조",
-      "Multimodal projector가 patch embedding과 LLM hidden 차원을 맞추는 방법(linear·MLP)",
-      "Cross-modal alignment의 결합 방식 비교(concat-projection·cross-attention·query bottleneck)",
+      "한 image가 patch representation·projector를 거쳐 LLM input sequence에 합류하는 shape 변화",
+      "Linear projector가 patch 수를 유지하며 마지막 차원을 LLM hidden 차원에 맞추는 계산",
+      "LLaVA·Flamingo·BLIP-2의 connector 위치와 학습 대상 parameter 비교",
+      "생성형 VLM의 답 token 경로와 dual encoder retrieval의 후보 순위 경계",
     ],
     reuses: [
       { label: "Vision encoder가 image를 patch embedding으로 바꾸는 절차(ViT patch-sequence contract)", href: "/cs/ai/vision-transformer#patch-embedding" },
@@ -11678,15 +11679,15 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "multimodal-retrieval-and-visual-grounding": {
-    title: "같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다 글이 소유하는 범위",
+    title: "Multimodal retrieval과 visual grounding 글이 소유하는 범위",
     owns: [
-      "Multimodal embedding·cross-modal retrieval·multimodal RAG의 정의와 CLIP 대조학습 산수",
-      "Visual document retrieval·screenshot retrieval이 OCR·layout parsing을 건너뛰는 방식과 비용 비교",
+      "Dual encoder가 text·image embedding의 similarity로 후보를 고르는 경로와 계산",
+      "Visual document retrieval에서 OCR 경로와 screenshot retrieval 경로의 표현 차이",
       "Visual grounding의 위치 표현 단위(bounding box·point·segmentation mask)와 표현력·비용 비교",
       "Vision-in-the-loop reasoning이 grounding 결과를 반복 참조하는 절차",
     ],
     reuses: [
-      { label: "VLM이 vision encoder·projector·LLM을 조립해 image·text를 함께 추론하는 방식", href: "/cs/ai/vision-language-model-architecture#architecture" },
+      { label: "생성형 VLM의 답 token 경로와 dual encoder 검색 경로의 경계", href: "/cs/ai/vision-language-model-architecture#boundary" },
       { label: "Image가 patch embedding sequence로 바뀌는 절차", href: "/cs/ai/vision-transformer#patch-embedding" },
       { label: "Text 중심 dense retrieval의 embedding space·ANN index", href: "/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space" },
       { label: "OCR·layout parsing 기반 문서 구조 파싱 경로", href: "/cs/ai/document-parsing-and-table-extraction#layout-and-order" },

@@ -3208,3 +3208,26 @@
 - Node heap 8GB production build는 7,873개 module, 정적 public route 2,086개, 검토 완료 no-script 본문
   14편을 생성했다. JavaScript를 끈 390×844 브라우저에서 네 글 모두 제목과 네 절, 전체 정적 본문,
   가로 overflow 0을 확인했다. 공개 배포 검증 전 상태는 `rewritten-local-verified`로 기록한다.
+
+### Multimodal 생성·검색 묶음 로컬 완료 (2026-10-24)
+
+- `ai/vision-language-model-architecture`와 `ai/multimodal-retrieval-and-visual-grounding`을 concept 글로
+  다시 썼다. 첫 글은 생성형 VLM의 `image → patch → vision encoder → projector → LLM sequence`를,
+  둘째 글은 dual encoder 검색의 `text query → image embedding → cosine → top-1`과 그 뒤의
+  grounding을 맡는다. 두 경로를 하나의 연속 pipeline처럼 설명하던 기존 배치를 제거했다.
+- 생성 글은 LLaVA 공개 설정인 224×224·patch 14·256×1024·projector 1024→5120을 한 이미지에서
+  끝까지 추적한다. LLaVA·Flamingo·BLIP-2는 visual 정보를 줄이는 방식과 LLM에 연결하는 위치를
+  비교하되 성능 순위로 확대하지 않는다.
+- 검색 글은 교육용 정규화 벡터 `q=(1,0)`, `A=(0.8,0.6)`, `B=(0,1)`, `C=(−0.6,0.8)`을 써
+  cosine `0.8·0·−0.6`과 top-1 A를 직접 계산한다. 후보 선택이 끝난 뒤에만 box·point·mask로
+  위치를 표현한다. ColPali는 OCR 경로와 screenshot multi-vector 경로의 차이를 설명하는 범위로
+  한정했다.
+- 모바일에서 길던 connector 비교와 grounding primitive 도표를 정보 손실 없는 짧은 비교 행으로
+  바꿔 data canvas 높이를 902→661px, 796→499px로 줄였다. 1,440×1,000과 390×844에서 키보드
+  `→`가 1/5→2/5로 이동하고, 가로 overflow와 console 오류는 모두 0이었다. reduced-motion에서는
+  재생이 비활성화되며 자동 시작하지 않는다.
+- 엄격 learning·graph·formula·calculation·reading·order·prose·terms·term-pairs·Viz·pseudocode·
+  architecture-flow·runtime 감사와 변경 파일 ESLint를 통과했다. Production build는 7,875개 module,
+  정적 public route 2,086개, no-script 본문 16편을 생성했다. JavaScript를 끈 모바일에서 두 글의
+  제목·5개 절·전체 본문과 overflow 0을 확인했다. 공개 배포 전 상태는
+  `rewritten-local-verified`로 기록한다.

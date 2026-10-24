@@ -54,13 +54,14 @@ export const dlFoundation2Articles: Article[] = [
   },
   {
     slug: "vision-language-model-architecture",
-    title: "VLM은 image patch를 projector로 LLM token에 맞춥니다",
+    title: "VLM 구조: Image Patch에서 LLM Token까지",
     subcategory: "ai-vision",
     sections: [
-      { id: "problem", title: "Vision encoder·projector·LLM 조립" },
-      { id: "architecture", title: "Multimodal model, VLM, vision encoder" },
-      { id: "projector", title: "Multimodal projector와 차원 산수" },
-      { id: "alignment", title: "Cross-modal alignment: concat vs cross-attention vs query bottleneck" },
+      { id: "overview", title: "이미지에서 LLM 입력까지" },
+      { id: "trace", title: "한 요청의 배열 모양" },
+      { id: "projector", title: "Projector와 의미 정렬" },
+      { id: "connectors", title: "세 가지 연결 방식" },
+      { id: "boundary", title: "생성과 검색의 경계" },
       {
         id: "sources",
         title: "근거 문서",
@@ -75,14 +76,14 @@ export const dlFoundation2Articles: Article[] = [
   },
   {
     slug: "multimodal-retrieval-and-visual-grounding",
-    title: "같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다",
+    title: "Multimodal Retrieval과 Visual Grounding",
     subcategory: "ai-vision",
     sections: [
-      { id: "problem", title: "검색은 무엇인지, grounding은 어디인지" },
-      { id: "embedding-and-retrieval", title: "Multimodal embedding, cross-modal retrieval, multimodal RAG" },
-      { id: "document-retrieval", title: "Visual document retrieval과 screenshot retrieval" },
-      { id: "grounding", title: "Bounding box, point, segmentation grounding" },
-      { id: "vision-in-the-loop", title: "Vision-in-the-loop reasoning" },
+      { id: "overview", title: "검색 뒤에 위치 찾기" },
+      { id: "similarity", title: "Cosine similarity 계산" },
+      { id: "document-retrieval", title: "문서를 표현하는 두 경로" },
+      { id: "grounding", title: "Box·point·mask" },
+      { id: "vision-loop", title: "찾고 확대해 다시 읽기" },
       {
         id: "sources",
         title: "근거 문서",

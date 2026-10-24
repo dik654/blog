@@ -1,224 +1,267 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import MultimodalRetrievalAndVisualGroundingViz from "./multimodal-retrieval-and-visual-grounding/viz/MultimodalRetrievalAndVisualGroundingViz";
+import MultimodalSeriesLocator, {
+  MultimodalMapReturn,
+} from "./vision-language-model-architecture/shared/MultimodalSeriesLocator";
+import MultimodalRetrievalAndVisualGroundingViz, {
+  DocumentRetrievalPathComparison,
+  GroundingPrimitiveComparison,
+} from "./multimodal-retrieval-and-visual-grounding/viz/MultimodalRetrievalAndVisualGroundingViz";
 
 /**
- * 같은 embedding 공간이 검색을, grounding primitive가 위치를 정합니다
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
+ * Text query로 이미지를 고른 뒤, 선택된 이미지 안의 위치를 찾는 경로를 추적합니다.
  */
 export default function MultimodalRetrievalAndVisualGroundingArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <section className="scroll-mt-20">
+        <MultimodalSeriesLocator current="retrieval-grounding" />
         <h2 className="mb-6 text-2xl font-bold">
-          검색은 image가 무엇인지, grounding은 image의 어디인지를 답합니다
+          먼저 어느 이미지인지, 그다음 이미지의 어디인지 찾습니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <MultimodalRetrievalAndVisualGroundingViz />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multimodal retrieval은 image와 text를 같은 벡터 공간에 놓고 그 공간에서 가까운 것을 찾아
-            "어떤 이미지·문서인지"에 답하고, visual grounding은 image 위의 특정 좌표나 영역을 짚어
-            "그 대상이 어디에 있는지"에 답합니다. 둘 다 <Link to="/cs/ai/vision-language-model-architecture#architecture">
-            VLM</Link>이 만드는 image·text 공동 표현 위에서 동작하지만 묻는 질문이 다릅니다.
+            “빨간 컵”이라는 text query가 들어오면 retrieval은 후보 이미지 중 의미가 가장 가까운 한
+            장을 고릅니다. Grounding은 그 결과로 고른 이미지 안에서 빨간 컵의 좌표나 영역을
+            찾습니다. 둘은 같은 요청에 이어서 쓸 수 있지만 출력과 책임이 다른 두 계산입니다.
           </p>
           <p>
-            이 글은 image와 text를 한 embedding 공간에 놓는 대조학습부터, OCR 없이 문서 스크린샷을
-            그대로 검색하는 방식, bounding box·point·segmentation mask로 위치를 표현하는 세 가지
-            grounding 방식, 그리고 이 grounding 결과를 반복 참조하며 답을 좁혀 가는 reasoning
-            방식까지 차례로 다룹니다.
+            Retrieval의 결과는 image ID와 similarity입니다. 이 시점에는 컵의 위치를 모릅니다.
+            Grounding의 결과는 bounding box·point·segmentation mask입니다. 이 시점에는 어느
+            후보를 고를지 비교하지 않습니다.
+          </p>
+          <p>
+            또 하나의 경계를 먼저 분명히 해야 합니다. 앞 글의 생성형 VLM은 visual token을 LLM에
+            넣어 답을 생성합니다. 이 글의 CLIP류 retrieval은 image encoder와 text encoder의
+            embedding을 비교해 후보 순위를 만듭니다. 두 경로는 서로 조합할 수 있지만 같은
+            파이프라인의 앞뒤 부품은 아닙니다.
           </p>
         </div>
-        <MultimodalRetrievalAndVisualGroundingViz />
         <ContentBoundary article="multimodal-retrieval-and-visual-grounding" />
       </section>
 
-      <section id="embedding-and-retrieval" className="scroll-mt-20">
+      <section id="similarity" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Multimodal embedding은 image·text를 한 공간에 놓습니다
+          Cosine similarity로 후보 세 장의 순서를 정합니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            서로 다른 modality(image·text)를 같은 차원의 벡터 공간에 투영해 그 공간에서 거리가 가까울수록 의미가 가깝다고 둡니다. 이렇게 만든 표현이 multimodal
-            embedding입니다. 이 공간이 있어야 text query로 image를 찾거나 image로 비슷한 image를 찾는 검색이 벡터 비교만으로 성립합니다.
-          </p>
-          <p>
-            Image retrieval은 query(text 또는 image)로 관련 image를 찾는 작업입니다. 그중 query와 대상의 modality가 서로 다른 경우를
-            cross-modal retrieval이라고 부릅니다. text로 image를 찾거나 image로 text를 찾는 쪽입니다.
-          </p>
-          <p>
-            CLIP은 image encoder와 text encoder를 따로 두고 같은 batch 안 진짜 image-text 쌍의 cosine similarity는 키우고 나머지
-            재배열 쌍은 낮추는 대조학습으로 이 공간을 만듭니다. 배치 크기가 클수록(원 논문은 32,768) 한 번에 비교하는 negative pair가 많아져 학습 신호가 강해집니다.
-          </p>
-        </div>
         <ExplainedFormula
-          question="Image와 text encoder를 어떤 loss로 학습해야 같은 벡터 공간에서 서로를 가리키게 되나요?"
-          idea="배치 안의 N개 image-text 쌍 중 진짜 짝(대각선)의 similarity는 softmax 분자에서 키우고, 나머지 N-1개 재배열 쌍은 분모에서 함께 낮춰 image·text 벡터가 서로를 예측하게 만듭니다."
-          formula={String.raw`\mathcal{L}=-\frac{1}{N}\sum_{i=1}^{N}\log\frac{\exp(\mathrm{sim}(v_i,t_i)/\tau)}{\sum_{j=1}^{N}\exp(\mathrm{sim}(v_i,t_j)/\tau)}`}
-          annotatedFormula={String.raw`\mathcal{L}=-\frac{1}{N}\sum_{i=1}^{N}\log\frac{\overbrace{\exp(\mathrm{sim}(v_i,t_i)/\tau)}^{\text{진짜 쌍(대각선)}}}{\underbrace{\sum_{j=1}^{N}\exp(\mathrm{sim}(v_i,t_j)/\tau)}_{\text{배치 안 N개 후보 전체로 정규화}}}`}
+          question="q=(1,0)인 query와 후보 A=(0.8,0.6)의 cosine similarity는 얼마인가요?"
+          idea="두 벡터를 길이 1로 정규화했다고 가정하면 cosine similarity는 내적과 같습니다. 같은 계산을 B와 C에도 반복해 가장 큰 점수를 고릅니다."
+          formula={String.raw`\cos(q,A)=\frac{q\cdot A}{\lVert q\rVert\lVert A\rVert}=1\times0.8+0\times0.6=0.8`}
+          annotatedFormula={String.raw`\cos(\underbrace{q}_{(1,0)},\underbrace{A}_{(0.8,0.6)})=\underbrace{0.8}_{\text{세 후보 중 가장 큼}}`}
           operations={[
-            { expression: String.raw`\mathrm{sim}(v_i,t_i)`, annotation: ["같은 배치 안 진짜 image-text 쌍의", "cosine similarity를 키우는 분자"] },
-            { expression: String.raw`\sum_{j=1}^{N}\exp(\cdot/\tau)`, annotation: ["배치 안 N개 text 후보 전체와 비교해", "확률로 정규화하는 분모"] },
-            { expression: String.raw`\tau`, annotation: ["학습 가능한 temperature로", "similarity 분포를 얼마나 뾰족하게 만들지 조절"] },
+            {
+              expression: String.raw`\lVert q\rVert=\lVert A\rVert=1`,
+              annotation: ["비교 전에 두 embedding을", "길이 1로 정규화한 가정"],
+            },
+            {
+              expression: String.raw`q\cdot A=0.8`,
+              annotation: ["같은 방향 성분을 곱해 더한", "query와 후보 A의 내적"],
+            },
+            {
+              expression: String.raw`q\cdot B=0,\ q\cdot C=-0.6`,
+              annotation: ["후보 B·C에도 같은 계산을 적용한", "비교 점수"],
+            },
           ]}
           terms={[
-            { symbol: String.raw`v_i,t_i`, name: "Image·text embedding", description: "각 encoder가 만든 벡터를 정규화한 표현입니다." },
-            { symbol: "N", name: "Batch size", description: "한 번에 비교하는 image-text 쌍의 수이며, 원 논문은 32,768을 씁니다." },
-            { symbol: String.raw`\tau`, name: "Temperature", description: "0.07로 초기화하고 학습 중 값이 조정되는 scaling 계수입니다." },
+            {
+              symbol: "q",
+              name: "Text embedding",
+              description: "Text encoder가 ‘빨간 컵’을 바꾼 query 벡터입니다.",
+            },
+            {
+              symbol: "A, B, C",
+              name: "Image embedding",
+              description: "Image encoder가 후보 이미지 세 장을 바꾼 벡터입니다.",
+            },
+            {
+              symbol: String.raw`\cos(q,A)`,
+              name: "Cosine similarity",
+              description: "두 벡터의 방향이 얼마나 가까운지를 −1부터 1 사이로 나타낸 값입니다.",
+            },
           ]}
-          assumptions={["배치가 클수록 negative pair가 많아져 대조학습 신호가 강해진다는 전제입니다.", "이 식은 image→text 방향이며, 실제 학습은 text→image 방향의 대칭 loss를 더해 평균 냅니다."]}
-          interpretation="이 loss가 낮아진다고 image와 text가 같은 '의미'를 인코딩한다는 보장은 없습니다. 학습에 쓴 4억 개 image-text 쌍의 caption 분포 안에서 서로를 잘 예측하게 됐다는 뜻입니다."
+          assumptions={[
+            "q=(1,0), A=(0.8,0.6), B=(0,1), C=(−0.6,0.8)은 계산을 눈으로 확인하기 위한 교육용 가정입니다.",
+            "네 벡터는 모두 길이 1입니다. 실제 retrieval embedding은 보통 수백 차원 이상입니다.",
+          ]}
+          interpretation="A의 0.8이 가장 크므로 retrieval은 A를 top-1으로 선택합니다. 이 결론은 ‘A 안에서 컵이 어디에 있다’는 뜻이 아니라, 세 후보 중 query와 가장 가까운 이미지라는 뜻입니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
-            Multimodal RAG는 이렇게 만든 cross-modal retrieval 결과를 LLM의 generation 입력에 넣는
-            RAG의 확장입니다. 검색된 evidence가 text chunk가 아니라 image·표·스크린샷일 수 있다는
-            점만 다르고, context budget·citation 같은 generation 단계 규칙은{" "}
-            <Link to="/cs/ai/rag-pipeline#generation">RAG 파이프라인</Link> 글의 정본을 그대로
-            따릅니다.
+            CLIP은 image encoder와 text encoder를 따로 두고 두 출력을 같은 embedding 공간으로
+            projection합니다. 학습할 때는 batch 안의 실제 image-text 짝은 가깝게 만들고, 서로
+            짝이 아닌 조합은 멀어지게 합니다.
           </p>
         </div>
+        <AlgorithmBlock
+          title="CLIP이 같은 batch에서 진짜 짝을 찾도록 학습하는 순서"
+          input={[
+            "N개의 image-text 짝",
+            "image encoder와 text encoder",
+            "학습 가능한 temperature",
+          ]}
+          steps={[
+            {
+              code: "V = normalize(image_encoder(images))",
+              note: "N개 image를 길이 1인 embedding으로 바꿉니다.",
+            },
+            {
+              code: "T = normalize(text_encoder(texts))",
+              note: "짝을 이루는 N개 text를 같은 차원의 embedding으로 바꿉니다.",
+            },
+            {
+              code: "logits = V @ T.T / temperature",
+              note: "N×N 조합 전체의 similarity를 계산합니다. 대각선만 실제 짝입니다.",
+            },
+            {
+              code: "loss = mean(CE(logits), CE(logits.T))",
+              note: "Image→text와 text→image 두 방향에서 대각선 짝의 확률을 높입니다.",
+            },
+          ]}
+          output="Text와 image가 같은 공간에서 서로의 진짜 짝을 높은 점수로 찾는 두 encoder"
+        />
         <TermBreakdown
-          title="Multimodal embedding·retrieval·RAG의 층위"
-          description="공간을 만드는 것, 그 공간에서 찾는 것, 찾은 결과를 생성에 넣는 것은 다른 단계입니다."
+          title="공간·검색·생성을 구분합니다"
+          description="같은 embedding을 쓰더라도 각 단계의 출력은 다릅니다."
           items={[
-            { term: "Multimodal Embedding", description: "서로 다른 modality를 같은 차원의 벡터 공간에 투영한 표현입니다.", example: "CLIP이 image·text를 각각 512차원 벡터로 투영해 같은 공간에 둡니다.", boundary: "공간이 같다고 모든 개념이 균일하게 가깝게 놓이는 것은 아니며 학습 데이터 분포에 좌우됩니다." },
-            { term: "Image Retrieval", description: "Query로 관련 image를 찾는 작업입니다.", example: "text query 'red shoes'로 비슷한 상품 image를 검색.", boundary: "Query와 target의 modality가 같은 경우(image로 image 검색)도 포함합니다." },
-            { term: "Cross-Modal Retrieval", description: "Query와 대상의 modality가 서로 다른 검색입니다.", example: "Text로 image를 찾거나 image로 관련 text를 찾음.", boundary: "같은 modality 안에서의 검색은 이 이름으로 부르지 않습니다." },
-            { term: "Multimodal RAG", description: "Cross-modal retrieval 결과를 LLM generation 입력에 넣는 RAG 확장입니다.", example: "스크린샷 검색 결과를 evidence로 넣어 표에 대한 질문에 답변.", boundary: "Context budget·citation 같은 generation 규칙 자체는 이 글이 아니라 RAG 파이프라인 글이 정본입니다." },
+            {
+              term: "Multimodal Embedding",
+              description: "Image와 text를 비교할 수 있도록 같은 차원과 거리 규칙을 쓰는 표현입니다.",
+              example: "CLIP의 image embedding과 text embedding을 cosine similarity로 비교합니다.",
+              boundary: "같은 공간에 있다는 사실만으로 모든 인간 의미가 정확히 정렬됐다고 볼 수는 없습니다.",
+            },
+            {
+              term: "Cross-Modal Retrieval",
+              description: "Text로 image를 찾는 것처럼 query와 후보의 modality가 다른 검색입니다.",
+              example: "‘빨간 컵’ text query로 후보 이미지 A를 선택합니다.",
+              boundary: "검색 결과는 후보와 점수이며 답 문장이나 대상 좌표가 아닙니다.",
+            },
+            {
+              term: "Multimodal RAG",
+              description: "검색한 image·표·스크린샷을 생성 모델의 evidence로 다시 넣는 구성입니다.",
+              example: "A를 검색한 뒤 생성형 VLM에 질문과 함께 넣어 설명을 만듭니다.",
+              boundary: "검색과 generation의 context budget·citation 책임을 하나로 뭉뚱그리면 안 됩니다.",
+            },
           ]}
         />
       </section>
 
       <section id="document-retrieval" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Screenshot retrieval은 OCR 없이 문서 이미지를 embedding합니다
+          문서 검색은 페이지를 표현하는 경로부터 갈립니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <DocumentRetrievalPathComparison />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
-            Visual document retrieval은 PDF·슬라이드 같은 문서를 검색 대상으로 삼는 retrieval이고,
-            그중 문서 페이지를 이미지(스크린샷)로 그대로 embedding해 찾는 방식을 screenshot
-            retrieval이라고 부릅니다. <Link to="/cs/ai/document-parsing-and-table-extraction#layout-and-order">
-            문서 구조 파싱</Link> 글의 layout parsing·OCR 경로와는 문서를 표현하는 방식 자체가
-            다릅니다.
+            OCR 중심 경로는 layout 분석, 문자 인식, 필요하면 caption 생성을 거쳐 페이지를 text로
+            바꿉니다. 이 표현은 검색 결과를 사람이 읽고 인용하기 쉽지만, 표의 배치나 그림처럼
+            text만으로 옮기기 어려운 정보가 중간에 줄어들 수 있습니다.
           </p>
           <p>
-            ColPali는 문서 페이지 이미지를 vision-language model(PaliGemma)에 넣어 patch 1024개를 각각 128차원 벡터로 만드는 multi-
-            vector embedding을 만듭니다. query token embedding과 각 patch embedding의 내적 중 최댓값을 골라 더하는 MaxSim(late
-            interaction) 방식으로 둘을 매칭합니다.
+            ColPali는 문서 페이지 이미지를 PaliGemma에 넣고 patch마다 128차원 벡터를 만듭니다.
+            Query token마다 가장 잘 맞는 page patch를 고르는 MaxSim 점수를 더해 페이지 순위를
+            정합니다. 하나의 page vector로 압축하지 않으므로 어느 query token이 어느 시각 영역과
+            맞았는지 더 세밀하게 비교할 수 있습니다.
           </p>
           <p>
-            기존 파이프라인은 OCR과 layout 분석, caption 생성을 순서대로 거칩니다. 한 페이지에 layout 감지 0.81초, OCR 2.67초, captioning
-            3.71초로 합쳐서 7.22초가 걸립니다. ColPali는 이미지를 그대로 embedding에 넣어 페이지당 0.39초, 즉 20분의 1 이하 시간으로 인덱싱을 끝냅니다.
+            논문은 저자들이 구성한 OCR·layout·captioning 경로와 비교해 페이지당 index 처리 시간이
+            7.22초에서 0.39초로 줄고, ViDoRe의 평균 nDCG@5가 67.0에서 81.3으로 높아졌다고
+            보고합니다. 이 값은 해당 모델·하드웨어·benchmark 조건의 자기보고 결과이며, 모든 OCR
+            구현과 모든 문서에서 같은 차이가 난다는 뜻은 아닙니다.
           </p>
           <p>
-            ViDoRe 벤치마크(nDCG@5)에서 ColPali는 평균 81.3점을 냈고, OCR+캡션+텍스트 검색을 조합한 기존 파이프라인은 67.0점, CLIP류 대조학습
-            VLM(SigLIP)은 51.4점에 그쳤습니다. layout이 복잡하거나 표·그림이 섞인 문서일수록 텍스트만 뽑는 경로가 놓치는 정보를 이미지 자체 embedding이 더 많이
-            보존한다는 뜻입니다.
+            OCR을 쓰지 않는다는 말도 “문자 정보를 보지 않는다”는 뜻은 아닙니다. VLM이 페이지
+            이미지를 보며 문자와 배치를 함께 표현하되, 별도 OCR 결과를 중간 산출물로 만들지 않는
+            경로라는 뜻입니다.
           </p>
         </div>
-        <ProgressiveDetail
-          title="OCR 기반 검색과 screenshot retrieval 중 언제 무엇을 고르나요?"
-          preview="레이아웃·표·그림이 복잡한 문서는 screenshot retrieval이, 순수 텍스트 위주 문서는 OCR 기반 경로도 충분합니다."
-        >
-          <p>
-            ColPali 논문은 인덱싱 속도(7.22초→0.39초)와 정확도(67.0→81.3) 모두에서 우위를 보고합니다. 다만 비교 대상이 저자들이 구성한 특정 OCR+캡션
-            파이프라인인 이상, 이 우위가 모든 OCR 구현으로 그대로 옮겨 가지는 않습니다.
-          </p>
-        </ProgressiveDetail>
       </section>
 
       <section id="grounding" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Visual grounding은 bbox·point·mask로 위치를 표현합니다
+          선택한 이미지 안의 위치는 세 가지 형태로 나타냅니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <GroundingPrimitiveComparison />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
-            text가 가리키는 대상이 image의 어느 위치에 있는지 찾는 작업을 visual grounding이라고 합니다. 그 위치를 표현하는 방식은 visual primitive라고
-            부르며, bounding box·point·segmentation mask 세 가지가 흔히 쓰입니다.
+            Bounding box는 좌상단과 우하단 좌표 네 개로 대상을 감쌉니다. 대상의 대략적인 범위는
+            알 수 있지만 사각형 안의 배경도 함께 포함합니다. Point는 좌표 두 개만 내므로 클릭할
+            지점처럼 한 위치면 충분한 작업에 맞지만 대상의 크기를 표현하지 못합니다.
           </p>
           <p>
-            Bounding box grounding은 좌상단·우하단 좌표 4개로 대상을 감싸는 사각형을 표현합니다. Kosmos-2는 224px 이미지를 32×32 bin으로 나눠 각
-            좌표를 1,024개 location token 중 하나로 양자화하고 "&lt;box&gt;&lt;loc1&gt;&lt;loc2&gt;&lt;/box&gt;" 형태로 text
-            sequence 안에 끼워 넣습니다.
+            Segmentation mask는 각 pixel이 대상에 속하는지를 표시합니다. 컵의 윤곽까지 남기지만
+            해상도에 비례해 출력과 계산이 커집니다. 따라서 정밀도가 높다는 이유만으로 모든 작업에
+            mask가 필요한 것은 아닙니다.
           </p>
           <p>
-            Point grounding은 좌표 2개(x, y)만으로 대상의 한 지점을 가리킵니다. Segmentation grounding은 픽셀마다 대상에 속하는지 아닌지를 표시하는
-            mask 전체로 대상을 표현합니다. 좌표 4개 → 2개 → 픽셀 수만큼으로 표현에 드는 정보량이 늘어나는 순서입니다.
-          </p>
-          <p>
-            Bounding box는 표현이 가장 싸지만 배경을 함께 감싸 물체의 실제 윤곽은 담지 못하고 point는 더 간단하지만 대상의 크기·범위 정보가 아예 없습니다.
-            Segmentation mask는 윤곽을 그대로 담는 대신 이미지 픽셀 수에 비례해 표현 비용이 커집니다.
+            Kosmos-2는 224px 이미지를 가로와 세로 각각 32개 bin으로 나눕니다. Bounding box 좌표를
+            32×32=1,024개의 location token으로 양자화해 text sequence 안에 넣습니다. 이 방식은
+            언어 생성과 위치 출력을 한 vocabulary에서 다루지만, bin보다 더 세밀한 위치는 표현하지
+            못합니다.
           </p>
         </div>
-        <TermBreakdown
-          title="세 grounding 방식의 표현력·비용 비교"
-          description="위치를 표현하는 정보량이 늘어날수록 정밀해지지만 비용도 함께 늘어납니다."
-          items={[
-            { term: "Visual Grounding", description: "Text가 가리키는 대상이 image의 어디에 있는지 찾는 작업입니다.", example: "'왼쪽 빨간 컵'이라는 표현에 해당하는 image 영역을 찾음.", boundary: "무엇(what)을 찾는 recognition과 달리 어디(where)에 있는지를 답합니다." },
-            { term: "Bounding Box Grounding", description: "좌상단·우하단 좌표 4개로 대상을 감싸는 사각형을 표현합니다.", example: "Kosmos-2는 32×32=1,024개 location token으로 좌표를 양자화합니다.", boundary: "사각형 안에 배경이 함께 담겨 물체의 실제 윤곽은 표현하지 못합니다." },
-            { term: "Point Grounding", description: "좌표 2개만으로 대상의 한 지점을 가리킵니다.", example: "'이 버튼을 눌러'라는 지시에 클릭할 좌표 하나만 출력.", boundary: "대상의 크기·범위 정보가 없어 겹친 대상을 구분하기 어렵습니다." },
-            { term: "Segmentation Grounding", description: "픽셀마다 대상 여부를 표시하는 mask로 위치를 표현합니다.", example: "224×224 이미지라면 최대 50,176개 픽셀 각각에 대상 여부를 표시.", boundary: "표현력은 가장 높지만 이미지 해상도에 비례해 저장·연산 비용이 커집니다." },
-            { term: "Visual Primitive", description: "Grounding 결과를 표현하는 단위(bbox·point·mask)를 통칭하는 이름입니다.", example: "같은 grounding 모델도 과제에 따라 다른 primitive를 출력하도록 학습됩니다.", boundary: "Primitive를 바꾼다고 grounding의 정확도 자체가 자동으로 바뀌지는 않습니다." },
-          ]}
-        />
       </section>
 
-      <section id="vision-in-the-loop" className="scroll-mt-20">
+      <section id="vision-loop" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Vision-in-the-loop reasoning은 grounding을 반복 참조합니다
+          작은 영역은 찾고, 잘라서, 다시 읽습니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            grounding을 한 번으로 끝내지 않는 방법도 있습니다. grounding 결과(잘라낸 영역·짚은 좌표)를 다시 모델에 넣어 다음 판단의 근거로 쓰는 반복 절차가
-            vision-in-the-loop reasoning입니다. 작은 글자나 겹친 물체처럼 한 번에 답하기 어려운 질문에서 이 반복이 정확도를 끌어올립니다.
-          </p>
-          <p>
-            예를 들어 "표 3행의 값은?"이라는 질문에 전체 image만 보고 답하면 작은 글자를 놓치기 쉽지만 먼저 표 영역을 bounding box로 grounding한 뒤 그 영역만
-            잘라 확대해 다시 읽으면 같은 모델로도 더 정확한 답을 낼 수 있습니다.
-          </p>
-        </div>
         <AlgorithmBlock
-          title="Grounding 결과를 되먹임하는 vision-in-the-loop reasoning 루프"
+          title="Grounding 결과를 다음 판단에 되먹이는 순서"
           input={[
             "원본 image와 질문",
-            "visual grounding 모델(bbox·point·segmentation 중 하나 출력)",
+            "bbox·point·mask 중 하나를 내는 grounding 모델",
             "충분한 근거인지 판단하는 종료 조건",
           ]}
           steps={[
-            { code: "region = ground(image, question)", note: "질문과 관련된 영역을 bbox·point·mask 중 하나로 grounding합니다." },
-            { code: "crop = extract_and_zoom(image, region)", note: "찾은 영역만 잘라 확대해, 원본에서 작아 보이던 세부를 키웁니다." },
-            { code: "answer, confidence = read(crop, question)", note: "확대된 영역만으로 다시 질문에 답하고 확신도를 함께 냅니다." },
+            {
+              code: "region = ground(image, question)",
+              note: "질문과 관련된 영역을 먼저 찾습니다.",
+            },
+            {
+              code: "crop = crop_and_zoom(image, region)",
+              note: "찾은 영역만 잘라 확대해 작은 문자나 겹친 대상을 더 크게 봅니다.",
+            },
+            {
+              code: "answer, confidence = read(crop, question)",
+              note: "확대된 영역으로 다시 답하고 근거가 충분한지 확인합니다.",
+            },
           ]}
-          output="충분한 확신도에 도달한 답, 또는 다음 grounding 대상이 될 새 영역"
-          repeatUntil="확신도가 임계값을 넘거나 더 좁힐 영역이 없을 때까지 region→crop→answer를 반복"
+          output="종료 조건을 만족한 답, 또는 다음에 더 좁혀 볼 영역"
+          repeatUntil="확신도가 기준을 넘거나 더 좁힐 영역이 없을 때까지"
         />
+        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
+          <p>
+            예를 들어 “표 3행의 값은?”이라는 질문은 전체 페이지를 한 번에 볼 때 글자가 너무 작을
+            수 있습니다. 먼저 표 영역을 찾고, 그 부분만 확대해 다시 읽으면 같은 pixel 수를 중요한
+            영역에 더 많이 쓸 수 있습니다.
+          </p>
+          <p>
+            이 반복에는 종료 조건이 필요합니다. 새 영역이 이전보다 작아지지 않거나, confidence가
+            더는 오르지 않거나, 최대 반복 횟수에 도달하면 멈춰야 합니다. 그렇지 않으면 같은
+            영역을 계속 잘라 비용만 늘어납니다.
+          </p>
+        </div>
       </section>
 
       <section id="sources" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          근거는 결합 지점이 다른 세 논문에서 가져왔습니다
+          검색·문서 표현·위치 출력의 원문 근거
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Multimodal embedding의 대조학습은 CLIP, screenshot retrieval은 ColPali, bounding box
-            grounding의 location token 표현은 Kosmos-2 논문을 근거로 삼았습니다.
-          </p>
-        </div>
         <div id="paper-clip" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Radford et al. · Learning Transferable Visual Models From Natural Language Supervision / CLIP (ICML 2021)"
             citeKey={1}
             href="https://arxiv.org/abs/2103.00020"
           >
-            4억 개의 image-text 쌍(WIT)으로 image encoder와 text encoder를 대조학습해 같은 embedding
-            공간을 만듭니다. 배치 32,768, 학습 가능한 temperature(0.07 초기화)를 쓰는 symmetric
-            cross-entropy loss로 zero-shot classification·retrieval에 재사용 가능한 표현을
-            학습합니다.
+            4억 개 image-text 쌍으로 별도의 image encoder와 text encoder를 대조학습합니다. 두
+            embedding의 cosine similarity를 temperature로 조절하고, batch 안의 실제 짝을 양방향
+            cross-entropy로 맞춥니다.
           </CitationBlock>
         </div>
         <div id="paper-colpali" className="not-prose my-8 scroll-mt-24">
@@ -227,9 +270,8 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             citeKey={2}
             href="https://arxiv.org/abs/2407.01449"
           >
-            PaliGemma 기반 vision-language model로 문서 페이지를 1024개 patch × 128차원 multi-vector
-            embedding으로 직접 바꾸고 ColBERT 스타일 MaxSim으로 query와 매칭합니다. OCR+layout+captioning
-            파이프라인 대비 인덱싱 7.22초→0.39초, ViDoRe nDCG@5 67.0→81.3을 보고합니다.
+            문서 페이지 이미지를 patch 단위 multi-vector로 직접 표현하고 query token과 page patch의
+            late interaction으로 검색하는 ColPali와 ViDoRe benchmark를 제안합니다.
           </CitationBlock>
         </div>
         <div id="paper-kosmos2" className="not-prose my-8 scroll-mt-24">
@@ -238,21 +280,20 @@ export default function MultimodalRetrievalAndVisualGroundingArticle() {
             citeKey={3}
             href="https://arxiv.org/abs/2306.14824"
           >
-            224px 이미지를 32×32 bin으로 나눠 bounding box 좌표를 1,024개 location token으로
-            양자화하고 "&lt;box&gt;&lt;loc&gt;...&lt;/box&gt;" 형태로 text vocabulary에 편입시켜
-            referring expression·grounded caption을 하나의 sequence로 생성합니다. 약 9,100만 장의
-            image와 1억 3,700만 개의 bounding box로 구성된 GrIT 데이터셋으로 학습합니다.
+            Referring expression과 bounding box를 연결하고, 위치를 location token sequence로 나타내
+            language generation과 visual grounding을 한 모델에서 다룹니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          Image가 patch embedding으로 바뀌는 절차는{" "}
-          <Link to="/cs/ai/vision-transformer#patch-embedding">Vision transformer</Link> 글을, VLM이
-          vision encoder·projector·LLM을 조립하는 방식은{" "}
-          <Link to="/cs/ai/vision-language-model-architecture#architecture">VLM 구조</Link> 글을,
-          text 검색 자체의 embedding space·ANN index는{" "}
-          <Link to="/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">벡터 검색</Link>{" "}
+          생성형 VLM의 visual token 경로는{" "}
+          <Link to="/cs/ai/vision-language-model-architecture#overview">VLM 조립</Link> 글을,
+          text-only retrieval의 index와 근사 최근접 탐색은{" "}
+          <Link to="/cs/ai/vector-search-and-ann-indexes#dense-retrieval-embedding-space">
+            벡터 검색
+          </Link>{" "}
           글을 참고하세요.
         </p>
+        <MultimodalMapReturn current="retrieval-grounding" />
       </section>
     </div>
   );

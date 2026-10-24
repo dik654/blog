@@ -59,6 +59,8 @@ const noScriptArticleRoutes = new Set([
   "ai/linear-autoencoder-pca",
   "ai/denoising-masked-autoencoders",
   "ai/reconstruction-anomaly-detection",
+  "ai/vision-language-model-architecture",
+  "ai/multimodal-retrieval-and-visual-grounding",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
