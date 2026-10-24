@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const STAGES = [
@@ -40,23 +41,8 @@ const STAGES = [
 ] as const;
 
 export default function EmbodimentGapViz() {
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const reducedMotion = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    [],
-  );
-
-  useEffect(() => {
-    if (!playing || reducedMotion) return;
-    const timer = window.setInterval(
-      () => setActive((value) => (value + 1) % STAGES.length),
-      3000,
-    );
-    return () => window.clearInterval(timer);
-  }, [playing, reducedMotion]);
+  const scenes = useAnimatedScenes(STAGES.length, 5200, { loop: false });
+  const active = scenes.active;
 
   return (
     <VizFrame
@@ -66,24 +52,13 @@ export default function EmbodimentGapViz() {
       note="어느 한 단계가 정확해도 뒤 단계의 좌표·동역학·제어 계약을 대신 보장하지 않습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="의미에서 물리 행동까지 다섯 단계"
-        onKeyDown={(event) => {
-          if (event.key === "ArrowRight") {
-            event.preventDefault();
-            setPlaying(false);
-            setActive((value) => (value + 1) % STAGES.length);
-          } else if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            setPlaying(false);
-            setActive((value) => (value - 1 + STAGES.length) % STAGES.length);
-          } else if (event.key === " ") {
-            event.preventDefault();
-            setPlaying((value) => !value);
-          }
-        }}
+        onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
         <div className="grid gap-3 md:grid-cols-5">
@@ -93,8 +68,7 @@ export default function EmbodimentGapViz() {
               key={stage.label}
               aria-pressed={active === index}
               onClick={() => {
-                setPlaying(false);
-                setActive(index);
+                scenes.setActive(index);
               }}
               className={`relative min-w-0 border p-4 text-left transition-colors ${
                 active === index
@@ -140,13 +114,16 @@ export default function EmbodimentGapViz() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setPlaying((value) => !value)}
-          className="mt-4 border border-border bg-background px-3 py-2 text-xs font-bold"
-        >
-          {playing && !reducedMotion ? "일시정지" : "자동 재생"}
-        </button>
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {STAGES.map((stage) => (
+              <li key={stage.label}>
+                <strong>{stage.label}</strong>: {stage.input} → {stage.output}. 필요한 계약은 {stage.receipt}이며, 대표 실패는 {stage.failure}입니다.
+              </li>
+            ))}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls labels={STAGES.map((stage) => stage.label)} {...scenes} playLabel="과정 재생" />
       </div>
     </VizFrame>
   );

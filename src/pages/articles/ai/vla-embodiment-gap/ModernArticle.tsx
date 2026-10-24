@@ -6,6 +6,7 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import EmbodimentGapViz from "./viz/EmbodimentGapViz";
 import SystemBoundaryViz from "./viz/SystemBoundaryViz";
+import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "../shared/EmbodiedVisionLocator";
 
 function EvidenceTag({ children }: { children: string }) {
   return (
@@ -18,9 +19,17 @@ function EvidenceTag({ children }: { children: string }) {
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <EmbodiedVisionLocator
+        current="vla"
+        question="이미지에서 컵을 찾은 결과가 실제 로봇의 안전한 움직임이 되려면 어떤 계약을 더 통과해야 할까요?"
+        fixture="‘컵을 집어’라는 한 요청이 의미·3D 좌표·행동·제어·재관측을 통과하는 과정을 따라갑니다."
+        parentHref="/cs/ai/multimodal-retrieval-and-visual-grounding#grounding"
+        parentLabel="문장과 이미지 영역을 연결하는 grounding"
+      />
       <section id="overview" className="scroll-mt-20 space-y-7">
+        <h2 className="text-2xl font-bold">컵을 알아보는 것과 집는 것 사이에는 다섯 개의 실행 계약이 있습니다</h2>
+        <EmbodimentGapViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <h2>컵을 알아보는 것과 컵을 집는 것 사이에는 실행 계약이 다섯 개 있습니다</h2>
           <p className="text-lg leading-8">
             LLM이 “컵”이라는 말을 알고 VLM이 image에서 컵을 찾았다고 해도 robot은 아직 움직일 수
             없습니다. Pixel을 camera 좌표의 3D 위치로 바꾸고, 현재 robot morphology가 실행할 action으로
@@ -75,7 +84,6 @@ export default function ModernArticle() {
           <li>Pixel grounding이 맞으면 depth·calibration·collision 오류와 무관하게 grasp도 성공할까요?</li>
         </ol>
         <p>답은 <strong>아니요, 아니요, 아니요</strong>입니다. 의미 인식 뒤에도 좌표·행동 표현·동역학·제어·재관측 계약을 차례로 통과해야 합니다.</p>
-        <EmbodimentGapViz />
         <ContentBoundary article="vla-embodiment-gap" />
 
         <div id="paper-embodiment-gap-survey" className="scroll-mt-20">
@@ -482,6 +490,12 @@ p_w&=\underbrace{T_{wc}p_c}_{\text{world·map frame으로 변환}}
           </CitationBlock>
         </div>
       </section>
+      <EmbodiedVisionMapReturn
+        title="시각 의미는 행동의 출발점일 뿐이며, 좌표·행동 표현·제어·재관측의 소유자는 따로 있습니다."
+        detail="컵을 정확히 찾았다는 결과가 grasp 성공을 보장하지 않는 이유를 다섯 계약으로 분리했습니다. 다음 글은 그중 action 값을 실제 숫자·토큰·묶음으로 표현하는 방법을 파고듭니다."
+        nextHref="/cs/ai/robot-action-representations"
+        nextLabel="로봇 행동 표현"
+      />
     </article>
   );
 }

@@ -24,7 +24,7 @@ const MODELS = [
 ];
 
 export default function MetricViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const step = scenes.active;
   const mode = step === 2 ? "sum" : step === 3 ? "product" : "none";
   return (
@@ -35,6 +35,8 @@ export default function MetricViz() {
       note="지표 값은 결합 방식의 차이를 보여 주기 위한 예시이며 실제 벤치마크 수치가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -95,6 +97,7 @@ export default function MetricViz() {
             {NOTES[step]}
           </p>
         </div>
+        <noscript><ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">{SCENES.map((label, index) => <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>)}</ol></noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

@@ -18,7 +18,7 @@ const COND = "#10b981";
 const MUTED = "#94a3b8";
 
 export default function DetectorViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -28,6 +28,8 @@ export default function DetectorViz() {
       note="질의 개수와 토큰 수는 단순화했습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -113,6 +115,7 @@ export default function DetectorViz() {
             {NOTES[step]}
           </p>
         </div>
+        <noscript><ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">{SCENES.map((label, index) => <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>)}</ol></noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

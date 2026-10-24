@@ -59,7 +59,7 @@ const TONE_CLASS: Record<Tone, string> = {
 };
 
 export default function ImitationLearningAndPolicyGeneralizationViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const showOodRow = scenes.active >= 2;
 
   return (
@@ -70,6 +70,8 @@ export default function ImitationLearningAndPolicyGeneralizationViz() {
       note="Object·location 4×4 예시는 mechanism을 보여 주기 위한 단순화이며 실제 dataset의 축 개수가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -121,6 +123,13 @@ export default function ImitationLearningAndPolicyGeneralizationViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

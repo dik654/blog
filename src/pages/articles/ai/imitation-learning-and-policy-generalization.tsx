@@ -7,14 +7,24 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ImitationLearningAndPolicyGeneralizationViz from "./imitation-learning-and-policy-generalization/viz/ImitationLearningAndPolicyGeneralizationViz";
+import { EmbodiedVisionLocator, EmbodiedVisionMapReturn } from "./shared/EmbodiedVisionLocator";
+import EmbodiedProcessOverviewViz from "./shared/EmbodiedProcessOverviewViz";
 
 export default function ImitationLearningAndPolicyGeneralizationArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <EmbodiedVisionLocator
+        current="imitation"
+        question="사람의 시연을 그대로 맞힌 정책이 실제 배포에서 왜 처음 보는 상태로 벗어날까요?"
+        fixture="컵을 오른쪽으로 2cm 옮긴 한 시연을 예측·손실·업데이트·배포 이탈까지 추적합니다."
+        parentHref="/cs/ai/robot-action-representations"
+        parentLabel="정책이 출력할 행동 표현"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Demonstration data가 IL·BC로 학습되고 generalization 한계를 정합니다
+          시연 데이터가 정책의 학습 범위와 실패 범위를 함께 정합니다
         </h2>
+        <EmbodiedProcessOverviewViz variant="imitation" />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Robot policy는 사람이 남긴 demonstration data를 모사하는 imitation learning(IL)으로
@@ -314,6 +324,12 @@ L(\theta)&=\underbrace{\mathbb{E}\,\ell(\hat a,a)}_{\text{모든 쌍에서 예�
           </p>
         </div>
       </section>
+      <EmbodiedVisionMapReturn
+        title="Behavior cloning은 시연 분포 안의 행동을 배우지만, 정책이 만든 새 상태까지 자동으로 덮지는 않습니다."
+        detail="학습 손실·조합 일반화·OOD·sim-to-real은 서로 다른 실패 축입니다. 다음 글은 이 축들이 실제 이동 과제의 경유점·기억·보상으로 어떻게 나타나는지 봅니다."
+        nextHref="/cs/ai/vision-language-navigation"
+        nextLabel="언어 지시로 이동하기"
+      />
     </div>
   );
 }

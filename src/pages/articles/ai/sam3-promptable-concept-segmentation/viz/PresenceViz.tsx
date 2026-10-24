@@ -20,7 +20,7 @@ const WARN = "#f59e0b";
 const QUERIES = [0.82, 0.61, 0.44, 0.2];
 
 export default function PresenceViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const step = scenes.active;
   const presence = step === 3 ? 0.08 : 0.93;
   return (
@@ -31,6 +31,8 @@ export default function PresenceViz() {
       note="점수 값은 구조를 보여 주기 위한 예시이며 실제 출력이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -125,6 +127,7 @@ export default function PresenceViz() {
             {NOTES[step]}
           </p>
         </div>
+        <noscript><ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">{SCENES.map((label, index) => <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>)}</ol></noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

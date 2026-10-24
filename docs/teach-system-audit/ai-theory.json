@@ -3393,9 +3393,11 @@
       "subcategory": "ai-vision",
       "publicFiles": [
         "src/pages/articles/ai/imitation-learning-and-policy-generalization.tsx",
-        "src/pages/articles/ai/imitation-learning-and-policy-generalization/viz/ImitationLearningAndPolicyGeneralizationViz.tsx"
+        "src/pages/articles/ai/imitation-learning-and-policy-generalization/viz/ImitationLearningAndPolicyGeneralizationViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedProcessOverviewViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedVisionLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3403,19 +3405,32 @@
         "hasSourceSurface": true,
         "characters": 15302
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "시연 데이터·behavior cloning·일반화가 각각 설명됐지만 한 시연이 학습과 배포 실패로 이어지는 경로가 첫 화면에 없었습니다.",
+        "주요 시각화가 본문 중간의 generalization 절에 있어 글의 전체 질문을 먼저 보여 주지 못했습니다.",
+        "기존 애니메이션이 짧은 간격으로 반복되어 사용자가 장면을 읽기 전에 상태가 바뀌었습니다."
+      ],
+      "fixture": "컵을 오른쪽으로 2cm 움직이는 (o0,a0) 한 쌍을 예측·손실·업데이트·배포 이탈까지 추적합니다.",
+      "stageAnchors": {
+        "demonstration": "사람의 observation-action 쌍을 데이터셋에 기록합니다.",
+        "prediction": "정책의 action과 사람 action의 차이를 계산합니다.",
+        "update": "손실의 gradient로 같은 observation의 예측을 갱신합니다.",
+        "deployment": "정책 오차가 만든 데이터 밖 상태에서 compounding error가 시작됩니다."
+      },
+      "primarySourceApplication": [
+        "Behavior cloning 수식은 demonstration을 supervised target으로 사용하는 범위로 한정했습니다.",
+        "Open X-Embodiment 수치는 데이터 규모의 사례이며 일반화 보장으로 확대하지 않았습니다.",
+        "Compositional·OOD·sim-to-real은 서로 다른 평가 축으로 분리했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass",
+        "humanize": "pass",
+        "numericTrace": "pass",
+        "mobile390": "pass · document overflow 0 · 첫 장면 수동 유지",
+        "desktop1440": "pass · document overflow 0 · locator와 세 개 시각화 확인"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -7505,9 +7520,11 @@
       "subcategory": "ai-vision",
       "publicFiles": [
         "src/pages/articles/ai/robot-action-representations.tsx",
-        "src/pages/articles/ai/robot-action-representations/viz/RobotActionRepresentationsViz.tsx"
+        "src/pages/articles/ai/robot-action-representations/viz/RobotActionRepresentationsViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedProcessOverviewViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedVisionLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7515,19 +7532,32 @@
         "hasSourceSurface": true,
         "characters": 18221
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "연속값·토큰·chunk·분포 head가 나열됐지만 같은 action 값이 각 표현을 거치는 전체 흐름이 먼저 보이지 않았습니다.",
+        "Action chunking 시각화가 중간 절에만 있어 글의 상위 질문을 대신하지 못했습니다.",
+        "애니메이션의 반복 속도가 빨라 호출 수와 open-loop 위험을 읽기 어려웠습니다."
+      ],
+      "fixture": "−10cm…+10cm 범위의 +2cm action을 256개 bin의 153번으로 바꾸고 12 step을 k=6 chunk 두 번으로 실행합니다.",
+      "stageAnchors": {
+        "contract": "좌표계·단위·주기를 먼저 고정합니다.",
+        "token": "연속값을 256개 bin의 정수 token으로 변환합니다.",
+        "chunk": "12회 호출을 두 개의 6-step chunk로 묶습니다.",
+        "feedback": "환경 변화 뒤 새 chunk와 temporal ensembling으로 action을 수정합니다."
+      },
+      "primarySourceApplication": [
+        "RT-2는 coordinate-as-text의 256-bin 구현 근거로 사용했습니다.",
+        "ACT 수치는 action chunking ablation의 해당 환경 결과로 한정했습니다.",
+        "Diffusion·flow head는 평균 대신 조건부 action 분포를 표현하는 선택지로 구분했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass",
+        "humanize": "pass",
+        "numericTrace": "pass",
+        "mobile390": "pass · document overflow 0 · 첫 장면 수동 유지",
+        "desktop1440": "pass · document overflow 0 · console error 0 · 시각 확인"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -7591,9 +7621,10 @@
         "src/pages/articles/ai/sam3-promptable-concept-segmentation/viz/MetricViz.tsx",
         "src/pages/articles/ai/sam3-promptable-concept-segmentation/viz/PresenceViz.tsx",
         "src/pages/articles/ai/sam3-promptable-concept-segmentation/viz/PromptShiftViz.tsx",
-        "src/pages/articles/ai/sam3-promptable-concept-segmentation/viz/TrackerViz.tsx"
+        "src/pages/articles/ai/sam3-promptable-concept-segmentation/viz/TrackerViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedVisionLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7601,19 +7632,32 @@
         "hasSourceSurface": true,
         "characters": 21687
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "개념 프롬프트와 점 프롬프트의 차이를 보여 주는 핵심 그림이 여러 설명 문단 뒤에 있었습니다.",
+        "모델의 존재 판단·위치 판단·영상 정체성이 상위 grounding 지도와 연결되지 않았습니다.",
+        "여섯 시각화가 짧은 간격으로 무한 반복되어 각 상태를 비교하기 어려웠습니다."
+      ],
+      "fixture": "버스 네 대가 있는 한 이미지에 점 1개, ‘버스’, 존재하지 않는 ‘소방차’ 프롬프트를 넣어 마스크 1·마스크 4·빈 결과를 비교합니다.",
+      "stageAnchors": {
+        "point": "점 프롬프트는 사람이 지목한 한 개체의 마스크를 반환합니다.",
+        "concept": "명사구 프롬프트는 이미지 전체에서 같은 개념의 모든 인스턴스를 찾습니다.",
+        "absence": "대상이 없을 때 빈 결과를 반환하는 존재 판단을 분리합니다.",
+        "identity": "영상에서는 검출된 인스턴스의 정체성을 프레임 사이에 유지합니다."
+      },
+      "primarySourceApplication": [
+        "SAM 3 공개 코드 스냅샷은 prompt-conditioned detector와 presence head의 구현 경계를 확인하는 데 사용했습니다.",
+        "논문 수치와 데이터 규모는 저자 환경의 자기보고로 범위를 제한했습니다.",
+        "상자와 마스크 위치는 메커니즘 설명용 fixture이며 실제 모델 출력으로 표시하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass",
+        "humanize": "pass",
+        "numericTrace": "pass",
+        "mobile390": "pass · document overflow 0 · 첫 장면 6초 뒤에도 유지 · 시각 확인",
+        "desktop1440": "pass · document overflow 0 · 일곱 개 수동 시각화 확인"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -9212,9 +9256,11 @@
       "subcategory": "ai-vision",
       "publicFiles": [
         "src/pages/articles/ai/vision-language-navigation.tsx",
-        "src/pages/articles/ai/vision-language-navigation/viz/VisionLanguageNavigationViz.tsx"
+        "src/pages/articles/ai/vision-language-navigation/viz/VisionLanguageNavigationViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedProcessOverviewViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedVisionLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9222,19 +9268,32 @@
         "hasSourceSurface": true,
         "characters": 15632
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Waypoint·SLAM·memory·reward가 각 절에 흩어져 한 지시가 실제 이동으로 이어지는 전체 고리가 먼저 보이지 않았습니다.",
+        "기존 시각화는 trajectory memory만 다뤄 글 전체의 navigation 흐름을 대표하지 못했습니다.",
+        "짧은 무한 반복 때문에 같은 위치를 다른 시간에 다시 만나는 장면을 따라가기 어려웠습니다."
+      ],
+      "fixture": "‘복도 끝에서 왼쪽 방’이라는 지시를 RGB-D grounding, map waypoint=(3.2m,1.1m), SLAM 이동, 갈림길 재판단으로 실행합니다.",
+      "stageAnchors": {
+        "instruction": "언어 지시와 현재 시야에서 다음 landmark를 찾습니다.",
+        "waypoint": "pixel 목표를 map 좌표의 3D waypoint로 바꿉니다.",
+        "control": "SLAM controller가 현재 pose에서 waypoint까지 저수준 action을 냅니다.",
+        "replan": "새 결정 지점에서 memory와 남은 지시를 다시 읽어 계획을 바꿉니다."
+      },
+      "primarySourceApplication": [
+        "R2R과 VLN-CE는 discrete graph와 continuous navigation의 과제 차이를 설명하는 데 사용했습니다.",
+        "Waypoint와 TAMP-Nav 수치는 각 논문의 실험 조건 밖으로 일반화하지 않았습니다.",
+        "Memory·selective reasoning·two-level reward를 서로 대체하지 않는 독립 계약으로 분리했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass",
+        "humanize": "pass",
+        "numericTrace": "pass",
+        "mobile390": "pass · document overflow 0 · 키보드 장면 이동 · reduced-motion 재생 비활성 · 시각 확인",
+        "desktop1440": "pass · document overflow 0 · 세 개 시각화 확인"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {
@@ -9369,9 +9428,10 @@
         "src/pages/articles/ai/vla-embodiment-gap.tsx",
         "src/pages/articles/ai/vla-embodiment-gap/ModernArticle.tsx",
         "src/pages/articles/ai/vla-embodiment-gap/viz/EmbodimentGapViz.tsx",
-        "src/pages/articles/ai/vla-embodiment-gap/viz/SystemBoundaryViz.tsx"
+        "src/pages/articles/ai/vla-embodiment-gap/viz/SystemBoundaryViz.tsx",
+        "src/pages/articles/ai/shared/EmbodiedVisionLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9379,19 +9439,33 @@
         "hasSourceSurface": true,
         "characters": 31335
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "시각 의미와 물리 행동 사이의 다섯 계약 그림이 긴 서론과 예측 질문 뒤에 배치됐습니다.",
+        "자동 재생이 페이지를 열자마자 시작되어 의미·공간·행동·제어·검증 경계를 읽기 어려웠습니다.",
+        "개념 grounding 글과 다음 action 표현 글 사이의 직속 부모 관계가 보이지 않았습니다."
+      ],
+      "fixture": "‘컵을 집어’라는 요청이 대상·3D pose·action chunk·motor command·새 관측으로 바뀌는 다섯 계약을 추적합니다.",
+      "stageAnchors": {
+        "semantic": "언어 지시에서 대상과 의도를 찾습니다.",
+        "spatial": "pixel과 depth를 camera frame의 3D pose로 바꿉니다.",
+        "action": "현재 robot state에 맞는 action chunk를 만듭니다.",
+        "control": "waypoint를 안전 제한이 적용된 motor command로 내립니다.",
+        "verification": "새 관측에서 성공·계속·복구를 결정합니다."
+      },
+      "primarySourceApplication": [
+        "Embodiment gap survey는 최신 분류 틀로만 사용하고 합의된 표준으로 단정하지 않았습니다.",
+        "RT-2·OpenVLA·Octo 수치는 각 논문의 환경과 평가 범위에 귀속했습니다.",
+        "의미 인식 성공과 geometry·control·recovery 성공을 별도 계약으로 나눴습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass",
+        "humanize": "pass",
+        "numericTrace": "pass",
+        "mobile390": "pass · document overflow 0 · 첫 장면 6초 뒤에도 유지",
+        "desktop1440": "pass · document overflow 0 · 두 시각화 확인"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 배포 확인"
       ]
     },
     {

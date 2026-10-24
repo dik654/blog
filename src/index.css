@@ -17,6 +17,28 @@
 }
 
 /*
+ * KaTeX의 unlayered stylesheet가 긴 annotated formula에 max-content 폭을
+ * 만들 수 있습니다. 수식은 자체 컨테이너 안에서만 가로로 스크롤하고,
+ * JavaScript가 꺼진 모바일 문서의 폭에는 영향을 주지 않게 격리합니다.
+ */
+[data-math-display="true"] {
+  contain: inline-size;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+[data-math-display="true"] > .katex-display {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/*
  * 아키텍처 요청 추적은 박스 전체를 깜빡이지 않고 실제 처리 순서만 표시한다.
  * 노드는 차례로 짧게 테두리가 선명해지고, Engine API의 요청과 응답은 서로
  * 반대 방향으로 흐른다. 한 장면의 4.2초 재생 주기와 맞춰 반복한다.

@@ -25,7 +25,7 @@ const OBJECTS = [
 ];
 
 export default function PromptShiftViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -35,6 +35,8 @@ export default function PromptShiftViz() {
       note="상자 배치는 설명용 예시이며 실제 모델 출력이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -100,6 +102,13 @@ export default function PromptShiftViz() {
             {NOTES[step]}
           </p>
         </div>
+        <noscript>
+          <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+            {SCENES.map((label, index) => (
+              <li key={label}><strong>{label}</strong>: {NOTES[index]}</li>
+            ))}
+          </ol>
+        </noscript>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>

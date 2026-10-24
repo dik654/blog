@@ -288,6 +288,18 @@ BERT 시각화는 정의 카드보다 먼저 배치하고, 각 글에서 같은 
 | `ai/resnet` | concept · explanation | `ai/cnn` | 깊은 plain CNN의 학습 오차가 나빠질 때 입력 보존 경로와 residual update는 무엇을 바꾸는가? |
 | `ai/vision-task-spatial-contracts` | concept · explanation | `ai/cnn-receptive-fields` | 분류·탐지·분할·복원이 각각 무엇을 하나의 답으로 보고 어떤 좌표를 보존해야 하는가? |
 
+## 9. 시각 의미에서 로봇 행동까지
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/sam3-promptable-concept-segmentation` | concept · explanation | `ai/multimodal-retrieval-and-visual-grounding#grounding` | 위치를 찍지 않고 이름만 주었을 때 같은 개념의 모든 개체와 ‘없음’을 어떻게 함께 답하는가? |
+| `ai/vla-embodiment-gap` | concept · explanation | `ai/multimodal-retrieval-and-visual-grounding#grounding` | 이미지에서 찾은 컵이 실제 로봇의 안전한 움직임이 되려면 어떤 실행 계약을 더 통과하는가? |
+| `ai/robot-action-representations` | concept · explanation | `ai/vla-embodiment-gap#action-interface` | 같은 움직임을 연속값·토큰·행동 묶음 중 무엇으로 표현하는가? |
+| `ai/imitation-learning-and-policy-generalization` | concept · explanation | `ai/robot-action-representations` | 시연을 그대로 맞힌 정책이 배포 중 처음 보는 상태로 벗어나는 이유는 무엇인가? |
+| `ai/vision-language-navigation` | concept · explanation | `ai/imitation-learning-and-policy-generalization` | 언어 지시를 이동으로 바꿀 때 언제 추론하고 무엇을 기억하는가? |
+
+공통 위치 표시는 `EmbodiedVisionLocator`를 사용합니다. 각 글의 첫 시각화는 한 요청을 실제 값으로 끝까지 추적하고, 글의 마지막에는 새로 확인한 계약과 실패를 이 상위 지도에 되돌려 놓습니다. 기존의 세부 시각화는 각 메커니즘을 더 깊게 파는 장면으로 유지하되 자동 재생과 무한 반복은 사용하지 않습니다.
+
 공통 locator는 `지역 계산 → 이동 → 범위 → 분리 → 잔차 → 출력`을 보여 준다. 각 글은 바로 앞의
 계산 결과를 직속 부모 anchor에서 이어받고 마지막에 새로 확인한 사실을 같은 지도에 되돌린다.
 VLM·grounding·SAM3·VLA는 이 여섯 기초 글 뒤에서 공간 출력 계약을 재사용한다.

@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">프롬프트의 단위가 자리에서 이름으로 바뀝니다</h2>
+      <PromptShiftViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           이전 세대의 Segment Anything은 "여기"를 가리키면 그 자리의 물체 하나를 잘라 줬습니다. 점이나 상자를
@@ -48,7 +49,6 @@ export default function Overview() {
         </p>
       </div>
 
-      <PromptShiftViz />
     </section>
   );
 }
