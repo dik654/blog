@@ -6,8 +6,9 @@ import DropEmbedViz from "./viz/DropEmbedViz";
 export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="dropout-embedding" className="mb-16 scroll-mt-20">
+    <section id="dropout-embedding" data-teach-level="3" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Dropout과 Embedding은 forward의 선택 정보를 backward에 재사용합니다</h2>
+      <div className="not-prose my-8"><DropEmbedViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Inverted dropout은 학습 중 확률 <code>p</code>로 원소를 0으로 만들고, 남은 값에 <code>1/(1-p)</code>를 곱해 출력의 기댓값을 유지합니다. backward에서도 같은 mask를 사용해야 하므로 forward에서 생성한 mask를 저장합니다. 평가 모드에서는 무작위성을 제거하고 입력을 그대로 반환합니다.
@@ -17,7 +18,6 @@ export default function DropoutEmbedding({ onCodeRef }: { onCodeRef: (key: strin
           줄어듭니다. backward는 forward에서 사용한 ID를 기억했다가 해당 행에 gradient를 scatter-add하며 같은 ID가 여러 번 나오면 기여를 합산합니다.
         </p>
       </div>
-      <div className="not-prose my-8"><DropEmbedViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="Inverted dropout은 일부 값을 0으로 만들면서 왜 평균 출력은 유지할까요?"
         idea={<>Keep probability만큼만 값이 남으므로 남은 값은 그 확률로 나눠 키웁니다. Drop되면 0, keep되면 x/(1-p)가 되고 두 경우를 각 확률로 가중해 평균하면 원래 x입니다.</>}

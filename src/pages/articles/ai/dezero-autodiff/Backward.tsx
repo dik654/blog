@@ -6,8 +6,9 @@ import BackwardViz from "./viz/BackwardViz";
 export default function Backward({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="backward" className="mb-16 scroll-mt-20">
+    <section id="backward" data-teach-level="1" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">역전파에서는 순서와 gradient 누적이 정확해야 합니다</h2>
+      <div className="not-prose my-8"><BackwardViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           출력 Variable의 gradient를 1로 초기화한 뒤 creator를 따라가면 각 Function의 <code>backward()</code>가 출력 gradient를 입력 gradient로 바꿉니다. 처리할 Function은 generation 기준으로 꺼내므로, 아직 필요한 gradient가 계산되지 않은 연산을 먼저 실행하는 일을 피할 수 있습니다.
@@ -16,7 +17,6 @@ export default function Backward({ onCodeRef }: { onCodeRef: (key: string, ref: 
           같은 Variable이 여러 연산에 쓰였다면 역전파 경로도 여러 개로 갈라졌다가 다시 합쳐집니다. 이때 새 gradient로 기존 값을 덮어쓰면 한 경로의 기여가 사라지므로 <code>prev + gx</code>로 합산해야 합니다. gradient accumulation은 부가 기능이 아니라 올바른 chain rule을 위한 필수 조건입니다.
         </p>
       </div>
-      <div className="not-prose my-8"><BackwardViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="같은 x가 두 갈래로 쓰였다면 x의 gradient는 왜 덮어쓰지 않고 더해야 할까요?"
         idea={<>전체 출력은 두 branch 출력의 합이므로 x를 조금 움직였을 때 각 branch가 만드는 변화량도 더해집니다. Graph에서 다시 만난 두 cotangent를 합친 뒤 앞쪽 creator로 보내야 chain rule과 같은 결과가 됩니다.</>}

@@ -1764,6 +1764,8 @@
       "publicFiles": [
         "src/pages/articles/ai/DezeroConceptViz.tsx",
         "src/pages/articles/ai/dezero-advanced.tsx",
+        "src/pages/articles/ai/shared/DezeroExecutionPathViz.tsx",
+        "src/pages/articles/ai/shared/DezeroImplementationLocator.tsx",
         "src/pages/articles/ai/dezero-advanced/DropoutEmbedding.tsx",
         "src/pages/articles/ai/dezero-advanced/LstmCell.tsx",
         "src/pages/articles/ai/dezero-advanced/Normalization.tsx",
@@ -1782,27 +1784,41 @@
         "src/pages/articles/ai/dezero-advanced/viz/OverviewViz.tsx",
         "src/pages/articles/ai/dezero-advanced/viz/RnnLstmViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
         "characters": 36018
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "RNN·LSTM·LayerNorm·Dropout·Embedding이 글 안에서 각각 설명됐지만, 실무 구현 트랙의 현재 위치와 직속 개념 앵커가 없었습니다.",
+        "각 절의 그림이 첫 설명문 뒤에 있어 상태 경계를 읽기 전에 용어를 먼저 해석해야 했습니다.",
+        "reset·carry·detach가 같은 값의 수명과 계산 그래프의 수명을 어떻게 다르게 바꾸는지 첫 화면에서 이어지지 않았습니다."
+      ],
+      "fixture": "새 표본에서 h=c=0으로 초기화하고, f=.8·c_prev=1·i=.25·g=.4·o=.5로 c=.9와 h≈.358을 만든 뒤 같은 sequence의 다음 chunk에는 값만 넘기고 graph는 detach합니다.",
+      "stageAnchors": {
+        "S": "overview — reset→cell→carry→detach의 네 장면과 실무 트랙 위치",
+        "0": "rnn-vs-lstm — recurrent state와 graph 수명",
+        "1": "lstm — 네 gate와 두 상태 갱신",
+        "2": "normalization — feature 축 statistic과 backward cache",
+        "3": "dropout-embedding — train/eval·RNG·index 선택의 재사용"
+      },
+      "primarySourceApplication": [
+        "Hochreiter & Schmidhuber의 LSTM 원 논문은 memory cell과 gate의 문제의식에만 사용했습니다.",
+        "Layer Normalization 원 논문은 sample별 feature statistic 정의에만 사용했습니다.",
+        "Dropout 원 논문은 학습 중 stochastic removal과 평가 모드의 경계에만 사용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "상태·모드·난수·index의 서로 다른 소유 상태를 본문과 코드 참조에서 대조했습니다.",
+        "humanize": "개념 앵커와 실행 상태를 먼저 보여 주고 구현 용어는 뒤에서 설명하도록 정리했습니다.",
+        "numericTrace": "c=.8×1+.25×.4=.9, h=.5×tanh(.9)≈.358을 네 장면과 LSTM 식에서 같은 값으로 확인했습니다.",
+        "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -1812,6 +1828,8 @@
       "publicFiles": [
         "src/pages/articles/ai/DezeroConceptViz.tsx",
         "src/pages/articles/ai/dezero-autodiff.tsx",
+        "src/pages/articles/ai/shared/DezeroExecutionPathViz.tsx",
+        "src/pages/articles/ai/shared/DezeroImplementationLocator.tsx",
         "src/pages/articles/ai/dezero-autodiff/Backward.tsx",
         "src/pages/articles/ai/dezero-autodiff/Forward.tsx",
         "src/pages/articles/ai/dezero-autodiff/HigherOrder.tsx",
@@ -1830,27 +1848,41 @@
         "src/pages/articles/ai/dezero-autodiff/viz/MemoryViz.tsx",
         "src/pages/articles/ai/dezero-autodiff/viz/VariableViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
         "characters": 31110
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "자동 미분 구현이 전체 AI 지도에서 어떤 개념을 코드로 옮기는 실습인지 표시되지 않았습니다.",
+        "값·연산 기록·역순 실행·gradient 합산이 여러 절에 흩어져 한 요청처럼 이어지지 않았습니다.",
+        "각 절의 시각화가 설명문 뒤에 있어 수식과 Rust 소유권을 보기 전에 실행 상태를 잡기 어려웠습니다."
+      ],
+      "fixture": "x=3, y=x²+x²에서 두 Square가 각각 9를 만들고 Add가 y=18을 만든 뒤, 역전파에서 6과 6을 합쳐 x.grad=12가 되는 같은 계산을 끝까지 추적합니다.",
+      "stageAnchors": {
+        "S": "overview — 입력→두 제곱→출력→gradient 합산의 네 장면과 실무 트랙 위치",
+        "0": "forward — 값과 creator·generation 기록",
+        "1": "backward — generation 역순 실행과 branch gradient 합산",
+        "2": "higher-order — backward 연산의 재기록",
+        "3": "memory — Rc·RefCell·Weak과 실행 모드 수명"
+      },
+      "primarySourceApplication": [
+        "DeZero 원 프로젝트는 작은 단계로 자동 미분 기능을 확장하는 교육 순서의 근거로만 사용했습니다.",
+        "PyTorch autograd mechanics는 동적 graph·saved tensor·gradient mode의 실제 경계를 대조하는 데 사용했습니다.",
+        "Chainer 논문은 define-by-run이 등장한 문제와 설계 의도를 설명하는 데만 사용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Variable·Function·generation·gradient accumulation·고차 미분·소유권을 같은 계산으로 대조했습니다.",
+        "humanize": "역전파 개념 앵커에서 시작해 값과 계산 이력이 실제 코드 상태가 되는 순서로 정리했습니다.",
+        "numericTrace": "x=3에서 9+9=18, branch gradient 6+6=12가 첫 장면·수식·본문에서 일치함을 확인했습니다.",
+        "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -1860,6 +1892,8 @@
       "publicFiles": [
         "src/pages/articles/ai/DezeroConceptViz.tsx",
         "src/pages/articles/ai/dezero-nn.tsx",
+        "src/pages/articles/ai/shared/DezeroExecutionPathViz.tsx",
+        "src/pages/articles/ai/shared/DezeroImplementationLocator.tsx",
         "src/pages/articles/ai/dezero-nn/Activation.tsx",
         "src/pages/articles/ai/dezero-nn/LinearLayer.tsx",
         "src/pages/articles/ai/dezero-nn/Optimizer.tsx",
@@ -1878,27 +1912,41 @@
         "src/pages/articles/ai/dezero-nn/viz/OverviewViz.tsx",
         "src/pages/articles/ai/dezero-nn/viz/TrainingViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
         "characters": 32473
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "자동 미분 엔진에서 신경망 학습 상태로 넘어가는 직속 관계가 제목과 본문만으로는 한눈에 보이지 않았습니다.",
+        "parameter registry·forward·backward·optimizer·resume가 하나의 parameter identity를 공유한다는 핵심이 첫 화면에 모이지 않았습니다.",
+        "각 절의 그림이 설명문 뒤에 있어 shape와 갱신 순서를 먼저 볼 수 없었습니다."
+      ],
+      "fixture": "X 4×2, W 2×3, b 길이 3에서 Y 4×3과 parameter 9개를 확인하고, θ=2·gradient=.5·learning rate=.1인 SGD 한 걸음으로 θ=1.95를 만듭니다.",
+      "stageAnchors": {
+        "S": "overview — registry→forward→backward→update의 네 장면과 실무 트랙 위치",
+        "0": "linear — affine shape·초기화·gradient shape",
+        "1": "activation — forward와 derivative parity",
+        "2": "optimizer — parameter별 SGD·Adam 상태",
+        "3": "training — 반복 실행·평가 모드·checkpoint resume"
+      },
+      "primarySourceApplication": [
+        "Glorot & Bengio 논문은 fan-in·fan-out 초기화의 문제의식에만 사용했습니다.",
+        "Adam 논문은 1차·2차 moment와 bias correction의 정의에만 사용했습니다.",
+        "AdamW 논문은 weight decay를 adaptive gradient 변환과 분리하는 경계에만 사용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "parameter identity·shape·gradient·optimizer state·resume artifact를 같은 학습 실행에서 대조했습니다.",
+        "humanize": "학습 루프 개념 앵커와 숫자 한 건을 먼저 보여 주고 구현 상태를 뒤에서 확장하도록 정리했습니다.",
+        "numericTrace": "4×2·2×3·길이 3에서 Y 4×3과 9개 parameter, SGD 2−.1×.5=1.95를 확인했습니다.",
+        "mobile390": "390×844에서 locator·첫 시각화·모든 canvas overflow 0, 키보드 1→4와 reduced-motion 정지를 확인했습니다.",
+        "desktop1440": "1440×1000에서 locator·첫 시각화·모든 canvas overflow 0과 겹침 없는 상태를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

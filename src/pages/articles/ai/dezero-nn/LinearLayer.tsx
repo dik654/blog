@@ -6,8 +6,9 @@ import LinearViz from "./viz/LinearViz";
 export default function LinearLayer({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="linear" className="mb-16 scroll-mt-20">
+    <section id="linear" data-teach-level="0" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Linear layer는 shape와 초기화까지 포함한 affine transform입니다</h2>
+      <div className="not-prose my-8"><LinearViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Linear layer의 순전파는 <code>y = xW + b</code>로 짧지만, 구현에서는 입력과 weight의 차원, 배치 축, bias broadcasting을 먼저 고정해야 합니다. 이 계약이 모호하면 forward는 우연히 동작해도 backward에서 잘못된 축으로 gradient가 합산될 수 있습니다.
@@ -17,7 +18,6 @@ export default function LinearLayer({ onCodeRef }: { onCodeRef: (key: string, re
           transform으로 정규분포를 생성하므로 외부 RNG 없이도 결과가 재현됩니다. 다만 실제 학습 라이브러리라면 검증된 RNG와 초기화 구현을 사용하는 편이 안전합니다.
         </p>
       </div>
-      <div className="not-prose my-8"><LinearViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="Batch 4개, input feature 2개, output 3개인 Linear layer의 shape와 parameter 수는 어떻게 정할까요?"
         idea={<>각 sample의 길이 2 row가 2×3 weight와 곱해져 길이 3 row가 되고, 길이 3 bias가 모든 sample에 broadcast됩니다. Parameter는 weight 원소와 bias 원소를 더해 셉니다.</>}

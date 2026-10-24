@@ -5,8 +5,9 @@ import RnnLstmViz from "./viz/RnnLstmViz";
 export default function RnnVsLstm({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="rnn-vs-lstm" className="mb-16 scroll-mt-20">
+    <section id="rnn-vs-lstm" data-teach-level="0" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">RNN과 LSTM의 차이는 장기 상태가 흐르는 경로에 있습니다</h2>
+      <div className="not-prose my-8"><RnnLstmViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           기본 RNN은 현재 입력과 이전 hidden state를 합친 뒤 tanh를 통과시켜 다음 상태를 만듭니다. 시간을 따라 같은 변환을 반복하므로 backpropagation
@@ -18,7 +19,6 @@ export default function RnnVsLstm({ onCodeRef }: { onCodeRef: (key: string, ref:
           length도 함께 봅니다.
         </p>
       </div>
-      <div className="not-prose my-8"><RnnLstmViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>파라미터 수보다 상태 수명부터 정합니다</h3>
         <p>

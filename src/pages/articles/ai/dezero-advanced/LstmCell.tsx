@@ -6,8 +6,9 @@ import LstmViz from "./viz/LstmViz";
 export default function LstmCell({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="lstm" className="mb-16 scroll-mt-20">
+    <section id="lstm" data-teach-level="1" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">LSTM cell은 네 projection과 두 상태 업데이트로 구성됩니다</h2>
+      <div className="not-prose my-8"><LstmViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           현재 입력과 이전 hidden state는 forget, input, output gate와 candidate를 위한 네 개의 projection으로 들어갑니다. 세 gate에는
@@ -17,7 +18,6 @@ export default function LstmCell({ onCodeRef }: { onCodeRef: (key: string, ref: 
           먼저 <code>c = f*c_prev + i*g</code>로 cell state를 갱신한 뒤 <code>h = o*tanh(c)</code>로 hidden state를 만듭니다. 첫 시점에는 이전 상태가 없으므로 0으로 초기화하거나 별도 분기로 처리할 수 있지만, 두 방식이 batch size와 device·dtype을 일관되게 유지하는지 확인해야 합니다.
         </p>
       </div>
-      <div className="not-prose my-8"><LstmViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="Forget·input·output gate는 cell state와 hidden state를 어떤 순서로 바꿀까요?"
         idea={<>먼저 이전 memory에 forget 비율을 곱하고 새 candidate에 input 비율을 곱해 더합니다. 그다음 갱신된 cell state를 tanh로 제한하고 output gate만큼 외부에 공개합니다.</>}

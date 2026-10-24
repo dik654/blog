@@ -6,8 +6,9 @@ import HigherOrderViz from "./viz/HigherOrderViz";
 export default function HigherOrder({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="higher-order" className="mb-16 scroll-mt-20">
+    <section id="higher-order" data-teach-level="2" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">고차 미분은 backward 자체를 다시 기록해서 만듭니다</h2>
+      <div className="not-prose my-8"><HigherOrderViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           일반 학습에서는 파라미터의 1차 gradient만 필요하므로 backward 중 수행한 연산까지 그래프로 남길 이유가 없습니다. 반면 2차 미분이 필요할 때는 <code>backward(create_graph=true)</code>를 사용해 gradient를 계산한 Mul, Add 같은 연산도 새 계산 그래프에 기록해야 합니다.
@@ -16,7 +17,6 @@ export default function HigherOrder({ onCodeRef }: { onCodeRef: (key: string, re
           이 설계가 가능하려면 gradient를 단순 배열이 아니라 Variable로 저장해야 합니다. 첫 번째 backward로 얻은 <code>x.grad</code>가 creator chain을 유지하므로, gradient를 초기화한 뒤 그 Variable에서 backward를 다시 호출하면 2차 미분을 얻을 수 있습니다.
         </p>
       </div>
-      <div className="not-prose my-8"><HigherOrderViz onOpenCode={open} /></div>
       <ExplainedFormula
         question="x³의 2차 미분을 얻으려면 첫 backward에서 무엇을 기록해야 할까요?"
         idea={<>첫 backward의 결과 3x²를 단순 숫자로 만들면 다시 미분할 creator가 없습니다. Gradient 계산 자체를 Mul·Pow 같은 Variable 연산으로 기록하면 첫 gradient가 두 번째 backward의 출력이 됩니다.</>}

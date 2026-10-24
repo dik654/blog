@@ -5,8 +5,9 @@ import ActivationViz from "./viz/ActivationViz";
 export default function Activation({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="activation" className="mb-16 scroll-mt-20">
+    <section id="activation" data-teach-level="1" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Activation은 출력 범위와 gradient 흐름을 바꿉니다</h2>
+      <div className="not-prose my-8"><ActivationViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Linear layer만 여러 번 연결하면 전체 모델도 하나의 선형 변환으로 합쳐집니다. ReLU, sigmoid, tanh, GELU 같은 activation을 사이에 넣어야
@@ -16,7 +17,6 @@ export default function Activation({ onCodeRef }: { onCodeRef: (key: string, ref
           Sigmoid와 tanh는 forward 출력으로 각각 <code>y(1-y)</code>, <code>1-y²</code>을 계산할 수 있어 지수함수나 tanh를 다시 호출하지 않아도 됩니다. GELU의 tanh 근사를 사용한다면 forward 근사식과 정확히 대응하는 derivative를 구현해야 하며, 서로 다른 근사식을 섞지 않도록 테스트해야 합니다.
         </p>
       </div>
-      <div className="not-prose my-8"><ActivationViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>표준 용어와 사용 위치를 구분합니다</h3>
         <p>

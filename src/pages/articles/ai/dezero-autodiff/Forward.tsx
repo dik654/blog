@@ -5,8 +5,9 @@ import ForwardViz from "./viz/ForwardViz";
 export default function Forward({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   const open = (key: string) => onCodeRef(key, codeRefs[key]);
   return (
-    <section id="forward" className="mb-16 scroll-mt-20">
+    <section id="forward" data-teach-level="0" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">순전파는 결과를 계산하면서 역추적 경로를 기록합니다</h2>
+      <div className="not-prose my-8"><ForwardViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           <code>Func::call()</code>은 입력 Variable에서 데이터를 읽어 <code>Function::forward()</code>를 실행하고 결과를 새 Variable로 감쌉니다. 여기까지만 하면 일반 수치 계산과 같지만, backpropagation이 켜져 있을 때는 입력과 출력, creator와 generation도 함께 기록합니다.
@@ -16,7 +17,6 @@ export default function Forward({ onCodeRef }: { onCodeRef: (key: string, ref: C
           때 전체 미분을 만드는 일은 계산 그래프가 맡습니다. 새 연산을 추가할 때도 전역 그래프 로직을 바꿀 일은 없습니다.
         </p>
       </div>
-      <div className="not-prose my-8"><ForwardViz onOpenCode={open} /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>generation으로 실행 순서를 단순화합니다</h3>
         <p>
