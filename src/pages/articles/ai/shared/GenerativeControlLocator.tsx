@@ -10,6 +10,14 @@ const STEPS = [
     href: "/cs/ai/image-video-lora-architecture",
   },
   {
+    id: "context",
+    branch: "공통 준비",
+    label: "참조 조건 학습",
+    track: "개념",
+    detail: "참조와 생성 대상을 한 attention 문맥에 넣어 별도 조건 모듈 없이 대응 관계를 학습합니다.",
+    href: "/cs/ai/in-context-lora",
+  },
+  {
     id: "memory",
     branch: "공통 준비",
     label: "메모리 예산",
@@ -65,12 +73,21 @@ const STEPS = [
     detail: "시드·문구·가중치·참조 뱅크를 차례로 분리해 같은 얼굴이 반복되는 원인을 좁힙니다.",
     href: "/cs/ai/generative-identity-diversity",
   },
+  {
+    id: "negative",
+    branch: "정체성 제어",
+    label: "실패 원인 검증",
+    track: "참고",
+    detail: "3차원 형태 제어의 세 실패를 버그·형태 보존·대조군으로 나눠 다음 실험에서 되풀이하지 않게 합니다.",
+    href: "/cs/ai/negative-result-3d-face-control",
+  },
 ] as const;
 
 type GenerativeControlStep = (typeof STEPS)[number]["id"];
 
 const QUESTIONS: Record<GenerativeControlStep, string> = {
   scope: "LoRA의 행렬식이 같아도 이미지와 영상에서 학습되는 능력이 달라지는 이유는 무엇입니까?",
+  context: "별도 조건 모듈 없이 참조와 생성 대상의 대응 관계를 기존 self-attention이 어떻게 학습합니까?",
   memory: "어댑터만 학습하는데도 여러 부품이 VRAM을 차지하는 이유와 줄일 수 있는 항목은 무엇입니까?",
   measurement: "생성 결과를 재는 숫자가 실제 의도한 차이를 측정하는지 어떻게 먼저 확인합니까?",
   verbs: "같은 마스크 편집 API가 색 변경·교체·추가·삭제를 모두 같은 방식으로 처리할 수 없는 이유는 무엇입니까?",
@@ -78,10 +95,12 @@ const QUESTIONS: Record<GenerativeControlStep, string> = {
   resolution: "같은 모델과 설정인데 대상의 화면상 크기만 달라져 정체성 보존이 무너지는 이유는 무엇입니까?",
   signals: "참조 이미지에 정체성과 자세가 함께 들어 있을 때 두 신호를 어떤 경로로 나눠야 합니까?",
   diversity: "같은 얼굴이 반복될 때 시드·문구·가중치 중 실제 병목을 어떻게 구분합니까?",
+  negative: "3차원 얼굴 제어가 실패했을 때 구현 버그·표현 손실·난수 효과를 어떻게 분리합니까?",
 };
 
 const FINDINGS: Record<GenerativeControlStep, string> = {
   scope: "LoRA는 작은 변화량을 만드는 방법일 뿐입니다. 실제로 학습되는 능력은 host architecture에서 선택한 공간·시간·교차모달 경로와 학습 데이터가 결정하므로, artifact에는 base revision과 정확한 target module 목록이 함께 남아야 합니다.",
+  context: "참조는 깨끗한 조건으로 두고 생성 대상에만 노이즈를 섞은 뒤 한 sequence로 이어붙입니다. 기존 self-attention이 두 구간의 대응을 찾고 target 위치의 오차만 LoRA 행렬에 반영하므로, 새 조건 모듈 없이도 참조 기반 작업을 학습할 수 있습니다.",
   memory: "동결은 gradient를 만들지 않는다는 뜻이지 장치에서 사라진다는 뜻이 아닙니다. 매 스텝 forward에 참여하는 부품은 상주하며, 메모리는 가중치·활성값·gradient·optimizer state를 부품별로 나눠 계산해야 합니다.",
   measurement: "계측값은 계측기의 적용 범위 안에서만 근거가 됩니다. 원본 자신·무동작·서로 다른 대상을 함께 넣어 탐지 실패, 오토인코더 바닥값, 스타일 범위를 확인한 뒤에만 비교값을 해석할 수 있습니다.",
   verbs: "편집 API 하나 안에도 형태를 보존하는 속성 변경, 새 경계를 만드는 교체, 없던 것을 만드는 추가, 있던 것을 비우는 삭제가 있습니다. 모델 선택과 마스크 확장 방향은 이 동작 분류 뒤에 결정해야 합니다.",
@@ -89,6 +108,7 @@ const FINDINGS: Record<GenerativeControlStep, string> = {
   resolution: "전체 이미지 해상도가 아니라 대상이 잠재 격자에서 차지하는 정보량이 보존 가능성을 제한합니다. 작은 얼굴은 ROI로 잘라 실제 입력 예산을 늘리고, 확대 지표는 정답을 아는 대조군으로 먼저 검증해야 합니다.",
   signals: "참조 조건 하나에 정체성과 자세를 함께 맡기면 두 요구가 충돌합니다. 정체성은 어텐션 경로, 포즈는 공간 조건, 방향은 문구처럼 서로 다른 손잡이로 나눠야 각 신호를 독립적으로 조절할 수 있습니다.",
   diversity: "표본을 늘리고 변수를 한 축씩 바꾸자 시드의 기여는 거의 사라지고 문구와 모델 가중치의 경계가 드러났습니다. 작은 표본에서 얻은 원인을 일반화하지 말고 충돌률과 계측 실패를 함께 기록해야 합니다.",
+  negative: "세 실패는 각각 다른 원인을 드러냈습니다. winding 오류는 구현 문제였고, 깨끗한 메쉬는 오히려 형태 신호를 잃었으며, 마지막 분리는 난수 대조군과 차이가 없었습니다. 낮은 유사도만으로 성공이라 판정하지 말고 입력·대조군·출력 유효성을 함께 확인해야 합니다.",
 };
 
 export function GenerativeControlLocator({ current }: { current: GenerativeControlStep }) {
@@ -107,7 +127,7 @@ export function GenerativeControlLocator({ current }: { current: GenerativeContr
         <strong className="text-foreground" aria-current="page">생성 조정 · {currentStep.label}</strong>
       </nav>
 
-      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-5">
         {STEPS.map((step, index) => (
           <Link
             key={step.id}
@@ -146,16 +166,17 @@ export function GenerativeControlMapReturn({ current }: { current: GenerativeCon
 
   return (
     <aside
+      id="generative-control-return"
       className="not-prose my-8 border-y border-border py-5"
       aria-label="확인한 사실을 이미지와 영상 생성 조정 지도에 되돌려 놓기"
     >
       <p className="text-[10px] font-bold text-primary">부모 지도에 되돌려 놓기</p>
       <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">{FINDINGS[current]}</p>
       <Link
-        to={next?.href ?? "/cs/ai/negative-result-3d-face-control"}
+        to={next?.href ?? "/cs/ai/world-model-latent-planning"}
         className="mt-3 inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary"
       >
-        {next ? `다음 단계 · ${next.label} →` : "다음 기록 · 실패한 3D 얼굴 제어 실험으로 이동 →"}
+        {next ? `다음 단계 · ${next.label} →` : "다음 지도 · 월드모델과 행동 계획으로 이동 →"}
       </Link>
     </aside>
   );

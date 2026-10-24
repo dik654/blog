@@ -18,7 +18,7 @@ const R3 = "#ef4444";
 const MUTED = "#94a3b8";
 
 export default function RoundsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
+  const scenes = useAnimatedScenes(SCENES.length, 3400, { loop: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -28,17 +28,41 @@ export default function RoundsViz() {
       note="실패한 것은 이 세 방법이며 3차원 형태 제어 일반이 불가능하다는 뜻은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="negative-result-three-rounds-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="세 라운드의 실패"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(30rem,calc(100svh-15rem))] sm:min-h-[23rem]"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
+        <div key={step} data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <div className="mt-4 space-y-2 sm:hidden">
+            {step === 0 ? (
+              <>
+                <div className="border-l-2 border-primary bg-muted/40 px-3 py-3">
+                  <strong className="block text-sm">서로 다른 얼굴 4개</strong>
+                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">출력의 여섯 쌍이 모두 다른 인물로 남아야 합격합니다.</span>
+                </div>
+                <p className="text-xs leading-5 text-muted-foreground">문장만으로는 움직이지 않던 얼굴 형태를 3차원 입력으로 먼저 고정합니다.</p>
+              </>
+            ) : (
+              [
+                ["1차 · 조립식 메쉬", "형태 전달", "부속물 복사"],
+                ["2차 · 단일 두상", "깨끗한 렌더", "결과 수렴"],
+                ["3차 · 매 단계 조건화", "단조 감소", "난수와 같은 분리"],
+              ].map(([name, gain, failure], index) => (
+                <div key={name} className={`border-l-2 px-3 py-2 ${step - 1 >= index ? "border-primary" : "border-border text-muted-foreground"}`}>
+                  <strong className="block text-sm">{name}</strong>
+                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">얻은 것 · {gain} / 무너진 곳 · {failure}</span>
+                </div>
+              ))
+            )}
+          </div>
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {step === 0 && (
               <g>
                 <text x={24} y={30} fontSize={9} fill={MUTED}>
@@ -105,6 +129,14 @@ export default function RoundsViz() {
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

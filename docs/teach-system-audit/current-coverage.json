@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 513,
-    "pending": 477,
+    "reviewed": 515,
+    "pending": 475,
     "untracked": 0,
-    "assignedPending": 433,
+    "assignedPending": 431,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1863,9 +1863,9 @@
       "publicPath": "cs/ai/negative-result-3d-face-control",
       "title": "세 라운드를 들여 실패했고 그 기록이 남을 가치가 있습니다",
       "catalogIndex": 183,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1873,9 +1873,9 @@
       "publicPath": "cs/ai/in-context-lora",
       "title": "In-Context LoRA: reference·target을 한 context로 이어붙이기",
       "catalogIndex": 184,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

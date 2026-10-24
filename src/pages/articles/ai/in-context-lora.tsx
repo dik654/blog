@@ -4,15 +4,18 @@ import Applications from "./in-context-lora/Applications";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./in-context-lora/codeRefs";
 import { inContextLoraTree } from "./in-context-lora/fileTree";
+import { GenerativeControlLocator, GenerativeControlMapReturn } from "./shared/GenerativeControlLocator";
 
 export default function InContextLoraArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <div className="space-y-12">
+      <GenerativeControlLocator current="context" />
       <Overview onCodeRef={sidebar.open} />
       <Training onCodeRef={sidebar.open} />
       <Applications onCodeRef={sidebar.open} />
+      <GenerativeControlMapReturn current="context" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

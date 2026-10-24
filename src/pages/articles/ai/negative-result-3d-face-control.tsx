@@ -4,6 +4,7 @@ import ShapeSurvival from "./negative-result-3d-face-control/ShapeSurvival";
 import SeedControl from "./negative-result-3d-face-control/SeedControl";
 import BrokenNotDifferent from "./negative-result-3d-face-control/BrokenNotDifferent";
 import NegativeGate from "./negative-result-3d-face-control/NegativeGate";
+import { GenerativeControlLocator, GenerativeControlMapReturn } from "./shared/GenerativeControlLocator";
 
 /**
  * 세 라운드를 들여 실패했고 그 기록이 남을 가치가 있습니다
@@ -13,12 +14,14 @@ import NegativeGate from "./negative-result-3d-face-control/NegativeGate";
 export default function NegativeResult3dFaceControlArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeControlLocator current="negative" />
       <Overview />
       <WindingBug />
       <ShapeSurvival />
       <SeedControl />
       <BrokenNotDifferent />
       <NegativeGate />
+      <GenerativeControlMapReturn current="negative" />
     </div>
   );
 }
