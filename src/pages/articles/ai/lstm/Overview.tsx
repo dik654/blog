@@ -7,6 +7,7 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">이전 cell 2에서 새 cell 1.375와 hidden 0.44를 만듭니다</h2>
+      <LSTMFlowViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -23,7 +24,6 @@ export default function Overview() {
         <p>답은 <strong>예, 예, 아니요</strong>입니다. Output gate는 완성된 cell을 그대로 복사하지 않고 tanh로 읽은 값 중 절반만 공개합니다.</p>
       </div>
 
-      <LSTMFlowViz />
       <ContentBoundary article="lstm" />
       <TermBreakdown
         title="LSTM의 두 state와 세 gate를 먼저 분리합니다"

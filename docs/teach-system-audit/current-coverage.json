@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 405,
-    "pending": 585,
+    "reviewed": 412,
+    "pending": 578,
     "untracked": 0,
-    "assignedPending": 533,
+    "assignedPending": 526,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -493,9 +493,9 @@
       "publicPath": "cs/ai/rnn",
       "title": "RNN 기초: hidden state와 시간축 계산",
       "catalogIndex": 46,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -503,9 +503,9 @@
       "publicPath": "cs/ai/rnn-language-model",
       "title": "RNN Language Model: shifted token에서 perplexity까지",
       "catalogIndex": 47,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -513,9 +513,9 @@
       "publicPath": "cs/ai/bptt",
       "title": "BPTT: 시간축 gradient와 truncation",
       "catalogIndex": 48,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -523,9 +523,9 @@
       "publicPath": "cs/ai/lstm",
       "title": "LSTM: 장기 의존성을 학습하는 게이트 구조",
       "catalogIndex": 49,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -533,9 +533,9 @@
       "publicPath": "cs/ai/gru",
       "title": "GRU: reset candidate와 update interpolation",
       "catalogIndex": 50,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -543,9 +543,9 @@
       "publicPath": "cs/ai/seq2seq",
       "title": "Seq2Seq: 시퀀스를 시퀀스로 변환",
       "catalogIndex": 51,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -553,9 +553,9 @@
       "publicPath": "cs/ai/attention-theory",
       "title": "어텐션 메커니즘 이론: Bahdanau에서 Transformer까지",
       "catalogIndex": 52,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

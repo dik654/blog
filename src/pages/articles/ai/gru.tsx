@@ -2,12 +2,14 @@ import Variants from "./lstm/Variants";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./gru/codeRefs";
 import { gruTree } from "./gru/fileTree";
+import { RnnTrackLocator } from "./rnn/shared/RnnSeriesLocator";
 
 export default function GRUArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <article className="space-y-14">
+      <RnnTrackLocator current="gates" question="cell state를 따로 두지 않고 reset과 update 두 gate로 하나의 hidden state를 어떻게 갱신할까요?" fixture="hprev=(2,−1)에 reset mask (0,.5)를 적용해 candidate용 history를 만든 뒤, z=.25일 때 기존 state와 candidate를 보간합니다." parentHref="/cs/ai/rnn#overview" parentLabel="현재 입력과 직전 hidden을 합치는 recurrent transition" secondaryHref="/cs/ai/lstm" secondaryLabel="cell state와 세 gate로 경로를 나눈 LSTM" />
       <section id="overview" className="scroll-mt-20 space-y-4">
         <p className="text-sm font-semibold text-primary">One gate at a time</p>
         <h2 className="text-3xl font-bold tracking-tight">

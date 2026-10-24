@@ -196,3 +196,43 @@ negative sample `k=5`를 적용한 shifted score는 `0.439−ln5≈−1.170`이�
 
 모션은 사용자가 재생한 뒤 단계마다 실제 수치와 상태가 바뀌고 마지막 장면에서 멈춘다. 장식용
 페이드나 자동 재생은 사용하지 않는다. JavaScript가 없어도 같은 수치와 결론은 본문 순서로 남긴다.
+
+## 6. RNN에서 Attention까지
+
+### 분류와 질문의 경계
+
+| route | track · form | 이 글이 소유하는 질문 |
+|---|---|---|
+| `ai/rnn` | concept · explanation | 현재 입력과 직전 state를 같은 transition으로 반복 갱신하면 과거 정보가 어떻게 다음 시점으로 전달되는가? |
+| `ai/rnn-language-model` | concept · explanation | 현재 state를 vocabulary 전체의 다음-token probability와 평가값으로 어떻게 바꾸는가? |
+| `ai/bptt` | concept · explanation | 여러 시점에서 공유한 weight의 책임을 어떻게 합치며, 긴 시간 경로에서 gradient가 왜 달라지는가? |
+| `ai/lstm` | concept · explanation | 보존·쓰기·공개 경로를 cell과 gate로 어떻게 분리하는가? |
+| `ai/gru` | concept · explanation | reset과 update 두 gate로 candidate와 최종 hidden을 어떻게 만드는가? |
+| `ai/seq2seq` | concept · explanation | source sequence를 조건으로 길이가 다른 target sequence를 어떻게 생성하는가? |
+| `ai/attention-theory` | concept · explanation | 현재 query가 source memory의 필요한 위치를 매 시점 어떻게 다시 읽는가? |
+
+이 묶음은 하나의 긴 RNN 설명으로 합치지 않는다. 각 글은 바로 앞 글에서 생긴 질문만 이어받고,
+자신이 소유하지 않는 메커니즘은 정확한 anchor로 넘긴다. 공통 locator는 `상태 → 예측 → 학습 →
+보존 → 변환 → 조회`의 위치와 직속 부모를 함께 보여 준다.
+
+### 공통 fixture와 반환 경로
+
+RNN은 `hₜ=tanh(0.8hₜ₋₁+0.5xₜ)`, `h₀=0`, 입력 `1→0→1`을 사용한다. 따라서 state는
+약 `0.462→0.354→0.654`가 된다. 언어 모델은 `[BOS, 나, 간다, EOS]`를 세 shifted pair로
+나누며, BPTT는 같은 weight의 시점별 contribution `2, −1, 3`을 합쳐 `4`로 만든다.
+
+LSTM은 `Cprev=2, f=.5, i=.75, g=.5, o=.5`에서 `C=1.375`, `h≈.44`를 계산한다.
+GRU는 `hprev=(2,−1)`, `r=(0,.5)`에서 filtered history `(0,−.5)`를 만들고,
+`hprev=2, candidate=10, z=.25`에서 새 state `4`를 만든다. 모두 메커니즘을 읽기 위한
+교육용 가정이며 benchmark나 실제 학습 결과가 아니다.
+
+### 시각화 규칙
+
+기존 시각화는 선택하지 않은 장면도 흐리게 한 화면 아래에 계속 쌓아 모바일에서 1,000px가 넘었다.
+이를 현재 장면 하나만 교체하는 방식으로 바꾸고, 다음 상태가 실제로 달라지는 장면만 재생한다.
+자동 시작과 무한 반복은 사용하지 않으며 마지막 장면에서 멈춘다. RNN·언어 모델·BPTT·LSTM·GRU
+모두 키보드와 reduced-motion을 같은 공통 controller로 처리한다.
+
+첫 모바일 계측에서 내부 캔버스 높이는 언어 모델 `1,575→588px`, BPTT `1,044→474px`,
+LSTM `1,458→573px`, GRU `1,308→627px`로 줄었다. 이 값은 390×844 브라우저에서 DOM
+bounding box로 확인한 레이아웃 수치이며 모델 성능 지표가 아니다.

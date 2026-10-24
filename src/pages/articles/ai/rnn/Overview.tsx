@@ -15,6 +15,7 @@ export default function Overview({
   return (
     <section id="overview" className="mb-20 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">RNN의 핵심은 순서가 아니라 state transition이다</h2>
+      <RecurrentStateFlowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           문장의 세 번째 단어를 해석하려면 앞의 두 단어가 무엇이었는지 알아야 합니다.
@@ -42,7 +43,6 @@ export default function Overview({
         ]}
       />
 
-      <RecurrentStateFlowViz />
       <ContentBoundary article="rnn" />
 
       <div id="paper-elman" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">

@@ -1,10 +1,12 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import M from "@/components/ui/math";
+import RNNUnrollViz from "./viz/RNNUnrollViz";
 
 export default function Architecture() {
   return (
     <section id="architecture" className="mb-20 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">접힌 cell 하나를 시간축 계산 graph로 펼친다</h2>
+      <RNNUnrollViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           RNN 그림의 self-loop는 구현할 때 실제로 원을 도는 연산이 아닙니다. 길이

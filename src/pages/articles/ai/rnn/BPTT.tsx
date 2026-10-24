@@ -9,6 +9,7 @@ export default function BPTT() {
   return (
     <section id="bptt" className="mb-20 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">BPTT: 같은 weight가 만든 모든 시간 경로를 역으로 따라간다</h2>
+      <BPTTLearningFlowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Backpropagation through time(BPTT)은 별도의 학습 알고리즘이라기보다, recurrent
@@ -27,7 +28,6 @@ export default function BPTT() {
           { term: "Truncation·detach", description: "State 값은 다음 chunk로 넘기되 이전 graph로 돌아가는 derivative edge를 끊습니다.", boundary: "Forward history 길이와 direct gradient horizon은 같은 숫자가 아닙니다." },
         ]}
       />
-      <BPTTLearningFlowViz />
       <ContentBoundary article="bptt" />
 
       <div id="paper-bptt" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">
