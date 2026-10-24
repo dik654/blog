@@ -17,10 +17,10 @@ const SCENES = [
 ] as const;
 
 const NOTES = [
-  "요청이 도착하면 이 요청 전체를 감싸는 request span(루트)이 생성되고 trace id 하나가 부여됩니다. 아직 자식 span은 없습니다.",
-  "처리 도중 retrieval → generation → tool → generation 순서로 자식 span이 붙습니다. 같은 trace id를 공유하면서 parent span id로 tree 위치가 정해집니다.",
-  "각 span의 시작·종료 시각을 시간축에 놓으면 전체 latency가 어느 구간에 쓰였는지 보입니다. Queue·TTFT는 첫 generation span 이전에, 나머지는 이후에 쌓입니다.",
-  "두 번째 generation span에서 output 96 token을 0.9초에 만들었다면 throughput은 초당 약 107 token입니다. 같은 계산을 generation span마다 따로 해야 합니다.",
+  "요청이 도착하면 전체 구간을 감싸는 request span을 만들고 trace id를 붙입니다. 이때 자식 span은 없습니다.",
+  "retrieval → generation → tool → generation 순서로 자식 span이 붙습니다. 같은 trace id와 parent span id가 tree 위치를 잇습니다.",
+  "span의 시작·종료 시각을 시간축에 놓으면 구간별 latency가 드러납니다. 첫 generation 전에는 queue와 TTFT가 쌓입니다.",
+  "96 token ÷ 0.9초 ≈ 107 tok/s입니다. 이 계산은 generation span마다 따로 합니다.",
 ] as const;
 
 const SPANS = [
@@ -102,7 +102,7 @@ function LatencyBar({ highlightLast }: { highlightLast: boolean }) {
 
 function ThroughputScene() {
   return (
-    <div className="mt-6">
+    <div>
       <LatencyBar highlightLast />
       <div className="mx-auto mt-4 flex max-w-xs items-center justify-center gap-2 border border-primary/50 bg-primary/5 px-4 py-3 text-center text-xs font-bold text-foreground">
         <span>96 token</span>
@@ -116,7 +116,7 @@ function ThroughputScene() {
 }
 
 export default function LlmMonitoringObservabilityAndDriftViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
   return (
     <VizFrame
       eyebrow="Trace tree · latency breakdown"
@@ -125,14 +125,17 @@ export default function LlmMonitoringObservabilityAndDriftViz() {
       note="80/220/480/900ms와 96 token 같은 숫자는 절차를 보여 주기 위한 예시이며 특정 배포의 실측값이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
+        data-viz-scene="llm-observability-trace-viz"
+        data-story-index={scenes.active}
         tabIndex={0}
         role="group"
         aria-label="Request span 아래 retrieval·generation·tool span이 중첩되고, 그 duration이 latency breakdown과 token throughput 계산으로 이어지는 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-h-[27rem] min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex flex-col justify-center sm:min-h-0 sm:flex-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
@@ -147,11 +150,23 @@ export default function LlmMonitoringObservabilityAndDriftViz() {
           {scenes.active === 2 && <LatencyBar highlightLast={false} />}
           {scenes.active === 3 && <ThroughputScene />}
 
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:mt-6 sm:leading-7">
             {NOTES[scenes.active]}
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {label}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {NOTES[index]}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

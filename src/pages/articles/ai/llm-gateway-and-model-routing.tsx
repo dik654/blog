@@ -5,6 +5,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmGatewayAndModelRoutingViz from "./llm-gateway-and-model-routing/viz/LlmGatewayAndModelRoutingViz";
+import {
+  LlmOperationsPathLocator,
+  LlmOperationsPathMapReturn,
+} from "./shared/LlmOperationsPathLocator";
 
 /**
  * LLM gateway: unified API·routing 정책·cascade·fallback
@@ -14,10 +18,12 @@ import LlmGatewayAndModelRoutingViz from "./llm-gateway-and-model-routing/viz/Ll
 export default function LlmGatewayAndModelRoutingArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <LlmOperationsPathLocator current="routing" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           확신도 0.42에서 상위 model로 넘어가고 timeout 뒤 fallback이 답합니다
         </h2>
+        <LlmGatewayAndModelRoutingViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Gateway가 하나의 요청을 받았습니다. Router는 먼저 저비용 model을 호출합니다.
@@ -38,7 +44,6 @@ export default function LlmGatewayAndModelRoutingArticle() {
             시작 신호가 다릅니다.
           </p>
         </div>
-        <LlmGatewayAndModelRoutingViz />
         <ContentBoundary article="llm-gateway-and-model-routing" />
         <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
           <p>
@@ -51,7 +56,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </div>
       </section>
 
-      <section id="gateway-unified-api" className="scroll-mt-20">
+      <section id="gateway-unified-api" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Gateway는 provider별 API 차이를 하나의 interface 뒤로 숨깁니다
         </h2>
@@ -88,7 +93,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
         />
       </section>
 
-      <section id="routing-policy-taxonomy" className="scroll-mt-20">
+      <section id="routing-policy-taxonomy" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Router는 부하·지연·비용·능력·정책 중 무엇을 기준으로 고릅니다
         </h2>
@@ -127,7 +132,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
         />
       </section>
 
-      <section id="model-cascade" className="scroll-mt-20">
+      <section id="model-cascade" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Cascade는 확신이 낮을 때만 더 비싼 model로 넘어갑니다
         </h2>
@@ -187,7 +192,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
         </div>
       </section>
 
-      <section id="fallback-model" className="scroll-mt-20">
+      <section id="fallback-model" data-teach-level="failure" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Fallback은 확신이 아니라 실패에 반응해 다른 model로 넘어갑니다
         </h2>
@@ -233,6 +238,7 @@ export default function LlmGatewayAndModelRoutingArticle() {
           ]}
         />
       </section>
+      <LlmOperationsPathMapReturn current="routing" />
     </div>
   );
 }

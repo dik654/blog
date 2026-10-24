@@ -7,6 +7,10 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import RateLimitingAndReliabilityPatternsViz from "./rate-limiting-and-reliability-patterns/viz/RateLimitingAndReliabilityPatternsViz";
+import {
+  LlmOperationsPathLocator,
+  LlmOperationsPathMapReturn,
+} from "./shared/LlmOperationsPathLocator";
 
 /**
  * Rate limiting·backpressure·circuit breaker·failover
@@ -16,10 +20,12 @@ import RateLimitingAndReliabilityPatternsViz from "./rate-limiting-and-reliabili
 export default function RateLimitingAndReliabilityPatternsArticle() {
   return (
     <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
+      <LlmOperationsPathLocator current="reliability" />
+      <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           실패 종류마다 다른 방어 장치를 겹쳐 씁니다
         </h2>
+        <RateLimitingAndReliabilityPatternsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             분산 시스템에서 “실패에 대응한다”는 말은 하나의 장치가 아니라 여러
@@ -47,7 +53,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         <ContentBoundary article="rate-limiting-and-reliability-patterns" />
       </section>
 
-      <section id="retry-backoff" className="scroll-mt-20">
+      <section id="retry-backoff" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Backoff는 재시도 간격을 점점 늘려 몰림을 완화합니다
         </h2>
@@ -95,7 +101,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         />
       </section>
 
-      <section id="circuit-breaker-health-check" className="scroll-mt-20">
+      <section id="circuit-breaker-health-check" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Circuit breaker는 계속되는 실패 앞에서 재시도 자체를 멈춥니다
         </h2>
@@ -113,7 +119,6 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
             check는 실제 트래픽과 무관하게 주기적으로 backend 상태만 묻습니다.
           </p>
         </div>
-        <RateLimitingAndReliabilityPatternsViz />
         <AlgorithmBlock
           title="Closed·open·half-open 사이를 오가는 circuit breaker 상태 전이"
           input={["요청", "실패율 임계값", "open 유지 시간", "half-open 시험 요청 결과"]}
@@ -153,7 +158,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         />
       </section>
 
-      <section id="rate-limiting-algorithms" className="scroll-mt-20">
+      <section id="rate-limiting-algorithms" data-teach-level="mechanism" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Rate limiting은 무엇을 세느냐로 알고리즘이 갈립니다
         </h2>
@@ -242,7 +247,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         />
       </section>
 
-      <section id="token-reservation" data-calculation-explained className="scroll-mt-20">
+      <section id="token-reservation" data-teach-level="mechanism" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Token 한도는 요청을 받을 때 최대치로 잡고, 끝난 뒤 실제 사용량으로 정산합니다
         </h2>
@@ -317,7 +322,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         </div>
       </section>
 
-      <section id="load-shedding-and-admission" className="scroll-mt-20">
+      <section id="load-shedding-and-admission" data-teach-level="failure" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Load shedding은 넘친 뒤에, admission policy는 문 앞에서 거릅니다
         </h2>
@@ -379,7 +384,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
         />
       </section>
 
-      <section id="graceful-degradation-and-failover" className="scroll-mt-20">
+      <section id="graceful-degradation-and-failover" data-teach-level="boundary" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Reliability는 HA·fault tolerance·failover가 함께 만드는 결과입니다
         </h2>
@@ -413,6 +418,7 @@ export default function RateLimitingAndReliabilityPatternsArticle() {
           ]}
         />
       </section>
+      <LlmOperationsPathMapReturn current="reliability" />
     </div>
   );
 }

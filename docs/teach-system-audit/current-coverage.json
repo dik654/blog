@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 539,
-    "pending": 451,
+    "reviewed": 543,
+    "pending": 447,
     "untracked": 0,
-    "assignedPending": 407,
+    "assignedPending": 403,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1493,9 +1493,9 @@
       "publicPath": "cs/ai/llm-monitoring-observability-and-drift",
       "title": "LLM 운영 관측: trace·token/latency 분해·drift monitoring",
       "catalogIndex": 146,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1503,9 +1503,9 @@
       "publicPath": "cs/ai/llm-application-caching",
       "title": "LLM 애플리케이션 캐시: exact-match·semantic·retrieval·staleness",
       "catalogIndex": 147,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1513,9 +1513,9 @@
       "publicPath": "cs/ai/llm-gateway-and-model-routing",
       "title": "LLM gateway: unified API·routing 정책·cascade·fallback",
       "catalogIndex": 148,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -1533,9 +1533,9 @@
       "publicPath": "cs/ai/rate-limiting-and-reliability-patterns",
       "title": "Rate limiting·backpressure·circuit breaker·failover",
       "catalogIndex": 150,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

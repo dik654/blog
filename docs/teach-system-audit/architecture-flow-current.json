@@ -9,7 +9,7 @@
     "customVisuals": 860,
     "animatedMechanisms": 450,
     "architectureWithoutAnimation": 99,
-    "recursiveLocators": 190,
+    "recursiveLocators": 194,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
     "architectureWithoutCustomVisual": 27
@@ -3034,7 +3034,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -3098,7 +3098,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -3146,7 +3146,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
@@ -4618,7 +4618,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

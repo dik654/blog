@@ -8119,25 +8119,74 @@
       "route": "ai/llm-application-caching",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-application-caching.tsx",
       "publicPath": "cs/ai/llm-application-caching",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Exact·semantic·retrieval cache를 설명했지만 한 요청이 어느 계층에서 멈추는지 먼저 보여 주는 부모 경로가 없었음",
+        "유사도 threshold와 hit·miss 계산이 세 계층의 실제 조회 순서보다 먼저 흩어져 있었음",
+        "첫 설명보다 동작 그림이 늦게 나와 cache가 항상 모든 계층을 거치는 것처럼 읽힐 수 있었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "cacheKeyParts": [
+          "prompt",
+          "model",
+          "options"
+        ],
+        "exactMatch": "miss",
+        "semanticSimilarity": 0.97,
+        "semanticThreshold": 0.95,
+        "semanticResult": "hit",
+        "retrievalLookup": "skipped"
+      },
+      "stageAnchors": {
+        "0": "llm-operations-parent-map",
+        "1": "problem",
+        "2": "cache-taxonomy",
+        "3": "semantic-threshold",
+        "4": "cache-key-ttl-staleness",
+        "5": "hit-miss-rate",
+        "6": "warming-eviction",
+        "return": "llm-operations-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/zilliztech/GPTCache",
+          "application": "Semantic cache가 embedding과 유사도 평가로 hit를 판정하는 구현 사례"
+        },
+        {
+          "href": "https://doi.org/10.1147/sj.52.0078",
+          "application": "미래 참조를 안다는 가정에서 가장 늦게 다시 쓰일 항목을 버리는 Belady 기준"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "prompt·model·option으로 key를 만든 뒤 exact miss, semantic 0.97 ≥ 0.95 hit, retrieval 생략으로 끝나는 한 요청을 추적했습니다.",
+        "humanize": "Cache 종류를 먼저 나열하지 않고 한 요청이 조회되고 멈추는 순서부터 읽도록 문장을 다듬었습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·최종 설명 잘림 없음: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 31 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "llm-request-operations-map-and-cache-lookup-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-application-caching.tsx",
+        "src/pages/articles/ai/llm-application-caching/viz/LlmApplicationCachingViz.tsx",
+        "src/pages/articles/ai/shared/LlmOperationsPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-application-caching.tsx",
+      "preserved": [
+        "Exact·semantic·retrieval cache의 책임 경계",
+        "유사도 threshold·TTL·staleness·hit rate·eviction 식과 한계",
+        "GPTCache·Belady 근거와 기존 연습문제"
       ]
     },
     {
@@ -8194,25 +8243,66 @@
       "route": "ai/llm-gateway-and-model-routing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-gateway-and-model-routing.tsx",
       "publicPath": "cs/ai/llm-gateway-and-model-routing",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Gateway·routing policy·cascade·fallback을 설명했지만 같은 요청에서 어느 신호가 다음 model을 고르는지 한 흐름으로 보이지 않았음",
+        "품질 신호에 따른 cascade와 실행 실패에 따른 provider fallback이 모두 다른 model로 넘기는 동작이라 경계가 흐렸음",
+        "첫 요청 경로보다 분류 설명이 먼저 나와 model 선택과 GPU 배치의 책임을 혼동할 수 있었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "firstModel": "저비용 model",
+        "confidence": 0.42,
+        "confidenceThreshold": 0.7,
+        "cascadeTarget": "상위 model",
+        "upperModelResult": "timeout",
+        "fallbackResult": "response accepted",
+        "attemptCount": 3
+      },
+      "stageAnchors": {
+        "0": "llm-operations-parent-map",
+        "1": "problem",
+        "2": "gateway-unified-api",
+        "3": "routing-policy-taxonomy",
+        "4": "model-cascade",
+        "5": "fallback-model",
+        "return": "llm-operations-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2305.05176",
+          "application": "작은 model부터 시도하고 품질 조건에 따라 더 비싼 model로 넘기는 FrugalGPT cascade 근거"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "저비용 model의 확신도 0.42가 threshold 0.70보다 낮아 상위 model로 넘기고, 상위 호출 timeout 뒤 fallback provider가 응답을 확정하는 한 요청을 추적했습니다.",
+        "humanize": "Cascade는 품질 신호에, fallback은 실행 실패에 반응한다는 차이가 요청 흐름 안에서 바로 드러나도록 문장을 다듬었습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·최종 설명 잘림 없음: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 31 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "llm-request-operations-map-and-model-routing-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-gateway-and-model-routing.tsx",
+        "src/pages/articles/ai/llm-gateway-and-model-routing/viz/LlmGatewayAndModelRoutingViz.tsx",
+        "src/pages/articles/ai/shared/LlmOperationsPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-gateway-and-model-routing.tsx",
+      "preserved": [
+        "Gateway와 model router의 책임 경계",
+        "Routing policy·cascade·fallback의 조건과 비용식",
+        "FrugalGPT 근거와 기존 연습문제"
       ]
     },
     {
@@ -8328,25 +8418,85 @@
       "route": "ai/llm-monitoring-observability-and-drift",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-monitoring-observability-and-drift.tsx",
       "publicPath": "cs/ai/llm-monitoring-observability-and-drift",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Metrics·logs·traces·drift가 각각 상세했지만 한 요청에서 어떤 신호가 생기는지 먼저 보여 주는 부모 경로가 없었음",
+        "Span tree와 latency breakdown, token throughput이 같은 trace의 다른 투영이라는 관계가 한눈에 보이지 않았음",
+        "첫 설명보다 동작 그림이 늦어 지표 이름을 먼저 외워야 요청 지연의 원인을 따라갈 수 있었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "spanOrder": [
+          "retrieval",
+          "generation",
+          "tool",
+          "generation"
+        ],
+        "spanMilliseconds": [
+          80,
+          220,
+          480,
+          900
+        ],
+        "totalMilliseconds": 1680,
+        "outputTokens": 96,
+        "generationSeconds": 0.9,
+        "throughputTokensPerSecond": 106.67
+      },
+      "stageAnchors": {
+        "0": "llm-operations-parent-map",
+        "1": "problem",
+        "2": "monitoring-layers",
+        "3": "drift-taxonomy",
+        "4": "trace-tree",
+        "5": "token-latency-breakdown",
+        "6": "gpu-queue-monitoring",
+        "7": "error-sampling-debugging",
+        "return": "llm-operations-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://doi.org/10.1145/2523813",
+          "application": "Concept drift의 범주와 시간에 따라 입력·정답 관계가 변하는 경계"
+        },
+        {
+          "href": "https://opentelemetry.io/docs/concepts/signals/traces/",
+          "application": "Trace·span·parent 관계와 한 요청의 구간별 시간 기록"
+        },
+        {
+          "href": "https://langfuse.com/docs/observability/data-model",
+          "application": "LLM 관측에서 trace·observation·generation을 연결하는 데이터 모델 사례"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "80·220·480·900ms의 네 span을 tree와 시간축으로 다시 놓고, 마지막 generation의 96 token ÷ 0.9초 ≈ 107 tok/s까지 한 trace에서 계산했습니다.",
+        "humanize": "지표를 나열하기보다 한 요청의 span이 원인 신호로 바뀌는 순서를 먼저 읽도록 문장을 다듬었습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·최종 계산과 설명 잘림 없음: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 31 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "llm-request-operations-map-and-trace-latency-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-monitoring-observability-and-drift.tsx",
+        "src/pages/articles/ai/llm-monitoring-observability-and-drift/viz/LlmMonitoringObservabilityAndDriftViz.tsx",
+        "src/pages/articles/ai/shared/LlmOperationsPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-monitoring-observability-and-drift.tsx",
+      "preserved": [
+        "Metrics·logs·traces와 drift의 관측 경계",
+        "Trace tree·latency breakdown·token throughput·queue 지표의 계산",
+        "OpenTelemetry·Langfuse·drift survey 근거와 기존 연습문제"
       ]
     },
     {
@@ -10501,25 +10651,86 @@
       "route": "ai/rate-limiting-and-reliability-patterns",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rate-limiting-and-reliability-patterns.tsx",
       "publicPath": "cs/ai/rate-limiting-and-reliability-patterns",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Retry·circuit breaker·rate limit·token reservation·admission이 각각 상세했지만 요청 과부하를 막는 부모 경로가 없었음",
+        "Circuit breaker의 closed·open·half-open 상태가 설명 뒤에 있어 실패율이 요청 처리 방식을 어떻게 바꾸는지 바로 보이지 않았음",
+        "Rate limit와 GPU admission이 서로 다른 자원을 보호한다는 경계가 여러 절에 흩어져 있었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "breakerStates": [
+          "closed",
+          "open",
+          "half-open"
+        ],
+        "failureRateThreshold": 0.5,
+        "halfOpenProbeCount": 1,
+        "successTransition": "closed",
+        "failureTransition": "open"
+      },
+      "stageAnchors": {
+        "0": "llm-operations-parent-map",
+        "1": "problem",
+        "2": "retry-backoff",
+        "3": "circuit-breaker-health-check",
+        "4": "rate-limiting-algorithms",
+        "5": "token-reservation",
+        "6": "load-shedding-and-admission",
+        "7": "graceful-degradation-and-failover",
+        "return": "llm-operations-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://martinfowler.com/bliki/CircuitBreaker.html",
+          "application": "Closed·open·half-open 상태 전이와 빠른 실패의 기본 패턴"
+        },
+        {
+          "href": "https://www.rfc-editor.org/rfc/rfc2697",
+          "application": "Token bucket 계열에서 rate와 burst를 분리하는 기준"
+        },
+        {
+          "href": "https://nginx.org/en/docs/http/ngx_http_limit_req_module.html",
+          "application": "Leaky bucket 방식의 요청률 제한 구현 사례"
+        },
+        {
+          "href": "https://learn.microsoft.com/en-us/azure/foundry-classic/openai/how-to/quota",
+          "application": "요청 전에 최대 token을 예약하는 API quota 사례"
+        },
+        {
+          "href": "https://github.com/llm-d/llm-d-router/blob/907c5fe84769a8f8e80ece112fd419dc6313453e/apix/v1/inferenceobjective_types.go",
+          "application": "Inference endpoint 선택에서 priority와 목표를 표현하는 고정 commit의 구조"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "Closed에서 요청을 통과시키다가 실패율 50%를 넘으면 open, cooldown 뒤 시험 요청 한 건을 보내는 half-open, 성공 시 closed·실패 시 open으로 돌아가는 전이를 추적했습니다.",
+        "humanize": "보호 기법 이름을 나열하지 않고 실패가 요청 처리 상태를 바꾸는 순서부터 읽도록 문장을 다듬었습니다.",
+        "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·시각화 overflow0·최종 설명 잘림 없음: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "browser1440": "첫 그림 우선·지도·키보드·시각화 overflow0·console과 page 오류 0: output/playwright/ai-llm-operations-path-batch-31/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 31 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "llm-request-operations-map-and-circuit-breaker-state-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/rate-limiting-and-reliability-patterns.tsx",
+        "src/pages/articles/ai/rate-limiting-and-reliability-patterns/viz/RateLimitingAndReliabilityPatternsViz.tsx",
+        "src/pages/articles/ai/shared/LlmOperationsPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/rate-limiting-and-reliability-patterns.tsx",
+      "preserved": [
+        "Retry·backoff·circuit breaker·rate limiting의 책임 경계",
+        "Token reservation·load shedding·admission·graceful degradation의 계산과 실패 조건",
+        "고정된 공식 근거와 기존 연습문제"
       ]
     },
     {
