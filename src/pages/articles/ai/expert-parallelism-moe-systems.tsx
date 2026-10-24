@@ -12,12 +12,18 @@ import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./research-audit-sources/codeRefs";
 import ExpertRouteCaseViz from "./expert-parallelism-moe-systems/viz/ExpertRouteCaseViz";
 import ExpertParallelismMoeSystemsViz from "./expert-parallelism-moe-systems/viz/ExpertParallelismMoeSystemsViz";
+import {
+  ParallelExecutionMapReturn,
+  ParallelExecutionSeriesLocator,
+} from "./shared/ParallelExecutionSeriesLocator";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
   return <div className="space-y-16">
+    <ParallelExecutionSeriesLocator current="experts" />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 선택한 계산기가 다른 GPU에 있으면 입력을 옮겨야 한다</h2>
+      <ExpertParallelismMoeSystemsViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">64개 expert를 GPU 8개에 8개씩 나누겠습니다. GPU 0의 token 37이 expert 13과 42를 선택했습니다. 두 expert가 있는 GPU 1과 5로 값을 보내고 결과를 돌려받아 합칩니다.</p>
         <p className="leading-8">Expert 수를 늘려 모델의 저장 능력을 키울 수 있어도, 이 왕복이 계산보다 오래 걸리면 기다림이 커집니다. 이 글은 token 37의 이동에서 시작해 같은 경로 2048개의 바이트, 부하 쏠림과 최신 DeepEP API까지 추적합니다.</p>
@@ -33,7 +39,6 @@ export default function Article(){
           달려 있습니다.
         </p>
       </div>
-      <ExpertRouteCaseViz />
       <ContentBoundary article="expert-parallelism-moe-systems" />
       <p data-stage-bridge="overview" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">작업과 목적지를 정했습니다. 입출력과 완료 조건을 먼저 봅니다.</p>
     </section>
@@ -52,6 +57,7 @@ export default function Article(){
         <p className="leading-8">4096개 값 × 2B = 8192B, 즉 8KiB입니다. Expert 13과 42가 서로 다른 GPU에 있으므로 token 37의 입력은 각각 8KiB씩 총 16KiB 이동합니다. 결과 폭이 같으면 돌아오는 값도 합계 16KiB입니다.</p>
         <p className="leading-8">가령 결합 가중치가 0.25와 0.75라면 같은 출력 좌표에서 0.25×y₁₃+0.75×y₄₂를 구합니다. 두 결과가 도착하기 전에 결합을 끝낼 수 없습니다. 이 token의 왕복 32KiB는 header·routing metadata 등을 제외한 유효 데이터입니다.</p>
       </div>
+      <ExpertRouteCaseViz />
 <NumericPath title="token 37의 왕복" steps={[{"label": "GPU 0", "value": "8KiB 입력", "detail": "expert 13·42를 선택"}, {"label": "Dispatch", "value": "GPU 1과 5로 각각 전송", "detail": "논리 payload 합계 16KiB"}, {"label": "Expert 계산", "value": "각각 8KiB 출력", "detail": "weight가 있는 장치에서 계산"}, {"label": "Combine", "value": "GPU 0에서 가중합", "detail": "둘의 완료를 확인한 뒤 결합"}]} />
       <p data-stage-bridge="case" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">하나의 token에 필요한 두 왕복을 셌습니다. 장치 사이 순서를 그려봅니다.</p>
     </section>
@@ -61,8 +67,6 @@ export default function Article(){
         <p className="leading-8">GPU g에 expert 8g부터 8g+7을 두면 expert 번호를 8로 나눈 몫이 목적 GPU입니다. 13은 1, 42는 5입니다. Dispatch는 목적지별로 입력을 모으고, 도착한 입력을 expert별 연속 구간으로 배치합니다.</p>
         <p className="leading-8">각 expert가 자기 구간을 계산한 뒤 combine이 원래 token 위치로 결과를 돌려보냅니다. 입력 순서를 섞었다면 원래 위치로 되돌릴 metadata가 필요합니다. 잘못된 handle을 재사용하면 바이트 수가 맞아도 다른 token의 결과를 합칠 수 있습니다.</p>
       </div>
-      <ExpertParallelismMoeSystemsViz />
-
       <p data-stage-bridge="picture" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">값뿐 아니라 돌아갈 위치도 옮겨야 합니다. 이 비용이 생기는 이유를 봅니다.</p>
     </section>
     <section id="need" data-teach-level="2" className="scroll-mt-20">
@@ -151,6 +155,7 @@ export default function Article(){
       <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">바이트, routing 의미, 자원 경합과 완료 시간을 함께 확인하면 추적이 끝납니다.</p>
     </section>
     <ReviewPrompts questions={["token 37의 두 expert를 모두 로컬로 옮기면 어떤 비용이 사라질까요? (답: 3절)", "평균 payload가 같아도 한 GPU의 쏠림이 시간을 늘리는 이유는 무엇일까요? (답: 7절)", "같은 목적 GPU라도 routing handle을 다시 만들어야 하는 경우는 언제일까요? (답: 8절)"]} />
+    <ParallelExecutionMapReturn current="experts" />
     <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />
   </div>;
 }

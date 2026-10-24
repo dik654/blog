@@ -149,6 +149,9 @@ const noScriptArticleRoutes = new Set([
   "ai/qwen36-hybrid-architecture",
   "ai/qwen36-hybrid-runtime",
   "ai/qwen38-flash-next-architecture",
+  "ai/expert-parallelism-moe-systems",
+  "ai/tensor-and-pipeline-parallel-inference",
+  "ai/parallelism-strategy-and-placement",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

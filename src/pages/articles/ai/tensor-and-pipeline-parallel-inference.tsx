@@ -8,6 +8,10 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import TensorAndPipelineParallelInferenceViz from "./tensor-and-pipeline-parallel-inference/viz/TensorAndPipelineParallelInferenceViz";
 import PipelineBubbleGridViz from "./tensor-and-pipeline-parallel-inference/viz/PipelineBubbleGridViz";
 import RingAttentionBlockViz from "./tensor-and-pipeline-parallel-inference/viz/RingAttentionBlockViz";
+import {
+  ParallelExecutionMapReturn,
+  ParallelExecutionSeriesLocator,
+} from "./shared/ParallelExecutionSeriesLocator";
 
 /**
  * Tensor·pipeline·data·context parallel 은 서로 다른 축을 나눠 서로 다른 통신을 만듭니다
@@ -20,10 +24,12 @@ import RingAttentionBlockViz from "./tensor-and-pipeline-parallel-inference/viz/
 export default function TensorAndPipelineParallelInferenceArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <ParallelExecutionSeriesLocator current="axes" />
       <section id="axes" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           네 parallel 축은 나누는 차원이 달라 통신의 종류와 횟수도 다릅니다
         </h2>
+        <TensorAndPipelineParallelInferenceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Model 하나를 여러 GPU 에 나누거나 복제해 forward 를 돌리는 일이 distributed inference 입니다. 나눌 수 있는 차원은 넷입니다. weight
@@ -47,7 +53,6 @@ export default function TensorAndPipelineParallelInferenceArticle() {
             보내는지로 내려갑니다.
           </p>
         </div>
-        <TensorAndPipelineParallelInferenceViz />
         <ContentBoundary article="tensor-and-pipeline-parallel-inference" />
       </section>
 
@@ -430,6 +435,7 @@ export default function TensorAndPipelineParallelInferenceArticle() {
           </p>
         </div>
       </section>
+      <ParallelExecutionMapReturn current="axes" />
     </div>
   );
 }

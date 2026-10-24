@@ -6,6 +6,10 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ParallelismStrategyAndPlacementViz from "./parallelism-strategy-and-placement/viz/ParallelismStrategyAndPlacementViz";
+import {
+  ParallelExecutionMapReturn,
+  ParallelExecutionSeriesLocator,
+} from "./shared/ParallelExecutionSeriesLocator";
 
 /**
  * Parallelism 전략은 통신 대 계산 비율을 topology 안에서 최소화하는 배치입니다
@@ -18,10 +22,12 @@ import ParallelismStrategyAndPlacementViz from "./parallelism-strategy-and-place
 export default function ParallelismStrategyAndPlacementArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <ParallelExecutionSeriesLocator current="placement" />
       <section id="strategy" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Parallelism 전략은 GPU mesh 의 각 축에 degree 를 배정하는 결정입니다
         </h2>
+        <ParallelismStrategyAndPlacementViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             model 하나를 GPU 여러 장에 올릴 때는 TP·PP·DP 의 degree 를 각각 얼마로 둘지, 어느 GPU 묶음이 어느 축을 맡을지 정합니다. 그렇게 정한 결과가
@@ -43,7 +49,6 @@ export default function ParallelismStrategyAndPlacementArticle() {
             을 그대로 씁니다. 여기서는 그 숫자를 실제 node 와 link 위에 올립니다.
           </p>
         </div>
-        <ParallelismStrategyAndPlacementViz />
         <ContentBoundary article="parallelism-strategy-and-placement" />
       </section>
 
@@ -329,6 +334,7 @@ export default function ParallelismStrategyAndPlacementArticle() {
           </p>
         </div>
       </section>
+      <ParallelExecutionMapReturn current="placement" />
     </div>
   );
 }

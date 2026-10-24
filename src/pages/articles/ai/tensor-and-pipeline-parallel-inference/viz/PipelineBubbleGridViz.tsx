@@ -92,6 +92,7 @@ export default function PipelineBubbleGridViz() {
       note="PP 4 · 80 layer(stage마다 20 layer)는 본문 사례입니다. 모든 stage의 처리 시간이 같고 stage 사이 전송 시간은 칸에 넣지 않았다는 본문 식의 가정을 따릅니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -189,6 +190,13 @@ export default function PipelineBubbleGridViz() {
             {scene.note}
           </p>
         </div>
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((item) => (
+            <li key={item.label}>
+              <strong>{item.label}</strong>: {item.note}
+            </li>
+          ))}
+        </ol>
         <AnimatedSceneControls {...scenes} labels={SCENES.map((s) => s.label)} />
       </div>
     </VizFrame>

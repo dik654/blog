@@ -129,6 +129,7 @@ export default function ParallelismStrategyAndPlacementViz() {
       note="70B FP16, 80 layer, hidden 8192, decode batch 64 의 계산 예시입니다. NVSwitch 900 GB/s · α 5 μs, InfiniBand 50 GB/s · α 15 μs 를 가정했고 실제 값은 nccl-tests 로 재야 합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -148,6 +149,13 @@ export default function ParallelismStrategyAndPlacementViz() {
             {NOTES[s]}
           </p>
         </div>
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>: {NOTES[index]}
+            </li>
+          ))}
+        </ol>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
       </div>
     </VizFrame>
