@@ -80,6 +80,7 @@ const noScriptArticleRoutes = new Set([
   "ai/cnn-translation-equivariance",
   "ai/cnn-receptive-fields",
   "ai/depthwise-separable-convolution",
+  "ai/resnet",
   "ai/vision-task-spatial-contracts",
 ]);
 const noScriptArticles = catalog.filter(

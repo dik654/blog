@@ -6,8 +6,7 @@ export default function SkipConnection() {
   return (
     <section id="skip-connection" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Identity shortcut은 forward와 backward에 residual branch를 우회하는 항을
-        만든다
+        입력 보존 경로가 순전파와 역전파를 나눕니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -15,8 +14,10 @@ export default function SkipConnection() {
           Shape가 같은 block에서는 입력 <code>x</code>를 parameter 없이 그대로
           더합니다. Forward에서는 기존 representation을 보존하는 경로가 생기고,
           backward에서는 residual branch Jacobian을 통하지 않는 identity 항이
-          생깁니다. 이를 “gradient가 절대 사라지지 않는다”로 줄이면 정확하지
-          않습니다. Identity 항과 residual Jacobian이 상쇄될 수 있고, 여러
+          생깁니다.
+        </p>
+        <p className="leading-8">
+          이를 “gradient가 절대 사라지지 않는다”로 줄이면 정확하지 않습니다. Identity 항과 residual Jacobian이 상쇄될 수 있고, 여러
           block의 product는 여전히 initialization·normalization과 activation에
           영향을 받습니다.
         </p>
@@ -116,8 +117,11 @@ export default function SkipConnection() {
         <h3>Element-wise addition에는 엄격한 tensor contract가 있다</h3>
         <p className="leading-8">
           Residual output과 shortcut은 batch를 제외한 spatial·channel shape가 같아야 더할 수 있습니다. Stage transition에서는
-          projection이 흔합니다. residual branch의 stride로 resolution을 줄이고 shortcut에도 같은 stride의 1×1 convolution을
-          적용해 channel을 맞추는 방식입니다. 이 shortcut에는 parameter가 생기니 더 이상 순수 identity path가 아닙니다. compute와 gradient
+          projection이 흔합니다.
+        </p>
+        <p className="leading-8">
+          Residual branch의 stride로 resolution을 줄이고 shortcut에도 같은 stride의 1×1 convolution을
+          적용해 channel을 맞춥니다. 이 shortcut에는 parameter가 생기니 더 이상 순수 identity path가 아닙니다. Compute와 gradient
           path도 함께 달라집니다.
         </p>
       </div>

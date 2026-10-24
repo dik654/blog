@@ -7,15 +7,18 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        ResNet이 겨냥한 것은 capacity 부족이 아니라 깊이에 따른 optimization
-        degradation이다
+        깊어졌는데 학습 오차도 나빠졌습니다
       </h2>
+
+      <DegradationViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           더 깊은 network는 추가 layer가 identity mapping을 구현하면 적어도 얕은
-          network의 함수를 포함할 수 있습니다. 그런데 원 ResNet 논문은
-          BatchNorm과 ReLU를 쓴 plain CNN에서도 depth를 늘리자 test error뿐
+          network의 함수를 포함할 수 있습니다.
+        </p>
+        <p className="leading-8">
+          그런데 원 ResNet 논문은 BatchNorm과 ReLU를 쓴 plain CNN에서도 depth를 늘리자 test error뿐
           아니라 training error가 함께 나빠지는{" "}
           <strong>degradation problem</strong>을 관찰했습니다. 이는
           overfitting처럼 train error는 낮고 test error만 높아지는 현상과
@@ -23,18 +26,21 @@ export default function Overview() {
         </p>
         <p className="leading-8">
           Vanishing gradient는 깊은 network의 중요한 위험이지만 이 관찰을
-          그것만으로 설명하면 좁습니다. ResNet의 핵심 제안은 원하는 mapping
+          그것만으로 설명하면 좁습니다.
+        </p>
+        <p className="leading-8">
+          ResNet의 핵심 제안은 원하는 mapping
           전체를 바로 학습하는 대신 입력에서 필요한 변화, 즉 residual을
-          학습하도록 parameterization을 바꾸는 것입니다. CNN의
-          convolution·receptive field는
+          학습하도록 parameterization을 바꾸는 것입니다.
+        </p>
+        <p className="leading-8">
+          CNN의 convolution·receptive field는
           <Link to="/cs/ai/cnn"> CNN 정본 글</Link>에서 이어지고, 이 글은 residual
           parameterization과 tensor shape·gradient 경계를 소유합니다.
         </p>
       </div>
 
       <ContentBoundary article="resnet" />
-
-      <DegradationViz />
 
       <ExplainedFormula
         question="전체 mapping H(x)를 배우는 문제를 residual F(x)로 어떻게 바꾸는가?"
@@ -99,6 +105,8 @@ export default function Overview() {
         <h3>깊이를 늘리는 것과 유효한 계산을 늘리는 것은 같지 않다</h3>
         <p className="leading-8">
           Residual connection은 더 깊은 network를 최적화하기 쉬운 방향으로 바꿉니다. 그렇다고 깊이가 자동으로 accuracy를 높인다는 보장이 따라오지는 않습니다.
+        </p>
+        <p className="leading-8">
           Data size, stage width, normalization, learning-rate schedule과 regularization이 함께 맞아야 하고 지나치게 깊은
           model은 latency와 activation memory를 늘리기도 합니다. ResNet-18·50·101 같은 이름은 품질 서열이 아니라 compute·memory를 어떻게
           잡을지의 선택지로 읽습니다.

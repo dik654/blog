@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 424,
-    "pending": 566,
+    "reviewed": 425,
+    "pending": 565,
     "untracked": 0,
-    "assignedPending": 514,
+    "assignedPending": 513,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -733,9 +733,9 @@
       "publicPath": "cs/ai/resnet",
       "title": "ResNet: 잔차 연결이 깊은 네트워크를 학습시키는 법",
       "catalogIndex": 70,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

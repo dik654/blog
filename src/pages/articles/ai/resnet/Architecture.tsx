@@ -13,8 +13,7 @@ export default function Architecture({
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        BasicBlock과 Bottleneck은 같은 residual 원리를 다른 compute shape로
-        구현한다
+        두 block은 같은 잔차 원리를 다른 계산 모양으로 구현합니다
       </h2>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -180,8 +179,10 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Post-activation과 pre-activation은 activation 위치가 다르다</h3>
         <p className="leading-8">
-          Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다. Identity Mappings 논문의 pre-activation
-          ResNet v2는 normalization과 ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더 직접적으로 유지했습니다. 두 구현은
+          Original ResNet v1은 residual과 shortcut을 더한 뒤 ReLU를 적용합니다.
+        </p>
+        <p className="leading-8">
+          Identity Mappings 논문의 pre-activation ResNet v2는 normalization과 ReLU를 convolution 앞에 두어 addition 뒤의 identity path를 더 직접적으로 유지했습니다. 두 구현은
           checkpoint-compatible하지 않습니다. “BN 순서만 조금 바꾼 것” 이상으로 forward·backward mapping 자체가 달라집니다.
         </p>
       </div>
@@ -228,8 +229,11 @@ y_i&=\underbrace{\gamma\hat x_i+\beta}_{\text{학습 가능한 scale·shift로 �
         </h3>
         <p className="leading-8">
           Torchvision의 현재 Bottleneck은 ResNet v1.5 변형을 씁니다. 원 논문 표기와 달리 stride가 첫 1×1이 아니라 3×3 convolution에
-          붙습니다. 마지막 normalization scale을 0으로 초기화하면 residual branch가 처음에 0에 가까워져 block을 identity 근처에서 시작시킬 수
-          있습니다. Architecture 이름만으로는 이런 recipe 차이가 결정되지 않습니다. source와 checkpoint metadata를 함께 확인합니다.
+          붙습니다.
+        </p>
+        <p className="leading-8">
+          마지막 normalization scale을 0으로 초기화하면 residual branch가 처음에 0에 가까워져 block을 identity 근처에서 시작시킬 수
+          있습니다. Architecture 이름만으로는 이런 recipe 차이가 결정되지 않습니다. Source와 checkpoint metadata를 함께 확인합니다.
         </p>
       </div>
     </section>
