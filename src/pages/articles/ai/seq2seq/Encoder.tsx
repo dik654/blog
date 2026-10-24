@@ -12,6 +12,7 @@ export default function Encoder({
   return (
     <section id="encoder" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Encoder는 source를 decoder가 사용할 조건 정보로 바꾼다</h2>
+      <StateHandoffViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -44,7 +45,6 @@ export default function Encoder({
         onClick={() => onCodeRef("encoder-handoff", codeRefs["encoder-handoff"])}
       />
 
-      <StateHandoffViz />
     </section>
   );
 }

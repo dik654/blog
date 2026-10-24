@@ -6,6 +6,7 @@ export default function Limitations() {
   return (
     <section id="limitations" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Attention은 fixed-context interface를 source별 memory로 확장했다</h2>
+      <BottleneckAttentionBridgeViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -34,8 +35,6 @@ export default function Limitations() {
         assumptions={["초기 additive attention의 단일-head 표기입니다.", "Padding source position은 softmax 전에 mask해야 하며 all-masked row가 생기지 않도록 합니다."]}
         interpretation="Attention weight는 source alignment를 진단하는 단서지만 prediction의 완전한 인과 설명은 아니다. Value와 decoder·residual 경로가 결과에 함께 기여합니다."
       />
-
-      <BottleneckAttentionBridgeViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>병목을 완화해도 계산과 해석의 비용은 남는다</h3>

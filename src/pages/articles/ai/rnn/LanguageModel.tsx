@@ -9,6 +9,7 @@ export default function LanguageModel() {
   return (
     <section id="language-model" className="mb-20 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">RNN language model: context를 state로 접어 다음 token을 예측한다</h2>
+      <RNNLanguageFlowViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Language modeling에서는 token ID를 embedding으로 바꾼 뒤 지금까지의 context를 반영한 hidden state를 vocabulary 크기의
@@ -35,7 +36,6 @@ export default function LanguageModel() {
         ]}
       />
 
-      <RNNLanguageFlowViz />
       <ContentBoundary article="rnn-language-model" />
 
       <div id="paper-rnn-lm" className="not-prose mt-8 scroll-mt-24 border-l border-border/80 pl-4">

@@ -6,6 +6,7 @@ export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Seq2Seq는 입력과 출력의 길이·순서를 독립적으로 모델링한다</h2>
+      <ConditionalSequenceViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -26,8 +27,6 @@ export default function Overview() {
           나누는 단계부터 숫자 예제로 설명합니다.
         </p>
       </div>
-
-      <ConditionalSequenceViz />
 
       <ExplainedFormula
         question="가변 길이 target sequence 전체의 확률을 다음-token 확률로 어떻게 분해할까?"

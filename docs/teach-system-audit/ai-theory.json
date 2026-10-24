@@ -268,7 +268,7 @@
         "src/pages/articles/ai/attention-theory/viz/AttentionScoreChoiceViz.tsx",
         "src/pages/articles/ai/attention-theory/viz/SelfAttentionTensorViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -276,19 +276,43 @@
         "hasSourceSurface": true,
         "characters": 28332
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Attention의 score→weight→aggregate 설명은 있었지만 Seq2Seq 병목에서 이어지는 직속 부모와 recurrent track의 현재 위치가 보이지 않았습니다.",
+        "각 절에서 시각화가 긴 설명 뒤에 놓여 query·key·value와 tensor shape를 먼저 볼 수 없었습니다."
+      ],
+      "fixture": "한 decoder query가 세 source memory slot을 채점하고 source 축 softmax weight를 만든 뒤 value weighted sum context를 구성하는 흐름을 사용합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "pipeline": ["overview"],
+        "additive": ["additive"],
+        "multiplicative": ["multiplicative"],
+        "selfAttention": ["self-attention"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Neural Machine Translation by Jointly Learning to Align and Translate",
+          "href": "https://arxiv.org/abs/1409.0473",
+          "note": "Decoder query와 encoder annotation의 additive score·soft alignment 범위로 적용합니다."
+        },
+        {
+          "kind": "논문",
+          "label": "Attention Is All You Need",
+          "href": "https://arxiv.org/abs/1706.03762",
+          "note": "Scaled dot-product self-attention과 multi-head projection의 원형 범위로 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Seq2Seq 병목→score·weight·aggregate→additive·multiplicative→self-attention 순서를 확인했습니다.",
+        "humanize": "중요한 곳을 본다는 비유보다 query가 key를 비교하고 value를 섞는 실제 세 단계부터 시작합니다.",
+        "numericTrace": "Softmax 축, sqrt(d_k) scaling, Q·K·V tensor shape와 source-mask 경계를 대조했습니다.",
+        "mobile390": "390x844에서 문서 overflow 0과 대표 시각화 높이 458px를 확인했습니다.",
+        "desktop1440": "1440x1000 공개 경로와 공통 locator를 확인했습니다.",
+        "reducedMotion": "핵심 설명은 정적 시각화와 본문 순서만으로 유지됩니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -669,7 +693,7 @@
         "src/pages/articles/ai/rnn/viz/RecurrentVizControls.tsx",
         "src/pages/articles/ai/rnn/viz/useRecurrentScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -677,19 +701,42 @@
         "hasSourceSurface": false,
         "characters": 11574
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "공유 gradient·Jacobian scale·detach 경계가 동시에 쌓여 현재 역전파 상태를 한 번에 읽기 어려웠습니다.",
+        "일반 backpropagation과 RNN time unroll 사이의 부모 관계가 상단 지도에 드러나지 않았습니다."
+      ],
+      "fixture": "공유 weight의 시점별 contribution 2, −1, 3을 합쳐 4로 만들고, local derivative 0.5를 1·2·5·10번 곱한 값과 h_128 detach 경계를 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "accumulation": ["bptt"],
+        "jacobian": ["bptt"],
+        "detach": ["bptt"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Backpropagation Through Time: What It Does and How to Do It",
+          "href": "https://doi.org/10.1109/5.58337",
+          "note": "유한하게 펼친 differentiable dynamic system의 reverse differentiation으로 적용합니다."
+        },
+        {
+          "kind": "논문",
+          "label": "On the Difficulty of Training Recurrent Neural Networks",
+          "href": "https://arxiv.org/abs/1211.5063",
+          "note": "반복 Jacobian과 exploding-gradient clipping의 범위로 적용하며 clipping이 vanishing을 해결한다고 쓰지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "공유 weight 합산→Jacobian product→clipping→value carry와 graph detach 분리 순서를 확인했습니다.",
+        "humanize": "시간축을 거슬러 책임을 돌려준다는 한 질문 아래 서로 다른 세 실패·제어 메커니즘을 분리했습니다.",
+        "numericTrace": "2−1+3=4, 0.5^10≈0.00098, (6,8)의 norm 10과 clipping 결과 (3,4)를 대조했습니다.",
+        "mobile390": "390x844에서 내부 캔버스 높이 1,044px를 474px로 줄였고 문서 overflow는 0입니다.",
+        "desktop1440": "1440x1000에서 첫 장면 유지와 키보드 장면 이동, console error 0을 확인했습니다.",
+        "reducedMotion": "공통 controller에서 자동 재생과 반복을 끄고 reduced-motion을 따릅니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -2843,7 +2890,7 @@
         "src/pages/articles/ai/rnn/viz/RecurrentVizControls.tsx",
         "src/pages/articles/ai/rnn/viz/useRecurrentScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2851,19 +2898,37 @@
         "hasSourceSurface": true,
         "characters": 11494
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Reset·candidate·update·budget이 한 화면에 쌓여 모바일 캔버스가 1,308px였고 현재 계산 단계가 장식처럼 보였습니다.",
+        "LSTM과 비교하기 전에 GRU 자체 state update를 따라갈 공통 숫자가 부족했습니다."
+      ],
+      "fixture": "hprev=(2,−1), r=(0,.5)에서 filtered history (0,−.5)를 만들고, 별도 scalar update 예에서 hprev=2, candidate=10, z=.25로 h=4를 계산합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "reset": ["state-update"],
+        "candidate": ["state-update"],
+        "update": ["state-update"],
+        "budget": ["state-update"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Learning Phrase Representations using RNN Encoder–Decoder",
+          "href": "https://arxiv.org/abs/1406.1078",
+          "note": "Reset·update gate를 가진 gated hidden unit과 encoder-decoder의 제안 범위로 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Reset-filtered history→candidate→update interpolation→LSTM과 같은 budget 비교 순서를 확인했습니다.",
+        "humanize": "네 줄 식보다 reset과 update가 각각 어느 선에 작용하는지 숫자로 먼저 분리했습니다.",
+        "numericTrace": "(2,−1)⊙(0,.5)=(0,−.5), .75×2+.25×10=4를 대조했습니다.",
+        "mobile390": "390x844에서 내부 캔버스 높이 1,308px를 627px로 줄였고 문서 overflow는 0입니다.",
+        "desktop1440": "1440x1000에서 첫 장면 유지, 키보드 장면 이동, console error 0을 확인했습니다.",
+        "reducedMotion": "공통 controller가 reduced-motion에서 재생을 비활성화합니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3733,7 +3798,7 @@
         "src/pages/articles/ai/rnn/viz/RecurrentVizControls.tsx",
         "src/pages/articles/ai/rnn/viz/useRecurrentScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3741,19 +3806,42 @@
         "hasSourceSurface": true,
         "characters": 15713
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "C·h 분리, 세 gate, direct gradient path가 한 화면에 세로로 쌓여 모바일 캔버스가 1,458px였습니다.",
+        "RNN과 BPTT에서 어떤 질문을 이어받는지가 글 위에서 보이지 않았습니다."
+      ],
+      "fixture": "Cprev=2, f=.5, i=.75, candidate=.5, o=.5인 한 channel에서 보존 1, 기록 .375, C=1.375, h≈.44를 계산하고 f=.99의 100-step direct retention≈.366을 봅니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "state": ["overview"],
+        "gates": ["gates"],
+        "retention": ["cell-state"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Long Short-Term Memory",
+          "href": "https://doi.org/10.1162/neco.1997.9.8.1735",
+          "note": "원형 memory cell과 constant-error-flow 아이디어에 적용하며 현대 forget-gate 식 전체로 소급하지 않습니다."
+        },
+        {
+          "kind": "논문",
+          "label": "Learning to Forget: Continual Prediction with LSTM",
+          "href": "https://doi.org/10.1162/089976600300015015",
+          "note": "Continual sequence에서 forget gate를 추가한 범위로 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "두 state→forget·input·output gate→direct cell derivative→BPTT 경계 순서를 확인했습니다.",
+        "humanize": "장기 기억이라는 이름보다 한 channel에서 남기고 더하고 공개하는 숫자를 먼저 보였습니다.",
+        "numericTrace": "1+.375=1.375, .5×tanh(1.375)≈.44, .99^100≈.366을 대조했습니다.",
+        "mobile390": "390x844에서 내부 캔버스 높이 1,458px를 573px로 줄였고 문서 overflow는 0입니다.",
+        "desktop1440": "1440x1000에서 첫 장면 유지, 키보드 장면 이동, console error 0을 확인했습니다.",
+        "reducedMotion": "공통 controller가 reduced-motion에서 재생을 비활성화합니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -7127,7 +7215,7 @@
         "src/pages/articles/ai/rnn/viz/RecurrentVizControls.tsx",
         "src/pages/articles/ai/rnn/viz/useRecurrentScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7135,19 +7223,36 @@
         "hasSourceSurface": true,
         "characters": 9650
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "RNN·언어 모델·BPTT·LSTM·GRU·Seq2Seq·Attention의 관계를 보여 주는 직속 부모와 같은 트랙 지도가 없었습니다.",
+        "상태 갱신·시간축 펼치기·방향 경계가 한 시각화에 세로로 쌓여 현재 장면과 실제 수치 변화를 읽기 어려웠습니다."
+      ],
+      "fixture": "h_t=tanh(0.8h_{t-1}+0.5x_t), h_0=0에 입력 1→0→1을 넣어 state가 약 0.462→0.354→0.654로 바뀌는 교육용 스칼라 사례를 사용합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "transition": ["overview"],
+        "unroll": ["architecture"],
+        "direction": ["architecture"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Finding Structure in Time",
+          "href": "https://doi.org/10.1207/s15516709cog1402_1",
+          "note": "직전 hidden activation을 context로 다시 사용하는 simple recurrent network의 역사적 범위로 제한해 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모→한 state update→공유 parameter→시간축 unroll→causal 경계→언어 모델·BPTT로 반환하는 concept 흐름을 확인했습니다.",
+        "humanize": "기억한다는 비유보다 입력 1→0→1에서 실제 state가 어떻게 바뀌는지 먼저 보이도록 정리했습니다.",
+        "numericTrace": "Python의 tanh 계산으로 0.462117, 0.353724, 0.654413을 확인해 본문과 시각화의 반올림을 통일했습니다.",
+        "mobile390": "390x844에서 문서 가로 overflow 0, 대표 장면 709px, unroll 그림 236px로 확인했습니다.",
+        "desktop1440": "1440x1000에서 자동 시작 없이 첫 장면을 유지하고 오른쪽 화살표로 다음 장면에 이동하며 문서 overflow 0을 확인했습니다.",
+        "reducedMotion": "공통 scene controller가 reduced-motion에서 재생을 끄고 뷰포트 이탈 시 재생을 중지합니다.",
+        "build": "8GB Node heap 조건에서 production build와 정적 public route 2,086개 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -7161,7 +7266,7 @@
         "src/pages/articles/ai/rnn/viz/RecurrentVizControls.tsx",
         "src/pages/articles/ai/rnn/viz/useRecurrentScenes.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7169,19 +7274,36 @@
         "hasSourceSurface": false,
         "characters": 9280
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Shift pair·state projection·NLL·PPL 장면이 동시에 세로로 쌓여 모바일 내부 캔버스가 1,575px였습니다.",
+        "RNN state에서 출발한다는 직속 부모와 BPTT로 이어지는 위치가 글 위에서 보이지 않았습니다."
+      ],
+      "fixture": "[BOS, 나, 간다, EOS]를 BOS→나, 나→간다, 간다→EOS 세 pair로 나누고 정답 probability 0.25에서 NLL=ln4, PPL=4를 추적합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "pairs": ["language-model"],
+        "distribution": ["language-model"],
+        "metric": ["language-model"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Recurrent Neural Network Based Language Model",
+          "href": "https://www.fit.vut.cz/research/groups/speech/publi/2010/mikolov_interspeech2010_IS100722.pdf",
+          "note": "Recurrent hidden state에서 다음 word distribution을 만드는 범위로 적용하고 현대 Transformer와의 보편 우위로 일반화하지 않습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Shifted target→vocabulary logits→softmax→NLL→같은 평가 계약의 PPL 순서를 확인했습니다.",
+        "humanize": "평가지표부터 설명하지 않고 한 문장을 입력·정답 pair로 바꾸는 장면부터 시작합니다.",
+        "numericTrace": "정답 probability 0.25의 −ln 값과 exp(ln4)=4를 본문·시각화에서 동일하게 사용합니다.",
+        "mobile390": "390x844에서 내부 캔버스 높이 1,575px를 588px로 줄였고 문서 overflow는 0입니다.",
+        "desktop1440": "1440x1000에서 첫 장면 유지, 키보드 다음 장면 이동, console error 0을 확인했습니다.",
+        "reducedMotion": "reduced-motion에서 재생 버튼이 비활성화되고 4.6초 뒤에도 첫 장면을 유지했습니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -7416,7 +7538,7 @@
         "src/pages/articles/ai/seq2seq/viz/StateHandoffViz.tsx",
         "src/pages/articles/ai/seq2seq/viz/TrainInferenceGapViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7424,19 +7546,44 @@
         "hasSourceSurface": true,
         "characters": 23760
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Encoder·decoder·teacher forcing·fixed-context 병목이 각 절에 있었지만 전체 순환 신경망 지도에서 현재 위치와 직속 부모가 보이지 않았습니다.",
+        "각 절의 핵심 시각화가 설명과 수식 뒤에 배치되어 독자가 먼저 긴 문단을 읽어야 했습니다."
+      ],
+      "fixture": "Source를 encoder state로 압축해 decoder 초기 조건으로 넘기고 BOS에서 EOS까지 target을 생성하는 하나의 번역 흐름을 사용합니다. Teacher forcing과 inference는 이전 정답과 이전 예측이라는 다른 prefix를 사용합니다.",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "conditional": ["overview"],
+        "encoder": ["encoder"],
+        "decoder": ["decoder"],
+        "training": ["training"],
+        "bottleneck": ["limitations"]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "Sequence to Sequence Learning with Neural Networks",
+          "href": "https://arxiv.org/abs/1409.3215",
+          "note": "LSTM encoder의 fixed-dimensional state를 decoder 초기 조건으로 넘기는 원형 Seq2Seq 범위로 적용합니다."
+        },
+        {
+          "kind": "논문",
+          "label": "Neural Machine Translation by Jointly Learning to Align and Translate",
+          "href": "https://arxiv.org/abs/1409.0473",
+          "note": "Fixed context 병목에서 source별 dynamic read로 넘어가는 연결 근거로 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "조건부 sequence→state handoff→autoregressive decode→teacher forcing 경계→attention bridge 순서를 확인했습니다.",
+        "humanize": "각 절에서 수식보다 encoder·decoder·prefix·source memory의 그림을 먼저 보도록 순서를 바꿨습니다.",
+        "numericTrace": "Token NLL mask 예와 source 길이 S=40, target 길이 T=10의 attention score 400개 예를 대조했습니다.",
+        "mobile390": "390x844에서 여섯 시각화의 문서 overflow가 모두 0이며 내부 캔버스 높이는 393–642px였습니다.",
+        "desktop1440": "1440x1000 공개 경로와 공통 locator를 확인했습니다.",
+        "reducedMotion": "이 글의 정적 시각화는 모션 없이 같은 순서와 결론을 제공합니다.",
+        "build": "Production build와 정적 경로 생성을 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

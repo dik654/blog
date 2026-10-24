@@ -12,6 +12,7 @@ export default function Decoder({
   return (
     <section id="decoder" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Decoder는 prefix를 state로 축약하며 다음 token을 생성한다</h2>
+      <AutoregressiveDecodeViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -45,7 +46,6 @@ export default function Decoder({
         onClick={() => onCodeRef("decoder-step", codeRefs["decoder-step"])}
       />
 
-      <AutoregressiveDecodeViz />
     </section>
   );
 }

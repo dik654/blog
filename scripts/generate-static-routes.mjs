@@ -62,6 +62,13 @@ const noScriptArticleRoutes = new Set([
   "ai/distributional-semantics",
   "ai/vision-language-model-architecture",
   "ai/multimodal-retrieval-and-visual-grounding",
+  "ai/rnn",
+  "ai/rnn-language-model",
+  "ai/bptt",
+  "ai/lstm",
+  "ai/gru",
+  "ai/seq2seq",
+  "ai/attention-theory",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

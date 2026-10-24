@@ -3,14 +3,17 @@ import Architecture from "./rnn/Architecture";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./rnn/codeRefs";
 import { rnnTree } from "./rnn/fileTree";
+import RnnSeriesLocator, { RnnMapReturn } from "./rnn/shared/RnnSeriesLocator";
 
 export default function RNNArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <div className="[&_svg_text]:text-[11px]">
+      <RnnSeriesLocator />
       <Overview onCodeRef={sidebar.open} />
       <Architecture />
+      <RnnMapReturn />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

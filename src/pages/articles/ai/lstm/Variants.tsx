@@ -15,6 +15,7 @@ export default function Variants({
   return (
     <section id="state-update" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Reset→candidate→update를 순서대로 조합한다</h2>
+      <GRUFlowViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -89,7 +90,6 @@ h_t
         />
       )}
 
-      <GRUFlowViz />
       <ContentBoundary article="gru" />
 
       <ExplainedFormula

@@ -12,6 +12,7 @@ export default function Training({
   return (
     <section id="training" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Teacher forcing은 objective 계산을 단순화하지만 inference prefix와 다르다</h2>
+      <TrainInferenceGapViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -43,8 +44,6 @@ export default function Training({
       <CodeViewButton
         onClick={() => onCodeRef("training-loop", codeRefs["training-loop"])}
       />
-
-      <TrainInferenceGapViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>

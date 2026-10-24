@@ -8,6 +8,7 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         Attention은 필요한 정보를 그때그때 다시 고르는 방법이다
       </h2>
+      <AttentionPipelineViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
@@ -27,8 +28,6 @@ export default function Overview() {
           <Link to="/cs/ai/seq2seq">Seq2Seq 글</Link>을 읽는 편이 자연스럽다.
         </p>
       </div>
-
-      <AttentionPipelineViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>모든 attention이 공유하는 세 단계</h3>
