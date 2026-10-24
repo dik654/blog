@@ -3251,3 +3251,20 @@
 - 여섯 글은 로컬 390×844·1440×900에서 가로 넘침 0, 현재 위치·반환 지도 표시, 키보드 장면 이동,
   reduced-motion 정지 상태를 확인했다. JavaScript를 끈 390×844 정적 문서에서도 HTTP 200, 제목과
   본문 절, 부모 지도, 가로 넘침 0을 확인했으며 공개 배포 확인만 남아 있다.
+
+### AI GPU 실행 경로 묶음 로컬 완료 (2026-10-24)
+
+- `launch-overhead-and-cpu-gpu-synchronization → cuda-graph-capture → flash-attention-io-aware-kernel →
+  attention-kernel-anatomy-and-backends`를 `CPU 제출 → 반복 실행 재생 → HBM 이동 절감 → kernel 선택`의
+  공통 원리 순서로 연결했다. `tensorrt-llm-kv-cache-and-kernels`와 `inference-engine-design-axes`는 뒤에
+  이어지는 처리 단계가 아니라 실제 엔진이 앞의 결정을 어떻게 조합하는지 확인하는 reference 가지로
+  분리했다.
+- 여섯 글 모두 본문 설명보다 현재 영역 지도와 핵심 시각 자료가 먼저 나오며, 글 끝에서 확인한 사실을
+  GPU 실행 지도에 되돌려 놓는다. 기존 글의 수치 사례, 고정 소스, 설명용 가정과 실측의 경계는 보존했다.
+- 엄격 learning·graph·formula·calculation·reading·order·prose·Korean·terms·term-pairs·Viz·pseudocode·
+  topology·architecture-flow·runtime·coverage 감사와 production build를 통과했다. 빌드는 7,891개 module,
+  정적 public route 2,086개와 검토 완료 no-script 본문 96편을 생성했다.
+- 390×844와 1,440×900에서 여섯 글 모두 HTTP 200, 부모 지도·현재 위치·반환 지도, 문서 가로 넘침 0,
+  console 오류 0을 확인했다. 모든 `data-viz-canvas`의 모바일 내부 넘침도 검사했고, 엔진 비교 시간축의
+  끝 숫자가 6px 벗어나던 문제를 경계 안 정렬로 수정했다. 키보드 장면 이동·Space 재생/정지,
+  reduced-motion, JavaScript 비활성 정적 본문도 통과했으며 공개 배포 확인만 남아 있다.

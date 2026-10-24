@@ -135,6 +135,12 @@ const noScriptArticleRoutes = new Set([
   "ai/multimodal-serving-pipeline",
   "ai/sglang-runtime-anatomy",
   "ai/llama-cpp-local-inference",
+  "ai/launch-overhead-and-cpu-gpu-synchronization",
+  "ai/cuda-graph-capture",
+  "ai/flash-attention-io-aware-kernel",
+  "ai/attention-kernel-anatomy-and-backends",
+  "ai/tensorrt-llm-kv-cache-and-kernels",
+  "ai/inference-engine-design-axes",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -176,7 +176,11 @@ export default function OverlapStepViz() {
               <span />
               <div className="relative h-4 font-mono text-[10px] text-muted-foreground">
                 {[0, 6, 12, 18, 24].map((t) => (
-                  <span key={t} className="absolute -translate-x-1/2" style={{ left: `${(t / SPAN) * 100}%` }}>
+                  <span
+                    key={t}
+                    className={`absolute ${t === 0 ? "" : t === SPAN ? "-translate-x-full" : "-translate-x-1/2"}`}
+                    style={{ left: `${(t / SPAN) * 100}%` }}
+                  >
                     {t}
                   </span>
                 ))}
