@@ -4,10 +4,15 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { XGBoostGainViz } from "../gbm-viz";
+import {
+  TabularModelFamilyLocator,
+  TabularModelFamilyMapReturn,
+} from "../shared/TabularModelFamilyLocator";
 export default function XGBoostTreeObjectiveArticle() {
   return (
     <article id="overview" className="space-y-16">
-      <section className="space-y-6">
+      <TabularModelFamilyLocator current="xgboost" />
+      <section data-teach-level="0" className="space-y-6">
         <LessonHeader
           number="00"
           eyebrow="한 leaf의 local objective"
@@ -16,14 +21,22 @@ export default function XGBoostTreeObjectiveArticle() {
           한 row씩 보지 말고 leaf 안의 first·second derivative를 합칩니다.
           Regularization λ는 작은 H에서 leaf weight가 과도해지는 것을 누릅니다.
         </LessonHeader>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <XGBoostGainViz />
+        <p className="font-semibold">
+          그림을 보기 전에 세 가지를 예측해 보세요.
+        </p>
         <ol className="list-decimal space-y-2 pl-6">
           <li>G=−6, H=2, λ=1이면 최적 leaf update는 −G/(H+λ)=2일까요?</li>
           <li>같은 G와 H에서 λ를 키우면 update의 절댓값은 작아질까요?</li>
-          <li>Split의 local training gain이 양수이면 validation 성능도 반드시 좋아질까요?</li>
+          <li>
+            Split의 local training gain이 양수이면 validation 성능도 반드시
+            좋아질까요?
+          </li>
         </ol>
-        <p>답은 <strong>예, 예, 아니요</strong>입니다. 현재 score 주변의 2차 근사와 보이지 않은 자료의 성능을 구분합니다.</p>
-        <XGBoostGainViz />
+        <p>
+          답은 <strong>예, 예, 아니요</strong>입니다. 현재 score 주변의 2차
+          근사와 보이지 않은 자료의 성능을 구분합니다.
+        </p>
         <ContentBoundary article="xgboost-tree-objective" />
         <TermLesson
           name="XGBoost second-order leaf objective"
@@ -79,7 +92,7 @@ export default function XGBoostTreeObjectiveArticle() {
           interpretation="G=−6,H=2,λ=1이면 −(−6)/3=2입니다. λ가 커지면 같은 G에서도 update가 작아집니다."
         />
       </section>
-      <section id="split-gain" className="space-y-6">
+      <section id="split-gain" data-teach-level="1" className="space-y-6">
         <LessonHeader
           number="01"
           eyebrow="Parent와 두 child 비교"
@@ -143,7 +156,7 @@ export default function XGBoostTreeObjectiveArticle() {
           interpretation="Gain≤0이면 local training objective에서도 split cost를 갚지 못하므로 후보를 버립니다."
         />
       </section>
-      <section id="histogram" className="space-y-6">
+      <section id="histogram" data-teach-level="2" className="space-y-6">
         <LessonHeader
           number="02"
           eyebrow="Threshold 후보 줄이기"
@@ -160,7 +173,7 @@ export default function XGBoostTreeObjectiveArticle() {
           boundary="Bin 수가 작으면 threshold 해상도가 줄고 version·device별 builder·determinism이 다를 수 있습니다."
         />
       </section>
-      <section id="evidence" className="space-y-6">
+      <section id="evidence" data-teach-level="3" className="space-y-6">
         <LessonHeader
           number="03"
           eyebrow="Objective와 system 경계"
@@ -198,6 +211,7 @@ export default function XGBoostTreeObjectiveArticle() {
           ]}
         />
       </section>
+      <TabularModelFamilyMapReturn current="xgboost" />
     </article>
   );
 }

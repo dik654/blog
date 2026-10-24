@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 521,
-    "pending": 469,
+    "reviewed": 526,
+    "pending": 464,
     "untracked": 0,
-    "assignedPending": 425,
+    "assignedPending": 420,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2723,9 +2723,9 @@
       "publicPath": "cs/ai/imbalanced-data",
       "title": "불균형 분류 기초: Prevalence에서 Action까지",
       "catalogIndex": 269,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2735,7 +2735,7 @@
       "catalogIndex": 270,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2745,7 +2745,7 @@
       "catalogIndex": 271,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2755,7 +2755,7 @@
       "catalogIndex": 272,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2763,9 +2763,9 @@
       "publicPath": "cs/ai/imbalanced-classification-evaluation",
       "title": "불균형 분류 평가: Confusion · PR · Calibration",
       "catalogIndex": 273,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2775,7 +2775,7 @@
       "catalogIndex": 274,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2783,9 +2783,9 @@
       "publicPath": "cs/ai/xgboost-tree-objective",
       "title": "XGBoost Tree Objective: G·H Leaf에서 Histogram Split까지",
       "catalogIndex": 275,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2793,9 +2793,9 @@
       "publicPath": "cs/ai/lightgbm-efficient-trees",
       "title": "LightGBM: GOSS·EFB·Leaf-wise를 비용 축으로 읽기",
       "catalogIndex": 276,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2805,7 +2805,7 @@
       "catalogIndex": 277,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2813,9 +2813,9 @@
       "publicPath": "cs/ai/tabular-deep-learning",
       "title": "테이블 딥러닝: Row 표현에서 TabNet·FT-Transformer까지",
       "catalogIndex": 278,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -3705,7 +3705,7 @@
       "catalogIndex": 367,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

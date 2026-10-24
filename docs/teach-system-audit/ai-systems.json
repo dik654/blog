@@ -1659,11 +1659,11 @@
       "route": "ai/catboost-ordered-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/catboost-ordered-learning.tsx",
       "publicPath": "cs/ai/catboost-ordered-learning",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 5
       },
       "beforeDefects": [
@@ -1718,10 +1718,13 @@
         "formula": "전역 1,471식 explicit annotation strict actual exit0",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
-        "production": "GitHub Pages run 37312864987 success; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-207-production/summary.json"
+        "production": "Batch24 공개 배포 후 재검증 필요",
+        "batch24Browser": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-05",
+      "remaining": [
+        "Batch24 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
         "src/pages/articles/ai/catboost-ordered-learning/ModernArticle.tsx",
@@ -1739,11 +1742,11 @@
       "route": "ai/classification-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/classification-metrics.tsx",
       "publicPath": "cs/ai/classification-metrics",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
       "beforeDefects": [
@@ -6992,11 +6995,11 @@
       "route": "ai/gradient-boosting",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/gradient-boosting.tsx",
       "publicPath": "cs/ai/gradient-boosting",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 5
       },
       "beforeDefects": [
@@ -7039,11 +7042,14 @@
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
         "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
-        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
+        "production": "Batch24 공개 배포 후 재검증 필요",
+        "batch24Browser": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
         "semanticReview": "목표 7·현재 예측 4에서 residual 3을 얻고, 새 tree leaf 2.4에 η=0.2를 곱한 0.48만 더해 4.48이 되는 한 번의 update를 고정했습니다. 모든 leaf를 더하거나 2.4를 그대로 더하는 오해를 예측 문제로 분리했습니다."
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
+      "remaining": [
+        "Batch24 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
       "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
       "bodyFiles": [
         "src/pages/articles/ai/gradient-boosting/ModernArticle.tsx",
@@ -8715,25 +8721,64 @@
       "route": "ai/lightgbm-efficient-trees",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lightgbm-efficient-trees.tsx",
       "publicPath": "cs/ai/lightgbm-efficient-trees",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "GOSS·EFB·잎 중심 성장의 세 축은 설명했지만 표 형식 모델 전체 지도에서 현재 위치를 찾기 어려웠음",
+        "그림이 첫 사례의 수치 설명 뒤에 있어 행·열·분할 위치가 어떻게 따로 줄어드는지 먼저 볼 수 없었음",
+        "동적 그림의 JavaScript 비활성 결론과 명시적 장면 식별자가 없었음"
+      ],
+      "fixture": {
+        "rows": 10000,
+        "largeGradientRows": 2000,
+        "sampledSmallGradientRows": 1000,
+        "smallGradientWeight": 8,
+        "sparseColumns": 6,
+        "bundles": 2,
+        "terminalGains": [3, 7, 5]
+      },
+      "stageAnchors": {
+        "parent": "표 형식 모델 지도",
+        "current": "탐색 비용",
+        "1": "bundling",
+        "2": "leaf-growth",
+        "3": "evidence"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://proceedings.neurips.cc/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html",
+          "application": "GOSS·EFB의 정의와 논문 범위"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "행 수·유효 열 수·다음 분할 위치가 서로 다른 상태임을 10,000→3,000, 6→2, [3,7,5]→잎 B의 한 사례로 분리했습니다.",
+        "humanize": "그림의 역할과 장면 이름을 한국어로 바꾸고 제품명은 실제 기법 이름으로 유지했습니다.",
+        "browser390": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "browser1440": "부모 지도·첫 시각화·키보드·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
+        "production": "Batch24 공개 배포 후 재검증 필요"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch24 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "recursive-family-map-and-visual-first-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/lightgbm-efficient-trees/ModernArticle.tsx",
+        "src/pages/articles/ai/gbm-viz.tsx",
+        "src/pages/articles/ai/shared/TabularModelFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/lightgbm-efficient-trees/ModernArticle.tsx",
+      "preserved": [
+        "GOSS 보정 가중치 수식",
+        "EFB와 잎 중심 성장의 별도 경계",
+        "NeurIPS 2017 근거 범위"
       ]
     },
     {
@@ -12471,25 +12516,62 @@
       "route": "ai/tabular-deep-learning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/tabular-deep-learning.tsx",
       "publicPath": "cs/ai/tabular-deep-learning",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
+      "beforeDefects": [
+        "TabNet·FT-Transformer·선택 기준은 있었지만 앞선 부스팅 원리와 실제 선택 판단이 한 경로로 연결되지 않았음",
+        "읽는 순서 그림이 긴 설명과 수식 뒤에 있어 전체 판단 기준을 먼저 볼 수 없었음",
+        "시각화가 둥근 카드와 영문 보조 제목에 의존해 같은 글 안의 정보 위계가 약했음"
+      ],
+      "fixture": {
+        "columns": ["나이 42세", "지역 서울", "30일 결제액 37만 원"],
+        "comparison": "같은 분리·탐색 예산의 강한 트리 기준선",
+        "decisionAxes": ["품질", "보정", "지연", "메모리"]
+      },
+      "stageAnchors": {
+        "parent": "표 형식 모델 지도",
+        "current": "표현 선택",
+        "0": "overview",
+        "1": "tabnet",
+        "2": "ft-transformer",
+        "3": "when-dl-wins"
+      },
       "sourceEvidence": [],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "모델 이름을 고르는 글이 아니라 데이터 계약→강한 출발점→표현 기회→운영 판정의 실무 흐름으로 고정했습니다.",
+        "humanize": "영문 시각화 제목과 역할 문구를 자연스러운 한국어로 바꾸고 모델·기법 고유명은 유지했습니다.",
+        "browser390": "부모 지도·첫 시각화·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "browser1440": "부모 지도·첫 시각화·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
+        "production": "Batch24 공개 배포 후 재검증 필요"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch24 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "practice-track-map-and-visual-first-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/tabular-deep-learning.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/Overview.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/TabNet.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/FTTransformer.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/WhenDLWins.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/viz/TabNetViz.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/viz/FTTransformerViz.tsx",
+        "src/pages/articles/ai/tabular-deep-learning/viz/WhenDLWinsViz.tsx",
+        "src/pages/articles/ai/shared/TabularModelFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/tabular-deep-learning.tsx",
+      "preserved": [
+        "TabNet의 행별 희소 마스크 설명",
+        "FT-Transformer의 열 토큰 경로",
+        "같은 조건에서 비교하는 선택 기준과 오차 상관 수식"
       ]
     },
     {
@@ -13593,25 +13675,61 @@
       "route": "ai/xgboost-tree-objective",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/xgboost-tree-objective.tsx",
       "publicPath": "cs/ai/xgboost-tree-objective",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
-        "levelMarkers": 0,
+        "levelMarkers": 4,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "잎 갱신과 분할 이득 수식은 있었지만 경사 부스팅 지도에서 목적함수가 맡는 위치를 찾기 어려웠음",
+        "행→구간→자식 점수→구조 비용의 그림이 선행 예측 문제 뒤에 있어 계산 흐름을 먼저 볼 수 없었음",
+        "동적 그림의 JavaScript 비활성 결론과 명시적 장면 식별자가 없었음"
+      ],
+      "fixture": {
+        "leafGradientSum": -6,
+        "leafHessianSum": 2,
+        "lambda": 1,
+        "optimalLeafUpdate": 2
+      },
+      "stageAnchors": {
+        "parent": "표 형식 모델 지도",
+        "current": "목적함수",
+        "1": "split-gain",
+        "2": "histogram",
+        "3": "evidence"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/1603.02754",
+          "application": "2차 목적함수·분할 이득·히스토그램 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "행별 g·h를 구간별 G·H로 합친 뒤 자식 점수에서 부모 점수와 γ를 빼는 흐름을 한 그림과 기존 수식에 맞췄습니다.",
+        "humanize": "그림의 bin·child·penalty 역할을 구간·자식·구조 비용으로 풀고 XGBoost 고유명은 유지했습니다.",
+        "browser390": "부모 지도·첫 시각화·키보드·reduced-motion·JavaScript 비활성·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "browser1440": "부모 지도·첫 시각화·키보드·overflow0: output/playwright/ai-tabular-models-batch-24/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "build": "Vite 7.3.1·7,909 modules·정적 public route 2,086개+404 exit0",
+        "production": "Batch24 공개 배포 후 재검증 필요"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch24 공개 경로 재검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "recursive-family-map-and-visual-first-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/xgboost-tree-objective/ModernArticle.tsx",
+        "src/pages/articles/ai/gbm-viz.tsx",
+        "src/pages/articles/ai/shared/TabularModelFamilyLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/xgboost-tree-objective/ModernArticle.tsx",
+      "preserved": [
+        "잎 가중치와 분할 이득의 주석 수식",
+        "히스토그램 후보 축소 경계",
+        "KDD 2016 근거 범위"
       ]
     },
     {
@@ -13641,24 +13759,24 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 52,
-    "rewritten-production-verified": 60,
-    "unreviewed": 74
+    "rewritten-local-verified": 57,
+    "rewritten-production-verified": 58,
+    "unreviewed": 71
   },
   "localValidationSummary": {
-    "rewritten": 112,
-    "remainingUnreviewed": 74,
+    "rewritten": 115,
+    "remainingUnreviewed": 71,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
     "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
     "typescript": "checkpoint255 actual npx tsc -b exit0",
-    "note": "현재 112편은 actual-body semantic review를 마쳤고 그중 60편은 운영 검증까지 완료했습니다. 미검토 74편은 완료에 포함하지 않습니다.",
+    "note": "현재 115편은 actual-body semantic review를 마쳤고 그중 58편은 운영 검증까지 완료했습니다. 미검토 71편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 112,
-    "rewrittenLocalVerified": 52,
-    "unreviewed": 74,
+    "verifiedRewrites": 115,
+    "rewrittenLocalVerified": 57,
+    "unreviewed": 71,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
