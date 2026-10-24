@@ -9,6 +9,8 @@ export default function Distributional() {
         Context를 정의하고 세는 순간 representation의 inductive bias가 결정된다
       </h2>
 
+      <ContextMatrixViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
           Word–context matrix의 row는 target 단어, column은 context feature입니다. Symmetric window를 쓰면 좌우 주변 token을
@@ -16,13 +18,11 @@ export default function Distributional() {
           보존하고 term–document matrix는 같은 문서에 등장하는 주제적 관계를 강조합니다.
         </p>
         <p className="leading-8">
-          작은 계산을 해보면 구조가 선명해집니다. Token sequence를 [고양이, 우유, 마신다]로 단순화하고 방향을 구분하지 않는 window 1을 쓰면 target “우유”에서
-          X(우유, 고양이)와 X(우유, 마신다)가 각각 1 증가합니다. Window 2로 넓히면 더 먼 token도 열에 들어오므로 count가 늡니다. 다만 그 관계가 현재 task에
-          필요한 문법 관계인지 단순한 같은 문서의 주제 관계인지는 별도로 검증해야 합니다.
+          이 글의 교육용 장부에서는 고양이·강아지 row 합이 각각 7이고 행성 row 합은 5입니다. 반려·먹이 column 합은 각각 7, 공전은 5라서 전체 사건 수는
+          19입니다. 이 숫자를 얻기 전에 window를 넓히거나 방향을 나누면 열과 count가 함께 달라집니다. 그 관계가 현재 task에 필요한 문법 관계인지 단순한 같은
+          문서의 주제 관계인지는 별도로 검증해야 합니다.
         </p>
       </div>
-
-      <ContextMatrixViz />
 
       <ExplainedFormula
         question="Corpus token sequence에서 word–context matrix의 한 cell은 어떻게 누적되는가?"
@@ -37,7 +37,7 @@ export default function Distributional() {
         annotatedFormula={String.raw`\begin{aligned}X_{wc}&=\underbrace{\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}}_{\text{window 안 가중 누적}}\\I_{t,\delta}&=\underbrace{\mathbf 1[x_t=w,\ x_{t+\delta}=c]}_{\text{pair 관측 indicator}}\end{aligned}`}
         operations={[
           { expression: String.raw`\sum_t\sum_{\delta\in\mathcal W}\omega(\delta)I_{t,\delta}`, annotation: ["corpus의 모든 위치 t와 offset δ를 돌며","(w,c) pair가 보일 때마다 ω(δ)만큼 누적","ω≡1이면 단순 count, 가까울수록 크면 가중"] },
-          { expression: String.raw`\mathbf 1[x_t=w,\ x_{t+\delta}=c]`, annotation: ["위치 t가 w이고 t+δ가 c이면 1, 아니면 0","[고양이, 우유, 마신다]에 window 1이면","X(우유,고양이)·X(우유,마신다)가 각 1 증가"] },
+          { expression: String.raw`\mathbf 1[x_t=w,\ x_{t+\delta}=c]`, annotation: ["위치 t가 w이고 t+δ가 c이면 1, 아니면 0","같은 규칙으로 고양이–반려 사건을 네 번 관측","X(고양이,반려)=4로 누적"] },
         ]}
         terms={[
           {
@@ -72,6 +72,8 @@ export default function Distributional() {
         interpretation="Window size는 단순 hyperparameter가 아니라 무엇을 ‘같은 문맥’으로 볼지 정하는 측정 정의입니다. 좁은 window가 항상 syntax, 넓은 window가 항상 semantics를 보장하는 것은 아니므로 downstream task에서 검증합니다."
       />
 
+      <WeightingViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Raw count는 association보다 frequency를 크게 반영한다</h3>
         <p className="leading-8">
@@ -80,8 +82,6 @@ export default function Distributional() {
           zero cell 문제까지 해결하지는 않습니다.
         </p>
       </div>
-
-      <WeightingViz />
 
       <ExplainedFormula
         question="두 단어가 우연한 독립 기대보다 더 자주 함께 나타났는지 어떻게 측정하는가?"
@@ -95,8 +95,8 @@ export default function Distributional() {
         formula={String.raw`\begin{aligned}\operatorname{PMI}(w,c)&=\log\frac{P(w,c)}{P(w)P(c)}\\\operatorname{PPMI}(w,c)&=\max(0,\operatorname{PMI}(w,c))\end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}\operatorname{PMI}(w,c)&=\underbrace{\log\frac{P(w,c)}{P(w)P(c)}}_{\text{독립 기대 대비 log 비율}}\\\operatorname{PPMI}(w,c)&=\underbrace{\max(0,\operatorname{PMI}(w,c))}_{\text{음수 association 절단}}\end{aligned}`}
         operations={[
-          { expression: String.raw`\log\frac{P(w,c)}{P(w)P(c)}`, annotation: ["실제 joint를 독립 기대 P(w)P(c)로 나눔","0.02/(0.1×0.1)=2 → log 2≈0.693","양수면 우연보다 자주 함께 나온 pair"] },
-          { expression: String.raw`\max(0,\operatorname{PMI}(w,c))`, annotation: ["기대보다 드문 pair의 음수 PMI는 0으로","신뢰하기 어려운 negative association 제거","0.693은 양수라 PPMI도 0.693"] },
+          { expression: String.raw`\log\frac{P(w,c)}{P(w)P(c)}`, annotation: ["실제 joint를 독립 기대 P(w)P(c)로 나눔","(4/19)÷((7/19)²)=76/49","log(76/49)≈0.439"] },
+          { expression: String.raw`\max(0,\operatorname{PMI}(w,c))`, annotation: ["기대보다 드문 pair의 음수 PMI는 0으로","신뢰하기 어려운 negative association 제거","0.439는 양수라 PPMI도 0.439"] },
         ]}
         terms={[
           {
@@ -133,9 +133,9 @@ export default function Distributional() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          예를 들어 같은 event 표본공간에서 P(w,c)=0.02이고 P(w)=P(c)=0.1이면 독립 기대는 0.1×0.1=0.01입니다. 실제 joint가 그 두 배이므로 자연로그
-          PMI는 log(2)≈0.693이고 양수라서 PPMI도 0.693입니다. 반대로 count가 0이면 log(0)을 계산할 수 없으므로 smoothing을 할지, 최소 count
-          아래를 버릴지, 해당 cell을 관측 불가로 둘지 정책을 먼저 고정해야 합니다.
+          고양이–반려 pair는 19개 사건 중 4개이므로 P(w,c)=4/19입니다. 고양이 row와 반려 column은 각각 7개라 P(w)=P(c)=7/19이고 독립 기대는
+          (7/19)²입니다. 실제 joint를 이 값으로 나누면 76/49≈1.551, 자연로그 PMI는 약 0.439입니다. 반대로 count가 0이면 log(0)을 계산할 수
+          없으므로 smoothing·최소 count·0 처리 중 어떤 정책을 썼는지 먼저 고정해야 합니다.
         </p>
       </div>
     </section>

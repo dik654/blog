@@ -7,9 +7,10 @@ export default function Dimensionality() {
   return (
     <section id="dimensionality" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Matrix factorization은 sparse context coordinate를 공유 latent
-        direction으로 압축한다
+        SVD는 넓고 희소한 행렬을 공유 방향으로 압축합니다
       </h2>
+
+      <FactorizationViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
@@ -27,8 +28,6 @@ export default function Dimensionality() {
         </p>
       </div>
 
-      <FactorizationViz />
-
       <ExplainedFormula
         question="큰 word–context matrix를 k차원 dense word vector로 어떻게 근사하는가?"
         idea={
@@ -42,7 +41,7 @@ export default function Dimensionality() {
         formula={String.raw`M\approx U_k\Sigma_kV_k^\top,\qquad E_{\mathrm{word}}=U_k\Sigma_k^p`}
         annotatedFormula={String.raw`M\approx \underbrace{U_k\Sigma_kV_k^\top}_{\text{상위 k 방향 근사}},\qquad E_{\mathrm{word}}=\underbrace{U_k\Sigma_k^p}_{\text{k차원 word vector}}`}
         operations={[
-          { expression: String.raw`U_k\Sigma_kV_k^\top`, annotation: ["singular value 큰 k방향만 남긴 근사","M=diag(3,1), k=1이면 diag(3,0)","버린 error 1²=1은 같은 rank에서 최소"] },
+          { expression: String.raw`U_k\Sigma_kV_k^\top`, annotation: ["singular value 큰 k방향만 남긴 근사","fixture의 1.335·0.590은 유지","0.288 방향을 버리면 error≈0.288²=0.083"] },
           { expression: String.raw`U_k\Sigma_k^p`, annotation: ["U_k의 row: 단어가 latent 방향에 놓인 좌표","Σ_k^p로 방향별 scale을 얼마나 흡수할지 결정","p=0·1/2·1은 별도 design choice"] },
         ]}
         terms={[
@@ -80,9 +79,9 @@ export default function Dimensionality() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          가장 단순한 예로 M=diag(3,1)이면 singular value도 3과 1입니다. k=1은 크기 3인 첫 방향만 남기므로 rank-1 근사는 diag(3,0)이 되고 버린
-          squared Frobenius error는 1²=1입니다. 이 값이 최소라는 말은 같은 rank와 Frobenius norm에서 matrix를 가장 잘 복원한다는 의미입니다.
-          버린 두 번째 방향이 downstream label이나 희귀한 의미 관계에 쓸모없다는 데까지는 미치지 않습니다.
+          이 글의 3×3 PPMI matrix는 singular value가 약 1.335·0.590·0.288입니다. k=2는 앞의 두 방향을 남기고 고양이와 강아지의 반려·먹이 비율 차이를
+          표현하던 마지막 방향을 버립니다. Squared Frobenius error는 약 0.288²=0.083으로 최소지만, 그 방향이 downstream label이나 희귀한 의미 관계에
+          쓸모없다는 데까지는 미치지 않습니다.
         </p>
       </div>
 
@@ -110,8 +109,8 @@ export default function Dimensionality() {
         formula={String.raw`\operatorname{cos}(u,v)=\frac{u^\top v}{\lVert u\rVert_2\lVert v\rVert_2}`}
         annotatedFormula={String.raw`\operatorname{cos}(u,v)=\frac{\underbrace{u^\top v}_{\text{좌표 정렬 합}}}{\underbrace{\lVert u\rVert_2\lVert v\rVert_2}_{\text{크기 제거}}}`}
         operations={[
-          { expression: String.raw`u^\top v`, annotation: ["같은 부호 coordinate 기여를 합한 dot product","같은 방향이면 크고 orthogonal이면 0"] },
-          { expression: String.raw`\lVert u\rVert_2\lVert v\rVert_2`, annotation: ["두 L2 norm의 곱으로 나눠 scale 제거","norm엔 빈도·factor scale이 섞여 있음","zero vector면 정의 안 됨, OOV 처리 필요"] },
+          { expression: String.raw`u^\top v`, annotation: ["(.439,.151,0)·(.151,.439,0)","같은 부호 coordinate 기여를 합하면 약 0.133"] },
+          { expression: String.raw`\lVert u\rVert_2\lVert v\rVert_2`, annotation: ["두 row norm의 곱은 약 0.216","0.133÷0.216≈0.616","zero vector면 정의 안 됨, OOV 처리 필요"] },
         ]}
         terms={[
           {

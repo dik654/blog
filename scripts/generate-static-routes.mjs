@@ -59,6 +59,7 @@ const noScriptArticleRoutes = new Set([
   "ai/linear-autoencoder-pca",
   "ai/denoising-masked-autoencoders",
   "ai/reconstruction-anomaly-detection",
+  "ai/distributional-semantics",
   "ai/vision-language-model-architecture",
   "ai/multimodal-retrieval-and-visual-grounding",
 ]);
