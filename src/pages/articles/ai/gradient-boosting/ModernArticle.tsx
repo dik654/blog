@@ -4,34 +4,40 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
 import { BoostingFunctionViz } from "../gbm-viz";
+import {
+  TabularModelFamilyLocator,
+  TabularModelFamilyMapReturn,
+} from "../shared/TabularModelFamilyLocator";
 
 export default function GradientBoostingArticle() {
   return (
     <article className="space-y-16">
-      <section id="overview" className="space-y-6">
+      <TabularModelFamilyLocator current="boosting" />
+      <section id="overview" data-teach-level="0" className="space-y-6">
         <LessonHeader
           number="00"
           eyebrow="55㎡ 집 한 채부터"
           title="현재 4억인 예측을 새 tree가 4.48억으로 고칩니다"
         >
-          목표값이 7억인 55㎡ 집의 현재 score는 4억입니다. Squared loss에서
-          고칠 방향은 3이고, 새 tree는 이 방향을 2.4로 근사했습니다. Learning
-          rate가 0.2이면 이번 round가 더하는 값은 0.48, 새 score는 4.48입니다.
+          목표값이 7억인 55㎡ 집의 현재 score는 4억입니다. Squared loss에서 고칠
+          방향은 3이고, 새 tree는 이 방향을 2.4로 근사했습니다. Learning rate가
+          0.2이면 이번 round가 더하는 값은 0.48, 새 score는 4.48입니다.
         </LessonHeader>
+        <BoostingFunctionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
+          <p className="font-semibold">
+            그림을 넘기기 전에 세 가지를 예측해 보세요.
+          </p>
           <ol>
             <li>55㎡ 집은 tree의 모든 leaf 값을 더해서 예측할까요?</li>
             <li>현재 score 4와 목표 7 사이의 pseudo-residual은 3일까요?</li>
             <li>새 tree 2.4를 그대로 더하면 다음 score가 6.4일까요?</li>
           </ol>
           <p>
-            답은 차례로 <strong>아니요, 예, 아니요</strong>입니다. 한 sample은 leaf
-            하나만 선택하고, 새 tree에는 0.2를 곱하므로 4+0.2×2.4=4.48입니다.
+            답은 차례로 <strong>아니요, 예, 아니요</strong>입니다. 한 sample은
+            leaf 하나만 선택하고, 새 tree에는 0.2를 곱하므로
+            4+0.2×2.4=4.48입니다.
           </p>
-        </div>
-        <div className="[&>figure]:max-h-[calc(100svh-8rem)] [&>figure]:overflow-y-auto">
-          <BoostingFunctionViz />
         </div>
         <ContentBoundary article="gradient-boosting" />
         <TermLesson
@@ -88,7 +94,11 @@ export default function GradientBoostingArticle() {
           interpretation="55㎡ sample은 첫 indicator만 1이라 3억을, 75㎡ sample은 둘째 indicator만 1이라 6억을 받습니다."
         />
       </section>
-      <section id="functional-gradient" className="space-y-6">
+      <section
+        id="functional-gradient"
+        data-teach-level="1"
+        className="space-y-6"
+      >
         <LessonHeader
           number="01"
           eyebrow="현재 함수를 고치는 방향"
@@ -158,7 +168,7 @@ export default function GradientBoostingArticle() {
           interpretation="Squared loss의 residual은 y−F이지만 logistic loss에서는 score link를 포함한 derivative가 target이 됩니다."
         />
       </section>
-      <section id="shrinkage" className="space-y-6">
+      <section id="shrinkage" data-teach-level="2" className="space-y-6">
         <LessonHeader
           number="02"
           eyebrow="Step 크기와 ensemble 길이"
@@ -175,7 +185,7 @@ export default function GradientBoostingArticle() {
           boundary="작은 η가 자동으로 overfit을 막거나 항상 더 좋은 solution을 보장하지 않으며 search budget도 함께 맞춰야 합니다."
         />
       </section>
-      <section id="comparison" className="space-y-6">
+      <section id="comparison" data-teach-level="3" className="space-y-6">
         <LessonHeader
           number="03"
           eyebrow="세 구현은 마지막에 비교"
@@ -223,6 +233,7 @@ export default function GradientBoostingArticle() {
           ]}
         />
       </section>
+      <TabularModelFamilyMapReturn current="boosting" />
     </article>
   );
 }

@@ -105,6 +105,8 @@ export function StoryShell({
   title,
   subtitle,
   labels,
+  sceneId,
+  staticNotes,
   step,
   playing,
   setStep,
@@ -117,6 +119,8 @@ export function StoryShell({
   title: string;
   subtitle: string;
   labels: readonly string[];
+  sceneId?: string;
+  staticNotes?: readonly string[];
   step: number;
   playing: boolean;
   setStep: (step: number) => void;
@@ -130,6 +134,7 @@ export function StoryShell({
     <figure
       id={playbackId}
       data-viz="animated-story"
+      data-viz-scene={sceneId}
       data-viz-canvas="story-canvas"
       data-story-index={step}
       data-story-playing={playing ? "true" : "false"}
@@ -147,15 +152,23 @@ export function StoryShell({
             </p>
           </div>
           <button
+            data-viz-controls
             type="button"
             disabled={reducedMotion}
             onClick={() => setPlaying(!playing)}
             className="border border-border px-3 py-2 text-xs font-black hover:border-primary disabled:cursor-not-allowed disabled:text-muted-foreground"
           >
-            {reducedMotion ? "재생 꺼짐" : playing ? "일시정지" : "순서대로 재생"}
+            {reducedMotion
+              ? "재생 꺼짐"
+              : playing
+                ? "일시정지"
+                : "순서대로 재생"}
           </button>
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div
+          data-viz-controls
+          className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"
+        >
           {labels.map((label, index) => (
             <button
               key={label}
@@ -172,17 +185,27 @@ export function StoryShell({
           ))}
         </div>
       </figcaption>
-      <div className="min-w-0 p-4 sm:p-6">{children}</div>
-      <noscript>
-        <ol className="space-y-2 border-t border-border px-5 py-4 text-sm leading-6">
-          {labels.map((label, index) => (
-            <li key={label}>
-              <strong>{String(index + 1).padStart(2, "0")} · {label}</strong>
-            </li>
-          ))}
-        </ol>
-      </noscript>
-      <p className="border-t border-border px-5 py-3 text-xs text-muted-foreground">
+      <div data-viz-live-only className="min-w-0 p-4 sm:p-6">
+        {children}
+      </div>
+      <ol className="static-reading-only space-y-3 border-t border-border px-5 py-4 text-sm leading-6">
+        {labels.map((label, index) => (
+          <li key={label}>
+            <strong>
+              {String(index + 1).padStart(2, "0")} · {label}
+            </strong>
+            {staticNotes?.[index] ? (
+              <span className="mt-1 block text-muted-foreground">
+                {staticNotes[index]}
+              </span>
+            ) : null}
+          </li>
+        ))}
+      </ol>
+      <p
+        data-viz-live-only
+        className="border-t border-border px-5 py-3 text-xs text-muted-foreground"
+      >
         키보드: ← 이전 · → 다음 · Space 재생/정지
       </p>
     </figure>

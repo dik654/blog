@@ -42,7 +42,10 @@ for (const { route, publicPath } of catalog) {
 for (const route of [...routes].sort()) {
   const routeDirectory = path.join(distRoot, ...route.split("/"));
   const relativeDirectory = path.relative(distRoot, routeDirectory);
-  if (relativeDirectory.startsWith("..") || path.isAbsolute(relativeDirectory)) {
+  if (
+    relativeDirectory.startsWith("..") ||
+    path.isAbsolute(relativeDirectory)
+  ) {
     throw new Error(`dist 바깥의 public route는 생성할 수 없습니다: ${route}`);
   }
   await fs.mkdir(routeDirectory, { recursive: true });
@@ -84,6 +87,11 @@ const noScriptArticleRoutes = new Set([
   "ai/imbalance-loss-weighting",
   "ai/cost-sensitive-thresholding",
   "ai/imbalanced-classification-evaluation",
+  "ai/gradient-boosting",
+  "ai/xgboost-tree-objective",
+  "ai/lightgbm-efficient-trees",
+  "ai/catboost-ordered-learning",
+  "ai/tabular-deep-learning",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",
@@ -232,7 +240,10 @@ try {
     for (const route of [article.publicPath, article.route]) {
       const outputPath = path.join(distRoot, ...route.split("/"), "index.html");
       const html = await fs.readFile(outputPath, "utf8");
-      await fs.writeFile(outputPath, html.replace("</body>", `${fallback}</body>`));
+      await fs.writeFile(
+        outputPath,
+        html.replace("</body>", `${fallback}</body>`),
+      );
     }
   }
 } finally {
