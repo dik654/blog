@@ -21,9 +21,9 @@ export default function FoundationArticle() {
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
           위의 평균내기와 되돌리기는 계산 경로를 보여 주는 교육용 가정입니다. 실제 학습에서는 두 계산의
-          매개변수를 복원 오차가 줄어드는 방향으로 함께 고칩니다. 여기서 앞의 계산을
-          <strong> encoder</strong>, 두 자리 중간값을 <strong>latent</strong>, 뒤의 계산을
-          <strong> decoder</strong>라고 부릅니다.
+          매개변수를 복원 오차가 줄어드는 방향으로 함께 고칩니다. 앞의 계산은
+          <strong> encoder</strong>입니다. 두 자리 중간값은 <strong>latent</strong>입니다. 뒤의
+          계산은 <strong> decoder</strong>입니다.
         </p>
       </div>
       <TermBreakdown title="계산 경로의 대상 네 개" description="각 용어를 따로 정의한 뒤 아래 그림에서 하나의 복원 경로로 연결합니다." items={[
