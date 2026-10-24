@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import MultiHeadLatentAttentionMechanicsViz from "./multi-head-latent-attention-mechanics/viz/MultiHeadLatentAttentionMechanicsViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * MLA 는 latent 로 압축한 KV 를 흡수한 weight 로 곧장 소비합니다
@@ -15,10 +16,18 @@ import MultiHeadLatentAttentionMechanicsViz from "./multi-head-latent-attention-
 export default function MultiHeadLatentAttentionMechanicsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="mla"
+        question="과거 token의 key·value를 모두 저장하지 않고도 같은 attention 결과를 어떻게 계산할까요?"
+        fixture="DeepSeek-V2의 512차원 latent와 64차원 위치 key가 decode 한 step을 통과하는 과정을 봅니다."
+        parentHref="/cs/ai/kv-cache-fundamentals#kv-shape"
+        parentLabel="Q·K·V와 token별 KV 기록"
+      />
       <section id="problem" data-calculation-explained className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           MLA 는 decode 에서 key·value 를 복원하지 않고 latent 를 그대로 씁니다
         </h2>
+        <MultiHeadLatentAttentionMechanicsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <Link to="/cs/ai/motif-3-architecture#gdla">MLA latent KV compression</Link> 은 token 마다
@@ -235,7 +244,6 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           assumptions={["W^UK, W^UV, W^O 사이에 비선형이 없어야 결합법칙으로 순서를 바꿀 수 있습니다.", "content 부분에만 적용됩니다. 위치 부분은 RoPE 회전이 t 마다 달라 같은 방식으로 접을 수 없습니다."]}
           interpretation="Content 점수의 내적 차원이 128에서 512로 늘어 head당 곱셈은 늘지만, 캐시에서 읽는 바이트는 head 차원과 무관한 latent 576개 원소로 고정됩니다. Decode 는 메모리 대역폭에 묶여 있어 이 교환이 순이익이 됩니다."
         />
-        <MultiHeadLatentAttentionMechanicsViz />
         <AlgorithmBlock
           title="MLA decode: 새 token 하나가 흡수된 weight 로 latent 캐시와 만나는 한 step"
           input={[
@@ -325,6 +333,12 @@ export default function MultiHeadLatentAttentionMechanicsArticle() {
           </p>
         </ProgressiveDetail>
       </section>
+      <LlmArchitectureMapReturn
+        title="MLA는 문맥 전체를 고정 크기로 만들지 않고, token마다 저장하는 KV 폭을 latent로 줄입니다."
+        detail="다음 글은 한 단계 더 나아가 token별 기록 자체를 고정 크기 recurrent state 하나로 바꾸는 계열을 비교합니다."
+        nextHref="/cs/ai/linear-attention-and-state-space-models"
+        nextLabel="다음: Linear attention과 SSM"
+      />
     </div>
   );
 }

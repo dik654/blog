@@ -8,6 +8,7 @@ import VizFrame from "@/components/viz/VizFrame";
  * stage 높이는 네 장면의 최대 필요 크기로 고정한다.
  */
 const SCENES = ["latent 압축·캐시", "query 흡수", "content+위치 점수", "출력 흡수"] as const;
+const CONTROL_LABELS = ["압축·캐시", "query 흡수", "두 점수", "출력 흡수"] as const;
 
 type CacheSlot = { id: string; label: string; sub: string };
 const CACHE_SLOTS: readonly CacheSlot[] = [
@@ -83,8 +84,15 @@ const NOTES = [
   "Attention 가중치로 latent 를 그대로 가중합한 뒤, 미리 곱해 둔 W^O W^UV 하나로 model 차원까지 한 번에 보냅니다. k_t^C, v_t^C 는 이 전체 과정에서 한 번도 존재하지 않았습니다.",
 ] as const;
 
+const MOBILE_NOTES = [
+  "h_t를 512차원 latent로 캐시합니다. 원래 key·value는 만들지 않습니다.",
+  "Query를 latent 공간으로 한 번 접어 과거 token 전체에 재사용합니다.",
+  "Latent 내용 점수와 64차원 위치 점수를 더해 attention 가중치를 만듭니다.",
+  "Latent를 가중합한 뒤 흡수된 출력 행렬로 model 차원에 한 번만 보냅니다.",
+] as const;
+
 export default function MultiHeadLatentAttentionMechanicsViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const state = STATES[scenes.active];
   return (
     <VizFrame
@@ -94,20 +102,22 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
       note="실제로는 head 128개가 병렬로 같은 과정을 반복합니다. 그림은 head 하나와 과거 token 세 개로 줄였습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz="multi-head-latent-attention-mechanics"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="MLA weight absorption 이 latent 캐시와 만나는 장면"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(38rem,calc(100svh-15rem))] min-h-[30rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex h-full max-h-full min-h-0 min-w-0 flex-col overflow-hidden outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-[1fr_1.7fr]">
+          <div className="mt-5 hidden gap-3 md:grid md:grid-cols-[1fr_1.7fr]">
             <div className="min-w-0 border border-border p-3">
               <p className="text-[11px] font-bold text-muted-foreground">Latent 캐시 (KV cache)</p>
               <div className="mt-3 grid grid-cols-2 gap-1.5">
@@ -142,7 +152,7 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
                   }`}
                 >
                   <span className="shrink-0">흡수된 query q'_t</span>
-                  <span className="truncate font-mono text-right">{state.foldedQuery}</span>
+                  <span className="min-w-0 break-words font-mono text-right">{state.foldedQuery}</span>
                 </div>
                 <div
                   className={`flex min-h-9 items-center justify-between gap-3 border px-2 text-xs ${
@@ -150,7 +160,7 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
                   }`}
                 >
                   <span className="shrink-0">content 점수</span>
-                  <span className="truncate font-mono text-right">{state.scoreContent}</span>
+                  <span className="min-w-0 break-words font-mono text-right">{state.scoreContent}</span>
                 </div>
                 <div
                   className={`flex min-h-9 items-center justify-between gap-3 border px-2 text-xs ${
@@ -158,7 +168,7 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
                   }`}
                 >
                   <span className="shrink-0">위치 점수</span>
-                  <span className="truncate font-mono text-right">{state.scorePosition}</span>
+                  <span className="min-w-0 break-words font-mono text-right">{state.scorePosition}</span>
                 </div>
                 <div
                   className={`flex min-h-9 items-center justify-between gap-3 border px-2 text-xs ${
@@ -166,7 +176,7 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
                   }`}
                 >
                   <span className="shrink-0">latent 가중합</span>
-                  <span className="truncate font-mono text-right">{state.weightedSum}</span>
+                  <span className="min-w-0 break-words font-mono text-right">{state.weightedSum}</span>
                 </div>
                 <div
                   className={`flex min-h-9 items-center justify-between gap-3 border px-2 text-xs ${
@@ -174,7 +184,7 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
                   }`}
                 >
                   <span className="shrink-0">출력 (흡수된 W^O W^UV)</span>
-                  <span className="truncate font-mono text-right">{state.output}</span>
+                  <span className="min-w-0 break-words font-mono text-right">{state.output}</span>
                 </div>
               </div>
               <p className="mt-3 border-t border-dashed border-border pt-2 font-mono text-[10px] leading-4 text-muted-foreground">
@@ -183,11 +193,39 @@ export default function MultiHeadLatentAttentionMechanicsViz() {
             </div>
           </div>
 
-          <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
+          <div className="mt-4 space-y-3 md:hidden">
+            <div className="border border-border p-2">
+              <p className="text-[11px] font-bold text-muted-foreground">Latent 캐시 · 4×512 · 원래 K/V 복원 없음</p>
+              <div className="mt-2 grid grid-cols-4 gap-1">
+                {CACHE_SLOTS.map((slot) => (
+                  <div key={slot.id} className={`min-w-0 border px-1 py-1.5 text-center font-mono text-[10px] ${state.newCache.includes(slot.id) ? "border-primary bg-primary/10" : "border-primary/40"}`}>
+                    <strong className="block">{slot.label}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="border border-primary/50 p-2">
+              <p className="text-[11px] font-bold text-primary">현재 계산</p>
+              <p className="mt-1 break-words font-mono text-[10px] leading-5">
+                {scenes.active === 0 && state.dims}
+                {scenes.active === 1 && state.foldedQuery}
+                {scenes.active === 2 && `${state.scoreContent} + ${state.scorePosition}`}
+                {scenes.active === 3 && `${state.weightedSum} → ${state.output}`}
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-2 border-l border-primary/50 pl-3 text-sm leading-6 text-muted-foreground md:mt-5 md:pl-4 md:leading-7">
+            <span className="md:hidden">{MOBILE_NOTES[scenes.active]}</span>
+            <span className="hidden md:inline">{NOTES[scenes.active]}</span>
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <noscript>
+          <ol className="space-y-2 text-sm leading-6">
+            {SCENES.map((label, index) => <li key={label}><strong>{label}:</strong> {NOTES[index]}</li>)}
+          </ol>
+        </noscript>
+        <AnimatedSceneControls {...scenes} labels={CONTROL_LABELS} />
       </div>
     </VizFrame>
   );

@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LlmSamplingStrategiesViz from "./llm-sampling-strategies/viz/LlmSamplingStrategiesViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Sampling 전략은 temperature 로 분포를 바꾸고 top-k·top-p 로 자릅니다
@@ -15,10 +16,18 @@ import LlmSamplingStrategiesViz from "./llm-sampling-strategies/viz/LlmSamplingS
 export default function LlmSamplingStrategiesArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="sampling"
+        question="같은 logit에서 어떤 token을 남기고 다음 출력으로 고를까요?"
+        fixture="다섯 token의 확률 분포 하나에 temperature·top-k·top-p를 차례로 적용합니다."
+        parentHref="/cs/ai/transformer-architecture#output-head"
+        parentLabel="Transformer가 다음 token의 logit을 만드는 출력층"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           같은 다섯 token에서 top-k는 2개, top-p는 3개를 남깁니다
         </h2>
+        <LlmSamplingStrategiesViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             다음 token 분포가 [0.50, 0.20, 0.15, 0.10, 0.05]라고 합시다. Temperature
@@ -37,7 +46,6 @@ export default function LlmSamplingStrategiesArticle() {
             되는 최소 집합이 필요하므로 C까지 포함해 0.85를 만든 뒤 재정규화합니다.
           </p>
         </div>
-        <LlmSamplingStrategiesViz />
         <ContentBoundary article="llm-sampling-strategies" />
         <AlgorithmBlock
           title="한 decode step: logits → temperature → truncation → renormalize → sample"
@@ -308,6 +316,12 @@ export default function LlmSamplingStrategiesArticle() {
           </p>
         </ProgressiveDetail>
       </section>
+      <LlmArchitectureMapReturn
+        title="Sampling은 모델의 logit을 바꾸지 않고, 그 분포에서 남길 후보와 다음 token을 정합니다."
+        detail="다음 글은 후보를 고르는 단계보다 앞에서, 학습 범위를 벗어난 위치를 모델이 어떻게 해석하도록 조정하는지 추적합니다."
+        nextHref="/cs/ai/yarn-rope-extension"
+        nextLabel="다음: YaRN과 위치 확장"
+      />
     </div>
   );
 }

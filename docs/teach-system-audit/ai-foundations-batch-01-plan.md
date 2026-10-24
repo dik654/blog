@@ -376,3 +376,30 @@ chosen·rejected pair를, KTO는 response별 binary feedback을 사용한다. Co
 Reward와 flywheel 장면은 자동으로 시작하거나 반복하지 않으며, 사용자가 재생한 경우 5.2초마다
 다음 장면으로 이동한 뒤 마지막에서 멈춘다. JavaScript가 없을 때는 모든 단계의 제목과 상태 변화를
 정적 순서로 남긴다.
+
+## 12. 출력 선택에서 fast weight memory까지
+
+| 공개 경로 | 분류 | 직속 부모 | 이 글이 답하는 질문 |
+|---|---|---|---|
+| `ai/llm-sampling-strategies` | concept · explanation | `ai/transformer-architecture#output-head` | 같은 logit에서 temperature·top-k·top-p가 실제 후보와 확률을 어떻게 바꾸는가? |
+| `ai/yarn-rope-extension` | concept · explanation | `ai/transformer-architecture#position-information` | 학습 길이보다 긴 입력을 받는 것과 실제 긴 문맥 과제를 푸는 것을 어떻게 구분하는가? |
+| `ai/multi-head-latent-attention-mechanics` | concept · explanation | `ai/kv-cache-fundamentals#kv-shape` | MLA가 token별 KV를 무엇으로 압축하고 decode 때 무엇을 다시 계산하는가? |
+| `ai/linear-attention-and-state-space-models` | concept · explanation | `ai/attention-theory#self-attention` | token별 KV 기록 대신 고정 크기 state를 넘기면 계산과 기억의 계약이 어떻게 달라지는가? |
+| `ai/fast-weight-memory-and-chunkwise-recurrence` | concept · explanation | `ai/linear-attention-and-state-space-models#recurrent-state` | 읽기만 하는 recurrent state를 쓰고 지우면서도 chunk 단위로 병렬 계산하려면 무엇이 필요한가? |
+
+공통 구조 지도는 `출력 선택 → 위치 확장 → KV 압축 → 고정 state → state 쓰기`를 먼저 보여 줍니다.
+이 다섯 단계는 한 모델 안에서 반드시 직렬로 구현되는 제품 파이프라인이 아니라, LLM 구조를 바꿀 때
+서로 다른 상태와 비용을 판단하는 학습 순서입니다. 각 글은 직속 부모에서 질문 하나를 이어받고,
+새로 확인한 상태 소유권과 계산 경계를 마지막에 같은 지도에 반영합니다.
+
+Sampling은 확률 `[0.50, 0.20, 0.15, 0.10, 0.05]`에서 T=0.5·T=2·top-k=2·top-p=0.8을
+한 단계씩 적용합니다. YaRN은 32K checkpoint를 128K 입력에 사용하는 사례에서 입력 수용, 위치 일반화,
+과제 성능, 서빙 비용을 분리합니다. MLA는 token당 32,768개 KV 원소와 576개 latent·position 원소를
+비교합니다. Linear attention과 state space 글은 64K 문맥의 32 MiB KV와 64 KiB 고정 state를 대조하고,
+fast weight 글은 같은 2×2 state를 순차 갱신한 결과와 chunkwise 계산의 state handoff가 일치하는 조건을
+추적합니다. 모든 수치는 메커니즘을 읽기 위한 가정 또는 명시된 논문 설정이며 모델 성능 측정값이 아닙니다.
+
+첫 시각화는 첫 설명 문단보다 앞에 두었습니다. 자동 시작과 무한 반복은 사용하지 않으며, 사용자가 재생하면
+장면당 5.2초 뒤 다음 상태로 이동하고 마지막에서 멈춥니다. 모바일에서는 현재 계산만 펼쳐 한 화면에서
+입력·변화·출력을 함께 보게 하고, 데스크톱에서는 전체 상태를 비교합니다. reduced-motion에서는 재생을
+비활성화하고, JavaScript가 없을 때는 같은 장면 순서와 결론을 정적 목록으로 제공합니다.

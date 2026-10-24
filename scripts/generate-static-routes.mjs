@@ -98,6 +98,11 @@ const noScriptArticleRoutes = new Set([
   "ai/orpo",
   "ai/kto",
   "ai/synthetic-data-and-data-flywheel",
+  "ai/llm-sampling-strategies",
+  "ai/yarn-rope-extension",
+  "ai/multi-head-latent-attention-mechanics",
+  "ai/linear-attention-and-state-space-models",
+  "ai/fast-weight-memory-and-chunkwise-recurrence",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

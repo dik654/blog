@@ -6,6 +6,7 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import LinearAttentionAndStateSpaceModelsViz from "./linear-attention-and-state-space-models/viz/LinearAttentionAndStateSpaceModelsViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 /**
  * Linear attention과 SSM은 고정 크기 state로 attention의 KV 성장을 없앱니다
@@ -15,10 +16,18 @@ import LinearAttentionAndStateSpaceModelsViz from "./linear-attention-and-state-
 export default function LinearAttentionAndStateSpaceModelsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <LlmArchitectureLocator
+        current="linear"
+        question="과거 token 기록을 다시 훑지 않고 고정 크기 상태 하나로 어떻게 이어갈까요?"
+        fixture="d=128, 64K token에서 attention KV 32 MiB와 recurrent state 64 KiB를 비교합니다."
+        parentHref="/cs/ai/attention-theory#self-attention"
+        parentLabel="token별 기록을 직접 읽는 self-attention"
+      />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Sequence mixer는 과거를 token 기록 대신 고정 state로 저장할 수 있습니다
         </h2>
+        <LinearAttentionAndStateSpaceModelsViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Attention은 이전 token 전부의 key와 value를 그대로 남겨 두고 현재 query가 그 기록을 다시 훑습니다. Linear attention과 state
@@ -42,7 +51,6 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
             채 내용만 갱신됩니다.
           </p>
         </div>
-        <LinearAttentionAndStateSpaceModelsViz />
         <ContentBoundary article="linear-attention-and-state-space-models" />
       </section>
 
@@ -316,6 +324,12 @@ export default function LinearAttentionAndStateSpaceModelsArticle() {
           </CitationBlock>
         </div>
       </section>
+      <LlmArchitectureMapReturn
+        title="Linear attention과 SSM은 길이에 따라 커지는 기록 대신 같은 크기의 상태를 계속 갱신합니다."
+        detail="다음 글은 그 상태를 단순히 유지하는 데서 더 나아가, 현재 읽기와 새 목표의 차이를 어떻게 쓰고 chunk 단위로 병렬화하는지 계산합니다."
+        nextHref="/cs/ai/fast-weight-memory-and-chunkwise-recurrence"
+        nextLabel="다음: Fast weight memory"
+      />
     </div>
   );
 }

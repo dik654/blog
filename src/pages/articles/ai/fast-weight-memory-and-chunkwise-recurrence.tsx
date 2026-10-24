@@ -9,12 +9,16 @@ import SourceApplication from "@/pages/articles/world-systems/SourceApplication"
 import ReviewPrompts from "@/pages/articles/world-systems/ReviewPrompts";
 import PaperReading from "./research-audit-sources/PaperReading";
 import { codeRefs, fileTrees, projectMetas } from "./fast-weight-memory-and-chunkwise-recurrence/codeRefs";
+import FastWeightMemoryAndChunkwiseRecurrenceViz from "./fast-weight-memory-and-chunkwise-recurrence/viz/FastWeightMemoryAndChunkwiseRecurrenceViz";
+import { LlmArchitectureLocator, LlmArchitectureMapReturn } from "./shared/LlmArchitectureLocator";
 
 export default function Article(){
   const sidebar=useCodeSidebar();
   return <div className="space-y-16">
+    <LlmArchitectureLocator current="fast" question="고정 크기 기억에서 기존 값을 읽고, 목표와의 차이만 같은 주소에 어떻게 다시 쓸까요?" fixture="두 주소와 2×2 기억 행렬로 간섭·delta update·4-token chunk 병렬화를 끝까지 계산합니다." parentHref="/cs/ai/linear-attention-and-state-space-models#recurrent-state" parentLabel="고정 크기 recurrent state" />
     <section id="overview" data-teach-level="S" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">1 · 작은 행렬 하나에 기억을 쓰면 서로 섞일 수 있다</h2>
+      <FastWeightMemoryAndChunkwiseRecurrenceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">두 쌍을 기억하겠습니다. 주소 k₁=(1,0)의 값은 (2,0), k₂=(0.6,0.8)의 값은 (0,3)입니다. 이 값들은 설명을 위한 숫자입니다 (가정). 네 숫자짜리 행렬에 둘을 넣으면 첫 주소를 읽을 때 원래 없던 1.8이 함께 나옵니다.</p>
         <p className="leading-8">이 글은 그 간섭을 확인하고 같은 주소의 값을 (5,0)으로 고칩니다. 수정 규칙을 이해한 뒤, 입력 조각을 하나씩 처리하는 계산을 여러 개씩 병렬로 바꾸는 방법과 기존 값을 지우는 양과 새로 쓰는 양을 따로 정하는 방법을 연결합니다.</p>
@@ -121,6 +125,7 @@ export default function Article(){
 
       <p data-stage-bridge="limits" className="mt-5 text-sm leading-7 text-neutral-600 dark:text-neutral-400">저장 크기, 수정 규칙, 병렬 실행과 회상 품질을 각각 검증하면 추적이 끝납니다.</p>
     </section>
+    <LlmArchitectureMapReturn title="Fast weight memory는 고정 크기 상태를 읽고 목표와의 차이만 쓰며, chunkwise 계산은 같은 순차 의존성을 작은 묶음 안에서 병렬화합니다." detail="다음 글은 기억 상태가 아니라 두 attention 분포의 차이를 사용해 공통 잡음을 지우는 differential attention으로 이동합니다." nextHref="/cs/ai/differential-attention" nextLabel="다음: Differential attention" />
     <ContentBoundary article="fast-weight-memory-and-chunkwise-recurrence" />
     <ReviewPrompts questions={["첫 key의 값을 정확히 고쳐도 두 번째 key의 읽기가 바뀌는 이유는 무엇일까요? (답: 4절)", "두 token의 삼각 연립식에 왜 I−L이 아닌 I+L이 나올까요? (답: 7절)", "erase=0·write=1이면 같은 key의 읽기는 어떻게 될까요? (답: 8절)"]} />
     <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={fileTrees} projectMetas={projectMetas} />
