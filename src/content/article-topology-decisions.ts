@@ -2827,14 +2827,14 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-network-packet-path": {
     action: "keep",
     status: "implemented",
-    reviewedAt: "2026-10-08",
+    reviewedAt: "2026-10-24",
     rationale: "Client Pod의 한 연결을 network namespace, Service backend 선택, Calico route·encapsulation, MTU·SNAT, policy hook, Gateway·service mesh와 server socket까지 추적합니다. 2024년 KANS 실습 소재는 현재 Kubernetes v1.37, Calico 3.33, Cilium 1.20.1과 Gateway API v1.6.1 공식 문서로 다시 검증합니다.",
     sharedGate: "10.244.1.12:43120→10.96.20.15:8080→10.244.2.34:8080과 underlay 1500 B→VXLAN workload 1450 B 사례가 본문·Viz·수식·실습·연습문제에서 같은 주소와 단위로 이어지는지 확인합니다.",
   },
   "cloud/kubernetes-request-path-and-cka": {
     action: "keep",
     status: "implemented",
-    reviewedAt: "2026-10-08",
+    reviewedAt: "2026-10-24",
     rationale: "Pod가 하나 부족한 사건에서 출발해 desired state 저장, 배치, node 실행, network·storage, readiness와 endpoint 게시까지 첫 실패 전환을 찾는 한 요청 경로를 설명합니다. CKA 영역은 같은 경로를 고장 내고 복구해 증거를 남기는 실습으로 연결하며, 브라우저 CLI는 이 상태 전이를 반복하는 안전한 simulator로 한정합니다.",
     sharedGate: "3개×초당 35건=계획 105건, Ready 2개=현재 70건, 유입 90건에서 초당 20건 부족한 사례와 scheduling·Service selector·runtime 세 실습을 context→diagnosis→fix→verify 네 증거로 채점합니다.",
   },
@@ -3130,7 +3130,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-concept-map": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-23",
+    reviewedAt: "2026-10-24",
     rationale:
       "cloud-kubernetes 하위분류의 허브다. checkout Pod 하나가 API 저장부터 사용자 요청까지 가는 경로와 단계별 확대 글, 장애 색인·CKA 매핑을 한 장에 둔다. 하위 글은 이 좌표를 재사용하고 각 메커니즘의 계산과 원문만 확장한다.",
     sharedGate:
@@ -3139,7 +3139,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-controllers-reconcile-deployment-job": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "replicas 3인 Deployment 하나와 실패하는 Job 하나로 세 층 → 반올림 → 사다리 → reconcile 이름 → 오해 정정 → Job 지연 → 원문까지 한 사례를 끝까지 따라가는 글이다. ReplicaSet의 diff와 Deployment의 상한·하한은 같은 '차이를 한 걸음 줄인다'는 질문의 두 층이라 나누면 사례를 다시 세워야 한다.",
     sharedGate:
@@ -3148,7 +3148,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "세 노드 클러스터 하나로 Pod가 노드를 배정받는 순간과 노드를 잃는 6분을 같은 '객체를 읽고 쓸 뿐 신호가 없다'는 질문으로 끝까지 따라가는 글이다. 배정(Bind → nodeName → kubelet watch)과 상실(Lease 중단 → 50초 → taint → 300초)은 같은 필드와 같은 참여자가 움직이므로 나누면 사례를 다시 세워야 한다.",
     sharedGate:
@@ -3157,7 +3157,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-requests-limits-allocatable-qos": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "노드 하나의 장부(Allocatable)와 컨테이너 하나의 limit(500m)을 scheduler 비교 → kubelet 변환 → 커널 집행 → eviction·admission까지 따라가는 글이다. requests와 limits는 같은 두 숫자의 서로 다른 독자이므로 나누면 '왜 Pending인데 노드는 놀고 있나'라는 질문이 두 글로 쪼개진다.",
     sharedGate:
@@ -3166,7 +3166,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-pod-states-crashloop-probes-events": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "컨테이너 하나의 시계(2초 실행·10→300초 대기)를 상태 단어 → backoff 원문 → 그 죽음을 만드는 probe → 이유를 적는 Event까지 따라가는 글이다. 상태 단어와 Event는 같은 '왜 이 단어가 붙었나'의 두 면이라 나누면 진단 순서가 끊긴다.",
     sharedGate:
@@ -3175,7 +3175,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-pvc-pv-storageclass-csi": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "20Gi RWO PVC 하나를 생성 → 바인딩 모드 → CSI 계단 → 노드 장애 뒤 6분 → reclaimPolicy까지 한 사례로 따라가는 글이다. 바인딩과 attach·mount는 같은 '디스크가 어디에 있어야 하는가' 질문의 연속 계단이라 나누면 사례를 다시 세워야 한다.",
     sharedGate:
@@ -3184,7 +3184,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-rollout-termination-pdb-drain-hpa": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "replicas 4인 Deployment 하나로 롤아웃 반올림 → Pod 종료의 두 시계 → PDB·drain → HPA를 따라가는 글이다. 네 조절기가 모두 Ready 수를 센다는 하나의 답으로 묶이므로 나누면 그 연결이 사라진다.",
     sharedGate:
@@ -3193,7 +3193,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "cloud/kubernetes-sre-slo-burn-rate-upgrades": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-17",
+    reviewedAt: "2026-10-24",
     rationale:
       "30일 99.9% SLO 서비스 하나와 10분짜리 장애 하나를 budget → burn rate → 두 창 경보 → budget 정책 → 업그레이드 skew → toil → postmortem까지 같은 숫자로 따라가는 글이다. 경보와 postmortem이 같은 budget 단위를 쓰므로 나누면 사례를 두 번 세워야 한다.",
     sharedGate:
@@ -3211,14 +3211,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-process-signals-pid1-fds": "cdd4b768e1b89852",
   "cloud/linux-disk-full-inode-deleted-files": "fac99653b93bbedd",
   "cloud/linux-systemd-boot-change-incidents": "088ff9320317ffa7",
-  "cloud/kubernetes-concept-map": "418c5e364e132a14",
-  "cloud/kubernetes-controllers-reconcile-deployment-job": "7878c9685a4d20d7",
-  "cloud/kubernetes-pod-states-crashloop-probes-events": "bb48266ea1011521",
-  "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": "0998d81418a47a6f",
-  "cloud/kubernetes-pvc-pv-storageclass-csi": "d078d6d3e61f7c15",
-  "cloud/kubernetes-requests-limits-allocatable-qos": "ce8eece01efa4702",
-  "cloud/kubernetes-rollout-termination-pdb-drain-hpa": "b78aa47a8e2c3e29",
-  "cloud/kubernetes-sre-slo-burn-rate-upgrades": "cab9658e169c7c83",
+  "cloud/kubernetes-concept-map": "647ca325dba184ab",
+  "cloud/kubernetes-controllers-reconcile-deployment-job": "885be267363a6335",
+  "cloud/kubernetes-pod-states-crashloop-probes-events": "3c844f6b77400da0",
+  "cloud/kubernetes-pod-to-node-scheduler-kubelet-notready": "ca4d366dd231b236",
+  "cloud/kubernetes-pvc-pv-storageclass-csi": "f0d98beceeb4577a",
+  "cloud/kubernetes-requests-limits-allocatable-qos": "a2ed5b1144ccb6e7",
+  "cloud/kubernetes-rollout-termination-pdb-drain-hpa": "bfa7f8d8868dc853",
+  "cloud/kubernetes-sre-slo-burn-rate-upgrades": "1b38cb68433667bb",
   "cloud/linux-containers-cgroup-namespace": "8f7a0220976541c2",
   "cloud/linux-kernel-process-syscall-scheduler": "0933ae9a2923224c",
   "cloud/linux-network-interface-route-netfilter-dns": "9fd23d0227bc70aa",
@@ -3240,23 +3240,23 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/sliding-window-kv-and-attention-sinks": "9060b918a79f3e51",
   "ai/smoothquant-activation-smoothing": "0476326172a6c719",
   "ai/tensorrt-llm-kv-cache-and-kernels": "abc60acd7452533c",
-  "gpu/nvidia-nca-aiio-study-guide": "51f24fe853757ce9",
-  "cloud/aws-clf-c02-fast-study": "2aab65df5e8a3237",
-  "cloud/aws-developer-cloudops-paths": "e6bfbfe4f62f2a14",
-  "cloud/aws-saa-c03-fast-study": "89c66e298b5afd2f",
-  "cloud/azure-ai200-fast-study": "7421834adf9882a7",
-  "cloud/azure-architect-devops-paths": "6ff1d02fcb303a51",
-  "cloud/azure-az104-fast-study": "0db8834fc31d83a4",
-  "cloud/azure-az900-fast-study": "9e81ce703b285155",
-  "cloud/cloud-certification-roadmap-2026": "7081aa1f3dc92e8e",
-  "cloud/kubernetes-network-packet-path": "8470d3308b1627b2",
-  "cloud/kubernetes-request-path-and-cka": "3bdda8a59437335c",
-  "cloud/cloud-compute-selection": "9773ac2061e9960d",
-  "cloud/cloud-foundations-responsibility-regions": "6d18e9bdeb3f7f1b",
-  "cloud/cloud-identity-access-hierarchy": "8b59dc6cceb49b76",
-  "cloud/cloud-networking-request-path": "d24ac0cedbd65fc3",
-  "cloud/cloud-reliability-observability-iac": "818905c513b0c64b",
-  "cloud/cloud-storage-database-selection": "5362636cbdb701a1",
+  "gpu/nvidia-nca-aiio-study-guide": "b58a5adcbf399c4f",
+  "cloud/aws-clf-c02-fast-study": "eda1f94deab018ff",
+  "cloud/aws-developer-cloudops-paths": "c002aa20655a1eb4",
+  "cloud/aws-saa-c03-fast-study": "d09a3895a635c2ca",
+  "cloud/azure-ai200-fast-study": "eee0f3deab18ea58",
+  "cloud/azure-architect-devops-paths": "36e687d0195a16d4",
+  "cloud/azure-az104-fast-study": "199cd4705a5a3409",
+  "cloud/azure-az900-fast-study": "80161350c843f782",
+  "cloud/cloud-certification-roadmap-2026": "f30bffd6e9facc3b",
+  "cloud/kubernetes-network-packet-path": "ec065017eb0305bb",
+  "cloud/kubernetes-request-path-and-cka": "c3e99ab97588e40c",
+  "cloud/cloud-compute-selection": "613e3d42921738b3",
+  "cloud/cloud-foundations-responsibility-regions": "ab8554359175b557",
+  "cloud/cloud-identity-access-hierarchy": "fc5d1e374c6fe0a0",
+  "cloud/cloud-networking-request-path": "900e982adfc44617",
+  "cloud/cloud-reliability-observability-iac": "78616e4d10060407",
+  "cloud/cloud-storage-database-selection": "42df47ea56c630f1",
   "philosophy-history/critical-theory-immanent-critique-ideology-and-emancipation": "e74aa6a5433b639a",
   "philosophy-history/existentialism-facticity-freedom-and-bad-faith": "9593d8790a820b54",
   "philosophy-history/german-idealism-self-consciousness-recognition-and-history": "2a1c58fc635c3b3e",
