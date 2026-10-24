@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 
 const stages = [
   { label: "현재 작업", input: "결제 migration · payment-17 실패", check: "새 session이 다음 행동을 고르는 데 필요한가?", output: "schema 수정이라는 next action과 미해결 test를 working state에 남김", note: "목표만 남기고 payment-17을 빼면 새 session은 같은 결정을 복원하지 못할 수 있습니다." },
@@ -8,32 +9,49 @@ const stages = [
 ];
 
 export default function MemoryTraceViz() {
-  const [active, setActive] = useState(0);
-  const stage = stages[active];
+  const controls = useAnimatedScenes(stages.length, 6200);
+  const stage = stages[controls.active];
   return (
-    <figure data-viz="memory-trace" className="my-8 rounded-xl border p-4 sm:p-6" aria-label="결제 migration 기록의 수명에 따른 저장과 복원 과정">
-      <figcaption className="mb-4 text-base font-semibold">payment-17 실패를 새 session이 복원하는 네 단계 · 가정 사례</figcaption>
-      <div data-viz-canvas className="sm:h-[22rem]" aria-live="polite">
-        <ol className="space-y-2 text-sm leading-6">
-          {[["현재 기록", stage.input], ["확인할 조건", stage.check], ["다음 저장·동작", stage.output]].map(([label, value], i) => (
-            <li key={label}>
-              {i > 0 && <div className="mb-2 pl-4 text-neutral-500" aria-hidden="true">↓</div>}
-              <div className="min-h-16 border-l-2 border-sky-400 pl-4"><span className="block font-semibold">{label}</span><span>{value}</span></div>
+    <figure data-viz="memory-trace" className="my-8 border-y border-border py-5 sm:py-6" aria-label="결제 migration 기록의 수명에 따른 저장과 복원 과정">
+      <figcaption className="mb-4 break-keep text-base font-semibold">payment-17 실패를 새 session이 복원하는 네 단계 · 가정 사례</figcaption>
+      <div
+        id={controls.playbackId}
+        data-viz-canvas
+        data-viz-scene="memory-resume-trace-viz"
+        data-story-index={controls.active}
+        tabIndex={0}
+        onKeyDown={controls.onKeyDown}
+        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto px-1 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-2"
+        aria-live="polite"
+      >
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(controls.active + 1).padStart(2, "0")}</p>
+          <h3 className="mt-2 break-keep text-lg font-bold leading-7">{stage.label}</h3>
+          <ol className="mt-4 space-y-2 text-sm leading-6">
+            {[["현재 기록", stage.input], ["확인할 조건", stage.check], ["다음 저장·동작", stage.output]].map(([label, value], i) => (
+              <li key={label}>
+                {i > 0 && <div className="mb-2 pl-4 text-muted-foreground" aria-hidden="true">↓</div>}
+                <div className="min-h-16 border-l border-primary/55 pl-4">
+                  <span className="block font-semibold">{label}</span>
+                  <span className="break-keep text-muted-foreground">{value}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 border-l border-primary/50 pl-3 text-xs leading-6 text-muted-foreground sm:text-sm">{stage.note}</p>
+        </div>
+        <AnimatedSceneControls labels={stages.map((item) => item.label)} {...controls} />
+        <ol className="static-reading-only mt-4 space-y-4 text-sm leading-6">
+          {stages.map((item, index) => (
+            <li key={item.label}>
+              <strong>{String(index + 1).padStart(2, "0")} · {item.label}</strong>
+              <span className="mt-1 block text-muted-foreground">현재 기록: {item.input}</span>
+              <span className="block text-muted-foreground">확인할 조건: {item.check}</span>
+              <span className="block text-muted-foreground">다음 저장·동작: {item.output}</span>
+              <span className="mt-1 block text-muted-foreground">{item.note}</span>
             </li>
           ))}
         </ol>
-        <p className="mt-4 text-sm leading-7 text-neutral-600 dark:text-neutral-400">{stage.note}</p>
-      </div>
-      <div data-viz-controls aria-label="기록 처리 단계">
-        <p data-viz-mobile-controls className="text-center text-sm font-semibold sm:hidden">{active + 1}. {stage.label}</p>
-        <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:hidden">
-          <button type="button" disabled={active === 0} onClick={() => setActive((value) => Math.max(0, value - 1))} className="min-h-11 min-w-0 rounded border px-2 text-xs disabled:opacity-35">← 이전</button>
-          <span className="whitespace-nowrap text-xs tabular-nums text-muted-foreground">{active + 1} / {stages.length}</span>
-          <button type="button" disabled={active === stages.length - 1} onClick={() => setActive((value) => Math.min(stages.length - 1, value + 1))} className="min-h-11 min-w-0 rounded border px-2 text-xs disabled:opacity-35">다음 →</button>
-        </div>
-        <div className="hidden flex-wrap gap-2 sm:flex">
-          {stages.map((item, i) => <button key={item.label} type="button" aria-pressed={active === i} onClick={() => setActive(i)} className="rounded border px-3 py-2 text-sm aria-pressed:border-sky-500 aria-pressed:bg-sky-50 dark:aria-pressed:bg-sky-950">{item.label}</button>)}
-        </div>
       </div>
     </figure>
   );

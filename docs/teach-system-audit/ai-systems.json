@@ -824,11 +824,13 @@
         "production": "checkpoint 201은 이전 content version의 운영 검증이며 현재 front Viz 개선본은 checkpoint 207 배포 예정",
         "frontViz": "도입 사례 직후 핵심 Viz 배치와 사례 수치 일치; 390/1440 12회 공동 browser 검사 0 failed: /tmp/teach-all/browser-ai-six-196/summary.json",
         "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0"
+        "build": "Vite 9.26s·정적 public route 1,679개+404 actual exit0",
+        "batch35Browser": "Context state 부모 지도·첫 시각화·명시적 재생·키보드·reduced-motion·JavaScript 비활성·overflow0 통과: output/playwright/ai-context-state-path-batch-35/summary.json",
+        "batch35Build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 197편 exit0"
       },
-      "remaining": ["checkpoint 207 배포·production 검증"],
-      "reviewDate": "2026-10-05",
-      "reviewMode": "targeted-entry-and-toc-rewrite-after-full-body-review",
+      "remaining": ["Batch 35 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "context-state-path-map-and-memory-resume-transition-review",
       "bodyFiles": [
         "src/pages/articles/ai/agent-memory-lifecycle/ModernArticle.tsx",
         "src/pages/articles/ai/agent-memory-lifecycle/MemoryTraceViz.tsx"
@@ -3894,7 +3896,7 @@
       "route": "ai/context-engineering",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-engineering.tsx",
       "publicPath": "cs/ai/context-engineering",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -3942,11 +3944,13 @@
         "build": "PASS Vite 9.62s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, Viz clipped0·unreachable0",
         "production": "GitHub Pages run 37346824304 success @ d2b6cd98f9ef87e14dab7661903adff64d7b8ea5; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-231-production/summary.json",
-        "semanticReview": "연차 정책 v6/v7 후보에서 caller ACL·freshness를 통과한 v7 §4만 선택해 message로 직렬화했습니다. 저장과 context, 큰 window와 relevant/authorized context, model 추측과 selector 책임을 분리했습니다. 모바일 SVG aspect와 control row를 고정해 자동 장면 전환의 레이아웃 이동을 줄였습니다."
+        "semanticReview": "연차 정책 v6/v7 후보에서 caller ACL·freshness를 통과한 v7 §4만 선택해 message로 직렬화했습니다. 저장과 context, 큰 window와 relevant/authorized context, model 추측과 selector 책임을 분리했습니다. 모바일 SVG aspect와 control row를 고정해 자동 장면 전환의 레이아웃 이동을 줄였습니다.",
+        "batch35Browser": "Context state 부모 지도·첫 시각화·명시적 재생·키보드·reduced-motion·JavaScript 비활성·overflow0 통과: output/playwright/ai-context-state-path-batch-35/summary.json",
+        "batch35Build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 197편 exit0"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "remaining": ["Batch 35 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "context-state-path-map-and-selection-transition-review",
       "bodyFiles": [
         "src/pages/articles/ai/context-engineering/FoundationArticle.tsx",
         "src/pages/articles/ai/context-engineering/viz/ModernContextEngineeringViz.tsx"
@@ -4018,9 +4022,18 @@
         "browser1440": true,
         "learning": "strict require-registration 10편 통과",
         "formula": "strict require-explicit 통과",
-        "typescript": "루트 tsc --noEmit만으로 완료를 판정하지 않음. 실제 앱 -p tsconfig.app.json 검증 진행 중"
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "batch35Browser": "Context state 부모 지도·첫 시각화·명시적 재생·키보드·reduced-motion·JavaScript 비활성·overflow0 통과: output/playwright/ai-context-state-path-batch-35/summary.json",
+        "batch35Build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 197편 exit0"
       },
-      "remaining": ["root 통합 검토·전역 build·배포 검증"],
+      "remaining": ["Batch 35 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "context-state-path-map-and-runtime-authority-transition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/context-instruction-boundaries/ModernArticle.tsx",
+        "src/pages/articles/ai/context-engineering/viz/ModernContextEngineeringViz.tsx",
+        "src/pages/articles/ai/shared/ContextStatePathLocator.tsx"
+      ],
       "actualBodyFile": "src/pages/articles/ai/context-instruction-boundaries/ModernArticle.tsx",
       "contentHash": "0f64da9af96cae8bf19ba5b833e126f2c821e65c60e573f2deac531c5397d2d7",
       "preserved": [
@@ -4038,7 +4051,7 @@
       "route": "ai/context-provenance-freshness",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-provenance-freshness.tsx",
       "publicPath": "cs/ai/context-provenance-freshness",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4083,11 +4096,13 @@
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
         "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
-        "semanticReview": "2026-08-15 질의에서 similarity .92인 stale v6를 제외하고 validity·ACL·canonical revision을 통과한 v7을 고르는 과정을 추적했습니다. Provenance 완전성과 내용의 진실성도 분리했습니다."
+        "semanticReview": "2026-08-15 질의에서 similarity .92인 stale v6를 제외하고 validity·ACL·canonical revision을 통과한 v7을 고르는 과정을 추적했습니다. Provenance 완전성과 내용의 진실성도 분리했습니다.",
+        "batch35Browser": "Context state 부모 지도·첫 시각화·명시적 재생·키보드·reduced-motion·JavaScript 비활성·overflow0 통과: output/playwright/ai-context-state-path-batch-35/summary.json",
+        "batch35Build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 197편 exit0"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "remaining": ["Batch 35 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "context-state-path-map-and-provenance-selection-review",
       "bodyFiles": [
         "src/pages/articles/ai/context-provenance-freshness/ModernArticle.tsx",
         "src/pages/articles/ai/context-engineering/viz/ModernContextEngineeringViz.tsx"
@@ -4105,7 +4120,7 @@
       "route": "ai/context-window-optimization",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/context-window-optimization.tsx",
       "publicPath": "cs/ai/context-window-optimization",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -4164,11 +4179,13 @@
         "build": "PASS Vite 9.25s·7,105 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
         "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
         "production": "GitHub Pages run 37352057357 success @ d609f9223356e24aff78676e91ac50e8dbe9a764; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-237-production/summary.json",
-        "semanticReview": "128k 한도에서 sys8k+task4k+retrieval40k+history30k+tool20k+output16k=118k를 계산했습니다. 10k 여유와 evidence utilization, prefix cache hit, freshness·ACL을 서로 다른 검사로 유지했습니다."
+        "semanticReview": "128k 한도에서 sys8k+task4k+retrieval40k+history30k+tool20k+output16k=118k를 계산했습니다. 10k 여유와 evidence utilization, prefix cache hit, freshness·ACL을 서로 다른 검사로 유지했습니다.",
+        "batch35Browser": "Context state 부모 지도·첫 시각화·명시적 재생·키보드·reduced-motion·JavaScript 비활성·overflow0 통과: output/playwright/ai-context-state-path-batch-35/summary.json",
+        "batch35Build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 197편 exit0"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "remaining": ["Batch 35 공개 배포 경로 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "context-state-path-map-and-token-budget-review",
       "bodyFiles": [
         "src/pages/articles/ai/context-window-optimization/ModernArticle.tsx",
         "src/pages/articles/ai/context-window-optimization/viz/LostInMiddleViz.tsx",
@@ -8127,7 +8144,7 @@
       "route": "ai/llm-application-caching",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-application-caching.tsx",
       "publicPath": "cs/ai/llm-application-caching",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8181,7 +8198,6 @@
         "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "Batch 31 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "llm-request-operations-map-and-cache-lookup-state-transition-review",
@@ -8345,7 +8361,7 @@
       "route": "ai/llm-gateway-and-model-routing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-gateway-and-model-routing.tsx",
       "publicPath": "cs/ai/llm-gateway-and-model-routing",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8391,7 +8407,6 @@
         "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "Batch 31 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "llm-request-operations-map-and-model-routing-state-transition-review",
@@ -8520,7 +8535,7 @@
       "route": "ai/llm-monitoring-observability-and-drift",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-monitoring-observability-and-drift.tsx",
       "publicPath": "cs/ai/llm-monitoring-observability-and-drift",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8585,7 +8600,6 @@
         "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "Batch 31 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "llm-request-operations-map-and-trace-latency-state-transition-review",
@@ -10297,7 +10311,7 @@
       "route": "ai/prompt-engineering",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-engineering.tsx",
       "publicPath": "cs/ai/prompt-engineering",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10342,7 +10356,6 @@
         "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "Batch 32 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "prompt-request-contract-map-and-regression-state-transition-review",
@@ -10364,7 +10377,7 @@
       "route": "ai/prompt-few-shot",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-few-shot.tsx",
       "publicPath": "cs/ai/prompt-few-shot",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10411,7 +10424,6 @@
         "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "Batch 32 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "prompt-request-map-and-few-shot-context-state-transition-review",
@@ -10457,7 +10469,7 @@
       "route": "ai/prompt-reasoning",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-reasoning.tsx",
       "publicPath": "cs/ai/prompt-reasoning",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10508,7 +10520,6 @@
         "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "Batch 32 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "prompt-request-map-and-reasoning-answer-verifier-boundary-review",
@@ -10529,7 +10540,7 @@
       "route": "ai/prompt-structured-output",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prompt-structured-output.tsx",
       "publicPath": "cs/ai/prompt-structured-output",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10577,7 +10588,6 @@
         "build": "Vite 7.3.1·7,917 modules·정적 public route 2,086개+404·no-script 본문 188편 exit0"
       },
       "remaining": [
-        "Batch 32 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "prompt-request-map-and-structured-output-validation-ladder-review",
@@ -10927,7 +10937,7 @@
       "route": "ai/rate-limiting-and-reliability-patterns",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rate-limiting-and-reliability-patterns.tsx",
       "publicPath": "cs/ai/rate-limiting-and-reliability-patterns",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -10993,7 +11003,6 @@
         "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 184편 exit0"
       },
       "remaining": [
-        "Batch 31 공개 배포 경로 확인"
       ],
       "reviewDate": "2026-10-25",
       "reviewMode": "llm-request-operations-map-and-circuit-breaker-state-transition-review",
@@ -13696,8 +13705,8 @@
   ],
   "counts": {
     "rewritten-local-verified": 67,
-    "rewritten-production-verified": 81,
-    "unreviewed": 38
+    "rewritten-production-verified": 91,
+    "unreviewed": 28
   },
   "localValidationSummary": {
     "rewritten": 117,
@@ -13741,6 +13750,9 @@
     "checkpoint255Browser": "/tmp/teach-all/browser-ai-six-255/summary.json",
     "checkpoint255Dist": "/tmp/teach-all/browser-ai-six-255-dist/summary.json",
     "checkpoint255Production": "docs/teach-system-audit/checkpoint-255-production.json",
-    "checkpoint395Production": "docs/teach-system-audit/checkpoint-395.json"
+    "checkpoint395Production": "docs/teach-system-audit/checkpoint-395.json",
+    "batch31Production": "GitHub Pages run 40140695979 success; output/playwright/ai-llm-operations-path-batch-31-public/summary.json",
+    "batch32Production": "GitHub Pages run 40140695979 success; output/playwright/ai-prompt-request-path-batch-32-public/summary.json",
+    "batch35Browser": "output/playwright/ai-context-state-path-batch-35/summary.json"
   }
 }

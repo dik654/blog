@@ -37,27 +37,26 @@ function SceneFrame({
   notes: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3000);
+  const controls = useAnimatedScenes(labels.length, 6200);
   return (
-    <VizFrame title={title} description={description} className="my-8">
+    <VizFrame eyebrow={eyebrow} title={title} description={description} className="my-8">
       <div
         id={id}
-        data-viz
+        data-viz-canvas
+        data-viz-scene={id}
+        data-story-index={controls.active}
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto border-y border-border/70 bg-background px-4 py-5 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
-          {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">{labels[controls.active]}</h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
+          <p className="text-[11px] font-black text-primary">장면 {String(controls.active + 1).padStart(2, "0")}</p>
+          <h3 className="mt-2 text-lg font-bold leading-7">{labels[controls.active]}</h3>
+          <div className="mt-4 min-w-0 overflow-hidden">{children(controls.active)}</div>
+          <p className="mt-3 border-l border-primary/50 pl-3 text-[11px] leading-5 text-muted-foreground sm:mt-4 sm:text-sm sm:leading-6">{notes[controls.active]}</p>
         </div>
-        <p className="mt-4 min-h-[6.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[4.5rem]">
-          {notes[controls.active]}
-        </p>
         <AnimatedSceneControls labels={[...labels]} {...controls} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">{labels.map((label, index) => <li key={label}><strong>{String(index + 1).padStart(2, "0")} · {label}</strong><span className="mt-1 block text-muted-foreground">{notes[index]}</span></li>)}</ol>
       </div>
     </VizFrame>
   );

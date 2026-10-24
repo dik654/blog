@@ -6,11 +6,14 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import { ContextWindowViz } from "../context-engineering/viz/ModernContextEngineeringViz";
 import LostInMiddleViz from "./viz/LostInMiddleViz";
+import { ContextStatePathLocator, ContextStatePathMapReturn } from "../shared/ContextStatePathLocator";
 
 export default function ContextWindowOptimizationArticle() {
   return <div className="space-y-16">
+    <ContextStatePathLocator current="window" />
     <section id="overview" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">긴 context의 capacity·utilization·prefill reuse는 다른 문제입니다</h2>
+      <ContextWindowViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           128k request를 구성한다고 합시다. System 8k, task 4k, retrieval 40k, history 30k,
@@ -29,7 +32,6 @@ export default function ContextWindowOptimizationArticle() {
           서로 다른 검사입니다. 압축 뒤에는 필수 evidence checklist도 다시 통과시켜야 합니다.
         </p>
       </div>
-      <ContextWindowViz />
       <ContentBoundary article="context-window-optimization" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Window에 token이 들어간다고 model이 그 evidence를 안정적으로 사용하는 것은 아닙니다. 같은 prefix 계산을 cache했다고 내용이 최신이 되는 것도 아닙니다. 먼저 output reserve를 포함한 token 장부를 맞추고 position·distractor 평가로 utilization을 측정하고 마지막으로 stable prefix 계산을 재사용합니다.</p>
@@ -50,5 +52,6 @@ export default function ContextWindowOptimizationArticle() {
             NaturalQuestions에서 token을 4배 줄이면서 GPT-3.5-Turbo 성능을 최대 21.4% 끌어올렸고 LooGLE에서는 비용을 94.0% 줄였습니다. 두 수치
             모두 저자 자기보고입니다.
           </p></div><TermBreakdown title="압축 두 계층과 caching과의 차이" items={[{term:"Context compression",description:"검색 결과·대화 기록처럼 부피가 큰 원문을 요약·추출로 줄여 token budget 안에 맞추는 일반 기법입니다.",boundary:"압축은 정보 손실 위험을 동반하므로 압축 뒤에도 필요한 답이 남는지 별도로 검증해야 합니다."},{term:"Prompt compression",description:"작은 model의 perplexity·중요도 신호로 원문 안의 저정보 token을 지워 의미를 최대한 보존하며 길이를 줄이는 token 단위 방법입니다.",example:"LLMLingua는 budget controller와 반복적 token 삭제로 최대 20배 압축을 보고했습니다."},{term:"압축과 caching의 차이",description:"압축은 내용을 바꿔 다시 계산해야 하지만, prefix cache는 내용을 바꾸지 않고 계산만 재사용합니다.",boundary:"압축한 prefix는 매 요청마다 내용이 달라 stable-prefix cache 대상이 아닙니다."}]}/><AlgorithmBlock title="Context compression pipeline" input={["원본 context item 목록(source, token 수, priority)","목표 token budget B","필수 evidence checklist"]} steps={[{code:"for item in items: rank[item] = utility(item, task)",note:"Task 관련성과 priority로 항목별 utility를 매깁니다."},{code:"if total_tokens(items) <= B: return items",note:"이미 budget 안이면 압축 없이 통과합니다."},{code:"for item in low_utility_items: item = extract_or_summarize(item)",note:"긴 evidence·history부터 추출·요약으로 줄입니다 — context compression."},{code:"prompt_text = compress_tokens(prompt_text, target_ratio)",note:"남은 지시문·질문 자체는 token 단위로 압축합니다 — prompt compression."},{code:"assert checklist ⊆ surviving_spans else restore_or_reject()",note:"필수 evidence가 빠졌으면 복원하거나 request를 거부합니다."}]} output="Budget 이하로 줄었고 checklist가 보존된 context"/><div className="prose prose-neutral max-w-none dark:prose-invert"><p>대화 기록을 줄인 뒤 무엇을 반드시 남겨야 하는지는 <Link to="/cs/ai/agent-memory-lifecycle#compaction">Agent memory lifecycle의 compaction fidelity</Link>가 정본입니다. 이 절은 압축이라는 선택지 자체와 token compression 기법만 다룹니다.</p></div><div id="paper-llmlingua" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={2} source="LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models" href="https://arxiv.org/abs/2310.05736">작은 language model의 perplexity 신호로 저정보 token을 반복적으로 제거하는 budget controller와 token-level 압축 알고리즘을 제안합니다. GSM8K·BBH 등 저자 데이터셋에서 최대 20배 압축을 보고했으며, 다른 model·domain에서 같은 배수를 보장하지 않습니다.</CitationBlock></div><div id="paper-longllmlingua" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={3} source="LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression" href="https://arxiv.org/abs/2310.06839">질문 인지 압축과 조각 재배치로 긴 context의 비용·성능·위치 편향을 함께 다룹니다. NaturalQuestions에서 token 4배 감소로 GPT-3.5-Turbo 성능을 최대 21.4% 끌어올렸다는 수치는 저자 자기보고이며, 모든 model·workload에 같은 폭으로 재현된다는 뜻은 아닙니다.</CitationBlock></div></section>
+    <ContextStatePathMapReturn current="window" />
   </div>;
 }
