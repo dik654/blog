@@ -3,11 +3,17 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { EarlyStoppingMechanismViz } from "../regularization-practice/viz/ModernRegularizationViz";
+import {
+  RegularizationFamilyLocator,
+  RegularizationFamilyMapReturn,
+} from "../shared/RegularizationFamilyLocator";
 
 export default function EarlyStoppingArticle() {
   return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20">
+    <RegularizationFamilyLocator current="early-stopping" />
+    <section id="overview" data-teach-level="big-picture" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Early stopping은 학습법이 아니라 trajectory에서 checkpoint를 고르는 상태 기계입니다</h2>
+      <EarlyStoppingMechanismViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           다섯 번의 validation loss가 .42, .38, .39, .40, .41이라고 합시다.
@@ -27,7 +33,6 @@ export default function EarlyStoppingArticle() {
           선택은 서로 다른 상태 전이입니다.
         </p>
       </div>
-      <EarlyStoppingMechanismViz />
       <ContentBoundary article="early-stopping" />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
         Validation event, best metric, minimum improvement, bad-event counter,
@@ -41,7 +46,7 @@ export default function EarlyStoppingArticle() {
         { term: "Patience P", description: "Stop 전에 허용하는 bad event 수입니다.", example: "P=2이고 c=3이면 stop합니다.", boundary: "Update 수가 아니라 evaluation 횟수입니다." },
       ]} />
     </section>
-    <section id="state-machine" className="scroll-mt-20">
+    <section id="state-machine" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Metric을 비교해 best 또는 bad counter 하나만 갱신합니다</h2>
       <ExplainedFormula question="각 validation event에서 state는 어떻게 바뀌나요?" idea={<p>
             loss 최소화 기준에서는 새 metric이 best에서 δ보다 더 내려가야 개선입니다. 개선이면 best를 저장하고 counter를 0으로 돌립니다. 아니면 counter만
@@ -55,7 +60,7 @@ export default function EarlyStoppingArticle() {
         { symbol: "c_j", name: "Bad-event counter", description: "연속 비개선 evaluation 횟수입니다." },
       ]} assumptions={["Loss를 minimize하는 방향입니다.", "Evaluation cadence와 metric definition이 고정됩니다."]} interpretation=".42,.38,.39,.40,.41에서 δ=0이면 eval2가 best이고 이후 counter가 1,2,3으로 증가합니다." />
     </section>
-    <section id="stop-and-restore" className="scroll-mt-20">
+    <section id="stop-and-restore" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Stop event는 last를 버리고 best artifact를 복원하라는 신호입니다</h2>
       <ExplainedFormula question="언제 멈추고 어느 checkpoint를 반환할까요?" idea={<p>
             counter가 patience를 초과하면 현재 update를 더 진행하지 않습니다. 반환 index는 metric이 가장 좋았던 evaluation을 가리킵니다. stop
@@ -69,7 +74,7 @@ export default function EarlyStoppingArticle() {
         { symbol: "θreturn", name: "Returned parameters", description: "새 process에서도 복원 가능한 best model state입니다." },
       ]} assumptions={["Best event마다 durable snapshot을 저장합니다.", "Metric direction과 tie rule이 고정됩니다."]} interpretation="P=2이면 eval5에서 c=3으로 stop하지만 eval2 checkpoint를 반환합니다." />
     </section>
-    <section id="artifact" className="scroll-mt-20">
+    <section id="artifact" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Best artifact에는 model만 아니라 재현에 필요한 state를 묶습니다</h2>
       <TermBreakdown title="복원 receipt" items={[
         { term: "Model state", description: "선택된 evaluation의 immutable parameter snapshot입니다." },
@@ -79,5 +84,6 @@ export default function EarlyStoppingArticle() {
       ]} />
       <div id="paper-early-stopping" className="not-prose mt-8 scroll-mt-24"><CitationBlock source="Prechelt — Early Stopping — but when?" citeKey={1} type="paper" href="https://pubmed.ncbi.nlm.nih.gov/12662814/">여러 stopping criterion의 generalization과 training-time trade-off를 비교합니다. 특정 patience 값이 현대 모델의 보편 default라는 뜻은 아닙니다.</CitationBlock></div>
     </section>
+    <RegularizationFamilyMapReturn current="early-stopping" />
   </div>;
 }

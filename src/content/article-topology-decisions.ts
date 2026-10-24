@@ -110,6 +110,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/cosine-restart-scheduling": KEEP("Cycle-local progress 계산에서 warm restart state와 동일 budget 비교까지 하나의 cosine schedule 검증입니다."),
   "ai/one-cycle-scheduling": KEEP("Range test로 후보를 만들고 별도 실제 run의 rise·decay budget과 rollback gate까지 연결하는 한 실행 정책입니다."),
   "ai/warmup-scheduling": KEEP("Warmup과 main schedule의 길이·local cursor·경계값을 맞추고 실제 update magnitude로 확인하는 한 composition 계약입니다."),
+  "ai/regularization-practice": KEEP("관측한 train–validation gap에서 대체 원인을 배제하고 한 regularization 축의 paired ablation까지 이어지는 하나의 진단 절차입니다."),
+  "ai/dropout-regularization": KEEP("한 activation의 Bernoulli mask·inverted scaling·추가 분산·train/eval mode를 같은 확률 연산으로 추적합니다."),
+  "ai/weight-decay": KEEP("Plain SGD 등가에서 AdamW의 분리된 shrink와 parameter-group coverage까지 하나의 parameter update 경계입니다."),
+  "ai/early-stopping": KEEP("Validation event별 best·bad counter 갱신에서 stop event와 반환 artifact를 구분하는 하나의 상태 기계입니다."),
+  "ai/label-smoothing": KEEP("One-hot과 uniform 질량의 결합에서 soft-target loss와 다른 target regularizer 조합까지 하나의 probability 재분배 과정입니다."),
   "ai/transformer-architecture": KEEP("Token input→visibility→block→output policy→scaling이 Transformer의 단일 기준 구조를 형성합니다. 2026-08-29 보강으로 concept가 14개로 늘었지만 decoder-only 정의·width/depth·attention logit/matrix·head dim·FFN·residual stream·RMSNorm이 모두 같은 block 구조의 facet이며, causal mask는 attention-visibility, sequence mixer 대안은 linear-attention-and-state-space-models로 이미 분리돼 있습니다."),
   "ai/tokenizer": KEEP("BPE→Unigram→byte-level tokenization에서 token id·embedding matrix lookup까지 텍스트를 모델 입력으로 바꾸는 하나의 전처리 arc입니다."),
   "ai/vae": KEEP("Latent model→pathwise gradient→ELBO→collapse diagnosis→variant 경계가 하나의 VAE 학습 arc입니다."),
@@ -3219,6 +3224,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/regularization-practice": "70bd499ad13bf51a",
+  "ai/dropout-regularization": "6719495808ed42e2",
+  "ai/weight-decay": "0f13f76d0c655fae",
+  "ai/early-stopping": "4c24da0ef878a0e0",
+  "ai/label-smoothing": "cea8427f1735834a",
   "cloud/linux-memory-page-cache-oom": "e68c5f01f2beecf2",
   "cloud/linux-tcp-time-wait-ports-backlog": "6985b5da12ab138a",
   "cloud/linux-process-signals-pid1-fds": "cdd4b768e1b89852",

@@ -23,47 +23,185 @@ function ConceptViz({
   description: string;
   scenes: readonly Scene[];
 }) {
-  const controls = useAnimatedScenes(scenes.length, 2600);
+  const controls = useAnimatedScenes(scenes.length, 6200);
   const scene = scenes[controls.active];
   return (
     <VizFrame title={title} description={description} className="my-8">
       <div
-        id={id}
+        id={controls.playbackId}
         data-viz
+        data-viz-scene={id}
+        data-story-index={controls.active}
         data-viz-canvas
+        role="group"
+        aria-label={`${title} 애니메이션`}
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
         className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">{eyebrow} · {String(controls.active + 1).padStart(2, "0")}</p>
-        <h3 className="mt-2 min-h-[7.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">{scene.title}</h3>
-        <svg viewBox="0 0 360 230" role="img" aria-label={`${scene.label}: ${scene.title}`} className="mx-auto mt-5 block h-auto w-full max-w-[560px] overflow-visible">
-          <defs>
-            <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 Z" fill="currentColor" className="text-muted-foreground" />
-            </marker>
-          </defs>
-          {scene.nodes.slice(0, -1).map((_, index) => {
-            const x1 = 45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
-            const x2 = 45 + (index + 1) * (270 / Math.max(scene.nodes.length - 1, 1));
-            return <motion.line key={index} x1={x1 + 37} y1="104" x2={x2 - 37} y2="104" stroke="currentColor" className="text-muted-foreground" strokeWidth="1.25" markerEnd={`url(#${id}-arrow)`} initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }} transition={{ duration: .45, delay: index * .12 }} />;
-          })}
-          {scene.nodes.map((node, index) => {
-            const x = 45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
-            return <motion.g key={`${scene.label}-${node.label}-${index}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, delay: index * .12 }}>
-              {node.shape === "circle" ? <circle cx={x} cy="104" r="32" fill="var(--background)" stroke="var(--primary)" strokeWidth="1.25" /> : node.shape === "bar" ? <><rect x={x - 36} y="64" width="72" height="80" rx="9" fill="var(--muted)" fillOpacity=".35" stroke="var(--border)" strokeWidth="1.25" /><rect x={x - 24} y={128 - index * 10} width="48" height={12 + index * 10} fill="var(--primary)" fillOpacity=".22" /></> : <rect x={x - 36} y="70" width="72" height="68" rx="10" fill="var(--background)" stroke="var(--primary)" strokeWidth="1.25" />}
-              <text x={x} y="100" textAnchor="middle" fill="currentColor" className="fill-foreground text-[9px] font-bold">{node.label}</text>
-              <text x={x} y="116" textAnchor="middle" fill="currentColor" className="fill-muted-foreground text-[7px]">{node.sub}</text>
-            </motion.g>;
-          })}
-          <motion.path d="M45 184 H315" stroke="var(--border)" strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} />
-          {scene.nodes.map((node, index) => {
-            const x = 45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
-            return <circle key={`${node.label}-${index}`} cx={x} cy="184" r={index <= controls.active ? 5 : 3} fill={index <= controls.active ? "var(--primary)" : "var(--muted-foreground)"} />;
-          })}
-        </svg>
-        <p className="mt-2 min-h-[8.75rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">{scene.note}</p>
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black tracking-[0.12em] text-primary">
+            {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 min-h-[4rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">
+            {scene.title}
+          </h3>
+          <svg
+            viewBox="0 0 360 230"
+            role="img"
+            aria-label={`${scene.label}: ${scene.title}`}
+            className="mx-auto mt-4 block h-auto w-full max-w-[560px] overflow-visible"
+          >
+            <defs>
+              <marker
+                id={`${id}-arrow`}
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="4"
+                orient="auto"
+              >
+                <path
+                  d="M0,0 L8,4 L0,8 Z"
+                  fill="currentColor"
+                  className="text-muted-foreground"
+                />
+              </marker>
+            </defs>
+            {scene.nodes.slice(0, -1).map((_, index) => {
+              const x1 =
+                45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
+              const x2 =
+                45 + (index + 1) * (270 / Math.max(scene.nodes.length - 1, 1));
+              return (
+                <motion.line
+                  key={index}
+                  x1={x1 + 37}
+                  y1="104"
+                  x2={x2 - 37}
+                  y2="104"
+                  stroke="currentColor"
+                  className="text-muted-foreground"
+                  strokeWidth="1.25"
+                  markerEnd={`url(#${id}-arrow)`}
+                  initial={false}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                />
+              );
+            })}
+            {scene.nodes.map((node, index) => {
+              const x =
+                45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
+              return (
+                <motion.g
+                  key={`${scene.label}-${node.label}-${index}`}
+                  initial={false}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  {node.shape === "circle" ? (
+                    <circle
+                      cx={x}
+                      cy="104"
+                      r="32"
+                      fill="var(--background)"
+                      stroke="var(--primary)"
+                      strokeWidth="1.25"
+                    />
+                  ) : node.shape === "bar" ? (
+                    <>
+                      <rect
+                        x={x - 36}
+                        y="64"
+                        width="72"
+                        height="80"
+                        rx="9"
+                        fill="var(--muted)"
+                        fillOpacity=".35"
+                        stroke="var(--border)"
+                        strokeWidth="1.25"
+                      />
+                      <rect
+                        x={x - 24}
+                        y={128 - index * 10}
+                        width="48"
+                        height={12 + index * 10}
+                        fill="var(--primary)"
+                        fillOpacity=".22"
+                      />
+                    </>
+                  ) : (
+                    <rect
+                      x={x - 36}
+                      y="70"
+                      width="72"
+                      height="68"
+                      rx="10"
+                      fill="var(--background)"
+                      stroke="var(--primary)"
+                      strokeWidth="1.25"
+                    />
+                  )}
+                  <text
+                    x={x}
+                    y="100"
+                    textAnchor="middle"
+                    className="fill-foreground text-[12px] font-bold sm:text-[9px]"
+                  >
+                    {node.label}
+                  </text>
+                  <text
+                    x={x}
+                    y="116"
+                    textAnchor="middle"
+                    className="fill-muted-foreground text-[10px] sm:text-[7px]"
+                  >
+                    {node.sub}
+                  </text>
+                </motion.g>
+              );
+            })}
+            <motion.path
+              d="M45 184 H315"
+              stroke="var(--border)"
+              strokeWidth="1"
+              initial={false}
+              animate={{ pathLength: 1 }}
+            />
+            {scene.nodes.map((node, index) => {
+              const x =
+                45 + index * (270 / Math.max(scene.nodes.length - 1, 1));
+              return (
+                <circle
+                  key={`${node.label}-${index}`}
+                  cx={x}
+                  cy="184"
+                  r={index <= controls.active ? 5 : 3}
+                  fill={
+                    index <= controls.active
+                      ? "var(--primary)"
+                      : "var(--muted-foreground)"
+                  }
+                />
+              );
+            })}
+          </svg>
+          <p className="mt-2 min-h-[5.5rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">
+            {scene.note}
+          </p>
+        </div>
         <AnimatedSceneControls labels={scenes.map((item) => item.label)} {...controls} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {scenes.map((item, index) => (
+            <li key={item.label}>
+              <strong>
+                {String(index + 1).padStart(2, "0")} · {item.label} — {item.title}
+              </strong>
+              <span className="mt-1 block text-muted-foreground">
+                {item.note}
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

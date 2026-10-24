@@ -3,11 +3,17 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { LabelSmoothingMechanismViz } from "../regularization-practice/viz/ModernRegularizationViz";
+import {
+  RegularizationFamilyLocator,
+  RegularizationFamilyMapReturn,
+} from "../shared/RegularizationFamilyLocator";
 
 export default function LabelSmoothingArticle() {
   return <div id="overview" className="space-y-16">
-    <section id="problem" className="scroll-mt-20">
+    <RegularizationFamilyLocator current="label-smoothing" />
+    <section id="problem" data-teach-level="big-picture" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">정답 확률 1을 0.925로 낮추고 나머지 세 class에 0.025씩 나눕니다</h2>
+      <LabelSmoothingMechanismViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Class가 4개이고 두 번째 class가 정답인 한 sample을 봅니다. One-hot target은
@@ -26,7 +32,6 @@ export default function LabelSmoothingArticle() {
           (0.025, 0.925, 0.025, 0.025)가 됩니다.
         </p>
       </div>
-      <LabelSmoothingMechanismViz />
       <ContentBoundary article="label-smoothing" />
       <TermBreakdown title="Target을 이루는 네 용어" items={[
         { term: "Class count K", description: "Model logit과 target probability가 가지는 class 축의 길이입니다.", example: "K=4입니다." },
@@ -35,7 +40,7 @@ export default function LabelSmoothingArticle() {
         { term: "Smoothing strength ε", description: "One-hot 질량 중 uniform prior로 옮길 비율입니다.", example: "ε=.1이면 hard target 90%, uniform 10%입니다." },
       ]} />
     </section>
-    <section id="target" className="scroll-mt-20">
+    <section id="target" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Class별로 두 distribution의 질량을 더합니다</h2>
       <ExplainedFormula question="왜 target class는 .925이고 나머지는 .025가 될까요?" idea={<p>One-hot을 (1−ε)만큼 남기고 uniform distribution을 ε만큼 더합니다. Uniform의 1/K가 모든 class에 들어가므로 target class도 ε/K를 함께 받습니다.</p>} formula={String.raw`\widetilde y=(1-\epsilon)y+\epsilon\mathbf1/K`} annotatedFormula={String.raw`\begin{aligned}u_k&=\underbrace{1/K}_{\text{class별 균등 몫}}\\y_{\mathrm{hard},k}&=\underbrace{(1-\epsilon)y_k}_{\text{원래 정답을 유지}}\\y_{\mathrm{uniform},k}&=\underbrace{\epsilon u_k}_{\text{균등 몫을 추가}}\\\widetilde y_k&=\underbrace{y_{\mathrm{hard},k}+y_{\mathrm{uniform},k}}_{\text{두 질량을 class별 결합}}\end{aligned}`} operations={[
         { expression: String.raw`(1-\epsilon)y_k`, annotation: ["원래 target distribution에서", "hard-target 비율을 보존"] },
@@ -47,7 +52,7 @@ export default function LabelSmoothingArticle() {
         { symbol: "ỹ", name: "Smoothed target", description: "합이 1인 최종 class probability vector입니다." },
       ]} assumptions={["Uniform label smoothing 정의입니다.", "0≤ε<1이고 y의 합이 1입니다."]} interpretation="K=4,ε=.1이면 target class는 .9+.025=.925, 나머지는 각각 .025이고 합은 1입니다." />
     </section>
-    <section id="loss" className="scroll-mt-20">
+    <section id="loss" data-teach-level="mechanism" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Cross-entropy는 모든 class의 target 질량으로 log probability를 가중합니다</h2>
       <ExplainedFormula question="Soft target은 loss에서 어떻게 사용되나요?" idea={<p>
             Model logit을 softmax probability로 바꾸고 각 class의 log probability에 smoothed target 질량을 곱해 더합니다.
@@ -60,7 +65,7 @@ export default function LabelSmoothingArticle() {
         { symbol: "L", name: "Soft-target cross-entropy", description: "Smoothed target과 model distribution의 mismatch입니다." },
       ]} assumptions={["Target probability의 합이 1이고 음수가 없습니다.", "Ignore index·class weight·reduction은 별도 API 계약입니다."]} interpretation="Off-target class에도 작은 gradient가 생깁니다. 이것이 calibration 개선을 자동 보장하지는 않습니다." />
     </section>
-    <section id="composition" className="scroll-mt-20">
+    <section id="composition" data-teach-level="failure" className="scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">Mixup과 함께 쓰면 이름이 아니라 최종 target을 계산합니다</h2>
       <ExplainedFormula question="Mixup 뒤 smoothing을 적용하면 probability mass는 어디로 가나요?" idea={<p>
             두 one-hot target을 λ로 섞고 그 결과 전체를 다시 (1−ε)만큼 유지한 뒤 uniform ε/K를 더합니다.
@@ -74,5 +79,6 @@ export default function LabelSmoothingArticle() {
       ]} assumptions={["Mixup 뒤 label smoothing을 적용하는 순서입니다.", "Framework 구현과 class weighting 순서를 확인합니다."]} interpretation="K=4,λ=.7,ε=.1이고 c1/c2를 섞으면 (.655,.295,.025,.025)입니다. Entropy와 class slice를 단독·조합 ablation으로 비교합니다." />
       <div id="paper-label-smoothing" className="not-prose mt-8 scroll-mt-24"><CitationBlock source="Szegedy et al. — Rethinking the Inception Architecture" citeKey={1} type="paper" href="https://arxiv.org/abs/1512.00567">ImageNet classification recipe에서 uniform label smoothing을 제시합니다. 모든 class imbalance·distillation·calibration 문제를 해결한다는 근거는 아닙니다.</CitationBlock></div>
     </section>
+    <RegularizationFamilyMapReturn current="label-smoothing" />
   </div>;
 }
