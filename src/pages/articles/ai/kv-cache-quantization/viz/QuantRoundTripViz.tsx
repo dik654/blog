@@ -38,7 +38,7 @@ const NOTES = [
 const COLS = ["x", "x ÷ s", "FP8 저장", "× s", "오차"] as const;
 
 export default function QuantRoundTripViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   const rows = scene === 4 ? [...SHARED.slice(0, 3), OWN_SCALE] : SHARED;
   const visibleCols = scene === 4 ? 5 : scene + 2;
@@ -53,6 +53,7 @@ export default function QuantRoundTripViz() {
       note="scale 0.02는 vLLM의 calc_kv_scales처럼 max|k| ÷ 200으로 정한 가정값입니다. 실제 모델의 key 값은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

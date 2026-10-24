@@ -119,6 +119,8 @@ const noScriptArticleRoutes = new Set([
   "ai/kimi-k3-sequence-mixer",
   "ai/kimi-k3-depth-routing",
   "ai/kimi-k3-latent-moe",
+  "ai/kv-cache-fundamentals",
+  "ai/kv-cache-quantization",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -12,12 +12,12 @@ const STATES = [
 ] as const;
 
 export default function KVCacheLifecycleViz() {
-  const scenes = useAnimatedScenes(STATES.length, 3600);
+  const scenes = useAnimatedScenes(STATES.length, 5200, { loop: false });
   const state = STATES[scenes.active];
   return <VizFrame eyebrow="KV cache lifecycle" title="기록은 48 → 64byte, 현재 질문은 이번에만 씁니다"
     description="같은 요청의 한 층을 따라갑니다. 표의 각 칸은 폭 2인 벡터 하나입니다."
     note="Q head 4·KV head 2·폭 2·원소당 2byte. 모든 값은 가정이며 위치 변환을 끝낸 K를 표시합니다.">
-    <div data-viz-canvas role="group" tabIndex={0} aria-label="KV 기록의 생성과 추가와 재사용" onKeyDown={scenes.onKeyDown}
+    <div id={scenes.playbackId} data-viz-canvas role="group" tabIndex={0} aria-label="KV 기록의 생성과 추가와 재사용" onKeyDown={scenes.onKeyDown}
       className="flex h-auto min-h-full min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary">
       <div className="flex flex-none flex-col py-2">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm"><h4 className="font-bold">{LABELS[scenes.active]}</h4><span>{state.positions}위치 · KV {state.positions * 16}byte</span></div>

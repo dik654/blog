@@ -48,7 +48,7 @@ const UP = 42;
 const DOWN = 96;
 
 export default function Fp8GridSnapViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 4400);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const s = scenes.active;
   const reduced = scenes.reducedMotion;
   const t = (d: number) => ({ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : d });
@@ -61,6 +61,7 @@ export default function Fp8GridSnapViz() {
       note="−1.3은 크기 65로 그리고 부호는 따로 둡니다. 16보다 작은 칸과 음수 쪽 칸은 생략했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

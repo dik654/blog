@@ -25,7 +25,7 @@ const NOTES = [
 ] as const;
 
 export default function KvByteLedgerViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3600);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   const fp8 = scene >= 3;
   const cellW = fp8 ? CELL_W / 2 : CELL_W;
@@ -46,6 +46,7 @@ export default function KvByteLedgerViz() {
       note="층 32, KV head 8, head 폭 128은 GQA 모델 형태를 가정한 값입니다. block 빈칸과 scale 저장은 그리지 않았습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
