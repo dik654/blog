@@ -11,10 +11,14 @@ import ServingLatencyMetricsAndSloViz from "./serving-latency-metrics-and-slo/vi
 import LatencyPercentileHistogramViz from "./serving-latency-metrics-and-slo/viz/LatencyPercentileHistogramViz";
 import SloWindowBudgetViz from "./serving-latency-metrics-and-slo/viz/SloWindowBudgetViz";
 import TokenArrivalGapsViz from "./serving-latency-metrics-and-slo/viz/TokenArrivalGapsViz";
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
 
 export default function Article() {
   const sidebar = useCodeSidebar();
-  return <><div className="space-y-16">
+  return <><ServingEngineSeriesLocator current="latency" /><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">1. 첫 응답의 기다림과 도중의 멈춤을 따로 봅니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>답변이 늦다는 말에는 두 가지 경험이 섞여 있습니다. 처음 아무것도 보이지 않는 기다림과 답변이 나오다가 끊기는 멈춤입니다. 전체 시간이 같아도 어느 쪽이 긴지에 따라 찾아야 할 원인이 달라집니다.</p><p>이 글은 한 요청의 도착 기록을 작은 숫자로 계산한 뒤 여러 요청을 묶어 서비스의 약속을 판정합니다. 측정 도구가 무엇을 세었는지도 실제 코드로 확인합니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 시각을 남기고 간격을 계산한 뒤 약속과 비교합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>측정기는 보낸 시각과 받은 시각들을 같은 시계로 남깁니다. 계산기는 첫 도착까지의 시간과 이후 간격을 구합니다. 집계기는 여러 요청의 값을 모으고 판정기는 정한 기간과 한도에 따라 결과를 냅니다.</p><p>처음에는 이 네 자리만 잡습니다. 한 값으로 모든 단계를 대신하면 어느 기다림이 길어졌는지 다시 확인하기 어렵습니다.</p></div><ol className="my-8 grid list-none gap-4 p-0 sm:grid-cols-2"><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">1</span><span>보낸 시각과 받은 시각을 기록한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">2</span><span>한 요청의 기다림과 간격을 계산한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">3</span><span>정한 범위의 여러 요청을 집계한다</span></li><li className="border-l border-border pl-4"><span className="block text-sm text-muted-foreground">4</span><span>한도와 허용 실패 비율로 판정한다</span></li></ol></section>
@@ -178,5 +182,5 @@ export default function Article() {
           </p><p>
             측정하지 못한 10구간을 지운 뒤 나머지가 모두 통과했습니다. 원래 약속의 달성을 선언해도 될까요? (답: 13절)
           </p></div></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:latencySourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 · Python",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
+</div><ServingEngineMapReturn current="latency" /><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{vllm:latencySourceTree}} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 · Python",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;
 }

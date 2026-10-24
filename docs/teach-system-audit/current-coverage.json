@@ -1214,8 +1214,8 @@
       "title": "KV cache 양자화: 8비트로 쓰고 읽을 때 생기는 두 지점",
       "catalogIndex": 118,
       "status": "reviewed",
-      "provenance": "current-session-rewrite",
-      "recordedStatus": "rewritten-local-verified",
+      "provenance": "post-checkpoint-registry",
+      "recordedStatus": "reviewed-local",
       "evidence": "docs/teach-system-audit/ai-serving-batch-01-plan.md"
     },
     {

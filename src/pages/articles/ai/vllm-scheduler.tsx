@@ -6,17 +6,23 @@ import Preemption from "./vllm-scheduler/Preemption";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./vllm-scheduler/codeRefs";
 import { vllmSchedulerTree } from "./vllm-scheduler/fileTree";
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
 
 export default function VLLMSchedulerArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <ServingEngineSeriesLocator current="scheduler" />
       <Overview />
       <QueueBatching onCodeRef={sidebar.open} />
       <ScheduleMethod onCodeRef={sidebar.open} />
       <PrefillDecode onCodeRef={sidebar.open} />
       <Preemption onCodeRef={sidebar.open} />
+      <ServingEngineMapReturn current="scheduler" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

@@ -121,6 +121,9 @@ const noScriptArticleRoutes = new Set([
   "ai/kimi-k3-latent-moe",
   "ai/kv-cache-fundamentals",
   "ai/kv-cache-quantization",
+  "ai/vllm-serving",
+  "ai/serving-latency-metrics-and-slo",
+  "ai/vllm-scheduler",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
