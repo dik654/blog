@@ -138,7 +138,7 @@
     },
     {
       "route": "ai/kv-cache-quantization",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/teach-system-audit/ai-serving-batch-01-plan.md"
     },
     {

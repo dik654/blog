@@ -8,7 +8,11 @@ import CacheAwareOrderViz from "./prefix-caching-radix-attention/viz/CacheAwareO
 import PageGranularityHitViz from "./prefix-caching-radix-attention/viz/PageGranularityHitViz";
 import { codeRefs } from "./prefix-caching-radix-attention/codeRefs";
 import { prefixTrees } from "./prefix-caching-radix-attention/fileTree";
-export default function PrefixCachingRadixAttentionArticle() {const sidebar=useCodeSidebar();return <><div className="space-y-16">
+import {
+  ServingEngineMapReturn,
+  ServingEngineSeriesLocator,
+} from "./shared/ServingEngineSeriesLocator";
+export default function PrefixCachingRadixAttentionArticle() {const sidebar=useCodeSidebar();return <><ServingEngineSeriesLocator current="reuse" /><div className="space-y-16">
 <section id="overview" data-teach-level="S" className="scroll-mt-20"><span id="problem" className="scroll-mt-20" /><h2 className="mb-6 text-2xl font-bold">1. 앞부분을 이미 읽었다면 어디서 이어 계산할까요?</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>같은 안내문 뒤에 서로 다른 질문을 붙여 세 번 보낸다고 합시다. 앞의 안내문을 매번 처음부터 읽으면 같은 계산을 반복합니다. 이전에 읽으며 만든 기록을 남겨 두면 다음 요청은 그 기록을 사용하고 달라진 뒷부분부터 계산할 수 있습니다.</p><p>그러려면 무엇이 같은 앞부분인지 찾고, 기록이 아직 남아 있는지 확인해야 합니다. 새 요청이 쓰는 동안 다른 요청이 그 자리를 덮어써도 안 됩니다. 이 글은 여덟 자리 입력 세 개를 찾기·공유·보호·반환까지 따라갑니다.</p><p>재사용한 입력이 많다는 것과 응답이 빨랐다는 것은 다른 관측입니다. 기록을 찾는 비용과 실행 순서도 있기 때문입니다. 우선 생략한 계산의 자리 수와 실제 보관한 자리 수부터 따로 셉니다.</p></div></section>
 
 <section id="black-box" data-teach-level="B" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">2. 입력 번호와 저장된 기록을 연결합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>입구에서는 새 입력의 번호 열을 받습니다. 찾는 부품은 이전 입력과 처음부터 연속으로 같은 부분을 찾고 그 기록의 저장 위치를 돌려줍니다. 계산 담당자는 그 위치를 참고하며 새 뒷부분을 처리합니다. 끝난 뒤에는 다음 요청이 찾아올 수 있도록 새 기록도 등록합니다.</p><p>입력 번호 자체가 중간 계산 기록은 아닙니다. 번호가 5인 입력을 읽었다고 기록 안의 값도 5가 되는 것은 아닙니다. 번호는 같은 입력인지 찾는 데 쓰이고 저장 위치는 여러 층이 만든 실제 값을 찾는 데 쓰입니다.</p><p>모델과 입력을 해석하는 조건도 같다고 가정합니다. 같은 번호 열이라도 모델이 달라지면 그 기록을 바꾸어 쓸 수 없습니다. 요청마다 다르게 넣은 추가 입력이 있다면 그것도 구별해야 합니다. 이 구별이 끝난 뒤에야 공유 가능한 길이를 셉니다.</p><p>완성된 답변을 그대로 복사하는 기능도 아닙니다. 이전에 읽은 앞부분의 계산 기록을 넘겨받은 뒤 현재 질문의 답은 다시 생성합니다. 앞부분을 재사용하는 일과 이후에 어떤 답을 고르는 일을 구분해야 저장할 내용을 이해할 수 있습니다.</p></div></section>
@@ -193,4 +197,4 @@ export default function PrefixCachingRadixAttentionArticle() {const sidebar=useC
           </p><p>
             큰 사례의 세 요청이 2496을 공유한다면 고정 FlashAttention backend의 cascade가 켜질까요? (답: 19절)
           </p><p>같은 system prompt를 쓰는 요청이 하루에 한 번만 온다면 cache 쓰기 표시를 붙이는 쪽이 쌀까요? (답: 21절)</p></div></section>
-</div><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={prefixTrees} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"},sglang:{id:"sglang",label:"SGLang 고정 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;}
+</div><ServingEngineMapReturn current="reuse" /><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={prefixTrees} projectMetas={{vllm:{id:"vllm",label:"vLLM v0.27.1 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"},sglang:{id:"sglang",label:"SGLang 고정 원문",badgeClass:"bg-blue-500/10 border-blue-500 text-blue-700"}}} /></>;}

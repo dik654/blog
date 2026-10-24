@@ -124,6 +124,11 @@ const noScriptArticleRoutes = new Set([
   "ai/vllm-serving",
   "ai/serving-latency-metrics-and-slo",
   "ai/vllm-scheduler",
+  "ai/continuous-batching-step-anatomy",
+  "ai/prefill-decode-phase-dynamics",
+  "ai/vllm-paged-attention",
+  "ai/serving-memory-admission-and-preemption",
+  "ai/prefix-caching-radix-attention",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

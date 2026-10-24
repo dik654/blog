@@ -47,4 +47,4 @@ Transformer의 autoregressive decode가 현재 위치를 계산할 때 과거 K�
 - [x] 1440×900 가로 넘침 0
 - [x] 키보드·reduced-motion·명시적 재생·뷰포트 이탈 정지
 - [x] JavaScript 비활성 정적 본문과 부모 지도
-- [ ] 공개 경로
+- [x] 공개 경로
