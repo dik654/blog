@@ -42,7 +42,7 @@ const OVERHEAD = [
 ] as const;
 
 export default function ScaleGranularityViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const scene = scenes.active;
   const group = GROUPS[scene];
   const cell = 26;
@@ -59,6 +59,7 @@ export default function ScaleGranularityViz() {
       note="8 × 8 행렬과 큰 채널 하나는 묶는 방향을 보이려는 가정입니다. 실제 KIVI는 G = 32, R = 128을 씁니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"

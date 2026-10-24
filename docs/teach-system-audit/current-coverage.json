@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 460,
-    "pending": 530,
+    "reviewed": 461,
+    "pending": 529,
     "untracked": 0,
     "assignedPending": 478,
-    "postCheckpointPending": 52,
+    "postCheckpointPending": 51,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -1213,10 +1213,10 @@
       "publicPath": "cs/ai/kv-cache-quantization",
       "title": "KV cache 양자화: 8비트로 쓰고 읽을 때 생기는 두 지점",
       "catalogIndex": 118,
-      "status": "pending",
-      "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed",
+      "provenance": "current-session-rewrite",
+      "recordedStatus": "rewritten-local-verified",
+      "evidence": "docs/teach-system-audit/ai-serving-batch-01-plan.md"
     },
     {
       "route": "ai/flash-attention-io-aware-kernel",

@@ -8,6 +8,10 @@ import Fp8GridSnapViz from "./kv-cache-quantization/viz/Fp8GridSnapViz";
 import ScaleGranularityViz from "./kv-cache-quantization/viz/ScaleGranularityViz";
 import { codeRefs } from "./kv-cache-quantization/codeRefs";
 import { kvQuantTrees } from "./kv-cache-quantization/fileTree";
+import {
+  KVCacheSeriesLocator,
+  KVCacheSeriesMapReturn,
+} from "./shared/KVCacheSeriesLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -16,6 +20,7 @@ export default function KvCacheQuantizationArticle() {
   const code = (key: string, label: string) => <CodeViewButton label={label} onClick={() => sidebar.open(key, codeRefs[key])} />;
   return (
     <>
+      <KVCacheSeriesLocator current="quantization" />
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">1. KV를 8비트로 저장하면 무엇이 두 배가 되고 무엇이 새로 생기나요?</h2>
@@ -40,6 +45,7 @@ export default function KvCacheQuantizationArticle() {
 
         <section id="small-case" data-teach-level="0" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">3. token 하나의 KV는 128KiB에서 64KiB가 됩니다</h2>
+          <KvByteLedgerViz />
           <div className={prose}>
             <p>층 32개, KV head 8개, head 폭 128인 GQA 모델을 가정합니다. (가정) query head는 더 많지만 KV를 저장하는 head는 8개뿐이라는 점이 GQA입니다. token 하나가 한 층에 남기는 칸은 K head 8개와 V head 8개입니다.</p>
             <p>칸 하나에는 숫자 128개가 있습니다. BF16이면 숫자 하나가 2 byte라 칸 하나가 256 byte입니다. 한 층은 16칸이라 4,096 byte, 32층이면 131,072 byte, 곧 128KiB입니다. 숫자 하나를 1 byte로 저장하면 칸의 개수는 그대로이고 칸의 폭만 절반이 되어 64KiB입니다.</p>
@@ -59,11 +65,11 @@ export default function KvCacheQuantizationArticle() {
             conclusion="같은 pool에 FP8 KV는 BF16의 정확히 두 배 token을 담습니다. scale과 padding을 더하면 이 비율이 조금 줄어듭니다."
             caveats={["층·head 수는 가정입니다. 실제 모델 설정으로 다시 셉니다.", "token 수가 두 배라는 것이 처리량 두 배를 뜻하지는 않습니다(13절)."]}
           />
-          <KvByteLedgerViz />
         </section>
 
         <section id="round-trip" data-teach-level="1" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">4. 네 값을 나눴다 곱하면 큰 값 하나만 크게 틀어집니다</h2>
+          <Fp8GridSnapViz />
           <div className={prose}>
             <p>
             같은 head의 key 원소 네 개 0.47, −1.3, 3.1, 12.0을 저장한다고 합시다. 서버가 처음 몇 개의 요청에서 본 가장 큰 절댓값은 4.0이었고 12.0은 그
@@ -73,7 +79,6 @@ export default function KvCacheQuantizationArticle() {
             <p>읽는 쪽은 저장된 수에 0.02를 곱합니다. 0.48, −1.28, 3.2, 8.96입니다. 작은 세 값의 오차는 0.01, 0.02, 0.10으로 원래 크기의 2~3%입니다. 12.0은 8.96으로 돌아와 3.04, 25%가 사라집니다. 간격 때문에 생긴 작은 오차와 상한에 걸려 생긴 큰 오차는 원인이 다릅니다.</p>
             <p>큰 값이 늘 같은 채널에서 나온다면 그 채널에만 다른 비율을 줄 수 있습니다. 12.0을 200에 맞춰 0.06을 쓰면 200은 192로 저장되고 11.52로 돌아와 오차가 0.48로 줄어듭니다. 비율을 몇 개 두느냐가 7절의 질문입니다.</p>
           </div>
-          <Fp8GridSnapViz />
         </section>
 
         <section id="why-scale" data-teach-level="2" className="scroll-mt-20">
@@ -122,6 +127,7 @@ export default function KvCacheQuantizationArticle() {
 
         <section id="granularity" data-teach-level="4" data-calculation-explained className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">7. scale을 잘게 둘수록 오차는 줄고 부가 저장량은 늘어납니다</h2>
+          <ScaleGranularityViz />
           <div className={prose}>
             <p>4절의 사례에서 12.0을 망가뜨린 것은 scale이 하나뿐이라는 사실이었습니다. 큰 값과 작은 값이 같은 scale을 쓰면 둘 중 하나는 불리합니다. scale을 여러 개 두어 값이 비슷한 원소끼리 묶으면 이 충돌이 줄어듭니다. 대신 scale도 메모리에 저장해야 합니다.</p>
             <p>tensor 하나에 scale 하나를 두면 층마다 K와 V에 숫자 둘이라 부가 저장량은 사실상 0입니다. head마다 두면 층마다 KV head 수만큼이고 여전히 작습니다. llama.cpp의 q8_0처럼 원소 32개마다 2 byte scale을 붙이면 원소당 1.0625 byte가 되어 본체보다 6.25% 큽니다. 묶음이 작을수록 scale의 몫이 커집니다.</p>
@@ -140,7 +146,6 @@ export default function KvCacheQuantizationArticle() {
             conclusion="block scale은 큰 값을 가까운 원소 32개 안에 가두는 대신 원소당 1/16 byte를 더 씁니다."
             caveats={["실제 kernel은 정렬 때문에 더 큰 단위로 저장할 수 있습니다.", "KIVI의 비대칭 2비트는 scale과 zero를 함께 저장해 별도로 셉니다(12절)."]}
           />
-          <ScaleGranularityViz />
         </section>
 
         <section id="trace" data-teach-level="4" className="scroll-mt-20">
@@ -257,6 +262,7 @@ export default function KvCacheQuantizationArticle() {
             <p>key와 value를 모두 token 방향으로 묶은 2비트 KV가 KIVI보다 불리한 이유를 큰 채널의 위치로 설명해 보세요. (답: 12절)</p>
           </div>
         </section>
+        <KVCacheSeriesMapReturn current="quantization" />
       </div>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
