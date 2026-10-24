@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 488,
-    "pending": 502,
+    "reviewed": 494,
+    "pending": 496,
     "untracked": 0,
-    "assignedPending": 458,
+    "assignedPending": 452,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -1603,9 +1603,9 @@
       "publicPath": "cs/ai/generative-theory",
       "title": "생성 모델의 출발점: observation·distribution·평가",
       "catalogIndex": 157,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1613,9 +1613,9 @@
       "publicPath": "cs/ai/autoregressive-generative-models",
       "title": "자기회귀 생성 모델: prefix conditional을 곱하는 이유",
       "catalogIndex": 158,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1623,9 +1623,9 @@
       "publicPath": "cs/ai/latent-variable-generative-models",
       "title": "잠재변수 생성 모델: 숨은 원인·marginalization·ELBO",
       "catalogIndex": 159,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1633,9 +1633,9 @@
       "publicPath": "cs/ai/normalizing-flows",
       "title": "Normalizing flow: 가역 좌표와 density 보정",
       "catalogIndex": 160,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1643,9 +1643,9 @@
       "publicPath": "cs/ai/adversarial-density-ratios",
       "title": "GAN density ratio: discriminator가 비교하는 것",
       "catalogIndex": 161,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -1653,9 +1653,9 @@
       "publicPath": "cs/ai/score-based-generative-models",
       "title": "Score 기반 생성 모델: local direction에서 diffusion까지",
       "catalogIndex": 162,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

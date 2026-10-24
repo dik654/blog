@@ -3427,3 +3427,23 @@
   JavaScript 비활성 정적 지도·본문·결론도 확인했습니다.
 - Production build는 7,899개 module, 정적 public route 2,086개와 no-script 본문 121편을
   생성했습니다. 전체 strict audit을 통과했고 공개 배포 경로 검증만 남아 있습니다.
+
+### AI 생성 모델 계열 묶음 로컬 완료 (2026-10-25)
+
+- `generative-theory`를 공통 개념 지도, `autoregressive-generative-models`,
+  `latent-variable-generative-models`, `normalizing-flows`, `adversarial-density-ratios`,
+  `score-based-generative-models`를 서로 다른 계산을 선택하는 개념 갈래로 분류했습니다. 다섯 계열은
+  순차 파이프라인이 아니라 `공통 생성 문제 → {조건부 분해 | 숨은 원인 | 가역 밀도 | 비교 신호 |
+  점수 방향}`으로 분기합니다.
+- 여섯 글 모두 직속 부모와 현재 갈래를 먼저 보여 주고, 핵심 동작 그림을 용어 설명과 수식보다 앞에
+  배치했습니다. 글 끝에서는 각 계산이 얻는 것과 포기하는 것을 공통 생성 문제에 되돌려 놓습니다.
+- 장면 제목의 `release`, `joint`, `finite training` 같은 번역투를 결과 평가·결합확률·유한 학습으로
+  고쳤습니다. 정식 영문 용어는 필요할 때 본문과 수식에 남겨 검색 가능성과 정확성을 유지했습니다.
+- 공통 장면 컴포넌트가 실제 DOM에 없는 식별자를 관찰해 화면 이탈 정지가 동작하지 않던 원인을
+  고쳤습니다. 이제 명시적 입력 전에는 시작하지 않고, 화면을 벗어나면 선택한 장면에서 멈추며,
+  다시 들어와도 자동 재생하지 않습니다.
+- 390×844와 1,440×1,000에서 여섯 경로 모두 HTTP 200, 부모·반환 지도, 현재 링크, 문서와 모든
+  시각화 overflow 0, SVG 글자 잘림 0, console 오류 0을 확인했습니다. 키보드 장면 순서,
+  reduced-motion, JavaScript 비활성 전체 장면도 통과했습니다. Production build는 7,900개 module,
+  정적 public route 2,086개와 no-script 본문 127편을 생성했고 전체 strict audit을 통과했습니다.
+  공개 배포 경로 검증만 남아 있습니다.

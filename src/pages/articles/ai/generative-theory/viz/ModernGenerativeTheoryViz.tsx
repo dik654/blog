@@ -29,26 +29,38 @@ function Scene({
 
   return (
     <VizFrame title={title} description={description} className="my-9">
+      <span id={id} className="scroll-mt-24" />
       <div
-        id={id}
+        id={controls.playbackId}
         data-viz
+        data-viz-scene={id}
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
         className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 text-lg font-bold leading-7">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black tracking-[.12em] text-primary">
+            장면 · {String(controls.active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 text-lg font-bold leading-7">
+            {labels[controls.active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
+            {children(controls.active)}
+          </div>
+          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
+            {notes[controls.active]}
+          </p>
+          <AnimatedSceneControls labels={labels} {...controls} />
         </div>
-        <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={labels} {...controls} />
+        <ol className="static-reading-only space-y-3 text-sm leading-6">
+          {labels.map((label, index) => (
+            <li key={label}>
+              <strong>{index + 1}. {label}</strong>
+              <span className="mt-1 block text-muted-foreground">{notes[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
@@ -139,22 +151,22 @@ function Arrow({ x1, y1, x2, y2, active, id }: ArrowProps) {
 
 export function GenerativeMapViz() {
   const labels = [
-    "Observation과 condition을 고정합니다",
-    "배워야 할 distribution을 정의합니다",
+    "관측값과 조건을 고정합니다",
+    "배워야 할 확률 분포를 정의합니다",
     "직접 계산할 연산을 고릅니다",
-    "여러 평가 축에서 release합니다",
+    "서로 다른 기준으로 결과를 평가합니다",
   ] as const;
   const notes = [
-    "x는 image·token·audio 같은 observation이고 c는 prompt·class 같은 condition입니다.",
-    "생성 모델은 한 sample이 아니라 support 전체에 probability 또는 sampling rule을 둡니다.",
-    "Likelihood·latent inference·sampling 중 무엇을 tractable하게 만들지 family마다 다릅니다.",
-    "NLL·quality·coverage·condition fidelity·latency는 한 숫자로 합치지 않습니다.",
+    "x는 이미지·토큰·오디오 같은 관측값이고 c는 프롬프트·분류값 같은 조건입니다.",
+    "생성 모델은 표본 하나가 아니라 가능한 값 전체에 확률 또는 표본 추출 규칙을 둡니다.",
+    "우도·잠재변수 추론·표본 추출 중 어느 계산을 쉽게 만들지가 계열마다 다릅니다.",
+    "음의 로그 우도·품질·포괄 범위·조건 충실도·지연 시간은 한 숫자로 합치지 않습니다.",
   ] as const;
 
   return (
     <Scene
       id="generative-map-viz"
-      title="Sample에서 model family 선택까지"
+      title="표본에서 생성 모델 계열 선택까지"
       description="생성 문제를 정의하고 필요한 연산과 평가로 좁혀 가는 지도입니다."
       labels={labels}
       notes={notes}
@@ -166,7 +178,7 @@ export function GenerativeMapViz() {
           aria-label={labels[active]}
           className="block h-auto w-full"
         >
-          <Box x={18} y={68} w={80} label="x · c" detail="observation" active />
+          <Box x={18} y={68} w={80} label="x · c" detail="관측·조건" active />
           <Arrow
             x1={100}
             y1={97}
@@ -180,7 +192,7 @@ export function GenerativeMapViz() {
             y={68}
             w={86}
             label="p(x|c)"
-            detail="distribution"
+            detail="가능성 분포"
             active={active >= 1}
           />
           <Arrow
@@ -195,16 +207,16 @@ export function GenerativeMapViz() {
             x={240}
             y={28}
             w={82}
-            label="Density"
-            detail="likelihood"
+            label="밀도"
+            detail="확률 계산"
             active={active >= 2}
           />
           <Box
             x={240}
             y={112}
             w={82}
-            label="Sampler"
-            detail="new x"
+            label="표본 추출"
+            detail="새 관측값"
             active={active >= 2}
           />
           <Arrow
@@ -227,8 +239,8 @@ export function GenerativeMapViz() {
             x={354}
             y={68}
             w={70}
-            label="Release"
-            detail="many axes"
+            label="평가"
+            detail="여러 기준"
             active={active >= 3}
           />
         </svg>
@@ -239,23 +251,23 @@ export function GenerativeMapViz() {
 
 export function AutoregressiveFactorViz() {
   const labels = [
-    "Joint sequence를 놓습니다",
-    "첫 token 확률을 계산합니다",
-    "Prefix를 조건으로 다음 확률을 곱합니다",
-    "Sampling은 token 순서를 기다립니다",
+    "문장 전체의 결합확률을 놓습니다",
+    "첫 토큰 확률을 계산합니다",
+    "앞 토큰을 조건으로 다음 확률을 곱합니다",
+    "생성은 앞 토큰이 나올 때까지 기다립니다",
   ] as const;
   const notes = [
-    "문장 전체 probability는 하나의 joint distribution입니다.",
-    "첫 token은 빈 prefix 또는 시작 기호에 조건화됩니다.",
-    "Chain rule은 ordering을 정하면 joint를 conditional product로 정확히 분해합니다.",
-    "Training은 알려진 targets를 병렬 점수화할 수 있지만 generation은 앞 token이 나와야 다음 조건이 생깁니다.",
+    "문장 전체의 확률은 하나의 결합분포입니다.",
+    "첫 토큰은 빈 앞부분 또는 시작 기호를 조건으로 삼습니다.",
+    "연쇄 법칙은 순서를 정하면 결합확률을 조건부 확률의 곱으로 정확히 나눕니다.",
+    "학습 때는 정답 토큰을 병렬로 평가할 수 있지만, 생성 때는 앞 토큰이 나와야 다음 조건이 생깁니다.",
   ] as const;
 
   return (
     <Scene
       id="autoregressive-factor-viz"
-      title="문장 확률을 prefix별 조건부 확률로"
-      description="Exact likelihood와 sequential sampling이 같은 factorization에서 갈리는 모습을 봅니다."
+      title="문장 확률을 앞부분별 조건부 확률로"
+      description="정확한 우도 계산과 순차 생성이 같은 분해에서 갈리는 모습을 봅니다."
       labels={labels}
       notes={notes}
     >
@@ -314,7 +326,7 @@ export function AutoregressiveFactorViz() {
             textAnchor="middle"
             className="fill-muted-foreground text-[10px]"
           >
-            training: targets known · sampling: left → right
+            학습: 정답 앞부분을 앎 · 생성: 왼쪽부터 순서대로
           </text>
         </svg>
       )}
@@ -326,21 +338,21 @@ export function LatentInferenceViz() {
   const labels = [
     "보이지 않는 원인 z를 둡니다",
     "모든 z 설명을 가중해 p(x)를 만듭니다",
-    "Encoder q가 posterior를 근사합니다",
-    "ELBO와 inference gap을 분리합니다",
+    "추론기 q가 사후분포를 근사합니다",
+    "ELBO와 근사 오차를 분리합니다",
   ] as const;
   const notes = [
-    "z는 pose·style 같은 생성 원인을 표현할 수 있지만 사람이 붙인 의미와 자동 일치하지 않습니다.",
-    "z를 관측하지 않았으므로 가능한 원인의 joint probability를 모두 합하거나 적분합니다.",
-    "True posterior가 어렵기 때문에 tractable q(z|x)를 학습합니다.",
-    "ELBO는 log evidence 아래의 bound이고 q와 true posterior의 KL이 정확한 gap입니다.",
+    "z는 자세·스타일 같은 생성 원인을 표현할 수 있지만 사람이 붙인 의미와 자동으로 일치하지는 않습니다.",
+    "z를 관측하지 않았으므로 가능한 원인의 결합확률을 모두 합하거나 적분합니다.",
+    "실제 사후분포를 계산하기 어려워 계산 가능한 q(z|x)를 학습합니다.",
+    "ELBO는 로그 증거의 하한이며, q와 실제 사후분포 사이의 KL이 정확한 차이입니다.",
   ] as const;
 
   return (
     <Scene
       id="latent-inference-viz"
-      title="숨은 원인을 합하고 posterior를 근사하기"
-      description="Marginalization과 variational inference를 서로 다른 단계로 보여 줍니다."
+      title="숨은 원인을 합하고 사후분포를 근사하기"
+      description="주변화와 변분 추론을 서로 다른 단계로 보여 줍니다."
       labels={labels}
       notes={notes}
     >
@@ -351,8 +363,8 @@ export function LatentInferenceViz() {
           aria-label={labels[active]}
           className="block h-auto w-full"
         >
-          <Box x={22} y={34} w={76} label="z=0" detail="prior .75" active />
-          <Box x={22} y={126} w={76} label="z=1" detail="prior .25" active />
+          <Box x={22} y={34} w={76} label="z=0" detail="사전확률 .75" active />
+          <Box x={22} y={126} w={76} label="z=1" detail="사전확률 .25" active />
           <Arrow
             x1={100}
             y1={63}
@@ -374,7 +386,7 @@ export function LatentInferenceViz() {
             y={72}
             w={82}
             label="p(x)"
-            detail="sum over z"
+            detail="z를 모두 합산"
             active={active >= 1}
           />
           <Arrow
@@ -390,7 +402,7 @@ export function LatentInferenceViz() {
             y={72}
             w={68}
             label="q(z|x)"
-            detail="encoder"
+            detail="추론기"
             active={active >= 2}
           />
           <Arrow
@@ -406,7 +418,7 @@ export function LatentInferenceViz() {
             y={72}
             w={54}
             label="ELBO"
-            detail="+ gap"
+            detail="근사 격차"
             active={active >= 3}
           />
         </svg>
@@ -417,23 +429,23 @@ export function LatentInferenceViz() {
 
 export function FlowChangeViz() {
   const labels = [
-    "쉬운 base density를 둡니다",
+    "계산하기 쉬운 기준 분포를 둡니다",
     "가역 함수로 좌표를 옮깁니다",
-    "늘어난 volume만큼 density를 보정합니다",
-    "Inverse·sample·likelihood를 모두 검사합니다",
+    "늘어난 부피만큼 밀도를 보정합니다",
+    "역변환·표본·우도를 모두 검사합니다",
   ] as const;
   const notes = [
-    "Gaussian z처럼 sample과 density 계산이 쉬운 출발점을 씁니다.",
-    "f는 z와 x 사이를 양방향으로 오갈 수 있는 bijection이어야 합니다.",
-    "Probability mass는 보존되므로 공간이 두 배 늘면 단위 volume density는 절반이 됩니다.",
-    "Exact likelihood의 대가는 같은 dimension·invertibility·tractable Jacobian 제약입니다.",
+    "정규분포 z처럼 표본과 밀도 계산이 쉬운 출발점을 씁니다.",
+    "f는 z와 x 사이를 양방향으로 오갈 수 있는 일대일 대응이어야 합니다.",
+    "확률 질량은 보존되므로 공간이 두 배 늘면 단위 부피당 밀도는 절반이 됩니다.",
+    "정확한 우도를 얻는 대신 차원 유지·가역성·계산 가능한 야코비안이라는 제약을 받습니다.",
   ] as const;
 
   return (
     <Scene
       id="flow-change-viz"
-      title="고무판을 늘려도 probability mass는 보존됩니다"
-      description="Base cell의 변형과 Jacobian density correction을 도형으로 확인합니다."
+      title="고무판을 늘려도 확률 질량은 보존됩니다"
+      description="기준 영역의 변형과 야코비안 밀도 보정을 도형으로 확인합니다."
       labels={labels}
       notes={notes}
     >
@@ -460,7 +472,7 @@ export function FlowChangeViz() {
             textAnchor="middle"
             className="fill-foreground text-[11px] font-bold"
           >
-            base z
+            기준 z
           </text>
           <Arrow
             x1={114}
@@ -490,22 +502,22 @@ export function FlowChangeViz() {
             textAnchor="middle"
             className="fill-foreground text-[11px] font-bold"
           >
-            data x=f(z)
+            관측 x=f(z)
           </text>
           <Box
             x={160}
             y={174}
             w={120}
             label="Jacobian"
-            detail="volume correction"
+            detail="부피 보정"
             active={active >= 2}
           />
           <Box
             x={304}
             y={174}
             w={112}
-            label="Receipt"
-            detail="inverse · log p"
+            label="검증"
+            detail="역변환·log p"
             active={active >= 3}
           />
         </svg>
@@ -516,23 +528,23 @@ export function FlowChangeViz() {
 
 export function AdversarialRatioViz() {
   const labels = [
-    "Real sample과 generated sample을 따로 봅니다",
-    "한 위치의 두 density를 비교합니다",
-    "Discriminator가 density ratio를 출력합니다",
-    "Finite training 경계를 함께 기록합니다",
+    "실제 표본과 생성 표본을 따로 봅니다",
+    "한 위치의 두 밀도를 비교합니다",
+    "판별기가 밀도비 신호를 냅니다",
+    "유한한 학습의 해석 한계를 함께 봅니다",
   ] as const;
   const notes = [
-    "GAN은 generator density를 직접 정규화하지 않고 두 source의 sample을 비교합니다.",
-    "같은 x에서 real mass와 generated mass가 얼마나 겹치는지 묻습니다.",
-    "이상적 D*는 real density가 두 density 합에서 차지하는 비율입니다.",
-    "D=0.5가 distribution equality를 뜻하려면 capacity와 pointwise optimum 전제가 필요합니다.",
+    "GAN은 생성기 밀도를 직접 정규화하지 않고 두 출처의 표본을 비교합니다.",
+    "같은 x에서 실제 표본과 생성 표본의 밀도가 얼마나 겹치는지 묻습니다.",
+    "이상적인 D*는 실제 밀도가 두 밀도의 합에서 차지하는 비율입니다.",
+    "D=0.5가 두 분포의 일치를 뜻하려면 충분한 모델 용량과 각 점에서의 최적화가 전제되어야 합니다.",
   ] as const;
 
   return (
     <Scene
       id="adversarial-ratio-viz"
-      title="두 sample source에서 density-ratio signal까지"
-      description="GAN의 비교 신호를 score나 likelihood와 섞지 않고 따로 만듭니다."
+      title="두 표본 출처에서 밀도비 신호까지"
+      description="GAN의 비교 신호를 점수 함수나 우도와 섞지 않고 따로 만듭니다."
       labels={labels}
       notes={notes}
     >
@@ -571,7 +583,7 @@ export function AdversarialRatioViz() {
             textAnchor="middle"
             className="fill-muted-foreground text-[10px]"
           >
-            two sample sources
+            두 표본 출처
           </text>
           <Arrow
             x1={118}
@@ -586,7 +598,7 @@ export function AdversarialRatioViz() {
             y={66}
             w={98}
             label="pᵣ(x) : p𝓰(x)"
-            detail="local ratio"
+            detail="점별 비율"
             active={active >= 1}
           />
           <Arrow
@@ -602,15 +614,15 @@ export function AdversarialRatioViz() {
             y={66}
             w={116}
             label="D*(x)"
-            detail="real / total"
+            detail="실제 / 전체"
             active={active >= 2}
           />
           <Box
             x={256}
             y={166}
             w={156}
-            label="capacity · optimum"
-            detail="release boundary"
+            label="용량 · 최적점"
+            detail="해석 경계"
             active={active >= 3}
           />
         </svg>
@@ -621,23 +633,23 @@ export function AdversarialRatioViz() {
 
 export function ScoreDiffusionViz() {
   const labels = [
-    "한 density의 local score를 정의합니다",
-    "Gaussian에서는 원점 방향을 계산합니다",
-    "Noisy sample과 injected noise를 연결합니다",
-    "Minus와 noise scale로 reverse direction을 만듭니다",
+    "밀도가 커지는 국소 방향을 정의합니다",
+    "정규분포에서는 중심 방향을 계산합니다",
+    "잡음이 섞인 표본과 주입한 잡음을 연결합니다",
+    "부호와 잡음 크기를 바꿔 복원 방향을 만듭니다",
   ] as const;
   const notes = [
-    "Score는 normalized density 값이 아니라 log density가 가장 빨리 증가하는 방향입니다.",
-    "Standard Gaussian의 score −x는 x=2에서 왼쪽인 −2를 가리킵니다.",
-    "VP forward process는 clean signal과 Gaussian noise를 알려진 scale로 섞습니다.",
-    "Predicted noise의 반대 방향을 취하고 noise standard deviation으로 나누면 score parameterization이 됩니다.",
+    "점수 함수는 정규화된 밀도값이 아니라 로그 밀도가 가장 빠르게 증가하는 방향입니다.",
+    "표준 정규분포의 점수 −x는 x=2에서 왼쪽인 −2를 가리킵니다.",
+    "정방향 과정은 깨끗한 신호와 정규 잡음을 정해진 크기로 섞습니다.",
+    "예측한 잡음의 반대 방향을 취하고 잡음 표준편차로 나누면 점수 함수 표현이 됩니다.",
   ] as const;
 
   return (
     <Scene
       id="score-diffusion-viz"
-      title="Local score에서 diffusion reverse direction까지"
-      description="왜 predicted noise 앞에 minus가 붙고 noise scale로 나누는지 장면별로 확인합니다."
+      title="국소 점수에서 확산 복원 방향까지"
+      description="왜 예측 잡음의 부호를 바꾸고 잡음 크기로 나누는지 장면별로 확인합니다."
       labels={labels}
       notes={notes}
     >
@@ -663,7 +675,7 @@ export function ScoreDiffusionViz() {
             textAnchor="middle"
             className="fill-muted-foreground text-[9px]"
           >
-            density peak
+            밀도 최대점
           </text>
           <circle
             cx="162"
@@ -702,7 +714,7 @@ export function ScoreDiffusionViz() {
             y={34}
             w={84}
             label="xₜ"
-            detail="noisy point"
+            detail="노이즈 표본"
             active={active >= 2}
           />
           <Box
@@ -710,7 +722,7 @@ export function ScoreDiffusionViz() {
             y={126}
             w={84}
             label="εθ"
-            detail="noise guess"
+            detail="노이즈 추정"
             active={active >= 2}
           />
           <Arrow

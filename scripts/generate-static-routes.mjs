@@ -53,8 +53,14 @@ for (const route of [...routes].sort()) {
 // 검토를 마친 학습 묶음은 같은 절 순서와 결론을 읽을 수 있도록 각 글의
 // 실제 React 본문을 build 시점에 정적 markup으로 한 번 더 넣습니다.
 // 새 글은 모바일·키보드·reduced-motion·정적 읽기 검증을 모두 마친 뒤에만
-// 이 목록에 넣습니다. Kubernetes 묶음은 subcategory가 완성 단위입니다.
+// 이 목록에 넣습니다. 개별 파일이 아니라 함께 검증한 학습 묶음을 완성 단위로 봅니다.
 const noScriptArticleRoutes = new Set([
+  "ai/generative-theory",
+  "ai/autoregressive-generative-models",
+  "ai/latent-variable-generative-models",
+  "ai/normalizing-flows",
+  "ai/adversarial-density-ratios",
+  "ai/score-based-generative-models",
   "ai/arima",
   "ai/lstm-timeseries",
   "ai/autoencoder",

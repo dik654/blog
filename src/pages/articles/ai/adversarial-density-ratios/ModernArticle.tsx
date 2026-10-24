@@ -3,15 +3,21 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { AdversarialRatioViz } from "../generative-theory/viz/ModernGenerativeTheoryViz";
+import {
+  GenerativeFamilyLocator,
+  GenerativeFamilyMapReturn,
+} from "../shared/GenerativeFamilyLocator";
 
 export default function AdversarialDensityRatiosArticle() {
   return (
     <div className="space-y-16">
+      <GenerativeFamilyLocator current="adversarial" />
       <section id="overview" className="scroll-mt-20">
         <span id="two-sources" className="scroll-mt-20" />
         <h2 className="mb-6 text-2xl font-bold">
           GAN은 두 sample source를 구별하는 문제부터 만듭니다
         </h2>
+        <AdversarialRatioViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             <strong>Adversarial density-ratio signal</strong>은 generator의
@@ -44,7 +50,6 @@ export default function AdversarialDensityRatiosArticle() {
             },
           ]}
         />
-        <AdversarialRatioViz />
         <ContentBoundary article="adversarial-density-ratios" />
       </section>
 
@@ -140,6 +145,7 @@ export default function AdversarialDensityRatiosArticle() {
           아닙니다.
         </CitationBlock>
       </section>
+      <GenerativeFamilyMapReturn current="adversarial" />
     </div>
   );
 }

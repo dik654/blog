@@ -101,7 +101,7 @@ export function AnimatedSceneControls({
         </button>
       </div>
       <p className="mt-3 hidden text-xs text-muted-foreground sm:block">
-        Viz에 focus한 뒤 ← →로 이동 · Space로 재생/일시정지
+        그림에 초점을 둔 뒤 ← →로 이동 · Space로 재생/일시정지
       </p>
     </div>
   );
