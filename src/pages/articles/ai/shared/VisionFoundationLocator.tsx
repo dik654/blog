@@ -5,6 +5,7 @@ const VISION_PATH = [
   ["equivariance", "이동", "입력이 옮겨질 때 출력 좌표를 추적", "/cs/ai/cnn-translation-equivariance"],
   ["receptive", "범위", "출력 하나가 읽는 원본 영역을 계산", "/cs/ai/cnn-receptive-fields"],
   ["depthwise", "분리", "공간 계산과 채널 혼합을 나눔", "/cs/ai/depthwise-separable-convolution"],
+  ["resnet", "잔차", "입력을 보존하며 필요한 변화만 더함", "/cs/ai/resnet"],
   ["tasks", "출력", "분류·상자·마스크의 좌표 계약", "/cs/ai/vision-task-spatial-contracts"],
 ] as const;
 
@@ -68,7 +69,7 @@ export function VisionFoundationLocator({
       </div>
 
       <div
-        className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-5"
+        className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-3 lg:grid-cols-6"
         aria-label="컴퓨터 비전 기초 경로"
       >
         {VISION_PATH.map(([id, label, description, href], index) => (
