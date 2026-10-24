@@ -23,7 +23,7 @@ export default function KubernetesRequestPathAndCkaArticle() {
       <div className="mt-16 space-y-16">
         <CkaResourceMap />
         <CkaInteractiveLab />
-        <section id="practice-decision" className="scroll-mt-20">
+        <div id="practice-decision" className="scroll-mt-20">
           <h2 className="mb-6 text-2xl font-bold">8. 실험 기록: 첫 실패 경계를 찾는 순서를 기본 진단법으로 둡니다</h2>
           <div className="not-prose grid gap-3 md:grid-cols-2">
             {[
@@ -44,7 +44,7 @@ export default function KubernetesRequestPathAndCkaArticle() {
             <p>이 결정은 실제 반복 실험에서 단계별 진단이 더 느리거나, 관측 권한 때문에 필수 증거에 접근할 수 없거나, 관리형 클러스터의 공식 진단 경로가 더 정확할 때 뒤집습니다. 제품 이름을 추가하기 전에 현재 기본 도구로 닫히지 않는 경계를 먼저 기록합니다.</p>
           </div>
           <KubernetesMapReturn current="request" />
-        </section>
+        </div>
       </div>
     </>
   );
