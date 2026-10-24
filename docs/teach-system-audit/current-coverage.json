@@ -2865,7 +2865,7 @@
       "catalogIndex": 283,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2875,7 +2875,7 @@
       "catalogIndex": 284,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2903,9 +2903,9 @@
       "publicPath": "cs/ai/warmup-scheduling",
       "title": "Learning-rate Warmup: Main Schedule과 Update Magnitude",
       "catalogIndex": 287,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2953,9 +2953,9 @@
       "publicPath": "cs/ai/label-smoothing",
       "title": "Label Smoothing: One-hot에서 Soft Target 조합까지",
       "catalogIndex": 292,
-      "status": "reviewed",
+      "status": "pending",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "unreviewed",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

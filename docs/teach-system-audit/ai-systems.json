@@ -8410,7 +8410,7 @@
       "route": "ai/lr-decay-policies",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lr-decay-policies.tsx",
       "publicPath": "cs/ai/lr-decay-policies",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8457,9 +8457,10 @@
         "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-learning-rate-batch-27/summary.json",
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-learning-rate-batch-27/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
-        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 171편 exit0"
+        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 171편 exit0",
+        "production": "GitHub Pages run 40132519023 success @ b362d01f; 공개 390×844·1440×1000, 키보드, reduced-motion, JavaScript 비활성, 부모 지도·현재 위치·반환 지도, overflow 0, console 오류 0 재검증: output/playwright/ai-learning-rate-batch-27/summary.json"
       },
-      "remaining": ["Batch 27 공개 배포 경로 확인"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "practice-track-map-and-decay-state-machine-review",
       "bodyFiles": [
@@ -8479,7 +8480,7 @@
       "route": "ai/lr-scheduling",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/lr-scheduling.tsx",
       "publicPath": "cs/ai/lr-scheduling",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
@@ -8522,9 +8523,10 @@
         "browser390": "첫 그림 우선·지도·키보드·reduced-motion·JavaScript 비활성·전체 시각화 overflow0: output/playwright/ai-learning-rate-batch-27/summary.json",
         "browser1440": "첫 그림 우선·지도·키보드·전체 시각화 overflow0: output/playwright/ai-learning-rate-batch-27/summary.json",
         "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
-        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 171편 exit0"
+        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 171편 exit0",
+        "production": "GitHub Pages run 40132519023 success @ b362d01f; 공개 390×844·1440×1000, 키보드, reduced-motion, JavaScript 비활성, 부모 지도·현재 위치·반환 지도, overflow 0, console 오류 0 재검증: output/playwright/ai-learning-rate-batch-27/summary.json"
       },
-      "remaining": ["Batch 27 공개 배포 경로 확인"],
+      "remaining": [],
       "reviewDate": "2026-10-25",
       "reviewMode": "concept-track-map-and-learning-rate-clock-review",
       "bodyFiles": [
@@ -12935,8 +12937,8 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 63,
-    "rewritten-production-verified": 79,
+    "rewritten-local-verified": 61,
+    "rewritten-production-verified": 81,
     "unreviewed": 44
   },
   "localValidationSummary": {
