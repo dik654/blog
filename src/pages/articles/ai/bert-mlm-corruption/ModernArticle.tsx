@@ -3,14 +3,25 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
 import { BertMlmViz } from "../bert/viz/ModernBertViz";
+import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertMlmArticle() {
   return (
     <div className="space-y-16">
+      <NlpFoundationLocator
+        current="mlm"
+        question="양쪽 문맥을 볼 수 있는 encoder가 정답 token을 그대로 복사하지 못하게 하면서, 원래 ID를 어떻게 복원하게 할까요?"
+        fixture="선택 가능한 token 10,000개에서 15%를 고르고, 그 안을 MASK 1,200·random 150·unchanged 150의 기대값으로 나눕니다."
+        parentHref="/cs/ai/bert-input-packing#aligned-tensors"
+        parentLabel="BERT에 들어가는 정렬된 input tensor"
+        secondaryHref="/cs/ai/cross-entropy#cross-entropy"
+        secondaryLabel="정답 token probability의 negative log loss"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           MLM은 정답 위치를 고른 뒤 model이 볼 input만 오염시킵니다
         </h2>
+        <BertMlmViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             양방향 encoder가 원래 token을 그대로 본 채 그 token ID를 맞히면 복사
@@ -47,7 +58,6 @@ export default function BertMlmArticle() {
             },
           ]}
         />
-        <BertMlmViz />
         <ContentBoundary article="bert-mlm-corruption" />
       </section>
       <section id="corruption" className="scroll-mt-20">
@@ -201,6 +211,12 @@ export default function BertMlmArticle() {
           </CitationBlock>
         </div>
       </section>
+      <NlpMapReturn
+        title="MLM은 전체 문장의 왼쪽부터 오른쪽까지 확률을 곱하는 문제가 아니라, 선택된 위치의 원 token을 오염된 전체 문맥에서 복원하는 문제입니다."
+        detail="다음 글에서는 같은 encoder pretraining이라도 segment label과 token label을 어디에 붙이는지 비교합니다."
+        nextHref="/cs/ai/bert-pretraining-objectives"
+        nextLabel="후속 pretraining objective 비교"
+      />
     </div>
   );
 }

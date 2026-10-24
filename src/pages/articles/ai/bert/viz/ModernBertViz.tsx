@@ -25,13 +25,14 @@ function BertFlow({
   description: string;
   scenes: readonly Scene[];
 }) {
-  const controls = useAnimatedScenes(scenes.length, 2500);
+  const controls = useAnimatedScenes(scenes.length, 4200, { loop: false });
   const scene = scenes[controls.active];
   const count = scene.nodes.length;
   return (
-    <VizFrame title={title} description={description} className="my-8">
+    <VizFrame eyebrow={eyebrow} title={title} description={description} className="my-8">
       <div
-        id={id}
+        id={controls.playbackId}
+        data-viz-id={id}
         data-viz
         data-viz-canvas
         tabIndex={0}
@@ -39,11 +40,11 @@ function BertFlow({
         className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
         <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">
-          {eyebrow} · {String(controls.active + 1).padStart(2, "0")}
+          장면 · {String(controls.active + 1).padStart(2, "0")} · {scene.label}
         </p>
         <h3 className="mt-2 text-lg font-bold leading-7">{scene.title}</h3>
         <svg
-          viewBox="0 0 360 230"
+          viewBox="0 0 360 160"
           role="img"
           aria-label={`${scene.label}: ${scene.title}`}
           className="mx-auto mt-5 block h-auto w-full max-w-[560px] overflow-visible"
@@ -73,9 +74,9 @@ function BertFlow({
                 stroke="var(--muted-foreground)"
                 strokeWidth="1.25"
                 markerEnd={`url(#${id}-arrow)`}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 0.4, delay: i * 0.12 }}
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.5, delay: i * 0.18 }}
               />
             );
           })}
@@ -84,9 +85,9 @@ function BertFlow({
             return (
               <motion.g
                 key={`${scene.label}-${n.label}-${i}`}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.12 }}
+                initial={{ x: -4 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 0.28, delay: i * 0.12 }}
               >
                 {n.kind === "token" ? (
                   <rect
@@ -144,23 +145,6 @@ function BertFlow({
               </motion.g>
             );
           })}
-          <path d="M45 184 H315" stroke="var(--border)" strokeWidth="1" />
-          {scene.nodes.map((n, i) => {
-            const x = 45 + i * (270 / Math.max(count - 1, 1));
-            return (
-              <circle
-                key={`${n.label}-${i}`}
-                cx={x}
-                cy="184"
-                r="4"
-                fill={
-                  i <= controls.active
-                    ? "var(--primary)"
-                    : "var(--muted-foreground)"
-                }
-              />
-            );
-          })}
         </svg>
         <p className="mt-2 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
           {scene.note}
@@ -177,12 +161,12 @@ function BertFlow({
 export const BertVisibilityViz = () => (
   <BertFlow
     id="bert-visibility-modern"
-    eyebrow="Encoder visibility"
+    eyebrow="인코더 읽기 범위"
     title="한 token state가 양쪽 실제 token을 읽습니다"
     description="Token row, visibility gate, contextual state를 한 장면씩 연결합니다."
     scenes={[
       {
-        label: "Token rows",
+        label: "입력",
         title: "입력 token마다 하나의 vector row를 만듭니다",
         note: "같은 word type도 문장 위치와 주변 token에 따라 다른 contextual state가 됩니다.",
         nodes: [
@@ -192,7 +176,7 @@ export const BertVisibilityViz = () => (
         ],
       },
       {
-        label: "Visibility",
+        label: "가시성",
         title: "Query i는 왼쪽과 오른쪽 실제 token key를 모두 엽니다",
         note: "Causal triangle이 아니라 real-token rectangle이며 PAD column은 닫습니다.",
         nodes: [
@@ -203,7 +187,7 @@ export const BertVisibilityViz = () => (
         ],
       },
       {
-        label: "Context",
+        label: "문맥",
         title: "허용된 token의 정보를 가중합해 state hᵢ를 만듭니다",
         note: "양방향이라는 말은 두 방향 생성기가 아니라 입력 전체를 읽는 encoder visibility를 뜻합니다.",
         nodes: [
@@ -213,7 +197,7 @@ export const BertVisibilityViz = () => (
         ],
       },
       {
-        label: "Boundary",
+        label: "경계",
         title: "미래가 아직 없는 streaming 생성에는 같은 mask를 쓰지 않습니다",
         note: "BERT는 입력이 모두 주어진 이해 작업에 맞고 자유 형식 causal decoding은 별도 구조입니다.",
         nodes: [
@@ -229,12 +213,12 @@ export const BertVisibilityViz = () => (
 export const BertPackingViz = () => (
   <BertFlow
     id="bert-packing-modern"
-    eyebrow="Four aligned tensors"
+    eyebrow="정렬된 네 입력"
     title="Token·position·segment·padding은 같은 길이의 다른 표입니다"
     description="Special token sequence를 만든 뒤 세 metadata row를 정확히 맞춥니다."
     scenes={[
       {
-        label: "Tokens",
+        label: "토큰",
         title: "[CLS] A [SEP] B [SEP] 뒤에만 [PAD]를 붙입니다",
         note: "Special-token ID는 tokenizer와 checkpoint embedding row의 공동 계약입니다.",
         nodes: [
@@ -245,7 +229,7 @@ export const BertPackingViz = () => (
         ],
       },
       {
-        label: "Position",
+        label: "위치",
         title: "각 실제 slot에 absolute position index를 붙입니다",
         note: "원 BERT는 learned position table 범위를 넘는 index를 자동 외삽하지 않습니다.",
         nodes: [
@@ -256,7 +240,7 @@ export const BertPackingViz = () => (
         ],
       },
       {
-        label: "Segment",
+        label: "구간",
         title: "A와 B의 소속을 token-type row로 분리합니다",
         note: "Checkpoint의 type-vocab size가 1이면 두 segment ID를 가정하면 안 됩니다.",
         nodes: [
@@ -266,7 +250,7 @@ export const BertPackingViz = () => (
         ],
       },
       {
-        label: "Padding",
+        label: "패딩",
         title: "Attention mask는 content가 아닌 PAD key만 닫습니다",
         note: "Vocabulary token [MASK]와 padding attention mask는 이름만 비슷한 다른 물체입니다.",
         nodes: [
@@ -283,12 +267,12 @@ export const BertPackingViz = () => (
 export const BertMlmViz = () => (
   <BertFlow
     id="bert-mlm-modern"
-    eyebrow="Corrupt then recover"
+    eyebrow="오염 후 복원"
     title="정답 위치 선택과 model 입력 변경은 두 번의 sampling입니다"
     description="15% selection과 80/10/10 branch를 분리해 loss 위치를 추적합니다."
     scenes={[
       {
-        label: "Select",
+        label: "선택",
         title: "전체 실제 token 중 약 15%만 prediction target으로 고릅니다",
         note: "Special token과 PAD의 제외 규칙, static/dynamic masking을 collator revision에 고정합니다.",
         nodes: [
@@ -298,7 +282,7 @@ export const BertMlmViz = () => (
         ],
       },
       {
-        label: "Corrupt",
+        label: "오염",
         title: "선택된 위치 안에서만 80·10·10 branch를 나눕니다",
         note: "전체 token의 80%가 [MASK]가 아니라 selected 15%의 80%입니다.",
         nodes: [
@@ -308,7 +292,7 @@ export const BertMlmViz = () => (
         ],
       },
       {
-        label: "Encode",
+        label: "인코딩",
         title: "Model은 corrupted sequence 전체를 양방향으로 읽습니다",
         note: "Target token 자체를 그대로 보이는 shortcut을 줄이면서 주변 context는 유지합니다.",
         nodes: [
@@ -318,7 +302,7 @@ export const BertMlmViz = () => (
         ],
       },
       {
-        label: "Recover",
+        label: "복원",
         title: "Loss는 선택 위치의 원래 vocabulary ID에만 계산합니다",
         note: "MLM은 left-to-right joint generation likelihood가 아니라 selected conditional reconstruction입니다.",
         nodes: [
@@ -334,7 +318,7 @@ export const BertMlmViz = () => (
 export const BertObjectiveViz = () => (
   <BertFlow
     id="bert-objectives-modern"
-    eyebrow="Supervision unit"
+    eyebrow="정답 단위"
     title="NSP·SOP·RTD는 서로 다른 위치에 label을 붙입니다"
     description="이름의 연대기가 아니라 example construction과 prediction unit을 비교합니다."
     scenes={[
@@ -369,7 +353,7 @@ export const BertObjectiveViz = () => (
         ],
       },
       {
-        label: "Compare",
+        label: "비교",
         title: "같은 compute·data에서 공통 downstream task로 비교합니다",
         note: "RoBERTa·ALBERT·ELECTRA는 objective 외 architecture와 recipe도 바뀌므로 단일 요인으로 읽지 않습니다.",
         nodes: [
@@ -385,12 +369,12 @@ export const BertObjectiveViz = () => (
 export const BertTaskHeadViz = () => (
   <BertFlow
     id="bert-heads-modern"
-    eyebrow="Output unit"
+    eyebrow="출력 단위"
     title="Task가 요구하는 답의 축이 읽을 hidden state를 정합니다"
     description="Sequence, token, span, retrieval을 출력 tensor와 계산 재사용 기준으로 나눕니다."
     scenes={[
       {
-        label: "Sequence",
+        label: "문장",
         title: "[CLS] state 하나를 class logits로 투영합니다",
         note: "3-class classification은 [B,H]에서 [B,3]을 만듭니다.",
         nodes: [
@@ -400,7 +384,7 @@ export const BertTaskHeadViz = () => (
         ],
       },
       {
-        label: "Token",
+        label: "토큰",
         title: "각 token state를 각 위치 label logits로 바꿉니다",
         note: "NER는 subword-to-label alignment와 PAD loss mask를 별도로 고정합니다.",
         nodes: [
@@ -410,7 +394,7 @@ export const BertTaskHeadViz = () => (
         ],
       },
       {
-        label: "Span",
+        label: "구간",
         title: "각 위치에서 start와 end score 두 개를 만듭니다",
         note: "Extractive QA는 answer가 input span 안에 있다는 data contract가 필요합니다.",
         nodes: [
@@ -420,7 +404,7 @@ export const BertTaskHeadViz = () => (
         ],
       },
       {
-        label: "Retrieval",
+        label: "검색",
         title: "함께 읽는 cross와 따로 저장하는 bi-encoder를 구분합니다",
         note: "Cross는 pair interaction이 강하고 bi는 document vector를 재사용할 수 있습니다.",
         nodes: [

@@ -6,16 +6,27 @@ import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./codeRefs";
 import { bertTree } from "./fileTree";
 import { BertVisibilityViz } from "./viz/ModernBertViz";
+import { NlpFoundationLocator, NlpMapReturn } from "../shared/NlpFoundationLocator";
 
 export default function BertFoundationArticle() {
   const sidebar = useCodeSidebar();
   return (
     <div className="space-y-16">
+      <NlpFoundationLocator
+        current="bert"
+        question="입력 전체가 이미 주어졌을 때, 각 token 위치를 양쪽 문맥이 반영된 state로 어떻게 다시 표현할까요?"
+        fixture="‘은행에서 대출을 받았다’의 ‘대출’ 위치가 왼쪽 ‘은행’과 오른쪽 ‘받았다’를 모두 읽되 PAD는 보지 않는 과정을 추적합니다."
+        parentHref="/cs/ai/transformer-architecture#attention-boundary"
+        parentLabel="Transformer의 source·visibility 계약"
+        secondaryHref="/cs/ai/tokenizer#wordpiece"
+        secondaryLabel="WordPiece와 special-token ID"
+      />
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           BERT는 문장을 생성하기보다 주어진 입력의 각 위치를 양쪽 문맥으로 다시
           표현합니다
         </h2>
+        <BertVisibilityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             먼저 token row 하나와 그 row가 읽을 수 있는 key 위치를 봅니다.
@@ -53,7 +64,6 @@ export default function BertFoundationArticle() {
             },
           ]}
         />
-        <BertVisibilityViz />
         <ContentBoundary article="bert" />
       </section>
       <section id="visibility" className="scroll-mt-20">
@@ -183,6 +193,12 @@ export default function BertFoundationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <NlpMapReturn
+        title="BERT의 양방향성은 두 방향으로 생성한다는 뜻이 아니라, 이미 주어진 입력의 모든 실제 token key를 읽는 encoder visibility입니다."
+        detail="다음 글에서는 이 encoder에 들어갈 token·position·segment·padding tensor를 같은 길이로 맞춥니다."
+        nextHref="/cs/ai/bert-input-packing"
+        nextLabel="BERT 입력 구성으로 이어가기"
+      />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

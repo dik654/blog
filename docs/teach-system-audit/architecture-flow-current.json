@@ -7,8 +7,8 @@
     "dedicatedVisuals": 673,
     "inlineVisuals": 557,
     "customVisuals": 858,
-    "animatedMechanisms": 414,
-    "architectureWithoutAnimation": 111,
+    "animatedMechanisms": 416,
+    "architectureWithoutAnimation": 110,
     "recursiveLocators": 34,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 979,
@@ -5577,11 +5577,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/tool-calling-lifecycle-and-costs",
@@ -5673,11 +5673,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": false,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/triplet-metric-learning",

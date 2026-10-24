@@ -9,29 +9,36 @@ export default function SentencePiece() {
         SentencePiece는 toolkit이고 Unigram은 segmentation model이다
       </h2>
 
+      <UnigramViz />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           SentencePiece는 공백으로 먼저 단어를 나누지 않은 raw sentence에서
           subword model을 학습하고 실행하는 toolkit입니다. 그 안에서 BPE와
           Unigram을 모두 선택할 수 있으므로 “SentencePiece와 BPE 중 무엇을
-          썼다”는 표현만으로는 model을 특정할 수 없습니다. <code>▁</code> meta
-          symbol은 공백 경계를 vocabulary 안에 드러내 detokenization을 돕지만,
-          normalization·unknown 처리·byte fallback 설정까지 자동으로 한 값이 되는
-          것은 아닙니다.
+          썼다”는 표현만으로는 model을 특정할 수 없습니다.
         </p>
         <p>
-          Unigram trainer는 넓은 seed vocabulary(예: suffix array로 뽑은 자주 나오는 substring 모두)에서 출발해 EM(expectation-
-          maximization)을 반복합니다. E-step은 현재 piece probability로 corpus의 각 문장을 여러 경로로 나눠 보고 piece별 기대 등장 횟수를
-          계산합니다. M-step은 그 기대 횟수로 probability를 다시 추정합니다. 이 EM을 몇 round 돌린 뒤, 제거했을 때 corpus log-likelihood를 가장
-          덜 해치는 piece부터 얼마간 잘라내는 pruning을 반복해 목표 vocabulary 크기에 도달합니다.
+          <code>▁</code> meta symbol은 공백 경계를 vocabulary 안에 드러내
+          detokenization을 돕습니다. 하지만 normalization·unknown 처리·byte
+          fallback 설정까지 자동으로 한 값이 되는 것은 아닙니다.
+        </p>
+        <p>
+          Unigram trainer는 넓은 seed vocabulary에서 출발해 EM(expectation-
+          maximization)을 반복합니다. Seed는 suffix array 등으로 찾은 자주 나오는
+          substring을 포함할 수 있습니다.
+        </p>
+        <p>
+          E-step은 현재 piece probability로 corpus의 문장을 여러 경로로 나누고
+          piece별 기대 등장 횟수를 계산합니다. M-step은 그 기대 횟수로 probability를
+          다시 추정합니다. 몇 round가 끝나면 corpus log-likelihood를 가장 덜 해치는
+          piece부터 잘라내고, 이 pruning을 목표 vocabulary 크기까지 반복합니다.
         </p>
         <p className="leading-7">
           BPE가 병합 순서를 규칙으로 쌓는 반면 Unigram encoding은 현재
           vocabulary로 입력을 완전히 덮는 여러 경로를 비교합니다.
         </p>
       </div>
-
-      <UnigramViz />
 
       <ExplainedFormula
         question="같은 문자열의 여러 subword 분할 가운데 Unigram은 어느 경로를 고를까?"

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 412,
-    "pending": 578,
+    "reviewed": 419,
+    "pending": 571,
     "untracked": 0,
-    "assignedPending": 526,
+    "assignedPending": 519,
     "postCheckpointPending": 52,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -563,9 +563,9 @@
       "publicPath": "cs/ai/tokenizer",
       "title": "토크나이저: 텍스트를 토큰으로",
       "catalogIndex": 53,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -573,9 +573,9 @@
       "publicPath": "cs/ai/transformer-architecture",
       "title": "Transformer 아키텍처",
       "catalogIndex": 54,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -583,9 +583,9 @@
       "publicPath": "cs/ai/bert",
       "title": "BERT Encoder: 양방향 Visibility에서 Contextual State까지",
       "catalogIndex": 55,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -593,9 +593,9 @@
       "publicPath": "cs/ai/bert-input-packing",
       "title": "BERT Input Packing: Special Token과 네 Tensor",
       "catalogIndex": 56,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -603,9 +603,9 @@
       "publicPath": "cs/ai/bert-mlm-corruption",
       "title": "BERT MLM: 15% 선택과 80·10·10 Corruption",
       "catalogIndex": 57,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -613,9 +613,9 @@
       "publicPath": "cs/ai/bert-pretraining-objectives",
       "title": "BERT 후속 Objective: NSP·SOP·RTD 비교",
       "catalogIndex": 58,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -623,9 +623,9 @@
       "publicPath": "cs/ai/bert-task-heads",
       "title": "BERT Task Heads: Sequence·Token·Span·Retrieval",
       "catalogIndex": 59,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

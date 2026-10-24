@@ -10,15 +10,19 @@ export default function Training() {
         Training recipe는 architecture 밖의 부록이 아니라 재현 결과의 일부다
       </h2>
 
+      <TrainingRecipeViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-8">
-          Layer 수와 hidden size가 같아도 initialization과 optimizer, learning-rate schedule이 다르면 안정성과 최종 loss가
-          달라집니다. global token batch와 sequence packing, numerical precision도 마찬가지입니다. “Transformer는 AdamW와
-          warmup을 쓴다”는 목록보다 각 선택이 어떤 failure를 막는지, checkpoint resume 때 어떤 state가 보존되는지를 봅니다.
+          Layer 수와 hidden size가 같아도 initialization·optimizer·learning-rate
+          schedule이 다르면 안정성과 최종 loss가 달라집니다. Global token batch,
+          sequence packing, numerical precision도 마찬가지입니다.
+        </p>
+        <p className="leading-8">
+          “Transformer는 AdamW와 warmup을 쓴다”는 목록만 외우지 않습니다. 각 선택이
+          어떤 failure를 막는지, checkpoint resume 때 어떤 state를 보존하는지 봅니다.
         </p>
       </div>
-
-      <TrainingRecipeViz />
 
       <ExplainedFormula
         question="Warmup 이후 learning rate를 왜 step 수의 제곱근에 반비례하게 낮추는가?"
@@ -110,9 +114,11 @@ export default function Training() {
         <p className="leading-8">
           Model weight 외에도 gradient, optimizer moment, master weight,
           activation, temporary buffer와 communication이 memory를 차지합니다.
-          BF16·FP16·FP8을 쓴다고 전체 memory가 정확히 절반이나 4분의 1이 되지
-          않으며, loss scaling과 accumulation precision도 함께 봐야 합니다.
-          Optimizer update 자체는
+        </p>
+        <p className="leading-8">
+          BF16·FP16·FP8을 써도 전체 memory가 정확히 절반이나 4분의 1이 되지는
+          않습니다. Loss scaling과 accumulation precision도 함께 봐야 합니다.
+          Optimizer update는
           <Link to="/cs/ai/optimizers"> Optimizer 정본 글</Link>에서 이어집니다.
         </p>
 
