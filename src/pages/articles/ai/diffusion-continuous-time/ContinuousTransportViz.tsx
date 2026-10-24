@@ -3,10 +3,16 @@ import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
 const SCENES = [
-  "forward SDE",
-  "reverse SDE",
-  "flow ODE",
-  "solver budget",
+  "정방향 확산",
+  "무작위 역경로",
+  "결정적 역경로",
+  "호출 비용",
+] as const;
+const NOTES = [
+  "정방향 SDE는 평균 이동과 브라운 운동을 더해 데이터 분포를 잡음 쪽으로 퍼뜨립니다.",
+  "역방향 SDE는 점수로 평균 방향을 고치면서도 매 순간 무작위 항을 남깁니다.",
+  "Probability-flow ODE는 같은 시간별 분포를 목표로 하되 한 초기점에 결정적 경로를 줍니다.",
+  "실제 실행에서는 유한한 solver step과 신경망 호출 횟수 NFE가 오차와 지연을 정합니다.",
 ] as const;
 
 export default function ContinuousTransportViz() {
@@ -14,12 +20,14 @@ export default function ContinuousTransportViz() {
   const a = scenes.active;
   return (
     <VizFrame
-      eyebrow="Animated probability transport"
-      title="같은 noise cloud에서 출발해 random path와 deterministic path를 분리한다"
-      description="Score는 density가 많은 방향을 알려 주고, dynamics는 그 방향을 stochastic drift 또는 deterministic velocity로 사용합니다."
-      note="같은 time marginal은 같은 particle path를 뜻하지 않습니다."
+      eyebrow="확률분포 전송"
+      title="같은 잡음 분포에서 무작위 경로와 결정적 경로를 나눕니다"
+      description="점수는 밀도가 높아지는 방향을 알려 주고, 동역학은 그 방향을 무작위 평균 이동이나 결정적 속도로 사용합니다."
+      note="같은 시간별 분포를 만든다고 각 표본이 같은 경로로 움직이는 것은 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="continuous-transport-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -27,31 +35,32 @@ export default function ContinuousTransportViz() {
         onKeyDown={scenes.onKeyDown}
         className="outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
+        <div data-viz-live-only>
         <div className="space-y-3 md:hidden">
-          <Cloud label="data cloud" dots="● ●  ●" active={a === 0} />
-          <MobileArrow text="forward drift + Brownian noise" />
-          <Cloud label="terminal noise" dots="·  · ·  ·" active={a <= 1} />
+          <Cloud label="데이터 분포" dots="● ●  ●" active={a === 0} />
+          <MobileArrow text="정방향 평균 이동 + 브라운 잡음" />
+          <Cloud label="마지막 잡음" dots="·  · ·  ·" active={a <= 1} />
           <div className="grid grid-cols-2 gap-3">
-            <Cloud label="reverse SDE" dots="random paths" active={a === 1} />
-            <Cloud label="flow ODE" dots="fixed paths" active={a === 2} />
+            <Cloud label="역방향 SDE" dots="무작위 경로" active={a === 1} />
+            <Cloud label="흐름 ODE" dots="결정적 경로" active={a === 2} />
           </div>
-          <MobileArrow text="finite solver가 learned field를 호출" />
-          <Cloud label="NFE ledger" dots="steps ≠ calls" active={a === 3} />
+          <MobileArrow text="유한 solver가 학습한 장을 호출" />
+          <Cloud label="호출 장부" dots="단계 수 ≠ 호출 수" active={a === 3} />
         </div>
         <svg
           viewBox="0 0 840 350"
           className="hidden h-auto w-full md:block"
           aria-label="data cloud와 noise cloud 사이 SDE ODE transport"
         >
-          <CloudSvg cx={110} cy={175} label="data" active={a === 0 || a >= 1} />
-          <CloudSvg cx={420} cy={175} label="noise prior" active={a <= 1} />
-          <CloudSvg cx={730} cy={95} label="reverse SDE" active={a === 1} />
-          <CloudSvg cx={730} cy={255} label="flow ODE" active={a === 2} />
+          <CloudSvg cx={110} cy={175} label="데이터" active={a === 0 || a >= 1} />
+          <CloudSvg cx={420} cy={175} label="잡음 기준분포" active={a <= 1} />
+          <CloudSvg cx={730} cy={95} label="역방향 SDE" active={a === 1} />
+          <CloudSvg cx={730} cy={255} label="흐름 ODE" active={a === 2} />
           <Curve
             d="M175 165 C255 75 330 95 355 145"
             color="#64748b"
             active={a === 0}
-            label="forward + Brownian"
+            label="정방향 + 브라운 잡음"
             x={270}
             y={80}
           />
@@ -59,7 +68,7 @@ export default function ContinuousTransportViz() {
             d="M485 150 C570 50 640 55 675 90"
             color="#f97316"
             active={a === 1}
-            label="score-corrected random path"
+            label="점수로 고친 무작위 경로"
             x={585}
             y={48}
           />
@@ -67,7 +76,7 @@ export default function ContinuousTransportViz() {
             d="M485 205 C565 300 640 290 675 260"
             color="#0ea5e9"
             active={a === 2}
-            label="deterministic velocity"
+            label="결정적 속도"
             x={585}
             y={320}
           />
@@ -90,10 +99,19 @@ export default function ContinuousTransportViz() {
             fontWeight="700"
             fill="currentColor"
           >
-            solver calls → NFE
+            신경망 호출 수 → NFE
           </text>
         </svg>
+        </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

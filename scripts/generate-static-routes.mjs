@@ -55,6 +55,13 @@ for (const route of [...routes].sort()) {
 // 새 글은 모바일·키보드·reduced-motion·정적 읽기 검증을 모두 마친 뒤에만
 // 이 목록에 넣습니다. 개별 파일이 아니라 함께 검증한 학습 묶음을 완성 단위로 봅니다.
 const noScriptArticleRoutes = new Set([
+  "ai/diffusion-models",
+  "ai/diffusion-continuous-time",
+  "ai/latent-diffusion-guidance",
+  "ai/visual-representation-tokenizers",
+  "ai/diffusion-transformer-architecture",
+  "ai/modern-image-model-stack",
+  "ai/diffusion-language-models",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

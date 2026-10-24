@@ -5,14 +5,20 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import VisualRepresentationMap from "./visual-representation-tokenizers/viz/VisualRepresentationMap";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "./shared/DiffusionLearningLocator";
 
 export default function VisualRepresentationTokenizersArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="representation" />
       <section id="objective" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Image를 token으로 줄인다는 말만으로는 무엇을 남겼는지 알 수 없습니다
         </h2>
+        <VisualRepresentationMap />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             현대 image model은 pixel을 그대로 끝까지 처리하기보다 더 작은 숫자
@@ -32,7 +38,6 @@ export default function VisualRepresentationTokenizersArticle() {
             로봇이 작은 손잡이를 잡아야 한다면 그 detail을 지운 semantic feature도 부족할 수 있기 때문입니다.
           </p>
         </div>
-        <VisualRepresentationMap />
         <ContentBoundary article="visual-representation-tokenizers" />
       </section>
 
@@ -190,6 +195,7 @@ N_z&=\underbrace{\frac{H}{f}\frac{W}{f}}_{\substack{\text{두 공간축을 각�
           </p>
         </ProgressiveDetail>
       </section>
+      <DiffusionLearningMapReturn current="representation" />
     </div>
   );
 }

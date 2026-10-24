@@ -28,6 +28,8 @@ export default function DiffusionLanguageRefinementViz() {
       note="실제 sampler는 무작위 remasking, confidence 순위, block schedule 등 여러 정책을 쓸 수 있습니다. 이 그림은 low-confidence remasking의 직관을 보여 줍니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-scene="diffusion-language-refinement-viz"
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -35,9 +37,10 @@ export default function DiffusionLanguageRefinementViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col">
         <div className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Reverse step · {String(scenes.active + 1).padStart(2, "0")}
+            복원 단계 · {String(scenes.active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
           <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
@@ -64,7 +67,16 @@ export default function DiffusionLanguageRefinementViz() {
             {NOTES[scenes.active]}
           </p>
         </div>
+        </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 list-decimal space-y-3 pl-5 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}>
+              <strong>{label}</strong>
+              <span className="mt-1 block text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

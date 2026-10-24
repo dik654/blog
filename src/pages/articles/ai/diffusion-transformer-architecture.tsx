@@ -6,14 +6,20 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DiffusionTransformerBlockViz from "./diffusion-transformer-architecture/viz/DiffusionTransformerBlockViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "./shared/DiffusionLearningLocator";
 
 export default function DiffusionTransformerArchitectureArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="transformer" />
       <section id="latent-patches" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           DiT는 image를 쓰는 LLM이 아니라 noisy latent를 복원하는 Transformer입니다
         </h2>
+        <DiffusionTransformerBlockViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Diffusion Transformer(DiT)는 U-Net이 맡던 denoiser interface를 Transformer로
@@ -31,7 +37,6 @@ export default function DiffusionTransformerArchitectureArticle() {
             granularity를 한꺼번에 정합니다.
           </p>
         </div>
-        <DiffusionTransformerBlockViz />
         <ExplainedFormula
           question="Latent grid와 patch size가 Transformer token 수를 어떻게 정하나요?"
           idea="각 공간축에서 patch가 몇 개 들어가는지 센 뒤 두 축의 개수를 곱합니다. Self-attention을 dense하게 쓰면 pair 수는 N²으로 늘어납니다."
@@ -207,6 +212,7 @@ C_{\mathrm{attn}}&\propto\underbrace{N^2}_{\text{모든 token pair}}\underbrace{
           </p>
         </ProgressiveDetail>
       </section>
+      <DiffusionLearningMapReturn current="transformer" />
     </div>
   );
 }

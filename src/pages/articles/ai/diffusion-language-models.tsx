@@ -6,14 +6,20 @@ import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DiffusionLanguageRefinementViz from "./diffusion-language-models/viz/DiffusionLanguageRefinementViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "./shared/DiffusionLearningLocator";
 
 export default function DiffusionLanguageModelsArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="language" />
       <section id="ar-vs-diffusion" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
           Diffusion LLM은 다음 token 대신 문장 전체의 빈칸을 반복해서 복원합니다
         </h2>
+        <DiffusionLanguageRefinementViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
             Autoregressive language model은 왼쪽 prefix가 정해진 뒤 다음 token 하나의 확률을 냅니다. Diffusion language model은
@@ -31,7 +37,6 @@ export default function DiffusionLanguageModelsArticle() {
             kernel, output 분포, loss와 runtime은 모두 이산 token에 맞게 다시 설계됩니다.
           </p>
         </div>
-        <DiffusionLanguageRefinementViz />
         <ContentBoundary article="diffusion-language-models" />
       </section>
 
@@ -233,6 +238,7 @@ export default function DiffusionLanguageModelsArticle() {
           </p>
         </div>
       </section>
+      <DiffusionLearningMapReturn current="language" />
     </div>
   );
 }

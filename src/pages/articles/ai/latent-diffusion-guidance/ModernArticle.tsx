@@ -11,18 +11,24 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import LatentPipelineViz from "./LatentPipelineViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "../shared/DiffusionLearningLocator";
 
 export default function LatentDiffusionGuidanceArticle() {
   const sidebar = useCodeSidebar();
   return (
     <>
     <article id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="latent" />
       <section id="compression" className="space-y-6">
         <LearningHeader
           n="00"
           kicker="먼저 denoising 공간을 바꾸기"
           title="Latent diffusion은 pixel을 버리는 것이 아니라 lossy interface를 앞에 둔다"
         />
+        <LatentPipelineViz />
         <p className="text-lg leading-8">
           먼저 <strong>latent bottleneck</strong> 하나만 봅니다. Encoder는 큰
           pixel grid를 더 작은 spatial tensor로 바꾸고, decoder는 그 tensor를
@@ -35,7 +41,6 @@ export default function LatentDiffusionGuidanceArticle() {
           example="512×512 image를 8배 spatial downsampling하면 latent grid는 64×64가 되어 위치 수가 262,144에서 4,096로 64배 줄어듭니다."
           boundary="Channel·width·attention·NFE가 달라 실제 speedup은 정확히 64배가 아니며, encoder가 버린 detail은 diffusion이 원본에서 되찾을 수 없습니다."
         />
-        <LatentPipelineViz />
         <ExplainedFormula
           question="왜 spatial downsampling factor를 한 번이 아니라 제곱해서 위치 수 감소를 계산할까요?"
           idea="Image에는 height와 width 두 축이 있습니다. 각 축을 f배 줄이면 전체 spatial position 수는 f×f배 줄어듭니다."
@@ -364,6 +369,7 @@ G_{\rm release}&=\underbrace{G_{\rm recon}\land G_s\land G_p}_{\text{필수 gate
         </div>
         <ContentBoundary article="latent-diffusion-guidance" />
       </section>
+      <DiffusionLearningMapReturn current="latent" />
     </article>
     <CodeSidebar
       codeRefKey={sidebar.codeRefKey}

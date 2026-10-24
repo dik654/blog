@@ -1954,9 +1954,10 @@
         "src/pages/articles/ai/diffusion-continuous-time.tsx",
         "src/pages/articles/ai/diffusion-continuous-time/ContinuousTransportViz.tsx",
         "src/pages/articles/ai/diffusion-continuous-time/ModernArticle.tsx",
-        "src/pages/articles/ai/diffusion-shared.tsx"
+        "src/pages/articles/ai/diffusion-shared.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -1964,19 +1965,32 @@
         "hasSourceSurface": true,
         "characters": 23445
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Reverse SDE·probability-flow ODE·flow matching·solver가 각각 설명됐지만 확산 기초에서 어느 가정을 연속시간으로 옮기는지 먼저 보이지 않았습니다.",
+        "무작위 경로와 결정적 경로가 같은 시간별 분포를 가질 수 있다는 주장과 실제 유한 solver 오차의 경계가 한 지도에 없었습니다."
+      ],
+      "fixture": "하나의 데이터 분포가 정방향 SDE로 잡음 분포가 된 뒤 역방향 SDE와 probability-flow ODE라는 두 경로로 돌아오고, 마지막에 solver 호출 수를 셉니다.",
+      "stageAnchors": {
+        "parent": "diffusion-models#score",
+        "map": "overview",
+        "random": "reverse-sde",
+        "deterministic": "probability-flow",
+        "field": "flow-matching",
+        "execution": "solver-budget"
+      },
+      "primarySourceApplication": [
+        "Score-SDE 원문은 역방향 SDE와 probability-flow ODE의 이상적 관계에, Flow Matching 원문은 조건부 속도 회귀와 주변 벡터장의 연결에 한정해 적용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 정방향 확산→무작위 역경로→결정적 역경로→유한 호출 비용을 같은 분포 전송으로 추적했습니다.",
+        "humanize": "pass · SDE·ODE 이름보다 무작위 경로와 결정적 경로의 차이를 먼저 보여 줍니다.",
+        "numericTrace": "pass · NFE·solver step을 측정값처럼 만들지 않고 서로 다른 장부 항목으로 유지했습니다.",
+        "mobile390": "pass · locator·첫 그림·반환 지도·document/canvas/SVG overflow 0",
+        "desktop1440": "pass · locator·첫 그림·반환 지도·document/canvas/SVG overflow 0",
+        "interaction": "pass · 명시적 재생, 키보드 순서, reduced-motion, no-JS 전체 장면"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -1985,9 +1999,10 @@
       "subcategory": "ai-generative",
       "publicFiles": [
         "src/pages/articles/ai/diffusion-language-models.tsx",
-        "src/pages/articles/ai/diffusion-language-models/viz/DiffusionLanguageRefinementViz.tsx"
+        "src/pages/articles/ai/diffusion-language-models/viz/DiffusionLanguageRefinementViz.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -1995,19 +2010,33 @@
         "hasSourceSurface": true,
         "characters": 14201
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "MASK 손상과 반복 복원은 설명했지만 이미지 확산과 공유하는 원리, 갈라지는 상태 공간, 전체 커리큘럼에서의 위치가 먼저 보이지 않았습니다.",
+        "한 번에 여러 토큰을 예측하는 것과 실제 지연이 짧다는 주장을 분리해 읽을 부모 지도가 없었습니다."
+      ],
+      "fixture": "여섯 자리 응답을 전부 MASK로 시작해 여러 위치를 함께 채우고, 낮은 신뢰도 토큰을 다시 가린 뒤 네 단계에서 문장을 완성합니다.",
+      "stageAnchors": {
+        "parent": "diffusion-models#corruption",
+        "map": "overview",
+        "difference": "ar-vs-diffusion",
+        "forward": "forward-objective",
+        "reverse": "reverse-sampling",
+        "runtime": "runtime-blocks",
+        "boundary": "world-model-boundary"
+      },
+      "primarySourceApplication": [
+        "MDLM은 MASK 손상과 목적함수, LLaDA는 대규모 반복 복원, Block Diffusion은 블록 사이 자기회귀와 블록 안 확산의 경계에 각각 한정해 적용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 이미지 경로와 분기한 뒤 MASK 손상·복원·재마스킹·캐시 경계를 한 여섯 토큰 사례로 추적했습니다.",
+        "humanize": "pass · diffusion LLM이라는 이름보다 문장 전체의 빈칸을 여러 번 고치는 상태 변화를 먼저 보여 줍니다.",
+        "numericTrace": "pass · 병렬 토큰 수를 wall-clock 성능으로 확대하지 않고 step·block·forward latency를 따로 남겼습니다.",
+        "mobile390": "pass · locator·4장면·반환 지도·document/canvas overflow 0",
+        "desktop1440": "pass · locator·4장면·반환 지도·document/canvas overflow 0",
+        "interaction": "pass · 명시적 재생, 키보드 순서, reduced-motion, no-JS 전체 장면"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -2020,9 +2049,10 @@
         "src/pages/articles/ai/diffusion-models/ModernArticle.tsx",
         "src/pages/articles/ai/diffusion-models/codeRefs.ts",
         "src/pages/articles/ai/diffusion-models/fileTree.ts",
-        "src/pages/articles/ai/diffusion-shared.tsx"
+        "src/pages/articles/ai/diffusion-shared.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2030,19 +2060,33 @@
         "hasSourceSurface": true,
         "characters": 34416
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "정방향 식·예측 목표·ELBO·score는 자세했지만 학습용 잡음 쌍 하나와 생성 시 반복 호출이 서로 다른 절차라는 그림이 설명 뒤에 있었습니다.",
+        "이 글이 생성 모델의 점수 방향 갈래에서 연속시간·이미지·언어 경로로 이어지는 직속 부모 역할을 하지 못했습니다."
+      ],
+      "fixture": "원본 x₀ 하나에서 시간 t와 잡음 ε로 xₜ를 한 번 만들고 예측값을 학습한 뒤, 생성에서는 잡음에서 시작해 같은 복원기를 여러 번 호출합니다.",
+      "stageAnchors": {
+        "parent": "score-based-generative-models",
+        "map": "overview",
+        "contract": "corruption",
+        "schedule": "schedule",
+        "target": "target",
+        "derivation": "loss-derivation",
+        "direction": "score"
+      },
+      "primarySourceApplication": [
+        "DDPM 원문은 Gaussian 손상·단순 예측 손실·표본추출 경계에, U-Net 원문은 같은 크기 특징을 잇는 뼈대의 출처에 한정했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 손상과 복원이라는 부모 원리에서 잡음 쌍·예측값·score·표본추출을 한 사례로 추적했습니다.",
+        "humanize": "pass · noise level·target·sampling 대신 잡음 쌍·예측값·반복 복원을 첫 그림에 사용했습니다.",
+        "numericTrace": "pass · 학습 시점 수, 표본추출 단계 수와 신경망 호출 수를 같은 숫자로 가정하지 않았습니다.",
+        "mobile390": "pass · 675px 부모 지도와 첫 그림, document/canvas/SVG overflow 0",
+        "desktop1440": "pass · locator·첫 그림·반환 지도·document/canvas/SVG overflow 0",
+        "interaction": "pass · 명시적 재생, 키보드 순서, 화면 이탈 정지, 재진입 자동 재생 없음, reduced-motion, no-JS 전체 장면"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -2051,9 +2095,10 @@
       "subcategory": "ai-generative",
       "publicFiles": [
         "src/pages/articles/ai/diffusion-transformer-architecture.tsx",
-        "src/pages/articles/ai/diffusion-transformer-architecture/viz/DiffusionTransformerBlockViz.tsx"
+        "src/pages/articles/ai/diffusion-transformer-architecture/viz/DiffusionTransformerBlockViz.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2061,19 +2106,32 @@
         "hasSourceSurface": true,
         "characters": 12534
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "DiT 텐서와 조건 방식은 정확했지만 앞 글의 표현 계약을 실제 복원기 호출로 어떻게 소비하는지 첫 화면에서 이어지지 않았습니다.",
+        "기존 모바일 가로 카드가 내부 847px 넘침을 만들어 전체 파이프라인을 보려면 좌우로 이동해야 했습니다."
+      ],
+      "fixture": "잠재 격자 h×w×c를 N개 토큰으로 바꾸고 DiT 블록을 거쳐 속도 또는 잡음 텐서를 같은 격자 모양으로 돌려놓습니다.",
+      "stageAnchors": {
+        "parent": "visual-representation-tokenizers#reconstruction",
+        "map": "overview",
+        "tokens": "latent-patches",
+        "time": "conditioned-block",
+        "streams": "multimodal-streams",
+        "runtime": "runtime-boundary"
+      },
+      "primarySourceApplication": [
+        "원 DiT 논문은 잠재 패치·조건 주입·규모 실험의 범위에 한정하고 현대 텍스트·이미지 결합 구조 전체로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 잠재 격자→패치→DiT→출력→격자 복원과 시점·조건·위치를 먼저 보여 줍니다.",
+        "humanize": "pass · 영문 카드보다 잠재 격자·패치 변환·복원 방향이라는 역할을 먼저 사용했습니다.",
+        "numericTrace": "pass · 토큰 수와 NFE를 서로 다른 비용 축으로 유지했습니다.",
+        "mobile390": "pass · 첫 그림 832px, 이전 내부 overflow 847px를 0으로 수정",
+        "desktop1440": "pass · 다섯 단계와 세 조건이 한 화면에 표시되고 overflow 0",
+        "accessibility": "pass · 정적 그림이므로 JavaScript와 모션 없이 같은 순서와 결론 제공"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -4035,9 +4093,10 @@
         "src/pages/articles/ai/latent-diffusion-guidance/LatentPipelineViz.tsx",
         "src/pages/articles/ai/latent-diffusion-guidance/ModernArticle.tsx",
         "src/pages/articles/ai/latent-diffusion-guidance/codeRefs.ts",
-        "src/pages/articles/ai/latent-diffusion-guidance/fileTree.ts"
+        "src/pages/articles/ai/latent-diffusion-guidance/fileTree.ts",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4045,19 +4104,32 @@
         "hasSourceSurface": true,
         "characters": 22542
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "압축·구성요소·CFG·출시 판정은 갖췄지만 공통 확산 원리가 이미지 경로의 실제 제품 구성으로 바뀌는 위치가 보이지 않았습니다.",
+        "인코더·복원기·표본추출기·디코더가 소유하는 상태와 실패가 긴 설명 뒤에 나타났습니다."
+      ],
+      "fixture": "512×512 픽셀을 64×64 잠재 격자로 압축하고 텍스트 조건을 넣어 반복 복원한 뒤 픽셀로 되돌려 품질·포괄·지연을 판정합니다.",
+      "stageAnchors": {
+        "parent": "diffusion-continuous-time#solver-budget",
+        "map": "overview",
+        "compression": "compression",
+        "components": "pipeline",
+        "condition": "guidance",
+        "release": "evaluation"
+      },
+      "primarySourceApplication": [
+        "Latent Diffusion 원문은 손실 압축과 잠재공간 생성에, Classifier-Free Guidance 원문은 조건부·무조건부 예측 결합과 품질·다양성 경계에 한정했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 압축→조건→반복 복원→픽셀 복원과 판정을 구성요소별 상태 책임으로 추적했습니다.",
+        "humanize": "pass · encode·condition·denoise보다 압축·조건 입력·반복 복원이라는 역할을 먼저 보여 줍니다.",
+        "numericTrace": "pass · 8배 공간축 압축과 64배 위치 감소를 실제 전체 속도 향상으로 확대하지 않았습니다.",
+        "mobile390": "pass · locator·4장면·반환 지도·document/canvas overflow 0",
+        "desktop1440": "pass · locator·4장면·반환 지도·document/canvas overflow 0",
+        "interaction": "pass · 명시적 재생, 키보드 순서, reduced-motion, no-JS 전체 장면"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -6228,9 +6300,10 @@
       "subcategory": "ai-generative",
       "publicFiles": [
         "src/pages/articles/ai/modern-image-model-stack.tsx",
-        "src/pages/articles/ai/modern-image-model-stack/viz/ModernImageStackViz.tsx"
+        "src/pages/articles/ai/modern-image-model-stack/viz/ModernImageStackViz.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -6238,19 +6311,32 @@
         "hasSourceSurface": true,
         "characters": 12581
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "조건 인코더·오토인코더·DiT·디코더의 전체 지도는 있었지만 앞선 세부 글이 어디에 꽂히는지와 언어 확산으로 갈라지는 위치가 먼저 보이지 않았습니다.",
+        "좁은 데스크톱 카드에서 Visual autoencoder와 Diffusion transformer가 단어 중간에서 줄바꿈됐습니다."
+      ],
+      "fixture": "프롬프트가 조건 c가 되고 이미지가 잠재값 z가 된 뒤 복원기가 여러 번 방향을 예측하고 디코더가 z₀를 이미지로 되돌리는 요청 하나를 조립합니다.",
+      "stageAnchors": {
+        "parent": "diffusion-transformer-architecture#runtime-boundary",
+        "map": "overview",
+        "system": "system-map",
+        "interfaces": "component-contract",
+        "training": "training-stack",
+        "boundary": "world-model-boundary"
+      },
+      "primarySourceApplication": [
+        "개별 논문과 제품 보고서의 결과는 해당 구성요소와 실험 범위에만 귀속하고 현대 이미지 생성 전체의 단일 표준으로 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 조건→표현→생성→복원의 네 계약과 학습·병목·월드모델 경계를 전체 지도에 반환했습니다.",
+        "humanize": "pass · 구성요소 이름과 설명을 한국어 역할 중심으로 고쳐 단어 중간 줄바꿈을 제거했습니다.",
+        "numericTrace": "pass · 특정 제품 성능값을 전체 스택의 보편 결과로 만들지 않았습니다.",
+        "mobile390": "pass · locator·첫 지도·반환 지도·document/canvas overflow 0",
+        "desktop1440": "pass · 네 구성요소와 세 운영 경계가 한 화면에 표시되고 글자 잘림 0",
+        "accessibility": "pass · 정적 그림이므로 JavaScript와 모션 없이 같은 구조와 결론 제공"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -10024,9 +10110,10 @@
       "subcategory": "ai-generative",
       "publicFiles": [
         "src/pages/articles/ai/visual-representation-tokenizers.tsx",
-        "src/pages/articles/ai/visual-representation-tokenizers/viz/VisualRepresentationMap.tsx"
+        "src/pages/articles/ai/visual-representation-tokenizers/viz/VisualRepresentationMap.tsx",
+        "src/pages/articles/ai/shared/DiffusionLearningLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -10034,19 +10121,32 @@
         "hasSourceSurface": true,
         "characters": 9554
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "복원 잠재표현과 의미 표현의 차이는 설명됐지만 잠재 확산 뒤 어느 표현 계약을 고르고 DiT가 무엇을 소비하는지 직속 위치가 보이지 않았습니다.",
+        "핵심 비교 그림이 세 설명 문단 뒤에 있어 이름을 읽기 전에 보존 정보의 차이를 파악하기 어려웠습니다."
+      ],
+      "fixture": "같은 이미지 x를 복원 손실로 압축한 z와 의미 관계로 학습한 h로 갈라 무엇을 남기고 잃는지, 다음 사용처가 무엇인지 비교합니다.",
+      "stageAnchors": {
+        "parent": "latent-diffusion-guidance#compression",
+        "map": "overview",
+        "objective": "objective",
+        "reconstruction": "reconstruction",
+        "semantic": "semantic",
+        "world": "world-state"
+      },
+      "primarySourceApplication": [
+        "LDM은 복원용 잠재공간의 계산·정보 경계에, RAE preprint는 의미 인코더 재사용의 가능성과 미확정 범위에 한정했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 같은 이미지의 복원 잠재표현과 의미 표현을 학습 목표·보존 정보·사용처로 비교했습니다.",
+        "humanize": "pass · reconstruction latent·semantic feature보다 복원 잠재표현·의미 표현을 첫 그림에서 먼저 사용했습니다.",
+        "numericTrace": "pass · 8배 축소의 위치 수 감소를 전체 계산량이나 품질 우위로 확대하지 않았습니다.",
+        "mobile390": "pass · locator·첫 비교 지도·반환 지도·document/canvas overflow 0",
+        "desktop1440": "pass · 두 표현 계약이 나란히 표시되고 글자 잘림 0",
+        "accessibility": "pass · 정적 그림이므로 JavaScript와 모션 없이 같은 구조와 결론 제공"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
@@ -11000,14 +11100,14 @@
   ],
   "summary": {
     "assigned": 189,
-    "rewritten": 66,
+    "rewritten": 73,
     "existingTeachTargetedRepairs": 4,
-    "reviewedAndImproved": 70,
-    "localVerified": 70,
+    "reviewedAndImproved": 77,
+    "localVerified": 77,
     "awaitingIntegration": 0,
-    "pending": 119,
+    "pending": 112,
     "complete": 0,
     "bodyReviewedNeedsRewrite": 1,
-    "bodyReviewedTotal": 71
+    "bodyReviewedTotal": 78
   }
 }

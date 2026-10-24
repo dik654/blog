@@ -8,16 +8,22 @@ import {
   LearningTerm,
 } from "../diffusion-shared";
 import ContinuousTransportViz from "./ContinuousTransportViz";
+import {
+  DiffusionLearningLocator,
+  DiffusionLearningMapReturn,
+} from "../shared/DiffusionLearningLocator";
 
 export default function ContinuousDiffusionArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <DiffusionLearningLocator current="continuous" />
       <section id="reverse-sde" className="space-y-6">
         <LearningHeader
           n="00"
           kicker="먼저 random path를 정의하기"
           title="Reverse-time SDE에는 time reversal뿐 아니라 density 방향이 필요하다"
         />
+        <ContinuousTransportViz />
         <p className="text-lg leading-8">
           <strong>SDE</strong>는 현재 state를 움직이는 평균 방향인 drift와, 매
           순간 새로 들어오는 Brownian randomness를 함께 적는 변화 법칙입니다.
@@ -31,7 +37,6 @@ export default function ContinuousDiffusionArticle() {
           example="f=0, g=1, score=−2라면 reverse drift correction은 +2 방향입니다."
           boundary="True score와 continuous integration의 이론입니다. Neural score와 finite steps에서는 exact sample 보장이 사라집니다."
         />
-        <ContinuousTransportViz />
         <ExplainedFormula
           question="왜 reverse drift에서 score에 g(t)²을 곱해 빼야 할까요?"
           idea="Forward diffusion이 g² scale로 density를 퍼뜨린 만큼, reverse process는 현재 density gradient를 같은 variance rate로 사용해 probability current를 되돌려야 합니다."
@@ -347,6 +352,7 @@ C_{\rm model}&=\underbrace{\mathrm{NFE}\times C_{\rm call}}_{\text{호출 수와
         </div>
         <ContentBoundary article="diffusion-continuous-time" />
       </section>
+      <DiffusionLearningMapReturn current="continuous" />
     </article>
   );
 }
