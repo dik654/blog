@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 550,
-    "pending": 440,
+    "reviewed": 554,
+    "pending": 436,
     "untracked": 0,
-    "assignedPending": 396,
+    "assignedPending": 392,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2023,9 +2023,9 @@
       "publicPath": "cs/ai/mcp-protocol",
       "title": "MCP 기초: Host · Client · Server와 Stateless Core",
       "catalogIndex": 199,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2033,9 +2033,9 @@
       "publicPath": "cs/ai/mcp-primitives",
       "title": "MCP Primitives: Tool · Resource · Prompt",
       "catalogIndex": 200,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2043,9 +2043,9 @@
       "publicPath": "cs/ai/mcp-transports",
       "title": "MCP Transports: stdio · Streamable HTTP",
       "catalogIndex": 201,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2053,9 +2053,9 @@
       "publicPath": "cs/ai/mcp-server-operations",
       "title": "MCP Server 운영: Authorization · Retry · Receipt",
       "catalogIndex": 202,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

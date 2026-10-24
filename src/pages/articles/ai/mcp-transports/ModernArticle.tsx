@@ -4,25 +4,27 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import McpLearningFlowViz from "../mcp-learning/viz/McpLearningFlowViz";
+import { McpRequestPathLocator, McpRequestPathMapReturn } from "../shared/McpRequestPathLocator";
 
 export default function ModernArticle() {
   return (
     <article className="space-y-16">
+      <McpRequestPathLocator current="transport" />
       <section id="overview" className="scroll-mt-20 space-y-7">
-        <header className="space-y-3"><p className="text-sm font-semibold text-primary">Message와 운반 경로를 분리합니다</p><h2 className="text-3xl font-bold tracking-tight">MCP transport는 같은 protocol message를 local process 또는 remote service까지 옮기는 방법입니다</h2></header>
+        <McpLearningFlowViz mode="transport" />
+        <header className="space-y-3"><p className="text-sm font-semibold text-primary">운반 경로</p><h2 className="text-3xl font-bold tracking-tight">메시지와 운반은 다릅니다</h2></header>
         <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8"><Link to="/cs/ai/mcp-protocol">MCP core</Link>에서 만든 JSON-RPC request가 실제 byte로 이동하려면 transport가 필요합니다. <strong>stdio</strong>와 <strong>Streamable HTTP</strong>는 같은 primitive 의미를 운반하지만, process 수명·identity·관측·실패 경계는 다릅니다.</p><p className="leading-8">
             먼저 local pipe 하나를 보고 다음에 remote endpoint를 봅니다. 마지막에 response stream·cancel·subscription을 수명 기준으로
             조합합니다.
           </p></div>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
+        <p className="font-semibold">방금 본 흐름으로 세 가지를 확인해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>stdio server의 진단 로그를 stdout에 써도 protocol framing이 유지될까요?</li><li>Remote HTTP가 TLS로 암호화되면 caller의 업무 권한도 자동으로 증명될까요?</li><li>응답 stream을 닫으면 이미 만들어진 외부 effect까지 자동으로 취소될까요?</li></ol>
         <p>답은 <strong>아니요, 아니요, 아니요</strong>입니다. Transport는 byte의 이동과 연결 수명을 다루며, 진단 채널·인증·업무 effect의 종료는 각각 따로 확인합니다.</p>
-        <McpLearningFlowViz mode="transport" />
         <ContentBoundary article="mcp-transports" />
       </section>
 
       <section id="stdio" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>stdio는 host가 시작한 child process와 두 pipe로 대화합니다</h2><p className="leading-8">Host가 command를 실행하고 child의 stdin으로 request를 쓰며 stdout에서 response를 읽습니다. Protocol byte와 diagnostic text가 섞이면 framing이 깨지므로 log는 stderr로 보냅니다. Child가 local이라는 사실은 낮은 latency를 설명할 수 있지만 안전한 sandbox를 의미하지는 않습니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>stdio는 child process를 잇습니다</h2><p className="leading-8">Host가 command를 실행하고 child의 stdin으로 request를 쓰며 stdout에서 response를 읽습니다. Protocol byte와 diagnostic text가 섞이면 framing이 깨지므로 log는 stderr로 보냅니다. Child가 local이라는 사실은 낮은 latency를 설명할 수 있지만 안전한 sandbox를 의미하지는 않습니다.</p></div>
         <TermBreakdown title="Local stdio 연결의 형태" items={[
           { term: "Child process", description: "Host가 시작하고 종료를 관찰하는 server process입니다.", example: "IDE가 formatter MCP server를 workspace마다 시작합니다.", boundary: "같은 machine에 있어도 filesystem·network 권한을 제한해야 합니다." },
           { term: "stdin", description: "Host client가 server에 protocol message를 쓰는 입력 pipe입니다.", example: "tools/call JSON-RPC message를 frame 단위로 씁니다.", boundary: "Shell command 문자열이나 secret을 무심코 합치지 않습니다." },
@@ -32,7 +34,7 @@ export default function ModernArticle() {
       </section>
 
       <section id="streamable-http" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Streamable HTTP는 요청마다 POST하고 JSON 또는 그 요청 범위의 SSE를 받습니다</h2><p className="leading-8">Remote endpoint에서는 TLS·OAuth·Origin·tenant isolation과 gateway 정책이 추가됩니다. <code>MCP-Protocol-Version</code>, <code>Mcp-Method</code>, named operation의 <code>Mcp-Name</code>은 body를 전부 읽기 전에 route를 고르게 돕습니다. Server는 header와 JSON-RPC body가 같은 method·name을 말하는지 다시 검사합니다.</p></div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>HTTP는 요청마다 POST합니다</h2><p className="leading-8">Remote endpoint에서는 TLS·OAuth·Origin·tenant isolation과 gateway 정책이 추가됩니다. <code>MCP-Protocol-Version</code>, <code>Mcp-Method</code>, named operation의 <code>Mcp-Name</code>은 body를 전부 읽기 전에 route를 고르게 돕습니다. Server는 header와 JSON-RPC body가 같은 method·name을 말하는지 다시 검사합니다.</p></div>
         <TermBreakdown title="HTTP request에서 따로 확인할 네 층" items={[
           { term: "Connection", description: "TLS endpoint와 Origin이 예상한 배포 경계인지 확인합니다.", boundary: "암호화된 연결만으로 caller 권한이 증명되지는 않습니다." },
           { term: "Authorization", description: "Token issuer·audience·scope와 resource ACL을 확인합니다.", boundary: "Tool description이나 serverInfo는 credential이 아닙니다." },
@@ -42,7 +44,7 @@ export default function ModernArticle() {
       </section>
 
       <section id="lifetimes" className="scroll-mt-20 space-y-7">
-        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>Response·cancel·subscription은 연결이 아니라 논리 수명으로 나눕니다</h2><p className="leading-8">
+        <div className="prose prose-neutral max-w-none dark:prose-invert"><h2>수명을 나눕니다</h2><p className="leading-8">
             Request-scoped SSE는 한 request의 여러 response event를 운반합니다. 그 stream을 닫아 cancellation 의사를 알릴 수 있지만 이미
             외부 system에 생긴 effect까지 되돌리지는 않습니다. Resource update를 계속 받는 subscription은 별도 장기 channel이며 request
             response와 같은 수명으로 묶지 않습니다.
@@ -68,6 +70,7 @@ export default function ModernArticle() {
         <div id="paper-mcp-transports" className="scroll-mt-20"><CitationBlock source="MCP 2026-07-28 · Transports" citeKey={1} href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports"><p><strong>문제:</strong> MCP message를 local process와 remote HTTP에서 일관되게 운반해야 합니다.</p><p><strong>핵심 기여:</strong> stdio와 Streamable HTTP의 wire·lifecycle·security requirement를 규정합니다.</p><p><strong>전제:</strong> Client와 server가 같은 protocol revision과 transport profile을 사용합니다.</p><p><strong>근거 범위:</strong> 표준 transport behavior에 한정합니다.</p><p><strong>비주장:</strong> 특정 runtime의 framing이나 운영 안전성을 자동 인증하지 않습니다.</p></CitationBlock></div>
         <div id="paper-mcp-http" className="scroll-mt-20"><CitationBlock source="MCP 2026-07-28 · Streamable HTTP" citeKey={2} href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http"><p><strong>문제:</strong> Stateless HTTP infrastructure에서 routing·streaming·cancel·subscription을 구분해야 합니다.</p><p><strong>핵심 기여:</strong> POST request, JSON/request-scoped SSE, routing header와 consistency check를 정의합니다.</p><p><strong>전제:</strong> Gateway와 intermediary가 header를 보존·검증하도록 구성됩니다.</p><p><strong>근거 범위:</strong> Streamable HTTP wire semantics입니다.</p><p><strong>비주장:</strong> SSE가 durable queue이거나 connection close가 transaction rollback이라는 뜻은 아닙니다.</p></CitationBlock></div>
       </section>
+      <McpRequestPathMapReturn current="transport" />
     </article>
   );
 }
