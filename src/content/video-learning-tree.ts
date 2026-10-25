@@ -1,10 +1,7 @@
 export type VideoLearningTrack = "concept" | "practice" | "reference";
 
 export type VideoLearningNodeId =
-  | "time-observation"
-  | "clip-sampling"
-  | "convolution"
-  | "transformers";
+  "time-observation" | "clip-sampling" | "convolution" | "transformers";
 
 export interface VideoLearningNode {
   id: VideoLearningNodeId;
@@ -62,14 +59,14 @@ export const VIDEO_LEARNING_NODES: readonly VideoLearningNode[] = [
     id: "transformers",
     href: "/cs/ai/video-transformers#overview",
     shortTitle: "Video Transformer",
-    mapLabel: "tubelet → token → space-time attention",
+    mapLabel: "tubelet → attention → tube mask",
     track: "concept",
     parentHref: "/cs/ai/video-understanding#return",
     parentLabel: "비디오 시간 관측 · 다음 질문",
     question:
-      "비디오 격자를 tubelet token으로 바꾸면 sequence 길이와 space-time attention 비용은 어떻게 정해질까요?",
+      "같은 sampled clip을 tubelet token으로 바꾸면 attention 연결과 VideoMAE encoder 입력은 어떻게 정해질까요?",
     closure:
-      "시간·높이·너비를 tubelet 크기로 나눈 token geometry에서 출발해야 joint·divided attention과 masked pretraining이 줄이는 계산을 같은 경계에서 셀 수 있습니다.",
+      "Source timestamp가 고정된 clip을 tubelet geometry로 바꾼 뒤 joint·temporal→spatial 연결과 공식 tube mask의 visible token을 따로 계산하면 interaction 절감과 encoder-input 절감을 같은 것으로 오해하지 않습니다.",
   },
 ] as const;
 

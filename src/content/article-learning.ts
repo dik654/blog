@@ -22297,240 +22297,292 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/video-transformers": {
-    "entryLevel": true,
-    "entryNote": "Attention을 안다고 가정하지 않고 video grid를 tubelet blocks와 pair counts로 바꾸는 데서 시작합니다.",
-    "coreIdea": "Video transformer의 입력 비용은 tubelet geometry가 결정합니다. Joint와 factorized attention은 pair 수뿐 아니라 direct connectivity를 바꾸며, VideoMAE masking은 interaction factorization과 달리 encoder input token 수 자체를 줄입니다.",
-    "assumedKnowledge": [],
-    "introducedHere": [
+    entryLevel: false,
+    recursiveTeaching: true,
+    entryNote:
+      "부모 글에서 계산한 source timestamp와 앞 글의 동일 30fps·source-stride-2 입력을 유지한 채 sampled frames가 tubelet·attention·tube mask로 바뀌는 경로를 추적합니다.",
+    coreIdea:
+      "Video transformer의 입력 비용은 source sampling 뒤 tubelet geometry가 결정합니다. Joint와 divided attention은 pair 수와 direct connectivity를 바꾸고, VideoMAE tube masking은 공식 구현의 공간별 정수화와 시간축 반복을 거쳐 encoder input token 자체를 줄입니다.",
+    assumedKnowledge: [
       {
-        "id": "video-tubelet-token-contract",
-        "role": "T×H×W를 tau×P×P blocks와 token sequence로 바꿉니다."
+        id: "video-temporal-observation-contract",
+        role: "Source FPS·frame index·timestamp·sampling stride로 sampled clip의 실제 시간 범위를 읽습니다.",
       },
       {
-        "id": "factorized-space-time-attention-cost",
-        "role": "Joint와 divided space-time pair counts를 계산합니다."
+        id: "deterministic-multiclip-replay",
+        role: "같은 clip shape와 source timestamps를 다시 만들 수 있는 입력 기록을 사용합니다.",
       },
-      {
-        "id": "videomae-visible-tubelet-pretraining",
-        "role": "Mask ratio 뒤 visible encoder tokens와 남는 decoder cost를 구분합니다."
-      }
     ],
-    "conceptExplanations": [
+    introducedHere: [
       {
-        "id": "video-tubelet-token-contract",
-        "sectionId": "tubelets",
-        "intuition": "연속 frames의 같은 공간 patch를 작은 직육면체 조각으로 묶어 token 하나로 만듭니다.",
-        "workedExample": "16×224×224, tau 2, patch 16이면 temporal 8×spatial 14×14=1568 tokens입니다.",
-        "boundary": "Non-overlap divisibility를 가정하며 variable FPS·position interpolation은 별도 contract입니다."
+        id: "video-tubelet-token-contract",
+        role: "T×H×W를 tau×P×P blocks와 token sequence로 바꿉니다.",
       },
       {
-        "id": "factorized-space-time-attention-cost",
-        "sectionId": "attention-cost",
-        "intuition": "모든 학생을 한꺼번에 짝짓는 대신 같은 시간의 공간 모임과 같은 위치의 시간 모임을 차례로 엽니다.",
-        "workedExample": "T=8,S=196이면 joint 약 2.46M pairs, divided 약 320k pairs입니다.",
-        "boundary": "Pair count는 latency가 아니며 factorization은 모든 space-time pair의 direct interaction을 바꿉니다."
+        id: "factorized-space-time-attention-cost",
+        role: "Joint와 temporal→spatial divided attention의 direct connectivity와 pair counts를 계산합니다.",
       },
       {
-        "id": "videomae-visible-tubelet-pretraining",
-        "sectionId": "masked-pretraining",
-        "intuition": "비슷한 video 조각 대부분을 가리고 남은 일부만 큰 encoder가 읽은 뒤 작은 decoder가 빈 칸을 복원합니다.",
-        "workedExample": "1568 tokens에서 mask .9이면 구현 rounding에 따라 약 157 visible tokens만 encoder에 들어갑니다.",
-        "boundary": "Decoder·I/O 비용은 남고 높은 mask ratio가 모든 motion domain에서 최적이라는 보장은 없습니다."
-      }
+        id: "videomae-visible-tubelet-pretraining",
+        role: "공간별 mask 정수화와 시간축 반복 뒤 visible encoder tokens·masked decoder targets를 구분합니다.",
+      },
     ],
-    "conceptStages": [
+    conceptExplanations: [
       {
-        "label": "00 Blocks",
-        "relation": "Video grid를 tubelet coordinates로 나눕니다.",
-        "concepts": [
-          "video-tubelet-token-contract"
-        ]
+        id: "video-tubelet-token-contract",
+        sectionId: "tubelets",
+        intuition:
+          "Sampling된 input에서 인접한 frames의 같은 공간 patch를 작은 직육면체 조각으로 묶어 token 하나로 만듭니다.",
+        workedExample:
+          "30fps 원본의 source frame 0·2부터 30까지 16장을 고르고 tau 2, patch 16을 적용하면 temporal 8×spatial 14×14=1568 tokens입니다.",
+        boundary:
+          "Non-overlap divisibility를 가정하며 source timestamp·variable FPS·position interpolation은 별도 contract입니다.",
+        causalTrace: {
+          answer:
+            "Sampled frame 수를 tubelet depth로, 높이와 너비를 patch 크기로 나눈 세 위치 수를 곱합니다.",
+          followUpQuestion:
+            "같은 1568 tokens라도 tubelet depth와 source sampling stride가 다르면 token 하나가 담는 실제 시간은 어떻게 달라질까요?",
+          bottleneck:
+            "최종 token 수만 기록하면 sampled frame 두 장이 어느 source timestamp를 묶었는지 잃습니다.",
+          mechanism:
+            "Source timestamps를 먼저 고정하고 F/tau·H/P·W/P를 계산해 각 token의 time-row-column 좌표와 원본 시간 범위를 함께 남깁니다.",
+          remainingCost:
+            "Position embedding, projection channel, padding·interpolation과 decode 비용은 sequence count에 포함되지 않습니다.",
+          decisionRule:
+            "모델 구조를 비교하기 전에 source timestamps와 tubelet geometry를 함께 고정하고, 나누어떨어지지 않는 축의 처리 규칙을 명시합니다.",
+        },
       },
       {
-        "label": "01 Tokens",
-        "relation": "축별 positions를 곱해 sequence length를 만듭니다.",
-        "concepts": [
+        id: "factorized-space-time-attention-cost",
+        sectionId: "attention-cost",
+        intuition:
+          "모든 token을 한 score matrix에서 직접 비교하는 대신 같은 공간 위치의 시간 모임을 먼저 열고 같은 시간의 공간 모임으로 이어 갑니다.",
+        workedExample:
+          "T=8,S=196이면 joint 2458624 pairs, temporal 12544와 spatial 307328을 더한 divided는 319872 pairs입니다.",
+        boundary:
+          "Pair count는 latency가 아니며 divided 두 단계의 정보 전달과 joint direct pair는 같은 연결 그래프가 아닙니다.",
+        causalTrace: {
+          answer:
+            "Joint는 (TS)^2를 계산하고, divided는 공간 위치별 temporal T^2와 시간 위치별 spatial S^2를 차례로 계산합니다.",
+          followUpQuestion:
+            "두 단계 뒤 모든 위치의 정보가 퍼질 수 있는데도 joint와 같은 연결이라고 부를 수 없는 이유는 무엇일까요?",
+          bottleneck:
+            "Pair 수만 비교하면 한 score matrix의 direct edge와 temporal→spatial 두 stage의 경로를 같은 것으로 오해합니다.",
+          mechanism:
+            "Query 하나의 직접 이웃을 표시하고 공식 코드의 tensor 재배열 순서와 실제 pair ledger를 함께 대조합니다.",
+          remainingCost:
+            "Heads·embedding dimension·QKV·MLP·memory traffic·kernel 구현이 실제 latency와 memory를 바꿉니다.",
+          decisionRule:
+            "같은 token geometry에서 연결 그래프와 pair proxy를 먼저 비교하고 실제 hardware에서는 latency·memory·quality를 따로 측정합니다.",
+        },
+      },
+      {
+        id: "videomae-visible-tubelet-pretraining",
+        sectionId: "masked-pretraining",
+        intuition:
+          "공간 mask 하나를 시간축 전체에 반복하고 남은 일부만 큰 encoder가 읽은 뒤 decoder가 가려진 cube를 복원합니다.",
+        workedExample:
+          "공식 구현은 floor(.9×196)=176개를 시간 위치마다 가려 20×8=160 visible tokens를 encoder에, 176×8=1408 masked targets를 decoder에 둡니다.",
+        boundary:
+          "Per-spatial-frame 정수화는 구현 계약이며 decoder·I/O 비용이 남고 높은 mask ratio가 모든 motion domain에서 최적이라는 보장은 없습니다.",
+        causalTrace: {
+          answer:
+            "공간 위치 196개에 mask ratio를 적용해 정수 mask 수를 만든 뒤 같은 mask map을 시간 위치 8개에 반복하고 ~mask만 encoder에 전달합니다.",
+          followUpQuestion:
+            "전체 1568개에 10%를 곱한 157개와 공식 구현의 160개가 다른 이유는 무엇일까요?",
+          bottleneck:
+            "전체 token 비율만 계산하면 공간축에서 먼저 int를 적용하고 그 결과를 시간축에 tile하는 구현 순서를 잃습니다.",
+          mechanism:
+            "masked-per-time=floor(mS), visible=T(S-masked-per-time)을 계산하고 encoder x[~mask]와 decoder mask-token 결합 경계를 확인합니다.",
+          remainingCost:
+            "Decoder·projection·data I/O·reconstruction loss가 남으며 encoder token 감소가 end-to-end speedup과 같지 않습니다.",
+          decisionRule:
+            "Mask ratio와 함께 정수화 단위·mask 반복 축·seed·encoder 선택·decoder target을 버전이 고정된 코드에서 확인합니다.",
+        },
+      },
+    ],
+    conceptStages: [
+      {
+        label: "00 Blocks",
+        relation: "Video grid를 tubelet coordinates로 나눕니다.",
+        concepts: ["video-tubelet-token-contract"],
+      },
+      {
+        label: "01 Tokens",
+        relation: "축별 positions를 곱해 sequence length를 만듭니다.",
+        concepts: [
           "video-tubelet-token-contract",
-          "factorized-space-time-attention-cost"
-        ]
-      },
-      {
-        "label": "02 Interact",
-        "relation": "Joint 또는 divided space-time pairs를 계산합니다.",
-        "concepts": [
-          "factorized-space-time-attention-cost"
-        ]
-      },
-      {
-        "label": "03 Mask",
-        "relation": "Visible subset만 encoder input으로 남깁니다.",
-        "concepts": [
           "factorized-space-time-attention-cost",
-          "videomae-visible-tubelet-pretraining"
-        ]
-      }
-    ],
-    "exercises": [
-      {
-        "level": "basic",
-        "question": "16×224×224 clip, tau 2, patch 16의 temporal·spatial·total token 수를 계산하세요.",
-        "answerChecklist": [
-          "8 temporal",
-          "14x14 spatial",
-          "1568 total"
         ],
-        "requiredConcepts": [
-          "video-tubelet-token-contract"
-        ],
-        "sectionId": "tubelets"
       },
       {
-        "level": "basic",
-        "question": "Tubelet temporal depth를 2에서 4로 바꾸면 token 수가 어떻게 되는지 계산하세요.",
-        "answerChecklist": [
+        label: "02 Interact",
+        relation: "Joint 또는 divided space-time pairs를 계산합니다.",
+        concepts: ["factorized-space-time-attention-cost"],
+      },
+      {
+        label: "03 Mask",
+        relation: "Visible subset만 encoder input으로 남깁니다.",
+        concepts: [
+          "factorized-space-time-attention-cost",
+          "videomae-visible-tubelet-pretraining",
+        ],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question:
+          "16×224×224 clip, tau 2, patch 16의 temporal·spatial·total token 수를 계산하세요.",
+        answerChecklist: ["8 temporal", "14x14 spatial", "1568 total"],
+        requiredConcepts: ["video-tubelet-token-contract"],
+        sectionId: "tubelets",
+      },
+      {
+        level: "basic",
+        question:
+          "Tubelet temporal depth를 2에서 4로 바꾸면 token 수가 어떻게 되는지 계산하세요.",
+        answerChecklist: [
           "4 temporal",
           "784 total",
-          "temporal resolution halves"
+          "temporal resolution halves",
         ],
-        "requiredConcepts": [
-          "video-tubelet-token-contract"
-        ],
-        "sectionId": "tubelets"
+        requiredConcepts: ["video-tubelet-token-contract"],
+        sectionId: "tubelets",
       },
       {
-        "level": "basic",
-        "question": "Non-overlapping tubelet에서 divisibility와 padding 정책을 기록해야 하는 이유를 설명하세요.",
-        "answerChecklist": [
-          "remainder frames",
-          "edge pixels",
-          "token identity"
-        ],
-        "requiredConcepts": [
-          "video-tubelet-token-contract"
-        ],
-        "sectionId": "tubelets"
+        level: "basic",
+        question:
+          "Non-overlapping tubelet에서 divisibility와 padding 정책을 기록해야 하는 이유를 설명하세요.",
+        answerChecklist: ["remainder frames", "edge pixels", "token identity"],
+        requiredConcepts: ["video-tubelet-token-contract"],
+        sectionId: "tubelets",
       },
       {
-        "level": "basic",
-        "question": "T=8,S=196일 때 joint attention pair proxy를 계산하세요.",
-        "answerChecklist": [
-          "N 1568",
-          "N squared",
-          "2458624 pairs"
-        ],
-        "requiredConcepts": [
-          "factorized-space-time-attention-cost"
-        ],
-        "sectionId": "attention-cost"
+        level: "basic",
+        question: "T=8,S=196일 때 joint attention pair proxy를 계산하세요.",
+        answerChecklist: ["N 1568", "N squared", "2458624 pairs"],
+        requiredConcepts: ["factorized-space-time-attention-cost"],
+        sectionId: "attention-cost",
       },
       {
-        "level": "basic",
-        "question": "같은 T와 S에서 divided spatial·temporal pair 수를 각각 계산하세요.",
-        "answerChecklist": [
+        level: "basic",
+        question:
+          "같은 T와 S에서 divided spatial·temporal pair 수를 각각 계산하세요.",
+        answerChecklist: [
           "T times S squared",
           "S times T squared",
-          "sum 319872"
+          "sum 319872",
         ],
-        "requiredConcepts": [
-          "factorized-space-time-attention-cost"
-        ],
-        "sectionId": "attention-cost"
+        requiredConcepts: ["factorized-space-time-attention-cost"],
+        sectionId: "attention-cost",
       },
       {
-        "level": "basic",
-        "question": "N=1000, mask .9에서 visible encoder tokens를 계산하세요.",
-        "answerChecklist": [
-          "visible fraction .1",
-          "100 tokens",
-          "decoder remains"
+        level: "basic",
+        question:
+          "T=8,S=196, mask .9인 VideoMAE 공식 tube mask에서 visible encoder tokens와 masked decoder targets를 계산하세요.",
+        answerChecklist: [
+          "floor(.9 times 196) 176",
+          "20 visible per time",
+          "160 encoder tokens",
+          "1408 decoder targets",
         ],
-        "requiredConcepts": [
-          "videomae-visible-tubelet-pretraining"
-        ],
-        "sectionId": "masked-pretraining"
+        requiredConcepts: ["videomae-visible-tubelet-pretraining"],
+        sectionId: "masked-pretraining",
       },
       {
-        "level": "advanced",
-        "question": "Joint와 divided attention의 pair 감소와 connectivity 차이를 graph로 설명하세요.",
-        "answerChecklist": [
+        level: "advanced",
+        question:
+          "Joint와 divided attention의 pair 감소와 connectivity 차이를 graph로 설명하세요.",
+        answerChecklist: [
           "all direct pairs",
-          "space then time",
-          "multi-layer path",
-          "not same representation"
+          "time then space",
+          "two-stage path",
+          "not same representation",
         ],
-        "requiredConcepts": [
-          "factorized-space-time-attention-cost"
-        ],
-        "sectionId": "attention-cost"
+        requiredConcepts: ["factorized-space-time-attention-cost"],
+        sectionId: "attention-cost",
       },
       {
-        "level": "advanced",
-        "question": "Resolution과 clip length를 동시에 늘릴 때 token count와 pair cost 증가를 계산하세요.",
-        "answerChecklist": [
+        level: "advanced",
+        question:
+          "Resolution과 clip length를 동시에 늘릴 때 token count와 pair cost 증가를 계산하세요.",
+        answerChecklist: [
           "axis counts",
           "product sequence",
           "square joint",
-          "memory gate"
+          "memory gate",
         ],
-        "requiredConcepts": [
+        requiredConcepts: [
           "video-tubelet-token-contract",
-          "factorized-space-time-attention-cost"
+          "factorized-space-time-attention-cost",
         ],
-        "sectionId": "attention-cost"
+        sectionId: "attention-cost",
       },
       {
-        "level": "advanced",
-        "question": "Mask ratio .9가 end-to-end 100배 speedup이 아닌 이유를 비용 항목별로 설명하세요.",
-        "answerChecklist": [
+        level: "advanced",
+        question:
+          "Mask ratio .9가 end-to-end 100배 speedup이 아닌 이유를 비용 항목별로 설명하세요.",
+        answerChecklist: [
           "encoder pair reduction",
           "decoder",
           "MLP and I-O",
-          "kernel efficiency"
+          "kernel efficiency",
         ],
-        "requiredConcepts": [
-          "videomae-visible-tubelet-pretraining"
-        ],
-        "sectionId": "masked-pretraining"
+        requiredConcepts: ["videomae-visible-tubelet-pretraining"],
+        sectionId: "masked-pretraining",
       },
       {
-        "level": "advanced",
-        "question": "Joint·divided·VideoMAE candidates를 같은 clip·token·pretraining budget에서 비교하세요.",
-        "answerChecklist": [
+        level: "advanced",
+        question:
+          "Joint·divided·VideoMAE candidates를 같은 clip·token·pretraining budget에서 비교하세요.",
+        answerChecklist: [
           "same T H W",
           "same tubelet",
           "connectivity",
-          "quality latency memory"
+          "quality latency memory",
         ],
-        "requiredConcepts": [
+        requiredConcepts: [
           "video-tubelet-token-contract",
           "factorized-space-time-attention-cost",
-          "videomae-visible-tubelet-pretraining"
+          "videomae-visible-tubelet-pretraining",
         ],
-        "sectionId": "masked-pretraining"
-      }
+        sectionId: "masked-pretraining",
+      },
     ],
-    "papers": [
+    papers: [
       {
-        "title": "TimeSformer",
-        "href": "https://proceedings.mlr.press/v139/bertasius21a.html",
-        "problem": "Video patch tokens의 space-time self-attention 구조를 비교합니다.",
-        "contribution": "Joint와 여러 factorized schemes 및 divided attention을 평가합니다.",
-        "assumptions": "논문의 pretraining·clip·resolution·datasets를 전제로 합니다.",
-        "evidenceScope": "TimeSformer architecture와 video classification experiments 범위입니다.",
-        "notClaim": "Divided attention이 모든 sequence와 runtime에서 같은 우위를 보장하지 않습니다.",
-        "sectionId": "paper-timesformer"
+        title: "TimeSformer",
+        href: "https://proceedings.mlr.press/v139/bertasius21a.html",
+        problem:
+          "Video patch tokens의 space-time self-attention 구조를 비교합니다.",
+        contribution:
+          "Joint와 여러 factorized schemes 및 divided attention을 평가합니다.",
+        assumptions:
+          "논문의 pretraining·clip·resolution·datasets를 전제로 합니다.",
+        evidenceScope:
+          "TimeSformer architecture와 video classification experiments 범위입니다.",
+        notClaim:
+          "Divided attention이 모든 sequence와 runtime에서 같은 우위를 보장하지 않습니다.",
+        sectionId: "paper-timesformer",
       },
       {
-        "title": "VideoMAE: Masked Autoencoders are Data-Efficient Learners for Self-Supervised Video Pre-Training",
-        "href": "https://openreview.net/forum?id=AhccnBXSne",
-        "problem": "Video의 높은 시간 중복을 활용해 self-supervised pretraining 비용을 줄입니다.",
-        "contribution": "높은 tube masking ratio와 visible-token encoder·light decoder를 제안합니다.",
-        "assumptions": "논문의 datasets·masking·encoder/decoder·transfer setting을 전제로 합니다.",
-        "evidenceScope": "VideoMAE pretraining과 downstream transfer experiments 범위입니다.",
-        "notClaim": "90 percent masking이 모든 motion domain에서 최적이라는 뜻은 아닙니다.",
-        "sectionId": "paper-videomae"
-      }
-    ]
+        title:
+          "VideoMAE: Masked Autoencoders are Data-Efficient Learners for Self-Supervised Video Pre-Training",
+        href: "https://arxiv.org/abs/2203.12602v3",
+        problem:
+          "Video의 높은 시간 중복을 활용해 self-supervised pretraining 비용을 줄입니다.",
+        contribution:
+          "높은 tube masking ratio와 visible-token encoder·light decoder를 제안하며, 글에서는 고정된 공식 구현의 공간별 정수화와 시간축 반복까지 확인합니다.",
+        assumptions:
+          "논문의 datasets·masking·encoder/decoder·transfer setting을 전제로 합니다.",
+        evidenceScope:
+          "VideoMAE pretraining과 downstream transfer experiments 범위입니다.",
+        notClaim:
+          "90 percent masking이 모든 motion domain에서 최적이라는 뜻은 아닙니다.",
+        sectionId: "paper-videomae",
+      },
+    ],
   },
   "ai/contrastive-learning": {
     entryLevel: true,

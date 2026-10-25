@@ -2147,13 +2147,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "핵심 논문",
       label: "TimeSformer",
       href: "https://proceedings.mlr.press/v139/bertasius21a.html",
-      note: "Video patch token의 joint·factorized space-time attention 비교",
+      note: "Frame-level patch token의 joint·divided space-time attention 구조와 직접 연결 경계",
     },
     {
       kind: "핵심 논문",
       label: "VideoMAE",
-      href: "https://openreview.net/forum?id=AhccnBXSne",
-      note: "높은 tube masking ratio와 visible-token encoder 기반 video pretraining",
+      href: "https://arxiv.org/abs/2203.12602v3",
+      note: "2×16×16 cube embedding, 높은 tube masking ratio, visible-token encoder와 decoder 복원 경계",
+    },
+    {
+      kind: "공식 코드",
+      label: "VideoMAE TubeMaskingGenerator",
+      href: "https://github.com/MCG-NJU/VideoMAE/blob/14ef8d856287c94ef1f985fe30f958eb4ec2c55d/masking_generator.py#L3-L20",
+      note: "공간 위치별 int 정수화와 같은 mask map의 시간축 tile을 확인한 고정 commit",
+    },
+    {
+      kind: "공식 코드",
+      label: "TimeSformer divided_space_time block",
+      href: "https://github.com/facebookresearch/TimeSformer/blob/a5ef29a7b7264baff199a30b3306ac27de901133/timesformer/models/vit.py#L115-L140",
+      note: "Temporal attention 뒤 spatial attention을 수행하는 tensor 재배열 순서를 확인한 고정 commit",
     },
   ],
   "ai/competition-workflow": [

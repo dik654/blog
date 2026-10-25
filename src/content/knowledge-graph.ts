@@ -6779,7 +6779,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Video tubelet-token contract",
     definition:
-      "T×H×W clip을 τ×P×P non-overlapping volumes로 나누고 projection·position을 적용해 spatiotemporal token sequence를 만드는 규칙입니다.",
+      "Source timestamp가 고정된 F×H×W sampled clip을 τ×P×P non-overlapping volumes로 나누고 projection·position을 적용해 spatiotemporal token sequence를 만드는 규칙입니다.",
     canonicalHref: "/cs/ai/video-transformers#tubelets",
   },
   "factorized-space-time-attention-cost": {
@@ -6788,7 +6788,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Factorized space–time attention cost",
     definition:
-      "TS token의 joint (TS)² pair interaction을 T회 spatial S²와 S회 temporal T² interaction으로 나눠 score cost와 direct connectivity를 바꾸는 설계입니다.",
+      "TS token의 joint (TS)² 직접 pair를 공간 위치별 temporal T²와 시간 위치별 spatial S²의 두 단계로 나눠 score pair 수와 direct connectivity를 바꾸는 설계입니다.",
     canonicalHref: "/cs/ai/video-transformers#attention-cost",
   },
   "videomae-visible-tubelet-pretraining": {
@@ -6797,7 +6797,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "VideoMAE visible-tubelet pretraining",
     definition:
-      "높은 비율의 spatiotemporal tubelet을 가리고 visible subset만 encoder에 전달해 decoder가 masked video content를 복원하도록 학습하는 self-supervised objective입니다.",
+      "공간 mask map을 시간축에 반복해 tubelet을 가리고 visible subset만 encoder에 전달한 뒤 decoder가 masked video content를 복원하도록 학습하는 self-supervised objective입니다.",
     canonicalHref: "/cs/ai/video-transformers#masked-pretraining",
   },
   "contrastive-pair-semantics": {

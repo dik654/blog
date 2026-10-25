@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 583,
-    "pending": 408,
+    "reviewed": 584,
+    "pending": 407,
     "untracked": 0,
-    "assignedPending": 365,
+    "assignedPending": 364,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3131,11 +3131,11 @@
     {
       "route": "ai/video-transformers",
       "publicPath": "cs/ai/video-transformers",
-      "title": "Video Transformer: Tubelet · Space-Time Attention · VideoMAE",
+      "title": "Video Transformer: Tubelet에서 VideoMAE까지",
       "catalogIndex": 310,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

@@ -108,6 +108,7 @@ const noScriptArticleRoutes = new Set([
   "ai/video-understanding",
   "ai/video-clip-sampling",
   "ai/video-convolution-architectures",
+  "ai/video-transformers",
   "ai/lr-scheduling",
   "ai/lr-decay-policies",
   "ai/cosine-restart-scheduling",
