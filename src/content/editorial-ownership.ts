@@ -2592,7 +2592,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
-  "contrastive-evaluation": { title: "Contrastive evaluation 글이 소유하는 범위", owns: ["Bucket별 false-negative pair audit", "동일 split·seed downstream paired evaluation과 data revision loop"], reuses: [{ label: "Triplet miner receipt", href: "/cs/ai/triplet-metric-learning#mining" }, { label: "Train·validation·test", href: "/cs/ai/train-validation-test" }], evidence: [{ kind: "primary-source", rule: "False-negative bias 연구의 objective 가정과 실험 범위를 human audit 결과로 오인하지 않는다." }, { kind: "standard", rule: "Bucket·rubric·agreement·split·seed·metric·artifact revision을 함께 기록한다." }] },
+  "contrastive-evaluation": { title: "Contrastive evaluation 실무 글이 소유하는 범위", owns: ["고정된 candidate snapshot의 구간별 false-negative pair audit", "동일 split·seed downstream paired comparison", "평가 실패 격리·재실행·release decision과 rollback"], reuses: [{ label: "Pair 관계의 업무상 의미", href: "/cs/ai/contrastive-learning#pair-contract" }, { label: "Triplet miner receipt", href: "/cs/ai/triplet-metric-learning#mining" }, { label: "Label 관계의 경계", href: "/cs/ai/supervised-contrastive-learning#boundaries" }, { label: "Test feedback와 선택 편향", href: "/cs/ai/train-validation-test#selection-feedback" }], evidence: [{ kind: "primary-source", rule: "False-negative bias와 downstream evaluation 연구의 가정·실험 범위를 human audit 결과나 운영 threshold로 오인하지 않는다." }, { kind: "standard", rule: "Bucket 모집단·sampling·rubric·agreement·uncertainty·split·seed·metric·artifact revision을 함께 기록한다." }] },
   "domain-finetuning": {
     title: "도메인 적응 선택 글이 소유하는 범위",
     owns: ["Language·fresh fact·behavior·system gap 진단", "Retrieval–weight 저장 경계와 최소 개입 release"],

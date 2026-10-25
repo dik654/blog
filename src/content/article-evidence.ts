@@ -2663,7 +2663,32 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "2N multiview batch, same-label P(i), 식 (2)·(3)의 log 위치와 식 (4)~(6)의 gradient target 분석",
     },
   ],
-  "ai/contrastive-evaluation": [{ kind: "핵심 논문", label: "Debiased Contrastive Learning", href: "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html", note: "Unlabeled negative 안의 hidden positive가 만드는 sampling bias 분석" }],
+  "ai/contrastive-evaluation": [
+    {
+      kind: "핵심 논문",
+      label: "Debiased Contrastive Learning",
+      href: "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html",
+      note: "Unlabeled negative 안의 hidden positive가 만드는 sampling bias 분석. Human audit나 운영 threshold의 근거는 아님",
+    },
+    {
+      kind: "선행·비교 논문",
+      label: "A Simple Framework for Contrastive Learning of Visual Representations",
+      href: "https://proceedings.mlr.press/v119/chen20j.html",
+      note: "Learned representation의 linear evaluation·fine-tuning protocol 범위",
+    },
+    {
+      kind: "공식 가이드",
+      label: "NIST — Confidence Limits for a Proportion",
+      href: "https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm",
+      note: "표본 비율의 Wilson·exact binomial confidence interval과 불확실성 경계",
+    },
+    {
+      kind: "공식 가이드",
+      label: "NIST — Proportions and Sample Size",
+      href: "https://www.itl.nist.gov/div898/handbook/ppc/section3/ppc333.htm",
+      note: "원하는 정밀도와 층화에 따른 proportion sample-size 설계 범위",
+    },
+  ],
   "ai/vae": [
     {
       kind: "핵심 논문",

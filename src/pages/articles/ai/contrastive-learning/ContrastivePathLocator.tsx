@@ -23,6 +23,7 @@ export default function ContrastivePathLocator({
   const currentIndex = track.findIndex((candidate) => candidate.id === current);
   const previous = currentIndex > 0 ? track[currentIndex - 1] : undefined;
   const next = currentIndex >= 0 ? track[currentIndex + 1] : undefined;
+  const anchors = node.conceptAnchors ?? [];
 
   return (
     <aside
@@ -52,14 +53,28 @@ export default function ContrastivePathLocator({
           <p className="mt-3 max-w-3xl break-keep text-base font-bold leading-7">{node.question}</p>
         </div>
         <div className="border-l-2 border-primary/45 pl-3">
-          <p className="text-[10px] font-bold text-muted-foreground">직속 부모 지도</p>
-          <Link to={node.parentHref} className="mt-1 block break-keep text-sm font-bold leading-6 hover:text-primary">
-            {node.parentLabel} ↗
-          </Link>
+          <p className="text-[10px] font-bold text-muted-foreground">
+            {node.track === "concept" ? "직속 부모 지도" : "출발할 개념"}
+          </p>
+          {node.track === "concept" ? (
+            <Link to={node.parentHref} className="mt-1 block break-keep text-sm font-bold leading-6 hover:text-primary">
+              {node.parentLabel} ↗
+            </Link>
+          ) : (
+            <ul className="mt-1 space-y-1">
+              {anchors.map((anchor) => (
+                <li key={anchor.href}>
+                  <Link to={anchor.href} className="break-keep text-xs font-semibold leading-5 hover:text-primary">
+                    {anchor.label} ↗
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
-      <div className="mt-5 grid gap-px bg-border p-px sm:grid-cols-5" aria-label="대조 학습의 다섯 개념 영역">
+      <div className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-5" aria-label="대조 학습의 다섯 학습 영역">
         {CONTRASTIVE_LEARNING_NODES.map((candidate, index) => {
           const active = candidate.id === current;
           return (
@@ -73,6 +88,7 @@ export default function ContrastivePathLocator({
             >
               <span className="font-mono text-[9px] font-black text-primary">{String(index + 1).padStart(2, "0")}</span>
               <strong className="mt-1 block break-keep text-xs leading-5">{candidate.shortTitle}</strong>
+              <span className="mt-0.5 block text-[9px] font-bold text-primary/80">{TRACK_LABEL[candidate.track]}</span>
               <span className="mt-1 block break-keep text-[10px] leading-4">{candidate.mapLabel}</span>
             </Link>
           );
