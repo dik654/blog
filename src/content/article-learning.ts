@@ -41379,9 +41379,9 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/openclaw-assistant": {
     entryLevel: true,
     entryNote:
-      "Channel·binding·session·provider·model·runtime·Skill·sandbox를 안다고 가정하지 않습니다. 같은 trust boundary의 운영자 A가 Telegram에서 월말 보고서 초안을 요청하고, 운영자 B가 Slack에 직접 첨부한 보고서를 고객용으로 요약해 달라고 요청하는 두 건을 입구부터 답장까지 따라갑니다. 두 요청은 문서 주제가 같아도 session과 artifact가 자동 공유되지 않는 격리 반례이며, 각 단계가 고르는 대상과 보안상 책임지지 않는 범위를 함께 설명합니다. 제품 동작은 2026-08-13에 확인한 공식 문서 snapshot에 한정하고 실제 설치 version·config·plugin 목록으로 다시 확인해야 합니다.",
+      "Channel·binding·session·provider·model·runtime·sandbox를 모른다고 가정합니다. Telegram의 월말 보고서 요청 한 건이 채널 정책을 통과하고 Agent와 대화 상태를 찾은 뒤 runId를 받아 실행되며, 같은 외부 대화로 전달되는 과정을 끝까지 따라갑니다. 제품 동작은 2026-10-25에 공식 문서와 최신 안정 릴리스 v2026.10.7을 대조한 범위이며 실제 설치 version·config·plugin 목록으로 다시 확인해야 합니다.",
     coreIdea:
-      "OpenClaw assistant는 model 하나의 별칭이 아니라, 여러 inbound channel을 한 Gateway가 받아 이미 허용된 message를 deterministic binding으로 agent에 연결하고, session key로 이어 쓸 conversation state를 찾은 뒤 provider·model과 agent runtime을 차례로 확정하는 제품 실행 경로입니다. 선택된 harness가 현재 workspace의 tool·Skill·resource를 읽고 observation loop를 실행하더라도 tool policy·sandbox·elevated는 별도의 판정이며, 마지막 reply는 원 channel route와 idempotency key, outbound terminal state를 보존해야 합니다. 따라서 binding이나 session key를 authorization으로, sandbox를 Gateway 전체나 적대적 multi-tenant 격리로, audit log를 무한한 exactly-once 증거로 해석하면 안 됩니다.",
+      "OpenClaw는 model 하나의 별칭이 아니라 messaging surface와 typed API를 소유하는 Gateway, Agent·session 선택, provider·model·runtime 해석, tool policy·sandbox, 원 channel delivery가 이어지는 실행 경로입니다. agent RPC의 runId 접수, runtime terminal outcome, terminalReceipt의 source reply 전달은 서로 다른 시점입니다. Binding이나 session key를 authorization으로, sandbox를 Gateway 전체나 적대적 multi-tenant 격리로, runtime 완료를 외부 답장 성공으로 해석하면 안 됩니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -41402,11 +41402,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "openclaw-agent-harness-execution-boundary",
-        role: "Agent turn을 실행하는 built-in/plugin harness와 Gateway routing·delivery를 나누고 legacy Pi 명칭을 이관합니다.",
-      },
-      {
-        id: "openclaw-resource-discovery-loading-contract",
-        role: "Extension·tool·Skill·prompt·theme의 source·scope·eligibility와 실제 load 시점을 구분합니다.",
+        role: "Agent turn을 실행하는 built-in/plugin harness와 Gateway의 routing·delivery 책임을 나눕니다.",
       },
       {
         id: "openclaw-tool-policy-sandbox-elevated-boundary",
@@ -41434,7 +41430,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "회사 우편실이 '특정 고객의 긴급 우편→그 고객 담당자, support account의 나머지 우편→support 팀, 그 밖의 우편→기본 담당자' 순서로 배정하는 규칙과 같습니다.",
         workedExample:
-          "Slack `work` account 전체를 `work-agent`에 연결하되 특정 incident channel을 `incident-agent`에 연결합니다. Concrete peer처럼 더 구체적인 match가 account fallback보다 먼저 이기고, 같은 specificity tier에서는 config에 먼저 적힌 binding이 선택됩니다. 매칭이 없으면 `default:true` agent를 사용합니다.",
+          "Slack `work` account 전체를 `work-agent`에 연결하되 특정 incident channel을 `incident-agent`에 연결합니다. Concrete peer처럼 더 구체적인 match가 account fallback보다 먼저 이기고, 같은 specificity tier에서는 config에 먼저 적힌 binding이 선택됩니다. 매칭이 없으면 caller owner·configured/preserved default owner·sole agent를 차례로 사용할 수 있으며 어느 것도 없으면 `AGENT_SELECTION_REQUIRED`가 됩니다.",
         boundary:
           "Binding은 account를 만들거나 접근을 허용하지 않습니다. 이미 channel policy를 통과한 traffic의 agentId만 고르므로 allowlist를 binding으로 대체할 수 없고, 존재하지 않는 agentId·빠진 accountId·restart 전 config는 roster와 channel probe로 따로 검증해야 합니다.",
       },
@@ -41454,9 +41450,9 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "어느 통신사(provider)의 어느 회선(model)을 쓸지 정한 뒤 그 회선을 운전할 단말(runtime)을 고르는 순서입니다. 회선 이름만 보고 단말을 임의로 바꾸지 않습니다.",
         workedExample:
-          "`work-agent`의 auth/catalog snapshot에서 `anthropic/claude-...` model route를 확정한 다음 model-scoped `agentRuntime.id`, provider-scoped policy, auto mode의 registered plugin claim을 차례로 평가합니다. Explicit `codex` runtime이 실행되지 않으면 selection error를 반환하며 built-in OpenClaw로 조용히 fallback하지 않습니다. 일반적인 unmatched `auto` turn은 built-in runtime으로 가지만, 현재 OpenAI model은 runtime이 unset/`auto`이면 Codex harness를 고르는 제품별 예외가 있으므로 trace와 설치 version으로 확인합니다.",
+          "`work-agent`의 auth/catalog snapshot에서 provider/model route를 확정한 다음 model-scoped `agentRuntime.id`, provider-scoped runtime, registered harness claim을 평가합니다. OpenAI prefix만으로 Codex runtime이 정해지는 것은 아니며 compatible effective route와 authored request override 여부를 함께 봅니다. 실제 선택 결과는 trace와 설치 version으로 확인합니다.",
         boundary:
-          "Provider는 인증·catalog·transport, model은 선택한 inference target, runtime은 agent loop 실행 방식입니다. OpenAI auto 예외를 모든 provider의 일반 규칙으로 확대하거나 whole-agent/session pin이 현행 정책을 override한다고 가정하지 말고, 현재 config generation과 plugin registry를 기록해야 합니다.",
+          "Provider는 인증·catalog·transport, model은 선택한 inference target, runtime은 agent loop 실행 방식입니다. Provider/model과 runtime을 같은 선택으로 합치거나 model prefix 하나만 보고 실행 harness를 단정하지 말고, 현재 config generation과 plugin registry를 기록해야 합니다.",
       },
       {
         id: "openclaw-agent-harness-execution-boundary",
@@ -41464,19 +41460,9 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "Gateway가 접수·배달 창구라면 harness는 안쪽에서 자료를 읽고 도구를 쓰며 답안을 만드는 작업대입니다. 작업대가 바뀌어도 어느 Slack thread로 답할지는 Gateway가 계속 소유합니다.",
         workedExample:
-          "Built-in runtime id는 `openclaw`입니다. Legacy config의 `pi`는 `openclaw`로 normalize되지만 새 config에서는 `openclaw`를 쓰고, plugin code의 deprecated `runEmbeddedPiAgent(...)`는 같은 channel turn resolution을 사용하는 `runEmbeddedAgent(...)`로 바꿉니다. 이관 전후 같은 provider·model·workspace·tool fixture에서 trace와 reply를 pair로 비교합니다.",
+          "Gateway가 `agent` RPC를 접수해 `runId`와 `acceptedAt`을 즉시 반환하면 선택된 runtime이 model loop를 실행합니다. OpenClaw embedded runtime은 자체 transcript와 tool loop를 소유하고, Codex app-server runtime은 primary thread와 model loop를 더 많이 소유하지만 두 경우 모두 channel delivery는 OpenClaw가 담당합니다.",
         boundary:
-          "Deprecated alias가 당장 동작한다는 사실은 새 code에서 계속 써도 된다는 뜻이 아니며 `pi-tui`라는 별도 terminal dependency와 runtime alias `pi`도 혼동하면 안 됩니다. Harness는 model quality·tool permission·final correctness를 자동 보장하지 않고 explicit runtime 실패를 다른 runtime으로 숨기면 안 됩니다.",
-      },
-      {
-        id: "openclaw-resource-discovery-loading-contract",
-        sectionId: "runtime-resources",
-        intuition:
-          "창고 목록에 물건이 있다는 것, 작업자가 설명서를 읽었다는 것, 실제로 기계를 켤 권한이 있다는 것은 서로 다른 단계입니다.",
-        workedExample:
-          "운영자 A의 월말 보고서 turn에서 runtime generation은 package manifest의 `openclaw.extensions·skills·prompts·themes`와 conventional directory fallback을 확인합니다. Session 시작 때 workspace Skill의 source precedence·binary/env eligibility로 목록을 snapshot하고 turn 사이에는 이를 재사용합니다. Watcher·config·node 상태가 바뀌면 다음 turn의 refresh 경계에서 다시 계산하며, Skill은 작성 절차를 제공하고 tool은 실제 조회 capability를 제공합니다.",
-        boundary:
-          "Skill은 tool이나 plugin의 동의어가 아니고 instruction을 읽었다고 권한이 늘지 않습니다. Eligible 목록이 매 turn 무조건 새로 만들어진다고 가정하면 재현성이 깨집니다. Third-party Skill·plugin은 trusted code로 검토해야 하며 Skill env/API key가 host turn에 주입되는 것과 sandbox 안에 secret이 전달되는 것도 별도 설정입니다.",
+          "Harness가 model loop를 소유한다는 사실은 channel route·sender authorization·tool policy까지 소유한다는 뜻이 아닙니다. Runtime 완료와 외부 답장 성공도 별도 receipt로 확인해야 합니다.",
       },
       {
         id: "openclaw-tool-policy-sandbox-elevated-boundary",
@@ -41494,20 +41480,20 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "처리한 편지를 원래 봉투의 회신 주소로 돌려보내고, 전송 확인이 불분명하면 같은 접수 번호로 우체국 장부를 조회해 `전송됨·실패·확인 불가` 가운데 어디에 있는지 정하는 단계입니다.",
         workedExample:
-          "운영자 B의 고객용 summary가 완료되면 원 Slack account·peer·thread route로 final response를 전달합니다. 전송 직후 ack가 유실되면 같은 idempotency key의 outbound record를 조회하고 ack·dead-letter·reconciliation 결과로 durable terminal state를 `sent`·`failed`·`unknown` 중 하나로 확정합니다. Client reconnect 전에 거절된 pending request는 자동 replay하지 않고 새 status 조회나 명시적인 새 요청으로 복구합니다.",
+          "Telegram 보고서 초안 run이 완료되면 OpenClaw가 원 channel·account·peer·thread route로 final response를 전달합니다. 같은 runId의 `terminalReceipt.sourceReplyDelivered: true`는 외부 source 대화에 답장이 도착했다는 증거입니다. 전송 뒤 응답이 유실돼 결과가 모호하면 대화와 receipt를 먼저 확인하고 자동 중복 전송을 피합니다.",
         boundary:
-          "Session continuity와 reply route는 같은 개념이 아니며 docking은 새 authorization을 만들지 않습니다. Durable delivery state가 있어도 channel 외부 effect까지 exactly-once가 되는 것은 아니고, activity audit는 보존 기간과 용량이 제한된 best-effort evidence입니다. 따라서 `unknown`을 성공으로 꾸미거나 rejected request를 reconnect 뒤 몰래 재실행하면 안 됩니다.",
+          "Session continuity와 reply route는 같은 개념이 아닙니다. `sourceReplyDelivered`가 true여도 channel 밖 tool effect까지 exactly-once가 되는 것은 아니며, 결과가 모호한 channel send나 외부 effect를 reconnect 뒤 몰래 재실행하면 안 됩니다.",
       },
     ],
     conceptStages: [
       {
-        label: "Admit",
+        label: "접수",
         relation:
           "Channel policy를 통과한 message를 source와 reply metadata가 있는 Gateway event로 정규화",
         concepts: ["openclaw-inbound-gateway-event-envelope"],
       },
       {
-        label: "Route",
+        label: "선택",
         relation:
           "Binding으로 agent를 고르고 dmScope·source에서 conversation state를 찾되 key와 authorization을 분리",
         concepts: [
@@ -41517,7 +41503,7 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Resolve",
+        label: "실행 준비",
         relation:
           "Provider·model route 뒤 model/provider-scoped policy로 built-in 또는 plugin harness를 선택",
         concepts: [
@@ -41527,18 +41513,7 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Load",
-        relation:
-          "Workspace와 package에서 tool·plugin resource를 찾고 session-start Skill snapshot과 다음-turn refresh 경계를 기록",
-        concepts: [
-          "openclaw-resource-discovery-loading-contract",
-          "agent-skill-authoring-boundary",
-          "skill-scope-discovery",
-          "skill-permission-non-escalation",
-        ],
-      },
-      {
-        label: "Execute",
+        label: "도구 실행",
         relation:
           "Harness의 observation loop와 tool policy·sandbox·elevated 판정을 분리해 실행",
         concepts: [
@@ -41550,7 +41525,7 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Deliver",
+        label: "답장 전달",
         relation:
           "Exit state를 원 route로 전달하고 idempotency key·ack·reconciliation·terminal state로 불확실한 전송을 판정",
         concepts: [
@@ -41563,7 +41538,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "같은 trust boundary에서 운영자 A가 Telegram으로 요청한 월말 보고서 초안과 운영자 B가 Slack에 직접 첨부한 보고서의 고객용 요약을 각각 inbound event→binding→session key→provider/model→runtime→resource→tool execution→reply route 순서로 그리고, 두 요청의 state와 artifact가 자동 공유되지 않는 이유를 적으라.",
+          "같은 trust boundary에서 운영자 A가 Telegram으로 요청한 월말 보고서 초안과 운영자 B가 Slack에 직접 첨부한 보고서의 고객용 요약을 각각 inbound event→binding→session key→provider/model→runtime→tool 판정→reply route 순서로 그리고, 두 요청의 상태와 첨부물이 자동으로 공유되지 않는 이유를 적으라.",
         answerChecklist: [
           "two source events",
           "channel/account/peer/thread",
@@ -41575,7 +41550,7 @@ export const ARTICLE_LEARNING: Readonly<
           "provider/auth catalog",
           "model route",
           "runtime/harness",
-          "tool/Skill/resource",
+          "tool policy and execution location",
           "typed observation and exit",
           "separate reply routes",
           "trace/version",
@@ -41586,7 +41561,6 @@ export const ARTICLE_LEARNING: Readonly<
           "openclaw-session-key-scope-boundary",
           "openclaw-provider-model-runtime-resolution",
           "openclaw-agent-harness-execution-boundary",
-          "openclaw-resource-discovery-loading-contract",
           "openclaw-tool-policy-sandbox-elevated-boundary",
           "openclaw-reply-route-idempotency-contract",
         ],
@@ -41631,47 +41605,24 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Provider·model·agent runtime을 각각 한 문장으로 정의하고 explicit runtime failure와 auto fallback의 차이, OpenAI model의 unset/auto 예외, legacy `pi` config를 새 표기로 바꾸는 순서를 설명하라.",
+          "Provider·model·agent runtime·channel을 각각 한 문장으로 정의하고, `agent` 접수부터 같은 runId의 `agent.wait`와 외부 답장 증거까지 이어지는 순서를 설명하라. OpenAI라는 provider 이름만으로 Codex runtime을 단정할 수 없는 이유도 포함하라.",
         answerChecklist: [
           "provider auth/catalog/transport",
           "model inference target",
           "runtime harness",
+          "channel delivery route",
           "provider/model resolved first",
-          "model policy before provider policy",
-          "plugin claim",
-          "explicit fail closed",
-          "generic auto built-in fallback",
-          "OpenAI unset/auto Codex exception",
-          "pi to openclaw",
+          "compatible effective route",
+          "runId and acceptedAt",
+          "wait timeout does not cancel",
+          "terminal outcome",
+          "terminal receipt",
           "versioned config snapshot",
         ],
         requiredConcepts: [
           "openclaw-provider-model-runtime-resolution",
           "openclaw-agent-harness-execution-boundary",
         ],
-        sectionId: "runtime-resources",
-      },
-      {
-        level: "basic",
-        question:
-          "월말 보고서 기능에서 tool·Skill·plugin·prompt/theme resource를 나누고 manifest·conventional directory·workspace Skill precedence에서 무엇을 언제 load하며 session-start Skill snapshot이 언제 refresh되는지, 무엇이 실행 권한을 만들지 않는지 적으라.",
-        answerChecklist: [
-          "tool capability",
-          "Skill workflow instruction",
-          "plugin registration/distribution",
-          "prompt/theme resource",
-          "manifest paths/globs",
-          "directory fallback",
-          "scope/precedence/eligibility",
-          "session-start snapshot",
-          "reuse across turns",
-          "next-turn refresh after watcher/config/node change",
-          "loaded identity",
-          "Skill not permission",
-          "third-party trust review",
-          "secret scope",
-        ],
-        requiredConcepts: ["openclaw-resource-discovery-loading-contract"],
         sectionId: "runtime-resources",
       },
       {
@@ -41693,6 +41644,28 @@ export const ARTICLE_LEARNING: Readonly<
           "sandbox off default",
         ],
         requiredConcepts: ["openclaw-tool-policy-sandbox-elevated-boundary"],
+        sectionId: "security-reply",
+      },
+      {
+        level: "basic",
+        question:
+          "같은 runId에서 접수 완료, runtime 완료, 외부 답장 완료를 각각 어떤 값으로 확인하는지 적고, `agent.wait` timeout 뒤 새 요청을 만들지 않고 같은 runId를 다시 조회해야 하는 이유를 설명하라.",
+        answerChecklist: [
+          "runId",
+          "acceptedAt",
+          "terminal outcome",
+          "ok error timeout",
+          "wait timeout is not cancellation",
+          "same runId lookup",
+          "terminalReply",
+          "terminalReceipt",
+          "sourceReplyDelivered",
+          "no blind duplicate",
+        ],
+        requiredConcepts: [
+          "openclaw-agent-harness-execution-boundary",
+          "openclaw-reply-route-idempotency-contract",
+        ],
         sectionId: "security-reply",
       },
       {
@@ -41723,19 +41696,17 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Slack reply 전송 직후 ack가 유실되고 client connection도 끊긴 상황에서 원 thread route·idempotency key·outbound terminal state·reconciliation·audit evidence·reconnect 뒤 rejected request 처리 절차를 설계하라.",
+          "Telegram 답장 전송 뒤 응답이 유실된 상황에서 같은 runId의 terminal outcome과 terminalReceipt, 원래 대화의 실제 메시지를 사용해 재전송 여부를 판단하라.",
         answerChecklist: [
           "preserve channel/account/peer/thread",
-          "same operation identity",
-          "send/agent idempotency key",
-          "ack",
-          "dead-letter",
-          "reconciliation",
-          "sent/failed/unknown durable terminal state",
+          "same runId",
+          "terminal outcome",
+          "terminalReceipt",
+          "sourceReplyDelivered",
+          "inspect source conversation",
+          "ambiguous post-send failure",
+          "limited channel retry policy",
           "no blind duplicate",
-          "bounded best-effort audit evidence",
-          "rejected pending request not replayed",
-          "explicit status refresh or new request",
           "external tool side effects separate",
           "no exactly-once claim",
         ],
@@ -41745,36 +41716,33 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Legacy `pi` runtime config와 `runEmbeddedPiAgent(...)`를 사용한 plugin을 현행 OpenClaw API로 이관하고 behavior parity·explicit failure·resource loading·reply route 회귀를 검증하는 paired test를 설계하라.",
+          "`agent` 호출에서 runId는 받았지만 Telegram 답장이 보이지 않는 상황을 wait timeout, runtime terminal error, terminal ok이지만 sourceReplyDelivered가 확인되지 않은 경우로 나눠 진단하라.",
         answerChecklist: [
-          "inventory installed version",
-          "pi alias normalized",
-          "new id openclaw",
-          "runEmbeddedAgent replacement",
-          "same provider/model resolution",
-          "same workspace/input/tools",
-          "runtime selection trace",
-          "explicit failure preserved",
-          "resource manifest",
-          "reply route",
-          "no pi-tui confusion",
-          "canary",
-          "rollback/config backup",
+          "runId",
+          "acceptedAt",
+          "same runId wait",
+          "wait timeout is not cancellation",
+          "runtime terminal error",
+          "terminal reply",
+          "terminalReceipt",
+          "sourceReplyDelivered",
+          "original channel route",
+          "no blind retry",
+          "tool effect checked separately",
         ],
         requiredConcepts: [
           "openclaw-agent-harness-execution-boundary",
-          "openclaw-provider-model-runtime-resolution",
-          "openclaw-resource-discovery-loading-contract",
           "openclaw-reply-route-idempotency-contract",
         ],
-        sectionId: "runtime-resources",
+        sectionId: "security-reply",
       },
       {
         level: "advanced",
         question:
           "OpenClaw·plugin·Skill update 전후를 같은 channel fixture에서 paired canary로 비교하고 binding collision, shared-DM leak, explicit runtime failure, denied/elevated tool, duplicate reply를 주입해 release와 rollback 기준을 작성하라.",
         answerChecklist: [
-          "official docs date 2026-08-13",
+          "official docs date 2026-10-25",
+          "stable release v2026.10.7",
           "installed OpenClaw/plugin/Skill versions",
           "immutable config/workspace fixture",
           "same provider/model/input",
@@ -41793,7 +41761,6 @@ export const ARTICLE_LEARNING: Readonly<
           "openclaw-binding-agent-selection-order",
           "openclaw-session-key-scope-boundary",
           "openclaw-provider-model-runtime-resolution",
-          "openclaw-resource-discovery-loading-contract",
           "openclaw-tool-policy-sandbox-elevated-boundary",
           "openclaw-reply-route-idempotency-contract",
         ],
@@ -41809,7 +41776,7 @@ export const ARTICLE_LEARNING: Readonly<
         contribution:
           "Long-lived Gateway가 messaging surfaces와 typed WebSocket API를 소유하고 connect handshake·request/response/event frame·device pairing·idempotency·event gap invariants를 제공하는 현재 구조를 설명",
         assumptions:
-          "2026-08-13에 확인한 공식 문서와 실제 설치 OpenClaw version·Gateway auth/bind·enabled channel·client/node role·network topology가 일치한다는 전제",
+          "2026-10-25에 확인한 공식 문서와 안정 릴리스 v2026.10.7, 실제 설치 OpenClaw version·Gateway auth/bind·enabled channel·client/node role·network topology가 일치한다는 전제",
         evidenceScope:
           "Gateway daemon·client·node·WebChat component와 typed WS connection lifecycle, side-effecting method idempotency 및 event non-replay의 문서화된 현재 동작",
         notClaim:
@@ -41837,13 +41804,13 @@ export const ARTICLE_LEARNING: Readonly<
         problem:
           "DM·group·room·cron·webhook의 conversation continuity를 유지하면서 여러 sender의 transcript와 reply route가 의도치 않게 섞이지 않게 하는 문제",
         contribution:
-          "Source별 session routing, main·per-peer·per-channel-peer·per-account-channel-peer dmScope, identity linking·channel docking·incognito storage boundary를 설명",
+          "Source별 session routing, main·per-peer·per-channel-peer·per-account-channel-peer dmScope, 검증된 identity linking과 incognito storage boundary를 설명",
         assumptions:
-          "2026-08-13 공식 문서와 실제 session.scope/dmScope·identityLinks·channel account·Gateway owner trust model 및 기존 session store 상태",
+          "2026-10-25 공식 문서와 안정 릴리스 v2026.10.7, 실제 session.scope/dmScope·identityLinks·channel account·Gateway owner trust model 및 기존 session store 상태",
         evidenceScope:
           "Gateway가 소유하는 session key와 transcript/compaction state의 현재 routing·isolation·persistence 동작",
         notClaim:
-          "Session key가 authorization token이거나 DM scope·incognito·channel docking이 hostile multi-tenant isolation, tool write 차단, provider privacy를 자동 제공한다는 뜻은 아님",
+          "Session key가 authorization token이거나 DM scope·incognito가 hostile multi-tenant isolation, tool write 차단, provider privacy를 자동 제공한다는 뜻은 아님",
         sectionId: "paper-openclaw-session-management",
       },
       {
@@ -41852,74 +41819,74 @@ export const ARTICLE_LEARNING: Readonly<
         problem:
           "Provider·model route와 agent execution harness를 한 이름으로 취급하면 auth·transport·runtime fallback과 장애 원인을 예측할 수 없는 문제",
         contribution:
-          "Provider/model과 runtime/channel layer를 분리하고 model-scoped·provider-scoped policy, plugin claim, generic auto fallback, OpenAI model의 unset/auto Codex 예외, explicit fail-closed 및 legacy whole-agent pin 처리의 현재 선택 규칙을 설명",
+          "Provider·model·runtime·channel을 서로 다른 선택과 소유권으로 분리하고 OpenClaw embedded runtime과 Codex app-server runtime의 loop·transcript 책임 차이를 설명",
         assumptions:
-          "현재 config generation·provider auth/model catalog·registered plugin runtime·effective model route와 2026-08-13 공식 문서 snapshot을 함께 기록한 환경",
+          "현재 config generation·provider auth/model catalog·registered runtime·effective model route와 2026-10-25 공식 문서 및 안정 릴리스 v2026.10.7을 함께 기록한 환경",
         evidenceScope:
-          "OpenClaw가 provider/model resolution 뒤 agent harness를 선택하고 explicit runtime error, generic auto fallback, OpenAI auto 예외를 처리하는 현재 제품 semantics",
+          "OpenClaw가 provider/model route와 agent runtime, channel delivery를 분리하는 현재 제품 동작과 runtime별 ownership 경계",
         notClaim:
-          "OpenAI auto 예외가 모든 provider에 적용되거나 auto가 explicit failure를 복구하고 runtime 변경이 model quality·tool compatibility를 보장한다는 뜻은 아님",
+          "OpenAI라는 provider 이름만으로 Codex runtime이 선택되거나 runtime 변경이 model 품질·tool 호환성·외부 전달 성공을 보장한다는 뜻은 아님",
         sectionId: "paper-openclaw-agent-runtimes",
       },
       {
-        title: "OpenClaw — Agent runtime architecture",
-        href: "https://docs.openclaw.ai/agent-runtime-architecture",
+        title: "OpenClaw — Agent loop",
+        href: "https://docs.openclaw.ai/concepts/agent-loop",
         problem:
-          "과거 Pi 명칭과 내부 source import·resource discovery가 남아 있으면 config migration에서 compatibility alias와 현행 runtime/resource contract를 구분하기 어려운 문제",
+          "실행 접수, model/tool loop, 대기, 최종 상태, 외부 답장 전달을 한 번의 성공이나 timeout으로 합치면 어디까지 끝났는지 판단할 수 없는 문제",
         contribution:
-          "Built-in `openclaw` runtime id, deprecated `pi` normalization, atomic model runtime generation과 package manifest/conventional resource discovery 경계를 문서화",
+          "`agent`가 runId와 acceptedAt을 즉시 반환하고 `agent.wait`가 같은 runId의 ok·error·timeout과 terminalReply·terminalReceipt를 확인하는 실행 수명을 설명",
         assumptions:
-          "2026-08-13 문서와 설치 package의 resource package metadata를 사용하며 private `src/**` internal import에 의존하지 않는다는 전제",
+          "2026-10-25 공식 문서와 안정 릴리스 v2026.10.7, 실제 Gateway protocol과 설치 runtime이 일치하고 같은 runId를 끝까지 보존한다는 전제",
         evidenceScope:
-          "Runtime selection alias와 extensions·skills·prompts·themes manifest, current internal/public module boundary의 기술 reference",
+          "Gateway의 실행 접수와 agent event stream, wait-only timeout, terminal outcome과 source reply delivery receipt의 현재 계약",
         notClaim:
-          "Legacy alias가 영구 지원되거나 plugin helper migration까지 이 문서 한 곳에서 보장하고, resource가 발견됐다는 사실이 신뢰·permission·sandbox 통과를 뜻한다는 주장은 아님",
-        sectionId: "paper-openclaw-runtime-migration",
+          "runId 접수가 model 실행·tool effect·외부 답장 성공을 뜻하거나 agent.wait timeout이 실행 취소를 뜻한다는 주장은 아님",
+        sectionId: "paper-openclaw-agent-loop",
       },
       {
-        title: "OpenClaw — Plugin SDK runtime helpers",
-        href: "https://docs.openclaw.ai/plugins/sdk-runtime",
+        title: "OpenClaw — Channel routing",
+        href: "https://docs.openclaw.ai/channels/channel-routing",
         problem:
-          "Plugin이 private runtime source나 deprecated helper에 의존하면 OpenClaw update에서 실행 경로와 compatibility 수명을 검증하기 어려운 문제",
+          "Model runtime이 답장 채널까지 고른다고 오해하면 원래 source route와 실행 책임의 경계를 잃는 문제",
         contribution:
-          "Public plugin SDK의 `runEmbeddedAgent(...)` helper와 deprecated compatibility alias인 `runEmbeddedPiAgent(...)`의 현재 이름·호출 경계를 문서화",
+          "답장은 inbound 메시지의 channel·account·peer·thread 경로로 돌아가며 model이 delivery channel을 선택하지 않는 규칙을 설명",
         assumptions:
-          "2026-08-13 공식 문서와 실제 설치 OpenClaw/plugin SDK version, plugin build artifact 및 public package export를 함께 확인한다는 전제",
+          "2026-10-25 공식 문서와 안정 릴리스 v2026.10.7, 실제 활성 channel adapter와 inbound source metadata가 일치한다는 전제",
         evidenceScope:
-          "Plugin code에서 embedded agent turn을 시작할 때 사용할 public helper와 deprecated alias의 현재 migration surface",
+          "메시지가 들어온 source route를 보존해 같은 외부 대화로 final response를 전달하는 현재 channel routing 계약",
         notClaim:
-          "Compatibility alias가 영구 지원되거나 이름만 바꾸면 provider/model·tool·resource·reply behavior가 자동으로 같고 모든 private Pi import가 public SDK에 대응한다는 뜻은 아님",
-        sectionId: "paper-openclaw-plugin-sdk-runtime",
+          "Runtime 완료만으로 외부 전달이 성공하거나 channel routing이 tool side effect를 exactly-once로 만든다는 뜻은 아님",
+        sectionId: "paper-openclaw-channel-routing",
       },
       {
-        title: "OpenClaw — Skills",
-        href: "https://docs.openclaw.ai/tools/skills",
-        problem:
-          "여러 workspace·personal·managed·bundled·plugin source의 Skill이 겹칠 때 어떤 instruction이 보이고 어떻게 설치·검증되며 권한과 secret이 어디까지 전달되는지 판단하는 문제",
-        contribution:
-          "SKILL.md format·loading precedence·per-agent/shared scope·ClawHub install/verify·eligibility, session-start snapshot·turn reuse·next-turn refresh와 third-party Skill·path·secret security 주의를 설명",
-        assumptions:
-          "현재 OpenClaw version·active workspace/agent·configured Skill roots·installed ClawHub metadata·binary/env eligibility와 2026-08-13 공식 문서 snapshot",
-        evidenceScope:
-          "OpenClaw Skill discovery·session snapshot·refresh·installation·verification·frontmatter와 host process secret injection의 현재 제품 동작",
-        notClaim:
-          "Skill verify나 registry scan이 code safety를 완전히 증명하고, Skill instruction이 tool capability·runtime permission을 만들거나 secret이 sandbox에 자동 전달된다는 뜻은 아님",
-        sectionId: "paper-openclaw-skills",
-      },
-      {
-        title: "OpenClaw — Sandboxing",
-        href: "https://docs.openclaw.ai/gateway/sandboxing",
+        title: "OpenClaw — Sandbox vs tool policy vs elevated",
+        href: "https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated",
         problem:
           "Tool call이 막힌 이유와 실제 실행 위치를 tool policy·sandbox·elevated 가운데 구분하지 못하면 위험한 host execution이나 잘못된 격리 기대가 생기는 문제",
         contribution:
           "Sandbox가 기본 off이고 tool execution만 이동한다는 범위, mode·scope·backend, workspace access, allow/deny precedence와 explicit elevated escape path를 설명",
         assumptions:
-          "2026-08-13 공식 문서와 실제 agent/default override, sandbox backend/image, workspace mounts, sender authorization·tool policy·elevated config를 함께 확인한 환경",
+          "2026-10-25 공식 문서와 안정 릴리스 v2026.10.7, 실제 agent/default override, sandbox backend/image, workspace mounts, sender authorization·tool policy·elevated config를 함께 확인한 환경",
         evidenceScope:
           "OpenClaw Gateway에서 허용된 tool이 sandbox 또는 configured host/node escape path에서 실행되는 현재 제품 경계와 진단 command",
         notClaim:
           "Sandbox가 Gateway process를 격리하거나 완벽한 security boundary·hostile tenant isolation·network/credential policy를 자동 제공하고, denied tool을 다시 허용한다는 뜻은 아님",
         sectionId: "paper-openclaw-sandboxing",
+      },
+      {
+        title: "OpenClaw — Retry policy",
+        href: "https://docs.openclaw.ai/concepts/retry",
+        problem:
+          "채널 전송 뒤 응답이 유실된 모호한 실패를 일반 오류처럼 즉시 재시도하면 같은 메시지를 중복 전송할 수 있는 문제",
+        contribution:
+          "채널별 제한된 재시도와 Telegram text send처럼 post-send 결과가 모호한 경우 자동 replay를 피하는 현재 정책을 설명",
+        assumptions:
+          "2026-10-25 공식 문서와 안정 릴리스 v2026.10.7, 실제 channel adapter의 retry 분류와 외부 대화 조회가 일치한다는 전제",
+        evidenceScope:
+          "OpenClaw channel delivery 단계의 재시도 가능 오류와 모호한 post-send failure 처리 범위",
+        notClaim:
+          "이 정책이 모든 channel과 외부 tool effect에 exactly-once 또는 자동 복구를 보장한다는 뜻은 아님",
+        sectionId: "paper-openclaw-retry",
       },
     ],
   },

@@ -348,15 +348,15 @@
 
 ### AI / OpenClaw — Gateway · session · runtime · sandbox
 
-- [x] 제품 기능 목록보다 먼저 Telegram 사용자 A와 Slack 사용자 B의 동시 요청을 고정 사례로 두고 인증·allowlist → binding → session → provider/model → runtime → tool policy/sandbox → typed reply의 실행 경로를 top-down으로 연결
-- [x] Channel adapter·Gateway·binding·session·model·runtime·tool policy·sandbox의 소유 책임을 구분하고, model 출력이 reply route나 실행 권한을 바꾸지 못하도록 control plane 경계를 명시
-- [x] 기본 shared DM session과 `per-channel-peer`·`per-account-channel-peer`를 비교해 다중 사용자 history 혼합 위험과 검증된 identity link의 적용 범위를 설명
-- [x] Provider·model·runtime 선택 순서, explicit runtime의 fail-closed와 auto fallback, 현행 `openclaw` runtime 및 `pi`·`runEmbeddedPiAgent` deprecated alias의 migration 경계를 반영
-- [x] Skill·tool·plugin·resource discovery와 workspace·sandbox workspace를 분리하고 tool policy → sandbox location → elevated exception의 판정 순서를 초심자용 반례와 함께 보강
-- [x] Side effect 직후 acknowledgement 유실 사례로 idempotency key·receipt·dedupe와 event sequence gap의 state refresh를 구분하고 paired canary·rollback까지 연결
-- [x] OpenClaw 공식 문서 7개를 learning reading anchor로 등록하고 protocol·security 보조 근거를 더해 문제·핵심 아이디어·전제·근거 범위·비주장을 본문에서 확인 가능하게 구성
-- [x] Canonical product concept 8개와 기존 agent/harness/session/security 정본 edge, 기초 6개·심화 4개 문제를 등록하고 article-only 역검사 수행
-- [x] 기존 흐름 표현을 유지한 flat responsive Viz 4개를 390px·1440px에서 확인하고 page/Viz overflow 0·Viz 내부 gradient/shadow/thick border 0·console warning/error 0을 확인
+- [x] Telegram의 “월말 보고서 초안을 만들어 줘” 한 건을 채널 수락 → Agent 선택 → 대화 상태 → 실행 접수 → runtime → tool 효과 → 최종 상태 → 원래 대화 전달까지 아홉 단계로 추적했습니다.
+- [x] Binding은 접근 권한을 부여하지 않고 이미 허용된 메시지의 Agent만 고른다는 점, DM scope는 별도로 transcript를 고른다는 점을 분리했습니다. `main`·`per-channel-peer`·검증된 `identityLinks`의 상태 변화를 같은 그림에서 비교합니다.
+- [x] Provider·model·runtime·channel을 별도 책임으로 나누고, `agent`가 즉시 돌려주는 `runId`·`acceptedAt`, 같은 `runId`의 `agent.wait` 결과, 외부 전달 증거 `sourceReplyDelivered`를 서로 다른 시계로 설명합니다.
+- [x] Tool 제안·allow/deny·sandbox 실행 위치·외부 효과 증거·답장 전달을 다섯 상태로 나눴습니다. Tool 결과만으로 외부 시스템 변경까지 증명되지 않는 경우에는 조회 결과나 별도 멱등성 키가 필요하다고 밝혔습니다.
+- [x] 현행 공식 문서에서 확인되지 않은 Pi migration·auto fallback·resource discovery 설명을 제거했습니다. Gateway architecture, agent bindings, session, runtimes, agent loop, channel routing, sandbox, retry, security와 안정 릴리스 `v2026.10.7`을 2026-10-25 기준으로 대조했습니다.
+- [x] 직속 부모인 에이전트 제어 경계 지도에서 출발해 네 경로를 설명한 뒤 같은 부모로 결론을 돌려보냅니다. 개념 글에는 환경별 설치·canary·rollback 결정을 넣지 않고 연결된 실무 글로 넘겼습니다.
+- [x] 시각화 4개를 1440×1000과 390×844에서 확인했습니다. 가로 overflow와 console error는 0이고, 모바일 첫 그림은 아홉 줄을 3×3 전체 지도와 현재 단계 상세로 바꿔 높이를 911px에서 506px로 줄였습니다.
+- [x] 재생은 4.6~5.2초마다 한 장면만 이동하며 화면 이탈 시 멈추고 재진입만으로 재개되지 않습니다. ArrowRight·Space와 49.5px 이상의 모바일 조작부를 확인했고, reduced-motion에서는 재생만 비활성화됩니다.
+- [x] 8GB 상한 production build가 TypeScript·Vite 7,914개 모듈·정적 경로 2,088개를 통과했습니다. OpenClaw도 no-script 본문 대상에 넣어 JavaScript 비활성 390×844에서 폭 390/390, 조작부 0, 정적 목록 4개·22단계와 마지막 결론을 확인했습니다. 공개 배포 확인만 남았습니다.
 
 ### AI / Agent 개발 기록 — artifact · Changelog · ADR · Lessons
 
