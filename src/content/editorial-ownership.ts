@@ -639,13 +639,11 @@ export const EDITORIAL_BOUNDARIES = {
   "openclaw-assistant": {
     title: "OpenClaw assistant 글이 소유하는 범위",
     owns: [
-      "Channel event를 Gateway envelope로 받아 deterministic binding·default agent로 연결하는 OpenClaw 제품 routing",
-      "Agent가 소유하는 session key·dmScope·identity link·reply route와 authorization·tenant isolation의 경계",
-      "Provider·model resolution 뒤 model/provider-scoped policy로 built-in 또는 plugin agent runtime을 고르는 현재 순서",
-      "OpenClaw runtime generation의 extension·tool·Skill·prompt·theme discovery와 workspace/package resource loading",
-      "Tool allow/deny→sandbox mode/scope/backend→elevated host/node escape path의 제품별 판정 경계",
-      "Gateway reply route·idempotency key·outbound terminal state·ack/dead-letter/reconciliation·bounded audit·rejected request non-replay 경계",
-      "Legacy `pi` config와 `runEmbeddedPiAgent(...)` plugin helper를 현행 public OpenClaw 표기로 이관하는 계약",
+      "허용된 channel message가 binding·session scope를 지나 Agent run으로 접수되는 순서",
+      "`runId` 즉시 접수와 `agent.wait` terminal outcome, 외부 source reply receipt의 서로 다른 완료 시점",
+      "Provider·model·agent runtime·channel이 소유하는 상태와 실행 책임의 경계",
+      "Tool allow/deny→sandbox 실행 위치→elevated exec 예외의 제품별 판정 순서",
+      "원 channel reply route와 모호한 전송에서 중복을 피하는 제한된 retry 경계",
     ],
     reuses: [
       {
@@ -681,7 +679,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "OpenClaw routing·session·runtime·Skill·sandbox·Gateway protocol·plugin SDK 동작은 2026-08-13에 확인한 docs.openclaw.ai 공식 문서와 실제 설치 version·config·plugin/resource inventory에만 귀속한다.",
+        rule: "OpenClaw routing·session·runtime·sandbox·delivery 동작은 2026-10-25에 확인한 공식 문서와 최신 안정 릴리스 v2026.10.7 범위에 귀속하며 실제 설치 version·config·plugin inventory로 다시 확인한다.",
       },
       {
         kind: "standard",
@@ -689,11 +687,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "project-measurement",
-        rule: "제품 변경 효과는 같은 Gateway/channel fixture·provider/model·workspace·message에서 route winner·session isolation·runtime trace·tool effect·outbound terminal state·latency를 paired 비교하고 ack 유실·dead-letter·unknown·reconnect failure injection으로 검증한다.",
-      },
-      {
-        kind: "project-claim",
-        rule: "Legacy `pi`는 `openclaw`로 normalize되는 alias이고 `runEmbeddedPiAgent(...)`는 deprecated compatibility alias이므로 새 config·code는 `openclaw`와 `runEmbeddedAgent(...)`를 사용하며 지원 수명은 고정된 보장이 아니다.",
+        rule: "운영 적용 글에서는 같은 channel fixture에서 binding winner·session isolation·runId terminal outcome·tool effect·source reply receipt를 비교하고 거부·timeout·모호한 전송을 별도로 주입한다.",
       },
       {
         kind: "standard",
@@ -701,7 +695,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Durable outbound terminal state를 external side effect의 exactly-once 보장으로 확대하지 않고 activity audit은 bounded/best-effort evidence이며 reconnect 전에 거절된 pending request는 자동 replay하지 않는다.",
+        rule: "Runtime 완료와 외부 source reply 전달을 같은 상태로 합치지 않고, 모호한 channel send와 외부 tool effect에 exactly-once를 주장하지 않는다.",
       },
     ],
   },

@@ -5211,7 +5211,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "OpenClaw provider · model · runtime resolution",
     definition:
-      "Agent config와 현재 auth/catalog snapshot에서 provider와 model route를 먼저 확정한 뒤 model-scoped·provider-scoped runtime policy와 plugin claim을 평가해 harness를 선택하는 해석 순서입니다. Explicit runtime 실패는 OpenClaw로 조용히 우회하지 않으며, runtime을 지정하지 않았거나 `auto`인 OpenAI model은 현재 Codex harness를 고르는 제품별 예외까지 설치 version과 함께 확인합니다.",
+      "Agent config와 현재 auth/catalog snapshot에서 provider와 model route를 먼저 확정한 뒤 model-scoped·provider-scoped runtime policy와 등록된 harness를 평가해 실행 구현을 고르는 해석 순서입니다. OpenAI model prefix만으로 Codex runtime이 정해지는 것은 아니며 compatible effective route와 실제 설치 version을 함께 확인합니다.",
     canonicalHref: "/cs/ai/openclaw-assistant#runtime-resources",
   },
   "openclaw-agent-harness-execution-boundary": {
@@ -5220,16 +5220,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "OpenClaw agent runtime · harness boundary",
     definition:
-      "Built-in `openclaw` 또는 plugin runtime이 provider stream·model turn·tool loop·context lifecycle을 실행하는 책임과 Gateway의 channel routing·reply delivery를 분리하고, legacy `pi` 및 `runEmbeddedPiAgent(...)`를 새 config·code에서 쓰지 않는 migration 경계입니다.",
-    canonicalHref: "/cs/ai/openclaw-assistant#runtime-resources",
-  },
-  "openclaw-resource-discovery-loading-contract": {
-    id: "openclaw-resource-discovery-loading-contract",
-    kind: "concept",
-    domain: "computer-science",
-    label: "OpenClaw tool · skill · resource loading contract",
-    definition:
-      "Agent runtime generation과 workspace에서 extension·tool·Skill·prompt·theme의 manifest 또는 conventional directory·scope·eligibility를 확인해 보일 resource를 만들고, instruction bundle과 실행 capability·secret injection을 분리하는 제품별 로딩 계약입니다. Eligible Skill 목록은 session이 시작될 때 snapshot으로 만들어 turn 사이에 재사용되며 watcher·config·node 상태 변화는 다음 turn의 refresh 경계에서 반영됩니다.",
+      "Built-in `openclaw` 또는 plugin runtime이 provider stream·model turn·tool loop·context lifecycle을 실행하는 책임과 Gateway의 run 추적·channel routing·reply delivery를 분리하는 경계입니다.",
     canonicalHref: "/cs/ai/openclaw-assistant#runtime-resources",
   },
   "openclaw-tool-policy-sandbox-elevated-boundary": {
@@ -5247,7 +5238,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "OpenClaw reply-route · idempotency contract",
     definition:
-      "Agent run의 final·error·approval-wait 상태를 원 channel·account·peer·thread 또는 명시적으로 dock된 route로 전달하고, side-effecting send·agent request에는 stable idempotency key를 연결하는 전달 계약입니다. Outbound delivery는 ack·dead-letter·reconciliation을 거쳐 `sent`·`failed`·`unknown`의 durable terminal state로 남기되 activity audit은 bounded/best-effort임을 밝히고, reconnect 전에 거절된 pending request는 자동 replay하지 않습니다.",
+      "Agent run의 terminal outcome을 원 channel·account·peer·thread route로 전달하고, 같은 `runId`의 `terminalReceipt.sourceReplyDelivered`로 외부 source 대화 도착 여부를 구분하는 전달 계약입니다. 결과가 모호한 channel send와 외부 tool effect는 무조건 replay하지 않으며 receipt와 현재 대화를 먼저 확인합니다.",
     canonicalHref: "/cs/ai/openclaw-assistant#security-reply",
   },
   "prompt-input-contract": {
@@ -44466,20 +44457,6 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Harness는 model proposal·authorized tool execution·typed observation·exit transition을 실행하지만 channel routing 자체를 대신하지 않습니다.",
   },
   {
-    from: "openclaw-agent-harness-execution-boundary",
-    to: "openclaw-resource-discovery-loading-contract",
-    relation: "produces",
-    reason:
-      "선택된 runtime generation과 agent workspace가 이번 turn에 보일 extension·tool·Skill·prompt·theme 후보와 load scope를 정합니다.",
-  },
-  {
-    from: "skill-scope-discovery",
-    to: "openclaw-resource-discovery-loading-contract",
-    relation: "extends",
-    reason:
-      "일반 Skill discovery를 OpenClaw workspace·project-agent·personal·managed·bundled·extra/plugin source의 현재 precedence에 적용합니다.",
-  },
-  {
     from: "skill-permission-non-escalation",
     to: "openclaw-tool-policy-sandbox-elevated-boundary",
     relation: "prerequisite",
@@ -44492,13 +44469,6 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     relation: "extends",
     reason:
       "일반 identity·network·kernel·storage·lifecycle 통제표 위에 OpenClaw의 tool policy·sandbox mode/scope/backend·elevated escape path를 배치합니다.",
-  },
-  {
-    from: "openclaw-resource-discovery-loading-contract",
-    to: "openclaw-tool-policy-sandbox-elevated-boundary",
-    relation: "constrains",
-    reason:
-      "발견되어 model에게 보이는 resource와 실제로 실행이 허용되고 어디서 실행되는지를 별도 판정으로 유지합니다.",
   },
   {
     from: "openclaw-tool-policy-sandbox-elevated-boundary",

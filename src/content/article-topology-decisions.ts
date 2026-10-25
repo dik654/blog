@@ -3498,7 +3498,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/llm-serving-ops": "58c53da4c3e32026",
   "ai/multiview-fusion": "885caaeca0c831e1",
   "ai/open-r1": "1479317024d9936a",
-  "ai/openclaw-assistant": "edc4529ce21a5f35",
+  "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",
   "ai/dinov3-self-supervised-backbone": "23b836bbc712c191",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",

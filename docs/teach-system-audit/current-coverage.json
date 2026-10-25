@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 565,
-    "pending": 426,
+    "reviewed": 566,
+    "pending": 425,
     "untracked": 0,
-    "assignedPending": 382,
+    "assignedPending": 381,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2381,11 +2381,11 @@
     {
       "route": "ai/openclaw-assistant",
       "publicPath": "cs/ai/openclaw-assistant",
-      "title": "OpenClaw: Gateway·Session·Runtime·Sandbox 경계",
+      "title": "OpenClaw 실행 경로",
       "catalogIndex": 235,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

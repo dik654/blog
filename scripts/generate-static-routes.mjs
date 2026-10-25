@@ -137,6 +137,7 @@ const noScriptArticleRoutes = new Set([
   "ai/skills-anatomy",
   "ai/agent-frameworks",
   "ai/agent-runtime-selection",
+  "ai/openclaw-assistant",
   "ai/qwen-korean-consistency",
   "ai/smoothie-qwen-weight-editing",
   "ai/qwen-korean-reasoning-posttraining",
