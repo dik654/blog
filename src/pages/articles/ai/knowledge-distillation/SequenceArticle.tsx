@@ -2,26 +2,29 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import DistillationPathLocator, {
+  DistillationMapReturn,
+} from "./DistillationPathLocator";
 
 export default function SequenceDistillationArticle() {
   return (
     <article>
       <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
+        <DistillationPathLocator current="sequence" />
         <header>
           <p className="text-sm font-semibold text-primary">
             Vocabulary 불일치부터 인정합니다
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            Sequence distillation은 teacher text를 provenance가 있는 student
-            dataset으로 바꾼다
+            Teacher 문자열은 student용 학습 데이터가 됩니다
           </h2>
         </header>
+        <DistillationLearningFlowViz mode="sequence" />
         <p className="text-lg leading-8">
           API teacher처럼 logits를 받을 수 없거나 tokenizer가 다르면 같은 timestep의 vocabulary distribution을 직접 비교할 수 없습니다.
           이럴 때는 teacher가 생성한 문자열을 student tokenizer로 다시 encode해 supervised target으로 씁니다. 대신 prompt source부터
           filter까지를 dataset construction receipt로 남깁니다.
         </p>
-        <DistillationLearningFlowViz mode="sequence" />
         <ContentBoundary article="sequence-distillation" />
       </section>
       <section id="sequence-loss" className="mb-16 scroll-mt-20 space-y-6">
@@ -116,9 +119,11 @@ export default function SequenceDistillationArticle() {
           </h2>
         </header>
         <p>
-          각 example에는 출처 쪽으로 prompt source·rights·slice를, 생성 쪽으로 teacher/version·system prompt·sampling을, 검증
-          쪽으로 filter/verifier 결과와 dedup group을 붙이고 마지막에 student template·mask까지 연결합니다. “teacher가 만들었다”는 출처가
-          quality label을 대신하지 않습니다.
+          각 example에는 출처 쪽의 prompt source·rights·slice를 기록합니다.
+          생성 쪽에는 teacher version·system prompt·sampling을, 검증 쪽에는
+          filter·verifier 결과와 dedup group을 남깁니다. 마지막으로 student
+          template과 loss mask를 연결합니다. “Teacher가 만들었다”는 출처만으로
+          품질이 보장되지는 않습니다.
         </p>
         <ExplainedFormula
           question="Generation pipeline에서 acceptance rate만 보면 왜 부족한가?"
@@ -225,8 +230,7 @@ export default function SequenceDistillationArticle() {
             03 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            독립 benchmark와 contamination audit 뒤에만 synthetic dataset을
-            승인한다
+            합성 데이터는 독립 검증을 거쳐야 합니다
           </h2>
         </header>
         <p>
@@ -242,6 +246,7 @@ export default function SequenceDistillationArticle() {
           입니다.
         </p>
       </section>
+      <DistillationMapReturn current="sequence" />
     </article>
   );
 }

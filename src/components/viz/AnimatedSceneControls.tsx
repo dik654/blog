@@ -7,6 +7,7 @@ export function AnimatedSceneControls({
   setPlaying,
   playLabel = "재생",
   controlLabels,
+  className = "",
 }: {
   labels: readonly string[];
   active: number;
@@ -16,6 +17,7 @@ export function AnimatedSceneControls({
   setPlaying: (value: boolean) => void;
   playLabel?: string;
   controlLabels?: readonly string[];
+  className?: string;
 }) {
   const previous = () => setActive(Math.max(0, active - 1));
   const next = () => setActive(Math.min(labels.length - 1, active + 1));
@@ -24,7 +26,7 @@ export function AnimatedSceneControls({
     <div
       data-viz-controls
       data-viz-live-only
-      className="z-20 mt-auto w-full shrink-0 sm:min-h-[6.75rem] sm:border-t sm:border-border sm:pt-4"
+      className={`z-20 mt-auto w-full shrink-0 sm:min-h-[6.75rem] sm:border-t sm:border-border sm:pt-4 ${className}`}
     >
       <div
         data-viz-mobile-controls

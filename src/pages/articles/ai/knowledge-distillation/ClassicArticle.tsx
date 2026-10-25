@@ -4,20 +4,24 @@ import ExplainedFormula from "@/components/ui/explained-formula";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
 import ScopeTaxonomy from "./ScopeTaxonomy";
+import DistillationPathLocator, {
+  DistillationMapReturn,
+} from "./DistillationPathLocator";
 
 export default function ClassicDistillationArticle() {
   return (
     <article>
       <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
+        <DistillationPathLocator current="signal-interface" />
         <header>
           <p className="text-sm font-semibold text-primary">
             먼저 무엇을 전달할지 정합니다
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            Knowledge distillation은 큰 모델을 복사하는 일이 아니라 teacher
-            signal을 student target으로 번역하는 일이다
+            증류는 teacher의 신호를 student의 학습 목표로 바꿉니다
           </h2>
         </header>
+        <DistillationLearningFlowViz mode="classic" />
         <p className="text-lg leading-8">
           Teacher는 class logit이나 hidden feature를 관측하게 해 줍니다.
           Student는 그 신호를 그대로 담을 수 없으므로 공유 class 순서,
@@ -56,7 +60,6 @@ export default function ClassicDistillationArticle() {
             },
           ]}
         />
-        <DistillationLearningFlowViz mode="classic" />
         <ContentBoundary article="knowledge-distillation" />
       </section>
       <section id="soft-target" className="mb-16 scroll-mt-20 space-y-6">
@@ -164,8 +167,7 @@ export default function ClassicDistillationArticle() {
         <header>
           <p className="text-sm font-semibold text-primary">02 · two anchors</p>
           <h2 className="mt-2 text-2xl font-bold">
-            Hard label은 정답에, soft target은 teacher의 class 관계에 student를
-            고정한다
+            Hard label과 soft target은 서로 다른 기준을 잡습니다
           </h2>
         </header>
         <p>
@@ -247,8 +249,7 @@ export default function ClassicDistillationArticle() {
             03 · hidden bridge
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Feature distillation은 tensor를 빼기 전에 layer·position·dimension
-            대응을 정의한다
+            Feature를 비교하려면 좌표부터 맞춰야 합니다
           </h2>
         </header>
         <p>
@@ -384,8 +385,7 @@ export default function ClassicDistillationArticle() {
             05 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Teacher agreement가 아니라 student-only quality·memory·latency로
-            승인한다
+            승인은 student 단독 결과로 판단합니다
           </h2>
         </header>
         <p>
@@ -402,6 +402,7 @@ export default function ClassicDistillationArticle() {
           로 넘어갑니다.
         </p>
       </section>
+      <DistillationMapReturn current="signal-interface" />
     </article>
   );
 }

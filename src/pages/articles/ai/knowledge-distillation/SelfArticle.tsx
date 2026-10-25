@@ -2,25 +2,28 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import DistillationPathLocator, {
+  DistillationMapReturn,
+} from "./DistillationPathLocator";
 
 export default function SelfDistillationArticle() {
   return (
     <article>
       <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
+        <DistillationPathLocator current="self" />
         <header>
           <p className="text-sm font-semibold text-primary">
             세대 경계부터 고정합니다
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            Self-distillation은 같은 이름의 model이 아니라 frozen teacher 세대와
-            새 student 세대의 계약이다
+            Frozen teacher와 새 student를 세대로 나눕니다
           </h2>
         </header>
+        <DistillationLearningFlowViz mode="self" />
         <p className="text-lg leading-8">
           한 checkpoint를 teacher로 freeze한 뒤 student는 같은 architecture 또는 같은 family에서 새로 initialization해 학습합니다.
           Student가 teacher와 더 비슷해지는 것과 ground truth에 더 가까워지는 것은 다릅니다. 세대별 artifact와 두 지표를 따로 두는 이유가 여기 있습니다.
         </p>
-        <DistillationLearningFlowViz mode="self" />
         <ContentBoundary article="self-distillation" />
       </section>
       <section
@@ -32,8 +35,7 @@ export default function SelfDistillationArticle() {
             01 · generation contract
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Teacher snapshot·student initialization·data·target policy를
-            세대마다 동결한다
+            세대마다 입력 계약을 동결합니다
           </h2>
         </header>
         <p>
@@ -117,8 +119,7 @@ export default function SelfDistillationArticle() {
             02 · inheritance audit
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Teacher agreement 증가에서 ground-truth quality 변화를 빼 bias
-            inheritance를 찾는다
+            닮음과 정답 품질의 차이로 오류 상속을 찾습니다
           </h2>
         </header>
         <p>
@@ -290,6 +291,7 @@ export default function SelfDistillationArticle() {
           interpretation="세대 수 자체가 목표가 아닙니다. 평균·worst slice·inheritance가 모두 gate를 통과한 student만 다음 teacher 후보가 됩니다."
         />
       </section>
+      <DistillationMapReturn current="self" />
     </article>
   );
 }

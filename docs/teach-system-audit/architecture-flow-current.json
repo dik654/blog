@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 543,
     "customVisuals": 864,
-    "animatedMechanisms": 466,
+    "animatedMechanisms": 470,
     "architectureWithoutAnimation": 94,
-    "recursiveLocators": 270,
+    "recursiveLocators": 274,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -2793,11 +2793,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/knowledge-graph-construction",
@@ -4009,11 +4009,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/one-cycle-scheduling",
@@ -5049,11 +5049,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/sentence-embeddings",
@@ -5097,11 +5097,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/sequence-modeling-tabular",

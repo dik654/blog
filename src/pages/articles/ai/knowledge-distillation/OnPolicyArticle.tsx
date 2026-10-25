@@ -3,20 +3,24 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import DistillationLearningFlowViz from "./viz/DistillationLearningFlowViz";
+import DistillationPathLocator, {
+  DistillationMapReturn,
+} from "./DistillationPathLocator";
 
 export default function OnPolicyDistillationArticle() {
   return (
     <article>
       <section id="overview" className="mb-16 scroll-mt-20 space-y-7">
+        <DistillationPathLocator current="on-policy" />
         <header>
           <p className="text-sm font-semibold text-primary">
             먼저 prefix를 누가 만들었는지 봅니다
           </p>
           <h2 className="mt-2 text-3xl font-bold">
-            On-policy distillation은 student가 실제 방문한 상태에서 teacher
-            feedback을 받는다
+            Student가 방문한 상태에서 다시 배웁니다
           </h2>
         </header>
+        <DistillationLearningFlowViz mode="on-policy" />
         <p className="text-lg leading-8">
           고정 teacher response만 학습한 student는 inference 때 자기 token으로
           다른 prefix를 만듭니다. On-policy distillation은 현재 student
@@ -24,7 +28,6 @@ export default function OnPolicyDistillationArticle() {
           distribution을 target으로 받아 이 state-distribution mismatch를
           줄입니다.
         </p>
-        <DistillationLearningFlowViz mode="on-policy" />
         <ContentBoundary article="on-policy-distillation" />
       </section>
       <section id="state-mismatch" className="mb-16 scroll-mt-20 space-y-6">
@@ -233,8 +236,7 @@ export default function OnPolicyDistillationArticle() {
             03 · policy-space integration
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            여러 specialist의 weight를 섞지 않고 prompt domain에서 teacher를
-            route한다
+            Teacher는 prompt domain에서 고릅니다
           </h2>
         </header>
         <p>
@@ -341,15 +343,18 @@ export default function OnPolicyDistillationArticle() {
             04 · Motif 3 case
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Motif 3는 full-vocabulary KL 대신 sampled token 하나의 teacher
-            log-probability를 사용했다
+            Motif 3는 선택 token의 log-probability를 썼습니다
           </h2>
         </header>
         <p>
-          Motif 3의 MOPD는 general SFT student가 on-policy trajectory를 만들고 prompt domain에 맞는 일곱 specialist 중 하나가
-          각 sampled token에 준 scalar log probability만 가져옵니다. Generation policy와 update 직전 old policy의 mismatch는
-          ICE-POP importance filter로 제한합니다. environment reward와 reference-policy KL은 distillation objective에서
-          제외합니다.
+          Motif 3의 MOPD는 general SFT student가 on-policy trajectory를
+          만듭니다. Prompt domain에 맞는 일곱 specialist 중 하나는 각 sampled
+          token에 scalar log probability를 줍니다.
+        </p>
+        <p>
+          Generation policy와 update 직전 old policy의 차이는 ICE-POP
+          importance filter로 제한합니다. Environment reward와
+          reference-policy KL은 이 distillation objective에서 제외합니다.
         </p>
         <p>
           이는 앞 절의 full-vocabulary divergence를 구현하는 유일한 방법이
@@ -382,7 +387,7 @@ export default function OnPolicyDistillationArticle() {
             05 · release gate
           </p>
           <h2 className="mt-2 text-2xl font-bold">
-            Rollout policy·teacher cost·worst-domain regression을 함께 승인한다
+            비용과 domain별 품질을 함께 봅니다
           </h2>
         </header>
         <p>
@@ -398,6 +403,7 @@ export default function OnPolicyDistillationArticle() {
           에서 분리합니다.
         </p>
       </section>
+      <DistillationMapReturn current="on-policy" />
     </article>
   );
 }
