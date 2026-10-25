@@ -11297,26 +11297,77 @@
       "route": "ai/rag-ingestion-and-chunking",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rag-ingestion-and-chunking.tsx",
       "publicPath": "cs/ai/rag-ingestion-and-chunking",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "파싱·고정 청킹·의미 청킹·문맥 보충·증분 반영이 기능 목록으로 이어져, 문서 한 건이 어떤 파생 기록을 만드는지 한 경로로 추적하기 어려웠음",
+        "원문 revision과 chunk provenance가 검색 색인 교체까지 어떻게 유지되는지 드러나지 않았음",
+        "시각 자료가 본문보다 앞에서 전체 경로를 보여 주지 않았고, 장면별 상태 변화와 JavaScript 비활성 대체 표현이 없었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "sourceRevision": "policy-v17",
+        "elementId": "e-037",
+        "chunkId": "c-8f31",
+        "indexRevision": "index-v42",
+        "documentTokens": 1000,
+        "chunkSize": 500,
+        "overlap": 50,
+        "chunkCount": 3
+      },
+      "stageAnchors": {
+        "0": "problem",
+        "1": "parsing",
+        "2": "chunking",
+        "3": "semantic-chunking",
+        "4": "contextual-retrieval",
+        "5": "pipeline",
+        "return": "rag-ingestion-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://www.anthropic.com/research/contextual-retrieval",
+          "location": "Contextual Retrieval method and reported retrieval-failure experiments",
+          "application": "검색용 문맥 prefix와 저자 실험의 top-20 검색 실패율을 해당 조건에 한정해 설명"
+        },
+        {
+          "href": "https://reference.langchain.com/python/langchain-text-splitters/base/TextSplitter",
+          "location": "TextSplitter API, version 1.1.2",
+          "application": "chunk size와 overlap을 별도 설정하는 고정 길이 분할 계약 확인"
+        },
+        {
+          "href": "https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/semantic_splitter/",
+          "location": "SemanticSplitterNodeParser stable API",
+          "application": "buffer size와 breakpoint percentile을 이용한 의미 경계 분할 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "policy-v17 → e-037 → c-8f31 → index-v42를 따라 원문 접수·구조 보존·분할·문맥 보충·색인 교체를 하나의 추적 경로로 재구성했습니다.",
+        "humanize": "기능 이름을 나열하던 흐름을 문서 한 건에서 새로 생기는 기록과 실패 조건 중심으로 바꾸고, 영어 용어에는 바로 읽을 수 있는 한국어 역할을 붙였습니다.",
+        "browser390": "390×844에서 여섯 장면 모두 514px 캔버스 안에 내부 스크롤 없이 들어가며 문서·그림·하위 요소의 가로 넘침이 0임을 확인했습니다.",
+        "browser1024": "1024×900에서 장면 캔버스와 본문 가로 넘침 0, 캔버스 scrollHeight와 clientHeight가 일치함을 확인했습니다.",
+        "browser1440": "1440×1000에서 704px 흐름과 조작부가 한 화면에 들어가고 잘린 하위 요소가 없음을 확인했습니다.",
+        "keyboard": "그림에 초점을 둔 뒤 ArrowRight로 원문부터 반영까지 여섯 장면을 이동했습니다.",
+        "timing": "명시적으로 재생한 뒤 3.2초에는 첫 장면을 유지하고 6.5초 뒤 두 번째 장면으로 이동함을 확인했습니다.",
+        "reducedMotion": "마지막 반영 장면에서 시작하며 재생 버튼이 비활성화되고 '재생 꺼짐'을 표시합니다.",
+        "noScript": "production preview의 JavaScript 비활성 390×844 화면에서 여섯 장면의 제목과 결론, 일곱 절, 전체 지도 반환이 같은 순서로 남고 재생 조작부는 노출되지 않았습니다.",
+        "build": "production build 8,009 modules·정적 public route 2,088개·no-script 본문 267편 생성, 최대 상주 메모리 약 6.53GB",
+        "browserEvidence": "output/playwright/rag-ingestion-mobile-fixed.png, output/playwright/rag-ingestion-mobile-final.png, output/playwright/rag-ingestion-desktop-final-fixed.png, output/playwright/rag-ingestion-noscript-mobile.png"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+        "GitHub Pages 배포 뒤 공개 경로 확인"
+      ],
+      "bodyFiles": [
+        "src/pages/articles/ai/rag-ingestion-and-chunking.tsx",
+        "src/pages/articles/ai/rag-ingestion-and-chunking/RagIngestionLocator.tsx",
+        "src/pages/articles/ai/rag-ingestion-and-chunking/viz/RagIngestionAndChunkingViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/rag-ingestion-and-chunking.tsx"
     },
     {
       "route": "ai/rag-pipeline",

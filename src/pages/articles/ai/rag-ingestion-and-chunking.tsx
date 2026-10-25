@@ -5,315 +5,322 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  RagIngestionLocator,
+  RagIngestionReturn,
+} from "./rag-ingestion-and-chunking/RagIngestionLocator";
 import RagIngestionAndChunkingViz from "./rag-ingestion-and-chunking/viz/RagIngestionAndChunkingViz";
 
-/**
- * RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- */
 export default function RagIngestionAndChunkingArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
+        <RagIngestionLocator />
+        <RagIngestionAndChunkingViz />
         <h2 className="mb-6 text-2xl font-bold">
-          Ingestion pipeline 이 문서를 잘라 knowledge base 를 채웁니다
+          문서 한 건이 검색 단위가 되기까지
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Retrieval-Augmented Generation(RAG)은 LLM 이 학습 시점 가중치만으로 답을 만들게 두지 않는 아키텍처입니다. 질문마다 외부 knowledge
-            base 를 검색해 그 내용을 prompt context 에 넣고 그 위에서 답을 생성하게 합니다. 모델을 다시 학습하지 않고도 최신 정보나 사설 데이터를 답변에 반영할 수
-            있는 대신, 검색이 가져온 근거가 틀리면 생성 단계는 그 오류를 그대로 답에 옮깁니다.
-          </p>
-          <p className="text-lg leading-8">
-            RAG 가 검색하는 대상은 원본 파일이 아니라 knowledge base 입니다. Knowledge base 는 문서·chunk·metadata·embedding vector
-            를 함께 담은 저장소입니다. 그 저장소를 채우는 절차가 document ingestion pipeline 입니다. 이 순서(parsing → chunking →
-            embedding)를 한 단계라도 건너뛰면 다음 단계가 받는 입력의 모양 자체가 깨집니다.
+            환불 규정이 v16에서 v17로 바뀌었다고 하겠습니다. 파일을 다시
+            올리는 것만으로는 충분하지 않습니다. 질문이 v17을 검색해야 하고,
+            답변의 인용은 v17 원문의 정확한 위치를 가리켜야 하며, v16에서
+            파생된 chunk는 더 이상 검색되면 안 됩니다.
           </p>
           <p>
-            이 글은 그 pipeline 의 앞쪽 절반, 즉 문서를 읽어 들여 검색 가능한 단위로 자르는
-            parsing·chunking·contextual retrieval 을 다룹니다. Chunking 뒤에 오는 embedding
-            버전 계약과 검색 funnel 자체는{" "}
-            <Link to="/cs/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>의 범위입니다.
+            이 글은 부모 글에서 본 RAG 전체 경로 가운데 질문 전에 실행되는
+            부분만 엽니다. 원문을 구조 있는 element로 바꾸고, 검색 단위로
+            나누고, 필요한 문맥을 보충한 뒤 색인 작업에 넘기는 과정입니다.
           </p>
           <p>
-            가정: 100 페이지 매뉴얼을 chunk 500 개로 잘라 knowledge base 에 넣었는데, 실제로
-            질문에 답하는 chunk 는 그중 30 개뿐이었습니다. 나머지 470 개는 parsing 이 표를
-            깨뜨렸거나, chunk 경계가 문장을 반으로 잘라 원래 뜻을 잃은 것들입니다. Ingestion
-            단계의 선택 하나하나가 이 30 개와 470 개의 경계를 가릅니다.
+            계속 추적할 사례는 <strong>policy-v17 → element e-037 → chunk
+            c-8f31 → index-v42</strong>입니다. ID와 개수는 동작을 설명하기 위한
+            가정이며 실제 측정값이 아닙니다. Embedding 모델 선택과 후보 검색은
+            이 글이 정하지 않습니다.
           </p>
         </div>
-        <RagIngestionAndChunkingViz />
         <ContentBoundary article="rag-ingestion-and-chunking" />
       </section>
 
       <section id="parsing" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Document parsing 은 chunking 이 쓸 구조를 만듭니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">구조 보존</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            PDF, HTML, Markdown 은 저마다 다른 방식으로 제목과 문단, 표를 인코딩합니다. Parsing 은 그 포맷을 벗겨 내고 순서가 있는 일반 텍스트를 만듭니다.
+          <p className="text-lg leading-8">
+            PDF에서 글자를 읽었다고 파싱이 끝나는 것은 아닙니다. 제목 계층,
+            문단 순서, 표의 머리글과 행 관계, 페이지와 원문 offset을 함께
+            보존해야 뒤 단계가 “이 문장은 어디에서 왔는가”에 답할 수 있습니다.
           </p>
           <p>
-            이때 그 텍스트가 원래 어떤 구조(제목 경로, 문단, 표의 행과 열)에 속했는지도 함께
-            남겨야 합니다. 구조 정보를 버리면 다음 단계인 chunking 은 평범한 글자열만 보고 자르게
-            됩니다.
+            예를 들어 e-037이 <code>환불 &gt; 예외</code> 아래의 1180~1540
+            문자 구간이라고 기록하면, 나중에 만들어진 c-8f31을 원문 §4.2로
+            되돌릴 수 있습니다. 문자열만 남기면 같은 문장이 어느 revision의
+            어느 표·문단에서 나왔는지 잃습니다.
           </p>
           <p>
-            이 글은 parsing 을 ingestion pipeline 의 한 단계로만 다룹니다. 표를 셀 단위로 복원하거나 스캔 문서의 layout 을 분석하는 세부는 별도 글의
-            범위입니다. 여기서는 parsing 결과가 무엇을 보존해야 다음 단계인 chunking 이 안전하게 작동하는지만 봅니다.
-          </p>
-          <p>
-            가정: 표 하나가 3 행 4 열이고 header 행에 항목 이름이 있습니다. Parsing 이 header 와 data row 의 관계를 남기지 않으면 뒤에 이어지는
-            chunking 은 숫자만 있는 행을 header 없이 잘라냅니다. 그 chunk 는 어떤 항목의 숫자인지 알 수 없는 상태로 knowledge base 에 들어갑니다.
-          </p>
-          <p>
-            Parsing 이 남겨야 할 최소 단위는 문단 경계, 제목 계층, 표의 header-row 관계, 원문 기준 문자 offset 입니다. Offset 을 남기지 않으면 나중에
-            어떤 chunk 가 원문 어디서 왔는지 추적할 방법이 없습니다.
+            표 셀을 어떤 순서로 복원하고 스캔 PDF의 layout을 어떻게 읽는지는
+            <Link to="/cs/ai/document-parsing-and-table-extraction">
+              문서 구조 파싱 글
+            </Link>
+            에서 더 깊이 다룹니다. 여기서는 파서의 출력 계약만 사용합니다.
           </p>
         </div>
         <TermBreakdown
-          title="이 글이 다루는 parsing 의 범위"
-          description="Ingestion pipeline 관점에서 parsing 이 남겨야 할 것과, 이 글이 다루지 않는 것을 나눕니다."
+          title="파서가 다음 단계에 넘기는 최소 기록"
+          description="본문 내용과 원문으로 돌아갈 좌표를 분리해 보존합니다."
           items={[
-            { term: "Document parsing", description: "원본 포맷에서 텍스트와 구조(제목·문단·표)를 뽑는 단계입니다.", example: "PDF 본문 + 표 header/row 관계 + 원문 offset.", boundary: "표 셀 단위 복원·layout 분석 같은 parsing 자체의 세부는 이 글이 소유하지 않습니다." },
-            { term: "원문 offset", description: "Chunk 가 원문 어디서 왔는지 되짚을 수 있는 문자 위치입니다.", example: "chunk 하나가 원문 480~530 문자 구간을 담았다는 기록.", boundary: "Offset 이 없으면 chunk 재현·업데이트 시 원문과의 대응을 잃습니다." },
+            {
+              term: "Element",
+              description: "제목·문단·표처럼 구조와 종류를 가진 파싱 결과입니다.",
+              example: "e-037 · paragraph · heading_path=환불/예외.",
+              boundary: "텍스트만 같아도 revision이나 위치가 다르면 다른 element입니다.",
+            },
+            {
+              term: "Provenance",
+              description: "파생 데이터가 어느 원문에서 나왔는지 되짚는 기록입니다.",
+              example: "source=policy, revision=v17, page=7, offset=1180:1540.",
+              boundary: "파일 이름 하나는 내용 변경과 같은 이름의 재업로드를 구분하지 못합니다.",
+            },
           ]}
         />
       </section>
 
       <section id="chunking" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Chunk size 와 overlap 이 검색 정밀도와 경계 손실을 정합니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">고정 경계</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Document chunking 은 parsing 이 만든 연속 텍스트를 고정 길이(chunk size)로 나눠 검색 단위를 만듭니다. Chunk 를 너무 크게 두면 서로 다른
-            주제가 한 chunk 에 섞여 검색 정밀도가 떨어집니다. 너무 작게 두면 조건과 예외가 다른 chunk 로 흩어집니다.
-          </p>
-          <p>
-            그 사이를 메우는 것이 chunk overlap 입니다. 인접한 두 chunk 가 일부 구간을 공유하게 해서 chunk 경계(chunk boundary)에 걸친 문장이 한쪽
-            chunk 에는 통째로 남게 만듭니다.
+            고정 길이 분할은 한 chunk의 최대 길이와 다음 chunk가 다시 포함할
+            길이를 정합니다. 1,000 token 문서를 size 500, overlap 50으로
+            자르면 다음 시작점은 450 token씩 전진합니다.
           </p>
         </div>
         <ExplainedFormula
-          question="Chunk size 500, overlap 50 인 1,000-token 문서는 chunk 가 몇 개 나올까요?"
-          idea="첫 chunk 이후로는 chunk size 에서 overlap 을 뺀 만큼(stride)만 앞으로 나가므로, overlap 을 뺀 나머지 길이를 그 stride 로 나누면 필요한 chunk 개수가 나옵니다."
-          formula={String.raw`N=\left\lceil \frac{L-o}{s-o} \right\rceil`}
-          annotatedFormula={String.raw`N=\left\lceil \underbrace{\frac{L-o}{s-o}}_{\text{남은 길이 ÷ stride}} \right\rceil`}
+          question="1,000-token 문서는 몇 개의 chunk가 될까요?"
+          idea="첫 chunk 하나를 만든 뒤, 아직 덮지 못한 길이를 stride로 몇 번 더 전진해야 하는지 계산합니다."
+          formula={String.raw`N=\begin{cases}1,&L\le s\\1+\left\lceil\dfrac{L-s}{s-o}\right\rceil,&L>s\end{cases}`}
+          annotatedFormula={String.raw`N=\begin{cases}1,&\underbrace{L\le s}_{\text{한 chunk 안에 들어감}}\\1+\left\lceil\underbrace{\dfrac{L-s}{s-o}}_{\text{남은 길이 ÷ stride}}\right\rceil,&L>s\end{cases}`}
           operations={[
-            { expression: String.raw`L-o`, annotation: ["문서 길이 L 에서 overlap 한 번을 먼저 빼", "첫 chunk 뒤에 실제로 더 덮어야 할 길이를 구함"] },
-            { expression: String.raw`s-o`, annotation: ["chunk size 에서 overlap 을 뺀 stride 로", "다음 chunk 시작 위치가 얼마나 전진하는지 나타냄"] },
-            { expression: String.raw`\left\lceil \cdot \right\rceil`, annotation: ["나눈 값을 올림해", "끝에 짧게 남는 조각도 chunk 하나로 셈"] },
+            {
+              expression: String.raw`s-o`,
+              annotation: ["500−50=450", "다음 시작점이 전진하는 stride"],
+            },
+            {
+              expression: String.raw`L-s`,
+              annotation: ["1,000−500=500", "첫 chunk가 덮고 남은 길이"],
+            },
+            {
+              expression: String.raw`1+\left\lceil 500/450\right\rceil`,
+              annotation: ["첫 chunk 1개에 두 번의 전진을 더해", "총 3개"],
+            },
           ]}
           terms={[
-            { symbol: "L", name: "문서 길이", description: "token 단위로 잰 전체 문서 길이입니다." },
-            { symbol: "s", name: "chunk size", description: "chunk 하나가 담는 최대 token 수입니다." },
-            { symbol: "o", name: "chunk overlap", description: "인접 chunk 가 공유하는 token 수입니다." },
-            { symbol: "N", name: "chunk 개수", description: "문서 하나를 자를 때 만들어지는 chunk 총수입니다." },
+            { symbol: "L", name: "문서 길이", description: "같은 tokenizer로 센 전체 token 수입니다." },
+            { symbol: "s", name: "chunk size", description: "한 chunk의 최대 token 수입니다." },
+            { symbol: "o", name: "overlap", description: "이웃 chunk가 함께 담는 token 수입니다." },
+            { symbol: "N", name: "chunk 수", description: "끝의 짧은 조각까지 포함한 결과 개수입니다." },
           ]}
           assumptions={[
-            "Token 단위로 정확히 나뉜다고 가정하며 문장 경계는 고려하지 않은 순수 길이 계산입니다.",
-            "마지막에 chunk size 보다 짧게 남는 조각도 chunk 하나로 셉니다.",
+            "0 ≤ overlap < chunk size이고 길이는 같은 tokenizer의 token 단위입니다.",
+            "문장·표·제목 경계를 보지 않고 길이만으로 자르는 설명용 계산입니다.",
+            "마지막에 짧게 남은 구간도 chunk 하나로 셉니다.",
           ]}
-          interpretation="L=1,000, s=500, o=50 이면 stride 는 450 이라 chunk 시작 위치는 0, 450, 900 이 되고 [0,500), [450,950), [900,1,000) 세 chunk 가 나옵니다. 마지막 chunk 는 100 token 짜리 짧은 조각입니다."
+          interpretation="시작점은 0, 450, 900이고 구간은 [0,500), [450,950), [900,1,000)입니다. 480~530 문장은 두 번째 chunk에 온전히 들어가지만, overlap이 없으면 두 chunk에 나뉩니다."
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Overlap 의 효과는 경계에 걸친 문장에서 드러납니다. 480~530 번째 token 에 걸친 문장 하나가 있다고 하면 overlap 이 없는 경우(stride 500)
-            chunk 는 [0,500) 과 [500,1,000) 으로 나뉩니다. 이 문장은 두 chunk 어디에도 온전히 남지 않습니다.
+            Overlap은 경계 손실을 줄이지만 없애지는 않습니다. 경계를 가로지르는
+            span이 overlap보다 길거나, 표의 머리글과 행이 더 멀리 떨어져 있으면
+            어느 chunk에도 완전한 의미가 남지 않을 수 있습니다.
           </p>
           <p>
-            같은 문장을 overlap 50 인 앞의 예로 다시 보면 두 번째 chunk 가 [450,950) 구간을 담으므로 480~530 문장 전체가 그 chunk 안에 통째로
-            들어갑니다. Overlap 은 이런 식으로 경계에 걸친 정보를 적어도 한쪽 chunk 에는 살려 둡니다.
-          </p>
-          <p>
-            다만 overlap 이 문장 길이보다 짧으면 이 보장은 깨집니다. 400~560 번째 token 에 걸친 160-token 문장은 overlap 50 으로도 어느 chunk
-            에도 완전히 들어가지 않습니다. Overlap 을 키우면 이런 경우는 줄지만 chunk 개수와 중복 저장량이 함께 늘어납니다.
+            Size를 키우면 더 많은 문맥이 한 덩어리에 남는 대신 서로 다른
+            주제가 섞일 수 있습니다. Size를 줄이면 후보는 세밀해지지만 조건과
+            예외가 갈라지고 저장·검색할 chunk 수도 늘어납니다. 따라서 “500과
+            50이 정답”이 아니라 평가 질문과 문서 구조에 맞춰 비교해야 합니다.
           </p>
         </div>
-        <TermBreakdown
-          title="Chunk size · overlap · boundary 의 관계"
-          items={[
-            { term: "Document chunking", description: "연속 텍스트를 고정 길이 검색 단위로 나누는 단계입니다.", example: "500-token chunk 로 문서 하나를 여러 조각으로 나눔.", boundary: "Chunk 하나에 여러 주제가 섞이면 검색 정밀도가 떨어집니다." },
-            { term: "Chunk size", description: "chunk 하나가 담는 최대 token 수입니다.", example: "500 token.", boundary: "너무 크면 주제가 섞이고, 너무 작으면 문맥이 흩어집니다." },
-            { term: "Chunk overlap", description: "인접 chunk 가 공유하는 token 수입니다.", example: "50 token 중복.", boundary: "문장 길이보다 짧은 overlap 은 경계 손실을 완전히 막지 못합니다." },
-            { term: "Chunk boundary", description: "한 chunk 가 끝나고 다음 chunk 로 넘어가는 자리입니다.", example: "[0,500) 과 [450,950) 사이 겹치는 [450,500) 구간.", boundary: "경계 자체를 없앨 수는 없고, overlap 은 그 경계의 손실을 줄이는 장치일 뿐입니다." },
-          ]}
-        />
         <ProgressiveDetail
-          title="Chunk size 를 늘리면 span coverage 도 함께 오르나요?"
-          preview="아닙니다. Chunk 를 키우면 경계 손실은 줄지만 각 chunk 안에 무관한 문장이 섞여 검색이 그 chunk 를 놓칠 위험이 커집니다."
+          title="Size를 키우면 정답 근거도 항상 더 잘 남을까요?"
+          preview="아닙니다. 경계 손실은 줄어도 무관한 문장이 섞인 큰 chunk가 검색 후보에서 밀리면 최종 문맥에는 들어가지 못합니다."
         >
           <p>
-            <Link to="/cs/ai/rag-pipeline#chunking">RAG 파이프라인 글의 span coverage</Link> 는 정답
-            근거가 최종 context 에 얼마나 남았는지를 잽니다. Chunk size 를 키우면 경계에 걸린
-            손실은 줄어도, 그 chunk 가 검색 단계에서 아예 후보로 뽑히지 못하면 span coverage 는
-            오히려 떨어집니다. Chunk size·overlap 은 이 글의 범위이고, 그 결과를 재는 span coverage
-            수식은 RAG 파이프라인 글이 이미 정의합니다.
+            분할 단계에서는 원문 span이 chunk에 들어갔는지 확인할 수 있습니다.
+            검색과 문맥 조립을 거친 뒤 실제 답변 입력에 남았는지는 부모 글의
+            <Link to="/cs/ai/rag-pipeline#evaluation">단계별 평가</Link>에서
+            따로 측정합니다.
           </p>
         </ProgressiveDetail>
       </section>
 
       <section id="semantic-chunking" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Semantic chunking 은 문장 유사도가 떨어지는 자리를 경계로 삼습니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">의미 경계</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Fixed-size chunking 은 몇 번째 token 인지만 보고 자릅니다. Semantic chunking 은 문장을 하나씩 embedding 한 뒤 이웃한 문장 사이의
-            유사도를 계산해 그 유사도가 갑자기 떨어지는 자리만 경계로 삼습니다. 그래서 주제가 바뀌는 자리에서 자릅니다.
+            의미 기반 분할은 일정한 token 위치 대신 이웃 문장 묶음의 embedding
+            거리가 크게 벌어지는 지점을 경계 후보로 삼습니다. 결과 chunk의
+            길이는 같지 않지만, 화제가 바뀌는 곳에서 나눌 수 있습니다.
           </p>
           <p>
-            절차는 이렇습니다. 문서를 문장 단위로 나누고 각 문장(또는 이웃 몇 개를 묶은 group)을 embedding 합니다. 그다음 문장 i 와 문장 i+1 의 embedding
-            사이 거리를 차례로 계산합니다. 그 거리가 전체 분포에서 상위 몇 퍼센트(percentile)에 들 때만 그 자리를 chunk boundary 로 확정합니다.
+            LlamaIndex의 <code>SemanticSplitterNodeParser</code>는
+            <code>buffer_size</code>만큼 문장을 묶어 비교하고, 이웃 묶음 사이
+            cosine dissimilarity가 지정한 percentile을 넘을 때 node를 나눕니다.
+            현재 공식 API 문서의 기본값은 buffer 1, percentile 95입니다. 이는
+            구현 기본값이지 모든 한국어 문서에 맞는 최적값이 아닙니다.
           </p>
           <p>
-            LlamaIndex 의 SemanticSplitterNodeParser 는 이 percentile 을 breakpoint_percentile_threshold 라는 이름으로
-            노출합니다. 기본 예시 값은 95 입니다. 문장 사이 유사도 하락이 상위 5 % 안에 드는 자리만 경계로 인정한다는 뜻입니다. buffer_size 파라미터로는 경계를 계산할
-            때 앞뒤로 몇 문장을 더 묶어 볼지 조절합니다.
-          </p>
-          <p>
-            이 방식은 chunk 길이를 고정하지 않으므로 어떤 chunk 는 두 문장, 어떤 chunk 는 열 문장이 될 수 있습니다. 그 대가로 문장마다 embedding 을 한 번 더
-            계산해야 해서 ingestion 시점의 연산 비용이 fixed-size chunking 보다 커집니다.
+            이 방식에는 문장 분리와 추가 embedding 계산이 필요합니다. 표나
+            코드처럼 문장 유사도만으로 구조를 설명하기 어려운 자료에서는
+            제목·표 경계를 먼저 보존하는 구조 기반 분할이 더 중요할 수 있습니다.
           </p>
         </div>
         <TermBreakdown
-          title="Fixed-size 와 semantic chunking 의 경계 결정 기준"
+          title="두 경계가 보는 신호"
           items={[
-            { term: "Semantic chunking", description: "문장 embedding 유사도가 급격히 떨어지는 자리를 경계로 삼는 방법입니다.", example: "이웃 문장 유사도 하락이 상위 5 %(percentile 95)에 들 때만 자름.", boundary: "문장 단위 embedding 이 추가로 필요해 ingestion 비용이 fixed-size 보다 높습니다." },
-            { term: "Fixed-size chunking", description: "token 수만 보고 정해진 길이로 자르는 방법입니다.", example: "500 token 마다 자름.", boundary: "내용과 무관하게 잘라 문장이 중간에 끊길 수 있습니다." },
+            {
+              term: "Fixed-size",
+              description: "같은 길이와 overlap 규칙으로 시작 위치를 계산합니다.",
+              example: "0·450·900 token에서 시작합니다.",
+              boundary: "내용의 전환과 무관하게 잘릴 수 있습니다.",
+            },
+            {
+              term: "Semantic",
+              description: "이웃 문장 묶음의 의미 거리가 큰 위치를 찾습니다.",
+              example: "거리 분포의 95 percentile을 넘는 경계를 선택합니다.",
+              boundary: "추가 모델 계산과 언어별 문장 분리 품질에 의존합니다.",
+            },
           ]}
         />
       </section>
 
       <section id="contextual-retrieval" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Contextual retrieval 은 chunk 앞에 문맥을 붙여 검색 실패율을 낮춥니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">문맥 보충</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Chunk 하나만 떼어 보면 "그 회사의 매출은 지난 분기보다 3 % 늘었다" 같은 문장은 어느 회사, 어느 분기인지 알 수 없습니다. Contextual retrieval 은
-            이 손실을 chunking 뒤, embedding 하기 전에 chunk 앞에 짧은 설명을 붙여 메웁니다.
+            “요청 뒤 7일 안에 가능합니다”라는 chunk만 보면 무엇을 요청한
+            것인지 알기 어렵습니다. Contextual Retrieval은 문서 전체를 참고해
+            만든 짧은 설명을 chunk 앞에 붙이고, 그 텍스트를 embedding과 BM25
+            색인의 입력으로 사용합니다.
           </p>
           <p>
-            LLM 이 문서 전체를 보고 각 chunk 를 위한 50~100 token 짜리 설명을 생성합니다. Anthropic
-            이 공개한 prompt 는 "이 chunk 를 검색에 도움이 되도록 문서 전체 맥락에 위치시키는 짧고
-            명확한 설명을 달라"고 요청하는 형태입니다. 이렇게 만들어진 설명이 chunk 앞에 붙은 채로
-            embedding·BM25 색인 양쪽에 들어갑니다.
+            Anthropic의 예에서 contextual text는 보통 50~100 token입니다.
+            공식 자기보고 실험에서는 top-20 검색 실패율이 5.7%에서 contextual
+            embedding 3.7%, contextual BM25까지 2.9%, reranking까지 1.9%로
+            낮아졌습니다. 이 값은 해당 데이터셋·모델·검색 설정의 결과이며,
+            우리 문서에서도 같은 폭으로 줄어든다는 뜻은 아닙니다.
           </p>
           <p>
-            Anthropic 은 codebase·소설·arXiv 논문·과학 논문을 섞은 데이터셋에서 top-20 chunk 검색의 실패율을 측정했습니다. 기존 방식의 실패율은 5.7 %
-            였습니다. Contextual embedding 만 추가하면 3.7 %(35 % 개선), contextual BM25 를 더하면 2.9 %(49 % 개선), 그 뒤에
-            reranking 까지 더하면 1.9 %(67 % 개선)로 낮아졌습니다.
-          </p>
-          <p>
-            문서마다 매번 이 설명을 새로 생성하면 비용이 큽니다. 그런데 prompt caching 으로 문서 본문을 한 번만 context 에 올려 두고 chunk 별 설명만 반복
-            생성할 수 있습니다. Anthropic 은 이 방식으로 문서 100 만 token 당 1.02 달러의 일회성 비용으로 전체 chunk 의 설명을 만들 수 있다고 보고합니다.
+            검색용 prefix와 인용할 원문은 분리해 보존해야 합니다. Prefix가
+            잘못 생성되거나 나중에 생성 모델을 바꾸더라도 raw chunk와 원문
+            위치는 그대로 확인할 수 있어야 합니다.
           </p>
         </div>
         <ProgressiveDetail
-          title="Contextual retrieval 은 semantic chunking 을 대체하나요?"
-          preview="아닙니다. 둘은 서로 다른 문제를 풉니다. Semantic chunking 은 경계를 어디서 자를지 정하고, contextual retrieval 은 잘린 chunk 에 빠진 문맥을 붙입니다."
+          title="의미 기반 분할과 문맥 prefix는 같은 기능일까요?"
+          preview="아닙니다. 하나는 어디서 자를지 정하고, 다른 하나는 잘린 조각만으로 알 수 없는 배경을 검색 입력에 보충합니다."
         >
           <p>
-            Chunking 방식을 fixed-size 로 하든 semantic 으로 하든, 잘라낸 chunk 는 여전히 원문 전체의 맥락을 잃습니다. Contextual retrieval
-            은 어느 chunking 방식 위에도 적용할 수 있는 뒤 단계입니다. Anthropic 의 실험도 chunking 자체는 고정해 두고 이 prefix 유무만 비교했습니다.
+            Fixed-size와 semantic chunking 어느 쪽을 쓰더라도 잘린 조각은
+            문서 전체의 맥락을 잃을 수 있습니다. Contextual prefix는 그 뒤에
+            선택적으로 붙는 별도 파생물입니다.
           </p>
         </ProgressiveDetail>
       </section>
 
       <section id="pipeline" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Ingestion pipeline 은 네 단계를 순서대로 묶어 index 를 채웁니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">증분 반영</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            앞서 다룬 네 단계를 하나의 pipeline 으로 이으면 원본이 바뀔 때 그 source 에서 파생된 chunk 만 다시 만들면 되는 구조가 됩니다. 전체를 매번 다시 도는
-            대신 바뀐 부분만 갱신하는 것이 knowledge base 를 최신 상태로 유지하는 실용적인 방법입니다.
+            원문 revision을 키로 삼으면 바뀐 문서만 다시 처리할 수 있습니다.
+            하지만 새 chunk가 준비되기 전에 이전 chunk를 지우면 검색 공백이
+            생기고, 새것만 추가하면 v16과 v17이 함께 검색됩니다. 그래서
+            staging manifest를 검증한 뒤 active alias를 바꾸고 이전 revision을
+            검색에서 제외합니다.
           </p>
         </div>
         <AlgorithmBlock
-          title="문서 ingestion pipeline: parsing 부터 index 반영까지"
+          title="policy-v17 수집에서 active index 반영까지"
           input={[
-            "원본 문서 목록(PDF · HTML · Markdown 등)",
-            "chunk size, chunk overlap(또는 semantic chunking 의 percentile threshold)",
-            "contextual retrieval 사용 여부",
-            "embedding model 과 대상 index",
+            "source=policy/refund, revision=v17, content_hash=7a2…, ACL=employee",
+            "parser·splitter·contextualizer·embedding 설정 버전",
+            "현재 active manifest=index-v41",
           ]}
           steps={[
-            { code: "for doc in raw_documents: parsed = parse(doc)", note: "원본 포맷에서 텍스트와 제목·문단·표 구조, 원문 offset 을 뽑습니다." },
-            { code: "chunks = split(parsed, chunk_size, chunk_overlap)", note: "고정 길이(또는 semantic 기준)로 검색 단위를 만들고 각 chunk 에 source·offset metadata 를 남깁니다." },
-            { code: "if contextual_retrieval: chunks = [prepend(c, summarize(parsed, c)) for c in chunks]", note: "필요하면 문서 전체를 본 LLM 이 만든 짧은 설명을 각 chunk 앞에 붙입니다." },
-            { code: "vectors = embed(chunks); index.upsert(vectors, chunks, metadata)", note: "chunk 를 embedding 하고 knowledge base 색인에 넣습니다." },
-            { code: "if source_updated(doc): rerun steps 1-4 for doc only", note: "원본이 바뀌면 그 source 에서 파생된 chunk 만 다시 만들어 index 를 갱신합니다." },
+            {
+              code: "if manifest.has(source, revision, config_hash): return existing_receipt",
+              note: "같은 원문과 같은 설정을 다시 받으면 중복 파생물을 만들지 않습니다.",
+            },
+            {
+              code: "elements = parse(source_blob, keep=[heading, table, page, offset])",
+              note: "텍스트와 함께 원문으로 돌아갈 구조와 위치를 보존합니다.",
+            },
+            {
+              code: "chunks = split(elements, size=500, overlap=50)",
+              note: "각 chunk에 source revision·element ID·offset·분할 설정을 붙입니다.",
+            },
+            {
+              code: "search_text = contextualize(chunk); keep(raw_text, search_text)",
+              note: "문맥 보충을 쓴다면 검색용 텍스트와 인용할 원문을 분리합니다.",
+            },
+            {
+              code: "upsert(staging_index, embed(search_text), metadata)",
+              note: "Embedding 작업은 source·revision·ACL·설정 checksum이 든 payload를 받습니다.",
+            },
+            {
+              code: "validate(staging_manifest); swap_alias(); tombstone(v16_chunks)",
+              note: "새 revision이 완전한지 확인한 뒤 공개하고 이전 파생물을 검색에서 뺍니다.",
+            },
           ]}
-          output="검색 가능한 knowledge base — chunk, (선택) context prefix, embedding, metadata 를 갖춘 index"
+          output="index-v42 manifest와 source→element→chunk→vector lineage, 이전 revision tombstone"
         />
       </section>
 
       <section id="sources" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          근거는 Anthropic 의 실측 수치와 LangChain·LlamaIndex 의 공식 구현 문서입니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">근거</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Contextual retrieval 의 실패율 수치는 Anthropic 이 공개한 실험 결과를, chunk size·
-            overlap·separator 계층은 LangChain 의 공식 문서를, semantic chunking 의 percentile
-            threshold 는 LlamaIndex 의 공식 구현 문서를 근거로 삼았습니다.
+            수치와 API 기본값은 아래 공식 자료의 범위에서만 사용했습니다.
+            실제 chunk 크기와 경계 방식은 우리 문서와 질문 집합에서 별도로
+            평가해야 합니다.
           </p>
         </div>
         <div id="paper-anthropic" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Anthropic · Introducing Contextual Retrieval"
+            source="Anthropic · Contextual Retrieval"
             citeKey={1}
-            href="https://www.anthropic.com/news/contextual-retrieval"
+            href="https://www.anthropic.com/research/contextual-retrieval"
             type="code"
           >
-            Chunk 앞에 LLM 이 생성한 문서 맥락 설명을 붙여 embedding·BM25 색인에 넣는 방법을
-            제시하고, codebase·소설·arXiv·과학 논문 데이터셋에서 top-20 chunk 검색 실패율을
-            5.7 %에서 contextual embedding 만으로 3.7 %, contextual BM25 를 더해 2.9 %, reranking
-            까지 더해 1.9 %로 낮췄다고 보고합니다. Prompt caching 을 쓰면 문서 100 만 token 당
-            1.02 달러의 일회성 비용으로 처리된다고 밝힙니다.
+            Chunk별 짧은 설명을 원문 앞에 붙여 contextual embedding과 BM25
+            색인을 만드는 방법, prompt caching 비용 가정, top-20 실패율
+            5.7→3.7→2.9→1.9%의 자기보고 실험 범위를 확인했습니다.
           </CitationBlock>
         </div>
         <div id="paper-langchain" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="LangChain · Text splitters (공식 문서)"
+            source="LangChain TextSplitter · Python reference v1.1.2"
             citeKey={2}
-            href="https://python.langchain.com/docs/concepts/text_splitters/"
+            href="https://reference.langchain.com/python/langchain-text-splitters/base/TextSplitter"
             type="code"
           >
-            Chunk size 와 chunk overlap 을 받는 fixed-size 분할과, 문단(\n\n) → 줄바꿈(\n) → 공백
-            → 문자 순서로 구분자를 차례로 시도하는 RecursiveCharacterTextSplitter 의 계층적 분할
-            방식을 정의합니다. Markdown·HTML 처럼 구조가 있는 문서는 헤더·태그를 먼저 구분자로
-            쓰는 전용 splitter 를 따로 둡니다.
+            chunk_size·chunk_overlap·length_function·add_start_index가 분할 결과를
+            결정한다는 현재 공식 API 계약을 확인했습니다. 기본값을 이 글의
+            권장값으로 사용하지는 않았습니다.
           </CitationBlock>
         </div>
         <div id="paper-llamaindex" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="LlamaIndex · Node Parser Modules (공식 문서)"
+            source="LlamaIndex · SemanticSplitterNodeParser API"
             citeKey={3}
-            href="https://developers.llamaindex.ai/python/framework/module_guides/loading/node_parsers/modules/"
+            href="https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/semantic_splitter/"
             type="code"
           >
-            SentenceSplitter 가 문장 경계를 존중하며 chunk_size·chunk_overlap 으로 자르는 방식과,
-            SemanticSplitterNodeParser 가 이웃 문장 embedding 유사도의 breakpoint_percentile_threshold
-            (예시 값 95)와 buffer_size 로 경계를 정하는 방식을 정의합니다. 영어 문장 분리 정규식
-            기준이라 다른 언어에는 threshold 를 다시 조정해야 한다고 명시합니다.
+            buffer_size와 breakpoint_percentile_threshold가 이웃 문장 묶음의
+            cosine dissimilarity로 node 경계를 정하며, 현재 문서의 기본값이
+            각각 1과 95임을 확인했습니다.
           </CitationBlock>
         </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          Chunking 뒤에 오는 embedding 버전 계약과 검색 funnel 은{" "}
-          <Link to="/cs/ai/rag-pipeline#embedding">RAG 파이프라인 글</Link>이 정본입니다. 검색 결과를
-          어떻게 재검색·재작성해 recall 을 더 올리는지는{" "}
-          <Link to="/cs/ai/query-transformation-and-adaptive-retrieval#overview">
-            Query 변환과 적응형 검색 글
-          </Link>
-          로 이어집니다.
-        </p>
       </section>
+
+      <RagIngestionReturn />
     </div>
   );
 }

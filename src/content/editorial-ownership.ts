@@ -11542,16 +11542,16 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "rag-ingestion-and-chunking": {
-    title: "RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval 글이 소유하는 범위",
+    title: "RAG 문서 수집과 청킹 글이 소유하는 범위",
     owns: [
-      "Retrieval-Augmented Generation(RAG) 자체의 정의 — 학습 시점 가중치 대신 검색한 외부 문서를 context에 넣어 생성하는 아키텍처",
-      "Knowledge base와 document ingestion pipeline의 정의, parsing→chunking→embedding 순서의 필요성",
-      "Ingestion pipeline 관점의 document parsing 범위(구조·offset 보존, 표 셀 세부는 제외)",
-      "Fixed-size chunking의 chunk size·chunk overlap·chunk boundary와 그 수치 관계",
-      "Semantic chunking의 문장 embedding 유사도 기반 경계 결정과 fixed-size와의 비교",
-      "Contextual retrieval의 chunk-prefix 방법과 Anthropic의 실측 검색 실패율 수치",
+      "원문 revision·ACL부터 element·chunk·색인 payload까지 이어지는 document ingestion 순서",
+      "Chunk provenance manifest가 보존해야 할 source·revision·heading·page·offset·분할 설정",
+      "Ingestion 관점의 document parsing 출력 계약과 fixed-size·semantic 경계의 차이",
+      "Contextual retrieval의 chunk-prefix 방법과 Anthropic이 보고한 검색 실패율",
+      "Staging 검증, alias 전환, 이전 revision tombstone으로 이어지는 증분 반영",
     ],
     reuses: [
+      { label: "RAG 전체 구조와 knowledge base 정의", href: "/cs/ai/rag-pipeline#overview" },
       { label: "RAG 전체 stage 진단과 answer-span coverage metric", href: "/cs/ai/rag-pipeline#chunking" },
       { label: "Embedding·index 버전 계약과 검색 funnel", href: "/cs/ai/rag-pipeline#embedding" },
       { label: "Document parsing의 표 구조·layout 세부", href: "/cs/ai/document-parsing-and-table-extraction" },
@@ -11559,7 +11559,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Anthropic의 실패율 수치(5.7→3.7→2.9→1.9%)와 캐싱 비용($1.02/백만 token)은 저자 자기보고이며 이 글이 새로 측정한 값이 아니다." },
       { kind: "primary-source", rule: "LangChain·LlamaIndex의 파라미터 이름과 기본값은 공식 문서 표기를 그대로 옮기며 버전에 따라 바뀔 수 있음을 적는다." },
-      { kind: "project-claim", rule: "100 페이지 매뉴얼 예, chunk 개수 계산 예, 480~530 토큰 문장 예는 mechanism을 보여 주는 설명용 가정이며 특정 시스템의 실측값이 아니다." },
+      { kind: "project-claim", rule: "policy-v17·element e-037·chunk c-8f31·index-v42와 chunk 개수 계산은 동작을 보여 주는 설명용 가정이며 특정 시스템의 실측값이 아니다." },
     ],
   },
   "vector-search-and-ann-indexes": {

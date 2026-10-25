@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 617,
-    "pending": 374,
+    "reviewed": 618,
+    "pending": 373,
     "untracked": 0,
-    "assignedPending": 332,
+    "assignedPending": 331,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3483,9 +3483,9 @@
       "publicPath": "cs/ai/rag-ingestion-and-chunking",
       "title": "RAG 문서 수집과 청킹",
       "catalogIndex": 345,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

@@ -162,6 +162,7 @@ const noScriptArticleRoutes = new Set([
   "ai/self-distillation",
   "ai/compression-pipeline",
   "ai/rag-pipeline",
+  "ai/rag-ingestion-and-chunking",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

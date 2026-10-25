@@ -3624,7 +3624,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/hw-server-vs-desktop": "462cccffb09e8c25",
   "gpu/hw-storage-comparison": "889cf0afb8c32964",
   "gpu/rdma-roce": "33f467d495f32c84",
-  "ai/rag-pipeline": "5d05bc2a292c50c1",
+  "ai/rag-pipeline": "33eca540432074fe",
   "ai/smoothie-qwen-weight-editing": "6229c951faeeae1b",
   "ai/sequence-modeling-tabular": "e9a379d48be2788a",
   "ai/sionic-eureka": "0690e86f62bb1580",
