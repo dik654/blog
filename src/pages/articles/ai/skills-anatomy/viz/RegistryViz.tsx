@@ -1,22 +1,22 @@
 import VizFrame from "@/components/viz/VizFrame";
 
 const scopes = [
-  ["REPO", "$CWD/.agents/skills → $REPO_ROOT/.agents/skills", "module·repository workflow"],
-  ["USER", "$HOME/.agents/skills", "개인의 여러 repository 공통 workflow"],
-  ["ADMIN", "/etc/codex/skills", "machine·container·조직 기본 automation"],
-  ["SYSTEM", "OpenAI bundled", "모든 사용자가 받는 broad capability"],
+  ["LOCAL", "실행 환경의 path", "직접 관리하는 파일과 버전"],
+  ["HOSTED", "skill_id + version", "업로드한 versioned bundle"],
+  ["PLUGIN", "skills/ + plugin.json", "설치 가능한 배포 묶음"],
+  ["MCP", "mcp.json · server", "실시간 데이터·인증·동작"],
 ] as const;
 
 export default function RegistryViz() {
   return (
     <VizFrame
-      eyebrow="Discovery scope"
-      title="파일 위치는 현재 session의 후보 범위와 owner를 함께 정합니다"
-      description="Repository에서는 CWD부터 root까지 탐색하며, 같은 name이 있어도 merge되지 않으므로 path를 포함한 discovery 결과를 확인합니다."
+      eyebrow="배포 형태"
+      title="작업 지식의 버전과 실제 동작의 연결을 따로 관리합니다"
+      description="Skill을 파일 경로로 제공할지, versioned bundle로 올릴지, MCP와 함께 Plugin으로 묶을지에 따라 배포 책임이 달라집니다."
     >
       <div className="border-y border-border/70">
         <div className="hidden grid-cols-[5rem_minmax(0,1.5fr)_minmax(0,1fr)] gap-5 border-b border-border/70 py-3 text-[11px] font-bold text-muted-foreground md:grid">
-          <span>Scope</span><span>Location</span><span>Suggested owner</span>
+          <span>형태</span><span>식별 방법</span><span>관리 책임</span>
         </div>
         {scopes.map(([scope, location, owner]) => (
           <div
@@ -30,7 +30,7 @@ export default function RegistryViz() {
         ))}
       </div>
       <p className="mt-5 border-l border-border pl-4 text-xs leading-5 text-muted-foreground">
-        다른 사용자가 설치할 package가 필요하면 local discovery 경로를 늘리는 대신 Plugin distribution으로 책임을 옮깁니다.
+        Plugin은 Skill과 MCP 연결을 함께 배포할 수 있지만, Skill은 작업 순서를 맡고 MCP server는 실시간 데이터·인증·허용된 동작을 맡습니다.
       </p>
     </VizFrame>
   );

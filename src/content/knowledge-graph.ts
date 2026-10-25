@@ -5040,7 +5040,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Skill scope · discovery path",
     definition:
-      "현재 작업 위치에서 repository root까지의 project scope와 user·admin·system 위치를 탐색하여 어떤 skill 후보가 현재 session에 보이는지 정하는 발견 규칙입니다.",
+      "Local shell의 path, hosted Skill의 id·version, Agents API sandbox의 capability directory처럼 실행 환경에 등록한 위치에서 name·description·path를 찾아 현재 후보 집합을 만드는 발견 규칙입니다.",
     canonicalHref: "/cs/ai/skills-anatomy#registry",
   },
   "skill-plugin-distribution-boundary": {

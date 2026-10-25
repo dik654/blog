@@ -11,9 +11,9 @@ const tree = [
 export default function FormatViz() {
   return (
     <VizFrame
-      eyebrow="Directory contract"
-      title="필수 entry point와 선택 resource를 역할과 수명으로 나눕니다"
-      description="파일을 많이 만드는 것이 목적이 아니라 instruction·code·근거·template이 서로 독립적으로 검토되고 필요한 때만 로드되게 하는 구조입니다."
+      eyebrow="폴더 구조"
+      title="필수 지침과 선택 자료를 역할별로 나눕니다"
+      description="지침·실행 코드·참고 규정·결과 양식이 따로 검토되고 필요한 순간에만 읽히도록 구성합니다."
     >
       <div className="divide-y divide-border/70 border-y border-border/70">
         {tree.map(([path, requirement, role, load], index) => (

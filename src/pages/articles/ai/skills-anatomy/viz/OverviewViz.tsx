@@ -24,9 +24,9 @@ const rows = [
 export default function OverviewViz() {
   return (
     <VizFrame
-      eyebrow="책임 경계"
-      title="Tool·Skill·Plugin은 같은 사다리의 단계가 아닙니다"
-      description="하나의 PR 리뷰 workflow에서도 실행 capability, 작업 절차, 배포 단위는 서로 다른 변경 이유와 검증 방법을 가집니다."
+      eyebrow="세 책임"
+      title="실제 동작, 작업 순서, 배포 묶음을 구분합니다"
+      description="같은 CI 수정 작업에서도 도구가 만드는 효과, Skill이 알려 주는 순서, Plugin이 설치하는 구성은 서로 다른 책임입니다."
     >
       <div className="grid gap-6 md:grid-cols-3">
         {rows.map((row, index) => (

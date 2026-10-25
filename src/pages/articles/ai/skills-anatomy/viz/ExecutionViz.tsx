@@ -1,20 +1,20 @@
 import VizFrame from "@/components/viz/VizFrame";
 
 const stages = [
-  ["Select", "Trigger scope 확인", "선택 trace"],
-  ["Read", "Instructions 전체 로딩", "작업 계약"],
-  ["Authorize", "Identity·scope·approval", "허용 또는 거부"],
-  ["Execute", "Tool·script·reasoning", "관측 가능한 effect"],
-  ["Validate", "Output·regression·safety", "Acceptance evidence"],
-  ["Handoff", "Result·changes·unfinished", "재개 가능한 artifact"],
+  ["선택", "요청과 적용 범위 확인", "선택 기록"],
+  ["읽기", "지침 전체 로딩", "작업 순서"],
+  ["허용", "신원·범위·승인", "허용 또는 거절"],
+  ["실행", "도구·script·추론", "관측 가능한 효과"],
+  ["검증", "출력·회귀·안전", "완료 근거"],
+  ["보고", "결과·변경·남은 일", "이어갈 수 있는 결과물"],
 ] as const;
 
 export default function ExecutionViz() {
   return (
     <VizFrame
-      eyebrow="Execution contract"
-      title="Workflow instructions와 runtime authority, artifact acceptance를 분리합니다"
-      description="Skill이 선택된 사실은 권한 승인도 완료 증거도 아니므로 실행 전·후의 판정 지점을 독립적으로 남깁니다."
+      eyebrow="실행 경계"
+      title="작업 지침과 실행 권한, 완료 판정을 분리합니다"
+      description="Skill이 선택된 사실은 권한 승인도 완료 근거도 아니므로 실행 전후의 판정을 따로 남깁니다."
     >
       <ol className="grid gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
         {stages.map(([name, action, output], index) => (
