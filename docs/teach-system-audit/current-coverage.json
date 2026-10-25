@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 562,
-    "pending": 429,
+    "reviewed": 565,
+    "pending": 426,
     "untracked": 0,
-    "assignedPending": 385,
+    "assignedPending": 382,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2353,9 +2353,9 @@
       "publicPath": "cs/ai/qwen-korean-consistency",
       "title": "Qwen 한국어 일관성: 현상 진단에서 배포 개입 선택까지",
       "catalogIndex": 232,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2363,9 +2363,9 @@
       "publicPath": "cs/ai/smoothie-qwen-weight-editing",
       "title": "Smoothie-Qwen: Token Risk에서 lm_head Weight Editing까지",
       "catalogIndex": 233,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -2373,9 +2373,9 @@
       "publicPath": "cs/ai/qwen-korean-reasoning-posttraining",
       "title": "Qwen 한국어 Reasoning Post-Training: SFT·Dr.GRPO·Oracle Reward",
       "catalogIndex": 234,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

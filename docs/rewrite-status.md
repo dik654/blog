@@ -3508,3 +3508,24 @@
   no-script 본문 210편을 생성했습니다. 390×844·1,440×1,000에서 두 경로의 모든 장면을 확인했고,
   부모 지도·현재 위치·반환 지도, 문서와 시각화의 가로 넘침 0, SVG 글자 잘림 0, console 오류 0,
   키보드·reduced-motion·JavaScript 비활성 상태를 검증했습니다. 공개 배포 경로 검증은 남아 있습니다.
+
+### AI Qwen 한국어 출력 선택 묶음 로컬 완료 (2026-10-25)
+
+- `qwen-korean-consistency`를 practice, `smoothie-qwen-weight-editing`과
+  `qwen-korean-reasoning-posttraining`을 reference로 분류했습니다. 세 글은
+  `출력 경로 → 현상 진단 → 출력층 보정 → 정책 재학습 → 비교·배포`라는 직속 부모 지도를 공유합니다.
+- 세 글 모두 `9,600÷3=3,200`과 사용자가 요청한 중국어 번역 `首尔`을 같은 평가 사례로 사용합니다.
+  정상 번역은 보존하면서 예상하지 않은 언어 전환만 줄여야 하므로, 문자 탐지 결과만으로 성공을
+  판정하지 않습니다.
+- Smoothie-Qwen 글은 token risk가 `lm_head` 행 배율과 logit을 거쳐 vocabulary 전체 softmax 경쟁을
+  바꾸는 경로를 추적합니다. Post-training 글은 논문의 Smoothie Qwen3 14B 출발점에서 고정 SFT
+  예시, 현재 policy rollout, 네 reward, frozen Judge, Dr.GRPO, 단계별 평가를 구분합니다. 두 방법은
+  독립 후보로 비교할 수도 있지만 해당 논문 실험은 출력층 보정 뒤 SFT·RL을 더한 조합임을 밝혔습니다.
+- Opus의 독립 검토에서 발견한 다음 글 링크, 고정 사례 누락, 논문 사실과 설명용 사례의 혼합,
+  Judge 근거 범위, 장면 강조 오류를 수정했습니다. ko-natural 검사에서는 사용자 대상 본문의
+  합니다체 오류가 0이 되도록 다듬었습니다.
+- Production build는 7,931개 module, 정적 public route 2,088개와 no-script 본문 213편을
+  생성했습니다. 390×844·1,440×1,000에서 세 경로 모두 HTTP 200, 부모·반환 지도, 첫 시각 자료,
+  문서와 시각화 overflow 0, console 오류 0을 확인했습니다. 명시적 입력 전 정지, 키보드 장면 순서,
+  reduced-motion, JavaScript 비활성 전체 장면도 통과했습니다. 직접 Playwright API 실행 전후에
+  브라우저 프로세스가 추가되지 않았고, 공개 배포 경로 확인만 남아 있습니다.

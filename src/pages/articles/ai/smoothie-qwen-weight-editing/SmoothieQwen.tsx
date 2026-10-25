@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import SmoothieQwenViz from "./viz/SmoothieQwenViz";
 
 export default function SmoothieQwen() {
   return (
@@ -13,8 +13,8 @@ export default function SmoothieQwen() {
         <p className="text-lg leading-8">
           프롬프트가 요청 시점의 정책이라면 Smoothie-Qwen은 학습이 끝난
           checkpoint의 <strong>출력층 weight를 직접 수정</strong>하는 post-hoc
-          방법입니다. tokenizer에서 목표 문자와 관련된 token을 찾고, token마다
-          선택한 Unicode 문자군으로 decode될 위험도 <code>r</code>을 계산한 뒤,
+          방법입니다. Tokenizer에서 목표 문자와 관련된 token을 찾습니다. 그런 다음
+          token마다 선택한 Unicode 문자군으로 decode될 위험도 <code>r</code>을 계산하고,
           <code>lm_head</code>의 해당 행에 0보다 크고 1 이하인 scale을 곱합니다.
           Transformer 본체를 다시 학습하지는 않지만 weight가 달라지므로, 원본과
           별개의 모델 후보로 평가하고 저장해야 합니다.
@@ -26,12 +26,8 @@ export default function SmoothieQwen() {
         </p>
       </div>
 
-      <div className="not-prose my-8">
-        <SmoothieQwenViz />
-      </div>
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>질문: risk가 0에서 1로 커질 때 얼마만큼 낮출까요?</h3>
+        <h3>질문: risk가 0에서 1로 커질 때 얼마만큼 낮춥니까?</h3>
         <p>
           모든 관련 token에 같은 계수를 곱하면, 명백한 목표 문자와 우연히 그
           문자를 만들 수 있는 subword 조각을 똑같이 벌점 줍니다. 논문은 risk가
@@ -41,7 +37,7 @@ export default function SmoothieQwen() {
       </div>
 
       <ExplainedFormula
-        question="token risk r을 lm_head에 곱할 scale S(r)로 어떻게 바꿀까요?"
+        question="token risk r을 lm_head에 곱할 scale S(r)로 어떻게 바꿉니까?"
         idea={
           <>
             Risk가 0이면 원래 weight를 유지하고, risk가 1이면 최소 scale m만큼만
@@ -90,7 +86,7 @@ export default function SmoothieQwen() {
       </div>
 
       <ExplainedFormula
-        question="token t의 lm_head 행을 줄이면 그 token의 확률만 같은 비율로 줄어들까요?"
+        question="token t의 lm_head 행을 줄이면 그 token의 확률만 같은 비율로 줄어듭니까?"
         idea={
           <>
             Scale은 먼저 lm_head 행을 바꾸고, 바뀐 행과 hidden state의 내적이 새
@@ -187,7 +183,7 @@ p'(t\mid h)&=\frac{e^{z'_t}}{\underbrace{\sum_{j\in\mathcal V}e^{z'_j}}_{\text{v
         <p>
           변환본은 원본 checkpoint를 덮어쓰지 않습니다. config·tokenizer·risk 목록의 digest를 붙여 versioning합니다. canary로 보내는 것은
           paired evaluation에서 정상 예외와 과제 품질을 통과한 뒤입니다. 문자 suppression이 아니라 reasoning 구간 전체가 다른 언어로 전환되는 문제가
-          남는다면 다음 절의 SFT·RL이 더 직접적인 개입입니다.
+          남는다면 <Link to="/cs/ai/qwen-korean-reasoning-posttraining#rl-approach">한국어 SFT·RL 논문 실험</Link>이 더 직접적인 개입인지 별도 후보로 확인합니다.
         </p>
       </div>
     </section>

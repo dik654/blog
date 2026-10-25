@@ -27,9 +27,12 @@ export default function RuntimeGuard() {
           고정 사례의 계산 설명에 “因此”가 끼면 checker가 Han script span을
           표시하고 judge는 예상하지 않은 전환이라고 판정할 수 있습니다. 그러나
           번역 필드의 “首尔”도 같은 Han character이므로, checker 결과만으로
-          실패시키면 false positive입니다. script detector는 언어 semantics가
-          아니라 검토 대상을 먼저 고르는 <strong>triage signal(선별 신호)</strong>
-          이라는 경계를 코드와 운영 지표에 남겨야 합니다.
+          실패시키면 false positive입니다.
+        </p>
+        <p>
+          Script detector는 언어 semantics가 아니라 검토 대상을 먼저 고르는
+          <strong> triage signal(선별 신호)</strong>입니다. 이 경계를 코드와 운영
+          지표에도 남겨야 합니다.
         </p>
       </div>
 
