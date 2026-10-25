@@ -902,13 +902,13 @@ export const agentArticles: Article[] = [
   },
   {
     slug: "sandbox-gpu-isolation",
-    title: "GPU Sandbox 격리: Ioctl Proxy · VFIO · IOMMU",
+    title: "GPU 격리: ioctl 중개와 VFIO 할당",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "GPU Device 경계" },
-      { id: "ioctl-proxy", title: "nvproxy Ioctl 중개" },
-      { id: "vfio", title: "VFIO Device 할당" },
-      { id: "compatibility", title: "Support Generation과 Release" },
+      { id: "overview", title: "GPU 장치 경로" },
+      { id: "ioctl-proxy", title: "nvproxy 중개" },
+      { id: "vfio", title: "VFIO와 IOMMU" },
+      { id: "compatibility", title: "한 조합의 근거" },
     ],
     component: () => import("@/pages/articles/ai/sandbox-gpu-isolation"),
   },

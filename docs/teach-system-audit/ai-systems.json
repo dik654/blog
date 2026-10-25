@@ -11490,26 +11490,79 @@
       "route": "ai/sandbox-gpu-isolation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sandbox-gpu-isolation.tsx",
       "publicPath": "cs/ai/sandbox-gpu-isolation",
-      "status": "unreviewed",
+    "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+    "beforeDefects": [
+      "직속 부모인 샌드박스 경계 지도와 앞뒤 런타임·배포 통제 글이 보이지 않음",
+      "nvproxy의 ioctl 중개와 VFIO 장치 할당을 같은 GPU 격리 기능처럼 비교함",
+      "지원 조합을 추적하는 한 GPU 요청 장면이 첫 설명보다 앞에 없음"
+    ],
+    "fixture": {
+      "request": "이미지 생성 작업이 GPU 0을 배정받아 CUDA 프로세스를 시작",
+      "device": "/dev/nvidia0",
+      "paths": [
+        "gVisor nvproxy의 ioctl 해석·검사 뒤 호스트 NVIDIA 드라이버",
+        "Kata QEMU의 VFIO cold-plug 뒤 게스트 NVIDIA 드라이버",
+        "IOMMU의 DMA 주소 변환과 허용 메모리 제한"
+      ]
+    },
+    "stageAnchors": {
+      "1": "overview의 GPU 0 장치 요청",
+      "2": "ioctl-proxy",
+      "3": "vfio",
+      "4": "paper-linux-vfio",
+      "5": "compatibility",
+      "S": "sandbox-gpu-device-path-viz",
+      "B": "sandbox-boundary-return"
+    },
+    "sourceEvidence": [
+      {
+        "href": "https://github.com/google/gvisor/blob/release-20261019.0/g3doc/user_guide/gpu.md",
+        "application": "nvproxy의 ioctl 중개 구조와 릴리스별 GPU·드라이버 지원 범위"
+      },
+      {
+        "href": "https://docs.kernel.org/driver-api/vfio.html",
+        "application": "VFIO의 IOMMU 그룹과 DMA·인터럽트·I/O 장치 직접 할당 경계"
+      },
+      {
+        "href": "https://github.com/kata-containers/kata-containers/blob/4.3.1/docs/use-cases/NVIDIA-GPU-passthrough-and-Kata-QEMU.md",
+        "application": "Kata의 Pod Resources API·CDI·VFIO BDF·QEMU cold-plug·게스트 드라이버 경로"
+      }
+    ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "semanticReview": "같은 GPU 0 장치 요청을 nvproxy 중개와 VFIO 할당으로 나눠 드라이버 위치·IOMMU·남은 신뢰 경계를 분리했습니다.",
+      "humanize": "긴 영문 나열형 제목을 짧은 한국어 경로 설명으로 바꾸고 지원 가능성과 공식 지원을 구분했습니다.",
+      "browser390": "가로 넘침 0, 시각화 우선, 키보드 순서, reduced-motion, 조작부 겹침 0: output/playwright/ai-sandbox-gpu-batch-41/summary.json",
+      "browser1440": "가로 넘침 0, 장면 다섯 개, 조작부 겹침 0: output/playwright/ai-sandbox-gpu-batch-41/summary.json",
+      "noScript": "정적 본문에서 위치 지도·되돌리기·다섯 장면이 모두 보이고 조작부와 live scene은 숨김: output/playwright/ai-sandbox-gpu-batch-41/summary.json",
+      "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+      "formula": "전역 1,500개 수식 explicit annotation strict exit0",
+      "learning": "전역 990개 공개 글 strict registration exit0",
+      "build": "Vite 7.3.1 production build와 정적 public route 2,086개+404 생성 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "현재 commit 배포 뒤 공개 경로를 다시 검증"
+    ],
+    "reviewDate": "2026-10-25",
+    "reviewMode": "recursive-map-one-gpu-device-and-versioned-source-review",
+    "bodyFiles": [
+      "src/pages/articles/ai/sandbox-gpu-isolation/ModernArticle.tsx"
+    ],
+    "actualBodyFile": "src/pages/articles/ai/sandbox-gpu-isolation/ModernArticle.tsx",
+    "dedicatedVizFiles": [
+      "src/pages/articles/ai/sandbox-gpu-isolation/viz/SandboxGpuIsolationViz.tsx"
+    ],
+    "contentHash": "3cabb6318323a9047f9583b2caaab8b82bb0e5d5311603cfba818002a88da23e",
+    "preserved": [
+      "기존 nvproxy·VFIO·IOMMU 메커니즘과 공식 근거",
+      "GPU·드라이버·샌드박스 경로·격리·수명주기 조건을 AND로 묶는 설명 수식",
+      "지원표와 실제 장비 검증 결과가 서로를 대신하지 않는다는 경계"
+    ]
     },
     {
       "route": "ai/sandbox-runtime-isolation",
