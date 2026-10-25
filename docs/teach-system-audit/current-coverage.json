@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 558,
-    "pending": 432,
+    "reviewed": 559,
+    "pending": 431,
     "untracked": 0,
-    "assignedPending": 388,
+    "assignedPending": 387,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2241,11 +2241,11 @@
     {
       "route": "ai/sandbox-gpu-isolation",
       "publicPath": "cs/ai/sandbox-gpu-isolation",
-      "title": "GPU Sandbox 격리: Ioctl Proxy · VFIO · IOMMU",
+      "title": "GPU 격리: ioctl 중개와 VFIO 할당",
       "catalogIndex": 221,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

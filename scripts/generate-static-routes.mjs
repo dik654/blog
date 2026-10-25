@@ -132,6 +132,7 @@ const noScriptArticleRoutes = new Set([
   "ai/llm-guardrails-and-output-validation",
   "ai/prompt-injection-poisoning-and-data-protection",
   "ai/sandbox-runtime-isolation",
+  "ai/sandbox-gpu-isolation",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",
