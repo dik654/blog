@@ -3105,7 +3105,7 @@
       "catalogIndex": 307,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
