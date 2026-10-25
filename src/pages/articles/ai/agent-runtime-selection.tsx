@@ -7,7 +7,9 @@ import {
 export default function AgentRuntimeSelectionArticle() {
   return (
     <article className="space-y-12">
-      <AgentRuntimeSelectionLocator />
+      <div id="overview" className="scroll-mt-20">
+        <AgentRuntimeSelectionLocator />
+      </div>
       <Comparison />
       <AgentRuntimeSelectionReturn />
     </article>
