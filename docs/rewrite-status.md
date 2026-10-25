@@ -3721,3 +3721,24 @@
   지도 반환, console 오류 0을 확인했습니다. Production build는 8,001개 module과 정적 public
   route 2,088개, no-script 본문 260편을 생성했습니다. 토폴로지·아키텍처 흐름·전수 장부·
   런타임 복구·ESLint·diff 검사를 통과했으며, GitHub Pages 배포와 공개 경로 검증이 남아 있습니다.
+
+### 지식 증류 학습 묶음 로컬 검증 (2026-10-26)
+
+- `knowledge-distillation`의 공유 출력에서 시작해 `sequence-distillation`의 문자열,
+  `on-policy-distillation`의 student 방문 상태, `self-distillation`의 세대로 이어지는
+  네 갈래 개념 지도를 만들었습니다. 각 글은 직속 부모와 현재 영역, 같은 트랙의 앞뒤 글을
+  첫 화면에 표시하고 확인한 사실을 같은 지도에 돌려놓습니다.
+- 첫 시각화는 teacher 신호가 student 학습 단위로 바뀌는 네 단계를 먼저 보여 줍니다.
+  공유 vocabulary가 없을 때는 문자열과 생성 기록을 남기고, on-policy에서는 student가 실제로
+  방문한 prefix를 다시 채점합니다. Self-distillation은 teacher 세대와 artifact를 고정한 뒤
+  agreement와 정답 quality를 따로 검사합니다.
+- 움직이는 그림은 사용자가 재생하기 전에는 시작하지 않고 장면당 6.2초로 진행합니다. 마지막
+  장면에서 멈추며, 화면 밖에서는 정지하고 다시 들어와도 자동 재생하지 않습니다. 키보드 이동과
+  reduced-motion의 마지막 정적 상태도 확인했습니다.
+- 390×844에서는 캔버스 577px 안에 521px 흐름과 50×50px 조작부가 들어갑니다. 1024×768에서는
+  캔버스 559px 안에 504px 흐름, 1,440×1,000에서는 캔버스 745px 안에 최대 623px 흐름이
+  들어가며 네 글 모두 문서 가로 넘침과 console 오류가 없습니다.
+- Vite production build는 8,003개 module을 생성했습니다. 정적 public route 2,088개와 no-script
+  본문 264편을 만들었고, JavaScript 비활성 390×844 화면에서 네 글의 부모 지도, 전체 본문,
+  네 장면 정적 목록과 가로 넘침 0을 확인했습니다. 전체 감사와 GitHub Pages 공개 경로 검증은
+  이어서 진행합니다.

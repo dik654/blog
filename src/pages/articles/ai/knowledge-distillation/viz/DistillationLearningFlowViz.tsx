@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
+import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
+import VizFrame from "@/components/viz/VizFrame";
 
 type Mode = "classic" | "sequence" | "on-policy" | "self";
 type Shape =
@@ -12,7 +17,7 @@ const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
     scenes: [
       {
         code: "T",
-        title: "Teacher",
+        title: "Teacher 출력",
         detail: "Input에서 logits·feature를 관측",
         shape: "teacher",
       },
@@ -30,7 +35,7 @@ const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
       },
       {
         code: "S",
-        title: "Student gate",
+        title: "Student 승인",
         detail: "정답·quality·runtime을 함께 검증",
         shape: "gauge",
       },
@@ -42,25 +47,25 @@ const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
     scenes: [
       {
         code: "PROMPT",
-        title: "Prompt slice",
+        title: "입력 묶음",
         detail: "Domain·language·difficulty 목표",
         shape: "document",
       },
       {
         code: "GEN",
-        title: "Teacher generation",
+        title: "Teacher 생성",
         detail: "Version·prompt·sampling 고정",
         shape: "teacher",
       },
       {
         code: "FILTER",
-        title: "Receipt",
+        title: "품질 기록",
         detail: "Quality·rights·dedup·reject reason",
         shape: "gauge",
       },
       {
         code: "TOK",
-        title: "Student sequence",
+        title: "Student 문자열",
         detail: "재토큰화와 response-only loss",
         shape: "document",
       },
@@ -72,25 +77,25 @@ const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
     scenes: [
       {
         code: "ROLL",
-        title: "Student rollout",
+        title: "Student 생성",
         detail: "현재 policy가 prefix를 생성",
         shape: "loop",
       },
       {
         code: "VISIT",
-        title: "Visited state",
+        title: "방문 상태",
         detail: "실수까지 포함한 실제 prefix",
         shape: "document",
       },
       {
         code: "SCORE",
-        title: "Teacher feedback",
+        title: "Teacher 채점",
         detail: "같은 prefix의 token 분포",
         shape: "distribution",
       },
       {
         code: "UPDATE",
-        title: "Policy update",
+        title: "Policy 갱신",
         detail: "Divergence와 domain gate 검증",
         shape: "gauge",
       },
@@ -102,25 +107,25 @@ const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
     scenes: [
       {
         code: "G0",
-        title: "Frozen teacher",
+        title: "Teacher 고정",
         detail: "세대와 artifact를 고정",
         shape: "teacher",
       },
       {
         code: "G1",
-        title: "Next student",
+        title: "다음 student",
         detail: "같은 task에서 soft signal 학습",
         shape: "loop",
       },
       {
         code: "AUDIT",
-        title: "Inheritance audit",
+        title: "상속 점검",
         detail: "Agreement와 accuracy 변화 분리",
         shape: "distribution",
       },
       {
         code: "STOP",
-        title: "Stop gate",
+        title: "중단 판단",
         detail: "Worst slice 악화 전 중단",
         shape: "gauge",
       },
@@ -134,7 +139,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
     : "border-border bg-background text-muted-foreground";
   if (shape === "teacher")
     return (
-      <div className={`relative h-20 w-24 rounded-xl border ${tone}`}>
+      <div className={`relative h-16 w-16 shrink-0 rounded-xl border xl:h-20 xl:w-24 ${tone}`}>
         <span className="absolute left-5 right-5 top-5 h-8 rounded-full border border-current" />
         <span className="absolute bottom-4 left-7 right-7 h-px bg-current" />
       </div>
@@ -142,7 +147,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   if (shape === "distribution")
     return (
       <div
-        className={`flex h-20 w-24 items-end justify-center gap-2 rounded-xl border p-4 ${tone}`}
+        className={`flex h-16 w-16 shrink-0 items-end justify-center gap-2 rounded-xl border p-2 xl:h-20 xl:w-24 xl:p-4 ${tone}`}
       >
         <span className="h-5 w-2 bg-current" />
         <span className="h-10 w-2 bg-current" />
@@ -152,7 +157,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
     );
   if (shape === "bridge")
     return (
-      <div className={`relative h-20 w-24 rounded-xl border ${tone}`}>
+      <div className={`relative h-16 w-16 shrink-0 rounded-xl border xl:h-20 xl:w-24 ${tone}`}>
         <span className="absolute left-3 top-5 h-10 w-5 border border-current" />
         <span className="absolute right-3 top-4 h-12 w-7 border border-current" />
         <span className="absolute left-8 right-9 top-1/2 h-px bg-current" />
@@ -160,7 +165,7 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
     );
   if (shape === "document")
     return (
-      <div className={`relative h-20 w-16 rounded-md border ${tone}`}>
+      <div className={`relative h-16 w-12 shrink-0 rounded-md border xl:h-20 xl:w-16 ${tone}`}>
         <span className="absolute left-3 right-3 top-5 h-px bg-current" />
         <span className="absolute left-3 right-3 top-9 h-px bg-current" />
         <span className="absolute left-3 right-5 top-12 h-px bg-current" />
@@ -168,13 +173,13 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
     );
   if (shape === "loop")
     return (
-      <div className={`relative h-20 w-20 rounded-full border ${tone}`}>
+      <div className={`relative h-16 w-16 shrink-0 rounded-full border xl:h-20 xl:w-20 ${tone}`}>
         <span className="absolute inset-4 rounded-full border border-current border-l-transparent" />
         <span className="absolute right-3 top-5 h-2 w-2 rotate-45 border-r border-t border-current" />
       </div>
     );
   return (
-    <div className={`relative h-20 w-24 rounded-xl border ${tone}`}>
+    <div className={`relative h-16 w-16 shrink-0 rounded-xl border xl:h-20 xl:w-24 ${tone}`}>
       <span className="absolute bottom-4 left-4 right-4 h-px bg-current" />
       <span className="absolute bottom-4 left-1/2 h-10 w-px origin-bottom rotate-45 bg-current" />
       <span className="absolute bottom-3 left-[calc(50%-3px)] h-2 w-2 rounded-full bg-current" />
@@ -184,97 +189,89 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
 
 export default function DistillationLearningFlowViz({ mode }: { mode: Mode }) {
   const flow = FLOWS[mode];
-  const [active, setActive] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  useEffect(() => {
-    if (!playing || matchMedia("(prefers-reduced-motion: reduce)").matches)
-      return;
-    const timer = setInterval(() => setActive((v) => (v + 1) % 4), 2200);
-    return () => clearInterval(timer);
-  }, [playing]);
-  const move = (d: number) => {
-    setPlaying(false);
-    setActive((v) => (v + d + 4) % 4);
-  };
+  const labels = flow.scenes.map(
+    (scene) => `${scene.title}: ${scene.detail}`,
+  );
+  const notes = flow.scenes.map((scene) => scene.detail);
+  const controlLabels = flow.scenes.map((scene) => scene.title);
+  const controls = useAnimatedScenes(flow.scenes.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const active = controls.reducedMotion
+    ? flow.scenes.length - 1
+    : controls.active;
+
   return (
-    <figure
-      data-viz="distillation-learning-flow"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (["ArrowRight", " ", "Enter"].includes(e.key)) {
-          e.preventDefault();
-          move(1);
-        }
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          move(-1);
-        }
-      }}
-      className="not-prose my-8 overflow-hidden rounded-2xl border border-border bg-card"
+    <VizFrame
+      eyebrow="한 신호 추적"
+      title="Teacher 신호가 student 학습 단위로 바뀌는 네 단계"
+      description={flow.caption}
+      className="my-8"
+      canvasClassName="p-0 sm:p-0"
     >
-      <figcaption className="flex flex-col gap-3 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-black tracking-[.15em] text-primary">
-            DISTILLATION TRACE · 4 SCENES
+      <div
+        id={controls.playbackId}
+        data-viz-id={`distillation-learning-flow-${mode}`}
+        tabIndex={0}
+        onKeyDown={controls.onKeyDown}
+        className="min-w-0 border-y border-border/70 bg-background px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-primary xl:px-6 xl:py-6"
+      >
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
+            장면 · {String(active + 1).padStart(2, "0")}
           </p>
-          <p className="mt-2 text-sm font-semibold leading-6">{flow.caption}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            ← → · Space로 이동하거나 자동 재생합니다.
-          </p>
-        </div>
-        <button
-          type="button"
-          aria-pressed={playing}
-          onClick={() => setPlaying((v) => !v)}
-          className="w-fit rounded-full border border-border px-3 py-1.5 text-xs font-bold"
-        >
-          {playing ? "일시정지" : "흐름 재생"}
-        </button>
-      </figcaption>
-      <div data-viz-canvas className="p-5 sm:p-7">
-        <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] md:items-center">
-          {flow.scenes.map((scene, i) => (
-            <div className="contents" key={scene.code}>
-              <button
-                type="button"
-                aria-current={i === active ? "step" : undefined}
-                onClick={() => {
-                  setPlaying(false);
-                  setActive(i);
-                }}
-                className={`flex min-w-0 items-center gap-4 rounded-xl border p-4 text-left md:flex-col md:border-transparent md:text-center ${i === active ? "border-primary/50 bg-primary/5" : "border-border/70 bg-background/50 md:bg-transparent"}`}
-              >
-                <Glyph shape={scene.shape} active={i <= active} />
-                <span>
-                  <span className="block text-[10px] font-black text-primary">
-                    0{i + 1} · {scene.code}
+          <h3 className="mt-2 min-h-16 text-lg font-bold leading-7 sm:min-h-[2.5rem]">
+            {labels[active]}
+          </h3>
+          <div className="mt-3 grid grid-cols-2 gap-3 xl:mt-5 xl:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] xl:items-center">
+            {flow.scenes.map((scene, index) => (
+              <div className="contents" key={scene.code}>
+                <div
+                  aria-current={index === active ? "step" : undefined}
+                  className={`flex min-h-24 min-w-0 flex-row items-center gap-2 border-t-2 px-2 py-2 text-left xl:min-h-0 xl:flex-col xl:gap-3 xl:px-3 xl:py-3 xl:text-center ${
+                    index === active
+                      ? "border-primary bg-primary/5"
+                      : index < active
+                        ? "border-primary/55"
+                        : "border-border text-muted-foreground"
+                  }`}
+                >
+                  <Glyph shape={scene.shape} active={index <= active} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[9px] font-black text-primary sm:text-[10px]">
+                      0{index + 1} · {scene.code}
+                    </span>
+                    <span className="mt-1 block break-keep text-xs font-bold leading-5 sm:text-sm">
+                      {scene.title}
+                    </span>
+                    <span className="mt-1 hidden break-keep text-xs leading-5 text-muted-foreground xl:block">
+                      {scene.detail}
+                    </span>
                   </span>
-                  <span className="mt-1 block text-sm font-bold">
-                    {scene.title}
-                  </span>
-                  <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                    {scene.detail}
-                  </span>
-                </span>
-              </button>
-              {i < 3 ? (
-                <div className="hidden items-center md:flex" aria-hidden="true">
-                  <span
-                    className={`h-px w-8 ${i < active ? "bg-primary" : "bg-border"}`}
-                  />
-                  <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-current text-muted-foreground" />
                 </div>
-              ) : null}
-            </div>
-          ))}
+                {index < flow.scenes.length - 1 ? (
+                  <div className="hidden items-center xl:flex" aria-hidden="true">
+                    <span className={`h-px w-7 ${index < active ? "bg-primary" : "bg-border"}`} />
+                    <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-current text-muted-foreground" />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 min-h-14 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:mt-5 sm:min-h-[3.5rem]">
+            {notes[active]}
+          </p>
         </div>
-        <div className="mt-6 border-t border-border pt-5 text-sm">
-          <strong>
-            {active + 1}. {flow.scenes[active].title}
-          </strong>{" "}
-          — {flow.scenes[active].detail}
-        </div>
+        <AnimatedSceneControls
+          {...controls}
+          active={active}
+          className="sm:!min-h-0 sm:!pt-0 sm:[&_[data-viz-desktop-controls]]:hidden sm:[&_[data-viz-mobile-controls]]:flex sm:[&>p]:hidden xl:!pt-3 xl:[&_[data-viz-desktop-controls]]:flex xl:[&_[data-viz-mobile-controls]]:hidden xl:[&>p]:block"
+          labels={labels}
+          controlLabels={controlLabels}
+        />
+        <StaticSceneList labels={labels} notes={notes} />
       </div>
-    </figure>
+    </VizFrame>
   );
 }
