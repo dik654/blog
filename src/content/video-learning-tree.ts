@@ -49,14 +49,14 @@ export const VIDEO_LEARNING_NODES: readonly VideoLearningNode[] = [
     id: "convolution",
     href: "/cs/ai/video-convolution-architectures#overview",
     shortTitle: "Video Convolution",
-    mapLabel: "시간 span → 3D 연산 → 다중 rate",
+    mapLabel: "seconds → 초기화 → block → pathway",
     track: "concept",
     parentHref: "/cs/ai/video-understanding#return",
     parentLabel: "비디오 시간 관측 · 다음 질문",
     question:
-      "시간축을 convolution에 넣는 I3D·R(2+1)D·SlowFast는 무엇을 다르게 계산하며 실제 몇 초를 볼까요?",
+      "같은 clip을 넣었을 때 I3D·R(2+1)D·SlowFast는 어느 계산을 바꾸며, temporal output 하나는 원본 몇 초와 연결될까요?",
     closure:
-      "Temporal kernel의 source timestamp span과 연산 분해·rate·channel 배분을 따로 보면 세 구조가 시간을 표현하는 방식과 비용 경계를 비교할 수 있습니다.",
+      "Input timestamp에서 temporal receptive span을 계산한 뒤, I3D의 초기화·R(2+1)D의 block 연산·SlowFast의 pathway 배분을 서로 다른 축으로 놓으면 세 구조의 역할과 보장 범위를 구분할 수 있습니다.",
   },
   {
     id: "transformers",

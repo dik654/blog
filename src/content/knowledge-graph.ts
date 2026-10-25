@@ -6752,8 +6752,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Inflated 3D pretraining handoff",
     definition:
-      "2D convolution filter·pooling kernel에 temporal dimension을 추가해 3D operator의 초기값으로 옮기고 video pretraining으로 spatiotemporal representation을 학습하는 I3D 방식입니다.",
-    canonicalHref: "/cs/ai/video-convolution-architectures#inflation-factorization",
+      "2D convolution filter·pooling kernel에 temporal dimension을 추가하고 반복 정지 영상의 response를 보존하도록 filter를 복제 수로 나눠 3D 초기값으로 옮긴 뒤, video data에서 spatiotemporal representation을 학습하는 I3D 방식입니다.",
+    canonicalHref: "/cs/ai/video-convolution-architectures#i3d",
   },
   "r2plus1d-factorization": {
     id: "r2plus1d-factorization",
@@ -6762,7 +6762,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "R(2+1)D factorization",
     definition:
       "Full 3D convolution을 2D spatial convolution과 1D temporal convolution 및 중간 nonlinearity로 나눠 optimization path와 representation을 바꾸는 block입니다.",
-    canonicalHref: "/cs/ai/video-convolution-architectures#inflation-factorization",
+    canonicalHref: "/cs/ai/video-convolution-architectures#r2plus1d",
   },
   "slowfast-rate-capacity-allocation": {
     id: "slowfast-rate-capacity-allocation",
