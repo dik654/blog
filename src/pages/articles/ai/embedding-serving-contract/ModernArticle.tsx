@@ -2,12 +2,15 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { EmbeddingArtifactViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
 
 export default function EmbeddingServingContractArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Embedding model은 weight 파일 하나가 아니라 입력 규칙과 index를 포함한 generation입니다</h2>
+      <EmbeddingPathLocator current="serving-contract" />
+      <h2 className="mb-6 text-2xl font-bold">Embedding model은 checkpoint 하나가 아닙니다</h2>
+      <EmbeddingArtifactViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
             같은 checkpoint를 불러도 query prefix를 빼거나 tokenizer revision을 바꾸거나 normalization을 끄면 다른 vector 공간이 됩니다.
             더 위험한 쪽은 document index는 예전 설정으로 두고 query server만 새 설정으로 바꾸는 경우입니다. 요청은 성공합니다. 다만 서로 다른 좌표계를 비교하는
@@ -19,7 +22,6 @@ export default function EmbeddingServingContractArticle() {
         { term: "Pooling contract", description: "CLS·mean·last token, mask, normalization을 결정하는 vector 생성 규칙입니다." },
         { term: "Index generation", description: "Corpus snapshot을 특정 encoder·serialization·pooling·dimension·dtype로 변환한 검색 artifact 세대입니다.", example: "g42 receipt가 corpus c17과 encoder e9를 함께 가리킵니다." },
       ]} />
-      <EmbeddingArtifactViz />
       <ContentBoundary article="embedding-serving-contract" />
     </section>
 
@@ -50,10 +52,10 @@ export default function EmbeddingServingContractArticle() {
     </section>
 
     <section id="index-artifact" className="scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Raw vector 크기와 실제 index 크기를 분리하고 generation receipt로 함께 배포합니다</h2>
+      <h2 className="mb-5 text-2xl font-bold">Index 크기와 배포 세대를 함께 기록합니다</h2>
       <ExplainedFormula question="문서 vector의 원자료와 실제 ANN index는 각각 얼마나 차지하나요?" idea={<p>
-            문서 수마다 dimension 개수만큼 scalar를 저장하므로 raw payload는 세 값을 곱합니다. 그 위에 ANN
-            graph·codebook·ID·metadata·alignment·replica가 얹힙니다.
+            문서 수마다 dimension 개수만큼 scalar를 저장합니다. 각 scalar가 차지하는 byte를 곱하면 raw
+            payload가 됩니다. 실제 index에는 ANN graph와 운영 metadata가 더해집니다.
           </p>} formula={String.raw`S_{\rm raw}=Mdb,\quad S_{\rm index}=S_{\rm raw}+S_{\rm ANN}+S_{\rm meta}`} annotatedFormula={String.raw`\begin{aligned}N&=\underbrace{M\times d}_{\substack{\text{vector 행·열을 곱해}\\\text{scalar 수 계산}}}\\S_{\rm raw}&=\underbrace{N\times b}_{\substack{\text{scalar 수에 byte를 곱해}\\\text{원자료 크기 계산}}}\\S_{\rm search}&=\underbrace{S_{\rm ANN}+S_{\rm meta}}_{\substack{\text{검색 구조와}\\\text{운영 metadata 추가}}}\\S_{\rm index}&=\underbrace{S_{\rm raw}+S_{\rm search}}_{\text{실제 index 예산}}\end{aligned}`} operations={[
         { expression: String.raw`M\times d`, annotation: ["vector 행 수와 dimension 열 수를 곱해", "저장할 scalar 총개수를 계산"] },
         { expression: String.raw`(Md)\times b`, annotation: ["scalar 수에 dtype byte를 곱해", "raw payload를 byte로 변환"] },
@@ -65,10 +67,14 @@ export default function EmbeddingServingContractArticle() {
         { symbol: String.raw`S_{\rm ANN},S_{\rm meta}`, name: "Index overhead", description: "검색 구조와 ID·revision·replica의 추가 저장량입니다." },
       ]} assumptions={["Dense raw payload 계산이며 allocator와 filesystem overhead는 별도 측정합니다.", "Quantization·dimension 변경 뒤 같은 retrieval validation을 다시 수행합니다.", "Query server와 index가 같은 generation receipt를 확인한 뒤 traffic을 받습니다."]} interpretation="1천만×1,024×2 bytes는 raw 20.48GB입니다. 실제 index RSS와 disk는 이보다 크거나 compression으로 작을 수 있으므로 build 결과를 receipt에 실측값으로 남깁니다." />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            Release 시점에 checkpoint revision, tokenizer, prefix, pooling, normalization, max length, dimension,
-            dtype, corpus snapshot, ANN parameters와 measured index size를 한 generation ID 아래 묶어 기록합니다. Query
-            encoder와 index가 같은 ID를 확인하지 못하면 아예 요청을 받지 않습니다. 조용한 품질 회귀보다는 그쪽이 안전합니다.
+            Release 시점에는 입력에서 index까지의 호환성을 generation ID 하나로 기록합니다. 앞쪽에는 checkpoint
+            revision, tokenizer, prefix, pooling, normalization, max length, dimension과 dtype이 들어갑니다. 뒤쪽에는
+            corpus snapshot, ANN parameters와 실제 index 크기를 넣습니다.
+          </p><p>
+            Query encoder와 index가 같은 ID를 확인하지 못하면 요청을 받지 않습니다. 검색 품질이 조용히 무너지는
+            것보다 불일치를 바로 드러내는 편이 안전합니다.
           </p></div>
     </section>
+    <EmbeddingMapReturn current="serving-contract" />
   </div>;
 }

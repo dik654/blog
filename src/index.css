@@ -614,7 +614,24 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
   }
 
   #noscript-article figure[data-viz="modern"]:has([data-viz-controls]) > [data-viz-canvas] {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     overflow: visible !important;
+  }
+
+  /*
+   * 480단위로 작성된 구조 그림은 휴대전화 폭에 그대로 축소하면 내부 라벨이
+   * 6px 안팎까지 작아진다. 그림만 가로로 살펴보게 하고 문서 폭은 늘리지 않는다.
+   */
+  svg.mobile-readable-svg {
+    min-width: 40rem !important;
+  }
+
+  @media (min-width: 640px) {
+    svg.mobile-readable-svg {
+      min-width: 0 !important;
+    }
   }
 
   /*

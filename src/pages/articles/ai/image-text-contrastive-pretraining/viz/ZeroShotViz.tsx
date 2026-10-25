@@ -1,6 +1,7 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import WideSvgViewport from "@/components/viz/WideSvgViewport";
 
 /** 본문 대응: ZeroShot.tsx — 범주 이름에서 분류기를 만드는 절차 */
 const SCENES = ["범주 이름", "문장 틀 적용", "평균과 정규화", "내적으로 예측"] as const;
@@ -18,8 +19,8 @@ const MUTED = "#94a3b8";
 const LABELS = ["고양이", "강아지", "자전거"];
 
 export default function ZeroShotViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, { loop: false, autoPlay: false });
+  const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const scores = [0.31, 0.22, 0.47];
   return (
     <VizFrame
@@ -29,17 +30,20 @@ export default function ZeroShotViz() {
       note="점수는 절차를 보여 주기 위한 예시이며 실제 모델 출력이 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-id="image-text-zero-shot"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="zero-shot 분류기 구성"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[23rem] flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <WideSvgViewport>
+          <svg viewBox="0 0 480 200" className="mobile-readable-svg w-full max-w-none sm:max-w-2xl">
             {LABELS.map((l, i) => (
               <g key={l}>
                 <rect x={20} y={44 + i * 42} width={70} height={28} fill={NAME} fillOpacity={0.12} stroke={NAME} strokeWidth={1} />
@@ -104,9 +108,11 @@ export default function ZeroShotViz() {
               범주 목록을 바꾸면 분류기도 바로 바뀝니다
             </text>
           </svg>
+          </WideSvgViewport>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={step} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

@@ -1,6 +1,7 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import WideSvgViewport from "@/components/viz/WideSvgViewport";
 
 /** 본문 대응: PipelineContract.tsx — 지문 불일치가 만드는 조용한 고장 */
 const SCENES = ["색인 지문", "질의 지문 일치", "전처리만 변경", "백본 변경"] as const;
@@ -19,8 +20,8 @@ const MUTED = "#94a3b8";
 const FIELDS = ["백본·체크포인트", "전처리 설정", "풀링 방식", "정규화 여부"];
 
 export default function ContractViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, { loop: false, autoPlay: false });
+  const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const mismatch = step === 2 ? 1 : step === 3 ? 0 : -1;
   return (
     <VizFrame
@@ -30,17 +31,20 @@ export default function ContractViz() {
       note="지문이 어긋나도 코드는 오류를 내지 않으므로 검사를 따로 둬야 합니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-id="image-pipeline-contract"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="임베딩 파이프라인 지문 비교"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[23rem] flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <WideSvgViewport>
+          <svg viewBox="0 0 480 200" className="mobile-readable-svg w-full max-w-none sm:max-w-2xl">
             <text x={24} y={30} fontSize={9} fontWeight={700} fill={MUTED}>
               색인 경로
             </text>
@@ -90,9 +94,11 @@ export default function ContractViz() {
               </text>
             )}
           </svg>
+          </WideSvgViewport>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={step} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

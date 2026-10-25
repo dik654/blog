@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 593,
-    "pending": 398,
+    "reviewed": 599,
+    "pending": 392,
     "untracked": 0,
-    "assignedPending": 355,
+    "assignedPending": 349,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3233,9 +3233,9 @@
       "publicPath": "cs/ai/sentence-embeddings",
       "title": "문장 임베딩: Token State에서 Relation Vector까지",
       "catalogIndex": 320,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3243,9 +3243,9 @@
       "publicPath": "cs/ai/bi-encoder-retrieval",
       "title": "Bi-encoder Retrieval: 사전 계산에서 Reranking까지",
       "catalogIndex": 321,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3253,9 +3253,9 @@
       "publicPath": "cs/ai/embedding-serving-contract",
       "title": "Embedding Serving Contract: 입력에서 Index Generation까지",
       "catalogIndex": 322,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3263,9 +3263,9 @@
       "publicPath": "cs/ai/image-embedding-pipeline",
       "title": "이미지 임베딩은 전처리와 풀링에서 대부분 갈립니다",
       "catalogIndex": 323,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3273,9 +3273,9 @@
       "publicPath": "cs/ai/image-text-contrastive-pretraining",
       "title": "이미지와 문장을 같은 공간에 맞추는 두 가지 손실",
       "catalogIndex": 324,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3283,9 +3283,9 @@
       "publicPath": "cs/ai/embedding-evaluation",
       "title": "Embedding Evaluation: 정답 집합에서 품질–비용 Frontier까지",
       "catalogIndex": 325,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

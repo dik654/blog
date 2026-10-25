@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import EmbeddingPathLocator from "../sentence-embeddings/EmbeddingPathLocator";
 import PipelineViz from "./viz/PipelineViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
+      <EmbeddingPathLocator current="image-vector" />
       <h2 className="mb-6 text-2xl font-bold">사진 한 장이 벡터가 되기까지 결정이 세 번 있습니다</h2>
+      <PipelineViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           이미지 검색이 기대만큼 안 될 때 원인은 대개 모델이 아니라 그 앞뒤에 있습니다. 어떤 크기로 맞춰
@@ -40,8 +43,6 @@ export default function Overview() {
           그 앞단, 곧 사진이 벡터가 되는 구간만 다룹니다.
         </p>
       </div>
-
-      <PipelineViz />
     </section>
   );
 }

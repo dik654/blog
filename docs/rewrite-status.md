@@ -3635,3 +3635,23 @@
 - 두 번째 Pages 실행은 구조 결함이 아니라 `architecture-flow-current.json`이 새 제목과 재귀 위치
   지도를 반영하지 않은 상태라 멈췄습니다. 공개 991편 기준 장부를 다시 생성해 네 route의 제목,
   전용 시각화, 움직이는 메커니즘, 재귀 위치 지도를 현재 소스와 맞췄습니다.
+
+### AI 임베딩 학습 묶음 로컬 검증 (2026-10-26)
+
+- `sentence-embeddings`에서 문장 벡터의 형태와 관계의 의미를 분리한 뒤,
+  `bi-encoder-retrieval`의 사전 계산과 후보 경계, `embedding-serving-contract`의 입력·색인 세대,
+  `image-embedding-pipeline`의 전처리·풀링, `image-text-contrastive-pretraining`의 짝 학습,
+  `embedding-evaluation`의 정답 집합과 평가로 이어지는 여섯 글의 부모 지도를 만들었습니다.
+- 각 글은 `concept` 트랙으로 분류했습니다. 직속 부모, 현재 영역, 같은 트랙의 앞뒤 글을 첫 화면에
+  표시하고, 하나의 숫자 사례와 내부 동작을 추적한 뒤 확인한 사실을 `return-map`에 되돌려 놓습니다.
+- 움직이는 그림은 사용자가 재생하기 전에는 시작하지 않고 장면당 6.2초를 사용합니다. 화면 밖으로
+  나가면 멈추며 다시 들어와도 자동으로 재생하지 않습니다. 마지막 장면에서 반복하지 않고,
+  reduced-motion에서는 마지막 상태와 비활성 재생 버튼을 바로 보여 줍니다.
+- 이미지 계열의 480단위 SVG를 휴대전화 폭에 억지로 줄이지 않고 720px의 읽을 수 있는 크기로
+  유지했습니다. 그림 안에서만 좌우로 살펴보게 하고, 문서의 가로 overflow와 중첩된 세로 scroll은
+  모두 0으로 유지했습니다. JavaScript가 꺼지면 같은 장면을 순서 있는 정적 목록으로 제공합니다.
+- 390×844와 1,440×1,000에서 여섯 경로의 부모 지도, 문서 overflow 0, 모든 시각화의 세로 높이,
+  키보드 이동, 화면 이탈 정지, reduced-motion, console 오류 0을 확인했습니다. 직접 실행한 Vite
+  production build는 8,000개 module과 정적 public route 2,088개, no-script 본문 247편을
+  생성했습니다. 로컬 `tsc -b`를 포함한 전체 `npm run build`는 약 4.4GB에서 메모리 부족으로
+  종료되므로 통과했다고 기록하지 않았으며, GitHub Pages 실행과 공개 경로 검증이 남아 있습니다.

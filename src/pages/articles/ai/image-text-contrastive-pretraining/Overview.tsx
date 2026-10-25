@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import EmbeddingPathLocator from "../sentence-embeddings/EmbeddingPathLocator";
 import SharedSpaceViz from "./viz/SharedSpaceViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
+      <EmbeddingPathLocator current="image-text-relation" />
       <h2 className="mb-6 text-2xl font-bold">캡션을 정답 대신 씁니다</h2>
+      <SharedSpaceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           인터넷에는 사진과 그 사진을 설명하는 문장이 함께 있는 자료가 많습니다. 이 짝을 정답으로 삼아 이미지
@@ -40,8 +43,6 @@ export default function Overview() {
           <Link to="/cs/ai/image-embedding-pipeline">이미지 임베딩 파이프라인</Link>으로 이어집니다.
         </p>
       </div>
-
-      <SharedSpaceViz />
     </section>
   );
 }

@@ -2,12 +2,15 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { EmbeddingEvaluationViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
 
 export default function EmbeddingEvaluationArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
+      <EmbeddingPathLocator current="evaluation" />
       <h2 className="mb-6 text-2xl font-bold">Embedding 평가는 model score보다 먼저 “무엇을 정답이라 부를지”를 고정합니다</h2>
+      <EmbeddingEvaluationViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
             한 query에 답이 되는 문서는 하나가 아닐 수 있습니다. 같은 규정을 설명하는 원문·FAQ·절차서가 모두 relevant일 수 있고 corpus가 바뀌면 document
             ID와 정답 집합도 달라집니다. 이 상태에서 single-positive label만 쓰면 실제 정답을 negative로 채점할 수 있습니다.
@@ -18,7 +21,6 @@ export default function EmbeddingEvaluationArticle() {
         { term: "Label snapshot", description: "Corpus revision·annotator rule·positive IDs·판정 시각을 묶은 평가 artifact입니다.", boundary: "Unlabeled를 확정 negative로 간주하지 않습니다." },
         { term: "Required slice", description: "한국어·장문·domain·query style처럼 평균으로 상쇄하면 안 되는 배포 조건입니다." },
       ]} />
-      <EmbeddingEvaluationViz />
       <ContentBoundary article="embedding-evaluation" />
     </section>
 
@@ -67,5 +69,6 @@ export default function EmbeddingEvaluationArticle() {
         { symbol: String.raw`\succ`, name: "Pareto dominance", description: "한 후보가 품질은 낮지 않고 비용은 크지 않으며 한 축 이상 더 나은 관계입니다." },
       ]} assumptions={["모든 후보는 같은 corpus·label snapshot·ANN setting·hardware·concurrency로 측정합니다.", "Validation에서 threshold와 후보를 고르고 untouched test는 마지막 보고에 한 번 사용합니다.", "Privacy·safety·license는 품질과 상쇄하지 않는 별도 gate입니다."]} interpretation="A가 NDCG .62·p95 8ms·20GB, B가 .61·10ms·25GB면 A가 B를 지배합니다. C가 .64·14ms·18GB면 A와 C는 서로 다른 trade-off로 남습니다." />
     </section>
+    <EmbeddingMapReturn current="evaluation" />
   </div>;
 }
