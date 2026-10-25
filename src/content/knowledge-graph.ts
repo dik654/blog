@@ -22572,7 +22572,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Gram teacher 기준 갱신 주기",
     definition:
-      "관계 구조의 기준으로 삼는 복사본을 언제 세우고 얼마마다 현재 teacher 값으로 다시 맞출지 정하는 일정입니다. 자주 갱신하면 붙잡는 힘이 약해지고 전혀 갱신하지 않으면 낡은 구조에 묶이므로 규제 강도를 결정하는 값이 됩니다.",
+      "Gram 손실을 켜는 시점, 최초 기준으로 고르는 이른 teacher 체크포인트, 현재 EMA teacher로 기준을 다시 맞추는 주기를 구분하는 일정입니다. DINOv3 보고서는 100만 스텝 뒤 손실을 켜고 이른 teacher를 최초 기준으로 삼았습니다. 비교 실험에서는 10만·20만 teacher가 비슷했으며, refinement 중에는 1만 스텝마다 최대 세 번 갱신했습니다.",
     canonicalHref: "/cs/ai/dinov3-self-supervised-backbone#gram-teacher",
   },
   "post-hoc-capability-adaptation": {

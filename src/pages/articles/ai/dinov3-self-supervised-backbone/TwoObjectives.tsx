@@ -19,9 +19,11 @@ export default function TwoObjectives({ onCodeRef }: { onCodeRef: (key: string, 
         <p className="leading-7">
           teacher는 별도로 학습되지 않습니다. 매 스텝 student 가중치를 조금씩 섞어 받을 뿐입니다. 그래서 정답은
           몇 스텝 전의 자기 자신이고, 학습이 진행되면 정답도 함께 좋아집니다. 이 구조에는 함정이 하나 있습니다.
-          student가 모든 입력에 같은 답을 내면 손실이 0이 되어 버립니다.
+          student와 teacher가 모든 입력에 비슷한 분포만 내도 서로를 쉽게 맞히는 무의미한 해로 갈 수 있습니다.
         </p>
       </div>
+
+      <ObjectivesViz />
 
       <h3 id="view-objective" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         이미지 수준 목표는 크롭 쌍의 분포를 맞춥니다
@@ -117,8 +119,6 @@ export default function TwoObjectives({ onCodeRef }: { onCodeRef: (key: string, 
         ]}
         interpretation="세 항은 서로 다른 실패를 막습니다. 앞의 둘은 무엇을 표현할지 정하고 마지막은 표현이 한 점으로 무너지는 것을 막습니다. 이 조합이 dense feature의 품질까지 보장하지는 않으며, 그 문제가 다음 절의 주제입니다."
       />
-
-      <ObjectivesViz />
 
       <div className="not-prose mt-6 flex flex-wrap items-center gap-2">
         <CodeViewButton onClick={() => onCodeRef("ibot-patch-loss", codeRefs["ibot-patch-loss"])} />

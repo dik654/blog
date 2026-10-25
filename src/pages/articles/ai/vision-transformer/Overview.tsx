@@ -5,14 +5,15 @@ import VisionTransformerTraceViz from "./viz/VisionTransformerTraceViz";
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
+    <section id="overview" data-calculation-explained className="mb-16 scroll-mt-20">
       <VisionTransformerLocator />
       <h2 className="mb-6 text-2xl font-bold">전체 경로</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          224×224×3 이미지를 16×16 조각으로 나누면 196개가 됩니다. 각 조각을 같은
-          projection으로 바꾸고 맨 앞에 <code>[CLS]</code>를 붙이면 Transformer가 읽는
-          길이 197의 sequence가 됩니다. Vision Transformer(ViT)의 출발점은 바로 이
+          가로와 세로를 각각 계산하면 224÷16=14이므로, 224×224×3 이미지는
+          14×14=196개의 16×16 조각으로 나뉩니다. 각 조각을 같은 projection으로 바꾸고
+          맨 앞에 <code>[CLS]</code> 하나를 붙이면 196+1=197이므로 Transformer가 읽는
+          sequence 길이는 197입니다. Vision Transformer(ViT)의 출발점은 바로 이
           <strong> image에서 token sequence로 넘어가는 입력 계약</strong>입니다.
         </p>
       </div>

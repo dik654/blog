@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileStageFlow from "./MobileStageFlow";
 
 /** 본문 대응: PostHoc.tsx — 해상도 적응과 증류 계열 */
 const SCENES = ["한 번만 크게 학습", "해상도 적응 10k", "증류로 계열 생성", "배포 예산에 맞춰 선택"] as const;
@@ -10,6 +11,13 @@ const NOTES = [
   "넓은 크롭 512·768과 좁은 크롭 112~336을 섞어 1만 스텝만 더 돌립니다. 기준 역할은 7B가 맡습니다.",
   "7B를 teacher로 두고 학생 모델을 100만 스텝 학습한 뒤 25만 스텝 동안 학습률을 낮춰 마무리합니다.",
   "같은 표현을 준다는 뜻이 아닙니다. 과제별로 얼마나 따라잡는지는 각자 재야 합니다.",
+] as const;
+
+const MOBILE_STAGES = [
+  { title: "ViT-7B 사전학습", detail: "약 67억 파라미터 · 100만 스텝" },
+  { title: "해상도 적응", detail: "여러 크롭 크기로 1만 스텝" },
+  { title: "고정 teacher로 증류", detail: "S · S+ · B · L · H+" },
+  { title: "과제별로 다시 평가", detail: "크기와 품질의 교환을 실측" },
 ] as const;
 
 const BIG = "#6366f1";
@@ -26,7 +34,7 @@ const FAMILY = [
 ];
 
 export default function DistillFamilyViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -34,21 +42,25 @@ export default function DistillFamilyViz() {
       title="큰 모델 하나에서 배포 계열이 갈라집니다"
       description="파라미터 수는 공개된 값이고 상자 너비는 비교를 위해 압축했습니다."
       note="증류 계열의 과제별 성능 차이는 이 그림이 보여 주지 않습니다."
+      className="my-8 !block !h-auto !max-h-none !overflow-visible"
+      canvasClassName="!h-auto !max-h-none !flex-none !overflow-visible"
     >
       <div
-        data-viz-canvas
+        id={scenes.playbackId}
+        data-viz-id="dinov3-post-training"
         tabIndex={0}
         role="group"
         aria-label="해상도 적응과 증류 계열"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="min-w-0 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[18rem] flex-col justify-center sm:min-h-[21rem]">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileStageFlow items={MOBILE_STAGES} active={step} ariaLabel="DINOv3 사후 적응과 증류 순서" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <rect x={24} y={40} width={110} height={54} fill={BIG} fillOpacity={0.12} stroke={BIG} strokeWidth={1.25} />
             <text x={79} y={62} textAnchor="middle" fontSize={11} fontWeight={700} fill={BIG}>
               ViT-7B
@@ -118,6 +130,14 @@ export default function DistillFamilyViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label} className="grid gap-1 py-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <strong>{index + 1}. {label}</strong>
+              <span className="text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

@@ -2181,11 +2181,13 @@
     },
     {
       "route": "ai/dinov3-self-supervised-backbone",
-      "title": "DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다",
+      "title": "DINOv3: 라벨 없이 패치 관계를 지키는 방법",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
         "src/pages/articles/ai/dinov3-self-supervised-backbone.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/DenseCollapse.tsx",
+        "src/pages/articles/ai/dinov3-self-supervised-backbone/DinoV3Locator.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/GramAnchoring.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/Overview.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/PostHoc.tsx",
@@ -2197,30 +2199,66 @@
         "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/DistillFamilyViz.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/FrozenEvalViz.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/GramViz.tsx",
+        "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/MobileStageFlow.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/ObjectivesViz.tsx",
         "src/pages/articles/ai/dinov3-self-supervised-backbone/viz/PipelineViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 7,
         "hasSourceSurface": true,
-        "characters": 25329
+        "characters": 28312
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "전체 지도와 직속 부모가 없어 Vision Transformer의 patch token에서 DINOv3 목표로 내려오는 위치를 알기 어려웠습니다.",
+        "시각화가 긴 설명 뒤에 있고 480px SVG를 모바일 폭으로 줄여 내부 용어가 읽히지 않았습니다.",
+        "Gram 손실 시작 시점과 최초 Gram teacher 체크포인트를 모두 100만 스텝으로 설명해 논문의 두 시점을 혼동했습니다.",
+        "장면 재생이 무한 반복 가능했고 playbackId가 DOM에 연결되지 않아 뷰포트를 벗어났을 때 정지 계약이 작동하지 않았습니다."
+      ],
+      "fixture": "개가 잔디 위에 있는 사진 한 장에서 넓은 크롭 2장과 좁은 크롭 8장을 만들고, 이미지 전체 목표와 가린 패치 목표가 생기는 경로를 추적합니다 (설명용 가정).",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "B": [
+          "two-objectives"
+        ],
+        "0": [
+          "dense-collapse"
+        ],
+        "1": [
+          "gram-anchoring"
+        ],
+        "2": [
+          "gram-teacher"
+        ],
+        "3": [
+          "post-hoc"
+        ],
+        "4": [
+          "use-boundary"
+        ]
+      },
+      "primarySourceApplication": [
+        "DINOv3 기술 보고서 3.2절의 전체 배치 4,096·2개 global crop·8개 local crop과 100만 iteration 조건을 전체 흐름에 반영했습니다.",
+        "기술 보고서 4.1절의 20만 스텝 이후 dense 평가 저하와 60만 스텝 이후 noisy similarity map 관찰을 붕괴 장면에 반영했습니다.",
+        "기술 보고서 4.2·4.3절과 부록 C의 Gram loss 시작 100만 스텝, 이른 teacher와 10만·20만 체크포인트 비교, 1만 스텝 갱신·최대 세 번, bicubic downsampling을 서로 다른 상태로 고쳤습니다.",
+        "facebookresearch/dinov3 커밋 11c58638의 고정 소스에서 DINO·iBOT·DKoleo·Gram 손실 계산 순서를 코드 패널로 연결했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모→한 이미지→두 목표→dense 저하→Gram 관계 복구→사후 적응→얼린 평가 순서로 다시 읽었습니다.",
+        "humanize": "pass · 라벨·teacher·Gram을 먼저 나열하지 않고 개와 잔디 사진에서 무엇을 맞히는지부터 설명합니다.",
+        "numericTrace": "pass · 2 global·8 local, 200k/600k/1M, 이른 Gram teacher의 100k/200k 비교, 갱신 10k·최대 세 번을 출처의 서로 다른 의미로 분리했습니다.",
+        "mobile390": "pass · 문서 client/scroll 390/390, 여섯 그림 675~792px이며 작은 SVG 대신 큰 글씨의 세로 상태 흐름을 사용합니다.",
+        "desktop1440": "pass · 문서 client/scroll 1440/1440, 여섯 SVG의 첫·중간·마지막 장면에서 잘림과 겹침이 없습니다.",
+        "keyboard": "pass · 그림 focus 후 ArrowRight로 다음 장면 이동, 명시적 재생은 마지막 장면에서 멈춥니다.",
+        "reducedMotion": "pass · prefers-reduced-motion에서 재생 버튼이 비활성화되고 수동 장면 선택은 유지됩니다.",
+        "noScript": "pass · JavaScript를 끈 390×844 production preview에서 여섯 정적 장면 목록이 모두 보이고, live 그림과 조작 버튼은 숨겨지며 문서 폭은 390/390입니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub CI와 공개 배포 경로 확인"
       ]
     },
     {

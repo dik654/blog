@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 464,
     "architectureWithoutAnimation": 95,
-    "recursiveLocators": 230,
+    "recursiveLocators": 231,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -1666,7 +1666,7 @@
     {
       "route": "ai/dinov3-self-supervised-backbone",
       "publicPath": "cs/ai/dinov3-self-supervised-backbone",
-      "title": "DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다",
+      "title": "DINOv3: 라벨 없이 패치 관계를 지키는 방법",
       "sourcePath": "src/pages/articles/ai/dinov3-self-supervised-backbone.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -1674,7 +1674,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

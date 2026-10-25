@@ -464,10 +464,10 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "dinov3-self-supervised-backbone",
-    title: "DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다",
+    title: "DINOv3: 라벨 없이 패치 관계를 지키는 방법",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "라벨 없이 배운 표현을 얼려 두고 씁니다" },
+      { id: "overview", title: "한 이미지가 학습 신호가 되는 경로부터 봅니다" },
       {
         id: "two-objectives",
         title: "정답은 이전 시점의 자기 자신이 만듭니다",

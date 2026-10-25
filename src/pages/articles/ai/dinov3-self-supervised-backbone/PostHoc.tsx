@@ -21,6 +21,8 @@ export default function PostHoc() {
           구조를 붙잡는 장치가 함께 들어갑니다.
         </p>
 
+        <DistillFamilyViz />
+
         <p className="leading-7">
           해상도 적응은 1만 스텝입니다. 넓은 크롭을 512와 768 중에서, 좁은 크롭을 112·168·224·336 중에서 섞어
           넣어 여러 입력 크기를 한 단계 안에서 보게 합니다. 이 단계에서 기준 역할은 가장 큰 7B 모델이 맡아,
@@ -62,8 +64,6 @@ export default function PostHoc() {
           </tbody>
         </table>
       </div>
-
-      <DistillFamilyViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">

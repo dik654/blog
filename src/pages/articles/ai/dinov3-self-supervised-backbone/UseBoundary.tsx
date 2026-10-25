@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CitationBlock } from "@/components/ui/citation";
 import FrozenEvalViz from "./viz/FrozenEvalViz";
+import { DinoV3MapReturn } from "./DinoV3Locator";
 
 export default function UseBoundary() {
   return (
@@ -12,6 +13,8 @@ export default function UseBoundary() {
           조건에서 합니다. backbone을 함께 미세조정하면 표현이 바뀌므로, 그 결과는 "이 표현이 좋다"가 아니라
           "이 초기값에서 출발한 학습이 좋다"가 됩니다. 두 주장은 다릅니다.
         </p>
+
+        <FrozenEvalViz />
 
         <p className="leading-7">
           얼린 채로 재는 데는 이유가 있습니다. head가 커질수록 head 자체가 과제를 푸는 능력이 커져 백본 차이가
@@ -25,8 +28,6 @@ export default function UseBoundary() {
           염두에 두는지에 따라 어떤 지표를 봐야 하는지가 정해집니다.
         </p>
       </div>
-
-      <FrozenEvalViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
@@ -73,6 +74,8 @@ export default function UseBoundary() {
         해결한 기술 보고서입니다. 보고된 개선은 논문이 명시한 데이터·일정·평가 조건에서의 저자 자기보고이며,
         손실 가중치와 Gram teacher 갱신 주기가 다른 규모에서도 최적이라는 근거는 제시하지 않습니다.
       </CitationBlock>
+
+      <DinoV3MapReturn />
     </section>
   );
 }
