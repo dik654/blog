@@ -18434,7 +18434,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "laya-system1-decision-model": {
-    title: "생성하지 않는 결정 모델의 입력 구성·학습 보상·보정·checkpoint 선택",
+    title: "Laya 결정 경로와 성능 경계",
     owns: [
       "choice·score·noul 질문과 답의 모양",
       "선택지 [MASK] 자리 점수와 token 예산",
@@ -18450,9 +18450,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "LLM gateway routing", href: "/cs/ai/llm-gateway-and-model-routing" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "GitHub 432312b와 Hugging Face rev 7b928d8의 원문을 고정해 함수·기본값·행 번호를 인용한다." },
+      { kind: "primary-source", rule: "내부 계산은 GitHub 432312b와 Hugging Face rev 7b928d8에 고정하고, 현재 Router와 token 예산 경계는 v0.4.15(tag commit 7a77439b) 문서와 대조한다." },
       { kind: "project-claim", rule: "청구 문의의 확률, 두 표본 RLCD, ECE 열 개, head parameter 수는 이 글의 계산이다. checkpoint를 실행하지 않았다." },
-      { kind: "standard", rule: "정확도·ECE·지연은 제작사 자기보고, Jev는 제3자 공개값으로만 쓰고 독립 평가처럼 쓰지 않는다." },
+      { kind: "standard", rule: "제작사 정확도·ECE·지연과 외부 arXiv 2610.02267의 paired evaluation은 출처·과제·범위를 나눠 쓰며 한 성능 순위로 합치지 않는다." },
     ],
   },
   "linux-server-interview-incident-map": {

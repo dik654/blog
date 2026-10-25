@@ -14,7 +14,7 @@ export const codeRefs: Record<string, CodeRef> = {
     desc: "질문 하나를 [CLS] 질문 [SEP] [MASK] 선택지0 [MASK] 선택지1 … [SEP]로 펼칩니다.",
     annotations: [
       { lines: [240, 251], color: "sky", note: "선택지마다 [MASK] 하나를 앞에 붙이고 설명은 48 token에서 자릅니다. 이 [MASK] 위치가 그 선택지의 점수 자리입니다." },
-      { lines: [252, 259], color: "sky", note: "선택지 합이 head_max_len을 넘으면 선택지 하나를 max(4, (head_max_len−16)//n) token으로 줄입니다. 77개·256이면 4 token, [MASK]를 빼면 이름에 3 token이 남습니다." },
+      { lines: [252, 259], color: "sky", note: "선택지 합이 head_max_len을 넘으면 선택지 하나를 max(4, (head_max_len−16)//n) token으로 줄입니다. English 기본값 192에서 77개면 4 token, [MASK]를 빼면 이름에 3 token이 남습니다." },
     ],
     code: common,
     lang: "python",
@@ -24,7 +24,7 @@ export const codeRefs: Record<string, CodeRef> = {
     highlight: [156, 222],
     desc: "질문 부분 뒤에 남은 자리만큼 상태 글을 붙이고 나머지는 조용히 자릅니다.",
     annotations: [
-      { lines: [199, 204], color: "sky", note: "room = max_len − 질문 부분 길이 − 1. English 512에서 질문 부분이 192면 상태는 319 token까지 들어갑니다." },
+      { lines: [199, 204], color: "sky", note: "room = max_len − 실제 질문 부분 길이 − 1입니다. English 기본 질문의 실제 head가 48이면 상태는 463 token, 77-option head가 319이면 192 token까지 들어갑니다." },
     ],
     code: common,
     lang: "python",

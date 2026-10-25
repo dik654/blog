@@ -163,8 +163,8 @@
     },
     {
       "route": "ai/laya-system1-decision-model",
-      "status": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#2026-10-25--ai-batch-44-laya-결정-모델-로컬-검수-완료-배포-대기"
     },
     {
       "route": "ai/smoothquant-activation-smoothing",

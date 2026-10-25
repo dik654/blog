@@ -7,7 +7,9 @@ import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import LayaSystem1DecisionModelViz from "./laya-system1-decision-model/viz/LayaSystem1DecisionModelViz";
+import LayaDecisionPathViz from "./laya-system1-decision-model/viz/LayaDecisionPathViz";
 import ScoringRuleViz from "./laya-system1-decision-model/viz/ScoringRuleViz";
+import LayaPathLocator, { LayaPathReturn } from "./laya-system1-decision-model/LayaPathLocator";
 import { codeRefs } from "./laya-system1-decision-model/codeRefs";
 import { layaTrees } from "./laya-system1-decision-model/fileTree";
 
@@ -22,8 +24,16 @@ export default function LayaSystem1DecisionModelArticle() {
   return (
     <>
       <div className="space-y-16">
+        <LayaPathLocator />
+
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">1. 고객 문의 하나를 분류하려고 문장을 생성할 필요는 없습니다</h2>
+          <h2 className="mb-4 text-2xl font-bold">전체 경로</h2>
+          <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
+            아래 그림에서 같은 청구 문의를 왼쪽부터 따라가면, Router가 checkpoint를 고르는 일과 모델이 선택지 확률을 계산하는 일이 분리되어 보입니다.
+          </p>
+
+          <LayaDecisionPathViz />
+
           <div className={prose}>
             <p>
               &quot;3월에 두 번 청구됐어요. 오늘 환불해 주지 않으면 해지하겠습니다.&quot;라는 문의가 왔다고 합시다. 서비스가 알고 싶은 것은 세 가지입니다. 어느 부서로
@@ -31,22 +41,29 @@ export default function LayaSystem1DecisionModelArticle() {
               파싱이 실패하고 token을 하나씩 만드는 시간도 듭니다.
             </p>
             <p>
-              Laya는 Convai Innovations가 2026년 9월에 Apache 2.0으로 공개한 모델로, 이 일을 생성 없이 처리합니다. 상태 글과 질문·선택지를 한 줄로
+              Laya는 Convai Innovations가 Apache 2.0으로 공개한 모델로, 이 일을 생성 없이 처리합니다. 상태 글과 질문·선택지를 한 줄로
               이어 encoder에 넣고 선택지마다 붙인 [MASK] 자리의 점수를 그 질문 안에서 softmax하는 분류기입니다.
             </p>
             <p>
-              선택지를 요청할 때 정하므로 다시 학습하지 않고도 새 질문을 받습니다. 학습 보상을 strictly proper scoring rule로 줘서 정직한 확률을 내도록
-              만들었지만 출시 상태는 과신하므로 temperature를 다시 맞춰야 합니다. 이것이 이 글의 답입니다.
+              선택지를 입력으로 받으므로 질문의 선택지 수가 바뀌어도 출력 head를 다시 만들 필요는 없습니다. 하지만 새 업무에서 정확하다는 뜻은 아닙니다. 학습 보상은
+              strictly proper scoring rule을 사용하지만, 공개 checkpoint의 확률도 그대로 믿지 않고 별도 데이터로 보정해야 합니다.
             </p>
             <p>
-              이 글은 청구 문의 하나를 따라 시퀀스 구성, 점수 head, 학습 보상, 확률 보정, 언어별 checkpoint 선택을 차례로 봅니다. 코드는 GitHub 커밋
-              432312b와 Hugging Face 리비전 7b928d8의 원문이고 성능 수치는 모두 제작사가 모델 카드에 적은 자기보고입니다.
+              이 글은 청구 문의 하나를 따라 checkpoint 선택, 시퀀스 구성, marker 점수, 학습 보상, 확률 보정을 차례로 봅니다. 내부 계산은 보관해 둔 GitHub 커밋
+              432312b와 Hugging Face 리비전 7b928d8의 원문으로 증명하고, 현재 사용 경계는 2026년 10월 24일 공개된 v0.4.15와 독립 평가를 따로 대조합니다.
             </p>
           </div>
+
+          <aside className="not-prose mt-8 border border-border bg-muted/20 p-4 text-xs leading-6 text-muted-foreground">
+            <strong className="text-foreground">근거 경계</strong>
+            <p className="mt-1">
+              구조와 수식은 고정한 원문에서 확인했습니다. 제작사 정확도·지연·ECE는 제작사 측정이고, 이 글은 checkpoint를 실행하지 않았습니다. 외부 논문의 paired evaluation은 별도 연구 결과로만 다룹니다.
+            </p>
+          </aside>
         </section>
 
         <section id="black-box" data-teach-level="B" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">2. 상태와 유형이 붙은 질문을 받아 확률을 돌려줍니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">질문과 답</h2>
           <div className={prose}>
             <p>
               입력은 둘입니다. 하나는 판단할 대상인 상태로, 글이나 이메일이나 JSON입니다. 다른 하나는 질문 묶음이고 질문마다 유형이 있습니다. choice는 정해 준 선택지
@@ -60,7 +77,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="small-case" data-teach-level="0" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">3. 청구 문의 하나에 질문 세 개를 붙입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">문의 하나, 질문 세 개</h2>
           <div className={prose}>
             <p>
               카드의 예제와 같은 질문 세 개를 씁니다. department는 choice이고 선택지가 billing·technical·other 세 개입니다. urgency는 score이고 단계가 &quot;급하지
@@ -77,31 +94,35 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="sequence" data-teach-level="1" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">4. 질문마다 한 줄을 만들고 선택지 앞 [MASK]에서 점수를 읽습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">입력 시퀀스</h2>
           <div className={prose}>
             <p>
               질문 하나는 encoder에 들어가는 한 줄이 됩니다. 앞에 질문 유형과 지시문이 오고 그 뒤에 선택지마다 [MASK] 하나와 선택지 글이 이어지며 마지막에 상태 글이
               붙습니다. 질문 세 개는 같은 상태 글을 붙인 세 줄이 되어 한 batch로 함께 계산됩니다. 상태 글을 token으로 바꾸는 일은 한 번만 하고 줄마다 다시 씁니다.
             </p>
             <p>
-              English checkpoint는 한 줄이 512 token입니다. 질문 부분을 192 token 안에 두므로 상태 글에는 적어도 319 token이 남고 그보다 긴
-              상태는 뒤가 잘립니다. 선택지가 많아 질문 부분이 넘칠 때는 선택지 하나에 줄 token 수를 줄입니다. 그림의 마지막 장면이 그 경우입니다.
+              English checkpoint는 한 줄이 512 token이고 <code>head_max_len</code> 기본값은 192입니다. 하지만 192는 실제 질문 길이가 아니라 option prompt를
+              만들 때 쓰는 목표 상한입니다. 상태 글이 쓸 자리는 <code>512 − 실제 head 길이 − 끝 [SEP] 1칸</code>으로 계산해야 합니다.
+            </p>
+            <p>
+              선택지가 적으면 실제 head가 192보다 짧아 상태 공간이 더 큽니다. 반대로 선택지가 많으면 선택지당 4-token 하한 때문에 실제 head가 192를 넘을 수 있습니다.
+              공식 v0.4.15 문서의 English 77-option 예에서는 head가 319 token이 되어 상태에 192 token만 남습니다.
             </p>
           </div>
           <LayaSystem1DecisionModelViz />
           <CalculationWalkthrough
             title="한 줄의 token 예산"
-            question="상태 글에는 몇 token이 남고, 선택지 77개면 이름에 몇 token이 남나요?"
-            scope="build_sequence와 build_head의 규칙만 셉니다. 실제 질문 부분 길이는 tokenizer에 따라 192보다 짧을 수 있습니다."
+            question="실제 head 길이가 바뀌면 상태 글이 읽히는 범위는 어떻게 달라지나요?"
+            scope="English 기본 max_len 512와 v0.4.15 공식 문서의 3-option·77-option 예를 비교합니다. 이 글에서 checkpoint를 실행하지는 않았습니다."
             steps={[
-              { label: "English 한 줄", expression: "max_len = 512, head_max_len = 192", result: "질문 부분 ≤ 192", reason: "rl_agent_config.json의 기본값입니다." },
-              { label: "상태가 쓸 자리", expression: "512 − 192 − 1", result: "319 token 이상", reason: "끝의 [SEP] 한 칸을 빼고 남는 자리입니다. 질문이 짧으면 더 늘어납니다." },
-              { label: "선택지당 상한", expression: "max(4, (256 − 16) ÷ 77)", result: "4 token", reason: "multilingual의 head_max_len 256에서 선택지 합이 넘칠 때 쓰는 식입니다. 240 ÷ 77의 몫 3보다 하한 4가 큽니다." },
-              { label: "이름에 남는 token", expression: "4 − 1([MASK])", result: "3 token", reason: "선택지 앞의 [MASK]도 그 4 token 안에 들어갑니다." },
-              { label: "선택지 전체", expression: "77 × 4", result: "308 token", reason: "질문 부분 상한 256을 넘으므로 지시문은 8 token까지 줄어듭니다." },
+              { label: "상태 공간 식", expression: "512 − head_len − 1", result: "실제 head 길이에 따라 변함", reason: "끝의 [SEP] 한 칸을 빼며 head_max_len 자체를 대입하지 않습니다." },
+              { label: "3-option 예", expression: "512 − 48 − 1", result: "463 token", reason: "공식 문서의 기본 department 질문은 실제 head가 48 token입니다." },
+              { label: "77-option 배분", expression: "max(4, (192 − 16) ÷ 77)", result: "선택지당 4 token", reason: "몫은 2지만 선택지당 하한 4가 적용됩니다." },
+              { label: "이름에 남는 token", expression: "4 − 1([MASK])", result: "3 token", reason: "선택지 앞의 [MASK]도 네 칸 안에 들어갑니다." },
+              { label: "77-option head", expression: "실제 head_len = 319", result: "상태 512 − 319 − 1 = 192", reason: "4-token 하한 때문에 head가 목표 상한 192를 넘습니다." },
             ]}
-            conclusion="상태에는 319 token 이상이 남지만, 선택지 77개는 이름 하나를 3 token으로 줄여 서로 구별하기 어렵게 만듭니다."
-            caveats={["카드는 Banking77(77개)에서 0.425를 보고하며 이 예산을 원인으로 듭니다.", "head_max_len과 max_len은 실행 중에 늘릴 수 있습니다."]}
+            conclusion="상태 공간은 고정된 319 token이 아닙니다. 질문이 짧으면 463 token까지 읽지만, 77개 선택지를 한 번에 넣으면 192 token만 남고 이름도 3 token으로 잘립니다."
+            caveats={["제작사는 Banking77(77개)에서 정확도 0.425를 보고하며 option budget을 원인으로 듭니다.", "head_max_len과 max_len을 늘리거나 shortlist·두 단계 질문을 쓸 수 있지만, 정확도와 비용은 다시 측정해야 합니다."]}
           />
           <div className="flex flex-wrap gap-2">
             {code("build-head", "질문 부분과 선택지 예산")}
@@ -110,7 +131,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="why-markers" data-teach-level="2" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">5. 선택지를 입력에 넣으면 출력 칸을 미리 정해 둘 필요가 없습니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">Marker 방식</h2>
           <div className={prose}>
             <p>
               일반적인 BERT 분류기는 마지막에 class 수만큼 출력 칸이 있는 head를 붙입니다. billing·technical·other 세 칸으로 학습하면 sales를 추가할 때 head를 바꾸고
@@ -129,7 +150,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="names" data-teach-level="3" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">6. 선택지 앞 [MASK]와 그 위의 작은 층에 이름을 붙입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">이름과 범위</h2>
           <div className={prose}>
             <p>
               선택지마다 점수를 읽는 자리인 [MASK]를 카드는 option marker라고 부릅니다. encoder 위에 얹어 marker의 점수를 내는 transformer 2층과 scorer를 decision head라고
@@ -143,7 +164,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="trace" data-teach-level="4" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">7. 청구 문의 하나가 checkpoint 선택부터 답까지 지나는 길</h2>
+          <h2 className="mb-6 text-2xl font-bold">한 요청의 내부</h2>
           <div className={prose}>
             <p>
               요청이 오면 Router가 먼저 어느 checkpoint로 보낼지 정합니다. 문의가 영어 라틴 문자이면 English, 다른 문자나 다른 언어이면 multilingual로 보냅니다. 다음에
@@ -163,7 +184,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="model-source" data-teach-level="5" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">8. decision head는 encoder 395M 위의 약 26M입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">모델 구조</h2>
           <div className={prose}>
             <p>
               common.py 574–658행의 DecisionModel이 구조 전체입니다. encoder의 출력에 질문 유형 embedding을 더하고 PyTorch
@@ -193,7 +214,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="rlcd" data-teach-level="5" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">9. 확률을 부풀리면 손해가 되는 보상으로 학습합니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">학습 보상</h2>
           <div className={prose}>
             <p>
               확률을 내는 모델에 정답만 맞히면 1점을 주면, 0.6이라고 하든 0.99라고 하든 같은 점수를 받습니다. 그러면 모델이 확률을 정직하게 낼 이유가 없습니다. 실제로
@@ -260,7 +281,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="calibration" data-teach-level="6" data-calculation-explained className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">10. 출시 상태는 과신하므로 (유형, 선택지 수)마다 temperature를 다시 맞춥니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">확률 보정</h2>
           <div className={prose}>
             <p>
               proper한 목표로 학습했어도 결과 모델이 보정되어 있다는 보장은 없습니다. 카드는 출시 checkpoint가 과신한다고 적고 질문 유형과 선택지 수의 칸마다
@@ -302,7 +323,7 @@ export default function LayaSystem1DecisionModelArticle() {
         </section>
 
         <section id="router" data-teach-level="6" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">11. 영어 checkpoint는 다른 문자에서 틀리면서도 확신하므로 문자로 먼저 고릅니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">Checkpoint 선택</h2>
           <div className={prose}>
             <p>
               Hugging Face 저장소에는 checkpoint가 셋 있습니다. English(ModernBERT-large, 421M, 512 token), multilingual(mmBERT-base, 322M, 1024 token, 8,192까지
@@ -310,29 +331,44 @@ export default function LayaSystem1DecisionModelArticle() {
             </p>
             <p>
               카드는 English checkpoint가 크메르어에서 정답률 0.000을 내면서 확신은 0.952였다고 적습니다. 틀리면서도 확신하므로 확신도 문턱으로는 걸러지지
-              않습니다. 그래서 Router는 forward 전에 문자를 검사합니다. router.py의 _route는 명시한 모델, 명시한 과제, 언어 힌트, 문자·언어 검출 순으로
-              확인하고 라틴 문자가 아니거나 영어가 아니면 multilingual로 보냅니다.
+              않습니다. 그래서 Router는 forward 전에 실행할 checkpoint를 따로 고릅니다. v0.4.15에서는 <code>model</code>, <code>task</code>, 선택적으로 켠 업무 자동
+              선택, <code>lang</code>, 애플리케이션의 언어 힌트, 내장 문자·언어 분석 순서로 확인하며 먼저 일치한 규칙을 사용합니다.
             </p>
             <p>
-              checkpoint를 새로 올리는 데는 수 초가 걸립니다. 기본 Router는 English와 multilingual 두 개를 메모리에 남기고 오래 안 쓴 것부터 내리며
-              하나만 남기면 언어가 바뀔 때마다 CPU 7.4초, T4 10.3초가 걸렸다고 카드는 적습니다.
+              짧거나 모호한 글에서 언어를 확정하지 못하면 0.4.0부터 기본값인 multilingual로 보냅니다. <code>route()</code>는 모델을 올리지 않고 선택한
+              <code>model</code>과 <code>reason</code>, 검출 정보를 돌려주므로 추론 전에도 선택 근거를 확인할 수 있습니다.
+            </p>
+            <p>
+              checkpoint는 처음 쓸 때 내려받고 메모리에 올립니다. 기본 Router는 Agent를 두 개까지 상주시켜 보통 English와 multilingual을 함께 유지합니다. typed-decisions까지
+              섞으면 작은 <code>max_loaded</code>에서 축출과 재로딩이 생길 수 있습니다. 모델 전환 시간은 설치·cache·장치에 따라 달라지므로 운영 환경에서 따로 재야 합니다.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">{code("route", "checkpoint를 고르는 순서")}</div>
+          <div className="not-prose my-8">
+            <CitationBlock source="Laya v0.4.15 · Routing" citeKey={3} href="https://github.com/NandhaKishorM/laya/blob/v0.4.15/docs/routing.md">
+              <code>route()</code>의 우선순위, multilingual 기본값, lazy load와 기본 상주 Agent 수 2개를 확인했습니다. 이 문서는 2026년 10월 24일 공개된 v0.4.15에 고정했습니다.
+            </CitationBlock>
+          </div>
         </section>
 
         <section id="benchmarks" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">12. 높은 정확도는 미세조정한 checkpoint의 값입니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">성능 경계</h2>
           <div className={prose}>
             <p>
               카드가 앞세우는 0.766은 typed-decisions 과제의 학습 분할로 미세조정한 checkpoint의 정확도입니다. 같은 2,000개 결정에서 기본 English checkpoint는 0.362,
-              multilingual은 0.342였습니다. 무작위가 0.318, 질문마다 가장 흔한 답을 고르는 기준이 0.461이므로 기본 checkpoint는 이 과제에서 다수 class보다 낮습니다.
+              multilingual은 0.3515였습니다. 무작위가 0.318, 질문마다 가장 흔한 답을 고르는 기준이 0.461이므로 기본 checkpoint는 이 과제에서 다수 class보다 낮습니다.
               카드도 Laya를 &quot;미세조정할 빠른 바탕&quot;이라고 적습니다.
             </p>
             <p>
               비교 대상인 TypeSafe Jev의 수치는 제3자가 공개한 값이며 Laya 제작사가 직접 재지 않았고 표본과 prompt도 다르다고 카드가 밝힙니다. 그 표에서 Laya는
-              AG News 0.950 대 0.910으로 앞서지만 선택지 77개인 Banking77에서는 0.425 대 0.870으로 뒤집니다. 4절의 선택지당 3 token 예산이 그
+              AG News 0.950 대 0.910으로 앞서지만 선택지 77개인 Banking77에서는 0.425 대 0.870으로 뒤집힙니다. 4절처럼 선택지 하나에 4 token만 주고
+              [MASK]를 뺀 이름에는 3 token만 남는 제약이 그
               이유입니다.
+            </p>
+            <p>
+              2026년 10월 공개된 외부 paired evaluation은 더 넓은 경계를 보여 줍니다. 같은 입력으로 11개 agent decision point를 비교한 연구에서 Laya는 선택지 순서를
+              뒤집었을 때 답의 30%를 바꿨고, 후보가 많고 비슷할수록 크게 약해졌습니다. 두 모델 모두 zero-shot model routing에서 우연 수준을 넘지 못했습니다. 이 결과는
+              제작사 표와 다른 데이터·과제를 쓴 별도 연구이므로 숫자를 한 순위표로 합치지 않습니다.
             </p>
           </div>
           <ProgressiveDetail
@@ -345,7 +381,8 @@ export default function LayaSystem1DecisionModelArticle() {
             </p>
             <p>
               decision head의 act_probability는 거의 모든 입력에서 1.0이고 정답 여부와 AUROC 0.30으로 오히려 반대로 움직인다고 적습니다(#185). 문턱은 confidence로 걸라고
-              하며 그 AUROC는 0.77입니다. 순서형 score 질문이 가장 약해 SST-5에서 0.372였다는 점도 적혀 있습니다.
+              하며 그 AUROC는 0.77입니다. 현재 v0.4.15의 일반 gating 문서는 보정 대상인 <code>answer_confidence</code>에 업무별 문턱을 맞추라고 더 구체적으로 설명합니다.
+              두 필드와 다른 선택지 수의 확률을 같은 문턱으로 섞으면 안 됩니다.
             </p>
           </ProgressiveDetail>
           <div className="flex flex-wrap gap-2">{code("card-limits", "모델 카드의 Honest Limits")}</div>
@@ -357,31 +394,35 @@ export default function LayaSystem1DecisionModelArticle() {
             <CitationBlock source="NandhaKishorM/laya · GitHub (commit 432312b)" citeKey={2} href="https://github.com/NandhaKishorM/laya/tree/432312b36714d8889eba405507b37eda25257d9c">
               DecisionModel·proper_reward·rlcd_loss·temperature 맞춤·Router의 원문입니다. Apache-2.0이며 저장소는 2026-09-18에 만들어졌습니다.
             </CitationBlock>
+            <CitationBlock source="Li · Fast Models, Slow Evidence (arXiv 2610.02267)" citeKey={4} href="https://arxiv.org/abs/2610.02267">
+              11개 agent decision point에서 7,283개 기본 사례와 6,640개 변형을 byte-identical 입력으로 비교한 외부 연구입니다. Laya의 선택지 순서 민감도와 많은 유사 후보에서의 저하를 확인했습니다. 이 연구가 모든 업무와 fine-tuned checkpoint의 성능을 대신하지는 않습니다.
+            </CitationBlock>
           </div>
         </section>
 
         <section id="boundary" data-teach-level="7" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">13. 생성형 LLM 앞에서 빠르게 거르는 자리에 맞고, 자기 데이터로 맞춘 뒤에 씁니다</h2>
+          <h2 className="mb-6 text-2xl font-bold">쓰임과 한계</h2>
           <div className={prose}>
             <p>
-              이 구조가 맞는 자리는 답의 모양이 정해진 반복 판단입니다. 문의를 부서로 나누기, 위험 문구 거르기, 다음 단계로 올릴지 정하기처럼 수십 ms 안에 확률이 필요한
-              곳입니다. 생성형 모델을 부르기 전에 요청을 고르는 자리라면{" "}
+              이 구조가 맞는 자리는 답의 모양이 정해진 반복 판단입니다. 문의를 부서로 나누기, 위험 문구 거르기, 다음 단계로 올릴지 정하기처럼 자유로운 설명보다 확률 분포가
+              먼저 필요한 곳입니다. 생성형 모델을 부르기 전에 요청을 고르는 자리라면{" "}
               <Link to="/cs/ai/llm-gateway-and-model-routing">LLM gateway의 routing</Link>과 함께 놓을 수 있습니다. (가정)
             </p>
             <p>
-              쓰기 전에 할 일이 둘 있습니다. 하나는 자기 업무의 결정으로 미세조정하는 것입니다. 카드의 수치가 보여 주듯 기본 checkpoint만으로는 다수 class 기준도 넘지 못할 수
-              있습니다. 다른 하나는 자기 데이터로 temperature를 다시 맞추고 ECE를 재는 것입니다. 선택지가 많은 질문은 head 예산을 늘리거나 두 단계로 나눠 묻습니다.
+              중요한 경계는 모델의 확률과 업무 행동이 같지 않다는 점입니다. 어떤 확률에서 자동 처리하고, 어느 구간을 더 느린 모델이나 사람에게 넘길지는 업무의 오류 비용과
+              검증 데이터로 정합니다. 카드의 수치와 외부 평가가 보여 주듯 기본 checkpoint만으로는 단순 기준도 넘지 못할 수 있습니다.
             </p>
             <p>
-              긴 설명, 근거 인용, 여러 단계의 추론이 필요한 판단은 이 모델의 일이 아닙니다. 상태 글이 길면 319 token 뒤가 잘리고 multilingual도 8,192
-              token까지 늘렸을 때 4,000 token을 넘는 문서에서는 결과가 흔들렸다고 카드가 적습니다.
+              긴 설명, 근거 인용, 여러 단계의 추론이 필요한 판단은 이 모델의 일이 아닙니다. 일반 <code>predict()</code>는 창 밖의 상태를 자릅니다. 현재 버전에는 겹치는 창을
+              훑는 <code>predict_long()</code>도 있지만, 반환 확률은 문서 전체에 다시 보정된 값이 아니며 창 수가 늘면 최대 확률도 달라질 수 있습니다.
             </p>
           </div>
           <ContentBoundary article="laya-system1-decision-model" />
+          <LayaPathReturn />
         </section>
 
         <section id="review" data-teach-level="review" className="scroll-mt-20">
-          <h2 className="mb-6 text-2xl font-bold">14. 같은 문의로 다음 경계를 예상해 보세요</h2>
+          <h2 className="mb-6 text-2xl font-bold">확인 질문</h2>
           <div className={prose}>
             <p>department 질문에 선택지 sales를 하나 더하려면 무엇을 바꿔야 하나요? BERT 분류 head와 비교해 답해 보세요. (답: 5절)</p>
             <p>참 확률 0.7인 질문에서 0.8을 보고하면 log score의 기대값은 0.7을 보고할 때보다 높을까요, 낮을까요? (답: 9절)</p>

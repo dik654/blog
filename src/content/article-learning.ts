@@ -158810,7 +158810,7 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote:
       "\"두 번 청구됐어요, 환불 안 하면 해지합니다\"라는 문의 하나에 department(choice 3)·urgency(score 3)·churn_risk(noul) 세 질문을 붙여 Laya의 원문 코드를 따라갑니다.",
     coreIdea:
-      "Laya는 글을 생성하지 않고 상태와 질문·선택지를 한 줄로 encoder에 넣어 선택지마다 [MASK] 자리 점수를 softmax하는 분류기입니다. 선택지를 요청 때 정해 재학습 없이 새 질문을 받고, proper scoring rule 보상으로 학습했지만 출시 상태는 과신해 temperature 재보정과 업무별 미세조정이 필요합니다.",
+      "Laya는 글을 생성하지 않고 상태와 질문·선택지를 한 줄로 encoder에 넣어 선택지마다 [MASK] 자리 점수를 softmax하는 분류기입니다. 요청마다 선택지 수를 바꿔도 출력 head는 다시 만들지 않지만 새 업무의 정확도가 보장되지는 않습니다. proper scoring rule 보상으로 학습했어도 출시 확률은 업무 데이터로 다시 보정하고 검증해야 합니다.",
     assumedKnowledge: [
       { id: "bert-task-head", role: "고정 class head와 marker 방식을 비교합니다." },
       { id: "strictly-proper-probability-score", role: "정직한 보고가 기대 점수를 최대로 하는 성질을 보상 설계에 씁니다." },
@@ -158838,7 +158838,7 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "sequence",
         intuition: "선택지마다 빈칸 하나를 붙여 두고 모델이 각 빈칸에 점수를 적게 합니다.",
         workedExample: "billing·technical·other의 점수 3.1·0.4·−0.6을 그 질문 안에서 softmax하면 0.916·0.062·0.023입니다. 선택지 77개면 하나에 4 token, 이름에 3 token만 남습니다.",
-        boundary: "질문 부분 192 token(English) 예산 때문에 선택지가 많으면 이름이 잘려 구별이 어렵습니다. 상태 글은 319 token 뒤가 잘립니다.",
+        boundary: "head_max_len 192는 실제 head 길이가 아닙니다. 기본 3-option head가 48 token이면 상태에 463 token이 남지만, 77-option head가 319 token까지 커지면 상태에는 192 token만 남습니다.",
       },
       {
         id: "rlcd-proper-scoring-reward",
@@ -158865,7 +158865,7 @@ export const ARTICLE_LEARNING: Readonly<
     conceptStages: [
       { label: "01 입력과 점수", relation: "질문 유형을 정하고 선택지 [MASK] 자리에서 점수를 읽습니다.", concepts: ["typed-decision-question", "option-marker-decision-head"] },
       { label: "02 학습과 보정", relation: "proper한 보상으로 학습하고 출시 과신을 칸별로 고칩니다.", concepts: ["rlcd-proper-scoring-reward", "bucketed-temperature-calibration"] },
-      { label: "03 운영", relation: "언어에 맞는 checkpoint를 먼저 고릅니다.", concepts: ["script-routed-checkpoint-selection"] },
+      { label: "03 실행 전 선택", relation: "forward 전에 명시적 설정과 언어 단서로 checkpoint를 고릅니다.", concepts: ["script-routed-checkpoint-selection"] },
     ],
     exercises: [
       {
@@ -158877,22 +158877,22 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         level: "basic",
-        question: "English checkpoint에서 질문 부분이 192 token일 때 상태 글이 쓸 수 있는 token 수를 구하고, 넘치는 상태는 어떻게 되는지 쓰세요.",
-        answerChecklist: ["512 − 192 − 1 = 319", "끝 [SEP] 한 칸", "넘치는 상태는 뒤가 잘림"],
+        question: "English checkpoint에서 실제 head가 48 token일 때와 319 token일 때 상태 글이 쓸 수 있는 token 수를 각각 구하세요.",
+        answerChecklist: ["512 − 48 − 1 = 463", "512 − 319 − 1 = 192", "head_max_len을 실제 head 길이로 대입하지 않음", "넘치는 상태는 뒤가 잘림"],
         sectionId: "sequence",
         requiredConcepts: ["option-marker-decision-head"],
       },
       {
         level: "basic",
-        question: "선택지 77개 질문을 head_max_len 256으로 넣으면 선택지 하나에 몇 token이 주어지고 이름에는 몇 token이 남나요?",
-        answerChecklist: ["max(4, 240 ÷ 77) = 4", "[MASK] 1개 포함", "이름 3 token", "Banking77 0.425의 원인으로 카드가 듦"],
+        question: "English 기본 head_max_len 192에서 선택지 77개를 넣으면 선택지 하나에 몇 token이 주어지고 이름에는 몇 token이 남나요?",
+        answerChecklist: ["max(4, 176 ÷ 77) = 4", "[MASK] 1개 포함", "이름 3 token", "Banking77 0.425의 원인으로 제작사 문서가 듦"],
         sectionId: "sequence",
         requiredConcepts: ["option-marker-decision-head"],
       },
       {
         level: "basic",
         question: "BERT 분류 head와 Laya에서 선택지 sales를 하나 추가하는 일의 차이를 설명하세요.",
-        answerChecklist: ["BERT head는 출력 칸 수가 고정", "head를 바꾸고 다시 학습", "Laya는 선택지 글과 [MASK] 하나 추가", "softmax는 그 질문의 marker끼리"],
+        answerChecklist: ["BERT head는 출력 칸 수가 고정", "head를 바꾸고 다시 학습", "Laya는 선택지 글과 [MASK] 하나 추가", "softmax는 그 질문의 marker끼리", "새 선택지의 정확도는 별도 검증·미세조정 대상"],
         sectionId: "why-markers",
         requiredConcepts: ["option-marker-decision-head", "typed-decision-question"],
       },
@@ -158946,8 +158946,18 @@ export const ARTICLE_LEARNING: Readonly<
         problem: "생성형 LLM으로 분류·routing·guardrail을 하면 글을 파싱해야 하고 확률이 보정되지 않으며 느립니다.",
         contribution: "option marker encoder 분류기, proper scoring rule 보상 학습(RLCD), 칸별 temperature, 언어별 Router를 Apache-2.0 가중치로 공개했습니다.",
         assumptions: "T4 GPU 측정, typed-decisions 등 제작사가 고른 벤치마크, 제3자가 공개한 Jev 수치와의 비교입니다.",
-        evidenceScope: "모든 정확도·ECE·지연은 제작사 자기보고이며 Jev 수치는 제3자 공개값입니다. 독립 평가는 2026-10-14 기준 확인하지 못했습니다.",
+        evidenceScope: "정확도·ECE·지연은 제작사 자기보고이며 Jev 수치는 제3자 공개값입니다. 이 표와 2026-10-01 외부 paired evaluation은 데이터와 과제가 달라 한 순위표로 합치지 않습니다.",
         notClaim: "기본 checkpoint가 zero-shot 결정 엔진이라거나 출시 확률이 보정되어 있다고 주장하지 않습니다. 카드 스스로 그 반대를 적습니다.",
+        sectionId: "benchmarks",
+      },
+      {
+        title: "Fast Models, Slow Evidence (arXiv 2610.02267v1)",
+        href: "https://arxiv.org/abs/2610.02267",
+        problem: "System-1 결정 모델의 속도·비용 약속이 여러 agent 판단과 변형 입력에서도 유지되는지 같은 입력으로 비교합니다.",
+        contribution: "11개 decision point, 7,283개 기본 사례와 6,640개 변형을 paired evaluation하고 분석 파이프라인의 오류도 다시 감사했습니다.",
+        assumptions: "공개 자료로 만든 11개 판단 과제와 Laya·Jev의 당시 버전, 논문이 정한 prompt·문턱·비용 모델입니다.",
+        evidenceScope: "Laya는 선택지 순서를 뒤집으면 답의 30%가 바뀌었고 많은 유사 후보에서 약해졌으며, 두 모델 모두 논문의 zero-shot routing 과제에서 우연 수준을 넘지 못했습니다.",
+        notClaim: "모든 업무나 별도로 미세조정한 checkpoint의 성능을 대신하거나 Jev의 보편적 우위를 증명하지 않습니다.",
         sectionId: "benchmarks",
       },
     ],

@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-25 · AI Batch 44 Laya 결정 모델 (로컬 검수 완료, 배포 대기)
+
+- `ai/laya-system1-decision-model`을 청구 문의 하나에 `choice`·`score`·`noul` 질문을 붙이는 장면에서 시작해, checkpoint 선택 → 입력 시퀀스 → marker 점수 → 보정된 확률 답을 따라가도록 다시 구성했습니다. 상위 Gateway가 맡는 LLM·업무 전환과 Laya Router가 맡는 checkpoint 선택도 별도 책임으로 구분했습니다.
+- GitHub `v0.4.15` 릴리스와 고정 tag의 routing 문서·README, 보관한 `432312b` 코드, 외부 평가 논문 arXiv 2610.02267을 따로 대조했습니다. 제작사 벤치마크와 독립 평가를 한 순위표로 합치지 않았고, `head_max_len`을 실제 head 길이로 오해했던 설명을 `512 - 실제 head - 1` 계산으로 바로잡았습니다.
+- 첫 시각 자료는 다섯 상태의 소유자와 출력이 실제로 바뀌는 장면으로 만들었습니다. 자동 반복 없이 5초마다 한 장면씩 진행하고 마지막에서 멈춥니다. 데스크톱에서는 전체 경로를 한눈에 보고, 모바일에서는 8px짜리 다섯 칸 대신 읽을 수 있는 세로 단계 흐름을 사용합니다.
+- 관련 strict 감사와 ESLint, 8GB 상한 TypeScript·production build를 통과했습니다. 1440×1000과 390×844에서 page overflow 0, 깨진 이미지 0, 키보드 좌우 이동, 마지막 장면 정지, 49.5px 조작부를 확인했습니다. reduced-motion에서는 재생을 막고 수동 장면 선택은 유지합니다.
+- 검수 장부를 `reviewed-local`로 올리고 정적 본문 허용 목록에 추가했습니다. JavaScript 비활성 390×844에서 전체 14개 절·다섯 단계 정적 목록·마지막 부모 지도 반환을 확인했으며 조작 버튼은 노출되지 않았습니다. 공개 URL 확인만 남았습니다.
+
 ## 2026-10-25 · AI Batch 43 Agent Skill (작성·검수 완료, 배포 대기)
 
 - `ai/skills-anatomy`를 CI 수정 요청 하나의 metadata 선택→SKILL.md 전체 로딩→필요 자료→기존 권한 안의 실행→결과 검증 경로로 재작성했습니다.
@@ -356,7 +364,7 @@
 - [x] 직속 부모인 에이전트 제어 경계 지도에서 출발해 네 경로를 설명한 뒤 같은 부모로 결론을 돌려보냅니다. 개념 글에는 환경별 설치·canary·rollback 결정을 넣지 않고 연결된 실무 글로 넘겼습니다.
 - [x] 시각화 4개를 1440×1000과 390×844에서 확인했습니다. 가로 overflow와 console error는 0이고, 모바일 첫 그림은 아홉 줄을 3×3 전체 지도와 현재 단계 상세로 바꿔 높이를 911px에서 506px로 줄였습니다.
 - [x] 재생은 4.6~5.2초마다 한 장면만 이동하며 화면 이탈 시 멈추고 재진입만으로 재개되지 않습니다. ArrowRight·Space와 49.5px 이상의 모바일 조작부를 확인했고, reduced-motion에서는 재생만 비활성화됩니다.
-- [x] 8GB 상한 production build가 TypeScript·Vite 7,914개 모듈·정적 경로 2,088개를 통과했습니다. OpenClaw도 no-script 본문 대상에 넣어 JavaScript 비활성 390×844에서 폭 390/390, 조작부 0, 정적 목록 4개·22단계와 마지막 결론을 확인했습니다. 공개 배포 확인만 남았습니다.
+- [x] 8GB 상한 production build가 TypeScript·Vite 7,914개 모듈·정적 경로 2,088개를 통과했습니다. GitHub Pages 실행 `40159279340`도 build·991개 공개 글 browser 검사·deploy를 모두 통과했습니다. 공개 URL을 1440×1000과 390×844에서 다시 열어 문서 overflow와 깨진 이미지가 없음을 확인했고, reduced-motion에서는 네 재생 버튼이 모두 꺼지며 JavaScript 비활성 화면에서도 아홉 단계 요청 경로와 `sourceReplyDelivered` 결론이 남았습니다.
 
 ### AI / Agent 개발 기록 — artifact · Changelog · ADR · Lessons
 
