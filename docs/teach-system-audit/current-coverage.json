@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 620,
-    "pending": 371,
+    "reviewed": 621,
+    "pending": 370,
     "untracked": 0,
-    "assignedPending": 329,
+    "assignedPending": 328,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3475,7 +3475,7 @@
       "catalogIndex": 344,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -3485,7 +3485,7 @@
       "catalogIndex": 345,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -3495,7 +3495,7 @@
       "catalogIndex": 346,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
@@ -3861,11 +3861,11 @@
     {
       "route": "ai/rag-context-assembly-and-evaluation",
       "publicPath": "cs/ai/rag-context-assembly-and-evaluation",
-      "title": "RAG context 조립과 평가: packing·groundedness·error attribution",
+      "title": "RAG 문맥 조립과 평가: 근거가 답이 되는 경로",
       "catalogIndex": 383,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

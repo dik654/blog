@@ -9081,11 +9081,12 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Unstructured.io · Chunking docs", href: "https://docs.unstructured.io/open-source/core-functionality/chunking", note: "Table element 격리(never combined)와 orig_elements provenance 보존의 근거" },
   ],
   "ai/rag-context-assembly-and-evaluation": [
-    { kind: "핵심 논문", label: "Es et al. · RAGAS (2023)", href: "https://arxiv.org/abs/2309.15217", note: "Groundedness(faithfulness)·answer relevance 계산식과 WikiEval 사람 판정 일치율의 근거" },
-    { kind: "공식 문서", label: "RAGAS docs · Context Precision", href: "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/", note: "Context precision 계산식(precision@k 가중 합산)의 근거" },
-    { kind: "공식 문서", label: "RAGAS docs · Context Recall", href: "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/", note: "Context recall 계산식(reference claim 지지 비율)의 근거" },
-    { kind: "핵심 논문", label: "Lewis et al. · RAG (NeurIPS 2020)", href: "https://arxiv.org/abs/2005.11401", note: "Closed-book 대비 RAG 성능 격차 — retrieval ablation 수치 예의 근거" },
-    { kind: "핵심 논문", label: "Ju et al. · CRUX (2025)", href: "https://arxiv.org/abs/2506.20051", note: "Oracle retrieval coverage 대비 실제 방법 coverage 격차 — retriever upper bound 수치 예의 근거" },
+    { kind: "핵심 논문", label: "Es et al. · RAGAS (2023)", href: "https://arxiv.org/abs/2309.15217", note: "2026-10-26에 arXiv v1의 Table 1을 확인했습니다. 세 원 지표와 WikiEval agreement의 근거입니다." },
+    { kind: "공식 문서", label: "Ragas v0.4.3 · Context Precision", href: "https://docs.ragas.io/en/v0.4.3/concepts/metrics/available_metrics/context_precision/", note: "2026-10-26에 버전 고정 문서를 확인했습니다. Context precision 공식과 variant 경계의 근거입니다." },
+    { kind: "공식 문서", label: "Ragas v0.4.3 · Context Recall", href: "https://docs.ragas.io/en/v0.4.3/concepts/metrics/available_metrics/context_recall/", note: "2026-10-26에 버전 고정 문서를 확인했습니다. Reference claim coverage 공식의 근거입니다." },
+    { kind: "핵심 논문", label: "Liu et al. · Lost in the Middle", href: "https://arxiv.org/abs/2307.03172", note: "2026-10-26에 arXiv v3 Table 6의 20문서 위치별 정확도를 확인했습니다." },
+    { kind: "핵심 논문", label: "Lewis et al. · RAG (NeurIPS 2020)", href: "https://arxiv.org/abs/2005.11401", note: "2026-10-26에 Table 1의 Natural Questions EM 36.6과 44.5를 확인했습니다." },
+    { kind: "핵심 논문", label: "Ju et al. · CRUX (2025)", href: "https://arxiv.org/abs/2506.20051", note: "2026-10-26에 Table 1의 DUC DR+RankFirst Cov(y) 44.6과 oracle retrieval 64.6을 확인했습니다." },
   ],
   "ai/query-transformation-and-adaptive-retrieval": [
     { kind: "핵심 논문", label: "Gao et al. · HyDE (ACL 2023)", href: "https://arxiv.org/abs/2212.10496", note: "2026-10-26에 arXiv v1을 확인했습니다. 가상 문서에 틀린 세부가 생길 수 있다는 경계와 비지도 encoder를 이용한 zero-shot dense retrieval 절차의 근거입니다." },
