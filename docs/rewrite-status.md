@@ -3629,3 +3629,6 @@
   재생 비활성화, console 오류 0을 확인했습니다. Production build는 7,997개 module과 정적 public
   route 2,088개를 생성했습니다. JavaScript 비활성 화면에서도 부모 지도, 네 장면 전체, 두 수식,
   출처, 부모 지도 반환과 확인 질문이 같은 순서로 나타났고 공개 배포 경로 검증만 남아 있습니다.
+- 첫 Pages 실행은 8개 section의 부모 글에 topology 결정이 없다는 전수 감사에서 멈췄습니다. 이미
+  부모와 세 자식 글로 분할한 현재 구조를 `split/implemented`로 기록하고, 같은 네 route를 분할
+  결과로 고정했습니다.
