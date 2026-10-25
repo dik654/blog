@@ -9036,9 +9036,24 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment", href: "https://arxiv.org/abs/2303.16634", note: "Chain-of-thought + form-filling rubric 설계와 Spearman 0.514 의 출처" },
   ],
   "ai/rag-ingestion-and-chunking": [
-    { kind: "공식 문서", label: "Anthropic · Introducing Contextual Retrieval", href: "https://www.anthropic.com/news/contextual-retrieval", note: "Contextual retrieval의 방법과 top-20 검색 실패율 5.7→1.9% 수치의 근거" },
-    { kind: "공식 문서", label: "LangChain · Text splitters", href: "https://python.langchain.com/docs/concepts/text_splitters/", note: "Chunk size·overlap·구분자 계층형 분할 방식의 근거" },
-    { kind: "공식 문서", label: "LlamaIndex · Node Parser Modules", href: "https://developers.llamaindex.ai/python/framework/module_guides/loading/node_parsers/modules/", note: "SentenceSplitter·SemanticSplitterNodeParser의 파라미터와 경계 결정 방식의 근거" },
+    {
+      kind: "공식 문서",
+      label: "Anthropic · Contextual Retrieval",
+      href: "https://www.anthropic.com/research/contextual-retrieval",
+      note: "Contextual retrieval의 방법과 top-20 검색 실패율 5.7→1.9% 수치의 근거",
+    },
+    {
+      kind: "공식 문서",
+      label: "LangChain · TextSplitter Python reference v1.1.2",
+      href: "https://reference.langchain.com/python/langchain-text-splitters/base/TextSplitter",
+      note: "Chunk size·overlap·length function·start index parameter 계약의 근거",
+    },
+    {
+      kind: "공식 문서",
+      label: "LlamaIndex · SemanticSplitterNodeParser",
+      href: "https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/semantic_splitter/",
+      note: "Semantic splitter의 buffer size와 breakpoint percentile 기본값·경계 결정 방식의 근거",
+    },
   ],
   "ai/vector-search-and-ann-indexes": [
     { kind: "핵심 논문", label: "Jégou, Douze, Schmid — Product Quantization for Nearest Neighbor Search (TPAMI 2011)", href: "https://doi.org/10.1109/TPAMI.2010.57", note: "Product quantization·asymmetric distance computation·IVFADC 의 근거. 수치는 저자 자기보고" },

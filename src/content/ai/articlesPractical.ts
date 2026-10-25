@@ -1130,12 +1130,12 @@ const llmAppArticles: Article[] = [
     title: "RAG 문서 수집과 청킹",
     subcategory: "ai-practical-llm",
     sections: [
-      { id: "problem", title: "문서에서 색인까지" },
-      { id: "parsing", title: "문서 구조 보존" },
-      { id: "chunking", title: "크기와 겹침" },
+      { id: "problem", title: "원문에서 검색 단위까지" },
+      { id: "parsing", title: "구조 보존" },
+      { id: "chunking", title: "고정 경계" },
       { id: "semantic-chunking", title: "의미 경계" },
       { id: "contextual-retrieval", title: "문맥 보충" },
-      { id: "pipeline", title: "수집 경로" },
+      { id: "pipeline", title: "증분 반영" },
       {
         id: "sources",
         title: "근거",

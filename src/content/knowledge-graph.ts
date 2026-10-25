@@ -19842,7 +19842,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Knowledge Base"],
     definition:
       "RAG 시스템이 검색 대상으로 유지하는 문서·chunk·metadata·embedding vector 전체를 가리키는 저장소로, document ingestion pipeline 이 만들어 채우고 검색 시점에는 이 저장소만 조회합니다.",
-    canonicalHref: "/cs/ai/rag-ingestion-and-chunking#problem",
+    canonicalHref: "/cs/ai/rag-pipeline#overview",
   },
   "document-ingestion-pipeline": {
     id: "document-ingestion-pipeline",
@@ -19852,6 +19852,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Document Ingestion"],
     definition:
       "외부 원본 문서를 읽어 parsing·chunking·embedding을 차례로 거쳐 knowledge base에 넣는 절차로, 이 순서를 건너뛰면 다음 단계가 받는 입력의 형태가 깨집니다.",
+    canonicalHref: "/cs/ai/rag-ingestion-and-chunking#problem",
+  },
+  "rag-chunk-provenance-manifest": {
+    id: "rag-chunk-provenance-manifest",
+    kind: "concept",
+    domain: "machine-learning",
+    label: "RAG chunk provenance manifest",
+    aliases: ["Chunk Provenance", "Ingestion Manifest"],
+    definition:
+      "RAG의 파생 chunk를 source ID·revision·element·page·offset·ACL·분할 설정과 연결해, 검색 결과에서 원문의 정확한 위치와 생성 조건을 되짚을 수 있게 하는 기록입니다.",
     canonicalHref: "/cs/ai/rag-ingestion-and-chunking#problem",
   },
   "document-parsing-for-ingestion": {
@@ -19891,6 +19901,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition:
       "각 chunk를 embedding·BM25 색인에 넣기 전에 LLM이 문서 전체를 보고 만든 50~100 token짜리 짧은 설명을 그 chunk 앞에 붙여, chunk 단독으로는 알 수 없는 문맥을 검색 신호에 포함시키는 방법입니다.",
     canonicalHref: "/cs/ai/rag-ingestion-and-chunking#contextual-retrieval",
+  },
+  "rag-incremental-reindex": {
+    id: "rag-incremental-reindex",
+    kind: "method",
+    domain: "machine-learning",
+    label: "RAG incremental reindex",
+    aliases: ["Incremental Reindex", "Staged Index Switch"],
+    definition:
+      "새 문서 revision의 파생 chunk와 색인 payload를 staging에서 완성·검증한 뒤 공개 alias를 바꾸고, 이전 revision의 파생물을 검색 대상에서 제외하는 갱신 절차입니다.",
+    canonicalHref: "/cs/ai/rag-ingestion-and-chunking#pipeline",
   },
   "dense-retrieval-embedding-space": {
     id: "dense-retrieval-embedding-space",
@@ -21855,7 +21875,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["RAG"],
     definition:
       "LLM이 학습 시점에 고정된 가중치만으로 답을 만드는 대신, 질문마다 외부 knowledge base에서 관련 문서를 검색해 그 내용을 prompt context에 넣고 그 위에서 답을 생성하게 하는 아키텍처로, 모델을 재학습하지 않고도 최신 정보나 사설 데이터를 답변에 반영할 수 있는 대신 검색이 가져온 근거가 틀리면 생성 단계가 그 오류를 그대로 옮깁니다.",
-    canonicalHref: "/cs/ai/rag-ingestion-and-chunking#problem",
+    canonicalHref: "/cs/ai/rag-pipeline#overview",
   },
   "document-frequency": {
     id: "document-frequency",
@@ -50725,6 +50745,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "evaluation-rubric", to: "judge-calibration", relation: "prerequisite", reason: "Rubric 을 고정하는 것이 calibration 이 조합하는 또 다른 조각입니다." },
   { from: "human-evaluation-baseline", to: "judge-calibration", relation: "evaluates", reason: "Judge 의 판정을 사람 labeled sample 과의 agreement rate 로 재는 것이 calibration 의 핵심 절차입니다." },
   { from: "document-ingestion-pipeline", to: "document-parsing-for-ingestion", relation: "prerequisite", reason: "Ingestion pipeline 첫 단계로 parsing이 먼저 끝나야 다음 단계인 chunking이 정렬된 텍스트를 받습니다." },
+  { from: "document-ingestion-pipeline", to: "rag-chunk-provenance-manifest", relation: "produces", reason: "Ingestion의 각 파생물을 원문 revision과 연결해야 색인 후에도 검색 근거의 출처를 복원할 수 있습니다." },
   { from: "document-parsing-for-ingestion", to: "fixed-size-chunking-and-overlap", relation: "prerequisite", reason: "Chunking은 parsing이 복원한 문단·헤딩 경계 정보를 입력으로 받아야 그 경계를 존중해 자를 수 있습니다." },
   { from: "document-parsing-for-ingestion", to: "semantic-chunking", relation: "prerequisite", reason: "Semantic chunking도 문장 단위 구분이 필요해 parsing이 복원한 문장·문단 구조를 입력으로 받습니다." },
   { from: "document-ingestion-pipeline", to: "rag-knowledge-base", relation: "produces", reason: "Ingestion pipeline이 parsing·chunking·embedding을 거쳐 만든 결과가 knowledge base를 채웁니다." },
@@ -50733,6 +50754,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "fixed-size-chunking-and-overlap", to: "semantic-chunking", relation: "contrasts", reason: "둘 다 chunk 경계를 정하지만 고정 길이 대신 문장 embedding 유사도로 경계를 고른다는 점이 다릅니다." },
   { from: "fixed-size-chunking-and-overlap", to: "contextual-retrieval-chunk-prefix", relation: "prerequisite", reason: "Contextual retrieval은 이미 잘린 chunk 앞에 문맥을 붙이는 단계이므로 chunking이 먼저 끝나 있어야 합니다." },
   { from: "contextual-retrieval-chunk-prefix", to: "offline-document-embedding-reuse", relation: "constrains", reason: "Chunk 앞에 붙는 context가 chunk마다 달라 embedding을 재사용하려면 이 prefix까지 포함해 미리 계산해 둬야 합니다." },
+  { from: "rag-chunk-provenance-manifest", to: "rag-incremental-reindex", relation: "prerequisite", reason: "새 revision이 생성한 파생물과 이전 revision의 파생물을 구분해야 공개 전환과 이전 데이터 제외를 안전하게 수행할 수 있습니다." },
   { from: "sentence-embedding-artifact", to: "dense-retrieval-embedding-space", relation: "prerequisite", reason: "문장 하나를 고정 길이 벡터로 만드는 절차를 알아야 그 벡터 여러 개가 모인 공간을 논의할 수 있습니다." },
   { from: "dense-retrieval-embedding-space", to: "exact-vs-approximate-nn", relation: "prerequisite", reason: "공간과 거리 정의가 있어야 그 공간에서 가장 가까운 벡터를 찾는 검색 문제가 성립합니다." },
   { from: "offline-document-embedding-reuse", to: "vector-database-and-index", relation: "prerequisite", reason: "미리 계산해 둔 document 벡터를 저장해야 하고, 그 저장·검색 계약이 vector database 와 index 입니다." },

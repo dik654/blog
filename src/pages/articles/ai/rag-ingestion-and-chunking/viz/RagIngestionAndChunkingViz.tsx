@@ -1,180 +1,194 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 한 mechanism: 1,000-token 문서(0)를 chunk size 500·overlap 50 으로 자르면
- * 세 chunk 가 겹치는 경계를 남기고(1), 480~530 문장은 그 겹침 덕에 두 번째 chunk 에
- * 통째로 남지만 overlap 이 없었다면 어느 chunk 에도 온전히 남지 않았을 것이며(2),
- * contextual retrieval 은 각 chunk 앞에 짧은 문맥을 붙여 그 손실을 한 번 더 메운다(3).
- * Stage 높이는 4 장면 중 가장 큰 scene 1(chunk 3개 + 문서 막대) 기준으로 고정한다.
- */
-const SCENES = ["원본 문서", "Chunk size·overlap", "경계에 걸친 문장", "Contextual prefix"] as const;
-
-const NOTES = [
-  "1,000-token 문서 하나입니다. Parsing 을 거쳐 순서가 있는 텍스트와 원문 offset 을 갖췄습니다.",
-  "Chunk size 500·overlap 50 으로 자르면 시작 위치는 0, 450, 900 이 되어 chunk 세 개가 나오고, 마지막 chunk 는 100 token 짜리 짧은 조각입니다.",
-  "480~530 번째 token 에 걸친 문장은 overlap 덕에 두 번째 chunk [450,950) 안에 통째로 남습니다. Overlap 이 없었다면 [0,500) 과 [500,1,000) 어디에도 온전히 남지 않았을 것입니다.",
-  "Contextual retrieval 은 이 chunk 앞에 LLM 이 만든 짧은 설명을 붙여, chunk 만 봐서는 알 수 없는 '어느 회사·어느 분기' 같은 문맥을 검색 신호에 더합니다.",
+const SCENES = [
+  {
+    short: "원문",
+    title: "원문 내용과 revision·권한을 한 묶음으로 받습니다.",
+    note: "파일 이름만으로 갱신 대상을 찾지 않습니다. source ID와 revision, 내용 hash, 유효 시점, ACL을 처리 요청에 함께 고정합니다.",
+    from: "문서 원장",
+    fromId: "policy / refund",
+    to: "처리 요청",
+    toId: "ingest-2048 · queued",
+    fields: ["revision: v17", "sha256: 7a2…", "ACL: employee"],
+  },
+  {
+    short: "구조",
+    title: "Parser가 제목 계층과 원문 위치를 보존합니다.",
+    note: "본문 문자열만 뽑으면 표 머리글과 행의 관계, 제목 경로, 원문 위치를 잃습니다. 파싱 결과가 chunk의 provenance가 됩니다.",
+    from: "policy-v17.pdf",
+    fromId: "§4.2 · 환불 조건",
+    to: "parsed-v17",
+    toId: "element e-037",
+    fields: ["heading: 환불 > 예외", "offset: 1180:1540", "page: 7"],
+  },
+  {
+    short: "분할",
+    title: "분할 규칙이 검색 단위와 겹치는 구간을 만듭니다.",
+    note: "1,000 token을 size 500·overlap 50으로 자르면 시작점은 0·450·900입니다. c-8f31은 경계에 걸린 480–530 문장을 온전히 보존합니다.",
+    from: "parsed-v17",
+    fromId: "1,000 token",
+    to: "chunk manifest",
+    toId: "c-8f31 · [450,950)",
+    fields: ["c-01: [0,500)", "c-8f31: [450,950)", "c-03: [900,1000)"],
+  },
+  {
+    short: "문맥",
+    title: "필요하면 검색용 prefix를 붙이고 원문은 따로 보존합니다.",
+    note: "검색용 텍스트를 바꿔도 인용은 raw span을 가리켜야 합니다. contextual prefix와 원문 내용, 생성 모델·prompt 버전을 분리해 기록합니다.",
+    from: "raw chunk",
+    fromId: "요청 뒤 7일 안에…",
+    to: "검색용 chunk",
+    toId: "ctx-c-8f31",
+    fields: ["prefix: 환불 규정 v17 §4.2", "raw: c-8f31", "contextizer: ctx-v3"],
+  },
+  {
+    short: "인계",
+    title: "Embedding 작업에 재현 가능한 payload를 넘깁니다.",
+    note: "이 글은 벡터를 만드는 모델을 고르지 않습니다. 같은 원문을 다시 처리했을 때 동일한 파생물을 식별할 수 있는 ID와 설정 checksum을 넘깁니다.",
+    from: "ctx-c-8f31",
+    fromId: "splitter cfg 91b…",
+    to: "색인 입력",
+    toId: "index-v42 / pending",
+    fields: ["source: policy-v17", "embed model: embed-v5", "ACL: employee"],
+  },
+  {
+    short: "반영",
+    title: "새 revision을 공개한 뒤 이전 파생물을 검색에서 뺍니다.",
+    note: "v17의 chunk가 모두 검증되기 전에 v16을 지우면 검색 공백이 생깁니다. staging 검증 뒤 alias를 바꾸고 이전 chunk를 tombstone 처리합니다.",
+    from: "index-v42 / staging",
+    fromId: "212 / 212 validated",
+    to: "active index",
+    toId: "alias → index-v42",
+    fields: ["missing: 0", "v16: tombstoned", "manifest: committed"],
+  },
 ] as const;
 
-const DOC_LEN = 1000;
-const CHUNKS = [
-  { label: "chunk 1", start: 0, end: 500 },
-  { label: "chunk 2", start: 450, end: 950 },
-  { label: "chunk 3", start: 900, end: 1000 },
-] as const;
-const SENTENCE = { start: 480, end: 530 };
-
-function Bar({ children }: { children: React.ReactNode }) {
-  return <div className="relative h-8 w-full border border-border bg-muted/30">{children}</div>;
-}
-
-function pct(v: number) {
-  return `${(v / DOC_LEN) * 100}%`;
-}
-
-function DocScene() {
+function StageRail({ active }: { active: number }) {
   return (
-    <div className="mt-6">
-      <Bar>
-        <div className="absolute inset-y-0 left-0 flex w-full items-center justify-center text-[11px] font-bold text-muted-foreground">
-          문서 (0 ~ 1,000 token)
-        </div>
-      </Bar>
-      <p className="mt-3 text-[11px] font-bold text-muted-foreground">
-        Parsing 이 제목·문단·표 구조와 원문 offset 을 보존한 상태입니다.
+    <ol className="grid grid-cols-3 gap-px bg-border p-px lg:grid-cols-6">
+      {SCENES.map((scene, index) => {
+        const current = index === active;
+        const reached = index <= active;
+        return (
+          <li
+            key={scene.short}
+            className={`min-w-0 px-2 py-1 text-center text-[10px] font-bold leading-4 sm:py-2 sm:text-[11px] ${
+              current
+                ? "bg-primary text-primary-foreground"
+                : reached
+                  ? "bg-primary/10 text-primary"
+                  : "bg-background text-muted-foreground"
+            }`}
+          >
+            <span className="mr-1 font-mono text-[8px] opacity-70">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            {scene.short}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function Artifact({ label, id }: { label: string; id: string }) {
+  return (
+    <div className="min-w-0 border border-border bg-background px-3 py-3 sm:px-4">
+      <p className="text-[10px] font-bold text-muted-foreground">{label}</p>
+      <p className="mt-2 break-words font-mono text-[11px] font-bold leading-5 text-foreground sm:text-xs">
+        {id}
       </p>
     </div>
   );
 }
 
-function ChunkScene() {
+function SceneBody({ active }: { active: number }) {
+  const scene = SCENES[active];
   return (
-    <div className="mt-6 space-y-2">
-      {CHUNKS.map((c) => (
-        <div key={c.label} className="flex items-center gap-3 text-xs">
-          <span className="w-16 shrink-0 font-bold text-muted-foreground">{c.label}</span>
-          <div className="relative h-6 flex-1 border border-border bg-muted/30">
-            <div
-              className="absolute inset-y-0 bg-primary/25"
-              style={{ left: pct(c.start), width: pct(c.end - c.start) }}
-            />
-          </div>
-          <span className="w-28 shrink-0 text-right font-mono text-[11px] text-foreground">
-            [{c.start},{c.end})
-          </span>
+    <div className="mt-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_1.5rem_minmax(0,1fr)] items-stretch">
+        <Artifact label={scene.from} id={scene.fromId} />
+        <div className="flex items-center px-1" aria-hidden>
+          <span className="h-px w-full bg-primary" />
         </div>
-      ))}
-      <p className="pt-1 text-[11px] font-bold text-muted-foreground">
-        stride = size − overlap = 450 → 시작 위치 0, 450, 900. N = ⌈(1,000−50)/450⌉ = 3
-      </p>
-    </div>
-  );
-}
-
-function BoundaryScene() {
-  return (
-    <div className="mt-6 space-y-3">
-      <div>
-        <p className="mb-1 text-[11px] font-bold text-muted-foreground">Overlap 있음 (chunk 2 가 문장을 통째로 담음)</p>
-        <div className="flex items-center gap-3 text-xs">
-          <span className="w-16 shrink-0 font-bold text-muted-foreground">chunk 2</span>
-          <div className="relative h-6 flex-1 border border-border bg-muted/30">
-            <div className="absolute inset-y-0 bg-primary/25" style={{ left: pct(450), width: pct(500) }} />
-            <div
-              className="absolute inset-y-0 border-x border-foreground/60 bg-foreground/25"
-              style={{ left: pct(SENTENCE.start), width: pct(SENTENCE.end - SENTENCE.start) }}
-            />
-          </div>
-          <span className="w-28 shrink-0 text-right font-mono text-[11px] text-foreground">문장 480~530</span>
-        </div>
+        <Artifact label={scene.to} id={scene.toId} />
       </div>
-      <div>
-        <p className="mb-1 text-[11px] font-bold text-muted-foreground">Overlap 없음(가상) — chunk 1·2 모두 절반만 담음</p>
-        <div className="space-y-1">
-          <div className="flex items-center gap-3 text-xs">
-            <span className="w-16 shrink-0 font-bold text-muted-foreground">chunk 1</span>
-            <div className="relative h-6 flex-1 border border-border bg-muted/30">
-              <div className="absolute inset-y-0 bg-primary/15" style={{ left: pct(0), width: pct(500) }} />
-              <div
-                className="absolute inset-y-0 border-x border-foreground/60 bg-foreground/25"
-                style={{ left: pct(SENTENCE.start), width: pct(500 - SENTENCE.start) }}
-              />
+      <dl className="mt-3 grid grid-cols-3 gap-px border border-border bg-border">
+        {scene.fields.map((field, index) => {
+          const [name, ...rest] = field.split(": ");
+          return (
+            <div key={field} className="min-w-0 bg-background px-2 py-2 sm:px-3 sm:py-2.5">
+              <dt className="text-[9px] font-bold text-muted-foreground">
+                필드 {index + 1}
+              </dt>
+              <dd className="mt-1 break-words font-mono text-[9px] font-semibold leading-4 text-foreground sm:text-[11px]">
+                {rest.length ? (
+                  <>
+                    <span className="text-primary">{name}</span>: {rest.join(": ")}
+                  </>
+                ) : (
+                  field
+                )}
+              </dd>
             </div>
-          </div>
-          <div className="flex items-center gap-3 text-xs">
-            <span className="w-16 shrink-0 font-bold text-muted-foreground">chunk 2</span>
-            <div className="relative h-6 flex-1 border border-border bg-muted/30">
-              <div className="absolute inset-y-0 bg-primary/15" style={{ left: pct(500), width: pct(500) }} />
-              <div
-                className="absolute inset-y-0 border-x border-foreground/60 bg-foreground/25"
-                style={{ left: pct(500), width: pct(SENTENCE.end - 500) }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ContextualScene() {
-  return (
-    <div className="mt-6 space-y-3">
-      <div className="border border-border p-3 text-xs">
-        <p className="text-[11px] font-black text-primary">Prefix 없이 embedding</p>
-        <p className="mt-2 leading-6 text-muted-foreground">
-          "그 회사의 매출은 지난 분기보다 3 % 늘었다" — 어느 회사, 어느 분기인지 chunk 만으로는
-          알 수 없습니다.
-        </p>
-      </div>
-      <div className="border border-primary/55 bg-primary/5 p-3 text-xs">
-        <p className="text-[11px] font-black text-primary">Contextual prefix 를 붙여 embedding</p>
-        <p className="mt-2 font-mono text-[11px] text-foreground">
-          [ACME 2024 Q2 실적 보고서 매출 항목] 그 회사의 매출은 지난 분기보다 3 % 늘었다
-        </p>
-        <p className="mt-2 leading-6 text-muted-foreground">
-          top-20 검색 실패율 5.7 % → contextual embedding 3.7 % → +BM25 2.9 % → +rerank 1.9 %
-        </p>
-      </div>
+          );
+        })}
+      </dl>
     </div>
   );
 }
 
 export default function RagIngestionAndChunkingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const labels = SCENES.map((scene) => `${scene.short}: ${scene.title}`);
+  const notes = SCENES.map((scene) => scene.note);
+  const controls = useAnimatedScenes(SCENES.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const active = controls.reducedMotion ? SCENES.length - 1 : controls.active;
+
   return (
     <VizFrame
-      eyebrow="RAG ingestion"
-      title="문서는 chunk 로 잘리고, overlap 과 contextual prefix 가 그 경계의 손실을 메웁니다"
-      description="1,000-token 문서를 chunk size 500·overlap 50 으로 잘라 경계가 어떻게 겹치고, 문장이 잘리는 손실을 무엇이 메우는지 보여 줍니다."
-      note="Chunk 개수·경계 위치는 계산된 값이고, 문장 예와 contextual prefix 문구는 설명용 예시입니다. 실패율 수치(5.7→1.9%)는 Anthropic 공식 발표 기준입니다."
+      eyebrow="검색 단위 · 설명용 갱신 한 건"
+      title="policy-v17이 추적 가능한 chunk가 되어 index-v42에 반영됩니다"
+      description="단계 이름을 먼저 외우지 않고, 같은 원문에서 어떤 artifact와 필드가 새로 생기는지 따라갑니다."
+      note="policy-v17·ID·개수는 설명용 가정입니다. 아래 Anthropic 수치만 해당 공식 실험 결과입니다."
+      className="my-8"
+      canvasClassName="p-0 sm:p-0"
     >
       <div
-        data-viz-canvas
+        id={controls.playbackId}
+        data-viz-id="rag-ingestion-flow"
         tabIndex={0}
-        role="group"
-        aria-label="RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        onKeyDown={controls.onKeyDown}
+        className="flex min-h-full min-w-0 flex-col border-y border-border/70 bg-background px-4 py-2 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-5 sm:py-3 lg:px-6 lg:py-5"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scenes.active + 1).padStart(2, "0")}
+        <div data-viz-live-only>
+          <StageRail active={active} />
+          <p className="mt-3 text-[10px] font-black uppercase tracking-[.16em] text-primary">
+            장면 · {String(active + 1).padStart(2, "0")}
           </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scenes.active]}</h4>
-
-          {scenes.active === 0 && <DocScene />}
-          {scenes.active === 1 && <ChunkScene />}
-          {scenes.active === 2 && <BoundaryScene />}
-          {scenes.active === 3 && <ContextualScene />}
-
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scenes.active]}
+          <h3 className="mt-1 min-h-10 break-keep text-base font-bold leading-5 sm:text-lg sm:leading-7">
+            {SCENES[active].title}
+          </h3>
+          <SceneBody active={active} />
+          <p className="mt-3 min-h-10 border-l border-primary/50 pl-3 text-[11px] leading-5 text-muted-foreground sm:pl-4 sm:text-xs lg:text-sm lg:leading-6">
+            {SCENES[active].note}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls
+          {...controls}
+          active={active}
+          labels={labels}
+          controlLabels={SCENES.map((scene) => scene.short)}
+          className="sm:!min-h-0 sm:!pt-0 sm:[&_[data-viz-desktop-controls]]:hidden sm:[&_[data-viz-mobile-controls]]:flex sm:[&>p]:hidden lg:!pt-3 lg:[&_[data-viz-desktop-controls]]:flex lg:[&_[data-viz-mobile-controls]]:hidden lg:[&>p]:block"
+        />
+        <StaticSceneList labels={labels} notes={notes} />
       </div>
     </VizFrame>
   );

@@ -26159,6 +26159,14 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     introducedHere: [
       {
+        id: "retrieval-augmented-generation",
+        role: "외부 knowledge base에서 근거를 찾아 model context에 넣고 답을 생성하는 전체 아키텍처를 정의합니다.",
+      },
+      {
+        id: "rag-knowledge-base",
+        role: "원본 파일이 아니라 문서·chunk·metadata·embedding을 검색 가능하게 유지하는 대상을 정의합니다.",
+      },
+      {
         id: "rag-stage-success-trace",
         role: "Source·retrieval·context·support indicator로 첫 실패 stage를 찾습니다.",
       },
@@ -26188,6 +26196,26 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     conceptExplanations: [
+      {
+        id: "retrieval-augmented-generation",
+        sectionId: "overview",
+        intuition:
+          "시험을 보기 전에 답을 모두 외우는 대신, 질문을 보고 허가된 자료를 찾은 뒤 그 자료를 근거로 답하는 구조입니다.",
+        workedExample:
+          "질문 q-731에서 최신 환불 규정 policy-v17의 허가된 chunk를 찾아 모델 입력에 넣고, 답의 claim c2를 그 원문과 연결합니다.",
+        boundary:
+          "검색한 문서가 잘못되었거나 문맥 예산에서 정답 구간이 빠지면 생성 모델이 강해도 정답을 보장하지 못합니다.",
+      },
+      {
+        id: "rag-knowledge-base",
+        sectionId: "overview",
+        intuition:
+          "질문을 받을 때마다 원본 파일을 처음부터 읽지 않도록 미리 검색 단위와 좌표를 준비해 둔 선반입니다.",
+        workedExample:
+          "policy-v17의 파생 chunk, 원문 revision과 ACL, embedding vector, 색인 manifest가 같은 corpus snapshot을 구성합니다.",
+        boundary:
+          "원본 파일 저장소와 검색 저장소는 같은 것이 아니며, 원본 갱신·삭제·권한 변경을 파생물에 반영하는 경로가 필요합니다.",
+      },
       {
         id: "rag-stage-success-trace",
         sectionId: "overview",
@@ -26321,7 +26349,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         label: "Source and trace",
         relation: "최신·허가 source에서 answer claim까지 stage receipt를 연결",
-        concepts: ["rag-stage-success-trace"],
+        concepts: [
+          "retrieval-augmented-generation",
+          "rag-knowledge-base",
+          "rag-stage-success-trace",
+        ],
       },
       {
         label: "Retrieval unit and index",
@@ -26391,7 +26423,11 @@ export const ARTICLE_LEARNING: Readonly<
           "source update/delete path",
           "stage trace",
         ],
-        requiredConcepts: ["rag-stage-success-trace"],
+        requiredConcepts: [
+          "retrieval-augmented-generation",
+          "rag-knowledge-base",
+          "rag-stage-success-trace",
+        ],
         sectionId: "overview",
       },
       {
@@ -94587,40 +94623,43 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/rag-ingestion-and-chunking": {
-    entryNote: "RAG 전체가 retrieval–generation 여러 stage로 나뉘어 실패를 진단한다는 사실은 이미 안다고 가정합니다. 이 글은 그중 가장 앞 stage인 ingestion 안쪽 — parsing·chunking·contextual retrieval — 만 봅니다.",
-    coreIdea: "Document ingestion pipeline은 parsing으로 구조를 보존한 텍스트를 만들고, chunk size·overlap으로 검색 단위와 경계 손실의 trade-off를 정하거나 semantic chunking으로 주제 경계를 찾은 뒤, contextual retrieval로 각 chunk 앞에 문맥을 붙여 knowledge base를 채우는 순서 있는 절차입니다.",
+    entryNote: "RAG 전체 지도에서 원문 갱신 경로와 사용자 질문 경로를 먼저 본 상태에서, 이 글은 원문 한 revision이 추적 가능한 검색 단위가 되는 과정만 엽니다.",
+    coreIdea: "문서 수집은 원문 revision·권한을 고정하고 구조와 위치를 보존해 파싱한 뒤, 고정 길이 또는 의미 경계로 chunk를 만들고, 선택적 검색 문맥을 붙여 재현 가능한 색인 payload와 manifest를 만드는 과정입니다. 새 revision은 staging 검증 뒤 공개하고 이전 파생물은 검색에서 제외합니다.",
     assumedKnowledge: [
+      { id: "retrieval-augmented-generation", role: "외부 원문을 찾아 답변 문맥에 넣는 RAG의 전체 목적은 부모 지도에서 가져옵니다." },
+      { id: "rag-knowledge-base", role: "질문이 원본 파일이 아니라 미리 준비한 검색 저장소를 조회한다는 경계를 가져옵니다." },
       { id: "rag-stage-success-trace", role: "RAG가 여러 stage로 나뉘어 첫 실패 지점을 진단한다는 전제이며, 이 글은 그중 가장 앞 ingestion stage만 다룹니다." },
       { id: "rag-index-version-contract", role: "Chunking 뒤에 오는 embedding·index 버전 계약은 RAG 파이프라인 글의 범위이며, 이 글은 그 계약이 받을 입력(chunk)을 만드는 과정만 다룹니다." },
     ],
     introducedHere: [
-      { id: "retrieval-augmented-generation", role: "LLM이 외부 문서를 검색해 context에 넣고 그 위에서 답을 생성하는 RAG 아키텍처 자체를 정의합니다." },
-      { id: "rag-knowledge-base", role: "RAG가 검색하는 대상이 원본 파일이 아니라 ingestion이 채운 저장소라는 사실을 정의합니다." },
-      { id: "document-ingestion-pipeline", role: "Parsing·chunking·embedding을 정해진 순서로 묶는 전체 절차를 정의합니다." },
+      { id: "document-ingestion-pipeline", role: "원문 수신부터 파싱·분할·문맥 보충·색인 인계까지의 순서를 정의합니다." },
+      { id: "rag-chunk-provenance-manifest", role: "Source revision·element·offset·분할 설정을 chunk와 연결해 원문으로 되돌아가는 기록을 정의합니다." },
       { id: "document-parsing-for-ingestion", role: "원본 포맷에서 구조와 offset을 보존해 chunking의 입력을 만드는 단계를 ingestion 관점에서 좁게 정의합니다." },
       { id: "fixed-size-chunking-and-overlap", role: "Chunk size·overlap·boundary를 하나의 mechanism으로 묶고 수치 예로 chunk 개수와 경계 손실을 계산합니다." },
       { id: "semantic-chunking", role: "고정 길이 대신 문장 embedding 유사도로 경계를 정하는 대안 방법을 fixed-size와 대비해 설명합니다." },
       { id: "contextual-retrieval-chunk-prefix", role: "Chunk 앞에 문맥을 붙여 검색 실패율을 낮추는 Anthropic의 방법과 실측 수치를 정의합니다." },
+      { id: "rag-incremental-reindex", role: "새 revision을 staging에서 검증한 뒤 공개하고 이전 파생물을 검색에서 제외하는 상태 전이를 정의합니다." },
     ],
     conceptExplanations: [
-      { id: "retrieval-augmented-generation", sectionId: "problem", intuition: "모델 가중치 안에 없는 정보를 매번 재학습하는 대신, 질문마다 관련 문서를 찾아 그 내용을 함께 읽고 답을 만듭니다.", workedExample: "어제 바뀐 요금제 문서를 검색해 prompt에 넣으면, 모델을 재학습하지 않고도 새 요금제로 답할 수 있습니다.", boundary: "검색이 관련 없는 chunk를 가져오면 생성 단계는 그 잘못된 근거를 그대로 답에 반영합니다." },
-      { id: "rag-knowledge-base", sectionId: "problem", intuition: "검색 엔진이 실제로 뒤지는 것은 웹 전체가 아니라 미리 만들어 둔 색인인 것과 같습니다.", workedExample: "100 페이지 매뉴얼을 500 개 chunk로 잘라 넣은 저장소가 knowledge base이며, 질문은 원본 PDF가 아니라 이 저장소를 검색합니다.", boundary: "Ingestion이 chunk를 잘못 만들면 knowledge base 자체가 그 오류를 그대로 담습니다." },
-      { id: "document-ingestion-pipeline", sectionId: "problem", intuition: "원자재를 순서대로 가공하는 조립 라인처럼, 뒷 단계는 앞 단계가 남긴 형태를 그대로 입력받습니다.", workedExample: "Parsing이 표의 header-row 관계를 남기지 않으면, 그 뒤 chunking은 숫자만 있는 행을 잘라내 어떤 항목인지 알 수 없는 chunk를 만듭니다.", boundary: "한 단계라도 건너뛰면 다음 단계가 받는 입력의 형태 자체가 깨집니다." },
+      { id: "document-ingestion-pipeline", sectionId: "problem", intuition: "원문 한 revision이 단계마다 다른 artifact로 바뀌는 조립 경로입니다.", workedExample: "policy-v17이 element e-037과 chunk c-8f31을 거쳐 index-v42의 입력이 됩니다.", boundary: "Embedding 모델 선택과 요청 시점의 후보 검색은 다음 글의 책임입니다." },
+      { id: "rag-chunk-provenance-manifest", sectionId: "problem", intuition: "잘린 문장 조각마다 원본 책의 판본과 페이지를 적어 둔 표식입니다.", workedExample: "c-8f31은 policy-v17, §4.2, offset 1180:1540, ACL employee를 함께 가리킵니다.", boundary: "파일 이름이나 chunk 문자열만으로는 같은 이름의 재업로드와 원문 위치를 안정적으로 구분하지 못합니다." },
       { id: "document-parsing-for-ingestion", sectionId: "parsing", intuition: "번역 전에 원문의 단락·표 구조부터 표시해 두지 않으면 번역문도 그 구조를 잃는 것과 같습니다.", workedExample: "3행 4열 표에서 header 행과의 관계를 남기지 않으면, chunking 뒤 그 표에서 나온 chunk는 항목 이름 없이 숫자만 남습니다.", boundary: "표 셀 단위 복원이나 스캔 문서 layout 분석 같은 parsing 자체의 세부는 이 글이 소유하지 않습니다." },
       { id: "fixed-size-chunking-and-overlap", sectionId: "chunking", intuition: "필름을 일정 길이로 자르되 옆 조각과 살짝 겹치게 잘라, 이어붙일 때 이음매에서 장면이 통째로 사라지지 않게 하는 것과 같습니다.", workedExample: "1,000-token 문서를 chunk size 500·overlap 50으로 자르면 [0,500), [450,950), [900,1,000) 세 chunk가 나오고, 480~530 토큰에 걸친 문장은 두 번째 chunk에 통째로 남습니다.", boundary: "Overlap이 문장 길이보다 짧으면(예: 160-token 문장에 overlap 50) 그 문장은 어느 chunk에도 완전히 담기지 않습니다." },
       { id: "semantic-chunking", sectionId: "semantic-chunking", intuition: "문단을 몇 글자마다 자르는 대신, 이야기의 화제가 바뀌는 자리에서 문단을 나누는 것과 같습니다.", workedExample: "LlamaIndex의 SemanticSplitterNodeParser는 이웃 문장 유사도 하락이 상위 5 %(breakpoint_percentile_threshold=95)에 들 때만 경계로 확정합니다.", boundary: "문장마다 embedding을 추가로 계산해야 해서 ingestion 시점의 연산 비용이 fixed-size보다 큽니다." },
       { id: "contextual-retrieval-chunk-prefix", sectionId: "contextual-retrieval", intuition: "사진 한 장만 보여주는 대신 캡션을 붙여 언제 어디서 찍었는지 알려주는 것과 같습니다.", workedExample: "Anthropic은 top-20 chunk 검색 실패율이 기존 5.7 %에서 contextual embedding만으로 3.7 %, +BM25로 2.9 %, +rerank로 1.9 %까지 낮아졌다고 보고합니다.", boundary: "Prompt caching 없이 매 문서마다 설명을 새로 생성하면 비용이 커지며, Anthropic의 1.02달러/100만 token 수치는 caching을 전제로 한 값입니다." },
+      { id: "rag-incremental-reindex", sectionId: "pipeline", intuition: "새 판을 완성해 선반에 올린 뒤 옛 판을 내리는 교체 절차와 같습니다.", workedExample: "index-v42 staging의 212개 chunk를 검증한 뒤 alias를 바꾸고 v16 파생물을 tombstone 처리합니다.", boundary: "새 파생물이 완성되기 전에 옛것을 지우면 검색 공백이 생기고, 옛것을 남기면 오래된 규정이 함께 검색될 수 있습니다." },
     ],
     conceptStages: [
-      { label: "00 RAG·저장소·절차", relation: "RAG 아키텍처 자체와 그것이 검색하는 대상(knowledge base), 그 대상을 채우는 절차(ingestion pipeline)를 정의합니다.", concepts: ["retrieval-augmented-generation", "rag-knowledge-base", "document-ingestion-pipeline"] },
+      { label: "00 원문과 계보", relation: "원문 revision이 파생 chunk와 색인 입력으로 이어지는 전체 경로와 provenance를 고정합니다.", concepts: ["document-ingestion-pipeline", "rag-chunk-provenance-manifest"] },
       { label: "01 parsing", relation: "원본 포맷에서 구조와 offset을 보존해 chunking의 입력을 만듭니다.", concepts: ["document-parsing-for-ingestion"] },
       { label: "02 fixed-size chunking", relation: "Chunk size·overlap·boundary로 검색 단위와 경계 손실의 trade-off를 정합니다.", concepts: ["fixed-size-chunking-and-overlap"] },
       { label: "03 semantic chunking", relation: "고정 길이 대신 문장 유사도로 주제 경계를 찾는 대안입니다.", concepts: ["semantic-chunking"] },
       { label: "04 contextual retrieval", relation: "잘린 chunk 앞에 문맥을 붙여 검색 실패율을 낮춥니다.", concepts: ["contextual-retrieval-chunk-prefix"] },
+      { label: "05 증분 반영", relation: "새 revision을 완성한 뒤 공개하고 이전 파생물을 검색에서 제외합니다.", concepts: ["rag-incremental-reindex"] },
     ],
     exercises: [
       { level: "basic", question: "Document ingestion pipeline이 parsing → chunking → embedding 순서를 지켜야 하는 이유를 표 데이터를 예로 설명하세요.", answerChecklist: ["parsing이 구조 보존", "chunking이 그 구조를 입력받음", "순서 깨지면 하류 형태 깨짐", "표 header 예"], requiredConcepts: ["document-ingestion-pipeline", "document-parsing-for-ingestion"], sectionId: "problem" },
-      { level: "basic", question: "Knowledge base와 원본 문서 저장소의 차이를 설명하세요.", answerChecklist: ["knowledge base는 chunk+metadata+embedding", "ingestion이 채움", "검색은 knowledge base만 조회"], requiredConcepts: ["rag-knowledge-base"], sectionId: "problem" },
+      { level: "basic", question: "Chunk c-8f31을 원문 policy-v17의 §4.2로 되돌리려면 manifest에 어떤 좌표가 필요한지 설명하세요.", answerChecklist: ["source ID", "revision", "element 또는 heading path", "page·offset", "ACL"], requiredConcepts: ["rag-chunk-provenance-manifest"], sectionId: "problem" },
       { level: "basic", question: "이 글이 다루는 document parsing의 범위와 다루지 않는 범위를 나누어 쓰세요.", answerChecklist: ["구조·offset 보존은 다룸", "표 셀 단위 복원은 별도 글", "chunking 입력 형태에 집중"], requiredConcepts: ["document-parsing-for-ingestion"], sectionId: "parsing" },
       { level: "basic", question: "Chunk size 500, overlap 50인 1,000-token 문서에서 chunk 개수와 마지막 chunk 길이를 계산하세요.", answerChecklist: ["stride=450", "시작 위치 0,450,900", "chunk 3개", "마지막 chunk 100 token"], requiredConcepts: ["fixed-size-chunking-and-overlap"], sectionId: "chunking" },
       { level: "basic", question: "Overlap이 없을 때와 50일 때 480~530 토큰에 걸친 문장이 각각 어떻게 보존되는지 설명하세요.", answerChecklist: ["overlap 없으면 두 chunk 모두 절반만", "overlap 50이면 chunk 2에 통째로 남음", "경계 손실을 줄이는 장치"], requiredConcepts: ["fixed-size-chunking-and-overlap"], sectionId: "chunking" },
@@ -94628,12 +94667,12 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "Chunk size를 500에서 250으로 줄이고 overlap은 50으로 유지할 때 chunk 개수와 span coverage에 미칠 수 있는 영향을 함께 설명하세요.", answerChecklist: ["chunk 개수 증가(stride=200)", "경계 손실은 늘 수 있음", "검색 정밀도와 문맥 손실의 trade-off", "span coverage는 별도 글의 metric"], requiredConcepts: ["fixed-size-chunking-and-overlap"], sectionId: "chunking" },
       { level: "advanced", question: "표가 많은 재무 문서와 서술형 논문 각각에 fixed-size와 semantic chunking 중 무엇이 더 나을지 근거를 들어 설계하세요.", answerChecklist: ["표는 구조 기반이 유리할 수 있음", "서술형은 주제 전환 경계가 유의미", "semantic은 연산 비용 증가", "정답 없이 trade-off 설명"], requiredConcepts: ["fixed-size-chunking-and-overlap", "semantic-chunking"], sectionId: "semantic-chunking" },
       { level: "advanced", question: "Contextual retrieval의 실패율이 5.7 %에서 3.7 %(contextual embedding), 2.9 %(+BM25), 1.9 %(+rerank)로 단계별로 낮아지는 이유를 각 단계가 추가하는 신호로 설명하세요.", answerChecklist: ["contextual embedding이 문맥 보강", "BM25가 lexical 신호 추가", "reranking이 후보를 다시 정렬", "각 단계가 서로 다른 종류의 신호"], requiredConcepts: ["contextual-retrieval-chunk-prefix"], sectionId: "contextual-retrieval" },
-      { level: "advanced", question: "1,000-token 문서 100개를 knowledge base에 새로 넣는 ingestion pipeline을 설계하고, 각 단계가 실패하면 무엇이 깨지는지 쓰세요.", answerChecklist: ["parsing 실패시 구조 손실", "chunking 실패시 검색 단위 붕괴", "contextual prefix 실패시 문맥 손실", "embedding 실패시 색인 불가"], requiredConcepts: ["document-ingestion-pipeline", "contextual-retrieval-chunk-prefix"], sectionId: "pipeline" },
+      { level: "advanced", question: "policy-v17을 knowledge base에 반영하는 ingestion pipeline과 실패 대응을 설계하세요. 새 chunk가 절반만 준비된 시점에 v16을 먼저 지울 때의 문제도 포함하세요.", answerChecklist: ["parsing·chunking·contextualization 실패 경계", "staging에서 새 revision 완성", "검증 뒤 alias 전환", "이전 revision tombstone", "먼저 삭제하면 검색 공백"], requiredConcepts: ["document-ingestion-pipeline", "contextual-retrieval-chunk-prefix", "rag-incremental-reindex"], sectionId: "pipeline" },
     ],
     papers: [
       {
         title: "Anthropic · Introducing Contextual Retrieval",
-        href: "https://www.anthropic.com/news/contextual-retrieval",
+        href: "https://www.anthropic.com/research/contextual-retrieval",
         problem: "Chunk 하나만 embedding하면 문서 전체 맥락(회사명·시점 등)을 잃어 검색이 실패하는 문제",
         contribution: "LLM이 문서 전체를 보고 만든 짧은 설명을 각 chunk 앞에 붙여 embedding·BM25 색인에 넣는 contextual retrieval을 제시하고, top-20 chunk 검색 실패율을 5.7 %에서 1.9 %까지 단계적으로 낮췄음을 보고합니다.",
         assumptions: "Prompt caching으로 문서 본문 재처리 비용을 낮출 수 있다는 전제이며 실험은 특정 데이터셋 혼합에 한정됩니다.",
@@ -94642,22 +94681,22 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "paper-anthropic",
       },
       {
-        title: "LangChain · Text splitters (공식 문서)",
-        href: "https://python.langchain.com/docs/concepts/text_splitters/",
+        title: "LangChain TextSplitter · Python reference v1.1.2",
+        href: "https://reference.langchain.com/python/langchain-text-splitters/base/TextSplitter",
         problem: "긴 문서를 검색·generation에 쓸 수 있는 단위로 일관되게 나누는 문제",
         contribution: "Chunk size·chunk overlap을 받는 fixed-size 분할과, 문단→줄바꿈→공백→문자 순서로 구분자를 시도하는 RecursiveCharacterTextSplitter, Markdown·HTML 전용 구조 기반 splitter를 정의합니다.",
-        assumptions: "Splitter가 대상 텍스트의 언어·구조를 어느 정도 예측 가능하다는 전제입니다.",
-        evidenceScope: "공식 문서이며 2026-08 시점 최신 버전 기준입니다.",
+        assumptions: "Length function과 separator, tokenizer에 따라 size 단위가 달라진다는 전제입니다.",
+        evidenceScope: "공식 Python API reference v1.1.2의 parameter 계약입니다.",
         notClaim: "특정 chunk size·overlap 값이 모든 도메인에 최적이라고 규정하지 않습니다.",
         sectionId: "paper-langchain",
       },
       {
-        title: "LlamaIndex · Node Parser Modules (공식 문서)",
-        href: "https://developers.llamaindex.ai/python/framework/module_guides/loading/node_parsers/modules/",
+        title: "LlamaIndex · SemanticSplitterNodeParser API",
+        href: "https://docs.llamaindex.ai/en/stable/api_reference/node_parsers/semantic_splitter/",
         problem: "문장 경계를 지키는 fixed-size 분할과, 내용 기반으로 경계를 정하는 분할을 함께 제공하는 문제",
         contribution: "SentenceSplitter의 chunk_size·chunk_overlap 동작과, SemanticSplitterNodeParser가 이웃 문장 embedding 유사도의 breakpoint_percentile_threshold·buffer_size로 경계를 정하는 방식을 정의합니다.",
-        assumptions: "문장 분리 정규식이 영어 기준으로 맞춰져 있다는 전제이며 다른 언어는 threshold 재조정이 필요합니다.",
-        evidenceScope: "공식 문서이며 2026-08 시점 최신 버전 기준입니다.",
+        assumptions: "문장 분리와 embedding이 해당 문서 언어에서 의미 있는 거리를 만든다는 전제입니다.",
+        evidenceScope: "공식 stable API reference에 공개된 field와 기본값 범위입니다.",
         notClaim: "breakpoint_percentile_threshold 기본 예시 값(95)이 모든 문서에 최적이라는 뜻은 아닙니다.",
         sectionId: "paper-llamaindex",
       },
