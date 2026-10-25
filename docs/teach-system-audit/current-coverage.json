@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 571,
-    "pending": 420,
+    "reviewed": 572,
+    "pending": 419,
     "untracked": 0,
-    "assignedPending": 377,
+    "assignedPending": 376,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3011,11 +3011,11 @@
     {
       "route": "ai/vision-transformer",
       "publicPath": "cs/ai/vision-transformer",
-      "title": "Vision Transformer: Patch Token에서 Pretrained Handoff까지",
+      "title": "Vision Transformer: Image에서 Patch Sequence까지",
       "catalogIndex": 298,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

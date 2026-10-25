@@ -2559,7 +2559,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "핵심 논문",
       label: "An Image is Worth 16x16 Words",
-      href: "https://openreview.net/forum?id=YicbFdNTTy",
+      href: "https://arxiv.org/abs/2010.11929",
       note: "이미지 패치를 token sequence로 다루는 Vision Transformer의 원문",
     },
     {

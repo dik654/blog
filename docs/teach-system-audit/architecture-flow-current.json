@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 558,
     "customVisuals": 864,
-    "animatedMechanisms": 463,
+    "animatedMechanisms": 464,
     "architectureWithoutAnimation": 95,
-    "recursiveLocators": 229,
+    "recursiveLocators": 230,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -5906,18 +5906,18 @@
     {
       "route": "ai/vision-transformer",
       "publicPath": "cs/ai/vision-transformer",
-      "title": "Vision Transformer: Patch Token에서 Pretrained Handoff까지",
+      "title": "Vision Transformer: Image에서 Patch Sequence까지",
       "sourcePath": "src/pages/articles/ai/vision-transformer.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/visual-representation-tokenizers",

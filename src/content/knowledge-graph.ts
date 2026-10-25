@@ -1578,7 +1578,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Pretrained handoff contract",
     definition:
       "Source objective로 학습한 backbone parameter와 architecture·tokenizer/normalization·label interface를 target task의 초기 state와 preprocessing으로 넘기는 계약입니다.",
-    canonicalHref: "/cs/ai/transfer-learning-practice#overview",
+    canonicalHref: "/cs/ai/transfer-learning-practice#checkpoint-parity",
   },
   "trainable-scope-mask": {
     id: "trainable-scope-mask",
@@ -6483,7 +6483,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Absolute position-grid resize",
     definition:
       "Spatial grid에 속하지 않는 special-token position을 분리한 뒤 learned patch positions를 old 2D grid에서 new grid로 interpolation하고 다시 결합하는 checkpoint 변환입니다.",
-    canonicalHref: "/cs/ai/vision-transformer#practice",
+    canonicalHref: "/cs/ai/vision-transformer#position-resize",
   },
   "distillation-token-interface": {
     id: "distillation-token-interface",
@@ -6519,7 +6519,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "CNN–ViT paired selection",
     definition:
       "같은 split·input·seed·update·tuning budget에서 후보 metric의 seed별 paired gain과 uncertainty를 계산하고 target latency·memory constraint와 함께 선택하는 절차입니다.",
-    canonicalHref: "/cs/ai/vision-transformer#tradeoff",
+    canonicalHref: "/cs/ai/vision-backbone-selection#measure-first",
   },
   "vision-checkpoint-parity-test": {
     id: "vision-checkpoint-parity-test",
@@ -6528,7 +6528,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Vision checkpoint logit-parity test",
     definition:
       "동일 checkpoint preprocessing·eval state·input에서 reference와 export implementation의 class-ordered logit vector 최대 오차가 precision별 tolerance 이내인지 검사하는 smoke test입니다.",
-    canonicalHref: "/cs/ai/vision-transformer#practice",
+    canonicalHref: "/cs/ai/transfer-learning-practice#overview",
   },
   "multiview-episode-contract": {
     id: "multiview-episode-contract",
@@ -60036,6 +60036,18 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "sre-toil-kubernetes", to: "kubernetes-reconciliation-request-path", relation: "extends", reason: "반복 운영 작업을 controller 루프로 옮기는 것이 Kubernetes식 toil 제거입니다." },
   { from: "golden-signals-symptom-cause", to: "blameless-postmortem", relation: "produces", reason: "monitoring 실패(사람이 발견)는 postmortem 작성 기준의 하나이고, 증상·원인 구분은 보고서의 근인·시스템적 원인 구분으로 이어집니다." },
   { from: "slo-sli-error-budget", to: "blameless-postmortem", relation: "produces", reason: "postmortem의 영향 칸은 소비한 budget 비율로 적어 경보 설계와 같은 단위를 씁니다." },
+  {
+    from: "probe-protocol-comparability",
+    to: "vision-architecture-paired-selection",
+    relation: "prerequisite",
+    reason: "같은 seed와 split에서 얻은 결과끼리 짝지어야 아키텍처 차이의 불확실성을 계산할 수 있습니다.",
+  },
+  {
+    from: "frozen-probe-selection-experiment",
+    to: "vision-architecture-paired-selection",
+    relation: "extends",
+    reason: "후보별 단일 점수를 seed별 paired gain과 uncertainty까지 확장해 선택 근거를 만듭니다.",
+  },
 ];
 
 export function getKnowledgeConcept(id: string): KnowledgeConcept {

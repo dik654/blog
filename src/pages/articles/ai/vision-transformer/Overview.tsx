@@ -1,43 +1,58 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import OverviewViz from "./viz/OverviewViz";
+import VisionTransformerLocator from "./VisionTransformerLocator";
+import VisionTransformerTraceViz from "./viz/VisionTransformerTraceViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Vision Transformer는 image를 바로 읽지 않습니다. 먼저 2D 공간을 token sequence 계약으로 바꿉니다</h2>
+      <VisionTransformerLocator />
+      <h2 className="mb-6 text-2xl font-bold">전체 경로</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          CNN은 작은 kernel을 모든 위치에 공유해 가까운 pixel과 이동에 대한 prior를
-          architecture에 넣습니다. ViT는 image를 고정 크기 patch로 자르고 각
-          patch를 vector token으로 바꾼 뒤, 일반 Transformer encoder가 token 사이
-          관계를 학습하게 합니다. 핵심 차이는 “attention이 더 최신”이라는 데 있지
-          않고 <strong>공간에 관한 가정을 어디에서 제공하는가</strong>에 있습니다.
-        </p>
-        <p>
-          Patch가 어느 좌표에서 왔는지 알려 주는 position signal, image 전체를
-          어떤 token이나 pooling으로 요약할지, resolution이 바뀌었을 때 position
-          grid를 어떻게 옮길지가 모두 model contract입니다. 이 계약이 맞아야
-          pretrained representation도 의미 있게 이어집니다.
-        </p>
-        <p>
-          Image tensor와 convolution은 <Link to="/cs/ai/cnn">CNN 정본</Link>, Q·K·V와
-          self-attention은 <Link to="/cs/ai/attention-theory">attention 정본</Link>,
-          encoder block은 <Link to="/cs/ai/transformer-architecture">Transformer 정본</Link>을
-          재사용합니다. 이 글은 그 계산을 반복하지 않고 image→patch token 변환과
-          DeiT·Swin·MAE가 바꾼 병목, checkpoint 호환성에 집중합니다.
+          224×224×3 이미지를 16×16 조각으로 나누면 196개가 됩니다. 각 조각을 같은
+          projection으로 바꾸고 맨 앞에 <code>[CLS]</code>를 붙이면 Transformer가 읽는
+          길이 197의 sequence가 됩니다. Vision Transformer(ViT)의 출발점은 바로 이
+          <strong> image에서 token sequence로 넘어가는 입력 계약</strong>입니다.
         </p>
       </div>
       <ContentBoundary article="vision-transformer" />
-      <div className="not-prose my-8"><OverviewViz /></div>
+      <VisionTransformerTraceViz />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          그림은 왼쪽 image부터 읽습니다. 크기를 나누어 patch 수를 정하고, patch마다
+          같은 projection을 적용한 뒤, <code>[CLS]</code>와 위치를 더합니다. Encoder는
+          이 sequence의 길이를 유지한 채 token 사이 관계를 갱신하고 마지막
+          <code>[CLS]</code> 출력을 class logit으로 바꿉니다.
+        </p>
+        <p>
+          CNN은 작은 kernel을 모든 위치에 공유해 가까운 pixel과 이동에 관한 가정을
+          구조에 넣습니다. 반면 ViT는 고정 크기 patch, position signal, pretraining
+          objective로 공간 정보를 넣습니다. 그래서 어느 쪽이 더 새롭다는 비교보다
+          <strong> 공간 가정이 어느 단계에 들어가는지</strong>를 봐야 합니다.
+        </p>
+        <p>
+          Image tensor와 convolution은 <Link to="/cs/ai/cnn">CNN 글</Link>, Q·K·V와
+          self-attention은 <Link to="/cs/ai/attention-theory">attention 글</Link>,
+          encoder block은 <Link to="/cs/ai/transformer-architecture">Transformer 글</Link>에서
+          설명합니다. 여기서는 같은 image의 shape가 어떻게 바뀌는지만 끝까지 추적합니다.
+        </p>
+      </div>
       <div id="paper-vit-core" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
-        <p className="text-xs font-bold text-primary">논문 읽기 · Vision Transformer</p>
+        <p className="text-xs font-bold text-primary">원 논문 · Vision Transformer</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Dosovitskiy 등은 image patch를 linear embedding sequence로 바꾸고 standard Transformer encoder를 large-
-            scale supervised pretraining한 뒤 여러 image task로 transfer했습니다. 이 결과를 읽을 때는 JFT·ImageNet-21k 규모와
-            recipe가 전제였다는 점을 함께 봐야 합니다. 작은 dataset scratch training의 보편적 우월성으로 읽으면 안 됩니다.
-          </p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://openreview.net/forum?id=YicbFdNTTy" target="_blank" rel="noreferrer">Tokenization·pretraining·transfer 범위 보기</a>
+          Dosovitskiy 등은 image patch를 linear embedding sequence로 바꾸고 Transformer encoder에 넣었습니다.
+          논문이 보고한 결과는 대규모 supervised pretraining 뒤 여러 image benchmark로 transfer한 범위입니다.
+          이를 작은 dataset에서 처음부터 학습할 때도 항상 우월하다는 뜻으로 넓히면 안 됩니다.
+        </p>
+        <a
+          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+          href="https://arxiv.org/abs/2010.11929"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Patch sequence와 pretraining 범위 보기
+        </a>
       </div>
     </section>
   );

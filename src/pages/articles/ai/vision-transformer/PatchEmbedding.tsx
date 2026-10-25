@@ -1,8 +1,8 @@
+import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
 import { CodeViewButton } from "@/components/code";
 import { codeRefs } from "./codeRefs";
-import PatchEmbeddingViz from "./viz/PatchEmbeddingViz";
 
 export default function PatchEmbedding({
   onCodeRef,
@@ -11,13 +11,13 @@ export default function PatchEmbedding({
 }) {
   return (
     <section id="patch-embedding" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Patch embedding은 자르기, 펼치기, 선형 투영, 위치 부여를 하나의 입력 계약으로 묶습니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">Patch sequence</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          높이 H, 너비 W, channel C인 image를 겹치지 않는 P×P patch로 나누면 각
-          patch에는 P²C개의 숫자가 있습니다. 이를 길이 D인 token으로 투영하고
-          image-level [CLS] token 또는 pooling용 경로를 더합니다. H와 W가 P로
-          나누어떨어지지 않으면 resize·crop·padding 중 무엇을 할지 먼저 정해야 합니다.
+          앞의 전체 경로에서 첫 두 단계를 확대합니다. 높이 H, 너비 W, channel C인
+          image를 겹치지 않는 P×P patch로 나누면 patch마다 P²C개의 숫자가 생깁니다.
+          같은 projection이 이 값을 길이 D인 token으로 바꾸고, image 전체를 읽을
+          <code>[CLS]</code> token을 맨 앞에 더합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -48,6 +48,13 @@ Z_0&=\underbrace{[e_{\mathrm{cls}};e_1;\ldots;e_N]}_{\text{[CLS]+patch N개}}\in
         assumptions={["H와 W가 P로 나누어떨어지며 non-overlapping raster-order patch를 사용합니다.", "Batch axis는 생략했고 projection E와 position dimension은 D로 같습니다.", "[CLS] token은 선택 사항이며 mean pooling을 쓰는 model은 sequence contract가 달라집니다."]}
         interpretation="224×224 image와 P=16이면 N=196이고 [CLS]를 포함한 sequence length는 197입니다. P를 바꾸면 detail뿐 아니라 pretrained projection shape와 position grid도 함께 달라집니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          torchvision v0.28.0은 이 sequence를 그대로 만듭니다. 196개 patch token 앞에
+          batch마다 복제한 class token을 붙이면 두 번째 axis가 197이 되고, encoder 뒤에는
+          첫 token만 classification head로 보냅니다.
+        </p>
+      </div>
       <CodeViewButton
         onClick={() =>
           onCodeRef("class-token-concat", codeRefs["class-token-concat"])
@@ -83,18 +90,24 @@ y_{r,s,d}&=\underbrace{k_d^\top v_{r,s}+b_d}_{\text{patch 하나의 d번째 좌�
         assumptions={["Kernel size=stride=P, dilation=1, padding=0인 non-overlapping convolution입니다.", "Patch flatten order와 kernel flatten order가 정확히 같아야 합니다.", "Bias 사용 여부와 tensor layout을 checkpoint schema와 맞춥니다."]}
         interpretation="두 구현은 parameter를 배치하는 방식만 다를 수 있습니다. 따라서 checkpoint 변환에서는 shape만 맞는지보다 flatten order와 numerical output parity를 검사해야 합니다."
       />
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <p>
+          같은 구현에서 <code>kernel_size</code>와 <code>stride</code>는 모두 16입니다.
+          <code>Conv2d</code> 출력 <code>[B,768,14,14]</code>를 reshape하면
+          <code>[B,768,196]</code>, permute하면 encoder가 읽는 <code>[B,196,768]</code>이 됩니다.
+        </p>
+      </div>
       <CodeViewButton
         onClick={() =>
           onCodeRef("conv-as-patch-proj", codeRefs["conv-as-patch-proj"])
         }
       />
-      <div className="not-prose my-8"><PatchEmbeddingViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Resolution을 바꾸면 position grid도 바뀝니다</h3>
+        <h3 id="position-resize" className="scroll-mt-24">해상도를 바꾸면 position grid도 달라집니다</h3>
         <p>
           224px·P=16 checkpoint의 14×14 position grid를 384px 입력의 24×24 grid에 그대로 더할 수는 없습니다. Class token을
-          spatial grid에서 분리하고 2D interpolation한 뒤 다시 붙입니다. 이렇게 해도 learned spatial signal을 보간했을 뿐 새 위치 정보를 학습한
-          것은 아니므로 target resolution에서 fine-tuning과 boundary artifact 검사가 따라와야 합니다.
+          spatial grid에서 분리하고 patch position만 2D interpolation한 뒤 다시 붙입니다. 보간은 기존 위치 신호를 새 좌표로 옮길 뿐 새 위치 관계를
+          학습하지는 않습니다. 어떤 보간법과 fine-tuning 조건을 쓸지는 <Link to="/cs/ai/transfer-learning-practice">checkpoint 인계 실무 글</Link>에서 결정합니다.
         </p>
       </div>
     </section>

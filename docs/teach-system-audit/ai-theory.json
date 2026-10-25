@@ -10366,24 +10366,22 @@
     },
     {
       "route": "ai/vision-transformer",
-      "title": "Vision Transformer: Patch Token에서 Pretrained Handoff까지",
+      "title": "Vision Transformer: image에서 patch sequence까지",
       "subcategory": "ai-practical-cv",
       "publicFiles": [
         "src/pages/articles/ai/vision-transformer.tsx",
         "src/pages/articles/ai/vision-transformer/Architecture.tsx",
+        "src/pages/articles/ai/vision-transformer/Boundary.tsx",
         "src/pages/articles/ai/vision-transformer/Overview.tsx",
         "src/pages/articles/ai/vision-transformer/PatchEmbedding.tsx",
-        "src/pages/articles/ai/vision-transformer/Practice.tsx",
-        "src/pages/articles/ai/vision-transformer/Tradeoff.tsx",
+        "src/pages/articles/ai/vision-transformer/VisionTransformerLocator.tsx",
         "src/pages/articles/ai/vision-transformer/codeRefs.ts",
+        "src/pages/articles/ai/vision-transformer/codebase/torchvision/models/class_token.py",
+        "src/pages/articles/ai/vision-transformer/codebase/torchvision/models/patch_projection.py",
         "src/pages/articles/ai/vision-transformer/fileTree.ts",
-        "src/pages/articles/ai/vision-transformer/viz/ArchitectureViz.tsx",
-        "src/pages/articles/ai/vision-transformer/viz/OverviewViz.tsx",
-        "src/pages/articles/ai/vision-transformer/viz/PatchEmbeddingViz.tsx",
-        "src/pages/articles/ai/vision-transformer/viz/PracticeViz.tsx",
-        "src/pages/articles/ai/vision-transformer/viz/TradeoffViz.tsx"
+        "src/pages/articles/ai/vision-transformer/viz/VisionTransformerTraceViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -10391,19 +10389,54 @@
         "hasSourceSurface": true,
         "characters": 29825
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "전체 경로와 patch·변형·실무 절이 분리돼 224×224 image가 197개 token이 되는 한 흐름을 따라가기 어려웠습니다.",
+        "DeiT·Swin·MAE가 기본 ViT의 어떤 병목을 바꾸는지보다 모델 이름별 카드로 읽혔습니다.",
+        "개념 메커니즘과 환경별 backbone 선택·checkpoint 인계 판단이 한 글에 섞여 있었습니다.",
+        "실제 torchvision 코드가 patch 수와 tensor shape 계산에 직접 연결되지 않았습니다."
+      ],
+      "fixture": {
+        "inputShape": "1×3×224×224",
+        "patchSize": 16,
+        "embeddingDim": 768,
+        "classes": 1000,
+        "grid": "14×14",
+        "patchTokens": 196,
+        "sequenceWithClassToken": 197,
+        "flattenedPatchValues": 768,
+        "attentionScoreCellsPerHead": 38809,
+        "resizedInput": "384×384",
+        "resizedGrid": "24×24",
+        "resizedSequenceWithClassToken": 577
+      },
+      "stageAnchors": {
+        "overview": "전체 경로 · 224×224 image → 197×768 sequence → class logits",
+        "patch-embedding": "Patch sequence · 14×14 grid와 shared projection 계산",
+        "position-resize": "해상도 변경 · 197개 position에서 577개 position으로 변환",
+        "architecture": "세 가지 분기 · DeiT·Swin·MAE가 서로 다른 병목을 변경",
+        "boundary": "여기서 확정한 것 · 개념을 부모 지도와 두 실무 글에 반환",
+        "self-check": "확인 질문 · patch 수, Conv2d 조건, 세 분기의 차이"
+      },
+      "primarySourceApplication": [
+        "Dosovitskiy 등의 ViT 논문이 정의한 patch sequence와 class token 경로를 224×224, patch 16, embedding 768의 숫자로 추적했습니다.",
+        "torchvision v0.28.0의 Conv2d·reshape·permute 원문과 class token concat·encoder·head 원문을 두 고정 excerpt로 연결했습니다.",
+        "DeiT·Swin·MAE 원문에서 teacher token, shifted window hierarchy, visible-token asymmetric autoencoder가 각각 바꾸는 병목을 구분했습니다.",
+        "환경별 backbone 선택과 checkpoint 호환성 판정은 개념 글에서 분리해 정확한 실무 anchor로 넘겼습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "기존 main·4개 section·5개 Viz·codeRefs·file tree와 새 계획을 대조해 전체 경로→patch 계산→실제 코드→position resize→세 분기→경계 순서로 재작성했습니다. 환경별 선택과 인계 판단은 연결된 practice 글로 옮겼습니다.",
+        "humanize": "route 단위 문장 호흡·쉬운 한국어·용어 밀도·모바일 용어 대응 검사가 모두 오류 0건으로 통과했습니다.",
+        "numericTrace": "224÷16=14, 14²=196, class token 포함 197, 197²=38,809를 본문·시각화·연습문제에서 같은 값으로 확인했습니다. 384px 입력은 24²+1=577로 연결했습니다.",
+        "mobile390": "문서 폭 390=scrollWidth 390, 네 장면 root 높이 605.375px로 안정적이며 controls 49.5px 이상, 본문·Viz·근거 카드 overflow 0건을 확인했습니다.",
+        "intermediate1024": "문서 overflow 0건, 본문 rail 안 근거 카드를 최대 2열로 제한한 뒤 모든 카드 폭 290.5px 이상, 잘림 0건을 확인했습니다.",
+        "desktop1440": "문서 폭 1440=scrollWidth 1440, trace figure 646×544, controls 높이 65px, 근거 카드 332×231 이상으로 겹침과 잘림이 없음을 확인했습니다.",
+        "keyboardAndMotion": "ArrowRight·ArrowLeft 장면 이동과 Space 재생·정지가 동작합니다. 재생은 encoder 장면에서 멈추며 반복하지 않습니다. reduced-motion에서는 네 장면과 정적 순서를 모두 읽을 수 있고 재생 버튼이 비활성화됩니다.",
+        "learning": "Vision Transformer·vision-backbone-selection·transfer-learning-practice 세 route의 strict learning contract와 전역 knowledge graph 검사가 통과했습니다.",
+        "build": "변경 파일 ESLint와 Vite production build, 2,088개 정적 public route 생성이 통과했습니다. 로컬 전체 tsc는 Node 기본 4GB 힙을 넘겨 종료됐으며 새 커밋의 GitHub CI 전체 build 검증이 남았습니다.",
+        "noScript": "정적 route 대상에 추가한 뒤 JavaScript 비활성 390×844에서 4개 h2, 본문 15,079자, 문서 scrollWidth 390px를 확인했습니다. 두 연결 실무 글도 같은 조건에서 정적 본문과 overflow 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub CI 전체 TypeScript build와 공개 경로 재검증"
       ]
     },
     {

@@ -1,8 +1,7 @@
 import Overview from "./vision-transformer/Overview";
 import PatchEmbedding from "./vision-transformer/PatchEmbedding";
 import Architecture from "./vision-transformer/Architecture";
-import Tradeoff from "./vision-transformer/Tradeoff";
-import Practice from "./vision-transformer/Practice";
+import Boundary from "./vision-transformer/Boundary";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./vision-transformer/codeRefs";
 import { visionTransformerTree } from "./vision-transformer/fileTree";
@@ -15,8 +14,7 @@ export default function VisionTransformerArticle() {
       <Overview />
       <PatchEmbedding onCodeRef={sidebar.open} />
       <Architecture />
-      <Tradeoff />
-      <Practice />
+      <Boundary />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
