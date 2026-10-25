@@ -1,272 +1,313 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import ConceptLadderViz from "@/components/viz/ConceptLadderViz";
-import { AGENT_SECURITY_SOURCES } from "@/content/agent-sandbox-security";
-import { DeploymentControlsViz } from "../sandbox-security-viz";
 import { EvidenceGrid, LessonHeader, TermLesson } from "../kimi-k3-shared";
+import {
+  SandboxBoundaryLocator,
+  SandboxBoundaryMapReturn,
+} from "../shared/SandboxBoundaryLocator";
+import SandboxDeploymentControlsViz from "./viz/SandboxDeploymentControlsViz";
+
+const podPolicyYaml = `# 이 Pod가 사용할 Kubernetes 신원입니다.
+serviceAccountName: agent-reader
+# 필요 없는 기본 API 토큰 주입은 끕니다.
+automountServiceAccountToken: false
+
+containers:
+- name: generator
+  # 루트 파일시스템 쓰기를 막습니다.
+  securityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+  volumeMounts:
+  # 쓰기가 필요한 경로만 따로 엽니다.
+  - name: work
+    mountPath: /work
+  # 이 작업에 필요한 짧은 API 토큰만 읽기 전용으로 넣습니다.
+  - name: api-token
+    mountPath: /var/run/secrets/tokens
+    readOnly: true
+
+volumes:
+# Pod 수명에 묶인 임시 작업 공간입니다.
+- name: work
+  emptyDir:
+    sizeLimit: 5Gi
+# audience와 만료 시간을 고정한 토큰입니다.
+# 실제 값은 API server가 허용한 audience와 맞춰야 합니다.
+- name: api-token
+  projected:
+    sources:
+    - serviceAccountToken:
+        audience: https://kubernetes.default.svc
+        expirationSeconds: 3600
+        path: token`;
+
+const roleYaml = `apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: own-job-reader
+  namespace: ai
+rules:
+# batch API의 Job만 대상으로 합니다.
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  # 조회만 허용하고 생성·수정·삭제는 주지 않습니다.
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-own-job-reader
+  namespace: ai
+subjects:
+# ai namespace의 agent-reader에만 연결합니다.
+- kind: ServiceAccount
+  name: agent-reader
+  namespace: ai
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: own-job-reader`;
 
 export default function SandboxDeploymentControlsArticle() {
   return (
     <article id="overview" className="space-y-16">
+      <SandboxBoundaryLocator current="deploy" />
+
       <section className="space-y-6">
         <LessonHeader
           number="00"
-          eyebrow="runtime 밖의 통제"
-          title="안전한 runtime을 골라도 Pod에 token·열린 egress·영구 workspace가 남으면 공격 경로는 계속 열린다"
+          eyebrow="남은 효과 제한"
+          title="런타임 밖의 권한과 흔적을 따로 닫습니다"
         >
-          배포 통제를 identity, network, storage, lifecycle 네 층으로 나눕니다.
-          각 용어를 따로 정의한 뒤 마지막에 workload control matrix로 합칩니다.
+          GPU를 격리한 이미지 생성 Pod 하나가 API를 읽고 결과를 전송하고 임시
+          파일을 남긴 뒤 삭제되는 과정을 따라갑니다.
         </LessonHeader>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
-        <ol className="list-decimal space-y-2 pl-6">
-          <li>Pod의 ServiceAccount token 자동 주입을 꺼도 다른 Secret과 egress가 자동으로 사라질까요?</li>
-          <li>유효한 token이 있어도 RBAC verb·resource·namespace 중 하나가 맞지 않으면 요청을 거절해야 할까요?</li>
-          <li>Ephemeral workload의 종료 receipt에는 compute뿐 아니라 writable storage 파기도 포함해야 할까요?</li>
-        </ol>
-        <p>답은 <strong>아니요, 예, 예</strong>입니다. Identity·권한·network·storage·lifecycle은 독립 gate이므로 workload별 control matrix와 negative test로 함께 승인합니다.</p>
-        <DeploymentControlsViz />
+        <SandboxDeploymentControlsViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            <code>img-job-91</code>은 샌드박스 안에서 실행돼도 외부에 효과를 남길
+            수 있습니다. Kubernetes API를 읽는 자격증명, 결과를 내보낼 네트워크,
+            파일을 쓸 공간이 있기 때문입니다.
+          </p>
+          <p>
+            이 세 효과의 판단자는 서로 다릅니다. API server는 토큰과 RBAC을,
+            CNI나 egress gateway는 목적지 연결을, kubelet과 컨테이너 런타임은
+            mount와 Pod 수명을 다룹니다. 한 정책을 켠 것으로 나머지 효과까지
+            막혔다고 볼 수 없습니다.
+          </p>
+          <p>
+            특히 컨테이너 종료와 Pod 삭제는 같은 사건이 아닙니다. <code>emptyDir</code>은
+            컨테이너가 재시작돼도 같은 Pod가 남아 있으면 유지되고, Pod가 제거될 때
+            함께 정리됩니다. 외부 object storage에 올린 결과는 또 다른 보존 정책을
+            따릅니다.
+          </p>
+        </div>
         <ContentBoundary article="sandbox-deployment-controls" />
+        <TermLesson
+          name="배포 효과 경계"
+          oneLine="워크로드가 남길 수 있는 API 변경·외부 통신·파일 흔적을 각각의 집행 주체와 수명에 연결한 계약입니다."
+          shape="Pod 요청 → API·network·storage gate → 허용된 효과 → 종료·삭제"
+          example="img-job-91은 자기 Job 조회와 object gateway 업로드, /work 쓰기만 허용받습니다."
+          boundary="안전한 런타임이나 유효한 토큰 하나가 다른 효과의 허용 여부를 대신 결정하지 않습니다."
+        />
       </section>
 
       <section id="service-account-token" className="space-y-6">
         <LessonHeader
           number="01"
-          eyebrow="누구인지 증명하는 재료"
-          title="ServiceAccount와 projected token은 workload identity의 이름과 증명서를 나눈다"
+          eyebrow="신원과 API 권한"
+          title="토큰을 확인한 뒤 요청 동작을 다시 검사합니다"
         >
-          ServiceAccount를 먼저 정의하고, Pod 안에 실제로 들어오는 token을 다음
-          개념으로 분리합니다.
+          같은 토큰으로 자기 Job 조회는 통과하고 Secret 조회는 거절되는 경로를
+          분리합니다.
         </LessonHeader>
         <TermLesson
-          name="Kubernetes ServiceAccount"
-          oneLine="Kubernetes workload가 API server와 다른 service에서 자신을 식별할 때 사용하는 namespaced identity입니다."
-          shape="namespace/service-account name → workload identity"
-          example="ai-workloads namespace의 agent-reader ServiceAccount를 특정 worker Pod에 지정합니다."
-          boundary="ServiceAccount 이름이 있다는 사실만으로 API permission이 생기지 않습니다."
+          name="ServiceAccount projected token"
+          oneLine="Pod의 ServiceAccount 신원을 audience·만료 시간·대상 객체에 묶어 파일로 전달하고 kubelet이 갱신하는 토큰입니다."
+          shape="ServiceAccount → TokenRequest → projected volume → Bearer token"
+          example="agent-reader Pod는 kube-apiserver용 1시간 토큰을 별도 경로에 읽기 전용으로 마운트합니다."
+          boundary="토큰이 유효하다는 사실은 인증만 끝났다는 뜻이며 API 권한을 자동으로 만들지 않습니다."
         />
+        <div id="rbac" className="scroll-mt-24" />
         <TermLesson
-          name="ServiceAccount token projection"
-          oneLine="ServiceAccount identity를 증명하는 audience·expiry가 있는 token을 Pod filesystem에 주입하고 갱신하는 delivery mechanism입니다."
-          shape="ServiceAccount → bounded token {audience, expiry} → Pod mount"
-          example="Kubernetes API가 필요 없는 agent는 automountServiceAccountToken:false로 기본 주입을 끕니다. 필요한 worker만 짧은 lifetime·명시적 audience token을 받습니다."
-          boundary="자동 mount를 꺼도 environment·Secret volume·tool credential까지 사라지는 것은 아닙니다."
+          name="RBAC 요청 범위"
+          oneLine="인증된 주체가 어느 API group의 어떤 resource에 어떤 verb를 어느 namespace에서 실행할지 정하는 허용 규칙입니다."
+          shape="subject → RoleBinding → {apiGroup, resource, verb, namespace}"
+          example="agent-reader는 ai namespace의 jobs.get만 받고 secrets.get과 jobs.create는 받지 않습니다."
+          boundary="RBAC 규칙은 더하는 방식이며 파일·외부 API·호스트 접근을 제한하지 않습니다."
         />
+        <ExplainedFormula
+          question="왜 유효한 토큰만으로 API 요청을 허용할 수 없을까요?"
+          idea="토큰은 요청 주체를 인증합니다. 그다음 API group·resource·verb·namespace가 주체의 RBAC 규칙과 모두 맞아야 요청이 허용됩니다."
+          formula={String.raw`\operatorname{allow}(q)=T(q)\land G(q)\land R(q)\land V(q)\land N(q)`}
+          annotatedFormula={String.raw`\begin{aligned}G_a&=\underbrace{T(q)}_{\text{토큰 인증}}\\G_o&=\underbrace{G(q)\land R(q)\land V(q)}_{\text{API 대상과 동작 일치}}\\\operatorname{allow}(q)&=\underbrace{G_a\land G_o\land N(q)}_{\text{namespace까지 모두 일치}}\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`T(q)`,
+              annotation: ["서명·audience·만료·대상 객체를 확인해", "ServiceAccount 주체를 인증"],
+            },
+            {
+              expression: String.raw`G(q)\land R(q)\land V(q)`,
+              annotation: ["API group·resource·verb를 함께 맞춰", "다른 대상이나 동작으로의 확대를 거절"],
+            },
+            {
+              expression: String.raw`G_a\land G_o\land N(q)`,
+              annotation: ["인증·동작·namespace 조건을 AND로 묶어", "하나라도 다르면 403으로 종료"],
+            },
+          ]}
+          terms={[
+            { symbol: "q", name: "API 요청", description: "주체·API group·resource·verb·namespace를 가진 요청입니다." },
+            { symbol: "T", name: "토큰 조건", description: "토큰 검증을 통과하면 1입니다." },
+            { symbol: "G", name: "API group 조건", description: "batch 같은 API group이 허용되면 1입니다." },
+            { symbol: "R", name: "resource 조건", description: "jobs 같은 대상 종류가 허용되면 1입니다." },
+            { symbol: "V", name: "verb 조건", description: "get 같은 동작이 허용되면 1입니다." },
+            { symbol: "N", name: "namespace 조건", description: "요청 namespace가 규칙 범위 안이면 1입니다." },
+          ]}
+          assumptions={[
+            "식은 namespaced resource 한 건을 설명하기 위한 축약이며 subresource·resourceName·non-resource URL은 별도 조건입니다.",
+            "Admission webhook과 애플리케이션 권한 검사는 RBAC 뒤에 추가될 수 있습니다.",
+          ]}
+          interpretation="같은 agent-reader 토큰으로 ai namespace의 jobs.get은 허용됩니다. 그러나 secrets.get은 resource와 verb 조합이 규칙에 없으므로 인증에 성공해도 403입니다."
+        />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <pre className="not-prose min-w-0 overflow-x-auto border border-border bg-muted/20 p-4 text-xs leading-6"><code>{podPolicyYaml}</code></pre>
+          <pre className="not-prose min-w-0 overflow-x-auto border border-border bg-muted/20 p-4 text-xs leading-6"><code>{roleYaml}</code></pre>
+        </div>
         <div id="paper-service-account" className="scroll-mt-24">
-          <CitationBlock
-            source={AGENT_SECURITY_SOURCES.serviceAccounts.label}
-            citeKey={1}
-            href={AGENT_SECURITY_SOURCES.serviceAccounts.href}
-          >
+          <CitationBlock source="Kubernetes v1.37 문서 — Service Accounts" citeKey={1} href="https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/security/service-accounts.md">
             <EvidenceGrid
-              problem="Pod workload에 Kubernetes identity와 bounded token을 제공하는 문제"
-              contribution="ServiceAccount·token projection·automount semantics를 정의"
-              assumptions="Cluster version·audience·expiry·token projection configuration"
-              scope="Workload identity 이름과 token delivery behavior"
-              notClaim="Token을 끄면 다른 credential과 RBAC permission·network path도 사라진다는 뜻은 아님"
+              problem="Pod에 Kubernetes 신원과 짧은 수명의 자격증명을 전달하는 문제"
+              contribution="ServiceAccount·TokenRequest·projected token·automount 의미를 정의"
+              assumptions="Kubernetes v1.37 문서와 API server의 issuer·audience 설정"
+              scope="워크로드 신원 이름과 토큰 발급·주입·갱신"
+              notClaim="토큰 주입을 끄면 다른 Secret·외부 자격증명·네트워크 경로도 사라진다는 뜻은 아님"
+            />
+          </CitationBlock>
+        </div>
+        <div id="paper-rbac" className="scroll-mt-24">
+          <CitationBlock source="Kubernetes v1.37 문서 — RBAC Authorization" citeKey={2} href="https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/reference/access-authn-authz/rbac.md">
+            <EvidenceGrid
+              problem="인증된 주체가 Kubernetes API에서 실행할 수 있는 동작을 제한하는 문제"
+              contribution="Role·ClusterRole·RoleBinding·ClusterRoleBinding과 additive permission 의미를 정의"
+              assumptions="API server에서 RBAC authorizer가 활성화된 Kubernetes v1.37"
+              scope="API group·resource·verb·namespace와 주체 binding"
+              notClaim="RBAC이 네트워크·파일시스템·애플리케이션 내부 권한까지 집행한다는 뜻은 아님"
             />
           </CitationBlock>
         </div>
       </section>
 
-      <section id="rbac" className="space-y-6">
-        <LessonHeader
-          number="02"
-          eyebrow="증명서가 할 수 있는 일"
-          title="RBAC은 인증된 identity가 어떤 verb를 어떤 resource에 실행할지 제한한다"
-        >
-          Token은 “누구인가”를 증명합니다. Role과 Binding은 그 identity가
-          “무엇을 할 수 있는가”를 결정합니다.
-        </LessonHeader>
-        <TermLesson
-          name="Kubernetes RBAC authorization scope"
-          oneLine="인증된 subject에 허용할 API verb·resource·namespace를 Role/ClusterRole과 Binding으로 연결한 authorization 범위입니다."
-          shape="subject → binding → {verb, resource, namespace} rules"
-          example="agent-reader는 ai-workloads namespace의 jobs를 get/list만 할 수 있고 secret read와 deployment write는 받지 않습니다."
-          boundary="최소 RBAC도 external API·filesystem·host kernel 접근을 제한하지 않습니다."
-        />
-        <TermLesson
-          name="Workload identity · RBAC boundary"
-          oneLine="Token 주입 여부와 API authorization을 독립 설정으로 관리해 identity material과 permission을 함께 최소화하는 경계입니다."
-          shape="token present? + RBAC rule matches? → API request allowed"
-          example="Token을 가진 worker라도 create deployments rule이 없으면 해당 API request는 거절됩니다."
-          boundary="Token 없음과 permission 없음은 다른 상태이며 둘 다 audit해야 합니다."
-        />
-        <ExplainedFormula
-          question="왜 API 허용 판정에서 token과 verb·resource·namespace를 모두 확인할까요?"
-          idea="Token이 유효하다는 것은 identity 인증만 끝났다는 뜻입니다. 요청의 동작과 대상이 그 identity의 rule 안에 들어와야 authorization이 완성됩니다."
-          formula={String.raw`\operatorname{allow}(q)=T(q)\land V(q)\land R(q)\land N(q)`}
-          annotatedFormula={String.raw`\begin{aligned}G_a&=\underbrace{T(q)}_{\text{identity 인증}}\\G_v&=\underbrace{V(q)\land R(q)}_{\text{동작·대상 허용}}\\G_n&=\underbrace{N(q)}_{\text{namespace 허용}}\\\operatorname{allow}(q)&=\underbrace{G_a\land G_v\land G_n}_{\text{모든 gate 통과}}\end{aligned}`}
-          operations={[
-            {
-              expression: String.raw`T(q)`,
-              annotation: [
-                "token의 서명·audience·expiry를 검사해",
-                "요청 identity를 인증",
-              ],
-            },
-            {
-              expression: String.raw`V(q)\land R(q)`,
-              annotation: [
-                "verb와 resource를 함께 맞춰",
-                "다른 API 동작으로의 권한 확대 차단",
-              ],
-            },
-            {
-              expression: String.raw`G_a\land G_v\land G_n`,
-              annotation: [
-                "인증·동작·scope gate를 AND로 묶어",
-                "하나라도 다르면 요청 거절",
-              ],
-            },
-          ]}
-          terms={[
-            {
-              symbol: "q",
-              name: "API request",
-              description: "Subject·verb·resource·namespace를 가진 요청입니다.",
-            },
-            {
-              symbol: "T",
-              name: "Token gate",
-              description: "Token이 유효하고 올바른 audience이면 1입니다.",
-            },
-            {
-              symbol: "V",
-              name: "Verb gate",
-              description: "get·list·create 같은 요청 동작이 허용되면 1입니다.",
-            },
-            {
-              symbol: "R",
-              name: "Resource gate",
-              description: "jobs·pods 같은 대상 resource가 허용되면 1입니다.",
-            },
-            {
-              symbol: "N",
-              name: "Namespace gate",
-              description: "요청 namespace가 rule 범위 안이면 1입니다.",
-            },
-          ]}
-          assumptions={[
-            "Admission·webhook·application authorization처럼 RBAC 뒤의 gate도 따로 존재할 수 있습니다.",
-            "Rule inventory는 실제 ServiceAccount binding과 cluster version에서 읽습니다.",
-          ]}
-          interpretation="유효한 token으로 jobs.get은 허용되어도 secrets.get은 R=0이라 거절됩니다. create jobs도 V=0이면 같은 identity라도 거절됩니다."
-        />
-      </section>
-
       <section id="egress" className="space-y-6">
-        <LessonHeader
-          number="03"
-          eyebrow="밖으로 나가는 경로"
-          title="Egress allowlist는 YAML의 존재가 아니라 실제 destination 차단 결과다"
-        >
-          Default-deny에서 시작해 DNS와 필요한 API를 한 경로씩 열고, 금지
-          목적지가 실제로 막히는지 flow log로 확인합니다.
+        <LessonHeader number="02" eyebrow="목적지 연결" title="외부 전송은 네트워크 경계가 따로 결정합니다">
+          object gateway 업로드는 허용하고 metadata IP는 차단하되, 표준 정책과
+          FQDN 확장의 범위를 구분합니다.
         </LessonHeader>
         <TermLesson
-          name="Egress allowlist enforcement"
-          oneLine="Workload의 destination·port·domain·protocol을 default-deny에서 필요한 항목만 허용하고 실제 CNI·DNS proxy·gateway 결과로 검증하는 경계입니다."
-          shape="Pod → default-deny → DNS observation → exact FQDN:port → gateway"
-          example="Cluster DNS와 api.example.com:443만 열고 metadata IP·private service·other.example.com 연결이 차단되는지 시험합니다."
-          boundary="NetworkPolicy는 CNI 집행이 필요하며 표준만으로 FQDN·explicit deny·hostNetwork·DNS tunneling을 모두 해결하지 않습니다."
+          name="Egress 허용 경로"
+          oneLine="선택된 Pod의 바깥 연결을 기본 차단한 뒤 필요한 peer·IP·port만 더하는 네트워크 집행 경로입니다."
+          shape="Pod → egress-isolated → 허용 규칙 합집합 → destination"
+          example="img-job-91은 cluster DNS와 object gateway 10.40.8.20:443만 연결하고 metadata IP는 연결하지 못합니다."
+          boundary="표준 NetworkPolicy는 L3/L4 규칙이며 도메인 이름·TLS 내용·외부 API 권한을 직접 판정하지 않습니다."
         />
         <div id="paper-network-policy" className="scroll-mt-24">
-          <CitationBlock
-            source={AGENT_SECURITY_SOURCES.networkPolicy.label}
-            citeKey={2}
-            href={AGENT_SECURITY_SOURCES.networkPolicy.href}
-          >
+          <CitationBlock source="Kubernetes v1.37 문서 — Network Policies" citeKey={3} href="https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/services-networking/network-policies.md">
             <EvidenceGrid
-              problem="Pod traffic을 direction·peer·port에 따라 격리하는 문제"
-              contribution="Ingress/egress isolation과 additive allow semantics를 정의"
-              assumptions="Cluster CNI가 NetworkPolicy를 지원·집행"
-              scope="표준 L3/L4 policy object와 connection allow behavior"
-              notClaim="YAML만으로 FQDN·explicit deny·hostNetwork·flow log가 보장된다는 뜻은 아님"
+              problem="선택된 Pod의 ingress·egress 연결을 peer와 port 단위로 제한하는 문제"
+              contribution="격리 조건, additive allow, source와 destination 양쪽 정책의 교집합 의미를 정의"
+              assumptions="선택한 CNI가 Kubernetes NetworkPolicy를 실제로 집행"
+              scope="표준 L3/L4 Pod·namespace·IPBlock·port 규칙"
+              notClaim="YAML 객체만 만들면 집행되거나 FQDN·명시적 deny·hostNetwork까지 해결된다는 뜻은 아님"
             />
           </CitationBlock>
         </div>
         <div id="paper-cilium-fqdn" className="scroll-mt-24">
-          <CitationBlock
-            source={AGENT_SECURITY_SOURCES.ciliumDns.label}
-            citeKey={3}
-            href={AGENT_SECURITY_SOURCES.ciliumDns.href}
-            type="code"
-          >
+          <CitationBlock source="Cilium v1.20.4 — DNS and FQDN policies" citeKey={4} href="https://github.com/cilium/cilium/blob/v1.20.4/Documentation/security/dns.rst" type="code">
             <EvidenceGrid
-              problem="IP가 바뀌는 domain을 egress identity와 연결하는 문제"
-              contribution="DNS proxy observation과 toFQDNs mapping을 제공"
-              assumptions="Cilium DNS proxy·cluster DNS path·지원 protocol/version"
-              scope="DNS 응답을 destination policy에 연결하는 Cilium semantics"
-              notClaim="Wildcard DNS query가 tunneling을 막거나 TLS 내용·API authorization을 검증한다는 뜻은 아님"
+              problem="주소가 바뀌는 도메인 이름을 Pod의 egress 허용 대상으로 연결하는 문제"
+              contribution="DNS proxy 관찰과 toFQDNs 기반 Cilium 확장 경로"
+              assumptions="Cilium v1.20.4의 DNS proxy·정책 집행·cluster DNS 경로"
+              scope="Cilium 확장의 DNS 응답과 destination IP 연결"
+              notClaim="표준 NetworkPolicy의 기능이거나 DNS tunneling·TLS 내용·API 권한을 함께 검사한다는 뜻은 아님"
             />
           </CitationBlock>
         </div>
       </section>
 
       <section id="writable-surface" className="space-y-6">
-        <LessonHeader
-          number="04"
-          eyebrow="남길 수 있는 흔적"
-          title="Read-only root 뒤에도 writable path의 크기·owner·수명 계약이 필요하다"
-        >
-          “쓰기 금지” 한 줄로 끝내지 않습니다. 꼭 필요한 workspace를 이름
-          붙이고, session이 끝날 때 무엇을 지울지 정합니다.
+        <LessonHeader number="03" eyebrow="쓰기 공간과 수명" title="컨테이너 종료와 Pod 삭제를 구분합니다">
+          루트 파일시스템은 읽기 전용으로 두고 필요한 임시 경로만 열며, 데이터가
+          실제로 없어지는 사건을 Pod 삭제에 연결합니다.
         </LessonHeader>
         <TermLesson
-          name="Sandbox writable surface · lifetime"
-          oneLine="쓰기 가능한 path마다 mount type·size·owner·session lifetime·폐기 시점을 제한해 persistence와 cross-session residue를 줄이는 storage 계약입니다."
-          shape="read-only root + {/tmp, /workspace} bounded mounts → destroy receipt"
-          example="root filesystem은 read-only로 두고 /tmp와 /workspace만 sizeLimit이 있는 emptyDir로 열어 Pod 종료 때 폐기합니다."
-          boundary="Read-only root는 memory execution·external storage·interpreter pipe를 막지 않고 emptyDir도 node pressure를 만들 수 있습니다."
+          name="제한된 쓰기 표면"
+          oneLine="루트 파일시스템은 읽기 전용으로 두고 이름·크기·소유자·수명이 정해진 mount만 쓰기 가능하게 여는 저장 경계입니다."
+          shape="read-only root + /work emptyDir 5 GiB → Pod lifetime"
+          example="생성 중간 파일은 /work에만 쓰고 애플리케이션·설정 경로 수정은 거절합니다."
+          boundary="readOnlyRootFilesystem은 메모리 실행·외부 저장소·이미 열린 volume·노드 디스크 압력을 막지 않습니다."
         />
-        <div id="paper-pod-security" className="scroll-mt-24">
-          <CitationBlock
-            source={AGENT_SECURITY_SOURCES.podSecurity.label}
-            citeKey={4}
-            href={AGENT_SECURITY_SOURCES.podSecurity.href}
-          >
+        <TermLesson
+          name="Pod 수명에 묶인 emptyDir"
+          oneLine="Pod가 노드에 배치될 때 생기고 그 Pod가 제거될 때 함께 삭제되며, 같은 Pod 안의 컨테이너 재시작을 지나서도 남는 volume입니다."
+          shape="Pod 생성 → container 실행·재시작 → Pod 삭제 → emptyDir 정리"
+          example="generator 컨테이너가 exit 0이어도 완료된 Pod가 남아 있으면 /work는 남고, TTL이나 운영자가 Pod를 삭제해야 정리됩니다."
+          boundary="Job 완료만으로 즉시 삭제된다고 가정할 수 없고 object storage·PVC 데이터는 emptyDir 수명과 다릅니다."
+        />
+        <div id="paper-emptydir" className="scroll-mt-24">
+          <CitationBlock source="Kubernetes v1.37 문서 — Volumes / emptyDir" citeKey={5} href="https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/storage/volumes.md">
             <EvidenceGrid
-              problem="Privileged namespace·capability·user·seccomp Pod 설정을 일관되게 제한하는 문제"
-              contribution="Baseline·Restricted Pod Security profile 요구를 정의"
-              assumptions="Cluster version·Pod Security admission·runtime support"
-              scope="Pod spec의 host access·privilege·user·seccomp 기본 경계"
-              notClaim="Guest kernel·egress·RBAC·image provenance·session cleanup을 대신한다는 뜻은 아님"
+              problem="같은 Pod 안의 컨테이너가 공유할 임시 저장 공간과 그 수명을 정하는 문제"
+              contribution="emptyDir 생성·컨테이너 재시작 보존·Pod 제거 시 삭제·sizeLimit 의미를 정의"
+              assumptions="Kubernetes v1.37과 실제 노드의 disk·memory backing 및 ephemeral-storage accounting"
+              scope="Pod 수명에 묶인 임시 volume"
+              notClaim="Job 완료 즉시 삭제, 보안 삭제, 백업, 외부 결과 보존까지 보장한다는 뜻은 아님"
+            />
+          </CitationBlock>
+        </div>
+        <div id="paper-pod-security" className="scroll-mt-24">
+          <CitationBlock source="Kubernetes v1.37 문서 — Security Context" citeKey={6} href="https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/tasks/configure-pod-container/security-context.md">
+            <EvidenceGrid
+              problem="컨테이너 프로세스의 사용자·권한 상승·루트 파일시스템 쓰기 성질을 제한하는 문제"
+              contribution="Pod·container securityContext와 readOnlyRootFilesystem 등 필드의 실행 의미"
+              assumptions="Kubernetes v1.37과 선택한 컨테이너 런타임·Linux 노드"
+              scope="프로세스 보안 속성과 루트 파일시스템 쓰기 여부"
+              notClaim="volume·network·ServiceAccount·runtime isolation까지 한 필드로 설정한다는 뜻은 아님"
             />
           </CitationBlock>
         </div>
       </section>
 
       <section id="control-matrix" className="space-y-6">
-        <LessonHeader
-          number="05"
-          eyebrow="마지막 조합"
-          title="Workload가 필요한 capability를 먼저 적고 독립 control을 열별로 승인한다"
-        >
-          이제 배운 identity·network·storage를 runtime·lifecycle과 합칩니다.
-          제품 목록이 아니라 실제 workload identity에 귀속된 test contract를
-          만듭니다.
+        <LessonHeader number="04" eyebrow="상태 소유권" title="각 효과의 판단자와 종료 조건을 한 줄씩 남깁니다">
+          제품 목록보다 먼저 누가 허용하고, 무엇을 관측하며, 언제 흔적이 사라지는지
+          연결합니다.
         </LessonHeader>
+        <div className="not-prose divide-y divide-border border-y border-border">
+          {[
+            ["Kubernetes API", "API server · RBAC authorizer", "요청별 200 또는 403", "token 만료·Pod 삭제"],
+            ["외부 통신", "CNI · egress gateway", "flow allow 또는 drop", "정책·endpoint 변경"],
+            ["임시 파일", "kubelet · container runtime", "mount와 사용량", "Pod 삭제"],
+            ["외부 결과", "object gateway · storage policy", "object write와 보존 상태", "만료·사용자 삭제"],
+          ].map(([effect, owner, evidence, end]) => (
+            <div key={effect} className="grid gap-2 py-4 text-sm sm:grid-cols-[7rem_1fr_1fr_1fr] sm:items-start">
+              <strong className="break-keep">{effect}</strong>
+              <span><b className="mr-1 text-[10px] text-primary sm:hidden">판단자</b>{owner}</span>
+              <span className="text-muted-foreground"><b className="mr-1 text-[10px] text-primary sm:hidden">근거</b>{evidence}</span>
+              <span className="text-muted-foreground"><b className="mr-1 text-[10px] text-primary sm:hidden">종료</b>{end}</span>
+            </div>
+          ))}
+        </div>
         <TermLesson
-          name="Sandbox workload · control matrix"
-          oneLine="Code trust와 필요한 credential·network·filesystem·GPU·session lifetime을 행에 적고 각 위험을 끊는 통제와 negative test를 열로 승인하는 방법입니다."
-          shape="workload row × {identity, egress, runtime, storage, lifecycle} columns"
-          example="사용자 생성 code는 no default token, proxy-only egress, gVisor/Kata, 5 GiB workspace, 20-minute destroy receipt를 한 row로 가집니다."
-          boundary="Control object가 존재한다는 사실이나 benchmark 하나만으로 production safety를 선언하지 않습니다."
-        />
-        <ConceptLadderViz
-          title="Kubernetes sandbox 배포 계약"
-          description="Identity material과 권한을 나눈 뒤 egress·storage를 더하고 마지막에 release matrix로 결합합니다."
-          steps={[
-            { label: "ServiceAccount", detail: "Workload identity 이름" },
-            { label: "Token", detail: "Audience·expiry가 있는 증명서" },
-            { label: "RBAC", detail: "Verb·resource·namespace 권한" },
-            { label: "Egress", detail: "Destination allowlist와 차단 결과" },
-            { label: "Storage", detail: "Writable path·size·lifetime" },
-            { label: "Matrix", detail: "독립 gate receipt를 함께 승인" },
-          ]}
+          name="워크로드 통제 행렬"
+          oneLine="하나의 워크로드가 필요한 신원·API 동작·목적지·쓰기 경로와 각각의 집행 주체·관측 근거·종료 조건을 연결한 표입니다."
+          shape="effect × {owner, allowed state, evidence, end condition}"
+          example="img-job-91의 jobs.get·object upload·/work 쓰기를 서로 다른 세 집행자와 연결합니다."
+          boundary="정책 객체가 존재한다는 사실만 기록하지 말고 실제 허용·거절·삭제 상태를 각각 확인해야 합니다."
         />
       </section>
+
+      <SandboxBoundaryMapReturn current="deploy" />
     </article>
   );
 }

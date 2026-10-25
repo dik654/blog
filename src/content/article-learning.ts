@@ -45409,7 +45409,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/sandbox-deployment-controls": {
     "entryLevel": true,
-    "coreIdea": "Sandbox 배포는 ServiceAccount identity, projected token, RBAC permission, egress, writable storage를 각각 정의하고 실제 차단 결과를 확인한 뒤 workload control matrix로 결합합니다. 한 control의 존재는 다른 경계를 대신하지 않습니다.",
+    "coreIdea": "Sandbox 배포는 ServiceAccount token, RBAC, egress, writable storage를 각각의 집행자와 수명에 연결합니다. 같은 img-job-91 요청에서도 API 인증, 권한 판정, 외부 연결, Pod volume 정리는 서로 다른 상태 전이입니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -45470,8 +45470,8 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "sandbox-writable-surface-lifetime",
         "sectionId": "writable-surface",
         "intuition": "Read-only root 밖 writable path의 type·size·owner·session lifetime·폐기를 제한합니다.",
-        "workedExample": "/tmp와 /workspace만 sizeLimit emptyDir로 열고 Pod 종료 때 volume destroy receipt를 남깁니다.",
-        "boundary": "Read-only root는 memory execution·external storage·node pressure를 해결하지 않습니다."
+        "workedExample": "/work만 5 GiB emptyDir로 열고 컨테이너 종료와 Pod 삭제를 분리해 확인합니다.",
+        "boundary": "Read-only root는 memory execution·external storage·node pressure를 해결하지 않고 emptyDir은 Pod 삭제 전까지 남습니다."
       },
       {
         "id": "sandbox-workload-control-matrix",
@@ -45584,7 +45584,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Default-deny 뒤 exact FQDN API를 여는 egress 단계와 negative test를 작성하라.",
+        "question": "Default-deny 뒤 object gateway를 여는 egress 단계와 FQDN 확장의 경계를 설명하라.",
         "answerChecklist": [
           "CNI enforcement",
           "default deny",
@@ -45695,7 +45695,7 @@ export const ARTICLE_LEARNING: Readonly<
     "papers": [
       {
         "title": "Kubernetes Service Accounts",
-        "href": "https://kubernetes.io/docs/concepts/security/service-accounts/",
+        "href": "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/security/service-accounts.md",
         "problem": "Pod workload에 identity와 bounded token을 제공하는 문제",
         "contribution": "ServiceAccount·token projection·automount semantics를 정의",
         "assumptions": "Cluster version·audience·expiry·projection",
@@ -45704,8 +45704,18 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "paper-service-account"
       },
       {
+        "title": "Kubernetes v1.37 RBAC Authorization",
+        "href": "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/reference/access-authn-authz/rbac.md",
+        "problem": "인증된 주체의 Kubernetes API 동작을 제한하는 문제",
+        "contribution": "Role·Binding과 additive permission 의미를 정의",
+        "assumptions": "Kubernetes v1.37과 RBAC authorizer 활성화",
+        "evidenceScope": "API group·resource·verb·namespace와 주체 binding",
+        "notClaim": "Network·filesystem·application permission까지 집행한다는 뜻은 아님",
+        "sectionId": "paper-rbac"
+      },
+      {
         "title": "Kubernetes Network Policies",
-        "href": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+        "href": "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/services-networking/network-policies.md",
         "problem": "Pod traffic을 direction·peer·port에 따라 격리하는 문제",
         "contribution": "Ingress/egress isolation과 additive allow semantics를 정의",
         "assumptions": "CNI가 NetworkPolicy를 지원·집행",
@@ -45715,7 +45725,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "title": "Cilium DNS and FQDN policies",
-        "href": "https://docs.cilium.io/en/stable/security/dns/",
+        "href": "https://github.com/cilium/cilium/blob/v1.20.4/Documentation/security/dns.rst",
         "problem": "변하는 domain IP를 egress identity와 연결하는 문제",
         "contribution": "DNS proxy observation과 toFQDNs mapping을 제공",
         "assumptions": "Cilium DNS proxy·cluster DNS path·version",
@@ -45724,13 +45734,23 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "paper-cilium-fqdn"
       },
       {
-        "title": "Kubernetes Pod Security Standards",
-        "href": "https://kubernetes.io/docs/concepts/security/pod-security-standards/",
-        "problem": "Privileged Pod 설정을 일관되게 제한하는 문제",
-        "contribution": "Baseline·Restricted profile 요구를 정의",
-        "assumptions": "Cluster version·Pod Security admission·runtime support",
-        "evidenceScope": "Host access·privilege·user·seccomp 기본 경계",
-        "notClaim": "Guest kernel·egress·RBAC·session cleanup을 대신한다는 뜻은 아님",
+        "title": "Kubernetes v1.37 Volumes / emptyDir",
+        "href": "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/storage/volumes.md",
+        "problem": "같은 Pod 안의 임시 저장 공간과 수명을 정하는 문제",
+        "contribution": "emptyDir 생성·재시작 보존·Pod 제거 시 삭제 의미를 정의",
+        "assumptions": "Kubernetes v1.37과 실제 노드 backing storage",
+        "evidenceScope": "Pod 수명에 묶인 임시 volume",
+        "notClaim": "Job 완료 즉시 삭제·백업·외부 결과 보존까지 보장한다는 뜻은 아님",
+        "sectionId": "paper-emptydir"
+      },
+      {
+        "title": "Kubernetes v1.37 Security Context",
+        "href": "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/tasks/configure-pod-container/security-context.md",
+        "problem": "컨테이너 프로세스와 루트 파일시스템의 보안 속성을 제한하는 문제",
+        "contribution": "securityContext와 readOnlyRootFilesystem 같은 필드의 의미를 정의",
+        "assumptions": "Kubernetes v1.37과 Linux container runtime",
+        "evidenceScope": "프로세스 권한과 루트 파일시스템 쓰기 여부",
+        "notClaim": "Volume·network·ServiceAccount·runtime isolation을 함께 설정한다는 뜻은 아님",
         "sectionId": "paper-pod-security"
       }
     ]

@@ -4788,19 +4788,29 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/sandbox-deployment-controls": [
     source(
       "공식 문서",
+      AGENT_SECURITY_SOURCES.serviceAccounts,
+      "Workload identity와 projected token 자동 mount 경계",
+    ),
+    source(
+      "공식 문서",
+      AGENT_SECURITY_SOURCES.rbac,
+      "인증된 주체의 API group·resource·verb·namespace 권한",
+    ),
+    source(
+      "공식 문서",
       AGENT_SECURITY_SOURCES.networkPolicy,
       "표준 Kubernetes ingress/egress isolation과 additive allow semantics",
     ),
     source("공식 문서", AGENT_SECURITY_SOURCES.ciliumDns, "FQDN egress policy"),
     source(
       "공식 문서",
-      AGENT_SECURITY_SOURCES.serviceAccounts,
-      "Workload identity와 token 자동 mount 경계",
+      AGENT_SECURITY_SOURCES.emptyDir,
+      "컨테이너 재시작과 Pod 삭제를 구분하는 emptyDir 수명",
     ),
     source(
       "공식 문서",
-      AGENT_SECURITY_SOURCES.podSecurity,
-      "Pod privilege·user·seccomp 기본 경계",
+      AGENT_SECURITY_SOURCES.securityContext,
+      "readOnlyRootFilesystem과 컨테이너 securityContext 경계",
     ),
   ],
   "ai/sionic-eureka": [
