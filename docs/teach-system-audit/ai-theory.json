@@ -3537,14 +3537,16 @@
     },
     {
       "route": "ai/image-classification-pipeline",
-      "title": "이미지 분류 데이터 경계: Identity Split과 Baseline Receipt",
+      "title": "이미지 분류의 데이터 경계: 같은 대상을 함께 나누고 비교 조건 남기기",
       "subcategory": "ai-practical-cv",
       "publicFiles": [
         "src/pages/articles/ai/image-classification-pipeline.tsx",
         "src/pages/articles/ai/image-classification-pipeline/ModernArticle.tsx",
-        "src/pages/articles/ai/image-classification-pipeline/viz/ModernImageClassificationViz.tsx"
+        "src/pages/articles/ai/image-classification-pipeline/ImageClassificationPathLocator.tsx",
+        "src/pages/articles/ai/image-classification-pipeline/viz/ImageDataBoundaryViz.tsx",
+        "src/content/image-classification-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3552,19 +3554,42 @@
         "hasSourceSurface": true,
         "characters": 12174
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "데이터 경계·backbone 비용·학습 단계·확률 판정이 한 글 안에서 같은 무게로 이어져 현재 질문과 직속 부모가 보이지 않았습니다.",
+        "Identity leakage 설명이 파일 목록 뒤에 있어 같은 상품에서 나온 네 파일이 왜 평가 단위 하나인지 먼저 그리기 어려웠습니다.",
+        "공유 시각화 파일을 고치면 형제 글의 소스 폐쇄와 검수 지문까지 함께 바뀌는 소유권 문제가 있었습니다."
+      ],
+      "fixture": "product-17 원본 한 장과 세 crop을 파일별로 나누는 실패에서 시작해, 같은 source_id를 가진 네 파일 전체를 한 split으로 이동시키고 비교 조건을 gen-04 receipt에 남깁니다.",
+      "stageAnchors": {
+        "parent": ["image-classification-map"],
+        "trace": ["overview"],
+        "formula": ["identity"],
+        "receipt": ["baseline"],
+        "failureAndProof": ["release"],
+        "return": ["image-classification-map-return"]
+      },
+      "primarySourceApplication": [
+        {
+          "href": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html",
+          "application": "같은 group이 여러 test fold에 겹치지 않도록 caller가 group label을 제공하는 GroupKFold 경계를 확인했습니다."
+        },
+        {
+          "href": "https://www.jmlr.org/papers/v22/20-303.html",
+          "application": "실험 조건과 결과를 재현 가능한 단위로 남겨야 한다는 checklist·reporting 범위를 baseline receipt 설명에 적용했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→product-17 한 대상→파일 분리 실패→group 분리→수식과 코드→비교 영수증→부모 지도 반환 순서로 전체 본문을 다시 읽었습니다.",
+        "humanize": "제목과 본문을 파일 수가 평가 대상 수와 다르다는 질문에서 시작하도록 고쳤고, Identity split과 receipt는 사례 뒤에 정식 용어로 연결했습니다.",
+        "numericTrace": "새 성능 수치를 만들지 않았습니다. product-17의 네 파일, group 교집합 0, seed·split·입력 조건 고정이라는 검증 가능한 상태만 사용했습니다.",
+        "mobile390": "390x844에서 문서·article·시각화의 가로 overflow 0을 확인했습니다. JavaScript 비활성 production preview에서도 다섯 장면과 전체 본문·부모 지도 반환이 보입니다.",
+        "desktop1440": "1440x1000에서 locator와 첫 시각화가 읽히고, 재생이 마지막 장면에서 멈추며 키보드 ArrowRight로 장면이 이동하는 것을 확인했습니다.",
+        "motion": "명시적 재생 뒤 4.8초 간격으로 한 번만 진행하고 마지막에서 멈춥니다. reduced-motion에서는 재생 버튼이 비활성화되고 수동 장면 선택은 유지됩니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과했고, 정적 route의 no-script 본문 삽입을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증",
+        "같은 지도에 속한 표현과 비용·학습 단계·확률 판정 세 글을 같은 구조로 검수"
       ]
     },
     {

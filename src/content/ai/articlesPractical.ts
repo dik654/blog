@@ -399,7 +399,7 @@ const pipelineArticles: Article[] = [
 export const cvArticles: Article[] = [
   {
     slug: "image-classification-pipeline",
-    title: "이미지 분류 데이터 경계: Identity Split과 Baseline Receipt",
+    title: "이미지 분류의 데이터 경계: 같은 대상을 함께 나누고 비교 조건 남기기",
     subcategory: "ai-practical-cv",
     sections: [
       { id: "overview", title: "Image Sample과 Deployment Unit" },

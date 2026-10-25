@@ -1962,7 +1962,7 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/image-classification-pipeline": [
     {
       kind: "공식 문서",
-      label: "scikit-learn GroupKFold",
+      label: "scikit-learn 1.9.1 GroupKFold 문서",
       href: "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html",
       note: "non-overlapping group을 cross-validation fold로 배정하는 API contract",
     },
