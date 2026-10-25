@@ -2074,9 +2074,21 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/deepfake-dataset-governance": [
     {
+      kind: "공식 규격",
+      label: "W3C PROV-O: entity·activity·agent와 derivation",
+      href: "https://www.w3.org/TR/2013/REC-prov-o-20130430/",
+      note: "원본·파생본과 생성 활동을 연결하는 provenance 표현의 기본 관계",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Datasheets for Datasets",
+      href: "https://arxiv.org/abs/1803.09010",
+      note: "자료의 구성·수집·사용·배포·유지보수와 사람 자료의 동의·철회 질문",
+    },
+    {
       kind: "Benchmark 논문",
       label: "The Deepfake Detection Challenge Dataset",
-      href: "https://arxiv.org/abs/2006.07397",
+      href: "https://arxiv.org/abs/2006.07397v4",
       note: "동의한 참여자 기반의 대규모 face-swap video dataset과 construction boundary",
     },
   ],

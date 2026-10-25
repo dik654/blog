@@ -81,9 +81,9 @@ export const DEEPFAKE_LEARNING_NODES: readonly DeepfakeLearningNode[] = [
     parentHref: "/cs/ai/deepfake-detection#release",
     parentLabel: "딥페이크 평가 지도 · 주장 범위",
     question:
-      "어떤 원본·인물·생성기·코덱을 어느 split에서 썼는지와 사용할 권한을 어떻게 함께 추적할까요?",
+      "어떤 원본·인물·생성기·코덱을 어느 split에서 썼는지와 사용할 권한을 어떻게 함께 추적합니까?",
     closure:
-      "파생 자료의 출처와 사용·삭제 범위를 manifest로 연결하고 조건별 독립 원본 수를 세어야 점수의 법적·통계적 범위를 함께 설명할 수 있습니다.",
+      "파생 자료의 출처와 사용 범위를 manifest로 연결합니다. 조건별 독립 원본 수를 세어야 자료를 쓸 수 있는 범위와 점수가 뒷받침하는 범위를 함께 설명할 수 있습니다.",
   },
 ] as const;
 

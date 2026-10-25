@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 579,
-    "pending": 412,
+    "reviewed": 580,
+    "pending": 411,
     "untracked": 0,
-    "assignedPending": 369,
+    "assignedPending": 368,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3091,11 +3091,11 @@
     {
       "route": "ai/deepfake-dataset-governance",
       "publicPath": "cs/ai/deepfake-dataset-governance",
-      "title": "딥페이크 Dataset Governance: Provenance·Consent·Coverage",
+      "title": "딥페이크 자료 범위: 출처에서 주장까지",
       "catalogIndex": 306,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

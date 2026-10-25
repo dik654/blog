@@ -1491,34 +1491,84 @@
     },
     {
       "route": "ai/deepfake-dataset-governance",
-      "title": "딥페이크 Dataset Governance: Provenance·Consent·Coverage",
+      "title": "딥페이크 자료 범위: 출처에서 주장까지",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
+        "src/content/deepfake-learning-tree.ts",
         "src/pages/articles/ai/deepfake-dataset-governance.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/Coverage.tsx",
         "src/pages/articles/ai/deepfake-dataset-governance/ModernArticle.tsx",
-        "src/pages/articles/ai/deepfake-detection/viz/ModernDeepfakeViz.tsx"
+        "src/pages/articles/ai/deepfake-dataset-governance/Overview.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/Provenance.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/Release.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/trace.ts",
+        "src/pages/articles/ai/deepfake-dataset-governance/viz/CoverageMatrixViz.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/viz/DatasetGovernanceMapViz.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/viz/ProvenanceChainViz.tsx",
+        "src/pages/articles/ai/deepfake-dataset-governance/viz/ReleasePropagationViz.tsx",
+        "src/pages/articles/ai/deepfake-detection/DeepfakeMobileStageFlow.tsx",
+        "src/pages/articles/ai/deepfake-detection/DeepfakePathLocator.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/DeepfakeStageViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 4,
         "hasSourceSurface": true,
-        "characters": 8428
+        "characters": 24117
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "원본·동의·provenance·coverage 용어를 나열했지만 하나의 crop이 어느 원본과 사용 범위에서 왔는지 끝까지 추적하는 흐름이 없었습니다.",
+        "파일 수와 독립 원본 근거 수가 분리되지 않아 파생 crop이 늘면 평가 근거도 늘어난 것처럼 읽힐 수 있었습니다.",
+        "사용 범위가 바뀐 뒤 파생본·coverage·자료 주장을 어느 순서로 다시 계산하는지 보이지 않았습니다.",
+        "직속 부모 지도, 현재 영역, 정적 읽기 순서와 reduced-motion 대안이 없어 딥페이크 평가 묶음에서 글의 위치를 찾기 어려웠습니다.",
+        "동의와 법률 범위를 일반화할 수 있는 문장이 있어 공식 자료에서 확인한 사실과 설명용 가정의 경계를 좁혀야 했습니다."
+      ],
+      "fixture": {
+        "status": "설명용 가정",
+        "lineage": "clip-042 → swap-042-Z → social-042-Z.mp4 → frame-120 → crop-04-a1",
+        "permission": "permission-C-r3 · person-C · 촬영·얼굴 변형·학습·평가",
+        "coverage": "generator-Z·social codec·256 px의 파일 60개 → 독립 source group 10개",
+        "revision": "permission-C-r4에서 person-C를 새 release에 쓰지 않음 → support 10에서 9",
+        "claim": "설명용 최소 support 10을 밑돌아 dataset-d09에서 해당 조건의 수치 주장 제외"
+      },
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "provenance": [
+          "provenance"
+        ],
+        "coverage": [
+          "coverage"
+        ],
+        "release": [
+          "release"
+        ],
+        "return": [
+          "release"
+        ]
+      },
+      "primarySourceApplication": [
+        "W3C PROV-O Recommendation의 Entity·Activity·Agent와 wasDerivedFrom 관계를 원본·생성·재인코딩·crop 출처 사슬에 적용했으며, 설명용 YAML이 PROV-O 전체 구현이나 상호운용성을 입증한다고 확대하지 않았습니다.",
+        "Datasheets for Datasets가 제안한 구성·수집·사용·배포·유지보수와 동의·철회 질문을 자료 수명주기 경계에 적용했으며, 논문이 본문의 필드 이름이나 최소 support 10을 정했다고 쓰지 않았습니다.",
+        "DFDC v4가 보고한 유급 참여자 3,426명, 참여와 얼굴 변형 동의, 100,000개가 넘는 clip만 확인했으며 공개 재배포·보유 기간·철회 처리는 미확인으로 남겼습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · clip-042에서 crop-04-a1까지의 출처, permission revision, 조건별 독립 원본 수와 release 주장이 한 사례로 이어집니다.",
+        "humanize": "pass · 프로젝트 한국어 감사 오류 0건, ko-natural 합니다체 오류 0건이며 긴 문장 네 곳을 의미 단위로 나눴습니다.",
+        "numericTrace": "pass · generator-Z·social codec의 파일 60개를 source group 10개로 접고, group 042-C 제외 뒤 support 9가 되어 설명용 최소값 10을 밑도는 과정을 추적했습니다.",
+        "mobile390": "pass · 네 그림이 307×474px 세로 단계로 표시되고 문서 scrollWidth 390px, 조작 버튼 49.5×49.5px, 가로 overflow 0을 확인했습니다.",
+        "desktop1440": "pass · provenance 5단계, coverage 3×3 표, release 4단계가 각 figure 안에 들어가고 문서 가로 overflow 0임을 확인했습니다.",
+        "keyboard": "pass · 네 그림 모두 컨테이너에 초점을 둔 뒤 ArrowRight로 마지막 장면까지 이동했습니다.",
+        "motion": "pass · 자동 시작과 반복이 없고 6.5초 뒤에도 첫 장면을 유지하며, 재생 시 5.2초마다 이동해 마지막에서 멈췄습니다. reduced-motion에서는 네 재생 버튼이 모두 비활성화됩니다.",
+        "productionBuild": "pass · Node 힙 상한을 8GB로 둔 전체 tsc-b·Vite build에서 7,973개 module과 2,088개 정적 route 생성이 통과했습니다.",
+        "noJavaScript": "pass · production 정적 본문에서 네 그림의 전체 순서와 clip-042·60→10·10→9·수치 주장 제외를 확인했으며 390×844와 1440×900에서 읽을 수 있습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {

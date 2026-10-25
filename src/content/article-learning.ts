@@ -21286,59 +21286,59 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/deepfake-dataset-governance": {
     "entryLevel": true,
     "entryNote": "파일 수가 많다는 말 대신 서로 다른 원본과 사용 권한이 얼마나 있는지 세는 데서 시작합니다.",
-    "coreIdea": "Forensic dataset은 source·person·consent·generator·codec derivative를 잇는 provenance manifest와 독립 source-group coverage matrix가 함께 있어야 합니다. 빈 cell과 삭제 범위를 숨기지 않아야 model claim의 근거 경계를 유지할 수 있습니다.",
+    "coreIdea": "딥페이크 자료의 주장은 원본·사람·사용 범위·generator·codec 파생본을 잇는 provenance manifest와 조건별 독립 원본 수로 제한됩니다. 파일 수가 늘어도 독립 근거는 늘지 않으며, 사용 범위가 바뀌면 파생본·coverage·주장을 함께 다시 계산해야 합니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
         "id": "forensic-data-provenance-manifest",
-        "role": "Source·identity·permission과 모든 derivative lineage를 기록합니다."
+        "role": "원본·사람·사용 범위 revision과 모든 파생본의 parent 관계를 기록합니다."
       },
       {
         "id": "forensic-coverage-matrix",
-        "role": "Generator·codec·resolution cell마다 독립 source group 수를 셉니다."
+        "role": "Generator·codec·resolution 조건마다 중복을 없앤 독립 원본 수를 셉니다."
       }
     ],
     "conceptExplanations": [
       {
         "id": "forensic-data-provenance-manifest",
         "sectionId": "provenance",
-        "intuition": "영상이 어디서 왔고 누가 어떤 조작과 이용에 동의했는지 파생본까지 따라가는 출처 장부입니다.",
-        "workedExample": "Source asset·person ID·consent revision·generator checkpoint·codec·split과 deletion status를 한 chain으로 연결합니다.",
-        "boundary": "인터넷에서 접근 가능하다는 사실은 얼굴 조작·재배포·상업 이용에 동의했다는 뜻이 아닙니다."
+        "intuition": "마지막 얼굴 crop에서 원본 영상과 사용 범위 기록까지 parent ID를 따라 돌아가는 출처 사슬입니다.",
+        "workedExample": "crop-04-a1에서 frame-120·social-042-Z.mp4·swap-042-Z·clip-042와 permission-C-r3을 차례로 찾습니다.",
+        "boundary": "설명용 permission 필드는 보편 계약이나 법률 규칙이 아니며, 실제 사용 범위는 적용되는 문서와 정책에서 확인해야 합니다."
       },
       {
         "id": "forensic-coverage-matrix",
         "sectionId": "coverage",
         "intuition": "파일이 많다는 말 대신 generator·codec·resolution 칸마다 서로 다른 원본 묶음이 몇 개인지 셉니다.",
-        "workedExample": "같은 source의 JPEG frames 1,000개는 한 cell의 독립 source coverage에서 1로 계산합니다.",
-        "boundary": "빈 test cell을 train source로 채우면 count는 늘어도 holdout 질문이 깨지고 미래 distribution을 보장하지 않습니다."
+        "workedExample": "Generator-Z·social codec·256 px의 파일 60개를 source group으로 접으면 독립 원본 10개이며 group 042-C의 crop 여섯 개는 1로 계산합니다.",
+        "boundary": "Generator-Y·social codec처럼 빈 칸은 다른 조건의 파일로 채울 수 없으며, 아직 모르는 미래 생성 조건도 미확인으로 남습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "00 Source",
-        "relation": "원본 asset과 person permission을 식별합니다.",
+        "relation": "원본 영상·사람·사용 범위 revision을 연결합니다.",
         "concepts": [
           "forensic-data-provenance-manifest"
         ]
       },
       {
         "label": "01 Derive",
-        "relation": "Generator·codec·crop derivatives를 parent chain에 잇습니다.",
+        "relation": "Generator·codec·frame·crop 파생본을 parent chain에 잇습니다.",
         "concepts": [
           "forensic-data-provenance-manifest"
         ]
       },
       {
         "label": "02 Count",
-        "relation": "Coverage cell에서 source group 중복을 제거합니다.",
+        "relation": "조건별 파일에서 source group 중복을 제거합니다.",
         "concepts": [
           "forensic-coverage-matrix"
         ]
       },
       {
         "label": "03 Release",
-        "relation": "Permission과 coverage가 있는 범위만 claim합니다.",
+        "relation": "사용 범위와 독립 원본 근거가 있는 조건만 주장합니다.",
         "concepts": [
           "forensic-data-provenance-manifest",
           "forensic-coverage-matrix"
@@ -21348,7 +21348,7 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Source asset과 derivative file을 서로 다른 개념으로 기록해야 하는 이유를 설명하세요.",
+        "question": "clip-042와 crop-04-a1을 서로 다른 artifact로 기록하면서도 같은 원본으로 연결해야 하는 이유를 설명하세요.",
         "answerChecklist": [
           "원본 identity",
           "parent chain",
@@ -21361,11 +21361,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Consent scope에 조작·연구·재배포를 별도 필드로 두는 이유를 설명하세요.",
+        "question": "permission-C-r3을 파생 파일마다 복사하지 않고 revision ID로 연결하는 이유를 설명하세요.",
         "answerChecklist": [
           "권한 분리",
           "허용 목적",
-          "revision과 expiry"
+          "revision 변경 전파"
         ],
         "requiredConcepts": [
           "forensic-data-provenance-manifest"
@@ -21374,12 +21374,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Deletion 요청이 들어온 person의 derivatives까지 찾는 경로를 설명하세요.",
+        "question": "Person-C를 새 자료 release에서 제외할 때 crop-04-a1까지 찾는 경로를 설명하세요.",
         "answerChecklist": [
           "person ID",
           "source assets",
           "parent links",
-          "caches와 outputs"
+          "generator·codec·frame·crop"
         ],
         "requiredConcepts": [
           "forensic-data-provenance-manifest"
@@ -21388,7 +21388,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "같은 source의 frames 1,000개가 coverage count 1인 이유를 설명하세요.",
+        "question": "Group 042-C의 crop 여섯 개가 coverage count 1인 이유를 설명하세요.",
         "answerChecklist": [
           "source group set",
           "unique",
@@ -21401,7 +21401,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Generator B와 social codec cell이 0일 때 말할 수 없는 주장을 설명하세요.",
+        "question": "Generator-Y와 social codec 칸이 0일 때 말할 수 없는 주장을 설명하세요.",
         "answerChecklist": [
           "빈 cell",
           "독립 evidence 없음",
@@ -21455,11 +21455,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "Consent 철회 뒤 trained artifact까지 포함한 삭제·재학습 경계를 설계하세요.",
+        "question": "사용 범위 변경 뒤 기존 checkpoint까지 자동 삭제할 수 없는 이유와 별도 판단 경계를 설명하세요.",
         "answerChecklist": [
           "data derivatives",
           "checkpoints",
-          "법적 scope",
+          "적용 계약·정책·법률",
           "release version"
         ],
         "requiredConcepts": [
@@ -21485,13 +21485,33 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     "papers": [
       {
+        "title": "PROV-O: The PROV Ontology",
+        "href": "https://www.w3.org/TR/2013/REC-prov-o-20130430/",
+        "problem": "서로 다른 시스템에서 만든 provenance 정보를 표현하고 교환하는 공통 관계가 필요합니다.",
+        "contribution": "Entity·Activity·Agent와 used·wasGeneratedBy·wasDerivedFrom 같은 관계를 정의합니다.",
+        "assumptions": "W3C PROV Data Model과 OWL2 표현을 전제로 합니다.",
+        "evidenceScope": "원본과 파생본을 잇는 관계를 설명하는 표준 범위입니다.",
+        "notClaim": "본문 YAML이 PROV-O 전체를 구현하거나 상호운용성 검사를 통과했다는 뜻은 아닙니다.",
+        "sectionId": "standard-prov"
+      },
+      {
+        "title": "Datasheets for Datasets",
+        "href": "https://arxiv.org/abs/1803.09010",
+        "problem": "기계학습 자료의 구성·수집·사용·배포·유지보수 정보가 빠져 적절한 사용 범위를 판단하기 어려운 문제입니다.",
+        "contribution": "자료 수명주기와 사람 자료의 동의·철회 수단을 묻는 문서화 질문을 제안합니다.",
+        "assumptions": "고정된 하나의 schema가 아니라 자료와 조직 상황에 맞추는 질문·workflow를 전제로 합니다.",
+        "evidenceScope": "자료 제작자와 사용자가 사용 범위와 유지보수 정보를 확인하는 문서화 범위입니다.",
+        "notClaim": "본문의 permission 필드와 최소 support 10을 논문이 정했다는 뜻은 아닙니다.",
+        "sectionId": "paper-datasheets"
+      },
+      {
         "title": "The DeepFake Detection Challenge Dataset",
-        "href": "https://arxiv.org/abs/2006.07397",
-        "problem": "대규모 face-swap detection과 challenge를 위한 consented video data를 구축하는 문제입니다.",
-        "contribution": "Likeness manipulation에 동의한 actors와 여러 manipulation의 대규모 clips를 제공합니다.",
-        "assumptions": "DFDC actor population·capture process·manipulation methods·competition split을 전제로 합니다.",
-        "evidenceScope": "논문의 dataset construction·consent와 challenge analysis 범위입니다.",
-        "notClaim": "DFDC가 모든 demographic·generator를 포괄하거나 영상 진위를 증명한다는 뜻은 아닙니다.",
+        "href": "https://arxiv.org/abs/2006.07397v4",
+        "problem": "대규모 face-swap 탐지와 challenge를 위해 참여·변형 동의를 받은 영상 자료가 필요합니다.",
+        "contribution": "3,426명의 유급 참여자와 여러 조작 방법으로 만든 100,000개 이상의 clip을 보고합니다.",
+        "assumptions": "DFDC의 참여자·촬영 과정·조작 방법·competition split을 전제로 합니다.",
+        "evidenceScope": "논문에 적힌 자료 구성, 촬영·얼굴 변형 동의와 challenge 분석 범위입니다.",
+        "notClaim": "공개 재배포·보유 기간·철회 처리가 본문의 설명용 manifest와 같았다는 뜻은 아닙니다.",
         "sectionId": "paper-dfdc"
       }
     ]
