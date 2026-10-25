@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 569,
-    "pending": 422,
+    "reviewed": 571,
+    "pending": 420,
     "untracked": 0,
-    "assignedPending": 379,
+    "assignedPending": 377,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2991,21 +2991,21 @@
     {
       "route": "ai/image-training-stages",
       "publicPath": "cs/ai/image-training-stages",
-      "title": "이미지 학습 단계: Resolution Handoff와 Pseudo-label",
+      "title": "이미지 학습 단계: 해상도와 임시 label을 한 번에 하나씩 바꾸기",
       "catalogIndex": 296,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
       "route": "ai/image-probability-decisions",
       "publicPath": "cs/ai/image-probability-decisions",
-      "title": "이미지 확률과 판정: Logit·Calibration·Decision Contract",
+      "title": "이미지 확률과 판정: 점수에서 행동까지",
       "catalogIndex": 297,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

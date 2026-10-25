@@ -6455,8 +6455,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Image inference decision contract",
     definition:
-      "Class mapping·preprocessing·calibration·TTA·ensemble weights·threshold 또는 reject policy를 순서와 selection split까지 포함해 versioning한 serving 규칙입니다.",
-    canonicalHref: "/cs/ai/image-probability-decisions#decision-contract",
+      "Class 순서·calibration·TTA·model weights·threshold 또는 reject 규칙을 적용 순서와 selection 자료까지 포함해 한 판정 버전으로 묶은 정의입니다.",
+    canonicalHref: "/cs/ai/image-probability-decisions#aggregation",
   },
   "vit-patch-sequence-contract": {
     id: "vit-patch-sequence-contract",

@@ -3666,34 +3666,53 @@
     },
     {
       "route": "ai/image-probability-decisions",
-      "title": "이미지 확률과 판정: Logit·Calibration·Decision Contract",
+      "title": "이미지 확률과 판정: 점수에서 행동까지",
       "subcategory": "ai-practical-cv",
       "publicFiles": [
-        "src/pages/articles/ai/image-classification-pipeline/viz/ModernImageClassificationViz.tsx",
         "src/pages/articles/ai/image-probability-decisions.tsx",
-        "src/pages/articles/ai/image-probability-decisions/ModernArticle.tsx"
+        "src/pages/articles/ai/image-probability-decisions/ModernArticle.tsx",
+        "src/pages/articles/ai/image-probability-decisions/viz/ProbabilityDecisionTraceViz.tsx",
+        "src/pages/articles/ai/image-classification-pipeline/ImageClassificationPathLocator.tsx",
+        "src/content/image-classification-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
         "hasSourceSurface": true,
-        "characters": 11173
+        "characters": 36530
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 logit·보정·ensemble·threshold를 각각 설명했지만, 예측 하나가 네 단계를 지나 실제 업무 행동으로 바뀌는 경로를 첫 화면에서 추적하기 어려웠습니다.",
+        "공유 시각화는 이 글의 temperature 후보 비교, TTA·model 결합, threshold 판정을 실제 숫자와 같은 장면에서 보여 주지 못했습니다.",
+        "개념 메커니즘과 배포 환경의 감시·latency·rollback 결정을 한 글에서 함께 다뤄 concept와 practice의 경계가 흐렸습니다."
+      ],
+      "fixture": "예측 pred-184의 logits (4,2,0)을 보정 집합에서 고른 T=1.5로 (.750,.198,.052)에 맞춥니다. model A의 TTA 평균 .725와 model B의 .620을 weights(.7,.3)로 합친 .6935가 신발 자동 분류 기준 .700보다 작아 검토 대기로 가는 과정을 추적합니다.",
+      "stageAnchors": {
+        "parent": ["image-classification-map"],
+        "trace": ["overview"],
+        "formula": ["temperature", "aggregation"],
+        "boundary": ["evidence-boundary"],
+        "return": ["image-classification-map-return"]
+      },
+      "primarySourceApplication": [
+        {
+          "href": "https://proceedings.mlr.press/v70/guo17a.html",
+          "application": "Guo et al.의 confidence calibration 정의와 held-out validation에서 scalar temperature를 고르는 방법을 pred-184의 설명용 보정 계산에 적용하고, class ranking·distribution shift·업무 비용까지 해결한다는 주장으로 넓히지 않았습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→pred-184 raw logits→보정 집합의 T 선택→TTA·model 결합→threshold 행동→판정 정의→근거 경계→부모 지도 반환 순서로 본문과 학습 문제를 다시 읽었습니다.",
+        "humanize": "logit·calibration·decision contract를 먼저 나열하지 않고 같은 예측이 숫자와 상태를 바꾸는 장면을 먼저 보여 주었습니다. 환경별 감시·latency·rollback은 실무 글의 판단으로 분리했습니다.",
+        "numericTrace": "T 후보의 설명용 평균 NLL .763·.753·.784, logits÷1.5, softmax (.750,.198,.052), TTA (.750+.700)÷2=.725, .7×.725+.3×.620=.6935, .6935<.700을 순서대로 대조했습니다.",
+        "mobile390": "390x844에서 첫 시각화 높이 754px, 문서 가로 overflow 0, 이전·재생·다음 조작부 50x50px를 확인했습니다.",
+        "desktop1440": "1440x1000에서 첫 시각화를 내용 높이 627px로 줄여 빈 세로 공간을 없앴고, 문서 가로 overflow 0과 네 장면의 숫자·선택 상태를 확인했습니다.",
+        "motion": "명시적으로 재생했을 때만 5.2초 간격으로 네 장면을 한 번 진행하고 마지막에서 멈춥니다. 키보드 이전·다음과 reduced-motion의 정적 네 단계가 같은 결론을 보여 줍니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 7,921개 module과 정적 public route 2,088개를 만들었습니다. Route를 no-script registry에 추가한 뒤 정적 본문 219편을 생성했고, JavaScript 비활성 390x844에서 부모 지도·네 단계·두 수식·출처·결론과 가로 넘침 0을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -3741,34 +3760,57 @@
     },
     {
       "route": "ai/image-training-stages",
-      "title": "이미지 학습 단계: Resolution Handoff와 Pseudo-label",
+      "title": "이미지 학습 단계: 해상도와 임시 label을 한 번에 하나씩 바꾸기",
       "subcategory": "ai-practical-cv",
       "publicFiles": [
-        "src/pages/articles/ai/image-classification-pipeline/viz/ModernImageClassificationViz.tsx",
         "src/pages/articles/ai/image-training-stages.tsx",
-        "src/pages/articles/ai/image-training-stages/ModernArticle.tsx"
+        "src/pages/articles/ai/image-training-stages/ModernArticle.tsx",
+        "src/pages/articles/ai/image-training-stages/viz/ImageTrainingStageViz.tsx",
+        "src/pages/articles/ai/image-classification-pipeline/ImageClassificationPathLocator.tsx",
+        "src/content/image-classification-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
         "hasSourceSurface": true,
-        "characters": 12462
+        "characters": 26532
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 stage handoff를 입력·optimizer·위치 상태의 목록으로 설명했지만, 한 run에서 실제 숫자가 어떻게 다음 단계로 이어지는지 바로 볼 수 없었습니다.",
+        "공유 시각화는 이 글의 160→320px 전환과 weak→strong pseudo-label 계산을 장면별 상태 변화로 보여 주지 못했습니다.",
+        "개념 글의 마지막에 class별 release 판정과 rollback을 넣어 stage 메커니즘과 운영 결정을 한 글에서 섞었습니다."
+      ],
+      "fixture": "run img-cls-07에서 160px 기준 학습은 64×4×1=256장, 320px 단계는 16×4×4=256장을 한 update에 봅니다. 이어서 label 없는 u-042가 weak-view 신발 .96으로 기준 .95를 통과하고 strong-view .72에서 −ln(.72)=.3285의 loss를 만드는 과정을 추적합니다.",
+      "stageAnchors": {
+        "parent": ["image-classification-map"],
+        "trace": ["overview"],
+        "formula": ["resolution-stage", "pseudo-label"],
+        "boundary": ["release"],
+        "return": ["image-classification-map-return"]
+      },
+      "primarySourceApplication": [
+        {
+          "href": "https://proceedings.neurips.cc/paper/2020/hash/06964dce9addb1c5cb5d6e3d9838f733-Abstract.html",
+          "application": "FixMatch의 weak-view confidence pseudo-label과 strong-view consistency 순서를 u-042의 .96·.95·.72 수치 추적에 적용하고, confidence가 정답을 보장하지 않는 경계를 함께 표시했습니다."
+        },
+        {
+          "href": "https://proceedings.neurips.cc/paper/9035-fixing-the-train-test-resolution-discrepancy.pdf",
+          "application": "학습과 평가의 crop·해상도가 물체 크기 분포를 바꾼다는 FixRes의 문제를 반영해, 해상도 전환을 단순 upsampling이 아니라 별도 stage로 설명했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→img-cls-07의 160px 기준 학습→320px handoff→u-042의 weak-view 통과→strong-view loss→변경 축 분리→부모 지도 반환 순서로 본문과 자동 학습 문제를 다시 읽었습니다.",
+        "humanize": "stage·pseudo-label 정의를 먼저 나열하지 않고 한 run의 상태 변화를 먼저 보여 주었습니다. release·rollback 판단은 제거하고, 영어 용어는 숫자 사례 뒤에 연결했습니다.",
+        "numericTrace": "S0의 64×4×1=256과 S1의 16×4×4=256을 단위와 함께 추적했습니다. u-042는 .96≥.95로 통과한 뒤 strong-view .72에서 −ln(.72)=.3285를 만드는 계산을 한 줄씩 확인했습니다.",
+        "mobile390": "390x844에서 문서와 시각화의 가로 overflow가 0이고, 제목·설명·4단계 상태·조작부를 포함한 첫 시각화 전체 높이가 viewport 안에 들어오는 것을 확인했습니다.",
+        "desktop1440": "1440x1000에서 stage rail과 현재 상태가 같은 화면 폭에 들어오며, 키보드 ArrowLeft와 버튼으로 장면을 이동하는 것을 확인했습니다.",
+        "motion": "명시적으로 재생했을 때만 5.2초 간격으로 네 장면을 한 번 진행하고 마지막에서 멈춥니다. reduced-motion에서는 재생이 꺼지고 네 장면의 정적 설명을 그대로 제공합니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 7,921개 module과 정적 public route 2,088개를 만들었습니다. Route를 no-script registry에 추가한 뒤 정적 본문 218편을 생성했고, JavaScript 비활성 390x844에서 부모 지도·네 장면·두 수식·결론이 순서대로 보이는 것을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
