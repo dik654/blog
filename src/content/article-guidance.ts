@@ -247,9 +247,10 @@ export const SUBCATEGORY_STARTS: Record<string, GuidanceLink> = {
     reason: "숫자를 줄이는 가장 작은 단위부터 압축·배포 파이프라인으로 갑니다.",
   },
   "ai-practical-llm": {
-    label: "LoRA Fine-tuning",
-    href: "/cs/ai/lora-finetuning",
-    reason: "전체 fine-tuning과 PEFT의 메모리·배포 차이를 먼저 봅니다.",
+    label: "RAG 전체 지도",
+    href: "/cs/ai/rag-pipeline",
+    reason:
+      "원문 수집부터 검색·문맥 구성·답변 근거까지 한 요청의 전체 경로를 먼저 본 뒤 각 내부 단계로 들어갑니다.",
   },
   "ai-practical-strategy": {
     label: "실험 추적",

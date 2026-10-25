@@ -1113,17 +1113,40 @@ export const compressionArticles: Article[] = [
 const llmAppArticles: Article[] = [
   {
     slug: "rag-pipeline",
-    title: "RAG 파이프라인: Source Ingestion에서 Grounded Answer까지",
+    title: "RAG 파이프라인",
     subcategory: "ai-practical-llm",
     sections: [
-      { id: "overview", title: "Answer에서 source까지 이어지는 trace" },
-      { id: "chunking", title: "검색 단위 · 근거 단위 · metadata" },
-      { id: "embedding", title: "Embedding–index version contract" },
-      { id: "retrieval", title: "검색 funnel 경계와 독립 글 연결" },
-      { id: "generation", title: "Context · citation · abstention policy" },
-      { id: "evaluation", title: "Retrieval · context · answer 분리 평가" },
+      { id: "overview", title: "전체 경로" },
+      { id: "chunking", title: "검색 단위" },
+      { id: "embedding", title: "검색 공간" },
+      { id: "retrieval", title: "후보 선택" },
+      { id: "generation", title: "문맥 구성" },
+      { id: "evaluation", title: "단계별 평가" },
     ],
     component: () => import("@/pages/articles/ai/rag-pipeline"),
+  },
+  {
+    slug: "rag-ingestion-and-chunking",
+    title: "RAG 문서 수집과 청킹",
+    subcategory: "ai-practical-llm",
+    sections: [
+      { id: "problem", title: "문서에서 색인까지" },
+      { id: "parsing", title: "문서 구조 보존" },
+      { id: "chunking", title: "크기와 겹침" },
+      { id: "semantic-chunking", title: "의미 경계" },
+      { id: "contextual-retrieval", title: "문맥 보충" },
+      { id: "pipeline", title: "수집 경로" },
+      {
+        id: "sources",
+        title: "근거",
+        subsections: [
+          { id: "paper-anthropic", title: "Anthropic Contextual Retrieval" },
+          { id: "paper-langchain", title: "LangChain Text Splitters" },
+          { id: "paper-llamaindex", title: "LlamaIndex Node Parser Modules" },
+        ],
+      },
+    ],
+    component: () => import("@/pages/articles/ai/rag-ingestion-and-chunking"),
   },
   {
     slug: "retrieval-ranking-funnel",
@@ -2244,29 +2267,6 @@ export const practicalArticles: Article[] = [
   ...compressionArticles,
   ...llmAppArticles,
   ...strategyArticles,
-  {
-    slug: "rag-ingestion-and-chunking",
-    title: "RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval",
-    subcategory: "ai-practical-llm",
-    sections: [
-      { id: "problem", title: "Knowledge base와 ingestion pipeline" },
-      { id: "parsing", title: "Document parsing (ingestion 관점)" },
-      { id: "chunking", title: "Chunk size, chunk overlap, chunk boundary" },
-      { id: "semantic-chunking", title: "Semantic chunking" },
-      { id: "contextual-retrieval", title: "Contextual retrieval" },
-      { id: "pipeline", title: "Ingestion pipeline 전체" },
-      {
-        id: "sources",
-        title: "근거 문서",
-        subsections: [
-          { id: "paper-anthropic", title: "Anthropic Contextual Retrieval" },
-          { id: "paper-langchain", title: "LangChain Text Splitters" },
-          { id: "paper-llamaindex", title: "LlamaIndex Node Parser Modules" },
-        ],
-      },
-    ],
-    component: () => import("@/pages/articles/ai/rag-ingestion-and-chunking"),
-  },
   {
     slug: "query-transformation-and-adaptive-retrieval",
     title: "Query 변환과 적응형 검색: rewriting·HyDE·Self-RAG·CRAG",

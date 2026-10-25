@@ -4,15 +4,21 @@ import EmbeddingViz from "./viz/EmbeddingViz";
 export default function Embedding() {
   return (
     <section id="embedding" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Embedding model을 바꾸는 일은 파일 하나를 교체하는 일이 아니라 검색 공간 전체의 version을 바꾸는 일입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">검색 공간</h2>
+      <div className="not-prose my-8"><EmbeddingViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>Query와 document는 checkpoint가 학습한 instruction·pooling·normalization 규약으로 encode합니다. 이 원리는 <a href="/cs/ai/sentence-embeddings">문장 임베딩 정본</a>에서 다루며, 여기서는 corpus snapshot과 index를 함께 배포하는 계약에 집중합니다.</p>
         <p>
-            같은 dimension이라고 같은 좌표계는 아닙니다. Encoder checkpoint나 query prefix, truncation 또는 normalization을 바꾸면
-            기존 document vector와 새 query vector의 내적을 해석할 근거가 사라집니다. 기존 active index는 보존한 채 새 version으로 corpus를
-            다시 encode해 blue/green shadow index를 만듭니다. 그리고 exact-search subset의 ANN recall, 동일 query의 paired
-            retrieval 품질, latency와 storage를 함께 비교합니다. Gate를 통과하면 alias를 원자적으로 전환합니다. 문제가 생기면 보존한 이전 index와
-            query encoder tuple로 즉시 rollback합니다.
+            같은 차원이라고 같은 좌표계는 아닙니다. Encoder checkpoint나
+            query prefix, truncation, normalization을 바꾸면 기존 문서
+            vector와 새 query vector의 내적을 해석할 근거가 사라집니다.
+          </p>
+        <p>
+            기존 active index는 보존하고 새 version으로 corpus를 다시
+            encode해 shadow index를 만듭니다. Exact-search subset의 ANN
+            recall, 같은 query의 검색 품질, latency와 storage를 비교한 뒤
+            alias를 전환합니다. 문제가 생기면 이전 index와 query encoder
+            tuple로 되돌립니다.
           </p>
       </div>
       <ExplainedFormula
@@ -35,7 +41,6 @@ export default function Embedding() {
         assumptions={["Query service가 active index와 같은 tuple의 encoder path를 사용합니다.", "Hash는 실제 artifact와 configuration을 재현할 수 있는 registry에 연결됩니다.", "동일 tuple은 검색 재현 조건이지 relevance 품질 보증이 아닙니다."]}
         interpretation="Checkpoint만 같아도 document는 normalized인데 query는 raw vector라면 다른 contract입니다. Alias 전환과 rollback도 이 tuple 단위로 수행합니다."
       />
-      <div className="not-prose my-8"><EmbeddingViz /></div>
     </section>
   );
 }

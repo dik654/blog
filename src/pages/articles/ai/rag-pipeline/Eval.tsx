@@ -4,7 +4,8 @@ import EvalViz from "./viz/EvalViz";
 export default function Eval() {
   return (
     <section id="evaluation" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">RAG 평가는 답변 점수 하나가 아니라 retrieval·context·answer·citation·system을 같은 query trace에서 따로 측정합니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">단계별 평가</h2>
+      <div className="not-prose my-8"><EvalViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p><strong>Recall@k</strong>는 필요한 문서 가운데 top-k가 몇 개를 회수했는지 봅니다. <strong>NDCG@k</strong>는 관련성이 높은 문서를 앞에 배치했는지 평가하며, 높은 순위에 더 큰 가치를 주고 이상적인 순서의 DCG로 나눠 0과 1 사이로 정규화합니다. Candidate recall이 낮으면 generation 실험을 멈추고 retrieval부터 고칩니다.</p>
       </div>
@@ -65,9 +66,17 @@ R_{\mathrm{cite}}&=\frac{\underbrace{|U_{\mathrm{supported}}|}_{\text{인용이 
         assumptions={["Claim segmentation과 entailment rubric을 사전에 고정하고 human audit 표본을 둡니다.", "같은 잘못된 citation을 여러 번 붙여도 valid support가 되지 않습니다.", "Citation precision·recall은 답변의 완전한 유용성·문체·안전성을 대신하지 않습니다."]}
         interpretation="인용 5개 중 4개가 주장을 지지하면 precision은 0.8입니다. 근거가 필요한 주장 6개 중 3개만 올바르게 연결됐다면 recall은 0.5이므로 인용은 대체로 맞지만 많이 빠진 답입니다."
       />
-      <div className="not-prose my-8"><EvalViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>평가셋에는 factoid뿐 아니라 multi-hop·no-answer·stale source·conflicting source·ACL·prompt injection을 넣습니다. LLM-as-judge는 빠른 rubric evaluator지만 judge·prompt·순서에 민감하므로 deterministic ID/span 검사와 blind human audit를 함께 둡니다. Source·parser·embedding·index·retriever·prompt·model version을 trace에 남겨 회귀가 시작된 stage를 찾습니다.</p>
+        <p>
+          평가셋에는 factoid뿐 아니라 multi-hop·no-answer·오래된
+          source·서로 충돌하는 source·ACL·prompt injection 사례를 넣습니다.
+        </p>
+        <p>
+          LLM-as-judge는 빠르지만 judge·prompt·순서에 민감합니다. 따라서
+          ID와 span을 직접 검사하는 절차, 사람이 답을 모른 채 확인하는 표본
+          감사도 함께 둡니다. Source·parser·embedding·index·retriever·
+          prompt·model version을 trace에 남겨 회귀가 시작된 단계를 찾습니다.
+        </p>
       </div>
       <div id="reading-ragas" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">평가 논문 · Ragas</p>

@@ -26129,30 +26129,6 @@ export const ARTICLE_LEARNING: Readonly<
       "RAG는 문서를 LLM 앞에 붙이는 기능이 아니라, 사용자의 질문에서 최신·허가된 source를 찾고 검색 단위와 generation 문맥을 구성한 뒤, 최종 claim과 citation을 원문 revision까지 역추적하며 각 실패 stage를 따로 평가하는 system입니다.",
     assumedKnowledge: [
       {
-        id: "reciprocal-rank-fusion",
-        role: "Dense·sparse rank fusion의 계산은 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
-        id: "bm25-lexical-ranking",
-        role: "Lexical candidate 생성은 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
-        id: "hnsw-ann-index",
-        role: "Approximate dense candidate search는 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
-        id: "cross-encoder-reranking",
-        role: "Bounded candidate reranking은 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
-        id: "graph-structured-retrieval-boundary",
-        role: "Graph retrieval lane의 provenance 경계는 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
-        id: "rag-pre-retrieval-access-control",
-        role: "Candidate 생성 전 ACL 경계는 독립 retrieval funnel 글에서 재사용합니다.",
-      },
-      {
         id: "offline-document-embedding-reuse",
         role: "Document vector를 corpus revision마다 미리 계산하고 query마다 재사용하는 비용 구조를 읽습니다.",
       },

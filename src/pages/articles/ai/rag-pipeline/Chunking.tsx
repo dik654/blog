@@ -4,7 +4,8 @@ import ChunkingViz from "./viz/ChunkingViz";
 export default function Chunking() {
   return (
     <section id="chunking" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Chunking은 글자 수를 맞추는 전처리가 아니라, 검색 단위와 인용 가능한 근거 단위의 경계를 정하는 작업입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">검색 단위</h2>
+      <div className="not-prose my-8"><ChunkingViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
             문서 전체를 vector 하나로 만들면 서로 다른 주제가 섞이기 쉽습니다. 한 문장씩 자르면 조건과 예외가 흩어질 수 있습니다. 먼저 parser가 제목·문단·목록·표·code
@@ -32,11 +33,16 @@ export default function Chunking() {
         assumptions={["정답 span label이 source revision과 같은 좌표계를 사용합니다.", "중복 overlap은 합집합으로 한 번만 셉니다.", "문자 coverage가 1이어도 표 header·앞 문단 조건 같은 구조적 문맥이 충분하다는 보장은 없습니다."]}
         interpretation="정답 근거가 원문 100자이고 최종 context가 그중 80자를 보존했다면 coverage는 0.8입니다. 이 값을 chunk length·overlap·parent 복원 방식별로 비교합니다."
       />
-      <div className="not-prose my-8"><ChunkingViz /></div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-            각 chunk에는 source ID·revision·heading path·원문 offset·parser version·valid-time·ACL을 남깁니다. 표는 셀만 떼지
-            않고 header와 row 관계를 복원할 수 있어야 합니다. 삭제된 원문에서 파생된 chunk와 vector까지 찾을 수 있어야 합니다.
+            각 chunk에는 원문을 다시 찾기 위한 source ID·revision·heading
+            path·offset을 남깁니다. Parser version·유효 시점·ACL도 같은
+            기록에 묶습니다.
+          </p>
+        <p>
+            표를 나눌 때는 header와 row 관계를 복원할 수 있어야 합니다.
+            원문이 삭제되면 그 문서에서 만든 chunk와 vector도 함께 찾을 수
+            있어야 합니다.
           </p>
       </div>
     </section>

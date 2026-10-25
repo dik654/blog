@@ -11322,26 +11322,77 @@
       "route": "ai/rag-pipeline",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/rag-pipeline.tsx",
       "publicPath": "cs/ai/rag-pipeline",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "전체 경로 글이 검색 세부 개념을 선수 지식으로 요구해 부모와 자식의 학습 순서가 뒤집혀 있었음",
+        "원문·chunk·색인·후보·문맥·답변의 상태 소유권이 긴 설명에 흩어져 첫 실패 단계를 찾기 어려웠음",
+        "시각화가 설명 뒤에 놓여 독자가 먼저 텍스트를 읽어야 전체 흐름을 조립할 수 있었음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "requestId": "q-731",
+        "userId": "u-42",
+        "role": "employee",
+        "sourceRevision": "policy-v17",
+        "chunkId": "c-8f31",
+        "indexRevision": "index-v42",
+        "claimId": "c2"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "0": "overview",
+        "1": "chunking",
+        "2": "embedding",
+        "3": "retrieval",
+        "4": "generation",
+        "5": "evaluation",
+        "standard": "standard-rag-security",
+        "paper": "reading-rag",
+        "return": "rag-pipeline-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2005.11401",
+          "location": "Abstract and §2",
+          "application": "parametric memory와 검색 가능한 non-parametric memory를 결합한 RAG의 원래 문제 경계를 설명"
+        },
+        {
+          "href": "https://arxiv.org/abs/2307.03172",
+          "location": "Abstract and position experiments",
+          "application": "관련 근거가 문맥에 있어도 위치에 따라 모델이 활용하지 못할 수 있다는 context assembly 한계를 설명"
+        },
+        {
+          "href": "https://cheatsheetseries.owasp.org/cheatsheets/RAG_Security_Cheat_Sheet.html",
+          "location": "Document ingestion and retrieval security guidance",
+          "application": "원문·파생 chunk·권한·citation을 같은 추적 경로로 관리해야 하는 보안 경계를 설명"
+        }
+      ],
+      "validation": {
+        "semanticReview": "RAG를 원문 갱신과 질문 처리의 두 경로로 나누고 q-731의 claim c2를 policy-v17 원문까지 역추적하도록 재구성했습니다.",
+        "humanize": "긴 개념 나열을 전체 경로·검색 단위·검색 공간·후보 선택·문맥 구성·단계별 평가로 바꾸고 직역투 표현을 줄였습니다.",
+        "browser390": "390×844에서 문서와 8개 시각화의 가로 넘침 0, 시각화 높이 754px 이하, 본문보다 그림이 먼저 나오는 순서를 확인했습니다.",
+        "browser1440": "1440×1000에서 문서와 8개 시각화의 가로 넘침 0, 전체 경로 장면과 사이드바 순서를 확인했습니다.",
+        "keyboard": "주 흐름 그림에 초점을 둔 뒤 ArrowRight와 ArrowLeft로 장면 1·2를 이동했습니다.",
+        "reducedMotion": "마지막 장면에서 재생 꺼짐 상태를 표시하고 재생 버튼이 비활성화되는 것을 확인했습니다.",
+        "noScript": "production build의 390×844 정적 화면에서 부모 지도, 여섯 절, 전체 장면 목록, claim c2→policy-v17 추적과 지도 반환을 확인했으며 console 오류가 없었습니다.",
+        "build": "production build 8,008 modules·정적 public route 2,088개·no-script 본문 266편 생성, 최대 상주 메모리 약 6.38GB",
+        "browserEvidence": "output/playwright/rag-pipeline-flow-mobile-final.png, output/playwright/rag-pipeline-flow-desktop-final.png"
+      },
+      "remaining": ["GitHub Pages 배포 뒤 공개 경로 확인"],
+      "bodyFiles": [
+        "src/pages/articles/ai/rag-pipeline.tsx",
+        "src/pages/articles/ai/rag-pipeline/Overview.tsx",
+        "src/pages/articles/ai/rag-pipeline/Chunking.tsx",
+        "src/pages/articles/ai/rag-pipeline/Embedding.tsx",
+        "src/pages/articles/ai/rag-pipeline/Generation.tsx",
+        "src/pages/articles/ai/rag-pipeline/Eval.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/rag-pipeline.tsx"
     },
     {
       "route": "ai/ranking-metrics",

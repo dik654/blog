@@ -1,17 +1,31 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { RagPipelineLocator } from "./RagPipelineLocator";
 import OverviewViz from "./viz/OverviewViz";
+import RagOwnershipViz from "./viz/RagOwnershipViz";
+import RagPipelineFlowViz from "./viz/RagPipelineFlowViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">RAG의 목적은 모델에게 문서를 많이 보여주는 것이 아니라, 답변에서 허가된 원문까지 검증 가능한 경로를 만드는 것입니다</h2>
+      <RagPipelineLocator />
+      <RagPipelineFlowViz />
+      <h2 className="mb-6 text-2xl font-bold">답에서 원문까지</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
             사용자가 “지난달에 바뀐 환불 규정은 무엇인가?”라고 물었을 때 모델 파라미터만으로 답하면 최신성·출처·접근 권한을 확인하기 어렵습니다. Retrieval-Augmented
             Generation(RAG)은 질문에 필요한 외부 문서를 먼저 찾습니다. 선택한 근거를 모델 입력에 넣은 뒤 답변의 각 주장과 원문 위치를 다시 연결합니다.
           </p>
-        <p>이 구조는 지식 저장소 자체가 아닙니다. 원문을 가져오지 못하거나, 가져온 문맥에서 정답 부분을 잘라냈거나, 모델이 근거와 다른 말을 하면 여전히 실패합니다. 그래서 ingestion·chunking·index·retrieval·context assembly·generation·citation을 하나의 trace로 관리해야 합니다.</p>
+        <p>
+          RAG라고 해서 원문을 자동으로 올바르게 찾는 것은 아닙니다. 원문을
+          가져오지 못하거나, 가져온 문맥에서 정답 부분을 잘라내거나, 모델이
+          근거와 다른 말을 하면 여전히 실패합니다.
+        </p>
+        <p>
+          그래서 ingestion·chunking·index·retrieval·context assembly·
+          generation·citation을 한 요청의 trace로 연결해야 합니다.
+        </p>
         <p>문서가 적고 안정적이며 한 번에 읽을 수 있다면 long-context prompting이 더 단순할 수 있습니다. 반대로 사실을 바꾸는 것이 아니라 출력 형식이나 말투를 익히게 하려면 <a href="/cs/ai/domain-finetuning">fine-tuning</a>이 맞습니다. RAG는 자주 갱신되는 문서, source-level ACL, citation과 삭제 반영이 중요한 경우에 특히 유용합니다.</p>
       </div>
       <ContentBoundary article="rag-pipeline" />
@@ -41,13 +55,46 @@ S(q)&=\underbrace{I_{\mathrm{source}}(q)}_{\text{corpus에 근거 있음}}\under
         interpretation="최신 규정이 corpus에 없으면 첫 항부터 0이므로 generator를 교체할 이유가 없습니다. 문서는 검색됐지만 prompt 예산 때문에 빠졌다면 context assembly를 고쳐야 합니다."
       />
       <div className="not-prose my-8"><OverviewViz /></div>
+      <RagOwnershipViz />
+      <AlgorithmBlock
+        title="한 요청을 역추적하는 순서 — 설명용 의사코드"
+        input={[
+          "request=q-731, user=u-42, role=employee, requested_at=09:30",
+          "answer claim c2와 citation chunk c-8f31",
+        ]}
+        steps={[
+          {
+            code: "claim c2 → citation c-8f31",
+            note: "먼저 답변의 주장이 실제 citation ID와 연결됐는지 확인합니다.",
+          },
+          {
+            code: "c-8f31 → policy-v17 §4.2 offset 1180:1540",
+            note: "Chunk manifest에서 원문 revision과 위치를 복원합니다.",
+          },
+          {
+            code: "authorize(u-42, employee, policy-v17, requested_at)",
+            note: "검색 시점뿐 아니라 검증 시점에도 문서 권한과 유효 시점을 확인합니다.",
+          },
+          {
+            code: "assert active_alias → index-v42 → corpus policy-v17",
+            note: "Query encoder와 색인 manifest가 같은 좌표계와 corpus snapshot을 가리키는지 확인합니다.",
+          },
+          {
+            code: "record first_failed_stage or support_receipt",
+            note: "처음 깨진 단계의 소유자에게 수정 책임을 연결하고, 모두 통과하면 지원 근거를 남깁니다.",
+          },
+        ]}
+        output="claim c2가 policy-v17의 허가된 원문으로 확인되거나, 처음 실패한 단계와 소유자가 기록됩니다."
+      />
       <div id="reading-rag" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Retrieval-Augmented Generation</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는 non-parametric memory를 결합했습니다. 그리고 같은
-            passage를 sequence 전체에 쓰는 방식과 token마다 passage를 달리할 수 있는 방식을 비교했습니다. 핵심 아이디어는 생성 모델 바깥의 명시적 memory를
-            검색해 provenance와 지식 갱신 경로를 마련한 것입니다. 논문의 Wikipedia·knowledge-intensive task 결과가 모든 사내 corpus와 최신
-            RAG 구현의 성능을 보장하는 것은 아닙니다.
+            Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는
+            non-parametric memory를 결합했습니다. 같은 passage를 sequence
+            전체에 쓰는 방식과 token마다 passage를 달리하는 방식도
+            비교했습니다. 생성 모델 밖의 명시적 memory를 검색해 provenance와
+            지식 갱신 경로를 만든 것이 핵심입니다. 논문의 결과가 모든 사내
+            corpus와 최신 RAG 구현의 성능을 보장하지는 않습니다.
           </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noreferrer">문제 정의와 두 RAG formulation 보기</a>
       </div>
