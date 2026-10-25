@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 990,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 679,
-    "inlineVisuals": 556,
-    "customVisuals": 862,
+    "dedicatedVisuals": 680,
+    "inlineVisuals": 557,
+    "customVisuals": 863,
     "animatedMechanisms": 456,
     "architectureWithoutAnimation": 97,
-    "recursiveLocators": 216,
+    "recursiveLocators": 217,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
-    "architectureWithoutCustomVisual": 26
+    "architectureWithoutCustomVisual": 25
   },
   "articles": [
     {
@@ -4930,18 +4930,18 @@
     {
       "route": "ai/sandbox-deployment-controls",
       "publicPath": "cs/ai/sandbox-deployment-controls",
-      "title": "Sandbox 배포 통제: Identity · Egress · Storage · Release",
+      "title": "배포 통제: 신원·통신·저장 수명",
       "sourcePath": "src/pages/articles/ai/sandbox-deployment-controls.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/sandbox-gpu-isolation",

@@ -28,12 +28,24 @@ export const AGENT_SECURITY_SOURCES = {
     href: "https://github.com/kata-containers/kata-containers/blob/main/docs/use-cases/NVIDIA-GPU-passthrough-and-Kata-QEMU.md",
   },
   networkPolicy: {
-    label: "Kubernetes NetworkPolicy",
-    href: "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+    label: "Kubernetes v1.37 NetworkPolicy",
+    href: "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/services-networking/network-policies.md",
   },
   serviceAccounts: {
-    label: "Kubernetes ServiceAccounts",
-    href: "https://kubernetes.io/docs/concepts/security/service-accounts/",
+    label: "Kubernetes v1.37 ServiceAccounts",
+    href: "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/security/service-accounts.md",
+  },
+  rbac: {
+    label: "Kubernetes v1.37 RBAC Authorization",
+    href: "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/reference/access-authn-authz/rbac.md",
+  },
+  emptyDir: {
+    label: "Kubernetes v1.37 Volumes / emptyDir",
+    href: "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/concepts/storage/volumes.md",
+  },
+  securityContext: {
+    label: "Kubernetes v1.37 Security Context",
+    href: "https://github.com/kubernetes/website/blob/snapshot-initial-v1.37/content/en/docs/tasks/configure-pod-container/security-context.md",
   },
   podSecurity: {
     label: "Kubernetes Pod Security Standards",
@@ -44,7 +56,7 @@ export const AGENT_SECURITY_SOURCES = {
     href: "https://kubernetes.io/docs/tutorials/security/seccomp/",
   },
   ciliumDns: {
-    label: "Cilium DNS and FQDN policies",
-    href: "https://docs.cilium.io/en/stable/security/dns/",
+    label: "Cilium v1.20.4 DNS and FQDN policies",
+    href: "https://github.com/cilium/cilium/blob/v1.20.4/Documentation/security/dns.rst",
   },
 } as const;

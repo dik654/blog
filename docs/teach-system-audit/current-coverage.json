@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 559,
-    "pending": 431,
+    "reviewed": 560,
+    "pending": 430,
     "untracked": 0,
-    "assignedPending": 387,
+    "assignedPending": 386,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2251,11 +2251,11 @@
     {
       "route": "ai/sandbox-deployment-controls",
       "publicPath": "cs/ai/sandbox-deployment-controls",
-      "title": "Sandbox 배포 통제: Identity · Egress · Storage · Release",
+      "title": "배포 통제: 신원·통신·저장 수명",
       "catalogIndex": 222,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
