@@ -412,13 +412,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "image-backbone-scaling",
-    title: "이미지 Backbone 선택: Resolution Cost와 Runtime Budget",
+    title: "이미지 Backbone의 표현과 비용: 해상도·깊이·폭을 함께 보기",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Backbone이 소유하는 변환" },
-      { id: "resolution-cost", title: "CNN·ViT Resolution Cost" },
-      { id: "compound-scaling", title: "Depth·Width·Resolution 조합" },
-      { id: "budget-comparison", title: "Quality–Runtime Frontier" },
+      { id: "overview", title: "같은 이미지, 다른 계산" },
+      { id: "resolution-cost", title: "해상도 비용" },
+      { id: "compound-scaling", title: "세 축을 함께 키우기" },
+      { id: "budget-comparison", title: "실측으로 고르기" },
     ],
     component: () => import("@/pages/articles/ai/image-backbone-scaling"),
   },

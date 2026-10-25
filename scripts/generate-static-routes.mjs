@@ -107,6 +107,7 @@ const noScriptArticleRoutes = new Set([
   "ai/early-stopping",
   "ai/label-smoothing",
   "ai/image-classification-pipeline",
+  "ai/image-backbone-scaling",
   "ai/open-r1",
   "ai/llm-monitoring-observability-and-drift",
   "ai/llm-application-caching",
