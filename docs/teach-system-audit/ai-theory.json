@@ -1626,34 +1626,71 @@
     },
     {
       "route": "ai/deepfake-preprocessing-lineage",
-      "title": "딥페이크 전처리: Face Track Coverage와 Lineage",
+      "title": "딥페이크 전처리: 누락과 입력 출처",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
-        "src/pages/articles/ai/deepfake-detection/viz/ModernDeepfakeViz.tsx",
+        "src/content/deepfake-learning-tree.ts",
         "src/pages/articles/ai/deepfake-preprocessing-lineage.tsx",
-        "src/pages/articles/ai/deepfake-preprocessing-lineage/ModernArticle.tsx"
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/Coverage.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/FailureStages.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/Lineage.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/ModernArticle.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/Overview.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/trace.ts",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/viz/CoverageViz.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/viz/FailureTraceViz.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/viz/LineageReceiptViz.tsx",
+        "src/pages/articles/ai/deepfake-preprocessing-lineage/viz/PreprocessingMapViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 4,
         "hasSourceSurface": true,
-        "characters": 7862
+        "characters": 22461
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Decode·얼굴 위치·인물 추적·crop이 용어별로 나뉘어 있었지만 한 원본 영상의 같은 시각들이 어디서 사라지는지 연속해서 볼 수 없었습니다.",
+        "첫 절의 공용 시각화 한 개 외에는 단계별 실패·공통 분모 계산·입력 출처 기록을 눈으로 검산할 화면이 없었습니다.",
+        "직속 부모 지도와 같은 개념 트랙의 위치가 없었고 성공한 crop만 남길 때 평가 범위가 줄어드는 이유가 한 사례로 닫히지 않았습니다."
+      ],
+      "fixture": "clip-042의 00:00~00:09 평가 시각 열 개를 고정하고, NO_FACE 두 건·TRACK_SWITCH 한 건·TOO_SMALL 한 건을 남겨 얼굴 위치 8개·인물 추적 7개·유효 crop 6개와 최종 coverage 0.60을 추적합니다 (설명용 가정).",
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "episode": [
+          "overview"
+        ],
+        "typed-failures": [
+          "detection-track"
+        ],
+        "shared-denominator": [
+          "coverage"
+        ],
+        "return": [
+          "lineage"
+        ]
+      },
+      "primarySourceApplication": [
+        "DeepfakeBench는 서로 다른 데이터 처리·구현·평가 조건이 detector 비교를 왜곡하는 문제와 통일된 데이터 관리·평가 protocol의 필요성을 뒷받침하는 데만 사용했습니다.",
+        "논문의 benchmark 범위를 특정 face detector·crop 규칙이 모든 실제 영상에 최적이라는 주장으로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · clip-042의 같은 열 개 시각이 입력 생성·typed failure·coverage·출처 영수증까지 이어집니다.",
+        "humanize": "pass · 절 제목을 역할 중심 한국어로 바꾸고 정식 상태 코드와 schema 필드만 영어로 남겼습니다.",
+        "numericTrace": "pass · 평가 분모 10에서 얼굴 위치 8·인물 추적 7·유효 crop 6을 세어 coverage 0.80·0.70·0.60을 독립 계산했습니다.",
+        "mobile390": "pass · 네 그림이 세로 단계와 선택한 상태 설명으로 표시되고 문서 가로 overflow 0, 각 마지막 장면과 console 오류 0을 확인했습니다.",
+        "desktop1440": "pass · 시각별 실패표·coverage 막대·입력 영수증이 잘리지 않고 문서 가로 overflow 0임을 확인했습니다.",
+        "keyboard": "pass · 네 그림에 초점을 둔 뒤 ArrowRight로 마지막 장면까지 이동했습니다.",
+        "motion": "pass · 6초 대기에도 자동 시작하지 않았고 reduced-motion에서는 재생만 비활성화되며 다음 장면 이동은 유지됐습니다.",
+        "productionBuild": "pass · Node 힙 상한을 8GB로 명시한 전체 tsc-b·Vite build에서 7,947개 module과 2,088개 정적 route 생성이 통과했습니다.",
+        "noJavaScript": "pass · production 정적 본문에서 네 절과 네 그림의 전체 장면, NO_FACE·TRACK_SWITCH·TOO_SMALL, coverage 0.60을 확인했고 390×844 화면에서 가로 잘림 없이 표시됐습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {

@@ -101,6 +101,7 @@ const noScriptArticleRoutes = new Set([
   "ai/vision-backbone-selection",
   "ai/multiview-fusion",
   "ai/deepfake-detection",
+  "ai/deepfake-preprocessing-lineage",
   "ai/lr-scheduling",
   "ai/lr-decay-policies",
   "ai/cosine-restart-scheduling",

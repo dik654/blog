@@ -20629,8 +20629,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/deepfake-preprocessing-lineage": {
     "entryLevel": true,
-    "entryNote": "얼굴 crop을 당연한 입력으로 보지 않고 decode부터 crop까지 성공과 실패가 어떻게 만들어지는지 봅니다.",
-    "coreIdea": "얼굴 전처리는 detector 밖의 청소 단계가 아니라 관측 장치입니다. Eligible frame을 분모로 coverage를 계산하고 각 transform과 실패를 source timestamp에 연결해야 preprocessing shortcut과 silent deletion을 진단할 수 있습니다.",
+    "entryNote": "clip-042의 평가 시각 열 개가 decode·얼굴 위치·인물 추적·crop을 지나 여섯 입력으로 바뀌는 전체 지도에서 시작합니다.",
+    "coreIdea": "얼굴 전처리는 detector 밖의 정리 작업이 아니라 관측 과정입니다. 처음 정한 원본 시각을 분모로 coverage를 계산하고 각 변환과 실패를 원본 시각에 연결해야 조용히 사라진 입력과 전처리 지름길을 찾을 수 있습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -20647,43 +20647,43 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "forensic-preprocessing-lineage",
         "sectionId": "lineage",
         "intuition": "완성 crop에 원본 주소와 자르기·회전·보간 영수증을 붙여 artifact가 생긴 단계를 찾습니다.",
-        "workedExample": "Source hash, timestamp, detector revision, box, landmarks, track ID, alignment matrix와 failure code를 한 record에 둡니다.",
+        "workedExample": "clip-042의 00:04 crop에 원본 checksum·timestamp·decoder와 detector revision·box·track ID·alignment·출력 checksum을 한 기록으로 연결합니다.",
         "boundary": "Lineage 자체가 detector를 robust하게 만들지는 않지만 input 변화의 원인을 재현하고 rollback할 수 있게 합니다."
       },
       {
         "id": "face-track-coverage",
         "sectionId": "coverage",
         "intuition": "성공한 얼굴만 채점하지 않고 원래 읽어야 했던 영상 중 실제로 읽은 비율을 남깁니다.",
-        "workedExample": "Eligible 100 frames에서 detect 80, 같은 identity track 70, valid crop 62이면 최종 coverage는 .62입니다.",
+        "workedExample": "평가 시각 10개에서 얼굴 위치 8개, 같은 인물 track 7개, 유효 crop 6개이면 단계별 coverage는 .80·.70·.60입니다.",
         "boundary": "높은 coverage만으로 track switch나 잘못된 identity crop이 없다고 보장하지 않으므로 lineage audit가 함께 필요합니다."
       }
     ],
     "conceptStages": [
       {
-        "label": "00 Decode",
-        "relation": "Source frame과 timestamp를 고정합니다.",
+        "label": "00 평가 시각",
+        "relation": "clip-042의 원본 시각 열 개를 먼저 고정합니다.",
         "concepts": [
           "forensic-preprocessing-lineage"
         ]
       },
       {
-        "label": "01 Track",
-        "relation": "Detection과 identity continuity 결과를 기록합니다.",
+        "label": "01 얼굴 위치",
+        "relation": "얼굴을 찾지 못한 시각을 NO_FACE로 기록합니다.",
         "concepts": [
           "forensic-preprocessing-lineage",
           "face-track-coverage"
         ]
       },
       {
-        "label": "02 Crop",
-        "relation": "Alignment·margin·interpolation transform을 보존합니다.",
+        "label": "02 인물 추적",
+        "relation": "같은 인물이 이어지지 않은 시각을 TRACK_SWITCH로 기록합니다.",
         "concepts": [
           "forensic-preprocessing-lineage"
         ]
       },
       {
-        "label": "03 Coverage",
-        "relation": "성공과 실패를 같은 전체 분모로 집계합니다.",
+        "label": "03 입력과 Coverage",
+        "relation": "유효 crop과 실패를 같은 전체 분모로 집계합니다.",
         "concepts": [
           "face-track-coverage"
         ]
@@ -20692,11 +20692,11 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Eligible 100 frames 중 valid crop 62개일 때 track coverage를 계산하세요.",
+        "question": "평가 시각 10개 중 유효 crop 6개일 때 detector 입력 coverage를 계산하세요.",
         "answerChecklist": [
-          "분모 100",
-          "분자 62",
-          "coverage .62"
+          "분모 10",
+          "분자 6",
+          "coverage .60"
         ],
         "requiredConcepts": [
           "face-track-coverage"
@@ -20705,12 +20705,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Detect 80·track 70·crop 62일 때 단계별 coverage를 같은 분모로 계산하세요.",
+        "question": "평가 시각 10개에서 얼굴 위치 8·인물 추적 7·유효 crop 6일 때 단계별 coverage를 계산하세요.",
         "answerChecklist": [
           ".80",
           ".70",
-          ".62",
-          "같은 eligible 분모"
+          ".60",
+          "같은 평가 시각 분모"
         ],
         "requiredConcepts": [
           "face-track-coverage"
