@@ -35946,9 +35946,9 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/agent-frameworks": {
     entryLevel: true,
     entryNote:
-      "Agent·ReAct·checkpoint·reducer를 알고 있다고 가정하지 않습니다. 고객 환불 요청 한 건을 조회하고 정책을 확인한 뒤, 사람의 승인을 기다렸다가 환불 API를 호출하고 receipt를 검증하는 예를 처음부터 끝까지 따라갑니다. 기존 ReAct·하네스·멀티에이전트 정본은 심화 링크로 제공하되, 이 글을 먼저 읽어도 framework 선택과 복구 흐름을 설명할 수 있게 구성합니다.",
+      "Agent·ReAct·checkpoint·reducer를 알고 있다고 가정하지 않습니다. A-104 환불 한 건을 조회하고 정책을 확인한 뒤, 사람의 승인을 기다렸다가 외부 환불을 검증하는 예를 처음부터 끝까지 따라갑니다. 제품 비교는 별도 실무 글로 보내고, 이 글에서는 상태·중단·재개 메커니즘만 설명합니다.",
     coreIdea:
-      "Agent framework는 model을 더 똑똑하게 만드는 부품이 아니라 state·tool call·persistence·interrupt·retry·trace 같은 실행 책임을 반복 구현하지 않게 해 주는 runtime 선택지입니다. 먼저 작은 direct loop를 baseline으로 만들고, process restart·사람 승인·병렬 merge·장기 상태처럼 실제 요구사항이 생길 때만 framework를 도입해야 합니다. 선택 뒤에는 checkpoint와 replay를 구분해 외부 side effect를 idempotent하게 만들고, framework·state schema·serializer·checkpointer version을 함께 고정한 paired evaluation과 rollback 경로를 유지해야 합니다.",
+      "Agent runtime은 model을 더 똑똑하게 만드는 부품이 아니라 run의 상태·중단·재개를 프로세스 밖에서 이어 주는 실행 계층입니다. 새 worker는 마지막 checkpoint에서 미완료 node를 찾되, 외부 환불은 같은 작업 key로 기존 결과를 먼저 조회하고 영수증을 검증한 뒤 완료 상태에 연결해야 합니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -35966,14 +35966,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "interrupt-resume-contract",
         role: "승인 대기에서 멈춘 run identity와 검증된 resume payload를 연결합니다.",
-      },
-      {
-        id: "framework-capability-requirement-matrix",
-        role: "네 framework를 유명도가 아닌 workload의 필수·선호 runtime 기능으로 비교합니다.",
-      },
-      {
-        id: "framework-version-migration-contract",
-        role: "State·checkpoint 호환성, paired eval, canary와 rollback을 version 이관 계약으로 묶습니다.",
       },
     ],
     conceptExplanations: [
@@ -36003,7 +35995,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "게임 저장 지점으로 돌아가 계산을 다시 하는 것과 이미 외부 은행에 보낸 송금을 취소하거나 다시 보내는 것은 다른 문제입니다. State 복원과 세상에 남은 effect를 별도로 확인해야 합니다.",
         workedExample:
-          "Refund node 호출 직후 process가 죽고 checkpoint에는 완료 표시가 남지 않았더라도, retry 전에 stable operation key `refund:order-42:v1`로 receipt를 조회합니다. 이미 성공했다면 기존 receipt를 state에 연결하고, 없을 때만 같은 key로 idempotent API를 호출합니다.",
+          "주문 A-104의 Refund node 호출 직후 process가 죽고 checkpoint에는 완료 표시가 남지 않았더라도, retry 전에 stable operation key `refund:refund-8472:A-104`로 receipt를 조회합니다. 이미 성공했다면 기존 receipt를 state에 연결하고, 없을 때만 같은 key로 idempotent API를 호출합니다.",
         boundary:
           "Checkpoint가 exactly-once execution을 보장하지 않고 node가 pure function이라는 가정도 외부 API에는 성립하지 않습니다. Email·결제·ticket 생성처럼 non-idempotent effect는 operation identity·receipt·status lookup·보상 정책이 필요합니다.",
       },
@@ -36016,26 +36008,6 @@ export const ARTICLE_LEARNING: Readonly<
           "`await_approval` interrupt는 thread ID, checkpoint ID, order·amount·policy hash, approver scope, expiry를 저장합니다. Resume 요청은 signed approval ID와 decision을 검증하고 snapshot의 amount가 바뀌지 않았을 때만 `refund_api` edge로 전이합니다.",
         boundary:
           "중단 뒤 user message가 왔다는 사실만으로 승인된 것은 아니며 resume을 새 run으로 시작해 이전 state를 prompt로만 복사해서도 안 됩니다. Identity·scope·expiry·payload binding·중복 resume과 취소 경로를 runtime에서 검사해야 합니다.",
-      },
-      {
-        id: "framework-capability-requirement-matrix",
-        sectionId: "comparison",
-        intuition:
-          "브랜드 순위를 먼저 정하지 않고 우리 업무에 전원·무게·방수·수리성이 필수인지 표로 만든 뒤 제품 설명과 직접 시험 결과를 채우는 방식입니다.",
-        workedExample:
-          "환불 workload의 행에는 typed state, durable persistence, human interrupt, idempotent resume hook, data/RAG integration, multi-agent team, deployment, trace를 둡니다. 확인 시점 문서에서 LangGraph는 graph runtime·checkpoint를, LlamaIndex는 data/tool 중심 agent workflow를, AutoGen AgentChat은 agent/team/state API를, CrewAI는 role-based Crews와 event/state 중심 Flows를 제공하는지 version과 함께 표시하고 필수 기능은 작은 spike로 검증합니다.",
-        boundary:
-          "표의 check mark는 품질·운영 적합성·보안 보장이 아니며 각 project의 기능은 빠르게 바뀝니다. CrewAI Flow의 persistence처럼 여러 runtime에 유사 기능이 있으므로 특정 framework만 durable하다고 단정하지 말고 semantics와 version을 비교해야 합니다.",
-      },
-      {
-        id: "framework-version-migration-contract",
-        sectionId: "comparison",
-        intuition:
-          "업무 시스템을 교체할 때 새 화면이 열리는지만 보지 않고 진행 중인 접수 건을 읽을 수 있는지, 같은 승인과 환불을 중복 처리하지 않는지 확인한 뒤 일부 트래픽부터 옮깁니다.",
-        workedExample:
-          "Manifest에 framework/SDK, state schema, serializer, checkpointer/store, model, prompt, tool schema version을 기록합니다. 기존 checkpoint fixture를 새 runtime에서 dry-run하고 동일 환불 case의 final artifact·node trace·API receipt·latency·token을 paired 비교한 뒤 canary thread만 이관하며, 실패하면 old reader/writer와 versioned checkpoint로 rollback합니다.",
-        boundary:
-          "Source code가 compile되거나 새 framework의 unit test가 통과해도 기존 persisted run과 side effect가 호환된다는 뜻은 아닙니다. In-place state rewrite에는 backup·dual reader 또는 explicit converter·migration receipt·rollback deadline이 필요합니다.",
       },
     ],
     conceptStages: [
@@ -36075,27 +36047,12 @@ export const ARTICLE_LEARNING: Readonly<
           "interrupt-resume-contract",
         ],
       },
-      {
-        label: "Select",
-        relation:
-          "Workload 필수·선호 기능을 네 framework의 현재 문서와 spike 결과에 대조",
-        concepts: ["framework-capability-requirement-matrix"],
-      },
-      {
-        label: "Migrate",
-        relation:
-          "Paired trace와 checkpoint compatibility로 canary·rollback을 승인",
-        concepts: [
-          "agent-trajectory-effect-evaluation",
-          "framework-version-migration-contract",
-        ],
-      },
     ],
     exercises: [
       {
         level: "basic",
         question:
-          "환불 요청 조회부터 receipt 검증까지 한 process에서 끝나는 경우와 다음 날 사람 승인을 받는 경우를 비교해 direct SDK loop와 framework runtime 중 무엇을 선택할지 설명하라.",
+          "환불 요청 조회부터 receipt 검증까지 한 process에서 끝나는 경우와 다음 날 사람 승인을 받는 경우의 상태 수명 차이를 설명하라.",
         answerChecklist: [
           "direct baseline",
           "state/action/observation",
@@ -36104,8 +36061,8 @@ export const ARTICLE_LEARNING: Readonly<
           "restart",
           "persistence",
           "interrupt",
-          "framework overhead",
-          "requirement not brand",
+          "process boundary",
+          "durable state",
         ],
         requiredConcepts: [
           "agent-framework-runtime-boundary",
@@ -36201,22 +36158,18 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "LangGraph·LlamaIndex·AutoGen AgentChat·CrewAI Crew/Flow를 환불 workload의 requirement matrix로 비교하되 확인 시점·version·공식 근거·직접 spike가 필요한 칸을 표시하라.",
+          "A-104의 thread checkpoint와 여러 실행이 공유하는 application store에 어떤 값을 각각 보관할지 나누어 설명하라.",
         answerChecklist: [
-          "typed state",
-          "persistence",
-          "interrupt/resume",
-          "data/RAG",
-          "agent/team",
-          "workflow/flow",
-          "deployment",
-          "observability",
-          "official version/date",
-          "unknown/test",
-          "no universal winner",
+          "thread identity",
+          "graph position",
+          "pending approval",
+          "refund receipt",
+          "cross-thread profile",
+          "different lifetime",
+          "tenant boundary",
         ],
-        requiredConcepts: ["framework-capability-requirement-matrix"],
-        sectionId: "comparison",
+        requiredConcepts: ["durable-agent-execution-state"],
+        sectionId: "langchain",
       },
       {
         level: "advanced",
@@ -36243,76 +36196,59 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Direct loop와 선택한 framework를 동일 환불 dataset에서 paired evaluation해 도입 이득을 판정하는 실험과 acceptance threshold를 설계하라.",
+          "Checkpoint 저장 전과 저장 후에 각각 worker가 종료되는 경우 A-104의 재개 위치와 외부 효과 확인 순서를 비교하라.",
         answerChecklist: [
-          "same model/prompt/tools",
-          "same task slices",
-          "success/verified receipt",
-          "approval correctness",
-          "duplicate effect rate",
-          "resume success",
-          "trajectory",
-          "p95 latency",
-          "token/cost",
-          "failure injection",
-          "paired comparison",
-          "complexity budget",
+          "checkpoint boundary",
+          "pending node",
+          "ambiguous effect",
+          "stable operation key",
+          "status lookup",
+          "receipt verification",
+          "completed state",
         ],
         requiredConcepts: [
-          "agent-framework-runtime-boundary",
-          "framework-capability-requirement-matrix",
-          "agent-trajectory-effect-evaluation",
+          "checkpoint-replay-boundary",
+          "durable-agent-execution-state",
         ],
-        sectionId: "comparison",
+        sectionId: "langchain",
       },
       {
         level: "advanced",
         question:
-          "Framework major version과 state serializer를 함께 올릴 때 기존 checkpoint fixture·paired trace·canary·rollback을 포함한 migration plan을 작성하라.",
+          "승인 응답이 만료된 policy version을 가리키거나 두 번 도착했을 때 resume을 거부하는 상태 전이를 작성하라.",
         answerChecklist: [
-          "version manifest",
-          "state schema",
-          "serializer",
-          "checkpointer/store",
-          "tool/model/prompt versions",
-          "old fixture",
-          "converter/dual reader",
-          "dry-run",
-          "canary",
-          "migration receipt",
-          "rollback",
-          "deadline",
+          "run identity",
+          "approval payload hash",
+          "policy version",
+          "expiry",
+          "duplicate decision",
+          "rejected transition",
+          "audit event",
         ],
         requiredConcepts: [
-          "framework-version-migration-contract",
+          "interrupt-resume-contract",
+          "durable-agent-execution-state",
+        ],
+        sectionId: "langchain",
+      },
+      {
+        level: "advanced",
+        question:
+          "환불 provider가 idempotency key를 지원하지 않을 때 중복 효과 위험을 줄이는 대체 복구 계약과 남는 한계를 설명하라.",
+        answerChecklist: [
+          "internal operation record",
+          "serialized writer",
+          "provider status lookup",
+          "unknown completion",
+          "manual reconciliation",
+          "compensation",
+          "not exactly once",
+        ],
+        requiredConcepts: [
+          "agent-replay-idempotency",
           "checkpoint-replay-boundary",
         ],
-        sectionId: "comparison",
-      },
-      {
-        level: "advanced",
-        question:
-          "정책 해석은 agent judgment로 남기고 승인·환불·재시도는 deterministic flow로 통제하는 hybrid architecture를 네 framework 후보 중 하나로 구현할 때 책임·복구·비선택 이유를 방어하라.",
-        answerChecklist: [
-          "semantic policy comparison",
-          "deterministic transitions",
-          "approval checkpoint",
-          "authorized refund",
-          "idempotency receipt",
-          "typed state",
-          "selected capabilities",
-          "rejected alternatives",
-          "version evidence",
-          "security external",
-          "single-loop fallback",
-        ],
-        requiredConcepts: [
-          "agent-workflow-judgment-boundary",
-          "interrupt-resume-contract",
-          "agent-replay-idempotency",
-          "framework-capability-requirement-matrix",
-        ],
-        sectionId: "comparison",
+        sectionId: "langchain",
       },
     ],
     papers: [
@@ -36361,66 +36297,63 @@ export const ARTICLE_LEARNING: Readonly<
           "Checkpoint가 external API의 exactly-once effect·transaction·tenant security를 자동 보장하거나 store와 checkpointer가 같은 수명의 데이터를 뜻하지 않음",
         sectionId: "paper-langgraph-durable-execution",
       },
+    ],
+  },
+  "ai/agent-runtime-selection": {
+    entryNote:
+      "상태·중단·재개 메커니즘은 Agent Runtime 개념 글에서 익혔다고 가정합니다. 이 글은 그 개념의 checkpoint·replay anchor에서 시작해 A-104 환불을 직접 구현과 네 후보에 같은 조건으로 실행하는 실무 판단만 다룹니다.",
+    coreIdea:
+      "Agent Runtime은 기능표나 인지도보다 상태 소유권과 실패 복구 결과로 선택합니다. A-104의 direct SDK 기준선을 먼저 남기고, 공식 문서로 후보 의미를 확인한 뒤 같은 장애를 주입해 복구율·중복 효과·trace를 측정하며, 진행 중인 checkpoint를 이관하거나 되돌릴 수 있을 때만 채택합니다.",
+    assumedKnowledge: [
+      { id: "agent-framework-runtime-boundary", role: "직접 loop와 runtime이 갈리는 책임 경계를 재사용합니다." },
+      { id: "durable-agent-execution-state", role: "프로세스 밖에 남는 run state의 구성 요소를 재사용합니다." },
+      { id: "checkpoint-replay-boundary", role: "상태 복원과 외부 효과 재실행을 분리하는 경계를 재사용합니다." },
+      { id: "interrupt-resume-contract", role: "승인 응답을 동일 run에 안전하게 연결하는 계약을 재사용합니다." },
+    ],
+    introducedHere: [
+      { id: "framework-capability-requirement-matrix", role: "후보 이름 대신 A-104가 요구하는 상태·재개·통합 책임으로 비교합니다." },
+      { id: "framework-version-migration-contract", role: "State·serializer·checkpoint 호환성과 canary·rollback을 하나의 이관 계약으로 묶습니다." },
+    ],
+    conceptExplanations: [
       {
-        title: "LlamaIndex — Agents",
-        href: "https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/",
-        problem:
-          "LLM이 data source·retrieval·tool을 사용해 여러 step의 작업을 수행하도록 agent와 workflow를 구성하고 실행·배포하는 문제",
-        contribution:
-          "LlamaIndex의 agent·tool·workflow·memory·multi-agent 관련 현재 guide와 data-centric application에서 사용할 구성 경로를 제공",
-        assumptions:
-          "확인 시점 LlamaIndex Python framework·agent workflow API, 연결한 model·tool·index와 deployment environment",
-        evidenceScope:
-          "공식 module guide가 설명하는 agent construction·workflow·tool/data integration의 현재 기능",
-        notClaim:
-          "LlamaIndex가 모든 RAG·agent task에서 품질이 높거나 persistence·interrupt·security semantics가 다른 runtime과 동일하다는 뜻은 아님",
-        sectionId: "paper-llamaindex-agents",
+        id: "framework-capability-requirement-matrix",
+        sectionId: "comparison",
+        intuition: "브랜드 순위를 정하는 대신 우리 업무가 요구하는 전원·무게·방수 조건을 먼저 적고 제품 설명과 직접 시험 결과를 채우는 방식입니다.",
+        workedExample: "A-104의 행에는 typed state, durable persistence, approval interrupt, idempotent resume hook, data/RAG integration, multi-agent team과 trace를 둡니다. LangGraph·LlamaIndex·AutoGen·CrewAI의 공식 문서로 기능 의미를 채우고 미확인 칸은 작은 spike로 검증합니다.",
+        boundary: "문서의 지원 표시는 품질·운영 적합성·보안 보장이 아닙니다. 같은 이름의 persistence도 memory와 durable checkpoint처럼 의미가 다르므로 설치할 version과 실제 failure semantics를 확인해야 합니다.",
       },
       {
-        title: "AutoGen — AgentChat tutorial",
-        href: "https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/index.html",
-        problem:
-          "Single agent와 multi-agent team이 message·tool·termination·state를 주고받는 application을 반복 가능한 high-level API로 구성하는 문제",
-        contribution:
-          "AutoGen AgentChat의 agents·teams·model clients·tools·termination·state·logging을 단계적으로 소개하는 stable user guide를 제공",
-        assumptions:
-          "확인 시점 AutoGen stable AgentChat API와 지원 model client·extension·team configuration, Core와 Studio의 별도 abstraction",
-        evidenceScope:
-          "공식 tutorial에 문서화된 AgentChat high-level API와 single/multi-agent 실행 기능",
-        notClaim:
-          "Agent 수를 늘리면 품질이 자동 증가하거나 AgentChat의 state 기능이 durable business workflow·authorization·idempotency를 대신 보장한다는 뜻은 아님",
-        sectionId: "paper-autogen-agentchat",
+        id: "framework-version-migration-contract",
+        sectionId: "comparison",
+        intuition: "업무 시스템을 교체할 때 새 화면이 열리는지만 보지 않고 진행 중인 접수 건을 읽고 중복 처리 없이 되돌릴 수 있는지 확인합니다.",
+        workedExample: "Manifest에 framework·state schema·serializer·checkpointer·model·prompt·tool version을 기록합니다. 기존 A-104 checkpoint fixture를 새 runtime에서 dry-run하고 canary run만 이관하며, 실패하면 old reader와 versioned checkpoint로 돌아갑니다.",
+        boundary: "새 code가 compile되거나 unit test가 통과해도 기존 persisted run과 외부 효과가 호환된다는 뜻은 아닙니다. In-place rewrite에는 backup·converter 또는 dual reader·migration receipt·rollback deadline이 필요합니다.",
       },
-      {
-        title: "CrewAI — Crews",
-        href: "https://docs.crewai.com/en/concepts/crews",
-        problem:
-          "역할이 다른 agent와 순서·hierarchy가 있는 task를 한 협업 단위로 정의하고 실행 결과와 process를 관리하는 문제",
-        contribution:
-          "Crew·agent·task·process·memory·planning·execution hook과 관련한 현재 role-based collaboration 개념과 configuration을 설명",
-        assumptions:
-          "확인 시점 CrewAI 문서 version과 Crew process·agent/task configuration, 연결한 model·tool·memory provider",
-        evidenceScope:
-          "공식 Crews 문서에 명시된 role-based orchestration과 execution option",
-        notClaim:
-          "Crew가 single-agent보다 항상 낫거나 role description만으로 artifact ownership·join completeness·runtime security가 보장된다는 뜻은 아님",
-        sectionId: "paper-crewai-crews",
-      },
-      {
-        title: "CrewAI — Flows",
-        href: "https://docs.crewai.com/en/concepts/flows",
-        problem:
-          "Event·state·branch·router가 있는 deterministic application flow와 agentic work를 결합하고 long-running process를 persist·resume·fork해야 하는 문제",
-        contribution:
-          "Flow state, start/listen/router decorators, Crew integration, persistence를 위한 @persist와 resume/fork를 포함한 현재 event-driven workflow 개념을 설명",
-        assumptions:
-          "확인 시점 CrewAI 문서 version·Flow API·persistence backend와 state serialization, application이 작성한 method·routing·error handling",
-        evidenceScope:
-          "공식 Flows 문서에 설명된 state/event/routing/persistence/resume 기능",
-        notClaim:
-          "CrewAI만 persistence를 제공하거나 @persist가 외부 side effect idempotency·database transaction·authorization을 자동 해결한다는 뜻은 아님",
-        sectionId: "paper-crewai-flows",
-      },
+    ],
+    conceptStages: [
+      { label: "Anchor", relation: "Checkpoint·replay·외부 효과의 개념 경계에서 시작합니다.", concepts: ["checkpoint-replay-boundary", "interrupt-resume-contract"] },
+      { label: "Baseline", relation: "Direct SDK로 A-104를 끝까지 실행해 가장 작은 기준선을 남깁니다.", concepts: ["agent-framework-runtime-boundary"] },
+      { label: "Compare", relation: "공식 문서와 spike로 후보의 실제 상태 소유권을 채웁니다.", concepts: ["framework-capability-requirement-matrix"] },
+      { label: "Inject", relation: "같은 failure point에서 복구율·중복 효과·trace를 측정합니다.", concepts: ["framework-capability-requirement-matrix", "checkpoint-replay-boundary"] },
+      { label: "Decide", relation: "호환성·canary·rollback을 포함해 채택 또는 보류합니다.", concepts: ["framework-version-migration-contract"] },
+    ],
+    exercises: [
+      { level: "basic", question: "A-104 direct SDK 기준선이 소유해야 할 상태와 외부 효과를 나누세요.", answerChecklist: ["run state", "approval", "operation key", "receipt", "authoritative writer"], requiredConcepts: ["agent-framework-runtime-boundary", "checkpoint-replay-boundary"], sectionId: "comparison" },
+      { level: "basic", question: "LangGraph·LlamaIndex·AutoGen·CrewAI를 비교할 요구사항 행을 작성하세요.", answerChecklist: ["durable state", "interrupt", "resume semantics", "data integration", "team runtime", "trace"], requiredConcepts: ["framework-capability-requirement-matrix"], sectionId: "comparison" },
+      { level: "basic", question: "Persistence 지원 표시만으로 후보를 채택할 수 없는 이유를 설명하세요.", answerChecklist: ["memory versus checkpoint", "storage owner", "replay semantics", "external effect", "version"], requiredConcepts: ["framework-capability-requirement-matrix"], sectionId: "comparison" },
+      { level: "basic", question: "A-104에서 LlamaIndex가 유리해지는 조건과 불필요해지는 조건을 나누세요.", answerChecklist: ["retrieval", "index", "query engine", "simple HTTP", "scope cost"], requiredConcepts: ["framework-capability-requirement-matrix"], sectionId: "paper-llamaindex-agents" },
+      { level: "basic", question: "AutoGen AgentChat과 Core의 책임을 A-104에 대입하세요.", answerChecklist: ["high-level team", "event runtime", "message lifecycle", "single state machine", "need evidence"], requiredConcepts: ["framework-capability-requirement-matrix"], sectionId: "paper-autogen-agentchat" },
+      { level: "basic", question: "Crew와 Flow를 자율적 subtask와 결정적 전이에 각각 배치하세요.", answerChecklist: ["role task", "event state", "approval", "refund transition", "persistence semantics"], requiredConcepts: ["framework-capability-requirement-matrix"], sectionId: "paper-crewai-flows" },
+      { level: "advanced", question: "직접 구현과 후보 runtime에 같은 A-104 failure를 주입하는 paired experiment를 설계하세요.", answerChecklist: ["same model", "same tools", "same failure point", "resume success", "duplicate effect", "trace", "p95", "cost"], requiredConcepts: ["framework-capability-requirement-matrix", "checkpoint-replay-boundary"], sectionId: "comparison" },
+      { level: "advanced", question: "환불 API 성공 직후 worker 종료에서 통과·탈락 기준을 정하세요.", answerChecklist: ["stable key", "status lookup", "verified receipt", "duplicate zero", "unknown state", "manual escalation"], requiredConcepts: ["framework-capability-requirement-matrix", "checkpoint-replay-boundary"], sectionId: "comparison" },
+      { level: "advanced", question: "Framework와 serializer를 함께 올리는 checkpoint 이관 계획을 작성하세요.", answerChecklist: ["version manifest", "old fixture", "converter or dual reader", "dry-run", "canary", "receipt", "rollback deadline"], requiredConcepts: ["framework-version-migration-contract"], sectionId: "comparison" },
+      { level: "advanced", question: "측정 이득이 작거나 rollback이 실패한 경우 결정을 어떻게 뒤집을지 쓰세요.", answerChecklist: ["measured threshold", "complexity budget", "direct baseline", "no in-place rewrite", "rollback", "ADR status"], requiredConcepts: ["framework-capability-requirement-matrix", "framework-version-migration-contract"], sectionId: "comparison" },
+    ],
+    papers: [
+      { title: "LangGraph overview", href: "https://docs.langchain.com/oss/python/langgraph/overview", problem: "장기 실행 stateful workflow의 공통 runtime 책임을 직접 구현해야 하는 문제", contribution: "Durable execution·human-in-the-loop·memory와 deployment의 현재 범위를 제시", assumptions: "확인 시점 공식 문서와 설치할 LangGraph version", evidenceScope: "공식 문서에 명시된 runtime capability", notClaim: "모든 workload에서 direct loop보다 단순하거나 안전하다는 뜻은 아님", internalHref: "/cs/ai/agent-frameworks#paper-langgraph-runtime" },
+      { title: "LlamaIndex — Agents", href: "https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/", problem: "Data source·retrieval·tool을 agent workflow에 연결하는 문제", contribution: "Agent·tool·memory와 data-centric integration의 현재 경로를 설명", assumptions: "확인 시점 Python framework와 연결한 model·tool·index", evidenceScope: "공식 agent API와 data integration", notClaim: "모든 RAG·agent task의 품질이나 durable exactly-once를 보장한다는 뜻은 아님", sectionId: "paper-llamaindex-agents" },
+      { title: "AutoGen — AgentChat tutorial", href: "https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/index.html", problem: "Agent·team·message runtime을 서로 다른 수준에서 구성하는 문제", contribution: "AgentChat high-level API와 event-driven Core의 현재 계층을 설명", assumptions: "확인 시점 stable package와 runtime configuration", evidenceScope: "공식 문서의 agents·teams·Core 경계", notClaim: "Agent 수 증가가 품질이나 durable workflow를 보장한다는 뜻은 아님", sectionId: "paper-autogen-agentchat" },
+      { title: "CrewAI — Crews and Flows", href: "https://docs.crewai.com/en/concepts/flows", problem: "Role-based work와 event·state 중심 workflow를 결합하는 문제", contribution: "Crew·Flow·persistence·resume·fork의 현재 개념을 설명", assumptions: "확인 시점 v1.15.30 문서와 storage·serialization 설정", evidenceScope: "공식 문서의 role·task·state·routing·persistence 범위", notClaim: "외부 효과의 exactly-once나 정책 정확성을 자동 보장한다는 뜻은 아님", sectionId: "paper-crewai-flows" },
     ],
   },
   "ai/claude-code": {

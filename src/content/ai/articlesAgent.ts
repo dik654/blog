@@ -943,14 +943,26 @@ export const agentArticles: Article[] = [
   /* ── 4. 프레임워크 & 실제 구현체 ── */
   {
     slug: "agent-frameworks",
-    title: "에이전트 프레임워크: 직접 구현부터 Durable Runtime까지",
+    title: "Agent Runtime: 상태·중단·재개",
     subcategory: "ai-agents",
     sections: [
-      { id: "overview", title: "직접 Tool Loop와 Framework 경계" },
-      { id: "langchain", title: "State·Checkpoint·Interrupt" },
-      { id: "comparison", title: "요구사항과 복구 비용으로 비교하기" },
+      { id: "overview", title: "환불 한 건" },
+      { id: "langchain", title: "상태와 재개" },
     ],
     component: () => import("@/pages/articles/ai/agent-frameworks"),
+  },
+  {
+    slug: "agent-runtime-selection",
+    title: "Agent Runtime 선택: 상태 소유권·실험·롤백",
+    subcategory: "ai-agents",
+    sections: [
+      { id: "comparison", title: "A-104 후보 비교" },
+      { id: "paper-llamaindex-agents", title: "LlamaIndex 근거" },
+      { id: "paper-autogen-agentchat", title: "AutoGen 근거" },
+      { id: "paper-crewai-crews", title: "Crew 근거" },
+      { id: "paper-crewai-flows", title: "Flow 근거" },
+    ],
+    component: () => import("@/pages/articles/ai/agent-runtime-selection"),
   },
   {
     slug: "claude-code",

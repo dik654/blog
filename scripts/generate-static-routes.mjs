@@ -135,6 +135,8 @@ const noScriptArticleRoutes = new Set([
   "ai/sandbox-gpu-isolation",
   "ai/sandbox-deployment-controls",
   "ai/skills-anatomy",
+  "ai/agent-frameworks",
+  "ai/agent-runtime-selection",
   "ai/gan",
   "ai/gan-training-dynamics",
   "ai/gan-wasserstein-critics",

@@ -5,9 +5,15 @@ import LangGraphDetailViz from "./viz/LangGraphDetailViz";
 export default function LangChain() {
   return (
     <section id="langchain" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        LangChain과 LangGraph는 서로 다른 층을 맡습니다
-      </h2>
+      <header className="mb-6 space-y-3">
+        <p className="text-xs font-black tracking-[0.18em] text-primary">01 · 상태와 재개</p>
+        <h2 className="text-2xl font-black leading-tight sm:text-3xl">Integration과 Runtime을 구분합니다</h2>
+        <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">모델·도구 연결과 장기 실행 상태를 같은 기능으로 묶지 않습니다.</p>
+      </header>
+
+      <div className="not-prose my-8">
+        <FrameworkArchViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
@@ -31,10 +37,6 @@ export default function LangChain() {
           Functional API 중 필요한 방식을 고릅니다. LangGraph는 LangChain 없이도 쓸 수 있으므로
           integration layer와 runtime을 반드시 함께 채택할 필요는 없습니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <FrameworkArchViz />
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -80,12 +82,19 @@ export default function LangChain() {
           </CitationBlock>
         </div>
 
+      </div>
+
+      <div className="not-prose my-8">
+        <LangGraphDetailViz />
+      </div>
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Checkpoint는 복원 가능한 상태 사본입니다</h3>
         <p>
           <strong>Checkpoint</strong>는 “다음 줄 번호”만 저장하지 않습니다. LangGraph의
           persistence는 thread별 graph state values, 다음에 실행할 node·task와 metadata를
-          남겨 interrupt, fault recovery와 replay에 사용합니다. Thread ID는 어느 실행의
-          checkpoint history를 읽을지 가리킵니다.
+          남겨 interrupt, fault recovery와 replay에 사용합니다. 이 사례에서는
+          <code>thread_id=refund-8472</code>가 어느 실행의 checkpoint history를 읽을지 가리킵니다.
         </p>
         <p>
           <strong>Checkpointer</strong>는 이 graph state를 저장합니다. 여러 thread가 공유하는
@@ -101,13 +110,6 @@ export default function LangChain() {
           File handle, open database transaction, live HTTP response 같은 process-local object는 다른 worker가 복원하기
           어렵습니다. 대신 stable ID와 필요한 data를 저장하고 connection 같은 dependency는 runtime context에서 다시 주입합니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <LangGraphDetailViz />
-      </div>
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>Replay가 가능하면 side effect는 idempotent해야 한다</h3>
         <p>
           과거 checkpoint에서 replay하면 이전 node 결과는 건너뛸 수 있지만 checkpoint 뒤의
@@ -120,7 +122,7 @@ export default function LangChain() {
           것과 같게 만드는 성질입니다.
         </p>
         <p>
-          환불 API에는 <code>{"refund:{request_id}:{order_id}"}</code>처럼 workflow에서
+          A-104 환불 API에는 <code>refund:refund-8472:A-104</code>처럼 workflow에서
           안정적으로 재생성할 수 있는 idempotency key를 보내고, provider가 반환한 operation ID와
           receipt를 state에 기록합니다.
         </p>
@@ -154,8 +156,8 @@ export default function LangChain() {
             전제: durable checkpointer, serializable state, stable thread identity와 해당 API semantics를
             따르는 workflow입니다. 근거 범위: LangGraph persistence와 resume 동작입니다. 하지 않는
             주장: checkpoint가 외부 API를 transaction으로 만들거나 exactly-once delivery·업무
-            correctness를 자동으로 보장하고, cross-thread store와 graph checkpoint가 같은 저장소
-            의미를 가진다는 뜻은 아닙니다.
+            correctness를 자동으로 보장하고, cross-thread store와 graph checkpoint가 같은 저장소를
+            뜻한다는 말도 아닙니다.
           </CitationBlock>
         </div>
       </div>

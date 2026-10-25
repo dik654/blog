@@ -50,6 +50,8 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "agent-plan-replanning": "구현 추적",
   "agent-delegation-contracts": "비교·선택",
   "agent-extension-boundaries": "개념 지도",
+  "agent-frameworks": "개념 지도",
+  "agent-runtime-selection": "비교·선택",
   "sionic-eureka": "사례·실측",
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
@@ -386,6 +388,14 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
       label: "Durable framework state",
       href: "/cs/ai/agent-frameworks",
       reason: "Plan checkpoint를 process restart와 human wait까지 지속하는 runtime 구현은 framework 글이 소유합니다.",
+    },
+  ],
+  "ai/agent-runtime-selection": [
+    {
+      label: "Checkpoint·replay·외부 효과 경계",
+      href: "/cs/ai/agent-frameworks#langchain",
+      reason:
+        "이 글은 상태 복구 메커니즘을 다시 설명하지 않고, A-104의 같은 failure point로 후보를 비교하는 실무 판단에서 시작합니다.",
     },
   ],
   "ai/agent-delegation-contracts": [

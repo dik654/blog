@@ -4906,7 +4906,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent framework capability · requirement matrix",
     definition:
       "유명도 대신 state model·persistence·interrupt·multi-agent·data integration·deployment·observability·version 조건을 workload의 필수·선호 요구사항과 대조해 후보를 평가하는 방법입니다.",
-    canonicalHref: "/cs/ai/agent-frameworks#comparison",
+    canonicalHref: "/cs/ai/agent-runtime-selection#comparison",
   },
   "framework-version-migration-contract": {
     id: "framework-version-migration-contract",
@@ -4915,7 +4915,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Agent framework version migration contract",
     definition:
       "Framework·serializer·state schema·checkpointer·model·tool version을 함께 기록하고 기존 checkpoint의 호환성·paired evaluation·canary·rollback을 승인 조건으로 두는 이관 계약입니다.",
-    canonicalHref: "/cs/ai/agent-frameworks#comparison",
+    canonicalHref: "/cs/ai/agent-runtime-selection#comparison",
   },
   "executable-plan-state": {
     id: "executable-plan-state",

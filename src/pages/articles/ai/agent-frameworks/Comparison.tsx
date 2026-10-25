@@ -33,13 +33,19 @@ const RUNTIME_BOUNDARIES = [
 export default function Comparison() {
   return (
     <section id="comparison" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        제품 이름보다 실행 책임을 비교합니다
-      </h2>
+      <div className="not-prose my-8">
+        <ComparisonDetailViz />
+      </div>
+
+      <header className="mb-6 space-y-3">
+        <p className="text-xs font-black tracking-[0.18em] text-primary">00 · 후보 비교</p>
+        <h2 className="text-2xl font-black leading-tight sm:text-3xl">A-104의 상태 소유권으로 Runtime을 고릅니다</h2>
+        <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">직접 구현과 네 후보에 같은 환불·장애 조건을 넣고, 복구 결과와 이관 비용을 함께 비교합니다.</p>
+      </header>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          Framework 비교표는 흔히 tool 수, memory, multi-agent 지원 여부에 check mark를 붙입니다. 하지만 기능 이름이 같아도 보장하는 범위는 다르고
+          <strong>[A]</strong> Framework 비교표는 흔히 tool 수, memory, multi-agent 지원 여부에 check mark를 붙입니다. 하지만 기능 이름이 같아도 보장하는 범위는 다르고
           version에 따라 빠르게 바뀝니다.
         </p>
         <p>
@@ -49,7 +55,7 @@ export default function Comparison() {
       </div>
 
       <ProgressiveDetail
-        title="기능표의 ‘지원’ 표시는 어떻게 검증하나요?"
+        title="기능표의 ‘지원’ 표시를 검증하는 기준"
         preview="Persistence라는 같은 이름도 memory, durable checkpoint, replay 의미가 다를 수 있습니다."
       >
         <p>
@@ -58,7 +64,7 @@ export default function Comparison() {
           책임지는지도 별도 항목입니다.
         </p>
         <p>
-          표는 2026년 8월 13일 공식 문서의 계층을 요약한 당시 정리입니다. Managed platform 기능과 open-source library의 보장을 섞지 않았으며 후보
+          <strong>[O]</strong> 표는 2026년 10월 25일 공식 문서의 계층을 요약한 현재 정리입니다. Managed platform 기능과 open-source library의 보장을 섞지 않았으며 후보
           version에서 다시 확인해야 합니다.
         </p>
         <p>
@@ -68,7 +74,20 @@ export default function Comparison() {
         </p>
       </ProgressiveDetail>
 
-      <div className="not-prose my-8 overflow-x-auto rounded-xl border border-border">
+      <div className="not-prose my-8">
+        <div className="grid gap-px bg-border p-px md:hidden">
+          {RUNTIME_BOUNDARIES.map((item, index) => (
+            <section key={item.name} className="min-w-0 bg-background p-4">
+              <span className="font-mono text-[10px] font-black text-primary">{String(index + 1).padStart(2, "0")}</span>
+              <h3 className="mt-1 break-keep text-sm font-bold">{item.name}</h3>
+              <p className="mt-3 text-xs font-bold leading-5 text-foreground">소유하는 실행 경계</p>
+              <p className="mt-1 break-keep text-xs leading-5 text-muted-foreground">{item.owns}</p>
+              <p className="mt-3 text-xs font-bold leading-5 text-foreground">채택 전에 확인할 제약</p>
+              <p className="mt-1 break-keep text-xs leading-5 text-muted-foreground">{item.constraint}</p>
+            </section>
+          ))}
+        </div>
+        <div className="hidden overflow-x-auto rounded-xl border border-border md:block">
         <table className="min-w-[820px] w-full border-collapse text-left text-sm">
           <thead className="bg-muted/60">
             <tr>
@@ -91,6 +110,7 @@ export default function Comparison() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
@@ -181,7 +201,7 @@ export default function Comparison() {
           필요한 좁은 단계에만 Crew를 넣으면 자율성과 결정적 전이의 경계를 나눌 수 있습니다.
         </p>
         <p>
-          Current CrewAI documentation에는 Crew execution checkpoint와 Flow의 persistence,
+          2026년 10월 25일 CrewAI v1.15.30 문서에는 Crew execution checkpoint와 Flow의 persistence,
           resume·fork가 포함되어 있습니다. 따라서 “CrewAI는 collaboration만 하고 durable state는
           없다”라고 비교해서는 안 됩니다.
         </p>
@@ -216,29 +236,29 @@ export default function Comparison() {
             문제: agentic subtask를 조건·event·state가 있는 auditable workflow 안에서 실행하고
             중단된 run을 이어야 합니다. 기여: 현재 공식 문서는 Flow state, routing, persistence,
             resume와 fork 및 Crew integration을 설명합니다. 전제: 해당 CrewAI version과
-            <code>@persist</code>·storage configuration, serializable state와 application의
-            idempotent side effect입니다. 근거 범위: Flow가 공개한 orchestration semantics입니다.
+            <code>@persist</code>·storage configuration, serializable state, application이 작성한
+            method·routing·error handling입니다. 근거 범위: 공식 문서에 공개된 Flow의 state·event·routing·persistence 기능입니다.
             하지 않는 주장: Flow가 모든 failure에서 exactly once를 보장하거나 LangGraph와 API·state
             scope가 동일하고, framework 선택만으로 policy와 evaluation이 완성된다는 뜻은 아닙니다.
           </CitationBlock>
         </div>
       </div>
 
-      <div className="not-prose my-8">
-        <ComparisonDetailViz />
-      </div>
-
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>같은 환불 workflow로 후보를 비교합니다</h3>
         <p>
-          Candidate를 두세 개로 줄였다면 같은 model snapshot, prompt, tool schema, policy와 test
+          <strong>[A]</strong> Candidate를 두세 개로 줄였다면 같은 model snapshot, prompt, tool schema, policy와 test
           data로 direct implementation과 framework implementation을 만듭니다. 각 input의 결과를
           짝지어 비교해야 framework 변경과 model variance가 섞이지 않습니다.
+        </p>
+        <p>
+          아직 이 환경에서 후보별 수치를 측정하지 않았으므로 결과는 <strong>[M] 미측정</strong>입니다.
+          아래 항목은 채택 결과가 아니라 동일 조건 실험 계획입니다.
         </p>
       </div>
 
       <ProgressiveDetail
-        title="어떤 실패와 지표를 같은 조건으로 비교하나요?"
+        title="같은 조건으로 비교할 실패와 지표"
         preview="정상 성공률뿐 아니라 crash·중복 실행·권한 위반·복구 비용을 함께 측정합니다."
       >
         <p>
@@ -265,7 +285,7 @@ export default function Comparison() {
       </div>
 
       <ProgressiveDetail
-        title="Upgrade와 rollback에는 무엇을 함께 묶나요?"
+        title="Upgrade와 rollback에 함께 묶을 항목"
         preview="오래된 checkpoint를 읽는 migration과 golden trace·failure canary를 release에 포함합니다."
       >
         <p>

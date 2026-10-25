@@ -633,21 +633,19 @@
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
-        "sectionCount": 3
+        "sectionCount": 2
       },
       "beforeDefects": [],
       "fixture": {
         "order": "A-104",
         "operation": "refund",
-        "effectRule": "single idempotent refund",
+        "effectRule": "stable operation key and receipt verification",
         "recovery": "approval interrupt and checkpoint resume"
       },
       "stageAnchors": {
         "1": "직접 loop와 ReAct 전이",
         "2": "langchain의 state·node·edge·checkpoint",
         "3": "replay와 idempotency",
-        "4": "comparison의 동일 환불 fixture",
-        "5": "failure injection·upgrade·rollback",
         "S": "overview의 A-104 환불 요청"
       },
       "sourceEvidence": [
@@ -658,42 +656,94 @@
         {
           "href": "https://docs.langchain.com/oss/python/langgraph/persistence",
           "application": "thread checkpointer와 cross-thread store 구분"
-        },
-        {
-          "href": "https://microsoft.github.io/autogen/stable/index.html",
-          "application": "AgentChat와 event-driven Core 구분"
-        },
-        {
-          "href": "https://docs.crewai.com/v1.15.23/en/concepts/flows",
-          "application": "Flow state·persistence·resume/fork 범위"
         }
       ],
       "validation": {
-        "semanticReview": "A-104 환불 요청 하나를 조회·정책·승인·idempotent effect·receipt로 끝까지 따라가며 직접 loop, LangGraph checkpoint/replay, LlamaIndex·AutoGen·CrewAI 선택과 failure injection·upgrade를 같은 조건에서 비교합니다. 최신 공식 문서와 일치해 날짜만 2026년 10월로 갱신했습니다.",
-        "humanize": "실제 렌더링 전문 수동 검토·수치/출처 보존·roundtrip: /tmp/teach-all/humanize-ai-six-visible-196/summary.json",
-        "browser390": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
-        "browser1440": "본문 section/overflow/KaTeX/SVG/console/request 검사 통과: /tmp/teach-all/browser-ai-six-196/summary.json",
-        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
-        "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "prose": "전역 799편 strict 재검토 0 actual exit0",
+        "semanticReview": "A-104 환불 한 건을 refund-8472와 stable operation key로 추적합니다. 마지막 checkpoint 복원과 외부 환불 영수증 확인을 분리하고, 제품 비교·장애 실험·롤백은 별도 실무 글로 분리했습니다.",
+        "humanize": "ko-natural 합니다체 error 0; Opus blind review의 질문 drift·식별자 불일치·개념/실무 혼합 지적을 반영했습니다.",
+        "browser390": "여섯 장면 keyboard 순서·fit·overflow 0·console error 0: output/playwright/ai-agent-runtime-split/summary.json",
+        "browser1440": "여섯 장면 keyboard 순서·SVG text fit·overflow 0·console error 0: output/playwright/ai-agent-runtime-split/summary.json",
+        "learning": "전역 991편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,500식 explicit annotation strict actual exit0",
+        "prose": "전역 991편 strict 재검토 0 actual exit0",
         "typescript": "actual npx tsc -b --pretty false exit0",
-        "mobileViewport": "전역 100dvh 331곳/326파일을 100svh로 교체; 대표 6개 route 반복 resize에서 figure 754px·scrollY·target top 유지, anchorDelta0: /tmp/teach-all/mobile-viewport-stability-201.json",
-        "production": "GitHub Pages run 37307865750 success; 390/1440 browser checks 0 failed; mobile viewport representative set anchorDelta 0"
+        "mobileViewport": "390×844에서 모든 장면이 VizFrame 안에 들어오고 가로 넘침 0을 확인했습니다.",
+        "production": "production build 7,929 modules·2,088 static routes 통과; 배포 확인 대기"
       },
       "remaining": [],
-      "reviewDate": "2026-10-05",
-      "reviewMode": "retained-after-full-body-review",
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-concept-practice-split",
       "bodyFiles": [
         "src/pages/articles/ai/agent-frameworks/Overview.tsx",
         "src/pages/articles/ai/agent-frameworks/LangChain.tsx",
-        "src/pages/articles/ai/agent-frameworks/Comparison.tsx"
+        "src/pages/articles/ai/agent-frameworks/viz/RefundRuntimeTraceViz.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/agent-frameworks/Overview.tsx",
-      "contentHash": "c54ff7a253789257e86de3a45fe3be1e3776e3670aeb44936c878dd1f882f2d4",
+      "contentHash": "13b69d8fb172d8fb2637a3b091d22b748ef10ebb1497151efab0d36b1206a282",
       "preserved": [
         "A-104 환불 단일 사례와 직접 구현 코드",
-        "ReAct·checkpoint·interrupt·idempotency의 실행 경계",
-        "다섯 runtime 후보와 failure/upgrade 비교"
+        "ReAct·checkpoint·interrupt·idempotency의 실행 경계"
+      ]
+    },
+    {
+      "route": "ai/agent-runtime-selection",
+      "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/agent-runtime-selection.tsx",
+      "publicPath": "cs/ai/agent-runtime-selection",
+      "status": "rewritten-local-verified",
+      "screeningSignals": {
+        "explicitAssumption": true,
+        "answerPointers": 1,
+        "levelMarkers": 3,
+        "sectionCount": 1
+      },
+      "beforeDefects": [
+        "제품 비교와 checkpoint 메커니즘이 한 글에 섞여 질문이 흐려짐",
+        "A-104 식별자가 비교 절에서 사라지고 장애 실험 결과와 계획이 구분되지 않음"
+      ],
+      "fixture": {
+        "order": "A-104",
+        "run": "refund-8472",
+        "operationKey": "refund:refund-8472:A-104",
+        "decision": "direct baseline versus runtime candidate"
+      },
+      "stageAnchors": {
+        "1": "Direct SDK 기준선",
+        "2": "부족한 실행 책임",
+        "3": "공식 문서 기반 후보 대조",
+        "4": "동일 지점 장애 실험",
+        "5": "채택·보류와 롤백",
+        "S": "agent-frameworks의 checkpoint·replay anchor"
+      },
+      "sourceEvidence": [
+        { "href": "https://docs.langchain.com/oss/python/langgraph/overview", "application": "durable runtime 비교 기준" },
+        { "href": "https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/", "application": "data·tool integration 경계" },
+        { "href": "https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/index.html", "application": "AgentChat·Core 계층" },
+        { "href": "https://docs.crewai.com/en/concepts/flows", "application": "v1.15.30 Flow persistence·resume·fork 범위" }
+      ],
+      "validation": {
+        "semanticReview": "A-104 direct baseline에서 시작해 [O] 공식 기능, [M] 동일 장애 실험, [A] 채택·보류를 분리합니다.",
+        "humanize": "ko-natural 합니다체 error 0",
+        "browser390": "다섯 장면 keyboard 순서·fit·overflow 0·console error 0: output/playwright/ai-agent-runtime-split/summary.json",
+        "browser1440": "다섯 장면 keyboard 순서·fit·overflow 0·console error 0: output/playwright/ai-agent-runtime-split/summary.json",
+        "learning": "전역 991편 정확히 기초 6+심화 4 strict actual exit0",
+        "formula": "전역 1,500식 explicit annotation strict actual exit0",
+        "prose": "전역 991편 strict 재검토 0 actual exit0",
+        "typescript": "actual npx tsc -b --pretty false exit0",
+        "mobileViewport": "390×844에서 모든 장면이 VizFrame 안에 들어오고 가로 넘침 0을 확인했습니다.",
+        "production": "production build 7,929 modules·2,088 static routes 통과; 배포 확인 대기"
+      },
+      "remaining": [],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-practice-split",
+      "bodyFiles": [
+        "src/pages/articles/ai/agent-frameworks/Comparison.tsx",
+        "src/pages/articles/ai/agent-frameworks/viz/ComparisonDetailViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/agent-frameworks/Comparison.tsx",
+      "contentHash": "213507cde59a4734d96bb0292a37b7a31d23abedde1ec45f3909ebf00077dd2e",
+      "preserved": [
+        "다섯 runtime 후보의 상태 소유권 비교",
+        "failure injection·version migration·rollback 판단"
       ]
     },
     {
