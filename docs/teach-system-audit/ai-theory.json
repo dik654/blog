@@ -10215,34 +10215,71 @@
     },
     {
       "route": "ai/triplet-metric-learning",
-      "title": "Triplet Metric Learning: Unit Geometry · Margin · Mining",
+      "title": "Triplet Metric Learning: 상대 거리와 Mining",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
-        "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx",
         "src/pages/articles/ai/triplet-metric-learning.tsx",
-        "src/pages/articles/ai/triplet-metric-learning/ModernArticle.tsx"
+        "src/pages/articles/ai/triplet-metric-learning/ModernArticle.tsx",
+        "src/pages/articles/ai/triplet-metric-learning/TripletMetricLearningViz.tsx",
+        "src/pages/articles/ai/triplet-metric-learning/calculations.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
-        "characters": 5570
+        "characters": 5376
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 squared Euclidean distance와 PyTorch 기본 p-norm distance의 수치 계약을 한 흐름에서 구분하지 않아 같은 margin 숫자를 그대로 옮겨 쓸 위험이 있었습니다.",
+        "Anchor·positive·negative의 역할, margin 위반량, hard·semi-hard·easy 분류가 별도 설명으로 흩어져 한 triplet을 처음부터 끝까지 추적하기 어려웠습니다.",
+        "거리상 가장 가까운 후보가 실제로는 같은 상품인 hidden positive일 수 있다는 관계 필터 경계와 mining 재현에 필요한 snapshot 기록이 보이지 않았습니다."
+      ],
+      "fixture": "SKU-42 정면 A₁을 anchor, 같은 상품 측면 A₂를 positive로 두고 L2 정규화된 embedding의 squared distance를 사용합니다. d²p=0.4, margin=0.2이며 후보 B₁·C₁·D₁·E₁의 d²는 0.35·0.3·0.5·0.9입니다. B₁은 hidden positive라 제외하고 D₁을 semi-hard negative로 선택합니다.",
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "geometry": [
+          "geometry"
+        ],
+        "margin": [
+          "margin"
+        ],
+        "mining": [
+          "mining"
+        ],
+        "return": [
+          "return-map"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "핵심 논문",
+          "label": "FaceNet: A Unified Embedding for Face Recognition and Clustering",
+          "href": "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html",
+          "note": "Unit embedding의 squared Euclidean triplet objective와 positive보다 멀지만 margin 안에 있는 semi-hard negative 선택 조건에 적용합니다."
+        },
+        {
+          "kind": "공식 API",
+          "label": "PyTorch TripletMarginLoss",
+          "href": "https://docs.pytorch.org/docs/stable/generated/torch.nn.TripletMarginLoss.html",
+          "note": "기본 TripletMarginLoss가 p-norm distance를 쓰는 경계를 명시하고, 논문의 squared-distance 식을 재현할 때 거리 함수를 따로 고정해야 한다는 설명에 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모의 pair 의미에서 출발해 세 역할→unit geometry→margin 위반량→관계 필터와 semi-hard mining→부모 지도 반환 순서를 대조했습니다.",
+        "humanize": "A₁·A₂·B₁·C₁·D₁·E₁의 역할을 같은 SKU-42 사례로 유지하고, 표준 용어는 보존하되 각 용어가 하는 일을 바로 뒤에서 설명했습니다.",
+        "numericTrace": "cosine 0.8→squared distance 0.4, 통과 경계 0.6, C₁·D₁·E₁ loss 0.3·0.1·0, 관계 필터 뒤 3개와 semi-hard 1개를 계산 fixture와 대조했습니다.",
+        "mobile390": "390×844에서 문서와 네 시각화의 가로 넘침 0, 보이는 이동 버튼 50×50px, 관계 필터와 margin 중간 장면 및 최종 장면의 잘림 없음을 확인했습니다.",
+        "desktop1440": "1440×1000에서 네 시각화의 4개 장면, 부모 locator, 최종 계산·분류·선택 결과를 확인했습니다.",
+        "accessibility": "네 시각화 모두 실제 ArrowRight·ArrowLeft 상태 전환을 확인했고, reduced-motion에서는 04/04 결론에 정지하며 재생 버튼이 비활성화됩니다.",
+        "noScript": "JavaScript 비활성 390×844에서 no-script 본문과 네 개 static-reading-only 목록이 각각 4단계를 순서대로 표시하며 mining 결론까지 노출되는 것을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 235편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

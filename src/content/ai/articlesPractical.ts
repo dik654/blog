@@ -671,13 +671,14 @@ export const embeddingArticles: Article[] = [
   },
   {
     slug: "triplet-metric-learning",
-    title: "Triplet Metric Learning: Unit Geometry · Margin · Mining",
+    title: "Triplet Metric Learning: 상대 거리와 Mining",
     subcategory: "ai-practical-embedding",
     sections: [
-      { id: "overview", title: "Anchor·positive·negative" },
+      { id: "overview", title: "Anchor에서 두 거리 비교" },
       { id: "geometry", title: "Cosine과 squared distance" },
-      { id: "margin", title: "Relative margin hinge" },
-      { id: "mining", title: "Versioned hard-negative miner" },
+      { id: "margin", title: "Margin 위반량" },
+      { id: "mining", title: "Negative mining funnel" },
+      { id: "return-map", title: "부모 지도에 반환" },
     ],
     component: () => import("@/pages/articles/ai/triplet-metric-learning"),
   },

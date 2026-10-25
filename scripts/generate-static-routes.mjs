@@ -99,6 +99,7 @@ const noScriptArticleRoutes = new Set([
   "ai/vision-transformer",
   "ai/contrastive-learning",
   "ai/simclr-infonce",
+  "ai/triplet-metric-learning",
   "ai/dinov3-self-supervised-backbone",
   "ai/vision-backbone-selection",
   "ai/multiview-fusion",

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 586,
-    "pending": 405,
+    "reviewed": 587,
+    "pending": 404,
     "untracked": 0,
-    "assignedPending": 362,
+    "assignedPending": 361,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3161,11 +3161,11 @@
     {
       "route": "ai/triplet-metric-learning",
       "publicPath": "cs/ai/triplet-metric-learning",
-      "title": "Triplet Metric Learning: Unit Geometry · Margin · Mining",
+      "title": "Triplet Metric Learning: 상대 거리와 Mining",
       "catalogIndex": 313,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
