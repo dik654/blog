@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 588,
-    "pending": 403,
+    "reviewed": 589,
+    "pending": 402,
     "untracked": 0,
-    "assignedPending": 360,
+    "assignedPending": 359,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3181,11 +3181,11 @@
     {
       "route": "ai/contrastive-evaluation",
       "publicPath": "cs/ai/contrastive-evaluation",
-      "title": "Contrastive Evaluation: False-negative Audit와 Downstream Gain",
+      "title": "대조 학습 평가: 숨은 정답 감사에서 출시 판단까지",
       "catalogIndex": 315,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

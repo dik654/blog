@@ -17,6 +17,10 @@ export interface ContrastiveLearningNode {
   parentLabel: string;
   question: string;
   closure: string;
+  conceptAnchors?: readonly {
+    label: string;
+    href: string;
+  }[];
 }
 
 export const CONTRASTIVE_LEARNING_NODES: readonly ContrastiveLearningNode[] = [
@@ -76,14 +80,32 @@ export const CONTRASTIVE_LEARNING_NODES: readonly ContrastiveLearningNode[] = [
     id: "evaluation",
     href: "/cs/ai/contrastive-evaluation#overview",
     shortTitle: "평가",
-    mapLabel: "pair audit → downstream 비교",
-    track: "concept",
+    mapLabel: "후보 고정 → 감사 → 출시 판단",
+    track: "practice",
     parentHref: "/cs/ai/contrastive-learning#return-map",
-    parentLabel: "Pair 의미 · 검증",
+    parentLabel: "대조 학습 · Pair 의미",
     question:
-      "Loss가 줄었다는 사실만으로 pair와 embedding이 좋아졌다고 판단할 수 있을까요?",
+      "새 encoder·miner·pair policy를 운영 환경에 반영해도 된다는 근거를 어떻게 남길까요?",
     closure:
-      "Bucket별 pair 오류와 같은 split·seed의 downstream metric을 함께 비교해야 개선 원인을 설명할 수 있습니다. 실패한 pair는 다음 데이터 버전으로 되돌립니다.",
+      "후보 snapshot을 고정하고 위험 구간별 pair audit과 같은 split·seed의 downstream 차이를 함께 봐야 출시 근거가 됩니다. 평가 계약이 깨지면 영향을 받은 receipt를 폐기하고 이전 revision을 유지합니다.",
+    conceptAnchors: [
+      {
+        label: "Pair 관계의 업무상 의미",
+        href: "/cs/ai/contrastive-learning#pair-contract",
+      },
+      {
+        label: "Triplet miner와 candidate receipt",
+        href: "/cs/ai/triplet-metric-learning#mining",
+      },
+      {
+        label: "Label 관계의 경계",
+        href: "/cs/ai/supervised-contrastive-learning#boundaries",
+      },
+      {
+        label: "Test feedback와 선택 편향",
+        href: "/cs/ai/train-validation-test#selection-feedback",
+      },
+    ],
   },
 ] as const;
 

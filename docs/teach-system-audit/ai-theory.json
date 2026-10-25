@@ -1218,34 +1218,120 @@
     },
     {
       "route": "ai/contrastive-evaluation",
-      "title": "Contrastive Evaluation: False-negative Audit와 Downstream Gain",
+      "title": "대조 학습 평가: 숨은 정답 감사에서 출시 판단까지",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
         "src/pages/articles/ai/contrastive-evaluation.tsx",
         "src/pages/articles/ai/contrastive-evaluation/ModernArticle.tsx",
-        "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx"
+        "src/pages/articles/ai/contrastive-evaluation/ContrastiveEvaluationViz.tsx",
+        "src/pages/articles/ai/contrastive-evaluation/calculations.ts",
+        "src/pages/articles/ai/contrastive-learning/ContrastivePathLocator.tsx",
+        "src/content/contrastive-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 7,
         "hasSourceSurface": true,
-        "characters": 4870
+        "characters": 18121
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 pair 관계와 평가 지표를 설명하는 개념 글처럼 구성되어, 실제 새 encoder revision을 출시할지 판단하는 실무 질문과 상태 소유권이 드러나지 않았습니다.",
+        "위험 구간마다 같은 수를 검토한 표본을 그대로 합쳐 모집단 비중이 다른 구간의 전체 오류율처럼 읽을 수 있었습니다.",
+        "Pair audit, downstream comparison, release decision의 writer와 receipt가 분리되지 않아 평가 입력이 바뀌거나 실패했을 때 어느 근거를 폐기하고 어디서 재실행할지 알기 어려웠습니다.",
+        "기존 시각화는 대조 학습 개념을 다시 보여줄 뿐 후보 고정, 층화 감사, paired comparison, 실패 복구의 실제 상태 변화를 추적하지 않았습니다."
+      ],
+      "fixture": {
+        "baselineRevision": "encoder-v7",
+        "candidateRevision": "encoder-v8",
+        "minerRevision": "miner-v5",
+        "indexRevision": "catalog-2026-10-24",
+        "strata": [
+          {
+            "name": "높은 유사도",
+            "population": 100,
+            "reviewed": 20,
+            "hiddenPositive": 8,
+            "observedRate": 0.4,
+            "wilson95": "21.9–61.3%"
+          },
+          {
+            "name": "중간 유사도",
+            "population": 900,
+            "reviewed": 20,
+            "hiddenPositive": 2,
+            "observedRate": 0.1,
+            "wilson95": "2.8–30.1%"
+          },
+          {
+            "name": "낮은 유사도",
+            "population": 9000,
+            "reviewed": 20,
+            "hiddenPositive": 0,
+            "observedRate": 0,
+            "wilson95": "0–16.1%"
+          }
+        ],
+        "naiveSampleRate": 0.1666666667,
+        "weightedPopulationRate": 0.013,
+        "pairedGains": [
+          0.02,
+          -0.01,
+          0,
+          0.01,
+          -0.02
+        ],
+        "meanPairedGain": 0,
+        "decision": "REVISE"
+      },
+      "stageAnchors": {
+        "entry": "overview",
+        "ownership": "baseline",
+        "pairAudit": "pair-audit",
+        "downstream": "downstream",
+        "failureRecovery": "failure-recovery",
+        "decision": "decision",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "핵심 논문",
+          "label": "Debiased Contrastive Learning",
+          "href": "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html",
+          "note": "Unlabeled negative에 같은 latent class의 positive가 섞일 수 있다는 문제의 범위를 확인합니다. Human audit, 업무 rubric, release threshold의 근거로 확대하지 않습니다."
+        },
+        {
+          "kind": "핵심 논문",
+          "label": "A Simple Framework for Contrastive Learning",
+          "href": "https://proceedings.mlr.press/v119/chen20j.html",
+          "note": "Learned representation을 linear evaluation과 fine-tuning으로 평가한 연구 범위를 확인합니다. 본문의 paired release gate는 운영 설계 [A]입니다."
+        },
+        {
+          "kind": "통계 참고",
+          "label": "NIST Confidence Limits for a Proportion",
+          "href": "https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm",
+          "note": "표본 비율에 Wilson 또는 exact binomial confidence interval을 붙일 수 있다는 경계를 확인합니다."
+        },
+        {
+          "kind": "통계 참고",
+          "label": "NIST Proportions and Sample Size",
+          "href": "https://www.itl.nist.gov/div898/handbook/ppc/section3/ppc333.htm",
+          "note": "원하는 정밀도와 stratum별 표본 수를 함께 설계해야 한다는 범위를 확인합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "정확한 개념 anchor에서 출발해 candidate receipt 고정 → state writer 구분 → 세 위험 구간 pair audit → 모집단 가중 계산 → 같은 split·seed paired comparison → 실패 격리·재실행 → REVISE 결정 → 부모 지도 반환 순서를 대조했습니다.",
+        "humanize": "Article check와 ko-natural 합니다체 검사를 통과했습니다. 오류 0이며 남은 길이 경고는 JSX·LaTeX source 줄입니다.",
+        "numericTrace": "20개씩 세 구간의 8·2·0 판정, 단순 10/60=16.7%, 모집단 가중 (100×.40+900×.10+9,000×0)/10,000=1.3%, paired gain 합과 평균 0을 calculations fixture와 대조했습니다.",
+        "mobile390": "390×844에서 문서 가로 넘침 0, 네 시각화의 01→04 상태와 locator의 2열 배치를 확인했습니다.",
+        "desktop1440": "1440×1000에서 문서 가로 넘침 0, 네 시각화의 폭과 중간·마지막 장면을 확인했습니다.",
+        "accessibility": "실제 다음·이전 버튼과 ArrowRight·ArrowLeft로 장면이 바뀌며, reduced-motion에서는 네 시각화가 04/04 결론에 정지하는 것을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 정적 읽기 안내, 네 시각화의 4단계 목록, 상태 writer, 두 계산, 실패 복구, REVISE 결정, 부모 지도 반환을 같은 순서로 확인했습니다.",
+        "build": "8GB heap 상한에서 전체 TypeScript 검사를 통과했고, Vite production bundle과 정적 public route 2,088개 생성을 완료했습니다. TypeScript 최대 상주 메모리는 약 6.4GB였고 종료 뒤 관련 프로세스가 남지 않았습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

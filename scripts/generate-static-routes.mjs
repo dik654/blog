@@ -98,6 +98,7 @@ const noScriptArticleRoutes = new Set([
   "ai/transfer-learning-practice",
   "ai/vision-transformer",
   "ai/contrastive-learning",
+  "ai/contrastive-evaluation",
   "ai/supervised-contrastive-learning",
   "ai/simclr-infonce",
   "ai/triplet-metric-learning",
