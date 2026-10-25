@@ -70,7 +70,7 @@ export const CONTRASTIVE_LEARNING_NODES: readonly ContrastiveLearningNode[] = [
     question:
       "Class label 하나를 anchor마다 여러 positive가 있는 학습 신호로 어떻게 바꿀까요?",
     closure:
-      "같은 label의 다른 sample을 P(i)로 모으고 각 positive의 log probability를 평균합니다. Positive가 없는 anchor와 label hierarchy를 따로 처리해야 합니다.",
+      "같은 label의 다른 sample을 P(i)로 모으고 각 positive의 log probability를 평균합니다. 논문의 two-view 구성에서는 paired view가 남고, one-view 변형에서는 빈 positive 집합을 따로 처리해야 합니다.",
   },
   {
     id: "evaluation",

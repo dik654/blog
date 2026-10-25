@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 587,
-    "pending": 404,
+    "reviewed": 588,
+    "pending": 403,
     "untracked": 0,
-    "assignedPending": 361,
+    "assignedPending": 360,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3173,9 +3173,9 @@
       "publicPath": "cs/ai/supervised-contrastive-learning",
       "title": "Supervised Contrastive Learning: Label을 Multi-positive로",
       "catalogIndex": 314,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

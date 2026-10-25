@@ -2655,7 +2655,14 @@ export const ARTICLE_EVIDENCE: Readonly<
       note: "기본 API가 p-norm distance를 사용한다는 구현 경계",
     },
   ],
-  "ai/supervised-contrastive-learning": [{ kind: "핵심 논문", label: "Supervised Contrastive Learning", href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html", note: "같은 class의 여러 sample을 positive로 사용하는 objective" }],
+  "ai/supervised-contrastive-learning": [
+    {
+      kind: "핵심 논문",
+      label: "Supervised Contrastive Learning",
+      href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Paper.pdf",
+      note: "2N multiview batch, same-label P(i), 식 (2)·(3)의 log 위치와 식 (4)~(6)의 gradient target 분석",
+    },
+  ],
   "ai/contrastive-evaluation": [{ kind: "핵심 논문", label: "Debiased Contrastive Learning", href: "https://proceedings.neurips.cc/paper/2020/hash/63c3ddcc7b23daa1e42dc41f9a44a873-Abstract.html", note: "Unlabeled negative 안의 hidden positive가 만드는 sampling bias 분석" }],
   "ai/vae": [
     {

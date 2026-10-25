@@ -9654,31 +9654,65 @@
       "title": "Supervised Contrastive Learning: Label을 Multi-positive로",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
-        "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx",
         "src/pages/articles/ai/supervised-contrastive-learning.tsx",
-        "src/pages/articles/ai/supervised-contrastive-learning/ModernArticle.tsx"
+        "src/pages/articles/ai/supervised-contrastive-learning/ModernArticle.tsx",
+        "src/pages/articles/ai/supervised-contrastive-learning/SupervisedContrastiveViz.tsx",
+        "src/pages/articles/ai/supervised-contrastive-learning/calculations.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
-        "characters": 5109
+        "characters": 6402
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 논문의 two-view batch를 설명하면서도 C₁의 positive set이 비어 있다고 표시해, 실제로는 paired view C₂가 남는다는 정의와 모순되었습니다.",
+        "같은 label을 positive로 모으는 mask, self를 제외한 denominator, positive별 log 평균이 분리되어 한 anchor의 계산을 처음부터 끝까지 추적하기 어려웠습니다.",
+        "논문 식 (2)와 식 (3)의 loss 숫자만 비교하고, log 위치가 positive target weight와 gradient를 어떻게 바꾸는지는 드러나지 않았습니다."
+      ],
+      "fixture": "신발 원본 A·B와 가방 원본 C에서 view를 두 개씩 만들어 A₁·A₂·B₁·B₂·C₁·C₂를 사용합니다. A₁의 후보 지수 점수를 8·4·2·1·1로 두면 P(A₁)={A₂,B₁,B₂}, Z=16, 식 (2)의 anchor loss는 약 1.386입니다.",
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "positiveSet": [
+          "positive-set"
+        ],
+        "objective": [
+          "objective"
+        ],
+        "logPlacement": [
+          "log-placement"
+        ],
+        "boundary": [
+          "boundaries"
+        ],
+        "return": [
+          "return-map"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "핵심 논문",
+          "label": "Supervised Contrastive Learning",
+          "href": "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Paper.pdf",
+          "note": "§3.2의 2N multiview batch, 식 (2)·(3)의 log 위치, 식 (4)~(6)의 positive target weight 분석을 같은 A₁ 계산에 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모의 pair 의미에서 출발해 원본 3개→view 6개→self 제외→same-label positive 3개→공통 분모→positive별 log 평균→log 위치 비교→부모 지도 반환 순서를 대조했습니다.",
+        "humanize": "ko-natural 합니다체 검사 오류 0을 확인했습니다. 남은 길이 경고 5개는 import와 LaTeX source 문자열입니다.",
+        "numericTrace": "지수 점수 8·4·2·1·1의 Z=16, 후보 확률 합 1, 식 (2) loss 1.386, 식 (3) loss 1.232, target weight 1/3·1/3·1/3과 8/14·4/14·2/14를 calculations fixture와 대조했습니다.",
+        "mobile390": "390×844에서 본문 폭 354px, 네 시각화 폭 325px, 가로 넘침과 내부 경계 이탈 0을 확인하고 네 시각화의 중간 장면을 캡처했습니다.",
+        "desktop1440": "1440×1000에서 body와 article 가로 넘침 0, 네 시각화의 01→04 키보드 이동과 중간 장면 레이아웃을 확인했습니다.",
+        "accessibility": "네 시각화 모두 실제 ArrowRight·ArrowLeft 상태 전환을 확인했습니다. reduced-motion에서는 04/04 결론에 정지하고 재생 버튼이 비활성화됩니다.",
+        "noScript": "JavaScript 비활성 390×844에서 정적 읽기 모드, 여섯 본문 절, 네 시각화의 4단계 정적 목록, C₂가 남는 경계와 부모 지도 반환을 확인했습니다.",
+        "build": "TypeScript·ESLint·article·learning·graph·formula·calculation·pseudocode·Viz 감사와 production build를 통과했습니다. 정적 public route 2,088개와 검토 완료 236편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
