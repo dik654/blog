@@ -158,6 +158,19 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "run img-cls-07의 기준 batch 256을 유지한 채 160px→320px 전환과, u-042의 약한 변형 확률 0.96이 기준 0.95를 넘어 임시 label이 되고 강한 변형 확률 0.72에서 loss 0.3285를 만드는 경로를 독립적으로 검산합니다.",
   },
+  "ai/domain-finetuning": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "도메인 적응의 공통 판단 지도와 continued pretraining, task fine-tuning, 데이터 경계는 각각 바꾸는 상태·계산·실패 조건이 다릅니다. 부모 글은 한 요청에서 상태 위치와 최소 개입을 고르는 지도만 소유하고, corpus→checkpoint, demonstration→행동, group·rights→주장 범위는 세 자식 글에서 독립적으로 추적합니다.",
+    targetRoutes: [
+      "ai/domain-finetuning",
+      "ai/continued-pretraining",
+      "ai/domain-task-finetuning",
+      "ai/domain-data-governance",
+    ],
+  },
   "ai/transfer-learning-practice": {
     action: "keep" as const,
     status: "reviewed" as const,
@@ -3287,6 +3300,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/image-training-stages": "20ded1bf15e7dd02",
+  "ai/domain-finetuning": "a1096dc05ae50ea7",
   "ai/regularization-practice": "70bd499ad13bf51a",
   "ai/dropout-regularization": "6719495808ed42e2",
   "ai/weight-decay": "0f13f76d0c655fae",
