@@ -6,18 +6,19 @@ import ProbeViz from "./viz/ProbeViz";
 export default function MeasureFirst() {
   return (
     <section id="measure-first" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">고르기 전에 30분짜리 실측을 돌립니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">고르기 전에 작은 실측을 돌립니다</h2>
+      <ProbeViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          후보가 두세 개로 줄면 그다음은 읽는 것이 아니라 재는 것입니다. 필요한 것은 큰 학습이 아니라 내
-          데이터 몇백 장으로 돌리는 짧은 실측입니다. 백본을 얼린 채 벡터만 뽑아 두면 대부분의 판단이 그 위에서
-          끝납니다.
+          후보가 두 개로 줄면 그다음은 논문 점수를 더 모으는 일이 아니라 우리 상품 사진으로 재는 일입니다.
+          먼저 상품 식별자별로 원본과 밝기·크롭·압축 변형본을 묶습니다. 백본을 얼리고 벡터를 한 번 뽑아 두면
+          후보의 표현 차이와 목표 장비의 실행 비용을 분리해 볼 수 있습니다.
         </p>
 
         <p className="leading-7">
-          세 가지를 잽니다. 첫째는 얇은 head만 올렸을 때의 과제 성능이고, 둘째는 촬영 변형에 얼마나 흔들리는지,
-          셋째는 자리별 정보가 필요한 과제라면 패치 수준 성능입니다. 셋 다 학습 없이 또는 선형층 하나만
-          학습해 구할 수 있습니다.
+          이번 검색 요청에서는 같은 상품이 상위 결과에 들어오는 비율, 촬영 변형 전후 벡터 거리, 장당 지연과
+          peak memory를 잽니다. 자리별 결과가 필요한 다른 과제라면 같은 절차에 패치 수준 probe를 추가합니다.
+          데이터 수와 실행 시간은 장비와 과제에 따라 달라지므로 여기서 고정된 소요 시간을 약속하지 않습니다.
         </p>
 
         <p className="leading-7">
@@ -29,19 +30,17 @@ export default function MeasureFirst() {
 
       <AlgorithmBlock
         title="후보 백본 비교용 최소 실측"
-        input={["내 데이터 300~1,000장", "과제 라벨 또는 정답 짝", "후보 백본 2~3개"]}
+        input={["상품별 원본과 촬영 변형 묶음", "같은 상품·다른 상품 정답", "후보 인코더 2개"]}
         steps={[
           { code: "freeze(backbone)", note: "가중치를 고정합니다. 이 조건에서만 표현 자체를 비교할 수 있습니다" },
           { code: "cfg = fixed(preproc, pooling, norm)", note: "후보마다 같은 전처리·풀링·정규화를 씁니다" },
           { code: "V = embed(images, cfg)", note: "벡터를 한 번만 뽑아 재사용합니다. 이후 단계는 CPU에서도 됩니다" },
-          { code: "acc = linear_probe(V, labels)", note: "선형층 하나만 학습해 과제 성능을 잽니다" },
+          { code: "recall = retrieve(V, product_id)", note: "같은 상품이 상위 결과에 들어오는 비율을 잽니다" },
           { code: "rho = mean_dist(variants) / mean_dist(others)", note: "밝기·압축 변형본과 다른 대상의 거리 비를 구합니다" },
           { code: "dense = linear_seg_probe(patch_V, masks)", note: "자리별 정보가 필요하면 패치 벡터로 한 번 더 잽니다" },
         ]}
-        output="후보별 세 숫자 (과제 성능 · 변형 견고성 · 자리별 성능)"
+        output="후보별 과제 성능 · 변형 견고성 · 지연 · 메모리"
       />
-
-      <ProbeViz />
 
       <h3 id="paired-selection" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         Seed별 차이를 짝지어 봅니다
@@ -49,7 +48,7 @@ export default function MeasureFirst() {
       <div className="not-prose my-6 border-y border-border">
         <table className="w-full table-fixed border-collapse text-xs sm:text-sm">
           <caption className="px-3 py-3 text-left text-xs text-muted-foreground">
-            설명용 예시 · 같은 split과 seed에서 잰 후보 A·B의 macro recall
+            설명용 가정 · 같은 split과 seed에서 잰 익명 후보 A·B의 macro recall
           </caption>
           <thead>
             <tr className="border-t border-border text-left text-xs text-muted-foreground">
@@ -91,7 +90,8 @@ export default function MeasureFirst() {
           seed마다 달랐던 난이도가 차이에 섞입니다.
         </p>
         <p className="leading-7">
-          이 값만으로 후보를 확정하지는 않습니다. 최소 개선 폭을 미리 정하고,
+          이 값은 실제 모델 측정값이 아니라 짝지은 비교 계산을 보여 주기 위한 가정입니다. 후보를 확정하려면
+          최소 개선 폭을 미리 정하고,
           p95 latency와 peak memory 같은 배포 제한을 먼저 통과시킵니다. 같은
           split·input·update 수·tuning budget을 맞추지 못했다면 결과는
           architecture 하나의 효과가 아니라 전체 recipe 비교입니다.

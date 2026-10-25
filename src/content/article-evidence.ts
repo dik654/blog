@@ -9358,15 +9358,15 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "보충 읽기",
-      label: "CLIP · arXiv 2103.00020",
-      href: "https://arxiv.org/abs/2103.00020",
-      note: "캡션 정렬 계열의 zero-shot 능력 근거이며 보고된 점수는 해당 프롬프트 설정 위의 값임",
+      label: "SigLIP · arXiv 2303.15343",
+      href: "https://arxiv.org/abs/2303.15343",
+      note: "이미지·텍스트 정렬과 쌍 단위 시그모이드 손실의 근거이며 배치 크기 결과는 논문의 실험 조건에 한정됨",
     },
     {
       kind: "보충 읽기",
       label: "SAM 3 · arXiv 2511.16719",
       href: "https://arxiv.org/abs/2511.16719",
-      note: "분할 감독 계열이 남기는 경계 능력의 근거이며 검색용 표현으로서의 성능을 주장하지 않음",
+      note: "개념 프롬프트에서 마스크와 식별자를 내는 시스템의 근거이며 검색용 백본 후보로서의 성능을 주장하지 않음",
     },
   ],
   "ai/multi-component-finetuning-vram": [

@@ -6516,9 +6516,9 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "vision-architecture-paired-selection",
     kind: "method",
     domain: "statistics",
-    label: "CNN–ViT paired selection",
+    label: "후보별 paired selection",
     definition:
-      "같은 split·input·seed·update·tuning budget에서 후보 metric의 seed별 paired gain과 uncertainty를 계산하고 target latency·memory constraint와 함께 선택하는 절차입니다.",
+      "같은 split·input·seed·전처리에서 두 후보 metric의 seed별 paired gain과 uncertainty를 계산하고 목표 장비의 latency·memory constraint와 함께 선택하는 절차입니다.",
     canonicalHref: "/cs/ai/vision-backbone-selection#measure-first",
   },
   "vision-checkpoint-parity-test": {
@@ -22792,7 +22792,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "학습 목표별 능력 프로필",
     definition:
-      "같은 아키텍처라도 무엇을 정답으로 삼아 학습했는지에 따라 얼린 표현에 남는 정보가 달라진다는 관점입니다. 자리별 세밀함·장면 요약·어휘 접근·경계 품질이 계열마다 다른 높이를 갖습니다.",
+      "같은 아키텍처라도 무엇을 정답으로 삼아 학습했는지에 따라 얼린 표현과 시스템 출력이 달라진다는 관점입니다. 자기지도 인코더·이미지 텍스트 인코더·프롬프트 분할 시스템의 역할과 경계를 구분합니다.",
     canonicalHref: "/cs/ai/vision-backbone-selection#objective-axes",
   },
   "text-alignment-as-separate-capability": {
@@ -22819,7 +22819,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "얼린 표현 기반 선택 실측",
     definition:
-      "후보 백본을 고정한 채 벡터를 한 번 뽑아 두고 선형 head 성능·변형 견고성·자리별 성능 세 숫자를 구하는 짧은 비교 실험입니다. 큰 학습 없이 후보를 가를 수 있습니다.",
+      "후보 인코더를 고정한 채 같은 상품 검색 성능·촬영 변형 견고성·목표 장비의 지연과 메모리를 같은 조건에서 재는 작은 비교 실험입니다.",
     canonicalHref: "/cs/ai/vision-backbone-selection#measure-first",
   },
   "probe-protocol-comparability": {

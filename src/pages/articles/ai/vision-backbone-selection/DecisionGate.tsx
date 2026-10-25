@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
+import { VisionBackboneSelectionMapReturn } from "./VisionBackboneSelectionLocator";
 import GateViz from "./viz/GateViz";
 
 export default function DecisionGate() {
   return (
     <section id="decision-gate" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">판단 순서를 고정하면 논쟁이 줄어듭니다</h2>
+      <GateViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           지금까지의 내용을 순서로 묶으면 이렇습니다. 질의 형태와 출력 형태를 먼저 적고, 그에 맞는 계열로
@@ -24,8 +26,6 @@ export default function DecisionGate() {
           바꾸게 됩니다.
         </p>
       </div>
-
-      <GateViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
@@ -57,6 +57,7 @@ export default function DecisionGate() {
           </p>
         </ProgressiveDetail>
       </div>
+      <VisionBackboneSelectionMapReturn />
     </section>
   );
 }

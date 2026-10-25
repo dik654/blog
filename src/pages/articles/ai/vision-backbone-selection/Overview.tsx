@@ -1,28 +1,32 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
+import VisionBackboneSelectionLocator from "./VisionBackboneSelectionLocator";
 import AxesViz from "./viz/AxesViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">벤치마크 순위표는 선택 기준이 아닙니다</h2>
+      <VisionBackboneSelectionLocator />
+      <h2 className="mb-4 text-2xl font-bold">상품 사진 한 장에서 선택 과정을 시작합니다</h2>
+      <AxesViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          비전 백본을 고를 때 가장 흔한 방식은 공개된 점수표에서 위쪽을 고르는 것입니다. 그런데 그 점수는
-          누군가의 과제와 평가 조건에서 나온 값이라, 내 과제가 요구하는 능력과 다를 수 있습니다. 더 믿을 만한
-          출발점은 그 모델이 무엇을 정답으로 삼아 학습했는지입니다.
+          사용자가 운동화 사진을 올리면 같은 상품의 식별자를 가까운 순서대로 돌려주는 기능을 만든다고 하겠습니다.
+          입력은 이미지이고 출력은 상품 순위입니다. 텍스트 질의와 픽셀 마스크는 필요하지 않습니다. 이 한 문장이
+          공개 점수표보다 먼저 고정해야 할 선택 계약입니다.
         </p>
 
         <p className="leading-7">
-          학습 목표는 곧 무엇을 보존하고 무엇을 버렸는지를 정합니다. 라벨 없이 이미지끼리 맞춘 모델은 자리별
-          구조를 세밀하게 남기고, 캡션에 맞춘 모델은 어휘로 접근할 수 있는 축을 남깁니다. 분할 감독으로 학습한
-          모델은 경계를 남기지만 장면 요약은 그만큼 약합니다.
+          다음으로 후보가 무엇을 맞히며 학습했는지 봅니다. 자기지도 백본은 이미지와 패치의 관계를, 이미지·텍스트
+          정렬 모델은 사진과 문장의 대응을, 프롬프트 기반 분할 시스템은 지목한 개념의 마스크를 직접 냅니다. 세
+          대상은 같은 종류가 아닙니다. 특히 분할 시스템은 검색 백본 후보가 아니라 출력 계약이 다를 때 쓰는 완성된
+          시스템일 수 있습니다.
         </p>
 
         <p className="leading-7">
-          그래서 이 글은 순위표 대신 세 가지 축으로 시작합니다. 학습 목표가 만든 능력의 축, 내 과제가 요구하는
-          능력의 축, 그리고 배포가 감당할 수 있는 비용의 축입니다. 세 축이 만나는 지점에서 후보가 두세 개로
-          줄어들고, 그 다음에 짧은 실측으로 결정합니다.
+          상품 사진 검색에서는 자기지도 백본과 이미지·텍스트 정렬 인코더를 1차 후보로 남깁니다. 어느 쪽이 더
+          낫다고 미리 확정하지 않습니다. 같은 상품의 촬영 변형을 가까이 두는지, 다른 상품과 구분하는지, 목표
+          장비의 지연과 메모리를 지키는지를 같은 조건에서 직접 재야 합니다.
         </p>
 
         <ContentBoundary article="vision-backbone-selection" />
@@ -40,13 +44,10 @@ export default function Overview() {
         </p>
 
         <p className="leading-7">
-          순서는 이렇습니다. 학습 목표별 능력 차이를 정리하고 과제 유형에 매핑한 뒤, 고르기 전에 30분 안에
-          돌려 볼 수 있는 최소 실측을 설계합니다. 이어서 비용과 교체 부담, 마지막으로 판단 순서와 흔한 함정으로
-          마무리합니다.
+          이제 같은 상품 사진 찾기라는 요청을 끝까지 유지합니다. 학습 신호가 만든 능력 차이로 후보를 줄이고,
+          작은 고정 조건 실측으로 두 후보를 비교한 뒤, 재색인과 임계값 조정 비용까지 더해 결정을 기록합니다.
         </p>
       </div>
-
-      <AxesViz />
     </section>
   );
 }

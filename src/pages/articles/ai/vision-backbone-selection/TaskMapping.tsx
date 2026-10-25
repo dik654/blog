@@ -6,8 +6,8 @@ const ROWS = [
   {
     task: "이미지로 이미지 찾기 · 중복 탐지",
     need: "장면 요약과 변형 견고성",
-    fit: "자기지도 계열",
-    note: "텍스트 질의가 없다면 정렬 계열을 고를 이유가 약합니다.",
+    fit: "자기지도·정렬 계열 모두 후보",
+    note: "텍스트 정렬 자체는 필수가 아니므로 같은 데이터에서 직접 가릅니다.",
   },
   {
     task: "문장으로 이미지 찾기",
@@ -24,14 +24,14 @@ const ROWS = [
   {
     task: "분할 · 깊이 · 대응",
     need: "자리별 세밀한 표현",
-    fit: "자기지도 계열",
-    note: "얇은 head만 붙여 재는 것이 표준 비교 방식입니다.",
+    fit: "dense 표현 후보",
+    note: "패치 특징을 고정하고 같은 얇은 head로 비교할 수 있습니다.",
   },
   {
     task: "개념 이름으로 인스턴스 잘라내기",
     need: "경계와 존재 판단",
-    fit: "분할 감독 계열",
-    note: "백본 표현이 아니라 완성된 시스템을 쓰는 경우가 많습니다.",
+    fit: "프롬프트 분할 시스템",
+    note: "검색용 백본이 아니라 decoder까지 포함한 시스템을 쓰는 경우가 많습니다.",
   },
 ];
 
@@ -39,17 +39,18 @@ export default function TaskMapping() {
   return (
     <section id="task-mapping" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">과제가 요구하는 능력부터 한 문장으로 적습니다</h2>
+      <MappingViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           선택이 어려워지는 이유는 대개 과제를 충분히 좁히지 않았기 때문입니다. "이미지 검색"이라고만 하면
-          후보가 전부 남지만, "사용자가 올린 사진으로 같은 상품을 찾는다"까지 좁히면 필요한 능력이 장면
-          요약과 촬영 변형 견고성으로 정해지고 후보가 한 계열로 줄어듭니다.
+          후보가 전부 남지만, "사용자가 올린 사진으로 같은 상품 식별자를 순위로 돌려준다"까지 적으면 마스크를
+          내는 분할 시스템은 빠지고 이미지 인코더 후보만 남습니다.
         </p>
 
         <p className="leading-7">
           그래서 먼저 적을 것은 질의의 형태입니다. 입력이 이미지인지 문장인지, 출력이 순위인지 마스크인지,
-          그리고 자리 정보가 필요한지입니다. 이 세 가지만 정해도 앞 절의 세 계열 중 어디를 볼지가 대부분
-          결정됩니다.
+          그리고 자리 정보가 필요한지입니다. 이번 요청은 이미지·순위·자리 불필요입니다. 자기지도와 정렬
+          인코더가 모두 남고, 어느 쪽이 상품의 촬영 변형에 강한지는 다음 절에서 직접 잽니다.
         </p>
       </div>
 
@@ -76,8 +77,6 @@ export default function TaskMapping() {
           </tbody>
         </table>
       </div>
-
-      <MappingViz />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p className="leading-7">
