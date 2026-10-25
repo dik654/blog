@@ -3821,7 +3821,7 @@
     {
       "route": "ai/knowledge-graph-construction",
       "publicPath": "cs/ai/knowledge-graph-construction",
-      "title": "Knowledge Graph 구축: Property Graph · Schema · Extraction · Dedup",
+      "title": "Knowledge Graph 구축: 원문에서 검증된 관계까지",
       "catalogIndex": 379,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",

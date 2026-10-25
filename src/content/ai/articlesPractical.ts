@@ -2347,13 +2347,13 @@ export const practicalArticles: Article[] = [
   },
   {
     slug: "knowledge-graph-construction",
-    title: "Knowledge Graph 구축: Property Graph · Schema · Extraction · Dedup",
+    title: "Knowledge Graph 구축: 원문에서 검증된 관계까지",
     subcategory: "ai-practical-llm",
     sections: [
-      { id: "problem", title: "Chunk 검색의 한계와 knowledge graph 의 답" },
+      { id: "problem", title: "원문에서 검증 가능한 그래프로" },
       {
         id: "extraction",
-        title: "Entity extraction 이 찾는 mention 후보",
+        title: "Mention과 relation 후보 추출",
         subsections: [
           { id: "relation-extraction-task", title: "Relation extraction 과 triple" },
           { id: "schema-guided-extraction", title: "Schema-guided extraction 과 Open IE" },
@@ -2361,18 +2361,23 @@ export const practicalArticles: Article[] = [
       },
       {
         id: "property-graph",
-        title: "Property graph: node·edge·property·edge type",
-        subsections: [{ id: "rdf-ontology", title: "RDF triple 과 ontology 의 표현력 차이" }],
+        title: "Property graph와 provenance",
+        subsections: [{ id: "rdf-ontology", title: "RDF 1.2와 ontology의 경계" }],
       },
-      { id: "dedup", title: "Cosine 유사도 threshold 로 하는 entity dedup" },
-      { id: "pipeline", title: "Graph construction pipeline 다섯 단계" },
+      { id: "dedup", title: "Blocking부터 fusion까지" },
+      { id: "validation", title: "공개 전 검증" },
+      { id: "pipeline", title: "Graph construction pipeline 여섯 단계" },
+      { id: "graph-traversal", title: "다음 GraphRAG 검색으로" },
+      { id: "review", title: "흐름 확인" },
       {
         id: "evidence",
-        title: "Neo4j 문서·Open IE 논문·EDC 논문",
+        title: "정의와 방법의 근거",
         subsections: [
           { id: "source-neo4j-property-graph", title: "Neo4j property graph 정의" },
+          { id: "source-kg-construction-survey", title: "Knowledge Graph Construction survey" },
           { id: "paper-openie-banko2007", title: "Open IE(TextRunner) 논문" },
           { id: "paper-edc-schema-canonicalization", title: "EDC schema·canonicalization 논문" },
+          { id: "source-rdf-12", title: "W3C RDF 1.2" },
         ],
       },
     ],
