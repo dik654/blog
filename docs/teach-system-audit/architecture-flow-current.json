@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 465,
     "architectureWithoutAnimation": 95,
-    "recursiveLocators": 244,
+    "recursiveLocators": 245,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -5698,7 +5698,7 @@
     {
       "route": "ai/triplet-metric-learning",
       "publicPath": "cs/ai/triplet-metric-learning",
-      "title": "Triplet Metric Learning: Unit Geometry · Margin · Mining",
+      "title": "Triplet Metric Learning: 상대 거리와 Mining",
       "sourcePath": "src/pages/articles/ai/triplet-metric-learning.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -5706,7 +5706,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

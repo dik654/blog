@@ -2538,7 +2538,33 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
   },
-  "triplet-metric-learning": { title: "Triplet metric learning 글이 소유하는 범위", owns: ["Unit embedding의 cosine–squared-distance 동치", "Triplet relative margin과 versioned hard-negative mining"], reuses: [{ label: "Pair 의미", href: "/cs/ai/contrastive-learning" }, { label: "벡터·norm·내적", href: "/cs/ai/math-vectors-inner-products" }], evidence: [{ kind: "primary-source", rule: "FaceNet margin·mining 결과는 얼굴 identity data와 해당 architecture 범위로 제한한다." }, { kind: "standard", rule: "Distance·normalization·margin·miner encoder·index snapshot·filter revision을 함께 기록한다." }] },
+  "triplet-metric-learning": {
+    title: "Triplet metric learning 글이 소유하는 범위",
+    owns: [
+      "Unit embedding의 cosine과 squared Euclidean distance 변환",
+      "Triplet relative margin 계산과 candidate mining funnel",
+    ],
+    reuses: [
+      {
+        label: "Positive·negative 관계",
+        href: "/cs/ai/contrastive-learning#overview",
+      },
+      {
+        label: "Vector·norm·inner product",
+        href: "/cs/ai/math-vectors-inner-products",
+      },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "FaceNet의 margin·semi-hard mining 주장은 얼굴 identity data와 해당 논문의 식·실험 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Normalization·distance convention·margin·encoder·candidate pool·relation filter를 함께 기록한다.",
+      },
+    ],
+  },
   "supervised-contrastive-learning": { title: "Supervised contrastive 글이 소유하는 범위", owns: ["Label을 anchor별 positive set P(i)로 바꾸는 관계", "Multi-positive 평균 loss·valid-anchor·sampler 경계"], reuses: [{ label: "Pair 의미와 projection", href: "/cs/ai/contrastive-learning" }, { label: "Softmax와 cross-entropy", href: "/cs/ai/cross-entropy" }], evidence: [{ kind: "primary-source", rule: "Supervised contrastive 결과는 논문의 label·dataset·augmentation·batch recipe 범위로 제한한다." }, { kind: "standard", rule: "Positive relation·label hierarchy·sampler·valid-anchor count·subgroup metric을 기록한다." }] },
   "contrastive-evaluation": { title: "Contrastive evaluation 글이 소유하는 범위", owns: ["Bucket별 false-negative pair audit", "동일 split·seed downstream paired evaluation과 data revision loop"], reuses: [{ label: "Triplet miner receipt", href: "/cs/ai/triplet-metric-learning#mining" }, { label: "Train·validation·test", href: "/cs/ai/train-validation-test" }], evidence: [{ kind: "primary-source", rule: "False-negative bias 연구의 objective 가정과 실험 범위를 human audit 결과로 오인하지 않는다." }, { kind: "standard", rule: "Bucket·rubric·agreement·split·seed·metric·artifact revision을 함께 기록한다." }] },
   "domain-finetuning": {

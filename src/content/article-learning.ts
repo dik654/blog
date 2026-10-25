@@ -22873,40 +22873,225 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/triplet-metric-learning": {
-    entryLevel: true,
-    entryNote: "거리·cosine·mining을 모른다고 가정하고 anchor·positive·negative 세 자리부터 시작합니다.",
-    coreIdea: "Triplet learning은 unit embedding geometry에서 positive와 negative의 상대 거리 margin을 학습하며, hard negative를 miner·index·filter가 versioned된 data artifact로 관리합니다.",
-    assumedKnowledge: [],
+    entryLevel: false,
+    recursiveTeaching: true,
+    entryNote:
+      "앞 글의 SKU-42 positive pair를 이어받아 anchor A₁, positive A₂와 negative 후보 네 개가 거리 계산과 관계 필터를 거쳐 D₁ 하나로 좁혀지는 과정을 추적합니다.",
+    coreIdea:
+      "Triplet loss는 같은 anchor에서 잰 positive와 negative의 squared distance 순서를 margin으로 비교합니다. Mining은 가까운 후보를 바로 고르는 일이 아니라 후보 생성, 관계 필터, 난이도 판정과 선택을 분리하는 과정입니다.",
+    assumedKnowledge: [
+      {
+        id: "contrastive-pair-semantics",
+        role: "Positive·negative·unknown 관계를 거리보다 먼저 정한다는 전제입니다.",
+      },
+    ],
     introducedHere: [
-      { id: "normalized-embedding-cosine", role: "Unit embedding의 cosine과 squared Euclidean 순위 동치를 유도합니다." },
-      { id: "triplet-relative-margin", role: "Positive·negative 거리 차이의 hinge margin을 계산합니다." },
-      { id: "hard-negative-mining-snapshot", role: "Miner·index·depth·filter를 재현 가능한 candidate artifact로 기록합니다." },
+      {
+        id: "normalized-embedding-cosine",
+        role: "Unit embedding의 cosine 0.8을 squared Euclidean distance 0.4로 변환합니다.",
+      },
+      {
+        id: "triplet-relative-margin",
+        role: "Positive 0.4, negative 0.5, margin 0.2에서 위반량 0.1을 계산합니다.",
+      },
+      {
+        id: "hard-negative-mining-snapshot",
+        role: "후보 생성, 관계 필터, 난이도 분류와 semi-hard 선택을 서로 다른 단계로 추적합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "normalized-embedding-cosine", sectionId: "geometry", intuition: "모든 화살표 길이를 1로 맞추면 방향이 가까울수록 끝점 거리도 작습니다.", workedExample: "Cosine .8이면 squared distance 2−1.6=.4입니다.", boundary: "정규화하지 않은 vector에는 성립하지 않습니다.", proofIdea: "차이 제곱을 norm 두 개와 내적으로 전개합니다.", counterexample: "(1,0)과 (2,0)은 cosine 1이지만 distance 1입니다." },
-      { id: "triplet-relative-margin", sectionId: "margin", intuition: "Negative가 positive보다 m만큼 더 멀면 통과하고 부족한 거리만 벌점으로 남깁니다.", workedExample: "Positive 거리 .4, negative 거리 .5, margin .2이면 .4−.5+.2=.1이어서 hinge loss .1이 남습니다.", boundary: "Margin은 distance·normalization scale에 종속됩니다." },
-      { id: "hard-negative-mining-snapshot", sectionId: "mining", intuition: "현재 모델이 헷갈리는 후보를 뽑되 선택 조건 전체를 versioning합니다.", workedExample: "Encoder E7·index C3·top100·filter F2의 semi-hard 후보를 저장합니다.", boundary: "가장 가까운 후보가 label이 누락된 positive일 수 있습니다." },
+      {
+        id: "normalized-embedding-cosine",
+        sectionId: "geometry",
+        intuition:
+          "두 화살표 길이를 1로 맞추면 방향이 가까울수록 unit circle 위 끝점 사이 squared distance가 작아집니다.",
+        workedExample:
+          "Anchor (1,0)과 positive (0.8,0.6)은 cosine 0.8이고 squared distance는 2−2×0.8=0.4입니다.",
+        boundary:
+          "정규화하지 않은 vector에서는 norm 항이 1이 아니므로 2−2 cosine으로 축약할 수 없습니다.",
+        proofIdea:
+          "차이의 제곱을 두 norm 제곱과 내적으로 전개한 뒤 unit norm을 대입합니다.",
+        counterexample:
+          "(1,0)과 (2,0)은 cosine 1이지만 squared distance는 1입니다.",
+        causalTrace: {
+          answer:
+            "Unit embedding에서는 squared Euclidean distance가 2−2 cosine이므로 cosine 순위와 squared-distance 순위가 반대로 일치합니다.",
+          followUpQuestion:
+            "같은 distance convention으로 positive와 negative를 비교하면 언제 loss가 남을까요?",
+          bottleneck:
+            "정규화 전제나 squared 표기를 빼면 cosine과 Euclidean distance를 같은 숫자처럼 섞게 됩니다.",
+          mechanism:
+            "두 norm을 1로 고정하고 차이 제곱을 전개해 cosine 0.8을 squared distance 0.4로 바꿉니다.",
+          remainingCost:
+            "거리 순위가 같아도 margin의 수치 scale과 학습 gradient는 distance convention에 따라 달라집니다.",
+          decisionRule:
+            "Triplet 식과 구현을 비교할 때 normalization, squared 여부와 margin scale을 한 계약으로 확인합니다.",
+        },
+      },
+      {
+        id: "triplet-relative-margin",
+        sectionId: "margin",
+        intuition:
+          "Negative가 positive보다 margin만큼 더 멀지 않으면 부족한 거리만 벌점으로 남깁니다.",
+        workedExample:
+          "d²p=0.4, d²n=0.5, α=0.2이면 max(0,0.4−0.5+0.2)=0.1입니다.",
+        boundary:
+          "Squared distance와 비제곱 Lp distance의 margin 숫자를 그대로 바꿔 쓸 수 없습니다.",
+        causalTrace: {
+          answer:
+            "Positive와 negative의 squared distance 차이에 margin을 더하고 hinge를 적용하면 위반량만 loss로 남습니다.",
+          followUpQuestion:
+            "후보가 여러 개일 때 어떤 negative를 이 식에 넣어야 할까요?",
+          bottleneck:
+            "Easy negative는 loss가 0이고, 가장 가까운 후보는 hidden positive이거나 지나치게 어려운 negative일 수 있습니다.",
+          mechanism:
+            "Positive 경계 0.4와 통과 경계 0.6 사이를 semi-hard 구간으로 두고 세 negative의 loss를 같은 눈금에서 비교합니다.",
+          remainingCost:
+            "Loss 식만으로 후보의 관계 정확성이나 학습 안정성을 보증할 수 없습니다.",
+          decisionRule:
+            "거리 계산 전에 관계를 확인하고, 선택 전략이 요구하는 hard·semi-hard·easy 조건을 따로 적용합니다.",
+        },
+      },
+      {
+        id: "hard-negative-mining-snapshot",
+        sectionId: "mining",
+        intuition:
+          "현재 encoder가 헷갈리는 후보를 찾되, 실제 negative인지 먼저 확인하고 선택 조건 전체를 함께 남깁니다.",
+        workedExample:
+          "네 후보 중 hidden positive B₁을 제외한 뒤 C₁·D₁·E₁을 분류하고 semi-hard D₁을 선택합니다.",
+        boundary:
+          "Encoder, candidate pool 또는 관계 filter가 바뀌면 같은 anchor에서도 선택 결과가 달라질 수 있습니다.",
+        causalTrace: {
+          answer:
+            "후보를 생성하고 관계 오류를 제거한 뒤 거리 구간을 판정해야 semi-hard negative를 재현 가능하게 선택할 수 있습니다.",
+          followUpQuestion:
+            "선택한 triplet이 실제 downstream task에도 도움이 되는지는 어떻게 검증할까요?",
+          bottleneck:
+            "거리순 정렬만 사용하면 hidden positive를 negative로 쓰거나 선택 당시 조건을 잃습니다.",
+          mechanism:
+            "생성 4개→관계 통과 3개→semi-hard 1개→D₁ 선택의 funnel과 선택 기록을 함께 보존합니다.",
+          remainingCost:
+            "관계 filter도 완전하지 않으며, mining 결과는 encoder가 바뀌면 낡을 수 있습니다.",
+          decisionRule:
+            "선택 결과를 평가할 때 encoder, candidate pool, relation filter, distance convention과 margin을 같은 기록으로 묶습니다.",
+        },
+      },
     ],
     conceptStages: [
-      { label: "Geometry", relation: "Unit normalization에서 cosine·distance 동치 확인", concepts: ["normalized-embedding-cosine"] },
-      { label: "Triplet", relation: "Anchor·positive·negative 거리 측정", concepts: ["normalized-embedding-cosine", "triplet-relative-margin"] },
-      { label: "Margin", relation: "Relative ordering 위반량을 hinge loss로 변환", concepts: ["triplet-relative-margin"] },
-      { label: "Mine", relation: "난이도 후보와 source revision 보존", concepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"] },
+      {
+        label: "00 관계",
+        relation: "A₁·A₂·D₁의 anchor·positive·negative 관계를 먼저 고정합니다.",
+        concepts: ["contrastive-pair-semantics", "triplet-relative-margin"],
+      },
+      {
+        label: "01 Geometry",
+        relation: "Unit vector의 cosine 0.8을 squared distance 0.4로 바꿉니다.",
+        concepts: ["normalized-embedding-cosine"],
+      },
+      {
+        label: "02 Margin",
+        relation: "Positive 0.4와 통과 경계 0.6 사이의 위반량을 계산합니다.",
+        concepts: ["triplet-relative-margin"],
+      },
+      {
+        label: "03 후보",
+        relation: "네 후보에서 hidden positive를 제외하고 난이도를 분류합니다.",
+        concepts: ["hard-negative-mining-snapshot"],
+      },
+      {
+        label: "04 선택",
+        relation: "Semi-hard D₁과 선택 조건을 함께 남깁니다.",
+        concepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "Anchor·positive·negative·margin을 정의하라.", answerChecklist: ["reference", "same relation", "different relation", "distance", "minimum gap"], requiredConcepts: ["triplet-relative-margin"], sectionId: "overview" },
-      { level: "basic", question: "Cosine .8인 unit vectors의 squared distance를 계산하라.", answerChecklist: ["2-2cos", "1.6", ".4", "unit assumption"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
-      { level: "basic", question: "정규화 없는 cosine-distance 반례를 쓰라.", answerChecklist: ["(1,0)", "(2,0)", "cosine 1", "distance 1", "assumption failure"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
-      { level: "basic", question: "d(a,p)=.4,d(a,n)=.9,m=.2의 loss를 계산하라.", answerChecklist: ["-.3", "max zero", "loss 0", "easy", "condition satisfied"], requiredConcepts: ["triplet-relative-margin"], sectionId: "margin" },
-      { level: "basic", question: "Negative가 .5일 때 loss와 상태를 계산하라.", answerChecklist: [".1", "positive violation", "semi-hard", "gradient"], requiredConcepts: ["triplet-relative-margin"], sectionId: "margin" },
-      { level: "basic", question: "Miner snapshot의 필드를 쓰라.", answerChecklist: ["encoder hash", "corpus", "index", "depth", "similarity", "filters", "timestamp"], requiredConcepts: ["hard-negative-mining-snapshot"], sectionId: "mining" },
-      { level: "advanced", question: "Cosine-distance 동치를 유도하라.", answerChecklist: ["difference expansion", "two norms", "unit substitution", "inner product", "monotone ranking"], requiredConcepts: ["normalized-embedding-cosine"], sectionId: "geometry" },
-      { level: "advanced", question: "Random·semi-hard·hard bucket 평가를 설계하라.", answerChecklist: ["definitions", "same encoder", "FN audit", "loss", "downstream", "worst bucket"], requiredConcepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"], sectionId: "mining" },
-      { level: "advanced", question: "Offline miner가 stale해지는 fixture를 설계하라.", answerChecklist: ["encoder revision", "old index", "candidate drift", "regeneration trigger", "receipt", "rollback"], requiredConcepts: ["hard-negative-mining-snapshot"], sectionId: "mining" },
-      { level: "advanced", question: "Triplet release receipt를 작성하라.", answerChecklist: ["pair source", "normalization", "distance", "margin", "miner revision", "FN rate", "downstream", "fallback"], requiredConcepts: ["normalized-embedding-cosine", "triplet-relative-margin", "hard-negative-mining-snapshot"], sectionId: "mining" },
+      {
+        level: "basic",
+        question: "A₁·A₂·D₁의 역할과 비교하는 두 거리를 쓰라.",
+        answerChecklist: ["anchor A1", "positive A2", "negative D1", "d2 anchor-positive", "d2 anchor-negative"],
+        requiredConcepts: ["triplet-relative-margin"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "Cosine 0.8인 unit vectors의 squared distance를 계산하라.",
+        answerChecklist: ["2-2cos", "1.6", "0.4", "unit norm"],
+        requiredConcepts: ["normalized-embedding-cosine"],
+        sectionId: "geometry",
+      },
+      {
+        level: "basic",
+        question: "정규화하지 않은 cosine-distance 반례를 설명하라.",
+        answerChecklist: ["1,0", "2,0", "cosine 1", "squared distance 1", "norm assumption"],
+        requiredConcepts: ["normalized-embedding-cosine"],
+        sectionId: "geometry",
+      },
+      {
+        level: "basic",
+        question: "d²p=0.4, d²n=0.5, α=0.2의 triplet loss를 계산하라.",
+        answerChecklist: ["0.4-0.5", "add 0.2", "0.1", "hinge", "semi-hard"],
+        requiredConcepts: ["triplet-relative-margin"],
+        sectionId: "margin",
+      },
+      {
+        level: "basic",
+        question: "C₁·D₁·E₁을 hard·semi-hard·easy로 분류하라.",
+        answerChecklist: ["C1 0.3 hard", "D1 0.5 semi-hard", "E1 0.9 easy", "positive boundary 0.4", "margin boundary 0.6"],
+        requiredConcepts: ["triplet-relative-margin"],
+        sectionId: "margin",
+      },
+      {
+        level: "basic",
+        question: "B₁을 거리순 첫 negative로 선택하면 안 되는 이유를 쓰라.",
+        answerChecklist: ["same SKU", "hidden positive", "relation filter", "false repulsion", "distance after legality"],
+        requiredConcepts: ["contrastive-pair-semantics", "hard-negative-mining-snapshot"],
+        sectionId: "mining",
+      },
+      {
+        level: "advanced",
+        question: "후보 네 개에서 D₁을 고르는 mining funnel을 재현하라.",
+        answerChecklist: ["four generated", "remove B1", "three legal", "one semi-hard", "select D1", "selection inputs"],
+        requiredConcepts: ["triplet-relative-margin", "hard-negative-mining-snapshot"],
+        sectionId: "mining",
+      },
+      {
+        level: "advanced",
+        question: "PyTorch 기본 TripletMarginLoss와 FaceNet 식의 distance 차이를 설명하라.",
+        answerChecklist: ["Lp distance", "squared Euclidean", "custom distance", "margin scale", "not interchangeable"],
+        requiredConcepts: ["triplet-relative-margin"],
+        sectionId: "margin",
+      },
+      {
+        level: "advanced",
+        question: "Squared distance를 비제곱 Euclidean distance로 바꿀 때 다시 확인할 항목을 설계하라.",
+        answerChecklist: ["distance function", "normalization", "margin scale", "hardness boundaries", "fixture recalculation", "regression test"],
+        requiredConcepts: ["normalized-embedding-cosine", "triplet-relative-margin"],
+        sectionId: "margin",
+      },
+      {
+        level: "advanced",
+        question: "Mining 결과를 다시 만들기 위해 필요한 입력 기록을 쓰라.",
+        answerChecklist: ["encoder snapshot", "candidate pool", "relation filter", "distance convention", "margin", "selected candidate"],
+        requiredConcepts: ["hard-negative-mining-snapshot"],
+        sectionId: "return-map",
+      },
     ],
     papers: [
-      { title: "FaceNet: A Unified Embedding for Face Recognition and Clustering", href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html", problem: "Verification·recognition·clustering에 공통으로 쓸 compact face embedding을 학습하는 문제", contribution: "Unit embedding·triplet loss·online semi-hard selection을 사용한 FaceNet", assumptions: "얼굴 identity labels·논문의 network·dataset·evaluation", evidenceScope: "CVPR 논문의 face task 결과", notClaim: "FaceNet margin과 mining이 임의 retrieval corpus의 기본값이라는 뜻은 아님", sectionId: "paper-facenet" },
+      {
+        title: "FaceNet: A Unified Embedding for Face Recognition and Clustering",
+        href: "https://openaccess.thecvf.com/content_cvpr_2015/html/Schroff_FaceNet_A_Unified_2015_CVPR_paper.html",
+        problem:
+          "Verification·recognition·clustering에 공통으로 쓸 compact face embedding을 학습하는 문제",
+        contribution:
+          "Unit hypersphere의 squared-distance triplet loss와 online semi-hard negative selection",
+        assumptions:
+          "얼굴 identity label, 논문의 network·dataset·batch·evaluation 설정",
+        evidenceScope:
+          "CVPR 2015 논문의 triplet objective, online mining 조건과 face task 결과",
+        notClaim:
+          "논문의 margin과 mining 방식이 임의 retrieval corpus의 보편 기본값이라는 뜻은 아님",
+        sectionId: "paper-facenet",
+      },
     ],
   },
   "ai/supervised-contrastive-learning": {

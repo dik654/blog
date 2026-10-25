@@ -6833,7 +6833,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "mathematics",
     label: "Normalized embedding cosine–distance equivalence",
     definition:
-      "L2 norm이 1인 두 embedding에서는 squared Euclidean distance가 2−2 cosine similarity이므로 두 측정이 반대 방향의 같은 이웃 순서를 만든다는 동치입니다.",
+      "L2 norm이 1인 두 embedding에서는 squared Euclidean distance가 2−2 cosine similarity이므로 두 측정이 반대 방향의 같은 이웃 순서를 만듭니다.",
     canonicalHref: "/cs/ai/triplet-metric-learning#geometry",
   },
   "ntxent-inbatch-objective": {
@@ -6860,16 +6860,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Triplet relative margin",
     definition:
-      "Anchor-negative 거리가 anchor-positive 거리보다 margin만큼 크지 않은 위반량에 hinge loss를 부여하는 relative metric-learning objective입니다.",
+      "같은 anchor에서 잰 positive squared distance와 negative squared distance의 차이가 margin을 채우지 못한 만큼 hinge loss를 남기는 metric-learning objective입니다.",
     canonicalHref: "/cs/ai/triplet-metric-learning#margin",
   },
   "hard-negative-mining-snapshot": {
     id: "hard-negative-mining-snapshot",
     kind: "method",
     domain: "computer-science",
-    label: "Hard-negative mining snapshot",
+    label: "Negative mining snapshot",
     definition:
-      "Miner encoder·corpus index·candidate depth·similarity·duplicate/multi-positive filter를 versioning해 선택된 negative 집합을 재현하는 data artifact입니다.",
+      "Candidate 생성, 관계 필터, 거리 난이도 판정과 최종 선택에 사용한 encoder·candidate pool·filter·distance·margin을 함께 기록한 결과입니다.",
     canonicalHref: "/cs/ai/triplet-metric-learning#mining",
   },
   "supervised-multipositive-objective": {
