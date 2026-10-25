@@ -10444,35 +10444,82 @@
     },
     {
       "route": "ai/video-transformers",
-      "title": "Video Transformer: Tubelet · Space-Time Attention · VideoMAE",
+      "title": "Video Transformer: Tubelet에서 VideoMAE까지",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
         "src/pages/articles/ai/video-transformers.tsx",
+        "src/content/video-learning-tree.ts",
+        "src/content/article-learning.ts",
+        "src/content/article-evidence.ts",
+        "src/content/editorial-ownership.ts",
+        "src/content/knowledge-graph.ts",
         "src/pages/articles/ai/video-transformers/ModernArticle.tsx",
-        "src/pages/articles/ai/video-understanding/viz/ModernVideoUnderstandingViz.tsx"
+        "src/pages/articles/ai/video-transformers/calculations.ts",
+        "src/pages/articles/ai/video-transformers/viz/VideoTransformersViz.tsx",
+        "src/pages/articles/ai/video-understanding/VideoPathLocator.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 5,
         "hasSourceSurface": true,
-        "characters": 13136
+        "characters": 48004
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 직속 부모와 현재 위치가 없고 비디오 전반을 공유 시각화 하나로 요약해 sampled clip이 tubelet·attention·mask로 바뀌는 과정을 추적하기 어려웠습니다.",
+        "기존의 (1−0.9)×1,568≈157 계산은 전체 token에 비율을 한 번 적용한 근삿값으로, 공식 VideoMAE 구현의 공간 위치별 int와 시간축 tile을 반영하지 못했습니다.",
+        "Tubelet이 어느 source timestamp를 묶는지, joint와 divided attention의 직접 연결이 어떻게 다른지, 논문 설명이 실제 구현의 어느 코드로 이어지는지 확인할 경로가 없었습니다."
+      ],
+      "fixture": "30 fps 원본에서 source frame 0·2·4부터 30까지 16장을 읽어 1초 clip을 만듭니다. Sampled frame 두 장과 16×16 공간을 한 tubelet으로 묶어 T=8, S=196, N=1,568을 만들고, joint 2,458,624 pairs와 divided 319,872 pairs를 대조합니다. 공식 VideoMAE 구현의 90% tube mask는 시간 위치마다 20개를 남겨 encoder에 160개를 전달하고 decoder가 1,408개 masked target을 복원합니다.",
+      "stageAnchors": {
+        "S": ["overview"],
+        "0": ["tubelet-geometry"],
+        "1": ["attention-cost"],
+        "2": ["masked-pretraining"],
+        "R": ["return-map"]
+      },
+      "primarySourceApplication": [
+        {
+          "source": "VideoMAE 공식 코드, commit 14ef8d856287c94ef1f985fe30f958eb4ec2c55d",
+          "anchor": "code-videomae-patch-embed",
+          "application": "Conv3d kernel·stride가 (tubelet, patch, patch)이고 num_patches가 시간·높이·너비의 몫으로 계산되는 구현을 확인했습니다."
+        },
+        {
+          "source": "Bertasius et al., Is Space-Time Attention All You Need for Video Understanding?, ICML 2021",
+          "anchor": "paper-timesformer",
+          "application": "Joint와 divided space-time attention의 연결 구조와 분류 실험 범위를 확인하고 실제 latency의 보편적 우위로 일반화하지 않았습니다."
+        },
+        {
+          "source": "TimeSformer 공식 코드, commit a5ef29a7b7264baff199a30b3306ac27de901133",
+          "anchor": "code-timesformer-divided",
+          "application": "Divided block이 temporal attention을 먼저 수행한 뒤 spatial attention으로 재배열하는 실제 순서를 확인했습니다."
+        },
+        {
+          "source": "Tong et al., VideoMAE, arXiv:2203.12602v3",
+          "anchor": "paper-videomae",
+          "application": "시간 중복을 활용하는 tube masking과 높은 masking ratio, visible-token encoder와 작은 decoder의 설계 의도를 확인했습니다."
+        },
+        {
+          "source": "VideoMAE 공식 코드, commit 14ef8d856287c94ef1f985fe30f958eb4ec2c55d",
+          "anchor": "paper-videomae",
+          "application": "공간 위치 196개에서 int(0.9×196)=176개를 가리고 같은 mask를 시간 위치 8곳에 반복해 encoder 160개·decoder target 1,408개가 되는 정확한 구현을 확인했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모 지도에서 transformer 영역을 표시하고 동일한 1초 clip을 tubelet→attention→tube mask로 추적한 뒤 세 개의 새 사실을 부모 지도에 되돌렸습니다.",
+        "humanize": "pass · 글 전용 한국어 자연스러움·문장 호흡·용어 밀도 검사를 통과했으며, 이름만 나열하지 않고 각 용어 바로 뒤에 역할을 붙였습니다.",
+        "numericTrace": "pass · 16×224×224→8×14×14=1,568, joint 2,458,624, divided 319,872, 공간별 masked 176·visible 20, encoder 160·decoder target 1,408을 TypeScript 계산과 장면에서 대조했습니다.",
+        "mobile390": "pass · 네 시각화의 5→4→5→5개 장면을 실제 이전·다음 버튼으로 모두 전환했습니다. 최대 figure 높이 783px, 모바일 버튼 50px, 문서 가로 overflow 0을 확인했습니다.",
+        "desktop1440": "pass · 네 시각화의 전체 5→4→5→5개 장면을 모두 직접 선택했습니다. 문서 가로 overflow 0, console 오류·경고 0과 divided attention 중간 장면을 확인했습니다.",
+        "keyboard": "pass · attention 시각화에 초점을 둔 뒤 ArrowRight·ArrowLeft로 장면을 이동하고 Space로 재생·일시정지했습니다.",
+        "reducedMotion": "pass · 네 시각화가 마지막 장면으로 정착하고 재생 버튼이 '재생 꺼짐' 상태로 비활성화됩니다.",
+        "noScript": "pass · 390×844 JavaScript 비활성 화면에서 제목·직속 부모 locator·return map과 네 시각화의 전체 5→4→5→5개 정적 장면 목록을 순서대로 확인했습니다.",
+        "typecheck": "pass · NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 단계",
+        "build": "pass · NODE_OPTIONS=--max-old-space-size=8192 npm run build"
       },
-      "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
-      ]
+      "remaining": ["운영 배포 검증"]
     },
     {
       "route": "ai/video-understanding",

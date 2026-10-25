@@ -2470,8 +2470,9 @@ export const EDITORIAL_BOUNDARIES = {
   "video-transformers": {
     title: "Video transformer 글이 소유하는 범위",
     owns: [
-      "T×H×W clip을 tubelet coordinates와 token sequence로 바꾸는 input contract",
-      "Joint·divided space-time pair cost와 VideoMAE visible-token pretraining 경계",
+      "Source timestamp가 고정된 F×H×W clip을 tubelet coordinates와 token sequence로 바꾸는 input contract",
+      "Joint와 temporal→spatial divided attention의 direct connectivity·pair proxy 차이",
+      "VideoMAE 공식 tube mask의 공간별 int 정수화·시간축 반복·visible-only encoder·decoder target 경계",
     ],
     reuses: [
       { label: "Patch token과 position", href: "/cs/ai/vision-transformer" },
@@ -2479,8 +2480,14 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Deterministic clip shape", href: "/cs/ai/video-clip-sampling" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "TimeSformer·VideoMAE claim은 각 논문의 clip·resolution·pretraining·dataset 범위로 제한한다." },
-      { kind: "standard", rule: "T·H·W·tubelet·position revision·attention pattern·mask seed·decoder·test clips·latency·memory를 함께 기록한다." },
+      {
+        kind: "primary-source",
+        rule: "TimeSformer·VideoMAE claim은 각 논문과 고정된 공식 코드 commit의 clip·resolution·pretraining·dataset 범위로 제한한다.",
+      },
+      {
+        kind: "standard",
+        rule: "Source timestamp·F/H/W·tubelet·position revision·attention pattern·mask 정수화·seed·decoder·test clips·latency·memory를 함께 기록한다.",
+      },
     ],
   },
   "contrastive-learning": {
