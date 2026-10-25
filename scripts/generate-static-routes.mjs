@@ -99,6 +99,7 @@ const noScriptArticleRoutes = new Set([
   "ai/vision-transformer",
   "ai/dinov3-self-supervised-backbone",
   "ai/vision-backbone-selection",
+  "ai/multiview-fusion",
   "ai/lr-scheduling",
   "ai/lr-decay-policies",
   "ai/cosine-restart-scheduling",

@@ -6931,40 +6931,62 @@
     },
     {
       "route": "ai/multiview-fusion",
-      "title": "멀티뷰 Fusion: Episode Contract에서 Missing-view 평가까지",
+      "title": "멀티뷰 결합: 관측 묶음부터 누락 평가까지",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
+        "src/content/image-classification-learning-tree.ts",
         "src/pages/articles/ai/multiview-fusion.tsx",
         "src/pages/articles/ai/multiview-fusion/AttentionFusion.tsx",
         "src/pages/articles/ai/multiview-fusion/EarlyFusion.tsx",
         "src/pages/articles/ai/multiview-fusion/LateFusion.tsx",
+        "src/pages/articles/ai/multiview-fusion/MultiviewFusionLocator.tsx",
+        "src/pages/articles/ai/multiview-fusion/MultiviewMobileStageFlow.tsx",
         "src/pages/articles/ai/multiview-fusion/Overview.tsx",
         "src/pages/articles/ai/multiview-fusion/viz/AttentionFusionViz.tsx",
         "src/pages/articles/ai/multiview-fusion/viz/EarlyFusionViz.tsx",
         "src/pages/articles/ai/multiview-fusion/viz/LateFusionViz.tsx",
         "src/pages/articles/ai/multiview-fusion/viz/OverviewViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
-        "hasSourceSurface": false,
-        "characters": 22613
+        "teachLevelMarkers": 4,
+        "hasSourceSurface": true,
+        "characters": 28786
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "관측 묶음·입력 단계·표현 단계·토큰 단계가 각각 설명됐지만 한 대상이 네 경계를 연속해서 지나지 않아 차이를 머릿속에서 다시 조립해야 했습니다.",
+        "네 시각화가 정적인 표여서 파일이 묶이고, 누락 관측이 분모에서 빠지고, 토큰 쌍과 loss가 바뀌는 상태 전이가 보이지 않았습니다.",
+        "직속 부모와 개념 트랙의 현재 위치가 없었고, 일부 수식 해설에는 자동 생성된 어색한 한국어와 영어 중심 용어가 남아 있었습니다."
+      ],
+      "fixture": "검수대의 운동화 shoe-017에서 정면 RGB·깊이, 측면·밑창·위쪽 관측을 묶고 측면 카메라 누락을 입력·표현·토큰 결합과 평가까지 추적합니다 (설명용 가정).",
+      "stageAnchors": {
+        "parent": ["overview"],
+        "episode": ["overview"],
+        "registered-input": ["early-fusion"],
+        "masked-representation": ["late-fusion"],
+        "spatial-interaction": ["attention-fusion"],
+        "return": ["attention-fusion"]
+      },
+      "primarySourceApplication": [
+        "Multi-view CNN 논문은 렌더링한 여러 2차원 화면을 CNN과 view pooling으로 합쳐 3차원 형상을 인식한 범위에만 사용하고, 센서 보정과 임의 누락까지 해결했다는 근거로 확대하지 않았습니다.",
+        "Set Transformer 논문은 집합 입력의 순서 불변 attention과 inducing-point 경로의 근거로 사용하고, 잘못된 관측 자리 embedding이나 기하학적 대응까지 자동으로 해결한다는 근거로 쓰지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · shoe-017 한 건이 파일 도착·관측 묶음·좌표 정렬·누락 제외·토큰 결합·누락 평가까지 이어집니다.",
+        "humanize": "pass · 네 절의 제목과 수식 해설을 역할 중심 한국어로 고치고 영어 용어는 정식 개념이 필요한 곳에만 남겼습니다.",
+        "numericTrace": "pass · exp 점수의 masked softmax가 [0.1863237,0,0.5064804,0.3071959]로 합 1이며 784²=614,656·588²=345,744를 독립 계산했습니다.",
+        "mobile390": "pass · 네 그림이 세로 단계로 표시되고 문서 가로 overflow 0, 각 그림의 마지막 장면과 console 오류 0을 확인했습니다.",
+        "desktop1440": "pass · 네 그림의 상태표·연결·가중치·토큰 쌍이 잘리지 않고 문서 가로 overflow 0임을 확인했습니다.",
+        "keyboard": "pass · 각 그림에 초점을 둔 뒤 ArrowRight 세 번으로 마지막 장면까지 이동했습니다.",
+        "motion": "pass · 자동 시작과 반복이 없고 명시적 재생 뒤 마지막 장면에서 멈추며 reduced-motion에서는 재생이 비활성화됩니다.",
+        "productionBuild": "pass · Node 힙 상한을 8GB로 명시한 전체 tsc-b·Vite build와 2,088개 정적 route 생성이 통과했습니다.",
+        "noJavaScript": "pass · 정적 본문 등록 뒤 네 그림의 전체 순서가 보이고 live control은 숨겨지며 390px 가로 overflow가 없음을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {

@@ -99,8 +99,8 @@ export default function ImageClassificationPathLocator({
       </div>
 
       <div
-        className="mt-5 grid grid-cols-2 gap-px bg-border p-px lg:grid-cols-4"
-        aria-label="이미지 분류를 데이터 경계에서 업무 판정까지 따라가는 네 영역"
+        className="mt-5 grid grid-cols-2 gap-px bg-border p-px lg:grid-cols-5"
+        aria-label="이미지 분류를 데이터 경계에서 여러 관측 결합까지 따라가는 다섯 영역"
       >
         {IMAGE_CLASSIFICATION_LEARNING_NODES.map((candidate, index) => {
           const active = candidate.id === current;

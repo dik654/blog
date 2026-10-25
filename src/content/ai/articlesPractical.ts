@@ -515,13 +515,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "multiview-fusion",
-    title: "멀티뷰 Fusion: Episode Contract에서 Missing-view 평가까지",
+    title: "멀티뷰 결합: 관측 묶음부터 누락 평가까지",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Episode · Identity · Order 계약" },
-      { id: "early-fusion", title: "Registration과 Input-level Fusion" },
-      { id: "late-fusion", title: "Masked Representation Aggregation" },
-      { id: "attention-fusion", title: "Cross-view Token·Cost·Intervention" },
+      { id: "overview", title: "같은 상품의 관측 묶음" },
+      { id: "early-fusion", title: "같은 좌표의 센서 결합" },
+      { id: "late-fusion", title: "누락을 제외한 표현 결합" },
+      { id: "attention-fusion", title: "관측 간 위치 관계와 검사" },
     ],
     component: () => import("@/pages/articles/ai/multiview-fusion"),
   },

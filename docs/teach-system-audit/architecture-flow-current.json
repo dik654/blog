@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 558,
     "customVisuals": 864,
-    "animatedMechanisms": 464,
+    "animatedMechanisms": 465,
     "architectureWithoutAnimation": 95,
-    "recursiveLocators": 231,
+    "recursiveLocators": 233,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -3938,18 +3938,18 @@
     {
       "route": "ai/multiview-fusion",
       "publicPath": "cs/ai/multiview-fusion",
-      "title": "멀티뷰 Fusion: Episode Contract에서 Missing-view 평가까지",
+      "title": "멀티뷰 결합: 관측 묶음부터 누락 평가까지",
       "sourcePath": "src/pages/articles/ai/multiview-fusion.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/negative-result-3d-face-control",
@@ -5842,7 +5842,7 @@
     {
       "route": "ai/vision-backbone-selection",
       "publicPath": "cs/ai/vision-backbone-selection",
-      "title": "무엇으로 학습했는지가 어떤 과제에 맞는지를 정합니다",
+      "title": "Vision Backbone 선택: 과제에서 배포까지",
       "sourcePath": "src/pages/articles/ai/vision-backbone-selection.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -5850,7 +5850,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": false,
       "reviewPriority": "verify-motion-semantics"

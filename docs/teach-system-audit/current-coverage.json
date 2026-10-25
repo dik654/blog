@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 574,
-    "pending": 417,
+    "reviewed": 575,
+    "pending": 416,
     "untracked": 0,
-    "assignedPending": 374,
+    "assignedPending": 373,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3041,11 +3041,11 @@
     {
       "route": "ai/multiview-fusion",
       "publicPath": "cs/ai/multiview-fusion",
-      "title": "멀티뷰 Fusion: Episode Contract에서 Missing-view 평가까지",
+      "title": "멀티뷰 결합: 관측 묶음부터 누락 평가까지",
       "catalogIndex": 301,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
