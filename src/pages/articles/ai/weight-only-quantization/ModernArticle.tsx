@@ -2,12 +2,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { WeightOnlyMethodViz } from "../quantization/viz/ModernQuantizationViz";
 
 export default function WeightOnlyQuantizationArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="weight-only" />
         <h2 className="mb-6 text-2xl font-bold">
           Weight-only quantization은 weight를 줄이고 activation은 높은
           precision으로 남깁니다
@@ -242,6 +244,7 @@ export default function WeightOnlyQuantizationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <QuantizationMapReturn current="weight-only" />
     </div>
   );
 }

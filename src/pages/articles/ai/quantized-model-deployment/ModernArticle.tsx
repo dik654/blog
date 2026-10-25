@@ -3,12 +3,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { QuantizedDeploymentViz } from "../quantization/viz/ModernQuantizationViz";
 
 export default function QuantizedModelDeploymentArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="deployment" />
         <h2 className="mb-6 text-2xl font-bold">
           27B라는 parameter 수를 GPU에 들어갈 byte 장부로 바꿉니다
         </h2>
@@ -283,6 +285,7 @@ export default function QuantizedModelDeploymentArticle() {
           </CitationBlock>
         </div>
       </section>
+      <QuantizationMapReturn current="deployment" />
     </div>
   );
 }

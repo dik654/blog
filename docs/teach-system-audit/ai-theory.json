@@ -8094,7 +8094,7 @@
         "src/pages/articles/ai/ptq-calibration/ModernArticle.tsx",
         "src/pages/articles/ai/quantization/viz/ModernQuantizationViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8102,19 +8102,33 @@
         "hasSourceSurface": true,
         "characters": 11413
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "PTQ의 통계 수집과 배포 artifact 생성은 설명됐지만, 양자화 전체 지도에서 현재 질문과 다음 개념의 위치를 찾기 어려웠습니다.",
+        "조작형 그림이 화면에 들어왔다는 이유만으로 재생되고, 긴 장면 이름이 데스크톱 조작부 높이를 늘렸습니다."
+      ],
+      "fixture": "학습이 끝난 checkpoint를 고정하고 대표 입력으로 range를 관측한 뒤 traffic slice별 포화와 task regression을 확인해 artifact와 검증 기록을 함께 묶습니다.",
+      "stageAnchors": {
+        "map": "양자화 기초에서 PTQ로 내려오는 직속 부모와 같은 개념 트랙을 표시합니다.",
+        "observe": "대표 입력으로 tensor range와 scale 후보를 관측합니다.",
+        "validate": "별도 traffic slice에서 포화와 task regression을 검사합니다.",
+        "return": "검증된 scale과 artifact 경계를 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "AWQ와 SmoothQuant 원문을 calibration activation과 배포 artifact 경계를 설명하는 근거로 제한해 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "checkpoint 고정 → range 관측 → traffic slice 검증 → artifact 생성의 한 경로와 양자화 가족 지도의 위치를 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "Scale granularity와 saturation 계산의 기존 수식·가정을 보존했으며 측정하지 않은 성능값을 추가하지 않았습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서 overflow 0, 그림 내부 overflow 0, 49.5px 조작 버튼을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서 overflow 0, 그림 내부 overflow 0, 짧은 탐색 이름으로 고정된 조작부를 확인했습니다.",
+        "interaction": "자동 시작 없음, 6.2초 간격, 키보드 이동, 화면 이탈 시 정지와 재진입 후 정지 유지가 동작합니다.",
+        "reducedMotion": "마지막 장면과 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "프로덕션 정적 경로에서 네 장면의 제목과 결론, 부모 지도 반환이 순서대로 표시됩니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8126,7 +8140,7 @@
         "src/pages/articles/ai/quantization/ModernArticle.tsx",
         "src/pages/articles/ai/quantization/viz/ModernQuantizationViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8134,19 +8148,33 @@
         "hasSourceSurface": true,
         "characters": 8899
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Affine quantizer의 계산은 있었지만 PTQ·QAT·형식·weight-only·배포 글을 한 가족으로 읽을 공통 지도가 없었습니다.",
+        "모바일에서 제목·설명 여백을 두 번 잡아 현재 장면의 조작부가 figure 아래로 잘렸습니다."
+      ],
+      "fixture": "signed INT2 codebook {-2,-1,0,1}에서 x=0.7, scale=0.5, zero-point=0을 q=1로 바꾸고 0.5로 복원하며 rounding과 clipping을 나눠 봅니다.",
+      "stageAnchors": {
+        "map": "양자화 가족의 표현·Scale·대상·배포 영역과 현재 위치를 표시합니다.",
+        "encode": "실수를 scale로 나누고 zero-point를 더해 code로 바꿉니다.",
+        "error": "range 안 rounding과 range 밖 clipping을 분리합니다.",
+        "return": "확인한 표현 계약을 모델 경량화 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "NVIDIA Transformer Engine 문서는 affine integer quantizer와 FP8 exponent·mantissa 형식을 구분하는 근거로만 사용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "실수 → code → 근사값 → 오차 원인 → 형식 경계의 질문 흐름과 직속 부모·같은 트랙·지도 반환을 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "x=.7,s=.5,z=0의 q=1과 복원값 .5, range 안 rounding과 밖 clipping 계산을 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서 overflow 0, canvas 608=scrollHeight 608, 49.5px 조작 버튼 전체 노출을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 65px 높이의 짧은 장면 탐색 버튼을 확인했습니다.",
+        "interaction": "7초 대기 후 장면 01 유지, 재생 뒤 3.2초에는 01·6.5초에는 02, 키보드 04 이동, 화면 이탈 뒤 정지 유지를 확인했습니다.",
+        "reducedMotion": "마지막 장면 04와 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론과 부모 지도 반환을 확인했습니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8158,7 +8186,7 @@
         "src/pages/articles/ai/quantization-aware-training/ModernArticle.tsx",
         "src/pages/articles/ai/quantization/viz/ModernQuantizationViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8166,19 +8194,33 @@
         "hasSourceSurface": true,
         "characters": 8177
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Fake quant forward와 STE backward는 설명됐지만 PTQ와 다른 질문을 푸는 개념 트랙의 위치가 보이지 않았습니다.",
+        "긴 장면 이름이 조작부 높이를 늘려 본문 그림보다 탐색 UI가 더 많은 공간을 차지했습니다."
+      ],
+      "fixture": "Float master weight를 유지한 채 forward에는 round·clip·dequantize를 넣고 loss를 계산한 뒤 backward에서 STE로 근사 gradient를 흘립니다.",
+      "stageAnchors": {
+        "map": "PTQ와 나란한 Scale 영역의 QAT 위치를 표시합니다.",
+        "forward": "Fake quantized weight로 배포 오차를 forward에 노출합니다.",
+        "backward": "Round의 실제 미분 대신 STE를 쓰는 이유와 범위를 구분합니다.",
+        "return": "Forward·backward의 다른 계약을 양자화 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "Integer-Arithmetic-Only Inference 논문의 fake quantization과 straight-through estimator를 forward·backward 경계에 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Float master weight → fake quant forward → loss → STE backward → export 경계를 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "기존 fake quant 수식과 STE 적용 범위를 보존하고 새 성능 수치를 만들지 않았습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서와 그림 overflow 0, 49.5px 조작 버튼을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서와 그림 overflow 0, 65px 장면 탐색 버튼을 확인했습니다.",
+        "interaction": "자동 시작 없음, 6.2초 장면 간격, 키보드 이동과 이탈 정지 계약을 공유 훅에서 확인했습니다.",
+        "reducedMotion": "마지막 장면 04와 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "프로덕션 정적 경로에서 네 장면의 제목과 결론, 부모 지도 반환이 순서대로 표시됩니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8189,7 +8231,7 @@
         "src/pages/articles/ai/quantization-formats-and-granularity.tsx",
         "src/pages/articles/ai/quantization-formats-and-granularity/viz/QuantizationFormatsAndGranularityViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8197,19 +8239,33 @@
         "hasSourceSurface": true,
         "characters": 11008
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "INT·FP8·FP4·극저비트 형식과 scale granularity가 한 글 안에 있었지만 양자화 가족의 표현 영역에서 어떤 질문을 맡는지 드러나지 않았습니다.",
+        "모바일·데스크톱 모두 긴 장면 이름과 바깥 여백 때문에 조작부가 canvas 아래로 밀렸습니다."
+      ],
+      "fixture": "4채널×4원소 weight에서 첫 채널의 큰 값 18·20·22·24를 유지하고 per-tensor→per-channel→group-wise→block으로 scale 공유 범위만 바꿉니다.",
+      "stageAnchors": {
+        "map": "양자화 기초와 함께 표현 영역에 놓인 형식·단위 글의 위치를 표시합니다.",
+        "format": "같은 bit 수라도 INT와 FP 계열의 code 구조가 다른 이유를 구분합니다.",
+        "granularity": "Scale 공유 범위를 좁힐 때 outlier 피해와 metadata 비용이 어떻게 바뀌는지 추적합니다.",
+        "return": "형식과 granularity가 서로 다른 선택 축이라는 결론을 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "NVIDIA FP8·NVFP4 문서와 BitNet b1.58 논문을 각 형식의 실제 표현 규칙과 적용 범위에 한정해 사용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "INT·FP 계열 형식 → zero-point 경계 → scale granularity → 비용의 흐름과 양자화 가족 지도를 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "같은 4×4 값과 group 수 1·4·8·8을 모든 장면에서 유지하며 측정하지 않은 정확도 수치를 추가하지 않았습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서 overflow 0, canvas 487=scrollHeight 487, 49.5px 조작 버튼을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서 overflow 0, canvas 678=scrollHeight 678, 65px 조작 버튼을 확인했습니다.",
+        "interaction": "자동 시작 없음, 6.2초 장면 간격, 키보드 이동과 이탈 정지 계약을 확인했습니다.",
+        "reducedMotion": "마지막 Block 장면과 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "프로덕션 정적 경로에서 네 장면의 제목과 결론, 부모 지도 반환이 순서대로 표시됩니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8221,7 +8277,7 @@
         "src/pages/articles/ai/quantized-model-deployment.tsx",
         "src/pages/articles/ai/quantized-model-deployment/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8229,19 +8285,33 @@
         "hasSourceSurface": true,
         "characters": 11472
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Weight bytes·resident VRAM·kernel speedup을 설명했지만 이 글이 개념 설명이 아니라 실제 release 판단을 맡는 실무 트랙이라는 경계가 없었습니다.",
+        "긴 장면 이름이 데스크톱 버튼을 132.5px까지 키워 마지막 설명과 조작부를 canvas 밖으로 밀었습니다."
+      ],
+      "fixture": "27B parameter의 BF16 raw weight 약 54GB와 FP8 약 27GB를 출발점으로 metadata·KV/state·workspace·headroom을 따로 합산하고 실제 kernel trace를 확인합니다.",
+      "stageAnchors": {
+        "concept": "Quantizer·PTQ·형식·weight-only의 정확한 개념 anchor 네 곳에서 시작합니다.",
+        "capacity": "Parameter와 dtype로 weight floor를 구한 뒤 runtime memory를 합산합니다.",
+        "speed": "Low-bit kernel 비율과 fallback을 Amdahl 경계로 분리합니다.",
+        "decision": "대상 GPU·workload에서 capacity·quality·p95·throughput·peak를 함께 확인합니다."
+      },
+      "primarySourceApplication": [
+        "NVIDIA Transformer Engine FP8·FP4 문서는 지원 형식과 scaling recipe의 근거로 사용하고 실제 서비스 속도는 측정값으로 남깁니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "개념 anchor → 환경의 capacity 질문 → weight floor → resident ledger → kernel trace → release 판정의 실무 흐름을 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "27B×2 byte≈54GB, 27B×1 byte≈27GB와 p=.6,Sq=2의 end-to-end 상한 1.43배 계산을 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서와 그림 overflow 0, 49.5px 조작 버튼을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서와 그림 overflow 0, 장면 버튼 높이를 65px로 줄여 전체 조작부를 확인했습니다.",
+        "interaction": "자동 시작 없음, 6.2초 장면 간격, 키보드 이동과 이탈 정지 계약을 확인했습니다.",
+        "reducedMotion": "마지막 kernel trace 장면과 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론과 부모 지도 반환을 확인했습니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -11464,7 +11534,7 @@
         "src/pages/articles/ai/weight-only-quantization.tsx",
         "src/pages/articles/ai/weight-only-quantization/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -11472,19 +11542,33 @@
         "hasSourceSurface": true,
         "characters": 9924
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "GPTQ·AWQ와 artifact 형식은 설명됐지만 양자화 기초·SmoothQuant·배포 판단 사이에서 이 글이 맡는 대상 축이 보이지 않았습니다.",
+        "Method·format·W/A dtype·container·kernel 이름이 한 줄에 모여 처음 읽는 독자가 같은 종류의 대안으로 오해하기 쉬웠습니다."
+      ],
+      "fixture": "같은 calibration activation X에 원래 W와 4-bit 근사 Ŵ를 각각 곱해 XW와 XŴ의 차이를 비교하고 GPTQ·AWQ가 보정하는 지점을 나눕니다.",
+      "stageAnchors": {
+        "map": "Weight-only와 SmoothQuant를 양자화 가족의 대상 영역에 놓습니다.",
+        "effect": "같은 weight error도 activation에 따라 layer output 영향이 달라지는 이유를 추적합니다.",
+        "methods": "GPTQ의 second-order 보정과 AWQ의 activation-aware scaling을 분리합니다.",
+        "boundary": "Method·format·tensor dtype·container·kernel을 서로 다른 계층으로 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "GPTQ·AWQ 원문은 각 보정 메커니즘에, GGUF 명세는 container 경계에만 적용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Weight error → layer output → GPTQ·AWQ 보정 → artifact 계층 경계의 흐름과 가족 지도를 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "기존 XW·XŴ reconstruction 계산과 4-bit 저장 경계를 보존하고 새 벤치마크 수치를 만들지 않았습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서와 그림 overflow 0, 49.5px 조작 버튼을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서와 그림 overflow 0, 65px 장면 탐색 버튼을 확인했습니다.",
+        "interaction": "자동 시작 없음, 6.2초 장면 간격, 키보드 이동과 이탈 정지 계약을 확인했습니다.",
+        "reducedMotion": "마지막 artifact 경계 장면과 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "프로덕션 정적 경로에서 네 장면의 제목과 결론, 부모 지도 반환이 순서대로 표시됩니다.",
+        "staticAudits": "learning evidence-heavy, article, graph, order, viz, formula, calculation, prose, Korean, terms, term-pairs, eslint 검사 통과"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

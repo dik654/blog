@@ -3022,6 +3022,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "AI-200의 네 시험 영역을 분당 요청 100건의 한 AI 백엔드 경로와 진단 고리로 이어 가는 독립 학습 단위입니다.",
     sharedGate: "100건=캐시 60건+벡터 조회 40건이며 갱신 5건을 큐로 분리합니다. 같은 수가 본문·Viz·의사코드·기초 6문제와 심화 4문제에서 같은 뜻인지 확인합니다.",
   },
+  "ai/ptq-calibration": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "학습이 끝난 checkpoint 하나를 고정하고 range 관측, scale 선택, traffic slice별 검증, artifact 발행까지 따라가는 단일 PTQ 경로입니다. 각 절은 같은 scale과 검증 기록을 다음 단계로 넘기므로 나누면 calibration과 release 경계가 끊깁니다.",
+    sharedGate:
+      "대표 입력으로 정한 scale과 별도 검증 입력의 saturation·task regression을 구분하고, 측정하지 않은 정확도나 속도를 결과로 쓰지 않습니다.",
+  },
   "ai/smoothquant-activation-smoothing": {
     action: "keep" as const,
     status: "reviewed" as const,
@@ -3338,7 +3347,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/multimodal-serving-pipeline": "567e794881b2b8bd",
   "ai/sglang-runtime-anatomy": "527aef35d9173e0d",
   "ai/sliding-window-kv-and-attention-sinks": "fcb0fc36051a7a96",
-  "ai/smoothquant-activation-smoothing": "0476326172a6c719",
+  "ai/ptq-calibration": "df9ff399e556a27c",
+  "ai/smoothquant-activation-smoothing": "7ed8a07d9d45ba09",
   "ai/tensorrt-llm-kv-cache-and-kernels": "a58ad2af5cf646d4",
   "gpu/nvidia-nca-aiio-study-guide": "b58a5adcbf399c4f",
   "cloud/aws-clf-c02-fast-study": "eda1f94deab018ff",
@@ -3607,7 +3617,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/rag-pipeline": "2fb3244f98aed1db",
   "ai/smoothie-qwen-weight-editing": "6229c951faeeae1b",
   "ai/sequence-modeling-tabular": "e9a379d48be2788a",
-  "ai/sionic-eureka": "5d6547a42fa142ca",
+  "ai/sionic-eureka": "0690e86f62bb1580",
   "ai/sionic-glm-b300": "138eb8be2aac9d29",
   "ai/skills-anatomy": "029acbe5b6a9abea",
   "ai/time-features": "c97c2aee8b7e795f",

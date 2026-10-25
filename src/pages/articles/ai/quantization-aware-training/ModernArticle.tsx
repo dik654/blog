@@ -2,12 +2,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { QATLoopViz } from "../quantization/viz/ModernQuantizationViz";
 
 export default function QuantizationAwareTrainingArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="qat" />
         <h2 className="mb-6 text-2xl font-bold">
           QAT는 배포 오차를 forward에 보여 주는 재학습입니다
         </h2>
@@ -204,6 +206,7 @@ export default function QuantizationAwareTrainingArticle() {
           </CitationBlock>
         </div>
       </section>
+      <QuantizationMapReturn current="qat" />
     </div>
   );
 }

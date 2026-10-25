@@ -3,12 +3,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "../quantization/QuantizationPathLocator";
 import { CalibrationPipelineViz } from "../quantization/viz/ModernQuantizationViz";
 
 export default function PtqCalibrationArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="ptq-calibration" />
         <h2 className="mb-6 text-2xl font-bold">
           PTQ는 학습 없이 scale을 고르는 배포 전 변환입니다
         </h2>
@@ -276,6 +278,7 @@ export default function PtqCalibrationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <QuantizationMapReturn current="ptq-calibration" />
     </div>
   );
 }
