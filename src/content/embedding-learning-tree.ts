@@ -6,7 +6,8 @@ export type EmbeddingLearningNodeId =
   | "serving-contract"
   | "image-vector"
   | "image-text-relation"
-  | "evaluation";
+  | "evaluation"
+  | "eureka-pipeline";
 
 export interface EmbeddingLearningNode {
   id: EmbeddingLearningNodeId;
@@ -86,6 +87,17 @@ export const EMBEDDING_LEARNING_NODES: readonly EmbeddingLearningNode[] = [
     parentLabel: "임베딩 지도 · 공통 평가",
     question: "정답이 여러 개이고 후보마다 속도와 크기가 다를 때 검색 품질과 비용을 어떻게 분리해 비교할까요?",
     closure: "먼저 corpus와 multi-positive label snapshot을 고정합니다. Recall은 candidate coverage를, NDCG는 relevant 문서의 순위를 재며, 조건부 선택은 필수 slice와 비용 축을 따로 보존합니다.",
+  },
+  {
+    id: "eureka-pipeline",
+    href: "/cs/ai/sionic-eureka#overview",
+    shortTitle: "EUREKA 사례",
+    mapLabel: "corpus → mining → distillation → slice",
+    track: "practice",
+    parentHref: "/cs/ai/embedding-evaluation#release",
+    parentLabel: "임베딩 평가 · 필수 slice와 배포 경계",
+    question: "앞에서 배운 검색·라벨·평가 개념을 실제 데이터와 증류 파이프라인에서는 어떤 artifact로 이어야 할까요?",
+    closure: "EUREKA 사례는 corpus lineage, query-positive graph, mining snapshot, teacher scalar, training config, slice report를 따로 버전 관리합니다. 공개하지 않은 값과 내부 실험은 외부 논문의 사실과 분리합니다.",
   },
 ] as const;
 

@@ -7,14 +7,14 @@ export default function Ablation() {
   return (
     <section id="ablation" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Loss ablation: 관측된 순위와 원인 해석을 분리한다
+        Loss ablation
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          student·teacher·learning rate를 고정하고 loss만 바꾼 내부 실험에서는
-          네 데이터 모두 KL-div(τ=0.05)가 가장 높았다. 아래 표는 그 관측을
+          Student·teacher·learning rate를 고정하고 loss만 바꾼 내부 기록에서는
+          네 데이터 모두 KL-div(τ=0.05)가 가장 높았습니다 <strong>[M]</strong>. 아래 표는 그 관측을
           그대로 보존하지만, 다른 model·candidate set·teacher calibration에서도
-          같은 순위가 나온다는 뜻은 아니다.
+          같은 순위가 나온다는 뜻은 아닙니다.
         </p>
         <div
           data-viz="eureka-loss-ablation-ledger"
@@ -59,16 +59,16 @@ export default function Ablation() {
         <ul>
           <li>
             이 후보 구성에서는 낮은 τ의 listwise KL이 teacher의 top ranking을 더
-            강하게 전달했다.
+            강하게 전달했습니다.
           </li>
           <li>
             τ=1.0의 낮은 점수는 이 설정에서 평탄한 target이 약한
-            supervision이었을 가능성과 일치한다.
+            supervision이었을 가능성과 일치합니다 <strong>[A]</strong>.
           </li>
           <li>
             Margin-MSE는 pairwise score gap을, cosine distillation은
             representation alignment를 직접 최적화하므로 KL과 전달 단위가
-            다르다.
+            다릅니다.
           </li>
         </ul>
         <h3 className="mt-6 mb-3 text-xl font-semibold">
@@ -77,16 +77,16 @@ export default function Ablation() {
         <ul>
           <li>
             cosine distillation은 데이터 A 한 번뿐이라 일관된 열세를 입증하지
-            못한다.
+            못합니다.
           </li>
           <li>
             “기존 embedding space가 흐트러져 하락했다”는 설명은 representation
-            drift 측정이 없는 한 가설이다.
+            drift 측정이 없는 한 가설입니다 <strong>[?]</strong>.
           </li>
           <li>
             Margin-MSE는 embedding 자체의 절대 좌표를 맞추는 loss가 아니라
-            teacher의 pairwise margin을 맞춘다. scale에 민감할 수 있지만 cosine
-            정렬과 같은 방식은 아니다.
+            teacher의 pairwise margin을 맞춥니다. Scale에 민감할 수 있지만 cosine
+            정렬과 같은 방식은 아닙니다.
           </li>
         </ul>
       </div>

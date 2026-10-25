@@ -109,6 +109,7 @@ const noScriptArticleRoutes = new Set([
   "ai/image-embedding-pipeline",
   "ai/image-text-contrastive-pretraining",
   "ai/embedding-evaluation",
+  "ai/sionic-eureka",
   "ai/supervised-contrastive-learning",
   "ai/simclr-infonce",
   "ai/triplet-metric-learning",

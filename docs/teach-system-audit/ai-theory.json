@@ -9441,32 +9441,56 @@
         "src/pages/articles/ai/sionic-eureka/HardNegatives.tsx",
         "src/pages/articles/ai/sionic-eureka/Overview.tsx",
         "src/pages/articles/ai/sionic-eureka/QueryGeneration.tsx",
-        "src/pages/articles/ai/sionic-eureka/viz/OverviewData.ts",
-        "src/pages/articles/ai/sionic-eureka/viz/OverviewViz.tsx",
-        "src/pages/articles/ai/sionic-eureka/viz/PipelineData.ts",
-        "src/pages/articles/ai/sionic-eureka/viz/PipelineViz.tsx"
+        "src/pages/articles/ai/sionic-eureka/viz/PipelineViz.tsx",
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
-        "hasSourceSurface": false,
+        "hasSourceSurface": true,
         "characters": 24689
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 데이터 생성·hard negative·증류·평가를 각각 설명했지만, 한 query가 어떤 artifact로 바뀌며 다음 단계에 전달되는지 전체 경로가 먼저 보이지 않았습니다.",
+        "SionicAI 내부 실험과 외부 논문의 사실이 같은 문장 안에서 이어져 공개된 근거와 설계 가정의 경계가 흐렸습니다.",
+        "임베딩 개념 글과 실제 파이프라인 사례의 관계가 표시되지 않아, 독자가 이 글을 개념 정본으로 읽어야 하는지 운영 사례로 읽어야 하는지 알기 어려웠습니다."
+      ],
+      "fixture": "query q-ko-017과 positive 문서 doc-104·doc-219를 따라 corpus manifest→relevance graph→positive-aware mining snapshot→teacher scalar score→student run→robustness slice report의 여섯 artifact를 추적합니다. 0.86·0.05·0.82·0.76은 mining 경계를 설명하기 위한 값 [A]이고, 내부 teacher와 최종 benchmark 수치는 [?]로 남겼습니다.",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "overview": "overview",
+        "data": "data",
+        "query": "query-generation",
+        "mining": "hard-negatives",
+        "distillation": "distillation",
+        "ablation": "ablation",
+        "evaluation": "evaluation",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "E5-Mistral·Gecko·Qwen3 Embedding은 합성 query와 multi-stage 데이터 구성의 공개 기준점으로만 사용하고 EUREKA 내부 구현과 동일하다고 쓰지 않았습니다.",
+        "NV-Retriever는 positive score에 상대적인 hard-negative 경계를 설명하는 근거로 사용했으며, 그림의 score와 margin은 프로젝트 측정값이 아니라 설명용 [A]로 표시했습니다.",
+        "position-bias·multi-positive 연구는 각각 answer position 분포와 다중 정답 관계를 평가 축으로 보존해야 하는 근거로만 사용했습니다.",
+        "Hinton의 distillation은 softened target의 일반 원리를 설명하는 근거이며, 미공개 teacher 정체와 결합식은 추론하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 실무 트랙으로 분류하고 임베딩 평가의 release anchor에서 시작해 여섯 artifact와 근거 등급을 한 query 경로로 연결했습니다.",
+        "humanize": "pass · 한국어 lint 오류 0이며, 공개 사실·내부 측정·설계 분석·미확인을 문장마다 구분했습니다.",
+        "numericTrace": "pass · 0.86 positive, margin 0.05, 후보 0.82·0.76의 선별 경계와 teacher logits·temperature·KL 계산을 본문에서 추적합니다.",
+        "mobile390": "pass · 390×844에서 단계 지도를 3×2로 배치해 제목·artifact·44px 조작부를 한 화면에 넣고 문서 overflow와 그림 내부 세로 scroll을 0으로 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 여섯 단계와 현재 artifact를 나란히 표시하고 문서·그림 overflow 0을 확인했습니다.",
+        "keyboard": "pass · 그림에 초점을 둔 뒤 ArrowRight로 Teacher 기록 장면까지 이동했습니다.",
+        "playback": "pass · 사용자 입력 전 7초 동안 1번 장면에 머물고 재생 뒤 약 6.2초 간격으로 이동하며, 화면 이탈 시 정지하고 재진입해도 재개하지 않습니다.",
+        "reducedMotion": "pass · 390×844에서 6번 Slice 평가를 정적으로 표시하고 재생 버튼을 비활성화했습니다.",
+        "noJavaScript": "pass · production 정적 경로에서 부모 지도, 여섯 장면 목록, 전체 본문과 return-map을 같은 순서로 표시했습니다.",
+        "build": "pass · 직접 실행한 Vite production build에서 7,997개 module을 만들고 정적 public route 2,088개와 no-script 본문 248편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

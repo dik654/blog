@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 543,
     "customVisuals": 864,
-    "animatedMechanisms": 465,
-    "architectureWithoutAnimation": 95,
-    "recursiveLocators": 257,
+    "animatedMechanisms": 466,
+    "architectureWithoutAnimation": 94,
+    "recursiveLocators": 258,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -5209,11 +5209,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/sionic-glm-b300",

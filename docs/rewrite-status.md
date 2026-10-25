@@ -3636,6 +3636,25 @@
   지도를 반영하지 않은 상태라 멈췄습니다. 공개 991편 기준 장부를 다시 생성해 네 route의 제목,
   전용 시각화, 움직이는 메커니즘, 재귀 위치 지도를 현재 소스와 맞췄습니다.
 
+### AI 임베딩 실무 사례 · Sionic EUREKA 로컬 검증 (2026-10-26)
+
+- `ai/sionic-eureka`를 임베딩 개념 정본이 아니라 `practice` 트랙으로 분류했습니다. 직속 부모는
+  `embedding-evaluation#release`이며, 앞선 여섯 개념 글에서 정리한 정답 집합·검색·서빙·평가
+  경계를 실제 데이터·증류 파이프라인에서 어떤 artifact로 이어야 하는지 답합니다.
+- query `q-ko-017`과 positive 문서 `doc-104`·`doc-219`를 corpus manifest → relevance graph →
+  mining snapshot → teacher scalar score → student run → robustness report까지 추적합니다. 외부
+  논문 `[O]`, 내부 측정 `[M]`, 설계 분석 `[A]`, 미공개 값 `[?]`을 분리했으며 teacher 정체와
+  결합식, 최종 benchmark 수치는 추정하지 않았습니다.
+- 모바일은 여섯 단계를 3×2 지도에 넣고 현재 artifact의 필드만 크게 보여 줍니다. 390×844와
+  1440×1000 모두 문서 가로 넘침과 그림 내부 세로 scroll이 0이며, 조작부는 44px 이상입니다.
+  사용자가 재생하기 전에는 움직이지 않고 장면당 6.2초로 진행합니다. 화면 밖에서는 멈추며,
+  다시 들어와도 재생되지 않습니다. reduced-motion에서는 마지막 slice 결과와 꺼진 재생 버튼을
+  표시합니다.
+- 직접 실행한 Vite production build는 7,997개 module을 만들었고 정적 public route 2,088개와
+  no-script 본문 248편을 생성했습니다. JavaScript 비활성 390×844에서 부모 지도, 여섯 장면의
+  정적 목록, 전체 본문과 부모 지도 반환을 확인했습니다. GitHub Pages 공개 경로 검증은 배포 뒤
+  진행합니다.
+
 ### AI 임베딩 학습 묶음 로컬 검증 (2026-10-26)
 
 - `sentence-embeddings`에서 문장 벡터의 형태와 관계의 의미를 분리한 뒤,

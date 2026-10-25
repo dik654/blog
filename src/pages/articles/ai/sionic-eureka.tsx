@@ -5,6 +5,7 @@ import Evaluation from "./sionic-eureka/Evaluation";
 import HardNegatives from "./sionic-eureka/HardNegatives";
 import Overview from "./sionic-eureka/Overview";
 import QueryGeneration from "./sionic-eureka/QueryGeneration";
+import { EmbeddingMapReturn } from "./sentence-embeddings/EmbeddingPathLocator";
 
 export default function SionicEurekaArticle() {
   return (
@@ -16,6 +17,7 @@ export default function SionicEurekaArticle() {
       <Distillation />
       <Ablation />
       <Evaluation />
+      <EmbeddingMapReturn current="eureka-pipeline" />
     </div>
   );
 }

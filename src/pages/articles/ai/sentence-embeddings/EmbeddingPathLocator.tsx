@@ -59,7 +59,7 @@ export default function EmbeddingPathLocator({
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-3" aria-label="임베딩의 여섯 학습 영역">
+      <div className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-3 lg:grid-cols-4" aria-label="임베딩의 일곱 학습 영역">
         {EMBEDDING_LEARNING_NODES.map((candidate, index) => {
           const active = candidate.id === current;
           return (
