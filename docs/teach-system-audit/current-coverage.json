@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 585,
-    "pending": 406,
+    "reviewed": 586,
+    "pending": 405,
     "untracked": 0,
-    "assignedPending": 363,
+    "assignedPending": 362,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3153,9 +3153,9 @@
       "publicPath": "cs/ai/simclr-infonce",
       "title": "SimCLR · NT-Xent: Augmentation Pair에서 In-batch 분류까지",
       "catalogIndex": 312,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

@@ -292,10 +292,10 @@ function LegacyBox({ x, y, w, h, label, detail, active = false, shape = "rect" }
 
 /** 다음 네 export는 이웃 글이 재작성될 때 각 글 전용 파일로 이동합니다. */
 export function SimCLRObjectiveViz() {
-  const labels = ["원본에서 두 view", "2B 후보 batch", "Positive 확률", "Temperature lens"] as const;
+  const labels = ["원본에서 두 view", "2N view batch", "Positive 확률", "Temperature lens"] as const;
   const notes = [
     "Augmentation 두 번이 같은 원본의 positive pair를 만듭니다.",
-    "Anchor 자신을 빼면 후보는 2B−1개이고 그중 positive는 하나입니다.",
+    "Anchor 자신을 빼면 후보는 2N−1개이고 그중 positive는 하나입니다.",
     "Positive score를 모든 후보 score 합으로 나누어 in-batch 분류 문제를 만듭니다.",
     "작은 temperature는 가까운 후보 차이를 확대하므로 false negative도 더 세게 반영합니다.",
   ] as const;
@@ -313,7 +313,7 @@ export function SimCLRObjectiveViz() {
             {[0, 1, 2, 3, 4].map((index) => (
               <circle key={index} cx={215 + (index % 2) * 34} cy={54 + Math.floor(index / 2) * 48} r="15" fill={index === 0 ? legacyAccent : "var(--background)"} fillOpacity={index === 0 ? 0.16 : 1} stroke={active >= 1 ? (index === 0 ? legacyAccent : legacyBorder) : legacyBorder} strokeWidth="1.25" />
             ))}
-            <text x="232" y="190" textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">2B−1 candidates</text>
+            <text x="232" y="190" textAnchor="middle" className="fill-muted-foreground text-[10px] sm:text-[8px]">2N−1 candidates</text>
           </g>
           <LegacyArrow x1={270} y1={100} x2={300} y2={100} id="sim-d" active={active === 2} />
           <LegacyBox x={304} y={71} w={46} h={58} label="−log" detail="p(j|i)" active={active === 2} shape="diamond" />

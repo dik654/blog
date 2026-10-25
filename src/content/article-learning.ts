@@ -22675,38 +22675,201 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/simclr-infonce": {
-    entryLevel: true,
-    entryNote: "Pair·softmax를 모른다고 가정하고 한 원본에서 두 view가 생기는 batch shape부터 시작합니다.",
-    coreIdea: "SimCLR은 B개 원본에서 2B view를 만들고 anchor 자신을 제외한 후보 가운데 같은 원본 positive를 맞히는 NT-Xent 분류 문제를 구성하며 temperature와 false-negative 품질을 함께 평가합니다.",
-    assumedKnowledge: [],
+    entryLevel: false,
+    recursiveTeaching: true,
+    entryNote:
+      "앞 글의 상품 SKU-42 positive pair를 이어받아, 원본 A·B·C에서 만든 6개 view 중 A₁이 A₂를 고르는 한 방향의 계산을 끝까지 추적합니다.",
+    coreIdea:
+      "SimCLR은 N개 원본을 2N개 view로 펼치고, 각 view가 자기 자신을 제외한 후보 중 같은 원본의 다른 view를 고르게 합니다. NT-Xent는 이 2N개 방향별 분류 loss를 평균하며, temperature는 후보 관계를 고치지 않고 이미 정한 점수 차이만 확대하거나 완화합니다.",
+    assumedKnowledge: [
+      {
+        id: "contrastive-pair-semantics",
+        role: "같은 의미를 보존하는 positive와 구분할 negative를 먼저 정했다는 전제입니다.",
+      },
+      {
+        id: "positive-transformation-invariance",
+        role: "두 augmentation view가 현재 task의 의미를 보존한다는 전제입니다.",
+      },
+      {
+        id: "projection-head-boundary",
+        role: "Encoder representation h와 loss가 비교하는 normalized projection z를 구분한 상태에서 시작합니다.",
+      },
+    ],
     introducedHere: [
-      { id: "ntxent-inbatch-objective", role: "Positive 분자와 self 제외 candidate 분모를 가진 in-batch objective를 계산합니다." },
-      { id: "temperature-negative-weighting", role: "Temperature가 candidate weight ratio와 false-negative 영향에 미치는 효과를 계산합니다." },
+      {
+        id: "ntxent-inbatch-objective",
+        role: "2N개 view가 만드는 self 제외 후보 집합과 양방향 loss를 계산합니다.",
+      },
+      {
+        id: "temperature-negative-weighting",
+        role: "Temperature가 같은 similarity 차이의 상대 가중치와 hidden positive 오류에 미치는 영향을 계산합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "ntxent-inbatch-objective", sectionId: "objective", intuition: "Anchor가 batch 후보 중 같은 원본 view를 맞히는 분류 문제입니다.", workedExample: "B=3이면 view 6개, anchor 자신을 뺀 후보 5개, positive 1개입니다.", boundary: "다른 source view가 semantic duplicate면 false negative가 됩니다." },
-      { id: "temperature-negative-weighting", sectionId: "temperature", intuition: "Temperature는 similarity 점수의 확대 배율입니다.", workedExample: "차이 .1은 τ=1에서 ratio 1.11, τ=.1에서 2.72입니다.", boundary: "작은 τ는 mislabeled hard negative의 영향도 키웁니다." },
+      {
+        id: "ntxent-inbatch-objective",
+        sectionId: "objective",
+        intuition:
+          "각 view가 anchor가 되어 같은 원본의 다른 view 하나를 2N−1개 후보 중에서 고르는 분류 문제입니다.",
+        workedExample:
+          "N=3이면 view 6개가 생깁니다. A₁을 anchor로 둘 때 A₁은 빠지고, A₂·B₁·B₂·C₁·C₂ 다섯 후보 중 A₂가 positive입니다.",
+        boundary:
+          "다른 source ID가 실제로 같은 의미를 가진다면 분모의 후보가 false negative가 됩니다.",
+        causalTrace: {
+          answer:
+            "Anchor 자신을 제외한 후보의 temperature-scaled 지수 점수를 합하고, positive 점수를 그 합으로 나눈 뒤 negative log를 취합니다. 모든 2N개 anchor 방향을 평균하면 batch loss가 됩니다.",
+          followUpQuestion:
+            "같은 후보 관계를 유지한 채 temperature를 낮추면 어떤 값이 달라질까요?",
+          bottleneck:
+            "원본 수와 view 수를 섞거나 self mask와 반대 방향 loss를 빼면 논문이 정의한 후보 집합과 다른 문제를 계산합니다.",
+          mechanism:
+            "Source→두 augmentation view→anchor별 self mask→candidate softmax→2N개 방향 loss 평균을 한 batch shape로 고정합니다.",
+          remainingCost:
+            "후보 수가 늘수록 메모리·계산량과 semantic duplicate 충돌 가능성도 함께 늘어납니다.",
+          decisionRule:
+            "Batch를 키우기 전에 2N view와 self 제외 2N−1 후보가 구현·로그에서 일치하는지 확인하고, duplicate collision을 따로 측정합니다.",
+        },
+      },
+      {
+        id: "temperature-negative-weighting",
+        sectionId: "temperature",
+        intuition:
+          "Temperature는 이미 정한 후보 점수 차이가 softmax에서 얼마나 크게 보일지를 조절합니다.",
+        workedExample:
+          "Similarity 차이 0.1은 τ=1에서 exp(0.1)=1.11배지만 τ=0.1에서 exp(1)=2.72배가 됩니다.",
+        boundary:
+          "작은 temperature는 hidden positive를 negative로 잘못 밀어내는 힘도 키웁니다.",
+        causalTrace: {
+          answer:
+            "두 후보의 상대 지수 점수 비는 exp((s₁−s₂)/τ)이므로, 같은 similarity 차이에서도 τ가 작을수록 비가 커집니다.",
+          followUpQuestion:
+            "점수 간격을 날카롭게 만드는 것이 downstream 성능에도 유리한지는 어떻게 판단할까요?",
+          bottleneck:
+            "Temperature만 sweep하면 작은 τ의 효과와 false-negative 충돌을 분리할 수 없습니다.",
+          mechanism:
+            "같은 batch와 similarity gap에서 temperature만 바꾸고, duplicate·same-class collision 구간을 별도 bucket으로 평가합니다.",
+          remainingCost:
+            "최적 temperature는 dataset·augmentation·batch·model·downstream evaluation에 따라 달라집니다.",
+          decisionRule:
+            "Temperature 후보는 전체 평균 loss만으로 고르지 않고 collision bucket과 downstream probe를 함께 비교합니다.",
+        },
+      },
     ],
     conceptStages: [
-      { label: "Views", relation: "한 원본에서 독립 augmentation 두 개 생성", concepts: ["ntxent-inbatch-objective"] },
-      { label: "Batch", relation: "2B view와 self 제외 candidate set 구성", concepts: ["ntxent-inbatch-objective"] },
-      { label: "Normalize", relation: "Positive score를 candidate score 합으로 정규화", concepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"] },
-      { label: "Stress", relation: "Temperature와 false-negative collision 동시 평가", concepts: ["temperature-negative-weighting"] },
+      {
+        label: "00 원본",
+        relation: "원본 A·B·C에서 독립 augmentation 두 개씩 만들 준비를 합니다.",
+        concepts: ["positive-transformation-invariance"],
+      },
+      {
+        label: "01 View",
+        relation: "N=3개 원본을 2N=6개 encoder 입력으로 펼칩니다.",
+        concepts: ["ntxent-inbatch-objective"],
+      },
+      {
+        label: "02 후보",
+        relation: "Anchor 자신을 제외한 5개 후보에서 positive 하나를 표시합니다.",
+        concepts: ["ntxent-inbatch-objective"],
+      },
+      {
+        label: "03 Softmax",
+        relation: "Cosine→temperature logit→exp 합→positive 확률→loss를 계산합니다.",
+        concepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"],
+      },
+      {
+        label: "04 경계",
+        relation: "같은 similarity gap에서 temperature와 hidden positive의 영향을 함께 확인합니다.",
+        concepts: ["temperature-negative-weighting", "contrastive-pair-semantics"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "B=3에서 view·anchor·candidate·positive 수를 계산하라.", answerChecklist: ["6 views", "6 anchors", "5 candidates", "1 positive", "symmetric directions"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "batch" },
-      { level: "basic", question: "Source sample과 augmented view를 구분하라.", answerChecklist: ["original", "two transformations", "encoder inputs", "shared identity", "relation assumption"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "overview" },
-      { level: "basic", question: "NT-Xent 분자와 분모에 들어가는 항을 쓰라.", answerChecklist: ["positive exp score", "all non-self candidates", "self mask", "temperature", "normalization"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "objective" },
-      { level: "basic", question: "왜 i→j와 j→i를 모두 계산하는지 설명하라.", answerChecklist: ["directional anchor", "different denominator owner", "two losses", "average", "same pair"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "batch" },
-      { level: "basic", question: "Similarity 차이 .1에서 τ=1의 ratio를 계산하라.", answerChecklist: ["exp(.1)", "about 1.11", "relative weight", "positive tau"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
-      { level: "basic", question: "τ=.1에서 같은 차이의 ratio를 계산하라.", answerChecklist: ["exp(1)", "about 2.72", "sharper", "negative importance"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
-      { level: "advanced", question: "Semantic duplicate가 있는 in-batch failure를 설계하라.", answerChecklist: ["different source IDs", "same meaning", "denominator", "repulsion", "duplicate filter", "pair audit"], requiredConcepts: ["ntxent-inbatch-objective"], sectionId: "temperature" },
-      { level: "advanced", question: "Temperature sweep를 negative 품질과 함께 평가하라.", answerChecklist: ["fixed batch", "tau grid", "FN buckets", "loss", "linear probe", "worst slice", "paired seeds"], requiredConcepts: ["temperature-negative-weighting"], sectionId: "temperature" },
-      { level: "advanced", question: "SimCLR training artifact receipt를 작성하라.", answerChecklist: ["source dataset", "augmentation revision", "sampler", "batch", "temperature", "encoder", "projection", "seed"], requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"], sectionId: "temperature" },
-      { level: "advanced", question: "Large batch를 채택하지 않을 반례를 제시하라.", answerChecklist: ["more candidates", "more collisions", "memory/compute", "false negatives", "downstream no gain", "release gate"], requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"], sectionId: "temperature" },
+      {
+        level: "basic",
+        question: "N=3에서 view·anchor·candidate·positive 수를 계산하라.",
+        answerChecklist: ["6 views", "6 anchors", "5 candidates", "1 positive", "two directions per pair"],
+        requiredConcepts: ["ntxent-inbatch-objective"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "A₁→A₂와 A₂→A₁의 후보 집합을 각각 쓰라.",
+        answerChecklist: ["self mask", "directional anchor", "different excluded view", "same source positive", "five candidates"],
+        requiredConcepts: ["ntxent-inbatch-objective"],
+        sectionId: "batch",
+      },
+      {
+        level: "basic",
+        question: "A₁ 방향의 cosine 다섯 개에서 positive 확률과 NT-Xent loss를 계산하라.",
+        answerChecklist: ["divide by tau", "exponential scores", "partition 10.219", "probability 0.485", "loss 0.724"],
+        requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"],
+        sectionId: "objective",
+      },
+      {
+        level: "basic",
+        question: "NT-Xent 분자와 분모에 들어가는 후보를 A₁ 방향에서 구분하라.",
+        answerChecklist: ["A₂ numerator", "five denominator terms", "self excluded", "positive included", "temperature-scaled exp"],
+        requiredConcepts: ["ntxent-inbatch-objective"],
+        sectionId: "objective",
+      },
+      {
+        level: "basic",
+        question: "왜 한 positive pair에서 두 방향의 loss가 생기는지 설명하라.",
+        answerChecklist: ["A₁ anchor", "A₂ anchor", "different self mask", "two directional losses", "2N mean"],
+        requiredConcepts: ["ntxent-inbatch-objective"],
+        sectionId: "batch",
+      },
+      {
+        level: "basic",
+        question: "Similarity 차이 0.1에서 τ=1과 τ=0.1의 상대 점수 비를 비교하라.",
+        answerChecklist: ["exp(delta/tau)", "1.11", "2.72", "same gap", "sharper weighting"],
+        requiredConcepts: ["temperature-negative-weighting"],
+        sectionId: "temperature",
+      },
+      {
+        level: "advanced",
+        question: "다른 source ID가 같은 상품인 hidden-positive batch를 설계하고 오류 경로를 설명하라.",
+        answerChecklist: ["different source IDs", "same semantic item", "denominator", "false repulsion", "duplicate audit", "exclusion rule"],
+        requiredConcepts: ["contrastive-pair-semantics", "ntxent-inbatch-objective"],
+        sectionId: "temperature",
+      },
+      {
+        level: "advanced",
+        question: "Temperature sweep와 collision audit을 함께 수행할 평가표를 설계하라.",
+        answerChecklist: ["fixed batch", "tau grid", "collision buckets", "downstream probe", "paired seeds", "boundary condition"],
+        requiredConcepts: ["temperature-negative-weighting"],
+        sectionId: "temperature",
+      },
+      {
+        level: "advanced",
+        question: "같은 계산을 overflow 없이 수행하는 log-sum-exp 구현 경계를 설명하라.",
+        answerChecklist: ["maximum logit", "subtract max", "sum exp", "restore scale", "same probability", "numeric stability"],
+        requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting"],
+        sectionId: "objective",
+      },
+      {
+        level: "advanced",
+        question: "SimCLR 학습 결과를 재현할 수 있는 artifact receipt를 작성하라.",
+        answerChecklist: ["dataset revision", "augmentation revision", "sampler", "batch N", "temperature", "encoder", "projection", "seed"],
+        requiredConcepts: ["ntxent-inbatch-objective", "temperature-negative-weighting", "projection-head-boundary"],
+        sectionId: "return-map",
+      },
     ],
     papers: [
-      { title: "A Simple Framework for Contrastive Learning of Visual Representations", href: "https://proceedings.mlr.press/v119/chen20j.html", problem: "Label 없이 image representation을 학습할 때 augmentation·projection·objective recipe를 비교하는 문제", contribution: "두 view·shared encoder·projection head·NT-Xent로 구성한 SimCLR과 ablation", assumptions: "ImageNet·ResNet·large batch·논문의 augmentation와 schedule", evidenceScope: "ICML 논문의 linear evaluation·transfer와 ablation", notClaim: "특정 batch·temperature·augmentation이 모든 modality의 최적 default라는 뜻은 아님", sectionId: "paper-simclr" },
+      {
+        title: "A Simple Framework for Contrastive Learning of Visual Representations",
+        href: "https://proceedings.mlr.press/v119/chen20j.html",
+        problem:
+          "Label 없이 visual representation을 학습할 때 augmentation·encoder·projection·objective 구성을 비교하는 문제",
+        contribution:
+          "N개 원본에서 2N개 view를 만들고 normalized projection에 NT-Xent를 적용하는 SimCLR framework와 ablation",
+        assumptions:
+          "ImageNet·ResNet·논문의 augmentation·batch·optimizer·evaluation 설정",
+        evidenceScope:
+          "PMLR에 공개된 논문의 2.1절·Algorithm 1·linear evaluation·ablation 범위",
+        notClaim:
+          "논문의 batch size·temperature·augmentation이 모든 dataset과 modality의 기본값이라는 뜻은 아님",
+        sectionId: "paper-simclr",
+      },
     ],
   },
   "ai/triplet-metric-learning": {

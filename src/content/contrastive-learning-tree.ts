@@ -37,12 +37,12 @@ export const CONTRASTIVE_LEARNING_NODES: readonly ContrastiveLearningNode[] = [
     id: "simclr",
     href: "/cs/ai/simclr-infonce#overview",
     shortTitle: "SimCLR",
-    mapLabel: "두 view → 2B 후보 → NT-Xent",
+    mapLabel: "두 view → 2N 후보 → NT-Xent",
     track: "concept",
     parentHref: "/cs/ai/contrastive-learning#return-map",
     parentLabel: "Pair 의미 · 다음 objective",
     question:
-      "한 원본에서 만든 두 view가 어떻게 2B개 후보 안의 분류 문제로 바뀔까요?",
+      "N개 원본에서 만든 2N개 view가 어떻게 각 anchor의 분류 문제로 바뀔까요?",
     closure:
       "같은 원본의 다른 view 하나를 positive로 두고 anchor 자신을 뺀 후보에 softmax를 적용하면 NT-Xent가 됩니다. Temperature와 hidden positive는 별도로 점검해야 합니다.",
   },
