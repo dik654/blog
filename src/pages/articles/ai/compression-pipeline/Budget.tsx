@@ -3,11 +3,16 @@ import BudgetViz from "./viz/BudgetViz";
 export default function Budget() {
   return (
     <section id="budget" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Memory budget은 weight 크기가 아니라 고정 resident와 요청별 state를
-        분리해야 동시 실행 수로 이어집니다
-      </h2>
+      <h2 className="mb-4 text-2xl font-bold">메모리 예산</h2>
+      <div className="not-prose my-8">
+        <BudgetViz />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          Weight 파일 크기만 줄어도 요청별 state가 그대로라면 동시 실행 수는
+          기대만큼 늘지 않습니다. 먼저 고정 resident와 요청마다 늘어나는 memory를
+          분리해야 합니다.
+        </p>
         <p>
           Device memory에는 packed weights뿐 아니라 scale metadata, runtime
           workspace, allocator headroom, activation과 KV cache가 함께
@@ -15,7 +20,7 @@ export default function Budget() {
           그대로라면 긴 context에서 얻는 concurrency 이득은 제한됩니다.
         </p>
         <p>
-          Baseline receipt에는 hardware·driver·engine, model/tokenizer revision,
+          Baseline 기록에는 hardware·driver·engine, model/tokenizer revision,
           batch·input/output length distribution, request arrival pattern과
           decode policy를 포함합니다. Peak 한 점 외에 OOM 없는 지속 부하와
           fragmentation도 확인합니다.
@@ -85,7 +90,7 @@ c_{\max}&=\underbrace{\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rflo
             symbol: "c_max",
             name: "capacity estimate",
             description:
-              "동시에 resident로 둘 수 있는 요청 수의 하한 지향 1차 견적입니다.",
+              "고정 가정 안에서 동시에 resident로 둘 수 있는 요청 수의 1차 상한입니다.",
           },
         ]}
         assumptions={[
@@ -95,9 +100,6 @@ c_{\max}&=\underbrace{\left\lfloor M_{\mathrm{free}}/M_{\mathrm{req}}\right\rflo
         ]}
         interpretation="24GB 중 weights 12GB, workspace 2GB, headroom 2GB가 고정이고 요청당 1GB라면 memory 상한은 floor(8/1)=8입니다. Weight를 6GB로 줄이면 상한은 14지만 p95가 이를 허용하는지는 별도입니다."
       />
-      <div className="not-prose my-8">
-        <BudgetViz />
-      </div>
     </section>
   );
 }

@@ -1,23 +1,31 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CompressionPipelineReturn } from "./CompressionPipelineLocator";
 import BenchmarkViz from "./viz/BenchmarkViz";
 export default function Benchmark() {
   return (
     <section id="benchmark" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        최종 승인은 baseline·단일 stage·결합 artifact를 동일 workload에서 비교해
-        interaction과 Pareto frontier를 확인합니다
-      </h2>
+      <h2 className="mb-4 text-2xl font-bold">동일 조건 비교</h2>
+      <div className="not-prose my-8">
+        <BenchmarkViz />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          최종 승인은 baseline, 단일 stage, 결합 후보를 동일 workload에서
+          비교합니다. 그래야 결합 효과와 Pareto frontier를 구분할 수 있습니다.
+        </p>
         <p>
-          File size나 theoretical FLOPs는 설명 변수이지 serving 결과가 아닙니다.
-          같은 hardware·engine·batch·length·concurrency·warmup에서 p50뿐 아니라
-          p95/p99, throughput, peak memory, load/compile time을 측정합니다. 생성
-          model은 prefill과 decode를 나누고 deterministic quality run과
-          representative sampling run을 구분합니다.
+          File size나 theoretical FLOPs는 설명 변수이지 serving 결과가
+          아닙니다. 같은 hardware, engine, batch, length, concurrency와
+          warmup에서 p50뿐 아니라 p95/p99, throughput, peak memory,
+          load·compile time을 측정합니다.
+        </p>
+        <p>
+          생성 모델은 prefill과 decode를 나누고,
+          deterministic quality run과 representative sampling run을 구분합니다.
         </p>
         <p>
           Baseline, A, B, A+B를 모두 남겨야 결합 이득이 단일 효과의 합인지 알 수 있습니다. Quality guardrail을 통과한 후보만 resource
-          frontier에 올리며 더 느리고 더 크면서 품질도 낮은 dominated artifact는 제거합니다.
+          frontier에 올리며 더 느리고 더 크면서 품질도 낮은 후보는 제거합니다.
         </p>
       </div>
       <ExplainedFormula
@@ -139,10 +147,38 @@ D(a)&=\underbrace{\mathbf1[\exists b\in\mathcal A:b\succ a],}_{\text{지배당�
           "모든 운영 관심사를 축에 포함하지 않으면 숨겨진 비용에서 잘못된 dominance가 생깁니다.",
           "Frontier는 최종 하나를 자동 선택하지 않으며 traffic 가치와 운영 복잡도로 마지막 결정을 내립니다.",
         ]}
-        interpretation="A가 quality loss .5, p95 8ms, memory 10GB이고 B가 .7, 9ms, 12GB라면 A가 B를 지배합니다. C가 .3, 11ms, 8GB라면 A와 C는 tradeoff가 있어 둘 다 남습니다."
+        interpretation="이 식은 앞의 hard gate에서 후보가 하나만 남지 않은 경우를 위한 별도 예시입니다. A가 quality loss .5, p95 8ms, memory 10GB이고 B가 .7, 9ms, 12GB라면 A가 B를 지배합니다. C가 .3, 11ms, 8GB라면 A와 C는 tradeoff가 있어 둘 다 남습니다."
       />
-      <div className="not-prose my-8">
-        <BenchmarkViz />
+      <div
+        id="release"
+        className="not-prose my-10 scroll-mt-20 border-y border-border py-5"
+      >
+        <p className="text-xs font-bold text-primary">승인과 rollback · 제안 [A]</p>
+        <h3 className="mt-2 text-lg font-bold">Pointer만 바꾸고 증거는 남깁니다</h3>
+        <div className="mt-4 grid gap-px border border-border bg-border md:grid-cols-4">
+          {[
+            ["1", "승인", "필수 gate와 canary를 통과한 digest를 고릅니다."],
+            ["2", "전환", "Release pointer가 새 digest를 가리키게 합니다."],
+            ["3", "관측", "고객 지표와 runtime 오류를 이전 버전과 비교합니다."],
+            ["4", "Rollback", "실패하면 이전 digest로 pointer를 되돌립니다."],
+          ].map(([number, title, detail]) => (
+            <div key={number} className="bg-background px-4 py-4">
+              <span className="font-mono text-[10px] font-black text-primary">
+                {number.padStart(2, "0")}
+              </span>
+              <strong className="mt-2 block text-sm">{title}</strong>
+              <p className="mt-1 break-keep text-xs leading-5 text-muted-foreground">
+                {detail}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 max-w-3xl text-sm leading-6 text-muted-foreground">
+          새 결과물이 실패해도 recipe, digest와 benchmark 기록을 지우지
+          않습니다. 그래야 다음 실험에서 실패 원인을 비교할 수 있습니다. 실제
+          자동 전환 방식과 중단 기준은 대상 serving 환경에서 검증하기 전까지
+          미확정입니다.
+        </p>
       </div>
       <div
         id="reading-compiler-survey"
@@ -188,6 +224,7 @@ D(a)&=\underbrace{\mathbf1[\exists b\in\mathcal A:b\succ a],}_{\text{지배당�
           Scenario·LoadGen·submission evidence 보기
         </a>
       </div>
+      <CompressionPipelineReturn />
     </section>
   );
 }

@@ -7,8 +7,8 @@ export default function CompressionPipelineArticle() {
   return (
     <div className="space-y-12">
       <Overview />
-      <Order />
       <Budget />
+      <Order />
       <Benchmark />
     </div>
   );

@@ -1097,13 +1097,13 @@ export const compressionArticles: Article[] = [
   },
   {
     slug: "compression-pipeline",
-    title: "모델 경량화 파이프라인: Deployment Budget에서 Benchmark까지",
+    title: "모델 경량화 파이프라인",
     subcategory: "ai-practical-compression",
     sections: [
-      { id: "overview", title: "병목별 compression lever" },
-      { id: "order", title: "Distribution이 바뀌는 stage 순서" },
-      { id: "budget", title: "Quality · memory · latency contract" },
-      { id: "benchmark", title: "End-to-end serving benchmark" },
+      { id: "overview", title: "배포 기준과 후보" },
+      { id: "budget", title: "메모리 예산" },
+      { id: "order", title: "단계 순서" },
+      { id: "benchmark", title: "동일 조건 비교" },
     ],
     component: () => import("@/pages/articles/ai/compression-pipeline"),
   },

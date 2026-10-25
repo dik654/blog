@@ -160,6 +160,7 @@ const noScriptArticleRoutes = new Set([
   "ai/sequence-distillation",
   "ai/on-policy-distillation",
   "ai/self-distillation",
+  "ai/compression-pipeline",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

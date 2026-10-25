@@ -3,21 +3,31 @@ import OrderViz from "./viz/OrderViz";
 export default function Order() {
   return (
     <section id="order" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Compression stage는 대체로 교환법칙이 성립하지 않으므로, 구조가 바뀐 뒤
-        calibration을 다시 수집합니다
-      </h2>
+      <h2 className="mb-4 text-2xl font-bold">단계 순서</h2>
+      <div className="not-prose my-8">
+        <OrderViz />
+      </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="text-lg leading-8">
+          압축 단계는 순서를 바꾸면 같은 실행 결과가 되지 않을 수
+          있습니다. 구조가 바뀐 뒤에는 activation 통계와 engine을 다시 만들어야
+          합니다.
+        </p>
         <p>
-          Distillation은 student architecture와 behavior distribution을 만들고 structured pruning은 tensor shape와
-          activation을 바꿉니다. 이 둘보다 먼저 quantization scale을 맞춰 놓으면 뒤 단계가 만든 새 tensor에 이전 통계가 대응하지 않을 수 있습니다. 일반
-          출발점은 student/structure 결정→recovery→final graph calibration→quantization→engine build입니다.
+          Distillation은 student architecture와 behavior distribution을 만들고,
+          structured pruning은 tensor shape와 activation을 바꿉니다. 이 둘보다
+          먼저 quantization scale을 맞추면 뒤 단계가 만든 새 tensor에 이전 통계가
+          대응하지 않을 수 있습니다.
+        </p>
+        <p>
+          일반적인 출발점은 student·structure 결정 →
+          recovery → final graph calibration → quantization → engine build입니다.
         </p>
         <p>
           다만 공동 학습이나 hardware constraint 때문에 다른 순서가 나을 수
           있으므로 규칙으로 단정하지 않습니다. 작은 factorial pilot에서 순서를
           비교하고 각 stage의 input hash·output hash·data
-          manifest·quality/runtime receipt를 남깁니다.
+          manifest·quality/runtime 측정 기록을 남깁니다.
         </p>
       </div>
       <ExplainedFormula
@@ -75,9 +85,6 @@ m_{BA}&=\underbrace{m(A(B(\theta_0))),}_{\text{B 먼저, A 나중 metric}}\\
         ]}
         interpretation="A→B의 quality가 .82, B→A가 .79라면 higher-is-better metric의 order effect는 .03입니다. 단일 seed·run noise가 .03보다 큰지 확인하기 전에는 순서를 확정하지 않습니다."
       />
-      <div className="not-prose my-8">
-        <OrderViz />
-      </div>
     </section>
   );
 }

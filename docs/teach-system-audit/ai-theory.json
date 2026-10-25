@@ -1121,16 +1121,18 @@
     },
     {
       "route": "ai/compression-pipeline",
-      "title": "모델 경량화 파이프라인: Deployment Budget에서 Benchmark까지",
+      "title": "모델 경량화 파이프라인",
       "subcategory": "ai-practical-compression",
       "publicFiles": [
         "src/pages/articles/ai/compression-pipeline.tsx",
         "src/pages/articles/ai/compression-pipeline/Benchmark.tsx",
         "src/pages/articles/ai/compression-pipeline/Budget.tsx",
+        "src/pages/articles/ai/compression-pipeline/CompressionPipelineLocator.tsx",
         "src/pages/articles/ai/compression-pipeline/Order.tsx",
         "src/pages/articles/ai/compression-pipeline/Overview.tsx",
         "src/pages/articles/ai/compression-pipeline/viz/BenchmarkViz.tsx",
         "src/pages/articles/ai/compression-pipeline/viz/BudgetViz.tsx",
+        "src/pages/articles/ai/compression-pipeline/viz/CompressionPipelineFlowViz.tsx",
         "src/pages/articles/ai/compression-pipeline/viz/OrderViz.tsx",
         "src/pages/articles/ai/compression-pipeline/viz/SynergyViz.tsx"
       ],
@@ -1140,30 +1142,35 @@
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
         "hasSourceSurface": false,
-        "characters": 20632
+        "characters": 49164
       },
       "originalProblems": [
-        "Logit·feature 증류가 각각 설명돼도 공유 출력이라는 직속 부모와 다음 증류 갈래의 위치를 한눈에 찾기 어려웠습니다.",
-        "Teacher 신호가 target interface와 student 승인 조건으로 바뀌는 흐름보다 용어와 수식이 먼저 나와 전체 경로를 늦게 조립해야 했습니다."
+        "양자화·가지치기·증류가 한 표에 나열됐지만 각 개념 글의 정확한 앵커와 실무 결정의 경계가 보이지 않았습니다.",
+        "배포 기준부터 후보 생성·build·검증·승인·롤백까지 이어지는 한 경로가 없어 수식과 기법 목록을 읽은 뒤 전체 절차를 독자가 다시 조립해야 했습니다.",
+        "본문 순서와 사이드바 순서가 달랐고, recipe·artifact·benchmark receipt·release pointer의 권위 원장과 복구 증거가 빠져 있었습니다."
       ],
-      "fixture": "Teacher logit 차이 4를 T=1·2에서 비교하고, 384차원 student feature를 1024차원 teacher 좌표로 projection한 뒤 정답 성능과 함께 승인합니다.",
+      "fixture": "24GB device에서 weights 12GB·workspace 2GB·headroom 2GB를 빼 요청당 state 1GB인 동시 요청 상한 8을 계산하고, 설명용 배포 기준 quality loss≤0.5·memory≤7GB·p95≤9ms에서 baseline·양자화 A·가지치기 B·결합 A+B를 같은 workload로 비교합니다.",
       "stageAnchors": {
-        "parent": ["overview"],
-        "trace": ["overview", "soft-target", "hard-soft-loss", "feature-alignment"],
-        "return": ["release-gate"]
+        "parent": [
+          "/cs/ai/quantized-model-deployment#overview",
+          "/cs/ai/pruning-recovery-deployment#overview",
+          "/cs/ai/knowledge-distillation#release-gate"
+        ],
+        "trace": ["overview", "budget", "order", "benchmark", "release"],
+        "return": ["compression-pipeline-return"]
       },
       "primarySourceApplication": [
-        "Hinton·Vinyals·Dean의 temperature soft target과 hard target 혼합을 logit 증류의 근거로 적용했습니다.",
-        "FitNets의 student regressor를 서로 다른 feature 차원을 맞추는 bridge의 근거로 적용했습니다."
+        "Deep Learning Compiler survey의 graph·IR·frontend/backend 경계를 근거로 parameter·FLOPs 변화와 실제 runtime 성능을 구분했습니다.",
+        "MLPerf Inference의 scenario·LoadGen·accuracy/performance 분리 원칙을 동일 workload와 benchmark receipt 설계의 참고 범위로만 적용했습니다."
       ],
       "verification": {
-        "contentReview": "공유 출력 지도에서 teacher 관측→soft target→feature bridge→student 승인으로 내려가고 결과를 부모 지도에 반환하는 흐름을 대조했습니다.",
-        "humanize": "Teacher·student·soft target을 처음 쓰는 자리에서 역할을 붙이고, 긴 제목과 한 문단에 겹친 판단을 나눴습니다.",
-        "numericTrace": "Logit 차이 4의 odds와 384→1024 feature projection 예시를 기존 수식·본문과 대조했으며 새 측정값은 만들지 않았습니다.",
-        "mobile390": "390x844에서 문서 가로 넘침 0, 캔버스 577px 안에 521px 흐름, 50x50px 조작부와 네 장면 전체를 확인했습니다.",
-        "desktop1440": "1440x1000에서 캔버스 745px 안에 623px 흐름, 1024x768에서 캔버스 559px 안에 504px 흐름과 console 오류 0을 확인했습니다.",
-        "accessibility": "명시적 재생 전 정지, 장면당 6.2초, 마지막 장면 정지, 키보드 이동, 화면 이탈 정지·재진입 자동 재생 없음, reduced-motion 마지막 상태를 확인했습니다.",
-        "noScript": "JavaScript 비활성 390x844 경로에서 locator·전체 본문·네 장면 정적 목록·가로 넘침 0을 확인했습니다.",
+        "contentReview": "세 개의 정확한 개념 앵커에서 출발해 배포 기준→메모리 예산→단계 순서→동일 조건 비교→승인·롤백으로 진행하고 결과를 모델 경량화 지도에 반환하는 실무 경로를 대조했습니다.",
+        "humanize": "긴 글 제목과 section 제목을 줄이고 Stage를 단계로 바꿨으며, technical term은 실제 상태 이름과 함께 쓰고 별도 사례로 바뀌는 지점을 명시했습니다.",
+        "numericTrace": "24−12−2−2=8GB와 요청당 1GB의 동시 요청 상한 8, 네 후보의 quality loss·memory·p95, interaction 145−130−120+100=−5를 수식·시각화·본문에서 대조했습니다. 모든 후보 수치는 설명용 [A]로 표시했습니다.",
+        "mobile390": "390×844에서 문서 폭 390, 첫 시각화의 다섯 장면 높이 508px·가로 넘침 0, 44px 이상 조작부, final artifact-ab pointer를 확인했습니다.",
+        "desktop1440": "1024×900과 1440×1000에서 문서 가로 넘침 0, data-viz-canvas·figure 8개의 내부 잘림 0을 확인했습니다.",
+        "accessibility": "명시적 재생 전 6.8초 정지, 재생 뒤 다음 장면 이동, 화면 이탈 시 정지·재진입 6.8초 뒤 같은 장면 유지, reduced-motion 마지막 장면과 비활성 재생 버튼을 확인했습니다.",
+        "noScript": "Production preview의 JavaScript 비활성 390×844 경로에서 H1·네 section·locator·다섯 장면 정적 목록·지도 반환·가로 넘침 0을 확인했고 live controls와 live-only 장면은 숨겨졌습니다.",
         "build": "Vite production build와 2,088개 정적 공개 경로 생성을 통과했습니다."
       },
       "remaining": [
