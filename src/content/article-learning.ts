@@ -20844,33 +20844,49 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/deepfake-frequency-evidence": {
     "entryLevel": true,
-    "entryNote": "주파수라는 단어를 보편적 진위 서명으로 가정하지 않고 이미지의 밝기 변화 패턴을 다른 좌표로 본다는 데서 시작합니다.",
-    "coreIdea": "Frequency evidence는 generator와 codec·resize 조건에 따라 생기고 사라지는 조건부 단서입니다. RGB와 spectrum branch의 개별 오류뿐 아니라 같은 sample에서 동시에 실패하는 joint error를 봐야 실제 보완성을 판단할 수 있습니다.",
+    "entryNote": "주파수를 보편적인 진위 서명으로 가정하지 않고, 여덟 밝기 값의 반복을 다른 좌표에서 세는 사례로 시작합니다.",
+    "coreIdea": "주파수 단서는 생성기와 JPEG·크기 변경·흐림 조건에 따라 생기고 사라질 수 있습니다. 같은 원본의 손상 전후를 비교하고 RGB·주파수 분기가 같은 샘플에서 함께 틀리는 비율을 봐야 추가 단서인지 판단할 수 있습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
         "id": "conditional-frequency-forensic-signal",
-        "role": "Spectrum pattern의 근거를 generator·corruption cell로 제한합니다."
+        "role": "주파수 막대의 근거 범위를 생성기와 손상 조건에 묶습니다."
       },
       {
         "id": "forensic-branch-joint-error",
-        "role": "RGB와 frequency branch가 같은 sample에서 함께 틀리는 비율을 계산합니다."
+        "role": "RGB와 주파수 분기가 같은 샘플에서 함께 틀리는 비율을 계산합니다."
       }
     ],
     "conceptExplanations": [
       {
         "id": "conditional-frequency-forensic-signal",
         "sectionId": "spectrum",
-        "intuition": "특정 프린터의 줄무늬처럼 일부 generator가 남긴 반복 패턴을 frequency 좌표에서 보되 유통 변환 뒤 유지되는지 다시 묻습니다.",
-        "workedExample": "Raw generator output에서 보인 high-frequency peak를 JPEG quality·resize·blur cell마다 다시 측정합니다.",
-        "boundary": "Fourier transform은 정확한 좌표 변환이지만 관측한 peak가 모든 deepfake의 보편 원인이라는 뜻은 아닙니다."
+        "intuition": "특정 프린터의 줄무늬처럼 반복되는 밝기 변화를 주파수 좌표에서 보되, 유통 변환 뒤에도 남는지 다시 묻습니다.",
+        "workedExample": "+1과 −1이 번갈아 나타나는 여덟 칸은 k=4에서 크기 8을 만들고, 생성기 A의 설명용 peak는 원본 0.84에서 흐림 0.11로 줄어듭니다.",
+        "boundary": "Fourier 변환은 정확한 좌표 변환이지만 관측한 peak가 모든 딥페이크의 보편 원인이라는 뜻은 아닙니다.",
+        "scientificGrounding": {
+          "observable": "같은 원본 파생본에서 같은 주파수 대역의 정규화 peak",
+          "unitsAndDimensions": "설명용 peak는 같은 정규화 방식 안의 무차원 비입니다.",
+          "modelAssumptions": "원본 ID와 crop, 변환 외 조건과 측정식을 고정합니다.",
+          "measurementExample": "생성기 A의 설명용 peak 0.84·0.46·0.28·0.11을 원본·JPEG·크기 변경·흐림 순서로 비교합니다.",
+          "invalidConditions": "다른 생성기·crop·정규화·codec 구현으로 바꾸면 같은 값을 기대할 수 없습니다.",
+          "referenceFrame": "원본 cell의 동일 주파수 대역과 변환하지 않은 source ID를 기준으로 둡니다."
+        }
       },
       {
         "id": "forensic-branch-joint-error",
         "sectionId": "joint-error",
-        "intuition": "두 탐정이 각각 몇 번 틀렸는지보다 같은 사건에서 함께 틀리는지를 세어 서로 보완하는지 확인합니다.",
-        "workedExample": "100 clips에서 RGB error 20, frequency error 25, simultaneous error 18이면 joint error rate는 .18입니다.",
-        "boundary": "Joint error가 낮아도 calibration·latency·coverage를 포함한 ensemble 이득이 자동 보장되지는 않습니다."
+        "intuition": "두 탐정이 각각 몇 번 틀렸는지보다 같은 사건에서 함께 틀리는지를 세어 오류가 겹치는지 확인합니다.",
+        "workedExample": "열 개 샘플에서 RGB 오류 3개, 주파수 오류 4개, 공동 오류 2개이면 공동 오류율은 0.20입니다.",
+        "boundary": "공동 오류가 낮아도 결합 규칙과 임계값을 적용한 최종 성능이 자동으로 좋아지지는 않습니다.",
+        "scientificGrounding": {
+          "observable": "같은 held-out 샘플 ID에 기록한 두 분기의 정답·오답 상태",
+          "unitsAndDimensions": "오류 표시는 0·1이고 오류율은 공동 오류 수를 샘플 수로 나눈 무차원 비입니다.",
+          "modelAssumptions": "두 분기의 샘플 ID·정답 label·threshold와 분모를 맞춥니다.",
+          "measurementExample": "S02와 S06이 두 오류 집합의 교집합이므로 2/10=0.20입니다.",
+          "invalidConditions": "서로 다른 샘플이나 다른 label·threshold를 쓰면 공동 오류를 계산할 수 없습니다.",
+          "referenceFrame": "S01부터 S10까지 같은 held-out 샘플 순서를 기준으로 둡니다."
+        }
       }
     ],
     "conceptStages": [
@@ -20946,11 +20962,11 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "RGB error 20, frequency error 25, simultaneous error 18의 joint error rate를 계산하세요.",
+        "question": "샘플 10개에서 RGB 오류 3개, 주파수 오류 4개, 공동 오류 2개의 공동 오류율을 계산하세요.",
         "answerChecklist": [
-          "동시 18",
-          "분모 100",
-          "rate .18"
+          "공동 오류 2",
+          "분모 10",
+          "오류율 0.20"
         ],
         "requiredConcepts": [
           "forensic-branch-joint-error"
@@ -20961,8 +20977,8 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "같은 수치에서 RGB-only와 frequency-only error 수를 계산하세요.",
         "answerChecklist": [
-          "RGB-only 2",
-          "frequency-only 7",
+          "RGB-only 1",
+          "frequency-only 2",
           "동일 sample IDs"
         ],
         "requiredConcepts": [

@@ -552,13 +552,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-frequency-evidence",
-    title: "딥페이크 주파수 단서: Spectrum에서 Joint Error까지",
+    title: "딥페이크 주파수 단서: 손상 뒤에도 남는가",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "주파수 단서는 조건부 Evidence" },
-      { id: "spectrum", title: "Image에서 Spectrum으로" },
-      { id: "corruption", title: "Codec·Resize Corruption Matrix" },
-      { id: "joint-error", title: "RGB와 Frequency의 Joint Error" },
+      { id: "overview", title: "입력에서 공동 오류까지" },
+      { id: "spectrum", title: "밝기에서 반복 횟수로" },
+      { id: "corruption", title: "같은 원본의 손상 비교" },
+      { id: "joint-error", title: "같이 틀린 샘플 세기" },
     ],
     component: () => import("@/pages/articles/ai/deepfake-frequency-evidence"),
   },

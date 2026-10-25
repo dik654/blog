@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 577,
-    "pending": 414,
+    "reviewed": 578,
+    "pending": 413,
     "untracked": 0,
-    "assignedPending": 371,
+    "assignedPending": 370,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3071,11 +3071,11 @@
     {
       "route": "ai/deepfake-frequency-evidence",
       "publicPath": "cs/ai/deepfake-frequency-evidence",
-      "title": "딥페이크 주파수 단서: Spectrum에서 Joint Error까지",
+      "title": "딥페이크 주파수 단서: 손상 뒤에도 남는가",
       "catalogIndex": 304,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
