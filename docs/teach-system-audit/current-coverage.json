@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 557,
-    "pending": 433,
+    "reviewed": 558,
+    "pending": 432,
     "untracked": 0,
-    "assignedPending": 389,
+    "assignedPending": 388,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2231,11 +2231,11 @@
     {
       "route": "ai/sandbox-runtime-isolation",
       "publicPath": "cs/ai/sandbox-runtime-isolation",
-      "title": "Sandbox Runtime 격리: Syscall · Seccomp · gVisor · Kata",
+      "title": "런타임 격리: 같은 시스템 호출의 세 경로",
       "catalogIndex": 220,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

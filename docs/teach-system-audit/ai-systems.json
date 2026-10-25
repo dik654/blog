@@ -11515,25 +11515,82 @@
       "route": "ai/sandbox-runtime-isolation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/sandbox-runtime-isolation.tsx",
       "publicPath": "cs/ai/sandbox-runtime-isolation",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 6
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "직속 부모인 샌드박스 경계 지도와 같은 트랙의 GPU·배포 통제 글이 보이지 않음",
+        "Seccomp·gVisor·Kata의 추상 설명 전에 같은 시스템 호출을 끝까지 비교하는 장면이 없음",
+        "첫 시각화가 설명 문단 뒤에 있고 고정 높이에서 설명과 조작부가 겹칠 수 있음"
+      ],
+      "fixture": {
+        "request": "보고서 91을 읽는 생성 코드를 샌드박스에서 실행",
+        "syscall": "openat(AT_FDCWD, /workspace/report-91.md, O_RDONLY)",
+        "paths": [
+          "Seccomp 허용 뒤 호스트 커널",
+          "gVisor Sentry의 시스템 API 구현",
+          "Kata 게스트 커널과 VMM"
+        ]
+      },
+      "stageAnchors": {
+        "1": "overview의 동일 openat() 호출",
+        "2": "seccomp",
+        "3": "application-kernel",
+        "4": "guest-kernel",
+        "5": "runtime-spectrum",
+        "S": "sandbox-runtime-openat-viz",
+        "B": "sandbox-boundary-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.kernel.org/userspace-api/seccomp_filter.html",
+          "application": "Seccomp BPF가 호출 번호·인자를 검사하고 반환 동작을 고르는 경계"
+        },
+        {
+          "href": "https://kubernetes.io/docs/tutorials/security/seccomp/",
+          "application": "Kubernetes RuntimeDefault 적용과 런타임별 기본 프로필 차이"
+        },
+        {
+          "href": "https://github.com/google/gvisor/blob/release-20261019.0/g3doc/architecture_guide/security.md",
+          "application": "gVisor Sentry가 시스템 API를 구현하고 호스트 인터페이스를 줄이는 구조"
+        },
+        {
+          "href": "https://github.com/kata-containers/kata-containers/blob/4.3.1/docs/design/virtualization.md",
+          "application": "Kata 게스트 커널·VMM·가상 장치 경로"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 openat() 호출을 고정해 Seccomp 필터·gVisor Sentry·Kata 게스트 커널의 처리 주체와 남은 파일·통신·자격증명 경계를 분리했습니다.",
+        "humanize": "영문 직역형 제목을 짧은 한국어 질문과 경로 설명으로 바꾸고 제품의 단일 보안 순위를 주장하지 않았습니다.",
+        "browser390": "가로 넘침 0, 시각화 우선, 키보드 순서, reduced-motion, 조작부 겹침 0: output/playwright/ai-sandbox-runtime-batch-40/summary.json",
+        "browser1440": "가로 넘침 0, 장면 다섯 개, 조작부 겹침 0: output/playwright/ai-sandbox-runtime-batch-40/summary.json",
+        "noScript": "정적 본문에서 위치 지도·되돌리기·다섯 장면이 모두 보이고 조작부와 live scene은 숨김: output/playwright/ai-sandbox-runtime-batch-40/summary.json",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --pretty false exit0",
+        "formula": "전역 1,500개 수식 explicit annotation strict exit0",
+        "learning": "전역 990개 공개 글 strict registration exit0",
+        "build": "Vite 7.3.1 production build와 정적 public route 2,086개+404 생성 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "현재 commit 배포 뒤 JavaScript 비활성 정적 본문과 공개 경로를 다시 검증"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "recursive-map-one-syscall-and-versioned-source-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/sandbox-runtime-isolation/ModernArticle.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/sandbox-runtime-isolation/ModernArticle.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/sandbox-runtime-isolation/viz/SandboxRuntimeIsolationViz.tsx"
+      ],
+      "contentHash": "a7d9c9174d14a942532da7c91f1a9c4ef42cd991592fa3a6e8d44bce85b290b5",
+      "preserved": [
+        "기존 Seccomp·gVisor·Kata 메커니즘과 네 개 공식 근거",
+        "격리·호환성·기동·메모리 조건을 AND로 묶는 설명 수식",
+        "런타임 격리와 파일·통신·자격증명 정책의 책임 분리"
       ]
     },
     {
