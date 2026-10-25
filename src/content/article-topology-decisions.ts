@@ -72,6 +72,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/claw-worker-boot": KEEP("Readiness gate→terminal observation→prompt delivery가 한 worker startup trust 판정입니다."),
   "ai/llm-serving-ops": KEEP("Gateway routing·GPU capacity·deployment·SLO control이 한 online serving contract의 연속 단계입니다."),
   "ai/multiview-fusion": KEEP("Episode contract에서 representation fusion과 missing-view intervention까지 하나의 fusion 선택 질문입니다."),
+  "ai/deepfake-detection": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-25",
+    rationale:
+      "clip-042 한 건이 파생본 누수 검사, source-independent split, 조건별 loss, 검증 주장으로 이어지는 하나의 평가 경로입니다. 전처리·주파수·영상 집계·자료 거버넌스는 별도 자식 글로 두고 이 글은 평가 단위와 주장 범위만 소유합니다.",
+    sharedGate:
+      "group 042-C의 split 교집합이 1에서 0이 되는지와, support 60·30·10 및 domain loss 0.10·0.30·0.80에서 전체 평균 0.23·worst-domain 0.80이 나오는지 검산합니다.",
+  },
   "ai/open-r1": KEEP("Reasoning data cold start→SFT→online GRPO→evaluation이 하나의 recipe reproduction arc입니다."),
   "ai/openclaw-assistant": KEEP("Inbound event가 route·session·runtime·resource·sandbox를 거쳐 reply receipt가 되는 단일 trace입니다."),
   "ai/qwen-korean-consistency": {
@@ -3515,6 +3524,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/claw-worker-boot": "f9191c745d76c11f",
   "ai/llm-serving-ops": "58c53da4c3e32026",
   "ai/multiview-fusion": "9fab27058ecc1c00",
+  "ai/deepfake-detection": "879f9a610190da59",
   "ai/open-r1": "1479317024d9936a",
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",

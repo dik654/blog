@@ -1523,34 +1523,73 @@
     },
     {
       "route": "ai/deepfake-detection",
-      "title": "딥페이크 평가 기초: Source Group과 Unseen Risk",
+      "title": "딥페이크 평가: 자료 분리와 위험 범위",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
+        "src/content/deepfake-learning-tree.ts",
         "src/pages/articles/ai/deepfake-detection.tsx",
+        "src/pages/articles/ai/deepfake-detection/DeepfakeMobileStageFlow.tsx",
+        "src/pages/articles/ai/deepfake-detection/DeepfakePathLocator.tsx",
+        "src/pages/articles/ai/deepfake-detection/DomainRisk.tsx",
         "src/pages/articles/ai/deepfake-detection/ModernArticle.tsx",
-        "src/pages/articles/ai/deepfake-detection/viz/ModernDeepfakeViz.tsx"
+        "src/pages/articles/ai/deepfake-detection/Overview.tsx",
+        "src/pages/articles/ai/deepfake-detection/ReleaseBoundary.tsx",
+        "src/pages/articles/ai/deepfake-detection/SourceGroups.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/ClaimBoundaryViz.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/DeepfakeStageViz.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/DomainRiskViz.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/EvaluationMapViz.tsx",
+        "src/pages/articles/ai/deepfake-detection/viz/SourceGroupViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 4,
         "hasSourceSurface": true,
-        "characters": 9714
+        "characters": 23839
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "파일·프레임·얼굴 crop·생성기·코덱이 각각 언급됐지만, 한 원본 영상이 평가 주장까지 어떻게 이동하는지 연결되지 않아 좋은 점수의 근거 범위를 파악하기 어려웠습니다.",
+        "파일 단위 분리와 원본 단위 분리, 전체 평균과 조건별 위험, unseen identity와 unseen generator가 한 화면에서 구별되지 않았습니다.",
+        "직속 부모 지도와 같은 개념 트랙의 이웃 글이 없었고, 기존 시각화는 상태 전이와 수치 계산을 끝까지 보여 주지 않았습니다."
+      ],
+      "fixture": "원본 영상 clip-042와 person-C에서 만든 frame·얼굴 crop·social JPEG를 하나의 source group으로 되돌리고, train/test 누수를 없앤 뒤 세 평가 조건의 전체 평균 0.23과 가장 큰 조건별 평균 0.80을 계산해 주장 범위를 정합니다 (설명용 가정).",
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "episode": [
+          "overview"
+        ],
+        "source-independent-split": [
+          "source-groups"
+        ],
+        "domain-risk": [
+          "domain-risk"
+        ],
+        "return": [
+          "release"
+        ]
+      },
+      "primarySourceApplication": [
+        "FaceForensics++는 네 조작 방법과 압축 조건을 공통 벤치마크에서 비교한 범위에만 사용하고, 이후 모든 생성기와 실제 유통 경로를 보장하는 근거로 확대하지 않았습니다.",
+        "Wang 등의 연구는 ProGAN 자료에 학습한 분류기가 당시 시험한 여러 CNN 생성 모델로 일반화된 결과의 근거로만 사용하고, 미래의 모든 생성 방식에 대한 보장으로 쓰지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · clip-042 한 건이 파생본·원본 묶음·자료 분리·조건별 위험·주장 범위를 연속해서 지나갑니다.",
+        "humanize": "pass · 역할을 먼저 설명하는 한국어 제목으로 바꾸고, 영어 용어는 정식 평가 개념과 식별자에만 남겼습니다.",
+        "numericTrace": "pass · 수정 전 group 교집합 1, 수정 후 0과 세 조건의 loss 합 6+9+8=23, 전체 평균 0.23, 가장 큰 조건별 평균 0.80을 독립 계산했습니다.",
+        "mobile390": "pass · 네 그림이 세로 단계와 선택한 장면 설명으로 표시되고 문서 가로 overflow 0, 각 마지막 장면과 console 오류 0을 확인했습니다.",
+        "desktop1440": "pass · 원본 경로·두 manifest·조건별 위험표·주장 범위가 잘리지 않고 문서 가로 overflow 0임을 확인했습니다.",
+        "keyboard": "pass · 각 그림에서 ArrowRight로 마지막 장면까지 이동했습니다.",
+        "motion": "pass · 자동 시작과 반복이 없고 명시적 재생 뒤 마지막 장면에서 멈추며 reduced-motion에서는 재생이 비활성화됩니다.",
+        "productionBuild": "pass · Node 힙 상한을 8GB로 명시한 전체 tsc-b·Vite build와 2,088개 정적 route 생성이 통과했습니다.",
+        "noJavaScript": "pass · production 정적 본문에서 네 그림의 전체 장면 목록과 네 절, 전체 평균 0.23·가장 큰 조건별 평균 0.80을 확인했고 390×844 화면에서 가로 잘림 없이 표시됐습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
