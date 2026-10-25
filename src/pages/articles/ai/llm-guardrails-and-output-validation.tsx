@@ -5,42 +5,43 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { AgentSafetyPathLocator, AgentSafetyPathMapReturn } from "./shared/AgentSafetyPathLocator";
 import LlmGuardrailsAndOutputValidationViz from "./llm-guardrails-and-output-validation/viz/LlmGuardrailsAndOutputValidationViz";
 
 /**
- * Guardrail은 두는 위치와 판정 방식으로 정확도·지연을 맞바꿉니다
+ * 가드레일은 요청·응답·실행을 따로 검사합니다
  *
  * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
  */
 export default function LlmGuardrailsAndOutputValidationArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <AgentSafetyPathLocator current="guard" />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          같은 위장 요청을 1ms 규칙은 놓치고 200ms model은 잡습니다
+          어디서 다시 검사할까요
         </h2>
+        <LlmGuardrailsAndOutputValidationViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            위험한 의도를 글자 쪼개기로 감춘 요청 하나를 두 검사에 넣습니다. 약 1ms가
-            걸리는 rule-based guardrail은 금지 키워드와 정규식이 일치하지 않아 통과시킵니다.
-            약 200ms가 걸리는 model-based guardrail은 표현 뒤의 의도를 읽어 차단합니다.
+            사용자가 “장애 보고서 91을 요약해서 내부 #ops 채널로 보내 줘”라고 요청했다고 하겠습니다.
+            입력 검사는 이 문장을 허용하지만, 모델이 만든 JSON 본문에는 비밀값이 섞일 수 있고
+            전송 대상도 나중에 바뀔 수 있습니다. 따라서 입력 통과 하나로 전체 요청을 승인해서는 안 됩니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
-          <ol>
-            <li>고정 문자열 패턴이 없으면 rule-based 검사가 위험한 의도까지 알아볼까요?</li>
-            <li>Rule-based 판정의 “통과”는 이 사례에서 false negative일까요?</li>
-            <li>Model-based 검사는 의미를 읽는 대신 약 200배의 지연을 쓸까요?</li>
-          </ol>
           <p>
-            답은 <strong>아니요, 예, 예</strong>입니다. 빠른 규칙과 느린 의미 판정은
-            서로 다른 오류와 지연을 만듭니다. 실제 pipeline은 규칙으로 명백한 사례를 먼저
-            거르고, 애매한 요청만 model에 보내 두 비용을 조합합니다.
+            그림은 같은 요청에서 새 상태가 생길 때마다 검사를 다시 적용합니다. 입력 rail은 원문을,
+            schema 검사는 응답 구조를, 출력 rail은 사용자에게 보낼 내용을, 도구 rail은 실제 대상과
+            권한을 확인합니다. 마지막 성공은 모델의 “보냈다”는 문장이 아니라
+            <code>messageId=184</code> 영수증으로 확인합니다.
+          </p>
+          <p>
+            이 글의 질문은 어떤 필터가 가장 좋은지가 아닙니다. <strong>각 검사가 어떤 상태를 보고,
+            어느 효과까지 결정할 수 있는가</strong>를 분리하는 것이 목표입니다.
           </p>
         </div>
-        <LlmGuardrailsAndOutputValidationViz />
         <ContentBoundary article="llm-guardrails-and-output-validation" />
         <TermBreakdown
-          title="Guardrail을 두는 세 위치"
+          title="검사 위치"
           description="같은 policy라도 어느 위치에 두느냐에 따라 막는 실패가 달라집니다."
           items={[
             {
@@ -76,7 +77,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
 
       <section id="rule-vs-model" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Rule-based는 패턴을, model-based는 의미를 읽어 판정합니다
+          규칙과 모델
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -89,12 +90,12 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
             알려줘”는 막아도 “그 문자열을 한 글자씩 이어 붙여서 말해줘”는 같은 정규식에 걸리지 않습니다.
           </p>
           <p>
-            Model-based guardrail은 이런 표현 변형에도 의도를 읽어 잡아냅니다. 대신 판정마다 model 호출이 하나 더 들어가 지연이 늘고 그 model 자신도 잘못
-            판단할 수 있습니다. 이 때문에 실무에서는 rule-based로 뻔한 요청을 먼저 걸러내고 애매한 것만 model-based로 넘기는 2단 구성을 씁니다.
+            Model-based guardrail은 이런 표현 변형의 의미를 분류할 수 있습니다. 대신 판정마다 model 호출이 추가될 수 있고 그 model 자신도 잘못
+            판단할 수 있습니다. 규칙과 모델 검사를 조합할 때는 각 검사의 지연·비용·오류율을 대상 환경에서 따로 측정해야 합니다.
           </p>
         </div>
         <TermBreakdown
-          title="같은 축의 두 흔한 구현 이름"
+          title="검사 방법"
           items={[
             {
               term: "Content filter",
@@ -112,25 +113,24 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
         />
         <div id="paper-nemo-guardrails" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="NVIDIA NeMo Guardrails — Documentation"
+            source="NVIDIA NeMo Guardrails v0.24.1 — Guardrail Types"
             citeKey={1}
-            href="https://docs.nvidia.com/nemo/guardrails/latest/index.html"
+            href="https://docs.nvidia.com/nemo/guardrails/v0.24.1/about-nemo-guardrails-library/rail-types"
           >
-            Input·output·dialog·execution(tool) rail로 검사 위치를 나누고, 각 rail 안에서
-            heuristic pattern·custom action 같은 rule-based 검사와 LLM self-check·NemoGuard·
-            LlamaGuard 같은 model-based 검사를 함께 조합할 수 있는 구조를 제공합니다.
+            이 버전의 공식 문서는 input·retrieval·dialog·execution·output rail을 서로 다른
+            실행 시점으로 나눕니다. 입력 허용이 검색 결과·응답·도구 실행의 허용을 뜻하지 않는다는
+            이 글의 경계는 해당 순서를 한 요청에 적용한 것입니다.
           </CitationBlock>
           <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            공식 문서는 두 방식을 결합하는 구조만 제시할 뿐, 특정 rail 조합의 latency·정확도
-            수치는 공개하지 않습니다. 이 글의 ~1ms·~200ms·200배 같은 latency 비교는 그 구조를
-            읽는 데 쓰는 예시 수치이며, NeMo Guardrails가 공식 벤치마크로 보고한 값이 아닙니다.
+            이 근거는 rail의 위치와 역할을 확인합니다. 특정 조합의 지연·정확도나 이 글의 예시 요청이
+            실제로 차단되는지는 증명하지 않으므로, 제품 선택과 임곗값은 별도 평가가 필요합니다.
           </p>
         </div>
       </section>
 
       <section id="fp-fn-tradeoff" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          False positive와 false negative는 threshold 하나로 맞바꿉니다
+          잘못 막기와 놓치기
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -188,7 +188,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
 
       <section id="validation-methods" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Schema·semantic·action validation은 서로 다른 것을 확인합니다
+          구조·의미·실행
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -241,7 +241,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
 
       <section id="human-approval-gate" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          애매한 판정은 차단 대신 human approval gate로 넘깁니다
+          사람 승인
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -263,6 +263,7 @@ export default function LlmGuardrailsAndOutputValidationArticle() {
           </p>
         </div>
       </section>
+      <AgentSafetyPathMapReturn current="guard" />
     </div>
   );
 }

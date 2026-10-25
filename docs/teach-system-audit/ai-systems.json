@@ -8426,25 +8426,68 @@
       "route": "ai/llm-guardrails-and-output-validation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/llm-guardrails-and-output-validation.tsx",
       "publicPath": "cs/ai/llm-guardrails-and-output-validation",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "입력·출력·도구 검사를 설명했지만 하나의 요청에서 새 상태가 생길 때마다 무엇을 다시 검사하는지 첫 화면에서 연결되지 않았음",
+        "출처 없는 1ms 대 200ms와 200배 지연 예시가 제품 또는 일반적 성능 측정처럼 읽힐 수 있었음",
+        "모바일에서 sticky 장면 조작부가 설명 마지막 22px을 덮어 내부 스크롤 없이는 문장을 끝까지 읽을 수 없었음"
+      ],
+      "fixture": {
+        "request": "장애 보고서 91을 요약해 내부 #ops 채널로 전송",
+        "requestId": "req-91",
+        "secretExample": "sk-live-7A9",
+        "tool": "send_message",
+        "allowedTarget": "#ops",
+        "messageId": 184
+      },
+      "stageAnchors": {
+        "parent": "에이전트 안전 지도의 검사",
+        "overview": "요청→입력 검사→응답 검사→실행 검사→영수증",
+        "ruleModel": "rule-vs-model",
+        "errorTradeoff": "fp-fn-tradeoff",
+        "validation": "validation-methods",
+        "approval": "human-approval-gate",
+        "return": "agent-safety-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.nvidia.com/nemo/guardrails/v0.24.1/about-nemo-guardrails-library/rail-types",
+          "application": "input·retrieval·dialog·execution·output rail의 실행 시점과 책임 경계"
+        },
+        {
+          "href": "https://json-schema.org/understanding-json-schema/about",
+          "application": "응답 구조 검사가 의미와 실행 권한을 대신하지 않는 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 장애 보고서 요청에서 입력 허용, schema 통과, 비밀값 제거, 도구 범위 확인, 실제 전송 영수증을 끝까지 분리했습니다.",
+        "humanize": "가드레일 종류를 나열하기 전에 무엇을 어느 시점에서 다시 확인하는지 한 요청으로 보여 주고 긴 제목을 줄였습니다.",
+        "browser390": "부모 지도·첫 시각화·5장면·키보드·reduced-motion·JavaScript 비활성·overflow0·설명/조작부 overlap0·console0 통과: output/playwright/ai-guardrail-request-batch-38/summary.json",
+        "browser1440": "요청부터 영수증까지 5장면·overflow0·console0 통과: output/playwright/ai-guardrail-request-batch-38/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 203편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 38 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "agent-safety-map-and-guardrail-request-lifecycle-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/llm-guardrails-and-output-validation.tsx",
+        "src/pages/articles/ai/llm-guardrails-and-output-validation/viz/LlmGuardrailsAndOutputValidationViz.tsx",
+        "src/pages/articles/ai/shared/AgentSafetyPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/llm-guardrails-and-output-validation.tsx",
+      "contentHash": "2b2a95ca7b15ad56dfba7d8eb12487fb6a387c668fee3b3d7f52b193aebcb1be",
+      "preserved": [
+        "입력·출력·도구 guardrail의 위치와 책임 차이",
+        "precision·recall 임곗값 계산과 false positive·false negative 경계",
+        "schema·semantic·action validation과 사람 승인 흐름"
       ]
     },
     {

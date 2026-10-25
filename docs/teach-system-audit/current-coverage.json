@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 555,
-    "pending": 435,
+    "reviewed": 556,
+    "pending": 434,
     "untracked": 0,
-    "assignedPending": 391,
+    "assignedPending": 390,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2181,11 +2181,11 @@
     {
       "route": "ai/llm-guardrails-and-output-validation",
       "publicPath": "cs/ai/llm-guardrails-and-output-validation",
-      "title": "Guardrail은 두는 위치와 판정 방식으로 정확도·지연을 맞바꿉니다",
+      "title": "가드레일은 요청·응답·실행을 따로 검사합니다",
       "catalogIndex": 215,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

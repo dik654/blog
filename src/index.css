@@ -196,7 +196,7 @@
  * Figure 전체를 작은 viewport 높이(svh)에 맞춰 안정된 크기로 예약하고, 큰 장면만
  * canvas 안에서 스크롤한다. 모바일 주소 표시줄이 나타나도 figure 높이가 다시
  * 계산되지 않으므로 읽던 본문 위치를 밀어내지 않는다. 좁은 화면의 조작부는
- * 이전·현재·다음의 별도 grid로 두고, 넓은 화면에서는 전체 탭을 하단에 고정한다.
+ * 이전·현재·다음의 별도 grid로 두고, 넓은 화면에서는 전체 탭을 본문 다음에 둔다.
  */
 figure[data-viz="modern"]:has([data-viz-controls]) {
   display: flex;
@@ -359,11 +359,6 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     min-height: 100% !important;
     flex-direction: column !important;
     overflow: visible !important;
-  }
-
-  figure[data-viz="modern"]:has([data-viz-controls]) [data-viz-controls] {
-    position: sticky;
-    bottom: 0;
   }
 
   /*
