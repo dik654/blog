@@ -6899,23 +6899,23 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Pair·augmentation·miner revision을 동일 split·seed의 retrieval·probe 등 downstream metric과 error slice로 평가하고 실패 관계를 다음 data version에 반영하는 절차입니다.",
     canonicalHref: "/cs/ai/contrastive-evaluation#downstream",
   },
-  "domain-adaptation-gap-diagnosis": {
-    id: "domain-adaptation-gap-diagnosis",
+  "domain-adaptation-state-diagnosis": {
+    id: "domain-adaptation-state-diagnosis",
     kind: "method",
     domain: "machine-learning",
-    label: "Domain-adaptation gap diagnosis",
+    label: "Domain-adaptation state diagnosis",
     definition:
-      "도메인 오류를 language/style distribution·factual freshness·task behavior·system constraint 결함으로 분해해 RAG·continued pretraining·SFT·PEFT 후보와 검증 지표를 연결하는 진단입니다.",
-    canonicalHref: "/cs/ai/domain-finetuning#evidence",
+      "한 요청의 실패를 현재 사실을 담은 외부 context·반복 언어 pattern을 담은 model weight·원하는 출력 행동을 담은 supervised example·지연과 memory를 결정하는 runtime 제약으로 나누는 진단입니다.",
+    canonicalHref: "/cs/ai/domain-finetuning#diagnose",
   },
-  "minimum-domain-intervention-selection": {
-    id: "minimum-domain-intervention-selection",
+  "minimum-domain-intervention-funnel": {
+    id: "minimum-domain-intervention-funnel",
     kind: "method",
     domain: "statistics",
-    label: "Minimum domain-intervention selection",
+    label: "Minimum domain-intervention funnel",
     definition:
-      "같은 target validation에서 gain을 최대화하되 general regression과 학습·서빙 비용의 사전 한도를 만족하는 가장 작은 adaptation 후보를 선택하는 계약입니다.",
-    canonicalHref: "/cs/ai/domain-finetuning#release",
+      "현재 근거 같은 hard requirement를 먼저 검사하고 target 품질·general regression·비용 예산을 순서대로 적용해 가장 작은 domain-adaptation 후보를 남기는 절차입니다.",
+    canonicalHref: "/cs/ai/domain-finetuning#candidates",
   },
   "domain-corpus-mixture-objective": {
     id: "domain-corpus-mixture-objective",
@@ -6980,14 +6980,23 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "기관·계통·장비·condition 등 required cell마다 독립 group 수를 세고 최소 evidence count를 충족한 cell 비율과 빈 cell을 함께 보고하는 metric입니다.",
     canonicalHref: "/cs/ai/domain-data-governance#coverage-release",
   },
-  "retrieval-weight-adaptation-boundary": {
-    id: "retrieval-weight-adaptation-boundary",
+  "retrieval-weight-behavior-boundary": {
+    id: "retrieval-weight-behavior-boundary",
     kind: "concept",
     domain: "machine-learning",
-    label: "Retrieval–weight adaptation boundary",
+    label: "Retrieval–weight–behavior boundary",
     definition:
-      "최신성·출처·즉시 삭제가 필요한 사실은 외부 retrieval artifact에 두고 반복되는 언어·행동 pattern은 model weight adaptation 후보로 두는 저장 위치 경계입니다.",
-    canonicalHref: "/cs/ai/domain-finetuning#candidates",
+      "최신성·출처·즉시 교체가 필요한 사실은 외부 context에, 반복되는 언어 pattern은 model weight에, 원하는 출력 행동은 supervised example에 두는 상태 위치 경계입니다.",
+    canonicalHref: "/cs/ai/domain-finetuning#state-boundary",
+  },
+  "domain-evidence-missing-state": {
+    id: "domain-evidence-missing-state",
+    kind: "concept",
+    domain: "computer-science",
+    label: "Domain evidence-missing state",
+    definition:
+      "현재 근거를 요구하는 요청에서 검색 결과가 없거나 요구한 revision과 다르면 답을 생성하지 않고 evidence_status=missing을 남기는 관측 가능한 실패 상태입니다.",
+    canonicalHref: "/cs/ai/domain-finetuning#failure",
   },
   "domain-corpus-preparation-manifest": {
     id: "domain-corpus-preparation-manifest",
@@ -7014,7 +7023,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Domain behavior release gate",
     definition:
       "Format validity·source-grounded content·abstention·domain slice·general regression threshold를 서로 상쇄하지 않는 조건으로 묶어 task-adapted model을 판정하는 gate입니다.",
-    canonicalHref: "/cs/ai/domain-task-finetuning#evaluation",
+    canonicalHref: "/cs/ai/domain-task-finetuning#behavior-release",
   },
   "domain-deployment-claim-boundary": {
     id: "domain-deployment-claim-boundary",
@@ -36752,21 +36761,21 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "covariate-label-concept-shift",
-    to: "domain-adaptation-gap-diagnosis",
+    to: "domain-adaptation-state-diagnosis",
     relation: "prerequisite",
     reason:
       "Source와 target에서 input·label·label mechanism 중 무엇이 달라졌는지 진단의 확률적 기준을 제공합니다.",
   },
   {
-    from: "domain-adaptation-gap-diagnosis",
-    to: "minimum-domain-intervention-selection",
+    from: "domain-adaptation-state-diagnosis",
+    to: "minimum-domain-intervention-funnel",
     relation: "produces",
     reason:
       "Language·fact·behavior·system 결함별로 비교할 no-op·RAG·DAPT/TAPT·SFT·PEFT 후보를 만듭니다.",
   },
   {
     from: "adaptation-scope-comparison",
-    to: "minimum-domain-intervention-selection",
+    to: "minimum-domain-intervention-funnel",
     relation: "extends",
     reason:
       "같은 split·seed·budget의 paired comparison을 adaptation family 전체로 확장합니다.",
@@ -36853,25 +36862,32 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
       "Code·data·checkpoint lineage에 license·consent·retention·deletion 권리 정보를 추가합니다.",
   },
   {
-    from: "domain-adaptation-gap-diagnosis",
-    to: "retrieval-weight-adaptation-boundary",
+    from: "domain-adaptation-state-diagnosis",
+    to: "retrieval-weight-behavior-boundary",
     relation: "produces",
     reason:
       "Fresh fact와 반복 language·behavior pattern을 분리해 정보의 저장 위치 후보를 정합니다.",
   },
   {
     from: "rag-stage-success-trace",
-    to: "retrieval-weight-adaptation-boundary",
+    to: "retrieval-weight-behavior-boundary",
     relation: "prerequisite",
     reason:
       "Retrieval만 추가한 baseline이 실패를 회복하는지 stage evidence로 확인합니다.",
   },
   {
-    from: "retrieval-weight-adaptation-boundary",
-    to: "minimum-domain-intervention-selection",
+    from: "retrieval-weight-behavior-boundary",
+    to: "minimum-domain-intervention-funnel",
     relation: "constrains",
     reason:
       "최신성·citation·삭제 요구는 외부 retrieval을 우선하고 반복 pattern은 weight adaptation 후보로 제한합니다.",
+  },
+  {
+    from: "minimum-domain-intervention-funnel",
+    to: "domain-evidence-missing-state",
+    relation: "produces",
+    reason:
+      "현재 근거 hard requirement를 통과하는 후보가 없으면 추측 답변 대신 관측 가능한 실패 상태로 보냅니다.",
   },
   {
     from: "run-artifact-provenance",
@@ -50747,7 +50763,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "in-batch-negative-sampling", to: "embedding-fine-tuning-objective", relation: "prerequisite", reason: "Negative 후보 집합이 정의돼야 그 집합 위에서 InfoNCE 형태 loss를 계산할 수 있습니다." },
   { from: "sentence-relation-objective-boundary", to: "embedding-fine-tuning-objective", relation: "extends", reason: "Pooling으로 만든 vector에 relation objective가 필요하다는 경계를 실제 in-batch InfoNCE 학습 절차로 구체화합니다." },
   { from: "embedding-fine-tuning-objective", to: "domain-specific-embedding-adaptation", relation: "prerequisite", reason: "같은 in-batch negative InfoNCE objective를 도메인 쌍 위에서 이어 돌리는 것이 domain adaptation입니다." },
-  { from: "domain-adaptation-gap-diagnosis", to: "domain-specific-embedding-adaptation", relation: "extends", reason: "Language·behavior 등 domain gap 진단을 retrieval embedding의 vocabulary·relevance gap에 적용합니다." },
+  { from: "domain-adaptation-state-diagnosis", to: "domain-specific-embedding-adaptation", relation: "extends", reason: "Language·behavior 등 domain gap 진단을 retrieval embedding의 vocabulary·relevance gap에 적용합니다." },
   { from: "offline-document-embedding-reuse", to: "asymmetric-vs-symmetric-retrieval", relation: "contrasts", reason: "Bi-encoder의 online·offline 계산 분리는 query·document encoder 가중치 공유 여부와는 다른 독립적인 설계 축입니다." },
   { from: "embedding-fine-tuning-objective", to: "asymmetric-vs-symmetric-retrieval", relation: "prerequisite", reason: "In-batch negative를 한 방향으로 볼지 양방향으로 볼지는 objective가 이미 정의된 뒤에 encoder 구성으로 정해집니다." },
   { from: "asymmetric-vs-symmetric-retrieval", to: "instruction-tuned-embedding", relation: "extends", reason: "별도 encoder를 두는 대신 하나의 encoder에 instruction 접두어만 바꿔 asymmetric에 가까운 역할 분리를 흉내 냅니다." },

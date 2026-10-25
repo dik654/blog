@@ -1186,34 +1186,56 @@
     },
     {
       "route": "ai/continued-pretraining",
-      "title": "Continued Pretraining: Corpus Mixture와 Forgetting",
+      "title": "Continued Pretraining: 전문 문서에서 checkpoint까지",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
         "src/pages/articles/ai/continued-pretraining.tsx",
         "src/pages/articles/ai/continued-pretraining/ModernArticle.tsx",
-        "src/pages/articles/ai/domain-finetuning/viz/ModernDomainAdaptationViz.tsx"
+        "src/pages/articles/ai/continued-pretraining/ContinuedPretrainingViz.tsx",
+        "src/pages/articles/ai/domain-finetuning/DomainAdaptationPathLocator.tsx",
+        "src/content/domain-adaptation-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 6,
         "hasSourceSurface": true,
-        "characters": 8983
+        "characters": 16006
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 DAPT·TAPT·망각·PPL을 각각 설명했지만 하나의 전문 문서가 corpus manifest에서 release할 checkpoint로 바뀌는 경로를 끝까지 추적하지 않았습니다.",
+        "Sampling 비율과 loss 가중치, PPL, checkpoint 선택 수치가 서로 다른 예시로 흩어져 같은 계산 장부로 읽기 어려웠습니다.",
+        "전문 지표가 좋아졌다는 사실만으로 release할 수 있는 것처럼 보여, 일반 능력 회귀와 평가 계약 누락에서 멈추는 실패 동작이 드러나지 않았습니다.",
+        "도메인 적응 부모 지도와 이 글의 직속 위치, 다음 세부 글로 이어지는 관계가 보이지 않았습니다."
+      ],
+      "fixture": "특허 문장을 반복해서 잘못 끊는 base model에 전문 문서 token 8과 일반 replay token 2를 섞어 학습하고, 10k·30k checkpoint 가운데 일반 능력 회귀 예산 1을 통과한 10k를 남깁니다 [A].",
+      "stageAnchors": {
+        "parent": "domain-adaptation-map",
+        "flow": "overview",
+        "corpus": "corpus",
+        "mixture": "mixture",
+        "measurement": "measurement",
+        "checkpoint": "checkpoint",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Gururangan et al.의 DAPT·TAPT는 target domain·task의 unlabeled corpus에서 pretraining objective를 이어 가는 메커니즘에 적용했습니다.",
+        "Gu & Feng의 continual NMT 연구는 새 domain 적응 중 이전 능력이 저하될 수 있다는 경계에 적용했으며, 본문의 checkpoint 수치는 논문 결과가 아니라 가정 [A]입니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모→특허 문장 실패→corpus manifest→8:2 token 혼합→PPL→checkpoint gate→부모 지도 반환 순서로 concept 범위만 재작성했습니다.",
+        "humanize": "pass · 용어 이름보다 전문 문서 10칸과 두 checkpoint를 먼저 보여 주고 문장 호흡·용어 밀도 검사를 통과했습니다.",
+        "numericTrace": "pass · 전문 8·일반 2, loss 2·3에서 mixed loss 2.2를 계산하고 PPL 4와 10k·30k release gate를 같은 설명용 장부 [A]로 연결했습니다.",
+        "mobile390": "pass · 390×844에서 문서 가로 overflow가 없고 네 시각화가 각각 794·759·778·808px 안에 표시되며 50×50px 조작 영역을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 문서 overflow 없이 흐름 시각화가 841px, 나머지 수치 시각화가 503·569·543px 높이에 표시됩니다.",
+        "keyboard": "pass · 흐름 시각화에 초점을 둔 뒤 ArrowRight로 장면 01에서 02로 이동하고 aria-pressed가 함께 바뀝니다.",
+        "reducedMotion": "pass · 최종 장면을 표시하고 재생 버튼을 비활성화한 상태에서도 같은 순서와 결론을 읽을 수 있습니다.",
+        "noJavaScript": "pass · production static route의 390×844 화면에서 정적 읽기 모드, 부모 지도, 4단계 전체 목록, 수식과 부모 지도 반환을 확인했습니다.",
+        "build": "pass · Vite production build와 2,088개 public route·239개 no-script article 생성을 완료했습니다. 전체 npm run build의 tsc 단계는 이전 실행에서 메모리 한도로 실패했으므로 별도 미통과 상태입니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "도메인 적응의 두 자식 글과 묶음 검증을 마친 뒤 GitHub Pages 공개 경로 재검증"
       ]
     },
     {
@@ -2677,98 +2699,169 @@
     },
     {
       "route": "ai/domain-data-governance",
-      "title": "Domain Data Governance: Group Split·Rights·Evidence",
+      "title": "도메인 데이터 경계: 행에서 검증 가능한 주장까지",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
         "src/pages/articles/ai/domain-data-governance.tsx",
         "src/pages/articles/ai/domain-data-governance/ModernArticle.tsx",
-        "src/pages/articles/ai/domain-finetuning/viz/ModernDomainAdaptationViz.tsx"
+        "src/pages/articles/ai/domain-data-governance/DataGovernanceViz.tsx",
+        "src/pages/articles/ai/domain-finetuning/DomainAdaptationPathLocator.tsx",
+        "src/content/domain-adaptation-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 6,
         "hasSourceSurface": true,
-        "characters": 7938
+        "characters": 12073
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 split·권리·coverage를 설명했지만 열두 visit row가 실제 환자 네 명에서 왔다는 공유 원인을 한 사례로 끝까지 추적하지 않았습니다.",
+        "행 ID를 무작위로 나누는 것과 환자 group을 격리하는 것의 차이가 첫 화면에서 드러나지 않아 leakage를 떠올리기 어려웠습니다.",
+        "Source URL 기록과 삭제 가능한 lineage가 구분되지 않았고, checkpoint에서 원본 source까지 역추적하는 경로가 보이지 않았습니다.",
+        "전체 평균 성능과 평가 근거가 있는 cell의 범위를 구분하지 않아 미확인 영역도 배포 주장에 포함될 수 있었습니다."
+      ],
+      "fixture": "환자 A·B·C·D의 방문 세 번씩인 열두 row를 A·B·C train, D test로 나누고 source S-17에서 checkpoint v2까지 삭제 경로를 잇습니다. Required cell 12개 중 독립 group 30개 이상인 9개만 주장 범위에 둡니다 [A].",
+      "stageAnchors": {
+        "parent": "domain-adaptation-map",
+        "flow": "overview",
+        "split": "group-time-split",
+        "rights": "rights-lineage",
+        "coverage": "coverage-release",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Gebru et al.의 Datasheets for Datasets는 수집·구성·전처리·배포·유지 질문을 문서화하는 근거에만 적용했으며 문서 작성만으로 권리나 독립성이 보장된다고 쓰지 않았습니다.",
+        "Mitchell et al.의 Model Cards는 intended use·평가 조건·subgroup 결과·제한을 보고하는 근거에만 적용했으며 runtime gate를 대신한다고 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모→환자 네 명과 visit 열두 건→group·time split→삭제 lineage→evaluation coverage→부모 지도 반환 순서로 concept 범위만 재작성했습니다.",
+        "humanize": "pass · 쉬운 한국어·문장 호흡·용어 밀도·모바일 용어 대응 검사를 통과했습니다.",
+        "numericTrace": "pass · 환자 4명×visit 3회, A·B·C train과 D test, required cell 12개 중 9개 통과와 coverage 0.75를 같은 설명용 장부 [A]로 연결했습니다.",
+        "mobile390": "pass · 390×844에서 문서 가로 overflow가 없고 네 장면의 figure 높이가 모두 776px, live 영역 494px, 조작부 55px로 유지됩니다.",
+        "desktop1440": "pass · 1440×1000에서 문서 가로 overflow가 없고 모든 데이터 경계 시각화의 카드·문구·연결 관계가 겹치지 않습니다.",
+        "keyboard": "pass · 흐름 시각화에 초점을 둔 뒤 ArrowRight로 장면 01에서 02로 이동합니다.",
+        "playback": "pass · 명시적 재생 뒤 6.5초에 장면 01에서 02로 한 단계 이동합니다.",
+        "viewportPause": "pass · 네 글 모두 화면을 벗어나면 선택한 장면에서 정지하고 재진입해도 자동 재생하지 않습니다.",
+        "reducedMotion": "pass · 마지막 04/04 장면을 표시하고 재생 버튼은 ‘재생 꺼짐’으로 비활성화됩니다.",
+        "build": "pass · Vite production build 7,997 modules와 2,088개 public route를 생성했습니다. 전체 npm run build의 tsc 단계는 이전 실행에서 메모리 한도로 실패했으므로 별도 미통과 상태입니다.",
+        "noJavaScript": "pass · production static route의 390×844 화면에서 정적 읽기 모드, 부모 지도, 네 장면 전체 목록, 두 수식, 출처, 부모 지도 반환과 확인 질문을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
       "route": "ai/domain-finetuning",
-      "title": "도메인 적응 선택: RAG·Pretraining·SFT를 고르는 법",
+      "title": "도메인 적응 지도: 무엇을 어디에서 바꿀까",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
         "src/pages/articles/ai/domain-finetuning.tsx",
         "src/pages/articles/ai/domain-finetuning/DecisionArticle.tsx",
-        "src/pages/articles/ai/domain-finetuning/viz/ModernDomainAdaptationViz.tsx"
+        "src/pages/articles/ai/domain-finetuning/DomainAdaptationPathLocator.tsx",
+        "src/pages/articles/ai/domain-finetuning/DomainDecisionViz.tsx",
+        "src/pages/articles/ai/domain-finetuning/calculations.ts",
+        "src/content/domain-adaptation-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
+        "hasAssumedCase": true,
         "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "teachLevelMarkers": 8,
         "hasSourceSurface": true,
-        "characters": 6848
+        "characters": 41113
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "RAG·continued pretraining·SFT·PEFT를 바로 나열해, 각 방법이 어느 상태를 바꾸는지 보이지 않았습니다.",
+        "한 요청의 실패→회복→근거 누락 경로를 끝까지 추적하지 않아, 개입 선택의 인과관계를 읽기 어려웠습니다.",
+        "SFT와 PEFT를 같은 선택 축에 두어 학습 목표와 parameter update 범위가 섞였습니다.",
+        "품질·회귀·비용 점수를 한번에 합치면 현재 근거 같은 hard requirement가 높은 다른 점수로 상쇄될 수 있었습니다."
+      ],
+      "fixture": "‘2026년 환불 규정의 최신 조항을 근거와 함께 알려 달라’는 요청을 가중치만 읽은 baseline과 refund-policy-2026-10을 context에 넣은 RAG 경로로 대조합니다 [A].",
+      "stageAnchors": {
+        "parent": "domain-adaptation-map",
+        "request": "overview",
+        "state": "diagnose",
+        "boundary": "state-boundary",
+        "funnel": "candidates",
+        "failure": "failure",
+        "children": "branches",
+        "evidence": "evidence",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Lewis et al. RAG 논문은 외부 retrieval memory와 parametric generator를 결합한 메커니즘에만 적용했습니다.",
+        "Gururangan et al. DAPT·TAPT 결과는 RoBERTa, 네 domain, 여덟 classification task 범위로 한정했습니다.",
+        "InstructGPT와 LoRA는 각각 desired behavior의 supervised signal과 trainable parameter 범위를 분리하는 근거로만 사용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 현재 사실·언어 pattern·출력 행동·runtime 제약을 상태 위치로 분리하고 도요새를 통과하는 최소 개입으로 연결했습니다.",
+        "humanize": "pass · 쉬운 한국어·문장 호흡·용어 밀도·모바일 용어 대응 검사를 통과했습니다.",
+        "numericTrace": "pass · 설명용 후보 5개를 현재 근거 2개→품질 2개→예산 1개로 줄이며 모든 수치를 가정 [A]로 표시했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, 시각화 높이 787·741·719px, 모바일 조작부 50×50px을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, 시각화 너비 646px와 본문·목차 분리를 확인했습니다.",
+        "keyboard": "pass · 시각화에 초점을 둔 뒤 ArrowRight로 01→02 상태와 탈락 표시가 함께 바뀌었습니다.",
+        "reducedMotion": "pass · 세 시각화가 모두 최종 04/04 상태를 보이고 재생 버튼은 비활성화됩니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드, 8개 절, 세 시각화의 4단계 목록, 부모 지도 복귀를 390×844로 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
       "route": "ai/domain-task-finetuning",
-      "title": "Domain Task Fine-tuning: Demonstration에서 Release까지",
+      "title": "Task Fine-tuning: 예시에서 검증된 행동까지",
       "subcategory": "ai-practical-embedding",
       "publicFiles": [
-        "src/pages/articles/ai/domain-finetuning/viz/ModernDomainAdaptationViz.tsx",
         "src/pages/articles/ai/domain-task-finetuning.tsx",
-        "src/pages/articles/ai/domain-task-finetuning/ModernArticle.tsx"
+        "src/pages/articles/ai/domain-task-finetuning/ModernArticle.tsx",
+        "src/pages/articles/ai/domain-task-finetuning/TaskFinetuningViz.tsx",
+        "src/pages/articles/ai/domain-finetuning/DomainAdaptationPathLocator.tsx",
+        "src/content/domain-adaptation-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 7,
         "hasSourceSurface": true,
-        "characters": 8953
+        "characters": 14248
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 demonstration·loss mask·update scope·release gate를 설명했지만 한 입력이 검증된 행동으로 바뀌는 경로가 한 화면에서 이어지지 않았습니다.",
+        "SFT 학습 목표와 full·LoRA·head-only parameter update 범위가 가까이 나열되어 같은 선택 축처럼 읽힐 수 있었습니다.",
+        "Response-only loss의 mask와 NLL 계산이 실제 token 묶음 그림 없이 수식부터 나와 prompt가 여전히 context로 읽힌다는 점을 떠올리기 어려웠습니다.",
+        "형식은 맞지만 내용이 틀린 revision이 왜 출시되지 않는지와 평가 계약이 없을 때 판정 불가로 멈추는 경로가 시각적으로 드러나지 않았습니다."
+      ],
+      "fixture": "‘혈압 120/80, 흉통 부인’ 문장을 세 필드와 evidence가 있는 JSON으로 추출하고, 근거가 없으면 null과 human review를 반환하는 행동을 학습합니다 [A].",
+      "stageAnchors": {
+        "parent": "domain-adaptation-map",
+        "flow": "overview",
+        "demonstration": "demonstration",
+        "loss": "response-loss",
+        "scope": "update-scope",
+        "release": "behavior-release",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Ouyang et al.의 InstructGPT 연구는 human-written demonstration을 이용한 supervised fine-tuning 경로에만 적용했으며 본문의 의료 extraction 성능을 입증하는 자료로 쓰지 않았습니다.",
+        "Hu et al.의 LoRA는 frozen weight에 저랭크 update를 붙이는 parameter 범위의 근거로만 적용했으며 full fine-tuning보다 항상 낫다고 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모→의료 문장과 JSON 계약→response-only mask→parameter 범위→비보상 행동 gate→부모 지도 반환 순서로 concept 범위만 재작성했습니다.",
+        "humanize": "pass · 프로젝트 자연스러움 검사와 ko-natural 합니다체·expert 문서 검사를 통과했으며 긴 문장을 분리했습니다.",
+        "numericTrace": "pass · mask [0,0,0,1,1,1]과 NLL [0.2,0.4,0.8]에서 loss 0.467을 계산하고, v1 factuality 0.84 실패와 v2의 네 gate 통과를 같은 설명용 장부 [A]로 연결했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, 다섯 시각화 높이 830·620·587·685·644px, 모바일 조작부 50×50px을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, 다섯 시각화 너비 711px와 높이 828·422·431·449·581px을 확인했습니다.",
+        "keyboard": "pass · 흐름 시각화에 초점을 둔 뒤 ArrowRight로 01→02 상태와 aria-pressed가 함께 바뀌었습니다.",
+        "playback": "pass · 재생 뒤 6.5초에 02→03으로 한 단계만 진행하고 일시정지 상태를 확인했습니다.",
+        "reducedMotion": "pass · 마지막 04/04 장면을 표시하고 재생 버튼은 ‘재생 꺼짐’으로 비활성화됩니다.",
+        "noJavaScript": "pass · production static route의 390×844 화면에서 정적 읽기 모드, 부모 지도, 4단계 전체 목록, 수식과 부모 지도 반환을 확인했습니다.",
+        "build": "pass · Vite production build 7,997 modules와 2,088개 public route·240개 no-script article 생성을 완료했습니다. 최대 RSS는 약 4.17GB였습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "도메인 적응의 마지막 자식 글과 묶음 검증을 마친 뒤 GitHub Pages 공개 경로 재검증"
       ]
     },
     {

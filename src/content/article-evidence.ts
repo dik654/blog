@@ -3012,6 +3012,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/2106.09685",
       note: "weight adaptation의 trainable scope를 줄이는 저랭크 update",
     },
+    {
+      kind: "핵심 논문",
+      label: "Don’t Stop Pretraining",
+      href: "https://aclanthology.org/2020.acl-main.740/",
+      note: "Domain·task unlabeled corpus에서 pretraining objective를 이어 가는 DAPT·TAPT",
+    },
+    {
+      kind: "핵심 논문",
+      label: "InstructGPT",
+      href: "https://arxiv.org/abs/2203.02155",
+      note: "Human-written demonstration으로 supervised baseline을 학습한 pipeline",
+    },
   ],
   "ai/continued-pretraining": [
     { kind: "핵심 논문", label: "Don’t Stop Pretraining", href: "https://aclanthology.org/2020.acl-main.740/", note: "DAPT·TAPT corpus와 downstream experiment의 원 연구" },
