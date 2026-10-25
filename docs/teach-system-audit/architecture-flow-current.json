@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 990,
     "architectureCandidates": 176,
-    "dedicatedVisuals": 677,
-    "inlineVisuals": 554,
-    "customVisuals": 860,
+    "dedicatedVisuals": 678,
+    "inlineVisuals": 555,
+    "customVisuals": 861,
     "animatedMechanisms": 456,
     "architectureWithoutAnimation": 97,
-    "recursiveLocators": 214,
+    "recursiveLocators": 215,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 980,
-    "architectureWithoutCustomVisual": 27
+    "architectureWithoutCustomVisual": 26
   },
   "articles": [
     {
@@ -4962,18 +4962,18 @@
     {
       "route": "ai/sandbox-runtime-isolation",
       "publicPath": "cs/ai/sandbox-runtime-isolation",
-      "title": "Sandbox Runtime 격리: Syscall · Seccomp · gVisor · Kata",
+      "title": "런타임 격리: 같은 시스템 호출의 세 경로",
       "sourcePath": "src/pages/articles/ai/sandbox-runtime-isolation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/score-based-generative-models",
