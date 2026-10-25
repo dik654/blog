@@ -163,7 +163,7 @@
     },
     {
       "route": "ai/laya-system1-decision-model",
-      "status": "reviewed-local",
+      "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#2026-10-25--ai-batch-44-laya-결정-모델-로컬-검수-완료-배포-대기"
     },
     {

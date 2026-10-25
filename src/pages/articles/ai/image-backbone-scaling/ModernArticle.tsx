@@ -3,243 +3,347 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import { ImageBackboneViz } from "../image-classification-pipeline/viz/ModernImageClassificationViz";
+import ImageClassificationPathLocator, {
+  ImageClassificationMapReturn,
+} from "../image-classification-pipeline/ImageClassificationPathLocator";
+import {
+  ImageBackboneBudgetViz,
+  RuntimeFrontierViz,
+} from "./viz/ImageBackboneBudgetViz";
+
+function ResolutionLedger() {
+  const rows = [
+    {
+      label: "한 축의 patch 수",
+      arithmetic: "224 px ÷ 16 px/patch = 14 patches",
+      reason: "사진 한 변을 patch 한 변으로 나눕니다.",
+    },
+    {
+      label: "전체 image token 수",
+      arithmetic: "14 patches × 14 patches = 196 tokens",
+      reason: "높이와 너비의 patch 위치를 곱합니다.",
+    },
+    {
+      label: "전역 attention score 항목",
+      arithmetic: "196 queries × 196 keys = 38,416 entries",
+      reason: "한 head·한 layer에서 모든 query와 key의 조합을 셉니다.",
+    },
+    {
+      label: "448px 입력의 항목 수",
+      arithmetic: "28² tokens → 784² = 614,656 entries",
+      reason: "한 변이 두 배면 token은 네 배, token 쌍은 열여섯 배가 됩니다.",
+    },
+    {
+      label: "증가율",
+      arithmetic: "614,656 ÷ 38,416 = 16×",
+      reason: "같은 head·layer·patch 크기의 score matrix를 비교합니다.",
+    },
+  ] as const;
+
+  return (
+    <div
+      className="not-prose my-8 border-y border-border"
+      aria-label="224픽셀과 448픽셀 입력의 attention score 항목 수 계산"
+    >
+      <p className="py-3 text-xs font-bold text-primary">
+        계산을 한 줄씩 확인하기
+      </p>
+      <ol className="divide-y divide-border">
+        {rows.map((row, index) => (
+          <li
+            key={row.label}
+            className="grid gap-2 py-4 sm:grid-cols-[2rem_minmax(0,1fr)_minmax(0,1fr)] sm:items-start"
+          >
+            <span className="font-mono text-xs font-black text-primary">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="min-w-0">
+              <strong className="block break-keep text-sm">{row.label}</strong>
+              <code className="mt-1 block break-words text-xs leading-5">
+                {row.arithmetic}
+              </code>
+            </div>
+            <p className="break-keep text-xs leading-5 text-muted-foreground">
+              {row.reason}
+            </p>
+          </li>
+        ))}
+      </ol>
+      <p className="border-t border-border py-3 text-xs leading-5 text-muted-foreground">
+        여기서는 special token, 여러 head와 layer, QKV projection, MLP,
+        activation, cache와 kernel 차이를 세지 않습니다. 이 계산은 전역
+        attention의 score matrix가 해상도에 따라 얼마나 빨리 커지는지 보여주는
+        구조적 비교입니다.
+      </p>
+    </div>
+  );
+}
 
 export default function ImageBackboneScalingArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Backbone은 image를 reusable representation으로 바꾸는 model body입니다
-        </h2>
+        <ImageClassificationPathLocator current="backbone-budget" />
+        <h2 className="mb-6 text-2xl font-bold">같은 이미지, 다른 계산</h2>
+        <ImageBackboneBudgetViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Classifier는 보통 <strong>backbone</strong>과 classifier head로
-            나뉩니다. Backbone은 pixels를 feature map이나 token sequence로
-            바꾸고, head는 그 representation을 class logits로 투영합니다. 따라서
-            backbone 선택은 유명한 이름을 고르는 일이 아니라 어떤 spatial
-            interaction과 resource path를 살 것인지 고르는 일입니다.
+            <strong>
+              Backbone의 이름만으로는 이미지 한 장의 실행 비용을 알 수 없습니다.
+            </strong>{" "}
+            입력 해상도와 공간 정보를 섞는 방식이 함께 정해져야 계산량과
+            메모리가 구체적인 모양을 갖습니다. 같은 사진의 한 변을 두 배로
+            키우면 CNN이 훑는 공간 위치는 네 배가 되지만, 모든 patch token 쌍을
+            비교하는 전역 attention의 score matrix는 열여섯 배가 됩니다.
           </p>
           <p>
-            CNN의 local convolution은 가까운 pattern과 translation structure를
-            반복 사용합니다. ViT는 patches를 tokens로 만들어 넓은 관계를
-            attention으로 계산합니다. ViT 내부 shape는{" "}
-            <Link to="/cs/ai/vision-transformer">Vision Transformer 정본</Link>
-            에서, 여기서는 resolution이 두 family의 비용을 어떻게 바꾸는지
-            비교합니다.
+            Backbone은 픽셀을 여러 작업에서 다시 쓸 수 있는 표현으로 바꾸는
+            모델의 본체입니다. 분류 head는 그 표현을 class logit으로 바꿉니다.
+            그래서 이 글에서는 모델 이름을 나열하지 않고, 같은 사진이 표현으로
+            바뀌는 경로와 해상도 비용을 먼저 추적합니다. ViT 내부 tensor 모양은{" "}
+            <Link to="/cs/ai/vision-transformer">Vision Transformer</Link>에서
+            더 깊게 다룹니다.
           </p>
         </div>
         <TermBreakdown
-          title="Backbone 후보를 읽는 네 축"
+          title="비교 전에 고정할 네 가지"
           items={[
             {
-              term: "Spatial prior",
+              term: "공간 상호작용",
               description:
-                "Local convolution·window·global attention처럼 위치 관계를 섞는 구조적 규칙입니다.",
+                "CNN의 local convolution, ViT의 global attention처럼 위치 정보를 섞는 규칙입니다.",
             },
             {
-              term: "Pretrained handoff",
+              term: "입력 계약",
               description:
-                "Weight와 architecture config·input transform·label head 호환성을 함께 넘기는 계약입니다.",
+                "해상도·patch 크기·색 순서·정규화가 weight의 학습 조건과 맞아야 합니다.",
             },
             {
-              term: "Scaling knobs",
+              term: "크기 조절 축",
               description:
-                "Depth·channel width·input resolution·patch size처럼 capacity와 비용을 바꾸는 축입니다.",
+                "Depth·width·resolution 가운데 무엇을 얼마나 바꿨는지 따로 기록합니다.",
             },
             {
-              term: "Runtime frontier",
+              term: "실행 조건",
               description:
-                "Target hardware에서 quality와 latency·throughput·memory가 더 이상 함께 좋아지지 않는 후보 경계입니다.",
+                "같은 장비·정밀도·batch·동시성에서 품질과 지연·처리량·메모리를 측정합니다.",
             },
           ]}
         />
-        <ImageBackboneViz />
         <ContentBoundary article="image-backbone-scaling" />
       </section>
 
       <section id="resolution-cost" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Resolution을 두 배로 키우면 pixel은 4배, global token pairs는 16배가
-          됩니다
-        </h2>
+        <h2 className="mb-5 text-2xl font-bold">해상도 비용</h2>
         <ExplainedFormula
-          question="정사각 image의 한 변 r을 두 배로 키울 때 CNN area와 ViT attention pair 수는 어떻게 달라지나요?"
+          question="정사각 이미지의 한 변 r을 두 배로 키우면 CNN의 공간 위치와 ViT의 전역 attention score 항목은 얼마나 늘어날까요?"
           idea={
             <p>
-              Patch 한 변 P가 고정이면 한 축 patch 수는 r/P, 전체 token 수는 그
-              제곱입니다. Global attention은 모든 token 쌍을 비교합니다.
+              Patch 한 변 P를 고정하면 한 축의 patch 수는 r/P입니다. 전체 image
+              token은 두 축의 patch 수를 곱하고, 전역 attention은 그 token의
+              모든 query–key 조합을 만듭니다.
             </p>
           }
           formula={String.raw`N=(r/P)^2,\quad C_{\rm pair}=N^2`}
-          annotatedFormula={String.raw`\begin{aligned}n_{\rm axis}&=\underbrace{r/P}_{\substack{\text{image 한 축을 patch 폭으로 나눠}\\\text{축별 patch 수 계산}}}\\[4pt]N&=\underbrace{n_{\rm axis}^2}_{\substack{\text{높이와 너비 위치를 곱해}\\\text{전체 token 수 계산}}}\\[4pt]C_{\rm CNN}&\propto\underbrace{r^2}_{\text{pixel area에 비례}}\\[4pt]C_{\rm pair}&\propto\underbrace{N^2}_{\substack{\text{모든 query-key 쌍을 만들어}\\\text{global interaction 계산}}}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}n_{\rm axis}&=\underbrace{r/P}_{\substack{\text{사진 한 변을 patch 폭으로 나눠}\\\text{축별 patch 수 계산}}}\\[4pt]N&=\underbrace{n_{\rm axis}^2}_{\substack{\text{높이와 너비 위치를 곱해}\\\text{전체 image token 수 계산}}}\\[4pt]C_{\rm CNN}&\propto\underbrace{r^2}_{\text{공간 위치 수에 비례}}\\[4pt]C_{\rm pair}&\propto\underbrace{N^2}_{\substack{\text{모든 query-key 조합을 만들어}\\\text{score matrix 항목 계산}}}\end{aligned}`}
           operations={[
             {
               expression: String.raw`r/P`,
               annotation: [
-                "image 길이를 patch 폭으로 나눠",
-                "한 축 token 위치를 구함",
+                "사진 길이를 patch 폭으로 나눠",
+                "한 축의 token 위치를 구함",
               ],
             },
             {
               expression: String.raw`n_{\rm axis}^2`,
               annotation: [
-                "두 spatial 축의 위치 수를 곱해",
-                "전체 patch tokens를 구함",
+                "두 공간 축의 위치 수를 곱해",
+                "전체 image token을 구함",
               ],
             },
             {
               expression: String.raw`r^2`,
               annotation: [
                 "높이와 너비를 곱해",
-                "CNN이 훑는 spatial area를 구함",
+                "CNN의 공간 위치 증가율을 구함",
               ],
             },
             {
               expression: String.raw`N^2`,
               annotation: [
                 "query 수와 key 수를 곱해",
-                "global attention pair 수를 구함",
+                "전역 attention 항목 수를 구함",
               ],
             },
           ]}
           terms={[
             {
               symbol: "r",
-              name: "Input side",
-              description:
-                "정사각형으로 단순화한 input 한 변의 pixel 수입니다.",
+              name: "입력 한 변",
+              description: "정사각형으로 단순화한 사진 한 변의 픽셀 수입니다.",
             },
             {
               symbol: "P",
-              name: "Patch side",
+              name: "Patch 한 변",
               description:
-                "ViT token 하나가 묶는 patch 한 변의 pixel 수입니다.",
+                "Image token 하나로 묶는 patch 한 변의 픽셀 수입니다.",
             },
             {
               symbol: "N",
-              name: "Patch tokens",
-              description: "Special token을 제외한 image patch 위치 수입니다.",
+              name: "Image tokens",
+              description: "Special token을 제외한 patch 위치 수입니다.",
             },
             {
               symbol: String.raw`C_{\rm pair}`,
-              name: "Pair count",
+              name: "Score matrix 항목",
               description:
-                "Global attention score matrix의 entry 수에 비례하는 항입니다.",
+                "한 attention head·한 layer에서 query와 key를 짝지은 항목 수입니다.",
             },
           ]}
           assumptions={[
-            "Patch size와 layer width·depth는 고정합니다.",
-            "Global attention 지배항만 비교하며 local/window attention은 다릅니다.",
-            "FLOPs는 latency가 아니므로 memory traffic과 kernel을 target runtime에서 측정합니다.",
+            "Patch 크기와 layer의 depth·width는 고정합니다.",
+            "전역 attention의 score matrix 항목만 비교합니다. Local/window attention은 다른 증가율을 가질 수 있습니다.",
+            "FLOPs는 실제 지연이 아닙니다. Memory traffic과 kernel 실행은 목표 장비에서 측정합니다.",
           ]}
-          interpretation="P=16에서 224px는 14×14=196 tokens, 448px는 28×28=784 tokens입니다. Token은 4배지만 pair entries는 38,416→614,656으로 16배입니다."
+          interpretation="P=16이면 224px에서 196 tokens와 38,416 pair entries가 생깁니다. 448px에서는 784 tokens와 614,656 entries가 생기므로 token은 4배, pair entries는 16배입니다."
         />
+        <ResolutionLedger />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            이 계산이 알려 주는 것은 정확한 latency가 아니라{" "}
+            <strong>증가 방향</strong>
+            입니다. CNN도 layer와 channel 수에 따라 실제 연산량이 달라지고,
+            ViT도 window attention이나 token 축소를 쓰면 전역 N² 경로와
+            달라집니다. 따라서 구조식은 비싼 후보를 미리 가려내는 데 쓰고, 남은
+            후보는 같은 실행 환경에서 측정해야 합니다.
+          </p>
+        </div>
       </section>
 
       <section id="compound-scaling" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          Compound scaling은 depth·width·resolution을 한 resource 단계로
-          묶습니다
-        </h2>
+        <h2 className="mb-5 text-2xl font-bold">세 축을 함께 키우기</h2>
         <ExplainedFormula
-          question="EfficientNet의 compound coefficient는 세 capacity 축을 어떻게 함께 움직이나요?"
+          question="EfficientNet의 compound scaling은 depth·width·resolution을 한 단계에서 어떻게 함께 움직일까요?"
           idea={
             <p>
-              공통 단계가 하나 증가할 때 depth·width·resolution을 미리 탐색한 비율로 각각 늘리고 convolutional compute가 대략 두 배가 되도록 비율을
-              제한합니다.
+              한 축만 계속 키우지 않고 공통 단계 φ가 늘 때마다 세 축을 미리 찾은
+              비율로 함께 키웁니다. Convolutional compute가 depth에는 선형,
+              width와 resolution에는 대략 제곱으로 반응한다는 근사를 사용합니다.
             </p>
           }
-          formula={String.raw`d=\alpha^\phi,\ w=\beta^\phi,\ r=\gamma^\phi`}
-          annotatedFormula={String.raw`\begin{aligned}d&=\underbrace{\alpha^\phi}_{\text{block depth를 단계별 확대}}\\[3pt]w&=\underbrace{\beta^\phi}_{\text{channel width를 단계별 확대}}\\[3pt]r&=\underbrace{\gamma^\phi}_{\text{input resolution을 단계별 확대}}\\[3pt]2&\approx\underbrace{\alpha\beta^2\gamma^2}_{\substack{\text{세 증가율의 compute 효과를 묶어}\\\text{한 단계 budget을 제한}}}\end{aligned}`}
+          formula={String.raw`d=\alpha^\phi,\quad w=\beta^\phi,\quad r=\gamma^\phi`}
+          annotatedFormula={String.raw`\begin{aligned}d&=\underbrace{\alpha^\phi}_{\text{block depth를 단계별 확대}}\\[3pt]w&=\underbrace{\beta^\phi}_{\text{channel width를 단계별 확대}}\\[3pt]r&=\underbrace{\gamma^\phi}_{\text{입력 한 변을 단계별 확대}}\\[3pt]2&\approx\underbrace{\alpha\beta^2\gamma^2}_{\substack{\text{세 축의 compute 효과를 곱해}\\\text{한 단계의 예산을 제한}}}\end{aligned}`}
           operations={[
             {
               expression: String.raw`\alpha^\phi`,
               annotation: [
                 "depth 비율을 단계 수만큼 누적해",
-                "network 반복 수를 키움",
+                "block 반복 수를 키움",
               ],
             },
             {
               expression: String.raw`\beta^\phi`,
               annotation: [
                 "width 비율을 단계 수만큼 누적해",
-                "channel capacity를 키움",
+                "channel 수를 키움",
               ],
             },
             {
               expression: String.raw`\gamma^\phi`,
               annotation: [
-                "resolution 비율을 누적해",
-                "spatial evidence를 늘림",
+                "resolution 비율을 단계 수만큼 누적해",
+                "공간 증거를 늘림",
               ],
             },
             {
               expression: String.raw`\alpha\beta^2\gamma^2`,
-              annotation: ["세 축의 cost 효과를 곱해", "단계별 compute를 근사"],
+              annotation: ["세 축의 비용 증가를 곱해", "단계별 compute를 근사"],
             },
           ]}
           terms={[
             {
               symbol: String.raw`\phi`,
-              name: "Compound step",
-              description: "Model family의 전체 resource scale 단계입니다.",
+              name: "공통 단계",
+              description:
+                "Model family 전체의 크기를 한 칸 올리는 계수입니다.",
             },
             {
               symbol: String.raw`\alpha`,
-              name: "Depth ratio",
-              description: "한 단계마다 depth를 늘리는 비율입니다.",
+              name: "Depth 비율",
+              description: "한 단계마다 block 수를 늘리는 비율입니다.",
             },
             {
               symbol: String.raw`\beta`,
-              name: "Width ratio",
-              description: "한 단계마다 channel width를 늘리는 비율입니다.",
+              name: "Width 비율",
+              description: "한 단계마다 channel 수를 늘리는 비율입니다.",
             },
             {
               symbol: String.raw`\gamma`,
-              name: "Resolution ratio",
-              description: "한 단계마다 input side를 늘리는 비율입니다.",
+              name: "Resolution 비율",
+              description: "한 단계마다 입력 한 변을 늘리는 비율입니다.",
             },
           ]}
           assumptions={[
-            "원 논문의 convolutional cost 근사와 baseline search를 전제로 합니다.",
-            "비율은 architecture·dataset·accelerator를 바꾸면 다시 검증합니다.",
-            "Pretrained checkpoint가 해당 scale과 input contract를 지원해야 합니다.",
+            "EfficientNet 논문의 convolutional compute 근사와 B0 기준 탐색을 전제로 합니다.",
+            "논문이 찾은 α=1.2, β=1.1, γ=1.15는 해당 탐색 조건의 결과입니다.",
+            "Architecture·dataset·accelerator가 달라지면 비율과 실행 결과를 다시 검증합니다.",
           ]}
-          interpretation="세 축을 균형 있게 키운다는 설계 heuristic입니다. 식의 비율만 보고 target GPU에서 가장 빠른 model을 고를 수는 없습니다."
+          interpretation="φ=1에서 1.2 × 1.1² × 1.15² = 1.92027이므로 한 단계의 convolutional compute가 약 2배가 됩니다. 이는 균형 있게 후보를 만드는 heuristic이지, 목표 GPU에서 가장 빠른 모델을 정하는 공식은 아닙니다."
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            세 축을 함께 키운다는 말은 세 축의 효과가 같다는 뜻이 아닙니다.
+            Depth는 표현을 여러 번 갱신하고, width는 한 번에 보관하는 channel
+            수를 늘리며, resolution은 처음부터 더 많은 공간 위치를 만듭니다.
+            Compound scaling은 이 세 가지를 한 resource 단계로 묶어 후보군을
+            만드는 규칙입니다.
+          </p>
+        </div>
       </section>
 
       <section id="budget-comparison" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          최종 backbone은 같은 evidence와 target runtime의 Pareto frontier에서
-          고릅니다
-        </h2>
+        <h2 className="mb-5 text-2xl font-bold">실측으로 고르기</h2>
+        <RuntimeFrontierViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Pareto frontier에는 다른 후보가 모든 측정축에서 동시에 앞서지 못하는
+            후보만 남습니다. 그림의 C는 B보다 품질이 낮으면서 더 느리고 메모리도
+            더 사용하므로 제외할 수 있습니다. 반면 A와 B의 우열은 서비스가
+            허용하는 지연·메모리 상한과 필요한 품질에 따라 달라집니다.
+          </p>
+          <p>
+            이 글은 특정 Backbone을 고르지 않습니다. 같은 split과 입력 변환,
+            weight 출처, 정밀도, batch, 동시성, 장비를 고정한 실험이 있어야
+            환경별 선택을 내릴 수 있기 때문입니다. 그 선택과 롤백 기준은 별도의
+            실무 글에서 다룹니다.
+          </p>
+        </div>
         <TermBreakdown
-          title="후보별로 같은 열에 놓을 값"
+          title="한 행에 함께 기록할 값"
           items={[
             {
-              term: "Quality",
+              term: "품질",
               description:
-                "Macro recall·NLL·중요 slice와 seed별 uncertainty를 같은 split에서 계산합니다.",
+                "같은 split에서 macro recall·NLL·중요 slice와 seed별 편차를 계산합니다.",
             },
             {
-              term: "Latency",
+              term: "지연",
               description:
-                "Target batch·precision·warmup·concurrency에서 p50·p95를 측정합니다.",
+                "같은 batch·정밀도·warmup·동시성에서 p50과 p95를 측정합니다.",
             },
             {
-              term: "Capacity",
+              term: "용량",
               description:
-                "Throughput·peak device memory·model artifact size를 함께 기록합니다.",
+                "처리량·peak device memory·model artifact 크기를 함께 기록합니다.",
             },
             {
-              term: "Provenance",
+              term: "출처",
               description:
-                "Pretraining data scope, weight revision, license와 input transform을 보존합니다.",
+                "Pretraining data 범위, weight revision, license와 입력 변환을 보존합니다.",
             },
           ]}
         />
+
         <div id="paper-efficientnet" className="not-prose mt-8 scroll-mt-24">
           <CitationBlock
             type="paper"
@@ -249,24 +353,21 @@ export default function ImageBackboneScalingArticle() {
           >
             <div className="space-y-2 text-sm leading-6">
               <p>
-                <strong>문제.</strong> Fixed resource에서 ConvNet
-                depth·width·resolution을 어떻게 늘릴지 정합니다.
+                <strong>문제.</strong> 정해진 resource에서 ConvNet의
+                depth·width·resolution을 어떻게 함께 늘릴지 정합니다.
               </p>
               <p>
-                <strong>기여.</strong> 세 축을 compound coefficient로 함께
+                <strong>기여.</strong> 세 축을 하나의 compound coefficient로
                 조절하는 scaling method를 제시합니다.
               </p>
               <p>
-                <strong>가정.</strong> 논문의 NAS baseline·ImageNet·transfer
-                benchmark와 compute 근사를 전제로 합니다.
+                <strong>근거 범위.</strong> 논문의 NAS
+                baseline·ImageNet·transfer benchmark와 convolutional compute
+                근사입니다.
               </p>
               <p>
-                <strong>근거 범위.</strong> Scaling ablation과
-                accuracy–efficiency 비교 범위입니다.
-              </p>
-              <p>
-                <strong>일반화 금지.</strong> 논문의 constants와 model 순위가
-                모든 target runtime에서 최적이라는 뜻은 아닙니다.
+                <strong>일반화 금지.</strong> 논문의 계수와 모델 순위가 모든
+                장비와 workload에서 최적이라는 뜻은 아닙니다.
               </p>
             </div>
           </CitationBlock>
@@ -280,23 +381,19 @@ export default function ImageBackboneScalingArticle() {
           >
             <div className="space-y-2 text-sm leading-6">
               <p>
-                <strong>문제.</strong> Transformer 시대의 training·architecture
-                선택으로 standard ConvNet을 재검토합니다.
+                <strong>문제.</strong> Transformer 시대의 학습법과 구조 선택으로
+                standard ConvNet을 다시 검토합니다.
               </p>
               <p>
-                <strong>기여.</strong> ResNet에서 여러 recipe와 block 선택을
-                단계적으로 바꾼 ConvNeXt family를 제시합니다.
+                <strong>기여.</strong> ResNet의 학습법과 block을 단계적으로 바꾼
+                ConvNeXt family를 제시합니다.
               </p>
               <p>
-                <strong>가정.</strong> 논문의 pretraining·downstream
-                task·accelerator 조건입니다.
+                <strong>근거 범위.</strong> 논문의 cumulative modernization
+                ablation과 benchmark입니다.
               </p>
               <p>
-                <strong>근거 범위.</strong> Cumulative modernization ablation과
-                benchmark 범위입니다.
-              </p>
-              <p>
-                <strong>일반화 금지.</strong> 한 block 변경이 모든 CNN 우위를
+                <strong>일반화 금지.</strong> 하나의 block 변경이 모든 결과를
                 만든다는 단일 원인 주장이 아닙니다.
               </p>
             </div>
@@ -311,27 +408,43 @@ export default function ImageBackboneScalingArticle() {
           >
             <div className="space-y-2 text-sm leading-6">
               <p>
-                <strong>문제.</strong> Image patches에 표준 Transformer
-                encoder를 적용할 수 있는지 검증합니다.
+                <strong>문제.</strong> Image patch에 표준 Transformer encoder를
+                적용할 수 있는지 검증합니다.
               </p>
               <p>
-                <strong>기여.</strong> Patch projection과 large-scale
-                pretraining 뒤 transfer하는 vision architecture를 제시합니다.
+                <strong>기여.</strong> Patch projection과 대규모 pretraining 뒤
+                transfer하는 vision architecture를 제시합니다.
               </p>
               <p>
-                <strong>가정.</strong> 원 논문의 대규모 data·compute·fine-tuning
-                recipe입니다.
+                <strong>근거 범위.</strong> 원 논문의 data·compute·fine-tuning
+                조건과 image classification transfer 결과입니다.
               </p>
               <p>
-                <strong>근거 범위.</strong> Image classification transfer와
-                scaling 관찰 범위입니다.
-              </p>
-              <p>
-                <strong>일반화 금지.</strong> 작은 target dataset의 scratch
-                ViT가 항상 CNN보다 우월하다는 뜻은 아닙니다.
+                <strong>일반화 금지.</strong> 작은 dataset에서 처음부터 학습한
+                ViT가 항상 CNN보다 낫다는 뜻은 아닙니다.
               </p>
             </div>
           </CitationBlock>
+        </div>
+
+        <ImageClassificationMapReturn current="backbone-budget" />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <h3>스스로 확인하기</h3>
+          <ol>
+            <li>
+              224px를 448px로 키울 때 전역 attention score 항목이 왜 16배가
+              되나요? <strong>(답: 해상도 비용)</strong>
+            </li>
+            <li>
+              Compound scaling은 세 축의 최적값을 증명하나요?{" "}
+              <strong>(답: 세 축을 함께 키우기)</strong>
+            </li>
+            <li>
+              FLOPs가 더 작은 모델을 곧바로 배포 모델로 고르면 안 되는 이유는
+              무엇인가요? <strong>(답: 실측으로 고르기)</strong>
+            </li>
+          </ol>
         </div>
       </section>
     </div>

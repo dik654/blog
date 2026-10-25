@@ -3545,3 +3545,30 @@
   문서와 시각화 overflow 0, console 오류 0을 확인했습니다. 명시적 입력 전 정지, 키보드 장면 순서,
   reduced-motion, JavaScript 비활성 전체 장면도 통과했습니다. 직접 Playwright API 실행 전후에
   브라우저 프로세스가 추가되지 않았고, 공개 배포 경로 확인만 남아 있습니다.
+
+### AI 이미지 Backbone 비용 글 로컬 완료 (2026-10-25)
+
+- `image-backbone-scaling`을 concept 글로 다시 썼습니다. 같은 224px 사진과 P=16에서 시작해
+  CNN의 공간 위치와 ViT의 patch token·전역 attention 항목을 계산한 뒤, 448px에서 각각 4배와
+  16배가 되는 경로를 한 사례로 추적합니다.
+- EfficientNet의 compound scaling은 α=1.2, β=1.1, γ=1.15를 φ=1에 대입해
+  `1.2×1.1²×1.15²=1.92027`을 직접 계산했습니다. 이 값은 convolutional compute 근사이며 실제
+  장비의 지연이나 모든 구조의 최적 비율을 뜻하지 않는다는 경계를 함께 적었습니다.
+- 본문을 고친 뒤 자동 학습 문제에 남아 있던 five seeds·release gate·rollback 같은 실무 판단을
+  제거했습니다. 설명용 A·B·C 후보는 Pareto 지배 관계까지만 보여 주고, 실제 Backbone 선택과 롤백은
+  별도의 practice 글로 넘겼습니다.
+- 390×844와 1,440×1,000에서 모바일 전용 흐름과 데스크톱 두 경로를 확인했습니다. 명시적 재생,
+  버튼·키보드 장면 이동, 마지막 장면 정지, reduced-motion 재생 비활성화를 검증했습니다. Production
+  build는 7,920개 module과 정적 public route 2,088개를 만들었고, no-script 본문 217편을 생성했습니다.
+  JavaScript 비활성 두 viewport에서도 부모 지도·네 장면·수식·결론이 그대로 보였습니다. 공개 배포
+  경로 확인은 남아 있습니다.
+
+### AI Laya·이미지 데이터 경계 공개 검증 완료 (2026-10-25)
+
+- GitHub Pages run `40163432467`은 전체 strict audit, production build, 공개 991개 글의 실제 브라우저
+  검사와 배포를 모두 통과했습니다.
+- `laya-system1-decision-model`은 1,440×1,000 공개 경로에서 새 제목과 전체 본문, 가로 overflow 0,
+  console 오류 0을 확인했습니다. `image-classification-pipeline`은 390×844 공개 경로에서 새 제목과
+  부모 지도, 가로 overflow 0, console 오류 0을 확인했습니다.
+- 이미지 데이터 경계 글은 reduced-motion에서 다섯 정적 장면과 비활성 재생 버튼이 유지됐고,
+  두 글 모두 JavaScript 비활성 공개 경로에서 정적 읽기 본문 전체가 나타났습니다.

@@ -18894,21 +18894,21 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/image-backbone-scaling": {
     coreIdea:
-      "이미지 backbone은 pixels를 reusable representation으로 바꾸는 model body이며, resolution이 CNN area와 global-attention pair cost를 다르게 키우는 방식을 계산하고 depth·width·resolution 후보를 같은 target runtime frontier에서 고릅니다.",
+      "이미지 Backbone은 픽셀을 재사용 가능한 표현으로 바꾸는 본체입니다. 같은 사진의 해상도를 높였을 때 CNN의 공간 위치와 ViT의 전역 attention 항목이 서로 다른 속도로 늘어나는 이유를 계산하고, 구조식과 실제 실행 시간을 구분합니다.",
     entryLevel: true,
     assumedKnowledge: [],
     introducedHere: [
       {
         id: "resolution-compute-scaling",
-        role: "Input side와 patch 수가 CNN area·global attention pair cost를 어떻게 키우는지 계산합니다.",
+        role: "입력 한 변과 patch 수가 CNN의 공간 위치와 전역 attention 항목을 어떻게 키우는지 계산합니다.",
       },
       {
         id: "compound-model-scaling",
-        role: "Depth·width·resolution을 하나의 resource step으로 함께 움직이는 heuristic을 읽습니다.",
+        role: "Depth·width·resolution을 하나의 자원 단계에서 함께 움직이는 규칙을 읽습니다.",
       },
       {
         id: "backbone-budget-comparison",
-        role: "같은 evidence에서 quality·latency·throughput·memory frontier로 후보를 선택합니다.",
+        role: "구조식으로 후보를 좁힌 뒤 같은 조건에서 품질·지연·처리량·메모리를 확인해야 하는 이유를 설명합니다.",
       },
     ],
     conceptExplanations: [
@@ -18920,110 +18920,90 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "P=16에서 224px는 196 tokens, 448px는 784 tokens이고 pair entries는 38,416에서 614,656으로 증가합니다.",
         boundary:
-          "Global attention 지배항이며 local attention·kernel·memory traffic을 생략하므로 실제 latency는 측정합니다.",
+          "전역 attention의 score matrix만 센 값입니다. Local attention·projection·MLP·memory traffic을 생략했으므로 실제 지연과 같지 않습니다.",
       },
       {
         id: "compound-model-scaling",
         sectionId: "compound-scaling",
         intuition:
-          "층수만 높이지 않고 층수·채널·도면 크기를 한 resource 단계에서 함께 조절합니다.",
+          "층수만 높이지 않고 층수·채널 수·입력 크기를 한 자원 단계에서 함께 조절합니다.",
         workedExample:
-          "φ가 1 늘 때 d=α^φ, w=β^φ, r=γ^φ로 키우고 αβ²γ²≈2인 후보를 만듭니다.",
+          "논문의 α=1.2, β=1.1, γ=1.15를 φ=1에 넣으면 1.2×1.1²×1.15²=1.92027로, convolutional compute가 약 두 배인 후보를 만듭니다.",
         boundary:
-          "EfficientNet의 convolutional heuristic이며 다른 architecture·accelerator의 최적 비율 theorem이 아닙니다.",
+          "EfficientNet의 convolutional compute 근사입니다. 다른 구조·가속기에서도 같은 비율이 최적이라는 정리가 아닙니다.",
       },
       {
         id: "backbone-budget-comparison",
         sectionId: "budget-comparison",
         intuition:
-          "시험 점수뿐 아니라 정해진 장비에서 답을 내는 시간과 memory까지 같은 표에서 봅니다.",
+          "이론상 연산량만으로 모델을 고르지 않고, 같은 조건에서 확인한 품질·지연·처리량·메모리를 함께 봅니다.",
         workedExample:
-          "같은 split·input·five seeds에서 macro recall, p95, throughput과 peak memory를 비교합니다.",
+          "설명용 후보 A(.82·18ms·4.2GB), B(.84·24ms·5.1GB), C(.83·30ms·5.8GB)에서는 B가 C보다 세 축에서 모두 앞서므로 C를 제외합니다.",
         boundary:
-          "FLOPs·parameters는 latency proxy이고 pretraining recipe가 다르면 architecture만의 인과 효과가 아닙니다.",
+          "그림의 수치는 개념을 위한 가정입니다. FLOPs와 parameter 수는 실제 지연이 아니며, 서로 다른 pretraining 조건을 구조 차이로만 해석할 수 없습니다.",
       },
     ],
     conceptStages: [
       {
-        label: "Representation",
-        relation: "Pixels를 local feature 또는 patch tokens로 변환",
+        label: "표현",
+        relation: "픽셀을 local feature 또는 patch token으로 변환",
         concepts: ["convolution-spatial-geometry", "self-attention"],
       },
       {
-        label: "Resolution cost",
-        relation: "Area와 token-pair 증가율을 계산",
+        label: "해상도 비용",
+        relation: "공간 위치와 token 쌍의 증가율을 계산",
         concepts: ["resolution-compute-scaling"],
       },
       {
-        label: "Scaling family",
+        label: "크기 조절",
         relation: "Depth·width·resolution 후보를 함께 생성",
         concepts: ["resolution-compute-scaling", "compound-model-scaling"],
       },
       {
-        label: "Runtime frontier",
-        relation: "Pretrained handoff와 target budget으로 선택",
+        label: "실측 경계",
+        relation: "구조식으로 좁힌 후보를 같은 실행 조건에서 비교",
         concepts: ["pretrained-handoff-contract", "backbone-budget-comparison"],
       },
     ],
     exercises: [
       {
         level: "basic",
-        question: "Backbone과 classifier head가 각각 소유하는 변환을 설명하라.",
-        answerChecklist: [
-          "pixels",
-          "representation",
-          "class logits",
-          "separate head",
-        ],
+        question: "Backbone과 분류 head가 각각 무엇을 입력받아 무엇으로 바꾸는지 설명하세요.",
+        answerChecklist: ["픽셀", "재사용 가능한 표현", "class logit", "서로 다른 역할"],
         requiredConcepts: ["backbone-budget-comparison"],
         sectionId: "overview",
       },
       {
         level: "basic",
         question:
-          "CNN local window와 ViT global patch relation의 차이를 설명하라.",
-        answerChecklist: [
-          "local convolution",
-          "shared kernel",
-          "patch tokens",
-          "global pairs",
-        ],
+          "CNN의 local convolution과 ViT의 전역 attention은 공간 정보를 어떻게 다르게 섞나요?",
+        answerChecklist: ["주변 위치", "공유 kernel", "patch token", "모든 query-key 조합"],
         requiredConcepts: ["resolution-compute-scaling"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question: "P=16에서 224px와 448px의 patch token 수를 계산하라.",
-        answerChecklist: [
-          "14 per axis",
-          "196 tokens",
-          "28 per axis",
-          "784 tokens",
-        ],
+        question: "Patch 한 변이 16px일 때 224px와 448px 이미지의 token 수를 계산하세요.",
+        answerChecklist: ["축당 14개", "196 tokens", "축당 28개", "784 tokens"],
         requiredConcepts: ["resolution-compute-scaling"],
         sectionId: "resolution-cost",
       },
       {
         level: "basic",
         question:
-          "Input side를 두 배로 할 때 CNN spatial area와 global pair entries의 배수를 비교하라.",
-        answerChecklist: [
-          "4× area",
-          "4× tokens",
-          "16× pairs",
-          "latency caveat",
-        ],
+          "입력 한 변을 두 배로 할 때 CNN의 공간 위치와 전역 attention 항목 수는 각각 몇 배가 되나요?",
+        answerChecklist: ["공간 위치 4배", "token 4배", "query-key 항목 16배", "실제 지연과는 다름"],
         requiredConcepts: ["resolution-compute-scaling"],
         sectionId: "resolution-cost",
       },
       {
         level: "basic",
-        question: "Compound scaling의 φ·α·β·γ와 근사 budget 식을 설명하라.",
+        question: "Compound scaling에서 φ·α·β·γ가 각각 무엇을 뜻하는지 설명하세요.",
         answerChecklist: [
-          "common step",
-          "depth ratio",
-          "width ratio",
-          "resolution ratio",
+          "공통 단계",
+          "depth 비율",
+          "width 비율",
+          "resolution 비율",
           "αβ²γ²≈2",
         ],
         requiredConcepts: ["compound-model-scaling"],
@@ -19032,27 +19012,14 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Recall .84·p95 14ms 후보 A와 recall .86·p95 27ms 후보 B를 p95 20ms 한도에서 선택하라.",
+          "224px에서 448px로 바꿀 때 38,416개 attention 항목이 614,656개가 되는 과정을 단위와 함께 계산하세요.",
         answerChecklist: [
-          "same evidence",
-          "A passes",
-          "B fails latency",
-          "quality not enough",
-        ],
-        requiredConcepts: ["backbone-budget-comparison"],
-        sectionId: "budget-comparison",
-      },
-      {
-        level: "advanced",
-        question:
-          "224→448 변경의 CNN·ViT cost 차수를 유도하고 실제 profiler에서 확인할 항목을 설계하라.",
-        answerChecklist: [
-          "token derivation",
-          "area 4×",
-          "pairs 16×",
-          "kernel",
-          "memory traffic",
-          "p95",
+          "224÷16=14 patches",
+          "14²=196 tokens",
+          "196²=38,416 entries",
+          "28²=784 tokens",
+          "784²=614,656 entries",
+          "16배",
         ],
         requiredConcepts: ["resolution-compute-scaling"],
         sectionId: "resolution-cost",
@@ -19060,14 +19027,27 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Compound family에서 세 축을 한꺼번에 바꾼 결과를 해석할 때 필요한 ablation과 한계를 작성하라.",
+          "Attention 항목 수가 16배라는 계산만으로 실제 지연도 16배라고 말할 수 없는 이유를 설명하세요.",
         answerChecklist: [
-          "three axes",
-          "compute approximation",
-          "baseline search",
-          "paired ablation",
-          "target hardware",
-          "not theorem",
+          "score matrix만 계산",
+          "QKV projection 생략",
+          "MLP 생략",
+          "kernel 차이",
+          "memory traffic",
+        ],
+        requiredConcepts: ["resolution-compute-scaling"],
+        sectionId: "resolution-cost",
+      },
+      {
+        level: "advanced",
+        question:
+          "α=1.2, β=1.1, γ=1.15, φ=1일 때 αβ²γ²를 계산하고 결과가 무엇을 뜻하는지 설명하세요.",
+        answerChecklist: [
+          "1.2×1.1²×1.15²",
+          "1.92027",
+          "약 2배",
+          "convolutional compute 근사",
+          "보편적 최적값 아님",
         ],
         requiredConcepts: ["compound-model-scaling"],
         sectionId: "compound-scaling",
@@ -19075,35 +19055,28 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "CNN·ViT 후보의 pretraining 차이를 숨기지 않는 공정 비교 receipt를 설계하라.",
+          "설명용 후보 A(.82·18ms·4.2GB), B(.84·24ms·5.1GB), C(.83·30ms·5.8GB) 가운데 C가 Pareto frontier에서 빠지는 이유를 설명하세요.",
         answerChecklist: [
-          "weight revision",
-          "pretraining scope",
-          "input parity",
-          "fine-tuning budget",
-          "seeds",
-          "uncertainty",
-          "license",
+          "B보다 품질이 낮음",
+          "B보다 느림",
+          "B보다 메모리를 더 사용",
+          "B가 C를 지배",
         ],
-        requiredConcepts: [
-          "backbone-budget-comparison",
-          "pretrained-handoff-contract",
-        ],
+        requiredConcepts: ["backbone-budget-comparison"],
         sectionId: "budget-comparison",
       },
       {
         level: "advanced",
         question:
-          "Quality·p95·throughput·memory에서 Pareto frontier와 release gate를 설계하라.",
+          "Backbone 구조가 다른 두 결과를 비교할 때 pretraining 조건이 다르면 구조만의 효과라고 말할 수 없는 이유를 설명하세요.",
         answerChecklist: [
-          "same split",
-          "quality direction",
-          "hard budgets",
-          "nondominated candidates",
-          "runtime conditions",
-          "rollback",
+          "학습 데이터 범위",
+          "학습량",
+          "입력 변환",
+          "weight revision",
+          "구조 외 변수가 함께 달라짐",
         ],
-        requiredConcepts: ["backbone-budget-comparison"],
+        requiredConcepts: ["backbone-budget-comparison", "pretrained-handoff-contract"],
         sectionId: "budget-comparison",
       },
     ],

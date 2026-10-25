@@ -3505,34 +3505,62 @@
     },
     {
       "route": "ai/image-backbone-scaling",
-      "title": "이미지 Backbone 선택: Resolution Cost와 Runtime Budget",
+      "title": "이미지 Backbone의 표현과 비용: 해상도·깊이·폭을 함께 보기",
       "subcategory": "ai-practical-cv",
       "publicFiles": [
         "src/pages/articles/ai/image-backbone-scaling.tsx",
         "src/pages/articles/ai/image-backbone-scaling/ModernArticle.tsx",
-        "src/pages/articles/ai/image-classification-pipeline/viz/ModernImageClassificationViz.tsx"
+        "src/pages/articles/ai/image-backbone-scaling/viz/ImageBackboneBudgetViz.tsx",
+        "src/pages/articles/ai/image-classification-pipeline/ImageClassificationPathLocator.tsx",
+        "src/content/image-classification-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
         "teachLevelMarkers": 0,
         "hasSourceSurface": true,
-        "characters": 12911
+        "characters": 31930
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 Backbone 후보와 운영 비교 항목을 먼저 나열해, 같은 이미지가 CNN과 ViT 안에서 어떤 계산으로 달라지는지 한 사례로 추적하기 어려웠습니다.",
+        "해상도를 두 배로 키우면 공간 위치가 네 배, 전역 attention 항목이 열여섯 배가 된다는 핵심 관계가 수식·수치·단위로 이어지지 않았습니다.",
+        "본문을 개념 글로 고친 뒤에도 자동 학습 문제에 five seeds·release gate·rollback 같은 실무 판단이 남아 concept/practice 경계를 흐렸습니다."
+      ],
+      "fixture": "같은 정사각 이미지와 P=16을 고정하고 224px에서 448px로 키웁니다. CNN 공간 위치는 50,176개에서 200,704개로, ViT의 한 head·layer score 항목은 38,416개에서 614,656개로 늘어나는 과정을 추적합니다.",
+      "stageAnchors": {
+        "parent": ["image-classification-map"],
+        "trace": ["overview"],
+        "formula": ["resolution-cost", "compound-scaling"],
+        "boundary": ["budget-comparison"],
+        "return": ["image-classification-map-return"]
+      },
+      "primarySourceApplication": [
+        {
+          "href": "https://proceedings.mlr.press/v97/tan19a.html",
+          "application": "EfficientNet의 d=α^φ, w=β^φ, r=γ^φ와 αβ²γ²≈2 관계, 논문이 B0 기준 탐색에서 사용한 α=1.2, β=1.1, γ=1.15를 확인하고 1.92027 계산에 적용했습니다."
+        },
+        {
+          "href": "https://openaccess.thecvf.com/content/CVPR2022/html/Liu_A_ConvNet_for_the_2020s_CVPR_2022_paper.html",
+          "application": "ConvNeXt의 기여를 ResNet 학습법과 block 설계를 단계적으로 바꾼 cumulative modernization 범위로 제한했습니다."
+        },
+        {
+          "href": "https://openreview.net/forum?id=YicbFdNTTy",
+          "application": "ViT가 image patch를 Transformer encoder에 입력하고 대규모 pretraining 뒤 transfer한 범위와, 작은 데이터셋에서의 보편적 우위를 주장하지 않는 경계를 반영했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→같은 224px 이미지→CNN·ViT 표현 경로→448px 비용 증가→compound scaling→설명용 Pareto 경계→부모 지도 반환 순서로 전체 본문과 자동 학습 문제를 다시 읽었습니다.",
+        "humanize": "모델 목록보다 '같은 사진을 크게 만들면 무슨 계산이 늘어나는가'를 먼저 보여 주고, 낯선 용어는 사례 뒤에 붙였습니다. 자동 학습 문제의 운영 판단은 제거했습니다.",
+        "numericTrace": "224÷16=14, 14²=196, 196²=38,416과 448÷16=28, 28²=784, 784²=614,656을 단위와 함께 추적했습니다. Compound 계수도 1.2×1.1²×1.15²=1.92027로 직접 확인했습니다.",
+        "mobile390": "390x844에서 문서와 시각화의 가로 overflow가 0이고, 모바일 전용 흐름 안에서 입력·CNN·ViT·증가율·실측 경계와 조작 버튼이 한 덩어리로 보이는 것을 확인했습니다.",
+        "desktop1440": "1440x1000에서 입력과 두 Backbone 경로가 같은 화면 폭 안에 들어오며, 키보드 ArrowRight와 버튼으로 장면이 이동하는 것을 확인했습니다.",
+        "motion": "명시적으로 재생했을 때만 4.8초 간격으로 네 장면을 한 번 진행하고 마지막에서 멈춥니다. reduced-motion에서는 재생이 꺼지고 네 장면의 정적 설명을 그대로 제공합니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 7,920개 module과 정적 public route 2,088개를 만들었습니다. Route를 no-script registry에 추가한 뒤 정적 본문 217편을 다시 생성했고, JavaScript 비활성 390x844·1440x1000에서 부모 지도·네 장면·수식·결론이 순서대로 보이는 것을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증",
+        "같은 지도에 속한 학습 단계·확률 판정 글을 같은 구조로 검수"
       ]
     },
     {
@@ -3546,7 +3574,7 @@
         "src/pages/articles/ai/image-classification-pipeline/viz/ImageDataBoundaryViz.tsx",
         "src/content/image-classification-learning-tree.ts"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3585,10 +3613,10 @@
         "mobile390": "390x844에서 문서·article·시각화의 가로 overflow 0을 확인했습니다. JavaScript 비활성 production preview에서도 다섯 장면과 전체 본문·부모 지도 반환이 보입니다.",
         "desktop1440": "1440x1000에서 locator와 첫 시각화가 읽히고, 재생이 마지막 장면에서 멈추며 키보드 ArrowRight로 장면이 이동하는 것을 확인했습니다.",
         "motion": "명시적 재생 뒤 4.8초 간격으로 한 번만 진행하고 마지막에서 멈춥니다. reduced-motion에서는 재생 버튼이 비활성화되고 수동 장면 선택은 유지됩니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과했고, 정적 route의 no-script 본문 삽입을 확인했습니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과했고, 정적 route의 no-script 본문 삽입을 확인했습니다.",
+        "production": "GitHub Pages run 40163432467 성공 뒤 390x844 공개 경로에서 새 제목·부모 지도·가로 overflow 0·console 오류 0을 확인했습니다. reduced-motion에서 다섯 정적 장면과 비활성 재생 버튼을, JavaScript 비활성 공개 경로에서 정적 읽기 본문 전체를 확인했습니다."
       },
       "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증",
         "같은 지도에 속한 표현과 비용·학습 단계·확률 판정 세 글을 같은 구조로 검수"
       ]
     },
