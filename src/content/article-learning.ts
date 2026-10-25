@@ -20400,8 +20400,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/deepfake-detection": {
     "entryLevel": true,
-    "entryNote": "딥페이크 detector를 고르기 전에 source·person·파생본을 한 묶음으로 보는 이유부터 시작합니다.",
-    "coreIdea": "딥페이크 탐지의 첫 경계는 model이 아니라 평가 분리입니다. 같은 원본의 파생본을 한 group에 묶고, generator·codec domain별 risk를 따로 계산해야 알려진 artifact 암기를 일반화로 오인하지 않습니다.",
+    "entryNote": "설명용 원본 clip-042가 파생본·자료 분리·조건별 loss·주장 범위를 거치는 전체 지도에서 시작합니다.",
+    "coreIdea": "딥페이크 탐지의 첫 경계는 detector 이름이 아니라 평가 단위와 근거 범위입니다. 같은 원본의 파생본을 한 group에 묶고 generator·codec domain별 위험을 따로 계산해야 알려진 artifact 암기를 일반화로 오인하지 않습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -20418,42 +20418,49 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "forensic-source-independent-split",
         "sectionId": "source-groups",
         "intuition": "같은 시험 문제를 압축하거나 잘라 두 문제처럼 세지 않도록 모든 파생본에 같은 원본 이름표를 붙입니다.",
-        "workedExample": "Person 17의 원본·face crop·JPEG 재압축본을 모두 train에 두고 person 42와 그 파생본은 test에만 둡니다.",
+        "workedExample": "clip-042의 face crop과 JPEG 재압축본이 train·test에 나뉜 누수를 찾고, group=(clip-042, person-C) 전체를 test로 옮겨 교집합을 1에서 0으로 만듭니다.",
         "boundary": "Person holdout과 generator holdout은 다른 질문이므로 source group 하나만 검사하고 둘을 같은 것으로 간주하지 않습니다."
       },
       {
         "id": "unseen-manipulation-domain-risk",
         "sectionId": "domain-risk",
         "intuition": "전체 반 평균과 함께 가장 성적이 나쁜 반의 평균을 보고 취약한 조건을 숨기지 않는 방법입니다.",
-        "workedExample": "Raw loss .1, JPEG .3, unseen-generator social loss .8이면 전체 평균보다 worst-domain .8이 배포 위험을 더 잘 드러냅니다.",
+        "workedExample": "독립 원본 수가 60·30·10개이고 domain loss가 .10·.30·.80이면 전체 가중 평균은 .23이지만 worst-domain은 .80입니다.",
         "boundary": "미리 선언한 domain 중 최댓값일 뿐 아직 보지 못한 미래 generator error의 상한은 아닙니다."
       }
     ],
     "conceptStages": [
       {
-        "label": "00 Source",
-        "relation": "파일을 원본 source·person group으로 되돌립니다.",
+        "label": "00 원본",
+        "relation": "clip-042와 person-C를 하나의 원본 증거로 고정합니다.",
         "concepts": [
           "forensic-source-independent-split"
         ]
       },
       {
-        "label": "01 Split",
+        "label": "01 파생본",
+        "relation": "Frame·crop·재인코딩 파일을 같은 원본 group으로 되돌립니다.",
+        "concepts": [
+          "forensic-source-independent-split"
+        ]
+      },
+      {
+        "label": "02 분리",
         "relation": "Group 교집합이 없는 train·validation·test를 만듭니다.",
         "concepts": [
           "forensic-source-independent-split"
         ]
       },
       {
-        "label": "02 Domain",
-        "relation": "Generator·codec·capture slice별 loss를 계산합니다.",
+        "label": "03 조건별 위험",
+        "relation": "Generator·codec·capture domain별 loss와 전체 평균을 계산합니다.",
         "concepts": [
           "unseen-manipulation-domain-risk"
         ]
       },
       {
-        "label": "03 Release",
-        "relation": "Worst-domain risk가 기준을 넘으면 배포를 중단합니다.",
+        "label": "04 주장 범위",
+        "relation": "가린 축·표본 수·metric을 붙이고 미래 domain은 미확인으로 남깁니다.",
         "concepts": [
           "forensic-source-independent-split",
           "unseen-manipulation-domain-risk"
@@ -20515,9 +20522,9 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Domain losses .1, .3, .8에서 평균과 worst-domain risk를 각각 계산하세요.",
+        "question": "Domain별 독립 원본 수가 60·30·10개이고 loss가 .1, .3, .8일 때 전체 평균과 worst-domain risk를 계산하세요.",
         "answerChecklist": [
-          "평균 .4",
+          "가중 평균 .23",
           "최댓값 .8",
           "두 값 함께 보고"
         ],
@@ -20607,6 +20614,16 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "FaceForensics++ benchmark의 manipulation·compression·detector 평가 범위입니다.",
         "notClaim": "이후 등장한 모든 generator와 실제 유통 경로에서 같은 성능을 보장하지 않습니다.",
         "sectionId": "paper-faceforensics"
+      },
+      {
+        "title": "CNN-Generated Images Are Surprisingly Easy to Spot... for Now",
+        "href": "https://openaccess.thecvf.com/content_CVPR_2020/html/Wang_CNN-Generated_Images_Are_Surprisingly_Easy_to_Spot..._for_Now_CVPR_2020_paper.html",
+        "problem": "한 CNN 생성 모델로 학습한 detector가 다른 생성 구조와 자료에도 일반화할 수 있는지 묻습니다.",
+        "contribution": "ProGAN 자료로 학습한 표준 분류기를 당시 수집한 여러 CNN 생성 모델과 전처리 조건에서 평가합니다.",
+        "assumptions": "논문의 ProGAN 학습 자료·증강·전처리와 11개 CNN 기반 생성 모델 범위를 전제로 합니다.",
+        "evidenceScope": "CVPR 2020 논문이 평가한 생성 모델·자료·처리 조건의 교차 모델 일반화입니다.",
+        "notClaim": "이후 등장할 모든 생성 방식과 실제 유통 경로의 성능을 보장하지 않습니다.",
+        "sectionId": "paper-cnn-detection"
       }
     ]
   },

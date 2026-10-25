@@ -527,13 +527,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-detection",
-    title: "딥페이크 평가 기초: Source Group과 Unseen Risk",
+    title: "딥페이크 평가: 자료 분리와 위험 범위",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "파일이 아니라 Source Group" },
-      { id: "source-groups", title: "Derivative·Identity 분리" },
-      { id: "domain-risk", title: "평균과 Worst-domain Risk" },
-      { id: "release", title: "Unseen Claim의 경계" },
+      { id: "overview", title: "원본에서 평가 주장까지" },
+      { id: "source-groups", title: "파생본 누수 막기" },
+      { id: "domain-risk", title: "취약 조건 숨기지 않기" },
+      { id: "release", title: "검증한 범위만 말하기" },
     ],
     component: () => import("@/pages/articles/ai/deepfake-detection"),
   },

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 575,
-    "pending": 416,
+    "reviewed": 576,
+    "pending": 415,
     "untracked": 0,
-    "assignedPending": 373,
+    "assignedPending": 372,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3051,11 +3051,11 @@
     {
       "route": "ai/deepfake-detection",
       "publicPath": "cs/ai/deepfake-detection",
-      "title": "딥페이크 평가 기초: Source Group과 Unseen Risk",
+      "title": "딥페이크 평가: 자료 분리와 위험 범위",
       "catalogIndex": 302,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
