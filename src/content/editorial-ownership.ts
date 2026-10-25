@@ -2594,10 +2594,10 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "contrastive-evaluation": { title: "Contrastive evaluation 실무 글이 소유하는 범위", owns: ["고정된 candidate snapshot의 구간별 false-negative pair audit", "동일 split·seed downstream paired comparison", "평가 실패 격리·재실행·release decision과 rollback"], reuses: [{ label: "Pair 관계의 업무상 의미", href: "/cs/ai/contrastive-learning#pair-contract" }, { label: "Triplet miner receipt", href: "/cs/ai/triplet-metric-learning#mining" }, { label: "Label 관계의 경계", href: "/cs/ai/supervised-contrastive-learning#boundaries" }, { label: "Test feedback와 선택 편향", href: "/cs/ai/train-validation-test#selection-feedback" }], evidence: [{ kind: "primary-source", rule: "False-negative bias와 downstream evaluation 연구의 가정·실험 범위를 human audit 결과나 운영 threshold로 오인하지 않는다." }, { kind: "standard", rule: "Bucket 모집단·sampling·rubric·agreement·uncertainty·split·seed·metric·artifact revision을 함께 기록한다." }] },
   "domain-finetuning": {
-    title: "도메인 적응 선택 글이 소유하는 범위",
-    owns: ["Language·fresh fact·behavior·system gap 진단", "Retrieval–weight 저장 경계와 최소 개입 release"],
-    reuses: [{ label: "Distribution shift", href: "/cs/ai/transfer-learning-practice#domain-shift" }, { label: "RAG pipeline", href: "/cs/ai/rag-pipeline" }, { label: "LoRA", href: "/cs/ai/lora-finetuning" }],
-    evidence: [{ kind: "primary-source", rule: "RAG·LoRA claim은 논문의 model·data·task 범위로 제한한다." }, { kind: "standard", rule: "실패 slice·candidate·target/general/system metric·threshold·rollback을 함께 기록한다." }],
+    title: "도메인 적응 지도 글이 소유하는 범위",
+    owns: ["현재 사실·언어 패턴·출력 행동·실행 제약의 상태 경계", "상태 위치별 후보 생성과 hard requirement 기반 최소 개입 선택"],
+    reuses: [{ label: "Distribution shift", href: "/cs/ai/transfer-learning-practice#domain-shift" }, { label: "Train·validation·test 선택 경계", href: "/cs/ai/train-validation-test#selection-feedback" }, { label: "RAG pipeline 세부", href: "/cs/ai/rag-pipeline#overview" }, { label: "LoRA parameterization", href: "/cs/ai/lora-finetuning#lora" }],
+    evidence: [{ kind: "primary-source", rule: "RAG·DAPT/TAPT·SFT·LoRA 주장은 각 논문의 model·data·task 범위로 제한한다." }, { kind: "standard", rule: "요청 계약·잘못된 상태 위치·hard requirement·target/general metric·비용 단위·실패 상태를 함께 기록한다." }],
   },
   "continued-pretraining": {
     title: "Continued pretraining 글이 소유하는 범위",
