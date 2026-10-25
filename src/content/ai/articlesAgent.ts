@@ -956,6 +956,7 @@ export const agentArticles: Article[] = [
     title: "Agent Runtime 선택: 상태 소유권·실험·롤백",
     subcategory: "ai-agents",
     sections: [
+      { id: "overview", title: "선택 질문" },
       { id: "comparison", title: "A-104 후보 비교" },
       { id: "paper-llamaindex-agents", title: "LlamaIndex 근거" },
       { id: "paper-autogen-agentchat", title: "AutoGen 근거" },
