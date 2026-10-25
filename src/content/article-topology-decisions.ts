@@ -104,6 +104,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/time-features": KEEP("Lag·window·cyclic feature가 같은 forecast-origin contract와 rolling evaluation 아래 결합됩니다."),
   "ai/tabular-deep-learning": KEEP("같은 row·split·탐색 예산에서 강한 GBDT 기준선과 열 표현 학습의 추가 가치를 비교하는 하나의 모델 선택 실험입니다."),
   "ai/training-pipeline": KEEP("Dataset input에서 update·resume·metric provenance까지 하나의 reproducible training run입니다."),
+  "ai/image-training-stages": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-25",
+    rationale:
+      "같은 출발 checkpoint에서 해상도만 바꾼 가지와 임시 label만 추가한 가지를 따로 진행해, 어떤 변화가 결과를 바꾸었는지 분리하는 하나의 대조 실험입니다. 두 개념을 나누면 같은 기준 run과 원인 분리 비교를 두 글에서 반복해야 합니다.",
+    sharedGate:
+      "run img-cls-07의 기준 batch 256을 유지한 채 160px→320px 전환과, u-042의 약한 변형 확률 0.96이 기준 0.95를 넘어 임시 label이 되고 강한 변형 확률 0.72에서 loss 0.3285를 만드는 경로를 독립적으로 검산합니다.",
+  },
   "ai/transfer-learning-practice": KEEP("Pretrained handoff에서 freeze scope·update scale·domain shift adaptation까지 하나의 선택 spectrum입니다."),
   "ai/lr-scheduling": KEEP("Optimizer update clock에서 schedule value·resume state까지 하나의 재현 가능한 learning-rate trajectory입니다."),
   "ai/lr-decay-policies": KEEP("같은 learning-rate 감소를 clock-driven policy와 validation-driven state machine으로 비교하고 stopping 순서까지 정합니다."),
@@ -3224,6 +3233,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/image-training-stages": "20ded1bf15e7dd02",
   "ai/regularization-practice": "70bd499ad13bf51a",
   "ai/dropout-regularization": "6719495808ed42e2",
   "ai/weight-decay": "0f13f76d0c655fae",

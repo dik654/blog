@@ -2188,11 +2188,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "image-training-stages": {
-    title: "이미지 training stage 글이 소유하는 범위",
+    title: "이미지 학습 단계 글이 소유하는 범위",
     owns: [
       "Resolution 변경 시 batch·crop·optimizer clock·position state를 넘기는 stage boundary",
       "Weak-view confidence gate와 strong-view consistency의 pseudo-label objective",
-      "Class별 pseudo-label precision·coverage와 rollback release gate",
+      "Resolution과 pseudo-label을 한 번에 하나씩 바꿔 결과 원인을 분리하는 비교 경계",
     ],
     reuses: [
       {
@@ -2208,20 +2208,20 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "RandAugment·FixMatch claim은 논문의 operation set·label regime·benchmark·unlabeled distribution 범위로 제한한다.",
+        rule: "FixRes·FixMatch claim은 각 논문의 해상도·crop·label regime·benchmark·unlabeled distribution 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Stage handoff와 teacher·pool·threshold·class별 precision·coverage·rollback을 generation별로 기록한다.",
+        rule: "Stage handoff의 checkpoint·optimizer·resolution·effective batch와 pseudo-label 계산 순서를 분리해 설명한다.",
       },
     ],
   },
   "image-probability-decisions": {
-    title: "이미지 probability·decision 글이 소유하는 범위",
+    title: "이미지 확률과 판정 글이 소유하는 범위",
     owns: [
-      "Logit·probability·hard action을 분리하는 inference state boundary",
-      "Scalar temperature scaling과 calibration split selection",
-      "Calibration→TTA→ensemble→threshold 순서와 versioned serving contract",
+      "Logit·보정 probability·top class·업무 행동을 분리하는 경계",
+      "보정 집합의 평균 NLL로 scalar temperature를 고르는 과정",
+      "TTA→model 결합→threshold 순서와 재현 가능한 판정 정의",
     ],
     reuses: [
       {
@@ -2240,7 +2240,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Class mapping·calibration split·temperature·TTA·model weights·threshold·latency·rollback을 적용 순서와 함께 기록한다.",
+        rule: "Class 순서·보정 집합·temperature·TTA·model weights·threshold를 적용 순서와 함께 기록한다. 환경별 latency·감시·rollback은 실무 결정으로 분리한다.",
       },
     ],
   },

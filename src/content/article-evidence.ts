@@ -1997,9 +1997,9 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/image-training-stages": [
     {
       kind: "핵심 논문",
-      label: "RandAugment: Practical Automated Data Augmentation",
-      href: "https://proceedings.neurips.cc/paper/2020/hash/d85b63ef0ccb114d0a3bb7b7d808028f-Abstract.html",
-      note: "검색 공간을 단순화한 image augmentation policy",
+      label: "Fixing the train-test resolution discrepancy",
+      href: "https://proceedings.neurips.cc/paper/9035-fixing-the-train-test-resolution-discrepancy.pdf",
+      note: "학습·평가 해상도와 crop scale이 만드는 물체 크기 분포 차이",
     },
     {
       kind: "핵심 논문",

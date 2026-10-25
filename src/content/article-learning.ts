@@ -19118,17 +19118,17 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/image-training-stages": {
     coreIdea:
-      "이미지 training stage는 input·optimization·position state가 같은 실행 구간이며, resolution handoff를 별도 generation으로 기록한 뒤 weak-view confidence gate와 strong-view consistency를 class별 precision·coverage release 조건으로 검증합니다.",
+      "하나의 학습 run에서 해상도와 임시 label을 한 번에 하나씩 바꾸고, checkpoint가 넘기는 상태와 update당 이미지 수를 함께 추적해야 각 단계가 결과를 바꾼 이유를 설명할 수 있습니다.",
     entryLevel: true,
     assumedKnowledge: [],
     introducedHere: [
       {
         id: "resolution-stage-boundary",
-        role: "Resolution 변경을 batch·crop·schedule·position state가 바뀌는 새 stage로 기록합니다.",
+        role: "해상도를 바꿀 때 batch·optimizer·위치 상태를 넘겨받는 새 stage로 구분합니다.",
       },
       {
         id: "confidence-gated-pseudo-label",
-        role: "Weak-view confidence로 admitted한 unlabeled image의 strong-view consistency를 학습합니다.",
+        role: "약한 변형의 confidence를 통과한 이미지만 강한 변형의 loss에 넣습니다.",
       },
     ],
     conceptExplanations: [
@@ -19136,11 +19136,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "resolution-stage-boundary",
         sectionId: "resolution-stage",
         intuition:
-          "작은 사진 연습에서 큰 사진 연습으로 가면 문제 크기와 한 번에 보는 수가 함께 바뀐 새 수업입니다.",
+          "작은 사진에서 큰 사진으로 바꾸면 한 GPU가 보는 수와 이어받는 학습 상태가 달라지는 새 구간입니다.",
         workedExample:
-          "160px batch256 뒤 320px batch64로 바꾸며 crop·LR clock·position interpolation·checkpoint를 handoff manifest에 남깁니다.",
+          "img-cls-07은 160px에서 64×4×1=256장, 320px에서 16×4×4=256장을 한 update에 봅니다.",
         boundary:
-          "Upsampling은 없는 detail을 만들지 않으며 resolution gain을 더 많은 updates와 섞지 않습니다.",
+          "effective batch가 같아도 픽셀 수·crop 분포·메모리와 연산량이 같아지는 것은 아닙니다.",
       },
       {
         id: "confidence-gated-pseudo-label",
@@ -19148,30 +19148,30 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "약하게 바꾼 사진에서 확신한 임시 답만 골라 강하게 바꾼 같은 사진에서도 답을 유지하게 합니다.",
         workedExample:
-          "τ=.95에서 class A precision .98/coverage .60과 B .82/.08을 따로 보고 B stage를 rollback합니다.",
+          "u-042의 약한 변형에서 신발 .96이 τ=.95를 넘어 통과하고, 강한 변형의 신발 .72가 −ln(.72)=.3285의 loss를 만듭니다.",
         boundary:
-          "Confidence는 correctness가 아니며 OOD·imbalance·confirmation bias에서 오류를 증폭할 수 있습니다.",
+          "confidence는 정답 보장이 아니며, 범위 밖 이미지에서는 자신 있게 틀린 임시 label이 생길 수 있습니다.",
       },
     ],
     conceptStages: [
       {
         label: "Supervised baseline",
-        relation: "Split·input·checkpoint·metric을 고정",
+        relation: "160px와 사람 label로 checkpoint c0를 생성",
         concepts: ["image-pipeline-baseline-receipt"],
       },
       {
         label: "Resolution handoff",
-        relation: "Batch·crop·clock·position을 새 stage로 이동",
+        relation: "320px로 바꾸고 update당 이미지 수를 다시 계산",
         concepts: ["resolution-stage-boundary"],
       },
       {
         label: "Pseudo-label admission",
-        relation: "Weak view confidence로 unlabeled rows를 선택",
+        relation: "u-042의 weak-view .96을 기준 .95와 비교",
         concepts: ["confidence-gated-pseudo-label"],
       },
       {
-        label: "Consistency release",
-        relation: "Strong-view CE와 class별 precision·coverage를 평가",
+        label: "Strong-view loss",
+        relation: "신발 확률 .72에서 loss .3285를 계산",
         concepts: ["cross-entropy-nll", "confidence-gated-pseudo-label"],
       },
     ],
@@ -19179,12 +19179,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Training stage의 input·optimization·position state를 각각 설명하라.",
+          "img-cls-07에서 stage가 바뀌어도 이어받는 상태와 새로 정하는 상태를 구분하라.",
         answerChecklist: [
-          "resolution/crop",
-          "checkpoint/optimizer",
-          "effective batch/clock",
-          "position state",
+          "checkpoint weight",
+          "optimizer state",
+          "resolution",
+          "batch/accumulation",
         ],
         requiredConcepts: ["resolution-stage-boundary"],
         sectionId: "overview",
@@ -19192,33 +19192,31 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Per-device batch64·4 GPUs·accumulation2의 effective batch를 계산하라.",
-        answerChecklist: ["64×4", "micro batch256", "×2", "effective512"],
+          "160px 단계에서 GPU당 64장·GPU 4개·누적 1회의 effective batch를 계산하라.",
+        answerChecklist: ["64×4", "×1", "256 images/update"],
         requiredConcepts: ["resolution-stage-boundary"],
         sectionId: "resolution-stage",
       },
       {
         level: "basic",
-        question: "160→320 resolution handoff manifest에 필요한 필드를 적어라.",
+        question:
+          "320px 단계에서 GPU당 16장·GPU 4개일 때 effective batch 256을 유지하려면 몇 번 누적해야 하는가?",
         answerChecklist: [
-          "checkpoint",
-          "batch",
-          "crop",
-          "LR clock",
-          "position",
-          "split",
+          "16×4=64",
+          "256÷64=4",
+          "accumulation 4",
         ],
         requiredConcepts: ["resolution-stage-boundary"],
         sectionId: "resolution-stage",
       },
       {
         level: "basic",
-        question: "Weak view와 strong view의 서로 다른 역할을 설명하라.",
+        question: "약한 변형과 강한 변형의 서로 다른 역할을 설명하라.",
         answerChecklist: [
-          "weak belief",
-          "pseudo-label",
-          "strong perturbation",
-          "consistency target",
+          "약한 변형에서 class 확률 계산",
+          "가장 큰 class를 임시 label로 선택",
+          "강한 변형에서 다시 예측",
+          "임시 label과의 차이를 loss로 계산",
         ],
         requiredConcepts: ["confidence-gated-pseudo-label"],
         sectionId: "pseudo-label",
@@ -19226,12 +19224,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "qmax .96·threshold .95와 qmax .91 row의 admission indicator를 계산하라.",
+          "qmax .96·기준 .95인 u-042와 qmax .91인 이미지의 통과 표시를 계산하라.",
         answerChecklist: [
-          "first 1",
-          "second 0",
-          "threshold comparison",
-          "only admitted CE",
+          ".96≥.95이므로 1",
+          ".91<.95이므로 0",
+          "통과한 이미지만 loss 계산",
         ],
         requiredConcepts: ["confidence-gated-pseudo-label"],
         sectionId: "pseudo-label",
@@ -19239,27 +19236,26 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Pseudo-label precision과 coverage를 class별로 봐야 하는 이유를 설명하라.",
+          "u-042의 strong-view 신발 확률이 .72일 때 cross-entropy loss를 계산하라.",
         answerChecklist: [
-          "confidence not correctness",
-          "minority disappearance",
-          "class precision",
-          "class coverage",
+          "−ln(.72)",
+          ".3285",
+          "통과 표시 1",
+          "임시 label 신발",
         ],
         requiredConcepts: ["confidence-gated-pseudo-label"],
-        sectionId: "release",
+        sectionId: "pseudo-label",
       },
       {
         level: "advanced",
         question:
-          "160→320 gain과 update-count effect를 분리하는 paired ablation을 설계하라.",
+          "160px와 320px의 해상도 효과를 비교할 때 update당 이미지 수 외에 같게 두어야 할 조건을 설명하라.",
         answerChecklist: [
-          "same split",
-          "same exposure",
-          "stage boundary",
-          "crop parity",
-          "small-object slice",
-          "latency",
+          "같은 출발 checkpoint",
+          "같은 data split",
+          "같은 update 수 또는 총 표본 수",
+          "crop 규칙 기록",
+          "position state 처리",
         ],
         requiredConcepts: ["resolution-stage-boundary"],
         sectionId: "resolution-stage",
@@ -19267,14 +19263,12 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Class A .98/.60, B .82/.08인 precision/coverage table의 release 판정을 작성하라.",
+          "약한 변형의 confidence .96이 u-042의 실제 정답 확률 .96을 뜻하지 않는 이유를 설명하라.",
         answerChecklist: [
-          "A acceptable",
-          "B risk",
-          "no global average",
-          "threshold/class policy",
-          "rollback",
-          "teacher revision",
+          "현재 모델의 출력",
+          "calibration과 다를 수 있음",
+          "범위 밖 입력",
+          "자신 있게 틀릴 수 있음",
         ],
         requiredConcepts: ["confidence-gated-pseudo-label"],
         sectionId: "release",
@@ -19282,29 +19276,13 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "OOD unlabeled pool이 pseudo-label stage를 오염시키는 경로와 controls를 설계하라.",
+          "해상도와 임시 label을 동시에 바꾼 결과 하나로 원인을 구분할 수 없는 이유를 설명하라.",
         answerChecklist: [
-          "pool provenance",
-          "OOD detection",
-          "high-confidence error",
-          "validation isolation",
-          "class slices",
-          "quarantine",
-        ],
-        requiredConcepts: ["confidence-gated-pseudo-label"],
-        sectionId: "release",
-      },
-      {
-        level: "advanced",
-        question:
-          "Resolution과 pseudo-label을 동시에 켠 실패 run의 원인을 분리하고 rollback 계획을 작성하라.",
-        answerChecklist: [
-          "two changed axes",
-          "return baseline",
-          "resolution only",
-          "pseudo only",
-          "receipts",
-          "rollback generation",
+          "변경 축 두 개",
+          "상호작용 가능성",
+          "해상도만 바꾼 가지",
+          "임시 label만 추가한 가지",
+          "같은 출발 checkpoint",
         ],
         requiredConcepts: [
           "resolution-stage-boundary",
@@ -19312,18 +19290,32 @@ export const ARTICLE_LEARNING: Readonly<
         ],
         sectionId: "release",
       },
+      {
+        level: "advanced",
+        question:
+          "ViT의 입력 격자가 바뀔 때 model weight 외에 position embedding을 따로 다뤄야 하는 이유를 설명하라.",
+        answerChecklist: [
+          "patch grid 크기 변화",
+          "위치 수 변화",
+          "기존 position state",
+          "interpolation 또는 새 위치 처리",
+          "weight만 복사하면 shape가 맞지 않을 수 있음",
+        ],
+        requiredConcepts: ["resolution-stage-boundary"],
+        sectionId: "resolution-stage",
+      },
     ],
     papers: [
       {
         title:
-          "RandAugment: Practical Automated Data Augmentation with a Reduced Search Space",
-        href: "https://proceedings.neurips.cc/paper/2020/hash/d85b63ef0ccb114d0a3bb7b7d808028f-Abstract.html",
-        problem: "Augmentation policy search가 크고 proxy에 의존하는 문제",
-        contribution: "Operation 수와 공통 magnitude의 작은 search space",
-        assumptions: "논문 operation set·benchmarks·training recipes",
-        evidenceScope: "Reduced search와 benchmark improvement",
-        notClaim: "모든 domain의 label preservation을 보장하지 않음",
-        sectionId: "paper-randaugment",
+          "Fixing the train-test resolution discrepancy",
+        href: "https://proceedings.neurips.cc/paper/9035-fixing-the-train-test-resolution-discrepancy.pdf",
+        problem: "학습과 평가의 crop·해상도가 만드는 물체 크기 분포 차이",
+        contribution: "학습·평가 scale 관계를 조정하고 평가 해상도에서 classifier를 미세 조정",
+        assumptions: "논문의 모델·dataset·crop·fine-tuning 조건",
+        evidenceScope: "논문 설정에서의 resolution 조정 실험",
+        notClaim: "해상도 증가만으로 모든 이미지 과제의 성능이 오른다는 뜻이 아님",
+        sectionId: "paper-fixres",
       },
       {
         title:
@@ -19341,17 +19333,17 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/image-probability-decisions": {
     coreIdea:
-      "이미지 inference에서는 logit·calibrated probability·hard action을 분리하고, scalar temperature·valid TTA·ensemble weight·class threshold를 selection split과 적용 순서까지 포함한 versioned decision artifact로 고정합니다.",
+      "예측 pred-184의 logit (4,2,0)을 보정 집합에서 고른 T=1.5로 확률화하고, TTA와 두 model을 결합한 .6935를 신발 기준 .700과 비교해 검토 대기로 보내는 전 과정을 추적합니다.",
     entryLevel: true,
     assumedKnowledge: [],
     introducedHere: [
       {
         id: "temperature-scaling-calibration",
-        role: "고정 logits의 argmax를 유지하며 scalar temperature로 confidence scale을 맞춥니다.",
+        role: "고정 logit의 argmax를 유지하며 보정 집합에서 고른 scalar temperature로 confidence 눈금을 맞춥니다.",
       },
       {
         id: "image-inference-decision-contract",
-        role: "Calibration·TTA·ensemble·threshold의 순서와 parameter를 serving artifact로 묶습니다.",
+        role: "Calibration·TTA·model 결합·threshold의 순서와 값을 한 판정 정의로 묶습니다.",
       },
     ],
     conceptExplanations: [
@@ -19359,48 +19351,48 @@ export const ARTICLE_LEARNING: Readonly<
         id: "temperature-scaling-calibration",
         sectionId: "temperature",
         intuition:
-          "정답 순서는 그대로 두고 자신감 눈금만 온도 손잡이로 평평하거나 뾰족하게 조정합니다.",
+          "모든 class 점수를 같은 양수로 나눠 순서는 유지하고 confidence 눈금만 조정합니다.",
         workedExample:
-          "Logits (4,2,0)에 T=2를 적용해 (2,1,0)으로 만들면 top class는 같고 maximum probability는 낮아집니다.",
+          "설명용 보정 집합에서 평균 NLL .753인 T=1.5를 고른 뒤 logits (4,2,0)을 probability (.750,.198,.052)로 바꿉니다.",
         boundary:
           "Scalar T는 ranking·accuracy·class-specific 오류를 고치지 않으며 shift에서 다시 틀어질 수 있습니다.",
       },
       {
         id: "image-inference-decision-contract",
-        sectionId: "decision-contract",
+        sectionId: "aggregation",
         intuition:
-          "Raw score에서 action까지 거치는 보정·결합·기준 적용 순서를 하나의 조리법으로 묶습니다.",
+          "한 model의 TTA를 먼저 평균하고 model끼리 결합한 뒤 threshold를 마지막에 적용합니다.",
         workedExample:
-          "Class map v3→input v5→T=1.7→flip TTA→weights(.7,.3)→class threshold를 generation에 저장합니다.",
+          "Model A의 TTA 평균 .725와 model B의 .620을 weights(.7,.3)로 합쳐 .6935를 만들고 신발 기준 .700과 비교합니다.",
         boundary:
           "Logit average와 probability average는 같지 않고 class order가 다른 outputs를 결합하면 의미가 무너집니다.",
       },
     ],
     conceptStages: [
       {
-        label: "Raw score",
-        relation: "Model head가 class logits를 생성",
+        label: "점수",
+        relation: "Model head가 pred-184의 class별 logit (4,2,0)을 생성",
         concepts: ["cross-entropy-nll"],
       },
       {
-        label: "Probability scale",
-        relation: "Calibration split으로 temperature를 선택",
+        label: "보정",
+        relation: "보정 집합의 평균 NLL로 T=1.5를 선택",
         concepts: [
           "conditional-probability",
           "temperature-scaling-calibration",
         ],
       },
       {
-        label: "Aggregation",
-        relation: "Valid TTA와 model outputs를 같은 class 의미로 결합",
+        label: "결합",
+        relation: "같은 class 의미의 TTA와 model probability를 .6935로 결합",
         concepts: [
           "temperature-scaling-calibration",
           "image-inference-decision-contract",
         ],
       },
       {
-        label: "Action release",
-        relation: "Threshold·reject·latency와 untouched test를 고정",
+        label: "행동",
+        relation: "신발 probability .6935를 기준 .700과 비교해 검토 대기로 보냄",
         concepts: [
           "image-inference-decision-contract",
           "train-validation-test",
@@ -19425,12 +19417,12 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         level: "basic",
-        question: "Logits (4,2,0)을 T=2로 scale한 값을 계산하라.",
+        question: "Logits (4,2,0)을 T=1.5로 나눈 값과 softmax probability를 계산하라.",
         answerChecklist: [
-          "divide by 2",
-          "(2,1,0)",
+          "divide by 1.5",
+          "(2.667,1.333,0)",
           "same order",
-          "flatter softmax",
+          "(.750,.198,.052)",
         ],
         requiredConcepts: ["temperature-scaling-calibration"],
         sectionId: "temperature",
@@ -19475,7 +19467,7 @@ export const ARTICLE_LEARNING: Readonly<
           "label preservation",
         ],
         requiredConcepts: ["image-inference-decision-contract"],
-        sectionId: "decision-contract",
+        sectionId: "aggregation",
       },
       {
         level: "basic",
@@ -19488,7 +19480,7 @@ export const ARTICLE_LEARNING: Readonly<
           "threshold/reject",
         ],
         requiredConcepts: ["image-inference-decision-contract"],
-        sectionId: "release",
+        sectionId: "action",
       },
       {
         level: "advanced",
@@ -19506,57 +19498,47 @@ export const ARTICLE_LEARNING: Readonly<
           "temperature-scaling-calibration",
           "image-inference-decision-contract",
         ],
-        sectionId: "decision-contract",
+        sectionId: "aggregation",
       },
       {
         level: "advanced",
         question:
-          "False-positive cost와 review capacity로 class threshold를 고르는 protocol을 설계하라.",
+          "Model B의 class 순서가 (가방,신발,모자)인데 그대로 index별 평균을 냈을 때 무엇이 잘못되는지 설명하라.",
         answerChecklist: [
-          "calibrated probability",
-          "cost/capacity",
-          "precision recall",
-          "selection split",
-          "slice",
-          "rollback",
+          "class identity mismatch",
+          "same index different meaning",
+          "invalid probability aggregation",
+          "class map parity",
         ],
         requiredConcepts: ["image-inference-decision-contract"],
-        sectionId: "decision-contract",
+        sectionId: "aggregation",
       },
       {
         level: "advanced",
         question:
-          "Deployment shift 뒤 scalar T가 실패했는지 진단하고 대응하라.",
+          "Scalar temperature가 class 순위는 유지하지만 calibration 오류를 모두 고치지는 못하는 이유를 설명하라.",
         answerChecklist: [
-          "reliability by slice",
-          "NLL/Brier",
-          "shift",
-          "new calibration data",
-          "freeze model",
-          "rollback T",
+          "one shared scalar",
+          "ranking unchanged",
+          "class-specific error",
+          "distribution shift",
         ],
         requiredConcepts: ["temperature-scaling-calibration"],
-        sectionId: "release",
+        sectionId: "temperature",
       },
       {
         level: "advanced",
         question:
-          "두 models·두 TTA·reject option의 untouched-test release artifact를 설계하라.",
+          "pred-184의 top class와 업무 행동이 서로 다른 상태여야 하는 이유를 .6935와 .700으로 설명하라.",
         answerChecklist: [
-          "class order",
-          "model revisions",
-          "TTA validity",
-          "weights sum1",
-          "temperature",
-          "reject",
-          "latency",
-          "test once",
+          "argmax shoe",
+          "combined probability .6935",
+          "threshold .700",
+          "review action",
+          "separate ownership",
         ],
-        requiredConcepts: [
-          "image-inference-decision-contract",
-          "temperature-scaling-calibration",
-        ],
-        sectionId: "release",
+        requiredConcepts: ["image-inference-decision-contract"],
+        sectionId: "action",
       },
     ],
     papers: [
