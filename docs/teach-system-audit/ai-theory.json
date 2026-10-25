@@ -7765,7 +7765,7 @@
         "src/pages/articles/ai/one-shot-llm-pruning/ModernArticle.tsx",
         "src/pages/articles/ai/pruning/viz/ModernPruningViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -7773,19 +7773,35 @@
         "hasSourceSurface": true,
         "characters": 8044
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "SparseGPT와 Wanda의 계산은 있었지만 calibration에서 mask 검증까지 같은 사례를 따라가는 가족 지도와 현재 위치가 없었습니다.",
+        "그림이 자동으로 빠르게 진행되어 score·reconstruction·held-out 검증의 차이를 읽기 어려웠습니다."
+      ],
+      "fixture": "대표 prompt slice에서 layer input X를 수집하고, 같은 sparsity에서 Wanda의 |w|×activation norm score와 SparseGPT의 layer-output reconstruction을 만든 뒤 held-out quality와 runtime을 따로 확인합니다.",
+      "stageAnchors": {
+        "map": "가지치기 가족의 기준·제거 단위·Mask 결정·배포 영역과 현재 위치를 표시합니다.",
+        "calibration": "언어·길이·domain을 포함한 prompt slice에서 layer input X를 수집합니다.",
+        "reconstruction": "Weight error를 X로 투영해 실제 layer output residual을 비교합니다.",
+        "papers": "SparseGPT와 Wanda의 공식 논문에서 확인되는 기여와 과장하면 안 되는 경계를 분리합니다.",
+        "return": "One-shot mask 선택 결과를 가지치기 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "SparseGPT 논문은 layer-wise approximate second-order reconstruction의 근거로만 사용합니다.",
+        "Wanda 논문은 magnitude와 activation norm을 결합한 per-output score의 근거로만 사용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Calibration prompt → layer input X → 두 score 경계 → held-out 검증의 질문 흐름과 직속 부모·같은 트랙·지도 반환을 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "같은 |w|=.2에서도 activation norm 1과 10이 Wanda score .2와 2를 만드는 계산과 XE reconstruction 경계를 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서·그림 overflow 0과 50px 조작 버튼 전체 노출을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 마지막 장면 전체 노출을 확인했습니다.",
+        "interaction": "7초 대기 뒤 장면 01 유지, 재생 3초 뒤 01·7초 뒤 02, ArrowRight 이동, 화면 이탈 뒤 정지·재진입 비재개를 확인했습니다.",
+        "reducedMotion": "마지막 장면 04 고정과 재생 조작 비노출을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론, locator와 지도 반환을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 260편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8030,7 +8046,7 @@
         "src/pages/articles/ai/pruning/ModernArticle.tsx",
         "src/pages/articles/ai/pruning/viz/ModernPruningViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8038,19 +8054,32 @@
         "hasSourceSurface": false,
         "characters": 6519
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
+      "originalProblems": [
+        "Mask·density·sparsity는 설명됐지만 제거 단위별 세부 글과 배포 글을 한 가족으로 읽을 공통 지도가 없었습니다.",
+        "숫자 0과 실제 runtime 제거가 다른 이유를 한 요청처럼 단계별로 재생·정지하며 확인하기 어려웠습니다."
+      ],
+      "fixture": "Weight 10개 중 mask로 4개를 남겨 density .4와 sparsity .6을 계산하고, 같은 mask라도 weight·N:M group·channel 중 제거 단위에 따라 저장 형식과 kernel 계약이 달라짐을 추적합니다.",
+      "stageAnchors": {
+        "map": "가지치기 가족의 기준·제거 단위·Mask 결정·배포 영역과 현재 위치를 표시합니다.",
+        "mask-shape": "Binary mask를 weight와 자리별로 곱하고 density와 sparsity의 분모를 고정합니다.",
+        "removal-unit": "Individual weight·N:M group·channel의 제거 단위와 다음 소비자를 구분합니다.",
+        "handoff": "Base checkpoint·mask generation·export format·consumer를 pruning receipt로 넘깁니다.",
+        "return": "확인한 mask 계약을 모델 경량화 부모 지도에 되돌려 놓습니다."
+      },
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Weight → mask → density·sparsity → 제거 단위 → runtime 소비자의 질문 흐름과 직속 부모·같은 트랙·지도 반환을 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "K=4,N=10의 density=.4와 sparsity=.6, dense zero가 계산 shape를 줄이지 않는 경계를 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서·그림 overflow 0과 50px 조작 버튼 전체 노출을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 마지막 장면 전체 노출을 확인했습니다.",
+        "interaction": "7초 대기 뒤 장면 01 유지, 재생 3초 뒤 01·7초 뒤 02, ArrowRight 이동, 화면 이탈 뒤 정지·재진입 비재개를 확인했습니다.",
+        "reducedMotion": "마지막 장면 03 고정과 재생 조작 비노출을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 세 장면의 제목·결론, locator와 지도 반환을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 260편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -8062,7 +8091,7 @@
         "src/pages/articles/ai/pruning-recovery-deployment/ModernArticle.tsx",
         "src/pages/articles/ai/pruning/viz/ModernPruningViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -8070,19 +8099,33 @@
         "hasSourceSurface": false,
         "characters": 7744
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
+      "originalProblems": [
+        "Recovery와 Amdahl 계산은 있었지만 artifact·optimizer state·active release의 authoritative writer가 드러나지 않았습니다.",
+        "실패 뒤 mask를 되돌리는 것과 검증된 배포 revision으로 트래픽을 돌리는 롤백을 구분하지 않았습니다."
+      ],
+      "fixture": "Base checkpoint와 fixed mask를 한 generation으로 고정하고 recovery step마다 weight와 optimizer state를 다시 mask한 뒤, target engine build receipt와 quality·memory·latency gate로 새 revision을 승인합니다.",
+      "stageAnchors": {
+        "map": "가지치기 가족의 기준·제거 단위·Mask 결정·배포 영역과 현재 위치를 표시합니다.",
+        "state-ownership": "Checkpoint·mask·optimizer state·engine artifact·active release의 기준 저장소와 쓰는 주체를 고정합니다.",
+        "mask-invariant": "Update 뒤 weight와 optimizer state에 같은 fixed mask를 다시 적용합니다.",
+        "runtime-receipt": "Eligible operator와 실제 선택된 sparse tactic을 분리해 Amdahl 상한을 계산합니다.",
+        "rollback": "문제가 생기면 직전 검증 revision으로 route를 되돌리고 새 replica를 drain합니다.",
+        "return": "배포 승인·대기 결론을 가지치기 부모 지도에 되돌려 놓습니다."
+      },
       "primarySourceApplication": [],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "고정 mask → 상태 소유권 → recovery 불변식 → engine receipt → canary·rollback의 실무 흐름과 개념 anchor를 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "f=.4와 sparse 구간 2배 가속에서 전체 상한 1/(.6+.2)=1.25배가 되는 계산과 M[i]=0의 state 불변식을 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서 overflow 0, 50px 조작 버튼과 자체 가로 스크롤 상태 소유권 표를 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 마지막 release 장면 전체 노출을 확인했습니다.",
+        "interaction": "7초 대기 뒤 장면 01 유지, 재생 3초 뒤 01·7초 뒤 02, ArrowRight 이동, 화면 이탈 뒤 정지·재진입 비재개를 확인했습니다.",
+        "reducedMotion": "마지막 장면 04 고정과 재생 조작 비노출을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론, 상태 소유권·롤백 절과 지도 반환을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 260편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -9866,7 +9909,7 @@
         "src/pages/articles/ai/structured-pruning/PruningGranularity.tsx",
         "src/pages/articles/ai/structured-pruning/SparseKernelExecution.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9874,19 +9917,34 @@
         "hasSourceSurface": true,
         "characters": 18931
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Channel shape 축소와 N:M local pattern이 한 글에 있었지만 가지치기 가족 안에서 둘의 제거 단위 차이를 찾기 어려웠습니다.",
+        "적격 pattern이면 반드시 sparse tactic이 선택된다는 인상을 줄 수 있어 shape·dtype·axis·compiler 선택 경계를 보강해야 했습니다."
+      ],
+      "fixture": "연결된 두 layer에서 channel 하나를 함께 제거해 실제 tensor shape를 줄이는 경로와, shape는 유지한 채 네 weight마다 두 개를 남기는 2:4 경로를 같은 그림에서 비교합니다.",
+      "stageAnchors": {
+        "map": "가지치기 가족의 기준·제거 단위·Mask 결정·배포 영역과 현재 위치를 표시합니다.",
+        "shape-propagation": "현재 layer output과 다음 layer input dimension을 함께 줄이는 shape 전파를 계산합니다.",
+        "nm-pattern": "Local group마다 정확히 N개를 남기는 N:M 적격성 규칙을 전체 sparsity와 구분합니다.",
+        "paper-structured-sparsity": "NVIDIA TensorRT 문서에서 확인되는 2:4 지원 조건과 tactic 선택 경계를 분리합니다.",
+        "return": "구조화 제거 단위의 결과를 가지치기 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "NVIDIA TensorRT 공식 문서는 지원되는 structured sparsity 조건과 builder tactic 경계의 근거로만 사용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "연결 shape 탐색 → channel 동시 제거 → N:M local pattern → target compiler tactic 확인의 질문 흐름과 지도 반환을 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "Cout 8→6과 다음 layer Cin 8→6의 dimension retention, 2:4 local group의 정확한 두 생존 조건을 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서·그림 overflow 0과 50px 조작 버튼 전체 노출을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 tactic 선택 장면 전체 노출을 확인했습니다.",
+        "interaction": "7초 대기 뒤 장면 01 유지, 재생 3초 뒤 01·7초 뒤 02, ArrowRight 이동, 화면 이탈 뒤 정지·재진입 비재개를 확인했습니다.",
+        "reducedMotion": "마지막 장면 04 고정과 재생 조작 비노출을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론, locator와 지도 반환을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 260편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -10721,7 +10779,7 @@
         "src/pages/articles/ai/unstructured-pruning.tsx",
         "src/pages/articles/ai/unstructured-pruning/ModernArticle.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -10729,19 +10787,34 @@
         "hasSourceSurface": true,
         "characters": 7596
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Importance score·sparse payload·kernel 손익은 있었지만 mask 기초와 structured·one-shot·배포 글 사이의 현재 위치가 없었습니다.",
+        "Sparsity 비율을 저장량이나 latency 감소율로 오해하지 않도록 value·index·metadata를 한 사례로 추적할 필요가 있었습니다."
+      ],
+      "fixture": "FP16 value 2 byte와 32-bit index 4 byte를 저장하는 단순 sparse payload에서 metadata가 없을 때 density 1/3 아래가 되어야 dense보다 작아지는 손익분기를 계산합니다.",
+      "stageAnchors": {
+        "map": "가지치기 가족의 기준·제거 단위·Mask 결정·배포 영역과 현재 위치를 표시합니다.",
+        "storage-break-even": "남은 value·index·metadata byte를 dense payload와 비교해 저장 손익분기를 계산합니다.",
+        "movement-score": "현재 magnitude와 task fine-tuning 중 movement 신호의 근거 차이를 분리합니다.",
+        "paper-movement-pruning": "Movement Pruning 논문에서 확인되는 score 학습과 적용 범위를 제한합니다.",
+        "return": "불규칙 제거의 저장·실행 경계를 가지치기 부모 지도에 되돌려 놓습니다."
+      },
+      "primarySourceApplication": [
+        "Movement Pruning 논문은 downstream task loss와 mask score를 함께 학습하는 방법의 근거로만 사용합니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "Score → mask → value·index payload → target kernel 측정의 질문 흐름과 직속 부모·같은 트랙·지도 반환을 실제 본문에서 대조했습니다.",
+        "humanize": "route 단위 한국어 자연스러움·문장 호흡·용어 대응 검사를 통과했습니다.",
+        "numericTrace": "value 2 byte와 index 4 byte에서 ρ<1/3, w=.1·g=-2에서 movement 신호 -gw=.2가 되는 계산을 보존했습니다.",
+        "mobile390": "실제 Chromium 390×844에서 문서·그림 overflow 0과 50px 조작 버튼 전체 노출을 확인했습니다.",
+        "desktop1440": "실제 Chromium 1440×1000에서 문서·그림 overflow 0과 마지막 kernel 장면 전체 노출을 확인했습니다.",
+        "interaction": "7초 대기 뒤 장면 01 유지, 재생 3초 뒤 01·7초 뒤 02, ArrowRight 이동, 화면 이탈 뒤 정지·재진입 비재개를 확인했습니다.",
+        "reducedMotion": "마지막 장면 04 고정과 재생 조작 비노출을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 네 장면의 제목·결론, locator와 지도 반환을 확인했습니다.",
+        "build": "Production build 뒤 정적 public route 2,088개와 검토 완료 260편의 no-script 본문을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

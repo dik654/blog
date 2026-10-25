@@ -3031,6 +3031,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "대표 입력으로 정한 scale과 별도 검증 입력의 saturation·task regression을 구분하고, 측정하지 않은 정확도나 속도를 결과로 쓰지 않습니다.",
   },
+  "ai/structured-pruning": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "연결된 두 layer의 channel shape를 함께 줄이는 경로와 같은 shape 안에서 2:4 local pattern을 만드는 경로를 한 제거 단위 질문으로 비교합니다. 실제 section은 여덟 개지만 모두 같은 tensor가 compiler tactic에 도달할 때까지의 연속 단계이므로 나누면 shape 전파와 runtime 경계가 끊깁니다.",
+    sharedGate:
+      "Cout 8→6이면 다음 layer의 Cin도 8→6이 되는지, 2:4는 모든 네 weight 묶음에서 정확히 두 개가 남는지, 적격 pattern과 실제 sparse tactic 선택을 별도 기록으로 확인합니다.",
+  },
   "ai/smoothquant-activation-smoothing": {
     action: "keep" as const,
     status: "reviewed" as const,
@@ -3348,6 +3357,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/sglang-runtime-anatomy": "527aef35d9173e0d",
   "ai/sliding-window-kv-and-attention-sinks": "fcb0fc36051a7a96",
   "ai/ptq-calibration": "df9ff399e556a27c",
+  "ai/structured-pruning": "56c893dc0677a02b",
   "ai/smoothquant-activation-smoothing": "7ed8a07d9d45ba09",
   "ai/tensorrt-llm-kv-cache-and-kernels": "a58ad2af5cf646d4",
   "gpu/nvidia-nca-aiio-study-guide": "b58a5adcbf399c4f",

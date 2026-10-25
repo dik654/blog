@@ -19,9 +19,9 @@ export default function SparseKernelExecution() {
           나타나지 않는 경우가 많은 이유입니다.
         </p>
         <p>
-          반대로 channel 자체를 지우는 구조적 pruning은 kernel 종류와 무관하게 이득이 생깁니다. shape 자체가 줄어든 weight matrix는 아무 dense
-          GEMM kernel에 넣어도 더 작은 행렬을 곱하기 때문입니다. N:M 같은 semi-structured pattern은 이 둘의 중간에 있습니다. shape는 그대로 두는 대신
-          kernel이 그 local pattern을 인식해야만 이득이 생깁니다.
+          반대로 channel 자체를 지우면 dense kernel이 받는 행렬 shape가 작아져 계산해야 할 곱과 합은 줄어듭니다. 그렇다고 wall-clock latency가 같은 비율로 줄지는
+          않습니다. 너무 작은 shape, 정렬 조건, memory traffic, launch 비용 때문에 GPU 활용률이 낮아질 수 있기 때문입니다. N:M 같은 semi-structured
+          pattern은 이 둘의 중간에 있습니다. Shape는 그대로 두는 대신 kernel이 local pattern을 인식해야 계산을 건너뜁니다.
         </p>
       </div>
       <TermBreakdown
@@ -38,7 +38,7 @@ export default function SparseKernelExecution() {
             term: "Structured (shape) sparsity",
             description: "연결된 dimension 전체를 지워 tensor shape 자체를 줄입니다.",
             example: "위 shape propagation처럼 input·output을 각각 .75 남기면 arithmetic이 .5625로 줍니다.",
-            boundary: "Shape가 줄어드는 그 자체로 kernel 종류와 무관하게 이득이 생깁니다.",
+            boundary: "계산량은 줄지만 latency 이득은 정렬·occupancy·launch 비용을 포함해 측정합니다.",
           },
           {
             term: "Semi-structured (N:M) sparsity",

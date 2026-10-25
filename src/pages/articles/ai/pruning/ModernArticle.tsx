@@ -1,12 +1,14 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PruningPathLocator, { PruningMapReturn } from "./PruningPathLocator";
 import { PruningMaskViz } from "./viz/ModernPruningViz";
 
 export default function PruningArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <PruningPathLocator current="mask-contract" />
         <h2 className="mb-6 text-2xl font-bold">
           먼저 weight 하나를 “남길지” 표시하는 물체부터 만듭니다
         </h2>
@@ -181,6 +183,7 @@ export default function PruningArticle() {
           </p>
         </div>
       </section>
+      <PruningMapReturn current="mask-contract" />
     </div>
   );
 }
