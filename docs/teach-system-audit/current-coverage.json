@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 556,
-    "pending": 434,
+    "reviewed": 557,
+    "pending": 433,
     "untracked": 0,
-    "assignedPending": 390,
+    "assignedPending": 389,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2191,11 +2191,11 @@
     {
       "route": "ai/prompt-injection-poisoning-and-data-protection",
       "publicPath": "cs/ai/prompt-injection-poisoning-and-data-protection",
-      "title": "Injection은 지시 경로로, poisoning은 오염 시점으로 나뉩니다",
+      "title": "주입은 지시 경로를, 오염은 학습 시점을 바꿉니다",
       "catalogIndex": 216,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
