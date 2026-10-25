@@ -414,18 +414,18 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/image-embedding-pipeline": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-10-26",
     rationale:
-      "본문은 6 section·concept 7개로 keep 범위이며 closure 대부분이 6개 Viz다. 전처리·풀링·거리·계약·평가는 '사진이 벡터가 되는 구간'이라는 한 경로의 연속 단계라 나누면 각 글이 같은 파이프라인을 다시 세워야 한다.",
+      "closure 1,385줄 중 상당 부분이 6개 상호작용 Viz이며 본문은 6 section·concept 7개입니다. 2026-10-26 재작성 뒤에도 같은 사진이 전처리·token 출력·pooling·거리·generation 계약·평가를 지나는 한 경로를 추적하므로, 나누면 각 글이 입력과 벡터 계약을 다시 세워야 합니다.",
     sharedGate:
       "reference 구현 스냅샷과 공개 논문만 근거로 삼고, 특정 데이터셋의 검색 성능 실측은 이 글에서 주장하지 않는다.",
   },
   "ai/image-text-contrastive-pretraining": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-10-26",
     rationale:
-      "본문은 6 section·concept 7개로 keep 범위다. 두 손실은 같은 유사도 행렬을 다르게 읽는 한 쌍이라 따로 떼면 비교 자체가 사라지고, 배치·zero-shot 절이 그 비교의 귀결을 담당한다.",
+      "closure 1,309줄 중 상당 부분이 5개 상호작용 Viz이며 본문은 6 section·concept 7개입니다. 2026-10-26 재작성 뒤에도 paired batch의 같은 similarity matrix를 softmax와 sigmoid가 다르게 읽고 batch·zero-shot으로 이어지는 한 경로이므로, 나누면 비교의 공통 입력과 경계를 반복해야 합니다.",
     sharedGate:
       "원 논문 두 편과 transformers 커밋 f62dc9bf2c90 구현만 근거로 삼고, 두 손실의 성능 우열을 자체 실측으로 주장하지 않는다.",
   },
@@ -3583,13 +3583,13 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",
   "ai/dinov3-self-supervised-backbone": "44bffd9be98df83c",
-  "ai/image-embedding-pipeline": "183b7fb7e57921f8",
+  "ai/image-embedding-pipeline": "fb237378302cf8c6",
   "gpu/datacenter-site-readiness": "45a73303cd5c890c",
   "gpu/server-cpu-lineup-comparison": "c67c3ee260d1cbf7",
   "gpu/ai-accelerator-vendor-comparison": "f38b6a8d1a1a2575",
   "ai/multi-component-finetuning-vram": "daab7b6d6749dbbf",
   "ai/vision-backbone-selection": "7a3df2f22910fbfb",
-  "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
+  "ai/image-text-contrastive-pretraining": "81232e4ede52cf4f",
   "ai/sam3-promptable-concept-segmentation": "598f46b464605121",
   "ai/qwen38-flash-next-architecture": "818a11c6feadce72",
   "gpu/modded-rtx4090-moe-serving": "6cf98cea148cc7ab",

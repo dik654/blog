@@ -2,12 +2,15 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
+import EmbeddingPathLocator, { EmbeddingMapReturn } from "../sentence-embeddings/EmbeddingPathLocator";
 import { BiEncoderFlowViz } from "../sentence-embeddings/viz/ModernSentenceEmbeddingViz";
 
 export default function BiEncoderRetrievalArticle() {
   return <div className="space-y-16">
     <section id="overview" className="scroll-mt-20">
+      <EmbeddingPathLocator current="retrieval" />
       <h2 className="mb-6 text-2xl font-bold">Bi-encoder는 더 작은 BERT가 아니라 document 계산을 query 사이에서 재사용하는 구조입니다</h2>
+      <BiEncoderFlowViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">
             검색할 문서가 백만 개라면 새 질문 하나마다 백만 pair를 Transformer에 넣을 수 없습니다. Bi-encoder는 document를 query 없이도 표현할 수 있게
             학습하고 그 결과를 미리 저장해 이 반복을 없앱니다.
@@ -17,7 +20,6 @@ export default function BiEncoderRetrievalArticle() {
         { term: "Bi-encoder", description: "Query와 document를 각각 vector로 만든 뒤 similarity로 비교합니다.", example: "Document vector는 밤에 만들고 query vector는 요청 때 만듭니다." },
         { term: "ANN index", description: "저장된 모든 vector를 exact scan하지 않고 가까운 후보를 빠르게 찾는 검색 artifact입니다.", boundary: "Approximation과 설정에 따라 candidate recall이 달라집니다." },
       ]} />
-      <BiEncoderFlowViz />
       <ContentBoundary article="bi-encoder-retrieval" />
     </section>
 
@@ -58,5 +60,6 @@ export default function BiEncoderRetrievalArticle() {
       <div className="prose prose-neutral max-w-none dark:prose-invert"><p>첫 단계의 일은 모든 문서를 완벽하게 정렬하는 것이 아니라 제한된 k 안에 정답을 넣는 것입니다. 두 번째 단계는 그 작은 집합에서 query–document token interaction을 사용해 위쪽 순서를 정교하게 바꿉니다. k를 키우면 candidate recall은 오를 수 있지만 reranking latency와 다음 model에 전달할 context 비용도 함께 늘어납니다.</p></div>
       <div id="paper-sbert-retrieval" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Reimers & Gurevych — Sentence-BERT" href="https://aclanthology.org/D19-1410/">독립 sentence embedding으로 pairwise BERT 계산의 조합 비용을 바꾼 기준 연구입니다. 논문의 비교 시간은 당시 task·hardware 조건이며 현대 ANN의 고정 speedup 숫자가 아닙니다.</CitationBlock></div>
     </section>
+    <EmbeddingMapReturn current="retrieval" />
   </div>;
 }

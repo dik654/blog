@@ -7,6 +7,7 @@ import ZeroShot from "./image-text-contrastive-pretraining/ZeroShot";
 import Boundary from "./image-text-contrastive-pretraining/Boundary";
 import { codeRefs } from "./image-text-contrastive-pretraining/codeRefs";
 import { transformersTree } from "./image-text-contrastive-pretraining/fileTree";
+import { EmbeddingMapReturn } from "./sentence-embeddings/EmbeddingPathLocator";
 
 const PROJECT_META = {
   transformers: {
@@ -31,6 +32,7 @@ export default function ImageTextContrastivePretrainingArticle() {
       <BatchAndNegatives />
       <ZeroShot />
       <Boundary />
+      <EmbeddingMapReturn current="image-text-relation" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

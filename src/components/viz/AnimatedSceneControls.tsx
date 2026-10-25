@@ -106,3 +106,22 @@ export function AnimatedSceneControls({
     </div>
   );
 }
+
+export function StaticSceneList({
+  labels,
+  notes,
+}: {
+  labels: readonly string[];
+  notes: readonly string[];
+}) {
+  return (
+    <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+      {labels.map((label, index) => (
+        <li key={label} className="grid gap-1 py-3 sm:grid-cols-[12rem_minmax(0,1fr)]">
+          <strong>{index + 1}. {label}</strong>
+          <span className="text-muted-foreground">{notes[index]}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}

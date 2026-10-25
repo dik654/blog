@@ -1,6 +1,7 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import WideSvgViewport from "@/components/viz/WideSvgViewport";
 
 /** 본문 대응: Pooling.tsx — 토큰 배치와 풀링 선택 */
 const SCENES = ["토큰 배치", "요약 토큰 사용", "패치 평균", "앞칸을 안 자르면"] as const;
@@ -19,8 +20,8 @@ const BAD = "#ef4444";
 const MUTED = "#94a3b8";
 
 export default function PoolingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, { loop: false, autoPlay: false });
+  const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   return (
     <VizFrame
       eyebrow="풀링"
@@ -29,17 +30,20 @@ export default function PoolingViz() {
       note="보조 토큰 수 R은 모델 설정에서 읽어야 하며 모델마다 다릅니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-id="image-token-pooling"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="풀링 방식 비교"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[23rem] flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <WideSvgViewport>
+          <svg viewBox="0 0 480 200" className="mobile-readable-svg w-full max-w-none sm:max-w-2xl">
             {Array.from({ length: 16 }, (_, i) => i).map((i) => {
               const kind = i === 0 ? "cls" : i < 5 ? "reg" : "patch";
               const color = kind === "cls" ? CLS : kind === "reg" ? REG : PATCH;
@@ -89,9 +93,11 @@ export default function PoolingViz() {
               무엇을 검색할지 정한 뒤에 고르는 결정입니다
             </text>
           </svg>
+          </WideSvgViewport>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={step} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

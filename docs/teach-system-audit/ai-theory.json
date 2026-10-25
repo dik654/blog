@@ -799,9 +799,12 @@
       "publicFiles": [
         "src/pages/articles/ai/bi-encoder-retrieval.tsx",
         "src/pages/articles/ai/bi-encoder-retrieval/ModernArticle.tsx",
-        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx"
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -809,19 +812,35 @@
         "hasSourceSurface": true,
         "characters": 7080
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Bi-encoder와 reranker를 구성요소 이름으로만 나열해, 어떤 계산을 offline으로 옮기고 어떤 계산이 요청 경로에 남는지 한눈에 보이지 않았습니다.",
+        "첫 retriever가 놓친 정답을 reranker가 복구할 수 없다는 후보 집합의 경계가 전체 검색 흐름과 떨어져 있었습니다.",
+        "직속 부모와 다음 세부 글이 보이지 않아 임베딩 학습 경로에서 현재 위치를 찾기 어려웠습니다."
+      ],
+      "fixture": "문서 10,000개를 매 요청마다 pair-forward하는 경우와 문서 벡터를 미리 계산한 경우를 비교하고, 정답 {A,B,C} 중 후보 {A,D,E,F,G}만 전달된 검색을 끝까지 추적합니다 [A].",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "offline": "offline-index",
+        "candidate": "candidate",
+        "reranking": "reranking",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Sentence-BERT 논문은 query와 document를 독립적으로 인코딩해 pairwise 계산을 재사용하는 메커니즘의 근거로만 사용했습니다.",
+        "논문의 당시 비교 시간을 현대 ANN 환경의 고정 성능 수치로 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · offline index→candidate coverage→reranking의 권한 경계를 한 요청으로 연결하고 부모 지도에 결론을 반환했습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · 10,000개 문서 계산과 relevant 3개 중 candidate 1개가 남은 경우를 식과 숫자로 함께 추적했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, locator 노출, 시각화의 세로 중첩 없음과 조작부 크기를 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, locator와 본문 흐름을 확인했습니다.",
+        "keyboard": "pass · 공용 시각화에서 ArrowRight로 장면을 이동하고 버튼 안의 키 입력이 가로채이지 않는 경로를 확인했습니다.",
+        "reducedMotion": "pass · 마지막 장면을 정적으로 표시하고 재생 버튼을 비활성화합니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 4개 장면 목록, 부모 지도 복귀를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -2917,9 +2936,12 @@
       "publicFiles": [
         "src/pages/articles/ai/embedding-evaluation.tsx",
         "src/pages/articles/ai/embedding-evaluation/ModernArticle.tsx",
-        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx"
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2927,19 +2949,35 @@
         "hasSourceSurface": true,
         "characters": 7560
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Leaderboard 점수와 서비스 배포 판단이 한 흐름에서 섞여, 정답 집합을 먼저 고정해야 하는 이유가 약했습니다.",
+        "Recall·NDCG·비용 지표가 나열돼 어떤 실패를 각각 잡는지 한 사례로 비교하기 어려웠습니다.",
+        "평균 점수가 필수 언어·도메인 slice의 실패를 가리는 경계가 부모 임베딩 지도에 연결되지 않았습니다."
+      ],
+      "fixture": "질문 ‘연차는 며칠인가?’에 정책 원문 A와 FAQ B가 모두 정답인 label snapshot을 만들고, relevant 4개 중 top-10에 3개가 들어온 Recall@10=.75와 품질·비용 후보를 추적합니다 [A].",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "labels": "labels",
+        "metrics": "metrics",
+        "release": "release",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "MTEB 논문은 retrieval·STS·classification 등 서로 다른 embedding task를 같은 평가 언어로 구분하는 근거로만 사용했습니다.",
+        "MTEB 평균을 특정 서비스 corpus·언어·latency의 배포 판단으로 대체하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · corpus·label snapshot→multi-positive→Recall·NDCG→필수 slice와 비용 경계를 한 평가 흐름으로 연결했습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · Recall@10=.75와 NDCG의 rank 할인, 세 후보의 Pareto 관계를 식과 숫자로 추적했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, locator와 시각화의 세로 중첩 없음을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0과 본문·시각화 순서를 확인했습니다.",
+        "keyboard": "pass · 공용 시각화에서 ArrowRight로 장면을 이동하는 경로를 확인했습니다.",
+        "reducedMotion": "pass · 마지막 장면을 정적으로 표시하고 재생 버튼을 비활성화합니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 4개 장면 목록, 부모 지도 복귀를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -2980,9 +3018,12 @@
       "publicFiles": [
         "src/pages/articles/ai/embedding-serving-contract.tsx",
         "src/pages/articles/ai/embedding-serving-contract/ModernArticle.tsx",
-        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx"
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -2990,19 +3031,35 @@
         "hasSourceSurface": true,
         "characters": 7732
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Checkpoint를 모델 전체로 부르면서 tokenizer·prefix·pooling·normalization·index가 같은 좌표계를 이루는 계약이 보이지 않았습니다.",
+        "Query server만 바꿔도 HTTP 요청은 성공하지만 검색 품질은 조용히 무너질 수 있는 실패 경로가 약했습니다.",
+        "입력 token 예산과 실제 index 저장량의 계산 근거가 배포 generation과 떨어져 있었습니다."
+      ],
+      "fixture": "질문 ‘연차 규정?’과 문서 ‘연차는 15일’을 E5 역할 prefix로 직렬화하고, limit 512에서 본문 480 token이 남는 과정과 1천만×1,024차원 FP16 index의 raw 20.48GB를 추적합니다 [A].",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "serialization": "serialization",
+        "truncation": "truncation",
+        "artifact": "index-artifact",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "E5 논문은 query·passage role prefix가 학습 입력과 배포 입력에 함께 속한다는 근거로만 사용했습니다.",
+        "E5의 prefix를 다른 embedding family에 복사하면 같은 효과가 난다고 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직렬화→token 예산→pooling·dtype→corpus·ANN index를 하나의 generation receipt로 묶었습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · 512-token 예산에서 480-token 본문을 남기는 계산과 raw index 20.48GB 계산을 단위별로 추적했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, locator와 시각화의 세로 중첩 없음을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0과 generation 흐름을 확인했습니다.",
+        "keyboard": "pass · 공용 시각화에서 ArrowRight로 장면을 이동하는 경로를 확인했습니다.",
+        "reducedMotion": "pass · 마지막 장면을 정적으로 표시하고 재생 버튼을 비활성화합니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 4개 장면 목록, 부모 지도 복귀를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -4110,9 +4167,13 @@
         "src/pages/articles/ai/image-embedding-pipeline/viz/PipelineViz.tsx",
         "src/pages/articles/ai/image-embedding-pipeline/viz/PoolingViz.tsx",
         "src/pages/articles/ai/image-embedding-pipeline/viz/ResizeViz.tsx",
-        "src/pages/articles/ai/image-embedding-pipeline/viz/SimilarityViz.tsx"
+        "src/pages/articles/ai/image-embedding-pipeline/viz/SimilarityViz.tsx",
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx",
+        "src/components/viz/WideSvgViewport.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4120,19 +4181,38 @@
         "hasSourceSurface": true,
         "characters": 20316
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "백본 이름이 중심에 놓여 resize·crop, patch 출력, pooling, normalization이 같은 변환의 일부라는 점이 약했습니다.",
+        "여러 시각화가 고정 높이 안에서 세로로 잘리거나 휴대전화에서 전체 SVG가 지나치게 축소됐습니다.",
+        "장면이 자동 반복되어 현재 상태를 읽기 어렵고 JavaScript가 꺼졌을 때 같은 순서의 설명이 남지 않았습니다.",
+        "이미지 벡터의 결론이 문장·이미지·평가를 잇는 직속 부모 지도에 반환되지 않았습니다."
+      ],
+      "fixture": "1920×1080 사진을 224×224 입력으로 바꾸고 CLS·register·patch token 가운데 하나의 검색 벡터를 고른 뒤, 변형 전후 거리와 pipeline generation을 추적합니다 [A].",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "preprocessing": "preprocessing",
+        "pooling": "pooling",
+        "similarity": "similarity",
+        "contract": "pipeline-contract",
+        "evaluation": "evaluation",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "NaViT 논문은 임의 해상도·종횡비를 patch sequence packing으로 다루는 대안의 근거로만 사용했습니다.",
+        "NaViT의 보고 결과를 고정 크기로 학습된 기존 backbone의 전처리 변경 효과로 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 사진 입력→전처리→token 출력→pooling→similarity→generation 계약→평가를 한 파이프라인으로 연결했습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · resize·crop 좌표, token 선택, 변형 거리 비와 index 계약의 계산 근거를 단계별로 유지했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, 여섯 시각화의 세로 중첩 0, SVG 720px의 내부 가로 탐색과 안내 문구를 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, locator와 여섯 시각화의 전체 높이를 확인했습니다.",
+        "keyboard": "pass · 공용 조작부의 이전·재생·다음 버튼과 키보드 접근 경로를 확인했습니다.",
+        "reducedMotion": "pass · 여섯 시각화가 모두 04/04 마지막 장면을 표시하고 재생 버튼을 비활성화합니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 여섯 시각화의 순서 있는 장면 목록을 390×844로 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -4204,9 +4284,13 @@
         "src/pages/articles/ai/image-text-contrastive-pretraining/viz/SharedSpaceViz.tsx",
         "src/pages/articles/ai/image-text-contrastive-pretraining/viz/SigmoidViz.tsx",
         "src/pages/articles/ai/image-text-contrastive-pretraining/viz/SoftmaxViz.tsx",
-        "src/pages/articles/ai/image-text-contrastive-pretraining/viz/ZeroShotViz.tsx"
+        "src/pages/articles/ai/image-text-contrastive-pretraining/viz/ZeroShotViz.tsx",
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx",
+        "src/components/viz/WideSvgViewport.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -4214,19 +4298,38 @@
         "hasSourceSurface": true,
         "characters": 21535
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "이미지·캡션 짝, similarity matrix, loss가 분리돼 한 batch에서 어떤 칸이 positive이고 negative인지 따라가기 어려웠습니다.",
+        "Softmax와 sigmoid를 모델 이름처럼 비교해, 전체 행 정규화와 쌍별 독립 채점이라는 실제 차이가 약했습니다.",
+        "시각화가 자동 반복되고 휴대전화에서 축소되거나 세로로 잘려 손실의 상태 변화를 읽기 어려웠습니다.",
+        "Zero-shot 분류가 공유 공간에서 범주 문장을 후보로 넣는 같은 메커니즘임을 부모 지도에 반환하지 않았습니다."
+      ],
+      "fixture": "N개의 이미지·캡션 짝으로 N×N similarity matrix를 만들고 대각선 positive와 비대각 negative를 softmax 또는 sigmoid로 채점한 뒤, 범주 이름을 문장으로 바꿔 zero-shot 후보로 비교합니다 [A].",
+      "stageAnchors": {
+        "parent": "embedding-family-map",
+        "softmax": "softmax-loss",
+        "sigmoid": "sigmoid-loss",
+        "batch": "batch-and-negatives",
+        "zeroShot": "zero-shot",
+        "boundary": "boundary",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "CLIP 논문은 이미지·캡션 paired batch와 batch-normalized contrastive loss, zero-shot transfer 메커니즘의 근거로 사용했습니다.",
+        "SigLIP 논문은 batch 전체 정규화를 없앤 쌍 단위 sigmoid loss의 근거로 사용하되 보고된 batch 크기 경계를 일반 법칙으로 쓰지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · paired batch→similarity matrix→softmax·sigmoid 손실→batch 경계→zero-shot 사용을 한 공간의 상태 변화로 연결했습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · N×N matrix의 positive·negative 수와 두 손실의 정규화 범위를 식과 장면으로 함께 추적했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, 다섯 시각화의 세로 중첩 0, SVG 내부 가로 탐색을 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, locator와 시각화 순서를 확인했습니다.",
+        "keyboard": "pass · 공용 조작부의 이전·재생·다음 버튼과 키보드 접근 경로를 확인했습니다.",
+        "reducedMotion": "pass · 각 시각화가 마지막 장면을 정적으로 표시하고 재생 버튼을 비활성화합니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 각 시각화의 순서 있는 장면 목록을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
@@ -4499,7 +4602,7 @@
       ],
       "fixture": "한 token이 과거 token을 읽는 sequence, 이전 layer를 읽는 depth, expert를 고르는 width 세 축을 지나며 각각 KDA·AttnRes·LatentMoE 상태를 바꾸는 과정을 추적합니다.",
       "stageAnchors": {
-        "parent": "overview",
+        "parent": "embedding-family-map",
         "axes": "axes",
         "configuration": "configuration",
         "evidence": "evidence"
@@ -9117,9 +9220,12 @@
       "publicFiles": [
         "src/pages/articles/ai/sentence-embeddings.tsx",
         "src/pages/articles/ai/sentence-embeddings/ModernArticle.tsx",
-        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx"
+        "src/pages/articles/ai/sentence-embeddings/EmbeddingPathLocator.tsx",
+        "src/pages/articles/ai/sentence-embeddings/viz/ModernSentenceEmbeddingViz.tsx",
+        "src/content/embedding-learning-tree.ts",
+        "src/components/viz/AnimatedSceneControls.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9127,19 +9233,36 @@
         "hasSourceSurface": true,
         "characters": 8091
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Token state, pooling, relation objective, cosine을 한꺼번에 소개해 vector 형태와 가까움의 의미가 어디서 생기는지 분리하기 어려웠습니다.",
+        "Padding을 평균에 넣으면 같은 문장이 batch 길이에 따라 달라지는 실패를 실제 숫자로 끝까지 추적하지 않았습니다.",
+        "문장·검색·서빙·이미지·평가 글 사이의 직속 부모와 현재 위치가 보이지 않았습니다.",
+        "시각화가 빠르게 반복되거나 JavaScript가 꺼진 상태에서 같은 설명 순서를 제공하지 않았습니다."
+      ],
+      "fixture": "Token state (1,1)·(3,1)·(9,9)에 mask 1·1·0을 적용해 masked mean (2,1)을 만들고, L2 normalization 뒤 cosine을 내적으로 줄이는 과정을 추적합니다 [A].",
+      "stageAnchors": {
+        "parent": "overview",
+        "pooling": "pooling",
+        "relation": "relation",
+        "similarity": "similarity",
+        "return": "return-map"
+      },
+      "primarySourceApplication": [
+        "Sentence-BERT 논문은 siamese·triplet 구조와 pooling으로 재사용 가능한 sentence embedding을 학습하는 메커니즘의 근거로 사용했습니다.",
+        "논문의 NLI·STS 결과를 모든 domain retrieval의 품질 보장으로 일반화하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · token state→mask pooling→relation objective→cosine 경계를 한 문장 벡터 사례로 연결하고 부모 지도에 반환했습니다.",
+        "humanize": "pass · 한국어·문장 호흡·용어 대응·본문 구조 검사를 통과했습니다.",
+        "numericTrace": "pass · mask 1·1·0에서 평균 (2,1)을 만들고 unit vector의 cosine이 내적으로 줄어드는 계산을 단계별로 추적했습니다.",
+        "mobile390": "pass · 390×844에서 document overflow 0, locator와 첫 시각화의 읽기 순서를 확인했습니다.",
+        "desktop1440": "pass · 1440×1000에서 document overflow 0, locator와 본문·시각화의 연결을 확인했습니다.",
+        "keyboard": "pass · ArrowRight로 01→02 장면을 이동하고 직접 선택한 장면을 유지했습니다.",
+        "reducedMotion": "pass · 최종 04/04 상태를 보이고 재생 버튼은 비활성화됩니다.",
+        "noJavaScript": "pass · production static route에서 정적 읽기 모드와 4개 장면 목록, 부모 지도 복귀를 390×844로 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

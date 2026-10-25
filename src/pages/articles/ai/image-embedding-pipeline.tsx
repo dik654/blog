@@ -7,6 +7,7 @@ import PipelineContract from "./image-embedding-pipeline/PipelineContract";
 import Evaluation from "./image-embedding-pipeline/Evaluation";
 import { codeRefs } from "./image-embedding-pipeline/codeRefs";
 import { transformersTree } from "./image-embedding-pipeline/fileTree";
+import { EmbeddingMapReturn } from "./sentence-embeddings/EmbeddingPathLocator";
 
 const PROJECT_META = {
   transformers: {
@@ -31,6 +32,7 @@ export default function ImageEmbeddingPipelineArticle() {
       <Similarity />
       <PipelineContract />
       <Evaluation />
+      <EmbeddingMapReturn current="image-vector" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

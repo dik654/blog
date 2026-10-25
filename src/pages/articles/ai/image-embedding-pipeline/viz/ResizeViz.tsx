@@ -1,6 +1,7 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import WideSvgViewport from "@/components/viz/WideSvgViewport";
 
 /** 본문 대응: Preprocessing.tsx — 크기를 맞추는 세 방식이 버리는 것 */
 const SCENES = ["원본 16:9", "비율 무시", "중앙 자르기", "여백 채우기"] as const;
@@ -17,8 +18,8 @@ const PAD = "#94a3b8";
 const OK = "#10b981";
 
 export default function ResizeViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, { loop: false, autoPlay: false });
+  const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   return (
     <VizFrame
       eyebrow="전처리"
@@ -27,17 +28,20 @@ export default function ResizeViz() {
       note="주제 위치는 설명을 위한 배치이며 실제 데이터 분포가 아닙니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-id="image-resize-crop"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="리사이즈 방식 비교"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[23rem] flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <WideSvgViewport>
+          <svg viewBox="0 0 480 200" className="mobile-readable-svg w-full max-w-none sm:max-w-2xl">
             <text x={24} y={34} fontSize={9} fill={PAD}>
               원본
             </text>
@@ -104,9 +108,11 @@ export default function ResizeViz() {
               색인과 질의가 같은 방식을 써야 합니다
             </text>
           </svg>
+          </WideSvgViewport>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={step} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

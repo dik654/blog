@@ -1,6 +1,7 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import WideSvgViewport from "@/components/viz/WideSvgViewport";
 
 /** 본문 대응: SigmoidLoss.tsx — 칸마다 독립인 이진 손실 */
 const SCENES = ["부호 라벨", "칸마다 독립 계산", "편향의 역할", "장치별 조각"] as const;
@@ -18,8 +19,8 @@ const DEV = "#6366f1";
 const N = 5;
 
 export default function SigmoidViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2600);
-  const step = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, { loop: false, autoPlay: false });
+  const step = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   return (
     <VizFrame
       eyebrow="시그모이드 손실"
@@ -28,17 +29,20 @@ export default function SigmoidViz() {
       note="장치 배치는 개념도이며 실제 구현의 통신 순서를 그대로 나타내지 않습니다."
     >
       <div
+        id={scenes.playbackId}
+        data-viz-id="image-text-sigmoid-loss"
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="쌍 단위 시그모이드 손실"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[23rem] flex-col justify-center">
           <p className="text-[11px] font-black text-primary">Scene · {String(step + 1).padStart(2, "0")}</p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <WideSvgViewport>
+          <svg viewBox="0 0 480 200" className="mobile-readable-svg w-full max-w-none sm:max-w-2xl">
             {Array.from({ length: N }, (_, i) => i).map((i) =>
               Array.from({ length: N }, (_, j) => j).map((j) => {
                 const isDiag = i === j;
@@ -104,9 +108,11 @@ export default function SigmoidViz() {
               </g>
             )}
           </svg>
+          </WideSvgViewport>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[step]}</p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={step} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );
