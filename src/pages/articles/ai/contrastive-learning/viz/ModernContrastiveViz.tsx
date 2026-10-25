@@ -359,32 +359,33 @@ export function TripletMiningViz() {
 }
 
 export function SupervisedPositiveViz() {
-  const labels = ["Batch label 보기", "Positive set P(i)", "여러 log-prob 평균", "빈 positive guard"] as const;
+  const labels = ["원본 3개를 view 6개로 펼치기", "Positive set P(A₁)", "여러 log-prob 평균", "One-view 변형의 빈 집합 경계"] as const;
   const notes = [
-    "Label은 pair 관계를 만드는 입력이지 모든 same-label sample이 완전히 같다는 선언은 아닙니다.",
-    "Anchor와 같은 label인 다른 sample만 P(i)에 들어갑니다.",
-    "각 positive의 log-probability를 |P(i)|로 나눠 anchor 하나의 loss로 만듭니다.",
-    "P(i)가 비면 분모가 정의되지 않으므로 sampler나 explicit exclusion이 필요합니다.",
+    "신발 원본 A·B와 가방 원본 C에서 view를 두 개씩 만들면 paired view가 항상 하나 남습니다.",
+    "A₁을 빼고 같은 신발 label인 A₂·B₁·B₂를 P(A₁)에 넣습니다.",
+    "공통 후보 분모에서 각 positive의 log-probability를 구하고 |P(A₁)|=3으로 나눕니다.",
+    "논문의 two-view batch에서는 P(i)가 비지 않습니다. One-view 변형에서만 빈 집합을 검사하고 해당 anchor를 제외합니다.",
   ] as const;
-  const points = [[48, 66, "A₁"], [102, 48, "A₂"], [96, 105, "A₃"], [178, 61, "B₁"], [225, 118, "C₁"]] as const;
+  const points = [[44, 62, "A₁"], [94, 42, "A₂"], [98, 101, "B₁"], [148, 75, "B₂"], [213, 48, "C₁"], [221, 111, "C₂"]] as const;
   return (
-    <Scene id="supervised-positive-viz" eyebrow="Multi-positive" title="Class label을 anchor별 positive 집합으로 바꿉니다" description="Batch→P(i)→평균→empty-set guard를 봅니다." labels={labels} notes={notes}>
+    <Scene id="supervised-positive-viz" eyebrow="Multi-positive" title="Class label을 anchor별 positive 집합으로 바꿉니다" description="Two-view batch→P(A₁)→평균→변형의 경계를 봅니다." labels={labels} notes={notes}>
       {(active) => (
         <svg viewBox="0 0 360 210" role="img" aria-label={labels[active]} className="block h-auto w-full">
           <g>
             {points.map(([x, y, text], index) => (
               <g key={text}>
-                <circle cx={x} cy={y} r="18" fill={text.startsWith("A") ? legacyAccent : "var(--background)"} fillOpacity={text.startsWith("A") ? 0.13 : 1} stroke={active === 1 && text.startsWith("A") ? legacyAccent : legacyBorder} strokeWidth="1.25" />
+                <circle cx={x} cy={y} r="18" fill={index < 4 ? legacyAccent : "var(--background)"} fillOpacity={index < 4 ? 0.13 : 1} stroke={active === 1 && index > 0 && index < 4 ? legacyAccent : legacyBorder} strokeWidth="1.25" />
                 <text x={x} y={y + 4} textAnchor="middle" className="fill-foreground text-[11px] font-bold sm:text-[9px]">{text}</text>
-                {active === 1 && index > 0 && index < 3 ? <line x1="48" y1="66" x2={x} y2={y} stroke={legacyAccent} strokeWidth="1.25" strokeDasharray="4 3" /> : null}
+                {active === 1 && index > 0 && index < 4 ? <line x1="44" y1="62" x2={x} y2={y} stroke={legacyAccent} strokeWidth="1.25" strokeDasharray="4 3" /> : null}
               </g>
             ))}
           </g>
           <LegacyArrow x1={247} y1={98} x2={271} y2={98} id="sup-a" active={active === 2} />
           <LegacyBox x={276} y={54} w={72} h={88} label="mean" detail="Σ log p / |P|" active={active === 2} shape="diamond" />
           <motion.g animate={{ opacity: active === 3 ? 1 : 0 }}>
-            <circle cx="225" cy="118" r="28" fill="none" stroke={legacyAccent} strokeWidth="1.25" />
-            <text x="225" y="163" textAnchor="middle" className="fill-foreground text-[10px] font-bold sm:text-[8px]">P(C₁)=∅ → exclude</text>
+            <rect x="48" y="151" width="208" height="38" fill="var(--background)" stroke={legacyAccent} strokeWidth="1.25" />
+            <text x="152" y="166" textAnchor="middle" className="fill-foreground text-[10px] font-bold sm:text-[8px]">one-view custom batch</text>
+            <text x="152" y="181" textAnchor="middle" className="fill-muted-foreground text-[9px] sm:text-[7px]">P(i)=∅이면 valid anchor에서 제외</text>
           </motion.g>
         </svg>
       )}

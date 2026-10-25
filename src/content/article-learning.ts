@@ -23095,36 +23095,169 @@ export const ARTICLE_LEARNING: Readonly<
     ],
   },
   "ai/supervised-contrastive-learning": {
-    entryLevel: true,
-    entryNote: "Multi-positive loss를 모른다고 가정하고 batch label에서 P(i)를 만드는 과정부터 시작합니다.",
-    coreIdea: "Supervised contrastive learning은 same-label sample을 anchor별 positive set으로 펼쳐 log-probability를 평균하지만 empty positive·coarse hierarchy·sampler prior 경계를 별도로 관리합니다.",
-    assumedKnowledge: [],
+    entryLevel: false,
+    recursiveTeaching: true,
+    entryNote:
+      "앞 글의 N=3, 2N=6 multiview batch를 이어받아 신발 label을 가진 A₁이 A₂·B₁·B₂ 세 positive를 찾고 loss 하나를 만드는 과정을 추적합니다.",
+    coreIdea:
+      "Supervised contrastive learning은 anchor 자신을 뺀 same-label view를 P(i)로 모으고, positive와 negative가 함께 있는 공통 분모에서 positive별 negative log-probability를 계산한 뒤 같은 비중으로 평균합니다.",
+    assumedKnowledge: [
+      {
+        id: "ntxent-inbatch-objective",
+        role: "N개 원본이 2N개 view가 되고 anchor 자신을 제외한 후보 softmax를 만든다는 출발점입니다.",
+      },
+      {
+        id: "contrastive-pair-semantics",
+        role: "같은 label이 현재 task에서 실제 positive 관계인지 확인해야 한다는 전제입니다.",
+      },
+    ],
     introducedHere: [
-      { id: "supervised-multipositive-objective", role: "Positive set P(i)·valid anchor·multi-positive 평균 objective를 계산합니다." },
+      {
+        id: "supervised-multipositive-objective",
+        role: "Label mask로 P(A₁)={A₂,B₁,B₂}를 만들고 논문 식 (2)와 식 (3)의 차이를 계산합니다.",
+      },
     ],
     conceptExplanations: [
-      { id: "supervised-multipositive-objective", sectionId: "objective", intuition: "같은 class 친구 여러 명을 모두 positive로 두고 각 선택 loss를 평균합니다.", workedExample: "A1의 P(i)={A2,A3}이면 두 log-probability를 평균합니다.", boundary: "P(i)가 비면 정의되지 않고 coarse label은 subgroup 차이를 지울 수 있습니다." },
+      {
+        id: "supervised-multipositive-objective",
+        sectionId: "objective",
+        intuition:
+          "Anchor 하나가 같은 class의 여러 view를 정답 후보로 보고, 각 positive가 받은 선택 실패량을 같은 비중으로 평균합니다.",
+        workedExample:
+          "A₁의 후보 지수 점수가 8·4·2·1·1이면 Z=16이고, positive 확률 0.5·0.25·0.125의 negative log 평균은 약 1.386입니다.",
+        boundary:
+          "논문의 two-view batch에서는 paired view가 있어 P(i)가 비지 않지만, one-view 변형과 custom sampler에서는 empty positive guard가 필요합니다. Same-label도 task 의미의 자동 증명은 아닙니다.",
+        causalTrace: {
+          answer:
+            "Self를 제외한 same-label view를 P(i)로 표시하고 공통 후보 분모에서 positive별 negative log-probability를 평균하면 multi-positive anchor loss가 됩니다.",
+          followUpQuestion:
+            "Positive 합을 log 안으로 옮겨도 같은 집합을 쓰는데 왜 gradient가 달라질까요?",
+          bottleneck:
+            "Positive 확률을 먼저 합쳐 log를 한 번만 적용하면 이미 가까운 positive가 target weight를 더 많이 가져갑니다.",
+          mechanism:
+            "N=3→view 6개→self 제외 후보 5개→same-label positive 3개→Z=16→positive별 negative log→3개 평균을 같은 anchor 행에서 계산합니다.",
+          remainingCost:
+            "Batch 구성과 label 품질이 바뀌면 positive 수와 의미가 달라지며, objective loss만으로 downstream 유용성을 보증할 수 없습니다.",
+          decisionRule:
+            "구현을 검토할 때 multiview 수, self mask, P(i), log 위치, valid-anchor 처리와 label 의미를 함께 확인합니다.",
+        },
+      },
     ],
     conceptStages: [
-      { label: "Labels", relation: "Batch label과 relation rule 확인", concepts: ["supervised-multipositive-objective"] },
-      { label: "Set", relation: "Anchor별 P(i)와 valid anchor 구성", concepts: ["supervised-multipositive-objective"] },
-      { label: "Average", relation: "Positive별 log-probability 평균", concepts: ["supervised-multipositive-objective"] },
-      { label: "Release", relation: "Sampler·hierarchy·subgroup metric 검사", concepts: ["supervised-multipositive-objective"] },
+      {
+        label: "00 Batch",
+        relation: "원본 3개와 label을 view 6개로 펼칩니다.",
+        concepts: ["ntxent-inbatch-objective", "supervised-multipositive-objective"],
+      },
+      {
+        label: "01 Self",
+        relation: "A₁ 행에서 자기 자신을 후보에서 제외합니다.",
+        concepts: ["supervised-multipositive-objective"],
+      },
+      {
+        label: "02 Positive",
+        relation: "같은 신발 label의 A₂·B₁·B₂를 P(A₁)로 표시합니다.",
+        concepts: ["contrastive-pair-semantics", "supervised-multipositive-objective"],
+      },
+      {
+        label: "03 Average",
+        relation: "공통 분모에서 positive별 negative log를 계산하고 3으로 나눕니다.",
+        concepts: ["supervised-multipositive-objective"],
+      },
+      {
+        label: "04 Log 위치",
+        relation: "논문 식 (2)와 식 (3)의 positive target weight를 비교합니다.",
+        concepts: ["supervised-multipositive-objective"],
+      },
     ],
     exercises: [
-      { level: "basic", question: "Batch [A1,A2,A3,B1,C1]에서 P(A1)을 쓰라.", answerChecklist: ["exclude anchor", "A2", "A3", "size 2", "same relation"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
-      { level: "basic", question: "Batch에서 같은 label sample이 없는 anchor C1의 P(C1)과 안전한 처리 규칙을 쓰라.", answerChecklist: ["empty", "undefined division", "exclude", "sampler alternative", "valid count"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
-      { level: "basic", question: "Same-label positive와 same-source view를 구분하라.", answerChecklist: ["label relation", "source identity", "multiple positives", "augmentation", "different assumptions"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "overview" },
-      { level: "basic", question: "Multi-positive loss에서 |P(i)|로 나누는 이유를 설명하라.", answerChecklist: ["sum positives", "count", "anchor average", "class composition", "not global prior"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "objective" },
-      { level: "basic", question: "Class-aware sampler의 목적과 위험을 쓰라.", answerChecklist: ["positive availability", "batch balance", "changed prior", "calibration", "record composition"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
-      { level: "basic", question: "Coarse label이 subgroup을 지우는 예를 쓰라.", answerChecklist: ["same top label", "different subgroup", "forced pull", "worst slice", "hierarchy rule"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
-      { level: "advanced", question: "Multi-label positive relation을 설계하라.", answerChecklist: ["label set", "overlap threshold", "confidence", "unknown", "weighting", "audit"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "positive-set" },
-      { level: "advanced", question: "Valid-anchor normalization bug fixture를 설계하라.", answerChecklist: ["empty anchors", "NaN", "silent drop", "count exposed", "expected mean", "test"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "objective" },
-      { level: "advanced", question: "Frozen probe·fine-tuning·retrieval 평가를 비교하라.", answerChecklist: ["same checkpoint", "different capability", "primary metric", "original prior", "subgroup", "paired baseline"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
-      { level: "advanced", question: "Supervised contrastive release receipt를 작성하라.", answerChecklist: ["label revision", "positive rule", "sampler", "valid anchors", "temperature", "encoder", "subgroup metric", "rollback"], requiredConcepts: ["supervised-multipositive-objective"], sectionId: "release" },
+      {
+        level: "basic",
+        question: "원본 A·B·C에서 view와 label을 펼치고 P(A₁)을 쓰라.",
+        answerChecklist: ["six views", "A1 anchor", "A2", "B1", "B2", "same shoe label"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "overview",
+      },
+      {
+        level: "basic",
+        question: "A(A₁)과 P(A₁)의 원소를 각각 쓰고 차이를 설명하라.",
+        answerChecklist: ["self excluded", "five candidates", "three positives", "C1 C2 denominator", "two negatives"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "positive-set",
+      },
+      {
+        level: "basic",
+        question: "지수 점수 8·4·2·1·1에서 Z와 다섯 후보 확률을 계산하라.",
+        answerChecklist: ["Z 16", "0.5", "0.25", "0.125", "0.0625 twice", "sum one"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "objective",
+      },
+      {
+        level: "basic",
+        question: "Positive 확률 0.5·0.25·0.125의 식 (2) anchor loss를 계산하라.",
+        answerChecklist: ["negative log each", "0.693", "1.386", "2.079", "divide three", "about 1.386"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "objective",
+      },
+      {
+        level: "basic",
+        question: "논문의 two-view batch에서 C₁의 P(C₁)이 비지 않는 이유를 쓰라.",
+        answerChecklist: ["paired C2", "same source", "same label", "two-view setup", "positive count at least one"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "basic",
+        question: "One-view 변형에서 empty positive가 생길 때 안전한 처리 규칙을 쓰라.",
+        answerChecklist: ["detect zero", "exclude anchor", "no division by zero", "valid anchor count", "batch variant recorded"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "boundaries",
+      },
+      {
+        level: "advanced",
+        question: "같은 세 positive로 논문 식 (2)와 식 (3)의 loss를 각각 계산하라.",
+        answerChecklist: ["outside log 1.386", "inside log 1.232", "different objectives", "magnitude not performance", "same denominator"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "log-placement",
+      },
+      {
+        level: "advanced",
+        question: "지수 점수 8·4·2에서 식 (2)와 식 (3)의 positive target weight를 비교하라.",
+        answerChecklist: ["one third each", "8/14", "4/14", "2/14", "easy positive more weight inside", "gradient differs"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "log-placement",
+      },
+      {
+        level: "advanced",
+        question: "수치 안정적인 batch loss pseudocode의 mask와 reduction 순서를 설명하라.",
+        answerChecklist: ["self mask", "label mask", "logsumexp", "positive sum", "positive count", "valid anchor mean"],
+        requiredConcepts: ["supervised-multipositive-objective"],
+        sectionId: "objective",
+      },
+      {
+        level: "advanced",
+        question: "Coarse label이 잘못된 positive를 만드는 사례와 다음 검증 항목을 설계하라.",
+        answerChecklist: ["same coarse label", "different task meaning", "false attraction", "pair audit", "subgroup slice", "downstream comparison"],
+        requiredConcepts: ["contrastive-pair-semantics", "supervised-multipositive-objective"],
+        sectionId: "boundaries",
+      },
     ],
     papers: [
-      { title: "Supervised Contrastive Learning", href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Abstract.html", problem: "Label을 활용해 class 내 여러 sample을 positive로 확장하는 문제", contribution: "Anchor별 same-class positive set을 평균하는 objective와 classification comparison", assumptions: "ImageNet·CIFAR·ResNet·논문의 augmentation·batch recipe", evidenceScope: "NeurIPS 논문의 accuracy·robustness와 ablation", notClaim: "Coarse·hierarchical·noisy label의 모든 same-label pair가 의미상 같다는 뜻은 아님", sectionId: "paper-supcon" },
+      {
+        title: "Supervised Contrastive Learning",
+        href: "https://papers.nips.cc/paper_files/paper/2020/hash/d89a66c7c80a29b1bdbab0f2a1a94af8-Paper.pdf",
+        problem:
+          "Self-supervised batch contrastive objective를 label이 있는 여러 positive에 맞게 확장하는 문제",
+        contribution:
+          "Same-label multiview positive set과 log 바깥 평균 objective를 제시하고 log 안 대안의 gradient·실험 차이를 분석",
+        assumptions:
+          "ImageNet·CIFAR, ResNet, 두 augmentation view, normalized projection, 논문의 batch·optimizer·evaluation 설정",
+        evidenceScope:
+          "NeurIPS 2020 논문 §3.1~3.2의 framework, 식 (2)~(6), Table 1과 해당 classification 실험 범위",
+        notClaim:
+          "모든 domain에서 same-label pair가 의미상 positive이거나 논문의 성능 차이가 그대로 재현된다는 뜻은 아님",
+        sectionId: "paper-supcon",
+      },
     ],
   },
   "ai/contrastive-evaluation": {

@@ -687,10 +687,12 @@ export const embeddingArticles: Article[] = [
     title: "Supervised Contrastive Learning: Label을 Multi-positive로",
     subcategory: "ai-practical-embedding",
     sections: [
-      { id: "overview", title: "Label에서 positive relation까지" },
-      { id: "positive-set", title: "P(i)와 valid anchor" },
-      { id: "objective", title: "Multi-positive 평균 loss" },
-      { id: "release", title: "Sampler·subgroup·downstream gate" },
+      { id: "overview", title: "원본 3개에서 view 6개" },
+      { id: "positive-set", title: "Self mask와 P(A₁)" },
+      { id: "objective", title: "Positive별 loss 평균" },
+      { id: "log-placement", title: "Log 밖과 안" },
+      { id: "boundaries", title: "Two-view·label 경계" },
+      { id: "return-map", title: "부모 지도에 반환" },
     ],
     component: () =>
       import("@/pages/articles/ai/supervised-contrastive-learning"),

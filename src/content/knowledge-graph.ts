@@ -6878,7 +6878,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Supervised multi-positive contrastive objective",
     definition:
-      "각 anchor에 대해 batch 안의 same-label positive log-probability를 positive-set 크기로 평균하고 다른 sample과 상대 비교하는 supervised contrastive loss입니다.",
+      "원본마다 두 view를 만든 multiview batch에서 anchor 자신을 제외한 same-label view를 positive set으로 모으고, 공통 후보 분모의 positive별 negative log-probability를 같은 비중으로 평균하는 objective입니다.",
     canonicalHref: "/cs/ai/supervised-contrastive-learning#objective",
   },
   "false-negative-pair-audit": {
@@ -60047,6 +60047,20 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "vision-architecture-paired-selection",
     relation: "extends",
     reason: "후보별 단일 점수를 seed별 paired gain과 uncertainty까지 확장해 선택 근거를 만듭니다.",
+  },
+  {
+    from: "ntxent-inbatch-objective",
+    to: "supervised-multipositive-objective",
+    relation: "extends",
+    reason:
+      "한 source의 paired view 하나만 positive로 쓰던 anchor별 후보 문제를 same-label view 전체로 확장합니다.",
+  },
+  {
+    from: "contrastive-pair-semantics",
+    to: "supervised-multipositive-objective",
+    relation: "constrains",
+    reason:
+      "Class label이 실제 task에서 가까워져야 할 관계인지 먼저 확인해야 positive mask의 의미가 성립합니다.",
   },
 ];
 

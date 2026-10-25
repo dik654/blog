@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · AI 대조 학습 05 지도 대조학습 (로컬 검수 완료, 배포 대기)
+
+- `ai/supervised-contrastive-learning`을 신발 원본 A·B와 가방 원본 C에서 두 view씩 만든 여섯 입력으로 다시 썼습니다. A₁의 self를 제외하고 A₂·B₁·B₂를 positive로 모은 뒤, 지수 점수 8·4·2·1·1에서 공통 분모 16과 식 (2)의 anchor loss 1.386을 끝까지 계산합니다.
+- 기존 글은 two-view batch인데도 C₁의 positive set이 빈다고 설명했습니다. 실제로는 paired view C₂가 남으므로 이를 바로잡고, 빈 positive 집합은 one-view 변형이나 custom sampler에서만 생기는 경계로 분리했습니다. 같은 오류가 되돌아오지 않도록 부모 지도 요약도 함께 수정했습니다.
+- 네 시각화는 원본→view, self·positive·negative mask, 지수 점수→확률→negative log→평균, 식 (2)·(3)의 target weight 차이를 각각 네 장면으로 보여 줍니다. 자동 재생과 반복은 끄고 키보드와 장면 버튼으로만 이동합니다.
+- NeurIPS 2020 원문 §3.2와 식 (2)~(6)을 대조했습니다. Table 1 수치는 ImageNet·ResNet-50·batch 6144라는 저자 실험 범위로 제한했으며, 다른 domain의 성능으로 일반화하지 않았습니다.
+- article·learning·graph·formula·calculation·pseudocode·Viz·한국어 감사, ESLint, 8GB TypeScript와 production build를 통과했습니다. 1440×1000과 390×844에서 네 시각화의 01→04 키보드 이동, 가로 넘침 0, reduced-motion 04/04 정지, JavaScript 비활성 정적 본문을 확인했습니다. 전수 장부는 검토 588편·미검토 403편입니다.
+
 ## 2026-10-25 · AI Batch 45 이미지 분류 데이터 경계 (로컬 검수 완료, 배포 대기)
 
 - 이미지 분류 묶음을 데이터 경계·표현과 비용·학습 단계·확률과 판정의 네 영역으로 고정하고, 첫 글에 직속 부모·현재 영역·같은 트랙의 이웃 글을 보여 주는 공통 locator를 추가했습니다.
