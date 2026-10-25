@@ -84,7 +84,10 @@ export default function DecisionMatrix() {
           Candidate를 실행한 뒤 잘 나온 예시만 골라 metric을 만드는 일을 막으려면,
           evaluation slice와 성공 기준을 먼저 versioning합니다. 고정 질문의
           한국어-only 변형, 긴 reasoning 변형, 중국어 번역 “首尔”을 요구하는
-          예외 변형을 쌍으로 둡니다. Model checkpoint와 tokenizer revision, chat
+          예외 변형을 쌍으로 둡니다.
+        </p>
+        <p>
+          Model checkpoint와 tokenizer revision, chat
           template, thinking mode, prompt, decoding, checker·judge version을 함께
           고정하고 seed를 지원하면 같은 seed를, 그렇지 않으면 반복 횟수와 결과
           분포를 기록합니다. 이런 <strong>preregistration(사전 등록)</strong>은 학술
@@ -111,7 +114,10 @@ export default function DecisionMatrix() {
         <h3>2. 제약에 맞는 candidate 하나와 baseline을 비교합니다</h3>
         <p>
           Weight access가 없고 즉시 실패를 막아야 하면 prompt와 bounded runtime guard가 현실적인 후보입니다. 오픈웨이트에서 특정 문자군만 반복적으로 과다
-          생성되면 Smoothie 변환본을 base와 비교합니다. 표면 표기는 안정됐는데 연구용 reasoning trace의 언어·정답 policy가 계속 무너지면 SFT를 먼저
+          생성되면 Smoothie 변환본을 base와 비교합니다.
+        </p>
+        <p>
+          표면 표기는 안정됐는데 연구용 reasoning trace의 언어·정답 policy가 계속 무너지면 SFT를 먼저
           검토합니다. SFT 이후 여러 candidate의 상대 선호를 바꿀 reliable reward와 judge가 있을 때만 RL을 추가합니다.
         </p>
         <p>
@@ -132,7 +138,10 @@ export default function DecisionMatrix() {
         <h3>4. rollback 기준은 배포 전에 수치와 action으로 연결합니다</h3>
         <p>
           예를 들어 unexpected leakage가 목표 이하더라도 번역 예외 보존율이나 핵심 task accuracy가 preregistered floor 아래로 내려가면
-          rollback합니다. Runtime guard의 p95 latency나 review queue가 한도를 넘을 때도 같은 action을 정의합니다. 원본
+          rollback합니다. Runtime guard의 p95 latency나 review queue가 한도를 넘을 때도 같은 action을 정의합니다.
+        </p>
+        <p>
+          원본
           checkpoint·prompt·checker schema를 보존하고 route만 되돌릴 수 있어야 사고 중에 새 모델을 다시 빌드하지 않아도 됩니다.
         </p>
 

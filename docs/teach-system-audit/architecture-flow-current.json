@@ -5,11 +5,11 @@
     "publicArticles": 991,
     "architectureCandidates": 178,
     "dedicatedVisuals": 681,
-    "inlineVisuals": 559,
+    "inlineVisuals": 560,
     "customVisuals": 864,
-    "animatedMechanisms": 459,
+    "animatedMechanisms": 462,
     "architectureWithoutAnimation": 96,
-    "recursiveLocators": 220,
+    "recursiveLocators": 223,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -4471,13 +4471,13 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": false,
+      "hasInlineVisual": true,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/qwen-korean-reasoning-posttraining",
@@ -4489,11 +4489,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/qwen36-hybrid-architecture",
@@ -5273,11 +5273,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/smoothquant-activation-smoothing",

@@ -10941,51 +10941,132 @@
       "route": "ai/qwen-korean-consistency",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen-korean-consistency.tsx",
       "publicPath": "cs/ai/qwen-korean-consistency",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "현상 진단·출력층 보정·정책 재학습 글이 같은 판단 경로에 놓이지 않아 개입 범위와 순서를 오해하기 쉬웠음",
+        "실무 선택 글에서 같은 질문을 세 후보에 끝까지 적용하는 첫 시각 자료와 직접 개념 앵커가 없었음",
+        "논문별 실험을 독립 후보와 조합 실험으로 구분하는 설명이 부족했음"
+      ],
+      "fixture": {
+        "prompt": "9,600원을 세 사람이 같은 금액으로 나누고, 마지막에 서울을 중국어로 번역해 주세요.",
+        "requiredAnswer": "3,200원",
+        "allowedForeignSpan": "首尔",
+        "decision": "정상 예외를 보존하면서 가장 작은 개입부터 비교"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "같은 질문·모델·template·생성 설정으로 관측",
+        "2": "reasoning·final·요청된 번역 구간을 분류",
+        "3": "prompt와 runtime guard 기준선",
+        "4": "Smoothie-Qwen 출력층 보정 후보",
+        "5": "한국어 SFT·RL 정책 재학습 후보",
+        "6": "개선·정답·정상 번역·지연·비용의 같은 조건 비교",
+        "7": "일부 배포와 이전 조합 복귀"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://qwenlm.github.io/blog/qwen3/",
+          "application": "Qwen3 공식 모델·thinking mode 맥락"
+        },
+        {
+          "href": "https://arxiv.org/abs/2507.05686",
+          "application": "Smoothie-Qwen의 post-hoc lm_head 편집 방법과 실험 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2508.10355",
+          "application": "Smoothie Qwen3 14B에서 시작한 한국어 SFT와 oracle-guided Dr.GRPO 실험"
+        }
+      ],
+      "validation": {
+        "semanticReview": "실무 판단과 두 논문 해설을 분리하고, 독립 비교와 Smoothie→SFT/RL 조합 실험을 구별했습니다. Opus blind review에서 발견한 다음 글 링크·고정 사례·Judge 근거 범위·장면 강조 오류를 모두 수정했습니다.",
+        "humanize": "ko-natural 합니다체·expert lint error 0",
+        "browser390": "locator·반환 지도 각 1개, 시각 자료가 첫 본문보다 앞, 모든 장면 높이·가로 넘침 0, console/page 오류 0",
+        "browser1440": "locator·반환 지도 각 1개, 모든 장면 높이·가로 넘침 0, console/page 오류 0",
+        "keyboard": "ArrowLeft·ArrowRight로 일곱 장면을 순서대로 이동하고 Space로만 재생이 시작됨을 확인했습니다.",
+        "reducedMotion": "6.4초 뒤에도 첫 장면과 정지 상태를 유지했습니다.",
+        "noScript": "production preview 390×844에서 live 장면과 조작부 0, 관측→분류→개입 비교→배포·복귀의 일곱 단계를 순서대로 확인했습니다.",
+        "build": "Vite 7.3.1·7,931 modules·정적 public route 2,088개·no-script 본문 213편 생성",
+        "browserEvidence": "output/playwright/qwen-korean-learning-production-interactive/summary.json · output/playwright/qwen-korean-learning-production-noscript/summary.json"
+      },
+      "remaining": ["공개 경로 배포 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-practice-with-paper-branches",
+      "bodyFiles": [
+        "src/pages/articles/ai/qwen-korean-consistency.tsx",
+        "src/pages/articles/ai/qwen-korean-consistency/RuntimeGuard.tsx",
+        "src/pages/articles/ai/qwen-korean-consistency/DecisionMatrix.tsx",
+        "src/pages/articles/ai/qwen-korean-consistency/viz/QwenKoreanInterventionViz.tsx",
+        "src/pages/articles/ai/shared/QwenKoreanPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/qwen-korean-consistency.tsx",
+      "contentHash": "944e0f09e9492533c4ccf84d327ea6bae2c35f7ac1d17c6974910d28126aea68"
     },
     {
       "route": "ai/qwen-korean-reasoning-posttraining",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/qwen-korean-reasoning-posttraining.tsx",
       "publicPath": "cs/ai/qwen-korean-reasoning-posttraining",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 1
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "논문이 Smoothie Qwen3 14B에서 시작한다는 연결이 첫 화면에서 드러나지 않았음",
+        "SFT의 고정 예시와 현재 policy rollout, checker와 frozen Judge의 역할이 한눈에 구분되지 않았음",
+        "글의 설명용 번역 사례가 논문 데이터처럼 읽힐 수 있었음"
+      ],
+      "fixture": {
+        "prompt": "9,600원을 나눈 정답과 요청된 중국어 번역을 함께 보존",
+        "paperStart": "Smoothie Qwen3 14B",
+        "stages": "SFT → rollout 12개 → reward → oracle 보정 → Dr.GRPO → 평가"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "30,000개 고정 SFT 예시",
+        "2": "현재 policy의 질문당 12개 rollout",
+        "3": "정확도·형식·언어·길이 reward",
+        "4": "frozen Judge의 accuracy 보정",
+        "5": "group-relative Dr.GRPO update",
+        "6": "Base·SFT·RL 단계별 평가"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2508.10355",
+          "application": "Smoothie Qwen3 14B 출발점, SFT·reward·Dr.GRPO·평가 설정"
+        },
+        {
+          "href": "https://arxiv.org/abs/2507.05686",
+          "application": "출발 checkpoint를 만든 출력층 보정 단계"
+        }
+      ],
+      "validation": {
+        "semanticReview": "논문이 보고한 단계와 글의 설명용 사례를 분리했습니다. Judge는 ground truth가 아니라 frozen evaluator라는 경계를 유지하고 교체·결합 범위는 구현 확인 대상으로 남겼습니다.",
+        "humanize": "ko-natural 합니다체·expert lint error 0",
+        "browser390": "두 열 단계 지도에서 여섯 장면이 모두 보이며 문서·canvas 가로 넘침 0, console/page 오류 0",
+        "browser1440": "여섯 장면 keyboard 순서·fit·overflow 0, console/page 오류 0",
+        "keyboard": "ArrowLeft·ArrowRight 순서와 Space 의도 재생을 확인했습니다.",
+        "reducedMotion": "6.4초 뒤에도 첫 장면과 정지 상태를 유지했습니다.",
+        "noScript": "production preview 390×844에서 live 장면과 조작부 0, SFT→rollout→reward→oracle→Dr.GRPO→평가의 여섯 단계를 순서대로 확인했습니다.",
+        "build": "Vite 7.3.1·7,931 modules·정적 public route 2,088개·no-script 본문 213편 생성",
+        "browserEvidence": "output/playwright/qwen-korean-learning-production-interactive/summary.json · output/playwright/qwen-korean-learning-production-noscript/summary.json"
+      },
+      "remaining": ["공개 경로 배포 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-reference-paper-trace",
+      "bodyFiles": [
+        "src/pages/articles/ai/qwen-korean-reasoning-posttraining.tsx",
+        "src/pages/articles/ai/qwen-korean-reasoning-posttraining/RLApproach.tsx",
+        "src/pages/articles/ai/qwen-korean-reasoning-posttraining/viz/RLApproachViz.tsx",
+        "src/pages/articles/ai/shared/QwenKoreanPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/qwen-korean-reasoning-posttraining/RLApproach.tsx",
+      "contentHash": "11351be87c41eeb3d8b42ffed97dec40979359bf8cf9ef8cb76a473adc165213"
     },
     {
       "route": "ai/qwen36-hybrid-architecture",
@@ -12472,26 +12553,64 @@
       "route": "ai/smoothie-qwen-weight-editing",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/smoothie-qwen-weight-editing.tsx",
       "publicPath": "cs/ai/smoothie-qwen-weight-editing",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 1
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "출력층 보정이 상위 한국어 출력 판단에서 어느 지점을 바꾸는지 보이지 않았음",
+        "정적 수식과 설명만 있어 token risk가 행 배율·logit·softmax 경쟁으로 이어지는 상태 변화를 빠르게 보기 어려웠음",
+        "정상 중국어 번역 보존과 원치 않은 전환 억제를 같은 질문에서 비교하는 경계가 약했음"
+      ],
+      "fixture": {
+        "prompt": "9,600÷3과 요청된 번역 首尔",
+        "risk": 0.5,
+        "minScale": 0.5,
+        "smoothness": 10,
+        "scale": "약 0.630"
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "1": "token 후보",
+        "2": "Unicode·broken token·n-gram risk",
+        "3": "S(r) 행 배율",
+        "4": "hidden state와 새 logit",
+        "5": "vocabulary 전체 softmax 재정규화"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2507.05686",
+          "application": "Smoothie-Qwen의 risk·scale 식과 실험 경계"
+        },
+        {
+          "href": "https://github.com/dnotitia/smoothie-qwen",
+          "application": "공개 변환 설정·checkpoint 저장 경로·지원 범위"
+        }
+      ],
+      "validation": {
+        "semanticReview": "행을 0.630배로 바꿔도 확률이 같은 비율로 줄지 않는 이유를 logit과 vocabulary 전체 softmax까지 추적했습니다. 논문 방법과 서비스 배포 판단은 분리했습니다.",
+        "humanize": "ko-natural 합니다체·expert lint error 0",
+        "browser390": "두 열 단계 지도·모든 장면 높이·문서와 canvas 가로 넘침 0, console/page 오류 0",
+        "browser1440": "다섯 장면 keyboard 순서·fit·overflow 0, console/page 오류 0",
+        "keyboard": "ArrowLeft·ArrowRight 순서와 Space 의도 재생을 확인했습니다.",
+        "reducedMotion": "6.4초 뒤에도 첫 장면과 정지 상태를 유지했습니다.",
+        "noScript": "production preview 390×844에서 live 장면과 조작부 0, token 후보→risk→행 배율→logit 경쟁→원본 비교의 다섯 단계를 순서대로 확인했습니다.",
+        "build": "Vite 7.3.1·7,931 modules·정적 public route 2,088개·no-script 본문 213편 생성",
+        "browserEvidence": "output/playwright/qwen-korean-learning-production-interactive/summary.json · output/playwright/qwen-korean-learning-production-noscript/summary.json"
+      },
+      "remaining": ["공개 경로 배포 확인"],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "visual-first-reference-paper-trace",
+      "bodyFiles": [
+        "src/pages/articles/ai/smoothie-qwen-weight-editing.tsx",
+        "src/pages/articles/ai/smoothie-qwen-weight-editing/SmoothieQwen.tsx",
+        "src/pages/articles/ai/smoothie-qwen-weight-editing/viz/SmoothieQwenViz.tsx",
+        "src/pages/articles/ai/shared/QwenKoreanPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/smoothie-qwen-weight-editing/SmoothieQwen.tsx",
+      "contentHash": "4fe2fa39bfcc4a368174792e06f40087bb495ecce6632edc5110be9309a86da7"
     },
     {
       "route": "ai/speculative-decoding-variants",

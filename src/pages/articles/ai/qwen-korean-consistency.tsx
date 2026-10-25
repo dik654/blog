@@ -3,19 +3,20 @@ import PromptLevel from "./qwen-korean-consistency/PromptLevel";
 import { Link } from "react-router-dom";
 import RuntimeGuard from "./qwen-korean-consistency/RuntimeGuard";
 import DecisionMatrix from "./qwen-korean-consistency/DecisionMatrix";
-
-const ARTICLE_PATH = [
-  ["현상 분류", "문자 혼용인지, 구간 전환인지, 정상 예외인지 먼저 가릅니다."],
-  ["입력 정책", "프롬프트로 기대 언어와 허용 예외를 명시합니다."],
-  ["출력층 보정", "독립 글에서 Smoothie-Qwen의 weight 편집 계약을 검증합니다."],
-  ["학습", "독립 글에서 SFT와 Oracle-Guided Dr.GRPO의 update 경계를 읽습니다."],
-  ["운영 가드", "규칙·judge·재시도·사람 검토의 책임을 나눕니다."],
-  ["배포 결정", "같은 paired evaluation으로 후보를 비교하고 rollback을 준비합니다."],
-] as const;
+import QwenKoreanInterventionViz from "./qwen-korean-consistency/viz/QwenKoreanInterventionViz";
+import {
+  QwenKoreanPracticeLocator,
+  QwenKoreanPracticeReturn,
+} from "./shared/QwenKoreanPathLocator";
 
 export default function QwenKoreanConsistencyArticle() {
   return (
-    <div className="space-y-12">
+    <article className="space-y-12">
+      <QwenKoreanPracticeLocator />
+      <div className="not-prose">
+        <QwenKoreanInterventionViz />
+      </div>
+
       <header className="min-w-0">
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
@@ -68,20 +69,6 @@ export default function QwenKoreanConsistencyArticle() {
           </p>
         </aside>
 
-        <div className="mt-6 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {ARTICLE_PATH.map(([title, description], index) => (
-            <div
-              key={title}
-              className="min-w-0 rounded-lg border border-border/70 bg-background p-4"
-            >
-              <p className="text-xs font-bold text-primary">{index + 1}</p>
-              <p className="mt-1 text-sm font-semibold">{title}</p>
-              <p className="mt-1 break-words text-xs leading-5 text-muted-foreground">
-                {description}
-              </p>
-            </div>
-          ))}
-        </div>
       </header>
 
       <Overview />
@@ -118,6 +105,7 @@ export default function QwenKoreanConsistencyArticle() {
       </section>
       <RuntimeGuard />
       <DecisionMatrix />
-    </div>
+      <QwenKoreanPracticeReturn />
+    </article>
   );
 }

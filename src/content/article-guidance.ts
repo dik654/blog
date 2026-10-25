@@ -52,6 +52,9 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "agent-extension-boundaries": "개념 지도",
   "agent-frameworks": "개념 지도",
   "agent-runtime-selection": "비교·선택",
+  "qwen-korean-consistency": "비교·선택",
+  "smoothie-qwen-weight-editing": "논문·프로젝트 해설",
+  "qwen-korean-reasoning-posttraining": "논문·프로젝트 해설",
   "sionic-eureka": "사례·실측",
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
@@ -396,6 +399,30 @@ export const CONCEPT_REUSE: Record<string, readonly GuidanceLink[]> = {
       href: "/cs/ai/agent-frameworks#langchain",
       reason:
         "이 글은 상태 복구 메커니즘을 다시 설명하지 않고, A-104의 같은 failure point로 후보를 비교하는 실무 판단에서 시작합니다.",
+    },
+  ],
+  "ai/qwen-korean-consistency": [
+    {
+      label: "Tokenizer → lm_head → softmax",
+      href: "/cs/ai/transformer-architecture#output-head",
+      reason:
+        "이 글은 다음 token 계산을 다시 정의하지 않고, 같은 출력 경로의 어느 상태를 개입 후보가 바꾸는지 비교하는 실무 판단에서 시작합니다.",
+    },
+  ],
+  "ai/smoothie-qwen-weight-editing": [
+    {
+      label: "오류·정상 예외 분류",
+      href: "/cs/ai/qwen-korean-consistency#overview",
+      reason:
+        "Smoothie-Qwen 논문 방법을 읽기 전에 원치 않은 언어 전환과 요청된 번역·인용을 서로 다른 label로 나눕니다.",
+    },
+  ],
+  "ai/qwen-korean-reasoning-posttraining": [
+    {
+      label: "오류·정상 예외 분류",
+      href: "/cs/ai/qwen-korean-consistency#overview",
+      reason:
+        "한국어 SFT·RL 사례를 읽기 전에 출력 구간과 사용자의 언어 의도를 분리해 두어야 reward가 무엇을 바꾸는지 해석할 수 있습니다.",
     },
   ],
   "ai/agent-delegation-contracts": [

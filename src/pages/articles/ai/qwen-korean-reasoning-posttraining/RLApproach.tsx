@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import RLApproachViz from "./viz/RLApproachViz";
 
 const SNAPSHOT = [
   ["출발 checkpoint", "Smoothie Qwen3 14B"],
@@ -28,25 +27,24 @@ export default function RLApproach() {
         <p className="text-lg leading-8">
           특정 token의 출력 확률을 낮추는 것과 reasoning trace 전체를 한국어로
           만들면서 정답 품질을 유지하는 것은 서로 다른 문제입니다. 한국어
-          reasoning 연구는 Smoothie Qwen3 14B 위에 곧바로 RL을 얹지 않고,
+          reasoning 연구는 <Link to="/cs/ai/smoothie-qwen-weight-editing#smoothie-qwen">Smoothie Qwen3 14B</Link>를 출발점으로 삼되 곧바로 RL을 얹지 않고,
           먼저 <strong>SFT</strong>로 따라 할 경로를 보여 준 다음
           <strong> Oracle-Guided Dr.GRPO</strong>로 정확성·형식·언어·길이의
           상대 선호를 조정했습니다.
         </p>
         <p>
-          고정 사례로 보면 SFT example은 “9,600÷3=3,200”이라는 한국어 연구용
-          trace, 최종 정답 3,200원, 요청된 번역 “首尔”을 함께 보여 줍니다. RL은
+          이 글의 고정 사례로 옮겨 설명하면 SFT example은 “9,600÷3=3,200”이라는 한국어 연구용
+          trace, 최종 정답 3,200원, 요청된 번역 “首尔”을 함께 보여 줍니다. 이는 논문 데이터의 실제 한 행이 아니라 단계 차이를 설명하는 예시입니다. RL은
           같은 질문에서 여러 후보를 생성하고, 이 계약을 더 잘 지킨 후보의
-          probability를 높입니다. 관련 기초는 <Link to="/cs/ai/supervised-fine-tuning">SFT 정본</Link>, <Link to="/cs/ai/rlhf">RLHF 정본</Link>, 구현 맥락은 <Link to="/cs/ai/open-r1">Open-R1 정본</Link>에서 이어서 볼 수 있습니다.
+          probability를 높입니다.
+        </p>
+        <p>
+          관련 기초는 <Link to="/cs/ai/supervised-fine-tuning">SFT 정본</Link>, <Link to="/cs/ai/rlhf">RLHF 정본</Link>에서 확인할 수 있습니다. 구현 맥락은 <Link to="/cs/ai/open-r1">Open-R1 정본</Link>에서 이어집니다.
         </p>
         <p>
           여기서 “reasoning”은 논문이 학습 데이터와 출력 형식으로 명시한 research trace입니다. 이 사례를 일반 제품이 숨겨진 chain-of-thought를 노출해야
           한다는 권장으로 옮기면 안 됩니다. 운영 제품은 final answer와 짧고 검증 가능한 근거만 노출하고 내부 평가는 별도 계약으로 설계하면 됩니다.
         </p>
-      </div>
-
-      <div className="not-prose my-8">
-        <RLApproachViz />
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
@@ -58,7 +56,10 @@ export default function RLApproach() {
         </p>
         <p>
           Decoder-only 모델의 response-only SFT에서는 prompt token의 loss를 mask해 학습 대상에서 빼고 정답 response token의
-          negative log-likelihood(NLL)를 줄이는 방식으로 demonstration을 따라 하게 만듭니다. 즉 고정된 정답 예시를 모방하는 신호입니다. 다음 RL 단계는
+          negative log-likelihood(NLL)를 줄이는 방식으로 demonstration을 따라 하게 만듭니다. 즉 고정된 정답 예시를 모방하는 신호입니다.
+        </p>
+        <p>
+          다음 RL 단계는
           현재 policy가 새로 생성한 여러 후보의 reward를 비교하므로 data source가 다릅니다. 실제 mask 범위와 template은 사용한 trainer 설정으로
           확인해야 합니다.
         </p>
@@ -80,7 +81,7 @@ export default function RLApproach() {
       </div>
 
       <ExplainedFormula
-        question="정확도·형식·언어·길이처럼 단위가 다른 평가를 한 policy reward로 어떻게 합칠까요?"
+        question="정확도·형식·언어·길이처럼 단위가 다른 평가를 한 policy reward로 어떻게 합칩니까?"
         idea={
           <>
             각 기준을 독립된 sub-reward로 계산하고 중요도 weight를 곱해 더합니다.
@@ -104,7 +105,7 @@ export default function RLApproach() {
         assumptions={[
           "논문 snapshot은 w_acc=1.0, w_format=w_lang=w_overlong=0.2를 사용했으며 보편적인 최적값이 아닙니다.",
           "Accuracy checker와 language detector가 false positive·false negative를 낼 수 있으므로 raw reward와 사람이 확인한 calibration set이 필요합니다.",
-          "정상 중국어 번역 ‘首尔’을 language 위반에서 제외하도록 요청·구간 단위 예외가 reward contract에 포함되어야 합니다.",
+          "이 글의 운영 예시에서는 정상 중국어 번역 ‘首尔’을 language 위반에서 제외하도록 요청·구간 단위 예외를 reward contract에 포함합니다. 논문이 이 번역 사례를 사용했다는 뜻은 아닙니다.",
         ]}
         interpretation="고정 사례에서 계산이 틀리면 한국어 형식이 완벽해도 accuracy 1.0을 얻지 못합니다. 반대로 3,200원이 맞아도 reasoning trace의 언어·형식과 번역 예외 처리는 별도 항으로 관찰됩니다."
       />
@@ -118,7 +119,7 @@ export default function RLApproach() {
       </div>
 
       <ExplainedFormula
-        question="같은 질문에서 생성한 후보 i가 group 평균보다 얼마나 좋은지 어떻게 나타낼까요?"
+        question="같은 질문에서 생성한 후보 i가 group 평균보다 얼마나 좋은지 어떻게 나타냅니까?"
         idea={
           <>
             Group의 mean reward를 기준선으로 두고 candidate reward에서 뺍니다.
@@ -164,7 +165,10 @@ export default function RLApproach() {
         <h3>oracle judge는 ground truth가 아니라 reward의 두 번째 측정기입니다</h3>
         <p>
           연구진의 verifiable-only run은 약 220 step에서 accuracy reward가 거의 0으로 떨어지는 collapse를 보였습니다. 형식 checker가 정답의
-          의미를 충분히 판별하지 못하자 policy가 허점을 이용했고 같은 질문의 후보 다양성도 줄었습니다. 이후 더 큰 frozen model을 oracle judge로 붙여 주로
+          의미를 충분히 판별하지 못하자 policy가 허점을 이용했고 같은 질문의 후보 다양성도 줄었습니다.
+        </p>
+        <p>
+          이후 더 큰 frozen model을 oracle judge로 붙여 주로
           accuracy reward를 재검토했고 같은 hyperparameter 비교에서 약 1,000 step까지 안정적으로 진행됐다고 보고합니다.
         </p>
         <p>
@@ -213,7 +217,8 @@ export default function RLApproach() {
           ))}
         </div>
         <p className="mt-3 text-xs leading-5 text-muted-foreground">
-          논문이 보고한 accuracy snapshot입니다. Base→SFT→RL 사이에는 data와 training stage, oracle reward가 함께 바뀌었으므로 표의 차이를
+          논문이 보고한 accuracy snapshot입니다. 여기서 Base는 원본 Qwen3가 아니라 논문이 출발점으로 삼은 Smoothie Qwen3 14B입니다.
+          Base→SFT→RL 사이에는 data와 training stage, oracle reward가 함께 바뀌었으므로 표의 차이를
           “한국어 reasoning 하나가 만든 인과 효과”로 분리할 수 없습니다.
         </p>
       </div>
@@ -241,8 +246,9 @@ export default function RLApproach() {
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          이 단계까지 가려면 출력 표면 문제가 아니라 reasoning trace와 과제 품질의 반복 가능한 실패가 있어야 합니다. 그보다 가벼운 서비스 요구라면 다음 절의 runtime
-          guard가 더 직접적일 수 있습니다. 학습 모델을 배포한 뒤에도 long-tail 실패를 관찰하는 마지막 방어선은 별도로 필요합니다.
+          이 단계까지 가려면 출력 표면 문제가 아니라 reasoning trace와 과제 품질의 반복 가능한 실패가 있어야 합니다. 그보다 가벼운 서비스 요구라면
+          <Link to="/cs/ai/qwen-korean-consistency#runtime-guard"> 규칙·judge·제한된 재시도를 나누는 runtime guard</Link>가 더 직접적일 수 있습니다.
+          학습 모델을 배포한 뒤에도 long-tail 실패를 관찰하는 마지막 방어선은 별도로 필요합니다.
         </p>
       </div>
     </section>
