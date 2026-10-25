@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 543,
     "customVisuals": 864,
-    "animatedMechanisms": 471,
-    "architectureWithoutAnimation": 93,
-    "recursiveLocators": 275,
+    "animatedMechanisms": 472,
+    "architectureWithoutAnimation": 92,
+    "recursiveLocators": 276,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -4578,7 +4578,7 @@
     {
       "route": "ai/rag-ingestion-and-chunking",
       "publicPath": "cs/ai/rag-ingestion-and-chunking",
-      "title": "RAG ingestion: 문서 파싱·chunking·overlap·contextual retrieval",
+      "title": "RAG 문서 수집과 청킹",
       "sourcePath": "src/pages/articles/ai/rag-ingestion-and-chunking.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -4594,18 +4594,18 @@
     {
       "route": "ai/rag-pipeline",
       "publicPath": "cs/ai/rag-pipeline",
-      "title": "RAG 파이프라인: Source Ingestion에서 Grounded Answer까지",
+      "title": "RAG 파이프라인",
       "sourcePath": "src/pages/articles/ai/rag-pipeline.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/ranking-metrics",

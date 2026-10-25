@@ -4,6 +4,7 @@ import Embedding from "./rag-pipeline/Embedding";
 import { Link } from "react-router-dom";
 import Generation from "./rag-pipeline/Generation";
 import Eval from "./rag-pipeline/Eval";
+import { RagPipelineReturn } from "./rag-pipeline/RagPipelineLocator";
 
 export default function RagPipelineArticle() {
   return (
@@ -12,12 +13,12 @@ export default function RagPipelineArticle() {
       <Chunking />
       <Embedding />
       <section id="retrieval" className="scroll-mt-20">
-        <h2 className="mb-4 text-2xl font-bold">Candidate retrieval은 독립 funnel로 검증합니다</h2>
+        <h2 className="mb-4 text-2xl font-bold">후보 선택</h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            이 lifecycle 글은 candidate retrieval의 입력·출력 receipt와 downstream
-            context 경계만 연결합니다. BM25·HNSW·RRF·cross-encoder·Graph lane과
-            pre-retrieval ACL의 수식·비용·recall ceiling은 별도 글에서 비교합니다.
+            이 글에서는 검색 단계가 넘겨주는 입력과 출력만 전체 경로에
+            연결합니다. BM25·HNSW·RRF·cross-encoder가 후보를 만들고 줄이는
+            내부 과정은 별도 글에서 한 요청으로 추적합니다.
           </p>
           <p>
             <Link to="/cs/ai/retrieval-ranking-funnel">
@@ -28,6 +29,7 @@ export default function RagPipelineArticle() {
       </section>
       <Generation />
       <Eval />
+      <RagPipelineReturn />
     </div>
   );
 }
