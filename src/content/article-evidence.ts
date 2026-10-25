@@ -2113,6 +2113,12 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://arxiv.org/abs/1608.00859",
       note: "긴 video를 segments로 나누고 sparse snippets를 video consensus로 결합",
     },
+    {
+      kind: "공식 문서",
+      label: "TensorFlow Models 2.16.1: sample_segment_sequence",
+      href: "https://www.tensorflow.org/api_docs/python/tfm/vision/preprocess_ops_3d/sample_segment_sequence",
+      note: "Segment별 frame을 학습에서는 무작위로, 평가에서는 중앙에서 고르는 API 계약",
+    },
   ],
   "ai/video-convolution-architectures": [
     {

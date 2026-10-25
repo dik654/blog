@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 581,
-    "pending": 410,
+    "reviewed": 582,
+    "pending": 409,
     "untracked": 0,
-    "assignedPending": 367,
+    "assignedPending": 366,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3111,11 +3111,11 @@
     {
       "route": "ai/video-clip-sampling",
       "publicPath": "cs/ai/video-clip-sampling",
-      "title": "비디오 Clip Sampling: Coverage · Replay · Split",
+      "title": "비디오 클립 샘플링: 관측 범위와 평가 재현",
       "catalogIndex": 308,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

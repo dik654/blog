@@ -21742,10 +21742,16 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/video-clip-sampling": {
-    "entryLevel": true,
-    "entryNote": "Frame budget을 숫자 하나로 보지 않고 timeline 위 start·end intervals로 그리는 데서 시작합니다.",
-    "coreIdea": "여러 clips의 관측 범위는 interval union으로 계산해야 overlap을 중복 세지 않습니다. Evaluation에서는 timestamps·decode·crop·aggregation을 receipt로 고정하고 training randomness와 분리해야 같은 video prediction을 재생할 수 있습니다.",
-    "assumedKnowledge": [],
+    "entryLevel": false,
+    "recursiveTeaching": true,
+    "entryNote": "비디오 시간 관측 글에서 계산한 timestamp와 duration을 이어 받아, 여러 clip의 겹침과 평가 재현 경계를 추적합니다.",
+    "coreIdea": "여러 clip의 관측 범위는 interval union으로 계산해야 overlap을 중복 세지 않습니다. 평가에서는 source·timestamp·decode·crop·model·reducer를 한 재현 기록으로 이어야 입력과 판정이 처음 달라진 경계를 찾을 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "video-temporal-observation-contract",
+        "role": "Frame index를 실제 timestamp·duration으로 바꾸는 입력 계약을 사용합니다."
+      }
+    ],
     "introducedHere": [
       {
         "id": "temporal-interval-coverage",
@@ -21753,7 +21759,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "id": "deterministic-multiclip-replay",
-        "role": "평가 관측과 video reducer를 versioned receipt로 고정합니다."
+        "role": "평가 관측과 video reducer를 versioned 재현 기록으로 연결합니다."
       }
     ],
     "conceptExplanations": [
@@ -21762,41 +21768,59 @@ export const ARTICLE_LEARNING: Readonly<
         "sectionId": "coverage",
         "intuition": "겹쳐 본 시간은 한 번만 세어 영상 전체 중 실제로 훑은 구간의 길이를 구합니다.",
         "workedExample": "10초 영상에서 [0,2],[1,3],[8,10]의 단순합은 6초지만 union은 5초라 coverage .5입니다.",
-        "boundary": "Coverage가 높아도 label event를 포함하거나 motion rate가 충분하다는 뜻은 아니며 interval quality를 별도로 봅니다."
+        "boundary": "Coverage가 높아도 label event를 포함하거나 motion rate가 충분하다는 뜻은 아니며 interval quality를 별도로 봅니다.",
+        "causalTrace": {
+          "answer": "Clip interval을 정렬·병합한 합집합 길이를 영상 길이로 나눕니다.",
+          "followUpQuestion": "겹치고 떨어진 구간을 어떤 순서로 병합해야 중복 없이 셀 수 있을까요?",
+          "bottleneck": "Clip 수나 길이의 단순합은 같은 시간을 여러 번 읽은 overlap을 숨깁니다.",
+          "mechanism": "시작 시각으로 정렬하고 current.end와 next.start를 비교해 겹치는 구간만 합칩니다.",
+          "remainingCost": "Coverage는 어느 사건을 포함했는지와 초당 관측 횟수를 설명하지 못합니다.",
+          "decisionRule": "관측 범위 비교에는 interval union을 쓰고, 사건 포함과 빠른 움직임은 별도 지표로 확인합니다."
+        }
       },
       {
         "id": "deterministic-multiclip-replay",
         "sectionId": "replay",
-        "intuition": "시험에서는 같은 영상의 같은 시각과 crop을 읽고 같은 방식으로 scores를 합쳐 결과가 흔들리지 않게 합니다.",
-        "workedExample": "Video hash별 clip starts·stride·decode revision·center crop·mean reducer·model checksum을 한 receipt에 저장합니다.",
-        "boundary": "고정 평가 하나는 sampling variance를 숨길 수 있어 coverage sweep은 별도 ablation으로 유지합니다."
+        "intuition": "평가 ID 하나를 source부터 최종 score까지 유지해 두 실행이 처음 갈라진 경계를 찾습니다.",
+        "workedExample": "eval-017에 source hash·intervals·frame PTS·decode와 crop revision·tensor hash·model hash·clip scores·mean reducer·video score를 잇습니다.",
+        "boundary": "기록은 bitwise 재현을 자동 보장하지 않으며, 같은 경계를 다시 만들고 차이를 진단할 수 있게 합니다.",
+        "causalTrace": {
+          "answer": "입력 선택뿐 아니라 tensor·model·reducer 경계의 revision과 checksum을 함께 기록합니다.",
+          "followUpQuestion": "Replay 결과가 다르면 어느 경계부터 원인을 좁혀야 할까요?",
+          "bottleneck": "Sampler 이름과 seed만 같아도 decode·crop·model·reducer가 달라지면 최종 score가 바뀝니다.",
+          "mechanism": "Source hash, 실제 선택값, tensor hash, clip scores, video score를 순서대로 비교합니다.",
+          "remainingCost": "같은 기록에서도 nondeterministic kernel이나 외부 runtime 차이가 남을 수 있습니다.",
+          "decisionRule": "첫 불일치 checksum이나 score가 나타난 단계의 입력·revision부터 확인합니다."
+        }
       }
     ],
     "conceptStages": [
       {
-        "label": "00 Intervals",
-        "relation": "각 clip을 실제 timestamp 구간으로 바꿉니다.",
+        "label": "00 구간",
+        "relation": "부모 글의 timestamp로 각 clip의 시작·끝을 표시합니다.",
+        "concepts": [
+          "video-temporal-observation-contract",
+          "temporal-interval-coverage"
+        ]
+      },
+      {
+        "label": "01 합집합",
+        "relation": "정렬·병합으로 겹친 시간을 한 번만 남깁니다.",
         "concepts": [
           "temporal-interval-coverage"
         ]
       },
       {
-        "label": "01 Union",
-        "relation": "겹친 구간을 병합해 coverage를 계산합니다.",
+        "label": "02 평가 입력",
+        "relation": "학습의 무작위 선택과 평가의 고정 선택을 구분합니다.",
         "concepts": [
-          "temporal-interval-coverage"
-        ]
-      },
-      {
-        "label": "02 Receipt",
-        "relation": "Eval timestamps·crop·reducer를 고정합니다.",
-        "concepts": [
+          "temporal-interval-coverage",
           "deterministic-multiclip-replay"
         ]
       },
       {
-        "label": "03 Replay",
-        "relation": "동일 tensor와 video score를 재실행합니다.",
+        "label": "03 재현 경계",
+        "relation": "Source부터 video score까지 첫 불일치 지점을 찾습니다.",
         "concepts": [
           "temporal-interval-coverage",
           "deterministic-multiclip-replay"
@@ -21815,7 +21839,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "temporal-interval-coverage"
         ],
-        "sectionId": "coverage"
+        "sectionId": "algorithm"
       },
       {
         "level": "basic",
@@ -21855,7 +21879,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "deterministic-multiclip-replay"
         ],
-        "sectionId": "replay"
+        "sectionId": "sampling"
       },
       {
         "level": "basic",
@@ -21868,7 +21892,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "deterministic-multiclip-replay"
         ],
-        "sectionId": "replay"
+        "sectionId": "sampling"
       },
       {
         "level": "basic",
@@ -21895,22 +21919,21 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "temporal-interval-coverage"
         ],
-        "sectionId": "coverage"
+        "sectionId": "algorithm"
       },
       {
         "level": "advanced",
-        "question": "두 model을 같은 frame budget과 coverage에서 비교하는 parity table을 설계하세요.",
+        "question": "같은 12-frame budget으로 [0,3]·[7,10]과 [0,2]·[1,3]·[8,10]을 읽을 때 coverage를 비교하세요.",
         "answerChecklist": [
-          "same source split",
-          "same intervals",
-          "same pixels",
-          "runtime target"
+          "첫 policy 6 seconds",
+          "둘째 policy 5 seconds",
+          "frame count alone insufficient",
+          "interval union"
         ],
         "requiredConcepts": [
-          "temporal-interval-coverage",
-          "deterministic-multiclip-replay"
+          "temporal-interval-coverage"
         ],
-        "sectionId": "release"
+        "sectionId": "coverage"
       },
       {
         "level": "advanced",
@@ -21928,18 +21951,18 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "Coverage sweep에서만 성능이 좋아지는 model의 release claim을 제한하세요.",
+        "question": "두 sampling policy의 coverage가 같아도 빠른 움직임을 같은 정도로 관측했다고 말할 수 없는 이유를 설명하세요.",
         "answerChecklist": [
-          "specific coverage",
-          "cost increase",
-          "event slices",
-          "claim boundary"
+          "local sample interval",
+          "effective sample rate",
+          "event location",
+          "coverage boundary"
         ],
         "requiredConcepts": [
-          "temporal-interval-coverage",
-          "deterministic-multiclip-replay"
+          "video-temporal-observation-contract",
+          "temporal-interval-coverage"
         ],
-        "sectionId": "release"
+        "sectionId": "sampling"
       }
     ],
     "papers": [
@@ -21952,6 +21975,16 @@ export const ARTICLE_LEARNING: Readonly<
         "evidenceScope": "Sparse temporal sampling과 video-level consensus 실험 범위입니다.",
         "notClaim": "Uniform segment sampling이 모든 event duration과 streaming task에 최적이라는 뜻은 아닙니다.",
         "sectionId": "paper-tsn"
+      },
+      {
+        "title": "TensorFlow Models 2.16.1 — sample_segment_sequence",
+        "href": "https://www.tensorflow.org/api_docs/python/tfm/vision/preprocess_ops_3d/sample_segment_sequence",
+        "problem": "학습과 평가에서 segment별 frame 선택 방식을 구분해야 합니다.",
+        "contribution": "학습에서는 segment별 무작위 frame, 평가에서는 중앙 frame을 선택하는 API 계약을 문서화합니다.",
+        "assumptions": "TensorFlow Models 2.16.1과 첫 차원이 시간인 입력 sequence를 전제로 합니다.",
+        "evidenceScope": "해당 version의 sample_segment_sequence 함수 동작입니다.",
+        "notClaim": "다른 sampler나 모든 video 평가가 같은 선택 규칙을 써야 한다는 뜻은 아닙니다.",
+        "sectionId": "api-segment-sampling"
       }
     ]
   },

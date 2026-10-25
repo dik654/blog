@@ -109,13 +109,24 @@ export default function VideoPathLocator({ current }: { current: VideoLearningNo
 
 export function VideoMapReturn({ current }: { current: VideoLearningNodeId }) {
   const node = getVideoLearningNode(current);
+  const track = getVideoTrackNodes(node.track);
+  const currentIndex = track.findIndex((candidate) => candidate.id === current);
+  const next = currentIndex >= 0 ? track[currentIndex + 1] : undefined;
+
   return (
     <aside id="return" className="not-prose my-8 scroll-mt-20 border-y border-border py-5" aria-label="확인한 사실을 비디오 이해 지도에 되돌려 놓기">
       <p className="text-[10px] font-bold text-primary">부모 지도에 되돌려 놓기</p>
       <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">{node.closure}</p>
-      <Link to="/cs/ai/video-clip-sampling#overview" className="mt-3 inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary">
-        다음: 여러 clip의 coverage와 replay ↗
-      </Link>
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+        <Link to={node.parentHref} className="inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary">
+          직속 부모: {node.parentLabel} ↗
+        </Link>
+        {next ? (
+          <Link to={next.href} className="inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary">
+            다음: {next.shortTitle} ↗
+          </Link>
+        ) : null}
+      </div>
     </aside>
   );
 }

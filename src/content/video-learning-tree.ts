@@ -36,14 +36,14 @@ export const VIDEO_LEARNING_NODES: readonly VideoLearningNode[] = [
     id: "clip-sampling",
     href: "/cs/ai/video-clip-sampling#overview",
     shortTitle: "Clip Sampling",
-    mapLabel: "구간 선택 → 겹침 제거 → replay",
+    mapLabel: "구간 선택 → 합집합 → 평가 재현",
     track: "concept",
     parentHref: "/cs/ai/video-understanding#return",
     parentLabel: "비디오 시간 관측 · 다음 질문",
     question:
-      "여러 clip이 같은 시간을 겹쳐 볼 때 실제 coverage를 어떻게 세고, 같은 평가 입력을 다시 재생하려면 무엇을 남겨야 할까요?",
+      "여러 clip이 같은 시간을 겹쳐 볼 때 실제 관측 범위를 어떻게 세고, 같은 평가 입력과 판정을 어떻게 다시 확인할까요?",
     closure:
-      "Clip 구간의 합이 아니라 interval union을 계산하고 timestamp·decode·crop·aggregation을 한 receipt에 고정해야 coverage와 prediction을 다시 확인할 수 있습니다.",
+      "Clip 길이의 단순합이 아니라 interval union을 계산하고 source·timestamp·decode·crop·model·reducer를 한 재현 기록으로 이으면 관측 범위와 prediction이 달라진 첫 경계를 찾을 수 있습니다.",
   },
   {
     id: "convolution",
