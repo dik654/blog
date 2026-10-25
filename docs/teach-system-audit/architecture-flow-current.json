@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 473,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 278,
+    "recursiveLocators": 279,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -4450,7 +4450,7 @@
     {
       "route": "ai/query-transformation-and-adaptive-retrieval",
       "publicPath": "cs/ai/query-transformation-and-adaptive-retrieval",
-      "title": "Query 변환과 적응형 검색: rewriting·HyDE·Self-RAG·CRAG",
+      "title": "질의 변환과 적응형 검색: 첫 검색이 부족할 때",
       "sourcePath": "src/pages/articles/ai/query-transformation-and-adaptive-retrieval.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -4458,7 +4458,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

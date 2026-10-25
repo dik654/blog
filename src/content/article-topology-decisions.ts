@@ -133,6 +133,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "전체 ingestion→grounded answer lifecycle과 BM25→HNSW→RRF→cross-encoder candidate funnel은 서로 다른 선수 지식·수식·failure mode를 가집니다.",
     targetRoutes: ["ai/rag-pipeline", "ai/retrieval-ranking-funnel"],
   },
+  "ai/query-transformation-and-adaptive-retrieval": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "q-732 한 건의 첫 검색 실패가 대화 맥락 복원, 변환 선택, 주장별 근거 판정, 재검색, 종료 기록으로 이어지는 하나의 적응형 검색 경로입니다. HyDE와 step-back은 같은 실패 진단에서 선택하지 않은 대안의 경계를 설명하고, Self-RAG와 CRAG는 같은 검색 상태를 누가 최종 변경하는지 비교하므로 현재 질문에서 분리하면 선택 기준과 한 요청의 계보가 끊깁니다.",
+    sharedGate:
+      "q-732가 설정 위치와 보안 영향으로 분해되고 d-17·d-04가 질문별 후보 계보와 함께 남는지, 충분성 통과와 max_iter 도달이 서로 다른 종료 이유로 기록되는지, Self-RAG와 CRAG의 검색 상태 writer가 중복되지 않는지 확인합니다.",
+  },
   "ai/smoothie-qwen-weight-editing": {
     action: "keep",
     status: "reviewed",
@@ -3646,6 +3655,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vllm-spec-decode": "6cfc2af8b27a924b",
   "ai/vllm-scheduler": "ef3d2228d799444a",
   "ai/retrieval-ranking-funnel": "3d6c8d1146116c83",
+  "ai/query-transformation-and-adaptive-retrieval": "173ebca4a97dff29",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",

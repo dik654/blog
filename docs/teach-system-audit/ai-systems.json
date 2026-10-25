@@ -10962,25 +10962,92 @@
       "route": "ai/query-transformation-and-adaptive-retrieval",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/query-transformation-and-adaptive-retrieval.tsx",
       "publicPath": "cs/ai/query-transformation-and-adaptive-retrieval",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 7
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "질의 다시 쓰기·분해·HyDE·step-back·적응형 검색을 나열했지만 첫 검색 실패에서 어떤 변환을 고르는지 한 요청으로 추적하기 어려웠음",
+        "Self-RAG의 모델 내부 reflection token과 CRAG의 외부 검색 평가기를 같은 적응형 검색 방식처럼 배치해 판정 상태의 소유자가 흐려졌음",
+        "충분한 근거를 얻어 멈추는 종료와 반복 한도에 닿아 멈추는 종료가 구분되지 않았음"
+      ],
+      "fixture": {
+        "requestId": "q-732",
+        "tenant": "tenant-a",
+        "originalQuery": "그거 자꾸 풀려",
+        "resolvedTarget": "XR-17B 모바일 앱의 로그인 유지",
+        "subQueries": [
+          "XR-17B 앱 세션 만료 설정",
+          "XR-17B 보안상 최대 연장 시간"
+        ],
+        "initialEvidence": "0/2",
+        "finalEvidence": "2/2",
+        "selectedDocuments": [
+          "d-17",
+          "d-04"
+        ],
+        "maxIterations": 2,
+        "assumed": true
+      },
+      "stageAnchors": {
+        "1": "대화 맥락에서 생략된 대상을 복원",
+        "2": "복원 전 문장의 첫 검색 실패를 문서 ID로 기록",
+        "3": "대상 생략과 두 요구 혼합을 실패 원인으로 판정",
+        "4": "질문을 두 개로 나눠 d-17과 d-04를 회수",
+        "5": "근거 2/2로 충분함을 확인하고 첫 반복 뒤 종료",
+        "6": "질문·근거·판정 경로와 종료 이유를 trace에 보존"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2212.10496",
+          "application": "HyDE의 가상 문서 임베딩과 사실 근거가 아닌 검색용 중간 표현이라는 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2310.11511",
+          "application": "Self-RAG의 학습된 reflection token과 검색·근거 사용을 모델 내부에서 제어하는 구조"
+        },
+        {
+          "href": "https://arxiv.org/abs/2401.15884",
+          "application": "CRAG의 외부 retrieval evaluator·임계 구간·교정 동작과 Table 1 결과의 범위"
+        },
+        {
+          "href": "https://arxiv.org/abs/2310.06117",
+          "application": "Step-back prompting의 추상화 질문과 논문이 측정한 reasoning 성능 범위"
+        },
+        {
+          "href": "https://arxiv.org/abs/2205.10625",
+          "application": "Least-to-Most의 복잡한 문제를 하위 문제로 나누는 선행 비교 근거"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "q-732 한 건으로 복원→첫 검색→실패 진단→질문 분해→재검색→종료→기록을 추적하고, HyDE·step-back의 적용 경계와 Self-RAG·CRAG의 판정 소유자를 분리했습니다.",
+        "humanize": "글별 한국어 자연스러움 strict 감사 error 0",
+        "browser390": "390×844에서 문서·핵심 시각화 가로 넘침 0, 6장면 354×754 고정, 50×50 조작부, 중간·마지막 장면 글자 잘림 0, console 오류·경고 0",
+        "browser1440": "1440×1000에서 문서·5개 시각화 가로 넘침 0, 6장면 711×864 고정, 명시적 재생 뒤 6.2초 간격·키보드 좌우·Space 확인, console 오류·경고 0",
+        "reducedMotion": "390×844에서 06 기록을 즉시 표시하고 재생 조작부를 숨김",
+        "noJavaScript": "390×844 정적 본문에서 여섯 장면과 종료 결론이 같은 순서로 남고 재생 조작부가 노출되지 않음",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npm run build의 tsc -b 통과",
+        "build": "Vite 7.3.1·8,012 modules·정적 public route 2,088개+404·no-script 본문 269편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 공개 경로 확인"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "one-request-adaptive-retrieval-state-owner-and-stop-condition-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/query-transformation-and-adaptive-retrieval.tsx",
+        "src/pages/articles/ai/query-transformation-and-adaptive-retrieval/QueryTransformationLocator.tsx",
+        "src/pages/articles/ai/query-transformation-and-adaptive-retrieval/viz/QueryTransformationAndAdaptiveRetrievalViz.tsx",
+        "src/pages/articles/ai/query-transformation-and-adaptive-retrieval/viz/RetrievalDecisionViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/query-transformation-and-adaptive-retrieval.tsx",
+      "preserved": [
+        "질의 다시 쓰기·분해·HyDE·step-back의 정의와 기존 연습문제",
+        "Self-RAG와 CRAG의 논문 근거 및 CRAG Table 1 수치",
+        "재검색 반복 한도와 출처 lineage를 남겨야 한다는 운영 경계"
       ]
     },
     {
@@ -14633,9 +14700,9 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 71,
+    "rewritten-local-verified": 72,
     "rewritten-production-verified": 91,
-    "unreviewed": 24
+    "unreviewed": 23
   },
   "localValidationSummary": {
     "rewritten": 117,

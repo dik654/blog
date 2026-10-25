@@ -164,6 +164,7 @@ const noScriptArticleRoutes = new Set([
   "ai/rag-pipeline",
   "ai/rag-ingestion-and-chunking",
   "ai/retrieval-ranking-funnel",
+  "ai/query-transformation-and-adaptive-retrieval",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

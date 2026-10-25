@@ -20325,8 +20325,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Query rewriting · expansion",
     aliases: ["Query Rewriting", "Query Expansion", "Query Transformation"],
     definition:
-      "원 질문의 표현을 검색에 유리하게 다시 쓰는 query rewriting과, 동의어·관련어를 더해 검색 범위를 넓히는 query expansion을 함께 묶은 방법으로, 이 둘을 포함해 질문을 검색 전에 변형하는 넓은 범주를 query transformation이라 부릅니다.",
-    canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#problem",
+      "생략된 대상과 대화 맥락을 복원해 질문을 검색 가능한 한 문장으로 다시 쓰거나, 동의어·관련어를 더해 표현 차이를 줄이는 방법입니다. 두 동작을 포함해 검색 전에 질문을 바꾸는 넓은 범주를 query transformation이라 부릅니다.",
+    canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#multi-query",
   },
   "multi-query-and-decomposition": {
     id: "multi-query-and-decomposition",
@@ -20335,7 +20335,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Multi-query retrieval · query decomposition",
     aliases: ["Multi-Query Retrieval", "Query Decomposition", "Subquestion Retrieval"],
     definition:
-      "원 질문 하나를 여러 변형(multi-query)으로 늘려 각각 따로 검색한 뒤 결과를 합치거나, 복합 질문을 더 단순한 subquestion 여러 개로 쪼개(query decomposition) 각각 검색·답변한 뒤 결합하는 방법입니다.",
+      "같은 의도를 표현이 다른 여러 질문으로 바꿔 병렬 검색하는 multi-query retrieval과, 서로 다른 답이 필요한 복합 질문을 하위 질문으로 나누는 query decomposition입니다. 전자는 어휘 차이를 줄이고, 후자는 필요한 근거를 주장별로 분리합니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#multi-query",
   },
   "hyde-hypothetical-document": {
@@ -20345,7 +20345,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "HyDE (Hypothetical Document Embeddings)",
     aliases: ["HyDE", "Hypothetical Document"],
     definition:
-      "질문에 대한 실제 정답 문서 없이 LLM이 그럴듯한 가상의 답변 문서(hypothetical document)를 먼저 생성한 뒤, 그 문서를 embedding해 검색 질의로 쓰는 방법으로, 세부 사실이 틀려도 검색 encoder가 그 오류를 걸러내고 실제 관련 문서에 가까운 방향만 남긴다는 것을 이용합니다.",
+      "관련성 표본 없이 LLM이 가상 답변 문서를 먼저 만들고, 그 문서를 embedding해 실제 문서를 찾는 zero-shot dense retrieval 방법입니다. 가상 문서는 틀린 세부 내용을 포함할 수 있으므로 검색용 벡터일 뿐 최종 답변의 근거가 아닙니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#hyde",
   },
   "step-back-prompting-retrieval": {
@@ -20354,7 +20354,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "Step-back prompting for retrieval",
     definition:
-      "구체적인 질문을 그대로 검색하는 대신, 그 질문이 속한 더 상위 개념·원리를 먼저 LLM에 묻는 step-back 질문으로 바꿔 검색하고, 원 질문에는 그 답을 배경 지식으로 함께 제공하는 방법입니다.",
+      "구체적인 질문에서 상위 개념이나 첫 원리를 먼저 묻고 그 답을 원 질문의 추론에 사용하는 프롬프팅입니다. 원 논문은 추론 과제를 평가했으며, 상위 질문을 검색어로 쓰는 RAG 응용의 회수율은 별도로 측정해야 합니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#step-back",
   },
   "adaptive-retrieval-trigger": {
@@ -20364,7 +20364,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Adaptive retrieval · retrieval trigger",
     aliases: ["Adaptive Retrieval", "Retrieval Trigger"],
     definition:
-      "모든 질문에 검색을 걸지 않고, 지금 가진 정보로 답할 수 있는지 먼저 판정해 부족할 때만 검색을 실행하는 방법과 그 판정 지점(retrieval trigger)입니다.",
+      "필요한 주장마다 인용할 근거가 있는지 판정하고, 부족한 주장에만 검색이나 재검색을 실행하는 방법과 그 판정 지점입니다. 정답 문서를 미리 아는 오프라인 회수율과 운영 중의 충분성 판정은 구분해야 합니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#adaptive-loop",
   },
   "corrective-rag": {
@@ -20374,7 +20374,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Corrective RAG (CRAG)",
     aliases: ["Corrective RAG (CRAG)"],
     definition:
-      "가벼운 evaluator가 검색된 문서마다 confidence를 매겨 Correct·Ambiguous·Incorrect 세 범주로 나누고, Correct는 문서를 조각내 관련 부분만 남기는 정제를, Incorrect는 그 결과를 버리고 web search로 대체를, Ambiguous는 둘을 함께 쓰는 절차를 트리거하는 방법입니다.",
+      "검색 뒤의 외부 evaluator가 문서 신뢰도를 평가해 Correct·Ambiguous·Incorrect에 해당하는 교정 동작을 고르는 방법입니다. 내부 지식 정제, 질문 재작성 뒤 외부 검색, 두 경로의 결합을 구분하며, 이 평가기가 검색 상태를 바꾸는 외부 소유자입니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#self-rag-crag",
   },
   "self-rag-reflection-tokens": {
@@ -20384,7 +20384,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Self-RAG reflection tokens",
     aliases: ["Self-RAG"],
     definition:
-      "언어 모델이 생성 중에 검색 여부(Retrieve), 검색 결과의 관련성(IsRel), 생성문이 근거에 의해 뒷받침되는 정도(IsSup), 응답 전체의 유용성(IsUse)을 특수 token으로 함께 예측해 검색과 생성을 스스로 통제하는 방법입니다.",
+      "Retrieve·IsRel·IsSup·IsUse reflection token을 생성하도록 학습한 모델이 추론 중 검색 여부, 문서 관련성, 근거 지지, 응답 유용성을 함께 예측하는 방법입니다. 일반 모델에 프롬프트 몇 줄을 붙이는 기능이 아니라 전용 학습과 디코딩이 필요합니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#self-rag-crag",
   },
   "iterative-retrieval-loop": {
@@ -20394,7 +20394,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Iterative retrieval loop",
     aliases: ["Iterative Retrieval", "Retrieval Loop"],
     definition:
-      "한 번의 검색으로 충분한 근거가 안 모이면, 부족한 부분을 새 질의로 바꿔 다시 검색하고 그 결과를 이전 context에 더하는 과정을 종료 조건(충분성 판정 또는 최대 반복 횟수)까지 반복하는 절차입니다.",
+      "한 번의 검색으로 필요한 근거가 모이지 않으면 누락 원인에 맞게 질문을 바꾸고, 새 결과를 기존 후보와 합쳐 다시 평가하는 절차입니다. 충분성 통과와 최대 반복 횟수 도달은 서로 다른 종료 이유로 기록해야 합니다.",
     canonicalHref: "/cs/ai/query-transformation-and-adaptive-retrieval#adaptive-loop",
   },
   "bag-of-words-tf-idf": {

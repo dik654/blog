@@ -2273,15 +2273,15 @@ export const practicalArticles: Article[] = [
   ...strategyArticles,
   {
     slug: "query-transformation-and-adaptive-retrieval",
-    title: "Query 변환과 적응형 검색: rewriting·HyDE·Self-RAG·CRAG",
+    title: "질의 변환과 적응형 검색: 첫 검색이 부족할 때",
     subcategory: "ai-practical-llm",
     sections: [
-      { id: "problem", title: "Query rewriting과 query expansion" },
-      { id: "multi-query", title: "Multi-query retrieval과 query decomposition" },
-      { id: "hyde", title: "HyDE: 가상 문서 embedding" },
-      { id: "step-back", title: "Step-back prompting" },
-      { id: "adaptive-loop", title: "Adaptive retrieval trigger와 iterative loop" },
-      { id: "self-rag-crag", title: "Self-RAG reflection tokens와 CRAG" },
+      { id: "problem", title: "첫 검색이 부족한 이유" },
+      { id: "multi-query", title: "실패에 맞는 질문 변환" },
+      { id: "hyde", title: "HyDE의 가상 문서" },
+      { id: "step-back", title: "상위 원리를 먼저 묻기" },
+      { id: "adaptive-loop", title: "재검색과 종료 기록" },
+      { id: "self-rag-crag", title: "검색 판단의 소유자" },
       {
         id: "sources",
         title: "근거 문서",

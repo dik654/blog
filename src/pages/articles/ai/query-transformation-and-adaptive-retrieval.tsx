@@ -5,267 +5,407 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  QueryTransformationLocator,
+  QueryTransformationReturn,
+} from "./query-transformation-and-adaptive-retrieval/QueryTransformationLocator";
 import QueryTransformationAndAdaptiveRetrievalViz from "./query-transformation-and-adaptive-retrieval/viz/QueryTransformationAndAdaptiveRetrievalViz";
+import {
+  CragThresholdViz,
+  DecisionOwnerViz,
+  TransformationChoiceViz,
+} from "./query-transformation-and-adaptive-retrieval/viz/RetrievalDecisionViz";
 
-/**
- * Query 변환과 적응형 검색: rewriting·HyDE·Self-RAG·CRAG
- *
- * 작성 규칙은 docs/coverage-batch-playbook.md 를 따른다.
- */
 export default function QueryTransformationAndAdaptiveRetrievalArticle() {
   return (
-    <div id="overview" className="space-y-16">
-      <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Query rewriting 은 검색어와 검색 대상의 어휘 차이를 메웁니다
-        </h2>
+    <div className="space-y-16">
+      <header id="problem" className="scroll-mt-20">
+        <QueryTransformationLocator />
+        <QueryTransformationAndAdaptiveRetrievalViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            사용자가 쓰는 말과 knowledge base 에 저장된 문서의 말이 다르면 아무리 좋은 index 도 관련 chunk 를 찾지 못합니다. Query transformation
-            은 검색을 걸기 전에 질문 자체를 바꿔 이 어휘 차이를 메우는 넓은 범주입니다. 그 안에서 가장 단순한 형태가 query rewriting 과 query expansion
-            입니다.
+            첫 검색이 부족할 때는 검색을 무작정 반복하지 않습니다. 먼저 질문에서
+            빠진 대상과 요구를 찾아내고, 그 실패 원인에 맞게 질문을 바꾼 뒤,
+            필요한 주장마다 근거가 모였는지 다시 확인합니다. 근거가 충분하거나
+            미리 정한 반복 한도에 닿으면 멈추되, 두 종료 이유를 서로 다르게
+            기록해야 합니다.
           </p>
           <p>
-            Query rewriting 은 질문의 표현을 검색에 유리하게 다시 쓰는 쪽이고 query expansion 은 원 질문에 동의어·관련어를 더해 검색 범위를 넓히는 쪽입니다.
-            예를 들어 "그거 왜 안 되지"라는 질문은 이전 대화의 맥락 없이는 어떤 chunk 와도 어휘가 겹치지 않습니다. "PDF 업로드가 500 에러로 실패하는 이유"로
-            rewriting 하면 관련 chunk 의 용어와 겹칩니다.
+            이 글은 앞 글에서 사용한 tenant-a의 요청 흐름을 이어 갑니다. q-732의
+            원문은 “그거 자꾸 풀려”이고, 직전 대화에는 XR-17B 모바일 앱이
+            등장했습니다. 설명용 목표는 로그인 유지 설정과 그 설정을 늘렸을 때의
+            보안 영향, 두 주장에 각각 근거를 찾는 것입니다.
           </p>
           <p>
-            이 글은 rewriting·expansion 에서 출발합니다. 여러 질의로 늘리는 방법(multi-query· decomposition), 가상의 답변으로 검색하는
-            방법(HyDE), 질문을 추상화하는 방법 (step-back), 그리고 검색을 언제 실행하고 언제 반복할지 스스로 판정하는 방법(adaptive retrieval, Self-
-            RAG, CRAG)까지 순서대로 다룹니다.
+            앞 단계의 후보 생성·순위 결합·재정렬 계산은{" "}
+            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">
+              검색과 재정렬 글
+            </Link>
+            이 맡습니다. 여기서는 검색기에 넣을 질문과 재검색 여부가 어떻게
+            바뀌는지만 추적합니다.
           </p>
         </div>
-        <QueryTransformationAndAdaptiveRetrievalViz />
         <ContentBoundary article="query-transformation-and-adaptive-retrieval" />
-      </section>
+      </header>
 
       <section id="multi-query" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Multi-query 는 변형 질의를 합쳐 recall 을 끌어올립니다
+          첫 실패의 모양이 질문을 바꾸는 방법을 정합니다
         </h2>
+        <TransformationChoiceViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multi-query retrieval 은 원 질문 하나를 LLM 으로 여러 개의 변형 질의로 늘려 각각 따로 검색한 뒤 그 결과를 합쳐 쓰는 방법입니다. 질문 하나로는 놓치는
-            관련 문서를 다른 표현의 질의가 잡아낼 수 있다는 것이 전제입니다.
+            q-732에는 검색 대상이 생략됐고 질문도 두 갈래입니다. 그래서 먼저
+            “XR-17B 앱 로그인 유지”로 표현을 다시 쓰고, 설정 위치와 보안 영향을
+            묻는 두 하위 질문으로 나눕니다. 첫 동작은{" "}
+            <strong>질의 재작성(query rewriting)</strong>, 두 번째 동작은{" "}
+            <strong>질의 분해(query decomposition)</strong>입니다.
           </p>
           <p>
-            가정: 정답 근거 문서가 6 개 있는 질문에서 원 질의는 top-k 안에 2 개만 회수해 recall 이 33 % 입니다. 표현을 바꾼 변형 질의 세 개를 더 만들어 각각
-            검색하면 변형마다 새로 잡아내는 문서가 있어 합집합 recall 이 5/6, 83 % 까지 오릅니다.
+            같은 뜻을 여러 표현으로 바꿔 동시에 검색하는{" "}
+            <strong>다중 질의 검색(multi-query retrieval)</strong>은 다른
+            선택입니다. “세션 만료”, “로그인 유지”, “인증 지속 시간”처럼 어휘가
+            달라 정답 후보가 빠질 때 도움이 될 수 있습니다. 반면 여러 질의가
+            같은 문서만 되풀이해 찾으면 검색 비용만 늘고 회수율은 그대로입니다.
+          </p>
+          <p>
+            설명용 정답 근거 집합을 A={"{d-17, d-04}"}라고 두겠습니다. 원문
+            검색은 두 문서를 모두 놓쳤지만, 다시 쓴 두 질문의 결과를 합치면 두
+            문서가 모두 남습니다. 이때의 회수율은 사후 평가용 값입니다. 실제
+            요청을 처리하는 동안에는 정답 집합 A를 미리 알 수 없으므로 별도의
+            충분성 판정이 필요합니다.
           </p>
         </div>
         <ExplainedFormula
-          question="변형 질의 여러 개의 검색 결과를 합치면 recall 이 왜 원 질의보다 높아질까요?"
-          idea="각 변형 질의가 서로 다른 관련 문서를 회수한다면, 그 결과의 합집합은 어느 한 질의보다 항상 같거나 더 많은 관련 문서를 담습니다."
-          formula={String.raw`R_{\cup}=\frac{\left|\left(\bigcup_{i=1}^{m} K_i\right)\cap A\right|}{|A|}`}
-          annotatedFormula={String.raw`R_{\cup}=\underbrace{\frac{\left|\left(\bigcup_{i=1}^{m} K_i\right)\cap A\right|}{|A|}}_{\text{합집합이 회수한 정답 비율}}`}
+          question="여러 질문의 검색 결과를 합쳤을 때 정답 근거를 얼마나 회수했는지 어떻게 계산할까요?"
+          idea="질문별 후보를 먼저 합친 뒤, 사후에 알고 있는 정답 근거 집합과 겹치는 문서 수를 셉니다."
+          formula={String.raw`\begin{aligned}K_{\cup}&=\bigcup_{i=1}^{m}K_i\\R_{\cup}&=\frac{|K_{\cup}\cap A|}{|A|}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{K_{\cup}}_{\text{모든 질문의 후보}}&=\underbrace{\bigcup_{i=1}^{m}K_i}_{\text{질문별 결과를 합침}}\\\underbrace{R_{\cup}}_{\text{합집합 회수율}}&=\underbrace{\frac{|K_{\cup}\cap A|}{|A|}}_{\text{정답 근거 중 회수한 비율}}\end{aligned}`}
           operations={[
-            { expression: String.raw`\bigcup_{i=1}^{m} K_i`, annotation: ["원 질의를 포함한 m 개 변형 질의가", "각각 회수한 후보 집합을 모두 합침"] },
-            { expression: String.raw`\left(\cdot\right)\cap A`, annotation: ["그 합집합과 실제 정답 근거 집합 A 의", "교집합만 남겨 회수된 정답만 셈"] },
-            { expression: String.raw`\frac{\cdot}{|A|}`, annotation: ["정답 근거 전체 개수로 나눠", "0 과 1 사이의 recall 비율로 정규화"] },
+            {
+              expression: String.raw`\bigcup_{i=1}^{m}K_i`,
+              annotation: [
+                "m개 질문이 회수한 후보 집합을",
+                "중복을 제거하며 하나로 합칩니다.",
+              ],
+            },
+            {
+              expression: String.raw`K_{\cup}\cap A`,
+              annotation: [
+                "합친 후보와 정답 근거 집합이",
+                "동시에 포함한 문서만 남깁니다.",
+              ],
+            },
+            {
+              expression: String.raw`\frac{|K_{\cup}\cap A|}{|A|}`,
+              annotation: [
+                "회수한 정답 문서 수를",
+                "전체 정답 문서 수로 나눕니다.",
+              ],
+            },
           ]}
           terms={[
-            { symbol: "A", name: "정답 근거 집합", description: "질문에 실제로 답이 되는 문서(또는 chunk) 전체입니다." },
-            { symbol: "K_i", name: "i 번째 질의의 회수 결과", description: "i 번째 변형 질의로 검색해 얻은 top-k 후보 집합입니다." },
-            { symbol: "m", name: "변형 질의 개수", description: "원 질의를 포함해 만든 질의 변형의 총 개수입니다." },
-            { symbol: String.raw`R_{\cup}`, name: "합집합 recall", description: "m 개 질의 결과를 합쳤을 때의 recall 입니다." },
+            {
+              symbol: "K_i",
+              name: "i번째 질문의 후보",
+              description: "각 질문으로 검색해 얻은 문서 ID 집합입니다.",
+            },
+            {
+              symbol: "A",
+              name: "정답 근거 집합",
+              description:
+                "평가 데이터에서 질문을 뒷받침한다고 미리 판정한 문서 집합입니다.",
+            },
+            {
+              symbol: String.raw`R_{\cup}`,
+              name: "합집합 회수율",
+              description:
+                "모든 질문의 후보를 합쳤을 때 정답 근거가 남은 비율입니다.",
+            },
           ]}
           assumptions={[
-            "각 질의를 독립적으로 검색한 뒤 결과만 합친다고 가정하며, rank 순서 자체의 재정렬(fusion)은 다루지 않습니다.",
-            "변형 질의가 원 질의와 겹치지 않는 새 관련 문서를 최소 하나는 회수해야 recall 이 실제로 오릅니다.",
+            "q-732의 정답 근거가 d-17·d-04 두 건이라는 설명용 평가 집합을 사용합니다.",
+            "이 식은 오프라인 회수율을 계산합니다. 운영 중인 판정기가 정답을 안다는 뜻은 아닙니다.",
           ]}
-          interpretation="변형이 서로 다른 문서를 회수할수록 합집합 recall 이 오르지만, 변형끼리 같은 문서만 반복해서 회수하면 질의 개수를 늘려도 recall 은 그대로입니다. 늘어난 질의 수만큼 검색 비용도 함께 늘어납니다."
+          interpretation="이 예에서는 원문 검색의 회수율이 0/2이고, 두 하위 질문의 합집합은 2/2입니다. 후보가 늘어난 만큼 재정렬 비용과 중복 제거 비용도 함께 계산해야 합니다."
         />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Query decomposition 은 방향이 조금 다릅니다. 질문 자체가 여러 하위 질문으로 쪼개지는 복합 질문일 때 "A 이면서 B 인 것"을 "A 인 것은 무엇인가"와
-            "그중 B 인 것은 무엇인가"라는 subquestion 으로 나눠 각각 검색·답변한 뒤 결합합니다. 이 패턴을 subquestion retrieval 이라고 부릅니다.
-          </p>
-        </div>
         <TermBreakdown
-          title="변형을 늘리는 두 방향"
+          title="비슷해 보이는 세 동작의 경계"
           items={[
-            { term: "Multi-query retrieval", description: "원 질의를 표현이 다른 여러 질의로 늘려 각각 검색하고 결과를 합칩니다.", example: "같은 질문을 세 가지 표현으로 바꿔 검색.", boundary: "변형이 서로 다른 문서를 회수하지 못하면 recall 개선 없이 비용만 늡니다." },
-            { term: "Query decomposition · subquestion retrieval", description: "복합 질문을 더 단순한 subquestion 여러 개로 나눠 각각 답한 뒤 결합합니다.", example: "\"A 이면서 B 인 것\"을 A 먼저, 그중 B 를 나중에 확인.", boundary: "Subquestion 사이에 순서 의존이 있으면 앞 단계 오류가 뒤로 그대로 전파됩니다." },
+            {
+              term: "질의 재작성 · Query rewriting",
+              description:
+                "생략된 대상이나 대화 맥락을 반영해 하나의 질문을 검색 가능한 문장으로 다시 씁니다.",
+              example:
+                "“그거 자꾸 풀려”를 “XR-17B 앱 로그인 유지 설정”으로 바꿉니다.",
+              boundary:
+                "대화에 없는 제품명이나 조건을 새로 만들어 넣으면 검색 오류가 아니라 질문 왜곡이 됩니다.",
+            },
+            {
+              term: "다중 질의 검색 · Multi-query retrieval",
+              description:
+                "같은 의도를 표현이 다른 여러 질문으로 바꿔 병렬 검색하고 후보를 합칩니다.",
+              example:
+                "“세션 만료”, “인증 지속 시간”, “로그인 유지”를 각각 검색합니다.",
+              boundary:
+                "변형들이 같은 후보만 찾으면 회수율은 오르지 않고 호출 수만 늘어납니다.",
+            },
+            {
+              term: "질의 분해 · Query decomposition",
+              description:
+                "서로 다른 답이 필요한 복합 질문을 하위 질문으로 나누고 각각의 근거를 찾습니다.",
+              example:
+                "설정 위치와 보안 영향을 q-732a·q-732b로 나눕니다.",
+              boundary:
+                "앞 하위 질문의 답을 다음 질문에 섞으면 첫 오류가 뒤 단계로 전파될 수 있습니다.",
+            },
           ]}
         />
       </section>
 
       <section id="hyde" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          HyDE 는 가상의 답변 문서를 만들어 그 embedding 으로 검색합니다
+          관련성 표본이 없을 때는 답과 비슷한 문장을 먼저 만들 수 있습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            HyDE(Hypothetical Document Embeddings) 는 질문을 그대로 embedding 하지 않습니다. LLM 이 그 질문에 대한 그럴듯한 답변 문서를 먼저
-            생성하고 그 가상 문서를 embedding 해 검색 질의로 씁니다. 실제 정답 문서나 사람이 매긴 relevance label 은 필요 없습니다.
+            질문이 짧아 실제 문서의 문체와 너무 다르면 단어를 조금 바꾸는 것만으로
+            부족할 수 있습니다. 이때 언어 모델이 그럴듯한 답변 문서를 먼저 쓰고,
+            그 문서의 벡터와 가까운 실제 문서를 찾는 방법이{" "}
+            <strong>가상 문서 임베딩(HyDE)</strong>입니다.
           </p>
           <p>
-            이 가상 문서는 세부 사실이 틀릴 수 있습니다. HyDE 는 그 오류를 dense retriever 의 embedding 이 걸러낼 것이라고 가정합니다. Encoder 가 관련
-            문서들을 가까운 좌표로 모아 두는 공간이라면 사실이 조금 틀린 가상 문서도 진짜 관련 문서와 비슷한 방향에 놓이기 때문입니다.
+            순서는 질문 → 가상 답변 → 가상 답변의 임베딩 → 실제 문서 검색입니다.
+            저자들은 가상 답변에 잘못된 세부 내용이 들어갈 수 있음을 인정하고,
+            비지도 대조학습 인코더의 좁은 벡터 표현이 관련성 방향은 남기고 틀린
+            세부를 약화한다고 설명합니다. 이는 사실 검증 장치가 아니라 검색
+            이웃을 찾기 위한 가정입니다.
           </p>
           <p>
-            HyDE 논문은 비지도 dense retriever 인 Contriever 를 baseline 으로 둡니다. 그 위에서 web 검색· 질의응답·사실 검증 등 여러 task 와
-            스와힐리어·한국어·일본어를 포함한 여러 언어에서 HyDE 가 Contriever 를 크게 앞서고 지도학습으로 미세조정한 retriever 에 견줄 만한 성능을 보였다고
-            보고합니다.
+            q-732는 대화 맥락과 두 요구가 명확하므로 HyDE를 선택하지 않았습니다.
+            매 요청마다 가상 문서를 생성하면 언어 모델 호출 지연과 비용이 추가되기
+            때문입니다. 관련성 라벨이 없고 짧은 질의가 문서 문체와 크게 어긋나는
+            평가 집합에서 단순 재작성과 비교해 채택 여부를 판단해야 합니다.
           </p>
         </div>
         <ProgressiveDetail
-          title="HyDE 는 항상 query rewriting 보다 나은가요?"
-          preview="아닙니다. HyDE 는 relevance label 이 없는 상황을 겨냥한 방법이고, label 이 있으면 지도학습 retriever 나 단순 rewriting 이 더 저렴하게 비슷한 효과를 낼 수 있습니다."
+          title="가상 문서에 틀린 사실이 들어가도 괜찮은가요?"
+          preview="검색용 벡터를 만드는 데 쓸 수는 있지만, 그 문장을 근거로 답해서는 안 됩니다. 최종 답은 회수한 실제 문서로 다시 검증해야 합니다."
         >
           <p>
-            HyDE 는 매 질문마다 LLM 호출로 문서를 생성해야 해서 rewriting 보다 지연시간과 비용이
-            큽니다. 논문도 지도학습 retriever 에 "견줄 만하다"고 표현했을 뿐, 모든 상황에서 더
-            낫다고 주장하지는 않습니다.
+            HyDE 논문은 관련성 라벨이 없는 zero-shot dense retrieval을 대상으로
+            합니다. 저자 실험에서는 Contriever보다 나았고 여러 과제·언어에서
+            미세조정 검색기와 견줄 만한 결과를 보고했지만, 모든 도메인에서 더
+            정확하거나 더 저렴하다는 뜻은 아닙니다.
           </p>
         </ProgressiveDetail>
       </section>
 
       <section id="step-back" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Step-back prompting 은 질문을 상위 개념으로 추상화해 검색합니다
+          구체 조건만 되풀이할 때는 먼저 적용할 원리를 묻습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Step-back prompting 은 구체적인 질문을 그대로 검색하지 않습니다. 먼저 LLM 에 묻는 것은 그 질문이 속한 더 일반적인 원리나 배경 질문(step-back
-            question)입니다. 그 답을 원 질문과 함께 배경 지식으로 제공한 뒤에야 최종 답을 생성합니다.
+            질문에 숫자와 고유명사가 많아 일반 원리를 놓친다면, 한 단계 물러나
+            상위 개념을 먼저 묻고 그 답을 원 질문의 배경으로 쓸 수 있습니다. 이를{" "}
+            <strong>한 단계 물러서기 프롬프팅(step-back prompting)</strong>이라고
+            합니다.
           </p>
           <p>
-            가정: "1990 년부터 2000 년 사이 특정 압력에서 어떤 기체의 부피는 어떻게 변했는가"라는
-            구체적 질문을 그대로 검색하면 그 정확한 조건과 일치하는 문서를 찾기 어렵습니다.
-            Step-back 질문 "압력과 기체 부피의 관계를 설명하는 물리 법칙은 무엇인가"로 바꾸면
-            훨씬 일반적인 문서(이상 기체 법칙 설명)와 어휘가 겹칩니다.
+            중요한 경계가 있습니다. 원 논문은 물리·화학·시간 질의·다중 단계
+            추론에서 이 프롬프팅이 추론을 개선하는지 평가했습니다. 검색 회수율을
+            검증한 논문은 아닙니다. RAG에서는 “세션 시간을 늘리면 어떤 보안 원리가
+            달라지는가?”처럼 상위 질문을 검색어로 쓰는 응용이 가능하지만, 그 효과는
+            별도의 검색 실험으로 확인해야 합니다.
           </p>
           <p>
-            Step-back prompting 논문은 PaLM-2L 모델로 MMLU 물리 +7 %p, MMLU 화학 +11 %p, 시간
-            추론 benchmark TimeQA +27 %p, multi-hop 추론 benchmark MuSiQue +7 %p 의 개선을
-            보고합니다. GPT-4, Llama2-70B 에서도 같은 방향의 개선이 나타났다고 밝힙니다.
+            논문 초록은 PaLM-2L에서 MMLU 물리 7%p, 화학 11%p, TimeQA 27%p,
+            MuSiQue 7%p 개선을 저자 결과로 보고합니다. 이 수치는 추론 과제의
+            결과이며 q-732의 검색 성능이나 작은 모델의 성능을 보장하지 않습니다.
           </p>
         </div>
-        <TermBreakdown
-          title="Step-back 질문과 원 질문의 역할"
-          items={[
-            { term: "Step-back question", description: "원 질문이 속한 더 일반적인 개념·원리를 묻는 질문입니다.", example: "\"압력과 기체 부피의 관계를 설명하는 법칙은?\"", boundary: "지나치게 추상화하면 원 질문에 필요한 구체 조건과 무관한 문서만 찾을 수 있습니다." },
-            { term: "원 질문(구체 질문)", description: "step-back 답변을 배경 지식 삼아 최종적으로 답해야 하는 질문입니다.", example: "\"1990~2000 년 특정 압력에서 기체 부피 변화는?\"", boundary: "Step-back 답변만으로는 원 질문의 구체적 수치까지 답할 수 없어 원 질문의 검색도 함께 필요합니다." },
-          ]}
-        />
       </section>
 
       <section id="adaptive-loop" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Adaptive retrieval 은 검색 전에 필요한지부터 판정합니다
+          재검색은 충분함과 반복 한도를 서로 다른 이유로 종료합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            지금까지 다룬 방법들은 모두 "어떻게 검색할지"를 다뤘습니다. Adaptive retrieval 은 그 전에 "지금 검색이 필요한가"부터 판정합니다. 이 판정 지점을
-            retrieval trigger 라고 부릅니다. 이미 가진 정보로 답할 수 있는 질문에는 검색을 걸지 않아 지연시간과 비용을 아낍니다.
+            검색 여부를 먼저 결정하고, 부족한 근거를 겨냥해 질문을 바꾸며, 다시
+            평가하는 반복을 <strong>적응형 검색 루프(adaptive retrieval loop)</strong>
+            라고 부르겠습니다. 핵심은 반복 자체가 아니라 누락된 주장과 다음 변환을
+            연결하는 것입니다.
           </p>
           <p>
-            회수한 근거가 부족하면 질의를 rewriting·decomposition· HyDE·step-back 중 하나로 바꿔 다시 검색합니다. 이렇게 검색을 한 번으로 끝내지 않는
-            과정을 iterative retrieval loop 라고 합니다. 이 반복은 충분성 판정을 통과하거나 정해 둔 최대 반복 횟수에 이르러야 끝납니다.
+            q-732의 운영 판정기는 정답 문서 집합 A를 모릅니다. 대신 “설정 위치”와
+            “보안 영향”이라는 두 필수 주장을 만들고, 각 주장에 인용 가능한 문서가
+            있는지 평가합니다. 이 평가는 틀릴 수 있으므로 판정기 버전과 점수,
+            변환된 질문, 후보 ID를 함께 남겨야 나중에 오답 원인을 재현할 수 있습니다.
           </p>
         </div>
         <AlgorithmBlock
-          title="Adaptive retrieval loop: 판정부터 종료까지"
+          title="q-732 적응형 검색: 복원부터 종료 기록까지"
           input={[
-            "사용자 질문 q",
-            "검색 함수 retrieve(query)",
-            "충분성 판정 함수 sufficient(context)",
-            "질의 변환 함수(rewrite · decompose · HyDE · step-back 중 선택)",
-            "최대 반복 횟수 max_iter",
+            "원 요청 request와 같은 대화의 문맥 conversation",
+            "필수 주장 required_claims={설정 위치, 보안 영향}",
+            "검색 함수 retrieve와 근거 판정 함수 evaluate",
+            "최대 재검색 횟수 max_iter=2 (가정)",
           ]}
           steps={[
-            { code: "if not sufficient(known_context(q)): context = retrieve(q)", note: "지금 가진 정보로 답할 수 있으면 검색을 아예 걸지 않습니다." },
-            { code: "iter = 0", note: "반복 횟수를 0 으로 시작합니다." },
-            { code: "while not sufficient(context) and iter < max_iter:", note: "회수한 근거가 부족하고 최대 반복에 못 미쳤으면 계속 반복합니다." },
-            { code: "  q' = transform(q, context)", note: "부족한 부분을 겨냥해 질의를 rewriting·decomposition·HyDE·step-back 중 하나로 바꿉니다." },
-            { code: "  context = context ∪ retrieve(q')", note: "새 질의로 다시 검색해 이전 context 에 더합니다." },
-            { code: "  iter += 1", note: "반복 횟수를 늘립니다." },
+            {
+              code: "// 대화 맥락으로 생략된 대상을 복원합니다.\nq = resolve_reference(request, conversation)",
+              note: "직전 발화에서 XR-17B와 모바일 앱을 확인해 검색 대상을 명시합니다.",
+            },
+            {
+              code: "// 복원한 질문으로 처음 검색합니다.\ncontext = retrieve(q)",
+              note: "첫 결과의 후보 ID와 검색기 설정을 기록합니다.",
+            },
+            {
+              code: "// 필요한 주장마다 근거가 있는지 평가합니다.\nverdict = evaluate(required_claims, context)",
+              note: "정답 문서를 미리 아는 대신 각 주장에 인용 가능한 근거가 있는지 판정합니다.",
+            },
+            {
+              code: "// 충분하면 그 이유를 기록하고 즉시 끝냅니다.\nif verdict.sufficient: return context, receipt(\"evidence_sufficient\")",
+              note: "충분성 통과와 단순 반복 중단을 같은 성공 상태로 처리하지 않습니다.",
+            },
+            {
+              code: "// 누락 원인에 맞는 변환만 고릅니다.\nqueries = transform(q, verdict.missing_reasons)",
+              note: "q-732에서는 문장 재작성과 두 하위 질문 분해를 선택합니다.",
+            },
+            {
+              code: "// 새 결과를 기존 후보와 합쳐 다시 평가합니다.\ncontext = union(context, retrieve_all(queries))",
+              note: "중복 문서를 제거하되 어느 질문이 어떤 문서를 찾았는지 계보는 보존합니다.",
+            },
+            {
+              code: "// 한도를 넘기지 않도록 반복 횟수를 올립니다.\niteration = iteration + 1",
+              note: "iteration이 max_iter에 닿으면 충분하지 않아도 멈춥니다.",
+            },
+            {
+              code: "// 충분하거나 한도에 닿을 때까지 평가로 돌아갑니다.\nrepeat from evaluate",
+              note: "마지막 기록에는 sufficient와 max_iter 중 실제 종료 이유를 남깁니다.",
+            },
           ]}
-          output="충분성 판정을 통과했거나 max_iter 에 도달한 context — 이 context 로 최종 답을 생성합니다"
-          repeatUntil="sufficient(context) 이거나 iter == max_iter"
+          output="근거 문서, 질문 변환 계보, 판정기 버전, 반복 횟수, 종료 이유가 담긴 검색 기록"
+          repeatUntil="verdict.sufficient 또는 iteration == max_iter"
         />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            q-732는 첫 재검색에서 d-17·d-04를 얻어 반복 1에서 끝납니다. 반대로
+            반복 2까지 갔는데도 보안 영향의 근거가 없다면 답을 지어내지 않고
+            “근거 부족” 상태로 넘겨야 합니다. 최대 횟수는 성공 조건이 아니라 비용과
+            지연을 제한하는 안전장치입니다.
+          </p>
+        </div>
       </section>
 
       <section id="self-rag-crag" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Self-RAG 와 CRAG 는 서로 다른 지점에서 검색 품질을 판정합니다
+          검색을 판단하는 주체는 하나로 정해야 합니다
         </h2>
+        <DecisionOwnerViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Self-RAG 는 이 판정을 언어 모델 자신의 생성 과정 안에 넣습니다. CRAG 는 반대로 언어 모델 바깥에 가벼운 evaluator 를 하나 더 둬 검색 결과의 품질을
-            따로 판정합니다. 두 방법 모두 adaptive retrieval trigger 의 구체적인 구현입니다.
+            Self-RAG는 검색과 비평을 생성 모델 안에 학습시킵니다. 모델은 다음
+            구간을 만들 때 검색 여부를 나타내는 Retrieve 토큰을 예측하고, 회수한
+            문서의 관련성(IsRel), 생성문의 근거 지지(IsSup), 응답의 유용성(IsUse)을
+            나타내는 토큰도 함께 예측합니다. 일반 모델에 프롬프트 네 줄을 붙이는
+            기능이 아니라, 이 토큰을 생성하도록 학습한 모델과 전용 디코딩 절차가
+            필요합니다.
           </p>
           <p>
-            Self-RAG 는 생성 중에 특수 token 네 개를 함께 예측합니다. Retrieve 는 지금 검색이
-            필요한지(yes·no·continue)를, IsRel 은 회수한 문서가 관련 있는지(relevant·irrelevant)를,
-            IsSup 은 생성한 문장이 그 문서로 뒷받침되는지(fully·partially·no support)를, IsUse 는
-            응답 전체의 유용성을 1~5 점으로 매깁니다.
-          </p>
-          <p>
-            Self-RAG 논문은 7B·13B 모델로 PopQA 정확도 54.9 %·55.8 % 를 보고합니다. 같은 benchmark 에서 ChatGPT 의 29.3 %,
-            Llama2-chat 13B 의 20.0 % 를 크게 앞서는 수치입니다. PubHealth 에서도 72.4 %·74.5 % 로 ChatGPT 의 70.1 % 를 앞섭니다.
-          </p>
-          <p>
-            다만 모든 benchmark 에서 이기지는 않습니다. ARC-Challenge 에서는 Self-RAG 13B 가 73.1 % 로 ChatGPT 의 75.3 % 에 못 미칩니다.
-            검색 근거가 필요한 task 에서는 강하지만 순수 추론에 가까운 task 에서는 검색 자체가 크게 도움이 되지 않을 수 있다는 뜻입니다.
+            CRAG는 검색이 끝난 뒤 별도 평가기가 문서 신뢰도를 매기고 교정 동작을
+            고릅니다. 관련 문서가 있다고 보면 내부 문서를 정제하고, 모두 낮다고
+            보면 질문을 다시 써 외부 검색을 사용합니다. 중간 구간에서는 두 결과를
+            함께 씁니다. 따라서 Self-RAG의 내부 토큰과 CRAG의 외부 평가기는 같은
+            컴포넌트가 아니며, 한 요청에서 누가 검색·재검색 상태를 최종 변경하는지
+            명확히 정해야 합니다.
           </p>
         </div>
+        <CragThresholdViz />
         <ExplainedFormula
-          question="CRAG 의 evaluator 는 검색 결과를 어떤 기준으로 세 범주로 나눌까요?"
-          idea="회수한 문서마다 confidence 점수를 매기고, 그 최댓값을 미리 정한 두 임계값과 비교해 Correct·Ambiguous·Incorrect 세 구간 중 하나로 판정합니다."
-          formula={String.raw`\text{category}=\begin{cases}\text{Correct}&\max_i c_i > \tau_{u}\\ \text{Ambiguous}&\tau_{l}\le \max_i c_i \le \tau_{u}\\ \text{Incorrect}&\max_i c_i < \tau_{l}\end{cases}`}
-          annotatedFormula={String.raw`\text{category}=\begin{cases}\text{Correct}&\underbrace{\max_i c_i > \tau_{u}}_{\text{가장 확신 있는 문서가 상한 초과}}\\ \text{Ambiguous}&\underbrace{\tau_{l}\le \max_i c_i \le \tau_{u}}_{\text{두 임계값 사이}}\\ \text{Incorrect}&\underbrace{\max_i c_i < \tau_{l}}_{\text{모든 문서가 하한 미만}}\end{cases}`}
+          question="CRAG의 설명용 판정 규칙을 두 임계값으로 어떻게 읽을까요?"
+          idea="문서별 신뢰도 가운데 가장 높은 값 s를 구하고, s가 하한과 상한 사이 어디에 놓이는지로 교정 동작을 고릅니다."
+          formula={String.raw`\begin{aligned}s&=\max_i c_i\\\operatorname{action}(s)&=\begin{cases}\text{정제}&s>\tau_u\\\text{정제+외부검색}&\tau_l\le s\le\tau_u\\\text{외부검색}&s<\tau_l\end{cases}\end{aligned}`}
+          annotatedFormula={String.raw`\begin{aligned}\underbrace{s}_{\text{검색 결과 대표 신뢰도}}&=\underbrace{\max_i c_i}_{\text{문서별 점수 중 최댓값}}\\\operatorname{action}(s)&=\begin{cases}\underbrace{\text{정제}}_{\text{관련 문서 있음}}&s>\tau_u\\\underbrace{\text{정제+외부검색}}_{\text{판정 모호}}&\tau_l\le s\le\tau_u\\\underbrace{\text{외부검색}}_{\text{모두 관련 없음}}&s<\tau_l\end{cases}\end{aligned}`}
           operations={[
-            { expression: String.raw`\max_i c_i`, annotation: ["회수한 문서 각각의 confidence 중", "가장 높은 값 하나만 대표로 씀"] },
-            { expression: String.raw`\max_i c_i > \tau_{u}`, annotation: ["그 값이 상한 threshold 를 넘으면", "Correct — 지식 정제 절차로 진행"] },
-            { expression: String.raw`\max_i c_i < \tau_{l}`, annotation: ["그 값이 하한 threshold 에도 못 미치면", "Incorrect — 버리고 web search 로 대체"] },
+            {
+              expression: String.raw`s=\max_i c_i`,
+              annotation: [
+                "문서별 관련성 점수 가운데",
+                "가장 높은 값을 대표값으로 둡니다.",
+              ],
+            },
+            {
+              expression: String.raw`s>\tau_u`,
+              annotation: [
+                "적어도 한 문서가 상한을 넘으면",
+                "내부 문서의 관련 부분을 정제합니다.",
+              ],
+            },
+            {
+              expression: String.raw`s<\tau_l`,
+              annotation: [
+                "모든 문서가 하한보다 낮으면",
+                "질문을 다시 써 외부 검색으로 바꿉니다.",
+              ],
+            },
           ]}
           terms={[
-            { symbol: "c_i", name: "문서 i 의 confidence", description: "evaluator 가 문서마다 매긴 관련성 점수입니다." },
-            { symbol: String.raw`\tau_{u}, \tau_{l}`, name: "상한·하한 threshold", description: "Correct·Ambiguous·Incorrect 를 가르는 두 기준값입니다." },
+            {
+              symbol: "c_i",
+              name: "문서 i의 신뢰도",
+              description: "검색 평가기가 각 문서에 매긴 관련성 점수입니다.",
+            },
+            {
+              symbol: String.raw`\tau_l,\tau_u`,
+              name: "하한과 상한",
+              description: "세 교정 동작을 가르는 두 기준값입니다.",
+            },
+            {
+              symbol: "s",
+              name: "대표 신뢰도",
+              description: "설명용으로 문서 점수의 최댓값을 사용한 값입니다.",
+            },
           ]}
           assumptions={[
-            "Threshold 두 값은 검증 데이터로 미리 정해 둔다는 전제이며 이 글은 그 값을 정하는 절차는 다루지 않습니다.",
-            "Ambiguous 판정은 internal 지식 정제와 web search 결과를 함께 쓰는 절차로 이어집니다.",
+            "논문의 Correct·Incorrect·Ambiguous 조건을 최댓값 s로 요약해 설명합니다. 실제 구현에서는 문서별 판정과 통합 절차도 함께 보존해야 합니다.",
+            "임계값은 검증 집합에서 정해야 하며, 이 글의 0.40·0.70은 시각화를 위한 가정입니다.",
           ]}
-          interpretation="Correct 는 문서를 조각내 관련 부분만 남기는 정제로, Incorrect 는 그 결과를 버리고 web search 로, Ambiguous 는 둘 다 써서 다음 단계로 넘깁니다."
+          interpretation="0.55는 두 임계값 사이이므로 내부 근거 정제와 외부 검색을 함께 사용합니다. 이 분류가 옳다는 보장은 없으므로 평가기 자체의 오분류율도 별도로 측정해야 합니다."
         />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            CRAG 논문은 baseline RAG 와 비교해 PopQA 정확도를 50.5 %에서 54.9 %로, PubHealth 를
-            48.9 %에서 59.5 %로, ARC-Challenge 를 43.4 %에서 53.7 %로 끌어올렸다고 보고합니다.
-            Self-RAG 위에 CRAG 의 evaluator 를 얹은 조합도 PopQA 를 54.9 %에서 61.8 %로 개선했습니다.
+            CRAG v3의 Table 1에서 LLaMA2-hf-7B를 생성 모델로 쓴 분기는 PopQA
+            정확도 50.5에서 54.9, ARC-Challenge 43.4에서 53.7로 오른 저자 결과를
+            보고합니다. 그러나 SelfRAG-LLaMA2-7B 분기에서 ARC-Challenge는
+            Self-RAG 67.3과 Self-CRAG 67.2로 거의 같았습니다. 평가기를 하나 더
+            붙인다고 모든 과제에서 개선된다고 말할 수 없는 이유입니다.
           </p>
           <p>
-            다만 ARC-Challenge 에서는 Self-RAG 13B 의 67.3 %와 Self-RAG+CRAG 조합의 67.2 %가 거의
-            같습니다. Evaluator 를 더한다고 모든 benchmark 에서 항상 개선이 따라오지는 않는다는
-            뜻입니다.
+            실제 선택은 동일한 코퍼스와 질문 집합에서 일반 RAG, Self-RAG,
+            CRAG를 따로 실행해 회수율·근거 지지율·지연·추가 모델 운영비를 함께
+            측정해야 합니다. 같은 요청의 검색 여부와 재검색 횟수를 여러 판정기가
+            동시에 바꾸게 두면 실패 원인과 비용의 소유권이 흐려집니다.
           </p>
         </div>
       </section>
 
       <section id="sources" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          근거는 다섯 논문의 실측 수치와 공식 결과입니다
+          각 논문이 실제로 검증한 범위를 구분합니다
         </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            HyDE·Self-RAG·CRAG·Step-Back Prompting 은 각 방법을 처음 제시한 논문에서, query
-            decomposition 의 일반 원리는 Least-to-Most Prompting 논문에서 근거를 가져왔습니다.
-          </p>
-        </div>
         <div id="paper-hyde" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Gao et al. · Precise Zero-Shot Dense Retrieval without Relevance Labels (HyDE, ACL 2023)"
             citeKey={1}
             href="https://arxiv.org/abs/2212.10496"
           >
-            질문에 대한 가상의 답변 문서를 LLM 으로 생성하고 그 문서를 비지도 dense retriever 로
-            embedding 해 검색 질의로 쓰는 HyDE 를 제시합니다. Web 검색·QA·사실 검증 등 여러 task 와
-            여러 언어에서 Contriever 를 크게 앞서고 지도학습 retriever 에 견줄 만한 성능을 보였다고
-            보고합니다.
+            질문으로 가상 문서를 생성하고 비지도 대조학습 인코더로 그 문서를
+            임베딩해 실제 문서를 찾는 방법을 제시합니다. 논문은 가상 문서에 틀린
+            세부가 들어갈 수 있다고 명시하며, 여러 과제와 언어에서의 성능은 저자
+            실험 범위입니다.
           </CitationBlock>
         </div>
         <div id="paper-selfrag" className="not-prose my-8 scroll-mt-24">
@@ -274,33 +414,31 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
             citeKey={2}
             href="https://arxiv.org/abs/2310.11511"
           >
-            Retrieve·IsRel·IsSup·IsUse 네 reflection token 으로 검색 여부와 근거 품질을 생성
-            과정 안에서 스스로 판정하는 방법을 제시합니다. 7B·13B 모델이 PopQA·PubHealth 등에서
-            ChatGPT 와 검색 결합 Llama2-chat 을 앞서지만 ARC-Challenge 에서는 ChatGPT 에 못
-            미친다고 보고합니다.
+            Retrieve·IsRel·IsSup·IsUse 토큰을 생성하도록 비평 모델과 생성 모델을
+            학습하고, 추론 중 검색·생성·비평을 연결합니다. 일반 모델에 같은 이름의
+            프롬프트를 붙이는 것과는 다릅니다.
           </CitationBlock>
         </div>
         <div id="paper-crag" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Yan et al. · Corrective Retrieval Augmented Generation (CRAG, 2024)"
+            source="Yan et al. · Corrective Retrieval Augmented Generation (CRAG, arXiv v3, 2024-10-07)"
             citeKey={3}
             href="https://arxiv.org/abs/2401.15884"
           >
-            가벼운 evaluator 로 회수한 문서의 confidence 를 매겨 Correct·Ambiguous·Incorrect 로
-            나누고, 각각 지식 정제·정제+web search·web search 로 대응하는 방법을 제시합니다. 네
-            데이터셋에서 baseline RAG 와 Self-RAG 위에 얹었을 때 모두 정확도가 올랐다고 보고합니다.
+            검색 평가기의 신뢰도에 따라 내부 문서 정제, 외부 검색, 두 경로의 결합을
+            선택합니다. 네 데이터셋의 수치는 저자 자기보고이며 Table 1에는 거의
+            차이가 없는 조합도 함께 나옵니다.
           </CitationBlock>
         </div>
         <div id="paper-stepback" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Zheng et al. · Take a Step Back: Evoking Reasoning via Abstraction (Step-Back Prompting, ICLR 2024)"
+            source="Zheng et al. · Take a Step Back: Evoking Reasoning via Abstraction (ICLR 2024)"
             citeKey={4}
             href="https://arxiv.org/abs/2310.06117"
           >
-            구체적인 질문 대신 그 질문이 속한 상위 개념을 먼저 묻는 step-back 질문으로 배경 지식을
-            얻은 뒤 원 질문에 답하는 방법을 제시합니다. PaLM-2L 로 MMLU 물리 +7 %p, 화학 +11 %p,
-            TimeQA +27 %p, MuSiQue +7 %p 개선을 보고하며 GPT-4·Llama2-70B 에서도 같은 방향을
-            확인합니다.
+            구체적인 사례에서 상위 개념과 첫 원리를 먼저 끌어내 추론에 사용하는
+            프롬프팅을 평가합니다. 이 논문의 개선 수치는 추론 과제 결과이며 검색
+            회수율을 직접 측정한 값이 아닙니다.
           </CitationBlock>
         </div>
         <div id="paper-least-to-most" className="not-prose my-8 scroll-mt-24">
@@ -309,21 +447,25 @@ export default function QueryTransformationAndAdaptiveRetrievalArticle() {
             citeKey={5}
             href="https://arxiv.org/abs/2205.10625"
           >
-            복잡한 문제를 더 단순한 subproblem 순서로 나눠 앞선 답을 다음 단계에 쓰는 방법을
-            제시합니다. Compositional generalization benchmark SCAN 에서 예시 14 개만으로 99 %
-            이상의 정확도를 보여 chain-of-thought 의 16 % 를 크게 앞선다고 보고합니다. 이 원리를
-            검색에 적용한 것이 query decomposition 이며, SCAN 수치 자체는 검색 평가가 아니라
-            추론 평가 결과입니다.
+            복합 문제를 더 쉬운 하위 문제 순서로 나누는 추론 방법을 제시합니다.
+            질의 분해의 직관을 설명하는 선행 근거로만 사용하며, SCAN 결과를 검색
+            품질의 증거로 사용하지 않습니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          Chunk 를 어떻게 만들지는{" "}
-          <Link to="/cs/ai/rag-ingestion-and-chunking#chunking">RAG ingestion 글</Link>이 정본이고,
-          검색 후보를 정렬·재정렬하는 계산은{" "}
-          <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">Retrieval ranking funnel 글</Link>이
-          정본입니다.
+          청크와 색인 개정은{" "}
+          <Link to="/cs/ai/rag-ingestion-and-chunking">
+            문서 수집과 청킹 글
+          </Link>
+          이, 충분한 근거를 문맥에 배치하고 답변을 평가하는 단계는{" "}
+          <Link to="/cs/ai/rag-context-assembly-and-evaluation">
+            문맥 조립과 평가 글
+          </Link>
+          이 맡습니다.
         </p>
       </section>
+
+      <QueryTransformationReturn />
     </div>
   );
 }
