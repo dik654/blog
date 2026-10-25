@@ -10416,7 +10416,7 @@
         "src/pages/articles/ai/video-understanding/VideoPathLocator.tsx",
         "src/pages/articles/ai/video-understanding/viz/ModernVideoUnderstandingViz.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": true,
         "predictionAnswerPointers": 3,
@@ -10471,11 +10471,10 @@
         "keyboard": "pass · 시각화 group에 초점을 둔 뒤 ArrowRight와 ArrowLeft로 장면이 이동합니다.",
         "reducedMotion": "pass · 사용자가 장면을 바꿀 수 있고 0.9초 뒤 실행 중인 figure animation은 0개입니다.",
         "noScript": "pass · 390px에서 live 장면과 조작부는 숨고 5개 정적 목록·19개 장면 설명·6개 학습 절·locator·return이 표시됩니다.",
-        "typecheck": "pass · NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --noEmit"
+        "typecheck": "pass · NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --noEmit",
+        "production": "pass · GitHub Pages run 40185577996 성공. 공개 390px에서 title·locator·return·figure 6개·group 5개·가로 overflow 0·console 오류 0을 확인했고 JavaScript 비활성 정적 목록도 확인했습니다."
       },
-      "remaining": [
-        "공개 배포 뒤 production 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/vision-backbone-selection",
