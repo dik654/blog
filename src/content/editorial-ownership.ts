@@ -368,12 +368,11 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "standard", rule: "Hook·Skill은 runtime capability를 넓히지 않고 policy pass와 artifact acceptance를 분리한다." }, { kind: "project-measurement", rule: "APR-42·1200행, 승인 누락, 1199행 fixture의 trace와 effectStarted 상태를 실행 결과로 대조한다." }],
   },
   "agent-frameworks": {
-    title: "Agent framework 글이 소유하는 범위",
+    title: "Agent runtime 메커니즘 글이 소유하는 범위",
     owns: [
-      "직접 SDK·작은 tool loop와 framework runtime을 workload 요구사항으로 나누는 선택 경계",
-      "Durable execution state·checkpoint/replay·interrupt/resume를 framework runtime 관점에서 비교하는 기준",
-      "LangGraph·LlamaIndex·AutoGen AgentChat·CrewAI Crew/Flow의 capability requirement matrix",
-      "Framework·state schema·serializer·checkpointer version migration과 paired eval·canary·rollback 계약",
+      "직접 SDK loop와 durable runtime이 갈리는 메커니즘 경계",
+      "Durable execution state·checkpoint/replay·interrupt/resume의 내부 동작",
+      "외부 환불 효과와 checkpoint를 서로 다른 상태로 복구하는 계약",
     ],
     reuses: [
       {
@@ -418,6 +417,26 @@ export const EDITORIAL_BOUNDARIES = {
         kind: "project-claim",
         rule: "Capability matrix는 현재 version snapshot이며 LangGraph·CrewAI를 포함한 각 runtime의 persistence·resume 기능을 정기적으로 다시 확인한다.",
       },
+    ],
+  },
+  "agent-runtime-selection": {
+    title: "Agent runtime 선택 글이 소유하는 범위",
+    owns: [
+      "A-104 환불 요구사항으로 LangGraph·LlamaIndex·AutoGen·CrewAI와 직접 구현을 비교하는 기준",
+      "같은 장애를 주입하는 paired experiment와 미측정 결과 표기",
+      "Framework·state schema·serializer·checkpointer version migration과 canary·rollback 계약",
+    ],
+    reuses: [
+      { label: "Checkpoint·replay·외부 효과 경계", href: "/cs/ai/agent-frameworks#langchain" },
+      { label: "ReAct state·action·observation", href: "/cs/ai/agent-loop-foundations#overview" },
+      { label: "Multi-agent runtime 구현", href: "/cs/ai/multi-agent-implementation" },
+      { label: "RAG data source·retrieval pipeline", href: "/cs/ai/rag-pipeline" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "후보 기능은 확인 시점 공식 문서와 설치할 version으로 제한한다." },
+      { kind: "standard", rule: "같은 A-104 상태와 failure point를 모든 후보에 적용하고 authoritative writer를 하나만 둔다." },
+      { kind: "project-measurement", rule: "후보 우위는 paired experiment의 복구율·중복 효과·trace·비용 측정으로만 확정한다." },
+      { kind: "project-claim", rule: "실험 전 결과는 proposed 또는 미측정으로 남기고 rollback 없는 채택을 승인하지 않는다." },
     ],
   },
   "claude-code": {

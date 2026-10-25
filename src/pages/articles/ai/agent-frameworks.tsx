@@ -1,13 +1,14 @@
 import Overview from "./agent-frameworks/Overview";
 import LangChain from "./agent-frameworks/LangChain";
-import Comparison from "./agent-frameworks/Comparison";
+import { AgentRuntimePathLocator, AgentRuntimePathReturn } from "./shared/AgentRuntimePathLocator";
 
 export default function AgentFrameworksArticle() {
   return (
-    <div className="space-y-12">
+    <article className="space-y-12">
+      <AgentRuntimePathLocator />
       <Overview />
       <LangChain />
-      <Comparison />
-    </div>
+      <AgentRuntimePathReturn />
+    </article>
   );
 }

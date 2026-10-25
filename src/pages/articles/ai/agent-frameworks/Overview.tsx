@@ -3,20 +3,33 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import AgentReActViz from "./viz/AgentReActViz";
 import TimelineDetailViz from "./viz/TimelineDetailViz";
+import RefundRuntimeTraceViz from "./viz/RefundRuntimeTraceViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Framework는 모델보다 실행 책임을 바꿉니다
-      </h2>
+      <header className="mb-6 space-y-3">
+        <p className="text-xs font-black tracking-[0.18em] text-primary">00 · 환불 한 건</p>
+        <h2 className="text-2xl font-black leading-tight sm:text-3xl">프로세스가 바뀌어도 같은 요청을 이어갑니다</h2>
+        <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">A-104 환불이 승인 대기와 worker 장애를 지나도 중복 효과 없이 완료되는 경로를 먼저 봅니다.</p>
+      </header>
+
+      <div className="not-prose my-8">
+        <RefundRuntimeTraceViz />
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          고객이 “주문 A-104를 환불해 주세요”라고 요청했다고 생각해 봅시다. 먼저 고객과 주문을 조회하고 요청 당시의 환불 정책을 확인해야 합니다.
+          이 글의 답부터 말하면, 새 worker는 <strong>refund-8472의 마지막 checkpoint</strong>를
+          읽고 완료되지 않은 node부터 이어 갑니다. 그 node가 외부 환불을 이미 만들었을 가능성이
+          있으면 <code>refund:refund-8472:A-104</code>로 기존 operation을 먼저 조회하고,
+          영수증을 검증한 뒤에만 완료 상태를 저장합니다.
         </p>
         <p>
-          금액이 크다면 담당자의 승인을 기다립니다. 승인 뒤에는 환불 API를 한 번만 호출하고 반환된 영수증이 실제 환불 건과 일치하는지 검증해야 완료됩니다.
+          고객이 “주문 A-104를 환불해 주세요”라고 요청한 상황을 가정하겠습니다. 먼저 고객과 주문을 조회하고 요청 당시의 환불 정책을 확인해야 합니다.
+        </p>
+        <p>
+          금액이 크다면 담당자의 승인을 기다립니다. 승인 뒤에는 같은 작업 키로 환불 API를 호출하고, 반환된 영수증이 실제 환불 건과 일치하는지 검증해야 완료됩니다.
         </p>
         <p>
           모델은 다음 행동을 제안할 수 있습니다. 하지만 어느 단계까지 끝났는지 저장하고
@@ -33,7 +46,7 @@ export default function Overview() {
         </p>
       </div>
 
-      <div className="not-prose my-8">
+      <div className="not-prose my-8" id="direct-loop">
         <AgentReActViz />
       </div>
 
@@ -45,7 +58,7 @@ export default function Overview() {
         </p>
         <ul>
           <li>
-            실행 식별자와 위치: <code>request_id</code>, <code>phase</code>, attempt
+            실행 식별자와 위치: <code>run_id=refund-8472</code>, <code>phase</code>, attempt
           </li>
           <li>판정 근거: customer·order record, 적용한 policy version, approval status</li>
           <li>외부 효과: refund idempotency key, receipt, 마지막 error</li>
@@ -137,8 +150,8 @@ export default function Overview() {
           <Link to="/cs/ai/multi-agent-implementation"> multi-agent 구현 정본</Link>에서 확장합니다.
         </p>
         <p>
-          이 글은 그보다 좁게, 한 환불 workflow를 기준으로 실행 runtime의 선택 경계만
-          비교합니다.
+          이 글은 그보다 좁게, 한 환불 workflow가 상태를 저장하고 중단된 위치에서 재개되는
+          메커니즘을 설명합니다. 제품 선택과 장애 실험은 다음 실무 글에서 이어집니다.
         </p>
         <ContentBoundary article="agent-frameworks" />
       </div>
