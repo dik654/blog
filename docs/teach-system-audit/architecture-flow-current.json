@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 473,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 279,
+    "recursiveLocators": 280,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -4562,7 +4562,7 @@
     {
       "route": "ai/rag-context-assembly-and-evaluation",
       "publicPath": "cs/ai/rag-context-assembly-and-evaluation",
-      "title": "RAG context 조립과 평가: packing·groundedness·error attribution",
+      "title": "RAG 문맥 조립과 평가: 근거가 답이 되는 경로",
       "sourcePath": "src/pages/articles/ai/rag-context-assembly-and-evaluation.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -4570,7 +4570,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

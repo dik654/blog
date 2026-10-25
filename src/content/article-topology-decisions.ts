@@ -3319,6 +3319,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "SRE 책·Workbook·Kubernetes 문서·v1.37.1 원문과 공개 postmortem에 적힌 사실까지만 근거로 삼고, 서비스 수치와 toil 예시는 가정으로 표기한다.",
   },
+  "ai/rag-context-assembly-and-evaluation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "앞 글이 넘긴 q-732와 d-17·d-04가 근거 선택, 문맥 조립, 주장 검증, 첫 실패 귀속까지 이어지는 한 경로입니다. 지표와 실험은 이 경로의 서로 다른 경계를 확인하므로 분리하면 같은 사례와 상태 기록을 다시 세워야 합니다.",
+    sharedGate:
+      "2,048토큰 예산에서 1,200토큰 근거를 선택하고, context precision 0.5→1.0·recall 2/2·faithfulness 2/3을 검산하며, 후보와 문맥은 통과하고 claim-3에서 처음 실패하는지 확인합니다.",
+  },
 };
 
 /**
@@ -3656,6 +3665,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vllm-scheduler": "ef3d2228d799444a",
   "ai/retrieval-ranking-funnel": "3d6c8d1146116c83",
   "ai/query-transformation-and-adaptive-retrieval": "173ebca4a97dff29",
+  "ai/rag-context-assembly-and-evaluation": "bbed55eefdc6b60b",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",
