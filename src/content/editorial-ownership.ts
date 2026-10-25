@@ -2507,7 +2507,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Alignment·uniformity 분석은 논문의 normalized representation·objective 가정 안에서 해석한다." },
+      { kind: "primary-source", rule: "SimCLR의 h/z handoff와 alignment·uniformity 분석은 각 논문의 dataset·normalized representation·objective 가정 안에서 해석한다." },
       { kind: "standard", rule: "Pair relation·relation source·augmentation revision·encoder/projection handoff를 함께 기록한다." },
     ],
   },

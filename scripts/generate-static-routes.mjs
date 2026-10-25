@@ -97,6 +97,7 @@ const noScriptArticleRoutes = new Set([
   "ai/training-pipeline",
   "ai/transfer-learning-practice",
   "ai/vision-transformer",
+  "ai/contrastive-learning",
   "ai/dinov3-self-supervised-backbone",
   "ai/vision-backbone-selection",
   "ai/multiview-fusion",

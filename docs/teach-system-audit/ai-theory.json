@@ -1255,9 +1255,12 @@
       "publicFiles": [
         "src/pages/articles/ai/contrastive-learning.tsx",
         "src/pages/articles/ai/contrastive-learning/FoundationArticle.tsx",
-        "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx"
+        "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx",
+        "src/pages/articles/ai/contrastive-learning/ContrastivePathLocator.tsx",
+        "src/pages/articles/ai/contrastive-learning/calculations.ts",
+        "src/content/contrastive-learning-tree.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -1265,19 +1268,56 @@
         "hasSourceSurface": true,
         "characters": 5807
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "Positive·negative pair를 loss 용어로 먼저 소개해 어떤 업무 의미를 보존하는지 찾기 어려웠습니다.",
+        "Encoder 표현 h와 contrastive loss가 비교하는 projection z의 인계 경계가 한 사례 안에서 이어지지 않았습니다.",
+        "Augmentation이 label을 보존하지 않는 반례와 unknown pair 처리 근거가 없었습니다.",
+        "정규화와 cosine 계산을 같은 숫자로 끝까지 검산할 수 있는 fixture가 없었습니다."
+      ],
+      "fixture": {
+        "task": "상품 SKU 검색",
+        "anchor": "SKU-42 정면 사진",
+        "positive": "SKU-42 밝은 crop",
+        "negative": "SKU-77 다른 상품",
+        "unknown": "중복 여부를 확인하지 못한 판매자 사진",
+        "projection": [
+          3,
+          4
+        ],
+        "norm": 5,
+        "unit": [
+          0.6,
+          0.8
+        ],
+        "reference": [
+          1,
+          0
+        ],
+        "cosine": 0.6
+      },
+      "stageAnchors": {
+        "relation": "overview",
+        "pairContract": "pair-contract",
+        "projection": "projection",
+        "failureBoundary": "release"
+      },
+      "primarySourceApplication": [
+        "SimCLR 원문에서 두 augmentation view·shared encoder h·projection z와 학습 뒤 representation 인계 경계를 확인했습니다.",
+        "Wang·Isola 원문은 positive alignment와 hypersphere uniformity를 구분하는 범위에 한정해 적용했습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "상품 SKU-42 한 사례가 relation 정의→pair receipt→h/z 인계→실패 경계로 이어지는지 본문과 시각화를 대조했습니다.",
+        "humanize": "ko-natural 원칙에 따라 번역투 문장을 줄이고, 용어는 첫 등장마다 상품 사례의 뜻과 함께 설명했습니다.",
+        "numericTrace": "z̃=(3,4)→norm 5→z=(0.6,0.8)→r=(1,0)과 cosine 0.6을 calculations.ts와 본문에서 같은 값으로 검산했습니다. calculation strict audit 0건입니다.",
+        "mobile390": "390×844에서 문서 가로 overflow 0, 세 시각화와 50×50px 장면 조작 버튼을 확인했습니다. 첫 장면 본체는 한 화면 안에 표시됩니다.",
+        "desktop1440": "1440×1000에서 문서 가로 overflow 0, 세 시각화가 잘리지 않고 표시되며 console error·warning 0건입니다.",
+        "keyboard": "시각화 group에 focus한 뒤 ArrowRight 02→03, ArrowLeft 03→02 전환을 Playwright로 확인했습니다.",
+        "reducedMotion": "prefers-reduced-motion: reduce에서 세 시각화가 각각 마지막 장면을 표시하고 재생이 꺼지는 것을 확인했습니다.",
+        "noScript": "JavaScript를 끈 390×844 브라우저에서 정적 읽기 안내·본문 제목·세 시각화의 전체 장면 목록이 순서대로 표시되는 것을 확인했습니다.",
+        "localChecks": "check-article, calculation strict, lint, tsc가 포함된 production build, git diff --check를 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "배포 후 공개 경로 확인"
       ]
     },
     {

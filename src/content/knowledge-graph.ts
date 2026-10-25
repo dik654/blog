@@ -6816,7 +6816,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Positive-transformation invariance",
     definition:
       "허용한 augmentation transformation 전후의 입력이 target 의미를 유지하므로 representation도 그 변화에 민감하지 않아야 한다는 대조 학습의 가정입니다.",
-    canonicalHref: "/cs/ai/contrastive-learning#projection",
+    canonicalHref: "/cs/ai/contrastive-learning#pair-contract",
   },
   "projection-head-boundary": {
     id: "projection-head-boundary",
@@ -6825,7 +6825,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Projection-head boundary",
     definition:
       "Encoder가 만드는 downstream representation h와 contrastive objective가 직접 작용하는 projection embedding z의 역할·shape·배포 handoff를 구분하는 경계입니다.",
-    canonicalHref: "/cs/ai/contrastive-learning#overview",
+    canonicalHref: "/cs/ai/contrastive-learning#projection",
   },
   "normalized-embedding-cosine": {
     id: "normalized-embedding-cosine",
