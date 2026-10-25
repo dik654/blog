@@ -105,6 +105,7 @@ const noScriptArticleRoutes = new Set([
   "ai/deepfake-frequency-evidence",
   "ai/deepfake-video-decisions",
   "ai/deepfake-dataset-governance",
+  "ai/video-understanding",
   "ai/lr-scheduling",
   "ai/lr-decay-policies",
   "ai/cosine-restart-scheduling",

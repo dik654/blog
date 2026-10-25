@@ -21518,8 +21518,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/video-understanding": {
     "entryLevel": true,
-    "entryNote": "Frame 수를 시간으로 착각하지 않고 source timestamp·duration·sampling rate를 하나씩 정의합니다.",
-    "coreIdea": "Video input은 frame 목록이 아니라 시간축 관측입니다. Source FPS와 stride로 duration과 effective sample rate를 각각 계산하고, 빠른 반복 motion이 aliasing boundary를 넘는지 확인해야 model이 실제로 본 evidence를 설명할 수 있습니다.",
+    "entryNote": "Frame 수를 시간으로 착각하지 않고 PTS·time base·duration·sampling rate를 하나씩 연결합니다.",
+    "coreIdea": "Video input은 frame 목록이 아니라 시간축 관측입니다. PTS와 time base로 실제 표시 시각을 확인하고, source FPS와 stride로 duration과 effective sample rate를 각각 계산한 뒤 빠른 반복 motion이 aliasing boundary를 넘는지 확인해야 model이 본 evidence를 설명할 수 있습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
@@ -21536,7 +21536,7 @@ export const ARTICLE_LEARNING: Readonly<
         "id": "video-temporal-observation-contract",
         "sectionId": "duration",
         "intuition": "사진 장수만 세지 않고 첫 장과 마지막 장이 몇 초 떨어졌고 초당 몇 번 관측했는지 함께 적습니다.",
-        "workedExample": "30 fps에서 T=16, stride 2이면 첫·마지막 index 폭 30 frames라 duration 1초, effective rate 15 fps입니다.",
+        "workedExample": "30 fps에서 T=16, stride 3이면 첫·마지막 index 폭 45 frames라 duration 1.5초, effective rate 10 observations/s입니다.",
         "boundary": "Variable-frame-rate·decode drop은 실제 timestamps를 사용하고 긴 coverage와 촘촘한 sampling을 같은 값으로 보지 않습니다."
       },
       {
@@ -21583,11 +21583,11 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "30 fps에서 T=16, stride 2인 clip의 index 폭과 duration을 계산하세요.",
+        "question": "30 fps에서 T=16, stride 3인 clip의 index 폭과 duration을 계산하세요.",
         "answerChecklist": [
           "15 gaps",
-          "30 frame indexes",
-          "1 second"
+          "45 frame indexes",
+          "1.5 seconds"
         ],
         "requiredConcepts": [
           "video-temporal-observation-contract"
@@ -21596,7 +21596,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "같은 T=16에서 stride를 2에서 8로 바꾸면 duration이 어떻게 되는지 계산하세요.",
+        "question": "같은 T=16에서 stride를 3에서 8로 바꾸면 duration이 어떻게 되는지 계산하세요.",
         "answerChecklist": [
           "120 frame indexes",
           "4 seconds",
@@ -21631,7 +21631,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "video-temporal-observation-contract"
         ],
-        "sectionId": "duration"
+        "sectionId": "timestamps"
       },
       {
         "level": "basic",
@@ -21720,14 +21720,24 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     "papers": [
       {
-        "title": "Certain Topics in Telegraph Transmission Theory",
-        "href": "https://doi.org/10.1109/T-AIEE.1928.5055024",
-        "problem": "제한된 대역에서 신호를 구분 가능한 관측 속도로 표현하는 문제를 다룹니다.",
-        "contribution": "Bandwidth와 signaling rate 사이의 고전적 sampling 경계를 제시합니다.",
-        "assumptions": "연속시간 신호와 논문의 통신 모델 및 대역 제한을 전제로 합니다.",
-        "evidenceScope": "Video motion에 재사용하는 sampling-theory 경계의 역사적 근거입니다.",
+        "title": "FFmpeg 9.0 — AVFrame Struct Reference",
+        "href": "https://ffmpeg.org/doxygen/9.0/structAVFrame.html",
+        "problem": "Decoded frame의 번호와 실제 표시 시각을 구분해야 합니다.",
+        "contribution": "AVFrame::pts를 time_base 단위 presentation timestamp로 정의합니다.",
+        "assumptions": "FFmpeg 9.0 AVFrame 구조체와 유효한 timestamp를 전제로 합니다.",
+        "evidenceScope": "PTS와 time_base 필드의 공식 의미입니다.",
+        "notClaim": "모든 container가 완전한 timestamp를 제공한다는 뜻은 아닙니다.",
+        "sectionId": "standard-ffmpeg-timestamps"
+      },
+      {
+        "title": "Communication in the Presence of Noise",
+        "href": "https://doi.org/10.1109/JRPROC.1949.232969",
+        "problem": "제한된 대역의 연속 신호를 discrete samples로 표현하고 복원하는 조건을 다룹니다.",
+        "contribution": "최고 frequency가 W인 신호를 1/(2W)초 간격의 samples로 정할 수 있는 sampling theorem을 제시합니다.",
+        "assumptions": "연속시간 band-limited signal과 논문의 통신 모델을 전제로 합니다.",
+        "evidenceScope": "Video의 반복 motion에 재사용하는 sampling-theory 필요조건입니다.",
         "notClaim": "이 경계만 만족하면 video model의 semantic accuracy가 보장된다는 뜻은 아닙니다.",
-        "sectionId": "paper-nyquist"
+        "sectionId": "paper-shannon-sampling"
       }
     ]
   },

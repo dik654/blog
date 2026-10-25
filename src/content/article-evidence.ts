@@ -2094,10 +2094,16 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/video-understanding": [
     {
+      kind: "공식 문서",
+      label: "FFmpeg 9.0 AVFrame: pts와 time_base",
+      href: "https://ffmpeg.org/doxygen/9.0/structAVFrame.html",
+      note: "Decoded frame의 presentation timestamp와 그 timestamp 단위의 공식 필드 정의",
+    },
+    {
       kind: "핵심 논문",
-      label: "Certain Topics in Telegraph Transmission Theory",
-      href: "https://doi.org/10.1109/T-AIEE.1928.5055024",
-      note: "Video motion aliasing에 재사용하는 signal bandwidth와 sampling-rate 경계",
+      label: "Communication in the Presence of Noise",
+      href: "https://doi.org/10.1109/JRPROC.1949.232969",
+      note: "Band-limited signal의 sampling 간격과 복원 경계를 직접 제시한 Shannon의 1949년 논문",
     },
   ],
   "ai/video-clip-sampling": [

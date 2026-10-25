@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 580,
-    "pending": 411,
+    "reviewed": 581,
+    "pending": 410,
     "untracked": 0,
-    "assignedPending": 368,
+    "assignedPending": 367,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3103,9 +3103,9 @@
       "publicPath": "cs/ai/video-understanding",
       "title": "비디오 시간 관측: Duration · Sampling Rate · Aliasing",
       "catalogIndex": 307,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

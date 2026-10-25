@@ -10408,32 +10408,73 @@
       "route": "ai/video-understanding",
       "title": "비디오 시간 관측: Duration · Sampling Rate · Aliasing",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
         "src/pages/articles/ai/video-understanding.tsx",
+        "src/content/video-learning-tree.ts",
         "src/pages/articles/ai/video-understanding/ModernArticle.tsx",
+        "src/pages/articles/ai/video-understanding/VideoPathLocator.tsx",
         "src/pages/articles/ai/video-understanding/viz/ModernVideoUnderstandingViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 6,
         "hasSourceSurface": true,
-        "characters": 10769
+        "characters": 12637
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 timestamp·관측 시간·sample rate·aliasing을 한 글에 두면서 clip 추출·3D convolution·video transformer 세부까지 함께 다뤄 현재 위치와 다음 학습 경로가 흐렸습니다.",
+        "절마다 stride와 frame 수가 달라 하나의 비디오 요청을 처음부터 끝까지 추적하기 어려웠습니다.",
+        "PTS와 time_base, 관측점 사이 간격, aliasing을 각각 눈으로 확인할 장면 흐름과 JavaScript 비활성 읽기 순서가 없었습니다."
+      ],
+      "fixture": "30fps 원본에서 16개 관측점을 stride 3으로 고릅니다. 15개 간격이 45 source frame을 덮어 1.5초가 되며 관측 빈도는 10 observations/s입니다. +8Hz 회전은 같은 다섯 관측점에서 −2Hz와 구분되지 않습니다.",
+      "stageAnchors": {
+        "S": [
+          "overview"
+        ],
+        "0": [
+          "timestamps"
+        ],
+        "1": [
+          "duration"
+        ],
+        "2": [
+          "sampling-rate"
+        ],
+        "3": [
+          "aliasing"
+        ],
+        "R": [
+          "return"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "source": "FFmpeg 9.0 AVFrame 공식 문서",
+          "anchor": "timestamps",
+          "application": "PTS를 time_base 단위의 표시 시각으로 읽고 frame 번호만으로 실제 시간을 단정하지 않는 경계를 확인했습니다."
+        },
+        {
+          "source": "Claude E. Shannon, Communication in the Presence of Noise, 1949",
+          "anchor": "aliasing",
+          "application": "10 observations/s의 이상적 복원 경계 5Hz와 +8Hz가 −2Hz와 같은 sample을 만드는 사례를 구분했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · 직속 부모 지도에서 시간 관측 영역을 표시하고 timestamp→duration→sample rate→aliasing의 한 사례를 끝까지 추적한 뒤 부모 지도에 반환했습니다.",
+        "humanize": "pass · UI 문구와 본문 한국어 자연스러움 감사를 통과했고 기술 이름은 첫 역할 설명 뒤에 배치했습니다.",
+        "numericTrace": "pass · T=16, stride=3, 15 gaps, 45 source frames, 1.5s, 10 observations/s, +8→−2Hz를 식과 장면에서 같은 값으로 대조했습니다.",
+        "mobile390": "pass · 가로 overflow 0, 여섯 figure 높이 678–791px, 마지막 duration 장면 776px, aliasing 장면 710px, 50px 조작 버튼을 확인했습니다.",
+        "desktop1440": "pass · 가로 overflow 0, console 오류·경고 0, 다섯 상호작용 그림과 반환 지도를 확인했습니다.",
+        "keyboard": "pass · 시각화 group에 초점을 둔 뒤 ArrowRight와 ArrowLeft로 장면이 이동합니다.",
+        "reducedMotion": "pass · 사용자가 장면을 바꿀 수 있고 0.9초 뒤 실행 중인 figure animation은 0개입니다.",
+        "noScript": "pass · 390px에서 live 장면과 조작부는 숨고 5개 정적 목록·19개 장면 설명·6개 학습 절·locator·return이 표시됩니다.",
+        "typecheck": "pass · NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --noEmit"
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 뒤 production 경로 재검증"
       ]
     },
     {
