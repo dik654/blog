@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 582,
-    "pending": 409,
+    "reviewed": 583,
+    "pending": 408,
     "untracked": 0,
-    "assignedPending": 366,
+    "assignedPending": 365,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3121,11 +3121,11 @@
     {
       "route": "ai/video-convolution-architectures",
       "publicPath": "cs/ai/video-convolution-architectures",
-      "title": "비디오 Convolution: Receptive Span · I3D · R(2+1)D · SlowFast",
+      "title": "비디오 Convolution: 시간 Span에서 SlowFast까지",
       "catalogIndex": 309,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

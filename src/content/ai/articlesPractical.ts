@@ -613,13 +613,15 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "video-convolution-architectures",
-    title: "비디오 Convolution: Receptive Span · I3D · R(2+1)D · SlowFast",
+    title: "비디오 Convolution: 시간 Span에서 SlowFast까지",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "시간 연산을 넣는 위치" },
-      { id: "receptive-span", title: "원본 Seconds로 보는 범위" },
-      { id: "inflation-factorization", title: "I3D와 R(2+1)D" },
-      { id: "slowfast", title: "Rate와 Capacity 분리" },
+      { id: "overview", title: "같은 입력, 다른 계산" },
+      { id: "receptive-span", title: "Temporal Receptive Span" },
+      { id: "i3d", title: "I3D Inflation" },
+      { id: "r2plus1d", title: "R(2+1)D Factorization" },
+      { id: "slowfast", title: "SlowFast Pathways" },
+      { id: "return-map", title: "부모 지도에 반환" },
     ],
     component: () =>
       import("@/pages/articles/ai/video-convolution-architectures"),

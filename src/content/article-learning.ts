@@ -21989,84 +21989,133 @@ export const ARTICLE_LEARNING: Readonly<
     ]
   },
   "ai/video-convolution-architectures": {
-    "entryLevel": true,
-    "entryNote": "3D CNN이라는 이름부터 외우지 않고 temporal kernel이 원본의 몇 초를 읽는지 계산합니다.",
-    "coreIdea": "Video convolution architecture는 시간 관계를 넣는 방식이 다릅니다. Temporal receptive span을 seconds로 계산하고, I3D weight inflation, R(2+1)D operator factorization, SlowFast rate-capacity allocation을 서로 다른 design axis로 비교해야 합니다.",
-    "assumedKnowledge": [],
+    "entryLevel": false,
+    "recursiveTeaching": true,
+    "entryNote": "부모 글에서 계산한 source timestamp와 sampling stride를 유지한 채 temporal convolution의 연결 범위와 세 architecture의 서로 다른 변경 축을 추적합니다.",
+    "coreIdea": "같은 clip에서 I3D는 2D weight의 3D 초기화, R(2+1)D는 convolution block의 연산 경로, SlowFast는 network pathway의 temporal rate와 channel 배분을 바꿉니다. 먼저 stacked temporal receptive span을 source seconds로 계산해야 세 구조의 입력 시간 범위를 같은 기준에서 읽을 수 있습니다.",
+    "assumedKnowledge": [
+      {
+        "id": "video-temporal-observation-contract",
+        "role": "Source FPS·frame index·timestamp·sampling stride를 같은 시간 기준으로 읽습니다."
+      },
+      {
+        "id": "convolution-spatial-geometry",
+        "role": "Kernel·channel·stride가 convolution output을 만드는 기본 공간 연산을 사용합니다."
+      }
+    ],
     "introducedHere": [
       {
         "id": "temporal-convolution-receptive-span",
-        "role": "Kernel·dilation·input stride를 original timestamp span으로 바꿉니다."
+        "role": "Stacked kernel·dilation·layer stride·input stride를 original timestamp span으로 바꿉니다."
       },
       {
         "id": "inflated-3d-pretraining-handoff",
-        "role": "2D filters를 3D initial weights와 video pretraining으로 넘깁니다."
+        "role": "반복 정지 영상의 2D response를 보존하도록 2D filter를 3D 초기값으로 옮기고 video training과 구분합니다."
       },
       {
         "id": "r2plus1d-factorization",
-        "role": "Spatial conv와 temporal conv 및 중간 activation을 구분합니다."
+        "role": "Spatial convolution·중간 ReLU·temporal convolution과 parameter-matched intermediate channels를 구분합니다."
       },
       {
         "id": "slowfast-rate-capacity-allocation",
-        "role": "Slow·Fast paths의 frame-rate와 channel ratio를 계산합니다."
+        "role": "같은 raw clip에서 Slow·Fast pathways의 frame-rate·channel ratio와 lateral time alignment를 계산합니다."
       }
     ],
     "conceptExplanations": [
       {
         "id": "temporal-convolution-receptive-span",
         "sectionId": "receptive-span",
-        "intuition": "시간 방향 도장이 처음 찍는 frame과 마지막 frame이 실제로 몇 초 떨어졌는지 계산합니다.",
-        "workedExample": "30 fps, input stride 2, kernel 3, dilation 1은 indexes 0·2·4를 읽어 first-last span .133초입니다.",
-        "boundary": "한 layer의 theoretical span이며 padding·stacked stride·effective contribution은 별도로 계산합니다."
+        "intuition": "Layer를 쌓을 때 output 하나와 연결되는 input position 수와 인접 output 간격을 따로 갱신한 뒤 source timestamp로 되돌립니다.",
+        "workedExample": "30 fps, input stride 2에서 kernel 3인 두 temporal layers와 둘째 layer stride 2를 지나면 r=5·j=2이고, source index 0·2·4·6·8의 first-last span은 8/30≈.267초입니다.",
+        "boundary": "Interior output의 theoretical span이며 padding boundary·effective contribution·motion blur를 설명하지 않습니다.",
+        "causalTrace": {
+          "answer": "Receptive positions r과 output jump j를 layer마다 갱신하고, (r−1)에 input stride를 곱한 source gap을 FPS로 나눕니다.",
+          "followUpQuestion": "Layer stride가 현재 output의 span과 다음 output의 시작 간격에 각각 어떻게 반영될까요?",
+          "bottleneck": "Kernel 크기만 더하면 앞 layer의 output 간격과 source sampling stride를 잃습니다.",
+          "mechanism": "r_l=r_(l−1)+(k_l−1)d_lj_(l−1), j_l=j_(l−1)s_l를 적용합니다.",
+          "remainingCost": "Theoretical span은 범위 안 timestamp의 실제 영향력과 padding 경계의 유효 frame 수를 보장하지 않습니다.",
+          "decisionRule": "구조 비교 전에 같은 timestamp 입력에서 source-second span을 계산하고, 실제 영향력은 별도 분석이나 측정으로 확인합니다."
+        }
       },
       {
         "id": "inflated-3d-pretraining-handoff",
-        "sectionId": "inflation-factorization",
-        "intuition": "2D image filter를 시간 방향으로 복제·정규화해 video filter의 시작점으로 사용합니다.",
-        "workedExample": "kh×kw kernel을 kt번 repeat하고 kt로 나눠 static repeated frames의 response scale을 맞춘 뒤 video pretraining합니다.",
-        "boundary": "Inflation만으로 motion knowledge가 생기지 않아 exact initialization과 video checkpoint를 함께 기록합니다."
+        "sectionId": "i3d",
+        "intuition": "2D image filter를 시간 방향으로 복제하고 복제 수로 나눠 반복 정지 영상의 초기 response를 보존합니다.",
+        "workedExample": "Weight response 합 6인 2D filter를 temporal depth 3으로 옮길 때 각 slice response를 2로 두면 2+2+2=6이 유지됩니다.",
+        "boundary": "Inflation은 초기화 규칙이며 motion knowledge는 이후 video data training에서 학습합니다.",
+        "causalTrace": {
+          "answer": "2D weight를 N개 temporal slices에 반복하되 각 slice를 N으로 나눕니다.",
+          "followUpQuestion": "왜 단순 복제가 아니라 N으로 나눠야 하며, 무엇이 아직 학습되지 않았을까요?",
+          "bottleneck": "Weight를 그대로 N회 복제하면 반복 frame의 response가 N배가 됩니다.",
+          "mechanism": "각 slice를 W/N으로 초기화해 boring-video fixed point를 맞춥니다.",
+          "remainingCost": "정지 영상 response 보존은 temporal pattern 학습이나 모든 task의 성능을 보장하지 않습니다.",
+          "decisionRule": "Inflated initialization과 이후 video checkpoint를 서로 다른 근거로 기록합니다."
+        }
       },
       {
         "id": "r2plus1d-factorization",
-        "sectionId": "inflation-factorization",
-        "intuition": "공간 모양을 읽고 activation을 거친 뒤 시간 변화를 읽는 두 단계 block입니다.",
-        "workedExample": "3×3×3 conv를 1×3×3 spatial conv와 3×1×1 temporal conv로 나누고 중간 nonlinearity를 둡니다.",
-        "boundary": "추가 activation 때문에 같은 linear operator의 단순 재배치가 아니며 intermediate channels도 비용을 바꿉니다."
+        "sectionId": "r2plus1d",
+        "intuition": "공간 모양을 읽고 ReLU를 거친 뒤 시간 변화를 읽는 두 단계 block입니다.",
+        "workedExample": "3×3×3, 4→4 full 3D의 432 parameters를 M=9인 1×3×3 4→9의 324와 3×1×1 9→4의 108 parameters로 나눕니다.",
+        "boundary": "Parameter 수가 같아도 중간 ReLU·activation memory·kernel runtime은 달라집니다.",
+        "causalTrace": {
+          "answer": "Full 3D parameter budget에서 intermediate channels M을 구한 뒤 spatial·ReLU·temporal 순서로 계산합니다.",
+          "followUpQuestion": "두 stage의 parameter 수를 합쳐 full 3D와 어떻게 맞출까요?",
+          "bottleneck": "M을 임의로 잡으면 구조 차이와 capacity 차이가 함께 바뀝니다.",
+          "mechanism": "M=floor(td²CinCout/(d²Cin+tCout))로 중간 폭을 정합니다.",
+          "remainingCost": "같은 parameter 수는 같은 FLOPs·activation memory·latency·accuracy를 뜻하지 않습니다.",
+          "decisionRule": "연산 경로를 비교할 때 input·parameter budget을 고정하고 runtime 지표는 별도로 측정합니다."
+        }
       },
       {
         "id": "slowfast-rate-capacity-allocation",
         "sectionId": "slowfast",
-        "intuition": "장면 의미는 천천히 넓게 보고 빠른 motion은 자주 보되 가벼운 feature로 읽습니다.",
-        "workedExample": "Slow 8×256, alpha 8, beta 1/8이면 Fast 64×32를 같은 duration에서 읽고 lateral로 결합합니다.",
-        "boundary": "Alpha·beta·lateral placement는 hyperparameters이며 high rate가 blur나 missing timestamps를 복구하지 않습니다."
+        "intuition": "같은 raw clip에서 Slow는 적은 frames와 넓은 channels를, Fast는 많은 frames와 좁은 channels를 사용합니다.",
+        "workedExample": "논문 Table 1의 64-frame window에서 Slow는 stride 16으로 4×64, Fast는 alpha 8·beta 1/8로 stride 2의 32×8 feature를 만들고 lateral transform으로 시간축을 맞춥니다.",
+        "boundary": "Alpha·beta·lateral placement는 architecture variables이며 high rate가 blur나 missing timestamps를 복구하거나 latency를 자동 개선하지 않습니다.",
+        "causalTrace": {
+          "answer": "Fast frames는 alpha T, Fast channels는 beta C로 만들고 lateral transform으로 Slow의 temporal length에 맞춥니다.",
+          "followUpQuestion": "32×8 Fast feature를 4×64 Slow feature와 어떤 경계에서 합칠 수 있을까요?",
+          "bottleneck": "Temporal lengths가 다르면 두 feature를 그대로 더하거나 이어 붙일 수 없습니다.",
+          "mechanism": "Time-to-channel, time-strided sampling, time-strided convolution 중 하나로 Fast 시간축을 맞춘 뒤 결합합니다.",
+          "remainingCost": "Shape만으로 실제 compute·memory·quality를 알 수 없고 lateral 방식도 결과를 바꿉니다.",
+          "decisionRule": "Raw clip·alpha·beta·lateral transform을 함께 기록하고 실제 runtime은 같은 입력에서 측정합니다."
+        }
       }
     ],
     "conceptStages": [
       {
-        "label": "00 Span",
-        "relation": "Kernel positions를 source seconds로 바꿉니다.",
+        "label": "00 Input",
+        "relation": "Source timestamp와 sampling stride를 같은 입력 계약으로 고정합니다.",
         "concepts": [
           "temporal-convolution-receptive-span"
         ]
       },
       {
-        "label": "01 Inflate",
-        "relation": "Image weight를 temporal kernel initialization으로 옮깁니다.",
+        "label": "01 Span",
+        "relation": "Stacked kernel positions와 jump를 source seconds로 바꿉니다.",
+        "concepts": [
+          "temporal-convolution-receptive-span"
+        ]
+      },
+      {
+        "label": "02 Inflate",
+        "relation": "Image weight를 response-preserving temporal initialization으로 옮깁니다.",
         "concepts": [
           "temporal-convolution-receptive-span",
           "inflated-3d-pretraining-handoff"
         ]
       },
       {
-        "label": "02 Factor",
-        "relation": "Spatial과 temporal operators를 분리합니다.",
+        "label": "03 Factor",
+        "relation": "Parameter budget을 맞춰 spatial·ReLU·temporal operators로 분리합니다.",
         "concepts": [
           "r2plus1d-factorization"
         ]
       },
       {
-        "label": "03 Multirate",
-        "relation": "두 pathways에 rate와 capacity를 배분합니다.",
+        "label": "04 Multirate",
+        "relation": "같은 raw clip의 두 pathways에 rate와 capacity를 배분하고 시간축을 맞춥니다.",
         "concepts": [
           "r2plus1d-factorization",
           "slowfast-rate-capacity-allocation"
@@ -22076,11 +22125,12 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "30 fps, stride 2, kernel 3, dilation 1의 source indexes와 span seconds를 계산하세요.",
+        "question": "30 fps, input stride 2에서 kernel 3인 두 temporal layers와 둘째 layer stride 2의 receptive positions·jump·source span을 계산하세요.",
         "answerChecklist": [
-          "0 2 4",
-          "4 source gaps",
-          "4/30 seconds"
+          "r1 3 j1 1",
+          "r2 5 j2 2",
+          "source indexes 0 2 4 6 8",
+          "8/30 seconds"
         ],
         "requiredConcepts": [
           "temporal-convolution-receptive-span"
@@ -22111,7 +22161,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "inflated-3d-pretraining-handoff"
         ],
-        "sectionId": "inflation-factorization"
+        "sectionId": "i3d"
       },
       {
         "level": "basic",
@@ -22124,7 +22174,7 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "inflated-3d-pretraining-handoff"
         ],
-        "sectionId": "inflation-factorization"
+        "sectionId": "i3d"
       },
       {
         "level": "basic",
@@ -22137,15 +22187,15 @@ export const ARTICLE_LEARNING: Readonly<
         "requiredConcepts": [
           "r2plus1d-factorization"
         ],
-        "sectionId": "inflation-factorization"
+        "sectionId": "r2plus1d"
       },
       {
         "level": "basic",
-        "question": "Slow 8×256과 alpha 8, beta 1/8에서 Fast shape를 계산하세요.",
+        "question": "Slow 4×64와 alpha 8, beta 1/8에서 Fast shape를 계산하세요.",
         "answerChecklist": [
-          "64 frames",
-          "32 channels",
-          "same duration"
+          "32 frames",
+          "8 channels",
+          "same raw clip window"
         ],
         "requiredConcepts": [
           "slowfast-rate-capacity-allocation"
@@ -22179,7 +22229,7 @@ export const ARTICLE_LEARNING: Readonly<
           "inflated-3d-pretraining-handoff",
           "r2plus1d-factorization"
         ],
-        "sectionId": "inflation-factorization"
+        "sectionId": "r2plus1d"
       },
       {
         "level": "advanced",

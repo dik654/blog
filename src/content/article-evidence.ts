@@ -2126,20 +2126,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       label:
         "Quo Vadis, Action Recognition? A New Model and the Kinetics Dataset",
       href: "https://openaccess.thecvf.com/content_cvpr_2017/html/Carreira_Quo_Vadis_Action_CVPR_2017_paper.html",
-      note: "2D image filters를 3D로 inflate한 I3D와 Kinetics video pretraining",
+      note: "2D filter를 시간축으로 반복하고 N으로 나눠 반복 정지 영상의 response를 보존하는 I3D 초기화와 Kinetics video training",
     },
     {
       kind: "핵심 논문",
       label:
         "A Closer Look at Spatiotemporal Convolutions for Action Recognition",
       href: "https://openaccess.thecvf.com/content_cvpr_2018/html/Tran_A_Closer_Look_CVPR_2018_paper.html",
-      note: "3D convolution을 spatial·temporal operators로 분해한 R(2+1)D",
+      note: "3D convolution을 spatial·ReLU·temporal 순서로 분해하고 중간 channel M으로 parameter 수를 맞춘 R(2+1)D",
     },
     {
       kind: "핵심 논문",
       label: "SlowFast Networks for Video Recognition",
       href: "https://openaccess.thecvf.com/content_ICCV_2019/html/Feichtenhofer_SlowFast_Networks_for_Video_Recognition_ICCV_2019_paper.html",
-      note: "공간 의미와 빠른 motion을 서로 다른 frame-rate·capacity paths로 처리",
+      note: "같은 raw clip을 {T,S²,C}와 {αT,S²,βC} 두 pathway로 읽고 lateral transform으로 결합",
     },
   ],
   "ai/video-transformers": [

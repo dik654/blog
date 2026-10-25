@@ -2453,8 +2453,9 @@ export const EDITORIAL_BOUNDARIES = {
   "video-convolution-architectures": {
     title: "비디오 convolution architecture 글이 소유하는 범위",
     owns: [
-      "Temporal kernel·dilation·input stride를 source timestamp seconds로 환산한 receptive span",
-      "I3D inflation·R(2+1)D factorization·SlowFast rate-capacity allocation의 서로 다른 design axis",
+      "Stacked temporal kernel·dilation·layer stride·input stride를 source timestamp seconds로 환산한 receptive span",
+      "I3D가 반복 정지 영상의 2D response를 보존하도록 2D weight를 3D 초기값으로 옮기는 범위",
+      "R(2+1)D의 parameter-matched spatial·ReLU·temporal block과 SlowFast의 rate·channel·lateral pathway 배분",
     ],
     reuses: [
       { label: "Image tensor와 spatial convolution", href: "/cs/ai/cnn" },
@@ -2462,8 +2463,8 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Clip replay와 budget parity", href: "/cs/ai/video-clip-sampling" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "I3D·R(2+1)D·SlowFast claim은 각 논문의 data·pretraining·architecture·task 범위로 제한한다." },
-      { kind: "standard", rule: "Input timestamps·kernel geometry·weight handoff·alpha/beta·lateral path·FLOPs·latency·memory를 함께 기록한다." },
+      { kind: "primary-source", rule: "I3D의 boring-video fixed point, R(2+1)D의 중간 channel 식, SlowFast의 alpha·beta·lateral claim은 각 논문의 architecture와 task 범위로 제한한다." },
+      { kind: "standard", rule: "Input timestamps·kernel geometry·initial weight rule·intermediate channels·alpha/beta·lateral transform을 기록하고 실제 latency·memory는 측정값과 분리한다." },
     ],
   },
   "video-transformers": {
