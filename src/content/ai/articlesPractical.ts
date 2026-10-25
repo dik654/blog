@@ -539,13 +539,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-preprocessing-lineage",
-    title: "딥페이크 전처리: Face Track Coverage와 Lineage",
+    title: "딥페이크 전처리: 누락과 입력 출처",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "전처리도 Model이다" },
-      { id: "detection-track", title: "Detect에서 Identity Track까지" },
-      { id: "coverage", title: "실패를 분모에 남기기" },
-      { id: "lineage", title: "Crop Transform Receipt" },
+      { id: "overview", title: "원본 시각에서 입력까지" },
+      { id: "detection-track", title: "실패를 단계별로 남기기" },
+      { id: "coverage", title: "읽은 비율 계산하기" },
+      { id: "lineage", title: "입력을 원본까지 되짚기" },
     ],
     component: () =>
       import("@/pages/articles/ai/deepfake-preprocessing-lineage"),

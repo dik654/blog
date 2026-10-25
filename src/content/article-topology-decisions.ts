@@ -81,6 +81,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "group 042-C의 split 교집합이 1에서 0이 되는지와, support 60·30·10 및 domain loss 0.10·0.30·0.80에서 전체 평균 0.23·worst-domain 0.80이 나오는지 검산합니다.",
   },
+  "ai/deepfake-preprocessing-lineage": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-25",
+    rationale:
+      "clip-042의 평가 시각 열 개가 decode·얼굴 위치·인물 추적·crop을 지나 여섯 detector 입력과 네 실패 기록으로 바뀌는 하나의 전처리 추적입니다. 모델 성능과 자료 거버넌스는 부모·이웃 글에 남기고 이 글은 관측 coverage와 입력 출처만 소유합니다.",
+    sharedGate:
+      "같은 평가 분모 10에서 얼굴 위치 8·인물 추적 7·유효 crop 6이 각각 coverage 0.80·0.70·0.60이 되는지와 성공·실패 영수증이 원본 시각으로 돌아가는지 확인합니다.",
+  },
   "ai/open-r1": KEEP("Reasoning data cold start→SFT→online GRPO→evaluation이 하나의 recipe reproduction arc입니다."),
   "ai/openclaw-assistant": KEEP("Inbound event가 route·session·runtime·resource·sandbox를 거쳐 reply receipt가 되는 단일 trace입니다."),
   "ai/qwen-korean-consistency": {
@@ -3525,6 +3534,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/llm-serving-ops": "58c53da4c3e32026",
   "ai/multiview-fusion": "9fab27058ecc1c00",
   "ai/deepfake-detection": "879f9a610190da59",
+  "ai/deepfake-preprocessing-lineage": "c49d82d80f595e0f",
   "ai/open-r1": "1479317024d9936a",
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",
