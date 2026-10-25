@@ -6,6 +6,7 @@ export default function CostAndSwitch() {
   return (
     <section id="cost-and-switch" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">교체 비용을 먼저 계산하고 고릅니다</h2>
+      <SwitchViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           백본 선택은 한 번으로 끝나지 않습니다. 더 나은 모델이 나오면 바꾸고 싶어지는데, 그때 드는 비용이
@@ -15,14 +16,15 @@ export default function CostAndSwitch() {
 
         <p className="leading-7">
           가장 큰 항목은 재색인입니다. 백본이 바뀌면 기존 벡터는 전부 쓸 수 없으므로 색인 대상 전체를 다시
-          계산해야 합니다. 1,000만 장 규모에서 장당 추론 시간이 10밀리초라면 단일 장비로 약 28시간이고,
-          병렬화해도 그동안 두 벌의 색인을 어떻게 운영할지 정해야 합니다.
+          계산해야 합니다. 설명용 가정으로 1,000만 장을 장당 10밀리초에 처리하면
+          10,000,000×0.01초=100,000초이고, 100,000÷3,600≈27.8시간입니다. 병렬화하면 벽시계 시간은 줄지만
+          총 계산량과 전환 동안 두 벌의 색인을 운영하는 문제는 남습니다.
         </p>
 
         <p className="leading-7">
-          두 번째는 질의 경로입니다. 색인과 질의가 같은 지문을 써야 하므로 전환은 원자적으로 일어나야 합니다.
-          점진 전환을 하려면 두 색인을 동시에 유지하고 질의를 한쪽으로만 보내는 구조가 필요하며, 그 기간
-          저장 비용은 두 배입니다.
+          두 번째는 질의 경로입니다. 한 요청 안에서는 색인과 질의 인코더가 같은 지문을 써야 합니다. 점진 전환을
+          하려면 두 색인을 동시에 유지하고 요청마다 A 또는 B 버전을 명시해 한 경로만 쓰게 해야 합니다. 이 기간의
+          색인 저장량은 단순화하면 두 배에 가까워집니다.
         </p>
 
         <p className="leading-7">
@@ -30,8 +32,6 @@ export default function CostAndSwitch() {
           잡아야 합니다. 유사도 0.8을 중복으로 보던 기준이 새 모델에서는 다른 의미가 됩니다.
         </p>
       </div>
-
-      <SwitchViz />
 
       <TermBreakdown
         title="선택 전에 계산해 둘 세 가지 비용"

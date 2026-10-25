@@ -376,7 +376,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     status: "reviewed" as const,
     reviewedAt: "2026-10-25",
     rationale:
-      "본문 6 section·concept 8개·closure 1,180줄에서 능력 프로필→과제 매핑→짧은 probe→비용과 교체 조건→결정 순서를 한 후보 선택 절차로 추적합니다. 각 절을 나누면 같은 후보와 데이터 계약을 반복해야 하므로 한 글로 유지합니다.",
+      "본문 6 section·concept 8개·closure 1,428줄에서 같은 상품 사진 요청을 입력·출력 계약→후보 경계→paired probe→재색인 비용→결정 기록까지 추적합니다. 각 절을 나누면 같은 요청과 비교 조건을 반복해야 하므로 한 글로 유지합니다.",
     sharedGate:
       "계열 비교는 각 원 논문의 자기보고를 정성 요약한 범위로만 쓰고, 특정 모델 간 벤치마크 수치나 자체 실측을 이 글에서 주장하지 않는다.",
   },
@@ -3524,7 +3524,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/server-cpu-lineup-comparison": "c67c3ee260d1cbf7",
   "gpu/ai-accelerator-vendor-comparison": "f38b6a8d1a1a2575",
   "ai/multi-component-finetuning-vram": "daab7b6d6749dbbf",
-  "ai/vision-backbone-selection": "b0c8667af2ce5d8c",
+  "ai/vision-backbone-selection": "7a3df2f22910fbfb",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "598f46b464605121",
   "ai/qwen38-flash-next-architecture": "818a11c6feadce72",

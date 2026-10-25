@@ -99719,7 +99719,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/vision-backbone-selection": {
     coreIdea:
-      "비전 백본은 공개 점수표가 아니라 학습 목표가 남긴 능력, 과제가 요구하는 능력, 배포가 감당할 비용의 세 축으로 후보를 좁힌 뒤 조건을 맞춘 짧은 실측과 교체 비용을 더해 결정해야 하며, 이 순서를 뒤집으면 평가 조건 차이가 가려집니다.",
+      "비전 백본은 공개 점수표가 아니라 요청의 입력·출력 계약으로 후보 종류를 구분하고, 학습 신호가 만든 능력을 확인한 뒤 같은 조건의 작은 실측과 재색인 비용을 더해 결정해야 합니다.",
     assumedKnowledge: [
       { id: "frozen-backbone-evaluation-protocol", role: "얼린 조건에서 표현을 재는 평가 규칙입니다." },
       { id: "caption-as-supervision", role: "문장을 감독 신호로 쓰는 학습이 무엇을 더해 주는지입니다." },
@@ -99745,9 +99745,9 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "같은 몸으로도 무엇을 연습했느냐에 따라 잘하는 종목이 달라지듯, 같은 아키텍처도 학습 신호가 능력을 정합니다.",
         workedExample:
-          "라벨 없이 이미지끼리 맞춘 계열은 자리별 세밀함이 높고 어휘 접근이 낮으며, 캡션 정렬 계열은 그 반대, 분할 감독 계열은 경계가 높고 장면 요약이 낮습니다.",
+          "자기지도 인코더는 이미지·패치 관계를, 이미지·텍스트 인코더는 사진·문장 정렬을, 프롬프트 분할 시스템은 지목한 대상의 마스크 출력을 학습합니다.",
         boundary:
-          "이 프로필은 각 논문이 보고한 경향을 정성적으로 요약한 것이며 특정 두 모델의 우열이 아닙니다. 미세조정을 하면 차이가 줄어듭니다.",
+          "이 프로필은 각 원 논문의 과제와 평가에서 보고된 경향을 정성적으로 요약한 가설 지도입니다. 분할 시스템은 검색 백본과 같은 종류의 후보가 아닙니다.",
       },
       {
         id: "text-alignment-as-separate-capability",
@@ -99755,7 +99755,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "표현이 좋다고 해서 그 표현에 이름표가 붙어 있는 것은 아니라, 문장으로 부르려면 따로 맞춰 둬야 합니다.",
         workedExample:
-          "이미지로 이미지를 찾는 질의는 자기지도 계열이 강점을 갖고, 문장으로 이미지를 찾는 질의는 정렬된 계열이 필요합니다. 둘 다 받으려면 벡터를 두 벌 두거나 정렬 단계를 붙입니다.",
+          "이미지로 이미지를 찾는 질의는 자기지도와 이미지·텍스트 정렬 인코더를 모두 후보로 둘 수 있고, 문장으로 이미지를 찾는 질의에는 정렬된 공간이 필요합니다.",
         boundary:
           "사후 정렬을 붙이면 그 성능은 백본이 아니라 정렬 단계의 데이터와 목표가 정합니다. 두 벡터를 이어 붙이는 방식은 스케일 지배 문제가 생겨 권하지 않습니다.",
       },
@@ -99765,7 +99765,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "무엇을 넣고 무엇을 받을지, 그리고 자리가 중요한지 세 가지만 적으면 볼 계열이 정해집니다.",
         workedExample:
-          "'사용자 사진으로 같은 상품 찾기'는 입력 이미지·출력 순위·자리 불필요라 장면 요약과 변형 견고성이 필요하고 자기지도 계열이 1차 후보가 됩니다.",
+          "'사용자 사진으로 같은 상품 찾기'는 입력 이미지·출력 순위·자리 불필요이므로 분할 시스템을 제외하고 자기지도와 이미지·텍스트 정렬 인코더를 실측 후보로 남깁니다.",
         boundary:
           "같은 칸에 들어가는 과제라도 도메인이 학습 분포에서 멀면 결과가 뒤집힐 수 있습니다. 이 표는 후보를 좁히는 도구이지 결론이 아닙니다.",
       },
@@ -99773,9 +99773,9 @@ export const ARTICLE_LEARNING: Readonly<
         id: "frozen-probe-selection-experiment",
         sectionId: "measure-first",
         intuition:
-          "논문을 더 읽는 대신 내 데이터 몇백 장으로 직접 재 보면 대부분의 논쟁이 끝납니다.",
+          "논문 점수를 더 모으기보다 같은 상품의 원본·촬영 변형과 다른 상품을 묶어 직접 재면 우리 요청에 맞는 후보를 가를 수 있습니다.",
         workedExample:
-          "백본을 얼리고 벡터를 한 번 뽑아 둔 뒤 선형 head 성능, 변형 민감도 비, 패치 수준 성능 세 숫자를 후보마다 구합니다.",
+          "인코더를 얼리고 벡터를 한 번 뽑아 둔 뒤 상품 recall, 변형 민감도, 목표 장비의 지연과 peak memory를 후보마다 구합니다.",
         boundary:
           "얼린 조건의 결과이므로 미세조정 후 순위와 다를 수 있습니다. 값이 비슷하면 점수가 아니라 운영 조건으로 결정하는 편이 낫습니다.",
       },
@@ -99785,7 +99785,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "같은 데이터 분할과 seed에서 나온 두 결과를 한 쌍으로 빼면, seed가 만든 공통 흔들림을 줄이고 아키텍처 차이를 더 직접 볼 수 있습니다.",
         workedExample:
-          "seed 5개에서 ViT−CNN 차이가 0.2·1.4·0.5·1.1·0.8이면 평균 이득은 0.8이고 표준오차는 약 0.21입니다. 이 값이 미리 정한 최소 이득을 넘는지 확인한 뒤 p95 latency와 memory 한도를 함께 적용합니다.",
+          "seed 5개에서 후보 B−A 차이가 0.2·1.4·0.5·1.1·0.8이면 평균 이득은 0.8이고 표준오차는 약 0.21입니다. 이 값이 미리 정한 최소 이득을 넘는지 확인한 뒤 p95 latency와 memory 한도를 함께 적용합니다.",
         boundary:
           "seed가 적으면 불확실성 추정도 거칩니다. 평균 이득만으로 결정하지 말고 같은 target hardware에서 latency와 memory를 함께 재야 합니다.",
       },
@@ -99856,8 +99856,8 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "세 계열의 학습 신호를 각각 한 줄로 쓰고, 그 신호가 남기는 대표 능력을 하나씩 짝지으세요.",
-        answerChecklist: ["이미지끼리 맞추기 → 자리별 세밀함", "캡션과 맞추기 → 어휘 접근", "마스크 정답 → 경계 품질", "얼린 조건에서 차이가 드러남"],
+          "세 후보 유형의 학습 신호 또는 출력 계약을 각각 한 줄로 쓰고, 검색 백본과 분할 시스템을 구분하세요.",
+        answerChecklist: ["이미지·패치 관계 → 자기지도 인코더", "사진·문장 정렬 → 이미지·텍스트 인코더", "개념 프롬프트 → 마스크 출력", "분할 시스템은 검색 백본과 같은 종류가 아님"],
         requiredConcepts: ["pretraining-objective-capability-profile"],
         sectionId: "objective-axes",
       },
@@ -99865,7 +99865,7 @@ export const ARTICLE_LEARNING: Readonly<
         level: "basic",
         question:
           "'이 백본이 검색에 좋은가'라는 질문을 두 개로 나누고, 각각 어느 계열이 1차 후보인지 쓰세요.",
-        answerChecklist: ["이미지로 이미지 찾기", "문장으로 이미지 찾기", "전자는 자기지도", "후자는 정렬 계열", "둘 다면 벡터 두 벌 또는 정렬 단계 추가"],
+        answerChecklist: ["이미지로 이미지 찾기", "문장으로 이미지 찾기", "전자는 자기지도와 정렬 인코더 모두 실측 후보", "후자는 정렬된 공간 필요", "둘 다면 벡터 두 벌 또는 정렬 단계 추가"],
         requiredConcepts: ["text-alignment-as-separate-capability"],
         sectionId: "text-aligned",
       },
@@ -99873,15 +99873,15 @@ export const ARTICLE_LEARNING: Readonly<
         level: "basic",
         question:
           "후보 계열을 좁히는 세 질문을 순서대로 쓰고, '사용자 사진으로 같은 상품 찾기'에 적용해 결론을 내세요.",
-        answerChecklist: ["질의 형태", "출력 형태", "자리 정보 필요 여부", "입력 이미지·출력 순위·자리 불필요", "자기지도 계열이 1차 후보"],
+        answerChecklist: ["질의 형태", "출력 형태", "자리 정보 필요 여부", "입력 이미지·출력 순위·자리 불필요", "분할 시스템 제외", "자기지도와 이미지·텍스트 정렬 인코더를 실측 후보로 유지"],
         requiredConcepts: ["task-to-backbone-family-mapping"],
         sectionId: "task-mapping",
       },
       {
         level: "basic",
         question:
-          "선택 전 최소 실측에서 구하는 세 숫자를 쓰고, 왜 백본을 얼린 채로 재는지 설명하세요.",
-        answerChecklist: ["선형 head 과제 성능", "변형 민감도 비", "패치 수준 성능", "표현 자체를 비교하기 위함", "미세조정하면 초기값 유용성 주장이 됨"],
+          "상품 사진 검색용 최소 실측에서 구할 값을 쓰고, 왜 백본을 얼린 채로 재는지 설명하세요.",
+        answerChecklist: ["상품 recall", "촬영 변형 민감도", "목표 장비 지연", "peak memory", "표현 자체를 비교하기 위함", "미세조정하면 초기값 유용성 주장이 됨"],
         requiredConcepts: ["frozen-probe-selection-experiment"],
         sectionId: "measure-first",
       },
@@ -99912,7 +99912,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "같은 split과 seed 5개에서 CNN 점수가 84.0·83.7·84.2·83.9·84.1, ViT 점수가 84.2·85.1·84.7·85.0·84.9일 때 seed별 차이, 평균 이득, 표준오차를 계산하고 선택 조건을 쓰세요.",
+          "같은 split과 seed 5개에서 후보 A 점수가 84.0·83.7·84.2·83.9·84.1, 후보 B 점수가 84.2·85.1·84.7·85.0·84.9일 때 seed별 차이, 평균 이득, 표준오차를 계산하고 선택 조건을 쓰세요.",
         answerChecklist: ["seed별 차이 0.2·1.4·0.5·1.1·0.8", "평균 이득 0.8", "표본 표준편차 약 0.47", "표준오차 약 0.21", "미리 정한 최소 이득과 비교", "같은 target hardware의 p95 latency·memory gate", "seed 수가 적다는 한계 기록"],
         requiredConcepts: ["frozen-probe-selection-experiment", "probe-protocol-comparability", "vision-architecture-paired-selection"],
         sectionId: "measure-first",
