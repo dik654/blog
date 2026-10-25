@@ -38,8 +38,10 @@ S(q)&=I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)\\
 &\quad I_{\mathrm{context}}(q)I_{\mathrm{support}}(q)
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-S(q)&=\underbrace{I_{\mathrm{source}}(q)}_{\text{corpus에 근거 있음}}\underbrace{I_{\mathrm{retrieve}}(q)}_{\text{검색에 걸림}}\\
-&\quad \underbrace{I_{\mathrm{context}}(q)}_{\text{prompt에 남음}}\underbrace{I_{\mathrm{support}}(q)}_{\text{답이 근거로 확인}}
+S(q)&=I_{\mathrm{source}}(q)\\
+&\quad\times I_{\mathrm{retrieve}}(q)\\
+&\quad\times I_{\mathrm{context}}(q)\\
+&\quad\times I_{\mathrm{support}}(q)
 \end{aligned}`}
         operations={[
           { expression: String.raw`I_{\mathrm{source}}(q)I_{\mathrm{retrieve}}(q)`, annotation: ["최신 허가 문서가 corpus에 있고", "candidate set에 들어와야 1·1", "규정이 없으면 첫 항부터 0"] },

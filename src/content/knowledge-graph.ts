@@ -20134,7 +20134,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     id: "hybrid-candidate-generation-and-depth-budget",
     kind: "concept",
     domain: "computer-science",
-    label: "Hybrid candidate generation · retrieval–rerank depth budget",
+    label: "혼합 후보 생성과 검색·재정렬 깊이 예산",
     aliases: [
       "Hybrid Retrieval",
       "Sparse–Dense Tradeoff",
@@ -20145,27 +20145,27 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Rerank Depth",
     ],
     definition:
-      "Sparse와 dense가 정확한 식별자와 의미 paraphrase에서 정반대로 실패하기 때문에 두 lane을 top-k까지 각각 돌려 문서 id로 합치는 hybrid retrieval의 candidate union부터, 그 앞단 전체를 부르는 first-stage retriever·candidate generation이라는 이름, 그리고 그 후보 가운데 reranker가 실제로 다시 채점하는 더 얕은 rerank depth가 첫 검색 깊이(top-k retrieval)보다 작아 새 recall 상한을 만드는 예산 관계까지 묶은 계약입니다.",
+      "단어 일치 검색과 의미 검색은 정확한 식별자와 바꿔 쓴 문장에서 서로 다르게 실패합니다. 두 검색을 상위 k개까지 실행해 문서 ID로 합치고, 그 가운데 재정렬기가 실제로 읽을 더 작은 범위를 정하는 관계를 설명합니다.",
     canonicalHref: "/cs/ai/retrieval-ranking-funnel#hybrid-depth",
   },
   "colbert-late-interaction-maxsim": {
     id: "colbert-late-interaction-maxsim",
     kind: "method",
     domain: "machine-learning",
-    label: "Late interaction · ColBERT-style MaxSim retrieval",
+    label: "지연 상호작용과 ColBERT MaxSim 검색",
     aliases: ["Late Interaction", "ColBERT-style Retrieval"],
     definition:
-      "Query와 document를 하나의 벡터로 pooling하지 않고 token별 벡터로 유지한 뒤, 각 query token이 document token들 중 가장 가까운 것과 이루는 최댓값(MaxSim)을 모두 더해 relevance를 계산하는 방법으로, document token embedding은 bi-encoder처럼 미리 계산해 둘 수 있어 cross-encoder보다 candidate당 비용이 낮습니다.",
+      "질의와 문서를 하나의 벡터로 뭉치지 않고 토큰별 벡터로 유지합니다. 각 질의 토큰과 가장 가까운 문서 토큰의 유사도(MaxSim)를 더해 관련성을 계산하며, 문서 토큰 벡터는 미리 계산해 둘 수 있습니다.",
     canonicalHref: "/cs/ai/retrieval-ranking-funnel#late-interaction",
   },
   "precision-at-k-and-mrr-ranking-evaluation": {
     id: "precision-at-k-and-mrr-ranking-evaluation",
     kind: "metric",
     domain: "statistics",
-    label: "Precision@k · Mean Reciprocal Rank ranking evaluation",
+    label: "Precision@k와 MRR 순위 평가",
     aliases: ["Precision@K", "Ranking Precision", "MRR", "Mean Reciprocal Rank (MRR)"],
     definition:
-      "상위 k개 결과 중 relevant 비율을 재는 Precision@k(=ranking precision)와, query마다 첫 relevant 문서 순위의 역수를 평균 내는 Mean Reciprocal Rank(MRR)를 함께 묶어, recall이 relevant set 전체 대비 회수량을 보는 것과 달리 사용자가 보는 상위 창의 정확도와 정답까지 걸린 순위에 답하는 평가 지표 쌍입니다.",
+      "Precision@k는 상위 k개 결과에서 정답이 차지하는 비율을 재고, 평균 역순위(MRR)는 질의마다 첫 정답이 나온 순위의 역수를 평균 냅니다. 전체 정답 중 얼마나 찾았는지를 보는 재현율과 달리, 사용자가 보는 상위 결과의 정확도와 첫 정답의 위치를 묻습니다.",
     canonicalHref: "/cs/ai/retrieval-ranking-funnel#ranking-evaluation",
   },
   "document-structure-extraction": {

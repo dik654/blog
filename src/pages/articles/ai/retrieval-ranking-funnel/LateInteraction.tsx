@@ -4,27 +4,29 @@ export default function LateInteraction() {
   return (
     <section id="late-interaction" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        ColBERT는 token 벡터를 남겨 두 encoder 방식 사이를 절충합니다
+        ColBERT는 문서 토큰 벡터를 미리 저장해 두 방식의 비용을 절충합니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Late interaction은 bi-encoder처럼 문서 벡터를 미리 계산해 두면서도
-          cross-encoder처럼 query와 문서를 token 단위로 비교하는 절충안입니다.
-          ColBERT가 이 방식을 대표하는 이름입니다.
+          지연 상호작용(late interaction)은 이중 인코더처럼 문서 벡터를 미리
+          계산해 두면서도, 교차 인코더처럼 질의와 문서를 토큰 단위로 비교하는
+          절충안입니다. ColBERT가 이 방식을 대표합니다.
         </p>
         <p>
-          Bi-encoder는 query와 문서를 각각 하나의 벡터로 pooling한 뒤 벡터 하나끼리 내적을 구합니다. 문서 벡터를 미리 계산해 둘 수 있어 빠릅니다. 대신 여러
-          token의 의미를 한 벡터로 뭉치는 과정에서 세부 신호가 흐려질 수 있습니다.
+          이중 인코더는 질의와 문서를 각각 하나의 벡터로 모은 뒤 두 벡터의 내적을
+          구합니다. 문서 벡터를 미리 계산할 수 있어 빠르지만, 여러 토큰의 의미를
+          하나로 뭉치는 과정에서 세부 신호가 흐려질 수 있습니다.
         </p>
         <p>
-          Cross-encoder는 query와 문서를 한 transformer에 함께 넣어 처음부터 다시 encoding합니다. Token 사이의 상호작용을 그대로 보므로 정확합니다.
-          문제는 문서 encoding이 query에 따라 달라진다는 점입니다. 미리 계산해 둘 수 없고 후보 하나마다 전체 forward pass가 새로 필요합니다.
+          교차 인코더는 질의와 문서를 한 Transformer에 함께 넣어 처음부터 다시
+          인코딩합니다. 토큰 사이의 상호작용을 그대로 보지만, 문서 표현이 질의에
+          따라 달라지므로 미리 계산할 수 없습니다. 후보마다 전체 순전파를 다시
+          실행해야 합니다.
         </p>
         <p>
-          Late interaction은 문서 token 벡터를 bi-encoder처럼 미리 계산해
-          캐시해 두되 하나로 뭉치지 않고 그대로 둡니다. Query가 들어오면
-          query token마다 문서 token 전체와의 유사도를 비교해 가장 높은
-          값만 더합니다. 이 최댓값 합을 MaxSim이라고 부릅니다.
+          지연 상호작용은 문서 토큰 벡터를 미리 계산해 캐시에 두되 하나로 뭉치지
+          않습니다. 질의가 들어오면 질의 토큰마다 모든 문서 토큰과의 유사도를
+          비교해 가장 높은 값만 더합니다. 이 최댓값의 합을 MaxSim이라고 부릅니다.
         </p>
       </div>
       <ExplainedFormula

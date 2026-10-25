@@ -11719,25 +11719,98 @@
       "route": "ai/retrieval-ranking-funnel",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/retrieval-ranking-funnel.tsx",
       "publicPath": "cs/ai/retrieval-ranking-funnel",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "직속 부모인 RAG 전체 지도와 현재 검색·재정렬 영역, 같은 트랙의 앞뒤 글이 보이지 않았음",
+        "정적인 결과 표가 긴 설명 뒤에 있어 검색 범위부터 최종 근거까지 후보가 어떻게 변하는지 한 번에 추적하기 어려웠음",
+        "권한 밖 문서 d-91에 검색 순위를 준 뒤 차단하는 그림이 권한 필터를 검색 전에 적용해야 한다는 본문과 모순됐음",
+        "글 목록에는 후보 깊이·지연 상호작용·순위 평가 절이 빠져 실제 본문 경계를 찾기 어려웠음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "tenant": "tenant-a",
+        "query": "XR-17B 로그인 유지 시간 늘리기",
+        "allowedDocuments": ["d-17", "d-04", "d-22"],
+        "deniedBeforeSearch": "d-91",
+        "rrf": {
+          "k": 60,
+          "d-17": 0.03252,
+          "d-22": 0.03101,
+          "d-04": 0.01639
+        },
+        "finalEvidence": ["d-17", "d-04"]
+      },
+      "stageAnchors": {
+        "1": "overview의 허용 검색 범위",
+        "2": "retrieval의 후보 생성·융합·재정렬",
+        "3": "hybrid-depth의 검색 깊이와 재정렬 범위",
+        "4": "late-interaction의 ColBERT MaxSim",
+        "5": "ranking-evaluation의 Precision@k·MRR",
+        "6": "retrieval-ranking-return의 RAG 지도 반환",
+        "S": "retrieval-ranking-funnel",
+        "B": "retrieval-ranking-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://arxiv.org/abs/2004.04906",
+          "application": "DPR의 질의·문서 이중 인코더와 논문 평가 범위를 설명"
+        },
+        {
+          "href": "https://arxiv.org/abs/1603.09320",
+          "application": "HNSW의 계층형 근접 그래프와 근사 검색 경계를 설명"
+        },
+        {
+          "href": "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf",
+          "application": "RRF의 1/(k+rank) 정의와 원 논문 실험 범위를 설명"
+        },
+        {
+          "href": "https://arxiv.org/abs/1901.04085",
+          "application": "질의와 문서를 함께 읽는 BERT 재정렬기의 역할과 평가 범위를 설명"
+        },
+        {
+          "href": "https://arxiv.org/abs/2004.12832",
+          "application": "ColBERT의 토큰별 MaxSim과 문서 표현 사전 계산 경계를 설명"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "tenant-a 질의 한 건을 권한 범위 → BM25·밀집 벡터 후보 → RRF → 재정렬 범위 → 교차 인코더 → 평가 기록까지 추적하고, 앞 단계 누락은 뒤 단계가 복구하지 못한다는 경계를 고정했습니다.",
+        "humanize": "후보 퍼널·candidate universe·bounded set처럼 설명 없이 놓였던 표현을 검색 범위·후보 좁히기·재정렬 범위처럼 바로 읽히는 한국어로 바꿨습니다.",
+        "browser390": "390×844에서 여섯 장면 모두 514px 안에 내부 스크롤과 가로 넘침 없이 들어가고 ArrowRight로 실제 이동함을 확인했습니다.",
+        "browser1440": "1440×1000에서 704px 캔버스와 조작부가 한 화면에 들어가며 잘린 하위 요소와 가로 넘침이 없음을 확인했습니다.",
+        "timing": "명시적으로 재생한 뒤 3.2초에는 첫 장면, 6.5초 뒤에는 둘째 장면임을 확인했습니다.",
+        "reducedMotion": "마지막 기록 장면을 정적으로 보여 주고 재생 버튼이 비활성화되며 '재생 꺼짐'을 표시합니다.",
+        "noScript": "production preview의 JavaScript 비활성 390×844 화면에서 부모 지도·여섯 정적 장면·네 본문 절·RAG 지도 반환이 같은 순서로 남고 재생 조작부가 노출되지 않음을 확인했습니다.",
+        "build": "production build 8,010 modules·정적 public route 2,088개, 최대 상주 메모리 약 6.72GB·swap 0",
+        "browserEvidence": "output/playwright/retrieval-ranking-mobile-viz.png, output/playwright/retrieval-ranking-desktop-viz-centered.png"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 확인"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "recursive-map-one-query-candidate-state-and-source-boundary-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/retrieval-ranking-funnel.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/Retrieval.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/HybridDepth.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/LateInteraction.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/RankingEvaluation.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/RetrievalRankingLocator.tsx",
+        "src/pages/articles/ai/retrieval-ranking-funnel/viz/RetrievalViz.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/retrieval-ranking-funnel.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/retrieval-ranking-funnel/viz/RetrievalViz.tsx"
+      ],
+      "preserved": [
+        "BM25·HNSW·RRF·교차 인코더의 서로 다른 역할과 비용 경계",
+        "후보 재현율 상한·재정렬 범위·MaxSim·MRR의 기존 수식과 계산",
+        "DPR·HNSW·RRF·BERT 재정렬·ColBERT 원문 근거와 기존 연습문제"
       ]
     },
     {

@@ -4,16 +4,19 @@ export default function RankingEvaluation() {
   return (
     <section id="ranking-evaluation" className="scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Precision@k와 MRR은 candidate recall과 다른 질문에 답합니다
+        Precision@k와 MRR은 후보 재현율과 다른 질문에 답합니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Candidate recall과 rerank NDCG만으로는 최종 사용자가 보는 상위 결과의 품질을 다 설명하지 못합니다. Precision@k는 상위 k개 중 실제
-          relevant 비율을 봅니다. MRR이 보는 것은 첫 정답이 얼마나 앞에 나왔는지입니다.
+          후보 재현율과 재정렬 NDCG만으로는 사용자가 보는 상위 결과의 품질을 다
+          설명하지 못합니다. Precision@k는 상위 k개 가운데 실제 정답의 비율을,
+          MRR은 첫 정답이 얼마나 앞에 나왔는지를 봅니다.
         </p>
         <p>
-          Ranking precision은 상위 결과 창 안의 정확도를 재는 일반적인 이름입니다. 그 창을 k개로 고정해 계산한 값이 Precision@k입니다. Recall@k가
-          relevant set 전체 대비 회수량을 본다면 Precision@k는 사용자가 실제로 스크롤하는 범위 안에 잡음이 얼마나 섞여 있는지를 봅니다.
+          순위 정확도(ranking precision)는 상위 결과 창 안의 정확도를 재는
+          일반적인 이름입니다. 그 창을 k개로 고정해 계산한 값이 Precision@k입니다.
+          Recall@k가 전체 정답 가운데 얼마나 찾았는지를 본다면 Precision@k는
+          사용자가 실제로 보는 범위에 잡음이 얼마나 섞였는지를 봅니다.
         </p>
         <p>
           예를 들어 reranker의 top-5 output에서 1·2·4번째 문서가 relevant이고 3·5번째가 아니라면 Precision@5는 3/5=0.6입니다. 같은 top-5가
