@@ -99,6 +99,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "+1·−1 여덟 칸의 k=4 크기가 8인지, 생성기 A의 설명용 peak가 원본 0.84에서 흐림 0.11로 줄어드는지, RGB 오류 3·주파수 오류 4·공동 오류 2에서 공동 오류율 0.20이 나오는지 검산합니다.",
   },
+  "ai/deepfake-video-decisions": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-25",
+    rationale:
+      "앞 글에서 고정한 clip-042의 열 개 평가 시각과 여섯 유효 crop이 프레임 점수, 세 집계 결과, 후보 비교 영수증, coverage 우선 판정으로 이어지는 하나의 영상 판정 추적입니다. 자료 권한과 생성 조건 coverage는 다음 글에 남기고 이 글은 영상 단위 판정 계약만 소유합니다.",
+    sharedGate:
+      "여섯 점수 합 2.37에서 전체 평균 0.395·최댓값 0.82·상위 두 개 평균 0.79가 되는지와, 보정값 0.72가 점수 문턱을 넘더라도 coverage 6/10=0.60이 최소 0.70보다 작아 증거 부족이 되는지 확인합니다.",
+  },
   "ai/open-r1": KEEP("Reasoning data cold start→SFT→online GRPO→evaluation이 하나의 recipe reproduction arc입니다."),
   "ai/openclaw-assistant": KEEP("Inbound event가 route·session·runtime·resource·sandbox를 거쳐 reply receipt가 되는 단일 trace입니다."),
   "ai/qwen-korean-consistency": {
@@ -3545,6 +3554,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/deepfake-detection": "879f9a610190da59",
   "ai/deepfake-preprocessing-lineage": "c49d82d80f595e0f",
   "ai/deepfake-frequency-evidence": "04a614ef1604ff4d",
+  "ai/deepfake-video-decisions": "9f60c7cf2b86a1c6",
   "ai/open-r1": "1479317024d9936a",
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",

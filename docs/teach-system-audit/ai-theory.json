@@ -1739,34 +1739,78 @@
     },
     {
       "route": "ai/deepfake-video-decisions",
-      "title": "딥페이크 Video Decision: Aggregation과 Benchmark Parity",
+      "title": "딥페이크 영상 판정: 프레임 점수에서 증거 부족까지",
       "subcategory": "ai-practical-cv",
+      "track": "concept",
       "publicFiles": [
-        "src/pages/articles/ai/deepfake-detection/viz/ModernDeepfakeViz.tsx",
+        "src/content/deepfake-learning-tree.ts",
         "src/pages/articles/ai/deepfake-video-decisions.tsx",
-        "src/pages/articles/ai/deepfake-video-decisions/ModernArticle.tsx"
+        "src/pages/articles/ai/deepfake-video-decisions/Aggregation.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/ModernArticle.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/Overview.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/Parity.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/Release.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/trace.ts",
+        "src/pages/articles/ai/deepfake-video-decisions/viz/AggregationTraceViz.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/viz/ParityReceiptViz.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/viz/ReleaseGateViz.tsx",
+        "src/pages/articles/ai/deepfake-video-decisions/viz/VideoDecisionMapViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 4,
         "hasSourceSurface": true,
-        "characters": 7476
+        "characters": 20877
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "상위 평가 지도와 직속 부모가 없어 전처리·주파수 단서 다음에 영상 판정이 왜 필요한지 찾기 어려웠습니다.",
+        "평균·최댓값·상위 k개 평균을 설명했지만 앞 글의 같은 영상과 전처리 실패가 이어지지 않아 coverage와 점수의 관계가 보이지 않았습니다.",
+        "후보 비교 조건이 용어 카드에 머물러 두 모델이 실제로 같은 입력·판정·측정 영수증을 받는지 한눈에 대조하기 어려웠습니다.",
+        "점수 보정과 증거 부족 상태가 문장으로만 설명돼 높은 점수와 부족한 evidence가 충돌할 때 무엇이 우선하는지 불분명했습니다."
+      ],
+      "fixture": {
+        "status": "설명용 가정",
+        "input": "앞 글에서 고정한 clip-042의 평가 시각 10개와 유효 crop 6개",
+        "frameScores": "0.12·0.18·0.35·0.82·0.76·0.14",
+        "aggregation": "전체 평균 0.395·최댓값 0.82·상위 두 개 평균 0.79",
+        "decision": "보정값 0.72≥점수 문턱 0.70, coverage 0.60<최소 0.70 → 증거 부족"
+      },
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "aggregate": [
+          "aggregation"
+        ],
+        "compare": [
+          "parity"
+        ],
+        "decide": [
+          "release"
+        ],
+        "return": [
+          "release"
+        ]
+      },
+      "primarySourceApplication": [
+        "DeepfakeBench의 NeurIPS 2023 공식 논문이 지적한 입력 전처리·실험 설정·평가 절차 불일치를 두 후보의 비교 영수증 경계에 적용했습니다.",
+        "논문의 표준화 주장을 본문의 상위 두 개 평균·보정값·coverage 문턱에 대한 실측 근거로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "pass · clip-042의 같은 열 개 시각과 여섯 crop이 프레임 점수, 세 집계값, 후보 비교 영수증, coverage 우선 판정으로 이어집니다.",
+        "humanize": "pass · 영어 명사구 중심 제목과 용어 카드를 역할 중심 한국어 문장과 실제 판정 흐름으로 교체했습니다.",
+        "numericTrace": "pass · 점수 합 2.37·전체 평균 0.395·최댓값 0.82·상위 두 개 평균 0.79·coverage 0.60을 독립 계산했습니다.",
+        "mobile390": "pass · 네 그림이 세로 단계와 선택한 상태 설명으로 표시되고 문서 가로 overflow 0, console 오류 0을 확인했습니다.",
+        "desktop1440": "pass · 여섯 점수·세 집계값·후보 비교표·coverage 우선 판정이 내부 가로 스크롤 없이 표시되고 문서 가로 overflow 0임을 확인했습니다.",
+        "keyboard": "pass · 지도·집계·후보 비교·최종 판정 네 그림에서 ArrowRight로 마지막 장면까지 이동했습니다.",
+        "motion": "pass · 자동 시작과 반복이 없고 6초 뒤에도 첫 장면을 유지하며 reduced-motion에서는 네 재생 버튼이 모두 비활성화됩니다.",
+        "productionBuild": "pass · Node 힙 상한을 8GB로 명시한 전체 tsc-b·Vite build에서 7,965개 module과 2,088개 정적 route 생성이 통과했습니다.",
+        "noJavaScript": "pass · production 정적 본문에서 네 그림의 전체 순서와 전체 평균 0.395·최댓값 0.82·상위 두 개 평균 0.79·coverage 0.60·증거 부족을 확인했고 390×844 화면에서 가로 잘림 없이 표시됐습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "공개 배포 경로 확인"
       ]
     },
     {
