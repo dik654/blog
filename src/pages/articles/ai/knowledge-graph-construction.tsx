@@ -4,402 +4,409 @@ import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
-import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  KnowledgeGraphConstructionLocator,
+  KnowledgeGraphConstructionReturn,
+} from "./knowledge-graph-construction/KnowledgeGraphConstructionLocator";
+import EntityResolutionFunnelViz from "./knowledge-graph-construction/viz/EntityResolutionFunnelViz";
 import KnowledgeGraphConstructionViz from "./knowledge-graph-construction/viz/KnowledgeGraphConstructionViz";
 
 /**
- * Knowledge graph 구축: property graph 모델, schema-guided extraction 과 open IE,
- * entity dedup, 그리고 이를 잇는 construction pipeline 을 소유한다.
- * Community·local/global search·multi-hop reasoning 은 /ai/graphrag-community-and-multihop-search 가 소유한다.
+ * Knowledge Graph 구축
+ *
+ * d-17·d-22·d-31 세 문서가 kg-v43 한 버전으로 바뀌는 과정을 끝까지 추적합니다.
  */
 export default function KnowledgeGraphConstructionArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
+        <KnowledgeGraphConstructionLocator />
         <h2 className="mb-6 text-2xl font-bold">
-          네 문장의 이름 7개가 대상 5개와 연결 4개가 됩니다
+          원문을 잃지 않고 같은 대상을 하나로 묶어야 합니다
         </h2>
+        <KnowledgeGraphConstructionViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            입력은 네 문장입니다. “마리 퀴리는 1867년 바르샤바에서 태어났다.” “그녀는
-            1903년 피에르 퀴리와 노벨 물리학상을 함께 받았다.” “피에르가 죽은 뒤 그녀는
-            파리 대학 교수직을 물려받았다.” “M. 퀴리는 1911년 두 번째 노벨상을 받았다.”
+            d-17의 “민준 김”, d-22의 “M. Kim”, d-31의 “그 사용자”가 같은
+            사람이라면 세 문서의 사실은 한곳에서 이어져야 합니다. 이름만 비슷하다는
+            이유로 먼저 합치거나, 관계만 저장하고 원문을 버리면 잘못된 연결을 나중에
+            검사할 수 없습니다.
           </p>
           <p>
-            추출기는 “마리 퀴리”, “그녀”, “피에르 퀴리”, “바르샤바”, “노벨
-            물리학상”, “파리 대학”, “M. 퀴리”라는 mention 7개를 먼저 찾습니다. 아직은
-            “마리 퀴리”와 “그녀”와 “M. 퀴리”가 같은 사람인지 모릅니다.
+            이 글이 답할 질문은 하나입니다. <strong>문서에 흩어진 표현을 어떻게
+            검증 가능한 node와 edge로 바꿀까요?</strong> 세 문서를 추출하고,
+            관계 이름을 맞추고, 같은 대상을 식별하고, 검증을 통과한 결과만 새
+            그래프 버전으로 기록하는 한 경로를 따라갑니다.
           </p>
-          <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
-          <ol>
-            <li>찾은 mention 7개가 모두 서로 다른 최종 node로 남을까요?</li>
-            <li>성이 같다는 이유만으로 마리 퀴리와 피에르 퀴리를 하나로 합칠까요?</li>
-            <li>대명사와 약칭을 합치면 최종 결과는 node 5개와 edge 4개가 될까요?</li>
-          </ol>
           <p>
-            답은 <strong>아니요, 아니요, 예</strong>입니다. 지칭하는 대상을 확인해 세
-            표기를 Marie Curie 하나로 합치고, Pierre Curie는 별도 인물로 남깁니다. 그러면
-            최종 그래프는 node 5개와 schema에 맞춘 edge 4개가 됩니다.
+            결론부터 말하면 Knowledge Graph 구축은 “LLM에게 triple을 뽑아 달라”는
+            한 번의 호출이 아닙니다. <strong>추출 → 정규화 → 식별 → 검증 →
+            근거가 남는 기록</strong>을 분리해야 어느 단계에서 잘못됐는지 되짚을 수
+            있습니다. 그림의 ID와 버전은 설명용 가정이며 특정 제품의 측정값이 아닙니다.
           </p>
         </div>
-        <KnowledgeGraphConstructionViz />
         <ContentBoundary article="knowledge-graph-construction" />
-        <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
-          <p>
-            이 과정을 knowledge graph construction이라고 부릅니다. 문장에서 entity와
-            relation을 뽑고, 같은 대상을 가리키는 표기를 합친 뒤, entity는 node로 관계는
-            edge로 저장합니다. 뒤 절에서 extraction·property graph·dedup이라는 이름을
-            방금 본 네 문장에 하나씩 붙입니다.
-          </p>
-        </div>
       </section>
 
       <section id="extraction" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Entity 추출과 relation 추출이 문장을 triple 로 바꿉니다
+          먼저 문장의 표현과 관계 후보를 원문 위치에 묶습니다
         </h2>
+        <div className="overflow-x-auto border-y border-border">
+          <table className="w-full min-w-[42rem] text-left text-sm">
+            <thead className="border-b border-border text-xs text-muted-foreground">
+              <tr>
+                <th className="px-3 py-3">원문</th>
+                <th className="px-3 py-3">mention</th>
+                <th className="px-3 py-3">raw relation</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-3 py-3 font-mono text-xs">d-17</td>
+                <td className="px-3 py-3">m-01 민준 김 · m-02 A-17</td>
+                <td className="px-3 py-3 font-mono text-xs">m-01 ─사용한다→ m-02</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-mono text-xs">d-22</td>
+                <td className="px-3 py-3">m-03 M. Kim · m-04 모바일 앱 · m-05 E401</td>
+                <td className="px-3 py-3 font-mono text-xs">m-03 ─보고했다→ m-05 · m-05 ─발생 위치→ m-04</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-mono text-xs">d-31</td>
+                <td className="px-3 py-3">m-06 그 사용자 · m-07 tenant-a</td>
+                <td className="px-3 py-3 font-mono text-xs">m-06 ─속한다→ m-07</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            관계를 뽑기 전에 "누가 누구인지" 후보부터 확정해야 합니다. 그 일을 맡는 것이 entity extraction(NER), 문장에서 entity 를 가리키는 글자
-            구간(mention)을 찾는 과제입니다. Knowledge graph construction pipeline 의 첫 단계가 여기입니다.
-          </p>
-          <p>
-            다음 네 문장을 예로 씁니다. "마리 퀴리는 1867년 바르샤바에서 태어났다."
-            "그녀는 1903년 피에르 퀴리와 노벨 물리학상을 함께 받았다." "피에르가 죽은
-            뒤 그녀는 파리 대학 교수직을 물려받았다." "M. 퀴리는 1911년 두 번째
-            노벨상을 받았다."
-          </p>
-          <p>
-            NER 은 이 네 문장에서 일곱 개 mention 을 찾습니다. "마리 퀴리", "그녀",
-            "피에르 퀴리", "바르샤바", "노벨 물리학상", "파리 대학", "M. 퀴리"가 그
-            목록입니다.
-          </p>
-          <p>
-            이 시점에는 "마리 퀴리"와 "그녀"와 "M. 퀴리"가 같은 사람이라는 사실을
-            아직 모릅니다. 일곱 개는 서로 다른 후보로만 존재하고, 이를 합칠지는
-            뒤의 dedup 절이 판단합니다.
+            <strong>Entity extraction</strong>은 문장에서 대상을 가리키는 범위를
+            찾고 mention ID를 붙입니다. 아직 m-01과 m-03이 같은 사람이라고
+            판단하지 않습니다. 표면형, 유형, source_id와 원문 범위를 함께 남기는
+            이유는 뒤의 식별 판정을 다시 검사하기 위해서입니다.
           </p>
         </div>
+
         <div id="relation-extraction-task" className="scroll-mt-24">
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            <h3 className="scroll-mt-20 text-xl font-bold">
-              Relation extraction 은 schema 유무에 따라 다른 triple 을 냅니다
-            </h3>
-            <p>
-              Mention 을 찾았으면 그다음은 그 사이의 관계입니다. Relation extraction 은 mention 두 개와 그 관계를 (entity, relation,
-              entity) triple 로 뽑습니다. 전통적으로는 "출생지"·"수상"처럼 미리 정한 관계 목록 가운데 하나로 분류하는 닫힌 문제였고 목록에 없는 관계는 애초에 뽑지
-              못했습니다.
-            </p>
-            <p>
-              Person, Place, Award, Institution 네 entity 유형과 bornIn, wonAward,
-              succeededAt 세 relation 을 미리 정한 schema 로 뽑으면(schema-guided
-              extraction), 그 목록 안에서만 triple 이 나옵니다.
-            </p>
-            <p>
-              결과는 (Marie Curie, bornIn, Warsaw), (Marie Curie, wonAward, Nobel
-              Prize in Physics), (Pierre Curie, wonAward, Nobel Prize in Physics),
-              (Marie Curie, succeededAt, University of Paris) 네 triple 입니다.
-            </p>
-            <p>
-              Schema 없이 Open Information Extraction(Open IE)으로 뽑으면 결과는 문장
-              표면형 그대로 남습니다. (Marie Curie, "was born in", Warsaw), (Marie
-              Curie, "shared the Nobel Prize in Physics with", Pierre Curie)처럼
-              relation 이 동사구 그대로입니다.
-            </p>
-            <p>
-              (she, "took over the professorship at", University of Paris)에서는
-              "she"가 누구를 가리키는지도 아직 풀리지 않습니다. Coreference 해소와
-              entity 병합은 뒤의 dedup 절이 맡습니다.
-            </p>
-          </div>
+          <TermBreakdown
+            title="mention 추출과 relation 추출은 서로 다른 과제입니다"
+            description="무엇이 등장했는지를 찾은 뒤, 어떤 관계인지 별도로 판정합니다."
+            items={[
+              {
+                term: "Mention",
+                description: "원문에서 대상을 가리키는 글자 범위와 그 발생 한 건입니다.",
+                example: "d-22의 ‘M. Kim’은 m-03이라는 한 mention입니다.",
+                boundary: "같은 대상을 가리키는 다른 표기와 아직 합치지 않습니다.",
+              },
+              {
+                term: "Entity",
+                description: "여러 mention이 가리킬 수 있는 정규화된 실제 대상입니다.",
+                example: "m-01·m-03·m-06을 합친 U-42입니다.",
+                boundary: "식별 근거가 부족하면 mention을 별도 후보로 유지합니다.",
+              },
+              {
+                term: "Relation",
+                description: "두 대상 사이에서 문장이 주장하는 방향 있는 연결입니다.",
+                example: "U-42 ─reported→ E401입니다.",
+                boundary: "source_id가 없으면 어느 문장이 주장했는지 검증하기 어렵습니다.",
+              },
+            ]}
+          />
         </div>
-        <div id="schema-guided-extraction" className="scroll-mt-24">
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            <h3 className="scroll-mt-20 text-xl font-bold">
-              Schema-guided extraction 은 문장을 미리 정한 관계 목록에 맞춥니다
-            </h3>
-            <p>
-              Schema-guided extraction 은 relation 목록과 entity 유형을 미리 정의해 두고 문장을 그 목록에 맞는 triple 로 뽑는 방식입니다.
-              Relation 이름이 고정돼 있으니 뒤에 나올 그래프 질의는 "bornIn"이라는 label 하나만 찾으면 됩니다. 대신 목록에 없는 관계는 버려지거나 가장 가까운
-              항목으로 억지로 맞춰집니다.
-            </p>
-            <p>
-              Open IE 는 반대로 목록 없이 동사구를 그대로 relation 으로 씁니다. 관계
-              표현의 다양성을 놓치지 않는 대신, "was born in"과 "is a native of"처럼
-              같은 뜻의 다른 표현이 서로 다른 relation 으로 남습니다.
-            </p>
-            <p>
-              EDC(Extract, Define, Canonicalize) 프레임워크는 이 문제를 스스로 풉니다. Open IE 로 자유롭게 뽑은 뒤 relation 마다 자연어 정의를
-              LLM 으로 생성하고 정의 임베딩이 가까운 후보를 모아 LLM 으로 하나의 relation 으로 합칠지 검증합니다.
-            </p>
-            <p>
-              두 방식은 상호 배타적이지 않습니다. Schema 가 있으면 그 목록 안에서 뽑고 목록 밖 표현이 반복해서 나오면 EDC 의 self-canonicalization 처럼 그
-              표현들을 스스로 새 relation type 으로 묶어 schema 를 넓힙니다. 다음 절의 property graph 는 이렇게 정해진 triple 을 담는 구조입니다.
-            </p>
-          </div>
+      </section>
+
+      <section id="schema-guided-extraction" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          자유로운 표현을 검색 가능한 관계 이름으로 맞춥니다
+        </h2>
+        <div className="grid gap-px bg-border p-px md:grid-cols-3">
+          {[
+            ["원문 표현", "사용한다 · 보고했다 · 발생 위치 · 속한다"],
+            ["관계 이름", "usesAccount · reported · occursIn · memberOf"],
+            ["보존할 근거", "source_id · 원문 범위 · extractor version"],
+          ].map(([label, value]) => (
+            <div key={label} className="bg-background p-4">
+              <p className="text-[11px] font-bold text-primary">{label}</p>
+              <p className="mt-2 break-keep text-sm font-bold leading-6">{value}</p>
+            </div>
+          ))}
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            미리 정한 relation type으로 출력하게 하면 애플리케이션이 예측 가능한
+            이름으로 질의할 수 있습니다. 대신 목록에 없는 관계를 놓치거나 비슷한
+            이름에 억지로 맞출 수 있습니다. Open Information Extraction은 relation
+            목록 없이 문장 표현을 넓게 뽑지만, 같은 뜻의 표면형이 여러 이름으로
+            갈라질 수 있습니다.
+          </p>
+          <p>
+            EDC는 이 두 경계를 <strong>Extract → Define → Canonicalize</strong>로
+            나눕니다. target schema가 있으면 그 이름에 맞추고, 없으면 추출한 relation의
+            정의를 이용해 서로 가까운 표현을 묶습니다. 이는 EMNLP 2024 논문의 제안이며
+            모든 언어와 도메인에서 자동으로 정확해진다는 뜻은 아닙니다.
+          </p>
         </div>
         <ProgressiveDetail
-          title="Open IE 는 실제로 얼마나 정확하게 뽑을까요?"
-          preview="TextRunner 는 웹 문서에서 자기지도로 학습한 뒤 한 번의 pass 로 후보를 뽑고, 같은 tuple 이 얼마나 자주 재등장하는지로 신뢰도를 매겨 상위권에서 88.3% 정밀도를 저자가 보고했습니다."
+          title="Open IE와 EDC가 실제로 확인한 범위"
+          preview="TextRunner와 EDC는 서로 다른 시점과 조건의 연구입니다. 보고된 수치를 현재 시스템의 성능으로 옮겨 쓰지 않습니다."
         >
           <p>
-            Banko et al. (2007)의 TextRunner 는 세 부분으로 이뤄집니다. Self-supervised learner 가 구문 트리에서 규칙을 자동으로 익힙니다.
-            그다음 single-pass extractor 가 문서를 한 번 훑어 후보 tuple 을 뽑고 redundancy-based assessor 가 같은 tuple 이 여러
-            문서에서 반복되는 빈도로 신뢰도를 매깁니다. 사람이 만든 정답 목록 없이 학습한다는 점이 이 pipeline 의 핵심입니다.
+            Banko 등의 TextRunner는 2007년 영어 웹 문서에서 목록 없는 이항 관계를
+            한 번의 순회로 추출하고 웹의 반복을 이용해 신뢰도를 평가했습니다. 논문의
+            9백만 문서와 표본 정밀도는 저자 실험에 귀속됩니다.
           </p>
           <p>
-            저자들은 약 9백만 개 웹 문서에서 tuple 을 뽑아 신뢰도 상위 1,844개 표본을 사람이 평가해 88.3% 정밀도를 보고했습니다. 이 수치는 저자 자기보고입니다. 상위권
-            밖의 tuple 이나 다른 corpus 에서 같은 정밀도가 나온다는 뜻은 아닙니다.
+            EDC는 LLM으로 relation 설명을 만든 뒤 schema element retriever로 후보를
+            줄이고 LLM으로 canonicalization을 확인합니다. target alignment와
+            self-canonicalization을 모두 다루지만, 모델·프롬프트·schema 크기에 따른
+            비용과 오류는 대상 데이터에서 다시 측정해야 합니다.
           </p>
         </ProgressiveDetail>
       </section>
 
+      <section id="dedup" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          같은 대상을 찾는 일은 후보 축소와 판정을 나눠야 합니다
+        </h2>
+        <EntityResolutionFunnelViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            mention 7개를 모두 둘씩 비교하면 21쌍입니다. 유형이 Person인 m-01,
+            m-03, m-06만 같은 block에 넣으면 비교 대상은 3쌍이 됩니다. 이때
+            85.7%는 <strong>비교량 감소율</strong>이지 식별 정확도가 아닙니다.
+          </p>
+          <p>
+            다음 matching 단계는 안정 ID, 별칭 사전, 문서의 coreference, 문자열
+            규칙, 임베딩, 학습된 분류기와 사람 검토를 조합할 수 있습니다. 이 사례는
+            stable_key와 coreference가 있다고 가정합니다. 특정 cosine threshold 하나를
+            Entity Resolution의 보편적인 절차로 쓰지 않습니다.
+          </p>
+          <p>
+            판정된 쌍을 연결해 cluster를 만든 뒤, 각 cluster를 U-42 같은 canonical
+            entity로 바꾸는 단계가 clustering과 fusion입니다. alias와 출처를 지우지
+            않아야 잘못 합친 node를 찾아 다시 나눌 수 있습니다.
+          </p>
+        </div>
+      </section>
+
       <section id="property-graph" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Property graph 는 edge 에도 속성을 붙여 관계를 데이터로 다룹니다
+          최종 그래프에는 대상, 관계와 근거가 함께 남습니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Property graph를 이루는 것은 셋입니다. 대상을 담는 칸은 노드(node)입니다. 노드 사이의 방향 있는 관계는 엣지(edge)입니다. 둘 모두에 key-value로 붙일
-            수 있는 값은 속성(property)입니다. Neo4j 공식 문서는 이를 "node 는 도메인의 개별 대상을, relationship 은 source node 와 target node
-            사이의 연결을 설명한다"고 정의합니다.
-          </p>
-          <p>
-            Edge 에도 property 를 붙일 수 있다는 점이 property graph 의 핵심입니다.
-            앞 절의 schema-guided triple 을 그래프에 넣으면, (Marie Curie)→bornIn→
-            (Warsaw) edge 에 {"{ year: 1867 }"}를 그대로 답니다.
-          </p>
-          <p>
-            (Marie Curie)→wonAward→(Nobel Prize in Physics) edge 에도{" "}
-            {"{ year: 1903 }"}를 답니다. Edge type 은 "bornIn"·"wonAward"처럼 관계의
-            종류를 나타내는 label 이고, node 하나는 label 을 두 개 이상 가질 수
-            있습니다.
-          </p>
-          <p>
-            Node 는 다섯 개(Marie Curie, Pierre Curie, Warsaw, Nobel Prize in Physics,
-            University of Paris)이고 edge 는 네 개입니다. 각 edge 는 자신만의 property
-            를 가지므로, 같은 두 node 사이에 시점이 다른 관계가 여러 개 있어도 edge 를
-            따로 두면 구분됩니다.
+            Property graph에서는 entity를 node로, 방향과 유형이 있는 연결을
+            relationship로 표현합니다. Neo4j 공식 개념 문서처럼 node와 relationship
+            모두 property를 가질 수 있습니다. 아래 코드는 위 사례의 네 edge 중
+            reported 하나를 멱등하게 기록하는 설명용 의사 코드입니다.
           </p>
         </div>
+        <pre className="overflow-x-auto border-y border-border bg-muted/20 p-4 text-xs leading-6"><code>{`// 같은 canonical ID면 기존 Person node를 재사용합니다.
+MERGE (u:Person {entity_id: "U-42"})
+
+// 오류 node도 안정 ID를 기준으로 한 번만 만듭니다.
+MERGE (e:Error {code: "E401"})
+
+// source_id를 포함한 edge_key로 재시도 중복을 막습니다.
+MERGE (u)-[r:REPORTED {edge_key: "d-22:m-03:reported:m-05"}]->(e)
+
+// 어느 원문과 추출기에서 나온 판정인지 보존합니다.
+SET r.source_id = "d-22",
+    r.extractor_version = "extractor-v7"`}</code></pre>
+
         <div id="rdf-ontology" className="scroll-mt-24">
           <div className="prose prose-neutral max-w-none dark:prose-invert">
-            <h3 className="scroll-mt-20 text-xl font-bold">
-              RDF triple 은 edge 속성을 위해 reification 을 거칩니다
-            </h3>
+            <h3>RDF는 같은 사실을 triple의 집합으로 표현합니다</h3>
             <p>
-              RDF(Resource Description Framework)는 모든 사실을 (subject, predicate, object) triple 하나로만 표현합니다.
-              Predicate 자체는 노드가 아니라 관계 이름이라 "언제 그 상을 받았는가"처럼 관계에 딸린 정보를 predicate 에 직접 붙일 자리가 없습니다.
+              RDF의 기본 문장은 subject, predicate, object로 이뤄진 triple입니다.
+              RDF 1.2는 triple term과 reifier를 도입해 문장 자체를 가리키고 그 문장에
+              관한 정보를 표현할 수 있습니다. 따라서 “관계 메타데이터에는 언제나
+              고전적인 네 reification triple이 필요하다”고 단정하면 현재 표준을
+              제대로 설명하지 못합니다.
             </p>
             <p>
-              그래서 RDF 는 reification 을 씁니다. (Marie Curie, wonAward, Nobel Prize
-              in Physics) 하나에 연도를 달려면, 그 statement 자체를 가리키는 새 node 를
-              만들어야 합니다.
-            </p>
-            <p>
-              (statement, subject, Marie Curie), (statement, predicate, wonAward),
-              (statement, object, Nobel Prize in Physics), (statement, year, 1903)
-              네 triple 을 추가해야 하는 자리에서, property graph 는 edge 하나에
-              property 한 줄이면 끝납니다.
-            </p>
-            <p>
-              Ontology 는 RDF 위에 얹는 형식 schema 층으로, RDFS·OWL 같은 언어로 "Person 은 Award 를 wonAward 로만 연결할 수 있다"는
-              class·relation 제약을 논리적으로 선언합니다. 다음 절의 graph schema 는 이보다 가볍습니다. 논리적 제약 없이 relation 목록과 entity
-              유형만 느슨하게 정하는 합의입니다.
+              이 글은 property graph와 RDF 중 하나를 선택하지 않습니다. 그래프 구축의
+              공통 핵심은 표현 모델보다 먼저 <strong>같은 대상 판정, 제약 검증,
+              provenance 보존</strong>입니다. RDF 1.2 문서는 2026년 4월 Candidate
+              Recommendation Snapshot이므로 구현 지원 범위도 따로 확인해야 합니다.
             </p>
           </div>
         </div>
-        <TermBreakdown
-          title="Property graph 와 RDF triple 의 표현력 차이"
-          description="같은 사실을 담는 두 모델이 관계에 딸린 정보를 어디에 두는지가 다릅니다."
-          items={[
-            {
-              term: "Edge property",
-              description: "Property graph 는 edge 에 key-value 를 직접 붙입니다.",
-              example: "wonAward edge 에 { year: 1903 } 를 한 번에 답니다.",
-              boundary: "RDF 는 predicate 에 속성을 못 붙여 reification 으로 네 triple 을 더 씁니다.",
-            },
-            {
-              term: "Node label",
-              description: "Property graph 의 node 는 여러 label 을 동시에 가질 수 있습니다.",
-              example: "Marie Curie 는 Person 이자 LaureateType label 을 같이 가집니다.",
-              boundary: "RDF 는 rdf:type triple 을 여러 개 추가해 같은 효과를 냅니다.",
-            },
-            {
-              term: "제약의 형식성",
-              description: "Ontology(RDFS·OWL)는 class·relation 제약을 논리적으로 선언합니다.",
-              example: "\"Person 만 wonAward 의 subject 가 될 수 있다\"는 OWL 공리로 검증됩니다.",
-              boundary: "Graph schema 는 이런 논리 검증 없이 relation 목록과 유형만 정합니다.",
-            },
-          ]}
-        />
       </section>
 
-      <section id="dedup" className="scroll-mt-20">
+      <section id="validation" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Graph deduplication 은 표기가 다른 같은 entity 를 하나로 합칩니다
+          검증을 통과하기 전에는 공개 그래프를 바꾸지 않습니다
         </h2>
+        <div className="grid gap-px bg-border p-px sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["유형", "Person ─reported→ Error인가"],
+            ["근거", "모든 edge에 source_id가 있는가"],
+            ["중복", "edge_key가 실행마다 같은가"],
+            ["격리", "실패 항목이 공개 버전에 섞이지 않는가"],
+          ].map(([label, question]) => (
+            <div key={label} className="bg-background p-4">
+              <p className="text-xs font-bold text-primary">{label}</p>
+              <p className="mt-2 break-keep text-sm leading-6 text-muted-foreground">{question}</p>
+            </div>
+          ))}
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Extraction 단계는 "마리 퀴리"·"그녀"·"M. 퀴리"를 세 개의 서로 다른 mention 으로 뽑을 뿐, 이들이 같은 사람인지는 알려주지 않습니다. 서로 다른 문장에
-            다른 표기로 나온 mention 이 실제로 같은 entity 를 가리키는지 판단해 하나의 node 로 합치는 일, 그것이 graph deduplication(entity
-            resolution)입니다.
+            추출 결과는 staging에 쓰고 schema 제약, 필수 provenance와 중복 키를
+            검사합니다. 같은 입력을 다시 처리했을 때 node와 edge 수가 늘지 않는지도
+            확인합니다. 검증이 끝난 버전만 조회 경로가 보도록 전환하면 실패한 배치가
+            현재 서비스 그래프에 섞이는 범위를 줄일 수 있습니다.
           </p>
           <p>
-            네 번째 문장 "M. 퀴리는 1911년 두 번째 노벨상을 받았다"가 더해졌다고
-            합시다. 표기만 보면 "마리 퀴리"와 "M. 퀴리"는 다르고, "마리 퀴리"와
-            "피에르 퀴리"도 성이 같아 헷갈릴 수 있습니다. 표기 유사도만으로 합치면
-            서로 다른 두 사람을 하나로 잘못 묶는 위험이 있습니다.
-          </p>
-          <p>
-            그래서 표기 대신 의미 embedding 사이의 cosine 유사도에 threshold 를 두고
-            합칩니다. 두 mention 의 문맥까지 반영한 embedding 이 충분히 가까울 때만
-            같은 node 로 합치고, 성이 같을 뿐 다른 사람이면 embedding 이 threshold
-            아래에 남습니다.
+            kg-v42를 유지하다 kg-v43으로 전환하는 방식은 이해를 위한 안전한 패턴이지
+            모든 graph DB가 제공하는 자동 기능은 아닙니다. 실제 구현에서는 transaction,
+            별도 database, snapshot, alias 또는 애플리케이션의 version pointer 가운데
+            무엇이 원자적 전환을 보장하는지 확인해야 합니다.
           </p>
         </div>
-        <ExplainedFormula
-          question="언제 두 entity mention 을 같은 node 로 합쳐도 되나요?"
-          idea="표기가 겹치는 다른 사람을 잘못 합치지 않도록, mention embedding 사이의 cosine 유사도가 정해 둔 threshold 를 넘을 때만 병합합니다."
-          formula={String.raw`\mathrm{sim}(e_i, e_j) = \frac{v_i \cdot v_j}{\lVert v_i \rVert \lVert v_j \rVert}, \qquad \mathrm{merge}(e_i, e_j) = \mathbb{1}\left[\mathrm{sim}(e_i, e_j) \ge \tau\right]`}
-          annotatedFormula={String.raw`\mathrm{sim}(e_i, e_j) = \frac{\underbrace{v_i \cdot v_j}_{\text{두 mention embedding 의 내적}}}{\underbrace{\lVert v_i \rVert \lVert v_j \rVert}_{\text{각 embedding 의 크기}}}, \qquad \mathrm{merge}(e_i, e_j) = \mathbb{1}\left[\mathrm{sim}(e_i, e_j) \underbrace{\ge \tau}_{\text{threshold 이상일 때만 병합}}\right]`}
-          operations={[
-            { expression: String.raw`v_i \cdot v_j`, annotation: ["두 mention 을 문맥까지 반영해 embedding 한 뒤", "내적으로 방향의 일치를 봅니다"] },
-            { expression: String.raw`\lVert v_i \rVert \lVert v_j \rVert`, annotation: ["각 embedding 의 크기로 나눠", "길이 차이를 지우고 방향만 남깁니다"] },
-            { expression: String.raw`\mathbb{1}[\mathrm{sim} \ge \tau]`, annotation: ["유사도가 threshold 를 넘을 때만 1이 되어", "그 경우에만 두 node 를 합칩니다"] },
-          ]}
-          terms={[
-            { symbol: String.raw`v_i, v_j`, name: "Mention embedding", description: "mention 과 그 주변 문맥을 함께 인코딩한 벡터입니다." },
-            { symbol: String.raw`\mathrm{sim}(e_i, e_j)`, name: "Cosine 유사도", description: "두 embedding 방향이 얼마나 가까운지를 −1~1 로 나타냅니다." },
-            { symbol: String.raw`\tau`, name: "Threshold", description: "검증 데이터로 정하는 병합 기준값입니다." },
-            { symbol: String.raw`\mathrm{merge}(e_i, e_j)`, name: "병합 결정", description: "threshold 를 넘으면 1(병합), 아니면 0(별도 node 유지)입니다." },
-          ]}
-          assumptions={[
-            "Embedding 이 표기 차이보다 의미적 동일성을 더 강하게 반영한다고 전제합니다.",
-            "Threshold τ 는 도메인·모델마다 검증 데이터로 다시 맞춰야 하는 값입니다.",
-            "동명이인처럼 embedding 이 가까운 다른 entity 는 생몰년 같은 property 확인이 별도로 필요합니다.",
-          ]}
-          interpretation="마리 퀴리와 M. 퀴리의 cosine 유사도가 0.92 로 τ=0.85 를 넘으면 두 mention 은 한 node 로 합쳐집니다. 마리 퀴리와 피에르 퀴리는 성이 같아도 문맥이 달라 유사도가 0.61 에 그쳐 합쳐지지 않습니다. Threshold 하나만으로는 이름이 겹치는 다른 인물을 완전히 걸러내지 못하므로 생몰년·직업 같은 property 대조를 병행해야 합니다."
-        />
       </section>
 
       <section id="pipeline" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Graph construction pipeline 은 추출부터 삽입까지 다섯 단계입니다
+          전체 과정은 여섯 개의 검사 가능한 상태로 이어집니다
+        </h2>
+        <AlgorithmBlock
+          title="d-17·d-22·d-31을 kg-v43으로 반영하는 절차"
+          input={[
+            "source_id를 가진 원문 3건",
+            "relation type과 유형 제약",
+            "현재 공개 버전 kg-v42",
+          ]}
+          steps={[
+            {
+              code: "documents = read_sources([d17, d22, d31])",
+              note: "원문과 source_id를 먼저 읽고 공개 그래프에는 아직 쓰지 않습니다.",
+            },
+            {
+              code: "mentions, raw_edges = extract(documents)",
+              note: "mention 7개와 raw relation 4개를 원문 범위와 함께 뽑습니다.",
+            },
+            {
+              code: "typed_edges = canonicalize(raw_edges, relation_schema)",
+              note: "자유로운 관계 표현을 네 relation type으로 맞추되 원문 표현은 보존합니다.",
+            },
+            {
+              code: "entities = resolve(mentions, blocking, evidence)",
+              note: "같은 유형의 후보만 비교하고 판정 근거가 이어진 세 Person mention을 U-42로 묶습니다.",
+            },
+            {
+              code: "validated = validate(entities, typed_edges, provenance)",
+              note: "유형, source_id와 멱등 edge_key를 검사하고 실패 항목은 staging에 남깁니다.",
+            },
+            {
+              code: "publish(version=kg_v43, items=validated)",
+              note: "검증된 node 5개와 edge 4개만 새 버전에 기록하고 조회 포인터를 전환합니다.",
+            },
+          ]}
+          output="kg-v43 · node 5개 · edge 4개 · source 3건 (설명용 가정)"
+        />
+      </section>
+
+      <section id="graph-traversal" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">
+          이 글의 출력은 다음 글의 검색 입력이 됩니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Graph construction pipeline 은 앞서 본 세 절차, 곧 entity·relation 추출과 schema 매핑과 entity dedup 을 하나의 순서로
-            이어 원문 텍스트를 property graph 로 바꿉니다. 문서 하나가 새로 들어올 때마다 이 다섯 단계를 반복하며, 이미 있는 node·edge 는 새로 만들지 않고 갱신만
-            합니다.
+            이제 “tenant-a 사용자가 모바일 앱에서 보고한 오류”처럼 문서 하나에
+            그대로 적히지 않은 경로를 U-42 → tenant-a와 U-42 → E401 → 모바일 앱의
+            연결로 찾을 수 있습니다. 그러나 어떤 경로를 우선 탐색하고, 여러 hop의
+            근거를 답변 문맥으로 바꾸고, community summary를 언제 쓰는지는 구축이
+            아니라 retrieval의 책임입니다.
           </p>
           <p>
-            순서가 중요한 이유는 뒷단계가 앞단계의 출력에 의존하기 때문입니다.
-            Dedup 은 추출된 mention 없이는 할 일이 없고, 그래프 삽입은 dedup 으로
-            확정된 node 없이는 어떤 node 에 edge 를 붙일지 알 수 없습니다.
+            이 다음은 <Link to="/cs/ai/graphrag-community-and-multihop-search">
+              GraphRAG와 multi-hop 검색
+            </Link>에서 다룹니다. 구축 오류와 검색 전략을 한 글에서 섞지 않아야
+            edge가 잘못됐는지 traversal이 잘못됐는지 구분할 수 있습니다.
           </p>
-        </div>
-        <AlgorithmBlock
-          title="텍스트에서 property graph 까지"
-          input={["D: 원문 텍스트(문장 또는 chunk)", "S: graph schema(있으면 schema-guided, 없으면 open IE)", "G: 기존 property graph(비어 있어도 됨)"]}
-          steps={[
-            { code: "mentions = extract_entities(D)", note: "NER 으로 entity mention 후보를 찾습니다." },
-            { code: "triples = extract_relations(D, mentions)", note: "Entity pair 사이 관계를 문장에서 뽑습니다. S 가 있으면 그 relation 목록 안에서, 없으면 Open IE 로 동사구를 그대로 뽑습니다." },
-            { code: "triples = S ? map_to_schema(triples, S) : induce_schema(triples)", note: "Schema 가 있으면 표면형 관계구를 schema label 로 정규화하고, 없으면 반복되는 관계구를 스스로 relation type 으로 묶습니다." },
-            { code: "clusters = resolve_entities(mentions ∪ G.nodes, τ)", note: "Mention embedding 의 cosine 유사도가 threshold τ 를 넘는 것끼리 하나의 entity cluster 로 묶습니다." },
-            { code: "G = insert(G, clusters, triples)", note: "Cluster 하나를 node 하나로, triple 을 edge 와 edge property 로 그래프에 넣거나 갱신합니다." },
-          ]}
-          repeatUntil="새 문서가 들어올 때마다 처음부터 반복하며, 같은 entity 가 다시 나오면 4단계에서 기존 cluster 에 합류합니다."
-          output="갱신된 property graph G"
-        />
-        <div id="graph-traversal" className="scroll-mt-24">
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            <h3 className="scroll-mt-20 text-xl font-bold">
-              Graph traversal 은 완성된 그래프를 다시 걷는 절차입니다
-            </h3>
-            <p>
-              이렇게 만든 그래프 위에서는 한 node 에서 시작해 edge 를 따라 이웃 node 로 옮겨 가며 원하는 정보를 찾습니다. 이 이동이 graph traversal 입니다.
-              너비 우선(BFS) 은 가까운 node 부터, 깊이 우선(DFS)은 한 경로를 끝까지 따라가며 찾습니다.
-            </p>
-            <p>
-              Marie Curie 에서 시작해 wonAward edge 를 한 번, succeededAt edge 를 한 번
-              건너면 "마리 퀴리와 같은 상을 받은 사람이 나중에 어느 자리를 물려받았나"
-              같은, 원문 어느 한 문장에도 없던 질문에 답할 수 있습니다. 이렇게 여러
-              node 를 건너 답을 찾는 절차와 그 절차가 vector 검색만으로는 왜 놓치는지는{" "}
-              <Link to="/cs/ai/graphrag-community-and-multihop-search#multihop">다음 글</Link>
-              이 정본입니다.
-            </p>
-          </div>
         </div>
       </section>
 
+      <section id="review" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">세 질문으로 흐름을 다시 확인합니다</h2>
+        <ol className="space-y-4">
+          {[
+            ["왜 m-01·m-03·m-06을 추출 직후 바로 합치면 안 될까요?", "식별 근거를 검사하고 잘못된 병합을 되돌릴 provenance가 필요하기 때문입니다. (답: 식별 절)"],
+            ["21쌍을 3쌍으로 줄인 85.7%는 무엇의 수치인가요?", "Entity Resolution의 정확도가 아니라 이 사례에서 blocking으로 줄인 비교량입니다. (답: 식별 절)"],
+            ["kg-v43을 만들었다고 multi-hop 답변까지 완성된 것일까요?", "아닙니다. 이 글은 검증된 graph를 만들고, 탐색·순위·문맥화는 다음 retrieval 글로 넘깁니다. (답: 반환 절)"],
+          ].map(([question, answer], index) => (
+            <li key={question} className="border-l-2 border-primary/50 pl-4">
+              <p className="text-xs font-bold text-primary">질문 {index + 1}</p>
+              <p className="mt-1 font-bold leading-7">{question}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">{answer}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Neo4j 문서·Open IE·EDC 논문이 이 글의 근거입니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Property graph 의 node, relationship, property, label 정의는 Neo4j 의
-            공식 개념 문서에서 그대로 가져왔습니다.
-          </p>
-          <p>
-            Open IE 의 self-supervised learner, single-pass extractor,
-            redundancy-based assessor 구조와 정밀도 수치는 Banko et al.(IJCAI
-            2007)의 TextRunner 저자 자기보고입니다.
-          </p>
-          <p>
-            Schema-guided extraction 과 self-canonicalization 의 3단계 구조, 그리고
-            relation 정의 embedding 으로 후보를 좁히고 LLM 으로 검증하는 절차는
-            Extract, Define, Canonicalize(EDC, EMNLP 2024)에서 확인했습니다.
-          </p>
-          <p>
-            이 글의 수치 예(마리 퀴리 네 문장, cosine 유사도 0.92 와 0.61)는 세
-            자료의 방법을 설명하기 위해 만든 산수이며 어느 논문의 측정값도 아닙니다.
-          </p>
-        </div>
+        <h2 className="mb-6 text-2xl font-bold">정의와 방법의 근거 범위를 구분합니다</h2>
         <div id="source-neo4j-property-graph" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Neo4j — Graph Database Concepts (Getting Started docs)"
+            source="Neo4j · Graph Database Concepts"
             citeKey={1}
             href="https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/"
           >
-            Node 는 도메인의 개별 대상을, relationship 은 source·target node 사이의
-            방향 있는 연결을 나타내며 둘 다 key-value property 를 가질 수 있다는
-            property graph model 의 정의를 확인했습니다. Node 는 label 을 0개 이상
-            가질 수 있습니다.
+            Property graph의 node, 방향과 유형을 가진 relationship, 양쪽의 property
+            정의를 확인합니다. Neo4j 공식 제품 문서의 개념 정의이며 모든 구현의
+            저장 방식이나 성능이 같다는 근거는 아닙니다.
+          </CitationBlock>
+        </div>
+        <div id="source-kg-construction-survey" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Information 2024 · A Survey on Knowledge Graph Construction"
+            citeKey={2}
+            href="https://www.mdpi.com/2078-2489/15/8/509"
+          >
+            Entity Resolution을 blocking, matching/linking, clustering과 이후 fusion으로
+            나누고 metadata와 provenance의 필요성을 정리한 조사 논문입니다. 개별
+            matcher의 정확도를 우리 데이터에 보장하지 않습니다.
           </CitationBlock>
         </div>
         <div id="paper-openie-banko2007" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Banko, Cafarella, Soderland, Broadhead, Etzioni — Open Information Extraction from the Web (IJCAI 2007)"
-            citeKey={2}
+            source="Banko et al. · Open Information Extraction from the Web (IJCAI 2007)"
+            citeKey={3}
             href="https://www.ijcai.org/Proceedings/07/Papers/429.pdf"
           >
-            미리 정한 relation 목록 없이 문장에서 관계를 뽑는 Open IE 를 제안하고,
-            self-supervised learner·single-pass extractor·redundancy-based assessor 로
-            이뤄진 TextRunner 로 약 9백만 웹 문서에서 tuple 을 뽑아 상위 1,844개 표본
-            기준 88.3% 정밀도를 저자가 보고했습니다.
+            미리 정한 relation 목록 없이 영어 웹 문서에서 이항 관계를 추출하는
+            TextRunner를 제안합니다. 문서 수와 정밀도는 당시 저자 실험 범위입니다.
           </CitationBlock>
         </div>
         <div id="paper-edc-schema-canonicalization" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Zhang et al. — Extract, Define, Canonicalize: An LLM-based Framework for Knowledge Graph Construction (EMNLP 2024)"
-            citeKey={3}
-            href="https://arxiv.org/abs/2404.03868"
+            source="Zhang et al. · Extract, Define, Canonicalize (EMNLP 2024)"
+            citeKey={4}
+            href="https://aclanthology.org/2024.emnlp-main.548/"
           >
-            Open IE 추출 → LLM 기반 schema 정의 → 정의 embedding 유사도로 후보를 좁히고
-            LLM 으로 검증하는 canonicalization 세 단계를 제안하고, 미리 정한 schema 가
-            있을 때(target alignment)와 없을 때(self-canonicalization) 모두에 적용
-            가능하다고 WebNLG·REBEL·Wiki-NRE 세 benchmark 로 보고했습니다.
+            Open IE 결과에 자연어 정의를 붙이고 target schema 또는 스스로 만든
+            canonical schema에 맞추는 EDC 절차를 제안합니다. 벤치마크 결과를 다른
+            도메인의 실제 정확도로 옮겨 쓰지 않습니다.
           </CitationBlock>
         </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글:{" "}
-          <Link to="/cs/ai/graphrag-community-and-multihop-search#overview">
-            GraphRAG: community summary·local/global search·multi-hop
-          </Link>
-        </p>
+        <div id="source-rdf-12" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="W3C · RDF 1.2 Concepts and Abstract Syntax (Candidate Recommendation Snapshot, 2026-04-07)"
+            citeKey={5}
+            href="https://www.w3.org/TR/rdf12-concepts/"
+          >
+            RDF triple과 RDF 1.2의 triple term·reifier 개념을 확인합니다. Candidate
+            Recommendation 단계이므로 실제 저장소의 지원 여부와 문법은 별도 검증이
+            필요합니다.
+          </CitationBlock>
+        </div>
       </section>
+
+      <KnowledgeGraphConstructionReturn />
     </div>
   );
 }

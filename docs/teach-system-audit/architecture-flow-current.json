@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 473,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 280,
+    "recursiveLocators": 281,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -2802,7 +2802,7 @@
     {
       "route": "ai/knowledge-graph-construction",
       "publicPath": "cs/ai/knowledge-graph-construction",
-      "title": "Knowledge Graph 구축: Property Graph · Schema · Extraction · Dedup",
+      "title": "Knowledge Graph 구축: 원문에서 검증된 관계까지",
       "sourcePath": "src/pages/articles/ai/knowledge-graph-construction.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -2810,7 +2810,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

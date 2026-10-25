@@ -25,6 +25,11 @@ const CHILD_MAPS = [
     detail: "질문과 문서가 같은 좌표계에 놓이기 위한 입력·pooling 계약을 확인합니다.",
     href: "/cs/ai/sentence-embeddings#overview",
   },
+  {
+    label: "Knowledge Graph 구축",
+    detail: "여러 문서의 mention과 관계를 검증 가능한 node·edge로 바꾸는 과정을 추적합니다.",
+    href: "/cs/ai/knowledge-graph-construction#problem",
+  },
 ] as const;
 
 export function RagPipelineLocator() {
@@ -89,7 +94,7 @@ export function RagPipelineLocator() {
         ))}
       </nav>
 
-      <div className="mt-4 grid gap-px border border-border bg-border sm:grid-cols-3">
+      <div className="mt-4 grid gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
         {CHILD_MAPS.map((child) => (
           <Link
             key={child.label}

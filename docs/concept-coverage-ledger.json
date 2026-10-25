@@ -15984,8 +15984,8 @@
    "plannedArticle": "knowledge-graph-construction",
    "plannedRoute": "ai/knowledge-graph-construction",
    "inProse": false,
-   "reason": "Cosine 유사도 threshold 기반 entity 병합 절차의 canonical",
-   "updatedAt": "2026-08-29"
+   "reason": "Blocking·matching·clustering·fusion으로 같은 대상을 식별하는 절차의 canonical",
+   "updatedAt": "2026-10-25"
   },
   {
    "batch": "1560",

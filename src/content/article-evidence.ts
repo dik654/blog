@@ -9062,7 +9062,9 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/knowledge-graph-construction": [
     { kind: "공식 문서", label: "Neo4j — Graph Database Concepts", href: "https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/", note: "Node·relationship·property·label 정의, edge property·multi-label 지원의 근거" },
     { kind: "핵심 논문", label: "Open Information Extraction from the Web (Banko et al., IJCAI 2007)", href: "https://www.ijcai.org/Proceedings/07/Papers/429.pdf", note: "TextRunner 구조와 Open IE 정밀도(저자 자기보고)의 근거" },
-    { kind: "핵심 논문", label: "Extract, Define, Canonicalize: An LLM-based Framework for Knowledge Graph Construction (EMNLP 2024)", href: "https://arxiv.org/abs/2404.03868", note: "Schema-guided extraction·self-canonicalization 3단계와 target alignment/self-canonicalization 구분의 근거" },
+    { kind: "핵심 논문", label: "A Survey on Knowledge Graph Construction (2024)", href: "https://www.mdpi.com/2078-2489/15/8/509", note: "Entity Resolution의 blocking·matching·clustering·fusion 구분과 provenance 필요성의 근거" },
+    { kind: "핵심 논문", label: "Extract, Define, Canonicalize: An LLM-based Framework for Knowledge Graph Construction (EMNLP 2024)", href: "https://aclanthology.org/2024.emnlp-main.548/", note: "Schema-guided extraction·self-canonicalization 3단계와 target alignment/self-canonicalization 구분의 근거" },
+    { kind: "공식 규격", label: "W3C RDF 1.2 Concepts", href: "https://www.w3.org/TR/rdf12-concepts/", note: "2026-04-07 Candidate Recommendation Snapshot의 triple term·reifier 정의" },
   ],
   "ai/embedding-model-fine-tuning": [
     { kind: "핵심 논문", label: "Reimers & Gurevych · Sentence-BERT (EMNLP 2019)", href: "https://arxiv.org/abs/1908.10084", note: "Siamese·triplet bi-encoder로 재사용 가능한 sentence embedding을 학습한 원 논문. In-batch negative는 후속 실무의 확장" },

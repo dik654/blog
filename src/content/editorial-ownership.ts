@@ -11592,9 +11592,9 @@ export const EDITORIAL_BOUNDARIES = {
       "Knowledge graph 를 chunk 검색의 한계를 넘는 자료구조로 정의하는 문제 설정",
       "Entity extraction(NER)과 relation extraction 을 mention → triple 로 잇는 과제 정의",
       "Schema-guided extraction 과 Open Information Extraction 의 대조, EDC 의 self-canonicalization 절차",
-      "Property graph model(node·edge·property·edge type)과 RDF·ontology 의 표현력 차이(reification)",
-      "Mention embedding cosine 유사도 threshold 기반 graph deduplication·entity resolution",
-      "Entity·relation 추출 → schema 매핑 → dedup → 그래프 삽입을 잇는 graph construction pipeline",
+      "Property graph model과 RDF 1.2 triple term·reifier의 현재 표현 경계",
+      "Blocking → matching → clustering → fusion으로 나뉘는 entity resolution",
+      "원문 → 추출 → 정규화 → 식별 → 검증 → 기록을 잇는 graph construction pipeline",
     ],
     reuses: [
       { label: "Chunk 단위 검색·근거 정의", href: "/cs/ai/rag-pipeline#chunking" },
@@ -11605,7 +11605,8 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Property graph 정의는 Neo4j 공식 문서의 서술 범위로만 쓰고 다른 그래프 DB 구현과 동일하다고 확대하지 않는다." },
       { kind: "primary-source", rule: "Open IE 의 정밀도 수치는 Banko et al. 2007 의 저자 자기보고로 표기하고 최신 시스템 대비 비교로 쓰지 않는다." },
       { kind: "primary-source", rule: "Schema-guided extraction·canonicalization 절차는 EDC(EMNLP 2024) 논문의 서술 범위로만 쓰고 benchmark 수치를 다른 도메인에 일반화하지 않는다." },
-      { kind: "standard", rule: "마리 퀴리 예문·cosine 유사도 수치(0.92·0.61)는 세 자료의 방법을 설명하기 위한 산수이며 어느 논문의 측정값도 아니라고 본문에 밝힌다." },
+      { kind: "standard", rule: "RDF 1.2 설명은 W3C Candidate Recommendation Snapshot의 triple term·reifier 범위로 한정하고 구현 지원을 단정하지 않습니다." },
+      { kind: "project-claim", rule: "d-17·d-22·d-31, U-42, kg-v42·kg-v43, stable_key·coreference와 모든 수치는 설명용 가정이며 운영 측정값이 아닙니다." },
     ],
   },
   "embedding-model-fine-tuning": {

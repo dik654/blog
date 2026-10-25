@@ -3328,6 +3328,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "2,048토큰 예산에서 1,200토큰 근거를 선택하고, context precision 0.5→1.0·recall 2/2·faithfulness 2/3을 검산하며, 후보와 문맥은 통과하고 claim-3에서 처음 실패하는지 확인합니다.",
   },
+  "ai/knowledge-graph-construction": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "d-17·d-22·d-31이 mention·relation 후보에서 U-42와 검증된 kg-v43으로 바뀌는 한 경로입니다. 추출, 정규화, 식별, 검증을 분리해 보여 주되 같은 사례를 유지해야 최초 오류 위치를 찾을 수 있습니다.",
+    sharedGate:
+      "mention 7개와 raw relation 4개를 세고, 21쌍을 Person 후보 3쌍으로 줄인 뒤 node 5개·edge 4개가 source_id와 멱등 키를 보존하는지 검산합니다.",
+  },
 };
 
 /**
@@ -3642,7 +3651,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/hw-server-vs-desktop": "462cccffb09e8c25",
   "gpu/hw-storage-comparison": "889cf0afb8c32964",
   "gpu/rdma-roce": "33f467d495f32c84",
-  "ai/rag-pipeline": "d43cb788fab8b65a",
+  "ai/rag-pipeline": "f044c41ba8171d18",
   "ai/smoothie-qwen-weight-editing": "6229c951faeeae1b",
   "ai/sequence-modeling-tabular": "e9a379d48be2788a",
   "ai/sionic-eureka": "0690e86f62bb1580",
@@ -3666,6 +3675,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/retrieval-ranking-funnel": "3d6c8d1146116c83",
   "ai/query-transformation-and-adaptive-retrieval": "173ebca4a97dff29",
   "ai/rag-context-assembly-and-evaluation": "bbed55eefdc6b60b",
+  "ai/knowledge-graph-construction": "d77325ccee6d293e",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",

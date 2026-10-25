@@ -59,8 +59,9 @@ for (const [group, groupFiles] of groups) {
   const gradients = (source.match(/bg-gradient|<linearGradient|<radialGradient/g) ?? []).length;
   const thickStroke = (source.match(/strokeWidth=\{?(?:["']?[2-9]|["']?1\.(?:[3-9]\d*|2[6-9]))/g) ?? []).length;
   const awkward = (source.match(/시킨 말|검사를 닫|결과(?:물)?을 버렸|결과(?:물)?를 버렸/g) ?? []).length;
+  const hasOpeningAnchor = /id=["'](?:overview|problem)["']/.test(source);
   let score = 0;
-  if (sectionCount > 0 && !/id=["']overview["']/.test(source)) score += 2;
+  if (sectionCount > 0 && !hasOpeningAnchor) score += 2;
   if (displayMath > 0) score += Math.min(8, displayMath * 2);
   score += Math.min(6, gradients * 2);
   score += Math.min(6, thickStroke);

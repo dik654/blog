@@ -20029,7 +20029,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "RDF triple · ontology schema layer",
     aliases: ["RDF", "Resource Description Framework", "Ontology", "RDFS", "OWL"],
     definition:
-      "모든 사실을 (subject, predicate, object) triple 하나로만 표현하는 RDF(Resource Description Framework) 와, 그 위에 RDFS·OWL 같은 언어로 class·relation 제약을 논리적으로 선언하는 ontology 를 함께 가리키며, predicate 자체에는 property 를 붙일 자리가 없어 관계에 딸린 정보를 달려면 reification 을 거쳐야 합니다.",
+      "사실을 (subject, predicate, object) triple로 표현하는 RDF와 그 위에 class·relation 제약을 선언하는 ontology를 함께 가리킵니다. RDF 1.2는 triple term과 reifier를 제공하므로 관계 메타데이터를 고전적인 네 reification triple로만 표현한다고 설명하지 않습니다.",
     canonicalHref: "/cs/ai/knowledge-graph-construction#rdf-ontology",
   },
   "graph-deduplication-and-entity-resolution": {
@@ -20039,7 +20039,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Graph deduplication · entity resolution",
     aliases: ["Graph Deduplication", "Entity Resolution"],
     definition:
-      "서로 다른 mention 이 실제로는 같은 entity 를 가리키는지 판단해 하나의 node 로 합치는 절차로, mention embedding 사이의 cosine 유사도가 정해 둔 threshold 를 넘을 때만 병합해 표기만 비슷한 다른 entity 를 잘못 합치는 위험을 줄입니다.",
+      "서로 다른 mention이 같은 실제 대상을 가리키는지 판단하는 절차입니다. Blocking으로 비교 후보를 줄이고, 안정 ID·규칙·문맥·임베딩·학습 모델 등의 근거로 matching한 뒤 clustering과 fusion을 거쳐 canonical entity를 만듭니다.",
     canonicalHref: "/cs/ai/knowledge-graph-construction#dedup",
   },
   "graph-construction-pipeline": {
@@ -20049,7 +20049,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Graph construction pipeline",
     aliases: ["그래프 구축 pipeline"],
     definition:
-      "Entity·relation 추출, schema 매핑, entity dedup 을 하나의 순서로 이어 원문 텍스트를 property graph 로 바꾸는 절차로, 뒷단계가 앞단계의 출력에 의존하므로 순서를 지켜야 하고 문서가 새로 들어올 때마다 반복하며 기존 node·edge 는 갱신만 합니다.",
+      "원문과 source_id를 입력으로 mention·relation 추출, 관계 정규화, entity resolution, 제약·provenance 검증, 멱등 기록을 이어 검증 가능한 graph version을 만드는 절차입니다.",
     canonicalHref: "/cs/ai/knowledge-graph-construction#pipeline",
   },
   "in-batch-negative-sampling": {

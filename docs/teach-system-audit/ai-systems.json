@@ -7530,55 +7530,87 @@
       "publicPath": "cs/ai/knowledge-graph-construction",
       "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
+        "explicitAssumption": true,
         "answerPointers": 0,
         "levelMarkers": 0,
-        "sectionCount": 6
+        "sectionCount": 10
       },
       "beforeDefects": [
-        "OneCycle 곡선 이름이 max LR를 어떻게 고르는지보다 먼저 나왔음",
-        "Range test의 불안정 지점과 실제 run의 max 후보가 구분되지 않았음",
-        "momentum·overflow·rollback이 곡선 바깥의 실행 정책이라는 경계가 시각적으로 없었음"
+        "서로 다른 예시가 절마다 바뀌어 원문에서 최종 graph version까지 한 사례를 추적하기 어려웠음",
+        "Entity resolution을 임베딩 cosine threshold 하나로 설명해 blocking·matching·clustering·fusion의 서로 다른 책임이 보이지 않았음",
+        "고전적인 네 reification triple 설명만 남아 RDF 1.2의 triple term·reifier와 현재 표준 경계가 맞지 않았음",
+        "RAG 부모 지도에서 현재 위치와 확인한 사실을 되돌려 놓는 경로가 없었음"
       ],
       "fixture": {
         "assumed": true,
-        "rangeStart": "1e-6",
-        "rangeEnd": "1",
-        "totalUpdates": 1000,
-        "riseFraction": 0.3,
-        "riseUpdates": 300,
-        "decayUpdates": 700,
-        "diagnosticStateDiscarded": true
+        "documentIds": [
+          "d-17",
+          "d-22",
+          "d-31"
+        ],
+        "mentionCount": 7,
+        "rawRelationCount": 4,
+        "allCandidatePairs": 21,
+        "blockedCandidatePairs": 3,
+        "canonicalPersonId": "U-42",
+        "publishedGraphVersion": "kg-v43",
+        "publishedNodeCount": 5,
+        "publishedEdgeCount": 4
       },
       "stageAnchors": {
-        "0": "learning-rate-family-parent-map",
-        "1": "overview",
-        "2": "range-test",
-        "3": "one-cycle",
-        "4": "release-boundary",
-        "return": "learning-rate-family-map-return"
+        "parent": "retrieval",
+        "0": "problem",
+        "1": "extraction",
+        "2": "schema-guided-extraction",
+        "3": "dedup",
+        "4": "validation",
+        "5": "pipeline",
+        "return": "knowledge-graph-construction-return"
       },
       "sourceEvidence": [
         {
-          "href": "https://arxiv.org/abs/1708.07120",
-          "application": "LR range test와 one-cycle policy를 구분하는 원문 근거"
+          "href": "https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/",
+          "application": "Property graph의 node·relationship·label·property 경계를 확인"
+        },
+        {
+          "href": "https://www.ijcai.org/Proceedings/07/Papers/429.pdf",
+          "application": "Open Information Extraction이 미리 정한 relation 목록 없이 표면 관계를 뽑는 원래 문제를 확인"
+        },
+        {
+          "href": "https://aclanthology.org/2024.emnlp-main.548/",
+          "application": "Extract→Define→Canonicalize와 target alignment·self-canonicalization 구분을 확인"
+        },
+        {
+          "href": "https://www.mdpi.com/2078-2489/15/8/509",
+          "application": "Entity resolution의 blocking·matching/linking·clustering·fusion과 provenance 필요성을 확인"
+        },
+        {
+          "href": "https://www.w3.org/TR/rdf12-concepts/",
+          "application": "RDF 1.2의 triple term·reifier와 관계 메타데이터 표현 경계를 현재 표준 시점으로 확인"
         }
       ],
       "validation": {
-        "semanticReview": "진단 run의 instability 탐색→더 낮은 max 후보→1,000 updates의 300/700 phase→momentum·rollback gate를 한 사례로 추적했습니다.",
-        "humanize": "진단에서 찾은 급증값을 정답으로 쓰지 않는다는 결론과 실제 run의 정책을 짧은 한국어 장면으로 분리했습니다.",
-        "browser390": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, 명시적 시작·키보드 이동·reduced-motion·JavaScript 비활성 대체 내용 통과: output/playwright/ai-schedule-shapes-batch-28/summary.json",
-        "browser1440": "부모 지도·현재 위치·반환 지도 각 1개, 문서·시각화 가로 넘침 0, console·page 오류 0: output/playwright/ai-schedule-shapes-batch-28/summary.json",
-        "build": "Vite 7.3.1·7,913 modules·정적 public route 2,086개+404·no-script 본문 174편 생성",
-        "production": "Batch 28 공개 배포 뒤 확인 예정"
+        "semanticReview": "d-17·d-22·d-31의 원문에서 mention 7개와 raw relation 4개를 추출하고, 관계 이름 정규화와 entity resolution을 거쳐 검증된 node 5개·edge 4개만 kg-v43에 기록하는 한 경로로 재구성했습니다.",
+        "humanize": "Mention·entity·relation을 짧은 한국어 정의와 같은 사례로 설명하고, 임베딩·RDF 표현을 보편적 정답처럼 단정하던 문장을 적용 경계가 드러나도록 고쳤습니다.",
+        "browser390": "390×844에서 주 흐름 여섯 장면 높이 442~613px, 식별 다섯 장면 높이 486~571px이며 각 장면의 scrollWidth와 clientWidth가 307px로 같고 문서 폭도 390px로 일치했습니다.",
+        "browser1440": "1440×1000에서 최종 kg-v43 그래프의 node·edge·source 수와 한글 설명이 겹치지 않고, 본문·목차·사이드바가 가로 영역 안에 들어오는 것을 확인했습니다.",
+        "allScenes3901440": true,
+        "keyboard": "주 흐름 그림에 초점을 둔 뒤 ArrowRight로 원문에서 추출 장면으로 이동했습니다.",
+        "timing": "재생하지 않은 상태에서 6.5초 뒤에도 원문 장면을 유지했습니다.",
+        "reducedMotion": "6.5초 뒤에도 원문 장면을 유지하고 재생 꺼짐 버튼이 비활성화되는 것을 확인했습니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 live 조작부 0개, 두 시각화의 정적 장면 11개, U-42 사례와 전체 지도 반환을 확인했으며 가로 넘침은 0이었습니다.",
+        "build": "Vite 7.3.1 production build 8,016 modules·최대 상주 메모리 약 4.41GB, 정적 public route 2,088개·no-script 본문 271편 생성",
+        "browserEvidence": "output/playwright/knowledge-graph-construction/mobile-scene-1-final.png, output/playwright/knowledge-graph-construction/mobile-scene-6-final.png, output/playwright/knowledge-graph-construction/entity-mobile-scene-5-final.png, output/playwright/knowledge-graph-construction/desktop-scene-6-final.png, output/playwright/knowledge-graph-construction/noscript-mobile-final.png",
+        "production": "공개 배포 뒤 확인 예정"
       },
-      "remaining": ["Batch 28 공개 배포 경로 확인"],
+      "remaining": ["GitHub Pages 공개 경로 확인"],
       "bodyFiles": [
-        "src/pages/articles/ai/one-cycle-scheduling/ModernArticle.tsx",
-        "src/pages/articles/ai/shared/LearningRateFamilyLocator.tsx",
-        "src/pages/articles/ai/lr-scheduling/viz/ModernLrScheduleViz.tsx"
+        "src/pages/articles/ai/knowledge-graph-construction.tsx",
+        "src/pages/articles/ai/knowledge-graph-construction/KnowledgeGraphConstructionLocator.tsx",
+        "src/pages/articles/ai/knowledge-graph-construction/viz/KnowledgeGraphConstructionViz.tsx",
+        "src/pages/articles/ai/knowledge-graph-construction/viz/EntityResolutionFunnelViz.tsx"
       ],
-      "actualBodyFile": "src/pages/articles/ai/one-cycle-scheduling/ModernArticle.tsx"
+      "actualBodyFile": "src/pages/articles/ai/knowledge-graph-construction.tsx"
     },
     {
       "route": "ai/kv-cache-fundamentals",
