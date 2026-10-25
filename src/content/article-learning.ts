@@ -21072,60 +21072,60 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/deepfake-video-decisions": {
     "entryLevel": true,
-    "entryNote": "Frame score가 여러 개라는 사실과 video 판정 하나가 만들어졌다는 사실을 구분하는 데서 시작합니다.",
-    "coreIdea": "Frame·clip·track score를 video decision으로 바꾸는 reducer는 model 밖의 사소한 후처리가 아닙니다. Aggregation 뒤 calibration하고 동일 preprocessing·budget·metric에서 후보를 비교해야 공정한 video-level benchmark가 됩니다.",
+    "entryNote": "앞 글에서 만든 clip-042의 여섯 유효 입력이 여섯 점수를 냈지만 아직 영상 전체의 답은 없다는 데서 시작합니다.",
+    "coreIdea": "프레임 선택·coverage·집계·보정·임계값은 하나의 영상 판정 계약입니다. 같은 입력 영수증과 판정 절차를 사용해야 두 모델의 차이를 공정하게 비교할 수 있습니다.",
     "assumedKnowledge": [],
     "introducedHere": [
       {
         "id": "video-score-aggregation-contract",
-        "role": "Temporal scores를 mean·max·top-k와 abstention으로 video decision에 연결합니다."
+        "role": "프레임 점수를 전체 평균·최댓값·상위 k개 평균과 증거 부족 상태를 거쳐 영상 판정에 연결합니다."
       },
       {
         "id": "forensic-benchmark-parity",
-        "role": "입력·training·decision·runtime 조건을 맞춰 detector를 비교합니다."
+        "role": "원본 묶음·평가 시각·전처리 입력·판정·측정 조건을 맞춰 두 탐지기를 비교합니다."
       }
     ],
     "conceptExplanations": [
       {
         "id": "video-score-aggregation-contract",
         "sectionId": "aggregation",
-        "intuition": "여러 frame의 경고음을 모두 평균할지 가장 큰 것만 들을지 높은 몇 개만 들을지 운영 규칙으로 고정합니다.",
-        "workedExample": "Scores .9,.8,.3,.1의 mean은 .525, max는 .9, top-2 mean은 .85이고 서로 다른 시간 분포 가정을 가집니다.",
-        "boundary": "Reducer를 바꾸면 score distribution도 바뀌므로 aggregation 뒤 calibration을 다시 맞춰야 합니다."
+        "intuition": "여러 프레임의 경고음을 모두 평균할지 가장 큰 것만 들을지 높은 몇 개만 들을지 판정 전에 고정합니다.",
+        "workedExample": "clip-042의 점수 0.12·0.18·0.35·0.82·0.76·0.14는 전체 평균 0.395, 최댓값 0.82, 상위 두 개 평균 0.79가 됩니다.",
+        "boundary": "집계 규칙을 바꾸면 영상 점수 분포도 바뀌므로 집계 뒤 보정을 다시 맞춰야 합니다."
       },
       {
         "id": "forensic-benchmark-parity",
         "sectionId": "parity",
-        "intuition": "경주차를 비교할 때 한 차만 좋은 타이어와 짧은 코스를 쓰지 않도록 입력과 측정계를 통일합니다.",
-        "workedExample": "같은 source split·crop·32 frames·reducer·metrics·target GPU에서 CNN과 temporal model을 비교합니다.",
-        "boundary": "공정한 benchmark의 순위도 dataset coverage 밖의 future manipulation 성능을 보장하지 않습니다."
+        "intuition": "두 후보에 같은 문제지와 채점 규칙을 주어 모델 구조 이외의 차이를 줄입니다.",
+        "workedExample": "공간 모델과 시간 모델이 같은 source split·열 개 시각·여섯 crop·상위 두 개 평균·검증 split·측정 장비를 사용합니다.",
+        "boundary": "공정한 비교 결과도 시험 자료가 포함하지 않은 미래 조작 조건의 성능을 보장하지 않습니다."
       }
     ],
     "conceptStages": [
       {
-        "label": "00 Units",
-        "relation": "Frame·clip·track 중 score의 temporal unit을 고정합니다.",
+        "label": "00 입력",
+        "relation": "평가할 시각 열 개와 유효 crop 여섯 개를 고정합니다.",
         "concepts": [
           "video-score-aggregation-contract"
         ]
       },
       {
-        "label": "01 Reduce",
-        "relation": "Mean·max·top-k로 video score를 만듭니다.",
+        "label": "01 집계",
+        "relation": "전체 평균·최댓값·상위 두 개 평균으로 영상 원점수를 만듭니다.",
         "concepts": [
           "video-score-aggregation-contract"
         ]
       },
       {
-        "label": "02 Match",
-        "relation": "입력·budget·metric·hardware를 후보 사이에 맞춥니다.",
+        "label": "02 비교",
+        "relation": "자료·입력·판정·측정 조건을 후보 사이에 맞춥니다.",
         "concepts": [
           "forensic-benchmark-parity"
         ]
       },
       {
-        "label": "03 Decide",
-        "relation": "Calibration·coverage·runtime과 함께 release를 판정합니다.",
+        "label": "03 판정",
+        "relation": "보정값·점수 임계값·coverage 문턱으로 최종 상태를 정합니다.",
         "concepts": [
           "video-score-aggregation-contract",
           "forensic-benchmark-parity"
@@ -21135,11 +21135,11 @@ export const ARTICLE_LEARNING: Readonly<
     "exercises": [
       {
         "level": "basic",
-        "question": "Frame scores .9,.8,.3,.1의 mean·max·top-2 mean을 계산하세요.",
+        "question": "clip-042의 여섯 점수에서 전체 평균·최댓값·상위 두 개 평균을 계산하세요.",
         "answerChecklist": [
-          "mean .525",
-          "max .9",
-          "top-2 .85"
+          "전체 평균 0.395",
+          "최댓값 0.82",
+          "상위 두 개 평균 0.79"
         ],
         "requiredConcepts": [
           "video-score-aggregation-contract"
@@ -21148,7 +21148,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Top-k mean에서 k가 1과 전체 score 수일 때 각각 어떤 reducer가 되는지 설명하세요.",
+        "question": "상위 k개 평균에서 k가 1과 전체 유효 점수 수일 때 각각 어떤 집계가 되는지 설명하세요.",
         "answerChecklist": [
           "k=1 max",
           "k=T mean",
@@ -21161,7 +21161,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Frame-level calibration을 aggregation 뒤 다시 맞춰야 하는 이유를 설명하세요.",
+        "question": "프레임 점수를 합친 뒤 보정을 다시 맞춰야 하는 이유를 설명하세요.",
         "answerChecklist": [
           "distribution 변화",
           "video score",
@@ -21174,7 +21174,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Valid units가 k보다 적을 때 abstention을 반환하는 이유를 설명하세요.",
+        "question": "coverage가 최소값보다 작을 때 증거 부족을 반환하는 이유를 설명하세요.",
         "answerChecklist": [
           "evidence 부족",
           "임의 보간 금지",
@@ -21187,7 +21187,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "CNN과 temporal model 비교에서 같아야 할 input 조건을 나열하세요.",
+        "question": "공간 모델과 시간 모델 비교에서 같아야 할 입력 조건을 나열하세요.",
         "answerChecklist": [
           "source split",
           "crop",
@@ -21201,7 +21201,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "Architecture 외 효과를 분리하려면 runtime을 같은 hardware에서 재야 하는 이유를 설명하세요.",
+        "question": "모델 구조 이외의 효과를 줄이려면 지연과 메모리를 같은 장비에서 재야 하는 이유를 설명하세요.",
         "answerChecklist": [
           "target 동일",
           "latency 비교",
@@ -21214,7 +21214,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "짧은 영상과 긴 영상에 fixed k와 비율 k를 적용한 차이를 분석하세요.",
+        "question": "짧은 영상과 긴 영상에 고정 k와 비율 k를 적용한 차이를 분석하세요.",
         "answerChecklist": [
           "length dependence",
           "evidence fraction",
@@ -21228,7 +21228,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "Single false spike에 민감한 max reducer의 반례와 대체 gate를 설계하세요.",
+        "question": "한 번의 잘못된 급등에 민감한 최댓값 집계의 반례와 대체 문턱을 설계하세요.",
         "answerChecklist": [
           "negative spike",
           "top-k or calibration",
@@ -21242,7 +21242,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "CNN·ViT·temporal model의 공정 비교표와 release 기준을 설계하세요.",
+        "question": "공간 모델과 시간 모델의 공정 비교표와 결과 공개 기준을 설계하세요.",
         "answerChecklist": [
           "같은 data",
           "같은 preprocessing",
@@ -21256,7 +21256,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "정확도는 높지만 coverage와 latency가 나쁜 detector의 배포 결정을 판정하세요.",
+        "question": "정확도는 높지만 coverage와 지연이 나쁜 탐지기의 배포 결정을 판정하세요.",
         "answerChecklist": [
           "accuracy 단독 금지",
           "coverage",

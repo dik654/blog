@@ -564,13 +564,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-video-decisions",
-    title: "딥페이크 Video Decision: Aggregation과 Benchmark Parity",
+    title: "딥페이크 영상 판정: 프레임 점수에서 증거 부족까지",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "Frame Score는 Video Decision이 아니다" },
-      { id: "aggregation", title: "Mean·Max·Top-k" },
-      { id: "parity", title: "동일 Input·Budget 비교" },
-      { id: "release", title: "Calibration·Abstention" },
+      { id: "overview", title: "열 개 시각에서 영상 행동까지" },
+      { id: "aggregation", title: "같은 점수의 세 집계" },
+      { id: "parity", title: "두 후보의 조건 맞추기" },
+      { id: "release", title: "점수와 증거량 문턱" },
     ],
     component: () => import("@/pages/articles/ai/deepfake-video-decisions"),
   },
