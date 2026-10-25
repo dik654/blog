@@ -3249,7 +3249,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-sre-metrics-slo-safe-change": "1ccb849d0232fdb0",
   "cloud/linux-vfs-mount-page-cache-fsync": "9981a35b055f0d92",
   "cloud/linux-server-interview-incident-map": "4b94cab30217f81b",
-  "ai/laya-system1-decision-model": "70fc3e5f3a0910bc",
+  "ai/laya-system1-decision-model": "f90f8e5722d17b42",
   "ai/neural-network": "58462a73abf9d1af",
   "ai/perceptron": "d81eb0d08e345535",
   "ai/spiking-neural-networks": "c4321e02444c2eeb",

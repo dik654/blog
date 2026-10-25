@@ -2,62 +2,69 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import { ImageIdentityViz } from "./viz/ModernImageClassificationViz";
+import ImageClassificationPathLocator, {
+  ImageClassificationMapReturn,
+} from "./ImageClassificationPathLocator";
+import {
+  BaselineReceiptViz,
+  ImageIdentityViz,
+} from "./viz/ImageDataBoundaryViz";
 
 export default function ImageClassificationDataBoundaryArticle() {
   return (
     <div className="space-y-16">
+      <ImageClassificationPathLocator current="data-boundary" />
+
       <section id="overview" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Image sample은 파일 한 장이 아니라 배포에서 독립적으로 만날 관측
-          단위입니다
+          파일 네 장이 실제 대상 네 개라는 뜻은 아닙니다
         </h2>
+        <ImageIdentityViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            같은 상품을 연속 촬영한 세 장, 한 원본에서 만든 두 crop, 같은 환자의
-            좌우 view는 파일 이름이 달라도 서로 독립적이지 않습니다. 먼저
-            “배포에서 처음 보는 것으로 세어야 할 대상”을 정해야 합니다. 그
-            대상이 <strong>deployment unit</strong>입니다.
+            검증 자료는 서비스가 출시된 뒤 처음 만날 대상을 흉내 내야 합니다.
+            새 상품을 분류하는 서비스라면 상품 하나가 평가 단위입니다. 같은
+            상품을 연속 촬영하거나 한 원본에서 여러 crop을 만들었더라도 평가
+            단위는 늘어나지 않습니다.
           </p>
           <p>
-            파일을 먼저 random split하면 같은 대상의 질감·배경·센서 흔적이
-            train과 validation 양쪽에 남을 수 있습니다. 모델은 class 규칙을 배운
-            것처럼 보이지만 실제로는 identity를 기억합니다. 따라서 model
-            architecture보다 먼저 sample lineage와 group key를 고정합니다.
+            파일부터 무작위로 나누면 같은 상품의 질감·배경·촬영 흔적이 학습
+            자료와 검증 자료 양쪽에 남을 수 있습니다. 모델이 상품 종류의 규칙이
+            아니라 product-17 자체를 기억해도 검증 점수가 높아집니다. 그래서
+            모델 구조를 고르기 전에 파일의 출처와 identity key부터 고정합니다.
           </p>
         </div>
         <TermBreakdown
-          title="파일에서 평가 단위까지"
+          title="그림에서 사용한 네 이름"
           items={[
             {
-              term: "Source object",
+              term: "원본 대상",
               description:
-                "촬영·생성의 출발점이 된 실제 사람·상품·문서·원본 image입니다.",
+                "촬영과 파생 파일 생성의 출발점이 된 실제 사람·상품·문서입니다.",
             },
             {
-              term: "Derivative image",
+              term: "파생 이미지",
               description:
-                "Crop·resize·compression·burst frame처럼 source에서 파생된 파일입니다.",
+                "Crop·resize·압축·연속 촬영처럼 같은 대상에서 만들어진 파일입니다.",
             },
             {
               term: "Identity group",
               description:
-                "같은 deployment unit에 속해 split을 함께 이동해야 하는 samples 집합입니다.",
+                "평가 단위가 같아서 학습·검증·시험 자료 사이를 함께 이동해야 하는 파일 묶음입니다.",
             },
             {
               term: "Split manifest",
               description:
-                "각 group이 train·validation·test 중 어디에 속하는지와 생성 규칙을 고정한 artifact입니다.",
+                "각 group의 위치와 분리 규칙을 다시 확인할 수 있도록 남긴 기록입니다.",
             },
           ]}
         />
-        <ImageIdentityViz />
         <ContentBoundary article="image-classification-pipeline" />
       </section>
 
       <section id="identity" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Identity group을 만든 뒤 group 집합의 교집합을 검사합니다
+          같은 대상의 파일을 한 group으로 묶고 양쪽의 교집합을 검사합니다
         </h2>
         <ExplainedFormula
           question="같은 실제 대상이 train과 validation을 건너지 않았는지 어떻게 검사하나요?"
@@ -130,12 +137,51 @@ export default function ImageClassificationDataBoundaryArticle() {
           ]}
           interpretation="상품 17의 원본과 세 crop을 모두 train에, 상품 42의 views를 모두 validation에 두면 두 group 집합의 교집합은 비어 있습니다."
         />
+        <div className="not-prose my-8">
+          <p className="text-xs font-bold text-primary">검증용 코드</p>
+          <h3 className="mt-2 text-lg font-bold leading-7">
+            GroupKFold에 identity를 넘기고 교집합을 한 번 더 확인합니다
+          </h3>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            이 코드는 identity를 찾아 주지 않습니다. 수집 단계에서 만든
+            product ID를 splitter에 전달하고, 결과가 실제로 겹치지 않는지
+            검사합니다.
+          </p>
+          <pre className="mt-5 max-w-full overflow-x-auto rounded-xl border border-border/70 bg-muted/25 p-4 font-mono text-xs leading-6 text-foreground">
+            <code>{`import numpy as np
+from sklearn.model_selection import GroupKFold
+
+# 비교할 여섯 파일의 이름을 고정합니다.
+files = np.array(["17-original", "17-crop-a", "17-crop-b", "17-crop-c", "42-left", "42-right"])
+
+# 각 파일의 분류 정답을 같은 순서로 둡니다.
+labels = np.array(["shoe", "shoe", "shoe", "shoe", "bag", "bag"])
+
+# 파일을 만든 실제 상품 ID를 group label로 기록합니다.
+groups = np.array(["product-17", "product-17", "product-17", "product-17", "product-42", "product-42"])
+
+# 서로 다른 identity 두 개를 두 fold로 나눕니다.
+splitter = GroupKFold(n_splits=2)
+
+# Splitter가 돌려준 index로 train과 validation의 group을 다시 읽습니다.
+for train_index, valid_index in splitter.split(files, labels, groups):
+    # 학습 파일이 가진 identity만 집합으로 모읍니다.
+    train_groups = set(groups[train_index])
+
+    # 검증 파일이 가진 identity만 집합으로 모읍니다.
+    valid_groups = set(groups[valid_index])
+
+    # 같은 identity가 양쪽에 있으면 release를 즉시 중단합니다.
+    assert train_groups.isdisjoint(valid_groups)`}</code>
+          </pre>
+        </div>
       </section>
 
       <section id="baseline" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Baseline receipt는 model weight가 아니라 공정 비교의 전체 입력입니다
+          비교 기록에는 model weight뿐 아니라 공정한 비교의 모든 입력이 들어갑니다
         </h2>
+        <BaselineReceiptViz />
         <TermBreakdown
           title="한 generation에 따로 기록할 네 묶음"
           items={[
@@ -231,7 +277,7 @@ export default function ImageClassificationDataBoundaryArticle() {
 
       <section id="release" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Split과 receipt를 재생할 수 있어야 backbone 실험으로 넘어갑니다
+          분리와 비교 조건을 재현할 수 있어야 backbone 실험으로 넘어갑니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
@@ -246,7 +292,7 @@ export default function ImageClassificationDataBoundaryArticle() {
           <CitationBlock
             type="paper"
             citeKey={1}
-            source="scikit-learn — GroupKFold"
+            source="scikit-learn 1.9.1 문서 — GroupKFold"
             href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html"
           >
             <div className="space-y-2 text-sm leading-6">
@@ -305,6 +351,8 @@ export default function ImageClassificationDataBoundaryArticle() {
           </CitationBlock>
         </div>
       </section>
+
+      <ImageClassificationMapReturn current="data-boundary" />
     </div>
   );
 }
