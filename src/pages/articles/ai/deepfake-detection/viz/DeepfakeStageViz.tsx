@@ -19,6 +19,7 @@ export default function DeepfakeStageViz({
   controlLabels,
   notes,
   stages,
+  showChildrenOnMobile = false,
   children,
 }: {
   id: string;
@@ -30,6 +31,7 @@ export default function DeepfakeStageViz({
   controlLabels?: readonly string[];
   notes: readonly string[];
   stages: readonly StageItem[];
+  showChildrenOnMobile?: boolean;
   children: (active: number) => ReactNode;
 }) {
   const controls = useAnimatedScenes(scenes.length, 5200, {
@@ -66,7 +68,9 @@ export default function DeepfakeStageViz({
             active={active}
             ariaLabel={`${title}의 장면 순서`}
           />
-          <div className="mt-6 hidden sm:block">{children(active)}</div>
+          <div className={`mt-6 ${showChildrenOnMobile ? "block" : "hidden sm:block"}`}>
+            {children(active)}
+          </div>
           <p className="mt-5 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
             {notes[active]}
           </p>

@@ -1,4 +1,5 @@
 import DeepfakeStageViz from "../../deepfake-detection/viz/DeepfakeStageViz";
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { COVERAGE_CELLS, GROUP_042_SOCIAL_FILES } from "../trace";
 
 const GENERATORS = ["generator-X", "generator-Y", "generator-Z"] as const;
@@ -38,37 +39,49 @@ export default function CoverageMatrixViz() {
       controlLabels={STAGES.map((stage) => stage.title)}
       notes={NOTES}
       stages={STAGES}
+      showChildrenOnMobile
     >
-      {(active) => (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[34rem] border-collapse text-left text-xs" aria-label="Generator와 codec별 파일 수와 독립 원본 수">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground">
-                <th className="px-3 py-3 font-bold">Generator</th>
-                {CODECS.map((codec) => <th key={codec} className="px-3 py-3 font-bold">{codec}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {GENERATORS.map((generator) => (
-                <tr key={generator} className="border-b border-border last:border-b-0">
-                  <th className="px-3 py-4 font-mono text-[11px]">{generator}</th>
-                  {CODECS.map((codec) => {
-                    const value = cell(generator, codec);
-                    const selected = (active === 2 && generator === "generator-Z" && codec === "social codec") || (active === 3 && generator === "generator-Y" && codec === "social codec");
-                    return (
-                      <td key={codec} className={`px-3 py-4 ${selected ? "bg-primary/10" : ""}`}>
-                        <strong className={value.groups === 0 ? "text-destructive" : "text-foreground"}>{active === 0 ? value.files : value.groups}</strong>
-                        <span className="ml-1 text-[10px] text-muted-foreground">{active === 0 ? "files" : "groups"}</span>
-                        {active >= 1 ? <span className="mt-1 block text-[10px] text-muted-foreground">{value.files} files</span> : null}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {(active) => {
+        const rows = GENERATORS.map((generator) => [
+          generator,
+          ...CODECS.map((codec) => {
+            const value = cell(generator, codec);
+            const selected =
+              (active === 2 && generator === "generator-Z" && codec === "social codec") ||
+              (active === 3 && generator === "generator-Y" && codec === "social codec");
+
+            return (
+              <span
+                key={codec}
+                className={`block min-w-0 border-l-2 pl-2 ${
+                  selected ? "border-primary bg-primary/10 py-1" : "border-transparent"
+                }`}
+              >
+                <strong className={value.groups === 0 ? "text-destructive" : "text-foreground"}>
+                  {active === 0 ? value.files : value.groups}
+                </strong>
+                <span className="ml-1 text-[10px] text-muted-foreground">
+                  {active === 0 ? "files" : "groups"}
+                </span>
+                {active >= 1 ? (
+                  <span className="mt-1 block text-[10px] text-muted-foreground">
+                    {value.files} files
+                  </span>
+                ) : null}
+              </span>
+            );
+          }),
+        ]);
+
+        return (
+          <ResponsiveVizTable
+            columns={["Generator", ...CODECS]}
+            rows={rows}
+            desktopMinWidthClassName="min-w-[34rem]"
+            firstColumnClassName="font-mono text-[11px]"
+          />
+        );
+      }}
     </DeepfakeStageViz>
   );
 }
