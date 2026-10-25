@@ -2425,11 +2425,11 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       {
         kind: "primary-source",
-        rule: "Nyquist sampling 경계는 논문의 signal·bandwidth 가정과 video에 적용한 근사 범위로 제한한다.",
+        rule: "Shannon sampling theorem은 논문의 band-limited signal 가정과 video에 적용한 근사 범위로 제한한다.",
       },
       {
         kind: "standard",
-        rule: "Source FPS와 실제 timestamps·decode drop·T·stride·duration·effective rate를 함께 기록한다.",
+        rule: "FFmpeg PTS·time base와 source FPS·decode drop·T·stride·duration·effective rate를 함께 기록한다.",
       },
     ],
   },

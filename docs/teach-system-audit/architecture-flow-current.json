@@ -9,7 +9,7 @@
     "customVisuals": 864,
     "animatedMechanisms": 465,
     "architectureWithoutAnimation": 95,
-    "recursiveLocators": 238,
+    "recursiveLocators": 239,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -5834,7 +5834,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
