@@ -7,9 +7,9 @@
     "dedicatedVisuals": 681,
     "inlineVisuals": 543,
     "customVisuals": 864,
-    "animatedMechanisms": 470,
-    "architectureWithoutAnimation": 94,
-    "recursiveLocators": 274,
+    "animatedMechanisms": 471,
+    "architectureWithoutAnimation": 93,
+    "recursiveLocators": 275,
     "codeEvidenceLinked": 215,
     "sourceCitationLinked": 981,
     "architectureWithoutCustomVisual": 25
@@ -1122,18 +1122,18 @@
     {
       "route": "ai/compression-pipeline",
       "publicPath": "cs/ai/compression-pipeline",
-      "title": "모델 경량화 파이프라인: Deployment Budget에서 Benchmark까지",
+      "title": "모델 경량화 파이프라인",
       "sourcePath": "src/pages/articles/ai/compression-pipeline.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/constitutional-ai",

@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · AI 모델 경량화 17 파이프라인 (로컬 검수 완료, 배포 대기)
+
+- `ai/compression-pipeline`을 양자화·가지치기·지식 증류의 정확한 개념 앵커에서 시작하는 실무 글로 다시 구성했습니다. 배포 기준 → 메모리 예산 → 단계 순서 → 동일 조건 비교 → 승인·롤백을 한 경로로 따라가며 결과를 모델 경량화 지도에 되돌려 놓습니다.
+- 24GB device에서 고정 16GB를 뺀 뒤 요청당 1GB인 동시 요청 상한 8을 계산합니다. 설명용 네 후보는 quality loss·memory·p95를 같은 workload에서 비교하며, 실제 모델·GPU·SLO가 없으므로 최종 기법과 수치는 `[A]`·미측정으로 남겼습니다.
+- Release spec, recipe와 입력 digest, artifact digest, benchmark receipt, release pointer의 권위 원장·writer·reader·reconciler·실패 조건·복구 증거를 분리했습니다. 의사 YAML은 같은 기준이 후보 생성부터 release pointer까지 어떻게 전달되는지 보여 줍니다.
+- 첫 시각 자료는 고정된 기준·후보 벤치·release pointer 안에서 상태만 다섯 장면으로 바꿉니다. 자동 재생과 반복을 끄고, 명시적 재생·키보드 이동·화면 이탈 정지·재진입 상태 유지·reduced-motion 최종 상태를 확인했습니다.
+- ESLint·8GB TypeScript·production build를 통과했습니다. 390×844·1024×900·1440×1000에서 문서와 8개 시각 자료의 가로 넘침·잘림이 0이었고, JavaScript 비활성 390×844에서도 제목·네 절·다섯 장면·locator·지도 반환이 남았습니다. GitHub Pages 공개 경로 검증은 배포 뒤 진행합니다.
+
 ## 2026-10-26 · AI 대조 학습 05 지도 대조학습 (로컬 검수 완료, 배포 대기)
 
 - `ai/supervised-contrastive-learning`을 신발 원본 A·B와 가방 원본 C에서 두 view씩 만든 여섯 입력으로 다시 썼습니다. A₁의 self를 제외하고 A₂·B₁·B₂를 positive로 모은 뒤, 지수 점수 8·4·2·1·1에서 공통 분모 16과 식 (2)의 anchor loss 1.386을 끝까지 계산합니다.

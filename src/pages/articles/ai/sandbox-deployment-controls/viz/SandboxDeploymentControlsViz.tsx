@@ -17,7 +17,7 @@ function Defs() {
 }
 
 function Arrow({ x1, y1, x2, y2, blocked = false }: { x1: number; y1: number; x2: number; y2: number; blocked?: boolean }) {
-  return <g><line x1={x1} y1={y1} x2={x2} y2={y2} className={blocked ? "stroke-destructive" : "stroke-foreground"} strokeWidth="1.2" markerEnd="url(#deploy-control-arrow)" />{blocked ? <line x1={x2 - 4} y1={y2 - 7} x2={x2 + 4} y2={y2 + 7} className="stroke-destructive" strokeWidth="2" /> : null}</g>;
+  return <g><line x1={x1} y1={y1} x2={x2} y2={y2} className={blocked ? "stroke-destructive" : "stroke-foreground"} strokeWidth="1.2" markerEnd="url(#deploy-control-arrow)" />{blocked ? <line x1={x2 - 4} y1={y2 - 7} x2={x2 + 4} y2={y2 + 7} className="stroke-destructive" strokeWidth="1.2" /> : null}</g>;
 }
 
 function Box({ x, y, w = 108, h = 54, title, detail, active = false }: { x: number; y: number; w?: number; h?: number; title: string; detail: string; active?: boolean }) {

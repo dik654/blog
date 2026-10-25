@@ -3461,7 +3461,7 @@
     {
       "route": "ai/compression-pipeline",
       "publicPath": "cs/ai/compression-pipeline",
-      "title": "모델 경량화 파이프라인: Deployment Budget에서 Benchmark까지",
+      "title": "모델 경량화 파이프라인",
       "catalogIndex": 343,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
