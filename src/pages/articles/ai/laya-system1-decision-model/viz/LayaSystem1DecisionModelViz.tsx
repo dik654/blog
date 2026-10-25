@@ -41,9 +41,9 @@ const ROW: Cell[] = [
 
 const NOTES = [
   "department·urgency·churn_risk 세 질문은 같은 상태 글을 붙인 세 줄이 되어 한 번의 forward에 함께 들어갑니다. 상태는 한 번만 token으로 바꾸고 줄마다 다시 씁니다.",
-  "English checkpoint는 한 줄이 512 token입니다. 질문 부분이 192를 넘지 않게 자르므로 상태 글에는 512 − 192 − 1 = 319 token 이상이 남습니다. 넘치는 상태는 뒤가 잘립니다.",
+  "English checkpoint는 한 줄이 512 token입니다. 상태가 쓸 자리는 512 − 실제 head 길이 − 끝 [SEP] 1칸입니다. head_max_len 192는 실제 길이가 아니라 option prompt의 목표 상한입니다.",
   "선택지 앞의 [MASK] 세 자리에서만 점수를 하나씩 읽습니다. 3.1·0.4·−0.6을 이 질문 안에서 softmax하면 billing 0.916이 됩니다. (점수는 설명용 가정)",
-  "선택지가 77개면 하나에 max(4, 240 ÷ 77) = 4 token만 줍니다. [MASK]를 빼면 이름에 3 token이 남아 비슷한 이름끼리 구별하기 어려워집니다.",
+  "English에서 선택지가 77개면 하나에 max(4, 176 ÷ 77) = 4 token을 줍니다. 4-token 하한 때문에 실제 head가 319 token까지 커지고 상태에는 192 token만 남습니다.",
 ] as const;
 
 const SCORES = [
@@ -70,7 +70,7 @@ function CellRow({ cells, dim }: { cells: Cell[]; dim?: boolean }) {
 }
 
 export default function LayaSystem1DecisionModelViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 5000, { loop: false });
   const scene = scenes.active;
 
   return (
@@ -81,6 +81,7 @@ export default function LayaSystem1DecisionModelViz() {
       note="칸 너비는 비율을 보이기 위한 대략값입니다. 실제 token 수는 tokenizer가 정합니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -88,7 +89,7 @@ export default function LayaSystem1DecisionModelViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
@@ -120,10 +121,10 @@ export default function LayaSystem1DecisionModelViz() {
                 <CellRow cells={ROW} />
                 <div className="grid grid-cols-[3fr_5fr] gap-1 font-mono text-[11px]">
                   <div className="rounded-sm border border-dashed px-2 py-1 text-center" style={{ borderColor: "#2563eb" }}>
-                    질문 부분 ≤ 192
+                    질문 부분 = 실제 head_len
                   </div>
                   <div className="rounded-sm border border-dashed px-2 py-1 text-center" style={{ borderColor: "#0d9488" }}>
-                    상태 ≥ 319 + SEP 1
+                    상태 = 512 − head_len − 1
                   </div>
                 </div>
                 <p className="text-center font-mono text-xs text-muted-foreground">합계 512 token</p>
@@ -168,7 +169,7 @@ export default function LayaSystem1DecisionModelViz() {
                   </div>
                   <div>
                     <dt className="text-muted-foreground">선택지 전체</dt>
-                    <dd className="font-bold">77 × 4 = 308</dd>
+                    <dd className="font-bold">실제 head 319</dd>
                   </div>
                 </dl>
               </div>
@@ -180,6 +181,11 @@ export default function LayaSystem1DecisionModelViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}><strong>{index + 1}. {label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

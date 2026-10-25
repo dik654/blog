@@ -32,7 +32,7 @@ const NOTES = [
 ] as const;
 
 export default function ScoringRuleViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3800);
+  const scenes = useAnimatedScenes(SCENES.length, 5000, { loop: false });
   const scene = scenes.active;
   const values = QS.map((q) => RULES[scene](q));
   const lo = Math.min(...values);
@@ -47,6 +47,7 @@ export default function ScoringRuleViz() {
       note="참 확률 0.7은 설명용 가정입니다. 기대 보상은 0.7×(yes일 때 점수) + 0.3×(no일 때 점수)로 계산했습니다."
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -54,7 +55,7 @@ export default function ScoringRuleViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(scene + 1).padStart(2, "0")}
           </p>
@@ -85,6 +86,11 @@ export default function ScoringRuleViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label}><strong>{index + 1}. {label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

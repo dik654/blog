@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 566,
-    "pending": 425,
+    "reviewed": 567,
+    "pending": 424,
     "untracked": 0,
     "assignedPending": 381,
-    "postCheckpointPending": 44,
+    "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -1521,12 +1521,12 @@
     {
       "route": "ai/laya-system1-decision-model",
       "publicPath": "cs/ai/laya-system1-decision-model",
-      "title": "Laya: 글을 만들지 않고 선택지에 확률을 매기는 결정 모델",
+      "title": "Laya: 글 대신 확률을 내는 결정 모델",
       "catalogIndex": 149,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#2026-10-25--ai-batch-44-laya-결정-모델-로컬-검수-완료-배포-대기"
     },
     {
       "route": "ai/rate-limiting-and-reliability-patterns",

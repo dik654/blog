@@ -3031,11 +3031,11 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/laya-system1-decision-model": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-10-14",
+    reviewedAt: "2026-10-25",
     rationale:
       "청구 문의 하나가 시퀀스 구성 → 점수 head → 학습 보상 → 보정 → checkpoint 선택을 차례로 지나는 단일 사례 글이다. 보정 절이 학습 절의 한계에서 나오고 benchmark 절이 token 예산 절의 숫자를 되쓰므로 나누면 같은 사례를 다시 세워야 한다.",
     sharedGate:
-      "고정 원문과 모델 카드까지만 근거로 삼고, 제작사 수치는 자기보고·Jev는 제3자 공개값으로 표시하며 독립 성능 주장을 만들지 않는다.",
+      "내부 구현은 GitHub 432312b·Hugging Face 7b928d8에 고정하고 현재 사용 경계는 v0.4.15로 확인한다. 제작사 수치와 2026-10-01 외부 paired evaluation은 데이터·과제가 다르므로 한 순위표로 합치지 않는다.",
   },
   "cloud/linux-server-interview-incident-map": {
     action: "keep" as const,
@@ -3249,7 +3249,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "cloud/linux-sre-metrics-slo-safe-change": "1ccb849d0232fdb0",
   "cloud/linux-vfs-mount-page-cache-fsync": "9981a35b055f0d92",
   "cloud/linux-server-interview-incident-map": "4b94cab30217f81b",
-  "ai/laya-system1-decision-model": "c299c073c3e24b17",
+  "ai/laya-system1-decision-model": "70fc3e5f3a0910bc",
   "ai/neural-network": "58462a73abf9d1af",
   "ai/perceptron": "d81eb0d08e345535",
   "ai/spiking-neural-networks": "c4321e02444c2eeb",

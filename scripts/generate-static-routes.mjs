@@ -110,6 +110,7 @@ const noScriptArticleRoutes = new Set([
   "ai/llm-monitoring-observability-and-drift",
   "ai/llm-application-caching",
   "ai/llm-gateway-and-model-routing",
+  "ai/laya-system1-decision-model",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

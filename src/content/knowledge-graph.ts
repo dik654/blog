@@ -32688,7 +32688,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Option-marker decision head",
     aliases: ["option marker", "[MASK] option scoring", "Laya decision head"],
     definition:
-      "선택지마다 [MASK] 하나를 붙여 입력에 넣고 그 자리의 hidden을 같은 scorer에 통과시켜 점수를 낸 뒤 그 질문의 선택지끼리 softmax하는 분류 head입니다. 출력 칸 수가 요청마다 정해져 재학습 없이 선택지를 바꿉니다. 선택지가 많으면 선택지당 token이 줄어 77개에서는 이름에 3 token만 남습니다.",
+      "선택지마다 [MASK] 하나를 붙여 입력에 넣고 그 자리의 hidden을 같은 scorer에 통과시켜 점수를 낸 뒤 그 질문의 선택지끼리 softmax하는 분류 head입니다. 출력 칸 수는 요청마다 정해집니다. English 기본 질문의 실제 head 48 token은 상태에 463 token을 남기지만, 77개 선택지는 head를 319 token까지 키워 상태에는 192 token, 이름에는 3 token만 남깁니다.",
     canonicalHref: "/cs/ai/laya-system1-decision-model#sequence",
   },
   "rlcd-proper-scoring-reward": {
@@ -32718,7 +32718,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Script-routed checkpoint selection",
     aliases: ["Laya Router", "language-routed checkpoint"],
     definition:
-      "forward 전에 상태 글의 문자와 언어를 검사해 English 또는 multilingual checkpoint로 보내는 선택입니다. English checkpoint가 크메르어에서 정답률 0.000에 확신 0.952를 냈다는 제작사 보고처럼 틀리면서도 확신하는 경우 확신도 문턱으로는 거를 수 없기 때문입니다.",
+      "forward 전에 model, task, 선택적으로 켠 업무 자동 선택, lang, 애플리케이션 언어 힌트, 내장 문자·언어 분석을 차례로 확인해 첫 일치 checkpoint를 고릅니다. 언어를 확정하지 못하면 기본 multilingual로 갑니다. English checkpoint가 크메르어에서 정답률 0.000에 확신 0.952를 냈다는 제작사 보고처럼 틀리면서도 확신하는 경우 확신도 문턱만으로는 거르지 못합니다.",
     canonicalHref: "/cs/ai/laya-system1-decision-model#router",
   },
   "linux-load-average-system-demand": {
