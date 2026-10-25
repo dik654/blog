@@ -16,6 +16,7 @@ export default function DeepfakeStageViz({
   description,
   note,
   scenes,
+  controlLabels,
   notes,
   stages,
   children,
@@ -26,6 +27,7 @@ export default function DeepfakeStageViz({
   description: string;
   note?: string;
   scenes: readonly string[];
+  controlLabels?: readonly string[];
   notes: readonly string[];
   stages: readonly StageItem[];
   children: (active: number) => ReactNode;
@@ -69,7 +71,10 @@ export default function DeepfakeStageViz({
             {notes[active]}
           </p>
         </div>
-        <AnimatedSceneControls {...controls} labels={[...scenes]} />
+        <AnimatedSceneControls
+          {...controls}
+          labels={[...(controlLabels ?? scenes)]}
+        />
         <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
           {scenes.map((scene, index) => (
             <li key={scene} className="grid gap-1 py-3 sm:grid-cols-[11rem_minmax(0,1fr)]">

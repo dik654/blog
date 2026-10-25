@@ -576,13 +576,13 @@ export const cvArticles: Article[] = [
   },
   {
     slug: "deepfake-dataset-governance",
-    title: "딥페이크 Dataset Governance: Provenance·Consent·Coverage",
+    title: "딥페이크 자료 범위: 출처에서 주장까지",
     subcategory: "ai-practical-cv",
     sections: [
-      { id: "overview", title: "영상 수보다 Source Identity" },
-      { id: "provenance", title: "Source에서 Derivative까지" },
-      { id: "coverage", title: "Generator×Codec Coverage" },
-      { id: "release", title: "Consent·Deletion·Claim Gate" },
+      { id: "overview", title: "파일 수와 근거 수" },
+      { id: "provenance", title: "원본까지 되짚기" },
+      { id: "coverage", title: "독립 원본 세기" },
+      { id: "release", title: "변경 뒤 주장 재계산" },
     ],
     component: () => import("@/pages/articles/ai/deepfake-dataset-governance"),
   },

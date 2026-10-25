@@ -108,6 +108,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "여섯 점수 합 2.37에서 전체 평균 0.395·최댓값 0.82·상위 두 개 평균 0.79가 되는지와, 보정값 0.72가 점수 문턱을 넘더라도 coverage 6/10=0.60이 최소 0.70보다 작아 증거 부족이 되는지 확인합니다.",
   },
+  "ai/deepfake-dataset-governance": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-25",
+    rationale:
+      "같은 clip-042와 person-C가 사용 범위 기록, 다섯 artifact의 parent chain, generator×codec coverage, 자료 release 주장 변경으로 이어지는 하나의 근거 범위 추적입니다. 제품 선택이나 법률 판단은 별도 실무 글에 남기고 이 글은 출처와 독립 원본 수가 주장 범위를 제한하는 원리만 소유합니다.",
+    sharedGate:
+      "Generator-Z·social codec·256 px의 파일 60개가 독립 원본 10개로 접히는지와, group 042-C를 제외하면 support가 10에서 9로 줄어 설명용 최소값 10을 밑도는지 검산합니다.",
+  },
   "ai/open-r1": KEEP("Reasoning data cold start→SFT→online GRPO→evaluation이 하나의 recipe reproduction arc입니다."),
   "ai/openclaw-assistant": KEEP("Inbound event가 route·session·runtime·resource·sandbox를 거쳐 reply receipt가 되는 단일 trace입니다."),
   "ai/qwen-korean-consistency": {
@@ -3551,10 +3560,11 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/claw-worker-boot": "f9191c745d76c11f",
   "ai/llm-serving-ops": "58c53da4c3e32026",
   "ai/multiview-fusion": "9fab27058ecc1c00",
-  "ai/deepfake-detection": "879f9a610190da59",
-  "ai/deepfake-preprocessing-lineage": "c49d82d80f595e0f",
-  "ai/deepfake-frequency-evidence": "04a614ef1604ff4d",
-  "ai/deepfake-video-decisions": "9f60c7cf2b86a1c6",
+  "ai/deepfake-detection": "8ff6854c8587a183",
+  "ai/deepfake-preprocessing-lineage": "47845e2bf48054eb",
+  "ai/deepfake-frequency-evidence": "7e5b72020462e24e",
+  "ai/deepfake-video-decisions": "4742b2b7c2ac0436",
+  "ai/deepfake-dataset-governance": "c658747a39df4c02",
   "ai/open-r1": "1479317024d9936a",
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",
