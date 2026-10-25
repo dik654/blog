@@ -2,12 +2,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { UnstructuredPruningViz } from "../pruning/viz/ModernPruningViz";
 
 export default function UnstructuredPruningArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <PruningPathLocator current="unstructured" />
         <h2 className="mb-6 text-2xl font-bold">
           Unstructured pruning은 weight를 개별 좌표에서 고르는 방법입니다
         </h2>
@@ -198,6 +200,7 @@ export default function UnstructuredPruningArticle() {
           아닙니다.
         </CitationBlock>
       </section>
+      <PruningMapReturn current="unstructured" />
     </div>
   );
 }

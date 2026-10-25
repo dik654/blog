@@ -2,12 +2,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { OneShotLlmPruningViz } from "../pruning/viz/ModernPruningViz";
 
 export default function OneShotLlmPruningArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <PruningPathLocator current="one-shot" />
         <h2 className="mb-6 text-2xl font-bold">
           One-shot LLM pruning은 작은 prompt 표본으로 layer의 중요도를
           추정합니다
@@ -21,6 +23,8 @@ export default function OneShotLlmPruningArticle() {
         <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
         <ol className="list-decimal space-y-2 pl-6"><li>같은 크기의 weight라도 자주 크게 활성화되는 입력 채널에 연결되면 중요도가 달라질까요?</li><li>Calibration prompt가 배포 언어·길이·도메인과 다르면 mask 품질도 달라질 수 있을까요?</li><li>정한 sparsity를 만들었다는 사실만으로 실제 GPU 지연 감소도 보장될까요?</li></ol>
         <p>답은 <strong>예, 예, 아니요</strong>입니다. One-shot pruning은 작은 표본에서 중요도를 추정하므로 표본 대표성과 실제 kernel의 희소 패턴 지원을 따로 검증해야 합니다.</p>
+        <OneShotLlmPruningViz />
+        <ContentBoundary article="one-shot-llm-pruning" />
         <TermBreakdown
           title="표본에서 mask까지 필요한 물체"
           items={[
@@ -47,8 +51,6 @@ export default function OneShotLlmPruningArticle() {
             },
           ]}
         />
-        <OneShotLlmPruningViz />
-        <ContentBoundary article="one-shot-llm-pruning" />
       </section>
       <section id="calibration" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -197,6 +199,7 @@ export default function OneShotLlmPruningArticle() {
           </CitationBlock>
         </div>
       </section>
+      <PruningMapReturn current="one-shot" />
     </div>
   );
 }

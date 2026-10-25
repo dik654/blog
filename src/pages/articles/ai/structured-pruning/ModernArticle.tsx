@@ -3,6 +3,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { StructuredPruningViz } from "../pruning/viz/ModernPruningViz";
+import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import CompressionTaxonomy from "./CompressionTaxonomy";
 import PruningGranularity from "./PruningGranularity";
 import SparseKernelExecution from "./SparseKernelExecution";
@@ -11,6 +12,7 @@ export default function StructuredPruningArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <PruningPathLocator current="structured" />
         <h2 className="mb-6 text-2xl font-bold">
           Structured pruning은 계산 graph의 dimension을 실제로 줄입니다
         </h2>
@@ -189,6 +191,7 @@ export default function StructuredPruningArticle() {
           선택한다는 뜻은 아닙니다.
         </CitationBlock>
       </section>
+      <PruningMapReturn current="structured" />
     </div>
   );
 }

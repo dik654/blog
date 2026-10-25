@@ -3698,3 +3698,26 @@
   일곱 경로의 부모 지도, 모든 장면의 정적 목록, 결론과 지도 반환을 확인했습니다. 학습 계약,
   글 구조, 개념 그래프, 읽기 순서, 시각화, 수식, 계산, 한국어와 용어 검사를 통과했으며,
   GitHub Pages 배포와 공개 경로 검증이 남아 있습니다.
+
+### 가지치기 학습 묶음 로컬 검증 (2026-10-26)
+
+- `pruning`을 공통 개념 지도로 정했습니다. `unstructured-pruning`,
+  `structured-pruning`, `one-shot-llm-pruning`은 같은 개념 트랙에서 제거 단위와
+  mask 결정 방법을 나누고, `pruning-recovery-deployment`는 recovery·engine build·배포
+  승인을 다루는 실무 트랙으로 분리했습니다.
+- 다섯 글은 직속 부모, 현재 위치, 같은 트랙의 이웃 글을 첫 화면에서 보여 줍니다. Weight
+  열 개 중 네 개를 남기는 공통 사례에서 출발해 불규칙 value·index 저장, channel shape
+  전파와 2:4 패턴, SparseGPT·Wanda의 calibration 근거, 고정 mask recovery와 release
+  rollback까지 추적한 뒤 결과를 공통 지도에 되돌려 놓습니다.
+- 배포 글에는 base checkpoint, mask generation, optimizer state, engine artifact, active
+  release의 기준 저장소와 쓰는 주체를 구분했습니다. Mask를 되돌리는 것과 검증된 이전
+  revision으로 트래픽을 돌리는 rollback도 별도 절차로 나눴습니다. 측정하지 않은 품질과
+  지연시간은 배포 결과로 쓰지 않고 실험 대기로 남깁니다.
+- 움직이는 그림은 명시적인 재생 전에는 정지하며 장면당 6.2초로 진행합니다. 화면 밖으로
+  나가면 멈추고 다시 들어와도 재생하지 않으며, 마지막 장면에서 반복하지 않습니다.
+  reduced-motion에서는 마지막 상태와 비활성 재생 버튼을 보여 주고, JavaScript가 꺼지면
+  같은 세·네 장면을 순서 있는 정적 목록으로 제공합니다.
+- 390×844와 1,440×1,000에서 다섯 경로 모두 문서 가로 넘침 0, 50px 조작 버튼, 부모 지도와
+  지도 반환, console 오류 0을 확인했습니다. Production build는 8,001개 module과 정적 public
+  route 2,088개, no-script 본문 260편을 생성했습니다. 토폴로지·아키텍처 흐름·전수 장부·
+  런타임 복구·ESLint·diff 검사를 통과했으며, GitHub Pages 배포와 공개 경로 검증이 남아 있습니다.

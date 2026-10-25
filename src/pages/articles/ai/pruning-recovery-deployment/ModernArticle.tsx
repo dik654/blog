@@ -1,12 +1,14 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import PruningPathLocator, { PruningMapReturn } from "../pruning/PruningPathLocator";
 import { PruningRecoveryViz } from "../pruning/viz/ModernPruningViz";
 
 export default function PruningRecoveryDeploymentArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <PruningPathLocator current="recovery-deployment" />
         <h2 className="mb-6 text-2xl font-bold">
           Recovery는 제거한 연결을 되살리지 않고 남은 연결을 다시 적응시킵니다
         </h2>
@@ -59,6 +61,66 @@ export default function PruningRecoveryDeploymentArticle() {
             },
           ]}
         />
+      </section>
+      <section id="state-ownership" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          같은 mask를 기준으로 삼되 상태마다 쓰는 주체는 나눕니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            아래 표는 특정 제품의 측정 결과가 아니라 배포 전에 확정할 상태 소유권입니다. 한 generation에서는 base checkpoint와 mask를 바꾸지 않고, recovery worker·build pipeline·배포 시스템이 자기 상태만 갱신합니다. 서로 다른 두 작업이 active artifact나 optimizer state를 동시에 고치게 두지 않습니다.
+          </p>
+        </div>
+        <div className="not-prose mt-6 overflow-x-auto border-y border-border">
+          <table className="w-full min-w-[46rem] border-collapse text-left text-sm leading-6">
+            <thead>
+              <tr className="border-b border-border text-xs text-muted-foreground">
+                <th className="px-3 py-3 font-bold">상태</th>
+                <th className="px-3 py-3 font-bold">기준 저장소</th>
+                <th className="px-3 py-3 font-bold">쓰는 주체</th>
+                <th className="px-3 py-3 font-bold">읽는 주체</th>
+                <th className="px-3 py-3 font-bold">불일치하면</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-3 py-3 font-semibold">Base checkpoint</td>
+                <td className="px-3 py-3">Model registry</td>
+                <td className="px-3 py-3">학습·export pipeline</td>
+                <td className="px-3 py-3">Pruning·recovery worker</td>
+                <td className="px-3 py-3">Digest가 다르면 작업 중단</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-semibold">Mask generation</td>
+                <td className="px-3 py-3">Pruning artifact</td>
+                <td className="px-3 py-3">Pruning pipeline</td>
+                <td className="px-3 py-3">Recovery·build pipeline</td>
+                <td className="px-3 py-3">Mask가 없거나 shape가 다르면 build 거부</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-semibold">Optimizer state</td>
+                <td className="px-3 py-3">Recovery checkpoint</td>
+                <td className="px-3 py-3">Recovery worker</td>
+                <td className="px-3 py-3">Resume worker</td>
+                <td className="px-3 py-3">마지막 일관된 checkpoint에서 재개</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-semibold">Engine artifact</td>
+                <td className="px-3 py-3">Artifact registry</td>
+                <td className="px-3 py-3">Build pipeline</td>
+                <td className="px-3 py-3">Serving runtime</td>
+                <td className="px-3 py-3">Fallback이 발생하면 승격 보류</td>
+              </tr>
+              <tr>
+                <td className="px-3 py-3 font-semibold">Active release</td>
+                <td className="px-3 py-3">배포 revision</td>
+                <td className="px-3 py-3">배포 시스템</td>
+                <td className="px-3 py-3">Router·serving replica</td>
+                <td className="px-3 py-3">직전 검증 revision 유지</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
       <section id="mask-invariant" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
@@ -196,6 +258,20 @@ export default function PruningRecoveryDeploymentArticle() {
           </p>
         </div>
       </section>
+      <section id="rollback" className="scroll-mt-20">
+        <h2 className="mb-4 text-2xl font-bold">
+          롤백은 mask를 되돌리는 일이 아니라 검증된 artifact로 트래픽을 돌리는 일입니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            새 artifact는 별도 revision으로 올리고 일부 요청만 보내 quality·오류율·peak memory·지연시간을 확인합니다. 기준을 통과하기 전에는 active release가 바뀌지 않으며, 승격 뒤 문제가 생기면 router가 참조하는 revision을 직전 artifact로 되돌리고 새 replica를 drain합니다.
+          </p>
+          <p>
+            이 절차는 제거한 weight를 원래 값으로 복원하지 않습니다. 원본 checkpoint와 pruning artifact를 계속 보관해 같은 generation을 재현하고, 다른 mask나 kernel을 시험할 때는 새 generation을 만듭니다. 아직 대상 환경에서 측정하지 않았다면 결론은 ‘배포 승인’이 아니라 ‘실험 대기’로 남깁니다.
+          </p>
+        </div>
+      </section>
+      <PruningMapReturn current="recovery-deployment" />
     </div>
   );
 }

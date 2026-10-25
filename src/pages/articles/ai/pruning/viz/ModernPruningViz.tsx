@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -14,6 +14,7 @@ function Scene({
   description,
   labels,
   notes,
+  controlLabels,
   children,
 }: {
   id: string;
@@ -21,31 +22,50 @@ function Scene({
   description: string;
   labels: readonly string[];
   notes: readonly string[];
+  controlLabels: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3200);
+  const controls = useAnimatedScenes(labels.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const active = controls.reducedMotion ? labels.length - 1 : controls.active;
   return (
-    <VizFrame title={title} description={description} className="my-9">
+    <VizFrame
+      title={title}
+      description={description}
+      className="my-9"
+      canvasClassName="p-0 sm:p-0"
+    >
       <div
-        id={id}
+        id={controls.playbackId}
+        data-viz-id={id}
         data-viz
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        className="min-w-0 border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 min-h-[7.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
+            장면 · {String(active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 min-h-[5.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">
+            {labels[active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0">
+            {children(active)}
+          </div>
+          <p className="mt-4 min-h-[7.25rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">
+            {notes[active]}
+          </p>
         </div>
-        <p className="mt-4 min-h-[8.75rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={labels} {...controls} />
+        <AnimatedSceneControls
+          {...controls}
+          active={active}
+          labels={labels}
+          controlLabels={controlLabels}
+        />
+        <StaticSceneList labels={labels} notes={notes} />
       </div>
     </VizFrame>
   );
@@ -203,6 +223,7 @@ export function PruningMaskViz() {
       description="Weight matrix 위에 mask를 올리고 runtime이 소비할 제거 단위로 넘기는 과정을 봅니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Dense weight", "Mask", "실행 단위"]}
     >
       {(active) => (
         <svg
@@ -278,6 +299,7 @@ export function UnstructuredPruningViz() {
       description="불규칙한 weight 제거가 value·index artifact와 kernel 측정으로 이어지는 흐름입니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Score", "Mask", "Value·index", "Kernel"]}
     >
       {(active) => (
         <svg
@@ -384,6 +406,7 @@ export function StructuredPruningViz() {
       description="Graph dimension 축소와 local sparse pattern을 같은 그림에서 구분합니다."
       labels={labels}
       notes={notes}
+      controlLabels={["연결 shape", "Channel 축소", "N:M", "Tactic"]}
     >
       {(active) => (
         <svg
@@ -492,6 +515,7 @@ export function OneShotLlmPruningViz() {
       description="대표 prompt가 layer activation을 만들고 두 method의 다른 판단으로 이어지는 흐름입니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Prompt 표본", "Layer input", "두 판단", "검증"]}
     >
       {(active) => (
         <svg
@@ -606,6 +630,7 @@ export function PruningRecoveryViz() {
       description="고정 mask 불변식과 실제 배포 승인을 하나의 receipt 흐름으로 보여 줍니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Generation", "Mask 유지", "Build", "Release"]}
     >
       {(active) => (
         <svg

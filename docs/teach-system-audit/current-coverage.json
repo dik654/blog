@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 607,
-    "pending": 384,
+    "reviewed": 612,
+    "pending": 379,
     "untracked": 0,
-    "assignedPending": 342,
+    "assignedPending": 337,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3373,9 +3373,9 @@
       "publicPath": "cs/ai/pruning",
       "title": "Pruning Foundations: Mask · Density · Removal Unit",
       "catalogIndex": 334,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3383,9 +3383,9 @@
       "publicPath": "cs/ai/unstructured-pruning",
       "title": "Unstructured Pruning: Importance · Index · Break-even",
       "catalogIndex": 335,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3393,9 +3393,9 @@
       "publicPath": "cs/ai/structured-pruning",
       "title": "Structured Pruning: Shape Propagation · N:M",
       "catalogIndex": 336,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3403,9 +3403,9 @@
       "publicPath": "cs/ai/one-shot-llm-pruning",
       "title": "One-Shot LLM Pruning: Calibration · SparseGPT · Wanda",
       "catalogIndex": 337,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3413,9 +3413,9 @@
       "publicPath": "cs/ai/pruning-recovery-deployment",
       "title": "Pruning Recovery & Deployment: Mask · Kernel · Release",
       "catalogIndex": 338,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
