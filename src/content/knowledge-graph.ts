@@ -6842,16 +6842,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "machine-learning",
     label: "NT-Xent in-batch objective",
     definition:
-      "Anchor와 같은 원본에서 나온 view의 temperature-scaled similarity를 분자로, anchor 자신을 제외한 batch view의 similarity 합을 분모로 두는 normalized contrastive objective입니다.",
+      "N개 원본에서 만든 2N개 view 각각을 anchor로 삼고, 자기 자신을 제외한 2N−1개 후보 중 같은 원본의 다른 view를 맞히도록 2N개 방향별 loss를 평균하는 대조 학습 목적 함수입니다.",
     canonicalHref: "/cs/ai/simclr-infonce#objective",
   },
   "temperature-negative-weighting": {
     id: "temperature-negative-weighting",
     kind: "concept",
     domain: "machine-learning",
-    label: "Temperature-based negative weighting",
+    label: "Temperature-based candidate weighting",
     definition:
-      "Similarity logit을 양수 temperature로 나누어 softmax 후보 비율과 가까운 negative의 gradient 비중을 조절하는 mechanism입니다.",
+      "Cosine similarity를 양수 temperature로 나누어 후보 사이의 상대 지수 점수 비를 조절하는 방식입니다. 후보 관계가 틀렸다면 잘못된 negative의 영향도 함께 커집니다.",
     canonicalHref: "/cs/ai/simclr-infonce#temperature",
   },
   "triplet-relative-margin": {

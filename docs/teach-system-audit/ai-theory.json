@@ -9069,9 +9069,11 @@
       "publicFiles": [
         "src/pages/articles/ai/contrastive-learning/viz/ModernContrastiveViz.tsx",
         "src/pages/articles/ai/simclr-infonce.tsx",
-        "src/pages/articles/ai/simclr-infonce/ModernArticle.tsx"
+        "src/pages/articles/ai/simclr-infonce/ModernArticle.tsx",
+        "src/pages/articles/ai/simclr-infonce/SimCLRInfoNCEViz.tsx",
+        "src/pages/articles/ai/simclr-infonce/calculations.ts"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -9079,19 +9081,49 @@
         "hasSourceSurface": true,
         "characters": 4802
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "원본 수와 augmentation 뒤 view 수에 같은 기호 B를 써서 source batch와 2B개 입력을 한눈에 구분하기 어려웠습니다.",
+        "NT-Xent 식은 있었지만 A₁ 한 방향에서 자기 자신을 뺀 후보, partition, positive 확률, loss가 어떻게 이어지는지 화면에서 계산할 수 없었습니다.",
+        "Temperature 설명이 값의 민감도에 머물러 다른 source ID가 실제 같은 상품인 hidden positive를 더 강하게 밀어내는 경계가 보이지 않았습니다."
+      ],
+      "fixture": "원본 A·B·C 세 개에서 view를 두 개씩 만들어 A₁을 anchor로 둡니다. A₂·B₁·B₂·C₁·C₂의 cosine 0.8·0.4·0.1·−0.1·0.0과 τ=0.5를 사용해 positive 확률 0.485와 한 방향 loss 0.724를 계산합니다.",
+      "stageAnchors": {
+        "parent": [
+          "overview"
+        ],
+        "batch": [
+          "overview",
+          "batch"
+        ],
+        "objective": [
+          "objective"
+        ],
+        "temperature": [
+          "temperature"
+        ],
+        "return": [
+          "return-map"
+        ]
+      },
+      "primarySourceApplication": [
+        {
+          "kind": "논문",
+          "label": "A Simple Framework for Contrastive Learning of Visual Representations",
+          "href": "https://proceedings.mlr.press/v119/chen20j.html",
+          "note": "N개 원본에서 2N개 view를 만들고 anchor 자신을 제외한 후보에 양방향 NT-Xent를 적용하는 SimCLR 정의와 temperature ablation 범위에 적용합니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모의 pair 의미에서 출발해 2N view→방향별 후보→NT-Xent 계산→temperature와 hidden-positive 경계→부모 지도 반환 순서를 대조했습니다.",
+        "humanize": "N과 2N을 일관되게 사용하고 source·view·anchor·candidate를 한 항목씩 설명했습니다. TypeScript 예시는 실제 라이브러리 코드가 아니라 의사코드임을 표시했습니다.",
+        "numericTrace": "N=3, 후보 5개, cosine 다섯 개, τ=0.5, exp 합 10.219, positive 확률 0.485, loss 0.724를 계산 fixture와 세로 계산 장부에서 대조했습니다.",
+        "mobile390": "390x844에서 문서 가로 넘침 0을 확인했고 세 장면 도식 높이는 669–748px였습니다.",
+        "desktop1440": "1440x1000에서 세 장면 도식의 네 장면과 부모 locator를 확인했습니다.",
+        "accessibility": "키보드 좌우 이동, reduced-motion의 04/04 정지 상태, JavaScript 비활성 정적 4단계 목록을 확인했습니다.",
+        "build": "Production build에서 7,985개 모듈과 정적 public route 2,088개를 생성했고 no-script 본문 수가 234편으로 늘었습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
