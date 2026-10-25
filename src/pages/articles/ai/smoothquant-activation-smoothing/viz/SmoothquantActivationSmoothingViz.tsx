@@ -1,4 +1,4 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -44,8 +44,11 @@ function Bar({ value, color }: { value: number; color: string }) {
 }
 
 export default function SmoothquantActivationSmoothingViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3600);
-  const scene = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const scene = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const s = scales(ALPHAS[scene]);
   const xHat = X_MAX.map((x, j) => x / s[j]);
   const wHat = W_MAX.map((w, j) => w * s[j]);
@@ -58,8 +61,10 @@ export default function SmoothquantActivationSmoothingViz() {
       title="나누는 비율 α에 따라 눈금이 activation과 weight 사이를 오갑니다"
       description="행은 입력 채널 1~4입니다. 주황 막대는 activation, 파랑 막대는 weight가 그 채널에서 쓰는 INT8 눈금 수이며 최대 256입니다."
       note="X·W 값은 3절의 설명용 가정입니다. 눈금 수는 논문 3절의 2^8·m_j/m 근사를 따릅니다."
+      canvasClassName="p-0 sm:p-0"
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -67,9 +72,9 @@ export default function SmoothquantActivationSmoothingViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(scene + 1).padStart(2, "0")}
+            장면 · {String(scene + 1).padStart(2, "0")}
           </p>
           <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h4 className="text-base font-bold">{SCENES[scene]}</h4>
@@ -82,7 +87,7 @@ export default function SmoothquantActivationSmoothingViz() {
             </p>
           </div>
 
-          <div className="mt-3 grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-3 gap-y-2 text-xs">
+          <div className="mt-3 grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-3 gap-y-1 text-xs">
             <span />
             <div className="flex justify-between font-bold">
               <span style={{ color: "#d97706" }}>activation 눈금</span>
@@ -102,11 +107,12 @@ export default function SmoothquantActivationSmoothingViz() {
             ))}
           </div>
 
-          <p className="mt-3 min-h-[8.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-[3.5rem]">
+          <p className="mt-3 min-h-[6.25rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-[3.5rem]">
             {NOTES[scene]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={scene} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

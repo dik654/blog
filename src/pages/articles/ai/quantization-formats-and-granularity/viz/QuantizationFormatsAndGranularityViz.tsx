@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -15,6 +15,8 @@ const SCENES = [
   "Group-wise: 4개 단위로 scale",
   "Block: 2개 단위 + tensor scale",
 ] as const;
+
+const CONTROL_LABELS = ["Per-tensor", "Per-channel", "Group-wise", "Block"] as const;
 
 const NOTES = [
   "Scale 하나를 tensor 전체가 공유하면 outlier channel(맨 위 행)의 큰 값이 전체 range를 정해, 나머지 3개 channel은 code 몇 칸만 쓰고 나머지는 뭉개집니다.",
@@ -55,8 +57,11 @@ const palette = [
 ];
 
 export default function QuantizationFormatsAndGranularityViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
-  const active = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const active = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const cell = 44;
   const gap = 6;
   const originX = 78;
@@ -68,18 +73,20 @@ export default function QuantizationFormatsAndGranularityViz() {
       title="Scale 공유 범위를 좁히면 outlier의 피해 반경이 줄어듭니다"
       description="같은 4채널×4원소 weight 값에서 scale을 공유하는 단위만 바꿔 outlier(맨 위 행)가 나머지 channel에 주는 영향을 봅니다."
       note="실제 크기·scale 계산식은 단순화했습니다. metadata·kernel 비용은 이 그림에 포함하지 않았습니다."
+      canvasClassName="p-0 sm:p-0"
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
         aria-label="Quantization granularity spectrum"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-0 flex-1 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(active + 1).padStart(2, "0")}
+            장면 · {String(active + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[active]}</h4>
 
@@ -148,7 +155,13 @@ export default function QuantizationFormatsAndGranularityViz() {
             {NOTES[active]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls
+          {...scenes}
+          active={active}
+          labels={SCENES}
+          controlLabels={CONTROL_LABELS}
+        />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

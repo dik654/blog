@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 600,
-    "pending": 391,
+    "reviewed": 607,
+    "pending": 384,
     "untracked": 0,
-    "assignedPending": 348,
-    "postCheckpointPending": 43,
+    "assignedPending": 342,
+    "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
     "historicalOvercount": 2
@@ -3303,9 +3303,9 @@
       "publicPath": "cs/ai/quantization",
       "title": "양자화 기초: Scale · Code · Rounding · Clipping",
       "catalogIndex": 327,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3313,9 +3313,9 @@
       "publicPath": "cs/ai/ptq-calibration",
       "title": "PTQ Calibration: Scale Granularity · Coverage · Artifact",
       "catalogIndex": 328,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3323,9 +3323,9 @@
       "publicPath": "cs/ai/quantization-formats-and-granularity",
       "title": "양자화 숫자 형식과 granularity: 비트 폭과 스케일 단위",
       "catalogIndex": 329,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3333,9 +3333,9 @@
       "publicPath": "cs/ai/quantization-aware-training",
       "title": "Quantization-Aware Training: Fake Quant · STE · Export",
       "catalogIndex": 330,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3343,9 +3343,9 @@
       "publicPath": "cs/ai/weight-only-quantization",
       "title": "Weight-Only Quantization: GPTQ · AWQ · Artifact Boundary",
       "catalogIndex": 331,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3353,19 +3353,19 @@
       "publicPath": "cs/ai/smoothquant-activation-smoothing",
       "title": "SmoothQuant: activation 이상치를 weight로 옮겨 W8A8을 만든다",
       "catalogIndex": 332,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "pending-full-review",
-      "evidence": "docs/rewrite-status.md#전체-지도에서-재귀적으로-확대하는-전수-개편-2026-10-23-시작"
+      "recordedStatus": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#2026-10-26--양자화-학습-묶음-로컬-검수-완료-배포-대기"
     },
     {
       "route": "ai/quantized-model-deployment",
       "publicPath": "cs/ai/quantized-model-deployment",
       "title": "Quantized Model Deployment: Weight Bytes · VRAM · Kernel",
       "catalogIndex": 333,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

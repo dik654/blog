@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "./quantization/QuantizationPathLocator";
 import QuantizationFormatsAndGranularityViz from "./quantization-formats-and-granularity/viz/QuantizationFormatsAndGranularityViz";
 
 /**
@@ -13,6 +14,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="formats-granularity" />
         <h2 className="mb-6 text-2xl font-bold">
           같은 quantizer도 숫자 형식과 scale 폭에 따라 다른 artifact가 됩니다
         </h2>
@@ -254,6 +256,7 @@ export default function QuantizationFormatsAndGranularityArticle() {
           </p>
         </div>
       </section>
+      <QuantizationMapReturn current="formats-granularity" />
     </div>
   );
 }

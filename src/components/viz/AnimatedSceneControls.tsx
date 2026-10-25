@@ -6,6 +6,7 @@ export function AnimatedSceneControls({
   setActive,
   setPlaying,
   playLabel = "재생",
+  controlLabels,
 }: {
   labels: readonly string[];
   active: number;
@@ -14,6 +15,7 @@ export function AnimatedSceneControls({
   setActive: (value: number) => void;
   setPlaying: (value: boolean) => void;
   playLabel?: string;
+  controlLabels?: readonly string[];
 }) {
   const previous = () => setActive(Math.max(0, active - 1));
   const next = () => setActive(Math.min(labels.length - 1, active + 1));
@@ -88,7 +90,7 @@ export function AnimatedSceneControls({
                 : "border-border bg-background text-muted-foreground"
             }`}
           >
-            {String(index + 1).padStart(2, "0")} · {label}
+            {String(index + 1).padStart(2, "0")} · {controlLabels?.[index] ?? label}
           </button>
         ))}
         <button

@@ -2,12 +2,14 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import QuantizationPathLocator, { QuantizationMapReturn } from "./QuantizationPathLocator";
 import { QuantizerNumberLineViz } from "./viz/ModernQuantizationViz";
 
 export default function QuantizationArticle() {
   return (
     <div className="space-y-16">
       <section id="overview" className="scroll-mt-20">
+        <QuantizationPathLocator current="quantizer-contract" />
         <h2 className="mb-6 text-2xl font-bold">
           먼저 실수 하나를 작은 codebook에 올려 봅니다
         </h2>
@@ -225,6 +227,7 @@ export default function QuantizationArticle() {
           </CitationBlock>
         </div>
       </section>
+      <QuantizationMapReturn current="quantizer-contract" />
     </div>
   );
 }

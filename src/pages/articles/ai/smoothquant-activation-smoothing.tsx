@@ -9,6 +9,7 @@ import SmoothquantActivationSmoothingViz from "./smoothquant-activation-smoothin
 import GemmScaleAxisViz from "./smoothquant-activation-smoothing/viz/GemmScaleAxisViz";
 import { codeRefs } from "./smoothquant-activation-smoothing/codeRefs";
 import { smoothquantTrees } from "./smoothquant-activation-smoothing/fileTree";
+import QuantizationPathLocator, { QuantizationMapReturn } from "./quantization/QuantizationPathLocator";
 
 const prose = "prose prose-neutral max-w-none dark:prose-invert";
 
@@ -22,6 +23,7 @@ export default function SmoothquantActivationSmoothingArticle() {
     <>
       <div className="space-y-16">
         <section id="overview" data-teach-level="S" className="scroll-mt-20">
+          <QuantizationPathLocator current="activation-smoothing" />
           <h2 className="mb-6 text-2xl font-bold">1. weight만 8비트로 줄이면 곱셈은 여전히 16비트로 합니다</h2>
           <div className={prose}>
             <p>
@@ -378,6 +380,7 @@ export default function SmoothquantActivationSmoothingArticle() {
             <p>Llama 층의 o_proj 입력에 큰 채널이 있다면 smooth.py가 그 채널을 평평하게 해 주나요? (답: 12절)</p>
           </div>
         </section>
+        <QuantizationMapReturn current="activation-smoothing" />
       </div>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

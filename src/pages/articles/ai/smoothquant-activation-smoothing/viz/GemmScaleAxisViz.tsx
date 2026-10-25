@@ -1,4 +1,4 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -37,8 +37,11 @@ function cellTone(active: boolean, color: string) {
 }
 
 export default function GemmScaleAxisViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3600);
-  const scene = scenes.active;
+  const scenes = useAnimatedScenes(SCENES.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const scene = scenes.reducedMotion ? SCENES.length - 1 : scenes.active;
   const axis = AXES[scene];
   const blocked = axis === "j";
   const xColor = axis === "j" ? "#dc2626" : "#d97706";
@@ -57,8 +60,10 @@ export default function GemmScaleAxisViz() {
       title="정수 곱셈은 합 밖의 두 축에만 scale을 되돌릴 수 있습니다"
       description="왼쪽은 X(token 2 × 입력 채널 4), 가운데는 W(입력 채널 4 × 출력 채널 2), 오른쪽은 Y입니다. 색칠한 칸이 같은 scale을 공유하는 칸입니다."
       note="X·W 크기는 3절의 설명용 사례입니다. Δ는 INT8 code를 실수로 되돌리는 간격입니다."
+      canvasClassName="p-0 sm:p-0"
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
@@ -66,13 +71,13 @@ export default function GemmScaleAxisViz() {
         onKeyDown={scenes.onKeyDown}
         className="flex min-h-full min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex shrink-0 flex-col justify-center">
+        <div data-viz-live-only className="flex shrink-0 flex-col justify-center">
           <p className="text-[11px] font-black text-primary">
-            Scene · {String(scene + 1).padStart(2, "0")}
+            장면 · {String(scene + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
 
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-3 sm:gap-x-3">
             <div>
               <p className="mb-1 text-center font-mono text-[11px] font-bold text-muted-foreground">X</p>
               <div className="grid grid-cols-4 gap-1">
@@ -82,7 +87,7 @@ export default function GemmScaleAxisViz() {
                   return (
                     <div
                       key={k}
-                      className="flex h-8 w-8 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300"
+                      className="flex h-7 w-7 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300 sm:h-8 sm:w-8"
                       style={cellTone(xActive(t, j), xColor)}
                     >
                       {t + 1},{j + 1}
@@ -103,7 +108,7 @@ export default function GemmScaleAxisViz() {
                   return (
                     <div
                       key={k}
-                      className="flex h-8 w-8 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300"
+                      className="flex h-7 w-7 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300 sm:h-8 sm:w-8"
                       style={cellTone(wActive(j, c), axis === "j" ? "#dc2626" : wColor)}
                     >
                       {j + 1},{c + 1}
@@ -122,7 +127,7 @@ export default function GemmScaleAxisViz() {
                   return (
                     <div
                       key={k}
-                      className="flex h-8 w-8 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300"
+                      className="flex h-7 w-7 items-center justify-center rounded-sm border font-mono text-[10px] transition-colors duration-300 sm:h-8 sm:w-8"
                       style={cellTone(yActive(t, c), blocked ? "#dc2626" : "#0d9488")}
                     >
                       {t + 1},{c + 1}
@@ -134,17 +139,18 @@ export default function GemmScaleAxisViz() {
           </div>
 
           <p
-            className="mt-4 break-words rounded-sm border px-3 py-2 text-center font-mono text-xs"
+            className="mt-2 break-words rounded-sm border px-3 py-2 text-center font-mono text-xs sm:mt-4"
             style={{ borderColor: blocked ? "#dc2626" : "#d4d4d8" }}
           >
             {FORMULAS[scene]}
           </p>
 
-          <p className="mt-4 min-h-[8.5rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:min-h-[3.5rem]">
+          <p className="mt-2 min-h-[6.25rem] border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground sm:mt-4 sm:min-h-[3.5rem]">
             {NOTES[scene]}
           </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} active={scene} labels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

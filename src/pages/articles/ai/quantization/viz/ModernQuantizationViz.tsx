@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { AnimatedSceneControls, StaticSceneList } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -14,6 +14,7 @@ function LessonScene({
   description,
   labels,
   notes,
+  controlLabels,
   children,
 }: {
   id: string;
@@ -21,31 +22,50 @@ function LessonScene({
   description: string;
   labels: readonly string[];
   notes: readonly string[];
+  controlLabels: readonly string[];
   children: (active: number) => ReactNode;
 }) {
-  const controls = useAnimatedScenes(labels.length, 3000);
+  const controls = useAnimatedScenes(labels.length, 6200, {
+    loop: false,
+    autoPlay: false,
+  });
+  const active = controls.reducedMotion ? labels.length - 1 : controls.active;
   return (
-    <VizFrame title={title} description={description} className="my-9">
+    <VizFrame
+      title={title}
+      description={description}
+      className="my-9"
+      canvasClassName="p-0 sm:p-0"
+    >
       <div
-        id={id}
+        id={controls.playbackId}
+        data-viz-id={id}
         data-viz
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
-        className="min-w-0 overflow-hidden border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
+        className="min-w-0 border-y border-border/70 bg-background px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6"
       >
-        <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
-          Animated lesson · {String(controls.active + 1).padStart(2, "0")}
-        </p>
-        <h3 className="mt-2 min-h-[7.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">
-          {labels[controls.active]}
-        </h3>
-        <div data-viz-canvas className="mt-5 min-w-0 overflow-hidden">
-          {children(controls.active)}
+        <div data-viz-live-only>
+          <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
+            장면 · {String(active + 1).padStart(2, "0")}
+          </p>
+          <h3 className="mt-2 min-h-[5.25rem] text-lg font-bold leading-7 sm:min-h-[2.5rem]">
+            {labels[active]}
+          </h3>
+          <div data-viz-canvas className="mt-5 min-w-0">
+            {children(active)}
+          </div>
+          <p className="mt-4 min-h-[7.25rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">
+            {notes[active]}
+          </p>
         </div>
-        <p className="mt-4 min-h-[8.75rem] border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:min-h-[3.5rem]">
-          {notes[controls.active]}
-        </p>
-        <AnimatedSceneControls labels={labels} {...controls} />
+        <AnimatedSceneControls
+          {...controls}
+          active={active}
+          labels={labels}
+          controlLabels={controlLabels}
+        />
+        <StaticSceneList labels={labels} notes={notes} />
       </div>
     </VizFrame>
   );
@@ -165,6 +185,7 @@ export function QuantizerNumberLineViz() {
       description="숫자축에서 scale·round·clip·dequantize의 역할을 한 단계씩 확인합니다."
       labels={labels}
       notes={notes}
+      controlLabels={["실수", "Scale", "Round·clip", "복원"]}
     >
       {(active) => (
         <svg
@@ -302,6 +323,7 @@ export function CalibrationPipelineViz() {
       description="Calibration data가 scale을 만들고, 별도 validation이 그 scale을 시험하는 경계를 보여 줍니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Checkpoint", "Range 관측", "포화 검사", "Artifact"]}
     >
       {(active) => (
         <svg
@@ -421,6 +443,7 @@ export function QATLoopViz() {
       description="실제 계단형 forward와 학습용 surrogate backward를 서로 다른 화살표로 분리합니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Float weight", "Fake quant", "Loss", "STE"]}
     >
       {(active) => (
         <svg
@@ -537,6 +560,7 @@ export function WeightOnlyMethodViz() {
       description="보정 목표와 배포 format을 한 이름으로 뭉치지 않고 계층별로 보여 줍니다."
       labels={labels}
       notes={notes}
+      controlLabels={["오차 영향", "Output 비교", "GPTQ·AWQ", "Artifact 경계"]}
     >
       {(active) => (
         <svg
@@ -708,6 +732,7 @@ export function QuantizedDeploymentViz() {
       description="Weight payload와 runtime memory, kernel speedup을 같은 숫자로 섞지 않는 배포 장부입니다."
       labels={labels}
       notes={notes}
+      controlLabels={["Weight floor", "Runtime 합산", "Headroom", "Kernel trace"]}
     >
       {(active) => (
         <svg
