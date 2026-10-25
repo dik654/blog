@@ -22,7 +22,7 @@ export function AnimatedSceneControls({
     <div
       data-viz-controls
       data-viz-live-only
-      className="z-20 mt-auto w-full shrink-0 sm:sticky sm:bottom-0 sm:min-h-[6.75rem] sm:border-t sm:border-border sm:bg-background/95 sm:pt-4 sm:backdrop-blur-sm"
+      className="z-20 mt-auto w-full shrink-0 sm:min-h-[6.75rem] sm:border-t sm:border-border sm:pt-4"
     >
       <div
         data-viz-mobile-controls

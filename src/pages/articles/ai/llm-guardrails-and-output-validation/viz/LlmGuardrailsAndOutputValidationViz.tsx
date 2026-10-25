@@ -2,142 +2,57 @@ import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 같은 위장된 위험 요청이 rule-based guardrail과 model-based guardrail을 각각 지날 때
- * 어떻게 다른 판정과 latency로 갈리는지 보여주는 장면. Node/edge는 장면이 지나도
- * 사라지지 않고 "seen" 상태로 남아 stage 크기가 바뀌지 않는다(stable stage).
- */
-const SCENES = [
-  "위장된 위험 요청 도착",
-  "Rule-based 검사 (패턴만 봄)",
-  "Model-based 검사 (의미를 봄)",
-  "판정 결과: False Negative 대 True Positive",
-] as const;
-
+const SCENES = ["요청", "입력 검사", "응답 검사", "실행 검사", "영수증"] as const;
 const NOTES = [
-  "패턴은 감췄지만 의도는 위험한 요청 하나가 두 guardrail 앞에 동시에 놓입니다.",
-  "Rule-based guardrail은 미리 정한 정규식·키워드만 비교합니다. 문자를 쪼개거나 바꿔 쓰면 패턴이 어긋나 그대로 통과할 수 있습니다.",
-  "Model-based guardrail은 표현이 달라도 같은 의도를 의미로 해석해 잡아냅니다. 대신 model 호출 한 번만큼 지연이 더 듭니다.",
-  "같은 요청이 rule-based에서는 false negative로 새고, model-based에서는 true positive로 잡히지만 약 200배 느립니다. 실무에서는 rule-based로 먼저 거르고 애매한 것만 model-based로 넘기는 2단 구성을 씁니다.",
+  "장애 보고서 91을 요약해 내부 #ops로 보내 달라는 요청입니다. 문장만 보면 허용 범위입니다.",
+  "입력 rail은 원문만 검사해 ALLOW를 냅니다. 아직 생기지 않은 응답과 도구 호출은 승인하지 않습니다.",
+  "모델 JSON은 schema를 통과해도 본문에 비밀값이 남습니다. 출력 rail이 값을 제거하고 MODIFY를 기록합니다.",
+  "도구 rail은 대상·권한·본문을 다시 봅니다. 외부 주소이거나 불확실하면 실행하지 않고 사람에게 넘깁니다.",
+  "검사된 본문만 전송하고 messageId=184를 남깁니다. 실제 효과는 이 영수증으로 확인합니다.",
 ] as const;
 
-type NodeSpec = { id: string; x: number; y: number; w: number; label: string; unlock: number };
-type EdgeSpec = { from: string; to: string; unlock: number; label?: string };
-
-const NODES: NodeSpec[] = [
-  { id: "req", x: 150, y: 12, w: 180, label: "위장된 위험 요청", unlock: 0 },
-  { id: "rule", x: 20, y: 82, w: 190, label: "Rule-based (~1ms)", unlock: 1 },
-  { id: "model", x: 270, y: 82, w: 190, label: "Model-based (~200ms)", unlock: 2 },
-  { id: "rule-out", x: 10, y: 152, w: 210, label: "통과 → False Negative", unlock: 3 },
-  { id: "model-out", x: 260, y: 152, w: 210, label: "차단 → True Positive", unlock: 3 },
-];
-
-const EDGES: EdgeSpec[] = [
-  { from: "req", to: "rule", unlock: 1 },
-  { from: "req", to: "model", unlock: 2 },
-  { from: "rule", to: "rule-out", unlock: 3 },
-  { from: "model", to: "model-out", unlock: 3 },
-];
-
-function nodeState(unlock: number, active: number): "future" | "active" | "seen" {
-  if (active < unlock) return "future";
-  if (active === unlock) return "active";
-  return "seen";
+function Defs() {
+  return <defs><marker id="guard-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="currentColor" /></marker></defs>;
 }
 
-const NODE_H = 30;
-
-function centerX(n: NodeSpec) {
-  return n.x + n.w / 2;
+function Arrow({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
+  return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="1" markerEnd="url(#guard-arrow)" />;
 }
+
+function Box({ x, y, w = 112, title, detail, active = false }: { x: number; y: number; w?: number; title: string; detail: string; active?: boolean }) {
+  return <g><rect x={x} y={y} width={w} height="48" rx="4" className={active ? "fill-primary/10 stroke-primary" : "fill-background stroke-border"} /><text x={x + w / 2} y={y + 18} textAnchor="middle" className="fill-foreground text-[9px] font-bold">{title}</text><text x={x + w / 2} y={y + 34} textAnchor="middle" className="fill-muted-foreground text-[8px]">{detail}</text></g>;
+}
+
+function RequestScene() {
+  return <svg viewBox="0 0 360 205" className="mx-auto h-[12.5rem] w-auto max-w-full" role="img" aria-label="장애 보고서 요약과 내부 채널 전송 요청"><Defs /><text x="180" y="26" textAnchor="middle" className="fill-muted-foreground text-[9px]">사용자 요청</text><rect x="43" y="47" width="274" height="62" rx="5" className="fill-background stroke-foreground" /><text x="180" y="73" textAnchor="middle" className="fill-foreground text-[11px] font-bold">장애 보고서 91을 요약해서</text><text x="180" y="92" textAnchor="middle" className="fill-foreground text-[11px] font-bold">내부 #ops 채널로 보내 줘</text><Arrow x1={180} y1={109} x2={180} y2={139} /><Box x={124} y={142} title="아직 생긴 효과 없음" detail="requestId=req-91" /></svg>;
+}
+
+function InputScene() {
+  return <svg viewBox="0 0 360 205" className="mx-auto h-[12.5rem] w-auto max-w-full" role="img" aria-label="입력만 검사해 요청을 허용하는 과정"><Defs /><Box x={12} y={72} title="사용자 요청" detail="보고서 요약·내부 전송" /><Arrow x1={124} y1={96} x2={154} y2={96} /><Box x={158} y={72} title="입력 rail" detail="주제·PII·탈옥 검사" active /><Arrow x1={270} y1={96} x2={299} y2={96} /><g><circle cx="323" cy="96" r="22" className="fill-primary/10 stroke-primary" /><text x="323" y="100" textAnchor="middle" className="fill-primary text-[9px] font-black">ALLOW</text></g><text x="180" y="153" textAnchor="middle" className="fill-muted-foreground text-[9px]">입력만 통과 · 응답과 실행은 아직 미검사</text></svg>;
+}
+
+function OutputScene() {
+  return <svg viewBox="0 0 360 205" className="mx-auto h-[12.5rem] w-auto max-w-full" role="img" aria-label="구조는 맞지만 비밀값이 섞인 응답을 수정하는 과정"><Defs /><Box x={9} y={61} w={104} title="모델 응답" detail="JSON + 비밀값" /><Arrow x1={113} y1={85} x2={137} y2={85} /><Box x={141} y={61} w={86} title="Schema" detail="PASS" /><Arrow x1={227} y1={85} x2={251} y2={85} /><Box x={255} y={61} w={96} title="출력 rail" detail="MODIFY" active /><text x="180" y="136" textAnchor="middle" className="fill-muted-foreground text-[9px]">body: “복구 완료 · sk-live-7A9”</text><path d="M86 149H274" className="stroke-border" /><text x="180" y="174" textAnchor="middle" className="fill-foreground text-[10px] font-bold">body: “복구 완료 · [비밀값 제거]”</text></svg>;
+}
+
+function ToolScene() {
+  return <svg viewBox="0 0 360 205" className="mx-auto h-[12.5rem] w-auto max-w-full" role="img" aria-label="도구 호출의 대상과 권한을 실행 직전에 검사하는 과정"><Defs /><Box x={10} y={68} w={105} title="send_message" detail="channel=#ops" /><Arrow x1={115} y1={92} x2={144} y2={92} /><Box x={148} y={68} w={105} title="도구 rail" detail="대상·권한·본문" active /><path d="M253 81H285V48H310" fill="none" className="stroke-muted-foreground" markerEnd="url(#guard-arrow)" /><path d="M253 103H285V138H310" fill="none" className="stroke-muted-foreground" markerEnd="url(#guard-arrow)" /><text x="318" y="43" textAnchor="middle" className="fill-primary text-[9px] font-black">허용</text><text x="318" y="58" textAnchor="middle" className="fill-muted-foreground text-[8px]">#ops</text><text x="318" y="134" textAnchor="middle" className="fill-foreground text-[9px] font-black">보류</text><text x="318" y="149" textAnchor="middle" className="fill-muted-foreground text-[8px]">외부 대상</text><text x="180" y="181" textAnchor="middle" className="fill-muted-foreground text-[9px]">애매하면 실행 대신 사람 승인 대기</text></svg>;
+}
+
+function ReceiptScene() {
+  return <svg viewBox="0 0 360 205" className="mx-auto h-[12.5rem] w-auto max-w-full" role="img" aria-label="검사된 메시지 한 건의 실행 영수증"><Defs /><Box x={12} y={71} title="검사된 호출" detail="send_message" /><Arrow x1={124} y1={95} x2={155} y2={95} /><Box x={159} y={71} title="내부 #ops" detail="메시지 1건 생성" active /><Arrow x1={271} y1={95} x2={299} y2={95} /><g><circle cx="326" cy="95" r="23" className="fill-primary/10 stroke-primary" /><text x="326" y="91" textAnchor="middle" className="fill-primary text-[8px] font-black">SENT</text><text x="326" y="104" textAnchor="middle" className="fill-muted-foreground text-[7px]">#184</text></g><text x="180" y="151" textAnchor="middle" className="fill-foreground text-[10px] font-bold">requestId=req-91 · messageId=184</text><text x="180" y="174" textAnchor="middle" className="fill-muted-foreground text-[9px]">모델의 주장 대신 실제 효과를 다시 조회할 식별자</text></svg>;
+}
+
+const DRAWINGS = [RequestScene, InputScene, OutputScene, ToolScene, ReceiptScene] as const;
 
 export default function LlmGuardrailsAndOutputValidationViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
-  const active = scenes.active;
-  const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
-
-  return (
-    <VizFrame
-      eyebrow="Rule-based · model-based guardrail"
-      title="같은 위장된 요청이 rule-based에서는 새고, model-based에서는 잡히지만 200배 느립니다"
-      description="판정 방식(rule/model)이 다르면 같은 요청에도 latency와 정확도가 서로 반대로 움직입니다."
-      note="실제 pipeline은 두 단을 함께 쓰지만, 이 장면은 한 요청이 한 판정 방식만 지났다고 가정해 대조를 단순화했습니다."
-    >
-      <div
-        data-viz-canvas
-        tabIndex={0}
-        role="group"
-        aria-label="Rule-based guardrail과 model-based guardrail의 latency-정확도 대조"
-        onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(32rem,calc(100svh-15rem))] min-h-[25rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-      >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[active]}</h4>
-
-          <svg viewBox="0 0 480 210" className="mt-4 w-full" role="img" aria-label={SCENES[active]}>
-            {EDGES.map((edge, index) => {
-              const from = byId[edge.from];
-              const to = byId[edge.to];
-              const state = nodeState(edge.unlock, active);
-              const stroke =
-                state === "future" ? "#d4d4d8" : state === "active" ? "#6366f1" : "#a5a5b0";
-              const x1 = centerX(from);
-              const y1 = from.y + NODE_H;
-              const x2 = centerX(to);
-              const y2 = to.y;
-              const midY = (y1 + y2) / 2;
-              return (
-                <g key={`${edge.from}-${edge.to}-${index}`}>
-                  <path
-                    d={`M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`}
-                    fill="none"
-                    stroke={stroke}
-                    strokeWidth={state === "active" ? 1.25 : 1}
-                  />
-                </g>
-              );
-            })}
-            {NODES.map((n) => {
-              const state = nodeState(n.unlock, active);
-              const fill = state === "future" ? "#fafafa" : state === "active" ? "#eef2ff" : "#f4f4f5";
-              const stroke = state === "future" ? "#d4d4d8" : state === "active" ? "#6366f1" : "#a5a5b0";
-              const text = state === "future" ? "#a1a1aa" : "#27272a";
-              return (
-                <g key={n.id}>
-                  <rect
-                    x={n.x}
-                    y={n.y}
-                    width={n.w}
-                    height={NODE_H}
-                    rx={4}
-                    fill={fill}
-                    stroke={stroke}
-                    strokeWidth={state === "active" ? 1.25 : 1}
-                  />
-                  <text
-                    x={centerX(n)}
-                    y={n.y + NODE_H / 2 + 3}
-                    textAnchor="middle"
-                    fontSize={9}
-                    fontWeight={state === "active" ? 700 : 500}
-                    fill={text}
-                  >
-                    {n.label}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-
-          <p className="mt-6 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[active]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
-  );
+  const scenes = useAnimatedScenes(SCENES.length, 6200);
+  const Drawing = DRAWINGS[scenes.active];
+  return <VizFrame eyebrow="한 요청 · 세 검사 · 한 효과" title="입력 허용이 응답과 실행까지 승인하지는 않습니다" description="같은 장애 보고서 요청에서 새 상태가 생길 때마다 무엇을 다시 검사하는지 따라갑니다." note="메시지 번호와 비밀값은 메커니즘을 설명하기 위한 예시입니다. 특정 제품의 성능 측정값이 아닙니다.">
+    <div id={scenes.playbackId} data-viz-canvas data-viz-scene="guardrail-request-lifecycle-viz" data-story-index={scenes.active} tabIndex={0} role="group" aria-label="요청과 응답과 도구 호출을 각 단계에서 검사하고 실제 영수증을 확인하는 과정" onKeyDown={scenes.onKeyDown} className="flex h-auto min-h-0 min-w-0 flex-col overflow-visible outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary sm:h-[min(36rem,calc(100svh-10rem))] sm:min-h-[31rem] sm:overflow-y-auto">
+      <div data-viz-live-only className="flex flex-none flex-col justify-center sm:min-h-0 sm:flex-1"><p className="text-[11px] font-black text-primary">장면 {String(scenes.active + 1).padStart(2, "0")}</p><h4 className="mt-2 break-keep text-lg font-bold">{SCENES[scenes.active]}</h4><div className="mt-3 border-y border-border py-3"><Drawing /></div><p data-scene-note className="mt-3 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">{NOTES[scenes.active]}</p></div>
+      <AnimatedSceneControls {...scenes} labels={SCENES} />
+      <ol className="static-reading-only mt-4 space-y-3 text-sm leading-6">{SCENES.map((label, index) => <li key={label}><strong>{index + 1}. {label}</strong><span className="mt-1 block text-muted-foreground">{NOTES[index]}</span></li>)}</ol>
+    </div>
+  </VizFrame>;
 }
