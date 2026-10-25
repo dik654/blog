@@ -58,8 +58,9 @@ export default function VideoTransformersArticle() {
           </p>
           <p>
             이 글에서는 sampled frame 두 장과 같은 <code>16×16</code> 공간을
-            tubelet 하나로 묶습니다. 그러면 <code>16×224×224</code> 입력은
-            <code> 8×14×14=1,568</code>개 token이 됩니다. 이후 선택은 두
+            tubelet 하나로 묶습니다. 16장짜리 224 정사각 입력을 이렇게
+            나누면 transformer에는 <code>1,568</code>개 token이 들어갑니다.
+            바로 아래에서 시간·행·열 순서로 이 수를 계산합니다. 이후 선택은 두
             갈래입니다. TimeSformer의 divided attention은 token 사이 연결 순서를
             바꾸고, VideoMAE의 tube masking은 pretraining encoder에 들어갈 token
             집합을 줄입니다.
