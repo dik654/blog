@@ -3211,11 +3211,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
   ],
   "ai/retrieval-ranking-funnel": [
-    { kind: "핵심 논문", label: "Dense Passage Retrieval for Open-Domain Question Answering", href: "https://arxiv.org/abs/2004.04906", note: "질문·passage dual encoder와 dense candidate retrieval의 기준 연구" },
-    { kind: "핵심 연구", label: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", note: "서로 다른 ranking을 reciprocal-rank evidence로 합치는 원 연구" },
-    { kind: "핵심 논문", label: "Efficient and robust approximate nearest neighbor search using HNSW", href: "https://arxiv.org/abs/1603.09320", note: "Multi-layer proximity graph approximate-neighbor index" },
-    { kind: "핵심 논문", label: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", note: "Query와 passage를 함께 읽는 cross-encoder second-stage reranking" },
-    { kind: "핵심 논문", label: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", href: "https://arxiv.org/abs/2004.12832", note: "문서 token embedding을 미리 계산해 두고 query token과 MaxSim으로 비교하는 late interaction" },
+    { kind: "핵심 논문", label: "Dense Passage Retrieval for Open-Domain Question Answering", href: "https://arxiv.org/abs/2004.04906", note: "질의·문서 이중 인코더와 밀집 벡터 후보 검색의 기준 연구" },
+    { kind: "핵심 연구", label: "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", href: "https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf", note: "서로 다른 순위 목록의 근거를 역순위 값으로 합치는 원 연구" },
+    { kind: "핵심 논문", label: "Efficient and robust approximate nearest neighbor search using HNSW", href: "https://arxiv.org/abs/1603.09320", note: "여러 층의 근접 그래프로 근사 최근접 이웃을 찾는 색인 연구" },
+    { kind: "핵심 논문", label: "Passage Re-ranking with BERT", href: "https://arxiv.org/abs/1901.04085", note: "질의와 문단을 함께 읽는 두 번째 단계의 교차 인코더 재정렬 연구" },
+    { kind: "핵심 논문", label: "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", href: "https://arxiv.org/abs/2004.12832", note: "미리 계산한 문서 토큰 벡터와 질의 토큰을 MaxSim으로 비교하는 지연 상호작용 연구" },
   ],
   "ai/lora-finetuning": [
     {

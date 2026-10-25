@@ -1150,11 +1150,15 @@ const llmAppArticles: Article[] = [
   },
   {
     slug: "retrieval-ranking-funnel",
-    title: "Retrieval Ranking Funnel: BM25·HNSW·RRF·Cross-Encoder",
+    title: "검색과 재정렬: 후보를 넓게 찾고 근거를 좁히는 과정",
     subcategory: "ai-practical-llm",
     sections: [
-      { id: "overview", title: "Candidate funnel과 recall ceiling" },
-      { id: "retrieval", title: "Sparse·dense·fusion·reranking" },
+      { id: "overview", title: "허용된 검색 범위에서 시작하기" },
+      { id: "retrieval", title: "후보 검색·융합·재정렬" },
+      { id: "hybrid-depth", title: "후보 깊이와 재정렬 범위" },
+      { id: "late-interaction", title: "Token 단위 정교화" },
+      { id: "ranking-evaluation", title: "상위 결과 평가" },
+      { id: "retrieval-ranking-return", title: "전체 지도에 되돌려 놓기" },
     ],
     component: () => import("@/pages/articles/ai/retrieval-ranking-funnel"),
   },

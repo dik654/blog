@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 618,
-    "pending": 373,
+    "reviewed": 619,
+    "pending": 372,
     "untracked": 0,
-    "assignedPending": 331,
+    "assignedPending": 330,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3491,11 +3491,11 @@
     {
       "route": "ai/retrieval-ranking-funnel",
       "publicPath": "cs/ai/retrieval-ranking-funnel",
-      "title": "Retrieval Ranking Funnel: BM25·HNSW·RRF·Cross-Encoder",
+      "title": "검색과 재정렬: 후보를 넓게 찾고 근거를 좁히는 과정",
       "catalogIndex": 346,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import RetrievalViz from "./viz/RetrievalViz";
 
 export default function Retrieval() {
   return (
@@ -15,21 +14,24 @@ export default function Retrieval() {
         </p>
         <p>
           예를 들어 제품 코드 <code>XR-17B</code>를 찾을 때는 철자가 그대로 맞는
-          sparse retrieval이 유리합니다. 반면 “로그인이 계속 풀린다”와 “세션이
-          조기에 만료된다”처럼 표현이 다른 문의는 dense retrieval이 더 잘 연결할 수
-          있습니다. 어느 하나만 쓰면 다른 종류의 정답을 놓칠 수 있습니다.
+          희소 검색(sparse retrieval)이 유리합니다. 반면 “로그인이 계속
+          풀린다”와 “세션이 조기에 만료된다”처럼 표현이 다른 문의는 밀집 벡터
+          검색(dense retrieval)이 더 잘 연결할 수 있습니다. 어느 하나만 쓰면
+          다른 종류의 정답을 놓칠 수 있습니다.
         </p>
         <p>
-          그래서 실용적인 검색은 보통 네 단계로 흐릅니다. BM25와 dense index가 각자 후보를 만들고 두 순위를 합친 뒤 더 비싼 reranker가 작은 후보 집합을 자세히
-          읽습니다. 아래 네 카드는 이 순서에서 각 부품이 맡는 일과 넘지 못하는 경계를 요약합니다.
+          그래서 실용적인 검색은 보통 네 단계로 흐릅니다. BM25와 밀집 벡터
+          색인이 각자 후보를 만들고 두 순위를 합친 뒤, 비용이 더 큰 재정렬기가
+          작은 후보 집합을 자세히 읽습니다. 아래 네 구역은 각 단계의 역할과
+          넘지 못하는 경계를 요약합니다.
         </p>
       </div>
       <div className="not-prose my-8 grid gap-3 md:grid-cols-2">
         {[
-          ["BM25 · lexical", "Term frequency saturation·IDF·문서 길이로 exact-term 후보를 빠르게 만듭니다.", "고유명사와 code에는 강하지만 vocabulary mismatch는 남습니다."],
-          ["HNSW · dense ANN", "여러 층의 proximity graph를 내려오며 embedding 이웃 후보를 근사 탐색합니다.", "efSearch를 키우면 보통 recall과 query cost가 함께 늘어납니다."],
-          ["RRF · rank fusion", "서로 단위가 다른 BM25·dense score 대신 각 목록의 rank evidence를 합칩니다.", "Candidate cutoff 밖의 문서를 복구하지는 못합니다."],
-          ["Cross-encoder · rerank", "Query와 candidate text를 함께 읽어 제한된 목록의 relevance를 다시 계산합니다.", "품질 ceiling은 candidate recall이고 비용은 candidate 수에 비례합니다."],
+          ["BM25 · 단어 일치", "단어 빈도 포화·역문서 빈도(IDF)·문서 길이로 정확히 일치하는 후보를 빠르게 만듭니다.", "고유명사와 코드에는 강하지만 표현이 달라지면 놓칠 수 있습니다."],
+          ["HNSW · 의미 검색", "여러 층의 근접 그래프를 내려오며 임베딩 이웃을 근사 탐색합니다.", "efSearch를 키우면 보통 재현율과 질의 비용이 함께 늘어납니다."],
+          ["RRF · 순위 융합", "단위가 다른 두 점수 대신 각 목록에서 받은 순위의 근거를 합칩니다.", "후보 제한선 밖의 문서를 복구하지는 못합니다."],
+          ["교차 인코더 · 재정렬", "질의와 후보 문서를 함께 읽어 제한된 목록의 관련성을 다시 계산합니다.", "품질 상한은 후보 재현율이고 비용은 후보 수에 비례합니다."],
         ].map(([title, description, boundary]) => (
           <article key={title} className="rounded-2xl border border-border/70 bg-card/60 p-5">
             <h3 className="font-semibold text-foreground">{title}</h3>
@@ -39,8 +41,8 @@ export default function Retrieval() {
         ))}
       </div>
       <ExplainedFormula
-        question="Dense와 sparse 결과의 점수 범위가 다를 때 순위만으로 어떻게 합칠까요?"
-        idea={<>각 검색기가 문서에 준 rank를 역수 형태로 바꿔 더합니다. 여러 목록에서 꾸준히 상위인 문서는 높은 점수를 얻고, k는 한 검색기의 1위가 지나치게 지배하는 정도를 완화합니다.</>}
+        question="밀집 벡터 검색과 단어 일치 검색의 점수 범위가 다를 때, 순위만으로 어떻게 합칠까요?"
+        idea={<>각 검색기가 문서에 준 순위를 역수 형태로 바꿔 더합니다. 여러 목록에서 꾸준히 상위인 문서는 높은 점수를 얻고, k는 한 검색기의 1위가 지나치게 지배하는 정도를 완화합니다.</>}
         formula={String.raw`\operatorname{RRF}(d)=\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}`}
         annotatedFormula={String.raw`\operatorname{RRF}(d)=\underbrace{\sum_{r\in\mathcal R}\frac{1}{k+\operatorname{rank}_r(d)}}_{\text{검색기별 역순위 기여를 합산}}`}
         operations={[
@@ -52,24 +54,27 @@ export default function Retrieval() {
           { symbol: "rank_r(d)", name: "rank", description: "검색기 r에서 문서 d의 1부터 시작하는 순위입니다." },
           { symbol: "k", name: "rank constant", description: "상위 한두 순위의 과도한 영향력을 완화하는 검증 parameter입니다." },
         ]}
-        assumptions={["각 ranker의 cutoff와 누락 문서 처리 규칙을 고정합니다.", "RRF는 score calibration을 요구하지 않지만 query별 최적 relevance를 보장하지 않습니다.", "k와 candidate 수는 validation set에서 정하고 test 결과로 재선택하지 않습니다."]}
+        assumptions={["각 검색기의 후보 제한선과 누락 문서 처리 규칙을 고정합니다.", "RRF는 점수 보정을 요구하지 않지만 질의마다 최적의 관련성 순위를 보장하지는 않습니다.", "k와 후보 수는 검증 집합에서 정하고 시험 결과를 본 뒤 다시 고르지 않습니다."]}
         interpretation="k=60일 때 dense 1위·sparse 10위 문서는 1/61+1/70을 얻습니다. 두 목록 모두 상위에 있는 문서가 한 목록에서만 우연히 1위인 문서보다 유리해질 수 있습니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          여기서 검색 범위를 정하는 권한 조건은 첫 단계보다 앞에 와야 합니다. ACL·tenant·valid-time filter를 검색 뒤에 적용하면 허가된 문서는 이미 top-k
-          밖으로 밀렸을 수 있습니다. 금지 문서의 본문이나 점수가 뒤 단계에 노출될 위험도 생깁니다.
+          검색 범위를 정하는 권한 조건은 첫 검색보다 앞에 와야 합니다. 접근 제어
+          목록(ACL)·테넌트·유효 시각 조건을 검색 뒤에 적용하면 허가된 문서는 이미
+          상위 k개 밖으로 밀렸을 수 있습니다. 금지 문서의 본문이나 점수가 뒤
+          단계에 노출될 위험도 생깁니다.
         </p>
         <p>
-          허가된 후보를 넓게 모은 다음에는 cross-encoder나 late-interaction model이
-          query와 문서를 함께 읽어 순서를 다시 정합니다. 하지만 여기에는 분명한
-          한계가 있습니다. Reranker는 받은 후보를 재정렬할 뿐, 첫 검색에서 빠진
-          문서를 새로 만들어 내지 못합니다.
+          허가된 후보를 넓게 모은 다음에는 교차 인코더나 지연 상호작용 모델이
+          질의와 문서를 함께 읽어 순서를 다시 정합니다. 하지만 재정렬기는 받은
+          후보의 순서만 바꿀 뿐, 첫 검색에서 빠진 문서를 새로 찾아내지는 못합니다.
         </p>
         <p>
-          GraphRAG도 이 원칙에서 예외가 아닙니다. 지식 그래프의 local subgraph나 community summary를 또 하나의 후보 통로로 추가할 뿐,
-          lexical·vector retrieval 전체를 대체하지는 않습니다. 어떤 원문에서 graph를 만들었는지, entity를 어떻게 합쳤는지, 몇 hop까지 탐색했는지를 함께
-          기록해 두어야 합니다. 빠진 edge는 뒤의 reranker가 원문 사실만으로 복구할 수 없기 때문입니다.
+          GraphRAG도 예외가 아닙니다. 지식 그래프의 가까운 하위 그래프나 군집
+          요약을 또 하나의 후보 통로로 추가할 뿐, 단어 일치 검색과 벡터 검색
+          전체를 대신하지는 않습니다. 어떤 원문에서 그래프를 만들었는지, 같은
+          개체를 어떻게 합쳤는지, 몇 단계의 연결까지 탐색했는지를 함께 기록해야
+          합니다. 빠진 연결은 뒤의 재정렬기가 원문만 보고 복구할 수 없기 때문입니다.
         </p>
       </div>
       <ExplainedFormula
@@ -94,7 +99,6 @@ O_q&\subseteq C_q\\
         assumptions={["Reranker가 외부 검색을 새로 수행하지 않고 Cq만 재정렬합니다.", "Relevant label은 multi-positive를 보존하고 corpus revision과 일치합니다.", "Output cutoff가 더 작으면 coverage는 같거나 줄 수 있습니다."]}
         interpretation="정답 문서 세 개 중 candidate가 두 개만 포함하면 뒤 단계가 완벽해도 최대 두 개만 남길 수 있습니다. 그래서 candidate Recall과 reranking NDCG를 따로 봅니다."
       />
-      <div className="not-prose my-8"><RetrievalViz /></div>
       <div id="reading-dpr" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Dense Passage Retrieval</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
