@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileStageFlow from "./MobileStageFlow";
 
 /** 본문 대응: UseBoundary.tsx — 얼린 평가와 미세조정의 주장 차이 */
 const SCENES = ["얼린 backbone", "선형 head만 학습", "head를 키우면", "미세조정은 다른 주장"] as const;
@@ -12,13 +13,20 @@ const NOTES = [
   "backbone까지 학습하면 표현이 바뀝니다. 결론은 표현 품질이 아니라 초기값의 유용성이 됩니다.",
 ] as const;
 
+const MOBILE_STAGES = [
+  { title: "backbone 고정", detail: "사전학습 표현은 바꾸지 않음" },
+  { title: "선형 head만 학습", detail: "표현에 드러난 정보를 측정" },
+  { title: "큰 head", detail: "head 능력이 백본 차이를 가릴 수 있음" },
+  { title: "전체 미세조정", detail: "표현 품질이 아니라 초기값을 평가" },
+] as const;
+
 const FROZEN = "#6366f1";
 const HEAD = "#10b981";
 const WARN = "#f59e0b";
 const MUTED = "#94a3b8";
 
 export default function FrozenEvalViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   const headHeight = step === 2 ? 54 : 20;
   const trainBackbone = step === 3;
@@ -28,21 +36,25 @@ export default function FrozenEvalViz() {
       title="무엇을 학습시키느냐가 결론의 주어를 바꿉니다"
       description="같은 backbone이라도 어디까지 학습을 허용하느냐에 따라 점수가 말해 주는 내용이 달라집니다."
       note="그림은 평가 조건의 차이만 보여 주며 특정 과제의 점수를 나타내지 않습니다."
+      className="my-8 !block !h-auto !max-h-none !overflow-visible"
+      canvasClassName="!h-auto !max-h-none !flex-none !overflow-visible"
     >
       <div
-        data-viz-canvas
+        id={scenes.playbackId}
+        data-viz-id="dinov3-frozen-evaluation"
         tabIndex={0}
         role="group"
         aria-label="얼린 평가와 미세조정의 차이"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="min-w-0 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[18rem] flex-col justify-center sm:min-h-[21rem]">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileStageFlow items={MOBILE_STAGES} active={step} ariaLabel="얼린 백본 평가와 미세조정의 차이" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             <rect
               x={120}
               y={96}
@@ -102,6 +114,14 @@ export default function FrozenEvalViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label} className="grid gap-1 py-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <strong>{index + 1}. {label}</strong>
+              <span className="text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

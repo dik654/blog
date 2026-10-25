@@ -16,6 +16,8 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
           행렬만 맞추면 값은 계속 움직이면서 관계 구조만 보존됩니다.
         </p>
 
+        <GramViz />
+
         <p className="leading-7">
           유사도 행렬을 만드는 방법은 단순합니다. 한 이미지의 패치 특징을 길이 1로 정규화하면 두 패치의 내적이
           코사인 유사도가 됩니다. 패치가 P개면 P×P 행렬 하나가 나오고, 이 행렬이 "어느 패치가 어느 패치와 닮았는가"
@@ -68,8 +70,6 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
         interpretation="이 손실은 student가 teacher와 같은 특징을 내도록 만들지 않습니다. 같은 패치들끼리 같은 정도로 닮아 있기만 하면 값은 달라도 됩니다. 반대로 기준 teacher의 관계 구조가 이미 나쁘면 그 나쁜 구조를 그대로 유지시키는 손실이 됩니다."
       />
 
-      <GramViz />
-
       <div className="not-prose mt-6 flex flex-wrap items-center gap-2">
         <CodeViewButton onClick={() => onCodeRef("gram-loss", codeRefs["gram-loss"])} />
         <span className="text-xs text-muted-foreground">정규화·유사도·음수 절단·MSE의 실제 순서</span>
@@ -80,21 +80,22 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
       </h3>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="leading-7">
-          기준을 처음부터 세우면 아직 나쁜 구조를 붙잡게 됩니다. 그래서 사전학습 100만 스텝이 끝난 뒤에야 이 항을
-          켭니다. 그 시점의 teacher를 복사해 Gram teacher로 세우고, 이후 1만 스텝마다 현재 teacher와 같은 값으로
-          다시 맞춥니다. 기준이 아주 느리게 따라오는 두 번째 teacher가 하나 더 생기는 셈입니다.
+          Gram 손실은 계산량을 아끼기 위해 100만 번의 기본 학습이 끝난 뒤 refinement 단계에서 켭니다. 그러나 최초
+          기준은 100만 번째 모델이 아닙니다. 보고서는 dense 특성이 더 좋았던 이른 teacher를 기준으로 삼고,
+          비교 실험에서는 10만·20만 체크포인트가 비슷한 결과를 냈다고 보고합니다. 늦은 모델을 기준으로 삼으면
+          이미 흐려진 관계까지 붙잡게 되기 때문입니다.
         </p>
 
         <p className="leading-7">
-          갱신 주기가 규제 강도를 정합니다. 자주 갱신하면 기준이 현재 모델을 따라가 버려 붙잡는 힘이 약해지고,
-          아예 갱신하지 않으면 낡은 구조에 묶여 나머지 목표의 개선까지 막습니다. 1만 스텝은 그 사이에서 고른 공개
-          설정값입니다.
+          refinement가 시작된 뒤에는 1만 스텝마다 Gram teacher를 현재 EMA teacher와 같은 값으로 갱신하며, 공개
+          설정은 이 갱신을 최대 세 번 수행합니다. 따라서 시작 시점, 최초 기준 체크포인트, 갱신 시점은 서로 다른
+          값입니다. 논문이 비교한 10만·20만 teacher는 비슷했고 100만 teacher는 더 나빴습니다.
         </p>
 
         <p className="leading-7">
           한 가지 장치가 더 있습니다. 기준 특징을 만들 때 Gram teacher에는 두 배 해상도의 이미지를 넣고, 나온 특징
-          맵을 2×2로 묶어 원래 크기로 줄입니다. 같은 패치 격자에 대해 더 촘촘히 본 결과를 평균한 값이 기준이 되므로,
-          붙잡는 관계 구조 자체가 더 정밀해집니다.
+          맵을 bicubic 보간으로 절반 크기로 줄입니다. 같은 패치 격자에 대해 더 촘촘히 본 결과를 부드럽게 줄인 값이
+          기준이 되므로, 붙잡는 관계 구조 자체가 더 정밀해집니다.
         </p>
       </div>
 
@@ -110,13 +111,13 @@ export default function GramAnchoring({ onCodeRef }: { onCodeRef: (key: string, 
           },
           {
             term: "Gram teacher",
-            description: "관계 구조의 기준으로 삼는 복사본입니다. 1만 스텝마다 EMA teacher 값으로 다시 맞춥니다.",
-            example: "100만 스텝 이후에 처음 세우고, 이후 계단식으로 갱신합니다.",
+            description: "관계 구조의 기준으로 삼는 복사본입니다. 이른 teacher로 시작하고 1만 스텝마다 EMA teacher 값으로 다시 맞춥니다.",
+            example: "Gram 손실은 100만 스텝 뒤 켜지만 최초 기준은 dense 특성이 좋았던 이른 체크포인트입니다. 보고서는 10만·20만 체크포인트를 비교했습니다.",
             boundary: "갱신 사이에는 완전히 고정입니다. EMA처럼 매 스텝 따라오지 않습니다.",
           },
           {
             term: "고해상도 Gram teacher",
-            description: "두 배 해상도 입력을 받아 특징 맵을 2×2로 줄여 기준을 만드는 변형입니다.",
+            description: "두 배 해상도 입력을 받아 특징 맵을 bicubic 보간으로 줄여 기준을 만드는 변형입니다.",
             example: "해상도 적응 단계에서는 가장 큰 7B 모델이 이 역할을 맡습니다.",
             boundary: "계산량이 늘어나므로 상시가 아니라 해당 단계에서만 씁니다.",
           },

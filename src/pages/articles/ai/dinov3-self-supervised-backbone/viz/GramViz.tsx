@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileStageFlow from "./MobileStageFlow";
 
 /** 본문 대응: GramAnchoring.tsx — 정규화 → 유사도 행렬 → 차이 → 손실 */
 const SCENES = ["패치 특징 정규화", "각자 유사도 행렬", "두 행렬의 차이", "회전에는 반응하지 않음"] as const;
@@ -10,6 +11,13 @@ const NOTES = [
   "패치가 P개면 P×P 행렬이 하나씩 나옵니다. 값이 아니라 이 행렬이 비교 대상입니다.",
   "성분별 차이를 제곱해 더합니다. 구현은 원소 수로 나눈 평균제곱오차를 씁니다.",
   "표현 전체를 회전시켜도 패치 쌍의 각도는 그대로라 손실이 변하지 않습니다. 학습은 계속 움직일 수 있습니다.",
+] as const;
+
+const MOBILE_STAGES = [
+  { title: "패치 특징 정규화", detail: "각 벡터의 길이를 1로" },
+  { title: "P×P Gram 행렬", detail: "패치 쌍의 코사인 유사도" },
+  { title: "두 행렬 비교", detail: "student와 이른 teacher의 관계 차이" },
+  { title: "값은 계속 움직임", detail: "전체 회전에는 같은 관계가 유지됨" },
 ] as const;
 
 const S = "#6366f1";
@@ -23,7 +31,7 @@ const sim = (i: number, j: number, shift = 0) =>
   i === j ? 1 : Math.max(0, 0.85 - Math.abs(i - j) * 0.22 + shift * (((i + j) % 3) - 1) * 0.08);
 
 export default function GramViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -31,21 +39,25 @@ export default function GramViz() {
       title="관계 행렬만 맞추고 값은 놓아둡니다"
       description="패치 6개로 줄인 그림입니다. 실제로는 이미지 한 장의 패치 수만큼 한 변이 늘어납니다."
       note="행렬 값은 설명을 위한 예시이며 실제 체크포인트의 측정값이 아닙니다."
+      className="my-8 !block !h-auto !max-h-none !overflow-visible"
+      canvasClassName="!h-auto !max-h-none !flex-none !overflow-visible"
     >
       <div
-        data-viz-canvas
+        id={scenes.playbackId}
+        data-viz-id="dinov3-gram-loss"
         tabIndex={0}
         role="group"
         aria-label="Gram anchoring 손실 계산"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="min-w-0 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[18rem] flex-col justify-center sm:min-h-[21rem]">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileStageFlow items={MOBILE_STAGES} active={step} ariaLabel="Gram anchoring 손실 계산 순서" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {step === 0 && (
               <g>
                 <text x={24} y={30} fontSize={9} fill={MUTED}>
@@ -147,6 +159,14 @@ export default function GramViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label} className="grid gap-1 py-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <strong>{index + 1}. {label}</strong>
+              <span className="text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );

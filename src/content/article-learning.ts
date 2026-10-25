@@ -98816,7 +98816,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/dinov3-self-supervised-backbone": {
     coreIdea:
-      "DINOv3는 라벨 대신 EMA teacher의 분포를 이미지 수준과 패치 수준에서 맞추며 학습하는데, 긴 일정에서 이미지 수준 목표가 패치 관계를 평탄하게 만들므로, 패치 유사도 행렬을 기준 teacher와 맞추는 Gram anchoring을 학습 후반에만 켜서 dense feature를 보존합니다.",
+      "DINOv3는 라벨 대신 EMA teacher의 분포를 이미지 수준과 패치 수준에서 맞춥니다. 긴 학습에서 무관한 패치의 유사도까지 올라가 국소성이 흐려지면, dense 특성이 좋았던 이른 teacher의 Gram 행렬을 기준으로 관계를 복구하고 이후 기준을 느리게 갱신합니다.",
     assumedKnowledge: [
       { id: "vit-patch-sequence-contract", role: "이미지를 패치 토큰 시퀀스로 다루는 계약입니다." },
       { id: "teacher-student-distillation-framework", role: "teacher 출력으로 student를 학습시키는 일반 구조입니다." },
@@ -98843,7 +98843,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "teacher는 넓은 크롭을, student는 좁은 크롭까지 보고 각각 prototype 분포를 냅니다. student 온도 0.1의 log-softmax와 teacher 확률의 교차 엔트로피를 모든 크롭 쌍에서 평균합니다.",
         boundary:
-          "teacher는 gradient를 받지 않고 이동평균으로만 갱신됩니다. centering이나 배치 정규화가 없으면 모든 입력이 한 prototype으로 몰려 손실이 0이 되는 붕괴가 일어납니다.",
+          "teacher는 gradient를 받지 않고 이동평균으로만 갱신됩니다. centering이나 배치 정규화가 없으면 모든 입력이 비슷한 prototype 분포를 내는 무의미한 해로 갈 수 있습니다.",
       },
       {
         id: "masked-patch-latent-target",
@@ -98861,7 +98861,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "이미지 한 장을 한 마디로 요약하는 연습만 오래 하면 세부를 구분해 말하는 능력이 줄어듭니다.",
         workedExample:
-          "같은 이미지 안 패치들의 유사도 행렬을 그리면 초반에는 물체와 배경이 블록으로 갈리다가 학습이 길어지면 대비가 사라집니다.",
+          "기준 패치와 나머지 패치의 코사인 유사도 지도를 그리면 20만 스텝에는 국소적인 영역이 또렷하지만 60만 스텝 이후에는 무관한 위치의 유사도까지 올라가며 지도가 시끄러워집니다.",
         boundary:
           "사전학습 손실 세 항 어디에도 이 구조가 직접 들어가지 않아 손실값으로는 관측되지 않습니다. 보고된 붕괴는 해당 규모와 일정에서의 자기보고이며 모든 자기지도 학습의 일반 법칙이 아닙니다.",
       },
@@ -98879,11 +98879,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "gram-teacher-refresh-schedule",
         sectionId: "gram-teacher",
         intuition:
-          "붙잡을 기준을 너무 일찍 세우면 나쁜 상태에 묶이고, 너무 자주 바꾸면 붙잡는 의미가 사라집니다.",
+          "손실을 켜는 때와 최초 기준을 가져오는 때는 다릅니다. 늦게 규제를 시작하더라도 관계가 선명했던 이른 모델을 기준으로 삼을 수 있습니다.",
         workedExample:
-          "사전학습 100만 스텝이 끝난 뒤 기준을 세우고 이후 1만 스텝마다 현재 teacher 값으로 다시 맞춥니다. 기준 특징은 두 배 해상도 입력을 2×2로 줄여 만듭니다.",
+          "100만 스텝 뒤 Gram 손실을 켜되 최초 Gram teacher는 10만 또는 20만 체크포인트에서 가져옵니다. 이후 1만 스텝마다 현재 EMA teacher로 최대 세 번 갱신하고, 고해상도 기준 특징은 bicubic 보간으로 절반 크기로 줄입니다.",
         boundary:
-          "갱신 주기와 시작 시점은 공개된 설정값이며 다른 데이터·규모에서의 최적값이라는 근거는 제시되지 않았습니다.",
+          "논문에서는 10만·20만 teacher가 비슷했고 100만 teacher는 더 나빴습니다. 이 체크포인트와 갱신 주기는 공개 설정값이며 다른 데이터·규모에서의 최적값이 아닙니다.",
       },
       {
         id: "post-hoc-capability-adaptation",
@@ -98950,8 +98950,8 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "모든 입력에 같은 답을 내는 붕괴가 왜 손실을 0으로 만드는지 설명하고, teacher 쪽에서 이를 막는 두 경로를 쓰세요.",
-        answerChecklist: ["student와 teacher가 같은 분포면 손실 최소", "centering으로 배치 평균 제거", "낮은 온도로 뾰족하게", "Sinkhorn-Knopp 정규화", "prototype 사용량 균등화"],
+          "모든 입력에 비슷한 답을 내는 무의미한 해가 왜 생길 수 있는지 설명하고, teacher 쪽에서 이를 막는 두 경로를 쓰세요.",
+        answerChecklist: ["student와 teacher가 서로 같은 분포를 쉽게 맞힘", "입력 구별이 사라짐", "centering으로 배치 평균 제거", "낮은 온도로 뾰족하게", "Sinkhorn-Knopp 정규화", "prototype 사용량 균등화"],
         requiredConcepts: ["ema-teacher-view-distillation"],
         sectionId: "view-objective",
       },
@@ -98974,8 +98974,8 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Gram teacher를 사전학습 100만 스텝 이후에야 세우는 이유와 1만 스텝마다 갱신하는 이유를 각각 쓰세요.",
-        answerChecklist: ["초반 구조는 아직 나쁨", "나쁜 구조를 붙잡으면 손해", "너무 자주 갱신하면 붙잡는 힘 약화", "전혀 갱신 안 하면 낡은 구조에 묶임", "주기가 규제 강도"],
+          "Gram 손실을 켜는 시점, 최초 Gram teacher 체크포인트, 이후 갱신 주기를 각각 구분하고 공개 설정값을 쓰세요.",
+        answerChecklist: ["손실은 100만 스텝 뒤 시작", "최초 기준은 이른 teacher", "비교 실험의 10만·20만 teacher는 비슷했음", "100만 teacher는 더 나빴음", "1만 스텝마다 현재 EMA teacher로 갱신", "최대 세 번 갱신", "다른 규모의 최적값은 아님"],
         requiredConcepts: ["gram-teacher-refresh-schedule"],
         sectionId: "gram-teacher",
       },

@@ -17,7 +17,7 @@ const PROJECT_META = {
 };
 
 /**
- * DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다
+ * DINOv3: 라벨 없이 패치 관계를 지키는 방법
  *
  * 코드 인용은 facebookresearch/dinov3 @ 11c58638 스냅샷을 가리킨다.
  * 스냅샷은 codebase/dinov3 아래에 pin 돼 있다.

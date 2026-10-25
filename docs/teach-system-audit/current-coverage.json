@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 572,
-    "pending": 419,
+    "reviewed": 573,
+    "pending": 418,
     "untracked": 0,
-    "assignedPending": 376,
+    "assignedPending": 375,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3021,11 +3021,11 @@
     {
       "route": "ai/dinov3-self-supervised-backbone",
       "publicPath": "cs/ai/dinov3-self-supervised-backbone",
-      "title": "DINOv3는 dense feature 붕괴를 Gram anchoring으로 막습니다",
+      "title": "DINOv3: 라벨 없이 패치 관계를 지키는 방법",
       "catalogIndex": 299,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

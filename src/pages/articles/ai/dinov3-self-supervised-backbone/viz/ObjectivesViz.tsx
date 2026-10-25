@@ -1,6 +1,7 @@
 import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
+import MobileStageFlow from "./MobileStageFlow";
 
 /** 본문 대응: TwoObjectives.tsx — 이미지 수준 목표와 패치 수준 목표 */
 const SCENES = ["이미지 수준: 크롭 쌍", "teacher 쪽 centering", "패치 수준: 가린 자리", "퍼뜨리기 항"] as const;
@@ -12,6 +13,13 @@ const NOTES = [
   "배치 안에서 최근접 이웃까지의 거리를 키워 서로 다른 이미지가 한 점으로 뭉치지 않게 합니다.",
 ] as const;
 
+const MOBILE_STAGES = [
+  { title: "크롭 쌍", detail: "한 이미지의 넓은 장면과 좁은 장면" },
+  { title: "teacher 분포 보정", detail: "centering · 낮은 온도" },
+  { title: "가린 패치", detail: "같은 자리의 teacher 분포가 목표" },
+  { title: "표현 퍼뜨리기", detail: "가까운 이웃과 거리를 확보" },
+] as const;
+
 const S = "#6366f1";
 const T = "#8b5cf6";
 const OK = "#10b981";
@@ -19,7 +27,7 @@ const WARN = "#f59e0b";
 const MUTED = "#94a3b8";
 
 export default function ObjectivesViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 2800);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false, autoPlay: false });
   const step = scenes.active;
   return (
     <VizFrame
@@ -27,21 +35,25 @@ export default function ObjectivesViz() {
       title="한 장에 하나, 그리고 자리마다 하나"
       description="같은 teacher에서 나오지만 비교하는 단위가 다릅니다."
       note="prototype 개수와 온도는 공개 설정값이며 그림에서는 단순화했습니다."
+      className="my-8 !block !h-auto !max-h-none !overflow-visible"
+      canvasClassName="!h-auto !max-h-none !flex-none !overflow-visible"
     >
       <div
-        data-viz-canvas
+        id={scenes.playbackId}
+        data-viz-id="dinov3-objectives"
         tabIndex={0}
         role="group"
         aria-label="DINOv3의 두 학습 목표"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(30rem,calc(100svh-15rem))] min-h-[23rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="min-w-0 outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div data-viz-live-only className="flex min-h-[18rem] flex-col justify-center sm:min-h-[21rem]">
           <p className="text-[11px] font-black text-primary">
             Scene · {String(step + 1).padStart(2, "0")}
           </p>
           <h4 className="mt-2 text-base font-bold">{SCENES[step]}</h4>
-          <svg viewBox="0 0 480 200" className="mt-4 w-full max-w-2xl">
+          <MobileStageFlow items={MOBILE_STAGES} active={step} ariaLabel="DINOv3 손실의 네 구성" />
+          <svg viewBox="0 0 480 200" className="mt-4 hidden w-full max-w-2xl sm:block">
             {(step === 0 || step === 1) && (
               <g>
                 <rect x={24} y={34} width={70} height={40} fill={S} fillOpacity={0.1} stroke={S} strokeWidth={1.25} />
@@ -139,6 +151,14 @@ export default function ObjectivesViz() {
           </p>
         </div>
         <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <ol className="static-reading-only mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+          {SCENES.map((label, index) => (
+            <li key={label} className="grid gap-1 py-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <strong>{index + 1}. {label}</strong>
+              <span className="text-muted-foreground">{NOTES[index]}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </VizFrame>
   );
