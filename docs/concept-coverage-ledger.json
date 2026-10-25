@@ -15107,12 +15107,12 @@
    "status": "done",
    "action": "alias",
    "conceptId": "query-rewriting-and-expansion",
-   "owner": "/ai/query-transformation-and-adaptive-retrieval#problem",
+   "owner": "/ai/query-transformation-and-adaptive-retrieval#multi-query",
    "plannedArticle": "query-transformation-and-adaptive-retrieval",
    "plannedRoute": "ai/query-transformation-and-adaptive-retrieval",
    "inProse": false,
    "reason": "질문을 검색 전에 바꾸는 넓은 범주 — rewriting을 대표 사례로 하는 node의 alias로 흡수",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-25"
   },
   {
    "batch": "1560",
@@ -15121,12 +15121,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "query-rewriting-and-expansion",
-   "owner": "/ai/query-transformation-and-adaptive-retrieval#problem",
+   "owner": "/ai/query-transformation-and-adaptive-retrieval#multi-query",
    "plannedArticle": "query-transformation-and-adaptive-retrieval",
    "plannedRoute": "ai/query-transformation-and-adaptive-retrieval",
    "inProse": false,
    "reason": "표현을 검색에 유리하게 바꾸는 방법의 canonical",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-25"
   },
   {
    "batch": "1560",
@@ -15135,12 +15135,12 @@
    "status": "done",
    "action": "alias",
    "conceptId": "query-rewriting-and-expansion",
-   "owner": "/ai/query-transformation-and-adaptive-retrieval#problem",
+   "owner": "/ai/query-transformation-and-adaptive-retrieval#multi-query",
    "plannedArticle": "query-transformation-and-adaptive-retrieval",
    "plannedRoute": "ai/query-transformation-and-adaptive-retrieval",
    "inProse": false,
    "reason": "동의어·관련어를 더하는 방법 — query rewriting node의 alias",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-25"
   },
   {
    "batch": "1560",

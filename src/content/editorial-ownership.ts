@@ -11679,12 +11679,12 @@ export const EDITORIAL_BOUNDARIES = {
   "query-transformation-and-adaptive-retrieval": {
     title: "Query 변환과 적응형 검색 글이 소유하는 범위",
     owns: [
-      "Query rewriting·expansion과 그 상위 범주 query transformation의 정의",
-      "Multi-query retrieval의 합집합 recall 계산과 query decomposition·subquestion retrieval",
-      "HyDE의 가상 문서 embedding 검색 절차와 정성적 근거",
-      "Step-back prompting의 추상화 절차와 실측 benchmark 개선폭",
-      "Adaptive retrieval trigger, iterative retrieval loop의 종료 조건이 있는 절차",
-      "Self-RAG의 reflection token 네 개와 CRAG의 confidence threshold 세 범주, 각각의 실측 benchmark 수치",
+      "q-732의 대화 맥락을 복원해 질문을 다시 쓰고 설정 위치와 보안 영향으로 분해하는 전체 흐름",
+      "Query rewriting·multi-query·query decomposition이 각각 해결하는 실패의 경계와 합집합 회수율의 오프라인 의미",
+      "HyDE의 가상 문서 embedding 검색 절차와 가상 문서를 사실 근거로 쓰지 않는 경계",
+      "Step-back prompting의 추론 절차와 검색 응용을 별도로 검증해야 하는 근거 범위",
+      "필수 주장별 충분성 판정, iterative retrieval loop, evidence_sufficient와 max_iter를 구분하는 종료 기록",
+      "Self-RAG의 모델 내부 reflection token과 CRAG 외부 evaluator 사이의 검색 상태 소유권 경계",
     ],
     reuses: [
       { label: "Ingestion pipeline이 채운 knowledge base", href: "/cs/ai/rag-ingestion-and-chunking#problem" },
@@ -11692,9 +11692,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "RAG 전체 stage 진단과 context token budget", href: "/cs/ai/rag-pipeline#generation" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "HyDE·Self-RAG·CRAG·Step-Back·Least-to-Most의 수치는 각 논문 저자 자기보고이며 이 글이 새로 측정한 값이 아니다." },
-      { kind: "primary-source", rule: "Self-RAG·CRAG가 특정 benchmark(ARC-Challenge)에서 baseline을 못 이기거나 거의 같은 결과도 함께 적어, 항상 이긴다는 인상을 주지 않는다." },
-      { kind: "project-claim", rule: "정답 근거 6개, recall 33→83%, chunk 겹침 예시 수치는 mechanism을 보여 주는 설명용 가정이며 특정 시스템의 실측값이 아니다." },
+      { kind: "primary-source", rule: "HyDE는 arXiv v1, Self-RAG는 arXiv v1의 Table 1·Algorithm 1, CRAG는 arXiv v3의 Algorithm 1·Table 1에 귀속합니다." },
+      { kind: "primary-source", rule: "Step-back과 Least-to-Most의 수치는 추론 평가 결과입니다. 검색 회수율을 직접 입증한 값으로 쓰지 않습니다." },
+      { kind: "primary-source", rule: "CRAG의 개선 사례와 SelfRAG-LLaMA2-7B ARC 67.3→67.2 사례를 함께 적어 evaluator가 항상 성능을 높인다고 일반화하지 않습니다." },
+      { kind: "project-claim", rule: "q-732, d-17·d-04, 회수율 0/2→2/2, max_iter=2, 임계값 0.40·0.70은 메커니즘을 추적하기 위한 설명용 가정이며 운영 실측값이 아닙니다." },
     ],
   },
   "lexical-retrieval-bm25-inverted-index": {

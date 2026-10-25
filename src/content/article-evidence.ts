@@ -9088,11 +9088,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "핵심 논문", label: "Ju et al. · CRUX (2025)", href: "https://arxiv.org/abs/2506.20051", note: "Oracle retrieval coverage 대비 실제 방법 coverage 격차 — retriever upper bound 수치 예의 근거" },
   ],
   "ai/query-transformation-and-adaptive-retrieval": [
-    { kind: "핵심 논문", label: "Gao et al. · HyDE (ACL 2023)", href: "https://arxiv.org/abs/2212.10496", note: "가상 문서 embedding으로 검색하는 HyDE 방법과 정성적 성능 비교의 근거" },
-    { kind: "핵심 논문", label: "Asai et al. · Self-RAG (ICLR 2024)", href: "https://arxiv.org/abs/2310.11511", note: "네 reflection token 정의와 PopQA·PubHealth·ARC-Challenge 수치의 근거" },
-    { kind: "핵심 논문", label: "Yan et al. · CRAG (2024)", href: "https://arxiv.org/abs/2401.15884", note: "Correct·Ambiguous·Incorrect 세 범주와 baseline 대비 개선 수치의 근거" },
-    { kind: "핵심 논문", label: "Zheng et al. · Step-Back Prompting (ICLR 2024)", href: "https://arxiv.org/abs/2310.06117", note: "Step-back 질문 방법과 MMLU·TimeQA·MuSiQue 개선폭의 근거" },
-    { kind: "핵심 논문", label: "Zhou et al. · Least-to-Most Prompting (ICLR 2023)", href: "https://arxiv.org/abs/2205.10625", note: "복합 문제를 subproblem으로 나누는 decomposition 원리와 SCAN 수치의 근거" },
+    { kind: "핵심 논문", label: "Gao et al. · HyDE (ACL 2023)", href: "https://arxiv.org/abs/2212.10496", note: "2026-10-26에 arXiv v1을 확인했습니다. 가상 문서에 틀린 세부가 생길 수 있다는 경계와 비지도 encoder를 이용한 zero-shot dense retrieval 절차의 근거입니다." },
+    { kind: "핵심 논문", label: "Asai et al. · Self-RAG (ICLR 2024)", href: "https://arxiv.org/abs/2310.11511", note: "2026-10-26에 arXiv v1의 Table 1과 Algorithm 1을 확인했습니다. 네 reflection token과 학습된 모델 내부의 조건부 검색 절차를 뒷받침합니다." },
+    { kind: "핵심 논문", label: "Yan et al. · CRAG (arXiv v3, 2024-10-07)", href: "https://arxiv.org/abs/2401.15884", note: "2026-10-26에 Algorithm 1과 Table 1을 확인했습니다. 외부 evaluator의 교정 동작과 PopQA·ARC의 개선 및 무개선 사례를 함께 인용합니다." },
+    { kind: "핵심 논문", label: "Zheng et al. · Step-Back Prompting (ICLR 2024)", href: "https://arxiv.org/abs/2310.06117", note: "2026-10-26에 arXiv v2를 확인했습니다. 상위 원리를 먼저 묻는 추론 방법의 근거이며 검색 회수율의 직접 근거가 아닙니다." },
+    { kind: "선행·비교 논문", label: "Zhou et al. · Least-to-Most Prompting (ICLR 2023)", href: "https://arxiv.org/abs/2205.10625", note: "2026-10-26에 원문을 확인했습니다. 복합 문제를 하위 문제로 나누는 선행 추론 아이디어이며 검색 품질의 직접 근거가 아닙니다." },
   ],
   "ai/lexical-retrieval-bm25-inverted-index": [
     { kind: "핵심 논문", label: "Robertson, Zaragoza — The Probabilistic Relevance Framework: BM25 and Beyond (2009)", href: "https://doi.org/10.1561/1500000019", note: "BM25 scoring 식의 유도와 saturation·length normalization 결합의 근거" },

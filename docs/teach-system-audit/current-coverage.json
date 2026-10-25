@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 619,
-    "pending": 372,
+    "reviewed": 620,
+    "pending": 371,
     "untracked": 0,
-    "assignedPending": 330,
+    "assignedPending": 329,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3791,11 +3791,11 @@
     {
       "route": "ai/query-transformation-and-adaptive-retrieval",
       "publicPath": "cs/ai/query-transformation-and-adaptive-retrieval",
-      "title": "Query 변환과 적응형 검색: rewriting·HyDE·Self-RAG·CRAG",
+      "title": "질의 변환과 적응형 검색: 첫 검색이 부족할 때",
       "catalogIndex": 376,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
