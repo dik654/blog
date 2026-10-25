@@ -191,7 +191,7 @@
         "src/pages/articles/ai/generative-theory/viz/ModernGenerativeTheoryViz.tsx",
         "src/pages/articles/ai/shared/GenerativeFamilyLocator.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -10368,9 +10368,10 @@
         "reducedMotion": "pass · 네 시각화가 마지막 장면으로 정착하고 재생 버튼이 비활성화됩니다.",
         "noScript": "pass · 정적 빌드의 390px JavaScript 비활성 화면에서 제목·locator·return과 네 시각화의 전체 4→5→4→5개 장면 목록을 순서대로 확인했습니다.",
         "typecheck": "pass · NODE_OPTIONS=--max-old-space-size=8192 npx tsc -b --noEmit",
-        "build": "pass · NODE_OPTIONS=--max-old-space-size=8192 npm run build"
+        "build": "pass · NODE_OPTIONS=--max-old-space-size=8192 npm run build",
+        "production": "pass · GitHub Pages run 40189894442 성공. 공개 1440px에서 가로 overflow 0·시각화 4개·locator·return·console 오류 0을 확인했고, 공개 390px에서 장면 이동·49.5px 조작부와 JavaScript 비활성 정적 장면 목록을 다시 확인했습니다."
       },
-      "remaining": ["GitHub Pages 배포 후 공개 경로 확인"]
+      "remaining": []
     },
     {
       "route": "ai/video-convolution-architectures",
