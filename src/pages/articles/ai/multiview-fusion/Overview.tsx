@@ -1,84 +1,88 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import MultiviewFusionLocator from "./MultiviewFusionLocator";
 import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">멀티뷰 학습은 image를 많이 넣는 기법이 아니라, 같은 대상을 본 관측 묶음을 정의하는 문제에서 시작합니다</h2>
+      <MultiviewFusionLocator />
+      <h2 className="mb-6 text-2xl font-bold">같은 상품을 찍은 파일부터 한 묶음으로 만듭니다</h2>
+      <OverviewViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
-          상품의 앞·옆 사진, 한 환자를 촬영한 여러 영상, RGB와 depth처럼 한 대상을
-          서로 다른 관점에서 관측한 값은 한 장에 없는 정보를 보완합니다. 그러나
-          model은 파일 이름만 보고 같은 대상을 알아내지 못합니다. 먼저 <strong>어떤
-          관측들이 한 sample인지</strong>, 좌표와 시각은 어떻게 맞추는지, 일부 view가
-          없을 때 무엇으로 표시할지를 data pipeline이 보장해야 합니다.
+          검수대에 운동화 한 켤레가 들어왔다고 하겠습니다. 정면 카메라는 RGB와 깊이를,
+          나머지 카메라는 측면·밑창·위쪽 사진을 남깁니다. 이 파일들이 모두 같은 상품
+          <code>shoe-017</code>을 가리킨다는 사실과 측면 카메라가 응답하지 않았다는 사실까지
+          묶어야 모델의 입력 한 건이 완성됩니다. 이 글에서는 이 묶음이 어떻게 하나의
+          ‘검수 필요’ 판정으로 바뀌는지 끝까지 따라갑니다.
         </p>
         <p>
-          이 글에서 fusion은 세 경계로 나눕니다. 좌표가 맞는 raw input을 channel로
-          합치는 방식은 early fusion입니다. View별 feature를 만든 뒤 집계하는 방식은 late fusion입니다.
-          Spatial token 사이의 관계를 학습하는 방식은 attention fusion입니다. <Link to="/cs/ai/cnn">CNN의
-          image tensor와 encoder</Link>, <Link to="/cs/ai/attention-theory">Q·K·V와
-          self-attention</Link>은 각 정본을 재사용하고, 여기서는 view sample 계약과
-          결합 위치가 만드는 가정에 집중합니다.
+          결합 위치는 세 군데입니다. 같은 좌표를 보는 RGB와 깊이는 입력 채널에서 합칠 수
+          있습니다. 서로 다른 각도의 사진은 각각 표현을 만든 뒤 합칠 수 있습니다. 사진 속
+          위치 관계까지 남기려면 패치 토큰 사이를 attention으로 연결할 수 있습니다. 이 세
+          방법은 성능 순위가 아니라 <strong>어떤 관계가 보장되는가</strong>에 따라 갈립니다.
+          <Link to="/cs/ai/cnn">CNN 인코더</Link>와 <Link to="/cs/ai/attention-theory">Q·K·V 계산</Link>은
+          기존 글을 재사용하고, 여기서는 관측 묶음과 결합 경계만 새로 설명합니다.
         </p>
       </div>
       <ContentBoundary article="multiview-fusion" />
       <ExplainedFormula
-        question="관측 수가 sample마다 달라도 한 개의 멀티뷰 sample을 어떻게 적을 수 있을까?"
-        idea={<>각 view의 관측값만 모으지 않고, 보이는지 나타내는 mask와 좌표·시각·센서 정보를 담은 metadata를 한 tuple로 묶습니다. Label은 개별 image가 아니라 이 episode 전체에 붙습니다.</>}
+        question="관측 수가 상품마다 달라도 입력 한 건을 어떻게 적을 수 있을까?"
+        idea={<>관측값만 모으지 않고, 사용할 수 있는지 나타내는 유효성 표시와 좌표·시각·센서 정보를 한 tuple로 묶습니다. 판정값은 개별 사진이 아니라 이 관측 묶음 전체에 붙습니다.</>}
         formula={String.raw`\begin{aligned}
 X_i&=\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i},\\
 \hat y_i&=F_\theta(X_i).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}}_{\text{관측·mask·metadata 묶음}},\\
-\hat y_i&=\underbrace{F_\theta(X_i)}_{\text{episode 단위 예측}}.
+X_i&=\underbrace{\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}}_{\text{관측·유효성·메타데이터 묶음}},\\
+\hat y_i&=\underbrace{F_\theta(X_i)}_{\text{관측 묶음 단위 예측}}.
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}`, annotation: ["view v마다 관측 x, 보이는지 m, 좌표·시각 c","V_i가 sample마다 달라도 한 episode","label y_i는 image가 아니라 이 묶음에 붙음"] },
-          { expression: String.raw`F_\theta(X_i)`, annotation: ["가변 개수 tuple을 받아 하나의 prediction","split도 episode가 새지 않게 group 단위로"] },
+          { expression: String.raw`\{(x_{iv},m_{iv},c_{iv})\}_{v=1}^{V_i}`, annotation: ["관측 v마다 값 x, 유효성 m, 좌표·시각 c를 함께 기록","관측 수 V_i가 달라도 한 상품 묶음","판정값 y_i는 사진 한 장이 아니라 묶음 전체에 붙음"] },
+          { expression: String.raw`F_\theta(X_i)`, annotation: ["가변 개수의 관측을 받아 예측 하나를 출력","자료 분리도 같은 상품이 새지 않도록 식별자 단위로"] },
         ]}
         terms={[
-          { symbol: "i,v", name: "sample and view index", description: "i는 같은 대상·사건을 묶은 episode, v는 그 안의 camera·sensor·시점 index입니다." },
-          { symbol: "xᵢᵥ", name: "view observation", description: "v번째 view의 image, depth map 또는 encoder가 읽을 원자료입니다." },
-          { symbol: "mᵢᵥ", name: "availability mask", description: "관측이 실제로 존재하고 사용할 수 있는지 표시합니다. 값 0인 관측과 결측을 구분합니다." },
-          { symbol: "cᵢᵥ", name: "view metadata", description: "Camera ID·pose·timestamp·calibration·quality처럼 관측의 좌표와 의미를 설명합니다." },
-          { symbol: "Fθ", name: "fusion predictor", description: "가변 개수의 view tuple을 받아 episode 수준 prediction을 만드는 전체 model입니다." },
+          { symbol: "i,v", name: "묶음과 관측 번호", description: "i는 같은 대상을 묶은 관측 묶음, v는 그 안의 카메라·센서·시점 번호입니다." },
+          { symbol: "xᵢᵥ", name: "관측값", description: "v번째 사진, 깊이 지도 또는 인코더가 읽을 원자료입니다." },
+          { symbol: "mᵢᵥ", name: "유효성 표시", description: "관측이 실제로 존재하고 사용할 수 있는지 표시합니다. 값 0인 관측과 결측을 구분합니다." },
+          { symbol: "cᵢᵥ", name: "관측 메타데이터", description: "카메라 ID·pose·촬영 시각·보정값·품질처럼 관측의 좌표와 의미를 설명합니다." },
+          { symbol: "Fθ", name: "결합 예측기", description: "가변 개수의 관측과 메타데이터 묶음을 받아 상품 단위 예측을 만드는 전체 모델입니다." },
         ]}
-        assumptions={["하나의 Xᵢ 안에 들어간 view들은 label yᵢ가 가리키는 같은 대상·사건에 속합니다.", "Availability와 metadata는 prediction 시점에도 같은 정의로 생성할 수 있습니다.", "View 수 Vᵢ가 고정인지 가변인지, 순서가 의미인지 여부는 별도로 선언합니다."]}
-        interpretation="멀티뷰 dataset의 최소 단위는 image 파일 한 장이 아니라 episode Xᵢ입니다. 따라서 train·validation·test split도 같은 identity의 episode가 서로 다른 split으로 새지 않도록 group 단위로 만들어야 합니다."
+        assumptions={["하나의 Xᵢ에 들어간 관측은 판정값 yᵢ가 가리키는 같은 대상·사건에 속합니다.", "유효성 표시와 메타데이터는 실제 예측 시점에도 같은 규칙으로 만들 수 있습니다.", "관측 수 Vᵢ가 고정인지 가변인지, 나열 순서가 의미인지 따로 선언합니다."]}
+        interpretation="멀티뷰 데이터의 최소 단위는 사진 한 장이 아니라 관측 묶음 Xᵢ입니다. 따라서 학습·검증·시험 자료도 같은 상품의 관측과 파생본이 서로 다른 구간으로 새지 않도록 상품 식별자 단위로 나눕니다."
       />
-      <div className="not-prose my-8"><OverviewViz /></div>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          고정 camera 번호처럼 순서 자체가 의미라면 tuple로 다루고 view ID를 보존합니다. 반대로 여러 각도의 사진처럼 입력 순서가 임의라면 set으로 다루며 순서를 바꿔도
-          결과가 같아야 합니다. 이 둘을 구분하지 않으면 dataset loader의 정렬 순서를 model이 의미 있는 신호로 외울 수 있습니다.
+          고정 카메라 번호처럼 자리가 의미라면 순서 있는 묶음으로 다루고 카메라 ID를 보존합니다. 반대로
+          촬영 순서가 임의인 상품 사진 모음이라면 집합으로 다루며, 나열 순서를 바꿔도 결과가
+          같아야 합니다. 이 둘을 구분하지 않으면 data loader가 우연히 정한 파일 순서를 모델이
+          의미 있는 신호처럼 외울 수 있습니다.
         </p>
       </div>
       <ExplainedFormula
-        question="순서가 없는 view set이라는 말은 model output에 어떤 검사를 요구할까?"
-        idea={<>같은 원소를 다른 순서로 나열한 permutation은 같은 set입니다. 그러므로 분류처럼 episode 전체에 한 값을 내는 함수는 어떤 permutation을 적용해도 output이 변하지 않아야 합니다.</>}
+        question="순서가 없는 관측 집합이라는 말은 모델 출력에 어떤 검사를 요구할까?"
+        idea={<>같은 관측을 다른 순서로 나열해도 집합은 같습니다. 그러므로 묶음 전체에 판정 하나를 내는 함수는 어떤 순열을 적용해도 출력이 변하지 않아야 합니다.</>}
         formula={String.raw`\begin{aligned}
 X_i'&=\pi X_i,\\
 F_\theta(X_i')&=F_\theta(X_i)\quad(\forall\pi).
 \end{aligned}`}
         annotatedFormula={String.raw`\begin{aligned}
-X_i'&=\underbrace{\pi X_i}_{\text{순서만 바꾼 episode}},\\
-F_\theta(X_i')&=\underbrace{F_\theta(X_i)}_{\text{output 불변}}\quad(\forall\pi).
+X_i'&=\underbrace{\pi X_i}_{\text{순서만 바꾼 관측 묶음}},\\
+F_\theta(X_i')&=\underbrace{F_\theta(X_i)}_{\text{출력 불변}}\quad(\forall\pi).
 \end{aligned}`}
         operations={[
-          { expression: String.raw`\pi X_i`, annotation: ["view 내용은 그대로, 나열 순서만 재배열","[front, side, top]→[top, front, side]"] },
-          { expression: String.raw`F_\theta(X_i)`, annotation: ["어떤 π를 넣어도 같은 output이어야 set 처리","mean pooling은 합·분모 불변이라 통과","순서 고정 concat은 slot 의미 고정일 때만"] },
+          { expression: String.raw`\pi X_i`, annotation: ["관측 내용은 그대로 두고 나열 순서만 변경","[정면, 측면, 위쪽]→[위쪽, 정면, 측면]"] },
+          { expression: String.raw`F_\theta(X_i)`, annotation: ["어떤 π를 넣어도 같은 출력이면 집합 처리","평균은 합과 분모가 같아 이 검사를 통과","순서 고정 이어 붙이기는 각 자리의 의미가 고정될 때만 사용"] },
         ]}
         terms={[
-          { symbol: "π", name: "permutation", description: "View 내용은 그대로 둔 채 나열 순서만 바꾸는 일대일 재배열입니다." },
-          { symbol: "πXᵢ", name: "reordered episode", description: "Xᵢ와 같은 view들을 다른 순서로 입력한 sample입니다." },
-          { symbol: "Fθ", name: "episode predictor", description: "Set 전체에서 class·score처럼 하나의 output을 만드는 함수입니다." },
+          { symbol: "π", name: "순열", description: "관측 내용은 그대로 둔 채 나열 순서만 바꾸는 일대일 재배열입니다." },
+          { symbol: "πXᵢ", name: "순서를 바꾼 관측 묶음", description: "Xᵢ와 같은 관측을 다른 순서로 넣은 입력입니다." },
+          { symbol: "Fθ", name: "관측 묶음 예측기", description: "관측 집합 전체에서 분류값이나 점수 하나를 만드는 함수입니다." },
         ]}
-        assumptions={["Task label이 camera slot의 순서가 아니라 view 집합 전체에 붙습니다.", "View ID·pose처럼 실제 의미가 있는 metadata는 각 view와 함께 이동합니다.", "순서별 output을 요구하는 task라면 invariance가 아니라 같은 방식으로 재배열되는 equivariance가 필요합니다."]}
-        interpretation="평균 pooling은 순서를 바꿔도 합과 분모가 같아 이 조건을 만족합니다. 반면 feature를 [front, side, top] 순서로 concat하는 model은 slot 의미가 고정된 경우에만 올바른 선택입니다."
+        assumptions={["과제의 판정값이 카메라 자리 순서가 아니라 관측 집합 전체에 붙습니다.", "카메라 ID·pose처럼 의미 있는 메타데이터는 해당 관측과 함께 이동합니다.", "순서별 출력이 필요한 과제라면 불변성이 아니라 입력과 같은 방식으로 재배열되는 등변성이 필요합니다."]}
+        interpretation="평균 pooling은 순서를 바꿔도 합과 분모가 같아 이 조건을 만족합니다. 반면 표현을 [정면, 측면, 위쪽] 순서로 이어 붙이는 모델은 각 자리가 고정된 카메라를 뜻할 때만 올바릅니다."
       />
     </section>
   );

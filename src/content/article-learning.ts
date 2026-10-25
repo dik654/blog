@@ -19966,7 +19966,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/multiview-fusion": {
     coreIdea:
-      "멀티뷰 fusion은 여러 image를 무조건 함께 넣는 기법이 아니라 같은 대상의 관측을 identity·coordinate·availability·order 계약으로 묶고, 정렬 가능한 raw input·view별 representation·spatial token 중 어느 경계에서 결합할지를 가정과 비용에 따라 선택한 뒤 missing-view intervention으로 검증하는 설계입니다.",
+      "멀티뷰 결합은 여러 사진을 무조건 함께 넣는 기법이 아닙니다. 같은 대상의 관측을 식별자·좌표·유효성·순서 계약으로 묶고, 정렬된 센서값·관측별 표현·공간 토큰 중 어디에서 합칠지를 정한 뒤 실제 누락과 정렬 오차로 검사하는 설계입니다.",
     assumedKnowledge: [
       {
         id: "image-identity-group-split",
@@ -20038,7 +20038,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "여러 장의 사진을 낱장 문제로 보지 않고 같은 상품·환자·장면을 설명하는 한 묶음의 관측 기록으로 만듭니다.",
         workedExample:
-          "환자 17의 정면 X-ray·측면 X-ray와 각 촬영 시각·pose·validity를 X17 하나에 넣고 진단 label도 episode 전체에 붙입니다.",
+          "운동화 shoe-017의 정면 RGB·깊이, 측면·밑창·위쪽 사진과 촬영 시각·pose·유효성을 X17 하나에 넣고 ‘검수 필요’ 판정도 묶음 전체에 붙입니다.",
         boundary:
           "시간이 다른 관측이 같은 label 상태를 공유하지 않거나 object ID가 틀리면 view가 많아도 잘못된 sample이며, 파일 hash만으로 identity를 보장할 수 없습니다.",
       },
@@ -20092,7 +20092,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "출석한 사람끼리만 투표 비율의 분모를 다시 계산해 결석자에게 weight가 배정되지 않도록 합니다.",
         workedExample:
-          "Mask [1,0,1]과 gate logits [0,5,1]에서 가운데 exp(5)는 제외되고 alpha1=1/(1+e), alpha3=e/(1+e)가 됩니다.",
+          "Mask [1,0,1,1]과 gate 점수 [0,5,1,0.5]에서 측면의 exp(5)는 제외되고 나머지 가중치는 약 [0.186,0.506,0.307]로 다시 정규화됩니다.",
         boundary:
           "Gate weight가 크다는 사실은 model sensitivity의 단서일 뿐 causal importance나 사람에게 충분한 설명은 아니며 view-drop error와 함께 봐야 합니다.",
       },
@@ -20122,7 +20122,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "같은 시험 문제에서 단서 하나만 가리고 답이 얼마나 나빠지는지 비교해 model이 어떤 관측에 의존하는지 확인합니다.",
         workedExample:
-          "각 episode를 full-view와 side-view-drop으로 평가해 sample별 loss difference를 만든 뒤 mean·confidence interval과 class·quality slice를 보고합니다.",
+          "같은 shoe-017 묶음을 전체 관측과 측면 누락 조건에서 평가해 상품별 loss 차이를 만들고, 평균·신뢰구간과 품질 구간별 결과를 함께 봅니다.",
         boundary:
           "Single-view drop effect는 view 간 interaction 때문에 독립 기여의 합으로 해석할 수 없고 실제 배포와 다른 결측 pattern은 robustness 근거가 아닙니다.",
       },
@@ -20197,7 +20197,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Shared encoder+masked mean이 unordered view permutation에 invariant함을 보이고 concat+slot-specific head가 깨지는 수치 반례를 작성하라.",
+          "공유 인코더와 누락을 제외한 평균이 관측 순서에 불변임을 보이고, 순서대로 이어 붙인 뒤 자리별 가중치를 쓰는 head가 이를 깨뜨리는 수치 반례를 작성하라.",
         answerChecklist: [
           "arbitrary permutation",
           "sum commutativity",
@@ -20258,13 +20258,14 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Mask [1,0,1], gate logits [0,5,1]에서 alpha를 계산하고 all-missing sample을 어떻게 처리할지 정하라.",
+          "Mask [1,0,1,1], gate 점수 [0,5,1,0.5]에서 alpha를 계산하고 모든 관측이 누락된 상품을 어떻게 처리할지 정하라.",
         answerChecklist: [
-          "middle numerator zero",
-          "denominator 1+e",
-          "alpha1=1/(1+e)",
-          "alpha2=0",
-          "alpha3=e/(1+e)",
+          "side numerator zero",
+          "denominator 1+e+sqrt(e)",
+          "alpha_front≈0.186",
+          "alpha_side=0",
+          "alpha_sole≈0.506",
+          "alpha_top≈0.307",
           "all-missing reject/fallback",
         ],
         requiredConcepts: [

@@ -5,7 +5,7 @@ import AttentionFusion from "./multiview-fusion/AttentionFusion";
 
 export default function MultiviewFusionArticle() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-10 sm:space-y-12">
       <Overview />
       <EarlyFusion />
       <LateFusion />

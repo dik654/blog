@@ -4,7 +4,8 @@ export type ImageClassificationLearningNodeId =
   | "data-boundary"
   | "backbone-budget"
   | "training-stages"
-  | "probability-action";
+  | "probability-action"
+  | "multiview-fusion";
 
 export interface ImageClassificationLearningNode {
   id: ImageClassificationLearningNodeId;
@@ -70,6 +71,19 @@ export const IMAGE_CLASSIFICATION_LEARNING_NODES: readonly ImageClassificationLe
       "모델의 가장 큰 점수가 실제 확률과 업무 행동으로 바뀔 때, 보정과 임계값은 어디에서 따로 결정해야 할까요?",
     closure:
       "logit·보정 확률·업무 행동을 분리하고 calibration·aggregation·threshold의 자료와 적용 순서를 하나의 판정 버전으로 고정합니다.",
+  },
+  {
+    id: "multiview-fusion",
+    href: "/cs/ai/multiview-fusion#overview",
+    shortTitle: "여러 관측 결합",
+    mapLabel: "관측 묶음 → 결합 → 누락 검사",
+    track: "concept",
+    parentHref: "/cs/ai/image-classification-pipeline#overview",
+    parentLabel: "이미지 분류 · 데이터 경계",
+    question:
+      "같은 상품을 찍은 여러 사진과 센서값 중 하나가 빠져도, 한 상품의 판정을 흔들리지 않게 만들려면 어디에서 어떻게 합쳐야 할까요?",
+    closure:
+      "먼저 같은 대상을 관측 묶음으로 만들고 좌표·순서·누락의 의미를 고정해야 합니다. 그 뒤에만 입력·표현·토큰 중 결합 위치를 고르고, 실제 누락과 정렬 오차로 결과를 검사할 수 있습니다.",
   },
 ] as const;
 
