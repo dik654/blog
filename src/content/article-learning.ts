@@ -43716,9 +43716,9 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/skills-anatomy": {
     entryLevel: true,
     entryNote:
-      "Agent·tool·plugin을 알고 있다고 가정하지 않습니다. 자주 반복하는 작업의 체크리스트를 재사용한다는 일상적인 예에서 시작해 SKILL.md, 선택·로딩, 권한, 평가와 배포 범위까지 이 글 안에서 연결합니다.",
+      "Agent·Tool·MCP·Plugin을 알고 있다고 가정하지 않습니다. 실패한 CI를 고치고 검증하는 한 요청에서 시작해 SKILL.md, 선택·로딩, 권한, 평가와 배포까지 연결합니다.",
     coreIdea:
-      "Agent Skill은 model에 새 권한을 주는 기능이나 tool bundle이 아니라, 반복 가능한 workflow를 trigger metadata·instructions·references·optional scripts로 작성해 필요한 순간에만 읽히게 하는 authoring format입니다. 좋은 Skill은 적용할 요청과 적용하지 않을 요청을 구분하고, 기존 runtime permission 안에서 실행되며, 산출물과 trigger를 별도로 평가합니다.",
+      "Agent Skill은 model에 새 권한을 주는 기능이나 Tool bundle이 아니라, 반복 가능한 작업 순서와 지원 파일을 필요한 순간에 읽히게 하는 작업 지식입니다. 짧은 metadata로 선택한 뒤 SKILL.md 전체와 필요한 자료를 읽고, 기존 실행 권한 안에서 Tool·MCP를 사용하며, 선택 품질과 실제 결과를 따로 평가합니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -43797,7 +43797,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "초기 후보 목록에는 name·description·path만 있다가 요청에 맞는 Skill이 선택되면 SKILL.md 전체를 읽고, 해당 작업이 PDF를 다룰 때만 references/pdf.md를 추가로 읽습니다.",
         boundary:
-          "선택 후에는 SKILL.md를 일부만 훑는 방식이 아니며, 초기 목록 budget 때문에 description이 짧아지거나 Skill이 누락될 수 있으므로 경고·충돌·대규모 설치 조건을 실제로 테스트해야 합니다.",
+          "선택 후에는 SKILL.md를 일부만 훑는 방식이 아니며, 후보가 많거나 description이 겹칠 때의 누락·오선택은 실제 요청과 범위 밖 요청을 함께 넣어 테스트해야 합니다.",
       },
       {
         id: "skill-invocation-routing",
@@ -43833,11 +43833,11 @@ export const ARTICLE_LEARNING: Readonly<
         id: "skill-scope-discovery",
         sectionId: "registry",
         intuition:
-          "현재 책상 서랍, 팀 공용 선반, 개인 가방, 건물 관리실 비품처럼 위치마다 보이는 사람과 범위가 다릅니다.",
+          "실행 환경에 연결한 폴더와 업로드한 version 묶음은 서로 다른 주소록에서 작업 지식을 제공하는 것과 같습니다.",
         workedExample:
-          "Codex는 현재 CWD에서 repository root까지 각 `.agents/skills`를 스캔하고 `$HOME/.agents/skills`, `/etc/codex/skills`, bundled system Skill을 후보에 넣습니다. 하위 module에서 실행하면 상위 repository Skill과 module Skill이 함께 보일 수 있습니다.",
+          "Local shell은 관리하는 runtime의 path로 Skill을 제공하고, hosted shell은 skill_id와 version을 붙이며, Agents API sandbox는 등록한 capability directory에서 SKILL.md를 발견합니다.",
         boundary:
-          "같은 name이 여러 scope에 있어도 자동 override나 merge를 보장하지 않고 둘 다 selector에 나타날 수 있으므로 name·description·실제 launch directory를 함께 검사해야 합니다.",
+          "Local·hosted·Agents API가 같은 attachment 형식을 쓰는 것은 아니며, 어떤 version과 path가 후보에 들어왔는지 실행 환경별 trace에서 확인해야 합니다.",
       },
       {
         id: "skill-plugin-distribution-boundary",
@@ -43937,11 +43937,11 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "Skill 500개가 설치된 환경에서 초기 metadata budget과 선택 후 reference loading을 나눠 context 비용과 누락을 측정하는 실험을 설계하라.",
+          "서로 비슷한 Skill이 많이 제공된 환경에서 초기 metadata와 선택 후 reference loading을 나눠 context 비용과 누락을 측정하는 실험을 설계하라.",
         answerChecklist: [
           "initial list",
-          "description shortening",
-          "omission warning",
+          "overlapping descriptions",
+          "candidate trace",
           "selected full SKILL.md",
           "on-demand reference",
           "token count",
@@ -43990,13 +43990,13 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "적용 대상 50건 중 45건을 선택하고 비대상 150건 중 15건을 잘못 선택했을 때 trigger precision과 recall을 계산하라.",
+          "적용 대상 40건 중 36건을 선택하고 비대상 요청에서 6건을 잘못 선택했을 때 trigger precision과 recall을 계산하라.",
         answerChecklist: [
-          "TP 45",
-          "FN 5",
-          "FP 15",
-          "precision 0.75",
-          "recall 0.90",
+          "TP 36",
+          "FN 4",
+          "FP 6",
+          "precision 36/42",
+          "recall 36/40",
           "not task success",
         ],
         requiredConcepts: ["skill-trigger-evaluation"],
@@ -44026,15 +44026,15 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "basic",
         question:
-          "Monorepo의 root와 하위 service, 개인, admin 위치에 Skill이 있을 때 하위 service CWD에서 발견될 후보와 중복 name 위험을 설명하라.",
+          "같은 Skill을 local shell path, hosted version, Agents API capability directory로 제공할 때 발견 방식과 version 추적 방법을 설명하라.",
         answerChecklist: [
-          "CWD path",
-          "parents to repo root",
-          "user",
-          "admin",
-          "system",
-          "no automatic merge",
-          "selector check",
+          "local path",
+          "hosted skill id",
+          "pinned version",
+          "capability directory",
+          "name description path",
+          "different attachment formats",
+          "discovery trace",
         ],
         requiredConcepts: ["skill-scope-discovery"],
         sectionId: "registry",
@@ -44063,19 +44063,39 @@ export const ARTICLE_LEARNING: Readonly<
     ],
     papers: [
       {
-        title: "OpenAI — Build skills",
-        href: "https://learn.chatgpt.com/docs/build-skills",
+        title: "OpenAI API — Skills",
+        href: "https://developers.openai.com/api/docs/guides/tools-skills",
         problem:
-          "ChatGPT와 Codex에 반복 가능한 task-specific workflow를 추가하면서 모든 instruction과 resource를 처음부터 context에 넣지 않고 발견·호출·배포하는 문제",
+          "반복 가능한 작업 지식과 지원 파일을 실행 환경에 제공하고 필요한 Skill만 선택하는 문제",
         contribution:
-          "필수 SKILL.md metadata, optional scripts·references·assets·openai.yaml, explicit·implicit invocation, progressive disclosure, Codex local scope와 plugin distribution 규약을 공식 문서로 설명",
+          "SKILL.md metadata·instructions·supporting files, discovery, user-prompt 우선순위, local·hosted·Agents API 제공 방식과 안전 경계를 설명",
         assumptions:
-          "2026년 8월 13일에 확인한 OpenAI 제품의 현재 Skill loader·UI·local discovery·plugin 동작과 문서에 명시된 context budget",
+          "2026년 10월 25일에 확인한 OpenAI API의 현재 Skill 실행 환경과 문서",
         evidenceScope:
-          "OpenAI의 현재 제품 규약과 authoring guidance이며 다른 agent host의 설치 경로나 merge·invocation semantics까지 표준화하지 않음",
+          "OpenAI API의 현재 제품 규약과 authoring guidance이며 다른 host의 설치 경로나 invocation semantics까지 표준화하지 않음",
         notClaim:
-          "Skill을 추가하면 model 지능·task quality가 자동으로 오르거나 permission이 늘고 모든 host가 같은 directory·budget·trigger 동작을 가진다는 뜻은 아님",
-        sectionId: "paper-openai-build-skills",
+          "Skill을 추가하면 model 지능·task quality가 자동으로 오르거나 permission이 늘고 모든 환경이 같은 attachment 형식을 가진다는 뜻은 아님",
+        sectionId: "paper-openai-api-skills",
+      },
+      {
+        title: "OpenAI Plugins — Skills",
+        href: "https://developers.openai.com/plugins/concepts/skills",
+        problem: "MCP tool과 반복 workflow를 함께 제공하면서 실제 동작과 작업 순서를 분리하는 문제",
+        contribution: "MCP server가 live data·authentication·authorization·actions를, Skill이 순서·판단·결과 형식을 맡는 경계를 설명",
+        assumptions: "2026년 10월 25일에 확인한 OpenAI Plugin 구조",
+        evidenceScope: "Skill과 MCP server의 역할 분리와 조합",
+        notClaim: "MCP server가 Skill에 필수이거나 Skill이 server 권한을 대신한다는 뜻은 아님",
+        sectionId: "paper-openai-plugin-skills",
+      },
+      {
+        title: "OpenAI Plugins — Package your plugin",
+        href: "https://developers.openai.com/plugins/build/plugins",
+        problem: "Skill·MCP 설정·asset을 설치 가능한 versioned package로 배포하는 문제",
+        contribution: "plugin.json, skills/, mcp.json과 OpenAI 확장 설정의 package 구조를 설명",
+        assumptions: "문서가 설명하는 portable Agent Plugins 또는 Codex compatibility package",
+        evidenceScope: "Plugin 배포 묶음의 파일 구조와 연결 metadata",
+        notClaim: "Plugin 설치가 hook·server·script를 자동으로 신뢰하거나 모든 실행 환경에 배포한다는 뜻은 아님",
+        sectionId: "paper-openai-plugin-package",
       },
     ],
   },

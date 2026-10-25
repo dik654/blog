@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-25 · AI Batch 43 Agent Skill (작성·검수 완료, 배포 대기)
+
+- `ai/skills-anatomy`를 CI 수정 요청 하나의 metadata 선택→SKILL.md 전체 로딩→필요 자료→기존 권한 안의 실행→결과 검증 경로로 재작성했습니다.
+- OpenAI 공식 문서에서 바로 확인되지 않는 metadata 비율·문자 수 상한과 제품별 local scope 일반화를 제거하고, Skill·Tool·MCP server·Plugin의 책임을 현재 문서 기준으로 분리했습니다.
+- 첫 시각 자료를 본문보다 먼저 배치하고 모바일에서는 큰 SVG 대신 읽을 수 있는 3열 상태 지도를 제공합니다. 자동 재생 없이 여섯 장면을 키보드와 버튼으로 이동하며, reduced-motion에서는 정지 상태를 유지합니다.
+- 관련 strict 감사, 8GB TypeScript 검사와 production build를 통과했습니다. 390×844·1440×1000에서 overflow·조작부 겹침·console 오류 0을 확인했고, JavaScript 비활성 production preview에서도 여섯 단계와 결론이 모두 보입니다. 화면 근거는 `output/playwright/ai-skills-anatomy-batch-43/summary.json`입니다.
+- 이전 GitHub Pages 실행이 진행 중이어서 새 변경은 아직 원격 배포하지 않았습니다.
+
 ## 2026-10-24 · Kubernetes 재귀 학습 묶음 (완료)
 
 - 공개 Kubernetes 글 10편을 공통 정본 `kubernetes-learning-tree.ts`에 등록했습니다. 전체 지도와 Controller·Scheduler/Node·자원·Pod 상태·스토리지·패킷 경로·교체/확장은 `concept`, 요청 경로 실습과 SRE/변경 판단은 `practice`입니다. 별도 `reference` 글은 현재 공개 경로에 없습니다.

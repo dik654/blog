@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 560,
-    "pending": 430,
+    "reviewed": 561,
+    "pending": 429,
     "untracked": 0,
-    "assignedPending": 386,
+    "assignedPending": 385,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2261,11 +2261,11 @@
     {
       "route": "ai/skills-anatomy",
       "publicPath": "cs/ai/skills-anatomy",
-      "title": "Agent Skills 해부: Trigger에서 Distribution까지",
+      "title": "Agent Skill: 선택부터 실행까지",
       "catalogIndex": 223,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

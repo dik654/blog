@@ -3529,15 +3529,21 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/skills-anatomy": [
     {
       kind: "공식 OpenAI 문서",
-      label: "Build skills — Codex",
-      href: "https://developers.openai.com/codex/skills/",
-      note: "SKILL.md 필수 구조, progressive disclosure, scope와 plugin 배포 규약",
+      label: "OpenAI API — Skills",
+      href: "https://developers.openai.com/api/docs/guides/tools-skills",
+      note: "2026-10-25 확인 · SKILL.md 구조, discovery, user-prompt 우선순위, version과 안전 경계",
     },
     {
-      kind: "공식 문서",
-      label: "Anthropic — Agent Skills",
-      href: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
-      note: "SKILL.md·선택적 리소스·progressive disclosure의 공식 구조",
+      kind: "공식 OpenAI 문서",
+      label: "OpenAI Plugins — Skills",
+      href: "https://developers.openai.com/plugins/concepts/skills",
+      note: "2026-10-25 확인 · Skill workflow와 MCP live data·authentication·authorization·action 경계",
+    },
+    {
+      kind: "공식 OpenAI 문서",
+      label: "OpenAI Plugins — Package your plugin",
+      href: "https://developers.openai.com/plugins/build/plugins",
+      note: "2026-10-25 확인 · plugin.json, skills/, mcp.json과 배포 package 구조",
     },
   ],
   "ai/claude-code": [

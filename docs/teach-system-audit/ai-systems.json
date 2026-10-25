@@ -12356,26 +12356,67 @@
       "route": "ai/skills-anatomy",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/skills-anatomy.tsx",
       "publicPath": "cs/ai/skills-anatomy",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
-      "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "beforeDefects": [
+        "요청 하나를 따라가는 경로 없이 파일 형식·로딩·실행 설명이 흩어져 있었습니다.",
+        "핵심 시각화가 설명 문단 뒤에 있어 전체 경로를 먼저 파악하기 어려웠습니다.",
+        "공식 문서에서 확인되지 않는 metadata 2%·8,000자 상한과 특정 local path 규칙을 일반 규약처럼 설명했습니다.",
+        "Skill·Tool·MCP server·Plugin의 책임이 실제 효과 하나에 연결되지 않았습니다."
+      ],
+      "fixture": {
+        "request": "이 PR에서 실패한 CI를 고치고 검증 결과를 보고해 주세요",
+        "selectedSkill": "gh-fix-ci",
+        "expected": "한 파일 수정, 실패한 검사와 관련 회귀 검사 통과, 별도 권한 없는 push 금지",
+        "assumed": false
       },
-      "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
-      ]
+      "stageAnchors": {
+        "0": "skill-workflow locator와 overview",
+        "1": "skill-request-trace-viz",
+        "2": "format",
+        "3": "loading",
+        "4": "execution",
+        "5": "paper-openai-skill-safety",
+        "6": "paper-openai-plugin-package",
+        "return": "skill-workflow-map-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://developers.openai.com/api/docs/guides/tools-skills",
+          "application": "2026-10-25 현재 SKILL.md 기반 bundle, metadata discovery 뒤 전체 지침 로딩, references·scripts·assets, hosted version, user-prompt 우선순위와 안전 경계"
+        },
+        {
+          "href": "https://developers.openai.com/plugins/concepts/skills",
+          "application": "Skill은 workflow를, MCP server는 실시간 데이터·인증·허용된 동작을 제공하는 책임 경계"
+        },
+        {
+          "href": "https://developers.openai.com/plugins/build/plugins",
+          "application": "plugin.json·skills/·mcp.json을 포함할 수 있는 배포 묶음과 설치가 신뢰를 자동 부여하지 않는 경계"
+        },
+        {
+          "href": "https://developers.openai.com/plugins/build/skills",
+          "application": "OpenAI plugin context에서 agents/openai.yaml로 MCP dependency를 선언하는 방식"
+        }
+      ],
+      "validation": {
+        "semanticReview": "CI 수정 요청 하나가 metadata 후보 선택→SKILL.md 전체 로딩→필요 자료 확장→기존 권한 확인→도구 실행→독립 검증으로 이동하는 경로를 추적했습니다. Skill은 작업 지식, Tool·MCP는 실제 능력, runtime은 권한, Plugin은 배포 단위라는 경계를 공식 문서로 확인했습니다.",
+        "humanize": "ko-natural 문서·합니다체·expert lint error 0. 번역투 표현과 추상적인 제품 설명을 한 요청의 상태 변화로 바꾸고 제품 식별자는 유지했습니다.",
+        "browser390": "부모 locator·반환 지도 각 1개, 첫 시각 자료가 첫 문단보다 앞, 문서·시각화 가로 넘침 0, 조작부 겹침 0, console/page 오류 0",
+        "browser1440": "부모 locator·반환 지도 각 1개, 첫 시각 자료가 첫 문단보다 앞, 문서·시각화 가로 넘침 0, 조작부 겹침 0, console/page 오류 0",
+        "keyboard": "ArrowLeft·ArrowRight로 여섯 장면을 순서대로 이동하고 Space 재생을 확인했습니다. 자동 재생 없이 사용자가 선택한 상태를 유지했습니다.",
+        "reducedMotion": "800ms 뒤에도 첫 장면과 정지 상태를 유지했습니다.",
+        "noScript": "production preview 390×844에서 live 장면과 조작부 0, 요청→후보 선택→지침 읽기→자료 확장→권한 확인→결과 검증의 여섯 단계와 결론을 확인했습니다.",
+        "typescript": "NODE_OPTIONS=--max-old-space-size=8192 npx tsc --noEmit exit 0",
+        "audits": "learning·viz·formula·calculations·reading·prose·한국어·용어·용어쌍·pseudocode·order·graph strict 감사 통과",
+        "build": "production build 7,926 modules·정적 public route 2,086개·no-script 본문 208편 생성",
+        "browserEvidence": "output/playwright/ai-skills-anatomy-batch-43/summary.json"
+      },
+      "remaining": []
     },
     {
       "route": "ai/smoothie-qwen-weight-editing",

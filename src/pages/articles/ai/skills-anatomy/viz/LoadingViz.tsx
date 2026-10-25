@@ -1,19 +1,19 @@
 import VizFrame from "@/components/viz/VizFrame";
 
 const flow = [
-  ["Discover", "name · description · path", "작은 후보 index"],
-  ["Route", "explicit 또는 implicit", "한 Skill 선택"],
-  ["Load", "SKILL.md 전체", "workflow contract"],
-  ["Expand", "필요한 reference만", "task-specific context"],
-  ["Run", "tool·script·validation", "검증된 artifact"],
+  ["발견", "name · description · path", "작은 후보 목록"],
+  ["선택", "직접 지정 또는 요청 일치", "gh-fix-ci 선택"],
+  ["읽기", "SKILL.md 전체", "재현→수정→검증 순서"],
+  ["확장", "필요한 reference·script", "CI 정책과 재현 명령"],
+  ["실행", "기존 tool·권한", "검증 결과와 변경 내역"],
 ] as const;
 
 export default function LoadingViz() {
   return (
     <VizFrame
-      eyebrow="Progressive disclosure"
-      title="선택 전의 작은 index가 선택 뒤의 전체 지침과 필요한 자료로 확장됩니다"
-      description="각 단계의 output이 다음 단계 input이 되며, 설치된 모든 reference를 한 번에 context에 넣지 않습니다."
+      eyebrow="필요한 만큼 펼치기"
+      title="짧은 후보 정보에서 전체 지침과 필요한 자료로 확장합니다"
+      description="CI 수정 요청에 필요한 자료만 차례로 읽으며, 설치된 모든 파일을 한 번에 context에 넣지 않습니다."
     >
       <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
         {flow.map(([name, input, output], index) => (
@@ -28,9 +28,9 @@ export default function LoadingViz() {
         ))}
       </ol>
       <div className="mt-7 grid gap-3 border-t border-border/70 pt-5 text-xs leading-5 sm:grid-cols-3">
-        <p className="text-muted-foreground"><strong className="text-foreground">초기 목록</strong><br />최대 context 2%</p>
-        <p className="text-muted-foreground"><strong className="text-foreground">크기 미확인</strong><br />최대 8,000 characters</p>
-        <p className="text-muted-foreground"><strong className="text-foreground">선택 이후</strong><br />SKILL.md 전체 로딩</p>
+        <p className="text-muted-foreground"><strong className="text-foreground">선택 전</strong><br />이름·설명·경로</p>
+        <p className="text-muted-foreground"><strong className="text-foreground">선택 뒤</strong><br />SKILL.md 전체</p>
+        <p className="text-muted-foreground"><strong className="text-foreground">작업 중</strong><br />필요한 지원 파일만</p>
       </div>
     </VizFrame>
   );
