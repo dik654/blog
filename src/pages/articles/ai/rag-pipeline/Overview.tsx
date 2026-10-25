@@ -23,8 +23,9 @@ export default function Overview() {
           근거와 다른 말을 하면 여전히 실패합니다.
         </p>
         <p>
-          그래서 ingestion·chunking·index·retrieval·context assembly·
-          generation·citation을 한 요청의 trace로 연결해야 합니다.
+          그래서 문서 수집, 분할, 색인, 검색을 한 요청의 기록으로
+          연결해야 합니다. 모델에 넘긴 문맥과 생성한 답, 인용한 원문도
+          같은 기록에서 이어져야 합니다.
         </p>
         <p>문서가 적고 안정적이며 한 번에 읽을 수 있다면 long-context prompting이 더 단순할 수 있습니다. 반대로 사실을 바꾸는 것이 아니라 출력 형식이나 말투를 익히게 하려면 <a href="/cs/ai/domain-finetuning">fine-tuning</a>이 맞습니다. RAG는 자주 갱신되는 문서, source-level ACL, citation과 삭제 반영이 중요한 경우에 특히 유용합니다.</p>
       </div>
@@ -89,13 +90,16 @@ S(q)&=\underbrace{I_{\mathrm{source}}(q)}_{\text{corpus에 근거 있음}}\under
       <div id="reading-rag" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">핵심 논문 · Retrieval-Augmented Generation</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는
-            non-parametric memory를 결합했습니다. 같은 passage를 sequence
-            전체에 쓰는 방식과 token마다 passage를 달리하는 방식도
-            비교했습니다. 생성 모델 밖의 명시적 memory를 검색해 provenance와
-            지식 갱신 경로를 만든 것이 핵심입니다. 논문의 결과가 모든 사내
-            corpus와 최신 RAG 구현의 성능을 보장하지는 않습니다.
-          </p>
+          Lewis 등은 seq2seq parametric memory와 Wikipedia dense index라는
+          non-parametric memory를 결합했습니다. 같은 passage를 sequence
+          전체에 쓰는 방식과 token마다 passage를 달리하는 방식도
+          비교했습니다.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          생성 모델 밖의 명시적 memory를 검색해 provenance와 지식
+          갱신 경로를 만든 것이 핵심입니다. 다만 논문의 결과가 모든
+          사내 corpus와 최신 RAG 구현의 성능을 보장하지는 않습니다.
+        </p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noreferrer">문제 정의와 두 RAG formulation 보기</a>
       </div>
     </section>

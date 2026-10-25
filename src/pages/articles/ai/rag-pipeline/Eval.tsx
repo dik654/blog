@@ -68,14 +68,15 @@ R_{\mathrm{cite}}&=\frac{\underbrace{|U_{\mathrm{supported}}|}_{\text{인용이 
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          평가셋에는 factoid뿐 아니라 multi-hop·no-answer·오래된
-          source·서로 충돌하는 source·ACL·prompt injection 사례를 넣습니다.
+          평가셋은 단순 질문뿐 아니라 여러 근거를 이어야 하는 질문과
+          정답이 없는 질문을 포함합니다. 오래되거나 서로 충돌하는 출처,
+          ACL 위반, prompt injection 사례도 함께 넣습니다.
         </p>
         <p>
           LLM-as-judge는 빠르지만 judge·prompt·순서에 민감합니다. 따라서
           ID와 span을 직접 검사하는 절차, 사람이 답을 모른 채 확인하는 표본
-          감사도 함께 둡니다. Source·parser·embedding·index·retriever·
-          prompt·model version을 trace에 남겨 회귀가 시작된 단계를 찾습니다.
+          감사도 함께 둡니다. Source, parser, embedding, index, retriever,
+          prompt, model version을 trace에 남겨 회귀가 시작된 단계를 찾습니다.
         </p>
       </div>
       <div id="reading-ragas" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">

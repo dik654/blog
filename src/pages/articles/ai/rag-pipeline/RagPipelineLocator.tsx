@@ -123,9 +123,10 @@ export function RagPipelineReturn() {
         전체 지도에 되돌려 놓기
       </p>
       <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">
-        RAG의 결과는 원문·파생 chunk·색인 manifest·검색 후보·최종
-        context·claim·citation을 잇는 추적 기록입니다. 답이 틀리면 이
-        순서를 거슬러 올라가 처음 깨진 상태와 그 상태의 소유자를 찾습니다.
+        RAG의 결과는 원문에서 파생 chunk와 색인 manifest를 거쳐
+        검색 후보로 이어집니다. 최종 context와 claim, citation도 같은
+        추적 기록에 남습니다. 답이 틀리면 이 순서를 거슬러 올라가
+        처음 깨진 상태와 그 상태의 소유자를 찾습니다.
       </p>
       <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
         <Link

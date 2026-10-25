@@ -35,8 +35,8 @@ export default function Chunking() {
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-            각 chunk에는 원문을 다시 찾기 위한 source ID·revision·heading
-            path·offset을 남깁니다. Parser version·유효 시점·ACL도 같은
+            각 chunk에는 원문을 다시 찾기 위한 source ID, revision, heading
+            path, offset을 남깁니다. Parser version과 유효 시점, ACL도 같은
             기록에 묶습니다.
           </p>
         <p>
