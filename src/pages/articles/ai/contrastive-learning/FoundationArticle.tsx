@@ -1,14 +1,245 @@
 import ContentBoundary from "@/components/articles/content-boundary";
+import CalculationWalkthrough from "@/components/articles/calculation-walkthrough";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation";
-import { PairContractViz } from "./viz/ModernContrastiveViz";
+import ContrastivePathLocator, { ContrastiveMapReturn } from "./ContrastivePathLocator";
+import {
+  PairContractViz,
+  PairMeaningOverviewViz,
+  ProjectionHandoffViz,
+} from "./viz/ModernContrastiveViz";
+
+const PAIR_RECEIPT_CODE = `type PairRelation = "positive" | "negative" | "unknown";
+
+type PairReceipt = {
+  // 어떤 두 sample을 비교했는지 고정합니다.
+  leftSampleId: string;
+  rightSampleId: string;
+
+  // 학습에 넣을 관계와 그 판단 근거를 분리합니다.
+  relation: PairRelation;
+  relationSource: "same-sku" | "human-review" | "unverified";
+
+  // 무엇을 보존하려는지와 어떤 변환을 썼는지 기록합니다.
+  target: "product-identity";
+  transformationRevision: "color-v3";
+};`;
 
 export default function ContrastiveLearningFoundationArticle() {
-  return <div className="space-y-16">
-    <section id="overview" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">Contrastive learning은 loss가 아니라 sample 관계를 정의하는 데서 시작합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p className="text-lg leading-8">대조 학습은 입력을 vector로 만든 뒤, <strong>현재 task에서 같은 의미인 pair</strong>는 가깝게 하고 <strong>구분해야 하는 pair</strong>는 멀게 만드는 representation 학습입니다. 모델은 두 sample의 관계를 스스로 알지 못합니다. 따라서 첫 설계 대상은 loss 이름이 아니라 pair contract입니다.</p><p>상품 검색에서는 같은 SKU의 조명 변화가 positive일 수 있습니다. 피부 병변 분류에서는 색 변화가 진단 정보를 지울 수 있어 같은 augmentation을 positive로 둘 수 없습니다. “같은 변화”도 task가 달라지면 label이 달라집니다.</p></div><TermBreakdown title="Pair contract를 이루는 세 관계" items={[{term:"Positive pair",description:"현재 task에서 보존할 의미가 같아 representation을 가깝게 만들 두 sample입니다.",example:"같은 상품의 서로 다른 crop."},{term:"Negative pair",description:"현재 task가 반드시 구분해야 하므로 representation을 멀게 만들 두 sample입니다.",example:"서로 다른 SKU."},{term:"Unknown pair",description:"같거나 다르다는 근거가 부족해 loss에서 제외할 관계입니다.",example:"중복 등록인지 확인되지 않은 두 판매자 이미지.",boundary:"다른 record라는 이유만으로 negative로 강제하지 않습니다."},{term:"Positive transformation",description:"변환 전후에도 target 의미가 유지되어야 한다는 invariance 가정입니다.",boundary:"Augmentation 이름이 같아도 domain별 label preservation은 다릅니다."}]}/><PairContractViz/><ContentBoundary article="contrastive-learning"/></section>
-    <section id="pair-contract" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Pair는 sample metadata가 아니라 학습 신호를 만드는 typed relation입니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Pair receipt에는 left/right sample ID, relation, relation source, transformation revision과 confidence를 함께 둡니다. Positive는 “모든 속성이 같다”가 아니라 “이 task가 보존할 속성이 같다”는 뜻입니다. Negative도 “서로 다른 파일”이 아니라 “이 task가 구분해야 한다”는 판단입니다.</p><p>Relation source가 label인지, 같은 원본의 augmentation인지, human review인지 구분해야 오류를 되돌릴 수 있습니다. Unknown을 허용하면 불확실한 pair가 강한 repulsion gradient로 바뀌는 일을 막을 수 있습니다.</p></div></section>
-    <section id="projection" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Encoder 표현 h와 loss 전용 projection z를 분리합니다</h2><TermBreakdown title="입력에서 similarity까지" items={[{term:"Encoder fθ",description:"입력 x를 downstream task가 재사용할 representation h로 바꿉니다."},{term:"Projection head gφ",description:"h를 contrastive objective가 직접 작용할 공간의 vector z̃로 바꿉니다.",boundary:"학습 뒤 어떤 표현을 배포할지는 method contract에 기록합니다."},{term:"L2 normalization",description:"z̃를 길이 1인 z로 만들어 vector 크기 대신 방향을 비교합니다."},{term:"Cosine similarity",description:"Unit vector 두 개의 내적으로 방향 일치 정도를 계산합니다."}]}/><ExplainedFormula question="입력 x가 비교 가능한 unit embedding이 되는 동안 각 연산은 무엇을 하나요?" idea={<p>Encoder는 업무 표현을 만들고 projection head는 loss 공간으로 옮깁니다. Norm으로 나누어 길이를 1로 맞춘 뒤 내적으로 방향을 비교합니다.</p>} formula={String.raw`h_i=f_\theta(x_i),\quad \widetilde z_i=g_\phi(h_i),\quad z_i=\widetilde z_i/\lVert\widetilde z_i\rVert_2,\quad \operatorname{sim}(i,j)=z_i^\top z_j`} annotatedFormula={String.raw`\begin{aligned}h_i&=\underbrace{f_\theta(x_i)}_{\text{입력을 downstream 표현으로 encode}}\\\widetilde z_i&=\underbrace{g_\phi(h_i)}_{\text{loss 전용 projection 공간으로 이동}}\\z_i&=\underbrace{\widetilde z_i/\lVert\widetilde z_i\rVert_2}_{\text{길이를 1로 맞춰 방향만 남김}}\\\operatorname{sim}(i,j)&=\underbrace{z_i^\top z_j}_{\text{두 unit vector의 방향 일치를 비교}}\end{aligned}`} operations={[{expression:String.raw`f_\theta(x_i)`,annotation:["raw input을 encoder에 통과시켜","downstream representation h 생성"]},{expression:String.raw`g_\phi(h_i)`,annotation:["업무용 h를 loss 공간으로 옮겨","projection output z̃ 생성"]},{expression:String.raw`\widetilde z_i/\lVert\widetilde z_i\rVert_2`,annotation:["vector를 자기 norm으로 나눠","scale을 제거하고 unit direction 생성"]},{expression:String.raw`z_i^\top z_j`,annotation:["대응 성분을 곱해 더하여","두 방향의 cosine similarity 계산"]}]} terms={[{symbol:"x_i",name:"Input sample",description:"Image·text·audio 등 i번째 입력입니다."},{symbol:"h_i",name:"Encoder representation",description:"Downstream classifier·retrieval이 재사용할 표현입니다."},{symbol:String.raw`\widetilde z_i`,name:"Projection output",description:"정규화 전 contrastive loss 공간의 vector입니다."},{symbol:"z_i",name:"Unit embedding",description:"L2 norm이 1인 비교 vector입니다."}]} assumptions={["Projection vector의 norm은 0이 아니며 구현은 epsilon을 둘 수 있습니다.","Normalization은 vector magnitude 정보를 similarity에서 제거합니다.","Pair relation과 augmentation revision을 loss보다 먼저 고정합니다."]} interpretation="h는 task 표현, z는 contrastive 비교 표현입니다. 둘을 같은 이름으로 기록하면 학습 후 어느 vector를 배포했는지 재현할 수 없습니다."/></section>
-    <section id="release" className="scroll-mt-20"><h2 className="mb-5 text-2xl font-bold">Loss 선택 전에 pair counterexample과 handoff를 release gate로 둡니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>Positive transformation이 label을 바꾸는 반례, 다른 record지만 실제 정답인 hidden positive, projection head를 잘못 배포한 fixture를 먼저 통과시킵니다. 그 다음에야 SimCLR·triplet·supervised objective 중 관계 형식에 맞는 방법을 고릅니다.</p></div><div id="paper-alignment-uniformity" className="not-prose mt-8 scroll-mt-24"><CitationBlock type="paper" citeKey={1} source="Wang & Isola — Understanding Contrastive Representation Learning through Alignment and Uniformity" href="https://proceedings.mlr.press/v119/wang20k.html">Positive pair alignment와 normalized representation의 hypersphere uniformity 관점으로 contrastive loss를 분석합니다. 이 분석은 모든 task의 positive relation이나 augmentation이 자동으로 옳다는 보장이 아닙니다.</CitationBlock></div></section>
-  </div>;
+  return (
+    <div className="space-y-10 sm:space-y-12">
+      <section
+        id="overview"
+        data-teach-level="1"
+        data-assumed-case="sku-42-product-search-pairs"
+        className="scroll-mt-20"
+      >
+        <ContrastivePathLocator current="pair-contract" />
+        <h2 className="mb-5 text-2xl font-bold">
+          두 사진을 가깝게 만들기 전에 무엇이 같다는 뜻인지 정해야 합니다
+        </h2>
+
+        <PairMeaningOverviewViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            상품 검색 모델에 <code>SKU-42</code>의 정면 사진을 넣는다고 하겠습니다.
+            같은 상품을 밝게 찍은 crop은 가까워져야 하고, 다른 상품인
+            <code> SKU-77</code>은 멀어져야 합니다. 중복 상품인지 확인되지 않은
+            판매자 사진은 어느 쪽인지 아직 모릅니다.
+          </p>
+          <p>
+            대조 학습은 이 세 관계를 vector 사이의 거리로 옮깁니다. 모델은 파일
+            이름만 보고 관계를 알지 못합니다. 따라서 첫 설계 대상은 loss 이름이
+            아니라 현재 업무에서 보존할 의미와 구분할 의미입니다.
+          </p>
+        </div>
+
+        <TermBreakdown
+          title="이 글에서 구분할 세 관계"
+          items={[
+            {
+              term: "Positive pair",
+              description: "현재 업무에서 보존할 의미가 같아 가까워지게 할 두 sample입니다.",
+              example: "같은 SKU의 원본과 밝은 crop.",
+            },
+            {
+              term: "Negative pair",
+              description: "현재 업무에서 반드시 구분해야 하므로 멀어지게 할 두 sample입니다.",
+              example: "서로 다른 SKU.",
+            },
+            {
+              term: "Unknown pair",
+              description: "같거나 다르다는 근거가 부족해 학습 신호에서 제외할 관계입니다.",
+              example: "중복 등록인지 확인되지 않은 판매자 사진.",
+              boundary: "다른 record라는 이유만으로 negative로 만들지 않습니다.",
+            },
+          ]}
+        />
+        <ContentBoundary article="contrastive-learning" />
+      </section>
+
+      <section id="pair-contract" data-teach-level="2" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Positive는 두 파일의 속성이 아니라 업무상 관계입니다
+        </h2>
+
+        <PairContractViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            같은 색 변화도 상품 식별에서는 무시해도 되지만 피부 병변 분류에서는
+            진단 단서를 지울 수 있습니다. Positive transformation으로 정한 변화는
+            모델에 “이 변화는 구분하지 말라”는 불변성 가정을 줍니다. 그러므로
+            augmentation 이름만 저장해서는 어떤 가정을 학습했는지 되돌릴 수 없습니다.
+          </p>
+          <p>
+            Pair 기록에는 두 sample ID, relation, 판단 근거, target, transformation
+            revision을 함께 둡니다. Unknown을 허용하면 불확실한 후보가 강한
+            negative 신호로 바뀌는 일을 막을 수 있습니다.
+          </p>
+        </div>
+
+        <div className="not-prose my-7 border-y border-border py-4">
+          <p className="mb-3 text-xs font-bold text-muted-foreground">
+            관계 판단을 다시 확인하기 위한 TypeScript 기록 예시
+          </p>
+          <pre className="overflow-x-auto bg-muted/25 p-4 text-[12px] leading-6">
+            <code>{PAIR_RECEIPT_CODE}</code>
+          </pre>
+        </div>
+      </section>
+
+      <section id="projection" data-teach-level="3" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          Encoder의 h와 loss가 비교할 z를 따로 둡니다
+        </h2>
+
+        <ProjectionHandoffViz />
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            같은 encoder <code>fθ</code>가 두 view를 <code>h</code>로 바꿉니다.
+            <code> h</code>는 분류나 검색에서 재사용할 표현입니다. Projection head
+            <code> gφ</code>는 이를 contrastive loss가 직접 비교할 공간의
+            <code> z̃</code>로 옮깁니다. 마지막으로 L2 norm으로 나누면 길이가 1인
+            <code> z</code>가 됩니다.
+          </p>
+        </div>
+
+        <CalculationWalkthrough
+          title="Projection을 unit vector로 바꾸는 계산"
+          question="z̃=(3,4)는 어떻게 z=(0.6,0.8)이 되고, r=(1,0)과 cosine 0.6을 만드나요?"
+          scope="두 차원의 설명용 projection만 계산합니다. 실제 모델 품질이나 학습 결과를 뜻하지 않습니다."
+          steps={[
+            {
+              label: "L2 norm",
+              expression: "√(3² + 4²)",
+              result: "5",
+              reason: "두 성분 제곱을 더한 뒤 제곱근을 구해 vector 길이를 얻습니다.",
+            },
+            {
+              label: "Normalization",
+              expression: "(3/5, 4/5)",
+              result: "z = (0.6, 0.8)",
+              reason: "각 성분을 자기 길이로 나눠 방향은 유지하고 길이를 1로 맞춥니다.",
+            },
+            {
+              label: "Cosine similarity",
+              expression: "0.6×1 + 0.8×0",
+              result: "0.6",
+              reason: "두 unit vector의 대응 성분을 곱해 더하면 방향의 cosine이 됩니다.",
+            },
+          ]}
+          conclusion="이 fixture에서 z̃의 길이 5는 제거되고, reference 방향과의 일치 정도 0.6만 비교에 남습니다."
+          caveats={[
+            "영벡터는 정규화할 수 없으므로 구현에서는 오류 처리나 epsilon 정책이 필요합니다.",
+            "h와 z 중 무엇을 배포할지는 학습 방법의 계약이며 이름을 섞어 저장하면 재현할 수 없습니다.",
+          ]}
+        />
+
+        <div id="paper-simclr-handoff" className="not-prose mt-8 scroll-mt-24">
+          <CitationBlock
+            type="paper"
+            citeKey={1}
+            source="Chen et al. — A Simple Framework for Contrastive Learning of Visual Representations"
+            href="https://proceedings.mlr.press/v119/chen20j.html"
+          >
+            SimCLR은 두 augmentation view를 같은 encoder에 넣고, representation
+            <code> h</code>를 projection head로 <code>z</code>에 옮겨 contrastive
+            loss를 적용합니다. 논문의 linear evaluation에서는 학습 뒤 projection
+            head를 버리고 <code>h</code>를 사용합니다. 이 결과는 논문의 ImageNet·ResNet·학습
+            설정 범위에 한정합니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="release" data-teach-level="4" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          관계 형식이 정해진 뒤에 다음 objective를 고릅니다
+        </h2>
+
+        <div className="not-prose my-7 grid gap-px bg-border p-px sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-stretch">
+          <div className="bg-background px-4 py-4">
+            <span className="text-[10px] font-bold text-primary">AUGMENTATION PAIR</span>
+            <strong className="mt-2 block break-keep text-sm leading-6">한 원본에서 두 view</strong>
+            <span className="mt-2 block text-xs leading-5 text-muted-foreground">다음 · SimCLR과 NT-Xent</span>
+          </div>
+          <span className="hidden items-center text-muted-foreground sm:flex" aria-hidden="true">·</span>
+          <div className="bg-background px-4 py-4">
+            <span className="text-[10px] font-bold text-primary">RELATIVE TRIPLET</span>
+            <strong className="mt-2 block break-keep text-sm leading-6">Anchor·positive·negative</strong>
+            <span className="mt-2 block text-xs leading-5 text-muted-foreground">다음 · Margin과 mining</span>
+          </div>
+          <span className="hidden items-center text-muted-foreground sm:flex" aria-hidden="true">·</span>
+          <div className="bg-background px-4 py-4">
+            <span className="text-[10px] font-bold text-primary">CLASS LABEL</span>
+            <strong className="mt-2 block break-keep text-sm leading-6">한 anchor의 여러 positive</strong>
+            <span className="mt-2 block text-xs leading-5 text-muted-foreground">다음 · Supervised contrastive</span>
+          </div>
+        </div>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            Pair 관계가 맞는지 확인하지 않은 채 loss만 바꾸면 잘못된 의미를 더
+            정교하게 학습할 뿐입니다. 색 변화가 target을 파괴하는 반례, hidden
+            positive, projection head를 잘못 배포한 경우를 먼저 확인한 뒤 관계
+            형식에 맞는 다음 글로 이동합니다.
+          </p>
+        </div>
+
+        <div id="paper-alignment-uniformity" className="not-prose mt-8 scroll-mt-24">
+          <CitationBlock
+            type="paper"
+            citeKey={2}
+            source="Wang & Isola — Understanding Contrastive Representation Learning through Alignment and Uniformity"
+            href="https://proceedings.mlr.press/v119/wang20k.html"
+          >
+            이 논문은 positive pair가 가까워지는 alignment와 normalized
+            representation이 unit hypersphere에 퍼지는 uniformity를 분리해
+            분석합니다. 이 분석이 어떤 pair나 augmentation이 업무상 옳은지를
+            대신 판단해 주지는 않습니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="return-map" data-teach-level="5" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">부모 지도에 되돌려 놓기</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+          {[
+            ["관계", "positive · negative · unknown", "업무상 의미와 근거"],
+            ["불변성", "target · transformation revision", "반례로 보존 여부 확인"],
+            ["표현", "x → h → z̃ → z", "h와 loss 공간의 handoff"],
+          ].map(([label, path, result]) => (
+            <div key={label} className="min-w-0 bg-background px-4 py-4">
+              <span className="text-[10px] font-bold text-primary">{label}</span>
+              <strong className="mt-2 block break-keep text-sm leading-6">{result}</strong>
+              <code className="mt-3 block break-words font-mono text-[10px] leading-5 text-muted-foreground">{path}</code>
+            </div>
+          ))}
+        </div>
+        <ContrastiveMapReturn current="pair-contract" />
+      </section>
+    </div>
+  );
 }

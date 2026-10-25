@@ -2622,6 +2622,12 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/contrastive-learning": [
     {
       kind: "핵심 논문",
+      label: "A Simple Framework for Contrastive Learning of Visual Representations",
+      href: "https://proceedings.mlr.press/v119/chen20j.html",
+      note: "두 augmentation view·encoder h·projection z와 학습 뒤 representation handoff를 정의한 SimCLR 논문",
+    },
+    {
+      kind: "핵심 논문",
       label: "Understanding Contrastive Representation Learning through Alignment and Uniformity",
       href: "https://proceedings.mlr.press/v119/wang20k.html",
       note: "positive alignment와 normalized hypersphere uniformity를 분리해 분석",
