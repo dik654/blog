@@ -99,7 +99,7 @@ export const EUREKA_ABLATIONS = [
 
 export const EUREKA_EVIDENCE = {
   internalExperiment:
-    "Sionic 내부 retrieval 종합 점수. student·teacher·learning rate를 고정한 프로젝트 실험이며 외부 benchmark의 보편적 우열을 뜻하지 않는다.",
+    "[M] Sionic 내부 retrieval 종합 점수입니다. student·teacher·learning rate를 고정한 프로젝트 기록이며 외부 benchmark의 보편적 우열을 뜻하지 않습니다.",
   unreleasedDetails:
-    "두 teacher의 정체·결합식, corpus 규모, margin 값과 최종 benchmark 수치는 이 초안에 공개되지 않았다.",
+    "[?] 두 teacher의 정체·결합식, corpus 규모, margin 값과 최종 benchmark 수치는 아직 공개하지 않았습니다.",
 } as const;

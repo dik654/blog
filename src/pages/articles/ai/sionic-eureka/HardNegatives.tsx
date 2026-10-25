@@ -3,23 +3,24 @@ import {
   EUREKA_SOURCE_LINKS,
 } from "@/content/sionic-eureka";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CitationBlock } from "@/components/ui/citation";
 
 export default function HardNegatives() {
   return (
     <section id="hard-negatives" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Hard negative: 가깝되 positive 경계를 넘지 않게
+        Hard negative
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
-          무관한 문서는 이미 쉽게 밀어낼 수 있어 gradient가 작다. 지나치게 가까운 후보는 실제 relevant 문서일 수 있다. EUREKA는 NV-Retriever의 TopK-
-          MarginPos 계열처럼 각 query의 positive score를 anchor로 삼아 false negative 후보를 거른다.
+          무관한 문서는 이미 쉽게 밀어낼 수 있어 gradient가 작습니다. 지나치게 가까운 후보는 실제 relevant 문서일 수 있습니다. EUREKA 설계는 NV-Retriever의 TopK-
+          MarginPos 계열처럼 각 query의 positive score를 기준으로 false negative 후보를 거릅니다 <strong>[O][A]</strong>.
         </p>
         <div id="paper-nv-retriever" className="scroll-mt-24">
           <p className="border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground">
             <strong className="text-foreground">논문의 핵심 아이디어:</strong>{" "}
             fixed threshold 하나를 모든 query에 적용하지 않고, 각 query의
-            positive score를 기준으로 후보 난이도를 상대적으로 제한한다.
+            positive score를 기준으로 후보 난이도를 상대적으로 제한합니다.
           </p>
         </div>
         <div className="not-prose my-6 grid gap-3 md:grid-cols-3">
@@ -73,17 +74,13 @@ export default function HardNegatives() {
           interpretation="후보가 positive와 지나치게 비슷하면 어렵더라도 negative로 확정하지 않습니다. Margin이 너무 크면 유용한 hard negative가 사라지고 너무 작으면 false negative가 섞입니다."
         />
         <p className="leading-7">
-          이 부등식은 candidate가 positive보다 margin 이상 낮을 때만 negative로 채택한다는 뜻이다. 고정 similarity threshold보다 query
-          난이도에 적응하지만 margin과 mining encoder가 바뀌면 후보 분포도 바뀐다. model version, corpus snapshot, K, margin,
-          positive set을 mining artifact와 함께 버전 관리한다.
+          이 부등식은 candidate가 positive보다 margin 이상 낮을 때만 negative로 채택한다는 뜻입니다. 고정 similarity threshold보다 query
+          난이도에 적응하지만 margin과 mining encoder가 바뀌면 후보 분포도 바뀝니다. Model version, corpus snapshot, K, margin,
+          positive set을 mining artifact와 함께 버전 관리합니다.
         </p>
-        <a
-          href={EUREKA_SOURCE_LINKS.nvRetriever.href}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {EUREKA_SOURCE_LINKS.nvRetriever.label}
-        </a>
+        <CitationBlock source={EUREKA_SOURCE_LINKS.nvRetriever.label} citeKey={5} type="paper" href={EUREKA_SOURCE_LINKS.nvRetriever.href}>
+          Positive relevance score를 기준으로 false negative를 거르는 mining 계열의 공개 근거입니다. 그림의 점수와 margin은 논문 결과가 아니라 설명용 값 [A]입니다.
+        </CitationBlock>
       </div>
     </section>
   );

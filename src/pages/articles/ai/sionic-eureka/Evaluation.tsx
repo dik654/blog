@@ -12,14 +12,14 @@ export default function Evaluation() {
   return (
     <section id="evaluation" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        평균 NDCG@10 뒤에 robustness slice를 남긴다
+        Robustness slice
       </h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="leading-7">
           NDCG@10은 상위 10개 결과의 relevance와 순서를 반영해 1에 가까울수록
-          좋다. 하지만 전체 평균 하나만 보면 특정 언어·짧은 문서가 개선을
-          독점해도 모른다. EUREKA의 평가 artifact는 종합 점수와 다음 slice를
-          함께 저장한다.
+          좋습니다. 하지만 전체 평균 하나만 보면 특정 언어·짧은 문서가 개선을
+          독점해도 알 수 없습니다. EUREKA의 평가 artifact는 종합 점수와 다음 slice를
+          함께 저장합니다 <strong>[A]</strong>.
         </p>
         <ExplainedFormula
           question="관련 문서를 상위에 배치했는지 query마다 어떻게 정규화해 비교하는가?"
@@ -61,15 +61,15 @@ export default function Evaluation() {
         </div>
         <p className="leading-7">
           공개 benchmark는 비교 가능성을, 사내 OOD set은 실제 배포 분포의 변화를
-          본다. 둘은 같은 표에 넣더라도 source와 version을 분리한다. 최종
+          봅니다. 둘은 같은 표에 넣더라도 source와 version을 분리합니다. 최종
           benchmark 수치가 공개되기 전에는 “리더보드 성능”을 대신 만들어 넣지
-          않는다.
+          않습니다 <strong>[?]</strong>.
         </p>
         <p className="rounded-xl border-l-4 border-emerald-400 bg-emerald-500/5 p-4 text-sm leading-6">
           <strong>확장 규칙:</strong> 새 언어·도메인은 corpus source → query
           recipe → label graph → mining snapshot → teacher scores → evaluation
-          slice를 한 묶음으로 추가한다. 그래서 데이터만 늘고 검증 축이 빠지는
-          일을 막는다.
+          slice를 한 묶음으로 추가합니다. 그래서 데이터만 늘고 검증 축이 빠지는
+          일을 막습니다 <strong>[A]</strong>.
         </p>
       </div>
     </section>

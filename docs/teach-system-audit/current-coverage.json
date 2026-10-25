@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 991,
-    "reviewed": 599,
-    "pending": 392,
+    "reviewed": 600,
+    "pending": 391,
     "untracked": 0,
-    "assignedPending": 349,
+    "assignedPending": 348,
     "postCheckpointPending": 43,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3293,9 +3293,9 @@
       "publicPath": "cs/ai/sionic-eureka",
       "title": "EUREKA: 견고한 검색 임베딩을 만드는 데이터·증류 파이프라인",
       "catalogIndex": 326,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
