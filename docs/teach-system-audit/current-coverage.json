@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 990,
-    "reviewed": 554,
-    "pending": 436,
+    "reviewed": 555,
+    "pending": 435,
     "untracked": 0,
-    "assignedPending": 392,
+    "assignedPending": 391,
     "postCheckpointPending": 44,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -2093,9 +2093,9 @@
       "publicPath": "cs/ai/search-based-reasoning-and-test-time-compute",
       "title": "Test-time compute 는 후보 여러 개를 만들고 검증·탐색으로 고릅니다",
       "catalogIndex": 206,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
