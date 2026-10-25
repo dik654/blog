@@ -11450,25 +11450,83 @@
       "route": "ai/search-based-reasoning-and-test-time-compute",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/search-based-reasoning-and-test-time-compute.tsx",
       "publicPath": "cs/ai/search-based-reasoning-and-test-time-compute",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
         "explicitAssumption": false,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "여러 탐색 전략을 설명했지만 동일한 문제와 예산에서 차이를 한눈에 비교하는 첫 시각화가 없었음",
+        "에이전트 전체 판단 경로에서 이 글이 맡는 단계와 부모 지도로 돌려보낼 결론이 보이지 않았음",
+        "생성 횟수 최대 4배 절감 수치가 실제 지연과 모든 과제의 일반적 우위처럼 읽힐 수 있었음"
+      ],
+      "fixture": {
+        "problem": "4·7·8·8로 24 만들기",
+        "numbers": [
+          4,
+          7,
+          8,
+          8
+        ],
+        "target": 24,
+        "generationBudget": 8,
+        "winningExpression": "(7−8÷8)×4=24"
+      },
+      "stageAnchors": {
+        "parent": "에이전트 판단 경로상의 탐색",
+        "overview": "문제·예산→병렬 후보→중간 가지치기→피드백 수정→선택 기준",
+        "bestOfN": "best-of-n",
+        "treeSearch": "tree-search",
+        "selfCorrection": "self-correction",
+        "return": "agent-decision-path-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://proceedings.iclr.cc/paper_files/paper/2025/file/1b623663fd9b874366f3ce019fdfdd44-Paper-Conference.pdf",
+          "application": "문제 난도와 생성 예산에 따른 compute-optimal strategy 및 최대 4배 생성 예산 비교의 경계"
+        },
+        {
+          "href": "https://arxiv.org/abs/2305.20050",
+          "application": "최종 답 검사와 단계별 process reward model의 후보 선택 차이"
+        },
+        {
+          "href": "https://arxiv.org/abs/2305.10601",
+          "application": "중간 상태를 확장하고 평가해 가지치기하는 Tree of Thoughts"
+        },
+        {
+          "href": "https://arxiv.org/abs/2303.17651",
+          "application": "자기 피드백을 다음 입력에 넣는 Self-Refine 반복 구조"
+        },
+        {
+          "href": "https://arxiv.org/abs/2310.01798",
+          "application": "외부 신호 없는 intrinsic self-correction이 reasoning 정확도를 낮출 수 있는 경계"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "같은 Game of 24 문제와 생성 예산 8회에서 병렬 후보·중간 가지치기·피드백 수정을 끝까지 비교하고 논문 수치의 적용 범위를 분리했습니다.",
+        "humanize": "전략 이름보다 후보를 언제 검사하고 남은 생성을 어디에 쓰는지 먼저 보여 주며, 생성 예산을 실제 지연으로 번역하지 않았습니다.",
+        "browser390": "부모 지도·첫 시각화·5장면·키보드·reduced-motion·JavaScript 비활성·overflow0·console0 통과: output/playwright/ai-agent-search-batch-37/summary.json",
+        "browser1440": "같은 문제와 예산의 5장면·overflow0·console0 통과: output/playwright/ai-agent-search-batch-37/summary.json",
+        "build": "Vite 7.3.1·정적 public route 2,086개+404·no-script 본문 202편 exit0"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "Batch 37 공개 배포 경로 확인"
+      ],
+      "reviewDate": "2026-10-25",
+      "reviewMode": "agent-decision-path-map-and-search-budget-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/search-based-reasoning-and-test-time-compute.tsx",
+        "src/pages/articles/ai/search-based-reasoning-and-test-time-compute/viz/SearchBasedReasoningAndTestTimeComputeViz.tsx",
+        "src/pages/articles/ai/shared/AgentDecisionPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/search-based-reasoning-and-test-time-compute.tsx",
+      "contentHash": "8811419cef8edd4c166038d86ea6e5f3e0d42839a86a4f43a04c974b8c57e869",
+      "preserved": [
+        "Best-of-N 기대 정확도와 Tree search 후보 평가 수 계산",
+        "PRM·Tree of Thoughts·Self-Refine·intrinsic self-correction의 원문 근거와 적용 범위",
+        "외부 verifier가 없는 자기 교정의 한계와 기존 연습문제"
       ]
     },
     {

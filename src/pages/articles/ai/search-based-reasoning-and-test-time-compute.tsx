@@ -5,6 +5,7 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { AgentDecisionPathLocator, AgentDecisionPathMapReturn } from "./shared/AgentDecisionPathLocator";
 import SearchBasedReasoningAndTestTimeComputeViz from "./search-based-reasoning-and-test-time-compute/viz/SearchBasedReasoningAndTestTimeComputeViz";
 
 /**
@@ -15,15 +16,17 @@ import SearchBasedReasoningAndTestTimeComputeViz from "./search-based-reasoning-
 export default function SearchBasedReasoningAndTestTimeComputeArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <AgentDecisionPathLocator current="search" />
       <section id="problem" className="scroll-mt-20">
         <h2 className="mb-6 text-2xl font-bold">
-          Search-based reasoning 은 후보 여러 개를 만들고 검증·탐색으로 답을 고릅니다
+          후보를 어디서 평가할까요
         </h2>
+        <SearchBasedReasoningAndTestTimeComputeViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Test-time compute 를 쓰는 방법으로는 후보를 N 개 독립적으로 만들어 verifier 로 하나를 고르는 best-of-N, 중간 단계마다 후보를 넓히고
-            가지치기하는 tree search, 이미 낸 답을 스스로 다시 검토하는 self-correction 이 있습니다. 이 글은 셋을 search-based reasoning 이라는
-            한 축의 서로 다른 구현으로 봅니다.
+            숫자 4·7·8·8로 24를 만드는 동안 모델 출력을 여덟 번 생성할 수 있다고 하겠습니다.
+            여덟 답을 끝까지 만든 뒤 고를 수도 있고, 중간식을 평가해 유망한 가지에 남은 생성을 쓸 수도 있으며, 첫 답에 오류 신호를 붙여 다시 고칠 수도 있습니다.
+            이 글은 같은 예산을 서로 다르게 배치하는 세 방법을 비교합니다.
           </p>
           <p>
             세 방법은 같은 재료를 씁니다.{" "}
@@ -40,12 +43,11 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
             방법의 성패를 가르는 가장 큰 변수입니다.
           </p>
           <p>
-            Snell 외 (2024) 는 같은 test-time compute 예산에서 두 접근을 비교했습니다. 쉬운 문제에서는 답을 순차적으로 고쳐 나가는 revision 이 유리해
-            64개 revision 이 256개 독립 샘플과 같은 정확도를 냈습니다. 중간 난이도 문제에서는 PRM 으로 방향을 잡는 tree·beam search 가 유리해 16개
-            평가만으로 64개 독립 샘플과 같은 효율이 나왔습니다.
+            Snell 외는 MATH 문제의 난도와 생성 예산에 따라 병렬 best-of-N, verifier 기반 search, 순차 revision의 유리한 비율이 달라진다고 보고했습니다.
+            저자들의 난도별 compute-optimal 선택은 search에서 16회와 64회, revision에서 64회와 256회의 생성 예산을 비교했을 때 최대 4배 적은 예산으로
+            best-of-N에 근접하거나 앞서는 결과를 보였습니다. 이는 4배 낮은 지연이나 모든 문제에서의 우위를 뜻하지 않습니다.
           </p>
         </div>
-        <SearchBasedReasoningAndTestTimeComputeViz />
         <TermBreakdown
           title="세 방법이 후보를 다루는 시점"
           description="언제 후보를 만들고, 언제 평가하고, 언제 좁히는지가 다릅니다."
@@ -55,6 +57,16 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
             { term: "사후 재검토", description: "Self-correction 은 이미 낸 답을 model 스스로 다시 비평하고 고칩니다.", example: "Self-Refine 은 외부 verifier 없이 자기 피드백만 씁니다.", boundary: "외부 신호가 없으면 개선이 보장되지 않고 오히려 나빠질 수 있습니다." },
           ]}
         />
+        <div id="paper-compute-optimal-search" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Snell, Lee, Xu, Kumar · Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters"
+            citeKey={1}
+            href="https://proceedings.iclr.cc/paper_files/paper/2025/file/1b623663fd9b874366f3ce019fdfdd44-Paper-Conference.pdf"
+          >
+            ICLR 2025 논문은 MATH와 PaLM 2-S* 기반 실험에서 문제 난도·예산에 따라 best-of-N, PRM search, revision의 효율이 달라진다고 보고했습니다.
+            16대 64와 64대 256은 생성 횟수 기준의 저자 자기보고이며, 난도 추정 비용과 실제 wall-clock latency가 모두 같은 네 배 차이라는 뜻은 아닙니다.
+          </CitationBlock>
+        </div>
         <ContentBoundary article="search-based-reasoning-and-test-time-compute" />
       </section>
 
@@ -114,7 +126,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
         <div id="paper-lets-verify-step-by-step" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Lightman, Kosaraju, Burda, Edwards, Baker, Lee, Leike, Schulman, Sutskever, Cobbe · Let's Verify Step by Step"
-            citeKey={1}
+            citeKey={2}
             href="https://arxiv.org/abs/2305.20050"
           >
             2023년 논문은 최종 답만 채점하는 outcome reward model(ORM)과 각 reasoning step 을
@@ -177,7 +189,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
         <div id="paper-tree-of-thoughts" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Yao, Yu, Zhao, Shafran, Griffiths, Cao, Narasimhan · Tree of Thoughts: Deliberate Problem Solving with Large Language Models"
-            citeKey={2}
+            citeKey={3}
             href="https://arxiv.org/abs/2305.10601"
           >
             2023년 논문은 chain-of-thought 의 단일 경로 생성을 일반화해, 중간 사고 단위를 여러
@@ -255,7 +267,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
         <div id="paper-self-refine" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Madaan, Tandon, Gupta, Hallinan, Gao, Wiegreffe, Alon, Dziri, Prabhumoye, Yang, Gupta, Majumder, Hermann, Welleck, Yazdanbakhsh, Clark · Self-Refine: Iterative Refinement with Self-Feedback"
-            citeKey={3}
+            citeKey={4}
             href="https://arxiv.org/abs/2303.17651"
           >
             2023년 논문은 같은 model 이 생성자·평가자·수정자를 겸해 feedback-refine loop 를
@@ -267,7 +279,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
         <div id="paper-self-correction-limits" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Huang, Chen, Mishra, Zheng, Yu, Song, Zhou · Large Language Models Cannot Self-Correct Reasoning Yet"
-            citeKey={4}
+            citeKey={5}
             href="https://arxiv.org/abs/2310.01798"
           >
             2023년 논문은 외부 신호 없이 자신의 내재적 능력만으로 답을 고치는 intrinsic
@@ -314,6 +326,7 @@ export default function SearchBasedReasoningAndTestTimeComputeArticle() {
           </p>
         </ProgressiveDetail>
       </section>
+      <AgentDecisionPathMapReturn current="search" />
     </div>
   );
 }
