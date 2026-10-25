@@ -113,7 +113,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "run img-cls-07의 기준 batch 256을 유지한 채 160px→320px 전환과, u-042의 약한 변형 확률 0.96이 기준 0.95를 넘어 임시 label이 되고 강한 변형 확률 0.72에서 loss 0.3285를 만드는 경로를 독립적으로 검산합니다.",
   },
-  "ai/transfer-learning-practice": KEEP("Pretrained handoff에서 freeze scope·update scale·domain shift adaptation까지 하나의 선택 spectrum입니다."),
+  "ai/transfer-learning-practice": {
+    action: "keep" as const,
+    status: "reviewed" as const,
+    reviewedAt: "2026-10-25",
+    rationale:
+      "concept 10개·5단계·closure 1,459줄이지만, pretrained handoff에서 freeze 범위·업데이트 크기·domain shift 적응까지 같은 checkpoint를 얼마나 바꿀지 결정하는 하나의 연속 선택입니다. 나누면 데이터와 기준 모델, 평가 계약을 각 글에서 다시 세워야 합니다.",
+    sharedGate:
+      "같은 pretrained checkpoint·dataset split·평가 지표에서 fixed feature, 부분 해제, 전체 fine-tuning과 domain adaptation을 비교하고, 각 단계가 바꾼 parameter 범위와 학습률을 함께 기록합니다.",
+  },
   "ai/lr-scheduling": KEEP("Optimizer update clock에서 schedule value·resume state까지 하나의 재현 가능한 learning-rate trajectory입니다."),
   "ai/lr-decay-policies": KEEP("같은 learning-rate 감소를 clock-driven policy와 validation-driven state machine으로 비교하고 stopping 순서까지 정합니다."),
   "ai/cosine-restart-scheduling": KEEP("Cycle-local progress 계산에서 warm restart state와 동일 budget 비교까지 하나의 cosine schedule 검증입니다."),
@@ -330,9 +338,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/dinov3-self-supervised-backbone": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-24",
+    reviewedAt: "2026-10-25",
     rationale:
-      "closure 1,495줄 중 절반 이상이 6개 Viz이고 본문은 6 section·concept 7개로 keep 범위다. 두 학습 목표·붕괴·Gram anchoring은 '라벨 없이 학습할 때 무엇이 무너지는가'라는 한 질문의 연속 단계라 나누면 각 글이 손실 구성을 다시 세워야 한다. 2026-09-24 재검토에서 줄 수 변화는 JSX 단어 중간 줄바꿈 정리 2줄뿐임을 확인했다.",
+      "closure 1,771줄 중 상당 부분이 6개 상호작용 Viz와 모바일 정적 흐름이고 본문은 6 section·concept 7개입니다. 직속 부모인 Vision Transformer의 patch sequence에서 시작해 두 학습 목표·dense 저하·Gram anchoring·사후 적응·평가 경계까지 한 이미지의 연속 상태를 추적하므로, 나누면 각 글이 teacher와 손실 구성을 반복해야 합니다. 2026-10-25 전체 재작성 뒤에도 한 질문을 닫는 단위가 유지됨을 확인했습니다.",
     sharedGate:
       "DINOv3 기술 보고서와 facebookresearch/dinov3 커밋 11c58638 스냅샷만 근거로 삼는다. 다른 자기지도 방법과의 벤치마크 비교나 재현 실측은 이 글에 넣지 않는다.",
   },
@@ -366,9 +374,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/vision-backbone-selection": {
     action: "keep" as const,
     status: "reviewed" as const,
-    reviewedAt: "2026-09-11",
+    reviewedAt: "2026-10-25",
     rationale:
-      "본문은 6 section·concept 7개로 keep 범위다. 능력 프로필·과제 매핑·실측·비용·순서는 하나의 판단 절차를 이루는 단계라 나누면 각 글이 같은 전제를 다시 세워야 한다.",
+      "본문 6 section·concept 8개·closure 1,180줄에서 능력 프로필→과제 매핑→짧은 probe→비용과 교체 조건→결정 순서를 한 후보 선택 절차로 추적합니다. 각 절을 나누면 같은 후보와 데이터 계약을 반복해야 하므로 한 글로 유지합니다.",
     sharedGate:
       "계열 비교는 각 원 논문의 자기보고를 정성 요약한 범위로만 쓰고, 특정 모델 간 벤치마크 수치나 자체 실측을 이 글에서 주장하지 않는다.",
   },
@@ -3510,13 +3518,13 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/open-r1": "1479317024d9936a",
   "ai/openclaw-assistant": "c93f3e58c4565062",
   "ai/qwen-korean-consistency": "392be593c5ec34a9",
-  "ai/dinov3-self-supervised-backbone": "23b836bbc712c191",
+  "ai/dinov3-self-supervised-backbone": "44bffd9be98df83c",
   "ai/image-embedding-pipeline": "183b7fb7e57921f8",
   "gpu/datacenter-site-readiness": "45a73303cd5c890c",
   "gpu/server-cpu-lineup-comparison": "c67c3ee260d1cbf7",
   "gpu/ai-accelerator-vendor-comparison": "f38b6a8d1a1a2575",
   "ai/multi-component-finetuning-vram": "daab7b6d6749dbbf",
-  "ai/vision-backbone-selection": "cdd9671993dee419",
+  "ai/vision-backbone-selection": "b0c8667af2ce5d8c",
   "ai/image-text-contrastive-pretraining": "f5b36610fc8dff17",
   "ai/sam3-promptable-concept-segmentation": "598f46b464605121",
   "ai/qwen38-flash-next-architecture": "818a11c6feadce72",
@@ -3541,7 +3549,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/time-features": "c97c2aee8b7e795f",
   "ai/tabular-deep-learning": "47f68c435adc0a44",
   "ai/training-pipeline": "31149dd7460ab625",
-  "ai/transfer-learning-practice": "eae4945edb127d5e",
+  "ai/transfer-learning-practice": "33d41065ad022b0c",
   "ai/cosine-restart-scheduling": "808bbc71017f6f35",
   "ai/lr-decay-policies": "839a6b518defcb0e",
   "ai/lr-scheduling": "949722efcce0b22a",
