@@ -43,6 +43,61 @@ export default function MeasureFirst() {
 
       <ProbeViz />
 
+      <h3 id="paired-selection" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
+        Seed별 차이를 짝지어 봅니다
+      </h3>
+      <div className="not-prose my-6 border-y border-border">
+        <table className="w-full table-fixed border-collapse text-xs sm:text-sm">
+          <caption className="px-3 py-3 text-left text-xs text-muted-foreground">
+            설명용 예시 · 같은 split과 seed에서 잰 후보 A·B의 macro recall
+          </caption>
+          <thead>
+            <tr className="border-t border-border text-left text-xs text-muted-foreground">
+              <th className="px-2 py-2 sm:px-3">Seed</th>
+              <th className="px-2 py-2 sm:px-3">후보 A</th>
+              <th className="px-2 py-2 sm:px-3">후보 B</th>
+              <th className="px-2 py-2 sm:px-3">B−A</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono">
+            {[
+              [1, "82.1", "82.3", "+0.2"],
+              [2, "81.8", "83.2", "+1.4"],
+              [3, "82.5", "83.0", "+0.5"],
+              [4, "82.0", "83.1", "+1.1"],
+              [5, "82.4", "83.2", "+0.8"],
+            ].map(([seed, a, b, delta]) => (
+              <tr key={seed} className="border-t border-border/70">
+                <td className="px-2 py-2 sm:px-3">{seed}</td>
+                <td className="px-2 py-2 sm:px-3">{a}</td>
+                <td className="px-2 py-2 sm:px-3">{b}</td>
+                <td className="px-2 py-2 font-bold text-primary sm:px-3">{delta}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="border-t border-border font-mono text-xs">
+              <td className="px-2 py-3 sm:px-3" colSpan={2}>paired mean · SE</td>
+              <td className="px-2 py-3 font-bold sm:px-3" colSpan={2}>+0.8 · ≈0.21</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <p className="leading-7">
+          Seed 1의 A와 seed 1의 B처럼 같은 조건끼리 차이를 먼저 구합니다. 위
+          예시는 차이의 평균이 0.8 point이고, 표본 표준편차를 √5로 나눈
+          standard error는 약 0.21 point입니다. Candidate별 평균만 따로 내면
+          seed마다 달랐던 난이도가 차이에 섞입니다.
+        </p>
+        <p className="leading-7">
+          이 값만으로 후보를 확정하지는 않습니다. 최소 개선 폭을 미리 정하고,
+          p95 latency와 peak memory 같은 배포 제한을 먼저 통과시킵니다. 같은
+          split·input·update 수·tuning budget을 맞추지 못했다면 결과는
+          architecture 하나의 효과가 아니라 전체 recipe 비교입니다.
+        </p>
+      </div>
+
       <h3 id="probe-protocol" className="mt-10 mb-3 scroll-mt-24 text-xl font-semibold">
         비교 가능하려면 무엇을 고정해야 합니까
       </h3>

@@ -4,15 +4,15 @@ import ArchitectureViz from "./viz/ArchitectureViz";
 export default function Architecture() {
   return (
     <section id="architecture" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">ViT 이후의 계보는 같은 구조의 세대교체가 아니라 서로 다른 병목에 대한 분기입니다</h2>
+      <h2 className="mb-6 text-2xl font-bold">세 가지 분기</h2>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
-          DeiT는 ImageNet-1K 안에서 강한 augmentation·regularization과 teacher distillation을 결합해 supervised training
-          recipe를 바꿨습니다. Swin은 global attention 대신 local window와 shifted window, patch merging을 사용해 high-
-          resolution hierarchy를 만들었습니다. MAE는 label이 아니라 가린 patch 복원으로 encoder를 사전학습했습니다. 셋이 해결한 문제가 서로 다르니 이름을
-          한 줄의 단순한 진화 순서로 놓는 순간 핵심이 사라집니다.
+          기본 ViT의 patch sequence가 만들어졌어도 세 문제가 남습니다. 많은 supervised data가 필요하고,
+          고해상도에서 global attention의 비교 쌍이 빠르게 늘며, label이 없는 image를 학습에 쓰기 어렵습니다.
+          DeiT·Swin·MAE는 이 세 병목 가운데 서로 다른 하나를 바꿉니다.
         </p>
       </div>
+      <div className="not-prose my-8"><ArchitectureViz /></div>
       <ExplainedFormula
         question="DeiT의 distillation token은 teacher signal을 어디에 넣을까?"
         idea={<>Student는 class token head로 정답 label을 학습하는 동시에 별도의 distillation token head로 teacher prediction을 학습합니다. 두 loss의 결합 비율과 teacher 자체의 training data를 함께 봐야 data efficiency를 해석할 수 있습니다.</>}
@@ -87,7 +87,6 @@ N_{\mathrm{vis}}&=\underbrace{(1-\rho)N}_{\text{안 가린 patch 수}}=vN,\\
         assumptions={["원 논문처럼 asymmetric encoder가 visible token만 처리하고 lightweight decoder가 mask token을 나중에 받습니다.", "전체 training cost에는 patch projection·MLP·decoder·memory overhead도 포함됩니다.", "높은 mask ratio가 임의 modality와 objective에서 최적이라는 보장은 없습니다."]}
         interpretation="ρ=.75이면 v=.25이고 attention-score 항은 단순 근사로 1/16입니다. 이것이 encoder를 크게 만들 수 있는 compute 여유를 주지만 전체 wall-time speedup과 같지는 않습니다."
       />
-      <div className="not-prose my-8"><ArchitectureViz /></div>
       <div id="paper-deit" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">논문 읽기 · DeiT</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
             Touvron 등은 ImageNet-1K 중심의 강한 recipe와 convolutional teacher의 distillation token으로 external
             pretraining data 없이 경쟁력 있는 ViT 학습을 보였습니다. 여기서 data efficiency를 따지려면 teacher가 사용한 학습과 recipe cost까지

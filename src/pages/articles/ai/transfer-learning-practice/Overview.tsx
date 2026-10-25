@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import CheckpointParityViz from "./viz/CheckpointParityViz";
 import OverviewViz from "./viz/OverviewViz";
 
 export default function Overview() {
@@ -123,6 +124,29 @@ export default function Overview() {
         ]}
         interpretation="Transfer learning의 핵심 선택은 pretrained 여부가 아니라 target loss가 θ의 어느 부분까지 바꾸도록 허용할지입니다."
       />
+      <div id="checkpoint-parity" className="scroll-mt-24">
+        <h3 className="mt-10 mb-3 text-xl font-semibold">
+          Checkpoint는 출력까지 같아야 넘겨받은 것입니다
+        </h3>
+        <CheckpointParityViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            같은 preprocessing을 거친 tensor 하나를 reference와 target 구현에
+            넣습니다. 두 구현은 eval mode여야 하며 output shape, dtype, class
+            order가 먼저 같아야 합니다. 그다음 class별 logit 차이의 최댓값이
+            precision별로 미리 정한 ε 이하인지 확인합니다.
+          </p>
+          <p>
+            이 검사는 checkpoint와 실행 경로가 수치적으로 호환되는지 확인하는
+            smoke test입니다. 전체 dataset의 accuracy, calibration, latency를
+            대신하지는 않습니다. ViT처럼 입력 해상도가 바뀌면 먼저
+            <Link to="/cs/ai/vision-transformer#position-resize">
+              position grid 변환
+            </Link>
+            을 끝낸 뒤 같은 검사를 적용합니다.
+          </p>
+        </div>
+      </div>
       <div
         id="docs-transfer-tutorial"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"

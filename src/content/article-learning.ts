@@ -15968,6 +15968,10 @@ export const ARTICLE_LEARNING: Readonly<
         role: "Source backbone state와 architecture·preprocessing을 target 초기 조건으로 넘깁니다.",
       },
       {
+        id: "vision-checkpoint-parity-test",
+        role: "같은 input을 reference·target 구현에 넣어 class별 logit이 허용 오차 안에서 일치하는지 확인합니다.",
+      },
+      {
         id: "trainable-scope-mask",
         role: "Layer별 parameter update 허용 범위로 fixed·partial·full을 정의합니다.",
       },
@@ -16010,6 +16014,16 @@ export const ARTICLE_LEARNING: Readonly<
           "ImageNet ResNet weight와 224 crop·channel normalization을 가져오고 새 두-class head를 초기화해 ant/bee target split에서 학습합니다.",
         boundary:
           "Weight만 load하고 tokenizer·normalization·input resolution·architecture revision을 바꾸면 source representation을 의도와 다른 좌표에서 사용할 수 있습니다.",
+      },
+      {
+        id: "vision-checkpoint-parity-test",
+        sectionId: "checkpoint-parity",
+        intuition:
+          "같은 사진을 원본 계산기와 옮긴 계산기에 넣어 정답 하나뿐 아니라 모든 class score가 얼마나 다른지 확인합니다.",
+        workedExample:
+          "같은 preprocessed tensor를 eval mode의 reference와 target 구현에 넣고 B×K shape·class order를 확인한 뒤 max absolute logit error가 미리 정한 ε 이하인지 검사합니다.",
+        boundary:
+          "Logit parity는 checkpoint와 실행 경로의 수치적 호환성을 보는 smoke test이며 dataset accuracy·calibration·latency 검증을 대신하지 않습니다.",
       },
       {
         id: "trainable-scope-mask",
@@ -16101,6 +16115,7 @@ export const ARTICLE_LEARNING: Readonly<
           "representation-learning",
           "parameterized-model",
           "pretrained-handoff-contract",
+          "vision-checkpoint-parity-test",
         ],
       },
       {
@@ -16159,12 +16174,16 @@ export const ARTICLE_LEARNING: Readonly<
           "new head mapping",
           "target split",
           "baseline",
+          "same preprocessed input",
+          "B×K shape and class order",
+          "maximum logit error tolerance",
         ],
         requiredConcepts: [
           "pretrained-handoff-contract",
+          "vision-checkpoint-parity-test",
           "train-validation-test",
         ],
-        sectionId: "overview",
+        sectionId: "checkpoint-parity",
       },
       {
         level: "basic",
@@ -19559,7 +19578,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/vision-transformer": {
     coreIdea:
-      "Vision Transformer는 image를 patch vector·shared projection·position signal·special token의 sequence로 바꿔 Transformer encoder에 전달하는 모델입니다. 실전에서는 DeiT·Swin·MAE를 단순한 세대로 외우지 않고 supervision·high-resolution·unlabeled-pretraining 병목의 서로 다른 해법으로 읽으며, 전체 recipe의 paired gain과 checkpoint logit parity로 선택·배포합니다.",
+      "Vision Transformer는 image를 patch vector·shared projection·position signal·special token의 sequence로 바꿔 Transformer encoder에 전달합니다. DeiT·Swin·MAE는 이 입력 계약을 출발점으로 삼되 supervised data·고해상도 attention·label 없는 pretraining이라는 서로 다른 병목을 바꿉니다.",
     assumedKnowledge: [
       {
         id: "image-tensor-layout",
@@ -19580,18 +19599,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "cross-entropy-nll",
         role: "Class label·teacher label·downstream objective의 CE를 계산합니다.",
-      },
-      {
-        id: "pretrained-handoff-contract",
-        role: "Checkpoint weight와 architecture·preprocessing을 함께 target task로 넘깁니다.",
-      },
-      {
-        id: "variance",
-        role: "Architecture 후보의 seed별 paired gain uncertainty를 해석합니다.",
-      },
-      {
-        id: "train-validation-test",
-        role: "Fine-tuning·selection·최종 test를 분리합니다.",
       },
     ],
     introducedHere: [
@@ -19618,14 +19625,6 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "mae-visible-token-pretraining",
         role: "Visible patch만 큰 encoder에 보내는 asymmetric masked-image pretraining을 계산합니다.",
-      },
-      {
-        id: "vision-architecture-paired-selection",
-        role: "전체 recipe의 paired quality gain과 deployment constraint로 후보를 선택합니다.",
-      },
-      {
-        id: "vision-checkpoint-parity-test",
-        role: "Reference·export 구현의 class-ordered logit vector를 tolerance로 비교합니다.",
       },
     ],
     conceptExplanations: [
@@ -19655,7 +19654,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "absolute-position-grid-resize",
-        sectionId: "practice",
+        sectionId: "position-resize",
         intuition:
           "14×14 지도에 적힌 위치 메모를 24×24 지도에 옮기되 지도 밖의 [CLS] 메모는 늘리지 않고 그대로 둡니다.",
         workedExample:
@@ -19693,26 +19692,6 @@ export const ARTICLE_LEARNING: Readonly<
         boundary:
           "전체 cost에는 MLP·decoder·I/O가 남고 pixel reconstruction quality가 semantic representation quality와 항상 같지는 않습니다.",
       },
-      {
-        id: "vision-architecture-paired-selection",
-        sectionId: "tradeoff",
-        intuition:
-          "같은 시험지를 같은 횟수만큼 연습한 두 후보의 seed별 점수 차이를 짝지어 보고 제품 시간·메모리 한도도 통과시킵니다.",
-        workedExample:
-          "Five seeds의 B−A macro-recall gain 평균 .8 point, SE .3, p95 18ms≤20ms, peak 3.2GB≤4GB일 때 사전 δmin=.5를 넘는지 확인합니다.",
-        boundary:
-          "Pretraining corpus·teacher·resolution·tuning trials가 다르면 architecture 하나의 인과 효과로 해석할 수 없고 FLOPs는 latency가 아닙니다.",
-      },
-      {
-        id: "vision-checkpoint-parity-test",
-        sectionId: "practice",
-        intuition:
-          "같은 사진을 원본 계산기와 배포 계산기에 넣어 정답 label 하나뿐 아니라 모든 class score가 허용 오차 안에서 같은지 확인합니다.",
-        workedExample:
-          "32개 golden images에서 FP16 export와 FP32 reference logits의 max absolute error≤2e-3, shape B×K, class-map digest equality를 assert합니다.",
-        boundary:
-          "Logit parity가 dataset accuracy·calibration·latency·robustness를 대신하지 않으며 precision별 tolerance는 사전에 정해야 합니다.",
-      },
     ],
     conceptStages: [
       {
@@ -19740,28 +19719,12 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Selection",
+        label: "Position boundary",
         relation:
-          "전체 pretraining/fine-tuning recipe를 paired evidence와 system constraint로 비교",
-        concepts: [
-          "pretrained-handoff-contract",
-          "variance",
-          "train-validation-test",
-          "distillation-token-interface",
-          "shifted-window-hierarchy",
-          "mae-visible-token-pretraining",
-          "vision-architecture-paired-selection",
-        ],
-      },
-      {
-        label: "Checkpoint handoff",
-        relation:
-          "Position grid를 변환하고 reference·export logits로 implementation identity 확인",
+          "입력 해상도가 달라질 때 patch 수와 learned position grid가 함께 바뀌는 경계를 확인",
         concepts: [
           "vit-patch-sequence-contract",
           "absolute-position-grid-resize",
-          "pretrained-handoff-contract",
-          "vision-checkpoint-parity-test",
         ],
       },
     ],
@@ -19884,27 +19847,6 @@ export const ARTICLE_LEARNING: Readonly<
         sectionId: "patch-embedding",
       },
       {
-        level: "advanced",
-        question:
-          "CNN·ViT 후보를 five seeds에서 paired 비교하는 quality·uncertainty·p95·memory·support 표와 reject rule을 설계하라.",
-        answerChecklist: [
-          "same split/input",
-          "same pretraining stated",
-          "same updates/trials",
-          "paired gain",
-          "SE",
-          "delta min",
-          "latency/memory",
-          "runtime support",
-        ],
-        requiredConcepts: [
-          "vision-architecture-paired-selection",
-          "variance",
-          "train-validation-test",
-        ],
-        sectionId: "tradeoff",
-      },
-      {
         level: "basic",
         question:
           "14×14 absolute position grid checkpoint를 24×24 input grid로 옮길 때 special token 분리부터 새 shape까지 순서를 적어라.",
@@ -19921,35 +19863,46 @@ export const ARTICLE_LEARNING: Readonly<
           "absolute-position-grid-resize",
           "vit-patch-sequence-contract",
         ],
-        sectionId: "practice",
+        sectionId: "position-resize",
       },
       {
         level: "advanced",
         question:
-          "Registry reference와 FP16 export의 preprocessing·shape·class-map·logit parity test 및 release receipt를 설계하라.",
+          "8×8 token grid와 M=4 window에서 unshifted block 다음에 shift=2 block을 적용할 때 이전 window 경계를 넘는 token pair 하나를 추적하고, 각 block의 attention 범위와 비용 경계를 설명하라.",
         answerChecklist: [
-          "same deterministic input",
-          "eval mode",
-          "position resize receipt",
-          "B×K shape",
-          "class digest",
-          "max error epsilon",
-          "golden set",
-          "accuracy/calibration follow-up",
+          "first 4×4 window membership",
+          "shift by 2",
+          "cross-boundary pair",
+          "attention mask",
+          "two-block propagation",
+          "local M² candidates per token",
+          "global visibility is not immediate",
         ],
-        requiredConcepts: [
-          "vision-checkpoint-parity-test",
-          "absolute-position-grid-resize",
-          "pretrained-handoff-contract",
+        requiredConcepts: ["shifted-window-hierarchy", "self-attention"],
+        sectionId: "architecture",
+      },
+      {
+        level: "advanced",
+        question:
+          "N=196, mask ratio .75 MAE의 encoder attention·MLP·decoder·I/O 비용 장부를 만들고, attention-score 항의 1/16이 전체 학습 16배 속도 향상을 뜻하지 않는 이유를 측정 계획으로 설명하라.",
+        answerChecklist: [
+          "49 visible tokens",
+          "attention score ratio 1/16",
+          "encoder MLP remains",
+          "decoder sees restored sequence",
+          "mask and reconstruction I/O",
+          "wall-clock measurement",
+          "downstream representation metric",
         ],
-        sectionId: "practice",
+        requiredConcepts: ["mae-visible-token-pretraining", "self-attention"],
+        sectionId: "architecture",
       },
     ],
     papers: [
       {
         title:
           "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
-        href: "https://openreview.net/forum?id=YicbFdNTTy",
+        href: "https://arxiv.org/abs/2010.11929",
         problem:
           "Convolution-specific architecture 없이 image patch sequence에 standard Transformer를 적용할 수 있는지 검증",
         contribution:
@@ -99780,6 +99733,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "text-alignment-as-separate-capability", role: "텍스트 질의 능력이 별도 학습의 산물임을 고정합니다." },
       { id: "task-to-backbone-family-mapping", role: "세 질문으로 후보 계열을 좁히는 절차를 세웁니다." },
       { id: "frozen-probe-selection-experiment", role: "선택 전에 돌리는 최소 실측을 정의합니다." },
+      { id: "vision-architecture-paired-selection", role: "같은 seed의 결과를 짝지어 평균 차이와 불확실성을 함께 계산합니다." },
       { id: "probe-protocol-comparability", role: "실측이 비교가 되려면 무엇을 고정해야 하는지 정리합니다." },
       { id: "backbone-switch-cost", role: "교체 시 드는 세 가지 비용을 계산 가능한 형태로 만듭니다." },
       { id: "backbone-decision-order", role: "네 단계 판단 순서와 뒤집었을 때의 함정을 고정합니다." },
@@ -99826,6 +99780,16 @@ export const ARTICLE_LEARNING: Readonly<
           "얼린 조건의 결과이므로 미세조정 후 순위와 다를 수 있습니다. 값이 비슷하면 점수가 아니라 운영 조건으로 결정하는 편이 낫습니다.",
       },
       {
+        id: "vision-architecture-paired-selection",
+        sectionId: "measure-first",
+        intuition:
+          "같은 데이터 분할과 seed에서 나온 두 결과를 한 쌍으로 빼면, seed가 만든 공통 흔들림을 줄이고 아키텍처 차이를 더 직접 볼 수 있습니다.",
+        workedExample:
+          "seed 5개에서 ViT−CNN 차이가 0.2·1.4·0.5·1.1·0.8이면 평균 이득은 0.8이고 표준오차는 약 0.21입니다. 이 값이 미리 정한 최소 이득을 넘는지 확인한 뒤 p95 latency와 memory 한도를 함께 적용합니다.",
+        boundary:
+          "seed가 적으면 불확실성 추정도 거칩니다. 평균 이득만으로 결정하지 말고 같은 target hardware에서 latency와 memory를 함께 재야 합니다.",
+      },
+      {
         id: "probe-protocol-comparability",
         sectionId: "probe-protocol",
         intuition:
@@ -99870,7 +99834,7 @@ export const ARTICLE_LEARNING: Readonly<
       {
         label: "02 실측",
         relation: "얼린 조건에서 세 숫자를 구함",
-        concepts: ["frozen-probe-selection-experiment", "frozen-backbone-evaluation-protocol"],
+        concepts: ["frozen-probe-selection-experiment", "vision-architecture-paired-selection", "frozen-backbone-evaluation-protocol"],
       },
       {
         label: "03 비교 가능성",
@@ -99948,9 +99912,9 @@ export const ARTICLE_LEARNING: Readonly<
       {
         level: "advanced",
         question:
-          "성능이 더 높은 후보 A와 변형 견고성·비용이 나은 후보 B가 있을 때 선택 점수로 결정하는 절차를 쓰고, 점수가 비슷할 때의 판단 기준을 제시하세요.",
-        answerChecklist: ["같은 조건에서 세 숫자 확보", "감점 가중치는 서비스 요구에서 결정", "데이터로 가중치를 추정하지 않음", "점수는 상대 비교용", "비슷하면 교체 비용·라이선스·지원 상태로 결정"],
-        requiredConcepts: ["frozen-probe-selection-experiment", "backbone-switch-cost"],
+          "같은 split과 seed 5개에서 CNN 점수가 84.0·83.7·84.2·83.9·84.1, ViT 점수가 84.2·85.1·84.7·85.0·84.9일 때 seed별 차이, 평균 이득, 표준오차를 계산하고 선택 조건을 쓰세요.",
+        answerChecklist: ["seed별 차이 0.2·1.4·0.5·1.1·0.8", "평균 이득 0.8", "표본 표준편차 약 0.47", "표준오차 약 0.21", "미리 정한 최소 이득과 비교", "같은 target hardware의 p95 latency·memory gate", "seed 수가 적다는 한계 기록"],
+        requiredConcepts: ["frozen-probe-selection-experiment", "probe-protocol-comparability", "vision-architecture-paired-selection"],
         sectionId: "measure-first",
       },
       {

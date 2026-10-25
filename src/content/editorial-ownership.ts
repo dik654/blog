@@ -2250,7 +2250,6 @@ export const EDITORIAL_BOUNDARIES = {
       "Image tensor를 non-overlapping patch sequence로 바꾸는 projection·position·special-token shape contract",
       "Patch projection matrix와 kernel=stride=P Conv2d 사이의 계산 동치와 position-grid resize",
       "DeiT distillation·Swin shifted window·MAE visible-only encoder가 해결하는 서로 다른 병목",
-      "CNN–ViT paired quality–runtime 비교와 registry→token→logit parity→export checkpoint handoff",
     ],
     reuses: [
       {
@@ -2263,12 +2262,12 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/cs/ai/transformer-architecture",
       },
       {
-        label: "Pretrained handoff·fine-tuning scope",
-        href: "/cs/ai/transfer-learning-practice",
+        label: "Checkpoint logit parity·fine-tuning scope",
+        href: "/cs/ai/transfer-learning-practice#checkpoint-parity",
       },
       {
-        label: "Image pipeline split·resolution·decision",
-        href: "/cs/ai/image-classification-pipeline",
+        label: "Backbone quality·latency·memory 선택",
+        href: "/cs/ai/vision-backbone-selection#measure-first",
       },
     ],
     evidence: [
@@ -2278,7 +2277,7 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Checkpoint revision·license·input transform·patch/grid·special token·position resize·class map·dtype·logit tolerance·runtime receipt를 함께 저장한다.",
+        rule: "환경별 checkpoint revision·license·input transform·class map·dtype·logit tolerance·runtime receipt는 실무 글에서 결정한다.",
       },
     ],
   },
@@ -12382,6 +12381,7 @@ export const EDITORIAL_BOUNDARIES = {
       "텍스트 정렬이 백본의 자연스러운 성질이 아니라 별도 학습의 산물이라는 구분",
       "질의 형태·출력 형태·자리 정보 필요 여부 세 질문으로 후보 계열을 좁히는 절차",
       "얼린 표현에서 세 숫자를 구하는 최소 실측의 설계와 실행 순서",
+      "같은 seed의 후보 결과를 짝지어 평균 차이와 불확실성을 계산하는 선택 절차",
       "후보 비교가 성립하기 위한 고정 조건과 두 종류 비교의 구분",
       "재색인 시간·이중 저장·임계값 재조정으로 이루어진 교체 비용 계산",
       "과제 정의부터 결정 기록까지의 네 단계 판단 순서와 순서를 뒤집었을 때의 함정",

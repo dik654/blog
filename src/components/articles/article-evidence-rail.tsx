@@ -43,17 +43,10 @@ export default function ArticleEvidenceRail({
     paperReadings?.map((reading) => [reading.href, reading]) ?? [],
   );
   /**
-   * 열 수를 항목 수에 맞춘다. 근거가 하나뿐인데 4열을 쓰면 긴 설명이 133px
-   * 폭의 세로 띠가 되어, 데스크톱에서만 좁은 열에 본문이 눌리는 결함이 난다.
+   * 이 rail은 viewport 전체가 아니라 본문 열 안에 놓인다. 넓은 화면에서도
+   * 본문은 650px 안팎일 수 있으므로, 설명 카드는 최대 2열까지만 사용한다.
    */
-  const gridCols =
-    items.length <= 1
-      ? ""
-      : items.length === 2
-        ? "sm:grid-cols-2"
-        : items.length === 3
-          ? "sm:grid-cols-2 lg:grid-cols-3"
-          : "sm:grid-cols-2 lg:grid-cols-4";
+  const gridCols = items.length <= 1 ? "" : "sm:grid-cols-2";
   return (
     <aside
       className="not-prose mb-8 min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-card"

@@ -96,6 +96,8 @@ const noScriptArticleRoutes = new Set([
   "ai/sequence-modeling-tabular",
   "ai/training-pipeline",
   "ai/transfer-learning-practice",
+  "ai/vision-transformer",
+  "ai/vision-backbone-selection",
   "ai/lr-scheduling",
   "ai/lr-decay-policies",
   "ai/cosine-restart-scheduling",
