@@ -2437,7 +2437,8 @@ export const EDITORIAL_BOUNDARIES = {
     title: "비디오 clip sampling 글이 소유하는 범위",
     owns: [
       "Clip timestamp interval union으로 overlap을 제거한 temporal coverage",
-      "Train random sampling과 분리된 deterministic multi-clip evaluation receipt와 replay",
+      "학습의 무작위 segment sampling과 분리된 평가 입력 선택",
+      "Source부터 video score까지 차이가 시작된 경계를 찾는 평가 재현 기록",
     ],
     reuses: [
       { label: "Duration·sample rate·aliasing", href: "/cs/ai/video-understanding" },
@@ -2445,7 +2446,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "primary-source", rule: "TSN sampling claim은 논문의 action datasets·segments·two-stream recipe 범위로 제한한다." },
-      { kind: "standard", rule: "Source checksum·clip starts·duration·stride·decode·crop·reducer·model revision을 한 receipt에 기록한다." },
+      { kind: "standard", rule: "TensorFlow Models 2.16.1의 segment sampling API는 해당 version의 training·evaluation 함수 계약으로 제한한다." },
+      { kind: "project-claim", rule: "평가 재현 기록은 설명용 schema이며 실제 source·tensor·model hash와 runtime 재현성은 대상 환경에서 검증한다." },
     ],
   },
   "video-convolution-architectures": {
