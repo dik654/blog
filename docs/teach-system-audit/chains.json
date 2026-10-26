@@ -5095,41 +5095,63 @@
     },
     {
       "route": "blockchain/reth-chainspec",
-      "title": "Reth ChainSpec & 하드포크 관리",
-      "status": "unreviewed",
+      "title": "Reth 체인 규칙과 첫 상태",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-chainspec.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-chainspec.tsx",
         "src/pages/articles/ethereum/reth-chainspec/Genesis.tsx",
         "src/pages/articles/ethereum/reth-chainspec/Hardfork.tsx",
         "src/pages/articles/ethereum/reth-chainspec/Overview.tsx",
+        "src/pages/articles/ethereum/reth-chainspec/RethChainSpecLocator.tsx",
+        "src/pages/articles/ethereum/reth-chainspec/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-chainspec/viz/ChainSpecViz.tsx",
+        "src/pages/articles/ethereum/reth-chainspec/viz/ContextViz.tsx",
+        "src/pages/articles/ethereum/reth-chainspec/viz/GenesisViz.tsx",
+        "src/pages/articles/ethereum/reth-chainspec/viz/HardforkDetailViz.tsx",
         "src/pages/articles/ethereum/reth-viz-primitives.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "assumptionMarkers": 4,
+        "sourceButtons": 8,
         "headings": [
-          "\n        Genesis JSON은 parse 결과가 아니라 재계산 가능한 block 0 commitment다\n      ",
-          "\n        Hardfork 이름은 label이고 실제 rule 선택은 activation predicate다\n      ",
-          "\n        ChainSpec은 이름표가 아니라 모든 execution consumer가 공유하는 versioned\n        rule bundle이다\n      "
+          "체인 번호만 같아서는 같은 체인이라고 할 수 없습니다",
+          "규칙 이름보다 활성화 조건이 판단을 바꿉니다",
+          "첫 상태도 체인 규칙의 일부입니다",
+          "모든 실행 구성요소가 같은 판단을 공유해야 합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 ChainSpec·Genesis·Hardfork를 용어별로 나열해, 한 후보 블록을 판단할 때 세 정보가 어떻게 함께 쓰이는지 추적하기 어려웠습니다.",
+        "하드포크 저장 구조를 BTreeMap이라고 단정했지만 고정한 alloy-hardforks 0.4.11 구현은 순서를 보존하는 Vec와 조회용 해시 맵을 사용합니다.",
+        "TTD 활성화 조건과 후보 블록 경계가 축약돼 있어 현재 블록과 부모 블록 중 무엇을 비교하는지 불분명했습니다.",
+        "개념 글 안에 출시·롤백 판단이 섞여 체인 정체성과 규칙 선택이라는 핵심 질문이 흐려졌습니다."
+      ],
+      "fixture": "설명용 두 체인은 체인 번호 777과 규칙 변경 시각 1,000을 공유합니다. Alice의 초기 잔액만 100에서 101로 바꿔 첫 상태 차이를 확인하고, 후보 블록 시각 999·1,000·1,001에서 같은 거래가 어느 규칙을 선택하는지 추적합니다. R₁₀₀·G₁₀₀ 같은 값은 실제 해시가 아닌 관계 설명용 기호입니다.",
+      "stageEvidence": {
+        "locator": "Reth 전체 구조의 concept 자식 글로 표시하고 CLI→ChainSpec→값과 직렬화의 같은 트랙 순서를 보여 줍니다.",
+        "identityTrace": "6개 장면에서 입력 고정→첫 상태 계산→초기값 변경→경계 직전→경계 도달→판단 공유를 같은 체인 번호 777 사례로 추적합니다.",
+        "activation": "Block·Timestamp·TTD·Never 조건을 고정한 alloy-hardforks 0.4.11 구현과 연결하고 후보 블록 시각 999와 1,000의 경계를 비교합니다.",
+        "genesis": "Alice 잔액 100과 101이 서로 다른 상태 루트·첫 블록 해시를 만든다는 관계를 설명용 기호로 분리해 보여 줍니다.",
+        "source": "Reth와 alloy-hardforks를 별도 프로젝트로 표시해 ChainSpec 소비 코드와 ForkCondition 구현의 실제 소유 저장소를 구분합니다.",
+        "fallback": "StaticSceneList와 no-script 정적 route에서 같은 6단계·근거·부모 지도 반환을 순서대로 제공합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth v2.8.1 태그의 crates/chainspec/src/spec.rs·api.rs와 crates/ethereum/cli/src/chainspec.rs에서 ChainSpec 구조·소비 인터페이스·mainnet 구성 경로를 확인했습니다.",
+        "Reth v2.8.1 Cargo.lock이 고정한 alloy-hardforks 0.4.11과 소스 커밋 52877c0에서 ForkCondition과 ChainHardforks의 실제 저장·조회 방식을 확인했습니다.",
+        "EIP-6122 Final 문서에서 Fork ID가 genesis hash와 통과한 fork 값을 바탕으로 계산된다는 경계를 확인했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "Reth v2.8.1과 alloy-hardforks 0.4.11의 실제 소스를 읽어 오래된 BTreeMap 설명을 교체하고 TTD 비교식을 saturating subtraction까지 반영했습니다.",
+        "arithmetic": "체인 번호 777·잔액 100→101·시각 999/1,000/1,001은 작동 원리를 위한 가정이며 실제 네트워크 값이나 성능 측정치로 사용하지 않았습니다.",
+        "humanize": "글 단위 학습 계약·문장 호흡·한국어 자연스러움·용어 밀도·모바일 용어 묶음 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 본체 높이 약 721px, 키보드 장면 이동을 확인했습니다. JavaScript 비활성 문맥에서도 동적 화면 0개·정적 장면 6개·공식 근거·부모 지도 반환이 보입니다.",
+        "browser1440": "1440×1100에서 장면 1·4·5의 경계 판단과 마지막 장면 정지를 확인했습니다. reduced-motion에서는 재생 버튼이 비활성화되고 장면 1에 머뭅니다. 8,051개 모듈 production build와 2,090개 정적 route 생성이 통과했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "rewrite-as-concept-chain-identity-and-fork-selection"
     },
     {
       "route": "blockchain/reth-cli",

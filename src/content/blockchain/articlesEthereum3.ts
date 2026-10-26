@@ -18,12 +18,12 @@ export const ethereum3Articles: Article[] = [
   },
   {
     slug: "reth-chainspec",
-    title: "Reth ChainSpec & 하드포크 관리",
+    title: "Reth 체인 규칙과 첫 상태",
     subcategory: "eth-reth",
     sections: [
-      { id: "overview", title: "ChainSpec 구조" },
-      { id: "hardfork", title: "Hardfork enum & 활성화" },
-      { id: "genesis", title: "Genesis 초기화" },
+      { id: "overview", title: "체인 정체성과 규칙 묶음" },
+      { id: "hardfork", title: "활성화 조건과 Fork ID" },
+      { id: "genesis", title: "초기 상태와 첫 블록" },
     ],
     component: () => import("@/pages/articles/ethereum/reth-chainspec"),
   },

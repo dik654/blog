@@ -5940,13 +5940,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-chainspec": {
-    title: "Reth ChainSpec·genesis 글이 소유하는 범위",
+    title: "Reth 체인 규칙과 첫 상태 글이 소유하는 범위",
     owns: [
-      "Chain ID·genesis hash·fork schedule·protocol parameter의 chain identity bundle",
-      "Block·Timestamp·TTD·Never activation predicate와 boundary context",
-      "Genesis alloc→state root→conditional header→sealed hash derivation",
-      "Fork ID compatibility filter와 validator·EVM·payload·network consumer parity",
-      "Genesis·fork boundary release gate",
+      "체인 번호·첫 블록 해시·규칙 변경 일정·실행 매개변수로 이루어진 체인 정체성",
+      "Block·Timestamp·TTD·Never 조건과 후보 블록 문맥의 경계 판정",
+      "초기 계정→상태 루트→조건부 헤더→첫 블록 해시의 계산 경로",
+      "Fork ID 호환성 검사와 검증기·EVM·블록 제작·네트워크의 판단 일치",
+      "초기 계정 변화와 규칙 경계의 개념 정확성 검사",
     ],
     reuses: [
       { label: "Reth execution block lifecycle", href: "/cs/blockchain/reth" },
@@ -5954,10 +5954,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Reth peer/session compatibility path", href: "/cs/blockchain/reth-net" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "ChainSpec field·ForkCondition·genesis builder claim은 pinned Reth 2.x crate docs/source와 EIP에 귀속한다." },
-      { kind: "standard", rule: "Fork ID를 peer honesty·block validity 증명으로, chain ID 일치를 동일 genesis·ruleset 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Raw genesis·spec bytes가 같은 paired boundary fixture에서 derived root·hash·consumer decision parity를 검사한다." },
-      { kind: "project-claim", rule: "Current mainnet fork list·field·activation을 custom chain이나 future release의 영구 상수로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "ChainSpec 필드는 Reth v2.8.1, ForkCondition은 그 릴리스가 고정한 alloy-hardforks 0.4.11, Fork ID는 EIP-6122에 귀속한다." },
+      { kind: "standard", rule: "Fork ID를 피어의 정직성·블록 유효성 증명으로, 체인 번호 일치를 같은 첫 상태·규칙 묶음의 보장으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "설명용 체인 777에서 잔액 100·101과 시각 999·1000·1001을 같은 계산 경로에 넣어 루트·해시·규칙 선택을 비교한다." },
+      { kind: "project-claim", rule: "Reth v2.8.1의 필드·자료구조·활성화 구현을 사용자 정의 체인이나 이후 릴리스의 영구 구조로 일반화하지 않는다." },
     ],
   },
   "reth-net": {

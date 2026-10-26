@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 642,
-    "pending": 350,
+    "reviewed": 643,
+    "pending": 349,
     "untracked": 0,
-    "assignedPending": 308,
+    "assignedPending": 307,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4201,11 +4201,11 @@
     {
       "route": "blockchain/reth-chainspec",
       "publicPath": "cs/blockchain/reth-chainspec",
-      "title": "Reth ChainSpec & 하드포크 관리",
+      "title": "Reth 체인 규칙과 첫 상태",
       "catalogIndex": 417,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
