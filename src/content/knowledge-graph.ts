@@ -12180,16 +12180,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "computer-science",
     label: "Reth storage route · data lifetime",
-    definition: "Mutable latest state·immutable history·secondary index를 update 빈도·reader·writer·prune·migration 책임에 따라 DB와 segment에 배치하는 physical routing입니다.",
-    canonicalHref: "/cs/blockchain/reth-db#overview",
+    definition: "Storage V2에서 sequential immutable history는 static files, history·lookup index는 RocksDB, canonical state와 공개 checkpoint는 MDBX에 두는 physical routing입니다.",
+    canonicalHref: "/cs/blockchain/reth-db#routing",
   },
   "reth-db-transaction-commit-boundary": {
     id: "reth-db-transaction-commit-boundary",
     kind: "concept",
     domain: "computer-science",
     label: "Reth DB transaction · commit boundary",
-    definition: "Block-dependent primary rows·indexes·checkpoint·canonical marker를 한 write generation으로 보이게 하고 commit·sync·stable-media 단계를 구분하는 atomic persistence 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-db#tables",
+    definition: "Static files를 finalize하고 RocksDB batch를 commit한 뒤 MDBX transaction을 마지막에 commit해 MDBX의 보이는 tip보다 앞선 자료를 공개하지 않는 persistence 경계입니다.",
+    canonicalHref: "/cs/blockchain/reth-db#commit",
   },
   "reth-db-cursor-snapshot-lifetime": {
     id: "reth-db-cursor-snapshot-lifetime",
@@ -12197,7 +12197,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth DB cursor · snapshot lifetime",
     definition: "Seek·range walk의 key ordering과 borrowed bytes가 동일 read/write transaction·storage generation 안에서만 유효하도록 cursor position과 memory lifetime을 제한하는 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-db#cursor",
+    canonicalHref: "/cs/blockchain/reth-db#schema",
   },
   "reth-static-segment-coverage-manifest": {
     id: "reth-static-segment-coverage-manifest",
@@ -12205,7 +12205,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth static-segment coverage manifest",
     definition: "Immutable segment의 kind·block range·row count·codec version·checksum·source generation을 기록하고 copy→verify→publish→retire 순서를 제어하는 ownership record입니다.",
-    canonicalHref: "/cs/blockchain/reth-db#static-files",
+    canonicalHref: "/cs/blockchain/reth-db#routing",
   },
   "reth-db-crash-migration-release-gate": {
     id: "reth-db-crash-migration-release-gate",
@@ -12213,7 +12213,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth DB crash · migration release gate",
     definition: "Transaction·segment publish·schema migration 각 지점에 crash와 corruption을 주입해 logical rows·canonical state·cursor·restart parity 뒤 layout 변경을 채택하는 절차입니다.",
-    canonicalHref: "/cs/blockchain/reth-db#static-files",
+    canonicalHref: "/cs/blockchain/reth-db-validation#experiment",
   },
   "reth-provider-view-identity": {
     id: "reth-provider-view-identity",

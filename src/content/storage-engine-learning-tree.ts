@@ -6,7 +6,7 @@ export interface StorageEngineAnchor {
 }
 
 export interface StorageEngineNode {
-  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "mdbx-validation" | "reth-db";
+  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "mdbx-validation" | "reth-db" | "reth-db-validation";
   href: string;
   shortTitle: string;
   track: StorageEngineTrack;
@@ -118,16 +118,32 @@ export const STORAGE_ENGINE_NODES = [
     id: "reth-db",
     href: "/cs/blockchain/reth-db#overview",
     shortTitle: "Reth 저장",
-    track: "practice",
-    mapLabel: "typed table·static history",
+    track: "concept",
+    mapLabel: "세 저장소·한 가시 지점",
     question: "Reth는 어떤 값을 어느 저장 계층에 놓고 같은 시점으로 읽게 할까요?",
     parentHref: "/cs/blockchain/reth#overview",
     parentLabel: "Reth의 검증·실행·저장 지도",
-    closure: "Reth의 저장 경로는 값의 codec, mutable table, immutable history, transaction view를 한 블록 identity에 맞춰야 합니다.",
+    closure: "Reth Storage V2는 하나의 cross-store transaction을 만들지 않습니다. 정상 저장에서는 static files, RocksDB, MDBX 순서로 확정하고 MDBX의 보이는 tip을 공개 경계로 삼습니다. 앞선 저장소가 더 멀리 갔다면 시작할 때 잘라 내거나 재구축해 한 독자가 같은 chain frontier만 읽게 합니다.",
+    paired: {
+      href: "/cs/blockchain/reth-db-validation#overview",
+      label: "Reth 저장 검증",
+    },
+  },
+  {
+    id: "reth-db-validation",
+    href: "/cs/blockchain/reth-db-validation#overview",
+    shortTitle: "Reth 검증",
+    track: "practice",
+    mapLabel: "migration·crash·복구",
+    question: "어떤 중단·복구 증거가 있어야 Storage V1→V2 전환을 운영에 적용할 수 있을까요?",
+    parentHref: "/cs/blockchain/reth-db#return-map",
+    parentLabel: "Reth의 세 저장소·commit·read frontier",
+    closure: "Storage V2 전환은 binary 교체가 아니라 세 저장소의 소유권과 복구 경계를 바꾸는 작업입니다. 원본 snapshot과 migration phase를 고정하고 각 phase에서 중단한 뒤 MDBX checkpoint, static coverage, RocksDB invariant와 재시작 결과를 대조해야 합니다. 결과가 없으면 상태는 proposed이며 binary·DB·static files·RocksDB를 함께 되돌릴 수 있어야 합니다.",
     anchors: [
-      { href: "/cs/blockchain/reth-alloy-primitives#rlp", label: "값과 바이트 표현" },
-      { href: "/cs/blockchain/bplus-tree#overview", label: "page index" },
-      { href: "/cs/blockchain/mdbx-internals#transaction", label: "MVCC transaction" },
+      { href: "/cs/blockchain/reth-db#routing", label: "Storage V2 route" },
+      { href: "/cs/blockchain/reth-db#commit", label: "세 저장소 commit 순서" },
+      { href: "/cs/blockchain/reth-db#recovery", label: "가시 지점과 재조정" },
+      { href: "/cs/blockchain/reth-db#read", label: "일관된 read frontier" },
     ],
   },
 ] as const satisfies readonly StorageEngineNode[];

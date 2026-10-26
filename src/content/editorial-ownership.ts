@@ -6023,13 +6023,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-db": {
-    title: "Reth typed DB·static history 글이 소유하는 범위",
+    title: "Reth Storage V2 route·commit·read 글이 소유하는 범위",
     owns: [
       "Typed table의 key/value codec·ordering·duplicate policy·schema version",
-      "Mutable latest·immutable history·secondary index의 physical route와 lifetime",
-      "Block write set·canonical marker·commit/sync/stable-media durability 경계",
-      "Transaction snapshot cursor ordering·borrow lifetime",
-      "Static segment coverage manifest와 crash/migration release gate",
+      "Sequential immutable history·history index·canonical state의 static files·RocksDB·MDBX route",
+      "정상 static files→RocksDB→MDBX와 unwind의 반대 commit order",
+      "MDBX-visible tip보다 앞선 static/RocksDB 자료의 startup reconciliation",
+      "In-memory head를 먼저 고정하고 DB snapshot을 여는 consistent read frontier",
     ],
     reuses: [
       { label: "Reth storage-tier owner", href: "/cs/blockchain/reth" },
@@ -6038,10 +6038,32 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Provider pinned read view", href: "/cs/blockchain/reth-provider" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Table·transaction·cursor·static-file·Storage V2 claim은 표시한 Reth release/SHA와 backend version에 귀속한다." },
-      { kind: "standard", rule: "Engine commit·sync semantics는 해당 DB engine·OS/filesystem·flags 범위로 제한하고 Reth logical schema와 구분한다." },
-      { kind: "project-measurement", rule: "같은 chain snapshot·schema에서 crash·corruption·migration·reorg parity를 먼저 통과한 뒤 amplification·disk·latency를 비교한다." },
-      { kind: "project-claim", rule: "Storage V2 default·commit return·segment 존재를 자동 migration·power-loss durability·complete history로 확대하지 않는다." },
+      { kind: "primary-source", rule: "Route·commit order·startup repair·snapshot order는 Reth v2.8.1 source에 귀속한다." },
+      { kind: "standard", rule: "세 backend의 순차 commit을 cross-store atomic transaction이나 stable-media durability로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "블록 1,000과 tip 999는 원리 설명용 식별자이며 대상 chain 측정값이 아니다." },
+      { kind: "project-claim", rule: "Storage V2 default를 기존 V1 DB의 자동 migration이나 무손실 복구 보장으로 읽지 않는다." },
+    ],
+  },
+  "reth-db-validation": {
+    title: "Reth Storage V2 migration·복구·결정 글이 소유하는 범위",
+    owns: [
+      "Reth release·chain fixture·MDBX·static files·RocksDB와 rollback snapshot의 run manifest",
+      "Changesets·receipts·indices·StorageSettings flip·MDBX cleanup·pipeline rebuild의 phase별 중단",
+      "V1 oracle와 V2 candidate의 tip/hash·state root·row·provider query parity",
+      "Ahead prune·behind rebuild·격리·동일 snapshot rollback과 재진입",
+      "정합성 통과 뒤 migration 시간·space peak·startup/query latency와 proposed ADR",
+    ],
+    reuses: [
+      { label: "Storage V2의 세 backend route", href: "/cs/blockchain/reth-db#routing" },
+      { label: "Static→RocksDB→MDBX commit", href: "/cs/blockchain/reth-db#commit" },
+      { label: "MDBX-visible tip과 startup repair", href: "/cs/blockchain/reth-db#recovery" },
+      { label: "한 query의 consistent frontier", href: "/cs/blockchain/reth-db#read" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Migration phase와 invariant claim은 Reth v2.8.1 source와 release에 귀속한다." },
+      { kind: "standard", rule: "Process 종료 결과를 power-loss durability 증거로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경에서 얻은 값만 [M]으로 기록하며 현재 migration·복구·성능 결과는 미측정이다." },
+      { kind: "project-claim", rule: "Release·chain size·storage settings·prune mode·filesystem·장치 또는 RPO/RTO가 바뀌면 다시 검증한다." },
     ],
   },
   "reth-provider": {

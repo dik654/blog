@@ -3,7 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### MDBX 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth Storage V2 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/reth-db`는 `concept`, 새 `blockchain/reth-db-validation`은 `practice`로 분리했습니다. 개념 글은 블록 1,000의 실행 결과가 static files·RocksDB·MDBX로 나뉜 뒤 한 가시 지점으로 읽히는 과정을 추적합니다. 실무 글은 V1→V2 migration, phase별 중단, 복구, rollback과 채택 조건을 별도 실험 계약으로 다룹니다.
+- 기존 글에서 table·cursor·static file을 각각 설명하던 구조를 실행 결과→저장 위치 분류→세 backend 준비→순차 commit→중단 뒤 재조정→일관된 읽기의 여섯 장면으로 바꿨습니다. 세 저장소를 하나의 원자적 transaction처럼 읽을 여지도 제거했습니다. Reth v2.8.1의 정상 경로는 static files를 finalize하고 RocksDB batch를 반영한 뒤 MDBX transaction을 마지막에 commit하며, MDBX의 checkpoint가 독자에게 보이는 persistent frontier가 됩니다.
+- 복구는 모든 불일치를 같은 방향으로 처리하지 않습니다. Static files와 RocksDB가 MDBX보다 앞서면 visible tip에 맞춰 자르지만, RocksDB가 뒤처지면 unwind와 rebuild가 필요합니다. Static files가 필요한 immutable range보다 뒤라면 정상으로 가장하지 않고 중단합니다. 읽기 경로는 in-memory head를 먼저 고정한 뒤 database snapshot을 열어 memory와 disk 범위 사이의 빈 구간을 막습니다.
+- 실무 글은 Reth v2.8.1 release와 source SHA, MDBX·static files·RocksDB·chain 자료를 한 manifest에 고정합니다. 보존한 V1을 oracle로 두고 changesets·receipts·indices·StorageSettings 전환·old table cleanup·pipeline rebuild 경계에서 격리된 사본을 중단합니다. 대상 환경의 migration 시간과 성능 수치는 없으므로 결론은 `proposed`, 측정 결과는 `[M] 미측정`으로 남겼습니다.
+- 학습 계약, 지식 그래프, 글 구조, topology, 읽기 순서, 한국어, 용어, 수식·계산·pseudocode, runtime, coverage와 architecture-flow 검사가 통과했습니다. Production build는 8,065개 module과 정적 공개 경로 2,098개, no-script 본문 307편을 만들었습니다.
+- 1,440×1,000에서 두 글 모두 문서 가로 넘침과 console 오류가 없고 여섯 장면의 commit·recovery·migration 경계를 확인했습니다. 390×844에서는 개념 그림 높이 360~616px, 실무 그림 360~378px이며 문서와 그림에 가로 넘침이 없습니다. 명시적 재생 전에는 장면 01이 유지되고 키보드 이동과 reduced-motion의 비활성 재생이 동작합니다. JavaScript 비활성 화면은 두 글 모두 live 장면 0개, 정적 장면 6개, 문서 폭 390=390입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+
+### MDBX 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/mdbx-internals`는 `concept`, 새 `blockchain/mdbx-validation`은 `practice`로 분리했습니다. 개념 글은 mmap·Copy-on-Write·MVCC·page 회수·DUPSORT만 설명합니다. 실무 글은 고정한 release와 sync 계약을 중단·재실행하고 복구·성능·rollback 근거를 남기는 방법을 다룹니다.
 - 개념 글은 reader R1이 txid 100의 `p1 → p8 → p42`를 읽는 동안 writer 101이 `p2 → p18 → p52`를 만든 뒤 새 meta를 공개하는 한 사례를 추적합니다. Meta visibility와 stable-media durability를 분리하고, R1이 끝난 뒤에만 old pages를 재사용할 수 있는 이유를 같은 page graph로 설명합니다.
@@ -11,7 +20,7 @@
 - 근거는 MDB 논문과 2026년 8월 9일 공개된 libmdbx v0.14.3의 고정 source `f7a3a93`, 같은 release의 `mdbx.h`로 나눴습니다. Process kill 결과를 정전 결과로 확대하지 않고, sync mode·reader lag·map-full·DUPSORT API의 존재도 대상 환경의 복구 성능으로 해석하지 않았습니다.
 - 1,440×1,000에서 두 글의 문서와 여섯 장면에 가로 넘침·내부 clipping·console 오류가 없습니다. 명시적 재생 전 장면 01이 유지되고, 키보드 이동과 6.8초 장면 간격, 일시정지 뒤 상태 유지가 동작합니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이며 실무 장면을 722~789px로 줄여 하단 아이콘 조작부까지 한 흐름에서 볼 수 있습니다.
 - reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 390×844에서는 두 글의 live 장면을 숨기고 여섯 정적 장면·직속 부모·본문·지도 반환을 같은 순서로 표시합니다. KaTeX의 긴 underbrace SVG가 정적 문서 폭을 늘리던 문제는 no-script 수식 컨테이너와 SVG의 overflow 경계를 고쳐 해결했습니다.
-- 학습 계약, 지식 그래프, topology, 읽기 순서, 문장 호흡, 한국어, 용어, architecture-flow, coverage와 runtime 감사를 통과했습니다. Production build는 8,069개 module, 정적 공개 경로 2,096개, no-script 본문 305편을 만들었고 최대 RSS는 약 6.45GB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증이 남았습니다.
+- 학습 계약, 지식 그래프, topology, 읽기 순서, 문장 호흡, 한국어, 용어, architecture-flow, coverage와 runtime 감사를 통과했습니다. Production build는 8,069개 module, 정적 공개 경로 2,096개, no-script 본문 305편을 만들었고 최대 RSS는 약 6.45GB, swap은 0이었습니다. GitHub Pages run `40397969215`에서 995편 실제 브라우저 검사와 배포가 성공했습니다. 공개 두 경로를 1,440×1,000·390×844, 키보드, reduced-motion과 JavaScript 비활성 상태로 다시 확인했고 가로 넘침과 console 오류는 0건이었습니다.
 
 ### B+ tree 개념·실무 분리 공개 검증 완료 (2026-10-27)
 

@@ -5211,14 +5211,35 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/reth-db": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 구현",
-    label: "Reth v2.2.0 — storage crates",
-    href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/storage",
-    note: "Typed DB·provider·static history·Storage V2 routing의 pinned source",
+    label: "Reth v2.8.1 — StorageSettings",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/db-api/src/models/metadata.rs",
+    note: "Storage V1/V2의 MDBX·RocksDB·static-file route를 고정한 구현",
   }, {
-    kind: "공식 문서",
-    label: "libmdbx documentation",
-    href: "https://libmdbx.dqdkfa.ru/",
-    note: "MDBX MVCC transaction·commit·durability의 engine-level 경계",
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — DatabaseProvider commit",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/provider/src/providers/database/provider.rs",
+    note: "정상·unwind commit 순서와 MDBX-visible tip에 맞춘 static-file 복구 경계",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — RocksDB invariants",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/provider/src/providers/rocksdb/invariants.rs",
+    note: "MDBX stage checkpoint 대비 RocksDB ahead·behind 판정과 복구 방향",
+  }),
+  "blockchain/reth-db-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "시험 대상을 2026-10-23 공개 release로 고정하고 v2.8.0 대비 DB 변경 없음을 확인",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — migrate_to_v2",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/cli/commands/src/db/migrate_v2.rs",
+    note: "Changesets·receipts·indices·version flip·cleanup·rebuild의 실제 migration 순서",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — provider invariants",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/provider/src/providers/rocksdb/invariants.rs",
+    note: "중단 뒤 ahead prune와 behind rebuild 판단의 구현 근거",
   }),
   "blockchain/reth-eip1559": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",
