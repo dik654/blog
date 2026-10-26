@@ -3835,7 +3835,7 @@
       "catalogIndex": 380,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
