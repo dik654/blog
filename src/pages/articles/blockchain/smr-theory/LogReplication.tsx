@@ -5,6 +5,7 @@ export default function LogReplication() {
   return (
     <section id="log-replication" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">Raft는 log prefix와 leader epoch를 함께 지킨다</h2>
+      <LogReplicationViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Raft의 term은 leader epoch를 나타내는 logical number입니다. Candidate는 majority vote를 얻어 leader가 되고 leader는
@@ -12,7 +13,6 @@ export default function LogReplication() {
           suffix를 갖고 있으면 그 지점부터 고쳐 같은 prefix를 만듭니다.
         </p>
       </div>
-      <LogReplicationViz />
       <ExplainedFormula
         question="n개 replica에서 crash f개 뒤에도 majority quorum을 만들고 두 quorum을 겹치게 하려면?"
         idea="Majority q=floor(n/2)+1은 두 집합이 반드시 겹치며, n=2f+1이면 f개 crash 뒤에도 q개가 남습니다."
@@ -48,7 +48,7 @@ export default function LogReplication() {
       <div id="paper-raft" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">논문 읽기 · Raft</p>
         <p className="mt-2 text-sm font-semibold">In Search of an Understandable Consensus Algorithm</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">Consensus를 leader election·log replication·safety·membership change로 분해하고 replicated state machine 구현과 평가를 제시합니다. 단순 majority ACK만으로 모든 durability·client exactly-once·Byzantine safety가 생긴다는 논문은 아닙니다.</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">Consensus를 이해하기 쉽도록 leader election, log replication, safety로 나눕니다. Membership change와 replicated state machine 구현도 함께 설명합니다. 단순 majority ACK만으로 durability·client exactly-once·Byzantine safety가 모두 생긴다는 논문은 아닙니다.</p>
         <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://raft.github.io/raft.pdf" target="_blank" rel="noreferrer">Raft extended paper 보기</a>
       </div>
     </section>

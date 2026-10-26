@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import ContentBoundary from "@/components/articles/content-boundary";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import AlgorithmBlock from "@/components/ui/algorithm-block";
 import ContextViz from "./viz/ContextViz";
 import SMRModelViz from "./viz/SMRModelViz";
+import SMRRequestTraceViz from "./viz/SMRRequestTraceViz";
 
 export default function Overview() {
   return (
@@ -10,14 +11,19 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         상태 머신 복제는 상태가 아니라 결정된 명령의 순서를 복제한다
       </h2>
+      <ContextViz />
+      <SMRRequestTraceViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p className="text-lg leading-8">
           세 replica가 같은 계좌 서비스를 운영해도 <code>deposit 3</code>과
           <code>withdraw 1</code>을 다른 순서로 실행하면 중간 결과와 client reply가
-          달라질 수 있습니다. State machine replication(SMR)은 client command에
-          하나의 total order를 정하고, 같은 initial state의 deterministic state
-          machine이 그 순서대로 command를 apply하게 해 fault-tolerant service를
-          만듭니다.
+          달라질 수 있습니다.
+        </p>
+        <p>
+          State machine replication(SMR)은 client command에 하나의 total order를
+          정합니다. 같은 initial state에서 출발한 deterministic state machine은
+          그 순서대로 command를 apply합니다. 그래서 여러 replica가 하나의
+          fault-tolerant service처럼 동작합니다.
         </p>
         <p>
           이 글은 SMR, total-order delivery, replicated log의 commit/apply,
@@ -27,9 +33,6 @@ export default function Overview() {
           가져옵니다.
         </p>
       </div>
-
-      <ContentBoundary article="smr-theory" />
-      <ContextViz />
       <SMRModelViz />
 
       <ExplainedFormula
@@ -60,19 +63,63 @@ export default function Overview() {
         interpretation="같은 log만으로 충분한 것이 아니라 같은 initial state와 deterministic transition이 필요합니다. Divergent state digest가 나오면 세 조건을 각각 검사합니다."
       />
 
+      <AlgorithmBlock
+        title="요청 r-17을 한 번만 적용하는 복제본의 의사코드"
+        input={[
+          "request = { id: r-17, command: withdraw(3) }",
+          "committed log, commitIndex, lastApplied, resultByRequestId",
+        ]}
+        steps={[
+          {
+            code: "if resultByRequestId contains request.id: return saved result",
+            note: "같은 요청의 재시도라면 명령을 다시 실행하지 않고 이미 commit된 결과를 반환합니다.",
+          },
+          {
+            code: "entry = appendNextSlot(request.id, request.command)",
+            note: "요청 식별자와 명령을 다음 로그 위치의 후보로 기록합니다. 로컬 append만으로 성공을 반환하지 않습니다.",
+          },
+          {
+            code: "wait until entry.index <= commitIndex",
+            note: "선택한 합의 프로토콜의 commit 조건이 충족될 때까지 기다립니다. 과반 규칙은 crash-fault Raft 예시에 해당합니다.",
+          },
+          {
+            code: "while lastApplied < commitIndex: apply log[lastApplied + 1]",
+            note: "중간 슬롯을 건너뛰지 않고 commit된 prefix를 앞에서부터 결정적으로 적용합니다.",
+          },
+          {
+            code: "store resultByRequestId[entry.requestId] with applied state",
+            note: "상태 변화와 요청 결과를 같은 복제 상태에 남겨 응답 유실 뒤에도 중복 실행을 막습니다.",
+          },
+          {
+            code: "return resultByRequestId[request.id]",
+            note: "클라이언트 응답은 유실될 수 있지만 commit된 로그와 결과는 복구 뒤에도 유지되어야 합니다.",
+          },
+        ]}
+        output="r-17 → balance 7; 같은 request ID의 재시도는 상태를 다시 바꾸지 않음"
+      />
+
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Command·log·state·reply를 구분합니다</h3>
+        <h3>네 상태를 나눠 봅니다</h3>
         <p>
-          Client의 요청은 command이고, consensus가 정한 위치가 log index입니다. Entry가 replica disk에 append된 상태, quorum에 복제되어
-          commit된 상태, state machine에 apply된 상태는 서로 다릅니다. Client success는 protocol이 정한 durability와 commit 조건
-          뒤에만 반환해야 하며 apply result와 request ID를 함께 보존해야 retry가 같은 effect를 두 번 만들지 않습니다.
+          Client의 요청은 command이고, consensus가 정한 위치가 log index입니다.
+          Entry가 replica disk에 append된 상태와 quorum에 복제되어 commit된
+          상태는 다릅니다. Commit된 entry가 state machine에 apply된 상태도 따로
+          확인해야 합니다.
+        </p>
+        <p>
+          Client success는 protocol이 정한 durability와 commit 조건 뒤에만 반환해야
+          합니다. Apply result와 request ID를 함께 보존하면 retry가 같은 effect를
+          두 번 만들지 않습니다.
         </p>
         <p>
           예를 들어 request <code>r-17: increment</code>가 commit된 직후 reply가
           손실되면 client는 retry합니다. Replica가 request ID별 committed result를
-          기억하면 두 번째 increment 없이 이전 result를 반환할 수 있습니다. SMR의
-          total order만으로 외부 payment API까지 exactly-once가 되지는 않으며,
-          external effect에는 idempotency key·outbox·reconciliation이 필요합니다.
+          기억하면 두 번째 increment 없이 이전 result를 반환합니다.
+        </p>
+        <p>
+          하지만 SMR의 total order만으로 외부 payment API까지 exactly-once가 되지는
+          않습니다. External effect에는 idempotency key·outbox·reconciliation이
+          따로 필요합니다.
         </p>
       </div>
 
