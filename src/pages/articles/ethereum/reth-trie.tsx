@@ -5,16 +5,19 @@ import Parallel from "./reth-trie/Parallel";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./reth-trie/codeRefs";
 import { rethTrieTree } from "./reth-trie/fileTrees";
+import EthereumStatePathLocator, { EthereumStateMapReturn } from "./state-shared/EthereumStatePathLocator";
 
 export default function RethTrieArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <EthereumStatePathLocator current="reth-update" />
       <Overview onCodeRef={sidebar.open} />
       <PrefixSet onCodeRef={sidebar.open} />
       <StateRoot onCodeRef={sidebar.open} />
       <Parallel />
+      <EthereumStateMapReturn current="reth-update" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

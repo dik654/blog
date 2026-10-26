@@ -1484,7 +1484,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/evm-fundamentals": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
+    "reviewedAt": "2026-10-27",
     "rationale": "하나의 짧은 바이트코드를 읽고 스택·프로그램 위치·남은 비용을 실제 실행 함수까지 따라갑니다.",
     "sharedGate": "60 02 60 03 01 00이 pc0→2→4→5, gas20→17→14→11, 스택 결과5로 이어지는지 고정 execution-specs 원문과 대조합니다."
   },
@@ -3686,7 +3686,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/supervised-learning-loop": "7a5e69058dab487d",
   "ai/train-validation-test": "f36295d863f12c61",
   "blockchain/crypto-theory": "cf4f2e2ae2a5e979",
-  "blockchain/evm-fundamentals": "f44e69161afbdef3",
+  "blockchain/evm-fundamentals": "48c9ad132b5994f1",
   "crypto/discrete-log": "3a45605b7fb5946c",
   "institutions/public-budget-and-taxes": "d20475b0f1195c69",
   "institutions/media-attention-and-public-belief": "6bdcaf0879fe12b7",

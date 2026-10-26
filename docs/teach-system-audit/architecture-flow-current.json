@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 992,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 682,
+    "dedicatedVisuals": 683,
     "inlineVisuals": 534,
-    "customVisuals": 865,
-    "animatedMechanisms": 479,
+    "customVisuals": 866,
+    "animatedMechanisms": 480,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 299,
+    "recursiveLocators": 301,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -7586,18 +7586,18 @@
     {
       "route": "blockchain/merkle-patricia-trie",
       "publicPath": "cs/blockchain/merkle-patricia-trie",
-      "title": "Ethereum MPT: nibble path·RLP·root proof",
+      "title": "Ethereum MPT: 주소에서 stateRoot까지",
       "sourcePath": "src/pages/articles/ethereum/merkle-patricia-trie.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/mysticeti",
@@ -8426,7 +8426,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-text-first"

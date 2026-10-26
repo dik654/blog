@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 638,
-    "pending": 354,
+    "reviewed": 640,
+    "pending": 352,
     "untracked": 0,
-    "assignedPending": 312,
+    "assignedPending": 310,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3981,11 +3981,11 @@
     {
       "route": "blockchain/merkle-patricia-trie",
       "publicPath": "cs/blockchain/merkle-patricia-trie",
-      "title": "Ethereum MPT: nibble path·RLP·root proof",
+      "title": "Ethereum MPT: 주소에서 stateRoot까지",
       "catalogIndex": 395,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4273,9 +4273,9 @@
       "publicPath": "cs/blockchain/reth-trie",
       "title": "Reth Trie & 상태 루트 계산",
       "catalogIndex": 424,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

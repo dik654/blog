@@ -55,9 +55,10 @@ export default function PrefixSet({
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Account와 storage의 dirty 범위를 따로 둡니다</h3>
         <p>
-          Balance·nonce·code가 바뀌면 account path가 dirty입니다. Contract storage slot이 바뀌면 먼저 그 account의 storage
-          trie root를 다시 계산하고 바뀐 storage root를 담는 account leaf까지 dirty가 전파됩니다. Account delete나 storage wipe는 한
-          key update가 아니라 기존 descendant가 사라지는 경계이므로 별도 marker와 full-subtree 처리가 필요합니다.
+          Balance·nonce·code가 바뀌면 해당 account path를 다시 계산할 대상으로 표시합니다. Contract storage slot이 바뀌면 먼저 그 account의 storage trie root를 다시 계산합니다. 새 storage root가 account leaf에 들어가므로 변경 표시는 account path까지 이어집니다.
+        </p>
+        <p>
+          Account 삭제와 storage 전체 삭제는 key 하나를 바꾸는 작업과 다릅니다. 기존 하위 경로가 사라지므로 별도 marker와 전체 하위 트리 처리 경계를 사용합니다.
         </p>
         <h3>Prefix가 적다는 사실만으로 빠르다고 단정하지 않습니다</h3>
         <p>
