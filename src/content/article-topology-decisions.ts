@@ -1808,6 +1808,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "q-17 한 건이 같은 임베딩 좌표에 놓인 뒤 전수 비교, IVF 구역 선택, PQ 코드 압축을 거쳐 doc-104를 반환하는 단일 검색 경로입니다. 정규화와 실패 경계도 같은 후보 순위를 설명하므로 분리하면 어느 단계에서 정답을 잃었는지 추적하기 어렵습니다.",
     sharedGate: "N=1,000,000·nlist=1,000·nprobe=10에서 11,000회, d=768·m=8·nbits=8에서 3,072B→8B를 검산하고, 두 값이 실제 지연 시간·전체 저장량·재현율 측정치가 아님을 함께 확인합니다.",
   },
+  "ai/lexical-retrieval-bm25-inverted-index": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale: "q-18 한 건을 analyzer 출력부터 posting list 합집합, Lucene 10.5.2 BM25 점수, 공통 token이 없을 때의 실패까지 같은 세 문서로 추적합니다. 후보 생성과 점수 계산을 나누되 한 글에서 이어 봐야 D2가 어느 단계에서 빠지는지 설명할 수 있습니다.",
+    sharedGate: "N=3·avgdl=4·df=2에서 D1=0.5539, D3=0.3547을 검산하고, q-18·문서·점수는 설명용 가정이며 실제 analyzer·지연 시간·검색 품질 측정값이 아님을 함께 확인합니다.",
+  },
   "ai/adaptive-hyperparameter-search": {
     "action": "keep",
     "status": "implemented",
@@ -3459,6 +3466,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/vector-search-and-ann-indexes": "1b2aed448dad9989",
+  "ai/lexical-retrieval-bm25-inverted-index": "03c283713aa04e5a",
   "ai/image-training-stages": "20ded1bf15e7dd02",
   "ai/domain-finetuning": "c940531287aaa232",
   "ai/regularization-practice": "70bd499ad13bf51a",

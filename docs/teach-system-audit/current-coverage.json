@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 632,
-    "pending": 360,
+    "reviewed": 633,
+    "pending": 359,
     "untracked": 0,
-    "assignedPending": 318,
+    "assignedPending": 317,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3821,11 +3821,11 @@
     {
       "route": "ai/lexical-retrieval-bm25-inverted-index",
       "publicPath": "cs/ai/lexical-retrieval-bm25-inverted-index",
-      "title": "Lexical retrieval: TF-IDF·BM25·inverted index",
+      "title": "Lexical retrieval: posting list에서 BM25 순위까지",
       "catalogIndex": 379,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

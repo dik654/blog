@@ -110,6 +110,7 @@ const noScriptArticleRoutes = new Set([
   "ai/domain-data-governance",
   "ai/bi-encoder-retrieval",
   "ai/vector-search-and-ann-indexes",
+  "ai/lexical-retrieval-bm25-inverted-index",
   "ai/embedding-serving-contract",
   "ai/image-embedding-pipeline",
   "ai/image-text-contrastive-pretraining",

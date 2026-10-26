@@ -4,6 +4,7 @@ export type EmbeddingLearningNodeId =
   | "sentence-vector"
   | "retrieval"
   | "vector-index"
+  | "lexical-index"
   | "serving-contract"
   | "image-vector"
   | "image-text-relation"
@@ -55,6 +56,17 @@ export const EMBEDDING_LEARNING_NODES: readonly EmbeddingLearningNode[] = [
     parentLabel: "임베딩 지도 · 사전 계산된 문서 벡터",
     question: "문서 벡터가 100만 개일 때 정답 후보를 놓칠 위험과 저장 비용을 어떻게 보면서 비교량을 줄일까요?",
     closure: "전수 비교는 모든 벡터를 확인해 최근접을 보장합니다. IVF는 가까운 구역만 열어 비교 대상을 줄이고, PQ는 벡터를 짧은 code로 바꿔 저장과 거리 계산을 줄이지만 두 단계 모두 recall이나 거리 정밀도를 내줄 수 있습니다.",
+  },
+  {
+    id: "lexical-index",
+    href: "/cs/ai/lexical-retrieval-bm25-inverted-index#overview",
+    shortTitle: "단어 색인",
+    mapLabel: "token → posting → BM25",
+    track: "concept",
+    parentHref: "/cs/ai/bi-encoder-retrieval#candidate",
+    parentLabel: "검색 · Candidate set을 만드는 첫 단계",
+    question: "같은 token을 가진 문서만 빠르게 모으고, 반복 빈도와 문서 길이로 후보 순서를 어떻게 정할까요?",
+    closure: "Analyzer가 만든 token은 posting list로 후보를 만들고, BM25는 DF·TF 포화·문서 길이로 그 후보만 정렬합니다. 공통 token이 없으면 의미가 가까워도 후보가 되지 않습니다.",
   },
   {
     id: "serving-contract",

@@ -9138,8 +9138,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "선행·비교 논문", label: "Zhou et al. · Least-to-Most Prompting (ICLR 2023)", href: "https://arxiv.org/abs/2205.10625", note: "2026-10-26에 원문을 확인했습니다. 복합 문제를 하위 문제로 나누는 선행 추론 아이디어이며 검색 품질의 직접 근거가 아닙니다." },
   ],
   "ai/lexical-retrieval-bm25-inverted-index": [
-    { kind: "핵심 논문", label: "Robertson, Zaragoza — The Probabilistic Relevance Framework: BM25 and Beyond (2009)", href: "https://doi.org/10.1561/1500000019", note: "BM25 scoring 식의 유도와 saturation·length normalization 결합의 근거" },
-    { kind: "공식 문서", label: "Apache Lucene — BM25Similarity (javadoc)", href: "https://lucene.apache.org/core/9_11_0/core/org/apache/lucene/search/similarities/BM25Similarity.html", note: "IDF 의 log(1+...) 변형과 k1=1.2, b=0.75 기본값의 근거" },
+    { kind: "핵심 논문", label: "Robertson, Zaragoza — The Probabilistic Relevance Framework: BM25 and Beyond (2009)", href: "https://doi.org/10.1561/1500000019", note: "BM25 계열의 확률적 관련성 모형, term frequency saturation, 문서 길이 보정의 이론적 범위를 확인했습니다." },
+    { kind: "공식 문서", label: "Apache Lucene 10.5.2 — BM25Similarity Javadoc", href: "https://lucene.apache.org/core/10_5_2/core/org/apache/lucene/search/similarities/BM25Similarity.html", note: "2026-10-26에 k1=1.2, b=0.75 기본값, IDF, 평균 문서 길이 계산을 확인했습니다." },
+    { kind: "공식 코드", label: "Apache Lucene 10.5.2 — BM25Similarity.java", href: "https://github.com/apache/lucene/blob/releases/lucene/10.5.2/lucene/core/src/java/org/apache/lucene/search/similarities/BM25Similarity.java", note: "릴리스 태그에서 길이 norm 준비와 실제 doScore 구현을 확인했습니다. main 브랜치의 이후 변화와 섞지 않습니다." },
   ],
   "ai/graphrag-community-and-multihop-search": [
     { kind: "핵심 논문", label: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., arXiv 2404.16130)", href: "https://arxiv.org/abs/2404.16130", note: "Leiden community detection·계층 summary, local/global search 구분, global search map-reduce 절차, community level 별 성능·token 비율의 근거. 수치는 저자 자기보고" },
