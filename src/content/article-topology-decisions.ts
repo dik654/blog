@@ -351,6 +351,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
   "blockchain/reth-alloy-primitives": KEEP("Semantic type→canonical encode/decode→hash/address derivation이 한 Alloy codec 경계입니다."),
+  "blockchain/lsm-tree": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "A@41·52·60 한 키의 쓰기, 시점별 읽기, snapshot을 보존하는 compaction과 debt·stall까지는 한 메커니즘 사슬입니다. 특정 엔진 설정을 비교하는 실험·복구·ADR은 환경별 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 snapshot 55에서 A=9, snapshot 61에서 없음이 되는 규칙과 20+20+60/20=5, (80-60)MB/s와 1,000/20=50초를 검산합니다. 운영 설정·SLO·rollback 판단은 포함하지 않습니다.",
+    targetRoutes: ["blockchain/lsm-tree", "blockchain/lsm-engine-validation"],
+  },
+  "blockchain/lsm-engine-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "고정 manifest에서 같은 operation trace를 재생하고 crash 뒤 oracle을 대조한 다음 비용을 측정해 ADR로 남기는 하나의 운영 판단 경로입니다. 상태 소유권·실험·복구·결정은 같은 run receipt를 공유하므로 다시 나누면 증거 연결이 끊깁니다.",
+    sharedGate:
+      "Engine commit·options·자료 digest·seed·장치·filesystem을 고정하고 WAL·flush·MANIFEST·compaction install 경계의 key·tombstone·snapshot parity를 먼저 통과합니다. 통과한 run에서만 증폭·stall·p99·recovery를 비교하며 실제 결과가 없으면 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
@@ -3825,7 +3844,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",
-  "blockchain/reth-alloy-primitives": "6e05036f1849ea7e",
+  "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
+  "blockchain/lsm-tree": "9aecdf800aab56ed",
+  "blockchain/lsm-engine-validation": "47d5cc0e46151e22",
   "blockchain/reth-net": "f506624d24b7ed4a",
   "blockchain/reth-precompiles": "79605a2596ddb7f4",
   "blockchain/reth-rpc": "02473a33cea1db84",

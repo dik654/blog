@@ -3461,40 +3461,57 @@
     },
     {
       "route": "blockchain/lsm-tree",
-      "title": "LSM tree: WAL·SSTable·compaction amplification",
-      "status": "unreviewed",
+      "title": "LSM 저장 엔진: 한 키의 쓰기·읽기·정리",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/lsm-tree.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/lsm-tree.tsx",
-        "src/pages/articles/ethereum/lsm-tree/ModernArticle.tsx"
+        "src/pages/articles/ethereum/lsm-tree/ModernArticle.tsx",
+        "src/pages/articles/ethereum/lsm-tree/StorageEngineLocator.tsx",
+        "src/pages/articles/ethereum/lsm-tree/viz/LsmLifecycleViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 6,
+        "predictionPointers": 3,
+        "assumptionMarkers": 4,
+        "sourceButtons": 3,
         "headings": [
-          "LSM tree: 빠른 append의 비용을 read와 compaction에서 갚는다",
-          "WAL·memtable·SSTable은 서로 다른 실패를 막는다",
-          "Read는 newest visible sequence와 tombstone을 함께 고른다",
-          "Compaction은 amplification과 service-rate의 문제다",
-          "Snapshot correctness 뒤 workload별 증폭·stall을 비교한다"
+          "한 키가 WAL에서 시점 읽기와 compaction까지 가는 과정을 추적합니다",
+          "성공 응답, 복구 기록, 검색 구조는 서로 다른 책임입니다",
+          "읽기는 키가 아니라 키·sequence·값 종류를 함께 비교합니다",
+          "Compaction은 읽기 결과를 보존하면서 미뤄 둔 정리를 수행합니다",
+          "정리 속도가 입력보다 느리면 debt가 foreground write로 돌아옵니다",
+          "실패는 어느 단계가 사라지거나 너무 빨리 지워졌는지로 나눕니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 쓰기 경로·읽기·compaction과 운영 설정 비교를 한 글에 넣어 메커니즘과 환경별 선택을 구분하기 어려웠습니다.",
+        "WAL·memtable·SSTable을 나열했지만 같은 키의 여러 sequence와 tombstone이 snapshot마다 어떤 답을 만드는지 한 사례로 추적하지 않았습니다.",
+        "Write amplification과 stall 수치를 설명하면서 실제 제품 설정값과 설명용 계산의 경계가 충분히 드러나지 않았습니다."
+      ],
+      "fixture": "키 A에 A@41=7, A@52=9, A@60=tombstone을 순서대로 기록합니다. snapshot 55는 A@52=9를, snapshot 61은 삭제를 봅니다. 입력 80MB/s와 compaction 60MB/s의 설명용 차이 20MB/s가 1,000MB 한도를 채우는 50초를 계산합니다.",
+      "stageEvidence": {
+        "locator": "저장 엔진 전체 지도의 concept 글로 표시하고 같은 트랙의 B+ tree·MDBX와 실무 검증 글을 분리해 연결합니다.",
+        "write": "WAL append와 memtable insert, immutable SSTable flush가 각각 어느 실패 경계를 맡는지 구분합니다.",
+        "read": "키 A의 세 내부 항목에서 snapshot sequence 이하의 최신 항목과 tombstone을 선택합니다.",
+        "compaction": "활성 snapshot이 요구하는 A@52를 보존하면서 더 오래된 A@41·A@12를 제거할 수 있는 조건을 표시합니다.",
+        "stall": "ingest와 compaction service rate의 차이를 debt와 남은 시간으로 계산해 backpressure가 필요한 이유를 연결합니다.",
+        "fallback": "JavaScript 비활성 경로에서도 여섯 장면의 순서와 결론을 정적 목록으로 제공합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "O’Neil 외 1996 LSM-tree 논문으로 메모리 구성요소와 디스크 병합 구조의 출발점을 확인했습니다.",
+        "RocksDB Wiki의 Read Path와 Compaction 문서로 sequence·tombstone·snapshot 보존과 compaction 동작을 대조했습니다.",
+        "RocksDB Operations 문서로 pending compaction bytes와 write stall을 운영 지표로 확인했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "개념 글에서는 값 보존과 backpressure 메커니즘만 설명하고, profile 선택·crash 실험·ADR은 별도 practice 글로 옮겼습니다.",
+        "arithmetic": "snapshot 55·61의 선택 결과, write amplification (20+20+60)/20=5와 debt 80-60=20MB/s, 1,000/20=50초를 다시 계산했습니다. 모두 설명용 가정으로 표시했습니다.",
+        "humanize": "학습 계약·지식 그래프·한국어 자연스러움·용어·수식·계산·시각화 감사가 통과했습니다.",
+        "browser390": "390×844에서 문서 가로 넘침 0, 장면 전환 시 frame·조작부 이동 0px, 50×50px 버튼, 키보드 이동과 reduced-motion 비활성 재생을 확인했습니다.",
+        "browser1440": "1440×1000에서 문서 가로 넘침과 console 오류 0, 무자동재생, 화면 이탈 정지와 재진입 후 정지 유지를 확인했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "split-concept-mechanism-from-practice-validation"
     },
     {
       "route": "blockchain/mdbx-internals",

@@ -3933,3 +3933,24 @@
   브라우저 검사가 모두 통과했습니다. 공개 Knowledge Graph 경로를 390×844에서 다시 열어 제목,
   U-42, kg-v43, 부모 지도 반환, 가로 넘침 0, console 오류 0과 키보드 초점을 확인했습니다.
   검증 뒤 Playwright와 Chromium 프로세스를 모두 종료했습니다.
+
+### LSM 저장 엔진 개념·실무 분리 로컬 검증 (2026-10-27)
+
+- `lsm-tree`는 `concept`, `lsm-engine-validation`은 `practice`로 분리했습니다. 두 글은 저장
+  엔진 학습 지도에서 직속 부모, 현재 위치, 같은 트랙의 이웃 글을 먼저 보여 줍니다. 실무 글은
+  개념 글의 쓰기·읽기·compaction·stall anchor에서 시작하며 전체 메커니즘을 다시 설명하지 않습니다.
+- 개념 글은 키 A의 `A@41=7`, `A@52=9`, `A@60=tombstone`을 끝까지 추적합니다. Snapshot 55와
+  61의 읽기 결과, 활성 snapshot을 보존하는 compaction, 설명용 write amplification 5와
+  compaction debt 20MB/s, 남은 50초를 같은 사례에서 계산합니다.
+- 실무 글은 환경 manifest, baseline과 candidate, 동일 operation trace, kill point, 독립 oracle,
+  지표 receipt, rollback과 ADR의 상태 소유자를 나눴습니다. 대상 환경에서 실행한 성능 결과는
+  없으므로 모든 우위와 임계값을 `[M] 미측정`으로 남기고 결론을 `proposed`로 표시했습니다.
+- 두 그림은 사용자가 재생하기 전에는 움직이지 않고 마지막 장면에서 멈춥니다. 390×844와
+  1,440×1,000에서 문서 가로 넘침과 console 오류가 없고 장면 전환 시 frame·조작부 이동은
+  0px입니다. 모바일 조작부는 50×50px이며 키보드 이동, 화면 이탈 정지, 재진입 후 정지 유지와
+  reduced-motion의 비활성 재생을 확인했습니다.
+- 학습 계약, 지식 그래프, topology, 읽기 순서, 시각화, 수식, 계산, 한국어와 용어 검사를
+  통과했습니다. Production build는 8,061개 module과 정적 public route 2,092개, no-script
+  본문 301편을 생성했고 최대 상주 메모리는 약 6.42GB, swap은 0이었습니다. JavaScript 비활성
+  390×844 화면에서 두 글 모두 직속 부모, 여섯 정적 장면, 핵심 사례, 부모 지도 반환이 보이고
+  live 조작부와 문서 가로 넘침은 없었습니다. GitHub Pages 공개 경로 검증만 남아 있습니다.

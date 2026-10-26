@@ -6821,6 +6821,11 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind:"핵심 논문", label:"O’Neil et al. · The Log-Structured Merge-Tree", href:"https://doi.org/10.1007/s002360050048", note:"LSM architecture·rolling merge의 primary paper" },
     { kind:"공식 코드", label:"facebook/rocksdb @ 2dc6bc5", href:"https://github.com/facebook/rocksdb/tree/2dc6bc51b498c7fcae16e78a54de9058181c8b75", note:"WAL·memtable·SST·compaction·stall의 pinned implementation" },
   ],
+  "blockchain/lsm-engine-validation": [
+    { kind:"공식 문서", label:"RocksDB Wiki · Write Stalls", href:"https://github.com/facebook/rocksdb/wiki/Write-Stalls", note:"Memtable·L0·pending compaction bytes에 따른 지연·중단 경계와 관측 지점" },
+    { kind:"공식 문서", label:"RocksDB Wiki · Basic Operations", href:"https://github.com/facebook/rocksdb/wiki/Basic-Operations", note:"WAL·sync 설정별 process crash와 machine crash 복구 경계" },
+    { kind:"공식 코드", label:"facebook/rocksdb @ 2dc6bc5", href:"https://github.com/facebook/rocksdb/tree/2dc6bc51b498c7fcae16e78a54de9058181c8b75", note:"실험 기준선의 option 기본값과 write·compaction·stall 구현 snapshot" },
+  ],
   "blockchain/mdbx-internals": [
     { kind:"핵심 논문", label:"Chu · MDB: A Memory-Mapped Database and Backend for OpenLDAP", href:"https://www.openldap.org/pub/hyc/mdb-paper.pdf", note:"mmap·CoW·MVCC design lineage의 primary paper" },
     { kind:"공식 코드", label:"Mithril-mine/libmdbx @ f7a3a93", href:"https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0", note:"MDBX transaction·page·DUPSORT의 pinned source" },
