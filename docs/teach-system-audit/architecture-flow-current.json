@@ -7,9 +7,9 @@
     "dedicatedVisuals": 683,
     "inlineVisuals": 533,
     "customVisuals": 866,
-    "animatedMechanisms": 480,
-    "architectureWithoutAnimation": 92,
-    "recursiveLocators": 302,
+    "animatedMechanisms": 481,
+    "architectureWithoutAnimation": 91,
+    "recursiveLocators": 303,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -8217,11 +8217,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/reth-db",

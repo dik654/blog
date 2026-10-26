@@ -5857,11 +5857,11 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-cli": {
     title: "Reth CLI·NodeBuilder 글이 소유하는 범위",
     owns: [
-      "CLI·config file·default precedence와 normalized config provenance",
-      "NodeBuilder typestate와 component dependency DAG",
-      "Core component와 RPC·ExEx·lifecycle hook add-on 경계",
-      "Launch state·readiness·crash cleanup supervision receipt",
-      "Node assembly adversarial release·rollback gate",
+      "CLI·설정 파일·기본값의 우선순위와 최종 설정의 출처",
+      "NodeBuilder 형식 상태와 부품 의존 관계",
+      "핵심 부품과 RPC·ExEx·수명주기 훅의 경계",
+      "시작 상태·준비 판정·비정상 종료 뒤 정리 기록",
+      "노드 조립 변경의 실패 검사와 되돌리기 기준",
     ],
     reuses: [
       { label: "Reth execution-client·block lifecycle", href: "/cs/blockchain/reth" },
@@ -5869,10 +5869,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Provider pinned view·storage ownership", href: "/cs/blockchain/reth-provider" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Flag·default·type·method·trait claim은 실행한 Reth 2.x semver/SHA와 official CLI/crate docs·source에 귀속한다." },
-      { kind: "standard", rule: "CLI parse success와 compile-time assembly success를 runtime readiness·chain correctness로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 normalized config·chain spec·storage snapshot에서 failure matrix와 lifecycle receipt parity를 먼저 비교한다." },
-      { kind: "project-claim", rule: "Moving main·old crate layout·README 성능을 모든 release·custom node의 고정 동작으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "플래그·기본값·형식·메서드·트레이트 설명은 실행한 Reth v2.8.1 태그와 공식 CLI·crate 문서·소스에 귀속한다." },
+      { kind: "standard", rule: "CLI 해석 성공과 컴파일 단계의 조립 성공을 실행 준비 상태나 체인 계산의 정확성으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "같은 최종 설정·ChainSpec·저장소 복사본에서 실패 조건과 수명주기 기록이 같은지 먼저 비교한다." },
+      { kind: "project-claim", rule: "계속 바뀌는 main·예전 crate 구조·README 성능을 모든 릴리스와 사용자 정의 노드의 고정 동작으로 일반화하지 않는다." },
     ],
   },
   "reth-alloy-primitives": {

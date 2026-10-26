@@ -5134,40 +5134,60 @@
     {
       "route": "blockchain/reth-cli",
       "title": "Reth CLI & 노드 빌더",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-cli.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-cli.tsx",
         "src/pages/articles/ethereum/reth-cli/Components.tsx",
         "src/pages/articles/ethereum/reth-cli/NodeBuilder.tsx",
         "src/pages/articles/ethereum/reth-cli/Overview.tsx",
+        "src/pages/articles/ethereum/reth-cli/RethCliLocator.tsx",
+        "src/pages/articles/ethereum/reth-cli/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-cli/viz/BuilderDetailViz.tsx",
+        "src/pages/articles/ethereum/reth-cli/viz/ComponentsViz.tsx",
+        "src/pages/articles/ethereum/reth-cli/viz/ContextViz.tsx",
+        "src/pages/articles/ethereum/reth-cli/viz/NodeBuilderViz.tsx",
         "src/pages/articles/ethereum/reth-viz-primitives.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "assumptionMarkers": 3,
         "sourceButtons": 8,
         "headings": [
-          "\n        교체 가능한 component도 dependency graph 안에서만 안전하다\n      ",
-          "\n        NodeBuilder는 조립 순서를 compile-time capability로 바꾼다\n      ",
-          "\n        Reth CLI의 핵심은 옵션을 많이 받는 것이 아니라 재현 가능한 node assembly\n        입력을 만드는 것이다\n      "
+          "실무에서 확정할 질문",
+          "상태 소유자를 먼저 나눕니다",
+          "NodeBuilder는 조립 순서를 컴파일 단계의 제약으로 바꿉니다",
+          "교체 가능한 부품도 의존 관계 안에서만 안전합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 CLI·NodeBuilder·핵심 부품 이름을 설명했지만, 같은 명령을 다시 실행했을 때 같은 노드가 준비됐다고 판정할 증거가 한 흐름으로 연결되지 않았습니다.",
+        "예전 Reth 소스 구조와 v2.2.0 근거가 현재 설명에 섞여 있었고, 입력 해석 성공·컴파일 성공·실행 준비 상태의 경계가 충분히 드러나지 않았습니다.",
+        "시각화가 정적인 부품 목록에 가까워 설정 입력이 저장소·부품·서비스 상태로 바뀌는 실제 상태 전이를 보여 주지 못했습니다."
+      ],
+      "fixture": "설명용 HTTP 포트 후보 기본값 8545·설정 파일 9545·CLI 10545를 값 출처와 함께 정리하고, 체인·경로·JWT·포트 검사, DB 연결, 형식→부품→부가 기능 조립, 서비스 시작과 준비 판정까지 추적합니다.",
+      "stageEvidence": {
+        "locator": "Reth 전체 구조의 practice 자식 글로 표시하고 현재 영역의 CLI→ChainSpec→값·직렬화 순서를 같은 curriculum 데이터에 연결합니다.",
+        "launchTrace": "7개 장면에서 설정 입력→값 정리→사전 검사→저장소 연결→부품 조립→서비스 시작→준비 판정을 상태 소유자와 단계별 증거로 추적합니다.",
+        "typeState": "NodeBuilder→WithTypes→WithComponents→WithAddOns 반환 형식과 트레이트 조건이 조립 순서를 제한하는 이유를 v2.8.1 축약 소스로 확인합니다.",
+        "failureBoundary": "CLI 입력 해석·컴파일 단계 조립·데이터베이스와 소켓의 실행 실패·서비스 준비 상태를 서로 다른 판정으로 유지합니다.",
+        "fallback": "StaticSceneList와 no-script 정적 route에서 같은 7단계, 근거, 부모 지도 반환을 순서대로 제공합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth 공식 reth node 명령 문서에서 --config·--chain·--instance 입력 표면을 확인했습니다.",
+        "Reth v2.8.1 태그의 NodeCommand.execute와 NodeBuilder·states·components 소스로 설정·DB·실행 문맥 전달과 형식 상태 전이를 확인했습니다.",
+        "Reth v2.8.1 릴리스 노트에서 Hoodi Amsterdam 일정 제거, 데이터베이스 변경 없음, 버전 하향 가능성과 체인별 안전성의 차이를 확인했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "공식 v2.8.1 태그와 현재 CLI·NodeBuilder 문서를 다시 확인하고, 이전 축약 코드와 v2.2.0 근거를 v2.8.1 기준으로 교체했습니다.",
+        "arithmetic": "8545·9545·10545는 우선순위를 설명하는 예시임을 시각화와 본문에 명시했으며 실제 기본값이나 성능 측정값으로 사용하지 않았습니다.",
+        "humanize": "글 단위 학습 계약·문장 호흡·한국어 자연스러움·용어 밀도·모바일 용어 묶음 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 폭 334=334, 본체 높이 약 486px, 키보드 장면 이동과 reduced-motion 재생 비활성을 확인했습니다. JavaScript 비활성 문맥에서도 7개 정적 장면과 부모 지도 반환을 확인했습니다.",
+        "browser1440": "1440×1100에서 문서 폭 1440=1440, practice locator·7단계 시각화·상태 소유자와 장면 전이를 확인했고 console 오류·경고가 없었습니다. 8,047개 모듈 production build와 2,090개 정적 route 생성이 통과했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "rewrite-as-practice-node-launch-contract"
     },
     {
       "route": "blockchain/reth-db",

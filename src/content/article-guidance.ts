@@ -58,6 +58,7 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "sionic-eureka": "사례·실측",
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
+  "reth-cli": "운영 가이드",
 };
 
 const CATEGORY_STARTS: Record<string, GuidanceLink> = {
@@ -1597,6 +1598,20 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
       },
     ],
     "Reth는 합의를 대신하지 않습니다. 합의가 선택한 실행 데이터 묶음을 검증·실행·저장하고 한 시점의 상태로 조회하게 합니다.",
+  ),
+  "blockchain/reth-cli": flow(
+    "같은 Reth 노드를 다시 준비하는 일곱 단계",
+    "같은 reth node 명령을 다시 실행했을 때 같은 노드가 준비됐다고 무엇으로 확인할까요?",
+    [
+      { label: "설정 입력", detail: "기본값·설정 파일·CLI 인자를 한 요청으로 모읍니다." },
+      { label: "값 정리", detail: "우선순위를 적용하고 각 최종값의 출처를 함께 남깁니다." },
+      { label: "사전 검사", detail: "체인·경로·JWT·포트가 서로 충돌하지 않는지 확인합니다." },
+      { label: "저장소 연결", detail: "선택한 체인과 맞는 데이터베이스를 열고 저장 형식을 확인합니다." },
+      { label: "부품 조립", detail: "형식→핵심 부품→부가 기능 순서를 NodeBuilder가 제한합니다." },
+      { label: "서비스 시작", detail: "네트워크·거래 풀·Engine API·RPC를 단계별로 시작합니다." },
+      { label: "준비 판정", detail: "프로세스 생존이 아니라 단계별 성공 기록과 실패 뒤 정리 여부를 봅니다." },
+    ],
+    "CLI는 입력을 정리해 빌더에 넘깁니다. 같은 노드가 준비됐다는 판정은 설정 출처, 저장소 호환성, 부품 시작 상태와 실패 뒤 정리 기록을 함께 확인해야 합니다.",
   ),
   "blockchain/prysm": flow(
     "Prysm beacon node의 큰 실행 경로",
