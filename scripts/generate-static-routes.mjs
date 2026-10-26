@@ -345,6 +345,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth",
   "blockchain/reth-cli",
   "blockchain/reth-chainspec",
+  "blockchain/reth-alloy-primitives",
   "blockchain/reth-trie",
 ]);
 const noScriptArticles = catalog.filter(
@@ -368,7 +369,7 @@ try {
         createElement(module.default),
       ),
     );
-    const fallback = `<noscript><main id="noscript-article" style="max-width:52rem;margin:0 auto;padding:2rem 1rem 5rem"><article><p style="margin:0 0 .75rem;color:#64748b;font:600 12px/1.5 system-ui,sans-serif">정적 읽기 모드 · 장면 조작 없이 모든 절을 순서대로 표시합니다.</p><h1 style="margin:0 0 2rem;font:700 clamp(1.75rem,5vw,2.5rem)/1.25 system-ui,sans-serif">${article.title}</h1>${body}</article></main></noscript>`;
+    const fallback = `<noscript><style>#noscript-article [data-viz-live-only],#noscript-article button{display:none!important}</style><main id="noscript-article" style="max-width:52rem;margin:0 auto;padding:2rem 1rem 5rem"><article><p style="margin:0 0 .75rem;color:#64748b;font:600 12px/1.5 system-ui,sans-serif">정적 읽기 모드 · 장면 조작 없이 모든 절을 순서대로 표시합니다.</p><h1 style="margin:0 0 2rem;font:700 clamp(1.75rem,5vw,2.5rem)/1.25 system-ui,sans-serif">${article.title}</h1>${body}</article></main></noscript>`;
 
     for (const route of [article.publicPath, article.route]) {
       const outputPath = path.join(distRoot, ...route.split("/"), "index.html");

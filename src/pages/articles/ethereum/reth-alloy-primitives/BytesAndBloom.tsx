@@ -6,7 +6,7 @@ import { codeRefs } from "./codeRefs";
 export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, ref: CodeRef) => void }) {
   return (
     <section id="bytes-bloom" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Log bloom은 “없음”은 빠르게 증명하지만 “있음”은 후보만 만든다</h2>
+      <h2 className="mb-5 text-2xl font-bold">같은 해시 도구도 Bloom에서는 비트 세 곳을 고릅니다</h2>
       <div className="not-prose my-5 flex flex-wrap gap-2">
         <CodeViewButton onClick={() => onCodeRef("bloom-accrue", codeRefs["bloom-accrue"])} />
         <CodeViewButton onClick={() => onCodeRef("bloom-contains", codeRefs["bloom-contains"])} />
@@ -31,15 +31,9 @@ export default function BytesAndBloom({ onCodeRef }: { onCodeRef: (key: string, 
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Bytes는 길이가 변할 수 있는 owned buffer이고 FixedBytes는 폭 invariant를 갖습니다. Bloom을 만들 때는 address/topic의 exact
-          bytes를 Keccak-256에 넣어 protocol이 정한 세 위치를 켭니다. Query도 같은 bytes·bit ordering을 써야 합니다.
-        </p>
-        <h3>Type·codec release gate</h3>
-        <p>
-          Boundary value(0, 127, 128, 255, U256 MAX)와 wrong width, endian reversal을 old/new crate에 재생합니다. Non-
-          canonical RLP, trailing bytes, CREATE/CREATE2 domain, bloom false positive도 같이 넣습니다. Typed
-          value·encoded bytes·decode error·hash/address·bloom bits parity를 먼저 통과한 뒤 allocation·throughput을
-          비교합니다. Crate version과 rollback lockfile은 함께 보존합니다.
+          CREATE 주소에서는 digest의 마지막 20바이트를 썼지만, log bloom에서는 address나 topic의 Keccak-256 digest에서 세 개의
+          11비트 위치를 고릅니다. 같은 해시 함수라도 입력 문맥과 결과를 읽는 규칙이 다릅니다. 조회할 때 세 비트 중 하나라도 0이면
+          해당 항목은 없지만, 셋이 모두 1이어도 다른 항목들이 우연히 켠 비트일 수 있으므로 실제 log를 다시 확인해야 합니다.
         </p>
       </div>
     </section>

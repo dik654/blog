@@ -4896,8 +4896,8 @@
     },
     {
       "route": "blockchain/reth-alloy-primitives",
-      "title": "Reth alloy 프리미티브 & RLP",
-      "status": "unreviewed",
+      "title": "Reth 값과 바이트: Alloy·RLP",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-alloy-primitives.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-alloy-primitives.tsx",
@@ -4906,41 +4906,72 @@
         "src/pages/articles/ethereum/reth-alloy-primitives/Keccak256Address.tsx",
         "src/pages/articles/ethereum/reth-alloy-primitives/Overview.tsx",
         "src/pages/articles/ethereum/reth-alloy-primitives/Primitives.tsx",
+        "src/pages/articles/ethereum/reth-alloy-primitives/RethAlloyPrimitivesLocator.tsx",
         "src/pages/articles/ethereum/reth-alloy-primitives/Rlp.tsx",
         "src/pages/articles/ethereum/reth-alloy-primitives/RlpDecoding.tsx",
         "src/pages/articles/ethereum/reth-alloy-primitives/U256Arithmetic.tsx",
-        "src/pages/articles/ethereum/reth-storage-boundary-viz.tsx"
+        "src/pages/articles/ethereum/reth-alloy-primitives/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codeRefsKeccakBloom.ts",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codeRefsPrimitives.ts",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codeRefsRlp.ts",
+        "src/pages/articles/ethereum/reth-alloy-primitives/fileTrees.ts",
+        "src/pages/articles/ethereum/reth-alloy-primitives/viz/ContextViz.tsx",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-primitives/address.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-primitives/aliases.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-primitives/bloom.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-primitives/fixed.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-primitives/keccak.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-rlp/decode.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/alloy-rlp/header.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/ruint/add.rs",
+        "src/pages/articles/ethereum/reth-alloy-primitives/codebase/ruint/uint.rs"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 22,
+        "stageMarkers": 6,
+        "predictionPointers": 3,
+        "assumptionMarkers": 5,
+        "sourceButtons": 18,
         "headings": [
-          "Log bloom은 “없음”은 빠르게 증명하지만 “있음”은 후보만 만든다",
-          "FixedBytes&lt;N&gt;은 길이 invariant를 constructor에서 한 번 증명한다",
-          "Hash가 같으려면 입력 bytes와 domain 조립 순서가 먼저 같아야 한다",
-          "Alloy primitive는 같은 32 bytes라도 주소·hash·정수를 섞지 않게 만든다",
-          "Address·B256·U256은 width가 아니라 허용 연산까지 구분한다",
-          "RLP는 값의 의미가 아니라 byte string과 list의 길이를 canonical하게 적는다",
-          "안전한 RLP decode는 header를 읽기 전에 allocation과 소비 범위를 정한다",
-          "U256은 네 개의 64-bit limb를 하나의 unsigned value로 읽는다"
+          "타입과 바이트가 같아야 모든 노드가 같은 주소를 계산합니다",
+          "같은 32바이트라도 해시와 숫자는 다른 값입니다",
+          "외부 바이트는 타입 안으로 들어올 때 길이를 검사합니다",
+          "RLP는 두 필드를 23바이트 목록 하나로 만듭니다",
+          "복원은 값뿐 아니라 남은 바이트까지 확인해야 끝납니다",
+          "해시는 확정된 23바이트만 입력으로 받습니다",
+          "U256의 내부 조각 순서는 RLP 바이트 순서와 다릅니다",
+          "같은 해시 도구도 Bloom에서는 비트 세 곳을 고릅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 Address·U256·RLP·Keccak·Bloom을 항목별로 나열해 한 값이 타입에서 바이트와 주소로 바뀌는 전체 경로를 추적하기 어려웠습니다.",
+        "코드 패널이 실제 Alloy·ruint 고정 버전이 아니라 설명용 합성 Reth 소스를 보여 주어 구현 근거와 예시 코드의 경계가 불분명했습니다.",
+        "학습 계약은 Reth v2.2.0과 운영용 crate release gate를 포함해 현재 본문의 버전과 개념 글의 질문에 맞지 않았습니다.",
+        "RLP 바이트 문법과 양의 정수의 최소 표현을 한 층으로 설명해 83 00 04 00이 어느 단계에서 거절되는지 구분하지 못했습니다."
+      ],
+      "fixture": "alloy-primitives 1.6.1 공식 예시의 sender 0xb20a608c624Ca5003905aA834De7156C68b2E1d0와 nonce 1을 사용합니다. RLP d694b20a608c624ca5003905aa834de7156c68b2e1d001, Keccak-256 c71d864bc265f58febf32269e33c6e89e69d085897f98e92b06ebd541d1daa99, CREATE 주소 0xe33c6e89e69d085897f98e92b06ebd541d1daa99를 같은 흐름에서 추적합니다.",
+      "stageEvidence": {
+        "locator": "Reth 전체 구조의 개념 자식 글로 표시하고 CLI→ChainSpec→값과 직렬화의 같은 트랙 순서를 보여 줍니다.",
+        "trace": "입력 고정→필드 인코딩→목록 완성→정확한 복원→해시 계산→주소 선택을 공식 sender·nonce 하나로 추적합니다.",
+        "boundaries": "타입·RLP·정확한 복원·Keccak-256이 확인하는 것과 확인하지 못하는 것을 나눕니다.",
+        "source": "Reth v2.8.1이 고정한 alloy-primitives 1.6.1·alloy-rlp 0.3.16과 ruint 1.18.0의 실제 구현 발췌를 별도 프로젝트로 보여 줍니다.",
+        "failure": "19바이트 주소, 비최소 정수, 잘린 payload, 객체 뒤 남은 00, 잘못 조립한 해시 입력이 어느 경계에서 실패하는지 구분합니다.",
+        "return": "세 예측 질문으로 바이트 경로를 다시 설명한 뒤 같은 값 표현이 Reth 실행·저장·네트워크 경로의 전제임을 부모 지도에 반환합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth v2.8.1 Cargo.toml에서 alloy-primitives 1.6.1과 alloy-rlp 0.3.16 의존성을 확인했습니다.",
+        "alloy-primitives 1.6.1 소스 커밋 ae40cc4의 Address::create·FixedBytes·Keccak-256·Bloom 구현을 대조했습니다.",
+        "alloy-rlp 0.3.16 소스 커밋 87cd1b7의 Header::decode·decode_exact·static_left_pad와 Ethereum RLP 공식 규격을 대조했습니다.",
+        "ruint 1.18.0 소스 커밋 95594bd의 Uint limb 순서와 checked_add·overflowing_add·saturating_add 구현을 대조했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "공식 규격과 고정 릴리스의 실제 소스를 읽어 설명용 합성 코드를 제거하고 RLP 문법·정수 복원·상위 필드 의미를 서로 다른 경계로 고쳤습니다.",
+        "arithmetic": "공식 sender·nonce 1의 RLP 23바이트, Keccak-256 digest, 마지막 20바이트 주소를 독립 계산해 공식 예시와 일치함을 확인했습니다. Bloom 0.25%는 m=2048·k=3·n=100인 설명용 근사입니다.",
+        "humanize": "글별 학습 계약·지식 그래프·문장 호흡·한국어 자연스러움·용어 밀도·수식·계산·시각화 감사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 폭 334=334, 장면 0→5 키보드 이동, reduced-motion 수동 이동, JavaScript 비활성 여섯 정적 장면·버튼 0개를 확인했습니다.",
+        "browser1440": "1440×1100에서 6.5초 무자동재생, ArrowRight 장면 0→5와 마지막 정지, Space 재생·일시정지, 장면 간 시각화 높이 변화 0px, console 오류 0을 확인했습니다. TypeScript와 8GB production build가 통과했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "rewrite-as-concept-type-bytes-hash-trace"
     },
     {
       "route": "blockchain/reth-blob-admission",

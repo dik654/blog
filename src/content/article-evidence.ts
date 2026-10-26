@@ -5111,8 +5111,28 @@ export const ARTICLE_EVIDENCE: Readonly<
     RETH_SERIES_EVIDENCE,
     source(
       "공식 문서",
-      OFFICIAL_SOURCES.alloy.primitives,
-      "Ethereum primitive type과 encoding API의 현재 정의",
+      { label: "alloy-primitives 1.6.1 문서", href: "https://docs.rs/alloy-primitives/1.6.1/alloy_primitives/" },
+      "alloy-primitives 1.6.1의 Address·FixedBytes·B256·U256·Keccak-256·Bloom 공개 API",
+    ),
+    source(
+      "공식 코드",
+      { label: "alloy-rlp 0.3.16 · commit 87cd1b7", href: "https://github.com/alloy-rs/rlp/tree/87cd1b72eddd24410b0cf782436ad3ea94262d05/crates/rlp" },
+      "alloy-rlp 0.3.16의 Header::decode·decode_exact·정수 복원 구현",
+    ),
+    source(
+      "공식 코드",
+      { label: "ruint 1.18.0 · commit 95594bd", href: "https://github.com/recmo/uint/tree/95594bdc3b8a7b3ef84abfe61ef1932dfe576f37" },
+      "ruint 1.18.0의 64비트 조각 배열과 범위 초과 덧셈 구현",
+    ),
+    source(
+      "공식 규격",
+      { label: "Ethereum Recursive Length Prefix", href: "https://ethereum.org/developers/docs/data-structures-and-encoding/rlp/" },
+      "RLP 바이트 문자열·목록의 길이 표시와 양의 정수 최소 표현 규칙",
+    ),
+    source(
+      "공식 코드",
+      { label: "Reth v2.8.1 Cargo.toml", href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/Cargo.toml#L240-L247" },
+      "Reth v2.8.1이 alloy-primitives 1.6.1과 alloy-rlp 0.3.16을 지정한 근거",
     ),
   ),
   "blockchain/reth-block-execution": withSeriesEvidence(

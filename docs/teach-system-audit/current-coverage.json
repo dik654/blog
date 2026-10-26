@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 643,
-    "pending": 349,
+    "reviewed": 644,
+    "pending": 348,
     "untracked": 0,
-    "assignedPending": 307,
+    "assignedPending": 306,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4211,11 +4211,11 @@
     {
       "route": "blockchain/reth-alloy-primitives",
       "publicPath": "cs/blockchain/reth-alloy-primitives",
-      "title": "Reth alloy 프리미티브 & RLP",
+      "title": "Reth 값과 바이트: Alloy·RLP",
       "catalogIndex": 418,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
