@@ -11,6 +11,30 @@ export default function ScopeTaxonomy() {
           겨냥할 수 있다
         </h2>
       </header>
+      <TermBreakdown
+        title="Task-specific distillation과 capability distillation의 차이"
+        description="같은 teacher-student 관계라도 무엇을 옮기려 하는지에 따라 학습 데이터와 평가 기준이 달라집니다."
+        items={[
+          {
+            term: "Task-specific distillation",
+            description:
+              "배포할 task 하나에서 teacher 행동을 재현하도록 좁게 학습합니다.",
+            example:
+              "(가정) 감성분류 teacher 정확도 94%를 student가 92%까지 따라가면 그 task만으로 승인합니다.",
+            boundary:
+              "학습에 없던 새 task로는 일반화를 보장하지 않고, 그 task 안의 out-of-distribution 입력에도 취약할 수 있습니다.",
+          },
+          {
+            term: "Capability distillation",
+            description:
+              "여러 task에 걸친 teacher의 일반 능력을 student가 폭넓게 재현하도록 학습합니다.",
+            example:
+              "(가정) 요약·코드·수학·대화 네 benchmark 평균에서 teacher 62점과 student 점수 차이를 함께 봅니다.",
+            boundary:
+              "폭넓은 데이터가 필요해 학습 비용이 크고, task 하나만 놓고 보면 좁게 학습한 task-specific student보다 낮을 수 있습니다.",
+          },
+        ]}
+      />
       <p>
         지금까지는 teacher signal을 student에 어떻게(logit·feature) 전달할지를
         다뤘습니다. 이 절은 무엇을 전달할지, 곧 distillation의 목표 범위를
@@ -29,34 +53,10 @@ export default function ScopeTaxonomy() {
         benchmark suite 평균으로 검증해야 합니다.
       </p>
       <p>
-        Teacher가 요약, 코드, 수학, 대화 네 benchmark 평균 62점을 낸다면,
+        (가정) Teacher가 요약, 코드, 수학, 대화 네 benchmark 평균 62점을 낸다면,
         capability distillation의 student도 이 네 평균을 함께 봐야 하고
         그중 하나만 잘하는 student로는 대체되지 않습니다.
       </p>
-      <TermBreakdown
-        title="Task-specific distillation과 capability distillation의 차이"
-        description="같은 teacher-student 관계라도 무엇을 옮기려 하는지에 따라 학습 데이터와 평가 기준이 달라집니다."
-        items={[
-          {
-            term: "Task-specific distillation",
-            description:
-              "배포할 task 하나에서 teacher 행동을 재현하도록 좁게 학습합니다.",
-            example:
-              "감성분류 teacher 정확도 94%를 student가 92%까지 따라가면 그 task만으로 승인합니다.",
-            boundary:
-              "학습에 없던 새 task로는 일반화를 보장하지 않고, 그 task 안의 out-of-distribution 입력에도 취약할 수 있습니다.",
-          },
-          {
-            term: "Capability distillation",
-            description:
-              "여러 task에 걸친 teacher의 일반 능력을 student가 폭넓게 재현하도록 학습합니다.",
-            example:
-              "요약·코드·수학·대화 네 benchmark 평균에서 teacher 62점과 student 점수 차이를 함께 봅니다.",
-            boundary:
-              "폭넓은 데이터가 필요해 학습 비용이 크고, task 하나만 놓고 보면 좁게 학습한 task-specific student보다 낮을 수 있습니다.",
-          },
-        ]}
-      />
       <p>
         이 축은 teacher가 어떤 dataset으로 student 학습 데이터를 만드는지와도
         이어집니다. Teacher가 직접 만든 synthetic dataset으로 student를

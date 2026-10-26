@@ -71,6 +71,42 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/claw-session": KEEP("식별→turn 실행→commit→recovery/fork→control이 같은 session state의 수명주기입니다."),
   "ai/claw-worker-boot": KEEP("Readiness gate→terminal observation→prompt delivery가 한 worker startup trust 판정입니다."),
   "ai/llm-serving-ops": KEEP("Gateway routing·GPU capacity·deployment·SLO control이 한 online serving contract의 연속 단계입니다."),
+  "ai/knowledge-distillation": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "고정 teacher가 만든 신호에서 logit 또는 feature 경로를 선택하고 student objective를 구성한 뒤 student 단독 평가로 끝내는 하나의 증류 계약입니다. 절이 많아도 같은 teacher·student 사례와 승인 기준을 공유하므로 쪼개면 전달 신호와 최종 평가의 관계가 끊깁니다.",
+    sharedGate:
+      "logit 차이 4의 temperature odds, 큰-T gradient scale, 384→1024 feature projection을 각각 검산하고, 어떤 경로를 택해도 teacher를 제거한 student의 독립 test quality와 runtime으로 최종 승인합니다.",
+  },
+  "ai/on-policy-distillation": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "Student가 방문한 prefix를 teacher가 다시 채점하는 한 바퀴 안에서 state mismatch·feedback·multi-teacher 경계를 비교하는 단일 on-policy 질문입니다. 네 영역을 나누면 같은 prefix가 어느 정책에서 나왔는지 추적할 수 없습니다.",
+    sharedGate:
+      "고정 dataset의 A→B와 student 방문 상태 A→X를 구분하고, teacher feedback receipt와 최종 student 평가가 같은 prefix provenance로 연결되는지 확인합니다.",
+  },
+  "ai/self-distillation": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "고정된 직전 세대와 학습 중인 다음 세대를 분리하고 bias inheritance를 검사한 뒤 중단 여부를 정하는 하나의 세대 계약입니다. 세대 생성과 중단 조건을 분리하면 어느 teacher snapshot에서 편향이 이어졌는지 잃습니다.",
+    sharedGate:
+      "G0는 고정하고 G1만 갱신하며, 같은 예측 비율과 정답 accuracy·worst slice를 함께 비교해 다음 세대 진행 여부를 판정합니다.",
+  },
+  "ai/sequence-distillation": {
+    action: "keep" as const,
+    status: "implemented" as const,
+    reviewedAt: "2026-10-26",
+    rationale:
+      "Teacher 문자열 생성·검수·student tokenizer 재인코딩·response token loss가 같은 생성 receipt를 공유하는 단일 sequence-distillation 경로입니다. dataset 생성과 학습을 쪼개면 문자열 출처와 loss 대상 token의 연결이 끊깁니다.",
+    sharedGate:
+      "같은 prompt 묶음에서 teacher 문자열과 receipt를 만들고 검수 통과 문자열만 student tokenizer로 다시 encode하며, prompt token을 제외한 response token loss와 coverage를 함께 확인합니다.",
+  },
   "ai/multiview-fusion": KEEP("Episode contract에서 representation fusion과 missing-view intervention까지 하나의 fusion 선택 질문입니다."),
   "ai/deepfake-detection": {
     action: "keep" as const,
@@ -3434,6 +3470,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "f1d055fa0a9dcc1c",
   "ai/inference-optimization-layers": "749076b26a4967e9",
+  "ai/knowledge-distillation": "a01cfa493db6fe3f",
+  "ai/on-policy-distillation": "943d22a5dd85cf08",
+  "ai/self-distillation": "d712d1194909eff4",
+  "ai/sequence-distillation": "551f8aec24091d26",
   "ai/text-unicode-encoding": "a10f387d00572a65",
   "ai/subword-static-embeddings": "18c2834ee26d4253",
   "ai/word2vec-negative-sampling": "cbc9a8c89b7f9329",
