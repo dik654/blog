@@ -216,6 +216,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "ai/domain-data-governance",
     ],
   },
+  "ai/embedding-model-fine-tuning": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "같은 세 개의 query·document 쌍을 점수 행렬, 정답 확률, InfoNCE gradient, 다음 검색 순위까지 이어서 추적하는 단일 학습 경로입니다. 역할 접두어, Matryoshka 차원 축소, int8 양자화는 이 경로의 학습·서빙 계약이 어디에서 달라지는지 보여 주는 경계이므로 별도 글로 떼면 같은 embedding과 평가 기준을 반복해야 합니다.",
+    sharedGate:
+      "Q1 행의 logit [2, 1, 0]에서 정답 확률 0.6652·loss 0.4076·gradient [-0.3348, 0.2447, 0.0900]을 검산하고, 예시 다음 상태 [2.6, 0.7, -0.2]가 정답 확률 0.8262·loss 0.1909로 바뀌는지 같은 쌍으로 확인합니다.",
+  },
   "ai/transfer-learning-practice": {
     action: "keep" as const,
     status: "reviewed" as const,
@@ -3469,6 +3478,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/lexical-retrieval-bm25-inverted-index": "03c283713aa04e5a",
   "ai/image-training-stages": "20ded1bf15e7dd02",
   "ai/domain-finetuning": "c940531287aaa232",
+  "ai/embedding-model-fine-tuning": "41f0462f1e6aef1d",
   "ai/regularization-practice": "70bd499ad13bf51a",
   "ai/dropout-regularization": "6719495808ed42e2",
   "ai/weight-decay": "0f13f76d0c655fae",
