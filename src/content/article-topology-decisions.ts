@@ -3866,6 +3866,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",
+  "blockchain/bplus-tree": "b1aeba618637cd19",
+  "blockchain/bplus-index-validation": "1f8d0bca8f6b4161",
   "blockchain/reth-net": "f506624d24b7ed4a",
   "blockchain/reth-precompiles": "79605a2596ddb7f4",
   "blockchain/reth-rpc": "02473a33cea1db84",
