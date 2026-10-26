@@ -59,6 +59,7 @@ const ARTICLE_INTENT_OVERRIDES: Partial<Record<string, ArticleIntent>> = {
   "sionic-glm-b300": "사례·실측",
   "b300-switchless-network": "사례·실측",
   "reth-cli": "운영 가이드",
+  "reth-chainspec": "개념 지도",
 };
 
 const CATEGORY_STARTS: Record<string, GuidanceLink> = {
@@ -1612,6 +1613,19 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
       { label: "준비 판정", detail: "프로세스 생존이 아니라 단계별 성공 기록과 실패 뒤 정리 여부를 봅니다." },
     ],
     "CLI는 입력을 정리해 빌더에 넘깁니다. 같은 노드가 준비됐다는 판정은 설정 출처, 저장소 호환성, 부품 시작 상태와 실패 뒤 정리 기록을 함께 확인해야 합니다.",
+  ),
+  "blockchain/reth-chainspec": flow(
+    "같은 체인으로 판단하기까지 여섯 단계",
+    "체인 번호가 같은 두 노드가 왜 같은 블록을 서로 다르게 판단할 수 있을까요?",
+    [
+      { label: "입력 고정", detail: "체인 번호·초기 계정·규칙 변경 일정과 매개변수를 한 묶음으로 고정합니다." },
+      { label: "첫 상태 계산", detail: "초기 계정을 인코딩하고 상태 트리의 루트와 첫 블록 해시를 계산합니다." },
+      { label: "차이 확인", detail: "초기 잔액 하나만 달라도 상태 루트와 첫 블록 해시가 달라짐을 확인합니다." },
+      { label: "경계 직전", detail: "후보 헤더 시각 999에서는 변경 시각 1,000 이전의 규칙을 선택합니다." },
+      { label: "경계 도달", detail: "후보 헤더 시각 1,000부터 새 규칙과 그 규칙이 요구하는 필드를 선택합니다." },
+      { label: "판단 공유", detail: "검증기·EVM·블록 제작·피어 호환성 검사가 같은 입력과 경계 판단을 사용합니다." },
+    ],
+    "체인 번호는 이름표에 가깝습니다. 같은 체인으로 계산하려면 첫 상태에서 얻은 해시와 규칙 변경 일정, 각 시점의 매개변수가 모두 같아야 합니다.",
   ),
   "blockchain/prysm": flow(
     "Prysm beacon node의 큰 실행 경로",

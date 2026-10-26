@@ -11956,13 +11956,13 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Validator·executor·payload builder·network fork filter가 같은 ChainSpec digest와 block context에서 동일 fork activation과 parameter 결정을 내리는지 boundary fixture로 확인하는 invariant입니다.",
     canonicalHref: "/cs/blockchain/reth-chainspec#overview",
   },
-  "reth-chainspec-release-gate": {
-    id: "reth-chainspec-release-gate",
+  "reth-chainspec-identity-boundary-check": {
+    id: "reth-chainspec-identity-boundary-check",
     kind: "method",
     domain: "distributed-systems",
-    label: "Reth ChainSpec release gate",
+    label: "Reth ChainSpec 정체성·경계 검사",
     definition:
-      "같은 raw genesis와 rule bundle에서 alloc mutation·boundary fork·wrong hash·database mismatch·restart를 주입하고 derived root·genesis hash·fork decision·consumer parity를 먼저 비교하는 채택 절차입니다.",
+      "같은 체인 번호에서 초기 계정 값과 후보 블록 문맥을 바꾸며 상태 루트·첫 블록 해시·규칙 선택·소비자 판단이 예상한 지점에서 달라지는지 확인하는 개념 검사입니다.",
     canonicalHref: "/cs/blockchain/reth-chainspec#genesis",
   },
   "prysm-peer-candidate-active-lifecycle": {
@@ -47520,15 +47520,15 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "reth-chainspec-consumer-parity",
-    to: "reth-chainspec-release-gate",
+    to: "reth-chainspec-identity-boundary-check",
     relation: "evaluates",
-    reason: "Boundary fork의 validation·execution·payload·network decision 일치를 hard gate로 둡니다.",
+    reason: "규칙 경계에서 검증·실행·블록 제작·네트워크의 판단이 같은지 확인합니다.",
   },
   {
     from: "reth-genesis-sealed-hash",
-    to: "reth-chainspec-release-gate",
+    to: "reth-chainspec-identity-boundary-check",
     relation: "evaluates",
-    reason: "Genesis mutation·database mismatch에서 derived root와 sealed hash parity를 확인합니다.",
+    reason: "초기 계정이 바뀌면 상태 루트와 첫 블록 해시가 함께 달라지는지 확인합니다.",
   },
   {
     from: "reth-execution-client-boundary",

@@ -12,33 +12,29 @@ const d = (name: string, children: FileNode[]): FileNode => ({
   children,
 });
 
-export const rethTree: FileNode = d("reth", [
+export const rethTree: FileNode = d("reth v2.8.1", [
   d("crates/chainspec/src", [
+    f("spec.rs — ChainSpec", "reth/crates/chainspec/src/spec.rs", "chainspec-struct"),
+    f("spec.rs — Fork ID", "reth/crates/chainspec/src/spec.rs", "fork-id"),
+    f("spec.rs — 첫 헤더", "reth/crates/chainspec/src/spec.rs", "make-genesis"),
+    f("spec.rs — 메인넷", "reth/crates/chainspec/src/spec.rs", "mainnet-spec"),
+    f("spec.rs — 사용자 체인", "reth/crates/chainspec/src/spec.rs", "custom-spec-build"),
+    f("api.rs — 조회 경계", "reth/crates/chainspec/src/api.rs", "eth-chainspec-trait"),
+  ]),
+  d("crates/ethereum/hardforks/src", [
     f(
-      "spec.rs — ChainSpec struct",
-      "crates/chainspec/src/spec.rs",
-      "chainspec-struct",
-    ),
-    f(
-      "spec.rs — MAINNET static",
-      "crates/chainspec/src/spec.rs",
-      "mainnet-spec",
-    ),
-    f(
-      "spec.rs — make_genesis_header",
-      "crates/chainspec/src/spec.rs",
-      "make-genesis",
-    ),
-    f(
-      "api.rs — EthChainSpec trait",
-      "crates/chainspec/src/api.rs",
-      "eth-chainspec-trait",
+      "hardforks/mod.rs — 순서와 조회",
+      "reth/crates/ethereum/hardforks/src/hardforks/mod.rs",
+      "chain-hardforks",
     ),
   ]),
-  d("crates/ethereum-forks/src", [
+]);
+
+export const alloyHardforksTree: FileNode = d("alloy-hardforks 0.4.11", [
+  d("crates/hardforks/src", [
     f(
-      "hardfork.rs — ForkCondition",
-      "crates/ethereum-forks/src/hardfork.rs",
+      "forkcondition.rs — 활성화 판정",
+      "alloy-hardforks/crates/hardforks/src/forkcondition.rs",
       "fork-condition",
     ),
   ]),

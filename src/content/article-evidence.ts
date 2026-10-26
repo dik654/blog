@@ -5144,16 +5144,28 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/reth-chainspec": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
     {
-      kind: "공식 문서",
-      label: "Reth ChainSpec API",
-      href: "https://reth.rs/docs/reth/chainspec/struct.ChainSpec.html",
-      note: "선택한 Reth 2.x docs version의 chain·genesis·hardfork·fee/blob parameter 경계",
+      kind: "공식 코드",
+      label: "Reth v2.8.1 — ChainSpec",
+      href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/chainspec/src/spec.rs",
+      note: "고정 릴리스의 ChainSpec 필드, 첫 헤더 생성, Fork ID 계산과 내장·사용자 정의 제네시스 경계",
+    },
+    {
+      kind: "공식 코드",
+      label: "alloy-hardforks 0.4.11 — ForkCondition",
+      href: "https://github.com/alloy-rs/hardforks/blob/52877c0ac3ee81a7bcfe28a58d56faedfa4899eb/crates/hardforks/src/forkcondition.rs",
+      note: "Reth v2.8.1 Cargo.lock이 고정한 버전의 Block·TTD·Timestamp·Never 판정 구현",
     },
     {
       kind: "공식 규격",
-      label: "EIP-6122 — Fork identifier update",
+      label: "EIP-6122 — Fork identifier update · Final",
       href: "https://eips.ethereum.org/EIPS/eip-6122",
-      note: "Timestamp fork를 포함한 fork ID 계산과 peer compatibility validation 규칙",
+      note: "블록 경계 뒤 시각 경계를 처리하는 Fork ID 계산과 피어 설정 호환성 검사 규칙",
+    },
+    {
+      kind: "공식 프로젝트 기록",
+      label: "Reth v2.8.1 release",
+      href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+      note: "본문이 설명하는 구현 범위를 2026-10-23 공개 릴리스에 고정",
     },
   ),
   "blockchain/reth-cli": withSeriesEvidence(

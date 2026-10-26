@@ -7,9 +7,9 @@
     "dedicatedVisuals": 683,
     "inlineVisuals": 533,
     "customVisuals": 866,
-    "animatedMechanisms": 481,
+    "animatedMechanisms": 482,
     "architectureWithoutAnimation": 91,
-    "recursiveLocators": 303,
+    "recursiveLocators": 304,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -8194,18 +8194,18 @@
     {
       "route": "blockchain/reth-chainspec",
       "publicPath": "cs/blockchain/reth-chainspec",
-      "title": "Reth ChainSpec & 하드포크 관리",
+      "title": "Reth 체인 규칙과 첫 상태",
       "sourcePath": "src/pages/articles/ethereum/reth-chainspec.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/reth-cli",

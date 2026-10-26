@@ -2,6 +2,7 @@ import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import GenesisViz from "./viz/GenesisViz";
 import { codeRefs } from "./codeRefs";
+import { RethChainSpecMapReturn } from "./RethChainSpecLocator";
 
 export default function Genesis({
   onCodeRef,
@@ -13,44 +14,47 @@ export default function Genesis({
   return (
     <section id="genesis" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">
-        Genesis JSON은 parse 결과가 아니라 재계산 가능한 block 0 commitment다
+        초기 계정 하나가 첫 블록의 해시까지 바꿉니다
       </h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>
-          Genesis alloc은 address별 balance·nonce·code·storage를 기술합니다. 구현은 이를 canonical account와 trie key/value로
-          바꿔 state root를 계산하고 genesis 시점에 활성인 fork rule로 base fee·withdrawals·blob 관련 조건부 header field를 채운 뒤
-          sealed header hash를 만듭니다. Input byte를 읽었다는 사실보다 이 derivation이 모든 node에서 같다는 점이 중요합니다.
-        </p>
-      </div>
-
       <GenesisViz onOpenCode={open} />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>한 계정 차이가 왜 chain을 바꾸는지 단계별로 추적합니다</h3>
         <p>
-          Alice의 초기 balance가 100에서 101로 바뀌면 account encoding이 달라지고 해당 trie path와 state root가 달라집니다. Header의
-          state root가 바뀌므로 canonical header encoding과 genesis hash도 달라집니다. Chain ID를 그대로 두어도 두 database는 같은
-          chain state를 공유하지 않습니다. Expected genesis hash와 기존 database identity가 다르면 fail-closed해야 합니다.
+          체인이 시작할 때 사용할 초기 계정과 헤더 값을 적은 입력을 <strong>제네시스(Genesis)</strong>라고 합니다. Alice의 잔액 100은
+          계정 형식으로 바뀌고 상태 트리에 들어갑니다. 전체 트리에서 얻은 상태 루트 <code>R₁₀₀</code>은 첫 블록 헤더의 한 필드가 되고,
+          헤더 전체에서 첫 블록 해시 <code>G₁₀₀</code>을 얻습니다.
         </p>
-        <h3>Conditional field도 genesis context에서 rule을 따릅니다</h3>
         <p>
-          Custom development chain이 어떤 fork를 block 0 또는 timestamp 0에
-          활성화했다면 그 fork가 요구하는 genesis header semantics를 적용해야
-          합니다. Mainnet field 목록을 그대로 복사하거나 최신 fork field를
-          언제나 채우면 다른 hash가 나올 수 있습니다. Parser output,
-          active-at-genesis decisions, state root, sealed header와 expected
-          hash를 하나의 receipt로 보존합니다.{" "}
+          잔액을 101로 바꾸면 계정 인코딩과 트리 경로가 달라져 <code>R₁₀₁</code>이 만들어집니다. 상태 루트가 달라진 헤더는 같은 해시를
+          낼 수 없으므로 <code>G₁₀₁</code>도 달라집니다. 체인 번호 777이 같아도 두 설정은 같은 첫 블록을 가리키지 않습니다.
+        </p>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>첫 블록도 시작 시점의 규칙을 따릅니다</h3>
+        <p>
+          Reth v2.8.1의 <code>make_genesis_header</code>는 초기 계정에서 상태 루트를 계산할 뿐 아니라, 시작 시점에 London·Shanghai·Cancun·
+          Prague·Amsterdam이 활성인지 확인해 조건부 헤더 필드를 채웁니다. 최신 헤더 필드를 무조건 넣거나 메인넷의 필드 목록을 사용자
+          체인에 그대로 복사하면 다른 첫 블록이 만들어질 수 있습니다.
           <CodeViewButton onClick={() => open("make-genesis")} />
         </p>
-        <h3>Release matrix는 rule selection과 identity를 먼저 고정합니다</h3>
         <p>
-          Base와 candidate에 같은 raw genesis bytes와 chain spec을 주고 alloc
-          순서 변경, duplicate/invalid field, boundary fork, wrong expected
-          hash, existing database mismatch와 restart를 주입합니다. Parse error
-          class, derived state root·genesis hash, fork decision·fork ID와
-          downstream validator/EVM/payload decision parity가 모두 맞은 뒤 성능을
-          비교합니다. 실패 시 이전 binary·config와 호환 storage snapshot으로
-          되돌리고 migration receipt를 남깁니다.
+          기본 제공 메인넷 설정은 계산한 헤더와 알려진 <code>MAINNET_GENESIS_HASH</code>를 묶습니다. 사용자 정의 설정을 만드는 빌더는
+          <code>make_genesis_header</code>의 결과를 해시가 아직 계산되지 않은 봉인 헤더에 넣습니다. 따라서 JSON을 읽는 데 성공했다는
+          사실과 첫 블록의 정체성이 맞는다는 판정은 구분해야 합니다.
+          <CodeViewButton onClick={() => open("mainnet-spec")} />
+          <CodeViewButton onClick={() => open("custom-spec-build")} />
+        </p>
+
+        <h3>잘못된 설정은 어디에서 드러날까요?</h3>
+        <p>
+          초기 잔액이 다르면 상태 루트와 제네시스 해시가 달라집니다. 규칙 변경 시각이 다르면 경계 블록부터 실행 결과가 달라집니다.
+          네트워크의 Fork ID 검사는 이런 불일치를 피어 연결 초기에 일부 발견하지만, 개별 블록 검증을 대신하지는 않습니다.
+        </p>
+        <p>
+          개념을 확인하는 최소 테스트는 같은 입력을 다시 계산했을 때 같은 상태 루트와 첫 블록 해시가 나오는지, 초기 잔액 100을 101로
+          바꿨을 때 두 값이 달라지는지, 시각 999·1,000·1,001에서 모든 소비자가 이전·새·새 규칙을 고르는지 확인하는 것입니다. 이 테스트는
+          성능 비교나 운영 배포 계획이 아니라 규칙 선택 자체의 정확성을 확인합니다.
         </p>
       </div>
 
@@ -58,25 +62,32 @@ export default function Genesis({
         id="paper-reth-chainspec-source"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
       >
-        <p className="text-xs font-bold text-primary">
-          공식 source 읽기 · genesis derivation
-        </p>
-        <p className="mt-2 text-sm font-semibold">
-          reth-chainspec source and crate documentation
-        </p>
+        <p className="text-xs font-bold text-primary">[O] 공식 구현 · 2026-10-27 확인</p>
+        <p className="mt-2 text-sm font-semibold">Reth v2.8.1 제네시스 헤더 생성</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          확인할 것은 Genesis에서 ChainSpec과 sealed header가 만들어지는 실제 release 경로입니다. Source는 parser·builder·header
-          construction을 보여 주지만 custom input의 경제적 안전성이나 다른 client와의 상호운용을 자동으로 검증하지는 않습니다.
+          공식 태그의 함수는 초기 계정에서 상태 루트를 계산하고 시작 시점에 활성인 규칙에 따라 조건부 헤더 필드를 채웁니다. 이 구현을
+          읽었다고 사용자 정의 체인의 경제적 안전성이나 다른 클라이언트와의 상호운용성이 자동으로 증명되는 것은 아닙니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-          href="https://reth.rs/docs/reth_ethereum/chainspec/index.html"
+          href="https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/chainspec/src/spec.rs#L45-L108"
           target="_blank"
           rel="noreferrer"
         >
-          공식 chainspec module 보기
+          make_genesis_header 소스 보기
         </a>
       </div>
+
+      <aside className="not-prose my-8 border-y border-border py-5" aria-label="읽고 바로 확인할 질문">
+        <p className="text-[10px] font-bold text-primary">읽고 바로 확인하기</p>
+        <ol className="mt-3 space-y-3 text-sm leading-6">
+          <li><strong>1.</strong> 체인 번호 777이 같아도 Alice의 초기 잔액이 다르면 왜 같은 체인이 아닐까요? <span className="text-muted-foreground">(답: 1절·3절)</span></li>
+          <li><strong>2.</strong> 변경 시각 1,000에서 후보 헤더 시각 999와 1,000은 각각 어느 규칙을 고를까요? <span className="text-muted-foreground">(답: 2절)</span></li>
+          <li><strong>3.</strong> Fork ID가 통과하면 개별 블록 검증을 생략해도 될까요? <span className="text-muted-foreground">(답: 2절)</span></li>
+        </ol>
+      </aside>
+
+      <RethChainSpecMapReturn />
     </section>
   );
 }
