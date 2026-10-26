@@ -7528,7 +7528,7 @@
       "route": "ai/knowledge-graph-construction",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/knowledge-graph-construction.tsx",
       "publicPath": "cs/ai/knowledge-graph-construction",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "screeningSignals": {
         "explicitAssumption": true,
         "answerPointers": 0,
@@ -7601,9 +7601,10 @@
         "noScript": "JavaScript 비활성 390×844 정적 경로에서 live 조작부 0개, 두 시각화의 정적 장면 11개, U-42 사례와 전체 지도 반환을 확인했으며 가로 넘침은 0이었습니다.",
         "build": "Vite 7.3.1 production build 8,016 modules·최대 상주 메모리 약 4.41GB, 정적 public route 2,088개·no-script 본문 271편 생성",
         "browserEvidence": "output/playwright/knowledge-graph-construction/mobile-scene-1-final.png, output/playwright/knowledge-graph-construction/mobile-scene-6-final.png, output/playwright/knowledge-graph-construction/entity-mobile-scene-5-final.png, output/playwright/knowledge-graph-construction/desktop-scene-6-final.png, output/playwright/knowledge-graph-construction/noscript-mobile-final.png",
-        "production": "공개 배포 뒤 확인 예정"
+        "production": "GitHub Pages run 40245292327 성공. 공개 경로를 Playwright 390×844로 확인해 제목, U-42, kg-v43, 부모 지도 반환을 확인했으며 문서 가로 넘침과 console 오류는 0이었습니다. 키보드 Tab은 카테고리 메뉴 버튼에 정상적으로 초점을 두었고 검사 뒤 브라우저 프로세스를 모두 종료했습니다.",
+        "productionEvidence": "output/playwright/knowledge-graph-construction/public-mobile.png"
       },
-      "remaining": ["GitHub Pages 공개 경로 확인"],
+      "remaining": [],
       "bodyFiles": [
         "src/pages/articles/ai/knowledge-graph-construction.tsx",
         "src/pages/articles/ai/knowledge-graph-construction/KnowledgeGraphConstructionLocator.tsx",

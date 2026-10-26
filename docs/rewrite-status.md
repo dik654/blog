@@ -3803,7 +3803,7 @@
   40238545026 성공 뒤 360px 공개 경로에서 HTTP 200, 가로 넘침 0과 page error 0을
   확인했으며 Playwright와 Vite는 검증 직후 종료했습니다.
 
-### Knowledge Graph 구축 글 로컬 검증 (2026-10-26)
+### Knowledge Graph 구축 글 공개 검증 완료 (2026-10-26)
 
 - `rag-pipeline#retrieval`에서 내려와 문서 세 건을 그래프로 바꾸는 개념 글로 분류했습니다.
   d-17·d-22·d-31의 원문에서 mention 7개와 관계 후보 4개를 뽑고, 관계 이름 정규화와
@@ -3820,5 +3820,9 @@
   비활성 재생 상태를 확인했습니다. JavaScript 비활성 390×844 정적 경로에는 두 그림의 장면
   11개가 같은 순서로 남고 live 조작부는 보이지 않습니다.
 - Vite production build는 8,016개 module을 만들었고 최대 상주 메모리는 약 4.41GB였습니다.
-  정적 public route 2,088개와 no-script 본문 271편을 생성했습니다. GitHub Pages 배포와 공개
-  경로 확인이 남아 있습니다.
+  전체 TypeScript 검사도 통과했으며 최대 상주 메모리는 약 6.31GB, swap은 0이었습니다. 정적
+  public route 2,088개와 no-script 본문 271편을 생성했습니다.
+- GitHub Pages run 40245292327에서 전역 감사, production build, 991개 공개 글의 데스크톱·모바일
+  브라우저 검사가 모두 통과했습니다. 공개 Knowledge Graph 경로를 390×844에서 다시 열어 제목,
+  U-42, kg-v43, 부모 지도 반환, 가로 넘침 0, console 오류 0과 키보드 초점을 확인했습니다.
+  검증 뒤 Playwright와 Chromium 프로세스를 모두 종료했습니다.
