@@ -1434,42 +1434,83 @@
     {
       "route": "blockchain/distributed-systems",
       "title": "분산 시스템 이론",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/distributed-systems.tsx",
       "bodyFiles": [
+        "src/content/distributed-systems-learning-tree.ts",
         "src/pages/articles/blockchain/distributed-systems.tsx",
         "src/pages/articles/blockchain/distributed-systems/BFTTheory.tsx",
         "src/pages/articles/blockchain/distributed-systems/CAP.tsx",
         "src/pages/articles/blockchain/distributed-systems/ConsensusClass.tsx",
+        "src/pages/articles/blockchain/distributed-systems/DistributedSystemsPathLocator.tsx",
         "src/pages/articles/blockchain/distributed-systems/FLP.tsx",
-        "src/pages/articles/blockchain/distributed-systems/Overview.tsx"
+        "src/pages/articles/blockchain/distributed-systems/Overview.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/ByzantineViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/CAPViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/ConsensusClassViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/ContextViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/ExecutionTraceViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/FLPViz.tsx",
+        "src/pages/articles/blockchain/distributed-systems/viz/SystemModelViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
         "predictionPointers": 0,
         "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "sourceButtons": 5,
         "headings": [
-          "\n        Byzantine fault는 거짓말의 범위를 system model에 포함한다\n      ",
-          "\n        CAP는 제품을 CP·AP로 분류하는 표보다 partition execution의 불가능성이다\n      ",
-          "\n        Partial synchrony는 safety를 timeout에 맡기지 않고 liveness 조건만 추가한다\n      ",
-          "\n        FLP는 합의가 항상 실패한다는 정리가 아니라 종료 보장의 한계다\n      ",
-          "\n        분산 시스템은 같은 상태보다 먼저 같은 가정을 합의해야 한다\n      "
+          "보장은 가정과 함께 읽습니다",
+          "FLP는 끝나지 않는 실행 하나를 보입니다",
+          "CAP는 분할 중 두 약속의 충돌을 보입니다",
+          "비잔틴 장애는 서로 다른 거짓말까지 허용합니다",
+          "부분 동기는 진행할 수 있는 구간을 가정합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 FLP·CAP·비잔틴·부분 동기를 각각 설명했지만, 같은 요청 하나가 노드별로 다른 상태를 만드는 실행에서 개념을 차례로 꺼내지 않았습니다.",
+        "정적 카드와 분류표가 중심이라 메시지 지연·타임아웃·결정 보장의 실제 상태 변화가 장면으로 이어지지 않았습니다.",
+        "직속 부모 지도와 개념·실무·참고 트랙이 없어 현재 글의 위치와 다음 심화 글의 관계를 한눈에 확인하기 어려웠습니다."
+      ],
+      "fixture": "잔액 10에서 3을 빼는 요청 w-17을 노드 A가 먼저 처리합니다. A→B 메시지는 도착하고 A→C 메시지는 늦어져 A·B는 7, C는 10을 봅니다. 200ms 타임아웃 뒤에도 중단과 지연을 구별하지 못하는 실행에서 시간·고장·채널 가정과 안전성·진행성을 분리합니다 [A].",
+      "stageEvidence": {
+        "parent": "블록체인 · 상태·네트워크·합의 지도에서 개념 트랙의 첫 영역으로 현재 위치를 표시합니다.",
+        "question": "같은 프로그램을 실행한 노드들이 왜 다른 상태를 보고, 보장이라는 말은 무엇을 전제로 하는지 한 질문으로 고정합니다.",
+        "trace": "w-17의 로컬 처리→B 전달→C 지연→타임아웃→안전성·진행성 판정을 다섯 장면으로 추적합니다.",
+        "mechanisms": "같은 실행에서 system model을 붙인 뒤 FLP bivalence, CAP partition execution, Byzantine equivocation, DLS partial synchrony로 재귀적으로 들어갑니다.",
+        "return": "보장은 알고리즘 이름이 아니라 허용한 실행·고장·시간과 충돌 방지·진행 약속을 함께 읽는다는 사실을 부모 지도에 반환합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Fischer·Lynch·Paterson, Impossibility of Distributed Consensus with One Faulty Process, JACM 1985 원문",
+          "application": "완전 비동기·결정적 합의·최대 한 process 중단·신뢰 가능한 메시지라는 범위와 종료하지 않는 허용 실행 하나라는 결론만 적용했습니다."
+        },
+        {
+          "source": "Gilbert·Lynch, Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services 원문",
+          "application": "atomic consistency, non-failing node 요청의 eventual non-error response, 임의 메시지 손실 partition이라는 정의로 두 복제본 실행을 제한했습니다."
+        },
+        {
+          "source": "Lamport·Shostak·Pease, The Byzantine Generals Problem 원문",
+          "application": "oral-message와 signed-message 모델을 구분하고, 서명이 모순 행동의 증거는 남겨도 정직성을 보장하지 않는 경계만 설명했습니다."
+        },
+        {
+          "source": "Dwork·Lynch·Stockmeyer, Consensus in the Presence of Partial Synchrony 원문",
+          "application": "알려지지 않은 상한과 알 수 없는 시각 뒤부터 성립하는 알려진 상한이라는 두 부분 동기 형태를 구분했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "contentReview": "pass · 직속 부모 지도→w-17 한 요청→system model→FLP→CAP→Byzantine→partial synchrony→부모 지도 복귀 순서로 재작성했습니다.",
+        "sourceScope": "pass · FLP·CAP·Byzantine·DLS 원문을 직접 확인하고 각 정리의 시간·고장·채널·인증 모델 밖으로 결론을 일반화하지 않았습니다.",
+        "humanize": "pass · 글 단위 문장 호흡·한국어 자연스러움·용어 밀도·용어 대응·읽기 순서 검사를 통과했습니다.",
+        "browser390": "pass · 390×844에서 document 폭 390px, 다섯 시각화의 모든 23개 장면에서 canvas clientHeight=scrollHeight, 조작 버튼 49.5×49.5px를 확인했습니다.",
+        "browser1440": "pass · 1440×1000에서 document overflow 0이며 w-17 요청·세 노드 상태·세 질문·장면 설명과 데스크톱 조작부가 겹치지 않는지 확인했습니다.",
+        "keyboard": "pass · 시각화 그룹에 초점을 둔 뒤 ArrowRight로 01→02 장면과 노드 B의 7 적용 상태가 함께 바뀌는지 확인했습니다.",
+        "reducedMotion": "pass · prefers-reduced-motion에서 4.3초 뒤에도 첫 장면을 유지하고 재생 버튼이 비활성화되는지 확인했습니다.",
+        "noJavaScript": "pass · 390×844 JavaScript 비활성 browser context에서 현재 장면과 조작부는 숨고 정적 목록 5개·총 23개 장면·안전성 결론이 보이며 가로 넘침이 없는지 확인했습니다.",
+        "console": "pass · 새 Playwright 세션에서 console error·warning 0개입니다.",
+        "build": "pass · 글 단위 검사와 NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

@@ -3,98 +3,60 @@ import CAPViz from "./viz/CAPViz";
 
 export default function CAP() {
   return (
-    <section id="cap" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        CAP는 제품을 CP·AP로 분류하는 표보다 partition execution의 불가능성이다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          CAP의 formal model에서 consistency는 모든 operation이 한 복사본에서
-          원자적으로 실행된 것처럼 보이는 <strong>linearizability</strong>입니다.
-          Availability는 non-failing node가 받은 모든 요청에 결국 non-error
-          response를 돌려주는 성질입니다. Partition tolerance는 세 번째 기능을
-          켜는 선택지가 아니라, node 집합 사이 메시지가 임의로 손실되는 execution을
-          system model에 포함한다는 뜻입니다.
+    <section id="cap" className="scroll-mt-20">
+      <header className="space-y-4">
+        <p className="text-sm font-bold text-primary">03 · 분할 한계</p>
+        <h2 className="text-2xl font-bold">CAP는 분할 중 두 약속의 충돌을 보입니다</h2>
+        <p className="max-w-3xl text-lg leading-8 text-foreground/90">
+          서로 연락할 수 없는 두 복제본에서 한쪽 쓰기가 완료된 뒤 다른 쪽이 읽기 요청을 받으면 무엇을 답할 수 있을까요? 먼저 실제 요청 순서를 확인합니다.
         </p>
-      </div>
+      </header>
 
       <CAPViz />
 
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>여기서 사용하는 세 단어는 평소 뜻보다 좁습니다</h3>
+        <p>
+          Gilbert와 Lynch의 모델에서 consistency는 모든 연산이 단일 복제본에서 한 순간씩 실행된 것처럼 보이는 <strong>linearizability</strong>입니다. Availability는 고장 나지 않은 노드가 받은 모든 요청에 결국 non-error 응답을 주는 성질입니다. Partition tolerance는 따로 켜는 기능이 아니라, 노드 집합 사이의 메시지가 계속 손실되는 실행도 모델에 포함한다는 뜻입니다.
+        </p>
+      </div>
+
       <ExplainedFormula
-        question="Partition 중 linearizability와 모든 요청의 응답을 왜 동시에 보장할 수 없을까?"
-        idea="서로 통신할 수 없는 두 replica에서 한쪽은 write를 완료하고 다른 쪽은 그 이후 read를 받습니다. 두 번째 replica는 write를 알 수 없으므로 최신 값을 답하거나 응답을 보장하는 선택을 동시에 할 수 없습니다."
+        question="분할 중 linearizability와 모든 요청의 응답을 왜 동시에 보장할 수 없을까요?"
+        idea="A에서 완료된 쓰기를 B가 알 수 없도록 두 복제본 사이 메시지를 끊습니다. B가 예전 값을 답하면 최신성 약속을 깨고, 확인할 때까지 기다리거나 오류를 내면 응답 약속을 깹니다."
         formula={String.raw`P \Longrightarrow \neg(C_{lin} \land A_{resp})`}
-        annotatedFormula={String.raw`\underbrace{P}_{\text{replica 간 partition}} \Longrightarrow \underbrace{\neg(C_{lin} \land A_{resp})}_{\text{최신 값과 응답 동시 불가}}`}
+        annotatedFormula={String.raw`\underbrace{P}_{\text{복제본 사이 분할}} \Longrightarrow \underbrace{\neg(C_{lin} \land A_{resp})}_{\text{두 약속의 동시 보장 불가}}`}
         operations={[
-          { expression: String.raw`P \Longrightarrow`, annotation: ["A와 B 사이 network가 끊긴 execution","Client 1이 A에 x=1을 쓰고 성공 응답"] },
-          { expression: String.raw`\neg(C_{lin} \land A_{resp})`, annotation: ["B가 바로 0을 답하면 응답은 했지만","linearizability를 어깁니다","기다리거나 error면 availability 상실"] },
+          { expression: String.raw`P \Longrightarrow`, annotation: ["A와 B 사이 메시지가 손실됩니다.", "A의 x=1 쓰기는 성공 응답까지 끝납니다."] },
+          { expression: String.raw`\neg(C_{lin} \land A_{resp})`, annotation: ["B가 0을 답하면 linearizability 위반", "기다리거나 오류면 availability 위반"] },
         ]}
         terms={[
-          { symbol: "P", name: "partition execution", description: "replica 집합 사이 message loss가 지속되는 partition execution" },
-          { symbol: "C_{lin}", name: "linearizability", description: "real-time order를 보존하는 linearizable history" },
-          { symbol: "A_{resp}", name: "response availability", description: "모든 non-failing node의 요청에 eventual non-error response" },
+          { symbol: "P", name: "Partition execution", description: "복제본 집합 사이 메시지 손실이 지속되는 실행" },
+          { symbol: "C_{lin}", name: "Linearizability", description: "실제 시간의 선후 관계를 보존하는 단일 연산 순서" },
+          { symbol: "A_{resp}", name: "Response availability", description: "고장 나지 않은 노드의 모든 요청에 eventual non-error response" },
         ]}
         assumptions={[
-          "적어도 두 node가 있고 partition 양쪽에서 요청을 받을 수 있습니다.",
-          "Consistency와 availability는 Gilbert–Lynch model의 강한 정의를 사용합니다.",
+          "분할 양쪽의 고장 나지 않은 노드가 각각 클라이언트 요청을 받습니다.",
+          "Consistency와 availability는 Gilbert–Lynch 논문의 강한 정의를 사용합니다.",
         ]}
-        interpretation="이 식은 정상 구간에서 latency와 consistency 중 하나만 선택하라는 뜻이 아닙니다. Partition이 실제로 발생한 execution에서 둘의 동시 보장이 불가능하다는 뜻입니다."
+        interpretation="이 식은 정상 구간에서 언제나 일관성과 속도 중 하나를 버리라는 뜻이 아닙니다. 메시지가 실제로 끊긴 실행에서 두 정의를 동시에 만족할 수 없다는 뜻입니다."
       />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>두 replica의 수치 없는 반례</h3>
-        <ol>
-          <li>A와 B 사이 network가 끊깁니다.</li>
-          <li>Client 1이 A에 <code>x=1</code>을 쓰고 성공 응답을 받습니다.</li>
-          <li>그 뒤 Client 2가 B에서 <code>x</code>를 읽습니다.</li>
-        </ol>
+        <h3>제품을 CP·AP 한 글자로 고정하는 표가 아닙니다</h3>
         <p>
-          B가 즉시 이전 값 0을 답하면 availability는 유지하지만 real-time order를
-          어겨 linearizability를 잃습니다. A의 write를 확인할 때까지 기다리거나
-          error를 돌려주면 consistency는 지킬 수 있지만 CAP availability 정의를
-          만족하지 못합니다. “항상 둘 중 하나를 영구 선택”하는 것이 아니라 key,
-          operation, consistency level에 따라 요청별 policy를 다르게 둘 수도
-          있습니다.
-        </p>
-
-        <h3>CAP에서 읽으면 안 되는 결론</h3>
-        <ul>
-          <li>Consistency가 모든 replica의 byte가 같은 순간 같다는 뜻은 아닙니다.</li>
-          <li>Availability가 SLA 99.99%나 low latency를 뜻하지 않습니다.</li>
-          <li>Replication factor를 늘리면 정리 자체가 사라지는 것이 아닙니다.</li>
-          <li>정상 구간의 latency trade-off는 CAP proof가 직접 말하지 않습니다.</li>
-        </ul>
-        <p>
-          실무에서는 consistency model(linearizable·causal·eventual), operation별
-          quorum, timeout과 retry, stale-read budget, recovery reconciliation을
-          따로 기록합니다. Partition injection은 양쪽 write/read trace와 응답
-          status를 수집해 safety와 availability를 각각 판정해야 합니다.
+          CAP의 availability는 99.99% 같은 운영 SLA가 아니며, 정상 구간의 지연 시간도 직접 설명하지 않습니다. 실제 시스템은 key와 연산에 따라 읽기·쓰기 정책을 달리할 수 있고, 분할이 끝난 뒤 충돌을 조정할 수도 있습니다. 다만 위와 같은 실행에서는 linearizability와 모든 요청의 non-error 응답을 동시에 약속할 수 없습니다.
         </p>
       </div>
 
-      <div
-        id="paper-gilbert-lynch-cap"
-        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
-      >
-        <p className="text-xs font-bold text-primary">논문 읽기 · CAP의 formal model</p>
-        <p className="mt-2 text-sm font-semibold">
-          Brewer&apos;s Conjecture and the Feasibility of Consistent, Available,
-          Partition-Tolerant Web Services
-        </p>
+      <aside id="paper-gilbert-lynch-cap" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">원 논문 · CAP의 정의</p>
+        <p className="mt-2 text-sm font-semibold">Brewer&apos;s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 asynchronous network model에서 atomic consistency와 availability를 partition execution까지 함께 보장할 수
-          있는지입니다. 두 node 반례로 불가능성을 보이고 약한 consistency에서는 availability가 가능함을 구분합니다. 모든 database를 영구적인 CP/AP
-          label 하나로 분류하거나 정상 상태 latency를 예측하는 논문은 아닙니다.
+          Gilbert와 Lynch는 비동기 네트워크에서 atomic read/write object, 모든 요청의 응답, 임의 메시지 손실을 각각 정의하고 세 성질을 함께 만족할 수 없음을 보입니다. 이 결론을 모든 종류의 consistency나 평상시 latency로 일반화하면 안 됩니다.
         </p>
-        <a
-          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-          href="https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Gilbert–Lynch proof와 정의 보기
-        </a>
-      </div>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf" target="_blank" rel="noreferrer">Gilbert–Lynch 원문 보기</a>
+      </aside>
     </section>
   );
 }

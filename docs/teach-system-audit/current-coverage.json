@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 634,
-    "pending": 358,
+    "reviewed": 635,
+    "pending": 357,
     "untracked": 0,
-    "assignedPending": 316,
+    "assignedPending": 315,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3855,7 +3855,7 @@
       "catalogIndex": 382,
       "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-public-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
@@ -3903,9 +3903,9 @@
       "publicPath": "cs/blockchain/distributed-systems",
       "title": "분산 시스템 이론",
       "catalogIndex": 387,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

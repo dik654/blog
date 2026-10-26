@@ -336,6 +336,7 @@ const noScriptArticleRoutes = new Set([
   "ai/onprem-k8s-inference-platform",
   "ai/inference-failure-absorption",
   "ai/own-vs-rent-inference-capacity",
+  "blockchain/distributed-systems",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

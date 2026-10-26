@@ -3,94 +3,46 @@ import FLPViz from "./viz/FLPViz";
 
 export default function FLP() {
   return (
-    <section id="flp" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        FLP는 합의가 항상 실패한다는 정리가 아니라 종료 보장의 한계다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          FLP(Fischer–Lynch–Paterson) 정리는 완전 비동기 message-passing
-          system에서 process 하나가 crash할 수 있을 때, deterministic consensus
-          protocol이 모든 admissible execution에서 agreement·validity·termination을
-          함께 보장할 수 없다고 말합니다. 실제 cluster가 대체로 합의한다는 관찰과
-          모순되지 않습니다. 핵심은 한 번도 끝나지 않는 허용된 schedule이
-          <em> 존재</em>한다는 점입니다.
+    <section id="flp" className="scroll-mt-20">
+      <header className="space-y-4">
+        <p className="text-sm font-bold text-primary">02 · 종료 한계</p>
+        <h2 className="text-2xl font-bold">FLP는 끝나지 않는 실행 하나를 보입니다</h2>
+        <p className="max-w-3xl text-lg leading-8 text-foreground/90">
+          완전 비동기 환경에서 결정적 합의가 모든 허용된 실행마다 반드시 끝난다고 약속할 수 있을까요? 아래 장면은 결정을 고정할 사건을 늦춰 미결정 상태를 연장하는 증명의 핵심을 보여줍니다.
         </p>
-      </div>
+      </header>
 
       <FLPViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>정리의 입력 계약</h3>
-        <ul>
-          <li>Process는 결정적이며 binary input에서 시작합니다.</li>
-          <li>Process speed와 message delay에 고정 upper bound가 없습니다.</li>
-          <li>최대 한 process가 crash할 수 있고 non-faulty receiver의 메시지는 결국 전달됩니다.</li>
-          <li>Agreement·validity뿐 아니라 모든 admissible run의 termination을 요구합니다.</li>
-        </ul>
+        <h3>정리의 범위를 먼저 고정합니다</h3>
         <p>
-          Timeout bound, synchronized clock, random coin, failure detector, Byzantine
-          behavior는 이 기본 모델에 없습니다. 이 중 하나를 추가하면 다른
-          theorem의 대상이 됩니다.
+          FLP(Fischer–Lynch–Paterson) 정리는 process의 상대 속도와 메시지 지연에 상한이 없는 완전 비동기 메시지 시스템을 다룹니다. process는 결정적으로 동작하고, 최대 한 process가 예고 없이 멈출 수 있으며, 메시지는 정확하게 전달됩니다. 이 조건에서 agreement와 validity를 만족하는 합의 프로토콜도 모든 허용된 실행의 termination까지 함께 보장할 수는 없습니다.
+        </p>
+        <p>
+          원문은 오히려 채널에 유리한 조건을 둡니다. 메시지가 손상되거나 중복되는 모델도, 비잔틴 고장도 다루지 않습니다. 그런데도 느린 process와 멈춘 process를 구별할 수 없기 때문에 종료하지 않는 실행을 구성할 수 있습니다.
         </p>
 
-        <h3>Bivalence로 읽는 증명 아이디어</h3>
+        <h3>Bivalence는 아직 두 결정이 모두 가능한 상태입니다</h3>
         <p>
-          Configuration은 모든 local state와 아직 전달되지 않은 message의
-          snapshot입니다. 앞으로 0만 결정할 수 있으면 0-valent, 1만 가능하면
-          1-valent, 둘 다 가능한 상태는 <strong>bivalent</strong>입니다. Validity
-          때문에 bivalent initial configuration이 하나는 존재합니다.
+          모든 로컬 상태와 아직 전달되지 않은 메시지를 합친 전체 상태를 configuration이라고 합니다. 앞으로 0만 결정할 수 있으면 0-valent, 1만 가능하면 1-valent입니다. 둘 다 가능하면 <strong>bivalent</strong>입니다. 증명은 bivalent 초기 상태가 있음을 보인 뒤, 결정값을 하나로 좁힐 critical event를 당장 전달하지 않고 다음 bivalent 상태로 이동하는 선택을 반복합니다.
         </p>
         <p>
-          이제 어떤 event <code>e</code>가 bivalent state를 univalent하게 만들려
-          한다고 합시다. Scheduler는 <code>e</code>와 독립적인 다른 process의
-          event를 먼저 실행하고, 서로 commute하는 execution을 비교해 결정을
-          고정하지 않는 다음 bivalent state를 구성할 수 있습니다. 이 선택을
-          반복하면 non-faulty process의 message가 결국 전달되는 admissible run을
-          유지하면서도 termination을 피할 수 있습니다. 이것은 평균적인 network
-          behavior에 대한 확률 주장이 아니라 adversarial execution의 존재
-          증명입니다.
-        </p>
-
-        <h3>실제 protocol은 무엇을 추가하는가</h3>
-        <p>
-          Raft·Paxos 계열은 안전성 규칙과 별도로 timeout·leader election 같은
-          진행 메커니즘을 둡니다. Partial synchrony BFT는 unknown GST 이후
-          message delay가 bound 안으로 돌아온다는 조건에서 liveness를 얻습니다.
-          Randomized asynchronous consensus는 adversary가 다음 선택을 완전히
-          예측하지 못하게 합니다. 중요한 것은 “FLP를 해결했다”가 아니라 어떤
-          추가 가정에서 어떤 보장을 얻었는지 적는 것입니다.
+          결론은 “현실의 모든 합의가 멈춘다”가 아닙니다. 끝나지 않는 허용된 실행이 하나라도 있으므로 <em>모든 실행에서 종료</em>를 보장할 수 없다는 뜻입니다. 실제 프로토콜은 부분 동기, 무작위성, 실패 감지기처럼 원래 모델에 없던 조건을 추가합니다.
         </p>
         <p>
-          이 글 다음에는 <Link to="/cs/blockchain/smr-theory">SMR</Link>에서 safety
-          rule과 leader-based progress를 실제 log에 연결하고,{" "}
-          <Link to="/cs/blockchain/bft-theory">BFT</Link>에서 partial synchrony와
-          quorum certificate를 더 엄밀하게 다룹니다.
+          안전성 규칙과 리더 교체가 실제 로그에 어떻게 연결되는지는 <Link to="/cs/blockchain/smr-theory">상태 머신 복제</Link>에서 확인합니다. 비잔틴 합의의 진행 조건은 <Link to="/cs/blockchain/bft-theory">비잔틴 합의</Link>에서 이어집니다.
         </p>
       </div>
 
-      <div
-        id="paper-flp-consensus"
-        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
-      >
-        <p className="text-xs font-bold text-primary">논문 읽기 · 불가능성의 범위</p>
-        <p className="mt-2 text-sm font-semibold">
-          Impossibility of Distributed Consensus with One Faulty Process
-        </p>
+      <aside id="paper-flp-consensus" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">원 논문 · 불가능성의 범위</p>
+        <p className="mt-2 text-sm font-semibold">Impossibility of Distributed Consensus with One Faulty Process</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 비동기 process가 crash 가능할 때 deterministic binary consensus의 total correctness입니다. Bivalence와
-          critical event를 이용해 종료하지 않는 admissible execution이 존재함을 보입니다. Byzantine fault, probabilistic
-          protocol, partial synchrony를 같은 결론으로 일반화하면 안 되며 모든 실제 실행이 멈춘다는 실험 결과도 아닙니다.
+          Fischer·Lynch·Paterson은 완전 비동기 메시지 시스템에서 한 process의 중단을 허용하면, 부분적으로 올바른 결정적 합의 프로토콜에도 결정하지 않는 admissible run이 존재함을 보입니다. 확률적 프로토콜이나 부분 동기 모델까지 같은 결론으로 넓혀서는 안 됩니다.
         </p>
-        <a
-          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-          href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          FLP 원문과 proof structure 보기
-        </a>
-      </div>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf" target="_blank" rel="noreferrer">FLP 원문 보기</a>
+      </aside>
     </section>
   );
 }
