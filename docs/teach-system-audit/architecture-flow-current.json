@@ -9,7 +9,7 @@
     "customVisuals": 865,
     "animatedMechanisms": 475,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 291,
+    "recursiveLocators": 292,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -5778,7 +5778,7 @@
     {
       "route": "ai/vector-search-and-ann-indexes",
       "publicPath": "cs/ai/vector-search-and-ann-indexes",
-      "title": "Vector search: exact NN 에서 IVF·PQ 까지",
+      "title": "벡터 검색: 전수 비교에서 IVF·PQ까지",
       "sourcePath": "src/pages/articles/ai/vector-search-and-ann-indexes.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
@@ -5786,7 +5786,7 @@
       "hasInlineVisual": true,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"

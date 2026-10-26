@@ -10977,33 +10977,67 @@
     },
     {
       "route": "ai/vector-search-and-ann-indexes",
-      "title": "Vector search: exact NN 에서 IVF·PQ 까지",
+      "title": "벡터 검색: 전수 비교에서 IVF·PQ까지",
       "subcategory": "ai-practical-embedding",
+      "track": "concept",
       "publicFiles": [
+        "src/content/embedding-learning-tree.ts",
+        "src/content/ai/articlesPractical.ts",
+        "src/content/article-learning.ts",
+        "src/content/article-evidence.ts",
+        "src/content/editorial-ownership.ts",
         "src/pages/articles/ai/vector-search-and-ann-indexes.tsx",
         "src/pages/articles/ai/vector-search-and-ann-indexes/viz/VectorSearchAndAnnIndexesViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 4,
+        "teachLevelMarkers": 9,
         "hasSourceSurface": true,
-        "characters": 17365
+        "characters": 17271
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 설명문이 먼저 나오고 시각 자료가 뒤에 있어, 질의 하나가 전수 비교·IVF·PQ를 어떻게 통과하는지 한 번에 파악하기 어려웠습니다.",
+        "벡터 DB, 색인, IVF, PQ, 정규화가 개별 정의로 나뉘어 같은 문서 ID와 거리 계산이 끝까지 이어지지 않았습니다.",
+        "PQ bit 수를 현재 릴리스 코드보다 좁게 단정했고, 문서가 참조한 공식 자료와 실제 설치 대상 릴리스의 구현을 구분하지 않았습니다."
+      ],
+      "fixture": "설명용 질의 q-17 ‘배터리 충전 오류’와 768차원 문서 100만 개에서 doc-104를 찾습니다. IVF는 nlist 1000·nprobe 10, PQ는 m=8·k=256으로 두고 비교 횟수와 코드 크기를 계산합니다.",
+      "stageAnchors": {
+        "S": ["overview"],
+        "B": ["problem"],
+        "0": ["dense-retrieval-embedding-space"],
+        "1": ["exact-vs-approximate-nn"],
+        "3": ["vector-database-and-index"],
+        "4": ["ivf", "pq"],
+        "5": ["embedding-normalization-and-metric"],
+        "6": ["evidence", "paper-pq", "source-faiss-indexes"],
+        "7": ["failure-boundary"],
+        "R": ["prediction-questions"]
+      },
+      "primarySourceApplication": [
+        {
+          "source": "Jégou, Douze, Schmid · Product Quantization for Nearest Neighbor Search (TPAMI 2011)",
+          "application": "곱 양자화가 벡터를 부분 공간으로 나누고 각 부분의 centroid 식별자를 저장한다는 메커니즘을 설명하는 데 사용했습니다. 이 논문의 결과를 현재 서비스의 압축률이나 지연으로 확대하지 않았습니다."
+        },
+        {
+          "source": "FAISS v1.15.1 · IndexIVF.h / ProductQuantizer.cpp",
+          "application": "설치 후보 릴리스에서 nlist·nprobe 필드와 code_size=(nbits×M+7)/8, ksub=1&lt;&lt;nbits 구현을 확인했습니다. 8·12·16bit만 가능하다는 기존 문장은 제거했습니다."
+        }
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→q-17과 doc-104→전수 비교→IVF 후보 축소→PQ 코드 비교→metric 경계→실패 원인→부모 지도 반환 순서로 concept 범위만 다시 썼습니다.",
+        "humanize": "한국어 strict 감사와 용어 감사를 통과했습니다. 영어 제품명은 고유명사로 유지하고 역할 설명은 한국어로 붙였습니다.",
+        "numericTrace": "N=1,000,000·nlist=1,000·nprobe=10에서 1,000+10×1,000=11,000회와 약 90.9배 비교 감소를 계산했습니다. d=768 float32는 3,072B, m=8·k=256 PQ code는 8B이므로 code-only 384배라는 경계를 명시했습니다.",
+        "mobile390": "output/playwright/vector-search-rewrite/mobile-scene-1.png: 문서 가로 넘침 0, 50×50px 조작부, SVG 반응형 배치와 키보드 ArrowRight 전환을 확인했습니다.",
+        "desktop1440": "output/playwright/vector-search-rewrite/desktop-scene-1.png과 scene-3~5: 문서 가로 넘침 0, 7초 무자동재생, 선택 cluster·PQ code·top-k 상태를 직접 확인했습니다.",
+        "reducedMotion": "첫 시각 자료가 조작 버튼 없이 다섯 장면과 결론을 정적 순서로 모두 제공합니다.",
+        "noScript390": "production preview HTTP 200·document 390/390·본문 9,816자. 다섯 장면과 doc-104·실패 경계가 정적 순서로 남고 visible live element와 조작부는 0입니다. output/playwright/vector-search-rewrite/nojs-mobile.png",
+        "audits": "선택 파일 ESLint와 article·viz·learning·calculation·formula·pseudocode·reading·order·runtime·topology·한국어·용어 strict 감사를 통과했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build 통과. Vite 8,032 modules·정적 public route 2,090개, 최대 RSS 약 6.74GB·swap 0. 정적 생성기 허용 목록에 이 글을 등록한 뒤 no-script 본문은 286편입니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 공개 경로 검증"
       ]
     },
     {

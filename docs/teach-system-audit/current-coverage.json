@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 631,
-    "pending": 361,
+    "reviewed": 632,
+    "pending": 360,
     "untracked": 0,
-    "assignedPending": 319,
+    "assignedPending": 318,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3811,11 +3811,11 @@
     {
       "route": "ai/vector-search-and-ann-indexes",
       "publicPath": "cs/ai/vector-search-and-ann-indexes",
-      "title": "Vector search: exact NN 에서 IVF·PQ 까지",
+      "title": "벡터 검색: 전수 비교에서 IVF·PQ까지",
       "catalogIndex": 378,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {

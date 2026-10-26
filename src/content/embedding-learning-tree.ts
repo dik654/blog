@@ -3,6 +3,7 @@ export type EmbeddingLearningTrack = "concept" | "practice" | "reference";
 export type EmbeddingLearningNodeId =
   | "sentence-vector"
   | "retrieval"
+  | "vector-index"
   | "serving-contract"
   | "image-vector"
   | "image-text-relation"
@@ -43,6 +44,17 @@ export const EMBEDDING_LEARNING_NODES: readonly EmbeddingLearningNode[] = [
     parentLabel: "임베딩 지도 · 벡터 비교",
     question: "문서 전체를 요청마다 다시 읽지 않고도 정답 후보를 찾고 정교하게 다시 정렬하려면 계산을 어디에서 나눌까요?",
     closure: "Bi-encoder는 문서 벡터를 미리 계산해 online 경로를 query encode와 ANN 탐색으로 줄입니다. Reranker는 전달받은 candidate의 순서만 바꾸므로 첫 단계의 recall이 복구 가능한 범위를 정합니다.",
+  },
+  {
+    id: "vector-index",
+    href: "/cs/ai/vector-search-and-ann-indexes#overview",
+    shortTitle: "벡터 색인",
+    mapLabel: "전수 비교 → 구역 선택 → 짧은 code",
+    track: "concept",
+    parentHref: "/cs/ai/bi-encoder-retrieval#offline-index",
+    parentLabel: "임베딩 지도 · 사전 계산된 문서 벡터",
+    question: "문서 벡터가 100만 개일 때 정답 후보를 놓칠 위험과 저장 비용을 어떻게 보면서 비교량을 줄일까요?",
+    closure: "전수 비교는 모든 벡터를 확인해 최근접을 보장합니다. IVF는 가까운 구역만 열어 비교 대상을 줄이고, PQ는 벡터를 짧은 code로 바꿔 저장과 거리 계산을 줄이지만 두 단계 모두 recall이나 거리 정밀도를 내줄 수 있습니다.",
   },
   {
     id: "serving-contract",

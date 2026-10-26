@@ -11577,7 +11577,7 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "vector-search-and-ann-indexes": {
-    title: "Vector search: exact NN 에서 IVF·PQ 까지 글이 소유하는 범위",
+    title: "벡터 검색: 전수 비교에서 IVF·PQ까지 글이 소유하는 범위",
     owns: [
       "Embedding model·query embedding·embedding space·dense retrieval·embedding dimension 의 정의와 이들이 검색 문제로 이어지는 경로",
       "Exact nearest neighbor 와 ANN 의 정확도-비교 횟수 맞바꿈, vector search·euclidean-distance retrieval 의 위치",
@@ -11595,7 +11595,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Embedding index 저장량 계약", href: "/cs/ai/embedding-serving-contract#index-artifact" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "IVF·PQ 파라미터 이름과 계산식은 FAISS 공식 index 문서에서 읽은 범위로만 쓰고 읽은 시점을 본문에 밝힌다." },
+      { kind: "primary-source", rule: "IVF·PQ 파라미터 이름과 계산식은 FAISS v1.15.1 소스와 공식 색인 문서에서 확인한 범위로만 쓰며, 버전 없는 위키 설명을 릴리스 보장으로 확대하지 않는다." },
       { kind: "primary-source", rule: "PQ 의 제안·성능은 Jégou 외 2011 논문의 서술 범위로만 쓰고 수치는 저자 자기보고로 표기한다." },
       { kind: "standard", rule: "수치 예(d=768, N=1,000,000, nlist=1,000, nprobe=10, m=8, k=256)는 계산을 보이기 위한 예시이며 어느 배포의 측정도 아니라고 밝힌다." },
     ],
