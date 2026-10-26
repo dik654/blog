@@ -419,7 +419,7 @@
     {
       "route": "blockchain/bplus-tree",
       "title": "B+ tree: page에서 조회와 분할까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/bplus-tree.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/bplus-tree.tsx",
@@ -483,9 +483,7 @@
         "noJavaScript": "390x844에서 live 장면은 숨고 여섯 정적 장면과 locator·본문이 보이며 문서 가로 넘침이 없습니다.",
         "static": "ESLint, 8GB TypeScript, production build와 전역 strict 감사 통과. 8,065 modules, 2,094 static routes, 303 no-script bodies, 최대 RSS 약 6.35GB, swap 0."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "concept-practice-split-and-substantively-rewritten"
     },
     {
@@ -3550,40 +3548,77 @@
     },
     {
       "route": "blockchain/mdbx-internals",
-      "title": "MDBX: mmap·Copy-on-Write·MVCC durability",
-      "status": "unreviewed",
+      "title": "MDBX: mmap·Copy-on-Write·MVCC generation",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/mdbx-internals.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/mdbx-internals.tsx",
-        "src/pages/articles/ethereum/mdbx-internals/ModernArticle.tsx"
+        "src/pages/articles/ethereum/mdbx-internals/ModernArticle.tsx",
+        "src/pages/articles/ethereum/mdbx-internals/viz/MdbxGenerationViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 6,
+        "predictionPointers": 3,
+        "assumptionMarkers": 4,
+        "sourceButtons": 3,
         "headings": [
-          "MDBX: mmap은 접근 방식이고 CoW generation이 transaction을 만든다",
-          "Mapped address와 resident page, logical lookup은 다른 층이다",
-          "Copy-on-Write path를 만든 뒤 meta root를 publish한다",
-          "DUPSORT는 key 안에 두 번째 ordered domain을 만든다",
-          "Commit kill points와 reopen generation을 먼저 맞춘다"
+          "Reader가 이전 page를 보는 동안 writer는 어떻게 새 세대를 확정할까요?",
+          "Mapped address, resident page, B+ tree lookup은 서로 다른 층입니다",
+          "Writer는 변경 path를 복사하고 새 meta가 시작점을 바꿉니다",
+          "가장 오래된 reader가 retired page의 재사용 시점을 정합니다",
+          "DUPSORT는 한 key 아래에 두 번째 정렬 축을 만듭니다",
+          "메커니즘의 실패는 snapshot, page 수명, 순서 경계에서 드러납니다",
+          "설계 계보와 선택한 release의 구현을 나눠 확인합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 mmap·Copy-on-Write·MVCC 설명과 commit 중단·복구·출시 판단을 한 글에 섞어 개념 질문과 운영 결정을 구분하기 어려웠습니다.",
+        "Mapped file 크기, resident memory와 실제 storage I/O를 같은 의미로 읽기 쉬웠습니다.",
+        "Reader snapshot 보존과 stable-media durability를 같은 경계로 오해할 수 있었습니다."
+      ],
+      "fixture": {
+        "reader": "R1 starts at txid 100 and follows root p1 → branch p8 → leaf p42 containing A=old",
+        "writer": "W101 writes leaf p52 → branch p18 → root p2 and publishes meta txid 101",
+        "reclaim": "p1·p8·p42 remain retired until the oldest reader no longer needs generation 100",
+        "dupsort": "key A has ordered duplicate values 04·07·12 before cursor moves to key B"
+      },
+      "stageEvidence": {
+        "0": "Database file offsets를 virtual address에 map하되 RSS와 storage I/O를 분리",
+        "1": "Reader R1이 txid 100과 root p1을 reader table에 고정",
+        "2": "Writer 101이 old page를 덮지 않고 p52·p18·p2의 새 path 생성",
+        "3": "새 data pages, meta visibility와 stable media를 구분해 txid 101·root p2 공개",
+        "4": "기존 R1은 generation 100, meta 공개 뒤 R2는 generation 101을 동시에 읽음",
+        "5": "R1 종료 뒤에만 p1·p8·p42가 다음 write generation의 재사용 후보가 됨"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Chu, MDB: A Memory-Mapped Database and Backend for OpenLDAP",
+          "application": "memory mapping·Copy-on-Write·MVCC·single-writer 설계 계보"
+        },
+        {
+          "source": "Mithril-mine/libmdbx v0.14.3 @ f7a3a9323cacacfa9dc6137ae7a7252a67744ff0",
+          "application": "2026-08-09 release의 transaction·reader·page·DUPSORT 구현 경계"
+        },
+        {
+          "source": "libmdbx v0.14.3 mdbx.h",
+          "application": "sync mode, reader lag, map-full과 cursor operation의 공개 API 계약"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "개념 글은 한 transaction generation의 mmap·CoW·meta·reader·page 회수·DUPSORT만 설명하고 중단 시험·측정·ADR은 별도 practice route로 옮겼습니다.",
+        "arithmetic": "설명용 txid 100·101과 page p1·p8·p42 및 p2·p18·p52의 두 graph를 장면·본문·복습에서 같은 식별자로 대조했습니다.",
+        "humanize": "학습 계약·지식 그래프·토폴로지·문장 호흡·한국어·용어 strict 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 390=390, 시각화 334=334이며 여섯 장면의 가로 넘침과 내부 clipping이 없습니다. 키보드 이동과 하단 아이콘 조작부를 확인했습니다.",
+        "browser1440": "1440×1000에서 문서 1440=1440, 시각화 664=664이며 여섯 장면 overflow와 console 오류가 없습니다. 명시적 재생 전 2.2초 동안 장면 01이 유지됐습니다.",
+        "playback": "ArrowRight·ArrowLeft 이동, 6.8초 장면 간격, 일시정지 뒤 7.2초 동안 장면 유지와 마지막 장면 정지를 확인했습니다.",
+        "reducedMotion": "재생 버튼이 비활성화되고 수동 장면 이동은 유지됩니다.",
+        "noJavaScript": "390×844에서 live 장면은 숨고 여섯 정적 장면·직속 부모·본문·지도 반환이 보입니다. KaTeX stretchy SVG가 만들던 문서 가로 넘침을 정적 읽기 CSS로 막았습니다.",
+        "static": "7GB Node heap 상한의 TypeScript·Vite production build가 통과했습니다. 8,069 modules, 2,096 static routes, 305 no-script bodies, 최대 RSS 약 6.45GB, swap 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "concept-practice-split-and-substantively-rewritten"
     },
     {
       "route": "blockchain/merkle-patricia-trie",

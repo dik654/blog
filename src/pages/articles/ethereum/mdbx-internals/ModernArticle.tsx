@@ -1,79 +1,139 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import { CitationBlock } from "@/components/ui/citation-block";
-
-const TxFlow = () => (
-  <figure data-viz="mdbx-generation-flow" className="not-prose rounded-xl border border-border bg-card p-4 sm:p-5">
-    <figcaption className="mb-4 text-sm font-semibold">Old reader와 new commit이 같은 file에서 공존하는 경로</figcaption>
-    <div className="grid gap-3 sm:grid-cols-5">
-      {[["01", "Map pages"], ["02", "Pin reader"], ["03", "Copy path"], ["04", "Publish meta"], ["05", "Reclaim later"]].map(([step, label]) => (
-        <div key={step} className="min-w-0 rounded-lg border border-border bg-background p-4">
-          <span className="text-xs font-semibold text-primary">{step}</span>
-          <p className="mt-2 break-words text-sm font-semibold">{label}</p>
-        </div>
-      ))}
-    </div>
-  </figure>
-);
+import StorageEngineLocator, { StorageEngineMapReturn } from "../lsm-tree/StorageEngineLocator";
+import MdbxGenerationViz from "./viz/MdbxGenerationViz";
 
 export default function ModernArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-5">
-      <h2 className="text-3xl font-bold">MDBX: mmap은 접근 방식이고 CoW generation이 transaction을 만든다</h2>
-      <p className="text-lg leading-8">Reader R1이 key A가 든 leaf page 42를 보는 동안 writer가 A를 바꾼다고 해 봅시다. R1이 보는 bytes를 제자리에서 덮으면 snapshot이 중간에 변합니다. MDBX 계열은 기존 page graph를 남겨 두고 변경된 path를 새 pages에 쓴 뒤 새 root generation을 publish합니다.</p>
-      <TxFlow />
-      <p>MDBX는 내부에서 paged B+ tree를 사용하지만 generic B+ tree의 search/split 설명과 transaction·durability를 섞지 않습니다. mmap 또한 file 전체가 RAM에 resident하거나 write가 stable media에 도달했다는 뜻이 아니므로 page fault, meta publish, sync mode를 별도 경계로 봐야 합니다.</p>
-    </section>
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-5 scroll-mt-20">
+        <StorageEngineLocator current="mdbx-internals" />
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 break-keep text-3xl font-bold">Reader가 이전 page를 보는 동안 writer는 어떻게 새 세대를 확정할까요?</h2>
+        </div>
+        <MdbxGenerationViz />
+        <p className="text-lg leading-8">Reader R1이 key A가 든 leaf page를 읽는 동안 writer가 A를 바꾼다고 하겠습니다. 기존 page를 제자리에서 덮으면 R1의 snapshot이 읽는 중간에 달라집니다. MDBX는 R1이 보는 page graph를 남겨 두고 변경된 leaf에서 root까지 새 path를 만든 뒤, 새 root를 가리키는 transaction generation을 공개합니다.</p>
+        <p>이 흐름에는 서로 다른 세 경계가 있습니다. <code>mmap</code>은 file page에 접근하는 방법이고, Copy-on-Write는 old reader와 new writer가 page graph를 공유하는 방법이며, meta publish는 이후 reader가 어떤 root를 시작점으로 고를지 바꾸는 transaction 경계입니다. 어느 하나도 그 자체로 stable media 도달을 뜻하지 않습니다.</p>
+      </section>
 
-    <section id="page-map" className="space-y-5">
-      <h2 className="text-2xl font-bold">Mapped address와 resident page, logical lookup은 다른 층이다</h2>
-      <p>Root page 1에서 branch page 8을 거쳐 leaf page 42의 key를 찾는다면 logical B+ tree path는 세 pages입니다. mmap은 database file의 page offsets를 process virtual address에 연결하므로 별도 read-copy API를 줄일 수 있지만 cold page를 처음 만날 때 OS page fault가 storage I/O를 만들 수 있습니다.</p>
-      <p>100 GB file을 map해도 실제 RSS는 접근해 resident가 된 subset과 OS 정책에 달려 있으므로 곧바로 RSS 100 GB라고 할 수도, I/O가 0이라고 할 수도 없습니다. Page size·map geometry·access locality·OS cache state·major/minor faults를 함께 기록해야 B+ height와 실제 latency를 연결할 수 있습니다.</p>
-    </section>
+      <section id="page-map" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Mapped address, resident page, B+ tree lookup은 서로 다른 층입니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3">
+          {[
+            ["File", "Page 번호와 offset", "meta·root·branch·leaf bytes"],
+            ["OS", "Virtual mapping과 page cache", "page fault·resident·writeback"],
+            ["MDBX", "B+ tree page graph", "separator·cursor·transaction generation"],
+          ].map(([title, role, detail]) => (
+            <div key={title} className="bg-background p-4">
+              <strong className="text-sm">{title}</strong>
+              <p className="mt-2 text-xs font-semibold leading-5">{role}</p>
+              <p className="mt-1 text-[10px] leading-4 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
+        <p>Root page 1에서 branch page 8을 거쳐 leaf page 42의 key를 찾는다면 logical B+ tree path는 세 pages입니다. MDBX는 database file을 process virtual address에 map하므로 별도의 library buffer cache에서 file bytes를 한 번 더 복사하지 않고 그 page를 읽을 수 있습니다. 그러나 cold page가 RAM에 없으면 첫 접근에서 OS page fault와 storage I/O가 생길 수 있습니다.</p>
+        <p>100GB file을 map했다고 RSS가 곧 100GB가 되는 것도 아니고, I/O가 사라지는 것도 아닙니다. Map geometry는 접근 가능한 주소 범위를, RSS는 현재 resident인 memory를, major fault는 storage에서 가져온 page를 설명합니다. Page size·접근 locality·OS cache 상태를 함께 기록해야 logical tree height와 실제 latency를 연결할 수 있습니다.</p>
+      </section>
 
-    <section id="transaction" className="space-y-5">
-      <h2 className="text-2xl font-bold">Copy-on-Write path를 만든 뒤 meta root를 publish한다</h2>
-      <p>
-            R1이 txid 100의 root 1→branch 8→leaf 42를 pin한 동안 writer 101은 수정 leaf 52, parent 18, root 2를 새로 만듭니다.
-            Root 2와 geometry·transaction identity를 나타내는 meta state가 publish되기 전에는 old graph가 완전하고 publish된 뒤에는
-            new graph가 완전합니다. 그래서 R1은 계속 old root를 읽고 새 reader는 txid 101을 선택할 수 있습니다.
-          </p>
-      <p>한 시점의 writer를 직렬화한다고 해서 readers도 writer lock을 기다릴 필요는 없습니다. 대신 active readers 중 가장 오래된 generation이 아직 참조할 수 있는 retired pages를 재사용하지 않아야 합니다. Long reader가 끝나지 않으면 free pages 회수가 늦어져 file/map growth가 늘 수 있습니다.</p>
-      <ExplainedFormula
-        question="Retired page를 언제 안전하게 재사용할 수 있을까?"
-        idea="그 page가 마지막으로 속한 generation보다 오래된 reader가 하나도 없을 때만 새 writer generation에 돌려줍니다."
-        formula={String.raw`\operatorname{reclaim}(p)\ \text{only if}\ \operatorname{retiredTx}(p)<\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`}
-        annotatedFormula={String.raw`\operatorname{reclaim}(p)\ \text{only if}\ \underbrace{\operatorname{retiredTx}(p)}_{\text{page가 빠진 txid}}<\underbrace{\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)}_{\text{가장 오래된 reader}}`}
-        operations={[
-          { expression: String.raw`\operatorname{retiredTx}(p)`, annotation: ["page가 current graph에서 빠진 txid","이 값이 oldest reader보다 작아야","어떤 열린 snapshot도 그 page를 안 봄"] },
-          { expression: String.raw`\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`, annotation: ["열린 reader 중 가장 오래된 snapshot txid","txid 100·103이 열려 있으면 100","오래 열린 reader가 회수 horizon을 붙잡음"] },
-        ]}
-        terms={[
-          { symbol: "p", name: "Retired page", description: "새 root에서는 더 이상 필요하지 않지만 old reader가 볼 수 있는 page입니다." },
-          { symbol: "retiredTx", name: "Retirement generation", description: "해당 page가 current graph에서 빠진 transaction boundary입니다." },
-          { symbol: "R_active", name: "Active readers", description: "아직 snapshot을 닫지 않은 read transactions입니다." },
-          { symbol: "readerTx", name: "Pinned generation", description: "각 reader가 시작 때 고정한 transaction ID입니다." },
-        ]}
-        assumptions={["Reader slot과 liveness가 pinned libmdbx API 규칙대로 관리됩니다.", "정확한 equality·free-list 세부는 선택 source version의 page-retirement semantics를 따릅니다.", "이 식은 수명 직관이며 stable-media durability를 설명하지 않습니다."]}
-        interpretation="Active reader txids가 100과 103이면 oldest는 100입니다. txid 100 snapshot이 필요할 수 있는 pages는 그 reader가 끝나기 전에 재사용할 수 없고, 오래 열린 reader는 reclamation horizon을 붙잡습니다."
-      />
-      <p>Meta publish가 atomic visibility를 주더라도 power-loss durability는 sync flags, filesystem, device cache와 commit 반환 시점에 달려 있습니다. “commit success”, “OS에 write 제출”, “stable media 도달”을 같은 상태로 부르지 않습니다.</p>
-    </section>
+      <section id="transaction" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Writer는 변경 path를 복사하고 새 meta가 시작점을 바꿉니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+          <div className="bg-background p-4">
+            <span className="text-[9px] font-bold text-muted-foreground">R1 · txid 100</span>
+            <p className="mt-2 font-mono text-sm font-black">root 1 → branch 8 → leaf 42</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">A=old를 읽는 기존 graph</p>
+          </div>
+          <div className="hidden bg-background px-3 text-center font-black text-primary sm:block">CoW</div>
+          <div className="bg-background p-4">
+            <span className="text-[9px] font-bold text-muted-foreground">Writer · txid 101</span>
+            <p className="mt-2 font-mono text-sm font-black text-primary">root 2 → branch 18 → leaf 52</p>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">A=new를 담은 새 graph</p>
+          </div>
+        </div>
+        <p>Writer 101은 leaf 52만 새로 만드는 것으로 끝나지 않습니다. Leaf를 가리키는 branch와 그 위 root도 새 page version으로 만들고, 새 transaction number와 root를 담은 일관된 meta를 공개합니다. 공개 전에는 root 1 graph가 완전하고, 공개 뒤 새 reader에게는 root 2 graph가 완전해야 합니다.</p>
+        <p>Reader는 transaction 시작 때 선택한 meta와 transaction ID를 snapshot으로 고정합니다. Meta 101이 공개된 뒤에도 R1은 root 1을 계속 걷고, 그 뒤 시작한 R2는 root 2를 고릅니다. Writer는 한 시점에 하나로 직렬화되지만 이미 열린 read transaction은 새 writer가 끝나기를 기다렸다가 같은 root로 갈아타지 않습니다.</p>
+      </section>
 
-    <section id="dupsort" className="space-y-5">
-      <h2 className="text-2xl font-bold">DUPSORT는 key 안에 두 번째 ordered domain을 만든다</h2>
-      <p>
-            key A 아래 values [2,5,9]가 있으면 next-duplicate는 같은 A에서 2→5→9로 움직이고 next-key는 다음 key B로 이동합니다. 이것은
-            unordered set이나 application array와 다르며 duplicate comparator와 value codec이 persisted schema의 일부입니다.
-          </p>
-      <p>Numeric 256을 little-endian bytes 00 01로 저장하고 2를 02 00으로 저장하면서 lexicographic byte comparator를 쓰면 사람이 기대한 numeric ordering과 달라질 수 있습니다. Key/value type, byte encoding, comparator, DUPSORT/DUPFIXED flags와 cursor operation을 하나의 schema receipt로 고정해야 합니다.</p>
-    </section>
+      <section id="reclaim" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">가장 오래된 reader가 retired page의 재사용 시점을 정합니다</h2>
+        <ExplainedFormula
+          question="Retired page를 언제 새 transaction에 다시 쓸 수 있을까요?"
+          idea="그 page를 볼 수 있는 가장 오래된 active reader가 끝난 뒤에만 재사용 후보가 됩니다."
+          formula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \operatorname{retiredTx}(p)<\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)`}
+          annotatedFormula={String.raw`\operatorname{reuse}(p)\ \text{only after}\ \underbrace{\operatorname{retiredTx}(p)}_{\text{page가 current graph에서 빠진 세대}}<\underbrace{\min_{r\in R_{\mathrm{active}}}\operatorname{readerTx}(r)}_{\text{가장 오래된 열린 snapshot}}`}
+          operations={[
+            { expression: String.raw`R_{\mathrm{active}}=\{100,103\}`, annotation: ["두 reader가 txid 100과 103을 고정", "oldest reader는 100", "100이 볼 수 있는 page는 유지"] },
+            { expression: String.raw`\min(100,103)=100`, annotation: ["회수 horizon은 100", "새 commit 105가 있어도 바뀌지 않음", "R1 종료 뒤 horizon이 전진"] },
+          ]}
+          terms={[
+            { symbol: "p", name: "Retired page", description: "새 root에서는 빠졌지만 old reader가 여전히 볼 수 있는 page입니다." },
+            { symbol: "retiredTx", name: "Retirement generation", description: "해당 page가 current graph에서 빠진 transaction generation입니다." },
+            { symbol: "R_active", name: "Active readers", description: "아직 snapshot을 닫지 않은 read transactions입니다." },
+            { symbol: "readerTx", name: "Pinned generation", description: "각 reader가 시작할 때 선택한 transaction ID입니다." },
+          ]}
+          assumptions={["이 식은 page 수명 경계를 설명하는 모형입니다.", "Reader slot·process liveness와 정확한 GC 비교 규칙은 고정한 libmdbx release의 구현에 따릅니다.", "Page 재사용 가능 여부와 stable-media durability를 같은 의미로 쓰지 않습니다."]}
+          interpretation="Active reader가 100과 103이면 가장 오래된 snapshot은 100입니다. Writer가 105까지 진행해도 txid 100이 볼 수 있는 page는 R1이 끝나기 전 재사용하지 않습니다. 오래 열린 reader는 free-page 회수를 늦춰 map과 working set을 키울 수 있습니다."
+        />
+        <p>이 제약은 snapshot isolation의 비용입니다. Long reader가 끝나지 않으면 writer가 retired page를 곧바로 되돌려 쓰지 못하고 새 page를 더 필요로 할 수 있습니다. “Reader와 writer가 서로 막지 않는다”는 말은 page 수명과 공간 비용까지 서로 무관하다는 뜻이 아닙니다.</p>
+      </section>
 
-    <section id="release" className="space-y-5">
-      <h2 className="text-2xl font-bold">Commit kill points와 reopen generation을 먼저 맞춘다</h2>
-      <p>Data-page allocation/write, parent/root construction, meta publish, sync 전후에 process kill을 반복하고 reopen했을 때 last durable txid·root·logical rows가 한 generation으로 일치하는지 확인합니다. Torn meta나 mixed old/new path를 success로 열면 안 됩니다. Map-full, long reader, stale reader handling, writer contention, malformed page와 DUPSORT insert/delete/order도 포함합니다.</p>
-      <p>libmdbx SHA, API/build/sync flags, page/map geometry, filesystem·mount·device cache, process model을 pin한 뒤 commit/abort/reopen parity, page faults, dirty/writeback bytes, fsync time, map growth, reader age, p50/p99, RSS를 기록합니다. Correctness·durability·schema compatibility가 깨지면 이전 source/flag/database generation으로 rollback합니다.</p>
-      <div id="paper-lmdb-2011"><CitationBlock source="Chu · MDB: A Memory-Mapped Database and Backend for OpenLDAP" citeKey={1} href="https://www.openldap.org/pub/hyc/mdb-paper.pdf"><p><b>문제:</b> Embedded read-heavy DB에서 locking과 copy overhead를 줄입니다.</p><p><b>기여:</b> Memory mapping·Copy-on-Write·MVCC·single-writer design foundation을 제시했습니다.</p><p><b>전제:</b> LMDB paper의 OS·page·transaction model을 따릅니다.</p><p><b>근거 범위:</b> MDBX가 계승한 architecture를 이해하는 primary background입니다.</p><p><b>말하지 않는 것:</b> 현재 libmdbx API·meta format·durability flags와 동일하다고 주장하지 않습니다.</p></CitationBlock></div>
-      <div id="paper-libmdbx-source"><CitationBlock source="Mithril-mine/libmdbx pinned source f7a3a93" citeKey={2} href="https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0"><p><b>문제:</b> MDBX transaction·page·reader table·DUPSORT source seam을 고정합니다.</p><p><b>기여:</b> Official libmdbx source·tests·documentation의 exact snapshot을 제공합니다.</p><p><b>전제:</b> Commit f7a3a93, build flags, filesystem과 sync options를 pin합니다.</p><p><b>근거 범위:</b> 선택 commit에서 확인되는 MDBX implementation/API behavior입니다.</p><p><b>말하지 않는 것:</b> 모든 platform power-loss guarantee나 workload 성능 우위를 보장하지 않습니다.</p></CitationBlock></div>
-    </section>
-  </article>;
+      <section id="dupsort" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">DUPSORT는 한 key 아래에 두 번째 정렬 축을 만듭니다</h2>
+        <figure className="not-prose border-y border-border py-4" aria-labelledby="mdbx-dupsort-caption">
+          <figcaption id="mdbx-dupsort-caption" className="text-xs font-bold">Key A의 duplicate cursor와 다음 key 이동</figcaption>
+          <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,0.7fr)] sm:items-center">
+            <div className="border border-primary p-3">
+              <span className="text-[9px] font-bold text-muted-foreground">KEY A · ordered values</span>
+              <div className="mt-2 grid grid-cols-3 gap-px bg-border p-px text-center font-mono text-sm font-black">
+                {[2, 5, 9].map((value) => <span key={value} className="bg-background py-2">{value}</span>)}
+              </div>
+              <p className="mt-2 text-[10px] text-muted-foreground">next-duplicate: 2 → 5 → 9</p>
+            </div>
+            <span className="hidden font-black text-primary sm:block">next-key →</span>
+            <div className="border border-border p-3 text-center">
+              <span className="text-[9px] font-bold text-muted-foreground">KEY B</span>
+              <strong className="mt-2 block font-mono text-sm">value 4</strong>
+            </div>
+          </div>
+        </figure>
+        <p>이 값들은 unordered set이나 application array가 아닙니다. Duplicate comparator가 순서를 정하고 cursor operation은 같은 key 안에서 다음 value로 갈지, 다음 key로 갈지를 구분합니다. Key/value type, byte encoding, table flags와 comparator가 함께 persisted schema가 됩니다.</p>
+        <p>예를 들어 숫자 256을 little-endian bytes <code>00 01</code>, 숫자 2를 <code>02 00</code>으로 저장하면서 lexicographic byte comparator를 쓰면 사람이 기대한 numeric ordering과 달라질 수 있습니다. 같은 bytes라도 codec과 comparator 계약이 달라지면 point lookup과 iteration 결과가 달라집니다.</p>
+      </section>
+
+      <section id="failure" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">메커니즘의 실패는 snapshot, page 수명, 순서 경계에서 드러납니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2">
+          {[
+            ["Old page 제자리 수정", "R1이 읽는 txid100 snapshot의 bytes가 중간에 바뀝니다."],
+            ["불완전한 새 root 공개", "새 reader가 old·new page가 섞인 path를 따라갈 수 있습니다."],
+            ["Reader보다 이른 page 재사용", "같은 address가 다른 record를 가리켜 열린 snapshot이 손상됩니다."],
+            ["Long reader 방치", "Retired page 회수가 멈춰 map·working set과 write 비용이 커질 수 있습니다."],
+            ["Comparator·codec 불일치", "DUPSORT iteration과 point lookup이 저장 때의 순서를 재현하지 못합니다."],
+            ["Commit과 내구성 혼동", "Meta가 보인다는 사실만으로 정전 뒤 같은 generation이 남는다고 단정합니다."],
+          ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="break-keep text-sm">{title}</strong><p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{body}</p></div>)}
+        </div>
+        <p>이 글은 transaction generation이 보이는 원리를 설명합니다. 어떤 sync mode와 장비에서 어느 commit을 durable로 인정할지, 어느 kill point를 통과해야 release할지는 다음 실무 글에서 이 글의 네 개념 anchor를 가져와 검증합니다.</p>
+      </section>
+
+      <section id="evidence" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">설계 계보와 선택한 release의 구현을 나눠 확인합니다</h2>
+        <div id="paper-lmdb-2011"><CitationBlock source="Chu · MDB: A Memory-Mapped Database and Backend for OpenLDAP" citeKey={1} href="https://www.openldap.org/pub/hyc/mdb-paper.pdf"><p><b>확인한 범위:</b> Memory mapping, Copy-on-Write, MVCC와 single-writer 구조의 설계 계보입니다.</p><p><b>확대하지 않은 범위:</b> 현재 libmdbx의 meta 형식, API와 sync mode를 이 논문이 그대로 정의한다고 보지 않습니다.</p></CitationBlock></div>
+        <div id="paper-libmdbx-source"><CitationBlock source="Mithril-mine/libmdbx v0.14.3 · f7a3a93" citeKey={2} href="https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0"><p><b>확인한 범위:</b> 2026년 8월 9일 공개된 v0.14.3의 transaction API, sync flags, reader 정보, DUPSORT와 pinned source snapshot입니다.</p><p><b>확대하지 않은 범위:</b> 모든 OS·filesystem·storage 장치에서의 power-loss 결과나 대상 workload의 성능 우위를 보장하지 않습니다.</p></CitationBlock></div>
+        <div id="paper-libmdbx-header"><CitationBlock source="libmdbx v0.14.3 · mdbx.h" citeKey={3} href="https://github.com/Mithril-mine/libmdbx/blob/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0/mdbx.h"><p><b>확인한 범위:</b> Read-only와 read-write transaction, sync mode, reader lag, map-full, DUPSORT cursor의 공개 API 계약입니다.</p><p><b>확대하지 않은 범위:</b> Header의 기능 설명만으로 crash 시험, filesystem ordering과 복구 시간을 측정했다고 주장하지 않습니다.</p></CitationBlock></div>
+      </section>
+
+      <section className="not-prose border-y border-border py-5" aria-labelledby="mdbx-review-title">
+        <p className="text-[10px] font-bold text-primary">그림 없이 다시 설명하기</p>
+        <h2 id="mdbx-review-title" className="mt-2 text-xl font-bold">세 질문으로 한 transaction generation을 다시 추적해 보세요</h2>
+        <ol className="mt-4 grid gap-px bg-border p-px text-sm leading-6 md:grid-cols-3">
+          <li className="bg-background p-4"><strong className="block text-xs text-primary">01 · 읽기</strong><span className="mt-2 block">mmap이 page 접근을 바꾸는 것과 page가 RAM에 resident인 것은 어떻게 다를까요?</span></li>
+          <li className="bg-background p-4"><strong className="block text-xs text-primary">02 · 공개</strong><span className="mt-2 block">R1이 tx100을 읽는 동안 writer101은 어떤 page를 만들고 무엇을 마지막 시작점으로 공개할까요?</span></li>
+          <li className="bg-background p-4"><strong className="block text-xs text-primary">03 · 회수</strong><span className="mt-2 block">R1이 끝나지 않았을 때 retired page를 재사용하면 왜 snapshot이 깨질까요?</span></li>
+        </ol>
+      </section>
+
+      <StorageEngineMapReturn current="mdbx-internals" />
+    </article>
+  );
 }

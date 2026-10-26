@@ -3,14 +3,24 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### B+ tree 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### MDBX 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/mdbx-internals`는 `concept`, 새 `blockchain/mdbx-validation`은 `practice`로 분리했습니다. 개념 글은 mmap·Copy-on-Write·MVCC·page 회수·DUPSORT만 설명합니다. 실무 글은 고정한 release와 sync 계약을 중단·재실행하고 복구·성능·rollback 근거를 남기는 방법을 다룹니다.
+- 개념 글은 reader R1이 txid 100의 `p1 → p8 → p42`를 읽는 동안 writer 101이 `p2 → p18 → p52`를 만든 뒤 새 meta를 공개하는 한 사례를 추적합니다. Meta visibility와 stable-media durability를 분리하고, R1이 끝난 뒤에만 old pages를 재사용할 수 있는 이유를 같은 page graph로 설명합니다.
+- 실무 글은 source SHA, build options, sync mode, filesystem, storage cache, map geometry, operation trace와 oracle digest를 한 manifest에 고정합니다. 같은 write의 정상 기준선을 만든 뒤 data page·meta·sync 경계에서 격리된 candidate process를 중단하고, reopen generation과 logical rows를 독립 oracle에 대조합니다. 대상 환경의 측정값이 없으므로 상태는 `proposed`로 남겼습니다.
+- 근거는 MDB 논문과 2026년 8월 9일 공개된 libmdbx v0.14.3의 고정 source `f7a3a93`, 같은 release의 `mdbx.h`로 나눴습니다. Process kill 결과를 정전 결과로 확대하지 않고, sync mode·reader lag·map-full·DUPSORT API의 존재도 대상 환경의 복구 성능으로 해석하지 않았습니다.
+- 1,440×1,000에서 두 글의 문서와 여섯 장면에 가로 넘침·내부 clipping·console 오류가 없습니다. 명시적 재생 전 장면 01이 유지되고, 키보드 이동과 6.8초 장면 간격, 일시정지 뒤 상태 유지가 동작합니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이며 실무 장면을 722~789px로 줄여 하단 아이콘 조작부까지 한 흐름에서 볼 수 있습니다.
+- reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 390×844에서는 두 글의 live 장면을 숨기고 여섯 정적 장면·직속 부모·본문·지도 반환을 같은 순서로 표시합니다. KaTeX의 긴 underbrace SVG가 정적 문서 폭을 늘리던 문제는 no-script 수식 컨테이너와 SVG의 overflow 경계를 고쳐 해결했습니다.
+- 학습 계약, 지식 그래프, topology, 읽기 순서, 문장 호흡, 한국어, 용어, architecture-flow, coverage와 runtime 감사를 통과했습니다. Production build는 8,069개 module, 정적 공개 경로 2,096개, no-script 본문 305편을 만들었고 최대 RSS는 약 6.45GB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증이 남았습니다.
+
+### B+ tree 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/bplus-tree`는 4,096바이트 page 예산에서 key 35 조회, range 35~62, 삽입 25의 overflow와 split, parent downlink가 없는 실패까지 한 page graph로 추적하는 개념 글로 다시 썼습니다. 출시 판단과 운영 검증은 새 `blockchain/bplus-index-validation` 실무 글로 분리했습니다.
 - 실무 글은 manifest에 비교 조건을 고정하고, candidate와 독립 oracle에 같은 연산을 재생한 뒤 경계 입력·중간 종료·재시작 대조를 거쳐 정확성 통과 run에서만 비용을 재는 순서로 구성했습니다. 실제 측정값이 없으므로 상태는 `proposed`이고 결과는 미측정으로 남겼습니다.
 - 일반 B+ tree의 redistribution·merge와 PostgreSQL nbtree의 삭제 정책을 구분했습니다. Bayer·McCreight 원 논문, Comer의 개관, PostgreSQL 18 공식 문서, PostgreSQL 18.6 고정 source `724edf9`와 `amcheck` 문서를 역할별로 대조했습니다.
 - 1440×1000 production preview에서 두 글 모두 6.5초 동안 자동 진행되지 않았고 ArrowRight로 장면이 이동했습니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이며 모든 장면의 가로 넘침과 clipping이 0입니다. 모바일 실패 비교와 상태 소유자 표는 같은 정보를 더 짧은 이동 거리로 읽도록 별도 레이아웃을 사용합니다.
 - reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 390×844에서는 live 장면을 숨기고 여섯 단계의 정적 설명, 직속 부모 지도, 같은 트랙의 이웃 글과 본문을 그대로 제공합니다. 프로덕션 콘솔 오류는 0건입니다.
-- ESLint, 8GB TypeScript, production build와 article·visual·learning·graph·formula·calculation·reading·order·prose·한국어·용어·runtime·topology·coverage·architecture-flow strict 감사를 통과했습니다. 빌드는 8,065개 module, 2,094개 정적 공개 경로와 303편의 no-script 본문을 만들었고 최대 RSS는 약 6.35GB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증이 남았습니다.
+- ESLint, 8GB TypeScript, production build와 article·visual·learning·graph·formula·calculation·reading·order·prose·한국어·용어·runtime·topology·coverage·architecture-flow strict 감사를 통과했습니다. 빌드는 8,065개 module, 2,094개 정적 공개 경로와 303편의 no-script 본문을 만들었고 최대 RSS는 약 6.35GB, swap은 0이었습니다. GitHub Pages run `40390238268`에서 995편의 실제 브라우저 검사와 배포가 성공했습니다. 공개 두 경로를 390×844·1,440×1,000과 JavaScript 비활성 상태에서 다시 열어 HTTP 200, 여섯 장면, 가로 넘침 0, 부모 지도 반환과 console 오류 0을 확인했습니다.
 
 ## 2026-10-27 · Reth 값과 바이트: Alloy·RLP (로컬 검수 완료, 배포 대기)
 

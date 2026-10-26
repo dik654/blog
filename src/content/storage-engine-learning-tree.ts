@@ -6,7 +6,7 @@ export interface StorageEngineAnchor {
 }
 
 export interface StorageEngineNode {
-  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "reth-db";
+  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "mdbx-validation" | "reth-db";
   href: string;
   shortTitle: string;
   track: StorageEngineTrack;
@@ -91,7 +91,28 @@ export const STORAGE_ENGINE_NODES = [
     question: "독자가 이전 page를 보는 동안 writer는 어떻게 새 세대를 확정할까요?",
     parentHref: "/cs/blockchain/reth#overview",
     parentLabel: "Reth의 검증·실행·저장 지도",
-    closure: "MDBX는 memory-mapped B+ tree의 page를 Copy-on-Write하고 새 root를 meta page에 확정해 독자별 snapshot과 단일 writer를 조정합니다.",
+    closure: "MDBX는 mapped file을 곧 RAM 전체로 취급하지 않습니다. Reader는 시작할 때 고른 transaction generation의 page graph를 계속 걷고, writer는 변경된 leaf에서 root까지 새 path를 만든 뒤 새 meta를 공개합니다. 오래 열린 reader가 사라져야 그 reader가 볼 수 있던 retired page를 다시 쓸 수 있습니다.",
+    paired: {
+      href: "/cs/blockchain/mdbx-validation#overview",
+      label: "MDBX 운영 검증",
+    },
+  },
+  {
+    id: "mdbx-validation",
+    href: "/cs/blockchain/mdbx-validation#overview",
+    shortTitle: "MDBX 검증",
+    track: "practice",
+    mapLabel: "commit·중단·재실행 대조",
+    question: "어떤 중단·재실행 증거가 있어야 MDBX 설정과 버전을 운영에 적용할 수 있을까요?",
+    parentHref: "/cs/blockchain/mdbx-internals#return-map",
+    parentLabel: "MDBX의 mmap·CoW·MVCC 메커니즘",
+    closure: "MDBX 변경은 commit 성공 횟수나 처리량만으로 승인하지 않습니다. 소스와 sync mode, filesystem·장치를 고정하고 data page·meta·sync 경계에서 중단한 뒤, 다시 연 세대와 논리 rows를 독립 oracle에 대조합니다. Long reader·map full·DUPSORT 경계까지 통과한 run에서만 지연과 공간 비용을 비교합니다.",
+    anchors: [
+      { href: "/cs/blockchain/mdbx-internals#page-map", label: "Mapped page와 page fault" },
+      { href: "/cs/blockchain/mdbx-internals#transaction", label: "CoW path와 meta 공개" },
+      { href: "/cs/blockchain/mdbx-internals#reclaim", label: "Reader와 page 재사용" },
+      { href: "/cs/blockchain/mdbx-internals#dupsort", label: "DUPSORT 순서 계약" },
+    ],
   },
   {
     id: "reth-db",
