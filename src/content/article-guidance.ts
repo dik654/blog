@@ -1568,27 +1568,35 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     "증명 안의 root를 믿지 않고, 신뢰한 stateRoot에서 leaf 값까지 참조를 끊김 없이 확인합니다.",
   ),
   "blockchain/reth": flow(
-    "Reth 노드의 큰 데이터 경로",
-    "네트워크로 받은 블록은 어디를 지나 조회 가능한 상태가 될까?",
+    "Reth에서 한 블록이 실행 결과와 조회 응답이 되는 경로",
+    "합의가 고른 실행 데이터 묶음은 어디를 지나 조회 가능한 상태가 될까?",
     [
       {
-        label: "Network",
-        detail: "header·body·transaction을 peer에서 수신합니다.",
+        label: "합의 선택",
+        detail: "합의 클라이언트가 현재 head·safe·finalized 위치를 정합니다.",
       },
       {
-        label: "Pipeline",
-        detail: "다운로드·검증·execution stage를 순서대로 진행합니다.",
+        label: "실행 요청",
+        detail: "Engine API로 새 실행 데이터 묶음과 분기 선택 변화를 전달합니다.",
       },
       {
-        label: "Storage",
-        detail: "MDBX·static files에 hot state와 immutable data를 나눕니다.",
+        label: "검증·EVM",
+        detail: "부모 상태에서 규칙을 확인하고 거래를 실행해 새 상태와 실행 영수증을 계산합니다.",
       },
       {
-        label: "Provider/RPC",
-        detail: "일관된 snapshot으로 상위 조회 API를 제공합니다.",
+        label: "정본 반영",
+        detail: "분기 선택에 맞춰 정본의 끝(head)을 바꾸고 safe·finalized 표시는 따로 유지합니다.",
+      },
+      {
+        label: "영속 저장",
+        detail: "블록·상태·실행 영수증·조회용 색인을 같은 블록 식별자에 연결해 저장합니다.",
+      },
+      {
+        label: "일관된 조회",
+        detail: "조회 계층이 블록 해시와 상태 루트를 고정해 JSON-RPC 응답을 만듭니다.",
       },
     ],
-    "Reth를 읽을 때는 crate 목록보다 network→pipeline→storage→provider 경계를 먼저 잡습니다.",
+    "Reth는 합의를 대신하지 않습니다. 합의가 선택한 실행 데이터 묶음을 검증·실행·저장하고 한 시점의 상태로 조회하게 합니다.",
   ),
   "blockchain/prysm": flow(
     "Prysm beacon node의 큰 실행 경로",

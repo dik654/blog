@@ -4843,11 +4843,13 @@
     {
       "route": "blockchain/reth",
       "title": "Reth 아키텍처 개요",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth.tsx",
-        "src/pages/articles/ethereum/reth/Overview.tsx"
+        "src/pages/articles/ethereum/reth/Overview.tsx",
+        "src/pages/articles/ethereum/reth/RethArchitectureLocator.tsx",
+        "src/pages/articles/ethereum/reth/viz/RethArchitectureViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -4855,23 +4857,42 @@
         "assumptionMarkers": 0,
         "sourceButtons": 0,
         "headings": [
-          "\n        Reth는 block을 받는 프로그램이 아니라 검증·실행·저장·조회 owner를 조립한 execution client다\n      "
+          "Reth가 답하는 질문",
+          "Reth와 합의 클라이언트는 같은 일을 하지 않습니다",
+          "두 입력 경로는 같은 실행 결과로 합류합니다",
+          "한 단계의 성공을 전체 성공으로 부르면 안 됩니다",
+          "Provider는 저장소가 아니라 일관된 조회 시점을 제공합니다",
+          "Reorg는 정본 포인터 하나만 바꾸는 일이 아닙니다",
+          "여기서부터는 책임별로 내려갑니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 Reth 구성요소와 운영 release gate를 한 개요 글에 함께 넣어 실행 클라이언트의 가장 큰 데이터 경로가 흐려졌습니다.",
+        "상단 전체 흐름이 P2P network만 입력으로 표시해 합의 클라이언트와 Engine API의 역할 경계를 놓쳤습니다.",
+        "한 단계의 성공을 전체 성공으로 읽기 쉬웠고 reorg에서 어떤 파생 상태를 함께 되돌려야 하는지 시각적으로 보이지 않았습니다."
+      ],
+      "fixture": "합의 클라이언트가 보낸 payload 0x6a…를 부모 상태 S₀에서 검증·실행해 상태 S₁과 receipt R₁을 만들고, fork choice 반영과 영속 저장 뒤 eth_getBalance가 같은 block/state view를 읽습니다.",
+      "stageEvidence": {
+        "locator": "Ethereum 전체 구조의 실행 클라이언트 자식인 concept 글로 표시하고 직속 부모 지도와 다음 세부 경로를 연결합니다.",
+        "blockTrace": "7개 장면에서 합의·실행 owner 경계→Engine 요청→검증→EVM 상태 계산→정본 반영→저장→JSON-RPC 조회를 추적합니다.",
+        "twoPaths": "P2P 과거 동기화와 Engine API 실시간 처리를 입력·진척·복구·공통 실행 규칙으로 나눕니다.",
+        "reorg": "공통 조상 뒤 이전 파생 결과를 되돌리고 새 branch를 실행한 뒤 Provider view를 바꾸는 순서를 표시합니다.",
+        "fallback": "StaticSceneList와 no-script 정적 route에서 7개 장면의 순서와 결론을 모두 제공합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth 공식 Overview v2.8.1 표시 문서의 execution-layer·Engine API 경계.",
+        "Reth 공식 Node Components 문서의 network·pool·consensus validation·EVM·RPC 책임 구분.",
+        "paradigmxyz/reth 공식 저장소와 v2.8.1 release를 구현·버전 범위 확인 링크로 사용했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "공식 v2.8.1 표시 문서와 Node Components를 다시 확인하고 개념 글에서 version 선택·release gate를 Reth CLI practice 경로로 옮겼습니다.",
+        "arithmetic": "성능 수치를 주장하지 않았으며 S₀→S₁·receipt R₁은 단계 identity를 구분하기 위한 축약 표기임을 명시했습니다.",
+        "humanize": "article check의 한국어 자연스러움·용어 밀도·모바일 용어 묶음·학습 계약 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, locator·시각화 무가로오버플로, 키보드 장면 이동, reduced-motion 비활성 재생을 확인했습니다.",
+        "browser1440": "1440×1100에서 장면 1·4를 확인했고 console 오류·경고가 없었으며 production build와 정적 route 생성이 통과했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "rewrite-as-concept-first-execution-client-map"
     },
     {
       "route": "blockchain/reth-alloy-primitives",
