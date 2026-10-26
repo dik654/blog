@@ -2185,7 +2185,20 @@ export const ARTICLE_EVIDENCE: Readonly<
       "note": "2026-10-04 원문 확인. 평균0.70 후보의 관측0.74 선택과 별도평가, 고정집합 부등식 한계"
     },
 ],
-  "ai/prediction-time-feature-availability": [],
+  "ai/prediction-time-feature-availability": [
+    {
+      kind: "공식 문서",
+      label: "Feast v0.66.0 · Point-in-time joins",
+      href: "https://github.com/feast-dev/feast/blob/v0.66.0/docs/getting-started/concepts/point-in-time-joins.md",
+      note: "2026-10-26 확인. 기본 join의 event-time 경계와 filter_by_created_timestamp=True의 as-of-known-time 경계를 구분",
+    },
+    {
+      kind: "공식 문서",
+      label: "BigQuery ML · ML.ENTITY_FEATURES_AT_TIME",
+      href: "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-entity-feature-time",
+      note: "2026-10-26 확인. Entity별 cutoff와 feature timestamp를 이용한 point-in-time 조회 계약",
+    },
+  ],
   "ai/competition-baseline": [
     { kind: "핵심 논문", label: "Hidden Technical Debt in Machine Learning Systems", href: "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems", note: "Data·configuration·feedback dependency를 포함한 ML system risk taxonomy" },
     {

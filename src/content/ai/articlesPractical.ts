@@ -1313,10 +1313,11 @@ const strategyArticles: Article[] = [
     title: "Prediction-time feature: 실제로 도착한 정보만 쓰기",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Event time과 available time" },
-      { id: "lineage", title: "Source record lineage" },
-      { id: "fixture", title: "Cutoff admission fixture" },
-      { id: "boundary", title: "Transform·join·serving 경계" },
+      { id: "overview", title: "사건 시각과 도착 시각" },
+      { id: "lineage", title: "입력에서 원본까지" },
+      { id: "fixture", title: "가장 늦은 도착 판정" },
+      { id: "boundary", title: "이 판정이 막지 못하는 누수" },
+      { id: "feature-availability-return", title: "평가 계약에 되돌려 놓기" },
     ],
     component: () =>
       import("@/pages/articles/ai/prediction-time-feature-availability"),

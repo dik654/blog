@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · 예측 시점 정보 경계 (로컬 검수 완료, 배포 대기)
+
+- `ai/prediction-time-feature-availability`의 첫 화면을 평가 계약의 직속 자식으로 연결하고, 환자 `p-17`의 10시 예측 한 건을 요청 → 도착 → 판정 → 재현의 네 장면으로 본문보다 먼저 보여 줍니다. 사건이 09:50에 일어났어도 결과가 10:20에 도착했다면 10시 입력에서는 제외된다는 경계를 같은 원본 ID로 추적합니다.
+- 입력 마감 `10:00 Asia/Seoul`과 로그 위치 `8420`, 원본 ID, 누락 규칙 버전을 함께 남깁니다. 같은 벽시계 시각의 순서를 스냅숏 위치로 고정하고, SQL과 수식이 사건 시각뿐 아니라 실제 도착 시각까지 제한하도록 맞췄습니다. 모든 식별자와 수치는 설명용 가정입니다.
+- Feast `v0.66.0`의 버전 고정 공식 문서에서 기본 시점 일치 결합과 `filter_by_created_timestamp`의 차이를 확인했습니다. BigQuery ML 공식 문서의 대상별 입력 마감 조회도 함께 대조했으며, 제품 기능의 존재를 대상 환경의 데이터 품질 증거로 확대하지 않았습니다.
+- 390×844·1440×1000 production preview에서 문서·시각 자료 가로 넘침과 console 오류가 0입니다. 실제 focus 대상의 ArrowRight 장면 01→02, reduced-motion 마지막 장면, JavaScript 비활성 HTTP 200·정적 본문·가로 넘침 0을 확인했습니다.
+- 학습 위치·읽기 순서·topology·TypeScript·production build를 통과했습니다. 공개 경로 검증은 GitHub Pages 배포 뒤 진행합니다.
+
 ## 2026-10-26 · 멀티에이전트 실행 계약 (로컬 검수 완료, 배포 대기)
 
 - `ai/multi-agent-implementation`의 첫 화면에 직속 부모인 delegation 개념, 현재 실행 계약, 같은 경로의 앞뒤 글을 표시했습니다. 배포 후보 `RELEASE-42` 한 건이 단일-agent 기준선 → 세 작업 분리 → worker receipt → 합류 판정을 지나는 네 장면을 본문보다 먼저 보여 줍니다.
