@@ -1,10 +1,15 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import ManufacturingViz from "./viz/ManufacturingViz";
 export default function Manufacturing(){return <section id="manufacturing" className="scroll-mt-20"><h2 className="mb-6 text-2xl font-bold">제조 사례에서는 여러 agent의 판단 경로와 PLC·안전 제어의 실행 경로를 구조적으로 분리합니다</h2><div className="prose prose-neutral max-w-none dark:prose-invert"><p>
-            센서 정합·통계·threshold는 versioned 일반 코드가 계산하고 retrieval worker는 매뉴얼과 정비 이력에서 근거를 찾습니다. LLM worker는 이
-            artifact를 설명 가능한 보고서와 추가 확인 항목으로 조합합니다. 여러 설비·문서 묶음의 독립 분석은 병렬화할 수 있지만 같은 설비 ID·관측 구간·data
-            revision을 receipt에 남겨 join에서 중복과 충돌을 찾습니다.
-          </p><p>LLM output은 advisory artifact일 뿐 actuator command가 아닙니다. 실행 가능한 조치는 승인된 rule engine·운영자·PLC interlock을 모두 통과해야 하며 agent credential에는 PLC write 권한을 주지 않습니다.</p></div><ExplainedFormula question="보고서 생성 성공과 실제 설비 조치 허용을 어떻게 분리할까요?" idea={<>조치는 agent 추천 하나로 열지 않고 sensor validity, deterministic safety rule, 사람 승인, interlock을 모두 만족할 때만 허용합니다.</>} formula={String.raw`\begin{aligned}
+            일반 코드는 센서 값의 정합성과 통계, 기준값 초과 여부를 계산합니다. 검색 작업자는 매뉴얼과 정비 이력에서 근거를 찾습니다. LLM 작업자는
+            두 결과를 읽고 설명 가능한 보고서와 추가 확인 항목을 만듭니다.
+          </p><p>
+            설비나 문서 묶음이 서로 독립적이면 분석을 병렬로 실행할 수 있습니다. 이때 설비 ID, 관측 구간, 데이터 판본을 결과 기록에 남깁니다.
+            결과를 합칠 때 이 값으로 중복과 충돌을 찾습니다.
+          </p><p>
+            LLM이 만든 보고서는 권고일 뿐 설비 명령이 아닙니다. 실제 조치는 승인된 규칙, 운영자 확인, PLC 안전 차단 조건을 모두 통과해야 합니다.
+            에이전트 계정에는 PLC 쓰기 권한을 주지 않습니다.
+          </p></div><ExplainedFormula question="보고서 생성 성공과 실제 설비 조치 허용을 어떻게 분리할까요?" idea={<>조치는 agent 추천 하나로 열지 않고 sensor validity, deterministic safety rule, 사람 승인, interlock을 모두 만족할 때만 허용합니다.</>} formula={String.raw`\begin{aligned}
 A_{\mathrm{execute}}&=I_{\mathrm{sensor}}I_{\mathrm{rule}}\\
 &\quad I_{\mathrm{human}}I_{\mathrm{interlock}}\\
 I_{\mathrm{LLM}}&\not\Rightarrow A_{\mathrm{execute}}
