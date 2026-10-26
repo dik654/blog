@@ -3337,6 +3337,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "mention 7개와 raw relation 4개를 세고, 21쌍을 Person 후보 3쌍으로 줄인 뒤 node 5개·edge 4개가 source_id와 멱등 키를 보존하는지 검산합니다.",
   },
+  "ai/graphrag-community-and-multihop-search": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "앞 글에서 만든 kg-v43 하나를 Community Report 생성, Local 혼합 문맥, Global map-reduce, DRIFT 반복 검색의 서로 다른 읽기 경로에 차례로 넣는 비교 글입니다. 네 경로를 나누면 같은 그래프와 질의를 다시 설명해야 하고, 정확한 N-hop 탐색이 현재 GraphRAG Local Search의 계약이 아니라는 경계도 비교할 자리가 사라집니다.",
+    sharedGate:
+      "node 5개·edge 4개의 원래 community 분할에서 Q=0.21875, E401을 옮긴 분할에서 Q=-0.03125가 되는지 검산하고, Local의 8,000토큰 기본 예산이 text unit 50%·community 25%·나머지 local data로 조립되는 v3.3.0 구현과 정확한 N-hop 그래프 질의를 구분합니다.",
+  },
 };
 
 /**
@@ -3676,6 +3685,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/query-transformation-and-adaptive-retrieval": "173ebca4a97dff29",
   "ai/rag-context-assembly-and-evaluation": "bbed55eefdc6b60b",
   "ai/knowledge-graph-construction": "d77325ccee6d293e",
+  "ai/graphrag-community-and-multihop-search": "bd317ddb459c472d",
   "ai/model-vram-budgeting": "c6b1e28dd71284c2",
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",

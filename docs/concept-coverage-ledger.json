@@ -15784,12 +15784,12 @@
    "status": "done",
    "action": "alias",
    "conceptId": "local-vs-global-graph-search",
-   "owner": "/ai/graphrag-community-and-multihop-search#graph-traversal",
+   "owner": "/ai/graphrag-community-and-multihop-search#multihop",
    "plannedArticle": "graphrag-community-and-multihop-search",
    "plannedRoute": "ai/graphrag-community-and-multihop-search",
    "inProse": false,
-   "reason": "Local search 가 hop 으로 제한하는 걷기 — local-vs-global-graph-search 의 alias 로 흡수",
-   "updatedAt": "2026-08-29"
+   "reason": "결정적 graph traversal과 GraphRAG local context 조립의 경계를 multi-hop 절에서 구분",
+   "updatedAt": "2026-10-26"
   },
   {
    "batch": "1560",
@@ -16036,12 +16036,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "local-vs-global-graph-search",
-   "owner": "/ai/graphrag-community-and-multihop-search#search",
+   "owner": "/ai/graphrag-community-and-multihop-search#search-modes",
    "plannedArticle": "graphrag-community-and-multihop-search",
    "plannedRoute": "ai/graphrag-community-and-multihop-search",
    "inProse": false,
-   "reason": "Hop 예산으로 제한된 entity 중심 탐색의 canonical",
-   "updatedAt": "2026-08-29"
+   "reason": "Entity 중심 mixed context를 만드는 local query method의 canonical",
+   "updatedAt": "2026-10-26"
   },
   {
    "batch": "1560",
@@ -16050,12 +16050,12 @@
    "status": "done",
    "action": "alias",
    "conceptId": "local-vs-global-graph-search",
-   "owner": "/ai/graphrag-community-and-multihop-search#search",
+   "owner": "/ai/graphrag-community-and-multihop-search#search-modes",
    "plannedArticle": "graphrag-community-and-multihop-search",
    "plannedRoute": "ai/graphrag-community-and-multihop-search",
    "inProse": false,
    "reason": "Community summary 전체를 map-reduce 로 종합하는 탐색 — local-vs-global-graph-search 의 alias 로 흡수",
-   "updatedAt": "2026-08-29"
+   "updatedAt": "2026-10-26"
   },
   {
    "batch": "1560",
@@ -16078,12 +16078,12 @@
    "status": "done",
    "action": "new",
    "conceptId": "graph-vector-hybrid-retrieval",
-   "owner": "/ai/graphrag-community-and-multihop-search#hybrid",
+   "owner": "/ai/graphrag-community-and-multihop-search#local-search",
    "plannedArticle": "graphrag-community-and-multihop-search",
    "plannedRoute": "ai/graphrag-community-and-multihop-search",
    "inProse": false,
-   "reason": "Vector 유사도로 진입점을 찾고 graph traversal 로 확장하는 두 단계 검색의 canonical",
-   "updatedAt": "2026-08-29"
+   "reason": "Vector 유사도로 시작 entity를 찾고 graph record·report·text unit을 context로 조립하는 검색의 canonical",
+   "updatedAt": "2026-10-26"
   },
   {
    "batch": "1560",

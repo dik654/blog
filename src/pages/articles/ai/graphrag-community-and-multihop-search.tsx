@@ -1,329 +1,335 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import ProgressiveDetail from "@/components/articles/progressive-detail";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  GraphRagSearchLocator,
+  GraphRagSearchReturn,
+} from "./graphrag-community-and-multihop-search/GraphRagSearchLocator";
 import GraphragCommunityAndMultihopSearchViz from "./graphrag-community-and-multihop-search/viz/GraphragCommunityAndMultihopSearchViz";
+import {
+  CommunityReportBuildViz,
+  GlobalAndDriftViz,
+  LocalSearchContextViz,
+  MultiHopBoundaryViz,
+} from "./graphrag-community-and-multihop-search/viz/GraphRagSearchDetailsViz";
 
 /**
- * GraphRAG: community detection·summary, local/global search, graph-vector hybrid
- * retrieval, multi-hop reasoning 을 소유한다.
- * Property graph·schema·extraction·dedup 은 /ai/knowledge-graph-construction 이 소유한다.
+ * Microsoft GraphRAG v3.3.0의 community report·local/global/DRIFT query path를 소유합니다.
+ * Property graph 구축과 entity resolution은 앞 글이, 제품 선택·운영 SLO는 실무 글이 소유합니다.
  */
 export default function GraphragCommunityAndMultihopSearchArticle() {
   return (
     <div id="overview" className="space-y-16">
+      <GraphRagSearchLocator />
+
       <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          마리 퀴리에서 두 번 건너면 앙리 베크렐에 닿습니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">그래프 다음에는 검색 인덱스가 필요합니다</h2>
+        <GraphragCommunityAndMultihopSearchViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            고정된 그래프에는 node 7개와 edge 6개가 있습니다. 마리 퀴리에서
-            <code>wonAward</code>를 따라 노벨 물리학상으로 가고, 같은 상을 받은
-            사람을 역으로 찾으면 앙리 베크렐에 닿습니다. 이 local 질문은 2-hop,
-            방문 node 3개로 답할 수 있습니다.
+            앞 글에서 만든 <code>kg-v43</code>에는 U-42, A-17, tenant-a, E401,
+            모바일 앱 node와 관계 네 개가 있습니다. 그러나 이 그래프만으로는 질문과
+            가까운 시작 entity를 찾거나, 자료 전체의 주제를 한 번에 요약할 수 없습니다.
           </p>
           <p className="font-semibold">그림을 넘기기 전에 세 가지를 예측해 보세요.</p>
           <ol>
-            <li>이 질문을 풀 때 node 7개를 모두 읽어야 할까요?</li>
-            <li>마리 퀴리 문서 하나만 찾은 vector 검색이 베크렐의 학교까지 바로 답할 수 있을까요?</li>
-            <li>“그래프 전체의 주제는 무엇인가”라는 질문도 마리 퀴리 한 명에서 시작하면 충분할까요?</li>
+            <li>Local search는 시작 node에서 정확히 N-hop BFS를 실행할까요?</li>
+            <li>Global search는 질문마다 graph의 모든 node와 edge를 다시 읽을까요?</li>
+            <li>Microsoft GraphRAG가 질문을 보고 local·global·DRIFT를 자동 선택할까요?</li>
           </ol>
           <p>
-            세 답은 모두 <strong>아니요</strong>입니다. 첫 질문은 2-hop만 걷고,
-            학교 질문은 한 hop을 더 이어야 하며, 전체 질문은 두 community summary를
-            모두 읽어야 합니다.
+            세 답은 모두 <strong>아니요</strong>입니다. v3.3.0의 local search는
+            entity를 시작점으로 여러 자료를 token 예산 안에 조립하고, global search는
+            미리 만든 community report를 map-reduce로 종합합니다. 검색 방식은 별도
+            API와 CLI method이므로 호출자가 선택합니다.
           </p>
         </div>
-        <GraphragCommunityAndMultihopSearchViz />
         <ContentBoundary article="graphrag-community-and-multihop-search" />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            <Link to="/cs/ai/knowledge-graph-construction#pipeline">앞 글</Link>이 만든
-            property graph를 GraphRAG는 두 방식으로 넓힙니다. 관련 entity를
-            community로 묶어 미리 요약한 뒤 전체 질문에 쓰고, entity 여러 개를
-            건너야 하는 질문은 edge를 순서대로 따라갑니다.
-          </p>
-          <p>
-            아래에서는 community 분할, local·global search의 비용, vector로 찾은
-            진입점에서 시작하는 graph traversal, multi-hop 실패 경계를 차례로 봅니다.
-          </p>
-        </div>
       </section>
 
-      <section id="community" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Community detection 은 관련 entity 를 묶고 LLM 이 요약합니다
-        </h2>
+      <section id="index" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">질문 전에 네 가지 상태를 준비합니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2 lg:grid-cols-4" aria-label="GraphRAG 검색 인덱스의 네 상태">
+          {[
+            ["Graph", "entity · relationship · source_id"],
+            ["Community report", "묶음별 LLM 요약 · level · rank"],
+            ["Entity embedding", "질문과 가까운 시작 entity 후보"],
+            ["Text unit mapping", "entity에서 원문 조각으로 돌아가는 연결"],
+          ].map(([title, detail], index) => (
+            <div key={title} className="bg-background p-4">
+              <p className="font-mono text-[10px] font-bold text-primary">{String(index + 1).padStart(2, "0")}</p>
+              <p className="mt-2 text-sm font-bold">{title}</p>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Graph community 는 서로 조밀하게 연결된 entity 묶음입니다. Community detection 은 그래프 전체를 이런 묶음 여러 개로 나눕니다.
-            Community summary 는 각 묶음이 무엇을 다루는지 LLM 이 미리 요약해 둔 결과입니다.
+            GraphRAG 검색은 property graph 하나만 읽지 않습니다. Indexing pipeline은
+            entity·relationship·claim을 만들고, community를 찾고, 여러 수준의 report를
+            생성하며, 검색에 쓸 text embedding을 저장합니다.
           </p>
           <p>
-            <Link to="/cs/ai/knowledge-graph-construction#property-graph">앞 글</Link>
-            의 그래프에 앙리 베크렐과 그의 소속 기관 에콜 폴리테크닉을 더합니다.
-            베크렐도 1903년 노벨 물리학상을 마리·피에르 퀴리와 함께 받았으므로,
-            Nobel Prize in Physics node 하나가 두 인물 묶음을 잇는 다리 edge 가
-            됩니다.
+            이 글은 앞 글의 <code>kg-v43</code>을 입력으로 삼습니다. C-A는 U-42·A-17·
+            tenant-a, C-B는 E401·모바일 앱을 담습니다. 질문과 가까운 entity를 찾는
+            embedding과 원문 d-17·d-22·d-31로 돌아가는 mapping도 같은 검색 인덱스에
+            속합니다.
           </p>
           <p>
-            그래프는 이제 node 7개, edge 6개입니다. 마리 퀴리 쪽 5개 node(마리 퀴리, 피에르 퀴리, 바르샤바, 노벨 물리학상, 파리 대학)가 edge 4개로 조밀하게
-            얽혀 있습니다. 베크렐 쪽 2개 node(베크렐, 에콜 폴리테크닉)는 edge 1개와 다리 edge 1개로 얇게만 이어져 있습니다.
-          </p>
-          <p>
-            Leiden·Louvain 같은 community detection 알고리즘은 이 조밀함의 차이를
-            보고 나눕니다. 다리 edge 하나만으로 두 묶음을 합쳐도 되는지는 아래
-            수식으로 직접 비교할 수 있습니다.
-          </p>
-        </div>
-        <ExplainedFormula
-          question="다리 edge 가 하나뿐인 두 묶음을 합치지 않는 것이 왜 더 나은 분할인가요?"
-          idea="Modularity Q 는 각 community 안의 edge 비율에서, 그 community 의 degree 합이 우연히 만들 것으로 기대되는 edge 비율을 뺀 값의 총합입니다. 조밀한 안쪽과 성긴 다리를 가진 분할일수록 Q 가 커집니다."
-          formula={String.raw`Q = \sum_{c} \left[ \frac{e_c}{m} - \left(\frac{a_c}{2m}\right)^2 \right]`}
-          annotatedFormula={String.raw`Q = \sum_{c} \left[ \underbrace{\frac{e_c}{m}}_{\text{community } c \text{ 안쪽 edge 비율}} - \underbrace{\left(\frac{a_c}{2m}\right)^2}_{\text{우연히 기대되는 비율}} \right]`}
-          operations={[
-            { expression: String.raw`\frac{e_c}{m}`, annotation: ["Community c 안에서만 끝나는 edge 수를", "그래프 전체 edge 수 m 으로 나눕니다"] },
-            { expression: String.raw`\frac{a_c}{2m}`, annotation: ["Community c 안 node 들의 degree 합을", "전체 degree 합(2m)으로 나눠 비중을 봅니다"] },
-            { expression: String.raw`\sum_{c}`, annotation: ["모든 community 에 대해 이 차이를 더해", "분할 전체의 점수 하나를 냅니다"] },
-          ]}
-          terms={[
-            { symbol: String.raw`e_c`, name: "안쪽 edge 수", description: "Community c 에 속한 node 끼리만 잇는 edge 의 개수입니다." },
-            { symbol: String.raw`a_c`, name: "Degree 합", description: "Community c 에 속한 node 들의 degree(연결된 edge 수)를 더한 값입니다." },
-            { symbol: String.raw`m`, name: "전체 edge 수", description: "그래프 전체의 edge 개수입니다." },
-            { symbol: String.raw`Q`, name: "Modularity", description: "분할이 우연보다 얼마나 조밀하게 안쪽에 몰려 있는지를 나타내는 점수입니다." },
-          ]}
-          assumptions={[
-            "Community detection 에서는 edge 의 방향을 지우고 무방향 그래프로 봅니다.",
-            "Q 는 두 분할을 비교하는 상대 점수이며 절대적인 좋고 나쁨의 기준값은 아닙니다.",
-            "실제 Leiden·Louvain 은 Q 를 국소적으로 높이는 node 이동을 반복해 근사합니다.",
-          ]}
-          interpretation="노벨 물리학상 node 를 퀴리 쪽 community 에 두면 e_A=4·a_A=9 로 Q≈0.208 이 나옵니다. 같은 node 를 베크렐 쪽으로 옮기면 양쪽 안쪽 edge 가 줄어 Q≈0.167 로 낮아집니다. 다리 edge 하나만으로 두 인물 묶음을 합치는 분할보다, 원래 조밀했던 쪽에 그 node 를 남기는 분할이 Q 가 더 큽니다."
-        />
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Community 가 정해지면 LLM 이 각 community 의 node·edge·property 를 읽어
-            요약문을 미리 만들어 둡니다. 퀴리 community 는 "마리·피에르 퀴리 부부의
-            출생·수상·교수직 승계"로, 베크렐 community 는 "앙리 베크렐과 소속
-            기관"으로 요약됩니다.
-          </p>
-          <p>
-            이 요약은 질문이 들어오기 전에 미리 계산해 두는 index 의 일부입니다.
-            다음 절의 global search 는 그래프 원본이 아니라 이 요약들을 읽습니다.
-          </p>
-        </div>
-      </section>
-
-      <section id="search" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Local search 와 global search 는 탐색 범위와 비용이 다릅니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Local search 는 질문과 관련된 entity 하나에서 시작해 정해진 hop 수 안쪽만 살핍니다. Global search 는 community summary 전체를
-            모아 그래프 전체에 걸친 답을 만듭니다. 살피는 범위가 다르니 비용도 다릅니다.
-          </p>
-        </div>
-        <div id="graph-traversal" className="scroll-mt-24">
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
-            <h3 className="scroll-mt-20 text-xl font-bold">
-              Graph traversal 은 local search 가 hop 으로 제한하는 걷기입니다
-            </h3>
-            <p>
-              Graph traversal 은 한 node 에서 시작해 edge 를 따라 이웃 node 로 옮겨 갑니다. 너비 우선(BFS)이 가까운 node 부터 훑는다면 깊이
-              우선(DFS)은 한 경로를 끝까지 따라가며 찾습니다.
-            </p>
-            <p>
-              Local search 는 이 traversal 을 hop 예산으로 제한합니다. "마리
-              퀴리가 받은 상을 누가 또 받았는가"라는 질문은 마리 퀴리에서 시작해
-              wonAward edge 를 한 번, 그 상을 받은 다른 사람으로 다시 한 번, 2-hop
-              만 걸으면 앙리 베크렐에 닿습니다.
-            </p>
-            <p>
-              이 예에서 local search 가 실제로 읽는 node 는 마리 퀴리, 노벨
-              물리학상, 앙리 베크렐 셋뿐입니다. Hop 예산을 넘는 에콜 폴리테크닉은
-              이번 질문에 필요 없으니 아예 방문하지 않습니다.
-            </p>
-          </div>
-        </div>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Global search 는 "이 그래프가 다루는 인물이 모두 몇 명이고 어떤 주제로 나뉘는가" 처럼 한 entity 에서 출발할 수 없는 질문에 씁니다. 어떤
-            community 부터 봐야 할지 알 수 없으니 모든 community summary 를 읽습니다.
-          </p>
-          <p>
-            GraphRAG 저자들은 원본 podcast 대화록 전체(약 1,014,611 token)를 읽는
-            대신 최상위 community summary(C0)만 읽으면 26,657 token, 원본의
-            2.6% 로 답할 수 있었다고 보고합니다. Summary 계층이 없으면 매 global
-            질문마다 원본 전체를 다시 읽어야 합니다.
-          </p>
-        </div>
-        <AlgorithmBlock
-          title="Global search: community summary → map → reduce"
-          input={["Q: 질문", "C: 고른 community level 의 summary 목록", "k: map 단계 chunk 하나의 token 예산"]}
-          steps={[
-            { code: "chunks = shuffle(C).split_into(k)", note: "Summary 순서에 따른 편향을 줄이려 무작위로 섞은 뒤 token 예산 k 로 chunk 를 나눕니다." },
-            { code: "for chunk in chunks: answers.append(LLM.map(Q, chunk))", note: "각 chunk 를 질문과 함께 LLM 에 넣어 중간 답변을 만들고, 그 답변에 0~100 helpfulness 점수를 함께 매기게 합니다." },
-            { code: "answers.sort(key = helpfulness, descending)", note: "점수가 높은 중간 답변부터 정렬해 관련 없는 답변을 뒤로 보냅니다." },
-            { code: "context = take_while(answers, budget)", note: "정렬된 답변을 앞에서부터 최종 context 예산이 찰 때까지 채웁니다." },
-            { code: "return LLM.reduce(Q, context)", note: "채운 context 로 최종 답변 하나를 생성합니다." },
-          ]}
-          output="Community summary 전체를 반영한 최종 답변"
-        />
-        <TermBreakdown
-          title="Local search 와 global search 의 비용 차이"
-          description="같은 그래프 위에서 무엇을 얼마나 읽는지가 다릅니다."
-          items={[
-            {
-              term: "탐색 범위",
-              description: "Local search 는 entity 하나에서 hop 예산만큼, global search 는 community summary 전체를 봅니다.",
-              example: "마리 퀴리 질문은 node 3개만, 전체 주제 질문은 community summary 2개 전부를 읽습니다.",
-              boundary: "그래프가 커지면 hop 예산은 그대로여도 community 수는 늘어 global search 비용이 더 빨리 늘어납니다.",
-            },
-            {
-              term: "비용 성장",
-              description: "Local search 비용은 hop 수·평균 fan-out 에, global search 비용은 community 개수에 비례합니다.",
-              example: "C0 summary 만 읽어도 원본 대비 2.6% token(저자 자기보고)이지만, 이는 여전히 community 수에 비례해 늘어납니다.",
-              boundary: "Map-reduce 는 community 개수가 늘 때 병렬로 처리해 응답 시간을 줄이는 것이지 총 token 비용을 줄이는 것은 아닙니다.",
-            },
-          ]}
-        />
-        <ProgressiveDetail
-          title="어떤 community level 을 읽어야 하나요?"
-          preview="GraphRAG 저자들은 계층 맨 위(C0)보다 한두 단계 아래(C2·C3)의 더 잘게 나뉜 community 를 읽을 때 comprehensiveness·diversity 지표가 더 높았다고 보고합니다."
-        >
-          <p>
-            Community detection 은 한 번에 끝나지 않고 큰 community 안에서 다시 작은 community 를 찾는 식으로 계층을 만듭니다. 맨 위 C0 는 가장
-            크게 묶은 소수의 community 이고 맨 아래로 갈수록 더 잘게 나뉩니다.
-          </p>
-          <p>
-            저자들은 podcast·news 두 corpus 에서 C2 나 C3 수준으로 답했을 때 비교 대상(요약 없는 map-reduce) 대비 comprehensiveness 승률이
-            더 높았다고 보고합니다. 너무 위 단계는 세부를 뭉개고 너무 아래 단계로 내려가면 token 비용이 커집니다.
-          </p>
-        </ProgressiveDetail>
-      </section>
-
-      <section id="hybrid" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Graph-vector hybrid retrieval 은 벡터로 진입점을 찾습니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            Local search 는 어디서 시작할지부터 정해야 합니다. Graph-vector hybrid retrieval 은 두 단계로 움직입니다. 질문 embedding 과
-            entity·relation description embedding 사이의 유사도로 시작 entity 후보를 찾고 그 지점에서 graph traversal 로 확장합니다.
-          </p>
-          <p>
-            "노벨 물리학상을 받은 화학자 부부는 누구인가"라는 질문은 벡터 검색으로 "마리 퀴리" node 를 진입점으로 찾고 그 다음은 벡터 유사도가 아니라
-            wonAward·succeededAt 같은 edge 를 따라 그래프를 traversal 합니다.
-          </p>
-          <p>
-            진입점을 못 찾으면 traversal 도 시작하지 못하므로, hybrid retrieval
-            의 첫 실패 지점은 대개 벡터 검색이 맞는 entity 를 후보에 못 넣는
-            경우입니다. 이 결합의 provenance·hop 예산 관리는{" "}
-            <Link to="/cs/ai/retrieval-ranking-funnel#retrieval">retrieval funnel 글</Link>
-            의 graph-structured retrieval 경계가 정본입니다.
-          </p>
-          <p>
-            현재 Microsoft GraphRAG의 DRIFT search는 이 결합을 반복형으로
-            확장합니다. 먼저 질문과 가까운 community report 상위 K개로 넓은
-            초안과 후속 질문을 만들고, 각 후속 질문은 local search로 entity와
-            관계를 더 찾습니다. 마지막에는 여러 경로의 답을 순위화해 합칩니다.
-          </p>
-          <p>
-            따라서 DRIFT를 쓰려면 community report만으로는 부족합니다. Report와
-            함께 text unit, entity description embedding이 있어야 후속 local
-            search가 움직입니다. 공식 CLI는 2026년 10월 6일 확인 기준으로
-            <code>local</code>·<code>global</code>·<code>drift</code>·
-            <code>basic</code> 방법을 구분합니다.
+            따라서 graph가 바뀌었는데 report와 embedding을 갱신하지 않으면, 저장된 관계는
+            최신인데 검색은 이전 상태를 보는 불일치가 생깁니다. 이 글에서는 이들을 하나의
+            설명용 index version으로 묶어 생각합니다.
           </p>
         </div>
         <div className="not-prose my-8">
           <CitationBlock
-            source="Microsoft GraphRAG — DRIFT Search 공식 문서"
-            citeKey={2}
-            href="https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md"
+            source="Microsoft GraphRAG v3.3.0 — Indexing overview"
+            citeKey={1}
+            href="https://github.com/microsoft/graphrag/blob/v3.3.0/docs/index/overview.md"
           >
-            Primer가 관련 community report를 읽어 초기 답과 후속 질문을 만들고,
-            후속 단계는 local search를 실행한 뒤 결과를 합치는 현재 DRIFT 절차의
-            근거입니다. 문서의 필수 데이터 표는 report·text unit·embedding의
-            역할도 구분합니다.
+            표준 indexing pipeline이 entity·relationship·claim 추출, community detection,
+            여러 수준의 community report 생성, text embedding 저장을 수행한다는 고정 버전 근거입니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="community" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">Community와 report는 서로 다른 상태입니다</h2>
+        <CommunityReportBuildViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            Community는 서로 조밀하게 연결된 entity 묶음입니다. Community report는 그
+            묶음의 node·edge·근거를 LLM이 읽고 만든 검색용 요약입니다. 분할은 graph
+            algorithm의 출력이고 report는 생성 모델의 출력입니다.
+          </p>
+          <p>
+            설명용 kg-v43에서 U-42·A-17·tenant-a를 C-A에, E401·모바일 앱을 C-B에 두면
+            각 묶음 안의 edge가 2개와 1개이고 <code>reported</code> 하나가 두 묶음을 잇습니다.
+            아래 modularity는 이 분할과 E401을 C-A로 옮긴 분할을 비교하는 산수입니다.
+          </p>
+        </div>
+        <ExplainedFormula
+          question="두 분할 중 어느 쪽이 안쪽 관계를 더 잘 모으나요?"
+          idea="Modularity는 community 안쪽 edge 비율에서 같은 degree 분포가 우연히 만들 것으로 기대되는 비율을 뺀 값을 모두 더합니다."
+          formula={String.raw`Q = \sum_c \left[\frac{l_c}{m} - \left(\frac{d_c}{2m}\right)^2\right]`}
+          annotatedFormula={String.raw`Q = \sum_c \left[\underbrace{\frac{l_c}{m}}_{\text{community 안쪽 edge 비율}} - \underbrace{\left(\frac{d_c}{2m}\right)^2}_{\text{같은 degree에서 기대되는 비율}}\right]`}
+          operations={[
+            { expression: String.raw`m=4`, annotation: ["kg-v43의 전체 edge는 4개입니다."] },
+            { expression: String.raw`C_A:(l_A,d_A)=(2,5)`, annotation: ["C-A 안쪽 edge는 2개이고 node degree 합은 5입니다."] },
+            { expression: String.raw`C_B:(l_B,d_B)=(1,3)`, annotation: ["C-B 안쪽 edge는 1개이고 node degree 합은 3입니다."] },
+            { expression: String.raw`Q=0.21875`, annotation: ["두 community의 차이를 더한 설명용 분할 점수입니다."] },
+          ]}
+          terms={[
+            { symbol: String.raw`l_c`, name: "안쪽 edge", description: "양 끝 node가 모두 community c 안에 있는 edge 수입니다." },
+            { symbol: String.raw`d_c`, name: "Degree 합", description: "community c에 속한 node의 degree를 모두 더한 값입니다." },
+            { symbol: String.raw`m`, name: "전체 edge", description: "비교하는 graph의 전체 edge 수입니다." },
+            { symbol: String.raw`Q`, name: "Modularity", description: "이 graph 안에서 두 분할을 상대 비교하는 점수입니다." },
+          ]}
+          assumptions={[
+            "설명용 계산에서는 edge 방향과 가중치를 제거한 무방향 graph로 봅니다.",
+            "Q는 서로 다른 분할을 비교하는 값이며 모든 graph에 통하는 절대 합격선이 아닙니다.",
+            "실제 Leiden 결과는 resolution, 가중치, graph 크기에 따라 달라집니다.",
+          ]}
+          interpretation="원래 분할은 Q=0.21875입니다. E401을 C-A로 옮겨 모바일 앱 하나가 떨어진 분할은 Q=-0.03125이므로, 이 작은 예에서는 원래 분할이 안쪽 관계를 더 잘 모읍니다."
+        />
+        <div className="not-prose my-8">
+          <CitationBlock
+            source="Traag, Waltman, van Eck — From Louvain to Leiden (2019)"
+            citeKey={2}
+            href="https://arxiv.org/abs/1810.08473"
+          >
+            Leiden이 Louvain의 잘못 연결된 community 문제를 다루고 연결된 community를
+            보장하도록 제안됐다는 원 논문 근거입니다. 위 5-node 산수는 이 논문의 실험값이 아닙니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="search-modes" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">질문의 범위가 검색 방식을 가릅니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px lg:grid-cols-3" aria-label="Local, global, DRIFT 검색 비교">
+          {[
+            ["Local", "특정 entity", "entity·관계·report·원문을 한 context로 조립"],
+            ["Global", "자료 전체", "선택 level의 report 전체를 map-reduce로 종합"],
+            ["DRIFT", "넓게 시작해 세부화", "상위 K report의 primer에서 후속 local 질문 반복"],
+          ].map(([name, scope, path]) => (
+            <section key={name} className="bg-background p-4">
+              <p className="font-mono text-xs font-bold text-primary">{name}</p>
+              <p className="mt-2 text-sm font-bold">{scope}</p>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{path}</p>
+            </section>
+          ))}
+        </div>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            “tenant-a 사용자가 보고한 오류”처럼 특정 대상을 묻는 q-882에는 local이 맞습니다.
+            “자료 전체가 무엇을 다루는가”라는 q-883에는 출발 entity가 없으므로 global이 맞습니다.
+            q-884처럼 넓은 설명에서 시작해 세부 연결을 파고들려면 DRIFT가 그 중간을 맡습니다.
+          </p>
+          <p>
+            이 분류는 설명을 위한 판단 기준이지 v3.3.0이 제공하는 자동 router가 아닙니다.
+            공식 CLI도 <code>local</code>·<code>global</code>·<code>drift</code>·
+            <code>basic</code>을 method로 구분합니다. 자동 선택이 필요하면 그 정책은 호출 계층이
+            별도로 소유해야 합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="local-search" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">Local은 답변 문맥을 조립합니다</h2>
+        <LocalSearchContextViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            q-882를 local search에 넣으면 먼저 질문 embedding과 entity description
+            embedding을 비교해 tenant-a와 U-42 같은 후보를 찾습니다. 이 후보가 community,
+            relationship, covariate, text unit을 가져오는 기준점입니다.
+          </p>
+          <p>
+            v3.3.0 <code>LocalSearchMixedContext.build_context</code>의 기본값은
+            <code>max_context_tokens=8000</code>, <code>text_unit_prop=0.5</code>,
+            <code>community_prop=0.25</code>입니다. 남은 25%는 entity·relationship·covariate
+            자료에 씁니다. 이는 설정 가능한 기본값이지 품질이 검증된 보편적 비율이 아닙니다.
+          </p>
+        </div>
+        <AlgorithmBlock
+          title="v3.3.0 local mixed context의 핵심 순서"
+          input={["query: q-882", "entity description vector store", "entities·relationships·reports·text units", "max_context_tokens: 8,000 (기본값)"]}
+          steps={[
+            { code: "# 질문과 가까운 시작 entity를 찾습니다.\nselected = map_query_to_entities(query, k=top_k)", note: "Entity description embedding을 비교합니다. 이때 후보에서 빠진 entity는 뒤 자료 수집의 시작점이 되지 못합니다." },
+            { code: "# 전체 예산의 25%로 연결된 community report를 채웁니다.\nreports = build_community_context(selected, tokens=2_000)", note: "기본 community_prop=0.25를 8,000에 적용한 설명입니다." },
+            { code: "# 남은 25%로 entity·relationship·covariate를 채웁니다.\nlocal = build_local_context(selected, tokens=2_000)", note: "Relationship은 선택 entity와 연결된 record를 순위화해 top-k와 예산 안에 넣습니다." },
+            { code: "# 전체 예산의 50%로 연결 원문 조각을 채웁니다.\nsources = build_text_unit_context(selected, tokens=4_000)", note: "Entity에 연결된 text unit을 entity 순서와 relationship 수로 정렬합니다." },
+            { code: "# 네 자료를 한 문맥으로 합쳐 답변 모델에 전달합니다.\ncontext = reports + local + sources\nreturn LLM(query, context)", note: "최종 산출물은 BFS의 마지막 node가 아니라 생성 모델이 읽는 context와 답변입니다." },
+          ]}
+          output="q-882의 답변 문맥과 ‘모바일 앱’이라는 생성 답변"
+        />
+        <div className="not-prose my-8">
+          <CitationBlock
+            source="Microsoft GraphRAG v3.3.0 — LocalSearchMixedContext"
+            citeKey={3}
+            href="https://github.com/microsoft/graphrag/blob/v3.3.0/packages/graphrag/graphrag/query/structured_search/local_search/mixed_context.py"
+          >
+            질문→entity mapping, community/local/text-unit 예산 분할, relationship와 원문 조각을
+            context에 넣는 실제 구현의 고정 버전 근거입니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="global-and-drift" className="scroll-mt-20">
+        <h2 className="mb-6 text-2xl font-bold">Global과 DRIFT는 넓히는 방식이 다릅니다</h2>
+        <GlobalAndDriftViz />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p className="text-lg leading-8">
+            Global search는 선택한 community level의 report를 여러 batch로 나눠 각 batch에서
+            점수 있는 중간 point를 만듭니다. 중요한 point만 최종 예산까지 채운 뒤 reduce
+            모델이 자료 전체의 답으로 합칩니다.
+          </p>
+          <p>
+            DRIFT는 모든 report를 같은 방식으로 map-reduce하지 않습니다. 질문과 가까운 report
+            상위 K개로 primer를 만들고, 여기서 나온 후속 질문마다 local search를 실행합니다.
+            실행 중인 질문·답·다음 action은 query state가 추적합니다.
+          </p>
+          <p>
+            Map 단계를 병렬화하면 응답 시간을 줄일 수 있지만 report를 읽고 중간 답을 만드는
+            총 작업량이 사라지는 것은 아닙니다. 반대로 DRIFT는 탐색 폭과 깊이를 제한하지만
+            여러 local search가 이어질 수 있습니다.
+          </p>
+        </div>
+        <TermBreakdown
+          title="세 방식이 읽는 상태"
+          description="같은 kg-v43 검색 인덱스를 사용해도 질문 시점의 자료 선택은 다릅니다."
+          items={[
+            { term: "Local", description: "질문과 가까운 entity를 기준으로 graph record·report·원문을 모읍니다.", example: "q-882 → tenant-a·U-42 → d-31·d-22 → 모바일 앱", boundary: "시작 entity가 후보에서 빠지거나 token 예산에서 관계가 잘리면 경로가 끊깁니다." },
+            { term: "Global", description: "선택한 community level의 report 전체를 map-reduce합니다.", example: "q-883 → C-A·C-B report → 점수 있는 point → 전체 요약", boundary: "낮은 level의 자세한 report는 정보가 많지만 token과 LLM 호출량도 늘어납니다." },
+            { term: "DRIFT", description: "관련 report로 primer를 만든 뒤 후속 질문을 local search로 파고듭니다.", example: "q-884 → 상위 report → 계정·오류 후속 질문 → local 결과 결합", boundary: "반복 깊이와 branch가 늘면 비용과 지연이 커지고, query state를 추적해야 합니다." },
+          ]}
+        />
+        <div className="not-prose my-8 grid gap-4 lg:grid-cols-2">
+          <CitationBlock
+            source="Microsoft GraphRAG v3.3.0 — Global search"
+            citeKey={4}
+            href="https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/global_search.md"
+          >
+            Community report batch에서 점수 있는 중간 응답을 만들고, 중요 point를 모아 최종 답으로
+            reduce하는 공식 경로의 근거입니다.
+          </CitationBlock>
+          <CitationBlock
+            source="Microsoft GraphRAG v3.3.0 — DRIFT search"
+            citeKey={5}
+            href="https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/drift_search.md"
+          >
+            상위 K community report의 primer, 후속 질문별 local search, 관련도 순 output hierarchy로
+            이어지는 세 단계의 근거입니다.
           </CitationBlock>
         </div>
       </section>
 
       <section id="multihop" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Multi-hop reasoning 은 entity 여러 개를 이어야 답이 나옵니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">Multi-hop 답변과 graph traversal을 구분합니다</h2>
+        <MultiHopBoundaryViz />
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            Multi-hop reasoning 은 entity A 에서 B, B 에서 C 로 이어지는 관계를 차례로 밟아야 답이 나오는 질문입니다. 한 문서 안에 A 와 C 가 함께
-            언급된 적이 없어도 A-B, B-C 관계가 각각 다른 곳에 있으면 그래프는 둘을 잇습니다.
+            q-882는 tenant-a←U-42→E401→모바일 앱의 세 관계를 이어야 답합니다. Local
+            context에 이 관계와 원문이 들어오면 LLM은 “모바일 앱”을 합성할 수 있습니다.
+            이것이 이 글에서 말하는 multi-hop 답변입니다.
           </p>
           <p>
-            "마리 퀴리와 같은 상을 받은 사람은 어느 학교에서 공부했는가"를
-            예로 듭니다. 그래프는 마리 퀴리→wonAward→노벨 물리학상→wonAward
-            (역방향)→앙리 베크렐→studiedAt→에콜 폴리테크닉, 3-hop 으로 답합니다.
+            그러나 v3.3.0의 기본 local API에는 <code>max_hops=3</code>처럼 BFS 깊이를 강제하는
+            공개 인자가 없습니다. Relationship context는 선택 entity와 연결된 관계를 rank와
+            top-k, token 예산에 맞춰 넣습니다. 따라서 “정확히 세 hop을 모두 방문했다”고 설명하면
+            실제 구현보다 강한 보장을 만들어 냅니다.
           </p>
           <p>
-            벡터 검색만으로는 이 질문에 답할 chunk 가 없을 수 있습니다. "마리 퀴리"를 다루는 chunk 와 "에콜 폴리테크닉"을 다루는 chunk 는 원문에서 함께 등장하지 않아
-            유사도가 낮고 질문 embedding 은 "마리 퀴리" chunk 쪽으로만 끌립니다.
-          </p>
-          <p>
-            그 chunk 안에는 베크렐의 학교 정보가 없으므로 답은 나오지 않습니다. 그래프는 텍스트 유사도가 아니라 edge 로 이어져 있어 중간의 베크렐과 노벨 물리학상을 실제로 거쳐
-            에콜 폴리테크닉까지 닿습니다.
+            경로를 빠짐없이 열거하거나 edge 방향과 최대 깊이를 강제해야 한다면 graph query가
+            traversal 결과를 먼저 만들어야 합니다. 그 검증된 경로와 source_id를 RAG context에
+            넣으면, 결정적 탐색과 생성 답변의 책임을 분리할 수 있습니다.
           </p>
         </div>
       </section>
 
       <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Microsoft GraphRAG 논문이 이 글의 근거입니다
-        </h2>
+        <h2 className="mb-6 text-2xl font-bold">논문과 현재 구현의 범위를 나눠 봅니다</h2>
+        <div className="not-prose grid gap-px bg-border p-px lg:grid-cols-3" aria-label="GraphRAG 근거의 세 층">
+          {[
+            ["2024 논문", "Entity graph·hierarchical community report·global map-reduce와 두 corpus 실험"],
+            ["v3.3.0 문서", "Local·global·DRIFT·basic이라는 현재 query method와 입력 상태"],
+            ["v3.3.0 소스", "Entity mapping과 8,000·50%·25% local context 기본 인자"],
+          ].map(([label, detail]) => (
+            <div key={label} className="bg-background p-4">
+              <p className="text-xs font-bold text-primary">{label}</p>
+              <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{detail}</p>
+            </div>
+          ))}
+        </div>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            Community detection 에 Leiden 알고리즘을 쓰고 그 결과를 계층으로 나눠 community summary 를 만들고, local search 와 global
-            search 를 구분하는 절차는 모두 Microsoft 의 GraphRAG 논문(arXiv 2404.16130)에서 확인했습니다.
+          <p className="text-lg leading-8">
+            GraphRAG 논문은 약 100만 token 규모의 podcast 대화록과 약 170만 token 규모의
+            news corpus에서 global sensemaking 질문을 평가했습니다. 저자들이 보고한
+            comprehensiveness·diversity와 token 비율은 그 데이터와 비교 조건에만 귀속됩니다.
           </p>
           <p>
-            Global search 의 map(중간 답변과 helpfulness 점수)과 reduce(정렬 후
-            context 채우기) 절차, community level 별 성능 비교, 원본 대비 token
-            비율(2.6%)도 이 논문의 실험(podcast·news corpus)입니다.
-          </p>
-          <p>
-            DRIFT의 primer·후속 local search·최종 결합 절차와 필요한 인덱스는
-            Microsoft GraphRAG의 현재 공식 문서에서 별도로 확인했습니다. 이는
-            2024년 논문의 실험 수치가 아니라 현재 구현의 검색 경로 설명입니다.
-          </p>
-          <p>
-            이 글의 그래프 예(node 7개, edge 6개, Q≈0.208)는 modularity 개념을
-            보이기 위해 만든 산수이며 GraphRAG 논문이 실제로 다룬 그래프가
-            아닙니다. Multi-hop 예의 3-hop 경로도 마찬가지로 예시용 구성입니다.
+            이 글의 kg-v43, q-882~884, Q=0.21875, point 점수 83·91은 메커니즘을 추적하기
+            위한 설명용 값입니다. 논문이나 공식 프로젝트가 측정한 수치가 아닙니다. 현재 구현
+            사실은 2026년 10월 8일 공개된 v3.3.0 tag에 고정했습니다.
           </p>
         </div>
         <div id="paper-graphrag" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Edge et al. — From Local to Global: A Graph RAG Approach to Query-Focused Summarization (arXiv 2404.16130)"
-            citeKey={1}
+            source="Edge et al. — From Local to Global: A Graph RAG Approach to Query-Focused Summarization"
+            citeKey={6}
             href="https://arxiv.org/abs/2404.16130"
           >
-            LLM 으로 뽑은 entity 그래프에 Leiden community detection 을 계층으로
-            적용해 community summary 를 미리 만들고, 질문 시점에는 그 summary 를
-            map-reduce 로 종합하는 global search 와 entity 중심의 local search 를
-            구분해 제안합니다. Podcast·news 두 corpus 의 sensemaking 질문에서
-            비교 대상(요약 없는 map-reduce, naive vector RAG) 대비
-            comprehensiveness·diversity 승률 우위를 저자가 보고했습니다.
+            Entity graph와 community summary를 미리 만들고, community별 부분 답을 최종 답으로
+            종합하는 global query-focused summarization의 원 논문 근거입니다.
           </CitationBlock>
         </div>
         <p className="prose prose-neutral max-w-none dark:prose-invert">
-          이전 글:{" "}
-          <Link to="/cs/ai/knowledge-graph-construction#overview">
-            Knowledge Graph 구축: property graph·schema·extraction·dedup
-          </Link>
+          이 글에서 확인한 핵심은 간단합니다. GraphRAG는 graph를 만들고 끝나는 기술이 아니라,
+          질문 전에 만든 여러 검색 상태를 local·global·DRIFT가 서로 다른 방식으로 읽는
+          query engine입니다.
         </p>
+        <GraphRagSearchReturn />
       </section>
     </div>
   );
