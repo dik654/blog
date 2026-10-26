@@ -11713,13 +11713,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "lexical-retrieval-bm25-inverted-index": {
-    title: "Lexical retrieval: TF-IDF·BM25·inverted index 글이 소유하는 범위",
+    title: "Lexical retrieval: posting list에서 BM25 순위까지 글이 소유하는 범위",
     owns: [
-      "Document frequency(DF)의 정의 — term frequency와 다른 축이며 IDF·BM25 idf 항의 공통 기반",
-      "Bag of words 표현과 TF·IDF·TF-IDF 가중치의 정의와 3문서 toy corpus 계산",
-      "BM25 의 term frequency saturation·document length normalization 조절 항과 그 수치 효과(k1=1.2, b=0.75)",
-      "Inverted index·posting list 자료구조와 AND/OR candidate 계산",
-      "Lexical matching(exact-term retrieval)과 semantic retrieval 의 vocabulary mismatch 경계, sparse retrieval 이라는 이름의 위치",
+      "q-18 한 건을 analyzer 출력→posting list→후보 합집합→BM25 순위까지 추적하는 전체 경로",
+      "Term frequency와 document frequency의 차이, 같은 3문서 corpus에서의 TF-IDF 계산",
+      "Lucene 10.5.2 BM25 식의 term frequency saturation·document length normalization과 손계산",
+      "Inverted index·posting list 자료구조와 OR 후보 집합 계산",
+      "공통 token이 없을 때 발생하는 vocabulary mismatch와 semantic retrieval의 보완 경계",
     ],
     reuses: [
       { label: "BM25 전체 이름과 exact lexical match 후보 정렬", href: "/cs/ai/retrieval-ranking-funnel#retrieval" },
@@ -11729,8 +11729,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "primary-source", rule: "BM25 식과 saturation·길이 정규화 결합은 Robertson·Zaragoza 2009 survey 의 서술 범위로만 쓴다." },
-      { kind: "primary-source", rule: "IDF 의 log(1+...) 변형과 k1·b 기본값은 Lucene BM25Similarity 공식 문서에서 읽은 범위로만 쓰고 읽은 시점을 밝힌다." },
-      { kind: "standard", rule: "toy corpus(apple·banana·cherry·durian)와 saturation 예(N=1,000, df=100, avgdl=50)는 계산을 보이기 위한 예시이며 실제 corpus 측정이 아니라고 밝힌다." },
+      { kind: "primary-source", rule: "IDF, 평균 길이, k1·b 기본값과 점수 코드는 Lucene 10.5.2 Javadoc·릴리스 태그 소스에서 읽은 범위로만 쓰고 읽은 시점을 밝힌다." },
+      { kind: "project-claim", rule: "q-18, D1~D3의 token·길이·0.5539와 0.3547은 계산을 재현하기 위한 설명용 가정이며 실제 corpus 측정이 아니라고 밝힌다." },
     ],
   },
   "graphrag-community-and-multihop-search": {

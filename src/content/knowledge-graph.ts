@@ -20405,7 +20405,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Bag of Words", "BoW", "Term Frequency", "TF", "Inverse Document Frequency", "IDF", "TF-IDF"],
     definition:
       "문서를 단어 순서 없이 등장 횟수(term frequency)로만 표현하는 bag of words 위에서, 그 단어가 나온 문서 수가 많을수록 값을 줄이는 inverse document frequency 를 곱해 흔한 단어를 깎고 희귀한 단어를 키우는 가중치입니다.",
-    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#bag-of-words-tf-idf",
+    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#tf-idf",
   },
   "bm25-saturation-and-length-norm": {
     id: "bm25-saturation-and-length-norm",
@@ -20435,7 +20435,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Lexical Matching", "Exact-Term Retrieval", "Vocabulary Mismatch", "Sparse Retrieval"],
     definition:
       "Query 와 문서가 같은 term 문자열을 공유하는지로 관련성을 매기는 lexical matching(=exact-term retrieval, sparse retrieval)과, 동의어처럼 term 은 다르지만 의미가 같은 경우(vocabulary mismatch)를 embedding 거리로 메우는 semantic retrieval 을 가르는 경계입니다.",
-    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#lexical-vs-semantic-matching",
+    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#failure-boundary",
   },
   "community-detection-and-summary": {
     id: "community-detection-and-summary",
@@ -21885,7 +21885,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Document Frequency", "DF"],
     definition:
       "코퍼스 전체에서 어떤 term이 등장하는 문서의 개수로, 한 문서 안에서 몇 번 나왔는지를 세는 term frequency와 달리 몇 개의 서로 다른 문서에 걸쳐 나타나는지만 세며, TF-IDF의 inverse document frequency와 BM25의 idf 항이 모두 이 값 위에서 계산됩니다.",
-    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#bag-of-words-tf-idf",
+    canonicalHref: "/cs/ai/lexical-retrieval-bm25-inverted-index#analyzer-output",
   },
   "llm-mid-training-stage": {
     id: "llm-mid-training-stage",

@@ -1,228 +1,350 @@
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import { motion } from "framer-motion";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 한 mechanism: 문서가 term 으로 분해되어 inverted index 로 바뀌고, query 가
- * posting list 를 타고 candidate 를 좁힌 뒤 BM25 score 로 정렬되는 과정.
- * 장면 = 색인·조회 파이프라인의 한 단계. 3문서 toy corpus 는 본문과 동일합니다.
- * stage 높이는 고정, control row 는 아래 고정 row. SVG viewBox 고정.
- */
 const SCENES = [
-  "문서 3개 · term 으로 분해",
-  "Inverted index · term → posting list",
-  "Query {banana, durian} · candidate 좁히기",
-  "BM25 score 로 정렬",
+  "분석 결과",
+  "posting list",
+  "후보 집합",
+  "BM25 입력",
+  "순위 확정",
 ] as const;
 
 const NOTES = [
-  "D1=apple apple banana, D2=apple cherry cherry, D3=apple banana durian. 색인은 각 문서를 bag of words 로 먼저 분해합니다.",
-  "Term 마다 그 term 이 나오는 문서 id 목록(posting list)을 만듭니다. Apple 은 세 문서 전부, banana 는 D1·D3, cherry 는 D2, durian 은 D3 에만 있습니다.",
-  "Query term banana·durian 의 posting list 를 모으면(union) candidate 는 D1·D3 이고, D2 는 후보에서 빠집니다. 전체 3문서가 아니라 candidate 2개만 봅니다.",
-  "Candidate 마다 실제 포함된 term 의 BM25 기여를 더합니다. D3 은 banana·durian 둘 다 있어 D1(banana 만)보다 점수가 높아 먼저 반환됩니다.",
+  "검색어 q-18과 문서 세 개를 같은 analyzer로 처리했다고 가정합니다. 아래의 한국어 단어는 원문이 아니라 analyzer가 내놓은 token입니다.",
+  "각 token에서 그 token을 가진 문서로 방향을 뒤집습니다. 충전 posting list에는 D1의 빈도 2와 D3의 빈도 1이 함께 저장됩니다.",
+  "q-18의 충전·오류 posting list를 합치면 후보는 D1과 D3입니다. D2는 어느 목록에도 없어서 점수 계산 전에 빠집니다.",
+  "후보마다 term frequency, 문서 길이, document frequency를 꺼냅니다. 두 query term은 문서 세 개 중 두 개에 있으므로 IDF가 모두 0.4700입니다.",
+  "Lucene 10.5.2 식으로 계산하면 D1은 0.5539, D3은 0.3547입니다. D1은 더 짧고 충전이 두 번 나와 먼저 반환됩니다.",
 ] as const;
 
-const DOCS = [
-  { id: "D1", x: 70, cy: 44, terms: ["apple×2", "banana×1"] },
-  { id: "D2", x: 220, cy: 44, terms: ["apple×1", "cherry×2"] },
-  { id: "D3", x: 370, cy: 44, terms: ["apple×1", "banana×1", "durian×1"] },
+const DOCUMENTS = [
+  { id: "D1", length: 3, tokens: ["충전", "충전", "오류"] },
+  { id: "D2", length: 3, tokens: ["배터리", "교체", "안내"] },
+  { id: "D3", length: 6, tokens: ["충전", "오류", "케이블", "어댑터", "점검", "절차"] },
 ] as const;
 
-const TERMS = [
-  { id: "apple", x: 60, cy: 150, docs: ["D1", "D2", "D3"] },
-  { id: "banana", x: 170, cy: 150, docs: ["D1", "D3"] },
-  { id: "cherry", x: 280, cy: 150, docs: ["D2"] },
-  { id: "durian", x: 380, cy: 150, docs: ["D3"] },
+const POSTINGS = [
+  { term: "충전", docs: ["D1 · tf 2", "D3 · tf 1"] },
+  { term: "오류", docs: ["D1 · tf 1", "D3 · tf 1"] },
 ] as const;
 
-const QUERY_TERMS = ["banana", "durian"];
-const CANDIDATES = ["D1", "D3"];
+const CANDIDATES = [
+  { id: "D1", length: 3, termFrequency: "충전 2 · 오류 1", score: 0.5539 },
+  { id: "D3", length: 6, termFrequency: "충전 1 · 오류 1", score: 0.3547 },
+] as const;
 
-function docX(id: string) {
-  return DOCS.find((d) => d.id === id)?.x ?? 0;
+function ReducedSceneList() {
+  return (
+    <ol className="mt-4 divide-y divide-border border-y border-border text-sm leading-6">
+      {SCENES.map((label, index) => (
+        <li key={label} className="grid gap-1 py-3 sm:grid-cols-[12rem_minmax(0,1fr)]">
+          <strong>{index + 1}. {label}</strong>
+          <span className="text-muted-foreground">{NOTES[index]}</span>
+        </li>
+      ))}
+    </ol>
+  );
 }
 
-const HIT_LABEL = [
-  "색인 대상 3문서",
-  "term 4개 · posting list 4개",
-  "candidate 2 / 전체 3",
-  "D3 ≈ 3.6 > D1 ≈ 2.3",
-] as const;
+function FlowArrow({ active, label }: { active: boolean; label: string }) {
+  return (
+    <div className="flex min-h-11 items-center justify-center gap-2 py-1 lg:flex-col lg:px-1 lg:py-0" aria-hidden="true">
+      <span className={`h-px w-9 transition-colors lg:h-9 lg:w-px ${active ? "bg-primary" : "bg-border"}`} />
+      <span className={`text-[9px] font-bold transition-colors ${active ? "text-primary" : "text-muted-foreground/55"}`}>{label}</span>
+      <span className={`text-sm transition-colors ${active ? "text-primary" : "text-muted-foreground/40"}`}>→</span>
+    </div>
+  );
+}
 
-const SUB_LABEL = [
-  "bag of words 추출",
-  "apple:[D1,D2,D3] 등",
-  "union(banana, durian)",
-  "BM25 score 내림차순",
-] as const;
+function MobileScene({ scene }: { scene: number }) {
+  if (scene === 0) {
+    return (
+      <section className="border border-border p-3" aria-label="모바일 분석 결과">
+        <p className="text-[10px] font-black text-muted-foreground">문서 → token</p>
+        <div className="mt-3 space-y-2">
+          {DOCUMENTS.map((doc) => (
+            <div key={doc.id} className="border border-border p-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <strong className="font-mono text-xs">{doc.id}</strong>
+                <span className="text-[10px] text-muted-foreground">길이 {doc.length}</span>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {doc.tokens.map((token, index) => (
+                  <span key={`${doc.id}-mobile-${token}-${index}`} className="border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                    {token}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (scene === 1) {
+    return (
+      <section className="border border-border p-4" aria-label="모바일 posting list">
+        <p className="text-[10px] font-black text-muted-foreground">term → posting list</p>
+        <div className="mt-4 space-y-4">
+          {POSTINGS.map((posting) => (
+            <div key={posting.term} className="border-l-2 border-primary pl-3">
+              <strong className="font-mono text-sm">{posting.term}</strong>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {posting.docs.map((doc) => <span key={doc} className="border border-border px-2 py-1 font-mono text-xs">{doc}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (scene === 2) {
+    return (
+      <section className="border border-border p-4" aria-label="모바일 후보 집합">
+        <p className="text-[10px] font-black text-muted-foreground">posting list 합집합</p>
+        <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
+          <span className="border border-border px-2 py-3 font-mono text-xs">충전 · D1,D3</span>
+          <span aria-hidden="true" className="text-primary">∪</span>
+          <span className="border border-border px-2 py-3 font-mono text-xs">오류 · D1,D3</span>
+        </div>
+        <p className="mt-4 border-l-2 border-primary pl-3 text-base font-black">candidate = &#123;D1, D3&#125;</p>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">D2는 어느 posting list에도 없어 채점 전에 빠집니다.</p>
+      </section>
+    );
+  }
+
+  if (scene === 3) {
+    return (
+      <section className="border border-border p-4" aria-label="모바일 BM25 입력">
+        <p className="text-[10px] font-black text-muted-foreground">두 후보에 넣을 통계</p>
+        <div className="mt-4 grid grid-cols-2 gap-px bg-border p-px font-mono text-xs">
+          {["N = 3", "avgdl = 4", "df(충전) = 2", "df(오류) = 2", "D1 · tf 2+1 · len 3", "D3 · tf 1+1 · len 6"].map((value) => (
+            <span key={value} className="bg-background px-2 py-3">{value}</span>
+          ))}
+        </div>
+        <p className="mt-4 font-mono text-xs font-bold text-primary">idf = ln(1 + 1.5 / 2.5) = 0.4700</p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="border border-border p-4" aria-label="모바일 BM25 순위">
+      <p className="text-[10px] font-black text-muted-foreground">candidate → BM25 순위</p>
+      <div className="mt-4 space-y-3">
+        {CANDIDATES.map((candidate, index) => (
+          <div key={candidate.id} className={`border p-3 ${index === 0 ? "border-primary bg-primary/[0.06]" : "border-border"}`}>
+            <div className="flex items-center justify-between gap-2">
+              <strong className="font-mono text-sm">{index + 1}위 · {candidate.id}</strong>
+              <span className="font-mono text-base font-black text-primary">{candidate.score.toFixed(4)}</span>
+            </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">{candidate.termFrequency} · 길이 {candidate.length}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 border-l-2 border-primary pl-3 text-sm font-bold leading-6">D1은 D3보다 짧고 “충전”이 한 번 더 나와 먼저 반환됩니다.</p>
+    </section>
+  );
+}
+
+function QueryTrace({ scene }: { scene: number }) {
+  return (
+    <div className="min-w-0">
+      <div className="grid gap-2 border-y border-border py-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[10px] font-black text-primary">q-18</span>
+          <strong className="break-keep text-sm">“충전 오류”</strong>
+        </div>
+        <div className="flex min-w-0 flex-wrap items-center gap-2 sm:justify-end">
+          <span className="text-[10px] font-bold text-muted-foreground">analyzer 출력</span>
+          {["충전", "오류"].map((term) => (
+            <motion.span
+              key={term}
+              animate={{
+                backgroundColor: scene >= 1 ? "hsl(var(--primary) / 0.10)" : "hsl(var(--muted) / 0.55)",
+                borderColor: scene >= 1 ? "hsl(var(--primary) / 0.7)" : "hsl(var(--border))",
+              }}
+              transition={{ duration: 0.25 }}
+              className="border px-2 py-1 font-mono text-xs font-bold"
+            >
+              {term}
+            </motion.span>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 lg:hidden">
+        <MobileScene scene={scene} />
+      </div>
+
+      <div className="mt-5 hidden min-w-0 items-stretch gap-0 lg:grid lg:grid-cols-[minmax(0,1.05fr)_3.25rem_minmax(0,.9fr)_3.25rem_minmax(0,1fr)]">
+        <section className="min-w-0 border border-border p-3" aria-label="분석된 문서">
+          <p className="text-[10px] font-black text-muted-foreground">문서 → token</p>
+          <div className="mt-3 space-y-2">
+            {DOCUMENTS.map((doc) => {
+              const candidate = doc.id !== "D2";
+              return (
+                <motion.div
+                  key={doc.id}
+                  animate={{
+                    opacity: scene >= 2 && !candidate ? 0.38 : 1,
+                    borderColor: scene >= 2 && candidate ? "hsl(var(--primary) / 0.55)" : "hsl(var(--border))",
+                  }}
+                  transition={{ duration: 0.25 }}
+                  className="border p-2.5"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <strong className="font-mono text-xs">{doc.id}</strong>
+                    <span className="text-[10px] text-muted-foreground">길이 {doc.length}</span>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {doc.tokens.map((token, index) => {
+                      const matched = token === "충전" || token === "오류";
+                      return (
+                        <span
+                          key={`${doc.id}-${token}-${index}`}
+                          className={`border px-1.5 py-0.5 font-mono text-[10px] ${scene >= 1 && matched ? "border-primary/60 bg-primary/[0.08] text-foreground" : "border-border text-muted-foreground"}`}
+                        >
+                          {token}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+
+        <FlowArrow active={scene >= 1} label="색인" />
+
+        <section className="min-w-0 border border-border p-3" aria-label="query term의 posting list">
+          <p className="text-[10px] font-black text-muted-foreground">term → posting list</p>
+          <div className="mt-3 space-y-3">
+            {POSTINGS.map((posting, postingIndex) => (
+              <motion.div
+                key={posting.term}
+                animate={{
+                  opacity: scene >= 1 ? 1 : 0.3,
+                  borderColor: scene >= 2 ? "hsl(var(--primary) / 0.65)" : "hsl(var(--border))",
+                }}
+                transition={{ duration: 0.25, delay: postingIndex * 0.08 }}
+                className="border-l-2 pl-3"
+              >
+                <strong className="font-mono text-xs">{posting.term}</strong>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {posting.docs.map((doc) => (
+                    <span key={doc} className="border border-border bg-muted/20 px-2 py-1 font-mono text-[10px]">{doc}</span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <motion.p
+            animate={{ opacity: scene >= 3 ? 1 : 0.3 }}
+            className="mt-5 border-t border-border pt-3 font-mono text-[10px] leading-5 text-muted-foreground"
+          >
+            N=3 · avgdl=4<br />df(충전)=2 · df(오류)=2<br />idf=ln(1+1.5/2.5)=0.4700
+          </motion.p>
+        </section>
+
+        <FlowArrow active={scene >= 2} label="합집합" />
+
+        <section className="min-w-0 border border-border p-3" aria-label="후보와 BM25 점수">
+          <p className="text-[10px] font-black text-muted-foreground">candidate → BM25 순위</p>
+          <div className="mt-3 space-y-3">
+            {CANDIDATES.map((candidate, index) => {
+              const winner = scene >= 4 && index === 0;
+              return (
+                <motion.div
+                  key={candidate.id}
+                  animate={{
+                    opacity: scene >= 2 ? 1 : 0.28,
+                    borderColor: winner ? "hsl(var(--primary))" : "hsl(var(--border))",
+                    backgroundColor: winner ? "hsl(var(--primary) / 0.07)" : "hsl(var(--background))",
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="border p-3"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <strong className="font-mono text-sm">{index + 1}위 · {candidate.id}</strong>
+                    <span className={`font-mono text-sm font-black ${scene >= 4 ? "text-primary" : "text-muted-foreground/35"}`}>
+                      {scene >= 4 ? candidate.score.toFixed(4) : "—"}
+                    </span>
+                  </div>
+                  <p className="mt-2 break-keep text-[10px] leading-5 text-muted-foreground">{candidate.termFrequency} · 길이 {candidate.length}</p>
+                  <div className="mt-2 h-1.5 bg-muted/50" aria-hidden="true">
+                    <motion.div
+                      initial={false}
+                      animate={{ width: scene >= 4 ? `${candidate.score * 100}%` : "0%" }}
+                      transition={{ duration: 0.55, delay: index * 0.15 }}
+                      className="h-full bg-primary"
+                    />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+          <motion.p
+            animate={{ opacity: scene >= 4 ? 1 : 0.28 }}
+            className="mt-4 border-l-2 border-primary pl-3 text-xs font-bold leading-5"
+          >
+            D1은 짧고 “충전”이 두 번 나와 D3보다 앞섭니다.
+          </motion.p>
+        </section>
+      </div>
+    </div>
+  );
+}
 
 export default function LexicalRetrievalBm25InvertedIndexViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3200);
+  const scenes = useAnimatedScenes(SCENES.length, 6500, { loop: false, autoPlay: false });
   const scene = scenes.active;
+
+  if (scenes.reducedMotion) {
+    return (
+      <VizFrame
+        eyebrow="q-18 검색 추적"
+        title="같은 단어를 가진 문서만 모아 BM25로 순서를 정합니다"
+        description="분석된 token에서 posting list를 열고, 후보를 합친 뒤, 같은 통계로 두 문서의 점수를 계산합니다."
+      >
+        <ReducedSceneList />
+      </VizFrame>
+    );
+  }
 
   return (
     <VizFrame
-      eyebrow="Inverted Index · BM25"
-      title="문서는 term 으로, term 은 posting list 로, query 는 candidate 로 좁혀집니다"
-      description="위쪽 3개 상자는 문서, 아래쪽 4개 상자는 term 입니다. 노란 선은 이번 장면에서 살아있는 연결, 회색은 있지만 이번엔 쓰지 않는 연결입니다."
-      note="3문서 toy corpus 는 본문과 동일한 예시이며 실제 코퍼스 규모의 측정이 아닙니다."
+      eyebrow="q-18 검색 추적"
+      title="같은 단어를 가진 문서만 모아 BM25로 순서를 정합니다"
+      description="문서 세 개와 검색어 하나를 끝까지 고정했습니다. 장면을 직접 넘기거나 한 번 재생해 후보가 줄고 점수가 채워지는 순서를 따라가세요."
+      note="설명용 가정 · analyzer 출력 3문서 · Lucene 10.5.2 BM25 기본값 k1=1.2, b=0.75"
     >
       <div
+        id={scenes.playbackId}
         data-viz-canvas
         tabIndex={0}
         role="group"
-        aria-label="문서 색인부터 BM25 정렬까지 posting list 를 타고 좁혀지는 과정"
+        aria-label="q-18이 posting list를 거쳐 BM25 순위가 되는 다섯 단계"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(33rem,calc(100svh-15rem))] min-h-[26rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="flex min-w-0 flex-col outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(scene + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[scene]}</h4>
-
-          <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
-            <div className="min-w-0 overflow-x-auto border border-border">
-              <svg viewBox="0 0 460 210" className="h-[15.5rem] w-full min-w-[26rem]" role="img" aria-label="inverted index diagram">
-                {scene < 3 && (
-                  <>
-                    {scene >= 1 &&
-                      TERMS.map((t) =>
-                        t.docs.map((docId) => {
-                          const active =
-                            scene === 2
-                              ? QUERY_TERMS.includes(t.id) && CANDIDATES.includes(docId)
-                              : true;
-                          return (
-                            <line
-                              key={`${t.id}-${docId}`}
-                              x1={t.x}
-                              y1={t.cy - 14}
-                              x2={docX(docId)}
-                              y2={44 + 14}
-                              className={active ? "stroke-amber-600/60" : "stroke-border"}
-                              strokeWidth={1}
-                            />
-                          );
-                        }),
-                      )}
-
-                    {DOCS.map((d) => {
-                      const dim = scene === 2 && !CANDIDATES.includes(d.id);
-                      return (
-                        <g key={d.id}>
-                          <rect
-                            x={d.x - 44}
-                            y={44 - 20}
-                            width={88}
-                            height={40}
-                            className={dim ? "fill-muted/30 stroke-border" : "fill-muted stroke-border"}
-                            strokeWidth={1}
-                          />
-                          <text x={d.x} y={44 - 22} textAnchor="middle" className="fill-foreground text-[9px] font-bold">
-                            {d.id}
-                          </text>
-                          {d.terms.map((term, i) => (
-                            <text
-                              key={term}
-                              x={d.x}
-                              y={44 - 6 + i * 9}
-                              textAnchor="middle"
-                              className={dim ? "fill-muted-foreground text-[7px]" : "fill-muted-foreground text-[7px]"}
-                            >
-                              {term}
-                            </text>
-                          ))}
-                        </g>
-                      );
-                    })}
-
-                    {scene >= 1 &&
-                      TERMS.map((t) => {
-                        const isQueryTerm = QUERY_TERMS.includes(t.id);
-                        const highlight = scene === 2 && isQueryTerm;
-                        const dim = scene === 2 && !isQueryTerm;
-                        return (
-                          <g key={t.id}>
-                            <rect
-                              x={t.x - 34}
-                              y={t.cy - 14}
-                              width={68}
-                              height={28}
-                              className={
-                                highlight
-                                  ? "fill-primary/25 stroke-primary"
-                                  : dim
-                                    ? "fill-muted/30 stroke-border"
-                                    : "fill-amber-500/15 stroke-amber-600"
-                              }
-                              strokeWidth={1}
-                            />
-                            <text x={t.x} y={t.cy + 4} textAnchor="middle" className="fill-foreground text-[9px] font-bold">
-                              {t.id}
-                            </text>
-                          </g>
-                        );
-                      })}
-                  </>
-                )}
-
-                {scene === 3 && (
-                  <>
-                    <text x={20} y={30} className="fill-muted-foreground text-[9px] font-bold">
-                      Candidate 를 BM25 score 로 정렬
-                    </text>
-                    {[
-                      { id: "D3", score: 3.6, terms: "banana + durian" },
-                      { id: "D1", score: 2.3, terms: "banana 만" },
-                    ].map((row, i) => (
-                      <g key={row.id}>
-                        <text x={20} y={70 + i * 50} className="fill-foreground text-[10px] font-bold">
-                          {row.id}
-                        </text>
-                        <rect
-                          x={60}
-                          y={58 + i * 50}
-                          width={row.score * 60}
-                          height={20}
-                          className={i === 0 ? "fill-primary/25 stroke-primary" : "fill-muted stroke-border"}
-                          strokeWidth={1}
-                        />
-                        <text x={60 + row.score * 60 + 8} y={72 + i * 50} className="fill-foreground text-[9px]">
-                          {row.score.toFixed(2)}
-                        </text>
-                        <text x={60} y={92 + i * 50} className="fill-muted-foreground text-[8px]">
-                          {row.terms}
-                        </text>
-                      </g>
-                    ))}
-                  </>
-                )}
-              </svg>
-            </div>
-
-            <div className="flex min-h-[9rem] flex-col justify-between border border-border p-3 font-mono text-[11px]">
-              <div>
-                <p className="font-bold text-muted-foreground">candidate/score</p>
-                <p className="mt-1 text-primary">{HIT_LABEL[scene]}</p>
-              </div>
-              <div>
-                <p className="font-bold text-muted-foreground">연산</p>
-                <p className="mt-1">{SUB_LABEL[scene]}</p>
-              </div>
-              <div className="flex flex-col gap-1 text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-amber-600 bg-amber-500/15" /> posting 연결</span>
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-primary bg-primary/25" /> query term/candidate</span>
-                <span className="flex items-center gap-1"><span className="inline-block h-2 w-3 border border-border bg-muted/30" /> 후보 아님</span>
-              </div>
-            </div>
+        <div data-viz-live-only>
+          <QueryTrace scene={scene} />
+          <div className="mt-5 border-l-2 border-primary/50 pl-4" aria-live="polite">
+            <p className="font-mono text-[10px] font-black text-primary">{String(scene + 1).padStart(2, "0")} / {SCENES.length}</p>
+            <h4 className="mt-1 break-keep text-base font-black">{SCENES[scene]}</h4>
+            <p className="mt-2 max-w-4xl break-keep text-sm leading-7 text-muted-foreground">{NOTES[scene]}</p>
           </div>
-
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[scene]}
-          </p>
         </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
+        <AnimatedSceneControls {...scenes} labels={SCENES} controlLabels={SCENES} />
+        <StaticSceneList labels={SCENES} notes={NOTES} />
       </div>
     </VizFrame>
   );

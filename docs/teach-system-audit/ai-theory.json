@@ -4978,33 +4978,59 @@
     },
     {
       "route": "ai/lexical-retrieval-bm25-inverted-index",
-      "title": "Lexical retrieval: TF-IDF·BM25·inverted index",
+      "title": "Lexical retrieval: posting list에서 BM25 순위까지",
       "subcategory": "ai-practical-embedding",
+      "track": "concept",
       "publicFiles": [
+        "src/content/embedding-learning-tree.ts",
+        "src/content/ai/articlesPractical.ts",
+        "src/content/article-learning.ts",
+        "src/content/article-evidence.ts",
+        "src/content/editorial-ownership.ts",
         "src/pages/articles/ai/lexical-retrieval-bm25-inverted-index.tsx",
         "src/pages/articles/ai/lexical-retrieval-bm25-inverted-index/viz/LexicalRetrievalBm25InvertedIndexViz.tsx"
       ],
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "automaticSignals": {
-        "hasAssumedCase": false,
-        "predictionAnswerPointers": 0,
-        "teachLevelMarkers": 0,
+        "hasAssumedCase": true,
+        "predictionAnswerPointers": 3,
+        "teachLevelMarkers": 8,
         "hasSourceSurface": true,
-        "characters": 14353
+        "characters": 17600
       },
-      "originalProblems": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "primarySourceApplication": [],
+      "originalProblems": [
+        "기존 글은 시각 자료보다 설명문이 먼저 나오고 TF-IDF·BM25·posting list가 서로 다른 예시를 사용해 한 검색 요청의 내부 경로를 이어 보기 어려웠습니다.",
+        "BM25 그림의 점수와 본문 계산이 서로 맞지 않았고, k1=1.2·b=0.75를 모든 환경의 표준값처럼 표현했습니다.",
+        "Lucene 9.11 문서를 참조하면서 현재 릴리스 소스의 점수식·길이 norm을 직접 확인하지 않았습니다."
+      ],
+      "fixture": "설명용 검색 q-18 ‘충전 오류’와 세 문서 D1~D3를 analyzer 출력으로 고정합니다. posting list 합집합은 D1·D3이고, Lucene 10.5.2 기본값을 쓴 손계산은 D1=0.5539, D3=0.3547입니다.",
+      "stageAnchors": {
+        "S": ["overview"],
+        "0": ["analyzer-output"],
+        "1": ["tf-idf"],
+        "3": ["inverted-index-posting-list"],
+        "5": ["bm25-saturation-and-length-norm"],
+        "6": ["lucene-source", "evidence", "source-lucene-bm25", "paper-bm25"],
+        "7": ["failure-boundary"],
+        "R": ["prediction-questions"]
+      },
+      "primarySourceApplication": [
+        "Robertson·Zaragoza 2009 survey는 TF 포화와 문서 길이 보정의 이론적 범위에만 사용했습니다.",
+        "Lucene 10.5.2 Javadoc과 릴리스 태그 소스에서 기본 파라미터·IDF·평균 길이·doScore 구현을 확인했고 다른 검색 엔진의 계약으로 확대하지 않았습니다."
+      ],
       "verification": {
-        "contentReview": "pending",
-        "humanize": "pending",
-        "numericTrace": "pending",
-        "mobile390": "pending",
-        "desktop1440": "pending"
+        "contentReview": "직속 부모 지도→q-18 analyzer 출력→posting list→TF-IDF→BM25 손계산→Lucene 소스→어휘 불일치→부모 지도 반환 순서로 concept 범위만 다시 썼습니다.",
+        "humanize": "한국어 strict 감사와 용어 감사를 통과했으며 역할을 먼저 설명한 뒤 Analyzer·TF·DF·posting list 이름을 연결했습니다.",
+        "numericTrace": "N=3·avgdl=4·df=2에서 TF-IDF 1.2164/0.8109와 Lucene형 BM25 0.5539/0.3547을 같은 세 문서로 검산했습니다.",
+        "mobile390": "390×844에서 다섯 장면을 이전·다음 조작으로 이동했고, 선택한 장면의 핵심 정보와 문서 가로 넘침 0을 확인했습니다.",
+        "desktop1440": "1440×1000에서 모든 직접 장면 선택, ArrowLeft, Space 재생·정지, 최종 점수 표시와 문서 가로 넘침 0을 확인했습니다.",
+        "reducedMotion": "동작 축소 환경에서는 조작 가능한 움직임 대신 다섯 장면의 설명 목록을 정적 순서로 제공합니다.",
+        "noJavaScript": "정적 route의 JavaScript를 끄고 390×844에서 접속해 부모 지도, 다섯 장면, 최종 점수, 가로 넘침 0을 확인했습니다.",
+        "browserErrors": "1440×1000과 390×844에서 console error와 page error가 없음을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기와 단계별 내용 대조"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {
