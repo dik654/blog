@@ -316,6 +316,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "D 판정 전후의 기존·후보 NDCG .956/.665→.658/1.000을 검산하고, head 99회·tail 1회에서 질의 종류별 평균 기존/후보 .829/.8155와 요청 횟수별 평균 .66142/.99631을 같은 설명용 기록으로 연결합니다.",
   },
+  "ai/metric-selection-protocol": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "release-27 한 건이 학습, 정책 후보 측정, 필수 기준을 적용한 선택, 출시 결정 기록 고정, 독립 최종 승인을 지나는 순서를 추적합니다. 각 절은 제품을 나열하지 않고 학습 산출물·행동 기준·실행 설정을 묶은 policy-grid-v4의 P17·P24-H·P24-L·P29에서 어떤 자료가 어떤 값을 바꿀 수 있는지를 하나의 출시 판단으로 연결합니다.",
+    sharedGate:
+      "P17과 P24-L만 최저 집단 recall≥.80·p95≤100ms를 통과하고 비용 38인 P17이 비용 42인 P24-L보다 낮아 선택됩니다. 전체 고객 사례 200,000건과 언어 집단별 positive 5,000건, 사례당 요청 1개를 고정합니다. 1,000건으로 정규화한 TP102·FN18·FP50·TN830에서 전체 recall .85와 18×2+50×0.1=41을 검산합니다. 최저 집단은 4,100/5,000=.82이고 Wilson 하한 .809입니다. 비용은 고객 사례 bootstrap, 지연은 40,000건씩 5회 실행의 계층적 run-case bootstrap으로 구분합니다. outer-v3의 비용 상한 42.2≤45·모든 집단 recall 하한의 최솟값 .809≥.80·p95 상한 99≤100ms를 확인해 재조정 없이 승인합니다. 표본이 부족하면 보류하고, 거절 뒤에는 새 outer 자료를 사용합니다.",
+  },
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
@@ -3798,8 +3807,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/lora-training-and-release": "9887191b7009e2d0",
   "ai/multi-agent-implementation": "c2b3777be97f2835",
   "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
-  "ai/regression-metrics": "08d5aadc77d91041",
-  "ai/ranking-metrics": "1cb64ef79c8f94b4",
+  "ai/regression-metrics": "155581756d2638cb",
+  "ai/ranking-metrics": "d84457f9790ef765",
+  "ai/metric-selection-protocol": "508edafed83f4172",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",

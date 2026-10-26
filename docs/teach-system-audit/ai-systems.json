@@ -9343,25 +9343,100 @@
       "route": "ai/metric-selection-protocol",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/metric-selection-protocol.tsx",
       "publicPath": "cs/ai/metric-selection-protocol",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 5,
+        "levelMarkers": 5,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "가장 낮은 학습 손실이나 단일 검증 점수만 보고 출시 후보를 고르는 것처럼 읽혀 학습 산출물·행동 기준·실행 설정을 묶은 정책 선택 경계가 보이지 않았음",
+        "Validation에서 후보를 고르는 절차와 독립 최종 자료에서 고정 정책을 승인하는 절차가 분리되지 않아 결과를 본 뒤 기준을 바꾸거나 최종 자료를 재사용할 위험이 있었음",
+        "평가 계약 부모 글 아래에서 출력별 지표와 출시 결정이 어떤 관계인지, 현재 글의 결과가 어느 부모 지도에 돌아가는지 나타나지 않았음",
+        "비용·최저 집단 recall·지연의 단위와 표본 조건이 서로 맞지 않는 초안을 독립 검토에서 발견해 혼동행렬·집단 표본·신뢰구간 계산을 다시 맞춰야 했음"
+      ],
+      "fixture": {
+        "boundary": "모든 자료 이름과 수치는 출시 선택 절차를 설명하기 위한 가정이며 실제 서비스 측정값이 아닙니다.",
+        "trainLosses": {
+          "C17": 0.38,
+          "C24": 0.31,
+          "C29": 0.28
+        },
+        "validationPolicies": [
+          { "policy": "P17", "artifact": "C17", "threshold": 0.62, "runtime": "단일 실행", "costPer1000": 38, "worstSliceRecall": 0.86, "p95Ms": 92 },
+          { "policy": "P24-H", "artifact": "C24", "threshold": 0.71, "runtime": "단일 실행", "costPer1000": 31, "worstSliceRecall": 0.74, "p95Ms": 91 },
+          { "policy": "P24-L", "artifact": "C24", "threshold": 0.6, "runtime": "단일 실행", "costPer1000": 42, "worstSliceRecall": 0.81, "p95Ms": 91 },
+          { "policy": "P29", "artifact": "C29", "threshold": 0.58, "runtime": "3회 평균", "costPer1000": 35, "worstSliceRecall": 0.83, "p95Ms": 121 }
+        ],
+        "guardrails": {
+          "worstSliceRecallAtLeast": 0.8,
+          "p95MsAtMost": 100,
+          "passed": ["P17", "P24-L"],
+          "selected": "P17",
+          "tieBreak": "필수 기준을 모두 통과한 정책 중 비용이 가장 낮은 정책"
+        },
+        "outerApproval": {
+          "dataset": "outer-v3",
+          "customerCases": 200000,
+          "requestsPerCase": 1,
+          "confusionPer1000": { "tp": 102, "fn": 18, "fp": 50, "tn": 830 },
+          "overallRecall": 0.85,
+          "worstSlice": { "truePositive": 4100, "positive": 5000, "recall": 0.82, "wilson95Lower": 0.8091 },
+          "costPer1000": { "point": 41, "bootstrap95Upper": 42.2, "limit": 45, "bootstrapUnit": "customer_case" },
+          "latency": { "profileRuns": 5, "requestsPerRun": 40000, "p95Ms": 96, "hierarchicalBootstrap95UpperMs": 99, "limitMs": 100, "bootstrapUnits": ["profile_run", "customer_case"] },
+          "decision": "승인",
+          "reuseRule": "승인·거절 뒤 outer-v3 결과를 보고 정책을 바꾸거나 같은 outer-v3를 다시 사용하지 않음"
+        }
+      },
+      "stageAnchors": {
+        "0": "overview",
+        "1": "information-boundary",
+        "2": "guardrails",
+        "3": "receipt",
+        "4": "receipt",
+        "parent": "evaluation-metrics#release-decision",
+        "return": "metric-selection-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/1.9/modules/model_evaluation.html",
+          "application": "scikit-learn 1.9.1 공식 문서에서 scorer 방향, callable scorer, multi-metric evaluation의 버전 고정 API 경계를 확인"
+        },
+        {
+          "href": "https://www.jmlr.org/papers/volume11/cawley10a/cawley10a.pdf",
+          "application": "Cawley와 Talbot의 분석에서 모델 fitting과 selection을 구분하고 선택 절차 전체를 독립적으로 평가해야 하는 근거 범위를 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "독립 Opus 검토 두 차례와 별도 계산으로 confusion 합계, 전체 recall 0.85, 최저 집단 recall 0.82, Wilson 95% 하한 0.8091, 비용 95% 상한 42.2의 단위와 결론을 다시 확인했습니다.",
+        "humanize": "학습·측정·선택·고정·승인을 먼저 한국어 상태 변화로 보여 주고 artifact·threshold·bootstrap 같은 이름은 필요한 위치에서만 연결했습니다.",
+        "browser390": "production preview 390×844에서 다섯 장면 모두 scrollHeight=clientHeight 479, scrollWidth=clientWidth 316, 문서 폭 390=390, console 오류 0",
+        "browser1440": "production preview 1440×1000에서 다섯 장면 모두 scrollHeight=clientHeight 558, scrollWidth=clientWidth 655, 문서 폭 1440=1440, console 오류 0",
+        "keyboard": "시각화에 초점을 둔 뒤 ArrowRight로 장면 01→02→03→04→05 이동",
+        "autoPlay": "7.2초 대기 후에도 장면 01 유지",
+        "reducedMotion": "다섯 장면의 제목과 결론을 정적 순서로 표시하고 1초 뒤 실행 중 애니메이션 0개·인터랙티브 버튼 0개",
+        "noScript": "JavaScript 비활성 390×844 production preview에서 HTTP 200, 글 제목·전체 흐름·P17 선택·outer-v3 승인 내용 표시, 본문 길이 12,924자, 문서 폭 390=390",
+        "build": "Vite 7.3.1·8,029 modules·정적 public route 2,090개·no-script 본문 283편·최대 RSS 6,477,365,248 bytes·swap 0",
+        "typecheck": "TypeScript project build 통과·최대 RSS 6,742,540,288 bytes·swap 0",
+        "browserEvidence": "output/playwright/ai-metric-selection-production/summary.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 공개 경로 검증"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "practice-track-policy-selection-outer-approval-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/metric-selection-protocol/ModernArticle.tsx",
+        "src/pages/articles/ai/metric-selection-protocol/MetricSelectionProtocolViz.tsx",
+        "src/pages/articles/ai/shared/MetricDecisionPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/metric-selection-protocol/ModernArticle.tsx",
+      "contentHash": "686126dcab1c540df1157a322a2570b31c3bb91a58a544ceb35d2d38c8976b82",
+      "preserved": [
+        "Scorer 방향·threshold·여러 지표를 구분하는 기존 핵심 설명",
+        "Model selection bias와 독립 최종 평가의 기존 논문 근거",
+        "출시 결정 기록에 후보·자료·정책·승인 규칙을 남기는 기존 실무 목표"
       ]
     },
     {

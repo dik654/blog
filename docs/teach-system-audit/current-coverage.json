@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 628,
-    "pending": 364,
+    "reviewed": 629,
+    "pending": 363,
     "untracked": 0,
-    "assignedPending": 322,
+    "assignedPending": 321,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3711,7 +3711,7 @@
     {
       "route": "ai/evaluation-metrics",
       "publicPath": "cs/ai/evaluation-metrics",
-      "title": "평가 설계: Decision Cost와 집계 단위",
+      "title": "평가 계약: 행동 비용과 집계 단위",
       "catalogIndex": 368,
       "status": "reviewed",
       "provenance": "checkpoint",
@@ -3751,11 +3751,11 @@
     {
       "route": "ai/metric-selection-protocol",
       "publicPath": "cs/ai/metric-selection-protocol",
-      "title": "Metric Selection Protocol: Loss에서 Outer Test까지",
+      "title": "출시 선택 규칙: 학습 손실에서 최종 승인까지",
       "catalogIndex": 372,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

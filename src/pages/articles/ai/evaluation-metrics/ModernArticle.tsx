@@ -236,41 +236,58 @@ export default function EvaluationMetricsArticle() {
 
       <section id="map" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          Output 형태가 달라지면 다음 metric 수업도 갈라집니다
+          출력의 품질을 재는 일과 출시 정책을 고르는 일은 다른 단계입니다
         </h2>
-        <TermBreakdown
-          title="여기서 이어지는 네 개의 독립 수업"
-          items={[
-            {
-              term: <Link to="/cs/ai/regression-metrics">Regression metrics</Link>,
-              description:
-                "숫자 residual에 선형·제곱 비용을 붙이고 point와 interval을 평가합니다.",
-            },
-            {
-              term: (
-                <Link to="/cs/ai/classification-metrics">
-                  Classification metrics
-                </Link>
-              ),
-              description:
-                "Score ordering, probability 의미와 threshold action을 분리합니다.",
-            },
-            {
-              term: <Link to="/cs/ai/ranking-metrics">Ranking metrics</Link>,
-              description:
-                "Query별 relevance·rank position·judgment coverage와 query population을 평가합니다.",
-            },
-            {
-              term: (
-                <Link to="/cs/ai/metric-selection-protocol">
-                  Selection protocol
-                </Link>
-              ),
-              description:
-                "Training loss, validation selection, hard guardrail과 untouched test의 정보 경계를 고정합니다.",
-            },
-          ]}
-        />
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            회귀·분류·검색·추천 평가는 출력 형태에 맞는 오차와 순서를 묻습니다. 출시
+            선택은 그 측정값을 받아 여러 정책 후보 가운데 하나를 고정하고, 별도
+            자료로 승인하는 절차입니다. 따라서 네 항목을 같은 종류의 지표처럼
+            나열하지 않습니다.
+          </p>
+        </div>
+        <div id="output-evaluation" className="scroll-mt-24">
+          <TermBreakdown
+            title="출력별 평가"
+            items={[
+              {
+                term: <Link to="/cs/ai/regression-metrics">회귀 평가</Link>,
+                description:
+                  "숫자 residual에 선형·제곱 비용을 붙이고 point와 interval을 평가합니다.",
+              },
+              {
+                term: (
+                  <Link to="/cs/ai/classification-metrics">
+                    분류 평가
+                  </Link>
+                ),
+                description:
+                  "Score ordering, probability 의미와 threshold action을 분리합니다.",
+              },
+              {
+                term: <Link to="/cs/ai/ranking-metrics">검색·추천 평가</Link>,
+                description:
+                  "Query별 relevance·rank position·judgment coverage와 query population을 평가합니다.",
+              },
+            ]}
+          />
+        </div>
+        <div id="release-decision" className="mt-8 scroll-mt-24">
+          <TermBreakdown
+            title="출시 결정"
+            items={[
+              {
+                term: (
+                  <Link to="/cs/ai/metric-selection-protocol">
+                    출시 선택
+                  </Link>
+                ),
+                description:
+                  "학습 손실, 검증 자료의 정책 선택, 필수 기준과 독립 최종 자료의 정보 경계를 고정합니다.",
+              },
+            ]}
+          />
+        </div>
         <div
           id="standard-sklearn-metrics"
           className="not-prose mt-8 scroll-mt-24"
