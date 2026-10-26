@@ -5306,7 +5306,7 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Process·local state·message·event·execution의 최소 system model",
       "Synchronous·asynchronous·partial timing과 crash·omission·Byzantine failure의 분류",
-      "Consensus safety·liveness의 분리와 failure-injection oracle",
+      "Consensus safety·liveness의 분리",
       "FLP bivalence·CAP partition execution·partial synchrony GST의 전제와 결론 경계",
       "Timing·randomness·failure detector·약한 문제 정의를 추가하는 assumption escape hatch",
     ],
@@ -5324,26 +5324,22 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/cs/blockchain/consensus-mechanisms",
       },
       {
-        label: "Retry 뒤 중복 side effect를 막는 idempotency",
-        href: "/cs/ai/agent-loop-foundations#observation-contract",
+        label: "같은 조건에서 합의 계열을 비교하는 실무 기준",
+        href: "/cs/blockchain/consensus-comparison",
       },
     ],
     evidence: [
       {
         kind: "primary-source",
-        rule: "FLP·CAP·DLS·Byzantine·failure-detector claim은 각 논문의 process·timing·failure·channel model과 conclusion 범위로 제한한다.",
+        rule: "FLP·CAP·DLS·Byzantine·failure-detector 주장은 각 원 논문의 process·timing·failure·channel model과 결론 범위로 제한한다.",
       },
       {
         kind: "standard",
         rule: "Safety와 liveness, consistency model과 SLA, authentication과 honesty를 서로 다른 계약으로 유지한다.",
       },
       {
-        kind: "project-measurement",
-        rule: "Protocol 비교는 같은 binary·config·membership·schedule·fault trace에서 conflicting decision 0건과 recovery time을 paired 측정한다.",
-      },
-      {
         kind: "project-claim",
-        rule: "Timeout·throughput·validator 수 같은 배포 수치를 theorem의 보편적 결론으로 쓰지 않는다.",
+        rule: "잔액·메시지 순서·200ms·300ms 같은 수치는 메커니즘을 설명하기 위한 예시이며 특정 배포의 측정 결과가 아니다.",
       },
     ],
   },

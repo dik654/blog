@@ -3,16 +3,16 @@ import { DistributedFrame, Ledger } from "./DistributedVizPrimitives";
 export default function SystemModelViz() {
   return (
     <DistributedFrame
-      eyebrow="SYSTEM MODEL"
-      title="같은 protocol도 timing·failure·channel 가정이 바뀌면 보장이 달라진다"
-      description="Protocol 이름보다 먼저 세 축을 적어야 정리의 전제와 실제 장애 주입 결과를 비교할 수 있습니다."
-      note="Timeout은 느린 노드와 죽은 노드를 확정적으로 구별하지 않습니다. 부분 동기 모델에서는 진행을 위한 의심 신호로 사용합니다."
+      eyebrow="가정 지도"
+      title="시간·고장·채널이 달라지면 같은 규칙의 보장도 달라집니다"
+      description="프로토콜 이름만 봐서는 타임아웃의 의미나 견딜 수 있는 고장을 알 수 없습니다. 세 축을 먼저 고정합니다."
+      note="타임아웃은 느린 노드와 멈춘 노드를 확정적으로 구별하지 못합니다. 부분 동기 모델에서는 진행 경로를 바꾸는 신호로 사용합니다."
     >
       <Ledger
         items={[
-          { label: "TIMING", title: "언제 도착하는가", body: "synchronous·asynchronous·partial synchrony를 구분합니다.", example: "GST 이후 delay ≤ Δ" },
-          { label: "FAILURE", title: "노드는 어떻게 실패하는가", body: "crash·omission·Byzantine은 서로 다른 공격 능력을 허용합니다.", example: "crash ≠ equivocation" },
-          { label: "CHANNEL", title: "메시지를 무엇까지 믿는가", body: "loss·duplication·reordering·authentication을 별도 가정으로 둡니다.", example: "retry + id → dedupe" },
+          { label: "시간", title: "언제 도착하는가", body: "동기·비동기·부분 동기 가운데 어떤 시간 모델인지 구분합니다.", example: "GST 이후 지연 ≤ Δ" },
+          { label: "고장", title: "노드는 어떻게 실패하는가", body: "중단·누락·비잔틴 장애는 서로 다른 행동 범위를 허용합니다.", example: "중단 ≠ 수신자별 거짓말" },
+          { label: "채널", title: "메시지를 무엇까지 믿는가", body: "손실·중복·순서 변경·발신자 인증을 각각 가정합니다.", example: "재시도 + 요청 ID → 중복 제거" },
         ]}
       />
     </DistributedFrame>

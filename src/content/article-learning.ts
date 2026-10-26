@@ -55304,10 +55304,8 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "blockchain/distributed-systems": {
     entryLevel: true,
-    entryNote:
-      "서버·네트워크 이론을 안다고 가정하지 않습니다. 세 process와 늦은 메시지의 작은 실행에서 출발해 정리의 전제와 운영 검증까지 연결합니다.",
-    coreIdea:
-      "분산 protocol의 보장은 알고리즘 이름이 아니라 process·message execution, timing·failure·channel model, safety·liveness 목표를 함께 고정할 때만 의미가 있습니다.",
+    entryNote: "서버·네트워크 이론을 안다고 가정하지 않습니다. 잔액 10에서 3을 빼는 요청이 세 process에 다르게 보이는 실행에서 출발해, 시간·고장·채널 가정과 safety·liveness의 뜻을 붙입니다.",
+    coreIdea: "분산 프로토콜의 보장은 알고리즘 이름만으로 정해지지 않습니다. process·message execution, timing·failure·channel model, safety·liveness 목표를 함께 고정해야 FLP·CAP·부분 동기 결과의 적용 범위를 판단할 수 있습니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -55436,44 +55434,33 @@ export const ARTICLE_LEARNING: Readonly<
     conceptStages: [
       {
         label: "01 실행",
-        relation: "process·message·event의 관측 가능한 실행을 만듭니다.",
+        relation: "출금 요청 하나에서 process·message·event의 실제 순서를 추적합니다.",
         concepts: ["distributed-process-message-execution"],
       },
       {
         label: "02 전제",
-        relation: "Timing과 failure adversary의 범위를 고정합니다.",
+        relation: "같은 장면을 timing·failure·channel 세 축으로 해석합니다.",
         concepts: ["distributed-timing-model", "distributed-failure-model"],
       },
       {
         label: "03 목표",
-        relation: "Safety와 liveness를 서로 다른 판정으로 둡니다.",
+        relation: "충돌 방지와 최종 진행을 서로 다른 약속으로 구분합니다.",
         concepts: ["consensus-safety-liveness"],
       },
       {
         label: "04 한계",
-        relation: "FLP와 CAP를 각 formal model 안에서 읽습니다.",
-        concepts: [
-          "flp-bivalence-impossibility",
-          "cap-partition-execution-tradeoff",
-        ],
+        relation: "FLP와 CAP를 각 논문의 formal model 안에서 한 실행으로 읽습니다.",
+        concepts: ["flp-bivalence-impossibility", "cap-partition-execution-tradeoff"],
       },
       {
         label: "05 진행",
-        relation:
-          "Partial synchrony와 추가 가정으로 progress 조건을 설명합니다.",
-        concepts: [
-          "partial-synchrony-gst",
-          "consensus-assumption-escape-hatch",
-        ],
+        relation: "Partial synchrony와 추가 가정이 liveness 조건을 어떻게 바꾸는지 봅니다.",
+        concepts: ["partial-synchrony-gst", "consensus-assumption-escape-hatch"],
       },
       {
-        label: "06 검증",
-        relation:
-          "Failure trace에서 safety 0건과 recovery liveness를 paired 평가합니다.",
-        concepts: [
-          "consensus-safety-liveness",
-          "consensus-assumption-escape-hatch",
-        ],
+        label: "06 연결",
+        relation: "SMR·BFT·공개 참여 합의가 이 글의 어느 전제에서 갈라지는지 부모 지도에 되돌려 놓습니다.",
+        concepts: ["distributed-timing-model", "distributed-failure-model", "consensus-safety-liveness"],
       },
     ],
     exercises: [

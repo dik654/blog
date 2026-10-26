@@ -1,146 +1,58 @@
 import { Link } from "react-router-dom";
-import ContentBoundary from "@/components/articles/content-boundary";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import ContextViz from "./viz/ContextViz";
+import ExecutionTraceViz from "./viz/ExecutionTraceViz";
 import SystemModelViz from "./viz/SystemModelViz";
-
-const modelAxes = [
-  ["Timing", "메시지·process step의 시간에 어떤 상한이 있는가"],
-  ["Failure", "멈춤, 누락, 임의 행동 중 무엇까지 허용하는가"],
-  ["Channel", "손실·중복·순서 변경·발신자 인증을 어떻게 다루는가"],
-] as const;
 
 export default function Overview() {
   return (
-    <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        분산 시스템은 같은 상태보다 먼저 같은 가정을 합의해야 한다
-      </h2>
+    <section id="overview" className="scroll-mt-20">
+      <header className="space-y-4">
+        <p className="text-sm font-bold text-primary">01 · 실행</p>
+        <h2 className="text-2xl font-bold">보장은 가정과 함께 읽습니다</h2>
+        <p className="max-w-3xl text-lg leading-8 text-foreground/90">
+          여러 컴퓨터가 같은 프로그램을 실행해도 메시지는 같은 시각과 순서로 도착하지 않습니다. 그래서 분산 시스템에서는 알고리즘 이름보다 먼저 <strong>어떤 실행을 허용했고 무엇을 보장하려는지</strong>를 확인합니다.
+        </p>
+      </header>
+
+      <ContextViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p className="text-lg leading-8">
-          한 process가 메모리 안의 값을 바꾸는 일은 순서가 하나지만, 여러 node가
-          네트워크로 협력하면 각 node가 보는 메시지 순서와 시각이 달라집니다.
-          그래서 분산 protocol을 읽을 때는 알고리즘 이름보다 먼저
-          <strong> system model</strong>을 고정해야 합니다. 어떤 지연과 고장을
-          허용했는지 모르면 “안전하다”와 “결국 진행한다”는 문장도 의미가
-          정해지지 않습니다.
-        </p>
         <p>
-          이 글은 node·message·execution에서 출발해 timing과 failure model,
-          safety와 liveness, FLP와 CAP의 정확한 적용 범위를 설명합니다. 명령을
-          같은 순서로 실행하는 방법은 <Link to="/cs/blockchain/smr-theory">SMR</Link>,
-          Byzantine quorum의 정확한 bound는{" "}
-          <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>, 공개 네트워크의
-          참여 가중치는 <Link to="/cs/blockchain/consensus-mechanisms">PoW·PoS</Link>
-          글에서 확장합니다.
+          아래에서는 잔액 10에서 3을 빼는 요청 하나를 따라갑니다. 그림에서 먼저 확인할 것은 세 노드의 값이 다른 순간이 실제로 생긴다는 사실입니다. 그다음에야 이 차이가 허용된 지연인지, 충돌한 결정인지 판단할 수 있습니다.
         </p>
       </div>
 
-      <ContentBoundary article="distributed-systems" />
-      <ContextViz />
+      <ExecutionTraceViz />
+
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <h3>장면에 이름을 붙이면 실행을 추적할 수 있습니다</h3>
+        <p>
+          각자 로컬 상태를 가진 계산 주체는 <strong>process</strong>입니다. 그 사이를 이동하는 값은 <strong>message</strong>입니다. 로컬 계산, 전송, 수신처럼 상태를 바꾸는 한 번의 사건은 <strong>event</strong>입니다. 초기 상태에서 시작해 event가 실제로 일어난 순서를 하나의 <strong>execution</strong>이라고 합니다.
+        </p>
+        <p>
+          이론의 process가 물리 서버·컨테이너·스레드와 반드시 일대일로 대응하지는 않습니다. 중요한 것은 누가 어떤 로컬 상태를 갖고, 어느 메시지를 본 뒤, 어떤 상태로 바뀌었는지입니다. 위 장면에서는 A의 계산, A→B 전달, A→C 지연, C의 타임아웃이 execution을 이룹니다.
+        </p>
+      </div>
+
       <SystemModelViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>가장 작은 실행 단위</h3>
+        <h3>같은 타임아웃도 시간 가정에 따라 뜻이 달라집니다</h3>
         <p>
-          <strong>Process</strong>는 local state를 가진 계산 주체이고,
-          <strong> message</strong>는 process 사이를 이동하는 값입니다. Process가
-          한 번 계산하거나 메시지를 보내고 받는 사건을 event라고 하며, 한
-          실행(execution)은 initial state에서 시작한 event의 순서입니다. 실제
-          서버·container·thread와 이론의 process는 일대일일 필요가 없습니다.
-        </p>
-        <p>
-          예를 들어 A가 <code>balance=10</code>에서 출금 요청을 처리하고 B에게
-          갱신 메시지를 보냈더라도, 그 메시지가 늦으면 B는 여전히 10을 읽을 수
-          있습니다. 이것은 곧바로 protocol 오류가 아니라 system model이 허용한
-          관측 차이입니다. 오류 여부는 어떤 consistency와 decision rule을
-          약속했는지로 판단합니다.
-        </p>
-      </div>
-
-      <ExplainedFormula
-        question="Quorum 두 개가 적어도 한 process를 공유하게 하려면 크기가 얼마나 커야 할까?"
-        idea="전체 n개 중 각각 q개를 고르면 두 집합의 합이 n을 넘는 부분만큼은 반드시 겹칩니다. 이 단순한 집합 계산이 이후 crash quorum과 Byzantine quorum의 출발점입니다."
-        formula={String.raw`|Q_1 \cap Q_2| \ge 2q-n`}
-        annotatedFormula={String.raw`\underbrace{|Q_1 \cap Q_2|}_{\text{두 quorum 공통 voter}} \ge \underbrace{2q}_{\text{두 quorum 크기 합}}-\underbrace{n}_{\text{전체 voter 수}}`}
-        operations={[
-          { expression: String.raw`2q-n`, annotation: ["두 quorum 크기 합이 전체 n을","넘는 만큼은 반드시 같은 voter","예: n=5, q=3이면 최소 1개 공유"] },
-        ]}
-        terms={[
-          { symbol: "n", name: "membership size", description: "전체 replica 또는 voter 수" },
-          { symbol: "q", name: "quorum size", description: "각 decision certificate에 필요한 voter 수" },
-          { symbol: "Q_1,Q_2", name: "quorum sets", description: "서로 다른 두 quorum 집합" },
-        ]}
-        assumptions={[
-          "두 quorum은 같은 고정 membership에서 선택합니다.",
-          "교집합이 존재한다는 사실만으로 그 process가 정직하다는 보장은 없습니다.",
-        ]}
-        interpretation="n=5, q=3이면 교집합은 최소 1개입니다. Byzantine safety에는 교집합 안에 정직한 voter가 남도록 더 강한 threshold와 vote rule이 필요합니다."
-      />
-
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Timing model: timeout은 사실 판정기가 아니다</h3>
-        <div className="not-prose my-5 grid gap-5 md:grid-cols-3">
-          {[
-            ["Synchronous", "알려진 delay·step 상한이 모든 실행에서 성립합니다."],
-            ["Asynchronous", "고정 시간 상한이 없어 느림과 crash를 시간만으로 구분하지 못합니다."],
-            ["Partial synchrony", "상한이 있지만 값이나 성립 시작 시점 GST를 미리 모릅니다."],
-          ].map(([title, body]) => (
-            <div key={title} className="border-l border-border pl-4">
-              <p className="text-sm font-semibold">{title}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
-            </div>
-          ))}
-        </div>
-        <p>
-          Production timeout은 “상대가 죽었다”는 증명이 아니라 현재 진행 경로를
-          바꿀 근거입니다. 200ms timeout 뒤 leader를 교체하더라도 이전 leader의
-          늦은 메시지가 도착할 수 있으므로 term·view·certificate 같은 logical
-          evidence로 stale action을 거절해야 합니다.
+          모든 메시지가 알려진 상한 안에 도착하는 <strong>동기 모델</strong>에서는 상한을 넘긴 응답을 고장 신호로 사용할 수 있습니다. <strong>비동기 모델</strong>에는 고정된 전달 상한이 없으므로 200ms가 지나도 상대가 멈췄는지 메시지가 늦는지 구별할 수 없습니다. <strong>부분 동기 모델</strong>은 상한이 언젠가 성립하지만 값이나 시작 시각을 미리 모르는 경우를 다룹니다.
         </p>
 
-        <h3>Failure model: 고장이라는 한 단어를 쪼갭니다</h3>
-        <ul>
-          <li><strong>Crash:</strong> process가 더 이상 step을 수행하지 않습니다.</li>
-          <li><strong>Omission:</strong> 일부 send·receive event가 누락됩니다.</li>
-          <li><strong>Byzantine:</strong> 임의 값, equivocation, 선택적 침묵까지 허용합니다.</li>
-        </ul>
+        <h3>멈춤과 거짓말은 같은 고장이 아닙니다</h3>
         <p>
-          인증된 channel은 “누가 보냈는가”와 변조 여부를 검증하지만 발신자가
-          거짓 값을 보냈는지는 해결하지 않습니다. 또한 retry로 lossy channel을
-          보완할 때는 duplicate delivery를 견디는 message ID와 idempotency rule이
-          필요합니다.
+          <strong>Crash</strong>는 process가 더 이상 진행하지 않는 고장입니다. <strong>Omission</strong>은 일부 전송이나 수신이 빠지는 고장입니다. <strong>Byzantine fault</strong>는 수신자마다 다른 값을 보내거나 잘못된 상태를 제안하는 임의 행동까지 허용합니다. 인증된 채널은 누가 보냈고 내용이 변조됐는지는 알려주지만, 발신자가 정직한 값을 보냈는지는 알려주지 않습니다.
         </p>
 
-        <h3>Safety와 liveness는 서로 다른 질문입니다</h3>
+        <h3>안전성과 진행성은 서로 다른 약속입니다</h3>
         <p>
-          <strong>Safety</strong>는 나쁜 일이 한 번도 일어나지 않는다는 성질입니다.
-          Consensus의 agreement라면 정직한 두 process가 서로 다른 값을 결정하지
-          않는 것입니다. <strong>Liveness</strong>는 좋은 일이 결국 일어난다는
-          성질이며, termination은 non-faulty process가 결국 값을 결정하는
-          조건입니다. Partition 중 protocol이 멈추면 liveness는 잃을 수 있지만
-          conflicting decision을 내지 않았다면 safety는 지킬 수 있습니다.
+          <strong>Safety</strong>는 일어나면 안 되는 일이 한 번도 생기지 않는 성질입니다. 합의에서는 정직한 두 process가 서로 다른 값을 최종 결정하지 않는다는 약속이 대표적입니다. <strong>Liveness</strong>는 필요한 조건이 갖춰지면 좋은 일이 결국 일어나는 성질입니다. 네트워크가 갈라졌을 때 결정을 멈추면 진행성은 잃을 수 있지만, 충돌한 결정을 만들지 않았다면 안전성은 지킬 수 있습니다.
         </p>
         <p>
-          장애 주입에서는 둘을 다른 oracle로 측정합니다. Safety는 conflicting commit certificate가 한 건이라도 생기면 실패이고 liveness는
-          network가 회복된 뒤 정해진 시간 안에 새 commit이 나오는지 측정합니다. 평균 latency 하나로 두 성질을 대신할 수 없습니다.
-        </p>
-
-        <h3>세 축을 기록하는 최소 run contract</h3>
-        <div className="not-prose my-5 grid gap-4 md:grid-cols-3">
-          {modelAxes.map(([title, body]) => (
-            <div key={title} className="border-t border-border pt-4">
-              <p className="text-xs font-bold text-primary">{title}</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
-            </div>
-          ))}
-        </div>
-        <p>
-          같은 binary와 같은 workload라도 이 세 축, membership, protocol version,
-          seed·schedule, fault injection trace를 고정하지 않으면 결과를 비교할 수
-          없습니다. 다음 절부터는 이 run contract 위에서 불가능성 결과가 실제
-          설계에 무엇을 요구하는지 살펴봅니다.
+          다음 절의 FLP와 CAP는 “분산 시스템은 어렵다”는 막연한 경고가 아닙니다. 어떤 시간·고장·채널 모델에서 어떤 약속을 동시에 보장할 수 없는지 정확히 경계를 긋는 결과입니다. 명령을 같은 순서로 실행하는 구조는 <Link to="/cs/blockchain/smr-theory">상태 머신 복제</Link>에서 이어집니다.
         </p>
       </div>
     </section>

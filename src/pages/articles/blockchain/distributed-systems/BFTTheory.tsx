@@ -3,69 +3,40 @@ import ByzantineViz from "./viz/ByzantineViz";
 
 export default function BFTTheory() {
   return (
-    <section id="bft-theory" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Byzantine fault는 거짓말의 범위를 system model에 포함한다
-      </h2>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <p>
-          Crash-fault process는 멈추지만 그 전까지 protocol을 따릅니다. Byzantine process는 receiver마다 다른 값을 보내는
-          equivocation, 유효하지 않은 state 제안, 선택적 침묵처럼 임의로 행동할 수 있습니다. Digital signature는 발신자와 내용의 무결성을 확인해도 서명한
-          발신자가 서로 모순된 값을 보냈다는 사실 자체를 막지는 않습니다.
+    <section id="bft-theory" className="scroll-mt-20">
+      <header className="space-y-4">
+        <p className="text-sm font-bold text-primary">04 · 임의 행동</p>
+        <h2 className="text-2xl font-bold">비잔틴 장애는 서로 다른 거짓말까지 허용합니다</h2>
+        <p className="max-w-3xl text-lg leading-8 text-foreground/90">
+          멈춘 노드는 더 이상 메시지를 보내지 않습니다. 비잔틴 노드는 같은 단계에서도 수신자마다 다른 값을 보낼 수 있습니다. 서명이 있어도 왜 합의 규칙이 더 필요한지 장면으로 확인합니다.
         </p>
-      </div>
+      </header>
 
       <ByzantineViz />
 
       <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <h3>Bound는 timing과 authentication 없이 적을 수 없습니다</h3>
+        <h3>서명은 거짓말을 막지 않고 증거를 남깁니다</h3>
         <p>
-          흔히 보는 <code>n≥3f+1</code>과 <code>2f+1</code> quorum은 특정
-          partially synchronous authenticated BFT protocol에서 자주 쓰이는
-          구성입니다. 그러나 synchronous signed-message model, unauthenticated
-          oral-message model, asynchronous randomized protocol은 서로 다른 lower
-          bound와 진행 조건을 가집니다. 따라서 “Byzantine이면 항상 3f+1”로 외우지
-          않고 membership, timing, authentication, safety·liveness 목표를 함께
-          적어야 합니다.
-        </p>
-        <p>
-          이 글에서는 failure model의 차이만 소유합니다. Quorum 교집합에 정직한
-          voter가 남는 이유와 PBFT·Tendermint·HotStuff의 certificate rule은{" "}
-          <Link to="/cs/blockchain/bft-theory">BFT 정본</Link>에서 다룹니다.
+          Crash-fault process는 멈추기 전까지 프로토콜을 따릅니다. Byzantine process는 잘못된 상태 제안, 선택적 침묵, 수신자별 모순 메시지처럼 임의로 행동할 수 있습니다. 디지털 서명은 발신자와 내용의 무결성을 확인하므로 나중에 모순 행동을 증명하는 데 유용하지만, 발신자가 한 값만 보냈다고 보장하지는 않습니다.
         </p>
 
-        <h3>Failure injection도 공격 능력에 맞춰야 합니다</h3>
+        <h3>인원수 공식은 시간·인증 모델과 함께 읽습니다</h3>
         <p>
-          Process kill만 주입하고 Byzantine tolerance를 검증했다고 결론 내릴 수
-          없습니다. Crash suite에는 leader kill·restart·message delay를, Byzantine
-          suite에는 double vote·invalid proposal·selective send·stale certificate를
-          포함합니다. Oracle은 conflicting commit 0건, invalid state commit 0건,
-          network 회복 뒤 progress time, evidence receipt를 별도로 기록합니다.
+          자주 보는 <code>n ≥ 3f + 1</code>은 모든 비잔틴 시스템에 적용되는 보편 상수가 아닙니다. Lamport·Shostak·Pease의 원 논문에서도 발신자를 위조할 수 없는 서명 메시지와 일반 메시지를 구분합니다. 동기·부분 동기·비동기, 인증 방식, 요구하는 안전성과 진행성에 따라 가능한 조건이 달라집니다.
+        </p>
+        <p>
+          이 글에서는 장애 능력의 경계만 정합니다. 두 결정 증거가 어떻게 겹쳐야 하고 다음 라운드에서 어떤 표를 잠가야 하는지는 <Link to="/cs/blockchain/bft-theory">비잔틴 합의</Link>에서 계산합니다.
         </p>
       </div>
 
-      <div
-        id="paper-lamport-byzantine"
-        className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
-      >
-        <p className="text-xs font-bold text-primary">논문 읽기 · Byzantine model</p>
+      <aside id="paper-lamport-byzantine" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
+        <p className="text-xs font-bold text-primary">원 논문 · 비잔틴 장군 문제</p>
         <p className="mt-2 text-sm font-semibold">The Byzantine Generals Problem</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 일부 participant가 모순된 정보를 보낼 수 있을 때 loyal participant가
-          같은 결정을 내리는 interactive consistency입니다. Oral message와
-          unforgeable signature 모델을 분리하고 각 조건의 algorithm과 bound를
-          제시합니다. 이 결과를 partial synchrony blockchain protocol의 liveness나
-          경제적 공격 비용으로 그대로 일반화하면 안 됩니다.
+          목표는 일부 참여자가 모순된 정보를 보내도 정직한 참여자들이 같은 명령을 따르게 하는 것입니다. 원 논문은 일반 메시지와 위조할 수 없는 서명 메시지를 분리하고 각 모델의 알고리즘과 한계를 제시합니다. 이를 부분 동기 블록체인의 진행성이나 경제적 공격 비용으로 바로 넓혀서는 안 됩니다.
         </p>
-        <a
-          className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-          href="https://lamport.azurewebsites.net/pubs/byz.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Lamport–Shostak–Pease 원문 보기
-        </a>
-      </div>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://lamport.azurewebsites.net/pubs/byz.pdf" target="_blank" rel="noreferrer">Lamport·Shostak·Pease 원문 보기</a>
+      </aside>
     </section>
   );
 }

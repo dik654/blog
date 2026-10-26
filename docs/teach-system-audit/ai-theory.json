@@ -3008,7 +3008,7 @@
         "src/pages/articles/ai/embedding-model-fine-tuning.tsx",
         "src/pages/articles/ai/embedding-model-fine-tuning/viz/EmbeddingModelFineTuningViz.tsx"
       ],
-      "status": "rewritten-local-verified",
+      "status": "rewritten-public-verified",
       "automaticSignals": {
         "hasAssumedCase": false,
         "predictionAnswerPointers": 0,
@@ -3046,11 +3046,10 @@
         "timing": "pass · 재생 1초 뒤에도 첫 장면을 유지하고, 5.4초 후 둘째 장면으로 이동해 장면당 5.2초 리듬을 확인했습니다.",
         "reducedMotion": "pass · 자동 재생 버튼은 비활성화되지만 좌우 키로 다섯 번째 장면의 0.8262·0.1909 최종 상태까지 직접 이동할 수 있습니다.",
         "noJavaScript": "pass · production static route에서 다섯 장면의 정적 순서, 0.6652·0.4076·0.8262·0.1909, 부모 지도 복귀를 390×844 JavaScript 비활성 browser context로 확인했습니다.",
-        "console": "pass · 최종 production preview에서 console error·warning 0개입니다."
+        "console": "pass · 최종 production preview에서 console error·warning 0개입니다.",
+        "publicRoute": "pass · GitHub Pages 배포 run 40331365754 성공 뒤 공개 경로에서 제목·학습 locator·시각화 2개·본문을 확인했고 console error·warning 0개였습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "ai/embedding-serving-contract",
