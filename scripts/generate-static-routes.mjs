@@ -348,6 +348,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-alloy-primitives",
   "blockchain/lsm-tree",
   "blockchain/lsm-engine-validation",
+  "blockchain/bplus-tree",
+  "blockchain/bplus-index-validation",
   "blockchain/reth-trie",
 ]);
 const noScriptArticles = catalog.filter(

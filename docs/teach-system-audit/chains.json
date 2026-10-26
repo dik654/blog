@@ -418,40 +418,75 @@
     },
     {
       "route": "blockchain/bplus-tree",
-      "title": "B+ tree: page fanout·range scan·split/merge",
-      "status": "unreviewed",
+      "title": "B+ tree: page에서 조회와 분할까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/bplus-tree.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/bplus-tree.tsx",
-        "src/pages/articles/ethereum/bplus-tree/ModernArticle.tsx"
+        "src/pages/articles/ethereum/bplus-tree/ModernArticle.tsx",
+        "src/pages/articles/ethereum/bplus-tree/viz/BplusLifecycleViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 6,
+        "predictionPointers": 3,
+        "assumptionMarkers": 5,
+        "sourceButtons": 4,
         "headings": [
-          "B+ tree: 비교 횟수보다 먼저 page I/O를 줄이는 ordered index",
-          "Page byte budget이 fanout과 높이를 정한다",
-          "Internal separator는 길을 고르고 leaf chain이 range를 잇는다",
-          "Split·redistribution·merge는 세 불변식을 함께 보존한다",
-          "Page graph correctness를 통과한 뒤 I/O를 비교한다"
+          "큰 fanout의 page는 어떻게 짧은 조회 경로와 순서 탐색을 만들까요?",
+          "Page byte 예산이 fanout과 높이를 정합니다",
+          "Separator는 길을 고르고 leaf 연결은 범위를 잇습니다",
+          "Split은 새 page와 parent 경계를 함께 공개해야 합니다",
+          "실패는 page가 아니라 도달 경로와 순서가 깨질 때 드러납니다",
+          "원 논문, B+ tree 개관, 안정 release 구현을 나눠 확인합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 page 구조·조회·갱신과 release 검증을 한 글 안에서 섞어 개념 질문과 운영 결정을 분리하기 어려웠습니다.",
+        "모바일 실패 장면에서 두 page 사례를 반쪽 폭에 넣어 label과 key가 글자 단위로 갈라졌습니다.",
+        "일반 B+ tree의 redistribution·merge와 PostgreSQL nbtree의 실제 삭제 정책을 같은 구현처럼 읽을 수 있었습니다."
+      ],
+      "fixture": {
+        "page": "4096 bytes; header 96; routing entry 24; 설명용 fanout 160; leaf capacity 200",
+        "lookup": "root separators [20,40] → key 35 → leaf 09",
+        "range": "35에서 시작해 right sibling을 따라 62에서 종료",
+        "split": "capacity 4 leaf [10,20,30,40] + 25 → [10,20] | [25,30,40], parent boundary 25"
+      },
+      "stageEvidence": {
+        "0": "4,096-byte page의 metadata와 routing entry 예산에서 fanout·높이를 계산",
+        "1": "separator [20,40]이 key 35를 leaf 09로 보내는 point lookup",
+        "2": "첫 leaf 뒤 right-sibling을 따라가는 range [35,62]",
+        "3": "capacity 4 leaf에 25를 넣어 overflow가 생기는 상태",
+        "4": "두 leaf와 parent downlink 25를 함께 공개하는 split",
+        "5": "정상 underflow 복구와 parent downlink가 없는 도달 불가능 page 비교"
+      },
+      "sourceEvidence": [
+        {
+          "source": "Bayer & McCreight, Organization and Maintenance of Large Ordered Indices, DOI 10.1007/BF00288683",
+          "application": "fixed-size page balanced multiway tree의 fanout·높이·삽입·삭제 원리"
+        },
+        {
+          "source": "Comer, The Ubiquitous B-Tree, DOI 10.1145/356770.356776",
+          "application": "B-tree 계열과 B+ tree 변형의 구조적 경계"
+        },
+        {
+          "source": "PostgreSQL 18 B-Tree Indexes와 PostgreSQL 18.6 nbtree README @ 724edf9",
+          "application": "leaf/internal page, downlink, split, high key·right link와 제품별 삭제 정책"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "개념 글은 page layout·point/range·split/delete·failure·evidence만 남기고 운영 검증은 별도 practice route로 분리했습니다.",
+        "arithmetic": "(4096-96)/24=floor 166, 100만 rows/leaf 200=5000 leaves, 보수적 fanout 160에서 32 parents와 1 root를 독립 계산했습니다.",
+        "humanize": "한국어 strict 오류 0, prose 신규 재검토 0; 설명용 가정과 제품 구현을 문장마다 분리했습니다.",
+        "browser390": "production preview 390x844에서 document 390=390, visual 334=334; 여섯 장면의 가로·세로 clipping 0. 실패 장면은 모바일 전용 compact 상태 비교로 수정했습니다.",
+        "browser1440": "production preview 1440x1000에서 document 1440=1440, visual 664=664; 6.5초 무자동재생, ArrowRight 01→02, 여섯 장면 overflow 0.",
+        "reducedMotion": "자동 진행이 멈추고 재생 버튼이 비활성화되며 수동 다음 장면 이동은 유지됩니다.",
+        "noJavaScript": "390x844에서 live 장면은 숨고 여섯 정적 장면과 locator·본문이 보이며 문서 가로 넘침이 없습니다.",
+        "static": "ESLint, 8GB TypeScript, production build와 전역 strict 감사 통과. 8,065 modules, 2,094 static routes, 303 no-script bodies, 최대 RSS 약 6.35GB, swap 0."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "concept-practice-split-and-substantively-rewritten"
     },
     {
       "route": "blockchain/bullshark-deep",
@@ -3462,7 +3497,7 @@
     {
       "route": "blockchain/lsm-tree",
       "title": "LSM 저장 엔진: 한 키의 쓰기·읽기·정리",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/lsm-tree.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/lsm-tree.tsx",

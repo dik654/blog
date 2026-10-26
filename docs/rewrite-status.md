@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### B+ tree 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/bplus-tree`는 4,096바이트 page 예산에서 key 35 조회, range 35~62, 삽입 25의 overflow와 split, parent downlink가 없는 실패까지 한 page graph로 추적하는 개념 글로 다시 썼습니다. 출시 판단과 운영 검증은 새 `blockchain/bplus-index-validation` 실무 글로 분리했습니다.
+- 실무 글은 manifest에 비교 조건을 고정하고, candidate와 독립 oracle에 같은 연산을 재생한 뒤 경계 입력·중간 종료·재시작 대조를 거쳐 정확성 통과 run에서만 비용을 재는 순서로 구성했습니다. 실제 측정값이 없으므로 상태는 `proposed`이고 결과는 미측정으로 남겼습니다.
+- 일반 B+ tree의 redistribution·merge와 PostgreSQL nbtree의 삭제 정책을 구분했습니다. Bayer·McCreight 원 논문, Comer의 개관, PostgreSQL 18 공식 문서, PostgreSQL 18.6 고정 source `724edf9`와 `amcheck` 문서를 역할별로 대조했습니다.
+- 1440×1000 production preview에서 두 글 모두 6.5초 동안 자동 진행되지 않았고 ArrowRight로 장면이 이동했습니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이며 모든 장면의 가로 넘침과 clipping이 0입니다. 모바일 실패 비교와 상태 소유자 표는 같은 정보를 더 짧은 이동 거리로 읽도록 별도 레이아웃을 사용합니다.
+- reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다. JavaScript 비활성 390×844에서는 live 장면을 숨기고 여섯 단계의 정적 설명, 직속 부모 지도, 같은 트랙의 이웃 글과 본문을 그대로 제공합니다. 프로덕션 콘솔 오류는 0건입니다.
+- ESLint, 8GB TypeScript, production build와 article·visual·learning·graph·formula·calculation·reading·order·prose·한국어·용어·runtime·topology·coverage·architecture-flow strict 감사를 통과했습니다. 빌드는 8,065개 module, 2,094개 정적 공개 경로와 303편의 no-script 본문을 만들었고 최대 RSS는 약 6.35GB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증이 남았습니다.
+
 ## 2026-10-27 · Reth 값과 바이트: Alloy·RLP (로컬 검수 완료, 배포 대기)
 
 - `blockchain/reth-alloy-primitives`를 값 종류를 나열하는 글에서 주소 생성 한 건을 바이트 단위로 추적하는 개념 글로 다시 썼습니다. 공식 예시의 발신 주소 `0xb20a...E1d0`와 nonce 1이 타입 검사, RLP 필드 인코딩, 23바이트 목록, 정확한 복원, Keccak-256, CREATE 주소 `0xe33c...aa99`로 이어지는 여섯 장면을 본문보다 먼저 배치했습니다.
@@ -3934,7 +3943,7 @@
   U-42, kg-v43, 부모 지도 반환, 가로 넘침 0, console 오류 0과 키보드 초점을 확인했습니다.
   검증 뒤 Playwright와 Chromium 프로세스를 모두 종료했습니다.
 
-### LSM 저장 엔진 개념·실무 분리 로컬 검증 (2026-10-27)
+### LSM 저장 엔진 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `lsm-tree`는 `concept`, `lsm-engine-validation`은 `practice`로 분리했습니다. 두 글은 저장
   엔진 학습 지도에서 직속 부모, 현재 위치, 같은 트랙의 이웃 글을 먼저 보여 줍니다. 실무 글은
@@ -3953,4 +3962,7 @@
   통과했습니다. Production build는 8,061개 module과 정적 public route 2,092개, no-script
   본문 301편을 생성했고 최대 상주 메모리는 약 6.42GB, swap은 0이었습니다. JavaScript 비활성
   390×844 화면에서 두 글 모두 직속 부모, 여섯 정적 장면, 핵심 사례, 부모 지도 반환이 보이고
-  live 조작부와 문서 가로 넘침은 없었습니다. GitHub Pages 공개 경로 검증만 남아 있습니다.
+  live 조작부와 문서 가로 넘침은 없었습니다.
+- GitHub Pages run `40378899670`에서 전역 감사, production build와 993개 공개 글의 실제 브라우저
+  검사가 모두 통과했습니다. 공개 LSM 두 경로를 390×844에서 다시 열어 HTTP 200, 직속 부모와
+  개념 anchor, 핵심 사례, 가로 넘침 0, console 오류 0과 6.4초 무자동재생을 확인했습니다.
