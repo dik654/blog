@@ -389,6 +389,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Source SHA·page format·comparator·duplicate policy·sync·filesystem·장비·trace를 고정하고 capacity 경계와 root growth, 대상 구현의 delete path, parent/root/meta 공개 전후를 대조합니다. 모든 key·range·graph 불변식을 통과한 run에서만 page read/write·height·space·p99를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/mdbx-internals": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Mapped file·page fault, txid100 reader와 txid101 writer의 Copy-on-Write path, meta publish, reader generation·page reclamation과 DUPSORT ordering까지는 한 transaction 메커니즘입니다. Release·sync·filesystem·storage를 고정한 중단·재실행·복구·측정·ADR은 환경별 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 root1→branch8→leaf42와 새 path root2→branch18→leaf52, active reader txids 100·103의 reclamation horizon, key A values [2,5,9]를 끝까지 추적합니다. Crash 결과·성능 수치·운영 승인은 포함하지 않습니다.",
+    targetRoutes: ["blockchain/mdbx-internals", "blockchain/mdbx-validation"],
+  },
+  "blockchain/mdbx-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "한 run manifest에서 정상 commit receipt, data page·meta·sync 경계 중단, reopen generation·rows 대조, long reader·map-full·DUPSORT 경계와 비용을 연결해 ADR로 남기는 하나의 운영 판단 경로입니다. 상태 소유권·복구·결정은 같은 artifact를 공유하므로 다시 나누면 증거가 끊깁니다.",
+    sharedGate:
+      "libmdbx v0.14.3 f7a3a93, build·sync·geometry·filesystem·device·trace를 고정하고 process kill과 power-loss model을 구분합니다. Txid·root·rows·DUPSORT parity를 통과한 run에서만 latency·RSS·map growth를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
@@ -3868,6 +3887,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",
   "blockchain/bplus-tree": "b1aeba618637cd19",
   "blockchain/bplus-index-validation": "1f8d0bca8f6b4161",
+  "blockchain/mdbx-internals": "53f56a767f72651b",
+  "blockchain/mdbx-validation": "e1da7d714babffc2",
   "blockchain/reth-net": "f506624d24b7ed4a",
   "blockchain/reth-precompiles": "79605a2596ddb7f4",
   "blockchain/reth-rpc": "02473a33cea1db84",

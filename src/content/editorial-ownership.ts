@@ -5979,6 +5979,49 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "장비·filesystem·자료·sync 정책이 바뀌면 기존 결론을 다시 검증하고, 실험 계획을 운영 승인으로 확대하지 않는다." },
     ],
   },
+  "mdbx-internals": {
+    title: "MDBX mmap·CoW·MVCC 개념 글이 소유하는 범위",
+    owns: [
+      "Mapped file address·resident page·logical B+ tree lookup과 page fault의 경계",
+      "Reader txid100의 old path와 writer101의 새 leaf·branch·root Copy-on-Write path",
+      "Meta가 새 transaction generation과 root를 공개하는 visibility 경계",
+      "가장 오래된 active reader가 retired page 재사용을 늦추는 MVCC 수명",
+      "DUPSORT key 내부 ordered values와 duplicate cursor·next-key·codec·comparator 계약",
+    ],
+    reuses: [
+      { label: "Reth의 검증·실행·저장 전체 지도", href: "/cs/blockchain/reth#overview" },
+      { label: "B+ tree page·조회·갱신", href: "/cs/blockchain/bplus-tree#overview" },
+      { label: "Bit·byte의 기초", href: "/cs/ai/text-unicode-encoding#bits-bytes" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Mmap·CoW·MVCC 설계 계보는 LMDB 원 논문에 귀속한다." },
+      { kind: "primary-source", rule: "Transaction·reader·map·DUPSORT claim은 libmdbx v0.14.3 commit f7a3a93과 공개 header 범위로 제한한다." },
+      { kind: "project-measurement", rule: "Page 번호·txid와 100GB mapping은 원리 설명용 사례이며 대상 서비스 측정값으로 쓰지 않는다." },
+      { kind: "project-claim", rule: "Mmap·meta visibility·stable-media durability와 특정 workload의 성능 우위를 서로 확대하지 않는다." },
+    ],
+  },
+  "mdbx-validation": {
+    title: "MDBX 실험·복구·결정 글이 소유하는 범위",
+    owns: [
+      "Release·source SHA·build·sync mode·geometry·filesystem·storage·trace를 고정한 run manifest",
+      "Harness·libmdbx DB state·ordered multimap oracle·collector·ADR의 authoritative writer",
+      "Data page·meta·sync 경계의 process kill과 별도 power-loss model",
+      "Reopen generation·root·전체 rows·DUPSORT order와 oracle·commit receipt 대조",
+      "Long reader·map-full·reader slots·writer contention·복구·rollback 뒤 비용과 채택 판정",
+    ],
+    reuses: [
+      { label: "Mapped page와 page fault", href: "/cs/blockchain/mdbx-internals#page-map" },
+      { label: "CoW path와 meta 공개", href: "/cs/blockchain/mdbx-internals#transaction" },
+      { label: "Reader와 page 재사용", href: "/cs/blockchain/mdbx-internals#reclaim" },
+      { label: "DUPSORT 순서 계약", href: "/cs/blockchain/mdbx-internals#dupsort" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "기능·flag·error·known constraint는 libmdbx v0.14.3 commit f7a3a93에 귀속한다." },
+      { kind: "standard", rule: "Process kill 결과를 kernel panic·power-loss·device cache까지 견딘 증거로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경에서 직접 얻은 값만 [M]으로 기록하며 현재 복구·성능 결과는 미측정으로 남긴다." },
+      { kind: "project-claim", rule: "Release·build·sync·filesystem·device·container model·workload 또는 RPO/RTO가 바뀌면 결론을 다시 검증한다." },
+    ],
+  },
   "reth-db": {
     title: "Reth typed DB·static history 글이 소유하는 범위",
     owns: [

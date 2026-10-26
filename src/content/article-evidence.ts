@@ -6835,7 +6835,13 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/mdbx-internals": [
     { kind:"핵심 논문", label:"Chu · MDB: A Memory-Mapped Database and Backend for OpenLDAP", href:"https://www.openldap.org/pub/hyc/mdb-paper.pdf", note:"mmap·CoW·MVCC design lineage의 primary paper" },
-    { kind:"공식 코드", label:"Mithril-mine/libmdbx @ f7a3a93", href:"https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0", note:"MDBX transaction·page·DUPSORT의 pinned source" },
+    { kind:"공식 코드", label:"Mithril-mine/libmdbx v0.14.3 @ f7a3a93", href:"https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0", note:"2026-08-09 release의 transaction·page·reader·DUPSORT pinned source" },
+    { kind:"공식 코드", label:"libmdbx v0.14.3 · mdbx.h", href:"https://github.com/Mithril-mine/libmdbx/blob/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0/mdbx.h", note:"Transaction·reader·map·sync mode·DUPSORT 공개 API 계약" },
+  ],
+  "blockchain/mdbx-validation": [
+    { kind:"공식 코드", label:"Mithril-mine/libmdbx v0.14.3 @ f7a3a93", href:"https://github.com/Mithril-mine/libmdbx/tree/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0", note:"시험 대상 release와 source·tests·change log의 exact snapshot" },
+    { kind:"공식 코드", label:"libmdbx v0.14.3 · mdbx.h", href:"https://github.com/Mithril-mine/libmdbx/blob/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0/mdbx.h", note:"Durable·safe-nosync·utterly-nosync와 commit·reader·map·DUPSORT 오류 경계" },
+    { kind:"공식 문서", label:"libmdbx v0.14.3 · README", href:"https://github.com/Mithril-mine/libmdbx/blob/f7a3a9323cacacfa9dc6137ae7a7252a67744ff0/README.md", note:"Single writer·concurrent readers·shadow paging·long-reader·container 운영 제약" },
   ],
   "blockchain/merkle-patricia-trie": [
     { kind:"공식 문서", label:"ethereum.org · Merkle Patricia Trie", href:"https://ethereum.org/developers/docs/data-structures-and-encoding/patricia-merkle-trie/", note:"MPT node/path/root 구조의 official documentation" },
