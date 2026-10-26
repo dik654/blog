@@ -1754,38 +1754,54 @@
     {
       "route": "blockchain/evm-advanced",
       "title": "EVM 심화: Create · DelegateCall · StaticCall",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/evm-advanced.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/evm-advanced.tsx",
-        "src/pages/articles/blockchain/evm-advanced/ModernArticle.tsx"
+        "src/pages/articles/blockchain/evm-advanced/ModernArticle.tsx",
+        "src/pages/articles/blockchain/evm-advanced/viz/NestedCallFrameTraceViz.tsx",
+        "src/pages/articles/blockchain/evm-advanced/viz/ModernEvmAdvancedViz.tsx",
+        "src/pages/articles/blockchain/evm-shared/EvmPathLocator.tsx",
+        "src/content/evm-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "stageMarkers": 12,
+        "predictionPointers": 2,
+        "assumptionMarkers": 6,
         "sourceButtons": 0,
         "headings": [
-          "EVM 심화의 핵심은 opcode 이름 암기가 아니라, 새 frame이 누구의 code·storage·sender·value를 쓰는지 추적하는 일이다",
-          "높은 memory offset은 quadratic 비용을 만들고, CREATE2 주소는 init code에 commit한다",
-          "Code를 빌려 쓰는 것과 상대 account의 상태를 바꾸는 것은 다르다",
-          "Child가 실패해도 parent가 그 실패를 처리하면 transaction은 계속될 수 있다"
+          "다른 계약의 코드를 실행하면 누구의 상태가 바뀔까요?",
+          "실행할 코드와 상태를 기록할 주소는 같은 항목이 아닙니다",
+          "CREATE2 주소와 배포된 코드는 서로 다른 단계에서 결정됩니다",
+          "하위 실패는 결과로 돌아오고, 상위 프레임이 전파 여부를 정합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 정적 표는 DELEGATECALL의 code·storage 권한과 STATICCALL 실패가 한 요청 안에서 어떻게 이어지는지 보여주지 못했습니다.",
+        "개념 글에 실행기 교체·release fixture·rollback 판단이 섞여 있어 프로토콜 자체의 실패 동작과 운영 결정을 구분하기 어려웠습니다.",
+        "EVM 전체 지도에서 현재 위치와 다음 실제 구현 글을 찾을 수 없었습니다."
+      ],
+      "fixture": "Alice→Proxy P(1 ETH)→DELEGATECALL Implementation I→Proxy slot0=7 임시 기록→STATICCALL Checker C→SSTORE 예외→F1 REVERT→Proxy가 success=0을 처리하고 정상 종료",
+      "stageEvidence": {
+        "nestedCall": "7개 장면에서 F0/F1/F2의 code·storage·sender·value·write 권한과 slot0·success 상태를 추적합니다.",
+        "create2": "EIP-1014 예제 0을 5개 장면으로 나눠 입력·후보 주소·충돌·init frame·runtime code 저장을 구분합니다.",
+        "fallback": "두 장면형 시각화가 StaticSceneList를 제공하고 정적 route의 noscript 본문에서 12개 장면을 순서대로 표시합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        {
+          "source": "EIP-7, EIP-214, EIP-1014, EIP-211, Ethereum Yellow Paper Shanghai version",
+          "application": "DELEGATECALL sender/value 보존, static flag 전파와 금지 연산, CREATE2 85-byte preimage·충돌, return-data buffer, memory·halt 경계를 각각 해당 절에 한정해 적용했습니다."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "개념 질문 하나에서 시작해 한 Proxy 요청, 권한표, CREATE2, child rollback을 같은 프레임 모델로 다시 읽었습니다. 운영 release 문장은 제거하고 Reth 실행 글을 practice 트랙으로 연결했습니다.",
+        "arithmetic": "CREATE2 수식과 공식 example 0 주소를 EIP-1014에 대조했습니다. Memory 식은 Yellow Paper Shanghai의 Cmem(a)=3a+floor(a²/512) 범위로 표시했으며 별도 실행 측정은 주장하지 않습니다.",
+        "humanize": "audit-korean-naturalness·term-density·term-pair-wrapping strict 통과. code·storage·sender 같은 프로토콜 필드는 한글 설명을 바로 붙였습니다.",
+        "browser390": "Playwright 390×844에서 document clientWidth=scrollWidth=390, locator=concept, 장면 초기값 0, 키보드 ArrowRight 전환, reduced-motion 재생 비활성, no-JS 정적 장면 12개와 live canvas display:none을 확인했습니다.",
+        "browser1440": "Playwright 1440×1100에서 첫 장면과 05 쓰기 거절 장면을 캡처해 F0/F1/F2 권한·success=0·본문 겹침 없음, console error/warning 0을 확인했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "rewrite-concept-first-with-nested-frame-trace-and-recursive-evm-map"
     },
     {
       "route": "blockchain/evm-fundamentals",

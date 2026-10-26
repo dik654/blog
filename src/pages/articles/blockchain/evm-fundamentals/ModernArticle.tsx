@@ -4,9 +4,11 @@ import { CitationBlock } from "@/components/ui/citation-block";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
 import { teachCodeRefs } from "./teachCodeRefs";
 import { EvmStepTraceViz, EvmFailureViz } from "./viz/ModernEvmFundamentalsViz";
+import EvmPathLocator, { EvmMapReturn } from "../evm-shared/EvmPathLocator";
 export default function ModernEvmFundamentalsArticle() {
  const sidebar=useCodeSidebar();
  return <><article className="space-y-14 [&_section]:space-y-5 [&_h2]:text-2xl [&_h2]:font-bold [&_p]:leading-8">
+ <EvmPathLocator current="machine" />
  <section id="overview" data-teach-level="S"><h2>1. 여러 컴퓨터가 같은 지시를 실행해 같은 결과를 얻습니다</h2>
  <p>장부를 여러 컴퓨터가 복사해 보관한다면 각자가 계산한 다음 값도 같아야 합니다. 한 컴퓨터가 2와 3을 더해 5를 만들고 다른 컴퓨터가 6을 만들면 같은 장부를 유지할 수 없습니다. 모든 참여자가 공유하는 작은 계산 규칙이 필요한 이유입니다.</p>
  <p>실행할 프로그램은 외부 사람이 보낼 수 있으므로 끝없이 계산하거나 장부를 임의로 고치지 못하도록 제한합니다. 한 명령의 의미, 계산 예산, 실패했을 때 되돌릴 범위를 함께 정합니다. 프로그램의 결과가 맞다는 검사와 여러 후보 중 어떤 기록을 채택할지는 각각의 책임입니다.</p>
@@ -57,5 +59,6 @@ export default function ModernEvmFundamentalsArticle() {
  <p>하위 호출이 실패해도 상위 호출이 실패 표시를 확인하고 계속할 수 있습니다. 반대로 상위 호출까지 실패하면 앞서 성공한 하위 호출의 변경도 취소될 수 있습니다. 자세한 생성·중첩 호출은 <Link to="/cs/blockchain/evm-advanced">EVM 심화</Link>에서 같은 책임을 확장합니다.</p>
  <p>새 실행기를 검증할 때는 2+3, 256비트 넘침, 스택 부족, memory 확장, storage 쓰기 뒤 REVERT, 하위 호출 gas 부족을 같은 fork의 시험 입력으로 비교합니다. 종료 상태·사용 gas·로그·최종 상태 루트가 모두 맞아야 합니다. 두 클라이언트의 시험을 이 글에서 실제 실행했다고 주장하지 않습니다.</p>
  <ul className="list-disc space-y-3 pl-6"><li>ADD 뒤 스택에 5가 남으면 storage와 반환 데이터에도 5가 기록될까요? (답: 7절)</li><li>같은 프로그램의 시작 예산이 8이면 어느 명령에서 실패할까요? (답: 10절)</li><li>하위 호출의 REVERT가 항상 거래 전체를 실패시킬까요? (답: 11절)</li></ul>
+ <EvmMapReturn current="machine" />
  </section></article><CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={teachCodeRefs} fileTrees={{}} projectMetas={{"execution-specs":{id:"execution-specs",label:"실행 명세 · 87aba1a",badgeClass:"border-sky-500 text-sky-700"}}} /></>;
 }
