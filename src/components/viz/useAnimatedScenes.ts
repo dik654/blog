@@ -117,7 +117,7 @@ export function useAnimatedScenes(
   const move = (offset: number) => setActive(active + offset);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (isTextEditingTarget(event.target)) return;
+    if (isTextEditingTarget(event.target) || isInteractiveTarget(event.target)) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
       move(1);
@@ -125,7 +125,7 @@ export function useAnimatedScenes(
       event.preventDefault();
       move(-1);
     } else if (event.key === " ") {
-      if (!keyboardPlayback || isInteractiveTarget(event.target)) return;
+      if (!keyboardPlayback) return;
       event.preventDefault();
       if (!reducedMotion) setPlaying(!playing);
     }

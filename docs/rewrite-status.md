@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · 모델 등록에서 실제 실행까지 (로컬 화면 검수 완료, 정적 배포 검증 진행 중)
+
+- `ai/model-artifact-registry`를 run-27 → 실행 기록과 모델 파일 → 필수 파일 4개 검사 → Champion을 고정 버전 v21로 해석 → promotion-84 승인 → v17·v21 Canary → 실제 endpoint 대조의 한 경로로 다시 구성했습니다. 모든 이름·digest·시각·트래픽 비율은 설명용 가정입니다.
+- 변경 가능한 Champion 별명만 승인 기록에 남기지 않고 당시의 v21과 bundle digest·정책 revision·승인자·시각을 고정합니다. 배포 뒤에는 READY 상태만 보지 않고 모델 버전·모델 파일·container·설정 digest를 승인 기록과 각각 대조합니다.
+- 본문보다 먼저 기록·검사·승인·배포·대조의 다섯 장면을 배치했습니다. 390×844에서는 모든 장면이 523px canvas 안에 들어가고 문서 가로 넘침·박스 이탈이 0이며 조작 버튼은 50×50px입니다. 1024×900에서도 다섯 장면의 높이가 같고 가로 넘침이 없습니다.
+- 축소 모션에서는 재생 조작부 없이 다섯 장면의 제목과 결론을 정적 순서로 모두 제공합니다. 조작 버튼에 초점을 둔 채 ArrowRight를 누르면 상위 시각화까지 이벤트가 전파되어 장면이 두 번 이동하던 공용 키보드 결함도 `useAnimatedScenes`에서 막았습니다.
+- MLflow v3.17.1 Model Registry 문서, MLflow Backend·Artifact Store 문서, Databricks Unity Catalog·Model Serving 공식 문서를 역할별로 대조했습니다. 제품 기능의 존재를 대상 환경의 복구·무결성·배포 일치 증거로 확대하지 않았습니다.
+- 선택 파일 ESLint와 learning·article·viz·formula·calculation·graph·reading·order·prose·한국어·용어·용어쌍·runtime strict 감사를 통과했습니다. TypeScript 검사는 최대 RSS 약 6.38GB, production build는 8,031개 module·정적 public route 2,090개·no-script 본문 284편·최대 RSS 약 6.70GB로 끝났고 둘 다 swap은 0이었습니다.
+- JavaScript 비활성 390×844 production preview에서 HTTP 200, 다섯 장면의 정적 순서, run-27·promotion-84·canary·READY와 다음 글 결론이 남고 문서 가로 넘침이 없음을 확인했습니다. GitHub Pages 공개 경로 검증은 아직 남았으며 AI systems 장부에서는 `reproducible-ml-execution` 한 글이 미검토 상태입니다.
+
 ## 2026-10-26 · 출시 정책 선택과 독립 승인 (로컬 검수 완료, 배포 대기)
 
 - `ai/metric-selection-protocol`을 학습 → 측정 → 선택 → 고정 → 승인의 다섯 상태로 다시 구성했습니다. C17·C24·C29의 학습 손실은 후보 생성 기록일 뿐이며, validation에서는 학습 산출물·행동 기준·실행 설정을 묶은 P17·P24-H·P24-L·P29 정책을 같은 조건으로 비교합니다.

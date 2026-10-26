@@ -2529,33 +2529,33 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/model-artifact-registry": [
     {
       kind: "공식 문서",
-      label: "MLflow Artifact Stores",
-      href: "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/",
-      note: "Backend metadata와 artifact object store의 현재 책임·access 경계",
-    },
-    {
-      kind: "공식 문서",
-      label: "MLflow Model Registry Workflows",
-      href: "https://mlflow.org/docs/latest/ml/model-registry/workflow/",
-      note: "Immutable versions·tags·mutable aliases와 alias-based loading의 현재 workflow",
+      label: "MLflow 3.17.1 Model Registry Workflows",
+      href: "https://github.com/mlflow/mlflow/blob/v3.17.1/docs/docs/classic-ml/model-registry/workflow.mdx",
+      note: "고정한 릴리스에서 model version과 변경 가능한 alias의 API·workflow 경계",
     },
     {
       kind: "공식 문서",
       label: "MLflow Backend Stores",
-      href: "https://mlflow.org/docs/latest/self-hosting/architecture/backend-store/",
-      note: "SQLite·relational database backend와 artifact store의 분리, schema migration·backup 경계",
+      href: "https://mlflow.org/docs/latest/tracking/backend-stores/",
+      note: "2026-10-26 확인. run·model·trace metadata와 큰 artifact의 저장 책임 분리",
+    },
+    {
+      kind: "공식 문서",
+      label: "MLflow Artifact Stores",
+      href: "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/",
+      note: "2026-10-26 확인. model weights·data file 같은 큰 object와 access 경계",
     },
     {
       kind: "공식 문서",
       label: "Databricks · Models in Unity Catalog",
-      href: "https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/",
-      note: "catalog.schema.model identity, version·alias와 상위 catalog·schema permission의 현재 lifecycle",
+      href: "https://learn.microsoft.com/en-us/azure/databricks/machine-learning/manage-model-lifecycle/",
+      note: "2026-10-26 확인. catalog.schema.model identity, version·alias·권한과 배포 상태의 경계",
     },
     {
       kind: "공식 문서",
       label: "Databricks · Custom model serving endpoints",
-      href: "https://docs.databricks.com/aws/en/machine-learning/model-serving/create-manage-serving-endpoints",
-      note: "Unity Catalog full model name·explicit version을 endpoint served entity로 배포하는 현재 API",
+      href: "https://learn.microsoft.com/en-us/azure/databricks/machine-learning/model-serving/create-manage-serving-endpoints",
+      note: "2026-10-26 확인. 명시적인 model version과 served entity별 traffic percentage 설정",
     },
   ],
   "ai/reproducible-ml-execution": [
