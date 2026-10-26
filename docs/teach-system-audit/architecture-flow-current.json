@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 992,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 683,
+    "dedicatedVisuals": 684,
     "inlineVisuals": 533,
-    "customVisuals": 866,
-    "animatedMechanisms": 482,
+    "customVisuals": 867,
+    "animatedMechanisms": 483,
     "architectureWithoutAnimation": 91,
-    "recursiveLocators": 304,
+    "recursiveLocators": 305,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -8114,18 +8114,18 @@
     {
       "route": "blockchain/reth-alloy-primitives",
       "publicPath": "cs/blockchain/reth-alloy-primitives",
-      "title": "Reth alloy 프리미티브 & RLP",
+      "title": "Reth 값과 바이트: Alloy·RLP",
       "sourcePath": "src/pages/articles/ethereum/reth-alloy-primitives.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/reth-blob-admission",

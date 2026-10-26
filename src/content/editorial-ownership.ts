@@ -5882,7 +5882,7 @@ export const EDITORIAL_BOUNDARIES = {
       "RLP byte string/list prefix와 minimal integer canonical form",
       "U256 limb/value mapping과 checked·wrapping overflow 선택",
       "Bounded exact RLP decode와 typed error·trailing-byte rejection",
-      "CREATE·CREATE2·bloom hash domain과 paired type/codec release gate",
+      "CREATE·CREATE2·bloom에서 Keccak-256 입력과 결과를 해석하는 서로 다른 규칙",
     ],
     reuses: [
       { label: "Bit·byte의 기초", href: "/cs/ai/text-unicode-encoding#bits-bytes" },
@@ -5892,7 +5892,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "standard", rule: "RLP canonical form·Ethereum hash/address derivation은 고정한 protocol specification·schema에 귀속한다." },
       { kind: "primary-source", rule: "Primitive layout·trait·method·codec claim은 표시한 Alloy/Reth crate semver 또는 SHA와 feature에 귀속한다." },
-      { kind: "project-measurement", rule: "Boundary value·wrong width·malformed encoding·hash domain fixture의 typed value·bytes·error·digest parity 뒤 성능을 비교한다." },
+      { kind: "project-measurement", rule: "공식 sender·nonce에서 RLP 23바이트·Keccak-256 digest·CREATE 주소를 독립 계산해 소스 예시와 대조한다." },
       { kind: "project-claim", rule: "같은 width·round-trip·hash collision resistance를 semantic schema·canonical input·application validity 전체로 확대하지 않는다." },
     ],
   },
