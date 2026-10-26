@@ -5621,49 +5621,60 @@
     },
     {
       "route": "blockchain/reth-pipeline",
-      "title": "Reth Pipeline & Stages 아키텍처",
-      "status": "unreviewed",
+      "title": "Reth Pipeline: stage·checkpoint·unwind",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-pipeline.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-pipeline.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/BodiesStage.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/ExecutionStage.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/HeadersStage.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/MerkleStage.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/Overview.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/SendersStage.tsx",
-        "src/pages/articles/ethereum/reth-pipeline/StageTrait.tsx",
-        "src/pages/articles/ethereum/reth-state-flow-viz.tsx"
+        "src/pages/articles/ethereum/reth-pipeline/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-pipeline/RethPipelineLocator.tsx",
+        "src/pages/articles/ethereum/reth-pipeline/fileTree.ts",
+        "src/pages/articles/ethereum/reth-pipeline/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-pipeline/viz/RethPipelineViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 5,
         "headings": [
-          "\n        BodiesStage는 payload 목록을 header commitment에 다시 연결한다\n      ",
-          "\n        ExecutionStage는 parent state에서 block을 순서대로 실행한다\n      ",
-          "\n        HeadersStage는 parent linkage와 fork rule을 먼저 고정한다\n      ",
-          "\n        MerkleStage는 execution bundle을 header state root와 대조한다\n      ",
-          "\n        Pipeline은 오래된 block 구간을 검증 가능한 stage와 checkpoint로 나눈다\n      ",
-          "\n        SendersStage는 서명에서 recovered address를 deterministic하게 만든다\n      ",
-          "\n        Stage 계약은 bounded progress·checkpoint·unwind를 한 상태 기계로 묶는다\n      "
+          "긴 과거 동기화를 중단하고 다시 시작해도 어떻게 같은 지점에서 이어갈까요?",
+          "뒤 stage는 바로 앞 stage가 저장한 범위까지만 진행합니다",
+          "Checkpoint 다음 블록부터 threshold만큼 처리합니다",
+          "Output과 새 checkpoint를 같은 provider transaction에 저장합니다",
+          "Stage trait은 준비·실행·되감기의 경계를 분리합니다",
+          "되돌릴 때는 실행 순서의 반대로 140 이후를 지웁니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 stage output commit과 checkpoint marker 저장 사이에 독립적인 공개 틈이 있다고 설명했지만 v2.8.1 runner는 둘을 같은 provider transaction에 넣습니다.",
+        "과거 release의 stage layout과 현재 기본 stage set을 구분하지 않았고 checkpoint를 finality나 전체 sync head처럼 읽을 여지가 있었습니다.",
+        "Stage별 구현 설명 안에 restart·fault injection·release 판단을 섞어 개념 질문과 운영 검증 경계가 흐려졌습니다."
+      ],
+      "fixture": "Stage checkpoint 99에서 target 250까지 threshold 64로 진행합니다. Forward batch 100..163·164..227·228..250과 common ancestor 140으로의 reverse unwind를 같은 사례에서 추적합니다.",
+      "stageEvidence": {
+        "request": "현재 checkpoint 99와 target 250을 고정하고 checkpoint가 finality나 downloaded head가 아님을 구분합니다.",
+        "order": "기본 stage set을 입력 확보→실행 파생→state commitment→조회·보존 순서로 나누고 다음 stage target이 앞 stage checkpoint임을 확인합니다.",
+        "batch": "next_block_range_with_threshold의 실제 v2.8.1 source로 100..163·164..227·228..250을 계산합니다.",
+        "commit": "Stage output과 checkpoint가 같은 RW provider transaction에 들어가 commit되는 경계를 runner source와 대조합니다.",
+        "unwind": "Prune 경계를 먼저 확인하고 stage를 역순으로 순회해 output·checkpoint를 140까지 낮추는 경로를 확인합니다.",
+        "return": "Bounded progress·durable checkpoint·reverse dependency unwind를 직속 부모인 Reth backfill 지도에 반환합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth v2.8.1 default stage set에서 실제 stage 추가 순서와 선택 stage를 확인했습니다.",
+        "Reth v2.8.1 stage.rs L74–84에서 checkpoint 다음 block과 threshold 기반 batch 범위를 확인했습니다.",
+        "Reth v2.8.1 stage.rs L241–308에서 ready·execute·unwind와 post-commit hook의 책임을 확인했습니다.",
+        "Reth v2.8.1 pipeline/mod.rs L365–463·L486–554에서 previous-stage target, output·checkpoint commit과 reverse unwind를 확인했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "v2.8.1 source와 tag를 다시 읽어 과거의 두 단계 commit 설명, release 혼용과 합성 restart receipt를 개념 사실에서 제거했습니다.",
+        "arithmetic": "checkpoint 99·target 250·threshold 64의 세 batch와 250→140 unwind를 계산하고 모두 설명용 가정으로 표시했습니다.",
+        "humanize": "학습·article·pseudocode·visual style 계약과 선택 ESLint, TypeScript, production build가 통과했습니다.",
+        "browser390": "390×844에서 문서 390=390, live 시각화 334=334, 코드 패널 389=389이며 reduced-motion과 JavaScript 비활성 정적 6단계를 확인했습니다.",
+        "browser1440": "1440×1000에서 실제 코드 버튼과 source panel을 열어 path·line·주석을 확인했고 문서·패널 가로 넘침과 console 오류는 0건입니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "split-concept-from-pipeline-release-validation"
     },
     {
       "route": "blockchain/reth-precompiles",

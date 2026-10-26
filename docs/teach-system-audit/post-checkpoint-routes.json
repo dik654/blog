@@ -295,6 +295,11 @@
       "route": "blockchain/reth-provider-validation",
       "status": "reviewed-local",
       "evidence": "docs/rewrite-status.md#reth-provider-개념실무-분리-로컬-검증-완료-2026-10-27"
+    },
+    {
+      "route": "blockchain/reth-pipeline-validation",
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#reth-pipeline-개념실무-분리-로컬-검증-완료-2026-10-27"
     }
   ]
 }
