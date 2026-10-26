@@ -3549,7 +3549,7 @@
     {
       "route": "blockchain/mdbx-internals",
       "title": "MDBX: mmap·Copy-on-Write·MVCC generation",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/mdbx-internals.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/mdbx-internals.tsx",
@@ -3615,9 +3615,7 @@
         "noJavaScript": "390×844에서 live 장면은 숨고 여섯 정적 장면·직속 부모·본문·지도 반환이 보입니다. KaTeX stretchy SVG가 만들던 문서 가로 넘침을 정적 읽기 CSS로 막았습니다.",
         "static": "7GB Node heap 상한의 TypeScript·Vite production build가 통과했습니다. 8,069 modules, 2,096 static routes, 305 no-script bodies, 최대 RSS 약 6.45GB, swap 0입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "concept-practice-split-and-substantively-rewritten"
     },
     {
@@ -5331,43 +5329,58 @@
     },
     {
       "route": "blockchain/reth-db",
-      "title": "Reth Storage V1/V2 (MDBX · RocksDB · Static Files)",
-      "status": "unreviewed",
+      "title": "Reth Storage V2: 세 저장소와 한 가시 지점",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-db.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-db.tsx",
-        "src/pages/articles/ethereum/reth-db/Cursor.tsx",
-        "src/pages/articles/ethereum/reth-db/Overview.tsx",
-        "src/pages/articles/ethereum/reth-db/StaticFiles.tsx",
-        "src/pages/articles/ethereum/reth-db/Tables.tsx",
-        "src/pages/articles/ethereum/reth-storage-boundary-viz.tsx"
+        "src/pages/articles/ethereum/reth-db/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-db/viz/RethStorageV2Viz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "assumptionMarkers": 3,
         "sourceButtons": 8,
         "headings": [
-          "Cursor는 정렬된 key를 transaction snapshot 안에서만 걷는다",
-          "Reth DB는 record를 저장하는 곳이 아니라 schema·transaction·durability를 함께 지키는 경계다",
-          "Static file은 immutable history를 싸게 읽되 coverage manifest로 DB와 연결한다",
-          "Typed table은 Rust type과 disk bytes 사이의 schema contract다"
+          "Reth는 서로 다른 세 저장소를 어떻게 한 시점의 체인처럼 보여 줄까요?",
+          "StorageSettings가 값의 수명과 조회 방식에 따라 목적지를 고릅니다",
+          "정상 저장은 static files → RocksDB → MDBX 순서입니다",
+          "중간에 멈추면 앞서 간 자료를 MDBX의 보이는 tip에 맞춥니다",
+          "독자는 memory head를 먼저 고정한 뒤 disk snapshot을 엽니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 table·cursor·static file을 따로 설명해 블록 하나가 세 저장소로 나뉜 뒤 다시 한 체인 시점으로 읽히는 과정을 추적하기 어려웠습니다.",
+        "세 저장소의 저장을 하나의 원자적 transaction처럼 읽을 여지가 있었지만 실제 v2.8.1 정상 경로는 static files, RocksDB, MDBX를 순서대로 commit합니다.",
+        "v2.2.0과 일반적인 coverage manifest 설명이 섞여 현재 기본 Storage V2의 실제 route·복구 규칙과 차이가 있었습니다.",
+        "Migration·rollback 판단이 개념 설명과 섞여 저장 메커니즘의 질문이 흐려졌습니다."
+      ],
+      "fixture": "블록 1,000 실행 결과를 static files와 RocksDB에 반영한 뒤 MDBX commit 전에 process가 종료되는 사례를 사용합니다. Static files와 RocksDB는 1,000, MDBX의 공개 checkpoint는 999인 상태에서 무엇을 공개하고 어떤 자료를 잘라 내거나 다시 만드는지 추적합니다.",
+      "stageEvidence": {
+        "locator": "저장 엔진 학습 지도의 concept 자식으로 표시하고 MDBX 개념·검증 다음, Storage V2 migration 검증 앞에 둡니다.",
+        "route": "6개 장면에서 실행 결과→저장소 분류→세 backend 준비→순차 commit→중단 복구→일관된 읽기를 같은 블록 1,000 사례로 추적합니다.",
+        "commit": "v2.8.1 DatabaseProvider의 정상 static files→RocksDB→MDBX 순서와 unwind의 역방향 경계를 분리해 설명합니다.",
+        "recovery": "MDBX stage checkpoint를 공개 frontier로 두고 static/RocksDB의 ahead·behind 상태를 서로 다른 복구 방향으로 보여 줍니다.",
+        "read": "In-memory canonical head를 먼저 고정하고 database snapshot을 여는 순서가 memory와 disk 범위의 빈 구간을 막는 이유를 설명합니다.",
+        "fallback": "StaticSceneList와 no-script 정적 route에서 같은 6단계·공식 근거·부모 지도 반환을 순서대로 제공합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1의 StorageSettings 구현에서 V1·V2 backend route와 기본 V2 설정을 확인했습니다.",
+        "Reth v2.8.1 DatabaseProvider 구현에서 정상·unwind commit order, startup static-file 조정과 consistent provider snapshot 순서를 확인했습니다.",
+        "Reth v2.8.1 RocksDB invariant 구현에서 MDBX checkpoint보다 앞선 index는 prune하고 뒤처진 index는 unwind·rebuild 대상으로 분류하는 규칙을 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Reth v2.8.1 태그의 실제 StorageSettings, DatabaseProvider, RocksDB invariant와 migration 소스를 읽고 기존 v2.2.0·단일 원자성 인상을 교체했습니다.",
+        "arithmetic": "블록 999와 1,000은 저장소 간 frontier 차이를 설명하는 사례이며 실제 chain 높이나 성능 측정값으로 사용하지 않았습니다.",
+        "humanize": "글 단위 학습 계약·문장 호흡·한국어 자연스러움·용어 밀도·모바일 용어 묶음 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 여섯 장면 본체 높이 360~616px, 키보드 이동과 reduced-motion 비활성 재생을 확인했습니다. JavaScript 비활성 화면은 live 장면 0개·정적 장면 6개·문서 폭 390=390이며 직속 부모와 본문을 같은 순서로 제공합니다.",
+        "browser1440": "1440×1000에서 문서 폭 1440=1440, commit·recovery 장면과 부모 지도 반환을 확인했고 console 오류가 없었습니다. 8,065개 module production build와 2,098개 정적 route 생성이 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 검증"
+      ],
+      "reviewDisposition": "rewrite-as-concept-storage-v2-visibility-and-recovery"
     },
     {
       "route": "blockchain/reth-eip1559",

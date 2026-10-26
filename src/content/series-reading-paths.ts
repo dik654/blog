@@ -52,6 +52,7 @@ export const SERIES_READING_PATHS = {
           "state와 immutable history의 저장 위치, provider/RPC와 외부 확장 경계를 봅니다.",
         slugs: [
           "reth-db",
+          "reth-db-validation",
           "reth-provider",
           "reth-trie",
           "reth-rpc",
