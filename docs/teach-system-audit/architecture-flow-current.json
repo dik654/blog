@@ -7,9 +7,9 @@
     "dedicatedVisuals": 682,
     "inlineVisuals": 542,
     "customVisuals": 865,
-    "animatedMechanisms": 474,
+    "animatedMechanisms": 475,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 284,
+    "recursiveLocators": 285,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 982,
     "architectureWithoutCustomVisual": 25
@@ -3849,11 +3849,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "ai/multi-component-finetuning-vram",
