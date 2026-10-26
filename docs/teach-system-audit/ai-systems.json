@@ -9608,14 +9608,14 @@
       ],
       "validation": {
         "semanticReview": "Agent 수를 늘리는 설명보다 같은 RELEASE-42 요청이 기준선·세 작업·세 receipt·합류 판정을 지나는 순서를 먼저 보이고, 뒤 절의 framework와 안전 경계를 같은 완료 계약에 연결했습니다.",
-        "humanize": "영어 단독 단계명을 기준선·분리·결과·합류로 바꾸고 receipt·checksum처럼 필요한 용어는 한국어 역할과 함께 표시했습니다.",
+        "humanize": "영어 단독 단계명을 기준선·분리·결과·합류로 바꿨습니다. CI의 문장 호흡 실패 뒤 LangGraph·CrewAI 제목을 줄이고 상태 합치기·재실행·중복 방지 문단을 나눠, 전역 문장 감사의 신규 재검토 항목을 0개로 만들었습니다.",
         "browser390": "390×844에서 장면별 핵심 영역만 표시해 마지막 장면의 합류 판정이 첫 화면에 들어오며 overflow·frame/control movement·console 오류가 0임을 확인했습니다.",
         "browser1440": "1440×1000에서 요청·세 worker·합류 판정을 한 행으로 비교하고 overflow·frame/control movement·console 오류가 0임을 확인했습니다.",
         "keyboard": "핵심 Viz에 focus 후 ArrowRight로 장면 01에서 02로 이동했습니다.",
         "reducedMotion": "reduced-motion에서는 마지막 합류 장면과 비활성 재생 제어를 정적으로 제공합니다.",
         "noScript": "JavaScript 비활성 390×844 정적 경로에서 제목·현재 위치·부모 anchor·본문·정적 장면 순서가 보이고 가로 넘침이 없음을 확인했습니다.",
-        "build": "8GB 상한 production build가 통과했고 8,023 modules·정적 public route 2,090개·no-script 본문 277편을 생성했습니다.",
-        "browserEvidence": "output/playwright/multi-agent-rewrite-fixed/2026-10-26T02-55-05/summary.json"
+        "build": "문장 호흡 수정 뒤 8GB 상한 production build가 통과했고 8,025개 module·정적 public route 2,090개·no-script 본문 278편을 생성했습니다. 최대 상주 메모리는 약 6.77GB이고 swap은 0이었습니다.",
+        "browserEvidence": "output/playwright/ai-release-fix/2026-10-26T03-24-32/summary.json"
       },
       "remaining": [
         "GitHub Pages 배포 뒤 공개 경로 재검증"
@@ -10411,8 +10411,8 @@
         "keyboard": "실제 focus 대상에서 ArrowRight로 장면 01에서 02로 이동했습니다.",
         "reducedMotion": "reduced-motion에서는 마지막 재현 장면을 정적으로 제공하고 재생 조작을 비활성화했습니다.",
         "noScript": "JavaScript 비활성 390×844 production preview에서 HTTP 200, 제목·p-17·사건 시각·도착 시각·부모 지도 반환과 가로 넘침 0을 확인했습니다.",
-        "build": "production build가 8,025개 module을 변환했고 정적 공개 경로에 이 글의 no-script 본문을 생성했습니다.",
-        "browserEvidence": "output/playwright/prediction-time-feature-production/2026-10-26T03-17-12/summary.json"
+        "build": "8GB 상한 production build가 8,025개 module·정적 public route 2,090개·no-script 본문 278편을 생성했습니다. 최대 상주 메모리는 약 6.77GB이고 swap은 0이었습니다.",
+        "browserEvidence": "output/playwright/ai-release-fix/2026-10-26T03-24-32/summary.json"
       },
       "remaining": [
         "GitHub Pages 배포 뒤 공개 경로 재검증"

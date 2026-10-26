@@ -3778,7 +3778,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "isms-aml/isms-security-infra": "f4de0cdcc8443f58",
   "ai/lora-finetuning": "2123bb03bde8459e",
   "ai/lora-training-and-release": "9887191b7009e2d0",
-  "ai/multi-agent-implementation": "3969ad1368c01763",
+  "ai/multi-agent-implementation": "c2b3777be97f2835",
   "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
