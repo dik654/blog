@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useId, useState, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useState,
+  type KeyboardEvent,
+} from "react";
 
 function isTextEditingTarget(target: EventTarget | null) {
   return (
@@ -89,6 +96,14 @@ export function useAnimatedScenes(
     );
     return () => window.clearTimeout(timer);
   }, [active, intervalMs, length, loop, playing, reducedMotion]);
+
+  useLayoutEffect(() => {
+    const sceneRoot = document.getElementById(playbackId);
+    const scrollRegion = sceneRoot?.parentElement?.closest("[data-viz-canvas]");
+    if (scrollRegion instanceof HTMLElement && scrollRegion !== sceneRoot) {
+      scrollRegion.scrollTop = 0;
+    }
+  }, [active, playbackId]);
 
   const setActive = (value: number) => {
     setActiveState(

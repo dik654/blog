@@ -9103,8 +9103,11 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/graphrag-community-and-multihop-search": [
     { kind: "핵심 논문", label: "From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., arXiv 2404.16130)", href: "https://arxiv.org/abs/2404.16130", note: "Leiden community detection·계층 summary, local/global search 구분, global search map-reduce 절차, community level 별 성능·token 비율의 근거. 수치는 저자 자기보고" },
-    { kind: "공식 문서", label: "Microsoft GraphRAG — DRIFT Search", href: "https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md", note: "2026-10-06 확인. 관련 community report로 primer를 만들고 후속 질문을 local search로 확장한 뒤 결과를 합치는 절차와 필수 데이터 경계" },
-    { kind: "공식 문서", label: "Microsoft GraphRAG — CLI query methods", href: "https://microsoft.github.io/graphrag/cli/", note: "2026-10-06 확인. 현재 query method가 local·global·drift·basic으로 구분되는 CLI 계약" },
+    { kind: "핵심 논문", label: "From Louvain to Leiden: guaranteeing well-connected communities", href: "https://arxiv.org/abs/1810.08473", note: "Leiden이 Louvain의 잘못 연결된 community 문제를 다루고 연결된 community를 보장하도록 제안됐다는 원 논문 근거" },
+    { kind: "공식 규격", label: "Microsoft GraphRAG v3.3.0 — LocalSearchMixedContext", href: "https://github.com/microsoft/graphrag/blob/v3.3.0/packages/graphrag/graphrag/query/structured_search/local_search/mixed_context.py", note: "질문→entity mapping, community/local/text unit 예산 분할, relationship와 원문을 context에 넣는 실제 고정 버전 구현" },
+    { kind: "공식 문서", label: "Microsoft GraphRAG v3.3.0 — Global Search", href: "https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/global_search.md", note: "Community report batch→점수 있는 중간 point→filter·reduce 절차의 고정 버전 문서" },
+    { kind: "공식 문서", label: "Microsoft GraphRAG v3.3.0 — DRIFT Search", href: "https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/drift_search.md", note: "관련 report의 primer→후속 질문→local search→output hierarchy 절차의 고정 버전 문서" },
+    { kind: "공식 프로젝트 기록", label: "Microsoft GraphRAG v3.3.0 release", href: "https://github.com/microsoft/graphrag/releases/tag/v3.3.0", note: "2026-10-08 공개된 이 글의 구현 기준 버전" },
   ],
   "ai/vision-language-model-architecture": [
     { kind: "핵심 논문", label: "Liu et al. · Visual Instruction Tuning / LLaVA (NeurIPS 2023)", href: "https://arxiv.org/abs/2304.08485", note: "Linear/MLP projector와 concat-projection 결합 방식의 근거" },

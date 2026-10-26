@@ -20444,18 +20444,18 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Community detection · community summary",
     aliases: ["Graph Community", "Community Detection", "Community Summary"],
     definition:
-      "서로 조밀하게 연결된 entity 묶음(graph community)을 modularity 기준으로 나누는 절차(Leiden·Louvain 류 community detection)와, 나뉜 community 마다 그 안의 node·edge·property 를 LLM 이 미리 요약해 두는 community summary 를 함께 가리키며, 이 요약은 질문이 들어오기 전에 인덱싱 시점에 만들어집니다.",
+      "서로 조밀하게 연결된 entity 묶음을 찾는 community detection과, 각 묶음의 node·edge·근거를 LLM이 질문 전에 요약해 두는 community report 생성을 함께 가리킵니다. 분할은 graph algorithm의 출력이고 report는 생성 모델의 출력이므로 서로 다른 상태입니다.",
     canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#community",
   },
   "local-vs-global-graph-search": {
     id: "local-vs-global-graph-search",
     kind: "method",
     domain: "computer-science",
-    label: "Local search · global search · graph traversal",
-    aliases: ["Local Graph Search", "Global Graph Search", "Graph Traversal"],
+    label: "Local search · global search · DRIFT search",
+    aliases: ["Local Graph Search", "Global Graph Search", "DRIFT Search"],
     definition:
-      "Node 에서 시작해 edge 를 따라 이웃으로 옮겨 가는 graph traversal(BFS·DFS)을 hop 예산으로 제한해 entity 하나 주변만 보는 local search 와, 그 예산 없이 모든 community summary 를 모아 그래프 전체에 걸친 답을 만드는 global search 로 나누며, 두 방식은 살피는 범위가 다른 만큼 비용도 다르게 늘어납니다.",
-    canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#search",
+      "Microsoft GraphRAG의 local search는 질문과 가까운 entity를 기준으로 relationship·community report·text unit을 token 예산 안에 조립하고, global search는 선택한 community level의 report를 map-reduce하며, DRIFT는 관련 report의 primer에서 후속 local 질문으로 내려갑니다. 세 방식은 별도 query method입니다.",
+    canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#search-modes",
   },
   "graph-vector-hybrid-retrieval": {
     id: "graph-vector-hybrid-retrieval",
@@ -20464,8 +20464,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Graph-vector hybrid retrieval",
     aliases: ["Graph–Vector Hybrid Retrieval"],
     definition:
-      "질문 embedding 과 entity·relation description embedding 사이의 유사도로 local search 가 시작할 entity 후보(진입점)를 먼저 찾고, 그 지점부터는 유사도가 아니라 edge 를 따라 graph traversal 로 확장하는 두 단계 검색으로, 진입점을 찾지 못하면 이후 traversal 도 시작하지 못합니다.",
-    canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#hybrid",
+      "질문 embedding과 entity description embedding 사이의 유사도로 local search의 시작 entity를 찾고, 선택 entity에 연결된 relationship·community report·text unit을 순위화해 한 context로 조립하는 검색입니다. 시작 entity를 놓치면 뒤 자료 수집에서도 복구하기 어렵습니다.",
+    canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#local-search",
   },
   "multi-hop-graph-reasoning": {
     id: "multi-hop-graph-reasoning",
@@ -20474,7 +20474,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Multi-hop reasoning",
     aliases: ["다중 hop 추론"],
     definition:
-      "Entity A 에서 B, B 에서 C 로 이어지는 관계를 차례로 밟아야 답이 나오는 질문으로, A 와 C 가 한 chunk 에 함께 언급된 적이 없어 vector 검색은 그 chunk 를 찾지 못해도 A-B·B-C edge 를 실제로 거치는 graph traversal 은 답에 닿습니다.",
+      "Entity A-B-C처럼 여러 관계를 합쳐야 답이 나오는 질문입니다. GraphRAG local context에 필요한 relationship과 원문이 들어오면 LLM이 이 연결을 합성할 수 있지만, 기본 local API가 정확한 N-hop BFS나 경로 완전성을 보장한다는 뜻은 아닙니다.",
     canonicalHref: "/cs/ai/graphrag-community-and-multihop-search#multihop",
   },
   "regular-language-context-free-hierarchy": {
@@ -50858,11 +50858,11 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "property-graph-model", to: "community-detection-and-summary", relation: "prerequisite", reason: "Community detection 은 이미 만들어진 node·edge 구조 위에서 조밀함을 계산해야 나눌 대상이 있습니다." },
   { from: "graph-construction-pipeline", to: "community-detection-and-summary", relation: "prerequisite", reason: "Pipeline 이 완성한 그래프가 있어야 그 위에서 community 를 나누고 요약할 수 있습니다." },
   { from: "community-detection-and-summary", to: "local-vs-global-graph-search", relation: "prerequisite", reason: "Global search 가 읽는 community summary 는 community detection 단계에서 미리 만들어져 있어야 합니다." },
-  { from: "graph-structured-retrieval-boundary", to: "graph-vector-hybrid-retrieval", relation: "prerequisite", reason: "Graph traversal 과 vector 후보 생성을 결합하는 일반 경계가 있어야 그 구체적 두 단계 절차(진입점 탐색 → traversal)를 정의할 수 있습니다." },
-  { from: "local-vs-global-graph-search", to: "graph-vector-hybrid-retrieval", relation: "extends", reason: "Local search 가 어디서 시작할지 정하는 문제를 vector 유사도 기반 진입점 탐색으로 확장합니다." },
-  { from: "graph-vector-hybrid-retrieval", to: "multi-hop-graph-reasoning", relation: "prerequisite", reason: "진입점을 찾아야 그 지점에서 시작하는 여러 hop 의 traversal 이 가능합니다." },
-  { from: "local-vs-global-graph-search", to: "multi-hop-graph-reasoning", relation: "prerequisite", reason: "Hop 을 여러 번 잇는 traversal 능력이 있어야 entity 여러 개를 건너는 multi-hop 질문에 답할 수 있습니다." },
-  { from: "multi-hop-graph-reasoning", to: "graph-structured-retrieval-boundary", relation: "produces", reason: "Multi-hop 으로 찾은 근거가 graph-structured retrieval 이 남겨야 할 provenance·hop 경로의 구체적 사례가 됩니다." },
+  { from: "graph-structured-retrieval-boundary", to: "graph-vector-hybrid-retrieval", relation: "prerequisite", reason: "Vector로 시작 entity를 찾고 graph record와 원문을 context로 모으는 역할을 구분해야 실제 local search의 경계를 설명할 수 있습니다." },
+  { from: "local-vs-global-graph-search", to: "graph-vector-hybrid-retrieval", relation: "extends", reason: "Local search의 시작 entity 선택과 여러 자료 묶음의 context 조립을 현재 구현 수준으로 구체화합니다." },
+  { from: "graph-vector-hybrid-retrieval", to: "multi-hop-graph-reasoning", relation: "prerequisite", reason: "필요한 entity·relationship·원문이 context에 들어와야 LLM이 여러 관계를 합성할 수 있습니다." },
+  { from: "local-vs-global-graph-search", to: "multi-hop-graph-reasoning", relation: "prerequisite", reason: "Multi-hop 질문은 local context의 관계 합성과 결정적 graph traversal의 책임을 구분해야 합니다." },
+  { from: "multi-hop-graph-reasoning", to: "graph-structured-retrieval-boundary", relation: "produces", reason: "경로 완전성이 필요할 때 graph query 결과와 RAG context를 분리해야 한다는 구현 경계를 되돌려 줍니다." },
   { from: "finite-automaton-memory-boundary", to: "regular-language-context-free-hierarchy", relation: "extends", reason: "Finite state가 인식하는 언어 class를 정규언어라는 이름으로 정확히 규정합니다." },
   { from: "regular-language-context-free-hierarchy", to: "context-free-grammar-recursion", relation: "contrasts", reason: "정규언어는 CFG가 만드는 언어의 진부분집합이라는 Chomsky hierarchy 한 단계 차이를 대조합니다." },
   { from: "pushdown-automaton-stack", to: "lr-glr-parsing-pda-implementation", relation: "prerequisite", reason: "PDA 이론 모델이 LR·GLR parser가 실제로 구현할 계산 모델을 제공합니다." },

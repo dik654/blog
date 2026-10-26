@@ -11722,20 +11722,21 @@ export const EDITORIAL_BOUNDARIES = {
   "graphrag-community-and-multihop-search": {
     title: "GraphRAG(community summary·local/global search·multi-hop) 글이 소유하는 범위",
     owns: [
-      "Modularity 기준 graph community 분할(community detection)과 LLM 기반 community summary 생성",
-      "Hop 예산으로 제한된 local search 와 community summary 전체를 종합하는 global search 의 비용 비교",
-      "Global search 의 map(중간 답변+helpfulness)-reduce(정렬 후 context 채우기) 절차",
-      "Vector 유사도로 local search 의 시작 entity 를 찾는 graph-vector hybrid retrieval",
-      "여러 entity 를 건너야 답이 나오는 multi-hop reasoning 과 vector 검색만으로 놓치는 이유",
+      "Graph community 분할과 LLM 기반 community report 생성이라는 서로 다른 검색 상태",
+      "Microsoft GraphRAG v3.3.0 local·global·DRIFT query path와 호출자 선택 경계",
+      "LocalSearchMixedContext의 entity mapping·community/local/text unit token 예산 조립",
+      "Global search의 report map·점수 있는 point·filter·reduce 절차와 DRIFT의 primer·후속 local 반복",
+      "여러 관계를 합성하는 multi-hop 답변과 결정적 N-hop graph traversal 보장의 차이",
     ],
     reuses: [
       { label: "Property graph model(node·edge·property·edge type)", href: "/cs/ai/knowledge-graph-construction#property-graph" },
       { label: "Graph construction pipeline", href: "/cs/ai/knowledge-graph-construction#pipeline" },
-      { label: "Graph-structured retrieval 의 traversal·summary 결합 경계", href: "/cs/ai/retrieval-ranking-funnel#retrieval" },
+      { label: "Graph-structured retrieval의 후보·근거 결합 경계", href: "/cs/ai/retrieval-ranking-funnel#retrieval" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Community detection·local/global search·global search 절차·community level 비교·token 비율은 GraphRAG 논문(arXiv 2404.16130)의 서술·실험 범위로만 쓰고 저자 자기보고로 표기한다." },
-      { kind: "standard", rule: "그래프 예(node 7·edge 6)와 modularity Q 계산(0.208·0.167)은 modularity 개념을 보이기 위해 만든 산수이며 논문이 실제로 다룬 그래프가 아니라고 본문에 밝힌다." },
+      { kind: "primary-source", rule: "Community report·global query-focused summarization과 corpus 실험 수치는 GraphRAG 논문(arXiv 2404.16130)의 범위로만 쓰고 저자 자기보고로 표기한다." },
+      { kind: "standard", rule: "Current query method·기본 인자·context 조립은 Microsoft GraphRAG v3.3.0 tag의 문서와 소스에 고정하고 main의 이후 변화와 섞지 않는다." },
+      { kind: "standard", rule: "kg-v43, q-882~884, Q=0.21875·-0.03125, point 83·91은 설명용 가정이며 논문·제품 측정값이 아니라고 밝힌다." },
     ],
   },
   "vision-language-model-architecture": {

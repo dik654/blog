@@ -6569,75 +6569,103 @@
       "route": "ai/graphrag-community-and-multihop-search",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
       "publicPath": "cs/ai/graphrag-community-and-multihop-search",
-      "status": "rewritten-production-verified",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
+        "explicitAssumption": true,
         "answerPointers": 0,
         "levelMarkers": 0,
-        "sectionCount": 6
+        "sectionCount": 13
       },
       "beforeDefects": [
-        "GraphRAG 정의가 7-node 경로 사례보다 먼저 나왔음",
-        "local 2-hop·global 두 summary의 읽기 범위가 첫 화면에서 비교되지 않았음",
-        "현재 공식 구현의 DRIFT 반복 검색 경계가 빠져 있었음"
+        "앞 글에서 만든 knowledge graph와 이어지지 않아 GraphRAG가 별도 예시로 다시 시작했음",
+        "Microsoft GraphRAG Local Search를 max-hop BFS처럼 설명했지만 v3.3.0 구현에는 그런 공개 계약이 없음",
+        "Community·Community Report와 Local·Global·DRIFT의 서로 다른 상태·읽기 범위가 한 요청에서 비교되지 않았음",
+        "정확한 N-hop graph query와 LLM이 선택된 relationship record를 조합하는 multi-hop 답변의 경계가 흐렸음",
+        "직속 부모 지도·현재 위치·부모 지도 반환 경로가 없었음"
       ],
       "fixture": {
-        "nodes": 7,
-        "edges": 6,
-        "localHops": 2,
-        "visitedNodes": 3,
+        "assumed": true,
+        "graphVersion": "kg-v43",
+        "nodes": 5,
+        "edges": 4,
         "communities": 2,
-        "modularity": 0.208
+        "originalModularity": 0.21875,
+        "movedE401Modularity": -0.03125,
+        "localQueryId": "q-882",
+        "globalQueryId": "q-883",
+        "driftQueryId": "q-884",
+        "localDefaultContextTokens": 8000,
+        "textUnitProp": 0.5,
+        "communityProp": 0.25
       },
       "stageAnchors": {
-        "1": "community",
-        "2": "search",
-        "3": "hybrid",
-        "4": "multihop",
-        "5": "evidence",
-        "S": "problem의 마리 퀴리→노벨상→베크렐",
-        "B": "세 예측 뒤 7-node·6-edge Viz"
+        "parent": "retrieval",
+        "0": "problem",
+        "1": "index",
+        "2": "community",
+        "3": "search-modes",
+        "4": "local-search",
+        "5": "global-and-drift",
+        "6": "multihop",
+        "return": "graphrag-search-return"
       },
       "sourceEvidence": [
         {
-          "href": "https://arxiv.org/abs/2404.16130",
-          "application": "Leiden community summary와 local/global search"
+          "href": "https://github.com/microsoft/graphrag/blob/v3.3.0/docs/index/overview.md",
+          "application": "Indexing pipeline이 graph·community report·embedding을 준비하는 범위를 고정 버전에서 확인"
         },
         {
-          "href": "https://github.com/microsoft/graphrag/blob/main/docs/query/drift_search.md",
-          "application": "2026-10-06 현재 DRIFT primer→후속 local search→결합 절차"
+          "href": "https://arxiv.org/abs/1810.08473",
+          "application": "Leiden community detection의 연결성 개선과 modularity 설명 범위를 원 논문에서 확인"
+        },
+        {
+          "href": "https://github.com/microsoft/graphrag/blob/v3.3.0/packages/graphrag/graphrag/query/structured_search/local_search/mixed_context.py",
+          "application": "Local Search의 entity mapping과 community·local data·text unit token 예산 기본값을 실제 릴리스 소스에서 확인"
+        },
+        {
+          "href": "https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/global_search.md",
+          "application": "Global Search의 community report map-reduce 경로를 확인"
+        },
+        {
+          "href": "https://github.com/microsoft/graphrag/blob/v3.3.0/docs/query/drift_search.md",
+          "application": "DRIFT의 상위 K report primer→후속 질문→반복 local search 경로를 확인"
+        },
+        {
+          "href": "https://arxiv.org/abs/2404.16130",
+          "application": "GraphRAG 논문의 global sensemaking 실험 범위와 현재 구현 설명을 구분"
         }
       ],
       "validation": {
-        "humanize": "공개 본문 전체와 기존 수식·연습문제를 읽고, 고정 사례와 예측 세 문항 뒤에 사례 수치가 보이는 핵심 Viz를 배치했습니다. 용어와 일반식은 그 뒤에 이름 붙였습니다.",
-        "browser390": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과. 여섯 Viz 390px 이미지를 직접 확인했습니다: /tmp/teach-all/browser-ai-six-255/summary.json",
-        "browser1440": "첫 사례→세 예측→핵심 Viz 순서, overflow0·outside0·KaTeX0·console0·request0 통과: /tmp/teach-all/browser-ai-six-255/summary.json",
-        "learning": "전역 799편 정확히 기초 6+심화 4 strict actual exit0",
-        "articles": "로컬·원격 CI 전역 799편 article contract strict actual exit0",
-        "typescript": "actual npx tsc -b exit0",
-        "prose": "전역 799편 strict, 압축 신호260, 재검토0 actual exit0",
-        "formula": "전역 1,471식 explicit annotation strict actual exit0",
-        "reading": "전역 reading strict·stableMobileViewportUnits actual exit0",
-        "build": "PASS Vite 9.33s·7,108 modules·정적 public route 1,679개+404 actual exit0; existing large bundle warning remains",
-        "clipping": "완성된 dist에서 6 routes×390/1440=12 checks, uncontrolled overflow0·outside0",
-        "production": "GitHub Pages run 37361708815 success @ d012eeb990f56e1b296fac24397a6ac7dc6966c0; 390/1440 checks 0 failed: /tmp/teach-all/browser-ai-six-255-production/summary.json",
-        "semanticReview": "node 7개·edge 6개에서 마리 퀴리→노벨 물리학상→앙리 베크렐의 2-hop·3-node local 경로와 두 community summary를 읽는 global 질문을 분리했습니다. Q≈0.208 산수를 재검산하고 현재 DRIFT의 필수 report·text unit·embedding 경계를 공식 문서로 보완했습니다."
+        "semanticReview": "앞 글의 kg-v43을 그대로 받아 q-882 Local, q-883 Global, q-884 DRIFT가 서로 다른 자료를 읽는 과정을 한 index version에서 비교했습니다. Local을 hop-limited traversal로 설명하던 오류를 v3.3.0 실제 mixed-context 조립 경로로 교체하고 정확한 graph query는 별도 경계로 분리했습니다.",
+        "humanize": "Community와 report, 검색 방식과 실행 결과처럼 자주 섞이는 항목을 짧은 한국어 정의와 같은 ID로 설명하고, 영문 한 줄만 있는 box에는 역할과 실패 경계를 덧붙였습니다.",
+        "staticAudits": "TypeScript, learning, article, formula, calculation, pseudocode, graph, reading, prose, Korean, terms, term-pairs, topology, architecture-flow, teach-coverage, runtime 검사를 통과했습니다.",
+        "browser390": "390×844에서 주 흐름 6장면, Community 4장면, Local 5장면, Global·DRIFT 5장면, Multi-hop 5장면을 모두 넘겼습니다. 문서 scrollWidth=clientWidth=390, 각 canvas 352=352, 각 장면 group 307=307이며 전환 뒤 outerScrollTop=0입니다.",
+        "browser1440": "1440×1000에서 같은 25장면을 모두 확인했습니다. 문서 폭 1440=1440, 각 canvas 709=709, 각 장면 group 646=646이며 겹침 없이 전체 탭과 본문이 보입니다.",
+        "keyboard": "주 흐름 group에 초점을 둔 뒤 ArrowRight를 눌러 01 · kg-v43에서 02 · 검색 인덱스로 이동했고 초점은 group에 남았습니다.",
+        "timing": "재생하지 않은 01 · kg-v43 장면이 7초 뒤에도 그대로 유지됐습니다.",
+        "reducedMotion": "prefers-reduced-motion: reduce에서 7초 뒤에도 kg-v43 장면을 유지하고 ‘전체 경로 재생 꺼짐’ 버튼이 비활성화됐습니다.",
+        "noScript": "JavaScript 비활성 390×844에서 정적 읽기 안내, 직속 부모 지도, 본문 절, 다섯 시각화의 전체 정적 장면 목록, 부모 지도 반환을 확인했습니다. 과거 no-script 등록 누락을 찾아 generate-static-routes 목록에 추가했습니다.",
+        "build": "Vite 7.3.1 production build 8,018 modules·최대 상주 메모리 약 6.79GB·swap 0, 정적 public route 2,088개와 no-script 본문 272편 생성",
+        "interactionFix": "모바일에서 다음 장면을 누른 뒤 이전 scrollTop이 남아 새 장면 윗부분이 가려지는 공통 결함을 확인했습니다. useAnimatedScenes가 active 변경 직후 해당 figure의 직계 canvas scrollTop만 0으로 복원하도록 수정하고 25장면에서 검증했습니다.",
+        "browserEvidence": "output/playwright/graphrag-community-and-multihop-search/mobile-main-scene-1.png, output/playwright/graphrag-community-and-multihop-search/mobile-main-scene-3-fixed.png, output/playwright/graphrag-community-and-multihop-search/mobile-main-scene-6.png, output/playwright/graphrag-community-and-multihop-search/mobile-multihop-scene-5.png, output/playwright/graphrag-community-and-multihop-search/desktop-main-scene-6.png, output/playwright/graphrag-community-and-multihop-search/nojs-mobile-top.png"
       },
-      "remaining": [],
-      "reviewDate": "2026-10-06",
-      "reviewMode": "entry-case-viz-rewrite-after-full-body-review",
+      "remaining": [
+        "GitHub Pages 공개 경로"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "recursive-parent-map-and-versioned-implementation-review",
       "bodyFiles": [
         "src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
-        "src/pages/articles/ai/graphrag-community-and-multihop-search/viz/GraphragCommunityAndMultihopSearchViz.tsx"
+        "src/pages/articles/ai/graphrag-community-and-multihop-search/GraphRagSearchLocator.tsx",
+        "src/pages/articles/ai/graphrag-community-and-multihop-search/viz/GraphragCommunityAndMultihopSearchViz.tsx",
+        "src/pages/articles/ai/graphrag-community-and-multihop-search/viz/GraphRagSearchDetailsViz.tsx"
       ],
       "actualBodyFile": "src/pages/articles/ai/graphrag-community-and-multihop-search.tsx",
-      "contentHash": "267f5ea7352ee6daf5f902c85b13ef68a5a33134be16dd3e5d34d7b61761a6a4",
       "preserved": [
-        "Leiden·modularity 설명과 Q≈0.208 예",
-        "local·global·multi-hop 구분",
+        "Leiden·modularity의 정의와 두 분할을 비교하는 작은 계산",
+        "Local·Global·DRIFT·multi-hop의 구분",
         "정확히 기초6+심화4 연습문제"
-      ],
-      "contentHashScope": "2개 본문·Viz 파일 연결"
+      ]
     },
     {
       "route": "ai/grouped-validation",

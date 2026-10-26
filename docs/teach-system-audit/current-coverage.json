@@ -3825,17 +3825,17 @@
       "catalogIndex": 379,
       "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
       "route": "ai/graphrag-community-and-multihop-search",
       "publicPath": "cs/ai/graphrag-community-and-multihop-search",
-      "title": "GraphRAG: Community Summary · Local/Global Search · Multi-Hop",
+      "title": "GraphRAG: Community Report · Local/Global/DRIFT · Multi-Hop 경계",
       "catalogIndex": 380,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "rewritten-production-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

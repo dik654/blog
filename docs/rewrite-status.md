@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · GraphRAG 검색 경로 (로컬 검수 완료, 배포 대기)
+
+- 앞 글의 `kg-v43`을 그대로 받아 Community Report 생성, q-882 Local, q-883 Global, q-884 DRIFT, 결정적 N-hop traversal 경계를 한 사례로 다시 구성했습니다. 과거 글이 Microsoft GraphRAG Local Search를 hop-limited BFS처럼 설명하던 부분은 v3.3.0의 entity mapping과 mixed-context 조립 경로로 교체했습니다.
+- 설명용 graph는 node 5개·edge 4개입니다. 원래 두 community 분할의 modularity `0.21875`와 E401을 옮긴 분할의 `-0.03125`를 검산했습니다. Local의 8,000-token 기본 예산은 text unit 50%, community report 25%, local entity·relationship·covariate 25%로 나뉘며, 보편적인 품질 보장이 아니라 v3.3.0의 설정 기본값임을 구분했습니다.
+- 주 흐름 6장면과 네 상세 그림 19장면을 자동 재생 없이 구성했습니다. 390×844에서는 문서 폭 390px, canvas 352px, 장면 group 307px가 각각 scrollWidth와 clientWidth가 같았고, 1440×1000에서는 1440px·709px·646px로 같았습니다. 25장면을 모두 넘기며 가로 넘침과 장면 누락이 없음을 확인했습니다.
+- 모바일에서 아래 조작부를 누른 뒤 이전 내부 스크롤 위치가 남아 다음 장면의 윗부분이 가려지는 공통 결함을 찾았습니다. 장면이 바뀔 때 해당 시각화의 직계 canvas만 맨 위로 복원하도록 `useAnimatedScenes`를 수정했고, 25장면 모두 `scrollTop=0`을 확인했습니다.
+- ArrowRight 키보드 이동, 7초 무자동재생, reduced-motion의 재생 비활성, JavaScript 비활성 정적 장면 목록을 확인했습니다. 과거 장부에는 no-JS 검증 완료로 적혀 있었지만 실제 정적 본문 등록 목록에서 GraphRAG가 빠져 있던 모순도 고쳐, no-script 본문이 271편에서 272편으로 늘었습니다.
+- 정적 감사와 production build를 통과했습니다. 빌드는 8,018개 module, 정적 public route 2,088개를 생성했고 최대 실제 RSS는 약 6.79GB, swap은 0이었습니다. GitHub Pages 공개 경로 검증만 남았습니다.
+
 ## 2026-10-26 · RAG 문맥 조립과 평가 (로컬 검수 완료, 배포 대기)
 
 - `rag-context-assembly-and-evaluation`을 앞 글의 q-732 검색 기록에서 이어지는 한 경로로 다시 구성했습니다. d-17·d-04 선택, 출처 경계를 보존한 문맥 조립, 세 주장 생성, 지표 계산과 `claim-3`의 첫 실패 귀속을 같은 요청·문서 ID로 추적합니다.
