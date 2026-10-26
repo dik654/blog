@@ -11624,11 +11624,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "embedding-model-fine-tuning": {
-    title: "Embedding fine-tuning: InfoNCE·asymmetric retrieval·truncation 글이 소유하는 범위",
+    title: "Embedding fine-tuning: 정답 쌍이 검색 순위가 되는 과정 글이 소유하는 범위",
     owns: [
       "배치 안 다른 (query, document) 쌍을 negative로 재사용하는 in-batch negative InfoNCE fine-tuning objective",
       "General embedding을 도메인 쌍으로 이어 학습하는 domain-specific adaptation과 그로 인한 over-specialization·retrieval domain shift",
-      "Query·document encoder를 공유할지(symmetric) 나눌지(asymmetric) 정하는 아키텍처 선택과 instruction 접두어로 역할을 나누는 방법",
+      "Query·document 역할의 대칭성과 encoder 가중치 공유 여부를 구분하고 instruction 접두어로 역할을 나누는 방법",
       "Nested loss로 학습해 차원을 잘라도 되는 Matryoshka embedding truncation과 float32→int8 embedding quantization의 저장·정확도 trade-off",
     ],
     reuses: [
@@ -11644,7 +11644,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "SBERT·DPR·Matryoshka·E5의 claim은 각 논문의 model·data·benchmark 범위로 제한하고 저자 자기보고임을 본문에 밝힌다." },
       { kind: "primary-source", rule: "Int8 quantization의 저장·정확도 수치는 Hugging Face·Sentence Transformers 공식 블로그의 측정 범위로만 쓴다." },
-      { kind: "standard", rule: "배치 256·255 negative, 768→128차원, float32→int8 4배 같은 수치 예는 두 방법의 산수이며 특정 배포의 측정이 아니라고 본문에 밝힌다." },
+      { kind: "standard", rule: "배치 3쌍의 3×3 logit·softmax·gradient와 768→128차원, float32→int8 수치는 메커니즘을 설명하는 계산이며 특정 배포의 측정이 아니라고 본문에 밝힌다." },
     ],
   },
   "document-parsing-and-table-extraction": {

@@ -5,400 +5,392 @@ import TermBreakdown from "@/components/articles/term-breakdown";
 import AlgorithmBlock from "@/components/ui/algorithm-block";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
+import {
+  EmbeddingMapReturn,
+  default as EmbeddingPathLocator,
+} from "./sentence-embeddings/EmbeddingPathLocator";
 import EmbeddingModelFineTuningViz from "./embedding-model-fine-tuning/viz/EmbeddingModelFineTuningViz";
 
 /**
- * Embedding fine-tuning: InfoNCE·asymmetric retrieval·truncation
+ * Embedding fine-tuning: 정답 쌍이 검색 순위가 되는 과정
  *
- * In-batch negative로 정답 (query, document) 쌍을 학습 신호로 바꾸는 fine-tuning objective,
- * asymmetric·symmetric encoder 선택과 instruction 접두어, 학습 후 embedding을 줄이는
- * Matryoshka truncation과 int8 quantization, 그리고 도메인 특화가 만드는 over-specialization을
- * 다룬다. Pair 의미·NT-Xent·pooling·bi-encoder 계산 구조는 각 정본 글이 소유한다.
+ * 한 query-document 쌍을 배치의 점수 행렬, InfoNCE 확률과 gradient, 갱신된
+ * encoder, 새 문서 index까지 추적한다. 그 계산 위에서 역할별 입력, Matryoshka
+ * 차원 축소, int8 표현, false negative와 도메인 과적합의 경계를 구분한다.
  */
 export default function EmbeddingModelFineTuningArticle() {
   return (
     <div id="overview" className="space-y-16">
       <section id="problem" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Embedding fine-tuning은 배치의 다른 쌍을 negative로 재사용합니다
+        <EmbeddingPathLocator current="fine-tuning" />
+        <h2 className="mb-4 break-keep text-2xl font-bold">
+          정답 쌍은 어떻게 모델 가중치와 검색 순위를 바꿀까요?
         </h2>
+        <p className="max-w-3xl break-keep text-lg font-semibold leading-8 text-foreground">
+          한 배치의 질문과 문서를 모두 교차 비교해 점수 행렬을 만들고, 각 질문의 정답
+          문서가 선택될 확률을 높이는 방향으로 encoder를 갱신합니다. 학습된 가중치와
+          입력 규칙으로 문서 index까지 다시 만들어야 그 변화가 실제 검색에 반영됩니다.
+        </p>
+
+        <EmbeddingModelFineTuningViz />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p className="text-lg leading-8">
-            사전학습된 embedding checkpoint는 문장이 서로 비슷한지는 압니다. 우리 검색 시스템에서 어떤 문서가 어떤 질의의 정답인지는 모릅니다. fine-tuning은 그
-            정답 (query, document) 쌍을 모아 배치 안의 다른 문서 전부를 negative로 삼아 정답 쌍의 similarity만 높이는 학습입니다.
+          <p>
+            위 그림의 Q1은 <strong>“충전이 안 돼요”</strong>이고 D1은 케이블과
+            어댑터 점검을 설명한 정답 문서입니다. 같은 배치에 배송지 변경과 환불 기한
+            쌍도 넣었습니다. 그러면 Q1은 D1을 정답으로 보면서 D2와 D3을 별도로
+            수집하지 않은 negative로 사용합니다.
           </p>
           <p>
-            이 글은 그 objective가 무엇을 계산하는지(in-batch negative·InfoNCE), query와
-            document를 같은 encoder로 볼지 다른 encoder로 볼지(asymmetric·symmetric), 학습
-            후 embedding을 어떻게 줄이는지(Matryoshka truncation·int8 quantization), 그리고
-            도메인에 맞출수록 생기는 대가(over-specialization)를 순서대로 봅니다.
+            이 구조를 <strong>in-batch negative</strong>라고 부릅니다. Fine-tuning은
+            단순히 정답 쌍을 가깝게 만드는 데서 끝나지 않습니다. 어느 입력을 질문으로
+            직렬화할지, 어느 차원을 배포에 남길지, 새 가중치로 문서 index를 언제 다시
+            만들지도 같은 검색 좌표계의 계약입니다.
           </p>
           <p>
-            Pair가 무엇인지, NT-Xent가 어떻게 계산되는지, 문장 pooling과 bi-encoder의
-            online·offline 구조가 무엇인지는{" "}
-            <Link to="/cs/ai/contrastive-learning#pair-contract">Contrastive Learning</Link>,{" "}
-            <Link to="/cs/ai/simclr-infonce#objective">SimCLR·NT-Xent</Link>,{" "}
-            <Link to="/cs/ai/sentence-embeddings#relation">문장 임베딩</Link>,{" "}
-            <Link to="/cs/ai/bi-encoder-retrieval#offline-index">Bi-encoder retrieval</Link> 글이
-            이미 다룹니다. 이 글은 그 위에서 embedding을 실제로 fine-tuning할 때의 목적함수와
-            설계 선택을 엽니다.
+            문장을 고정 길이 벡터로 만드는 과정은{" "}
+            <Link to="/cs/ai/sentence-embeddings#overview">문장 임베딩</Link>이,
+            문서 벡터를 미리 계산해 검색하는 구조는{" "}
+            <Link to="/cs/ai/bi-encoder-retrieval#overview">Bi-encoder 검색</Link>이
+            맡습니다. 이 글은 그 사이에서 정답 쌍이 encoder를 바꾸는 계산만 엽니다.
           </p>
         </div>
-        <EmbeddingModelFineTuningViz />
-        <ContentBoundary article="embedding-model-fine-tuning" />
       </section>
 
       <section id="objective" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          배치 크기가 negative 개수입니다 — 256개면 255개가 그냥 생깁니다
+        <h2 className="mb-6 break-keep text-2xl font-bold">
+          배치 하나가 점수 행렬과 negative 집합을 함께 만듭니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            in-batch negative는 같은 배치에 들어온 다른 (query, document) 쌍의 document를 그대로 negative로 쓰는 방법입니다. 별도의
-            negative sampling이 필요 없습니다. 배치가 256개 쌍이면 query 하나마다 자기 정답 문서 1개와 다른 255개 문서가 동시에 negative 후보가 됩니다.
+            배치에 정답 쌍이 B개 있으면 질문 하나는 자기 정답 1개와 다른 쌍의 문서
+            B−1개를 비교합니다. 위의 세 쌍에서는 Q1이 D1·D2·D3을 보고, D1만
+            positive로 취급합니다. 전체 행렬에는 대각선 positive 3칸과 대각선 밖
+            negative 6칸이 생깁니다.
           </p>
           <p>
-            추가 mining 없이 negative가 배치 크기만큼 자동으로 생기는 것이 장점입니다. 대신 배치 안에 우연히 같은 의미의 문서가 둘 있으면 그것도 negative로 잘못
-            셉니다. 이 false negative는 배치가 클수록, 코퍼스가 좁을수록 늘어납니다.
-          </p>
-          <p>
-            embedding fine-tuning objective는 이 in-batch negative 위에서 InfoNCE 형태의 loss로 정답 쌍의 similarity를 높이고
-            나머지는 낮춥니다. 수식은 NT-Xent가 augmentation view 둘을 서로의 positive로 삼는 것과 같습니다. 다만 여기서 계산 대상은 view가 아니라
-            query와 document라는 서로 다른 둘입니다.
+            여기서 점수는 정규화한 두 벡터의 cosine similarity일 수도 있고 내적일 수도
+            있습니다. 모델과 loss가 정한 scale을 적용한 뒤 softmax를 계산하므로, 아래
+            예시의 2·1·0은 원래 cosine 값이 아니라 <strong>softmax에 들어가는
+            logit</strong>입니다.
           </p>
         </div>
+
         <ExplainedFormula
-          question="정답 문서 하나와 배치 안 나머지 문서 전부를 두고 query embedding을 어떻게 갱신하나요?"
-          idea="Query와 정답 문서의 similarity를 temperature로 나눠 logit을 만들고, 배치 안 모든 문서(정답 포함)의 지수 점수 합으로 정규화합니다. 정답 문서가 선택될 확률이 낮을수록 큰 벌점을 줍니다."
-          formula={String.raw`L_i=-\log\frac{\exp(\operatorname{sim}(q_i,d_i)/\tau)}{\sum_{j=1}^{B}\exp(\operatorname{sim}(q_i,d_j)/\tau)}`}
+          question="Q1이 D1을 정답으로 고를 확률과 벌점을 어떻게 계산하나요?"
+          idea="Q1과 모든 문서의 logit을 지수 점수로 바꿔 합한 뒤, 정답 D1의 몫을 확률로 봅니다. 그 확률에 음의 로그를 취하면 정답 확률이 낮을수록 큰 loss가 됩니다."
+          formula={String.raw`L_i=-\log\frac{\exp(s_{ii})}{\sum_{j=1}^{B}\exp(s_{ij})}`}
           annotatedFormula={String.raw`\begin{aligned}
-s_{ij}&=\underbrace{\operatorname{sim}(q_i,d_j)/\tau}_{\text{query }i\text{와 문서 }j\text{의 similarity를 temperature로 조절}}\\
-Z_i&=\underbrace{\sum_{j=1}^{B}\exp(s_{ij})}_{\text{배치 전체 문서(정답 포함)의 점수를 합산}}\\
-p(i\mid i)&=\underbrace{\exp(s_{ii})/Z_i}_{\text{정답 문서가 선택될 확률}}\\
-L_i&=\underbrace{-\log p(i\mid i)}_{\text{확률이 낮을수록 큰 벌점}}
+s_{ij}&=\underbrace{\operatorname{sim}(q_i,d_j)/\tau}_{\text{질문 }i\text{와 문서 }j\text{의 logit}}\\
+Z_i&=\underbrace{\sum_{j=1}^{B}\exp(s_{ij})}_{\text{이 질문이 비교하는 모든 문서의 지수 점수}}\\
+p(d_i\mid q_i)&=\underbrace{\exp(s_{ii})/Z_i}_{\text{정답 문서가 선택될 확률}}\\
+L_i&=\underbrace{-\log p(d_i\mid q_i)}_{\text{정답 확률이 낮을수록 커지는 벌점}}
 \end{aligned}`}
           operations={[
-            { expression: String.raw`\operatorname{sim}(q_i,d_j)/\tau`, annotation: ["Query와 문서의 similarity를", "temperature로 나눠 logit을 만듭니다"] },
-            { expression: String.raw`\sum_{j=1}^{B}\exp(s_{ij})`, annotation: ["배치 안 모든 문서(자기 정답 포함)의", "지수 점수를 합쳐 분모를 만듭니다"] },
-            { expression: String.raw`-\log p(i\mid i)`, annotation: ["정답 문서 선택 확률에 negative log를 씌워", "additive loss로 바꿉니다"] },
+            { expression: String.raw`\exp(2)=7.389`, annotation: ["Q1과 D1의 logit 2를", "양수 지수 점수로 바꿉니다"] },
+            { expression: String.raw`Z=7.389+2.718+1=11.107`, annotation: ["D1·D2·D3의 지수 점수를", "같은 질문의 분모로 합칩니다"] },
+            { expression: String.raw`p=7.389/11.107=0.6652`, annotation: ["분모에서 정답 D1이 차지하는 몫이", "현재 정답 확률입니다"] },
+            { expression: String.raw`L=-\log(0.6652)=0.4076`, annotation: ["정답 확률을 loss로 바꾸면", "optimizer가 줄일 값이 됩니다"] },
           ]}
           terms={[
-            { symbol: "q_i, d_i", name: "Query·정답 문서 embedding", description: "각 encoder를 통과시키고 길이 1로 정규화한 벡터입니다." },
-            { symbol: "d_j", name: "In-batch negative", description: "같은 배치의 다른 query에 속한 문서로, j≠i면 이번 query의 negative입니다." },
-            { symbol: String.raw`\tau`, name: "Temperature", description: "Similarity 차이를 얼마나 날카롭게 볼지 정하는 양수입니다." },
-            { symbol: "B", name: "배치 크기", description: "이번 step의 (query, document) 쌍 개수이자 negative 후보 수 + 1입니다." },
+            { symbol: "q_i", name: "질문 벡터", description: "배치의 i번째 질문을 query 입력 규칙으로 인코딩한 벡터입니다." },
+            { symbol: "d_j", name: "문서 벡터", description: "배치의 j번째 문서를 document 입력 규칙으로 인코딩한 벡터입니다." },
+            { symbol: String.raw`\tau`, name: "Temperature", description: "Similarity 차이를 softmax에서 얼마나 날카롭게 볼지 정하는 양수입니다." },
+            { symbol: "B", name: "배치의 쌍 수", description: "Pairs-only 예시에서는 질문 하나가 보는 문서 후보 수도 B개입니다." },
           ]}
           assumptions={[
-            "Query encoder와 document encoder는 가중치가 다를 수 있습니다(asymmetric).",
-            "배치 안 다른 문서가 실제로 무관하다고 가정합니다 — false negative가 있을 수 있습니다.",
-            "Similarity는 정규화한 벡터의 cosine 또는 내적입니다.",
+            "Q1–D1, Q2–D2, Q3–D3가 각각 정답이라는 pair label을 알고 있습니다.",
+            "같은 배치의 다른 문서는 이번 질문의 정답이 아니라고 간주합니다.",
+            "2·1·0은 학습 과정을 설명하기 위한 logit이며 특정 모델의 측정값이 아닙니다.",
           ]}
-          interpretation="형태는 SimCLR의 NT-Xent와 같지만 두 가지가 다릅니다. View 둘이 아니라 query·document라는 다른 대상 사이에서 계산하고, j→i 방향(문서를 anchor로 보는 방향)은 계산하지 않습니다. Asymmetric encoder에서는 문서를 질문처럼 인코딩하는 것 자체가 의미가 없기 때문입니다."
+          interpretation="Q1의 정답 확률은 0.6652이고 loss는 0.4076입니다. Softmax cross-entropy의 logit 기울기는 p−y이므로 D1은 −0.3348, D2는 +0.2447, D3는 +0.0900입니다. 경사하강은 정답 logit을 올리고 두 negative logit을 내리는 방향으로 encoder 가중치를 바꿉니다."
         />
+
         <AlgorithmBlock
-          title="In-batch negative contrastive training 한 step"
+          title="한 배치의 InfoNCE 학습 절차 (의사코드)"
           input={[
-            "f_q, f_d: query/document encoder (asymmetric이면 가중치가 다르고, symmetric이면 f_q = f_d)",
-            "batch: B개의 (query_i, document_i) 정답 쌍",
-            "τ: temperature",
+            "query_encoder, document_encoder: 같거나 서로 다른 가중치를 쓸 수 있는 encoder",
+            "batch: B개의 (query_i, positive_document_i) 쌍",
+            "temperature τ와 optimizer",
           ]}
           steps={[
-            { code: "for i in batch: q_i = normalize(f_q(query_i)); d_i = normalize(f_d(document_i))", note: "각 query·document를 encoder에 통과시키고 길이를 1로 맞춰 cosine 비교가 되게 합니다." },
-            { code: "S = (q @ d.T) / τ    # B×B similarity 행렬", note: "행 i·열 j는 query_i와 document_j의 유사도이고, 대각선 S[i,i]가 정답 쌍입니다." },
-            { code: "mask(S, duplicate_pairs)   # 선택: 알려진 중복 의미 쌍을 negative에서 제외", note: "배치 안에 우연히 같은 의미의 문서가 있으면 false negative가 되므로 아는 만큼 걸러 냅니다." },
-            { code: "loss_i = -log( exp(S[i,i]) / sum_j exp(S[i,j]) )   for each i", note: "행마다 softmax cross-entropy를 계산합니다. 정답 열의 확률이 낮을수록 loss가 커집니다." },
-            { code: "L = mean(loss_i);  backward(L);  optimizer.step()", note: "배치 평균 loss로 encoder 가중치를 갱신합니다. Asymmetric이면 두 encoder 모두 갱신됩니다." },
+            { code: "// 질문과 문서를 각 역할의 입력 규칙으로 인코딩합니다.\nQ = normalize(query_encoder(queries))\nD = normalize(document_encoder(documents))", note: "한 encoder를 공유하더라도 query·document 접두어나 prompt는 다를 수 있습니다." },
+            { code: "// 모든 질문과 모든 문서를 교차 비교해 B×B logit 행렬을 만듭니다.\nS = (Q @ D.T) / τ", note: "행 i와 열 j의 값이 s_ij이며 대각선 s_ii가 정답입니다." },
+            { code: "// 각 행에서 대각선 열을 정답으로 삼아 loss를 계산합니다.\nloss = cross_entropy(S, labels=range(B))", note: "Pairs-only 배치에서는 다른 열이 in-batch negative가 됩니다." },
+            { code: "// loss의 기울기로 encoder 가중치를 한 번 갱신합니다.\nloss.backward()\noptimizer.step()", note: "점수 행렬 자체를 저장하는 것이 아니라 점수를 만든 encoder의 파라미터가 바뀝니다." },
           ]}
-          repeatUntil="Validation retrieval metric(Recall@k 등)이 더 이상 오르지 않을 때까지 다음 배치로 반복합니다."
-          output="갱신된 f_q, f_d 가중치와 이번 step의 평균 loss"
+          repeatUntil="고정한 validation 검색 지표가 더 나아지지 않거나 미리 정한 중단 조건에 도달할 때까지 다음 배치로 반복합니다."
+          output="새 encoder 가중치. 실제 검색에 쓰려면 같은 입력 규칙으로 corpus embedding과 ANN index를 다시 만듭니다."
         />
-      </section>
 
-      <section id="domain-adaptation" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          도메인 쌍으로 다시 학습하면 그 도메인은 좋아지고 밖은 좁아집니다
-        </h2>
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <ProgressiveDetail
+          title="배치가 크면 언제나 좋은 negative가 많아지나요?"
+          preview="아닙니다. 다른 쌍의 문서가 Q1에도 정답일 수 있으면 false negative가 됩니다. 배치 크기보다 먼저 pair 중복과 다중 정답을 확인해야 합니다."
+        >
           <p>
-            넓은 코퍼스에서 학습된 general embedding은 다양한 주제를 어느 정도 다룹니다. 그래도 법률·의료·코드처럼 용어가 특수한 도메인에서는 미묘한 차이를 놓칩니다.
-            "고려"라는 단어가 법률 문서와 일상 대화에서 뜻이 다르듯 도메인 vocabulary는 general 학습 데이터에 충분히 나오지 않았을 수 있습니다.
+            “충전이 안 돼요”에 D1뿐 아니라 “배터리와 충전 포트 확인” 문서도 정답일 수
+            있습니다. 그 문서가 다른 쌍의 positive로 같은 배치에 들어오면 기본 행렬은
+            Q1에서 그 문서를 negative로 취급합니다. Sentence Transformers 공식 문서도
+            이런 중복을 피하도록 중복 없는 batch sampler를 권합니다.
           </p>
           <p>
-            domain-specific embedding adaptation은 이 general checkpoint를 도메인의 (query, document) 쌍으로 이어서 학습합니다.
-            objective는 똑같은 in-batch negative입니다. 법률 QA 쌍 5만 개로 추가 학습하면 법률 벤치마크의 Recall@10이 오르는 대신 학습에 없던 표현에는
-            상대적으로 덜 민감해집니다.
+            따라서 B가 커져 B−1개의 후보가 생겼다는 사실과, 그 후보가 올바른 학습 신호라는
+            판단은 별개입니다. 알려진 다중 정답은 mask로 제외하고, hard negative는 label과
+            mining 시점을 기록해야 합니다.
           </p>
-          <p>
-            어떤 도메인 gap을 채우려는 것인지부터 분명히 해야 합니다. vocabulary·문체 차이인지, 사실 최신성 문제인지, 검색 자체의 relevance 기준이 다른 것인지에
-            따라 갈립니다. 이 글의 fine-tuning이 맞는 처방일 수도 있고 retrieval-time 재작성이나 reranker 추가가 더 나을 수도 있습니다.
-          </p>
-          <h3 id="over-specialization" className="scroll-mt-20">
-            도메인에 맞춘 만큼 general 성능이 떨어지는 것은 흔한 부작용입니다
-          </h3>
-          <p>
-            도메인 fine-tuning은 embedding 공간을 그 도메인의 (query, document) 쌍이 잘 구분되도록 재배치합니다. 그 재배치가 general 벤치마크가
-            기대는 다른 구분까지 건드리면 도메인 점수는 오르고 general 점수는 내려갑니다. 이 현상이 embedding over-specialization입니다.
-          </p>
-          <p>
-            법률 fine-tuning 뒤 법률 벤치마크가 8점 오르는 대신 일반 MTEB 평균이 3점 떨어지는 식의 결과가 흔히 보고됩니다. 이 수치는 설명을 위한 예시 산수이며 특정
-            모델의 측정값이 아닙니다.
-          </p>
-          <p>
-            원인은 retrieval domain shift입니다. 배포 도메인의 query·document 분포가
-            general 학습 분포와 다르기 때문에 도메인 fine-tuning이 필요했습니다. 그런데
-            그 fine-tuning이 도메인 분포에만 맞춰 공간을 좁히면 domain shift의 반대
-            방향에서 같은 문제가 다시 생깁니다.
-          </p>
-          <p>
-            배포가 그 도메인에만 쓰인다면 general 하락은 감수할 수 있는 trade-off입니다. general 사용도 함께 필요하다면 checkpoint를 나누거나 general
-            pair를 일부 섞어 학습해야 합니다.
-          </p>
-        </div>
+        </ProgressiveDetail>
       </section>
 
       <section id="architecture" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Query와 document 길이가 다르면 asymmetric encoder가 낫습니다
+        <h2 className="mb-6 break-keep text-2xl font-bold">
+          입력 역할이 다르다는 사실과 encoder 가중치를 나누는 선택은 별개입니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            짧은 질문과 긴 문단처럼 두 입력의 길이·역할이 다르면 같은 encoder 하나로 둘 다 잘 인코딩하기 어렵습니다. 그래서 asymmetric retrieval은 query
-            encoder와 document encoder의 가중치를 따로 두고 각자에 맞는 표현을 학습하게 합니다. DPR이 질문 encoder와 passage encoder를 독립적으로
-            학습한 것이 대표적입니다.
+            짧은 질문으로 긴 문서를 찾는 문제는 <strong>asymmetric semantic
+            search</strong>입니다. 질문과 후보가 비슷한 형식인 중복 문장 검색은
+            symmetric search에 가깝습니다. 이 이름은 입력 역할의 차이를 말할 뿐,
+            가중치를 반드시 두 벌 써야 한다는 뜻은 아닙니다.
           </p>
           <p>
-            반대로 query와 target의 길이·형식이 비슷하면(중복 질문 찾기, 문장 간 유사도) encoder를 하나만 두는 symmetric retrieval이 더 간단하고 자주
-            더 낫습니다. 두 구성 중 어느 쪽이 맞는지는 문제의 길이·형식 차이로 가늠합니다. 애매하면 실제로 비교해 정합니다.
-          </p>
-          <p>
-            이 선택은 앞 절의 in-batch negative 계산에도 영향을 줍니다. symmetric에서는 query→document와 document→query 양방향 loss를
-            더할 수 있습니다. asymmetric에서는 문서를 질문처럼 인코딩하는 방향이 의미가 없어 query→document 한 방향만 계산합니다.
+            DPR은 질문 encoder와 passage encoder를 따로 두었습니다. 반면 E5는 하나의
+            encoder를 공유하면서 <code>query:</code>와 <code>passage:</code> 접두어로
+            역할을 구분합니다. 둘 다 질문과 문서의 역할 차이를 학습하지만, 파라미터를
+            나누는 위치가 다릅니다.
           </p>
         </div>
+
         <TermBreakdown
-          title="Asymmetric retrieval과 symmetric retrieval의 차이"
-          description="같은 in-batch negative objective를 어떤 encoder 구성 위에서 돌리느냐의 선택입니다."
+          title="같은 검색 문제를 표현하는 두 가지 구조"
+          description="둘 중 하나가 asymmetric retrieval의 정의는 아닙니다. 역할이 다른 입력을 어떤 파라미터와 문자열 계약으로 구분하는지의 선택입니다."
           items={[
-            { term: "가중치 공유", description: "Symmetric은 query와 document를 같은 encoder로, asymmetric은 서로 다른 encoder(또는 다른 가중치)로 인코딩합니다.", example: "DPR은 question encoder와 passage encoder를 따로 학습합니다.", boundary: "Instruction 접두어만 바꾸는 방식은 가중치는 하나지만 실질적으로 asymmetric 효과를 냅니다." },
-            { term: "잘 맞는 문제", description: "Query와 target의 길이·형식이 비슷하면 symmetric, 짧은 질문과 긴 문서처럼 다르면 asymmetric이 유리합니다.", example: "중복 질문 찾기는 symmetric, 질문–문단 검색은 asymmetric입니다.", boundary: "경계가 뚜렷하지 않은 문제는 두 구성을 실제로 비교해 정해야 합니다." },
-            { term: "In-batch negative 방향", description: "Symmetric은 양방향 loss를 더할 수 있지만 asymmetric은 query→document 한 방향만 계산합니다.", example: "NT-Xent는 두 view가 대칭이라 양방향 평균을 냅니다.", boundary: "양방향 loss를 asymmetric에 그대로 적용하면 문서를 질문처럼 보는 의미 없는 신호가 섞입니다." },
-            { term: "학습·서빙 비용", description: "Asymmetric은 encoder 두 벌을 학습·배포해야 하지만 symmetric·instruction-tuned는 한 벌로 충분합니다.", example: "Instruction-tuned embedding은 encoder 하나에 접두어만 바꿔 asymmetric 역할을 흉내 냅니다.", boundary: "접두어 방식은 완전히 분리된 encoder만큼 역할을 특화하지 못할 수 있습니다." },
+            { term: "가중치 분리", description: "Query encoder와 document encoder가 서로 다른 파라미터를 가집니다.", example: "DPR의 question encoder·passage encoder", boundary: "모델 두 벌의 학습·배포 상태를 함께 관리해야 합니다." },
+            { term: "가중치 공유", description: "Encoder 하나를 공유하고 입력 앞의 역할 prefix나 prompt를 다르게 줍니다.", example: "E5의 query:·passage: 접두어", boundary: "학습 때 쓴 문자열을 서빙과 index 생성에서도 그대로 지켜야 합니다." },
+            { term: "Loss 방향", description: "기본 검색은 query→document 행 softmax로 설명할 수 있지만, 역방향 loss를 더할지는 loss 설계가 정합니다.", example: "공유 encoder의 symmetric ranking loss는 양방향을 합칠 수 있습니다.", boundary: "Asymmetric이라는 이름만 보고 역방향을 자동으로 금지하거나 추가하지 않습니다." },
           ]}
         />
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <h3 id="instruction-tuned" className="scroll-mt-20">
-            Instruction 접두어 하나로 encoder 한 벌이 여러 역할을 나눠 맡습니다
+            역할 접두어는 모델 밖의 장식이 아니라 학습 입력입니다
           </h3>
           <p>
-            instruction-tuned embedding은 문장 앞에 자연어 지시("이 문장을 검색용으로 표현하라" 같은)를 붙여 인코딩하는 방법입니다. 같은 encoder라도 붙인
-            지시에 따라 embedding 공간 안에서 다르게 배치되도록 학습합니다. 별도 encoder 없이도 asymmetric에 가까운 역할 분리를 얻습니다.
+            E5에서 <code>query:</code>와 <code>passage:</code>는 tokenizer로 들어가는
+            문자열의 일부입니다. 학습 때 넣은 접두어를 query API에서 빼거나 문서 index를
+            만들 때 다른 표현으로 바꾸면 두 벡터가 같은 학습 계약을 따르지 않습니다.
           </p>
           <p>
-            E5는 문장 앞에 <code>query:</code> 또는 <code>passage:</code> 접두어를 붙여
-            하나의 encoder로 검색의 query 쪽과 document 쪽을 다르게 인코딩합니다. 이
-            접두어는{" "}
+            그래서 fine-tuning 결과물은 weight 파일 하나가 아닙니다. Checkpoint,
+            tokenizer, query·document 입력 형식, pooling, normalization, 최대 길이를 함께
+            고정해야 합니다. 이 묶음이 실제 배포 generation으로 이어지는 방식은{" "}
             <Link to="/cs/ai/embedding-serving-contract#serialization">
-              embedding serving contract
-            </Link>{" "}
-            가 정의하는 입력 문자열의 일부가 되어, 서빙 시점에도 학습 때와 똑같이
-            붙여야 합니다.
-          </p>
-          <p>
-            접두어를 빼거나 다른 표현으로 바꾸면 학습 때 보지 못한 조합이 되어 품질이 보장되지 않습니다. 학습·서빙 비용은 별도 encoder를 두는 asymmetric 구성보다
-            낮습니다. 대신 완전히 분리된 encoder만큼 역할을 특화하지는 못합니다.
+              임베딩 서빙 계약
+            </Link>
+            에서 추적합니다.
           </p>
         </div>
       </section>
 
       <section id="compression" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          Nested loss로 학습한 embedding은 차원을 잘라도, 정수로 바꿔도 크게 나빠지지 않습니다
+        <h2 className="mb-6 break-keep text-2xl font-bold">
+          차원을 잘라 쓸 계획이라면 학습할 때부터 그 길이로 loss를 계산합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            fine-tuning이 끝난 embedding은 그대로 저장·검색에 쓰기엔 크고 비쌉니다. 차원을 줄이거나(embedding truncation) 성분을 더 적은 비트로
-            저장하면(embedding quantization) 저장·전송 비용이 줄어듭니다. 두 방법 모두 학습 방식을 조금 바꾸면 정확도 손실을 작게 유지할 수 있습니다.
-          </p>
-          <p>
-            차원을 줄이는 쪽은 Matryoshka Representation Learning의 nested loss가 대표적입니다. 러시아 인형처럼 큰 embedding 안에 작은
-            embedding이 이미 들어 있도록 학습합니다. 그래서 뒤쪽을 잘라내도 앞쪽만으로 어느 정도 순위를 매길 수 있습니다.
+            일반 768차원 embedding의 앞 128차원을 나중에 임의로 잘라 쓴다고 해서 그
+            부분에 중요한 정보가 먼저 모여 있지는 않습니다. Matryoshka Representation
+            Learning은 768·512·256·128처럼 여러 prefix 길이에서 loss를 함께 계산해,
+            짧은 prefix도 독립적으로 쓸 수 있게 학습합니다.
           </p>
         </div>
+
         <ExplainedFormula
-          question="여러 차원 길이에서 한 번에 잘 작동하는 embedding을 어떻게 학습하나요?"
-          idea="전체 embedding z의 앞 m개 차원만 잘라 독립된 부분 embedding으로 보고, 그 부분 embedding만으로 InfoNCE loss를 계산합니다. 이것을 여러 m에 대해 동시에 더해 한 번의 backward로 모든 길이를 함께 학습합니다."
-          formula={String.raw`L_{\mathrm{MRL}}=\sum_{m\in\mathcal{M}}c_m\,L_{\mathrm{InfoNCE}}\!\left(z_{1:m},z'_{1:m}\right)`}
+          question="한 모델이 여러 embedding 차원에서 검색 관계를 유지하게 하려면 무엇을 더하나요?"
+          idea="전체 벡터의 앞 m개 차원만 남긴 prefix마다 같은 retrieval loss를 계산하고, 선택한 모든 길이의 loss를 한 번에 더합니다."
+          formula={String.raw`L_{\mathrm{MRL}}=\sum_{m\in\mathcal M}c_m L_{\mathrm{InfoNCE}}(z_{1:m},z'_{1:m})`}
           annotatedFormula={String.raw`\begin{aligned}
-z_{1:m}&=\underbrace{z[1..m]}_{\text{전체 embedding의 앞 }m\text{개 차원(prefix)}}\\
-L_{\mathrm{InfoNCE}}(z_{1:m},z'_{1:m})&=\underbrace{\text{그 prefix만으로 계산한 in-batch loss}}_{\text{granularity }m\text{ 하나의 목적함수}}\\
-L_{\mathrm{MRL}}&=\underbrace{\sum_{m\in\mathcal{M}}c_m\,L_{\mathrm{InfoNCE}}(z_{1:m},z'_{1:m})}_{\text{여러 granularity의 loss를 가중합}}
+z_{1:m}&=\underbrace{z[1..m]}_{\text{전체 embedding의 앞 }m\text{개 차원}}\\
+L_m&=\underbrace{L_{\mathrm{InfoNCE}}(z_{1:m},z'_{1:m})}_{\text{그 길이만으로 다시 계산한 검색 loss}}\\
+L_{\mathrm{MRL}}&=\underbrace{\sum_{m\in\mathcal M}c_mL_m}_{\text{여러 길이의 loss를 합친 학습 목표}}
 \end{aligned}`}
           operations={[
-            { expression: String.raw`z_{1:m}`, annotation: ["전체 embedding z의 앞 m개 차원만 잘라", "독립된 부분 embedding으로 씁니다"] },
-            { expression: String.raw`L_{\mathrm{InfoNCE}}(z_{1:m},z'_{1:m})`, annotation: ["그 부분 embedding만으로 같은 InfoNCE loss를", "이 granularity 하나에 대해 계산합니다"] },
-            { expression: String.raw`\sum_{m\in\mathcal{M}}c_m(\cdot)`, annotation: ["여러 차원 granularity의 loss를 가중합해", "한 번의 backward로 모든 길이를 동시에 학습합니다"] },
+            { expression: String.raw`\mathcal M=\{768,512,256,128\}`, annotation: ["배포에서 허용할 차원 길이를", "학습 전에 정합니다"] },
+            { expression: String.raw`z_{1:128}`, annotation: ["전체 벡터의 앞 128차원만 남겨", "별도 embedding처럼 정규화하고 비교합니다"] },
+            { expression: String.raw`L_{768}+L_{512}+L_{256}+L_{128}`, annotation: ["각 길이에서 나온 retrieval loss를", "같은 backward에 반영합니다"] },
           ]}
           terms={[
-            { symbol: "z", name: "전체 embedding", description: "예: 768차원 full-precision embedding." },
-            { symbol: String.raw`\mathcal{M}`, name: "Nested 차원 집합", description: "예: {128, 256, 384, 512, 768}처럼 앞에서부터 겹치는 차원 길이들입니다." },
-            { symbol: "c_m", name: "Granularity 가중치", description: "각 m의 loss를 얼마나 반영할지 정하며, 보통 1로 둡니다." },
-            { symbol: String.raw`z_{1:m}`, name: "Prefix embedding", description: "전체 embedding의 앞 m개 차원만 남긴 부분 벡터입니다." },
+            { symbol: "z", name: "전체 embedding", description: "예에서는 최대 768차원인 encoder 출력입니다." },
+            { symbol: String.raw`\mathcal M`, name: "허용 차원 집합", description: "앞에서부터 남겨 평가할 차원 길이 목록입니다." },
+            { symbol: "c_m", name: "길이별 가중치", description: "각 prefix loss를 전체 학습에 얼마나 반영할지 정합니다." },
           ]}
           assumptions={[
-            "차원은 항상 앞에서부터 자른다고 정의합니다 — 순서가 있는 nested prefix입니다.",
-            "각 m에 대해 같은 배치의 같은 (query, document) 쌍으로 loss를 계산합니다.",
-            String.raw`c_m을 1로 두면 모든 granularity를 동등하게 취급합니다.`,
+            "차원은 임의 선택이 아니라 항상 앞에서부터 자르는 prefix입니다.",
+            "각 길이에서 벡터를 다시 정규화하고 같은 pair 관계를 평가합니다.",
+            "128차원 품질은 데이터와 모델에 따라 달라지므로 배포 지표로 따로 확인해야 합니다.",
           ]}
-          interpretation="전체 embedding의 loss만 최소화하지 않고 여러 prefix 길이의 loss를 동시에 최소화하기 때문에, 학습이 끝나면 앞 128차원만으로도 그 자체로 유효한 embedding이 됩니다. 무작위로 학습한 768차원을 나중에 128차원으로 자르는 것과 다른 점이 바로 이 nested 학습입니다."
+          interpretation="MRL은 앞쪽 차원에도 검색 관계를 직접 가르칩니다. 그래서 짧은 벡터가 쓸 만해지는 것이지, 자르기 연산 자체가 정보를 압축하는 것은 아닙니다."
         />
+
+        <div className="not-prose my-8 grid gap-px bg-border p-px sm:grid-cols-3" aria-label="차원과 자료형에 따른 벡터당 저장량 계산">
+          {[
+            ["원본", "768차원 × 4 B", "3,072 B"],
+            ["차원 축소", "128차원 × 4 B", "512 B"],
+            ["차원 축소 + int8", "128차원 × 1 B", "128 B"],
+          ].map(([label, calculation, result]) => (
+            <div key={label} className="bg-background p-4">
+              <p className="text-[10px] font-black text-primary">{label}</p>
+              <p className="mt-2 font-mono text-xs text-muted-foreground">{calculation}</p>
+              <p className="mt-2 text-lg font-black">{result}</p>
+            </div>
+          ))}
+        </div>
+
         <div className="prose prose-neutral max-w-none dark:prose-invert">
-          <p>
-            차원을 앞에서부터 자르는 이 방식은{" "}
-            <Link to="/cs/ai/embedding-serving-contract#truncation">
-              embedding serving contract가 다루는 token 단위 truncation
-            </Link>{" "}
-            과는 다른 축입니다. Token truncation은 입력 문장에서 어디까지 읽을지를
-            자르고, Matryoshka truncation은 이미 만든 embedding의 어느 차원까지 쓸지를
-            자릅니다.
-          </p>
           <h3 id="quantization" className="scroll-mt-20">
-            성분을 float32에서 int8로 바꾸면 저장량은 4분의 1, 정확도는 거의 그대로입니다
+            Int8은 별도의 학습 목표가 아니라 저장 표현을 바꾸는 다음 단계입니다
           </h3>
           <p>
-            embedding quantization은 각 성분의 32비트 소수를 256단계짜리 정수(int8)로 다시 표현합니다. 성분마다 최소·최댓값을 calibration 데이터로
-            재고 그 범위를 정수 구간에 선형으로 대응시키는 affine mapping을 씁니다.
+            Float32 한 성분은 4바이트이고 int8 한 성분은 1바이트라서, 차원이 같다면
+            원시 벡터 저장량은 4분의 1이 됩니다. 그러나 scalar quantization은 좌표를
+            256단계로 근사하므로 거리와 순위가 조금 달라질 수 있습니다.
           </p>
           <p>
-            768차원 embedding은 float32면 벡터당 3,072바이트(768×4바이트)지만 int8이면
-            768바이트(768×1바이트)라 저장량이 4분의 1로 줄어듭니다. 실제 벤치마크에서는
-            rescoring 없이도 원래 성능의 최대 99.3%를, oversampling 뒤 재채점하면 약
-            99%를 유지한다고 보고됩니다.
+            Matryoshka truncation과 int8 quantization은 서로 다른 축입니다. 먼저 사용할
+            차원을 정해 retrieval 품질을 확인하고, 그 차원에서 다시 int8 손실을 재야
+            합니다. 두 결과를 다른 데이터셋에서 따로 얻은 뒤 손실을 단순히 더하거나
+            곱하면 같은 검색 작업을 비교한 계산이 아닙니다.
           </p>
           <p>
-            이 손실은 모델마다 다릅니다. Embedding 성분이 이미 몇 개 차원에 쏠려 있는
-            (dimension collapse) 모델은 calibration 범위가 왜곡되어 quantization 손실이
-            커집니다. Affine mapping 자체의 scale·zero-point 계산은{" "}
-            <Link to="/cs/ai/quantization#affine-map">양자화 기초</Link> 글의 일반 quantizer와
-            같습니다.
+            이 절의 3,072→512→128바이트는 벡터 값만 센 원시 크기입니다. ANN graph,
+            식별자, metadata, 정렬과 파일 형식의 overhead는 포함하지 않았습니다.
           </p>
         </div>
-        <ProgressiveDetail
-          title="Matryoshka truncation과 quantization을 같이 쓰면 손실이 그냥 더해지나요?"
-          preview="꼭 그렇지는 않습니다. 두 손실이 같은 차원 축에서 겹치므로 독립이 아니며, 실제 배포에서는 차원을 먼저 정하고 그 줄어든 차원에서 quantization 손실을 다시 재야 합니다."
-        >
+      </section>
+
+      <section id="domain-adaptation" className="scroll-mt-20">
+        <h2 className="mb-6 break-keep text-2xl font-bold">
+          Loss가 줄어도 pair 정의가 틀리면 검색은 잘못 배웁니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            차원을 128로 자른 뒤 그 128차원 벡터를 다시 int8로 quantize하면 각 손실을 따로 측정한 값의 합보다 실제 손실이 크거나 작을 수 있습니다. 차원이 줄면 성분당
-            정보량이 달라져 calibration 범위와 quantization error의 상대적 영향도 달라지기 때문입니다.
+            Fine-tuning은 학습 데이터가 정한 관계를 더 잘 구분하도록 공간을 바꿉니다.
+            따라서 도메인 pair를 넣으면 그 도메인의 어휘와 relevance 기준을 배울 수
+            있지만, pair 자체가 사용자 의도와 다르면 loss가 잘 줄어도 검색 품질은
+            좋아지지 않습니다.
           </p>
           <p>
-            안전한 순서는 truncation 차원을 target retrieval metric으로 먼저 정하고 그 차원에서 quantization을 다시 검증하는 것입니다. 두 압축을
-            각각 다른 벤치마크에서 검증한 수치를 그대로 곱하거나 더해 배포 판단에 쓰면 안 됩니다.
+            예를 들어 법률 질의에서 조문을 positive로 두고 해설을 모두 negative로 두면,
+            모델은 관련 해설까지 밀어내도록 학습할 수 있습니다. In-batch negative의
+            false negative 문제와 도메인 label의 범위가 여기서 만납니다.
           </p>
-        </ProgressiveDetail>
+          <h3 id="over-specialization" className="scroll-mt-20">
+            도메인 이득과 일반 검색 하락은 서로 다른 평가 묶음으로 확인합니다
+          </h3>
+          <p>
+            한 도메인의 pair만 반복해서 학습하면 그 관계에는 더 민감해지는 대신 다른
+            관계를 구분하던 공간이 바뀔 수 있습니다. 이를 over-specialization이라고
+            부를 수 있지만, 하락 폭은 보편값이 아닙니다. 기존 글의 “도메인 +8점,
+            일반 −3점” 같은 숫자는 특정 측정 근거가 없어 본문 판단에서 제외했습니다.
+          </p>
+          <p>
+            개념적으로 확인할 것은 두 묶음입니다. 도메인 validation에서는 새로 배우려던
+            검색 관계를 재고, 일반 validation에서는 유지해야 할 기존 관계가 무너지지
+            않았는지 봅니다. 어느 하락을 허용할지는 운영 환경의 결정이므로 별도 실무
+            글과 ADR에서 다뤄야 합니다.
+          </p>
+        </div>
       </section>
 
       <section id="evidence" className="scroll-mt-20">
-        <h2 className="mb-6 text-2xl font-bold">
-          SBERT·DPR·Matryoshka 논문과 공식 문서가 이 글의 근거입니다
+        <h2 className="mb-6 break-keep text-2xl font-bold">
+          논문과 공식 구현 문서에서 어디까지 확인했을까요?
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            Siamese·triplet 구조로 재사용 가능한 sentence embedding을 학습한 것은 Sentence-BERT 논문입니다. 이 논문 자체는
-            classification·regression 목적함수를 썼습니다. 이 글이 다루는 in-batch negative InfoNCE objective는 그 이후 bi-
-            encoder 학습 실무에서 널리 쓰이게 된 형태입니다.
+            DPR은 질문과 passage를 별도 encoder로 학습하고 in-batch negative를 사용한
+            대표 사례입니다. E5는 query·passage 접두어와 대조학습으로 하나의 encoder가
+            역할을 구분하게 했습니다. 두 사례는 입력 역할의 비대칭성과 가중치 공유
+            여부가 같은 말이 아님을 보여 줍니다.
           </p>
           <p>
-            asymmetric dual encoder와 in-batch negative 학습은 DPR 논문의 설계입니다. 질문 encoder와 passage encoder를 독립적으로
-            학습하는 구조입니다. symmetric·asymmetric semantic search라는 용어 구분 자체는 sentence-transformers 공식 문서가 명시적으로 쓰는
-            표현입니다.
-          </p>
-          <p>
-            nested loss는 Matryoshka Representation Learning 논문의 기여입니다. 차원을 잘라도 성능이 크게 떨어지지 않게 하는 장치입니다.
-            query·passage 접두어로 하나의 encoder에 asymmetric 역할을 나눠 맡기는 것은 E5 논문의 설계입니다. int8 embedding
-            quantization의 저장·정확도 수치는 Hugging Face·Sentence Transformers의 공식 블로그에서 가져왔습니다.
-          </p>
-          <p>
-            이 글의 수치 예(배치 256·255 negative, 768→128차원, float32→int8 4배)는 두 방법의 산수이며 특정 배포의 측정값이 아닙니다. domain
-            fine-tuning의 gain· general 하락 폭은 도메인·데이터·학습 규모에 따라 달라지므로 배포 전 직접 재야 합니다.
+            MRL 논문은 여러 prefix 차원을 함께 학습하는 목적함수를 제안했고,
+            Sentence Transformers 공식 문서는 MultipleNegativesRankingLoss와
+            MatryoshkaLoss의 현재 구현 인터페이스를 공개합니다. 아래 수치 중 논문 성능은
+            저자 환경의 결과이며 이 글의 세 쌍 계산은 메커니즘을 확인하기 위한 예시입니다.
           </p>
         </div>
-        <div id="paper-sbert" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Reimers & Gurevych · Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks (EMNLP 2019)"
-            citeKey={1}
-            href="https://arxiv.org/abs/1908.10084"
-          >
-            Siamese·triplet BERT와 pooling으로 cosine 비교가 가능한 sentence embedding을
-            학습한 원 논문입니다. 원 objective는 classification·regression이며, in-batch
-            negative InfoNCE는 이 구조 위에 후속 실무가 추가한 것입니다.
-          </CitationBlock>
-        </div>
+
         <div id="paper-dpr" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Karpukhin et al. · Dense Passage Retrieval for Open-Domain Question Answering (EMNLP 2020)"
-            citeKey={2}
+            citeKey={1}
             href="https://arxiv.org/abs/2004.04906"
           >
-            질문 encoder와 passage encoder를 독립적으로 학습하는 asymmetric dual encoder와
-            in-batch negative 학습으로 BM25보다 top-20 retrieval accuracy를 9~19%p 올렸습니다.
-            결과는 저자가 실험한 open-domain QA 데이터셋 범위입니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-symmetric-search" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Sentence-Transformers 공식 문서 · Symmetric vs. Asymmetric Semantic Search"
-            citeKey={3}
-            href="https://www.sbert.net/examples/applications/semantic-search/README.html"
-            type="code"
-          >
-            Query와 corpus 항목의 길이·내용이 비슷하면 symmetric, 짧은 질문과 긴 문단처럼
-            다르면 asymmetric search라 부르고 각각 다른 사전학습 모델을 권장한다고
-            명시합니다.
-          </CitationBlock>
-        </div>
-        <div id="paper-matryoshka" className="not-prose my-8 scroll-mt-24">
-          <CitationBlock
-            source="Kusupati et al. · Matryoshka Representation Learning (NeurIPS 2022)"
-            citeKey={4}
-            href="https://arxiv.org/abs/2205.13147"
-          >
-            Nested prefix마다 loss를 계산하는 MRL을 제안하고, ImageNet-1K 분류에서 동일
-            정확도 기준 최대 14배 작은 embedding으로도 충분함을 보였습니다. 수치는 vision
-            benchmark 기준 저자 자기보고입니다.
+            질문 encoder와 passage encoder, in-batch negative를 결합한 dense retrieval
+            학습을 제시합니다. 보고된 성능은 논문의 open-domain QA 데이터셋과 비교 조건에
+            한정됩니다.
           </CitationBlock>
         </div>
         <div id="paper-e5" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
             source="Wang et al. · Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5)"
-            citeKey={5}
+            citeKey={2}
             href="https://arxiv.org/abs/2212.03533"
           >
-            Query:·passage: 접두어로 하나의 encoder에 asymmetric 역할을 나눠 맡기고
-            in-batch negative contrastive pre-training으로 BEIR·MTEB 56개 데이터셋에서
-            BM25를 zero-shot으로 넘었다고 보고합니다.
+            Query·passage 역할 접두어와 대규모 text pair 대조학습을 결합했습니다. 접두어
+            규칙은 E5 계열 checkpoint의 학습·서빙 계약이며 모든 embedding 모델의 공통
+            규칙은 아닙니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-matryoshka" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Kusupati et al. · Matryoshka Representation Learning (NeurIPS 2022)"
+            citeKey={3}
+            href="https://arxiv.org/abs/2205.13147"
+          >
+            여러 prefix 차원에서 loss를 함께 계산하는 nested representation 학습을
+            제안합니다. 최대 14배 축소·가속 수치는 논문의 vision 중심 실험 결과라서 text
+            retrieval에 그대로 옮기지 않습니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-symmetric-search" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Sentence Transformers 공식 문서 · Semantic Search"
+            citeKey={4}
+            href="https://www.sbert.net/examples/applications/semantic-search/README.html"
+            type="code"
+          >
+            질문과 corpus의 역할이 다른 asymmetric search와 비슷한 문장끼리 비교하는
+            symmetric search를 구분하고, query·document 전용 encode 경로를 설명합니다.
+          </CitationBlock>
+        </div>
+        <div id="paper-losses" className="not-prose my-8 scroll-mt-24">
+          <CitationBlock
+            source="Sentence Transformers 공식 문서 · Losses"
+            citeKey={5}
+            href="https://www.sbert.net/docs/package_reference/sentence_transformer/losses.html"
+            type="code"
+          >
+            MultipleNegativesRankingLoss의 query→document 기본 방향, 중복 없는 batch 권고,
+            MatryoshkaLoss의 차원 목록과 가중치 인터페이스를 확인할 수 있습니다. 문서는
+            버전별 API가 바뀔 수 있으므로 실제 구현에서는 설치 버전을 고정해야 합니다.
           </CitationBlock>
         </div>
         <div id="paper-quantization" className="not-prose my-8 scroll-mt-24">
           <CitationBlock
-            source="Shakir, Aarsen & Lee · Binary and Scalar Embedding Quantization (Hugging Face blog, 2024)"
+            source="Hugging Face · Binary and Scalar Embedding Quantization (2024)"
             citeKey={6}
             href="https://huggingface.co/blog/embedding-quantization"
             type="code"
           >
-            Float32→int8 quantization이 벡터당 저장량을 4배 줄이면서 rescoring 없이 최대
-            99.3%, oversampling 후 재채점하면 약 99%의 성능을 유지한다고 보고합니다.
-            Dimension collapse가 있는 모델은 손실이 더 크다고 밝힙니다.
+            Float32 embedding을 int8로 바꾸는 scalar quantization과 oversampling 뒤
+            rescoring 절차를 공개합니다. 품질 유지 비율은 글에서 평가한 모델과 MTEB
+            retrieval 조건의 저자 측정입니다.
           </CitationBlock>
         </div>
-        <p className="prose prose-neutral max-w-none dark:prose-invert">
-          다음 글:{" "}
-          <Link to="/cs/ai/embedding-evaluation#metrics">Embedding evaluation의 Recall·NDCG</Link>
-          , 그리고{" "}
-          <Link to="/cs/ai/embedding-serving-contract#index-artifact">
-            embedding serving contract의 index generation
-          </Link>
-          .
-        </p>
+
+        <ContentBoundary article="embedding-model-fine-tuning" />
+        <EmbeddingMapReturn current="fine-tuning" />
       </section>
     </div>
   );
