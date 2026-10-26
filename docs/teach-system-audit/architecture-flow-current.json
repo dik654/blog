@@ -7,9 +7,9 @@
     "dedicatedVisuals": 682,
     "inlineVisuals": 534,
     "customVisuals": 865,
-    "animatedMechanisms": 477,
+    "animatedMechanisms": 478,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 296,
+    "recursiveLocators": 297,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -7081,11 +7081,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/giwa-chain",
