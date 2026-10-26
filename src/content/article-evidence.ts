@@ -5337,14 +5337,40 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/reth-precompiles": withSeriesEvidence(RETH_SERIES_EVIDENCE),
   "blockchain/reth-provider": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 구현",
-    label: "Reth v2.2.0 — storage/provider",
-    href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/storage/provider",
-    note: "StateProvider·latest/historical provider·storage routing의 pinned source",
+    label: "Reth v2.8.1 — StateProvider API",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/storage-api/src/state.rs",
+    note: "Latest·historical·pending state와 선택 블록 실행 뒤 상태의 pinned contract",
   }, {
     kind: "공식 구현",
-    label: "Reth v2.2.0 — storage/db-api",
-    href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/storage/db-api",
-    note: "Provider 아래 read transaction·cursor·typed table capability",
+    label: "Reth v2.8.1 — BlockchainProvider",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/provider/src/providers/blockchain_provider.rs",
+    note: "Memory·history·pending source 선택과 block-hash anchored provider 생성",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — OverlayStateProvider",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/storage-overlay/src/provider.rs",
+    note: "Execution overlay·historical fallback·account/storage lookup ordering",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — ConsistentProvider",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/provider/src/providers/consistent.rs",
+    note: "Memory head를 먼저 capture한 뒤 DB snapshot을 여는 range-read boundary",
+  }),
+  "blockchain/reth-provider-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "검증 대상 release와 v2.8.0 대비 database 변경 범위",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Provider·overlay source",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/storage/storage-overlay/src/provider.rs",
+    note: "Flush·history·prune 경계에서 검증할 실제 lookup과 error path",
+  }, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.6.0 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.6.0",
+    note: "Partial persistence 기본값과 execution/trie overlay 재구성의 도입 범위",
   }),
   "blockchain/reth-rpc": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",

@@ -54,6 +54,7 @@ export const SERIES_READING_PATHS = {
           "reth-db",
           "reth-db-validation",
           "reth-provider",
+          "reth-provider-validation",
           "reth-trie",
           "reth-rpc",
           "reth-exex",

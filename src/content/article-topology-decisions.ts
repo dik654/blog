@@ -408,6 +408,44 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "libmdbx v0.14.3 f7a3a93, build·sync·geometry·filesystem·device·trace를 고정하고 process kill과 power-loss model을 구분합니다. Txid·root·rows·DUPSORT parity를 통과한 run에서만 latency·RSS·map growth를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/reth-db": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "블록 1,000을 기준으로 MDBX·static files·RocksDB의 소유 자료, write route, 순차 commit, startup repair와 한 query의 보이는 frontier까지는 Reth Storage V2의 한 메커니즘 사슬입니다. Migration phase에 fault를 주입하고 rollback·RTO·ADR을 판단하는 작업은 환경별 운영 결정이므로 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 MDBX-visible tip 999, static·RocksDB→MDBX commit 순서, 시작 시 ahead prune·behind rebuild와 블록 1,000 query frontier를 같은 설명용 상태로 추적합니다. Migration 성공·성능·운영 승인은 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-db", "blockchain/reth-db-validation"],
+  },
+  "blockchain/reth-db-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "V1 oracle와 V2 candidate를 같은 chain fixture에 고정하고 official migration phase마다 종료·재시작한 뒤 세 backend parity, rollback, 비용과 ADR을 잇는 하나의 운영 판단입니다. 다시 나누면 같은 run receipt의 fault·복구·결정 연결이 끊깁니다.",
+    sharedGate:
+      "v2.8.1/SHA·StorageSettings·prune·filesystem·MDBX/static/Rocks snapshot을 고정하고 tip/hash·state root·receipts·indices·Provider query parity를 먼저 통과합니다. 통과한 run에서만 migration 시간·space peak·restart/query latency를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
+  },
+  "blockchain/reth-provider": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "H1000의 account A와 slot K 한 조회에서 state selector, retained memory/history/pending source, memory→DB snapshot 순서, execution overlay와 history fallback, typed failure까지는 한 읽기 메커니즘입니다. Flush·reorg·prune fault와 rollback·SLO·ADR은 대상 환경의 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 영속 tip 995와 memory 996~1,000, DB balance 10·overlay 7을 같은 H1000 anchor에서 추적하고 account deletion·slot zero·normal absence·StateAtBlockPruned를 구분합니다. 대상 node의 성능이나 release 승인은 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-provider", "blockchain/reth-provider-validation"],
+  },
+  "blockchain/reth-provider-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "한 run manifest에서 latest·retained·historical·pending 기준선을 만들고 flush overlap·partial persistence·reorg·prune·missing evidence·restart를 재생한 뒤 격리·rollback·비용·ADR까지 연결하는 하나의 운영 판단입니다. 같은 hash query receipt를 나누면 fault와 최종 결정의 연결이 끊깁니다.",
+    sharedGate:
+      "Reth v2.8.1/SHA·Storage V1/V2·prune/persistence·fixture·filesystem·workload를 고정하고 value·root·proof·typed outcome과 restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 p50/p95/p99·CPU·I/O·RTO를 비교하며 현재 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
@@ -3889,6 +3927,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/bplus-index-validation": "1f8d0bca8f6b4161",
   "blockchain/mdbx-internals": "53f56a767f72651b",
   "blockchain/mdbx-validation": "e1da7d714babffc2",
+  "blockchain/reth-db": "8359b9b78409ef9f",
+  "blockchain/reth-db-validation": "d7122135ba517430",
+  "blockchain/reth-provider": "6e9d5b70c36e4cef",
+  "blockchain/reth-provider-validation": "769041c3f923d720",
   "blockchain/reth-net": "f506624d24b7ed4a",
   "blockchain/reth-precompiles": "79605a2596ddb7f4",
   "blockchain/reth-rpc": "02473a33cea1db84",
