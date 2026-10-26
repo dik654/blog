@@ -101,6 +101,8 @@ const noScriptArticleRoutes = new Set([
   "ai/contrastive-learning",
   "ai/contrastive-evaluation",
   "ai/domain-finetuning",
+  "ai/lora-finetuning",
+  "ai/lora-training-and-release",
   "ai/continued-pretraining",
   "ai/domain-task-finetuning",
   "ai/domain-data-governance",

@@ -3234,14 +3234,10 @@ export const ARTICLE_EVIDENCE: Readonly<
       kind: "공식 문서",
       label: "Hugging Face PEFT — LoRA",
       href: "https://huggingface.co/docs/peft/main/package_reference/lora",
-      note: "LoraConfig·target_modules·initialization·merge 관련 현재 구현 옵션",
+      note: "LoraConfig·rank·alpha·target_modules·dropout·initialization 관련 현재 구현 옵션",
     },
-    {
-      kind: "핵심 논문",
-      label: "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
-      href: "https://arxiv.org/abs/2311.03285",
-      note: "Unified paging과 batched GEMM으로 여러 LoRA adapter를 동시에 서빙하는 방법",
-    },
+  ],
+  "ai/lora-training-and-release": [
     {
       kind: "공식 문서",
       label: "Hugging Face Transformers · Resume training",

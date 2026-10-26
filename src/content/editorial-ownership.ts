@@ -2982,7 +2982,8 @@ export const EDITORIAL_BOUNDARIES = {
         label: "지식 증류 signal·student evaluation",
         href: "/cs/ai/knowledge-distillation",
       },
-      { label: "LoRA adaptation·merge", href: "/cs/ai/lora-finetuning" },
+      { label: "LoRA adapter 학습 원리", href: "/cs/ai/lora-finetuning" },
+      { label: "LoRA merge·requantization 승인", href: "/cs/ai/lora-training-and-release#practice" },
       { label: "Train·validation·test", href: "/cs/ai/train-validation-test" },
     ],
     evidence: [
@@ -3058,17 +3059,13 @@ export const EDITORIAL_BOUNDARIES = {
   ],
   },
   "lora-finetuning": {
-    title: "LoRA·QLoRA 글이 소유하는 범위",
+    title: "LoRA·QLoRA 개념 글이 소유하는 범위",
     owns: [
       "Frozen base와 trainable adapter·modules_to_save의 parameter/optimizer/checkpoint 경계",
       "Low-rank update BA의 shape·rank 상한·parameter budget과 target-module capacity 배분",
       "QLoRA의 quantized base storage·dequant compute·adapter training precision·memory ledger",
-      "Chat template serialization·response-only loss mask·packing/truncation data contract",
-      "Unmerged·merged·merged-requantized artifact의 algebra·호환성·parity·배포 승인 경로",
       "Full fine-tuning과 parameter-efficient fine-tuning(PEFT)의 용어 경계, alpha·scaling·dropout 등 adapter hyperparameter",
       "Trainable parameter ratio·memory footprint·compute budget으로 나눈 fine-tuning resource 장부",
-      "하나의 base 위에서 여러 adapter를 동시에 서빙하는 multi-LoRA serving과 요청 단위 adapter switching 경계",
-      "Adapter 배포 저장과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint의 경계",
   ],
     reuses: [
       {
@@ -3076,17 +3073,13 @@ export const EDITORIAL_BOUNDARIES = {
         href: "/cs/ai/math-matrices-svd",
       },
       {
-        label: "SFT demonstration·response loss mask",
-        href: "/cs/ai/supervised-fine-tuning",
+        label: "LoRA 데이터·재개·배포 승인",
+        href: "/cs/ai/lora-training-and-release",
       },
       { label: "Quantizer·metadata·kernel·memory", href: "/cs/ai/quantization" },
       {
         label: "Domain adaptation intervention 선택",
         href: "/cs/ai/domain-finetuning",
-      },
-      {
-        label: "Train·validation·test와 generalization",
-        href: "/cs/ai/train-validation-test",
       },
     ],
     evidence: [
@@ -3100,13 +3093,34 @@ export const EDITORIAL_BOUNDARIES = {
       },
       {
         kind: "standard",
-        rule: "Base/tokenizer/template·target/rank/alpha/dropout/init/bias/modules_to_save·quant/storage/compute dtype·data/split/mask·optimizer/batch/sequence/peak·adapter/merge/requant checksum·quality/latency를 함께 기록한다.",
-      },
-      {
-        kind: "primary-source",
-        rule: "Multi-LoRA serving의 동시 서빙 adapter 수·throughput claim은 S-LoRA 논문의 benchmark model·adapter 구성 범위로 제한한다.",
+        rule: "Base revision·target module·rank·alpha·dropout·초기화·quantized storage와 compute dtype·trainable parameter·peak memory를 같은 설정 기록에 남긴다.",
       },
   ],
+  },
+  "lora-training-and-release": {
+    title: "LoRA 학습·배포 글이 소유하는 범위",
+    owns: [
+      "Chat template serialization·response-only loss mask·packing/truncation data contract",
+      "Adapter 저장물과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint의 경계",
+      "Base·tokenizer·adapter manifest와 unmerged·merged·merged-requantized artifact의 lineage",
+      "Merge parity·requantization 오차·quality·memory·latency를 함께 확인하는 배포 승인 경로",
+    ],
+    reuses: [
+      { label: "LoRA low-rank update와 trainable scope", href: "/cs/ai/lora-finetuning#lora" },
+      { label: "QLoRA precision과 memory ledger", href: "/cs/ai/lora-finetuning#qlora" },
+      { label: "SFT response-only loss mask", href: "/cs/ai/supervised-fine-tuning#response-loss" },
+      { label: "여러 adapter 동시 서빙", href: "/cs/ai/multi-adapter-serving" },
+    ],
+    evidence: [
+      {
+        kind: "primary-source",
+        rule: "PEFT·Transformers의 checkpoint·resume·merge 동작은 설치할 release의 공식 문서와 실제 artifact를 함께 확인한다.",
+      },
+      {
+        kind: "standard",
+        rule: "학습 재개 상태와 배포 artifact를 같은 checkpoint라는 이름으로 합치지 않고 각각의 완료 증거를 기록한다.",
+      },
+    ],
   },
   "multi-agent-implementation": {
     title: "멀티에이전트 구현 글이 소유하는 범위",
@@ -11914,7 +11928,8 @@ export const EDITORIAL_BOUNDARIES = {
       "Checkpoint selection과 fine-tuning ablation 절차",
     ],
     reuses: [
-      { label: "LoRA·QLoRA adapter 메커니즘과 LoRA merge equivalence", href: "/cs/ai/lora-finetuning#practice" },
+      { label: "LoRA·QLoRA adapter 메커니즘", href: "/cs/ai/lora-finetuning#lora" },
+      { label: "LoRA merge equivalence와 배포 승인", href: "/cs/ai/lora-training-and-release#practice" },
       { label: "Post-training method 경계(SFT·preference optimization 등)", href: "/cs/ai/llm-training-stages#post-training" },
       { label: "Stability–plasticity dilemma와 continual learning의 replay buffer", href: "/cs/ai/continual-learning-foundations#stability-plasticity" },
     ],
@@ -18426,7 +18441,8 @@ export const EDITORIAL_BOUNDARIES = {
       "soft prompt의 표·KV·문맥 비용과 prefix cache key 조건",
     ],
     reuses: [
-      { label: "LoRA의 A·B 구조와 adapter 합치기", href: "/cs/ai/lora-finetuning#practice" },
+      { label: "LoRA의 A·B 구조", href: "/cs/ai/lora-finetuning#lora" },
+      { label: "Adapter merge와 배포 artifact", href: "/cs/ai/lora-training-and-release#practice" },
       { label: "token당 KV byte 계산", href: "/cs/ai/kv-cache-fundamentals#kv-shape-formula" },
       { label: "block hash와 prefix 재사용", href: "/cs/ai/prefix-caching-radix-attention#block-hash" },
       { label: "step마다 batch를 다시 짜는 continuous batching", href: "/cs/ai/vllm-serving#engine-loop" },

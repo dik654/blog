@@ -1164,16 +1164,28 @@ const llmAppArticles: Article[] = [
   },
   {
     slug: "lora-finetuning",
-    title: "LoRA·QLoRA: Adapter Contract에서 배포 경로까지",
+    title: "LoRA·QLoRA: 작은 변화량만 학습하는 원리",
     subcategory: "ai-practical-llm",
     sections: [
       { id: "overview", title: "Frozen base와 trainable adapter" },
       { id: "lora", title: "Rank · target module · update capacity" },
       { id: "qlora", title: "Quantized storage와 compute precision" },
-      { id: "data", title: "Chat template · loss mask · provenance" },
-      { id: "practice", title: "Adapter lineage · merge · serving" },
+      { id: "return-map", title: "도메인 적응 지도에 되돌려 놓기" },
     ],
     component: () => import("@/pages/articles/ai/lora-finetuning"),
+  },
+  {
+    slug: "lora-training-and-release",
+    title: "LoRA 학습·배포: 데이터에서 artifact 승인까지",
+    subcategory: "ai-practical-llm",
+    sections: [
+      { id: "overview", title: "학습과 배포의 상태 경계" },
+      { id: "data", title: "Chat template · loss mask · provenance" },
+      { id: "practice", title: "Adapter lineage · merge · 재양자화" },
+      { id: "checkpoint-resume", title: "중단 뒤 같은 학습 재개" },
+      { id: "return-map", title: "도메인 적응 지도에 되돌려 놓기" },
+    ],
+    component: () => import("@/pages/articles/ai/lora-training-and-release"),
   },
   {
     slug: "multi-agent-implementation",

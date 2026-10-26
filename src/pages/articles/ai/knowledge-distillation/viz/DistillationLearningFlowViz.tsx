@@ -270,9 +270,12 @@ export default function DistillationLearningFlowViz({ mode }: { mode: Mode }) {
         data-viz-id={`distillation-learning-flow-${mode}`}
         tabIndex={0}
         onKeyDown={controls.onKeyDown}
-        className="min-w-0 border-y border-border/70 bg-background px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-primary xl:px-6 xl:py-6"
+        className="flex h-full min-h-0 min-w-0 flex-col border-y border-border/70 bg-background px-4 py-4 outline-none focus-visible:ring-2 focus-visible:ring-primary xl:px-6 xl:py-6"
       >
-        <div data-viz-live-only>
+        <div
+          data-viz-live-only
+          className="min-h-0 flex-1 overflow-y-auto [scrollbar-gutter:stable]"
+        >
           <p className="text-[11px] font-black uppercase tracking-[.16em] text-primary">
             장면 · {String(active + 1).padStart(2, "0")}
           </p>

@@ -4,6 +4,8 @@ export type DomainAdaptationNodeId =
   | "decision-map"
   | "continued-pretraining"
   | "task-finetuning"
+  | "lora-mechanism"
+  | "lora-operations"
   | "data-governance";
 
 export interface DomainAdaptationNode {
@@ -16,6 +18,7 @@ export interface DomainAdaptationNode {
   parentLabel: string;
   question: string;
   closure: string;
+  anchors?: readonly { href: string; label: string }[];
 }
 
 export const DOMAIN_ADAPTATION_NODES: readonly DomainAdaptationNode[] = [
@@ -57,6 +60,37 @@ export const DOMAIN_ADAPTATION_NODES: readonly DomainAdaptationNode[] = [
       "원하는 응답 형식과 거절 행동을 어떤 demonstration과 loss로 학습할까요?",
     closure:
       "Task fine-tuning은 입력·target·loss mask·평가 계약을 한 demonstration에 묶고, 업데이트 범위와 행동 release gate를 별도로 검증합니다.",
+  },
+  {
+    id: "lora-mechanism",
+    href: "/cs/ai/lora-finetuning#overview",
+    shortTitle: "LoRA·QLoRA",
+    mapLabel: "frozen base → low-rank update",
+    track: "concept",
+    parentHref: "/cs/ai/domain-task-finetuning#update-scope",
+    parentLabel: "Task fine-tuning · 업데이트 범위",
+    question:
+      "전체 base를 다시 학습하지 않고 작은 변화량만 학습하면 어떤 상태가 줄고, 어떤 계산은 그대로 남을까요?",
+    closure:
+      "LoRA는 frozen base의 forward를 유지한 채 선택한 layer의 저랭크 변화량만 학습·저장합니다. QLoRA는 base 저장 표현까지 low-bit로 바꾸지만 adapter 학습과 activation·workspace는 별도 상태로 남습니다.",
+  },
+  {
+    id: "lora-operations",
+    href: "/cs/ai/lora-training-and-release#overview",
+    shortTitle: "LoRA 학습·배포",
+    mapLabel: "data → checkpoint → artifact 승인",
+    track: "practice",
+    parentHref: "/cs/ai/lora-finetuning#return-map",
+    parentLabel: "LoRA·QLoRA · 개념 경계",
+    question:
+      "선택한 LoRA 구성을 실제 데이터로 학습하고, 중단 뒤 이어서 실행하며, 재현 가능한 배포 후보로 어떻게 승인할까요?",
+    closure:
+      "실무 경로는 token 직렬화와 loss mask, 재개 checkpoint, base·adapter lineage, merge·requantization parity를 각각 검증하고 통과한 artifact만 배포 후보로 남깁니다.",
+    anchors: [
+      { href: "/cs/ai/lora-finetuning#lora", label: "저랭크 update와 trainable scope" },
+      { href: "/cs/ai/lora-finetuning#qlora", label: "QLoRA 저장·연산·학습 정밀도" },
+      { href: "/cs/ai/supervised-fine-tuning#response-loss", label: "Response-only loss mask" },
+    ],
   },
   {
     id: "data-governance",

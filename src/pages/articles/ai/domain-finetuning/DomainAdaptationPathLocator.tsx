@@ -59,7 +59,7 @@ export default function DomainAdaptationPathLocator({
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-4" aria-label="도메인 적응의 네 학습 영역">
+      <div className="mt-5 grid grid-cols-2 gap-px bg-border p-px sm:grid-cols-3 xl:grid-cols-6" aria-label="도메인 적응의 학습 영역">
         {DOMAIN_ADAPTATION_NODES.map((candidate, index) => {
           const active = candidate.id === current;
           return (
@@ -79,6 +79,23 @@ export default function DomainAdaptationPathLocator({
           );
         })}
       </div>
+
+      {node.track === "practice" && node.anchors?.length ? (
+        <div className="mt-4 border-t border-border pt-4" aria-label="이 실무 글이 사용하는 개념 앵커">
+          <p className="text-[10px] font-bold text-muted-foreground">먼저 확인할 개념</p>
+          <div className="mt-2 grid gap-2 sm:grid-cols-3">
+            {node.anchors.map((anchor) => (
+              <Link
+                key={anchor.href}
+                to={anchor.href}
+                className="inline-flex min-h-11 items-center border-b border-border py-2 text-xs font-semibold leading-5 hover:border-primary hover:text-primary"
+              >
+                {anchor.label} ↗
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-4 grid grid-cols-2 gap-4 border-t border-border pt-2" aria-label="같은 트랙의 이전 글과 다음 글">
         {previous ? (
