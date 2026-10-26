@@ -338,6 +338,7 @@ const noScriptArticleRoutes = new Set([
   "ai/own-vs-rent-inference-capacity",
   "blockchain/distributed-systems",
   "blockchain/smr-theory",
+  "blockchain/fork-id",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
