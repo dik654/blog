@@ -20,12 +20,12 @@ export default function Parallel() {
           계산하면 각각은 내부적으로 valid해 보여도 결합 root가 틀릴 수
           있습니다.
         </p>
-        <h3>Release gate</h3>
+        <h3>정확성을 확인한 뒤 성능을 비교합니다</h3>
         <p>
-          Empty state, account create/delete, storage update/wipe, shared prefix, inline/hash 경계, reorg와
-          restart를 sequential full-trie oracle과 비교합니다. Account/storage root·node set·changeset parity를 통과한 뒤
-          visited nodes, DB read bytes, hash count, wall time과 peak memory를 비교하며 평균 speedup만으로 worst-case
-          correctness를 대신하지 않습니다.
+          빈 상태, account 생성·삭제, storage 갱신·전체 삭제, 공통 접두와 inline/hash 경계를 순차 전체-trie 기준 구현과 비교합니다. Reorg와 재시작도 같은 입력으로 확인합니다.
+        </p>
+        <p>
+          Account·storage root, node 집합, changeset이 모두 같아야 성능 측정으로 넘어갑니다. 그다음 방문한 node 수, DB에서 읽은 bytes, hash 횟수, 실행 시간과 최대 memory를 비교합니다. 평균 속도 향상만으로 최악 조건의 정확성을 대신하지 않습니다.
         </p>
       </div>
     </section>

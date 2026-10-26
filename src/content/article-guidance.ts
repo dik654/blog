@@ -1544,6 +1544,29 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     ],
     "실행할 코드·상태를 기록할 주소·sender·value·쓰기 권한을 프레임마다 따로 추적합니다.",
   ),
+  "blockchain/merkle-patricia-trie": flow(
+    "계정 포함 증명의 큰 흐름",
+    "블록 헤더의 stateRoot 하나로 특정 계정 값을 어떻게 확인할까요?",
+    [
+      {
+        label: "주소 경로",
+        detail: "계정 주소를 hash해 64개의 nibble 길로 바꿉니다.",
+      },
+      {
+        label: "루트 확인",
+        detail: "첫 node의 RLP hash를 신뢰한 stateRoot와 비교합니다.",
+      },
+      {
+        label: "경로 소비",
+        detail: "Extension 접두와 Branch slot을 따라 남은 경로를 줄입니다.",
+      },
+      {
+        label: "값 판정",
+        detail: "Leaf 경로와 account value가 모두 맞아야 포함을 인정합니다.",
+      },
+    ],
+    "증명 안의 root를 믿지 않고, 신뢰한 stateRoot에서 leaf 값까지 참조를 끊김 없이 확인합니다.",
+  ),
   "blockchain/reth": flow(
     "Reth 노드의 큰 데이터 경로",
     "네트워크로 받은 블록은 어디를 지나 조회 가능한 상태가 될까?",

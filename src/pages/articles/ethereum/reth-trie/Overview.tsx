@@ -12,8 +12,7 @@ export default function Overview({
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">
-        State root는 모든 계정을 다시 저장한 값이 아니라 현재 state를 검증하는
-        하나의 commitment다
+        State root는 현재 계정 상태를 검증하는 값입니다
       </h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
