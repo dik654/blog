@@ -2463,9 +2463,15 @@ export const ARTICLE_EVIDENCE: Readonly<
   "ai/metric-selection-protocol": [
     {
       kind: "공식 문서",
-      label: "scikit-learn: Metrics and scoring",
-      href: "https://scikit-learn.org/stable/modules/model_evaluation.html",
-      note: "Scorer 방향·parameter·multi-metric evaluation의 현재 API semantics",
+      label: "scikit-learn 1.9.1 — Metrics and scoring",
+      href: "https://scikit-learn.org/1.9/modules/model_evaluation.html",
+      note: "2026-10-26 재검토 · scorer 방향·parameter·multi-metric evaluation의 버전 고정 공식 API",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Cawley & Talbot — On Over-fitting in Model Selection and Subsequent Selection Bias",
+      href: "https://www.jmlr.org/papers/volume11/cawley10a/cawley10a.pdf",
+      note: "JMLR 11, 2010, 2079–2107 · 유한한 선택 기준의 과적합과 같은 자료를 선택·평가에 쓸 때 생기는 편향 분석",
     },
   ],
   "ai/experiment-tracking": [
