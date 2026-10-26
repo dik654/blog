@@ -7,9 +7,9 @@
     "dedicatedVisuals": 682,
     "inlineVisuals": 534,
     "customVisuals": 865,
-    "animatedMechanisms": 475,
+    "animatedMechanisms": 476,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 294,
+    "recursiveLocators": 295,
     "codeEvidenceLinked": 216,
     "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
@@ -6793,11 +6793,11 @@
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/drand",
