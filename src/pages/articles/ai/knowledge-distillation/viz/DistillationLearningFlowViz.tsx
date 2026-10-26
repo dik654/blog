@@ -13,30 +13,30 @@ type Scene = { code: string; title: string; detail: string; shape: Shape };
 const FLOWS: Record<Mode, { caption: string; scenes: Scene[] }> = {
   classic: {
     caption:
-      "Teacher output을 그대로 복사하지 않고 student가 읽을 target interface로 바꿉니다.",
+      "같은 입력을 본 teacher 신호를 logit 또는 feature 경로로 바꾼 뒤 student만 갱신하고, 마지막에는 teacher 없이 student를 평가합니다.",
     scenes: [
       {
         code: "T",
-        title: "Teacher 출력",
-        detail: "Input에서 logits·feature를 관측",
+        title: "Teacher 고정",
+        detail: "같은 입력에서 logit과 선택한 feature를 관측",
         shape: "teacher",
       },
       {
-        code: "SOFT",
-        title: "Soft target",
-        detail: "Temperature로 class 관계 노출",
-        shape: "distribution",
-      },
-      {
-        code: "MAP",
-        title: "Feature bridge",
-        detail: "Layer·position·dimension을 대응",
+        code: "IF",
+        title: "신호 경로 선택",
+        detail: "공유 class는 soft target, hidden은 feature bridge로 전달",
         shape: "bridge",
       },
       {
-        code: "S",
-        title: "Student 승인",
-        detail: "정답·quality·runtime을 함께 검증",
+        code: "LOSS",
+        title: "Student 갱신",
+        detail: "Hard label과 선택한 teacher 신호를 합쳐 student만 backprop",
+        shape: "loop",
+      },
+      {
+        code: "TEST",
+        title: "Student 단독 평가",
+        detail: "Teacher를 떼고 독립 test quality와 runtime을 확인",
         shape: "gauge",
       },
     ],
@@ -187,6 +187,61 @@ function Glyph({ shape, active }: { shape: Shape; active: boolean }) {
   );
 }
 
+function ClassicMechanism({ active }: { active: number }) {
+  const tone = (index: number) =>
+    index === active
+      ? "border-primary bg-primary/5"
+      : index < active
+        ? "border-primary/55"
+        : "border-border text-muted-foreground";
+  const connector = (index: number) =>
+    index < active ? "text-primary" : "text-muted-foreground/60";
+
+  return (
+    <div
+      className="mt-3 grid grid-cols-2 gap-2 xl:mt-5 xl:grid-cols-[1fr_auto_1.35fr_auto_1.2fr_auto_1fr] xl:items-stretch"
+      aria-label="고전 지식 증류에서 teacher 신호가 갈라졌다가 student objective에서 합쳐지는 경로"
+    >
+      <section className={`border-l-2 p-3 ${tone(0)}`} aria-current={active === 0 ? "step" : undefined}>
+        <p className="text-[10px] font-black text-primary">01 · T</p>
+        <h4 className="mt-1 break-keep text-sm font-bold">고정 teacher</h4>
+        <p className="mt-2 break-keep text-xs leading-5">Logit·feature 관측</p>
+      </section>
+
+      <div className={`hidden items-center text-xl xl:flex ${connector(0)}`} aria-hidden="true">→</div>
+      <section className={`border-l-2 p-3 ${tone(1)}`} aria-current={active === 1 ? "step" : undefined}>
+        <p className="text-[10px] font-black text-primary">02 · IF</p>
+        <h4 className="mt-1 break-keep text-sm font-bold">신호 경로</h4>
+        <div className="mt-2 grid gap-px bg-border">
+          <div className="flex items-center justify-between gap-2 bg-background px-2 py-2">
+            <strong className="text-[11px]">공유 class</strong>
+            <span className="text-right text-[11px] leading-5 text-muted-foreground">Soft target</span>
+          </div>
+          <div className="flex items-center justify-between gap-2 bg-background px-2 py-2">
+            <strong className="text-[11px]">대응 hidden</strong>
+            <span className="text-right text-[11px] leading-5 text-muted-foreground">Feature bridge</span>
+          </div>
+        </div>
+      </section>
+
+      <div className={`hidden items-center text-xl xl:flex ${connector(1)}`} aria-hidden="true">→</div>
+      <section className={`border-l-2 p-3 ${tone(2)}`} aria-current={active === 2 ? "step" : undefined}>
+        <p className="text-[10px] font-black text-primary">03 · LOSS</p>
+        <h4 className="mt-1 break-keep text-sm font-bold">Student objective</h4>
+        <p className="mt-2 break-keep text-xs leading-5">Hard label + teacher loss</p>
+        <p className="mt-2 border-t border-border pt-2 text-[11px] font-bold text-primary">Student만 갱신</p>
+      </section>
+
+      <div className={`hidden items-center text-xl xl:flex ${connector(2)}`} aria-hidden="true">→</div>
+      <section className={`border-l-2 p-3 ${tone(3)}`} aria-current={active === 3 ? "step" : undefined}>
+        <p className="text-[10px] font-black text-primary">04 · TEST</p>
+        <h4 className="mt-1 break-keep text-sm font-bold">Student 단독 평가</h4>
+        <p className="mt-2 break-keep text-xs leading-5">독립 test와 runtime 확인</p>
+      </section>
+    </div>
+  );
+}
+
 export default function DistillationLearningFlowViz({ mode }: { mode: Mode }) {
   const flow = FLOWS[mode];
   const labels = flow.scenes.map(
@@ -224,41 +279,45 @@ export default function DistillationLearningFlowViz({ mode }: { mode: Mode }) {
           <h3 className="mt-2 min-h-16 text-lg font-bold leading-7 sm:min-h-[2.5rem]">
             {labels[active]}
           </h3>
-          <div className="mt-3 grid grid-cols-2 gap-3 xl:mt-5 xl:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] xl:items-center">
-            {flow.scenes.map((scene, index) => (
-              <div className="contents" key={scene.code}>
-                <div
-                  aria-current={index === active ? "step" : undefined}
-                  className={`flex min-h-24 min-w-0 flex-row items-center gap-2 border-t-2 px-2 py-2 text-left xl:min-h-0 xl:flex-col xl:gap-3 xl:px-3 xl:py-3 xl:text-center ${
-                    index === active
-                      ? "border-primary bg-primary/5"
-                      : index < active
-                        ? "border-primary/55"
-                        : "border-border text-muted-foreground"
-                  }`}
-                >
-                  <Glyph shape={scene.shape} active={index <= active} />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[9px] font-black text-primary sm:text-[10px]">
-                      0{index + 1} · {scene.code}
+          {mode === "classic" ? (
+            <ClassicMechanism active={active} />
+          ) : (
+            <div className="mt-3 grid grid-cols-2 gap-3 xl:mt-5 xl:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] xl:items-center">
+              {flow.scenes.map((scene, index) => (
+                <div className="contents" key={scene.code}>
+                  <div
+                    aria-current={index === active ? "step" : undefined}
+                    className={`flex min-h-24 min-w-0 flex-row items-center gap-2 border-t-2 px-2 py-2 text-left xl:min-h-0 xl:flex-col xl:gap-3 xl:px-3 xl:py-3 xl:text-center ${
+                      index === active
+                        ? "border-primary bg-primary/5"
+                        : index < active
+                          ? "border-primary/55"
+                          : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    <Glyph shape={scene.shape} active={index <= active} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[9px] font-black text-primary sm:text-[10px]">
+                        0{index + 1} · {scene.code}
+                      </span>
+                      <span className="mt-1 block break-keep text-xs font-bold leading-5 sm:text-sm">
+                        {scene.title}
+                      </span>
+                      <span className="mt-1 hidden break-keep text-xs leading-5 text-muted-foreground xl:block">
+                        {scene.detail}
+                      </span>
                     </span>
-                    <span className="mt-1 block break-keep text-xs font-bold leading-5 sm:text-sm">
-                      {scene.title}
-                    </span>
-                    <span className="mt-1 hidden break-keep text-xs leading-5 text-muted-foreground xl:block">
-                      {scene.detail}
-                    </span>
-                  </span>
-                </div>
-                {index < flow.scenes.length - 1 ? (
-                  <div className="hidden items-center xl:flex" aria-hidden="true">
-                    <span className={`h-px w-7 ${index < active ? "bg-primary" : "bg-border"}`} />
-                    <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-current text-muted-foreground" />
                   </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
+                  {index < flow.scenes.length - 1 ? (
+                    <div className="hidden items-center xl:flex" aria-hidden="true">
+                      <span className={`h-px w-7 ${index < active ? "bg-primary" : "bg-border"}`} />
+                      <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-current text-muted-foreground" />
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          )}
           <p className="mt-3 min-h-14 border-l border-primary/50 pl-4 text-sm leading-6 text-muted-foreground sm:mt-5 sm:min-h-[3.5rem]">
             {notes[active]}
           </p>

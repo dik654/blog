@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · 지식 증류 기초 (로컬 검수 완료, 배포 대기)
+
+- `ai/knowledge-distillation`을 고정 teacher → 신호 경로 선택 → student objective → student 단독 평가의 한 흐름으로 다시 검수했습니다. 기존 그림이 soft target과 feature bridge를 직렬 단계처럼 보이게 하던 오류를 고쳐, 공유 class의 logit 경로와 대응 hidden의 feature 경로가 서로 다른 선택지임을 한눈에 보이게 했습니다.
+- Logit 차이 4에서 `T=1` odds 약 54.6, `T=2` odds 약 7.4를 추적하고, 큰 T에서 soft-target gradient가 약 `1/T²` 규모로 줄어 `T²`를 곱하는 이유를 미분 단계로 보강했습니다. Forward KL과 reverse KL은 설명용 가정 `q=(.5,.5)`, `p=(.99,.01)`에서 약 1.61과 0.64로 달라짐을 표시했습니다.
+- Hinton 등의 원 논문 arXiv:1503.02531에서 `T²` 근거와 MNIST·speech 실험 범위를, FitNets arXiv:1412.6550에서 hint/guided layer와 regressor의 차원 정렬을 원문 PDF로 대조했습니다. 논문 실험값과 24층·1024차원, 12층·384차원 같은 설명용 가정은 분리했습니다.
+- 390×844에서 문서 가로 넘침 0, 첫 시각화 352×693px, 49.5px 조작부와 `ArrowRight` 장면 1→2 전환을 확인했습니다. 1440×1000에서는 첫 시각화 709×537px, 모든 시각화 가로 넘침과 console 오류 0을 확인했습니다. reduced-motion은 마지막 장면에서 정지하고 실행 중 animation이 0이었습니다.
+- JavaScript 비활성 390×844에서도 제목·부모 지도·네 전달 경로·네 정적 장면·수식·student 단독 평가·부모 지도 반환이 남습니다. 8GB 상한 전체 production build는 8,018개 module과 정적 public route 2,088개를 생성했고 최대 RSS 약 6.54GB, swap 0으로 통과했습니다. 공개 경로 검증만 남았습니다.
+
 ## 2026-10-26 · GraphRAG 검색 경로 (작성·검수·배포 완료)
 
 - 앞 글의 `kg-v43`을 그대로 받아 Community Report 생성, q-882 Local, q-883 Global, q-884 DRIFT, 결정적 N-hop traversal 경계를 한 사례로 다시 구성했습니다. 과거 글이 Microsoft GraphRAG Local Search를 hop-limited BFS처럼 설명하던 부분은 v3.3.0의 entity mapping과 mixed-context 조립 경로로 교체했습니다.

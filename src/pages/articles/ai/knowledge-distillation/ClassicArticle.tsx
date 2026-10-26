@@ -37,7 +37,7 @@ export default function ClassicDistillationArticle() {
               term: "Teacher model",
               description:
                 "이미 학습이 끝나 고정된 채로만 참조하는 모델입니다. Gradient를 받지 않고 student가 맞춰야 할 target만 만듭니다.",
-              example: "24층·1024차원 대형 classifier가 teacher 역할을 맡습니다.",
+              example: "(가정) 24층·1024차원 대형 classifier가 teacher 역할을 맡습니다.",
               boundary:
                 "Teacher가 크거나 유명하다는 사실이 student 품질을 보장하지 않고, teacher 자신의 오류도 그대로 target에 남습니다.",
             },
@@ -45,7 +45,7 @@ export default function ClassicDistillationArticle() {
               term: "Student model",
               description:
                 "실제로 backprop되어 갱신되는, 대개 더 작고 배포 비용이 싼 모델입니다.",
-              example: "12층·384차원 모델이 teacher의 판단을 student target으로 학습합니다.",
+              example: "(가정) 12층·384차원 모델이 teacher의 판단을 student target으로 학습합니다.",
               boundary:
                 "Student capacity가 너무 작으면 teacher signal을 아무리 잘 만들어도 담아낼 곳이 없습니다.",
             },
@@ -242,6 +242,135 @@ export default function ClassicDistillationArticle() {
           ]}
           interpretation="α=0이면 supervised baseline, α=1이면 teacher-only imitation입니다. 둘 사이의 개선은 agreement가 아니라 독립 test quality로 승인합니다."
         />
+        <ExplainedFormula
+          question="Soft loss에 T²를 곱하는 근거는 무엇인가?"
+          idea={
+            <>
+              Temperature softmax의 정확한 logit gradient에는 1/T가 한 번
+              들어갑니다. 큰 T에서 teacher와 student probability 차이도 대략
+              1/T로 줄어 전체 gradient가 약 1/T² 규모가 됩니다.
+            </>
+          }
+          formula={String.raw`\frac{\partial L_t}{\partial z_{s,k}}=\frac{p_{s,k}^{(T)}-q_{t,k}^{(T)}}{T}=O\!\left(\frac1{T^2}\right)`}
+          annotatedFormula={String.raw`\begin{aligned}
+\frac{\partial L_t}{\partial z_{s,k}}&=\underbrace{\frac{p_{s,k}^{(T)}-q_{t,k}^{(T)}}{T}}_{\text{temperature softmax의 정확한 gradient}}\\[4pt]
+p_{s,k}^{(T)}-q_{t,k}^{(T)}&=\underbrace{O(1/T)}_{\text{큰 T에서 centered logit 차이가 완만해짐}}\\[4pt]
+\frac{\partial L_t}{\partial z_{s,k}}&=\underbrace{O(1/T^2)}_{\text{두 요인이 함께 줄이는 근사 규모}}\\[4pt]
+T^2\frac{\partial L_t}{\partial z_{s,k}}&=\underbrace{O(1)}_{\text{hard loss와 비교할 scale을 대략 복원}}
+\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`(p_s^{(T)}-q_t^{(T)})/T`,
+              annotation: [
+                "Temperature softmax CE를 student logit으로 미분해",
+                "정확한 gradient를 얻음",
+              ],
+            },
+            {
+              expression: String.raw`p_s^{(T)}-q_t^{(T)}=O(1/T)`,
+              annotation: [
+                "큰 T에서 centered logit을 1차 전개해",
+                "probability residual의 근사 규모를 얻음",
+              ],
+            },
+            {
+              expression: String.raw`O(1/T)\times 1/T`,
+              annotation: [
+                "Residual과 미분의 두 1/T 요인을 곱해",
+                "soft gradient가 약 1/T²로 줄어듦을 확인",
+              ],
+            },
+            {
+              expression: String.raw`T^2L_t`,
+              annotation: [
+                "Soft loss에 T²를 곱해",
+                "temperature를 바꿀 때 상대 scale을 대략 유지",
+              ],
+            },
+          ]}
+          terms={[
+            {
+              symbol: String.raw`z_{s,k}`,
+              name: "student logit",
+              description: "Class k의 softmax 전 student score입니다.",
+            },
+            {
+              symbol: String.raw`p_{s,k}^{(T)}`,
+              name: "student soft probability",
+              description: "Temperature T를 적용한 student probability입니다.",
+            },
+            {
+              symbol: String.raw`q_{t,k}^{(T)}`,
+              name: "teacher soft target",
+              description: "같은 T를 적용한 teacher probability입니다.",
+            },
+            {
+              symbol: String.raw`O(1/T^2)`,
+              name: "large-T gradient scale",
+              description: "정확한 등식이 아니라 큰 T에서의 근사 규모입니다.",
+            },
+          ]}
+          assumptions={[
+            "Teacher와 student logit을 class 방향으로 center합니다.",
+            "Centered logit 크기가 T보다 작아 1차 전개가 유효한 큰-T 구간을 가정합니다.",
+            "T²는 scale 보정이며 최적 α나 수렴을 보장하지 않습니다.",
+          ]}
+          interpretation="T가 1에 가깝거나 logit 차이가 T보다 크면 1/T² 근사가 정확하지 않습니다. 그래서 T²는 고전적인 scale 보정이지 모든 설정의 최적값을 정하는 법칙이 아닙니다."
+        />
+        <div className="not-prose grid gap-px border border-border bg-border sm:grid-cols-2">
+          <section className="bg-background p-4">
+            <p className="text-xs font-bold text-primary">Forward KL · qₜ ∥ pₛ</p>
+            <p className="mt-2 break-keep text-sm leading-6">
+              Teacher가 확률을 둔 class를 student가 빠뜨렸는지 teacher expectation으로 봅니다.
+            </p>
+            <p className="mt-2 font-mono text-xs text-muted-foreground">
+              (가정) q=(.5,.5), p=(.99,.01) → 약 1.61
+            </p>
+          </section>
+          <section className="bg-background p-4">
+            <p className="text-xs font-bold text-primary">Reverse KL · pₛ ∥ qₜ</p>
+            <p className="mt-2 break-keep text-sm leading-6">
+              Student가 확률을 둔 class를 teacher가 허용하는지 student expectation으로 봅니다.
+            </p>
+            <p className="mt-2 font-mono text-xs text-muted-foreground">
+              (가정) q=(.5,.5), p=(.99,.01) → 약 0.64
+            </p>
+          </section>
+        </div>
+        <p>
+          두 값은 같은 분포를 비교해도 다릅니다. 고전 식의 forward KL은 teacher가
+          중요하게 본 class를 student가 놓치는 일을 크게 벌주며, reverse KL로 순서를
+          바꾸면 다른 학습 목표가 됩니다.
+        </p>
+        <div id="paper-hinton-kd">
+          <CitationBlock
+            source="Hinton et al. — Distilling the Knowledge in a Neural Network"
+            citeKey={1}
+            type="paper"
+            href="https://arxiv.org/abs/1503.02531"
+          >
+            <p>
+              <strong>문제:</strong> 비싼 ensemble behavior를 작은 model로
+              옮깁니다.
+            </p>
+            <p>
+              <strong>기여:</strong> Temperature soft target과 hard target의
+              결합을 제안합니다.
+            </p>
+            <p>
+              <strong>전제:</strong> 공유 class interface와 논문의 model·dataset
+              조건입니다.
+            </p>
+            <p>
+              <strong>근거 범위:</strong> MNIST·speech·specialist ensemble
+              실험입니다.
+            </p>
+            <p>
+              <strong>말하지 않는 것:</strong> 모든 작은 student가 teacher
+              quality를 보존한다는 뜻은 아닙니다.
+            </p>
+          </CitationBlock>
+        </div>
       </section>
       <section id="feature-alignment" className="mb-16 scroll-mt-20 space-y-6">
         <header>
@@ -253,7 +382,7 @@ export default function ClassicDistillationArticle() {
           </h2>
         </header>
         <p>
-          Teacher 24층·1024 channel과 student 12층·384 channel은 좌표계가
+          (가정) Teacher 24층·1024 channel과 student 12층·384 channel은 좌표계가
           다릅니다. 어느 layer와 token을 대응할지 정하고 student feature를
           teacher dimension으로 보내는 projection을 둡니다. Shape가 같아져도
           의미가 같다는 보장은 없습니다.
@@ -320,35 +449,6 @@ export default function ClassicDistillationArticle() {
           ]}
           interpretation="384→1024 projection은 뺄셈을 가능하게 할 뿐 semantic alignment를 증명하지 않습니다. Output metric과 ablation을 함께 봅니다."
         />
-        <div id="paper-hinton-kd">
-          <CitationBlock
-            source="Hinton et al. — Distilling the Knowledge in a Neural Network"
-            citeKey={1}
-            type="paper"
-            href="https://arxiv.org/abs/1503.02531"
-          >
-            <p>
-              <strong>문제:</strong> 비싼 ensemble behavior를 작은 model로
-              옮깁니다.
-            </p>
-            <p>
-              <strong>기여:</strong> Temperature soft target과 hard target의
-              결합을 제안합니다.
-            </p>
-            <p>
-              <strong>전제:</strong> 공유 class interface와 논문의 model·dataset
-              조건입니다.
-            </p>
-            <p>
-              <strong>근거 범위:</strong> MNIST·speech·specialist ensemble
-              실험입니다.
-            </p>
-            <p>
-              <strong>말하지 않는 것:</strong> 모든 작은 student가 teacher
-              quality를 보존한다는 뜻은 아닙니다.
-            </p>
-          </CitationBlock>
-        </div>
         <div id="paper-fitnets">
           <CitationBlock
             source="Romero et al. — FitNets"
@@ -401,6 +501,17 @@ export default function ClassicDistillationArticle() {
           </a>
           로 넘어갑니다.
         </p>
+      </section>
+      <section id="review" className="mb-16 scroll-mt-20 space-y-5">
+        <header>
+          <p className="text-sm font-semibold text-primary">확인</p>
+          <h2 className="mt-2 text-2xl font-bold">같은 사례를 다시 계산해 봅니다</h2>
+        </header>
+        <ol className="list-decimal space-y-3 pl-6 leading-7">
+          <li>Teacher logit 차이가 4일 때 T=2를 적용하면 두 class의 odds는 왜 약 7.4가 됩니까? (답: 01절)</li>
+          <li>T²를 곱하는 이유를 정확한 등식이 아니라 큰-T 근사라고 불러야 하는 이유는 무엇입니까? (답: 02절)</li>
+          <li>384차원 student feature를 1024차원 teacher feature에서 바로 뺄 수 없고, projection 뒤에도 품질 검사가 필요한 이유는 무엇입니까? (답: 03절)</li>
+        </ol>
       </section>
       <DistillationMapReturn current="signal-interface" />
     </article>
