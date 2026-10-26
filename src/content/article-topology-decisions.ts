@@ -370,6 +370,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Engine commit·options·자료 digest·seed·장치·filesystem을 고정하고 WAL·flush·MANIFEST·compaction install 경계의 key·tombstone·snapshot parity를 먼저 통과합니다. 통과한 run에서만 증폭·stall·p99·recovery를 비교하며 실제 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/bplus-tree": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "4KiB page의 fanout과 높이, 35의 point·range 조회, 25 삽입의 split과 parent downlink, generic delete 불변식까지는 한 page-index 메커니즘입니다. Source·format·comparator를 고정한 경계 입력·중간 종료·reopen·측정·ADR은 환경별 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 (4096−96)/24=166, 100만/200=5,000 leaves와 fanout160에서 32 parents·1 root·3-page path를 검산하고, [20,40]의 key35 조회와 [35,62] sibling walk, capacity4에 25를 넣는 split을 끝까지 추적합니다. 운영 승인과 성능 수치는 포함하지 않습니다.",
+    targetRoutes: ["blockchain/bplus-tree", "blockchain/bplus-index-validation"],
+  },
+  "blockchain/bplus-index-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "고정 manifest에서 같은 operation trace를 candidate와 ordered-map oracle에 재생하고 경계 변화·중간 종료·reopen을 대조한 뒤 비용을 측정해 ADR로 남기는 하나의 운영 판단 경로입니다. 상태 소유권·복구·결정은 같은 run receipt를 공유하므로 다시 나누면 증거가 끊깁니다.",
+    sharedGate:
+      "Source SHA·page format·comparator·duplicate policy·sync·filesystem·장비·trace를 고정하고 capacity 경계와 root growth, 대상 구현의 delete path, parent/root/meta 공개 전후를 대조합니다. 모든 key·range·graph 불변식을 통과한 run에서만 page read/write·height·space·p99를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),

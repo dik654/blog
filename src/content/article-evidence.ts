@@ -6815,7 +6815,14 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "blockchain/bplus-tree": [
     { kind:"핵심 논문", label:"Bayer & McCreight · Organization and Maintenance of Large Ordered Indices", href:"https://doi.org/10.1007/BF00288683", note:"Page-oriented balanced multiway index의 primary paper" },
-    { kind:"공식 코드", label:"PostgreSQL nbtree @ eb983d0", href:"https://github.com/postgres/postgres/tree/eb983d0a94f666d91058552117d029939821d648/src/backend/access/nbtree", note:"Production ordered-index implementation의 pinned source" },
+    { kind:"핵심 논문", label:"Comer · The Ubiquitous B-Tree", href:"https://doi.org/10.1145/356770.356776", note:"B+ tree를 포함한 B-tree 계열 변형의 고전적 개관" },
+    { kind:"공식 문서", label:"PostgreSQL 18 · B-Tree Indexes", href:"https://www.postgresql.org/docs/18/btree.html", note:"Multi-level pages·leaf tuples·internal downlinks·split의 공식 설명" },
+    { kind:"공식 코드", label:"PostgreSQL 18.6 nbtree README @ 724edf9", href:"https://github.com/postgres/postgres/blob/724edf9bde9d356724ad384a2e196edc3c9f80f7/src/backend/access/nbtree/README", note:"High key·right link·page deletion 정책의 pinned stable source" },
+  ],
+  "blockchain/bplus-index-validation": [
+    { kind:"공식 코드", label:"PostgreSQL 18.6 nbtree README @ 724edf9", href:"https://github.com/postgres/postgres/blob/724edf9bde9d356724ad384a2e196edc3c9f80f7/src/backend/access/nbtree/README", note:"제품별 split·page deletion·동시성 fixture를 설계할 pinned source" },
+    { kind:"공식 문서", label:"PostgreSQL 18 · amcheck", href:"https://www.postgresql.org/docs/18/amcheck.html", note:"B-tree 불변식·parent 관계 검사와 손상 부재를 완전히 증명하지 못하는 한계" },
+    { kind:"공식 문서", label:"PostgreSQL 18.6 Release", href:"https://www.postgresql.org/docs/18/release-18-6.html", note:"Pinned source가 대응하는 안정 minor release의 공식 기록" },
   ],
   "blockchain/lsm-tree": [
     { kind:"핵심 논문", label:"O’Neil et al. · The Log-Structured Merge-Tree", href:"https://doi.org/10.1007/s002360050048", note:"LSM architecture·rolling merge의 primary paper" },

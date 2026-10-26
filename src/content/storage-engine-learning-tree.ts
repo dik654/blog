@@ -6,7 +6,7 @@ export interface StorageEngineAnchor {
 }
 
 export interface StorageEngineNode {
-  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "mdbx-internals" | "reth-db";
+  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "reth-db";
   href: string;
   shortTitle: string;
   track: StorageEngineTrack;
@@ -60,7 +60,27 @@ export const STORAGE_ENGINE_NODES = [
     question: "큰 fanout의 page 구조는 어떻게 짧은 조회 경로와 순서 탐색을 만들까요?",
     parentHref: "/cs/blockchain/reth#overview",
     parentLabel: "Reth의 검증·실행·저장 지도",
-    closure: "B+ tree는 page 내부의 separator와 연결된 leaf를 이용해 짧은 조회 경로를 만듭니다. 삽입과 삭제는 split·redistribution·merge를 통해 정렬과 같은 leaf 깊이를 보존합니다.",
+    closure: "B+ tree는 page 내부의 separator와 연결된 leaf를 이용해 짧은 조회 경로를 만듭니다. 삽입과 삭제는 새 page뿐 아니라 parent 경계와 sibling 연결을 함께 고쳐 정렬과 같은 leaf 깊이를 보존합니다. 실제 제품의 page 삭제 정책은 이 일반 모형과 다를 수 있습니다.",
+    paired: {
+      href: "/cs/blockchain/bplus-index-validation#overview",
+      label: "B+ tree 구현 검증",
+    },
+  },
+  {
+    id: "bplus-index-validation",
+    href: "/cs/blockchain/bplus-index-validation#overview",
+    shortTitle: "B+ 검증",
+    track: "practice",
+    mapLabel: "경계·중단·복구 대조",
+    question: "어떤 증거가 있어야 page 형식이나 split 구현 변경을 운영에 적용할 수 있을까요?",
+    parentHref: "/cs/blockchain/bplus-tree#return-map",
+    parentLabel: "B+ tree의 page·조회·갱신 메커니즘",
+    closure: "B+ tree 구현 변경은 정상 조회 한 번으로 승인하지 않습니다. Page 형식과 comparator를 고정하고 경계 입력과 중간 종료를 재생한 뒤, 재시작한 index의 point·range 결과와 page graph를 독립 oracle에 대조합니다. 정확성과 복구를 통과한 run에서만 page 비용과 tail latency를 비교합니다.",
+    anchors: [
+      { href: "/cs/blockchain/bplus-tree#page-layout", label: "Page 예산과 fanout" },
+      { href: "/cs/blockchain/bplus-tree#search-range", label: "Point·range 조회" },
+      { href: "/cs/blockchain/bplus-tree#updates", label: "Split·삭제 불변식" },
+    ],
   },
   {
     id: "mdbx-internals",

@@ -5896,6 +5896,47 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "같은 width·round-trip·hash collision resistance를 semantic schema·canonical input·application validity 전체로 확대하지 않는다." },
     ],
   },
+  "bplus-tree": {
+    title: "B+ tree page·조회·갱신 개념 글이 소유하는 범위",
+    owns: [
+      "Page byte budget에서 fanout·leaf 수·root-to-leaf page 수를 계산하는 모형",
+      "Internal separator가 child를 고르고 leaf가 실제 entry와 sibling 연결을 보관하는 조회 구조",
+      "Point lookup과 첫 leaf 이후 right-sibling을 따르는 range scan",
+      "Overflow split·parent downlink 공개와 generic delete redistribution·merge 불변식",
+      "일반 알고리즘과 PostgreSQL nbtree의 high key·right link·page deletion 정책 차이",
+    ],
+    reuses: [
+      { label: "Reth의 검증·실행·저장 전체 지도", href: "/cs/blockchain/reth#overview" },
+      { label: "Bit·byte의 기초", href: "/cs/ai/text-unicode-encoding#bits-bytes" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Balanced multiway page tree의 기원과 B+ tree 변형은 Bayer–McCreight와 Comer 원문에 귀속한다." },
+      { kind: "primary-source", rule: "PostgreSQL 구조·split·page deletion claim은 18 문서와 18.6 commit 724edf9 범위로 제한한다." },
+      { kind: "project-measurement", rule: "4KiB·fanout160·100만 entries 계산은 설명용 검산이며 대상 서비스 측정값으로 쓰지 않는다." },
+      { kind: "project-claim", rule: "일반 B+ tree의 merge 모형을 특정 제품의 구현이나 crash 복구 계약으로 확대하지 않는다." },
+    ],
+  },
+  "bplus-index-validation": {
+    title: "B+ tree 구현 실험·복구·결정 글이 소유하는 범위",
+    owns: [
+      "Source SHA·page format·comparator·duplicate 정책·sync·장비·trace를 고정한 run manifest",
+      "Harness·candidate·ordered-map oracle·collector·ADR의 authoritative writer",
+      "Capacity 경계·root growth와 제품이 지원하는 delete path의 differential test",
+      "Page·parent downlink·root/meta/free-list 공개 전후의 kill·reopen 대조",
+      "정확성 통과 뒤 page 비용·tail latency를 측정하고 우회·재구축·rollback을 승인하는 조건",
+    ],
+    reuses: [
+      { label: "Page 예산과 fanout", href: "/cs/blockchain/bplus-tree#page-layout" },
+      { label: "Point·range 조회", href: "/cs/blockchain/bplus-tree#search-range" },
+      { label: "Split·삭제 불변식", href: "/cs/blockchain/bplus-tree#updates" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "제품별 split·delete·동시성 fixture는 PostgreSQL 18.6 commit 724edf9처럼 고정한 대상 구현에 귀속한다." },
+      { kind: "standard", rule: "amcheck 결과를 손상 부재의 완전한 증명이나 모든 B+ tree의 복구법으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경에서 직접 얻은 값만 [M]으로 기록하며 현재 성능·복구 결과는 미측정으로 남긴다." },
+      { kind: "project-claim", rule: "Page format·comparator·자료·장비·release가 바뀌면 기존 결론을 다시 검증한다." },
+    ],
+  },
   "lsm-tree": {
     title: "LSM 쓰기·읽기·병합 개념 글이 소유하는 범위",
     owns: [
