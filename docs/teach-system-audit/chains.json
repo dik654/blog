@@ -5926,40 +5926,77 @@
     {
       "route": "blockchain/smr-theory",
       "title": "상태 머신 복제 (SMR) 이론",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/smr-theory.tsx",
       "bodyFiles": [
+        "src/pages/articles/blockchain/distributed-systems/DistributedSystemsPathLocator.tsx",
         "src/pages/articles/blockchain/smr-theory.tsx",
         "src/pages/articles/blockchain/smr-theory/LogReplication.tsx",
         "src/pages/articles/blockchain/smr-theory/Overview.tsx",
         "src/pages/articles/blockchain/smr-theory/Paxos.tsx",
-        "src/pages/articles/blockchain/smr-theory/TotalOrder.tsx"
+        "src/pages/articles/blockchain/smr-theory/TotalOrder.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/ContextViz.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/LogReplicationViz.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/PaxosViz.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/SMRModelViz.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/SMRRequestTraceViz.tsx",
+        "src/pages/articles/blockchain/smr-theory/viz/TotalOrderViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
         "predictionPointers": 0,
         "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "sourceButtons": 3,
         "headings": [
           "Raft는 log prefix와 leader epoch를 함께 지킨다",
-          "\n        상태 머신 복제는 상태가 아니라 결정된 명령의 순서를 복제한다\n      ",
+          "상태 머신 복제는 상태가 아니라 결정된 명령의 순서를 복제한다",
           "Paxos는 이미 chosen될 수 있는 value를 새 proposal이 이어받게 한다",
           "도착 순서와 delivery 순서는 다르다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 SMR·total-order broadcast·Raft·Paxos를 설명했지만, 하나의 client request가 append·commit·apply·reply를 지나는 상태 변화로 연결되지 않았습니다.",
+        "본문보다 정적 개념 카드가 뒤에 배치되어 그림만 먼저 보고 핵심 질문에 답하기 어려웠습니다.",
+        "직속 부모 지도와 같은 트랙의 이웃 글, 배운 사실을 부모 지도에 되돌려 놓는 경로가 없었습니다."
+      ],
+      "fixture": "잔액 10인 세 replica에 client가 r-17: withdraw(3)을 보냅니다. Leader A가 index 42에 제안하고 A·B 과반 저장 뒤 commit합니다. 각 replica는 committed prefix를 순서대로 적용해 7을 만들고 request ID별 결과를 보존합니다. Reply가 유실되어 같은 r-17이 다시 와도 출금을 재실행하지 않습니다 [A].",
+      "stageEvidence": {
+        "parent": "분산 시스템 학습 지도에서 개념 트랙의 두 번째 영역인 상태 머신 복제로 현재 위치를 표시합니다.",
+        "question": "서로 다른 순서로 도착한 명령을 모든 replica가 같은 순서로 실행하려면 어떤 상태를 합의해야 하는지 한 질문으로 고정합니다.",
+        "trace": "r-17 접수→index 42 제안→과반 저장→commit된 prefix 적용→reply 유실→request ID 재시도 판별을 여섯 장면으로 추적합니다.",
+        "mechanisms": "같은 실행에서 deterministic transition과 total order를 확인한 뒤 Raft의 commit rule과 Paxos의 chosen-value invariant로 재귀적으로 들어갑니다.",
+        "code": "복제본이 request result를 먼저 조회하고 append·commit 대기·ordered apply·result 저장·reply를 수행하는 의사코드를 줄마다 한국어로 설명합니다.",
+        "failure": "Local append, follower ACK, majority commit, apply, reply 사이의 crash cut과 external side effect의 exactly-once 한계를 분리합니다.",
+        "return": "같은 initial state·같은 ordered input·deterministic transition이 같은 결과를 만들며 receive·commit·apply를 구분해야 한다는 사실을 부모 지도에 반환합니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "Fred B. Schneider, Implementing Fault-Tolerant Services Using the State Machine Approach, ACM Computing Surveys 1990 원문",
+          "application": "State variable과 deterministic command, request sequence가 output을 결정한다는 semantic characterization과 replica coordination 범위만 적용했습니다."
+        },
+        {
+          "source": "Diego Ongaro·John Ousterhout, In Search of an Understandable Consensus Algorithm, extended paper 원문",
+          "application": "Replicated log의 동일 command sequence, leader election·log replication·safety, crash-stop majority 전제와 current-term commit rule을 적용했습니다."
+        },
+        {
+          "source": "Leslie Lamport, Paxos Made Simple, 2001 원문",
+          "application": "Prepare promise, highest-numbered accepted value adoption, majority-chosen value와 single-decree를 command sequence로 확장하는 범위만 적용했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "contentReview": "pass · 직속 부모 지도→r-17 한 요청→deterministic transition→total order→Raft commit/apply→Paxos chosen value→부모 지도 복귀 순서로 재작성했습니다.",
+        "sourceScope": "pass · Schneider SMR tutorial, Raft extended paper, Paxos Made Simple 원문을 직접 확인하고 crash-fault 고정 membership 밖으로 과반 결론을 일반화하지 않았습니다.",
+        "humanize": "pass · 글 단위 학습 계약·지식 그래프·시각화 스타일·문장 호흡·한국어 자연스러움·용어 밀도·읽기 순서 검사를 통과했습니다.",
+        "browser390": "pass · 390×844에서 document 폭 390px이며 일곱 시각화 canvas의 clientHeight=scrollHeight, r-17 여섯 장면의 높이 464px 고정과 가로 넘침 0을 확인했습니다.",
+        "browser1440": "pass · 1440×1000에서 document overflow 0이며 r-17 요청, 세 replica, commit 경계, 단계 표시, 설명과 조작부가 겹치지 않는지 확인했습니다.",
+        "keyboard": "pass · 시각화 그룹에 초점을 둔 뒤 ArrowRight로 0→5까지 이동하는 동안 초점이 유지되고 각 장면의 상태가 함께 바뀌는지 확인했습니다.",
+        "reducedMotion": "pass · prefers-reduced-motion에서 4.6초 뒤에도 첫 장면을 유지하고 재생 버튼이 비활성화되는지 확인했습니다.",
+        "noJavaScript": "pass · 390×844 JavaScript 비활성 browser context에서 현재 장면과 조작부는 숨고 정적 여섯 장면·부모 지도 복귀가 보이며 document 폭 390px로 가로 넘침이 없는지 확인했습니다.",
+        "console": "pass · Playwright 세션에서 console error·warning 0개입니다.",
+        "build": "pass · NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

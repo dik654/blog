@@ -4,6 +4,7 @@ export default function TotalOrder() {
   return (
     <section id="total-order" className="mb-16 scroll-mt-20">
       <h2 className="mb-6 text-2xl font-bold">도착 순서와 delivery 순서는 다르다</h2>
+      <TotalOrderViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <p>
           Network receive buffer에는 A가 먼저, B가 나중에 도착할 수 있고 다른
@@ -13,7 +14,6 @@ export default function TotalOrder() {
           다른 correct process도 A 뒤 B로 봅니다.
         </p>
       </div>
-      <TotalOrderViz />
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         <h3>네 성질과 경계</h3>
         <p>
