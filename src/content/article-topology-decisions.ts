@@ -3798,7 +3798,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/lora-training-and-release": "9887191b7009e2d0",
   "ai/multi-agent-implementation": "c2b3777be97f2835",
   "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
-  "ai/regression-metrics": "0fbb57b8ab39f4c1",
+  "ai/regression-metrics": "08d5aadc77d91041",
   "ai/ranking-metrics": "1cb64ef79c8f94b4",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
