@@ -9096,7 +9096,8 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/vector-search-and-ann-indexes": [
     { kind: "핵심 논문", label: "Jégou, Douze, Schmid — Product Quantization for Nearest Neighbor Search (TPAMI 2011)", href: "https://doi.org/10.1109/TPAMI.2010.57", note: "Product quantization·asymmetric distance computation·IVFADC 의 근거. 수치는 저자 자기보고" },
-    { kind: "공식 문서", label: "FAISS wiki — Faiss indexes", href: "https://github.com/facebookresearch/faiss/wiki/Faiss-indexes", note: "IndexIVFFlat 의 nlist·nprobe, IndexPQ·IndexIVFPQ 의 m·nbits·code_size 계산의 근거" },
+    { kind: "공식 코드", label: "FAISS v1.15.1 — IndexIVF.h / ProductQuantizer.cpp", href: "https://github.com/facebookresearch/faiss/tree/v1.15.1", note: "릴리스에 고정한 nlist·nprobe 필드, d%M 검사와 (nbits×M+7)/8 code_size 계산의 근거" },
+    { kind: "공식 문서", label: "FAISS wiki — Faiss indexes", href: "https://github.com/facebookresearch/faiss/wiki/Faiss-indexes", note: "Flat·IVF·PQ 색인의 역할과 cosine 검색을 위한 사전 정규화 설명. 릴리스 버전 고정 문서는 아님" },
   ],
   "ai/knowledge-graph-construction": [
     { kind: "공식 문서", label: "Neo4j — Graph Database Concepts", href: "https://neo4j.com/docs/getting-started/appendix/graphdb-concepts/", note: "Node·relationship·property·label 정의, edge property·multi-label 지원의 근거" },

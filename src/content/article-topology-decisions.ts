@@ -1801,6 +1801,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "모델 등록 글에서 승인한 run-27의 v21을 repro-31로 이어 받아, 동등성 계약·실행 증명·병렬 난수 계보·빈 worker·최초 차이를 한 재현 경로로 추적합니다.",
     sharedGate: "설명용 수치와 digest를 명시하고, container 불일치는 실행 전에 차단하며, 실행 뒤에는 입력부터 중요 사용자 구간까지 최초로 다른 단계를 보고합니다.",
   },
+  "ai/vector-search-and-ann-indexes": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale: "q-17 한 건이 같은 임베딩 좌표에 놓인 뒤 전수 비교, IVF 구역 선택, PQ 코드 압축을 거쳐 doc-104를 반환하는 단일 검색 경로입니다. 정규화와 실패 경계도 같은 후보 순위를 설명하므로 분리하면 어느 단계에서 정답을 잃었는지 추적하기 어렵습니다.",
+    sharedGate: "N=1,000,000·nlist=1,000·nprobe=10에서 11,000회, d=768·m=8·nbits=8에서 3,072B→8B를 검산하고, 두 값이 실제 지연 시간·전체 저장량·재현율 측정치가 아님을 함께 확인합니다.",
+  },
   "ai/adaptive-hyperparameter-search": {
     "action": "keep",
     "status": "implemented",
@@ -3451,6 +3458,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  * 개념 소유권이 바뀌면 topology audit가 stale decision으로 되돌립니다.
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
+  "ai/vector-search-and-ann-indexes": "1b2aed448dad9989",
   "ai/image-training-stages": "20ded1bf15e7dd02",
   "ai/domain-finetuning": "c940531287aaa232",
   "ai/regularization-practice": "70bd499ad13bf51a",
