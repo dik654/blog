@@ -339,6 +339,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/distributed-systems",
   "blockchain/smr-theory",
   "blockchain/fork-id",
+  "blockchain/evm-fundamentals",
+  "blockchain/evm-advanced",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

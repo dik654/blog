@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 637,
-    "pending": 355,
+    "reviewed": 638,
+    "pending": 354,
     "untracked": 0,
-    "assignedPending": 313,
+    "assignedPending": 312,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3973,9 +3973,9 @@
       "publicPath": "cs/blockchain/evm-advanced",
       "title": "EVM 심화: Create · DelegateCall · StaticCall",
       "catalogIndex": 394,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

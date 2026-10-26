@@ -1522,27 +1522,27 @@ export const ARTICLE_CONCEPT_FLOWS: Record<string, ConceptFlow> = {
     "속도는 draft 자체보다 평균 acceptance length와 검증 경로의 비용으로 결정됩니다.",
   ),
   "blockchain/evm-advanced": flow(
-    "EVM 하위 실행 컨텍스트",
-    "CREATE·DELEGATECALL·STATICCALL은 무엇을 바꾸고 무엇을 물려줄까?",
+    "EVM 중첩 호출의 큰 흐름",
+    "Proxy가 다른 코드를 실행하고 하위 실패를 처리할 때 어떤 상태가 남을까요?",
     [
       {
-        label: "Caller",
-        detail: "현재 address·storage·value·static 상태를 가집니다.",
+        label: "Proxy 요청",
+        detail: "Alice가 Proxy에 값과 요청을 보냅니다.",
       },
       {
-        label: "Opcode",
-        detail: "호출 종류가 code·context·value 상속 규칙을 정합니다.",
+        label: "코드 위임",
+        detail: "Implementation 코드를 Proxy 상태에서 실행합니다.",
       },
       {
-        label: "Child frame",
-        detail: "독립 gas와 returndata를 가진 실행 프레임이 생깁니다.",
+        label: "정적 검사",
+        detail: "Checker를 쓰기 금지 프레임으로 호출합니다.",
       },
       {
-        label: "Commit/Revert",
-        detail: "성공 시 state diff를 합치고 실패 시 되돌립니다.",
+        label: "실패 처리",
+        detail: "하위 변경을 되돌리고 상위 코드가 계속할지 정합니다.",
       },
     ],
-    "opcode 이름보다 실행 프레임의 address·storage·value·write 권한을 표로 추적해야 합니다.",
+    "실행할 코드·상태를 기록할 주소·sender·value·쓰기 권한을 프레임마다 따로 추적합니다.",
   ),
   "blockchain/reth": flow(
     "Reth 노드의 큰 데이터 경로",
