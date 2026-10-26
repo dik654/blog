@@ -32501,22 +32501,25 @@ export const ARTICLE_LEARNING: Readonly<
     entryNote: "이 글에서는 한 학습 실행을 run-27, 등록한 고정 버전을 v21이라고 부릅니다. Champion 별명이 가리킨 v21을 승인한 뒤 실제 endpoint가 같은 모델을 읽었는지 추적합니다.",
   },
   "ai/reproducible-ml-execution": {
-    coreIdea: "Bitwise·numeric·statistical·behavioral 중 필요한 재현 수준을 먼저 선언하고, 계층적 random streams와 immutable inputs로 clean-room test를 수행합니다.",
-    assumedKnowledge: [],
+    coreIdea: "승인한 v21의 동등성 계약과 실행 증명 묶음을 먼저 고정하고, 병렬 난수 계보를 재구성한 뒤 빈 worker에서 실행 전 차단과 실행 후 최초 차이를 구분합니다.",
+    assumedKnowledge: [
+      { id: "tracking-store-artifact-integrity", role: "승인한 모델 파일과 실행 환경 digest가 함께 보존되어야 재현 입력이 완성됨을 확인합니다." },
+      { id: "mutable-alias-resolution-receipt", role: "움직이는 별명이 아니라 승인 순간의 고정 버전과 digest를 재현 대상으로 사용합니다." },
+    ],
     introducedHere: [
       { id: "reproduction-equivalence-level", role: "재실행 결과를 같다고 볼 acceptance 수준을 선언합니다." },
       { id: "hierarchical-random-seed-derivation", role: "Root seed에서 병렬 실행 좌표별 random stream을 파생합니다." },
       { id: "clean-room-reproduction-test", role: "빈 environment에서 first divergence와 acceptance를 검사합니다." },
     ],
     conceptExplanations: [
-      { id: "reproduction-equivalence-level", sectionId: "equivalence-level", intuition: "문서를 글자까지 같게 복사할지 뜻과 통계만 같으면 될지 목적에 따라 정합니다.", workedExample: "CPU artifact는 digest exact, GPU tensor는 atol·rtol, 여러 seed는 mean·spread를 검사합니다.", boundary: "결과를 본 뒤 tolerance를 넓히면 acceptance가 사후 선택됩니다." },
-      { id: "hierarchical-random-seed-derivation", sectionId: "seed-tree", intuition: "가족 이름 하나에서 구성원별 주소를 규칙적으로 만들되 같은 주소를 복사하지 않습니다.", workedExample: "Root seed와 run·rank·worker·epoch를 hash해 loader별 child seed를 만듭니다.", boundary: "Worker 수와 sampler topology가 바뀌면 sample-to-stream mapping도 달라집니다." },
-      { id: "clean-room-reproduction-test", sectionId: "clean-room", intuition: "개발 laptop의 cache 없이 봉인된 재료와 설명서만으로 다시 만듭니다.", workedExample: "Fresh worker가 input digest와 image·command를 받아 실행하고 최초로 달라진 artifact를 보고합니다.", boundary: "한 번 통과해도 미래 library·hardware release까지 영구 보장하지 않습니다." },
+      { id: "reproduction-equivalence-level", sectionId: "equivalence-level", intuition: "파일·tensor·분포·사용자 행동은 같은 결과를 요구하는 강도가 서로 다릅니다.", workedExample: "기준값 100.00과 재실행값 100.08은 atol 0.01과 rtol 0.001이 만든 경계 0.11 안에 있어 한 원소의 numeric gate를 통과합니다.", boundary: "결과를 본 뒤 tolerance를 넓히면 acceptance가 사후 선택됩니다." },
+      { id: "hierarchical-random-seed-derivation", sectionId: "seed-tree", intuition: "Root 하나를 복사하지 않고 용도와 병렬 좌표마다 다시 계산 가능한 난수 흐름을 만듭니다.", workedExample: "Root 24017과 train·run·rank·worker·epoch를 hash해 loader별 child seed와 manifest를 만듭니다.", boundary: "Worker 수와 sampler topology가 바뀌면 sample-to-stream mapping도 달라집니다." },
+      { id: "clean-room-reproduction-test", sectionId: "clean-room", intuition: "실행 전 증명이 다르면 시작을 차단하고, 실행 뒤 결과가 다르면 최초 차이부터 조사합니다.", workedExample: "Container digest 불일치 worker를 폐기한 뒤 올바른 image로 재실행하고, step 820 logits의 첫 불일치를 보고합니다.", boundary: "한 번 통과해도 미래 library·hardware release까지 영구 보장하지 않습니다." },
     ],
     conceptStages: [
-      { label: "Equality", relation: "목적에 맞는 재현 acceptance level과 tolerance를 선언", concepts: ["reproduction-equivalence-level"] },
-      { label: "Random streams", relation: "Root seed에서 역할·병렬 좌표별 child streams 파생", concepts: ["hierarchical-random-seed-derivation", "reproduction-equivalence-level"] },
-      { label: "Clean room", relation: "숨은 state 없이 재실행하고 first divergence 판정", concepts: ["hierarchical-random-seed-derivation", "clean-room-reproduction-test", "reproduction-equivalence-level"] },
+      { label: "동등성 계약", relation: "파일·tensor·분포·행동별 재현 수준과 tolerance를 결과 전에 선언", concepts: ["reproduction-equivalence-level"] },
+      { label: "실행 증명과 난수", relation: "승인한 입력·환경을 고정하고 root seed에서 역할·병렬 좌표별 child stream 파생", concepts: ["hierarchical-random-seed-derivation", "reproduction-equivalence-level"] },
+      { label: "빈 환경", relation: "증명 불일치는 실행 전에 차단하고 실행 후에는 최초 차이를 판정", concepts: ["hierarchical-random-seed-derivation", "clean-room-reproduction-test", "reproduction-equivalence-level"] },
     ],
     exercises: [
       { level: "basic", question: "재현 equality의 네 수준을 예와 연결하라.", answerChecklist: ["bitwise", "numeric", "statistical", "behavioral", "example", "purpose"], requiredConcepts: ["reproduction-equivalence-level"], sectionId: "overview" },
@@ -32531,10 +32534,12 @@ export const ARTICLE_LEARNING: Readonly<
       { level: "advanced", question: "Clean-room CI에서 first divergence를 찾는 순서를 설계하라.", answerChecklist: ["inputs", "environment", "intermediate artifact", "output tensor", "metric", "slice gate"], requiredConcepts: ["clean-room-reproduction-test", "reproduction-equivalence-level"], sectionId: "clean-room" },
     ],
     papers: [
-      { title: "Machine Learning: The High Interest Credit Card of Technical Debt", href: "https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/", problem: "숨은 data dependency·configuration·pipeline debt가 ML system 신뢰성을 약화함", contribution: "ML-specific technical debt와 boundary erosion을 구조화", assumptions: "조직·production ML 관점의 position paper", evidenceScope: "숨은 coupling과 configuration debt의 위험", notClaim: "특정 reproduction protocol의 표준은 아님", sectionId: "paper-ml-reproducibility" },
-      { title: "PyTorch Reproducibility", href: "https://docs.pytorch.org/docs/stable/notes/randomness.html", problem: "RNG·algorithm·platform 차이가 동일 코드 결과를 바꿀 수 있음", contribution: "Randomness 제어와 deterministic algorithm의 공식 경계 설명", assumptions: "Release·platform·device가 달라지면 완전 재현이 보장되지 않음", evidenceScope: "PyTorch execution randomness control", notClaim: "Seed 설정만으로 data·artifact·environment 재현이 완성된다는 뜻은 아님", sectionId: "standard-pytorch-reproducibility" },
+      { title: "PyTorch 2.14 Reproducibility", href: "https://docs.pytorch.org/docs/2.14/notes/randomness.html", problem: "RNG·algorithm·platform 차이가 동일 코드 결과를 바꿀 수 있음", contribution: "Randomness 제어와 DataLoader worker reseeding의 공식 경계 설명", assumptions: "Release·platform·device가 달라지면 완전 재현이 보장되지 않음", evidenceScope: "PyTorch 2.14 execution randomness control", notClaim: "Seed 설정만으로 data·artifact·environment 재현이 완성된다는 뜻은 아님", sectionId: "standard-pytorch-reproducibility" },
+      { title: "PyTorch 2.14 torch.use_deterministic_algorithms", href: "https://docs.pytorch.org/docs/2.14/generated/torch.use_deterministic_algorithms.html", problem: "비결정적 연산이 같은 입력의 결과를 바꿀 수 있음", contribution: "결정적 구현 선택과 대안이 없는 연산의 오류 처리 API를 설명", assumptions: "지원 연산과 장치·버전 범위가 정해져 있음", evidenceScope: "PyTorch 2.14 deterministic algorithm 동작", notClaim: "모든 환경에서 bitwise equality를 보장한다는 뜻은 아님", sectionId: "standard-pytorch-deterministic" },
+      { title: "Improving Reproducibility in Machine Learning Research", href: "https://jmlr.org/papers/v22/20-303.html", problem: "ML 연구 결과를 독립적으로 확인하기 어려움", contribution: "재현성 정의와 NeurIPS checklist·code 제출·reproducibility program을 분석", assumptions: "연구 발표와 검증 절차를 중심으로 다룸", evidenceScope: "같은 코드·데이터로 유사 결과를 얻는 재현성의 범위", notClaim: "본문의 다섯 단계나 clean-worker 프로토콜을 표준화한 논문은 아님", sectionId: "paper-ml-reproducibility" },
     ],
-    entryLevel: true,
+    entryLevel: false,
+    entryNote: "모델 등록 글에서 승인한 run-27의 v21을 재현 계획 repro-31의 입력으로 넘깁니다. 결과를 보기 전에 동등성 계약을 정하고, 실행 전 증명 불일치와 실행 후 최초 차이를 구분합니다.",
   },
   "ai/mixture-of-experts": {
     coreIdea:

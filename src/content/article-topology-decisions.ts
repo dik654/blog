@@ -1794,6 +1794,13 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     rationale: "run-27의 실행 기록과 실제 모델 파일을 함께 검사한 뒤, Champion 별명을 고정 버전 v21로 해석하고 승인 기록·배포 명세·실행 중인 endpoint를 차례로 대조하는 하나의 모델 전달 경로입니다.",
     sharedGate: "DB 행과 필수 파일 4개, promotion-84가 고정한 v21, Canary의 v17·v21 비율, endpoint의 모델·container·설정 digest를 같은 사례로 추적합니다.",
   },
+  "ai/reproducible-ml-execution": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale: "모델 등록 글에서 승인한 run-27의 v21을 repro-31로 이어 받아, 동등성 계약·실행 증명·병렬 난수 계보·빈 worker·최초 차이를 한 재현 경로로 추적합니다.",
+    sharedGate: "설명용 수치와 digest를 명시하고, container 불일치는 실행 전에 차단하며, 실행 뒤에는 입력부터 중요 사용자 구간까지 최초로 다른 단계를 보고합니다.",
+  },
   "ai/adaptive-hyperparameter-search": {
     "action": "keep",
     "status": "implemented",
@@ -3599,7 +3606,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/competition-workflow": "4562393852c386c2",
   "ai/cross-validation": "7ff394a94b7466c2",
   "ai/experiment-tracking": "04b0f3a38a0fc35b",
-  "ai/model-artifact-registry": "6f7745ebe10a9286",
+  "ai/model-artifact-registry": "ef067045c3962561",
+  "ai/reproducible-ml-execution": "7235dab8219b5c8e",
   "ai/fold-local-validation": "81c7a08d18185317",
   "ai/grouped-validation": "a28b15a149db340a",
   "ai/math-functions-derivatives-gradients": "5a8140b33430e27e",

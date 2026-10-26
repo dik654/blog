@@ -2264,13 +2264,13 @@ const strategyArticles: Article[] = [
   },
   {
     slug: "reproducible-ml-execution",
-    title: "ML 재현 실행: Equality Level에서 Clean Room까지",
+    title: "ML 재현 실행: 승인한 모델을 빈 환경에서 다시 검증하는 법",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "재현의 네 수준" },
-      { id: "equivalence-level", title: "Numeric equality gate" },
-      { id: "seed-tree", title: "Hierarchical seed tree" },
-      { id: "clean-room", title: "Clean-room test" },
+      { id: "overview", title: "v21 재현의 전체 흐름" },
+      { id: "equivalence-level", title: "대상별 동등성 계약" },
+      { id: "seed-tree", title: "병렬 난수의 계보" },
+      { id: "clean-room", title: "실행 전 차단과 최초 차이" },
     ],
     component: () => import("@/pages/articles/ai/reproducible-ml-execution"),
   },

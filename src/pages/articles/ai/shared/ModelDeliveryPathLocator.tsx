@@ -51,12 +51,44 @@ const TRACKS: Record<ModelDeliveryStep, "개념" | "실무"> = {
   reproduction: "실무",
 };
 
+const PARENTS: Record<
+  ModelDeliveryStep,
+  { label: string; href: string; description: string }
+> = {
+  tracking: {
+    label: "인공지능 전체 지도",
+    href: "/cs/ai",
+    description: "학습·평가·선택·배포로 이어지는 모델 전달 경로에서 실행 근거의 위치를 확인합니다.",
+  },
+  curve: {
+    label: "실험 추적 · 산출물 근거",
+    href: "/cs/ai/experiment-tracking#provenance-receipt",
+    description: "같은 입력과 실행 근거를 가진 실험만 진행 곡선에서 비교합니다.",
+  },
+  selection: {
+    label: "실험 추적 · 산출물 근거",
+    href: "/cs/ai/experiment-tracking#provenance-receipt",
+    description: "후보의 실행 근거와 비교 좌표를 확인한 뒤 출시 기준을 적용합니다.",
+  },
+  registry: {
+    label: "실험 추적 · 산출물 근거",
+    href: "/cs/ai/experiment-tracking#provenance-receipt",
+    description: "어떤 실행이 어떤 파일을 만들었는지 확인한 다음, 그 파일이 승인과 배포에서 어떻게 고정되는지 추적합니다.",
+  },
+  reproduction: {
+    label: "모델 등록·배포 · 저장 무결성",
+    href: "/cs/ai/model-artifact-registry#store-integrity",
+    description: "승인한 v21의 모델 파일·container·설정 증명을 입력으로 받아, 숨은 로컬 상태 없이 다시 실행합니다.",
+  },
+};
+
 export function ModelDeliveryPathLocator({
   current,
 }: {
   current: ModelDeliveryStep;
 }) {
   const currentStep = STEPS.find((step) => step.key === current)!;
+  const parent = PARENTS[current];
 
   return (
     <aside
@@ -89,14 +121,13 @@ export function ModelDeliveryPathLocator({
         <div className="border-l-2 border-primary/45 pl-3">
           <p className="text-[10px] font-bold text-muted-foreground">직속 부모</p>
           <Link
-            to="/cs/ai/experiment-tracking#provenance-receipt"
+            to={parent.href}
             className="mt-1 block break-keep text-sm font-bold leading-6 hover:text-primary"
           >
-            실험 추적 · 산출물 근거
+            {parent.label}
           </Link>
           <p className="mt-1 break-keep text-[10px] leading-4 text-muted-foreground">
-            어떤 실행이 어떤 파일을 만들었는지 확인한 다음, 그 파일이 승인과 배포에서
-            어떻게 고정되는지 추적합니다.
+            {parent.description}
           </p>
         </div>
       </div>
@@ -164,6 +195,41 @@ export function ModelArtifactRegistryReturn() {
           className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
         >
           다음 주제 · 빈 환경에서 다시 실행하기 →
+        </Link>
+      </div>
+    </aside>
+  );
+}
+
+export function ReproducibleMlExecutionLocator() {
+  return <ModelDeliveryPathLocator current="reproduction" />;
+}
+
+export function ReproducibleMlExecutionReturn() {
+  return (
+    <aside
+      id="model-delivery-return"
+      className="not-prose my-8 border-y border-border py-5"
+      aria-label="재현 검증에서 확인한 사실을 모델 전달 경로에 되돌려 놓기"
+    >
+      <p className="text-[10px] font-bold text-primary">부모 지도에 되돌려 놓기</p>
+      <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">
+        같은 seed는 재현의 출발점일 뿐입니다. 결과를 같다고 볼 기준, 변경 불가능한
+        입력과 환경, 병렬 난수의 계보, 최초로 달라진 지점을 함께 남겨야 승인한 모델을
+        다른 실행 환경에서도 다시 검증할 수 있습니다.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold">
+        <Link
+          to="/cs/ai/model-artifact-registry#store-integrity"
+          className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
+        >
+          모델 등록·배포의 저장 무결성에 반영하기 ↑
+        </Link>
+        <Link
+          to="/cs/ai/experiment-tracking#overview"
+          className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
+        >
+          모델 전달 경로의 처음부터 다시 보기 ↺
         </Link>
       </div>
     </aside>
