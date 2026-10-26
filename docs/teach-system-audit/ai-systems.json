@@ -12331,25 +12331,100 @@
       "route": "ai/reproducible-ml-execution",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/reproducible-ml-execution.tsx",
       "publicPath": "cs/ai/reproducible-ml-execution",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 5,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "동등성 수준·난수 계보·빈 환경 검사가 기능별 설명으로 나뉘어 승인한 모델 하나를 실제로 다시 실행하는 전체 경로가 보이지 않았음",
+        "같은 seed를 기록하는 것과 입력·환경·sampler topology까지 고정하는 것의 경계가 약했음",
+        "실행 전 환경 불일치와 실행 후 수치 차이를 모두 재현 실패로 묶어 어느 시점에 차단하고 어디서 조사할지 드러나지 않았음",
+        "기존 공용 시각화가 본문 사례와 직접 연결되지 않았고 모바일·키보드·축소 모션·JavaScript 비활성 대체 표현이 검증되지 않았음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "sourceRun": "run-27",
+        "modelVersion": "v21",
+        "promotionReceipt": "promotion-84",
+        "reproductionRun": "repro-31",
+        "rootSeed": 24017,
+        "numericExample": {
+          "reference": 100,
+          "reproduced": 100.08,
+          "absoluteTolerance": 0.01,
+          "relativeTolerance": 0.001,
+          "allowedError": 0.11,
+          "actualError": 0.08,
+          "result": "pass for this element"
+        },
+        "environmentMismatch": {
+          "expectedContainer": "d18c…",
+          "observedContainer": "91ef…",
+          "action": "실행 전 차단 후 worker 재생성"
+        },
+        "firstDivergence": "step 820 logits",
+        "boundary": "모든 실행 ID·digest·seed·tensor 값·허용 오차는 재현 경로를 설명하기 위한 가정이며 실제 측정 결과가 아닙니다."
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "0": "equivalence-level",
+        "1": "seed-tree",
+        "2": "clean-room",
+        "parent": "model-artifact-registry#store-integrity",
+        "return": "model-delivery-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/notes/randomness.html",
+          "application": "PyTorch 2.14에서 release·platform·device가 달라질 때의 재현 경계와 RNG·DataLoader worker 제어를 확인"
+        },
+        {
+          "href": "https://docs.pytorch.org/docs/2.14/generated/torch.use_deterministic_algorithms.html",
+          "application": "결정적 구현을 선택하고 대안이 없는 연산을 오류로 처리하는 공식 API의 범위를 확인"
+        },
+        {
+          "href": "https://jmlr.org/papers/v22/20-303.html",
+          "application": "같은 코드와 데이터로 유사 결과를 얻는 재현성의 정의와 NeurIPS reproducibility 프로그램의 범위를 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "promotion-84의 v21 → 동등성 계약 → 입력·환경 증명 → root 24017의 child seed → 빈 worker의 실행 전 차단 → step 820 최초 차이를 같은 repro-31로 추적합니다.",
+        "humanize": "계약·입력·난수·빈 환경·첫 차이라는 한국어 상태 변화를 먼저 보여 주고 bitwise·numeric·statistical·behavioral 용어와 수식은 사례 뒤에 정의했습니다.",
+        "browser390": "390×844에서 다섯 장면 모두 root 548px 안에 들어가고 문서 가로 넘침·보이는 요소의 박스 이탈이 0이며 조작 버튼은 49.5×49.5px입니다.",
+        "browser1024": "1024×900에서 다섯 장면 모두 canvas 664px와 root 662px를 유지하고 문서 가로 넘침이 없습니다.",
+        "browser1440": "1440×1000에서 시각화·본문 목차·조작부를 확인했고 console 오류가 0입니다.",
+        "keyboard": "시각화 root의 ArrowRight는 한 번에 한 장면만 이동하고, 다음 장면 버튼에 초점을 둔 ArrowRight는 장면 이동을 중복 실행하지 않습니다.",
+        "autoPlay": "입력 장면에서 7초 동안 그대로 유지되어 명시적인 재생 입력 전에는 시작하지 않습니다.",
+        "reducedMotion": "다섯 장면의 제목과 결론을 정적 순서로 모두 표시하고 시각화 내부의 보이는 조작 버튼은 0개이며 문서 가로 넘침이 없습니다.",
+        "noScript": "JavaScript 비활성 390×844 production preview에서 정적 다섯 장면의 순서·설명과 부모 지도에 되돌리는 결론을 확인했습니다.",
+        "staticAudits": "learning·article·viz·formula·calculation·graph·reading·order·prose·한국어·용어·용어쌍·runtime strict 감사와 선택 파일 ESLint를 통과했습니다.",
+        "typecheck": "TypeScript project build 통과·최대 RSS 6,307,102,720 bytes·swap 0",
+        "build": "Vite 7.3.1·8,032 modules·정적 public route 2,090개·no-script 본문 285편·최대 RSS 6,615,597,056 bytes·swap 0",
+        "browserEvidence": "output/playwright/reproducible-ml-mobile-scene1.png · reproducible-ml-mobile-scene5.png · reproducible-ml-desktop-scene5.png · reproducible-ml-nojs-mobile.png"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 확인"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "visual-first-clean-room-reproduction-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/reproducible-ml-execution/ModernArticle.tsx",
+        "src/pages/articles/ai/reproducible-ml-execution/ReproducibleMlExecutionViz.tsx",
+        "src/pages/articles/ai/shared/ModelDeliveryPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/reproducible-ml-execution/ModernArticle.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/reproducible-ml-execution/ReproducibleMlExecutionViz.tsx"
+      ],
+      "contentHash": "b7212ce1da652a9a783068f09b25cb14df35bfe1d947723c1463a48409441d4a",
+      "preserved": [
+        "Bitwise·numeric·statistical·behavioral 동등성 수준의 구분",
+        "절대·상대 허용 오차를 결합하는 numeric gate",
+        "Root seed에서 병렬 실행 좌표별 child seed를 파생하는 규칙",
+        "숨은 입력을 제거하고 최초 차이를 찾는 clean-room 검사의 경계"
       ]
     },
     {

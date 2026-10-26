@@ -2560,16 +2560,22 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/reproducible-ml-execution": [
     {
-      kind: "핵심 논문",
-      label: "Machine Learning: The High Interest Credit Card of Technical Debt",
-      href: "https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/",
-      note: "Hidden data dependency·configuration·pipeline coupling이 만드는 ML system debt",
+      kind: "공식 문서",
+      label: "PyTorch 2.14 · Reproducibility",
+      href: "https://docs.pytorch.org/docs/2.14/notes/randomness.html",
+      note: "2026-10-26 확인. release·platform·device에 따른 재현 경계와 RNG·DataLoader worker 제어",
     },
     {
       kind: "공식 문서",
-      label: "PyTorch Reproducibility",
-      href: "https://docs.pytorch.org/docs/stable/notes/randomness.html",
-      note: "seed와 deterministic operation의 범위 및 재현성 trade-off",
+      label: "PyTorch 2.14 · torch.use_deterministic_algorithms",
+      href: "https://docs.pytorch.org/docs/2.14/generated/torch.use_deterministic_algorithms.html",
+      note: "결정적 구현 선택과 대안이 없는 연산의 오류 처리 경계",
+    },
+    {
+      kind: "핵심 논문",
+      label: "Improving Reproducibility in Machine Learning Research",
+      href: "https://jmlr.org/papers/v22/20-303.html",
+      note: "같은 코드·데이터로 유사 결과를 얻는 재현성과 NeurIPS reproducibility 프로그램의 범위",
     },
   ],
   "ai/open-r1": [

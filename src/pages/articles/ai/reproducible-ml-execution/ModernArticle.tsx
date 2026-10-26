@@ -2,260 +2,264 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
 import { CitationBlock } from "@/components/ui/citation";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import { ReproductionTestViz } from "../experiment-tracking/viz/ModernExperimentViz";
+import {
+  ReproducibleMlExecutionLocator,
+  ReproducibleMlExecutionReturn,
+} from "../shared/ModelDeliveryPathLocator";
+import ReproducibleMlExecutionViz from "./ReproducibleMlExecutionViz";
 
 export default function ReproducibleMlExecutionArticle() {
   return (
     <div className="space-y-16">
-      <section id="overview" className="scroll-mt-20">
+      <section id="overview" data-teach-level="S" className="scroll-mt-20">
+        <ReproducibleMlExecutionLocator />
+        <ReproducibleMlExecutionViz />
+
         <h2 className="mb-6 text-2xl font-bold">
-          재현은 seed 하나가 아니라 어떤 결과를 같다고 볼지 정하고 빈 환경에서
-          검증하는 과정입니다
+          1. 승인한 v21을 다른 실행 환경에서도 같은 계약으로 검증합니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p className="text-lg leading-8">
-            <strong>Reproducible execution</strong>은 같은 immutable inputs와
-            실행 계약으로 다시 수행했을 때 미리 선언한 equivalence level을
-            통과하는 실행입니다.
+            앞 글에서 <code>run-27</code>이 만든 모델을 변경 불가능한 버전
+            <code>v21</code>로 등록하고, 모델 파일·container·설정 digest를
+            <code>promotion-84</code>에 고정했습니다. 이제 새 worker에는 그 기록만
+            전달합니다. 개발자 노트북의 cache나 설치 상태 없이도 같은 결과를 만들 수
+            있는지 확인하는 재현 실행을 <code>repro-31</code>이라고 하겠습니다.
           </p>
           <p>
-            먼저 같음의 수준을 고릅니다. 다음으로 병렬 worker의 random stream을
-            계층적으로 파생합니다. 마지막에는 개발 machine의 cache와 숨은
-            state가 없는 clean room에서 첫 divergence를 찾습니다.
+            재현은 seed 숫자 하나를 복사하는 작업이 아닙니다. 무엇을 같다고 볼지 먼저
+            정하고, 입력과 실행 환경을 고정하며, 병렬 난수의 계보를 남긴 뒤, 처음
+            달라진 단계를 보고해야 합니다. 결과가 달라졌을 때 원인을 좁힐 수 있어야
+            재현 검사가 운영 도구가 됩니다.
+          </p>
+          <p>
+            이 글의 실행 ID, digest, seed, tensor 값과 허용 오차는 과정을 설명하기 위한
+            가정입니다. 특정 환경에서 측정한 수치가 아닙니다.
           </p>
         </div>
-        <p className="font-semibold">그림을 보기 전에 세 가지를 예측해 보세요.</p>
-        <ol className="list-decimal space-y-2 pl-6">
-          <li>같은 seed 하나만 기록하면 다른 hardware와 library에서도 bitwise 재현이 보장될까요?</li>
-          <li>기준값 100, absolute tolerance 0.01, relative tolerance 0.001이면 허용 오차는 0.11일까요?</li>
-          <li>전체 평균이 같아도 중요한 safety slice가 달라지면 behavioral equality는 실패할 수 있을까요?</li>
-        </ol>
-        <p>답은 <strong>아니요, 예, 예</strong>입니다. 필요한 같음의 수준을 먼저 정하고 immutable input·환경·난수 계보를 고정한 뒤 clean room에서 그 gate를 재검사합니다.</p>
-        <ReproductionTestViz />
-        <ContentBoundary article="reproducible-ml-execution" />
+
         <TermBreakdown
-          title="결과가 같다는 말의 네 수준"
+          title="한 실행을 끝까지 추적한 뒤 붙이는 네 이름"
           items={[
             {
-              term: "Bitwise equality",
-              description: "Output bytes의 digest가 완전히 같습니다.",
-              example:
-                "같은 checkpoint serialization이 같은 SHA-256 digest를 냅니다.",
-              boundary:
-                "Hardware·library·parallel reduction이 달라지면 필요 이상으로 강한 요구일 수 있습니다.",
+              term: "동등성 계약",
+              description: "두 실행의 결과를 같다고 판정할 검사 대상과 허용 범위를 실행 전에 정합니다.",
+              example: "모델 파일은 digest, tensor는 절대·상대 오차, 중요 사용자 구간은 정책 기준으로 검사합니다.",
+              boundary: "결과를 본 뒤 허용 범위를 넓히면 재현 결과로 사용할 수 없습니다.",
             },
             {
-              term: "Numeric equality",
-              description:
-                "Tensor별 absolute·relative error가 선언된 tolerance 안입니다.",
-              example: "logit max error가 1e-5 이하인지 검사합니다.",
-              boundary:
-                "작은 수치 차이가 ranking·threshold decision을 바꾸는지 별도 확인합니다.",
+              term: "실행 증명 묶음",
+              description: "데이터·코드·모델·container·설정·명령·하드웨어와 runtime 정보를 한 실행 단위로 묶습니다.",
+              example: "promotion-84의 v21 bundle, container d18c…, config 53aa…를 repro-31의 입력으로 사용합니다.",
+              boundary: "모델 파일만 같아도 library나 kernel이 달라지면 연산 결과는 달라질 수 있습니다.",
             },
             {
-              term: "Statistical equality",
-              description:
-                "여러 seed 결과의 분포·신뢰구간이 허용 범위에서 같습니다.",
-              example: "10개 seed의 mean F1과 variance를 비교합니다.",
-              boundary: "한 번의 우연한 성공으로 분포 claim을 만들지 않습니다.",
+              term: "난수 계보",
+              description: "root seed에서 용도와 병렬 좌표별 child seed를 만드는 규칙과 결과를 기록합니다.",
+              example: "train·rank·worker·epoch 좌표로 DataLoader worker마다 다른 난수 흐름을 만듭니다.",
+              boundary: "Worker 수나 sample 배치 규칙이 바뀌면 같은 root seed도 같은 sample 순서를 보장하지 않습니다.",
             },
             {
-              term: "Behavioral equality",
-              description:
-                "중요 slice와 product decision이 같은 acceptance rule을 통과합니다.",
-              example:
-                "모든 safety slice에서 false-negative ceiling을 만족합니다.",
-              boundary:
-                "Aggregate metric 하나가 같아도 slice failure를 숨길 수 있습니다.",
+              term: "최초 차이",
+              description: "두 실행을 단계별로 대조했을 때 처음 불일치한 입력·환경·중간 산출물을 가리킵니다.",
+              example: "입력과 환경은 같지만 step 820 logits부터 달라졌다고 보고합니다.",
+              boundary: "최종 지표만 비교하면 차이를 만든 위치와 복구 방법을 찾기 어렵습니다.",
             },
           ]}
         />
+        <ContentBoundary article="reproducible-ml-execution" />
       </section>
 
-      <section id="equivalence-level" className="scroll-mt-20">
+      <section id="equivalence-level" data-teach-level="0" className="scroll-mt-20">
         <h2 className="mb-5 text-2xl font-bold">
-          목적에 맞는 equality gate를 실행 전에 선언합니다
-        </h2>
-        <ExplainedFormula
-          question="두 output이 수치적으로 같다는 판정을 scale이 다른 tensor에도 적용하려면 어떻게 하나요?"
-          idea={
-            <p>
-              각 원소 차이를 absolute tolerance와 값의 크기에 비례한 relative tolerance의 합과 비교합니다. 모든 원소가 통과해야 numeric
-              equality로 판정합니다.
-            </p>
-          }
-          formula={String.raw`\begin{aligned}e_i&=|y_i-\hat y_i|\\\tau_i&=\varepsilon_a+\varepsilon_r|y_i|\\Q_{\rm num}&=\bigwedge_i[e_i\le\tau_i]\end{aligned}`}
-          annotatedFormula={String.raw`\begin{aligned}e_i&=\underbrace{|y_i-\hat y_i|}_{\text{두 output의 원소 거리}}\\\tau_i&=\underbrace{\varepsilon_a+\varepsilon_r|y_i|}_{\text{고정·비례 tolerance 결합}}\\Q_{\rm num}&=\underbrace{\bigwedge_i[e_i\le\tau_i]}_{\text{모든 원소 검사를 AND}}\end{aligned}`}
-          operations={[
-            {
-              expression: String.raw`|y_i-\hat y_i|`,
-              annotation: [
-                "두 값을 빼고 절댓값을 취해",
-                "부호와 무관한 원소 오차 계산",
-              ],
-            },
-            {
-              expression: String.raw`\varepsilon_a+\varepsilon_r|y_i|`,
-              annotation: [
-                "고정 허용량과 scale 비례 허용량을 더해",
-                "0 근처와 큰 값 모두에 맞는 threshold 생성",
-              ],
-            },
-            {
-              expression: String.raw`\bigwedge_i`,
-              annotation: [
-                "모든 원소 판정을 AND해",
-                "일부 tensor만 맞는 결과를 전체 성공으로 오인하지 않음",
-              ],
-            },
-          ]}
-          terms={[
-            {
-              symbol: String.raw`y_i,\hat y_i`,
-              name: "Reference · reproduced value",
-              description: "기준 실행과 재실행의 같은 위치 output입니다.",
-            },
-            {
-              symbol: String.raw`\varepsilon_a`,
-              name: "Absolute tolerance",
-              description: "0 근처에서도 유지되는 고정 허용 오차입니다.",
-            },
-            {
-              symbol: String.raw`\varepsilon_r`,
-              name: "Relative tolerance",
-              description: "기준값 크기에 비례하는 허용 오차 비율입니다.",
-            },
-            {
-              symbol: String.raw`Q_{\rm num}`,
-              name: "Numeric equality gate",
-              description:
-                "대상 원소 전체가 tolerance를 통과했다는 판정입니다.",
-            },
-          ]}
-          assumptions={[
-            "Tensor shape·dtype·element correspondence가 먼저 일치합니다.",
-            "Tolerance는 결과를 본 뒤 넓히지 않고 사전 등록합니다.",
-            "NaN·Inf는 별도 명시 규칙으로 처리합니다.",
-          ]}
-          interpretation="두 tolerance를 더하는 이유는 작은 값에는 absolute bound가, 큰 값에는 relative bound가 필요하기 때문입니다. 마지막 AND는 단 하나의 큰 divergence도 숨기지 않습니다."
-        />
-      </section>
-
-      <section id="seed-tree" className="scroll-mt-20">
-        <h2 className="mb-5 text-2xl font-bold">
-          병렬 실행은 root seed를 복사하지 않고 좌표별 child stream을 파생합니다
-        </h2>
-        <ExplainedFormula
-          question="Worker 수와 retry가 달라도 random stream이 충돌하지 않고 다시 만들어지게 하려면 어떻게 하나요?"
-          idea={
-            <p>
-              Root seed와 run·rank·worker·epoch 좌표를 domain-separated hash에
-              넣어 child seed를 만듭니다.
-            </p>
-          }
-          formula={String.raw`s_{r,w,e}=H(s_0\Vert\texttt{train}\Vert r\Vert w\Vert e)\bmod 2^{64}`}
-          annotatedFormula={String.raw`\begin{aligned}b_{r,w,e}&=\underbrace{\operatorname{encode}(s_0,\texttt{train},r,w,e)}_{\text{root와 stream 좌표를 모호하지 않게 직렬화}}\\d_{r,w,e}&=\underbrace{H(b_{r,w,e})}_{\text{각 좌표를 독립적인 digest로 확산}}\\s_{r,w,e}&=\underbrace{d_{r,w,e}\bmod 2^{64}}_{\text{PRNG가 받는 64-bit seed 범위로 축소}}\end{aligned}`}
-          operations={[
-            {
-              expression: String.raw`\operatorname{encode}(s_0,\texttt{train},r,w,e)`,
-              annotation: [
-                "root와 역할·병렬 좌표를 길이 구분해 묶어",
-                "tuple collision과 stream 재사용 방지",
-              ],
-            },
-            {
-              expression: String.raw`H(b_{r,w,e})`,
-              annotation: [
-                "좌표 bytes를 hash해",
-                "가까운 worker 번호도 상관이 낮은 seed로 확산",
-              ],
-            },
-            {
-              expression: String.raw`\bmod 2^{64}`,
-              annotation: [
-                "digest를 64-bit 범위로 나머지 연산해",
-                "대상 PRNG input 폭에 맞춤",
-              ],
-            },
-          ]}
-          terms={[
-            {
-              symbol: String.raw`s_0`,
-              name: "Root seed",
-              description:
-                "실험 specification에 고정한 최상위 random identity입니다.",
-            },
-            {
-              symbol: String.raw`r,w,e`,
-              name: "Run · worker · epoch",
-              description:
-                "Random stream의 역할과 병렬 실행 위치를 구분하는 좌표입니다.",
-            },
-            {
-              symbol: String.raw`\texttt{train}`,
-              name: "Domain label",
-              description:
-                "Training, augmentation, sampling처럼 용도가 다른 stream의 재사용을 막습니다.",
-            },
-            {
-              symbol: String.raw`s_{r,w,e}`,
-              name: "Child seed",
-              description:
-                "특정 좌표의 PRNG를 초기화하는 재생 가능한 seed입니다.",
-            },
-          ]}
-          assumptions={[
-            "Hash·encoding·endianness version을 execution spec에 고정합니다.",
-            "Library 내부에서 추가 생성되는 generator도 seed tree에 등록합니다.",
-            "Retry가 같은 random stream을 재사용할지 새 attempt coordinate를 쓸지 정책화합니다.",
-          ]}
-          interpretation="모든 worker에 같은 seed를 복사하면 augmentation과 dropout stream이 겹칠 수 있습니다. 좌표를 hash에 넣는 연산은 각 child stream을 분리하면서도 root 하나로 다시 생성하기 위함입니다."
-        />
-      </section>
-
-      <section id="clean-room" className="scroll-mt-20">
-        <h2 className="mb-4 text-2xl font-bold">
-          Clean-room test는 숨은 입력을 제거하고 최초 divergence를 보고합니다
+          2. 파일·tensor·분포·사용자 행동에 서로 다른 같음의 기준을 둡니다
         </h2>
         <div className="prose prose-neutral max-w-none dark:prose-invert">
           <p>
-            빈 workspace에서 immutable dataset·code·container·command만 주입해
-            다시 실행합니다. Input digest, environment probe, intermediate
-            artifact, final metric과 slice gate를 순서대로 비교합니다. 실패
-            보고는 “재현 안 됨”으로 끝내지 않고 처음 달라진 stage와 두
-            receipts를 남깁니다.
+            모든 결과에 bitwise equality를 요구하면 하드웨어와 병렬 reduction 순서가
+            조금만 달라도 실패합니다. 반대로 평균 점수만 같다고 하면 중요한 사용자
+            구간에서 생긴 회귀를 숨길 수 있습니다. 따라서 검사 대상마다 필요한 수준을
+            선택합니다. v21 bundle과 fixture는 byte 단위로, 중간 tensor는 수치 오차로,
+            여러 seed의 지표는 분포로, 출시 결정은 중요 구간의 행동 기준으로 봅니다.
           </p>
+        </div>
+        <ExplainedFormula
+          question="기준값 100.00과 재실행값 100.08을 절대 오차 0.01, 상대 오차 0.001로 비교하면 통과하나요?"
+          idea={
+            <p>
+              실제 차이는 0.08입니다. 허용 오차는 고정값 0.01과 기준값의 0.1%인 0.10을 더한 0.11이므로 이 원소는 통과합니다.
+            </p>
+          }
+          formula={String.raw`|100.00-100.08|=0.08\le 0.01+0.001|100.00|=0.11`}
+          annotatedFormula={String.raw`\begin{aligned}e&=\underbrace{|100.00-100.08|}_{0.08}\\\tau&=\underbrace{0.01}_{\text{절대 허용량}}+\underbrace{0.001\times100.00}_{\text{값의 크기에 비례한 허용량}}=0.11\\Q_{num}&=\underbrace{[e\le\tau]}_{0.08\le0.11}=\mathrm{pass}\end{aligned}`}
+          operations={[
+            {
+              expression: String.raw`|100.00-100.08|`,
+              annotation: ["기준값과 재실행값의 차이를 구해", "방향과 무관한 실제 오차 0.08을 계산"],
+            },
+            {
+              expression: String.raw`0.01+0.001\times100.00`,
+              annotation: ["고정 허용량과 값의 크기에 비례한 허용량을 더해", "0 근처와 큰 값에 함께 적용할 경계 0.11 생성"],
+            },
+            {
+              expression: String.raw`0.08\le0.11`,
+              annotation: ["실제 오차를 사전에 정한 경계와 비교해", "이 원소의 numeric gate를 통과로 판정"],
+            },
+          ]}
+          terms={[
+            { symbol: String.raw`e`, name: "실제 오차", description: "같은 위치의 기준값과 재실행값 사이 거리입니다." },
+            { symbol: String.raw`\varepsilon_a`, name: "절대 허용 오차", description: "기준값이 0에 가까울 때도 유지되는 고정 허용량입니다." },
+            { symbol: String.raw`\varepsilon_r`, name: "상대 허용 오차", description: "기준값의 크기에 비례하는 허용 비율입니다." },
+            { symbol: String.raw`Q_{num}`, name: "수치 동등성 판정", description: "검사 대상의 모든 원소가 경계를 통과했는지 나타냅니다." },
+          ]}
+          assumptions={[
+            "Tensor의 shape·dtype·원소 대응 관계가 먼저 같아야 합니다.",
+            "허용 오차 0.01과 0.001은 결과를 보기 전에 등록합니다.",
+            "NaN·Inf와 중요 구간의 threshold 전환은 별도 실패 규칙으로 처리합니다.",
+          ]}
+          interpretation="예시의 한 원소는 통과하지만 전체 tensor가 통과했다는 뜻은 아닙니다. 모든 원소와 중요 slice를 검사한 뒤 numeric·behavioral gate를 각각 판정합니다."
+        />
+      </section>
+
+      <section id="seed-tree" data-teach-level="1" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          3. root seed를 복사하지 않고 병렬 좌표마다 다른 난수 흐름을 만듭니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            모든 worker에 24017을 그대로 넣으면 서로 같은 augmentation이나 sampling
+            순서를 만들 수 있습니다. <code>train</code>이라는 용도, 실행·rank·worker·epoch
+            좌표와 root seed를 모호하지 않게 직렬화한 뒤 hash해 child seed를 만듭니다.
+            Hash·encoding 버전과 만들어진 seed 목록도 실행 증명 묶음에 넣습니다.
+          </p>
+        </div>
+        <ExplainedFormula
+          question="병렬 worker마다 겹치지 않으면서 다시 계산할 수 있는 child seed는 어떻게 만드나요?"
+          idea={<p>Root seed와 난수의 용도·병렬 좌표를 한 tuple로 묶고, 버전이 고정된 hash 함수로 64-bit seed를 파생합니다.</p>}
+          formula={String.raw`s_{r,w,e}=H_v(s_0\Vert\texttt{train}\Vert r\Vert w\Vert e)\bmod 2^{64}`}
+          annotatedFormula={String.raw`\begin{aligned}b_{r,w,e}&=\underbrace{encode_v(s_0,\texttt{train},r,w,e)}_{\text{root·용도·병렬 좌표를 길이 구분해 직렬화}}\\d_{r,w,e}&=\underbrace{H_v(b_{r,w,e})}_{\text{버전이 고정된 hash로 좌표를 확산}}\\s_{r,w,e}&=\underbrace{d_{r,w,e}\bmod2^{64}}_{\text{PRNG 입력 폭에 맞춘 child seed}}\end{aligned}`}
+          operations={[
+            { expression: String.raw`encode_v(s_0,\texttt{train},r,w,e)`, annotation: ["root와 역할·병렬 좌표를 길이 구분해 묶어", "서로 다른 tuple이 같은 bytes로 해석되는 충돌 방지"] },
+            { expression: String.raw`H_v(b_{r,w,e})`, annotation: ["좌표 bytes를 버전이 고정된 hash에 넣어", "가까운 worker 번호도 다른 seed 공간으로 확산"] },
+            { expression: String.raw`\bmod2^{64}`, annotation: ["digest를 64-bit 범위로 줄여", "대상 PRNG가 받을 수 있는 seed로 변환"] },
+          ]}
+          terms={[
+            { symbol: String.raw`s_0`, name: "Root seed", description: "재현 계획 전체가 공유하는 최상위 난수 식별값입니다." },
+            { symbol: String.raw`r,w,e`, name: "Rank·worker·epoch", description: "난수 흐름을 구분하는 병렬 실행 좌표입니다." },
+            { symbol: String.raw`\texttt{train}`, name: "용도 표식", description: "학습·augmentation·sampling 등 서로 다른 난수 용도를 분리합니다." },
+            { symbol: String.raw`s_{r,w,e}`, name: "Child seed", description: "특정 좌표의 generator를 초기화하는 재생 가능한 값입니다." },
+          ]}
+          assumptions={[
+            "Hash 함수와 tuple encoding 버전을 실행 명세에 고정합니다.",
+            "Worker 수·sampler topology·resume cursor가 달라지면 exact 재현 주장을 다시 평가합니다.",
+            "같은 작업을 재시도할지 새 시도로 셀지 attempt 좌표 정책을 먼저 정합니다.",
+          ]}
+          interpretation="같은 root seed는 난수 계보의 시작점입니다. 실제 sample 순서를 다시 만들려면 child seed뿐 아니라 worker topology, sampler state와 checkpoint 시점까지 함께 복구해야 합니다."
+        />
+
+        <pre className="not-prose my-6 max-w-full overflow-x-auto border border-border bg-muted/20 p-4 text-sm leading-6"><code>{`# 실행 명세에서 고정한 최상위 seed입니다.
+root_seed = 24017
+
+# 용도와 병렬 좌표를 길이 구분이 있는 형식으로 직렬화합니다.
+coordinate = encode_v1(root_seed, "train", run, rank, worker, epoch)
+
+# 고정한 hash 버전으로 좌표별 digest를 만듭니다.
+digest = sha256(coordinate).digest()
+
+# PRNG가 받는 64-bit 범위로 child seed를 줄입니다.
+child_seed = int.from_bytes(digest[:8], "big")
+
+# 생성한 좌표와 seed를 실행 증명 묶음에 기록합니다.
+seed_manifest.append({"coordinate": coordinate, "seed": child_seed})`}</code></pre>
+
+        <div id="standard-pytorch-reproducibility" className="scroll-mt-24">
+          <CitationBlock
+            source="PyTorch 2.14 · Reproducibility"
+            citeKey={1}
+            href="https://docs.pytorch.org/docs/2.14/notes/randomness.html"
+          >
+            2026-10-26에 확인한 공식 문서는 release·platform·CPU/GPU가 달라지면 같은
+            seed만으로 완전한 재현을 보장하지 않는다고 설명합니다. 같은 환경에서는
+            난수원을 제어하고 비결정적 알고리즘을 피할 수 있으며, DataLoader worker를
+            다시 seed하는 공식 예시도 제공합니다. 결정적 실행은 더 느릴 수 있으므로
+            성능과 검증 목적을 구분해야 합니다.
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="clean-room" data-teach-level="2" className="scroll-mt-20">
+        <h2 className="mb-5 text-2xl font-bold">
+          4. 빈 worker는 실행 전 차단과 실행 후 최초 차이를 서로 다르게 처리합니다
+        </h2>
+        <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <p>
+            첫 worker가 <code>container 91ef…</code>를 보고했다면 승인 기록의
+            <code>d18c…</code>와 다르므로 학습을 시작하지 않습니다. 잘못된 환경에서 나온
+            결과를 만든 뒤 비교하는 것보다 worker를 폐기하고 올바른 image로 다시 만드는
+            편이 원인 경계를 지킵니다. 입력·환경·명령이 모두 맞으면 그때 실행합니다.
+          </p>
+          <p>
+            실행 뒤에는 입력, 환경, 난수 manifest, 중간 산출물, 최종 tensor, 지표, 중요
+            사용자 구간 순서로 대조합니다. 이 예시에서는 앞의 세 단계는 같지만 step 820의
+            logits부터 달랐습니다. 보고서는 “재현 실패”가 아니라 최초 차이와 양쪽
+            증명값을 남기고, 해당 연산·library·병렬 reduction 범위부터 조사하게 합니다.
+          </p>
+        </div>
+
+        <div className="not-prose my-7 overflow-x-auto border-y border-border">
+          <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-border text-xs text-muted-foreground">
+                <th className="px-3 py-3">발견 위치</th>
+                <th className="px-3 py-3">시스템 동작</th>
+                <th className="px-3 py-3">남기는 근거</th>
+                <th className="px-3 py-3">다음 조사 위치</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["실행 전 · 입력", "시작 차단", "snapshot·code·bundle digest", "잘못된 URI·권한·retention"],
+                ["실행 전 · 환경", "worker 폐기 후 재생성", "container·driver·runtime 증명", "image pin·node image·설치 drift"],
+                ["실행 중 · 난수", "해당 시도 중단", "seed tuple·sampler cursor", "worker topology·resume 정책"],
+                ["실행 중 · 중간값", "최종 성공 판정 보류", "최초 다른 tensor와 step", "kernel·library·reduction 순서"],
+                ["실행 후 · 행동", "출시 기준 실패", "지표·중요 구간별 판정", "threshold·data slice·정책"],
+              ].map((row) => (
+                <tr key={row[0]} className="border-b border-border last:border-b-0">
+                  {row.map((cell, index) => (
+                    <td key={cell} className={`px-3 py-3 align-top leading-6 ${index === 0 ? "font-bold" : "text-muted-foreground"}`}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div id="standard-pytorch-deterministic" className="scroll-mt-24">
+          <CitationBlock
+            source="PyTorch 2.14 · torch.use_deterministic_algorithms"
+            citeKey={2}
+            href="https://docs.pytorch.org/docs/2.14/generated/torch.use_deterministic_algorithms.html"
+          >
+            공식 API는 가능한 연산을 결정적 구현으로 바꾸고, 결정적 대안이 없는 연산은
+            기본적으로 오류를 내도록 설정할 수 있습니다. 이 설정만으로 입력·환경·난수
+            계보가 고정되는 것은 아니며, 모든 release와 hardware에서 bitwise 일치를
+            보장하는 기능도 아닙니다.
+          </CitationBlock>
         </div>
         <div id="paper-ml-reproducibility" className="scroll-mt-24">
           <CitationBlock
-            source="Machine Learning: The High Interest Credit Card of Technical Debt"
-            citeKey={1}
-            href="https://research.google/pubs/machine-learning-the-high-interest-credit-card-of-technical-debt/"
+            source="Pineau et al. · Improving Reproducibility in Machine Learning Research"
+            citeKey={3}
+            href="https://jmlr.org/papers/v22/20-303.html"
           >
-            <strong>문제:</strong> ML system의 숨은 data
-            dependency·configuration·pipeline debt가 결과 신뢰성을 약화함.{" "}
-            <strong>기여:</strong> ML-specific technical debt와 boundary
-            erosion을 구조화. <strong>전제:</strong> 조직·production ML system
-            관점의 position paper. <strong>근거 범위:</strong> 숨은 coupling과
-            configuration debt의 위험. <strong>과장 금지:</strong> 특정
-            reproducibility protocol을 표준화한 논문은 아닙니다.
+            이 논문은 같은 코드와 데이터를 이용해 유사한 결과를 얻는 재현성을 연구
+            신뢰성의 한 부분으로 다루고, NeurIPS의 checklist·code 제출·reproducibility
+            프로그램을 분석합니다. 본문의 다섯 단계나 repro-31 절차 자체를 표준으로
+            제시한 논문은 아닙니다.
           </CitationBlock>
         </div>
-        <div id="standard-pytorch-reproducibility" className="scroll-mt-24">
-          <CitationBlock
-            source="PyTorch: Reproducibility"
-            citeKey={2}
-            href="https://docs.pytorch.org/docs/stable/notes/randomness.html"
-          >
-            <strong>문제:</strong> RNG·algorithm·platform 차이가 동일 코드의
-            결과를 바꿀 수 있음. <strong>기여:</strong> Randomness 제어와
-            deterministic algorithm의 공식 경계를 설명. <strong>전제:</strong>{" "}
-            Release·platform·device가 달라지면 완전한 재현이 보장되지 않음.{" "}
-            <strong>근거 범위:</strong> PyTorch execution의 randomness control.{" "}
-            <strong>과장 금지:</strong> Seed 설정만으로
-            data·artifact·environment 재현이 완성된다는 뜻은 아닙니다.
-          </CitationBlock>
-        </div>
+
+        <ReproducibleMlExecutionReturn />
       </section>
     </div>
   );
