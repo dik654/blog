@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 640,
-    "pending": 352,
+    "reviewed": 641,
+    "pending": 351,
     "untracked": 0,
-    "assignedPending": 310,
+    "assignedPending": 309,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4003,9 +4003,9 @@
       "publicPath": "cs/blockchain/reth",
       "title": "Reth 아키텍처 개요",
       "catalogIndex": 397,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

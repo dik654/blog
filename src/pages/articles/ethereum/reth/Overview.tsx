@@ -2,124 +2,152 @@ import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import SeriesReadingMap from "@/components/articles/series-reading-map";
 import { SERIES_READING_PATHS } from "@/content/series-reading-paths";
-import RethArchitectureViz from "./viz/RethArchitectureViz";
+import RethArchitectureLocator from "./RethArchitectureLocator";
+import RethArchitectureViz, { RethReorgViz, RethTwoPathViz } from "./viz/RethArchitectureViz";
 
-const PATHS = [
-  ["Historical sync", "Headers·bodies·senders·execution을 checkpoint가 있는 stage로 전진시키며 긴 과거 구간을 복구합니다."],
-  ["Live Engine path", "Consensus client의 forkchoiceUpdated·newPayload를 받아 head 근처 payload를 검증·실행·canonicalize합니다."],
-  ["Query path", "Provider가 DB·static history·in-memory state를 같은 block view에 맞춰 RPC와 extension에 노출합니다."],
+const OWNERS = [
+  ["합의 클라이언트", "어느 분기를 현재 정본의 끝(head)으로 볼지 정하고 안전(safe)·확정(finalized) 지점을 관리합니다."],
+  ["Reth", "블록 규칙을 확인하고 거래를 실행해 상태·실행 영수증(receipt)·루트와 조회 데이터를 만듭니다."],
+  ["Engine API", "두 클라이언트가 실행 데이터 묶음(payload)의 유효성과 head·safe·finalized 위치를 주고받는 통신 경계입니다."],
+] as const;
+
+const STATUS = [
+  ["수신", "실행 데이터와 부모 블록 해시를 받음", "아직 유효성은 확인하지 않음"],
+  ["검증", "블록 머리글·본문·거래 규칙을 통과", "아직 실행 결과는 없음"],
+  ["실행", "새 상태·영수증·루트를 계산", "아직 정본이 아닐 수 있음"],
+  ["정본", "분기 선택에 따라 head의 조회 시점을 변경", "디스크 저장과는 구분"],
+  ["저장", "상태·과거 기록·색인에 반영", "조회 시점 고정과는 구분"],
+  ["조회", "블록 해시·상태 루트를 고정해 응답", "한 조회 시점에서만 읽음"],
 ] as const;
 
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">
-        Reth는 block을 받는 프로그램이 아니라 검증·실행·저장·조회 owner를 조립한 execution client다
-      </h2>
+      <RethArchitectureLocator />
+      <RethArchitectureViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h2>Reth가 답하는 질문</h2>
         <p className="text-lg leading-8">
-          Ethereum execution client는 P2P로 block을 받는 데서 끝나지 않습니다. Network bytes를 protocol
-          object로 검증하고, fork rule에 맞는 EVM transition을 실행하며, canonical chain과 historical data를
-          저장한 뒤 Engine API와 JSON-RPC consumer가 같은 state를 읽게 해야 합니다. Reth는 이 책임을
-          Rust crate와 node component로 나누고 다시 하나의 lifecycle로 조립합니다.
-        </p>
-        <p>
-          이 글의 목표는 crate 이름을 외우는 것이 아니라 한 block의 evidence를
-          <strong> 입력→검증→실행→canonicalization→저장→조회</strong> 순서로 추적하는 것입니다. 긴 과거
-          sync와 head 근처 Engine API가 같은 EVM·storage contract에 합류하지만 trigger·retry·rollback은
-          다르므로 하나의 pipeline으로 뭉뚱그리지 않습니다.
+          Reth는 Ethereum의 실행 클라이언트입니다. 새 블록 후보를 받으면 프로토콜 규칙을 확인하고, 부모 상태에서 거래를 실행하며,
+          새 상태와 실행 영수증(receipt)을 저장한 뒤 JSON-RPC가 같은 장부 시점을 읽게 합니다. 이 글은 제품 설정이 아니라
+          <strong> 실행 데이터 묶음(payload) 하나가 입력에서 조회 결과가 되기까지</strong>를 설명합니다.
         </p>
       </div>
 
       <ContentBoundary article="reth" />
-      <RethArchitectureViz />
 
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Reth가 소유하는 것과 consensus client가 소유하는 것을 나눕니다</h3>
-        <p>
-          Reth는 Ethereum execution layer의 transaction validity, EVM execution, receipt·state root, execution
-          payload와 Engine API를 맡습니다. Beacon consensus client는 fork choice와 finality, validator duty를
-          맡고 Engine API로 head·safe·finalized reference와 payload를 교환합니다. 따라서 Reth가 local canonical
-          head를 바꿀 수 있어도 consensus finality를 혼자 결정하거나 validator attestation을 만들지는 않습니다.
-        </p>
-      </div>
-
-      <div className="not-prose my-7 grid gap-4 md:grid-cols-3">
-        {PATHS.map(([title, body], index) => (
-          <article key={title} className="min-w-0 border-l border-border pl-4">
-            <p className="font-mono text-[11px] font-semibold text-primary">{String(index + 1).padStart(2, "0")}</p>
-            <h4 className="mt-2 text-sm font-bold">{title}</h4>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
+      <div className="not-prose my-8 grid gap-px bg-border p-px md:grid-cols-3" aria-label="Reth와 합의 클라이언트의 책임">
+        {OWNERS.map(([title, body], index) => (
+          <article key={title} className="min-w-0 bg-background p-4 sm:p-5">
+            <p className="font-mono text-[10px] font-black text-primary">{String(index + 1).padStart(2, "0")}</p>
+            <h3 className="mt-2 break-keep text-sm font-bold">{title}</h3>
+            <p className="mt-2 break-keep text-xs leading-5 text-muted-foreground">{body}</p>
           </article>
         ))}
       </div>
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>한 block receipt는 최소 여섯 단계를 잇습니다</h3>
+        <h2>Reth와 합의 클라이언트는 같은 일을 하지 않습니다</h2>
         <p>
-          Block hash 하나에 source peer 또는 Engine request, parent hash·number, header/body validation result,
-          chain spec·fork activation, execution output, state root·receipts root, canonical status와 storage checkpoint를
-          연결합니다. Query consumer가 읽은 block hash·state root·provider view도 남겨야 reorg 뒤 stale response와
-          genuine execution mismatch를 구분할 수 있습니다.
+          합의 클라이언트는 검증자(validator) 메시지와 분기 선택(fork choice)을 바탕으로 어느 체인을 따라갈지 정합니다. Reth는 그 체인의
+          실행 데이터 묶음이 EVM 규칙에 맞는지 계산합니다. <code>engine_newPayload</code>는 실행 유효성을 묻고,
+          <code>engine_forkchoiceUpdated</code>는 head·safe·finalized 위치를 전달합니다. Reth가 실행 데이터 묶음을 유효하다고 판단해도
+          어느 분기가 최종적으로 head가 될지는 합의 계층이 결정합니다.
         </p>
+      </div>
+
+      <RethTwoPathViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h2>두 입력 경로는 같은 실행 결과로 합류합니다</h2>
         <p>
-          수신 성공은 검증 성공이 아니며, 실행 성공은 canonical adoption이 아니고, DB write 성공은 RPC consumer가
-          같은 snapshot을 읽었다는 뜻도 아닙니다. 단계별 typed status와 owner를 유지해야 crash 뒤 어느 작업을
-          replay하고 어느 결과를 폐기할지 결정할 수 있습니다.
+          노드가 오래된 구간을 따라잡을 때는 P2P에서 블록 머리글(header)과 본문(body)을 내려받아 단계별 체크포인트를 전진시킵니다.
+          최신 head 부근에서는 합의 클라이언트가 Engine API로 실행 데이터 묶음과 분기 선택 변화를 보냅니다. 시작점과 복구 방식은
+          다르지만 같은 블록 바이트, 같은 부모 상태, 같은 분기 규칙이라면 상태 루트(state root)와 실행 영수증이 같아야 합니다.
         </p>
 
-        <h3>과거 sync와 live path는 합류점은 같아도 cursor가 다릅니다</h3>
+        <h2>한 단계의 성공을 전체 성공으로 부르면 안 됩니다</h2>
         <p>
-          Historical pipeline은 긴 block range를 stage checkpoint로 전진시키고 unwind point에서 잘못된 suffix를 되돌릴 수 있어야
-          합니다. Live Engine path는 head 근처 payload와 forkchoice update를 낮은 latency로 처리하면서 safe·finalized marker와
-          reorg를 반영합니다. 두 경로는 같은 chain spec·EVM semantics·storage invariants를 공유해야 하며 동일 block을 처리했을 때
-          execution output과 state root가 같아야 합니다.
+          블록을 받았다는 사실, 규칙을 통과했다는 사실, EVM 실행이 끝났다는 사실, 정본의 끝(canonical head)이 되었다는 사실, 디스크에 저장됐다는
+          사실은 서로 다릅니다. 그래서 블록 해시 하나에 단계별 상태를 이어 붙여야 합니다. 그래야 중단 뒤 검증부터 다시 할지,
+          실행 결과를 재사용할지, 잘못된 분기를 되돌릴지 판단할 수 있습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 overflow-hidden border-y border-border" aria-label="한 블록의 처리 상태 구분">
+        <div className="hidden grid-cols-[6rem_minmax(0,1fr)_minmax(0,1fr)] gap-px bg-border text-[10px] font-bold text-muted-foreground sm:grid">
+          <div className="bg-muted/30 px-3 py-2">상태</div><div className="bg-muted/30 px-3 py-2">확인한 사실</div><div className="bg-muted/30 px-3 py-2">아직 확인하지 않은 사실</div>
+        </div>
+        {STATUS.map(([state, yes, notYet]) => (
+          <div key={state} className="grid gap-2 border-b border-border px-3 py-3 last:border-b-0 sm:grid-cols-[6rem_minmax(0,1fr)_minmax(0,1fr)] sm:gap-0 sm:px-0 sm:py-0">
+            <strong className="break-keep text-xs sm:px-3 sm:py-3">{state}</strong>
+            <span className="break-keep text-xs leading-5 text-foreground sm:border-l sm:border-border sm:px-3 sm:py-3">{yes}</span>
+            <span className="break-keep text-xs leading-5 text-muted-foreground sm:border-l sm:border-border sm:px-3 sm:py-3">{notYet}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h2>조회 계층(Provider)은 저장소를 감추는 데서 그치지 않고 일관된 조회 시점을 제공합니다</h2>
+        <p>
+          최신 상태, 닫힌 과거 데이터, 실행 영수증과 각종 색인은 물리적으로 다른 저장 영역에 있을 수 있습니다. RPC가 이 차이를 몰라도 되는
+          이유는 조회 계층이 같은 블록 해시와 상태 루트에 속한 자료만 읽는 조회 시점(view)을 제공하기 때문입니다. 분기 재편(reorg) 도중
+          이전 블록 머리글과 새 상태가 섞인 답을 내는 대신, 고정한 조회 시점을 끝까지 읽거나 처음부터 다시 시도해야 합니다.
+        </p>
+      </div>
+
+      <RethReorgViz />
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h2>분기 재편은 정본 포인터 하나만 바꾸는 일이 아닙니다</h2>
+        <p>
+          새 분기 선택 결과가 다른 분기를 head로 정하면 Reth는 공통 조상 뒤의 이전 실행 결과를 되돌리고 새 분기를 실행합니다.
+          정본 해시만 바꾸고 이전 영수증·트라이·색인을 남기면 RPC가 서로 다른 분기의 자료를 섞어 읽을 수 있습니다. 따라서
+          되돌리기, 재실행, 저장, 조회 시점 전환이 같은 블록 식별자를 기준으로 이어져야 합니다.
         </p>
 
-        <h3>Provider는 storage 종류를 숨기는 대신 일관된 view를 약속해야 합니다</h3>
+        <h2>여기서부터는 책임별로 내려갑니다</h2>
         <p>
-          최신 mutable state, immutable historical segment, trie·receipt·header index는 서로 다른 storage tier에 놓일 수
-          있습니다. Provider abstraction의 핵심은 consumer가 같은 block identifier에서 섞이지 않은 view를 읽는 것입니다. Query 시작 시
-          canonical hash·state root·storage generation을 고정하고 reorg나 migration 중 view가 바뀌면 silent mixed
-          result보다 retryable error로 끝내는 편이 안전합니다.
-        </p>
-
-        <h3>현재 문서와 실제 binary의 version을 함께 기록합니다</h3>
-        <p>
-          2026-08-14 확인 시 Reth 공식 문서는 v2.5.0을 표시하고 repository는 Storage V2가 새 node의 default라고 설명합니다. 이 숫자를 영구
-          사실로 쓰지 않고 실제 run에는 Reth semver·git SHA, chain spec digest, execution/Engine API fork version,
-          storage format·schema, pruning profile과 OS·hardware를 기록합니다. Moving main과 최신 문서를 이전 production
-          binary의 구조 설명으로 섞지 않습니다.
-        </p>
-
-        <h3>Release gate는 sync 속도보다 state parity를 먼저 봅니다</h3>
-        <p>
-          Base와 candidate에 같은 chain snapshot·peer fixture·Engine sequence·chain spec을 주고 invalid header,
-          bad transaction, missing parent, reorg, crash during stage checkpoint, storage migration, restart와 concurrent
-          RPC를 반복합니다. Canonical hash·state root·receipts·logs·Engine response와 provider snapshot parity를 hard
-          gate로 둔 뒤 stage throughput·head latency·RPC p95·disk amplification을 비교합니다. 실패하면 이전 binary,
-          config·chain spec과 호환 storage snapshot으로 rollback하고 migration receipt를 보존합니다.
-        </p>
-        <p>
-          Ethereum protocol의 consensus 경계는 <Link to="/cs/blockchain/ethereum-architecture">Ethereum 구조</Link>,
-          state transition 기초는 <Link to="/cs/blockchain/evm">EVM</Link>에서 가져옵니다. Reth 내부를 더 깊게 볼 때는
-          아래 지도의 CLI·network·pipeline·execution·provider·RPC·ExEx 글로 내려가면 됩니다.
+          아래 지도는 Reth를 크레이트(crate) 이름순이 아니라 노드 수명주기 순서로 나눕니다. 먼저 노드를 조립하고 체인 규칙을 고른 뒤, P2P 수신과
+          동기화, 거래·실행 데이터 처리, 마지막으로 저장·조회·확장 경계를 봅니다. 이 글에서 잡은 한 블록의 흐름을 기준으로 내려가면
+          각 세부 글이 전체 구조의 어느 부분인지 잃지 않습니다.
         </p>
       </div>
 
       <SeriesReadingMap categorySlug="blockchain" path={SERIES_READING_PATHS.reth} />
 
+      <aside id="return-map" className="not-prose my-8 scroll-mt-20 border-y border-border py-5" aria-label="확인한 사실을 Ethereum 구조 지도에 되돌려 놓기">
+        <p className="text-[10px] font-bold text-primary">부모 지도에 되돌려 놓기</p>
+        <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">
+          Ethereum 노드는 합의와 실행을 한 프로세스에 섞지 않습니다. 합의 클라이언트가 체인의 위치를 정하고, Reth가 그 위치의 거래를 실행해 상태와 조회 결과를 만듭니다.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+          <Link to="/cs/blockchain/ethereum-architecture" className="inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary">직속 부모: Ethereum 전체 구조 ↗</Link>
+          <Link to="/cs/blockchain/reth-net" className="inline-flex min-h-11 items-center border-b border-border text-xs font-semibold hover:border-primary hover:text-primary">다음 세부 경로: P2P 수신 ↗</Link>
+        </div>
+      </aside>
+
       <div id="paper-reth-repository" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
-        <p className="text-xs font-bold text-primary">공식 코드 · implementation snapshot</p>
+        <p className="text-xs font-bold text-primary">[O] 공식 코드 · 릴리스를 고정해 읽기</p>
         <p className="mt-2 text-sm font-semibold">paradigmxyz/reth</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 execution node의 network·pipeline·EVM·storage·RPC 책임이 실제 release에서 어디에 구현됐는지 확인하는 것입니다. Repository는 current source와 release history를 제공하지만 main을 production binary와 같다고 가정하지 않으므로 semver·SHA를 함께 고정합니다.</p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/paradigmxyz/reth" target="_blank" rel="noreferrer">공식 repository 보기</a>
+        <p className="mt-2 max-w-3xl break-keep text-sm leading-6 text-muted-foreground">
+          저장소는 네트워크·동기화·실행·저장·RPC의 실제 구현과 릴리스 이력을 제공합니다. 이 글의 역할 지도는 공식 문서 기준이며, 구체적인 구조체와 호출 순서는 분석할 릴리스 태그와 커밋을 먼저 고정한 뒤 세부 글에서 확인합니다.
+        </p>
+        <a href="https://github.com/paradigmxyz/reth" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">공식 저장소</a>
       </div>
+
       <div id="paper-reth-docs" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
-        <p className="text-xs font-bold text-primary">공식 문서 · node·SDK boundary</p>
-        <p className="mt-2 text-sm font-semibold">Reth official documentation</p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">문제는 operator 설정과 SDK component·storage·RPC의 current public contract를 찾는 것입니다. 공식 문서는 versioned 동작과 API를 설명하지만 Ethereum protocol 정본 전체나 특정 hardware의 성능을 대신하지 않습니다.</p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://reth.rs/" target="_blank" rel="noreferrer">Reth 공식 문서 보기</a>
+        <p className="text-xs font-bold text-primary">[O] 공식 문서 · 2026-10-27 확인 · v2.8.1 표시 기준</p>
+        <p className="mt-2 text-sm font-semibold">Reth Overview · Node Components</p>
+        <p className="mt-2 max-w-3xl break-keep text-sm leading-6 text-muted-foreground">
+          공식 문서는 Reth를 Engine API와 호환되는 실행 계층 구현으로 설명하고 네트워크·거래 풀·합의 규칙 검증·EVM·RPC를 교체 가능한 구성요소로 나눕니다. 실제 구현을 읽을 때는 계속 변하는 main 브랜치가 아니라 사용할 릴리스 태그와 커밋을 고정해야 합니다.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-primary">
+          <a href="https://reth.rs/overview/" target="_blank" rel="noreferrer" className="hover:underline">Reth 개요</a>
+          <a href="https://reth.rs/sdk/node-components/" target="_blank" rel="noreferrer" className="hover:underline">Node Components</a>
+          <a href="https://github.com/paradigmxyz/reth/releases/tag/v2.8.1" target="_blank" rel="noreferrer" className="hover:underline">v2.8.1 릴리스</a>
+        </div>
       </div>
     </section>
   );

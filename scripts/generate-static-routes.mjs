@@ -342,6 +342,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/evm-fundamentals",
   "blockchain/evm-advanced",
   "blockchain/merkle-patricia-trie",
+  "blockchain/reth",
   "blockchain/reth-trie",
 ]);
 const noScriptArticles = catalog.filter(

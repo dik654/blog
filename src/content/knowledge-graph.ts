@@ -10441,7 +10441,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth version snapshot receipt",
     definition:
       "Reth semver·git SHA, chain spec digest, execution/Engine fork version, storage format·schema, pruning profile와 OS·hardware를 함께 고정해 moving docs와 deployment를 섞지 않는 provenance입니다.",
-    canonicalHref: "/cs/blockchain/reth#overview",
+    canonicalHref: "/cs/blockchain/reth-cli#components",
   },
   "reth-reorg-unwind-reconciliation": {
     id: "reth-reorg-unwind-reconciliation",
@@ -10459,7 +10459,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth node release gate",
     definition:
       "같은 chain snapshot·peer fixture·Engine sequence·chain spec에서 invalid input·reorg·checkpoint crash·migration·restart·concurrent query를 주입하고 canonical hash·state root·receipt·provider parity를 hard gate로 비교하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth#overview",
+    canonicalHref: "/cs/blockchain/reth-cli#components",
   },
   "helios-dual-header-store": {
     id: "helios-dual-header-store",

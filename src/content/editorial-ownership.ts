@@ -6118,7 +6118,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Block input→validation→EVM execution→canonicalization→storage→provider trace",
       "Historical stage pipeline과 live Engine path의 cursor·retry·shared invariant 분리",
       "Mutable state·immutable history·index의 storage ownership과 pinned provider view",
-      "Reth·chain spec·Engine fork·storage schema provenance와 reorg/release gate",
+      "Canonical branch가 바뀔 때의 unwind·재실행·provider view 전환",
     ],
     reuses: [
       { label: "Ethereum execution·consensus architecture", href: "/cs/blockchain/ethereum-architecture" },
@@ -6129,7 +6129,6 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "Crate·trait·pipeline·storage claim은 표시한 Reth semver 또는 git SHA와 official docs/source에 귀속한다." },
       { kind: "standard", rule: "Ethereum execution·Engine fork behavior는 chain spec과 protocol version을 함께 고정하며 Reth 문서를 protocol 정본 전체로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Node 후보는 같은 chain snapshot·peer fixture·Engine sequence·chain spec의 paired correctness gate 뒤 성능을 비교한다." },
       { kind: "project-claim", rule: "Repository marketing·moving main·특정 benchmark를 모든 network·hardware·storage profile의 고정 성능으로 일반화하지 않는다." },
     ],
   },
