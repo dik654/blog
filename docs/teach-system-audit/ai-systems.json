@@ -9559,25 +9559,66 @@
       "route": "ai/multi-agent-implementation",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/multi-agent-implementation.tsx",
       "publicPath": "cs/ai/multi-agent-implementation",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
+        "explicitAssumption": true,
         "answerPointers": 0,
         "levelMarkers": 0,
         "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "직속 부모인 delegation 개념과 이 실무 글의 위치가 첫 화면에 보이지 않았습니다.",
+        "단일-agent 기준선에서 partition·receipt·join으로 이어지는 한 요청이 없어 각 framework 절이 따로 읽혔습니다.",
+        "기존 시각 자료는 pattern·LangGraph·CrewAI·제조 경계를 각각 설명했지만 같은 요청의 상태 변화로 이어지지 않았습니다.",
+        "LangGraph와 CrewAI의 확인 버전과 날짜가 본문에 고정되지 않았습니다."
+      ],
+      "fixture": {
+        "assumed": true,
+        "requestId": "RELEASE-42",
+        "inputHash": "71f…",
+        "singleAgentBaseline": {
+          "wallMinutes": 60,
+          "costUsd": 10,
+          "quality": 0.8
+        },
+        "requiredTasks": [
+          "t-01 자료 조사",
+          "t-02 변경 분석",
+          "t-03 정책 검토"
+        ],
+        "joinConditions": [
+          "필수 receipt 3/3",
+          "artifact 식별값 충돌 없음",
+          "전역 validator 통과"
+        ]
+      },
+      "stageAnchors": {
+        "parent": "agent-delegation-contracts#parallel-merge",
+        "0": "overview — baseline→partition→receipt→join 한 요청",
+        "1": "architecture — worker receipt와 join 완료 조건",
+        "2": "langgraph — reducer·checkpoint·retry idempotency",
+        "3": "crewai — Crew 판단과 Flow transition 분리",
+        "4": "manufacturing — advisory와 설비 제어 권한 분리",
+        "return": "agent-delegation-implementation-return"
+      },
+      "sourceEvidence": [
+        "LangGraph 1.2.17 공식 Graph API와 릴리스에서 state·node·edge·reducer·parallel super-step·re-execution 경계를 확인했습니다.",
+        "CrewAI 1.15.30의 버전 고정 Crews·Flows 문서에서 agent·task·process와 event·state·branch의 책임 분리를 확인했습니다.",
+        "Join 수식과 worker receipt schema는 framework 보장이 아니라 이 글의 구현·감사 계약으로 유지했습니다."
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "Agent 수를 늘리는 설명보다 같은 RELEASE-42 요청이 기준선·세 작업·세 receipt·합류 판정을 지나는 순서를 먼저 보이고, 뒤 절의 framework와 안전 경계를 같은 완료 계약에 연결했습니다.",
+        "humanize": "영어 단독 단계명을 기준선·분리·결과·합류로 바꾸고 receipt·checksum처럼 필요한 용어는 한국어 역할과 함께 표시했습니다.",
+        "browser390": "390×844에서 장면별 핵심 영역만 표시해 마지막 장면의 합류 판정이 첫 화면에 들어오며 overflow·frame/control movement·console 오류가 0임을 확인했습니다.",
+        "browser1440": "1440×1000에서 요청·세 worker·합류 판정을 한 행으로 비교하고 overflow·frame/control movement·console 오류가 0임을 확인했습니다.",
+        "keyboard": "핵심 Viz에 focus 후 ArrowRight로 장면 01에서 02로 이동했습니다.",
+        "reducedMotion": "reduced-motion에서는 마지막 합류 장면과 비활성 재생 제어를 정적으로 제공합니다.",
+        "noScript": "JavaScript 비활성 390×844 정적 경로에서 제목·현재 위치·부모 anchor·본문·정적 장면 순서가 보이고 가로 넘침이 없음을 확인했습니다.",
+        "build": "8GB 상한 production build가 통과했고 8,023 modules·정적 public route 2,090개·no-script 본문 277편을 생성했습니다.",
+        "browserEvidence": "output/playwright/multi-agent-rewrite-fixed/2026-10-26T02-55-05/summary.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

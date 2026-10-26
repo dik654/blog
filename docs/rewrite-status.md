@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · 멀티에이전트 실행 계약 (로컬 검수 완료, 배포 대기)
+
+- `ai/multi-agent-implementation`의 첫 화면에 직속 부모인 delegation 개념, 현재 실행 계약, 같은 경로의 앞뒤 글을 표시했습니다. 배포 후보 `RELEASE-42` 한 건이 단일-agent 기준선 → 세 작업 분리 → worker receipt → 합류 판정을 지나는 네 장면을 본문보다 먼저 보여 줍니다.
+- 모바일에서는 현재 장면에 필요한 영역만 표시합니다. 마지막 장면은 필수 receipt 3/3, 파일 식별값 충돌 없음, 전역 validator 통과와 publish 가능 여부가 한 화면에 들어옵니다. 영어 단독 단계명은 기준선·분리·결과·합류로 바꿨습니다.
+- LangGraph는 2026-10-26 공식 문서와 1.2.17 릴리스, CrewAI는 버전 고정 문서 1.15.30을 다시 확인했습니다. Framework가 보장하는 기능과 이 글이 제안하는 receipt·join 감사 계약은 구분했습니다.
+- 390×844·1440×1000에서 문서·시각 자료 가로 넘침, frame·control 이동, console 오류가 모두 0입니다. ArrowRight 장면 01→02, reduced-motion 마지막 장면, JavaScript 비활성 정적 본문을 확인했습니다.
+- 학습·article·topology·읽기·runtime·한국어 감사와 8GB TypeScript·production build를 통과했습니다. 빌드는 8,023개 module과 정적 public route 2,090개를 만들었고 no-script 본문은 277편으로 늘었습니다. 전수 장부는 검토 625편·미검토 367편입니다. 공개 경로 검증은 배포 뒤 진행합니다.
+
 ## 2026-10-26 · LoRA 개념·실무 분리 (로컬 검수 완료, 배포 대기)
 
 - 기존 `ai/lora-finetuning` 한 글에 섞여 있던 저랭크 변화량의 원리와 데이터·복구·배포 판단을 분리했습니다. 개념 글은 7B frozen base와 20M adapter의 한 학습 step을 따라가며 base forward는 남고 gradient·optimizer state·저장량은 주로 adapter 쪽에서 줄어드는 이유를 닫습니다.

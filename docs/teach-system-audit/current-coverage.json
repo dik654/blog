@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 624,
-    "pending": 368,
+    "reviewed": 625,
+    "pending": 367,
     "untracked": 0,
-    "assignedPending": 326,
+    "assignedPending": 325,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3523,9 +3523,9 @@
       "publicPath": "cs/ai/multi-agent-implementation",
       "title": "멀티에이전트 구현: State · Worker · Join Contract",
       "catalogIndex": 349,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

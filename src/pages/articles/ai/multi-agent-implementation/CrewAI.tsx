@@ -6,7 +6,6 @@ export default function CrewAI(){return <section id="crewai" className="scroll-m
           </p><p>
             Flow는 event와 state를 중심으로 일반 코드·Crew·외부 service를 연결합니다. Retry·timeout·사람 승인·compensation 같은 비즈니스
             제어는 Flow에 두고 source 비교나 report synthesis처럼 의미 판단이 필요한 node만 Crew로 호출하면 자율성과 결정적 제어를 분리할 수 있습니다.
-          </p></div><div className="not-prose my-8"><CrewAIViz /></div><div id="standard-crewai" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 문서 · CrewAI Crews & Flows</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
-            현재 CrewAI 문서는 agent·task·process를 묶는 Crew와 event·state·routing 중심 Flow를 별도 계층으로 제공합니다. Version별
-            decorator·state·persistence API가 달라질 수 있으므로 설치 version을 pin합니다. 이 글은 제품 간 성능 우위를 주장하지 않습니다.
+          </p></div><div className="not-prose my-8"><CrewAIViz /></div><div id="standard-crewai" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"><p className="text-xs font-bold text-primary">공식 문서 · CrewAI 1.15.30 기준</p><p className="mt-2 text-sm leading-6 text-muted-foreground">
+            2026년 10월 26일 버전이 고정된 공식 문서를 확인했습니다. Crew는 agent·task·process를 묶고, Flow는 event·state·분기와 Crew 호출을 연결합니다. Decorator·state·persistence API는 버전별로 달라질 수 있으므로 실제 실험에서는 1.15.30을 고정합니다. 이 글은 제품 간 성능 우위를 주장하지 않습니다.
           </p><div className="mt-3 flex flex-wrap gap-4 text-sm font-medium"><a className="text-primary hover:underline" href="https://docs.crewai.com/en/concepts/crews" target="_blank" rel="noreferrer">Crews 문서</a><a className="text-primary hover:underline" href="https://docs.crewai.com/en/concepts/flows" target="_blank" rel="noreferrer">Flows 문서</a></div></div></section>}

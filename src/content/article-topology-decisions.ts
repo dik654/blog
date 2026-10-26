@@ -280,6 +280,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Step 1,800→1,801 재개 좌표와 base·adapter hash, merge 전후 logit 오차, 재양자화 설정·새 checksum을 함께 남기고 어느 gate라도 실패하면 이전 승인 artifact로 되돌립니다.",
   },
+  "ai/multi-agent-implementation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "배포 후보 하나의 단일-agent 기준선에서 작업 분리, worker receipt, join, reducer와 재실행 안전성, framework 매핑, 설비 제어 경계까지 같은 완료 계약을 따라갑니다. 실제 최상위 절은 다섯 개이며 시각화 내부 장면을 section으로 센 휴리스틱 때문에 분리 후보가 되었지만, 글을 나누면 receipt와 join·side effect 검증의 연결이 끊깁니다.",
+    sharedGate:
+      "동일한 input snapshot·tool·model·quality gate에서 single/multi time·cost·quality를 비교하고, 필수 receipt coverage·artifact checksum 충돌·전역 validator·retry idempotency를 모두 통과해야 완료로 판정합니다.",
+  },
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
@@ -3760,6 +3769,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "isms-aml/isms-security-infra": "f4de0cdcc8443f58",
   "ai/lora-finetuning": "2123bb03bde8459e",
   "ai/lora-training-and-release": "9887191b7009e2d0",
+  "ai/multi-agent-implementation": "3969ad1368c01763",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",
