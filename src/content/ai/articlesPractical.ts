@@ -2115,13 +2115,13 @@ const strategyArticles: Article[] = [
   },
   {
     slug: "ranking-metrics",
-    title: "검색·추천 평가: Relevance에서 Query Population까지",
+    title: "검색·추천 평가: 한 목록에서 사용자 집단까지",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Query와 ranked list" },
-      { id: "ndcg", title: "Gain · discount · ideal order" },
-      { id: "query-population", title: "Macro와 traffic 평균" },
-      { id: "judgment-boundary", title: "Incomplete judgment" },
+      { id: "overview", title: "검색 한 번의 평가 단위" },
+      { id: "judgment-boundary", title: "미판정 문서의 경계" },
+      { id: "ndcg", title: "관련도와 위치의 목록 점수" },
+      { id: "query-population", title: "질의 집단과 요청 집단" },
     ],
     component: () => import("@/pages/articles/ai/ranking-metrics"),
   },

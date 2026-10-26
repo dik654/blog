@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 627,
-    "pending": 365,
+    "reviewed": 628,
+    "pending": 364,
     "untracked": 0,
-    "assignedPending": 323,
+    "assignedPending": 322,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3741,11 +3741,11 @@
     {
       "route": "ai/ranking-metrics",
       "publicPath": "cs/ai/ranking-metrics",
-      "title": "검색·추천 평가: Relevance에서 Query Population까지",
+      "title": "검색·추천 평가: 한 목록에서 사용자 집단까지",
       "catalogIndex": 371,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {
