@@ -5896,6 +5896,48 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "같은 width·round-trip·hash collision resistance를 semantic schema·canonical input·application validity 전체로 확대하지 않는다." },
     ],
   },
+  "lsm-tree": {
+    title: "LSM 쓰기·읽기·병합 개념 글이 소유하는 범위",
+    owns: [
+      "WAL·memtable·immutable SSTable로 이어지는 한 변경의 저장 경로",
+      "Internal key의 사용자 키·sequence·값 종류와 snapshot-visible 최신 항목 선택",
+      "Tombstone이 오래된 값을 가리고 compaction이 활성 snapshot 결과를 보존하는 규칙",
+      "Leveled·tiered 계열의 read·write·space amplification 원인",
+      "입력률과 background 처리율의 차이가 compaction debt와 write stall로 돌아오는 경계",
+    ],
+    reuses: [
+      { label: "Reth의 검증·실행·저장 전체 지도", href: "/cs/blockchain/reth#overview" },
+      { label: "값과 canonical bytes", href: "/cs/blockchain/reth-alloy-primitives#overview" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "LSM 구조와 rolling merge의 기원은 O’Neil et al. 원 논문에 귀속한다." },
+      { kind: "primary-source", rule: "Internal key·WAL·memtable·snapshot-aware compaction·write-stall claim은 RocksDB commit 2dc6bc5와 공식 문서 범위로 제한한다." },
+      { kind: "project-measurement", rule: "A@41·52·60의 snapshot 결과와 20MB·80/60MB/s 계산은 설명용 검산이며 대상 서비스 측정값으로 쓰지 않는다." },
+      { kind: "project-claim", rule: "일반 LSM 메커니즘을 특정 compaction 설정의 성능 우위나 운영 승인으로 확대하지 않는다." },
+    ],
+  },
+  "lsm-engine-validation": {
+    title: "LSM 엔진 실험·복구·결정 글이 소유하는 범위",
+    owns: [
+      "엔진 commit·options·자료 digest·seed·장치·filesystem을 고정한 run manifest",
+      "실험 입력·DB 상태·독립 oracle·metrics·ADR의 authoritative writer",
+      "WAL·flush·MANIFEST·compaction 설치 경계의 crash/reopen 대조",
+      "정확성 통과 뒤 증폭·pressure·tail latency·recovery time을 비교하는 순서",
+      "격리·baseline 우회·format 호환성 확인·rollback·재진입과 결론 반증 조건",
+    ],
+    reuses: [
+      { label: "WAL과 성공 응답 경계", href: "/cs/blockchain/lsm-tree#write-path" },
+      { label: "Sequence·tombstone·snapshot 읽기", href: "/cs/blockchain/lsm-tree#read-path" },
+      { label: "Compaction·증폭·부채", href: "/cs/blockchain/lsm-tree#compaction" },
+      { label: "Write stall 경계", href: "/cs/blockchain/lsm-tree#stall" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "기본값·API·stall 분기는 RocksDB commit 2dc6bc5와 해당 공식 문서에 귀속한다." },
+      { kind: "standard", rule: "공식 기본값의 존재를 대상 workload의 적합성이나 안전성 증거로 쓰지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경에서 직접 실행한 값만 [M]으로 기록하며, 현재 글의 처리량·복구 결과는 미측정으로 남긴다." },
+      { kind: "project-claim", rule: "장비·filesystem·자료·sync 정책이 바뀌면 기존 결론을 다시 검증하고, 실험 계획을 운영 승인으로 확대하지 않는다." },
+    ],
+  },
   "reth-db": {
     title: "Reth typed DB·static history 글이 소유하는 범위",
     owns: [
