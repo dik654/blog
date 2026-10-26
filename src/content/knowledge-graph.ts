@@ -10657,7 +10657,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth stage dependency order",
     definition:
       "Headers·Bodies·Senders·Execution·Merkle가 앞 stage의 검증된 durable range까지만 진행하도록 output dependency와 block identity를 순서화하는 historical-sync 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#overview",
+    canonicalHref: "/cs/blockchain/reth-pipeline#order",
   },
   "reth-stage-checkpoint-cursor": {
     id: "reth-stage-checkpoint-cursor",
@@ -10666,7 +10666,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth durable stage-checkpoint cursor",
     definition:
       "Stage ID별로 필요한 output이 검증·commit된 마지막 block과 phase를 기록해 restart 시 첫 미완료 block을 찾는 progress identity입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#overview",
+    canonicalHref: "/cs/blockchain/reth-pipeline#commit",
   },
   "reth-stage-bounded-progress": {
     id: "reth-stage-bounded-progress",
@@ -10675,7 +10675,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth bounded stage progress",
     definition:
       "Checkpoint 다음 block부터 target과 운영 batch limit 중 작은 끝점까지 처리하고 실제 commit한 마지막 block만 새 checkpoint로 공개하는 실행 규칙입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#stage-trait",
+    canonicalHref: "/cs/blockchain/reth-pipeline#batch",
   },
   "reth-stage-unwind-contract": {
     id: "reth-stage-unwind-contract",
@@ -10684,16 +10684,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth reverse-dependency stage unwind",
     definition:
       "Reorg·invalid suffix에서 common ancestor를 고정하고 Merkle·Execution 같은 derived stage부터 reverse dependency 순서로 checkpoint와 output을 되돌리는 복구 규칙입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#overview",
-  },
-  "reth-pipeline-execution-root-gate": {
-    id: "reth-pipeline-execution-root-gate",
-    kind: "concept",
-    domain: "computer-science",
-    label: "Reth execution·Merkle stage root gate",
-    definition:
-      "Execution changeset과 receipt를 MerkleStage가 같은 parent generation에서 header state root와 대조하기 전에는 derived suffix를 fully verified로 표시하지 않는 stage 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#merkle-stage",
+    canonicalHref: "/cs/blockchain/reth-pipeline#unwind",
   },
   "reth-pipeline-restart-receipt": {
     id: "reth-pipeline-restart-receipt",
@@ -10702,7 +10693,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth pipeline restart receipt",
     definition:
       "Stage ID·input/dependency checkpoint·target·attempted/committed range·transaction과 forward/unwind phase를 남겨 commit 전후 crash를 조정하는 evidence입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#stage-trait",
+    canonicalHref: "/cs/blockchain/reth-pipeline-validation#baseline",
   },
   "reth-pipeline-release-gate": {
     id: "reth-pipeline-release-gate",
@@ -10711,7 +10702,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth staged-sync recovery release gate",
     definition:
       "Missing/invalid input·root mismatch·checkpoint corruption·stage crash·reorg/unwind·restart에서 header/body/sender/receipt/state-root와 checkpoint parity 뒤 throughput을 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/blockchain/reth-pipeline#stage-trait",
+    canonicalHref: "/cs/blockchain/reth-pipeline-validation#experiment",
   },
   "ethereum-block-prestate-context": {
     id: "ethereum-block-prestate-context",
@@ -47097,24 +47088,6 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     to: "reth-pipeline-restart-receipt",
     relation: "produces",
     reason: "Input/dependency/output checkpoint와 forward/unwind phase가 restart evidence의 핵심 identity가 됩니다.",
-  },
-  {
-    from: "reth-ordered-block-transition",
-    to: "reth-pipeline-execution-root-gate",
-    relation: "prerequisite",
-    reason: "ExecutionStage의 ordered bundle·receipts가 MerkleStage state-root 검증의 입력입니다.",
-  },
-  {
-    from: "reth-trie-overlay-state-root",
-    to: "reth-pipeline-execution-root-gate",
-    relation: "prerequisite",
-    reason: "같은 parent generation의 trie calculation을 header root와 비교해 verified suffix를 정합니다.",
-  },
-  {
-    from: "reth-pipeline-execution-root-gate",
-    to: "reth-pipeline-release-gate",
-    relation: "evaluates",
-    reason: "Execution과 Merkle checkpoint가 어긋나거나 root가 다른 fixture를 fail closed하는지 검사합니다.",
   },
   {
     from: "reth-pipeline-restart-receipt",

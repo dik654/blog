@@ -357,6 +357,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-provider",
   "blockchain/reth-provider-validation",
   "blockchain/reth-trie",
+  "blockchain/reth-pipeline",
+  "blockchain/reth-pipeline-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -5324,15 +5324,26 @@ export const ARTICLE_EVIDENCE: Readonly<
     ),
   ),
   "blockchain/reth-pipeline": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
-    kind: "공식 규격",
-    label: "Ethereum execution-specs — pinned snapshot",
-    href: "https://github.com/ethereum/execution-specs/tree/56e8617b619c0ab22284b140b49cc5501e5e6227",
-    note: "Stage가 검증하는 fork별 header·body·transaction·receipt·state transition 정본",
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — default stage set",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/stages/stages/src/sets.rs",
+    note: "선택 release의 실제 stage 추가 순서와 선택 stage",
   }, {
     kind: "공식 구현",
-    label: "Reth v2.2.0 — crates/stages",
-    href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/stages",
-    note: "선택한 release의 stage dependency·checkpoint·execute/unwind source snapshot",
+    label: "Reth v2.8.1 — Pipeline runner",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/stages/api/src/pipeline/mod.rs",
+    note: "Previous-stage target, output·checkpoint commit과 reverse unwind 경계",
+  }),
+  "blockchain/reth-pipeline-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Pipeline runner",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/stages/api/src/pipeline/mod.rs",
+    note: "Fault point와 output·checkpoint·unwind parity 대상을 고정하는 구현 근거",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Pipeline tests",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/stages/stages/tests/pipeline.rs",
+    note: "Upstream fixture와 이미 검증한 stage 경계를 lab baseline과 구분하기 위한 근거",
   }),
   "blockchain/reth-precompiles": withSeriesEvidence(RETH_SERIES_EVIDENCE),
   "blockchain/reth-provider": withSeriesEvidence(RETH_SERIES_EVIDENCE, {

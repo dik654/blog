@@ -3,6 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth Pipeline 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/reth-pipeline`은 `concept`, 새 `blockchain/reth-pipeline-validation`은 `practice`로 분리했습니다. 개념 글은 checkpoint 99에서 target 250까지 threshold 64로 진행하는 한 stage를 따라 dependency 순서, 100..163·164..227·228..250 batch, provider commit과 250→140 역순 unwind를 설명합니다. 실무 글은 같은 fixture를 execute 전·commit 전후·invalid input·reorg·prune 경계에서 중단하고 output·checkpoint·state root를 대조하는 release gate를 설계합니다.
+- 기존 글이 stage output commit과 checkpoint marker 저장 사이에 독립적인 공개 틈이 있다고 설명한 오류를 고쳤습니다. Reth v2.8.1 runner는 stage output을 RW provider에 쓴 뒤 새 checkpoint를 같은 provider transaction에 저장하고 commit합니다. `post_execute_commit`은 그 뒤 호출되는 hook이며 durable checkpoint owner가 아닙니다.
+- 기본 stage 순서는 선택적 ERA1 뒤 Headers·Bodies, Sender Recovery·Execution, Merkle unwind·Account/Storage Hashing·Merkle execute, lookup·history·prune·finish로 고정했습니다. 첫 stage는 전체 target을 받고 다음 stage는 바로 앞 stage checkpoint를 target으로 받습니다. Checkpoint는 stage progress이며 consensus finality나 downloaded head가 아닙니다.
+- 실제 v2.8.1 `stage.rs` L74–84·L241–308과 `pipeline/mod.rs` L365–463·L486–554를 본문 주장 옆 코드 패널에서 열 수 있게 했습니다. 범위 계산, Stage trait, output·checkpoint commit, prune 확인과 역순 unwind를 링크만이 아니라 고정 source excerpt로 대조합니다.
+- 실무 글은 release·source SHA·feature, stage set·threshold·prune, chain fixture, 저장 snapshot, filesystem과 runtime을 한 manifest에 고정합니다. Golden receipt는 Reth 내장 단일 형식이라고 주장하지 않고 실험에서 만들 증거 묶음으로 표시했습니다. 대상 장비의 측정값은 없으므로 상태는 `proposed`, 성능과 복구 결과는 `[M] 미측정`입니다.
+- 시각화·학습 계약·글 구조·pseudocode·TypeScript·production build와 `git diff --check`가 통과했습니다. Build는 8,053개 module, 정적 공개 경로 2,102개, no-script 본문 311편을 생성했고 최대 RSS는 약 6.35GB, swap은 0이었습니다.
+- 1,440×1,000에서 개념·실무 글의 코드 패널이 실제 file path, line 범위, 주석과 source를 표시했고 문서·패널 가로 넘침과 console 오류는 0건입니다. 390×844에서는 문서와 live 시각화가 390=390·334=334이고 코드 패널도 389=389입니다. reduced-motion에서는 재생이 비활성화되고 장면 키보드 이동은 유지됩니다. 네이티브 JavaScript 비활성 컨텍스트에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 단계 6개, 문서 폭 390=390입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+
 ### Reth Provider 개념·실무 분리 로컬 검증 완료 (2026-10-27)
 
 - `blockchain/reth-provider`는 `concept`, 새 `blockchain/reth-provider-validation`은 `practice`로 분리했습니다. 개념 글은 영속 tip 995와 memory 996~1,000이 공존할 때 H1000의 account A와 slot K를 한 시점으로 읽는 과정을 추적합니다. 실무 글은 flush overlap·partial persistence·reorg·prune·missing evidence·restart를 같은 hash query에 재생해 변경을 채택할지 판단합니다.
