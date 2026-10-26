@@ -44,7 +44,7 @@ export default function ModernArticle() {
         <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-2 lg:grid-cols-4">{[
           ["Latest", "현재 memory head"], ["Retained hash", "아직 memory에 있는 canonical block"], ["Historical hash", "영속화된 과거 block"], ["Pending", "head를 한 블록 연장한 state"],
         ].map(([title, body]) => <div key={title} className="bg-background p-4"><strong className="text-sm">{title}</strong><p className="mt-2 text-xs leading-5 text-muted-foreground">{body}</p></div>)}</div>
-        <p><LABEL>A</LABEL>각 block hash에서 account·storage·bytecode·block hash range·state root 또는 proof를 읽고, 값뿐 아니라 정상 absence와 pruned·missing evidence 오류를 함께 기록합니다. Number selector는 먼저 canonical hash로 해석한 뒤 같은 hash query와 비교합니다.</p>
+        <p><LABEL>A</LABEL>각 block hash에서 account와 storage, bytecode, block hash range를 읽습니다. 이어서 state root나 proof를 대조하고 정상 absence와 pruned·missing evidence 오류를 따로 기록합니다. Number selector는 먼저 canonical hash로 해석한 뒤 같은 hash query와 비교합니다.</p>
       </section>
 
       <section id="experiment" className="space-y-5 scroll-mt-20">
@@ -78,7 +78,7 @@ export default function ModernArticle() {
 
       <section id="decision" className="space-y-5 scroll-mt-20">
         <h2 className="break-keep text-2xl font-bold">실험 전 상태는 proposed이며 mixed state 한 번으로 기각합니다</h2>
-        <div className="not-prose border-y border-border py-4 text-sm leading-6"><p><strong>Status:</strong> proposed</p><p className="mt-2"><strong>채택 조건:</strong> 모든 hash·selector·fault에서 value·root·typed outcome이 같고, restart·rollback과 서비스 SLO를 통과합니다.</p><p className="mt-2"><strong>기각 조건:</strong> Memory/DB gap, 다른 block의 account·storage 혼합, pruned를 정상 absence로 변환, safe rollback 부재가 하나라도 나타납니다.</p><p className="mt-2"><strong>다시 검토할 조건:</strong> Reth release, Storage V1/V2, prune·persistence 설정, filesystem 또는 workload가 바뀝니다.</p></div>
+        <div className="not-prose border-y border-border py-4 text-sm leading-6"><p><strong>Status:</strong> proposed</p><p className="mt-2"><strong>채택 조건:</strong> 모든 hash, selector, fault에서 value와 root, typed outcome이 같습니다. 이어서 restart와 rollback, 서비스 SLO를 모두 통과해야 합니다.</p><p className="mt-2"><strong>기각 조건:</strong> Memory/DB gap, 다른 block의 account·storage 혼합, pruned를 정상 absence로 변환, safe rollback 부재가 하나라도 나타납니다.</p><p className="mt-2"><strong>다시 검토할 조건:</strong> Reth release, Storage V1/V2, prune·persistence 설정, filesystem 또는 workload가 바뀝니다.</p></div>
       </section>
 
       <section id="evidence" className="space-y-5 scroll-mt-20">
