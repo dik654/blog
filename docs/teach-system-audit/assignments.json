@@ -301,6 +301,7 @@
     "ai/llm-serving-capacity",
     "ai/llm-serving-ops",
     "ai/lora-finetuning",
+    "ai/lora-training-and-release",
     "ai/lr-decay-policies",
     "ai/lr-scheduling",
     "ai/mcp-primitives",

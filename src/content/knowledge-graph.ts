@@ -7663,7 +7663,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LoRA token-serialization · loss contract",
     definition:
       "Base tokenizer의 chat template으로 role·special token·turn을 직렬화하고 assistant target·prompt·padding 위치의 loss mask와 truncation/packing 경계를 고정하는 SFT data 계약입니다.",
-    canonicalHref: "/cs/ai/lora-finetuning#data",
+    canonicalHref: "/cs/ai/lora-training-and-release#data",
   },
   "lora-merge-equivalence": {
     id: "lora-merge-equivalence",
@@ -7672,7 +7672,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LoRA merge equivalence",
     definition:
       "같은 dtype·operator와 deterministic inference에서 Wx+sBAx=(W+sBA)x의 분배법칙으로 unmerged adapter branch를 merged weight 한 개로 바꿀 수 있다는 동치입니다.",
-    canonicalHref: "/cs/ai/lora-finetuning#practice",
+    canonicalHref: "/cs/ai/lora-training-and-release#practice",
   },
   "lora-requantization-boundary": {
     id: "lora-requantization-boundary",
@@ -7681,7 +7681,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "LoRA merge–requantization boundary",
     definition:
       "Quantization은 rounding·clipping이 있어 덧셈을 일반적으로 보존하지 않으므로 quantized base에 adapter를 merge하고 다시 quantize한 결과를 새 code·scale·오차를 가진 별도 artifact로 승인하는 경계입니다.",
-    canonicalHref: "/cs/ai/lora-finetuning#practice",
+    canonicalHref: "/cs/ai/lora-training-and-release#practice",
   },
   "training-checkpoint-resume-state": {
     id: "training-checkpoint-resume-state",
@@ -7690,7 +7690,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Training checkpoint · resume state",
     definition:
       "Adapter나 model weight뿐 아니라 optimizer·scheduler·random state·data cursor와 update 좌표를 함께 저장해 중단 지점 다음 batch부터 같은 학습 상태로 이어 가는 복구 계약입니다.",
-    canonicalHref: "/cs/ai/lora-finetuning#checkpoint-resume",
+    canonicalHref: "/cs/ai/lora-training-and-release#checkpoint-resume",
   },
   "multiagent-baseline-gain": {
     id: "multiagent-baseline-gain",
@@ -21222,7 +21222,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     aliases: ["Multi-LoRA Serving", "Adapter Switching"],
     definition:
       "하나의 frozen base weight를 한 번만 상주시키고 여러 adapter의 unmerged A·B를 batched kernel로 함께 실행해, 요청마다 base 재로드 없이 다른 adapter를 적용하는 서빙 방법입니다.",
-    canonicalHref: "/cs/ai/lora-finetuning#practice",
+    canonicalHref: "/cs/ai/multi-adapter-serving#overview",
   },
   "fine-tuning-goal-taxonomy": {
     id: "fine-tuning-goal-taxonomy",

@@ -2,6 +2,7 @@ import ContentBoundary from "@/components/articles/content-boundary";
 import ProgressiveDetail from "@/components/articles/progressive-detail";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import PeftCompareViz from "./viz/PeftCompareViz";
+import LoraLearningFlowViz from "./viz/LoraLearningFlowViz";
 
 export default function Overview() {
   return (
@@ -9,6 +10,10 @@ export default function Overview() {
       <h2 className="mb-6 text-2xl font-bold">
         7B base를 고정하고 20M adapter만 학습해도 base forward는 남습니다
       </h2>
+      <p className="mb-4 max-w-3xl text-sm leading-6 text-muted-foreground">
+        입력 하나가 두 계산 경로를 지나고, 어느 값만 바뀌어 저장되는지 먼저 따라가 보겠습니다.
+      </p>
+      <LoraLearningFlowViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
           Parameter 70억 개짜리 base model에 trainable adapter 2천만 개를 붙인 사례를
@@ -27,15 +32,22 @@ export default function Overview() {
           forward와 activation은 남으므로 20M/7B 비율만큼 전체 계산이 줄지는 않습니다.
         </p>
       </div>
-      <div className="not-prose my-8"><PeftCompareViz /></div>
+      <p className="mt-8 max-w-3xl text-sm leading-6 text-muted-foreground">
+        이제 같은 경계를 full fine-tuning과 QLoRA에 나란히 적용하면, 학습 대상과 실행 비용을 서로 다른 장부로 볼 수 있습니다.
+      </p>
+      <div className="not-prose my-6"><PeftCompareViz /></div>
       <ContentBoundary article="lora-finetuning" />
       <ProgressiveDetail
         title="이 글은 어떤 순서로 LoRA를 설명하나요?"
-        preview="Base와 adapter의 경계를 잡은 뒤 rank·QLoRA·데이터·배포 artifact 순서로 내려갑니다."
+        preview="Base와 adapter의 경계를 잡은 뒤 저랭크 update와 QLoRA 정밀도 경로까지 내려갑니다."
       >
         <p>
-          먼저 low-rank update의 shape와 capacity를 계산합니다. 그다음 QLoRA의 저장·연산·학습 precision을 분리하고 chat template과 loss
-          mask가 실제 학습 sequence를 어떻게 정하는지 확인합니다. 마지막에는 merge, requantization과 serving artifact의 검증 경계를 다룹니다.
+          먼저 low-rank update의 shape와 capacity를 계산합니다. 그다음 QLoRA의 저장·연산·학습 precision을 분리하고, low-bit base 밖에 남는
+          activation·adapter state·workspace를 다시 더합니다. 여기까지가 이 글이 답하는 개념 경계입니다.
+        </p>
+        <p>
+          실제 chat template과 loss mask, 중단 복구, merge와 requantization 승인은
+          <a href="/cs/ai/lora-training-and-release"> LoRA 학습·배포 글</a>에서 이 개념의 정확한 anchor를 가져와 이어갑니다.
         </p>
         <p>
           어떤 adaptation 방법을 고를지는

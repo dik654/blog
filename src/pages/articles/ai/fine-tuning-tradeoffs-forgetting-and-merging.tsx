@@ -348,7 +348,7 @@ export default function FineTuningTradeoffsForgettingAndMergingArticle() {
           <p>
             LoRA adapter를 base weight에 합치는 것과 model merging은
             이름은 비슷하지만 다른 연산입니다.{" "}
-            <Link to="/cs/ai/lora-finetuning#practice">LoRA merge</Link>는
+            <Link to="/cs/ai/lora-training-and-release#practice">LoRA merge</Link>는
             하나의 adapter 분기를 같은 값을 유지한 채 행렬 곱의
             분배법칙으로 base에 흡수하는 동치 변환이고, model merging은
             여러 개의 서로 다른 fine-tuned 모델을 평균이나 벡터 합으로

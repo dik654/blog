@@ -26777,7 +26777,7 @@ export const ARTICLE_LEARNING: Readonly<
   },
   "ai/lora-finetuning": {
     coreIdea:
-      "LoRA는 base model을 압축하는 기법이 아니라 frozen base의 task-specific weight update를 low-rank adapter로 분리해 trainable state와 task artifact를 줄이는 adaptation 방법입니다. QLoRA는 그 base를 low-bit로 저장하되 compute와 adapter training precision을 분리하며, 실제 배포는 base–adapter 호환성과 unmerged·merged·requantized artifact를 각각 검증해야 완성됩니다.",
+      "LoRA는 frozen base의 weight update를 작은 low-rank A·B로 분리해 학습하는 PEFT 방법입니다. QLoRA는 base의 저장 정밀도와 계산·adapter 학습 정밀도를 분리합니다. 이 글은 한 linear layer의 입력이 base 경로와 adapter 경로를 지나 다시 합쳐지는 과정을 계산해, 줄어드는 상태와 그대로 남는 계산을 구분합니다.",
     assumedKnowledge: [
       {
         id: "matrix-multiplication",
@@ -26793,15 +26793,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         id: "trainable-scope-mask",
-        role: "Base·adapter·modules_to_save의 requires_grad와 optimizer 포함 여부를 검사합니다.",
-      },
-      {
-        id: "sft",
-        role: "Chat demonstration을 next-token behavior 학습 data로 사용합니다.",
-      },
-      {
-        id: "response-loss-mask",
-        role: "Assistant target token만 loss에 넣는 mask를 재사용합니다.",
+        role: "Base와 adapter의 requires_grad·optimizer 포함 여부를 구분합니다.",
       },
       {
         id: "affine-uniform-quantizer",
@@ -26811,15 +26803,15 @@ export const ARTICLE_LEARNING: Readonly<
         id: "bit-byte",
         role: "Base·metadata·adapter·activation·workspace memory를 byte로 계산합니다.",
       },
-      {
-        id: "train-validation-test",
-        role: "Rank·target·merge path 선택과 마지막 평가를 분리합니다.",
-      },
     ],
     introducedHere: [
       {
+        id: "full-fine-tuning-vs-peft",
+        role: "Full fine-tuning과 PEFT를 구분하고 LoRA의 위치를 고정합니다.",
+      },
+      {
         id: "lora-trainable-scope-contract",
-        role: "실제로 gradient·optimizer·checkpoint에 들어가는 base/adapter 경계를 고정합니다.",
+        role: "실제로 gradient·optimizer·checkpoint에 들어가는 base와 adapter 경계를 고정합니다.",
       },
       {
         id: "lora-low-rank-update",
@@ -26830,54 +26822,40 @@ export const ARTICLE_LEARNING: Readonly<
         role: "Module별 rank와 shape를 합산해 parameter와 update capacity를 배분합니다.",
       },
       {
+        id: "lora-adapter-hyperparameters",
+        role: "Rank·alpha·scaling·dropout이 각각 무엇을 바꾸는지 구분합니다.",
+      },
+      {
+        id: "fine-tuning-resource-budget",
+        role: "Trainable parameter가 줄어도 base forward와 activation 비용이 남는 이유를 분리합니다.",
+      },
+      {
         id: "qlora-precision-path",
-        role: "Base storage·dequant compute·adapter training dtype과 gradient 경로를 분리합니다.",
+        role: "Base storage·dequantized compute·adapter training dtype과 gradient 경로를 분리합니다.",
       },
       {
         id: "qlora-training-memory-ledger",
         role: "Low-bit base 외의 metadata·adapter state·activation·workspace까지 peak memory로 합산합니다.",
       },
-      {
-        id: "lora-token-loss-contract",
-        role: "Chat template token·loss mask·packing·truncation을 training/serving에서 일치시킵니다.",
-      },
-      {
-        id: "lora-merge-equivalence",
-        role: "Unmerged adapter와 merged linear weight의 algebraic 동치와 수치 조건을 검증합니다.",
-      },
-      {
-        id: "lora-requantization-boundary",
-        role: "Merge 뒤 low-bit 재양자화를 새 오차와 checksum을 가진 artifact로 분리합니다.",
-      },
+    ],
+    conceptExplanations: [
       {
         id: "full-fine-tuning-vs-peft",
-        role: "Full fine-tuning과 PEFT의 용어 구분을 먼저 세워 LoRA가 그 안에서 어디에 속하는지 고정합니다.",
+        sectionId: "overview",
+        intuition:
+          "교과서 전체를 다시 쓰는 것과, 교과서는 그대로 두고 정정 쪽지만 추가하는 것의 차이입니다.",
+        workedExample:
+          "7B base를 full fine-tuning하면 7B 전체가 optimizer 대상이지만 LoRA는 target module의 A·B만 optimizer에 넣습니다.",
+        boundary:
+          "PEFT라고 해서 base forward와 activation 비용까지 없어지는 것은 아니며, LoRA는 여러 PEFT 방법 중 하나입니다.",
       },
-      {
-        id: "lora-adapter-hyperparameters",
-        role: "Rank과 별개로 adapter delta 크기와 정규화를 정하는 alpha·scaling·dropout을 구분합니다.",
-      },
-      {
-        id: "fine-tuning-resource-budget",
-        role: "Trainable parameter ratio가 memory의 어느 항은 줄이고 compute budget은 왜 그대로 남기는지 분리합니다.",
-      },
-      {
-        id: "multi-lora-serving-and-adapter-switching",
-        role: "Merge 대신 여러 adapter를 하나의 base 위에서 동시에 서빙하고 요청마다 바꿔 끼우는 방법을 설명합니다.",
-      },
-      {
-        id: "training-checkpoint-resume-state",
-        role: "배포용 adapter 저장과 optimizer·scheduler·RNG·data cursor를 포함한 학습 재개 checkpoint를 구분합니다.",
-      },
-  ],
-    conceptExplanations: [
       {
         id: "lora-trainable-scope-contract",
         sectionId: "overview",
         intuition:
           "원본 교과서는 그대로 두고 task별 정정 쪽지만 작성하되, 채점기는 쪽지에만 수정 표시를 남깁니다.",
         workedExample:
-          "7B base는 frozen이고 target A/B 총 20M만 optimizer에 넣으면 gradient와 Adam state는 주로 20M에만 생성됩니다.",
+          "7B base는 frozen이고 target A·B 총 20M만 optimizer에 넣으면 gradient와 Adam state는 20M에만 생성됩니다.",
         boundary:
           "Activation·base forward·normalization buffer가 20M/7B 비율로 함께 줄지는 않습니다.",
       },
@@ -26889,7 +26867,7 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "4096×4096 W에서 r=8이면 A=8×4096, B=4096×8이고 BA의 rank는 최대 8입니다.",
         boundary:
-          "Task에 필요한 update가 low-rank라는 것은 보편 정리가 아니며 rank·target·data별 validation이 필요합니다.",
+          "Task에 필요한 update가 low-rank라는 것은 보편 정리가 아니며 rank·target·data별 검증이 필요합니다.",
       },
       {
         id: "lora-target-capacity-budget",
@@ -26899,7 +26877,27 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "4096×4096 한 module의 r=8 adapter는 65,536 parameter이며 target 32개면 shape별 값을 모두 합산합니다.",
         boundary:
-          "Model family마다 fused projection·module naming·weight orientation이 달라 문자열 target만 복사하면 잘못된 layer를 학습할 수 있습니다.",
+          "Model family마다 fused projection·module 이름·weight orientation이 달라 문자열 target을 그대로 복사하면 잘못된 layer를 학습할 수 있습니다.",
+      },
+      {
+        id: "lora-adapter-hyperparameters",
+        sectionId: "lora",
+        intuition:
+          "통로의 폭과 통로를 지난 신호의 크기, 통로에만 거는 잡음은 서로 다른 손잡이입니다.",
+        workedExample:
+          "r=16, alpha=16이면 alpha/r scaling은 1입니다. r만 32로 올리면 scaling은 0.5로 줄어듭니다.",
+        boundary:
+          "Scaling 공식은 구현에 따라 다르며 dropout은 추론과 merge 시점에 꺼야 합니다.",
+      },
+      {
+        id: "fine-tuning-resource-budget",
+        sectionId: "lora",
+        intuition:
+          "수정할 답안 수는 줄어도 전체 교과서를 읽는 비용은 그대로 남습니다.",
+        workedExample:
+          "예시에서 20M adapter는 7B의 약 0.29%이지만 base forward와 activation은 전체 model을 통과합니다.",
+        boundary:
+          "Trainable parameter 비율을 학습 시간이나 전체 memory 감소율로 그대로 해석할 수 없습니다.",
       },
       {
         id: "qlora-precision-path",
@@ -26907,7 +26905,7 @@ export const ARTICLE_LEARNING: Readonly<
         intuition:
           "책은 압축 보관하지만 읽을 때 펼쳐 보고, 정정 쪽지는 별도의 선명한 종이에 씁니다.",
         workedExample:
-          "NF4 code/scale은 frozen이고 matmul은 bf16 compute path, A/B와 gradient·optimizer는 training dtype을 사용합니다.",
+          "NF4 code와 scale은 frozen이고 matmul은 bf16 compute path, A·B와 optimizer는 학습 dtype을 사용합니다.",
         boundary:
           "‘4-bit training’이 모든 연산·gradient·optimizer가 4-bit라는 뜻은 아닙니다.",
       },
@@ -26919,97 +26917,14 @@ export const ARTICLE_LEARNING: Readonly<
         workedExample:
           "Base payload가 12GB에서 3GB로 줄어도 activation 8GB·adapter state 1GB·workspace 2GB가 남으면 전체 peak는 4배 줄지 않습니다.",
         boundary:
-          "1차 byte ledger는 fragmentation·offload·communication·temporary kernel peak를 profile로 보완해야 합니다.",
+          "1차 byte 장부는 fragmentation·offload·communication·temporary kernel peak를 실제 profile로 보완해야 합니다.",
       },
-      {
-        id: "lora-token-loss-contract",
-        sectionId: "data",
-        intuition:
-          "질문은 읽되 답안 부분만 채점하는 시험지처럼 token별 mask를 둡니다.",
-        workedExample:
-          "100 token 중 assistant target 30개만 m=1이면 loss는 30개 NLL의 평균입니다.",
-        boundary:
-          "Multi-turn·tool token·packing·truncation에서 shifted label과 mask가 어긋나면 prompt나 padding을 잘못 학습합니다.",
-      },
-      {
-        id: "lora-merge-equivalence",
-        sectionId: "practice",
-        intuition:
-          "두 linear branch를 매번 더하는 대신 계수를 미리 더해 한 branch로 실행합니다.",
-        workedExample:
-          "같은 dtype에서 W+sBA를 materialize하면 임의 x에 대해 Wx+sBAx와 logit이 tolerance 안에서 일치해야 합니다.",
-        boundary:
-          "Dropout·bias·dtype·operator·base revision이 다르거나 nonlinear adapter라면 단순 merge 동치가 성립하지 않습니다.",
-        proofIdea: "행렬 곱의 분배법칙으로 (W+sBA)x=Wx+sBAx를 바로 전개합니다.",
-        counterexample:
-          "Adapter branch 사이에 input-dependent gate나 activation 함수가 있으면 일반적으로 weight 하나에 선형 merge할 수 없습니다.",
-      },
-      {
-        id: "lora-requantization-boundary",
-        sectionId: "practice",
-        intuition:
-          "반올림한 수에 값을 더하는 것과 먼저 더한 뒤 반올림하는 결과는 보통 다릅니다.",
-        workedExample:
-          "정수 step 1에서 D(q)=1, delta=.6이면 Q(1+.6)=2지만 q+Q(.6)=1+1=2일 수 있고 delta=.4에서는 1 vs 1처럼 우연히 같아도 모든 값에서 선형성은 없습니다.",
-        boundary:
-          "Quantizer grouping·scale 재추정·clipping에 따라 오차가 달라져 merged-requantized artifact를 task metric과 kernel에서 다시 승인해야 합니다.",
-      },
-      {
-        id: "full-fine-tuning-vs-peft",
-        sectionId: "overview",
-        intuition:
-          "교과서 전체를 다시 쓰는 것과, 교과서는 그대로 두고 정정 쪽지만 추가하는 것의 차이입니다.",
-        workedExample:
-          "7B base를 full fine-tuning하면 7B 전체가 optimizer 대상이지만, PEFT인 LoRA는 target module의 A/B만 optimizer에 넣습니다.",
-        boundary:
-          "PEFT라고 해서 base forward·activation 비용까지 없어지는 것은 아니며, LoRA는 여러 PEFT 방법 중 하나일 뿐입니다.",
-      },
-      {
-        id: "lora-adapter-hyperparameters",
-        sectionId: "lora",
-        intuition:
-          "통로의 폭(rank)과, 그 통로를 지난 신호를 얼마나 키울지(alpha/scaling), 통로 안에서만 거는 잡음(dropout)은 서로 다른 손잡이입니다.",
-        workedExample:
-          "r=16, alpha=16이면 s=alpha/r=1입니다. r만 32로 올리고 alpha를 그대로 두면 s는 0.5로 줄어 delta가 작아집니다.",
-        boundary:
-          "s를 계산하는 공식은 구현마다 다르고(alpha/r, alpha/sqrt(r) 등), dropout은 inference·merge 시점에 꺼야 merge 동치가 유지됩니다.",
-      },
-      {
-        id: "fine-tuning-resource-budget",
-        sectionId: "lora",
-        intuition:
-          "trainable parameter ratio가 줄어드는 것은 채점해야 할 답안 수가 줄어드는 것이고, base forward 비용은 전체 학생 수만큼 여전히 남는 것과 같습니다.",
-        workedExample:
-          "target-module 예시에서 r=8이면 adapter parameter는 약 20M으로 7B 대비 ratio는 약 0.29%, r=16이면 약 0.57%입니다. Hu 등은 GPT-3 175B·rank 4에서 trainable parameter를 약 10,000배, GPU memory를 약 3배 줄였다고 보고했습니다.",
-        boundary:
-          "Compute budget(GPU-시간)은 forward/backward가 통과하는 전체 model parameter 수가 지배하므로 trainable ratio만큼 줄지 않습니다.",
-      },
-      {
-        id: "multi-lora-serving-and-adapter-switching",
-        sectionId: "practice",
-        intuition:
-          "책 한 권은 그대로 두고, 독자마다 다른 색의 부록 쪽지를 끼워 넣어 같은 책으로 여러 사람을 동시에 응대하는 것과 같습니다.",
-        workedExample:
-          "batch 안 요청마다 다른 adapter_id가 있어도 frozen base matmul은 한 번만 계산하고, 각 요청은 자신의 A·B로만 delta를 더합니다.",
-        boundary:
-          "서로 다른 rank·target module을 가진 adapter를 하나의 batched kernel로 묶는 구현과 adapter 상주·교체 정책이 없으면 이 방식은 성립하지 않습니다.",
-      },
-      {
-        id: "training-checkpoint-resume-state",
-        sectionId: "checkpoint-resume",
-        intuition:
-          "교재만 저장하면 읽던 페이지는 남지만, 채점표·진도표·섞어 둔 문제 순서는 사라지는 것과 같습니다.",
-        workedExample:
-          "Step 1,800 checkpoint가 adapter와 함께 optimizer·scheduler·RNG·sampler cursor를 복구하면 1,801번째 update부터 이어 가지만, adapter만 불러오면 새 학습 attempt입니다.",
-        boundary:
-          "Model 또는 adapter weight가 같아도 optimizer moment·learning rate·data order가 다르면 중단 전 학습의 정확한 재개라고 부를 수 없습니다.",
-      },
-  ],
+    ],
     conceptStages: [
       {
-        label: "Adaptation boundary",
+        label: "학습 경계",
         relation:
-          "Full fine-tuning과 PEFT를 구분하고, base를 고정하고 adapter·선택 module만 optimizer/checkpoint 대상으로 분리",
+          "Full fine-tuning과 PEFT를 구분하고 base와 adapter 가운데 실제로 갱신되는 상태를 표시합니다.",
         concepts: [
           "full-fine-tuning-vs-peft",
           "trainable-scope-mask",
@@ -27017,9 +26932,9 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Low-rank capacity",
+        label: "저랭크 경로",
         relation:
-          "Matrix shape·rank에서 module별 parameter와 update 자유도를 계산하고, alpha·scaling·dropout으로 delta 크기와 정규화를 조절",
+          "입력이 A와 B를 지나 base와 같은 shape의 delta가 되는 과정을 계산합니다.",
         concepts: [
           "matrix-multiplication",
           "matrix-rank",
@@ -27031,9 +26946,9 @@ export const ARTICLE_LEARNING: Readonly<
         ],
       },
       {
-        label: "Quantized training path",
+        label: "양자화 경로",
         relation:
-          "Base storage·compute·adapter precision을 memory ledger와 연결",
+          "Base 저장 정밀도와 계산·adapter 학습 정밀도를 나누고 peak memory를 다시 합산합니다.",
         concepts: [
           "affine-uniform-quantizer",
           "qlora-precision-path",
@@ -27041,284 +26956,288 @@ export const ARTICLE_LEARNING: Readonly<
           "qlora-training-memory-ledger",
         ],
       },
-      {
-        label: "Token supervision",
-        relation:
-          "Base chat template의 serialized token에서 assistant target loss를 고정",
-        concepts: ["sft", "response-loss-mask", "lora-token-loss-contract"],
-      },
-      {
-        label: "Resume and promotion",
-        relation:
-          "학습을 이어 갈 mutable state와 배포할 immutable adapter artifact를 분리하고 각각의 검증 기록을 남김",
-        concepts: [
-          "training-checkpoint-resume-state",
-          "lora-trainable-scope-contract",
-          "train-validation-test",
-        ],
-      },
-      {
-        label: "Serving artifact",
-        relation:
-          "Unmerged/merged 동치와 merge-requantization의 새 오차·benchmark 경계를 분리하고, 여러 adapter를 동시에 서빙·교체하는 경로까지 확장",
-        concepts: [
-          "lora-merge-equivalence",
-          "lora-requantization-boundary",
-          "multi-lora-serving-and-adapter-switching",
-          "train-validation-test",
-        ],
-      },
     ],
     exercises: [
       {
         level: "basic",
-        question:
-          "Full fine-tuning과 LoRA에서 base·A/B·classifier head의 requires_grad·optimizer·checkpoint 포함 여부를 표로 작성하라.",
-        answerChecklist: [
-          "full base trainable",
-          "LoRA base frozen",
-          "A/B trainable",
-          "modules_to_save explicit",
-          "optimizer only trainable",
-          "checkpoint metadata/base hash",
-        ],
-        requiredConcepts: [
-          "lora-trainable-scope-contract",
-          "trainable-scope-mask",
-        ],
+        question: "Full fine-tuning과 LoRA에서 base와 A·B의 requires_grad·optimizer·checkpoint 포함 여부를 표로 작성하세요.",
+        answerChecklist: ["full base trainable", "LoRA base frozen", "A/B trainable", "optimizer only trainable", "base revision required"],
+        requiredConcepts: ["full-fine-tuning-vs-peft", "lora-trainable-scope-contract"],
         sectionId: "overview",
       },
       {
         level: "basic",
-        question:
-          "din=dout=4096,r=8인 한 LoRA module의 A/B shape와 parameter 수, full matrix 대비 비율, update rank 상한을 계산하라.",
-        answerChecklist: [
-          "A 8x4096",
-          "B 4096x8",
-          "65536",
-          "16777216 full",
-          "about .39%",
-          "rank at most 8",
-        ],
-        requiredConcepts: [
-          "lora-low-rank-update",
-          "matrix-multiplication",
-          "matrix-rank",
-        ],
-        sectionId: "lora",
-      },
-      {
-        level: "advanced",
-        question:
-          "Attention q/v만 r=16인 후보와 q/k/v/o+MLP에 r=8인 후보의 module shape별 trainable parameter·peak·step·quality 비교 계약을 설계하라.",
-        answerChecklist: [
-          "actual module paths",
-          "shape sum r(din+dout)",
-          "fused layout",
-          "alpha/dropout/init fixed",
-          "same data/update",
-          "seed variance",
-          "peak/step",
-          "target/general metric",
-        ],
-        requiredConcepts: [
-          "lora-target-capacity-budget",
-          "lora-low-rank-update",
-          "train-validation-test",
-        ],
+        question: "din=dout=4096, r=8인 LoRA module의 A·B shape와 parameter 수, update rank 상한을 계산하세요.",
+        answerChecklist: ["A 8×4096", "B 4096×8", "65,536", "rank at most 8"],
+        requiredConcepts: ["lora-low-rank-update", "matrix-multiplication", "matrix-rank"],
         sectionId: "lora",
       },
       {
         level: "basic",
-        question:
-          "QLoRA layer에서 ① 4-bit base code·scale, ② bf16으로 복원된 연산값, ③ LoRA A/B, ④ optimizer state를 ‘저장·임시 연산·학습’으로 분류하고, gradient가 받은 자와 안 받은 자를 표시하라.",
-        answerChecklist: [
-          "code and scale are stored and frozen",
-          "bf16 value is temporary compute",
-          "A/B are trainable",
-          "gradient reaches A/B through base operation",
-          "no base gradient",
-          "optimizer state belongs to adapter",
-        ],
-        requiredConcepts: [
-          "qlora-precision-path",
-          "affine-uniform-quantizer",
-          "lora-trainable-scope-contract",
-        ],
+        question: "r=16, alpha=16과 r=32, alpha=16의 alpha/r scaling을 각각 계산하세요.",
+        answerChecklist: ["1", "0.5", "rank and scaling separated", "implementation formula checked"],
+        requiredConcepts: ["lora-adapter-hyperparameters"],
+        sectionId: "lora",
+      },
+      {
+        level: "basic",
+        question: "Module 두 개의 input·output shape와 rank가 주어졌을 때 전체 adapter parameter를 계산하는 식을 쓰세요.",
+        answerChecklist: ["r(din+dout)", "sum over modules", "actual target paths", "fused projection checked"],
+        requiredConcepts: ["lora-target-capacity-budget"],
+        sectionId: "lora",
+      },
+      {
+        level: "basic",
+        question: "QLoRA의 base code·dequantized value·A/B·optimizer state를 저장·임시 연산·학습 상태로 분류하세요.",
+        answerChecklist: ["code and scale frozen", "dequantized compute temporary", "A/B trainable", "optimizer for adapter", "no base gradient"],
+        requiredConcepts: ["qlora-precision-path", "affine-uniform-quantizer"],
         sectionId: "qlora",
       },
       {
         level: "basic",
-        question:
-          "Base payload 3GB, qmeta .4GB, adapter .1GB, gradient .1GB, optimizer .8GB, activation 8GB, workspace 2GB일 때 ledger 합을 구하고 가장 큰 최적화 후보를 고르라.",
-        answerChecklist: [
-          "14.4GB",
-          "activation 8GB largest",
-          "base bit alone insufficient",
-          "checkpointing/sequence/batch candidate",
-          "profile actual peak",
-        ],
+        question: "Base 3GB, metadata 0.4GB, adapter state 1GB, activation 8GB, workspace 2GB인 peak 장부를 합산하세요.",
+        answerChecklist: ["14.4GB", "activation largest", "base bits alone insufficient", "actual peak profile"],
         requiredConcepts: ["qlora-training-memory-ledger", "bit-byte"],
         sectionId: "qlora",
       },
       {
         level: "advanced",
-        question:
-          "Full-precision LoRA와 QLoRA의 quality·memory·step time paired experiment에서 quantized-base effect를 분리하는 계약을 설계하라.",
-        answerChecklist: [
-          "same base/data/split",
-          "same rank/target/alpha",
-          "same optimizer/update",
-          "storage/compute dtype logged",
-          "peak breakdown",
-          "target/general/safety slices",
-          "seed",
-          "untouched test",
-        ],
-        requiredConcepts: [
-          "qlora-precision-path",
-          "qlora-training-memory-ledger",
-          "train-validation-test",
-        ],
+        question: "q/v에 r=16을 쓰는 후보와 q/k/v/o+MLP에 r=8을 쓰는 후보의 capacity와 품질을 비교하는 실험을 설계하세요.",
+        answerChecklist: ["actual module paths", "shape sum", "same data and updates", "alpha and dropout fixed", "seed variance", "target and general metrics"],
+        requiredConcepts: ["lora-target-capacity-budget", "lora-adapter-hyperparameters"],
+        sectionId: "lora",
+      },
+      {
+        level: "advanced",
+        question: "Trainable parameter가 0.3%일 때도 전체 step 시간이 0.3%가 되지 않는 이유를 연산 경로로 설명하세요.",
+        answerChecklist: ["full base forward", "activation", "adapter backward", "kernel and data cost", "measure step time"],
+        requiredConcepts: ["fine-tuning-resource-budget", "lora-trainable-scope-contract"],
+        sectionId: "lora",
+      },
+      {
+        level: "advanced",
+        question: "Full-precision LoRA와 QLoRA에서 quantized-base 효과만 분리하는 paired experiment를 설계하세요.",
+        answerChecklist: ["same base revision", "same data and split", "same rank target alpha", "dtype logged", "peak breakdown", "quality and step time"],
+        requiredConcepts: ["qlora-precision-path", "qlora-training-memory-ledger"],
         sectionId: "qlora",
       },
       {
-        level: "basic",
-        question:
-          "100-token sequence에서 assistant target 30개만 학습할 때 loss 분모와 prompt/padding mask를 설명하라.",
-        answerChecklist: [
-          "sum mask 30",
-          "assistant 1",
-          "prompt 0",
-          "padding 0",
-          "shift alignment",
-          "mean over valid targets",
-        ],
-        requiredConcepts: ["lora-token-loss-contract", "response-loss-mask"],
-        sectionId: "data",
-      },
-      {
         level: "advanced",
-        question:
-          "System/user/assistant/tool multi-turn data의 chat template·special token·packing·truncation·license·contamination receipt를 설계하라.",
-        answerChecklist: [
-          "base tokenizer/template",
-          "no duplicate special tokens",
-          "role boundaries",
-          "tool/result policy",
-          "loss mask",
-          "example isolation",
-          "answer retention",
-          "source/license/PII",
-          "dedup/test decontamination",
-          "formatted sample audit",
-        ],
-        requiredConcepts: ["lora-token-loss-contract", "train-validation-test"],
-        sectionId: "data",
-      },
-      {
-        level: "basic",
-        question:
-          "행렬 분배법칙으로 unmerged와 merged LoRA output 동치를 보이고 parity test의 tolerance 항목을 작성하라.",
-        answerChecklist: [
-          "Wx+sBAx",
-          "(W+sBA)x",
-          "same x",
-          "dropout off",
-          "same bias/dtype/operator",
-          "max/relative logit error",
-          "task metric",
-        ],
-        requiredConcepts: ["lora-merge-equivalence", "matrix-multiplication"],
-        sectionId: "practice",
-      },
-      {
-        level: "advanced",
-        question:
-          "QLoRA checkpoint에서 학습 재개 state와 unmerged·merged bf16·merged-requantized 배포 artifact의 lineage와 quality/memory/p95 승인표를 설계하라.",
-        answerChecklist: [
-          "optimizer/scheduler/RNG/data cursor",
-          "base/adapter hashes",
-          "merge dtype",
-          "requant method/group/scale",
-          "new checksums",
-          "parity before requant",
-          "target/general/safety quality",
-          "resident memory",
-          "latency/kernel",
-          "rollback",
-          "dynamic adapter tradeoff",
-        ],
-        requiredConcepts: [
-          "training-checkpoint-resume-state",
-          "lora-merge-equivalence",
-          "lora-requantization-boundary",
-          "qlora-precision-path",
-        ],
-        sectionId: "practice",
+        question: "다른 model family의 target_modules 설정을 그대로 복사했을 때 생길 수 있는 실패와 탐지 방법을 설계하세요.",
+        answerChecklist: ["module path mismatch", "fused layout", "trainable name dump", "shape check", "gradient nonzero", "fail closed"],
+        requiredConcepts: ["lora-target-capacity-budget", "lora-trainable-scope-contract"],
+        sectionId: "lora",
       },
     ],
     papers: [
       {
         title: "LoRA: Low-Rank Adaptation of Large Language Models",
         href: "https://arxiv.org/abs/2106.09685",
-        problem:
-          "대규모 pretrained model을 task마다 full fine-tuning하고 full checkpoint로 배포하는 parameter·memory·storage 비용",
-        contribution:
-          "Base weight를 frozen으로 두고 Transformer layer의 update를 trainable low-rank decomposition matrix로 parameterize",
-        assumptions:
-          "RoBERTa·DeBERTa·GPT-2·GPT-3·논문의 target modules/ranks/optimizers/tasks와 evaluation protocol",
-        evidenceScope:
-          "LoRA 논문의 trainable parameter·GPU memory·throughput·quality 및 rank-deficiency 분석 범위",
-        notClaim:
-          "모든 model·task에서 작은 rank가 full fine-tuning과 동등하거나 LoRA가 base inference compute를 제거한다는 뜻은 아님",
+        problem: "대규모 pretrained model을 task마다 full fine-tuning하고 전체 checkpoint로 배포하는 비용",
+        contribution: "Base weight를 frozen으로 두고 Transformer layer의 update를 trainable low-rank matrix로 parameterize",
+        assumptions: "논문의 model·target module·rank·optimizer·task와 평가 조건",
+        evidenceScope: "논문이 보고한 trainable parameter·GPU memory·throughput·quality와 rank 분석 범위",
+        notClaim: "모든 model과 task에서 작은 rank가 full fine-tuning과 동등하다는 뜻은 아님",
         sectionId: "reading-lora",
       },
       {
         title: "QLoRA: Efficient Finetuning of Quantized LLMs",
         href: "https://arxiv.org/abs/2305.14314",
-        problem:
-          "Large language model full-precision fine-tuning의 base-weight memory와 transient memory spike를 줄이는 문제",
-        contribution:
-          "Frozen 4-bit base를 통해 LoRA로 gradient를 전달하고 NF4·double quantization·paged optimizer를 결합",
-        assumptions:
-          "LLaMA/T5·논문의 quantization/kernel/optimizer·instruction datasets·Guanaco training와 human/GPT-4 evaluation",
-        evidenceScope:
-          "QLoRA 논문의 1,000+ fine-tuning experiments와 65B single-48GB result 범위",
-        notClaim:
-          "모든 hardware·task에서 full 16-bit fine-tuning 성능이 보존되거나 모든 training state가 4-bit라는 뜻은 아님",
+        problem: "Base-weight memory와 학습 중 일시적인 memory spike를 줄이는 문제",
+        contribution: "Frozen 4-bit base를 통해 LoRA로 gradient를 전달하고 NF4·double quantization·paged optimizer를 결합",
+        assumptions: "논문의 model·quantization·optimizer·dataset·평가 조건",
+        evidenceScope: "논문의 1,000회 이상 fine-tuning 실험과 65B single-48GB 결과 범위",
+        notClaim: "모든 hardware와 task에서 full 16-bit 학습 성능이 보존되거나 모든 상태가 4-bit라는 뜻은 아님",
         sectionId: "reading-qlora",
       },
+    ],
+  },
+  "ai/lora-training-and-release": {
+    coreIdea:
+      "LoRA 학습을 운영하려면 어떤 token을 학습했는지, 중단 지점에서 어떤 mutable state를 복구했는지, 어떤 base와 adapter를 어떤 변환으로 serving artifact로 승격했는지를 하나의 계보로 남겨야 합니다. 이 글은 데이터 직렬화부터 checkpoint 재개와 merge·requantization 승인까지 실제 상태 전이를 추적합니다.",
+    assumedKnowledge: [
       {
-        title: "Hugging Face PEFT — LoRA",
-        href: "https://huggingface.co/docs/peft/main/package_reference/lora",
-        problem:
-          "여러 model architecture에 LoRA adapter를 주입·설정·초기화·저장·merge하는 현재 library interface 제공",
-        contribution:
-          "LoraConfig의 rank·alpha·target_modules·dropout·bias·modules_to_save·initialization과 관련 API 문서",
-        assumptions:
-          "설치한 PEFT version·지원 model mapping·checkpoint format·backend와 해당 문서 revision",
-        evidenceScope: "Hugging Face PEFT 공식 LoRA API/reference 범위",
-        notClaim:
-          "Main branch default가 모든 stable release에서 같거나 특정 config가 품질 최적이라는 뜻은 아님",
+        id: "matrix-multiplication",
+        role: "Merge 전후 식을 행렬 곱의 분배법칙으로 검산합니다.",
+      },
+      {
+        id: "lora-trainable-scope-contract",
+        role: "Base는 frozen이고 adapter만 갱신된다는 학습 상태 경계를 가져옵니다.",
+      },
+      {
+        id: "qlora-precision-path",
+        role: "Quantized base와 higher-precision adapter를 구분합니다.",
+      },
+      {
+        id: "response-loss-mask",
+        role: "Assistant target token만 loss에 넣는 원리를 가져옵니다.",
+      },
+      {
+        id: "train-validation-test",
+        role: "설정 선택과 최종 평가에 서로 다른 분할을 사용합니다.",
+      },
+    ],
+    introducedHere: [
+      {
+        id: "lora-token-loss-contract",
+        role: "Chat template·loss mask·packing·truncation을 training과 serving에서 일치시킵니다.",
+      },
+      {
+        id: "training-checkpoint-resume-state",
+        role: "Adapter 저장과 optimizer·scheduler·RNG·data cursor를 포함한 재개 checkpoint를 구분합니다.",
+      },
+      {
+        id: "lora-merge-equivalence",
+        role: "Unmerged adapter와 merged weight의 대수적 동치와 수치 조건을 검증합니다.",
+      },
+      {
+        id: "lora-requantization-boundary",
+        role: "Merge 뒤 low-bit 재양자화를 새 오차와 checksum을 가진 artifact로 분리합니다.",
+      },
+    ],
+    conceptExplanations: [
+      {
+        id: "lora-token-loss-contract",
+        sectionId: "data",
+        intuition: "질문은 읽되 답안 부분만 채점하는 시험지처럼 token별 mask를 둡니다.",
+        workedExample: "100 token 가운데 assistant target 30개만 m=1이면 loss는 30개 NLL의 평균입니다.",
+        boundary: "Multi-turn·tool token·packing·truncation에서 shifted label과 mask가 어긋나면 잘못된 token을 학습합니다.",
+      },
+      {
+        id: "training-checkpoint-resume-state",
+        sectionId: "checkpoint-resume",
+        intuition: "교재뿐 아니라 채점표·진도표·섞어 둔 문제 순서까지 저장해야 같은 학습을 이어 갈 수 있습니다.",
+        workedExample: "Step 1,800에서 adapter·optimizer·scheduler·RNG·sampler cursor를 복구하면 1,801번째 update부터 이어 갑니다.",
+        boundary: "Adapter weight만 같아도 optimizer moment·learning rate·data order가 다르면 새 학습 attempt입니다.",
+      },
+      {
+        id: "lora-merge-equivalence",
+        sectionId: "practice",
+        intuition: "두 linear branch를 매번 더하는 대신 weight를 미리 더해 한 branch로 실행합니다.",
+        workedExample: "같은 dtype에서 W+sBA를 materialize하면 Wx+sBAx와 logit이 tolerance 안에서 일치해야 합니다.",
+        boundary: "Dropout·bias·dtype·operator·base revision이 다르거나 nonlinear adapter라면 단순 merge 동치가 성립하지 않습니다.",
+        proofIdea: "행렬 곱의 분배법칙으로 (W+sBA)x=Wx+sBAx를 전개합니다.",
+        counterexample: "Adapter branch 사이에 input-dependent gate나 activation이 있으면 weight 하나로 merge할 수 없습니다.",
+      },
+      {
+        id: "lora-requantization-boundary",
+        sectionId: "practice",
+        intuition: "값을 더한 뒤 반올림하는 것과 반올림한 값을 더하는 결과는 일반적으로 다릅니다.",
+        workedExample: "Dequantize한 base에 delta를 더하고 다시 quantize하면 기존 code와 다른 scale·rounding error를 가진 artifact가 됩니다.",
+        boundary: "Quantizer grouping·scale 재추정·clipping이 달라지면 quality와 kernel을 다시 승인해야 합니다.",
+      },
+    ],
+    conceptStages: [
+      {
+        label: "학습 입력",
+        relation: "Base tokenizer와 chat template으로 만든 token 가운데 실제 loss 대상 위치를 고정합니다.",
+        concepts: ["response-loss-mask", "lora-token-loss-contract"],
+      },
+      {
+        label: "중단 복구",
+        relation: "Weight 저장과 다음 update를 이어 가는 mutable state를 구분합니다.",
+        concepts: ["lora-trainable-scope-contract", "training-checkpoint-resume-state"],
+      },
+      {
+        label: "배포 승격",
+        relation: "Unmerged·merged·requantized 산출물을 서로 다른 checksum과 승인 결과로 남깁니다.",
+        concepts: ["matrix-multiplication", "lora-merge-equivalence", "lora-requantization-boundary", "train-validation-test"],
+      },
+    ],
+    exercises: [
+      {
+        level: "basic",
+        question: "100-token sequence에서 assistant target 30개만 학습할 때 loss 분모와 prompt·padding mask를 설명하세요.",
+        answerChecklist: ["mask sum 30", "assistant 1", "prompt 0", "padding 0", "shift alignment"],
+        requiredConcepts: ["lora-token-loss-contract", "response-loss-mask"],
+        sectionId: "data",
+      },
+      {
+        level: "basic",
+        question: "Adapter 저장물과 학습 재개 checkpoint가 각각 반드시 가져야 할 상태를 구분하세요.",
+        answerChecklist: ["adapter weights and config", "base revision", "optimizer", "scheduler", "RNG", "data cursor"],
+        requiredConcepts: ["training-checkpoint-resume-state"],
+        sectionId: "checkpoint-resume",
+      },
+      {
+        level: "basic",
+        question: "Step 1,800에서 재개한 직후 같은 run인지 판독할 네 가지 값을 쓰세요.",
+        answerChecklist: ["global step 1801", "learning rate continuity", "sampler cursor", "checkpoint digest"],
+        requiredConcepts: ["training-checkpoint-resume-state"],
+        sectionId: "checkpoint-resume",
+      },
+      {
+        level: "basic",
+        question: "행렬 분배법칙으로 unmerged와 merged LoRA output의 동치를 보이세요.",
+        answerChecklist: ["Wx+sBAx", "(W+sBA)x", "same input", "dropout off", "same dtype"],
+        requiredConcepts: ["lora-merge-equivalence", "matrix-multiplication"],
+        sectionId: "practice",
+      },
+      {
+        level: "basic",
+        question: "Merge parity test에서 기록할 수치와 실행 조건을 쓰세요.",
+        answerChecklist: ["max logit error", "relative error", "task metric", "base hash", "dtype and operator"],
+        requiredConcepts: ["lora-merge-equivalence"],
+        sectionId: "practice",
+      },
+      {
+        level: "basic",
+        question: "Merged bf16 산출물을 4-bit로 다시 저장할 때 새 artifact로 취급해야 하는 이유를 설명하세요.",
+        answerChecklist: ["rounding", "clipping", "new scale", "new checksum", "quality retest"],
+        requiredConcepts: ["lora-requantization-boundary", "qlora-precision-path"],
+        sectionId: "practice",
+      },
+      {
+        level: "advanced",
+        question: "Multi-turn·tool 호출이 포함된 학습 예제의 template·packing·truncation 검증표를 설계하세요.",
+        answerChecklist: ["tokenizer revision", "role boundaries", "special tokens", "loss mask", "example isolation", "answer retention"],
+        requiredConcepts: ["lora-token-loss-contract"],
+        sectionId: "data",
+      },
+      {
+        level: "advanced",
+        question: "Worker 종료 뒤 adapter weight만 복구한 실행과 완전 checkpoint를 복구한 실행을 구분하는 실험을 설계하세요.",
+        answerChecklist: ["same checkpoint point", "optimizer moment", "learning rate", "RNG", "data cursor", "first update comparison"],
+        requiredConcepts: ["training-checkpoint-resume-state"],
+        sectionId: "checkpoint-resume",
+      },
+      {
+        level: "advanced",
+        question: "Unmerged·merged bf16·merged-requantized 세 산출물의 lineage와 승인표를 설계하세요.",
+        answerChecklist: ["base and adapter hashes", "merge dtype", "quantizer config", "new checksums", "parity", "quality", "latency", "rollback"],
+        requiredConcepts: ["lora-merge-equivalence", "lora-requantization-boundary"],
+        sectionId: "practice",
+      },
+      {
+        level: "advanced",
+        question: "배포 후보가 task metric은 통과했지만 merge parity가 실패했을 때의 격리·복구·재승격 절차를 설계하세요.",
+        answerChecklist: ["fail closed", "retain unmerged artifact", "compare base and dtype", "reproduce transform", "rollback", "new candidate id"],
+        requiredConcepts: ["lora-merge-equivalence", "training-checkpoint-resume-state"],
+        sectionId: "practice",
+      },
+    ],
+    papers: [
+      {
+        title: "Hugging Face Transformers — Resume training from a checkpoint",
+        href: "https://huggingface.co/docs/transformers/trainer_recipes#resume-training-from-a-checkpoint",
+        problem: "중단된 Trainer 실행을 checkpoint 상태에서 다시 시작하는 문제",
+        contribution: "Model·optimizer·scheduler·RNG 상태를 복원하는 공식 재개 경로와 model-only checkpoint의 경계를 설명",
+        assumptions: "설치한 Transformers version과 Trainer checkpoint format",
+        evidenceScope: "공식 Trainer 재개 API와 문서가 명시한 복원 상태 범위",
+        notClaim: "호출 성공만으로 data cursor와 외부 dataset revision까지 자동 검증된다는 뜻은 아님",
+        sectionId: "checkpoint-resume",
+      },
+      {
+        title: "Hugging Face PEFT — Checkpoint format",
+        href: "https://huggingface.co/docs/peft/main/developer_guides/checkpoint",
+        problem: "PEFT adapter를 base model과 분리해 저장하고 다시 읽는 문제",
+        contribution: "Adapter weight와 설정 형식, 원본 base model이 별도로 필요하다는 경계를 설명",
+        assumptions: "설치한 PEFT version·지원 model·checkpoint format",
+        evidenceScope: "PEFT 공식 adapter checkpoint 형식 범위",
+        notClaim: "Adapter 저장물이 optimizer·scheduler·RNG를 포함한 완전한 training checkpoint라는 뜻은 아님",
         sectionId: "standard-peft-lora",
       },
-      {
-        title: "S-LoRA: Serving Thousands of Concurrent LoRA Adapters",
-        href: "https://arxiv.org/abs/2311.03285",
-        problem:
-          "하나의 base model 위에서 수천 개의 LoRA adapter를 동시에 서빙할 때 adapter 메모리 관리와 batched 연산 효율을 높이는 문제",
-        contribution:
-          "Adapter A·B를 unified paging으로 관리하고, 서로 다른 adapter를 가진 요청을 하나의 batched GEMM kernel로 처리하는 서빙 시스템",
-        assumptions:
-          "논문의 base model·adapter rank·수·GPU 구성과 benchmark workload 범위",
-        evidenceScope:
-          "S-LoRA 논문이 자기보고한 동시 서빙 adapter 수 증가(수 자릿수)와 최대 4배 throughput 개선 범위",
-        notClaim:
-          "모든 base model·batch 구성·hardware에서 같은 배율의 throughput·adapter 수 증가를 보장한다는 뜻은 아님",
-        sectionId: "reading-s-lora",
-      },
-  ],
+    ],
   },
   "ai/multi-agent-implementation": {
     coreIdea:
@@ -158638,7 +158557,6 @@ export const ARTICLE_LEARNING: Readonly<
     coreIdea:
       "한 base 위에 고객별 adapter를 섞어 서빙하려면 adapter별 구간을 만들어 곱하는 kernel, 실제 rank만큼 자리를 잡는 메모리, GPU 슬롯과 CPU 보관을 나눈 적재·입장 규칙이 필요합니다. 입력 앞에 가상 token을 붙이는 soft prompt는 이 셋을 덜지만 요청마다 KV와 문맥을 쓰고, 두 방식 모두 prefix cache key에 adapter의 정체가 들어가야 합니다.",
     assumedKnowledge: [
-      { id: "multi-lora-serving-and-adapter-switching", role: "base 한 벌 위에 unmerged A·B를 함께 실행한다는 출발점을 그대로 가져옵니다." },
       { id: "lora-low-rank-update", role: "W 옆에 rank r의 A·B를 더한다는 구조로 adapter 크기와 shrink·expand를 셉니다." },
       { id: "per-token-kv-byte", role: "token당 KV 128 KiB를 page 환산과 soft prompt 비용에 씁니다." },
       { id: "iteration-level-continuous-batching", role: "step마다 batch가 바뀐다는 전제에서 구간 표와 입장 확인이 매 step 일어납니다." },
@@ -158647,6 +158565,7 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "chained-prefix-block-hash", role: "block hash의 extra key에 adapter 정체를 넣는 조건을 설명합니다." },
     ],
     introducedHere: [
+      { id: "multi-lora-serving-and-adapter-switching", role: "하나의 frozen base를 공유하면서 요청마다 다른 unmerged A·B를 적용하는 서빙 경계를 세웁니다." },
       { id: "segmented-gather-lora-kernel", role: "adapter별 token 구간을 만들어 shrink·expand를 실행하는 kernel을 정본으로 설명합니다." },
       { id: "unified-adapter-kv-paging", role: "adapter와 KV를 같은 page pool에 담는 방식과 고정 슬롯의 빈칸을 비교합니다." },
       { id: "two-tier-adapter-cache", role: "GPU 슬롯과 CPU 보관을 다른 한도의 LRU로 관리하는 적재 경로를 다룹니다." },
@@ -158655,6 +158574,13 @@ export const ARTICLE_LEARNING: Readonly<
       { id: "adapter-scoped-prefix-cache-key", role: "prefix cache 재사용이 adapter·표마다 나뉘어야 하는 조건을 다룹니다." },
     ],
     conceptExplanations: [
+      {
+        id: "multi-lora-serving-and-adapter-switching",
+        sectionId: "overview",
+        intuition: "큰 교과서 한 권은 한 번만 책상에 두고 요청마다 작은 부록만 바꿔 끼웁니다.",
+        workedExample: "A·B·A·C 네 요청이 같은 base를 공유하고 각 요청은 자신에게 지정된 adapter delta만 더합니다.",
+        boundary: "Adapter 선택만으로 batching·적재·퇴거가 해결되지는 않으며 kernel과 memory policy가 별도로 필요합니다.",
+      },
       {
         id: "segmented-gather-lora-kernel",
         sectionId: "kernel-source",
@@ -158699,7 +158625,8 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     conceptStages: [
-      { label: "01 한 batch에 섞기", relation: "adapter 구간을 만들고 그 곱이 메모리 읽기에 묶인다는 점을 셉니다.", concepts: ["segmented-gather-lora-kernel"] },
+      { label: "00 공유 경계", relation: "Base를 한 번만 두고 요청마다 다른 adapter를 적용하는 실행 단위를 고정합니다.", concepts: ["multi-lora-serving-and-adapter-switching"] },
+      { label: "01 한 batch에 섞기", relation: "adapter 구간을 만들고 그 곱이 메모리 읽기에 묶인다는 점을 셉니다.", concepts: ["multi-lora-serving-and-adapter-switching", "segmented-gather-lora-kernel"] },
       { label: "02 GPU에 둘 자리", relation: "고정 슬롯과 공용 page를 비교하고 두 층 cache로 적재를 관리합니다.", concepts: ["unified-adapter-kv-paging", "two-tier-adapter-cache"] },
       { label: "03 batch에 들이기", relation: "KV와 adapter 자리를 함께 세어 요청을 받습니다.", concepts: ["adapter-aware-admission"] },
       { label: "04 입력 쪽 대안", relation: "가중치 대신 가상 token을 쓰는 비용과 cache key 조건을 봅니다.", concepts: ["soft-prompt-serving-cost", "adapter-scoped-prefix-cache-key"] },

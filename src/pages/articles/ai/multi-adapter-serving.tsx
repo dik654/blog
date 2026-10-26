@@ -48,7 +48,7 @@ export default function MultiAdapterServingArticle() {
               세 일을 거의 덜어 주지만 요청마다 문맥 길이와 KV를 더 씁니다.
             </p>
             <p>
-              LoRA 학습 자체와 adapter를 base에 합치는 방법은 <Link to="/cs/ai/lora-finetuning#practice">LoRA 미세조정</Link>에서 다룹니다. 이 글은 이미 학습된 adapter
+              LoRA 학습 자체와 adapter를 base에 합치는 방법은 <Link to="/cs/ai/lora-training-and-release#practice">LoRA 학습·배포</Link>에서 다룹니다. 이 글은 이미 학습된 adapter
               여러 개를 하나의 서빙 엔진에서 동시에 돌릴 때 생기는 일만 따라갑니다.
             </p>
           </div>

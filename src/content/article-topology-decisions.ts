@@ -262,13 +262,23 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "같은 query·corpus fixture에서 candidate depth·재순위 방식별 recall@k·precision@k·MRR과 latency를 한 receipt로 비교합니다.",
   },
   "ai/lora-finetuning": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "LoRA·QLoRA가 한 linear layer의 갱신 상태와 정밀도 경로를 바꾸는 원리와, 실제 학습 data·checkpoint 재개·merge·requantization을 승인하는 운영 절차는 질문과 상태 소유권이 다릅니다. 개념 글은 base와 adapter 계산을 닫고, 실무 글은 그 개념 anchor에서 시작해 학습·배포 계보를 추적합니다.",
+    sharedGate:
+      "같은 base revision·adapter 설정을 공유하되 개념 글은 shape·rank·precision·memory 장부로, 실무 글은 token mask·resume 좌표·artifact checksum·parity·rollback으로 각각 완료를 판정합니다.",
+    targetRoutes: ["ai/lora-finetuning", "ai/lora-training-and-release"],
+  },
+  "ai/lora-training-and-release": {
     action: "keep",
     status: "implemented",
-    reviewedAt: "2026-10-08",
+    reviewedAt: "2026-10-26",
     rationale:
-      "Frozen base→rank/alpha/target module→token/loss data→학습 재개 checkpoint→adapter 배포까지 하나의 PEFT lifecycle입니다. Adapter weight 저장과 optimizer·scheduler·RNG·data cursor를 포함한 resume state를 나눠야 중단 복구와 배포 artifact를 혼동하지 않으므로 같은 글에 둡니다.",
+      "한 adapter 학습 실행이 token 직렬화, 중단 복구, unmerged·merged·requantized 산출물 승격으로 이어지는 단일 운영 계보입니다. 각 단계의 checksum과 실행 좌표를 같은 candidate 기록으로 연결해야 실패 지점과 rollback 대상을 찾을 수 있습니다.",
     sharedGate:
-      "같은 base model·rank 설정에서 trainable parameter ratio·메모리·checkpoint 재개 좌표·adapter 서빙 artifact를 한 lineage로 비교합니다.",
+      "Step 1,800→1,801 재개 좌표와 base·adapter hash, merge 전후 logit 오차, 재양자화 설정·새 checksum을 함께 남기고 어느 gate라도 실패하면 이전 승인 artifact로 되돌립니다.",
   },
   "ai/vllm-scheduler": {
     "action": "keep",
@@ -3390,7 +3400,7 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
  */
 export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/image-training-stages": "20ded1bf15e7dd02",
-  "ai/domain-finetuning": "a1096dc05ae50ea7",
+  "ai/domain-finetuning": "c940531287aaa232",
   "ai/regularization-practice": "70bd499ad13bf51a",
   "ai/dropout-regularization": "6719495808ed42e2",
   "ai/weight-decay": "0f13f76d0c655fae",
@@ -3424,7 +3434,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/inference-engine-design-axes": "de0a9c94f84cb3bd",
   "ai/kv-cache-quantization": "a8176671d6b86764",
   "ai/llama-cpp-local-inference": "e58bf182102dd537",
-  "ai/multi-adapter-serving": "360fdb91e3e1e77f",
+  "ai/multi-adapter-serving": "a0c15133449ba899",
   "ai/multimodal-serving-pipeline": "567e794881b2b8bd",
   "ai/sglang-runtime-anatomy": "527aef35d9173e0d",
   "ai/sliding-window-kv-and-attention-sinks": "fcb0fc36051a7a96",
@@ -3470,10 +3480,10 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/agent-extension-boundaries": "fce567f71367b9d3",
   "ai/launch-overhead-and-cpu-gpu-synchronization": "f1d055fa0a9dcc1c",
   "ai/inference-optimization-layers": "749076b26a4967e9",
-  "ai/knowledge-distillation": "a01cfa493db6fe3f",
-  "ai/on-policy-distillation": "943d22a5dd85cf08",
-  "ai/self-distillation": "d712d1194909eff4",
-  "ai/sequence-distillation": "551f8aec24091d26",
+  "ai/knowledge-distillation": "a3e1455c2a3ff1d4",
+  "ai/on-policy-distillation": "ecd7a35792e24483",
+  "ai/self-distillation": "c0d81ba5253531b4",
+  "ai/sequence-distillation": "8b821b509c10efd0",
   "ai/text-unicode-encoding": "a10f387d00572a65",
   "ai/subword-static-embeddings": "18c2834ee26d4253",
   "ai/word2vec-negative-sampling": "cbc9a8c89b7f9329",
@@ -3748,7 +3758,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "gpu/cuda-persistent-kernels": "9a0d1ef64c90bed2",
   "gpu/cuda-register-pressure": "9fbbf7aee0398c74",
   "isms-aml/isms-security-infra": "f4de0cdcc8443f58",
-  "ai/lora-finetuning": "11aa2aeb5f7194f7",
+  "ai/lora-finetuning": "2123bb03bde8459e",
+  "ai/lora-training-and-release": "9887191b7009e2d0",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",

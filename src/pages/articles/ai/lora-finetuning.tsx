@@ -1,11 +1,12 @@
 import Overview from "./lora-finetuning/Overview";
 import LoRA from "./lora-finetuning/LoRA";
 import QLoRA from "./lora-finetuning/QLoRA";
-import Data from "./lora-finetuning/Data";
-import Practice from "./lora-finetuning/Practice";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./lora-finetuning/codeRefs";
 import { unslothTree } from "./lora-finetuning/fileTree";
+import DomainAdaptationPathLocator, {
+  DomainAdaptationMapReturn,
+} from "./domain-finetuning/DomainAdaptationPathLocator";
 
 export default function LoraFinetuningArticle() {
   const sidebar = useCodeSidebar();
@@ -13,11 +14,11 @@ export default function LoraFinetuningArticle() {
   return (
     <>
       <div className="space-y-12">
+        <DomainAdaptationPathLocator current="lora-mechanism" />
         <Overview />
         <LoRA onCodeRef={sidebar.open} />
         <QLoRA />
-        <Data onCodeRef={sidebar.open} />
-        <Practice />
+        <DomainAdaptationMapReturn current="lora-mechanism" />
       </div>
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

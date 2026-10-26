@@ -156,6 +156,7 @@ export const SUBCATEGORY_ARTICLE_CURRICULA: Readonly<
     "knowledge-graph-construction",
     "graphrag-community-and-multihop-search",
     "lora-finetuning",
+    "lora-training-and-release",
     "fine-tuning-tradeoffs-forgetting-and-merging",
     "continual-learning-foundations",
     "multi-agent-implementation",

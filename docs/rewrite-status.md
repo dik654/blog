@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+## 2026-10-26 · LoRA 개념·실무 분리 (로컬 검수 완료, 배포 대기)
+
+- 기존 `ai/lora-finetuning` 한 글에 섞여 있던 저랭크 변화량의 원리와 데이터·복구·배포 판단을 분리했습니다. 개념 글은 7B frozen base와 20M adapter의 한 학습 step을 따라가며 base forward는 남고 gradient·optimizer state·저장량은 주로 adapter 쪽에서 줄어드는 이유를 닫습니다.
+- 새 `ai/lora-training-and-release` 실무 글은 chat template·token·loss mask, 1,800번째 update에서의 checkpoint 재개, 정확한 base·tokenizer lineage, unmerged·merged·merged+requantized artifact의 승인 조건을 다룹니다. 여러 adapter를 동시에 서빙하는 문제는 기존 `multi-adapter-serving` 정본으로 넘겼습니다.
+- 도메인 적응 부모 지도에 개념과 실무를 별도 노드로 등록하고, 실무 노드가 사용하는 세 개의 정확한 개념 anchor를 표시했습니다. 카탈로그·읽기 순서·학습 계약·지식 그래프·근거·편집 소유권도 두 글의 책임에 맞춰 나눴습니다.
+- 새 LoRA 장면 그림과 지식 증류 그림의 내부 루트를 `높이 100% + 라이브 장면 스크롤 + 하단 조작부 고정` 구조로 고쳤습니다. 390×844와 1440×1000의 세 경로 검사에서 frame·조작부 이동, 문서·canvas 가로 넘침, 수식·console 오류가 모두 0이었습니다.
+- ArrowRight 장면 01→02 이동, reduced-motion의 마지막 장면 고정·재생 비활성, JavaScript 비활성 정적 본문을 확인했습니다. 정적 본문 등록은 272편에서 274편으로 늘었습니다. 학습·그래프·topology·읽기 순서·런타임·수식·계산·한국어·용어·의사코드·시각 자료 감사와 선택 파일 ESLint, 8GB TypeScript, production build가 통과했습니다. 빌드는 8,021개 module과 정적 public route 2,090개를 생성했습니다.
+- 보호 대상으로 지정된 `AutoencoderRoundTripViz.tsx`의 SHA-256은 `a76cf06f9042fb7785f152b52d19da42989af146054685063aff41dfe7e29ad9`로 그대로입니다. GitHub Pages 배포와 공개 경로 재검증은 아직 남았습니다.
+
 ## 2026-10-26 · 지식 증류 기초 (로컬 검수 완료, 배포 대기)
 
 - `ai/knowledge-distillation`을 고정 teacher → 신호 경로 선택 → student objective → student 단독 평가의 한 흐름으로 다시 검수했습니다. 기존 그림이 soft target과 feature bridge를 직렬 단계처럼 보이게 하던 오류를 고쳐, 공유 class의 logit 경로와 대응 hidden의 feature 경로가 서로 다른 선택지임을 한눈에 보이게 했습니다.
