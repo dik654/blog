@@ -5707,43 +5707,56 @@
     },
     {
       "route": "blockchain/reth-provider",
-      "title": "Reth State Provider & 상태 접근",
-      "status": "unreviewed",
+      "title": "Reth 상태 조회: 한 블록을 고정해 읽기",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-provider.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-provider.tsx",
-        "src/pages/articles/ethereum/reth-provider/BundleState.tsx",
-        "src/pages/articles/ethereum/reth-provider/Historical.tsx",
-        "src/pages/articles/ethereum/reth-provider/Overview.tsx",
-        "src/pages/articles/ethereum/reth-provider/StateProvider.tsx",
-        "src/pages/articles/ethereum/reth-storage-boundary-viz.tsx"
+        "src/pages/articles/ethereum/reth-provider/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-provider/viz/RethProviderReadViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "assumptionMarkers": 2,
+        "sourceButtons": 4,
         "headings": [
-          "BundleState는 실행 결과와 되돌리기 evidence를 함께 들고 있는 overlay다",
-          "Historical provider는 target block과 가장 가까운 valid evidence에서 state를 재구성한다",
-          "Provider는 여러 저장소를 숨기는 wrapper가 아니라 한 시점의 state를 고정하는 read boundary다",
-          "StateProvider는 account·storage·bytecode를 같은 view identity 아래에서 읽는다"
+          "블록 하나를 지정한 상태 조회는 memory와 disk를 어떻게 한 시점으로 묶을까요?",
+          "StateProviderFactory가 latest·historical·pending을 먼저 나눕니다",
+          "Memory head를 먼저 잡고 DB snapshot을 나중에 엽니다",
+          "계정과 slot은 execution overlay를 먼저 확인합니다",
+          "Overlay에 없으면 history evidence와 현재 DB 상태 중 가능한 경로를 고릅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 block/root/storage generation/overlay revision이라는 구현에 없는 합성 view handle을 사실처럼 설명했습니다.",
+        "v2.2.0의 BundleState 중심 설명이 v2.8.1의 OverlayStateProvider·partial persistence 구조와 섞여 있었습니다.",
+        "개념 글 안에 reorg·migration·crash release gate와 운영 결정을 함께 넣어 실제 read path의 질문이 흐려졌습니다."
+      ],
+      "fixture": "영속 저장은 995까지 끝났고 canonical memory에는 996~1,000이 남은 상태에서 H1000의 account A와 slot K를 읽습니다. DB의 A=10, H1000 overlay의 A=7, DB slot K=5를 이용해 source 선택과 key별 precedence를 추적합니다.",
+      "stageEvidence": {
+        "request": "H1000·account A·slot K를 고정하고 block number와 hash를 구분합니다.",
+        "selector": "Latest·historical·pending이 선택 block 실행 뒤 상태를 뜻하고 block n 재실행에는 n−1 상태가 필요함을 확인합니다.",
+        "snapshot": "ConsistentProvider가 memory head를 먼저 잡고 DB provider를 나중에 열어 flush 중 gap을 막는 순서를 설명합니다.",
+        "overlay": "Account deletion과 overlay miss, slot zero의 의미를 나눠 execution overlay→history/DB precedence를 추적합니다.",
+        "history": "NotYetWritten·InChangeset·InPlainState와 StateAtBlockPruned·missing changeset을 구분합니다.",
+        "return": "A=7과 K=5가 같은 H1000 after-state에 귀속하고 정상 absence와 unavailable을 다른 결과로 반환합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth v2.8.1 StateProvider API에서 latest·historical·pending과 선택 block 실행 뒤 상태의 의미를 확인했습니다.",
+        "Reth v2.8.1 BlockchainProvider에서 retained memory→history→pending의 block hash source 선택을 확인했습니다.",
+        "Reth v2.8.1 OverlayStateProvider에서 account·storage precedence, history fallback과 prune 오류를 확인했습니다.",
+        "Reth v2.8.1 ConsistentProvider에서 memory head→DB snapshot 획득 순서와 mutable marker 주의를 확인했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "v2.8.1 source를 다시 읽어 합성 generation/revision handle, v2.2.0 BundleState 중심 경로와 checkpoint+replay 일반화를 제거했습니다.",
+        "arithmetic": "995·996~1,000과 balance 10→7·slot 5는 메커니즘 설명용 값으로만 사용하고 실제 chain height나 측정값이 아님을 명시했습니다.",
+        "humanize": "전체 학습 계약·문장 호흡·한국어·용어·pseudocode·topology·읽기 순서 감사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 334=334, 중간 장면의 가로 넘침 0을 확인했습니다. JavaScript 비활성 상태에서 live 0·정적 장면 6개·HTTP 200입니다.",
+        "browser1440": "1440×1000에서 7.2초 무자동 재생, 키보드 0→1→2→4 이동, 장면 scrollWidth=clientWidth와 console 오류 0을 확인했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "split-concept-from-provider-release-validation"
     },
     {
       "route": "blockchain/reth-rpc",

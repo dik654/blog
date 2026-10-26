@@ -5760,7 +5760,7 @@ export const EDITORIAL_BOUNDARIES = {
       "State-root parity를 먼저 확인하는 trie optimization release gate",
     ],
     reuses: [
-      { label: "BundleState 변경·revert journal", href: "/cs/blockchain/reth-provider#bundle-state" },
+      { label: "BundleState 변경·revert journal", href: "/cs/blockchain/reth-block-execution#state-changes" },
       { label: "Provider pinned state view", href: "/cs/blockchain/reth-provider" },
       { label: "DB transaction commit boundary", href: "/cs/blockchain/reth-db" },
     ],
@@ -6069,22 +6069,44 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-provider": {
     title: "Reth provider consistent read 글이 소유하는 범위",
     owns: [
-      "Block hash·state root·storage generation·overlay revision의 provider view identity",
-      "Overlay value/tombstone과 pinned base snapshot의 read precedence",
-      "Valid absence·unknown·pruned·corrupt·stale-view·backend error의 typed outcome",
-      "Bundle post-state·original/revert journal과 historical reconstruction",
-      "Reorg·migration·crash·concurrent query provider release gate",
+      "Latest·historical·pending selector와 선택 block 실행 뒤 상태의 의미",
+      "Retained canonical memory·영속 history·pending의 block hash source 선택",
+      "Memory head를 먼저 잡고 DB read transaction을 여는 snapshot 순서",
+      "Execution overlay→history→DB의 account·slot별 read precedence",
+      "NotYetWritten·InChangeset·InPlainState와 정상 absence·pruned·missing evidence의 구분",
     ],
     reuses: [
       { label: "Reth provider consistent-view 상위 invariant", href: "/cs/blockchain/reth#overview" },
       { label: "Reth typed transaction·storage route", href: "/cs/blockchain/reth-db" },
-      { label: "Reth reorg·unwind reconciliation", href: "/cs/blockchain/reth#overview" },
+      { label: "Provider 변경의 운영 검증", href: "/cs/blockchain/reth-provider-validation" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Provider trait·overlay·historical route claim은 표시한 Reth release/SHA·features·storage/prune config에 귀속한다." },
-      { kind: "standard", rule: "DB transaction capability를 provider의 block/root identity·archive completeness·proof validity로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 query·chain fixture에서 reorg·tombstone·prune·corruption·generation switch·crash outcome parity 뒤 latency를 비교한다." },
-      { kind: "project-claim", rule: "Trait compile·cache hit·None·latest label을 consistent snapshot·valid absence·canonical answer의 보장으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Selector·source routing·snapshot order·overlay lookup claim은 Reth v2.8.1 StateProvider·BlockchainProvider·OverlayStateProvider·ConsistentProvider source에 귀속한다." },
+      { kind: "standard", rule: "StateProvider trait의 존재를 archive availability·safe/finalized/pending marker의 lifetime 고정·특정 장비 성능으로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "블록 1,000·영속 tip 995·balance 10→7은 메커니즘 설명용 값이며 대상 node의 측정값이 아니다." },
+      { kind: "project-claim", rule: "Account deletion과 slot zero, 정상 absence와 StateAtBlockPruned·missing changeset을 같은 결과로 합치지 않는다." },
+    ],
+  },
+  "reth-provider-validation": {
+    title: "Reth provider 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Reth release·storage/prune·persistence·fixture·runtime의 run manifest",
+      "Latest·retained·historical·pending hash query baseline",
+      "Flush overlap·partial persistence·reorg·prune·missing evidence·restart fault matrix",
+      "Candidate 격리·frontier 증거 보존·binary/snapshot/rebuild rollback과 재진입",
+      "Value·root·proof·typed outcome parity 뒤 비용 측정과 proposed ADR",
+    ],
+    reuses: [
+      { label: "State selector와 source 선택", href: "/cs/blockchain/reth-provider#selector" },
+      { label: "Memory→DB snapshot 순서", href: "/cs/blockchain/reth-provider#snapshot" },
+      { label: "Overlay precedence", href: "/cs/blockchain/reth-provider#overlay" },
+      { label: "History와 prune outcome", href: "/cs/blockchain/reth-provider#history" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "실험 대상과 lookup 경계는 Reth v2.8.1 release·source, 구조 변화는 v2.6.0 release에 귀속한다." },
+      { kind: "standard", rule: "공식 기능의 존재를 대상 환경의 무결성·복구·성능 결과로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경의 실제 값만 [M]으로 기록하며 현재 query·복구·성능 결과는 미측정이다." },
+      { kind: "project-claim", rule: "Reth release·Storage V1/V2·prune/persistence·filesystem·workload가 바뀌면 결정을 다시 검증한다." },
     ],
   },
   "reth-chainspec": {

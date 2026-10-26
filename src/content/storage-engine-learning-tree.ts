@@ -6,7 +6,7 @@ export interface StorageEngineAnchor {
 }
 
 export interface StorageEngineNode {
-  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "mdbx-validation" | "reth-db" | "reth-db-validation";
+  id: "lsm-tree" | "lsm-engine-validation" | "bplus-tree" | "bplus-index-validation" | "mdbx-internals" | "mdbx-validation" | "reth-db" | "reth-db-validation" | "reth-provider" | "reth-provider-validation";
   href: string;
   shortTitle: string;
   track: StorageEngineTrack;
@@ -144,6 +144,38 @@ export const STORAGE_ENGINE_NODES = [
       { href: "/cs/blockchain/reth-db#commit", label: "세 저장소 commit 순서" },
       { href: "/cs/blockchain/reth-db#recovery", label: "가시 지점과 재조정" },
       { href: "/cs/blockchain/reth-db#read", label: "일관된 read frontier" },
+    ],
+  },
+  {
+    id: "reth-provider",
+    href: "/cs/blockchain/reth-provider#overview",
+    shortTitle: "상태 조회",
+    track: "concept",
+    mapLabel: "block anchor·overlay·snapshot",
+    question: "Memory와 disk에 나뉜 상태를 어떻게 한 블록의 account·storage로 읽을까요?",
+    parentHref: "/cs/blockchain/reth-db#return-map",
+    parentLabel: "Reth의 세 저장소와 한 가시 지점",
+    closure: "Reth는 latest·historical·pending 중 target state를 먼저 고르고 block hash에 고정한 execution overlay와 DB snapshot을 조합합니다. Key가 overlay에 있으면 그 값이나 삭제 상태를 우선하고, 없을 때만 history evidence 또는 DB state로 내려갑니다. Memory range를 먼저 capture하고 DB snapshot을 나중에 열어 flush 중에도 두 범위 사이의 빈 구간을 막습니다.",
+    paired: {
+      href: "/cs/blockchain/reth-provider-validation#overview",
+      label: "Reth Provider 운영 검증",
+    },
+  },
+  {
+    id: "reth-provider-validation",
+    href: "/cs/blockchain/reth-provider-validation#overview",
+    shortTitle: "조회 검증",
+    track: "practice",
+    mapLabel: "flush·reorg·prune 대조",
+    question: "어떤 경계 실험이 통과해야 Provider와 overlay 변경을 운영에 적용할 수 있을까요?",
+    parentHref: "/cs/blockchain/reth-provider#return-map",
+    parentLabel: "Reth의 target 선택·overlay·history 조회 경로",
+    closure: "Provider 변경은 정상 latest 조회 한 번으로 승인하지 않습니다. 같은 block hash query를 memory/DB flush, partial persistence, reorg, prune와 restart 경계에서 반복해 value·state root·proof·typed error를 기준 구현에 대조합니다. Mixed state나 pruned-to-None 변환이 한 번이라도 나타나면 기각하고, 정확성과 rollback을 통과한 run에서만 latency와 자원 비용을 비교합니다.",
+    anchors: [
+      { href: "/cs/blockchain/reth-provider#selector", label: "Latest·historical·pending 선택" },
+      { href: "/cs/blockchain/reth-provider#snapshot", label: "Memory와 DB snapshot 순서" },
+      { href: "/cs/blockchain/reth-provider#overlay", label: "Overlay 우선 조회" },
+      { href: "/cs/blockchain/reth-provider#history", label: "History fallback과 prune" },
     ],
   },
 ] as const satisfies readonly StorageEngineNode[];

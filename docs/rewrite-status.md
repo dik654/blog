@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth Provider 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/reth-provider`는 `concept`, 새 `blockchain/reth-provider-validation`은 `practice`로 분리했습니다. 개념 글은 영속 tip 995와 memory 996~1,000이 공존할 때 H1000의 account A와 slot K를 한 시점으로 읽는 과정을 추적합니다. 실무 글은 flush overlap·partial persistence·reorg·prune·missing evidence·restart를 같은 hash query에 재생해 변경을 채택할지 판단합니다.
+- 기존 글의 `block/root/storage generation/overlay revision` 합성 view handle과 v2.2.0 BundleState 중심 설명을 제거했습니다. Reth v2.8.1의 실제 `StateProviderFactory`, `BlockchainProvider`, `OverlayStateProvider`, `ConsistentProvider`를 기준으로 latest·historical·pending 선택, retained memory→history→pending source, memory head→DB snapshot 획득 순서와 key별 overlay precedence를 설명합니다.
+- Account가 overlay에서 삭제된 경우와 overlay에 기록이 없는 경우, storage slot의 zero 의미를 구분했습니다. History fallback은 `NotYetWritten`·`InChangeset`·`InPlainState`로 나누고 정상 absence, `StateAtBlockPruned`, 있어야 할 changeset 누락을 같은 `None`으로 합치지 않습니다.
+- 실무 글은 Reth v2.8.1/SHA, Storage V1/V2, prune·persistence 설정, block hash fixture, filesystem과 workload를 한 run manifest에 고정합니다. 정확성·restart·rollback을 통과한 run에서만 query latency·CPU·I/O·RTO를 비교하며 대상 환경의 측정값이 없으므로 상태는 `proposed`, 결과는 `[M] 미측정`입니다.
+- 학습 계약 997편, 지식 그래프 4,475개 concept·6,892개 relation, 수식·계산·pseudocode·article topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime·시각화 검사가 통과했습니다. Production build는 8,060개 module과 정적 공개 경로 2,100개, no-script 본문 309편을 만들었고 최대 RSS는 약 5.93GB, swap은 0이었습니다.
+- 1,440×1,000에서 두 글 모두 7.2초 동안 자동 진행되지 않았고 키보드로 중간 장면과 복구 장면을 이동했습니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이고 가로 넘침이 없습니다. reduced-motion에서는 재생이 꺼지고 수동 이동은 유지됩니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면 0개, 정적 장면 6개이며 console 오류는 0건입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+
 ### Reth Storage V2 개념·실무 분리 로컬 검증 완료 (2026-10-27)
 
 - `blockchain/reth-db`는 `concept`, 새 `blockchain/reth-db-validation`은 `practice`로 분리했습니다. 개념 글은 블록 1,000의 실행 결과가 static files·RocksDB·MDBX로 나뉜 뒤 한 가시 지점으로 읽히는 과정을 추적합니다. 실무 글은 V1→V2 migration, phase별 중단, 복구, rollback과 채택 조건을 별도 실험 계약으로 다룹니다.
