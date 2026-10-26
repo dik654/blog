@@ -5161,7 +5161,7 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 문서",
       label: "Reth Book — reth node",
-      href: "https://reth.rs/cli/reth/node.html",
+      href: "https://reth.rs/cli/reth/node/",
       note: "실행한 release에서 operator input과 node option surface를 확인하는 command reference",
     },
     {
@@ -5172,9 +5172,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "공식 프로젝트 기록",
-      label: "Reth v2.2.0 release",
-      href: "https://github.com/paradigmxyz/reth/releases/tag/v2.2.0",
-      note: "Discv5 default와 feature·compatibility 변화가 release에 귀속된다는 upgrade 근거",
+      label: "Reth v2.8.1 release",
+      href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+      note: "Hoodi의 Amsterdam 일정 제거, 데이터베이스 변경 없음, 버전 하향 가능성과 체인별 안전성의 차이를 확인하는 업그레이드 근거",
     },
   ),
   "blockchain/reth-db": withSeriesEvidence(RETH_SERIES_EVIDENCE, {

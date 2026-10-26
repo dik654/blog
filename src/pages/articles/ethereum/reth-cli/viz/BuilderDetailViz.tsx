@@ -9,20 +9,20 @@ export default function BuilderDetailViz({
 }) {
   return (
     <VizFrame
-      eyebrow="Compile-time gate"
-      title="Builder state는 빠진 dependency를 launch 전에 드러냅니다"
-      description="정확한 type 이름과 method는 release에 따라 바뀔 수 있지만, input type이 다음 단계의 capability를 제한한다는 계약은 유지됩니다."
+      eyebrow="컴파일 단계 · 조립 조건"
+      title="빌더 상태는 빠진 의존성을 실행 전에 드러냅니다"
+      description="정확한 형식과 메서드 이름은 릴리스마다 달라질 수 있지만, 입력 형식이 다음 단계의 허용 동작을 제한합니다."
     >
       <div className="grid min-w-0 gap-5 md:grid-cols-3">
-        <RethReceipt label="input" value="NodeConfig<ChainSpec>" />
-        <RethReceipt label="configured" value="Types + Components + AddOns" />
-        <RethReceipt label="output" value="NodeHandle + service receipts" />
+        <RethReceipt label="입력" value="NodeConfig<ChainSpec>" />
+        <RethReceipt label="조립 완료" value="형식 + 핵심 부품 + 부가 기능" />
+        <RethReceipt label="실행 결과" value="NodeHandle + 단계별 시작 기록" />
       </div>
       <div className="mt-6">
         <RethDecision
-          question="필수 component와 add-on trait bound가 모두 만족되는가?"
-          yes="Launch context가 database·provider를 열고 component builder를 호출합니다."
-          no="해당 builder state에 launch method가 없거나 trait bound가 성립하지 않습니다."
+          question="필수 부품과 부가 기능의 트레이트 조건을 모두 만족합니까?"
+          yes="실행 문맥이 데이터베이스와 조회 계층을 열고 부품 빌더를 호출합니다."
+          no="현재 빌더 상태에는 실행 메서드가 없거나 트레이트 조건이 성립하지 않습니다."
         />
       </div>
       {onOpenCode && (

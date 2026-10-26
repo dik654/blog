@@ -5,6 +5,7 @@ import type { CodeRef } from "@/components/code/types";
 import ContextViz from "./viz/ContextViz";
 import NodeBuilderViz from "./viz/NodeBuilderViz";
 import { codeRefs } from "./codeRefs";
+import RethCliLocator from "./RethCliLocator";
 
 export default function Overview({
   onCodeRef,
@@ -15,76 +16,56 @@ export default function Overview({
 
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">
-        Reth CLI의 핵심은 옵션을 많이 받는 것이 아니라 재현 가능한 node assembly
-        입력을 만드는 것이다
-      </h2>
+      <RethCliLocator />
+      <ContextViz />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h2>실무에서 확정할 질문</h2>
         <p className="text-lg leading-8">
-          <code>reth node</code>는 문자열 인자를 읽고 곧바로 서비스를 켜지
-          않습니다. CLI·config file·default에서 온 값을 하나의 typed{" "}
-          <code>NodeConfig</code>로 정규화하고, chain spec·data
-          directory·network·RPC·Engine API·storage 설정이 서로 모순되지 않는지
-          확인한 뒤 node builder에 넘깁니다. 이 경계를 분명히 해야 같은 명령을
-          다시 실행했을 때 어떤 설정으로 어느 node가 시작됐는지 재현할 수
-          있습니다.
+          <code>reth node</code>를 실행했다고 해서 곧바로 요청을 받을 수 있는 노드가 된 것은 아닙니다. 명령행과 설정 파일을
+          <code>NodeConfig</code>로 정리하고, 체인·데이터 경로·JWT·포트를 확인하며, 호환되는 핵심 부품을 조립한 뒤 실제
+          저장소와 네트워크 서비스를 시작해야 합니다. 이 글은 <strong>누가 어떤 상태를 만들고, 어느 실패부터 런타임의 책임인지</strong>를
+          한 번의 시작 과정으로 추적합니다.
         </p>
         <p>
-          이 글은{" "}
-          <strong>
-            입력 provenance→config 검증→typestate assembly→component
-            lifecycle→release gate
-          </strong>{" "}
-          순서로 진행합니다. <Link to="/cs/blockchain/reth">Reth 구조</Link>가
-          execution client 전체의 block lifecycle을 소유하므로, 여기서는 그
-          정의를 복제하지 않고 “그 lifecycle을 안전하게 시작하는 방법”에
-          집중합니다.
+          실행 클라이언트가 블록을 검증·실행·저장하는 원리는 <Link to="/cs/blockchain/reth#overview">Reth 전체 구조</Link>에서
+          가져옵니다. 여기서는 그 기능을 다시 설명하지 않고, 같은 구조를 재현 가능한 설정과 실패 원인이 남는 시작 절차로 만드는 데
+          집중합니다. 공식 기능은 <strong>[O]</strong>, 아직 이 저장소에서 실행하지 않은 설계 판단은 <strong>[A]</strong>로 구분합니다.
         </p>
       </div>
 
       <ContentBoundary article="reth-cli" />
-      <ContextViz />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>먼저 알아둘 최소 개념</h3>
+        <h2>상태 소유자를 먼저 나눕니다</h2>
         <p>
-          <strong>Config precedence</strong>는 같은 설정이 여러 source에 있을 때
-          어느 값을 채택할지 정한 우선순위이고,
-          <strong>typestate</strong>는 현재 조립 단계를 Rust type으로 표현해
-          아직 허용되지 않은 method를 호출하지 못하게 하는 패턴입니다.{" "}
-          <strong>Component</strong>는 pool·network·executor처럼 core node가
-          동작하는 데 필요한 서비스이고,
-          <strong>add-on</strong>은 RPC·ExEx·hook처럼 core lifecycle에 붙는
-          확장입니다.
+          CLI는 명령행·설정 파일·기본값을 읽어 최종 설정과 값의 출처를 정합니다. NodeBuilder는 노드 형식과 핵심 부품의 호환 관계를
+          Rust 형식으로 제한합니다.
+        </p>
+        <p>
+          그다음 런타임이 데이터베이스·소켓·P2P·Engine API·RPC 작업을 실제로 시작합니다. 프로세스 생존이나
+          <code>NodeHandle</code> 반환은 이 가운데 일부 상태일 뿐입니다. 동기화와 요청 처리까지 정상이라는 뜻은 아닙니다.
         </p>
 
-        <h3>같은 값의 source와 최종값을 모두 기록합니다</h3>
+        <h2>최종값만 남기지 말고 값이 선택된 이유를 남깁니다</h2>
         <p>
-          예를 들어 default HTTP port가 8545이고 config file이 9545를 지정했으며
-          CLI가 10545를 지정했다면, 문서화된 precedence가{" "}
-          <code>CLI &gt; file &gt; default</code>일 때 최종값은 10545입니다.
-          하지만 receipt에는 숫자 하나만 남기지 않고{" "}
-          <code>http.port=10545, source=cli</code>와 가려진 후보까지 남겨야
-          잘못된 flag·환경 주입을 추적할 수 있습니다. 실제 precedence와 지원
-          flag는 실행한 Reth release의 <code>reth node --help</code>와 config
-          schema가 기준입니다.
+          설명용으로 기본 포트가 8545이고, 설정 파일이 9545, 명령행이 10545를 지정했다고 하겠습니다. 사용 중인 릴리스에서
+          명령행 값이 우선한다면 결과에는 <code>http.port=10545</code>뿐 아니라 <code>source=cli</code>와 가려진 후보도 남겨야 합니다.
+          그래야 잘못된 플래그나 설정 주입을 추적할 수 있습니다. 실제 우선순위·지원 플래그·기본값은 실행할 바이너리의
+          <code>reth node --help</code>와 설정 스키마가 기준입니다.
         </p>
         <p>
-          Chain path를 못 읽거나 JWT secret이 없고, 서로 같은 address에 두
-          server가 bind하려 하거나, 선택한 chain과 기존 database identity가
-          다르면 일부 service만 켜지기 전에 fail-closed해야 합니다. Parse 성공은
-          유효한 deployment라는 뜻이 아니며 filesystem permission·socket
-          bind·storage schema compatibility는 launch 단계에서 별도로 확인됩니다.
+          체인 파일을 읽지 못하거나 JWT 비밀값이 없고, 두 서버가 같은 주소에 연결하려 하거나, 선택한 체인과 기존 데이터베이스의
+          정체성이 다르면 일부 공개 서비스만 열린 채 남지 않도록 시작을 중단해야 합니다. 문자열 해석 성공은 유효한 배포라는 뜻이
+          아니며 파일 권한·소켓 연결·저장 형식 호환성은 시작 단계에서 따로 확인됩니다.
           <CodeViewButton onClick={() => open("cli-main")} />
         </p>
 
-        <h3>Run manifest가 moving docs와 production binary를 분리합니다</h3>
+        <h2>실행 기록이 현재 문서와 실제 바이너리를 구분합니다</h2>
         <p>
-          최소 receipt에는 Reth semver와 git SHA, Cargo feature, command line의 민감정보 제거본, config digest, chain spec
-          digest, storage schema·pruning profile, data directory identity, RPC·P2P bind address, Engine API
-          version과 OS·hardware를 넣습니다. 이 글은 2026-08-14에 Reth 2.x 공식 문서와 source를 확인했지만 current docs의
-          type·default를 이전 binary에 소급하지 않습니다. 예를 들어 v2.2.0 release에서 Discv5 default가 바뀌었다는 사실은 해당 release
-          line의 migration 판단에만 사용합니다.
+          최소 실행 기록에는 Reth 버전과 Git 커밋, 빌드 기능, 민감정보를 지운 명령행, 설정·ChainSpec 요약값, 저장 형식과 가지치기
+          정책, 데이터 경로의 정체성, RPC·P2P 연결 주소, Engine API 버전, 운영체제와 하드웨어를 넣습니다. 이 글은 2026-10-27에
+          v2.8.1 릴리스와 공식 문서를 확인했지만, 현재 문서의 형식 이름과 기본값을 이전 바이너리에 소급하지 않습니다.
         </p>
       </div>
 
@@ -94,25 +75,20 @@ export default function Overview({
         id="paper-reth-node-cli"
         className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4"
       >
-        <p className="text-xs font-bold text-primary">
-          공식 문서 읽기 · CLI contract
-        </p>
+        <p className="text-xs font-bold text-primary">[O] 공식 CLI · 2026-10-27 확인</p>
         <p className="mt-2 text-sm font-semibold">Reth Book — reth node</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          문제는 operator input이 어떤 node configuration으로 해석되는지
-          확인하는 것입니다. 공식 command reference는
-          <code>--chain</code>·config path와 현재 flag surface를 제공하지만,
-          특정 release의 hidden default·filesystem 상태·운영 안전성을 자동으로
-          증명하지는 않으므로 binary version과 실제 <code>--help</code>를 함께
-          고정합니다.
+          공식 명령 참고서는 <code>--config</code>·<code>--chain</code>·<code>--instance</code> 등 현재 입력 표면을 보여줍니다.
+          다만 특정 릴리스의 모든 기본값, 파일 시스템 상태, 운영 준비까지 증명하지는 않으므로 바이너리 버전과 실제
+          <code>--help</code> 출력을 함께 보관합니다.
         </p>
         <a
           className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-          href="https://reth.rs/cli/reth/node.html"
+          href="https://reth.rs/cli/reth/node/"
           target="_blank"
           rel="noreferrer"
         >
-          공식 CLI 문서 보기
+          공식 CLI 문서
         </a>
       </div>
     </section>
