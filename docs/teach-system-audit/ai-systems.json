@@ -9503,25 +9503,109 @@
       "route": "ai/model-artifact-registry",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/model-artifact-registry.tsx",
       "publicPath": "cs/ai/model-artifact-registry",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
-        "sectionCount": 4
+        "explicitAssumption": true,
+        "answerPointers": 5,
+        "levelMarkers": 5,
+        "sectionCount": 5
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "Backend store·artifact store·별명·배포 대조가 기능별 설명으로 흩어져 한 모델 버전이 고객 요청까지 도달하는 경로를 한눈에 보기 어려웠음",
+        "변경 가능한 별명과 고정 버전의 경계가 약해 별명 재할당 뒤 과거 승인을 재현할 수 없는 위험이 드러나지 않았음",
+        "레지스트리의 READY 상태와 실제 endpoint가 읽은 모델·container·설정 digest를 구분하지 않아 배포 일치를 과신할 수 있었음",
+        "시각 자료가 본문보다 앞에서 전체 경로를 보여 주지 않았고 모바일·축소 모션·JavaScript 비활성 대체 표현이 검증되지 않았음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "runId": "run-27",
+        "modelName": "prod.ml_team.claims_model",
+        "registeredVersion": "v21",
+        "alias": "Champion",
+        "promotionReceipt": "promotion-84",
+        "requiredArtifacts": [
+          "weights.safetensors",
+          "tokenizer.json",
+          "signature.json",
+          "fixture.jsonl"
+        ],
+        "canary": {
+          "v17": 90,
+          "v21": 10
+        },
+        "runtimeChecks": [
+          "model version",
+          "model artifact digest",
+          "container digest",
+          "config digest"
+        ],
+        "boundary": "모든 이름·digest·승인 시각·트래픽 비율은 모델 전달 경로를 설명하기 위한 가정이며 실제 회사의 배포 기록이나 측정값이 아닙니다."
+      },
+      "stageAnchors": {
+        "S": "overview",
+        "0": "store-integrity",
+        "1": "alias-promotion",
+        "2": "deployment-parity",
+        "3": "failure-paths",
+        "parent": "experiment-tracking#provenance-receipt",
+        "return": "model-artifact-registry-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://github.com/mlflow/mlflow/blob/v3.17.1/docs/docs/classic-ml/model-registry/workflow.mdx",
+          "application": "MLflow 3.17.1에서 고정된 model version과 다른 version으로 옮길 수 있는 alias의 API·workflow 경계를 확인"
+        },
+        {
+          "href": "https://mlflow.org/docs/latest/tracking/backend-stores/",
+          "application": "Backend store가 run·model·trace metadata를 저장하는 책임과 artifact store URI 경계를 확인"
+        },
+        {
+          "href": "https://mlflow.org/docs/latest/self-hosting/architecture/artifact-store/",
+          "application": "가중치·데이터 파일 같은 큰 object와 접근 자격 증명의 저장 경계를 확인"
+        },
+        {
+          "href": "https://learn.microsoft.com/en-us/azure/databricks/machine-learning/manage-model-lifecycle/",
+          "application": "Unity Catalog의 catalog.schema.model 이름, version·alias·권한과 실제 배포 상태의 경계를 확인"
+        },
+        {
+          "href": "https://learn.microsoft.com/en-us/azure/databricks/machine-learning/model-serving/create-manage-serving-endpoints",
+          "application": "Serving endpoint가 명시적인 model version과 served entity별 traffic percentage를 설정하는 경계를 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "run-27 → DB·파일 저장 → 필수 파일 4개 검사 → Champion을 v21로 고정 → promotion-84 → v17·v21 Canary → endpoint 실행 보고 대조를 같은 식별자로 추적합니다.",
+        "humanize": "기록·검사·승인·배포·대조를 먼저 한국어 상태 변화로 보여 주고 Backend store·artifact store·digest·alias 같은 이름은 사례 뒤에 정의했습니다.",
+        "browser390": "390×844에서 다섯 장면 모두 canvas 523px 안에 들어가고 문서 가로 넘침·박스 이탈이 0이며 조작 버튼은 50×50px입니다.",
+        "browser1024": "1024×900에서 다섯 장면 모두 canvas 664px와 root 662px를 유지하고 문서 가로 넘침·root 이탈이 0입니다.",
+        "browser1440": "1440×1000에서 시각화·표·조작부를 확인했고 console 오류가 0입니다.",
+        "keyboard": "시각화 root에 초점을 둔 ArrowRight는 다음 장면으로 이동하고, 조작 버튼에 초점을 둔 ArrowRight가 장면까지 중복 이동하던 공용 결함을 수정했습니다.",
+        "autoPlay": "reload 뒤 7초 동안 첫 장면을 유지하며 명시적인 재생 입력 전에는 시작하지 않습니다.",
+        "reducedMotion": "다섯 장면의 제목과 결론을 정적 순서로 모두 표시하고 실행 조작 버튼은 0개이며 문서 가로 넘침이 없습니다.",
+        "noScript": "JavaScript 비활성 390×844 production preview에서 HTTP 200, 정적 다섯 장면의 순서, run-27·promotion-84·canary·READY·다음 글 결론을 확인했습니다. 동적 조작부와 live 장면은 숨고 문서 폭은 390px로 맞습니다.",
+        "staticAudits": "learning·article·viz·formula·calculation·graph·reading·order·prose·한국어·용어·용어쌍·runtime strict 감사와 선택 파일 ESLint를 통과했습니다.",
+        "typecheck": "TypeScript project build 통과·최대 RSS 6,376,194,048 bytes·swap 0",
+        "build": "Vite 7.3.1·8,031 modules·정적 public route 2,090개·no-script 본문 284편·최대 RSS 6,696,353,792 bytes·swap 0",
+        "browserEvidence": "output/playwright/ai-model-artifact-registry/"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 확인"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "visual-first-model-delivery-path-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/model-artifact-registry/ModernArticle.tsx",
+        "src/pages/articles/ai/model-artifact-registry/ModelArtifactRegistryViz.tsx",
+        "src/pages/articles/ai/shared/ModelDeliveryPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/model-artifact-registry/ModernArticle.tsx",
+      "dedicatedVizFiles": [
+        "src/pages/articles/ai/model-artifact-registry/ModelArtifactRegistryViz.tsx"
+      ],
+      "contentHash": "295af5751bb2988a2df89db490fb6247b2fad3fc5422893f3237aae01224342b",
+      "preserved": [
+        "Backend store와 artifact store의 분리 및 공동 복구 경계",
+        "변경 가능한 alias와 고정된 model version의 구분",
+        "Unity Catalog 모델 이름·version·alias와 serving endpoint 대조의 기존 공식 근거"
       ]
     },
     {

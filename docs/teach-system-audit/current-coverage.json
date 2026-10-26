@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 629,
-    "pending": 363,
+    "reviewed": 630,
+    "pending": 362,
     "untracked": 0,
-    "assignedPending": 321,
+    "assignedPending": 320,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3781,11 +3781,11 @@
     {
       "route": "ai/model-artifact-registry",
       "publicPath": "cs/ai/model-artifact-registry",
-      "title": "Model Artifact Registry: Store에서 Deployment까지",
+      "title": "모델 레지스트리: 실행 기록에서 실제 배포까지",
       "catalogIndex": 375,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

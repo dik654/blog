@@ -1790,9 +1790,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/model-artifact-registry": {
     action: "keep",
     status: "implemented",
-    reviewedAt: "2026-10-08",
-    rationale: "Tracking backend와 artifact store의 공동 무결성에서 시작해 mutable alias를 immutable version으로 해소하고, Unity Catalog의 정식 이름과 serving endpoint가 실제로 읽은 version까지 대조하는 한 model promotion 경로입니다.",
-    sharedGate: "Champion alias가 v21을 가리키지만 endpoint가 v17을 서빙하는 사례에서 catalog.schema.model·resolved version·artifact digest·loaded revision을 한 배포 기록으로 검증합니다.",
+    reviewedAt: "2026-10-26",
+    rationale: "run-27의 실행 기록과 실제 모델 파일을 함께 검사한 뒤, Champion 별명을 고정 버전 v21로 해석하고 승인 기록·배포 명세·실행 중인 endpoint를 차례로 대조하는 하나의 모델 전달 경로입니다.",
+    sharedGate: "DB 행과 필수 파일 4개, promotion-84가 고정한 v21, Canary의 v17·v21 비율, endpoint의 모델·container·설정 digest를 같은 사례로 추적합니다.",
   },
   "ai/adaptive-hyperparameter-search": {
     "action": "keep",
@@ -3599,7 +3599,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/competition-workflow": "4562393852c386c2",
   "ai/cross-validation": "7ff394a94b7466c2",
   "ai/experiment-tracking": "04b0f3a38a0fc35b",
-  "ai/model-artifact-registry": "20414b26d59605c5",
+  "ai/model-artifact-registry": "6f7745ebe10a9286",
   "ai/fold-local-validation": "81c7a08d18185317",
   "ai/grouped-validation": "a28b15a149db340a",
   "ai/math-functions-derivatives-gradients": "5a8140b33430e27e",

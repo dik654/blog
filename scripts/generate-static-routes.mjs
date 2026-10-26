@@ -179,6 +179,7 @@ const noScriptArticleRoutes = new Set([
   "ai/classification-metrics",
   "ai/ranking-metrics",
   "ai/metric-selection-protocol",
+  "ai/model-artifact-registry",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",
