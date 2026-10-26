@@ -2229,7 +2229,7 @@
     {
       "route": "blockchain/fork-id",
       "title": "Fork ID (EIP-2124) 분석",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-public-verified",
       "publicEntry": "src/pages/articles/ethereum/fork-id.tsx",
       "bodyFiles": [
         "src/content/ethereum-p2p-learning-tree.ts",
@@ -2287,11 +2287,10 @@
         "reducedMotion": "pass · prefers-reduced-motion에서 4.8초 뒤에도 첫 장면을 유지하고 재생 버튼이 비활성화되는지 확인했습니다.",
         "noJavaScript": "pass · 390×844 JavaScript 비활성 browser context에서 현재 장면과 조작부는 숨고 정적 다섯 장면·판정 알고리즘·부모 지도 복귀가 보이며 document 폭 390px로 가로 넘침이 없는지 확인했습니다.",
         "console": "pass · Playwright 세션에서 console error·warning 0개입니다.",
-        "build": "pass · 글 단위 검사와 NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다."
+        "build": "pass · 글 단위 검사와 NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다.",
+        "publicRoute": "pass · GitHub Pages 배포 40345120677 뒤 공개 경로에서 H1·concept 트랙·첫 장면·시각화 5개·수정된 한국어 판정 문구를 확인했고 390px 문서 폭과 scroll 폭이 같으며 console error·warning이 0개입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/giwa-chain",
@@ -5956,7 +5955,7 @@
     {
       "route": "blockchain/smr-theory",
       "title": "상태 머신 복제 (SMR) 이론",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-public-verified",
       "publicEntry": "src/pages/articles/blockchain/smr-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/distributed-systems/DistributedSystemsPathLocator.tsx",
@@ -6023,11 +6022,10 @@
         "reducedMotion": "pass · prefers-reduced-motion에서 4.6초 뒤에도 첫 장면을 유지하고 재생 버튼이 비활성화되는지 확인했습니다.",
         "noJavaScript": "pass · 390×844 JavaScript 비활성 browser context에서 현재 장면과 조작부는 숨고 정적 여섯 장면·부모 지도 복귀가 보이며 document 폭 390px로 가로 넘침이 없는지 확인했습니다.",
         "console": "pass · Playwright 세션에서 console error·warning 0개입니다.",
-        "build": "pass · NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다."
+        "build": "pass · NODE_OPTIONS=--max-old-space-size=6144 npm run build를 완료했습니다.",
+        "publicRoute": "pass · GitHub Pages 배포 40345120677 뒤 공개 경로에서 H1·concept 트랙·첫 장면·시각화 7개를 확인했고 390px 문서 폭과 scroll 폭이 같으며 console error·warning이 0개입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/stablecoin-overview",
