@@ -10364,25 +10364,58 @@
       "route": "ai/prediction-time-feature-availability",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/prediction-time-feature-availability.tsx",
       "publicPath": "cs/ai/prediction-time-feature-availability",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
+        "explicitAssumption": true,
         "answerPointers": 0,
         "levelMarkers": 0,
-        "sectionCount": 4
+        "sectionCount": 8
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "핵심 시각 자료가 긴 설명과 복습 문제 뒤에 있어, 예측 요청 하나의 정보 경계를 먼저 볼 수 없었습니다.",
+        "사건 시각이 입력 마감보다 이르면 사용할 수 있다는 설명이 실제 도착 시각과 수정본 가용 시점을 구분하지 못했습니다.",
+        "직속 부모인 평가 계약과 현재 영역, 같은 학습 경로의 앞뒤 글이 첫 화면에 보이지 않았습니다.",
+        "point-in-time join의 일반 원리와 Feast의 버전별 옵션을 구분하는 공식 근거가 없었습니다."
+      ],
+      "fixture": {
+        "assumed": true,
+        "requestId": "pred-204",
+        "entityId": "p-17",
+        "cutoff": "10:00 Asia/Seoul",
+        "cutoffLogPosition": 8420,
+        "records": [
+          "r-vital-31 · 사건 09:40 · 도착 09:42 · 포함",
+          "r-lab-88 · 사건 09:50 · 도착 10:20 · 제외"
+        ],
+        "missingRule": "missing-v3",
+        "expected": "10시 입력은 활력 기록과 검사 누락 표시로 재현되며, 늦게 도착한 검사 결과는 제외됩니다."
+      },
+      "stageAnchors": {
+        "parent": "competition-workflow#source-availability",
+        "0": "overview — 요청·도착·판정·재현의 한 흐름",
+        "1": "lineage — 예측값에서 원본 기록까지의 의존 경로",
+        "2": "fixture — 사건 시각과 도착 시각을 함께 제한하는 SQL",
+        "3": "boundary — 이 판정만으로 막지 못하는 다른 누수",
+        "return": "feature-availability-return"
+      },
+      "sourceEvidence": [
+        "Feast v0.66.0의 버전 고정 공식 문서에서 기본 시점 일치 결합은 사건 시각을 제한하고, created timestamp 필터는 별도 옵션이라는 경계를 확인했습니다.",
+        "Google Cloud BigQuery ML 공식 문서에서 대상별 입력 마감과 feature timestamp를 사용한 시점 일치 조회 계약을 확인했습니다.",
+        "p-17·pred-204·원본 ID·시각·로그 위치는 메커니즘 설명을 위한 가정이며 실제 운영 측정값이 아닙니다."
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "10시 예측 한 건에서 사건 시각·도착 시각·입력 판정·재현 증거를 추적하고, 확인한 사실을 직속 부모인 평가 계약에 되돌려 놓았습니다.",
+        "humanize": "known time·receipt 같은 직역 표현을 피하고 입력 마감·도착 시각·입력 판정 기록으로 역할을 설명했습니다.",
+        "browser390": "390×844 production preview에서 현재 장면에 필요한 영역만 표시하며 문서·시각 자료 가로 넘침과 console 오류가 0임을 확인했습니다.",
+        "browser1440": "1440×1000 production preview에서 요청·원본 기록·입력 판정을 한 화면에서 비교하며 문서·시각 자료 가로 넘침과 console 오류가 0임을 확인했습니다.",
+        "keyboard": "실제 focus 대상에서 ArrowRight로 장면 01에서 02로 이동했습니다.",
+        "reducedMotion": "reduced-motion에서는 마지막 재현 장면을 정적으로 제공하고 재생 조작을 비활성화했습니다.",
+        "noScript": "JavaScript 비활성 390×844 production preview에서 HTTP 200, 제목·p-17·사건 시각·도착 시각·부모 지도 반환과 가로 넘침 0을 확인했습니다.",
+        "build": "production build가 8,025개 module을 변환했고 정적 공개 경로에 이 글의 no-script 본문을 생성했습니다.",
+        "browserEvidence": "output/playwright/prediction-time-feature-production/2026-10-26T03-17-12/summary.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 배포 뒤 공개 경로 재검증"
       ]
     },
     {

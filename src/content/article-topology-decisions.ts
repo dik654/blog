@@ -289,6 +289,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "동일한 input snapshot·tool·model·quality gate에서 single/multi time·cost·quality를 비교하고, 필수 receipt coverage·artifact checksum 충돌·전역 validator·retry idempotency를 모두 통과해야 완료로 판정합니다.",
   },
+  "ai/prediction-time-feature-availability": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "환자 p-17의 10시 예측 한 건에서 사건 시각, 시스템 도착, 원본별 허용, 집계값 완성 시각과 재현 receipt까지 같은 입력 경계를 추적합니다. 시각화 안의 장면용 section까지 휴리스틱이 세어 분리 후보가 되었지만, 글을 나누면 도착 판정과 그 판정을 증명하는 lineage가 끊깁니다.",
+    sharedGate:
+      "원본마다 event_at과 available_at이 입력 마감 이하인지 검사하고, 동일 시각은 snapshot offset으로 순서를 고정하며, 제외된 기록의 missing fallback revision까지 같은 예측 receipt에 남깁니다.",
+  },
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
@@ -3770,6 +3779,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/lora-finetuning": "2123bb03bde8459e",
   "ai/lora-training-and-release": "9887191b7009e2d0",
   "ai/multi-agent-implementation": "3969ad1368c01763",
+  "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",

@@ -173,6 +173,7 @@ const noScriptArticleRoutes = new Set([
   "ai/knowledge-graph-construction",
   "ai/graphrag-community-and-multihop-search",
   "ai/multi-agent-implementation",
+  "ai/prediction-time-feature-availability",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

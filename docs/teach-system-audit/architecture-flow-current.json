@@ -5,13 +5,13 @@
     "publicArticles": 992,
     "architectureCandidates": 177,
     "dedicatedVisuals": 682,
-    "inlineVisuals": 542,
+    "inlineVisuals": 541,
     "customVisuals": 865,
     "animatedMechanisms": 475,
     "architectureWithoutAnimation": 92,
-    "recursiveLocators": 285,
+    "recursiveLocators": 286,
     "codeEvidenceLinked": 216,
-    "sourceCitationLinked": 982,
+    "sourceCitationLinked": 983,
     "architectureWithoutCustomVisual": 25
   },
   "articles": [
@@ -4231,12 +4231,12 @@
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
-      "hasInlineVisual": true,
+      "hasInlineVisual": false,
       "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
-      "hasSourceCitation": false,
+      "hasSourceCitation": true,
       "reviewPriority": "verify-motion-semantics"
     },
     {
