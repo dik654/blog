@@ -307,6 +307,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "예측 0분과 25분의 MAE·RMSE를 같은 네 평가 단위에서 검산하고, 표본 중앙값 0·평균 25와 [0,30]·[0,100] 구간의 포함률·폭을 같은 설명용 기록으로 연결합니다.",
   },
+  "ai/ranking-metrics": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "‘서울 야간 소아과’ 검색 한 번에서 결과 목록을 고정하고 미판정 문서 D를 추가 판정한 뒤 RR·Recall·NDCG를 계산하고, 질의 종류별 평균과 요청 횟수별 평균으로 확장합니다. 네 절은 목록·판정·채점·사용자 집단이라는 실제 의존 순서를 하나의 평가 계약으로 연결합니다.",
+    sharedGate:
+      "D 판정 전후의 기존·후보 NDCG .956/.665→.658/1.000을 검산하고, head 99회·tail 1회에서 질의 종류별 평균 기존/후보 .829/.8155와 요청 횟수별 평균 .66142/.99631을 같은 설명용 기록으로 연결합니다.",
+  },
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
@@ -3790,6 +3799,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/multi-agent-implementation": "c2b3777be97f2835",
   "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
   "ai/regression-metrics": "0fbb57b8ab39f4c1",
+  "ai/ranking-metrics": "1cb64ef79c8f94b4",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",

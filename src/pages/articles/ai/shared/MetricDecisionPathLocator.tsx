@@ -33,11 +33,34 @@ const steps = [
   },
 ] as const;
 
-export function RegressionMetricLocator() {
+type MetricStepKey = (typeof steps)[number]["key"];
+
+const locatorCopy: Record<
+  Extract<MetricStepKey, "regression" | "ranking">,
+  { currentLabel: string; question: string; ariaLabel: string }
+> = {
+  regression: {
+    currentLabel: "회귀 지표",
+    question: "같은 네 수치가 MAE와 RMSE에서 왜 다른 최적 예측을 고릅니까?",
+    ariaLabel: "평가 설계에서 회귀 지표로 내려가는 학습 경로",
+  },
+  ranking: {
+    currentLabel: "검색·추천 지표",
+    question: "검색 결과의 판정과 순서를 어떻게 사용자 집단의 평가로 연결합니까?",
+    ariaLabel: "평가 설계에서 검색·추천 지표로 내려가는 학습 경로",
+  },
+};
+
+function MetricDecisionPathLocator({
+  current,
+}: {
+  current: keyof typeof locatorCopy;
+}) {
+  const copy = locatorCopy[current];
   return (
     <aside
       className="not-prose mb-8 border-y border-border py-4 sm:py-5"
-      aria-label="평가 설계에서 회귀 지표로 내려가는 학습 경로"
+      aria-label={copy.ariaLabel}
     >
       <nav className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] leading-5 text-muted-foreground">
         <Link to="/cs/ai" className="hover:text-primary">
@@ -49,7 +72,7 @@ export function RegressionMetricLocator() {
         </Link>
         <span aria-hidden>›</span>
         <strong className="text-foreground" aria-current="page">
-          회귀 지표
+          {copy.currentLabel}
         </strong>
       </nav>
 
@@ -59,7 +82,7 @@ export function RegressionMetricLocator() {
             개념
           </span>
           <p className="mt-3 break-keep text-base font-bold leading-7">
-            같은 네 수치가 MAE와 RMSE에서 왜 다른 최적 예측을 고릅니까?
+            {copy.question}
           </p>
         </div>
         <div className="border-l-2 border-primary/45 pl-3">
@@ -78,14 +101,14 @@ export function RegressionMetricLocator() {
         aria-label="평가 계약에서 지표 선택으로 이어지는 다섯 단계"
       >
         {steps.map((item, index) => {
-          const current = item.key === "regression";
+          const isCurrent = item.key === current;
           return (
             <Link
               key={item.key}
               to={item.href}
-              aria-current={current ? "step" : undefined}
+              aria-current={isCurrent ? "step" : undefined}
               className={`min-w-0 bg-background px-3 py-3 ${
-                current
+                isCurrent
                   ? "border-b-2 border-primary text-foreground"
                   : "text-muted-foreground hover:text-primary"
               }`}
@@ -105,6 +128,14 @@ export function RegressionMetricLocator() {
       </div>
     </aside>
   );
+}
+
+export function RegressionMetricLocator() {
+  return <MetricDecisionPathLocator current="regression" />;
+}
+
+export function RankingMetricLocator() {
+  return <MetricDecisionPathLocator current="ranking" />;
 }
 
 export function RegressionMetricReturn() {
@@ -132,6 +163,37 @@ export function RegressionMetricReturn() {
           className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
         >
           다음 주제 · 분류 점수를 행동으로 바꾸기 →
+        </Link>
+      </div>
+    </aside>
+  );
+}
+
+export function RankingMetricReturn() {
+  return (
+    <aside
+      id="ranking-metric-return"
+      className="not-prose my-8 border-y border-border py-5"
+      aria-label="검색·추천 지표에서 확인한 사실을 평가 설계 지도에 되돌려 놓기"
+    >
+      <p className="text-[10px] font-bold text-primary">부모 지도에 되돌려 놓기</p>
+      <p className="mt-2 max-w-3xl break-keep text-base font-bold leading-7">
+        검색·추천 평가는 질의 하나의 목록을 먼저 채점하고, 그 점수를 어떤 질의
+        집단으로 합칠지 정합니다. 순위 공식만 고르는 것으로 끝나지 않고 판정 범위와
+        집계 가중치까지 고정해야 같은 시스템을 비교할 수 있습니다.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold">
+        <Link
+          to="/cs/ai/evaluation-metrics#map"
+          className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
+        >
+          평가 설계의 출력 지도에 반영하기 ↑
+        </Link>
+        <Link
+          to="/cs/ai/metric-selection-protocol#overview"
+          className="inline-flex min-h-11 items-center border-b border-border hover:border-primary hover:text-primary"
+        >
+          다음 주제 · 지표를 선택 규칙으로 고정하기 →
         </Link>
       </div>
     </aside>

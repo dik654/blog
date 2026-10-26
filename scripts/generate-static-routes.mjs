@@ -175,6 +175,7 @@ const noScriptArticleRoutes = new Set([
   "ai/multi-agent-implementation",
   "ai/prediction-time-feature-availability",
   "ai/regression-metrics",
+  "ai/ranking-metrics",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",

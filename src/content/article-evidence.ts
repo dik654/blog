@@ -2442,10 +2442,22 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/ranking-metrics": [
     {
+      kind: "공식 문서",
+      label: "scikit-learn 1.9.1 — Normalized Discounted Cumulative Gain",
+      href: "https://scikit-learn.org/1.9/modules/model_evaluation.html#normalized-discounted-cumulative-gain",
+      note: "2026-10-26 재검토 · 예측 순서의 정답 점수에 로그 할인을 적용하고 이상적 DCG로 정규화하는 현재 문서",
+    },
+    {
+      kind: "공식 코드",
+      label: "NIST trec_eval · 35cf096",
+      href: "https://github.com/usnistgov/trec_eval/blob/35cf096ba6d5ae08ca4803c056b31ed61a56a6d4/trec_eval.c#L92-L102",
+      note: "2026-10-26 확인 · 풀 밖 문서와 미판정 문서의 내부 값, 대부분 지표의 0점 처리 경계",
+    },
+    {
       kind: "핵심 논문",
       label: "Cumulated Gain-based Evaluation of IR Techniques",
       href: "https://doi.org/10.1145/582415.582418",
-      note: "Graded relevance와 rank discount를 반영하는 cumulative gain·normalized evaluation",
+      note: "2002년 ACM TOIS 20(4), 422–446 · 단계형 관련도와 결과 위치를 반영하는 누적·할인·정규화 평가",
     },
   ],
   "ai/metric-selection-protocol": [

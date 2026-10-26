@@ -11790,25 +11790,99 @@
       "route": "ai/ranking-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/ranking-metrics.tsx",
       "publicPath": "cs/ai/ranking-metrics",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 4,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "평가 설계의 일반 순위 그림을 재사용해 검색 요청·판정 집합·질의별 점수·사용자 집단 집계가 한 사례로 이어지지 않았음",
+        "검색어 하나의 reciprocal rank를 MRR로 부르고 k=3을 고정한 뒤 Recall@2를 사용해 RR·MRR·Recall의 평가 단위가 섞여 있었음",
+        "미판정 문서 D의 판정이 집계 뒤에 놓였고, D가 IDCG 분모를 바꿔 기존 시스템 점수까지 내리는 원인이 설명되지 않았음"
+      ],
+      "fixture": {
+        "assumed": true,
+        "headQuery": "서울 야간 소아과",
+        "requestCount": 99,
+        "baselineResults": ["A3", "B0", "C2"],
+        "candidateResultsBeforeJudgment": ["D?", "A3", "C2"],
+        "candidateResultsAfterJudgment": ["D3", "A3", "C2"],
+        "beforeJudgmentNdcg": {
+          "baseline": 0.956,
+          "candidate": 0.665,
+          "idcg": 8.893
+        },
+        "afterJudgmentNdcg": {
+          "baseline": 0.658,
+          "candidate": 1,
+          "idcg": 12.916
+        },
+        "tailQuery": "새벽 소아과 무료주차",
+        "tailRequestCount": 1,
+        "tailBaselineResults": ["E1", "F0"],
+        "tailCandidateResults": ["F0", "E1"],
+        "queryAverage": {
+          "baseline": 0.829,
+          "candidate": 0.8155
+        },
+        "trafficAverage": {
+          "baseline": 0.66142,
+          "candidate": 0.99631
+        },
+        "boundary": "모든 검색어·관련도·요청 횟수는 계산을 설명하기 위한 가정이며 실제 서비스 측정값이 아닙니다."
+      },
+      "stageAnchors": {
+        "0": "overview",
+        "1": "judgment-boundary",
+        "2": "ndcg",
+        "3": "query-population",
+        "parent": "evaluation-metrics#map",
+        "return": "ranking-metric-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/1.9/modules/model_evaluation.html#normalized-discounted-cumulative-gain",
+          "application": "scikit-learn 1.9.1 공식 문서에서 예측 순서의 정답 점수에 로그 할인을 적용하고 이상적 DCG로 정규화하는 절차를 확인"
+        },
+        {
+          "href": "https://github.com/usnistgov/trec_eval/blob/35cf096ba6d5ae08ca4803c056b31ed61a56a6d4/trec_eval.c#L92-L102",
+          "application": "NIST trec_eval 고정 소스에서 판정 풀 밖·미판정 문서의 내부 값과 대부분 지표의 0점 처리 경계를 확인"
+        },
+        {
+          "href": "https://doi.org/10.1145/582415.582418",
+          "application": "Järvelin과 Kekäläinen의 원 논문에서 단계형 관련도·위치 할인·이상적 순서 정규화의 근거 범위를 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "목록→판정→질의별 채점→사용자 집단 집계 순서로 재구성하고 RR·MRR·Recall·NDCG 및 판정 전후·집계 수치를 직접 검산했습니다.",
+        "humanize": "query·candidate·relevance·population을 검색어·후보 결과·관련도·사용자 집단으로 먼저 설명하고 표준 약어와 수식을 뒤에 연결했습니다.",
+    "browser390": "production preview에서 문서·시각화 가로 넘침 0, 352×550px 시각화 안에 장면 3·4의 제목·수치·설명·조작부가 모두 보이며 console 오류 0",
+    "browser1440": "production preview에서 문서·시각화 가로 넘침 0, 직속 부모·현재 위치·반환 경로와 네 패널 확인, console 오류 0",
+    "keyboard": "7초 동안 첫 장면이 유지되고, 시각화에 초점을 둔 뒤 ArrowRight로 목록→판정 장면 이동을 확인했습니다.",
+    "reducedMotion": "390×844 reduced-motion에서 마지막 집계 장면으로 고정되고 재생 조작부가 비활성화되며 실행 중 animation이 0임을 확인했습니다.",
+    "noJavaScript": "390×844 JavaScript 비활성 경로에서 HTTP 200, 정적 네 장면·집계 결론·가로 넘침 0, live 장면 숨김을 확인했습니다.",
+    "productionBuild": "8GB Node heap 상한에서 8,028개 module, 정적 public route 2,090개, no-script 본문 280편을 생성했습니다. 최대 RSS 약 5.74GiB, swap 0입니다.",
+        "independentReview": "Opus 독립 검토 2회에서 첫 검토의 RR/MRR·k·판정 순서 결함과 두 번째 검토의 Recall@3·IDCG 원인·tail 사례 결함을 반영했습니다.",
+    "browserEvidence": "output/playwright/ai-ranking-metrics-production/2026-10-26T07-03-55/summary.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+    "GitHub Pages 공개 경로 검증"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "concept-track-ranking-judgment-population-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/ranking-metrics/ModernArticle.tsx",
+        "src/pages/articles/ai/ranking-metrics/RankingMetricFlowViz.tsx",
+        "src/pages/articles/ai/shared/MetricDecisionPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/ranking-metrics/ModernArticle.tsx",
+      "preserved": [
+        "MRR·Recall@k·NDCG@k의 서로 다른 평가 질문",
+        "관련도 이득·위치 할인·이상적 순서 정규화의 NDCG 계산",
+        "질의 종류별 평균과 요청 횟수별 평균의 대표 집단 차이",
+        "미판정 문서·판정 비율·후보 수집 방식의 평가 경계"
       ]
     },
     {
@@ -15036,24 +15110,24 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 88,
+    "rewritten-local-verified": 89,
     "rewritten-production-verified": 96,
-    "unreviewed": 4
+    "unreviewed": 3
   },
   "localValidationSummary": {
-    "rewritten": 184,
-    "remainingUnreviewed": 4,
+    "rewritten": 185,
+    "remainingUnreviewed": 3,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
     "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
     "typescript": "checkpoint255 actual npx tsc -b exit0",
-    "note": "현재 184편은 actual-body semantic review를 마쳤습니다. 로컬 검증 88편과 공개 배포 검증 96편을 구분하며, 미검토 4편은 완료에 포함하지 않습니다.",
+    "note": "현재 185편은 actual-body semantic review를 마쳤습니다. 로컬 검증 89편과 공개 배포 검증 96편을 구분하며, 미검토 3편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 184,
-    "rewrittenLocalVerified": 88,
-    "unreviewed": 4,
+    "verifiedRewrites": 185,
+    "rewrittenLocalVerified": 89,
+    "unreviewed": 3,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
