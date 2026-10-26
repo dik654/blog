@@ -3925,7 +3925,7 @@
       "catalogIndex": 389,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-public-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -3955,7 +3955,7 @@
       "catalogIndex": 392,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-public-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
