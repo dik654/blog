@@ -298,6 +298,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "원본마다 event_at과 available_at이 입력 마감 이하인지 검사하고, 동일 시각은 snapshot offset으로 순서를 고정하며, 제외된 기록의 missing fallback revision까지 같은 예측 receipt에 남깁니다.",
   },
+  "ai/regression-metrics": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-26",
+    rationale:
+      "배송 지연 [0,0,0,100]이라는 한 사례에서 잔차, 절댓값·제곱 비용, 중앙값·평균, 예측 구간의 포함률·폭을 차례로 추적합니다. 네 절은 서로 다른 지표를 나열하는 것이 아니라 같은 수치가 비용 선택에 따라 다른 최적 예측과 구간 판정을 만드는 하나의 질문을 닫습니다.",
+    sharedGate:
+      "예측 0분과 25분의 MAE·RMSE를 같은 네 평가 단위에서 검산하고, 표본 중앙값 0·평균 25와 [0,30]·[0,100] 구간의 포함률·폭을 같은 설명용 기록으로 연결합니다.",
+  },
   "ai/vllm-scheduler": {
     "action": "keep",
     "status": "implemented",
@@ -3780,6 +3789,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/lora-training-and-release": "9887191b7009e2d0",
   "ai/multi-agent-implementation": "c2b3777be97f2835",
   "ai/prediction-time-feature-availability": "8d46c5ddd2f1da85",
+  "ai/regression-metrics": "0fbb57b8ab39f4c1",
   "saas/edge-request-defense-pipeline": "7cbe4e65093e80a9",
   "saas/anycast-delivery-continuity": "aff159589f1c6bbb",
   "saas/private-access-inbound-closure": "4ce0f54f2ee45937",

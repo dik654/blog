@@ -31702,9 +31702,9 @@ export const ARTICLE_LEARNING: Readonly<
   "ai/regression-metrics": {
     entryLevel: true,
     entryNote:
-      "회귀 metric을 안다고 가정하지 않습니다. Actual과 prediction을 같은 수직선에 놓고 residual을 만든 뒤 absolute·squared penalty와 interval로 확장합니다.",
+      "회귀 지표를 안다고 가정하지 않습니다. 배송 지연 네 건의 실제값과 예측값으로 잔차를 만든 뒤 절댓값·제곱 비용과 예측 구간으로 확장합니다.",
     coreIdea:
-      "회귀 평가는 signed residual과 penalty를 구분하고, absolute/squared conditional risk가 각각 중앙값/평균을 목표로 하는 이유와 interval의 coverage/width trade-off를 함께 읽는 수업입니다.",
+      "회귀 평가는 방향 있는 잔차와 비용을 구분하고, 절댓값과 제곱 비용이 각각 중앙값과 평균을 고르는 이유, 예측 구간의 포함률과 폭을 한 사례로 연결하는 수업입니다.",
     assumedKnowledge: [],
     introducedHere: [
       {
@@ -31724,25 +31724,25 @@ export const ARTICLE_LEARNING: Readonly<
       {
         id: "regression-residual-penalty",
         sectionId: "residual-penalty",
-        intuition: "Actual과 prediction 사이 거리에는 방향이 있고, metric은 그 거리에 비용 곡선을 씌웁니다.",
-        workedExample: "[1,1,1,9]에서 MAE는 3, RMSE는 √21≈4.58입니다.",
-        boundary: "Residual r와 absolute penalty |r|·squared penalty r²는 서로 다른 객체입니다.",
+        intuition: "실제값과 예측값 사이 거리에는 방향이 있고, 지표는 그 거리에 비용 곡선을 씌웁니다.",
+        workedExample: "배송 지연 [0,0,0,100]에서 예측 0분은 MAE 25·RMSE 50이고, 예측 25분은 MAE 37.5·RMSE 약 43.30입니다.",
+        boundary: "잔차 r와 절댓값 비용 |r|·제곱 비용 r²는 서로 다른 객체입니다.",
       },
       {
         id: "absolute-squared-risk-bayes-act",
         sectionId: "bayes-act",
         intuition: "제곱 비용은 먼 값이 평균을 끌고, 절댓값 비용은 양쪽 사례 수가 균형인 중앙값에서 멈춥니다.",
-        workedExample: "Y=0 with .9, Y=100 with .1이면 squared target은 10, absolute target은 0입니다.",
-        boundary: "Population minimizer에 대한 결과이며 finite test set의 model 순위를 보장하지 않습니다.",
-        proofIdea: "Squared risk derivative는 2(a−E[Y|x])이고 absolute risk subgradient는 좌우 mass 차이입니다.",
+        workedExample: "표본 [0,0,0,100]의 중앙값은 0이고 평균은 25입니다.",
+        boundary: "표본 최적점과 모집단의 조건부 최적점을 구분하며, 이 성질만으로 시험 자료의 모델 순위를 보장하지 않습니다.",
+        proofIdea: "제곱 위험의 미분은 2(a−E[Y|x])이고 절댓값 위험의 부분기울기는 좌우 확률 질량의 차이입니다.",
         counterexample: "대칭 분포에서는 평균과 중앙값이 같아 target 차이가 사라질 수 있습니다.",
       },
       {
         id: "prediction-interval-coverage-width",
         sectionId: "interval",
         intuition: "모든 숫자를 덮는 구간은 정답을 놓치지 않지만 결정에 쓸 정보도 거의 없습니다.",
-        workedExample: "두 후보가 coverage .91이면 평균 폭 12와 30을 별도 축으로 비교합니다.",
-        boundary: "전체 coverage는 subgroup·horizon별 conditional coverage를 보장하지 않습니다.",
+        workedExample: "[0,30]은 포함률 75%·폭 30분이고 [0,100]은 포함률 100%·폭 100분입니다.",
+        boundary: "네 건의 전체 포함률은 실제 모집단의 90% 보장이나 하위 집단별 포함률을 증명하지 않습니다.",
       },
     ],
     conceptStages: [
@@ -31766,15 +31766,15 @@ export const ARTICLE_LEARNING: Readonly<
       },
     ],
     exercises: [
-      { level: "basic", question: "Actual 42, prediction 35의 residual과 방향을 설명하세요.", answerChecklist: ["42-35", "+7", "underprediction", "same unit"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
-      { level: "basic", question: "Residual과 penalty를 구분하고 |r|과 r²의 의미를 설명하세요.", answerChecklist: ["signed difference", "absolute removes sign", "squared amplifies", "cost choice"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
-      { level: "basic", question: "Residual [1,1,1,9]의 MAE와 RMSE를 계산하세요.", answerChecklist: ["MAE 3", "MSE 21", "RMSE about 4.58", "large error contribution"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
-      { level: "basic", question: "Squared loss가 큰 residual을 더 강조하는 이유를 multiplication 단계로 설명하세요.", answerChecklist: ["r times r", "9 becomes 81", "average", "square root only restores unit"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
-      { level: "basic", question: "Y=0 with .9, Y=100 with .1의 mean과 median을 구하세요.", answerChecklist: ["mean 10", "median 0", "different targets", "rare large value"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
-      { level: "basic", question: "Prediction interval coverage와 width가 답하는 질문을 구분하세요.", answerChecklist: ["contains actual", "fraction covered", "upper-lower", "informativeness"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
+      { level: "basic", question: "실제 지연 100분, 예측 25분의 잔차와 방향을 설명하세요.", answerChecklist: ["100-25", "+75", "낮게 예측", "분 단위"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
+      { level: "basic", question: "잔차와 비용을 구분하고 |r|과 r²의 의미를 설명하세요.", answerChecklist: ["방향 있는 차이", "절댓값은 부호 제거", "제곱은 큰 오차 확대", "비용 선택"], requiredConcepts: ["regression-residual-penalty"], sectionId: "overview" },
+      { level: "basic", question: "[0,0,0,100]에서 예측 0분과 25분의 MAE와 RMSE를 비교하세요.", answerChecklist: ["예측 0 MAE 25", "예측 0 RMSE 50", "예측 25 MAE 37.5", "예측 25 RMSE 약 43.30", "선택이 갈림"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
+      { level: "basic", question: "제곱 비용이 큰 잔차를 더 강조하는 이유를 곱셈 단계로 설명하세요.", answerChecklist: ["r 곱하기 r", "100이 10000", "평균", "제곱근은 단위 복원"], requiredConcepts: ["regression-residual-penalty"], sectionId: "residual-penalty" },
+      { level: "basic", question: "[0,0,0,100]의 평균과 중앙값을 구하세요.", answerChecklist: ["평균 25", "중앙값 0", "서로 다른 목표", "드문 큰 값"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
+      { level: "basic", question: "예측 구간의 포함률과 폭이 답하는 질문을 구분하세요.", answerChecklist: ["실제값 포함", "포함 비율", "위 경계-아래 경계", "정보의 범위"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
       { level: "advanced", question: "Squared-risk minimizer가 조건부 평균인 derivative proof를 전개하세요.", answerChecklist: ["conditional expectation", "differentiate", "2(a-EY)", "zero at mean", "second moment"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
       { level: "advanced", question: "Absolute-risk minimizer가 조건부 중앙값인 subgradient proof idea를 설명하세요.", answerChecklist: ["left mass", "right mass", "slope sign", "median", "nonunique interval"], requiredConcepts: ["absolute-squared-risk-bayes-act"], sectionId: "bayes-act" },
-      { level: "advanced", question: "90% interval A(.91,width12)와 B(.94,width30)의 release rule을 설계하세요.", answerChecklist: ["coverage guardrail", "sampling uncertainty", "A narrower", "subgroup coverage", "same units"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
+      { level: "advanced", question: "목표 포함률이 90%일 때 [0,30]과 [0,100]을 어떻게 판정할지 설명하세요.", answerChecklist: ["75% 탈락", "100% 통과", "표본 네 건의 불확실성", "하위 집단 포함률", "같은 단위"], requiredConcepts: ["prediction-interval-coverage-width"], sectionId: "interval" },
       { level: "advanced", question: "Log target을 원래 단위로 되돌릴 때 MAE·RMSE receipt에 필요한 항목을 설계하세요.", answerChecklist: ["transform version", "inverse rule", "bias correction", "original unit", "same evaluation rows", "rollback"], requiredConcepts: ["regression-residual-penalty"], sectionId: "interval" },
     ],
     papers: [

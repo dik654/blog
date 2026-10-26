@@ -2420,10 +2420,16 @@ export const ARTICLE_EVIDENCE: Readonly<
   ],
   "ai/regression-metrics": [
     {
+      kind: "공식 문서",
+      label: "scikit-learn 1.9.1 — Metrics and scoring",
+      href: "https://scikit-learn.org/1.9/modules/model_evaluation.html",
+      note: "2026-10-26 재검토 · 평균·중앙값·분위수라는 예측 대상과 MAE·MSE·RMSE·분위수 손실의 정의",
+    },
+    {
       kind: "핵심 논문",
       label: "Regression Quantiles",
       href: "https://doi.org/10.2307/1913643",
-      note: "Absolute-loss 기반 conditional quantile regression과 조건부 평균을 넘어선 회귀 target",
+      note: "1978년 Econometrica 46(1), 33–50 · 비대칭 절댓값 손실에 기반한 조건부 분위수 회귀",
     },
   ],
   "ai/classification-metrics": [

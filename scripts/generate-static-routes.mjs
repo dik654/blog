@@ -174,6 +174,7 @@ const noScriptArticleRoutes = new Set([
   "ai/graphrag-community-and-multihop-search",
   "ai/multi-agent-implementation",
   "ai/prediction-time-feature-availability",
+  "ai/regression-metrics",
   "ai/rate-limiting-and-reliability-patterns",
   "ai/prompt-engineering",
   "ai/prompt-reasoning",
