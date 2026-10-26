@@ -11951,25 +11951,88 @@
       "route": "ai/regression-metrics",
       "source": "/Users/dylan/code/projects/blog/src/pages/articles/ai/regression-metrics.tsx",
       "publicPath": "cs/ai/regression-metrics",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "screeningSignals": {
-        "explicitAssumption": false,
-        "answerPointers": 0,
-        "levelMarkers": 0,
+        "explicitAssumption": true,
+        "answerPointers": 4,
+        "levelMarkers": 4,
         "sectionCount": 4
       },
-      "beforeDefects": [],
-      "fixture": null,
-      "stageAnchors": {},
-      "sourceEvidence": [],
+      "beforeDefects": [
+        "본문은 잔차 [1,1,1,9], 평균·중앙값은 확률 분포, 시각화는 [0,0,0,100]을 사용해 한 사례를 끝까지 추적할 수 없었음",
+        "본문보다 설명이 약한 그림이 먼저 오지 않았고, 평가 설계의 어느 자식 글인지 보여 주는 직속 부모 지도가 없었음",
+        "MAE와 RMSE 정의는 있었지만 두 후보 예측의 승자가 실제로 바뀌는 계산과 같은 기록을 쓴 구간 평가가 연결되지 않았음"
+      ],
+      "fixture": {
+        "unit": "배송 지연 분",
+        "observations": [0, 0, 0, 100],
+        "candidateZero": {
+          "prediction": 0,
+          "mae": 25,
+          "rmse": 50
+        },
+        "candidateMean": {
+          "prediction": 25,
+          "mae": 37.5,
+          "mse": 1875,
+          "rmse": 43.3
+        },
+        "narrowInterval": {
+          "range": [0, 30],
+          "coverage": 0.75,
+          "width": 30
+        },
+        "wideInterval": {
+          "range": [0, 100],
+          "coverage": 1,
+          "width": 100
+        },
+        "boundary": "모든 수치는 계산을 설명하기 위한 가정이며 실제 서비스 측정값이 아닙니다."
+      },
+      "stageAnchors": {
+        "0": "overview",
+        "1": "residual-penalty",
+        "2": "bayes-act",
+        "3": "interval",
+        "parent": "evaluation-metrics#map",
+        "return": "regression-metric-return"
+      },
+      "sourceEvidence": [
+        {
+          "href": "https://scikit-learn.org/1.9/modules/model_evaluation.html",
+          "application": "scikit-learn 1.9.1 공식 문서에서 평균·중앙값·분위수의 예측 대상과 MAE·MSE·RMSE·분위수 손실의 정의를 확인"
+        },
+        {
+          "href": "https://doi.org/10.2307/1913643",
+          "application": "Koenker와 Bassett의 Regression Quantiles에서 비대칭 절댓값 손실과 조건부 분위수 회귀의 근거 범위를 확인"
+        }
+      ],
       "validation": {
-        "semanticReview": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "semanticReview": "배송 지연 [0,0,0,100] 한 사례에서 두 후보의 MAE·RMSE, 중앙값 0·평균 25, 두 예측 구간의 포함률·폭을 모두 직접 검산했습니다.",
+        "humanize": "잔차·절댓값 비용·제곱 비용·포함률을 먼저 한국어로 설명하고 수식 기호와 영문 약어를 그 뒤에 연결했습니다.",
+        "browser390": "production preview에서 문서·시각화 가로 넘침 0, 네 장면 중간 화면과 마지막 화면의 카드·조작부 확인, console 오류 0",
+        "browser1440": "production preview에서 문서·시각화 가로 넘침 0, 직속 부모·현재 위치·반환 경로와 네 패널 확인, console 오류 0",
+        "keyboard": "6.8초 동안 장면 01 유지, ArrowRight로 01→02 및 세 번 이동해 04 도달",
+        "reducedMotion": "장면 04 고정, 재생 관련 버튼 비활성",
+        "noScript": "390×844 production preview에서 HTTP 200, 조작부와 live 장면 display none, 네 정적 장면 목록 표시, 문서 가로 넘침 0",
+        "build": "Vite 7.3.1·8,027 modules·정적 public route 2,090개·no-script 본문 279편·최대 RSS 6,795,902,976 bytes·swap 0",
+        "browserEvidence": "output/playwright/ai-regression-metrics-production/2026-10-26T03-41-35/summary.json"
       },
       "remaining": [
-        "실제 공개 본문과 기존 연습문제를 읽고 단계별 설명·숫자 일치를 검토"
+        "GitHub Pages 공개 경로 검증"
+      ],
+      "reviewDate": "2026-10-26",
+      "reviewMode": "concept-track-single-fixture-metric-decision-review",
+      "bodyFiles": [
+        "src/pages/articles/ai/regression-metrics/ModernArticle.tsx",
+        "src/pages/articles/ai/regression-metrics/RegressionMetricDecisionViz.tsx",
+        "src/pages/articles/ai/shared/MetricDecisionPathLocator.tsx"
+      ],
+      "actualBodyFile": "src/pages/articles/ai/regression-metrics/ModernArticle.tsx",
+      "preserved": [
+        "잔차·MAE·RMSE의 일반식",
+        "절댓값 비용과 제곱 비용의 평균·중앙값 목표",
+        "예측 구간의 포함률·폭 구분과 Regression Quantiles 근거"
       ]
     },
     {
@@ -14973,24 +15036,24 @@
     }
   ],
   "counts": {
-    "rewritten-local-verified": 72,
-    "rewritten-production-verified": 91,
-    "unreviewed": 23
+    "rewritten-local-verified": 88,
+    "rewritten-production-verified": 96,
+    "unreviewed": 4
   },
   "localValidationSummary": {
-    "rewritten": 117,
-    "remainingUnreviewed": 69,
+    "rewritten": 184,
+    "remainingUnreviewed": 4,
     "first6Browser": "/tmp/world-browser-audit/teach-ai-systems-first6-summary.json",
     "second4Browser": "/tmp/world-browser-audit/teach-ai-systems-second4-summary.json",
     "sourcePanel3901440": "/tmp/teach-all/ai-systems-screens-02/code-panel.json",
     "learningStrict": "checkpoint255 — 799편 정확6+4 strict local+CI actual exit0",
     "formulaStrict": "checkpoint255 — 1,471식 explicit annotation strict local+CI actual exit0",
     "typescript": "checkpoint255 actual npx tsc -b exit0",
-    "note": "현재 117편은 actual-body semantic review를 마쳤고 그중 58편은 운영 검증까지 완료했습니다. 미검토 69편은 완료에 포함하지 않습니다.",
+    "note": "현재 184편은 actual-body semantic review를 마쳤습니다. 로컬 검증 88편과 공개 배포 검증 96편을 구분하며, 미검토 4편은 완료에 포함하지 않습니다.",
     "reviewedRewriteRequired": 0,
-    "verifiedRewrites": 117,
-    "rewrittenLocalVerified": 59,
-    "unreviewed": 69,
+    "verifiedRewrites": 184,
+    "rewrittenLocalVerified": 88,
+    "unreviewed": 4,
     "checkpoint196Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",
     "checkpoint196Humanize": "/tmp/teach-all/humanize-ai-six-visible-196/summary.json",
     "checkpoint201Browser": "/tmp/teach-all/browser-ai-six-196/summary.json",

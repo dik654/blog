@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 626,
-    "pending": 366,
+    "reviewed": 627,
+    "pending": 365,
     "untracked": 0,
-    "assignedPending": 324,
+    "assignedPending": 323,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3721,11 +3721,11 @@
     {
       "route": "ai/regression-metrics",
       "publicPath": "cs/ai/regression-metrics",
-      "title": "회귀 평가: Residual Cost와 Prediction Interval",
+      "title": "회귀 평가: 잔차 비용과 예측 구간",
       "catalogIndex": 369,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_systems",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-systems.json"
     },
     {

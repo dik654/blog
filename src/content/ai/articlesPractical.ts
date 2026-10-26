@@ -2091,13 +2091,13 @@ const strategyArticles: Article[] = [
   },
   {
     slug: "regression-metrics",
-    title: "회귀 평가: Residual Cost와 Prediction Interval",
+    title: "회귀 평가: 잔차 비용과 예측 구간",
     subcategory: "ai-practical-strategy",
     sections: [
-      { id: "overview", title: "Actual · prediction · residual" },
-      { id: "residual-penalty", title: "Absolute와 squared penalty" },
-      { id: "bayes-act", title: "평균과 중앙값 target" },
-      { id: "interval", title: "Coverage와 interval width" },
+      { id: "overview", title: "실제값 · 예측값 · 잔차" },
+      { id: "residual-penalty", title: "절댓값 비용과 제곱 비용" },
+      { id: "bayes-act", title: "평균과 중앙값" },
+      { id: "interval", title: "포함률과 예측 구간 폭" },
     ],
     component: () => import("@/pages/articles/ai/regression-metrics"),
   },
