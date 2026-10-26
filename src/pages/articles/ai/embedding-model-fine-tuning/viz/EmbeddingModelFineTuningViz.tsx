@@ -1,197 +1,178 @@
 import { Fragment } from "react";
-import { AnimatedSceneControls } from "@/components/viz/AnimatedSceneControls";
+import {
+  AnimatedSceneControls,
+  StaticSceneList,
+} from "@/components/viz/AnimatedSceneControls";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
-/**
- * 한 mechanism: 배치 안 4개 (query, document) 쌍이 학습 전에는 공간에 흩어져 있다가,
- * in-batch negative InfoNCE loss의 attract/repel gradient를 받아 정답 쌍끼리 뭉치고
- * 다른 쌍과는 멀어지는 과정. 장면 = 학습 이전 → 유사도 판정 → gradient → 학습 이후.
- * Stage 높이는 고정, 좌표는 4장면 모두 같은 480×220 viewBox 안에 둔다.
- */
 const SCENES = [
-  "학습 전 · 배치 안 4쌍이 공간에 흩어져 있음",
-  "유사도 판정 · 대각선만 positive",
-  "Gradient · positive는 당기고 negative는 밀어냄",
-  "학습 후 · 같은 쌍끼리 뭉치고 다른 쌍과 멀어짐",
+  "정답 쌍",
+  "점수 행렬",
+  "정답 확률",
+  "가중치 갱신",
+  "검색에 반영",
 ] as const;
 
 const NOTES = [
-  "아직 fine-tuning 전이라 query와 자기 정답 document가 서로 멀리 있을 수 있습니다. 색은 어느 (query, document)가 진짜 정답 쌍인지를 나타낼 뿐 지금 거리와는 무관합니다.",
-  "B×B similarity 행렬에서 대각선 4칸만 정답(positive)이고 나머지 12칸은 in-batch negative입니다. Negative는 추가로 고르지 않고 배치에 이미 있는 다른 쌍의 document를 그대로 씁니다.",
-  "InfoNCE loss의 gradient는 각 query를 자기 정답 document 쪽으로 당기고(실선) 다른 document로부터는 밀어냅니다(점선). 이 예시는 Q1의 gradient만 표시했지만 나머지 세 query도 같은 방식으로 동시에 갱신됩니다.",
-  "여러 step이 지나면 정답 쌍은 서로 가까운 작은 군집을 이루고, 군집끼리는 서로 멀어집니다. Recall·NDCG 같은 retrieval metric은 이 재배치가 실제로 일어났는지를 검증합니다.",
+  "질문 Q1과 문서 D1처럼 정답 관계가 있는 세 쌍을 한 배치에 넣습니다. Q1에서 보면 D2와 D3은 따로 모으지 않아도 negative가 됩니다.",
+  "세 질문과 세 문서를 각각 인코딩하면 3×3 점수 행렬이 생깁니다. 대각선은 정답 쌍이며, 나머지 여섯 칸은 같은 배치에서 재사용한 negative입니다.",
+  "Q1 행의 logit 2·1·0을 softmax에 넣으면 D1 확률은 0.6652이고 loss는 0.4076입니다. 정답이 1에 가까울수록 loss가 작아집니다.",
+  "Q1 행에서 정답 logit의 기울기는 −0.3348, 두 negative는 +0.2447·+0.0900입니다. 경사하강은 D1 점수를 올리고 D2·D3 점수를 내리는 방향으로 가중치를 바꿉니다.",
+  "설명용 다음 상태에서 Q1 행이 2.6·0.7·−0.2가 되면 D1 확률은 0.8262, loss는 0.1909가 됩니다. 학습된 입력 규칙과 가중치로 문서 index를 다시 만들 때 검색 순위에 반영됩니다.",
 ] as const;
 
-type Point = { id: string; x: number; y: number; label: string };
-
-const PAIR_COLOR = [
-  "fill-primary stroke-primary",
-  "fill-amber-600 stroke-amber-600",
-  "fill-emerald-600 stroke-emerald-600",
-  "fill-sky-600 stroke-sky-600",
+const PAIRS = [
+  { q: "Q1 · 충전이 안 돼요", d: "D1 · 케이블·어댑터 점검" },
+  { q: "Q2 · 배송지 변경", d: "D2 · 발송 전 주소 변경" },
+  { q: "Q3 · 환불 기한", d: "D3 · 수령 후 7일" },
 ] as const;
 
-// 학습 전: 정답 쌍(같은 색)이 멀리 흩어져 있음.
-const PRE: readonly Point[] = [
-  { id: "q1", x: 70, y: 40, label: "Q1" },
-  { id: "d1", x: 400, y: 190, label: "D1" },
-  { id: "q2", x: 320, y: 30, label: "Q2" },
-  { id: "d2", x: 90, y: 150, label: "D2" },
-  { id: "q3", x: 430, y: 70, label: "Q3" },
-  { id: "d3", x: 210, y: 20, label: "D3" },
-  { id: "q4", x: 150, y: 200, label: "Q4" },
-  { id: "d4", x: 360, y: 110, label: "D4" },
-];
+const INITIAL_SCORES = [
+  [2, 1, 0],
+  [0.4, 2.2, 0.7],
+  [0.3, 0.8, 2.1],
+] as const;
 
-// 학습 후: 정답 쌍끼리 4개의 작은 군집으로 뭉침.
-const POST: readonly Point[] = [
-  { id: "q1", x: 75, y: 45, label: "Q1" },
-  { id: "d1", x: 105, y: 70, label: "D1" },
-  { id: "q2", x: 225, y: 35, label: "Q2" },
-  { id: "d2", x: 255, y: 60, label: "D2" },
-  { id: "q3", x: 365, y: 40, label: "Q3" },
-  { id: "d3", x: 395, y: 65, label: "D3" },
-  { id: "q4", x: 215, y: 165, label: "Q4" },
-  { id: "d4", x: 250, y: 190, label: "D4" },
-];
+const UPDATED_Q1 = [2.6, 0.7, -0.2] as const;
 
-function byId(points: readonly Point[]) {
-  return new Map(points.map((point) => [point.id, point] as const));
+function panelClass(active: boolean) {
+  return `min-w-0 border p-3 transition-colors sm:p-4 ${
+    active
+      ? "border-primary/60 bg-primary/[0.045] text-foreground"
+      : "border-border bg-background text-muted-foreground"
+  }`;
 }
 
 export default function EmbeddingModelFineTuningViz() {
-  const scenes = useAnimatedScenes(SCENES.length, 3000);
+  const scenes = useAnimatedScenes(SCENES.length, 5200, { loop: false });
   const active = scenes.active;
+  const scores = active >= 3 ? [UPDATED_Q1, INITIAL_SCORES[1], INITIAL_SCORES[2]] : INITIAL_SCORES;
 
   return (
     <VizFrame
-      eyebrow="In-batch negative fine-tuning"
-      title="정답 (query, document) 쌍은 뭉치고 나머지 배치 쌍과는 멀어집니다"
-      description="네 가지 색은 배치 안 네 개의 정답 (query, document) 쌍입니다. 학습 전/후는 설명을 위한 배치이며 실제 embedding 좌표가 아닙니다."
-      note="배치 크기는 4로 줄여 그렸습니다. 본문 수치 예(배치 256 · negative 255개)는 이 그림의 4쌍·12칸 negative를 그대로 키운 것입니다."
+      eyebrow="한 배치 추적 · Q1"
+      title="정답 쌍 세 개가 검색 모델의 한 번의 학습 신호가 되는 과정"
+      description="Q1을 따라가면 pair 데이터, 3×3 점수 행렬, InfoNCE loss, gradient, 새 검색 index가 한 흐름으로 이어집니다. 숫자는 계산을 재현하기 위한 설명용 logit입니다."
+      note="이 그림은 학습 메커니즘을 보여 주는 계산 예시입니다. 점수 변화량과 검색 품질은 특정 모델의 측정 결과가 아닙니다."
+      canvasClassName="p-3 sm:p-5"
     >
       <div
-        data-viz-canvas
+        id={scenes.playbackId}
+        data-viz-live-only
         tabIndex={0}
         role="group"
-        aria-label="배치 안 positive·negative pair가 학습으로 재배치되는 과정"
+        aria-label="정답 쌍에서 검색 결과까지 이어지는 embedding fine-tuning 과정"
         onKeyDown={scenes.onKeyDown}
-        className="flex h-[min(34rem,calc(100svh-15rem))] min-h-[27rem] min-w-0 flex-col overflow-y-auto outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+        className="outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <p className="text-[11px] font-black text-primary">
-            Scene · {String(active + 1).padStart(2, "0")}
-          </p>
-          <h4 className="mt-2 text-base font-bold">{SCENES[active]}</h4>
-
-          <div className="mt-4 min-w-0 overflow-x-auto border border-border">
-            {active === 1 ? (
-              <SimilarityMatrix />
-            ) : (
-              <ScatterSpace points={active === 3 ? POST : PRE} showGradient={active === 2} />
-            )}
-          </div>
-
-          <div className="mt-3 flex flex-wrap gap-3 text-[10px] text-muted-foreground">
-            {["Q1·D1", "Q2·D2", "Q3·D3", "Q4·D4"].map((label, index) => (
-              <span key={label} className="flex items-center gap-1">
-                <span className={`inline-block h-2 w-2 rounded-full ${PAIR_COLOR[index].split(" ")[0]}`} />
-                {label}
-              </span>
-            ))}
-          </div>
-
-          <p className="mt-4 border-l border-primary/50 pl-4 text-sm leading-7 text-muted-foreground">
-            {NOTES[active]}
-          </p>
-        </div>
-        <AnimatedSceneControls {...scenes} labels={SCENES} />
-      </div>
-    </VizFrame>
-  );
-}
-
-function ScatterSpace({ points, showGradient }: { points: readonly Point[]; showGradient: boolean }) {
-  const map = byId(points);
-  const q1 = map.get("q1")!;
-  const others = ["d1", "d2", "d3", "d4"].map((id) => map.get(id)!);
-
-  return (
-    <svg viewBox="0 0 480 220" className="h-[13.5rem] w-full min-w-[26rem]" role="img" aria-label="embedding 공간의 query·document 배치">
-      <rect x={1} y={1} width={478} height={218} className="fill-none stroke-border" strokeWidth={1} />
-      {showGradient &&
-        others.map((target, index) => {
-          const isPositive = index === 0;
-          return (
-            <line
-              key={target.id}
-              x1={q1.x}
-              y1={q1.y}
-              x2={target.x}
-              y2={target.y}
-              className={isPositive ? "stroke-primary" : "stroke-muted-foreground"}
-              strokeWidth={1}
-              strokeDasharray={isPositive ? undefined : "3 3"}
-            />
-          );
-        })}
-      {points.map((point, index) => {
-        const pairIndex = Math.floor(index / 2);
-        const classes = PAIR_COLOR[pairIndex];
-        const isQuery = point.id.startsWith("q");
-        return (
-          <g key={point.id}>
-            <circle
-              cx={point.x}
-              cy={point.y}
-              r={isQuery ? 7 : 6}
-              className={`${classes} ${isQuery ? "" : "fill-opacity-30"}`}
-              strokeWidth={1.25}
-            />
-            <text x={point.x} y={point.y - 11} textAnchor="middle" className="fill-foreground text-[9px] font-bold">
-              {point.label}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-function SimilarityMatrix() {
-  const queries = ["Q1", "Q2", "Q3", "Q4"];
-  const docs = ["D1", "D2", "D3", "D4"];
-  return (
-    <div className="grid grid-cols-[2.5rem_repeat(4,1fr)] gap-1 p-3">
-      <div />
-      {docs.map((doc) => (
-        <div key={doc} className="text-center text-[9px] font-bold text-muted-foreground">
-          {doc}
-        </div>
-      ))}
-      {queries.map((query, rowIndex) => (
-        <Fragment key={query}>
-          <div className="flex items-center text-[9px] font-bold text-muted-foreground">
-            {query}
-          </div>
-          {docs.map((_, colIndex) => {
-            const isPositive = rowIndex === colIndex;
-            return (
-              <div
-                key={`${query}-${colIndex}`}
-                className={`flex h-9 items-center justify-center border text-[8px] font-bold ${
-                  isPositive
-                    ? "border-primary/60 bg-primary/15 text-foreground"
-                    : "border-border bg-muted/40 text-muted-foreground"
+        <div className="mb-4 overflow-x-auto pb-1">
+          <ol className="grid min-w-[36rem] grid-cols-5 gap-px bg-border p-px">
+            {SCENES.map((label, index) => (
+              <li
+                key={label}
+                className={`min-h-16 bg-background px-3 py-2 text-xs leading-5 ${
+                  active === index ? "text-foreground" : "text-muted-foreground"
                 }`}
               >
-                {isPositive ? "pos" : "neg"}
+                <span className="font-mono text-[10px] font-black text-primary">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <strong className="mt-1 block break-keep">{label}</strong>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="grid gap-3 lg:grid-cols-[1.05fr_1.25fr_1fr]">
+          <section className={panelClass(active === 0)} aria-label="학습 배치의 정답 쌍">
+            <p className="text-[10px] font-black text-primary">BATCH · 3 PAIRS</p>
+            <div className="mt-3 space-y-2">
+              {PAIRS.map((pair, index) => (
+                <div key={pair.q} className={`border-l-2 pl-3 ${index === 0 ? "border-primary" : "border-border"}`}>
+                  <p className="break-keep text-xs font-bold leading-5">{pair.q}</p>
+                  <p className="break-keep text-[11px] leading-5 text-muted-foreground">↳ {pair.d}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[11px] leading-5">
+              Q1 기준: <strong className="text-foreground">positive 1개</strong> · negative 2개
+            </p>
+          </section>
+
+          <section className={panelClass(active === 1 || active === 3)} aria-label="질문과 문서의 점수 행렬">
+            <p className="text-[10px] font-black text-primary">LOGITS · QUERY × DOCUMENT</p>
+            <div className="mt-3 grid grid-cols-[2rem_repeat(3,minmax(2.5rem,1fr))] gap-1 text-center text-[10px]">
+              <span />
+              {["D1", "D2", "D3"].map((doc) => <strong key={doc}>{doc}</strong>)}
+              {scores.map((row, rowIndex) => (
+                <Fragment key={`row-${rowIndex}`}>
+                  <strong className="flex items-center justify-start">Q{rowIndex + 1}</strong>
+                  {row.map((value, colIndex) => {
+                    const positive = rowIndex === colIndex;
+                    const changed = active >= 3 && rowIndex === 0;
+                    return (
+                      <span
+                        key={`${rowIndex}-${colIndex}`}
+                        className={`flex h-10 items-center justify-center border font-mono font-bold ${
+                          positive
+                            ? "border-primary/60 bg-primary/10 text-foreground"
+                            : "border-border bg-muted/30"
+                        } ${changed ? "ring-1 ring-inset ring-primary/30" : ""}`}
+                      >
+                        {value.toFixed(1)}
+                      </span>
+                    );
+                  })}
+                </Fragment>
+              ))}
+            </div>
+            <p className="mt-3 text-[11px] leading-5">
+              대각선 3칸은 positive, 나머지 <strong className="text-foreground">6칸은 in-batch negative</strong>입니다.
+            </p>
+          </section>
+
+          <section className={panelClass(active === 2 || active === 4)} aria-label="Q1의 확률과 loss 계산">
+            <p className="text-[10px] font-black text-primary">Q1 · SOFTMAX &amp; LOSS</p>
+            {active < 4 ? (
+              <div className="mt-3 min-h-36 space-y-2 font-mono text-[11px] leading-5">
+                <p>exp(2) = 7.389</p>
+                <p>Z = 7.389 + 2.718 + 1</p>
+                <p className="border-y border-border py-2 font-bold text-foreground">P(D1|Q1) = 0.6652</p>
+                <p>L = −log(0.6652) = 0.4076</p>
               </div>
-            );
-          })}
-        </Fragment>
-      ))}
-    </div>
+            ) : (
+              <div className="mt-3 min-h-36 space-y-2 font-mono text-[11px] leading-5">
+                <p>Q1 logits = 2.6 · 0.7 · −0.2</p>
+                <p className="border-y border-border py-2 font-bold text-foreground">P(D1|Q1) = 0.8262</p>
+                <p>L = 0.1909</p>
+                <p className="font-sans text-muted-foreground">문서 index를 다시 만듭니다.</p>
+              </div>
+            )}
+            <div className="mt-3 min-h-[3.5rem] border-t border-border pt-3 text-[11px] leading-5 sm:min-h-[5.5rem]">
+              <p><strong className="text-foreground">∂L/∂s</strong></p>
+              <p className={`mt-1 font-mono ${active >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
+                {active >= 3 ? "D1 −0.3348 · D2 +0.2447 · D3 +0.0900" : "D1 — · D2 — · D3 —"}
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <div className="mt-4 border-l-2 border-primary/50 pl-4">
+          <p className="text-[10px] font-black text-primary">
+            {String(active + 1).padStart(2, "0")} · {SCENES[active]}
+          </p>
+          <p className="mt-1 min-h-24 break-keep text-sm leading-6 text-muted-foreground sm:min-h-12">{NOTES[active]}</p>
+        </div>
+
+        <AnimatedSceneControls
+          {...scenes}
+          labels={SCENES}
+          playLabel="과정 재생"
+          className="mt-4"
+        />
+      </div>
+      <StaticSceneList labels={SCENES} notes={NOTES} />
+    </VizFrame>
   );
 }

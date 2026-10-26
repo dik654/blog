@@ -3,6 +3,7 @@ export type EmbeddingLearningTrack = "concept" | "practice" | "reference";
 export type EmbeddingLearningNodeId =
   | "sentence-vector"
   | "retrieval"
+  | "fine-tuning"
   | "vector-index"
   | "lexical-index"
   | "serving-contract"
@@ -45,6 +46,17 @@ export const EMBEDDING_LEARNING_NODES: readonly EmbeddingLearningNode[] = [
     parentLabel: "임베딩 지도 · 벡터 비교",
     question: "문서 전체를 요청마다 다시 읽지 않고도 정답 후보를 찾고 정교하게 다시 정렬하려면 계산을 어디에서 나눌까요?",
     closure: "Bi-encoder는 문서 벡터를 미리 계산해 online 경로를 query encode와 ANN 탐색으로 줄입니다. Reranker는 전달받은 candidate의 순서만 바꾸므로 첫 단계의 recall이 복구 가능한 범위를 정합니다.",
+  },
+  {
+    id: "fine-tuning",
+    href: "/cs/ai/embedding-model-fine-tuning#overview",
+    shortTitle: "검색 학습",
+    mapLabel: "정답 쌍 → 점수 행렬 → loss",
+    track: "concept",
+    parentHref: "/cs/ai/bi-encoder-retrieval#offline-index",
+    parentLabel: "검색 · query와 document를 같은 좌표계에 놓는 encoder",
+    question: "정답 query·document 쌍 몇 개를 어떻게 모델 가중치와 실제 검색 순위의 변화로 바꿀까요?",
+    closure: "한 배치의 query와 document로 점수 행렬을 만들면 대각선은 positive, 나머지는 in-batch negative가 됩니다. InfoNCE는 정답 열의 확률을 높이도록 encoder를 갱신하며, 그 가중치와 입력 규칙으로 문서 index를 다시 만들어야 검색에 반영됩니다.",
   },
   {
     id: "vector-index",

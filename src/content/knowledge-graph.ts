@@ -20089,7 +20089,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Asymmetric vs. symmetric retrieval",
     aliases: ["Asymmetric Retrieval", "Symmetric Retrieval", "Asymmetric Semantic Search", "Symmetric Semantic Search"],
     definition:
-      "Query와 document의 길이·역할이 크게 다르면 서로 다른 가중치의 encoder(asymmetric)를, 비슷하면 하나의 공유 encoder(symmetric)를 쓰는 embedding 검색 아키텍처 선택이며, 이 선택이 in-batch negative loss를 한 방향(asymmetric)으로 둘지 양방향(symmetric)으로 둘지도 정합니다.",
+      "Query와 document의 역할·길이·형식이 다른 검색을 asymmetric, 두 입력의 역할과 형식이 비슷한 검색을 symmetric이라고 구분합니다. 이 문제 구분과 encoder 가중치를 공유할지, loss를 한 방향 또는 양방향으로 계산할지는 서로 관련되지만 별도의 설계 선택입니다.",
     canonicalHref: "/cs/ai/embedding-model-fine-tuning#architecture",
   },
   "instruction-tuned-embedding": {
@@ -50785,10 +50785,10 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "in-batch-negative-sampling", to: "embedding-fine-tuning-objective", relation: "prerequisite", reason: "Negative 후보 집합이 정의돼야 그 집합 위에서 InfoNCE 형태 loss를 계산할 수 있습니다." },
   { from: "sentence-relation-objective-boundary", to: "embedding-fine-tuning-objective", relation: "extends", reason: "Pooling으로 만든 vector에 relation objective가 필요하다는 경계를 실제 in-batch InfoNCE 학습 절차로 구체화합니다." },
   { from: "embedding-fine-tuning-objective", to: "domain-specific-embedding-adaptation", relation: "prerequisite", reason: "같은 in-batch negative InfoNCE objective를 도메인 쌍 위에서 이어 돌리는 것이 domain adaptation입니다." },
-  { from: "domain-adaptation-state-diagnosis", to: "domain-specific-embedding-adaptation", relation: "extends", reason: "Language·behavior 등 domain gap 진단을 retrieval embedding의 vocabulary·relevance gap에 적용합니다." },
-  { from: "offline-document-embedding-reuse", to: "asymmetric-vs-symmetric-retrieval", relation: "contrasts", reason: "Bi-encoder의 online·offline 계산 분리는 query·document encoder 가중치 공유 여부와는 다른 독립적인 설계 축입니다." },
-  { from: "embedding-fine-tuning-objective", to: "asymmetric-vs-symmetric-retrieval", relation: "prerequisite", reason: "In-batch negative를 한 방향으로 볼지 양방향으로 볼지는 objective가 이미 정의된 뒤에 encoder 구성으로 정해집니다." },
-  { from: "asymmetric-vs-symmetric-retrieval", to: "instruction-tuned-embedding", relation: "extends", reason: "별도 encoder를 두는 대신 하나의 encoder에 instruction 접두어만 바꿔 asymmetric에 가까운 역할 분리를 흉내 냅니다." },
+  { from: "domain-adaptation-state-diagnosis", to: "domain-specific-embedding-adaptation", relation: "extends", reason: "Domain gap의 상태 위치 진단을 retrieval embedding의 vocabulary·relevance gap에 적용합니다." },
+  { from: "offline-document-embedding-reuse", to: "asymmetric-vs-symmetric-retrieval", relation: "contrasts", reason: "Bi-encoder의 online·offline 계산 분리는 query·document 역할의 대칭성이나 encoder 가중치 공유 여부와는 다른 설계 축입니다." },
+  { from: "embedding-fine-tuning-objective", to: "asymmetric-vs-symmetric-retrieval", relation: "prerequisite", reason: "입력 역할을 구분한 뒤 그 역할에 맞춰 query→document 또는 양방향 loss를 명시적으로 선택합니다." },
+  { from: "asymmetric-vs-symmetric-retrieval", to: "instruction-tuned-embedding", relation: "extends", reason: "역할이 다른 입력을 별도 encoder로 처리하는 대신 하나의 encoder에 역할별 접두어를 주는 구현을 선택할 수 있습니다." },
   { from: "embedding-role-instruction-contract", to: "instruction-tuned-embedding", relation: "prerequisite", reason: "서빙 시점에 고정하는 instruction 문자열 계약이 있어야 그 문자열을 학습 시점부터 일관되게 붙일 수 있습니다." },
   { from: "embedding-fine-tuning-objective", to: "matryoshka-embedding-truncation", relation: "extends", reason: "기본 InfoNCE objective 위에 여러 prefix 길이의 loss를 더하는 nested 학습을 추가합니다." },
   { from: "embedding-content-retention", to: "matryoshka-embedding-truncation", relation: "contrasts", reason: "입력 token을 자르는 시퀀스 단위 truncation과 이미 만든 embedding의 차원을 자르는 truncation은 서로 다른 축입니다." },

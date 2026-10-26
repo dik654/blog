@@ -9107,9 +9107,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "W3C RDF 1.2 Concepts", href: "https://www.w3.org/TR/rdf12-concepts/", note: "2026-04-07 Candidate Recommendation Snapshot의 triple term·reifier 정의" },
   ],
   "ai/embedding-model-fine-tuning": [
-    { kind: "핵심 논문", label: "Reimers & Gurevych · Sentence-BERT (EMNLP 2019)", href: "https://arxiv.org/abs/1908.10084", note: "Siamese·triplet bi-encoder로 재사용 가능한 sentence embedding을 학습한 원 논문. In-batch negative는 후속 실무의 확장" },
     { kind: "핵심 논문", label: "Karpukhin et al. · Dense Passage Retrieval (EMNLP 2020)", href: "https://arxiv.org/abs/2004.04906", note: "Asymmetric dual encoder와 in-batch negative 학습의 근거. 수치는 저자 자기보고" },
     { kind: "공식 문서", label: "Sentence-Transformers 공식 문서 · Symmetric vs. Asymmetric Semantic Search", href: "https://www.sbert.net/examples/applications/semantic-search/README.html", note: "Symmetric·asymmetric 용어 구분과 권장 모델의 근거" },
+    { kind: "공식 문서", label: "Sentence-Transformers 공식 문서 · Losses", href: "https://www.sbert.net/docs/package_reference/sentence_transformer/losses.html", note: "MultipleNegativesRankingLoss의 방향·중복 없는 batch 권고와 MatryoshkaLoss 인터페이스의 근거" },
     { kind: "핵심 논문", label: "Kusupati et al. · Matryoshka Representation Learning (NeurIPS 2022)", href: "https://arxiv.org/abs/2205.13147", note: "Nested loss로 embedding truncation을 가능하게 하는 근거. Vision benchmark 자기보고" },
     { kind: "핵심 논문", label: "Wang et al. · Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5)", href: "https://arxiv.org/abs/2212.03533", note: "Instruction 접두어 기반 asymmetric embedding과 in-batch negative pre-training의 근거" },
     { kind: "공식 문서", label: "Shakir, Aarsen & Lee · Binary and Scalar Embedding Quantization (Hugging Face blog)", href: "https://huggingface.co/blog/embedding-quantization", note: "Int8 embedding quantization의 저장 4배 절감과 99%대 정확도 유지 수치 근거" },

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 992,
-    "reviewed": 633,
-    "pending": 359,
+    "reviewed": 634,
+    "pending": 358,
     "untracked": 0,
-    "assignedPending": 317,
+    "assignedPending": 316,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3851,11 +3851,11 @@
     {
       "route": "ai/embedding-model-fine-tuning",
       "publicPath": "cs/ai/embedding-model-fine-tuning",
-      "title": "Embedding fine-tuning: InfoNCE·asymmetric retrieval·truncation",
+      "title": "Embedding fine-tuning: 정답 쌍이 검색 순위가 되는 과정",
       "catalogIndex": 382,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:ai_theory",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/ai-theory.json"
     },
     {
