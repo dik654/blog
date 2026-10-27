@@ -41,6 +41,7 @@ export const SERIES_READING_PATHS = {
           "reth-txpool",
           "reth-txpool-validation",
           "reth-eip1559",
+          "reth-eip1559-validation",
           "reth-eip4844",
           "reth-payload-builder",
           "reth-block-execution",

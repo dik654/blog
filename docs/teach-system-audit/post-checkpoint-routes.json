@@ -288,23 +288,28 @@
     },
     {
       "route": "blockchain/reth-db-validation",
-      "status": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#reth-storage-v2-개념실무-분리-로컬-검증-완료-2026-10-27"
+      "status": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#reth-storage-v2-개념실무-분리-공개-검증-완료-2026-10-27"
     },
     {
       "route": "blockchain/reth-provider-validation",
-      "status": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#reth-provider-개념실무-분리-로컬-검증-완료-2026-10-27"
+      "status": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#reth-provider-개념실무-분리-공개-검증-완료-2026-10-27"
     },
     {
       "route": "blockchain/reth-pipeline-validation",
-      "status": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#reth-pipeline-개념실무-분리-로컬-검증-완료-2026-10-27"
+      "status": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#reth-pipeline-개념실무-분리-공개-검증-완료-2026-10-27"
     },
     {
       "route": "blockchain/reth-txpool-validation",
+      "status": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#reth-txpool-개념실무-분리-공개-검증-완료-2026-10-27"
+    },
+    {
+      "route": "blockchain/reth-eip1559-validation",
       "status": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#reth-txpool-개념실무-분리-로컬-검증-완료-2026-10-27"
+      "evidence": "docs/rewrite-status.md#reth-eip-1559-개념실무-분리-로컬-검증-완료-2026-10-27"
     }
   ]
 }

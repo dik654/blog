@@ -361,6 +361,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-pipeline-validation",
   "blockchain/reth-txpool",
   "blockchain/reth-txpool-validation",
+  "blockchain/reth-eip1559",
+  "blockchain/reth-eip1559-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

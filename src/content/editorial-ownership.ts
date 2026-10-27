@@ -5831,12 +5831,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-eip1559": {
-    title: "Reth EIP-1559 글이 소유하는 범위",
+    title: "Reth EIP-1559 개념 글이 소유하는 범위",
     owns: [
       "Parent target 기반 next base fee 정수 계산과 변화 bound",
       "Max fee·priority cap·effective tip과 fee eligibility",
       "Base-fee burn·beneficiary tip의 단위별 accounting",
-      "ChainSpec parameter와 fork-boundary release gate",
+      "Reth ChainSpec→Alloy calculation→payload·consensus·TxPool 소비 경계",
     ],
     reuses: [
       { label: "EVM gas accounting", href: "/cs/blockchain/evm-gas" },
@@ -5845,9 +5845,30 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "Base fee arithmetic·transaction validity·burn은 EIP-1559와 활성 execution rules에 귀속한다." },
-      { kind: "primary-source", rule: "함수·integer type·ChainSpec 연결은 pinned Reth SHA에 귀속한다." },
-      { kind: "project-measurement", rule: "Fork boundary·target±1·zero·overflow fixture의 header/result parity 뒤 최적화를 비교한다." },
+      { kind: "primary-source", rule: "함수·integer type·ChainSpec 연결은 Reth v2.8.1과 Reth가 고정한 Alloy v2.5.0 source에 귀속한다." },
+      { kind: "project-claim", rule: "30M·18M·20 gwei·25,000 gas는 한 계산을 추적하기 위한 fixture이며 현재 네트워크나 대상 node의 측정값이 아니다." },
       { kind: "project-claim", rule: "Tip을 transaction의 유일한 ordering 기준이나 max fee 전액 지불로 해석하지 않는다." },
+    ],
+  },
+  "reth-eip1559-validation": {
+    title: "Reth EIP-1559 변경 검증 글이 소유하는 범위",
+    owns: [
+      "EIP·Reth·Alloy·ChainSpec·parent·transaction의 재현 가능한 run manifest",
+      "Target±1·fork activation·정수·fee cap·accounting 경계 fixture",
+      "Payload 작성·consensus header 검증·TxPool pending fee의 cross-path parity",
+      "Candidate 중지·증거 보존·binary/ChainSpec rollback·fixture replay",
+      "Exact correctness와 recovery 뒤 비용 측정 및 proposed ADR",
+    ],
+    reuses: [
+      { label: "Next base fee 계산", href: "/cs/blockchain/reth-eip1559#base-fee" },
+      { label: "Fee cap·tip·burn", href: "/cs/blockchain/reth-eip1559#transaction-fee" },
+      { label: "Reth·Alloy 구현 경계", href: "/cs/blockchain/reth-eip1559#implementation" },
+    ],
+    evidence: [
+      { kind: "standard", rule: "Expected header·transaction·burn oracle는 EIP-1559와 활성 execution rules에 귀속한다." },
+      { kind: "primary-source", rule: "호출 지점과 failure seam은 Reth v2.8.1·Alloy v2.5.0 source에 고정한다." },
+      { kind: "project-measurement", rule: "대상 환경에서 직접 얻은 값만 측정으로 기록하며 현재 latency·복구 결과는 미측정이다." },
+      { kind: "project-claim", rule: "Reth·Alloy·ChainSpec·fork·transaction type이 바뀌면 결정을 다시 검증한다." },
     ],
   },
   "reth-txpool": {

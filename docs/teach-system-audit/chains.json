@@ -5330,7 +5330,7 @@
     {
       "route": "blockchain/reth-db",
       "title": "Reth Storage V2: 세 저장소와 한 가시 지점",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-db.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-db.tsx",
@@ -5377,50 +5377,66 @@
         "browser390": "390×844에서 문서 폭 390=390, 여섯 장면 본체 높이 360~616px, 키보드 이동과 reduced-motion 비활성 재생을 확인했습니다. JavaScript 비활성 화면은 live 장면 0개·정적 장면 6개·문서 폭 390=390이며 직속 부모와 본문을 같은 순서로 제공합니다.",
         "browser1440": "1440×1000에서 문서 폭 1440=1440, commit·recovery 장면과 부모 지도 반환을 확인했고 console 오류가 없었습니다. 8,065개 module production build와 2,098개 정적 route 생성이 통과했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-concept-storage-v2-visibility-and-recovery"
     },
     {
       "route": "blockchain/reth-eip1559",
-      "title": "Reth EIP-1559 가스 메커니즘",
-      "status": "unreviewed",
+      "title": "Reth EIP-1559: 다음 가격과 수수료 정산",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-eip1559.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-eip1559.tsx",
-        "src/pages/articles/ethereum/reth-eip1559/CalcBaseFee.tsx",
-        "src/pages/articles/ethereum/reth-eip1559/CalcBaseFeeData.ts",
-        "src/pages/articles/ethereum/reth-eip1559/EffectiveTip.tsx",
-        "src/pages/articles/ethereum/reth-eip1559/EffectiveTipData.ts",
-        "src/pages/articles/ethereum/reth-eip1559/Overview.tsx",
-        "src/pages/articles/ethereum/reth-eip1559/OverviewData.ts"
+        "src/pages/articles/ethereum/reth-eip1559/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-eip1559/RethEip1559Locator.tsx",
+        "src/pages/articles/ethereum/reth-eip1559/fileTree.ts",
+        "src/pages/articles/ethereum/reth-eip1559/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-eip1559/viz/RethEip1559FlowViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 5,
         "headings": [
-          "\n        calc_next_block_base_fee의 consensus rounding\n      ",
-          "\n        effective tip은 fee cap 안의 beneficiary 몫\n      ",
-          "\n        EIP-1559는 다음 block 가격을 합의로 계산한다\n      "
+          "지난 블록의 사용량은 어떻게 다음 블록의 가격이 되고, Alice의 수수료는 어디로 나뉩니까?",
+          "Parent가 target보다 많이 썼으므로 다음 base fee가 20.5 gwei로 오릅니다",
+          "거래 cap 안에서 tip을 정한 뒤 actual gas used로 burn과 수익을 나눕니다",
+          "Reth가 계수를 고르고 Alloy가 계산하며 세 실행 경로가 같은 값을 소비합니다",
+          "합의 규칙과 선택한 구현 snapshot을 구분합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 설명용 합성 코드와 과거 crate 경계를 사용해 Reth와 Alloy의 실제 책임을 확인하기 어려웠습니다.",
+        "Base fee와 거래의 effective tip·burn을 별개 조각으로 설명해 한 거래의 최종 지불액까지 이어지지 않았습니다.",
+        "개념 설명 안에 출시 판단을 섞어 protocol mechanism과 대상 환경의 운영 검증 경계가 흐렸습니다."
+      ],
+      "fixture": "Parent gas limit 30M·used 18M·base fee 20 gwei와 Alice의 max fee 40·priority cap 3·actual gas 25,000을 고정해 target 15M, next base fee 20.5, burn 512,500 gwei, beneficiary 75,000 gwei와 총 587,500 gwei를 한 경로로 추적합니다.",
+      "stageEvidence": {
+        "parent": "Parent header와 Alice 거래 cap을 같은 화면에서 고정하고 둘이 어느 계산에 들어가는지 구분합니다.",
+        "target": "Gas limit을 elasticity 2로 나눠 target 15M을 만들고 used 18M의 20% 초과를 계산합니다.",
+        "baseFee": "정수 wei·denominator 8·증가분 최소 1 wei 규칙으로 next base fee 20.5 gwei를 계산합니다.",
+        "transaction": "Max fee에서 base fee를 뺀 cap과 priority cap 중 작은 값으로 effective tip을 구합니다.",
+        "settlement": "Actual gas 25,000으로 burn·beneficiary·sender total을 각각 계산합니다.",
+        "ownership": "ChainSpec·Alloy·payload·consensus·TxPool과 canonical header의 상태 소유권을 나눕니다.",
+        "fallback": "JavaScript 비활성 경로에서도 같은 여섯 단계와 부모 지도 반환을 정적으로 제공합니다."
+      },
+      "sourceEvidence": [
+        "EIP-1559 공식 명세에서 base fee transition, type-2 cap, burn과 beneficiary tip의 protocol semantics를 확인했습니다.",
+        "Reth v2.8.1 d763342fa185의 ChainSpec·consensus·payload·TxPool 소비 경계를 확인했습니다.",
+        "Reth v2.8.1 Cargo.lock이 고정한 Alloy EIPs·Consensus v2.5.0 source에서 정수 base-fee 계산과 effective-tip 계약을 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 공개 본문과 Reth·Alloy 고정 source를 다시 읽고 합성 코드, 과거 crate 경계와 조각난 fee 설명을 교체했습니다.",
+        "arithmetic": "20 gwei×3M÷15M÷8=0.5 gwei, 20.5×25,000=512,500 gwei, 3×25,000=75,000 gwei, 합계 587,500 gwei를 독립 검산했습니다.",
+        "humanize": "학습 계약, 한국어, 용어, 수식·계산, pseudocode, 지식 그래프, topology와 읽기 순서 strict 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 높이 754px, 조작부 50×50px, 여섯 장면 키보드 이동, reduced-motion과 JavaScript 비활성 정적 6단계를 확인했습니다.",
+        "browser1440": "1440×1000에서 의도 전 자동 진행 없음, 여섯 장면 순서, 커리큘럼 TxPool→EIP-1559→EIP-4844, 가로 넘침 0과 console 오류 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 공개 경로 확인"
+      ],
+      "reviewDisposition": "split-concept-from-eip1559-release-validation"
     },
     {
       "route": "blockchain/reth-eip4844",
@@ -5622,7 +5638,7 @@
     {
       "route": "blockchain/reth-pipeline",
       "title": "Reth Pipeline: stage·checkpoint·unwind",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-pipeline.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-pipeline.tsx",
@@ -5719,7 +5735,7 @@
     {
       "route": "blockchain/reth-provider",
       "title": "Reth 상태 조회: 한 블록을 고정해 읽기",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-provider.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-provider.tsx",
@@ -5909,7 +5925,7 @@
     {
       "route": "blockchain/reth-txpool",
       "title": "Reth TxPool: 검증·서브풀·거래 순서",
-      "status": "locally-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-txpool.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-txpool.tsx",
@@ -5953,7 +5969,7 @@
         "browser390": "390×844에서 document overflow·console/page error·layout shift 0, 모바일 controls 50×50px, keyboard 장면 이동, reduced-motion animation 0, trailing-slash no-JS 정적 장면 6개와 return-map 노출을 확인했습니다.",
         "browser1440": "1440×1000에서 document overflow·console/page error·layout shift 0, 8.2초 무동작 시 자동 재생 없음, keyboard 장면 이동과 중간 장면을 확인했습니다."
       },
-      "remaining": ["GitHub Pages 공개 URL 검증"],
+      "remaining": [],
       "reviewDisposition": "split-concept-from-operational-validation-and-pin-reth-v2.8.1"
     },
     {

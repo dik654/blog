@@ -274,17 +274,6 @@ export const ethereum3Articles: Article[] = [
 
   /* 4. TX & 가스: 트랜잭션 생명주기 */
   {
-    slug: "reth-eip1559",
-    title: "Reth EIP-1559 가스 메커니즘",
-    subcategory: "eth-reth",
-    sections: [
-      { id: "overview", title: "EIP-1559 가스 모델" },
-      { id: "calc-base-fee", title: "calc_next_block_base_fee" },
-      { id: "effective-tip", title: "effective_tip_per_gas" },
-    ],
-    component: () => import("@/pages/articles/ethereum/reth-eip1559"),
-  },
-  {
     slug: "reth-txpool",
     title: "Reth TxPool: 검증·서브풀·거래 순서",
     subcategory: "eth-reth",
@@ -314,6 +303,36 @@ export const ethereum3Articles: Article[] = [
       { id: "evidence", title: "공식 근거와 미측정값" },
     ],
     component: () => import("@/pages/articles/ethereum/reth-txpool-validation"),
+  },
+  {
+    slug: "reth-eip1559",
+    title: "Reth EIP-1559: 다음 가격과 수수료 정산",
+    subcategory: "eth-reth",
+    sections: [
+      { id: "overview", title: "한 거래의 가격과 정산" },
+      { id: "base-fee", title: "Next base fee 정수 계산" },
+      { id: "transaction-fee", title: "Cap·tip·burn" },
+      { id: "implementation", title: "Reth·Alloy 구현 경계" },
+      { id: "evidence", title: "명세와 고정 소스" },
+    ],
+    component: () => import("@/pages/articles/ethereum/reth-eip1559"),
+  },
+  {
+    slug: "reth-eip1559-validation",
+    title: "Reth EIP-1559 검증: 정수 경계·경로 대조·복구",
+    subcategory: "eth-reth",
+    sections: [
+      { id: "overview", title: "개념에서 운영 변경으로" },
+      { id: "environment", title: "버전·ChainSpec·fixture 고정" },
+      { id: "ownership", title: "상태 소유권" },
+      { id: "baseline", title: "Golden receipt" },
+      { id: "experiment", title: "Fork·정수·경로 실험" },
+      { id: "recovery", title: "중지·rollback·재진입" },
+      { id: "metrics", title: "정합성 뒤 비용 측정" },
+      { id: "decision", title: "결정과 반증 조건" },
+      { id: "evidence", title: "공식 근거와 미측정값" },
+    ],
+    component: () => import("@/pages/articles/ethereum/reth-eip1559-validation"),
   },
   {
     slug: "reth-eip4844",
