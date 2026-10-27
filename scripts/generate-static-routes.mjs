@@ -364,6 +364,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-eip1559",
   "blockchain/reth-eip1559-validation",
   "blockchain/reth-eip4844",
+  "blockchain/reth-blob-admission",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

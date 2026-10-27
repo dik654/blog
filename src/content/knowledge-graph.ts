@@ -12388,7 +12388,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "computer-science",
     label: "Reth staged blob admission",
-    definition: "Bounded decode·fork·개수·크기·hash-count 같은 값싼 구조 검사 뒤 nonce·balance·fee·KZG와 pool resource policy를 적용해 실패 이유와 비용을 분리하는 admission pipeline입니다.",
+    definition: "Reth v2.8.1이 transaction 자체의 stateless 검사 뒤에만 state provider와 account를 읽고 Blob sidecar를 검증한 다음 Valid·Invalid·Error를 구분하며, 별도 Pool insertion과 capacity 단계로 넘기는 admission pipeline입니다.",
     canonicalHref: "/cs/blockchain/reth-blob-admission#overview",
   },
   "reth-blobstore-lifecycle": {

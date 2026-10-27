@@ -413,9 +413,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     status: "reviewed",
     reviewedAt: "2026-10-27",
     rationale:
-      "Untrusted transaction을 bounded decode에서 시작해 fork·shape·state·두 fee market·KZG·pool budget 순서로 거부하거나 수용하는 하나의 admission state machine입니다. Blob 생성·결속은 부모 글, 보관과 reorg는 이웃 글이 맡으므로 이 경로를 다시 나누면 한 요청의 검사 비용과 typed reject가 끊깁니다.",
+      "Untrusted transaction T₀를 stateless→state provider→account→sidecar 검증으로 판정하고 Valid·Invalid·Error 뒤 Pool insertion·capacity까지 넘기는 하나의 admission state machine입니다. Blob 생성·결속은 부모 글, 보관과 reorg는 이웃 글이 맡으므로 이 경로를 다시 나누면 한 요청의 검사 비용과 typed outcome이 끊깁니다.",
     sharedGate:
-      "선택한 Reth release와 ChainSpec·KZG backend를 고정하고 각 gate의 입력, authoritative writer, reject reason을 같은 transaction trace에서 확인합니다. Moving main의 함수명이나 대상 환경의 처리량을 일반화하지 않습니다.",
+      "Reth v2.8.1과 ChainSpec·node settings·KZG backend를 고정하고 각 gate의 입력, Invalid/Error 구분, Pool insertion과 sidecar 저장 경계를 같은 transaction trace에서 확인합니다. Moving main의 함수명이나 대상 환경의 처리량을 일반화하지 않습니다.",
   },
   "blockchain/reth-blob-storage": {
     action: "keep",
@@ -4022,14 +4022,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/bplus-index-validation": "1f8d0bca8f6b4161",
   "blockchain/mdbx-internals": "53f56a767f72651b",
   "blockchain/mdbx-validation": "e1da7d714babffc2",
-  "blockchain/reth-blob-admission": "383e362b4a8cabff",
+  "blockchain/reth-blob-admission": "8ff32e48be1a73aa",
   "blockchain/reth-blob-reorg-release": "f41612453549bc3d",
   "blockchain/reth-blob-storage": "8f1aa69a7507d86b",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",
   "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",
   "blockchain/reth-eip1559-validation": "04c1549791aaa46e",
-  "blockchain/reth-eip4844": "3d29b594ee39e47c",
+  "blockchain/reth-eip4844": "3a88b46e06bdf866",
   "blockchain/reth-provider": "6e9d5b70c36e4cef",
   "blockchain/reth-provider-validation": "769041c3f923d720",
   "blockchain/reth-pipeline": "23ebb69349da3792",

@@ -5060,40 +5060,72 @@
     },
     {
       "route": "blockchain/reth-blob-admission",
-      "title": "Reth Blob Admission · 싼 검사부터 KZG까지",
-      "status": "unreviewed",
+      "title": "Reth Blob Admission · 검증에서 Pool 삽입까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-blob-admission.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-blob-admission.tsx",
         "src/pages/articles/ethereum/reth-blob-admission/ModernArticle.tsx",
-        "src/pages/articles/ethereum/reth-blob-admission/fileTree.ts"
+        "src/pages/articles/ethereum/reth-blob-admission/AdmissionTraceViz.tsx",
+        "src/pages/articles/ethereum/reth-blob-admission/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-blob-admission/fileTree.ts",
+        "src/pages/articles/ethereum/reth-blob-admission/codebase/reth-v2.8.1/validation-path.rs",
+        "src/pages/articles/ethereum/reth-blob-admission/codebase/reth-v2.8.1/stateless.rs",
+        "src/pages/articles/ethereum/reth-blob-admission/codebase/reth-v2.8.1/blob-validation.rs",
+        "src/pages/articles/ethereum/reth-blob-admission/codebase/reth-v2.8.1/outcomes.rs",
+        "src/pages/articles/ethereum/reth-blob-admission/codebase/reth-v2.8.1/pool-insertion.rs",
+        "src/content/reth-eip4844-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "stageMarkers": 7,
+        "predictionPointers": 3,
+        "assumptionMarkers": 1,
+        "sourceButtons": 5,
         "headings": [
-          "Admission은 “pool에 받아도 되는가”를 싼 질문부터 판정합니다",
-          "Cheap checks는 공격자가 강제할 수 있는 실패 비용을 제한합니다",
-          "모든 독립 gate가 참일 때만 admission이 열립니다",
-          "구현 근거를 고정합니다"
+          "Reth는 비용이 다른 검사를 어떤 순서로 실행해 Blob transaction을 Pool에 받습니까?",
+          "Stateless",
+          "State와 Sidecar",
+          "결과 타입",
+          "Pool insertion",
+          "부모 지도에 반환"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Reth v2.8.1을 표방하면서 실제 함수가 아닌 합성 v1.x 코드를 근거로 사용했습니다.",
+        "이미 decode된 transaction을 받는 validate_stateless를 131,072-byte sidecar의 bounded decode처럼 설명해 실제 책임을 잘못 연결했습니다.",
+        "Validator의 typed outcome, Pool insertion, capacity eviction과 BlobStore 저장을 하나의 admission gate로 합쳐 Valid가 최종 삽입을 보장하는 것처럼 보였습니다."
+      ],
+      "fixture": {
+        "case": "T0: type-3 transaction, nonce 7, one blob reference and one v0 sidecar; sender state nonce 7 and sufficient balance",
+        "assumption": "설명용 입력이며 실제 fork, fee, size, state와 pool limit은 선택한 head와 node 설정에서 읽습니다."
+      },
+      "stageEvidence": {
+        "S": "직속 부모 EIP-4844 Blob 제출 지도에서 admission을 현재 영역으로 표시합니다.",
+        "B": "T0 한 건이 transaction validator와 pool boundary를 지나는 전체 경로를 먼저 보여 줍니다.",
+        "0": "type 3, nonce 7, Blob reference 1개와 v0 sidecar 1개인 고정 사례를 끝까지 사용합니다.",
+        "1": "Stateless, state provider, account, sidecar, typed outcome, pool insertion의 일곱 상태를 장면으로 추적합니다.",
+        "2": "Invalid와 Error를 규칙 위반과 검증 의존성 실패로 분리하고 Valid를 insertion 시도 자격으로 제한합니다.",
+        "3": "Reth v2.8.1의 validate_one_transaction, validate_stateless, validate_eip4844와 add_transactions 이름을 실제 역할에 붙입니다.",
+        "4": "V(T0,H)=Icheap∧Istate∧Isidecar∧Iextra 식과 실제 분기 코드를 함께 설명합니다.",
+        "5/6": "고정한 Reth v2.8.1 소스 발췌에서 검사 순서, typed outcome, capacity와 BlobStore 경계를 확인합니다.",
+        "7": "세 예측 질문으로 실패 경계를 다시 확인하고 Valid와 삽입·보관이 다른 상태라는 사실을 부모 지도에 반환합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185의 transaction-pool validator와 pool insertion 구현을 고정해 읽었습니다.",
+        "실제 구현의 validate_one_transaction→validate_stateless→state provider/account→validate_eip4844 순서를 발췌했습니다.",
+        "TransactionValidationOutcome의 Valid/Invalid/Error와 Pool add·discard_worst·BlobStore 전달을 별도 상태로 대조했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 Reth v2.8.1 고정 소스를 모두 읽고 bounded decode 오해와 validator/pool/storage 경계 축약을 교정했습니다.",
+        "arithmetic": "이 글은 성능 수치를 주장하지 않습니다. T0의 nonce와 개수는 설명용 fixture이며 실제 판정값은 node 설정과 head에 귀속합니다.",
+        "humanize": "학습 계약, 지식 그래프, 문장 호흡, 한국어 자연스러움, 용어 밀도, 수식, 시각화와 아키텍처 흐름 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 334×469.09, 49.5px 조작부, 키보드 0→6, 장면 높이 고정과 console 오류 0을 확인했습니다. Production static route의 JavaScript 비활성 context에서도 폭 390=390, noscript 본문, 일곱 정적 장면, visible button 0과 부모 반환 링크를 확인했습니다.",
+        "browser1440": "1440×1000에서 7초 무자동재생, 키보드 0→6, 시각화 높이 550.44px 고정, 실제 source sidebar와 console 오류 0을 확인했습니다. 8,053 modules·정적 public route 2,106개·no-script 본문 317편의 production build가 통과했고 최대 상주 메모리는 6.50GB, swap은 0이었습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 공개 경로 검증"
+      ],
+      "reviewDisposition": "rewrite-as-version-pinned-validator-pool-boundary-trace"
     },
     {
       "route": "blockchain/reth-blob-reorg-release",

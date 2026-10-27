@@ -4043,3 +4043,22 @@
   `7d005b2a`의 전역 감사, production build, 1,000편 실제 브라우저 검사와 배포가 모두
   통과했습니다. 공개 경로를 390×844에서 다시 열어 폭 390=390, 의도 전 장면 0 유지,
   키보드 0→5 이동, 49.5px 조작부와 console 오류 0건을 확인했습니다.
+
+### Reth Blob Admission 글 로컬 검증 (2026-10-27)
+
+- 기존 글의 합성 `reth v1.x` 예시를 없애고 Reth v2.8.1 commit `d763342fa185`에서 고정한
+  validator와 pool insertion 구현을 직접 발췌했습니다. 이미 decode된 transaction을 받는
+  `validate_stateless`를 Blob 원문의 bounded decode처럼 설명하던 오류도 교정했습니다.
+- type-3·nonce 7·Blob reference 한 개와 v0 sidecar 한 개인 T₀를 stateless, state provider,
+  account, sidecar, typed outcome, Pool insertion의 일곱 장면으로 끝까지 추적합니다. `Valid`는
+  최종 수용이 아니라 insertion 시도 자격이며, capacity 탈락과 BlobStore 보관은 뒤의 별도
+  상태라는 경계를 시각화와 실제 코드로 함께 보여 줍니다.
+- 1,440×1,000과 390×844에서 자동 재생 없이 장면 0 유지, 키보드 0→6 이동, 장면 높이 고정,
+  모바일 49.5px 조작부, 문서 가로 넘침과 console 오류 0을 확인했습니다. reduced-motion에서는
+  재생이 비활성화되고 수동 이동은 유지됩니다.
+- 학습 계약, 지식 그래프, 수식, 계산, pseudocode, 읽기 순서, 한국어, 용어, topology와
+  아키텍처 흐름의 strict 감사를 통과했습니다. Production build는 8,053개 module과 정적
+  public route 2,106개, no-script 본문 317편을 생성했고 최대 상주 메모리는 약 6.50GB,
+  swap은 0이었습니다. JavaScript 비활성 390×844 화면에서 noscript 본문, 일곱 정적 장면,
+  부모 반환 링크, visible button 0과 가로 넘침 0을 확인했습니다. 이제 GitHub Pages 공개
+  경로만 다시 검증합니다.

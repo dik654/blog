@@ -17,6 +17,7 @@ export interface RethEip4844Node {
   parentLabel: string;
   parentHref: string;
   region: string;
+  returnSummary: string;
   curriculumPrevious?: { href: string; label: string };
   curriculumNext?: { href: string; label: string };
 }
@@ -33,6 +34,8 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentLabel: "Reth 전체 구조 · 검증과 실행",
     parentHref: "/cs/blockchain/reth#overview",
     region: "Blob transaction 경계",
+    returnSummary:
+      "Transaction은 Blob 원문 대신 commitment에서 만든 32-byte versioned hash를 기록합니다. Sidecar는 Blob·commitment·proof를 운반하며, 개수와 순서, commitment에서 다시 계산한 hash, KZG proof가 모두 맞아야 같은 제출로 받아들일 수 있습니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/reth-eip1559-validation#return-map",
       label: "EIP-1559 변경 검증",
@@ -53,6 +56,8 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentLabel: "EIP-4844 Blob 제출",
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Transaction Pool admission",
+    returnSummary:
+      "Reth v2.8.1은 transaction 자체로 끝낼 수 있는 검사를 먼저 실행하고, 통과한 경우에만 account state와 Blob sidecar를 검증합니다. 결과는 Valid·Invalid·Error로 구분하며, Valid는 실제 Pool insertion을 시도할 자격이지 최종 삽입 보장은 아닙니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/reth-eip4844#return-map",
       label: "EIP-4844 Blob 제출",
@@ -73,6 +78,8 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentLabel: "EIP-4844 Blob 제출",
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Execution client의 local BlobStore",
+    returnSummary:
+      "검증된 sidecar는 transaction hash로 찾는 local artifact입니다. 저장·조회·정리는 transaction pool의 생명주기와 연결되지만, 이 local 보관을 consensus data availability나 영구 archive로 확대하면 안 됩니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/reth-blob-admission#overview",
       label: "Blob Pool 입장 검사",
@@ -93,6 +100,8 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentLabel: "EIP-4844 Blob 제출",
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Blob gas feedback",
+    returnSummary:
+      "지난 블록의 excess와 사용량은 다음 excess를 만들고, 이 값이 다음 Blob base fee 계산의 입력이 됩니다. Blob gas와 execution gas는 단위와 가격 함수가 다른 두 시장이므로 하나의 gas budget처럼 더하지 않습니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/reth-blob-storage#overview",
       label: "BlobStore",
@@ -113,6 +122,8 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentLabel: "EIP-4844 Blob 제출",
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Reorg reinsertion과 retention",
+    returnSummary:
+      "Reorg로 transaction body가 Pool에 돌아올 때 sidecar가 빠져 있더라도 local BlobStore에 이미 검증한 artifact가 남아 있으면 재사용할 수 있습니다. 재삽입과 cleanup은 같은 canonical 경계를 보되 서로 다른 상태 전이로 기록해야 합니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/eip4844-blob-fee#overview",
       label: "Blob 가격",

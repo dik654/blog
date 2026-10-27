@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1000,
-    "reviewed": 661,
-    "pending": 339,
+    "reviewed": 662,
+    "pending": 338,
     "untracked": 0,
-    "assignedPending": 297,
+    "assignedPending": 296,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4421,11 +4421,11 @@
     {
       "route": "blockchain/reth-blob-admission",
       "publicPath": "cs/blockchain/reth-blob-admission",
-      "title": "Reth Blob Admission · 싼 검사부터 KZG까지",
+      "title": "Reth Blob Admission · 검증에서 Pool 삽입까지",
       "catalogIndex": 439,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

@@ -1,24 +1,32 @@
 import type { FileNode } from "@/components/code/types";
 
-const f = (name: string, path: string, codeKey?: string): FileNode => ({
+const file = (name: string, path: string, codeKey?: string): FileNode => ({
   name,
   type: "file",
   path,
   codeKey,
 });
-const d = (name: string, children: FileNode[]): FileNode => ({
-  name,
-  type: "dir",
-  children,
-});
 
-export const rethBlobAdmissionTree: FileNode = d("reth", [
-  d("crates/transaction-pool/src", [
-    d("validate", [
-      f("eth.rs", "reth/crates/transaction-pool/src/validate/eth.rs", "tx-validate-stateless"),
-    ]),
-    d("blobstore", [
-      f("blob.rs", "reth/crates/transaction-pool/src/blobstore/blob.rs", "blob-validate"),
-    ]),
-  ]),
-]);
+export const rethBlobAdmissionTree: FileNode = {
+  name: "reth v2.8.1",
+  type: "dir",
+  children: [
+    {
+      name: "crates/transaction-pool/src",
+      type: "dir",
+      children: [
+        {
+          name: "validate",
+          type: "dir",
+          children: [
+            file("eth.rs · 전체 경로", "reth-v2.8.1/transaction-pool/validate/eth.rs", "validation-path"),
+            file("eth.rs · stateless", "reth-v2.8.1/transaction-pool/validate/eth.rs", "stateless"),
+            file("eth.rs · Blob", "reth-v2.8.1/transaction-pool/validate/eth.rs", "blob-validation"),
+            file("mod.rs · outcomes", "reth-v2.8.1/transaction-pool/validate/mod.rs", "outcomes"),
+          ],
+        },
+        file("pool/mod.rs · insertion", "reth-v2.8.1/transaction-pool/pool/mod.rs", "pool-insertion"),
+      ],
+    },
+  ],
+};
