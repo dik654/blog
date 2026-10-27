@@ -4044,7 +4044,7 @@
   통과했습니다. 공개 경로를 390×844에서 다시 열어 폭 390=390, 의도 전 장면 0 유지,
   키보드 0→5 이동, 49.5px 조작부와 console 오류 0건을 확인했습니다.
 
-### Reth Blob Admission 글 로컬 검증 (2026-10-27)
+### Reth Blob Admission 글 공개 검증 완료 (2026-10-28)
 
 - 기존 글의 합성 `reth v1.x` 예시를 없애고 Reth v2.8.1 commit `d763342fa185`에서 고정한
   validator와 pool insertion 구현을 직접 발췌했습니다. 이미 decode된 transaction을 받는
@@ -4060,5 +4060,7 @@
   아키텍처 흐름의 strict 감사를 통과했습니다. Production build는 8,053개 module과 정적
   public route 2,106개, no-script 본문 317편을 생성했고 최대 상주 메모리는 약 6.50GB,
   swap은 0이었습니다. JavaScript 비활성 390×844 화면에서 noscript 본문, 일곱 정적 장면,
-  부모 반환 링크, visible button 0과 가로 넘침 0을 확인했습니다. 이제 GitHub Pages 공개
-  경로만 다시 검증합니다.
+  부모 반환 링크, visible button 0과 가로 넘침 0을 확인했습니다. Commit `7570024c`의 GitHub
+  Pages run `40546596786`에서 전역 감사, production build, 1,000편 실제 브라우저 검사와
+  배포가 모두 통과했습니다. 공개 경로도 390×844에서 폭 390=390, 7초 무자동재생,
+  키보드 0→6 이동, 49.5px 조작부와 console 오류 0건을 다시 확인했습니다.
