@@ -10283,7 +10283,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "EIP-1559 target base-fee transition",
     definition: "Parent gas limit에서 target을 만들고 parent gas used의 편차로 next block base fee를 결정하는 deterministic header transition입니다.",
-    canonicalHref: "/cs/blockchain/reth-eip1559#calc-base-fee",
+    canonicalHref: "/cs/blockchain/reth-eip1559#base-fee",
   },
   "eip1559-integer-rounding-bound": {
     id: "eip1559-integer-rounding-bound",
@@ -10291,7 +10291,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "EIP-1559 integer rounding·change bound",
     definition: "정해진 integer division 순서, increase 최소 1 wei와 elasticity·denominator가 next base fee 변화폭을 제한하는 규칙입니다.",
-    canonicalHref: "/cs/blockchain/reth-eip1559#calc-base-fee",
+    canonicalHref: "/cs/blockchain/reth-eip1559#base-fee",
   },
   "eip1559-fee-cap-eligibility": {
     id: "eip1559-fee-cap-eligibility",
@@ -10299,7 +10299,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "EIP-1559 fee-cap eligibility",
     definition: "Max fee가 current base fee를 감당하는지 먼저 확인하고 priority cap과 남은 cap으로 effective tip을 제한하는 transaction validity 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-eip1559#effective-tip",
+    canonicalHref: "/cs/blockchain/reth-eip1559#transaction-fee",
   },
   "eip1559-burn-tip-accounting": {
     id: "eip1559-burn-tip-accounting",
@@ -10307,7 +10307,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "EIP-1559 burn·tip accounting",
     definition: "Actual gas used에 base fee와 effective tip을 각각 곱해 protocol burn과 beneficiary 수익을 분리하는 수수료 회계입니다.",
-    canonicalHref: "/cs/blockchain/reth-eip1559#effective-tip",
+    canonicalHref: "/cs/blockchain/reth-eip1559#transaction-fee",
   },
   "reth-eip1559-parameter-provenance": {
     id: "reth-eip1559-parameter-provenance",
@@ -10323,7 +10323,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth EIP-1559 release gate",
     definition: "Fork boundary·target±1·minimum increment·large integer fixture에서 header·receipt·burn parity를 먼저 확인하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-eip1559#calc-base-fee",
+    canonicalHref: "/cs/blockchain/reth-eip1559-validation#experiment",
+  },
+  "reth-eip1559-run-receipt": {
+    id: "reth-eip1559-run-receipt",
+    kind: "method",
+    domain: "computer-science",
+    label: "Reth EIP-1559 run receipt",
+    definition: "Reth·Alloy·ChainSpec·parent·transaction과 payload·validator·TxPool의 exact 결과를 한 run ID로 묶어 첫 불일치를 찾는 실험 evidence입니다.",
+    canonicalHref: "/cs/blockchain/reth-eip1559-validation#baseline",
   },
   "reth-txpool-admission-classification": {
     id: "reth-txpool-admission-classification",
@@ -48287,9 +48295,15 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "reth-eip1559-parameter-provenance",
+    to: "reth-eip1559-run-receipt",
+    relation: "produces",
+    reason: "고정한 Reth·Alloy·ChainSpec·parent·transaction을 한 run ID의 재현 증거로 묶습니다.",
+  },
+  {
+    from: "reth-eip1559-run-receipt",
     to: "reth-eip1559-release-gate",
-    relation: "constrains",
-    reason: "Fork·ChainSpec 계수·source SHA가 같은 fixture끼리만 비교합니다.",
+    relation: "evaluates",
+    reason: "세 실행 경로의 exact 결과와 rollback 재생을 같은 receipt에서 비교해 채택 여부를 판단합니다.",
   },
   {
     from: "eip1559-integer-rounding-bound",

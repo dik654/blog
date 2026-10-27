@@ -3,16 +3,25 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Reth TxPool 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth EIP-1559 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/reth-eip1559`은 `concept`, 새 `blockchain/reth-eip1559-validation`은 `practice`로 분리했습니다. 개념 글은 parent gas limit 30M·used 18M·base fee 20 gwei와 Alice의 max fee 40·priority cap 3·actual gas 25,000을 고정해 target 15M, 다음 base fee 20.5 gwei, burn 512,500 gwei, beneficiary 75,000 gwei와 총 587,500 gwei를 한 흐름으로 추적합니다.
+- 기존 설명용 합성 코드와 과거 crate 경계를 제거했습니다. Reth v2.8.1 `d763342fa185`와 그 release가 고정한 Alloy EIPs·Consensus v2.5.0을 기준으로 ChainSpec의 parameter 선택, Alloy의 정수 계산, payload·consensus·TxPool의 소비 경계와 canonical header의 상태 소유권을 구분했습니다.
+- 실무 글은 같은 parent와 transaction corpus를 target·fork·custom parameter·정수 rounding·transaction cap·receipt accounting 경계에서 재생합니다. Payload 작성, header 검증과 TxPool 유지 경로의 exact wei 결과가 모두 같고 binary·ChainSpec rollback 뒤 fixture가 다시 통과해야 채택할 수 있습니다. 대상 환경의 성능·복구 결과는 없으므로 상태는 `proposed`, 수치는 `[M] 미측정`입니다.
+- 사이드바의 원본 목록과 커리큘럼 목록이 달라 EIP-1559이 TxPool 앞에 보이던 문제를 고쳤습니다. 이제 모든 내비게이션 표면이 `TxPool 개념→검증→EIP-1559 개념→검증→EIP-4844` 순서를 사용합니다. 자동 크기 바닥괄호가 KaTeX의 잘못된 SVG 경로를 만들던 문제도 고정 크기 괄호로 바꿔 콘솔 오류 4건을 없앴습니다.
+- Production build는 8,038개 module과 정적 public route 2,106개, no-script 본문 315편을 생성했습니다. 최종 빌드의 최고 RSS는 약 6.72GB이고 swap은 사용하지 않았습니다. 정적 생성 과정에는 기존 Recharts의 width·height 경고 한 건이 남지만 이번 두 경로의 브라우저 콘솔에는 오류와 경고가 없습니다.
+- 1,440×1,000과 390×844에서 두 경로 모두 가로 넘침 0, 여섯 장면의 의도 전 정지와 키보드 순서, 50×50px 모바일 조작부를 확인했습니다. 모바일 시각화는 754px 안에 들어옵니다. Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지되며 실행 중인 animation은 0건입니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 장면 6개와 부모 지도 반환을 제공합니다. GitHub Pages 공개 경로 확인 뒤 공개 검증 완료로 전환합니다.
+
+### Reth TxPool 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-txpool`은 `concept`, 새 `blockchain/reth-txpool-validation`은 `practice`로 분리했습니다. 개념 글은 canonical nonce 7인 Alice의 T7·T8과 Bob의 T4를 따라 validation, 네 subpool, sender-head ordering, canonical commit과 reorg 재주입을 설명합니다. 실무 글은 같은 거래 corpus와 head 일정을 공격 입력·fee 변화·restart·resource pressure에서 재생하고 rollback과 ADR까지 연결합니다.
 - 기존 글의 합성 코드와 Pending·Queued·BaseFee 세 서브풀 설명을 제거했습니다. Reth v2.8.1의 `validate/eth.rs`, `pool/state.rs`, `pool/best.rs`, `pool/mod.rs`, `pool/txpool.rs`, `maintain.rs`를 고정해 stateless→provider→stateful 검증, Valid·Invalid·Error, Pending·BaseFee·Queued·Blob, sender별 다음 nonce unlock과 old-only transaction 재검증을 실제 구현 경계에서 확인합니다.
 - Valid는 transaction이 pool에 보관 가능하다는 판정이며 곧바로 Pending이나 block 포함을 뜻하지 않습니다. Ordering policy는 priority만 계산하고 `BestTransactions`가 sender dependency를 지킵니다. Reorg 때는 예전 block 거래를 그대로 되살리지 않고 새 canonical state를 먼저 적용한 뒤 external validation 경로로 다시 넣습니다.
 - Replacement 식의 10%와 40→44 gwei, 3→3.3 gwei는 설명용 local policy입니다. Ethereum consensus 상수나 실제 배포 설정으로 일반화하지 않습니다. 실무 글은 Reth release·ChainSpec·PoolConfig·head schedule·raw corpus·runtime을 고정하고 transaction hash별 outcome·subpool reason·replacement·builder yield·canonical event receipt를 남기도록 했습니다.
 - 대상 환경에서 fault recovery와 성능을 실행하지 않았으므로 실무 결정은 `proposed`, latency·throughput·memory 결과는 `[M] 미측정`입니다. Invalid 삽입, sender nonce 순서 훼손, memory bound 초과 또는 안전한 rollback 부재가 한 번이라도 나타나면 기각하도록 했습니다.
-- 선택 파일 ESLint와 learning·article·Viz·pseudocode·calculation·formula·graph·reading·order·runtime·topology·문장 호흡·한국어·용어 검사가 통과했습니다. Production build는 8,043개 module과 공개 정적 경로 2,104개를 생성했고, 최고 RSS는 약 6.28GB이며 swap은 사용하지 않았습니다. 1,440×1,000과 390×844에서 두 route 모두 document overflow·console error·layout shift가 없었고 모바일 조작부는 50×50px을 확보했습니다. 8.2초 동안 자동 재생하지 않았으며, focus한 Viz에서 `←`·`→` 장면 이동과 reduced-motion의 재생 비활성·animation 0건을 확인했습니다. JavaScript를 끈 trailing-slash 정적 경로는 HTTP 200으로 열렸고, 실시간 장면과 조작부는 숨긴 채 장면 6개·본문 절·`return-map`을 390px 문서 폭 안에서 읽을 수 있었습니다. 남은 검증은 GitHub Pages 공개 URL 확인입니다.
+- 선택 파일 ESLint와 learning·article·Viz·pseudocode·calculation·formula·graph·reading·order·runtime·topology·문장 호흡·한국어·용어 검사가 통과했습니다. Production build는 8,043개 module과 공개 정적 경로 2,104개를 생성했고, 최고 RSS는 약 6.28GB이며 swap은 사용하지 않았습니다. 1,440×1,000과 390×844에서 두 route 모두 document overflow·console error·layout shift가 없었고 모바일 조작부는 50×50px을 확보했습니다. 8.2초 동안 자동 재생하지 않았으며, focus한 Viz에서 `←`·`→` 장면 이동과 reduced-motion의 재생 비활성·animation 0건을 확인했습니다. JavaScript를 끈 trailing-slash 정적 경로는 HTTP 200으로 열렸고, 실시간 장면과 조작부는 숨긴 채 장면 6개·본문 절·`return-map`을 390px 문서 폭 안에서 읽을 수 있었습니다. GitHub Pages run `40433467328`은 commit `aa841d13`의 strict 감사, production build, 999편 실제 브라우저 검사와 배포를 통과했습니다. 공개 개념·실무 경로에서 데스크톱·모바일·키보드·reduced-motion·JavaScript 비활성 상태와 console 오류 0건을 다시 확인했습니다.
 
-### Reth Pipeline 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth Pipeline 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-pipeline`은 `concept`, 새 `blockchain/reth-pipeline-validation`은 `practice`로 분리했습니다. 개념 글은 checkpoint 99에서 target 250까지 threshold 64로 진행하는 한 stage를 따라 dependency 순서, 100..163·164..227·228..250 batch, provider commit과 250→140 역순 unwind를 설명합니다. 실무 글은 같은 fixture를 execute 전·commit 전후·invalid input·reorg·prune 경계에서 중단하고 output·checkpoint·state root를 대조하는 release gate를 설계합니다.
 - 기존 글이 stage output commit과 checkpoint marker 저장 사이에 독립적인 공개 틈이 있다고 설명한 오류를 고쳤습니다. Reth v2.8.1 runner는 stage output을 RW provider에 쓴 뒤 새 checkpoint를 같은 provider transaction에 저장하고 commit합니다. `post_execute_commit`은 그 뒤 호출되는 hook이며 durable checkpoint owner가 아닙니다.
@@ -20,25 +29,25 @@
 - 실제 v2.8.1 `stage.rs` L74–84·L241–308과 `pipeline/mod.rs` L365–463·L486–554를 본문 주장 옆 코드 패널에서 열 수 있게 했습니다. 범위 계산, Stage trait, output·checkpoint commit, prune 확인과 역순 unwind를 링크만이 아니라 고정 source excerpt로 대조합니다.
 - 실무 글은 release·source SHA·feature, stage set·threshold·prune, chain fixture, 저장 snapshot, filesystem과 runtime을 한 manifest에 고정합니다. Golden receipt는 Reth 내장 단일 형식이라고 주장하지 않고 실험에서 만들 증거 묶음으로 표시했습니다. 대상 장비의 측정값은 없으므로 상태는 `proposed`, 성능과 복구 결과는 `[M] 미측정`입니다.
 - 시각화·학습 계약·글 구조·pseudocode·TypeScript·production build와 `git diff --check`가 통과했습니다. Build는 8,053개 module, 정적 공개 경로 2,102개, no-script 본문 311편을 생성했고 최대 RSS는 약 6.35GB, swap은 0이었습니다.
-- 1,440×1,000에서 개념·실무 글의 코드 패널이 실제 file path, line 범위, 주석과 source를 표시했고 문서·패널 가로 넘침과 console 오류는 0건입니다. 390×844에서는 문서와 live 시각화가 390=390·334=334이고 코드 패널도 389=389입니다. reduced-motion에서는 재생이 비활성화되고 장면 키보드 이동은 유지됩니다. 네이티브 JavaScript 비활성 컨텍스트에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 단계 6개, 문서 폭 390=390입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+- 1,440×1,000에서 개념·실무 글의 코드 패널이 실제 file path, line 범위, 주석과 source를 표시했고 문서·패널 가로 넘침과 console 오류는 0건입니다. 390×844에서는 문서와 live 시각화가 390=390·334=334이고 코드 패널도 389=389입니다. reduced-motion에서는 재생이 비활성화되고 장면 키보드 이동은 유지됩니다. 네이티브 JavaScript 비활성 컨텍스트에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 단계 6개, 문서 폭 390=390입니다. GitHub Pages run `40433467328`과 공개 두 경로의 HTTP 200을 확인했습니다.
 
-### Reth Provider 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth Provider 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-provider`는 `concept`, 새 `blockchain/reth-provider-validation`은 `practice`로 분리했습니다. 개념 글은 영속 tip 995와 memory 996~1,000이 공존할 때 H1000의 account A와 slot K를 한 시점으로 읽는 과정을 추적합니다. 실무 글은 flush overlap·partial persistence·reorg·prune·missing evidence·restart를 같은 hash query에 재생해 변경을 채택할지 판단합니다.
 - 기존 글의 `block/root/storage generation/overlay revision` 합성 view handle과 v2.2.0 BundleState 중심 설명을 제거했습니다. Reth v2.8.1의 실제 `StateProviderFactory`, `BlockchainProvider`, `OverlayStateProvider`, `ConsistentProvider`를 기준으로 latest·historical·pending 선택, retained memory→history→pending source, memory head→DB snapshot 획득 순서와 key별 overlay precedence를 설명합니다.
 - Account가 overlay에서 삭제된 경우와 overlay에 기록이 없는 경우, storage slot의 zero 의미를 구분했습니다. History fallback은 `NotYetWritten`·`InChangeset`·`InPlainState`로 나누고 정상 absence, `StateAtBlockPruned`, 있어야 할 changeset 누락을 같은 `None`으로 합치지 않습니다.
 - 실무 글은 Reth v2.8.1/SHA, Storage V1/V2, prune·persistence 설정, block hash fixture, filesystem과 workload를 한 run manifest에 고정합니다. 정확성·restart·rollback을 통과한 run에서만 query latency·CPU·I/O·RTO를 비교하며 대상 환경의 측정값이 없으므로 상태는 `proposed`, 결과는 `[M] 미측정`입니다.
 - 학습 계약 997편, 지식 그래프 4,475개 concept·6,892개 relation, 수식·계산·pseudocode·article topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime·시각화 검사가 통과했습니다. Production build는 8,060개 module과 정적 공개 경로 2,100개, no-script 본문 309편을 만들었고 최대 RSS는 약 5.93GB, swap은 0이었습니다.
-- 1,440×1,000에서 두 글 모두 7.2초 동안 자동 진행되지 않았고 키보드로 중간 장면과 복구 장면을 이동했습니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이고 가로 넘침이 없습니다. reduced-motion에서는 재생이 꺼지고 수동 이동은 유지됩니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면 0개, 정적 장면 6개이며 console 오류는 0건입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+- 1,440×1,000에서 두 글 모두 7.2초 동안 자동 진행되지 않았고 키보드로 중간 장면과 복구 장면을 이동했습니다. 390×844에서는 문서 폭 390=390, 시각화 폭 334=334이고 가로 넘침이 없습니다. reduced-motion에서는 재생이 꺼지고 수동 이동은 유지됩니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면 0개, 정적 장면 6개이며 console 오류는 0건입니다. GitHub Pages run `40433467328`과 공개 두 경로의 HTTP 200을 확인했습니다.
 
-### Reth Storage V2 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth Storage V2 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-db`는 `concept`, 새 `blockchain/reth-db-validation`은 `practice`로 분리했습니다. 개념 글은 블록 1,000의 실행 결과가 static files·RocksDB·MDBX로 나뉜 뒤 한 가시 지점으로 읽히는 과정을 추적합니다. 실무 글은 V1→V2 migration, phase별 중단, 복구, rollback과 채택 조건을 별도 실험 계약으로 다룹니다.
 - 기존 글에서 table·cursor·static file을 각각 설명하던 구조를 실행 결과→저장 위치 분류→세 backend 준비→순차 commit→중단 뒤 재조정→일관된 읽기의 여섯 장면으로 바꿨습니다. 세 저장소를 하나의 원자적 transaction처럼 읽을 여지도 제거했습니다. Reth v2.8.1의 정상 경로는 static files를 finalize하고 RocksDB batch를 반영한 뒤 MDBX transaction을 마지막에 commit하며, MDBX의 checkpoint가 독자에게 보이는 persistent frontier가 됩니다.
 - 복구는 모든 불일치를 같은 방향으로 처리하지 않습니다. Static files와 RocksDB가 MDBX보다 앞서면 visible tip에 맞춰 자르지만, RocksDB가 뒤처지면 unwind와 rebuild가 필요합니다. Static files가 필요한 immutable range보다 뒤라면 정상으로 가장하지 않고 중단합니다. 읽기 경로는 in-memory head를 먼저 고정한 뒤 database snapshot을 열어 memory와 disk 범위 사이의 빈 구간을 막습니다.
 - 실무 글은 Reth v2.8.1 release와 source SHA, MDBX·static files·RocksDB·chain 자료를 한 manifest에 고정합니다. 보존한 V1을 oracle로 두고 changesets·receipts·indices·StorageSettings 전환·old table cleanup·pipeline rebuild 경계에서 격리된 사본을 중단합니다. 대상 환경의 migration 시간과 성능 수치는 없으므로 결론은 `proposed`, 측정 결과는 `[M] 미측정`으로 남겼습니다.
 - 학습 계약, 지식 그래프, 글 구조, topology, 읽기 순서, 한국어, 용어, 수식·계산·pseudocode, runtime, coverage와 architecture-flow 검사가 통과했습니다. Production build는 8,065개 module과 정적 공개 경로 2,098개, no-script 본문 307편을 만들었습니다.
-- 1,440×1,000에서 두 글 모두 문서 가로 넘침과 console 오류가 없고 여섯 장면의 commit·recovery·migration 경계를 확인했습니다. 390×844에서는 개념 그림 높이 360~616px, 실무 그림 360~378px이며 문서와 그림에 가로 넘침이 없습니다. 명시적 재생 전에는 장면 01이 유지되고 키보드 이동과 reduced-motion의 비활성 재생이 동작합니다. JavaScript 비활성 화면은 두 글 모두 live 장면 0개, 정적 장면 6개, 문서 폭 390=390입니다. GitHub Pages 배포와 공개 경로 재검증이 남아 있습니다.
+- 1,440×1,000에서 두 글 모두 문서 가로 넘침과 console 오류가 없고 여섯 장면의 commit·recovery·migration 경계를 확인했습니다. 390×844에서는 개념 그림 높이 360~616px, 실무 그림 360~378px이며 문서와 그림에 가로 넘침이 없습니다. 명시적 재생 전에는 장면 01이 유지되고 키보드 이동과 reduced-motion의 비활성 재생이 동작합니다. JavaScript 비활성 화면은 두 글 모두 live 장면 0개, 정적 장면 6개, 문서 폭 390=390입니다. GitHub Pages run `40433467328`과 공개 두 경로의 HTTP 200을 확인했습니다.
 
 ### MDBX 개념·실무 분리 공개 검증 완료 (2026-10-27)
 

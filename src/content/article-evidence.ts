@@ -5246,6 +5246,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     label: "EIP-1559 — Fee market change for ETH 1.0 chain",
     href: "https://eips.ethereum.org/EIPS/eip-1559",
     note: "base fee update와 transaction fee 계산의 규범적 정의",
+  }, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "ChainSpec·payload·consensus·TxPool 호출 지점을 확인한 고정 release",
+  }, {
+    kind: "공식 구현",
+    label: "Alloy v2.5.0 — EIP-1559 helpers",
+    href: "https://github.com/alloy-rs/alloy/tree/v2.5.0/crates/eips/src/eip1559",
+    note: "Reth v2.8.1 Cargo.lock이 고정한 정수 base-fee 계산 구현",
+  }, {
+    kind: "공식 구현",
+    label: "Alloy v2.5.0 — Transaction trait",
+    href: "https://github.com/alloy-rs/alloy/blob/v2.5.0/crates/consensus/src/transaction/mod.rs",
+    note: "fee eligibility와 effective tip 계산 계약",
+  }),
+  "blockchain/reth-eip1559-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 규격",
+    label: "EIP-1559 — Fee market change for ETH 1.0 chain",
+    href: "https://eips.ethereum.org/EIPS/eip-1559",
+    note: "경계 fixture의 expected header·transaction·burn oracle",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — consensus validation",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/consensus/common/src/validation.rs",
+    note: "London 전환과 expected base fee mismatch의 fail-closed 경계",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — ChainSpec API",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/chainspec/src/api.rs",
+    note: "Target timestamp의 BaseFeeParams와 parent header 계산 연결",
   }),
   "blockchain/reth-eip4844": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,

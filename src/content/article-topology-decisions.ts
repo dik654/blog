@@ -427,6 +427,28 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "v2.8.1/SHA·StorageSettings·prune·filesystem·MDBX/static/Rocks snapshot을 고정하고 tip/hash·state root·receipts·indices·Provider query parity를 먼저 통과합니다. 통과한 run에서만 migration 시간·space peak·restart/query latency를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/reth-eip1559": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Parent 30M/18M/20 gwei에서 next base fee 20.5 gwei와 Alice의 effective tip·burn을 계산하고 ChainSpec→Alloy→소비 경계를 추적하는 부분은 하나의 합의 메커니즘입니다. Fork·정수·세 실행 경로를 비교하고 rollback·비용·ADR을 판단하는 일은 대상 환경의 운영 변경이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 EIP-1559, Reth v2.8.1과 Alloy v2.5.0에 고정하고 숫자는 설명용 fixture로만 사용합니다. 대상 환경의 성능·복구 결과나 release 승인은 주장하지 않습니다.",
+    targetRoutes: [
+      "blockchain/reth-eip1559",
+      "blockchain/reth-eip1559-validation",
+    ],
+  },
+  "blockchain/reth-eip1559-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "한 run manifest에서 EIP·Reth·Alloy·ChainSpec·parent·transaction을 고정하고 fork·target·integer·transaction cap을 payload·consensus·TxPool 경로에 재생한 뒤 rollback과 ADR까지 연결하는 하나의 운영 판단입니다. 이를 나누면 같은 1 wei mismatch의 발견과 복구 증거가 끊깁니다.",
+    sharedGate:
+      "Header·eligibility·receipt·balance·rollback parity를 먼저 통과합니다. 통과한 run에서만 계산 비용과 payload wait를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-provider": {
     action: "split",
     status: "implemented",
