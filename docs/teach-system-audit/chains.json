@@ -4928,7 +4928,7 @@
     {
       "route": "blockchain/reth",
       "title": "Reth 아키텍처 개요",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth.tsx",
@@ -5119,12 +5119,10 @@
         "substantiveReading": "기존 본문과 Reth v2.8.1 고정 소스를 모두 읽고 bounded decode 오해와 validator/pool/storage 경계 축약을 교정했습니다.",
         "arithmetic": "이 글은 성능 수치를 주장하지 않습니다. T0의 nonce와 개수는 설명용 fixture이며 실제 판정값은 node 설정과 head에 귀속합니다.",
         "humanize": "학습 계약, 지식 그래프, 문장 호흡, 한국어 자연스러움, 용어 밀도, 수식, 시각화와 아키텍처 흐름 감사를 통과했습니다.",
-        "browser390": "390×844에서 문서 폭 390=390, 시각화 334×469.09, 49.5px 조작부, 키보드 0→6, 장면 높이 고정과 console 오류 0을 확인했습니다. Production static route의 JavaScript 비활성 context에서도 폭 390=390, noscript 본문, 일곱 정적 장면, visible button 0과 부모 반환 링크를 확인했습니다.",
-        "browser1440": "1440×1000에서 7초 무자동재생, 키보드 0→6, 시각화 높이 550.44px 고정, 실제 source sidebar와 console 오류 0을 확인했습니다. 8,053 modules·정적 public route 2,106개·no-script 본문 317편의 production build가 통과했고 최대 상주 메모리는 6.50GB, swap은 0이었습니다."
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 334×469.09, 49.5px 조작부, 키보드 0→6, 장면 높이 고정과 console 오류 0을 확인했습니다. Production static route의 JavaScript 비활성 context에서도 폭 390=390, noscript 본문, 일곱 정적 장면, visible button 0과 부모 반환 링크를 확인했습니다. GitHub Pages run 40546596786 배포 뒤 공개 경로에서도 폭 390=390, 7초 무자동재생, 키보드 0→6, 49.5px 조작부와 console 오류 0을 다시 확인했습니다.",
+        "browser1440": "1440×1000에서 7초 무자동재생, 키보드 0→6, 시각화 높이 550.44px 고정, 실제 source sidebar와 console 오류 0을 확인했습니다. 8,053 modules·정적 public route 2,106개·no-script 본문 317편의 production build가 통과했고 최대 상주 메모리는 6.50GB, swap은 0이었습니다. GitHub Pages run 40546596786의 전역 감사와 1,000편 브라우저 검사·배포가 성공했습니다."
       },
-      "remaining": [
-        "GitHub Pages 공개 경로 검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-version-pinned-validator-pool-boundary-trace"
     },
     {
