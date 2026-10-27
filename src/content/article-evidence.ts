@@ -5413,7 +5413,48 @@ export const ARTICLE_EVIDENCE: Readonly<
     href: "https://github.com/paradigmxyz/reth/tree/v2.2.0/crates/trie/trie",
     note: "선택한 release의 prefix set·state-root·parallel trie source snapshot",
   }),
-  "blockchain/reth-txpool": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-txpool": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "이 글이 구현 기준으로 고정한 release와 source snapshot",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Ethereum transaction validator",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/transaction-pool/src/validate/eth.rs",
+    note: "Stateless·stateful validation과 Valid·Invalid·Error outcome 경계",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — SubPool state",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/transaction-pool/src/pool/state.rs",
+    note: "Pending·BaseFee·Queued·Blob을 결정하는 transaction state bits",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — BestTransactions iterator",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/transaction-pool/src/pool/best.rs",
+    note: "Sender별 independent head와 다음 nonce unlock 경계",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Pool maintenance",
+    href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/transaction-pool/src/maintain.rs",
+    note: "Canonical commit·reorg와 old-only transaction reinjection 순서",
+  }),
+  "blockchain/reth-txpool-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "실험 대상 binary·source version을 고정하는 근거",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Transaction pool tests",
+    href: "https://github.com/paradigmxyz/reth/tree/v2.8.1/crates/transaction-pool/tests",
+    note: "Upstream fixture 범위와 별도 운영 fault 실험을 구분하기 위한 baseline",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — Pool config and maintenance",
+    href: "https://github.com/paradigmxyz/reth/tree/v2.8.1/crates/transaction-pool/src",
+    note: "PoolConfig·PriceBumpConfig·canonical maintenance와 resource boundary",
+  }),
   "blockchain/prysm-attestation": withSeriesEvidence(PRYSM_SERIES_EVIDENCE),
   "blockchain/prysm-beacon-api": withSeriesEvidence(
     PRYSM_SERIES_EVIDENCE,

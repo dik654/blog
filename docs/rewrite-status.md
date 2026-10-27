@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth TxPool 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+
+- `blockchain/reth-txpool`은 `concept`, 새 `blockchain/reth-txpool-validation`은 `practice`로 분리했습니다. 개념 글은 canonical nonce 7인 Alice의 T7·T8과 Bob의 T4를 따라 validation, 네 subpool, sender-head ordering, canonical commit과 reorg 재주입을 설명합니다. 실무 글은 같은 거래 corpus와 head 일정을 공격 입력·fee 변화·restart·resource pressure에서 재생하고 rollback과 ADR까지 연결합니다.
+- 기존 글의 합성 코드와 Pending·Queued·BaseFee 세 서브풀 설명을 제거했습니다. Reth v2.8.1의 `validate/eth.rs`, `pool/state.rs`, `pool/best.rs`, `pool/mod.rs`, `pool/txpool.rs`, `maintain.rs`를 고정해 stateless→provider→stateful 검증, Valid·Invalid·Error, Pending·BaseFee·Queued·Blob, sender별 다음 nonce unlock과 old-only transaction 재검증을 실제 구현 경계에서 확인합니다.
+- Valid는 transaction이 pool에 보관 가능하다는 판정이며 곧바로 Pending이나 block 포함을 뜻하지 않습니다. Ordering policy는 priority만 계산하고 `BestTransactions`가 sender dependency를 지킵니다. Reorg 때는 예전 block 거래를 그대로 되살리지 않고 새 canonical state를 먼저 적용한 뒤 external validation 경로로 다시 넣습니다.
+- Replacement 식의 10%와 40→44 gwei, 3→3.3 gwei는 설명용 local policy입니다. Ethereum consensus 상수나 실제 배포 설정으로 일반화하지 않습니다. 실무 글은 Reth release·ChainSpec·PoolConfig·head schedule·raw corpus·runtime을 고정하고 transaction hash별 outcome·subpool reason·replacement·builder yield·canonical event receipt를 남기도록 했습니다.
+- 대상 환경에서 fault recovery와 성능을 실행하지 않았으므로 실무 결정은 `proposed`, latency·throughput·memory 결과는 `[M] 미측정`입니다. Invalid 삽입, sender nonce 순서 훼손, memory bound 초과 또는 안전한 rollback 부재가 한 번이라도 나타나면 기각하도록 했습니다.
+- 선택 파일 ESLint와 learning·article·Viz·pseudocode·calculation·formula·graph·reading·order·runtime·topology·문장 호흡·한국어·용어 검사가 통과했습니다. Production build는 8,043개 module과 공개 정적 경로 2,104개를 생성했고, 최고 RSS는 약 6.28GB이며 swap은 사용하지 않았습니다. 1,440×1,000과 390×844에서 두 route 모두 document overflow·console error·layout shift가 없었고 모바일 조작부는 50×50px을 확보했습니다. 8.2초 동안 자동 재생하지 않았으며, focus한 Viz에서 `←`·`→` 장면 이동과 reduced-motion의 재생 비활성·animation 0건을 확인했습니다. JavaScript를 끈 trailing-slash 정적 경로는 HTTP 200으로 열렸고, 실시간 장면과 조작부는 숨긴 채 장면 6개·본문 절·`return-map`을 390px 문서 폭 안에서 읽을 수 있었습니다. 남은 검증은 GitHub Pages 공개 URL 확인입니다.
+
 ### Reth Pipeline 개념·실무 분리 로컬 검증 완료 (2026-10-27)
 
 - `blockchain/reth-pipeline`은 `concept`, 새 `blockchain/reth-pipeline-validation`은 `practice`로 분리했습니다. 개념 글은 checkpoint 99에서 target 250까지 threshold 64로 진행하는 한 stage를 따라 dependency 순서, 100..163·164..227·228..250 batch, provider commit과 250→140 역순 unwind를 설명합니다. 실무 글은 같은 fixture를 execute 전·commit 전후·invalid input·reorg·prune 경계에서 중단하고 output·checkpoint·state root를 대조하는 release gate를 설계합니다.

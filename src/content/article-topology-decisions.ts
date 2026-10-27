@@ -469,7 +469,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
   "blockchain/reth-sync": KEEP("Anchor→pipeline execution/unwind→backfill/live handoff→notification이 한 sync state transition입니다."),
-  "blockchain/reth-txpool": KEEP("Admission→nonce chain→subpool→consumption→reorg/eviction이 한 transaction lifecycle입니다."),
+  "blockchain/reth-txpool": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Alice T7·T8와 Bob T4가 validator outcome, 네 subpool, sender-head ordering, canonical commit과 reorg 재주입을 지나는 과정은 한 TxPool 메커니즘입니다. 공격 입력·restart·resource pressure를 재생하고 rollback·비용·ADR을 판단하는 일은 대상 환경의 운영 결정이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 Reth v2.8.1 source에 고정하고 Valid·Invalid·Error, Pending·BaseFee·Queued·Blob, sender별 nonce dependency와 old-only transaction 재검증을 설명합니다. 대상 환경의 처리량·메모리·복구 결과나 release 승인은 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-txpool", "blockchain/reth-txpool-validation"],
+  },
+  "blockchain/reth-txpool-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "한 run manifest에서 transaction별 golden receipt를 만들고 invalid input·nonce gap·replacement flood·fee repricing·reorg·restart·resource pressure를 재생한 뒤 격리·rollback·재진입·ADR까지 잇는 하나의 운영 판단입니다. 이를 다시 나누면 같은 거래 hash의 fault와 복구 증거가 끊깁니다.",
+    sharedGate:
+      "Reth v2.8.1/SHA·ChainSpec·PoolConfig·head schedule·raw corpus·runtime을 고정하고 validation outcome·subpool reason·sender dependency·builder sequence·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·throughput·memory를 비교하며 현재 결과는 proposed·미측정으로 남깁니다.",
+  },
   "crypto/mpc": {
     "action": "keep",
     "status": "implemented",
@@ -3950,13 +3968,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-db-validation": "d7122135ba517430",
   "blockchain/reth-provider": "6e9d5b70c36e4cef",
   "blockchain/reth-provider-validation": "769041c3f923d720",
-  "blockchain/reth-pipeline": "34689ee1b5e382d6",
-  "blockchain/reth-pipeline-validation": "ba84e7bf03fdc215",
+  "blockchain/reth-pipeline": "23ebb69349da3792",
+  "blockchain/reth-pipeline-validation": "386d614580de719b",
   "blockchain/reth-net": "f506624d24b7ed4a",
   "blockchain/reth-precompiles": "79605a2596ddb7f4",
   "blockchain/reth-rpc": "02473a33cea1db84",
   "blockchain/reth-sync": "310f9fcbfb6e5b3e",
-  "blockchain/reth-txpool": "4366f4c66bca828a",
+  "blockchain/reth-txpool": "17e22144298ab69e",
+  "blockchain/reth-txpool-validation": "84685be87b398a7c",
   "crypto/mpc": "07f3cf355d38676f",
   "gpu/cuda-basics": "41615071ec176bec",
   "gpu/gpu-arch-hopper": "361781ed817ff81f",
