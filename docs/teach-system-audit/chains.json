@@ -5908,46 +5908,53 @@
     },
     {
       "route": "blockchain/reth-txpool",
-      "title": "Reth 트랜잭션 풀",
-      "status": "unreviewed",
+      "title": "Reth TxPool: 검증·서브풀·거래 순서",
+      "status": "locally-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-txpool.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-txpool.tsx",
-        "src/pages/articles/ethereum/reth-txpool/Ordering.tsx",
-        "src/pages/articles/ethereum/reth-txpool/OrderingData.ts",
-        "src/pages/articles/ethereum/reth-txpool/Overview.tsx",
-        "src/pages/articles/ethereum/reth-txpool/OverviewData.ts",
-        "src/pages/articles/ethereum/reth-txpool/Subpool.tsx",
-        "src/pages/articles/ethereum/reth-txpool/SubpoolData.ts",
-        "src/pages/articles/ethereum/reth-txpool/Validation.tsx",
-        "src/pages/articles/ethereum/reth-txpool/ValidationData.ts"
+        "src/pages/articles/ethereum/reth-txpool/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-txpool/RethTxpoolLocator.tsx",
+        "src/pages/articles/ethereum/reth-txpool/fileTree.ts",
+        "src/pages/articles/ethereum/reth-txpool/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-txpool/viz/RethTxpoolLifecycleViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "stageMarkers": 6,
+        "predictionPointers": 1,
+        "assumptionMarkers": 3,
         "sourceButtons": 6,
         "headings": [
-          "\n        Ordering: eligible sender heads 사이의 선택\n      ",
-          "\n        Txpool: 아직 실행되지 않은 의존성 그래프\n      ",
-          "\n        Subpools: 실행 가능성이 바뀌는 상태 머신\n      ",
-          "\n        Validation: reject와 대기 가능 상태를 구분하기\n      "
+          "한 거래가 도착해 사라지거나 다시 후보가 될 때까지",
+          "Valid는 곧바로 Pending이라는 뜻이 아닙니다",
+          "네 서브풀은 기다리는 이유를 보존합니다",
+          "우선순위는 sender별 현재 head 사이에서 비교합니다",
+          "새 head는 제거와 재분류를 일으킵니다",
+          "구현에서 다시 확인할 경계"
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "fixture": "Canonical nonce 7인 Alice의 T7·T8과 Bob T4를 Valid·Invalid·Error, Pending·BaseFee·Queued·Blob, sender-head ordering, commit과 reorg까지 추적합니다.",
+      "stageEvidence": {
+        "locator": "Reth 상위 지도에서 TxPool concept 위치와 별도 practice 글을 보여 줍니다.",
+        "validation": "Stateless→provider→stateful 순서와 Valid·Invalid·Error를 구분합니다.",
+        "classification": "TxState 비트와 네 서브풀, 설명용 10% replacement 계산을 연결합니다.",
+        "ordering": "Alice T7이 소비된 뒤에만 T8이 sender head로 열리는 순서를 보여 줍니다.",
+        "canonicalUpdate": "Mined removal과 old-only transaction 재검증을 같은 lifecycle에 되돌립니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "Reth v2.8.1 validate/eth.rs·pool/state.rs·pool/best.rs·maintain.rs 고정 source excerpt를 코드 패널에서 대조합니다.",
+        "EIP-1559는 fee validity 근거로만 사용하고 local replacement·retention·ordering 정책으로 확대하지 않습니다."
+      ],
+      "verification": {
+        "substantiveReading": "개념과 운영 판단을 분리하고 한 거래 사례를 여섯 장면과 실제 source seam까지 추적했습니다.",
+        "arithmetic": "설명용 10% replacement의 40→44 gwei와 3→3.3 gwei 계산을 local policy로 한정했습니다.",
+        "humanize": "learning·article·prose·한국어·용어·topology strict 검사가 통과했습니다.",
+        "browser390": "390×844에서 document overflow·console/page error·layout shift 0, 모바일 controls 50×50px, keyboard 장면 이동, reduced-motion animation 0, trailing-slash no-JS 정적 장면 6개와 return-map 노출을 확인했습니다.",
+        "browser1440": "1440×1000에서 document overflow·console/page error·layout shift 0, 8.2초 무동작 시 자동 재생 없음, keyboard 장면 이동과 중간 장면을 확인했습니다."
+      },
+      "remaining": ["GitHub Pages 공개 URL 검증"],
+      "reviewDisposition": "split-concept-from-operational-validation-and-pin-reth-v2.8.1"
     },
     {
       "route": "blockchain/robinhood-chain-blob-demand",

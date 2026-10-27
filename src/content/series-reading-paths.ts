@@ -39,6 +39,7 @@ export const SERIES_READING_PATHS = {
           "transaction 후보와 payload가 revm 실행·상태 변경으로 이어지는 순서입니다.",
         slugs: [
           "reth-txpool",
+          "reth-txpool-validation",
           "reth-eip1559",
           "reth-eip4844",
           "reth-payload-builder",
