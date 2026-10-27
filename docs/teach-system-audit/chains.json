@@ -3621,7 +3621,7 @@
     {
       "route": "blockchain/merkle-patricia-trie",
       "title": "Ethereum MPT: 주소에서 stateRoot까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/merkle-patricia-trie.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/merkle-patricia-trie.tsx",
@@ -5488,12 +5488,10 @@
         "substantiveReading": "기존 공개 본문, EIP-4844 명세, Reth v2.8.1과 Alloy v2.5.0 고정 source를 다시 읽고 한 Blob 제출의 분리·결속 경로로 교체했습니다.",
         "arithmetic": "B₀ 131,072 bytes, C₀·π₀ 각 48 bytes, h₀ 32 bytes와 h₀=0x01||SHA256(C₀)[1:32]의 길이·index 조건을 독립 확인했습니다.",
         "humanize": "글 구조, 학습 계약, 계산, pseudocode, 시각화, 한국어와 용어 검사가 통과했습니다. 이어지는 입장 검사·BlobStore·reorg 글의 실제 책임 범위를 읽고 topology 결정을 기록해 전역 strict 검사도 통과했습니다.",
-        "browser390": "390×844에서 문서 가로 넘침 0, 현재 장면만 표시하는 여섯 단계, 49.5px 조작부, 키보드 0→5 이동과 reduced-motion의 비활성 재생·수동 이동을 확인했습니다. JavaScript 비활성 정적 경로에서도 여섯 장면 목록, 전체 본문과 부모 지도 반환이 보이고 live 영역은 숨겨지는 것을 확인했습니다.",
-        "browser1440": "1440×1000에서 705px canvas 안에 전체 아키텍처가 들어가고 내부 세로 scroll과 겹침이 없으며, 7초 동안 무자동재생·재생 뒤 9초에 한 장면 진행·실제 code sidebar source 표시를 확인했습니다."
+        "browser390": "390×844에서 문서 가로 넘침 0, 현재 장면만 표시하는 여섯 단계, 49.5px 조작부, 키보드 0→5 이동과 reduced-motion의 비활성 재생·수동 이동을 확인했습니다. JavaScript 비활성 정적 경로에서도 여섯 장면 목록, 전체 본문과 부모 지도 반환이 보이고 live 영역은 숨겨지는 것을 확인했습니다. GitHub Pages 공개 경로에서도 폭 390=390, 의도 전 장면 0 유지, focus 후 키보드 0→5 이동과 console 오류 0건을 다시 확인했습니다.",
+        "browser1440": "1440×1000에서 705px canvas 안에 전체 아키텍처가 들어가고 내부 세로 scroll과 겹침이 없으며, 7초 동안 무자동재생·재생 뒤 9초에 한 장면 진행·실제 code sidebar source 표시를 확인했습니다. GitHub Pages run 40447405534가 commit 7d005b2a의 전역 감사·production build·1,000편 실제 브라우저 검사·배포를 통과했고 공개 경로가 HTTP 200을 반환했습니다."
       },
-      "remaining": [
-        "GitHub Pages 공개 경로 검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-blob-split-bind-validate-mechanism"
     },
     {
