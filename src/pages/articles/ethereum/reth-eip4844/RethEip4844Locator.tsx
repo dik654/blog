@@ -149,10 +149,7 @@ export function RethEip4844MapReturn({
     >
       <p className="text-[10px] font-bold text-primary">부모 지도에 반환</p>
       <p className="mt-2 max-w-3xl break-keep text-sm leading-6">
-        Transaction은 Blob 원문 대신 commitment에서 만든 32-byte versioned hash를
-        기록합니다. Sidecar는 Blob·commitment·proof를 운반하며, 개수와 순서,
-        commitment에서 다시 계산한 hash, KZG proof가 모두 맞아야 같은 제출로
-        받아들일 수 있습니다.
+        {node.returnSummary}
       </p>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs">
         <Link

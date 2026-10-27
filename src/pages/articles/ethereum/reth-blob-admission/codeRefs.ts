@@ -1,43 +1,72 @@
 import type { CodeRef } from "@/components/code/types";
-import validateEthRs from "../reth-eip4844/codebase/reth/crates/transaction-pool/src/validate/eth.rs?raw";
-import blobRs from "../reth-eip4844/codebase/reth/crates/transaction-pool/src/blobstore/blob.rs?raw";
+import validationPath from "./codebase/reth-v2.8.1/validation-path.rs?raw";
+import stateless from "./codebase/reth-v2.8.1/stateless.rs?raw";
+import blobValidation from "./codebase/reth-v2.8.1/blob-validation.rs?raw";
+import outcomes from "./codebase/reth-v2.8.1/outcomes.rs?raw";
+import poolInsertion from "./codebase/reth-v2.8.1/pool-insertion.rs?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
-  "tx-validate-stateless": {
-    path: "reth/crates/transaction-pool/src/validate/eth.rs",
-    code: validateEthRs,
+  "validation-path": {
+    path: "reth-v2.8.1/transaction-pool/validate/eth.rs · L401–435, L661–730",
+    code: validationPath,
     lang: "rust",
-    highlight: [3, 46],
-    desc: "문제: Blob TX가 풀에 진입하기 전 값싼 구조 오류를 먼저 걸러야 합니다.\n\n해결: 포크 활성 여부, 크기 한도, blob 개수를 상태 조회 없이 검사합니다. 비용은 원소 수에 비례합니다.",
+    highlight: [14, 104],
+    desc: "문제: 값싼 입력 오류, 현재 account 규칙, 비싼 Blob 검증을 한 단계처럼 실행하면 실패 원인과 비용이 섞입니다.\n\n해결: validate_one_with_provider가 stateless를 먼저 끝내고, 통과한 경우에만 state provider를 얻어 stateful path로 내려갑니다.",
     annotations: [
-      { lines: [9, 12], color: "sky", note: "Cancun 포크 미활성 → EIP-4844 거부" },
-      { lines: [19, 25], color: "emerald", note: "blob TX는 input 바이트 기준 크기 제한 (본체만 메모리)" },
-      { lines: [29, 43], color: "amber", note: "blob 개수 0이면 거부, 포크별 max_blob_count 초과도 거부" },
+      { lines: [14, 18], color: "sky", note: "State 조회 전 stateless 검사" },
+      { lines: [20, 35], color: "amber", note: "Provider 실패는 Invalid가 아니라 Error" },
+      { lines: [61, 88], color: "emerald", note: "Account · nonce · balance를 같은 state에서 확인" },
+      { lines: [90, 104], color: "violet", note: "Blob 검증 뒤 Valid outcome 구성" },
     ],
   },
-  "tx-validate-eip4844": {
-    path: "reth/crates/transaction-pool/src/validate/eth.rs",
-    code: validateEthRs,
+  stateless: {
+    path: "reth-v2.8.1/transaction-pool/validate/eth.rs · L452–658",
+    code: stateless,
     lang: "rust",
-    highlight: [48, 75],
-    desc: "문제: Blob TX의 사이드카가 유효한지 KZG 검증을 수행해야 하고, re-org로 사이드카가 없는 경우도 구분해야 합니다.\n\n해결: take_blob()으로 세 가지 경우(None/Missing/Present)를 분기해 서로 다른 reason code를 반환합니다.",
+    highlight: [8, 70],
+    desc: "문제: 활성 fork, 크기, gas·fee, chain id, intrinsic gas와 Blob 개수가 틀린 요청에 account 조회와 KZG 비용을 쓰면 안 됩니다.\n\n해결: transaction 자체와 설정만으로 판단할 수 있는 조건을 먼저 검사하고 정확한 Invalid reason을 반환합니다.",
     annotations: [
-      { lines: [56, 57], color: "sky", note: "None: blob TX인데 사이드카 자체가 없음 → 에러" },
-      { lines: [60, 66], color: "emerald", note: "Missing: re-org 재주입. local BlobStore에 있으면 재검증 없이 통과" },
-      { lines: [69, 72], color: "amber", note: "Present: KZG 검증 수행 → 성공 시 사이드카 반환" },
+      { lines: [8, 18], color: "sky", note: "활성화되지 않은 transaction type 차단" },
+      { lines: [20, 32], color: "emerald", note: "Blob 원문이 아닌 transaction 동적 영역의 크기 제한" },
+      { lines: [34, 35], color: "amber", note: "원본의 gas·fee·chain id·intrinsic gas 검사 구간" },
+      { lines: [38, 67], color: "violet", note: "Cancun과 fork별 Blob 개수 검사" },
     ],
   },
-  "blob-validate": {
-    path: "reth/crates/transaction-pool/src/blobstore/blob.rs",
-    code: blobRs,
+  "blob-validation": {
+    path: "reth-v2.8.1/transaction-pool/validate/eth.rs · L806–880",
+    code: blobValidation,
     lang: "rust",
-    highlight: [5, 45],
-    desc: "문제: 사이드카(blobs + commitments + proofs)의 개수·binding·KZG proof가 모두 맞는지 확인해야 합니다.\n\n해결: 개수 일치 → 개수 한도 → commitment→versioned hash 매칭 → KZG proof 배치 검증 순서로, 싼 검사부터 비싼 검사로 진행합니다.",
+    highlight: [8, 43],
+    desc: "문제: 새 제출의 sidecar, reorg로 sidecar가 빠진 transaction, 내부적으로 불가능한 상태를 같은 실패로 다루면 복구 경계가 사라집니다.\n\n해결: None·Missing·Present를 분리하고 Present만 version과 transaction binding·KZG proof를 검증합니다.",
     annotations: [
-      { lines: [10, 16], color: "sky", note: "blob·commitment·proof 개수가 모두 같아야 함 (shape gate)" },
-      { lines: [18, 25], color: "emerald", note: "MAX_BLOBS_PER_BLOCK 초과 시 거부 (shape gate)" },
-      { lines: [27, 34], color: "amber", note: "commitment → versioned hash 재계산 후 참조값과 비교 (binding)" },
-      { lines: [36, 42], color: "violet", note: "KZG proof 배치 검증 — pairing 연산 공유로 개별 검증보다 효율적 (KZG gate)" },
+      { lines: [10, 17], color: "sky", note: "None은 지원할 수 없는 내부 상태" },
+      { lines: [18, 29], color: "amber", note: "Missing은 BlobStore에 기존 검증 결과가 있어야 통과" },
+      { lines: [30, 42], color: "emerald", note: "Present는 fork별 version과 Blob 검증을 실행" },
+    ],
+  },
+  outcomes: {
+    path: "reth-v2.8.1/transaction-pool/validate/mod.rs · L27–55, L99–132",
+    code: outcomes,
+    lang: "rust",
+    highlight: [4, 39],
+    desc: "문제: 입력 위반과 state provider 장애, 검증 성공을 bool 하나로 줄이면 retry와 peer 처리 정책을 구분할 수 없습니다.\n\n해결: TransactionValidationOutcome을 Valid·Invalid·Error로 나누고 새 Blob 제출의 Valid에는 sidecar를 함께 실어 보냅니다.",
+    annotations: [
+      { lines: [6, 14], color: "emerald", note: "현재 head에서 유효한 후보와 필요한 state metadata" },
+      { lines: [15, 18], color: "amber", note: "입력 위반 Invalid와 의존성 실패 Error의 분리" },
+      { lines: [21, 39], color: "violet", note: "새 Blob 제출만 ValidWithSidecar로 전달" },
+    ],
+  },
+  "pool-insertion": {
+    path: "reth-v2.8.1/transaction-pool/pool/mod.rs · L585–753",
+    code: poolInsertion,
+    lang: "rust",
+    highlight: [5, 60],
+    desc: "문제: Validator의 Valid를 최종 pool 수용과 혼동하면 replacement·capacity eviction과 sidecar 저장 시점을 설명할 수 없습니다.\n\n해결: Valid 뒤 pool.add_transaction을 별도로 실행합니다. Batch capacity를 판정하고 write lock을 놓은 뒤 새 삽입 metadata의 sidecar를 저장하며, 탈락한 후보의 Blob은 이어서 정리합니다.",
+    annotations: [
+      { lines: [15, 24], color: "sky", note: "Validated transaction과 sidecar를 insertion 전에 분리" },
+      { lines: [26, 34], color: "emerald", note: "Pool 규칙이 별도로 insertion 성공을 결정" },
+      { lines: [46, 53], color: "amber", note: "Batch 뒤 capacity를 넘으면 discard_worst 실행" },
+      { lines: [55, 62], color: "violet", note: "Lock 해제 뒤 sidecar 저장과 알림" },
     ],
   },
 };

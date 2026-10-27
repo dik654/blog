@@ -348,12 +348,14 @@ export const ethereum3Articles: Article[] = [
   },
   {
     slug: "reth-blob-admission",
-    title: "Reth Blob Admission · 싼 검사부터 KZG까지",
+    title: "Reth Blob Admission · 검증에서 Pool 삽입까지",
     subcategory: "eth-reth",
     sections: [
-      { id: "overview", title: "Admission gate의 형태" },
-      { id: "cheap-checks", title: "Bounded decode와 shape 검사" },
-      { id: "state-kzg", title: "State · KZG · resource gate" },
+      { id: "overview", title: "T₀ 한 건의 입장 검사" },
+      { id: "cheap-checks", title: "Stateless" },
+      { id: "state-kzg", title: "State와 Sidecar" },
+      { id: "outcomes", title: "Valid · Invalid · Error" },
+      { id: "pool-insertion", title: "Pool 삽입과 capacity" },
       { id: "paper-reth-blob-validation", title: "Reth 구현 근거" },
     ],
     component: () => import("@/pages/articles/ethereum/reth-blob-admission"),

@@ -6233,8 +6233,8 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-blob-admission": {
     title: "Reth blob pool admission 글이 소유하는 범위",
     owns: [
-      "Bounded decode·shape·state·KZG·resource gate로 나눈 admission 순서",
-      "Cryptographically valid와 locally admitted를 구분하는 경계",
+      "Reth v2.8.1의 stateless→state provider→account→sidecar 검증 순서와 typed outcome",
+      "Validator Valid·Pool insertion·capacity eviction·sidecar 저장을 구분하는 경계",
     ],
     reuses: [
       { label: "Blob·sidecar·versioned hash 정의", href: "/cs/blockchain/reth-eip4844" },
@@ -6246,7 +6246,7 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Admission gate claim은 pinned Reth transaction-pool source snapshot에 귀속한다." },
       { kind: "standard", rule: "Pool admission을 block inclusion이나 finality 보장으로 확대하지 않는다." },
       { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar·KZG fixture에서 admission reason-code parity를 먼저 검사한다." },
-      { kind: "project-claim", rule: "특정 gate 순서·resource limit을 모든 Reth release의 고정값으로 일반화하지 않는다." },
+      { kind: "project-claim", rule: "특정 함수 순서·Pool limit을 모든 Reth release나 node 설정의 고정값으로 일반화하지 않는다." },
     ],
   },
   "reth-blob-storage": {
