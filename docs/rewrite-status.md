@@ -3,14 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Reth EIP-1559 개념·실무 분리 로컬 검증 완료 (2026-10-27)
+### Reth EIP-1559 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-eip1559`은 `concept`, 새 `blockchain/reth-eip1559-validation`은 `practice`로 분리했습니다. 개념 글은 parent gas limit 30M·used 18M·base fee 20 gwei와 Alice의 max fee 40·priority cap 3·actual gas 25,000을 고정해 target 15M, 다음 base fee 20.5 gwei, burn 512,500 gwei, beneficiary 75,000 gwei와 총 587,500 gwei를 한 흐름으로 추적합니다.
 - 기존 설명용 합성 코드와 과거 crate 경계를 제거했습니다. Reth v2.8.1 `d763342fa185`와 그 release가 고정한 Alloy EIPs·Consensus v2.5.0을 기준으로 ChainSpec의 parameter 선택, Alloy의 정수 계산, payload·consensus·TxPool의 소비 경계와 canonical header의 상태 소유권을 구분했습니다.
 - 실무 글은 같은 parent와 transaction corpus를 target·fork·custom parameter·정수 rounding·transaction cap·receipt accounting 경계에서 재생합니다. Payload 작성, header 검증과 TxPool 유지 경로의 exact wei 결과가 모두 같고 binary·ChainSpec rollback 뒤 fixture가 다시 통과해야 채택할 수 있습니다. 대상 환경의 성능·복구 결과는 없으므로 상태는 `proposed`, 수치는 `[M] 미측정`입니다.
 - 사이드바의 원본 목록과 커리큘럼 목록이 달라 EIP-1559이 TxPool 앞에 보이던 문제를 고쳤습니다. 이제 모든 내비게이션 표면이 `TxPool 개념→검증→EIP-1559 개념→검증→EIP-4844` 순서를 사용합니다. 자동 크기 바닥괄호가 KaTeX의 잘못된 SVG 경로를 만들던 문제도 고정 크기 괄호로 바꿔 콘솔 오류 4건을 없앴습니다.
 - Production build는 8,038개 module과 정적 public route 2,106개, no-script 본문 315편을 생성했습니다. 최종 빌드의 최고 RSS는 약 6.72GB이고 swap은 사용하지 않았습니다. 정적 생성 과정에는 기존 Recharts의 width·height 경고 한 건이 남지만 이번 두 경로의 브라우저 콘솔에는 오류와 경고가 없습니다.
-- 1,440×1,000과 390×844에서 두 경로 모두 가로 넘침 0, 여섯 장면의 의도 전 정지와 키보드 순서, 50×50px 모바일 조작부를 확인했습니다. 모바일 시각화는 754px 안에 들어옵니다. Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지되며 실행 중인 animation은 0건입니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 장면 6개와 부모 지도 반환을 제공합니다. GitHub Pages 공개 경로 확인 뒤 공개 검증 완료로 전환합니다.
+- 1,440×1,000과 390×844에서 두 경로 모두 가로 넘침 0, 여섯 장면의 의도 전 정지와 키보드 순서, 50×50px 모바일 조작부를 확인했습니다. 모바일 시각화는 754px 안에 들어옵니다. Reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지되며 실행 중인 animation은 0건입니다. JavaScript 비활성 상태에서는 두 경로 모두 HTTP 200, live 장면·조작부 0개, 정적 장면 6개와 부모 지도 반환을 제공합니다. GitHub Pages run `40440119067`은 commit `a6d770f8`의 strict 감사, production build, 공개 1,000편 실제 브라우저 검사와 배포를 통과했습니다. 두 공개 경로에서 HTTP 200, 데스크톱·모바일 가로 넘침 0, 의도 전 장면 0 유지와 키보드 0→5 이동을 다시 확인했습니다.
 
 ### Reth TxPool 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
@@ -4022,3 +4022,21 @@
 - GitHub Pages run `40378899670`에서 전역 감사, production build와 993개 공개 글의 실제 브라우저
   검사가 모두 통과했습니다. 공개 LSM 두 경로를 390×844에서 다시 열어 HTTP 200, 직속 부모와
   개념 anchor, 핵심 사례, 가로 넘침 0, console 오류 0과 6.4초 무자동재생을 확인했습니다.
+
+### EIP-4844 Blob 제출 글 로컬 검증 (2026-10-27)
+
+- `reth-eip4844`를 한 Blob 제출이 transaction과 sidecar로 나뉘고 다시 결속되는 개념 글로
+  재작성했습니다. B₀ 131,072 bytes에서 C₀·π₀ 각 48 bytes와 h₀ 32 bytes를 만들고, index 0의
+  두 기록을 개수·reference·KZG proof의 세 검사로 다시 묶는 한 사례를 끝까지 추적합니다.
+- EIP-4844 명세, Reth v2.8.1 commit `d763342fa185`, Reth가 고정한 Alloy v2.5.0 source를
+  저장했습니다. Reth는 sidecar version과 transaction-pool 결과를 맡고, Alloy는 목록 결속과
+  versioned hash·KZG proof 검증을 맡는 실제 책임 경계를 code sidebar에서 확인할 수 있습니다.
+- 여섯 장면은 자동으로 시작하지 않습니다. 데스크톱에서는 705px canvas 안에 전체 구조가 한 번에
+  들어가고, 모바일에서는 여섯 단계 경로와 현재 상태만 크게 표시합니다. 390×844와 1,440×1,000에서
+  문서 가로 넘침과 그림 내부 세로 scroll이 0이며, 키보드 이동과 reduced-motion을 확인했습니다.
+- ESLint, 글 구조, 학습 계약, 계산, pseudocode, 시각화, 한국어, 아키텍처 흐름, 읽기 순서와
+  지식 그래프 검사가 통과했습니다. 이어지는 `reth-blob-admission`, `reth-blob-storage`,
+  `reth-blob-reorg-release`의 실제 책임 범위를 읽고 topology 결정을 기록해 전역 strict 검사도
+  통과했습니다. 정적 public route 2,106개와
+  no-script 본문 316편을 생성했고, JavaScript 비활성 390×844에서 여섯 장면 목록, 전체 본문,
+  부모 지도 반환과 가로 넘침 0을 확인했습니다. GitHub Pages 공개 경로 검증은 다음 단계입니다.

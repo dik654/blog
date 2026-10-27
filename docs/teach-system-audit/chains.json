@@ -1787,7 +1787,7 @@
     {
       "route": "blockchain/evm-advanced",
       "title": "EVM 심화: Create · DelegateCall · StaticCall",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/evm-advanced.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/evm-advanced.tsx",
@@ -5430,51 +5430,71 @@
         "substantiveReading": "기존 공개 본문과 Reth·Alloy 고정 source를 다시 읽고 합성 코드, 과거 crate 경계와 조각난 fee 설명을 교체했습니다.",
         "arithmetic": "20 gwei×3M÷15M÷8=0.5 gwei, 20.5×25,000=512,500 gwei, 3×25,000=75,000 gwei, 합계 587,500 gwei를 독립 검산했습니다.",
         "humanize": "학습 계약, 한국어, 용어, 수식·계산, pseudocode, 지식 그래프, topology와 읽기 순서 strict 검사가 통과했습니다.",
-        "browser390": "390×844에서 문서 폭 390=390, 시각화 높이 754px, 조작부 50×50px, 여섯 장면 키보드 이동, reduced-motion과 JavaScript 비활성 정적 6단계를 확인했습니다.",
-        "browser1440": "1440×1000에서 의도 전 자동 진행 없음, 여섯 장면 순서, 커리큘럼 TxPool→EIP-1559→EIP-4844, 가로 넘침 0과 console 오류 0건을 확인했습니다."
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 높이 754px, 조작부 50×50px, 여섯 장면 키보드 이동, reduced-motion과 JavaScript 비활성 정적 6단계를 확인했습니다. GitHub Pages 공개 경로에서도 390×844 가로 넘침 0, 의도 전 장면 0 유지, focus 후 키보드 0→5 이동을 다시 확인했습니다.",
+        "browser1440": "1440×1000에서 의도 전 자동 진행 없음, 여섯 장면 순서, 커리큘럼 TxPool→EIP-1559→EIP-4844, 가로 넘침 0과 console 오류 0건을 확인했습니다. GitHub Pages run 40440119067이 commit a6d770f8의 strict 감사·production build·1,000편 실제 브라우저 검사·배포를 통과했고, 공개 경로는 HTTP 200과 가로 넘침 0을 반환했습니다."
       },
-      "remaining": [
-        "GitHub Pages 공개 경로 확인"
-      ],
+      "remaining": [],
       "reviewDisposition": "split-concept-from-eip1559-release-validation"
     },
     {
       "route": "blockchain/reth-eip4844",
       "title": "EIP-4844 Blob · Transaction과 Sidecar",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-eip4844.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-eip4844.tsx",
         "src/pages/articles/ethereum/reth-eip4844/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-eip4844/RethEip4844Locator.tsx",
         "src/pages/articles/ethereum/reth-eip4844/modernCodeRefs.ts",
-        "src/pages/articles/ethereum/reth-eip4844/modernFileTree.ts"
+        "src/pages/articles/ethereum/reth-eip4844/modernFileTree.ts",
+        "src/pages/articles/ethereum/reth-eip4844/viz/ModernEip4844Viz.tsx",
+        "src/content/reth-eip4844-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 6,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 2,
+        "assumptionMarkers": 3,
+        "sourceButtons": 8,
         "headings": [
-          "먼저 blob, commitment, transaction, sidecar를 한 줄씩 분리합니다",
-          "Transaction body와 sidecar는 서로 다른 질문에 답합니다",
-          "Versioned hash는 commitment에 scheme 이름표를 붙입니다",
-          "규격이 보장하는 범위"
+          "큰 Blob을 transaction과 sidecar로 나누고도 어떻게 같은 제출인지 검증합니까?",
+          "두 기록",
+          "Reference",
+          "세 검사",
+          "Reth 경계",
+          "근거 범위"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Blob·commitment·transaction·sidecar를 따로 정의했지만 한 제출이 분리되고 다시 결속되는 순서를 끝까지 추적하지 않았습니다.",
+        "Versioned hash 비교와 KZG proof 검증의 책임이 분리되어 있다는 점이 한눈에 드러나지 않았습니다.",
+        "설명용 코드와 moving main을 기준으로 읽어 Reth와 Alloy의 실제 release 경계를 재현하기 어려웠습니다."
+      ],
+      "fixture": "설명용 Blob B₀ 131,072 bytes 한 개에서 commitment C₀ 48 bytes, proof π₀ 48 bytes, versioned hash h₀ 32 bytes를 만들고 transaction index 0과 sidecar index 0을 개수·reference·KZG proof로 다시 결속합니다.",
+      "stageEvidence": {
+        "blob": "131,072-byte B₀를 field element grid로 보고 이후 모든 값의 출발점을 고정합니다.",
+        "commitment": "B₀에서 48-byte C₀와 48-byte π₀를 만들고 서로 다른 역할을 표시합니다.",
+        "reference": "C₀를 SHA-256한 뒤 첫 byte를 0x01로 바꿔 32-byte h₀를 만듭니다.",
+        "split": "Transaction에는 h₀와 실행 필드를, sidecar에는 B₀·C₀·π₀를 같은 index 0에 나눠 싣습니다.",
+        "validation": "개수와 순서, C₀→h₀ reference, B₀·C₀·π₀ KZG proof의 세 검사를 순서대로 통과시킵니다.",
+        "implementation": "Reth v2.8.1이 sidecar version을 고르고 Alloy v2.5.0 검증을 호출한 뒤 성공한 sidecar만 BlobStore 단계로 넘깁니다.",
+        "fallback": "JavaScript 비활성 경로에서도 같은 여섯 단계, 두 기록, 세 검사와 부모 지도 반환을 정적으로 제공합니다."
+      },
+      "sourceEvidence": [
+        "EIP-4844 공식 명세에서 type-3 transaction, v0 sidecar, versioned hash와 networking validation 조건을 확인했습니다.",
+        "Reth v2.8.1 d763342fa185 source에서 sidecar version 판정, Alloy 검증 위임, 실패 metric과 성공 sidecar 전달 경계를 확인했습니다.",
+        "Reth v2.8.1이 고정한 Alloy v2.5.0 source에서 transaction fields, BlobTransactionSidecar, kzg_to_versioned_hash와 batch proof 검증을 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 공개 본문, EIP-4844 명세, Reth v2.8.1과 Alloy v2.5.0 고정 source를 다시 읽고 한 Blob 제출의 분리·결속 경로로 교체했습니다.",
+        "arithmetic": "B₀ 131,072 bytes, C₀·π₀ 각 48 bytes, h₀ 32 bytes와 h₀=0x01||SHA256(C₀)[1:32]의 길이·index 조건을 독립 확인했습니다.",
+        "humanize": "글 구조, 학습 계약, 계산, pseudocode, 시각화, 한국어와 용어 검사가 통과했습니다. 이어지는 입장 검사·BlobStore·reorg 글의 실제 책임 범위를 읽고 topology 결정을 기록해 전역 strict 검사도 통과했습니다.",
+        "browser390": "390×844에서 문서 가로 넘침 0, 현재 장면만 표시하는 여섯 단계, 49.5px 조작부, 키보드 0→5 이동과 reduced-motion의 비활성 재생·수동 이동을 확인했습니다. JavaScript 비활성 정적 경로에서도 여섯 장면 목록, 전체 본문과 부모 지도 반환이 보이고 live 영역은 숨겨지는 것을 확인했습니다.",
+        "browser1440": "1440×1000에서 705px canvas 안에 전체 아키텍처가 들어가고 내부 세로 scroll과 겹침이 없으며, 7초 동안 무자동재생·재생 뒤 9초에 한 장면 진행·실제 code sidebar source 표시를 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 공개 경로 검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-blob-split-bind-validate-mechanism"
     },
     {
       "route": "blockchain/reth-exex",

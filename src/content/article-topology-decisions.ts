@@ -408,6 +408,33 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "libmdbx v0.14.3 f7a3a93, build·sync·geometry·filesystem·device·trace를 고정하고 process kill과 power-loss model을 구분합니다. Txid·root·rows·DUPSORT parity를 통과한 run에서만 latency·RSS·map growth를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/reth-blob-admission": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Untrusted transaction을 bounded decode에서 시작해 fork·shape·state·두 fee market·KZG·pool budget 순서로 거부하거나 수용하는 하나의 admission state machine입니다. Blob 생성·결속은 부모 글, 보관과 reorg는 이웃 글이 맡으므로 이 경로를 다시 나누면 한 요청의 검사 비용과 typed reject가 끊깁니다.",
+    sharedGate:
+      "선택한 Reth release와 ChainSpec·KZG backend를 고정하고 각 gate의 입력, authoritative writer, reject reason을 같은 transaction trace에서 확인합니다. Moving main의 함수명이나 대상 환경의 처리량을 일반화하지 않습니다.",
+  },
+  "blockchain/reth-blob-storage": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "검증된 sidecar를 transaction hash에 결속해 write receipt를 남기고 hit·miss·corrupt로 읽은 뒤 finalized generation을 정리하는 하나의 artifact lifecycle입니다. Admission과 reorg 판단을 별도 글이 맡으므로 저장 동작을 더 나누면 같은 bytes·digest·generation의 생명주기가 끊깁니다.",
+    sharedGate:
+      "선택한 Reth release, backend, schema, fsync와 cleanup policy를 고정하고 partial write·restart·corruption·cleanup 경계를 구분합니다. Local BlobStore retention을 Ethereum 전체의 data availability나 영구 보존으로 확대하지 않습니다.",
+  },
+  "blockchain/reth-blob-reorg-release": {
+    action: "keep",
+    status: "reviewed",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Old canonical chain의 transaction을 찾고 local receipt로 sidecar를 다시 결합해 hit이면 재주입하고 miss면 fetch 또는 실패한 뒤 failure parity로 release를 판단하는 하나의 복구 경로입니다. Reorg recovery와 release gate가 같은 trace와 rollback 조건을 공유하므로 분리하면 운영 판단의 근거가 끊깁니다.",
+    sharedGate:
+      "같은 Reth release·ChainSpec·KZG backend·storage schema에서 body·sidecar·receipt generation을 고정하고 wrong hash·proof·fee·corruption·cleanup crash를 같은 순서로 재생합니다. EL local retention을 CL availability·archive SLA로 일반화하지 않습니다.",
+  },
   "blockchain/reth-db": {
     action: "split",
     status: "implemented",
@@ -448,6 +475,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "한 run manifest에서 EIP·Reth·Alloy·ChainSpec·parent·transaction을 고정하고 fork·target·integer·transaction cap을 payload·consensus·TxPool 경로에 재생한 뒤 rollback과 ADR까지 연결하는 하나의 운영 판단입니다. 이를 나누면 같은 1 wei mismatch의 발견과 복구 증거가 끊깁니다.",
     sharedGate:
       "Header·eligibility·receipt·balance·rollback parity를 먼저 통과합니다. 통과한 run에서만 계산 비용과 payload wait를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
+  },
+  "blockchain/reth-eip4844": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-27",
+    rationale:
+      "Blob B₀에서 C₀·π₀·h₀를 만들고 transaction과 sidecar로 나눈 뒤 개수·reference·KZG proof 세 조건으로 다시 결속하는 하나의 제출 검증 메커니즘입니다. Pool 입장, 저장 수명, Blob fee, reorg 재편입은 별도 자식 글이 맡으므로 이 글을 다시 나누면 같은 index 0 사례의 생성과 검증이 끊깁니다.",
+    sharedGate:
+      "EIP-4844 v0, Reth v2.8.1과 Alloy v2.5.0에 고정해 B₀ 131,072 bytes, C₀·π₀ 48 bytes, h₀ 32 bytes와 세 검증 조건만 설명합니다. EIP-7594 v1, 장기 데이터 가용성, 롤업 실행 정확성이나 대상 환경 성능으로 확대하지 않습니다.",
   },
   "blockchain/reth-provider": {
     action: "split",
@@ -3986,10 +4022,14 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/bplus-index-validation": "1f8d0bca8f6b4161",
   "blockchain/mdbx-internals": "53f56a767f72651b",
   "blockchain/mdbx-validation": "e1da7d714babffc2",
+  "blockchain/reth-blob-admission": "383e362b4a8cabff",
+  "blockchain/reth-blob-reorg-release": "f41612453549bc3d",
+  "blockchain/reth-blob-storage": "8f1aa69a7507d86b",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",
   "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",
   "blockchain/reth-eip1559-validation": "04c1549791aaa46e",
+  "blockchain/reth-eip4844": "3d29b594ee39e47c",
   "blockchain/reth-provider": "6e9d5b70c36e4cef",
   "blockchain/reth-provider-validation": "769041c3f923d720",
   "blockchain/reth-pipeline": "23ebb69349da3792",
