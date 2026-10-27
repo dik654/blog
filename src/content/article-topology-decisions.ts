@@ -3988,6 +3988,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/mdbx-validation": "e1da7d714babffc2",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",
+  "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",
+  "blockchain/reth-eip1559-validation": "04c1549791aaa46e",
   "blockchain/reth-provider": "6e9d5b70c36e4cef",
   "blockchain/reth-provider-validation": "769041c3f923d720",
   "blockchain/reth-pipeline": "23ebb69349da3792",
