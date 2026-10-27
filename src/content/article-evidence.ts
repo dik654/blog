@@ -5292,6 +5292,18 @@ export const ARTICLE_EVIDENCE: Readonly<
       href: "https://github.com/ethereum/kzg-ceremony-specs",
       note: "KZG public parameter contribution과 transcript verification의 보안 경계",
     },
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — transaction-pool blob validation",
+      href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/transaction-pool/src/validate/eth.rs",
+      note: "Sidecar version 판정, Alloy validation 호출, 실패 metric과 성공 sidecar 전달 경계",
+    },
+    {
+      kind: "공식 구현",
+      label: "Alloy v2.5.0 — EIP-4844 transaction and sidecar",
+      href: "https://github.com/alloy-rs/alloy/tree/v2.5.0/crates/eips/src/eip4844",
+      note: "Reth v2.8.1이 고정한 v0 sidecar 구조, versioned hash 결속과 KZG proof validation",
+    },
   ),
   "blockchain/reth-exex": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 구현",

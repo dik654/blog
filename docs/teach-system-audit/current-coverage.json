@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1000,
-    "reviewed": 660,
-    "pending": 340,
+    "reviewed": 661,
+    "pending": 339,
     "untracked": 0,
-    "assignedPending": 298,
+    "assignedPending": 297,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -3975,7 +3975,7 @@
       "catalogIndex": 394,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4405,17 +4405,17 @@
       "catalogIndex": 437,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#reth-eip-1559-개념실무-분리-로컬-검증-완료-2026-10-27"
+      "recordedStatus": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#reth-eip-1559-개념실무-분리-공개-검증-완료-2026-10-27"
     },
     {
       "route": "blockchain/reth-eip4844",
       "publicPath": "cs/blockchain/reth-eip4844",
       "title": "EIP-4844 Blob · Transaction과 Sidecar",
       "catalogIndex": 438,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
