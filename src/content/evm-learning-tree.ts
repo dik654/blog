@@ -46,7 +46,7 @@ export const EVM_LEARNING_NODES: readonly EvmLearningNode[] = [
     href: "/cs/blockchain/reth-block-execution#overview",
     shortTitle: "클라이언트 실행",
     mapLabel: "블록 → EVM → 상태 묶음",
-    track: "practice",
+    track: "concept",
     parentHref: "/cs/blockchain/evm-advanced#return-map",
     parentLabel: "EVM 심화 · 프레임 결과",
     question: "실행 클라이언트는 블록의 거래를 EVM에 넣고 결과를 어떤 상태 묶음으로 모을까요?",

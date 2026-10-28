@@ -5760,7 +5760,7 @@ export const EDITORIAL_BOUNDARIES = {
       "State-root parity를 먼저 확인하는 trie optimization release gate",
     ],
     reuses: [
-      { label: "BundleState 변경·revert journal", href: "/cs/blockchain/reth-block-execution#state-changes" },
+      { label: "BundleState 변경·revert journal", href: "/cs/blockchain/reth-block-execution#bundle" },
       { label: "Provider pinned state view", href: "/cs/blockchain/reth-provider" },
       { label: "DB transaction commit boundary", href: "/cs/blockchain/reth-db" },
     ],
@@ -5810,12 +5810,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-block-execution": {
-    title: "Reth EVM block transition 글이 소유하는 범위",
+    title: "Reth Block Execution 개념 글이 소유하는 범위",
     owns: [
       "Parent state·block·fork를 묶는 authoritative pre-state context",
       "Fork-aware EVM environment와 pre/transaction/post ordered transition",
-      "Receipt·gas·logs·receipts root·post-state root의 block postcondition",
-      "Execution parity와 rollback을 먼저 확인하는 release gate",
+      "BlockExecutionResult와 BundleState의 서로 다른 반환 경계",
+      "REVERT·invalid transaction·commitment mismatch의 설계상 차이",
     ],
     reuses: [
       { label: "EVM opcode·gas semantics", href: "/cs/blockchain/evm" },
@@ -5825,9 +5825,28 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "Transaction·system operation·receipt·root semantics는 pinned Yellow Paper와 Ethereum execution specification의 활성 fork에 귀속한다." },
-      { kind: "primary-source", rule: "Executor·EVM adapter·state-change ownership claim은 Reth v2.2.0 source snapshot에 제한한다." },
-      { kind: "project-measurement", rule: "Invalid/revert/halt·create/delete/wipe·fork boundary·root mismatch·reorg를 base/candidate에 주입해 receipt·root·journal parity를 먼저 검사한다." },
+      { kind: "primary-source", rule: "Executor·EVM adapter·state-change ownership claim은 Reth v2.8.1 commit d763342f와 고정 dependency snapshot에 제한한다." },
       { kind: "project-claim", rule: "로컬 execute 성공을 canonical 채택·durable commit·finality로 확대하지 않는다." },
+    ],
+  },
+  "reth-block-execution-validation": {
+    title: "Reth Block Execution 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Release·dependencies·ChainSpec·parent·block·runtime run manifest",
+      "Result·BundleState·post-validation·post-state root의 정상 기준선",
+      "REVERT·invalid·state edge·fork·mismatch·crash·reorg paired fixture",
+      "Candidate 격리·binary/spec/config rollback·전체 fixture 재진입과 ADR",
+    ],
+    reuses: [
+      { label: "Fork-aware EVM 환경", href: "/cs/blockchain/reth-block-execution#evm-config" },
+      { label: "Pre·거래·Post 실행", href: "/cs/blockchain/reth-block-execution#execution" },
+      { label: "Result와 BundleState", href: "/cs/blockchain/reth-block-execution#bundle" },
+      { label: "Post-execution 검증", href: "/cs/blockchain/reth-block-execution#validation-boundary" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Fault point와 상태 owner는 Reth v2.8.1 commit d763342f와 고정 dependency versions에 귀속한다." },
+      { kind: "project-measurement", rule: "Result·bundle·commitment·restart·rollback parity를 통과한 run에서만 latency·CPU·memory·DB read를 비교한다." },
+      { kind: "project-claim", rule: "대상 환경 결과가 없으므로 상태는 proposed이며 upstream unit test를 운영 복구 증거로 확대하지 않는다." },
     ],
   },
   "reth-eip1559": {
