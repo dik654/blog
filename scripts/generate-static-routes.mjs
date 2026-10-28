@@ -387,6 +387,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/helios-state",
   "blockchain/helios-execution",
   "blockchain/helios-types",
+  "blockchain/helios-config",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

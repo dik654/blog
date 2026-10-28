@@ -12603,7 +12603,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "computer-science",
     label: "Helios config precedence · provenance",
-    definition: "Network default·TOML·CLI·explicit builder 후보를 pinned merge 순서로 typed value 하나에 정규화하고 final source·가려진 후보·redacted config digest를 보존하는 방법입니다.",
+    definition: "Pinned release의 network default·TOML·CLI merge 결과를 확인하고, 구현이 자동으로 남기지 않는 final source·가려진 후보·redacted config digest를 운영 launch receipt에 보존하는 방법입니다.",
     canonicalHref: "/cs/blockchain/helios-config#overview",
   },
   "helios-network-identity-bundle": {
@@ -12619,7 +12619,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "method",
     domain: "distributed-systems",
     label: "Helios CL·EL endpoint role probe",
-    definition: "Consensus endpoint와 execution endpoint를 chain identity·head·required capability·latency/availability별로 검사하고 한쪽의 성공을 다른 역할의 신뢰로 확대하지 않는 startup probe입니다.",
+    definition: "현재 Helios builder 밖의 배포 preflight에서 consensus endpoint와 execution endpoint를 chain identity·head·required capability·latency/availability별로 검사하고 한쪽의 성공을 다른 역할의 신뢰로 확대하지 않는 방법입니다.",
     canonicalHref: "/cs/blockchain/helios-config#network-config",
   },
   "helios-checkpoint-source-age-policy": {
@@ -12646,13 +12646,21 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition: "Checkpoint fallback URL이나 external list를 availability source로만 사용하고 다수 응답·freshness를 trusted chain 선택과 동일시하지 않으며 wrong/conflicting source를 fail closed하는 경계입니다.",
     canonicalHref: "/cs/blockchain/helios-config#persistence",
   },
+  "helios-socket-sync-readiness": {
+    id: "helios-socket-sync-readiness",
+    kind: "concept",
+    domain: "distributed-systems",
+    label: "Helios socket · sync · readiness boundary",
+    definition: "Helios 0.12.0에서 process construction, JSON-RPC listening, consensus Synced와 initial block 확보, 배포 플랫폼의 Service traffic admission을 서로 다른 상태와 writer로 두는 경계입니다.",
+    canonicalHref: "/cs/blockchain/helios-config#client-init",
+  },
   "helios-config-release-gate": {
     id: "helios-config-release-gate",
     kind: "method",
     domain: "distributed-systems",
     label: "Helios config · checkpoint release gate",
     definition: "Precedence conflict·wrong chain·expired/malformed checkpoint·partial write·endpoint mismatch·fallback conflict를 재생해 config·Store·restart parity 뒤 startup latency를 비교하는 채택 절차입니다.",
-    canonicalHref: "/cs/blockchain/helios-config#persistence",
+    canonicalHref: "/cs/blockchain/helios-config#decision",
   },
   "helios-consensus-execution-join": {
     id: "helios-consensus-execution-join", kind: "method", domain: "distributed-systems",
@@ -48467,6 +48475,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "helios-endpoint-role-probe", to: "helios-config-release-gate", relation: "evaluates", reason: "Wrong chain·unsupported method·stale head·partial endpoint 실패를 재생합니다." },
   { from: "helios-checkpoint-cache-record", to: "helios-config-release-gate", relation: "evaluates", reason: "31/32/33-byte file·truncate crash·permission error와 restart outcome을 비교합니다." },
   { from: "helios-fallback-trust-boundary", to: "helios-config-release-gate", relation: "evaluates", reason: "Expired·conflicting·unavailable fallback에서 fail-closed source policy를 검사합니다." },
+  { from: "helios-socket-sync-readiness", to: "helios-config-release-gate", relation: "evaluates", reason: "RPC port가 먼저 열려도 candidate가 조기 Service 편입되지 않는지 확인합니다." },
   { from: "helios-network-identity-bundle", to: "helios-consensus-execution-join", relation: "prerequisite", reason: "Consensus와 execution proof를 같은 chain/fork identity에서 검증해야 합니다." },
   { from: "helios-type-layer-boundary", to: "helios-consensus-execution-join", relation: "prerequisite", reason: "Fork별 beacon/execution commitment 타입이 두 검증 경로를 연결합니다." },
   { from: "helios-consensus-execution-join", to: "helios-proof-bound-rpc-response", relation: "produces", reason: "두 root 경로를 통과한 값만 proof-bound local response가 됩니다." },

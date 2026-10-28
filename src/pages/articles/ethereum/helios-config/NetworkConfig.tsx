@@ -1,5 +1,4 @@
 import type { CodeRef } from "@/components/code/types";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeViewButton } from "@/components/code";
 import HeliosContractViz from "../helios-contract-viz";
 import { codeRefsReal } from "./codeRefsReal";
@@ -12,52 +11,85 @@ interface Props {
 export default function NetworkConfig({ title, onCodeRef }: Props) {
   return (
     <section id="network-config" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">{title}</h2>
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>
-          Pinned Helios snapshot의 <code>Network</code>는 Mainnet·Sepolia·Holesky·Hoodi 네 profile을 제공합니다. 각 profile은 chain ID,
-          genesis time/root, consensus fork epoch/version, execution fork timestamp, default checkpoint·consensus endpoint와 checkpoint age policy를
-          한 묶음으로 만듭니다. 목록과 숫자는 source snapshot의 값이지 영구 protocol 상수가 아닙니다.
-        </p>
-        <p>
-          Consensus RPC는 light-client update와 head를 가져오고 execution RPC는 block·receipt·proof 재료를 제공합니다. 둘 다
-          availability와 equivocation 관측이 필요합니다. 특히 checkpoint source는 light-client가 처음 chain을 선택하는 trust
-          anchor이므로 “나중에 BLS를 검증하니 아무 URL이나 괜찮다”고 볼 수 없습니다.
-        </p>
-      </div>
-      <div className="not-prose my-4">
-        <CodeViewButton
-          label="Network enum · mainnet()"
-          onClick={() => onCodeRef("helios-network", codeRefsReal["helios-network"])}
-        />
-      </div>
+      <h2 className="mb-3 text-2xl font-bold">{title}</h2>
+      <p className="mb-6 max-w-3xl break-keep text-base leading-7 text-muted-foreground">
+        설정 후보, network identity, endpoint와 readiness는 서로 다른 상태이며 한 actor가 전부 소유하지 않습니다.
+      </p>
+
       <HeliosContractViz mode="network-bundle" />
-      <ExplainedFormula
-        question="Slot 8,192가 어느 epoch와 sync committee period에 속하는가?"
-        idea="Network preset의 slots per epoch와 epochs per period를 차례로 나눕니다. 두 floor division은 시간 단위가 아니라 정수 index 변환입니다."
-        formula={String.raw`e=\left\lfloor\frac{s}{32}\right\rfloor=256,\qquad p=\left\lfloor\frac{e}{256}\right\rfloor=1`}
-        annotatedFormula={String.raw`e=\underbrace{\left\lfloor\frac{s}{32}\right\rfloor}_{\text{slot에서 epoch로}}=256,\qquad p=\underbrace{\left\lfloor\frac{e}{256}\right\rfloor}_{\text{epoch에서 period로}}=1`}
-        operations={[
-          { expression: String.raw`\left\lfloor\frac{s}{32}\right\rfloor=256`, annotation: ["slot을 epoch당 32 slots로 정수 나눔","8,192/32 = epoch 256"] },
-          { expression: String.raw`\left\lfloor\frac{e}{256}\right\rfloor=1`, annotation: ["epoch를 period당 256 epochs로 다시 나눔","256/256 = period 1","period 0 committee를 쓰면 안 됨"] },
-        ]}
-        terms={[
-          { symbol: "s", name: "Slot", description: "검증할 update/header의 consensus slot입니다." },
-          { symbol: "e", name: "Epoch", description: "32 slots를 묶은 epoch index입니다." },
-          { symbol: "p", name: "Committee period", description: "256 epochs를 묶은 sync committee period index입니다." },
-        ]}
-        assumptions={[
-          "이 예시는 slots_per_epoch=32, epochs_per_period=256인 preset을 사용합니다.",
-          "실제 실행은 active fork와 target network의 pinned ConsensusSpec을 확인합니다.",
-        ]}
-        interpretation="Slot 8,192는 epoch 256과 period 1에 속하므로 period 0의 current committee를 그대로 쓰면 안 됩니다. 다만 period 계산은 committee branch와 signature validity를 대신하지 않습니다."
-      />
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Endpoint를 probe할 때 값 하나만 비교하지 않습니다</h3>
         <p>
-          Consensus 쪽은 genesis root·fork·finalized/optimistic slot과 light-client endpoint capability를, execution 쪽은 chain ID·verified block hash와
-          필요한 <code>eth_getProof</code> capability를 확인합니다. Timeout, wrong chain, stale head, unsupported method는 서로 다른 outcome으로
-          남깁니다. Fallback은 availability route일 뿐 trust level을 자동으로 높이지 않습니다.
+          <strong>[O]</strong> 0.12.0의 <code>Network</code> profile은 chain ID, genesis time/root, consensus fork
+          epoch/version, execution fork schedule, default checkpoint와 maximum checkpoint age를 묶습니다.{" "}
+          <CodeViewButton
+            label="Network profile — 0.12.0"
+            onClick={() => onCodeRef("helios-network", codeRefsReal["helios-network"])}
+          />
+        </p>
+        <p>
+          Network 이름은 chain ID 한 숫자의 별칭이 아닙니다. 일부 field만 다른 network에서 가져오면 update와 execution block을 같은
+          chain으로 검증할 수 없습니다.
+        </p>
+        <p>
+          Consensus RPC는 light-client bootstrap·update·finality 자료를 가져옵니다. Execution RPC는 block·receipt·account proof와
+          transaction 전송에 사용됩니다. Builder는 두 URL을 서로 다른 provider에 넣습니다.
+        </p>
+        <p>
+          다만 시작 전에 <code>eth_chainId</code>와 capability를 모두 probe하는 별도 단계를 구현하지는 않습니다. 따라서 기존 글의
+          “Builder가 endpoint identity를 먼저 확인한다”는 설명을 구현 사실에서 제외했습니다.
+        </p>
+      </div>
+
+      <div className="not-prose my-8 overflow-x-auto border-y border-border py-3">
+        <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+          <thead>
+            <tr className="text-xs text-muted-foreground">
+              <th className="px-3 py-2">상태</th>
+              <th className="px-3 py-2">현재 writer</th>
+              <th className="px-3 py-2">reader</th>
+              <th className="px-3 py-2">실패 시 보이는 결과</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            <tr>
+              <td className="px-3 py-3 font-bold">최종 Config</td>
+              <td className="px-3 py-3">Figment merge · CLI 경로</td>
+              <td className="px-3 py-3">EthereumClientBuilder</td>
+              <td className="px-3 py-3">Parse error 또는 잘못된 값으로 construction</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-3 font-bold">초기 checkpoint</td>
+              <td className="px-3 py-3">Config 또는 FileDB</td>
+              <td className="px-3 py-3">ConsensusClient</td>
+              <td className="px-3 py-3">Bootstrap 실패·경고·fallback 분기</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-3 font-bold">Sync status</td>
+              <td className="px-3 py-3">ConsensusClient</td>
+              <td className="px-3 py-3">wait_synced · eth_syncing</td>
+              <td className="px-3 py-3">Syncing 또는 Error</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-3 font-bold">Service readiness</td>
+              <td className="px-3 py-3">[A] 배포 플랫폼</td>
+              <td className="px-3 py-3">Gateway · Service endpoint</td>
+              <td className="px-3 py-3">트래픽 미편입·이전 revision 유지</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <h3>가장 작은 운영 기준선</h3>
+        <p>
+          <strong>[A]</strong> 첫 기준선은 network profile과 두 endpoint를 한 release의 설정으로 고정하고, secret을 지운 config digest와
+          선택된 source를 기록하는 것입니다. Consensus·execution endpoint의 identity와 필요한 method는 별도 preflight에서 확인합니다.
+          이 preflight가 실패하면 candidate Pod를 Service endpoint에 넣지 않습니다.
+        </p>
+        <p>
+          Endpoint가 HTTP 200을 반환하거나 낮은 지연을 보였다는 사실은 proof 검증과 sync 완료를 대신하지 않습니다. 반대로 검증 경로가
+          맞더라도 endpoint 장애가 계속되면 가용한 서비스가 되지 않습니다. 신뢰와 가용성을 한 health flag로 합치지 않습니다.
         </p>
       </div>
     </section>

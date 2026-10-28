@@ -98,6 +98,8 @@ export function HeliosMapReturn({ current }: { current: HeliosNodeId }) {
         ? "Helios는 선택한 block H의 header hash로 eth_getProof를 고정하고, header의 state root R에서 account를 먼저 검증합니다. 그 account가 묶은 storage root에서 slot proof를 다시 확인한 뒤에만 값을 반환·저장합니다. 따라서 RPC 응답 성공이나 오래된 valid proof만으로 현재 조회에 답할 수 없습니다."
       : current === "helios-execution"
         ? "Helios는 block tag를 header hash H로 고정하고, ProofDB가 기록한 account·slot miss를 같은 H의 proof로 보충한 뒤 같은 call·환경·fork를 revm에서 다시 실행합니다. Call과 gas는 H의 simulation이고, receipt·log는 receipts root에, raw transaction 제출은 나중 inclusion 확인에 각각 다른 근거를 둡니다."
+        : current === "helios-config"
+          ? "Helios 0.12.0은 base→TOML→CLI 순서로 설정을 합치고 explicit→FileDB→network default 순서로 checkpoint를 고릅니다. JSON-RPC socket은 consensus sync와 겹쳐 열릴 수 있으므로, socket listening과 내부 Synced 상태, Service readiness는 서로 다른 상태입니다. 외부 fallback의 최신 epoch·최다 root 선택도 protocol trust가 아니며, 운영 플랫폼이 별도의 readiness와 rollback 정책을 소유해야 합니다."
         : "이 글에서 확인한 결과는 Helios 전체 지도의 해당 영역으로 돌아갑니다. 직속 부모에서 같은 block·root·request identity가 유지되는지 확인해야 다음 경로로 넘어갈 수 있습니다.";
 
   return (
