@@ -5281,7 +5281,7 @@
     {
       "route": "blockchain/reth-block-execution",
       "title": "Reth Block Execution: 순차 실행과 검증 경계",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-block-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-block-execution.tsx",
@@ -5341,17 +5341,16 @@
         "arithmetic": "두 송금의 잔액과 21,000+21,000=42,000 gas, 0.000042 ETH base-fee burn을 검산하고 설명용 가정으로 표시했습니다.",
         "humanize": "글별 학습·문장 호흡·한국어·용어·수식·계산·topology 감사를 통과했습니다.",
         "browser390": "390×844에서 문서·장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, 49.5px 조작부와 일곱 장면 전환을 확인했습니다. 긴 장면에서 조작부가 각주 뒤로 가려지는 결함을 발견해 canvas 하단에 고정했습니다. Reduced-motion은 animation 0건·수동 이동 유지, JavaScript 비활성 trailing-slash 화면은 정적 8장면과 전체 본문을 유지했습니다.",
-        "browser1440": "1440×1000에서 문서·여덟 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, code sidebar의 Reth v2.8.1 경로·줄 범위와 console 오류·경고 0을 확인했습니다. TypeScript 최대 RSS는 약 6.51GB, Vite build는 약 4.29GB였고 swap은 0이었습니다. Build는 8,072 modules, 정적 public route 2,110개와 no-script 본문 324편을 생성했습니다."
+        "browser1440": "1440×1000에서 문서·여덟 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, code sidebar의 Reth v2.8.1 경로·줄 범위와 console 오류·경고 0을 확인했습니다. TypeScript 최대 RSS는 약 6.51GB, Vite build는 약 4.29GB였고 swap은 0이었습니다. Build는 8,072 modules, 정적 public route 2,110개와 no-script 본문 324편을 생성했습니다.",
+        "public": "GitHub Pages run 40708092733이 commit faf45551a720e6b48537e86269cb087ed3d61e02의 strict 감사, production build, 공개 1,002편 브라우저 검사와 배포를 통과했습니다. 공개 1440×1000·390×844 화면에서 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, 49.5px 모바일 조작부, reduced-motion animation 0건·수동 이동 유지와 console 오류·경고 0을 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "split-concept-trace-from-practice-release-gate"
     },
     {
       "route": "blockchain/reth-block-execution-validation",
       "title": "Reth Block Execution 검증: 회귀·복구·rollback",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-block-execution-validation/index.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-block-execution-validation/index.tsx",
@@ -5401,11 +5400,10 @@
         "arithmetic": "성능 우위·복구 시간을 만들지 않았고 block corpus, execution p95·p99, canary 범위와 복구 목표를 미확정·미측정으로 남겼습니다.",
         "humanize": "글별 학습·문장 호흡·한국어·용어·topology 감사를 통과했고 개념 재설명 대신 실험과 운영 판단을 분리했습니다.",
         "browser390": "390×844에서 문서·일곱 장면 가로 넘침 0, 49.5px 조작부, canvas 하단 고정과 키보드 이동을 확인했습니다. Reduced-motion은 animation 0건·수동 이동 유지, JavaScript 비활성 trailing-slash 화면은 개념 anchor, 정적 7장면과 전체 본문을 유지했습니다.",
-        "browser1440": "1440×1000에서 문서·일곱 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, Mismatch 중간 장면과 console 오류·경고 0을 확인했습니다."
+        "browser1440": "1440×1000에서 문서·일곱 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, Mismatch 중간 장면과 console 오류·경고 0을 확인했습니다.",
+        "public": "GitHub Pages run 40708092733이 commit faf45551a720e6b48537e86269cb087ed3d61e02의 strict 감사, production build, 공개 1,002편 브라우저 검사와 배포를 통과했습니다. 공개 1440×1000·390×844 화면에서 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, 49.5px 모바일 조작부와 console 오류·경고 0을 확인했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "split-practice-release-gate-from-concept"
     },
     {
