@@ -427,6 +427,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "a16z/helios 0.11.1 commit 204c998a와 Ethereum consensus-specs v1.6.1 mainnet preset을 고정합니다. HTTP JSON decode 성공을 SSZ proof나 BLS 성공으로 확대하지 않고, verify 결과와 LightClientStore mutation을 분리합니다.",
   },
+  "blockchain/helios-config": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "run-17 하나에서 Config 병합, checkpoint 선택, JSON-RPC와 sync의 겹친 시작, Service readiness, FileDB·fallback 실패, rollback과 proposed ADR까지 추적하는 하나의 운영 판단 경로입니다. Proof·Store 메커니즘은 직속 개념 글 anchor로 보내고 이 글에서는 다시 설명하지 않습니다.",
+    sharedGate:
+      "a16z/helios 0.12.0 commit 2af9b418을 구현 기준선으로 고정합니다. 현재 구현 [O], 배포 정책 [A], 대상 환경 측정 [M]을 분리하고 socket listening을 readiness로, external fallback plurality를 protocol trust로 확대하지 않습니다.",
+  },
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
@@ -4171,10 +4180,11 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/railgun": "2c7b61b18f7dbd43",
   "blockchain/railgun-validation": "f8b75a2b5a875a04",
-  "blockchain/helios": "1aae7cd438aecb42",
-  "blockchain/helios-bootstrap": "1d822ca07f5be08f",
-  "blockchain/helios-execution": "f6de6ee7a4190892",
-  "blockchain/helios-types": "c983f0fcedca1f1c",
+  "blockchain/helios": "7e5db745e3f3bc99",
+  "blockchain/helios-bootstrap": "a36d6c1eb6d3fcea",
+  "blockchain/helios-execution": "5a6a1dc6b6784ee4",
+  "blockchain/helios-types": "46c29258550fa707",
+  "blockchain/helios-config": "fc7c798862d9a44c",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",

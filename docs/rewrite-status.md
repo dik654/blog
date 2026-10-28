@@ -3,6 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Helios 설정·운영 검증 로컬 완료 (2026-10-29)
+
+- `blockchain/helios-config`를 설명용 실행 `run-17` 하나가 base·TOML·CLI 설정 병합, builder 조립, checkpoint 선택, consensus sync와 Service readiness를 거쳐 rollback 가능한 배포 후보가 되는 흐름으로 다시 썼습니다.
+- Helios 0.12.0 commit `2af9b41887e069144ee56cd710f3ddca195473f8`을 고정했습니다. `Config::from_file`, Network profile, `EthereumClientBuilder`, `HeliosClient`, `ConsensusClient`, FileDB와 fallback 구현을 실제 source excerpt로 대조했습니다.
+- Base 8,545·TOML 9,545·CLI 10,545에서는 뒤의 provider가 같은 key를 덮어써 10,545가 남습니다. 구현은 최종값의 provenance를 보존하지 않으므로 launch receipt는 `[A]` 운영 제안으로 분리했습니다.
+- JSON-RPC task와 consensus sync는 겹쳐 시작될 수 있습니다. Socket listening, 내부 `Synced`, initial block 확보와 Service traffic admission은 서로 다른 상태이며, 배포 플랫폼이 readiness와 rollback을 소유하도록 정리했습니다.
+- FileDB는 정확히 32 bytes만 checkpoint로 읽고, malformed·read 실패 시 network default로 돌아갑니다. Save는 truncate+write이며 atomic rename·fsync가 보이지 않습니다. External fallback의 최신 epoch·최다 root 선택도 protocol trust가 아니라 availability signal로 제한했습니다.
+- 1,440×1,000 production 화면에서 document 폭은 1,440px이고 8.2초 동안 장면 0이 유지됐습니다. ArrowRight로 0→1이 이동했고 console 오류·경고는 0건입니다. 390×844에서는 document 폭 390px, 조작 버튼 49.5×49.5px이며 코드 패널을 열어도 문서 전체 폭은 늘어나지 않습니다.
+- Reduced-motion에서는 재생 버튼이 비활성화되고 실행 중 animation은 0건입니다. JavaScript 비활성 모바일·데스크톱 화면에는 조작 버튼 없이 정적 일곱 장면, 직속 부모 지도, 결정·확인 질문·반환 절과 전체 본문이 남습니다.
+- 관련 strict 감사와 `git diff --check`, 전체 TypeScript와 production build를 통과했습니다. Build는 8,108개 module, 정적 공개 경로 2,118개와 no-script 본문 340편을 생성했고 최대 RSS는 약 6.46GB, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Helios JSON·SSZ 경계 검증 로컬 완료 (2026-10-29)
 
 - `blockchain/helios-types`를 HTTP JSON 한 건이 검증 후보가 되는 경로로 다시 썼습니다. JSON decode부터 `GenericUpdate` 후보 반환까지 일곱 장면으로 연결했습니다. 중간에는 Base·Electra 선택, 고정 branch, Merkle proof와 BLS signature 검증이 있습니다.

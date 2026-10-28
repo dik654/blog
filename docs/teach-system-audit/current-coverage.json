@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1006,
-    "reviewed": 683,
-    "pending": 323,
+    "reviewed": 684,
+    "pending": 322,
     "untracked": 0,
-    "assignedPending": 281,
+    "assignedPending": 280,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4163,9 +4163,9 @@
       "publicPath": "cs/blockchain/helios-config",
       "title": "Helios 설정 · 캐싱 · 네트워크",
       "catalogIndex": 413,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

@@ -2,6 +2,8 @@ import Overview from "./helios-config/Overview";
 import NetworkConfig from "./helios-config/NetworkConfig";
 import Persistence from "./helios-config/Persistence";
 import ClientInit from "./helios-config/ClientInit";
+import Decision from "./helios-config/Decision";
+import SelfCheck from "./helios-config/SelfCheck";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefsReal } from "./helios-config/codeRefsReal";
 import { heliosConfigRealTree } from "./helios-config/fileTreeReal";
@@ -14,15 +16,17 @@ export default function HeliosConfig() {
     <>
       <HeliosLocator current="helios-config" />
       <Overview onCodeRef={sidebar.open} />
-      <NetworkConfig title="네트워크 + 합의 스펙 + RPC" onCodeRef={sidebar.open} />
+      <NetworkConfig title="입력과 소유권" onCodeRef={sidebar.open} />
       <ClientInit
-        title="Builder 조립에서 verified readiness까지"
+        title="Socket과 readiness"
         onCodeRef={sidebar.open}
       />
       <Persistence
-        title="Checkpoint cache · age policy · fallback"
+        title="Checkpoint와 복구"
         onCodeRef={sidebar.open}
       />
+      <Decision />
+      <SelfCheck />
       <HeliosMapReturn current="helios-config" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
@@ -34,7 +38,7 @@ export default function HeliosConfig() {
         projectMetas={{
           helios: {
             id: "helios",
-            label: "a16z/helios · Rust",
+            label: "a16z/helios · v0.12.0 · Rust",
             badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
           },
         }}
