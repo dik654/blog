@@ -5727,7 +5727,7 @@
     {
       "route": "blockchain/reth-payload-builder",
       "title": "Reth Payload Builder: 요청에서 후보 Block까지",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-payload-builder.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-payload-builder.tsx",
@@ -5788,18 +5788,16 @@
         "substantiveReading": "Reth v2.8.1의 실제 source를 따라 attributes 검증, payloadId 입력, 현재 pool 재조회, job outcome과 resolve 경계를 교정했습니다.",
         "arithmetic": "63,000+80,000+120,000=263,000 gwei를 검산했으며 설명용 가정과 미측정 운영값을 분리했습니다.",
         "humanize": "글별 학습·문장·한국어·용어 감사를 통과했고 짧은 질문과 자연스러운 합니다체를 유지했습니다.",
-        "browser390": "390×844에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부, reduced-motion 실행 animation 0, JavaScript 비활성 정적 7장면과 전체 본문을 확인했습니다.",
-        "browser1440": "1440×1000에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바, console 오류·경고 0을 확인했습니다. 전체 build는 8,066 modules, 2,108 public routes와 322 no-script 본문을 생성했고 최대 RSS는 약 6.62GB였습니다."
+        "browser390": "390×844 로컬·공개 경로에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부와 ArrowRight 장면 0→1을 확인했습니다. Reduced-motion은 실행 animation 0건이고 재생만 비활성화하며 수동 이동을 유지했습니다. JavaScript 비활성 공개 화면에도 부모 지도, 질문, 정적 7장면과 전체 본문이 남았습니다.",
+        "browser1440": "1440×1000 로컬·공개 경로에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바와 console 오류·경고 0을 확인했습니다. 전체 build는 8,066 modules, 2,108 public routes와 322 no-script 본문을 생성했고 최대 RSS는 약 6.62GB였습니다. GitHub Pages run 40696961751이 commit 611f10545bccad3dd39eb3830e634c97e0937e83의 전역 감사, 전체 공개 글 브라우저 검사와 배포를 통과했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 390×844·1440×1000·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-version-pinned-job-lifecycle-and-current-pool-trace"
     },
     {
       "route": "blockchain/reth-payload-builder-validation",
       "title": "Reth Payload Builder 검증: 장애·복구·결정",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-payload-builder-validation/index.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-payload-builder-validation/index.tsx",
@@ -5848,12 +5846,10 @@
         "substantiveReading": "실무 글이 개념 글의 정확한 세 anchor에서 출발하고 state ownership, baseline, paired faults, recovery, 미측정값과 ADR 조건을 분리하는지 확인했습니다.",
         "arithmetic": "성능 우위나 운영 수치를 만들지 않았고 대상 환경의 slot budget, p95·p99, canary 범위와 rollback 시간은 미측정으로 남겼습니다.",
         "humanize": "글별 학습·문장·한국어·용어 감사를 통과했으며 개념 재설명 대신 실험과 운영 판단에 집중했습니다.",
-        "browser390": "390×844에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부, reduced-motion 실행 animation 0, JavaScript 비활성 정적 6장면과 전체 본문을 확인했습니다.",
-        "browser1440": "1440×1000에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바와 console 오류·경고 0을 확인했습니다."
+        "browser390": "390×844 로컬·공개 경로에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부와 ArrowRight 장면 0→1을 확인했습니다. Reduced-motion은 실행 animation 0건이고 재생만 비활성화하며 수동 이동을 유지했습니다. JavaScript 비활성 공개 화면에도 부모 지도, 개념 anchor, 정적 6장면과 전체 본문이 남았습니다.",
+        "browser1440": "1440×1000 로컬·공개 경로에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바와 console 오류·경고 0을 확인했습니다. GitHub Pages run 40696961751이 commit 611f10545bccad3dd39eb3830e634c97e0937e83의 전역 감사, 전체 공개 글 브라우저 검사와 배포를 통과했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 뒤 공개 390×844·1440×1000·reduced-motion·JavaScript 비활성 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "split-practice-release-gate-from-concept"
     },
     {
