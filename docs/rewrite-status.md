@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth Block Execution 개념·실무 분리 로컬 검수 완료 (2026-10-28)
+
+- `blockchain/reth-block-execution`은 `concept`, 새 `blockchain/reth-block-execution-validation`은 `practice`로 분리했습니다. 개념 글은 Alice→Bob→Carol의 두 송금을 부모 상태, fork-aware EVM 환경, pre·transaction·post 실행, `BlockExecutionResult`·`BundleState` 반환과 별도 사후 검증까지 추적합니다. 실무 글은 같은 입력을 base와 candidate에 재생해 REVERT, invalid transaction, fork 경계, commitment 불일치, crash·reorg와 rollback을 판정합니다.
+- Reth v2.8.1 commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`, Alloy EVM 0.39.0과 revm-database 43.0.1을 고정했습니다. `Executor::execute`가 output validation을 하지 않는 경계, cache miss에서 backing database를 읽는 `BundleState`, gas·receipt·request·BAL·state root 검증을 분리했습니다.
+- 설명용 두 거래는 각각 21,000 gas, base fee 1 gwei, tip 0입니다. 최종 잔액은 Alice 6.999979, Bob 0.999979, Carol 2 ETH이고 cumulative gas는 42,000, base-fee burn은 0.000042 ETH입니다. 대상 네트워크의 측정값이 아닙니다.
+- 390×844와 1,440×1,000에서 두 경로의 문서·전체 장면 가로 넘침은 0입니다. 8.2초 동안 자동 재생되지 않았고 ArrowRight로 0→1이 이동했습니다. 모바일 조작부는 49.5px이며, 긴 장면에서 각주 뒤로 가려지던 결함을 발견해 canvas 하단에 고정했습니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 재생만 비활성화되며 수동 키보드 이동은 유지됩니다. JavaScript 비활성 trailing-slash 정적 경로에는 직속 부모 지도, 개념 8장면·실무 7장면과 전체 본문이 남습니다.
+- 선택 파일 ESLint와 학습·계산·수식·문장 호흡·한국어·용어·topology·읽기 순서 감사를 통과했습니다. TypeScript 최대 RSS는 약 6.51GB, Vite build는 약 4.29GB였고 swap은 0이었습니다. Build는 8,072개 module, 정적 public route 2,110개와 no-script 본문 324편을 생성했습니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Reth Payload Builder 개념·실무 분리 공개 검증 완료 (2026-10-28)
 
 - `blockchain/reth-payload-builder`는 `concept`로 정리했습니다. 새 `blockchain/reth-payload-builder-validation`은 `practice`입니다.

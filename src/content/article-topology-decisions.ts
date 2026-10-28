@@ -545,6 +545,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Reth v2.8.1/SHA·stage set·threshold·prune·fixture·storage snapshot·runtime을 고정하고 output·checkpoint·root·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 blocks/s·CPU·I/O·RTO를 비교하며 결과가 없으면 proposed·미측정으로 남깁니다.",
   },
+  "blockchain/reth-block-execution": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-28",
+    rationale:
+      "부모 상태와 활성 fork를 고정하고 pre·본문 순서의 transactions·post를 실행해 BlockExecutionResult와 BundleState를 만든 뒤 별도 commitment 검증으로 넘기는 부분은 하나의 메커니즘입니다. Release 비교·장애 주입·rollback·SLO·ADR은 대상 환경의 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 Reth v2.8.1 commit d763342f, Alloy EVM 0.39.0과 revm-database 43.0.1에 고정합니다. 두 송금과 수수료는 설명용 fixture이며 대상 환경의 성능이나 복구 결과를 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-block-execution", "blockchain/reth-block-execution-validation"],
+  },
+  "blockchain/reth-block-execution-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-28",
+    rationale:
+      "한 run manifest에서 정상·REVERT·invalid·state edge·fork·commitment mismatch·crash·reorg를 재생하고 candidate 격리·rollback·재진입·ADR까지 연결하는 하나의 운영 판단입니다. 같은 evidence bundle을 나누면 첫 divergence와 복구 증거가 끊깁니다.",
+    sharedGate:
+      "Result·BundleState·post-validation·state root와 restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·CPU·memory·DB read를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
   "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
@@ -4047,6 +4066,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-blob-admission": "8ff32e48be1a73aa",
   "blockchain/reth-blob-reorg-release": "89535b0c731c7c90",
   "blockchain/reth-blob-storage": "62d28a887365e4ac",
+  "blockchain/reth-block-execution": "a5ec1d06381e6abb",
+  "blockchain/reth-block-execution-validation": "379faf29bddb2c67",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",
   "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",

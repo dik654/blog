@@ -10745,7 +10745,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth ordered block transition",
     definition:
       "Pre-block system change, body 순서의 transactions와 post-block fork operation을 하나의 mutable overlay에 적용해 각 step output을 다음 step input으로 넘기는 deterministic execution입니다.",
-    canonicalHref: "/cs/blockchain/reth-block-execution#executor",
+    canonicalHref: "/cs/blockchain/reth-block-execution#execution",
   },
   "ethereum-block-output-postconditions": {
     id: "ethereum-block-output-postconditions",
@@ -10754,7 +10754,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Ethereum block-output root postconditions",
     definition:
       "Ordered execution이 만든 receipt status·cumulative gas·logs, receipts root와 post-state root를 block header의 gas used·commitments와 비교해 block-level validity를 판정하는 조건입니다.",
-    canonicalHref: "/cs/blockchain/reth-block-execution#state-changes",
+    canonicalHref: "/cs/blockchain/reth-block-execution#validation-boundary",
   },
   "reth-block-execution-release-gate": {
     id: "reth-block-execution-release-gate",
@@ -10763,7 +10763,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth block-execution release gate",
     definition:
       "Invalid transaction·revert/halt·create/delete/wipe·fork boundary·batch crash·root mismatch·reorg fixture에서 receipt·gas·log·bundle journal·post-root parity 뒤 executor 변경을 채택하는 절차입니다.",
-    canonicalHref: "/cs/blockchain/reth-block-execution#state-changes",
+    canonicalHref: "/cs/blockchain/reth-block-execution-validation#experiment",
   },
   "prysm-consensus-client-boundary": {
     id: "prysm-consensus-client-boundary",
@@ -12268,7 +12268,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Reth BundleState revert journal",
     definition: "실행 후 account·storage·bytecode 값과 original/revert evidence를 block·branch별로 함께 보존해 commit·reorg·crash reconciliation에 쓰는 overlay journal입니다.",
-    canonicalHref: "/cs/blockchain/reth-block-execution#state-changes",
+    canonicalHref: "/cs/blockchain/reth-block-execution#bundle",
   },
   "reth-historical-state-reconstruction": {
     id: "reth-historical-state-reconstruction",

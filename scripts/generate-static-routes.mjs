@@ -370,6 +370,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-blob-reorg-release",
   "blockchain/reth-payload-builder",
   "blockchain/reth-payload-builder-validation",
+  "blockchain/reth-block-execution",
+  "blockchain/reth-block-execution-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

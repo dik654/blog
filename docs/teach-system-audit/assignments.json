@@ -501,6 +501,7 @@
     "blockchain/reth-blob-reorg-release",
     "blockchain/reth-blob-storage",
     "blockchain/reth-block-execution",
+    "blockchain/reth-block-execution-validation",
     "blockchain/reth-chainspec",
     "blockchain/reth-cli",
     "blockchain/reth-db",

@@ -5280,43 +5280,133 @@
     },
     {
       "route": "blockchain/reth-block-execution",
-      "title": "Reth 블록 실행 (revm)",
-      "status": "unreviewed",
+      "title": "Reth Block Execution: 순차 실행과 검증 경계",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-block-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-block-execution.tsx",
-        "src/pages/articles/ethereum/reth-block-execution/EvmConfig.tsx",
-        "src/pages/articles/ethereum/reth-block-execution/Executor.tsx",
-        "src/pages/articles/ethereum/reth-block-execution/Overview.tsx",
-        "src/pages/articles/ethereum/reth-block-execution/StateChanges.tsx",
-        "src/pages/articles/ethereum/reth-state-flow-viz.tsx"
+        "src/pages/articles/ethereum/reth-block-execution/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-block-execution/RethBlockExecutionLocator.tsx",
+        "src/pages/articles/ethereum/reth-block-execution/viz/RethBlockExecutionFlowViz.tsx",
+        "src/pages/articles/ethereum/reth-block-execution/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-block-execution/fileTree.ts",
+        "src/pages/articles/ethereum/reth-block-execution/codebase/reth-v2.8.1/execute-one.rs",
+        "src/pages/articles/ethereum/reth-block-execution/codebase/reth-v2.8.1/evm-config.rs",
+        "src/pages/articles/ethereum/reth-block-execution/codebase/reth-v2.8.1/execution-output.rs",
+        "src/pages/articles/ethereum/reth-block-execution/codebase/reth-v2.8.1/bundle-state.rs",
+        "src/pages/articles/ethereum/reth-block-execution/codebase/reth-v2.8.1/post-execution-validation.rs",
+        "src/content/reth-block-execution-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 8,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 5,
         "headings": [
-          "\n        EvmConfig는 header·ChainSpec·transaction을 revm 입력으로 번역한다\n      ",
-          "\n        Executor는 같은 mutable overlay 위에서 transaction 순서를 보존한다\n      ",
-          "\n        Block execution은 transaction 목록을 parent state에서 하나의\n        post-state로 접는 결정적 전이다\n      ",
-          "\n        BundleState는 rollback용 original과 commit용 present 값을 함께 보존한다\n      "
+          "Reth는 부모 상태에서 블록의 거래를 어떤 순서로 실행하고, 무엇을 결과로 돌려줍니까?",
+          "입력",
+          "EVM 환경",
+          "순차 실행",
+          "결과 묶음",
+          "검증 경계",
+          "실패 경계",
+          "구현 근거",
+          "확인 문제"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 EvmConfig·Executor·BundleState를 부품별로 나열해 한 블록의 입력이 결과와 검증으로 어떻게 이어지는지 추적하기 어려웠습니다.",
+        "실행 함수의 반환과 consensus validity·canonical publish가 한 단계처럼 보였습니다.",
+        "BundleState가 있으면 부모 database를 읽지 않는다는 오해와 REVERT·invalid transaction·commitment mismatch의 실패 경계를 교정할 필요가 있었습니다."
+      ],
+      "fixture": "Alice 10 ETH, Bob 0, Carol 0인 부모 상태에서 Alice→Bob 3 ETH, Bob→Carol 2 ETH를 본문 순서로 실행합니다. 두 거래는 각각 21,000 gas, base fee 1 gwei, tip 0을 사용하며 최종 잔액은 Alice 6.999979, Bob 0.999979, Carol 2 ETH입니다. 이 값은 설명용 가정입니다.",
+      "stageEvidence": {
+        "0": "부모 상태, header, ChainSpec과 본문 순서를 재현 입력으로 고정합니다.",
+        "1": "EthEvmConfig가 header와 ChainSpec으로 fork-aware EVM 환경과 block context를 만듭니다.",
+        "2": "활성 fork가 요구하는 사전 system call을 본문 거래보다 먼저 적용합니다.",
+        "3": "Alice의 첫 송금이 Bob의 상태와 첫 receipt·cumulative gas를 바꿉니다.",
+        "4": "Bob의 둘째 송금은 첫 거래가 만든 상태를 입력으로 읽습니다.",
+        "5": "본문 뒤의 fork별 사후 변경을 적용하고 transition을 revert와 함께 합칩니다.",
+        "6": "BlockExecutionResult와 BundleState를 BlockExecutionOutput으로 반환하되, 아직 유효하다고 판정하지 않습니다.",
+        "7": "별도 검증 계층이 gas·receipt·request·BAL·state root를 header의 약속과 비교합니다.",
+        "S": "시각화와 본문이 같은 두 송금과 42,000 cumulative gas를 입력에서 검증까지 유지합니다.",
+        "B": "거래 REVERT는 유효한 failed receipt일 수 있지만 invalid transaction과 header commitment 불일치는 블록 거절 경계입니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 execute, Ethereum EVM config, execution output과 post-execution validation 구현",
+        "Reth v2.8.1이 고정한 Alloy EVM 0.39.0과 revm-database 43.0.1의 block executor·BundleState 경계"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Reth v2.8.1 고정 source를 따라 pre→transactions→post→bundle 반환과 별도 validation 경계를 대조했습니다.",
+        "arithmetic": "두 송금의 잔액과 21,000+21,000=42,000 gas, 0.000042 ETH base-fee burn을 검산하고 설명용 가정으로 표시했습니다.",
+        "humanize": "글별 학습·문장 호흡·한국어·용어·수식·계산·topology 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서·장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, 49.5px 조작부와 일곱 장면 전환을 확인했습니다. 긴 장면에서 조작부가 각주 뒤로 가려지는 결함을 발견해 canvas 하단에 고정했습니다. Reduced-motion은 animation 0건·수동 이동 유지, JavaScript 비활성 trailing-slash 화면은 정적 8장면과 전체 본문을 유지했습니다.",
+        "browser1440": "1440×1000에서 문서·여덟 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, code sidebar의 Reth v2.8.1 경로·줄 범위와 console 오류·경고 0을 확인했습니다. TypeScript 최대 RSS는 약 6.51GB, Vite build는 약 4.29GB였고 swap은 0이었습니다. Build는 8,072 modules, 정적 public route 2,110개와 no-script 본문 324편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "split-concept-trace-from-practice-release-gate"
+    },
+    {
+      "route": "blockchain/reth-block-execution-validation",
+      "title": "Reth Block Execution 검증: 회귀·복구·rollback",
+      "status": "rewritten-local-verified",
+      "publicEntry": "src/pages/articles/ethereum/reth-block-execution-validation/index.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ethereum/reth-block-execution-validation/index.tsx",
+        "src/pages/articles/ethereum/reth-block-execution-validation/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-block-execution-validation/viz/RethBlockExecutionValidationViz.tsx",
+        "src/pages/articles/ethereum/reth-block-execution/RethBlockExecutionLocator.tsx",
+        "src/content/reth-block-execution-learning-tree.ts"
+      ],
+      "candidateSignals": {
+        "stageMarkers": 7,
+        "predictionPointers": 0,
+        "assumptionMarkers": 10,
+        "sourceButtons": 2,
+        "headings": [
+          "Reth release나 실행 경로를 바꿀 때 결과 회귀와 복구 실패를 어떻게 찾습니까?",
+          "실험 입력",
+          "상태 소유권",
+          "정상 기준선",
+          "실험 순서",
+          "장애 판정",
+          "복구와 재진입",
+          "측정 순서",
+          "결정",
+          "근거와 미측정값"
+        ]
+      },
+      "issues": [
+        "기존 개념 글에는 release·executor·ChainSpec 변경을 같은 입력으로 대조하는 별도 실무 경로가 없었습니다.",
+        "실행 결과, validation 판정, canonical state와 배포 상태의 authoritative writer를 구분할 필요가 있었습니다."
+      ],
+      "fixture": "Base와 candidate에 같은 Reth release 조건, dependency, ChainSpec, 부모 snapshot과 raw block bytes를 주고, 정상·REVERT·invalid transaction·state edge·fork·commitment mismatch·crash·reorg·rollback을 한 경계씩 재생하는 paired run입니다.",
+      "stageEvidence": {
+        "0": "개념 글의 순차 실행·결과 묶음·검증 경계 anchor에서 실무 질문을 엽니다.",
+        "1": "Binary, dependencies, chain, parent, block과 runtime을 run ID와 manifest에 고정합니다.",
+        "2": "Provider snapshot, EVM 환경, 임시 결과, validation, canonical state와 배포 상태의 writer를 나눕니다.",
+        "3": "정상 block의 receipt·gas·logs·requests·BundleState·post-state root·restart 결과를 기준선으로 남깁니다.",
+        "4": "REVERT, invalid transaction, state edges, fork, mismatch와 crash를 한 번에 하나씩 재생합니다.",
+        "5": "첫 field divergence와 typed outcome을 따라 발견·격리·우회·rollback·재진입을 연결합니다.",
+        "6": "정합성과 복구가 같아진 뒤에만 성능·비용을 측정하고 proposed ADR을 판정합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 block execution과 Ethereum post-execution validation 구현",
+        "대상 환경의 paired run·성능·복구 결과는 아직 [M] 미측정으로 분리했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "실무 글이 개념 글의 세 anchor에서 시작해 환경, 소유권, baseline, paired faults, 복구, 미측정값과 ADR로 이어지는지 확인했습니다.",
+        "arithmetic": "성능 우위·복구 시간을 만들지 않았고 block corpus, execution p95·p99, canary 범위와 복구 목표를 미확정·미측정으로 남겼습니다.",
+        "humanize": "글별 학습·문장 호흡·한국어·용어·topology 감사를 통과했고 개념 재설명 대신 실험과 운영 판단을 분리했습니다.",
+        "browser390": "390×844에서 문서·일곱 장면 가로 넘침 0, 49.5px 조작부, canvas 하단 고정과 키보드 이동을 확인했습니다. Reduced-motion은 animation 0건·수동 이동 유지, JavaScript 비활성 trailing-slash 화면은 개념 anchor, 정적 7장면과 전체 본문을 유지했습니다.",
+        "browser1440": "1440×1000에서 문서·일곱 장면 가로 넘침 0, 8.2초 무자동재생, ArrowRight 0→1, Mismatch 중간 장면과 console 오류·경고 0을 확인했습니다."
+      },
+      "remaining": [
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "split-practice-release-gate-from-concept"
     },
     {
       "route": "blockchain/reth-chainspec",
