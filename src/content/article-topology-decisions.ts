@@ -363,6 +363,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Base와 candidate에 동일한 D0~D3·encoded pieces·commitment·peer 응답·deadline·fault schedule을 재생합니다. Fixture parity, bounded inflight·buffer·custody state, restart와 rollback 재통과를 먼저 확인하고 그 뒤에만 bandwidth·CPU·memory·p95를 비교합니다. 대상 환경 결과가 없으면 proposed로 남깁니다.",
   },
+  "blockchain/railgun": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "값 10 note를 6과 4로 나누는 Wallet→JoinSplit→Broadcaster→contract 상태 전이는 한 개념 질문입니다. Contract·circuit·key·wallet engine 변경의 manifest, 부정 fixture, 중단·복구·호환 rollback과 ADR은 대상 환경의 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 contract 30da515와 circuits-v2 0aa2d13에서 note·nullifier 식, historical-root membership, key/signature, 10=6+4 balance, boundParams hash, contract의 first-use nullifier와 tree update를 추적합니다. 실제 deployment·artifact·engine 변경의 성능·복구·채택 판단은 포함하지 않습니다.",
+    targetRoutes: ["blockchain/railgun", "blockchain/railgun-validation"],
+  },
+  "blockchain/railgun-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "같은 manifest와 note fixture에서 정상 transfer, replayed nullifier, wrong root, balance·domain·ciphertext·key mutation, wallet sync와 submission 중단을 재생하고 on-chain state·wallet mirror·호환 rollback을 확인한 뒤 비용을 비교하는 하나의 운영 판단 경로입니다.",
+    sharedGate:
+      "Chain·contract/proxy/source·circuit/zkey/vkey·engine·fixture를 고정합니다. State/proof/event/wallet parity, idempotent submission, event rebuild와 compatible client rollback을 먼저 확인하고 그 뒤에만 prove·sync·submit p95·RSS·gas를 비교합니다. 대상 환경 결과가 없으면 proposed로 남깁니다.",
+  },
   "blockchain/helios-bootstrap": KEEP("Checkpoint source→proof 검증→store init→first update→recovery가 한 bootstrap lifecycle입니다."),
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
@@ -4106,6 +4125,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
   "blockchain/da-theory": "960f47b88c2342b7",
   "blockchain/da-validation": "e38d59ace70ff117",
+  "blockchain/railgun": "2c7b61b18f7dbd43",
+  "blockchain/railgun-validation": "f8b75a2b5a875a04",
   "blockchain/helios-bootstrap": "5784135b544e5930",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",

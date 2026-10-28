@@ -7968,6 +7968,50 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "Protocol·layout·setup·peer topology·deadline·runtime이 바뀌면 결정을 다시 검증한다." },
     ],
   },
+  "railgun": {
+    title: "RAILGUN 비공개 송금 개념 글이 소유하는 범위",
+    owns: [
+      "값 10 note가 값 6·4 note로 바뀌는 Wallet→JoinSplit→Broadcaster→contract 경로",
+      "Pinned circuit의 mpk·npk·commitment·nullifier 식과 membership·signature·balance 관계",
+      "Root·boundParams hash·nullifiers·commitments·proof의 공개 신호와 private witness 분리",
+      "Contract의 historical root·proof·first-use nullifier 검사와 원자적 tree update",
+      "Zero-knowledge witness와 chain·network·shield/unshield metadata 경계",
+    ],
+    reuses: [
+      { label: "Poseidon parameter profile", href: "/cs/crypto/poseidon-hash#parameters" },
+      { label: "Commitment binding·hiding", href: "/cs/crypto/commitment-theory#properties" },
+      { label: "Merkle membership", href: "/cs/blockchain/merkle-trees#proof" },
+      { label: "Groth16 public-input binding", href: "/cs/crypto/groth16#verification" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Contract 의미는 30da515, circuit 의미는 0aa2d13의 exact source에 귀속한다." },
+      { kind: "standard", rule: "실제 deployment source·proxy·verifying key·artifact 일치는 runtime evidence로 별도 확인한다." },
+      { kind: "project-claim", rule: "Proof 유효성을 anonymity set·IP/timing·Broadcaster trust·운영 복구의 보장으로 확대하지 않는다." },
+    ],
+  },
+  "railgun-validation": {
+    title: "RAILGUN 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Chain·contract/proxy/source·circuit/zkey/vkey·engine·fixture·submission·runtime manifest",
+      "정상 transfer와 nullifier replay·wrong root·balance·domain·ciphertext·key mutation fixture",
+      "Proof·contract event·wallet mirror를 같은 run ID로 묶은 receipt",
+      "Wallet sync·submission 중단 뒤 state rebuild와 중복 제출 방지",
+      "Client rollback·on-chain state 보존·호환성 확인과 proposed ADR",
+    ],
+    reuses: [
+      { label: "Tree와 nullifier 상태", href: "/cs/blockchain/railgun#state" },
+      { label: "JoinSplit이 확인하는 관계", href: "/cs/blockchain/railgun#circuit" },
+      { label: "Proof와 boundParams 결속", href: "/cs/blockchain/railgun#artifact" },
+      { label: "계약의 원자적 상태 전이", href: "/cs/blockchain/railgun#contract" },
+      { label: "보이는 정보와 metadata", href: "/cs/blockchain/railgun#visibility" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Contract·circuit fixture는 30da515와 0aa2d13의 source를 기준으로 만들되 실제 deployment artifact를 별도 대조한다." },
+      { kind: "project-measurement", rule: "대상 환경에서 직접 잰 prove·sync·submit·rebuild·rollback 값만 [M]으로 기록한다." },
+      { kind: "project-claim", rule: "On-chain state를 일반 client 배포처럼 되돌릴 수 있다고 가정하지 않고 storage·key·note compatibility를 먼저 확인한다." },
+      { kind: "standard", rule: "Runtime bytecode·proxy implementation·verifying key·engine version이 바뀌면 결정을 다시 검증한다." },
+    ],
+  },
   "longest-chain": {
     title: "PoW longest-chain 글이 소유하는 범위",
     owns: [

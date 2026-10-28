@@ -496,6 +496,7 @@
     "blockchain/prysm-sync-committee",
     "blockchain/prysm-validator-client",
     "blockchain/railgun",
+    "blockchain/railgun-validation",
     "blockchain/reth",
     "blockchain/reth-alloy-primitives",
     "blockchain/reth-blob-admission",

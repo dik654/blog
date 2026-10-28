@@ -4989,39 +4989,124 @@
     },
     {
       "route": "blockchain/railgun",
-      "title": "RAILGUN: note·nullifier·proof/contract artifact 경계",
-      "status": "unreviewed",
+      "title": "RAILGUN 비공개 송금: note에서 contract state까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/railgun.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/railgun.tsx",
-        "src/pages/articles/blockchain/railgun/ModernArticle.tsx"
+        "src/pages/articles/blockchain/railgun/ModernArticle.tsx",
+        "src/pages/articles/blockchain/railgun/RailgunLocator.tsx",
+        "src/pages/articles/blockchain/railgun/viz/RailgunStateTraceViz.tsx",
+        "src/content/railgun-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "assumptionMarkers": 7,
+        "sourceButtons": 3,
         "headings": [
-          "RAILGUN: private note를 tree에 넣고 nullifier로 한 번만 쓴다",
-          "Membership·ownership·balance·one-time spend를 하나의 relation으로 묶는다",
-          "Proof·public inputs·ciphertext·relayer request를 같은 transaction에 묶는다",
-          "State correctness와 privacy/cost boundary를 나눠 release한다"
+          "금액과 받는 사람을 공개하지 않고 note를 한 번만 썼다는 사실을 어떻게 확인합니까?",
+          "증명 생성과 거래 제출, 상태 변경은 서로 다른 역할입니다",
+          "Tree와 nullifier는 서로 다른 상태를 기록합니다",
+          "JoinSplit은 다섯 검사를 하나의 proof에 묶습니다",
+          "암호문과 chain ID도 boundParams hash에 들어갑니다",
+          "검증이 끝난 transaction만 상태를 함께 바꿉니다",
+          "Proof의 zero knowledge와 전체 사용자의 익명성은 같은 주장 아닙니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 note·nullifier·proof·ciphertext·Broadcaster와 계약 상태를 한 목록에서 설명해 누가 어떤 자료를 읽고 어느 상태를 바꾸는지 추적하기 어려웠습니다.",
+        "Token과 금액을 계약이 직접 보는 공개값처럼 읽힐 수 있었지만 pinned JoinSplit 회로에서 token·value와 key·Merkle path는 private witness이고 계약은 공개 신호와 결속된 proof를 확인합니다.",
+        "개념 설명과 변경 release gate가 한 글에 섞여 있어 검증·rollback·성능 판단을 별도 practice 글로 분리했습니다."
+      ],
+      "fixture": "Tree 0의 leaf 23에 있는 값 10 note를 값 6인 받는 note와 값 4인 거스름 note로 바꾸며 root R100, nullifier N₂₃, commitments C₆·C₄, boundParams hash와 proof가 contract state에 반영되는 경로를 추적합니다.",
+      "stageEvidence": {
+        "locator": "Ethereum Privacy의 concept 글과 별도 변경 검증 practice 글을 같은 학습 지도에 표시합니다.",
+        "0": "값 10 note와 historical root R100, leaf 23의 시작 상태를 고정합니다.",
+        "1": "Wallet이 random·token·value·key·Merkle path를 private witness로 선택합니다.",
+        "2": "받는 note 6과 거스름 note 4, C₆·C₄와 ciphertext를 계산합니다.",
+        "3": "JoinSplit 회로가 membership·ownership·nullifier·commitment·10=6+4를 한 relation으로 확인합니다.",
+        "4": "Wallet이 proof·root·nullifier·commitments와 chain·ciphertext가 결속된 boundParams를 Transaction으로 묶습니다.",
+        "5": "Broadcaster는 제출과 gas만 맡고 계약이 historical root·chain·proof·nullifier의 첫 사용을 검증합니다.",
+        "6": "같은 transaction에서 N₂₃을 used로 기록하고 C₆·C₄를 tree에 추가하며 실패 시 전체 revert되는 상태를 반환합니다."
+      },
+      "sourceEvidence": [
+        "Railgun-Privacy/contract commit 30da51509975013720529ec146c3cecc0f87088b의 CommitmentPreimage·BoundParams·Transaction·Verifier·RailgunSmartWallet을 고정했습니다.",
+        "Railgun-Privacy/circuits-v2 commit 0aa2d13763a9fcfbb7b7ea9c02e004e71f1394bb의 JoinSplit private/public signals와 mpk·npk·commitment·nullifier·balance 식을 고정했습니다.",
+        "RAILGUN Developer Guide의 State Structure·Transactions·Shielding 설명은 시스템 역할 확인에 사용하고 exact contract/circuit artifact를 대신하지 않았습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "공식 contract와 circuit을 다시 읽고 note commitment, nullifier, proof public input, ciphertext binding과 Broadcaster/contract 책임을 한 값 10→6+4 사례로 재작성했습니다.",
+        "arithmetic": "10=6+4와 10≠6+5를 같은 token의 balance constraint에 대입했으며 성능·익명성 크기·gas 결과는 만들지 않았습니다.",
+        "humanize": "글별 학습·한국어·용어·수식·pseudocode·읽기 순서 검사가 통과했고 기술 이름마다 현재 경로의 한글 역할을 붙였습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 7개 장면 모두 root 444px 이내·canvas 내부 스크롤 0, 49.5px 조작부, 키보드 이동과 가로 넘침 0을 확인했습니다.",
+        "browser1440": "1440×1000에서 장면 0이 사용자 입력 전 유지되고 10초 재생 뒤 0→1 이동, 7개 장면의 높이·오버플로·console 오류 0을 확인했습니다. Reduced-motion은 재생을 막고 수동 이동은 유지합니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "Production build의 JavaScript 비활성 정적 본문과 GitHub Pages 공개 경로를 검증합니다."
+      ],
+      "reviewDisposition": "split-concept-note-state-trace-from-change-validation"
+    },
+    {
+      "route": "blockchain/railgun-validation",
+      "title": "RAILGUN 변경 검증: contract·circuit·wallet state",
+      "status": "rewritten-local-verified",
+      "publicEntry": "src/pages/articles/blockchain/railgun-validation.tsx",
+      "bodyFiles": [
+        "src/pages/articles/blockchain/railgun-validation.tsx",
+        "src/pages/articles/blockchain/railgun-validation/ModernArticle.tsx",
+        "src/pages/articles/blockchain/railgun-validation/viz/RailgunValidationViz.tsx",
+        "src/pages/articles/blockchain/railgun/RailgunLocator.tsx",
+        "src/content/railgun-learning-tree.ts"
+      ],
+      "candidateSignals": {
+        "stageMarkers": 7,
+        "predictionPointers": 0,
+        "assumptionMarkers": 8,
+        "sourceButtons": 3,
+        "headings": [
+          "계약·회로·키·wallet engine을 바꿔도 기존 note와 이중 지출 방지가 유지되는지 어떻게 검증합니까?",
+          "실험 입력",
+          "상태 소유권",
+          "가장 작은 기준선",
+          "부정 입력과 중단 실험",
+          "실패 판정",
+          "격리·되돌리기·재진입",
+          "측정 순서",
+          "결정"
+        ]
+      },
+      "issues": [
+        "정상 송금 하나의 성공만으로 contract·circuit·wallet engine 변경의 replay 방지와 field binding을 입증할 수 없었습니다.",
+        "On-chain state, wallet mirror, proving artifact와 제출 retry를 같은 상태로 취급하면 rollback 때 이미 반영된 nullifier를 되감거나 중복 제출할 위험이 있습니다.",
+        "대상 환경 측정 전 성능 우위를 결론내리지 않도록 정합성·복구·rollback 통과 뒤에만 latency와 gas를 비교하게 분리했습니다."
+      ],
+      "fixture": "고정 manifest의 값 10→6+4 baseline을 기준으로 same N₂₃ replay, root·chain·ciphertext·commitment 변조, event sync·proof·submit 중단과 호환 artifact rollback을 한 경계씩 독립 실행합니다.",
+      "stageEvidence": {
+        "0": "Contract·circuit·zkey/vkey·engine·deployment·start block을 한 run manifest에 고정합니다.",
+        "1": "Baseline과 candidate에서 같은 정상 송금을 독립 실행하고 receipt·events·wallet view를 같은 식별자로 대조합니다.",
+        "2": "이미 사용한 N₂₃을 재제출해 contract와 wallet mirror가 모두 재사용을 거절하는지 확인합니다.",
+        "3": "Root·chain·ciphertext·commitment·boundParams·proof를 하나씩 바꾸고 fail closed를 확인합니다.",
+        "4": "Wallet sync·proof 생성·Broadcaster 제출 직전에 중단하고 restart 뒤 phantom balance와 중복 제출을 검사합니다.",
+        "5": "Candidate를 격리하고 호환 artifact로 rollback한 뒤 authoritative on-chain state에서 wallet view를 재구성합니다.",
+        "6": "정합성·복구·rollback이 같은 경우에만 성능을 비교하고 미측정 상태는 proposed로 남깁니다."
+      },
+      "sourceEvidence": [
+        "Contract commit 30da515와 circuit commit 0aa2d13을 동일 manifest의 독립 artifact로 고정합니다.",
+        "RAILGUN Developer Guide의 wallet transaction·state structure를 동기화와 제출 경계의 공식 설명으로 사용합니다.",
+        "대상 test chain에서 실행한 latency·gas·RTO 결과는 아직 없으므로 [M] 미측정으로 남겼습니다."
+      ],
+      "verification": {
+        "substantiveReading": "개념 글의 state·circuit·artifact·contract·visibility·failure anchor에서 시작해 환경·소유권·기준선·부정 입력·중단·복구·rollback·ADR로 이어지는지 확인했습니다.",
+        "arithmetic": "성능 우위·복구 시간·gas 절감률을 만들지 않았고 baseline/candidate의 동일 입력과 pass·reject·recover outcome만 비교합니다.",
+        "humanize": "개념 메커니즘을 반복하지 않고 상태 writer·검증 fixture·복구와 결정을 분리했으며 글별 한국어·용어·읽기 순서 검사가 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 7개 장면 모두 root 433px 이내·canvas 내부 스크롤 0, 49.5px 조작부, 키보드 이동과 가로 넘침 0을 확인했습니다.",
+        "browser1440": "1440×1000에서 사용자 입력 전 장면 0 유지, 7개 장면 높이·오버플로·console 오류 0을 확인했습니다. Reduced-motion은 재생을 비활성화하고 수동 이동은 유지합니다."
+      },
+      "remaining": [
+        "Production build의 JavaScript 비활성 정적 본문과 GitHub Pages 공개 경로를 검증합니다."
+      ],
+      "reviewDisposition": "practice-release-gate-with-negative-fixtures-and-rollback"
     },
     {
       "route": "blockchain/reth",
