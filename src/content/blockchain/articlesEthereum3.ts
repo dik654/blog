@@ -376,54 +376,18 @@ export const ethereum3Articles: Article[] = [
   },
   {
     slug: "eip4844-blob-fee",
-    title: "EIP-4844 Blob Fee · Excess Feedback",
+    title: "EIP-4844 Blob 가격",
     subcategory: "eth-reth",
     sections: [
-  {
-    "id": "overview",
-    "title": "1. 자료를 많이 올리면 다음 가격은 어떻게 달라질까"
-  },
-  {
-    "id": "black-box",
-    "title": "2. 보내는 사람, 사용량 기록, 가격 계산을 나눕니다"
-  },
-  {
-    "id": "case",
-    "title": "3. 남은 2에 사용 5를 더하고 목표 3을 뺍니다"
-  },
-  {
-    "id": "picture",
-    "title": "4. 사용량은 한 단계를 거쳐 다음 가격으로 갑니다"
-  },
-  {
-    "id": "need",
-    "title": "5. 왜 실행 비용과 자료 비용을 따로 기록할까"
-  },
-  {
-    "id": "names",
-    "title": "6. 자료 묶음은 blob, 가격용 기록은 excess입니다"
-  },
-  {
-    "id": "excess-update",
-    "title": "7. 524,288이라는 기록이 곧 524,288 wei는 아닙니다"
-  },
-  {
-    "id": "integer-fee",
-    "title": "8. 정수 계산은 매 단계의 나머지를 버립니다"
-  },
-  {
-    "id": "source",
-    "title": "9. 실제 코드에서 입력 시각과 세 갈래를 읽습니다"
-  },
-  {
-    "id": "paper-eip4844-fee",
-    "title": "10. 규격의 가격과 사용자가 내는 총비용을 구분합니다"
-  },
-  {
-    "id": "limits",
-    "title": "11. 수요 기록, 가격, 혼잡을 하나의 숫자로 읽지 않습니다"
-  }
-],
+      { id: "overview", title: "부모 사용량에서 자식 가격까지" },
+      { id: "state-ledger", title: "헤더에 남는 두 값" },
+      { id: "excess-update", title: "다음 excess 계산" },
+      { id: "integer-fee", title: "정수 기본료 계산" },
+      { id: "schedule", title: "업그레이드별 설정" },
+      { id: "source", title: "실제 구현 경로" },
+      { id: "failure-boundaries", title: "실패 경계" },
+      { id: "paper-eip4844-fee", title: "근거 범위" },
+    ],
     component: () => import("@/pages/articles/ethereum/eip4844-blob-fee"),
   },
   {

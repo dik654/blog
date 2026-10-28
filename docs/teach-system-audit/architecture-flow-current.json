@@ -4,12 +4,12 @@
   "summary": {
     "publicArticles": 1000,
     "architectureCandidates": 180,
-    "dedicatedVisuals": 698,
-    "inlineVisuals": 529,
-    "customVisuals": 881,
-    "animatedMechanisms": 497,
+    "dedicatedVisuals": 699,
+    "inlineVisuals": 530,
+    "customVisuals": 882,
+    "animatedMechanisms": 498,
     "architectureWithoutAnimation": 89,
-    "recursiveLocators": 323,
+    "recursiveLocators": 324,
     "codeEvidenceLinked": 217,
     "sourceCitationLinked": 991,
     "architectureWithoutCustomVisual": 23
@@ -6850,18 +6850,18 @@
     {
       "route": "blockchain/eip4844-blob-fee",
       "publicPath": "cs/blockchain/eip4844-blob-fee",
-      "title": "EIP-4844 Blob Fee · Excess Feedback",
+      "title": "EIP-4844 Blob 가격",
       "sourcePath": "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
-      "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": true,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/erasure-coding",

@@ -12527,19 +12527,25 @@ export const ARTICLE_EVIDENCE: Readonly<
       "kind": "공식 문서",
       "label": "EIP-4844 blob gas accounting",
       "href": "https://eips.ethereum.org/EIPS/eip-4844",
-      "note": "초과분과 정수 가격 함수"
+      "note": "Blob gas 131,072 단위, 헤더의 used·excess, 정수 가격 recurrence와 요금 차감·소각 규칙을 확인했습니다. target 3·max 6은 Cancun 역사값으로만 사용합니다."
     },
     {
       "kind": "공식 문서",
       "label": "EIP-7918 reserve-price branch",
       "href": "https://eips.ethereum.org/EIPS/eip-7918",
-      "note": "BPO2 사례에서 다음 초과분 6과 8이 나오는 조건을 비교합니다."
+      "note": "부모 실행 기본료와 nominal Blob 가격을 비교하는 reserve-price 분기, BPO2 fixture에서 다음 excess 8과 비교값 6이 갈리는 조건을 확인했습니다."
+    },
+    {
+      "kind": "공식 문서",
+      "label": "EIP-8135 BPO2 mainnet parameters",
+      "href": "https://eips.ethereum.org/EIPS/eip-8135",
+      "note": "BPO2 활성 시각, target 14, max 21, update fraction 11,684,671을 확인했습니다."
     },
     {
       "kind": "공식 코드",
-      "label": "go-ethereum c9a2bc7 eip4844.go",
-      "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go",
-      "note": "원본 fakeExponential 함수를 여섯 입력으로 로컬에서 실행했습니다."
+      "label": "go-ethereum v1.17.10 eip4844.go",
+      "href": "https://github.com/ethereum/go-ethereum/blob/v1.17.10/consensus/misc/eip4844/eip4844.go",
+      "note": "commit 1df30b18의 원본을 보존했습니다. 동일 정수 recurrence로 excess 8→1, 62→2, 98→3을 검산했으며 전체 node나 메인넷 block replay는 수행하지 않았습니다."
     }
   ],
   "ai/math-exponents-logarithms": [

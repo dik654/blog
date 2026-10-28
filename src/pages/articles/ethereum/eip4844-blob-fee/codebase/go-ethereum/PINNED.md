@@ -2,9 +2,11 @@
 
 Official repository: https://github.com/ethereum/go-ethereum
 
-Commit: `c9a2bc73c847319a8faa57de59e42c0efc420682`
+Release: `v1.17.10`
 
-Fetched 2026-10-04; original files preserved byte-for-byte. LGPL-3.0-or-later per file header, COPYING.LESSER retained. These are client implementation sources, not a claim of local mainnet execution.
+Commit: `1df30b18d9ed35ee9d28ffd4648442c2204554ad`
+
+Fetched again on 2026-10-28 from the release tag; original files preserved byte-for-byte. The `eip4844.go` SHA-256 is identical to the previously pinned commit. LGPL-3.0-or-later per file header, COPYING.LESSER retained. These are client implementation sources, not a claim of local mainnet execution.
 
 [
   {

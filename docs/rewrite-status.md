@@ -4091,3 +4091,22 @@
   `40671350526`에서 전역 감사, production build, 공개 1,000편 브라우저 검사와 배포가 모두
   통과했습니다. 공개 390×844 경로에서도 폭 390=390, 8초 무자동재생, 키보드 0→1 이동,
   49.5px 조작부와 console 오류 0건을 다시 확인했습니다.
+
+### EIP-4844 Blob 가격 글 로컬 검증 완료 (2026-10-28)
+
+- 기존 글의 Cancun 역사값과 현재 규칙이 한 흐름에 섞인 부분을 바로잡았습니다. 현재 메인넷 BPO2의
+  target 14·max 21·update fraction 11,684,671, EIP-7918의 reserve-price 분기, Geth
+  v1.17.10 commit `1df30b18d9ed35ee9d28ffd4648442c2204554ad` 구현을 각각 고정했습니다.
+- 부모 excess 2개분·used 18개분·실행 기본료 1 Gwei에서 자식 설정 선택, target 검사,
+  EIP-7918 조건, excess 8개분, 정수 기본료 1 wei/blob gas, 헤더 재검산까지 일곱 장면으로
+  추적합니다. 기존 식만 적용한 비교값 6은 다른 활성 규칙의 결과로 분리했습니다.
+- 정수 fake-exponential을 같은 순서로 실행해 BPO2의 임계값 0~61→1, 62~97→2,
+  98~123→3, 124~143→4 wei/blob gas를 검산했습니다. 본문·시각화의 한국어는
+  `ko-natural` 문서·합니다체·expert 린트에서 error 0, warn 0을 확인했습니다.
+- 1,440×1,000과 390×844에서 자동 재생 없이 첫 장면을 유지하고 키보드 이동, 44px 이상
+  조작부, 문서 가로 넘침 0과 reduced-motion의 재생 비활성·수동 이동 유지를 확인했습니다.
+  JavaScript 비활성 390×844 화면에는 직속 부모, 일곱 정적 장면, 전체 본문, 부모 지도 반환이
+  남고 visible button은 0개였습니다.
+- Node heap 8GB에서 TypeScript 검사와 production build가 통과했습니다. 정적 public route
+  2,106개와 no-script 본문 319편을 다시 생성했으며, 정적 생성기의 최대 상주 메모리는 약
+  1.35GB이고 swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증은 아직 남아 있습니다.

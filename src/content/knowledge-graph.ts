@@ -12404,7 +12404,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     "kind": "method",
     "domain": "distributed-systems",
     "label": "EIP-4844 excess blob-gas feedback",
-    "definition": "Parent excess와 사용량을 더하고 fork target을 saturating subtraction한 값으로 다음 excess를 만들며 정수 fake-exponential로 다음 blob base fee를 정하는 피드백입니다.",
+    "definition": "Parent excess·사용량과 child timestamp의 활성 설정으로 다음 excess를 만들고, EIP-7918 reserve-price 조건 또는 기존 target subtraction을 선택한 뒤 정수 fake-exponential로 child Blob 기본료를 정하는 피드백입니다.",
     "canonicalHref": "/cs/blockchain/eip4844-blob-fee#excess-update"
   },
   "blob-demand-average-target-peak-split": {

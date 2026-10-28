@@ -1863,9 +1863,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "blockchain/eip4844-blob-fee": {
     "action": "keep",
     "status": "implemented",
-    "reviewedAt": "2026-10-04",
-    "rationale": "사용량을 다음 초과분으로 바꾸고 그 기록을 정수 가격에 넣는 두 계산은 한 경로입니다. 이를 분리하면 초과분을 요금이나 대기 파일 수로 오해하기 쉬우므로 한 글에서 이어 설명합니다. 기존 2·5·3 사례와 현재 설정의 추가 분기 비교를 유지하면서 체인별 실제 수요 분석은 별도 글로 연결합니다.",
-    "sharedGate": "역사적 E=2,U=5,T=3의 결과 4와 실제 단위 524,288을 본문·식·그림·문제에서 대조합니다. 별도 작은 가격 설정 f=1,n=4,d=2의 결과 6, BPO2 E=2,U=18,target=14,max=21의 두 결과 6·8을 검산했습니다. 고정한 Go 원본 fakeExponential 함수는 여섯 입력으로 실제 로컬 실행했으며 전체 노드·메인넷 블록 또는 수요 측정으로 확대하지 않습니다."
+    "reviewedAt": "2026-10-28",
+    "rationale": "부모 헤더의 사용량을 자식 excess로 바꾸고 그 상태를 정수 기본료와 헤더 검산에 연결하는 과정은 하나의 피드백 경로입니다. BPO2·EIP-7918을 본 사례로 고정하고 Cancun 값은 역사 비교로 내려, 활성 규칙이 바뀌는 지점도 같은 경로에서 읽습니다. 체인별 실제 수요 측정은 별도 글에 남깁니다.",
+    "sharedGate": "BPO2의 parent E=2,U=18,target=14,max=21, execution base fee 1 Gwei에서 EIP-7918 결과 8과 기존 분기 비교값 6을 대조합니다. 동일 정수 recurrence에서 excess 8→fee 1, 62→2, 98→3을 검산하고, child timestamp 설정 선택과 header mismatch 거절까지 같은 fixture로 연결합니다. 전체 node·메인넷 block replay나 수요 측정으로 확대하지 않습니다."
   },
   "ai/harness-failure-ablation": {
     "action": "keep",
@@ -3840,7 +3840,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/model-selection-bias": "b5325f8612b2f7ce",
   "ai/paired-experiment-design": "f4cdaa22f07a80a0",
   "blockchain/aa-fundamentals": "bee9a48ed669a020",
-  "blockchain/eip4844-blob-fee": "49df0187376d0539",
+  "blockchain/eip4844-blob-fee": "9a04363afec6ff3d",
   "ai/agent-changelog-evidence": "626b86d8d4c1c97c",
   "ai/architecture-decision-records": "e4c10149936434e1",
   "ai/engineering-lessons-ledger": "ded6984691469be5",

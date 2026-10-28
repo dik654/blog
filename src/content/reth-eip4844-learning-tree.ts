@@ -101,7 +101,7 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Blob gas feedback",
     returnSummary:
-      "지난 블록의 excess와 사용량은 다음 excess를 만들고, 이 값이 다음 Blob base fee 계산의 입력이 됩니다. Blob gas와 execution gas는 단위와 가격 함수가 다른 두 시장이므로 하나의 gas budget처럼 더하지 않습니다.",
+      "부모 헤더의 excess·사용량과 자식 timestamp의 활성 설정은 자식 excess를 만들고, 이 값이 정수 Blob 기본료의 입력이 됩니다. 현재 규칙은 EIP-7918 reserve-price 조건도 확인하며 Blob gas와 execution gas를 하나의 gas budget처럼 더하지 않습니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/reth-blob-storage#overview",
       label: "BlobStore",
