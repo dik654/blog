@@ -7945,6 +7945,29 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "project-claim", rule: "KZG proof 성공이나 sample 성공을 전체 availability·valid encoding·application validity로 확대하지 않는다." },
     ],
   },
+  "da-validation": {
+    title: "Data availability 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Protocol·fork·encoding layout·commitment setup·custody·peer·deadline·runtime을 묶은 run manifest",
+      "정상 조각·숨김·마감 초과·bad proof·wrong parity·wrong index·duplicate의 typed outcome fixture",
+      "Piece·reconstruction·availability receipt와 decoded root 기준선",
+      "Custody 저장·표본 요청 중 restart와 binary·config·setup·layout rollback 뒤 전체 fixture 재생",
+      "정합성·자원 정리·복구를 통과한 뒤의 비용 측정과 proposed ADR",
+    ],
+    reuses: [
+      { label: "진위·인코딩·가용성 분리", href: "/cs/blockchain/da-theory#separation" },
+      { label: "EIP-4844 전체 sidecar 수신 경계", href: "/cs/blockchain/da-theory#eip4844" },
+      { label: "PeerDAS 1차원 column sampling", href: "/cs/blockchain/da-theory#peerdas" },
+      { label: "Celestia 2차원 extended data square", href: "/cs/blockchain/da-theory#celestia" },
+      { label: "표본 확률과 독립성 전제", href: "/cs/blockchain/da-theory#sampling" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Ethereum 실험 기준은 consensus-specs v1.6.1과 EIP-4844·7594, Celestia 비교는 celestia-app v10.5.0에 귀속한다." },
+      { kind: "standard", rule: "공식 기능의 존재를 대상 client의 정합성·복구·성능 결과로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경의 실제 값만 [M]으로 기록하며 현재 bandwidth·CPU·memory·p95·RTO는 미측정이다." },
+      { kind: "project-claim", rule: "Protocol·layout·setup·peer topology·deadline·runtime이 바뀌면 결정을 다시 검증한다." },
+    ],
+  },
   "longest-chain": {
     title: "PoW longest-chain 글이 소유하는 범위",
     owns: [

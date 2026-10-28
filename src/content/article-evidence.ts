@@ -7014,9 +7014,15 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/da-theory": [
     { kind: "공식 규격", label: "EIP-4844 · Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob transaction·sidecar·KZG commitment·versioned hash와 fixed blob serialization의 공식 경계" },
     { kind: "핵심 논문", label: "Kate–Zaverucha–Goldberg · Polynomial Commitments", href: "https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf", note: "Constant-size polynomial commitment와 evaluation opening의 원 논문이며 network availability 근거는 아님" },
-    { kind: "공식 규격", label: "EIP-7594 · PeerDAS", href: "https://eips.ethereum.org/EIPS/eip-7594", note: "EIP-4844 blob row의 1D extension·cell proof·data-column custody와 peer sampling 규격" },
-    { kind: "공식 문서", label: "Celestia App Specification · Data Structures", href: "https://celestiaorg.github.io/celestia-app/data_structures.html", note: "Celestia data square·2D Reed–Solomon extension·namespaced commitment의 공식 application 구조" },
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 · Fulu DAS core", href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/fulu/das-core.md", note: "PeerDAS data column·custody·sampling과 50% reconstruction을 고정한 릴리스 규격" },
+    { kind: "공식 문서", label: "Celestia App v10.5.0 · Data square layout", href: "https://github.com/celestiaorg/celestia-app/blob/v10.5.0/specs/src/data_square_layout.md", note: "Celestia data square의 행·열 배치와 2D extension을 고정한 application source" },
     { kind: "핵심 논문", label: "Fraud and Data Availability Proofs", href: "https://arxiv.org/abs/1809.09044", note: "2D erasure-coded Merkle tree·sampling·invalid-encoding fraud proof의 원 연구" },
+  ],
+  "blockchain/da-validation": [
+    { kind: "공식 규격", label: "Ethereum consensus-specs v1.6.1 · Fulu DAS core", href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/fulu/das-core.md", note: "Data column·custody·sampling·reconstruction fixture의 version-pinned protocol oracle" },
+    { kind: "공식 규격", label: "EIP-4844 · Shard Blob Transactions", href: "https://eips.ethereum.org/EIPS/eip-4844", note: "Blob·commitment·proof·versioned hash와 full sidecar transport의 기준" },
+    { kind: "공식 규격", label: "EIP-7594 · PeerDAS", href: "https://eips.ethereum.org/EIPS/eip-7594", note: "PeerDAS wrapper·cell proof·data-column networking의 Final EIP 경계" },
+    { kind: "공식 문서", label: "Celestia App v10.5.0 · Data square layout", href: "https://github.com/celestiaorg/celestia-app/blob/v10.5.0/specs/src/data_square_layout.md", note: "2D layout 비교를 해당 release에 고정하는 source" },
   ],
   "blockchain/longest-chain": [
     { kind: "공식 코드", label: "Bitcoin Core · chainwork implementation", href: "https://github.com/bitcoin/bitcoin/blob/master/src/chain.cpp", note: "Compact target를 integer block work로 바꾸고 CBlockIndex에 누적하는 current 구현이며 재현 시 commit pin 필요" },

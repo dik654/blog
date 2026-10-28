@@ -1353,43 +1353,123 @@
     },
     {
       "route": "blockchain/da-theory",
-      "title": "데이터 가용성 이론: DAS, DA Layer, EIP-4844",
-      "status": "unreviewed",
+      "title": "데이터 가용성: 조각 검증에서 복원까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/da-theory.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/da-theory.tsx",
-        "src/pages/articles/blockchain/da-theory/ModernArticle.tsx"
+        "src/pages/articles/blockchain/da-theory/ModernArticle.tsx",
+        "src/pages/articles/blockchain/da-theory/DataAvailabilityLocator.tsx",
+        "src/pages/articles/blockchain/da-theory/viz/ModernDAViz.tsx",
+        "src/content/data-availability-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "assumptionMarkers": 8,
+        "sourceButtons": 5,
         "headings": [
-          "Commitment가 맞는 것과 데이터를 받을 수 있는 것은 다르다",
-          "Reed–Solomon은 복사본이 아니라 다항식의 추가 평가값을 만든다",
-          "EIP-4844는 blob 운송과 가격 경계를 만들었지만 DAS는 아니다",
-          "KZG proof는 cell이 commitment에 속함을 보이지만 availability를 만들지는 않는다",
-          "Blob row를 1D로 두 배 늘리고, 모든 row의 같은 위치를 column으로 묶는다",
-          "원본 square의 행과 열을 모두 확장한다",
-          "Sampling 성공률은 전제를 적었을 때만 의미가 있다",
-          "차원을 세지 말고 encoding·sample·reconstruction contract를 기록한다"
+          "전체 자료를 받지 않고도 다시 구할 수 있다고 어떻게 판단합니까?",
+          "늘리고, 약속하고, 나누고, 확인하고, 복원합니다",
+          "네 조각을 여덟 조각으로 늘리면 절반의 유효 조각으로 원본을 구할 수 있습니다",
+          "조각의 진위, 복원 규칙, 네트워크 응답은 서로 다른 실패를 찾습니다",
+          "EIP-4844는 blob을 별도 운반하지만 합의 노드는 sidecar 전체를 받습니다",
+          "PeerDAS는 각 blob 행을 가로로 늘리고 같은 위치를 열로 묶습니다",
+          "Celestia 계열은 원본 정사각형의 행과 열을 모두 확장합니다",
+          "표본 성공률은 숨긴 비율과 요청 독립성을 적었을 때만 의미가 있습니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 EIP-4844·PeerDAS·Celestia를 먼저 나열해 진위성, 인코딩 유효성과 네트워크 가용성의 차이가 한 사례로 이어지지 않았습니다.",
+        "제품 구조와 변경 검증 계획이 같은 글에 섞여 개념 질문과 운영 의사결정의 경계가 흐렸습니다."
+      ],
+      "fixture": "원본 D0~D3을 설명용 (8,4) 코드의 P4~P7까지 늘리고, 검증자가 D1·P4·P6·P7을 서로 다른 보관 경로에서 받아 증거를 확인한 뒤 D0~D3을 복원합니다.",
+      "stageEvidence": {
+        "locator": "롤업의 자식인 concept 글과 별도 practice 글을 같은 학습 지도에 표시합니다.",
+        "0": "원본 네 조각 D0~D3에서 출발합니다.",
+        "1": "같은 인코딩 규칙으로 복원용 P4~P7을 계산합니다.",
+        "2": "짧은 commitment와 조각 proof가 받은 값의 진위를 확인하지만 존재 자체는 보장하지 않음을 분리합니다.",
+        "3": "조각을 여러 보관 경로에 분산하고 위치·peer·마감을 함께 기록합니다.",
+        "4": "D1·P4·P6·P7을 표본으로 받아 진위·중복·응답 시간을 확인합니다.",
+        "5": "같은 규칙의 서로 다른 유효 조각 네 개로 원본을 실제 복원합니다.",
+        "6": "진위성·인코딩·가용성·복원을 모두 통과한 조건부 판정과 실행 유효성의 별도 경계를 반환합니다."
+      },
+      "sourceEvidence": [
+        "EIP-4844의 blob·sidecar·versioned hash 경계와 4,096×32=131,072 bytes를 공식 EIP에 귀속했습니다.",
+        "Ethereum consensus-specs v1.6.1 Fulu DAS core에서 data column·custody·50% column reconstruction 경계를 고정했습니다.",
+        "Celestia App v10.5.0 data square layout과 Al-Bassam et al.의 2차원 확장·표본 모델을 PeerDAS와 별도 구조로 표시했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "개념 글을 한 (8,4) fixture로 다시 구성하고 EIP-4844, PeerDAS와 Celestia의 확장 방향·수신 단위·보장 범위를 공식 버전 자료에 대조했습니다.",
+        "arithmetic": "4÷8=1/2, (8−4)÷4=1, 4096×32=131072 bytes=128 KiB, (1−1/2)^10=1/1024≈0.0977%를 가정과 함께 확인했습니다.",
+        "humanize": "학습·문장 호흡·한국어·용어·수식·계산·읽기 순서 검사를 통과했고 개념 글에서 release gate를 별도 실무 글로 분리했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, live figure 334×467px, 50×50px 모바일 조작부, 키보드 이동과 가로 넘침 0을 확인했습니다. JavaScript 비활성 화면은 live 요소 0개와 정적 7장면을 제공합니다.",
+        "browser1440": "1440px에서 장면 0이 8.2초 유지되고 명시적 키보드 입력으로 0→1 이동했습니다. Production build와 정적 route 생성 뒤 JavaScript 비활성 문서 폭 1440=1440을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 공개 경로를 검증합니다."
+      ],
+      "reviewDisposition": "rewrite-as-concept-first-data-availability-map"
+    },
+    {
+      "route": "blockchain/da-validation",
+      "title": "데이터 가용성 검증: 숨김·오염·복구·Rollback",
+      "status": "rewritten-local-verified",
+      "publicEntry": "src/pages/articles/blockchain/da-validation.tsx",
+      "bodyFiles": [
+        "src/pages/articles/blockchain/da-validation.tsx",
+        "src/pages/articles/blockchain/da-validation/ModernArticle.tsx",
+        "src/pages/articles/blockchain/da-validation/viz/DataAvailabilityValidationViz.tsx",
+        "src/pages/articles/blockchain/da-theory/DataAvailabilityLocator.tsx",
+        "src/content/data-availability-learning-tree.ts"
+      ],
+      "candidateSignals": {
+        "stageMarkers": 7,
+        "predictionPointers": 0,
+        "assumptionMarkers": 9,
+        "sourceButtons": 2,
+        "headings": [
+          "데이터 가용성 변경이 숨김과 잘못된 조각을 구분하고 안전하게 되돌아오는지 어떻게 검증합니까?",
+          "실험 입력",
+          "상태 소유권",
+          "정상 기준선",
+          "장애별 실험",
+          "실패 판정",
+          "격리·Rollback·재진입",
+          "측정 순서",
+          "결정",
+          "근거와 미측정값"
+        ]
+      },
+      "issues": [
+        "기존 개념 글은 조각 진위·인코딩·가용성 메커니즘과 구현 변경의 release gate를 한 경로에서 구분하지 않았습니다.",
+        "Peer 응답, custody, availability outcome과 실험 collector가 같은 상태를 고치지 않도록 authoritative writer를 분리할 필요가 있었습니다."
+      ],
+      "fixture": "같은 D0~D3와 (8,4) 확장 조각을 base와 candidate에 주고 정상·숨김·지연·잘못된 proof·wrong parity·중복 응답·재시작·rollback을 한 경계씩 독립 재생합니다.",
+      "stageEvidence": {
+        "0": "개념 글의 진위·인코딩·가용성, EIP-4844, PeerDAS, Celestia와 표본 전제 anchor에서 실무 질문을 엽니다.",
+        "1": "Protocol·encoding·commitment·network·corpus·runtime을 run manifest에 고정합니다.",
+        "2": "원문·확장 조각·proof·custody·peer response·availability outcome의 writer를 나눕니다.",
+        "3": "유효 조각 네 개의 proof와 복원 root, typed outcome을 정상 receipt로 남깁니다.",
+        "4": "Withholding·deadline·proof·parity·index·duplicate·restart를 한 번에 하나씩 바꿉니다.",
+        "5": "Candidate 격리, 기준선 rollback, 전체 fixture 재생과 잔류 상태 확인을 연결합니다.",
+        "6": "정합성·자원 경계·복구가 같아진 뒤에만 비용을 측정하고 proposed ADR을 판정합니다."
+      },
+      "sourceEvidence": [
+        "Ethereum consensus-specs v1.6.1의 Fulu DAS core와 EIP-4844·EIP-7594를 Ethereum 검증 기준으로 고정했습니다.",
+        "Celestia App v10.5.0의 data square layout을 2차원 구조 비교 기준으로 고정했고, 대상 환경의 성능·복구 결과는 [M] 미측정으로 분리했습니다."
+      ],
+      "verification": {
+        "substantiveReading": "개념 글의 여섯 anchor에서 시작해 환경, 상태 소유권, 기준선, 단일 장애, rollback, 미측정값과 ADR로 이어지는지 확인했습니다.",
+        "arithmetic": "설명용 (8,4) fixture 외에 성능 우위나 복구 시간을 만들지 않았고 bandwidth·CPU·memory·p95와 RTO를 [M] 미측정으로 남겼습니다.",
+        "humanize": "글별 학습·문장 호흡·한국어·용어·topology 감사를 통과했고 메커니즘 재설명 대신 실험·복구·운영 판단을 분리했습니다.",
+        "browser390": "390×844에서 문서·시각화 가로 넘침 0, 50×50px 조작부와 키보드 0→1 이동을 확인했습니다. Reduced-motion은 animation 0건이며 JavaScript 비활성 화면은 live 요소 0개와 정적 7장면을 제공합니다.",
+        "browser1440": "1440px에서 장면 0이 8.2초 유지되고 console 오류·경고 0건을 확인했습니다. Production build와 JavaScript 비활성 문서 폭 1440=1440을 확인했습니다."
+      },
+      "remaining": [
+        "GitHub Pages 공개 경로를 검증합니다."
+      ],
+      "reviewDisposition": "split-practice-release-gate-from-concept"
     },
     {
       "route": "blockchain/dag-consensus",
