@@ -3,14 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### 데이터 가용성 개념·실무 분리 로컬 검증 완료 (2026-10-29)
+### 데이터 가용성 개념·실무 분리 공개 검증 완료 (2026-10-29)
 
 - `blockchain/da-theory`는 `concept`, 새 `blockchain/da-validation`은 `practice`로 분리했습니다. 개념 글은 원본 D0~D3을 설명용 (8,4) 코드의 P4~P7까지 늘리고, D1·P4·P6·P7을 표본으로 받아 조각 증거를 확인한 뒤 원본을 복원하는 한 흐름을 추적합니다. 실무 글은 같은 조각을 base와 candidate에 재생해 숨김·지연·잘못된 proof·wrong parity·중복 응답·재시작과 rollback을 판정합니다.
 - 조각 진위성, 인코딩 유효성, 네트워크 가용성과 실행 유효성을 분리했습니다. EIP-4844는 전체 sidecar 수신, PeerDAS는 blob 행의 1차원 확장과 data column, Celestia 계열은 행·열을 모두 확장한 2차원 square라는 차이를 같은 비교 화면에 표시했습니다.
 - Ethereum consensus-specs v1.6.1 Fulu DAS core와 EIP-4844·EIP-7594, Celestia App v10.5.0 data square layout을 고정했습니다. 4÷8=1/2, 추가 공간 1, blob 4096×32=131072 bytes, 설명용 표본 실패 확률 (1−1/2)^10=1/1024를 가정과 함께 확인했습니다. 대상 환경의 bandwidth·CPU·memory·복구 시간은 `[M] 미측정`입니다.
 - 1,440px과 390×844에서 두 글의 문서 가로 넘침은 0입니다. 8.2초 동안 자동 재생되지 않았고 키보드로 0→1 이동했습니다. 모바일 live 본체는 개념 334×467px, 실무 334×392px이며 조작부는 50×50px입니다. Reduced-motion에서는 실행 중 animation이 0건이고 수동 이동은 유지됩니다.
 - Production build는 8,074개 module을 처리했습니다. 정적 public route 2,116개와 no-script 본문 330편을 생성했습니다. JavaScript 비활성 390px·1,440px 화면에서 두 글 모두 문서 폭이 viewport와 같고, live 요소는 0개이며 정적 7장면과 전체 본문이 남습니다.
-- 선택 ESLint, 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage strict 감사와 `git diff --check`를 통과했습니다. GitHub Pages 공개 경로 검증은 남아 있습니다.
+- 선택 ESLint, 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage strict 감사와 `git diff --check`를 통과했습니다. Commit `f72ac838139c1d528e3e3f8d1881fd4638bb9dd3`의 GitHub Pages run `40736327225`에서 전역 감사, production build, 공개 글 브라우저 검사와 배포가 모두 통과했습니다. 공개 개념·실무 경로를 390×844에서 다시 열어 HTTP 200, 문서 폭 390=390, 부모 지도와 console 오류 0건을 확인했습니다. 현재 두 글의 상태는 `rewritten-production-verified`입니다.
 
 ### Reth 네트워크 개념·실무 분리 로컬 검증 완료 (2026-10-29)
 
@@ -4174,3 +4174,25 @@
   키보드 0→1 이동, 50px 조작부와 console 오류 0건을 확인했습니다. reduced-motion에서는
   재생이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 공개 경로에도 정적 읽기
   안내, 직속 부모, 일곱 장면, 전체 본문과 부모 지도 반환이 남았습니다.
+
+### RAILGUN 개념·실무 묶음 로컬 검증 완료 (2026-10-29)
+
+- `railgun`은 값 10인 note 한 개가 값 6과 4인 새 note로 바뀌는 개념 글로,
+  `railgun-validation`은 같은 fixture로 contract·circuit·wallet engine 변경을 검증하는
+  실무 글로 분리했습니다. 두 글은 같은 부모 지도와 용어를 쓰며 실무 글은 개념 글의
+  note·nullifier·commitment·state anchor에서 시작합니다.
+- 개념 글은 Wallet이 가진 private witness와 계약에 공개되는 root·boundParams hash·nullifier·
+  commitment를 구분하고, 회로 검증에서 EVM state 반영까지 같은 거래를 일곱 장면으로
+  추적합니다. 실무 글은 고정 manifest, 정상 실행, nullifier 재사용, 결속 필드 변조,
+  동기화 중단, 호환 artifact 복구와 결정 순서로 구성했습니다. 대상 환경 측정이 없으므로
+  성능 우위는 `proposed`로 남겼습니다.
+- 두 그림은 사용자가 재생하기 전에는 시작하지 않고 마지막 장면에서 멈춥니다. 390×844와
+  1,440×1,000에서 일곱 장면을 모두 확인했으며 문서 가로 넘침, 그림 내부 잘림과 console
+  오류가 없습니다. 모바일 조작부는 49.5px이고 키보드 이동, 화면 이탈 정지, reduced-motion의
+  재생 비활성·수동 이동도 확인했습니다.
+- 학습 계약, 지식 그래프, topology, 읽기 순서, 시각화, 수식, 계산, 한국어, 용어와 런타임
+  감사를 통과했습니다. Production build는 8,080개 module과 정적 public route 2,118개,
+  no-script 본문 332편을 생성했고 최대 상주 메모리는 약 6.27GB, swap은 0이었습니다.
+  JavaScript 비활성 390×844와 1,440×1,000 화면에서는 두 글 모두 직속 부모, 일곱 정적 장면,
+  전체 본문과 부모 지도 반환이 보이며 live 조작부와 가로 넘침은 없습니다. 공개 배포와 공개
+  경로 재검증은 다음 단계입니다.

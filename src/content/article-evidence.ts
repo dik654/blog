@@ -7160,8 +7160,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 코드", label: "scroll-tech/zkevm-circuits @ 18f5bc2", href: "https://github.com/scroll-tech/zkevm-circuits/tree/18f5bc268ca11988690c7cf59fc4615372ce99f2", note: "Halo2 trace/table/gadget implementation의 pinned snapshot" },
   ],
   "blockchain/railgun": [
-    { kind: "공식 문서", label: "RAILGUN Protocol Wiki", href: "https://docs.railgun.org/wiki", note: "Shielded note·transaction·relayer architecture의 official documentation" },
-    { kind: "공식 코드", label: "Railgun-Privacy/contract @ 30da515", href: "https://github.com/Railgun-Privacy/contract/tree/30da51509975013720529ec146c3cecc0f87088b", note: "Commitment·nullifier·verifier contract state machine의 pinned source" },
+    { kind: "공식 코드", label: "Railgun-Privacy/contract @ 30da515", href: "https://github.com/Railgun-Privacy/contract/tree/30da51509975013720529ec146c3cecc0f87088b", note: "Transaction·BoundParams·commitment·historical root·verifier·nullifier와 tree update의 pinned source" },
+    { kind: "공식 코드", label: "Railgun-Privacy/circuits-v2 @ 0aa2d13", href: "https://github.com/Railgun-Privacy/circuits-v2/tree/0aa2d13763a9fcfbb7b7ea9c02e004e71f1394bb", note: "JoinSplit·Merkle membership·nullifier·signature·output commitment·balance constraints의 pinned source" },
+    { kind: "공식 문서", label: "RAILGUN Developer Guide · State Structure", href: "https://docs.railgun.org/developer-guide/engine-1/state-structure", note: "Commitment accumulator·nullifier mapping·historical roots와 Wallet/contract 역할의 current 공식 설명" },
+  ],
+  "blockchain/railgun-validation": [
+    { kind: "공식 코드", label: "Railgun-Privacy/contract @ 30da515", href: "https://github.com/Railgun-Privacy/contract/tree/30da51509975013720529ec146c3cecc0f87088b", note: "정상·wrong root·replay·domain·ciphertext·proof fixture의 contract oracle" },
+    { kind: "공식 코드", label: "Railgun-Privacy/circuits-v2 @ 0aa2d13", href: "https://github.com/Railgun-Privacy/circuits-v2/tree/0aa2d13763a9fcfbb7b7ea9c02e004e71f1394bb", note: "Balance·nullifier·membership negative witness와 circuit/key artifact를 고정하는 source oracle" },
+    { kind: "공식 문서", label: "RAILGUN Developer Guide · UX Private Transactions", href: "https://docs.railgun.org/developer-guide/wallet/transactions/ux-private-transactions", note: "Gas estimate·Broadcaster fee·proof·populate·submit와 fee expiry의 current 공식 순서" },
   ],
   "crypto/circom": [
     { kind: "핵심 논문", label: "Circom: A Circuit Description Language", href: "https://eprint.iacr.org/2020/1003.pdf", note: "Template·signal·constraint compiler design의 primary paper" },
