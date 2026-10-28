@@ -3,7 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Helios Store update 로컬 완료 (2026-10-29)
+### Helios state proof 검증 로컬 완료 (2026-10-29)
+
+- `blockchain/helios-state`를 검증된 execution block `H`에서 주소 `A`의 slot `5`가 값 `7`이 되는 한 요청으로 다시 썼습니다. Block hash 고정, state root `R`의 account proof, account가 확인한 storage root `S`의 slot proof, code hash 확인, 검증 후 cache와 typed Account 반환을 일곱 장면으로 연결했습니다.
+- 현재 Helios source는 account leaf를 직접 decode해 RPC field와 비교하지 않습니다. RPC의 nonce·balance·storage hash·code hash로 expected `TrieAccount`를 만들고 RLP-encode한 뒤 Alloy trie verifier에 전달합니다. Empty value의 exclusion proof와 잘린 proof, proof 성공과 current head·finality를 서로 다른 경계로 분리했습니다.
+- Helios commit `43a8c9f3cdda41a6f383c4db41d9a83f102638b1`의 `execution/proof.rs`, `providers/rpc.rs::get_account`, `cache/state.rs`를 고정했습니다. Account `(address, block_hash)`, storage `(storage_hash, slot)`, code `code_hash`의 서로 다른 유효 범위와 검증 뒤 insert 순서를 실제 코드 패널로 대조했습니다.
+- 1,440×1,000 production 화면에서 document 폭 1,440px, figure 711×753px이고 8.2초 동안 장면 0이 유지됐습니다. 390×844에서는 document 폭 390px, figure 354×604px, live 장면 334×291px이며 ArrowRight로 0→1이 이동했습니다. 두 화면 모두 가로 넘침과 console 오류가 없습니다.
+- Reduced-motion에서는 재생 버튼이 비활성화되고 실행 중 animation이 0이며 수동 이동은 유지됩니다. JavaScript 비활성 390×844 직접 경로에는 조작 버튼 없이 정적 일곱 장면, 직속 부모 지도, 반환 절과 전체 본문이 남습니다.
+- 전체 ESLint·TypeScript와 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어·runtime 검사를 통과했습니다. Production build는 8,091개 module, 2,118개 정적 공개 경로와 no-script 본문 337편을 생성했고 최대 RSS는 약 6.75GB, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Helios Store update 공개 검증 완료 (2026-10-29)
 
 - `blockchain/helios-update`를 검증된 `u-8193` 하나가 메모리 Store `T0`을 `T1`으로 바꾸는 개념 글로 다시 썼습니다. 후보 보존, optimistic 전진, full apply, committee 교대, checkpoint 반환을 일곱 장면으로 연결했습니다.
 - Optimistic threshold `342>max(380,400)/2=200`과 full apply `3×342=1026≥2×512=1024`를 서로 다른 판정으로 분리했습니다. Period `0→1`에서는 `K1`을 current, `K2`를 next로 옮기며, slot `8192 mod 32=0`에서는 checkpoint root를 반환합니다.
@@ -11,7 +20,7 @@
 - 390×844에서는 장면별 figure가 354×622~733px이고 조작부는 약 49.5px입니다. 1024×900에서는 본문 폭에 맞춰 축약 장면을 사용해 figure 높이를 1,039px에서 678px로 줄였습니다. 1440×1000에서는 전체 field 지도를 유지하며 세 화면 모두 가로 넘침과 내부 잘림이 없습니다.
 - 9.2초 동안 자동 재생되지 않았습니다. 명시적 재생 뒤 약 8.8초에 한 장면만 전진하고 일시정지 상태를 유지합니다. Reduced-motion은 재생과 Space를 막되 좌우 키 이동을 유지하며, 안정화 뒤 실행 중 animation은 0건입니다.
 - JavaScript 비활성 390×844·1440×1000 직접 경로는 HTTP 200, visible live 요소·버튼 0개, 정적 7장면, 직속 부모 지도·반환 절과 전체 본문을 제공합니다. Production build는 8,088개 module, 2,118개 정적 공개 경로와 no-script 본문 336편을 생성했고 최대 RSS는 약 6.76GB, swap은 0이었습니다.
-- 전체 ESLint와 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+- 전체 ESLint와 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. Commit `c9a12b1e`의 GitHub Pages run `40757101377`이 production build, 공개 1,006편 실제 브라우저 검사와 배포를 통과했습니다. 공개 Helios root·bootstrap·consensus·update 경로는 390×844에서 폭 일치와 console 오류 0건을 확인했고, update는 1440×1000·reduced-motion·JavaScript 비활성 정적 7장면까지 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Helios Consensus update 검증 로컬 완료 (2026-10-29)
 

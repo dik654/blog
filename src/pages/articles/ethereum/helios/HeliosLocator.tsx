@@ -92,6 +92,10 @@ export function HeliosMapReturn({ current }: { current: HeliosNodeId }) {
       ? "Checkpoint C 자체는 protocol 밖에서 고른 신뢰 입력입니다. Helios는 HTR(H)=C와 Fold(HTR(K),B)=H.state_root를 모두 확인한 뒤에만 H와 K로 LightClientStore S1을 만듭니다. 따라서 HTTP 성공이나 decode 성공은 Store를 바꾸는 근거가 아닙니다."
       : current === "helios-consensus"
         ? "Helios는 Store의 current·next committee로 update의 시간·period·Merkle branch·BLS signature를 먼저 검증합니다. 그 뒤 2/3 참여와 더 새로운 finality를 따로 확인해 optimistic·finalized header와 committee를 바꿉니다. 따라서 유효한 signature 하나가 곧 finalized Store를 뜻하지는 않습니다."
+      : current === "helios-update"
+        ? "검증된 update는 먼저 best 후보와 참여 최댓값을 남기고, safety threshold와 2/3 gate를 따로 적용해 optimistic·finalized header를 전진시킵니다. Finalized period가 바뀔 때만 증명된 next committee를 current로 넘깁니다. 따라서 Store 변경은 하나의 Boolean이나 전체 덮어쓰기가 아니라 조건별 field transition입니다."
+      : current === "helios-state"
+        ? "Helios는 선택한 block H의 header hash로 eth_getProof를 고정하고, header의 state root R에서 account를 먼저 검증합니다. 그 account가 묶은 storage root에서 slot proof를 다시 확인한 뒤에만 값을 반환·저장합니다. 따라서 RPC 응답 성공이나 오래된 valid proof만으로 현재 조회에 답할 수 없습니다."
       : "이 글에서 확인한 결과는 Helios 전체 지도의 해당 영역으로 돌아갑니다. 직속 부모에서 같은 block·root·request identity가 유지되는지 확인해야 다음 경로로 넘어갈 수 있습니다.";
 
   return (

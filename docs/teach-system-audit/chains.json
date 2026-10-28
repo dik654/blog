@@ -2827,8 +2827,8 @@
     },
     {
       "route": "blockchain/helios-state",
-      "title": "Helios State Proof & Merkle-Patricia 검증",
-      "status": "unreviewed",
+      "title": "Helios는 원격 state 값을 어떻게 검증할까요?",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-state.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-state.tsx",
@@ -2836,34 +2836,77 @@
         "src/pages/articles/ethereum/helios-state/Overview.tsx",
         "src/pages/articles/ethereum/helios-state/ProofDB.tsx",
         "src/pages/articles/ethereum/helios-state/ProofTrace.tsx",
-        "src/pages/articles/ethereum/helios-trust-flow-viz.tsx"
+        "src/pages/articles/ethereum/helios-state/viz/StateProofTraceViz.tsx",
+        "src/pages/articles/ethereum/helios-state/codeRefs.ts",
+        "src/pages/articles/ethereum/helios-state/fileTrees.ts",
+        "src/pages/articles/ethereum/helios-state/codebase/helios/execution/src/proof.rs",
+        "src/pages/articles/ethereum/helios-state/codebase/helios/execution/src/rpc_account.rs",
+        "src/pages/articles/ethereum/helios-state/codebase/helios/execution/src/state_cache.rs",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
         "predictionPointers": 0,
         "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "sourceButtons": 4,
         "headings": [
-          "{title}",
-          "\n        State proof는 원격 값을 검증된 block의 state root에 묶는다\n      ",
-          "{title}",
-          "{title}"
+          "원격 RPC의 slot 값이 검증된 블록에 속하는지 어떻게 확인할까요?",
+          "RPC 응답이 검증된 Account가 되는 순서",
+          "MPT proof가 root·key·value를 묶는 방법",
+          "검증 결과의 유효 범위와 실패 경계"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 여러 추상 설명과 오래된 합성 source snapshot을 나열해 하나의 slot 조회가 block anchor에서 typed Account 반환까지 가는 경로를 추적하기 어려웠습니다.",
+        "Account leaf를 Helios가 직접 decode해 RPC field와 비교하는 것처럼 설명했지만 현재 고정 source는 RPC field로 expected TrieAccount를 만들고 Alloy trie verifier에 전달합니다.",
+        "정상 exclusion proof와 truncated proof, proof 성공과 현재 head·finality를 구분하는 경계가 충분히 드러나지 않았습니다.",
+        "Account·storage·code cache의 서로 다른 identity와 검증 후 insert 순서가 시각화와 실제 코드로 연결되지 않았습니다."
+      ],
+      "fixture": {
+        "anchor": "검증된 execution block H와 header.state_root R",
+        "query": "address A, storage slot 5, with_code=true",
+        "claim": "RPC가 account fields, accountProof, storage value 7과 storageProof를 반환",
+        "result": "R→account A→storage root S→slot 5=value 7과 code hash C를 모두 검증한 뒤 typed Account 반환",
+        "assumption": "H·R·A·S·C와 slot 5·value 7은 순서를 설명하기 위한 기호이며 실제 네트워크 주소·root·측정값이 아닙니다."
+      },
+      "stageEvidence": {
+        "0": "검증된 block H의 state root R에서 address A와 slot 5를 확인하는 전체 root chain을 한 지도에 놓습니다.",
+        "1": "Block을 먼저 얻고 eth_getProof를 같은 header hash H에 고정해 움직이는 latest 별칭을 제거합니다.",
+        "2": "RPC의 nonce·balance·storage hash·code hash로 expected TrieAccount를 만들고 R 아래 accountProof를 검증합니다.",
+        "3": "앞 account proof가 확인한 storage root S만 사용해 slot 5의 expected value 7과 storageProof를 검증합니다.",
+        "4": "필요한 경우 받은 bytecode의 Keccak hash가 account proof에 묶인 code hash C와 같은지 확인합니다.",
+        "5": "검증을 통과한 뒤 account는 (A,H), storage는 (S,slot), code는 C를 identity로 cache에 저장합니다.",
+        "6": "모든 단계가 성공하면 typed Account를 반환하고, root·proof·code hash mismatch는 반환과 cache insert를 모두 막습니다.",
+        "failure": "온전한 exclusion proof는 정상 부재이지만 empty 배열·잘린 node·wrong root는 invalid proof이며 현재 head·finality 판단은 부모 consensus 상태에 남깁니다.",
+        "return": "Helios가 원격 값을 block-pinned proof chain으로 검증한 뒤에만 반환·cache한다는 사실을 직속 부모 지도에 돌려줍니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "a16z/helios commit 43a8c9f3cdda41a6f383c4db41d9a83f102638b1",
+          "application": "core/src/execution/proof.rs, providers/rpc.rs의 get_account, cache/state.rs의 key와 verified insert를 고정 source에 대조했습니다.",
+          "boundary": "확인한 것은 선택한 source snapshot의 proof·RPC·cache 구현입니다. 대상 환경 성능, provider availability, current head·finality를 주장하지 않습니다."
+        },
+        {
+          "source": "EIP-1186과 Ethereum Yellow Paper efc5f9a1",
+          "application": "eth_getProof envelope, secure trie와 account의 nonce·balance·storage root·code hash 구조를 공식 자료에 대조했습니다.",
+          "boundary": "EIP envelope와 state commitment는 Helios cache 정책이나 운영 배포 판단을 규정하지 않습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 고정 Helios source를 다시 읽고 block H의 slot 5 요청 하나가 account·storage·code proof를 지나 typed Account가 되는 순서로 재작성했습니다.",
+        "arithmetic": "State proof 글에는 대상 환경 성능 계산이 없습니다. 32-byte Keccak key가 64개 nibble path가 되는 encoding 관계만 설명하며 측정값으로 확대하지 않습니다.",
+        "humanize": "전역 한국어 strict 감사 오류 0을 확인했고 번역투 표현과 오래된 직접-decode 설명을 제거했습니다.",
+        "browser390": "390×844 production 화면에서 document 390=390, figure 354×604px, live 334×291px, 모바일 조작부와 ArrowRight 0→1 이동을 확인했습니다.",
+        "browser1440": "1440×1000 production 화면에서 document 1440=1440, figure 711×753px, 8.2초 무자동재생, ArrowRight 0→1과 console 오류 0을 확인했습니다.",
+        "motion": "Reduced-motion에서 재생 버튼이 비활성화되고 running animation 0이며 수동 ArrowRight 0→1은 유지됩니다.",
+        "sourceBytes": "proof.rs의 account·storage·code·MPT wrapper, providers/rpc.rs get_account와 cache/state.rs의 identity·insert body를 고정 commit과 대조했습니다.",
+        "static": "TypeScript·Vite production build는 8,091 modules·2,118 static public routes를 생성했고 최대 RSS 약 6.75GB, swap 0이었습니다. 경로 목록 반영 뒤 no-script 본문은 337편이 되었고 JavaScript 비활성 390×844 직접 경로에서 정적 읽기 모드, 일곱 장면, locator·return-map과 전체 본문을 확인했습니다.",
+        "audits": "learning·graph·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime·formula·calculations·pseudocode와 전체 ESLint·TypeScript를 통과했습니다. 공용 locator 때문에 지문만 바뀐 다음 Helios 세 글은 기존 문장 신호를 다시 확인해 같은 점수로 baseline을 갱신했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/helios-types",
@@ -2909,7 +2952,7 @@
     {
       "route": "blockchain/helios-update",
       "title": "검증된 Helios update는 Store를 어떻게 바꿀까요?",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-update.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-update.tsx",
@@ -2980,11 +3023,10 @@
         "motion": "9.2초 동안 자동 재생되지 않았습니다. 사용자 재생 뒤 약 8.8초에 한 장면만 전진했고 일시정지 상태를 유지했습니다. Reduced-motion은 재생·Space를 막고 수동 좌우 이동을 유지하며 안정화 뒤 running animation 0입니다.",
         "sourceBytes": "로컬 apply excerpt와 update_ordering.rs는 고정 commit의 해당 line range와 차이가 없습니다.",
         "static": "TypeScript·Vite build는 8,088 modules·2,118 static public routes와 no-script 본문 336편을 생성했습니다. JavaScript 비활성 390×844·1440×1000 직접 경로는 HTTP 200, document 폭 일치, visible live 요소·버튼 0개, 정적 7장면, 부모 지도·반환 절과 전체 본문을 유지합니다.",
-        "audits": "전체 ESLint, viz·learning·graph·formula·calculations·pseudocode·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime strict 감사와 git diff --check를 통과했습니다. Build 최대 RSS는 약 6.76GB이고 swap은 0입니다."
+        "audits": "전체 ESLint, viz·learning·graph·formula·calculations·pseudocode·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime strict 감사와 git diff --check를 통과했습니다. Build 최대 RSS는 약 6.76GB이고 swap은 0입니다.",
+        "production": "Commit c9a12b1e의 GitHub Pages run 40757101377이 전역 감사·production build·공개 1,006편 실제 브라우저 검사와 배포를 통과했습니다. 공개 Helios root·bootstrap·consensus·update 경로는 390×844에서 HTTP 200, document 폭 390=390, 현재 concept locator와 console 오류 0건을 확인했습니다. Update는 1440×1000과 390×844에서 자동 재생 없이 장면 0을 유지하고 ArrowRight 0→1, reduced-motion 수동 이동, JavaScript 비활성 정적 7장면과 전체 본문을 유지합니다."
       },
-      "remaining": [
-        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
-      ],
+      "remaining": [],
       "reviewDisposition": "substantively-rewritten"
     },
     {
