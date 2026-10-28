@@ -431,9 +431,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     status: "reviewed",
     reviewedAt: "2026-10-27",
     rationale:
-      "Old canonical chain의 transaction을 찾고 local receipt로 sidecar를 다시 결합해 hit이면 재주입하고 miss면 fetch 또는 실패한 뒤 failure parity로 release를 판단하는 하나의 복구 경로입니다. Reorg recovery와 release gate가 같은 trace와 rollback 조건을 공유하므로 분리하면 운영 판단의 근거가 끊깁니다.",
+      "Old canonical chain에는 있고 new chain에는 없는 Blob transaction body를 고르고 local BlobStore의 sidecar를 다시 붙인 뒤, new canonical state를 먼저 반영해 Pool admission을 다시 수행하고 tracker·finality cleanup까지 잇는 하나의 개념 경로입니다. 특정 환경의 release 판단은 이 글에서 분리합니다.",
     sharedGate:
-      "같은 Reth release·ChainSpec·KZG backend·storage schema에서 body·sidecar·receipt generation을 고정하고 wrong hash·proof·fee·corruption·cleanup crash를 같은 순서로 재생합니다. EL local retention을 CL availability·archive SLA로 일반화하지 않습니다.",
+      "Reth v2.8.1 source commit·ChainSpec·Pool backend를 고정하고 old−new 차집합, get_blob hit·miss, try_from_eip4844, update-first 순서, tracker 교체와 finality 삭제를 같은 T₀·H₀·S₀ fixture로 추적합니다. Source에 없는 receipt·generation·network fetch를 구현 사실로 추가하지 않고 EL local retention을 CL availability·archive SLA로 일반화하지 않습니다.",
   },
   "blockchain/reth-db": {
     action: "split",
@@ -4023,7 +4023,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/mdbx-internals": "53f56a767f72651b",
   "blockchain/mdbx-validation": "e1da7d714babffc2",
   "blockchain/reth-blob-admission": "8ff32e48be1a73aa",
-  "blockchain/reth-blob-reorg-release": "f41612453549bc3d",
+  "blockchain/reth-blob-reorg-release": "8d73d573ff4f108d",
   "blockchain/reth-blob-storage": "62d28a887365e4ac",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",

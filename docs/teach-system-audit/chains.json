@@ -5145,40 +5145,74 @@
     },
     {
       "route": "blockchain/reth-blob-reorg-release",
-      "title": "Reth Blob Reorg · Retention과 Release Gate",
-      "status": "unreviewed",
+      "title": "Reth Blob Reorg · 재주입과 정리",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-blob-reorg-release.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-blob-reorg-release.tsx",
         "src/pages/articles/ethereum/reth-blob-reorg-release/ModernArticle.tsx",
-        "src/pages/articles/ethereum/reth-blob-reorg-release/fileTree.ts"
+        "src/pages/articles/ethereum/reth-blob-reorg-release/BlobReorgTraceViz.tsx",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/fileTree.ts",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codebase/reth-v2.8.1/maintain-reorg.rs",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codebase/reth-v2.8.1/maintain-finality.rs",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codebase/reth-v2.8.1/validate-missing.rs",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codebase/reth-v2.8.1/tracker.rs",
+        "src/pages/articles/ethereum/reth-blob-reorg-release/codebase/reth-v2.8.1/PINNED.md",
+        "src/content/reth-eip4844-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 5,
+        "assumptionMarkers": 1,
+        "sourceButtons": 4,
         "headings": [
-          "Reorg는 transaction과 sidecar의 생명주기를 다시 결합합니다",
-          "Body, sidecar, receipt가 모두 있어야 fast reinsert가 열립니다",
-          "Release gate는 빠른 후보보다 같은 실패 결정을 먼저 요구합니다",
-          "구현 근거"
+          "이전 블록에서 빠진 Blob transaction은 sidecar와 어떻게 다시 만납니까?",
+          "이전 체인과 새 체인의 차집합",
+          "Body와 sidecar 재결합",
+          "S₀가 없으면 어떻게 됩니까?",
+          "새 state를 먼저 반영합니다",
+          "다시 포함된 뒤 정리",
+          "실제 실패 동작",
+          "근거 범위"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 실제 Reth v2.8.1 구현에 없는 sidecar receipt와 generation을 재주입 조건처럼 설명했습니다.",
+        "Local BlobStore miss 뒤 network fetch로 복구되는 것처럼 썼지만 reorg maintenance 함수에는 그런 경로가 없습니다.",
+        "Old-chain transaction 회수, sidecar 재결합, new canonical state 반영, Pool admission과 finality cleanup의 상태 소유권과 순서를 한 문단에 합쳐 실제 실패 경계를 숨겼습니다."
+      ],
+      "fixture": {
+        "case": "Transaction T0와 sidecar S0가 hash H0로 연결돼 있습니다. T0가 old canonical block 100에는 들어 있지만 reorg 뒤 선택된 block 100′에는 없고, block 101에서 다시 포함되는 흐름을 추적합니다.",
+        "assumption": "T0, S0, H0와 block 100·100′·101은 설명용 식별자이며 실제 transaction hash, block height, reorg 빈도나 보존 기간을 뜻하지 않습니다."
+      },
+      "stageEvidence": {
+        "0": "직속 부모 EIP-4844 Blob 제출 지도에서 Reorg와 회수를 현재 영역으로 표시하고 T0, S0, H0를 처음 정의합니다.",
+        "1": "T0와 S0의 hash 결합, old canonical 포함, reorg, old−new 차집합, sidecar 재결합, new-state admission과 finality cleanup을 일곱 장면으로 고정합니다.",
+        "2": "BlobStore miss·error, try_from_eip4844 실패, admission 재실패와 tracker 교체 누락을 서로 다른 실패 동작으로 분리합니다.",
+        "3": "CanonStateNotification::Reorg, get_blob, try_from_eip4844, on_canonical_state_change, add_external_transactions와 BlobStoreCanonTracker 이름을 실제 역할 뒤에 붙입니다.",
+        "4": "Old−new transaction hash 차집합과 body·sidecar 재결합을 같은 H0로 추적하고, 새 canonical state를 먼저 반영하는 순서를 설명합니다.",
+        "5/6": "Reth v2.8.1 고정 source에서 reorg maintenance, Missing validation, tracker 교체와 finality cleanup을 본문 주장 옆 코드 패널로 대조합니다.",
+        "7": "Local execution-client Pool의 retention 경계와 consensus availability·P2P 재수집·영구 archive의 경계를 부모 지도에 반환합니다.",
+        "S": "직속 부모, 현재 영역, 앞 글 BlobStore와 다음 글 Payload builder를 같은 curriculum locator에서 보여 줍니다.",
+        "B": "본문보다 먼저 같은 transaction이 포함·고아화·재주입·정리되는 전체 흐름을 시각화합니다."
+      },
+      "sourceEvidence": [
+        "2026-10-23 Reth v2.8.1 tag의 source commit d763342fa185e4e90ee79dc65f6a5706168b0bcb을 고정했습니다.",
+        "transaction-pool maintain.rs의 old−new 차집합, get_blob, try_from_eip4844, canonical state update, external reinsertion과 finality cleanup을 exact source excerpt로 대조했습니다.",
+        "validate/eth.rs의 Missing sidecar local-store 확인과 blobstore/tracker.rs의 같은 높이 교체·finalized hash 배출을 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 Reth v2.8.1 고정 소스를 모두 읽고 합성 receipt·generation·network fetch 설명을 제거했으며 실제 상태 소유권과 재주입 순서로 교체했습니다.",
+        "arithmetic": "이 글은 성능 수치를 주장하지 않습니다. T0, S0, H0와 block 100·100′·101은 생명주기를 연결하기 위한 설명용 fixture입니다.",
+        "humanize": "학습 계약, 지식 그래프, 글 구조, 문장 호흡, 한국어 자연스러움, 용어, 읽기 순서, runtime, 시각화, topology와 architecture-flow strict 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 일곱 장면의 내부 overflow 0, 약 49.5px 조작부, 8.2초 무자동재생과 키보드 0→1 이동을 확인했습니다. Reduced-motion에서는 실행 중 animation 0, 재생 비활성, 수동 이동 유지를 확인했습니다. JavaScript 비활성 화면은 정적 읽기 모드, 부모 locator, 질문과 fixture, 일곱 정적 장면과 본문을 같은 순서로 표시합니다.",
+        "browser1440": "1440×1000에서 문서 가로 넘침 0, 시각화 664×627px, 장면 상태 유지와 실제 Reth v2.8.1 source sidebar를 확인했습니다. TypeScript 전체 검사는 최대 상주 메모리 약 6.52GB, production build와 정적 생성은 약 1.45GB였고 둘 다 swap은 0이었습니다. Build는 8,057 modules·정적 public route 2,106개·no-script 본문 320편을 생성했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 모바일·데스크톱·reduced-motion·JavaScript 비활성 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-version-pinned-reorg-reinsert-retention-trace"
     },
     {
       "route": "blockchain/reth-blob-storage",

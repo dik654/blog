@@ -1,85 +1,292 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import TermBreakdown from "@/components/articles/term-breakdown";
-import { CitationBlock } from "@/components/ui/citation-block";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
-import { BlobReorgReleaseViz } from "../reth-eip4844/viz/ModernEip4844Viz";
+import type { ProjectMeta } from "@/components/code/types";
+import { CitationBlock } from "@/components/ui/citation-block";
+import RethEip4844Locator, {
+  RethEip4844MapReturn,
+} from "../reth-eip4844/RethEip4844Locator";
+import BlobReorgTraceViz from "./BlobReorgTraceViz";
 import { codeRefs } from "./codeRefs";
 import { rethBlobReorgReleaseTree } from "./fileTree";
 
-const RETH_SOURCE = "https://github.com/paradigmxyz/reth";
-const RETH_PROJECT_META = {
-  reth: { id: "reth", label: "Reth · Rust", badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700" },
+const PROJECT_META: Record<string, ProjectMeta> = {
+  reth: {
+    id: "reth",
+    label: "Reth v2.8.1 · Rust",
+    badgeClass: "bg-orange-500/10 border-orange-500 text-orange-700",
+  },
 };
+
+function CodeLink({
+  codeKey,
+  label,
+  open,
+}: {
+  codeKey: keyof typeof codeRefs;
+  label: string;
+  open: (key: string, ref: (typeof codeRefs)[string]) => void;
+}) {
+  return (
+    <div className="not-prose flex flex-wrap items-center gap-2">
+      <CodeViewButton onClick={() => open(codeKey, codeRefs[codeKey])} />
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </div>
+  );
+}
 
 export default function ModernBlobReorgRelease() {
   const sidebar = useCodeSidebar();
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">
-            Canonical chain이 바뀌어도 blob transaction을 다시 실행할 수 있게 만들기
-          </p><h2 className="text-3xl font-bold tracking-tight">Reorg는 transaction과 sidecar의 생명주기를 다시 결합합니다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90"><strong>Reorg</strong>는 이전 canonical branch의 block이 빠지고 다른 branch가 canonical이 되는 사건입니다. Orphaned 일반 transaction은 body를 pool에 되돌릴 수 있지만, blob transaction은 대응 sidecar도 다시 확보해야 완전한 후보가 됩니다.</p>
-      <TermBreakdown title="Reorg에서 따로 추적할 네 상태" items={[
-        { term: "Orphaned transaction", description: "Old canonical block에서 빠져 다시 pool 후보가 될 type-3 transaction body입니다." },
-        { term: "Sidecar receipt", description: "Local store에 같은 transaction의 검증된 blob artifact가 남아 있다는 기록입니다." },
-        { term: "Fetch outcome", description: "Local miss 뒤 network에서 sidecar를 다시 얻었는지 또는 unavailable인지 나타냅니다." },
-        { term: "Reinsert outcome", description: "새 head의 nonce·fee·fork·pool budget에서 다시 admission됐는지 기록합니다.", boundary: "Old block에서 유효했다는 사실이 새 head admission을 보장하지 않습니다." },
-      ]} />
-      <BlobReorgReleaseViz />
-      <div className="not-prose flex flex-wrap items-center gap-2">
-        <CodeViewButton onClick={() => sidebar.open("canon-tracker", codeRefs["canon-tracker"])} />
-        <span className="text-xs text-muted-foreground">BlobStoreCanonTracker — 블록별 blob TX 추적</span>
-      </div>
-      <ContentBoundary article="reth-blob-reorg-release" />
-    </section>
-    <section id="reinsert" className="space-y-6">
-      <h2 className="text-2xl font-bold">Body, sidecar, receipt가 모두 있어야 fast reinsert가 열립니다</h2>
-      <ExplainedFormula question="어떤 orphaned blob transaction을 network fetch 없이 바로 재주입할 수 있나요?" idea={<p>
-            Old chain에서 빠진 body, local sidecar, 같은 generation의 verified receipt를 별도로 확인합니다. 세 조건을 모두 통과할 때만
-            fast path를 엽니다.
-          </p>} formula={String.raw`I_{fast}=I_{orphan}\land I_{sidecar}\land I_{receipt}`} annotatedFormula={String.raw`\begin{aligned}I_{artifact}&=\underbrace{I_{sidecar}\land I_{receipt}}_{\text{local bytes와 검증 provenance를 함께 확인}}\\I_{fast}&=\underbrace{I_{orphan}\land I_{artifact}}_{\text{old-chain body와 reusable artifact를 결합}}\\I_{miss}&=\underbrace{1-I_{artifact}}_{\text{fast path 없으면 fetch·failure로 전환}}
-\end{aligned}`} operations={[
-        { expression: String.raw`I_{sidecar}\land I_{receipt}`, annotation: ["sidecar 존재와 receipt 일치를 AND해", "재사용 가능한 artifact를 판정"] },
-        { expression: String.raw`I_{orphan}\land I_{artifact}`, annotation: ["orphaned body와 artifact를 결합해", "fast reinsert eligibility를 생성"] },
-        { expression: String.raw`1-I_{artifact}`, annotation: ["artifact 판정을 뒤집어", "fetch/failure path를 선택"] },
-      ]} terms={[
-        { symbol: String.raw`I_{orphan}`, name: "Orphan indicator", description: "Transaction이 old canonical branch에서 빠졌으면 1입니다." },
-        { symbol: String.raw`I_{sidecar}`, name: "Sidecar indicator", description: "Local store에 대응 bytes가 있으면 1입니다." },
-        { symbol: String.raw`I_{receipt}`, name: "Receipt indicator", description: "Digest·fork·validator generation이 재사용 조건과 맞으면 1입니다." },
-      ]} assumptions={["세 indicator는 같은 transaction hash와 reorg generation을 가리킵니다.", "Fast path 뒤에도 새 head-relative nonce·fee·pool admission을 다시 검사합니다."]} interpretation="Body만 있고 sidecar가 없으면 I_fast=0입니다. Versioned hash에서 blob을 복원하지 않고 fetch 성공 또는 unavailable failure를 명시합니다." />
-      <div className="not-prose flex flex-wrap items-center gap-2">
-        <CodeViewButton onClick={() => sidebar.open("reinsert-sidecar-check", codeRefs["reinsert-sidecar-check"])} />
-        <span className="text-xs text-muted-foreground">blob_store.contains() — I_sidecar의 실제 구현</span>
-      </div>
-    </section>
-    <section id="release-gate" className="space-y-6">
-      <h2 className="text-2xl font-bold">Release gate는 빠른 후보보다 같은 실패 결정을 먼저 요구합니다</h2>
-      <p>새 store나 admission 최적화를 배포할 때 happy path throughput부터 보지 않습니다. 동일 transaction·sidecar·fork·reorg schedule에 wrong hash, bad proof, fee boundary, local corruption, cache miss, cleanup crash를 주입하고 baseline과 candidate의 결과를 비교합니다.</p>
-      <TermBreakdown title="승인 전에 맞춰야 하는 결과" items={[
-        { term: "Admission parity", description: "같은 입력이 같은 reason code로 accept 또는 reject됩니다." },
-        { term: "Artifact parity", description: "Stored bytes, digest, generation과 cleanup 결과가 같습니다." },
-        { term: "Restart parity", description: "각 crash point 뒤 같은 terminal state와 retry decision으로 수렴합니다." },
-        { term: "Performance result", description: "위 parity를 통과한 뒤 p95 latency, memory, disk를 비교합니다.", boundary: "평균 처리량만 좋아진 candidate를 승인하지 않습니다." },
-      ]} />
-      <div className="not-prose flex flex-wrap items-center gap-2">
-        <CodeViewButton onClick={() => sidebar.open("header-blob-gas", codeRefs["header-blob-gas"])} />
-        <span className="text-xs text-muted-foreground">validate_cancun_gas() — reorg 뒤에도 유지돼야 할 parity</span>
-      </div>
-      <div className="not-prose flex flex-wrap items-center gap-2">
-        <CodeViewButton onClick={() => sidebar.open("header-4844-standalone", codeRefs["header-4844-standalone"])} />
-        <span className="text-xs text-muted-foreground">validate_4844_header_standalone() — 네 가지 독립 불변식</span>
-      </div>
-    </section>
-    <section id="paper-reth-blob-reorg" className="space-y-5"><h2 className="text-2xl font-bold">구현 근거</h2><CitationBlock type="code" citeKey={1} source="Reth repository · blob pool lifecycle" href={RETH_SOURCE}><p><strong>문제:</strong> Canonical reorg와 finalization 사이에서 blob transaction body와 sidecar retention을 일관되게 관리해야 합니다.</p><p><strong>핵심 기여:</strong> Reth node, pool, chain notification과 storage implementation을 end-to-end source로 제공합니다.</p><p><strong>중요 가정:</strong> 같은 release/SHA, ChainSpec, KZG backend와 storage schema를 고정합니다.</p><p><strong>근거 범위:</strong> 선택한 Reth snapshot의 local reinsert·cleanup behavior입니다.</p><p><strong>일반화 금지:</strong> EL pool retention을 CL availability·archive retention이나 network fetch SLA로 확대하지 않습니다.</p></CitationBlock></section>
-    <CodeSidebar
-      codeRefKey={sidebar.codeRefKey}
-      codeRef={sidebar.codeRef}
-      onClose={sidebar.close}
-      onNavigate={sidebar.navigate}
-      codeRefs={codeRefs}
-      fileTrees={{ reth: rethBlobReorgReleaseTree }}
-      projectMetas={RETH_PROJECT_META}
-    />
-  </article>;
+
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="scroll-mt-20 space-y-5">
+        <RethEip4844Locator current="reth-blob-reorg-release" />
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 break-keep text-3xl font-bold">
+            이전 블록에서 빠진 Blob transaction은 sidecar와 어떻게 다시 만납니까?
+          </h2>
+        </div>
+        <p className="text-lg leading-8">
+          앞 글에서 Blob transaction과 sidecar를 transaction hash로 보관하는 경로를
+          확인했습니다. 이 글에서는 예시 transaction을 T₀, sidecar를 S₀, transaction
+          hash를 H₀라고 부릅니다. 세 이름과 block 100·100′·101은 설명용 fixture입니다.
+        </p>
+        <p className="text-lg leading-8">
+          T₀가 old canonical block 100에 포함됐지만 reorg 뒤 선택된 new block 100′에는
+          들어 있지 않다고 하겠습니다. Reth는 old block의 body에서 T₀를 되찾고 local
+          BlobStore의 S₀를 붙여야 T₀를 Pool 후보로 되돌릴 수 있습니다.
+        </p>
+        <BlobReorgTraceViz />
+        <p>
+          기존 글은 별도 <code>sidecar receipt</code>와 <code>generation</code>을 확인하고,
+          local miss 뒤 network fetch로 넘어가는 것처럼 설명했습니다. Reth v2.8.1의 이
+          경로에는 그런 상태가 없습니다. 실제 분기는 <code>get_blob(H₀)</code>가 S₀를
+          반환하는지이며, miss나 store error는 이 local reinsert 후보를 만들지 못합니다.
+        </p>
+        <ContentBoundary article="reth-blob-reorg-release" />
+      </section>
+
+      <section id="old-new" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">이전 체인과 새 체인의 차집합</h2>
+        <p>
+          <code>CanonStateNotification::Reorg</code>는 old chain과 new chain을 함께
+          전달합니다. Reth는 먼저 new chain에 포함된 transaction hash를 집합으로 만든 뒤,
+          old chain의 transaction 가운데 그 집합에 없는 것만 고릅니다. T₀의 H₀가 new
+          집합에 없으므로 T₀는 <code>pruned_old_transactions</code> 후보가 됩니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px text-sm sm:grid-cols-3">
+          {[
+            ["Old block 100", "{H₀} · T₀가 이전 canonical block에 포함"],
+            ["New block 100′", "{} · H₀가 새 canonical branch에는 없음"],
+            ["Old − New", "{H₀} · Pool에 되돌릴 후보"],
+          ].map(([title, detail]) => (
+            <div key={title} className="bg-background p-4">
+              <strong className="block text-primary">{title}</strong>
+              <span className="mt-2 block break-keep text-muted-foreground">{detail}</span>
+            </div>
+          ))}
+        </div>
+        <p>
+          이 비교는 “old block에서 유효했으므로 항상 다시 넣는다”는 뜻이 아닙니다. New tip의
+          nonce·balance·base fee와 Pool 정책이 이미 달라졌을 수 있습니다. 차집합은 재검사할
+          후보를 고를 뿐 최종 admission을 보장하지 않습니다.
+        </p>
+      </section>
+
+      <section id="reinsert" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">Body와 sidecar 재결합</h2>
+        <p>
+          일반 transaction은 old block의 body만으로 Pool transaction을 다시 만들 수
+          있습니다. Blob transaction은 다릅니다. Block에는 Blob bytes가 없으므로 Reth는
+          <code>pool.get_blob(H₀)</code>로 local S₀를 읽고
+          <code>try_from_eip4844(T₀, S₀)</code>를 호출합니다. 주석에 적힌 직접적인 이유는
+          network 전파에 쓰는 encoded length를 정확히 계산하기 위해서입니다.
+        </p>
+        <TermBreakdown
+          title="재결합할 때 소유자가 다른 세 상태"
+          items={[
+            {
+              term: "Old-chain body",
+              description: "Old block이 제공하는 signed transaction T₀와 sender입니다.",
+              boundary: "Body에는 실제 Blob bytes와 KZG proof가 들어 있지 않습니다.",
+            },
+            {
+              term: "Local BlobStore",
+              description: "H₀를 key로 이전에 검증해 넣은 sidecar S₀를 돌려줍니다.",
+              boundary: "Local miss를 versioned hash만으로 복원할 수는 없습니다.",
+            },
+            {
+              term: "Transaction Pool",
+              description: "T₀와 S₀를 결합한 후보를 new tip 기준으로 다시 admission합니다.",
+              boundary: "Reorg 전 local·external origin은 잃으므로 external transaction으로 넣습니다.",
+            },
+          ]}
+        />
+        <CodeLink
+          codeKey="reorg-maintain"
+          label="Reth v2.8.1 · old−new 차집합, get_blob, state update와 재주입 순서"
+          open={sidebar.open}
+        />
+      </section>
+
+      <section id="missing-sidecar" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">S₀가 없으면 어떻게 됩니까?</h2>
+        <p>
+          Reorg maintenance의 <code>get_blob(H₀).ok().flatten()</code>은 store error와
+          <code>None</code>을 모두 sidecar 없음으로 바꿉니다. 이어지는
+          <code>filter_map</code>에서 T₀는 재주입 목록에 들어가지 않습니다. 이 함수는 peer에
+          S₀를 요청하거나 빈 sidecar를 만들어 대신 넣지 않습니다.
+        </p>
+        <p>
+          별도의 validation 경로에서 transaction이 <code>Missing</code> sidecar variant로
+          들어오면 <code>blob_store.contains(H₀)</code>를 확인합니다. 존재하면 이전 검증과
+          저장을 신뢰해 계속 진행하고, 없으면 <code>MissingEip4844BlobSidecar</code>로
+          거부합니다. 이것은 별도 receipt를 검증하는 구조가 아니라 local store 존재 여부에
+          기대는 구현입니다.
+        </p>
+        <CodeLink
+          codeKey="validate-missing"
+          label="Reth v2.8.1 · Missing sidecar의 local store hit와 typed rejection"
+          open={sidebar.open}
+        />
+      </section>
+
+      <section id="update-order" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">새 state를 먼저 반영합니다</h2>
+        <p>
+          재구성한 T₀를 곧바로 넣지 않습니다. Reth는 먼저 new tip, 새 base fee와 Blob fee,
+          changed accounts, new chain에서 mined된 transaction을
+          <code>on_canonical_state_change</code>로 Pool에 반영합니다. 그다음 T₀를
+          <code>add_external_transactions</code>로 넣습니다. 이 순서 덕분에 T₀는 old state가
+          아니라 new canonical state를 기준으로 다시 검사됩니다.
+        </p>
+        <div className="not-prose border-y border-border py-5">
+          <ol className="grid gap-3 text-sm sm:grid-cols-3">
+            {[
+              ["01", "New state", "새 tip·fee·account와 mined hash 반영"],
+              ["02", "Reinsert", "T₀+S₀를 external origin으로 admission"],
+              ["03", "Tracker", "높이 100의 기록을 100′ 내용으로 교체"],
+            ].map(([number, title, detail]) => (
+              <li key={number} className="border border-border p-4">
+                <span className="font-mono text-[9px] font-black text-primary">{number}</span>
+                <strong className="mt-1 block">{title}</strong>
+                <span className="mt-2 block break-keep text-xs leading-5 text-muted-foreground">
+                  {detail}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <p>
+          Tracker도 같은 높이 100의 old 기록 <code>[H₀]</code>를 new block 100′의 빈
+          목록으로 교체합니다. 그렇지 않으면 block 100′이 finalized될 때 아직 Pool에서 다시
+          대기 중인 T₀의 S₀를 잘못 지울 수 있습니다.
+        </p>
+      </section>
+
+      <section id="finality" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">다시 포함된 뒤 정리</h2>
+        <p>
+          Fixture를 한 단계 더 진행해 T₀가 block 101에 다시 포함됐다고 하겠습니다. Tracker는
+          <code>101 → [H₀]</code>를 기록합니다. Finalized height가 101에 도달하면
+          <code>on_finalized_block(101)</code>이 H₀를 <code>Finalized</code> update로
+          내보내고, maintenance loop가 <code>delete_blobs</code>와 background
+          <code>cleanup_blobs</code>를 실행합니다.
+        </p>
+        <p>
+          T₀가 다시 포함되지 않고 Pool에 오래 남는 경우에는 finality tracker가 아니라 stale
+          transaction eviction이 sidecar 삭제를 맡습니다. 두 경로 모두 local transaction
+          pool 수명주기이며, consensus layer의 Blob availability나 영구 archive 보존 기간을
+          결정하지 않습니다.
+        </p>
+        <div className="not-prose flex flex-wrap gap-2">
+          <CodeLink
+            codeKey="tracker"
+            label="Reth v2.8.1 · 같은 높이 교체와 finalized hash 배출"
+            open={sidebar.open}
+          />
+          <CodeLink
+            codeKey="finality-maintain"
+            label="Reth v2.8.1 · delete_blobs와 background cleanup 연결"
+            open={sidebar.open}
+          />
+        </div>
+      </section>
+
+      <section id="failure-boundaries" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">실제 실패 동작</h2>
+        <TermBreakdown
+          title="코드가 감추지 않는 네 경계"
+          items={[
+            {
+              term: "BlobStore miss 또는 error",
+              description: "Reorg maintenance에서는 둘 다 재결합 실패가 되어 T₀가 후보 목록에서 빠집니다.",
+              boundary: "이 함수 내부의 network fetch나 자동 복구로 이어지지 않습니다.",
+            },
+            {
+              term: "재구성 실패",
+              description: "try_from_eip4844가 실패하면 filter_map이 T₀를 제외합니다.",
+              boundary: "Old block에 있었다는 사실만으로 잘못된 후보를 강제로 넣지 않습니다.",
+            },
+            {
+              term: "Admission 재실패",
+              description: "add_external_transactions는 new state 기준의 정상 Pool 검사를 다시 거칩니다.",
+              boundary: "Reinserted metric은 만든 후보 수이며 최종 accepted 수와 같은 뜻이 아닙니다.",
+            },
+            {
+              term: "Tracker 교체 누락",
+              description: "Reorg new chain 기록으로 같은 높이를 덮어써야 finality 삭제 대상이 맞아집니다.",
+              boundary: "Block number만 보고 old와 new canonical 내용을 동시에 유지하지 않습니다.",
+            },
+          ]}
+        />
+      </section>
+
+      <section id="source" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">근거 범위</h2>
+        <CitationBlock
+          type="code"
+          citeKey={1}
+          source="Reth v2.8.1 · d763342fa185 · transaction-pool maintenance"
+          href="https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/transaction-pool/src/maintain.rs"
+        >
+          <p>
+            <b>확인한 범위:</b> Reorg의 old−new 차집합부터 finality cleanup까지
+            확인했습니다. BlobStore 조회, transaction 재구성, canonical state update와
+            tracker 교체도 범위에 포함합니다.
+          </p>
+          <p>
+            <b>고정 조건:</b> 2026-10-23에 게시된 Reth v2.8.1 tag를 사용했습니다. Source
+            commit은 <code>d763342fa185e4e90ee79dc65f6a5706168b0bcb</code>입니다.
+          </p>
+          <p>
+            <b>교정한 주장:</b> 실제 source에는 sidecar receipt와 generation이 없습니다.
+            Local miss 뒤 network fetch가 이어진다는 설명도 제거했습니다.
+          </p>
+          <p>
+            <b>확대하지 않은 범위:</b> 이 글은 local execution-client Pool의 수명주기를
+            다룹니다. 이를 consensus availability, P2P 재수집 SLA나 영구 archive 보장으로
+            확대하지 않습니다.
+          </p>
+          <p>
+            <b>측정하지 않은 값:</b> 실제 reorg 빈도와 get_blob latency는 아직 측정하지
+            않았습니다. Reinsert 성공률과 cleanup 시간도 대상 환경에서 측정하지 않았습니다.
+          </p>
+        </CitationBlock>
+        <RethEip4844MapReturn current="reth-blob-reorg-release" />
+      </section>
+
+      <CodeSidebar
+        codeRefKey={sidebar.codeRefKey}
+        codeRef={sidebar.codeRef}
+        onClose={sidebar.close}
+        onNavigate={sidebar.navigate}
+        codeRefs={codeRefs}
+        fileTrees={{ reth: rethBlobReorgReleaseTree }}
+        projectMetas={PROJECT_META}
+      />
+    </article>
+  );
 }

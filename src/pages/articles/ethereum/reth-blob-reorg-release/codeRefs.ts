@@ -1,56 +1,59 @@
 import type { CodeRef } from "@/components/code/types";
-import trackerRs from "../reth-eip4844/codebase/reth/crates/transaction-pool/src/blobstore/tracker.rs?raw";
-import validateEthRs from "../reth-eip4844/codebase/reth/crates/transaction-pool/src/validate/eth.rs?raw";
-import consensusRs from "../reth-eip4844/codebase/reth/crates/consensus/common/src/validation.rs?raw";
+import reorgMaintain from "./codebase/reth-v2.8.1/maintain-reorg.rs?raw";
+import finalityMaintain from "./codebase/reth-v2.8.1/maintain-finality.rs?raw";
+import tracker from "./codebase/reth-v2.8.1/tracker.rs?raw";
+import validateMissing from "./codebase/reth-v2.8.1/validate-missing.rs?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
-  "canon-tracker": {
-    path: "reth/crates/transaction-pool/src/blobstore/tracker.rs",
-    code: trackerRs,
+  "reorg-maintain": {
+    path: "reth v2.8.1 · crates/transaction-pool/src/maintain.rs:382-438",
+    code: reorgMaintain,
     lang: "rust",
-    highlight: [4, 56],
-    desc: "문제: Finalized block의 blob을 BlobStore에서 정리하려면 어떤 block에 어떤 blob TX가 포함됐는지 먼저 추적해야 합니다.\n\n해결: BTreeMap<BlockNumber, Vec<B256>>로 블록별 blob TX를 추적하고, finalization 시 오래된 블록부터 순서대로 삭제 대상을 뽑습니다.",
+    highlight: [7, 56],
+    desc: "문제: old canonical chain에서 빠진 transaction 가운데 무엇을 Pool에 되돌릴지, Blob transaction에 필요한 sidecar를 어디서 얻을지 결정해야 합니다.\n\n해결: new chain에 없는 old transaction만 고른 뒤 BlobStore에서 sidecar를 읽어 body와 결합합니다. 새 canonical state를 먼저 반영하고 재구성한 transaction을 external origin으로 넣습니다.",
     annotations: [
-      { lines: [7, 9], color: "sky", note: "BTreeMap: 블록 번호 순서 보장 → finalized 이전 구간을 효율적으로 순회" },
-      { lines: [22, 33], color: "emerald", note: "add_new_chain_blocks: is_eip4844() 필터로 blob TX 해시만 기록" },
-      { lines: [37, 49], color: "amber", note: "on_finalized_block: first_entry()로 오래된 순서부터 finalized까지 반환" },
-      { lines: [52, 56], color: "violet", note: "BlobStoreUpdates: 삭제할 TX 목록 또는 None" },
+      { lines: [1, 4], color: "sky", note: "New chain에 이미 포함된 transaction hash 집합" },
+      { lines: [7, 31], color: "emerald", note: "Old−new 차집합과 BlobStore sidecar 재결합" },
+      { lines: [34, 43], color: "amber", note: "새 canonical state를 Pool에 먼저 반영" },
+      { lines: [45, 53], color: "violet", note: "재구성한 후보를 external transaction으로 재주입" },
+      { lines: [55, 56], color: "sky", note: "같은 높이의 tracker 기록을 new chain 기준으로 교체" },
     ],
   },
-  "reinsert-sidecar-check": {
-    path: "reth/crates/transaction-pool/src/validate/eth.rs",
-    code: validateEthRs,
+  "validate-missing": {
+    path: "reth v2.8.1 · crates/transaction-pool/src/validate/eth.rs:806-835",
+    code: validateMissing,
     lang: "rust",
-    highlight: [59, 66],
-    desc: "문제: Reorg로 orphan된 blob TX를 재주입할 때, 매번 KZG를 다시 검증할지 local sidecar를 재사용할지 정해야 합니다.\n\n해결: take_blob()이 Missing을 반환하면(= body만 있고 sidecar가 빠짐) blob_store.contains()로 local 재사용 가능 여부를 확인합니다. 이 한 줄이 I_sidecar indicator의 실제 구현입니다.",
+    highlight: [11, 29],
+    desc: "문제: Reorg로 다시 들어온 body에 sidecar가 붙어 있지 않을 수 있습니다.\n\n해결: Missing variant면 BlobStore에 같은 transaction hash가 있는지 확인합니다. 있으면 이미 검증해 저장한 sidecar로 간주하고, 없으면 MissingEip4844BlobSidecar로 거부합니다. 별도 receipt나 network fetch는 이 코드에 없습니다.",
     annotations: [
-      { lines: [60, 61], color: "sky", note: "re-org로 재주입된 TX — take_blob()이 Missing을 반환" },
-      { lines: [61, 65], color: "emerald", note: "blob_store.contains(hash) — local sidecar 존재 여부가 곧 I_sidecar" },
-      { lines: [64, 65], color: "amber", note: "존재하면 재검증 없이 통과 — 이미 검증된 receipt를 재사용" },
+      { lines: [11, 16], color: "sky", note: "Transaction에서 sidecar variant를 분리" },
+      { lines: [17, 22], color: "emerald", note: "Missing이면 local BlobStore contains 확인" },
+      { lines: [23, 29], color: "rose", note: "Local miss는 typed validation error" },
     ],
   },
-  "header-blob-gas": {
-    path: "reth/crates/consensus/common/src/validation.rs",
-    code: consensusRs,
+  tracker: {
+    path: "reth v2.8.1 · crates/transaction-pool/src/blobstore/tracker.rs:1-77",
+    code: tracker,
     lang: "rust",
-    highlight: [4, 18],
-    desc: "문제: 새 head에 재주입된 block의 헤더 blob_gas_used가 실제 blob TX 합계와 일치해야 합니다.\n\n해결: 본체의 blob gas 합계와 헤더 값을 비교하고, 불일치하면 ConsensusError로 거부합니다 — reorg 후에도 이 parity는 그대로 유지돼야 합니다.",
+    highlight: [9, 75],
+    desc: "문제: Reorg 때 같은 block height의 canonical 내용이 바뀔 수 있고, finality 뒤에는 더 이상 필요 없는 sidecar를 정리해야 합니다.\n\n해결: BTreeMap에 block number별 Blob transaction hash를 기록합니다. Reorg의 new chain은 같은 높이 기록을 교체하고, finalized height 이하의 hash를 오래된 순서대로 내보냅니다.",
     annotations: [
-      { lines: [7, 9], color: "sky", note: "header의 blob_gas_used 필드 존재 확인" },
-      { lines: [10, 16], color: "emerald", note: "본체 합계 ≠ 헤더 값이면 BlobGasUsedDiff 에러" },
+      { lines: [9, 14], color: "sky", note: "Block number → Blob transaction hashes" },
+      { lines: [16, 34], color: "emerald", note: "같은 높이 insert는 이전 canonical 기록을 교체" },
+      { lines: [36, 54], color: "amber", note: "New chain에서 EIP-4844 hash만 다시 수집" },
+      { lines: [56, 75], color: "violet", note: "Finalized height 이하 hash를 순서대로 배출" },
     ],
   },
-  "header-4844-standalone": {
-    path: "reth/crates/consensus/common/src/validation.rs",
-    code: consensusRs,
+  "finality-maintain": {
+    path: "reth v2.8.1 · crates/transaction-pool/src/maintain.rs:233-247",
+    code: finalityMaintain,
     lang: "rust",
-    highlight: [20, 55],
-    desc: "문제: Release candidate가 reorg·restart 뒤에도 EIP-4844 헤더 불변식을 계속 지키는지 검증해야 합니다.\n\n해결: blob_gas_used 존재, beacon root 존재, 131072의 배수 여부, 최대값 초과 여부 네 가지를 부모 블록 없이도 독립적으로 검사합니다.",
+    highlight: [1, 15],
+    desc: "문제: Tracker가 내보낸 finalized Blob transaction을 실제 BlobStore 정리로 연결해야 합니다.\n\n해결: Finalized update의 hash를 delete_blobs에 넘기고, 별도 blocking task에서 cleanup_blobs를 실행합니다. 이 local 정리는 consensus data availability나 영구 archive 보존을 소유하지 않습니다.",
     annotations: [
-      { lines: [28, 29], color: "sky", note: "blob_gas_used 필드 존재 확인" },
-      { lines: [32, 36], color: "emerald", note: "parent_beacon_block_root — Cancun 필수 필드" },
-      { lines: [38, 44], color: "amber", note: "DATA_GAS_PER_BLOB(131072)의 배수 검증" },
-      { lines: [46, 53], color: "violet", note: "블록당 최대 blob gas 초과 확인" },
+      { lines: [1, 6], color: "sky", note: "새 finalized height와 tracker update 결합" },
+      { lines: [7, 9], color: "emerald", note: "삭제 metric과 BlobStore delete 요청" },
+      { lines: [10, 15], color: "amber", note: "Background cleanup task 실행" },
     ],
   },
 };

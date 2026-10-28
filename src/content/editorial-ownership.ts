@@ -6222,7 +6222,7 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Reth blob pool admission gate", href: "/cs/blockchain/reth-blob-admission" },
       { label: "Reth BlobStore artifact 수명주기", href: "/cs/blockchain/reth-blob-storage" },
       { label: "Blob fee excess feedback 계산", href: "/cs/blockchain/eip4844-blob-fee" },
-      { label: "Reorg reinsert와 release gate", href: "/cs/blockchain/reth-blob-reorg-release" },
+      { label: "Reorg body·sidecar 재결합과 재주입", href: "/cs/blockchain/reth-blob-reorg-release" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Blob·commitment·transaction·sidecar 구조 claim은 활성 fork의 EIP-4844 spec에 귀속한다." },
@@ -6285,10 +6285,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-blob-reorg-release": {
-    title: "Reth blob reorg·release gate 글이 소유하는 범위",
+    title: "Reth Blob reorg 재주입 글이 소유하는 범위",
     owns: [
-      "Orphaned body와 local sidecar receipt를 결합하는 fast reinsert 경계",
-      "Blob artifact lifecycle correctness·availability release gate",
+      "Old−new canonical chain 차집합에서 재주입할 transaction body를 고르는 경계",
+      "Transaction hash로 local sidecar를 찾아 body와 결합하는 경로",
+      "New canonical state를 먼저 반영한 뒤 재주입하고 tracker를 교체하는 순서",
+      "재포함된 Blob transaction의 finality와 local sidecar cleanup 연결",
     ],
     reuses: [
       { label: "Blob·sidecar·versioned hash 정의", href: "/cs/blockchain/reth-eip4844" },
@@ -6296,9 +6298,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Prysm blob sidecar consensus path", href: "/cs/blockchain/prysm-blob-sidecar" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Reorg reinsert claim은 pinned Reth source snapshot에 귀속한다." },
+      { kind: "primary-source", rule: "Reorg reinsert claim은 Reth v2.8.1 commit d763342f의 maintain·validate·tracker source에 귀속한다." },
       { kind: "standard", rule: "Execution 재주입 재사용을 consensus-layer data-availability 기간이나 finality 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 fork parameter·tx/sidecar fixture와 reorg schedule에서 admission·artifact·restart parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Source에 없는 receipt·generation·local miss 뒤 network fetch를 Reth의 구현으로 추가하지 않는다." },
       { kind: "project-claim", rule: "Finalized cleanup 시점을 consensus retention이나 장기 archive 보장과 합치지 않는다." },
     ],
   },
