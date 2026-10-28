@@ -1621,7 +1621,7 @@
     {
       "route": "blockchain/eip4844-blob-fee",
       "title": "EIP-4844 Blob 가격",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
@@ -1687,11 +1687,10 @@
         "browser1440": "로컬 production 정적 경로를 1,440×1,000에서 열어 전체 일곱 단계, 본문·차트·코드 sidebar, 문서 가로 넘침 0과 console 오류 0을 확인했습니다.",
         "static": "Node heap 8GB에서 tsc -b와 production build가 통과했습니다. generate-static-routes.mjs는 public route 2,106개와 no-script 본문 319편을 생성했으며 최대 RSS는 약 1.35GB, swap은 0이었습니다.",
         "noJavaScript": "dist를 directory-index 서버로 제공해 JavaScript 비활성 390×844에서 정적 읽기 모드, 직속 부모, 일곱 장면, 전체 본문, 부모 지도 반환, visible button 0과 가로 넘침 0을 확인했습니다.",
-        "chart": "BPO2의 정수 계단값을 직접 계산한 표와 계단 차트가 같은 임계값을 표시하고, 모바일과 데스크톱에서 축·레이블 잘림이 없음을 확인했습니다."
+        "chart": "BPO2의 정수 계단값을 직접 계산한 표와 계단 차트가 같은 임계값을 표시하고, 모바일과 데스크톱에서 축·레이블 잘림이 없음을 확인했습니다.",
+        "production": "Commit a2e9495e의 GitHub Pages run 40680752486에서 모든 정적 감사, production build, 공개 1,000편의 데스크톱·모바일 브라우저 전수 검사와 배포가 통과했습니다. 공개 경로를 390×844와 1,440×1,000에서 다시 열어 가로 넘침 0, 8초 무자동재생, 키보드 0→1 이동, 50px 조작부와 console 오류 0을 확인했습니다. reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됐습니다. JavaScript 비활성 공개 경로에는 정적 읽기 안내, 직속 부모, 일곱 장면, 전체 본문과 부모 지도 반환이 남았습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포 후 공개 경로에서 모바일·키보드·reduced-motion·JavaScript 비활성 상태를 다시 검증합니다."
-      ],
+      "remaining": [],
       "reviewedInitialIssues": [
         "Term-first overview without same-case role map/why sequence.",
         "Claimed actual Reth code was a hand-authored Korean summary without an exact original pin.",
