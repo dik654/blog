@@ -10585,13 +10585,13 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "eth_sendRawTransaction의 provider acknowledgement와 transaction hash를 network propagation·mempool acceptance·canonical inclusion과 분리하고, 이후 verified block receipts root에 연결된 receipt로 inclusion을 따로 확인하는 effect 경계입니다.",
     canonicalHref: "/cs/blockchain/helios-execution#send-tx",
   },
-  "helios-execution-release-gate": {
-    id: "helios-execution-release-gate",
-    kind: "method",
+  "helios-method-specific-trust-boundary": {
+    id: "helios-method-specific-trust-boundary",
+    kind: "concept",
     domain: "computer-science",
-    label: "Helios execution RPC release gate",
+    label: "Helios method-specific trust boundary",
     definition:
-      "Wrong proof/root·code mismatch·receipt-order mutation·Bloom false positive·EVM miss replay·reorg·broadcast timeout-after-accept를 주입해 value·error·root·status parity 뒤 local execution과 RPC 성능을 비교하는 채택 계약입니다.",
+      "Balance·storage·code는 state root, local call은 pinned state·environment·fork, receipt·log는 receipts root, raw transaction 제출은 provider acknowledgement에 각각 다른 근거와 결론을 두는 RPC 경계입니다.",
     canonicalHref: "/cs/blockchain/helios-execution#rpc-methods",
   },
   "ethereum-mpt-secure-key-nibbles": {
@@ -46984,21 +46984,21 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   },
   {
     from: "helios-proof-backed-local-execution",
-    to: "helios-execution-release-gate",
-    relation: "evaluates",
-    reason: "Cache miss·proof failure·reorg에서 output·gas·error parity를 검사합니다.",
+    to: "helios-method-specific-trust-boundary",
+    relation: "prerequisite",
+    reason: "Proof-backed call이 확인하는 범위를 알아야 local simulation을 transaction inclusion으로 확대하지 않습니다.",
   },
   {
     from: "ethereum-receipt-root-log-membership",
-    to: "helios-execution-release-gate",
-    relation: "evaluates",
-    reason: "Receipt ordering과 Bloom false positive fixture에서 root·log membership parity를 검사합니다.",
+    to: "helios-method-specific-trust-boundary",
+    relation: "prerequisite",
+    reason: "Receipt root와 log bytes가 만드는 membership 근거를 state root나 Bloom과 구분합니다.",
   },
   {
     from: "helios-broadcast-inclusion-boundary",
-    to: "helios-execution-release-gate",
-    relation: "evaluates",
-    reason: "Timeout-after-accept와 duplicate submission에서 acknowledgement·unknown·verified inclusion 상태를 합치지 않는지 검사합니다.",
+    to: "helios-method-specific-trust-boundary",
+    relation: "prerequisite",
+    reason: "Provider acknowledgement·verified inclusion·consensus finality를 서로 다른 상태로 남깁니다.",
   },
   {
     from: "ethereum-mpt-secure-key-nibbles",

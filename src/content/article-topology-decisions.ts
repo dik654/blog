@@ -409,6 +409,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "a16z/helios 43a8c9f3의 bootstrap·verify_bootstrap·apply_bootstrap 경로를 근거로 Header tree hash와 committee proof를 검증합니다. 확인한 범위는 메모리의 LightClientStore 교체까지이며 디스크 영속성·재시작 원자성·배포 rollback은 주장하지 않습니다.",
   },
+  "blockchain/helios-execution": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "검증된 block H의 state에서 slot 5를 읽는 eth_call 한 건으로 block pinning, ProofDB miss·proof 보충, 같은 입력 replay와 output 반환을 닫습니다. Balance·storage·code·receipt·log·broadcast는 이 흐름에서 갈라지는 method별 근거만 비교하고 운영 도입 판단은 섞지 않습니다.",
+    sharedGate:
+      "a16z/helios 0.11.1 commit 204c998a의 EthereumEvm·ProofDB·Node·RpcExecutionProvider를 고정합니다. Access list는 prefetch hint이고 state 신뢰는 block-pinned proof가 만듭니다. Call 결과를 inclusion으로, receipt inclusion을 finality로, broadcast hash를 propagation 보장으로 확대하지 않습니다.",
+  },
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
@@ -4153,8 +4162,9 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/railgun": "2c7b61b18f7dbd43",
   "blockchain/railgun-validation": "f8b75a2b5a875a04",
-  "blockchain/helios": "6a5a7d0e9a352231",
-  "blockchain/helios-bootstrap": "6769560a2cc4a26e",
+  "blockchain/helios": "1aae7cd438aecb42",
+  "blockchain/helios-bootstrap": "1d822ca07f5be08f",
+  "blockchain/helios-execution": "f6de6ee7a4190892",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",

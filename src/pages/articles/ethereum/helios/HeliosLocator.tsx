@@ -96,7 +96,9 @@ export function HeliosMapReturn({ current }: { current: HeliosNodeId }) {
         ? "검증된 update는 먼저 best 후보와 참여 최댓값을 남기고, safety threshold와 2/3 gate를 따로 적용해 optimistic·finalized header를 전진시킵니다. Finalized period가 바뀔 때만 증명된 next committee를 current로 넘깁니다. 따라서 Store 변경은 하나의 Boolean이나 전체 덮어쓰기가 아니라 조건별 field transition입니다."
       : current === "helios-state"
         ? "Helios는 선택한 block H의 header hash로 eth_getProof를 고정하고, header의 state root R에서 account를 먼저 검증합니다. 그 account가 묶은 storage root에서 slot proof를 다시 확인한 뒤에만 값을 반환·저장합니다. 따라서 RPC 응답 성공이나 오래된 valid proof만으로 현재 조회에 답할 수 없습니다."
-      : "이 글에서 확인한 결과는 Helios 전체 지도의 해당 영역으로 돌아갑니다. 직속 부모에서 같은 block·root·request identity가 유지되는지 확인해야 다음 경로로 넘어갈 수 있습니다.";
+      : current === "helios-execution"
+        ? "Helios는 block tag를 header hash H로 고정하고, ProofDB가 기록한 account·slot miss를 같은 H의 proof로 보충한 뒤 같은 call·환경·fork를 revm에서 다시 실행합니다. Call과 gas는 H의 simulation이고, receipt·log는 receipts root에, raw transaction 제출은 나중 inclusion 확인에 각각 다른 근거를 둡니다."
+        : "이 글에서 확인한 결과는 Helios 전체 지도의 해당 영역으로 돌아갑니다. 직속 부모에서 같은 block·root·request identity가 유지되는지 확인해야 다음 경로로 넘어갈 수 있습니다.";
 
   return (
     <section id="return-map" className="scroll-mt-20 border-y border-border py-6">

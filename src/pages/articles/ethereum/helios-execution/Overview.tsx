@@ -1,39 +1,50 @@
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation";
-import type { CodeRef } from "@/components/code/types";
-import HeliosTrustFlowViz from "../helios-trust-flow-viz";
+import ExecutionRpcTraceViz from "./viz/ExecutionRpcTraceViz";
 
-interface Props {
-  onCodeRef: (key: string, ref: CodeRef) => void;
-}
-
-export default function Overview({ onCodeRef: _onCodeRef }: Props) {
+export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">
-        Helios는 원격 state를 증명으로 채운 뒤 EVM을 로컬에서 실행한다
+      <h2 className="mb-5 text-2xl font-bold">
+        전체 state가 없는데 eth_call을 어떻게 로컬에서 실행할까요?
       </h2>
-
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <p>
-          일반 RPC의 <code>eth_call</code> 결과는 provider가 실행한 문자열
-          하나이므로, caller가 그 계산 경로를 확인하기 어렵습니다. Helios는 먼저
-          verified execution block hash H를 고정하고, contract가 실제로 읽는
-          account·code·storage를 proof-backed database에 채운 뒤 같은
-          transaction과 fork environment를 revm에서 로컬 실행합니다.
-        </p>
-        <p>
-          예를 들어 block H에서 contract 0xa의 slot 5를 읽는 call이라면, 결과가
-          신뢰되는 범위는 “H의 state root와 H의 block environment에서 이 call을
-          실행한 결과”입니다. 이후 head의 값, 실제 transaction inclusion,
-          mempool acceptance나 future gas price까지 보장하지는 않습니다.
-          읽기·simulation·broadcast를 같은 “trustless RPC”로 묶지 않는 것이 이
-          글의 출발점입니다.
+        <p className="text-lg leading-8">
+          이 글에서는 이미 검증된 execution block <code>H</code>에서 contract
+          <code>A</code>의 slot <code>5</code>를 읽는 <code>eth_call</code> 한
+          건을 추적합니다. Helios는 원격 노드가 계산한 output을 그대로 믿지
+          않습니다. 필요한 account·code·storage를 <code>H</code>의 proof로
+          채우고, 같은 call을 로컬 revm에서 실행합니다.
         </p>
       </div>
 
+      <ExecutionRpcTraceViz />
       <ContentBoundary article="helios-execution" />
-      <HeliosTrustFlowViz mode="execution" />
+
+      <div
+        id="request-contract"
+        className="prose prose-neutral max-w-none scroll-mt-24 dark:prose-invert"
+      >
+        <h3>결과 하나를 만들려면 transaction보다 더 많은 입력이 필요합니다</h3>
+        <p>
+          Call request <code>T</code>만 같다고 결과가 같아지지는 않습니다. Helios
+          0.11.1은 먼저 요청의 block tag를 실제 header hash <code>H</code>로
+          고정합니다.
+        </p>
+        <p>
+          이어서 header의 number·timestamp·beneficiary·base fee·randomness,
+          chain의 fork schedule, state override를 하나의 실행 입력으로 묶습니다.
+          Timestamp가 바뀌어 active fork가 달라지거나 state root가 달라지면 같은
+          <code>T</code>도 다른 결과를 낼 수 있습니다.
+        </p>
+        <p>
+          따라서 이 글에서 output <code>0x…07</code>은 “현재 contract의 영원한
+          값”이 아닙니다. 정확한 뜻은 “블록 <code>H</code>의 환경과 proof-backed
+          state, fork <code>f</code>, call <code>T</code>, override <code>O</code>를
+          사용한 로컬 simulation 결과”입니다. Mempool 수락·transaction 포함과
+          finality는 이 결과에 들어 있지 않습니다.
+        </p>
+      </div>
 
       <div id="paper-execution-api-rpc" className="scroll-mt-24">
         <CitationBlock
@@ -42,14 +53,9 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           citeKey={1}
         >
           <p>
-            <strong>문제:</strong> wallet·tooling이 서로 다른 execution client를
-            같은 method와 type으로 호출해야 합니다. <strong>기여:</strong>
-            JSON-RPC parameter·result·error contract를 제공합니다.{" "}
-            <strong>전제:</strong> method version과 block identifier semantics를
-            고정합니다. <strong>근거 범위:</strong> RPC interface입니다.{" "}
-            <strong>과장하면 안 되는 결론:</strong> 표준 response schema는
-            provider honesty, proof verification이나 transaction inclusion을
-            자동 보장하지 않습니다.
+            <strong>확인한 범위:</strong> JSON-RPC의 method·parameter·result·error
+            형태입니다. 이 schema가 provider의 계산 정직성, proof 검증이나
+            transaction 포함을 보장하는 것은 아닙니다.
           </p>
         </CitationBlock>
       </div>
@@ -61,37 +67,26 @@ export default function Overview({ onCodeRef: _onCodeRef }: Props) {
           citeKey={2}
         >
           <p>
-            <strong>문제:</strong> 같은 pre-state·transaction·fork에서 모든
-            client가 같은 transition result를 내야 합니다.{" "}
-            <strong>기여:</strong> fork-aware execution rule과 test fixture
-            기반을 제공합니다. <strong>전제:</strong> 정확한 block environment,
-            fork와 state를 사용합니다. <strong>근거 범위:</strong> protocol
-            execution semantics입니다. <strong>과장하면 안 되는 결론:</strong>
-            Helios의 async proof fetching·cache·RPC trust policy는 이 spec이
-            정하지 않습니다.
+            <strong>확인한 범위:</strong> 고정한 fork·block environment·pre-state와
+            transaction에서 결정되는 EVM transition입니다. Helios의 proof
+            fetch·cache·replay 구현은 이 규격이 아니라 아래의 고정 소스에서
+            확인합니다.
           </p>
         </CitationBlock>
       </div>
 
       <div id="paper-helios-execution-source" className="scroll-mt-24">
         <CitationBlock
-          source="Helios 0.11.1 — EVM and ProofDB source"
-          href="https://github.com/a16z/helios/tree/0.11.1/revm-utils/src"
+          source="a16z/helios 0.11.1 · commit 204c998a — EVM and ProofDB"
+          href="https://github.com/a16z/helios/tree/204c998a927348e1c000a664f08d5b37b1b0d924"
           citeKey={3}
           type="code"
         >
           <p>
-            <strong>문제:</strong> synchronous EVM state reads와 asynchronous
-            remote proof fetch를 연결해야 합니다. <strong>기여:</strong>
-            ProofDB miss signal, prefetch, block-hash pinning과 replay 구조를
-            보여 줍니다. <strong>전제:</strong> Helios 0.11.1, revm·Alloy
-            dependency, chain fork schedule을 함께 고정합니다.{" "}
-            <strong>근거 범위:</strong>
-            선택 release의 구현입니다. <strong>
-              과장하면 안 되는 결론:
-            </strong>{" "}
-            moving main의 API·iteration 수·latency나 모든 method가
-            proof-backed라는 주장을 만들지 않습니다.
+            <strong>확인한 범위:</strong> block-hash pinning, ProofDB의
+            StateMissing access, 비동기 proof 보충, 같은 입력 replay와
+            <code>gas_used</code> 반환입니다. 이 release의 동작을 moving main이나
+            다른 provider 구성의 성능으로 확대하지 않습니다.
           </p>
         </CitationBlock>
       </div>

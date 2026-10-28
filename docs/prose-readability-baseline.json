@@ -81,10 +81,6 @@
       "fingerprint": "fe863095b6e324ae",
       "score": 32
     },
-    "blockchain/helios-execution": {
-      "fingerprint": "d265ba6883b93951",
-      "score": 32
-    },
     "blockchain/prysm-finality": {
       "fingerprint": "01fefdb64aafc147",
       "score": 32
@@ -658,11 +654,11 @@
       "score": 10
     },
     "blockchain/helios-config": {
-      "fingerprint": "deb05548a8358da3",
+      "fingerprint": "f2d9f8dff7d327a1",
       "score": 10
     },
     "blockchain/helios-types": {
-      "fingerprint": "fafddea23e817f28",
+      "fingerprint": "002fd0cd737cc4dc",
       "score": 10
     },
     "blockchain/prysm-state-cache": {

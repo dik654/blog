@@ -5757,7 +5757,7 @@ export const EDITORIAL_BOUNDARIES = {
       "ProofDB synchronous miss→async proof→same-input replay adapter",
       "Pinned block·state·environment·fork의 proof-backed local execution",
       "Receipt-root log membership과 Bloom candidate filter의 구분",
-      "Broadcast acknowledgement·verified inclusion boundary와 execution release gate",
+      "State·call·receipt·broadcast의 method별 근거와 확인 범위",
     ],
     reuses: [
       { label: "Account·storage proof와 cache identity", href: "/cs/blockchain/helios-state" },
@@ -5767,7 +5767,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "standard", rule: "RPC field·result·error는 pinned execution-apis, EVM transition은 pinned execution-specs와 active fork에 귀속한다." },
       { kind: "primary-source", rule: "ProofDB replay·gas_used·receipt/log verification·broadcast forwarding claim은 Helios 0.11.1 source에 제한한다." },
-      { kind: "project-measurement", rule: "Proof/root/code/receipt mutation·cache miss·reorg·broadcast ambiguity에서 output·root·status parity 뒤 latency·RPC 수를 비교한다." },
+      { kind: "primary-source", rule: "Access-list는 prefetch hint이고 state 신뢰는 block-pinned get_account proof가 만든다는 구분을 Helios 0.11.1 commit 204c998a source에 제한한다." },
       { kind: "project-claim", rule: "Local call을 transaction inclusion으로, Bloom을 membership proof로, provider acknowledgement를 propagation 보장으로 확대하지 않는다." },
     ],
   },
