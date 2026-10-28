@@ -6229,13 +6229,13 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-net": {
-    title: "Reth discovery·RLPx·ETH network 글이 소유하는 범위",
+    title: "Reth 피어 세션 개념 글이 소유하는 범위",
     owns: [
-      "Discovery candidate·pending transport·authenticated session·active peer 상태 분리",
-      "Signed record freshness·diversity와 session outcome feedback",
-      "RLPx capability intersection·ETH Status compatibility gate",
-      "Announcement·request/response·bounded channel backpressure",
-      "Reason-coded close·reputation과 adversarial network release gate",
+      "후보 endpoint·pending transport·authenticated session·active peer의 상태 분리",
+      "ECIES identity와 Hello ID 결속",
+      "RLPx capability의 정확한 교집합과 이름별 최고 version 선택",
+      "ETH Status의 genesis·version·chain·Fork ID 호환성 검사",
+      "Active session의 자료 교환과 종료 뒤 slot·inflight 자원 회수",
     ],
     reuses: [
       { label: "Reth execution network-input boundary", href: "/cs/blockchain/reth" },
@@ -6243,10 +6243,33 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Distributed process·message·failure model", href: "/cs/blockchain/distributed-systems" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "RLPx·ETH·Discv5 wire claim은 official devp2p specification과 pinned Reth 2.x source에 귀속한다." },
-      { kind: "standard", rule: "Address discovery·signature·TCP·encrypted channel·Status를 peer honesty나 block validity로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 signed record·DNS·clock·seed·fault schedule에서 state·cleanup·message parity를 먼저 검사한다." },
-      { kind: "project-claim", rule: "특정 ETH version·queue size·peer limit·Discv5 default를 모든 release·deployment의 고정값으로 일반화하지 않는다." },
+      { kind: "primary-source", rule: "Identity·capability·Status·session lifecycle은 Reth v2.8.1 commit d763342f와 devp2p snapshot 2c19a28에 귀속한다." },
+      { kind: "standard", rule: "Endpoint·TCP·암호화·공통 capability·Status를 peer honesty나 block·transaction validity로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "Capability 집합과 eth/67 선택은 Reth 통합 테스트 값이며 endpoint와 chain 호환성은 설명용 가정이다." },
+      { kind: "project-claim", rule: "Eth72 enum의 존재를 기본 광고 version으로, 특정 discovery variant·queue·peer limit을 모든 배포의 고정값으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-net-validation": {
+    title: "Reth 네트워크 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Reth binary·features·network config·ChainSpec·peer corpus·runtime을 묶은 run manifest",
+      "후보·identity·capability·Status·accepted message의 기준 session receipt",
+      "Identity mismatch·공통 capability 없음·Status 불일치·과부하·restart fault matrix",
+      "Candidate 격리와 binary·features·network config rollback 뒤 전체 fixture 재생",
+      "정합성·자원 정리·복구를 통과한 뒤의 비용 측정과 proposed ADR",
+    ],
+    reuses: [
+      { label: "ECIES identity와 Hello ID 결속", href: "/cs/blockchain/reth-net#identity" },
+      { label: "Capability 교집합과 version 선택", href: "/cs/blockchain/reth-net#capability" },
+      { label: "ETH Status 호환성 검사", href: "/cs/blockchain/reth-net#status" },
+      { label: "Active session과 자료 경로", href: "/cs/blockchain/reth-net#data-path" },
+      { label: "세션 종료와 자원 정리", href: "/cs/blockchain/reth-net#failure-boundaries" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "실험 기준 동작은 Reth v2.8.1 commit d763342f와 devp2p snapshot 2c19a28에 귀속한다." },
+      { kind: "standard", rule: "공식 기능의 존재를 대상 환경의 정합성·복구·성능 결과로 확대하지 않는다." },
+      { kind: "project-measurement", rule: "대상 환경의 실제 값만 [M]으로 기록하며 현재 handshake·queue·복구·성능 결과는 미측정이다." },
+      { kind: "project-claim", rule: "Binary·features·network config·ChainSpec·peer corpus·runtime이 바뀌면 결정을 다시 검증한다." },
     ],
   },
   "reth-eip4844": {

@@ -46,7 +46,7 @@ export const ETHEREUM_P2P_LEARNING_NODES: readonly EthereumP2PLearningNode[] = [
     href: "/cs/blockchain/reth-net#overview",
     shortTitle: "Reth P2P",
     mapLabel: "후보 주소 → 세션 → 자료 교환",
-    track: "practice",
+    track: "concept",
     parentHref: "/cs/blockchain/fork-id#validation",
     parentLabel: "Fork ID · 호환성 판정",
     question: "Fork ID를 포함한 호환성 검사는 실제 Reth 피어 생명주기의 어느 단계에서 실패를 정리할까요?",

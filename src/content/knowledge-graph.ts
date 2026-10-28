@@ -12293,15 +12293,15 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth peer candidate · active separation",
     definition:
       "Discovery endpoint, pending transport, authenticated RLPx session과 ETH-compatible active peer를 별도 state·권한·slot으로 유지해 주소 발견을 신뢰나 protocol readiness로 확대하지 않는 lifecycle입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#overview",
+    canonicalHref: "/cs/blockchain/reth-net#discovery",
   },
   "reth-discovery-record-freshness": {
     id: "reth-discovery-record-freshness",
-    kind: "method",
+    kind: "concept",
     domain: "distributed-systems",
-    label: "Reth discovery record freshness · diversity",
+    label: "Reth discovery input · dial candidate boundary",
     definition:
-      "Signed node record의 identity·sequence·age·endpoint policy와 failed-dial history를 검사하고 prefix·identity concentration을 제한해 fresh dial candidate를 만드는 discovery 경계입니다.",
+      "Bootnode·DNS·discovery가 준 node ID와 endpoint를 접속 후보로만 등록하고 reachability·identity·protocol·chain 호환성은 뒤의 session gate에서 따로 확인하는 입력 경계입니다.",
     canonicalHref: "/cs/blockchain/reth-net#discovery",
   },
   "reth-rlpx-capability-negotiation": {
@@ -12311,7 +12311,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth RLPx capability negotiation",
     definition:
       "RLPx가 peer identity·encrypted frame을 확정한 뒤 양쪽 Hello의 protocol name·version 교집합에서 사용할 subprotocol schema를 선택하는 session 단계입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#session",
+    canonicalHref: "/cs/blockchain/reth-net#capability",
   },
   "reth-eth-status-compatibility-gate": {
     id: "reth-eth-status-compatibility-gate",
@@ -12319,8 +12319,8 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Reth ETH Status compatibility gate",
     definition:
-      "Negotiated ETH version의 Status에 담긴 network·genesis·fork·head context를 local ChainSpec과 검증해 data-message 권한을 열거나 reason-coded disconnect하는 gate입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#session",
+      "협상한 ETH version의 Status에 담긴 genesis·version·chain·Fork ID를 local 설정과 검증해 자료 메시지 권한을 열거나 연결을 끝내는 gate입니다.",
+    canonicalHref: "/cs/blockchain/reth-net#status",
   },
   "reth-eth-announcement-request-flow": {
     id: "reth-eth-announcement-request-flow",
@@ -12329,7 +12329,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth ETH announcement · request/response flow",
     definition:
       "새 block·transaction의 존재를 bounded push로 알리고 receiver가 dedupe·policy 뒤 필요한 object만 correlated request/response로 가져오는 ETH data path입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#eth-wire",
+    canonicalHref: "/cs/blockchain/reth-net#data-path",
   },
   "reth-network-backpressure-budget": {
     id: "reth-network-backpressure-budget",
@@ -12338,7 +12338,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth network backpressure budget",
     definition:
       "Per-peer·message-class별 inflight request, response bytes, queue capacity와 processing rate를 제한하고 saturation 때 pause·drop·disconnect를 구분해 unbounded memory와 starvation을 막는 자원 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#eth-wire",
+    canonicalHref: "/cs/blockchain/reth-net#data-path",
   },
   "reth-session-failure-reputation": {
     id: "reth-session-failure-reputation",
@@ -12347,7 +12347,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth session failure · reputation mapping",
     definition:
       "Timeout·capacity·identity mismatch·incompatible Status·malformed message와 local overload를 reason-coded close로 보존하고 slot cleanup·retry·peer score·ban을 서로 다른 policy로 적용하는 feedback 경로입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#session",
+    canonicalHref: "/cs/blockchain/reth-net#failure-boundaries",
   },
   "reth-network-version-receipt": {
     id: "reth-network-version-receipt",
@@ -12356,7 +12356,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth network version receipt",
     definition:
       "Reth semver·SHA·features, enabled discovery variants, negotiated RLPx/ETH capability, ChainSpec digest와 network config를 함께 고정해 release default와 실제 session을 구분하는 provenance입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#overview",
+    canonicalHref: "/cs/blockchain/reth-net-validation#environment",
   },
   "reth-network-release-gate": {
     id: "reth-network-release-gate",
@@ -12365,7 +12365,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Reth network adversarial release gate",
     definition:
       "동일 signed records·DNS·clock·seed·fault schedule에서 stale record·bad identity·wrong chain·flood·channel saturation·restart를 주입하고 session state·cleanup·accepted message parity를 먼저 비교하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-net#discovery",
+    canonicalHref: "/cs/blockchain/reth-net-validation#decision",
   },
   "eip4844-transaction-sidecar-boundary": {
     id: "eip4844-transaction-sidecar-boundary",
@@ -47535,7 +47535,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "reth-discovery-record-freshness",
     to: "reth-peer-candidate-active-separation",
     relation: "produces",
-    reason: "Identity·sequence·endpoint policy를 통과한 record만 pending dial 후보가 됩니다.",
+    reason: "Discovery 입력은 자료 권한이 없는 dial candidate를 만들고 session gate가 그 후보를 별도로 승격합니다.",
   },
   {
     from: "reth-peer-candidate-active-separation",
@@ -47577,7 +47577,7 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     from: "reth-session-failure-reputation",
     to: "reth-discovery-record-freshness",
     relation: "evaluates",
-    reason: "실제 dial·handshake·message 결과가 candidate의 liveness와 다음 retry 판단에 feedback됩니다.",
+    reason: "실제 dial·handshake·message 종료 이유는 같은 endpoint의 다음 접속 시도를 판단하는 입력이 됩니다.",
   },
   {
     from: "reth-version-snapshot-receipt",
