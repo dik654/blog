@@ -1,17 +1,22 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 interface Props { title: string; onCodeRef: (key: string, ref: CodeRef) => void }
 
-export default function CommitteeLifecycle({ title, onCodeRef: _onCodeRef }: Props) {
+export default function CommitteeLifecycle({ title, onCodeRef }: Props) {
   return (
     <section id="committee-lifecycle" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Store는 current와 next committee를 함께 보관해 period 경계 전에 다음 public keys를 검증해 둡니다. Update의 next committee는
-          attested/finalized state의 Merkle branch에 묶여야 하며 단지 signature가 valid하다는 이유로 교체하지 않습니다. 경계에서는 검증된
-          next를 current로 옮기고 새 next를 채울 수 있는 update를 기다립니다.
+          <code>T0</code>는 current <code>K0</code>와 next <code>K1</code>을 함께 보관합니다. Signature slot 8,193은 period 1이므로
+          <code>u-8193</code>의 서명은 <code>K0</code>가 아니라 <code>K1</code>로 검증합니다.
+        </p>
+        <p>
+          Update의 next committee <code>K2</code>는 attested state의 Merkle branch에 묶여야 합니다. Signature가 맞아도 branch가 틀리면
+          <code>K2</code>를 다음 key set으로 쓸 수 없습니다.
         </p>
       </div>
       <ExplainedFormula
@@ -38,12 +43,18 @@ export default function CommitteeLifecycle({ title, onCodeRef: _onCodeRef }: Pro
         interpretation="Slot 8,191은 period 0, slot 8,192는 period 1입니다. 따라서 8,192에서 나온 signature를 period 0 committee로 검증하면 안 됩니다. 약 27.3시간은 교체 주기일 뿐 checkpoint 안전 기간이 아닙니다."
       />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>경계 실패와 재부트스트랩</h3>
+        <h3>Period 경계에서는 두 committee를 함께 바꿉니다</h3>
         <p>
-          Next committee를 검증하지 못한 채 period가 넘어가면 새 signature를 확인할 trusted key set이 없습니다. 이때 임의 endpoint의 next
-          committee를 받아 계속하는 대신, 보유한 trusted finalized state에서 연결 가능한 update range를 다시 요청하거나 새 checkpoint를
-          별도 승인해 재부트스트랩합니다. Old current·new next를 섞은 store는 폐기하고 generation 단위로 적용합니다.
+          <code>u-8193</code>의 finalized slot 8,192는 <code>T0</code>의 period 0에서 period 1로 넘어갑니다. 적용 함수는 기존 next
+          <code>K1</code>을 current로 옮기고, branch로 검증한 <code>K2</code>를 새 next로 넣습니다. 참여 최댓값도 같은 경계에서 넘기고 현재 값을 0으로 초기화합니다.
         </p>
+        <p>
+          검증된 next committee 없이 period를 넘었다면 새 signature를 확인할 key set이 없습니다. 이때 임의 endpoint의 committee를 받아 계속하면
+          신뢰 사슬이 끊깁니다. 기존 finalized state에서 연결되는 update를 다시 요청하거나, 새 checkpoint를 별도로 승인해 부트스트랩해야 합니다.
+        </p>
+      </div>
+      <div className="not-prose mt-5">
+        <CodeViewButton label="실제 committee 교체 코드 보기" onClick={() => onCodeRef("hl-apply-update", codeRefs["hl-apply-update"])} />
       </div>
     </section>
   );

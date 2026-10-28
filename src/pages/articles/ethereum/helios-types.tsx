@@ -5,12 +5,14 @@ import SszInternal from "./helios-types/SszInternal";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefsReal } from "./helios-types/codeRefsReal";
 import { heliosTypesRealTree } from "./helios-types/fileTreeReal";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosTypes() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-types" />
       <Overview onCodeRef={sidebar.open} />
       <CoreTypes title="Header · Aggregate · Update · Store" onCodeRef={sidebar.open} />
       <Encoding title="SSZ · Fork · Domain signing context" onCodeRef={sidebar.open} />
@@ -18,6 +20,7 @@ export default function HeliosTypes() {
         title="SSZ proof — object root · generalized index"
         onCodeRef={sidebar.open}
       />
+      <HeliosMapReturn current="helios-types" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

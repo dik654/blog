@@ -3,18 +3,20 @@ import { CitationBlock } from "@/components/ui/citation";
 export default function ErrorCases({ title }: { title: string }) {
   return (
     <section id="error-cases" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">{title}: 부분 성공을 store로 승격하지 않는다</h2>
+      <h2 className="mb-5 text-2xl font-bold">{title}: 어느 gate에서 멈췄는지 구분합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Timeout·oversized response·unknown fork는 transport/schema failure이고 checkpoint root mismatch·invalid
-          committee branch는 trust failure입니다. Stale checkpoint는 provenance는 맞지만 freshness policy를 통과하지 못한
-          경우입니다. 이들을 모두 “sync 실패” 한 종류로 합치면 retry해도 되는 문제와 operator 승인이 필요한 문제의 구분이 사라집니다.
+          Timeout은 응답을 받지 못한 transport 실패입니다. Unknown fork는 받은 bytes를 해당 schema로 해석할 수 없는 실패입니다.
         </p>
         <p>
-          Release 전에 재생하는 fixture는 wrong network/genesis, C와 다른 header, branch sibling 한 bit 변경, old
-          checkpoint입니다. 여기에 response truncation, unknown fork, store write 전후 crash, endpoint failover도 같은
-          fixture로 돌립니다. Base와 candidate가 accept/reject reason, resulting store root, restart outcome에서 같음을
-          확인한 뒤 latency를 비교하며 rollback에는 binary·config·last verified checkpoint를 묶습니다.
+          Header root mismatch는 <code>HTR(H)≠C</code>입니다. Invalid committee branch는
+          <code>Fold(HTR(K),B)≠H.state_root</code>입니다. 오래된 checkpoint는 cryptographic mismatch가 아니라 고정한 Helios 구현의
+          freshness policy에 걸린 경우입니다.
+        </p>
+        <p>
+          이 실패들은 모두 S1을 만들기 전에 끝나므로 이전 Store가 있다면 그대로 남습니다. 반대로 두 proof가 통과한 뒤
+          <code>apply_bootstrap</code>이 실행되면 H와 K가 같은 Bootstrap 응답에서 함께 들어갑니다. 운영 환경에서 timeout을 몇 번 재시도할지,
+          checkpoint를 누가 교체할지, process crash 뒤 persistence를 어떻게 복구할지는 이 개념 경계 밖이며 설정·운영 글에서 다룹니다.
         </p>
       </div>
       <div id="paper-helios-bootstrap-source" className="scroll-mt-24">

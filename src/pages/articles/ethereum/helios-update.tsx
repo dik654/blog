@@ -4,12 +4,14 @@ import ForkChoice from "./helios-update/ForkChoice";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./helios-update/codeRefs";
 import { heliosTree } from "./helios-update/fileTrees";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosUpdateArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-update" />
       <Overview onCodeRef={sidebar.open} />
       <UpdateTrace
         title="validate + apply 코드 추적"
@@ -19,6 +21,7 @@ export default function HeliosUpdateArticle() {
         title="최선 Update 선택 + Reorg 처리"
         onCodeRef={sidebar.open}
       />
+      <HeliosMapReturn current="helios-update" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

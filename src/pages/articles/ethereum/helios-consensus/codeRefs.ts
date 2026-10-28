@@ -1,78 +1,43 @@
 import type { CodeRef } from "@/components/code/types";
 
-import verifyRs from "./codebase/helios/consensus/src/verify.rs?raw";
+import consensusCoreRs from "./codebase/helios/ethereum/consensus-core/src/consensus_core.rs?raw";
+import consensusRs from "./codebase/helios/ethereum/src/consensus.rs?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
-  // 본문 대응: VerifyTrace 단계 1~2 — 비트맵 필터링 + 정족수 검사
-  "hl-verify-filter": {
-    path: "helios/consensus/src/verify.rs",
-    code: verifyRs,
+  "hl-verify-update": {
+    path: "helios/ethereum/consensus-core/src/consensus_core.rs",
+    code: consensusCoreRs,
     lang: "rust",
-    highlight: [27, 44],
-    desc: "참여 비트맵 필터링 + 2/3 정족수 검사. pks와 bits를 zip하여 bit=1인 공개키만 추출, 정수 비교로 2/3 임계값 확인.",
+    highlight: [118, 237],
+    desc: "verify_generic_update — 시간·period·relevance·Merkle branch를 검사하고 마지막에 committee와 BLS signature를 확인합니다.",
     annotations: [
-      {
-        lines: [27, 31],
-        color: "sky",
-        note: "단계 1: bits.iter()로 참여 여부 필터링 → 보통 480~510개",
-      },
-      {
-        lines: [41, 44],
-        color: "amber",
-        note: "단계 2: participants*3 < total*2 → 최소 342명(66.8%)",
-      },
+      { lines: [125, 157], color: "sky", note: "참여가 0인지, header와 시간 순서가 맞는지, signature period가 Store에 연결되는지 확인합니다." },
+      { lines: [172, 210], color: "amber", note: "Finality header와 next committee가 attested state에 포함됐는지 각각 검증합니다." },
+      { lines: [212, 234], color: "emerald", note: "Signature period로 current·next committee를 고른 뒤 set-bit 공개키와 domain-bound signature를 확인합니다." },
     ],
   },
-
-  // 본문 대응: VerifyTrace 단계 3 — 집계 공개키 합산 (G1 점 덧셈)
-  "hl-verify-bls": {
-    path: "helios/consensus/src/verify.rs",
-    code: verifyRs,
+  "hl-apply-update": {
+    path: "helios/ethereum/consensus-core/src/consensus_core.rs",
+    code: consensusCoreRs,
     lang: "rust",
-    highlight: [55, 100],
-    desc: "BLS 검증 — G1 점 합산 → signing_root → 페어링 비교. BLS 선형성으로 개별 검증 486회를 집계 1회로 대체.",
+    highlight: [7, 114],
+    desc: "apply_generic_update — 검증된 update를 best 후보·optimistic header·finalized header·committee 상태에 반영합니다.",
     annotations: [
-      {
-        lines: [55, 57],
-        color: "sky",
-        note: "단계 3: G1 점 fold 합산 → agg_pk (48B)",
-      },
-      {
-        lines: [68, 78],
-        color: "emerald",
-        note: "단계 4: 도메인 분리 (0x07) + fork_version → signing_root",
-      },
-      {
-        lines: [86, 97],
-        color: "amber",
-        note: "단계 5: e(agg_pk, H(m)) == e(G, sig) → 쌍선형성 검증",
-      },
+      { lines: [11, 28], color: "sky", note: "참여 최댓값과 optimistic header는 full finality 적용과 별도로 바뀔 수 있습니다." },
+      { lines: [45, 63], color: "amber", note: "2/3 참여와 더 새로운 finality 또는 finalized next committee가 모두 있어야 full update를 적용합니다." },
+      { lines: [78, 100], color: "emerald", note: "Period가 넘어가면 next를 current로 옮기고, 더 새로운 finalized header를 Store에 기록합니다." },
     ],
   },
-
-  // 본문 대응: VerifyTrace 단계 4 — signing_root 도메인 분리 (상세)
-  "hl-verify-root": {
-    path: "helios/consensus/src/verify.rs",
-    code: verifyRs,
+  "hl-sync-loop": {
+    path: "helios/ethereum/src/consensus.rs",
+    code: consensusRs,
     lang: "rust",
-    highlight: [59, 78],
-    desc: "signing_root 계산 — DOMAIN_SYNC_COMMITTEE(0x07) + fork_version + genesis_root 결합. 3중 보호로 서명 재사용 방지.",
+    highlight: [4, 56],
+    desc: "sync·advance — bootstrap 뒤 update를 검증·적용하고, 이후 finality와 비어 있는 next committee를 보충합니다.",
     annotations: [
-      {
-        lines: [63, 67],
-        color: "sky",
-        note: "compute_domain: 도메인 타입 + 포크 + 제네시스 루트 결합",
-      },
-      {
-        lines: [68, 71],
-        color: "emerald",
-        note: "DOMAIN_SYNC_COMMITTEE = 0x07, fork = 0x04 (Deneb)",
-      },
-      {
-        lines: [72, 78],
-        color: "amber",
-        note: "compute_signing_root: SSZ(header) + domain → 32B 해시",
-      },
+      { lines: [4, 18], color: "sky", note: "초기 sync는 Store를 초기화한 뒤 bootstrap, update 목록, finality update 순서로 진행합니다." },
+      { lines: [20, 29], color: "emerald", note: "동기화가 끝나면 checkpoint 값을 channel 소비자에게 알립니다." },
+      { lines: [34, 53], color: "amber", note: "advance는 finality를 먼저 반영하고 next committee가 없을 때만 update 하나를 더 요청합니다." },
     ],
   },
 };

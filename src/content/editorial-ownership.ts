@@ -7551,8 +7551,8 @@ export const EDITORIAL_BOUNDARIES = {
     owns: [
       "Approved network·checkpoint를 고정한 bootstrap request identity",
       "Checkpoint header root와 current committee branch의 trust transfer",
-      "Initial LightClientStore generation의 atomic initialization",
-      "첫 update handoff·failure taxonomy·restart release gate",
+      "검증 뒤 Initial LightClientStore 전체를 교체하는 in-memory 경계",
+      "첫 update handoff와 bootstrap failure gate 구분",
     ],
     reuses: [
       { label: "Checkpoint source·age·fallback 정책", href: "/cs/blockchain/helios-config#persistence" },
@@ -7564,7 +7564,7 @@ export const EDITORIAL_BOUNDARIES = {
       { kind: "primary-source", rule: "Checkpoint input/cache/fallback과 HTTP/Store implementation은 표시한 Helios SHA에 귀속한다." },
       { kind: "standard", rule: "Bootstrap container·branch·initialization은 고정 consensus-specs v1.6.1·fork·preset에 귀속한다." },
       { kind: "project-claim", rule: "Fallback plurality·freshness·HTTP success를 trusted checkpoint나 valid Store로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "Wrong source/root/branch·stale·truncation·crash parity 뒤 startup latency를 비교한다." },
+      { kind: "project-measurement", rule: "이 개념 글은 성능·재시작·rollback 결과를 주장하지 않으며 해당 실험은 설정·운영 글로 보낸다." },
     ],
   },
   "helios-consensus": {
@@ -7573,7 +7573,7 @@ export const EDITORIAL_BOUNDARIES = {
       "Slot·period·branch·participant·domain·BLS의 cheap-first validation order",
       "2/3 supermajority와 signature·optimistic·finality decision의 분리",
       "Current/next committee period handoff와 missing-next recovery",
-      "Fetch·rank·apply·persist reconciliation과 consensus release gate",
+      "초기 sync와 이후 advance의 memory Store 반영 순서",
     ],
     reuses: [
       { label: "SyncAggregate와 Store type", href: "/cs/blockchain/helios-types#core-types" },
@@ -7582,10 +7582,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "SSZ generalized index", href: "/cs/blockchain/prysm-ssz" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Sync integration·Store persistence·runtime behavior는 표시한 Helios SHA와 build/config에 귀속한다." },
+      { kind: "primary-source", rule: "Sync integration·memory Store mutation·checkpoint channel behavior는 표시한 Helios SHA와 build/config에 귀속한다." },
       { kind: "standard", rule: "Participation threshold·update validation·committee period는 고정 consensus-specs v1.6.1과 network preset에 귀속한다." },
       { kind: "project-claim", rule: "BLS PASS·342 positions·higher slot을 automatic finality나 execution validity로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "341/342·wrong bit/domain/branch·period·reorg·clock·crash parity 뒤 BLS latency와 sync lag를 비교한다." },
+      { kind: "project-measurement", rule: "이 개념 글은 restart·disk durability·BLS latency·sync lag를 측정했다고 주장하지 않는다." },
     ],
   },
   "helios-types": {

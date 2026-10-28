@@ -54,7 +54,7 @@
       "score": 36
     },
     "blockchain/helios-state": {
-      "fingerprint": "20370bd97403457a",
+      "fingerprint": "9fe4c5169bb8f37b",
       "score": 35
     },
     "blockchain/prysm-engine-api": {
@@ -82,7 +82,7 @@
       "score": 32
     },
     "blockchain/helios-execution": {
-      "fingerprint": "292d8cbafd9624dd",
+      "fingerprint": "9e0bd296c6aad600",
       "score": 32
     },
     "blockchain/prysm-finality": {
@@ -294,7 +294,7 @@
       "score": 22
     },
     "blockchain/helios-update": {
-      "fingerprint": "c96c72a749414898",
+      "fingerprint": "b972aeb5cec26acb",
       "score": 22
     },
     "blockchain/pbft-deep": {
@@ -419,14 +419,6 @@
     },
     "blockchain/gossipbft": {
       "fingerprint": "360afe4399bb8f17",
-      "score": 18
-    },
-    "blockchain/helios-bootstrap": {
-      "fingerprint": "69fe404d5f27dc2c",
-      "score": 18
-    },
-    "blockchain/helios-consensus": {
-      "fingerprint": "17702400c22b4e5d",
       "score": 18
     },
     "blockchain/lotus-chain": {
@@ -666,11 +658,11 @@
       "score": 10
     },
     "blockchain/helios-config": {
-      "fingerprint": "1dd9976b1ea91afd",
+      "fingerprint": "bd35a6805dbbe88a",
       "score": 10
     },
     "blockchain/helios-types": {
-      "fingerprint": "fa28bc59ae3faa23",
+      "fingerprint": "a7992520c9d54f72",
       "score": 10
     },
     "blockchain/prysm-state-cache": {

@@ -10,12 +10,14 @@ import ErrorCases from "./helios-bootstrap/ErrorCases";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./helios-bootstrap/codeRefs";
 import { heliosTree } from "./helios-bootstrap/fileTrees";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosBootstrapArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-bootstrap" />
       <Overview onCodeRef={sidebar.open} />
       <CheckpointSources title="체크포인트 소스와 provenance" />
       <WeakSubjectivity title="Weak subjectivity와 freshness" />
@@ -30,7 +32,8 @@ export default function HeliosBootstrapArticle() {
         onCodeRef={sidebar.open}
       />
       <FirstUpdate title="첫 update와 확정성 분리" />
-      <ErrorCases title="실패 분류와 release gate" />
+      <ErrorCases title="실패 경계와 근거" />
+      <HeliosMapReturn current="helios-bootstrap" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}
@@ -41,7 +44,7 @@ export default function HeliosBootstrapArticle() {
         projectMetas={{
           helios: {
             id: "helios",
-            label: "Helios · Rust",
+            label: "a16z/helios · 43a8c9f3 · Rust",
             badgeClass: "bg-blue-500/10 border-blue-500 text-blue-700",
           },
         }}

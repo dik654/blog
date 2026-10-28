@@ -1,35 +1,34 @@
-import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import type { CodeRef } from "@/components/code/types";
-import HeliosTrustPathViz from "../helios-trust-path-viz";
+import ConsensusTraceViz from "./viz/ConsensusTraceViz";
 
 interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
 export default function Overview({ onCodeRef: _onCodeRef }: Props) {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">Sync committee 검증은 “누가 어느 header에 동의했는가”를 작은 상태로 확인한다</h2>
+      <h2 className="mb-5 text-2xl font-bold">Update 하나가 어떻게 신뢰할 수 있는 Store 변경이 될까요?</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          Helios는 모든 validator와 BeaconState를 들고 있지 않습니다. 대신 trusted state에 commitment된 sync committee public keys,
-          update의 512-position participation bits와 한 aggregate signature를 사용해 attested header를 검증합니다. 여기서 512는 mainnet
-          preset의 <em>position 수</em>이며 한 validator가 중복 선택될 수 있으므로 항상 512명의 서로 다른 사람을 뜻하지 않습니다.
-        </p>
-        <p>
-          고정 사례로 committee position 512개 중 342개 bit가 켜진 update를 보겠습니다. 이 글은 bit→public key 결속, signing root와
-          BLS, 2/3 supermajority, current/next committee handoff, store 적용을 순서대로 추적합니다. BLS pairing의 수학 정본은{" "}
-          <Link to="/cs/blockchain/prysm-bls">BLS</Link>, committee 선출과 duplicate position은{" "}
-          <Link to="/cs/blockchain/prysm-sync-committee">sync committee</Link> 글을 재사용합니다.
+          Consensus endpoint가 새 header와 signature를 돌려줘도 Helios는 곧바로 Store를 바꾸지 않습니다. 이 글은 update <code>u-8193</code> 하나를
+          고정해, 기존 Store <code>T0</code>의 committee가 새 header와 다음 committee를 검증하고 Store <code>T1</code>을 만드는 과정을 따라갑니다.
         </p>
       </div>
+      <ConsensusTraceViz />
       <ContentBoundary article="helios-consensus" />
-      <HeliosTrustPathViz mode="consensus" />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>Signature valid와 update adopted는 다른 판정입니다</h3>
+        <h3>검증 통과와 Store 적용은 다른 판정입니다</h3>
         <p>
-          Aggregate signature가 맞아도 signature slot이 미래이거나 committee period가 store와 연결되지 않거나 finality/next-committee
-          Merkle branch가 틀리면 update를 적용할 수 없습니다. 반대로 valid update라도 participation과 relevance에 따라 optimistic header만
-          전진하거나 best-valid 후보로 보관될 수 있습니다. “BLS 한 번 검증하면 block이 finalized된다”는 요약은 이 상태 기계를 지웁니다.
+          <code>u-8193</code>의 signature가 맞다는 사실은 update를 만든 committee가 attested header에 서명했다는 뜻입니다. 그러나 finality branch와
+          next-committee branch가 맞는지, 참여가 Store를 전진시킬 만큼 충분한지, 더 새로운 finalized header인지도 따로 확인해야 합니다.
+        </p>
+        <p>
+          참여 bit는 사람 수가 아니라 512칸인 sync committee 목록의 position을 셉니다. Protocol의 committee 추출 과정에서는 같은 validator가 여러
+          position에 들어갈 수 있으므로, 구현은 bit와 public key를 position별로 결속하고 임의로 중복 제거하지 않습니다.
+        </p>
+        <p>
+          따라서 검증 단계는 잘못된 입력을 거부하고, 적용 단계는 검증된 입력 중 어떤 상태를 실제로 바꿀지 결정합니다. 어느 단계에서든 조건이 맞지 않으면
+          Helios가 현재 사용하는 Store는 <code>T0</code>로 남습니다.
         </p>
       </div>
     </section>
