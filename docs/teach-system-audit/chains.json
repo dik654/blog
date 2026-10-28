@@ -5164,40 +5164,71 @@
     },
     {
       "route": "blockchain/reth-blob-storage",
-      "title": "Reth BlobStore · Sidecar Artifact 수명주기",
-      "status": "unreviewed",
+      "title": "Reth BlobStore · Sidecar 보관과 정리",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-blob-storage.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-blob-storage.tsx",
         "src/pages/articles/ethereum/reth-blob-storage/ModernArticle.tsx",
-        "src/pages/articles/ethereum/reth-blob-storage/fileTree.ts"
+        "src/pages/articles/ethereum/reth-blob-storage/BlobStoreTraceViz.tsx",
+        "src/pages/articles/ethereum/reth-blob-storage/codeRefs.ts",
+        "src/pages/articles/ethereum/reth-blob-storage/fileTree.ts",
+        "src/pages/articles/ethereum/reth-blob-storage/codebase/reth-v2.8.1/store-contract.rs",
+        "src/pages/articles/ethereum/reth-blob-storage/codebase/reth-v2.8.1/disk-path.rs",
+        "src/pages/articles/ethereum/reth-blob-storage/codebase/reth-v2.8.1/finality-cleanup.rs",
+        "src/pages/articles/ethereum/reth-blob-storage/codebase/reth-v2.8.1/pool-boundary.rs",
+        "src/content/reth-eip4844-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 5,
+        "stageMarkers": 7,
+        "predictionPointers": 3,
+        "assumptionMarkers": 1,
+        "sourceButtons": 4,
         "headings": [
-          "BlobStore는 sidecar bytes와 검증 영수증의 생명주기를 소유합니다",
-          "Write와 read는 bytes만이 아니라 outcome을 보존합니다",
-          "Cleanup은 finality signal과 local retention policy를 연결하는 별도 작업입니다",
-          "구현 근거"
+          "Pool에 들어간 T₀의 sidecar는 어디에 남고 언제 지워집니까?",
+          "저장 계약",
+          "쓰기와 읽기",
+          "Finality까지 보관",
+          "실패 경계",
+          "근거 범위"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Reth v1.x라는 합성 발췌를 근거로 실제 v2.8.1에 없는 digest, generation, atomic write receipt를 저장 계약처럼 설명했습니다.",
+        "Disk backend가 시작할 때 이전 blob directory를 지우는데도 restart 뒤 partial write를 복구하는 영구 artifact store처럼 설명했습니다.",
+        "Pool insertion, sidecar 저장, canonical retention, finality cleanup을 하나의 원자적 수명주기로 합쳐 실제 실패 경계와 상태 소유자를 숨겼습니다."
+      ],
+      "fixture": {
+        "case": "앞 글의 T0가 Pool insertion을 통과했습니다. Transaction hash H0로 검증된 sidecar S0를 보관하고 canonical block N부터 finalization cleanup까지 추적합니다.",
+        "assumption": "T0, H0, S0와 N은 설명용 식별자이며 실제 transaction hash, block number, storage 크기 또는 보존 기간을 뜻하지 않습니다."
+      },
+      "stageEvidence": {
+        "0": "Pool entry와 sidecar가 갈리는 지점에서 시작해 동일한 T0, H0, S0를 일곱 장면에서 유지합니다.",
+        "1": "Pool result, transaction-hash key, Disk insert, read, canonical tracker, finalized update, cleanup을 순서대로 추적합니다.",
+        "2": "Cache hit, file hit, missing file, decode error, get_exact 누락과 restart 경계를 서로 다른 결과로 분리합니다.",
+        "3": "BlobStore, DiskFileBlobStore, BlobStoreCanonTracker, txs_to_delete와 cleanup 이름을 실제 역할에 붙입니다.",
+        "4": "H0에서 S0를 찾는 contract와 cache→file decode, block number→Blob transaction hashes 추적을 실제 source 흐름으로 설명합니다.",
+        "7": "세 예측 질문으로 Pool 성공·store 실패, cache·file 불일치와 delete_failed를 다시 확인하고 local artifact 보관 범위를 부모 지도에 반환합니다.",
+        "S": "직속 부모 EIP-4844 Blob 제출 지도에서 BlobStore를 현재 영역으로 표시합니다.",
+        "B": "T0의 sidecar가 Pool 경계에서 분리되어 finality 뒤 삭제될 때까지 전체 경로를 먼저 보여 줍니다.",
+        "5/6": "Reth v2.8.1 고정 소스에서 trait contract, disk read/write, canonical tracker, finality deletion과 Pool 경계를 대조합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185의 transaction-pool blobstore, maintain loop와 pool insertion 구현을 고정해 읽었습니다.",
+        "DiskFileBlobStore의 open, insert_one, get_one, read_one과 cleanup 순서를 발췌해 cache와 file이 한 원자적 receipt가 아님을 확인했습니다.",
+        "Canonical tracker가 finality 전 hash를 보존하고 finalized hash를 delete queue로 넘기는 경로와 BlobStore insert 실패가 Pool insertion을 되돌리지 않는 경계를 확인했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 Reth v2.8.1 고정 소스를 모두 읽고 합성 receipt와 restart 복구 오해, Pool·store·finality 상태 경계 축약을 교정했습니다.",
+        "arithmetic": "이 글은 성능이나 보존 기간 수치를 주장하지 않습니다. T0, H0, S0와 N은 수명주기를 연결하기 위한 설명용 식별자입니다.",
+        "humanize": "학습 계약, 지식 그래프, 글 구조, 문장 호흡, 한국어 자연스러움, 용어, 수식, 계산, pseudocode, runtime, 시각화와 아키텍처 흐름 감사를 통과했습니다.",
+        "browser390": "390×844에서 문서 폭 390=390, 시각화 높이 554.59px 고정, 49.5px 조작부, 키보드 장면 이동과 console 오류 0을 확인했습니다. Reduced-motion에서는 재생이 비활성화되고 수동·키보드 이동이 유지됐습니다. Production static route의 JavaScript 비활성 화면에서도 제목, 부모 locator, 일곱 정적 장면과 부모 지도 반환이 남고 visible button은 0개였습니다.",
+        "browser1440": "1440×1000에서 7초 무자동재생, 키보드 0→6, 시각화 높이 534.98px 고정, 실제 Reth v2.8.1 source sidebar와 console 오류 0을 확인했습니다. Production build는 8,054 modules·정적 public route 2,106개·no-script 본문 318편을 생성했고 최대 상주 메모리는 약 6.69GB, swap은 0이었습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-version-pinned-local-sidecar-lifecycle-trace"
     },
     {
       "route": "blockchain/reth-block-execution",

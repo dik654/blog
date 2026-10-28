@@ -6252,8 +6252,9 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-blob-storage": {
     title: "Reth BlobStore 글이 소유하는 범위",
     owns: [
-      "Storage key·sidecar bytes·digest·generation receipt로 이루어진 artifact 형태",
-      "Hit·miss·corrupt read outcome과 crash-safe cleanup 경계",
+      "Reth v2.8.1의 transaction hash→PooledBlobSidecar 저장 계약과 cache→file 조회 순서",
+      "Canonical tracker가 finality까지 sidecar를 남기고 Disk deletion queue·cleanup으로 정리하는 경계",
+      "Pool insertion 성공과 BlobStore insert 실패, restart 때 directory 초기화가 갈리는 상태 경계",
     ],
     reuses: [
       { label: "Blob·sidecar·versioned hash 정의", href: "/cs/blockchain/reth-eip4844" },
@@ -6262,7 +6263,7 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "primary-source", rule: "BlobStore artifact·lifecycle claim은 pinned Reth transaction-pool source snapshot에 귀속한다." },
       { kind: "standard", rule: "Execution txpool sidecar retention을 consensus-layer data-availability 기간이나 장기 archive 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 schema·backend·durability fixture에서 hit/miss/corrupt·cleanup parity를 먼저 검사한다." },
+      { kind: "project-measurement", rule: "같은 release·backend·filesystem에서 cache/file hit, miss, decode error, failed insert·cleanup을 구분해 계측한다." },
       { kind: "project-claim", rule: "Local store hit를 protocol availability나 영구 보존 보장으로 확대하지 않는다." },
     ],
   },
