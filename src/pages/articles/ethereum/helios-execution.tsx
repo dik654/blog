@@ -3,18 +3,21 @@ import ExecutionTrace from "./helios-execution/ExecutionTrace";
 import RpcMethods from "./helios-execution/RpcMethods";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./helios-execution/codeRefs";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosExecution() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-execution" />
       <Overview onCodeRef={sidebar.open} />
       <ExecutionTrace
         title="eth_call + gas estimation 코드 추적"
         onCodeRef={sidebar.open}
       />
       <RpcMethods title="5가지 RPC 메서드 변형" onCodeRef={sidebar.open} />
+      <HeliosMapReturn current="helios-execution" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

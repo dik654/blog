@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
-export default function CommitteeBranch({ title, onCodeRef: _onCodeRef }: Props & { title: string }) {
+export default function CommitteeBranch({ title, onCodeRef }: Props & { title: string }) {
   return (
     <section id="committee-branch" className="mb-16 scroll-mt-20">
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
@@ -40,6 +42,9 @@ export default function CommitteeBranch({ title, onCodeRef: _onCodeRef }: Props 
         ]}
         interpretation="깊이 5인 작은 예에서 sibling 하나의 위치를 반대로 두기만 해도 최종 root가 달라집니다. Root가 같다는 것은 committee inclusion을 보장하지만 해당 위원회가 미래 모든 update에 충분히 참여한다는 뜻은 아닙니다."
       />
+      <div className="not-prose mt-5">
+        <CodeViewButton label="실제 두 검증 gate 보기" onClick={() => onCodeRef("hl-init", codeRefs["hl-init"])} />
+      </div>
     </section>
   );
 }

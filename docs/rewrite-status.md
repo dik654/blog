@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Helios Consensus update 검증 로컬 완료 (2026-10-29)
+
+- `blockchain/helios-consensus`를 Store `T0`와 update `u-8193` 하나를 끝까지 추적하는 개념 글로 다시 썼습니다. 입력 고정, slot·period 확인, 두 Merkle branch, K1 집계 서명, 342-position supermajority와 memory Store `T1` 적용을 여섯 장면으로 연결했습니다.
+- 서명 통과, 2/3 참여, optimistic 전진과 finalized 전진을 각각 다른 판정으로 분리했습니다. Sync committee는 512명의 고유 validator가 아니라 512개 position이며 같은 validator가 중복될 수 있다는 경계도 Ethereum consensus-specs v1.6.1에 대조했습니다.
+- Helios source commit `43a8c9f3cdda41a6f383c4db41d9a83f102638b1`을 고정했습니다. `consensus_core.rs` lines 132–365와 `consensus.rs`의 `sync`·`advance` 발췌가 원문과 정확히 일치하는지 확인했습니다. 이 코드의 memory Store 적용을 disk commit이나 restart 복구로 확대하지 않았습니다.
+- 1,440×1,000에서 8.5초 동안 자동 재생되지 않았고, ArrowRight로 0→5 이동한 뒤 ArrowLeft로 돌아왔습니다. Space 재생은 8.2초 간격으로 진행되고 일시정지 뒤 상태가 유지됩니다. 1,024×900과 390×844에서도 문서·시각화에 가로 넘침이나 잘림이 없습니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 수동 이동이 유지됩니다. JavaScript 비활성 직접 경로는 HTTP 200이며 visible live 장면·버튼 0개, 정적 6장면, 9개 본문 절, 직속 부모 지도와 `return-map`을 남깁니다.
+- 선택 ESLint, TypeScript, production build와 관련 strict 감사를 통과했습니다. Build는 8,087개 module과 2,118개 정적 공개 경로를 만들었고 최대 RSS는 약 6.70GB, swap은 0이었습니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### 데이터 가용성 개념·실무 분리 공개 검증 완료 (2026-10-29)
 
 - `blockchain/da-theory`는 `concept`, 새 `blockchain/da-validation`은 `practice`로 분리했습니다. 개념 글은 원본 D0~D3을 설명용 (8,4) 코드의 P4~P7까지 늘리고, D1·P4·P6·P7을 표본으로 받아 조각 증거를 확인한 뒤 원본을 복원하는 한 흐름을 추적합니다. 실무 글은 같은 조각을 base와 candidate에 재생해 숨김·지연·잘못된 proof·wrong parity·중복 응답·재시작과 rollback을 판정합니다.

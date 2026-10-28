@@ -1,38 +1,32 @@
 import type { CodeRef } from "@/components/code/types";
 
-import bootstrapRs from "./codebase/helios/consensus/src/bootstrap.rs?raw";
+import consensusRs from "./codebase/helios/ethereum/src/consensus.rs?raw";
+import consensusCoreRs from "./codebase/helios/ethereum/consensus-core/src/consensus_core.rs?raw";
 
 export const codeRefs: Record<string, CodeRef> = {
   "hl-fetch": {
-    path: "helios/consensus/src/bootstrap.rs",
-    code: bootstrapRs,
+    path: "helios/ethereum/src/consensus.rs",
+    code: consensusRs,
     lang: "rust",
-    highlight: [5, 18],
-    desc: "fetch_bootstrap — 체크포인트 URL로 Bootstrap 데이터 가져오기.",
+    highlight: [4, 31],
+    desc: "bootstrap — checkpoint C로 응답을 가져오고 검증 뒤 Store에 적용하는 실제 순서.",
     annotations: [
-      { lines: [5, 8], color: "sky", note: "체크포인트 해시 + RPC URL 인자" },
-      { lines: [9, 13], color: "emerald", note: "Beacon API URL 조합" },
-      { lines: [14, 17], color: "amber", note: "HTTP GET → JSON 역직렬화" },
+      { lines: [6, 10], color: "sky", note: "Checkpoint C를 request key로 Bootstrap 응답을 가져옵니다." },
+      { lines: [13, 22], color: "amber", note: "응답 header slot의 나이를 정책값과 비교합니다." },
+      { lines: [25, 28], color: "emerald", note: "검증이 끝난 뒤에만 Store를 교체합니다." },
     ],
   },
   "hl-init": {
-    path: "helios/consensus/src/bootstrap.rs",
-    code: bootstrapRs,
+    path: "helios/ethereum/consensus-core/src/consensus_core.rs",
+    code: consensusCoreRs,
     lang: "rust",
-    highlight: [22, 43],
-    desc: "init_store — Merkle 브랜치 검증 후 LightClientStore 초기화.",
+    highlight: [4, 56],
+    desc: "verify_bootstrap·apply_bootstrap — Header·committee proof를 확인한 뒤 Store 전체를 만듭니다.",
     annotations: [
-      {
-        lines: [27, 33],
-        color: "sky",
-        note: "is_valid_merkle_branch — depth=5, index=22",
-      },
-      { lines: [34, 36], color: "rose", note: "브랜치 무효 시 에러 반환" },
-      {
-        lines: [37, 43],
-        color: "emerald",
-        note: "Store 필드 초기화 (finalized + committee)",
-      },
+      { lines: [10, 13], color: "amber", note: "Fork별 header와 execution payload proof를 확인합니다." },
+      { lines: [16, 23], color: "sky", note: "Committee K의 inclusion branch를 검사합니다." },
+      { lines: [26, 36], color: "rose", note: "Header root 또는 committee proof가 다르면 Store를 바꾸지 않습니다." },
+      { lines: [42, 51], color: "emerald", note: "검증된 응답에서 첫 Store 전체를 한 번에 구성합니다." },
     ],
   },
 };

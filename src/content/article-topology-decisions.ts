@@ -382,7 +382,33 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Chain·contract/proxy/source·circuit/zkey/vkey·engine·fixture를 고정합니다. State/proof/event/wallet parity, idempotent submission, event rebuild와 compatible client rollback을 먼저 확인하고 그 뒤에만 prove·sync·submit p95·RSS·gas를 비교합니다. 대상 환경 결과가 없으면 proposed로 남깁니다.",
   },
-  "blockchain/helios-bootstrap": KEEP("Checkpoint source→proof 검증→store init→first update→recovery가 한 bootstrap lifecycle입니다."),
+  "blockchain/helios": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "q-7 한 요청이 신뢰 경로와 RPC 경로를 지나가는 전체 지도는 이 글에 남기고, Checkpoint에서 Store를 만드는 과정과 이후 consensus·update·state·execution·types·config의 내부 메커니즘은 각각 독립된 질문을 닫는 하위 글로 분리했습니다.",
+    sharedGate:
+      "전체 글은 Checkpoint C, 검증된 Header H, 요청 R, Proof P가 어느 경계에서 이어지는지만 추적합니다. 각 하위 글의 구현 세부를 대신 설명하지 않으며, 대상 환경의 배포·성능·복구 결정도 포함하지 않습니다.",
+    targetRoutes: [
+      "blockchain/helios-bootstrap",
+      "blockchain/helios-consensus",
+      "blockchain/helios-update",
+      "blockchain/helios-state",
+      "blockchain/helios-execution",
+      "blockchain/helios-types",
+      "blockchain/helios-config",
+    ],
+  },
+  "blockchain/helios-bootstrap": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "Checkpoint C를 받아 Header H와 current committee K의 Merkle 경로를 검증하고 첫 메모리 Store S1을 공개하는 하나의 부트스트랩 질문입니다. 첫 update는 다음 글로 이어지는 경계만 표시하며 운영 승인 절차를 섞지 않습니다.",
+    sharedGate:
+      "a16z/helios 43a8c9f3의 bootstrap·verify_bootstrap·apply_bootstrap 경로를 근거로 Header tree hash와 committee proof를 검증합니다. 확인한 범위는 메모리의 LightClientStore 교체까지이며 디스크 영속성·재시작 원자성·배포 rollback은 주장하지 않습니다.",
+  },
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
@@ -4127,7 +4153,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/railgun": "2c7b61b18f7dbd43",
   "blockchain/railgun-validation": "f8b75a2b5a875a04",
-  "blockchain/helios-bootstrap": "5784135b544e5930",
+  "blockchain/helios": "f566988c353922fb",
+  "blockchain/helios-bootstrap": "698c97a481e1c4b1",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",

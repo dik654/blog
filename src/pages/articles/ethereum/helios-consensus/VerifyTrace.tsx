@@ -1,19 +1,23 @@
 import { Link } from "react-router-dom";
 import ExplainedFormula from "@/components/ui/explained-formula";
 import type { CodeRef } from "@/components/code/types";
+import { CodeViewButton } from "@/components/code";
+import { codeRefs } from "./codeRefs";
 
 interface Props { onCodeRef: (key: string, ref: CodeRef) => void }
 
-export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { title: string }) {
+export default function VerifyTrace({ title, onCodeRef }: Props & { title: string }) {
   return (
     <section id="verify-trace" className="mb-16 scroll-mt-20">
-      <h2 className="mb-5 text-2xl font-bold">{title}: context부터 적용 가능성까지 순서대로 확인한다</h2>
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          첫째, current slot과 signature slot의 순서, attested/finalized header slot의 단조성을 확인합니다. 둘째, signature period가 store의
-          current 또는 검증된 next committee와 연결되는지 고릅니다. 셋째, participation bits와 public-key positions를 같은 index로
-          결속합니다. 넷째, 포함된 finality·next-committee branch를 fork별 generalized index로 검증합니다. 다섯째, network·fork·duty를
-          넣은 signing root에 대해 aggregate BLS signature를 확인한 뒤에야 update quality와 store transition을 판단합니다.
+          <code>T0</code>의 finalized slot은 8,191이고 current committee는 <code>K0</code>, next committee는 <code>K1</code>입니다. Update
+          <code>u-8193</code>은 attested·finalized slot 8,192와 signature slot 8,193을 제시합니다.
+        </p>
+        <p>
+          Helios는 시간 순서와 period를 먼저 확인해 signature를 검증할 <code>K1</code>을 고릅니다. 그런 다음 finality·next-committee branch를 확인하고,
+          참여 bit에 해당하는 public key로 aggregate signature를 검증합니다. 이 순서가 끝나야 <code>u-8193</code>은 Store 적용 후보가 됩니다.
         </p>
       </div>
 
@@ -34,7 +38,8 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
         ]}
         assumptions={[
           "Bitvector 길이와 committee public-key list가 같은 preset에 속하며 bit index를 중복 제거하지 않습니다.",
-          "각 selected public key는 trusted current/next committee commitment에서 왔고 signature 검증도 별도로 통과합니다.",
+          "각 selected public key는 trusted current/next committee commitment에서 옵니다.",
+          "선택한 public key에 대한 signature 검증도 별도로 통과합니다.",
           "Supermajority는 light-client update quality/finality transition의 조건이며 모든 valid update의 유일한 최소 참여 조건으로 일반화하지 않습니다.",
         ]}
         interpretation="341이면 3×341=1,023이 1,024보다 작아 2/3에 못 미치고, 342이면 1,026≥1,024로 통과합니다. 그러나 342 bits만 세고 BLS·branch·slot 검사를 생략할 수는 없습니다."
@@ -66,16 +71,22 @@ export default function VerifyTrace({ title, onCodeRef: _onCodeRef }: Props & { 
           "모든 참여 position은 byte-identical signing root에 서명했고 Ethereum key-registration/committee 전제를 사용합니다.",
           "Fork version은 signature slot에 적용되는 spec 규칙으로 계산하며 local wall-clock fork를 임의로 대입하지 않습니다.",
         ]}
-        interpretation="Bit 17을 끄거나 다른 network의 genesis root를 넣으면 aggregate public key 또는 signing root가 달라져 pairing equality가 깨집니다. Equality는 signature tuple의 유효성이지 header의 finality나 execution validity 전체를 뜻하지 않습니다."
+        interpretation="Bit 17을 끄면 aggregate public key가 달라집니다. 다른 network의 genesis root를 넣으면 signing root가 달라져 pairing equality가 깨집니다. 이 등식은 signature tuple의 유효성만 확인하며 header의 finality나 execution validity 전체를 뜻하지 않습니다."
       />
 
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>실패를 cheap-first로 분류합니다</h3>
+        <h3>검증 순서가 실패 비용을 결정합니다</h3>
         <p>
-          Length·slot·period·branch처럼 싼 검사를 먼저 수행하고 expensive BLS는 마지막에 둡니다. Malformed input을 pairing queue까지 보내지
-          않으면 DoS 비용을 제한할 수 있습니다. 기존 BLS 글의 <Link to="/cs/blockchain/prysm-bls#sign-verify">point validation과 domain</Link>을
-          그대로 재사용하며 Helios용으로 같은 정의를 다시 만들지 않습니다.
+          Slot·period·branch를 먼저 검사하면 분명히 잘못된 입력을 BLS 검증 전에 거부할 수 있습니다. 이 순서는 malformed input이 비싼
+          pairing 단계까지 가는 비용을 줄입니다.
         </p>
+        <p>
+          BLS 곡선·point·domain 정의는 <Link to="/cs/blockchain/prysm-bls#sign-verify">BLS 검증 글</Link>에서 이어집니다. 여기서는 그 정의가
+          <code>u-8193</code>의 committee와 header에 어떻게 연결되는지만 확인합니다.
+        </p>
+      </div>
+      <div className="not-prose mt-5">
+        <CodeViewButton label="실제 verify_generic_update 순서 보기" onClick={() => onCodeRef("hl-verify-update", codeRefs["hl-verify-update"])} />
       </div>
     </section>
   );

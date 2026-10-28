@@ -4,21 +4,24 @@ export default function CheckpointSources({ title }: { title: string }) {
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Checkpoint는 consensus RPC가 자기 응답과 함께 증명해 줄 수 없습니다. 사용자가 CLI·config로 넣은 root, 이전 실행에서 검증하고 저장한
-          finalized root, 별도 checkpoint service의 응답은 편의성만 다를 뿐 모두 provenance를 확인해야 하는 외부 신뢰 입력입니다. 같은 운영 주체의
-          URL 세 개가 같은 root를 준다고 독립적인 세 근거가 되지는 않습니다.
+          Checkpoint는 consensus RPC가 자기 응답과 함께 증명해 줄 수 없습니다. 같은 RPC가 “이 root를 믿으라”고 말한 뒤 그 root에
+          맞춘 응답까지 제공하면 신뢰가 자기 자신을 증명하는 순환이 됩니다.
+        </p>
+        <p>
+          Helios commit <code>43a8c9f3</code>은 명시한 checkpoint를 먼저 쓸 수 있습니다. 그 값이 없으면 로컬 DB의 checkpoint를 쓰고,
+          두 값이 모두 없으면 network 기본값을 고릅니다. 외부 fallback은 초기 sync가 실패했을 때 별도 경로로 시도합니다.
         </p>
         <h3>고정 사례: 두 독립 경로가 같은 checkpoint를 가리킬 때</h3>
         <p>
-          Mainnet이라는 network, finalized epoch 300,000, block root C를 release config와 별도 관측 채널에서 확인했다고 합시다. Receipt에는
-          <code>network=mainnet</code>, genesis validators root, epoch·root, 각 source의 이름과 확인 시각을 남깁니다. 이후 consensus endpoint가
-          다른 root C′의 bootstrap을 주면 다수결로 타협하지 않고 C와 다르다는 이유로 거부합니다.
+          Mainnet이라는 network와 block root C를 신뢰 입력으로 골랐다고 합시다. Bootstrap attempt <code>b-17</code>은
+          <code>network=mainnet</code>과 <code>checkpoint=C</code>를 request identity로 유지합니다. 이후 consensus endpoint가 다른 root C′의
+          header를 주면 최신값처럼 보여도 C와 다르다는 이유로 거부합니다.
         </p>
         <h3>Fallback은 availability 기능이지 자동 신뢰 승격이 아닙니다</h3>
         <p>
-          Helios README의 external fallback은 여러 community endpoint에서 자주 나타난 checkpoint를 고를 수 있지만 공식 문서 자체도 보안
-          보장을 제공하지 않는 last resort라고 경고합니다. 따라서 production hardening에서는 source independence·서명된 release
-          manifest·manual approval 같은 별도 정책을 두고 fallback 결과를 protocol이 보증한 값처럼 취급하지 않습니다.
+          Helios의 external fallback은 checkpoint를 구하는 가용성 경로입니다. 그러나 그 출처의 정직성까지 bootstrap proof가 증명하지는 않습니다.
+          이 글에서 protocol로 확인할 수 있는 범위는 “이미 고른 C와 응답 H가 같은가”부터입니다. C를 어떤 조직·채널에서 승인할지는
+          <a href="/cs/blockchain/helios-config#persistence">설정·운영 글</a>의 책임입니다.
         </p>
       </div>
     </section>

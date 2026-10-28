@@ -2577,13 +2577,14 @@
     },
     {
       "route": "blockchain/helios",
-      "title": "Helios 아키텍처 개요",
-      "status": "unreviewed",
+      "title": "Helios: 검증된 block에서 local RPC까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/helios-trust-path-viz.tsx",
         "src/pages/articles/ethereum/helios.tsx",
-        "src/pages/articles/ethereum/helios/Overview.tsx"
+        "src/pages/articles/ethereum/helios/Overview.tsx",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx",
+        "src/pages/articles/ethereum/helios/viz/HeliosTrustTraceViz.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -2599,20 +2600,21 @@
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "verified",
+        "arithmetic": "verified",
+        "humanize": "verified",
+        "browser390": "verified",
+        "browser1440": "verified",
+        "keyboard": "verified",
+        "reducedMotion": "verified",
+        "javascriptDisabled": "verified"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/helios-bootstrap",
-      "title": "Helios Checkpoint Sync & 부트스트랩",
-      "status": "unreviewed",
+      "title": "Helios 부트스트랩: Checkpoint C에서 Store S1까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-bootstrap.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-bootstrap.tsx",
@@ -2625,7 +2627,12 @@
         "src/pages/articles/ethereum/helios-bootstrap/Overview.tsx",
         "src/pages/articles/ethereum/helios-bootstrap/StoreInit.tsx",
         "src/pages/articles/ethereum/helios-bootstrap/WeakSubjectivity.tsx",
-        "src/pages/articles/ethereum/helios-trust-path-viz.tsx"
+        "src/pages/articles/ethereum/helios-bootstrap/viz/BootstrapTraceViz.tsx",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx",
+        "src/pages/articles/ethereum/helios-bootstrap/codeRefs.ts",
+        "src/pages/articles/ethereum/helios-bootstrap/fileTrees.ts",
+        "src/pages/articles/ethereum/helios-bootstrap/codebase/helios/ethereum/src/consensus.rs",
+        "src/pages/articles/ethereum/helios-bootstrap/codebase/helios/ethereum/consensus-core/src/consensus_core.rs"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -2649,15 +2656,16 @@
       "stageEvidence": {},
       "sourceEvidence": [],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "verified",
+        "arithmetic": "verified",
+        "humanize": "verified",
+        "browser390": "verified",
+        "browser1440": "verified",
+        "keyboard": "verified",
+        "reducedMotion": "verified",
+        "javascriptDisabled": "verified"
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/helios-config",
@@ -2702,16 +2710,20 @@
     },
     {
       "route": "blockchain/helios-consensus",
-      "title": "Helios Sync Committee BLS 검증 & 교체",
-      "status": "unreviewed",
+      "title": "Helios Consensus update는 어떻게 검증할까요?",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-consensus.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-consensus.tsx",
         "src/pages/articles/ethereum/helios-consensus/CommitteeLifecycle.tsx",
         "src/pages/articles/ethereum/helios-consensus/Overview.tsx",
+        "src/pages/articles/ethereum/helios-consensus/SelfCheck.tsx",
         "src/pages/articles/ethereum/helios-consensus/SyncLoop.tsx",
         "src/pages/articles/ethereum/helios-consensus/VerifyTrace.tsx",
-        "src/pages/articles/ethereum/helios-trust-path-viz.tsx"
+        "src/pages/articles/ethereum/helios-consensus/viz/ConsensusTraceViz.tsx",
+        "src/pages/articles/ethereum/helios-consensus/codebase/helios/ethereum/consensus-core/src/consensus_core.rs",
+        "src/pages/articles/ethereum/helios-consensus/codebase/helios/ethereum/src/consensus.rs",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -2725,20 +2737,55 @@
           "{title}: context부터 적용 가능성까지 순서대로 확인한다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 update 검증, committee 교체와 Store 적용을 서로 다른 고정 사례와 추상 문장으로 설명해 한 update의 상태 변화를 끝까지 추적하기 어려웠습니다.",
+        "BLS signature 통과와 supermajority, optimistic 전진, finalized 전진을 한 판정처럼 읽을 여지가 있었습니다.",
+        "과거 source 경로와 합성 설명이 현재 고정한 Helios source 구조 및 memory Store 경계를 정확히 보여 주지 못했습니다.",
+        "JavaScript 비활성 화면과 모바일에서는 여섯 장면의 전체 순서를 같은 정보로 읽을 근거가 없었습니다."
+      ],
+      "fixture": {
+        "store": "T0: finalized 8191, current K0, next K1",
+        "update": "u-8193: attested/finalized 8192, signature 8193, 342 participation positions, next K2",
+        "result": "all validation and apply conditions pass → memory Store T1: finalized/optimistic 8192, current K1, next K2",
+        "boundary": "341×3=1023<1024; 342×3=1026≥1024 for N=512",
+        "assumption": "설명용 slot·ID이며 실제 네트워크 지연·root·public key·signature 측정값이 아닙니다."
+      },
+      "stageEvidence": {
+        "0": "T0와 아직 신뢰하지 않는 u-8193을 한 지도에 놓고 검증 전 Store가 그대로임을 표시합니다.",
+        "1": "T0의 header·K0·K1과 update의 slot·342 bits·K2를 같은 fixture로 고정합니다.",
+        "2": "현재 slot, signature·attested·finalized slot과 period를 확인해 K1 선택 가능성을 판정합니다.",
+        "3": "Finality와 next-committee Merkle branch가 두 대상을 같은 attested state에 결속하는지 확인합니다.",
+        "4": "K1의 set-bit public keys, fork context, genesis root로 signing root와 aggregate signature를 검증합니다.",
+        "5": "342-position supermajority와 더 새로운 finality를 별도로 확인한 뒤 memory Store T1에 K1·K2를 반영합니다.",
+        "failure": "Future slot, wrong period, branch mismatch, invalid signature, 341 positions와 missing next committee에서 기존 Store를 유지합니다.",
+        "return": "검증된 update가 다음 Store transition 글의 입력이 된다는 관계를 직속 부모 지도에 돌려줍니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "a16z/helios 43a8c9f3cdda41a6f383c4db41d9a83f102638b1",
+          "application": "consensus_core.rs lines 132–365와 ethereum/src/consensus.rs의 sync·advance function body를 pinned source와 byte-for-byte 대조했습니다.",
+          "boundary": "이 경로의 LightClientStore는 memory 구조이며 disk commit·restart 복구·exactly-once를 주장하지 않습니다."
+        },
+        {
+          "source": "Ethereum consensus-specs v1.6.1 Altair light-client sync protocol and sync committee selection",
+          "application": "update validation·period·2/3 판정과 committee position의 중복 가능성을 공식 규격에 대조했습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문 전체와 고정 Helios source·consensus-specs를 다시 읽고, 한 update fixture로 overview→validation→committee handoff→sync loop→self-check를 재작성했습니다.",
+        "arithmetic": "N=512에서 341×3=1023<1024, 342×3=1026≥1024와 slot 8191/8192 period 경계를 독립 계산했습니다. 실제 BLS 또는 네트워크 실행은 주장하지 않습니다.",
+        "humanize": "대상 visible prose ko-natural lint 오류 0·경고 0, 전역 한국어 strict 오류 0을 확인했습니다.",
+        "browser390": "390×844 production/dev 화면에서 document 390=390, figure 354=354, 모바일 장면·49.5px 조작부·코드 sidebar를 확인했습니다. Reduced-motion은 running animation 0, 수동 이동 유지. JavaScript 비활성 화면은 visible live/button 0, 정적 6장면, 9개 section, locator·return-map을 유지합니다.",
+        "browser1024": "1024×900에서 document 1024=1024, figure 628=628이며 다섯 stage와 조작부의 잘림이 없음을 확인했습니다.",
+        "browser1440": "1440×1000에서 document 1440=1440, figure 711=711입니다. 8.5초 무자동재생, ArrowRight 0→5·ArrowLeft, Space 재생 8.2초 간격과 일시정지 상태 유지를 확인했습니다.",
+        "sourceBytes": "로컬 발췌 consensus_core.rs는 pinned source lines 132–365와 정확히 같고 consensus.rs의 sync·advance function body도 정확히 일치합니다.",
+        "static": "TypeScript·Vite production build 통과, 8,087 modules·2,118 static public routes 생성. 직접 trailing-slash route HTTP 200과 no-script full body를 확인했습니다.",
+        "audits": "viz·learning·graph·formula·calculations·pseudocode·articles·prose·Korean·terms·topology·reading·order·runtime·architecture-flow strict와 selected ESLint, git diff --check를 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/helios-execution",

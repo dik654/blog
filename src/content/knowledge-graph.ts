@@ -12581,7 +12581,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Helios update · Store transition",
     definition: "Validated update의 participation·finality branch·next-committee branch와 slot ordering에 따라 optimistic/finalized header와 current/next committee를 부분 mutation 없이 전진시키는 transition입니다.",
-    canonicalHref: "/cs/blockchain/helios-types#core-types",
+    canonicalHref: "/cs/blockchain/helios-update#apply-update",
   },
   "helios-fork-domain-context": {
     id: "helios-fork-domain-context",
@@ -12708,7 +12708,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "helios-bootstrap-store-atomicity": {
     id: "helios-bootstrap-store-atomicity", kind: "method", domain: "distributed-systems",
     label: "Helios bootstrap Store atomicity",
-    definition: "검증된 finalized/optimistic header·current committee·counters·receipt를 하나의 generation으로 초기화하고 partial write나 mixed bootstrap을 공개하지 않는 persistence 경계입니다.",
+    definition: "verify_bootstrap이 통과한 뒤 finalized/optimistic header·current committee·counters를 새 LightClientStore struct로 함께 대입하고 검증 전 partial mutation을 막는 in-memory 전이 경계입니다.",
     canonicalHref: "/cs/blockchain/helios-bootstrap#store-init",
   },
   "helios-bootstrap-first-update-handoff": {
@@ -12720,19 +12720,13 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
   "helios-bootstrap-failure-taxonomy": {
     id: "helios-bootstrap-failure-taxonomy", kind: "concept", domain: "computer-science",
     label: "Helios bootstrap failure taxonomy",
-    definition: "Timeout·oversize·decode·unknown fork·wrong network·stale checkpoint·root mismatch·invalid branch·partial persistence를 retry·operator approval·reject 대상으로 구분하는 오류 계약입니다.",
-    canonicalHref: "/cs/blockchain/helios-bootstrap#error-cases",
-  },
-  "helios-bootstrap-release-gate": {
-    id: "helios-bootstrap-release-gate", kind: "method", domain: "distributed-systems",
-    label: "Helios bootstrap release gate",
-    definition: "Wrong source/network/root/branch·stale checkpoint·truncation·unknown fork·failover·crash를 재생해 Store와 restart parity 뒤 bootstrap 성능을 비교하는 채택 절차입니다.",
+    definition: "Timeout·decode·unknown fork·stale checkpoint·header root mismatch·invalid committee branch가 transport·schema·freshness·cryptographic gate 중 어디에서 멈췄는지 구분하는 오류 경계입니다.",
     canonicalHref: "/cs/blockchain/helios-bootstrap#error-cases",
   },
   "helios-consensus-validation-order": {
     id: "helios-consensus-validation-order", kind: "method", domain: "computer-science",
     label: "Helios light-client validation order",
-    definition: "Length·slot·period·relevance·Merkle branch처럼 싼 context 검사를 먼저 하고 participant binding·domain·BLS 뒤 Store 적용을 판정하는 cheap-first 검증 순서입니다.",
+    definition: "Typed update의 참여·header·slot·period·relevance·Merkle branch를 먼저 확인하고 participant binding·domain·BLS 뒤 Store 적용을 판정하는 cheap-first 검증 순서입니다.",
     canonicalHref: "/cs/blockchain/helios-consensus#verify-trace",
   },
   "helios-sync-supermajority-decision": {
@@ -12747,16 +12741,10 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     definition: "Period 경계 전 검증한 next committee만 current로 승격하고 next가 없거나 state가 섞였으면 연결 가능한 update range 또는 새 approved checkpoint에서 복구하는 방법입니다.",
     canonicalHref: "/cs/blockchain/helios-consensus#committee-lifecycle",
   },
-  "helios-sync-loop-reconciliation": {
-    id: "helios-sync-loop-reconciliation", kind: "method", domain: "distributed-systems",
-    label: "Helios sync-loop reconciliation",
-    definition: "Fetch·validate·rank·apply·persist를 분리하고 endpoint/persist timeout 뒤 update root와 Store generation으로 이미 적용됐는지 조정해 duplicate와 partial mutation을 막는 절차입니다.",
-    canonicalHref: "/cs/blockchain/helios-consensus#sync-loop",
-  },
-  "helios-consensus-release-gate": {
-    id: "helios-consensus-release-gate", kind: "method", domain: "distributed-systems",
-    label: "Helios consensus release gate",
-    definition: "Participation 경계·wrong bit/domain/branch·period rotation·reorg·clock·failover·crash를 재생해 roots·committee·typed outcome·restart parity 뒤 속도를 비교하는 채택 절차입니다.",
+  "helios-sync-loop-state-flow": {
+    id: "helios-sync-loop-state-flow", kind: "method", domain: "distributed-systems",
+    label: "Helios sync-loop state flow",
+    definition: "초기 sync에서 bootstrap·update 목록·finality update를 검증 뒤 memory Store에 적용하고, advance에서 finality와 빈 next committee를 보충하는 상태 흐름입니다.",
     canonicalHref: "/cs/blockchain/helios-consensus#sync-loop",
   },
   "crypto-primitive-assurance-boundary": {
@@ -48507,17 +48495,14 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
   { from: "helios-bootstrap-request-identity", to: "helios-bootstrap-trust-transfer", relation: "prerequisite", reason: "응답 header는 요청한 바로 그 checkpoint root와 대조됩니다." },
   { from: "helios-ssz-proof-receipt", to: "helios-bootstrap-trust-transfer", relation: "prerequisite", reason: "Fork schema와 generalized-index branch가 committee를 state root에 결속합니다." },
   { from: "helios-bootstrap-trust-transfer", to: "helios-bootstrap-store-atomicity", relation: "produces", reason: "검증된 header와 key set만 첫 Store generation에 들어갑니다." },
+  { from: "helios-bootstrap-failure-taxonomy", to: "helios-bootstrap-store-atomicity", relation: "constrains", reason: "Transport·schema·freshness·proof gate 중 하나라도 실패하면 apply_bootstrap을 호출하지 않고 기존 Store를 유지합니다." },
   { from: "helios-bootstrap-store-atomicity", to: "helios-bootstrap-first-update-handoff", relation: "prerequisite", reason: "완전한 initial Store가 첫 update validation의 기준입니다." },
-  { from: "helios-bootstrap-failure-taxonomy", to: "helios-bootstrap-release-gate", relation: "evaluates", reason: "각 failure class의 retry/reject/recovery parity를 비교합니다." },
-  { from: "helios-bootstrap-first-update-handoff", to: "helios-bootstrap-release-gate", relation: "evaluates", reason: "첫 update 뒤 Store와 restart state가 동일한지 검사합니다." },
   { from: "helios-ssz-proof-receipt", to: "helios-consensus-validation-order", relation: "prerequisite", reason: "Fork schema·branch·typed reject가 update 검증 단계의 입력입니다." },
   { from: "helios-sync-aggregate-binding", to: "helios-sync-supermajority-decision", relation: "prerequisite", reason: "Trusted positions와 bits를 결속한 뒤 참여 수를 의미 있게 셀 수 있습니다." },
   { from: "helios-fork-domain-context", to: "helios-consensus-validation-order", relation: "prerequisite", reason: "BLS 전에 signature slot의 fork/network domain을 계산합니다." },
   { from: "helios-consensus-validation-order", to: "helios-update-store-transition", relation: "produces", reason: "모든 context·branch·signature 검사를 통과한 update만 transition 후보가 됩니다." },
   { from: "helios-update-store-transition", to: "helios-committee-handoff-recovery", relation: "prerequisite", reason: "검증된 next committee와 Store period가 atomic handoff를 결정합니다." },
-  { from: "helios-committee-handoff-recovery", to: "helios-sync-loop-reconciliation", relation: "produces", reason: "Period 경계 상태를 포함한 generation으로 steady-state loop를 이어갑니다." },
-  { from: "helios-sync-supermajority-decision", to: "helios-consensus-release-gate", relation: "evaluates", reason: "341/342 boundary와 finality/optimistic 결과를 고정 fixture로 비교합니다." },
-  { from: "helios-sync-loop-reconciliation", to: "helios-consensus-release-gate", relation: "evaluates", reason: "Timeout·crash·restart 뒤 duplicate 없는 Store parity를 검사합니다." },
+  { from: "helios-committee-handoff-recovery", to: "helios-sync-loop-state-flow", relation: "produces", reason: "Period 경계에서 검증한 current·next committee 상태를 다음 advance loop가 사용합니다." },
   { from: "algebraic-field-contract", to: "reed-solomon-evaluation-code", relation: "prerequisite", reason: "RS evaluation·division·interpolation은 0이 아닌 원소의 inverse가 존재하는 field 연산을 전제로 합니다." },
   { from: "polynomial-coefficient-evaluation-form", to: "reed-solomon-evaluation-code", relation: "prerequisite", reason: "Source coefficient와 encoded evaluation vector를 같은 degree-bounded polynomial의 두 표현으로 연결합니다." },
   { from: "lagrange-interpolation-basis", to: "reed-solomon-evaluation-code", relation: "prerequisite", reason: "받은 k개 point-value pair에서 source polynomial을 복원하는 계산입니다." },

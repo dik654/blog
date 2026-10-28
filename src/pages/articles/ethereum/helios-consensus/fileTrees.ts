@@ -13,9 +13,14 @@ const d = (name: string, children: FileNode[]): FileNode => ({
 });
 
 export const heliosTree: FileNode = d("helios", [
-  d("consensus", [
+  d("ethereum", [
     d("src", [
-      f("verify.rs", "helios/consensus/src/verify.rs", "hl-verify-filter"),
+      f("consensus.rs", "helios/ethereum/src/consensus.rs", "hl-sync-loop"),
+    ]),
+    d("consensus-core", [
+      d("src", [
+        f("consensus_core.rs", "helios/ethereum/consensus-core/src/consensus_core.rs", "hl-verify-update"),
+      ]),
     ]),
   ]),
 ]);

@@ -9,6 +9,7 @@ interface VizFrameProps {
   note?: ReactNode;
   className?: string;
   canvasClassName?: string;
+  documentFlow?: boolean;
 }
 
 /** 새 Viz의 기본 껍데기: 단색, 얇은 선, 넓은 여백, 한 겹의 canvas만 허용합니다. */
@@ -20,11 +21,13 @@ export default function VizFrame({
   note,
   className,
   canvasClassName,
+  documentFlow = false,
 }: VizFrameProps) {
   return (
     <figure
       data-viz="modern"
       data-viz-name={title}
+      data-viz-document-flow={documentFlow || undefined}
       className={cn("not-prose my-12 min-w-0", className)}
     >
       <figcaption className="mb-5 px-1">

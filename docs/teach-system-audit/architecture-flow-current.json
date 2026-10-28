@@ -3,16 +3,16 @@
   "note": "이 파일은 전수 개편의 작업 목록입니다. 실제 import closure 안의 전용 viz 파일과 inline SVG·canvas, 코드 발췌, 외부 근거를 서로 나눠 셉니다. 각 신호는 검토 우선순위를 정할 뿐 설명 품질이나 애니메이션 필요 여부를 자동 판정하지 않습니다.",
   "summary": {
     "publicArticles": 1006,
-    "architectureCandidates": 180,
-    "dedicatedVisuals": 708,
+    "architectureCandidates": 178,
+    "dedicatedVisuals": 711,
     "inlineVisuals": 528,
-    "customVisuals": 891,
-    "animatedMechanisms": 509,
-    "architectureWithoutAnimation": 87,
-    "recursiveLocators": 335,
+    "customVisuals": 894,
+    "animatedMechanisms": 512,
+    "architectureWithoutAnimation": 84,
+    "recursiveLocators": 343,
     "codeEvidenceLinked": 221,
     "sourceCitationLinked": 997,
-    "architectureWithoutCustomVisual": 22
+    "architectureWithoutCustomVisual": 19
   },
   "articles": [
     {
@@ -7170,34 +7170,34 @@
     {
       "route": "blockchain/helios",
       "publicPath": "cs/blockchain/helios",
-      "title": "Helios 아키텍처 개요",
+      "title": "Helios: 검증된 block에서 local RPC까지",
       "sourcePath": "src/pages/articles/ethereum/helios.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": false,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-bootstrap",
       "publicPath": "cs/blockchain/helios-bootstrap",
-      "title": "Helios Checkpoint Sync & 부트스트랩",
+      "title": "Helios 부트스트랩: Checkpoint C에서 Store S1까지",
       "sourcePath": "src/pages/articles/ethereum/helios-bootstrap.tsx",
       "locationMap": "global:ArticleOnboarding",
-      "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-config",
@@ -7210,7 +7210,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "architecture-without-custom-visual"
@@ -7218,18 +7218,18 @@
     {
       "route": "blockchain/helios-consensus",
       "publicPath": "cs/blockchain/helios-consensus",
-      "title": "Helios Sync Committee BLS 검증 & 교체",
+      "title": "Helios Consensus update는 어떻게 검증할까요?",
       "sourcePath": "src/pages/articles/ethereum/helios-consensus.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-execution",
@@ -7242,7 +7242,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "architecture-without-custom-visual"
@@ -7258,7 +7258,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-text-first"
@@ -7274,7 +7274,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-text-first"
@@ -7290,7 +7290,7 @@
       "hasInlineVisual": false,
       "hasCustomVisual": false,
       "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
+      "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
       "reviewPriority": "verify-text-first"

@@ -5,12 +5,14 @@ import ClientInit from "./helios-config/ClientInit";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefsReal } from "./helios-config/codeRefsReal";
 import { heliosConfigRealTree } from "./helios-config/fileTreeReal";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosConfig() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-config" />
       <Overview onCodeRef={sidebar.open} />
       <NetworkConfig title="네트워크 + 합의 스펙 + RPC" onCodeRef={sidebar.open} />
       <ClientInit
@@ -21,6 +23,7 @@ export default function HeliosConfig() {
         title="Checkpoint cache · age policy · fallback"
         onCodeRef={sidebar.open}
       />
+      <HeliosMapReturn current="helios-config" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

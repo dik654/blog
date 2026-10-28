@@ -4,14 +4,14 @@ export default function FirstUpdate({ title }: { title: string }) {
       <h2 className="mb-5 text-2xl font-bold">{title}</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          초기화 직후에는 update의 signature period가 store의 current committee로 검증 가능한지 먼저 확인합니다. Update가 next
-          committee와 branch를 포함하면 이를 현재 trusted state에 결속해 다음 period를 준비하고 finality branch와 participation 조건을
-          충족한 경우에만 finalized header를 전진시킵니다. 더 높은 slot이라는 이유만으로 모든 field를 한꺼번에 덮어쓰지는 않습니다.
+          S1이 생긴 뒤 처음 받은 update는 bootstrap이 만든 K를 실제 검증 key로 사용합니다. Signature period가 current committee로 검증 가능한지
+          확인하고, next committee와 branch가 있다면 현재 trusted state에 묶습니다. Finality branch와 participation 조건을 충족한 field만
+          전진시키므로 slot이 높다는 이유만으로 Store 전체를 덮어쓰지 않습니다.
         </p>
         <p>
-          Optimistic head는 더 빠르게 움직일 수 있지만 finalized head와 같은 확정성을 뜻하지 않습니다. Application이 잔액 표시에는 optimistic를,
-          큰 가치 이전에는 finalized를 요구한다면 어느 head를 사용했는지 RPC receipt에 명시해야 합니다. 첫 update부터 이 정책이 없으면
-          뒤의 sync loop가 올바르게 돌아도 caller가 서로 다른 확정성의 값을 혼동합니다.
+          이 시점부터 책임은 <a href="/cs/blockchain/helios-consensus#overview">BLS 서명 검증</a>과
+          <a href="/cs/blockchain/helios-update#overview">Store update 전이</a>로 넘어갑니다. Bootstrap 글이 확정하는 것은 첫 검증 key와 header의 출처이며,
+          optimistic·finalized header가 이후 어떤 조건에서 달라지는지는 두 자식 글이 맡습니다.
         </p>
       </div>
     </section>

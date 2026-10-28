@@ -380,6 +380,9 @@ const noScriptArticleRoutes = new Set([
   "blockchain/da-validation",
   "blockchain/railgun",
   "blockchain/railgun-validation",
+  "blockchain/helios",
+  "blockchain/helios-bootstrap",
+  "blockchain/helios-consensus",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

@@ -5,12 +5,14 @@ import ProofDB from "./helios-state/ProofDB";
 import { CodeSidebar, useCodeSidebar } from "@/components/code";
 import { codeRefs } from "./helios-state/codeRefs";
 import { heliosTree } from "./helios-state/fileTrees";
+import HeliosLocator, { HeliosMapReturn } from "./helios/HeliosLocator";
 
 export default function HeliosStateArticle() {
   const sidebar = useCodeSidebar();
 
   return (
     <>
+      <HeliosLocator current="helios-state" />
       <Overview onCodeRef={sidebar.open} />
       <ProofTrace
         title="계정 + 스토리지 증명 코드 추적"
@@ -21,6 +23,7 @@ export default function HeliosStateArticle() {
         onCodeRef={sidebar.open}
       />
       <ProofDB title="ProofDB — 캐싱과 에러" onCodeRef={sidebar.open} />
+      <HeliosMapReturn current="helios-state" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}
         codeRef={sidebar.codeRef}

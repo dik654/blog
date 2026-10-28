@@ -176,6 +176,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  [data-viz-live-only],
+  [data-viz-live-only] * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
   [data-viz="engine-boundary"] [data-process-node="true"],
   [data-viz="engine-boundary"] [data-sequence-step="true"],
   [data-viz="engine-boundary"] [data-engine-motion="active"] :is(.engine-request-dot, .engine-response-dot),
@@ -396,6 +404,27 @@ figure[data-viz="lesson-flow-v4"] [data-concept-step] {
     white-space: normal;
     overflow-wrap: anywhere;
   }
+}
+
+/*
+ * 한 장면 안에서 전체 인과관계를 위에서 아래로 읽어야 하는 글은 문서가
+ * 유일한 scrollport를 맡습니다. 작은 화면 높이에 맞추려고 canvas를 다시
+ * 자르면 조작부와 판정 문장을 오가며 두 번 스크롤해야 하므로, 명시적으로
+ * document flow를 고른 Viz에는 고정 높이 정책을 적용하지 않습니다.
+ */
+figure[data-viz="modern"][data-viz-document-flow="true"]:has([data-viz-controls]) {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+figure[data-viz="modern"][data-viz-document-flow="true"]:has([data-viz-controls])
+  > [data-viz-canvas] {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
 }
 
 @custom-variant dark (&:is(.dark *));
