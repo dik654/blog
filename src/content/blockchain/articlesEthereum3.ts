@@ -362,12 +362,14 @@ export const ethereum3Articles: Article[] = [
   },
   {
     slug: "reth-blob-storage",
-    title: "Reth BlobStore · Sidecar Artifact 수명주기",
+    title: "Reth BlobStore · Sidecar 보관과 정리",
     subcategory: "eth-reth",
     sections: [
-      { id: "overview", title: "BlobStore artifact" },
-      { id: "write-read", title: "Hit · miss · corrupt" },
-      { id: "failure-cleanup", title: "Crash recovery와 cleanup" },
+      { id: "overview", title: "T₀ sidecar의 local 수명" },
+      { id: "store-contract", title: "저장 계약" },
+      { id: "write-read", title: "쓰기와 읽기" },
+      { id: "retention", title: "Finality까지 보관" },
+      { id: "failure-boundaries", title: "실패 경계" },
       { id: "paper-reth-blobstore", title: "Reth 구현 근거" },
     ],
     component: () => import("@/pages/articles/ethereum/reth-blob-storage"),

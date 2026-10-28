@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1000,
-    "reviewed": 662,
-    "pending": 338,
+    "reviewed": 663,
+    "pending": 337,
     "untracked": 0,
-    "assignedPending": 296,
+    "assignedPending": 295,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4431,11 +4431,11 @@
     {
       "route": "blockchain/reth-blob-storage",
       "publicPath": "cs/blockchain/reth-blob-storage",
-      "title": "Reth BlobStore · Sidecar Artifact 수명주기",
+      "title": "Reth BlobStore · Sidecar 보관과 정리",
       "catalogIndex": 440,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

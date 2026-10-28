@@ -12396,7 +12396,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     kind: "concept",
     domain: "distributed-systems",
     label: "Reth BlobStore artifact lifecycle",
-    definition: "Transaction hash로 sidecar bytes와 검증 metadata를 memory/disk 구현에 저장하고 hit·miss·corruption·canonical cleanup을 typed receipt로 추적하는 artifact 수명주기입니다.",
+    definition: "Reth v2.8.1이 Pool transaction과 검증된 sidecar를 분리해 transaction hash로 memory·disk backend에 보관하고, cache→file 조회와 canonical finality tracker를 거쳐 정리하는 local artifact 수명주기입니다.",
     canonicalHref: "/cs/blockchain/reth-blob-storage#overview",
   },
   "eip4844-excess-blob-gas-feedback": {

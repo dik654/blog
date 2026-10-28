@@ -422,9 +422,9 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     status: "reviewed",
     reviewedAt: "2026-10-27",
     rationale:
-      "검증된 sidecar를 transaction hash에 결속해 write receipt를 남기고 hit·miss·corrupt로 읽은 뒤 finalized generation을 정리하는 하나의 artifact lifecycle입니다. Admission과 reorg 판단을 별도 글이 맡으므로 저장 동작을 더 나누면 같은 bytes·digest·generation의 생명주기가 끊깁니다.",
+      "T₀의 검증된 sidecar를 transaction hash H₀로 분리 보관하고 cache→file 조회, canonical block 추적, finality 삭제와 restart 초기화까지 잇는 하나의 local artifact lifecycle입니다. Admission과 reorg 판단은 이웃 글이 맡으므로 이 경로를 나누면 같은 S₀의 저장·조회·정리 상태가 끊깁니다.",
     sharedGate:
-      "선택한 Reth release, backend, schema, fsync와 cleanup policy를 고정하고 partial write·restart·corruption·cleanup 경계를 구분합니다. Local BlobStore retention을 Ethereum 전체의 data availability나 영구 보존으로 확대하지 않습니다.",
+      "Reth v2.8.1 source와 backend·filesystem·Pool 설정을 고정하고 failed insert, cache/file 불일치, decode error, cleanup 실패와 restart directory 초기화를 구분합니다. Source에 없는 digest·generation·atomic receipt를 보장으로 추가하지 않고 local retention을 protocol availability나 영구 보존으로 확대하지 않습니다.",
   },
   "blockchain/reth-blob-reorg-release": {
     action: "keep",
@@ -4024,7 +4024,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/mdbx-validation": "e1da7d714babffc2",
   "blockchain/reth-blob-admission": "8ff32e48be1a73aa",
   "blockchain/reth-blob-reorg-release": "f41612453549bc3d",
-  "blockchain/reth-blob-storage": "8f1aa69a7507d86b",
+  "blockchain/reth-blob-storage": "62d28a887365e4ac",
   "blockchain/reth-db": "8359b9b78409ef9f",
   "blockchain/reth-db-validation": "d7122135ba517430",
   "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",

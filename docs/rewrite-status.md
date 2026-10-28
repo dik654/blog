@@ -4064,3 +4064,28 @@
   Pages run `40546596786`에서 전역 감사, production build, 1,000편 실제 브라우저 검사와
   배포가 모두 통과했습니다. 공개 경로도 390×844에서 폭 390=390, 7초 무자동재생,
   키보드 0→6 이동, 49.5px 조작부와 console 오류 0건을 다시 확인했습니다.
+
+### Reth BlobStore 글 로컬 검증 완료 (2026-10-28)
+
+- 기존 글이 사용하던 합성 `reth v1.x` 발췌를 제거하고 Reth v2.8.1 commit
+  `d763342fa185`의 BlobStore trait, Disk backend, canonical tracker, maintenance loop와 Pool
+  경계를 고정했습니다. 실제 구현에 없는 digest·generation·atomic write receipt와 restart
+  복구 계약도 본문에서 명시적으로 교정했습니다.
+- 앞 글에서 Pool insertion을 통과한 T₀의 sidecar S₀를 transaction hash H₀로 보관하는
+  경로를 일곱 장면에서 추적합니다. Pool 결과, 저장 key, Disk insert, cache·file read,
+  canonical tracker, finalized deletion queue, cleanup을 같은 식별자로 연결했습니다.
+- Disk insert는 versioned-hash index와 LRU cache를 먼저 갱신한 뒤 파일을 씁니다. 따라서
+  cache와 file은 한 원자적 receipt가 아닙니다. `contains`는 파일 존재까지만 보고 `get`은
+  decode하며, 파일 없음·decode 실패·`get_exact` 누락을 서로 다른 결과로 구분했습니다.
+- Canonical block에 포함된 Blob transaction hash는 finality 전 reorg 재주입을 위해 남고,
+  finalized 뒤 Disk deletion queue와 background cleanup으로 정리됩니다. Disk store는 시작할
+  때 이전 blob directory를 지우므로 consensus data availability나 장기 archive로 확대하지
+  않았습니다.
+- 1,440×1,000과 390×844에서 자동 재생 없이 첫 장면 유지, 키보드 0→6 이동, 고정된 그림
+  높이, 모바일 49.5px 조작부, 문서 가로 넘침과 console 오류 0을 확인했습니다.
+  reduced-motion에서는 재생이 비활성화되고 수동·키보드 이동은 유지됐으며, 실제 source
+  sidebar에서 고정한 v2.8.1 발췌가 열렸습니다. Production build는 8,054개 module과 정적
+  public route 2,106개, no-script 본문 318편을 생성했고 최대 상주 메모리는 약 6.69GB,
+  swap은 0이었습니다. JavaScript 비활성 390×844 화면에서는 일곱 정적 장면과 부모 지도
+  반환이 남고 visible button은 0개였습니다. GitHub Pages 배포와 공개 경로 재검증만
+  남았습니다.
