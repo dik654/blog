@@ -2789,46 +2789,73 @@
     },
     {
       "route": "blockchain/helios-execution",
-      "title": "Helios Execution RPC",
-      "status": "unreviewed",
+      "title": "Helios는 eth_call을 어떻게 검증할까요?",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-execution.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-execution.tsx",
         "src/pages/articles/ethereum/helios-execution/ExecutionTrace.tsx",
         "src/pages/articles/ethereum/helios-execution/Overview.tsx",
         "src/pages/articles/ethereum/helios-execution/RpcMethods.tsx",
-        "src/pages/articles/ethereum/helios-trust-flow-viz.tsx"
+        "src/pages/articles/ethereum/helios-execution/codeRefs.ts",
+        "src/pages/articles/ethereum/helios-execution/viz/ExecutionRpcTraceViz.tsx",
+        "src/pages/articles/ethereum/helios-execution/viz/RpcTrustMap.tsx",
+        "src/pages/articles/ethereum/helios-execution/codebase/helios-0.11.1/evm_transact.rs",
+        "src/pages/articles/ethereum/helios-execution/codebase/helios-0.11.1/node_api.rs",
+        "src/pages/articles/ethereum/helios-execution/codebase/helios-0.11.1/proof_db.rs",
+        "src/pages/articles/ethereum/helios-execution/codebase/helios-0.11.1/proof_receipts.rs",
+        "src/pages/articles/ethereum/helios-execution/codebase/helios-0.11.1/rpc_provider.rs",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "stageMarkers": 7,
+        "predictionPointers": 4,
+        "assumptionMarkers": 8,
+        "sourceButtons": 7,
         "headings": [
-          "{title}",
-          "\n        Helios는 원격 state를 증명으로 채운 뒤 EVM을 로컬에서 실행한다\n      ",
-          "{title}"
+          "전체 state가 없는데 eth_call을 어떻게 로컬에서 실행할까요?",
+          "ProofDB miss부터 로컬 결과까지",
+          "RPC method마다 검증 근거가 다릅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 access-list prefetch와 proof-backed state의 신뢰 경계를 구분하지 않았고 eth_call의 replay 과정을 한 요청으로 보여 주지 않았습니다.",
+        "기존 gas estimate 설명의 고정 10% 마진은 Helios 0.11.1 코드와 달랐고, call·receipt·log·broadcast가 증명하는 범위를 한 문장으로 묶고 있었습니다."
+      ],
+      "fixture": "검증된 block H에서 contract A의 slot 5를 읽는 eth_call T를 고정합니다. ProofDB miss를 같은 H의 proof로 보충하고 T·환경·fork·override를 바꾸지 않은 채 revm을 다시 실행해 output 0x…07을 얻습니다.",
+      "stageEvidence": {
+        "0": "Call T가 block H의 proof-backed state와 로컬 revm을 거쳐 output으로 가는 전체 경로를 먼저 보여 줍니다.",
+        "1": "Block tag를 header hash H로 고정하고 block environment·fork·override를 하나의 입력으로 묶습니다.",
+        "2": "createAccessList는 account·slot 후보를 미리 찾는 hint이며, 각 값은 H의 proof로 다시 검증합니다.",
+        "3": "첫 revm 실행에서 없는 account·slot·block hash를 StateMissing으로 기록하고 실행을 중단합니다.",
+        "4": "EVM borrow가 끝난 뒤 비동기 provider가 같은 H의 proof를 가져오며, 검증된 값만 ProofDB에 저장합니다.",
+        "5": "T·H·fork·override를 그대로 둔 채 처음부터 재실행하고 새 miss가 없을 때까지 같은 규칙을 반복합니다.",
+        "6": "Success·Revert·Halt와 gas_used를 simulation 결과로 반환하고 inclusion·finality와 구분합니다."
+      },
+      "sourceEvidence": [
+        "a16z/helios 0.11.1 commit 204c998a927348e1c000a664f08d5b37b1b0d924의 EthereumEvm·ProofDB·Node·RpcExecutionProvider를 고정했습니다.",
+        "로컬 코드 패널 다섯 개는 pinned source의 표시한 줄 범위와 byte 단위로 대조해 정확히 일치함을 확인했습니다.",
+        "Ethereum execution-apis와 execution-specs의 고정 snapshot을 RPC schema와 fork-aware local execution의 근거로 분리했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 고정 Helios source를 다시 읽고 block pinning→prefetch hint→ProofDB miss→proof fill→same-input replay→method별 반환 경계의 한 사례로 재작성했습니다.",
+        "arithmetic": "성능·지연 수치를 만들지 않았습니다. 10% 고정 마진 설명은 제거하고 0.11.1 구현이 result.gas_used()를 반환한다는 코드 사실만 남겼습니다.",
+        "humanize": "문장 호흡 점수를 32에서 5 미만으로 낮췄고 한국어·용어·term-pair strict 검사와 git diff --check를 통과했습니다.",
+        "browser390": "390×844 production 화면에서 document 390=390, figure 354×671px, live group 334×363px이며 가로 넘침 0과 ArrowRight 0→1을 확인했습니다. Reduced-motion은 running animation 0, 재생 버튼 비활성, 수동 이동 유지. JavaScript 비활성 화면은 live control 없이 정적 7장면과 return-map을 남깁니다.",
+        "browser1440": "1440×1000에서 document 1440=1440, figure 711×763px입니다. 장면 0이 9초 동안 유지되고 명시적 ArrowRight로 0→1 이동했으며 console 오류·경고는 0건입니다.",
+        "sourceBytes": "다섯 로컬 Rust 발췌의 header 뒤 bytes를 0.11.1 tag source의 지정 줄 범위와 diff해 모두 일치함을 확인했습니다.",
+        "static": "TypeScript·Vite production build가 통과했습니다. 8,096 modules, 2,118 static public routes와 no-script 본문 338편을 생성했고 최대 RSS 약 6.63GB, swap 0이었습니다.",
+        "audits": "learning·graph·formula·calculations·pseudocode·articles·prose·Korean·terms·term-pairs·topology·reading·order·runtime·architecture-flow·coverage strict, selected ESLint와 git diff --check를 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/helios-state",
       "title": "Helios는 원격 state 값을 어떻게 검증할까요?",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-state.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/helios-state.tsx",
@@ -2901,11 +2928,10 @@
         "motion": "Reduced-motion에서 재생 버튼이 비활성화되고 running animation 0이며 수동 ArrowRight 0→1은 유지됩니다.",
         "sourceBytes": "proof.rs의 account·storage·code·MPT wrapper, providers/rpc.rs get_account와 cache/state.rs의 identity·insert body를 고정 commit과 대조했습니다.",
         "static": "TypeScript·Vite production build는 8,091 modules·2,118 static public routes를 생성했고 최대 RSS 약 6.75GB, swap 0이었습니다. 경로 목록 반영 뒤 no-script 본문은 337편이 되었고 JavaScript 비활성 390×844 직접 경로에서 정적 읽기 모드, 일곱 장면, locator·return-map과 전체 본문을 확인했습니다.",
-        "audits": "learning·graph·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime·formula·calculations·pseudocode와 전체 ESLint·TypeScript를 통과했습니다. 공용 locator 때문에 지문만 바뀐 다음 Helios 세 글은 기존 문장 신호를 다시 확인해 같은 점수로 baseline을 갱신했습니다."
+        "audits": "learning·graph·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime·formula·calculations·pseudocode와 전체 ESLint·TypeScript를 통과했습니다. 공용 locator 때문에 지문만 바뀐 다음 Helios 세 글은 기존 문장 신호를 다시 확인해 같은 점수로 baseline을 갱신했습니다.",
+        "production": "Commit 25ea8cd98db9c75bfdbd02389461cd0551de4c8c의 GitHub Pages run 40765476208에서 전역 strict 감사, production build, 공개 1,006편 실제 브라우저 검사와 배포가 통과했습니다. 공개 경로는 1,440×1,000과 390×844에서 가로 넘침 0, 8초 무자동재생, ArrowRight 0→1과 console 오류 0을 확인했습니다. Reduced-motion은 running animation 0과 수동 이동을 유지하며, JavaScript 비활성 경로에는 정적 7장면·직속 부모 지도·return-map과 전체 본문이 남습니다."
       },
-      "remaining": [
-        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
-      ],
+      "remaining": [],
       "reviewDisposition": "substantively-rewritten"
     },
     {

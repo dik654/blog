@@ -6748,9 +6748,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "공식 코드",
-      label: "Helios 0.11.1 — ProofDB and EVM",
-      href: "https://github.com/a16z/helios/tree/0.11.1/revm-utils/src",
-      note: "Pinned-block ProofDB miss·proof fetch·same-input revm replay의 stable implementation",
+      label: "Helios 0.11.1 · commit 204c998a — ProofDB and EVM",
+      href: "https://github.com/a16z/helios/tree/204c998a927348e1c000a664f08d5b37b1b0d924",
+      note: "Block-hash pinning, access-list prefetch, ProofDB miss·proof fill·same-input replay와 gas_used 반환의 고정 구현",
     },
   ],
   "blockchain/helios-types": [

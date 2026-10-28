@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 1006,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 713,
+    "dedicatedVisuals": 714,
     "inlineVisuals": 528,
-    "customVisuals": 896,
-    "animatedMechanisms": 514,
-    "architectureWithoutAnimation": 84,
+    "customVisuals": 897,
+    "animatedMechanisms": 515,
+    "architectureWithoutAnimation": 83,
     "recursiveLocators": 343,
     "codeEvidenceLinked": 221,
     "sourceCitationLinked": 997,
-    "architectureWithoutCustomVisual": 19
+    "architectureWithoutCustomVisual": 18
   },
   "articles": [
     {
@@ -7234,18 +7234,18 @@
     {
       "route": "blockchain/helios-execution",
       "publicPath": "cs/blockchain/helios-execution",
-      "title": "Helios Execution RPC",
+      "title": "Helios는 eth_call을 어떻게 검증할까요?",
       "sourcePath": "src/pages/articles/ethereum/helios-execution.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-state",

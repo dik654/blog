@@ -11,12 +11,9 @@ export default function HeliosExecution() {
   return (
     <>
       <HeliosLocator current="helios-execution" />
-      <Overview onCodeRef={sidebar.open} />
-      <ExecutionTrace
-        title="eth_call + gas estimation 코드 추적"
-        onCodeRef={sidebar.open}
-      />
-      <RpcMethods title="5가지 RPC 메서드 변형" onCodeRef={sidebar.open} />
+      <Overview />
+      <ExecutionTrace onCodeRef={sidebar.open} />
+      <RpcMethods onCodeRef={sidebar.open} />
       <HeliosMapReturn current="helios-execution" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

@@ -3,14 +3,25 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Helios state proof 검증 로컬 완료 (2026-10-29)
+### Helios Execution RPC 검증 로컬 완료 (2026-10-29)
+
+- `blockchain/helios-execution`을 검증된 block `H`에서 contract `A`의 slot `5`를 읽는 `eth_call T` 한 건으로 다시 썼습니다. Block pinning, access-list hint, ProofDB miss, 같은 `H`의 proof 보충, 같은 입력 재실행과 output 반환을 일곱 장면으로 연결했습니다.
+- Access list는 상태를 믿게 하는 근거가 아니라 proof 요청을 줄이는 힌트입니다. State 신뢰는 block `H`에 고정한 account·storage proof가 만듭니다. `StateMissing`은 보충 가능한 상태 부족으로, invalid proof와 contract revert·halt는 서로 다른 종료 경계로 분리했습니다.
+- Helios 0.11.1 commit `204c998a927348e1c000a664f08d5b37b1b0d924`의 `EthereumEvm`, `ProofDB`, `Node`, `RpcExecutionProvider`와 receipt proof를 고정했습니다. 다섯 Rust 코드 패널은 표시한 원문 줄 범위와 byte 단위로 정확히 일치합니다.
+- 기존 글의 고정 10% gas margin 설명을 제거했습니다. 이 release의 estimate path는 같은 local transaction 경로의 `result.gas_used()`를 반환합니다. Estimate 성공은 미래 head의 상태, transaction 포함이나 finality를 보장하지 않습니다.
+- State 조회는 state root, log는 receipts root와 receipt bytes, raw transaction 제출은 broadcast 응답이라는 서로 다른 근거를 사용합니다. Call 결과를 inclusion으로, receipt inclusion을 finality로, provider hash를 peer propagation으로 확대하지 않습니다.
+- 1,440×1,000에서 document 폭 1,440px, figure 711×763px이고 장면 0이 9초 동안 유지됐습니다. 390×844에서는 document 폭 390px, figure 354×671px, live group 334×363px이며 ArrowRight로 0→1이 이동했습니다. 가로 넘침과 console 오류·경고는 0건입니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 재생 버튼만 비활성화되며 수동 이동은 유지됩니다. JavaScript 비활성 직접 경로에는 조작 버튼 없이 정적 일곱 장면, 직속 부모 지도, 반환 절과 전체 본문이 남습니다.
+- 전체 TypeScript와 production build, 학습 계약·지식 그래프·수식·계산·의사코드·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 검사를 통과했습니다. Build는 8,096개 module, 2,118개 정적 공개 경로와 no-script 본문 338편을 만들었고 최대 RSS는 약 6.63GB, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Helios state proof 공개 검증 완료 (2026-10-29)
 
 - `blockchain/helios-state`를 검증된 execution block `H`에서 주소 `A`의 slot `5`가 값 `7`이 되는 한 요청으로 다시 썼습니다. Block hash 고정, state root `R`의 account proof, account가 확인한 storage root `S`의 slot proof, code hash 확인, 검증 후 cache와 typed Account 반환을 일곱 장면으로 연결했습니다.
 - 현재 Helios source는 account leaf를 직접 decode해 RPC field와 비교하지 않습니다. RPC의 nonce·balance·storage hash·code hash로 expected `TrieAccount`를 만들고 RLP-encode한 뒤 Alloy trie verifier에 전달합니다. Empty value의 exclusion proof와 잘린 proof, proof 성공과 current head·finality를 서로 다른 경계로 분리했습니다.
 - Helios commit `43a8c9f3cdda41a6f383c4db41d9a83f102638b1`의 `execution/proof.rs`, `providers/rpc.rs::get_account`, `cache/state.rs`를 고정했습니다. Account `(address, block_hash)`, storage `(storage_hash, slot)`, code `code_hash`의 서로 다른 유효 범위와 검증 뒤 insert 순서를 실제 코드 패널로 대조했습니다.
 - 1,440×1,000 production 화면에서 document 폭 1,440px, figure 711×753px이고 8.2초 동안 장면 0이 유지됐습니다. 390×844에서는 document 폭 390px, figure 354×604px, live 장면 334×291px이며 ArrowRight로 0→1이 이동했습니다. 두 화면 모두 가로 넘침과 console 오류가 없습니다.
 - Reduced-motion에서는 재생 버튼이 비활성화되고 실행 중 animation이 0이며 수동 이동은 유지됩니다. JavaScript 비활성 390×844 직접 경로에는 조작 버튼 없이 정적 일곱 장면, 직속 부모 지도, 반환 절과 전체 본문이 남습니다.
-- 전체 ESLint·TypeScript와 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어·runtime 검사를 통과했습니다. Production build는 8,091개 module, 2,118개 정적 공개 경로와 no-script 본문 337편을 생성했고 최대 RSS는 약 6.75GB, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+- 전체 ESLint·TypeScript와 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어·runtime 검사를 통과했습니다. Production build는 8,091개 module, 2,118개 정적 공개 경로와 no-script 본문 337편을 생성했고 최대 RSS는 약 6.75GB, swap은 0이었습니다. Commit `25ea8cd98db9c75bfdbd02389461cd0551de4c8c`의 GitHub Pages run `40765476208`이 전역 감사, production build, 공개 1,006편 실브라우저 검사와 배포를 통과했습니다. 공개 경로도 데스크톱·모바일·키보드·reduced-motion·JavaScript 비활성 상태에서 다시 확인했으며 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Helios Store update 공개 검증 완료 (2026-10-29)
 
