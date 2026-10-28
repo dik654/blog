@@ -564,7 +564,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Result·BundleState·post-validation·state root와 restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·CPU·memory·DB read를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
   },
-  "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
+  "blockchain/reth-net": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "후보 endpoint가 ECIES identity, Hello capability와 ETH Status를 거쳐 active session이 되고 종료 뒤 자원을 회수하는 과정은 하나의 피어 세션 메커니즘입니다. Release·설정 변경을 비교하고 장애·rollback·ADR을 판단하는 일은 대상 환경의 운영 결정이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 Reth v2.8.1 commit d763342f와 devp2p snapshot 2c19a28에 고정합니다. Capability 집합은 Reth 통합 테스트의 입력이며 endpoint와 chain 호환성은 흐름을 설명하기 위한 가정입니다. 대상 환경의 성능이나 복구 결과는 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-net", "blockchain/reth-net-validation"],
+  },
+  "blockchain/reth-net-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "한 run manifest에서 후보·identity·capability·Status·자료 교환 결과를 기준선과 대조하고 fault, restart, rollback, 재진입과 ADR까지 연결하는 하나의 운영 판단입니다. 같은 session receipt를 나누면 첫 차이와 복구 증거의 연결이 끊깁니다.",
+    sharedGate:
+      "Reth tag·commit·features·network config·ChainSpec·peer corpus·clock·seed·fault schedule을 고정하고 active outcome, 종료 이유, slot·queue 정리와 rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·CPU·memory·goodput을 비교하며 현재 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-precompiles": {
     action: "split",
     status: "implemented",

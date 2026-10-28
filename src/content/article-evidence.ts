@@ -5350,22 +5350,31 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/reth-net": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
     {
-      kind: "공식 규격",
-      label: "Ethereum devp2p RLPx specification",
-      href: "https://github.com/ethereum/devp2p/blob/master/rlpx.md",
-      note: "Peer authentication·encrypted framing·capability negotiation의 wire boundary",
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — network session and eth-wire",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/net",
+      note: "Identity 결속·capability 교집합·Status 검사·active-session lifecycle의 고정 source",
     },
     {
       kind: "공식 규격",
-      label: "Ethereum Wire Protocol (eth)",
-      href: "https://github.com/ethereum/devp2p/blob/master/caps/eth.md",
-      note: "Status와 versioned block·transaction announcement/request/response semantics",
+      label: "Ethereum devp2p specifications @ 2c19a28",
+      href: "https://github.com/ethereum/devp2p/tree/2c19a28b25c29487773ad6b07243e290fa8d65ec",
+      note: "RLPx Hello·capability와 ETH Status·announcement·request/response의 고정 snapshot",
+    },
+  ),
+  "blockchain/reth-net-validation": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — session and eth-wire",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/net",
+      note: "Identity 결속, capability 교집합, Status 검사와 active-session lifecycle의 고정 source",
     },
     {
       kind: "공식 규격",
-      label: "Ethereum Node Discovery v5",
-      href: "https://github.com/ethereum/devp2p/blob/master/discv5/discv5-theory.md",
-      note: "Signed node record·discovery session·lookup의 역할과 한계",
+      label: "Ethereum devp2p specifications @ 2c19a28",
+      href: "https://github.com/ethereum/devp2p/tree/2c19a28b25c29487773ad6b07243e290fa8d65ec",
+      note: "RLPx Hello·capability와 ETH Status·message semantics의 고정 snapshot",
     },
   ),
   "blockchain/reth-payload-builder": withSeriesEvidence(

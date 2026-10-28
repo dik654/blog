@@ -31,7 +31,13 @@ export const SERIES_READING_PATHS = {
         label: "수신과 동기화",
         purpose:
           "peer 입력이 live path와 backfill pipeline으로 나뉘는 경계를 봅니다.",
-        slugs: ["reth-net", "reth-sync", "reth-pipeline", "reth-pipeline-validation"],
+        slugs: [
+          "reth-net",
+          "reth-net-validation",
+          "reth-sync",
+          "reth-pipeline",
+          "reth-pipeline-validation",
+        ],
       },
       {
         label: "검증과 실행",
