@@ -5432,7 +5432,37 @@ export const ARTICLE_EVIDENCE: Readonly<
     href: "https://github.com/paradigmxyz/reth/blob/v2.8.1/crates/stages/stages/tests/pipeline.rs",
     note: "Upstream fixture와 이미 검증한 stage 경계를 lab baseline과 구분하기 위한 근거",
   }),
-  "blockchain/reth-precompiles": withSeriesEvidence(RETH_SERIES_EVIDENCE),
+  "blockchain/reth-precompiles": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "Reth adapter와 dependency snapshot을 고정한 release",
+  }, {
+    kind: "공식 코드",
+    label: "revm-precompile 43.0.3 · Registry와 SHA-256",
+    href: "https://docs.rs/crate/revm-precompile/43.0.3/source/src/",
+    note: "Spec별 주소 registry, gas 선계산과 native backend 호출 순서",
+  }, {
+    kind: "공식 코드",
+    label: "Reth v2.8.1 · Cargo.lock",
+    href: "https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/Cargo.lock",
+    note: "revm-precompile·revm-handler 43.0.3을 고정하는 version receipt",
+  }),
+  "blockchain/reth-precompiles-validation": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 코드",
+    label: "revm-precompile 43.0.3",
+    href: "https://docs.rs/crate/revm-precompile/43.0.3/source/src/",
+    note: "Base·candidate가 대조할 registry·gas·status·output 계약",
+  }, {
+    kind: "공식 코드",
+    label: "Reth v2.8.1 · Dependency receipt",
+    href: "https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/Cargo.lock",
+    note: "실험 기준 binary와 dependency version을 함께 고정하는 근거",
+  }, {
+    kind: "프로젝트 실측",
+    label: "대상 환경 paired run",
+    note: "Registry·gas·vector·backend·fault·rollback parity와 성능 결과는 아직 측정하지 않음",
+  }),
   "blockchain/reth-provider": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 구현",
     label: "Reth v2.8.1 — StateProvider API",

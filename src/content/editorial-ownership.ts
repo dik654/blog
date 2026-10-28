@@ -5671,12 +5671,12 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "reth-precompiles": {
-    title: "Reth precompile 글이 소유하는 범위",
+    title: "Reth precompile 개념 글이 소유하는 범위",
     owns: [
       "Fork별 precompile address registry와 CALL dispatch",
       "입력별 protocol gas 선계산과 out-of-gas 경계",
-      "EIP ABI·오류·출력과 native backend parity",
-      "Pinned registry snapshot과 adversarial release gate",
+      "EIP ABI·오류·출력과 InterpreterResult 변환",
+      "미등록 주소·OOG·protocol-defined empty success의 구분",
     ],
     reuses: [
       { label: "EVM deterministic execution", href: "/cs/blockchain/evm" },
@@ -5686,8 +5686,27 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [
       { kind: "standard", rule: "주소·입력·gas·실패·출력은 활성 fork의 EIP와 execution rule에 귀속한다." },
       { kind: "primary-source", rule: "Registry·crate·backend claim은 pinned Reth git SHA와 dependency snapshot에 귀속한다." },
-      { kind: "project-measurement", rule: "Backend 후보는 official vector·differential output·gas·panic isolation parity 뒤 성능을 비교한다." },
+      { kind: "project-measurement", rule: "대상 환경의 backend parity와 성능은 이 개념 글에서 측정했다고 주장하지 않는다." },
       { kind: "project-claim", rule: "Native 연산이라는 이유로 gas를 wall-clock 비용이나 library safety 보장으로 확대하지 않는다." },
+    ],
+  },
+  "reth-precompiles-validation": {
+    title: "Reth precompile 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Reth·revm·feature·ChainSpec·fork·backend·corpus run manifest",
+      "Fork registry·gas boundary·normal and malformed vector paired receipt",
+      "Backend error·panic·restart·partial success의 장애 판정",
+      "Candidate 격리·dependency rollback·전체 corpus 재진입과 ADR",
+    ],
+    reuses: [
+      { label: "Fork registry와 주소 lookup", href: "/cs/blockchain/reth-precompiles#registry" },
+      { label: "Precompile gas gate", href: "/cs/blockchain/reth-precompiles#gas-gate" },
+      { label: "Output과 failure contract", href: "/cs/blockchain/reth-precompiles#failure-boundaries" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Base contract는 Reth v2.8.1 commit d763342f와 revm-precompile·handler 43.0.3 source에 제한한다." },
+      { kind: "project-measurement", rule: "독립 process의 registry·status·gas·output·fault·restart·rollback parity 뒤 성능을 비교한다." },
+      { kind: "project-claim", rule: "대상 환경 결과가 없으면 proposed·미측정으로 남기고 candidate 우위를 주장하지 않는다." },
     ],
   },
   "helios-update": {

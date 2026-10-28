@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth Precompile 개념·실무 분리 로컬 검증 완료 (2026-10-29)
+
+- `blockchain/reth-precompiles`는 `concept`, 새 `blockchain/reth-precompiles-validation`은 `practice`로 분리했습니다. 개념 글은 주소 `0x02`에 `abc` 3바이트와 precompile frame gas 100을 보낸 한 CALL을 따라 Prague registry, SHA-256 비용 72, 32바이트 output과 frame gas 28까지 추적합니다. 실무 글은 같은 corpus를 base와 candidate에 독립 재생해 registry·gas·vector·backend·fault·rollback receipt를 비교합니다.
+- Reth v2.8.1 commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`과 revm-precompile·revm-handler 43.0.3을 고정했습니다. 미등록 주소의 `Ok(None)`, gas 71의 `PrecompileOOG`, malformed ecRecover의 성공·빈 output과 provider error를 서로 다른 경계로 구분했습니다. 대상 환경의 처리량과 복구 시간은 `[M] 미측정`입니다.
+- 1,440×1,000에서 8.2초 동안 장면 0이 유지되고 키보드로 0→6까지 이동했습니다. 개념 조작부는 65px, 실무 조작부는 87.5px이며 문서 가로 넘침과 production console 오류·경고는 0건입니다.
+- 390×844에서는 두 figure가 354×754px 안에 들어옵니다. 개념 live 본체는 334×557px, 실무 live 본체는 334×484px입니다. 세로로 쌓여 잘리던 실행 단계와 Base·candidate 비교를 모바일 상태 레일과 병렬 비교로 바꿨고, 49.5px 조작부까지 canvas 안에 남습니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 재생만 비활성화되며 수동 0→1 이동은 유지됩니다. JavaScript 비활성 trailing-slash 정적 경로는 두 글 모두 HTTP 200, visible live 장면·버튼 0개, 정적 장면 7개, 직속 부모 지도와 전체 본문을 제공합니다.
+- 학습·article·knowledge graph·읽기 순서·architecture-flow·coverage strict 감사, 선택 ESLint와 TypeScript·production build를 통과했습니다. TypeScript 최대 RSS는 약 5.90GB, Vite build는 약 4.27GB, 정적 생성은 약 1.43GB였고 swap은 0이었습니다. 공개 GitHub Pages 경로 검증은 남아 있습니다.
+
 ### Reth Block Execution 개념·실무 분리 공개 검증 완료 (2026-10-29)
 
 - `blockchain/reth-block-execution`은 `concept`, 새 `blockchain/reth-block-execution-validation`은 `practice`로 분리했습니다. 개념 글은 Alice→Bob→Carol의 두 송금을 부모 상태, fork-aware EVM 환경, pre·transaction·post 실행, `BlockExecutionResult`·`BundleState` 반환과 별도 사후 검증까지 추적합니다. 실무 글은 같은 입력을 base와 candidate에 재생해 REVERT, invalid transaction, fork 경계, commitment 불일치, crash·reorg와 rollback을 판정합니다.

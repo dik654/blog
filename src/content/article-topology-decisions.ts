@@ -565,7 +565,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "Result·BundleState·post-validation·state root와 restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·CPU·memory·DB read를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
   },
   "blockchain/reth-net": KEEP("Discovery→RLPx negotiation→eth activation→exchange→reputation이 한 peer session lifecycle입니다."),
-  "blockchain/reth-precompiles": KEEP("Fork registry→gas gate→ABI execution→backend parity가 한 precompile dispatch contract입니다."),
+  "blockchain/reth-precompiles": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "주소 0x02의 CALL이 활성 fork registry, SHA-256 gas gate와 output 변환을 지나는 과정은 하나의 메커니즘입니다. Release·dependency·backend를 비교하고 장애·rollback·ADR을 판단하는 일은 대상 환경의 운영 결정이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 Reth v2.8.1 commit d763342f와 revm-precompile·handler 43.0.3에 고정합니다. abc 3 bytes·frame gas 100·비용 72·남은 gas 28은 설명용 fixture이며 대상 환경의 성능이나 복구 결과를 주장하지 않습니다.",
+    targetRoutes: ["blockchain/reth-precompiles", "blockchain/reth-precompiles-validation"],
+  },
+  "blockchain/reth-precompiles-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "한 run manifest에서 fork registry, gas 경계, 정상·malformed vector, backend fault·restart를 재생하고 candidate 격리·rollback·재진입·ADR까지 연결하는 하나의 운영 판단입니다.",
+    sharedGate:
+      "Registry·status·gas·output·fault·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·calls/s·CPU·memory를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
   "blockchain/reth-sync": KEEP("Anchor→pipeline execution/unwind→backfill/live handoff→notification이 한 sync state transition입니다."),
   "blockchain/reth-txpool": {
@@ -4080,7 +4098,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-pipeline": "23ebb69349da3792",
   "blockchain/reth-pipeline-validation": "386d614580de719b",
   "blockchain/reth-net": "f506624d24b7ed4a",
-  "blockchain/reth-precompiles": "79605a2596ddb7f4",
+  "blockchain/reth-precompiles": "98682df52ea73c72",
+  "blockchain/reth-precompiles-validation": "a91dcd48e2c0083c",
   "blockchain/reth-rpc": "02473a33cea1db84",
   "blockchain/reth-sync": "310f9fcbfb6e5b3e",
   "blockchain/reth-txpool": "17e22144298ab69e",

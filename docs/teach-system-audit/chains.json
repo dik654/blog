@@ -5999,43 +5999,115 @@
     },
     {
       "route": "blockchain/reth-precompiles",
-      "title": "Reth 프리컴파일 (revm)",
-      "status": "unreviewed",
+      "title": "Reth Precompile: Fork Registry와 Gas Gate",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-precompiles.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-precompiles.tsx",
-        "src/pages/articles/ethereum/reth-precompiles/Crypto.tsx",
-        "src/pages/articles/ethereum/reth-precompiles/CryptoData.ts",
-        "src/pages/articles/ethereum/reth-precompiles/EipPrecompiles.tsx",
-        "src/pages/articles/ethereum/reth-precompiles/EipPrecompilesData.ts",
-        "src/pages/articles/ethereum/reth-precompiles/Overview.tsx",
-        "src/pages/articles/ethereum/reth-precompiles/OverviewData.ts"
+        "src/pages/articles/ethereum/reth-precompiles/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-precompiles/RethPrecompilesLocator.tsx",
+        "src/pages/articles/ethereum/reth-precompiles/viz/RethPrecompileCallViz.tsx",
+        "src/pages/articles/ethereum/reth-precompiles/modernCodeRefs.ts",
+        "src/content/reth-precompiles-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 7,
+        "stageMarkers": 7,
+        "predictionPointers": 1,
+        "assumptionMarkers": 4,
+        "sourceButtons": 5,
         "headings": [
-          "\n        서명·해시·BN254 연산의 공통 실행 경계\n      ",
-          "\n        Istanbul에서 Pectra까지 확장되는 연산 집합\n      ",
-          "\n        포크가 선택하는 네이티브 연산 레지스트리\n      "
+          "주소 0x02의 CALL은 어떻게 SHA-256 결과와 남은 gas를 만듭니까?",
+          "CALL 입력",
+          "Fork Registry",
+          "Gas Gate",
+          "SHA-256 실행",
+          "실패 경계",
+          "구현 근거",
+          "확인 문제"
+        ]
+      },
+      "issues": [
+        "기존 글은 fork registry·crypto 종류·backend release gate를 한 글에 섞고 CALL 하나의 end-to-end 상태 변화를 보여주지 않았습니다.",
+        "합성 source와 과거 snapshot을 사용해 현재 Reth release의 revm dependency 경계가 분명하지 않았습니다."
+      ],
+      "fixture": "주소 0x02에 abc 3 bytes와 precompile frame gas 100을 전달해 Prague registry lookup, SHA-256 비용 72, output 32 bytes와 남은 frame gas 28을 추적합니다.",
+      "stageEvidence": {
+        "input": "CALL-02의 주소·input bytes·frame gas를 먼저 고정합니다.",
+        "registry": "Reth EvmEnv와 revm PrecompileSpecId·address lookup을 연결합니다.",
+        "gas": "60+12×ceil(3/32)=72와 71/72 경계를 계산합니다.",
+        "execution": "SHA-256 output과 InterpreterResult·gas 28을 연결합니다.",
+        "failure": "미등록, OOG, malformed empty success와 provider error를 분리합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 EVM environment와 Cargo.lock",
+        "revm-precompile·revm-handler 43.0.3의 registry, SHA-256, ecRecover와 InterpreterResult 변환"
+      ],
+      "verification": {
+        "substantiveReading": "Reth v2.8.1과 revm 43.0.3의 registry·handler·SHA-256·ecRecover 경계를 다시 읽어 합성 source와 backend 출시 판단을 개념 글에서 제거했습니다.",
+        "arithmetic": "abc 3 bytes에서 ceil(3/32)=1, 60+12×1=72와 frame gas 100−72=28을 계산하고 71/72 경계를 분리했습니다.",
+        "humanize": "ko-natural 오류 0건, 학습·article·knowledge graph·읽기 순서·architecture-flow·coverage strict 감사와 선택 ESLint·TypeScript·production build가 통과했습니다.",
+        "browser390": "390×844에서 전체 figure 354×754px, live 본체 334×557px, 문서와 장면 가로 넘침 0, 49.5px 조작부·7장면·reduced-motion·JavaScript 비활성 정적 장면을 확인했습니다.",
+        "browser1440": "1440×1000에서 8.2초 무자동재생, 키보드 0→6, 65px 장면 버튼, 문서 가로 넘침과 console 오류·경고 0건을 확인했습니다."
+      },
+      "remaining": [
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "split-concept-call-trace-from-practice-release-gate"
+    },
+    {
+      "route": "blockchain/reth-precompiles-validation",
+      "title": "Reth Precompile 검증: Registry·Gas·Backend·Rollback",
+      "status": "rewritten-local-verified",
+      "publicEntry": "src/pages/articles/ethereum/reth-precompiles-validation/index.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ethereum/reth-precompiles-validation/index.tsx",
+        "src/pages/articles/ethereum/reth-precompiles-validation/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-precompiles-validation/viz/RethPrecompilesValidationViz.tsx",
+        "src/pages/articles/ethereum/reth-precompiles/RethPrecompilesLocator.tsx",
+        "src/content/reth-precompiles-learning-tree.ts"
+      ],
+      "candidateSignals": {
+        "stageMarkers": 7,
+        "predictionPointers": 0,
+        "assumptionMarkers": 10,
+        "sourceButtons": 2,
+        "headings": [
+          "Reth·revm·crypto backend 변경이 같은 precompile 결과를 내는지 어떻게 검증합니까?",
+          "실험 입력",
+          "상태 소유권",
+          "정상 기준선",
+          "실험 순서",
+          "장애 판정",
+          "복구와 재진입",
+          "측정 순서",
+          "결정",
+          "근거와 미측정값"
         ]
       },
       "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "fixture": "같은 release manifest와 call corpus를 base·candidate 독립 process에 재생해 registry·gas·vector·backend·fault·rollback receipt를 비교합니다.",
+      "stageEvidence": {
+        "pin": "Reth·revm·features·ChainSpec·fork·corpus·backend·runtime을 고정합니다.",
+        "baseline": "Lookup·gas·status·output·runtime을 call별 golden receipt로 저장합니다.",
+        "replay": "Fork·gas·malformed·backend·fault 경계를 한 항목씩 재생합니다.",
+        "recover": "Manifest rollback 뒤 전체 corpus parity를 다시 확인합니다.",
+        "decision": "Correctness와 복구 뒤 성능을 측정하고 ADR을 확정합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb와 Cargo.lock",
+        "revm-precompile·revm-handler 43.0.3의 registry·gas·status·output 계약"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "고정 release의 registry·gas·status·output 계약을 실무 검증 입력으로 연결하고 미측정 성능값은 결과에서 제외했습니다.",
+        "arithmetic": "각 vector의 exact cost−1·exact cost·exact cost+1 비교와 동일 corpus receipt 대조를 실험 순서에 고정했습니다.",
+        "humanize": "ko-natural 오류 0건, 학습·article·knowledge graph·읽기 순서·architecture-flow·coverage strict 감사와 선택 ESLint·TypeScript·production build가 통과했습니다.",
+        "browser390": "390×844에서 전체 figure 354×754px, live 본체 334×484px, Base·candidate 병렬 비교와 49.5px 조작부가 canvas 안에 남고 가로 넘침이 0임을 확인했습니다.",
+        "browser1440": "1440×1000에서 키보드 0→6, 87.5px 장면 버튼, base·candidate 독립 실행 장면과 console 오류·경고 0건을 확인했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "practice-release-gate-companion"
     },
     {
       "route": "blockchain/reth-provider",
