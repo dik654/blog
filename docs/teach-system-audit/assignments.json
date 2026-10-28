@@ -411,6 +411,7 @@
     "blockchain/crypto-theory",
     "blockchain/curve-stable",
     "blockchain/da-theory",
+    "blockchain/da-validation",
     "blockchain/dag-consensus",
     "blockchain/dai-maker",
     "blockchain/distributed-systems",

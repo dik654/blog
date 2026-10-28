@@ -376,6 +376,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-precompiles-validation",
   "blockchain/reth-net",
   "blockchain/reth-net-validation",
+  "blockchain/da-theory",
+  "blockchain/da-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

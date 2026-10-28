@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### 데이터 가용성 개념·실무 분리 로컬 검증 완료 (2026-10-29)
+
+- `blockchain/da-theory`는 `concept`, 새 `blockchain/da-validation`은 `practice`로 분리했습니다. 개념 글은 원본 D0~D3을 설명용 (8,4) 코드의 P4~P7까지 늘리고, D1·P4·P6·P7을 표본으로 받아 조각 증거를 확인한 뒤 원본을 복원하는 한 흐름을 추적합니다. 실무 글은 같은 조각을 base와 candidate에 재생해 숨김·지연·잘못된 proof·wrong parity·중복 응답·재시작과 rollback을 판정합니다.
+- 조각 진위성, 인코딩 유효성, 네트워크 가용성과 실행 유효성을 분리했습니다. EIP-4844는 전체 sidecar 수신, PeerDAS는 blob 행의 1차원 확장과 data column, Celestia 계열은 행·열을 모두 확장한 2차원 square라는 차이를 같은 비교 화면에 표시했습니다.
+- Ethereum consensus-specs v1.6.1 Fulu DAS core와 EIP-4844·EIP-7594, Celestia App v10.5.0 data square layout을 고정했습니다. 4÷8=1/2, 추가 공간 1, blob 4096×32=131072 bytes, 설명용 표본 실패 확률 (1−1/2)^10=1/1024를 가정과 함께 확인했습니다. 대상 환경의 bandwidth·CPU·memory·복구 시간은 `[M] 미측정`입니다.
+- 1,440px과 390×844에서 두 글의 문서 가로 넘침은 0입니다. 8.2초 동안 자동 재생되지 않았고 키보드로 0→1 이동했습니다. 모바일 live 본체는 개념 334×467px, 실무 334×392px이며 조작부는 50×50px입니다. Reduced-motion에서는 실행 중 animation이 0건이고 수동 이동은 유지됩니다.
+- Production build는 8,074개 module을 처리했습니다. 정적 public route 2,116개와 no-script 본문 330편을 생성했습니다. JavaScript 비활성 390px·1,440px 화면에서 두 글 모두 문서 폭이 viewport와 같고, live 요소는 0개이며 정적 7장면과 전체 본문이 남습니다.
+- 선택 ESLint, 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage strict 감사와 `git diff --check`를 통과했습니다. GitHub Pages 공개 경로 검증은 남아 있습니다.
+
 ### Reth 네트워크 개념·실무 분리 로컬 검증 완료 (2026-10-29)
 
 - `blockchain/reth-net`은 `concept`, 새 `blockchain/reth-net-validation`은 `practice`로 분리했습니다. 개념 글은 endpoint 하나가 후보에서 ECIES·Hello·공통 `eth/67`·Status를 거쳐 active session이 되는 과정을 추적합니다. 실무 글은 같은 peer·capability·Status·message fixture를 base와 candidate에 독립 재생해 종료 이유, slot·queue 회수와 rollback을 비교합니다.

@@ -344,7 +344,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
   "ai/xml-prompting": KEEP("Role framing→serialization→parser/schema/security validation→format evaluation이 한 XML prompt contract입니다."),
   "blockchain/cometbft-abci": KEEP("PrepareProposal→ProcessProposal→FinalizeBlock→Commit이 ABCI state transition 순서와 일치합니다."),
   "blockchain/cometbft-consensus": KEEP("Height/round/step 입력에서 safety·liveness·accountability까지 한 consensus state machine입니다."),
-  "blockchain/da-theory": KEEP("Availability 분리→erasure encoding→blob transport→sampling 비교가 하나의 DA 질문을 단계적으로 답합니다."),
+  "blockchain/da-theory": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "D0~D3을 복원용 조각까지 늘리고 commitment·분산·표본·복원으로 이어지는 메커니즘과 EIP-4844·PeerDAS·Celestia의 구조 비교는 하나의 개념 질문입니다. 버전·layout·setup·peer 조건을 고정하고 장애·restart·rollback·ADR을 판정하는 절차는 대상 환경의 운영 판단이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 설명용 (8,4) 코드에서 D1·P4·P6·P7 네 유효 조각으로 D0~D3을 복원하고, EIP-4844 전체 sidecar·PeerDAS 1차원 column·Celestia 2차원 square를 구분합니다. 실제 client 변경의 typed outcome·자원 정리·restart·rollback과 비용 판단은 포함하지 않습니다.",
+    targetRoutes: ["blockchain/da-theory", "blockchain/da-validation"],
+  },
+  "blockchain/da-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "같은 run manifest에서 정상·숨김·마감 초과·bad proof·wrong parity·wrong index·duplicate·restart를 재생하고 typed outcome·복원 root·자원 정리·rollback 재통과를 확인한 뒤 비용을 비교하는 하나의 운영 판단 경로입니다.",
+    sharedGate:
+      "Base와 candidate에 동일한 D0~D3·encoded pieces·commitment·peer 응답·deadline·fault schedule을 재생합니다. Fixture parity, bounded inflight·buffer·custody state, restart와 rollback 재통과를 먼저 확인하고 그 뒤에만 bandwidth·CPU·memory·p95를 비교합니다. 대상 환경 결과가 없으면 proposed로 남깁니다.",
+  },
   "blockchain/helios-bootstrap": KEEP("Checkpoint source→proof 검증→store init→first update→recovery가 한 bootstrap lifecycle입니다."),
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
@@ -4086,7 +4104,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "ai/xml-prompting": "b85fd33e70670be0",
   "blockchain/cometbft-abci": "e01d405674622a43",
   "blockchain/cometbft-consensus": "9bb6fd231f8bb08f",
-  "blockchain/da-theory": "4bb9b90b2f691896",
+  "blockchain/da-theory": "960f47b88c2342b7",
+  "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/helios-bootstrap": "5784135b544e5930",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
