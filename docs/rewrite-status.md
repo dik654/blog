@@ -3,13 +3,24 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Reth Blob Reorg 재주입·정리 로컬 검증 완료 (2026-10-28)
+### Reth Payload Builder 개념·실무 분리 로컬 검증 완료 (2026-10-28)
+
+- `blockchain/reth-payload-builder`는 `concept`로 정리했습니다. 새 `blockchain/reth-payload-builder-validation`은 `practice`입니다.
+- 개념 글은 `forkchoiceUpdated` 요청 하나를 끝까지 추적합니다. 먼저 attributes를 검증하고 8-byte `payloadId`를 만듭니다. 반복 build, 거래 선택과 EVM 실행을 거쳐 `getPayload` 결과에 도달합니다. 실무 글은 같은 입력을 base와 candidate에 넣습니다. 한 경계씩 장애를 추가해 결과, 복구와 rollback을 비교합니다.
+- Reth v2.8.1과 source commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`을 고정했습니다. 기존 글이 전제하던 txpool generation snapshot은 이 구현의 계약이 아닙니다. Parent와 attributes는 job에 고정되지만 각 build attempt는 현재 txpool iterator를 다시 얻습니다. `payloadId`에도 txpool 내용이나 candidate value가 들어가지 않습니다.
+- 설명용 거래 세 건의 effective tip과 실제 gas를 고정했습니다. 값은 차례로 `3 gwei×21,000`, `2 gwei×40,000`, `4 gwei×30,000`입니다. Candidate local value는 `63,000+80,000+120,000=263,000 gwei`입니다. 대상 네트워크의 수익이나 처리량을 측정한 값은 아닙니다.
+- 두 글은 개념 위치와 실무 anchor를 같은 locator에서 보여 줍니다. 개념 글의 일곱 장면은 요청에서 resolve까지 상태 변화를 추적합니다. 실무 글의 여섯 장면은 입력 고정, 소유권, 기준선, 장애 비교, 복구와 ADR 판정을 보여 줍니다. 두 시각화 모두 자동으로 시작하지 않습니다.
+- 390×844와 1,440×1,000에서 두 경로의 가로 넘침은 0입니다. 8초 동안 자동 재생되지 않았고 ArrowRight로 장면 0→1이 이동했습니다. 모바일 조작부는 약 49.5px이며, reduced-motion에서는 실행 중인 animation이 0건이고 수동 이동은 유지됩니다. JavaScript를 끈 화면에도 개념 7장면과 실무 6장면, 부모 지도와 전체 본문이 같은 순서로 남습니다.
+- 학습 계약·지식 그래프·글 구조·읽기 순서와 topology 감사가 통과했습니다. 문장 호흡·한국어·용어·runtime·architecture-flow·coverage strict 감사도 통과했습니다. TypeScript 검사의 최대 상주 메모리는 약 6.40GB입니다. Production build는 약 6.62GB였고 swap은 0이었습니다. Build는 8,066개 module, 정적 public route 2,108개와 no-script 본문 322편을 생성했습니다.
+- 현재 두 글의 상태는 `rewritten-local-verified`입니다. GitHub Pages 배포와 공개 경로의 모바일·데스크톱·reduced-motion·JavaScript 비활성 재검증이 남았습니다.
+
+### Reth Blob Reorg 재주입·정리 공개 검증 완료 (2026-10-28)
 
 - `blockchain/reth-blob-reorg-release`를 old canonical block 100에서 빠진 Blob transaction T₀가 local sidecar S₀와 hash H₀로 다시 결합하고, 새 canonical state에서 재검사된 뒤 block 101의 finality로 정리되는 한 흐름으로 다시 구성했습니다. T₀·S₀·H₀와 block 100·100′·101은 모두 설명용 fixture입니다.
 - 기존 글이 실제 구현에 없는 `sidecar receipt`, `generation`, local miss 뒤 network fetch를 재주입 조건처럼 설명하던 부분을 제거했습니다. Reth v2.8.1과 source commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`을 고정하고, old−new transaction hash 차집합, `get_blob`, `try_from_eip4844`, canonical state update, external reinsertion, tracker 교체와 finality cleanup을 exact source excerpt로 대조했습니다.
 - 일곱 장면은 요청 없이 자동으로 진행되지 않습니다. 390×844에서는 문서 폭 390px, 모든 장면의 내부 넘침 0, 약 49.5px 조작부와 키보드 0→1 이동을 확인했습니다. 1440×1000에서는 문서 가로 넘침 0, 664×627px 시각화와 실제 source sidebar를 확인했습니다. Reduced-motion은 실행 중 animation 0건이며 재생만 비활성화하고 수동 이동은 유지합니다. JavaScript 비활성 화면에도 부모 지도, 현재 질문, 일곱 정적 장면과 본문이 같은 순서로 남습니다.
 - 학습 계약·지식 그래프·글 구조·읽기 순서·topology·문장 호흡·한국어·용어·runtime·architecture-flow·coverage strict 감사를 통과했습니다. TypeScript 전체 검사의 최대 상주 메모리는 약 6.52GB, production build와 정적 생성은 약 1.45GB였고 swap은 0이었습니다. Build는 8,057개 module, 정적 public route 2,106개, no-script 본문 320편을 생성했습니다.
-- 현재 상태는 `rewritten-local-verified`입니다. GitHub Pages 배포와 공개 경로의 모바일·데스크톱·reduced-motion·JavaScript 비활성 재검증이 남았습니다.
+- GitHub Pages run `40690657290`이 commit `6c994885f29bec05441121ea26b32e890e2f451a`의 strict 감사, production build, 공개 글 브라우저 검사와 배포를 통과했습니다. 공개 390×844 경로에서 가로 넘침 0, 8초 무자동재생, 49.5px 조작부와 키보드 0→1 이동을 확인했습니다. 공개 1,440×1,000 경로도 가로 넘침과 console 오류·경고가 0입니다. Reduced-motion은 실행 중 animation 0건이고 수동 이동이 유지되며, JavaScript 비활성 화면에는 부모 지도, 질문, 일곱 정적 장면과 전체 본문이 남습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Reth EIP-1559 개념·실무 분리 공개 검증 완료 (2026-10-27)
 

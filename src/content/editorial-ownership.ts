@@ -6307,10 +6307,10 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-payload-builder": {
     title: "Reth payload builder 글이 소유하는 범위",
     owns: [
-      "Payload attributes·parent state·pool generation을 묶은 build identity",
-      "Build job snapshot·deadline·cancellation과 candidate overlay 경계",
-      "Gas·blob·dependency budget 안의 transaction selection과 best payload 교체",
-      "Engine payload ID 조회·restart·fork mismatch와 payload release gate",
+      "Payload attributes와 parent hash에서 payloadId를 만드는 build identity",
+      "Build job의 deadline·interval·Better·Aborted·Freeze 상태 전이",
+      "현재 txpool iterator의 gas·blob·size 검사와 EVM candidate overlay",
+      "Engine payload ID lookup·getPayload resolve와 UnknownPayload 경계",
     ],
     reuses: [
       { label: "Reth transaction pool ordering", href: "/cs/blockchain/reth-txpool" },
@@ -6319,10 +6319,29 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Blob gas와 sidecar boundary", href: "/cs/blockchain/reth-eip4844" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Payload job·attribute·builder API claim은 pinned Reth release/source와 활성 Engine API fork specification에 귀속한다." },
+      { kind: "primary-source", rule: "Payload job·ID·builder claim은 Reth v2.8.1 commit d763342f와 고정 Engine API specification에 귀속한다." },
       { kind: "standard", rule: "Local candidate value·payload ID·job completion을 canonical block이나 proposer 채택 보장으로 확대하지 않는다." },
-      { kind: "project-measurement", rule: "같은 parent/state/pool snapshot·attributes·deadline에서 payload bytes·receipts·value·terminal status parity를 먼저 검사한다." },
+      { kind: "project-claim", rule: "Job이 txpool generation 하나를 freeze한다고 설명하지 않고 build 시도마다 현재 iterator를 얻는 실제 경계를 유지한다." },
       { kind: "project-claim", rule: "특정 ordering·timeout·parallelism을 모든 Reth release와 builder customization의 고정 동작으로 일반화하지 않는다." },
+    ],
+  },
+  "reth-payload-builder-validation": {
+    title: "Reth payload builder 변경 검증 글이 소유하는 범위",
+    owns: [
+      "Release·ChainSpec·parent·attributes·raw transaction·clock fixture 고정",
+      "Attributes·resource·execution·resolve·restart fault의 paired comparison",
+      "Payload·roots·receipts·typed status·timing result bundle",
+      "Candidate 격리·binary/config rollback·fixture 재진입과 ADR",
+    ],
+    reuses: [
+      { label: "PayloadId·job·candidate 메커니즘", href: "/cs/blockchain/reth-payload-builder" },
+      { label: "Reth transaction pool ordering", href: "/cs/blockchain/reth-txpool" },
+      { label: "Reth block execution", href: "/cs/blockchain/reth-block-execution" },
+    ],
+    evidence: [
+      { kind: "primary-source", rule: "Fixture outcome oracle는 Reth v2.8.1과 고정 Engine API specification에 귀속한다." },
+      { kind: "project-measurement", rule: "같은 입력의 payload·receipt·typed outcome·rollback parity 뒤에만 성능과 value를 비교한다." },
+      { kind: "project-claim", rule: "대상 환경의 latency·resource·rollback 결과가 없으면 proposed·미측정으로 남긴다." },
     ],
   },
   "reth-sync": {

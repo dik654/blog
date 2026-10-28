@@ -5355,16 +5355,45 @@ export const ARTICLE_EVIDENCE: Readonly<
   ),
   "blockchain/reth-payload-builder": withSeriesEvidence(
     RETH_SERIES_EVIDENCE,
-    source(
-      "공식 문서",
-      OFFICIAL_SOURCES.reth.payloadBuilder,
-      "local payload construction의 현재 API 경계",
-    ),
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.engineApi,
-      "forkchoiceUpdated·getPayload·newPayload의 versioned CL/EL handoff",
-    ),
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — Payload Builder service and job",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/payload",
+      note: "PayloadId·active job·interval build·resolve lifecycle의 고정 source",
+    },
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — Ethereum local payload construction",
+      href: "https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/ethereum/payload/src/lib.rs",
+      note: "현재 txpool iterator·resource 검사·EVM 실행·local value 비교",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Execution APIs snapshot",
+      href: "https://github.com/ethereum/execution-apis/tree/3d627c95a4d3510a8187dd02e0250ecb4331d27e/src/engine",
+      note: "forkchoiceUpdated·getPayload의 고정 CL/EL contract",
+    },
+  ),
+  "blockchain/reth-payload-builder-validation": withSeriesEvidence(
+    RETH_SERIES_EVIDENCE,
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — Payload Builder state transitions",
+      href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/payload",
+      note: "Paired fixture의 typed outcome과 lifecycle oracle",
+    },
+    {
+      kind: "공식 구현",
+      label: "Reth v2.8.1 — Ethereum payload edge handling",
+      href: "https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/ethereum/payload/src/lib.rs",
+      note: "Gas·blob·size·execution failure fixture의 기준 구현",
+    },
+    {
+      kind: "공식 규격",
+      label: "Ethereum Execution APIs snapshot",
+      href: "https://github.com/ethereum/execution-apis/tree/3d627c95a4d3510a8187dd02e0250ecb4331d27e/src/engine",
+      note: "Versioned request rejection과 getPayload 외부 결과 비교",
+    },
   ),
   "blockchain/reth-pipeline": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 구현",
