@@ -4065,7 +4065,7 @@
   배포가 모두 통과했습니다. 공개 경로도 390×844에서 폭 390=390, 7초 무자동재생,
   키보드 0→6 이동, 49.5px 조작부와 console 오류 0건을 다시 확인했습니다.
 
-### Reth BlobStore 글 로컬 검증 완료 (2026-10-28)
+### Reth BlobStore 글 공개 검증 완료 (2026-10-28)
 
 - 기존 글이 사용하던 합성 `reth v1.x` 발췌를 제거하고 Reth v2.8.1 commit
   `d763342fa185`의 BlobStore trait, Disk backend, canonical tracker, maintenance loop와 Pool
@@ -4087,5 +4087,7 @@
   sidebar에서 고정한 v2.8.1 발췌가 열렸습니다. Production build는 8,054개 module과 정적
   public route 2,106개, no-script 본문 318편을 생성했고 최대 상주 메모리는 약 6.69GB,
   swap은 0이었습니다. JavaScript 비활성 390×844 화면에서는 일곱 정적 장면과 부모 지도
-  반환이 남고 visible button은 0개였습니다. GitHub Pages 배포와 공개 경로 재검증만
-  남았습니다.
+  반환이 남고 visible button은 0개였습니다. Commit `c127ab4a`의 GitHub Pages run
+  `40671350526`에서 전역 감사, production build, 공개 1,000편 브라우저 검사와 배포가 모두
+  통과했습니다. 공개 390×844 경로에서도 폭 390=390, 8초 무자동재생, 키보드 0→1 이동,
+  49.5px 조작부와 console 오류 0건을 다시 확인했습니다.
