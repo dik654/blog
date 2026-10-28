@@ -2908,15 +2908,20 @@
     },
     {
       "route": "blockchain/helios-update",
-      "title": "Helios Light Client Update",
-      "status": "unreviewed",
+      "title": "검증된 Helios update는 Store를 어떻게 바꿀까요?",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-update.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/helios-trust-flow-viz.tsx",
         "src/pages/articles/ethereum/helios-update.tsx",
         "src/pages/articles/ethereum/helios-update/ForkChoice.tsx",
         "src/pages/articles/ethereum/helios-update/Overview.tsx",
-        "src/pages/articles/ethereum/helios-update/UpdateTrace.tsx"
+        "src/pages/articles/ethereum/helios-update/UpdateTrace.tsx",
+        "src/pages/articles/ethereum/helios-update/viz/UpdateStoreViz.tsx",
+        "src/pages/articles/ethereum/helios-update/codeRefs.ts",
+        "src/pages/articles/ethereum/helios-update/fileTrees.ts",
+        "src/pages/articles/ethereum/helios-update/codebase/helios/ethereum/consensus-core/src/update_ordering.rs",
+        "src/pages/articles/ethereum/helios-consensus/codebase/helios/ethereum/consensus-core/src/consensus_core.rs",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx"
       ],
       "candidateSignals": {
         "stageMarkers": 0,
@@ -2924,25 +2929,63 @@
         "assumptionMarkers": 0,
         "sourceButtons": 0,
         "headings": [
-          "{title}",
-          "\n        Light client update는 하나의 head가 아니라 속도와 확정성을 함께 관리한다\n      ",
-          "{title}"
+          "검증된 update는 Store의 어느 필드를 바꿀까요?",
+          "Store field가 바뀌는 순서",
+          "후보 선택과 정체 시 예외"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 update 종류·fork choice·apply·reorg를 여러 추상 예시로 나눠 한 update가 같은 Store의 필드를 어떤 순서와 조건으로 바꾸는지 추적하기 어려웠습니다.",
+        "Optimistic threshold와 2/3 full apply, committee handoff, checkpoint 반환이 한 판정처럼 읽힐 여지가 있었습니다.",
+        "실제 Helios 구현에 없는 합성 update.rs와 오래된 source 경계를 근거처럼 보여 주고 있었습니다.",
+        "장식에 가까운 여러 시각화는 요청 없이 한 번 지나가거나 모바일에서 길게 쌓였고, JavaScript 비활성 화면에 같은 순서가 남지 않았습니다."
+      ],
+      "fixture": {
+        "store": "T0: finalized/optimistic 8191, current/next committee K0/K1, previous/current max 380/400, best None",
+        "update": "검증된 u-8193: attested/finalized 8192, signature 8193, 342/512 participants, next committee K2",
+        "result": "T1: finalized/optimistic 8192, current/next committee K1/K2, previous/current max 400/0, best cleared, checkpoint root returned",
+        "boundary": "optimistic threshold=max(380,400)/2=200; full apply는 3×342=1026≥2×512=1024",
+        "assumption": "설명용 slot·committee ID·참여 최댓값이며 대상 네트워크에서 측정한 값이 아닙니다."
+      },
+      "stageEvidence": {
+        "0": "Store T0에서 Store T1까지 후보·두 header·committee·checkpoint가 바뀌는 전체 순서를 한 지도에 놓습니다.",
+        "1": "부모 consensus 글에서 검증을 마친 u-8193과 변경 전 Store T0의 필드를 같은 사례로 고정합니다.",
+        "2": "best_valid_update가 비어 있으면 u-8193을 보존하고 current max를 max(400,342)=400으로 갱신합니다.",
+        "3": "342>max(380,400)/2=200과 더 새로운 attested slot을 확인해 optimistic header만 먼저 8192로 전진시킵니다.",
+        "4": "3×342=1026≥1024와 더 새로운 finalized slot을 따로 확인해 full apply 조건을 통과시킵니다.",
+        "5": "Finalized period가 하나 전진하면 K1을 current, K2를 next로 옮기고 participation 최대값을 previous/current=400/0으로 교대합니다.",
+        "6": "두 header와 committee가 반영된 Store T1, epoch 경계 checkpoint root와 비워진 best_valid_update를 함께 확인합니다.",
+        "failure": "Optimistic threshold만 통과하면 finalized와 committee는 유지하고 후보를 남깁니다. Force update는 정상 finality가 아니라 정체 뒤 liveness 예외로 분리합니다.",
+        "return": "검증된 update가 field별 Store transition을 만들었다는 사실을 Helios 부모 지도에 돌려주고 다음 state-proof 글로 이어집니다."
+      },
+      "sourceEvidence": [
+        {
+          "source": "a16z/helios commit 43a8c9f3cdda41a6f383c4db41d9a83f102638b1",
+          "application": "consensus_core.rs의 apply_update lines 266–365와 force_update·is_better_update·safety_threshold lines 367–505를 고정 source와 byte-for-byte 대조했습니다.",
+          "boundary": "확인한 것은 memory LightClientStore의 field transition입니다. Disk durability·restart recovery·대상 환경 성능은 주장하지 않습니다."
+        },
+        {
+          "source": "Ethereum consensus-specs v1.6.1 Altair light-client sync protocol",
+          "application": "optimistic/finality update 조건, sync-committee period 전환과 force-update의 안전성 차이를 공식 규격에 대조했습니다.",
+          "boundary": "설명용 fixture를 실제 network root·public key·signature 또는 latency 측정값으로 해석하지 않습니다."
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 고정 Helios source를 다시 읽고 검증 완료 u-8193 하나가 Store T0을 T1으로 바꾸는 field별 순서로 재작성했습니다.",
+        "arithmetic": "Optimistic 342>200, full apply 3×342=1026≥1024, period 0→1과 slot 8192 mod 32=0을 독립 검산했습니다. 대상 환경 측정값은 아닙니다.",
+        "humanize": "전역 한국어 strict 감사 오류 0을 확인했습니다. 기존 infrastructure 글의 문맥 검토 1건은 이번 글과 무관합니다.",
+        "browser390": "390×844 dev 화면에서 document 390=390, figure 354=354, 장면별 높이 622~733px, 49.5px 조작부와 가로 잘림 0을 확인했습니다.",
+        "browser1024": "1024×900에서는 축약 장면을 사용해 figure 높이를 1039px에서 678px로 줄였고 document 1024=1024를 확인했습니다.",
+        "browser1440": "1440×1000에서는 전체 field 지도가 표시되고 document 1440=1440, figure 711px, 내부 잘림 0과 ArrowRight/ArrowLeft 이동을 확인했습니다.",
+        "motion": "9.2초 동안 자동 재생되지 않았습니다. 사용자 재생 뒤 약 8.8초에 한 장면만 전진했고 일시정지 상태를 유지했습니다. Reduced-motion은 재생·Space를 막고 수동 좌우 이동을 유지하며 안정화 뒤 running animation 0입니다.",
+        "sourceBytes": "로컬 apply excerpt와 update_ordering.rs는 고정 commit의 해당 line range와 차이가 없습니다.",
+        "static": "TypeScript·Vite build는 8,088 modules·2,118 static public routes와 no-script 본문 336편을 생성했습니다. JavaScript 비활성 390×844·1440×1000 직접 경로는 HTTP 200, document 폭 일치, visible live 요소·버튼 0개, 정적 7장면, 부모 지도·반환 절과 전체 본문을 유지합니다.",
+        "audits": "전체 ESLint, viz·learning·graph·formula·calculations·pseudocode·articles·topology·reading·order·prose·Korean·terms·term-pairs·architecture-flow·coverage·runtime strict 감사와 git diff --check를 통과했습니다. Build 최대 RSS는 약 6.76GB이고 swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/hotstuff-deep",

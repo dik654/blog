@@ -1,5 +1,7 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
+import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
+import { codeRefs } from "./codeRefs";
 
 interface Props {
   onCodeRef: (key: string, ref: CodeRef) => void;
@@ -7,104 +9,156 @@ interface Props {
 
 export default function UpdateTrace({
   title,
-  onCodeRef: _onCodeRef,
+  onCodeRef,
 }: Props & { title: string }) {
   return (
-    <section id="update-trace" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">{title}</h2>
+    <section id="store-transition" className="mb-16 scroll-mt-20">
+      <h2 className="mb-5 text-2xl font-bold">{title}</h2>
 
       <div
-        id="validate-update"
+        id="candidate-state"
         className="prose prose-neutral max-w-none scroll-mt-24 dark:prose-invert"
       >
-        <h3>
-          검증은 time → period → branch → signature 순으로 범위를 좁힙니다
-        </h3>
+        <h3>먼저 후보와 참여 최댓값을 기록합니다</h3>
         <p>
-          먼저 participation bit가 하나 이상이고 header의 execution payload
-          branch가 fork schema에 맞는지 봅니다. 이어서{" "}
-          <code>
-            finalized slot ≤ attested slot &lt; signature slot ≤ current slot
-          </code>
-          인지, signature period가 store의 current 또는 허용된 next period인지,
-          update가 store보다 새롭거나 필요한 next committee를 제공하는지
-          확인합니다.
+          <code>best_valid_update</code>가 비어 있으면 <code>u-8193</code>을
+          저장합니다. 기존 후보가 있다면 <code>is_better_update</code>의
+          순서로 비교합니다. 같은 함수에서 현재 period의 최대 참여 수를
+          <code>max(기존값, 이번 참여 수)</code>로 갱신합니다.
         </p>
         <p>
-          finalized header나 next committee가 있다면 각각의 SSZ Merkle branch를 attested header의 state root에 연결합니다.
-          마지막으로 선택한 current/next committee에서 set bit의 public key를 aggregate하고 signature slot의 fork
-          version·genesis root로 만든 domain에서 BLS signature를 검증합니다. 서명만 맞아도 branch나 period가 틀리면 update 전체를
-          거부합니다.
+          이 두 변경은 full finality 적용보다 먼저 일어납니다. 2/3에 못 미친
+          update라도 검증을 통과했다면 더 나은 후보로 남을 수 있고, 이후
+          optimistic threshold나 장기 정체 시의 force update가 이 누적 상태를
+          읽습니다.
         </p>
       </div>
 
-      <div id="slot-comparison" className="scroll-mt-24">
+      <div id="optimistic-transition" className="scroll-mt-24">
         <ExplainedFormula
-          question="한 slot이 어느 sync-committee period에 속하는지 어떻게 계산할까요?"
-          idea={
-            <>
-              Slot을 epoch 크기로 먼저 묶고, 다시 period당 epoch 수로 묶습니다.
-              두 번의 정수 나눗셈은 하나의 곱으로 나눈 floor와 같습니다.
-            </>
-          }
-          formula={
-            "P(s)=\\left\\lfloor\\frac{s}{S_{\\rm epoch}E_{\\rm period}}\\right\\rfloor"
-          }
-          annotatedFormula={String.raw`P(s)=\biggl\lfloor\frac{\underbrace{s}_{\text{beacon slot}}}{\underbrace{S_{\rm epoch}E_{\rm period}}_{\text{period당 slot}}}\biggr\rfloor`}
+          question="왜 342개 참여로 optimistic header가 먼저 전진할까요?"
+          idea="Helios는 이전·현재 period에서 관측한 최대 참여 수의 절반을 safety threshold로 사용합니다. 이번 참여가 그 값보다 크고 attested slot이 더 새로워야 합니다."
+          formula={String.raw`q_{safe}=\left\lfloor\frac{\max(p_{prev},p_{cur})}{2}\right\rfloor,\qquad p_u>q_{safe}\;\land\;s_a>s_o`}
+          annotatedFormula={String.raw`q_{safe}=\left\lfloor\frac{\max(380,400)}{2}\right\rfloor=200,\qquad \underbrace{342>200}_{\text{참여 조건}}\;\land\;\underbrace{8192>8191}_{\text{새 header}}`}
           operations={[
-            { expression: String.raw`S_{\rm epoch}E_{\rm period}`, annotation: ["epoch당 slot × period당 epoch로","period 하나의 slot 수를 만듦","mainnet 32×256 = 8,192"] },
-            { expression: String.raw`\left\lfloor\frac{s}{S_{\rm epoch}E_{\rm period}}\right\rfloor`, annotation: ["slot을 그 크기로 나눠 내림하면 period","8,191 → 0, 8,192 → 1","경계에서 old committee 재사용 금지"] },
+            {
+              expression: String.raw`\max(380,400)/2=200`,
+              annotation: [
+                "이전·현재 period의 최대 참여 중 큰 값을 고릅니다",
+                "정수 나눗셈으로 절반인 200을 만듭니다",
+                "2/3 finality 기준과 다른 문턱입니다",
+              ],
+            },
+            {
+              expression: String.raw`342>200\;\land\;8192>8191`,
+              annotation: [
+                "이번 참여가 safety threshold를 넘고",
+                "attested slot도 현재 optimistic보다 새롭습니다",
+                "두 조건이 모두 참이므로 8,192로 전진합니다",
+              ],
+            },
           ]}
           terms={[
-            {
-              symbol: "s",
-              name: "Slot",
-              description: "분류할 beacon slot number입니다.",
-            },
-            {
-              symbol: "S_{\\rm epoch}",
-              name: "Slots per epoch",
-              description: "선택한 network preset의 epoch당 slot 수입니다.",
-            },
-            {
-              symbol: "E_{\\rm period}",
-              name: "Epochs per sync period",
-              description: "Sync committee 하나가 담당하는 epoch 수입니다.",
-            },
-            {
-              symbol: "P(s)",
-              name: "Sync period",
-              description: "Slot s를 서명할 committee generation index입니다.",
-            },
+            { symbol: "p_{prev}", name: "이전 period 최대 참여", description: "직전 sync-committee period에서 관측한 가장 큰 active-position 수" },
+            { symbol: "p_{cur}", name: "현재 period 최대 참여", description: "현재 period에서 지금까지 관측한 가장 큰 active-position 수" },
+            { symbol: "p_u", name: "이번 update 참여", description: "u-8193의 sync_committee_bits에서 1인 position 수, 예시는 342" },
+            { symbol: "s_a", name: "Attested slot", description: "이번 update가 제시한 빠른 head의 slot, 예시는 8,192" },
+            { symbol: "s_o", name: "현재 optimistic slot", description: "적용 전 Store의 빠른 head slot, 예시는 8,191" },
           ]}
           assumptions={[
-            "Slot과 preset parameter는 같은 network configuration에서 가져옵니다.",
-            "Mainnet 예시는 32 slots/epoch와 256 epochs/period를 사용합니다.",
-            "Period 일치는 committee membership 조건일 뿐 update freshness나 signature validity를 대신하지 않습니다.",
+            "u-8193은 부모 글의 context·branch·signature 검증을 이미 통과했습니다.",
+            "380·400은 상태 전이를 설명하기 위한 Store fixture이며 mainnet 측정값이 아닙니다.",
+            "Optimistic 전진은 finalized 전진이나 execution validity 전체를 뜻하지 않습니다.",
           ]}
-          interpretation="Mainnet에서는 period가 8,192 slots마다 바뀝니다. slot 8,191은 period 0, slot 8,192는 period 1이므로 경계에서 old committee를 무조건 재사용하면 안 됩니다."
+          interpretation="342는 safety threshold 200보다 크고 attested slot 8,192도 더 새롭습니다. 따라서 optimistic header는 전진할 수 있습니다. 같은 update가 finalized header까지 바꿀지는 다음 2/3 판정에서 따로 결정합니다."
+        />
+      </div>
+
+      <div id="finality-transition" className="scroll-mt-24">
+        <ExplainedFormula
+          question="같은 update가 finalized header까지 바꾸려면 무엇이 더 필요할까요?"
+          idea="Full apply는 sync-committee 2/3 이상과 더 새로운 finalized header를 함께 요구합니다. Store에 next committee가 비어 있는 특수한 경우에는 같은 period의 finalized committee proof가 두 번째 조건을 대신할 수 있습니다."
+          formula={String.raw`apply=(3p_u\ge2N)\;\land\;(s_f>s_F\;\lor\;hasFinalizedNextCommittee)`}
+          annotatedFormula={String.raw`apply=\underbrace{(3\cdot342=1026\ge1024=2\cdot512)}_{\text{2/3 참여}}\;\land\;\underbrace{(8192>8191)}_{\text{더 새로운 finality}}`}
+          operations={[
+            {
+              expression: String.raw`3\cdot342=1026\ge2\cdot512=1024`,
+              annotation: [
+                "342 positions는 512 positions의 2/3 경계를 넘습니다",
+                "341이면 1,023<1,024라 full apply가 아닙니다",
+                "BLS 유효성은 앞 단계에서 이미 확인했습니다",
+              ],
+            },
+            {
+              expression: String.raw`8192>8191`,
+              annotation: [
+                "Update의 finalized slot이 Store보다 새롭습니다",
+                "두 Boolean이 모두 참이므로 full apply를 호출합니다",
+                "낮거나 같은 finalized slot이면 header는 전진하지 않습니다",
+              ],
+            },
+          ]}
+          terms={[
+            { symbol: "N", name: "Committee position 수", description: "예시 network preset의 sync committee size 512" },
+            { symbol: "p_u", name: "이번 update 참여", description: "u-8193의 참여 position 342개" },
+            { symbol: "s_f", name: "Update finalized slot", description: "u-8193이 proof와 함께 제시한 finalized slot 8,192" },
+            { symbol: "s_F", name: "Store finalized slot", description: "적용 전 T0의 finalized slot 8,191" },
+          ]}
+          assumptions={[
+            "Finality header와 next committee branch는 attested state root에 이미 검증됐습니다.",
+            "2/3 조건은 position 수를 정수로 비교하며 distinct validator 수로 바꾸지 않습니다.",
+            "이 판정은 light-client Store transition이며 full BeaconState 실행이 아닙니다.",
+          ]}
+          interpretation="u-8193은 2/3 참여와 더 새로운 finality를 모두 갖췄으므로 full apply 경로로 들어갑니다. Optimistic 전진과 달리 두 조건 중 하나라도 빠지면 finalized header는 T0에 남습니다."
         />
       </div>
 
       <div
-        id="apply-update"
+        id="committee-handoff"
         className="prose prose-neutral max-w-none scroll-mt-24 dark:prose-invert"
       >
-        <h3>검증 성공과 Store pointer 갱신은 같은 사건이 아닙니다</h3>
+        <h3>Period가 바뀌면 next를 current로 옮깁니다</h3>
         <p>
-          유효한 update는 먼저 <code>best_valid_update</code> 후보가 될 수
-          있습니다. 참여가 store의 safety threshold를 넘고 attested slot이 더
-          높으면 optimistic header를 104에서 105로 옮길 수 있습니다. 반면
-          finalized header를 100에서 102로 옮기려면 350/512처럼 2/3
-          supermajority와 새 finality 또는 필요한 committee 정보가 있어야
-          합니다. 어느 pointer도 slot이 낮아지는 방향으로 갱신하지 않습니다.
+          Store의 finalized slot 8,191은 period 0, update의 finalized slot
+          8,192는 period 1입니다. Helios는 이미 저장한 next committee
+          <code>K1</code>을 current로 옮기고, <code>u-8193</code>이 증명한
+          <code>K2</code>를 새 next로 넣습니다. 현재 period의 최대 참여 수 400은
+          previous로 넘어가고 current 값은 0에서 다시 쌓입니다.
         </p>
-        <h3>Committee handoff는 finalized evidence에 묶습니다</h3>
         <p>
-          Store에 next committee가 없고 같은 period의 finalized update가 committee branch를 제공하면 next를 채웁니다. finalized
-          slot이 다음 period로 넘어가면 기존 next를 current로 승격하고 새 next를 저장합니다. 단순히 wall clock이 period 경계를 지났다는 이유로
-          committee를 회전시키지 않으므로 검열이나 네트워크 단절이 곧 잘못된 key set 선택으로 이어지지 않습니다.
+          Wall clock이 경계를 넘었다는 이유만으로 committee를 바꾸지 않습니다.
+          Finalized period가 정확히 한 칸 전진하고 검증된 next committee가 있어야
+          signer set이 이어집니다. Store에 next committee가 없는데 finalized
+          period부터 달라지면 이 함수는 변경을 적용하지 않고 끝납니다.
         </p>
+      </div>
+
+      <div
+        id="checkpoint-output"
+        className="prose prose-neutral max-w-none scroll-mt-24 dark:prose-invert"
+      >
+        <h3>Epoch 경계에서는 새 checkpoint root도 반환합니다</h3>
+        <p>
+          Finalized slot 8,192는 <code>32</code>로 나누어떨어지는 epoch
+          경계입니다. 적용 함수는 finalized header의 tree hash root를 반환하고,
+          상위 consensus client가 이를 <code>last_checkpoint</code>로 저장해
+          channel 소비자에게 알립니다. Full apply가 끝나면
+          <code>best_valid_update</code>는 비워집니다.
+        </p>
+        <p>
+          확인한 commit의 이 경로는 메모리 Store를 바꿉니다. Checkpoint root가
+          반환됐다는 사실을 disk의 원자적 저장이나 process restart 뒤 복구로
+          확대해서는 안 됩니다.
+        </p>
+      </div>
+
+      <div className="not-prose mt-5">
+        <CodeViewButton
+          label="실제 Store 전이 코드 보기"
+          onClick={() =>
+            onCodeRef("hl-apply-update", codeRefs["hl-apply-update"])
+          }
+        />
       </div>
     </section>
   );

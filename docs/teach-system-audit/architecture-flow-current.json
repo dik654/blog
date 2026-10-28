@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1006,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 711,
+    "dedicatedVisuals": 712,
     "inlineVisuals": 528,
-    "customVisuals": 894,
-    "animatedMechanisms": 512,
+    "customVisuals": 895,
+    "animatedMechanisms": 513,
     "architectureWithoutAnimation": 84,
     "recursiveLocators": 343,
     "codeEvidenceLinked": 221,
@@ -7282,18 +7282,18 @@
     {
       "route": "blockchain/helios-update",
       "publicPath": "cs/blockchain/helios-update",
-      "title": "Helios Light Client Update",
+      "title": "검증된 Helios update는 Store를 어떻게 바꿀까요?",
       "sourcePath": "src/pages/articles/ethereum/helios-update.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/hotstuff-deep",

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1006,
-    "reviewed": 679,
-    "pending": 327,
+    "reviewed": 680,
+    "pending": 326,
     "untracked": 0,
-    "assignedPending": 285,
+    "assignedPending": 284,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4121,11 +4121,11 @@
     {
       "route": "blockchain/helios-update",
       "publicPath": "cs/blockchain/helios-update",
-      "title": "Helios Light Client Update",
+      "title": "검증된 Helios update는 Store를 어떻게 바꿀까요?",
       "catalogIndex": 409,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

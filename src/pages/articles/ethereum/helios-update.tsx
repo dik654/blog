@@ -14,11 +14,11 @@ export default function HeliosUpdateArticle() {
       <HeliosLocator current="helios-update" />
       <Overview onCodeRef={sidebar.open} />
       <UpdateTrace
-        title="validate + apply 코드 추적"
+        title="Store field가 바뀌는 순서"
         onCodeRef={sidebar.open}
       />
       <ForkChoice
-        title="최선 Update 선택 + Reorg 처리"
+        title="후보 선택과 정체 시 예외"
         onCodeRef={sidebar.open}
       />
       <HeliosMapReturn current="helios-update" />

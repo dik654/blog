@@ -4153,7 +4153,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/da-validation": "e38d59ace70ff117",
   "blockchain/railgun": "2c7b61b18f7dbd43",
   "blockchain/railgun-validation": "f8b75a2b5a875a04",
-  "blockchain/helios": "f566988c353922fb",
+  "blockchain/helios": "1a42f9ade0fa4255",
   "blockchain/helios-bootstrap": "698c97a481e1c4b1",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
