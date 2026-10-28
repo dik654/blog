@@ -74958,10 +74958,19 @@ export const ARTICLE_LEARNING: Readonly<
     papers: [{ title: "Reth v2.8.1 blob-store source", href: "https://github.com/paradigmxyz/reth/tree/v2.8.1/crates/transaction-pool/src/blobstore", problem: "Pool transaction과 큰 sidecar를 분리하되 reorg 가능 기간에 다시 결합", contribution: "BlobStore contract, memory/disk backend, cache→file lookup, canonical finality cleanup", assumptions: "v2.8.1·source SHA·backend·filesystem·Pool settings 고정", evidenceScope: "고정 release의 insert/get/delete/cleanup과 Pool state boundary", notClaim: "Digest·generation·atomic receipt·restart durability 또는 protocol availability를 보장하지 않음", sectionId: "paper-reth-blobstore" }],
   },
   "blockchain/eip4844-blob-fee": {
-    "entryLevel": true,
-    "entryNote": "이전 초과분 2·사용량 5·목표 3의 사례에서 출발해 실제 단위와 정수 가격, 적용 버전의 분기를 읽습니다.",
-    "coreIdea": "이전 사용량은 다음 초과분을 거쳐 정수 가격에 반영되며, 현재 설정에서는 실행 가격에 연결된 추가 분기와 새 블록 시각을 함께 확인해야 합니다.",
-    "assumedKnowledge": [],
+    "entryLevel": false,
+    "entryNote": "직속 부모 글에서 Blob transaction과 sidecar의 결속을 확인한 뒤, 부모 블록의 사용량이 자식 블록의 excess와 기본료가 되는 한 경로를 따라갑니다.",
+    "coreIdea": "부모 헤더의 excess·사용량과 자식 시각의 활성 설정은 자식 excess를 만들고, 그 값은 정수 fake-exponential을 거쳐 자식 Blob 기본료가 됩니다.",
+    "assumedKnowledge": [
+      {
+        "id": "eip4844-transaction-sidecar-boundary",
+        "role": "Blob transaction이 Blob 원문 대신 versioned hash를 참조한다는 경계를 재사용합니다."
+      },
+      {
+        "id": "eip4844-versioned-hash-binding",
+        "role": "Blob 하나가 별도 fee lane에서 131,072 blob gas를 사용한다는 제출 단위를 연결합니다."
+      }
+    ],
     "introducedHere": [
       {
         "id": "eip4844-excess-blob-gas-feedback",
@@ -74972,15 +74981,15 @@ export const ARTICLE_LEARNING: Readonly<
       {
         "id": "eip4844-excess-blob-gas-feedback",
         "sectionId": "excess-update",
-        "intuition": "많이 쓴 양을 가격용 기록으로 넘기고 다음 가격 계산의 입력으로 사용합니다.",
-        "workedExample": "2+5−3=4묶음 상당이며 524,288 blob gas입니다. 옛 설정의 가격은 1 wei/blob gas이고 별도의 작은 설정 f=1, n=4, d=2에서는 6이 나옵니다.",
-        "boundary": "목표 3은 초기 규칙의 사례입니다. EIP-7918과 BPO2에서는 추가 분기와 새 블록 시각의 설정을 확인합니다."
+        "intuition": "부모가 사용한 양을 가격 상태로 넘기되, 자식 블록에 활성화된 규칙으로만 갱신합니다.",
+        "workedExample": "BPO2에서 부모 excess 2개분·사용 18개분·실행 기본료 1 Gwei이면 EIP-7918 분기로 자식 excess 8개분을 얻고, 정수 기본료는 아직 1 wei/blob gas입니다.",
+        "boundary": "부모의 사용량은 부모 자신의 기본료를 바꾸지 않으며, Cancun의 target 3·max 6을 현재 BPO2 설정으로 사용하지 않습니다."
       }
     ],
     "conceptStages": [
       {
         "label": "01 price",
-        "relation": "Blob demand feedback을 정의합니다.",
+        "relation": "부모 헤더 상태가 자식 excess·기본료·헤더 검증으로 이어지는 피드백을 추적합니다.",
         "concepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
@@ -74991,54 +75000,57 @@ export const ARTICLE_LEARNING: Readonly<
         "level": "basic",
         "question": "Blob gas와 실행 gas가 각각 무엇을 세는지 설명하세요.",
         "answerChecklist": [
-          "자료 사용량",
+          "Blob data 사용량",
           "프로그램 실행",
           "별도 가격",
           "blob 하나는 131,072 blob gas",
           "서로 다른 단위를 더하지 않음"
         ],
-        "sectionId": "names",
+        "sectionId": "state-ledger",
         "requiredConcepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
       },
       {
         "level": "basic",
-        "question": "사례의 초과분 4가 미처리 파일 네 개와 다른 이유를 설명하세요.",
+        "question": "사례의 자식 excess 8개분이 미처리 Blob 여덟 개와 다른 이유를 설명하세요.",
         "answerChecklist": [
           "가격 계산용 기록",
           "실제 대기열이 아님",
-          "이전 기록에서 다음 가격으로 전달",
-          "하한은 0"
+          "1,048,576 blob gas",
+          "부모 상태에서 자식 가격으로 전달",
+          "다음 블록이 다시 입력으로 사용"
         ],
-        "sectionId": "case",
+        "sectionId": "state-ledger",
         "requiredConcepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
       },
       {
         "level": "basic",
-        "question": "목표 3·최대 6에서 사용량 5인 블록을 판정하세요.",
+        "question": "BPO2의 target 14·max 21에서 사용량 18인 부모 블록을 판정하세요.",
         "answerChecklist": [
-          "목표보다 2 많음",
+          "target보다 4 많음",
           "최대 이내",
           "사용량만으로 무효인 블록은 아님",
-          "현재 목표는 적용 버전별로 확인"
+          "자식 excess 갱신 입력",
+          "target과 max의 역할 분리"
         ],
-        "sectionId": "case",
+        "sectionId": "state-ledger",
         "requiredConcepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
       },
       {
         "level": "basic",
-        "question": "2·5·3을 실제 blob gas로 바꿔 다음 기록을 계산하세요.",
+        "question": "EIP-7918 조건이 참인 BPO2 사례의 2·18·14·21을 실제 blob gas로 바꿔 자식 excess를 계산하세요.",
         "answerChecklist": [
           "262,144",
-          "655,360",
-          "393,216",
-          "524,288",
-          "최솟값은 0"
+          "2,359,296",
+          "target 1,835,008",
+          "max 2,752,512",
+          "증가분 786,432",
+          "결과 1,048,576"
         ],
         "sectionId": "excess-update",
         "requiredConcepts": [
@@ -75047,26 +75059,30 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "basic",
-        "question": "초과분 4 이후 사용량이 두 번 0이면 기록을 계산하세요.",
+        "question": "부모 사용량과 자식 사용량이 각각 어느 블록의 기본료에 반영되는지 설명하세요.",
         "answerChecklist": [
-          "4+0−3=1",
-          "1+0−3=−2",
-          "최종값은 0",
-          "음수 할인을 저장하지 않음"
+          "부모 사용량",
+          "자식 excess",
+          "자식 기본료",
+          "자식 사용량",
+          "손자 excess",
+          "한 블록 지연"
         ],
-        "sectionId": "case",
+        "sectionId": "overview",
         "requiredConcepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
       },
       {
         "level": "basic",
-        "question": "f=1, n=4, d=2의 정수 가격을 손으로 계산하세요.",
+        "question": "BPO2에서 excess 8개분의 기본료가 1이고 62개분부터 2가 되는 이유를 설명하세요.",
         "answerChecklist": [
-          "항은 2, 4, 4, 2, 1, 0",
-          "합계는 13",
-          "최종값은 6",
-          "e²를 내림한 7과 다름"
+          "fake-exponential",
+          "BPO2 fraction 11,684,671",
+          "정수 항",
+          "각 단계의 나머지 버림",
+          "excess 증가와 가격 증가 분리",
+          "8은 첫 정수 구간"
         ],
         "sectionId": "integer-fee",
         "requiredConcepts": [
@@ -75075,7 +75091,7 @@ export const ARTICLE_LEARNING: Readonly<
       },
       {
         "level": "advanced",
-        "question": "BPO2의 초과분 2·사용 18·목표 14·최대 21에서 두 가격 분기를 비교하세요.",
+        "question": "BPO2의 excess 2·사용 18·target 14·max 21에서 EIP-7918 분기와 기존 분기를 비교하세요.",
         "answerChecklist": [
           "보통 분기는 6",
           "추가 분기는 8",
@@ -75083,7 +75099,7 @@ export const ARTICLE_LEARNING: Readonly<
           "8192×실행 가격과 131072×blob 가격 비교",
           "실제 blob gas 단위로 정수 계산"
         ],
-        "sectionId": "source",
+        "sectionId": "excess-update",
         "requiredConcepts": [
           "eip4844-excess-blob-gas-feedback"
         ]
@@ -75142,9 +75158,9 @@ export const ARTICLE_LEARNING: Readonly<
         "href": "https://eips.ethereum.org/EIPS/eip-4844",
         "problem": "자료 수요를 실행 자원과 별도로 가격에 반영",
         "contribution": "이전 초과분과 사용량에서 목표를 빼는 상태 갱신 및 정수 항을 반복해 더하는 기본 가격 계산을 정의합니다.",
-        "assumptions": "초기 EIP-4844 설정을 사용하는 사례이며 blob gas 단위와 각 단계의 정수 내림 규칙을 고정합니다.",
-        "evidenceScope": "이전 초과분 2·사용량 5·목표 3에서 다음 기록 4와 실제 단위 524,288을 얻는 계산, blob 기본 요금의 차감과 소각을 확인합니다.",
-        "notClaim": "현재 모든 fork에 하나의 설정을 적용하지 않습니다.",
+        "assumptions": "Blob gas 131,072 단위와 정수 가격 recurrence를 사용하되, 문서의 target 3·max 6은 Cancun 역사값으로만 읽습니다.",
+        "evidenceScope": "별도 Blob fee lane, 헤더의 used·excess, 정수 가격, Blob 요금의 차감과 소각을 확인합니다.",
+        "notClaim": "Cancun 매개변수를 현재 BPO2나 향후 fork의 값으로 적용하지 않습니다.",
         "sectionId": "paper-eip4844-fee"
       },
       {
@@ -75153,17 +75169,27 @@ export const ARTICLE_LEARNING: Readonly<
         "problem": "실행 비용이 자료 가격의 신호를 압도하는 상황을 다룹니다.",
         "contribution": "실행 가격 조건에 따라 초과분 계산을 나눕니다.",
         "assumptions": "새 블록의 설정과 이전 헤더의 가격을 사용합니다.",
-        "evidenceScope": "BPO2 사례에서 다음 초과분 6과 8이 나오는 조건을 비교합니다.",
+        "evidenceScope": "부모 excess 2·사용 18·실행 기본료 1 Gwei에서 자식 excess 8, 비교 fixture에서 6이 나오는 조건을 구분합니다.",
         "notClaim": "실제 수요나 미래 가격을 예측하지 않습니다.",
-        "sectionId": "source"
+        "sectionId": "excess-update"
       },
       {
-        "title": "go-ethereum c9a2bc7 eip4844.go",
-        "href": "https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go",
+        "title": "EIP-8135 BPO2 mainnet parameters",
+        "href": "https://eips.ethereum.org/EIPS/eip-8135",
+        "problem": "현재 메인넷 Blob 매개변수를 Cancun 역사값과 구분해야 합니다.",
+        "contribution": "BPO2 활성 시각과 target 14·max 21·update fraction 11,684,671을 기록합니다.",
+        "assumptions": "Ethereum mainnet BPO2 설정을 기준으로 합니다.",
+        "evidenceScope": "현재 fixture에 넣는 세 매개변수와 활성 시각을 확인합니다.",
+        "notClaim": "향후 BPO에서도 같은 값이 유지된다고 가정하지 않습니다.",
+        "sectionId": "schedule"
+      },
+      {
+        "title": "go-ethereum v1.17.10 eip4844.go",
+        "href": "https://github.com/ethereum/go-ethereum/blob/v1.17.10/consensus/misc/eip4844/eip4844.go",
         "problem": "노드마다 같은 가격과 헤더 유효성 판정을 내려야 합니다.",
         "contribution": "설정 선택·초과분 세 분기·정수 반복·헤더 검산의 원본 코드입니다.",
-        "assumptions": "고정한 커밋과 적용 설정을 사용합니다.",
-        "evidenceScope": "원본 fakeExponential 함수를 여섯 입력으로 로컬에서 실행했습니다.",
+        "assumptions": "v1.17.10·commit 1df30b18과 BPO2 fixture를 고정합니다.",
+        "evidenceScope": "원본과 같은 정수 recurrence에서 excess 8→1, 62→2, 98→3을 로컬로 검산했습니다.",
         "notClaim": "전체 노드나 메인넷 실행 검증은 아닙니다.",
         "sectionId": "source"
       }

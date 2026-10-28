@@ -4441,11 +4441,11 @@
     {
       "route": "blockchain/eip4844-blob-fee",
       "publicPath": "cs/blockchain/eip4844-blob-fee",
-      "title": "EIP-4844 Blob Fee · Excess Feedback",
+      "title": "EIP-4844 Blob 가격",
       "catalogIndex": 441,
       "status": "reviewed",
       "provenance": "checkpoint",
-      "recordedStatus": "locally-verified",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

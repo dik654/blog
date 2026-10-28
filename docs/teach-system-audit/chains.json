@@ -1620,59 +1620,78 @@
     },
     {
       "route": "blockchain/eip4844-blob-fee",
-      "title": "EIP-4844 Blob Fee · Excess Feedback",
-      "status": "locally-verified",
+      "title": "EIP-4844 Blob 가격",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/eip4844-blob-fee.tsx",
-        "src/pages/articles/ethereum/eip4844-blob-fee/BlobFeeCurveChart.tsx",
         "src/pages/articles/ethereum/eip4844-blob-fee/ModernArticle.tsx",
+        "src/pages/articles/ethereum/eip4844-blob-fee/BlobFeeTraceViz.tsx",
+        "src/pages/articles/ethereum/eip4844-blob-fee/BlobFeeCurveChart.tsx",
+        "src/pages/articles/ethereum/eip4844-blob-fee/codeRefs.ts",
         "src/pages/articles/ethereum/eip4844-blob-fee/fileTree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
+        "stageMarkers": 7,
+        "predictionPointers": 3,
         "assumptionMarkers": 0,
         "sourceButtons": 3,
         "headings": [
-          "Blob fee는 execution gas와 분리된 수요 원장을 읽습니다",
-          "더한 뒤 target을 빼고, 음수 debt는 버립니다",
-          "정수 fake-exponential은 client마다 같은 price를 만들기 위한 계산법입니다",
-          "규범적 근거"
+          "부모 블록의 Blob 사용량은 어떻게 자식 블록의 가격이 됩니까?",
+          "헤더에 남는 두 값",
+          "다음 excess 계산",
+          "정수 기본료 계산",
+          "설정은 업그레이드마다 달라집니다",
+          "실제 구현 경로",
+          "잘못 읽으면 어디서 실패합니까?",
+          "근거 범위"
         ]
       },
       "issues": [],
       "fixture": {
-        "case": "HistoricalE2/U5/T3→4blob-equivalent524288gas→price1;mini f1/n4/d2→6;BPO2E2/U18/T14/max21 normal6,reserve8"
+        "case": "부모 excess 2개분·used 18개분·execution base fee 1 Gwei, 자식 시각 BPO2 target 14·max 21·fraction 11,684,671에서 EIP-7918 분기가 참입니다. 자식 excess는 8개분, Blob 기본료는 1 wei/blob gas, Blob 한 개의 프로토콜 요금은 131,072 wei입니다."
       },
       "stageEvidence": {
-        "S": "overview: user problem before role names",
-        "B": "black-box: submission,usage record,price output before component names",
-        "0": "case: historical excess2,usage5,target3→4;zero usage twice→1→0",
-        "1": "picture: same amounts in FlowRail with distinct owner/output roles",
-        "2": "need: separate data/execution resources and target versus max",
-        "3": "names: blob131072,used/excess,target/max,wei/blob gas;unitsconverted",
-        "4": "excess-update: 262144+655360−393216=524288→historicalfee1",
-        "5/6": "source: pinnedGeth129–168 headTimestamp/3branches;215–228 actualinteger6vs1;99–124 rejection;7918BPO2case6vs8",
-        "7": "limits:recordnotqueue;historical/currentfork;noactualdemandclaim;questions3/8/9"
+        "parent": "Reth EIP-4844 지도에서 제출·검증·보관 뒤의 가격 피드백 영역을 직속 부모로 표시합니다.",
+        "question": "부모 헤더의 excess와 사용량이 자식 헤더의 excess와 정수 Blob 기본료로 바뀌는 한 경로를 묻습니다.",
+        "trace": "부모 상태 → 자식 시각 BPO2 설정 → target 검사 → EIP-7918 가격 조건 → excess 8 → 정수 기본료 1 → 헤더 재검산의 일곱 장면을 같은 값으로 추적합니다.",
+        "calculation": "E+U=20≥14, reserve 조건 참, 2+floor(18×7/21)=8을 단계별로 계산하고 기존 분기의 결과 6과 구분합니다.",
+        "implementation": "Geth v1.17.10의 CalcExcessBlobGas, CalcBlobFee, VerifyEIP4844Header 발췌에서 fixture가 닿는 분기와 정수 반복을 확인합니다.",
+        "failure": "자식 시각 대신 부모 시각을 쓰는 설정 오류, 단위 혼용, EIP-7918 누락, 실수 지수함수 대체, 프로토콜 요금과 서비스 가격 혼동을 분리합니다.",
+        "return": "부모의 사용량은 부모 가격을 바꾸는 값이 아니라 자식 가격 상태의 입력이라는 사실을 부모 지도에 반환합니다."
       },
       "sourceEvidence": [
         {
-          "source": "go-ethereumc9a2bc73c847319a8faa57de59e42c0efc420682 originaleip4844.go228lines;LGPL preserved;SHA256c8b68e4f32cef33e9420648344edc8fa3bb5d5cb42de22fbf0b34bea5dbdf63c",
-          "application": "source: pinnedGeth129–168 headTimestamp/3branches;215–228 actualinteger6vs1;99–124 rejection;7918BPO2case6vs8"
+          "source": "EIP-4844 · https://eips.ethereum.org/EIPS/eip-4844",
+          "application": "Blob gas 단위, 헤더의 used/excess, fake-exponential과 프로토콜 요금 규칙을 확인했습니다. target 3·max 6은 Cancun 역사값으로만 사용합니다."
+        },
+        {
+          "source": "EIP-7918 · https://eips.ethereum.org/EIPS/eip-7918",
+          "application": "실행 기본료와 nominal Blob 가격을 비교하는 조건 및 조건이 참일 때의 excess 갱신식을 확인했습니다."
+        },
+        {
+          "source": "EIP-8135 · https://eips.ethereum.org/EIPS/eip-8135",
+          "application": "BPO2 활성 시각 1767747671, target 14, max 21, update fraction 11,684,671을 확인했습니다."
+        },
+        {
+          "source": "go-ethereum v1.17.10 commit 1df30b18d9ed35ee9d28ffd4648442c2204554ad · consensus/misc/eip4844/eip4844.go · SHA-256 c8b68e4f32cef33e9420648344edc8fa3bb5d5cb42de22fbf0b34bea5dbdf63c",
+          "application": "자식 timestamp로 설정을 고르는 분기, EIP-7918와 기존 excess 식, 정수 fake-exponential, max·배수·excess 일치 검사를 실제 구현에서 확인했습니다."
         }
       ],
       "verification": {
-        "substantiveReading": "Read original actualbodyandalloriginalcomponents;rewrote publicentry substance;retained accurate source/failureconstraints andcombinationderivation;initialissues recorded separately.",
-        "arithmetic": "/tmp/teach-all/chains-next-arithmetic.json17Pythonchecks;/tmp/teach-all/blob-fee-original-harness.log6actualGo-original-functioncases. AA contract not compiled/deployed; no mainnetexecution.",
-        "learning": "/tmp/teach-all/chains-next-learning.log: strict require-registration 2 routes passed after root merged learning, canonical, TOC and topology.",
-        "humanize": "/tmp/teach-all/humanize-chains-next-final/eip4844-blob-fee/gate.txt: gate 0, exact roundtrip, final text unchanged.",
-        "browser390": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
-        "browser1440": "output/playwright/teach-chains-next/summary.json: 22 original panels across 2 routes × 2 widths opened; overflow, broken anchors, KaTeX and runtime errors 0. /tmp/teach-all/chains-next-final-metrics.json verified later prose and formula layout.",
-        "static": "tscpass;/tmp/teach-all/chains-next-formulas.log1419explicit/0missing;targetedchartvizpass;proseglobalre-review0",
-        "chart": "/tmp/teach-all/blob-curve-final.json: 390 and 1440 SVG label bounds 0 errors; non-preserved aspect ratio exposes exponential shape, y bottom padding and bounded labels eliminate -5 clipping, x max 3.3 fits 3.0 label."
+        "substantiveReading": "기존 본문과 모든 구성요소를 다시 읽고 현재 BPO2·EIP-7918 규칙, 고정 Geth 구현, 일곱 장면의 한 fixture로 본문을 전면 재작성했습니다.",
+        "arithmetic": "같은 정수 반복으로 자식 excess 8, 기존 분기 비교값 6, 기본료 1, Blob 한 개 요금 131,072와 BPO2 임계값 0~61→1·62~97→2·98~123→3·124~143→4를 검산했습니다.",
+        "learning": "직속 부모 locator, 현재 영역, 한 질문, 한 fixture, 실제 구현, 설계된 실패와 부모 지도 반환을 연결하고 관련 학습·topology·지식 그래프를 갱신했습니다.",
+        "humanize": "humanize_extract.py로 본문·시각화 3개 파일을 추출하고 ko-natural doc·합니다체·expert 린트를 두 번 실행했습니다. 최종 errors 0, warns 0입니다.",
+        "browser390": "로컬 production 정적 경로를 390×844에서 열어 폭 390=390, 첫 장면 유지, 키보드 이동, 44px 이상 조작부, console 오류 0을 확인했습니다. reduced-motion에서는 재생이 비활성화되고 수동 이동은 유지됩니다.",
+        "browser1440": "로컬 production 정적 경로를 1,440×1,000에서 열어 전체 일곱 단계, 본문·차트·코드 sidebar, 문서 가로 넘침 0과 console 오류 0을 확인했습니다.",
+        "static": "Node heap 8GB에서 tsc -b와 production build가 통과했습니다. generate-static-routes.mjs는 public route 2,106개와 no-script 본문 319편을 생성했으며 최대 RSS는 약 1.35GB, swap은 0이었습니다.",
+        "noJavaScript": "dist를 directory-index 서버로 제공해 JavaScript 비활성 390×844에서 정적 읽기 모드, 직속 부모, 일곱 장면, 전체 본문, 부모 지도 반환, visible button 0과 가로 넘침 0을 확인했습니다.",
+        "chart": "BPO2의 정수 계단값을 직접 계산한 표와 계단 차트가 같은 임계값을 표시하고, 모바일과 데스크톱에서 축·레이블 잘림이 없음을 확인했습니다."
       },
-      "remaining": [],
+      "remaining": [
+        "GitHub Pages 배포 후 공개 경로에서 모바일·키보드·reduced-motion·JavaScript 비활성 상태를 다시 검증합니다."
+      ],
       "reviewedInitialIssues": [
         "Term-first overview without same-case role map/why sequence.",
         "Claimed actual Reth code was a hand-authored Korean summary without an exact original pin.",

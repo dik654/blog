@@ -1,98 +1,273 @@
 import { Link } from "react-router-dom";
-import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
-import { CitationBlock } from "@/components/ui/citation-block";
-import AlgorithmBlock from "@/components/ui/algorithm-block";
-import ExplainedFormula from "@/components/ui/explained-formula";
 import ContentBoundary from "@/components/articles/content-boundary";
-import FlowRail from "../../world-systems/FlowRail";
+import TermBreakdown from "@/components/articles/term-breakdown";
+import { CodeSidebar, CodeViewButton, useCodeSidebar } from "@/components/code";
+import type { ProjectMeta } from "@/components/code/types";
+import { CitationBlock } from "@/components/ui/citation-block";
+import ExplainedFormula from "@/components/ui/explained-formula";
 import ReviewPrompts from "../../world-systems/ReviewPrompts";
+import RethEip4844Locator, {
+  RethEip4844MapReturn,
+} from "../reth-eip4844/RethEip4844Locator";
 import BlobFeeCurveChart from "./BlobFeeCurveChart";
+import BlobFeeTraceViz from "./BlobFeeTraceViz";
 import { codeRefs } from "./codeRefs";
 import { eip4844BlobFeeTree } from "./fileTree";
 
+const PROJECT_META: Record<string, ProjectMeta> = {
+  "go-ethereum": {
+    id: "go-ethereum",
+    label: "go-ethereum v1.17.10 · Go",
+    badgeClass: "bg-sky-500/10 border-sky-500 text-sky-700",
+  },
+};
+
+function CodeLink({ codeKey, label, open }: {
+  codeKey: keyof typeof codeRefs;
+  label: string;
+  open: (key: string, ref: (typeof codeRefs)[string]) => void;
+}) {
+  return (
+    <div className="not-prose flex flex-wrap items-center gap-2">
+      <CodeViewButton onClick={() => open(codeKey, codeRefs[codeKey])} />
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
 export default function ModernBlobFee() {
- const sidebar = useCodeSidebar();
- const code = (key: string, label: string) => <div className="not-prose flex flex-wrap items-center gap-2"><CodeViewButton onClick={() => sidebar.open(key, codeRefs[key])} /><span className="text-sm text-muted-foreground">{label}</span></div>;
- return <article className="space-y-14">
-  <section id="overview" data-teach-level="S" className="space-y-5">
-   <h2 className="text-2xl font-bold">1. 자료를 많이 올리면 다음 가격은 어떻게 달라질까</h2>
-   <p>여러 서비스가 거래 기록을 같은 네트워크에 올립니다. 모두가 한꺼번에 많은 자료를 보내면 이를 받아 보관하고 전달하는 컴퓨터의 부담이 커집니다. 블록마다 허용량만 제한하면 남은 자리를 두고 경쟁하는 정도를 다음 가격에 반영하기 어렵습니다.</p>
-   <p>이더리움은 자료 사용량을 기록하고 목표보다 많이 쓴 양을 다음 블록으로 넘겨 가격을 조절합니다. 이 글에서는 이전에 남은 양 2에 새 사용량 5를 더하고 목표 3을 빼는 작은 사례부터 읽습니다. 이후 실제 단위와 정수 가격 계산, 2026-10-04에 확인한 추가 규칙을 연결합니다.</p>
-   <ContentBoundary article="eip4844-blob-fee" />
-  </section>
-  <section id="black-box" data-teach-level="B" className="space-y-5">
-   <h2 className="text-2xl font-bold">2. 보내는 사람, 사용량 기록, 가격 계산을 나눕니다</h2>
-   <p>자료를 보내는 서비스는 감당할 수 있는 가격 상한과 자료를 제출합니다. 블록을 만드는 쪽은 허용량 안에서 거래를 선택합니다. 다른 노드는 사용량과 다음 가격의 근거가 규칙대로 계산됐는지 다시 확인합니다.</p>
-   <p>지금은 가격 계산 안을 열지 않고 입력과 출력만 봅니다. 이전 블록의 사용 기록과 적용 중인 설정이 입력이고 다음 블록의 가격이 출력입니다. 특정 서비스가 지불하겠다고 한 상한은 이 계산 결과와 다른 값입니다.</p>
-  </section>
-  <section id="case" data-teach-level="0" className="space-y-5">
-   <h2 className="text-2xl font-bold">3. 남은 2에 사용 5를 더하고 목표 3을 뺍니다</h2>
-   <p>처음 도입된 EIP-4844 규칙을 읽기 위한 사례입니다(가정). 자료 한 묶음을 1로 세고 이전 초과분이 2, 이전 블록의 사용량이 5, 목표가 3이라고 합시다. 합계 7에서 목표 3을 빼면 다음 초과분은 4입니다. 이 4는 실제로 전송을 기다리는 파일 개수가 아니라 가격 계산을 위해 저장하는 수치입니다.</p>
-   <p>다음 블록에서 사용량이 0이면 4+0−3=1이 남습니다. 그다음도 0이면 1+0−3=−2지만 저장할 초과분은 0에서 멈춥니다. 한가한 기간을 음수 할인 쿠폰처럼 계속 쌓아 두지는 않습니다.</p>
-   <p>당시 목표 3과 최대 6은 서로 다른 설정입니다. 5개는 목표보다 많지만 최대 이내이므로 이 사용량 자체로 블록이 잘못된 것은 아닙니다. 현재 목표 수치를 3으로 고정하지는 않습니다.</p>
-  </section>
-  <section id="picture" data-teach-level="1" className="space-y-5">
-   <h2 className="text-2xl font-bold">4. 사용량은 한 단계를 거쳐 다음 가격으로 갑니다</h2>
-   <FlowRail title="같은 2·5·3을 다음 블록으로 전달하기" steps={[
-    {actor:"이전 기록",movement:"남은 양 2와 실제 사용 5를 읽습니다.",receives:"합계 7"},
-    {actor:"초과분 계산",movement:"목표 3을 빼고 음수이면 0으로 만듭니다.",receives:"다음 초과분 4"},
-    {actor:"가격 계산",movement:"4를 정해진 정수 계산에 넣습니다. 현재 거래가 낼 가격의 근거가 됩니다.",receives:"자료 사용 한 단위의 가격"},
-   ]} />
-   <p>현재 블록의 사용량은 그 블록 자신의 기본 가격을 바꾸지 않습니다. 현재 가격은 이미 이전 기록에서 정해졌으며 이번 사용량은 다음 계산으로 넘어갑니다.</p>
-  </section>
-  <section id="need" data-teach-level="2" className="space-y-5">
-   <h2 className="text-2xl font-bold">5. 왜 실행 비용과 자료 비용을 따로 기록할까</h2>
-   <p>계산을 많이 하는 거래와 큰 자료를 올리는 거래가 쓰는 자원은 다릅니다. 두 사용량을 같은 숫자로 더하면 자료 전송이 혼잡한지 프로그램 실행이 혼잡한지 구별하기 어렵습니다. 별도의 사용량과 가격을 두면 각 자원의 수요에 대응할 수 있습니다.</p>
-   <p>목표는 장기적으로 맞추려는 사용량이고 최대는 한 블록이 넘을 수 없는 한도입니다. 최대를 목표와 같게 두면 잠깐 몰린 수요를 처리할 여유가 줄어듭니다. 초과분을 저장하면 여러 블록에 걸친 수요도 다음 가격에 남습니다.</p>
-  </section>
-  <section id="names" data-teach-level="3" className="space-y-5">
-   <h2 className="text-2xl font-bold">6. 자료 묶음은 blob, 가격용 기록은 excess입니다</h2>
-   <p>앞에서 본 자료 묶음은 <strong className="whitespace-nowrap">자료 묶음(blob)</strong>입니다. 그 묶음의 사용량은 <strong className="whitespace-nowrap">자료 가스(blob gas)</strong>로 셉니다. blob 하나는 131,072 blob gas를 사용합니다. 이름에 gas가 들어가도 프로그램 실행에 사용하는 execution gas와 별도 장부입니다.</p>
-   <p><code>blob_gas_used</code>는 블록이 사용한 양입니다. <code>excess_blob_gas</code>는 다음 가격으로 넘기는 누적 초과분입니다. 장기적으로 맞출 사용량은 <strong className="whitespace-nowrap">목표(target)</strong>입니다. 한 블록이 넘을 수 없는 한도는 <strong className="whitespace-nowrap">최대(max)</strong>입니다. blob gas 한 단위의 기본 가격은 <strong className="whitespace-nowrap">자료 기본료(blob base fee)</strong>이며 ETH 최소 단위인 wei로 표현합니다.</p>
-   <p>따라서 사례의 2·5·3·4를 실제 입력으로 쓰려면 모두 131,072를 곱합니다. 262,144+655,360−393,216=524,288 blob gas입니다. 일부 숫자만 개수로 남겨 두면 서로 다른 단위를 더하게 됩니다.</p>
-  </section>
-  <section id="excess-update" data-teach-level="4" className="space-y-5">
-   <h2 className="text-2xl font-bold">7. 524,288이라는 기록이 곧 524,288 wei는 아닙니다</h2>
-   <ExplainedFormula question="2+5−3을 실제 blob gas로 옮기면 무엇을 저장하나요?" idea="이전 초과분과 사용량을 더하고 같은 단위의 목표를 뺍니다. 음수인 결과는 저장하지 않습니다." formula={String.raw`E'=\max(0,E+U-T)`} annotatedFormula={String.raw`E'=\underbrace{\max(0,\underbrace{E+U}_{\text{이전 초과분과 사용량}}-T)}_{\text{목표를 빼고 0에서 멈춤}}`} operations={[{expression:"E+U",annotation:["262,144와 655,360을 더해","917,504 blob gas를 얻습니다."]},{expression:String.raw`\max(0,E+U-T)`,annotation:["393,216을 빼면 양수이므로","524,288을 다음 기록으로 저장합니다."]}]} terms={[{symbol:"E",name:"이전 초과분",description:"가격 조절을 위해 이전 헤더에 저장된 blob gas입니다."},{symbol:"U",name:"이전 사용량",description:"이전 블록이 실제로 사용한 blob gas입니다."},{symbol:"T",name:"적용 목표",description:"계산 대상 블록에 적용되는 목표 blob gas입니다."}]} assumptions={["이 식은 원래 EIP-4844 규칙 또는 EIP-7918의 추가 가격 분기가 선택되지 않은 경우입니다.","모든 수치는 같은 blob gas 단위입니다. 적용 fork의 설정을 먼저 확인합니다."]} interpretation="초과분 524,288은 다음 가격 계산의 입력입니다. 당시 update fraction 3,338,477과 최소 가격 1을 사용하면 다음 가격은 정수 계산 결과 1 wei/blob gas입니다." />
-   <p>초과분이 늘어도 최소 가격 근처에서는 정수 반올림 방식 때문에 기본 가격이 그대로일 수 있습니다. 사례에서 다음 블록이 blob 하나를 올리면 자료 기본 요금은 131,072×1=131,072 wei입니다. 실행 요금은 여기에 따로 더합니다.</p>
-  </section>
-  <section id="integer-fee" data-teach-level="5" className="space-y-5">
-   <h2 className="text-2xl font-bold">8. 정수 계산은 매 단계의 나머지를 버립니다</h2>
-   <p>이상적인 가격 곡선은 초과분이 늘수록 지수 함수처럼 올라갑니다. 실제 노드는 같은 입력에서 정확히 같은 정수를 얻어야 하므로 부동소수점 대신 곱셈과 정수 나눗셈을 반복합니다. 규격의 이름은 <code>fake_exponential</code>이며 가짜 가격을 뜻하지 않습니다.</p>
-   <p>실수 지수 함수의 항은 1, x, x²/2!, x³/3! 순서입니다. 앞 항에 x/i를 곱하면 다음 항이 되므로 x=n/d를 대입하면 곱할 비율은 n/(di)입니다. 여기에 f를 곱하고 계산 중 크기를 d배로 유지한 뒤 마지막에 d로 나눕니다. 실제 규칙은 각 단계에서 내림을 추가합니다.</p>
-   <ExplainedFormula question="가격 계산에서 어느 단계에 정수 나눗셈이 들어가나요?" idea="첫 항을 크게 만든 다음 앞 항에서 다음 항을 계산합니다. 각 항의 나눗셈과 마지막 나눗셈에서 소수 부분을 버립니다." formula={String.raw`a_0=fd,\quad a_i=\left\lfloor\frac{a_{i-1}n}{di}\right\rfloor,\quad P=\left\lfloor\frac{\sum_{i=0}^{k}a_i}{d}\right\rfloor`} annotatedFormula={String.raw`a_i=\underbrace{\left\lfloor\frac{a_{i-1}n}{di}\right\rfloor}_{\text{매 항에서 정수 나눗셈}},\quad P=\underbrace{\left\lfloor\frac{\sum a_i}{d}\right\rfloor}_{\text{마지막에도 정수 나눗셈}}`} operations={[{expression:"a_0=fd",annotation:["최소 가격에 분모를 곱해","나눗셈 전 계산 크기를 확보합니다."]},{expression:String.raw`\left\lfloor a_{i-1}n/(di)\right\rfloor`,annotation:["이전 항에 초과분을 곱하고","분모와 항 번호로 나눠 나머지를 버립니다."]},{expression:String.raw`\left\lfloor\sum a_i/d\right\rfloor`,annotation:["0이 되기 전 항들을 더한 뒤","분모로 나눠 정수 가격을 얻습니다."]}]} terms={[{symbol:"f",name:"최소 가격",description:"이 사례에서는 1 wei/blob gas입니다."},{symbol:"n",name:"가격 입력",description:"앞에서 계산한 새 초과분입니다."},{symbol:"d",name:"update fraction",description:"가격 변화 속도를 정하는 양수 설정입니다."},{symbol:"i",name:"항 번호",description:"1부터 한 단계씩 증가합니다."},{symbol:"k",name:"마지막 양수 항",description:"다음 항이 0이 되면 반복을 끝냅니다."}]} assumptions={["음수가 아닌 정수 입력과 양수 d를 사용합니다.","floor 표시는 소수 부분을 버린다는 뜻입니다. 실수 급수와 정확히 같다고 두지 않습니다."]} interpretation="작동만 보기 위한 작은 설정 f=1,n=4,d=2에서는 항이 2→4→4→2→1→0입니다. 합계 13을 2로 나눈 정수값은 6입니다. e²≈7.389를 한 번만 내림한 7과도 다릅니다." />
-   <AlgorithmBlock title="정수 가격 함수 계산하기" input={["f ≥ 0, n ≥ 0인 정수와 d > 0인 정수"]} steps={[{code:"합계 ← 0; 항 ← f × d; i ← 1",note:"작은 사례에서는 항이 2로 시작합니다."},{code:"항 > 0인 동안: 합계 ← 합계 + 항",note:"이번 항을 다음 항으로 덮어쓰기 전에 더합니다."},{code:"항 ← floor(항 × n / (d × i)); i ← i + 1",note:"2·4·4·2·1 다음에 0이 나오면 반복을 끝냅니다."},{code:"반환 floor(합계 / d)",note:"13을 2로 나눈 정수값 6입니다."}]} repeatUntil="2·3단계를 항이 0이 될 때까지 반복합니다." output="정수 blob base fee" />
-   <p>이 작은 4/2 설정은 나눗셈을 손으로 추적하기 위한 별도 가정입니다. 실제 사례의 n=524,288·d=3,338,477과 섞지 않습니다. 두 입력을 실제 Go 함수로 각각 계산하면 6과 1을 얻습니다.</p>
-   <BlobFeeCurveChart />
-  </section>
-  <section id="source" data-teach-level="6" className="space-y-5">
-   <h2 className="text-2xl font-bold">9. 실제 코드에서 입력 시각과 세 갈래를 읽습니다</h2>
-   <p>보존한 원문은 go-ethereum commit <code>c9a2bc73c847319a8faa57de59e42c0efc420682</code>의 Go 파일입니다. <code>CalcExcessBlobGas</code>는 이전 헤더에서 E와 U를 읽지만 설정은 새 블록의 <code>headTimestamp</code>로 선택합니다. 업그레이드 첫 블록에서 이전 시각의 목표를 쓰면 잘못된 값을 계산할 수 있습니다.</p>
-   {code("calc-excess-blob-gas","공식 Go · 설정 선택과 초과분의 세 분기")}
-   <p>먼저 E+U가 목표보다 작은지 확인합니다. 작으면 0입니다. 다음으로 Osaka 이후의 EIP-7918 가격 조건을 확인하고 해당하면 별도 식을 씁니다. 두 조건에 해당하지 않으면 마지막 줄이 원래 E+U−T를 반환합니다. 앞의 역사적 2·5·3 사례는 이 마지막 경로에 대응합니다.</p>
-   <p>EIP-7918은 <code>8192 × 이전 실행 base fee</code>가 <code>131072 × 이전 excess로 계산한 blob base fee</code>보다 큰 경우를 다룹니다. 이때 초과분은 <code>E + floor(U × (max−target) / max)</code>입니다. 다만 E+U가 목표보다 작은 첫 분기는 여전히 먼저 적용합니다.</p>
-   <p>현재 설정을 읽는 비교 사례(가정)로 목표 14·최대 21, 이전 초과분 2묶음·사용 18묶음을 가정합시다. 추가 가격 조건이 거짓이면 다음 초과분은 2+18−14=6묶음 상당입니다. 조건이 참이면 2+18×7/21=8묶음 상당입니다. 실제 계산은 먼저 blob gas로 바꿔 정수 나눗셈합니다. 이번 수치는 나누어떨어집니다.</p>
-   <p>확인한 메인넷 설정은 BPO2의 목표 14·최대 21·update fraction 11,684,671입니다. 이 설정에서 이전 실행 base fee를 1 wei로 가정하면 8,192&lt;131,072이므로 보통 분기, 1 Gwei로 가정하면 8,192,000,000,000&gt;131,072이므로 추가 분기입니다. 설정의 존재와 네트워크 활성화는 <Link to="/cs/blockchain/robinhood-chain-blob-demand#source">일정과 연결된 원문</Link>에서 함께 확인합니다.</p>
-   {code("calc-blob-fee","공식 Go · 양의 정수 나눗셈과 반복 종료")}
-   <p>Go 함수는 항을 누적한 뒤 n을 곱하고 d, i로 차례로 정수 나눗셈합니다. 음수가 아닌 정수에서는 이 두 나눗셈이 d×i로 나눈 내림과 같습니다. 마지막에도 d로 나눕니다. 이 함수 원문을 별도 작은 실행 틀에서 계산해 본 것이며 전체 노드나 메인넷 거래를 실행한 검증은 아닙니다.</p>
-   <p>가격 함수의 <code>big.Int</code>는 고정 폭 정수의 넘침을 피합니다. 반면 헤더의 blob gas 필드는 64비트이므로 단위와 최대값 검사가 필요합니다. 다른 언어로 옮길 때에는 큰 정수나 검사된 곱셈을 사용하고 매 항의 내림 순서를 보존해야 합니다. 최소값·최대값·업그레이드 첫 블록을 같은 입력으로 비교해야 하며 넘쳤다고 실수 계산으로 바꾸면 안 됩니다.</p>
-   {code("verify-header","공식 Go · 새 헤더에 적힌 결과를 다시 검산")}
-   <p>검증 함수는 새 블록의 사용량이 최대 이내인지, blob 한 개의 단위로 나누어떨어지는지, 헤더의 초과분이 재계산 결과와 같은지 확인합니다. 기대값 6묶음인 조건에서 제작자가 8묶음을 적으면 가격에 유리한지와 무관하게 거절합니다.</p>
-  </section>
-  <section id="paper-eip4844-fee" className="space-y-5">
-   <h2 className="text-2xl font-bold">10. 규격의 가격과 사용자가 내는 총비용을 구분합니다</h2>
-   <p>EIP-4844의 <code>calc_blob_fee</code>는 거래가 쓰는 blob gas에 기본 가격을 곱합니다. 이 비용은 실행 전에 차감해 소각하며 실행 실패로 환급하지 않습니다. 사례의 131,072 wei는 자료 요금 한 부분이고 실행 gas, 서비스의 증명 생성·압축·운영 비용을 포함한 최종 청구액은 별도로 계산합니다.</p>
-   <p>사용자가 적은 <code>max_fee_per_blob_gas</code>는 지불 상한입니다. 현재 기본 가격보다 낮으면 유효한 blob 거래로 포함할 수 없습니다. 상한이 충분해도 선택·전파·검증까지 보장하는 것은 아닙니다. 기본 가격이 싸졌다는 사실만으로 모든 서비스 요금이 같은 비율로 줄었다고 계산할 수도 없습니다.</p>
-   <CitationBlock source="EIP-4844 · Helpers, Header extension, Gas accounting" citeKey={1} href="https://eips.ethereum.org/EIPS/eip-4844">초기 목표 3·최대 6, 131,072 단위, 정수 가격 함수와 실행 실패 시 blob 요금 규칙의 근거입니다.</CitationBlock>
-   <CitationBlock source="EIP-7918 · Functions" citeKey={2} href="https://eips.ethereum.org/EIPS/eip-7918">새 블록의 설정을 사용하는 조건과 실행 가격에 연결된 추가 분기를 대조했습니다. 2026-10-04 확인.</CitationBlock>
-   <CitationBlock source="go-ethereum · c9a2bc7 · eip4844.go" citeKey={3} href="https://github.com/ethereum/go-ethereum/blob/c9a2bc73c847319a8faa57de59e42c0efc420682/consensus/misc/eip4844/eip4844.go">수정하지 않은 원본 228줄과 LGPL 고지를 보존했습니다. 설정 선택·초과분·정수 가격·헤더 검증을 같은 사례에 적용합니다.</CitationBlock>
-  </section>
-  <section id="limits" data-teach-level="7" className="space-y-5">
-   <h2 className="text-2xl font-bold">11. 수요 기록, 가격, 혼잡을 하나의 숫자로 읽지 않습니다</h2>
-   <p>초과분 4는 가격을 정하는 기록이지 미처리 거래 네 개를 뜻하지 않습니다. 기본 가격 1이 유지돼도 사용량 기록은 달라질 수 있습니다. 같은 평균 사용량이라도 특정 블록에 수요가 몰리면 포함 대기와 최대 한도의 영향은 다르게 나타납니다.</p>
-   <p>원래의 3묶음 목표 사례와 BPO2의 14묶음 목표 사례는 적용 버전이 다릅니다. 실제 블록을 분석할 때는 이전 헤더, 새 블록 시각, 활성 설정, 실행 base fee를 함께 읽어야 합니다. 여기의 가정 계산으로 실제 서비스 수요나 향후 가격을 측정했다고 할 수는 없습니다.</p>
-   <ReviewPrompts questions={["원래 규칙에서 다음 초과분이 4이고 이후 사용량이 두 번 연속 0이면 기록은 어떻게 바뀔까요? (답: 3절)","f=1,n=4,d=2를 계산할 때 왜 e²를 내림한 7 대신 6이 나올까요? (답: 8절)","BPO2 사례에서 이전 초과분 2·사용 18이 같아도 6과 8이 갈리는 이유는 무엇일까요? (답: 9절)"]} />
-  </section>
-  <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{"go-ethereum":eip4844BlobFeeTree}} />
- </article>;
+  const sidebar = useCodeSidebar();
+
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="scroll-mt-20 space-y-5">
+        <RethEip4844Locator current="eip4844-blob-fee" />
+        <div>
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="mt-2 break-keep text-3xl font-bold">
+            부모 블록의 Blob 사용량은 어떻게 자식 블록의 가격이 됩니까?
+          </h2>
+        </div>
+        <p className="text-lg leading-8">
+          부모 블록이 <strong>excess 2개분</strong>과 <strong>사용량 18개분</strong>을
+          남겼다고 하겠습니다. 자식 블록 시각에는 BPO2가 활성화되어 있고 부모의 실행
+          기본료는 1 Gwei입니다. 노드는 이 네 값을 읽어 자식 헤더의
+          <code>excess_blob_gas</code>와 Blob 기본료를 계산합니다.
+        </p>
+        <BlobFeeTraceViz />
+        <p>
+          이 경로에서 가장 중요한 경계는 <strong>부모의 사용량이 부모 자신의 가격을
+          바꾸지 않는다</strong>는 점입니다. 부모가 남긴 상태는 자식의 excess가 되고,
+          자식의 기본료는 그 자식 헤더의 excess에서 계산됩니다. 자식이 실제로 사용한
+          Blob 수는 다시 그다음 블록의 가격 상태에 반영됩니다.
+        </p>
+        <ContentBoundary article="eip4844-blob-fee" />
+      </section>
+
+      <section id="state-ledger" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">헤더에 남는 두 값</h2>
+        <p>
+          Blob 하나는 131,072 <strong>blob gas</strong>를 사용합니다. Blob gas는 EVM
+          실행에 쓰는 execution gas와 이름만 비슷할 뿐 별도의 사용량 장부입니다. 이 글의
+          “2개분”은 계산을 읽기 쉽게 줄인 표현이며 실제 헤더에는 262,144처럼 blob gas
+          단위의 정수가 들어갑니다.
+        </p>
+        <TermBreakdown
+          title="부모에서 자식으로 넘어가는 상태"
+          items={[
+            { term: "parent.excess_blob_gas", description: "이전 블록들에서 target을 넘겨 사용한 양을 가격 계산용으로 누적한 상태입니다.", boundary: "미처리 transaction 수나 저장 중인 Blob 파일 수가 아닙니다." },
+            { term: "parent.blob_gas_used", description: "부모 블록 안의 Blob transaction이 실제로 사용한 blob gas 합계입니다.", boundary: "부모의 Blob 기본료가 아니라 자식 excess를 갱신하는 입력입니다." },
+            { term: "child.excess_blob_gas", description: "부모의 두 값과 자식 시각에 적용되는 설정으로 다시 계산한 결과입니다.", boundary: "제작자가 임의로 정할 수 없으며 모든 검증 노드가 같은 값을 얻어야 합니다." },
+            { term: "child Blob base fee", description: "자식 excess를 정수 fake-exponential에 넣어 얻는 1 blob gas당 기본료입니다.", boundary: "Rollup 서비스의 증명·압축·운영비를 합친 최종 고객 가격이 아닙니다." },
+          ]}
+        />
+        <p>
+          <strong>target</strong>은 장기적으로 맞추려는 사용량이고 <strong>max</strong>는
+          한 블록이 넘을 수 없는 상한입니다. BPO2에서는 target이 14, max가 21이므로
+          부모의 사용량 18은 target보다 많지만 상한 이내입니다. “target 초과”만으로 그
+          블록이 무효가 되지는 않습니다.
+        </p>
+      </section>
+
+      <section id="excess-update" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">다음 excess 계산</h2>
+        <p>
+          현재 메인넷 규칙은 먼저 <code>E+U&lt;T</code>인지 확인합니다. 작으면 자식
+          excess는 0입니다. 그렇지 않으면 EIP-7918의 가격 조건을 검사합니다. 이 조건이
+          참일 때는 target을 단순히 빼지 않고, max와 target의 차이만큼 사용량을 축소해
+          이전 excess에 더합니다.
+        </p>
+        <ExplainedFormula
+          question="부모 E=2·U=18에서 자식 excess가 왜 8개분입니까?"
+          idea="부모 실행 기본료 1 Gwei에서는 reserve price가 nominal Blob 가격보다 크므로 EIP-7918 분기를 사용합니다."
+          formula={String.raw`E_{child}=E_{parent}+\left\lfloor U_{parent}\frac{M-T}{M}\right\rfloor`}
+          annotatedFormula={String.raw`E_{child}=\underbrace{2}_{\text{이전 excess}}+\underbrace{\left\lfloor18\frac{21-14}{21}\right\rfloor}_{\text{현재 사용량에서 더할 6}}=8`}
+          operations={[
+            { expression: "E+U=2+18=20", annotation: ["20은 target 14보다 크므로", "0을 반환하는 첫 분기는 지나갑니다."] },
+            { expression: String.raw`8192\times 10^9 > 131072\times 1`, annotation: ["부모 실행 기본료로 만든 reserve가", "부모 excess의 nominal Blob 가격보다 큽니다."] },
+            { expression: String.raw`2+\lfloor18\times7/21\rfloor=8`, annotation: ["사용량에서 6개분만 더해", "자식 excess 8개분을 얻습니다."] },
+          ]}
+          terms={[
+            { symbol: "E", name: "parent excess", description: "가격 상태로 남아 있던 blob gas입니다." },
+            { symbol: "U", name: "parent used", description: "부모 블록이 실제 사용한 blob gas입니다." },
+            { symbol: "T", name: "target", description: "자식 시각의 BPO2 목표값 14입니다." },
+            { symbol: "M", name: "max", description: "자식 시각의 BPO2 상한 21입니다." },
+          ]}
+          assumptions={[
+            "계산은 실제로 2·18·14·21에 각각 131,072를 곱한 blob gas 단위에서 수행합니다.",
+            "부모 실행 기본료 1 Gwei와 부모 excess 2개분을 사용해 EIP-7918 조건이 참인 fixture입니다.",
+          ]}
+          interpretation="옛 EIP-4844 식 E+U−T를 그대로 적용하면 6개분이지만, 현재 fixture는 EIP-7918 분기이므로 8개분입니다. 두 값은 대안 계산이 아니라 서로 다른 활성 규칙의 결과입니다."
+        />
+        <p>
+          EIP-7918 조건이 거짓이면 원래 식 <code>max(0, E+U−T)</code>를 사용합니다.
+          부모 실행 기본료를 1 wei로 둔 비교 fixture에서는 reserve 8,192 wei가 한 Blob의
+          nominal 가격 131,072 wei보다 작으므로 이 경로가 선택되고 결과는 6개분입니다.
+          실제 블록을 분석할 때는 부모 헤더의 실행 기본료와 excess를 함께 읽어야 합니다.
+        </p>
+        <CodeLink codeKey="calc-excess-blob-gas" label="Geth v1.17.10 · 자식 시각의 설정과 EIP-7918·기존 분기" open={sidebar.open} />
+      </section>
+
+      <section id="integer-fee" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">정수 기본료 계산</h2>
+        <p>
+          자식 excess 8개분은 1,048,576 blob gas입니다. 노드는 이 값을
+          <code>fake_exponential(1, 1_048_576, 11_684_671)</code>에 넣습니다. 수학적인
+          곡선은 <code>e^(excess/fraction)</code>에 가깝지만 합의 계산은 부동소수점이
+          아니라 정수 곱셈과 나눗셈을 반복합니다.
+        </p>
+        <ExplainedFormula
+          question="같은 입력에서 모든 노드가 같은 정수 가격을 얻으려면 어떻게 계산합니까?"
+          idea="첫 항을 fraction만큼 키워 시작하고, 앞 항에서 다음 항을 만든 뒤 매 단계의 나머지를 버립니다."
+          formula={String.raw`a_0=fd,\quad a_i=\left\lfloor\frac{a_{i-1}n}{d}\right\rfloor\div i,\quad P=\left\lfloor\frac{\sum_i a_i}{d}\right\rfloor`}
+          annotatedFormula={String.raw`P=\underbrace{\left\lfloor\frac{a_0+a_1+\cdots}{d}\right\rfloor}_{\text{각 항과 마지막 나눗셈을 모두 정수로 계산}}`}
+          operations={[
+            { expression: "a₀ = 1 × 11,684,671", annotation: ["최소 가격 1에 update fraction을 곱해", "첫 누적 항을 만듭니다."] },
+            { expression: "n = 8 × 131,072", annotation: ["자식 excess 8개분을", "실제 blob gas 단위로 넣습니다."] },
+            { expression: "P = 1 wei / blob gas", annotation: ["정수 항을 0이 될 때까지 더해도", "아직 다음 정수 단계인 2에 도달하지 않습니다."] },
+          ]}
+          terms={[
+            { symbol: "f", name: "최소 가격", description: "현재 규칙에서 1 wei/blob gas입니다." },
+            { symbol: "n", name: "자식 excess", description: "1,048,576 blob gas입니다." },
+            { symbol: "d", name: "update fraction", description: "BPO2 값 11,684,671입니다." },
+            { symbol: "P", name: "Blob base fee", description: "자식 블록의 1 blob gas당 정수 기본료입니다." },
+          ]}
+          assumptions={["음수가 아닌 정수와 양수 fraction을 사용합니다.", "중간 나눗셈을 실수 계산 하나로 합치거나 마지막에만 반올림하지 않습니다."]}
+          interpretation="이 fixture의 자식 기본료는 1 wei/blob gas이고 Blob 하나의 프로토콜 요금은 131,072 wei입니다. excess가 8개분으로 늘었지만 정수 가격은 아직 그대로입니다."
+        />
+        <BlobFeeCurveChart />
+        <p>
+          로컬에서 Geth와 같은 정수 반복을 실행해 BPO2의 경계를 확인했습니다. excess
+          0~61개분은 1, 62개분부터 2, 98개분부터 3 wei/blob gas입니다. 이 경계는 현재
+          fraction을 고정한 계산 결과이며, 향후 BPO가 fraction을 바꾸면 다시 계산해야 합니다.
+        </p>
+        <CodeLink codeKey="calc-blob-fee" label="Geth v1.17.10 · fakeExponential의 정수 항과 종료 조건" open={sidebar.open} />
+      </section>
+
+      <section id="schedule" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">설정은 업그레이드마다 달라집니다</h2>
+        <p>
+          EIP-4844 문서의 target 3·max 6은 Cancun 도입 시점의 값입니다. 현재 메인넷
+          값을 설명할 때 그 숫자를 그대로 사용하면 안 됩니다. 자식 블록의 timestamp로
+          활성 설정을 고르는 이유가 여기에 있습니다.
+        </p>
+        <div className="not-prose overflow-x-auto border-y border-border py-4">
+          <table className="w-full min-w-[42rem] text-left text-sm leading-6">
+            <thead><tr className="border-b border-border text-xs text-muted-foreground"><th className="px-3 py-2">설정</th><th className="px-3 py-2">Target</th><th className="px-3 py-2">Max</th><th className="px-3 py-2">Update fraction</th><th className="px-3 py-2">이 글에서의 역할</th></tr></thead>
+            <tbody>
+              {[
+                ["Cancun", "3", "6", "3,338,477", "초기 EIP-4844 역사값"],
+                ["Prague", "6", "9", "5,007,716", "Pectra 이후 기준"],
+                ["BPO1", "10", "15", "8,346,193", "첫 parameter-only 증가"],
+                ["BPO2", "14", "21", "11,684,671", "현재 fixture와 메인넷 설정"],
+              ].map((row) => (
+                <tr key={row[0]} className="border-b border-border/70 last:border-b-0">
+                  {row.map((cell, index) => <td key={cell} className={`px-3 py-2 ${index === 0 ? "font-bold text-primary" : ""}`}>{cell}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          네트워크 업그레이드 Fusaka의 실행 계층 규칙인 Osaka에서 EIP-7918이 활성화됐습니다.
+          이후 BPO1·BPO2가 Blob 매개변수를 올렸습니다. BPO는 target·max·fraction을 바꾸는
+          업그레이드입니다. EIP-7918의 계산 의미와 BPO2의 숫자는 같은 항목이 아니므로
+          출처도 따로 확인해야 합니다.
+        </p>
+      </section>
+
+      <section id="source" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">실제 구현 경로</h2>
+        <p>
+          보존한 코드는 go-ethereum v1.17.10, commit
+          <code>1df30b18d9ed35ee9d28ffd4648442c2204554ad</code>의
+          <code>consensus/misc/eip4844/eip4844.go</code>입니다. 이 파일은 이전에 확인한
+          commit의 파일과 SHA-256이 같지만, 최신 안정 릴리스 태그에서 다시 내려받아
+          바이트 단위로 대조했습니다.
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px text-sm leading-6 sm:grid-cols-3">
+          {[
+            ["1 · CalcExcessBlobGas", "자식 timestamp로 설정을 고르고 부모 E·U를 읽습니다."],
+            ["2 · CalcBlobFee", "자식 헤더의 excess와 같은 시각의 fraction으로 기본료를 계산합니다."],
+            ["3 · VerifyEIP4844Header", "max·131,072 배수·재계산한 excess 일치를 검사합니다."],
+          ].map(([title, description]) => <div key={title} className="bg-background p-4"><strong className="block text-primary">{title}</strong><span className="mt-2 block text-muted-foreground">{description}</span></div>)}
+        </div>
+        <CodeLink codeKey="verify-header" label="Geth v1.17.10 · Blob 사용량과 자식 excess 재검산" open={sidebar.open} />
+        <p>
+          이 글에서 직접 실행한 것은 보존한 함수와 같은 정수 recurrence의 fixture
+          계산입니다. 전체 Geth node를 동기화하거나 실제 메인넷 블록을 재실행한 측정은
+          아닙니다. 따라서 현재 수요나 가격 측정으로 넓히지 않습니다. 실제 수요 분석은
+          <Link className="ml-1 underline underline-offset-4" to="/cs/blockchain/robinhood-chain-blob-demand#source">Blob 수요 측정 글</Link>
+          에서 블록 데이터를 고정해 따로 다룹니다.
+        </p>
+      </section>
+
+      <section id="failure-boundaries" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">잘못 읽으면 어디서 실패합니까?</h2>
+        <TermBreakdown
+          title="계산과 헤더 검증의 다섯 경계"
+          items={[
+            { term: "부모 시각으로 설정 선택", description: "업그레이드 첫 자식 블록에서 예전 target·max·fraction을 고를 수 있습니다.", boundary: "설정은 계산 대상인 자식 timestamp로 선택합니다." },
+            { term: "Blob 개수와 blob gas 혼용", description: "2·18·14를 일부만 131,072배 하면 서로 다른 단위를 더하게 됩니다.", boundary: "실제 함수 입력은 모두 blob gas 단위의 정수입니다." },
+            { term: "EIP-7918 분기 생략", description: "현재 fixture에서 8 대신 옛 식의 6을 자식 헤더에 적게 됩니다.", boundary: "검증 노드의 재계산 결과와 다르면 헤더가 거절됩니다." },
+            { term: "실수 지수함수로 대체", description: "중간 정수 나눗셈과 overflow 처리 차이로 client마다 다른 가격이 나올 수 있습니다.", boundary: "정수 연산 순서와 충분한 정수 폭을 그대로 보존합니다." },
+            { term: "기본료와 총 서비스 가격 혼동", description: "Blob 프로토콜 요금만으로 rollup의 증명·압축·실행·운영 원가를 계산할 수 없습니다.", boundary: "execution gas와 Blob gas는 별도 장부이며 사용자 상품 가격은 서비스 계층의 결정입니다." },
+          ]}
+        />
+        <p>
+          Blob transaction의 <code>max_fee_per_blob_gas</code>가 자식 기본료보다 낮으면
+          해당 transaction을 유효하게 포함할 수 없습니다. 포함된 transaction의 Blob
+          요금은 실행 전에 차감·소각되며 실행이 실패해도 환급되지 않습니다. 다만 이것은
+          프로토콜 규칙이고, 서비스가 고객에게 크레딧을 환급하는 정책과는 별개입니다.
+        </p>
+        <ReviewPrompts questions={[
+          "부모 E=2·U=18, BPO2 target 14에서 reserve-price 조건이 참일 때 자식 excess가 8인 이유를 설명하세요.",
+          "자식 excess가 8개분으로 늘었는데 기본료가 여전히 1 wei/blob gas일 수 있는 이유를 설명하세요.",
+          "자식 블록의 실제 Blob 사용량이 자식 자신의 기본료가 아니라 그다음 블록에 반영되는 경계를 설명하세요.",
+        ]} />
+      </section>
+
+      <section id="paper-eip4844-fee" className="scroll-mt-20 space-y-5">
+        <h2 className="break-keep text-2xl font-bold">근거 범위</h2>
+        <CitationBlock citeKey={1} source="EIP-4844 · Blob transaction과 별도 fee market" href="https://eips.ethereum.org/EIPS/eip-4844">
+          Blob gas 131,072 단위, 헤더의 <code>blob_gas_used</code>와 <code>excess_blob_gas</code>, 정수 <code>fake_exponential</code>, 요금 차감·소각 규칙을 확인했습니다. target 3·max 6은 Cancun 도입 시점의 역사값으로만 사용합니다.
+        </CitationBlock>
+        <CitationBlock citeKey={2} source="EIP-7918 · Blob base fee bounded by execution cost" href="https://eips.ethereum.org/EIPS/eip-7918">
+          실행 기본료와 nominal Blob 가격을 비교하는 reserve-price 조건과 조건이 참일 때의 excess 갱신식을 확인했습니다. 실제 특정 블록에서 조건이 참이었다는 측정 근거로 사용하지 않습니다.
+        </CitationBlock>
+        <CitationBlock citeKey={3} source="EIP-8135 · BPO2 mainnet parameters" href="https://eips.ethereum.org/EIPS/eip-8135">
+          BPO2 활성 시각 1767747671, target 14, max 21, update fraction 11,684,671을 확인했습니다. 향후 설정에도 같은 숫자가 유지된다는 뜻은 아닙니다.
+        </CitationBlock>
+        <CitationBlock type="code" citeKey={4} source="go-ethereum v1.17.10 · 1df30b18 · eip4844.go" href="https://github.com/ethereum/go-ethereum/blob/v1.17.10/consensus/misc/eip4844/eip4844.go">
+          <p><b>확인한 범위:</b> 자식 timestamp의 설정 선택, EIP-7918·기존 excess 분기, 정수 가격 함수, 헤더 재검산입니다.</p>
+          <p><b>고정 조건:</b> v1.17.10 release, BPO2 설정, 이 글의 2·18·14·21·1 Gwei fixture입니다.</p>
+          <p><b>실행한 검산:</b> 동일 recurrence로 excess 8의 기본료 1과 정수 가격 경계 62→2, 98→3을 계산했습니다.</p>
+          <p><b>확대하지 않은 범위:</b> 전체 node 동기화, 실제 메인넷 block replay, 현재 수요·가격 측정은 수행하지 않았습니다.</p>
+        </CitationBlock>
+        <RethEip4844MapReturn current="eip4844-blob-fee" />
+      </section>
+
+      <CodeSidebar codeRefKey={sidebar.codeRefKey} codeRef={sidebar.codeRef} onClose={sidebar.close} onNavigate={sidebar.navigate} codeRefs={codeRefs} fileTrees={{ "go-ethereum": eip4844BlobFeeTree }} projectMetas={PROJECT_META} />
+    </article>
+  );
 }

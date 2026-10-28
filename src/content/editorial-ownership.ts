@@ -6270,7 +6270,9 @@ export const EDITORIAL_BOUNDARIES = {
   "eip4844-blob-fee": {
     title: "EIP-4844 blob fee feedback 글이 소유하는 범위",
     owns: [
-      "Fork-aware excess blob gas 계산과 정수 fake-exponential fee",
+      "Parent header와 child timestamp를 잇는 fork-aware excess blob gas 계산",
+      "EIP-7918 reserve-price 분기와 기존 target subtraction의 선택 경계",
+      "BPO2 정수 fake-exponential 기본료와 header 재검산",
     ],
     reuses: [
       { label: "Blob·sidecar·versioned hash 정의", href: "/cs/blockchain/reth-eip4844" },
