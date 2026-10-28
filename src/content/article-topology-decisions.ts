@@ -485,6 +485,28 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "EIP-4844 v0, Reth v2.8.1과 Alloy v2.5.0에 고정해 B₀ 131,072 bytes, C₀·π₀ 48 bytes, h₀ 32 bytes와 세 검증 조건만 설명합니다. EIP-7594 v1, 장기 데이터 가용성, 롤업 실행 정확성이나 대상 환경 성능으로 확대하지 않습니다.",
   },
+  "blockchain/reth-payload-builder": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-28",
+    rationale:
+      "forkchoiceUpdated에서 payloadId·active job·현재 txpool 실행·best 교체·getPayload resolve까지는 한 후보 생성 메커니즘입니다. Release·설정 변경에서 fault를 재생하고 rollback·SLO·ADR을 판단하는 작업은 환경별 운영 결정이므로 별도 실무 글로 분리했습니다.",
+    sharedGate:
+      "개념 글은 Reth v2.8.1 commit d763342f와 고정 Engine API snapshot을 사용합니다. Parent·attributes는 job identity에 고정되지만 build 시도마다 현재 txpool iterator를 새로 얻는 실제 경계를 유지하며 대상 환경의 성능이나 release 승인을 주장하지 않습니다.",
+    targetRoutes: [
+      "blockchain/reth-payload-builder",
+      "blockchain/reth-payload-builder-validation",
+    ],
+  },
+  "blockchain/reth-payload-builder-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-28",
+    rationale:
+      "한 run manifest에서 release·ChainSpec·parent·attributes·raw transaction·clock을 고정하고 request·resource·execution·resolve·restart fault를 재생한 뒤 rollback과 ADR까지 연결하는 하나의 운영 판단입니다. 나누면 같은 result bundle의 발견과 복구 증거가 끊깁니다.",
+    sharedGate:
+      "Payload bytes·roots·receipts·typed status·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 build·resolve latency와 resource·value를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
+  },
   "blockchain/reth-provider": {
     action: "split",
     status: "implemented",
@@ -4030,6 +4052,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-eip1559": "4e7cf9303e7e8b8f",
   "blockchain/reth-eip1559-validation": "04c1549791aaa46e",
   "blockchain/reth-eip4844": "3a88b46e06bdf866",
+  "blockchain/reth-payload-builder": "b07e41d67358ae98",
+  "blockchain/reth-payload-builder-validation": "9ec01fd1125d9eb4",
   "blockchain/reth-provider": "6e9d5b70c36e4cef",
   "blockchain/reth-provider-validation": "769041c3f923d720",
   "blockchain/reth-pipeline": "23ebb69349da3792",

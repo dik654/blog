@@ -1,5 +1,5 @@
 {
-  "scope": 199,
+  "scope": 200,
   "reviewRule": "자동 신호는 검토 후보이며 적용 완료 판정이 아닙니다. 실제 본문과 원문 적용을 읽어 검증한 글만 통과합니다.",
   "articles": [
     {
@@ -5146,7 +5146,7 @@
     {
       "route": "blockchain/reth-blob-reorg-release",
       "title": "Reth Blob Reorg · 재주입과 정리",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-blob-reorg-release.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-blob-reorg-release.tsx",
@@ -5206,12 +5206,10 @@
         "substantiveReading": "기존 본문과 Reth v2.8.1 고정 소스를 모두 읽고 합성 receipt·generation·network fetch 설명을 제거했으며 실제 상태 소유권과 재주입 순서로 교체했습니다.",
         "arithmetic": "이 글은 성능 수치를 주장하지 않습니다. T0, S0, H0와 block 100·100′·101은 생명주기를 연결하기 위한 설명용 fixture입니다.",
         "humanize": "학습 계약, 지식 그래프, 글 구조, 문장 호흡, 한국어 자연스러움, 용어, 읽기 순서, runtime, 시각화, topology와 architecture-flow strict 감사를 통과했습니다.",
-        "browser390": "390×844에서 문서 폭 390=390, 일곱 장면의 내부 overflow 0, 약 49.5px 조작부, 8.2초 무자동재생과 키보드 0→1 이동을 확인했습니다. Reduced-motion에서는 실행 중 animation 0, 재생 비활성, 수동 이동 유지를 확인했습니다. JavaScript 비활성 화면은 정적 읽기 모드, 부모 locator, 질문과 fixture, 일곱 정적 장면과 본문을 같은 순서로 표시합니다.",
-        "browser1440": "1440×1000에서 문서 가로 넘침 0, 시각화 664×627px, 장면 상태 유지와 실제 Reth v2.8.1 source sidebar를 확인했습니다. TypeScript 전체 검사는 최대 상주 메모리 약 6.52GB, production build와 정적 생성은 약 1.45GB였고 둘 다 swap은 0이었습니다. Build는 8,057 modules·정적 public route 2,106개·no-script 본문 320편을 생성했습니다."
+        "browser390": "로컬 390×844에서 문서 폭 390=390, 일곱 장면의 내부 overflow 0, 약 49.5px 조작부, 8.2초 무자동재생과 키보드 0→1 이동을 확인했습니다. 공개 GitHub Pages 390×844에서도 문서 가로 넘침 0, 8초 무자동재생, 49.5px 조작부와 0→1 키보드 이동을 다시 확인했습니다. Reduced-motion은 실행 중 animation 0개와 수동 이동을 유지했고, JavaScript 비활성 공개 화면에서 부모 locator·질문·fixture·일곱 정적 장면·전체 본문이 남았습니다.",
+        "browser1440": "로컬과 공개 GitHub Pages 1440×1000에서 문서 가로 넘침 0, console error·warning 0, 49.5px 이상 조작부와 실제 Reth v2.8.1 source sidebar를 확인했습니다. GitHub Actions run 40690657290의 전체 audit·build·공개 카탈로그 브라우저 검사·Pages 배포가 commit 6c994885에서 성공했습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 모바일·데스크톱·reduced-motion·JavaScript 비활성 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-version-pinned-reorg-reinsert-retention-trace"
     },
     {
@@ -5728,41 +5726,135 @@
     },
     {
       "route": "blockchain/reth-payload-builder",
-      "title": "Reth Payload Builder (블록 생성)",
-      "status": "unreviewed",
+      "title": "Reth Payload Builder: 요청에서 후보 Block까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-payload-builder.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/reth-payload-builder.tsx",
-        "src/pages/articles/ethereum/reth-payload-builder/BuildJob.tsx",
-        "src/pages/articles/ethereum/reth-payload-builder/EngineApi.tsx",
-        "src/pages/articles/ethereum/reth-payload-builder/Overview.tsx",
-        "src/pages/articles/ethereum/reth-runtime-viz.tsx"
+        "src/pages/articles/ethereum/reth-payload-builder/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder/RethPayloadBuilderLocator.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder/viz/RethPayloadBuilderFlowViz.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-payload-builder/fileTree.ts",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/engine-handoff.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/payload-id.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/job-lifecycle.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/gas-selection.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/execution-selection.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/job-poll.rs",
+        "src/pages/articles/ethereum/reth-payload-builder/codebase/reth-v2.8.1/resolve.rs",
+        "src/content/reth-payload-builder-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "assumptionMarkers": 3,
+        "sourceButtons": 7,
         "headings": [
-          "Build job 내부",
-          "Engine API에서 build job까지",
-          "Payload builder는 forkchoice 요청을 block candidate로 바꾼다"
+          "forkchoiceUpdated 한 건은 어떻게 payloadId가 되고, Reth는 그 ID로 어떤 block candidate를 돌려줍니까?",
+          "Attributes가 유효할 때만 parent 위에 새 build를 시작합니다",
+          "PayloadId는 parent와 attributes를 가리키는 8-byte 조회 키입니다",
+          "Job은 parent·attributes·deadline을 보관하고 첫 build를 즉시 시작합니다",
+          "각 build 시도는 현재 pool을 다시 읽고 세 종류의 공간을 따로 검사합니다",
+          "EVM 실행이 성공한 거래만 임시 block state와 후보 value를 바꿉니다",
+          "Job은 더 나은 후보만 교체하고 getPayload에서 현재 결과를 확정합니다",
+          "실패한 위치에 따라 보존되는 상태와 다음 동작이 다릅니다",
+          "고정한 구현 근거"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글이 Reth v1 계열 합성 코드와 배포 판단을 개념 흐름에 섞었습니다.",
+        "Payload job이 txpool generation을 고정한다는 설명은 Reth v2.8.1 구현과 달랐습니다. 실제 build 시도마다 현재 pool iterator를 다시 얻습니다.",
+        "요청 거절, 거래 제외, build attempt 오류와 getPayload 조회 실패의 상태 보존 경계가 한 종류의 실패처럼 보였습니다."
+      ],
+      "fixture": "설명용 거래 세 건의 effective tip과 실제 gas를 3 gwei×21,000, 2 gwei×40,000, 4 gwei×30,000으로 두면 candidate local value는 63,000+80,000+120,000=263,000 gwei입니다. 이 값은 대상 네트워크의 수익 측정값이 아닙니다.",
+      "stageEvidence": {
+        "0": "합의 클라이언트가 forkchoice state와 payload attributes를 보냅니다.",
+        "1": "Engine API와 Engine tree가 version, fork field와 head timestamp 경계를 검증합니다.",
+        "2": "Parent와 attributes의 고정 필드로 8-byte payloadId를 계산하고 active job을 식별합니다.",
+        "3": "Job이 parent, attributes, deadline과 resource lease를 보관하며 첫 build를 즉시 시작합니다.",
+        "4": "각 build attempt가 현재 txpool iterator를 새로 얻고 gas, blob 수, encoded size와 sidecar를 검사합니다.",
+        "5": "통과한 거래를 임시 EVM state에서 실행하고 실제 gas와 effective tip으로 candidate value를 계산합니다.",
+        "6": "Better는 best를 교체하고 Aborted와 오류는 기존 best를 보존하며 Freeze는 반복 build를 멈춥니다.",
+        "7": "getPayload가 version과 timestamp를 검사한 뒤 best 또는 설정에 따른 fallback을 돌려주며 unknown ID는 UnknownPayload로 끝납니다.",
+        "S": "시각화와 본문이 같은 payloadId, 세 거래와 263,000 gwei 예시를 끝까지 추적합니다.",
+        "B": "PayloadId는 txpool 내용, candidate value나 canonical 채택을 증명하지 않는다는 경계를 남깁니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 source commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 Engine handoff, payload ID, BasicPayloadJob, EthereumPayloadBuilder와 resolve 구현",
+        "Ethereum Execution APIs commit 3d627c95a4d3510a8187dd02e0250ecb4331d27e의 versioned forkchoiceUpdated와 getPayload 계약"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "Reth v2.8.1의 실제 source를 따라 attributes 검증, payloadId 입력, 현재 pool 재조회, job outcome과 resolve 경계를 교정했습니다.",
+        "arithmetic": "63,000+80,000+120,000=263,000 gwei를 검산했으며 설명용 가정과 미측정 운영값을 분리했습니다.",
+        "humanize": "글별 학습·문장·한국어·용어 감사를 통과했고 짧은 질문과 자연스러운 합니다체를 유지했습니다.",
+        "browser390": "390×844에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부, reduced-motion 실행 animation 0, JavaScript 비활성 정적 7장면과 전체 본문을 확인했습니다.",
+        "browser1440": "1440×1000에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바, console 오류·경고 0을 확인했습니다. 전체 build는 8,066 modules, 2,108 public routes와 322 no-script 본문을 생성했고 최대 RSS는 약 6.62GB였습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포 뒤 공개 390×844·1440×1000·reduced-motion·JavaScript 비활성 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-version-pinned-job-lifecycle-and-current-pool-trace"
+    },
+    {
+      "route": "blockchain/reth-payload-builder-validation",
+      "title": "Reth Payload Builder 검증: 장애·복구·결정",
+      "status": "rewritten-local-verified",
+      "publicEntry": "src/pages/articles/ethereum/reth-payload-builder-validation/index.tsx",
+      "bodyFiles": [
+        "src/pages/articles/ethereum/reth-payload-builder-validation/index.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder-validation/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder-validation/viz/RethPayloadBuilderValidationViz.tsx",
+        "src/pages/articles/ethereum/reth-payload-builder/RethPayloadBuilderLocator.tsx",
+        "src/content/reth-payload-builder-learning-tree.ts"
+      ],
+      "candidateSignals": {
+        "stageMarkers": 6,
+        "predictionPointers": 0,
+        "assumptionMarkers": 9,
+        "sourceButtons": 2,
+        "headings": [
+          "Payload Builder 변경을 배포 전에 어떻게 검증합니까?",
+          "재현에 필요한 입력과 버전을 한 run ID에 묶습니다",
+          "관찰자가 상태를 고치지 않도록 authoritative writer를 먼저 정합니다",
+          "정상 경로의 결과를 payload bytes 하나가 아니라 상태 묶음으로 저장합니다",
+          "정상 입력에 한 경계씩만 바꾸어 첫 차이를 찾습니다",
+          "실패 결과를 하나의 build 실패로 합치지 않습니다",
+          "장애에서 재진입까지",
+          "유효성과 복구가 같은 뒤에만 성능과 value를 비교합니다",
+          "실험 전 상태는 proposed입니다",
+          "공식 구현과 아직 없는 현장 측정을 구분합니다"
+        ]
+      },
+      "issues": [
+        "기존 Payload Builder 글에는 버전 변경을 운영 환경에서 검증하고 복구하는 별도 실무 경로가 없었습니다.",
+        "개념 설명과 release gate를 한 글에 섞으면 보편적인 구현 사실과 대상 환경의 미측정 판단이 구분되지 않았습니다."
+      ],
+      "fixture": "같은 Reth version, ChainSpec, parent state, attributes 원문, transaction corpus와 clock schedule을 base와 candidate에 주고, attributes·parent·dependency·resource·execution·timing·identity·recovery 장애를 한 번에 하나씩 추가하는 paired run입니다.",
+      "stageEvidence": {
+        "0": "개념 글의 forkchoiceUpdated, transaction selection과 resolve anchor에서 실무 질문을 엽니다.",
+        "1": "Binary, ChainSpec, parent, attributes, pool과 clock을 run ID 하나에 고정합니다.",
+        "2": "Forkchoice, active job, best candidate, 임시 state, canonical block과 배포 상태의 authoritative writer를 분리합니다.",
+        "3": "정상 결과를 payload bytes가 아니라 Engine, job, candidate와 resource receipt 묶음으로 저장합니다.",
+        "4": "한 경계씩 장애를 주입하고 첫 차이, 보존 상태와 typed failure를 비교합니다.",
+        "5": "발견, 격리, 우회, rollback과 전체 fixture 재통과 뒤에만 재진입합니다.",
+        "6": "정합성과 복구가 같아진 뒤 성능을 측정하고 proposed ADR의 채택·기각·재검토 조건을 기록합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 source commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 payload service, job outcome과 builder 구현",
+        "Ethereum Execution APIs commit 3d627c95a4d3510a8187dd02e0250ecb4331d27e의 외부 요청·응답 계약"
+      ],
+      "verification": {
+        "substantiveReading": "실무 글이 개념 글의 정확한 세 anchor에서 출발하고 state ownership, baseline, paired faults, recovery, 미측정값과 ADR 조건을 분리하는지 확인했습니다.",
+        "arithmetic": "성능 우위나 운영 수치를 만들지 않았고 대상 환경의 slot budget, p95·p99, canary 범위와 rollback 시간은 미측정으로 남겼습니다.",
+        "humanize": "글별 학습·문장·한국어·용어 감사를 통과했으며 개념 재설명 대신 실험과 운영 판단에 집중했습니다.",
+        "browser390": "390×844에서 문서와 시각화 가로 넘침 0, 8초 무자동재생, 49.5px 조작부, reduced-motion 실행 animation 0, JavaScript 비활성 정적 6장면과 전체 본문을 확인했습니다.",
+        "browser1440": "1440×1000에서 가로 넘침 0, ArrowRight 장면 0→1, 코드 사이드바와 console 오류·경고 0을 확인했습니다."
+      },
+      "remaining": [
+        "GitHub Pages 배포 뒤 공개 390×844·1440×1000·reduced-motion·JavaScript 비활성 경로 재검증"
+      ],
+      "reviewDisposition": "split-practice-release-gate-from-concept"
     },
     {
       "route": "blockchain/reth-pipeline",

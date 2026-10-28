@@ -510,6 +510,7 @@
     "blockchain/reth-mev",
     "blockchain/reth-net",
     "blockchain/reth-payload-builder",
+    "blockchain/reth-payload-builder-validation",
     "blockchain/reth-pipeline",
     "blockchain/reth-precompiles",
     "blockchain/reth-provider",

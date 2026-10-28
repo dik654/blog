@@ -368,6 +368,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/reth-blob-storage",
   "blockchain/eip4844-blob-fee",
   "blockchain/reth-blob-reorg-release",
+  "blockchain/reth-payload-builder",
+  "blockchain/reth-payload-builder-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
