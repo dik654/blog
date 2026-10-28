@@ -514,6 +514,7 @@
     "blockchain/reth-payload-builder-validation",
     "blockchain/reth-pipeline",
     "blockchain/reth-precompiles",
+    "blockchain/reth-precompiles-validation",
     "blockchain/reth-provider",
     "blockchain/reth-rpc",
     "blockchain/reth-sync",

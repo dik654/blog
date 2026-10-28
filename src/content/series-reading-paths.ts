@@ -48,6 +48,7 @@ export const SERIES_READING_PATHS = {
           "reth-block-execution",
           "reth-block-execution-validation",
           "reth-precompiles",
+          "reth-precompiles-validation",
         ],
       },
       {

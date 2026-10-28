@@ -10235,7 +10235,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "EVM precompile fork registry",
     definition: "Block spec id에 따라 address를 EIP-defined native operation에 연결하고 비활성 fork에서는 일반 account처럼 취급하는 versioned dispatch 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#overview",
+    canonicalHref: "/cs/blockchain/reth-precompiles#registry",
   },
   "evm-precompile-gas-gate": {
     id: "evm-precompile-gas-gate",
@@ -10243,7 +10243,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Precompile gas-before-execution gate",
     definition: "Input으로 protocol gas를 먼저 계산해 call gas가 부족하면 native backend를 실행하지 않고 out-of-gas로 끝내는 합의 경계입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#overview",
+    canonicalHref: "/cs/blockchain/reth-precompiles#gas-gate",
   },
   "evm-precompile-abi-contract": {
     id: "evm-precompile-abi-contract",
@@ -10251,7 +10251,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Precompile ABI·failure contract",
     definition: "각 EIP가 정한 input length·encoding·validation order·output bytes·error semantics를 client backend와 무관하게 동일하게 적용하는 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#crypto",
+    canonicalHref: "/cs/blockchain/reth-precompiles#failure-boundaries",
   },
   "reth-precompile-backend-parity": {
     id: "reth-precompile-backend-parity",
@@ -10259,7 +10259,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth precompile backend parity",
     definition: "서로 다른 native crypto backend가 official vectors와 malformed input에서 같은 gas·bytes·failure를 내는지 differential하게 확인하는 방법입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#crypto",
+    canonicalHref: "/cs/blockchain/reth-precompiles-validation#experiment",
   },
   "reth-precompile-version-receipt": {
     id: "reth-precompile-version-receipt",
@@ -10267,7 +10267,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth precompile version receipt",
     definition: "Reth SHA·revm version·crypto dependency·ChainSpec digest·fork/spec id를 함께 기록해 moving registry와 재현 실행을 분리하는 provenance입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#eip-precompiles",
+    canonicalHref: "/cs/blockchain/reth-precompiles-validation#environment",
   },
   "reth-precompile-release-gate": {
     id: "reth-precompile-release-gate",
@@ -10275,7 +10275,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "computer-science",
     label: "Reth precompile release gate",
     definition: "Fork 전후·gas 경계·malformed input·backend failure vector의 result parity와 panic isolation을 통과한 뒤 성능을 비교하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/reth-precompiles#eip-precompiles",
+    canonicalHref: "/cs/blockchain/reth-precompiles-validation#decision",
   },
   "eip1559-target-base-fee-transition": {
     id: "eip1559-target-base-fee-transition",
