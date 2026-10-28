@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1006,
-    "reviewed": 682,
-    "pending": 324,
+    "reviewed": 683,
+    "pending": 323,
     "untracked": 0,
-    "assignedPending": 282,
+    "assignedPending": 281,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4151,11 +4151,11 @@
     {
       "route": "blockchain/helios-types",
       "publicPath": "cs/blockchain/helios-types",
-      "title": "Helios 타입 시스템",
+      "title": "Helios는 JSON update를 어떻게 검증 입력으로 바꿀까요?",
       "catalogIndex": 412,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

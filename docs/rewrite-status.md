@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Helios JSON·SSZ 경계 검증 로컬 완료 (2026-10-29)
+
+- `blockchain/helios-types`를 HTTP JSON 한 건이 검증 후보가 되는 경로로 다시 썼습니다. JSON decode부터 `GenericUpdate` 후보 반환까지 일곱 장면으로 연결했습니다. 중간에는 Base·Electra 선택, 고정 branch, Merkle proof와 BLS signature 검증이 있습니다.
+- 기존 글은 HTTP 응답이 fork별 SSZ binary로 도착하는 것처럼 설명했습니다. Helios 0.11.1은 response bytes를 `serde_json::from_slice`로 읽습니다. JSON은 전송 표현이고 SSZ tree root와 branch는 consensus commitment입니다. 두 책임을 본문과 그림에서 분리했습니다.
+- Helios 0.11.1 commit `204c998a927348e1c000a664f08d5b37b1b0d924`을 고정했습니다. `HttpRpc`, fork별 update 타입, proof fold와 `verify_generic_update`를 대조했습니다. Consensus-specs v1.6.1 mainnet의 slot·epoch·period도 다시 계산했습니다. Slot 11,649,024는 epoch 364,032이며, 해당 epoch은 period 1,422에 속합니다.
+- 1,440×1,000에서는 document 폭 1,440px, figure 711×851px이고 장면 0이 8초 동안 유지됐습니다. 390×844에서는 document 폭 390px, live group 334×292px이며 세 조작 버튼은 50×50px입니다. 두 화면 모두 가로 넘침과 console 오류·경고가 없습니다.
+- Reduced-motion에서는 재생 버튼이 비활성화되고 실행 중 animation은 0건입니다. 수동 이동은 유지됩니다. JavaScript 비활성 화면에는 정적 7장면과 확인 항목 5개가 남습니다. 직속 부모 지도, return-map과 전체 본문도 그대로 보입니다.
+- 관련 strict 감사, 선택 파일 ESLint, TypeScript와 production build를 통과했습니다. 빌드는 8,100개 module과 2,118개 정적 공개 경로를 만들었습니다. No-script 본문은 339편이며 최대 RSS는 약 6.60GB, swap은 0이었습니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
 ### Helios Execution RPC 검증 로컬 완료 (2026-10-29)
 
 - `blockchain/helios-execution`을 검증된 block `H`에서 contract `A`의 slot `5`를 읽는 `eth_call T` 한 건으로 다시 썼습니다. Block pinning, access-list hint, ProofDB miss, 같은 `H`의 proof 보충, 같은 입력 재실행과 output 반환을 일곱 장면으로 연결했습니다.

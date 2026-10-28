@@ -2936,44 +2936,81 @@
     },
     {
       "route": "blockchain/helios-types",
-      "title": "Helios 타입 시스템",
-      "status": "unreviewed",
+      "title": "Helios는 JSON update를 어떻게 검증 입력으로 바꿀까요?",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/helios-types.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/helios-contract-viz.tsx",
         "src/pages/articles/ethereum/helios-types.tsx",
         "src/pages/articles/ethereum/helios-types/CoreTypes.tsx",
         "src/pages/articles/ethereum/helios-types/Encoding.tsx",
         "src/pages/articles/ethereum/helios-types/Overview.tsx",
         "src/pages/articles/ethereum/helios-types/SszInternal.tsx",
-        "src/pages/articles/ethereum/helios-types/fileTreeReal.ts"
+        "src/pages/articles/ethereum/helios-types/viz/TypeBoundaryTraceViz.tsx",
+        "src/pages/articles/ethereum/helios-types/codeRefsReal.ts",
+        "src/pages/articles/ethereum/helios-types/fileTreeReal.ts",
+        "src/pages/articles/ethereum/helios-types/codebase/helios-0.11.1/http_rpc.rs",
+        "src/pages/articles/ethereum/helios-types/codebase/helios-0.11.1/types.rs",
+        "src/pages/articles/ethereum/helios-types/codebase/helios-0.11.1/proof.rs",
+        "src/pages/articles/ethereum/helios-types/codebase/helios-0.11.1/verify.rs",
+        "src/pages/articles/ethereum/helios/HeliosLocator.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
+        "assumptionMarkers": 2,
         "sourceButtons": 4,
         "headings": [
-          "{title}",
-          "{title}",
-          "Helios 타입은 untrusted bytes를 검증된 실행 상태 view로 바꾸는 계약이다",
-          "{title}"
+          "Beacon API의 JSON 한 건은 어떻게 검증 입력이 될까요?",
+          "먼저 HTTP JSON을 Rust 타입으로 읽습니다",
+          "Fork는 객체 모양과 증명 길이를 함께 바꿉니다",
+          "타입이 정한 길이로 root를 다시 만듭니다",
+          "검증 성공은 Store 변경이 아니라 후보 반환입니다",
+          "이 글에서 확인할 수 있어야 하는 것"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Beacon API 응답이 fork별 SSZ binary로 도착하는 것처럼 설명했지만, Helios 0.11.1의 실제 HTTP 경로는 response bytes를 serde_json으로 읽습니다.",
+        "JSON decode, SSZ tree proof, BLS signature 검증과 LightClientStore 상태 변경을 하나의 타입 변환 과정처럼 묶어 각 단계의 실패 경계가 보이지 않았습니다.",
+        "기존 코드 패널은 사용 중인 Helios release와 source commit을 고정하지 않은 합성 경로를 근거처럼 보여 주었습니다.",
+        "한 update가 transport body에서 fork type과 검증 후보로 바뀌는 순서, 독자 조작 장면과 JavaScript 비활성 정적 순서가 없었습니다."
+      ],
+      "fixture": {
+        "response": "설명용 update U1422가 Beacon API의 HTTP JSON body로 도착합니다.",
+        "fork": "Mainnet Electra 활성 slot 11,649,024, epoch 364,032, sync committee period 1,422, fork version 0x05000000을 사용합니다.",
+        "branches": "Electra next committee 6개, finality 7개, execution 4개 sibling을 요구합니다.",
+        "result": "Merkle proof와 BLS signature를 통과한 GenericUpdate 후보를 반환하며 LightClientStore는 그대로입니다.",
+        "assumption": "U1422는 계산을 잇기 위한 글 안의 식별자이며 실제 API 응답 ID나 측정값이 아닙니다."
+      },
+      "stageEvidence": {
+        "0": "HTTP JSON→fork variant→SSZ proof→BLS signature→GenericUpdate 후보의 전체 경로와 Store 경계를 먼저 보여 줍니다.",
+        "1": "get_updates가 response body bytes를 serde_json::from_slice로 읽으며 이 호출이 SSZ binary decoder가 아님을 확인합니다.",
+        "2": "serde untagged enum이 별도 fork tag가 아니라 field 구조와 FixedVector 길이로 Base 또는 Electra를 고릅니다.",
+        "3": "Electra variant가 next committee 6개, finality 7개, execution 4개의 branch shape를 고정합니다.",
+        "4": "leaf tree_hash_root와 sibling을 SHA-256으로 접어 attested header의 state_root 또는 body_root와 비교합니다.",
+        "5": "Signature slot의 period, participant bits, fork domain과 aggregate public key를 묶어 BLS signature를 검증합니다.",
+        "6": "성공 결과는 Store mutation이 아니라 GenericUpdate 후보이며, Store 변경은 별도 상태 전이 책임임을 되돌려 줍니다.",
+        "failure": "잘못된 JSON 구조·branch 길이·derived root·period·domain·signature는 각 경계에서 거절되고 Store는 바뀌지 않습니다.",
+        "return": "JSON은 전송 표현이고 SSZ tree root와 branch는 consensus commitment라는 사실을 Helios 부모 지도의 증거 형식 영역에 반환합니다."
+      },
+      "sourceEvidence": [
+        "a16z/helios 0.11.1 commit 204c998a927348e1c000a664f08d5b37b1b0d924의 HttpRpc, Update·LightClientHeader·GenericUpdate, proof fold와 verify_generic_update 경로를 고정했습니다.",
+        "Ethereum consensus-specs v1.6.1 mainnet의 32 slots/epoch, 256 epochs/sync committee period, Electra epoch 364,032와 fork version 0x05000000을 계산 경계와 구분해 사용했습니다.",
+        "공식 source는 기능 존재와 구현 순서를 증명하지만 대상 네트워크의 응답값·지연·운영 안전성을 증명하지 않는다고 범위를 제한했습니다."
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 본문과 고정 Helios source를 다시 읽고 HTTP JSON→untagged fork type→고정 branch→Merkle·BLS 검증→GenericUpdate 후보의 한 사례로 재작성했습니다.",
+        "arithmetic": "slot 11,649,024 ÷ 32 = epoch 364,032, epoch 364,032 ÷ 256 = period 1,422를 별도 계산으로 확인했습니다. 성능·지연 측정값은 만들지 않았습니다.",
+        "humanize": "한국어·문장 호흡·용어·term-pair strict 검사와 git diff --check를 통과했고, JSON·SSZ·Store의 책임을 동사 중심 문장으로 분리했습니다.",
+        "browser390": "390×844 production 화면에서 document 390=390, live group 334×292px, 이전·재생·다음 버튼 50×50px이며 가로 넘침 0을 확인했습니다. JavaScript 비활성 화면은 live 요소·버튼 없이 정적 7장면, 확인 항목, 직속 부모 지도와 return-map을 남깁니다.",
+        "browser1440": "1440×1000에서 document 1440=1440, figure 711×851px입니다. 장면 0이 8초 동안 유지되고 ArrowRight와 장면 버튼으로 이동했으며 console 오류·경고는 0건입니다.",
+        "motion": "Reduced-motion에서는 재생 버튼이 비활성화되고 실행 중 animation은 0건이며 수동 방향키 이동은 유지됩니다. 일반 모드에서도 viewport 진입만으로 재생되지 않습니다.",
+        "static": "TypeScript·Vite production build와 정적 경로 생성이 통과했습니다. 8,100개 module, 2,118개 공개 경로와 no-script 본문 339편을 생성했고 최대 RSS는 약 6.60GB, swap은 0이었습니다. JavaScript 비활성 390×844·1,440×1,000에서 가로 넘침 0, 정적 7장면, live 요소·버튼 0을 확인했습니다.",
+        "audits": "learning·graph·formula·calculations·pseudocode·articles·prose·Korean·terms·term-pairs·topology·reading·order·runtime·architecture-flow strict, selected ESLint와 git diff --check를 통과했습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "정확한 파일만 커밋해 GitHub Pages에 배포한 뒤 공개 경로를 다시 검증합니다."
+      ],
+      "reviewDisposition": "substantively-rewritten"
     },
     {
       "route": "blockchain/helios-update",

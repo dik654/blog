@@ -7557,9 +7557,9 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     reuses: [
       { label: "Checkpoint source·age·fallback 정책", href: "/cs/blockchain/helios-config#persistence" },
-      { label: "Fork-specific SSZ proof receipt", href: "/cs/blockchain/helios-types#ssz-internal" },
+      { label: "Fork-specific SSZ proof receipt", href: "/cs/blockchain/helios-types#proof-context" },
       { label: "Weak-subjectivity trust anchor", href: "/cs/blockchain/prysm-finality#weak-subjectivity" },
-      { label: "Light-client Store transition", href: "/cs/blockchain/helios-types#core-types" },
+      { label: "JSON decode와 Store 적용 경계", href: "/cs/blockchain/helios-types#validation-boundary" },
     ],
     evidence: [
       { kind: "primary-source", rule: "Checkpoint input/cache/fallback과 HTTP/Store implementation은 표시한 Helios SHA에 귀속한다." },
@@ -7577,7 +7577,7 @@ export const EDITORIAL_BOUNDARIES = {
       "초기 sync와 이후 advance의 memory Store 반영 순서",
     ],
     reuses: [
-      { label: "SyncAggregate와 Store type", href: "/cs/blockchain/helios-types#core-types" },
+      { label: "SyncAggregate와 검증 후보 경계", href: "/cs/blockchain/helios-types#validation-boundary" },
       { label: "BLS point·domain·pairing 정본", href: "/cs/blockchain/prysm-bls" },
       { label: "Sync committee membership", href: "/cs/blockchain/prysm-sync-committee" },
       { label: "SSZ generalized index", href: "/cs/blockchain/prysm-ssz" },
@@ -7590,11 +7590,11 @@ export const EDITORIAL_BOUNDARIES = {
     ],
   },
   "helios-types": {
-    title: "Helios light-client 타입 글이 소유하는 범위",
+    title: "Helios JSON·fork type·proof 경계 글이 소유하는 범위",
     owns: [
-      "Pinned Helios snapshot의 fork별 LightClientHeader·Update·Store type 배치",
-      "Update validation 결과를 optimistic/finalized header와 current/next committee에 적용하는 typed transition",
-      "Helios type release에서 bytes·root·branch·pre/post Store를 비교하는 검증 계약",
+      "Helios 0.11.1 Beacon API의 HTTP JSON decode와 untagged Base·Electra variant 선택",
+      "Fork별 LightClientHeader·Update branch shape와 SSZ tree proof의 연결",
+      "GenericUpdate 검증 후보와 LightClientStore 상태 전이의 책임 분리",
     ],
     reuses: [
       { label: "SSZ schema·canonical decode·Merkleization", href: "/cs/blockchain/prysm-ssz" },
@@ -7602,9 +7602,9 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Weak-subjectivity checkpoint", href: "/cs/blockchain/prysm-finality#weak-subjectivity" },
     ],
     evidence: [
-      { kind: "primary-source", rule: "Type field·variant·size는 Helios commit 43a8c9f3과 consensus-spec commit 2359a5e3·fork·preset을 함께 고정한다." },
-      { kind: "standard", rule: "SSZ decode·object root·Merkle branch·BLS/domain·Store transition을 서로 다른 검증 단계로 표시한다." },
-      { kind: "project-claim", rule: "Rust type 존재를 runtime validation·memory size·network response size·production safety 보장으로 확대하지 않는다." },
+      { kind: "primary-source", rule: "HTTP decode와 type field·variant는 Helios 0.11.1 commit 204c998a, protocol 상수는 consensus-specs v1.6.1 mainnet에 귀속한다." },
+      { kind: "standard", rule: "JSON transport decode·SSZ tree root·Merkle branch·BLS/domain·Store transition을 서로 다른 단계로 표시한다." },
+      { kind: "project-claim", rule: "Rust type 존재나 decode 성공을 proof validation·Store mutation·production safety 보장으로 확대하지 않는다." },
     ],
   },
   "helios-config": {

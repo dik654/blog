@@ -1,52 +1,94 @@
+import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import ExplainedFormula from "@/components/ui/explained-formula";
-import HeliosContractViz from "../helios-contract-viz";
+import { codeRefsReal } from "./codeRefsReal";
 
 interface Props {
-  title: string;
   onCodeRef: (key: string, ref: CodeRef) => void;
 }
 
-export default function Encoding({ title, onCodeRef: _onCodeRef }: Props) {
+export default function Encoding({ onCodeRef }: Props) {
   return (
-    <section id="encoding" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">{title}</h2>
+    <section id="fork-shape" className="mb-16 scroll-mt-20">
+      <h2 className="mb-5 text-2xl font-bold">Fork는 객체 모양과 증명 길이를 함께 바꿉니다</h2>
+
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          SSZ는 object를 canonical bytes로 읽는 규칙과 <code>hash_tree_root</code>를 만드는 규칙을 함께 제공합니다. 그러나 signature가
-          어떤 역할과 chain에서 유효한지는 SSZ root만으로 정해지지 않습니다. Ethereum은 4-byte domain type, active fork version,
-          genesis validators root를 결합해 서명 문맥을 분리합니다.
+          Mainnet Electra는 epoch 364,032에서 시작합니다. Mainnet preset은
+          epoch당 32 slots, sync committee period당 256 epochs를 사용합니다.
+          따라서 경계의 첫 slot은 11,649,024이고 period는 정확히 1,422입니다.
+          이 계산으로 U1422를 Electra 규칙으로 읽어야 한다는 문맥을 고정합니다.
         </p>
       </div>
-      <HeliosContractViz mode="signing-context" />
+
       <ExplainedFormula
-        question="같은 header root의 서명을 다른 duty·fork·network에서 재사용하지 못하게 하려면 무엇을 hash하는가?"
-        idea="먼저 fork와 network를 묶은 ForkData root를 만들고, 앞 28 bytes를 역할을 나타내는 domain type과 연결합니다. 마지막으로 message root와 domain을 SigningData로 묶습니다."
-        formula={String.raw`\begin{aligned} D &= T_{\text{domain}}\;\|\;\operatorname{root}(V_{\text{fork}},G)_{0:28} \\ R_{\text{sign}} &= \operatorname{root}(R_{\text{object}},D) \end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned} D &= \underbrace{T_{\text{domain}}}_{\text{역할 4 bytes}}\;\|\;\underbrace{\operatorname{root}(V_{\text{fork}},G)_{0:28}}_{\text{fork·network 28 bytes}} \\ R_{\text{sign}} &= \underbrace{\operatorname{root}(R_{\text{object}},D)}_{\text{message와 domain 결합}} \end{aligned}`}
+        question="Electra 활성 epoch는 어느 slot과 sync committee period에 속할까요?"
+        idea="Epoch에 slots/epoch를 곱해 첫 slot을 구하고, epoch를 epochs/period로 나눠 period를 구합니다."
+        formula={String.raw`slot_E=364032\times32=11649024,\qquad period_E=\left\lfloor\frac{364032}{256}\right\rfloor=1422`}
+        annotatedFormula={String.raw`slot_E=\underbrace{364032}_{\text{Electra epoch}}\times\underbrace{32}_{\text{slots/epoch}}=11649024,\qquad period_E=\left\lfloor\frac{364032}{256}\right\rfloor=1422`}
         operations={[
-          { expression: String.raw`T_{\text{domain}}`, annotation: ["sync committee·proposer 같은 역할을","구분하는 4-byte domain type","역할이 다르면 같은 root 서명도 무효"] },
-          { expression: String.raw`\operatorname{root}(V_{\text{fork}},G)_{0:28}`, annotation: ["fork version과 genesis validators root를","ForkData로 묶은 hash의 앞 28 bytes","다른 fork·network의 서명 재사용 차단"] },
-          { expression: String.raw`\operatorname{root}(R_{\text{object}},D)`, annotation: ["header의 SSZ root와 32-byte domain D를","SigningData로 묶은 최종 signing root","BLS verification에 들어가는 message"] },
+          {
+            expression: String.raw`364032\times32=11649024`,
+            annotation: [
+              "Electra가 시작하는 epoch에 epoch당 slot 수를 곱합니다",
+              "결과는 경계에 있는 첫 slot입니다",
+            ],
+          },
+          {
+            expression: String.raw`364032/256=1422`,
+            annotation: [
+              "Sync committee 하나가 256 epochs를 담당합니다",
+              "나머지가 0이므로 이 epoch가 period 1,422의 시작입니다",
+            ],
+          },
         ]}
         terms={[
-          { symbol: "T_{\\text{domain}}", name: "Domain type", description: "Sync committee·beacon proposer처럼 서명 역할을 구분하는 4-byte 값입니다." },
-          { symbol: "V_{\\text{fork}}", name: "Fork version", description: "Signature epoch에 활성인 consensus fork의 4-byte version입니다." },
-          { symbol: "G", name: "Genesis validators root", description: "서명이 속한 consensus network를 구분합니다." },
-          { symbol: "R_{\\text{object}}", name: "Object root", description: "서명할 message의 SSZ hash-tree-root입니다." },
-          { symbol: "R_{\\text{sign}}", name: "Signing root", description: "BLS verification에 들어가는 최종 32-byte message입니다." },
+          { symbol: "364032", name: "Electra 활성 epoch", description: "Consensus-specs v1.6.1 mainnet config의 ELECTRA_FORK_EPOCH입니다." },
+          { symbol: "32", name: "Slots per epoch", description: "Mainnet phase0 preset의 SLOTS_PER_EPOCH입니다." },
+          { symbol: "256", name: "Epochs per period", description: "Mainnet Altair preset의 EPOCHS_PER_SYNC_COMMITTEE_PERIOD입니다." },
+          { symbol: "1422", name: "Sync committee period", description: "U1422의 signature와 committee 선택에 쓰는 period입니다." },
         ]}
         assumptions={[
-          "Signature slot에서 올바른 fork version을 선택합니다.",
-          "Domain type과 genesis root는 target network의 pinned spec에서 가져옵니다.",
+          "Ethereum consensus-specs v1.6.1 mainnet preset와 config를 사용합니다.",
+          "U1422는 계산을 따라가기 위한 예시 객체이며 실제 네트워크 응답을 측정한 값이 아닙니다.",
         ]}
-        interpretation="Object bytes가 같아도 domain type·fork version·genesis root 가운데 하나가 바뀌면 signing root가 달라집니다. 반대로 domain 계산만 맞아도 participant set·quorum·Merkle branch 검증은 별도로 필요합니다."
+        interpretation="Slot 11,649,024는 Electra 경계의 첫 slot입니다. 따라서 같은 이름의 Update라도 Base의 5·6 branch가 아니라 Electra의 6·7 branch 모양으로 읽고 검증해야 합니다."
       />
-      <div className="prose prose-neutral max-w-none dark:prose-invert">
+
+      <div className="mt-8 grid gap-px bg-border p-px sm:grid-cols-3">
+        <div className="bg-background p-4">
+          <p className="text-xs font-bold text-muted-foreground">Next committee</p>
+          <p className="mt-2 font-mono text-lg font-bold">Base 5 → Electra 6</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">BeaconState tree 깊이 변화</p>
+        </div>
+        <div className="bg-background p-4">
+          <p className="text-xs font-bold text-muted-foreground">Finality</p>
+          <p className="mt-2 font-mono text-lg font-bold">Base 6 → Electra 7</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Finalized checkpoint 증명 깊이</p>
+        </div>
+        <div className="bg-background p-4">
+          <p className="text-xs font-bold text-muted-foreground">Execution payload</p>
+          <p className="mt-2 font-mono text-lg font-bold">Electra 4</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Beacon block body 아래의 header 증명</p>
+        </div>
+      </div>
+
+      <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <p>
-          고정 예시 slot 8,192를 mainnet preset의 32 slots/epoch, 256 epochs/period로 읽으면 epoch 256, sync committee period 1입니다. 이 계산은
-          어떤 committee를 사용할지 고르지만 그 committee가 trusted state에 포함됐다는 증명까지 대신하지는 않습니다.
+          <code>LightClientHeader</code>도 fork에 따라 모양이 다릅니다. Bellatrix
+          variant는 beacon header만 가지고, Capella·Deneb·Electra variant는
+          execution payload header와 4개짜리 execution branch를 함께 가집니다.
+          Beacon header의 <code>state_root</code>는 BeaconState root이고,
+          execution header의 <code>state_root</code>가 account proof의 기준입니다.
+          이름이 같아도 서로 다른 tree의 root입니다.
         </p>
+      </div>
+
+      <div className="not-prose mt-5">
+        <CodeViewButton
+          label="Fork별 Header와 branch 길이 보기"
+          onClick={() => onCodeRef("helios-fork-types", codeRefsReal["helios-fork-types"])}
+        />
       </div>
     </section>
   );

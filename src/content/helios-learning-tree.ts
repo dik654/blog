@@ -112,9 +112,9 @@ export const HELIOS_NODES: readonly HeliosNode[] = [
   },
   {
     id: "helios-types",
-    shortTitle: "타입·SSZ",
-    question: "Fork별 wire object와 Merkle path를 어떤 타입과 byte 규칙으로 해석합니까?",
-    track: "reference",
+    shortTitle: "JSON·SSZ 경계",
+    question: "Beacon API의 JSON 한 건이 어떻게 fork에 맞는 검증 입력이 됩니까?",
+    track: "concept",
     href: "/cs/blockchain/helios-types#overview",
     parentId: "helios",
     parentLabel: "Helios 전체 지도 · 증거 형식",
