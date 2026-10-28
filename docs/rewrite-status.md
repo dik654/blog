@@ -3,6 +3,14 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Reth Blob Reorg 재주입·정리 로컬 검증 완료 (2026-10-28)
+
+- `blockchain/reth-blob-reorg-release`를 old canonical block 100에서 빠진 Blob transaction T₀가 local sidecar S₀와 hash H₀로 다시 결합하고, 새 canonical state에서 재검사된 뒤 block 101의 finality로 정리되는 한 흐름으로 다시 구성했습니다. T₀·S₀·H₀와 block 100·100′·101은 모두 설명용 fixture입니다.
+- 기존 글이 실제 구현에 없는 `sidecar receipt`, `generation`, local miss 뒤 network fetch를 재주입 조건처럼 설명하던 부분을 제거했습니다. Reth v2.8.1과 source commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`을 고정하고, old−new transaction hash 차집합, `get_blob`, `try_from_eip4844`, canonical state update, external reinsertion, tracker 교체와 finality cleanup을 exact source excerpt로 대조했습니다.
+- 일곱 장면은 요청 없이 자동으로 진행되지 않습니다. 390×844에서는 문서 폭 390px, 모든 장면의 내부 넘침 0, 약 49.5px 조작부와 키보드 0→1 이동을 확인했습니다. 1440×1000에서는 문서 가로 넘침 0, 664×627px 시각화와 실제 source sidebar를 확인했습니다. Reduced-motion은 실행 중 animation 0건이며 재생만 비활성화하고 수동 이동은 유지합니다. JavaScript 비활성 화면에도 부모 지도, 현재 질문, 일곱 정적 장면과 본문이 같은 순서로 남습니다.
+- 학습 계약·지식 그래프·글 구조·읽기 순서·topology·문장 호흡·한국어·용어·runtime·architecture-flow·coverage strict 감사를 통과했습니다. TypeScript 전체 검사의 최대 상주 메모리는 약 6.52GB, production build와 정적 생성은 약 1.45GB였고 swap은 0이었습니다. Build는 8,057개 module, 정적 public route 2,106개, no-script 본문 320편을 생성했습니다.
+- 현재 상태는 `rewritten-local-verified`입니다. GitHub Pages 배포와 공개 경로의 모바일·데스크톱·reduced-motion·JavaScript 비활성 재검증이 남았습니다.
+
 ### Reth EIP-1559 개념·실무 분리 공개 검증 완료 (2026-10-27)
 
 - `blockchain/reth-eip1559`은 `concept`, 새 `blockchain/reth-eip1559-validation`은 `practice`로 분리했습니다. 개념 글은 parent gas limit 30M·used 18M·base fee 20 gwei와 Alice의 max fee 40·priority cap 3·actual gas 25,000을 고정해 target 15M, 다음 base fee 20.5 gwei, burn 512,500 gwei, beneficiary 75,000 gwei와 총 587,500 gwei를 한 흐름으로 추적합니다.

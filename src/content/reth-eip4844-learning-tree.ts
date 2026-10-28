@@ -123,7 +123,7 @@ export const RETH_EIP4844_NODES: readonly RethEip4844Node[] = [
     parentHref: "/cs/blockchain/reth-eip4844#return-map",
     region: "Reorg reinsertion과 retention",
     returnSummary:
-      "Reorg로 transaction body가 Pool에 돌아올 때 sidecar가 빠져 있더라도 local BlobStore에 이미 검증한 artifact가 남아 있으면 재사용할 수 있습니다. 재삽입과 cleanup은 같은 canonical 경계를 보되 서로 다른 상태 전이로 기록해야 합니다.",
+      "Reth는 old chain에는 있고 new chain에는 없는 Blob transaction body를 고른 뒤 transaction hash로 local sidecar를 찾아 다시 결합합니다. 새 canonical state를 먼저 반영하고 재주입하며, 같은 높이의 tracker 기록을 new chain 기준으로 교체한 뒤 재포함된 transaction이 finalized될 때 sidecar를 정리합니다.",
     curriculumPrevious: {
       href: "/cs/blockchain/eip4844-blob-fee#overview",
       label: "Blob 가격",
