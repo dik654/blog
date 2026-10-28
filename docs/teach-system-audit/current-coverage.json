@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1006,
-    "reviewed": 680,
-    "pending": 326,
+    "reviewed": 681,
+    "pending": 325,
     "untracked": 0,
-    "assignedPending": 284,
+    "assignedPending": 283,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4125,17 +4125,17 @@
       "catalogIndex": 409,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/helios-state",
       "publicPath": "cs/blockchain/helios-state",
-      "title": "Helios State Proof & Merkle-Patricia 검증",
+      "title": "Helios는 원격 state 값을 어떻게 검증할까요?",
       "catalogIndex": 410,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

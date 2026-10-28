@@ -6728,9 +6728,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     },
     {
       kind: "공식 코드",
-      label: "Helios 0.11.1 — execution proof verifier",
-      href: "https://github.com/a16z/helios/blob/0.11.1/core/src/execution/proof.rs",
-      note: "Account·storage·code·receipt proof와 empty-value 처리의 stable source snapshot",
+      label: "a16z/helios execution proof·provider·cache @ 43a8c9f",
+      href: "https://github.com/a16z/helios/tree/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/core/src/execution",
+      note: "Block-hash-pinned getProof, account·storage·code 검증과 verified cache identity의 pinned source snapshot",
     },
   ],
   "blockchain/helios-execution": [

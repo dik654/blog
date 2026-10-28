@@ -15,14 +15,14 @@ export default function HeliosStateArticle() {
       <HeliosLocator current="helios-state" />
       <Overview onCodeRef={sidebar.open} />
       <ProofTrace
-        title="계정 + 스토리지 증명 코드 추적"
+        title="RPC 응답이 검증된 Account가 되는 순서"
         onCodeRef={sidebar.open}
       />
       <MptTraversal
-        title="verify_proof() — MPT 순회 알고리즘"
+        title="MPT proof가 root·key·value를 묶는 방법"
         onCodeRef={sidebar.open}
       />
-      <ProofDB title="ProofDB — 캐싱과 에러" onCodeRef={sidebar.open} />
+      <ProofDB title="검증 결과의 유효 범위와 실패 경계" onCodeRef={sidebar.open} />
       <HeliosMapReturn current="helios-state" />
       <CodeSidebar
         codeRefKey={sidebar.codeRefKey}

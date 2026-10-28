@@ -5746,8 +5746,8 @@ export const EDITORIAL_BOUNDARIES = {
     ],
     evidence: [
       { kind: "standard", rule: "eth_getProof envelope은 EIP-1186과 pinned execution-apis schema를 함께 확인하고 MPT·account commitment는 Yellow Paper snapshot에 귀속한다." },
-      { kind: "primary-source", rule: "Empty-value handling·proof verification·cache key claim은 Helios 0.11.1 source에 제한한다." },
-      { kind: "project-measurement", rule: "Existence/absence·node encoding·wrong root·malformed RLP·reorg fixture에서 value·error·cache identity parity 뒤 성능을 비교한다." },
+      { kind: "primary-source", rule: "Block-pinned RPC·empty-value handling·proof verification·cache key claim은 Helios commit 43a8c9f3 source에 제한한다." },
+      { kind: "project-claim", rule: "현재 글은 proof 메커니즘만 설명하며 대상 환경의 fixture·성능·배포 채택 판단은 주장하지 않는다." },
       { kind: "project-claim", rule: "Proof 성공을 current head·finality·provider availability의 보장으로 확대하지 않는다." },
     ],
   },
