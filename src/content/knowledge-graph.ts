@@ -10486,15 +10486,6 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
       "Sync-committee update에서 빠르게 전진하지만 reorg 가능한 optimistic header와 supermajority·finality branch를 갖춰 더 강하게 확정된 finalized header를 별도 slot/root pointer로 유지하는 light-client 상태 계약입니다.",
     canonicalHref: "/cs/blockchain/helios-update#overview",
   },
-  "helios-update-validation-context": {
-    id: "helios-update-validation-context",
-    kind: "concept",
-    domain: "distributed-systems",
-    label: "Helios update validation context",
-    definition:
-      "Network preset·genesis validators root·fork schedule·expected current slot과 store current/next period를 고정해 update의 slot order·Merkle branch·committee binding·BLS domain을 같은 snapshot에서 판정하는 입력 계약입니다.",
-    canonicalHref: "/cs/blockchain/helios-update#validate-update",
-  },
   "helios-best-update-ordering": {
     id: "helios-best-update-ordering",
     kind: "method",
@@ -10511,16 +10502,16 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     label: "Helios finalized sync-committee handoff",
     definition:
       "Finalized update가 next committee Merkle branch를 제공하고 finalized period가 넘어갈 때만 stored next를 current로 승격하고 새 next를 채워 wall-clock만으로 signer set을 교체하지 않는 전환입니다.",
-    canonicalHref: "/cs/blockchain/helios-update#apply-update",
+    canonicalHref: "/cs/blockchain/helios-update#committee-handoff",
   },
-  "helios-update-release-gate": {
-    id: "helios-update-release-gate",
-    kind: "method",
+  "helios-force-update-liveness": {
+    id: "helios-force-update-liveness",
+    kind: "concept",
     domain: "distributed-systems",
-    label: "Helios light-client update release gate",
+    label: "Helios force-update liveness exception",
     definition:
-      "Fork domain·participation 경계·period handoff·invalid branch·competing update·force-update·reorg·restart fixture에서 optimistic/finalized root·committee·best-update·error parity를 먼저 비교하는 채택 계약입니다.",
-    canonicalHref: "/cs/blockchain/helios-update#reorg-handling",
+      "Finalized header가 한 sync-committee period보다 오래 멈추고 best valid update가 남았을 때 quorum gate를 우회할 수 있으므로, normal 2/3 finality와 다른 신뢰 전제로 다루는 liveness 예외입니다.",
+    canonicalHref: "/cs/blockchain/helios-update#force-update",
   },
   "helios-proof-anchor-chain": {
     id: "helios-proof-anchor-chain",
@@ -12581,7 +12572,7 @@ export const KNOWLEDGE_CONCEPTS: Readonly<Record<string, KnowledgeConcept>> = {
     domain: "distributed-systems",
     label: "Helios update · Store transition",
     definition: "Validated update의 participation·finality branch·next-committee branch와 slot ordering에 따라 optimistic/finalized header와 current/next committee를 부분 mutation 없이 전진시키는 transition입니다.",
-    canonicalHref: "/cs/blockchain/helios-update#apply-update",
+    canonicalHref: "/cs/blockchain/helios-update#store-transition",
   },
   "helios-fork-domain-context": {
     id: "helios-fork-domain-context",
@@ -46896,46 +46887,40 @@ export const KNOWLEDGE_EDGES: readonly KnowledgeEdge[] = [
     reason: "Candidate와 rollback artifact의 binary·chain·storage compatibility를 release receipt에 고정합니다.",
   },
   {
-    from: "light-client-sync-update-trust-boundary",
-    to: "helios-update-validation-context",
-    relation: "extends",
-    reason: "일반 light-client 신뢰 경계를 Helios가 실제로 고정할 network·fork·slot·period 입력으로 구체화합니다.",
-  },
-  {
-    from: "sync-aggregate-participant-binding",
-    to: "helios-update-validation-context",
-    relation: "prerequisite",
-    reason: "Set bit와 current/next committee position이 같은 root·domain에 결합돼야 update signature를 검증할 수 있습니다.",
-  },
-  {
-    from: "helios-update-validation-context",
+    from: "helios-consensus-validation-order",
     to: "helios-best-update-ordering",
     relation: "prerequisite",
-    reason: "후보 ordering 전에 각 update가 slot·period·branch·signature 검증을 통과해야 합니다.",
+    reason: "후보 ordering 전에 각 update가 context·branch·signature 검증을 통과해야 합니다.",
   },
   {
     from: "helios-best-update-ordering",
-    to: "helios-dual-header-store",
+    to: "helios-update-store-transition",
     relation: "produces",
-    reason: "Best valid update와 participation threshold가 optimistic·finalized pointer의 서로 다른 전진을 만듭니다.",
+    reason: "보존한 best 후보와 참여 누적값이 Store transition의 입력이 됩니다.",
   },
   {
-    from: "helios-update-validation-context",
+    from: "helios-update-store-transition",
+    to: "helios-dual-header-store",
+    relation: "produces",
+    reason: "Safety threshold와 2/3 finality gate가 optimistic·finalized pointer를 서로 다른 조건으로 전진시킵니다.",
+  },
+  {
+    from: "helios-committee-handoff-recovery",
     to: "helios-sync-committee-handoff",
     relation: "prerequisite",
-    reason: "Finalized period와 next committee branch가 같은 attested state에 속함을 검증한 뒤에만 handoff합니다.",
+    reason: "검증 단계에서 period와 trusted next committee 연결을 확인한 뒤 Store field를 실제로 옮깁니다.",
   },
   {
     from: "helios-dual-header-store",
-    to: "helios-update-release-gate",
-    relation: "evaluates",
-    reason: "Competing update·reorg·restart에서 두 header root와 monotonic slot을 비교합니다.",
+    to: "helios-force-update-liveness",
+    relation: "constrains",
+    reason: "Force update는 normal optimistic·finalized gate보다 약한 예외임을 명시합니다.",
   },
   {
-    from: "helios-sync-committee-handoff",
-    to: "helios-update-release-gate",
+    from: "helios-force-update-liveness",
+    to: "helios-config-release-gate",
     relation: "evaluates",
-    reason: "Period 직전·직후와 missing/invalid committee branch에서 current·next key parity를 검사합니다.",
+    reason: "검열 가능성·endpoint 장애·restart·rollback을 포함한 채택 판단은 설정·운영 실무 글에서 수행합니다.",
   },
   {
     from: "helios-dual-header-store",

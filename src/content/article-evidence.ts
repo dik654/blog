@@ -6703,14 +6703,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     {
       kind: "공식 규격",
       label: "Ethereum consensus-specs v1.6.1 — light-client sync",
-      href: "https://github.com/ethereum/consensus-specs/tree/5fa6edcca8ab4cf548653e6680b17b9d3e04d225/specs/altair/light-client",
-      note: "Update validation·selection·processing과 optimistic/finalized store의 pinned protocol 정본",
+      href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/altair/light-client/sync-protocol.md",
+      note: "Update selection·Store processing·force-update와 optimistic/finalized transition의 pinned protocol 정본",
     },
     {
       kind: "공식 코드",
-      label: "Helios 0.11.1 — consensus-core update",
-      href: "https://github.com/a16z/helios/blob/0.11.1/ethereum/consensus-core/src/consensus_core.rs",
-      note: "Verify·apply·best_valid_update·committee handoff·force_update의 stable source snapshot",
+      label: "a16z/helios consensus-core @ 43a8c9f",
+      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/consensus-core/src/consensus_core.rs",
+      note: "Apply·best_valid_update·participation threshold·committee handoff·checkpoint·force_update의 pinned source snapshot",
     },
   ],
   "blockchain/helios-state": [
