@@ -6756,21 +6756,21 @@ export const ARTICLE_EVIDENCE: Readonly<
   "blockchain/helios-types": [
     {
       kind: "공식 코드",
-      label: "a16z/helios consensus types @ 43a8c9f3",
-      href: "https://github.com/a16z/helios/blob/43a8c9f3cdda41a6f383c4db41d9a83f102638b1/ethereum/consensus-core/src/types/mod.rs",
-      note: "LightClientHeader·Update·Store·SyncAggregate의 fork별 Rust type snapshot",
+      label: "a16z/helios 0.11.1 · commit 204c998a",
+      href: "https://github.com/a16z/helios/tree/204c998a927348e1c000a664f08d5b37b1b0d924/ethereum",
+      note: "HTTP JSON decode, Base·Electra Update, Merkle proof와 GenericUpdate 검증의 고정 구현",
     },
     {
       kind: "공식 규격",
-      label: "Ethereum light-client sync protocol @ 2359a5e3",
-      href: "https://github.com/ethereum/consensus-specs/blob/2359a5e3444635ee2fc2acdea8a759e16391af90/specs/altair/light-client/sync-protocol.md",
-      note: "Light-client container·validation·Store transition의 protocol 기준",
+      label: "Ethereum consensus-specs v1.6.1 · light-client sync protocol",
+      href: "https://github.com/ethereum/consensus-specs/blob/v1.6.1/specs/altair/light-client/sync-protocol.md",
+      note: "Light-client container와 fork별 branch index·depth의 protocol 기준",
     },
     {
       kind: "공식 규격",
-      label: "Ethereum SSZ specification @ 2359a5e3",
-      href: "https://github.com/ethereum/consensus-specs/blob/2359a5e3444635ee2fc2acdea8a759e16391af90/ssz/simple-serialize.md",
-      note: "Schema·canonical bytes·hash-tree-root 규칙",
+      label: "Ethereum consensus-specs v1.6.1 · mainnet preset와 config",
+      href: "https://github.com/ethereum/consensus-specs/tree/v1.6.1/presets/mainnet",
+      note: "32 slots/epoch, 256 epochs/period와 Electra epoch·fork version 계산 기준",
     },
   ],
   "blockchain/helios-config": [

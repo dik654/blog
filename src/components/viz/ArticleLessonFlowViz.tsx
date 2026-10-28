@@ -494,13 +494,17 @@ export default function ArticleLessonFlowViz({
                               className="absolute -left-1 -top-1 size-2.5 rounded-full bg-primary"
                               animate={
                                 reduceMotion
-                                  ? undefined
+                                  ? { scale: 1, opacity: 1 }
                                   : {
                                       scale: [1, 1.45, 1],
                                       opacity: [1, 0.55, 1],
                                     }
                               }
-                              transition={{ duration: 1.8, repeat: Infinity }}
+                              transition={
+                                reduceMotion
+                                  ? { duration: 0 }
+                                  : { duration: 1.8, repeat: Infinity }
+                              }
                             />
                           ) : null}
                           <ConceptGlyph

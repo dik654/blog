@@ -418,6 +418,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "a16z/helios 0.11.1 commit 204c998a의 EthereumEvm·ProofDB·Node·RpcExecutionProvider를 고정합니다. Access list는 prefetch hint이고 state 신뢰는 block-pinned proof가 만듭니다. Call 결과를 inclusion으로, receipt inclusion을 finality로, broadcast hash를 propagation 보장으로 확대하지 않습니다.",
   },
+  "blockchain/helios-types": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "Beacon API JSON 한 건 U1422를 transport decode, Base·Electra type 선택, SSZ/Merkle proof, period·domain·BLS 검증, GenericUpdate 후보 반환까지 추적하는 하나의 개념 질문입니다. Store field 변경과 환경별 성능·운영 판단은 다른 글이 소유하므로 이 글에 섞지 않습니다.",
+    sharedGate:
+      "a16z/helios 0.11.1 commit 204c998a와 Ethereum consensus-specs v1.6.1 mainnet preset을 고정합니다. HTTP JSON decode 성공을 SSZ proof나 BLS 성공으로 확대하지 않고, verify 결과와 LightClientStore mutation을 분리합니다.",
+  },
   "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
@@ -4165,6 +4174,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/helios": "1aae7cd438aecb42",
   "blockchain/helios-bootstrap": "1d822ca07f5be08f",
   "blockchain/helios-execution": "f6de6ee7a4190892",
+  "blockchain/helios-types": "c983f0fcedca1f1c",
   "blockchain/kohaku-provider": "0660e6e953253651",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",

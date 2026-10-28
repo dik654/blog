@@ -4,10 +4,10 @@
   "summary": {
     "publicArticles": 1006,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 714,
+    "dedicatedVisuals": 715,
     "inlineVisuals": 528,
-    "customVisuals": 897,
-    "animatedMechanisms": 515,
+    "customVisuals": 898,
+    "animatedMechanisms": 516,
     "architectureWithoutAnimation": 83,
     "recursiveLocators": 343,
     "codeEvidenceLinked": 221,
@@ -7266,18 +7266,18 @@
     {
       "route": "blockchain/helios-types",
       "publicPath": "cs/blockchain/helios-types",
-      "title": "Helios 타입 시스템",
+      "title": "Helios는 JSON update를 어떻게 검증 입력으로 바꿀까요?",
       "sourcePath": "src/pages/articles/ethereum/helios-types.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-text-first"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-update",
