@@ -14,7 +14,7 @@ export const RETH_SYNC_NODE = {
   },
   curriculumNext: {
     href: "/cs/blockchain/reth-rpc#overview",
-    label: "Reth RPC와 Engine API",
+    label: "Reth RPC: 한 노드의 두 입구",
   },
   closure:
     "실행 클라이언트는 모르는 head를 곧바로 실행하지 않습니다. 가까운 누락은 downloader와 engine tree가 채우고, 큰 구간은 backfill pipeline이 단독 writer로 처리합니다. 검증된 저장 상태가 이어진 뒤에만 engine tree가 다시 live head를 맡습니다.",

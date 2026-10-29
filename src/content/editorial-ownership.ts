@@ -5612,10 +5612,11 @@ export const EDITORIAL_BOUNDARIES = {
   "reth-rpc": {
     title: "Reth RPC·Engine endpoint 글이 소유하는 범위",
     owns: [
-      "Public RPC transport·namespace·method-cost exposure policy",
-      "Block selector를 pinned provider view와 typed availability outcome에 연결하는 조회 경계",
-      "Listener·auth·body·concurrency·rate·timeout을 겹치는 middleware budget",
-      "RPC request/error/view/auth failure release gate",
+      "Public transport module과 JWT 인증 Engine module을 별도 listener로 만드는 구현 경계",
+      "eth_getBalance가 BlockId에 맞는 StateProvider view를 골라 canonical account state를 읽는 경로",
+      "Engine JWT를 method dispatch보다 먼저 검사하고 newPayloadV4의 version fields를 검증하는 순서",
+      "newPayload 실행 판정과 forkchoice canonical 선택이 public latest view에서 만나는 과정",
+      "JWT·module dispatch·fork version 실패가 발생한 경계에서 멈추는 동작",
     ],
     reuses: [
       { label: "Reth provider consistent snapshot", href: "/cs/blockchain/reth-provider" },
@@ -5623,10 +5624,10 @@ export const EDITORIAL_BOUNDARIES = {
       { label: "Reth payloadId handoff", href: "/cs/blockchain/reth-payload-builder#engine-api" },
     ],
     evidence: [
-      { kind: "standard", rule: "JSON-RPC·Engine method·field·error semantics는 pinned execution-apis revision과 active fork에 귀속한다." },
-      { kind: "primary-source", rule: "Module·middleware·provider wiring과 default는 pinned Reth SHA·features·runtime config에 귀속한다." },
-      { kind: "project-measurement", rule: "Snapshot·auth·quota·timeout·restart parity 뒤 latency와 throughput을 비교한다." },
-      { kind: "project-claim", rule: "CORS·JWT·rate limit 하나를 confidentiality·authorization·bounded resource 전체 보장으로 확대하지 않는다." },
+      { kind: "standard", rule: "Engine method·field·JWT semantics는 Execution APIs commit 03911ffc와 active fork에 귀속한다." },
+      { kind: "primary-source", rule: "Module·auth layer·provider view·Engine handler는 Reth v2.8.1 commit d763342f에 귀속한다." },
+      { kind: "project-measurement", rule: "대상 환경의 latency·throughput·exposure 안전성은 이 개념 글에서 측정하지 않았습니다." },
+      { kind: "project-claim", rule: "JSON-RPC 공통 형식을 같은 caller·listener·state 권한으로 확대하지 않습니다." },
     ],
   },
   "reth-exex": {

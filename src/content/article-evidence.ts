@@ -5511,14 +5511,14 @@ export const ARTICLE_EVIDENCE: Readonly<
   }),
   "blockchain/reth-rpc": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",
-    label: "Ethereum Execution APIs @ 742d45db",
-    href: "https://github.com/ethereum/execution-apis/tree/742d45db810b31265c8d3c075af324953330d1ed",
-    note: "Public JSON-RPC와 versioned Engine API wire contract snapshot",
+    label: "Ethereum Execution APIs @ 03911ffc",
+    href: "https://github.com/ethereum/execution-apis/tree/03911ffc053b8b806123f1fc237184b0092a485a/src/engine",
+    note: "Engine API 독립 port·JWT 인증 범위와 Prague V4 wire contract",
   }, {
     kind: "공식 구현",
-    label: "Reth RPC source @ 4cf0face",
-    href: "https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c/crates/rpc",
-    note: "Module·middleware·provider wiring의 pinned implementation snapshot",
+    label: "Reth v2.8.1 RPC source @ d763342f",
+    href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/rpc",
+    note: "Public transport·auth server·Eth state read·Engine handler의 고정 구현",
   }),
   "blockchain/reth-sync": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 프로젝트 기록",

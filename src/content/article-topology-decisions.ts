@@ -719,7 +719,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "Registry·status·gas·output·fault·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·calls/s·CPU·memory를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
   },
-  "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
+  "blockchain/reth-rpc": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "지갑의 getBalance와 합의 클라이언트의 newPayloadV4를 같은 실행 클라이언트에 넣고, listener 분리·public state read·JWT before dispatch·PayloadStatus·forkchoice handoff·경계별 실패까지 한 좌표에서 추적합니다.",
+    sharedGate:
+      "Reth v2.8.1 commit d763342f와 Execution APIs commit 03911ffc에서 확인한 protocol·source 경계만 설명합니다. Rate limit·방화벽·SLO·release gate는 대상 환경의 실무 판단으로 분리합니다.",
+  },
   "blockchain/reth-sync": {
     action: "keep",
     status: "implemented",
@@ -4253,8 +4261,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-net-validation": "8b641d3851c2f976",
   "blockchain/reth-precompiles": "f27b784b8a338965",
   "blockchain/reth-precompiles-validation": "56f82c70dcacdd46",
-  "blockchain/reth-rpc": "02473a33cea1db84",
-  "blockchain/reth-sync": "dbfa6e6c411fbd1a",
+  "blockchain/reth-rpc": "4d28589b778ec919",
+  "blockchain/reth-sync": "877c7118aea7b085",
   "blockchain/reth-txpool": "17e22144298ab69e",
   "blockchain/reth-txpool-validation": "84685be87b398a7c",
   "crypto/mpc": "07f3cf355d38676f",
