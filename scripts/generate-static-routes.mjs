@@ -390,6 +390,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/helios-config",
   "blockchain/kohaku-provider",
   "blockchain/kohaku-provider-validation",
+  "blockchain/webcat-frontend-integrity",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>

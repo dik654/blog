@@ -8130,8 +8130,9 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 규격", label: "Ethereum execution-apis · snapshot 5aebdfdd", href: "https://github.com/ethereum/execution-apis/tree/5aebdfdd45cadeb723be4bd45b4611b71c8b1c85", note: "Versioned Engine methods·schemas·statuses 정본이며 Octane의 ABCI packaging·retry·specific client parity를 정의하지 않음" },
   ],
   "blockchain/webcat-frontend-integrity": [
-    { kind: "공식 문서", label: "WEBCAT · Concepts", href: "https://docs.webcat.tech/concepts.html", note: "Signed manifest·bundle·enrollment·transparency log·browser verification 구성 근거이며 code correctness 보장은 아님" },
-    { kind: "공식 프로젝트 기록", label: "SecureDrop · WEBCAT alpha", href: "https://securedrop.org/news/webcat-alpha/", note: "2026 Firefox extension alpha와 실행 전 enforcement 공개 범위이며 표준 채택·production 완성은 아님" },
+    { kind: "공식 문서", label: "WEBCAT · Concepts and architecture", href: "https://docs.webcat.tech/concepts.html", note: "2/3 합의 enrollment preload·manifest·bundle·transparency proof·browser verification 구성 근거이며 code correctness 보장은 아님" },
+    { kind: "공식 문서", label: "WEBCAT · Threat model", href: "https://docs.webcat.tech/threat-model.html", note: "예방·탐지·범위 밖 공격의 프로젝트 전제이며 독립 보안 audit나 availability 보장은 아님" },
+    { kind: "공식 프로젝트 기록", label: "SecureDrop · WEBCAT alpha · 2026-03-03", href: "https://securedrop.org/news/webcat-alpha/", note: "Firefox extension alpha와 실행 전 enforcement 공개 범위이며 표준 채택·production 완성은 아님" },
   ],
   "crypto/binary-field-proving": [
     {

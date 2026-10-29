@@ -9839,9 +9839,9 @@ export const EDITORIAL_BOUNDARIES = {
   },
   "webcat-frontend-integrity": {
     title: "WEBCAT frontend integrity ownership",
-    owns: ["HTTPS 뒤 first-party frontend code integrity gap", "Signed manifest·local verification·transparency enrollment과 alpha release boundary"],
+    owns: ["HTTPS 뒤 first-party frontend code integrity gap", "2/3 합의 enrollment preload·signed manifest·local verification과 alpha release boundary"],
     reuses: [{ label: "Hash input·security contract", href: "/cs/crypto/hash-theory#input-security" }],
-    evidence: [{ kind: "primary-source", rule: "Architecture는 WEBCAT concepts/FAQ, maturity는 SecureDrop 2026 alpha 발표에 귀속한다." }, { kind: "project-claim", rule: "Manifest 검증을 code correctness·developer honesty·모든 browser 지원으로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Architecture는 2026-10-29에 확인한 WEBCAT concepts·preload·user·threat-model 문서, maturity는 SecureDrop 2026-03-03 alpha 발표에 귀속한다." }, { kind: "project-claim", rule: "Manifest 검증을 code correctness·developer honesty·모든 browser 지원이나 독립 audit 완료로 확대하지 않는다." }],
   },
   "binary-field-proving": {
     "title": "같은 네 비트의 이진체 계산·합 확인·원문을 설명하는 범위",
