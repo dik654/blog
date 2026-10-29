@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 688,
-    "pending": 319,
+    "reviewed": 689,
+    "pending": 318,
     "untracked": 0,
-    "assignedPending": 277,
+    "assignedPending": 276,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4561,11 +4561,11 @@
     {
       "route": "blockchain/reth-rpc",
       "publicPath": "cs/blockchain/reth-rpc",
-      "title": "Reth RPC & Engine API",
+      "title": "Reth RPC: 한 노드의 두 입구",
       "catalogIndex": 453,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
