@@ -4204,7 +4204,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/helios-types": "46c29258550fa707",
   "blockchain/helios-config": "fc7c798862d9a44c",
   "blockchain/kohaku-provider": "45293bde30e8f34c",
-  "blockchain/kohaku-provider-validation": "253e0aa8b8319bc2",
+  "blockchain/kohaku-provider-validation": "a650c8c45407202a",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",
