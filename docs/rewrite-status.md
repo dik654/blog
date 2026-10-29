@@ -3,7 +3,7 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Reth RPC 경계 검증 로컬 완료 (2026-10-29)
+### Reth RPC 경계 공개 검증 완료 (2026-10-30)
 
 - `blockchain/reth-rpc`를 공개 `eth_getBalance(A, latest)` 요청과 JWT 인증 `engine_newPayloadV4` 요청이 같은 실행 클라이언트의 서로 다른 입구로 들어가는 한 사례로 다시 썼습니다. 공개 조회, 후보 검증, `forkchoiceUpdated`, 후속 공개 조회까지 아홉 장면으로 연결했습니다.
 - Reth v2.8.1 commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`과 Execution APIs commit `03911ffc053b8b806123f1fc237184b0092a485a`를 고정했습니다. 공개 transport module, StateProvider 선택, JWT-before-dispatch, V4 field 검증과 consensus engine 전달을 실제 source excerpt로 대조했습니다.
@@ -11,7 +11,8 @@
 - 잘못된 JWT, 공개 listener의 method-not-found, fork version·field 오류, 계정 부재의 0과 historical state 제공 실패를 각각 발생한 경계의 다른 결과로 분리했습니다. 방화벽·rate limit·SLO·secret rotation 같은 대상 환경의 운영 판단은 개념 글에 섞지 않았습니다.
 - 390×844 production 화면에서 문서 폭은 390px이고 모바일 조작부는 49.5×49.5px입니다. 키보드로 장면 0→1이 이동했고 11초 동안 자동 재생하지 않았습니다. Reduced-motion에서는 재생이 비활성화되고 실행 중 animation은 0건입니다. JavaScript 비활성 직접 경로에는 조작 버튼 없이 부모 지도·정적 아홉 장면·전체 본문이 남습니다.
 - 1,440×1,000 production 화면에서 문서 폭은 1,440px이고 두 listener lane과 축약 조작 라벨에 중간 글자 줄바꿈·가로 넘침이 없습니다. Console 오류와 경고는 0건입니다.
-- 전체 TypeScript와 production build를 통과했습니다. Build는 8,108개 module, 정적 공개 경로 2,120개와 no-script 본문 345편을 생성했고 최대 RSS는 약 6.42GB, swap은 0이었습니다. 전수 장부는 검토 689편·미검토 318편입니다. GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+- 전체 TypeScript와 production build를 통과했습니다. Build는 8,108개 module, 정적 공개 경로 2,120개와 no-script 본문 345편을 생성했고 최대 RSS는 약 6.42GB, swap은 0이었습니다. 전수 장부는 검토 689편·미검토 318편입니다.
+- Commit `31981e45`의 GitHub Pages run `40901121815`가 전체 감사·build·배포를 통과했습니다. 공개 390×844 경로에서 문서 폭 390=390, 키보드 0→1, 11초 무자동 재생, reduced-motion animation 0건과 JavaScript 비활성 정적 아홉 장면을 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Helios 설정·운영 검증 로컬 완료 (2026-10-29)
 
@@ -4296,7 +4297,7 @@
   실무 글도 390×844에서 같은 문서 폭, 정적 6장면과 부모 지도 반환을 확인했습니다.
   현재 두 글은 `reviewed-production`입니다.
 
-### Reth 동기화 개념 글 로컬 검증 완료 (2026-10-29)
+### Reth 동기화 개념 글 공개 검증 완료 (2026-10-30)
 
 - 로컬 canonical block 1,000에서 CL이 head 1,008을 가리키지만 부모 1,001–1,007이 없는
   한 요청을 기준으로 글을 다시 구성했습니다. 모르는 head에는 `SYNCING`과 자료 요청을
@@ -4318,10 +4319,11 @@
   확인 질문과 부모 지도 반환이 남고 live 조작부는 사라집니다. 글 단위 학습 계약·지식
   그래프·문장·한국어·용어·읽기 순서, 전체 수식·topology·TypeScript와 production build를
   통과했습니다. Build는 8,118개 module, 정적 public route 2,120개, no-script 본문
-  344편을 생성했고 최대 RSS는 약 6.46GB, swap은 0이었습니다. 공개 배포와 공개 경로
-  재검증은 다음 단계입니다.
+  344편을 생성했고 최대 RSS는 약 6.46GB, swap은 0이었습니다. GitHub Pages run
+  `40901121815`가 성공한 뒤 공개 390×844 경로에서 제목·시각화·문서 폭 390=390과
+  console 오류·경고 0건을 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
-### WEBCAT 프런트엔드 무결성 개념 글 로컬 검증 완료 (2026-10-29)
+### WEBCAT 프런트엔드 무결성 개념 글 공개 검증 완료 (2026-10-30)
 
 - 정상 HTTPS로 전달된 `/app.js` 한 건을 기준으로 배포 전 증거 고정과 사용자 요청 시 검증을
   같은 지도에 배치했습니다. 사이트 등록, manifest 서명, 페이지 요청, 로컬 검증, 변조 차단과
@@ -4338,5 +4340,6 @@
   전체 본문과 부모 지도 반환이 남고 조작부가 사라집니다.
 - TypeScript 검사와 production build를 통과했습니다. 8,121개 module, 정적 public route
   2,120개와 no-script 본문 343편을 생성했으며 최대 RSS는 약 6.71GB, swap은 0이었습니다.
-  현재 상태는 `rewritten-local-verified`이며 GitHub Pages 배포와 공개 경로 재검증이 남아
-  있습니다.
+  GitHub Pages run `40901121815`가 성공한 뒤 공개 390×844 경로에서 제목·시각화·문서 폭
+  390=390과 console 오류·경고 0건을 다시 확인했습니다. 현재 상태는
+  `rewritten-production-verified`입니다.
