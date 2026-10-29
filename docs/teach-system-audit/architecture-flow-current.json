@@ -2,17 +2,17 @@
   "schemaVersion": 2,
   "note": "이 파일은 전수 개편의 작업 목록입니다. 실제 import closure 안의 전용 viz 파일과 inline SVG·canvas, 코드 발췌, 외부 근거를 서로 나눠 셉니다. 각 신호는 검토 우선순위를 정할 뿐 설명 품질이나 애니메이션 필요 여부를 자동 판정하지 않습니다.",
   "summary": {
-    "publicArticles": 1006,
+    "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 715,
+    "dedicatedVisuals": 717,
     "inlineVisuals": 528,
-    "customVisuals": 898,
-    "animatedMechanisms": 516,
-    "architectureWithoutAnimation": 83,
-    "recursiveLocators": 343,
-    "codeEvidenceLinked": 221,
-    "sourceCitationLinked": 997,
-    "architectureWithoutCustomVisual": 18
+    "customVisuals": 900,
+    "animatedMechanisms": 519,
+    "architectureWithoutAnimation": 82,
+    "recursiveLocators": 345,
+    "codeEvidenceLinked": 223,
+    "sourceCitationLinked": 998,
+    "architectureWithoutCustomVisual": 17
   },
   "articles": [
     {
@@ -7206,14 +7206,14 @@
       "sourcePath": "src/pages/articles/ethereum/helios-config.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
-      "hasAnimatedMechanism": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/helios-consensus",
@@ -7474,18 +7474,34 @@
     {
       "route": "blockchain/kohaku-provider",
       "publicPath": "cs/blockchain/kohaku-provider",
-      "title": "Kohaku Provider: 공통 API와 method별 신뢰 경계",
+      "title": "Kohaku Provider는 같은 API 뒤의 신뢰 경로를 어떻게 드러낼까요?",
       "sourcePath": "src/pages/articles/blockchain/kohaku-provider.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": false,
       "hasDedicatedVisual": true,
       "hasInlineVisual": false,
       "hasCustomVisual": true,
-      "hasAnimatedMechanism": false,
-      "hasRecursiveLocator": false,
-      "hasCodeEvidence": false,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "verify-static-visual"
+      "reviewPriority": "verify-motion-semantics"
+    },
+    {
+      "route": "blockchain/kohaku-provider-validation",
+      "publicPath": "cs/blockchain/kohaku-provider-validation",
+      "title": "Kohaku Provider 변경을 어떻게 검증하고 되돌릴까요?",
+      "sourcePath": "src/pages/articles/blockchain/kohaku-provider-validation.tsx",
+      "locationMap": "global:ArticleOnboarding",
+      "architectureCandidate": false,
+      "hasDedicatedVisual": true,
+      "hasInlineVisual": false,
+      "hasCustomVisual": true,
+      "hasAnimatedMechanism": true,
+      "hasRecursiveLocator": true,
+      "hasCodeEvidence": true,
+      "hasSourceCitation": true,
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/longest-chain",

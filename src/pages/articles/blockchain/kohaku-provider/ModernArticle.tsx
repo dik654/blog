@@ -1,70 +1,167 @@
+import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
 import { CitationBlock } from "@/components/ui/citation-block";
-import ExplainedFormula from "@/components/ui/explained-formula";
-import { KohakuMethodTrustViz, KohakuProviderSurfaceViz } from "./viz/ModernKohakuProviderViz";
+import { CodeViewButton } from "@/components/code";
+import type { CodeRef } from "@/components/code/types";
+import KohakuProviderLocator, { KohakuProviderMapReturn } from "./KohakuProviderLocator";
+import { kohakuProviderCodeRefs } from "./codeRefsReal";
+import { KohakuProviderTraceViz, KohakuSignerBoundaryViz } from "./viz/ModernKohakuProviderViz";
 
-export default function ModernKohakuProviderArticle() {
-  return <article className="space-y-14">
-    <section id="overview" className="space-y-6">
-      <header className="space-y-3"><p className="text-sm font-semibold text-primary">Kohaku Provider · adapter and trust boundary</p><h2 className="text-3xl font-bold tracking-tight">Kohaku Provider는 여러 Ethereum backend를 같은 method 모양으로 호출하게 하지만, backend의 신뢰 수준까지 같게 만들지는 않는다</h2></header>
-      <p className="text-lg leading-8 text-foreground/90">Alice의 wallet이 Bob의 balance를 읽고 transaction을 보내는 흐름을 생각해 보겠습니다. Application은 <code>EthereumProvider&lt;T&gt;</code>에 balance·code·receipt·call 같은 공통 method를 요청하고, adapter는 Ethers, Viem, Helios 또는 Colibri 호출로 바꾼 뒤 결과 type을 정규화합니다. 서명과 전송 권한은 별도 <code>TxSigner</code> interface가 가집니다.</p>
-      <p>이 구조의 핵심은 “한 API”와 “한 trust model”을 구분하는 데 있습니다. Ethers와 Viem이 configured RPC를 신뢰하는 방식, Helios가 light-client verification을 거치는 방식, 특정 method를 execution RPC로 bypass하는 방식은 결과 type이 같아도 provenance가 다릅니다. 이 글은 pinned provider package의 adapter 경계만 다루며 Kohaku 전체 privacy roadmap이나 wallet 기능을 provider의 현재 구현으로 확대하지 않습니다.</p>
-      <KohakuProviderSurfaceViz />
-      <ContentBoundary article="kohaku-provider" />
-      <aside className="rounded-lg border border-primary/30 bg-primary/5 p-5 text-sm leading-6"><strong>먼저 기억할 경계:</strong> Type parity는 값의 표현이 같다는 뜻이고, semantic parity는 같은 질문에 같은 의미로 답했다는 뜻이며, trust parity는 그 답을 뒷받침하는 검증 경로까지 같다는 뜻입니다.</aside>
-    </section>
+const KOHAKU_SHA = "b4ad096ef738a06f3f7025aa2870875527f9e6c7";
 
-    <section id="provider-capabilities" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">01 · common surface and normalization</p><h2 className="mt-2 text-2xl font-bold">공통 method 집합을 정의하고 backend별 반환값을 application이 비교할 수 있는 형태로 바꾼다</h2></header>
-      <p>Pinned interface에는 chain ID, logs, block number, transaction wait, balance, code, receipt, raw request, call, gas estimate·price와 transaction count가 포함됩니다. Adapter는 예를 들어 receipt status를 공통 bigint 표현으로 맞추거나 code가 없을 때 일관된 hex 결과를 돌려줍니다. 이런 정규화가 없으면 application은 backend마다 다른 library type과 null convention을 직접 처리해야 합니다.</p>
-      <p>하지만 method 이름이 같다고 block tag semantics, unsupported method, finality interpretation과 error behavior가 자동으로 같아지는 것은 아닙니다. Adapter contract에는 input·output뿐 아니라 unsupported state, timeout, backend identity와 provenance를 넣어야 합니다. Transaction hash는 submission receipt이고, mined receipt 또는 finalized inclusion과 같은 완료 상태가 아닙니다.</p>
-      <div id="paper-kohaku-provider"><CitationBlock source="ethereum/kohaku provider interface · commit 8d5a29e" citeKey={1} type="code" href="https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/provider.ts"><p><strong>문제:</strong> Ethers·Viem·Helios·Colibri를 사용하는 code가 서로 다른 provider APIs와 result types에 직접 결합되지 않아야 합니다.</p><p><strong>기여:</strong> Common <code>EthereumProvider&lt;T&gt;</code> method surface, normalized Ethereum types와 별도 <code>TxSigner</code> interface를 정의합니다.</p><p><strong>전제:</strong> Commit 8d5a29e와 package version 0.1.0-alpha.8, matching dependencies와 adapter configuration을 고정합니다.</p><p><strong>근거 범위:</strong> Pinned provider interface와 repository adapters가 선언한 현재 capability surface에 한정합니다.</p><p><strong>말하지 않는 것:</strong> 모든 backend가 모든 method를 같은 semantics·availability·trust로 제공하거나 package가 production-ready·audited라는 뜻은 아닙니다.</p></CitationBlock></div>
-    </section>
+interface Props {
+  onCodeRef: (key: string, ref: CodeRef) => void;
+}
 
-    <section id="trust-signing" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">02 · method provenance and signer authority</p><h2 className="mt-2 text-2xl font-bold">검증 경로가 바뀌는 method를 표시하고 read capability와 signing authority를 분리한다</h2></header>
-      <p>Pinned Helios adapter는 client가 sync될 때까지 기다린 다음 read methods를 제공합니다. 그러나 <code>getLogs</code>의 bypass option을 켜면 해당 호출을 execution RPC에 직접 보냅니다. 이는 성능을 위한 선택일 수 있지만, light-client verification을 거친 결과와 같은 provenance라고 표시하면 안 됩니다. Verified-only application이라면 bypass 결과를 조용히 받아들이지 말고 정책 오류로 거부해야 합니다.</p>
-      <KohakuMethodTrustViz />
-      <p>Provider가 balance와 code를 읽을 수 있다는 사실은 transaction을 서명할 권한을 뜻하지 않습니다. Pinned source는 <code>signMessage</code>, <code>sendTransaction</code>, <code>getAddress</code>를 <code>TxSigner</code>로 분리합니다. Application은 read-only provider를 기본으로 주입하고, 사용자 승인 뒤 필요한 signer scope만 짧게 전달해야 합니다. Backend fallback도 signer나 privacy policy를 자동 승격시키는 수단으로 쓰지 않습니다.</p>
-      <ExplainedFormula
-        question="Adapter를 교체해도 critical methods의 의미와 최소 신뢰 수준이 유지되었는가?"
-        idea={<>각 method의 결과 parity와 provenance policy를 함께 검사합니다. 신뢰 수준은 우주의 절대 순서가 아니라 application이 미리 정한 ordered policy labels입니다.</>}
-        formula={String.raw`\begin{aligned}A=\bigwedge_{m\in M_{crit}}\big(&[r_a(m)=r_o(m)]\\&\land[T_a(m)\ge T_{req}(m)]\big)\end{aligned}`}
-        annotatedFormula={String.raw`\begin{aligned}A=\underbrace{\bigwedge_{m\in M_{crit}}}_{\text{critical method 전부}}\big(&\underbrace{[r_a(m)=r_o(m)]}_{\text{결과가 oracle과 같음}}\\&\land\underbrace{[T_a(m)\ge T_{req}(m)]}_{\text{provenance가 정책 이상}}\big)\end{aligned}`}
-        operations={[
-          { expression: String.raw`\bigwedge_{m\in M_{crit}}`, annotation: ["balance·code·receipt·logs가","모두 통과해야 A=true"] },
-          { expression: String.raw`[r_a(m)=r_o(m)]`, annotation: ["같은 chain·block tag fixture에서","candidate 결과가 oracle과 일치"] },
-          { expression: String.raw`[T_a(m)\ge T_{req}(m)]`, annotation: ["실제 거친 경로의 trust label이","method별 최소 요구 이상인지 검사","getLogs bypass는 값이 같아도 실패"] },
-        ]}
-        terms={[
-          { symbol: "M_crit", name: "critical methods", description: "Balance·code·receipt·logs처럼 release에서 비교하기로 정한 method 집합입니다." },
-          { symbol: "r_a,r_o", name: "candidate와 oracle 결과", description: "같은 chain·block tag·request fixture에서 정규화한 결과입니다." },
-          { symbol: "T_a", name: "observed trust label", description: "해당 호출이 실제로 거친 verified·trusted RPC 같은 provenance입니다." },
-          { symbol: "T_req", name: "required trust label", description: "Method별 application policy가 요구하는 최소 provenance입니다." },
-        ]}
-        assumptions={[
-          "Chain ID, exact block hash/tag, provider commit와 backend endpoints를 고정합니다.",
-          "Trust labels의 순서는 deployment policy에 명시하며 서로 다른 threat model을 임의로 한 숫자에 합치지 않습니다.",
-          "Result equality는 canonical normalization 뒤 비교하고 unsupported와 timeout을 성공값으로 바꾸지 않습니다.",
-          "A=true는 wallet privacy, endpoint availability나 signer key safety 전체를 증명하지 않습니다.",
-        ]}
-        interpretation="Balance와 code가 verified provenance를 요구하는 정책에서 Helios의 검증 경로는 통과할 수 있습니다. getLogs bypass가 trusted-RPC label만 가진다면 값이 oracle과 같아도 verified-only 요구에는 실패합니다."
-      />
-      <div id="paper-kohaku-helios"><CitationBlock source="Kohaku Helios adapter · commit 8d5a29e" citeKey={2} type="code" href="https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/helios/index.ts"><p><strong>문제:</strong> Helios-backed provider를 공통 API로 노출하면서 synchronization과 method별 우회 경로를 처리해야 합니다.</p><p><strong>기여:</strong> Helios client initialization·sync wait, common methods와 optional <code>getLogs</code> execution-RPC bypass를 구현합니다.</p><p><strong>전제:</strong> Commit 8d5a29e, exact Helios dependency, consensus/execution RPC endpoints와 bypass configuration을 고정합니다.</p><p><strong>근거 범위:</strong> Pinned adapter의 initialization, read method와 explicit logs bypass behavior에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Bypass 결과가 light-client verified라는 뜻도, Helios가 모든 provider method와 operational failure를 동일하게 처리한다는 뜻도 아닙니다.</p></CitationBlock></div>
-    </section>
+export default function ModernKohakuProviderArticle({ onCodeRef }: Props) {
+  return (
+    <article className="space-y-14">
+      <section id="overview" className="space-y-6 scroll-mt-20">
+        <KohakuProviderLocator current="kohaku-provider" />
+        <header className="space-y-3">
+          <p className="text-xs font-bold text-primary">이 글이 답할 질문</p>
+          <h2 className="break-keep text-3xl font-bold tracking-tight">
+            같은 getLogs 호출은 왜 backend에 따라 다른 신뢰 경로를 지날까요?
+          </h2>
+        </header>
+        <p className="max-w-3xl break-keep text-lg leading-8">
+          Kohaku Provider는 Ethers·Viem·Helios·Colibri 같은 backend를 하나의 <code>EthereumProvider&lt;T&gt;</code>로 감쌉니다. 애플리케이션은 같은 메서드와 반환 타입을 쓰지만, 그 답을 만든 검증 경로까지 같아지지는 않습니다.
+        </p>
+        <KohakuProviderTraceViz />
+        <p>
+          그림은 block 17의 log를 읽는 설명용 요청 하나를 추적합니다. 이 요청을 <code>logs-17</code>이라고 부르지만 실제 프로토콜 필드는 아닙니다. 읽는 순서는 애플리케이션→공통 interface→Helios adapter→선택한 backend→결과 정규화입니다. 우회 설정이 바뀌는 순간 데이터 출처가 갈라지는 지점을 먼저 보시면 됩니다.
+        </p>
+        <p>
+          결론은 간단합니다. 공통 interface는 호출 모양과 값의 표현을 통일합니다. 어떤 backend가 답했고 무엇을 검증했는지는 별도 구성과 실행 증거로 확인해야 합니다. 이 글은 현재 구현 메커니즘만 설명하며, 실제 bundle 채택과 rollback은 <Link to="/cs/blockchain/kohaku-provider-validation#overview">Kohaku Provider 변경 검증</Link>에서 다룹니다.
+        </p>
+        <ContentBoundary article="kohaku-provider" />
+      </section>
 
-    <section id="release" className="space-y-6">
-      <header><p className="text-sm font-semibold text-primary">03 · failure, retry and release</p><h2 className="mt-2 text-2xl font-bold">Alpha package는 exact commit으로 고정하고 silent downgrade가 없는지 method별로 검증한다</h2></header>
-      <p>
-            Parity fixture는 같은 block hash에서 balance·code·logs·receipt·gas estimate를 각 adapter로 호출합니다. Null,
-            missing code, receipt status와 bigint conversion을 canonical form으로 맞춘 뒤 값과 error class를 비교하고
-            timeout·unsupported·stale backend·reorg를 별도 negative cases로 남깁니다. Verified backend가 실패했을 때 trusted
-            fallback으로 바뀌면 반드시 provenance를 노출하고 policy 승인을 다시 받아야 합니다.
-          </p>
-      <p>Release bundle에는 Kohaku commit, provider package version, Ethers·Viem·Helios·Colibri dependency versions, endpoint roles, bypass flags와 signer wiring을 담습니다. Canary에서 method parity, latency, failure rate, endpoint exposure와 signer prompts를 관찰하고 mismatch가 나면 이전 bundle로 rollback합니다. 이미 broadcast한 transaction은 다시 서명해 보내지 말고 hash·nonce로 receipt를 조회해 duplicate external effect를 막습니다.</p>
-      <div id="paper-kohaku-repo"><CitationBlock source="ethereum/kohaku repository · commit 8d5a29e" citeKey={3} type="code" href="https://github.com/ethereum/kohaku/tree/8d5a29e3fba806431c881f72c0bc9accb0066ace"><p><strong>문제:</strong> Ethereum wallet privacy와 security tooling을 여러 packages와 research tracks로 개발하면서 현재 maturity를 분명히 표시해야 합니다.</p><p><strong>기여:</strong> Provider를 포함한 monorepo package layout, current versioned source와 project-level readiness notices를 제공합니다.</p><p><strong>전제:</strong> 2026-08-14에 확인한 commit 8d5a29e와 각 package의 own README·manifest를 함께 읽습니다.</p><p><strong>근거 범위:</strong> 해당 snapshot의 repository structure, code와 명시된 WIP·unaudited status에 한정합니다.</p><p><strong>말하지 않는 것:</strong> Roadmap의 privacy 기능이 provider package에 이미 구현되었거나 코드가 production-ready·audited라는 뜻은 아닙니다.</p></CitationBlock></div>
-      <h3 className="text-xl font-semibold">이 글만으로 확인할 10가지</h3>
-      <p>기초 6문제는 provider의 보장 범위, common methods, normalization, Helios bypass, signer 분리와 alpha 완료 상태를 묻습니다. 심화 4문제는 method trust matrix, cross-adapter parity, silent downgrade 차단과 canary·rollback plan을 설계하게 합니다.</p>
-    </section>
-  </article>;
+      <section id="provider-interface" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">공통 interface는 메서드와 반환 타입을 고정합니다</h2>
+        <p>
+          Kohaku 0.1.0-alpha.13의 <code>EthereumProvider&lt;T&gt;</code>에는 chain ID, block number, logs, balance, code, receipt, call, gas, nonce와 raw request가 있습니다. 각 adapter는 이 계약에 맞춰 backend 호출을 바꾸고 결과를 공통 타입으로 돌려줍니다.
+        </p>
+        <p>
+          이 interface에 메서드가 있다는 사실은 모든 backend가 같은 범위와 속도로 지원한다는 뜻이 아닙니다. API에 메서드가 보이는 것과 실제로 쓸 수 있는 범위는 분리해서 봐야 합니다.
+        </p>
+        <p>
+          예를 들어 Helios adapter의 소스 주석은 일반 <code>getLogs</code>가 최신 8,191개 block 범위에 한정되고 느릴 수 있다고 적습니다.{" "}
+          <CodeViewButton
+            label="EthereumProvider와 TxSigner 소스"
+            onClick={() => onCodeRef("kohaku-provider-interface", kohakuProviderCodeRefs["kohaku-provider-interface"])}
+          />
+        </p>
+        <KohakuSignerBoundaryViz />
+        <p>
+          읽기 계약과 서명 계약도 나뉩니다. <code>signMessage</code>, <code>sendTransaction</code>, <code>getAddress</code>는 별도 <code>TxSigner</code>에 있습니다. 다만 TypeScript interface 분리는 설계 경계일 뿐입니다. 키 보관, 사용자 승인, signer 수명과 재시도 정책은 애플리케이션이 구현해야 합니다.
+        </p>
+      </section>
+
+      <section id="getlogs-route" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">Helios adapter는 준비 단계와 요청 경로를 따로 결정합니다</h2>
+        <p>
+          Adapter를 만들 때는 먼저 <code>executionRpc</code>가 있는지 확인합니다. Helios client를 만든 다음 <code>waitSynced()</code>가 끝나야 공통 Provider를 반환합니다. 그래서 애플리케이션이 Provider를 받은 시점에는 이 초기 동기화 조건을 통과한 상태입니다.
+        </p>
+        <p>
+          그다음 <code>bypassLogs</code>가 <code>getLogs</code>의 실제 경로를 고릅니다. 기본값은 <code>false</code>이므로 Helios client가 요청을 처리합니다. <code>true</code>이면 <code>eth_getLogs</code>만 설정된 execution RPC로 직접 보내고, 다른 메서드는 계속 Helios client를 사용합니다.{" "}
+          <CodeViewButton
+            label="Helios adapter의 두 경로"
+            onClick={() => onCodeRef("kohaku-helios-route", kohakuProviderCodeRefs["kohaku-helios-route"])}
+          />
+        </p>
+        <p>
+          우회는 adapter 전체를 다른 backend로 바꾸는 선택이 아닙니다. 메서드 하나의 데이터 경로만 바꿉니다. 따라서 “Helios Provider를 쓴다”는 한 줄만으로 모든 응답이 light-client 경로를 지났다고 판단하면 안 됩니다.
+        </p>
+      </section>
+
+      <section id="normalization" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">정규화는 값의 모양을 맞추지만 출처를 보존하지 않습니다</h2>
+        <p>
+          선택된 backend가 RPC log를 돌려주면 raw adapter가 <code>blockNumber</code>를 bigint로 바꾸고 선택적 <code>logIndex</code>를 number로 바꿉니다. Receipt도 status·gasUsed·logs를 공통 타입으로 정리합니다.
+        </p>
+        <p>
+          애플리케이션은 backend별 hex 변환과 null 규칙을 반복하지 않아도 됩니다.{" "}
+          <CodeViewButton
+            label="raw adapter의 TxLog 변환"
+            onClick={() => onCodeRef("kohaku-raw-normalize", kohakuProviderCodeRefs["kohaku-raw-normalize"])}
+          />
+        </p>
+        <div className="not-prose grid gap-px bg-border p-px sm:grid-cols-3" aria-label="Provider가 통일하는 세 단계와 남는 경계">
+          <div className="bg-background p-4">
+            <strong className="text-sm">호출 모양</strong>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground"><code>getLogs(filter)</code>처럼 application이 쓰는 method를 맞춥니다.</p>
+          </div>
+          <div className="bg-background p-4">
+            <strong className="text-sm">값 표현</strong>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">Hex 숫자와 선택 필드를 공통 <code>TxLog[]</code>로 바꿉니다.</p>
+          </div>
+          <div className="bg-background p-4">
+            <strong className="text-sm">남는 경계</strong>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">Backend·verification·지원 범위·오류 의미는 반환 타입만으로 알 수 없습니다.</p>
+          </div>
+        </div>
+        <p>
+          그래서 type parity와 trust parity를 구분해야 합니다. 두 결과가 모두 <code>TxLog[]</code>인 것은 type parity입니다. 두 결과가 같은 chain과 block을 가리키는지는 semantic parity이고, 같은 검증 절차를 거쳤는지는 trust parity입니다. 현재 <code>TxLog</code> 반환값 자체에는 이 provenance가 들어 있지 않습니다.
+        </p>
+      </section>
+
+      <section id="failure-boundary" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">설계된 실패는 자동 downgrade가 아니라 오류입니다</h2>
+        <p>
+          고정한 Helios adapter는 <code>executionRpc</code>가 없으면 초기화를 거부합니다. Helios client 생성이나 <code>waitSynced()</code>가 실패해도 Provider를 반환하지 않습니다. 우회 경로의 fetch·JSON decode·RPC error도 호출 오류로 전파됩니다. 이 소스에는 실패한 Helios 요청을 다른 backend로 조용히 바꾸는 fallback이 없습니다.
+        </p>
+        <p>
+          이 동작은 중요한 경계를 만듭니다. 가용성을 높이려고 fallback을 추가하는 순간, 어떤 오류에 어떤 backend로 바꾸며 그 사실을 누가 기록하는지 새 정책이 필요합니다. 그것은 Provider의 현재 메커니즘이 아니라 환경별 운영 결정입니다.
+        </p>
+        <div className="not-prose border-y border-border py-4 text-sm leading-6">
+          <p><strong>[O] 현재 구현:</strong> alpha.13의 interface, Helios 경로, raw 정규화와 오류 전파입니다.</p>
+          <p className="mt-2"><strong>[A] 운영 제안:</strong> method별 provenance 기록, verified-only 차단과 signer 승인 정책입니다.</p>
+          <p className="mt-2"><strong>[M] 대상 환경:</strong> 정확성·latency·timeout·가용성은 아직 측정하지 않았습니다.</p>
+        </div>
+      </section>
+
+      <section id="evidence" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">고정한 소스가 말하는 범위까지만 결론을 냅니다</h2>
+        <div id="paper-kohaku-provider" className="scroll-mt-24">
+          <CitationBlock
+            source="ethereum/kohaku · @kohaku-eth/provider 0.1.0-alpha.13"
+            citeKey={1}
+            type="code"
+            href={"https://github.com/ethereum/kohaku/tree/" + KOHAKU_SHA + "/packages/provider"}
+          >
+            <p><strong>문제:</strong> 여러 Ethereum backend를 같은 application API로 호출하면서 method별 검증 경계를 잃지 않아야 합니다.</p>
+            <p><strong>기여:</strong> EthereumProvider·TxSigner interface, Helios adapter, raw 정규화와 receipt waiting을 구현합니다.</p>
+            <p><strong>전제:</strong> 0.1.0-alpha.13, commit {KOHAKU_SHA.slice(0, 8)}와 실제 peer dependency·configuration을 함께 고정합니다.</p>
+            <p><strong>근거 범위:</strong> 이 릴리스의 공개 package source와 README·CHANGELOG입니다.</p>
+            <p><strong>말하지 않는 것:</strong> 모든 backend의 동일한 semantics·availability·privacy, production readiness 또는 audit 완료를 보장하지 않습니다.</p>
+          </CitationBlock>
+        </div>
+        <div id="paper-kohaku-helios" className="scroll-mt-24">
+          <CitationBlock
+            source="Kohaku Helios adapter · alpha.13"
+            citeKey={2}
+            type="code"
+            href={"https://github.com/ethereum/kohaku/blob/" + KOHAKU_SHA + "/packages/provider/src/helios/index.ts"}
+          >
+            <p><strong>문제:</strong> Helios-backed Provider를 만들면서 sync 조건과 getLogs 우회 경로를 처리합니다.</p>
+            <p><strong>기여:</strong> executionRpc 필수 검사, waitSynced, bypassLogs 분기와 공통 raw adapter 연결을 보여 줍니다.</p>
+            <p><strong>근거 범위:</strong> 초기화와 getLogs 요청 경로입니다.</p>
+            <p><strong>말하지 않는 것:</strong> execution RPC 우회 결과가 light-client verified라는 뜻은 아닙니다.</p>
+          </CitationBlock>
+        </div>
+      </section>
+
+      <section id="self-check" className="space-y-5 scroll-mt-20">
+        <h2 className="break-keep text-2xl font-bold">확인 질문</h2>
+        <ol className="space-y-3 pl-5 text-sm leading-6">
+          <li>EthereumProvider가 통일하는 것과 통일하지 않는 것은 무엇입니까? <strong>(답: 공통 interface)</strong></li>
+          <li>bypassLogs=true일 때 getLogs와 다른 method의 경로는 어떻게 달라집니까? <strong>(답: getLogs 경로)</strong></li>
+          <li>두 backend가 같은 TxLog[]를 돌려줘도 verified-only 정책을 통과했다고 말할 수 없는 이유는 무엇입니까? <strong>(답: 정규화)</strong></li>
+        </ol>
+      </section>
+
+      <KohakuProviderMapReturn current="kohaku-provider" />
+    </article>
+  );
 }

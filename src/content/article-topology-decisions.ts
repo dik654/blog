@@ -436,7 +436,25 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "a16z/helios 0.12.0 commit 2af9b418을 구현 기준선으로 고정합니다. 현재 구현 [O], 배포 정책 [A], 대상 환경 측정 [M]을 분리하고 socket listening을 readiness로, external fallback plurality를 protocol trust로 확대하지 않습니다.",
   },
-  "blockchain/kohaku-provider": KEEP("Provider capability→method provenance→signer authority→release가 한 API trust boundary입니다."),
+  "blockchain/kohaku-provider": {
+    action: "split",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "공통 interface→Helios 기본/우회 경로→TxLog 정규화→TxSigner 분리는 한 getLogs 메커니즘입니다. Exact bundle 비교, failure injection, receipt waiting, rollback과 ADR은 환경별 판단이므로 실무 글로 분리했습니다.",
+    sharedGate:
+      "ethereum/kohaku @kohaku-eth/provider 0.1.0-alpha.13 commit b4ad096e를 구현 기준선으로 고정합니다. 같은 반환 타입을 같은 검증 경로로 확대하지 않고 대상 환경 결과는 [M] 미측정으로 남깁니다.",
+    targetRoutes: ["blockchain/kohaku-provider", "blockchain/kohaku-provider-validation"],
+  },
+  "blockchain/kohaku-provider-validation": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "고정 bundle과 fixture, method별 value·error·provenance, receipt waiting, failure·rollback·ADR이 하나의 운영 채택 판단입니다.",
+    sharedGate:
+      "개념 글의 provider-interface·getlogs-route·normalization·failure-boundary anchor를 재사용합니다. 실험하지 않은 결과는 proposed·미측정으로 남기고 timeout을 transaction 실패나 in-flight RPC 취소로 확대하지 않습니다.",
+  },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
@@ -4185,7 +4203,8 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/helios-execution": "5a6a1dc6b6784ee4",
   "blockchain/helios-types": "46c29258550fa707",
   "blockchain/helios-config": "fc7c798862d9a44c",
-  "blockchain/kohaku-provider": "0660e6e953253651",
+  "blockchain/kohaku-provider": "45293bde30e8f34c",
+  "blockchain/kohaku-provider-validation": "253e0aa8b8319bc2",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",

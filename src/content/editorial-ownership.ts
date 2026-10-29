@@ -9820,10 +9820,16 @@ export const EDITORIAL_BOUNDARIES = {
     evidence: [{ kind: "primary-source", rule: "Transaction·sequence·StateDB·token/precompile facts는 MiniEVM v1.2.19 commit 27e60c5에만 귀속한다." }, { kind: "standard", rule: "Compatibility surface는 2026-08-14 확인한 Initia 공식 문서와 deployed exact revision을 함께 확인한다." }, { kind: "project-measurement", rule: "같은 pre-state·block context에서 transaction fields·sequence·status·gas·logs·balance·app hash와 crash replay를 대조한다." }, { kind: "project-claim", rule: "Ethereum tooling 호환·RPC hash·EVM success를 mainnet architecture parity·Cosmos commit·finality로 확대하지 않는다." }],
   },
   "kohaku-provider": {
-    title: "Kohaku provider API·method provenance·signer boundary ownership",
-    owns: ["Ethers·Viem·Helios·Colibri common provider surface와 result normalization", "Method별 trust provenance·read/signer authority 분리와 adapter release gate"],
+    title: "Kohaku provider API·실행 경로·권한 경계 ownership",
+    owns: ["EthereumProvider 공통 메서드와 TxSigner 권한의 분리", "Helios getLogs의 기본 검증 경로와 execution RPC 우회, 반환값 정규화 뒤의 신뢰 경계"],
     reuses: [{ label: "Helios proof-bound RPC response", href: "/cs/blockchain/helios#verification" }, { label: "Helios fallback trust boundary", href: "/cs/blockchain/helios#trust-boundary" }],
-    evidence: [{ kind: "primary-source", rule: "Provider interface·adapter·bypass facts는 Kohaku commit 8d5a29e, package 0.1.0-alpha.8에만 귀속한다." }, { kind: "project-measurement", rule: "같은 chain·block fixture에서 method value/error/provenance, silent downgrade와 duplicate submission을 adapter별로 대조한다." }, { kind: "project-claim", rule: "Common API·type parity를 동일 semantics·light-client verification·privacy·production readiness·audit 완료로 확대하지 않는다." }],
+    evidence: [{ kind: "primary-source", rule: "Provider interface·Helios adapter·raw normalization facts는 @kohaku-eth/provider 0.1.0-alpha.13, commit b4ad096ef738a06f3f7025aa2870875527f9e6c7에만 귀속한다." }, { kind: "project-claim", rule: "공통 API와 반환 타입을 동일한 검증 경로·신뢰·개인정보 보호·운영 준비 완료로 확대하지 않는다." }],
+  },
+  "kohaku-provider-validation": {
+    title: "Kohaku provider 변경 검증·복구 ownership",
+    owns: ["고정한 provider bundle의 값·오류·신뢰 경로 대조 실험", "Receipt 대기·timeout·중복 전송 경계와 채택·복구 결정"],
+    reuses: [{ label: "Provider와 TxSigner 경계", href: "/cs/blockchain/kohaku-provider#provider-interface" }, { label: "getLogs의 두 실행 경로", href: "/cs/blockchain/kohaku-provider#getlogs-route" }, { label: "정규화 뒤 신뢰 경계", href: "/cs/blockchain/kohaku-provider#normalization" }],
+    evidence: [{ kind: "primary-source", rule: "Receipt 대기 구현과 테스트 facts는 @kohaku-eth/provider 0.1.0-alpha.13, commit b4ad096ef738a06f3f7025aa2870875527f9e6c7에만 귀속한다." }, { kind: "project-measurement", rule: "같은 chain·block fixture에서 method 값·오류·실제 경로와 timeout·지연 응답·추가 poll 중지를 adapter별로 측정한다." }, { kind: "project-claim", rule: "측정 전 상태는 proposed로 남기며, 영수증 발견을 실행 성공·확인 블록 수·최종성으로 확대하지 않는다." }],
   },
   "omni-octane": {
     title: "Omni Octane ABCI·Engine payload integration ownership",

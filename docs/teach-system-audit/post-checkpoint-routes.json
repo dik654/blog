@@ -1,5 +1,5 @@
 {
-  "scope": "checkpoint-395 뒤 공개 catalog에 추가된 56편",
+  "scope": "checkpoint-395 뒤 공개 catalog에 추가된 경로",
   "statusMeaning": {
     "pending-full-review": "구조화 본문과 정적 검사는 확인됐지만 현재 teach-system 계약의 실제 본문·390px·1440px 검수를 모두 마치지 않은 상태",
     "reviewed-local": "본문 의미·학습 계약·근거와 390px·1440px production 렌더를 검토했지만 배포 후 공개 URL 확인 전인 상태",
@@ -310,6 +310,11 @@
       "route": "blockchain/reth-eip1559-validation",
       "status": "reviewed-production",
       "evidence": "docs/rewrite-status.md#reth-eip-1559-개념실무-분리-공개-검증-완료-2026-10-27"
+    },
+    {
+      "route": "blockchain/kohaku-provider-validation",
+      "status": "reviewed-local",
+      "evidence": "docs/rewrite-status.md#kohaku-provider-개념실무-분리-로컬-검증-완료-2026-10-29"
     }
   ]
 }

@@ -8114,9 +8114,14 @@ export const ARTICLE_EVIDENCE: Readonly<
     { kind: "공식 문서", label: "Initia · MiniEVM compatibility and changes", href: "https://docs.initia.xyz/home/core-concepts/initia-and-rollups/rollups/vms/minievm/evm-compatibility-and-changes", note: "2026-08-14 current compatibility·known differences 근거이며 future release나 모든 Ethereum tooling 동작을 고정하지 않음" },
   ],
   "blockchain/kohaku-provider": [
-    { kind: "공식 코드", label: "Kohaku provider interface · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/provider.ts", note: "Common methods·normalized types·TxSigner 분리의 pinned 근거이며 backend semantic·trust parity는 보장하지 않음" },
-    { kind: "공식 코드", label: "Kohaku Helios adapter · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/blob/8d5a29e3fba806431c881f72c0bc9accb0066ace/packages/provider/src/helios/index.ts", note: "Sync/read와 explicit getLogs bypass의 pinned 구현 근거이며 bypass 결과를 light-client verified로 해석하지 않음" },
-    { kind: "공식 코드", label: "Kohaku repository · commit 8d5a29e", href: "https://github.com/ethereum/kohaku/tree/8d5a29e3fba806431c881f72c0bc9accb0066ace", note: "Package layout·version·WIP/unaudited maturity의 pinned 근거이며 provider가 roadmap 전체 privacy 기능이나 production readiness를 가진다는 뜻은 아님" },
+    { kind: "공식 코드", label: "Kohaku provider · 0.1.0-alpha.13", href: "https://github.com/ethereum/kohaku/tree/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider", note: "EthereumProvider·TxSigner, adapter와 normalization의 pinned 근거이며 backend semantic·trust parity나 production readiness를 보장하지 않음" },
+    { kind: "공식 코드", label: "Kohaku Helios adapter · alpha.13", href: "https://github.com/ethereum/kohaku/blob/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider/src/helios/index.ts", note: "executionRpc·waitSynced·getLogs bypass의 pinned 구현이며 bypass 결과를 light-client verified로 해석하지 않음" },
+    { kind: "공식 코드", label: "Kohaku raw adapter · alpha.13", href: "https://github.com/ethereum/kohaku/blob/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider/src/raw/index.ts", note: "RPC log·receipt를 공통 타입으로 정규화하지만 실제 backend provenance를 반환 타입에 보존하지 않음" },
+  ],
+  "blockchain/kohaku-provider-validation": [
+    { kind: "공식 코드", label: "Kohaku provider · 0.1.0-alpha.13", href: "https://github.com/ethereum/kohaku/tree/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider", note: "실험 대상 exact source·manifest 근거이며 대상 환경의 측정 결과가 아님" },
+    { kind: "공식 프로젝트 기록", label: "Kohaku provider CHANGELOG · alpha.13", href: "https://github.com/ethereum/kohaku/blob/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider/CHANGELOG.md", note: "Configurable receipt polling, deadline·timer 정리·in-flight RPC 취소 불가와 inclusion-only 경계를 확인함" },
+    { kind: "공식 코드", label: "Kohaku raw receipt waiting tests · alpha.13", href: "https://github.com/ethereum/kohaku/blob/b4ad096ef738a06f3f7025aa2870875527f9e6c7/packages/provider/tests/raw-wait.test.ts", note: "Stalled request·reverted receipt·timeout·concurrent wait·timer 정리를 고정 test로 확인하며 target endpoint 결과는 아님" },
   ],
   "blockchain/omni-octane": [
     { kind: "공식 코드", label: "Omni Octane monorepo · commit 9864f25", href: "https://github.com/omni-network/omni/tree/9864f25fa9bcb473ee34d2442012fc5fbd2683ea", note: "Halo·Octane·Engine client의 pinned integration snapshot이며 moving main·all-client compatibility·production readiness를 뜻하지 않음" },
