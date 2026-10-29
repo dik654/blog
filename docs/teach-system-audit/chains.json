@@ -7565,38 +7565,70 @@
     {
       "route": "blockchain/webcat-frontend-integrity",
       "title": "WEBCAT: 서명 manifest와 frontend code transparency",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/blockchain/webcat-frontend-integrity.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/webcat-frontend-integrity.tsx",
-        "src/pages/articles/blockchain/webcat-frontend-integrity/ModernArticle.tsx"
+        "src/pages/articles/blockchain/webcat-frontend-integrity/ModernArticle.tsx",
+        "src/pages/articles/blockchain/webcat-frontend-integrity/WebcatLocator.tsx",
+        "src/pages/articles/blockchain/webcat-frontend-integrity/viz/WebcatIntegrityViz.tsx"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "assumptionMarkers": 4,
+        "sourceButtons": 3,
         "headings": [
-          "HTTPS는 전송한 서버를 인증하지만, 그 서버가 개발자가 의도한 frontend를 보냈는지까지 증명하지 않는다",
-          "Manifest는 “이 경로에는 이 bytes가 와야 한다”는 개발자 서명 목록이다",
-          "검증은 서버가 “맞다”고 말하는 곳이 아니라 실행 직전 사용자 쪽에서 끝나야 한다",
-          "Alpha extension의 검증 범위와 장기 배포 주장을 분리한다"
+          "서버가 바꾼 app.js를 정상 HTTPS로 보내도 브라우저가 실행 전에 막을 수 있을까요?",
+          "브라우저가 먼저 믿는 것은 서버가 아니라 서명된 enrollment preload입니다",
+          "Manifest는 경로별 bytes와 CSP를 개발자 승인 상태로 고정합니다",
+          "검증 결과는 app.js가 실행되기 전에 브라우저가 집행합니다",
+          "차단 가능한 공격과 남는 실패를 분리해야 합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 HTTPS·manifest·브라우저 검증의 역할을 나열했지만, 배포 전 증거 고정과 사용자 요청 시 검증이라는 두 시간축을 하나의 app.js로 끝까지 추적하지 않았습니다.",
+        "브라우저가 무엇을 기준점으로 믿는지, 서버가 한 byte를 바꿨을 때 어느 검증이 실패하고 누가 실행을 막는지가 하나의 공유 지도에 연결되지 않았습니다.",
+        "현재 alpha의 공식 범위와 production 안정성·대상 환경 성능처럼 측정하지 않은 주장이 구분되지 않았습니다."
+      ],
+      "fixture": "사이트가 승인한 /app.js의 hash를 manifest에 서명해 공개한 뒤, 침해된 서버가 한 byte를 바꾼 /app.js를 정상 HTTPS로 보냅니다. Firefox extension은 enrollment preload부터 manifest 서명·transparency proof·resource hash·CSP까지 확인하고 content 실행 전에 페이지를 차단합니다 [O].",
+      "stageEvidence": {
+        "parent": "Ethereum 프라이버시와 클라이언트 신뢰 지도에서 브라우저가 실행할 코드의 출처를 확인하는 영역을 표시합니다.",
+        "question": "서버가 바꾼 app.js를 정상 HTTPS로 보내도 브라우저가 실행 전에 막을 수 있는지 한 질문으로 고정합니다.",
+        "trace": "전체 경로→사이트 등록→배포물 서명→페이지 요청→로컬 검증→변조 차단→보장 경계를 일곱 장면으로 추적합니다.",
+        "mechanisms": "2/3 validator가 서명한 enrollment preload, 사이트 enrollment, signed manifest·transparency proof, 전달 resource hash와 CSP의 역할을 같은 증거 사슬에서 구분합니다.",
+        "formula": "등록 상태 E, manifest 승인 M, 실제 응답 일치 R을 각각 뜻과 함께 붙이고 E∧M∧R이 모두 참일 때만 실행한다는 조건을 풉니다.",
+        "failure": "한 단계라도 실패하면 content 실행 전에 차단하지만, 승인된 코드의 취약점·악의적인 개발자·WEBCAT 자체 공급망과 가용성은 별도 경계로 남깁니다.",
+        "return": "HTTPS는 전송 채널을 보호할 뿐 개발자 승인 배포물과의 일치를 증명하지 않으며, 최종 집행 지점은 사용자 브라우저라는 사실을 부모 지도에 반환합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        {
+          "source": "WEBCAT 공식 Concepts and architecture 문서",
+          "application": "Enrollment information, 2/3 합의 preload, signed manifest, bundle, transparency proof와 browser extension의 책임 경계를 적용했습니다."
+        },
+        {
+          "source": "WEBCAT 공식 Threat model and user errors 문서",
+          "application": "침해된 server·domain·validator 가정과 application·WEBCAT supply-chain의 범위 밖 항목을 구분했습니다."
+        },
+        {
+          "source": "SecureDrop, Help us test WEBCAT alpha, 2026-03-03",
+          "application": "Firefox extension alpha, 실행 전 resource 검증, 실패 시 page block과 현재 browser 호환 범위만 적용했습니다."
+        }
+      ],
+      "verification": {
+        "substantiveReading": "pass · 직속 부모 지도→app.js 한 건→배포 전 증거 고정→요청 시 검증→변조 차단→보장 경계→부모 지도 복귀 순서로 재작성했습니다.",
+        "arithmetic": "not-applicable · 수치 성능을 계산하지 않으며 E·M·R은 공식 문서의 검증 단계를 가르치기 위한 논리식으로만 사용했습니다.",
+        "humanize": "pass · 학습 계약·지식 그래프·읽기 순서·한국어 자연스러움·용어·architecture-flow 검사를 통과했습니다.",
+        "browser390": "pass · 390×844에서 문서 폭과 viewport 폭이 390px로 같고, 일곱 장면·설명·조작부에 가로 넘침이나 잘림이 없습니다.",
+        "browser1440": "pass · 1440×1000에서 공유 지도·두 시간축·일곱 장면·수식·본문이 겹치거나 잘리지 않는지 확인했습니다.",
+        "keyboard": "pass · 시각화에 초점을 둔 뒤 ArrowRight로 장면 0→1을 이동시키고 선택 상태와 설명이 함께 바뀌는지 확인했습니다.",
+        "reducedMotion": "pass · prefers-reduced-motion에서 재생 버튼이 비활성화되고 ArrowRight 수동 이동은 유지됩니다.",
+        "noJavaScript": "pass · 390×844 JavaScript 비활성 화면에 직속 부모, 일곱 정적 장면, 전체 본문과 부모 지도 반환이 남고 live 조작부가 사라지는지 확인했습니다.",
+        "console": "pass · 데스크톱과 모바일 Playwright 세션에서 console error·warning 0개입니다.",
+        "build": "pass · TypeScript noEmit과 production build를 완료하고 no-script 정적 본문에 Webcat 경로를 포함했습니다.",
+        "publicRoute": "pending · 로컬 build와 preview 검증은 끝났으며 GitHub Pages 배포와 공개 경로 재검증이 남았습니다."
+      },
+      "remaining": ["GitHub Pages 배포와 공개 경로 재검증"]
     },
     {
       "route": "crypto/binary-field-proving",

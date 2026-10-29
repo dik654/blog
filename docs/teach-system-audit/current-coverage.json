@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 685,
-    "pending": 322,
+    "reviewed": 686,
+    "pending": 321,
     "untracked": 0,
-    "assignedPending": 280,
+    "assignedPending": 279,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4193,9 +4193,9 @@
       "publicPath": "cs/blockchain/webcat-frontend-integrity",
       "title": "WEBCAT: 서명 manifest와 frontend code transparency",
       "catalogIndex": 416,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

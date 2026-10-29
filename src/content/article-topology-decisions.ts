@@ -455,6 +455,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
     sharedGate:
       "개념 글의 provider-interface·getlogs-route·normalization·failure-boundary anchor를 재사용합니다. 실험하지 않은 결과는 proposed·미측정으로 남기고 timeout을 transaction 실패나 in-flight RPC 취소로 확대하지 않습니다.",
   },
+  "blockchain/webcat-frontend-integrity": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "사용자가 app.js 하나를 받는 사례에서 HTTPS의 공백, 2/3 합의 enrollment preload, signed manifest·bundle, browser-local 검증과 차단, 공식 threat-model 경계까지 같은 증거 사슬로 추적합니다. 특정 환경의 key custody·배포 승인·성능 판단은 이 개념 글의 범위가 아니므로 별도 실무 글로 보냅니다.",
+    sharedGate:
+      "2026-10-29에 확인한 WEBCAT 공식 concepts·preload·user·threat-model 문서와 2026-03-03 alpha 발표에만 사실을 귀속합니다. HTTPS 성공을 developer-approved bytes로, 프로젝트 threat model을 독립 audit 결과나 production 안정성으로 확대하지 않습니다.",
+  },
   "blockchain/prysm-attestation": KEEP("Observe→sign→subnet route→aggregate→pool inclusion이 attestation의 실제 수명주기입니다."),
   "blockchain/prysm-beacon-db": KEEP("Root identity→schema→atomic read/write→pruning→retention이 한 BeaconDB lifecycle입니다."),
   "blockchain/prysm-epoch-processing": KEEP("Finality·reward/penalty·registry update가 protocol-defined epoch transition의 순차 sub-step입니다."),
@@ -4205,6 +4214,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/helios-config": "fc7c798862d9a44c",
   "blockchain/kohaku-provider": "45293bde30e8f34c",
   "blockchain/kohaku-provider-validation": "a650c8c45407202a",
+  "blockchain/webcat-frontend-integrity": "cc3625638a4e0c2b",
   "blockchain/prysm-attestation": "accd405e9c835fe6",
   "blockchain/prysm-beacon-db": "5163ddd87d6d2a0e",
   "blockchain/prysm-epoch-processing": "f9d422015c3b8c7a",
