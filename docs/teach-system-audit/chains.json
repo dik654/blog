@@ -3577,38 +3577,56 @@
     {
       "route": "blockchain/kohaku-provider",
       "title": "Kohaku Provider: 공통 API와 method별 신뢰 경계",
-      "status": "unreviewed",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/kohaku-provider.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/kohaku-provider.tsx",
-        "src/pages/articles/blockchain/kohaku-provider/ModernArticle.tsx"
+        "src/pages/articles/blockchain/kohaku-provider/ModernArticle.tsx",
+        "src/pages/articles/blockchain/kohaku-provider/KohakuProviderLocator.tsx",
+        "src/pages/articles/blockchain/kohaku-provider/viz/ModernKohakuProviderViz.tsx",
+        "src/content/kohaku-provider-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 7,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 0,
+        "assumptionMarkers": 4,
+        "sourceButtons": 4,
         "headings": [
-          "Kohaku Provider는 여러 Ethereum backend를 같은 method 모양으로 호출하게 하지만, backend의 신뢰 수준까지 같게 만들지는 않는다",
-          "공통 method 집합을 정의하고 backend별 반환값을 application이 비교할 수 있는 형태로 바꾼다",
-          "검증 경로가 바뀌는 method를 표시하고 read capability와 signing authority를 분리한다",
-          "Alpha package는 exact commit으로 고정하고 silent downgrade가 없는지 method별로 검증한다"
+          "같은 getLogs 호출은 어느 backend를 지나며 어디까지 검증됩니까?",
+          "공통 interface가 같아도 검증 경로는 같지 않습니다",
+          "Helios 기본 경로와 execution RPC 우회를 구분합니다",
+          "읽기 capability와 signing authority를 분리합니다",
+          "공식 alpha 구현에서 확인한 범위까지만 결론을 냅니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
-      "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+      "issues": [
+        "기존 글은 provider 기능을 method별로 나열해 같은 호출이 실제 어느 backend와 검증 경로를 지나는지 한 흐름으로 보기 어려웠습니다.",
+        "공통 TypeScript interface와 동일한 신뢰 수준을 혼동할 수 있었고, alpha package의 지원 범위와 대상 환경의 운영 안정성이 분리되지 않았습니다."
+      ],
+      "fixture": "logs-17 getLogs 호출 한 건을 Helios 기본 경로와 execution RPC 우회 경로에 각각 보내 backend 선택·검증 범위·TxLog[] 정규화 결과를 같은 영수증으로 비교합니다.",
+      "stageEvidence": {
+        "parent": "Ethereum 프라이버시와 클라이언트 신뢰 지도에서 provider 경계를 표시합니다.",
+        "trace": "요청→공통 interface→capability 판정→Helios 또는 execution RPC→정규화→application 반환을 일곱 장면으로 추적합니다.",
+        "boundary": "호출 모양, backend 선택, 검증 범위, read capability와 signing authority를 서로 다른 상태로 둡니다.",
+        "return": "공통 API는 backend 교체 비용을 줄이지만 신뢰 수준을 자동으로 같게 만들지 않는다는 사실을 부모 지도에 반환합니다."
       },
-      "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+      "sourceEvidence": [
+        "@kohaku-eth/provider 0.1.0-alpha.13과 commit b4ad096ef738a06f3f7025aa2870875527f9e6c7의 provider·Helios adapter 구현",
+        "Kohaku 공식 repository와 package source에서 확인한 alpha 지원 범위"
+      ],
+      "verification": {
+        "substantiveReading": "pass · logs-17 한 호출을 공통 interface, backend 선택, 검증 경로, 정규화 결과까지 추적하고 실무 검증 글을 정확한 개념 anchor에서 분리했습니다.",
+        "arithmetic": "not-applicable · 성능 수치를 주장하지 않고 method·backend·검증 outcome의 상태 전이만 설명합니다.",
+        "humanize": "pass · 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어 감사를 통과했습니다.",
+        "browser390": "pass · 공개 390×844 경로에서 문서 폭과 viewport 폭이 390px로 같고 article 폭 354px, 가로 넘침과 console 오류·경고 0건을 확인했습니다.",
+        "browser1440": "pass · 공개 1440×1000 경로에서 scrollWidth와 clientWidth가 1440px로 같고 일곱 장면·locator·본문의 겹침과 잘림이 없습니다.",
+        "keyboard": "pass · 공개 경로에서 시각화에 초점을 둔 뒤 ArrowRight로 장면 0→1이 이동합니다.",
+        "reducedMotion": "pass · 재생은 비활성화되고 수동 장면 이동은 유지됩니다.",
+        "noJavaScript": "pass · JavaScript 비활성 모바일 경로에 직속 부모, 일곱 정적 장면, 전체 본문과 부모 지도 반환이 남습니다.",
+        "publicRoute": "pass · GitHub Pages run 40799154628 성공 뒤 https://dik654.github.io/blog/cs/blockchain/kohaku-provider/에서 재검증했습니다."
+      },
+      "remaining": [],
+      "reviewDisposition": "concept-provider-trust-boundary-with-separate-practice-validation"
     },
     {
       "route": "blockchain/longest-chain",
@@ -6694,46 +6712,72 @@
     },
     {
       "route": "blockchain/reth-sync",
-      "title": "Reth 동기화 (Pipeline + Backfill + Live)",
-      "status": "unreviewed",
+      "title": "Reth 동기화: 모르는 head에서 live 복귀까지",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/reth-sync.tsx",
       "bodyFiles": [
-        "src/pages/articles/ethereum/reth-runtime-viz.tsx",
         "src/pages/articles/ethereum/reth-sync.tsx",
-        "src/pages/articles/ethereum/reth-sync/BackfillSync.tsx",
-        "src/pages/articles/ethereum/reth-sync/FullSync.tsx",
-        "src/pages/articles/ethereum/reth-sync/FullSyncData.ts",
-        "src/pages/articles/ethereum/reth-sync/LiveSync.tsx",
-        "src/pages/articles/ethereum/reth-sync/LiveSyncData.ts",
-        "src/pages/articles/ethereum/reth-sync/Overview.tsx",
-        "src/pages/articles/ethereum/reth-sync/OverviewData.ts"
+        "src/pages/articles/ethereum/reth-sync/ModernArticle.tsx",
+        "src/pages/articles/ethereum/reth-sync/RethSyncLocator.tsx",
+        "src/pages/articles/ethereum/reth-sync/viz/RethSyncFlowViz.tsx",
+        "src/pages/articles/ethereum/reth-sync/modernCodeRefs.ts",
+        "src/pages/articles/ethereum/reth-sync/modernFileTree.ts",
+        "src/pages/articles/ethereum/reth-sync/codebase/reth-v2.8.1/engine-path.rs",
+        "src/pages/articles/ethereum/reth-sync/codebase/reth-v2.8.1/backfill-control.rs",
+        "src/pages/articles/ethereum/reth-sync/codebase/reth-v2.8.1/pipeline.rs",
+        "src/content/reth-sync-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
+        "stageMarkers": 8,
         "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 4,
+        "assumptionMarkers": 6,
+        "sourceButtons": 3,
         "headings": [
-          "Backfill Sync와 Live handoff",
-          "Full Pipeline 동기화",
-          "Live Sync & Reorg 처리",
-          "Reth sync는 catch-up pipeline을 live import로 handoff한다"
+          "CL이 가리킨 head의 부모가 없으면, Reth는 언제 다운로드하고 언제 pipeline을 실행합니까?",
+          "모르는 head에는 SYNCING과 자료 요청을 함께 내보냅니다",
+          "짧은 누락 구간은 downloader와 engine tree가 이어 붙입니다",
+          "큰 누락 구간에서는 pipeline이 canonical state의 단독 writer가 됩니다",
+          "Pipeline은 stage별 결과와 checkpoint를 같은 순서로 전진시킵니다",
+          "검증 실패는 뒤 stage부터 역순으로 되돌립니다",
+          "Backfill이 끝나면 저장 head를 맞춘 뒤 남은 짧은 구간을 live 경로가 처리합니다"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 Full·Snap·Live를 병렬 전략처럼 보여 실제 Reth v2.8.1의 engine tree와 backfill pipeline 상태 전이를 오해할 수 있었습니다.",
+        "Live Sync를 ExEx와 가깝게 놓아 canonical writer, downstream notification consumer와 외부 effect checkpoint의 책임 경계가 흐렸습니다.",
+        "동기화 높이를 downloaded·executed·canonical·persisted로 나누지 않아 어느 상태가 실제로 전진했는지 판단하기 어려웠습니다."
+      ],
+      "fixture": "로컬 canonical block 1,000에서 CL이 A→B 10 ETH 송금 후보를 포함한 head 1,008을 가리키지만 부모 1,001–1,007이 없는 한 요청을 SYNCING부터 live 복귀까지 추적합니다. 번호는 경로 설명용이며 threshold 측정값이 아닙니다.",
+      "stageEvidence": {
+        "map": "직속 부모인 이더리움 노드 전체 지도와 현재 concept 위치, 이전 Reth P2P 검증과 다음 Reth RPC 글을 표시합니다.",
+        "fcu": "Unknown head에 VALID·INVALID를 단정하지 않고 SYNCING과 single-block DownloadRequest를 함께 반환합니다.",
+        "download": "누락 거리가 짧으면 block range 또는 single block을 받고 downloaded·executed·canonical·persisted 상태를 분리합니다.",
+        "backfill": "큰 누락에서는 Idle·Pending·PendingRevalidation·Active 상태로 pipeline writer와 live payload buffer를 분리합니다.",
+        "pipeline": "필수 stage checkpoint의 최솟값을 공통 진척으로 계산하고 root 검증 실패 시 뒤 stage부터 역순 unwind합니다.",
+        "handoff": "Pipeline 종료 높이의 저장 head와 최신 target을 다시 비교해 재-backfill 또는 짧은 다운로드 뒤 engine tree가 live writer로 돌아옵니다.",
+        "boundary": "ExEx는 canonical commit·reorg·revert 알림 소비자이며 parent 다운로드나 pipeline checkpoint를 소유하지 않습니다.",
+        "return": "자료 수집 경로와 canonical state writer를 분리하고 한 시점에 writer가 하나뿐이라는 사실을 부모 지도에 반환합니다."
+      },
+      "sourceEvidence": [
+        "Reth v2.8.1 commit d763342fa185e4e90ee79dc65f6a5706168b0bcb의 engine tree·backfill·staged pipeline 구현",
+        "Ethereum Execution APIs commit 3d627c95a4d3510a8187dd02e0250ecb4331d27e의 forkchoiceUpdated와 payload status 계약"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "pass · Reth v2.8.1 source에서 unknown head, short gap, backfill state, pipeline unwind, completion handoff와 ExEx 경계를 고정 commit으로 확인했습니다.",
+        "arithmetic": "pass · Headers 1,008·Bodies 1,008·Execution 1,005·Finish 1,005 fixture에서 공통 checkpoint를 min=1,005로 계산하고 같은 target·generation 전제를 표시했습니다.",
+        "humanize": "pass · ko-natural lint 오류 0건이며 글 단위 학습 계약·지식 그래프·문장·한국어·용어·읽기 순서와 전체 수식·topology·TypeScript 검사가 통과했습니다.",
+        "browser390": "pass · 390×844에서 scrollWidth=clientWidth=390, article 354px, viz 334px입니다. 장면 1은 관련 노드 3개만 보여 높이 554px이며 전체 장면도 766px 안에 표시됩니다.",
+        "browser1440": "pass · 1440×1000에서 scrollWidth=clientWidth=1440, article 711px이며 여덟 장면과 상태 영수증의 겹침·잘림이 없습니다.",
+        "keyboard": "pass · 시각화에 초점을 둔 뒤 ArrowRight로 장면 0→1이 이동하고 설명과 활성 노드가 함께 바뀝니다.",
+        "reducedMotion": "pass · 장면 0은 자동으로 바뀌지 않고 재생 버튼이 비활성화되며 ArrowRight 수동 이동은 유지됩니다.",
+        "noJavaScript": "pass · 390×844 JavaScript 비활성 production preview에 직속 부모, 정적 여덟 장면, 전체 본문, 확인 질문과 부모 지도 반환이 남고 live 조작부는 숨겨집니다.",
+        "console": "pass · 기본 데스크톱·모바일 세션에서 오류·경고 0건입니다. reduced-motion 세션의 Motion 개발 경고는 해당 미디어 설정을 알리는 라이브러리 메시지입니다.",
+        "build": "pass · production build가 8,118개 module, 정적 public route 2,120개와 no-script 본문 344편을 생성했습니다. 최대 RSS 약 6.46GB, swap 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "concept-unknown-head-to-backfill-pipeline-and-live-handoff"
     },
     {
       "route": "blockchain/reth-trie",

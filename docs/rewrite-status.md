@@ -4256,7 +4256,7 @@
   전체 본문과 부모 지도 반환이 보이며 live 조작부와 가로 넘침은 없습니다. 공개 배포와 공개
   경로 재검증은 다음 단계입니다.
 
-### Kohaku Provider 개념·실무 분리 로컬 검증 완료 (2026-10-29)
+### Kohaku Provider 개념·실무 분리 공개 검증 완료 (2026-10-29)
 
 - `kohaku-provider`는 같은 `getLogs` 호출이 Helios의 기본 경로와 execution RPC 우회 경로에서
   어떻게 갈라지는지 설명하는 개념 글로 다시 구성했습니다. 공통 API와 타입이 호출 모양은
@@ -4278,8 +4278,38 @@
 - 관련 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어·
   architecture-flow·coverage·runtime 검사와 선택 ESLint, TypeScript, production build,
   `git diff --check`를 통과했습니다. Build는 8,119개 module, 2,120개 정적 공개 경로와
-  no-script 본문 342편을 생성했고 최대 RSS는 약 6.47GB, swap은 0이었습니다. 현재 상태는
-  `reviewed-local`이며 GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
+  no-script 본문 342편을 생성했고 최대 RSS는 약 6.47GB, swap은 0이었습니다.
+- GitHub Pages run `40799154628`이 성공한 뒤 공개 개념·실무 경로를 다시 열었습니다.
+  개념 글은 1,440×1,000에서 `scrollWidth=clientWidth=1440`, 390×844에서
+  `scrollWidth=clientWidth=390`이고 article 폭은 354px입니다. 키보드 장면 0→1 이동,
+  reduced-motion, JavaScript 비활성 정적 7장면, console 오류·경고 0건을 확인했습니다.
+  실무 글도 390×844에서 같은 문서 폭, 정적 6장면과 부모 지도 반환을 확인했습니다.
+  현재 두 글은 `reviewed-production`입니다.
+
+### Reth 동기화 개념 글 로컬 검증 완료 (2026-10-29)
+
+- 로컬 canonical block 1,000에서 CL이 head 1,008을 가리키지만 부모 1,001–1,007이 없는
+  한 요청을 기준으로 글을 다시 구성했습니다. 모르는 head에는 `SYNCING`과 자료 요청을
+  반환하고, 짧은 누락은 downloader와 engine tree가, 큰 누락은 backfill pipeline이
+  처리한 뒤 저장 head를 맞춰 live 경로로 돌아오는 순서를 여덟 장면으로 추적합니다.
+- `downloaded`, `executed`, `canonical`, `persisted`를 분리하고, backfill의
+  `Idle → Pending → PendingRevalidation → Active` 상태와 canonical writer를 표시했습니다.
+  Pipeline은 필수 stage checkpoint의 최솟값만 공통 진척으로 공개하며 검증 실패에는 뒤
+  stage부터 역순으로 unwind합니다. ExEx는 마지막 알림 소비자이며 동기화 방식이 아닙니다.
+- 근거는 Reth v2.8.1 commit `d763342fa185e4e90ee79dc65f6a5706168b0bcb`의 engine
+  tree·backfill·pipeline 구현과 Ethereum Execution APIs commit
+  `3d627c95a4d3510a8187dd02e0250ecb4331d27e`에 고정했습니다. 대상 장비의 처리량과
+  복구 시간은 측정하지 않았습니다.
+- 1,440×1,000에서 문서 폭 1,440px, article 711px, 390×844에서 문서 폭 390px,
+  article 354px, viz 334px이고 가로 넘침이 없습니다. 모바일의 개별 장면은 관련 노드만
+  남겨 높이 554px 안에 설명과 조작부가 함께 보이며, 전체 지도 장면도 766px입니다.
+  무자동재생, 키보드 0→1 이동, reduced-motion의 재생 비활성·수동 이동을 확인했습니다.
+- JavaScript 비활성 production preview에는 직속 부모, 정적 여덟 장면, 전체 본문,
+  확인 질문과 부모 지도 반환이 남고 live 조작부는 사라집니다. 글 단위 학습 계약·지식
+  그래프·문장·한국어·용어·읽기 순서, 전체 수식·topology·TypeScript와 production build를
+  통과했습니다. Build는 8,118개 module, 정적 public route 2,120개, no-script 본문
+  344편을 생성했고 최대 RSS는 약 6.46GB, swap은 0이었습니다. 공개 배포와 공개 경로
+  재검증은 다음 단계입니다.
 
 ### WEBCAT 프런트엔드 무결성 개념 글 로컬 검증 완료 (2026-10-29)
 
