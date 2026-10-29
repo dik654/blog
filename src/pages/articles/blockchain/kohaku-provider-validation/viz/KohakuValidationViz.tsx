@@ -2,6 +2,7 @@ import {
   AnimatedSceneControls,
   StaticSceneList,
 } from "@/components/viz/AnimatedSceneControls";
+import ResponsiveVizTable from "@/components/viz/ResponsiveVizTable";
 import { useAnimatedScenes } from "@/components/viz/useAnimatedScenes";
 import VizFrame from "@/components/viz/VizFrame";
 
@@ -61,46 +62,28 @@ export default function KohakuValidationViz() {
           ))}
         </div>
 
-        <div className="mt-3 sm:hidden" aria-label="현재 검증 단계 상태">
-          <table className="w-full border-collapse text-left text-xs">
-            <thead>
-              <tr>
-                <th className="border border-border bg-muted/40 px-3 py-3">확인 대상</th>
-                <th className="border border-border bg-primary/10 px-3 py-3 text-primary">{SCENES[active]}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr key={row.name}>
-                  <th className="border border-border bg-muted/40 px-3 py-3">{row.name}</th>
-                  <td className="border border-border bg-primary/5 px-3 py-3 font-semibold">{row.values[active]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div
+          data-viz-mobile-table
+          className="mt-3 grid min-w-0 grid-cols-3 gap-px bg-border p-px sm:hidden"
+          aria-label={`현재 검증 단계: ${SCENES[active]}`}
+        >
+          {ROWS.map((row) => (
+            <article key={row.name} className="min-w-0 bg-background p-3">
+              <p className="break-keep text-[9px] font-semibold text-muted-foreground">{row.name}</p>
+              <p className="mt-1 break-words text-xs font-bold leading-5 [overflow-wrap:anywhere]">
+                {row.values[active]}
+              </p>
+            </article>
+          ))}
         </div>
 
-        <div className="mt-3 hidden overflow-x-auto sm:block" aria-label="검증 단계별 상태">
-          <table className="w-full min-w-[680px] border-collapse text-left text-xs">
-            <thead>
-              <tr>
-                <th className="border border-border bg-muted/40 px-3 py-3">확인 대상</th>
-                {SCENES.map((scene, index) => (
-                  <th key={scene} className={index === active ? "border border-border bg-primary/10 px-3 py-3 text-primary" : "border border-border bg-background px-3 py-3"}>{scene}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ROWS.map((row) => (
-                <tr key={row.name}>
-                  <th className="border border-border bg-muted/40 px-3 py-3">{row.name}</th>
-                  {row.values.map((value, index) => (
-                    <td key={SCENES[index]} className={index === active ? "border border-border bg-primary/5 px-3 py-3 font-semibold" : "border border-border bg-background px-3 py-3 text-muted-foreground"}>{value}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="hidden sm:block" aria-label="검증 단계별 상태">
+          <ResponsiveVizTable
+            className="mt-3"
+            columns={["확인 대상", ...SCENES]}
+            rows={ROWS.map((row) => [row.name, ...row.values])}
+            desktopMinWidthClassName="min-w-[680px]"
+          />
         </div>
 
         <p data-scene-note className="mt-3 min-h-24 border-l-2 border-primary/50 pl-3 text-xs leading-5 text-muted-foreground sm:min-h-20 sm:pl-4 sm:text-sm sm:leading-6">
