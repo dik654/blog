@@ -388,6 +388,8 @@ const noScriptArticleRoutes = new Set([
   "blockchain/helios-execution",
   "blockchain/helios-types",
   "blockchain/helios-config",
+  "blockchain/kohaku-provider",
+  "blockchain/kohaku-provider-validation",
 ]);
 const noScriptArticles = catalog.filter(
   (article) =>
