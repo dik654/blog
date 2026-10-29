@@ -4269,14 +4269,14 @@
   우회로 갈라지고 다시 `TxLog[]`로 정규화되는 일곱 장면을 추적합니다. 실무 글은 같은
   bundle을 고정하고 fixture·경로·값과 오류·실패·복구를 판정하는 여섯 장면으로 구성했습니다.
 - 1,440×1,000과 390×844 화면에서 두 글 모두 가로 넘침이 없고, 장면 0은 명시적인 조작 전까지
-  유지됩니다. 키보드 이동과 reduced-motion의 수동 이동도 유지되며 console 오류·경고는
-  0건입니다. 모바일 코드 패널은 키보드 `Enter`로 닫은 뒤 DOM에서 제거되고 문서 폭은
-  390px로 돌아옵니다.
+  유지됩니다. 실무 글의 고정 폭 비교표는 모바일에서 현재 단계의 입력·경로·판정 카드 세 장으로
+  바뀝니다. 키보드 이동과 reduced-motion의 수동 이동도 유지되며 console 오류·경고는 0건입니다.
+  모바일 코드 패널은 키보드 `Enter`로 닫은 뒤 DOM에서 제거되고 문서 폭은 390px로 돌아옵니다.
 - JavaScript 비활성 모바일·데스크톱 직접 경로에는 조작 버튼 없이 개념 7장면, 실무 6장면,
   직속 부모 지도, 실무의 정확한 개념 anchor와 전체 본문이 남습니다. 정적 경로는 trailing
   slash가 있는 directory index로 확인했습니다.
 - 관련 학습 계약·지식 그래프·수식·계산·글 구조·topology·읽기 순서·한국어·용어·
   architecture-flow·coverage·runtime 검사와 선택 ESLint, TypeScript, production build,
   `git diff --check`를 통과했습니다. Build는 8,119개 module, 2,120개 정적 공개 경로와
-  no-script 본문 342편을 생성했고 최대 RSS는 약 6.74GB, swap은 0이었습니다. 현재 상태는
+  no-script 본문 342편을 생성했고 최대 RSS는 약 6.47GB, swap은 0이었습니다. 현재 상태는
   `reviewed-local`이며 GitHub Pages 배포와 공개 경로 재검증은 남아 있습니다.
