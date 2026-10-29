@@ -5520,14 +5520,27 @@ export const ARTICLE_EVIDENCE: Readonly<
     href: "https://github.com/paradigmxyz/reth/tree/4cf0facecda7b4d474c739acef1c0fc2c69a122c/crates/rpc",
     note: "Module·middleware·provider wiring의 pinned implementation snapshot",
   }),
-  "blockchain/reth-sync": withSeriesEvidence(
-    RETH_SERIES_EVIDENCE,
-    source(
-      "공식 규격",
-      OFFICIAL_SOURCES.ethereum.engineApi,
-      "consensus head·safe·finalized와 execution payload status의 표준 경계",
-    ),
-  ),
+  "blockchain/reth-sync": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
+    kind: "공식 프로젝트 기록",
+    label: "Reth v2.8.1 release",
+    href: "https://github.com/paradigmxyz/reth/releases/tag/v2.8.1",
+    note: "이 글이 구현 기준으로 고정한 release와 2026-10-23 공개 시점",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — engine tree와 backfill",
+    href: "https://github.com/paradigmxyz/reth/tree/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/engine/tree",
+    note: "SYNCING·DownloadRequest·BackfillAction·buffer·live handoff의 고정 source snapshot",
+  }, {
+    kind: "공식 구현",
+    label: "Reth v2.8.1 — staged pipeline",
+    href: "https://github.com/paradigmxyz/reth/blob/d763342fa185e4e90ee79dc65f6a5706168b0bcb/crates/stages/api/src/pipeline/mod.rs",
+    note: "Stage 순차 실행·PipelineProgress·ControlFlow::Unwind·역순 unwind의 고정 source snapshot",
+  }, {
+    kind: "공식 규격",
+    label: "Ethereum Execution APIs @ 3d627c95",
+    href: "https://github.com/ethereum/execution-apis/blob/3d627c95a4d3510a8187dd02e0250ecb4331d27e/src/engine/paris.md",
+    note: "forkchoiceUpdated와 VALID·INVALID·SYNCING의 고정 CL·EL 외부 계약",
+  }),
   "blockchain/reth-trie": withSeriesEvidence(RETH_SERIES_EVIDENCE, {
     kind: "공식 규격",
     label: "Ethereum Yellow Paper — pinned snapshot",

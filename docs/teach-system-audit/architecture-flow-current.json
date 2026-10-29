@@ -4,15 +4,15 @@
   "summary": {
     "publicArticles": 1007,
     "architectureCandidates": 178,
-    "dedicatedVisuals": 717,
+    "dedicatedVisuals": 718,
     "inlineVisuals": 528,
-    "customVisuals": 900,
+    "customVisuals": 901,
     "animatedMechanisms": 519,
     "architectureWithoutAnimation": 82,
     "recursiveLocators": 346,
     "codeEvidenceLinked": 223,
     "sourceCitationLinked": 998,
-    "architectureWithoutCustomVisual": 17
+    "architectureWithoutCustomVisual": 16
   },
   "articles": [
     {
@@ -8626,18 +8626,18 @@
     {
       "route": "blockchain/reth-sync",
       "publicPath": "cs/blockchain/reth-sync",
-      "title": "Reth 동기화 (Pipeline + Backfill + Live)",
+      "title": "Reth 동기화: 모르는 head에서 live 복귀까지",
       "sourcePath": "src/pages/articles/ethereum/reth-sync.tsx",
       "locationMap": "global:ArticleOnboarding",
       "architectureCandidate": true,
-      "hasDedicatedVisual": false,
+      "hasDedicatedVisual": true,
       "hasInlineVisual": false,
-      "hasCustomVisual": false,
+      "hasCustomVisual": true,
       "hasAnimatedMechanism": true,
       "hasRecursiveLocator": true,
       "hasCodeEvidence": true,
       "hasSourceCitation": true,
-      "reviewPriority": "architecture-without-custom-visual"
+      "reviewPriority": "verify-motion-semantics"
     },
     {
       "route": "blockchain/reth-trie",

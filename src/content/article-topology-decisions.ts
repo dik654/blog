@@ -720,7 +720,15 @@ export const ARTICLE_TOPOLOGY_DECISIONS: Readonly<Record<string, ArticleTopology
       "Registry·status·gas·output·fault·restart·rollback parity를 먼저 통과합니다. 통과한 run에서만 latency·calls/s·CPU·memory를 비교하며 현재 대상 환경 결과는 proposed·미측정으로 남깁니다.",
   },
   "blockchain/reth-rpc": KEEP("Transport route→pinned view→answer/error→cost/auth protection이 한 RPC request lifecycle입니다."),
-  "blockchain/reth-sync": KEEP("Anchor→pipeline execution/unwind→backfill/live handoff→notification이 한 sync state transition입니다."),
+  "blockchain/reth-sync": {
+    action: "keep",
+    status: "implemented",
+    reviewedAt: "2026-10-29",
+    rationale:
+      "CL이 모르는 head를 보낸 한 사례가 SYNCING·자료 요청·짧은 구간 다운로드 또는 backfill·stage checkpoint·unwind·live 복귀·ExEx 알림 경계까지 이어집니다. 절 수는 많지만 모두 같은 후보 block의 연속된 상태 전이이므로 나누면 각 글에서 시작 상태와 writer 교대를 다시 설명해야 합니다.",
+    sharedGate:
+      "Reth v2.8.1 commit d763342f와 고정 Engine API snapshot에서 확인한 상태 전이까지만 설명합니다. 특정 하드웨어의 동기화 시간·처리량·운영 배포 판단은 이 개념 글의 결론으로 사용하지 않습니다.",
+  },
   "blockchain/reth-txpool": {
     action: "split",
     status: "implemented",
@@ -4246,7 +4254,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/reth-precompiles": "f27b784b8a338965",
   "blockchain/reth-precompiles-validation": "56f82c70dcacdd46",
   "blockchain/reth-rpc": "02473a33cea1db84",
-  "blockchain/reth-sync": "310f9fcbfb6e5b3e",
+  "blockchain/reth-sync": "dbfa6e6c411fbd1a",
   "blockchain/reth-txpool": "17e22144298ab69e",
   "blockchain/reth-txpool-validation": "84685be87b398a7c",
   "crypto/mpc": "07f3cf355d38676f",

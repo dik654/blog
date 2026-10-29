@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 686,
-    "pending": 321,
+    "reviewed": 688,
+    "pending": 319,
     "untracked": 0,
-    "assignedPending": 279,
+    "assignedPending": 277,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4173,9 +4173,9 @@
       "publicPath": "cs/blockchain/kohaku-provider",
       "title": "Kohaku Provider는 같은 API 뒤의 신뢰 경로를 어떻게 드러낼까요?",
       "catalogIndex": 414,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4185,8 +4185,8 @@
       "catalogIndex": 415,
       "status": "reviewed",
       "provenance": "post-checkpoint-registry",
-      "recordedStatus": "reviewed-local",
-      "evidence": "docs/rewrite-status.md#kohaku-provider-개념실무-분리-로컬-검증-완료-2026-10-29"
+      "recordedStatus": "reviewed-production",
+      "evidence": "docs/rewrite-status.md#kohaku-provider-개념실무-분리-공개-검증-완료-2026-10-29"
     },
     {
       "route": "blockchain/webcat-frontend-integrity",
@@ -4551,11 +4551,11 @@
     {
       "route": "blockchain/reth-sync",
       "publicPath": "cs/blockchain/reth-sync",
-      "title": "Reth 동기화 (Pipeline + Backfill + Live)",
+      "title": "Reth 동기화: 모르는 head에서 live 복귀까지",
       "catalogIndex": 452,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
