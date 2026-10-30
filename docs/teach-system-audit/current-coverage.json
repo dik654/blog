@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 695,
-    "pending": 312,
+    "reviewed": 696,
+    "pending": 311,
     "untracked": 0,
-    "assignedPending": 270,
+    "assignedPending": 269,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5173,9 +5173,9 @@
       "publicPath": "cs/blockchain/prysm-epoch-processing",
       "title": "Prysm 에폭 처리: 보상, 패널티, 레지스트리",
       "catalogIndex": 514,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

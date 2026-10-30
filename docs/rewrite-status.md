@@ -3,6 +3,15 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
+### Prysm Epoch 처리 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-epoch-processing`을 slot 351의 Fulu state가 epoch 경계를 지나 slot 352 직전 state가 되는 한 사례로 다시 썼습니다. Fork dispatch, finality, 보상·패널티, validator queue, rotation, output과 실패 경계를 여덟 장면으로 연결했습니다.
+- consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. Fulu는 Electra pipeline을 먼저 실행한 뒤 proposer lookahead를 추가하며, 다른 fork의 단계는 섞지 않았습니다.
+- 설명용 active 96·target 64에서 `3×64=2×96=192`이므로 justification threshold를 통과합니다. 다만 finalization은 기존 justification bits와 checkpoint 간격을 더 확인합니다. Base reward 100·source weight 14/64·participation 64/96의 실수식은 14.58…이고, 실제 정수 연산 결과는 14입니다. Churn 64에서 deposit 40을 처리하면 24가 남아 다음 32는 queue에 유지됩니다.
+- 1,440×1,000 production 렌더에서 여덟 장면 버튼, 세 경계, 다섯 pipeline stage, 상태 변화·설명·조작부가 한 화면에 들어옵니다. Finality 장면과 실제 source sidebar를 확인했고 문서 가로 넘침과 console 오류·경고는 없습니다.
+- 390×844에서는 현재 장면 하나만 중앙에 표시합니다. Production의 64px 상단 내비게이션까지 포함하면 조작부가 화면 아래로 밀리는 문제를 발견해 모바일 장면 영역의 빈 높이를 48px 줄였습니다. 글자 크기와 설명은 유지했습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 검사를 통과했습니다. Production build는 8,090개 module과 정적 public route 2,120개, no-script 본문 352편을 만들었고 최대 RSS는 5,740,363,776 bytes, swap은 0이었습니다. 최종 모바일·reduced-motion·JavaScript 비활성 재검증과 공개 배포가 남아 있습니다.
+
 ### Prysm Slot 처리 로컬 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-slot-processing`을 Block 30 적용 뒤의 state가 빈 Slot 31·32를 지나 Block 33 직전 state가 되는 한 사례로 다시 썼습니다. Target guard, per-slot state·block root, zero header backfill, epoch 경계, slot 증가, fork upgrade와 SkipSlotCache를 아홉 장면으로 연결했습니다.

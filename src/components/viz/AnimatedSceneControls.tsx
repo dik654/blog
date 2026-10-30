@@ -8,6 +8,7 @@ export function AnimatedSceneControls({
   playLabel = "재생",
   controlLabels,
   className = "",
+  compact = false,
 }: {
   labels: readonly string[];
   active: number;
@@ -18,6 +19,7 @@ export function AnimatedSceneControls({
   playLabel?: string;
   controlLabels?: readonly string[];
   className?: string;
+  compact?: boolean;
 }) {
   const previous = () => setActive(Math.max(0, active - 1));
   const next = () => setActive(Math.min(labels.length - 1, active + 1));
@@ -26,11 +28,11 @@ export function AnimatedSceneControls({
     <div
       data-viz-controls
       data-viz-live-only
-      className={`z-20 mt-auto w-full shrink-0 sm:min-h-[6.75rem] sm:border-t sm:border-border sm:pt-4 ${className}`}
+      className={`z-20 mt-auto w-full shrink-0 ${compact ? "" : "sm:min-h-[6.75rem] sm:border-t sm:border-border sm:pt-4"} ${className}`}
     >
       <div
         data-viz-mobile-controls
-        className="relative mt-2 flex min-h-11 items-center justify-end gap-0.5 border-t border-border/45 bg-background/95 pt-1 backdrop-blur-sm sm:hidden"
+        className={`relative mt-2 min-h-11 items-center justify-end gap-0.5 border-t border-border/45 bg-background/95 pt-1 backdrop-blur-sm ${compact ? "flex" : "flex sm:hidden"}`}
       >
         <span className="sr-only" style={{ left: 0, top: 0 }} aria-live="polite">
           {labels.length}개 장면 중 {active + 1}번, {labels[active]}
@@ -79,7 +81,7 @@ export function AnimatedSceneControls({
         </button>
       </div>
 
-      <div data-viz-desktop-controls className="hidden flex-wrap items-stretch gap-2 pb-1 sm:flex">
+      <div data-viz-desktop-controls className={`${compact ? "hidden" : "hidden sm:flex"} flex-wrap items-stretch gap-2 pb-1`}>
         {labels.map((label, index) => (
           <button
             key={label}
@@ -104,7 +106,7 @@ export function AnimatedSceneControls({
           {reducedMotion ? `${playLabel} 꺼짐` : playing ? "일시정지" : playLabel}
         </button>
       </div>
-      <p className="mt-3 hidden text-xs text-muted-foreground sm:block">
+      <p className={`mt-3 text-xs text-muted-foreground ${compact ? "sr-only" : "hidden sm:block"}`}>
         그림에 초점을 둔 뒤 ← →로 이동 · Space로 재생/일시정지
       </p>
     </div>
