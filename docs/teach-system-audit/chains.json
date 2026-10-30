@@ -587,7 +587,7 @@
     {
       "route": "blockchain/cometbft-abci",
       "title": "CometBFT ABCI: PrepareProposal → FinalizeBlock → Commit",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/blockchain/cometbft-abci.tsx",
       "bodyFiles": [
         "src/pages/articles/blockchain/cometbft-abci.tsx",
@@ -639,11 +639,10 @@
         "browser1440": "1440×1000에서 document 폭과 scroll 폭이 모두 1440px입니다. 수동 장면 1→2, group focus 뒤 ArrowRight로 2→3, 고정 source code sidebar와 Escape 닫기, console 오류 0건을 확인했습니다.",
         "reducedMotion": "390×844에서 reduced-motion을 켜면 재생 버튼이 비활성화되고 7초 뒤에도 첫 장면이 유지됩니다.",
         "resource": "기본 4GB Node heap TypeScript 검사는 최대 RSS 약 4.48GB에서 OOM이 났고, 8GB heap으로 직렬 재실행해 최대 RSS 약 6.46GB로 통과했습니다. Vite build 최대 RSS 약 4.52GB, 정적 생성 약 1.60GB였으며 다른 고부하 단계를 겹치지 않았습니다.",
-        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 381편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 8개, live UI·버튼 0개, 질문·부모 지도 반환·고정 commit 근거 노출을 확인했습니다."
+        "static": "검토 완료 목록에 route를 등록해 2,120개 정적 public route와 no-script 본문 381편을 생성했습니다. JavaScript를 끈 390×844 브라우저에서 정적 장면 8개, live UI·버튼 0개, 질문·부모 지도 반환·고정 commit 근거 노출을 확인했습니다.",
+        "production": "GitHub Pages run 41133786037의 전체 감사·빌드·공개 글 실제 브라우저 검사·배포가 성공했습니다. 공개 URL은 HTTP 200이며 1440×1000과 390×844에서 문서 폭이 뷰포트와 같고 console 오류가 없습니다. 첫 장면은 7초 뒤에도 유지됐고 수동 선택과 ArrowRight 이동, 재시작 장면의 본문·제어 아이콘 노출을 확인했습니다. Reduced-motion에서는 재생이 비활성화됐으며 JavaScript 비활성 공개 문서에는 정적 8장면·질문·고정 commit·부모 지도 반환이 남고 버튼은 없습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-one-block-from-candidate-through-finalize-commit-and-crash-replay-with-pinned-source"
     },
     {
