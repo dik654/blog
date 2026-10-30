@@ -4341,7 +4341,7 @@ export const ARTICLE_TOPOLOGY_FINGERPRINTS: Readonly<Record<string, string>> = {
   "blockchain/prysm-block-proposal": "b3a0205c8c47fa1c",
   "blockchain/prysm-forkchoice": "59b37f81aedba324",
   "blockchain/prysm-finality": "1ad0fbccb44a1b0d",
-  "blockchain/prysm-sync": "69c53dbac4cd0fcf",
+  "blockchain/prysm-sync": "191bb1d2791f013e",
   "blockchain/reth-alloy-primitives": "e8b0d939eba9a639",
   "blockchain/lsm-tree": "9aecdf800aab56ed",
   "blockchain/lsm-engine-validation": "47d5cc0e46151e22",
