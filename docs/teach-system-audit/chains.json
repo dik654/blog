@@ -4540,7 +4540,7 @@
     {
       "route": "blockchain/prysm-beacon-api",
       "title": "Prysm Beacon API",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-api.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-api.tsx",
@@ -4617,11 +4617,10 @@
         "arithmetic": "No latency or throughput arithmetic claimed; literal call sequence and three response fields are source-derived, while A-to-B reorg mixing remains explicitly unmeasured",
         "humanize": "Korean prose and all visible technical labels manually reread; example aliases A, Sₐ and Bₐ are defined before the first visualization",
         "browser390": "390x844 document width 390=390, figure 354x829.6 fits the viewport, scene 8 shows HeadState B and the unmeasured boundary, controls are 49.5px, reduced-motion has 0 running animations, CodeSidebar focus lock/Escape return pass, and the production no-JavaScript route exposes all 8 static scenes plus the full article and map return",
-        "browser1440": "1440x1000 document width 1440=1440, figure 711x978.7 fits the viewport, scene remains 0 after 6.2 seconds, console errors 0; production build completed with 8,106 modules, 2,120 static public routes and 360 no-script bodies"
+        "browser1440": "1440x1000 document width 1440=1440, figure 711x978.7 fits the viewport, scene remains 0 after 6.2 seconds, console errors 0; production build completed with 8,106 modules, 2,120 static public routes and 360 no-script bodies",
+        "production": "Commit 5e559a26의 GitHub Pages run 41034819898이 전체 감사·production build·공개 1,007편 실브라우저 검사와 배포를 통과했습니다. 공개 390×844 경로에서 문서 폭 390=390, 장면 0이 3초 뒤에도 유지되고 console 오류·경고 0건을 확인했습니다. JavaScript 비활성 공개 경로에는 정적 읽기 모드, 전체 본문, 확인 질문과 부모 지도 반환이 남습니다."
       },
-      "remaining": [
-        "GitHub Pages 공개 경로 재검증"
-      ]
+      "remaining": []
     },
     {
       "route": "blockchain/prysm-beacon-db",
@@ -4965,42 +4964,88 @@
     },
     {
       "route": "blockchain/prysm-engine-api",
-      "title": "Prysm Engine API 연동 (CL → EL)",
-      "status": "unreviewed",
+      "title": "Prysm Engine API",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-engine-api.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-engine-api.tsx",
-        "src/pages/articles/ethereum/prysm-engine-api/ForkchoiceUpdated.tsx",
-        "src/pages/articles/ethereum/prysm-engine-api/NewPayload.tsx",
-        "src/pages/articles/ethereum/prysm-engine-api/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-engine-api/PayloadRetrieval.tsx"
+        "src/pages/articles/ethereum/prysm-engine-api/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-engine-api/PrysmEngineAPILocator.tsx",
+        "src/pages/articles/ethereum/prysm-engine-api/viz/PrysmEngineAPIFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-engine-api/codeRefs.ts",
+        "src/pages/articles/ethereum/prysm-engine-api/fileTrees.ts",
+        "src/content/prysm-engine-api-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "stageMarkers": 8,
+        "predictionPointers": 6,
+        "assumptionMarkers": 7,
+        "sourceButtons": 5,
         "headings": [
-          "forkchoiceUpdated는 세 pointer를 적용한 뒤에만 build를 시작한다",
-          "newPayload는 payload를 제출하고 판정 evidence를 돌려받는다",
-          "Engine API는 합의 결과와 EVM 실행 결과를 맞추는 상태 있는 경계다",
-          "getPayload은 payloadId가 가리키는 build 결과를 fork별 envelope로 회수한다"
+          "만든 payload와 선택한 head를 어떻게 같은 실행 기록으로 맞추는가",
+          "추적할 payload",
+          "두 프로그램은 같은 상태를 쓰지 않는다",
+          "Build를 시작한다",
+          "Build 결과를 회수한다",
+          "받은 payload를 실행 검증한다",
+          "세 결과가 서로 다른 다음 동작을 만든다",
+          "VALID과 canonical head는 같은 말이 아니다",
+          "Version은 호출마다 따로 오른다",
+          "JWT는 caller만 확인한다",
+          "어디에서 멈췄는지 구분한다",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 newPayload·forkchoiceUpdated·getPayload을 별도 절로 설명해 proposal build와 block validation, canonical head 반영이 같은 payload를 어떻게 주고받는지 추적하기 어려웠습니다.",
+        "기존 설명은 JSON-RPC 전송 성공, PayloadStatus의 실행 판정, consensus fork choice와 finality를 한 성공 흐름처럼 읽게 만들 수 있었습니다."
+      ],
+      "fixture": {
+        "case": "설명용 parent H₀에서 payloadId P₁으로 execution payload E₁을 만들고 beacon block B₁에 포함한 뒤, E₁을 검증해 B₁ 선택과 execution head 반영까지 추적",
+        "identities": {
+          "buildHandle": "P₁",
+          "executionPayload": "E₁",
+          "beaconBlock": "B₁"
+        },
+        "execution": "Pinned source reading and deterministic browser interaction; latency, failover recovery time and client-pair compatibility remain unmeasured"
+      },
+      "stageEvidence": {
+        "parent": "Prysm 전체 구조에서 Beacon API 다음의 consensus↔execution 경계를 표시",
+        "question": "만든 payload와 선택한 head를 어떻게 같은 실행 기록으로 맞추는가",
+        "case": "H₀·P₁·E₁·B₁ 한 사례를 모든 장면과 본문에서 유지",
+        "picture": "전체→Build 요청→Payload 회수→Block 포함→실행 검증→VALID→미완료·실패→Head 반영",
+        "mechanism": "ForkchoiceUpdated, GetPayload, NewPayload, PayloadStatus, canonical pointer와 JWT 경계를 실제 함수·프로토콜 순서로 추적",
+        "evidence": "Prysm v7.3.1 commit 96d418cd와 Execution APIs v1.0.0-beta.7 commit 5aebdfdd에 고정",
+        "return": "build receipt, execution validity와 canonicality가 서로 다른 상태라는 사실을 부모 지도에 반환"
+      },
+      "sourceEvidence": [
+        {
+          "source": "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db",
+          "section": "beacon-chain/execution/engine_jsonrpc.go, blockchain/execution_engine.go, rpc/prysm/v1alpha1/validator/proposer_execution_payload.go",
+          "application": "method version 선택, payloadId cache·build·회수, PayloadStatus 처리, optimistic 해제와 invalid branch 정리",
+          "original": "고정 commit의 실제 분기와 함수 이름을 보존한 발췌"
+        },
+        {
+          "source": "Ethereum Execution APIs v1.0.0-beta.7 commit 5aebdfdd45cadeb723be4bd45b4611b71c8b1c85",
+          "section": "Engine namespace methods, common structures and authentication",
+          "application": "독립 method versioning, FCU ordering, payloadId, PayloadStatus, Engine error와 JWT iat 계약",
+          "original": "프로토콜 계약의 존재를 확인하며 특정 client 조합의 운영 안정성이나 성능을 입증하지 않음"
+        }
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 Prysm·Execution APIs source를 다시 읽어 proposal build→payload 회수→beacon block 포함→execution 검증→consensus 선택→execution head 반영을 한 payload로 재구성했습니다.",
+        "arithmetic": "성능 수치를 만들지 않았습니다. payloadId는 규격상 8-byte opaque handle이며 JWT iat 권고 범위 ±60초와 상태 집합은 고정된 규격에서만 인용했습니다.",
+        "humanize": "직속 부모 지도, 질문 하나, H₀·P₁·E₁·B₁ 한 사례, 세 Engine 호출과 상태 경계, 부모 지도 반환으로 다시 구성했습니다. 코드 식별자를 제외한 설명은 자연스러운 한국어로 다시 읽었습니다.",
+        "browser390": "390×844에서 document 폭 390=390, 8개 장면 버튼은 각각 49.5px이며 시각화가 가로로 넘치지 않습니다. forkchoiceUpdated는 camelCase 경계에서만 줄을 바꾸고, 장면 7→키보드 ArrowLeft→6 이동과 2.5초 무자동 재생을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건이고 수동으로 장면 8을 선택할 수 있습니다. JavaScript 비활성 production preview는 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 표시합니다.",
+        "browser1440": "1440×1000에서 document 폭 1440=1440, 장면 0이 3초 뒤에도 유지되고 장면 8을 수동으로 선택했습니다. CodeSidebar는 최종 위치에서 viewport 오른쪽에 맞고 내부 가로 넘침이 없으며 닫은 뒤 body scroll이 복구됩니다. Console 오류·경고는 0건입니다.",
+        "build": "ESLint를 통과했습니다. NODE_OPTIONS=--max-old-space-size=8192 npm run build는 8,105개 module과 정적 public route 2,120개를 만들었고 최대 RSS 6,281,297,920 bytes, swap 0이었습니다. Engine API를 no-script 등록한 뒤 static route 생성만 다시 실행해 no-script 본문 361편을 만들었고 최대 RSS 1,533,689,856 bytes, swap 0이었습니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-one-payload-build-validate-canonicalize-boundary"
     },
     {
       "route": "blockchain/prysm-epoch-processing",
@@ -5423,7 +5468,7 @@
     {
       "route": "blockchain/prysm-state-cache",
       "title": "Prysm 상태 재구성",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-state-cache.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-state-cache.tsx",
@@ -5480,11 +5525,10 @@
         "humanize": "직속 부모 지도, 질문 하나, target105 한 사례, 조회→소유권→metadata→ancestor→순서→replay→저장→신뢰→실패와 부모 지도 반환으로 다시 구성했습니다. 영문 직역 대신 state·block처럼 코드 식별에 필요한 용어만 유지했습니다.",
         "browser390": "390×844에서 document/body 폭 390=390, figure 354×808px, live 시각화 338.5×531.5px이며 가로 넘침이 없습니다. 6초 동안 장면 0 유지, ArrowRight 0→1, 수동 장면 5·7, reduced-motion에서 실행 animation 0건을 확인했습니다. JavaScript 비활성 production 경로는 HTTP 200, 폭 390=390이며 live 영역을 숨기고 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 표시합니다.",
         "browser1440": "1440×1000에서 document 폭 1440=1440, article 711px, live 시각화 664×743px이며 가로 넘침이 없습니다. 코드 대화상자의 초기 초점·body scroll lock·Tab trap·Escape 닫기·opener focus 반환과 console 오류 0건을 확인했습니다.",
-        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었습니다. 최대 RSS는 6,600,998,912 bytes이며 swap은 0입니다."
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었습니다. 최대 RSS는 6,600,998,912 bytes이며 swap은 0입니다.",
+        "production": "Commit 5e559a26의 GitHub Pages run 41034819898이 전체 감사·production build·공개 1,007편 실브라우저 검사와 배포를 통과했습니다. 공개 390×844 경로에서 문서 폭 390=390, 장면 0이 3초 뒤에도 유지되고 console 오류·경고 0건을 확인했습니다. JavaScript 비활성 공개 경로에는 정적 읽기 모드, 전체 본문, 확인 질문과 부모 지도 반환이 남습니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-one-block-root-cache-miss-ancestor-replay-trust-boundary"
     },
     {

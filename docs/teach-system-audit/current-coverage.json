@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 704,
-    "pending": 303,
+    "reviewed": 705,
+    "pending": 302,
     "untracked": 0,
-    "assignedPending": 261,
+    "assignedPending": 260,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -5295,7 +5295,7 @@
       "catalogIndex": 526,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -5305,17 +5305,17 @@
       "catalogIndex": 527,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
       "route": "blockchain/prysm-engine-api",
       "publicPath": "cs/blockchain/prysm-engine-api",
-      "title": "Prysm Engine API 연동 (CL → EL)",
+      "title": "Prysm Engine API",
       "catalogIndex": 528,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

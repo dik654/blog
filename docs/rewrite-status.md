@@ -3,7 +3,16 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Prysm Beacon API 로컬 검증 완료 (2026-10-30)
+### Prysm Engine API 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-engine-api`를 설명용 parent `H₀`, 8-byte build handle `P₁`, execution payload `E₁`, beacon block `B₁` 한 건으로 다시 썼습니다. `forkchoiceUpdated` build 요청, `getPayload` 회수, block 포함, `newPayload` 실행 판정과 선택된 execution head 반영을 여덟 장면에서 끝까지 추적합니다.
+- OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum Execution APIs v1.0.0-beta.7 commit `5aebdfdd45cadeb723be4bd45b4611b71c8b1c85`를 고정했습니다. Proposal payload ID cache, method version 선택, PayloadStatus와 optimistic·invalid 처리, FCU pointer ordering과 JWT `iat` 경계를 실제 source와 대조했습니다.
+- JSON-RPC 전송 성공, execution `VALID`, consensus의 canonical block 선택과 finality를 서로 다른 상태로 분리했습니다. `SYNCING`·`ACCEPTED`는 확정 전 상태이고, `INVALID`는 `latestValidHash`를 기준으로 branch를 정리합니다. Timeout·401·unknown payload ID는 PayloadStatus가 아니라 transport·Engine error 경계입니다.
+- 390×844에서 document 폭 390=390, 8개 장면 버튼은 각각 49.5px이고 가로 넘침이 없습니다. `forkchoiceUpdated`는 임의 글자 위치가 아니라 camelCase 경계에서만 줄을 바꿉니다. 장면 8 선택, 키보드 ArrowLeft로 8→7 이동, 2.5초 무자동 재생을 확인했습니다.
+- Reduced-motion에서는 실행 중 animation 0건이고 수동 장면 선택은 유지됩니다. 1,440×1,000에서도 장면 0이 자동으로 바뀌지 않으며, CodeSidebar의 최종 폭·본문 scroll 복구와 console 오류·경고 0건을 확인했습니다.
+- JavaScript 비활성 390×844 production preview에서 live 조작부 대신 정적 여덟 장면, 전체 본문, 확인 질문과 부모 지도 반환이 보입니다. ESLint와 production build를 통과했고, Engine API를 정적 본문 목록에 추가한 뒤 no-script 본문은 361편이 됐습니다. 공개 GitHub Pages 경로 검증만 남아 있습니다.
+
+### Prysm Beacon API 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-beacon-api`를 `GET /eth/v1/beacon/states/head/root` 한 요청으로 다시 썼습니다. Go ServeMux의 직접 REST 등록, JSON middleware, `StateRoot(head)`, `State(head)`, optimistic mode, state-derived block root, finality와 JSON 응답을 여덟 장면에서 같은 설명용 A·Sₐ·Bₐ로 추적합니다.
 - OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum Beacon APIs v4.0.0 commit `88fc9402c6a1821b6e9ae4e3b8ae0a22f1141203`을 고정했습니다. 기존 글의 REST→gRPC gateway 설명과 validator duty 혼합 구조를 제거하고, REST route와 gRPC service가 각각 `http.ServeMux`와 `grpc.Server`에 등록되는 실제 경계를 source로 대조했습니다.
@@ -11,10 +20,11 @@
 - 학습용 source excerpt에서 실제 구현에 없던 축약 helper 이름을 제거했습니다. 생략한 genesis·checkpoint·root·slot 분기는 명시하고, head 경로와 400·404·500 error mapping은 고정 commit의 실제 분기와 같은 순서로 보존했습니다.
 - 390×844에서 document 폭 390=390, figure 354×829.6px이며 8번 reorg 장면의 `HeadState B`와 미측정 표시가 보입니다. 조작 버튼은 49.5px이고 reduced-motion의 실행 중 animation은 0건입니다. 코드 패널의 첫 초점, 본문 스크롤 잠금, Tab trap, Escape 닫기와 opener focus 반환도 확인했습니다.
 - 1,440×1,000에서 document 폭 1,440=1,440, figure 711×978.7px이며 6.2초 동안 장면 0이 유지되고 console 오류는 0건입니다. Production build는 8,106개 module, 정적 public route 2,120개와 no-script 본문 360편을 만들었고 최대 RSS는 6,056,099,840 bytes, swap은 0입니다.
-- JavaScript 비활성 390×844 production preview에서 trailing slash 공개 경로가 HTTP 200으로 열리고, live 조작부 대신 정적 여덟 장면·전체 본문·확인 질문·부모 지도 반환이 순서대로 보이는 것을 확인했습니다. 공개 GitHub Pages 경로 검증만 남아 있습니다.
+- JavaScript 비활성 390×844 production preview에서 trailing slash 경로가 HTTP 200으로 열리고, live 조작부 대신 정적 여덟 장면·전체 본문·확인 질문·부모 지도 반환이 순서대로 보이는 것을 확인했습니다.
 - 직전 `b34fc978`의 Pages run `41031126431`은 `teach-coverage` 장부가 최신 상태와 어긋나 build 전에 중단됐습니다. 이번 Beacon API 장부와 함께 coverage를 다시 생성한 뒤 상태 재구성 변경도 함께 재배포합니다.
+- Commit `5e559a26`의 Pages run `41034819898`이 전체 감사·production build·공개 브라우저 검사를 통과했습니다. 공개 390×844에서 폭 390=390, 3초 무자동 재생과 console 오류·경고 0건을 확인했고, JavaScript 비활성 공개 경로에서도 정적 전체 본문을 다시 확인했습니다.
 
-### Prysm 상태 재구성 로컬 검증 완료 (2026-10-30)
+### Prysm 상태 재구성 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-state-cache`를 target block root `0x105…`의 post-state를 찾는 한 호출로 다시 썼습니다. Hot LRU 32·epoch-boundary FIFO 8·DB full-state 조회, target summary, 같은 branch의 ancestor state 100, block `[102, 105]` replay와 신뢰 경계를 여덟 장면으로 연결했습니다.
 - OffchainLabs Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 Ethereum consensus-specs commit `aa16bb4c156184e9548a997d53efaf2a228a6304`를 고정했습니다. `StateSummary`에는 target slot·root만 있고 anchor나 replay path가 없으며, `blocksAncestryQuery`가 descendant→parent로 모은 배열을 reverse해 과거→현재 순서로 반환함을 source로 대조했습니다.
@@ -22,7 +32,8 @@
 - `SaveState`는 epoch-start state를 epoch FIFO에 먼저, persistent summary를 다음, hot cache를 마지막에 넣습니다. State-generation replay는 이미 검증되어 저장된 block을 전제로 signature와 post-state root 비교를 반복하지 않습니다. Cache hit를 canonicality·head·finality로 확대하지 않았습니다.
 - 1,440×1,000에서 document 폭 1,440=1,440, article 711px, live 시각화 664×743px이며 가로 넘침과 console 오류가 없습니다. 390×844에서는 document/body 폭 390=390, figure 354×808px, live 시각화 338.5×531.5px이며 전체 상태 지도와 조작부가 한 화면 높이에 들어옵니다.
 - 6초 동안 장면 0이 유지되고 ArrowRight로 0→1, 수동으로 순서·Replay·신뢰 경계 장면을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건입니다. Source dialog의 첫 초점, body scroll lock, Tab trap, Escape 닫기와 opener focus 반환도 확인했습니다.
-- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사, ESLint와 `git diff --check`를 통과했습니다. Production build는 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었고 최대 RSS는 6,600,998,912 bytes, swap은 0입니다. JavaScript 비활성 390×844 경로도 HTTP 200, 가로 넘침 0, live 영역 숨김, 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 확인했습니다. 전수 장부는 검토 703편·미검토 304편이며 공개 배포 검증만 남아 있습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사, ESLint와 `git diff --check`를 통과했습니다. Production build는 8,103개 module, 정적 public route 2,120개와 no-script 본문 359편을 만들었고 최대 RSS는 6,600,998,912 bytes, swap은 0입니다. JavaScript 비활성 390×844 경로도 HTTP 200, 가로 넘침 0, live 영역 숨김, 정적 8장면·전체 본문·확인 질문·부모 지도 반환을 확인했습니다.
+- Commit `5e559a26`의 Pages run `41034819898`이 전체 감사·production build·공개 브라우저 검사를 통과했습니다. 공개 390×844에서 폭 390=390, 3초 무자동 재생과 console 오류·경고 0건을 확인했고, JavaScript 비활성 공개 경로에서도 정적 전체 본문을 다시 확인했습니다.
 
 ### Prysm BeaconDB 공개 검증 완료 (2026-10-30)
 
