@@ -1,37 +1,38 @@
-// beacon-chain/db/kv/kv.go — Prysm v5.x
+// OffchainLabs Prysm v7.3.1 @ 96d418cd964b083e37519a9df274030a1beac7db
+// beacon-chain/db/kv/kv.go — focused source excerpt
 
-// Store is the BoltDB-backed key-value store for beacon chain data.
+// Store defines an implementation of the Prysm Database interface
+// using BoltDB as the underlying persistent kv-store for Ethereum Beacon Nodes.
 type Store struct {
-	db           *bolt.DB
-	databasePath string
-	blockCache   *ristretto.Cache
-	stateCache   *ristretto.Cache
-	stateSummary *cache.StateSummaryCache
+	db                  *bolt.DB
+	databasePath        string
+	blockCache          *ristretto.Cache[string, interfaces.ReadOnlySignedBeaconBlock]
+	validatorEntryCache *ristretto.Cache[[]byte, *ethpb.Validator]
+	stateSummaryCache   *stateSummaryCache
+	stateDiffCache      *stateDiffCache
+	archiveStatus       *ArchiveStatus
+	archiveLock         sync.RWMutex
+	ctx                 context.Context
 }
 
-// NewKVStore initializes a new BoltDB-backed KV store.
-func NewKVStore(ctx context.Context, dirPath string) (*Store, error) {
-	db, err := bolt.Open(
-		path.Join(dirPath, "beaconchain.db"),
-		params.BeaconIoConfig().ReadWritePermissions,
-		&bolt.Options{Timeout: 1 * time.Second},
-	)
-	if err != nil {
-		return nil, err
-	}
-	// Create buckets if not exist
-	if err := db.Update(func(tx *bolt.Tx) error {
-		for _, bucket := range Buckets {
-			if _, err := tx.CreateBucketIfNotExists(bucket); err != nil {
-				return err
-			}
-		}
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-	kv := &Store{db: db, databasePath: dirPath}
-	kv.blockCache, _ = ristretto.NewCache(&ristretto.Config{MaxCost: 1 << 23})
-	kv.stateCache, _ = ristretto.NewCache(&ristretto.Config{MaxCost: 1 << 23})
-	return kv, nil
+var Buckets = [][]byte{
+	blocksBucket,
+	stateBucket,
+	chainMetadataBucket,
+	checkpointBucket,
+	stateSummaryBucket,
+	stateValidatorsBucket,
+	stateDiffBucket,
+	hotStateSnapshotsBucket,
+	archiveResumeSnapshotsBucket,
+	// Indices buckets.
+	blockSlotIndicesBucket,
+	stateSlotIndicesBucket,
+	blockParentRootIndicesBucket,
+	finalizedBlockRootsIndexBucket,
+	blockRootValidatorHashesBucket,
+	// Migrations.
+	migrationsBucket,
+	executionPayloadEnvelopesBucket,
+	executionPayloadEnvelopeBlockHashBucket,
 }

@@ -4580,42 +4580,73 @@
     {
       "route": "blockchain/prysm-beacon-db",
       "title": "Prysm BeaconDB (BoltDB/KV)",
-      "status": "unreviewed",
+      "status": "rewritten-local-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-beacon-db.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-beacon-db.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-db/BlockStateOps.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-db/KvSchema.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-db/Overview.tsx",
-        "src/pages/articles/ethereum/prysm-beacon-db/PruningArchival.tsx",
-        "src/pages/articles/ethereum/prysm-storage-viz.tsx"
+        "src/pages/articles/ethereum/prysm-beacon-db/ModernArticle.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-db/PrysmBeaconDBLocator.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-db/viz/PrysmBeaconDBFlowViz.tsx",
+        "src/pages/articles/ethereum/prysm-beacon-db/codeRefsBeaconDB.ts",
+        "src/pages/articles/ethereum/prysm-beacon-db/fileTrees.ts",
+        "src/content/prysm-beacon-db-learning-tree.ts"
       ],
       "candidateSignals": {
-        "stageMarkers": 0,
-        "predictionPointers": 0,
-        "assumptionMarkers": 0,
-        "sourceButtons": 6,
+        "stageMarkers": 8,
+        "predictionPointers": 4,
+        "assumptionMarkers": 4,
+        "sourceButtons": 7,
         "headings": [
-          "\n        Save 성공은 primary·index·checkpoint가 durable commit 뒤 함께 보인다는\n        뜻이어야 한다\n      ",
-          "\n        Primary key는 identity를, secondary index는 조회 경로를 소유한다\n      ",
-          "\n        BeaconDB는 객체를 저장하는 폴더가 아니라 root·index·checkpoint를 한\n        snapshot으로 맞추는 장부다\n      ",
-          "\n        Pruning은 finality fence와 복구 가능성을 확인한 뒤 primary와 index를\n        함께 지운다\n      "
+          "어디까지 한 번에 저장되는가",
+          "입력",
+          "준비",
+          "Block commit",
+          "조회",
+          "별도 commit",
+          "Cache 경계",
+          "Prune",
+          "실패 경계",
+          "근거",
+          "확인 질문",
+          "부모 지도에 돌려줄 사실"
         ]
       },
-      "issues": [],
-      "fixture": null,
-      "stageEvidence": {},
-      "sourceEvidence": [],
+      "issues": [
+        "기존 글은 BeaconDB 전체가 primary·index·checkpoint를 한 snapshot으로 commit하는 것처럼 설명했지만 고정한 Prysm v7.3.1 source에서 block·state·checkpoint는 서로 다른 db.Update를 사용합니다.",
+        "기존 도식은 root primary record와 slot·parent secondary index의 조회 책임을 구체적인 경쟁 block 사례로 추적하지 않아 같은 slot의 후보 두 개가 보존되는 이유가 드러나지 않았습니다.",
+        "Cache publication과 historical pruning을 durable DB transaction과 같은 경계로 표현해 callback error·context cancellation·Gloas payload envelope의 미검증 경계를 가렸습니다."
+      ],
+      "fixture": "설명용 slot 64에 같은 parent를 가진 Block A root 0x8a…31과 Block B root 0x2f…b9가 들어옵니다. 축약 root와 slot은 저장 모양을 위한 값이며 실제 mainnet block hash나 처리량 측정값이 아닙니다.",
+      "stageEvidence": {
+        "whole": "Block primary, slot·parent index, state, checkpoint, process-local cache와 historical pruning을 한 지도에서 서로 다른 transaction·lifecycle 경계로 먼저 나눕니다.",
+        "blocks": "Root는 encoded block 원본의 identity이고 slot은 같은 시각의 후보 root 목록을 찾는 조회 축이므로 slot 64 index는 A와 B를 모두 보존할 수 있습니다.",
+        "prepare": "prepareBlockBatch는 root·index value·encoded bytes를 write transaction 밖에서 계산해 single-writer callback의 작업 범위를 줄입니다.",
+        "commit": "SaveROBlocks의 한 db.Update는 blocks bucket의 root→bytes와 slot·parent index만 함께 갱신하며 callback error이면 이 DB 변경은 commit되지 않습니다.",
+        "reads": "Root 조회는 primary record 한 건을 찾고 BlockRootsBySlot은 한 db.View에서 root 목록을 반환합니다. 이 목록은 fork-choice의 canonical head 판정이 아닙니다.",
+        "separate": "SaveStates와 SaveFinalizedCheckpoint는 각각 자체 db.Update를 사용하므로 block transaction과 전역 all-or-none commit을 만들지 않습니다.",
+        "cache": "SaveROBlocks는 db.Update 호출 뒤 updated entry를 cache에 넣지만 현재 source는 err 검사 전 cache loop에 들어갈 수 있어 cache-only visibility 여부를 fault injection 없이 단정하지 않습니다.",
+        "prune": "DeleteHistoricalDataBeforeSlot은 선택한 block·state·summary·관련 index를 write transaction에서 지우지만 payload hash key의 Gloas envelope와 context cancellation 경계는 별도 검증 과제입니다."
+      },
+      "sourceEvidence": [
+        "OffchainLabs Prysm v7.3.1 commit 96d418cd964b083e37519a9df274030a1beac7db의 SaveROBlocks·prepareBlockBatch·BlockRootsBySlot·SaveStates·SaveFinalizedCheckpoint·DeleteHistoricalDataBeforeSlot 구현",
+        "etcd-io bbolt v1.4.3의 View·Update callback transaction contract",
+        "고정한 Prysm source의 block cache updated flag와 Gloas execution payload envelope pruning TODO"
+      ],
       "verification": {
-        "substantiveReading": "pending",
-        "arithmetic": "pending",
-        "humanize": "pending",
-        "browser390": "pending",
-        "browser1440": "pending"
+        "substantiveReading": "기존 글과 고정한 Prysm·bbolt source를 다시 읽어 경쟁 block 입력→transaction 밖 준비→block·index commit→root/slot 조회→별도 state/checkpoint→cache→prune의 한 사례로 전면 재작성했습니다.",
+        "arithmetic": "Block 한 건은 primary mapping 1개와 slot·parent secondary mapping 2개, 합계 3개 logical mapping을 block transaction에서 갱신합니다. 이는 bbolt page write나 fsync가 정확히 세 번이라는 뜻이 아닙니다.",
+        "humanize": "직속 부모와 현재 영역, 질문 하나, slot 64의 경쟁 block 두 개, 여덟 장면, 실제 transaction·cache·pruning 경계, source panel, 실패 표와 부모 지도 반환으로 구성했습니다. 대상 환경의 backup·disk·retention 운영 판단은 별도 실무 글로 분리했습니다.",
+        "browser390": "390×844 local 렌더에서 시각화 높이를 1,357px에서 822.6px로 줄여 전체 figure가 한 viewport 높이 안에 들어오게 했습니다. 모바일 지도는 핵심 상태를 3·4열로 유지하고 선택 장면의 자세한 설명을 한 곳에 표시합니다. 문서 가로 넘침과 console error는 0입니다.",
+        "browser1440": "1,440×1,000 local production 렌더에서 전체·Block commit·조회·Cache 장면의 강조와 설명이 문서 폭 안에 들어오고 가로 넘침과 console error가 없음을 확인했습니다.",
+        "interaction": "5.5초 동안 장면 0이 자동 진행되지 않았고 ArrowRight와 장면 선택으로 0→1→4→5→7을 확인했습니다. Reduced-motion에서는 실행 중 animation 0건이며 수동 이동은 유지됩니다.",
+        "codeSidebar": "390×844에서 Batch 준비 source panel을 열어 실제 path·한글 설명·강조 줄을 확인했습니다. Dialog 첫 초점, body scroll lock, Tab 순환, Escape 닫기와 원래 버튼 초점 복귀가 동작합니다.",
+        "noJavaScript": "JavaScript 비활성 390×844 production 경로에서 HTTP 200, visible live 영역·button 0개, 정적 여덟 장면, 전체 본문·근거·확인 질문·부모 지도 반환과 가로 넘침 0을 확인했습니다.",
+        "build": "NODE_OPTIONS=--max-old-space-size=8192 npm run build를 통과해 8,098개 module과 정적 public route 2,120개를 만들었습니다. BeaconDB를 정적 읽기 목록에 등록한 뒤 no-script 본문은 358편이며 최대 RSS는 6,442,795,008 bytes, swap은 0입니다."
       },
       "remaining": [
-        "실제 본문 읽기 및 teach-system 층위별 근거 기록"
-      ]
+        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
+      ],
+      "reviewDisposition": "rewrite-as-competing-block-primary-index-transaction-cache-pruning-boundary"
     },
     {
       "route": "blockchain/prysm-beacon-state",
@@ -5387,7 +5418,7 @@
     {
       "route": "blockchain/prysm-sync",
       "title": "Prysm 동기화",
-      "status": "rewritten-local-verified",
+      "status": "rewritten-production-verified",
       "publicEntry": "src/pages/articles/ethereum/prysm-sync.tsx",
       "bodyFiles": [
         "src/pages/articles/ethereum/prysm-sync.tsx",
@@ -5450,9 +5481,7 @@
         "noJavaScript": "JavaScript 비활성 390×844 정적 경로에서 HTTP 200, 정적 여덟 장면, 전체 본문·공식 근거·확인 질문·부모 지도 반환이 순서대로 남고 live 장면은 숨겨짐을 확인했습니다. 문서와 body의 가로 넘침은 0입니다.",
         "build": "NODE_OPTIONS=--max-old-space-size=8192 /usr/bin/time -l npm run build를 통과해 8,098개 module과 정적 public route 2,120개를 만들었습니다. Sync route를 정적 읽기 목록에 등록한 뒤 no-script 본문은 357편이고 최대 RSS는 6,616,989,696 bytes, swap은 0입니다."
       },
-      "remaining": [
-        "GitHub Pages 배포와 공개 경로의 desktop·mobile·reduced-motion·JavaScript 비활성 상태 재검증"
-      ],
+      "remaining": [],
       "reviewDisposition": "rewrite-as-checkpoint-origin-two-phase-range-lookahead-chain-owner-gossip-handoff-boundary"
     },
     {

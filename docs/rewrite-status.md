@@ -3,7 +3,17 @@
 이 문서는 대화가 압축되거나 작업자가 바뀌어도 현재 범위와 완료 근거를 잃지 않기 위한 ledger다.
 완료 표시는 `blog-rewrite-contract.md`의 Definition of Done을 모두 확인한 뒤에만 바꾼다.
 
-### Prysm 동기화 로컬 검증 완료 (2026-10-30)
+### Prysm BeaconDB 로컬 검증 완료 (2026-10-30)
+
+- `blockchain/prysm-beacon-db`를 설명용 slot 64의 경쟁 Block A `0x8a…31`과 Block B `0x2f…b9`가 저장·조회·정리되는 한 사례로 다시 썼습니다. 입력, transaction 밖 준비, block·index commit, root/slot 조회, 별도 state/checkpoint commit, cache 경계와 historical pruning을 여덟 장면으로 연결했습니다.
+- Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`과 bbolt v1.4.3을 고정했습니다. `SaveROBlocks` 한 transaction에 들어가는 것은 block 원본과 slot·parent index이며, `SaveStates`와 `SaveFinalizedCheckpoint`는 각자 다른 `db.Update`를 사용한다는 사실을 source excerpt로 대조했습니다.
+- Block 한 건은 primary mapping 1개와 secondary mapping 2개, 합계 3개 logical mapping을 바꿉니다. 이 값은 disk page write나 fsync 횟수가 아닙니다. `BlockRootsBySlot(64)`은 두 후보 root를 반환할 수 있지만 canonical head를 고르지는 않습니다.
+- 현재 source는 `db.Update` error를 cache loop보다 먼저 검사하지 않는 경로와 pruning callback의 context 취소 시 `nil` 반환 경로를 가집니다. 실제 cache-only read와 부분 prune 여부는 미측정으로 남기고 fault-injection test 없이 확정하지 않았습니다. Gloas payload envelope도 별도 pruning 과제입니다.
+- 1,440×1,000에서 5.5초 무자동 재생, 장면 0→1→4→5→7, 문서 가로 넘침과 console error 0을 확인했습니다. 390×844에서는 시각화 높이를 1,357px에서 822.6px로 줄여 한 viewport 높이 안에 들어오게 했고, 핵심 상태 지도·선택 장면 설명·조작부를 함께 유지했습니다.
+- Reduced-motion에서는 실행 중 animation이 0건이고 수동 이동은 유지됩니다. Source sidebar는 dialog 첫 초점, body scroll lock, Tab 순환, Escape 닫기와 원래 버튼 초점 복귀를 확인했습니다. JavaScript 비활성 390×844 production 경로에는 visible live 영역·button 없이 정적 여덟 장면, 전체 본문·근거·확인 질문·부모 지도 반환이 남습니다.
+- 전체 build는 8,098개 module과 정적 public route 2,120개, no-script 본문 358편을 만들었고 최대 RSS는 6,442,795,008 bytes, swap은 0입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+
+### Prysm 동기화 공개 검증 완료 (2026-10-30)
 
 - `blockchain/prysm-sync`를 checkpoint origin slot 96, local HeadSlot 100, peer finalized target 128, local current slot 140 한 사례로 다시 썼습니다. Checkpoint anchor, finalized 구간, current 구간, 네 lookahead range, blockchain receiver와 live gossip 전환을 여덟 장면에서 같은 식별자로 추적합니다.
 - Ethereum consensus-specs v1.7.0-beta.4 commit `aa16bb4c156184e9548a997d53efaf2a228a6304`와 Prysm v7.3.1 commit `96d418cd964b083e37519a9df274030a1beac7db`을 고정했습니다. Checkpoint state·block의 내부 짝 확인은 provider 신뢰와 다르고, queue의 `stateSent`는 blockchain service의 HeadSlot 변경과 다르다는 경계를 실제 source excerpt로 대조했습니다.
@@ -12,7 +22,8 @@
 - 첫 모바일 검사에서 live 장면 높이가 883px로 viewport보다 길어 조작부가 아래로 밀렸습니다. 장면 내용만 628px 내부 영역에서 스크롤하고 조작부는 화면 아래에 고정되도록 고쳤습니다. 내부 scroll 191px 끝에서 설명 마지막 줄까지 보이고, 조작부 bottom은 844.5px로 유지됩니다.
 - Reduced-motion에서는 장면 0, 실행 중 animation 0건과 재생 비활성화를 확인했습니다. JavaScript 비활성 390×844 정적 경로는 HTTP 200이며 live 영역 없이 정적 여덟 장면, 전체 본문, 근거와 부모 지도 반환을 표시합니다.
 - 공통 `CodeSidebar`에는 dialog 의미, 첫 초점, Tab 초점 순환, `Escape` 닫기, 본문 스크롤 잠금과 원래 버튼으로의 초점 복귀를 추가했습니다. Checkpoint origin source에서 패널 가로 넘침 0과 실제 v7.3.1 경로를 확인했습니다.
-- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 최종 build는 8,098개 module과 정적 public route 2,120개, no-script 본문 357편을 만들었고 최대 RSS는 6,616,989,696 bytes, swap은 0입니다. 공개 배포와 공개 경로 재검증은 남아 있습니다.
+- 학습 계약·지식 그래프·수식·계산·의사코드·본문·topology·읽기 순서·문장 호흡·한국어·용어·architecture-flow·coverage·runtime 감사를 통과했습니다. 최종 build는 8,098개 module과 정적 public route 2,120개, no-script 본문 357편을 만들었고 최대 RSS는 6,616,989,696 bytes, swap은 0입니다.
+- Commit `cbb0879a`의 GitHub Pages run `41022423596`이 전체 정적 감사, production build, 공개 1,007편의 데스크톱·모바일 실브라우저 검사와 배포를 통과했습니다. 공개 경로에서 6초 무자동 재생, 장면 0→1, 390×844 가로 넘침 0, console error 0, reduced-motion 실행 animation 0건과 JavaScript 비활성 전체 본문을 다시 확인했습니다. 현재 상태는 `rewritten-production-verified`입니다.
 
 ### Prysm Finality 공개 검증 완료 (2026-10-30)
 
