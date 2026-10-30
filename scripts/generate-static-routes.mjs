@@ -416,6 +416,7 @@ const noScriptArticleRoutes = new Set([
   "blockchain/curve-stable",
   "blockchain/cosmos-sdk",
   "blockchain/cometbft",
+  "blockchain/cometbft-types",
   "blockchain/da-theory",
   "blockchain/da-validation",
   "blockchain/railgun",

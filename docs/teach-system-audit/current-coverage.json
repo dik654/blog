@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "summary": {
     "publicArticles": 1007,
-    "reviewed": 721,
-    "pending": 286,
+    "reviewed": 722,
+    "pending": 285,
     "untracked": 0,
-    "assignedPending": 244,
+    "assignedPending": 243,
     "postCheckpointPending": 42,
     "latestHistoricalClaim": 395,
     "uniqueCheckpointReviewed": 393,
@@ -4595,7 +4595,7 @@
       "catalogIndex": 456,
       "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "rewritten-local-verified",
+      "recordedStatus": "rewritten-production-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {
@@ -4613,9 +4613,9 @@
       "publicPath": "cs/blockchain/cometbft-types",
       "title": "CometBFT 타입: Block · Vote · Validator",
       "catalogIndex": 458,
-      "status": "pending",
+      "status": "reviewed",
       "provenance": "assignment:chains",
-      "recordedStatus": "unreviewed",
+      "recordedStatus": "rewritten-local-verified",
       "evidence": "docs/teach-system-audit/chains.json"
     },
     {

@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import CometBFTCoreViz, { EvidenceLedgerViz } from "../cometbft-core-viz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -11,18 +10,16 @@ export default function ValidatorSet({
 }) {
   return (
     <section id="validator-set" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">ValidatorSet은 검증 weight snapshot이고 proposer priority는 별도 scheduler state다</h2>
+      <h2 className="mb-6 text-2xl font-bold">Commit의 power와 다음 proposer를 고르는 priority는 다릅니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Validator를 이루는 field는 address·public key·voting power, 그리고 proposer priority입니다. 이 중 public key와
-          power는 vote를 검증하고 quorum weight를 계산하는 합의 입력입니다. 반면 proposer priority는 다음 proposer를 고르는 누적 scheduler
-          값이라 block certificate의 의미와 섞으면 안 됩니다.
+          높이 41의 공개키와 voting power는 A·B의 서명을 검증하고 75/100을 계산하는 역사적 근거입니다. 반면 proposer priority는
+          다음 round의 제안자를 고르기 위해 계속 바뀌는 scheduler 값입니다. A의 priority가 가장 높다는 사실은 B41이 유효하거나 결정됐다는 증거가 아닙니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="Validator · ValidatorSet struct" onClick={() => onCodeRef("validator-struct", codeRefs["validator-struct"])} />
+        <CodeViewButton label="실제 Validator · ValidatorSet" onClick={() => onCodeRef("validator-set", codeRefs["validator-set"])} />
       </div>
-      <CometBFTCoreViz mode="validators" />
       <ExplainedFormula
         question="Voting power가 큰 validator에게 비례적으로 proposal 기회를 주면서 연속 독점을 막으려면 어떻게 갱신할까요?"
         idea={<>각 round에 모든 priority에 자신의 power를 더하고 최고 priority를 선택한 뒤, 선택자에게 전체 power만큼 비용을 부과합니다. 여러 round를 보면 제안 횟수가 weight에 가까워집니다.</>}
@@ -39,11 +36,11 @@ export default function ValidatorSet({
           { symbol: "W", name: "Total power", description: "Validator set의 total voting power입니다." },
           { symbol: "j", name: "Selected proposer", description: "갱신 뒤 priority가 가장 높은 validator입니다." },
         ]}
-        assumptions={["동일 validator set snapshot과 deterministic tie-break를 사용합니다.", "실제 구현의 normalization·rescaling·set update는 v0.40.0 source를 함께 확인합니다.", "이 식은 proposer scheduling이며 consensus safety를 단독으로 증명하지 않습니다."]}
-        interpretation="Power가 3:1이면 장기적으로 앞 validator가 더 자주 선택되지만, 선택할 때 W를 빼므로 매 round 같은 validator가 자동으로 독점하지 않습니다."
+        assumptions={["동일 validator set snapshot과 deterministic tie-break를 사용합니다.", "실제 v0.40.0 구현은 이 핵심 step 전에 priority 범위를 rescale하고 평균을 중심으로 옮깁니다.", "이 식은 proposer scheduling이며 consensus safety를 단독으로 증명하지 않습니다."]}
+        interpretation="Power가 3:1이면 장기적으로 앞 validator가 더 자주 선택되지만, 선택할 때 W를 빼므로 매 round 같은 validator가 자동으로 독점하지 않습니다. 아래 실제 코드에서 rescale·centering·overflow guard도 함께 확인할 수 있습니다."
       />
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="IncrementProposerPriority()" onClick={() => onCodeRef("proposer-priority", codeRefs["proposer-priority"])} />
+        <CodeViewButton label="실제 proposer priority 갱신" onClick={() => onCodeRef("proposer-priority", codeRefs["proposer-priority"])} />
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>Validator update에는 높이 지연이 있습니다</h3>
@@ -66,10 +63,9 @@ export default function ValidatorSet({
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="DuplicateVoteEvidence struct" onClick={() => onCodeRef("evidence-struct", codeRefs["evidence-struct"])} />
-        <CodeViewButton label="Evidence.Verify()" onClick={() => onCodeRef("evidence-verify", codeRefs["evidence-verify"])} />
+        <CodeViewButton label="실제 DuplicateVoteEvidence" onClick={() => onCodeRef("evidence-struct", codeRefs["evidence-struct"])} />
+        <CodeViewButton label="실제 VerifyDuplicateVote()" onClick={() => onCodeRef("evidence-verify", codeRefs["evidence-verify"])} />
       </div>
-      <EvidenceLedgerViz />
       <div id="paper-cometbft-evidence-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
         <p className="text-xs font-bold text-primary">공식 규격 읽기 · evidence accountability</p>
         <p className="mt-2 text-sm font-semibold">CometBFT Evidence Specification</p>
@@ -77,7 +73,7 @@ export default function ValidatorSet({
             이 규격은 Byzantine 행동을 객관적으로 검증하고 gossip·commit해 application까지 전달하는 문제를 다룹니다. 다만 설명하는 범위는 detection과
             on-chain delivery까지고 경제적 penalty의 크기나 모든 공격의 예방은 보장하지 않습니다.
           </p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/consensus/evidence.md" target="_blank" rel="noreferrer">v0.40.0 evidence 규격 보기</a>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/consensus/evidence.md" target="_blank" rel="noreferrer">고정 commit의 evidence 규격 보기</a>
       </div>
     </section>
   );

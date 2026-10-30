@@ -1,45 +1,45 @@
 import { Link } from "react-router-dom";
 import ContentBoundary from "@/components/articles/content-boundary";
-import CometBFTCoreViz from "../cometbft-core-viz";
+import CosmosCoreLocator from "../CosmosCoreLocator";
+import CometBFTTypesEvidenceViz from "./viz/CometBFTTypesEvidenceViz";
 export default function Overview() {
   return (
     <section id="overview" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">CometBFT type은 메모리 구조체가 아니라 합의 증거의 wire 계약이다</h2>
+      <CosmosCoreLocator
+        currentSlug="cometbft-types"
+        region="결정 증거의 데이터 구조"
+        question="서로 다른 node는 어떤 bytes와 서명을 받아야 같은 block이 결정됐다고 다시 검증할 수 있을까요?"
+      />
+      <h2 className="mb-6 text-2xl font-bold">한 block의 identity와 서명과 voting power를 끝까지 추적합니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p className="text-lg leading-8">
-          서로 다른 validator가 같은 block을 결정했다고 말하려면 “block bytes가 비슷하다”로는 부족합니다. 무엇을 hash했고 어느
-          chain·height·round·phase에 누가 서명했는지, 그리고 그 서명 power가 어떤 validator snapshot에서 threshold를 넘었는지까지 재현할 수
-          있어야 같은 block이라고 말할 수 있습니다. CometBFT의 Block·Vote·Commit·ValidatorSet은 바로 이 검증 문장을 bytes로 보존하는
-          protocol type입니다.
+          높이 41에서 A는 power 40, B는 35, C는 25를 가졌다고 하겠습니다. 제안된 block B41의 Header hash가
+          HB41이고 A와 B가 같은 round의 HB41에 precommit하면 signed power는 75입니다. 이 글은 이 한 사례가
+          <strong> Block → Header hash → canonical vote → Commit → Evidence</strong>로 바뀌는 과정을 따라갑니다.
         </p>
         <p>
-          이 글은 <strong>header commitment → canonical vote → voting-power commit → evidence</strong> 순서로
-          객체를 읽습니다. Consensus가 이 증거를 언제 만드는지는 <Link to="/cs/blockchain/cometbft-consensus">합의 엔진</Link>,
-          application state가 AppHash가 되는 과정은 <Link to="/cs/blockchain/cometbft-abci">ABCI++</Link>, quorum
-          intersection의 일반 증명은 <Link to="/cs/blockchain/bft-theory">BFT 이론</Link>이 소유합니다.
+          Consensus가 이 객체를 언제 만드는지는 <Link to="/cs/blockchain/cometbft-consensus">합의 엔진</Link>이,
+          application state가 AppHash가 되는 과정은 <Link to="/cs/blockchain/cometbft-abci">ABCI++</Link>가 다룹니다.
+          여기서는 합의 알고리즘 전체를 다시 설명하지 않고, 이미 받은 객체를 제삼자가 검증할 수 있게 만드는 필드와 계산만 봅니다.
         </p>
       </div>
       <ContentBoundary article="cometbft-types" />
-      <CometBFTCoreViz mode="types" />
+      <CometBFTTypesEvidenceViz />
       <div className="prose prose-neutral max-w-none dark:prose-invert">
-        <h3>먼저 runtime state와 wire evidence를 구분합니다</h3>
+        <h3>그림에서 먼저 구분할 두 가지</h3>
         <p>
-          <code>RoundState</code>나 proposer priority처럼 node가 다음 동작을 고르는 runtime state와, Block·Vote처럼
-          peer에게 보내고 disk에 남기는 wire object는 같은 것이 아닙니다. 또한 Protobuf schema가 있다는 사실만으로
-          signature가 안전해지는 것도 아닙니다. 서명에는 별도의 canonical representation과 chain domain이 필요하고,
-          검증자는 선택한 release의 schema·validation rule·sign-byte rule을 한 snapshot으로 맞춰야 합니다.
+          Block·Vote·Commit은 peer에게 전송하고 저장한 뒤 다른 node가 다시 검증하는 객체입니다. 반면 <code>RoundState</code>나
+          proposer priority는 node가 다음 동작을 고르기 위해 갱신하는 실행 상태입니다. 같은 Go package에 있어도 역할과 권위가 다릅니다.
         </p>
         <p>
-          여기서 hash는 임의 길이 bytes를 짧은 digest로 바꾸는 함수입니다. collision resistance는 서로 다른 두 입력이 같은 digest를 갖는 경우를
-          현실적으로 찾기 어렵다는 전제입니다. Digital signature는 private key 보유자가 특정 bytes에 서명했음을 public key로 확인해 줄 뿐입니다. 그
-          내용이 참이라거나 signer가 정직하다는 뜻은 아닙니다. Validator는 이런 vote를 내는 참여 node이며 voting power는 각 validator 표의
-          weight입니다.
+          또 Vote 구조체 전체를 그대로 서명하지 않습니다. ChainID·height·round·type·BlockID를 canonical form으로 만든 뒤 그 bytes에
+          서명합니다. Protobuf 필드가 존재한다는 사실과, 특정 맥락에 묶인 유효한 서명이라는 사실은 별개의 검증 단계입니다.
         </p>
         <h3>이 글의 release 기준</h3>
         <p>
-          아래 field와 lifecycle은 <code>v0.40.0</code> tag의 공식 specification과 source를 기준으로 설명합니다.
-          Production 분석에서는 binary semver와 git SHA를 다시 기록해야 하며, moving <code>main</code>의 field나
-          아직 배포하지 않은 feature를 현재 chain의 동작으로 일반화하지 않습니다.
+          필드와 검증 함수는 <code>v0.40.0</code>의 content commit
+          <code>0880b4d378f347ab16e54ec677ff50d803f37d62</code>로 고정했습니다. 아래 코드 패널은 이 commit의 실제 연속 구간을
+          옮긴 것이며, 이전에 쓰던 학습용 축약 구현은 공식 근거로 사용하지 않습니다.
         </p>
       </div>
       <div id="paper-cometbft-data-structures-v040" className="not-prose my-8 scroll-mt-24 border-l border-primary/50 pl-4">
@@ -49,7 +49,7 @@ export default function Overview() {
           여기서 걸리는 지점은 block·vote·commit·validator·evidence의 field와 validation rule을 같은 release에서 고정하는 일입니다.
           규격이 정의하는 범위는 wire object와 검증 관계까지이고 application business validity나 모든 chain의 validator 정책은 그 바깥입니다.
         </p>
-        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/v0.40.0/spec/core/data_structures.md" target="_blank" rel="noreferrer">v0.40.0 규격 보기</a>
+        <a className="mt-3 inline-block text-sm font-medium text-primary hover:underline" href="https://github.com/cometbft/cometbft/blob/0880b4d378f347ab16e54ec677ff50d803f37d62/spec/core/data_structures.md" target="_blank" rel="noreferrer">고정 commit의 규격 보기</a>
       </div>
     </section>
   );

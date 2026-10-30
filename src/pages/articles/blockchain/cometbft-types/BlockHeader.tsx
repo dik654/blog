@@ -1,5 +1,4 @@
 import ExplainedFormula from "@/components/ui/explained-formula";
-import CometBFTCoreViz from "../cometbft-core-viz";
 import { CodeViewButton } from "@/components/code";
 import type { CodeRef } from "@/components/code/types";
 import { codeRefs } from "./codeRefs";
@@ -11,22 +10,19 @@ export default function BlockHeader({
 }) {
   return (
     <section id="block-header" className="mb-16 scroll-mt-20">
-      <h2 className="mb-6 text-2xl font-bold">Header는 현재 payload와 이전 실행 결과를 한 block identity에 묶는다</h2>
+      <h2 className="mb-6 text-2xl font-bold">B41의 Header hash가 BlockID HB41이 됩니다</h2>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <p>
-          Block은 Header·Data·Evidence·LastCommit으로 구성됩니다. Data의 transaction bytes는 CometBFT가 의미를
-          해석하지 않지만, DataHash가 달라지면 header hash도 달라집니다. LastCommit은 이전 높이의 결정 증거이고,
-          AppHash와 LastResultsHash도 이전 block을 application에 적용한 결과를 가리킵니다. 즉 한 header는 현재
-          제안 내용과 직전 상태 전이의 영수증을 함께 잇습니다.
+          B41은 Header·Data·Evidence·LastCommit으로 구성됩니다. DataHash가 달라지면 Header hash HB41도 달라집니다.
+          LastCommitHash는 직전 높이의 결정 증거를, AppHash와 LastResultsHash는 직전 block의 application 실행 결과를
+          가리킵니다. 아직 실행하지 않은 B41의 결과는 B41 Header에 미리 담을 수 없습니다.
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="Block struct" onClick={() => onCodeRef("block-struct", codeRefs["block-struct"])} />
-        <CodeViewButton label="Header struct" onClick={() => onCodeRef("header-struct", codeRefs["header-struct"])} />
+        <CodeViewButton label="실제 Block · Header 필드" onClick={() => onCodeRef("block-header-struct", codeRefs["block-header-struct"])} />
       </div>
-      <CometBFTCoreViz mode="block" />
       <ExplainedFormula
-        question="여러 하위 객체를 하나의 짧은 block identity에 어떻게 묶을까요?"
+        question="B41의 여러 필드를 하나의 BlockID로 어떻게 묶을까요?"
         idea={<>각 field를 release가 정한 canonical encoding으로 바꾸고, field 순서를 보존한 Merkle commitment를 계산합니다. 같은 의미처럼 보여도 encoding·순서·version이 다르면 다른 identity입니다.</>}
         formula={String.raw`C_H=\operatorname{MerkleRoot}\!\left(E(f_{1:m})\right)`}
         annotatedFormula={String.raw`C_H=\underbrace{\operatorname{MerkleRoot}}_{\text{순서 보존 commitment}}\!\left(\underbrace{E(f_{1:m})}_{\text{field별 canonical encoding}}\right)`}
@@ -40,12 +36,11 @@ export default function BlockHeader({
           { symbol: "C_H", name: "Header commitment", description: "Header hash로 사용되는 Merkle commitment입니다." },
         ]}
         assumptions={["Field order와 encoding rule이 모든 verifier에서 동일합니다.", "Hash collision resistance와 Merkle construction의 domain separation을 가정합니다.", "Commitment는 payload 의미의 유효성이 아니라 같은 bytes에 묶였음을 증명합니다."]}
-        interpretation="한 field의 한 bit만 달라도 C_H가 바뀌므로 vote의 BlockID와 다른 payload를 바꿔 끼우기 어렵습니다. 그러나 AppHash의 application 의미는 application proof와 별도로 검증해야 합니다."
+        interpretation="B41의 한 field가 달라지면 HB41도 달라집니다. 따라서 HB41에 한 precommit을 다른 payload의 결정 증거로 바꿔 끼우기 어렵습니다. 다만 AppHash가 application 규칙에 맞는지는 별도 실행·검증 대상입니다."
       />
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="Header.Hash()" onClick={() => onCodeRef("header-hash", codeRefs["header-hash"])} />
-        <CodeViewButton label="Data.Hash()" onClick={() => onCodeRef("data-hash", codeRefs["data-hash"])} />
-        <CodeViewButton label="Tx.Hash() · Txs.Hash()" onClick={() => onCodeRef("tx-hash", codeRefs["tx-hash"])} />
+        <CodeViewButton label="실제 Header.Hash()" onClick={() => onCodeRef("header-hash", codeRefs["header-hash"])} />
+        <CodeViewButton label="실제 Data.Hash()" onClick={() => onCodeRef("data-hash", codeRefs["data-hash"])} />
       </div>
       <div className="prose prose-neutral max-w-none dark:prose-invert">
         <h3>왜 AppHash는 한 높이 늦게 보일까요?</h3>
@@ -63,7 +58,7 @@ export default function BlockHeader({
         </p>
       </div>
       <div className="not-prose my-4 flex flex-wrap gap-3">
-        <CodeViewButton label="MakePartSet()" onClick={() => onCodeRef("make-partset", codeRefs["make-partset"])} />
+        <CodeViewButton label="실제 MakePartSet()" onClick={() => onCodeRef("make-partset", codeRefs["make-partset"])} />
       </div>
     </section>
   );
